@@ -81,8 +81,8 @@ void _ZN10dBgActor_c4KillEv(void *self);                              /* slot 31
 
 int _ZN13daObjMaruta_c6RenderEv(void *self);                            /* slot 9,  ov080 */
 void _ZN13daObjMaruta_c15OnHitByMegaCharER6Player(void *self, void *p); /* slot 27, ov080 */
-/* slots 16 and 17: the #ifdef _MSC_VER arms of src/_ZN13daObjMaruta_cD1Ev.cpp
-   and src/_ZN13daObjMaruta_cD0Ev.cpp, the ROM's own two bodies spelled step
+/* slots 16 and 17: the #ifdef _MSC_VER arms of port/unmatched/hostarm/_ZN13daObjMaruta_cD1Ev.cpp
+   and port/unmatched/hostarm/_ZN13daObjMaruta_cD0Ev.cpp, the ROM's own two bodies spelled step
    for step */
 void *_ZN13daObjMaruta_cD1Ev(void *self);
 void *_ZN13daObjMaruta_cD0Ev(void *self);

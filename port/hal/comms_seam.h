@@ -5,8 +5,8 @@
 // ###########################################################################
 //
 // Reviewer MP1RV set the condition and it has now been met: an API should be
-// frozen when a REAL CONSUMER HAS RUN AGAINST IT. src/func_0203ea5c.c -- the
-// ROM's own lockstep -- and src/func_0203df40.c, the dispatcher that owns the
+// frozen when a REAL CONSUMER HAS RUN AGAINST IT. src/unnamed/arm9/0203/func_0203ea5c.c -- the
+// ROM's own lockstep -- and src/unnamed/arm9/0203/func_0203df40.c, the dispatcher that owns the
 // only close() call site, are LINKED as of MP3 (port/slice_mp3.txt) and drive
 // these faces themselves. MP1 drove them from a probe, MP2 from a faithful
 // transcription; neither could settle a question the real caller answers by
@@ -26,7 +26,7 @@
 //   HOLE 1  poll() WAS REQUIRED AND NEVER CALLED.  CLOSED, by fix (a): the
 //           seam grows the pump the prose always claimed. Linking the real
 //           conductor is what made that cheap -- the ROM's wait does not spin,
-//           it SLEEPS (src/func_0203ea5c.c:417 -> func_02042778 ->
+//           it SLEEPS (src/unnamed/arm9/0203/func_0203ea5c.c:417 -> func_02042778 ->
 //           func_0201a4d0 -> OS_SleepThread), and hal/os_thread.h's pump hook
 //           was written for exactly that call chain. hal/comms_conductor.cpp
 //           installs a pump that calls poll() once per turn of the ROM's own
@@ -59,7 +59,7 @@
 //   HOLE 3  THE ROLE IS DECIDED TWICE AND NOBODY SAID WHO WINS.  CLOSED, and
 //           the real caller REFRAMED THE QUESTION rather than answering it.
 //           "Who wins" never arises, because the ROM does not ask for a role at
-//           all until something seats data_020a0f04: src/func_0203df40.c
+//           all until something seats data_020a0f04: src/unnamed/arm9/0203/func_0203df40.c
 //           switches on that byte, and the become_parent/become_child calls
 //           live in the case-0 arm chosen off the same byte. At 0 the ROM takes
 //           its solo arm forever. On the DS the MULTIPLAYER MENU seats it. So:
@@ -105,7 +105,7 @@
 // THE ARITY DEFECT THIS BANNER USED TO WARN ABOUT IS FIXED. func_02040a5c is
 // declared with its u32 and called as func_02040a5c(func_02040a84()) -- the
 // ROM's own r0 hand-off written so a stack ABI carries it too -- and
-// src/func_0203ea5c.c still compiles to the ROM's bytes at 2004/b56. Two more
+// src/unnamed/arm9/0203/func_0203ea5c.c still compiles to the ROM's bytes at 2004/b56. Two more
 // like it were found and fixed at the same time: func_0203ea5c declared `int`
 // by its dispatcher against a `void` definition, and func_0203f604 declared
 // `void (void)` against `void *(int, unsigned, void *)`. The third is the one
@@ -148,7 +148,7 @@
 // wireless thread with two callbacks.
 //
 // THE WIRE FORMAT IS THE ROM'S AND IT IS FIXED. 0x20 bytes per player per
-// frame, staged at data_020a1020 by src/func_0203ea5c.c:177-186 and unpacked
+// frame, staged at data_020a1020 by src/unnamed/arm9/0203/func_0203ea5c.c:177-186 and unpacked
 // at the same offsets on receive (lines 277-290):
 //
 //   +0x00 (2)  flag word      0x8000 live, 0x4000 round complete, 0x2000 ...,
@@ -165,7 +165,7 @@
 //
 // A transport MUST NOT reinterpret those bytes. It moves them and nothing
 // else. There is no netcode model to reproduce: the ROM is frame-locked
-// lockstep with no prediction and no rollback (src/func_0203ea5c.c:157), the
+// lockstep with no prediction and no rollback (src/unnamed/arm9/0203/func_0203ea5c.c:157), the
 // parent's frame counter is the clock, and when the wait bound runs out the
 // ROM drops the session back to solo by itself.
 //
@@ -182,7 +182,7 @@
 //   peer block -> null
 //
 // And because the role byte data_020a0f04 never leaves 0 without something
-// asking for a wireless mode, src/func_0203df40.c's switch keeps dispatching
+// asking for a wireless mode, src/unnamed/arm9/0203/func_0203df40.c's switch keeps dispatching
 // to func_0203e0ac, the solo cascade the port already runs. Today's
 // single-player behaviour is unchanged, and that is proven by BMP rather
 // than asserted.
@@ -193,10 +193,10 @@
 // used to answer both with one lie:
 //
 //   0x027FFC40 == 2      "this console was DOWNLOAD-PLAYED".
-//                        src/func_0203db64.c:73 TESTS it and :79 seats
+//                        src/unnamed/arm9/0203/func_0203db64.c:73 TESTS it and :79 seats
 //                        data_020a0f04 = 2 -- an automatic wireless CHILD,
 //                        followed by a 0x4b0-bounded spin that calls the
-//                        sleep veneer -- and src/func_020408b0.c:33 picks its
+//                        sleep veneer -- and src/unnamed/arm9/0204/func_020408b0.c:33 picks its
 //                        init branch on it. It is a BOOT fact, not a role
 //                        request. (:72 is the `data_020a0f04 = 0` above the
 //                        test; an earlier draft of this note cited it.)
@@ -226,7 +226,7 @@ enum CommsLinkState {
     kCommsChildConnected = 4,
 };
 
-// The ROM's own role byte, data_020a0f04, as src/func_0203df40.c switches on it.
+// The ROM's own role byte, data_020a0f04, as src/unnamed/arm9/0203/func_0203df40.c switches on it.
 enum CommsRole {
     kCommsRoleSolo = 0,
     kCommsRoleParent = 1,
@@ -269,7 +269,7 @@ enum : int { kCommsBlockBytes = 0x20 };
 //
 // `poll` IS DRIVEN as of MP3 -- hal/comms_conductor.cpp installs a pump on
 // hal/os_thread.h's hook and the ROM's own wait sleeps through it, so "once per
-// pump turn" is once per turn of src/func_0203ea5c.c's real wait loop. MP2
+// pump turn" is once per turn of src/unnamed/arm9/0203/func_0203ea5c.c's real wait loop. MP2
 // measured that nothing called it and annotated this paragraph as false; the
 // code changed rather than the claim. See HOLE 1 in the banner at the top.
 // ---------------------------------------------------------------------------
@@ -300,7 +300,7 @@ struct CommsTransport {
     //
     // `status`: WRITE 0. That is the whole contract and it is now FROZEN as
     // such. The ROM's caller stores what comes back in a stack local (sp2e at
-    // src/func_0203ea5c.c:95) and never reads it, which the linked TU makes
+    // src/unnamed/arm9/0203/func_0203ea5c.c:95) and never reads it, which the linked TU makes
     // checkable rather than a claim about code nobody had run.
     int (*exchange)(const void *my_block, uint16_t *status);
 
@@ -314,14 +314,14 @@ struct CommsTransport {
     //
     // DRIVEN, as of run mg16 lane MP3. hal/comms_conductor.cpp installs a pump
     // on hal/os_thread.h's hook, and the ROM's own wait sleeps through it
-    // (src/func_0203ea5c.c:417 -> func_02042778 -> func_0201a4d0 ->
+    // (src/unnamed/arm9/0203/func_0203ea5c.c:417 -> func_02042778 -> func_0201a4d0 ->
     // OS_SleepThread), so this is called once per turn of the ROM's real wait
     // loop. That is exactly what the paragraph at the top of this struct always
     // claimed and what MP2 measured was not happening. HOLE 1 is CLOSED.
     void (*poll)();
 
     // THE SESSION WAS ABANDONED. Called when the ROM gives up waiting and drops
-    // back to solo -- src/func_0203ea5c.c:487, which sets the role byte to 0 --
+    // back to solo -- src/unnamed/arm9/0203/func_0203ea5c.c:487, which sets the role byte to 0 --
     // meaning "forget the round you have open; the game has walked away from
     // it".
     //
@@ -415,7 +415,7 @@ uint64_t comms_wire_activity();
 // GIVE THE HOST ARM7 A TURN. Run link100, lane WM2 rung W1, WIDENED BY LANE
 // WM3 RUNG W4.
 //
-// src/func_020408b0.c is the ROM's own body now and the seam's t->open(mode)
+// src/unnamed/arm9/0204/func_020408b0.c is the ROM's own body now and the seam's t->open(mode)
 // call went with the face it lived in. hal/boot2_ipc.cpp -- the host ARM7 --
 // makes that call instead, when it sees the ROM claim channel 0xa. The claim is
 // a plain store into the shared block, so nothing traps it and the model has to
@@ -433,7 +433,7 @@ uint64_t comms_wire_activity();
 // points and they are the ROM's own bodies now, so the callers moved with them:
 // hal/comms_conductor.cpp turns between func_020408b0 and the role request,
 // once per turn of its seat wait, and once per turn of the pump -- which covers
-// src/func_0203ea5c.c's case-2 arm, where the ROM sits while its own bring-up
+// src/unnamed/arm9/0203/func_0203ea5c.c's case-2 arm, where the ROM sits while its own bring-up
 // is still climbing. The seam's remaining exchange face turns once per round.
 //
 // Cheap and idempotent: one mask test after the open has happened, plus one
@@ -449,20 +449,20 @@ void comms_arm7_turn();
 // into data_020a0f24 -- because the ROM's own writers of those words were not
 // in the link and something had to keep them fresh.
 //
-// THE STATE WORD IS THE ROM'S NOW. src/func_0203fdac.c writes data_020a0f94
-// when a session forms, src/func_02040820.c and src/func_02040790.c write it
+// THE STATE WORD IS THE ROM'S NOW. src/unnamed/arm9/0203/func_0203fdac.c writes data_020a0f94
+// when a session forms, src/unnamed/arm9/0204/func_02040820.c and src/unnamed/arm9/0204/func_02040790.c write it
 // when one is asked for, and five callbacks write it on their failure arms. A
 // mirror would not merely duplicate those writes, it would FIGHT them: the
 // ROM's own state machine switches on that word, so a mirror write of 4 while
 // the ROM sits at 2 sends func_02040820 down its `case 4: Wireless_Reset` arm
 // and tears the session down. So data_020a0f94 is not written here any more,
 // and the chained pump that existed only to refresh it through
-// src/func_0203ea5c.c's silent case-2 arm is gone with it -- the ROM's own
+// src/unnamed/arm9/0203/func_0203ea5c.c's silent case-2 arm is gone with it -- the ROM's own
 // callbacks are the path out of connecting now, which is what that arm was
 // always waiting for on hardware.
 //
 // WHAT IS LEFT IS THE AID, KEPT FOR ONE READ. The ROM writes data_020a0f24 too
-// (src/func_0203fec4.c:23, out of the connect reply), but that reply is posted
+// (src/unnamed/arm9/0203/func_0203fec4.c:23, out of the connect reply), but that reply is posted
 // only once the transport reports the child connected -- and
 // hal/comms_conductor.cpp's comms_wait_for_session ends its wait on the SAME
 // signal and then immediately reads the slot through the ROM's own accessor.
@@ -483,7 +483,7 @@ void comms_publish_link_words();
 // ---------------------------------------------------------------------------
 
 // The halfword at 0x027FFC40. 0 is a cartridge boot; 2 is "download-played",
-// which makes src/func_0203db64.c seat the console as a wireless CHILD with
+// which makes src/unnamed/arm9/0203/func_0203db64.c seat the console as a wireless CHILD with
 // no menu. The port comes up 0. Only a launcher mod deliberately simulating a
 // downloaded copy should ever pass 2.
 void comms_set_boot_indicator(uint16_t value);
@@ -508,7 +508,7 @@ CommsReadout comms_readout();
 
 // ---------------------------------------------------------------------------
 // THE ROM'S OWN FAN-OUT, steps 0x16 and 0x17 of the main loop
-// (src/func_020197b8.c). func_0203bb60 turns the four comms records into
+// (src/unnamed/arm9/0201/func_020197b8.c). func_0203bb60 turns the four comms records into
 // TouchInfo[4] at data_020a0de8; func_0203bc7c turns them into PadData[4] at
 // data_020a0e58 plus the per-player edge masks. Both are the ROM's, linked
 // through port/slice_comms.txt.
@@ -545,13 +545,13 @@ void comms_report(const char *tag);
 
 // ---------------------------------------------------------------------------
 // THE CONDUCTOR'S HOST SIDE. Run mg16 lane MP3, implemented in
-// hal/comms_conductor.cpp. These exist because src/func_0203df40.c and
-// src/func_0203ea5c.c are LINKED now and the ROM's own code has hardware
+// hal/comms_conductor.cpp. These exist because src/unnamed/arm9/0203/func_0203df40.c and
+// src/unnamed/arm9/0203/func_0203ea5c.c are LINKED now and the ROM's own code has hardware
 // expectations the port has to meet.
 // ---------------------------------------------------------------------------
 
 // Publish `held` into the DS key register the way the hardware carries it:
-// ACTIVE LOW, complemented against 0x2fff. src/func_0203df40.c:31 reads
+// ACTIVE LOW, complemented against 0x2fff. src/unnamed/arm9/0203/func_0203df40.c:31 reads
 // KEYINPUT and un-complements it, so a port that leaves the register at 0 hands
 // the game ALL FOURTEEN BUTTONS HELD rather than none.
 //
@@ -570,7 +570,7 @@ void comms_install_pump();
 // on the DS are seated by the MULTIPLAYER MENU before the conductor first runs.
 // `role` is kCommsRoleParent or kCommsRoleChild.
 //
-// Without this the linked src/func_0203df40.c switches to its solo arm forever
+// Without this the linked src/unnamed/arm9/0203/func_0203df40.c switches to its solo arm forever
 // and never asks the transport for anything -- the conductor's own
 // become_parent/become_child live in the case-0 arm and are chosen off this
 // same byte. A launcher mod that installs a transport must seat it; that is
@@ -589,7 +589,7 @@ bool comms_wait_for_session(int frames);
 
 // The DS touch-panel ring's write index, at data_020a80cc[6] as a halfword.
 // hal/sub_screen.cpp's poll_touch writes one entry per frame and advances it;
-// src/func_0203b9bc.c reads the four entries behind it. Nine entries.
+// src/unnamed/arm9/0203/func_0203b9bc.c reads the four entries behind it. Nine entries.
 int touch_ring_index();
 void touch_ring_advance();
 

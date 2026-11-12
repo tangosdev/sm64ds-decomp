@@ -60,7 +60,7 @@ void _ZN4CP1514MPUDataRegion7Ej(unsigned int val) { g_mpu_region7 = val; }
 unsigned int _ZN4CP1517MPUGetDataRegion7Ev(void) { return g_mpu_region7; }
 
 // --- CP15 wait-for-interrupt ------------------------------------------------
-// src/func_02057e34.c is the OS idle thread: `IRQ::Enable(); for(;;)
+// src/unnamed/arm9/0205/func_02057e34.c is the OS idle thread: `IRQ::Enable(); for(;;)
 // CP15::WaitForInterrupt();`. It is REFERENCED by the thread-system init
 // (func_02058308 hands it to the idle thread record) and never entered on the
 // port, because the port runs the game on one fiber and never schedules the
@@ -92,7 +92,7 @@ void _ZN4cstd14__builtin_trapEv(void) {
 }
 
 // --- the backward LZ decompressor (autoload segments) -----------------------
-// src/func_020048d8.c is the CRT0's own decompressor: an `ldmdb` backward walk
+// src/unnamed/arm9/0200/func_020048d8.c is the CRT0's own decompressor: an `ldmdb` backward walk
 // over a packed segment with a rolling bit flag, followed by CP15 cache
 // maintenance. Entry sets r0 to the END of the region. On the port the
 // autoload segments are never packed -- port_romdata_load lays the image down
@@ -112,7 +112,7 @@ int func_02057178(unsigned int arg);
 void func_02057014(unsigned int arg) { func_02057178(arg); }
 
 // --- the calibrated delay loop ----------------------------------------------
-// src/func_02059d8c.c is `subs r0,r0,#4; bhs` -- a cycle-counted busy wait, and
+// src/unnamed/arm9/0205/func_02059d8c.c is `subs r0,r0,#4; bhs` -- a cycle-counted busy wait, and
 // the `bhs` carry test is why it could not be recovered as C. A host has no
 // bus to wait for and burning wall-clock time in the frame loop would be worse
 // than useless, so this returns immediately.
@@ -198,7 +198,7 @@ void func_0206d9dc(int on) { (void)on; }
 void func_020aa420(void) {}
 
 // --- the abort / undefined-instruction vector -------------------------------
-// src/func_020593f4.c is the CPU exception dispatcher: it reads the processor
+// src/unnamed/arm9/0205/func_020593f4.c is the CPU exception dispatcher: it reads the processor
 // mode out of CPSR, hand-saves registers with stmdb, repoints sp and spins.
 // func_02059594 STORES its address into the shared block's exception word
 // (0x027ffd9c) and into DTCM at 0x023c3ffc; nothing calls it. On the port the
@@ -215,20 +215,20 @@ void func_020593f4(void) {
 }
 
 // --- the bit allocator over the shared block --------------------------------
-// src/func_02057020.c (OS_GetLockID) is hosted in hal/os_lockid.cpp, which
+// src/unnamed/arm9/0205/func_02057020.c (OS_GetLockID) is hosted in hal/os_lockid.cpp, which
 // every binary links (smoke_player's SaveData path needs it too); the seed of
 // the two lock words lives beside it. Moved there at integration.
 
 // --- the game-card IREQ_MC fatal path: RETIRED ------------------------------
 // (run linkfull, lane S4CARD). A host copy of func_020610fc stood here, tagged as
-// hand-asm. src/func_020610fc.c is plain C now -- `while (IPCSend(0xd, 2, 0));
+// hand-asm. src/unnamed/arm9/0206/func_020610fc.c is plain C now -- `while (IPCSend(0xd, 2, 0));
 // for (;;);`, the ROM's answer to the card raising IREQ_MC -- and it links as a
 // row of port/slice_w28_card.txt under IRQ::GameCardIREQMCHandler, its only
 // caller. Unreachable either way: ntr/card.cpp never raises IF bit 20 and the
 // port dispatches no card interrupt.
 
 // --- the MSL printf core: a DS debug-console path ---------------------------
-// src/func_0206a928.c is MSL's printf formatting DFA, C since main #2293 and
+// src/unnamed/arm9/0206/func_0206a928.c is MSL's printf formatting DFA, C since main #2293 and
 // byte-matched, so the old "stack-home wall" reason is gone. It stays unlinked
 // by the 09-25 scope ruling (only what the PC runs goes in). Its one caller,
 // func_0206ccd8 (the ROM's varargs print, reached from cstd::__assert), returns
@@ -254,7 +254,7 @@ void func_0206a928(void *state, int first, void *ap, void *end) {
 
 // ---------------------------------------------------------------------------
 // func_02057198 IS RETIRED FROM THIS FILE (run link100, lane LOADOV). It stood
-// here as a transcription because src/func_02057198.c forward-declared
+// here as a transcription because src/unnamed/arm9/0205/func_02057198.c forward-declared
 // func_0205a74c `static` with no definition in the TU, which MSVC rejects with
 // C2129. The decomp corrected that word to `extern` in commit 861328718, so
 // the matched TU compiles, and port/slice_nitrofs.txt now seats it: the map
@@ -298,7 +298,7 @@ void func_0206a928(void *state, int first, void *ap, void *end) {
 // be here:
 //     /alternatename:?data_020a6148@@3PAHA=_data_020a6148
 //     /alternatename:?data_020a612c@@3PAUObj581@@A=_data_020a612c
-// and their one consumer is src/func_020581a8.cpp, which spells both names at
+// and their one consumer is src/unnamed/arm9/0205/func_020581a8.cpp, which spells both names at
 // namespace scope outside extern "C". That TU is on port/slice_gate223.txt,
 // which goes to ALL THREE big targets (hal/scene_vs_menu.cpp rides
 // SLICE_VS_SOURCES and this lane retires two of its faces), while THIS file is

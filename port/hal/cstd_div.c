@@ -103,7 +103,7 @@ unsigned ds_umod(unsigned a, unsigned b) { return b ? a % b : 0u; }
  * undefined at or above the operand width, so the compiler owes nothing
  * either way.
  *
- * src/func_0201b100.c -- the composer that lays the level-clear save menu's
+ * src/unnamed/arm9/0201/func_0201b100.c -- the composer that lays the level-clear save menu's
  * button captions into the sub engine's BG0 tiles -- reaches exactly that
  * count. It takes the pen's sub-tile offset `sh = acc & 7`, forms
  * `rshift = (8 - sh) << 2`, and uses it to pull the part of a glyph cell that

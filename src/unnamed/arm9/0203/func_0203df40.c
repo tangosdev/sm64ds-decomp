@@ -19,7 +19,7 @@ extern int data_020a0f98;
 
 extern void func_0203b9bc(struct Col4 *out);
 /* DEFECT D2, fixed here: the declaration follows the definition.
-   src/func_0203ea5c.c:82 defines `void func_0203ea5c(void)`. This TU used to
+   src/unnamed/arm9/0203/func_0203ea5c.c:82 defines `void func_0203ea5c(void)`. This TU used to
    declare it `int`, and both call sites below discard the result, so on ARM the
    lie is invisible -- r0 is simply never read. It stops being invisible the day
    both TUs are in one link and a compiler is entitled to believe the

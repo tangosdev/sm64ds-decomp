@@ -31,7 +31,7 @@ extern s32 func_0204271c(void *o);
 extern s32 func_02042748(void *a, void *b);
 extern s32 func_02040a84(void);
 /* DEFECT D1, fixed here: the declaration follows the definition.
-   src/func_02040a5c.c:11 is `void func_02040a5c(u32 val)` -- one argument,
+   src/unnamed/arm9/0204/func_02040a5c.c:11 is `void func_02040a5c(u32 val)` -- one argument,
    IRQ-guarded, and it stores `val & ~1u`. This TU used to declare it (void)
    and call it with nothing at the pair below, which is correct only on ARM,
    where func_02040a84's return is still sitting in r0 when the second bl
@@ -41,7 +41,7 @@ extern void func_02040a5c(u32 val);
 extern s32 func_0203fd64(void);
 extern void func_02042778(void);
 /* DEFECT D3, fixed here, and it is the one nobody had named: this TU declared
-   func_0203f604 as `void (void)` against src/func_0203f604.c:15's
+   func_0203f604 as `void (void)` against src/unnamed/arm9/0203/func_0203f604.c:15's
    `void *func_0203f604(int unused, unsigned int size, void *ptr)` -- wrong
    return type AND three missing parameters. It matters more than the other two
    because this symbol is ADDRESS-TAKEN (passed to func_02040c34 at :194 and

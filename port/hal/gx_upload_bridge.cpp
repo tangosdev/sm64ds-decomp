@@ -117,7 +117,7 @@ void ModelComponents::UpdateBones(BCA_File *file, int frame)
 //
 // What the src TU does NOT define any more is the flat ROM name: it spells the
 // body as the static member, so __ZN5Model27LoadCompressedTextureToVramEPcjS0_
-// went unresolved for src/func_ov075_0211aa94.c and src/func_ov080_02125630.cpp,
+// went unresolved for src/unnamed/ov075/func_ov075_0211aa94.c and src/func_ov080_02125630.cpp,
 // which still call it flat. That one is an /alternatename in
 // hal/cxx_aliases.cpp rather than a face: a STATIC member is __cdecl with no
 // receiver, three arguments and a scalar return on both sides, which is the

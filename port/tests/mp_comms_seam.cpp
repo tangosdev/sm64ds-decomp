@@ -8,13 +8,13 @@
 //   func_02040704 says slot 0, func_020406b4 never completes a round, and
 //   asking to become a parent or a child changes none of that. That is what a
 //   DS with nobody in range does, and it is what makes the ROM's own timeout
-//   (src/func_0203ea5c.c:487) drop the session back to solo instead of the
+//   (src/unnamed/arm9/0203/func_0203ea5c.c:487) drop the session back to solo instead of the
 //   port inventing a fallback.
 //
 //   THE FOUR INPUT SLOTS CARRY FOUR COPIES OF THE LOCAL INPUT. SM64DS is
-//   four-player all the way down in single player too: src/func_0203e0ac.c
+//   four-player all the way down in single player too: src/unnamed/arm9/0203/func_0203e0ac.c
 //   cascades the local comms record into slots 3, 2, 1 and 0, and
-//   src/func_0203bb60.c and src/func_0203bc7c.c fan those four records out
+//   src/unnamed/arm9/0203/func_0203bb60.c and src/unnamed/arm9/0203/func_0203bc7c.c fan those four records out
 //   into TouchInfo[4] and PadData[4], which is where every stylus and button
 //   read in the entire game comes from. All four TUs are the ROM's, linked.
 //
@@ -38,7 +38,7 @@ namespace port { int comms_session_players() { return 0; } }
 // them in ordered .dsstate$camcomm/$camrec sections at ROM spacing and asserts
 // the offsets at bring-up (hal_camera_check_layout). The probe links neither
 // that file nor its dependencies, so it reproduces the same split here -- SAME
-// SECTION FAMILY AND SAME ORDER, because src/func_0203e0ac.c reaches slots 1,
+// SECTION FAMILY AND SAME ORDER, because src/unnamed/arm9/0203/func_0203e0ac.c reaches slots 1,
 // 2 and 3 through the interior symbols data_020a117c / data_020a11a0 /
 // data_020a11c4 and a split that drifted would cascade into the wrong words.
 // The layout is asserted below before anything is measured.
@@ -96,7 +96,7 @@ static int g_fail;
 #define CHECK(cond) do { if (!(cond)) { ++g_fail; \
     std::printf("FAIL %s:%d  %s\n", __FILE__, __LINE__, #cond); } } while (0)
 
-// Write the local record the way src/func_0203df40.c does: the stylus quad at
+// Write the local record the way src/unnamed/arm9/0203/func_0203df40.c does: the stylus quad at
 // +4/+6/+8/+0xA, the key word at +0xE, and the live bit in the flag word.
 static void set_local_input(unsigned x, unsigned y, unsigned touch, unsigned key)
 {
@@ -185,7 +185,7 @@ int main() {
 
     // ---- 4. THE FOUR-SLOT FAN-OUT, all ROM code --------------------------
     //
-    // src/func_0203e0ac.c cascades the local record into slots 3, 2, 1, 0 in
+    // src/unnamed/arm9/0203/func_0203e0ac.c cascades the local record into slots 3, 2, 1, 0 in
     // that order and within one call (each step reads the slot the previous
     // step just wrote), so ONE tick puts the local input in all four.
     std::printf("\n4 the four-slot fan-out, through the ROM's own code\n");

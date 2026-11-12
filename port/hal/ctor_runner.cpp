@@ -15,7 +15,7 @@
  *     020048b4  bx  r1
  *
  * func_02072f94 is CodeWarrior's __init_cpp / static-initialiser runner and
- * src/func_02072f94.c is the whole of it:
+ * src/unnamed/arm9/0207/func_02072f94.c is the whole of it:
  *
  *     fn_t *p = (fn_t *)0x2086b60;
  *     while (p != 0 && (f = *p) != 0) { f(); p++; }
@@ -132,7 +132,7 @@
  * face messages:
  *   __sinit_02074e0c calls func_0201aa18, whose chain is
  *   func_0201aa18 -> func_0201aad4 -> func_0201aac8 -> func_02059ba0, and
- *   src/func_0201aac8.c is a tail-call veneer decompiled as `void(void)` that
+ *   src/unnamed/arm9/0201/func_0201aac8.c is a tail-call veneer decompiled as `void(void)` that
  *   its caller invokes WITH an argument. On ARM the value rides r0 through the
  *   veneer; on the host it does not. Linking that at Entry would hand
  *   func_02059ba0 whatever the host left in a register. That is a PORT_HOST_ABI
@@ -159,7 +159,7 @@
  *                  it and both readers -- src/_ZN7ClipperC1Ev.cpp and
  *                  src/_ZN7ClipperD1Ev.cpp -- are this rung's own TUs. Word 0 is
  *                  bound to the ROM's D1 body. WORD 1 IS A NAMED TRAP, not a
- *                  body: src/_ZN7ClipperD0Ev.cpp calls `base_dtor_Clipper`, an
+ *                  body: port/unmatched/hostarm/_ZN7ClipperD0Ev.cpp calls `base_dtor_Clipper`, an
  *                  INVENTED name for 0x0203cbcc that nothing in this tree
  *                  defines, so the deleting destructor is not linkable today.
  *                  It cannot fire either -- the only Clipper in this image is
@@ -176,7 +176,7 @@
  *                  reader crosses +12 and the generosity is slack rather than
  *                  aliasing.
  *
- * AND FIVE MSVC NAMES, because src/__sinit_02074e84.cpp is a //cpp TU that
+ * AND FIVE MSVC NAMES, because src/unnamed/arm9/0207/__sinit_02074e84.cpp is a //cpp TU that
  * declares its five data names WITHOUT extern "C". Every one of the five LHS
  * strings below was transcribed from `dumpbin /symbols` on this tree's own
  * compile of that TU (tmp/probe), the rule hal/w8a_stage_storage.cpp's alias
@@ -286,7 +286,7 @@
  *
  * WHAT IT RETIRES. hal/method_faces.cpp's FaderBrightness block said in as
  * many words that data_0209f5d0's vptr is null "because the port does not link
- * the ROM's static initialiser for it (src/__sinit_02074edc.c)", that the
+ * the ROM's static initialiser for it (src/unnamed/arm9/0207/__sinit_02074edc.c)", that the
  * matched SetForwardTime ends in an unqualified virtual IsAtEnd() that would
  * fault reading [vptr+0x14] on a null table, and "Do not wake the branch
  * without giving data_0209f5d0 a real vptr first." This rung is that. The vptr
@@ -294,7 +294,7 @@
  * rather than address zero, so the worst case moved from an access violation
  * to a line of output. The branch itself was unreachable for its own separate
  * reason -- every call site is behind `data_0209f1e0 != 0` and that byte's
- * only writer, src/func_02023498.c, was not in the link. It is now (run
+ * only writer, src/unnamed/arm9/0202/func_02023498.c, was not in the link. It is now (run
  * linkfull, lane LOOPIN2: phase 0x17 of both host loops), so the soft-reset
  * combo on a level enters the branch for two frames -- SetForwardTime on this
  * object, then IsAtEnd -- before the level loop answers the reset by starting
@@ -369,7 +369,7 @@
 
 extern "C" {
 
-/* The runner itself: src/func_02072f94.c, arm9 0x02072f94. */
+/* The runner itself: src/unnamed/arm9/0207/func_02072f94.c, arm9 0x02072f94. */
 void func_02072f94(void);
 
 /* The ten initialisers this build answers for. */
@@ -461,7 +461,7 @@ int _ZN8dGraph_c10callback_c14GraphCallback3Ev(void);
  *     0208ee20  02018ea0  _ZN8dGraph_c10callback_c14GraphCallback3Ev
  *
  * It is hosted here and not in hal/arm9_tables_link100.cpp because the reason
- * it is needed is this rung's: src/__sinit_02074fb8.c names it, and that
+ * it is needed is this rung's: src/unnamed/arm9/0207/__sinit_02074fb8.c names it, and that
  * initialiser is one of the eight. The store it appears in is dead in the ROM
  * itself (`data_020a0c68[0] = &data_0208ee14;` is overwritten by the next
  * statement with &data_02094390), so nothing in this build reads a word back
@@ -480,7 +480,7 @@ DSSTATE_END
 /* ---- rung C1b: the seven destruct-node cells --------------------------
  *
  * Every one of them is the third argument of a func_020731dc call in the
- * initialiser that names it -- the three-word node src/func_020731dc.c pushes
+ * initialiser that names it -- the three-word node src/unnamed/arm9/0207/func_020731dc.c pushes
  * onto data_020aa3f0 (node[0] = previous head, node[1] = the destructor,
  * node[2] = the object). Nothing in this port hosted any of them, and nothing
  * in this port reads one back: the ROM's only reader of the chain is
@@ -530,7 +530,7 @@ DSSTATE_END
  * and hosted nowhere before this. The header carries why the three that fall
  * inside hal/auto_bss.cpp's int data_020a0db0[8] are slack rather than
  * aliasing. data_020a0db8 is a short pair because that is how
- * src/__sinit_02075054.c writes it. */
+ * src/unnamed/arm9/0207/__sinit_02075054.c writes it. */
 DSSTATE_BEGIN
 extern "C" {
 unsigned char data_020a0d00[12];
@@ -639,7 +639,7 @@ unsigned int data_02086e40[2] = { 0x02005110u, 0u };   /* data_0209b0d8 main */
 }
 DSSTATE_END
 
-/* The five MSVC spellings src/__sinit_02074e84.cpp emits, transcribed from
+/* The five MSVC spellings src/unnamed/arm9/0207/__sinit_02074e84.cpp emits, transcribed from
    dumpbin /symbols on this tree's own compile of it. */
 #pragma comment(linker, "/alternatename:?data_0208ee14@@3DA=_data_0208ee14")
 #pragma comment(linker, "/alternatename:?data_02092188@@3DA=_data_02092188")
@@ -750,7 +750,7 @@ const unsigned kCtorWords = sizeof kCtorTable / sizeof kCtorTable[0];
 const unsigned kCtorBase = 0x02086b60u;
 
 /* How long the MSL global-destructor chain is. Nodes are three words and
-   node[0] is the previous head (src/func_020731dc.c), so this is a walk, not a
+   node[0] is the previous head (src/unnamed/arm9/0207/func_020731dc.c), so this is a walk, not a
    counter somebody has to keep in step. The cap is a cycle guard: a corrupt
    chain must not hang the boot. */
 int dtor_chain_len(void)

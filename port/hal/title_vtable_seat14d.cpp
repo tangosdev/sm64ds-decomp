@@ -45,7 +45,7 @@
  *   slot 9   s32  dScTitle_c::Render()             src/_ZN10dScTitle_c6RenderEv.cpp
  *   slot 12  void dScTitle_c::OnPendingDestroy()   src/_ZN10dScTitle_c16OnPendingDestroyEv.cpp
  *   slot 16  D2                                    src/_ZN10dScTitle_cD1Ev.cpp
- *   slot 17  D0                                    src/_ZN10dScTitle_cD0Ev.cpp
+ *   slot 17  D0                                    port/unmatched/hostarm/_ZN10dScTitle_cD0Ev.cpp
  *
  * SLOT 17 HAS ITS OWN TU NOW (run linkfull wave 27, lane V3B). MSVC folds the
  * ROM's destructor variants into one symbol, so only one of a class's two
@@ -157,7 +157,7 @@ DSSTATE_END
 #pragma comment(linker, "/alternatename:?data_0209b2f4@@3IA=_data_0209b2f4")
 #pragma comment(linker, "/alternatename:?data_0209f5e8@@3PAGA=_data_0209f5e8")
 
-// The ROM's own D0 body under its flat name: src/_ZN10dScTitle_cD0Ev.cpp's
+// The ROM's own D0 body under its flat name: port/unmatched/hostarm/_ZN10dScTitle_cD0Ev.cpp's
 // _MSC_VER arm (the destructor, then the deallocation 0x020ad69c makes).
 extern "C" {
 void *_ZN10dScTitle_cD0Ev(void *self);

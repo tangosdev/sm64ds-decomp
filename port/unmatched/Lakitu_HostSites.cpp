@@ -31,7 +31,7 @@
  *          0x021237ec 0x0203c1e8 _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE
  *          0x021237fc load 0x0212786c   0x02123800 load 0x020a0eac (the heap)
  *     So D1 IS D0 minus the deallocate, and the member offsets come from
- *     src/_ZN6LakituD0Ev.cpp, which is a plain C body the ROM matches and which
+ *     port/unmatched/hostarm/_ZN6LakituD0Ev.cpp, which is a plain C body the ROM matches and which
  *     this lane leaves in the slice untouched. Nothing here is guessed from a
  *     vtable slot (T5): every call and both offsets are relocation-confirmed.
  *

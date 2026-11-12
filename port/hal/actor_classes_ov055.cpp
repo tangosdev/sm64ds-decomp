@@ -102,7 +102,7 @@ void port_ov055_syms_patch(void);
    nothing else. */
 void __sinit_ov055_021118d4(void);
 
-/* what ml_d1 spells by hand (src/_ZN11MirrorLuigiD1Ev.cpp is held out -- it is
+/* what ml_d1 spells by hand (port/unmatched/hostarm/_ZN11MirrorLuigiD1Ev.cpp is held out -- it is
    the //cpp real-destructor shape, the ov024 PyramidTag case) */
 int __cxa_vec_cleanup(void *base, int n, int stride, void *dtor);
 void _ZN15TextureSequenceD1Ev(void *p);
@@ -325,7 +325,7 @@ extern "C" void port_ov55_bringup(void)
 // Matrix4x3 at +0x1dc.
 //
 // ---- SLOT 16, THE HAND-SPELLED D1 -----------------------------------------
-// src/_ZN11MirrorLuigiD1Ev.cpp is the //cpp REAL-DESTRUCTOR shape, the one
+// port/unmatched/hostarm/_ZN11MirrorLuigiD1Ev.cpp is the //cpp REAL-DESTRUCTOR shape, the one
 // port/slice_sweep1_ov024.txt holds src/_ZN10PyramidTagD1Ev.cpp out for: it
 // declares its own local struct ShadowModel / Model / ModelAnim / Actor and
 // calls `((ShadowModel *)(c + 0x188))->~ShadowModel();` and three more like it,
@@ -353,7 +353,7 @@ static int __fastcall ml_render(void *s, void *)
 static int __fastcall ml_pdes(void *s, void *)
 { (void)s; _ZN9daLuigi_c16OnPendingDestroyEv(); return 0; }
 /* SLOT 16 IS THE ROM'S OWN D1 NOW (run linkfull wave 31, lane VARIANT4). The
-   transcription above moved into src/_ZN11MirrorLuigiD1Ev.cpp's _MSC_VER arm,
+   transcription above moved into port/unmatched/hostarm/_ZN11MirrorLuigiD1Ev.cpp's _MSC_VER arm,
    which defines the flat ROM name and makes the same calls in the same order
    with the same offsets and the same table (its MSVC object and this thunk's
    old body are compared in runs/linkfull/out/VARIANT4/). The thunk keeps the

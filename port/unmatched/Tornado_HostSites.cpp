@@ -20,7 +20,7 @@
  *                                            0x02136e4c (load) 0x02137a90
  *                                            0x02136e50 (load) 0x020a0eac
  *
- *     Resolved against src/_ZN7TornadoD0Ev.cpp own member list:
+ *     Resolved against port/unmatched/hostarm/_ZN7TornadoD0Ev.cpp own member list:
  *     TextureTransformer +0x328 (0x0201592c), ModelAnim +0x2c4 (0x0201691c),
  *     WithMeshClsn +0x108 (0x020373f8), MovingCylinderClsn +0xd4 (0x020149a4),
  *     then _ZN8dActor_cD2Ev (0x020112c8). THE LAST THREE ARE THE SAME THREE arm9

@@ -3,25 +3,25 @@
 //
 // ============================ WHAT THIS RUNG IS ============================
 //
-// src/func_02040c34.c is the last body on the VS path that the port still
+// src/unnamed/arm9/0204/func_02040c34.c is the last body on the VS path that the port still
 // answered with a stand-in. hal/comms_seam.cpp's note called it "starts the
 // DS's wireless THREAD with two callbacks" and recorded that the host had no
 // thread to start. Both halves of that have since become false:
 //
-//   * gate 223 (run link100, lane THREAD) made src/func_02058200.c -- the
+//   * gate 223 (run link100, lane THREAD) made src/unnamed/arm9/0205/func_02058200.c -- the
 //     ROM's own OS_CreateThread -- a linked body, with hal/boot2_thread.cpp
 //     adopting any record it creates onto a Windows fiber. The card driver's
 //     thread has run that way since, and port/tools/thread_create_proof.py
 //     measures it.
 //   * lanes NITROFS and LOADOV wrote the cartridge-header mirror at
 //     0x027FFE40..0x027FFE5C, all eight words, read back through the ROM's own
-//     FS_Init. src/func_020424c0.c reads exactly those four (offset, size)
+//     FS_Init. src/unnamed/arm9/0204/func_020424c0.c reads exactly those four (offset, size)
 //     pairs, and until they existed it had nothing to read.
 //
 // So this rung deletes the stand-in and lets the cartridge do it. What runs
 // now, in the ROM's own instructions, when the lockstep opens a session:
 //
-//   src/func_0203ea5c.c:209/212  func_02040c34(role, 1, &func_0203f644,
+//   src/unnamed/arm9/0203/func_0203ea5c.c:209/212  func_02040c34(role, 1, &func_0203f644,
 //                                              &func_0203f604, 0)
 //     -> IRQ::Disable, the once-flag at data_020a0f84
 //     -> the 0x440 control block at data_020a1fc0 filled from the arguments
@@ -44,7 +44,7 @@
 //        func_020424c0, func_02065234 (FACED). No thread on this arm; the ROM
 //        does not create one for a child.
 //
-// The worker itself is src/func_02042254.c and its shape is a plain consumer:
+// The worker itself is src/unnamed/arm9/0204/func_02042254.c and its shape is a plain consumer:
 //
 //     while (1) {
 //         irq = IRQ::Disable();
@@ -61,9 +61,9 @@
 // 0x020422CC/D0, so no OSThreadQueue anywhere holds this thread's id bit and
 // no OS_WakeupThread call in the cartridge can reach it (checked by scanning
 // every BL to 0x0205807c in extracted/arm9_dec.bin: thirteen callers, none of
-// them on this chain). The wake is a DIRECT one: src/func_020423c8.c is
+// them on this chain). The wake is a DIRECT one: src/unnamed/arm9/0204/func_020423c8.c is
 // `func_02058048(data_020a15e4)` -- state = 1 on this exact record, then the
-// ROM's own reschedule -- and it is called from src/func_020412f0.c, the
+// ROM's own reschedule -- and it is called from src/unnamed/arm9/0204/func_020412f0.c, the
 // message callback, on the arm that has just moved a node onto the +0x2708
 // list with func_02041ae8. Same function func_02042200 uses to start the
 // thread in the first place. So the host needs no interrupt source it does not
@@ -72,7 +72,7 @@
 // ON RUNG W6 THE WAKE COULD NOT FIRE, and the reason was this file: the note
 // that stood here said "func_020412f0 is installed as the 0x02065xxx layer's
 // callback by func_020652fc, which is FACED below, so nothing invokes it".
-// RUNG W7 RETIRES THAT FACE. src/func_020652fc.c is a linked ROM body now, so
+// RUNG W7 RETIRES THAT FACE. src/unnamed/arm9/0206/func_020652fc.c is a linked ROM body now, so
 // the callback really is installed -- func_02040c34 loads func_020412f0 into
 // r2 at 0x02040DE0 and the ROM's own initialiser stores it. What still does
 // not happen is the message that would make it run: func_020412f0 is invoked
@@ -87,10 +87,10 @@
 // faces here. The refusal, in its own words, was that the band is reached only
 // through two ROM accessors that return LITERAL DS ADDRESSES:
 //
-//     src/func_02065b94.c   return 34247892;   // read as 0x020A9594
-//     src/func_02065b88.c   return 34248048;   // read as 0x020A9630
+//     src/unnamed/arm9/0206/func_02065b94.c   return 34247892;   // read as 0x020A9594
+//     src/unnamed/arm9/0206/func_02065b88.c   return 34248048;   // read as 0x020A9630
 //
-// and that src/func_020652fc.c's walk "reaches 0x020A9D83, past
+// and that src/unnamed/arm9/0206/func_020652fc.c's walk "reaches 0x020A9D83, past
 // data_020a9570's span and across three further ROM symbols", so that linking
 // the band would leave one ROM object as two host objects.
 //
@@ -141,14 +141,14 @@
 //      that only READ, through the literal, by one ROM body. There is
 //      something to bind. The 0x854-byte band is live mutable state written
 //      through the accessors and read through data_020a9570 by
-//      src/func_02065af0.c in the same session; a publish-at-load copy would
+//      src/unnamed/arm9/0206/func_02065af0.c in the same session; a publish-at-load copy would
 //      need a copy-back at every access and the ROM offers no point to do it.
 //   2. MSVC WILL NOT PLACE A C SYMBOL AT AN ABSOLUTE ADDRESS, and ntr/io.cpp
 //      already wrote down the experiment: a bss_seg plus
 //      /BASE /FIXED /DYNAMICBASE:NO does pin 0x02000000, and it was rejected
 //      because /FIXED turns a lost range into a process that never starts with
 //      no message of ours. data_020a9570 is read by relocation as
-//      &data_020a9570 from src/func_02065af0.c, so it has to stay a host
+//      &data_020a9570 from src/unnamed/arm9/0206/func_02065af0.c, so it has to stay a host
 //      symbol.
 //   3. DS MAIN RAM IS THE ONE RANGE THE PORT SHIPS ABLE TO LOSE. ntr/io.cpp's
 //      region table marks main memory fatal:false, on the stated ground that
@@ -162,15 +162,15 @@
 //      hard way.
 //
 // THE SEVEN BODIES BEHIND THE TWO GUARDS ARE LINKED AND UNENTERED, and that is
-// the honest state rather than a defect: src/func_02065050.c and
-// src/func_020650d8.c are reached only from src/func_020417d0.c's message
+// the honest state rather than a defect: src/unnamed/arm9/0206/func_02065050.c and
+// src/unnamed/arm9/0206/func_020650d8.c are reached only from src/unnamed/arm9/0204/func_020417d0.c's message
 // types 0x15 and 0x9, and func_020417d0 is entered only when the host ARM7
 // posts an 0x82 port-receive indication, which it does not. The [wm8] census
 // at the bottom of this file reads that back out of the ROM's own bytes.
 //
 // ============================ THE STORAGE ==================================
 //
-// ONE CONTIGUOUS BAND, 0x2b80 BYTES, AND IT HAS TO BE ONE. src/func_02040c34.c
+// ONE CONTIGUOUS BAND, 0x2b80 BYTES, AND IT HAS TO BE ONE. src/unnamed/arm9/0204/func_02040c34.c
 // derives its whole working area from data_020a1fc0:
 //
 //     02040C4C  ldr sl, [pc, #0x2b0]     sl = data_020a1fc0
@@ -178,7 +178,7 @@
 //     02040D0C  add sb, fp, #0xc0        the first 0xcc0-byte node
 //     02040D18  add r8, fp, #0x2700      the end of the three nodes
 //
-// while src/func_020412f0.c and src/func_02042254.c spell the same base as
+// while src/unnamed/arm9/0204/func_020412f0.c and src/unnamed/arm9/0204/func_02042254.c spell the same base as
 // `data_020a2400`. data_020a1fc0 + 0x440 IS data_020a2400 on the DS, so the two
 // spellings have to be the same address here, and the third node
 // (fp + 0x1a40 .. fp + 0x2700) runs straight through data_020a3fc0. The band is
@@ -262,12 +262,12 @@ extern unsigned char data_020a15e4[];
 
 // The 0x02063E-0x020655 message layer's own 0x854-byte object, in two
 // hal/wm_arm7.cpp sections: data_020a94d4 is the 0x9c header that
-// src/func_02065b94.c's literal names, data_020a9570 the 0x7b8 tail that
-// src/func_02065b88.c's names. The band check below reads the 0x9c back and
+// src/unnamed/arm9/0206/func_02065b94.c's literal names, data_020a9570 the 0x7b8 tail that
+// src/unnamed/arm9/0206/func_02065b88.c's names. The band check below reads the 0x9c back and
 // the [wm8] census reads the ROM's own state out of them.
 extern unsigned char data_020a94d4[];
 extern unsigned char data_020a9570[];
-// The layer's up flag: 0 until src/func_020652fc.c or src/func_02065234.c
+// The layer's up flag: 0 until src/unnamed/arm9/0206/func_020652fc.c or src/unnamed/arm9/0206/func_02065234.c
 // sets it, and nothing else in the image writes it.
 extern int data_020a94c0;
 
@@ -277,7 +277,7 @@ extern int data_020a6148[16];
 
 // The session's role byte, hosted by hal/comms_conductor.cpp: 1 parent, 2 child,
 // 0 no session. The census reads it so that a zero worker count is reported as
-// the reading it is rather than as a miss -- src/func_02040c34.c only reaches
+// the reading it is rather than as a miss -- src/unnamed/arm9/0204/func_02040c34.c only reaches
 // func_02042200 on the role-1 arm, so a child and a solo run are RIGHT to have
 // no worker, and only a parent with no worker is a failure.
 extern unsigned char data_020a0f04[];
@@ -300,22 +300,22 @@ void port_wm8_band_report(void);
     extern "C" __declspec(allocate(sec)) __declspec(align(1))     \
     unsigned char name[size]
 
-/* +0x0440  the pool base. src/func_020412f0.c and src/func_02042254.c spell
-   the base with this name; src/func_02040c34.c spells it data_020a1fc0+0x440. */
+/* +0x0440  the pool base. src/unnamed/arm9/0204/func_020412f0.c and src/unnamed/arm9/0204/func_02042254.c spell
+   the base with this name; src/unnamed/arm9/0204/func_02040c34.c spells it data_020a1fc0+0x440. */
 WM5_BAND(".dsstate$ymp3s0010", data_020a2400, 4) = { 0 };
-/* +0x0444  src/func_020412f0.c writes a word here per message slot. */
+/* +0x0444  src/unnamed/arm9/0204/func_020412f0.c writes a word here per message slot. */
 WM5_BAND(".dsstate$ymp3s0011", data_020a2404, 4) = { 0 };
-/* +0x0448  one byte, and src/func_020412f0.c stores a byte to it by name. */
+/* +0x0448  one byte, and src/unnamed/arm9/0204/func_020412f0.c stores a byte to it by name. */
 WM5_BAND(".dsstate$ymp3s0012", data_020a2408, 1) = { 0 };
 /* +0x0449  0x1bb7 to the next ROM symbol. NOT 4-aligned on the DS either --
    the ROM symbol really is at an odd address, which is why the whole run is
-   align(1). src/func_020412f0.c's byte-triple store is the reader. */
+   align(1). src/unnamed/arm9/0204/func_020412f0.c's byte-triple store is the reader. */
 WM5_BAND(".dsstate$ymp3s0013", data_020a2409, 0x1bb7) = { 0 };
 /* +0x2000  0xb80 to data_020a4b40. MOVED HERE from hal/comms_seam.cpp's
    ".dsstate$ywm". That file hosted it standing alone on the ground that a
    relocation sweep of config/arm9/relocs.txt over its span returns exactly two
    ROM functions, func_02040a5c and func_02040a84. The sweep is correct and the
-   conclusion was not: src/func_02040c34.c reaches these bytes by POINTER
+   conclusion was not: src/unnamed/arm9/0204/func_02040c34.c reaches these bytes by POINTER
    ARITHMETIC off data_020a1fc0, which a relocation sweep cannot see, and its
    third work node (data_020a1fc0 + 0x1e80 .. + 0x2b40) covers most of them.
    The two accessors' own invariant is untouched by the move -- they read and
@@ -333,17 +333,17 @@ WM5_BAND(".dsstate$ymp3s0014", data_020a3fc0, 0xb80) = { 0 };
     extern "C" __declspec(allocate(sec)) __declspec(align(4))     \
     unsigned char name[size]
 
-/* 0x020a0f88, 4, bss. src/func_02040c34.c:57 clears it. */
+/* 0x020a0f88, 4, bss. src/unnamed/arm9/0204/func_02040c34.c:57 clears it. */
 WM5_TAIL(".dsstate$ywmf00", data_020a0f88, 4) = { 0 };
-/* 0x020a0f8c, 4, bss. src/func_020412f0.c's case-0xd counter: sixty frames
+/* 0x020a0f8c, 4, bss. src/unnamed/arm9/0204/func_020412f0.c's case-0xd counter: sixty frames
    without a served read and it calls func_0204175c, the force-wakeup. */
 WM5_TAIL(".dsstate$ywmf01", data_020a0f8c, 4) = { 0 };
-/* 0x02082158, 0x20, kind:data. src/func_020658c0.c does
+/* 0x02082158, 0x20, kind:data. src/unnamed/arm9/0206/func_020658c0.c does
    CpuCopy8(a2, node + 8, 0x20) with this as a2. Thirty-two zero bytes in the
    cartridge image; read out rather than assumed. */
 WM5_TAIL(".dsstate$ywmf02", data_02082158, 0x20) = { 0 };
 /* 0x02099e24, 0x48, kind:data. The WFS force-wakeup message string; see the
-   header. src/func_0204175c.c passes its address to the game-card handler at
+   header. src/unnamed/arm9/0204/func_0204175c.c passes its address to the game-card handler at
    data_0209a03c, which config/arm9/relocs.txt resolves to func_02057e30. */
 WM5_TAIL(".dsstate$ywmf03", data_02099e24, 0x48) = {
     0x57, 0x46, 0x53, 0x69, 0x5f, 0x46, 0x6f, 0x72, 0x63, 0x65, 0x57, 0x61,
@@ -373,7 +373,7 @@ WM5_TAIL(".dsstate$ywmf03", data_02099e24, 0x48) = {
 //                  the sixteen 0x68-byte entries and stores the callback.
 //   func_02065234  refused as "the child's copy of the same". ANSWERED the
 //                  same way, on the child's arm.
-//   func_02065050  refused as one of "the two guards src/func_020417d0.c
+//   func_02065050  refused as one of "the two guards src/unnamed/arm9/0204/func_020417d0.c
 //   func_020650d8  calls ... both forward into the band". ANSWERED: both
 //                  forward into func_020654d0 / func_02065500 -> func_02063ea8
 //                  for real. They remain UNENTERED, for the reason the refusal
@@ -435,7 +435,7 @@ int wm5_band_check(void)
     // AND THE SECOND GROUPED RUN, rung W7's (run link100, lane WM8): the
     // 0x02063E-0x020655 layer's 0x854-byte object, hosted as data_020a94d4
     // (".dsstate$ywmd18a", 0x9c) followed by data_020a9570 ("$ywmd19", 0x7b8).
-    // src/func_020652fc.c's sixteen-iteration loop walks from the first and
+    // src/unnamed/arm9/0206/func_020652fc.c's sixteen-iteration loop walks from the first and
     // its table runs to the end of the second, so a gap between them is the
     // same class of defect the six rows above check for.
     if ((long)(data_020a9570 - data_020a94d4) != 0x9c) {
@@ -464,11 +464,11 @@ Wm5BandCheck g_wm5_band_check;
 // bytes, for the SECOND created thread. It is a one-shot driven from
 // hal/wm_arm7.cpp's port_arm7_wireless_tick (the host ARM7's turn, which runs
 // at the ARM9's yield points), because that is the first owned code that runs
-// after src/func_02042200.c has created the thread and the ROM's own
+// after src/unnamed/arm9/0204/func_02042200.c has created the thread and the ROM's own
 // reschedule has entered it.
 //
 // Rungs, in the order thread_create_proof.py's own verdict names them:
-//   created   the record data_020a15e4 carries exactly what src/func_02058200.c
+//   created   the record data_020a15e4 carries exactly what src/unnamed/arm9/0205/func_02058200.c
 //             writes for THIS thread -- entry pc + 4 = func_02042254 + 4, the
 //             exit thunk &func_020581a8 at +0x3c, the stack span
 //             [data_020a11e4, data_020a11e4 + 0x400) with the two guard words
@@ -477,9 +477,9 @@ Wm5BandCheck g_wm5_band_check;
 //             rise in the scheduler's adoption and entry counters across the
 //             creation, plus the ROM's own state word.
 //   slept     the thread's state word (+0x64) is 0 again, which is what
-//             src/OS_SleepThread.c leaves after src/func_02042254.c's
+//             src/OS_SleepThread.c leaves after src/unnamed/arm9/0204/func_02042254.c's
 //             `OS_SleepThread(0)` at 0x020422D0.
-//   woken     func_02058048(data_020a15e4) -- src/func_020423c8.c's whole body,
+//   woken     func_02058048(data_020a15e4) -- src/unnamed/arm9/0204/func_020423c8.c's whole body,
 //             the ROM's own wake for this thread -- puts it back on the
 //             scheduler and the reschedule switches to it. Ends where it
 //             started, parked, because nothing has pushed work.
@@ -505,10 +505,10 @@ uint32_t fn_addr(void (*f)(void))
     return static_cast<uint32_t>(reinterpret_cast<uintptr_t>(f));
 }
 
-const uint32_t kGuardBase = 0x7bf9dd5bu;   // src/func_02058200.c, str r2,[r1]
-const uint32_t kGuardTop  = 0xfddb597du;   // src/func_02058200.c, str r1,[r0,#-4]
-const uint32_t kStack     = 0x400u;        // src/func_02042200.c's 5th argument
-const uint32_t kPrio      = 0x0fu;         // src/func_02042200.c's 6th argument
+const uint32_t kGuardBase = 0x7bf9dd5bu;   // src/unnamed/arm9/0205/func_02058200.c, str r2,[r1]
+const uint32_t kGuardTop  = 0xfddb597du;   // src/unnamed/arm9/0205/func_02058200.c, str r1,[r0,#-4]
+const uint32_t kStack     = 0x400u;        // src/unnamed/arm9/0204/func_02042200.c's 5th argument
+const uint32_t kPrio      = 0x0fu;         // src/unnamed/arm9/0204/func_02042200.c's 6th argument
 
 int g_census_done;
 unsigned long long g_ad0, g_en0, g_sw0, g_rj0, g_nc0;
@@ -525,7 +525,7 @@ extern "C" void port_wm5_worker_census(void)
         g_baseline_taken = 1;
     }
 
-    // Nothing to census until src/func_02042200.c has run. Its own signature
+    // Nothing to census until src/unnamed/arm9/0204/func_02042200.c has run. Its own signature
     // in the record is the entry pc, and it is zero until then.
     const uint32_t pc4 = rec32(0x40);
     if (pc4 == 0) return;
@@ -600,7 +600,7 @@ extern "C" void port_wm5_report(void)
     const unsigned role = data_020a0f04[0];
     const int created = (int)(rec32(0x40) != 0);
     // What the number MEANS on this window, spelled out next to it. Only the
-    // parent's arm of src/func_02040c34.c reaches func_02042200; the child's
+    // parent's arm of src/unnamed/arm9/0204/func_02040c34.c reaches func_02042200; the child's
     // arm ends at func_02065234, and a solo run never enters func_02040c34 at
     // all. So worker_created=0 is the CORRECT reading on a child and on a solo
     // run, and a miss only on a parent.
@@ -636,29 +636,29 @@ extern "C" void port_wm5_report(void)
 // counts the ROM's own effects.
 //
 // Layout of the object, all offsets from data_020a94d4 (= 0x020A94D4):
-//     +0x000   the layer's own state word (src/func_02063ea8.c reads it)
+//     +0x000   the layer's own state word (src/unnamed/arm9/0206/func_02063ea8.c reads it)
 //     +0x008   the peer bitmap (u16)
-//     +0x148   the argument src/func_020652fc.c / src/func_02065234.c store
+//     +0x148   the argument src/unnamed/arm9/0206/func_020652fc.c / src/unnamed/arm9/0206/func_02065234.c store
 //     +0x1d4   sixteen 0x68-byte entries, running to +0x854 = 0x020A9D28
-//   entry i:  +0x00  src/func_02063ea8.c writes 1 on entry and 2 when it banks
-//             +0x03  the byte src/func_020652fc.c's sixteen-iteration loop
+//   entry i:  +0x00  src/unnamed/arm9/0206/func_02063ea8.c writes 1 on entry and 2 when it banks
+//             +0x03  the byte src/unnamed/arm9/0206/func_020652fc.c's sixteen-iteration loop
 //                    clears (p + 0x1d7 with p = base + i * 0x68)
-//             +0x24  the sub-record src/func_020647a4.c / src/func_020647d8.c
+//             +0x24  the sub-record src/unnamed/arm9/0206/func_020647a4.c / src/unnamed/arm9/0206/func_020647d8.c
 //                    walk, whose +0x10 is func_020647a4's own received counter
 //
 // WHAT EACH FIELD PROVES:
-//   up            data_020a94c0 == 1. Only src/func_020652fc.c and
-//                 src/func_02065234.c write it, and both were faced until
+//   up            data_020a94c0 == 1. Only src/unnamed/arm9/0206/func_020652fc.c and
+//                 src/unnamed/arm9/0206/func_02065234.c write it, and both were faced until
 //                 rung W7, so a 1 here IS the entry of one of them.
 //   arg148        the value that same body stored, which says which arm ran:
 //                 func_020652fc stores its third argument, func_02065234 the
 //                 only one it has.
-//   started/banked  how many of the sixteen entries carry src/func_02063ea8.c's
+//   started/banked  how many of the sixteen entries carry src/unnamed/arm9/0206/func_02063ea8.c's
 //                 own 1 or 2 at +0x00 -- its entry count, and with it the entry
-//                 count of src/func_020654d0.c, src/func_02065500.c and
+//                 count of src/unnamed/arm9/0206/func_020654d0.c, src/unnamed/arm9/0206/func_02065500.c and
 //                 everything they reach.
 //   received      the sum of the sixteen +0x24+0x10 words, which only
-//                 src/func_020647a4.c increments.
+//                 src/unnamed/arm9/0206/func_020647a4.c increments.
 // ---------------------------------------------------------------------------
 // RUNG W8, EXTENDED BY LANE WM9: the fan-out's own writer counts, so the
 // receive census and the ownership claim are read on ONE line. Defined in

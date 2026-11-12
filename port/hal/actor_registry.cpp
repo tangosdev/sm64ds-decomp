@@ -42,11 +42,11 @@
 // __fastcall faces (unmatched/func_02043fdc_hostcopy.cpp, each face carrying
 // the per-actor quarantine), the ROM's sinit copies them at Entry, and the
 // lists are walked by the matched src/func_02043fdc.cpp and
-// src/func_020441cc.cpp through /vmg /vmm member pointers, which are the ROM's
+// src/unnamed/arm9/0204/func_020441cc.cpp through /vmg /vmm member pointers, which are the ROM's
 // eight-byte pairs (the hostcopy file's header).
 //
 // THE FRAME IS THE ROM'S NOW (run linkfull, lane K1LOOP): both host loops
-// call src/func_02044120.c itself at phase 4 (port_actor_frame below), all
+// call src/unnamed/arm9/0204/func_02044120.c itself at phase 4 (port_actor_frame below), all
 // five walks in the ROM's order. It used to be SPLIT -- 4/2/3 as a "tick",
 // 5 inside the host's render frame, 1 after the level draw -- because the
 // render walk has to land in an open geometry buffer with this frame's view.
@@ -305,11 +305,11 @@ static int port_host_abi_blocked(unsigned id)
 extern "C" const char *port_actor_class_name(unsigned id);
 
 /* THE OVERLAY LOAD THIS HOOK STANDS IN FOR (run hunt1, lane MGMENU1).
-   The ROM's occupant of data_020a4b58 is func_0201a694 (src/func_0201a694.c,
-   seated by src/func_0201a5cc.c). For a scene id it asks GetSceneOverlayID
+   The ROM's occupant of data_020a4b58 is func_0201a694 (src/unnamed/arm9/0201/func_0201a694.c,
+   seated by src/unnamed/arm9/0201/func_0201a5cc.c). For a scene id it asks GetSceneOverlayID
    and, for a minigame (0x169..0x186, IsMinigameActorID's range), calls
    func_0201a798(&overlay_6), which loads ov004 and then ov006
-   (src/func_0201a798.c). The DS overlay load runs each overlay's static-init
+   (src/unnamed/arm9/0201/func_0201a798.c). The DS overlay load runs each overlay's static-init
    range, so all 35 ov004/ov006 constructors have run before the factory is
    reached. One of them, __sinit_ov004_020b948c, constructs
    dScMgBase_c::graphCallback_c in sMgGraphCallback (its vtable word is
@@ -1231,7 +1231,7 @@ extern "C" void port_actor_scene_pass(void)
 
 // ---- THE ROM'S ACTOR FRAME, WHOLE (run linkfull, lane K1LOOP) --------------
 //
-// src/func_020197b8.c phase 4 is one statement, `func_02044120();`, and this is
+// src/unnamed/arm9/0201/func_020197b8.c phase 4 is one statement, `func_02044120();`, and this is
 // where both host loops make it: tests/walk_window.cpp's level loop and
 // hal/scene_boot.cpp's port_scene_tick, each at the point the ROM's loop
 // reaches phase 4 (after phase 3, the scene request). func_02044120 walks

@@ -8,7 +8,7 @@ struct Thing {
 };
 
 extern void *func_ov007_020c3df4(int heap, int size);
-/* Takes the block to clear. src/func_ov007_020c78b0.c reads it out of r0 and
+/* Takes the block to clear. src/unnamed/ov007/func_ov007_020c78b0.c reads it out of r0 and
    hands it to MultiStore_Int; on ARM the allocation below is still in r0 at
    the branch, so spelling the argument costs no instruction and the TU keeps
    its bytes. Declared `(void)` and called with nothing, this reads an unwritten

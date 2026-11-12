@@ -89,7 +89,7 @@
 //     id out of the bitmask at 0x027FFFB0 -- also unmapped.
 //   * it calls func_02060890, the card driver's own init.
 //
-// so func_0205d96c is FACED here, spelled as close to src/func_0205d96c.c as a
+// so func_0205d96c is FACED here, spelled as close to src/unnamed/arm9/0205/func_0205d96c.c as a
 // host can be: the same globals in the same order, the same four calls into the
 // ROM's own code, and the two unmapped reads replaced by the same four words
 // taken from the cartridge at catalog-generate time.
@@ -627,7 +627,7 @@ unsigned long long fnv1a64(const unsigned char *p, u32 n)
 
    WHEN IT HASHES. port_nitrofs_read is synchronous. func_0205db2c returns 6
    and finishes on the ROM's card thread, which outranks the thread that
-   asked (priority 4, set by src/func_0206002c.c), so the wake inside
+   asked (priority 4, set by src/unnamed/arm9/0206/func_0206002c.c), so the wake inside
    func_02060228 runs the whole transfer -- completion callback func_0205db78
    included -- before func_0205db2c returns here. The wrapper reads the
    driver's busy bit (data_020a8180 + 0x34, bit 2) to show that rather than
@@ -658,7 +658,7 @@ extern "C" {
 
 /* ---- smoke_player's archive read function ---------------------------------
    ON walk_window AND walk_window_hires THIS IS NO LONGER THE READ FUNCTION
-   (run linkfull, lane S4CARD). Those two targets compile src/func_0205d96c.c
+   (run linkfull, lane S4CARD). Those two targets compile src/unnamed/arm9/0205/func_0205d96c.c
    without the `func_0205db2c=port_nitrofs_read` rename that stood in
    port/CMakeLists.txt, so FS_Init registers the ROM's own func_0205db2c: one
    call to func_02060918, which hands the transfer to the ROM's card thread
@@ -855,7 +855,7 @@ int port_nitrofs_proc(void *file, int command)
 }
 
 /* ---- FACE: FS_Init (ROM: func_0205d96c) -----------------------------------
-   Line for line against src/func_0205d96c.c, with the three unmapped or
+   Line for line against src/unnamed/arm9/0205/func_0205d96c.c, with the three unmapped or
    card-bound pieces named where they are dropped. Everything that remains is a
    call into the ROM's own matched code. smoke_player's alone (hal/
    nitrofs_face.cpp); it registers the synchronous port_nitrofs_read, which is
@@ -963,7 +963,7 @@ void port_nitrofs_header_words(u32 *fnt_off, u32 *fnt_size,
 
    RETIRED, run link100 wave 15 lane SEAT15C. Everything above stays true of
    the ARM and of the source this face was written against; it is no longer
-   true of src/func_02018e3c.c, which today reads
+   true of src/unnamed/arm9/0201/func_02018e3c.c, which today reads
 
        extern int func_0205d644(void *out_file_id, const char *path);
        int func_02018e3c(void *out_file_id, const char *path){
@@ -1054,7 +1054,7 @@ void port_nitrofs_probe_after_boot(void)
    func_0205cc80 packed the name out of four zero bytes and registered the
    archive under name word 0. Every by-name lookup of "rom" then walked the
    list for a key nobody holds and answered null, and the VS radio bring-up's
-   header-region reads (src/func_020424c0.c through func_0205d5e8) dereferenced
+   header-region reads (src/unnamed/arm9/0204/func_020424c0.c through func_0205d5e8) dereferenced
    that null: the host's game faulted in func_0205cdf4 the moment a lobby VS
    match opened its session. A dev build bakes the bytes, so the key was right
    and nothing showed. walk_window calls this right after port_romdata_load;
@@ -1081,14 +1081,14 @@ namespace {
    THE ARGUMENT IS -1, AND IT IS THE PORT'S CHOICE, NOT THE CARTRIDGE'S. An
    older note here said the DS ends up with -1; it does not. func_0205d89c has
    two callers: func_02018aa4 passes 2 and func_02040c34 passes -1. On a
-   cartridge boot src/func_0201a054.c:60-61 calls func_02018aa4 (its `if (!r4)`
+   cartridge boot src/unnamed/arm9/0201/func_0201a054.c:60-61 calls func_02018aa4 (its `if (!r4)`
    arm, r4 being the download-play word at 0x027ffc40), so the DS runs
    FS_Init(2): card DMA on channel 2, completion on IRQ 19. func_02040c34 is
-   the wireless system init (src/func_02040c34.c:60), not the cartridge boot.
+   the wireless system init (src/unnamed/arm9/0204/func_02040c34.c:60), not the cartridge boot.
 
    THE PORT KEEPS -1 ON PURPOSE (stage A of run linkfull lane S4CARD's card
-   model). With a channel above 3, src/func_02060918.c skips the DMA-channel
-   stop and src/func_02060b64.c's DMA test is false, so every card read takes
+   model). With a channel above 3, src/unnamed/arm9/0206/func_02060918.c skips the DMA-channel
+   stop and src/unnamed/arm9/0206/func_02060b64.c's DMA test is false, so every card read takes
    the CPU path -- ROMCTRL and the data port, which ntr/card.cpp models -- with
    no DMA and no IRQ 19. FS_Init(2) in the ROM's order, with card-timed DMA
    and IRQ 19 delivered, needs a DMA model first; it is stage B, not built.

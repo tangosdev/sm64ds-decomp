@@ -1,13 +1,13 @@
 // THE WIDE CONDUCTOR. Run vs16, hosted-conductor follow-up.
 //
-// src/func_0203ea5c.c -- the ROM's own wireless exchange and unpack loop -- is
+// src/unnamed/arm9/0203/func_0203ea5c.c -- the ROM's own wireless exchange and unpack loop -- is
 // what stopped a fifth player playing: nine hard-coded `< 4` bounds
 // (:310, :326, :347, :352, :367, :403, :428, :471, :499). It is byte-matched
 // ROM code, so it cannot be edited; it is HOSTED instead, the way the port
 // hosts many functions, and this file is that hosting.
 //
 // THE DISPATCH, AND WHY THE NARROW PATH IS THE REAL TU. port/CMakeLists.txt
-// compiles src/func_0203ea5c.c with `func_0203ea5c=func_0203ea5c_narrow`, the
+// compiles src/unnamed/arm9/0203/func_0203ea5c.c with `func_0203ea5c=func_0203ea5c_narrow`, the
 // same per-source rename a dozen actor TUs already use. The matched TU stays
 // in the link, byte for byte, and `func_0203ea5c` here is a two-line gate in
 // front of it: a session of four or fewer runs the ROM's own code -- not a
@@ -19,7 +19,7 @@
 //
 // THE WIDE COPY IS A TRANSCRIPTION, NOT A REWRITE. Same locals, same
 // staging, same switch, same gotos, same store order -- diffable against
-// src/func_0203ea5c.c line by line. Exactly one thing changes: SEVEN of the
+// src/unnamed/arm9/0203/func_0203ea5c.c line by line. Exactly one thing changes: SEVEN of the
 // nine bounds walk the per-slot RECORD run (data_020a1154, 0x24 stride) and
 // now walk all sixteen records the host gives that run
 // (hal/camera_bridges.cpp). Sixteen is the ARRAY's width, mirroring the ROM's
@@ -45,7 +45,7 @@
 // at its tail (hal/camera_bridges.cpp) so this file's walks and the ROM's own
 // slot-indexed readers (func_0203d950, func_0203dabc, GetAngleToCamera) have
 // records to land on; the seam's open face zeroing records 4..15 at
-// session-arm (hal/comms_seam.cpp) the way src/func_0203db64.c:64 zeroes
+// session-arm (hal/comms_seam.cpp) the way src/unnamed/arm9/0203/func_0203db64.c:64 zeroes
 // 0..3; and the width getter (comms_loopback.cpp). The transport side --
 // sixteen blocks on wire v3, func_0204068c bounded at kCommsMaxPlayers --
 // has been wide since the vs16 mainline.
@@ -80,7 +80,7 @@ enum { kRecs = kPortMaxPlayers };
 
 extern "C" {
 
-// The record, exactly as src/func_0203ea5c.c lays it out over the 0x24 run.
+// The record, exactly as src/unnamed/arm9/0203/func_0203ea5c.c lays it out over the 0x24 run.
 typedef struct {
     s32 unk0;
     u8 unk4;
@@ -101,7 +101,7 @@ typedef struct {
 
 static_assert(sizeof(Rec) == 0x24, "the record is the ROM's 0x24 stride");
 
-// The callees, declared as src/func_0203ea5c.c declares them (its declaration
+// The callees, declared as src/unnamed/arm9/0203/func_0203ea5c.c declares them (its declaration
 // fixes D1 and D3 included), so the wide copy and the narrow TU present the
 // same shapes to the same link.
 extern void func_020408b0(s32 a);
@@ -166,7 +166,7 @@ extern s16 data_020a0f2c;
 extern u16 data_020a0f30;
 extern u8 data_020a0efc;
 
-// The narrow arm: src/func_0203ea5c.c itself, under the build's rename.
+// The narrow arm: src/unnamed/arm9/0203/func_0203ea5c.c itself, under the build's rename.
 extern void func_0203ea5c_narrow(void);
 
 }  // extern "C"
@@ -192,7 +192,7 @@ void warn_info_mode_armed_wide(void)
 // ---------------------------------------------------------------------------
 // THE BOUND-EXPIRY INSTRUMENT. Run link100, lane VS7.
 //
-// src/func_0203ea5c.c's wait is bounded at 0x4B0 turns (0x12C once
+// src/unnamed/arm9/0203/func_0203ea5c.c's wait is bounded at 0x4B0 turns (0x12C once
 // data_020a0ef0 is set, which nothing on this port's session path sets), and
 // when the bound runs out the tail below stores data_020a0f04 = 0 -- the drop
 // to solo. Before this lane the port could see THAT it happened

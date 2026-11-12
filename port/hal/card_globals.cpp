@@ -11,11 +11,11 @@
 // symbol, not the width one caller touches:
 //
 //   data_020a8780  0x220  the CPU read path's object. +0x00 the page reader
-//                         (src/func_02060890.c stores func_02060a64 there and
-//                         src/func_02060a30.c calls through it), +0x04 the
-//                         ROMCTRL word src/func_02060b64.c builds, +0x08 the
+//                         (src/unnamed/arm9/0206/func_02060890.c stores func_02060a64 there and
+//                         src/unnamed/arm9/0206/func_02060a30.c calls through it), +0x04 the
+//                         ROMCTRL word src/unnamed/arm9/0206/func_02060b64.c builds, +0x08 the
 //                         ROM address of the page cached at +0x20, +0x20 that
-//                         page, 0x200 bytes (src/func_02060a64.c, func_02060ebc.c).
+//                         page, 0x200 bytes (src/unnamed/arm9/0206/func_02060a64.c, func_02060ebc.c).
 //                         0x020a8780 to data_020a89a0.
 //   data_020a89a0  4      IRQ::GameCardIREQMCHandler's "fired" word. The next
 //                         symbol, data_020a89a4 (the handler's callback), is
@@ -37,7 +37,7 @@
 W28_CARD_RUN(".dsstate$yzzcard00", data_020a8780, 0x220, 32);
 W28_CARD_RUN(".dsstate$yzzcard01", data_020a89a0, 4, 4);
 
-// The flat name src/func_02061138.c installs as the IRQ-20 handler, onto the
+// The flat name src/unnamed/arm9/0206/func_02061138.c installs as the IRQ-20 handler, onto the
 // matched namespace function src/_ZN3IRQ21GameCardIREQMCHandlerEv.cpp defines
 // (ntr/runtime.cpp's IRQ rows are the same bridge). A name bridge only: the
 // function takes nothing and returns nothing, so there is no receiver to carry.
@@ -50,11 +50,11 @@ extern "C" {
 //   assembles a coprocessor read. The answer is the base the ROM's own crt0
 //   wrote there: `ldr r0, =0x023c0000` at 0x02004a60 and `mcr p15, 0, r0, c9,
 //   c1, 0` at 0x02004a68 (config/arm9/dtcm starts at 0x023c0000), masked to
-//   0xfffff000 as the body does. Its one caller here is src/func_02060b64.c's
+//   0xfffff000 as the body does. Its one caller here is src/unnamed/arm9/0206/func_02060b64.c's
 //   card-DMA arm, which never runs while FS_Init's channel argument is -1.
 unsigned int _ZN4CP1518GetDTCMBaseAddressEv(void) { return 0x023c0000u; }
 
-// PORT_HOST_ABI: an ADDRESS, not a body. src/func_02060b64.c compares a
+// PORT_HOST_ABI: an ADDRESS, not a body. src/unnamed/arm9/0206/func_02060b64.c compares a
 //   transfer's end against `(u32)&func_01ff8000`, the ITCM base (config/arm9/
 //   itcm starts at 0x01ff8000 with this symbol), to keep card DMA out of ITCM.
 //   The port has no ITCM at that address and the comparison is inside the same

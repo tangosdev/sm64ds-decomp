@@ -270,7 +270,7 @@ int exit_gate(const char **why, bool *hard) {
 }
 
 // ---- names from the ROM's own message bank -------------------------------------------------------------------------------
-// The bank's text is a glyph-index stream (src/func_0201b7cc.c); decoded to ASCII the way the pause menu's star tracker does
+// The bank's text is a glyph-index stream (src/unnamed/arm9/0201/func_0201b7cc.c); decoded to ASCII the way the pause menu's star tracker does
 // (hal/menu_recipe_pause.cpp msg_text). Course title = message 406 + course, star name = 0x1b4 + course * 7 + (star - 1).
 int msg_text(int id, char *out, int cap) {
     out[0] = 0;

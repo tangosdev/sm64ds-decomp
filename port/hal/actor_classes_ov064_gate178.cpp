@@ -312,7 +312,7 @@ static int __fastcall aml_kill(void *s, void *)
    +0x124, Model +0xd4, then the Actor base D2. D0 also frees on the game heap
    (D1's caller frees itself after the dispatch, so D1 stops before Deallocate). */
 /* SLOT 16 IS THE ROM'S OWN D1 NOW (run linkfull wave 27, lane V3B). The note
-   above predates src/_ZN12MetalNetLiftD1Ev.cpp's conversion: it is a real C++
+   above predates port/unmatched/hostarm/_ZN12MetalNetLiftD1Ev.cpp's conversion: it is a real C++
    destructor today, spelling no shared placeholder table, and its _MSC_VER arm
    defines _ZN12MetalNetLiftD1Ev as the one host destructor the compiled D0
    file defines (??1MetalNetLift). That destructor tears down the same three

@@ -151,7 +151,7 @@ int  port_quarantine_is_frozen(void *actor);  /* same TU: is this actor frozen?
                                        note on its definition for why a
                                        teardown-side predicate that knew only the
                                        instance leg reopened the soft-lock. */
-/* the ROM's own list primitives (src/func_0203b3c0.c, src/func_0203b394.c):
+/* the ROM's own list primitives (src/func_0203b3c0.c, src/unnamed/arm9/0203/func_0203b394.c):
    scene-tree unlink, and the scene-tree pre-order successor. The drop at the
    tail of the teardown needs both -- see the scene-tree pass there. */
 int   func_0203b3c0(void *list, void *node);
@@ -2574,10 +2574,10 @@ extern "C" int port_level_change_poll(void)
  * dScene_c::AfterCleanupResources clears data_02092660, the "a scene has
  * spawned" latch, before fBase_c::AfterCleanupResources destroys the object.
  * With the latch clear and scene 8 pending, Scene::SpawnIfNecessary spawns
- * dScGameOver_c. Its CONTINUE row ends in StartFile(1, 0) (src/func_0202ae74.c)
+ * dScGameOver_c. Its CONTINUE row ends in StartFile(1, 0) (src/unnamed/arm9/0202/func_0202ae74.c)
  * -- a level request for the castle grounds and scene 3 -- and its QUIT row in
  * StartSceneFade(1, 0, 0), the title and its file select, which ends in the
- * same StartFile when a file is picked (src/_ZN9dScDSMT_c8BehaviorEv.cpp).
+ * same StartFile when a file is picked (port/unmatched/hostarm/_ZN9dScDSMT_c8BehaviorEv.cpp).
  *
  * WHAT THE PORT DID: nothing between the mark and the abort. Its level path has
  * no Scene::SpawnIfNecessary (the change poll sits in that seat), so nothing

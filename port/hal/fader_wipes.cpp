@@ -399,9 +399,9 @@ struct HalFaderWipe {
        which is exactly the frame the call site builds. Run link100, lane
        SINGLES2; measured by lane SINGLES (out/SINGLES/handoff_BOOT1.md).
 
-       The other two are src/FUN_020299f4.cpp (slot 0x10, from
+       The other two are src/unnamed/arm9/0202/FUN_020299f4.cpp (slot 0x10, from
        Player::St_DeadPit_Init on the local player's own pit death in a VS
-       match) and src/FUN_02029980.cpp (slot 0x0c, from Player::St_Respawn_Main,
+       match) and src/unnamed/arm9/0202/FUN_02029980.cpp (slot 0x0c, from Player::St_Respawn_Main,
        the respawn after it). Both reach wipe 6 (data_0209f324 + 0x240) through
        a shadow struct of plain virtuals, which MSVC compiles __thiscall: the
        receiver in ecx, (0x1e, 0) pushed, the CALLEE to take them back. Against
@@ -745,7 +745,7 @@ DSSTATE_END
    name them. The trampoline's discriminator is the first STACK word, which
    the language fixes: a __cdecl caller (dScene_c::BeforeBehavior's
    FaderVTable) pushed the receiver there, a __thiscall caller
-   (src/FUN_020299f4.cpp, src/FUN_02029980.cpp) pushed the frame count, and a
+   (src/unnamed/arm9/0202/FUN_020299f4.cpp, src/unnamed/arm9/0202/FUN_02029980.cpp) pushed the frame count, and a
    frame count is never one of the eight objects this file hands out. */
 extern "C" int __cdecl port_hal_wipe_is_object(const void *p)
 {
@@ -903,10 +903,10 @@ extern "C" void _ZN9dFdWipe_c14LoadAndSetFileEt(void *thiz, unsigned short fileI
 /* ---- THE ROM'S FRAME PHASE 2, AND THE ONE HOST STEP LEFT BESIDE IT --------
    run linkfull, lane RESET2.
 
-   src/func_020197b8.c, the cartridge's frame loop, runs
+   src/unnamed/arm9/0201/func_020197b8.c, the cartridge's frame loop, runs
        data_0209d50c = 2;   func_02019390();
    between the lid machine (0xb) and the input steps (0x16 / 0x17), so before
-   phase 3 spawns and phase 4 ticks. src/func_02019390.c is
+   phase 3 spawns and phase 4 ticks. src/unnamed/arm9/0201/func_02019390.c is
 
        if (data_0209d4a8 && data_0209d4a8->vt[0](data_0209d4a8) == 0) {
            func_0202345c(); func_02018efc(); return;         the EARLY arm
@@ -928,7 +928,7 @@ extern "C" void _ZN9dFdWipe_c14LoadAndSetFileEt(void *thiz, unsigned short fileI
    WHAT THE ROM'S BODY DECIDES THAT THE PIECES DID NOT. Word 0's answer is used:
    the title's block (dScDSMT_c::graphCallback_c::GraphCallback0) and dScMB_c's
    answer 0, so on those scenes the cartridge skips OAM::Reset, the GX reset and
-   the in-motion fader step every frame, exactly as src/func_02019390.c says;
+   the in-motion fader step every frame, exactly as src/unnamed/arm9/0201/func_02019390.c says;
    every other block this port can hold answers 1 (the thirty-two minigame
    blocks through dScMgBase_c's forwarder, scene 6's func_ov102_0214d1b0, the
    Stage's dGraph_c body), and on a level the block is the Stage's own
@@ -1281,7 +1281,7 @@ int port_fader_blend_state(int *evy, int *toWhite)
  * writes 0x4000050/54 and 0x4001050/54 together), so for a long time "read
  * engine A and apply it to both screens" and "read each engine" were the same
  * answer, and the first one was the one the port had. The title's opening
- * screen is where they part: func_ov007_020b7138 (src/func_ov007_020b7138.c)
+ * screen is where they part: func_ov007_020b7138 (src/unnamed/ov007/func_ov007_020b7138.c)
  * calls G2x::SetBlendBrightness on BOTH engines with first-target 0x3f and
  * -0x10, so both go to mode 3 with EVY 16, and then only engine A is faded back
  * in. From there to the first stylus tap engine B sits at mode 3 EVY 16, fully
@@ -1378,7 +1378,7 @@ extern "C" int port_fader_blend_fine_sub(int *e256, int *toWhite) { return fader
 /* ---- THE FRAME CLOCK, data_020a0db0 (run mg12 lane SELECT) ----------------
  *
  * WHAT IT IS. One int at 0x020a0db0, incremented once per frame by the ROM's
- * own main loop -- src/func_020197b8.c, between phase 5 (func_02019404) and
+ * own main loop -- src/unnamed/arm9/0201/func_020197b8.c, between phase 5 (func_02019404) and
  * the render phases:
  *
  *     data_0209d50c = 5; func_02019404();
@@ -1392,8 +1392,8 @@ extern "C" int port_fader_blend_fine_sub(int *e256, int *toWhite) { return fader
  * this address EIGHTEEN times: `grep -r "to:0x020a0db0" config/arm9/` returns
  * 18 relocations, every one kind:load, which is one literal-pool load per body
  * that touches it. Eighteen bodies, eighteen TUs in src/, and they split
- * SIXTEEN readers to TWO writers. Both writers are src/func_020197b8.c (the
- * increment above) and src/func_0203b684.c (the reset that zeroes it and
+ * SIXTEEN readers to TWO writers. Both writers are src/unnamed/arm9/0201/func_020197b8.c (the
+ * increment above) and src/unnamed/arm9/0203/func_0203b684.c (the reset that zeroes it and
  * data_020a0db4 together), and NEITHER IS LINKED into this program -- which is
  * the whole of why the counter never moved.
  *

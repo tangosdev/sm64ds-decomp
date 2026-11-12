@@ -16,7 +16,7 @@
  * tables."
  *
  * THAT SENTENCE IS TRUE AND THE REASON IS ONE DELEGATED CONSTRUCTOR.
- * src/d_s_mg_snowball.cpp (0x0212a520, 12 instructions plus a one-word
+ * src/minigames/d_s_mg_snowball.cpp (0x0212a520, 12 instructions plus a one-word
  * pool = 13 = 0x34/4) writes no vtable at all.  It allocates 0xc59c through
  * func_02043444, returns early on a null, and then calls dScMgSnowball_c_Construct
  * with the object in r0 and returns that callee's value:

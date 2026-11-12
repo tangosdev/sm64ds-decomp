@@ -210,7 +210,7 @@ extern unsigned char g_profile_KURIKING_VANISH[];    /* mount, +4 = 199 */
 
 /* the host vtable, excluded from the mount along with its own prologue.
    THIRTY-ONE slots. The name is C linkage because src/_ZN8GoombossD1Ev.cpp and
-   src/_ZN8GoombossD0Ev.cpp are .c files that spell it `extern int
+   port/unmatched/hostarm/_ZN8GoombossD0Ev.cpp are .c files that spell it `extern int
    _ZTV8Goomboss[]` / `extern void *_ZTV8Goomboss[]`, and both factories store
    it as `void **`. One host object, three spellings, one decorated name. */
 DSSTATE_BEGIN

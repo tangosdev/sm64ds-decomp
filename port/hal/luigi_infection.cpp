@@ -240,7 +240,7 @@ extern "C" void port_luigi_state_set(const int *team, int seeded)
  * LEAVES a VS match keeps his body in data_0209f394 -- hal/star_flow.cpp's
  * vs_remove_body parks it far out of the level and clears the seat's live
  * byte data_0209fc5c[k], the way the cartridge's own in-match drop does
- * (src/func_02030b58.c) -- so counting bodies counts the leaver for the rest
+ * (src/unnamed/arm9/0203/func_02030b58.c) -- so counting bodies counts the leaver for the rest
  * of the match. A survivor who left then stayed a survivor nobody could reach:
  * the Luigis could never infect "everyone", and the round ran to the clock
  * and went to the survivors even with every player still there caught.

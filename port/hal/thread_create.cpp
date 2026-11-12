@@ -3,8 +3,8 @@
 //
 // ============================ WHY A PROBE ==================================
 //
-// port/tools/linkage.py will report src/func_02058200.c, src/func_02058538.c
-// and src/func_0206002c.c as LINKED whether or not a single instruction of
+// port/tools/linkage.py will report src/unnamed/arm9/0205/func_02058200.c, src/unnamed/arm9/0205/func_02058538.c
+// and src/unnamed/arm9/0206/func_0206002c.c as LINKED whether or not a single instruction of
 // them ever executes, and that is exactly the failure this port has been
 // bitten by before: a seat that links, never runs, and reads as progress. The
 // same objection port/tools/thread_proof.py was written for applies one layer
@@ -17,7 +17,7 @@
 // flow. Nothing here fabricates state; the probe reads and then calls one ROM
 // function.
 //
-//   1. CREATED.  The record at data_020a81bc carries what src/func_02058200.c
+//   1. CREATED.  The record at data_020a81bc carries what src/unnamed/arm9/0205/func_02058200.c
 //      writes, at the offsets it writes them: a slot id whose entry in the
 //      ROM's own table data_020a6148 points BACK at the record, a priority,
 //      a stack range at +0x84/+0x88 that is exactly `top - 0x400 .. top` with
@@ -39,15 +39,15 @@
 //   3. SLEPT.  The card thread's own first act is OS_SleepThread(0) -- ROM
 //      code -- so after it is entered its state word at +0x64 is 0 and its
 //      record pointer is parked at data_020a8180 + 0xd0, which is the line
-//      src/func_020602bc.cpp writes immediately before the sleep. Control is
+//      src/unnamed/arm9/0206/func_020602bc.cpp writes immediately before the sleep. Control is
 //      back on the game context, which is what the ROM's reschedule does with
 //      a sleeping highest-priority thread.
 //
 //   4. WOKEN, THROUGH THE ROM'S RESCHEDULE. The probe calls one function and
-//      it is the ROM's: src/func_02058048.c, `IRQ off; state = 1;
-//      func_02057f54(); IRQ back`. That is the same call src/func_02060310.c
+//      it is the ROM's: src/unnamed/arm9/0205/func_02058048.c, `IRQ off; state = 1;
+//      func_02057f54(); IRQ back`. That is the same call src/unnamed/arm9/0206/func_02060310.c
 //      makes when the ARM7 answers a card command, and the same call
-//      src/func_020603c8.cpp and src/func_02060228.c make. func_02057f54 then
+//      src/unnamed/arm9/0206/func_020603c8.cpp and src/unnamed/arm9/0206/func_02060228.c make. func_02057f54 then
 //      picks the card thread (priority 4 sorts ahead of the game context's
 //      0x10), switches to it, and the card thread's loop sleeps again --
 //      so a successful wake shows up as TWO more switches and a state word
@@ -69,7 +69,7 @@
 // thread up in the ROM. If that call has not happened -- a target that does
 // not run the boot spine, or a boot that stopped earlier -- the probe makes
 // the SAME call func_0206002c makes, with func_0206002c's own arguments,
-// transcribed from src/func_0206002c.c:43, so both ends stay ROM code either
+// transcribed from src/unnamed/arm9/0206/func_0206002c.c:43, so both ends stay ROM code either
 // way. It says which of the two it did.
 //
 //   SM64DS_THREAD_CREATE_PROOF=1   run it and print the verdict line
@@ -87,7 +87,7 @@ extern "C" {
 // hal/globals_link100.cpp: the work object, the thread record 0x3c into it,
 // and the stack top 1444 bytes above the record.
 // Declared unsized on purpose: on the DS these three names are ONE object and
-// the ROM's own bodies read across the boundaries (src/func_0206002c.c stores
+// the ROM's own bodies read across the boundaries (src/unnamed/arm9/0206/func_0206002c.c stores
 // at data_020a8180 + 0xd4, which is inside data_020a81bc). hal/
 // globals_link100.cpp is what makes that layout real; this file only reads it.
 extern unsigned char data_020a8180[];
@@ -112,7 +112,7 @@ void port_thread_sched_counts(unsigned long long *adopted,
                               unsigned long long *rejected,
                               unsigned long long *nocreate);
 // Put the ROM manager's current-thread word back on the thread that is really
-// running. src/func_02057f54.c stores the PICK into data_020a6134 + 8 BEFORE
+// running. src/unnamed/arm9/0205/func_02057f54.c stores the PICK into data_020a6134 + 8 BEFORE
 // it calls ARMRestoreContext, so a refused restore -- which is the whole point
 // of the negative control -- leaves that word naming a thread nobody switched
 // to. hal/boot2_thread.cpp's own thread_proof repairs the same way and for the
@@ -127,7 +127,7 @@ namespace {
 
 const uint32_t kGuardBase = 0x7bf9dd5bu;   // func_02058200 pool 0x02058408
 const uint32_t kGuardTop  = 0xfddb597du;   // func_02058200 pool 0x02058404
-const uint32_t kCardStack = 0x400u;        // src/func_0206002c.c:43
+const uint32_t kCardStack = 0x400u;        // src/unnamed/arm9/0206/func_0206002c.c:43
 const uint32_t kCardPrio  = 4u;            // data_020a8180.f38, set two lines up
 
 inline uint32_t rec32(unsigned off) {
@@ -144,7 +144,7 @@ inline uint32_t fn_addr(void (*f)(void)) {
     return static_cast<uint32_t>(reinterpret_cast<uintptr_t>(f));
 }
 
-// Has src/func_02058200.c run over this record? The ROM's own admission test:
+// Has src/unnamed/arm9/0205/func_02058200.c run over this record? The ROM's own admission test:
 // the slot it allocated points back at the record it was given.
 bool created() {
     const uint32_t id = rec32(0x6c);
@@ -160,7 +160,7 @@ extern "C" void port_thread_create_proof(void)
 
     const char *how = "func_0206002c (the ROM's own card bring-up)";
     if (!created()) {
-        // src/func_0206002c.c's last two statements before the PXI
+        // src/unnamed/arm9/0206/func_0206002c.c's last two statements before the PXI
         // registration, verbatim, including the priority that body puts in
         // data_020a8180 + 0x38 two lines earlier. Both are ROM bodies; this
         // path exists so the probe still measures something on a target that

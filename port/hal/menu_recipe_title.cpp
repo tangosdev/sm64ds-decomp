@@ -19,14 +19,14 @@
  *   file pages (3..6)    the lower screen whole (the page IS the DS lower screen); see THE FILE PAGES below (run menu1, FILE1).
  * Wide canvases keep the same arrangement centred; nothing is stretched.
  *
- * DRIVER. NATIVE. The ROM reads the pad on every title page (src/func_ov007_020b3190.c: any non-B key
+ * DRIVER. NATIVE. The ROM reads the pad on every title page (src/unnamed/ov007/func_ov007_020b3190.c: any non-B key
  * shows its own cursor, the D-pad moves it through func_ov007_020b3708's table, a confirm key presses
  * the focused element). Only the key MEANING differs: the port's confirm is DS bit 0x0002 (jump), which
  * is the ROM's B; the ROM's confirm is A, 0x0001. menu_title_pad_map swaps them. Mouse clicks reach the
  * ROM as the stylus through the touch pieces (core H3); hover shows the port's focus outline.
  *
  * HOTSPOTS. The ROM's own element boxes through port_title_elem_boxes (hal/title_entry.cpp, the shared
- * decoder, arithmetic of src/func_ov007_020b46b0.c), with the dumped boxes as the fallback when the
+ * decoder, arithmetic of src/unnamed/ov007/func_ov007_020b46b0.c), with the dumped boxes as the fallback when the
  * scene global is not built (the layout selftest). Which ids a page shows is read off the pictures
  * (out/TITLE1/shots), not guessed from positions.
  */
@@ -282,14 +282,14 @@ int ltune(int idx, int dflt)         /* SM64DS_MENU_LOGO_TUNE=top,height,dx in c
 extern "C" {
 extern unsigned char data_020a0e40;   /* the local player's slot */
 extern int data_020a0e58[];           /* PadData[i]: {u16 held, u16 pressed} */
-extern char *data_ov007_02103360;     /* the title's element-cursor struct (src/func_ov007_020b3708.c) */
+extern char *data_ov007_02103360;     /* the title's element-cursor struct (src/unnamed/ov007/func_ov007_020b3708.c) */
 }
 static inline int *data_020a0e58_ref() { return data_020a0e58; }
 static inline int data_020a0e40_ref() { return data_020a0e40; }
 extern "C" {
 extern int (*g_port_title_draw_skip)(char *obj);
 extern int *data_ov007_0210342c;
-extern char *data_ov007_02104bd8;     /* the title's screen-fade manager (src/func_ov007_020bf690.c) */
+extern char *data_ov007_02104bd8;     /* the title's screen-fade manager (src/unnamed/ov007/func_ov007_020bf690.c) */
 }
 namespace {
 /* LOGOFADE1: the frame of the title head's animation (the head object at the title global + 0xf4, its animation at + 0x18, the frame at + 0x10
@@ -413,9 +413,9 @@ int title_skip(char *o)
     return k < 32 && ((skipk >> k) & 1);
 }
 struct TitleHookInit { TitleHookInit() { g_port_title_draw_skip = title_skip; } } g_title_hook_init;
-/* The ROM's own cursor on the main menu (src/func_ov007_020b3708.c: the cursor element is the short at the head of the
+/* The ROM's own cursor on the main menu (src/unnamed/ov007/func_ov007_020b3708.c: the cursor element is the short at the head of the
    struct data_ov007_02103360 points to; 0 = ADVENTURE, 1 = VS, 2 = REC ROOM, 7 = the wrench, 0xff = the cursor is not shown yet: the ROM
-   shows it on the first non-B key, src/func_ov007_020b3190.c), and whether it is being pressed: the DS A key (0x0001, which
+   shows it on the first non-B key, src/unnamed/ov007/func_ov007_020b3190.c), and whether it is being pressed: the DS A key (0x0001, which
    menu_title_pad_map writes into the held word) is down, or the page has already taken a choice (top-state request). */
 /* GLITCHFIX1: THE PRESS IS HELD UNTIL THE PAGE LEAVES. Read tick by tick, "pressed" was the A key held, or the request word set while the page is at
    rest; between the key's release and the request, and again once the request (one tick long) had turned into the page's way out (top-state 6, the
@@ -1092,7 +1092,7 @@ void chore_step(int variant, int top, int elem, int req)
         ++c.sw_t;
     }
     if (c.skip && c.sw_t >= 0 && c.sw_t < swap_end(c)) c.sw_t = swap_end(c);
-    /* INTRO2: in the intro the head is not faded in: the ROM's own entrance (top-state 1, src/func_ov007_020b1b74.c: the head object plays
+    /* INTRO2: in the intro the head is not faded in: the ROM's own entrance (top-state 1, src/unnamed/ov007/func_ov007_020b1b74.c: the head object plays
        its fly-in while the scale ramps for 30 ticks) is shown from its first tick, whole, and the swap (the logo's trip) starts when it is at rest */
     const bool head_in = c.mode == CH_INTRO && bounced && (top == 1 || rest);
     /* the face: faded in once the ROM is at rest and the swap began; faded out quickly when the ROM leaves rest (it walks out) */
@@ -1105,7 +1105,7 @@ void chore_step(int variant, int top, int elem, int req)
     } else {
         c.face_a -= 40; if (c.face_a < 0) c.face_a = 0;
     }
-    /* GLITCHFIX1: THE HEAD HAS ARRIVED when the ROM's entrance is over (top-state 0, its scale word g+0xff8 settled at 0x1000: src/func_ov007_020b1b74.c
+    /* GLITCHFIX1: THE HEAD HAS ARRIVED when the ROM's entrance is over (top-state 0, its scale word g+0xff8 settled at 0x1000: src/unnamed/ov007/func_ov007_020b1b74.c
        ramps it over the 30 ticks of top-state 1 and leaves it there) and the head is drawn whole (face_a at 255, the end of the pop's smoothing).
        The big logo stays solid until then (build_main_pc): its fade used to start on the swap's first tick, so the head arrived behind a logo already
        4 to 15 percent see-through. */
@@ -1180,7 +1180,7 @@ void chore_step(int variant, int top, int elem, int req)
 }
 
 /* ROM state the choreography writes (SM64DS_TITLE_FF=0 turns all of it off). Called from menu_title_up. */
-/* ASSET6: THE ATTRACT WAITS FOR THE PLAYER. The ROM (src/func_ov007_020b0a20.c) plays the star's flight and leaves the attract by itself
+/* ASSET6: THE ATTRACT WAITS FOR THE PLAYER. The ROM (src/unnamed/ov007/func_ov007_020b0a20.c) plays the star's flight and leaves the attract by itself
    when a save exists (func_ov007_020aebac == 0): the animation ends and it asks for state 10. With no save it picks the other animation
    (the star idling over TOUCH TO START) and waits. Tango asked for the waiting picture whatever the save, so while the attract is up the
    port shows the ROM the empty-save words (func_ov007_020aebac reads bytes +0xb..+0xd and the word +4 of the record at g+0x28), and puts the
@@ -1211,7 +1211,7 @@ static void sv_fake()
 }
 static int g_sv_lie;       /* FIELD093K: the record was EMPTY and the words were made non-empty for the press (see sv_press) */
 static char *g_sv_lq;
-/* FIELD093K: a press on the attract with an EMPTY save (a new player). The ROM's skip of the star flight (src/func_ov007_020b0a20.c: the key / touch edge
+/* FIELD093K: a press on the attract with an EMPTY save (a new player). The ROM's skip of the star flight (src/unnamed/ov007/func_ov007_020b0a20.c: the key / touch edge
    branch) only runs when func_ov007_020aebac() == 0, i.e. when a save exists, so a new player waited the whole 260 tick flight (6 s from the press to the
    wipe) and a pad / key press did nothing at all. The port shows the ROM a non-empty record for the press, exactly what it already does for a played save
    (sv_restore): the ROM then takes its own skip and asks for state 10. The words go back to empty once the attract is left. */
@@ -1241,10 +1241,10 @@ static void sv_restore()
     g_sv_q = 0;
     if (hal_menu_trace_on()) fprintf(stderr, "[chore] press: save words given back\n");
 }
-/* INTROCUT1 (Tango, round 18): the press no longer cuts the star's flight at once. The ROM's own flight runs (a touch on the star starts it: src/func_ov007_020b0da0.c, box
+/* INTROCUT1 (Tango, round 18): the press no longer cuts the star's flight at once. The ROM's own flight runs (a touch on the star starts it: src/unnamed/ov007/func_ov007_020b0da0.c, box
    x 0x60..0xa0, y 0x40..0x80; it stops the idle loop sound and starts the flight sound by itself) and CH_CUT ticks after the press, when the star is off the top of the picture,
    the skip is applied: the ROM is shown a save (the real words on a played save, a marker word on an empty one) and a key edge, which is the ROM's own skip of the rest of the flight
-   (src/func_ov007_020b0a20.c flag block) and the beat and the wipe follow. The same on a played and an empty save. SM64DS_INTRO_CUT=<ticks> tries another length (dev builds). */
+   (src/unnamed/ov007/func_ov007_020b0a20.c flag block) and the beat and the wipe follow. The same on a played and an empty save. SM64DS_INTRO_CUT=<ticks> tries another length (dev builds). */
 /* One cut length for both saves: a played save is made to look and fly exactly like the empty one (the star's scale is put to the no-save value right after the ROM's
    tick 0, see chore_rom_writes), so the star body leaves at press+88 on either (measured on the native flight, blob under 100 pixels). Tango picked the cut at press+134 on the numbered
    native sheets, after the sparkle trail, 46 ticks after the star body. */
@@ -1292,7 +1292,7 @@ void chore_rom_writes(int top, int req)
     if (!data_ov007_0210342c) return;
     if (top == 11 && g_ch.attract_t >= 0 && !g_sv_faked && g_ch.attract_t < 8 && g_last == V_ATTRACT) {
         sv_fake();
-        /* ROUND5: the ROM reads the save record at its attract tick 0 (src/func_ov007_020b0a20.c, mode 0: the star's scale is 0xDAC with a save, 0x1770 with none) and the port can hide the
+        /* ROUND5: the ROM reads the save record at its attract tick 0 (src/unnamed/ov007/func_ov007_020b0a20.c, mode 0: the star's scale is 0xDAC with a save, 0x1770 with none) and the port can hide the
            words only after that tick has run, so a played save showed the small star and, at the press, its other (popping, twice edge-on) flight. The words are hidden from tick 1 on, so the
            scale (element +0x40 / +0x44 / +0x48 of the attract object, the three words tick 0 sets together) is put to the no-save value by hand here, once, right after tick 0. */
         if (g_sv_faked && data_ov007_0210342c) {
@@ -1301,7 +1301,7 @@ void chore_rom_writes(int top, int req)
             char *el = s100 ? *(char **)(s100 + 4) : 0;
             if (el) {
                 *(int *)(el + 0x40) = 0x1770; *(int *)(el + 0x44) = 0x1770; *(int *)(el + 0x48) = 0x1770;
-                /* and the animation: beaa0 (src/func_ov007_020beaa0.c) picked resource 0xe with no save and 0xf with one for the two star objects (p0 = 0, 1), the "other flight" */
+                /* and the animation: beaa0 (src/unnamed/ov007/func_ov007_020beaa0.c) picked resource 0xe with no save and 0xf with one for the two star objects (p0 = 0, 1), the "other flight" */
                 for (int p0 = 0; p0 < 2; ++p0) *(void **)(data_ov007_02104bc8 + 8 * p0) = func_ov007_020b3f20(0xe);
                 if (hal_menu_trace_on()) fprintf(stderr, "[chore] played save: the star's scale put to the no-save value (0x1770)\n");
             }
@@ -1327,7 +1327,7 @@ void chore_rom_writes(int top, int req)
             if (hal_menu_trace_on()) fprintf(stderr, "[chore] return: ROM iris progress finished early\n");
         }
     }
-    /* INTRO2: the skip also ends the head's 30 tick entrance (state 1, counter 0..30: src/func_ov007_020b1b74.c hands over to the resting menu past 30) */
+    /* INTRO2: the skip also ends the head's 30 tick entrance (state 1, counter 0..30: src/unnamed/ov007/func_ov007_020b1b74.c hands over to the resting menu past 30) */
     if (top == 1 && g_ch.mode == CH_INTRO && g_ch.skip) { if (*t >= 1 && *t < 9) *t = 9; else if (*t >= 11 && *t < 29) *t = 29; }
     /* ASSET6: leaving a file page the ROM idles 30 frames (state 11, element machine 5) before its star iris closes over the page: skipped once its own 6 frame fade-in is over (an iris asked for while that fade runs is dropped) */
     if (top == 11 && g_elem == 5 && *t >= 9 && *t < 29) { *t = 29; if (hal_menu_trace_on()) fprintf(stderr, "[chore] file page exit: idle counter skipped\n"); }
@@ -1340,7 +1340,7 @@ void chore_rom_writes(int top, int req)
            then needs no voice wait */
         if (g_ch.skip && *t < 59) *t = 59;
         /* once our iris covers the picture the ROM's iris is finished: progress to its last step so the callback asks for the arrival.
-           INTROVOICE2: src/func_ov007_020b10dc.c plays the title voice in two calls of the top-state 10 handler: id 0x2b ("It's-a me") at
+           INTROVOICE2: src/unnamed/ov007/func_ov007_020b10dc.c plays the title voice in two calls of the top-state 10 handler: id 0x2b ("It's-a me") at
            t = 30 and id 0x2d ("Mario!") at t = 128 (Luigi 0x2c at 30 and 0x2e at 122), with the iris whoosh (0x30) at t = 60 between them.
            Our iris covers the picture well before t = 128, so the finish waits until the ROM's own handler has made the second call (t past
            it): the DS order and gaps 0x2b, 0x30, 0x2d, never overlapping. A confirm press (skip) does not wait. */
@@ -1941,7 +1941,7 @@ void build_main_pc(MenuLayout *L, bool intro)
         float Rds = 0.f;
         if (vis && c.ct >= 0) Rds = 0.004382f * (float)s48;
         if (c.ct >= 0 && !vis) c.iris_covered = 1;
-        /* INTRO2 (Tango 10-24): the wipe is the ROM's own (the fade manager's star sprite, raised at ROM counter t = 60 by src/func_ov007_020b10dc.c
+        /* INTRO2 (Tango 10-24): the wipe is the ROM's own (the fade manager's star sprite, raised at ROM counter t = 60 by src/unnamed/ov007/func_ov007_020b10dc.c
            with the whoosh), about half a second after the star has left the top: black until the ROM's sprite shows, then its radius. The early
            synthetic star of TITLE092 / INTROCARD092 (3a) is gone. */
         const float Rpx = Rds * (float)h / 192.f;
@@ -2155,7 +2155,7 @@ void build_doodle(MenuLayout *L)
 
 }  // namespace
 
-extern "C" char *data_ov007_02104bd8;     /* the title's screen-fade manager (src/func_ov007_020bf690.c): {obj6, iris sprite, flags, _, request} */
+extern "C" char *data_ov007_02104bd8;     /* the title's screen-fade manager (src/unnamed/ov007/func_ov007_020bf690.c): {obj6, iris sprite, flags, _, request} */
 
 /* ASSET5 measurement (SM64DS_TITLE_TL=1): one line per DS frame with the page, the page's own counter and the fade manager's
    fields (the star iris is the manager's sprite: scale at +0x40/+0x48, drawn while +0x94 is set) */
@@ -2317,7 +2317,7 @@ void menu_title_facts(MenuFacts *f)
    the main menu is built, the options and doodle pages should draw it in place of the wallpaper objects, and the
    file pages' margins could take its colour.
    Hotspots are the ROM's own element boxes in lower-screen DS pixels (piece 1:1), so a click lands in the box the ROM
-   hit-tests (src/func_ov007_020b46b0.c arithmetic through port_title_elem_boxes).
+   hit-tests (src/unnamed/ov007/func_ov007_020b46b0.c arithmetic through port_title_elem_boxes).
    THE SCORE TABLE is two screens of text in the ROM: courses 1..9 and the header on the upper screen (engine B), courses
    10..15 and the castle's secret stars on the lower (engine A, a 2D BG layer that types in), over the file plates,
    which the ROM never removes, so on the DS they show through the list. On one page:
@@ -2907,7 +2907,7 @@ extern int data_020a0e58[];           /* PadData[i]: {u16 held, u16 pressed} */
 }
 
 /* ASSET3: THE ROM CURSOR, STARTED AND FOLLOWING THE MOUSE.
-   The ROM shows its cursor on the first non-B key and starts it on ADVENTURE (src/func_ov007_020b3190.c: it writes the target
+   The ROM shows its cursor on the first non-B key and starts it on ADVENTURE (src/unnamed/ov007/func_ov007_020b3190.c: it writes the target
    element 0 into the cursor struct's second short; the cursor machinery of func_ov007_020b2e64 does the rest). On the one-screen main
    menu the port does that same write once the arrival has settled, so ADVENTURE is selected without a first press. A mouse hover
    (hal_menu_hover_box) writes the hovered element the same way, so the ROM's cursor, the lit plank and the arrow always name the
@@ -3082,7 +3082,7 @@ void menu_title_pad_map(uint16_t *pressed, int host_back)
    off, menu_title_pad_map_rom below): pad A is the ROM's confirm, pad B the back arrow on every page that has one. */
 static void title_pad_keys(uint16_t *pressed, int host_back, int inject)
 {
-    /* The ROM's key record (src/func_ov007_020b3190.c: `*(u16*)p & ~*(u16*)(p+2)`, and the repeat counters of
+    /* The ROM's key record (src/unnamed/ov007/func_ov007_020b3190.c: `*(u16*)p & ~*(u16*)(p+2)`, and the repeat counters of
        func_ov007_020b2e64) is built from the HELD word, so the pressed word alone is not enough: the held
        word moves 0x0002 -> 0x0001 too, and a host back is a one-frame B in it. */
     unsigned short *held = (unsigned short *)((char *)data_020a0e58 + data_020a0e40 * 4);

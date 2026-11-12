@@ -2,7 +2,7 @@
 //
 // Run link100, lane R2D2, rung R2d of lane BOOTSCOUT's boot plan.
 //
-// WHAT THIS IS FOR. src/func_0203bbc0.c is the game's touch-panel bring-up and
+// WHAT THIS IS FOR. src/unnamed/arm9/0203/func_0203bbc0.c is the game's touch-panel bring-up and
 // the fourth of the ROM's six PXI channels hangs off it. Nine calls, in the
 // ROM's own order:
 //
@@ -30,18 +30,18 @@
 // A command is a PAIR of words, both on channel 6, sent back to back inside one
 // IRQ::Disable window:
 //
-//   src/func_0205edd8.cpp:13  IPCSend(6, a | 0x02000300)  a = 3    -> 0x02000303
-//   src/func_0205edd8.cpp:15  IPCSend(6, b | 0x01010000)  b = 0x1e -> 0x0101001e
-//   src/func_0205edd8.cpp:26  then sets +0x36 bit 3 and clears +0x34 bit 3.
+//   src/unnamed/arm9/0205/func_0205edd8.cpp:13  IPCSend(6, a | 0x02000300)  a = 3    -> 0x02000303
+//   src/unnamed/arm9/0205/func_0205edd8.cpp:15  IPCSend(6, b | 0x01010000)  b = 0x1e -> 0x0101001e
+//   src/unnamed/arm9/0205/func_0205edd8.cpp:26  then sets +0x36 bit 3 and clears +0x34 bit 3.
 //
-//   src/func_0205eeac.cpp:36  IPCSend(6, (b & 0xff) | 0x02000100) b = 4 -> 0x02000104
-//   src/func_0205eeac.cpp:38  IPCSend(6, a | 0x01010000)          a = 0 -> 0x01010000
-//   src/func_0205eeac.cpp:49  then sets +0x36 bit 1 and clears +0x34 bit 1.
+//   src/unnamed/arm9/0205/func_0205eeac.cpp:36  IPCSend(6, (b & 0xff) | 0x02000100) b = 4 -> 0x02000104
+//   src/unnamed/arm9/0205/func_0205eeac.cpp:38  IPCSend(6, a | 0x01010000)          a = 0 -> 0x01010000
+//   src/unnamed/arm9/0205/func_0205eeac.cpp:49  then sets +0x36 bit 1 and clears +0x34 bit 1.
 //
 // The first word of a pair carries 0x02 in its top byte and THE BIT in bits
 // 8..14; the second carries 0x0101 in its top halfword and the command's own
 // parameter. The completion the ARM9 needs back is fixed by five conditions in
-// src/func_0205f300.c, the callback src/func_0205f270.c registers:
+// src/unnamed/arm9/0205/func_0205f300.c, the callback src/unnamed/arm9/0205/func_0205f270.c registers:
 //
 //   a2 == 0                     :40-45 -- a nonzero flag is the no-handler arm,
 //                               which SETS +0x34 and never clears +0x36
@@ -78,14 +78,14 @@
 // interrupts -- after the bit is set, before the wait. This host runs the ARM9
 // on one thread, so there is no "meanwhile": the ARM7 has to be given its turn
 // from INSIDE the wait. port_tsc_wait below is that turn, and it is the same
-// move ntr/ipc.cpp already makes for src/func_0205bad8.c's IPCSYNC handshake,
+// move ntr/ipc.cpp already makes for src/unnamed/arm9/0205/func_0205bad8.c's IPCSYNC handshake,
 // where the ARM9's own echoing store is what steps the ARM7's loop.
 //
 // port_tsc_wait is reached by a PER-SOURCE RENAME in port/CMakeLists.txt --
-// src/func_0203bbc0.c is compiled with `func_0205ea10=port_tsc_wait` -- which
+// src/unnamed/arm9/0203/func_0203bbc0.c is compiled with `func_0205ea10=port_tsc_wait` -- which
 // is hal/boot_arms.cpp's own precedent for func_02060890 and lane NITROFS's for
-// func_0205db2c. src/func_0205ea10.c is NOT displaced by that: it stays in the
-// link under its own name for its other caller, src/func_0205efc0.c, and it is
+// func_0205db2c. src/unnamed/arm9/0205/func_0205ea10.c is NOT displaced by that: it stays in the
+// link under its own name for its other caller, src/unnamed/arm9/0205/func_0205efc0.c, and it is
 // not a host body under a ROM name, so port/tools/linkage.py gains no SHADOW
 // row. What the rename says, in one place, is that a two-processor spin is the
 // one thing a single-threaded host cannot serve verbatim.
@@ -94,7 +94,7 @@
 // 3. THE CALIBRATION, WHICH IS NOT OPTIONAL AND IS NOT THE GAME'S
 // ---------------------------------------------------------------------------
 //
-// src/func_0205f1e4.c reads the touch calibration out of the FIRMWARE USER
+// src/unnamed/arm9/0205/func_0205f1e4.c reads the touch calibration out of the FIRMWARE USER
 // SETTINGS at 0x027ffc80 + 0x58..0x63 -- raw x1/y1, dot x1/y1, raw x2/y2, dot
 // x2/y2 -- and returns 0 without calling func_0205eb58 when all four raw words
 // are zero. So on a zeroed shared block the ROM declines to calibrate rather
@@ -103,9 +103,9 @@
 // ITS BEHAVIOUR DOES, and this is a real trap rather than a nicety. Whatever
 // func_0205f1e4 decides, func_0203bbc0's next call func_0205f0e0 runs, and its
 // last line is `data_020a80cc.field_30 = 1` -- byte +0x30 of the work struct,
-// which is exactly the halfword src/func_0205ea28.c reads as data_020a80cc[0x18]
+// which is exactly the halfword src/unnamed/arm9/0205/func_0205ea28.c reads as data_020a80cc[0x18]
 // to decide whether the calibration transform is LIVE. func_0205ea28 is linked,
-// and src/func_0203b9bc.c calls it on the per-frame stylus path. With a zero
+// and src/unnamed/arm9/0203/func_0203b9bc.c calls it on the per-frame stylus path. With a zero
 // calibration func_0205f0e0's two divides are 0x10000000 / 0, ntr/io.cpp models
 // the DS unit's answer (quotient -1 on a zero divisor, GBATEK), and
 // func_0205ea28 then computes (-1 * (x << 2)) >> 22, which is negative for every
@@ -152,20 +152,20 @@
 //
 // The third completion is the auto-sample indication: once per ARM7 sampling
 // period, a word with (a1 & 0x7f00) >> 8 == 0x10 and a2 == 0. On it
-// src/func_0205f300.c:47-64 advances the ring cursor at +0xc, wraps at the count
+// src/unnamed/arm9/0205/func_0205f300.c:47-64 advances the ring cursor at +0xc, wraps at the count
 // at +0x14, reads the packed sample out of the shared words 0x027fffaa (low
 // half) and 0x027fffac (high half) -- x 12 bits, y 12 bits, then valid 1 and
 // range 2 -- and writes one eight-byte entry into the ring func_0203bbc0 handed
 // it, &data_020a0df8 with a count of 9.
 //
-// THE CADENCE. src/func_0203bbc0.c's third call is
-// src/func_0205edd8.cpp(3, 0x1e), which IPCSends 0x02000303 then 0x0101001e --
+// THE CADENCE. src/unnamed/arm9/0203/func_0203bbc0.c's third call is
+// src/unnamed/arm9/0205/func_0205edd8.cpp(3, 0x1e), which IPCSends 0x02000303 then 0x0101001e --
 // "the sampling setup" by the ROM's own naming (section 1's table). That
 // 0x1e is the ONE number the ROM hands the ARM7 for how often to sample, and
 // arm7.bin is not decompiled anywhere in this project (section header above),
 // so what the ARM7 does with it is not a fact this repo can read off a body.
 // What IS measurable is the shape every reader downstream already assumes:
-// src/func_0203b9bc.c's three-consecutive-samples debounce (section header,
+// src/unnamed/arm9/0203/func_0203b9bc.c's three-consecutive-samples debounce (section header,
 // "left alone" note) is written against ONE ring entry per displayed frame --
 // three entries is three frames of holding a tap, not three deliveries inside
 // one -- and hal/sub_screen.cpp's poll_touch was already the port's stand-in
@@ -199,7 +199,7 @@
 // is read straight out of data_020a0de8[0]/[2]/[3]. So a mouse click, a
 // SKIP_MENU tap or an injected comms tap all cross into the ROM exactly the
 // way a real stylus press would: through the ARM7's shared sample words and
-// src/func_0205f300.c's own read of them, never by this port reaching into
+// src/unnamed/arm9/0205/func_0205f300.c's own read of them, never by this port reaching into
 // the ring directly. hal/sub_screen.cpp's store is retired ONLY when
 // port_tsc_ring_armed() is true; SM64DS_TP_RING=0 puts the pre-rung direct
 // write back, unchanged, for measurement.
@@ -221,7 +221,7 @@
 extern "C" {
 
 // data_020a80c8 -- the "the touch panel is already up" halfword
-// src/func_0205f270.c:12 guards on and :13 sets. Four bytes by ROM span
+// src/unnamed/arm9/0205/func_0205f270.c:12 guards on and :13 sets. Four bytes by ROM span
 // (0x020a80c8 -> data_020a80cc), and nothing else in this port spells it, so
 // the channel's own driver hosts it. Real DS state, so inside the .dsstate
 // capture a save state rolls back; ".dsstate$tp0000" puts it immediately before
@@ -246,13 +246,13 @@ extern unsigned char data_020a80e4[];
 // ONE ADDRESS, TWO SPELLINGS -- the C++ TUs of this rung, and why the answer is
 // a linker alias rather than an edit anywhere.
 //
-// src/func_0205edd8.cpp and src/func_0205eeac.cpp are the two //cpp TUs here,
+// src/unnamed/arm9/0205/func_0205edd8.cpp and src/unnamed/arm9/0205/func_0205eeac.cpp are the two //cpp TUs here,
 // and each declares the work struct as `extern S data_020a80cc;` at C++ file
 // scope with its own local `struct S`. MSVC therefore emits
 // ?data_020a80cc@@3US@@A -- the same mangling from both, because the mangling
 // carries the TAG and not the members -- while every other reader of the same
-// object spells it with C linkage: src/func_0205f300.c and src/func_0205e9fc.c
-// are .c, and hostgen wraps src/func_0205f0e0.c in extern "C".
+// object spells it with C linkage: src/unnamed/arm9/0205/func_0205f300.c and src/unnamed/arm9/0205/func_0205e9fc.c
+// are .c, and hostgen wraps src/unnamed/arm9/0205/func_0205f0e0.c in extern "C".
 //
 // THE BYTE GATE CANNOT SEE THIS. dsd's symbol table carries an address, and
 // mwccarm resolved both spellings to the same 0x020a80cc at link time, so the
@@ -279,13 +279,13 @@ extern unsigned char data_020a0de8[];
 namespace {
 
 // The ARM9's status halfwords, by the offsets the ROM's own bodies use.
-//   +0x0c  the ring cursor        src/func_0205edc8.c returns it
-//   +0x10  the ring pointer       src/func_0205eeac.cpp:28 sets it
-//   +0x14  the ring count         src/func_0205eeac.cpp:31 sets it
-//   +0x30  "the calibration is live"   src/func_0205f0e0.c:51 sets it
-//   +0x32  the pen state          src/func_0205f300.c:87 sets it to 2
-//   +0x34  the error bits         src/func_0205e9fc.c reads it
-//   +0x36  the pending bits       src/func_0205ea10.c spins on it
+//   +0x0c  the ring cursor        src/unnamed/arm9/0205/func_0205edc8.c returns it
+//   +0x10  the ring pointer       src/unnamed/arm9/0205/func_0205eeac.cpp:28 sets it
+//   +0x14  the ring count         src/unnamed/arm9/0205/func_0205eeac.cpp:31 sets it
+//   +0x30  "the calibration is live"   src/unnamed/arm9/0205/func_0205f0e0.c:51 sets it
+//   +0x32  the pen state          src/unnamed/arm9/0205/func_0205f300.c:87 sets it to 2
+//   +0x34  the error bits         src/unnamed/arm9/0205/func_0205e9fc.c reads it
+//   +0x36  the pending bits       src/unnamed/arm9/0205/func_0205ea10.c spins on it
 volatile unsigned short *tp16(unsigned off) {
     return reinterpret_cast<volatile unsigned short *>(data_020a80cc + off);
 }
@@ -317,7 +317,7 @@ const Command kCommands[] = {
 const unsigned kCommandCount = sizeof kCommands / sizeof kCommands[0];
 
 // The auto-sample indication. bit 0x10, low byte 0, and the 0x01 top byte the
-// other two completions carry -- src/func_0205f300.c:47 returns before it ever
+// other two completions carry -- src/unnamed/arm9/0205/func_0205f300.c:47 returns before it ever
 // looks at the low byte or the 0x01000000 marker for this bit, so the shape is
 // taken from its siblings rather than invented.
 const unsigned int kSampleWord = 0x01001000u;
@@ -477,10 +477,10 @@ int port_tsc_arm7_turn(void)
 }
 
 // ---------------------------------------------------------------------------
-// THE WAIT. src/func_0203bbc0.c is compiled with func_0205ea10=port_tsc_wait;
-// see section 2 for why, and for why src/func_0205ea10.c is not displaced.
+// THE WAIT. src/unnamed/arm9/0203/func_0203bbc0.c is compiled with func_0205ea10=port_tsc_wait;
+// see section 2 for why, and for why src/unnamed/arm9/0205/func_0205ea10.c is not displaced.
 //
-// The body is src/func_0205ea10.c's own test -- `while (*(volatile u16 *)
+// The body is src/unnamed/arm9/0205/func_0205ea10.c's own test -- `while (*(volatile u16 *)
 // (data_020a80cc + 0x36) & mask)` -- with the other processor's turn inside the
 // loop instead of outside it.
 // ---------------------------------------------------------------------------
@@ -526,7 +526,7 @@ void port_tsc_arm7_tick(void)
     if (*tp16(0x14) == 0) return;      // func_0205eeac has not run yet
     g_sample_due = false;
 
-    // The packed record src/func_0205f300.c:56-61 reads: x 12 bits, y 12 bits,
+    // The packed record src/unnamed/arm9/0205/func_0205f300.c:56-61 reads: x 12 bits, y 12 bits,
     // then valid 1 and range 2, low half at 0x027fffaa and high half at
     // 0x027fffac. The sample is this port's own stylus, off TouchInfo slot 0 --
     // which is DS pixels, which is what the published calibration makes the
@@ -563,7 +563,7 @@ void port_tsc_arm7_frame_touch(void)
 // THE WATCHER'S ROM-SIDE COUNT. g_samples is incremented exactly where this
 // file hands the ARM9 the auto-sample indication, and that send is synchronous
 // (ntr::ipc_arm7_send -> raise_rx_irq -> the ARM9's registered rx handler ->
-// src/func_0205f300.c, all inside the one call), so this count IS the number
+// src/unnamed/arm9/0205/func_0205f300.c, all inside the one call), so this count IS the number
 // of times the ROM's own writer has stored into the ring -- not an estimate of
 // it. hal/sub_screen.cpp's poll_touch reads it, under SM64DS_TP_RING_WATCH, to
 // print the two writers' counts side by side (run link100, lane R2D3).

@@ -620,7 +620,7 @@ int _ZN10daHyuhyu_c16CleanupResourcesEv(void *self)
    builds a dCcAc_c at +0x110, a dBgCh_Actr at +0x144 and a ModelAnim at +0x300,
    while daObjPile_c_classInit (0x02133938) allocates 0x330 and stamps
    0x021352bc and builds none of them; and the two tables differ in twelve of
-   their thirty-one slots. The join's effect was that src/d_a_obj_pile.c, which
+   their thirty-one slots. The join's effect was that src/game/actors/d_a_obj_pile.cpp, which
    stamps _ZTV5Stump, spawned every stump holding FWOOSH's methods -- whose
    Render reads a ModelAnim at +0x300 that an 0x330-byte stump does not even
    have room for -- while the stump's own filled array was installed on nothing

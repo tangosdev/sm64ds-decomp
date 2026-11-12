@@ -395,7 +395,7 @@ extern "C" void hal_fill_boo_vtable(void)
 // the actor_classes_star.cpp precedent -- NOT the Actor defaults the shared
 // fill would leave.
 //
-// Slot 16 is a HOST THUNK: src/game/actors/daTrsIcon_c/_ZN11daTrsIcon_cD1Ev.cpp is a real MSVC
+// Slot 16 is a HOST THUNK: port/unmatched/hostarm/_ZN11daTrsIcon_cD1Ev.cpp is a real MSVC
 // destructor (`BigBooIcon::~BigBooIcon() {}` over a virtual base) whose
 // auto-emitted base-dtor call would resolve to an MSVC name that does not
 // exist -- the HauntedChair hc_d1 case. The chain is what its matched D0
@@ -418,7 +418,7 @@ static int __fastcall bbi_behavior(void *s, void *)
 static int __fastcall bbi_render(void *s, void *)
 { return ((fBase_c *)s)->fBase_c::Render(); }
 /* SLOT 16 IS THE ROM'S OWN D1 NOW (run linkfull wave 31, lane VARIANT4):
-   src/game/actors/daTrsIcon_c/_ZN11daTrsIcon_cD1Ev.cpp's _MSC_VER arm defines
+   port/unmatched/hostarm/_ZN11daTrsIcon_cD1Ev.cpp's _MSC_VER arm defines
    the flat ROM name and makes this thunk's two steps (the store of
    _ZTV10BigBooIcon, then ActorD2); the thunk keeps the slot's shape and the
    PORT_D16 census and only forwards. */
@@ -500,7 +500,7 @@ extern "C" void hal_fill_boo_cage_vtable(void)
 // the byte-verified host copy (port/unmatched/MansionSteps_InitResources.c);
 // slot 6 is the PMF-dispatching Behavior host copy (Bbh_PmfDispatch.c); 12
 // is the class's own empty OnPendingDestroy. Slot 16 is a HOST THUNK for the
-// same reason as BigBooIcon's: src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_cD1Ev.cpp is a real MSVC
+// same reason as BigBooIcon's: port/unmatched/hostarm/_ZN11daTrsTrap_cD1Ev.cpp is a real MSVC
 // destructor. The chain is its matched D0's, minus the Deallocate: restore
 // the table, MovingMeshCollider::~ (+0x15c), Model::~ (+0xd4), ActorD2.
 extern "C" {
@@ -533,7 +533,7 @@ static int __fastcall ms_render(void *s, void *)
 static int __fastcall ms_pdes(void *s, void *)
 { (void)s; _ZN11daTrsTrap_c16OnPendingDestroyEv(); return 0; }
 /* SLOT 16 IS THE ROM'S OWN D1 NOW (run linkfull wave 31, lane VARIANT4):
-   src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_cD1Ev.cpp's _MSC_VER arm defines
+   port/unmatched/hostarm/_ZN11daTrsTrap_cD1Ev.cpp's _MSC_VER arm defines
    the flat ROM name and makes this thunk's four steps (the store of the table,
    spelled _ZTV11daTrsTrap_c, which the alternatename above binds to
    _ZTV12MansionSteps; the collider at +0x15c; the Model at +0xd4; ActorD2); the

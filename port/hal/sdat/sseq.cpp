@@ -1561,10 +1561,10 @@ void sd_seq_set_volume_db10(int p, int db10)
  * table, same units, same clamp, applied to one track instead of all of them.
  *
  * 0x0c IS A PITCH OFFSET IN 1/64 OF A SEMITONE. Two matched callers fix the
- * scale between them. src/func_ov007_020bdbcc.c sweeps
+ * scale between them. src/unnamed/ov007/func_ov007_020bdbcc.c sweeps
  *   -(((0x1000 - t) * 0x300) >> 12),  t in 0..0x1000
  * so full deflection is -0x300 = -768, and 768 units is what this file's own
- * bend arithmetic already calls an octave. src/func_02048af4.c sends
+ * bend arithmetic already calls an octave. src/unnamed/arm9/0204/func_02048af4.c sends
  * (height - 0x28) * 2 from the 3D updater, a few semitones either side of a
  * reference height. Both are signed and both are re-sent every frame, which
  * is why the retune below starts from baseRate.

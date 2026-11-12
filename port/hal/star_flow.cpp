@@ -2095,7 +2095,7 @@ extern "C" unsigned port_vs_seat_mask_round(void);    /* ... and its round      
 extern "C++" { namespace port { bool comms_rb_mode(); } }   /* this block is extern "C" */
 
 /* THE LEAVER'S BODY GOES, THE WAY THE CARTRIDGE TAKES A PLAYER OUT (plan G1).
-   The DS drops a lost child mid-match in src/func_02030b58.c, the in-match
+   The DS drops a lost child mid-match in src/unnamed/arm9/0203/func_02030b58.c, the in-match
    wireless state's per-frame check: for each seat whose radio link is gone it
    sets that seat's bit in data_0209fc58 and clears data_0209fc5c[i], the "this
    seat is live" byte. From then on Player::Behavior returns at its first test
@@ -2105,7 +2105,7 @@ extern "C++" { namespace port { bool comms_rb_mode(); } }   /* this block is ext
    function (its closure is the WM stack; hal/arm9_tables_link100.cpp says
    why), so the same two writes are made here, from the seat mask, at the same
    round on every console. The ROM's loop covers its four seats, and
-   data_0209fc58's upper bits mean other things (src/func_02030e4c.c), so seats
+   data_0209fc58's upper bits mean other things (src/unnamed/arm9/0203/func_02030e4c.c), so seats
    4..15 clear only their live byte.
    PARKED as well, which the cartridge does not do. Its body would stay where
    it stood, invisible but still the nearest player for an enemy's
@@ -3466,7 +3466,7 @@ void port_course_respawn(void *player)
 // func_0200ee8c: the star-get camera-script launcher -- a u8-return ride-through
 // =============================================================================
 //
-// src/func_0200ee8c.c is the star-get cutscene's script selector:
+// src/unnamed/arm9/0200/func_0200ee8c.c is the star-get cutscene's script selector:
 //
 //     void func_0200ee8c(s32 arg0) {
 //         if (arg0 < 0) arg0 = GetStarCameraSetting(data_0209f224);
@@ -3493,7 +3493,7 @@ void port_course_respawn(void *player)
 // spell the return the width the ROM means. GetStarCameraSetting yields a 4-bit
 // value, so masking its result with 0xf reproduces exactly the ARM behaviour (the
 // only bits the ROM's own `& 0xf` and single-byte return could carry) and keeps
-// the index inside the 6-entry table. src/func_0200ee8c.c is filtered out of
+// the index inside the 6-entry table. src/unnamed/arm9/0200/func_0200ee8c.c is filtered out of
 // slice_gate10.txt in exchange.
 // PORT_HOST_ABI: GetStarCameraSetting returns u8 (AL only); the src reads it as
 // s32 and indexes with it, so mask to the ROM's own 0xf here.
@@ -3510,7 +3510,7 @@ extern void RunKuppaScript(void *script);
    src/GetStarCameraSetting.c returns `unsigned char` and ends
    `and r0,r0,#0xf / and r0,r0,#0xff`, so masking here said the same
    arithmetic a second time.
-   The matched TU src/func_0200ee8c.c is seated in its place: port/tools/hostgen.py's ARG_WIDTH table declares the return the width
+   The matched TU src/unnamed/arm9/0200/func_0200ee8c.c is seated in its place: port/tools/hostgen.py's ARG_WIDTH table declares the return the width
    the definition really has, which makes MSVC read AL alone.
    Per-row ROM evidence (referrer, RTTI name, kind:function record, the
    dispatch instruction read at its own address) is in port/slice_seat6.txt. */

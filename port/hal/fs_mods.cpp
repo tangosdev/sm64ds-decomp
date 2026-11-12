@@ -3342,7 +3342,7 @@ u32 vs_char_colors_filter(unsigned fileID, u8 **data, u32 size)
  * bytes, which is exactly one sixteen-colour row. Slot 15 lands at +480 of 512,
  * inside.
  *
- * NOT src/func_0204a028.c, which an earlier draft of this note cited: that is
+ * NOT src/unnamed/arm9/0204/func_0204a028.c, which an earlier draft of this note cited: that is
  * the PARTICLE archive's palette walk (its only callers are
  * Particle::SysTracker::Initialise and one ov007 site) and no BMD goes through
  * it. It happens to be size-driven in the same way, which is how the wrong

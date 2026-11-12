@@ -261,7 +261,7 @@
  * It is a real table and its words were read: 7 slots (0x020927ec ->
  * data_02092808, 0x1c / 4), with func_02030dac, func_02030ca0, func_02030c38
  * and func_02030b58 at 1, 3, 4 and 5 and the ROM's own zeros at 0, 2 and 6.
- * Its one reader is func_02030e4c+0x158, and src/func_02030e4c.c ends
+ * Its one reader is func_02030e4c+0x158, and src/unnamed/arm9/0203/func_02030e4c.c ends
  * `fn = data_020927ec[data_0209fc68]; if (fn != 0) fn();` -- plain
  * `void (*)(void)` slots with no receiver, so it would have been the EASIEST
  * of the three to seat and needs no veneers at all.

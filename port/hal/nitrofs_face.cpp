@@ -1,12 +1,12 @@
 // The faces for the ONE target that cannot carry the ROM's own bodies.
 //
 // hal/fs_names.cpp used to define func_0205d96c itself. Run link100 lane
-// NITROFS seated the matched TU src/func_0205d96c.c instead (port/
+// NITROFS seated the matched TU src/unnamed/arm9/0205/func_0205d96c.c instead (port/
 // slice_nitrofs.txt), which the header of hal/nitrofs_boot.cpp explains. That
 // seat cannot go to every target, and the reason is a link line rather than a
 // ruling:
 //
-//   src/func_0205d96c.c takes the address of func_0205da94, the archive
+//   src/unnamed/arm9/0205/func_0205d96c.c takes the address of func_0205da94, the archive
 //   command proc, and the matched proc reaches the ROM's cartridge lock --
 //   func_0205ffb0 / func_0205ff90 and the six OS-lock TUs under them. Those
 //   bottom out on four primitives hal/boot_hw.cpp transcribes (func_02057198,
@@ -35,7 +35,7 @@ extern "C" void func_0205d96c(void *dma) { port_nitrofs_fs_init(dma); }
 // THE OVERLAY-UNLOAD FACE, same target and the same kind of reason (run
 // link100, lane LOADOV).
 //
-// src/func_02017e94.c is the ROM's own overlay unload: it scans
+// src/unnamed/arm9/0201/func_02017e94.c is the ROM's own overlay unload: it scans
 // data_0209d3c4[12] for an entry whose first word is the id, returns when
 // there is none, and otherwise drops the record and invalidates the code
 // region. On this host the id is a host address (hal/scene_boot.cpp's

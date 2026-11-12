@@ -18,7 +18,7 @@
 namespace ntr {
 namespace backup {
 
-// The chip the ROM asks for: src/func_0201a054.c calls
+// The chip the ROM asks for: src/unnamed/arm9/0201/func_0201a054.c calls
 // func_02042f68(0xd01, "ds mario"), and 0xd01 is the 64 Kbit (8192 byte)
 // serial EEPROM row of the card driver's own device table.
 enum { kSize = 0x2000 };

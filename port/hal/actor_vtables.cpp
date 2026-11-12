@@ -111,7 +111,7 @@ void *data_0208e3a4[31];
 }
 
 // ---- fBase_c::fBase_c(): the storage its constructor reads ----------------
-// The constructor itself is the #ifdef _MSC_VER arm of src/_ZN7fBase_cC2Ev.cpp
+// The constructor itself is the #ifdef _MSC_VER arm of port/unmatched/hostarm/_ZN7fBase_cC2Ev.cpp
 // now (run linkfull, lane VARIANT5): the transcription that stood here, moved
 // there statement for statement -- see the note below. The spawn CONTEXT
 // globals it reads (pending actor ID, area byte, the spawn-info pointer table
@@ -140,7 +140,7 @@ void **data_020a4bb8 = data_020a4bb8_storage;  /* actorID -> SpawnInfo* */
    one early) where the cartridge stores data_02099edc, the ROM-shaped
    transient table hal/dtor_seats_base.cpp fills and hal/cxx_aliases.cpp
    publishes as __ZTV9ActorBase (lane V3B measured that compile, wave 27).
-   src/_ZN7fBase_cC2Ev.cpp's #ifdef _MSC_VER arm now defines
+   port/unmatched/hostarm/_ZN7fBase_cC2Ev.cpp's #ifdef _MSC_VER arm now defines
    _ZN7fBase_cC2Ev with the same statements in the same order, the first one
    the store of data_02099edc, so every actor and scene is still constructed
    with the ROM's transient table, and the refusal count still counts.
@@ -250,7 +250,7 @@ void Memory_Deallocate(void *p, void *heap);
    veneer) and the C++ method Heap::_Destroy (the receiver-bridging face at the
    bottom of hal/lk4_solidheap_seat.cpp). This one exists because the matched
    teardown TU spells the callee by role at C linkage rather than by mangled
-   name: src/_ZN7fBase_c21AfterCleanupResourcesEj.cpp declares
+   name: port/unmatched/hostarm/_ZN7fBase_c21AfterCleanupResourcesEj.cpp declares
    "void Heap_Destroy(void*);" with the comment "0x0203c74c = Heap::_Destroy"
    beside it, and calls it on line 60 as
    "if (this->unk4C) Heap_Destroy(this->unk4C);".
@@ -552,15 +552,15 @@ int _ZTV8dM3dGSph[8];
    camera State objects, and the whole run has to carry the DS fn addresses */
 int data_0209b478[8], data_0209b484[4], data_0209b488[4];
 int data_0209b498[8];
-/* THE POWER/WAKE-LOCK RECORD src/func_0201a054.c hands to func_0201a9fc twice,
+/* THE POWER/WAKE-LOCK RECORD src/unnamed/arm9/0201/func_0201a054.c hands to func_0201a9fc twice,
    sized by ROM span instead of by the file's generous [8] default. The delta
    in config/arm9/symbols.txt is 0x0209d5b8 - 0x0209d574 = 0x44 = 68 bytes, and
    no other dsd name falls inside that run, so 68 IS the object. Two matched
    bodies write past 32:
 
-     src/func_0201a9fc.c  *(s64 *)(c + 0x38) = func_02059650();
+     src/unnamed/arm9/0201/func_0201a9fc.c  *(s64 *)(c + 0x38) = func_02059650();
                           ROM: str r0,[r4,#0x38] / str r1,[r4,#0x3c]
-     src/func_0201a96c.c  self->field_0x40 = newVal, after reading +0x30/+0x34
+     src/unnamed/arm9/0201/func_0201a96c.c  self->field_0x40 = newVal, after reading +0x30/+0x34
 
    At int[8] the tick store landed 24 bytes past the end of the object and on
    top of whatever the linker put next -- which is why hal/boot_os.cpp refuses

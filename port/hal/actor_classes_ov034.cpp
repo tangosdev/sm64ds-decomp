@@ -273,7 +273,7 @@ int _ZN12daHanachan_c13InitResourcesEv(void *self)
 // THE FACTORY: RETIRED HERE (run linkfull lane SMALLS2)
 // ============================================================================
 /* port_factory_wiggler, the ROM's factory sequence spelled by hand, stood in
-   for src/d_a_hanachan.c while that TU rode the ROM's r0 into Enemy::C2 with
+   for src/game/actors/d_a_hanachan.cpp while that TU rode the ROM's r0 into Enemy::C2 with
    no argument. The synced TU passes the receiver, compiles to the same
    sequence (operator new 0x8e8, dEnemyBase_c C2 on it, the _ZTV7Wiggler store,
    the eight __cxa_vec_ctor runs and the dBgCh_Actr C1 at +0x708, every offset,

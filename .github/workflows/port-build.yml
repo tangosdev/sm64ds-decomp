@@ -36,11 +36,17 @@
 # compiler and no ROM, and was simply never wired to anything. It reports 423 references
 # (249 + 21 + 153), 0 stale.
 #
-# `build` compiles and links the ROM-free targets. There are five: smoke, smoke_gx,
-# smoke_heap, smoke_roots, smoke_fs. ALL FIVE ARE BLOCKING. The other nine generate
-# romdata.c from gitignored extracted/arm9_dec.bin and are out of a runner's reach, so
-# this file cannot gate them and does not pretend to. Configure is blocking as well: a
-# broken CMakeLists or an unresolvable srcpath symbol is a regression regardless.
+# `build` compiles and links the ROM-free targets. On main that list is five:
+# smoke, smoke_gx, smoke_heap, smoke_roots, smoke_fs. On this branch smoke_fs is
+# not ROM-free. add_executable(smoke_fs) carries ${ROMDATA_C}, and that custom
+# command runs port/tools/romdata.py, which exits 1 with "missing
+# extracted/arm9_dec.bin -- extract the ROM first" on a runner (job 129375106564).
+# The four that do not read the cartridge stay blocking. smoke_fs comes back when
+# its source list no longer names ROMDATA_C. The port-linkage smoke job already
+# builds this same four for that reason. The other targets that generate romdata.c
+# from gitignored extracted/arm9_dec.bin stay out of reach, and this file does not
+# pretend to gate them. Configure is blocking as well: a broken CMakeLists or an
+# unresolvable srcpath symbol is a regression regardless.
 #
 # THREE OF THE FIVE DID NOT LINK when this workflow was first written -- smoke_heap 3
 # unresolved symbols, smoke_roots 17, smoke_fs 17 -- and ran in a reporting step instead.
@@ -159,4 +165,4 @@ jobs:
         shell: cmd
         run: |
           call "%VSINSTALL%\VC\Auxiliary\Build\vcvars32.bat" >nul || exit /b 1
-          cmake --build build\portci --target smoke smoke_gx smoke_heap smoke_roots smoke_fs -- -k 0
+          cmake --build build\portci --target smoke smoke_gx smoke_heap smoke_roots -- -k 0

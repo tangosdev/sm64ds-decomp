@@ -240,7 +240,7 @@ const char *host_setting_pad_name(int action);
    the L and R shoulder buttons and has no E key, no Q key, no right stick
    and no mouse, so every host binding this program has is the port's own
    choice and always was. The rotation MATH is the ROM's and is byte-gated
-   in src/func_02009e70.cpp; only the question of which host control feeds
+   in src/unnamed/arm9/0200/func_02009e70.cpp; only the question of which host control feeds
    which of its two directions is ours.
 
    MEASURED, so the default is not a guess. Walking Mario with the camera
@@ -792,7 +792,7 @@ int host_setting_volume(void);
                     choice anybody made, so BOTH go back to their defaults.
 
    The radii are the game's own world units -- the integer part of the Fix12
-   position at Actor+0x5c. port/status/VOICE.md carries the arena measurement
+   position at Actor+0x5c. status/VOICE.md carries the arena measurement
    the defaults come from. host_setting_voice_mic_device never returns null. */
 int host_setting_voice_enabled(void);
 int host_setting_voice_volume(void);

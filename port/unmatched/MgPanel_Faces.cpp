@@ -48,7 +48,7 @@
 
 // ---- THE CLASS VTABLE'S ITANIUM NAME ---------------------------------------
 //
-// src/d_s_mg_panel.c writes the class vtable into the new
+// src/minigames/d_s_mg_panel.cpp writes the class vtable into the new
 // object as `_ZTV12dScMgPanel_c`, which is the ROM's own class name -- the
 // type_info the word before the table points at reads "12dScMgPanel_c" -- and
 // is not a config symbol name, so it needs a face onto the mounted table. The

@@ -301,7 +301,7 @@ void page_course(int dir)
 
 /* NO STALE STYLUS UNDER A CONFIRM KEY. The ROM's plate chain (PS_Update.cpp case 1 / 3 / 5: "touched, or a valid button") tests the stylus x / y
    against every plate box BEFORE it looks at the chosen plate, and a valid button (Start, which the port's confirm keys become) with no touch
-   goes through the same tests. On the cartridge an untouched panel reads x = y = 0xff (src/func_0203b9bc.c: the idle quad {0xff, 0xff, 0, 0}
+   goes through the same tests. On the cartridge an untouched panel reads x = y = 0xff (src/unnamed/arm9/0203/func_0203b9bc.c: the idle quad {0xff, 0xff, 0, 0}
    whenever no ring entry is touched), which falls outside every box, so the chosen plate wins. The port latches the LAST touched point on release
    (hal/sub_screen.cpp poll_touch), so any earlier click left x / y inside some plate box (a click that landed where the ROM's Controller Modes
    plate is, 0x40..0x5f in a course, is enough) and the next Enter / A / Space on "Exit Course" pressed that plate instead. While the pause is up
@@ -328,7 +328,7 @@ int tracker_view(void) { return !g_wide_now && off_main() && g_slide.page == PAU
 
 /* ---- the ROM's strings ------------------------------------------------------------------------------------------------ */
 
-/* The message bank's text is a glyph-index stream (src/func_0201b7cc.c): 0..9 digits, 0xa..0x23 A..Z, 0x2d..0x46 a..z, a few punctuation codes, 0xff
+/* The message bank's text is a glyph-index stream (src/unnamed/arm9/0201/func_0201b7cc.c): 0..9 digits, 0xa..0x23 A..Z, 0x2d..0x46 a..z, a few punctuation codes, 0xff
    ends a line. Decoded to ASCII (checked against the bank: course 0 star 0 reads BIG BOB-OMB ON THE SUMMIT). */
 int msg_text(int id, char *out, int cap)
 {

@@ -2478,7 +2478,7 @@ DSSTATE_END
 // through FS off the card (hal/fs_names.cpp's image, which keeps a file's bytes
 // after the first block that touches it and serves mod files out of a patched
 // range). The contract is the ROM's: a fresh block per call, the caller frees.
-// Every path through src/func_0201818c.c ends in a Memory::Allocate followed
+// Every path through src/unnamed/arm9/0201/func_0201818c.c ends in a Memory::Allocate followed
 // by a CpuCopy8 or a DecompressLZ16 into that block, and of the fifty-five TUs
 // under src/ that call LoadFile, forty-six Deallocate what they get. The nine
 // that keep it are the ROM's own keepers: six ov075 TUs hand it to
@@ -2960,7 +2960,7 @@ static int g_intro_armed;
         dies calling its DS address: "FAULT code c0000005 ... accessing
         020bd600", eax holding the unrelocated pointer.
 
-     3. src/__sinit_02073e6c.c is in no slice either, so it never runs. It is
+     3. src/unnamed/arm9/0207/__sinit_02073e6c.c is in no slice either, so it never runs. It is
         what patches the script blobs' unaligned pointer fields at boot (392
         strb). VERIFIED in the ROM image: data_020890a0+0x103 (the cmd-6 chain
         arg) and the camera waypoint slots at +0x62/+0x66/+0x8a/+0x8e are all
@@ -3866,7 +3866,7 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
        and skips InitResources, so without this the pointer stays NULL and the
        star-progress index data_0209f344[data_0209f208] faults (StarMarker::
        Behavior +0x2e, SIG-2, WF star mission 2; plus the ov002/ov084 checks).
-       func_0203dad4() is just `return data_020a1040` (src/func_0203dad4.c), and
+       func_0203dad4() is just `return data_020a1040` (src/unnamed/arm9/0203/func_0203dad4.c), and
        that gate-36 TU is not in the walk_window link set, so the row index is
        computed from data_020a1040 directly -- the identical value the ROM's
        expression evaluates to. data_020a1040 is the VS local-comms record
@@ -5342,7 +5342,7 @@ extern unsigned char data_02092128[];  /* per-player character */
    will point data_020a0e40 at its own slot. Hosted by hal/auto_bss.cpp. */
 extern int data_0209fc68[];
 /* run mg16 lane MP3: the ROM's own "which comms slot am I", linked since MP1
-   and never called until now. src/func_0203da9c.c is `return data_020a0f10`. */
+   and never called until now. src/unnamed/arm9/0203/func_0203da9c.c is `return data_020a0f10`. */
 int func_0203da9c(void);
 /* and the ROM's own player-count setter: data_0208a0e0 = n plus func_020308d0.
    Stage::InitResources:153 copies data_0208a0e0 into data_0209f21c, so this is
@@ -5650,7 +5650,7 @@ static void port_a2_seat_body(int make_stage)
     /* THE SESSION COMES FIRST, THEN THE WORLD. Run mg16 lane MP3, field
        failure. Everything below asks the seam who I am and how many of us
        there are, and neither answer exists until the link is up:
-       data_020a0f10 is written by src/func_0203ea5c.c:252, which runs only
+       data_020a0f10 is written by src/unnamed/arm9/0203/func_0203ea5c.c:252, which runs only
        once a round has completed. Seating a world before that read 0 on BOTH
        consoles, so both believed they were player 0 and the child drove the
        host's character. On the DS the menu joins before anything loads a

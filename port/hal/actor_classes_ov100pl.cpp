@@ -210,7 +210,7 @@ DSSTATE_END
 }
 
 /* Both tables are named by TU declarations that sit OUTSIDE extern "C" --
-   src/d_a_obj_path_lift.cpp spells `extern void* data_ov002_0210af70;` and
+   src/game/actors/d_a_obj_path_lift.cpp spells `extern void* data_ov002_0210af70;` and
    `extern void* data_ov100_0214857c;` as plain C++ objects and takes their
    ADDRESS -- so MSVC mangles the type into the name. Bind the decorated
    spellings onto the one C-named array each (the ?data_020a0e68@@3UMtx43@@A

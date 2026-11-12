@@ -6,7 +6,7 @@
  *
  * This exists because the defect it measures reported NOTHING. Between
  * 9cbd99048 and this lane, `this->~fBase_c()` in
- * src/_ZN7fBase_c21AfterCleanupResourcesEj.cpp bound to a non-virtual
+ * port/unmatched/hostarm/_ZN7fBase_c21AfterCleanupResourcesEj.cpp bound to a non-virtual
  * declaration, so every actor's teardown ran fBase_c's own destructor body and
  * no derived destructor was ever reached. No guard fired, no log line
  * appeared, no fault was raised, and the boot got FURTHER than it had before,

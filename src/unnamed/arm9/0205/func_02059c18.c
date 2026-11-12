@@ -5,7 +5,7 @@ extern void func_02059824(void);
 extern void _ZN3IRQ10EnableIRQsEj(unsigned int mask);
 #ifdef _MSC_VER
 /* The ROM's 4-byte layout for the 64-bit field(s) of the alarm record (see
- * src/func_02059a60.c); mwccarm never sees this arm. */
+ * src/unnamed/arm9/0205/func_02059a60.c); mwccarm never sees this arm. */
 #pragma pack(push, 4)
 #endif
 typedef struct Obj

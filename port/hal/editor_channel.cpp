@@ -523,8 +523,8 @@ void exec_objrot(const Cmd &c)
  *
  *   actorID  ActorBase+0x0c. Already what exec_objlist reports.
  *
- *   param    ActorBase+0x08. src/func_02043180.c stores Spawn's `param1`
- *            (r2) to data_020a4b60, and src/_ZN7fBase_cC2Ev.cpp loads that
+ *   param    ActorBase+0x08. src/unnamed/arm9/0204/func_02043180.c stores Spawn's `param1`
+ *            (r2) to data_020a4b60, and port/unmatched/hostarm/_ZN7fBase_cC2Ev.cpp loads that
  *            global and does `str r2, [r4, #8]`. Copied 32 bits wide with no
  *            mask, shift or merge anywhere on that path -- see OFF_ACTOR_PARAM.
  *            THE TWO EXCEPTIONS ARE HANDLED BELOW; they are real.

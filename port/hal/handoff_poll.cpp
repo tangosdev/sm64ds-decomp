@@ -42,8 +42,8 @@ extern int port_vs_force_nobody;             /* hal/vs_arena.cpp: the "seat has 
 int port_vs_matches_ended_in_place(void);    /* hal/star_flow.cpp */
 extern int port_front_end_in_place;          /* hal/level_change.cpp (SEAMQUIT1): a title reached by an in-place quit */
 extern char *data_ov007_0210342c;            /* dScDSMT_c's scene global (hal/title_entry.cpp reads it the same way) */
-void func_ov007_020aec94(int choice);        /* src/func_ov007_020aec94.c: the title's own "the player chose X" */
-void func_ov007_020b6134(int slot);          /* src/func_ov007_020b6134.cpp: the file select's A / B / C handler */
+void func_ov007_020aec94(int choice);        /* src/unnamed/ov007/func_ov007_020aec94.c: the title's own "the player chose X" */
+void func_ov007_020b6134(int slot);          /* src/unnamed/ov007/func_ov007_020b6134.cpp: the file select's A / B / C handler */
 void port_touch_force_press(int x, int y, int frames);   /* hal/sub_screen.cpp */
 extern unsigned char data_020a0f10[], data_0209f250[], data_0208a0e0, data_0209fc68[], data_0209f2d8;   /* the rows' state line */
 #endif

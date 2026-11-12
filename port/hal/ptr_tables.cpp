@@ -24,7 +24,7 @@
 //
 // ---- table 1: data_02086758, the backup-media command table ----------------
 //
-// src/func_0205c5e4.c, the engine's per-command entry:
+// src/unnamed/arm9/0205/func_0205c5e4.c, the engine's per-command entry:
 //
 //     if (ret == 7)
 //         ret = data_02086758[idx](self);
@@ -36,7 +36,7 @@
 //
 // ---- table 2: the 39 records at 0x02086bc0.., the camera script commands ---
 //
-// src/func_02008550.cpp seeds data_0209b138[39] from them once and then
+// src/unnamed/arm9/0200/func_02008550.cpp seeds data_0209b138[39] from them once and then
 // dispatches:
 //
 //     (cam->*data_0209b138[msg[6]])(msg + 7, beg, end)
@@ -57,7 +57,7 @@
 // The dispatch itself cannot survive the ABI: MSVC's PMF for a complete
 // single-inheritance class is a 4-byte __thiscall address, and the callees are
 // C-linkage cdecl functions taking the camera as their first stack argument.
-// So the consumer, src/func_02008550.cpp, goes through hostgen's MG_PMF_CALL
+// So the consumer, src/unnamed/arm9/0200/func_02008550.cpp, goes through hostgen's MG_PMF_CALL
 // patch (lane shadow-A retired the host copy that used to stand in for it):
 // the 39 seeding assignments copy word 0 out of each record exactly as the
 // ROM's copy does, and the one call reads it back as a plain function. Same
@@ -265,7 +265,7 @@ void *data_02086ca8[2] = { (void *)&func_020072c4, 0 };
 void *data_02086ca0[2] = { (void *)&func_020071e0, 0 };
 
 /* The roster the checker and the host copy of func_02008550 both walk, in
-   data_0209b138 index order -- which is the order src/func_02008550.cpp
+   data_0209b138 index order -- which is the order src/unnamed/arm9/0200/func_02008550.cpp
    assigns them, not address order. */
 /* `extern` spelled on the definition on purpose: a const array at namespace
    scope has INTERNAL linkage in C++ even inside extern "C", and without this
@@ -296,7 +296,7 @@ static const unsigned g_cam_script_addr[39] = {
 
 // ---- table 3: data_020876e4, the Kuppa/star-get script-pointer table -------
 //
-// src/func_0200ee8c.c, the star-get camera-script launcher:
+// src/unnamed/arm9/0200/func_0200ee8c.c, the star-get camera-script launcher:
 //
 //     RunKuppaScript(data_020876e4[arg0]);
 //
@@ -454,18 +454,18 @@ void port_ptr_tables_check(void)
  *
  * config/arm9/relocs.txt has exactly three rows for this address:
  *
- *     from:0x0201a4b4 kind:load to:0x0209a03c    src/func_0201a490.c reads it
- *     from:0x020417c4 kind:load to:0x0209a03c    src/func_0204175c.c reads it
+ *     from:0x0201a4b4 kind:load to:0x0209a03c    src/unnamed/arm9/0201/func_0201a490.c reads it
+ *     from:0x020417c4 kind:load to:0x0209a03c    src/unnamed/arm9/0204/func_0204175c.c reads it
  *     from:0x0209a03c kind:load to:0x02057e30    THE WORD ITSELF
  *
  * The third row is the one that matters: the word AT 0x0209a03c is relocated,
  * so the four bytes romdata.py would hand over are the DS address 0x02057e30
  * and calling through them on the host is a jump into nothing. Both readers
- * CALL it -- src/func_0201a490.c is one line, `data_0209a03c(data_0208ee60)`
+ * CALL it -- src/unnamed/arm9/0201/func_0201a490.c is one line, `data_0209a03c(data_0208ee60)`
  * -- which is why hal/boot_os.cpp refused func_0201a490 outright rather than
  * hosting the word: "hosting the raw word would call into nothing".
  *
- * 0x02057e30 is src/func_02057e30.c, and the whole ROM body is `{}`. So the
+ * 0x02057e30 is src/unnamed/arm9/0205/func_02057e30.c, and the whole ROM body is `{}`. So the
  * binding is the ordinary one this file makes everywhere above: the host
  * pointer to the host function, not the DS address of the DS function. The
  * cast is because the ROM's call site spells the pointer `void (*)(void *)`
@@ -482,9 +482,9 @@ DSSTATE_END
 
 }  /* extern "C" */
 
-/* src/func_02008b4c.c, reached from commands 12 and 38 through func_02009414,
+/* src/unnamed/arm9/0200/func_02008b4c.c, reached from commands 12 and 38 through func_02009414,
    calls the spline evaluator by its bare address name. The config knows it as
    func_ov002_020effb8 -- 0x020effb8 is inside the Player overlay -- and
-   src/func_ov002_020effb8.c is the same matched function. A weak alias ties
+   src/unnamed/ov002/func_ov002_020effb8.c is the same matched function. A weak alias ties
    the two spellings together without a forwarding thunk; it only binds if
    nothing else defines the bare name. */

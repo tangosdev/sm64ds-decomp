@@ -224,11 +224,11 @@ uint64_t rt_frame() { return g.frame; }
 
 // ---- DS TIMER 0, THE OS TICK (run hunt2, lane HUD2) -------------------------
 //
-// WHAT THE ROM DOES WITH IT. src/func_02059788.c (called by main() at boot,
+// WHAT THE ROM DOES WITH IT. src/unnamed/arm9/0205/func_02059788.c (called by main() at boot,
 // hal/boot_os.cpp port_boot_rom_main_head) zeroes TM0CNT_L, writes TM0CNT_H =
 // 0xc1 (bit 7 run, bit 6 IRQ on overflow, prescaler 1 = F/64) and registers
 // func_02059700 on IRQ mask 8, which bumps the 48-bit overflow count at
-// data_020a6438 and re-arms itself. src/func_02059650.c reads the tick as
+// data_020a6438 and re-arms itself. src/unnamed/arm9/0205/func_02059650.c reads the tick as
 // (overflows << 16) | TM0CNT_L, and everything that measures time reads that:
 // Timer::GetTime (the course timer on the HUD, src/_ZN3HUD15RenderTimeTimerEv.cpp,
 // and the Princess's Secret Slide's under-21-second star, src/game/player/Player.cpp
@@ -472,7 +472,7 @@ void rt_install_irq_mode_hook(void (*enter)(), void (*exit)(),
 }
 
 // THE DS COMES UP WITH IME SET, and until this lane nothing said so outside
-// rt_run. THE SOURCE FOR THAT IS src/func_0201a054.c, the game's own IRQ init,
+// rt_run. THE SOURCE FOR THAT IS src/unnamed/arm9/0201/func_0201a054.c, the game's own IRQ init,
 // which does EnableIRQs(1) then IME = 1 then IRQ::Enable -- the exact pair
 // below, in that order. It is in NO SLICE, which is precisely why the host has
 // to stand in for it. (rt_run's line used to credit "the CRT0"; that was

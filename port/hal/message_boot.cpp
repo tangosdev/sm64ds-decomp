@@ -36,7 +36,7 @@
 // After this runs, func_0201f32c's bounds check passes for id < 711 and its
 // matched body runs for real. The text ITSELF is a glyph-index byte stream
 // (0xfd/0xfe/0xff control codes, everything else an AddChar glyph index, see
-// src/func_0201b7cc.c) -- not ASCII -- so port_message_dump below logs the id,
+// src/unnamed/arm9/0201/func_0201b7cc.c) -- not ASCII -- so port_message_dump below logs the id,
 // the resolved text address, the raw entry, and a hex+printable dump of the
 // entry's bytes rather than pretending to decode a string.
 #include <cstdio>

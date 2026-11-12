@@ -3,13 +3,13 @@
 // behind, and a report of what the ROM built into them.
 //
 // Run linkfull, lane S4OV0. The game asks for most files by an ov0 HANDLE and
-// src/func_02018a24.c turns a handle into a FAT file id:
+// src/unnamed/arm9/0201/func_02018a24.c turns a handle into a FAT file id:
 //
 //     return i < 0x8000 ? data_0209d3b8[i] : i;
 //
 // data_0209d3b8 is a pointer to a u16 table on the heap and data_0209d3b0 is
 // its entry count. Both are written once, at boot, by overlay 0's entry
-// (src/func_ov000_020aa420.c through src/func_02018a58.cpp): 0x80a entries,
+// (src/unnamed/ov000/func_ov000_020aa420.c through src/unnamed/arm9/0201/func_02018a58.cpp): 0x80a entries,
 // 4116 bytes off the default heap, each one the file id of one of ov000's 2058
 // path strings. hal/boot_os.cpp's port_boot_rom_worker() runs that entry.
 //

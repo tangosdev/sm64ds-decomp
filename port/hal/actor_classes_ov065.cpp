@@ -171,7 +171,7 @@ OV65_TRAP(13) OV65_TRAP(14) OV65_TRAP(17)
 // destructor on a live Snufit -- the window trap, caught by re-deriving.
 //
 // THE /alternatename THAT USED TO SIT HERE IS GONE. run rel0215 wave 2, lane
-// cast-ov066 landed ov066 and with it src/_ZN6EyerokD0Ev.cpp, so
+// cast-ov066 landed ov066 and with it port/unmatched/hostarm/_ZN6EyerokD0Ev.cpp, so
 // __ZN6EyerokD0Ev became a DEFINED symbol and the alias was defeated silently
 // -- which is exactly what port/build-port.cmd:92 and
 // port/tools/alternatename_guard.py:20 both predicted would happen "if their

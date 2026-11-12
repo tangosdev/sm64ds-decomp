@@ -46,7 +46,7 @@
 // object data_0209f5e8 by placement-newing a host HalFaderWipe over the
 // storage. That works and it ships. This lane is explicitly NOT allowed to
 // copy it, and the reason is the port's north star: the port must BE the
-// decomp. So what runs here is src/__sinit_02074f80.c -- the ROM's own
+// decomp. So what runs here is src/unnamed/arm9/0207/__sinit_02074f80.c -- the ROM's own
 // initialiser, byte-for-byte the two calls the image makes:
 //
 //     0x02074f80  bl func_0202fc40        r0 = 0x0209f61c
@@ -144,7 +144,7 @@
 // and _ZN8dScene_c9SetFadersEP15FaderBrightness -- already linked, slice_gate10 --
 // ends with `data_0209d4ac = thiz`. dScMgBase_c slot 1 hands it data_0209f61c,
 // so on scene 374 the ROM's own store arms this object into d4ac on the frame
-// the scene spawns. The missing piece was six lines of C: src/func_02018efc.c,
+// the scene spawns. The missing piece was six lines of C: src/unnamed/arm9/0201/func_02018efc.c,
 // which slice_fdr.txt now carries and hal/fader_wipes.cpp's port_fader_advance
 // calls, at the same point in the frame where it already stands in for phase
 // 2's other half.
@@ -627,7 +627,7 @@ void fdr_trap(const char *slot, const char *rom_body)
 
    0x08 IS THE ONE SLOT IN THIS TABLE THAT IS NOT __fastcall, run link60
    Stage 5 lane SEAT8, and the reason is section 9b's shape C rather than a
-   preference. Its one caller is the ROM's own src/func_02018efc.c:
+   preference. Its one caller is the ROM's own src/unnamed/arm9/0201/func_02018efc.c:
 
        void func_02018efc(void){
          void** o = (void**)data_0209d4ac;

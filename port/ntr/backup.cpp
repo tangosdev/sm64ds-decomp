@@ -22,12 +22,12 @@
 // runtime, so a framed image would have to GUESS a magic and a size the host
 // never has."
 //
-// NEITHER WAS A GUESS AND BOTH ARE IN THE ROM. src/func_0201a054.c -- the
+// NEITHER WAS A GUESS AND BOTH ARE IN THE ROM. src/unnamed/arm9/0201/func_0201a054.c -- the
 // game's own boot spine, decompiled and committed -- is one line:
 //
 //     func_02042f68(0xd01, data_0208ee50);
 //
-// func_02042f68 is the save system's init (src/func_02042f68.c): it runs the
+// func_02042f68 is the save system's init (src/unnamed/arm9/0204/func_02042f68.c): it runs the
 // card driver's init, identifies the backup device as type 0xd01, and then
 // copies eight bytes out of its second argument into data_020a4b40, stopping at
 // the first zero. So the magic is whatever data_0208ee50 holds and the size is
@@ -71,7 +71,7 @@
 //            -> func_02060f60(work, cmd, retries)                  <-- HOSTED
 //          func_02057078()      release the lock id                <-- HOSTED
 //
-// func_02060f60 IS THE ARM7 BOUNDARY. Its ROM body (src/func_02060f60.cpp)
+// func_02060f60 IS THE ARM7 BOUNDARY. Its ROM body (src/unnamed/arm9/0206/func_02060f60.cpp)
 // pushes a command number down PXI channel 0xB with IPCSend, then sleeps on
 // data_020a8180+0x34 bit 0x20 until the ARM7's interrupt clears it and reads
 // the ARM7's answer out of the shared command block. The port has no ARM7 and
@@ -91,7 +91,7 @@
 // ============================================================================
 //
 // data_020a8180 is the card driver's work object and data_020a8160 the 32-byte
-// command block it shares with the ARM7 (src/func_0206002c.c wires the two
+// command block it shares with the ARM7 (src/unnamed/arm9/0206/func_0206002c.c wires the two
 // together and this file reproduces that wiring statically). The three words
 // the transfer commands use are the same three in both directions:
 //
@@ -105,11 +105,11 @@
 //
 // and the commands, read off the four call sites (there are only four):
 //
-//     0   src/func_02060f60.cpp   hand the ARM7 the block pointer (init)
-//     2   src/func_020607e8.c     identify the backup device
-//     6   src/func_0206071c.c     read a span
-//     8   src/func_0206062c.cpp   program a span   (retries 0xa)
-//     9   src/func_0206062c.cpp   verify what 8 just programmed
+//     0   src/unnamed/arm9/0206/func_02060f60.cpp   hand the ARM7 the block pointer (init)
+//     2   src/unnamed/arm9/0206/func_020607e8.c     identify the backup device
+//     6   src/unnamed/arm9/0206/func_0206071c.c     read a span
+//     8   src/unnamed/arm9/0206/func_0206062c.cpp   program a span   (retries 0xa)
+//     9   src/unnamed/arm9/0206/func_0206062c.cpp   verify what 8 just programmed
 //
 // Command 8 and command 9 arrive with the SAME block still filled in, which is
 // why verify below compares the medium against the same source pointer.
@@ -1084,9 +1084,9 @@ int data_port_backup_device[10] = {
     0, 0, 0, 0, 0
 };
 
-// data_020a8760 is a POINTER, not the table: src/func_02060364.c assigns the
-// row to it and src/func_0206045c.c reads element [1] through it.
-// src/func_020603c8.cpp -> func_02060364 is what does this on hardware, off the
+// data_020a8760 is a POINTER, not the table: src/unnamed/arm9/0206/func_02060364.c assigns the
+// row to it and src/unnamed/arm9/0206/func_0206045c.c reads element [1] through it.
+// src/unnamed/arm9/0206/func_020603c8.cpp -> func_02060364 is what does this on hardware, off the
 // back of the card driver's own thread; the port has no card thread, so the
 // same assignment is made statically here.
 // The STORAGE for that pointer word is hal/globals_link100.cpp's grouped card
@@ -1099,7 +1099,7 @@ extern "C" unsigned char data_020a8180[60];
 
 // The record tag every save record carries, and the tag ReadDataFromCart
 // compares a record against before it will believe the payload. On hardware
-// src/func_02042f68.c copies it out of arm9 .rodata 0x0208ee50 ("ds mario",
+// src/unnamed/arm9/0204/func_02042f68.c copies it out of arm9 .rodata 0x0208ee50 ("ds mario",
 // 64 73 20 6d 61 72 69 6f) eight bytes at a time, stopping at the first zero;
 // there are no zeros in the eight, so all eight land.
 unsigned char data_020a4b40[8] = { 'd', 's', ' ', 'm', 'a', 'r', 'i', 'o' };
@@ -1117,7 +1117,7 @@ struct PortCoopTag {
 PortCoopTag g_port_coop_tag;
 }  // namespace
 
-// The 32-byte command block the ARM9 and the ARM7 share. src/func_0206002c.c
+// The 32-byte command block the ARM9 and the ARM7 share. src/unnamed/arm9/0206/func_0206002c.c
 // zeroes it, flushes it out of the data cache and hangs it off the work object.
 int data_020a8160[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
@@ -1150,16 +1150,16 @@ struct PortCardWork {
     unsigned char   staging[0x100];       /* 0xe0 the DMA staging buffer     */
 };
 
-// The state src/func_02060890.c and src/func_0206002c.c leave behind, which is
+// The state src/unnamed/arm9/0206/func_02060890.c and src/unnamed/arm9/0206/func_0206002c.c leave behind, which is
 // the state every entry point below assumes. Two of these are load-bearing and
 // a zeroed object deadlocks without them:
-//   owner = ~2 (-3)  "nobody holds the card". src/func_02060188.c spins in
+//   owner = ~2 (-3)  "nobody holds the card". src/unnamed/arm9/0206/func_02060188.c spins in
 //                    `while (owner != -3) OS_SleepThread(&waitq)` until it sees
 //                    that value, and a zeroed owner never becomes -3 because
 //                    nothing on the host is going to release a lock nobody took.
 //   state = 0        NOT SEEDED ANY MORE (run linkfull, lane S4CARD). Bit 0 is
 //                    the driver's "initialised" bit and the ROM's own bring-up,
-//                    src/func_02060890.c, is what sets it: it now runs in the
+//                    src/unnamed/arm9/0206/func_02060890.c, is what sets it: it now runs in the
 //                    ROM's order inside main (hal/boot_arms.cpp's R2c arm),
 //                    before any card read or save, and its first line returns
 //                    when the word is already set -- a seed of 1 made it skip
@@ -1181,13 +1181,13 @@ static const PortCardWork kCardWorkInit = {
     -1,             /* f24    */
     0, 0,           /* cbfn, cbarg */
     0,              /* f30    */
-    0u,             /* state: set by src/func_02060890.c (see above) */
+    0u,             /* state: set by src/unnamed/arm9/0206/func_02060890.c (see above) */
     4               /* prio   */
 };
 
 // Fill hal/globals_link100.cpp's storage once, before anything reads it: the
 // work object's initial state and the device-row pointer that
-// src/func_02060364.c would assign off the card thread on hardware.
+// src/unnamed/arm9/0206/func_02060364.c would assign off the card thread on hardware.
 namespace {
 struct PortBackupFill {
     PortBackupFill() {
@@ -1228,7 +1228,7 @@ DSSTATE_END
 // would give it: same command block, same result word, same return convention.
 //
 // Returns 1 when the command completed (block[0] == 0) and 0 otherwise, which
-// is what the ROM returns and what src/func_0206062c.cpp and src/func_0206071c.c
+// is what the ROM returns and what src/unnamed/arm9/0206/func_0206062c.cpp and src/unnamed/arm9/0206/func_0206071c.c
 // break their loops on. `retries` is how many times the ROM would re-send after
 // a "busy" (4); a host medium is never busy, so it is not consulted.
 int func_02060f60(void *self, int cmd, int retries)
@@ -1279,7 +1279,7 @@ int func_02060f60(void *self, int cmd, int retries)
     }
 
     case 9: {
-        /* Verify what command 8 just programmed. src/func_0206062c.cpp sends
+        /* Verify what command 8 just programmed. src/unnamed/arm9/0206/func_0206062c.cpp sends
            it with the SAME block still filled in, so the comparison is the
            same source against the same destination. */
         const void *src = (const void *)(std::size_t)(unsigned)blk[3];
@@ -1319,7 +1319,7 @@ void port_backup_transfer_end(int lock_id)
 // func_02060470, func_020607e8 and func_02042f68 -- i.e. the ROM would do its
 // own device identify and its own tag copy instead of the two static
 // definitions above, and func_02042f68 has a real ROM caller in
-// src/func_0201a054.c's boot spine for whoever hosts that.
+// src/unnamed/arm9/0201/func_0201a054.c's boot spine for whoever hosts that.
 //
 // IT WAS NOT TAKEN HERE FOR ONE REASON. port/CMakeLists.txt's ROM-CLEAN mode
 // makes romdata.py emit ZEROED arrays for a shipped kit, which the kit then

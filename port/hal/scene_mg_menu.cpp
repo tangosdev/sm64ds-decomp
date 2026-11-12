@@ -167,7 +167,7 @@ void  _ZN11dScMiniGm_c16OnPendingDestroyEv(void);              /* slot 12  OnPen
 int  *_ZN11dScMiniGm_cD1Ev(int *self);         /* slot 16  D2                */
 void *_ZN11dScMiniGm_cD0Ev(void *self);        /* slot 17  D0                */
 
-/* the factory (src/d_s_mini_gm.c) */
+/* the factory (src/minigames/d_s_mini_gm.cpp) */
 void *dScMiniGm_c_classInit(void);
 
 /* the two decision words the menu writes, for the report below */

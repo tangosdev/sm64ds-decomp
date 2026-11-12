@@ -550,7 +550,7 @@ extern "C" unsigned port_mg_flower_trap_hits(void) { return g_flw_trap_hits; }
  * first -- none of the eleven targets is a pair table, and this class has no
  * pointer-to-member table at all (port/slice_flw.txt).
  *
- * GROUP A -- THE C-LINKAGE FLIP, TWO ROWS. src/d_s_mg_flower.cpp (the
+ * GROUP A -- THE C-LINKAGE FLIP, TWO ROWS. src/minigames/d_s_mg_flower.cpp (the
  * factory) declares
  *
  *     extern int _ZTV19dScMgSingle3DBase_c;

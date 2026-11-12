@@ -996,7 +996,7 @@ extern int func_0203d8fc(void);
 extern int func_0203da3c(void);
 extern int func_0203da9c(void);
 #ifdef _MSC_VER
-/* THE COMMS SLOT INDEX. src/func_0203dae4.c and src/func_0203dabc.c both take
+/* THE COMMS SLOT INDEX. src/unnamed/arm9/0203/func_0203dae4.c and src/unnamed/arm9/0203/func_0203dabc.c both take
    it. The ROM's caller, dScDSMT_c::Behavior (0x020cc310..0x020cc320), leaves
    func_0203da9c()'s result in r0 across each call, so on ARM the (void)
    spelling is exact; on x86 the callee reads an unwritten stack slot. The

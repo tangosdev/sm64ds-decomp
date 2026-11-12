@@ -37,8 +37,8 @@
 // run, and the thing that has to run is a HOST FRAME -- because the sleep the
 // wireless path performs is, in the ROM, a wait for the next VBlank:
 //
-//   src/func_02042778.c   tail-call veneer
-//     -> src/func_0201a4d0.c   OS_SleepThread(data_0209d4fc)
+//   src/unnamed/arm9/0204/func_02042778.c   tail-call veneer
+//     -> src/unnamed/arm9/0201/func_0201a4d0.c   OS_SleepThread(data_0209d4fc)
 //   src/_ZN3IRQ13VBlankHandlerEv.cpp:22   OS_WakeupThread(&data_0209d4fc)
 //
 // data_0209d4fc is the PER-VBLANK wake queue and the VBlank handler clears it
@@ -60,7 +60,7 @@
 // IT CANNOT HANG. The bound is port_thread_set_pump_limit (default
 // kPortThreadPumpLimitDefault). The ROM's own wireless loop carries a second,
 // independent bound of its own (0x4B0 turns before init completes, 0x12C
-// after -- src/func_0203ea5c.c:142-146) and drops the session to solo when it
+// after -- src/unnamed/arm9/0203/func_0203ea5c.c:142-146) and drops the session to solo when it
 // runs out. Two bounds, and neither of them is "wait forever".
 //
 // RE-ENTRANCY IS REFUSED. A pump that reaches game code that sleeps again

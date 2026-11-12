@@ -374,7 +374,7 @@ void *_ZN8dActor_cD2Ev(void *);
 }
 /* Coin's own D0 spells its table by the RTTI name. */
 /* PORTSYNC2: both names of this ROM word are one name in main now; the alias would bind a symbol to itself. */ // #pragma comment(linker, "/alternatename:__ZTV8daCoin_c=__ZTV8daCoin_c")
-/* Gate 204: slot 17, the coin's own deleting destructor. src/_ZN4CoinD0Ev.cpp
+/* Gate 204: slot 17, the coin's own deleting destructor. port/unmatched/hostarm/_ZN4CoinD0Ev.cpp
    has been on slice_gate33.txt since that gate with nothing referencing it,
    so /OPT:REF dropped it before the map was written. */
 extern "C" int *_ZN8daCoin_cD0Ev(int *self);

@@ -333,7 +333,7 @@ static int __fastcall co_d0(void *s, void *)
 /* ---- A VTABLE SLOT THE SCRIPT'S OWN MODEL CLASS CALLS THROUGH --------------
    data_ov002_0210bae4 is a VTABLE, not a spawn record -- an earlier version of
    this comment called it a factory and that was wrong. Reading the body settles
-   it: src/_ZN8daDemo_c13simpleModel_cD0Ev.cpp stores data_ov002_0210bae4 into *this, calls
+   it: port/unmatched/hostarm/_ZN8daDemo_c13simpleModel_cD0Ev.cpp stores data_ov002_0210bae4 into *this, calls
    SharedFilePtr::Release, then Model::~Model, __cxa_vec_cleanup and
    Memory::operator_delete2. That is a DELETING DESTRUCTOR (a D0), and
    config/arm9/overlays/ov002/relocs.txt puts it in slot 1:
@@ -344,7 +344,7 @@ static int __fastcall co_d0(void *s, void *)
      ... Actor::Spawn -> func_02043098 -> CutsceneObject::InitResources
      -> func_ov002_020f6960 -> ModelBase::SetFile -> [this slot]
    so a DS address here is a jump into unmapped memory. Offering
-   src/_ZN8daDemo_c13simpleModel_cD0Ev.cpp put the body in the binary but did NOTHING about
+   port/unmatched/hostarm/_ZN8daDemo_c13simpleModel_cD0Ev.cpp put the body in the binary but did NOTHING about
    the pointer, which is the same lesson romdata.py's header records for
    data_020876e4.
 
@@ -467,8 +467,8 @@ static const struct { unsigned rom; const char *what; } g_co_vt2[7] = {
 };
 
 /* THE TWO DELETING DESTRUCTORS, FACED. Both ROM bodies are plain C functions
-   taking `this` as an ordinary first argument (src/_ZN8daDemo_c13simpleModel_cD0Ev.cpp and
-   src/_ZN8daDemo_c10anmModel_cD0Ev.cpp are both `void *f(char *c)`), and the seat below
+   taking `this` as an ordinary first argument (port/unmatched/hostarm/_ZN8daDemo_c13simpleModel_cD0Ev.cpp and
+   port/unmatched/hostarm/_ZN8daDemo_c10anmModel_cD0Ev.cpp are both `void *f(char *c)`), and the seat below
    used to store their raw addresses in slot 0 under a comment saying the seat
    "never calls them, so the arity here is irrelevant". That stopped being true
    the moment CutsceneObject::CleanupResources was hosted: it dispatches its
@@ -533,7 +533,7 @@ static void *__fastcall co_modelanim_d0(void *s, void *)
    hand-indexed call, src/_ZN8daDemo_c13simpleModel_cD1Ev.cpp (the Model) does not -- it
    Releases one SharedFilePtr, calls Model's D2 and runs __cxa_vec_cleanup.
    Second, the remedy it asked for (a host copy of each D1) is neither what
-   happened nor needed. src/_ZN8daDemo_c10anmModel_cD0Ev.cpp, the ModelAnim's DELETING
+   happened nor needed. port/unmatched/hostarm/_ZN8daDemo_c10anmModel_cD0Ev.cpp, the ModelAnim's DELETING
    half, carries the SAME hand-indexed TextureSequence call, and it has been
    seated at slot 1 and green since lane EXCEPT retired its host copy. The D1
    therefore opens no path the D0 was not already taking.

@@ -117,7 +117,7 @@
 
      src/minigames/d_s_mg_trampoline2.cpp:34  extern volatile s16 data_020a0dbc[];
                                      reads [0] and [1] with ldrsh
-     src/__sinit_02075054.c:2        extern short data_020a0dbc[];
+     src/unnamed/arm9/0207/__sinit_02075054.c:2        extern short data_020a0dbc[];
                                      writes [0] and [1], and passes
                                      data_020a0dc0 as a SEPARATE symbol
      config/arm9/symbols.txt:4928    data_020a0dbc at 0x020a0dbc; the NEXT

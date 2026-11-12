@@ -35,7 +35,7 @@
 //     *(int*)self = (int)data_0208e6ec; // set vptr
 //
 // so 0x0208e6ec is the vptr address, index 0 is the first virtual slot, and
-// the Itanium pair sits at 0 and 1. src/_ZN5dCc_cD0Ev.cpp writes the
+// the Itanium pair sits at 0 and 1. port/unmatched/hostarm/_ZN5dCc_cD0Ev.cpp writes the
 // same base and adds the Memory::operator_delete2 call, which is the D1/D0
 // split every class in this band shows.
 //
@@ -278,7 +278,7 @@
 //      null because the port does not link the ROM's static initialiser for it
 //      (hal/auto_bss.cpp carries that note at the storage).
 //
-//      [SUPERSEDED, run linkfull, lane LOOPIN2: src/func_02023498.c is in the
+//      [SUPERSEDED, run linkfull, lane LOOPIN2: src/unnamed/arm9/0202/func_02023498.c is in the
 //       link now and runs at phase 0x17 of both host loops, and slot 7 is
 //       dispatched on the Stage every frame, so L+R+START+SELECT on a level
 //       ENTERS this branch: that frame it starts the reset fade on
@@ -291,7 +291,7 @@
 //       below is the reading from before, kept for its account of the
 //       hazards.]
 //      IT CANNOT RUN, and the reason is a linked-set fact rather than a hope:
-//      src/func_02023498.c is the ONLY writer in the whole of src/ that ever
+//      src/unnamed/arm9/0202/func_02023498.c is the ONLY writer in the whole of src/ that ever
 //      sets data_0209f1e0 non-zero, and that TU is not in walk_window.map.
 //      Nothing else writes the byte at all except func_02023544, which writes
 //      zero. So the branch is dead twice over -- once because slot 7 is not
@@ -604,7 +604,7 @@ W2SeatDtorHeads g_w2_seat_dtor_heads;
 //
 //    These four are the SECONDARY-BASE sub-vtables of the collision classes
 //    wave 1 seated: 0x02099274 is 0x10 past RaycastGround's head, 0x020992b4
-//    0x10 past RaycastLine's, and src/_ZN12dBgCh_SphCrrD0Ev.cpp -- SphereClsn's matched
+//    0x10 past RaycastLine's, and port/unmatched/hostarm/_ZN12dBgCh_SphCrrD0Ev.cpp -- SphereClsn's matched
 //    deleting destructor, already linked -- names all three of the third
 //    class's vptrs in its own comment: [this+0] = 0x02099338, [this+0x10] =
 //    0x02099348, [this+0x38] = 0x02099358. So the addresses are right and the
@@ -616,7 +616,7 @@ W2SeatDtorHeads g_w2_seat_dtor_heads;
 //    whose only job is to make the compiler emit the thunk. Under MSVC none
 //    of them defines a symbol called func_0203xxxx at all. Measured, not
 //    assumed:
-//      - src/_ZThn16_N9dBgCh_GndD0Ev.cpp, src/_ZThn16_N9dBgCh_LinD0Ev.cpp and src/_ZThn16_N12dBgCh_SphCrrD0Ev.cpp
+//      - port/unmatched/hostarm/_ZThn16_N9dBgCh_GndD0Ev.cpp, port/unmatched/hostarm/_ZThn16_N9dBgCh_LinD0Ev.cpp and port/unmatched/hostarm/_ZThn16_N12dBgCh_SphCrrD0Ev.cpp
 //        are BYTE-IDENTICAL to each other (md5 cf4b564a...). Each compiles to
 //        ??1Derived@@UAE@XZ, so any two of them together are LNK2005
 //        ("already defined in _ZThn16_N9dBgCh_GndD0Ev.obj"), and each leaves

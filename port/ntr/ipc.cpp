@@ -45,7 +45,7 @@ uint32_t g_recv_last;          // GBATEK: an empty read returns the last word
 
 IpcCounters g_c;
 
-// THE BOUNDED-SPIN GUARD. src/func_0205bad8.c's handshake has no timeout: with
+// THE BOUNDED-SPIN GUARD. src/unnamed/arm9/0205/func_0205bad8.c's handshake has no timeout: with
 // no ARM7 answering, its inner 1000-read spin times out, resets its counter and
 // starts over, forever. That is the failure this whole file removes, and it is
 // also the negative control port/tools/ipc_proof.py runs -- so it must end in a
@@ -84,7 +84,7 @@ void spin_guard_trip() {
 //
 // THE PUBLISH STAYS, for two reasons that are not that one. Every linked TU
 // that touches an IPC register is routed today (IPCSend, func_0205bad8,
-// IRQ::IPCRxFifoNotEmptyHandler -- src/func_01ffdd98.c is the only other one
+// IRQ::IPCRxFifoNotEmptyHandler -- src/unnamed/arm9/01ff/func_01ffdd98.c is the only other one
 // in src/ and it is a host stub), but the moment a plain TU joins the link
 // this is what keeps it reading the truth rather than a stale latch; and the
 // window and the model must never be allowed to disagree, because a debugger
@@ -172,7 +172,7 @@ void raise_rx_irq() {
     if (g_in_rx) return;
     // THE GATE, and what it deliberately leaves out. On hardware four things
     // have to be true: the FIFO enabled, the recv-not-empty enable set, IE bit
-    // 18, and IME. src/func_0205bad8.c arms the first two itself by storing
+    // 18, and IME. src/unnamed/arm9/0205/func_0205bad8.c arms the first two itself by storing
     // 0xc408 into IPCFIFOCNT, and those two are what this checks -- they are
     // the ROM's own arming, observed through this model, so a build where the
     // game never ran the bring-up never gets a dispatch.
@@ -330,7 +330,7 @@ void ipc_init() {
         // THE CONTROL STILL RUNS THE ROM CODE. Turning the model off has to
         // leave the ROM's own bring-up being ATTEMPTED, or port/tools/
         // ipc_proof.py's rung R2 proves nothing at all -- it would just be a
-        // build where src/func_0205bad8.c is never called. The host ARM7 is
+        // build where src/unnamed/arm9/0205/func_0205bad8.c is never called. The host ARM7 is
         // NOT powered on here and claims no channel, so the handshake cannot
         // converge and the bounded-spin guard is what ends the run.
         if (g_arm7 && g_arm7->link_up) g_arm7->link_up();

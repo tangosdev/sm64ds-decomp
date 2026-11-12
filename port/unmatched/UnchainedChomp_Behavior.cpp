@@ -95,7 +95,7 @@ extern PortPmf data_ov100_02147ff8[];    /* -> hi, the one Behavior reads */
 }  /* extern "C" */
 
 /* ---- Spawn host copy ------------------------------------------------------
- * src/d_a_wanwan2.cpp calls Enemy's constructor as `func_020aed98()`
+ * src/game/actors/d_a_wanwan2.cpp calls Enemy's constructor as `func_020aed98()`
  * with no argument -- correct ARM (operator new returns `this` in r0 and the
  * ctor wants it in r0, so mwcc emits the branch with nothing between), but under
  * MSVC cdecl a no-arg call passes no argument and the ctor reads `this` off the

@@ -178,7 +178,7 @@ DSSTATE_END
  * On the DS the eight {handler, enabled, arg} entries start at 0x020a60c4:
  * DMA 0..3 then timer 0..3, the order data_02099fd4 lists (8, 9, 10, 11,
  * 3, 4, 5, 6). config/arm9/symbols.txt names the fifth entry separately,
- * data_020a60f4 = 0x020a60c4 + 0x30, and src/func_02056e4c.c (the timer arm:
+ * data_020a60f4 = 0x020a60c4 + 0x30, and src/unnamed/arm9/0205/func_02056e4c.c (the timer arm:
  * `data_020a60f4[idx] = {handler, 1, arg}; EnableIRQs(1 << (idx + 3))`)
  * writes through that name while IRQ::SetIRQHandler and IRQ::DmaTimHandler
  * write and read the same words as data_020a60c4[4 + idx]. The port hosted the
@@ -262,7 +262,7 @@ extern "C" int port_irqcb_band_ok(void)
 // host stand-in word g_ie is gone on these libraries and the two dispatchers
 // here read the latch instead: HBlank's IE gate bit 1, the geometry FIFO's bit
 // 21. ntr/rt.cpp's rt_irq_boot_state already seated bit 0 in that same latch
-// (the VBlank enable src/func_0201a054.c makes, EnableIRQs(1)), so the latch
+// (the VBlank enable src/unnamed/arm9/0201/func_0201a054.c makes, EnableIRQs(1)), so the latch
 // now holds what the cartridge's does at the same point rather than the host
 // word's subset of it. IRQ::ClearInterrupts runs as the ROM's too on these
 // libraries (run linkfull wave 27, lane SMALLS1): src/_ZN3IRQ15ClearInterruptsEj.cpp

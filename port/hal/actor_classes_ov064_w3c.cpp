@@ -77,7 +77,7 @@
 //
 // ---- WaterRing's D1/D0 ARE BOTH C NAMES ------------------------------------
 //
-// src/_ZN9WaterRingD1Ev.cpp and src/_ZN9WaterRingD0Ev.cpp are both .c bodies with
+// src/_ZN9WaterRingD1Ev.cpp and port/unmatched/hostarm/_ZN9WaterRingD0Ev.cpp are both .c bodies with
 // C linkage that restore _ZTV9WaterRing, so both stay in the slice and neither
 // needs a host thunk -- the gate-179 Piece reading. TreasureChest's D0 is a .c
 // too (it spells the table by its RTTI name _ZTV11daObjTbox_c, aliased below);
@@ -174,7 +174,7 @@ DSSTATE_END
 
 /* dsd names each address twice and both spellings are out of the mount; the
    RTTI spelling is the one each class's own D0 restores by
-   (src/_ZN9WaterRingD0Ev.cpp and src/_ZN13TreasureChestD0Ev.cpp). Both LHS are
+   (port/unmatched/hostarm/_ZN9WaterRingD0Ev.cpp and port/unmatched/hostarm/_ZN13TreasureChestD0Ev.cpp). Both LHS are
    declared and never defined, so tools/alternatename_guard.py stays clean. */
 /* PORTSYNC2: both names of this ROM word are one name in main now; the alias would bind a symbol to itself. */ // #pragma comment(linker, "/alternatename:__ZTV14daWater_Ring_c=__ZTV14daWater_Ring_c")
 /* PORTSYNC2: both names of this ROM word are one name in main now; the alias would bind a symbol to itself. */ // #pragma comment(linker, "/alternatename:__ZTV11daObjTbox_c=__ZTV11daObjTbox_c")
@@ -349,7 +349,7 @@ static int __fastcall tc_render(void *s, void *)
 /* slot 16, HOST CHAIN -- src/_ZN13TreasureChestD1Ev.cpp is a real MSVC
    destructor over structs declared inside itself, so it emits
    ??1TreasureChest@@UAE@XZ and never the C name. Transcribed from ROM
-   0x0211a200 and cross-checked against src/_ZN13TreasureChestD0Ev.cpp, which
+   0x0211a200 and cross-checked against port/unmatched/hostarm/_ZN13TreasureChestD0Ev.cpp, which
    spells the identical chain plus Memory::Deallocate. */
 /* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
    the transcribed thunk that stood here (tc_d1) spelled the same chain by hand. */

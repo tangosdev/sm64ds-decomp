@@ -92,7 +92,7 @@
 //     LoadArchive mounts off the heap it names at +0x04 (func_02018934), so
 //     src/UnloadArchive.c's func_02018908(e->f0, e->f4) frees a block that
 //     heap really owns.
-//   ITS ONE ARM9 CALLER RODE A REGISTER. src/func_02018770.c is main's
+//   ITS ONE ARM9 CALLER RODE A REGISTER. src/unnamed/arm9/0201/func_02018770.c is main's
 //     re-spelling now (PR #3130, synced path-scoped): it passes the index in
 //     data_0208eb54 where the ARM leaves it in r0.
 //
@@ -203,7 +203,7 @@
 //                 sixteen were measured with the three unsliced callees still
 //                 OUT; one of them, func_0203d81c, reads and clears this word
 //                 (`if (data_020a0f30[0]) { data_020a0f30[0] = 0; return 1; }`
-//                 -- src/func_0203d81c.c), and enrolling the callee is what
+//                 -- src/unnamed/arm9/0203/func_0203d81c.c), and enrolling the callee is what
 //                 asks for it. So the sixteen was honest when it was taken and
 //                 closing three of its rows opened a seventeenth. Measured the
 //                 same way, by port/tools/closure.py over
@@ -626,7 +626,7 @@ void port_slot0_check_wipes(void *before)
             of the LHS passes it on the stack instead --
             src/engine/heap/Heap.cpp:11,
             src/engine/heap/Heap.cpp:18,
-            src/_ZN9dScDSMT_c8BehaviorEv.cpp:49 and :53, and
+            port/unmatched/hostarm/_ZN9dScDSMT_c8BehaviorEv.cpp:49 and :53, and
             src/_ZN5Stage13InitResourcesEv.cpp:234 -- so the method runs with a
             garbage `this` and its body is `int old = G; G = (int)this;
             return old`. It writes the default-heap pointer from a register

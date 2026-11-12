@@ -31,7 +31,7 @@
 #  define ONL_JOIN_REAL 0
 #endif
 
-extern "C" char *data_ov007_02103360;   /* the title's element-cursor struct (src/func_ov007_020b3708.c): its first two shorts are the cursor element and its target */
+extern "C" char *data_ov007_02103360;   /* the title's element-cursor struct (src/unnamed/ov007/func_ov007_020b3708.c): its first two shorts are the cursor element and its target */
 namespace ntr { namespace backup { void select_online(int on); } }
 namespace ntr { extern int active_w, active_h; }
 extern "C" int hal_window_focused(void);           /* hal/sub_screen.cpp */

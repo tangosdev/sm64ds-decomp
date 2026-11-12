@@ -1,6 +1,6 @@
 // The door ring's Camera faces, split from hal/method_faces.cpp because the
 // defining TUs (src/_ZN6Camera10LookAtExitER8dActor_c.cpp,
-// src/_ZN6Camera14GoBehindPlayerEj.cpp) declare a LOCAL Camera mirror rather
+// port/unmatched/hostarm/_ZN6Camera14GoBehindPlayerEj.cpp) declare a LOCAL Camera mirror rather
 // than include/Camera.h, and this TU must mangle against the same shape
 // without colliding with the shared header.
 //

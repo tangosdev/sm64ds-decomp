@@ -30,7 +30,7 @@ int data_0209b2e8[8];
 /* data_0209b2ec MOVED to hal/scene_vs_menu.cpp (run rel0215 lane prop15), for
    the reason data_0209f310 moved out of hal/actor_vtables.cpp: dsd splits the
    four-byte run at 0x0209b2ec into data_0209b2ec (1 byte) and data_0209b2ed
-   (3), src/func_ov075_021165b0.c walks BOTH names over those same four bytes,
+   (3), src/unnamed/ov075/func_ov075_021165b0.c walks BOTH names over those same four bytes,
    and a split run cannot be hosted as two disjoint objects. It is a
    grouped-section pair there, gated by gxband_guard's 'vsrank' band. */
 int data_0209b2f0[8];
@@ -71,21 +71,21 @@ int data_020a0f70[8];
 /* data_020a6148 MOVED to the link100 GLOBALS block at the foot of
    hal/cxx_aliases.cpp. It is NOT storage of its own: 0x020a6148 is
    data_020a6134 + 0x14, the sixteen-slot thread table inside the ROM's one
-   0x54-byte OSThreadInfo record, and src/func_02058538.c reaches those same
+   0x54-byte OSThreadInfo record, and src/unnamed/arm9/0205/func_02058538.c reaches those same
    slots through the OTHER name. Two host objects meant the allocator wrote one
    array while the scanner read the other -- silently, with nothing to fault.
    The three names are a grouped run there; the measurement is in that block. */
 /* THE OVERLAY-RESIDENT TABLE, and the generous-default convention was 112
    bytes short of it. ROM span from config/arm9/symbols.txt is
    0x0209d454 - 0x0209d3c4 = 0x90 = 144 bytes, which is exactly the twelve
-   12-byte records src/func_02017e60.c writes:
+   12-byte records src/unnamed/arm9/0201/func_02017e60.c writes:
 
        for (i = 0; i < 12; i++, p++) { p->a = -1; p->b = 0; p->c = 0; }
 
-   src/LoadOverlay.c and src/func_02017e94.c walk the same twelve. At int[8]
+   src/LoadOverlay.c and src/unnamed/arm9/0201/func_02017e94.c walk the same twelve. At int[8]
    that loop ran 112 bytes past the end of the object and over whatever this
    file's link-sweep loop had put next to it. func_02018aa4, the ROM's own
-   file-system bring-up in src/func_0201a054.c, is the call that reaches it. */
+   file-system bring-up in src/unnamed/arm9/0201/func_0201a054.c, is the call that reaches it. */
 int data_0209d3c4[144 / 4];
 int data_0209d4f8[8];
 int data_0209d518[8];
@@ -94,9 +94,9 @@ int data_0209d518[8];
    lane DF40.)
 
    ROM span from config/arm9/symbols.txt is 0x0209d64c - 0x0209d5b8 = 0x94 =
-   148 bytes, and that is the DS thread record src/func_02058200.c builds:
-   src/func_02058158.c reads p[25] (offset 0x64, the state word),
-   src/func_02057f38.c writes offset 0x84/0x8c, src/func_020581a8.cpp reaches
+   148 bytes, and that is the DS thread record src/unnamed/arm9/0205/func_02058200.c builds:
+   src/unnamed/arm9/0205/func_02058158.c reads p[25] (offset 0x64, the state word),
+   src/unnamed/arm9/0205/func_02057f38.c writes offset 0x84/0x8c, src/unnamed/arm9/0205/func_020581a8.cpp reaches
    the wakeup queue at 0x90. At int[8] every one of those was 0x44 or more
    bytes past the end of the object and over whatever this file's link-sweep
    loop had put next to it.
@@ -104,7 +104,7 @@ int data_0209d518[8];
    IT HAS NOT FAULTED YET only because all four reachers are faced idle in
    hal/scene_vs_menu.cpp's refused-subtree block, so nothing has read or
    written past offset 0. This lane seats the first of them -- the poll,
-   src/func_02058158.c, whose only linked caller src/func_0201a1bc.c passes
+   src/unnamed/arm9/0205/func_02058158.c, whose only linked caller src/unnamed/arm9/0201/func_0201a1bc.c passes
    exactly this object -- and that read at 0x64 becomes real, which is what
    turns the size from a tidy-up into a correctness question. The other three
    stay faced (they need the ROM scheduler, which needs the ARM context
@@ -276,7 +276,7 @@ int data_020a0db0[8];
 /* run mg11 lane TTE: the two shorts dScMgTrampoline2_c's and
    dScMgTrampoline_c's slot 18 seed their stroke endpoints from
    (src/minigames/d_s_mg_trampoline2.cpp and src/minigames/d_s_mg_trampoline.cpp both read
-   data_020a0dbc[0] and [1] with ldrsh, and src/__sinit_02075054.c is what
+   data_020a0dbc[0] and [1] with ldrsh, and src/unnamed/arm9/0207/__sinit_02075054.c is what
    writes them). SIZED BY ROM SPAN rather than by the generous default above:
    config/arm9/symbols.txt puts the next symbol at 0x020a0dc0, four bytes on,
    which is exactly the two halfwords the three TUs read. */
@@ -569,11 +569,11 @@ void *data_0209f1e4;
    src/func_0202fb30.c reads the same +0x28 and copies +0x18 into +0x14. 44
    covers both with the ROM's own extent and no guessing. */
 
-/* the paused/suspended flag. src/func_02023498.c is the only writer that ever
+/* the paused/suspended flag. src/unnamed/arm9/0202/func_02023498.c is the only writer that ever
    sets it (`data_0209f1e0 = 1` on the pause edge) and that TU is not in the
    link, so on the port it stays 0 -- which is what makes the whole first
    branch of Scene::BeforeBehavior unreachable. decl_common.h does not declare
-   this one; src/func_02023544.c and src/func_02023498.c both spell it
+   this one; src/unnamed/arm9/0202/func_02023544.c and src/unnamed/arm9/0202/func_02023498.c both spell it
    `extern unsigned char`, which this serves. */
 unsigned char data_0209f1e0[4];
 
@@ -614,7 +614,7 @@ unsigned char data_0209f1d8[4];
 int data_0209f61c[0x2c / 4];   /* ROM span 0x2c */
 
 /* THE BRIGHTNESS FADER, and the one symbol here where zero is NOT the ROM's
-   boot value. src/__sinit_02074edc.c is the ROM's static initialiser for it:
+   boot value. src/unnamed/arm9/0207/__sinit_02074edc.c is the ROM's static initialiser for it:
    it installs a vtable, sets currInterp to 0x1000, and registers a destructor.
    The port does not link that sinit, so this storage is zeroed BSS and its
    FIRST WORD -- the vptr -- is null.

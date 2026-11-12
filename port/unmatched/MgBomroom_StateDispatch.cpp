@@ -11,7 +11,7 @@
 //
 // ---- THE THIRTY-THREE ADDRESSES, AND WHERE THEY COME FROM ------------------
 //
-// port/tools/stategen.py --sinit src/__sinit_ov006_0212fd48.c --overlay 6.
+// port/tools/stategen.py --sinit src/unnamed/ov006/__sinit_ov006_0212fd48.c --overlay 6.
 // That constructor is dScMgBomroom_c's own, and it was identified by the test
 // port/mg_fanout_costs.txt section 3 prescribes rather than by name: the pairs
 // it copies run 0x0213b9ec..0x0213baf4 and the class's SpawnInfo (0x0213badc)
@@ -423,7 +423,7 @@ extern "C" unsigned port_mg_bomroom_opencoded_calls(void)
 // naming the .obj -- zero real diff lines -- so the option is not claimed.
 //
 // THE TWENTY-FOUR SOURCE PAIRS ALL READ {code, 0} in the overlay image at the
-// addresses src/__sinit_ov006_0212fd48.c copies each slot from, and every one is
+// addresses src/unnamed/ov006/__sinit_ov006_0212fd48.c copies each slot from, and every one is
 // a WHOLE-PAIR copy (`data_ov006_TAB.pN = data_ov006_SRC;`, a struct assignment
 // of the whole eight-byte Pair). There is not one field-form fill, which is the
 // condition that lets this installer prove what it writes:

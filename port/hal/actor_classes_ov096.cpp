@@ -174,7 +174,7 @@ DSSTATE_END
 /* PORTSYNC2: both names of this ROM word are one name in main now; the alias would bind a symbol to itself. */ // #pragma comment(linker, "/alternatename:__ZTV7daTor_c=__ZTV7daTor_c")
 /* THE MEASURED CLOSURE GAP, four of its six rows. Taken off the first link's
  * own unresolved list, the way slice_vs.txt section 3 says to take it, not
- * guessed. The other two rows are not aliases: src/func_02016aac.c is a
+ * guessed. The other two rows are not aliases: src/unnamed/arm9/0201/func_02016aac.c is a
  * MISSING arm9 TU and was added to port/slice_ov096.txt, and func_02112968 is
  * a wrong NAME for level data and is handled in
  * port/unmatched/Tornado_HostSites.cpp.

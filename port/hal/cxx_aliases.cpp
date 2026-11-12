@@ -116,7 +116,7 @@ void MultiCopyHalf(const void *src, void *dst, int size)
    word. Their ROM callers do not agree on how wide the argument is:
 
      include/decl_common.h:2144-2146   (struct Matrix4x3*, short, short)
-     src/func_ov007_020c39f8.c:5-7     (struct Matrix4x3*, short, short)
+     src/unnamed/ov007/func_ov007_020c39f8.c:5-7     (struct Matrix4x3*, short, short)
      src/Matrix4x3_FromRotationX/Y/Z.c (void*, int, int)
 
    On ARM that disagreement is invisible. AAPCS makes the CALLER widen a
@@ -145,7 +145,7 @@ void MultiCopyHalf(const void *src, void *dst, int size)
    headers -- and it keeps src/ and include/ untouched.
 
    The DS semantics are unchanged: 4096 = 1.0, rows as the asm banners give
-   them in src/func_02052800.c, src/func_02052820.c and src/func_0205283c.c. */
+   them in src/unnamed/arm9/0205/func_02052800.c, src/unnamed/arm9/0205/func_02052820.c and src/func_0205283c.c. */
 void func_02052800(int *m, short s, short c)   /* X rotation */
 {
     m[0] = 0x1000; m[1] = 0; m[2] = 0;
@@ -253,7 +253,7 @@ int func_01ff99a4(int a, int b)
    0x01ff8000..0x01ffb078. Every caller IS the soft-float block, writing its own
    flags. No game code reads them.
    On the host the question does not arise at all: neither _func_0207322c nor
-   _data_020aa3f4 appears in walk_window.map, and src/func_0207322c.c is in no
+   _data_020aa3f4 appears in walk_window.map, and src/unnamed/arm9/0207/func_0207322c.c is in no
    slice and no CMake source list, because the port does not host the ROM's
    soft-float block -- every primitive in it is a native body like these two.
    The status word does not exist on the host, so nothing can read it.
@@ -270,7 +270,7 @@ int func_01ff9378(int a, int b)
    link100 wave 14, lane SHADOWS3: the tag at the foot of that comment binds to
    func_01ff9378 on the line above and stops there, so this half of the pair
    the comment spends forty lines deriving read as undocumented work. Same
-   ruling, same evidence, same permanence: src/func_01ffa594.c is the ROM's
+   ruling, same evidence, same permanence: src/unnamed/arm9/01ff/func_01ffa594.c is the ROM's
    hand-written single-precision subtract. */
 int func_01ffa594(int a, int b)
 { float x, y, r; memcpy(&x, &a, 4); memcpy(&y, &b, 4); r = x - y;
@@ -321,7 +321,7 @@ int func_01ffabe4(int a, int b) { return b ? a / b : 0; }
    assemble -- see the block comment above. TAG ADDED, run link100 wave 14,
    lane SHADOWS3. Every other body in this block carries this ruling and this
    one never did: the comment directly above it is the atan2 table's, so the
-   row read as owed work. src/func_01ff8e10.c is the toolchain's own
+   row read as owed work. src/unnamed/arm9/01ff/func_01ff8e10.c is the toolchain's own
    double-precision subtract, shipped as assembly, taking its operands in
    r0:r1 and r2:r3 -- outside the C ABI for doubles, which is the other half of
    why no C spelling of it exists. */
@@ -346,7 +346,7 @@ int func_01ff9e2c(unsigned a, unsigned b, unsigned c, unsigned d)
        asm void ARMProcessorMode(void) { mrs r0, cpsr; and r0, r0, #0x1f; bx lr }
    The host has no CPSR. It has the one thing the ROM's single caller asks this
    function about, though: whether the core is in IRQ mode. There is exactly one
-   caller in the linked set, src/func_02057f54.c:25 --
+   caller in the linked set, src/unnamed/arm9/0205/func_02057f54.c:25 --
        if (s->m4 == 0) { if (ARMProcessorMode() != 0x12) goto cont; }
        s->m0 = 1; return;
    -- and hal/boot2_thread.cpp raises port_irq_mode_depth for exactly the span an
@@ -365,7 +365,7 @@ int ARMProcessorMode(void) { return port_irq_mode_depth ? 0x12 : 0x1f; }
    reported "already resumed" (setjmp-nonzero) so func_02057f54 backed out
    without switching, and a restore that trapped because "a second DS thread
    went live" was assumed impossible. A second DS thread IS live now -- the
-   ROM's own idle thread, src/func_02057e34.c -- so both bodies are in
+   ROM's own idle thread, src/unnamed/arm9/0205/func_02057e34.c -- so both bodies are in
    hal/boot2_thread.cpp, backed by the fiber seam ntr/include/ntr/rt.h:11-14
    describes. They are still PORT_HOST_ABI and for the same reason (hand-asm
    ARM register-file primitives); the tag and its evidence moved with them.
@@ -401,7 +401,7 @@ int _ZNK15dExtFrameCtrl_c12WillHitFrameEi(void *self, int f)
    through a tail call the C decl never names (the ride-through catalog).
    Host spells out both args and routes to the HAL Construct. */
 void *_ZN13SharedFilePtr9ConstructEj(void *self, unsigned id);
-/* RETIRED, run link100 wave 15 lane SEAT15C: src/func_02017acc.c now spells
+/* RETIRED, run link100 wave 15 lane SEAT15C: src/unnamed/arm9/0201/func_02017acc.c now spells
    both arguments, so the matched TU carries this row. See port/slice_l15fs.txt. */
 /* RETIRED, run link100 wave 15 lane SEAT15C: src/SharedFilePtr_Construct_TexSeq.c
    now spells both arguments. See port/slice_l15fs.txt. */
@@ -410,7 +410,7 @@ void *_ZN13SharedFilePtr9ConstructEj(void *self, unsigned id);
    same veneer as its four siblings above and below -- ROM 0x02017a24 is
    `push {r4,lr} / mov r4,r0 / bl 0x2017ae4 / mov r0,r4 / pop / bx lr`, r1
    never written, so the fileID rides through -- but it was the only one left
-   compiled from src, where src/func_02017a24.c spells `int f(int x)` and
+   compiled from src, where src/unnamed/arm9/0201/func_02017a24.c spells `int f(int x)` and
    drops the id. The chain below it drops the id twice more before anything
    stores it: func_02017ae4 and func_02017e48 are the same shape, and
    func_02017e0c is the first body that takes two parameters. So on the host
@@ -448,13 +448,13 @@ void *_ZN13SharedFilePtr9ConstructEj(void *self, unsigned id);
    carries `func_02017a24 def_n 1 / decl_n 2 INVENTS` twice, once for
    __sinit_ov006_0212f6b4 and once for __sinit_ov006_02130a08. That census is
    REPORT ONLY -- only the receiver and plain-name subsets are ratcheted -- so
-   it never failed a build. src/func_02017a24.c was taken out of
+   it never failed a build. src/unnamed/arm9/0201/func_02017a24.c was taken out of
    port/slice_mg1.txt and this became the definition.
 
    RETIRED, run link100 wave 15 lane SEAT15C. Everything above is why the
    veneer was right, and it is also the reason it can go now: what PSY
    measured was a SOURCE that spelled one parameter, and main has since
-   matched src/func_02017a24.c with both spelled --
+   matched src/unnamed/arm9/0201/func_02017a24.c with both spelled --
 
        extern void *func_02017ae4(void *self, unsigned int fileID);
        void *func_02017a24(void *self, unsigned int fileID)
@@ -469,16 +469,16 @@ void *_ZN13SharedFilePtr9ConstructEj(void *self, unsigned id);
    constructor. port/slice_l15fs.txt carries the row. */
 /* RETIRED, run linkfull wave 23 lane BANNER3, LINK15 batch W23-3: the "host
    card seam does not refcount" reason (this comment's old text) is stale for
-   this row. src/func_02017ab4.c is `func_02017e34(x); return x;` and is
+   this row. src/unnamed/arm9/0201/func_02017ab4.c is `func_02017e34(x); return x;` and is
    directly called (not through the data_020aa3f0 MSL dtor-chain head) from
    the already-linked class destructor family MascotWalker_Destruct /
    020c1c64 / 020c21e4 / 020c3e70 (dScMgBSC_c / dScMgMemory_c, ninja_objs.json
    confirms these compile from their real src/ paths, not a hal/ substitute),
    which runs whenever an instance of that class is torn down in normal play.
    See port/slice_w23_stale3.txt. */
-/* RETIRED, run link100 wave 15 lane SEAT15C: src/func_02017b4c.c now spells
+/* RETIRED, run link100 wave 15 lane SEAT15C: src/unnamed/arm9/0201/func_02017b4c.c now spells
    both arguments. See port/slice_l15fs.txt. */
-/* RETIRED, run link100 wave 15 lane SEAT15C: src/func_020178cc.c now spells
+/* RETIRED, run link100 wave 15 lane SEAT15C: src/unnamed/arm9/0201/func_020178cc.c now spells
    both arguments. gate 50 (ov080's PAINTING): the third ov080 sinit constructs
    its SharedFilePtrs through func_020178cc, the same veneer chain as
    func_02017acc, and both chains end at func_02017e0c, which is where
@@ -487,7 +487,7 @@ void *_ZN13SharedFilePtr9ConstructEj(void *self, unsigned id);
    because the card seam does not refcount. See port/slice_l15fs.txt. */
 /* RE-CHECKED, run linkfull wave 23 lane BANNER3, LINK15 batch W23-3: KEPT AS
    HOST. The refcount reason above may be stale, but that is not why this one
-   stays out. func_020731dc (src/func_020731dc.c) is the MSL global-dtor-chain
+   stays out. func_020731dc (src/unnamed/arm9/0207/func_020731dc.c) is the MSL global-dtor-chain
    push: node[0]=data_020aa3f0 (prev head), node[1]=fn, node[2]=obj,
    data_020aa3f0=node. __sinit_ov075_0211c51c and __sinit_ov080_02127b2c pass
    &func_020178b4 as that node[1] to register it on the chain, not to call it.
@@ -501,7 +501,7 @@ void *_ZN13SharedFilePtr9ConstructEj(void *self, unsigned id);
 int func_020178b4(int x) { return x; }   /* fileptr dtor callback: host no-op */
 /* RETIRED, run linkfull wave 23 lane BANNER3, LINK15 batch W23-3: the "host
    card seam does not refcount" reason (this comment's old text) is stale for
-   this row. src/func_02017e34.c is `data_0209d3bc=*(unsigned short*)c;
+   this row. src/unnamed/arm9/0201/func_02017e34.c is `data_0209d3bc=*(unsigned short*)c;
    return c;`, writing the same "last fileID touched" breadcrumb
    port/hal/fs.cpp:171/590 already keeps for the load side; this is the
    release side. Called directly from func_02017ab4 and from the
@@ -1059,7 +1059,7 @@ extern "C" int _ZN9dBgCh_Gnd10DetectClsnEv(void *self)
    LHS an unresolved row of that link.
 
    THE FIRST ONE IS THE VTABLE, and it is a name bridge and not an address
-   change. main's 3739fdf78 gave src/d_a_obj_path_lift.cpp the imported table
+   change. main's 3739fdf78 gave src/game/actors/d_a_obj_path_lift.cpp the imported table
    by its Itanium name: `extern int _ZTV15daObjPathLift_c[];` and the store
    `*(int *)actor = (int)&_ZTV15daObjPathLift_c[0];`, addend ZERO, which is the
    correct spelling for a TU that IMPORTS its vtable. Declared in C++ at file
@@ -1372,7 +1372,7 @@ extern "C" int _ZN9dBgCh_Gnd10DetectClsnEv(void *self)
    (St_HurtWater_Main, St_WaitQuicksand_Main) spell the ov007 name for what is
    really ov002's body at 0x020c5dec, pass the ov002 two-argument signature, and
    still route to ov002 through this alias. ov007's own caller
-   src/func_ov007_020ba2e0.c wants the ov007 body at the same address, which a
+   src/unnamed/ov007/func_ov007_020ba2e0.c wants the ov007 body at the same address, which a
    single /alternatename cannot also express, so the ov007 body and that caller
    are compiled with COMPILE_DEFINITIONS func_ov007_020c5dec=func_ov007_020c5dec_own
    in port/CMakeLists.txt (the Spindrift/ov062 rule). That keeps func_ov007_020c5dec
@@ -1659,7 +1659,7 @@ extern "C" int _ZN9dBgCh_Gnd10DetectClsnEv(void *self)
 #pragma comment(linker, "/alternatename:?G1@@3PAHA=_data_ov002_0210e05c")
 #pragma comment(linker, "/alternatename:_G0=_data_020a0eac")
 /* VT/HEAP, the other two shared-header placeholder names, settled the same
-   way for their ONE linked reader: src/_ZN12dEnemyBase_cD0Ev.cpp (the Enemy base
+   way for their ONE linked reader: port/unmatched/hostarm/_ZN12dEnemyBase_cD0Ev.cpp (the Enemy base
    table's deleting destructor, seated by hal_fill_enemy_base_vtable). Its
    ROM relocs are the Enemy base vtable ov002 0x021081e4 for the vptr store
    and the 0x020a0eac game heap word for the Memory::Deallocate argument.
@@ -1674,9 +1674,9 @@ extern "C" int _ZN9dBgCh_Gnd10DetectClsnEv(void *self)
    pool names its own table, so bare VT would have stored the ov002 dEnemyBase_c base
    table into a minigame scene object. All three are exempted by a per-source -D
    in port/CMakeLists.txt onto their own table rather than by a change here, so
-   the row above keeps serving src/_ZN12dEnemyBase_cD0Ev.cpp untouched:
+   the row above keeps serving port/unmatched/hostarm/_ZN12dEnemyBase_cD0Ev.cpp untouched:
      src/minigames/d_s_mg_luigi.cpp  dScMgLuigi_c    -> data_ov006_0213cf10
-     src/_ZN14dScMgCurling_cD0Ev.cpp  dScMgCurling_c  -> data_ov006_0213c304
+     port/unmatched/hostarm/_ZN14dScMgCurling_cD0Ev.cpp  dScMgCurling_c  -> data_ov006_0213c304
      src/_ZN11dScMgCoin_cD0Ev.cpp  dScMgCoin_c     -> data_ov006_0213bf50
    HEAP is renamed for none of them: all three pools hold 020A0EAC, which is
    the row below, so that binding is right for every reader it has.
@@ -1694,7 +1694,7 @@ extern "C" int _ZN9dBgCh_Gnd10DetectClsnEv(void *self)
    now discounts the three ways a TU can reuse a spelling without meaning the
    placeholder -- typedef, struct/union/enum tag, and #define -- and lists them
    as SHADOW rows rather than findings, so `struct VT` in
-   src/State10_Update.c and `#define G1` in src/func_ov007_020be0dc.c are
+   src/State10_Update.c and `#define G1` in src/unnamed/ov007/func_ov007_020be0dc.c are
    no longer reported. What it still cannot see is who reaches the LINKER: it
    reports TUs that are in no target, and it can only ever discuss names it
    finds in source. Use the audit to decide whether a reader is WRONG; use the
@@ -2401,7 +2401,7 @@ void Platform::KillByMegaChar(Player &player)
    mangles WITH the const qualifier; ovdata.py's generated host array is a
    flat C u8[12] under the plain name. */
 #pragma comment(linker, "/alternatename:?data_ov072_02122c70@@3UVector3@@B=_data_ov072_02122c70")
-/* gate 193: src/_ZN11BabyPenguinD0Ev.cpp spells the class's own table as
+/* gate 193: port/unmatched/hostarm/_ZN11BabyPenguinD0Ev.cpp spells the class's own table as
    _ZTV9daPgBby_c (a plain C-linkage name, dsd's RTTI-derived spelling),
    the same address as hal/actor_classes_ov072.cpp's own host array
    _ZTV11BabyPenguin. */
@@ -2472,10 +2472,10 @@ bool Player::TryGrab(dActor_c &actor)
 // ONE THREAD NODE, and it is storage for a comparison that is never true.
 //
 // port/slice_gate215.txt links the card-backup driver, and two of its TUs are
-// there only because their address is taken: src/func_02060484.c and
-// src/func_02060558.cpp both hand func_02060228 to their asynchronous arm, and
+// there only because their address is taken: src/unnamed/arm9/0206/func_02060484.c and
+// src/unnamed/arm9/0206/func_02060558.cpp both hand func_02060228 to their asynchronous arm, and
 // both callers in that slice pass 0 for it. func_02060228 -> func_02057e84 is
-// the driver's thread-priority bump, and src/func_02057e84.c walks the ready
+// the driver's thread-priority bump, and src/unnamed/arm9/0205/func_02057e84.c walks the ready
 // list looking for the node it was given, refusing to touch it if it turns out
 // to be data_020a6188 -- the idle thread, which must never be re-queued.
 //
@@ -2483,7 +2483,7 @@ bool Player::TryGrab(dActor_c &actor)
 // first compare; the symbol still has to exist for the link. Sized by ROM span,
 // data_020a6188 to the next bss symbol data_020a621c, which is 0x94 bytes --
 // one OSThread, the same shape data_020a81bc has. NOT sized by the two fields
-// src/func_02057e84.c reads (+0x68 next, +0x70 priority): see the undersized-
+// src/unnamed/arm9/0205/func_02057e84.c reads (+0x68 next, +0x70 priority): see the undersized-
 // globals rule this file's GX bank block was rewritten under.
 //
 // It is hosted arm9 bss like every other symbol in this file, so it is inside a
@@ -2505,7 +2505,7 @@ DSSTATE_END
 //   spells the Itanium C name. Exactly the trade hal/scene_boot.cpp already
 //   makes for SaveData::SaveFile one screen above its own save block.
 //
-//   IRQ::Disable / IRQ::Restore   src/func_02060558.cpp declares them as free
+//   IRQ::Disable / IRQ::Restore   src/unnamed/arm9/0206/func_02060558.cpp declares them as free
 //   functions in `namespace IRQ` (`?Disable@IRQ@@YAIXZ`) while line 64 of this
 //   file aliases the STATIC-MEMBER spelling (`?Disable@IRQ@@SAIXZ`). Same two
 //   definitions, a second spelling; the ROM's own bodies still run.
@@ -2572,7 +2572,7 @@ DSSTATE_END
 // part of it, 0x020a6188 - 0x020a6134 = 0x54 = 84 bytes.
 //
 // THE MEASUREMENT, from extracted/arm9_dec.bin at base 0x02004000 rather than
-// from the decompilation. src/func_02058308.c is the widest writer and its ARM
+// from the decompilation. src/unnamed/arm9/0205/func_02058308.c is the widest writer and its ARM
 // is unambiguous:
 //
 //     02058334  ldr r4, =0x020a6134
@@ -2597,10 +2597,10 @@ DSSTATE_END
 // DS that name IS data_020a6134 + 0x14, and two matched bodies reach the same
 // sixteen table slots through the two different names --
 //
-//     src/func_02058538.c   scans data_020a6134.arr[0..15]  (+0x14 + 4i)
+//     src/unnamed/arm9/0205/func_02058538.c   scans data_020a6134.arr[0..15]  (+0x14 + 4i)
 //                           for a free slot and returns the index
-//     src/func_02058200.c   writes data_020a6148[id] = self
-//     src/func_020581a8.cpp writes data_020a6148[o->idx] = 0
+//     src/unnamed/arm9/0205/func_02058200.c   writes data_020a6148[id] = self
+//     src/unnamed/arm9/0205/func_020581a8.cpp writes data_020a6148[o->idx] = 0
 //
 // -- so with two host objects the allocator writes one array and the scanner
 // reads another: func_02058538 would hand out slot 0 for every thread, for
@@ -2622,8 +2622,8 @@ DSSTATE_END
 /* +0x00  u16 needsRescheduling, u16 irqDepth, u16, u16 */
 LINK100_BSS(".dsstate$osti00", data_020a6134, 8);
 /* +0x08  OSThread *current, OSThread *list, switch callback.
-   src/func_02058308.c also parks the ADDRESS of this member in data_020a612c,
-   which src/func_02057f54.c then dereferences to find the running thread --
+   src/unnamed/arm9/0205/func_02058308.c also parks the ADDRESS of this member in data_020a612c,
+   which src/unnamed/arm9/0205/func_02057f54.c then dereferences to find the running thread --
    so this one has to be at +8 of the record and not merely exist. */
 LINK100_BSS(".dsstate$osti01", data_020a613c, 12);
 /* +0x14  OSThread *table[16] -- the sixteen slots func_02058538 allocates */
@@ -2653,8 +2653,8 @@ Link100OstiCheck g_link100_osti_check;
 }  /* anonymous namespace */
 
 // TWO NAME BRIDGES ONTO THE RECORD ABOVE, moved here from hal/boot_hw.cpp by
-// run link100's lane THREAD. Their one consumer is src/func_020581a8.cpp --
-// the exit thunk src/func_02058200.c stores in every context it builds -- and
+// run link100's lane THREAD. Their one consumer is src/unnamed/arm9/0205/func_020581a8.cpp --
+// the exit thunk src/unnamed/arm9/0205/func_02058200.c stores in every context it builds -- and
 // that TU is a .cpp that declares both names at namespace scope OUTSIDE its
 // extern "C" block, so MSVC decorates the references while the definitions
 // eight lines up carry the ROM's flat C names. boot_hw.cpp is walk_window and
@@ -2706,7 +2706,7 @@ Link100OstiCheck g_link100_osti_check;
 //       exact against data_02092134, zero relocations).
 //   ?data_0209f278@@3EA   = _data_0209f278      u8     -- the "already
 //       resident" flag hal/auto_bss.cpp:63 hosts as int[8]. The alias binds the
-//       byte at offset 0, which is the same byte src/func_0202deac.c writes
+//       byte at offset 0, which is the same byte src/unnamed/arm9/0202/func_0202deac.c writes
 //       through the C name, so both spellings reach one storage location.
 //       Three DATA faces, not code ones: an address alias carries no
 //       convention, and each right-hand side is a definition this tree already
@@ -3537,7 +3537,7 @@ DSSTATE_END
  * main's #2528 matched Model::LoadCompressedTextureToVram and
  * src/_ZN5Model27LoadCompressedTextureToVramEPcjS0_.cpp spells the body as the
  * static member, so the flat ROM name it used to carry has no definition and
- * two ROM callers still reference it flat (src/func_ov075_0211aa94.c:16 and
+ * two ROM callers still reference it flat (src/unnamed/ov075/func_ov075_0211aa94.c:16 and
  * src/func_ov080_02125630.cpp:26). The RHS is DEFINED in this link and it is a
  * STATIC member: __cdecl, no receiver, three arguments, scalar return on both
  * sides, which is the admissibility rule met on every clause. The host bridge
@@ -3595,7 +3595,7 @@ DSSTATE_END
  * /alternatename does not chain.
  *
  * WHAT REFERENCES THEM: the ROM's own factory for each class, spelled
- * `p[0] = (int)_ZTV10SlidingBox;` in src/d_a_slide_box.c and the like. So
+ * `p[0] = (int)_ZTV10SlidingBox;` in src/game/actors/d_a_slide_box.cpp and the like. So
  * the count these close is the ROM's own reference graph reaching the
  * port's table. Those factories spell the table with NO addend, which is
  * the port's vptr address point (table + 0, the VPTR ruling);
@@ -3605,10 +3605,10 @@ DSSTATE_END
 /* ov002 0x0210c2c8, 18 words. hal/sub_actors.cpp defines the storage as
    _ZTV8dMeter_c and says so itself ("vtspan: _ZTV3HUD"): dMeter_c is the
    name the matched constructor writes and _ZTV3HUD the config name.
-   src/d_meter.cpp stores it as the HUD's vptr. */
+   src/ui/hud/d_meter.cpp stores it as the HUD's vptr. */
 /* PORTSYNC2: both names of this ROM word are one name in main now; the alias would bind a symbol to itself. */ // #pragma comment(linker, "/alternatename:__ZTV8dMeter_c=__ZTV8dMeter_c")
 /* ov002 0x0210c1c0, 18 words. Same file, same statement ("vtspan:
-   _ZTV7Minimap"); src/d_map.cpp stores it as the Minimap's vptr. */
+   _ZTV7Minimap"); src/ui/hud/d_map.cpp stores it as the Minimap's vptr. */
 /* PORTSYNC2: both names of this ROM word are one name in main now; the alias would bind a symbol to itself. */ // #pragma comment(linker, "/alternatename:__ZTV6dMap_c=__ZTV6dMap_c")
 /* ov002 0x0210b0ec, 31 words. The address's other ROM name is
    _ZTV13daObjNumber_c, which hal/actor_classes_vspopup.cpp:307 already

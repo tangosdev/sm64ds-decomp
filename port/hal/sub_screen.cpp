@@ -201,7 +201,7 @@ extern short data_0209d47c, data_0209d470, data_0209d474, data_0209d488;
    DS bottom-screen pixels. Stage::CheckCameraInput and every TouchArea read
    it; nothing on the host was writing it.
 
-   BYTE +1 IS AN EDGE AND NOT A HOLD. src/func_0203bb60.c, the ROM's own
+   BYTE +1 IS AN EDGE AND NOT A HOLD. src/unnamed/arm9/0203/func_0203bb60.c, the ROM's own
    producer, writes `p[1] = touch ^ p[0]` -- set on the frame the stylus goes
    down and again on the frame it comes up. This file called it `held` for a
    long time and wrote a held flag into it; poll_touch's store carries the
@@ -215,7 +215,7 @@ extern short data_0209d47c, data_0209d470, data_0209d474, data_0209d488;
    below is what proves it. */
 extern unsigned char data_020a0de8[];   /* +0 touched */
 /* run mg16 lane MP3: the ROM's four-deep touch RING, hosted by
-   hal/comms_conductor.cpp. This is link 3's input -- src/func_0203b9bc.c reads
+   hal/comms_conductor.cpp. This is link 3's input -- src/unnamed/arm9/0203/func_0203b9bc.c reads
    it and settles data_020a0dd8 -- and is a different thing from the TouchInfo
    block above, which is link 5's output. The store at the bottom of poll_touch
    is what fills it. */
@@ -2283,7 +2283,7 @@ extern "C" void port_touch_inject_census(unsigned *frames, unsigned *presses,
  *
  * PRESS EDGES ARE THE NUMBER THAT MATTERS and that is why they are counted
  * separately from poked frames. The ROM's own producer spells byte +1 as
- * `touch XOR previous` (src/func_0203bb60.c), so ONE held press is ONE edge,
+ * `touch XOR previous` (src/unnamed/arm9/0203/func_0203bb60.c), so ONE held press is ONE edge,
  * and every gate in the game that reads "touched AND changed" -- curling's
  * Aim_WaitTouch is one -- can only fire on that single frame. A script
  * that holds one long press across a scene's warm-up timer therefore delivers
@@ -2406,7 +2406,7 @@ extern "C" int  port_tsc_ring_armed(void);
 extern "C" void port_tsc_arm7_frame_touch(void);
 extern "C" unsigned long port_tsc_arm7_sample_count(void);
 /* hal/comms_conductor.cpp's MP3_BSS row: the ROM's OWN reader's settled
-   answer, {a,b,c,d} = {x,y,touched,valid} (struct Col, src/func_0203b9bc.c).
+   answer, {a,b,c,d} = {x,y,touched,valid} (struct Col, src/unnamed/arm9/0203/func_0203b9bc.c).
    Read-only here, for the watcher two paragraphs below. */
 extern "C" unsigned short data_020a0dd8[4];
 
@@ -2684,7 +2684,7 @@ void poll_touch(void)
      * The third member of this family, in the same place and the same shape as
      * the two around it, and it exists for a reason the other two do not have.
      *
-     * The title screen -- top-state 11, src/func_ov007_020b0a20.c -- WAITS FOR
+     * The title screen -- top-state 11, src/unnamed/ov007/func_ov007_020b0a20.c -- WAITS FOR
      * A TOUCH AND NOTHING ELSE. Measured: a default boot with no input at all
      * sits in that state for 3000 frames and never leaves it
      * (out/boot-title/P0_attract_noinput.log, one state line at f1 and then
@@ -2806,7 +2806,7 @@ void poll_touch(void)
      *
      * X AND Y STAY LATCHED ON RELEASE, and that is not the same shortcut.
      * The ROM writes p[2]/p[3] every frame from link 3, and link 3
-     * (src/func_0203b9bc.c) only publishes its idle 0xff/0xff when NO entry in
+     * (src/unnamed/arm9/0203/func_0203b9bc.c) only publishes its idle 0xff/0xff when NO entry in
      * the four-deep ring carries a touch. On the release-edge frame the ring
      * is still draining, so neither of its accept branches and neither the
      * idle branch runs, and data_020a0dd8 keeps the last touched point --
@@ -2823,10 +2823,10 @@ void poll_touch(void)
 
     /* ---- AND THE SAME SAMPLE INTO THE ROM'S OWN RING (run mg16, lane MP3) --
      *
-     * Everything above writes link 5's OUTPUT directly. src/func_0203b9bc.c is
+     * Everything above writes link 5's OUTPUT directly. src/unnamed/arm9/0203/func_0203b9bc.c is
      * link 3, and it does not read any of it: it reads the four-deep touch RING
      * at data_020a0df8 and settles the answer into data_020a0dd8. Nothing in
-     * this port had ever written that ring, so the moment src/func_0203df40.c
+     * this port had ever written that ring, so the moment src/unnamed/arm9/0203/func_0203df40.c
      * was linked -- it calls func_0203b9bc to fill the local comms record's
      * stylus fields -- the ROM published its IDLE QUAD every frame and the
      * stylus could not cross the wire. Measured: rung 3's parent saw
@@ -2839,9 +2839,9 @@ void poll_touch(void)
      * ROM's own code do the rest, rather than teaching the game to skip a read.
      *
      * THE ENCODING IS THE ONE THIS FILE ALREADY DOCUMENTS twenty lines up, and
-     * src/func_0203b9bc.c is where it was read off: {u16 x, u16 y, u16 touched,
+     * src/unnamed/arm9/0203/func_0203b9bc.c is where it was read off: {u16 x, u16 y, u16 touched,
      * u16 validity}, nine entries, and `d` is a VALIDITY MASK where any set bit
-     * makes src/func_ov007_020c1db0.c drop the sample -- so a live touch
+     * makes src/unnamed/ov007/func_ov007_020c1db0.c drop the sample -- so a live touch
      * publishes d = 0 or the reader cancels it.
      *
      * THREE CONSECUTIVE SAMPLES ARE NEEDED before func_0203b9bc accepts one:
@@ -2864,7 +2864,7 @@ void poll_touch(void)
      * once per frame, right here, which is this call's own cadence. That
      * function does not touch the ring itself; it gives the ARM7 the turn
      * that posts the auto-sample indication on channel 6, and the ROM's own
-     * src/func_0205f300.c is what writes data_020a0df8 and advances the
+     * src/unnamed/arm9/0205/func_0205f300.c is what writes data_020a0df8 and advances the
      * cursor, off the shared sample words the ARM7 fills from TouchInfo.
      *
      * THE HOST'S INPUT IS NOT LOST -- it is what TouchInfo (data_020a0de8,
@@ -2885,7 +2885,7 @@ void poll_touch(void)
            still writes the ring directly, and port_tsc_arm7_sample_count()
            reads hal/tsc_arm7.cpp's count of ROM-side writes (see its banner:
            the send that count is kept beside is synchronous with
-           src/func_0205f300.c's own store, so the count is not an estimate).
+           src/unnamed/arm9/0205/func_0205f300.c's own store, so the count is not an estimate).
            Off by default: it is a proof aid, not a shipped line. */
         static unsigned long host_stores;
         if (port_tsc_ring_armed()) {
@@ -3440,7 +3440,7 @@ extern "C" void hal_sub_screen_level_init(void)
      * puts it.
      *
      * WHAT THAT COST, measured on a star return with the save menu up. The
-     * fonts live at func_02054d88() (src/func_02054d88.c), which on this path
+     * fonts live at func_02054d88() (src/unnamed/arm9/0205/func_02054d88.c), which on this path
      * is 0x06000000: the small 8x16 message font at +0, and the big 16x16 menu
      * font that LoadFont(0) decompresses at +0x8000 (src/LoadFont.cpp:39).
      * With the offset missing BG3_A's tilemap lands at 0x06008800 and BG1_A's
@@ -3580,7 +3580,7 @@ extern "C" void hal_sub_screen_level_init(void)
 /* Top of the 2D frame. It used to put both OAM shadows back to "every sprite
    disabled" and both entry counters to zero with OAM::Reset, so the frame's
    Render calls filled from the start. That is the ROM's frame phase 2's first
-   statement on its full arm (src/func_02019390.c), and both host loops call the
+   statement on its full arm (src/unnamed/arm9/0201/func_02019390.c), and both host loops call the
    ROM's phase 2 now (hal/fader_wipes.cpp's port_frame_phase2, run linkfull lane
    RESET2), before anything renders, so the reset is gone from here: the ROM
    decides it, including the scenes whose graphics block answers 0 and skips it
@@ -3854,7 +3854,7 @@ void hal_obj_parity_probe(void)
  * WHAT WAS WRONG, and it is a frame-order fact about this program rather than
  * anything in the game's code.
  *
- * src/func_02019144.c is the DS's once-per-frame display sync and its order is
+ * src/unnamed/arm9/0201/func_02019144.c is the DS's once-per-frame display sync and its order is
  * fixed: dispatch the current graphics block's slot 2 (which for every minigame
  * reaches the scene's slot 24, and for the dScMgD3DBase_c family that slot is
  * what writes POWCNT1's display-swap bit), then OAM::Flush, then OAM::Load,

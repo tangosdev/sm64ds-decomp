@@ -433,7 +433,7 @@ extern "C" void host_menu_cursor_sound_flush(void);   /* hal/menu_compose.cpp: o
 #include "hal/vs_arena.h"         /* run mp1 lane ARENACORE1: arena-mode VS */
 #include "hal/adv_chat.h"         /* run mp1 lane CHATUI1: in-game text chat */
 /* run mg16 lane MP3: hal/comms_lockstep.h is RETIRED. Its transcription of
-   src/func_0203ea5c.c existed only because that TU was in no slice; the TU is
+   src/unnamed/arm9/0203/func_0203ea5c.c existed only because that TU was in no slice; the TU is
    linked now and drives itself. Its lessons live in comms_seam.h's frozen
    contract and in hal/comms_conductor.cpp. */
 #include "hal/instance_tag.h"     /* run mg16 lane MP2: per-instance filenames */
@@ -488,7 +488,7 @@ static unsigned short g_pad_mirror_prev;
    host_ds_buttons speaks the game's REMAPPED Ctrl convention (jump=2,
    punch=1, crouch=0x400, run=0x800), because it used to feed the Ctrl words
    directly. The key register wants the DS's RAW pad convention, because
-   src/func_0203df40.c publishes it and src/_ZN5Stage10CheckInputEv.cpp reads
+   src/unnamed/arm9/0203/func_0203df40.c publishes it and src/_ZN5Stage10CheckInputEv.cpp reads
    it back through the mode-0 remap map at data_02075650 (ROM bytes: A->1,
    B->2, R->0x400, Y->0x800, L->0x4000, X->0x8000). So the translation below
    is that map's exact inverse, row by row, and nothing else crosses (X's row
@@ -514,7 +514,7 @@ static unsigned short host_btn_to_raw_keys(unsigned short btn)
 }
 
 /* run mg15 lane MP1. The fan-out runs the ROM's own steps 0x16 and 0x17
-   (src/func_0203bb60.c, src/func_0203bc7c.c) after the comms tick, so
+   (src/unnamed/arm9/0203/func_0203bb60.c, src/unnamed/arm9/0203/func_0203bc7c.c) after the comms tick, so
    TouchInfo[4] and PadData[4] come out of the four comms records the way the
    DS builds them instead of being written directly by the port. The default
    is decided in ONE place now -- port::comms_fanout_active(), banner in
@@ -570,7 +570,7 @@ void _ZN5mHeap6Heap_t18InitializeGameHeapEjPS0_(unsigned size, void *root);
    main(), and the two heap calls above were the only two steps of that chain
    it actually ran -- which is why every matched TU reachable only through
    Entry/main sat unlinked. hal/boot_os.cpp transcribes the runnable spans of
-   src/func_02019780.c, src/main.c and src/func_0201a054.c and calls the ROM's
+   src/unnamed/arm9/0201/func_02019780.c, src/main.c and src/unnamed/arm9/0201/func_0201a054.c and calls the ROM's
    own bodies where the ROM calls them; its header block names every step it
    SKIPS and the hardware that is missing (the ARM7 PXI handshake, the Slot-2
    magic word at 0x08000000). The four seams below are placed in the ROM's
@@ -742,7 +742,7 @@ extern int data_020a0e5a[];
    reads it.
 
    unsigned char AND NOT int, which is not cosmetic. Every ROM-side
-   declaration of this symbol is u8 (src/func_0203da9c.c, func_0203db64.c,
+   declaration of this symbol is u8 (src/unnamed/arm9/0203/func_0203da9c.c, func_0203db64.c,
    func_0203df40.c, func_0203ea5c.c) and hal/comms_conductor.cpp declares and
    WRITES it as unsigned char, so byte 0 is the whole value and bytes 1..3 are
    nobody's. An int[] extern here reads all four and only agrees with the byte
@@ -894,7 +894,7 @@ void func_0203e0ac(void);
    site below, and the only call site of the seam's close() face. */
 void func_0203df40(void);
 /* run linkfull lane B5INPUT: the game loop's own pad read, phase 0x15
-   (src/func_0201ffcc.c, which calls func_0203df40 above), called from the
+   (src/unnamed/arm9/0201/func_0201ffcc.c, which calls func_0203df40 above), called from the
    level loop's input phase point (see THE GAME LOOP'S OWN INPUT STEPS there).
    The phase id is hal/rom_frame.cpp's. */
 extern "C" void func_0201ffcc(void);
@@ -912,7 +912,7 @@ extern "C" unsigned char data_0209e64c;    /* hal/boot_arms.cpp: the gate */
 extern "C" int data_0209d574[];            /* hal/actor_vtables.cpp: the
                                               watchdog alarm, ROM span 68 */
 /* run linkfull lane LOOPIN2: phase 0x17's last call, the ROM's soft-reset
-   latch (src/func_02023498.c), the latch byte it raises (hal/auto_bss.cpp), and
+   latch (src/unnamed/arm9/0202/func_02023498.c), the latch byte it raises (hal/auto_bss.cpp), and
    the lane's census of phases 0x17 and 7 (hal/b5input_globals.cpp). */
 extern "C" void func_02023498(void);
 extern "C" unsigned char data_0209f1e0[];
@@ -1453,7 +1453,7 @@ static void ss_file_keep(SsFileKeep *k)
    +0x328 matches), the star bytes come from the snapshot and the star is gold
    again, as at the F8. What the player had saved is still safe: the card is
    never rolled back, and SaveData::SaveFile ORs the stars already on the card
-   into whatever it writes (src/_ZN8SaveData8SaveFileEjP12FileSaveData.cpp), so
+   into whatever it writes (port/unmatched/hostarm/_ZN8SaveData8SaveFileEjP12FileSaveData.cpp), so
    a later save can add to the file and never take a star out of it. A snapshot
    of ANOTHER file (the player went back to the title and opened a different
    slot) keeps the old behaviour: the open file stays whole. */
@@ -2029,7 +2029,7 @@ void hal_sub_camera_zone_live(void);
    the first pass frees a cylinder. See that file's header. */
 extern "C" void port_cylinder_clsn_process(void);
 /* THE ROM'S OWN END-OF-FRAME SWAP (run link100, boot plan rung R3b, step
-   BSWAP). src/func_020190b8.c is two statements -- SWAP_BUFFERS and the
+   BSWAP). src/unnamed/arm9/0201/func_020190b8.c is two statements -- SWAP_BUFFERS and the
    "geometry engine armed" latch data_0209d464 -- and func_020197b8.c:52
    calls it once a frame, after phase 6 and before the phase-7 wait. It has
    been LINKED and CALLED BY NOTHING since the port existed. The call at
@@ -2075,9 +2075,9 @@ extern "C" unsigned char data_0209d4f0[4];
 extern "C" void _ZN4CP1516WaitForInterruptEv(void);
 /* AND THE ROM'S OWN WAY IN TO IT, which is what rung D5 actually uses.
    func_020197b8.c:57 is `data_0209d50c = 7; func_0201a4bc();` and
-   src/func_0201a4bc.c is one statement: OS_SleepThread(data_0209d500). That
+   src/unnamed/arm9/0201/func_0201a4bc.c is one statement: OS_SleepThread(data_0209d500). That
    sleep is not a spin -- it reschedules onto the ROM's IDLE THREAD, whose
-   entry src/func_02057e34.c is `IRQ::Enable(); for(;;) CP15::WaitForInterrupt();`
+   entry src/unnamed/arm9/0205/func_02057e34.c is `IRQ::Enable(); for(;;) CP15::WaitForInterrupt();`
    -- so the frame's wait is reached the way the cartridge reaches it, and the
    frame ends when IRQ::VBlankHandler wakes the sleeper back up.
 
@@ -2122,7 +2122,7 @@ extern "C" void _ZN4CP1516WaitForInterruptEv(void);
    circuit itself proven rather than the whole thing merely suspect. */
 extern "C" void OS_SleepThread(unsigned short *q);
 extern "C" unsigned char data_0209d500[4];
-/* AND THE ROM'S OWN TU FOR IT (run linkfull, lane LOOPIN2): src/func_0201a4bc.c
+/* AND THE ROM'S OWN TU FOR IT (run linkfull, lane LOOPIN2): src/unnamed/arm9/0201/func_0201a4bc.c
    is that one statement, OS_SleepThread(data_0209d500), so phase 7 below calls
    it by name where it used to carry the statement inlined. Same sleep, same
    wait, same host pacing inside it: the body is identical. */
@@ -2241,7 +2241,7 @@ static int r3e_sound_at_phase9(void)
    Memory::defaultHeapPtr going 30000000 -> 00000000 inside the ROM's own
    VBlank handler on frame 2, and the next free faulted at Heap::Deallocate+0x3
    on frame 31. The write was func_02019144's else arm calling
-   func_02055454(BG0 scroll), and src/func_02055454.c spelled its register as
+   func_02055454(BG0 scroll), and src/unnamed/arm9/0205/func_02055454.c spelled its register as
    `G`, the decomp's generic placeholder, which hal/lk4_solidheap_seat.cpp's
    /alternatename bound to that very word. R3F spelled the register in src
    (0x04000010, and 0x04000204 for func_02057128 and func_02057140),
@@ -3627,7 +3627,7 @@ static int port_pace_selftest(void)
        [thr] r3b-b1 ... halts=0 pump=0 vbl_dispatch=0 vbl_wakes=0
 
    -- CP1516WaitForInterrupt is entered ZERO times, because its only callers
-   are the ROM's idle loops (src/func_02057e34.c, src/func_0201a028.c) and this
+   are the ROM's idle loops (src/unnamed/arm9/0205/func_02057e34.c, src/unnamed/arm9/0201/func_0201a028.c) and this
    host loop drives the frame itself instead of sleeping. A duty moved literally
    into step 1 today would simply stop running.
 
@@ -17285,7 +17285,7 @@ int main(void)
        vbl_dispatch=299 (lane R3F, out/R3F/gate2_measure.log).
 
        WHY THE TWO PATHS DIFFER, and it is one call. The ROM registers the
-       handler inside main's fifth call: src/func_0201a054.c:46 is
+       handler inside main's fifth call: src/unnamed/arm9/0201/func_0201a054.c:46 is
        func_0201a4e4(), which is
        IRQ::SetIRQHandler(1, IRQ::VBlankHandler) plus the two sleep-queue words.
        This port does not run that body whole -- hal/boot_arms.cpp runs its
@@ -17349,7 +17349,7 @@ int main(void)
        says in as many words which site it deliberately leaves alone: "The
        third site, 0x0211d34c, is NOT touched -- its body is marked as recovered
        from vtable slot identity and the inferred-stub guard forbids seating a
-       guess." Neither that file nor src/func_ov075_0211b418.cpp is this lane's,
+       guess." Neither that file nor src/unnamed/ov075/func_ov075_0211b418.cpp is this lane's,
        and the second candidate -- the fiber round-trip through the ROM's idle
        thread in hal/boot2_thread.cpp, which the level path takes 300 times a
        run without trouble -- needs a control this lane did not have room for.
@@ -18610,7 +18610,7 @@ int main(void)
        (run link100, lane STARSEL5.) */
     port_interlude_frame_hook = port_interlude_frame;
     MSG msg;
-    /* THE DS'S POWER-ON INTERRUPT STATE, standing in for src/func_0201a054.c,
+    /* THE DS'S POWER-ON INTERRUPT STATE, standing in for src/unnamed/arm9/0201/func_0201a054.c,
        the game's own IRQ init, which is in no slice. The ROM's arming
        sequences SAVE AND RESTORE IME rather than setting it, so a host that
        boots with IME at zero arms interrupts that can never be delivered.
@@ -20208,7 +20208,7 @@ int main(void)
                 (unsigned short)(port_raw_dir_bits() | port_raw_bt_bits_for_mirror);
             /* ---- THE GAME LOOP'S OWN INPUT STEPS (run linkfull, lane
                B5INPUT) ------------------------------------------------------
-               src/func_020197b8.c reads the pad at phase 0x15, after phase 7's
+               src/unnamed/arm9/0201/func_020197b8.c reads the pad at phase 0x15, after phase 7's
                wait, and the next frame consumes it at phases 0x16 / 0x17,
                before phase 3 spawns and phase 4 ticks:
 
@@ -20232,7 +20232,7 @@ int main(void)
                holds the data_0209d574 watchdog alarm off across the read,
                stamps its tick and republishes func_0203daac's count into
                data_0208f274. It returns at once unless data_0209e64c is up,
-               and src/func_0201fec8.c:44 raises that on every boot (the a054
+               and src/unnamed/arm9/0201/func_0201fec8.c:44 raises that on every boot (the a054
                seam's R2b arm runs it).
 
                IT RETIRES the camera block's direct func_0203df40() call further
@@ -20312,7 +20312,7 @@ int main(void)
                TouchInfo straight from the stylus, and the only other source is
                func_0203b9bc's three-of-four debounce over hal/tsc_arm7.cpp's
                ring, which that file feeds ONE sample a frame where the ROM asks
-               the ARM7 for four (src/func_0203bbc0.c:21, func_0205eeac(0, 4,
+               the ARM7 for four (src/unnamed/arm9/0203/func_0203bbc0.c:21, func_0205eeac(0, 4,
                &data_020a0df8, 9)), so it would lag every tap by two frames.
 
                THE SPLIT SYMBOL: data_020a0e5a IS PadData[i].pressed on the DS
@@ -22758,7 +22758,7 @@ int main(void)
                 const double rb_t = rb_probe_mode() ? rb_now_ms() : 0.0;
                 pt_mark(PS_ROM_FRAME);
                 if (k1_rom) {
-                    /* src/func_020197b8.c phase 4: `func_02044120();`, all five
+                    /* src/unnamed/arm9/0201/func_020197b8.c phase 4: `func_02044120();`, all five
                        walks. Its render walk (list 5) submits this frame's
                        geometry now, as on the DS, so the host geometry frame
                        opens HERE rather than in the render block below: the
@@ -23210,9 +23210,9 @@ int main(void)
             if (cam_mode != CAM_DS && !cutscene_cam && !cam93_ds_owned(cam))
                 *(short *)data_020a1050 = fc_yaw;
             /* run mg16 lane MP3: THE ROM'S OWN DISPATCHER, LINKED.
-               src/func_0203df40.c fills the local comms record from the pad and
+               src/unnamed/arm9/0203/func_0203df40.c fills the local comms record from the pad and
                the touch panel and then switches on the role byte: 1 and 2 reach
-               src/func_0203ea5c.c, the real lockstep; 3 reaches Download Play;
+               src/unnamed/arm9/0203/func_0203ea5c.c, the real lockstep; 3 reaches Download Play;
                0 and anything else reach func_0203e0ac, the solo cascade this
                line used to call directly.
 
@@ -23280,7 +23280,7 @@ int main(void)
                SM64DS_VS_PROBE is set. */
             port::vs_probe(frame);
             /* run mg15 lane MP1: the ROM's OWN steps 0x16 and 0x17, right
-               where src/func_020197b8.c runs them -- immediately after the
+               where src/unnamed/arm9/0201/func_020197b8.c runs them -- immediately after the
                comms tick that filled the four records. func_0203bb60 turns
                those four into TouchInfo[4] and func_0203bc7c turns them into
                PadData[4], which is where every stylus and button read in the
@@ -23327,7 +23327,7 @@ int main(void)
                            thing rather than an oversight. MP2 counted ticks,
                            rounds, timeouts, spins and peer_updates from inside
                            its transcription. Those live inside
-                           src/func_0203ea5c.c now -- the spin loop, the bound,
+                           src/unnamed/arm9/0203/func_0203ea5c.c now -- the spin loop, the bound,
                            the per-slot unpack -- and instrumenting them would
                            mean editing a byte-matched TU, which this repo does
                            not do. What survives is what the SEAM can see:
@@ -23377,7 +23377,7 @@ int main(void)
            camera TILTS. [cam-in] above carries the heading cam+0x17c, which is
            horizontal only; the tilt is cam+0x17e, and it is not a control but
            a RESTATEMENT: func_02009e70 places the eye and then reads the angle
-           back off the eye and the look-at at its tail (src/func_02009e70.cpp
+           back off the eye and the look-at at its tail (src/unnamed/arm9/0200/func_02009e70.cpp
            :555), so a tilt that will not move is really an eye height that
            will not move. mode is the index the ROM's own func_0200cb58 wrote
            into cam+0x13c -- index 1 is the swim preset, the one record
@@ -23394,7 +23394,7 @@ int main(void)
                               : -1;
             int d[3] = {eye[0] - at[0], eye[1] - at[1], eye[2] - at[2]};
             /* THE ONE BRANCH IN MODE 0 THAT TILTS THE CAMERA AT ALL. At
-               src/func_02009e70.cpp:426-429 the follow state swings the eye
+               src/unnamed/arm9/0200/func_02009e70.cpp:426-429 the follow state swings the eye
                towards the TARGET'S OWN MOVEMENT PITCH -- atan2 of the frame's
                vertical step over its horizontal one, clamped to +-0x3f80 --
                and it does that for mode record 0 ONLY, and only while the
@@ -24467,7 +24467,7 @@ int main(void)
         } else
             hal_player_texseq_tick(player);
         /* PHASE 5, THE ROM'S func_02019404 (run linkfull, lane K2RENDER):
-           src/func_020197b8.c:48, the graphics block's word 1, after the
+           src/unnamed/arm9/0201/func_020197b8.c:48, the graphics block's word 1, after the
            frame's render walk and before phase 6. On a level the block is the
            Stage's and word 1 is Stage::GraphCallback1: the particle
            submission, last, after every opaque draw in the frame (the ROM's
@@ -25353,7 +25353,7 @@ int main(void)
                            cnt & 3u, (cnt >> 14) & 3u);
                 }
                 /* AND THE FONTS THE COMPOSERS READ, which live on engine A:
-                   func_02054d88() (src/func_02054d88.c) is the address both
+                   func_02054d88() (src/unnamed/arm9/0205/func_02054d88.c) is the address both
                    Message::AddChar and func_0201b100 resolve the glyph cells
                    against -- the small 8x16 font at +0, the big 16x16 menu
                    font LoadFont(0) decompresses at +0x8000. Same formula as
@@ -25855,7 +25855,7 @@ int main(void)
         data_0209d4f0[0] = 0;
         /* THE FRAME BOUNDARY'S OWN WORDS (run link100, lane DET2). One shot,
            late enough in the run to be steady state, taken at exactly the point
-           src/func_020197b8.c:58-59 sits -- after phase 7's wait and after the
+           src/unnamed/arm9/0201/func_020197b8.c:58-59 sits -- after phase 7's wait and after the
            flag's drop -- and reporting the words that line reads:
 
                if ((*(int*)(data_0209ee90 + 0x108) & 0x10) == 0)

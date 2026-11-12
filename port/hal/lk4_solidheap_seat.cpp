@@ -138,10 +138,10 @@
 // G any more.
 //
 // THE FOURTH I/O READER R3F LEFT ON IT IS FIXED, run link100 lane GREG2:
-// src/func_0205f650.c pooled 0x04000304 (POWCNT1) and returned bit 0, so it
+// src/unnamed/arm9/0205/func_0205f650.c pooled 0x04000304 (POWCNT1) and returned bit 0, so it
 // used to answer with bit 0 of the heap pointer instead. It never corrupted
 // anything -- it only read -- but it was wrong, and its caller
-// src/func_02019a58.c is a wait loop, `while (func_0205f66c(1) != 1)` guarded
+// src/unnamed/arm9/0201/func_02019a58.c is a wait loop, `while (func_0205f66c(1) != 1)` guarded
 // by `if (func_0205f650() == 1) break;`, that branches on the answer. GREG2
 // spelled it `(*(volatile unsigned short *)0x4000304 & 1) != 0`, byte-verified
 // 7 words of 7 under 2004/b56 with the pool word compared for real (R3F
@@ -163,7 +163,7 @@
 // either. So before this fix, func_02019a58 could not terminate by ANY path
 // once entered; it just never has been entered by the automated battery or
 // selftest (both call sites are gameplay-triggered -- the VS-exit pause menu
-// and src/func_02030790.c's data_02092778-gated reset). Seeding POWCNT1 to
+// and src/unnamed/arm9/0203/func_02030790.c's data_02092778-gated reset). Seeding POWCNT1 to
 // 0x820F at boot (ntr/io.cpp's io_init(), see the comment there for the ROM
 // derivation) means the fixed read now answers the shortcut truthfully, and
 // since nothing in either call site clears bit 0 first, it answers TRUE on
@@ -343,10 +343,10 @@ static int __fastcall ab_v38(void *s, void *, u32 a, u32 b)
    today, so this is a live bug and not one a future seat would introduce:
      src/engine/heap/Heap.cpp:11
      src/engine/heap/Heap.cpp:18
-     src/_ZN9dScDSMT_c8BehaviorEv.cpp:49 and :53
+     port/unmatched/hostarm/_ZN9dScDSMT_c8BehaviorEv.cpp:49 and :53
      src/_ZN5Stage13InitResourcesEv.cpp:234 and :236   (linked, env-gated)
      src/func_02034fbc.c:22, :27, :31, :33             (not compiled today)
-     src/func_ov075_02118bf8.c:9 and :18               (not compiled today)
+     src/unnamed/ov075/func_ov075_02118bf8.c:9 and :18               (not compiled today)
    The last two are the sequencing rule port/stage_lifecycle_map.txt section
    11g carries: a slice that enrols either of them without this face in front
    inherits the fault with none of the evidence.

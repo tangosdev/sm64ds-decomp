@@ -59,7 +59,7 @@
  * -----------------------------------------------------------------------
  * VoiceEnabled, VoiceMicDevice, VoiceMicIndex, VoiceVolume, VoiceNearRadius
  * and VoiceFarRadius, all of them in settings.json and all of them reloading
- * live. hal/host_settings.h carries the exact spec; port/status/VOICE.md
+ * live. hal/host_settings.h carries the exact spec; status/VOICE.md
  * carries it again for the launcher lane.
  *
  * VoiceMicDevice DEFAULTS TO AUTO-PICK rather than to the Windows default

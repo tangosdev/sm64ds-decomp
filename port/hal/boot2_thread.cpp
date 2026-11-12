@@ -35,13 +35,13 @@
 //                           other arm of the same branch.
 //
 // Nothing else about the ROM's scheduler is replaced. src/OS_SleepThread.c,
-// src/OS_WakeupThread.c, src/func_02057f54.c, src/func_0205801c.c and the idle
-// thread's own body src/func_02057e34.c run AS WRITTEN, and this file's other
+// src/OS_WakeupThread.c, src/unnamed/arm9/0205/func_02057f54.c, src/unnamed/arm9/0205/func_0205801c.c and the idle
+// thread's own body src/unnamed/arm9/0205/func_02057e34.c run AS WRITTEN, and this file's other
 // job is to give them the state they read.
 //
 // ============================ THE STATE THEY READ ==========================
 //
-// src/func_02058308.c is the ROM's thread-system init and it is NOT linked
+// src/unnamed/arm9/0205/func_02058308.c is the ROM's thread-system init and it is NOT linked
 // here. It fills data_020a621c's stack bounds out of DTCM and the ITCM entry
 // symbols (func_00000000 / func_00000600 / data_023c0000), none of which the
 // host maps, and it fills data_020a6134 through +0x54 -- the run/link100 BOOT
@@ -70,7 +70,7 @@
 //
 // data_020a612c is a POINTER TO the current-thread slot, not the slot: the ROM
 // spells the read `data_020a612c->node` (src/OS_SleepThread.c) and
-// `data_020a612c[0]` (src/func_02057f54.c), and func_02058308's own line is
+// `data_020a612c[0]` (src/unnamed/arm9/0205/func_02057f54.c), and func_02058308's own line is
 // `data_020a612c = data_020a613c` with data_020a613c at 0x020a613c, which is
 // data_020a6134 + 8. So its value is &manager[+8] and nothing more.
 //
@@ -84,7 +84,7 @@
 //
 // ============================ THE IDLE THREAD ==============================
 //
-// A sleep needs somewhere to go. src/func_02057e34.c is the ROM's idle thread
+// A sleep needs somewhere to go. src/unnamed/arm9/0205/func_02057e34.c is the ROM's idle thread
 // and it is three lines: enable interrupts, then halt forever on CP15's
 // wait-for-interrupt. That is the whole answer to "what runs while the game
 // thread is blocked", and it is the ROM's answer, so it is the one used here.
@@ -127,7 +127,7 @@
 // DS STACKS bullets of the WHAT IS NOT MODELLED block that stood here; both
 // said the same thing -- func_02058200 was not linked -- and it is now.)
 //
-// src/func_02058200.c IS THE ROM'S OS_CreateThread AND IT RUNS AS WRITTEN.
+// src/unnamed/arm9/0205/func_02058200.c IS THE ROM'S OS_CreateThread AND IT RUNS AS WRITTEN.
 // Nothing below hooks it, wraps it or reproduces it: it is on
 // port/slice_gate223.txt with func_02058538 (the slot allocator),
 // func_020584d0 (the priority insert, already on gate 215) and func_020581a8
@@ -168,8 +168,8 @@
 //   block at +0x00..+0x44 is written by the ROM and then not resumed FROM, and
 //   the stack at +0x84..+0x88 is written by the ROM and then not run ON. Both
 //   halves stay READABLE, which is the part that would have been lost by
-//   skipping the stores: src/func_02057f38.c's guard-word writer and
-//   src/func_02058158.c's state read both see what the ROM put there.
+//   skipping the stores: src/unnamed/arm9/0205/func_02057f38.c's guard-word writer and
+//   src/unnamed/arm9/0205/func_02058158.c's state read both see what the ROM put there.
 //
 // HOW A CREATED THREAD BECOMES A FIBER -- LAZILY, OFF THE RECORD, AT THE FIRST
 // RESTORE. ARMRestoreContext used to refuse a context it had never seen. It
@@ -195,7 +195,7 @@
 //   manager's pending flag and the exception return does the switch. That is
 //   what happens here now (run link100, lane DET3): step 2 of the halt raises
 //   port_irq_mode_depth for the length of IRQ::VBlankHandler, cxx_aliases.cpp's
-//   ARMProcessorMode host answers 0x12 while it is up, and src/func_02057f54.c
+//   ARMProcessorMode host answers 0x12 while it is up, and src/unnamed/arm9/0205/func_02057f54.c
 //   takes its own early return -- so the switch is performed by the handler's
 //   return, which is this port's IRQ return. Before that lane the host answered
 //   0x1f (system mode) unconditionally, every handler ran as a plain call and
@@ -270,14 +270,14 @@ extern int data_020a612c[4];
 extern int data_020a6134[5];
 extern int data_020a6128;
 // The ROM's sixteen-slot thread table, data_020a6134 + 0x14. It is 64 bytes of
-// hal/cxx_aliases.cpp's grouped OSThreadInfo run and src/func_02058538.c scans
+// hal/cxx_aliases.cpp's grouped OSThreadInfo run and src/unnamed/arm9/0205/func_02058538.c scans
 // all sixteen; the int[8] this used to declare covered half of it, which was
 // harmless while only slots 0 and 1 were ever written and is not now that
 // func_02058200 allocates out of the same table.
 extern int data_020a6148[16];
 
 // The per-VBlank wake queue, hosted by hal/comms_conductor.cpp as four bytes.
-// src/func_0201a4d0.c sleeps on it; src/_ZN3IRQ13VBlankHandlerEv.cpp:22 wakes it.
+// src/unnamed/arm9/0201/func_0201a4d0.c sleeps on it; src/_ZN3IRQ13VBlankHandlerEv.cpp:22 wakes it.
 extern unsigned char data_0209d4fc[4];
 /* THE ROM'S WAIT FLAG, 0x0209d4f0, hosted in hal/boot_globals.cpp. It is up for
    exactly the length of func_020197b8's phase-7 wait -- :53 raises it, :56
@@ -333,7 +333,7 @@ void thread_set_irq_mode_hooks(void (*enter)(), void (*exit)(),
 // exception vector is taken to the moment the handler returns. src/
 // ARMProcessorMode.c is one instruction and a mask over exactly those bits:
 //     asm void ARMProcessorMode(void) { mrs r0, cpsr; and r0, r0, #0x1f; bx lr }
-// and the whole linked set has ONE caller of it, src/func_02057f54.c:25:
+// and the whole linked set has ONE caller of it, src/unnamed/arm9/0205/func_02057f54.c:25:
 //     if (s->m4 == 0) { if (ARMProcessorMode() != 0x12) goto cont; }
 //     s->m0 = 1; return;
 // -- the ROM's own statement that a thread switch asked for from inside an
@@ -360,9 +360,9 @@ namespace {
 // ---------------------------------------------------------------------------
 #pragma pack(push, 1)
 struct RomThread {
-    // The ARM context block. src/func_02058568.c (OS_InitContext, the hand-asm
+    // The ARM context block. src/unnamed/arm9/0205/func_02058568.c (OS_InitContext, the hand-asm
     // primitive whose host body is hal/scene_vs_menu.cpp) fills it and
-    // src/func_02058200.c writes two more words into it; the adoption below
+    // src/unnamed/arm9/0205/func_02058200.c writes two more words into it; the adoption below
     // reads exactly those, because they are the only record of what thread the
     // ROM meant to make. The REGISTER FILE half is meaningless on a host --
     // the fiber is what carries the context.
@@ -388,7 +388,7 @@ struct RomThread {
 };
 #pragma pack(pop)
 
-// The offsets above are the ones src/func_02058200.c and src/func_02058568.c
+// The offsets above are the ones src/unnamed/arm9/0205/func_02058200.c and src/unnamed/arm9/0205/func_02058568.c
 // write and the ones the adoption reads back, so they are checked rather than
 // commented. #pragma pack(1) is what makes them hold on a 32-bit host.
 static_assert(offsetof(RomThread, r0) == 0x04, "RomThread r0");
@@ -414,10 +414,10 @@ inline uint16_t &vblank_queue() { return *reinterpret_cast<uint16_t *>(data_0209
 // The two threads. Host storage on purpose -- see the header.
 // ---------------------------------------------------------------------------
 RomThread g_main;   // the port's one game context: id 0, priority 0x10
-RomThread g_idle;   // src/func_02057e34.c:        id 1, priority 0x20
+RomThread g_idle;   // src/unnamed/arm9/0205/func_02057e34.c:        id 1, priority 0x20
 
 // One fiber per thread. SIXTEEN, which is the ROM's own cap and not a guess:
-// src/func_02058538.c scans data_020a6134 + 0x14 for a free slot out of
+// src/unnamed/arm9/0205/func_02058538.c scans data_020a6134 + 0x14 for a free slot out of
 // exactly sixteen and returns -1 when they are all taken, so a seventeenth
 // thread cannot exist. Slots 0 and 1 are the two seated below (the game
 // context and the idle thread); func_02058538 hands the first creation 2.
@@ -455,7 +455,7 @@ unsigned g_frame_wait_edges;
 
 // NONZERO WHILE STEP 2 OF THE HALT IS INSIDE IRQ::VBlankHandler (run link100,
 // lane DET2, rung 2). A DS is in IRQ mode for the whole of that handler, and
-// src/func_02057f54.c:24-28 is the ROM's own statement of what that means: the
+// src/unnamed/arm9/0205/func_02057f54.c:24-28 is the ROM's own statement of what that means: the
 // reschedule sees ARMProcessorMode() == 0x12, raises the manager's pending
 // flag, and RETURNS -- the thread switch happens when the IRQ returns, not
 // from inside the handler. See ARMRestoreContext and step 2's IRQ return.
@@ -571,8 +571,8 @@ void CALLBACK thread_trampoline(void *p) {
         // ARMRestoreContext's `ldmia r0, {r0-r12}^` would load; a __cdecl host
         // callee finds the same value as its first stack argument, and a
         // callee declared void ignores it with the caller cleaning up. Both of
-        // this build's thread bodies (src/func_020602bc.cpp, the card driver's
-        // service loop, and src/func_02057e34.c, the idle loop) take none and
+        // this build's thread bodies (src/unnamed/arm9/0206/func_020602bc.cpp, the card driver's
+        // service loop, and src/unnamed/arm9/0205/func_02057e34.c, the idle loop) take none and
         // the ROM passes 0 to both.
         reinterpret_cast<void (*)(uint32_t)>(s->entry)(s->arg);
     }
@@ -596,7 +596,7 @@ void CALLBACK thread_trampoline(void *p) {
 }
 
 // ---------------------------------------------------------------------------
-// ADOPTION: turn a record src/func_02058200.c really created into a fiber.
+// ADOPTION: turn a record src/unnamed/arm9/0205/func_02058200.c really created into a fiber.
 //
 // The header block lists the six words this reads and where each is written.
 // Every one of them is checked rather than assumed, because the alternative to
@@ -786,7 +786,7 @@ static bool det2_owed1() {
 }
 
 // Run link100, lane DET3. ON by default: hal/cxx_aliases.cpp's ARMProcessorMode
-// answers 0x12 for the length of IRQ::VBlankHandler, so src/func_02057f54.c's
+// answers 0x12 for the length of IRQ::VBlankHandler, so src/unnamed/arm9/0205/func_02057f54.c's
 // own lines 24-28 raise the manager's pending flag and return, and nothing
 // switches a thread from inside the handler. SM64DS_DET3=0 leaves the mode
 // answer at 0x1f and puts lane DET2's host-side deferral in ARMRestoreContext
@@ -845,7 +845,7 @@ void starve_wake() {
 // registered for mask 2), and until this lane neither raised the depth, so
 // ARMProcessorMode answered system mode (0x1f) inside them even with SM64DS_
 // DET3 on everywhere else -- the one caller in the linked set,
-// src/func_02057f54.c:25, would have read the wrong mode if either dispatch
+// src/unnamed/arm9/0205/func_02057f54.c:25, would have read the wrong mode if either dispatch
 // ever reached it with a switch to make. These two functions are that one
 // place, used by all three sites now: same word, same gate (det3_on(), i.e.
 // SM64DS_DET3), same span -- raised for exactly the length of the ROM
@@ -956,7 +956,7 @@ void ARMRestoreContext(void *ctx) {
     RomThread *from = g_running;
     FiberSlot *ts = slot_of(to);
 #if defined(_WIN32)
-    // A context this file has not seen is a thread src/func_02058200.c made
+    // A context this file has not seen is a thread src/unnamed/arm9/0205/func_02058200.c made
     // while nobody was watching, which is the ordinary case now: the card
     // driver's own bring-up creates one. Adopt it off its record, or refuse it
     // for a named reason.
@@ -992,7 +992,7 @@ void ARMRestoreContext(void *ctx) {
     //     OS_WakeupThread(&data_0209d4fc);
     //     ... |= 1; func_02019100();
     // On the cartridge all five run, in one go, before the interrupt returns:
-    // OS_WakeupThread reaches src/func_02057f54.c and its FIRST test is
+    // OS_WakeupThread reaches src/unnamed/arm9/0205/func_02057f54.c and its FIRST test is
     //     if (s->m4 == 0) { if (ARMProcessorMode() != 0x12) goto cont; }
     //     s->m0 = 1; return;
     // -- in IRQ mode (0x12) the reschedule raises the manager's pending flag
@@ -1204,7 +1204,7 @@ void _ZN4CP1516WaitForInterruptEv(void) {
         ++g_in_vblank_handler;
         // AND THE CORE IS IN IRQ MODE FOR THE WHOLE OF IT (run link100, lane
         // DET3). ARMProcessorMode answers 0x12 while this is up, which is what
-        // makes src/func_02057f54.c:24-28 -- the ROM's own lines, not this
+        // makes src/unnamed/arm9/0205/func_02057f54.c:24-28 -- the ROM's own lines, not this
         // file's -- raise the manager's pending flag and return instead of
         // switching a thread from inside an interrupt handler. It comes down
         // BEFORE the IRQ return below, because that return is out of IRQ mode.
@@ -1411,7 +1411,7 @@ extern "C" void port_thread_sched_counts(unsigned long long *adopted,
     if (nocreate) *nocreate = g_stat.nocreate;
 }
 
-// src/func_02057f54.c stores its PICK into the manager's current-thread word
+// src/unnamed/arm9/0205/func_02057f54.c stores its PICK into the manager's current-thread word
 // BEFORE calling ARMRestoreContext:
 //
 //     data_020a6134.m8 = r5;
@@ -1490,11 +1490,11 @@ namespace {
 
 // THE ROUND TRIP, driven by the ROM's own sleep site.
 //
-//   src/func_0201a4d0.c  ->  OS_SleepThread(data_0209d4fc)   [ROM]
-//     -> src/func_02057f54.c  -> src/func_0205801c.c picks the idle thread
-//       -> ARMRestoreContext  -> src/func_02057e34.c        [ROM]
+//   src/unnamed/arm9/0201/func_0201a4d0.c  ->  OS_SleepThread(data_0209d4fc)   [ROM]
+//     -> src/unnamed/arm9/0205/func_02057f54.c  -> src/unnamed/arm9/0205/func_0205801c.c picks the idle thread
+//       -> ARMRestoreContext  -> src/unnamed/arm9/0205/func_02057e34.c        [ROM]
 //         -> the halt's step 3: OS_WakeupThread(&data_0209d4fc)  [ROM]
-//           -> src/func_02057f54.c picks the main thread again
+//           -> src/unnamed/arm9/0205/func_02057f54.c picks the main thread again
 //             -> back inside ARMRestoreContext, and func_0201a4d0 returns.
 //
 // Everything except the two context primitives and the halt is ROM code, and

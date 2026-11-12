@@ -1,5 +1,5 @@
 /* HOST COPIES of src/runtime/actor/ActorDerived.cpp and
- * src/func_02042ffc.c -- the actor-spawn entry pair with its arguments
+ * src/unnamed/arm9/0204/func_02042ffc.c -- the actor-spawn entry pair with its arguments
  * spelled out.
  *
  * The ROM's ActorDerived::Spawn is a two-instruction veneer:

@@ -14,7 +14,7 @@
 //
 // ---- 1. THE CLASS VTABLE SYMBOL ------------------------------------------
 //
-// src/d_s_mg_pachinko.c ends with `p[0] = (int)_ZTV15dScMgPachinko_c;` and
+// src/minigames/d_s_mg_pachinko.cpp ends with `p[0] = (int)_ZTV15dScMgPachinko_c;` and
 // nothing in this tree defines that symbol -- the table is mounted ov006 data
 // under its address name, data_ov006_0213d9cc. This is the same shape
 // hal/scene_mg_faces.cpp:231 already carries for curling

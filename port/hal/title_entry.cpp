@@ -8,7 +8,7 @@
  * ---- WHAT WAS ALREADY TRUE, AND IT IS NEARLY ALL OF IT --------------------
  *
  * Every step of the handoff is the ROM's own matched code and every step of it
- * already runs. src/_ZN9dScDSMT_c8BehaviorEv.cpp is dScDSMT_c::Behavior, and its
+ * already runs. port/unmatched/hostarm/_ZN9dScDSMT_c8BehaviorEv.cpp is dScDSMT_c::Behavior, and its
  * save-file branch is four statements:
  *
  *     if ((unsigned)(result - 3) <= 2) {          // 3, 4, 5 = files A, B, C
@@ -404,7 +404,7 @@ extern "C" {
    port_interlude_frame_hook's reason: this file is on the smoke targets too
    and that one is not. Null there, and the session path then stays as it was. */
 int (*port_title_front_door_hook)(void) = 0;
-void func_ov007_020b6134(int slot);    /* src/func_ov007_020b6134.cpp */
+void func_ov007_020b6134(int slot);    /* src/unnamed/ov007/func_ov007_020b6134.cpp */
 }
 
 static const char BOOT_FILE_ENV[] = "SM64DS_BOOT_FILE";
@@ -532,7 +532,7 @@ static int port_title_carried_file(void)
  *
  * ---- WHY THAT FUNCTION AND NOT A STATE WRITE ------------------------------
  *
- * src/func_ov007_020aec94.c is the title's own "the player chose X". It is
+ * src/unnamed/ov007/func_ov007_020aec94.c is the title's own "the player chose X". It is
  * three statements and both of them matter:
  *
  *     g[4] = r4;                                 // g+0x10, the choice
@@ -546,7 +546,7 @@ static int port_title_carried_file(void)
  * state 11's own exit writes, the same word the router func_ov007_020b1224
  * writes, the same word hal/scene_boot.cpp's trace reads as `req`. So this
  * function does not move the machine; it ASKS the machine, in the machine's
- * own vocabulary, and src/func_ov007_020b0548.c's dispatcher performs the
+ * own vocabulary, and src/unnamed/ov007/func_ov007_020b0548.c's dispatcher performs the
  * transition on its own next frame. The fade, the sound, the page build and
  * the element rebuild are all the ROM's and all of them run.
  *
@@ -563,7 +563,7 @@ static int port_title_carried_file(void)
  * ---- THE GUARD IS THE ROM'S TOO ------------------------------------------
  *
  * Fired on the first frame the front screen is live AND the menu is idle, and
- * "idle" is not this file's opinion: it is the test src/func_ov007_020b1224.c
+ * "idle" is not this file's opinion: it is the test src/unnamed/ov007/func_ov007_020b1224.c
  * opens with, the chain g+0x134 -> [0] -> [+4], zero when nothing is playing.
  * Calling into a menu mid-animation is how a page gets built twice.
  *
@@ -622,7 +622,7 @@ static int port_title_carried_file(void)
  * the toggle. */
 extern "C" {
 extern char *data_ov007_0210342c;      /* dScDSMT_c's scene global */
-void func_ov007_020aec94(int choice);  /* src/func_ov007_020aec94.c */
+void func_ov007_020aec94(int choice);  /* src/unnamed/ov007/func_ov007_020aec94.c */
 /* hal/sub_screen.cpp: a press consumed by poll_touch in the same place the
    scripted probe and the comms injection are, so from that line on it is
    indistinguishable from a stylus. */
@@ -631,7 +631,7 @@ void port_touch_force_press(int x, int y, int frames);
 
 enum { TITLE_CHOICE_FILE_SELECT = 9 };
 
-/* src/func_ov007_020b1224.c's own opening test, READ AND REPORTED RATHER THAN
+/* src/unnamed/ov007/func_ov007_020b1224.c's own opening test, READ AND REPORTED RATHER THAN
    GATED ON. It was a gate in the first cut of this file and that was wrong:
    measured over a whole SKIP_MENU run (out/boot-title/P2_skipmenu_elems.log,
    first attempt) the word is never zero while the menu is up, so gating on it
@@ -655,7 +655,7 @@ static int title_router_word(char *g)
  * save-slot number back -- which is a search, not a measurement, and which
  * cannot tell "I missed the box" from "the box is not there".
  *
- * The arithmetic is src/func_ov007_020b46b0.c's own, copied from its armed
+ * The arithmetic is src/unnamed/ov007/func_ov007_020b46b0.c's own, copied from its armed
  * branch rather than reinvented: the element record's [1] is the placement,
  * whose 20.12 x/y at +4/+8 shift down into screen pixels, and the object's
  * +0x28 points at a box whose +4/+8/+0xc/+0x10 are min x, min y, max x, max y
@@ -811,7 +811,7 @@ extern "C" void port_title_skip_tick(int frame)
      * Only after step 2, and only once the file select is up and settled:
      * top-state 0 with the element machine at 5 and nothing requested of
      * either (measured on the default boot: state 6 at f495, then state 0 /
-     * elem 5 at f564). src/func_ov007_020b50e8.c answers the A / B / C buttons
+     * elem 5 at f564). src/unnamed/ov007/func_ov007_020b50e8.c answers the A / B / C buttons
      * (ids 14..16) with func_ov007_020b6134(id - 14), which on top-state 0 is
      * func_ov007_020aec94(slot + 3): the same pick a stylus makes, and from
      * there dScDSMT_c::Behavior's own func_02013c84 + StartFile. */
@@ -839,7 +839,7 @@ extern "C" void port_title_skip_tick(int frame)
      * measurement that shaped this whole function: a default boot with no
      * input sits there for 3000 frames and never leaves --
      * out/boot-title/P0_attract_noinput.log has one state line at f1 and then
-     * nothing. There is no state to ask for here; src/func_ov007_020b0a20.c's
+     * nothing. There is no state to ask for here; src/unnamed/ov007/func_ov007_020b0a20.c's
      * only exits are its own animation ending and an INPUT EDGE, so the port
      * supplies the edge and the ROM's own gate decides what to do with it.
      *
@@ -873,7 +873,7 @@ extern "C" void port_title_skip_tick(int frame)
         return;                       /* a transition is already requested */
     if (*(int *)(g + 0x10) != 0)
         return;                       /* something has already been chosen */
-    /* THE TWO POINTERS src/func_ov007_020aec94.c WILL DEREFERENCE. It reads
+    /* THE TWO POINTERS src/unnamed/ov007/func_ov007_020aec94.c WILL DEREFERENCE. It reads
        two save bytes through g+0x28 and writes the request through g+8, and it
        carries no null check of its own because on the DS it is only ever
        reached from a live menu. A host can tick this scene before the chain is
@@ -881,9 +881,9 @@ extern "C" void port_title_skip_tick(int frame)
     if (!*(char **)(g + 0x28))
         return;
     /* AND THE STATE'S OWN FRAME COUNTER, which is the ROM's own idea of "this
-       state has settled": src/func_ov007_020b0a20.c gates its input on
-       `mode >= 4` off exactly this word, and src/func_ov007_020b10dc.c and
-       src/func_ov007_020b0834.c both run their entry work on its zero frame.
+       state has settled": src/unnamed/ov007/func_ov007_020b0a20.c gates its input on
+       `mode >= 4` off exactly this word, and src/unnamed/ov007/func_ov007_020b10dc.c and
+       src/unnamed/ov007/func_ov007_020b0834.c both run their entry work on its zero frame.
        Eight rather than four for the reason the title tap uses eight: it costs
        an eighth of a second and it puts the choice after every handler in the
        chain has had its zero frame. */

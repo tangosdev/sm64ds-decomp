@@ -1,7 +1,7 @@
 // The ROM's OS lock-id allocator and its release, in one file every binary
 // links.
 //
-// src/func_02057020.c (OS_GetLockID) is a `clz` search over the two 32-bit
+// src/unnamed/arm9/0205/func_02057020.c (OS_GetLockID) is a `clz` search over the two 32-bit
 // words at 0x027fffb0, clearing the highest free bit and returning 0x40+index
 // (first word) or 0x60+index (second), or -3 when both are full. The port
 // hosts it here instead of in src/ because MSVC cannot assemble the `clz`

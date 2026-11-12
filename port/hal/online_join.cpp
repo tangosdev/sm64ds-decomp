@@ -614,7 +614,7 @@ extern "C" {
 extern unsigned short data_02092664;                          /* Scene::SetSceneToSpawn's pending id */
 extern unsigned char data_02092660;                           /* its "already spawned" latch */
 extern char *data_ov007_0210342c;                             /* dScDSMT_c's scene global (hal/title_entry.cpp reads it the same way) */
-void func_ov007_020b6134(int slot);                           /* src/func_ov007_020b6134.cpp: the file select's A / B / C button handler */
+void func_ov007_020b6134(int slot);                           /* src/unnamed/ov007/func_ov007_020b6134.cpp: the file select's A / B / C button handler */
 int port_mods_relatch_at_title(const char *reason);           /* hal/mods.cpp */
 void port_join_plate_raise_in_place(int server);              /* hal/menu_join_plate.cpp */
 int port_join_plate_inplace_tick(void);

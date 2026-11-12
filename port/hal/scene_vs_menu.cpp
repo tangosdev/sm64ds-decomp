@@ -33,7 +33,7 @@
  * THE CONTESTED NAMES (slice_vs.txt section 6): four ov075 spellings are
  * live in OTHER overlays' TUs meaning those overlays' storage, so the mount
  * excludes them and the one ov075 TU that names them
- * (src/__sinit_ov075_0211bb00.c) is compiled with -D renames onto the
+ * (src/unnamed/ov075/__sinit_ov075_0211bb00.c) is compiled with -D renames onto the
  * port_vs_* storage below. src/func_ov075_0211478c.c is the same race in
  * code: WorkElevator's TUs spell their vtable with that name
  * (hal/actor_classes_ov065.cpp aliases it), so the slice compiles ov075's
@@ -130,7 +130,7 @@ void *dScEntry_c_classInit_ENTRY(void);                 /* the factory (matched 
  * spawns, func_ov075_02116818 runs, its background and sprites load (BG VRAM
  * 20108 bytes nonzero, OBJ VRAM 16312, 128 OAM bytes), and it runs 3600 frames
  * with zero unmatched-body traps. With no input it never asks to leave; its own
- * exit is src/func_ov075_02117e84.c, which does Scene::StartSceneFade(6, 2, 0)
+ * exit is src/unnamed/ov075/func_ov075_02117e84.c, which does Scene::StartSceneFade(6, 2, 0)
  * -- back to the VS lobby, which is where the owner says a finished match
  * belongs. Captures: C:\tmp\vsend-out\scene7_pmf, scene7_pmf_long.
  *
@@ -172,7 +172,7 @@ extern unsigned char data_0209b2e4[];            /* the lobby's map pick      */
 #include "dBase_c.h"
 
 /* ---- contested-name storage (slice_vs.txt section 6) ----------------------
-   src/__sinit_ov075_0211bb00.c is compiled with
+   src/unnamed/ov075/__sinit_ov075_0211bb00.c is compiled with
      -Ddata_ov075_0211c800=port_vs_data_0211c800
      -Ddata_ov075_0211d608=port_vs_bss_0211d608
      -Ddata_ov075_0211d650=port_vs_bss_0211d650
@@ -209,7 +209,7 @@ DSSTATE_END
    map. It MOVED here out of hal/auto_bss.cpp's generic `int data_0209b2ec[8]`
    for the same reason data_0209f310 moved out of hal/actor_vtables.cpp: a
    split run cannot be hosted as two disjoint objects. Every consumer in the
-   tree reads it as bytes (src/func_ov075_021165b0.c, _02116e00.c, _02117fe4.c),
+   tree reads it as bytes (src/unnamed/ov075/func_ov075_021165b0.c, _02116e00.c, _02117fe4.c),
    so the type change costs nothing. */
 #pragma section(".dsstate$hvsrank0000", read, write)
 #pragma section(".dsstate$hvsrank0001", read, write)
@@ -292,12 +292,12 @@ unsigned char data_0209fc5d[kPortBodySlots - 1];
    slice_vs.txt. LANE prop16 RETIRED THE LAST TWO. They were floors with names
    and the decomp's run vsdec closed both:
 
-     func_ov075_0211621c  src/func_ov075_0211621c.c, from main 52d681683.
+     func_ov075_0211621c  src/unnamed/ov075/func_ov075_0211621c.c, from main 52d681683.
                           The VS results row. First source it has ever had;
                           NONMATCHING div 40 and the whole residue is routing
                           (30 register-field words, 10 sp displacements, no
                           opcode/immediate/mode/condition changed).
-     func_ov075_0211afb0  src/func_ov075_0211afb0.c, from main 52d681683. The
+     func_ov075_0211afb0  src/unnamed/ov075/func_ov075_0211afb0.c, from main 52d681683. The
                           grid-mesh renderer, and the 0x0211d35c pair-run
                           target. NONMATCHING div 4 -- the lsl/lsl/asr/asr
                           quartet at +0x164..+0x170, an allocator preference.
@@ -362,11 +362,11 @@ extern "C" unsigned port_vs_face_hits(void) { return g_vs_face_hits; }
    address through a lie is how it gets in. */
 extern "C" {
 void _ZN10dScEntry_c6icon_c6RenderEv(char *self);   /* src/_ZN10dScEntry_c6icon_c6RenderEv.cpp */
-void func_ov075_0211705c(void *thiz);   /* src/func_ov075_0211705c.c */
-void func_ov075_0211867c(char *self);   /* src/func_ov075_0211867c.c */
-void func_ov075_0211afb0(char *self);   /* src/func_ov075_0211afb0.c, and the
+void func_ov075_0211705c(void *thiz);   /* src/unnamed/ov075/func_ov075_0211705c.c */
+void func_ov075_0211867c(char *self);   /* src/unnamed/ov075/func_ov075_0211867c.c */
+void func_ov075_0211afb0(char *self);   /* src/unnamed/ov075/func_ov075_0211afb0.c, and the
                                            0x0211d35c patch row takes this */
-void func_ov075_0211621c(char *self);   /* src/func_ov075_0211621c.c */
+void func_ov075_0211621c(char *self);   /* src/unnamed/ov075/func_ov075_0211621c.c */
 int  port_vsstar_layout_check(void);    /* hal/actor_classes_star.cpp */
 }
 
@@ -391,7 +391,7 @@ extern "C" {
 
    THE SEAM IS THE ONE THIS SEAT ALREADY CROSSES EVERYWHERE (the thunks below,
    and hal/scene_mg_menu.cpp section 4). UnknownVsEntry::Render calls
-   src/func_ov075_0211b3d8.cpp, a byte-matched TU whose whole body is
+   src/unnamed/ov075/func_ov075_0211b3d8.cpp, a byte-matched TU whose whole body is
    `(c->*c->ep->pmf)()` over a complete single-inheritance class, so MSVC emits
    a __thiscall: the receiver rides in ecx and NOTHING goes to the stack. The
    word behind that member pointer is the mount's 0x0211d35c, which
@@ -407,8 +407,8 @@ extern "C" {
    THE OTHER TWO PAIRS IN THE SAME RECORD ARE LEFT EXACTLY AS THE BASE HAS
    THEM, and the reason is SCOPE, not difficulty. __sinit_ov075_0211c51c copies
    three pairs into data_ov075_0211d994: 0x0211d354 (func_ov075_0211b260,
-   dispatched by src/func_ov075_0211b458.cpp's own inline member call) and
-   0x0211d34c (func_ov075_0211b1cc, dispatched by src/func_ov075_0211b418.cpp)
+   dispatched by src/unnamed/ov075/func_ov075_0211b458.cpp's own inline member call) and
+   0x0211d34c (func_ov075_0211b1cc, dispatched by src/unnamed/ov075/func_ov075_0211b418.cpp)
    are the other two, and both carry the identical receiver defect today.
 
    ALL THREE SITES ARE THUNK-REACHABLE. An earlier revision of this comment
@@ -497,7 +497,7 @@ static void __fastcall vs_pmf_grid_render(void *self, void *)
  * this lane does not judge pictures.
  *
  * AND ONLY THAT SITE. The third pair, 0x0211d34c -> func_ov075_0211b1cc, gets
- * no thunk here and must not: src/func_ov075_0211b1cc.c carries the "recovered
+ * no thunk here and must not: src/unnamed/ov075/func_ov075_0211b1cc.c carries the "recovered
  * from vtable slot identity" marker, which makes it a GUESSED body, and
  * port/tools/inferred_stub_guard's standing ruling is that a guessed body may
  * not enter a live fill. It caught the first draft of this block doing exactly
@@ -516,7 +516,7 @@ static void __fastcall vs_pmf_grid_render(void *self, void *)
  * error C2733 on an extern "C" name. The four bodies that DO have real
  * declarations above are the four the generator was told to skip. A cast at the
  * one call site keeps the generated file generated; the body is cdecl and takes
- * exactly one pointer (src/func_ov075_0211b260.c), which is what the pointer
+ * exactly one pointer (src/unnamed/ov075/func_ov075_0211b260.c), which is what the pointer
  * type says. */
 extern "C" {
 extern unsigned char data_ov075_0211d354[];
@@ -524,7 +524,7 @@ extern unsigned char data_ov075_0211d354[];
 typedef void (*VsPmfBody)(void *self);
 static void __fastcall vs_pmf_grid_init(void *self, void *)
 {
-    /* src/func_ov075_0211b260.c: the 20x20 vertex-grid initialisation */
+    /* src/unnamed/ov075/func_ov075_0211b260.c: the 20x20 vertex-grid initialisation */
     ((VsPmfBody)(void *)&func_ov075_0211b260)(self);
 }
 static void vs_install_remaining_pmf_thunks(void)
@@ -556,7 +556,7 @@ static void vs_install_remaining_pmf_thunks(void)
  * runs is wrong. What is wrong is HOW it is entered.
  *
  * THE CONVENTION SEAM, the same one this file crosses at 0x0211d35c.
- * src/func_ov075_0211b418.cpp is `(c->*c->ep->pmf)()` over a complete
+ * src/unnamed/ov075/func_ov075_0211b418.cpp is `(c->*c->ep->pmf)()` over a complete
  * single-inheritance class, so MSVC emits the two-word member-pointer call --
  * disassembled out of walk_window.exe at 0x004a1430:
  *
@@ -567,7 +567,7 @@ static void vs_install_remaining_pmf_thunks(void)
  *     mov eax,[edx+8]       ; the pair's FIRST word, the function
  *     call eax              ; this in ecx, NOTHING on the stack
  *
- * and src/func_ov075_0211b1cc.c is a plain cdecl C body taking `char *c`,
+ * and src/unnamed/ov075/func_ov075_0211b1cc.c is a plain cdecl C body taking `char *c`,
  * which reads its receiver off the stack. The receiver never arrives. That is
  * the identical defect the 0x0211d35c thunk was written for.
  *
@@ -591,7 +591,7 @@ static void vs_install_remaining_pmf_thunks(void)
  * bisect said.
  *
  * IT IS NOT A GUESS ANY MORE, AND THAT WAS CHECKED BEFORE IT WAS SEATED.
- * src/func_ov075_0211b1cc.c carries the "recovered from vtable slot identity"
+ * src/unnamed/ov075/func_ov075_0211b1cc.c carries the "recovered from vtable slot identity"
  * marker, so port/tools/inferred_stub_guard.py refuses it a new hal reference
  * until a lane rules the BODY against the ROM. This lane disassembled ov075
  * 0x0211b1cc out of extracted/overlays/overlay_0075.bin at the overlays.yaml
@@ -643,7 +643,7 @@ static void __fastcall vs_pmf_entry_walk(void *self, void *)
                 *(unsigned short *)((char *)g_r3h_pmf3_stale + 0xa4);
     }
     ++g_r3h_pmf3_hits;
-    /* src/func_ov075_0211b1cc.c, cdecl, one pointer -- the cast is the one the
+    /* src/unnamed/ov075/func_ov075_0211b1cc.c, cdecl, one pointer -- the cast is the one the
        block above vs_pmf_grid_init explains: vs_data_patch.inc is generated and
        already declares the name void(void). */
     ((VsPmfBody)(void *)&func_ov075_0211b1cc)(self);
@@ -734,7 +734,7 @@ static void vs_register_graph_block(void)
  *       0049d2fa  movzx eax, word ptr [edi+4]     ; edi = 1, not a receiver
  *
  * THE PATH IS THE ONE THE REGISTRATION OPENED, and it is a chain of ROM C:
- * IRQ::VBlankHandler -> src/func_02019144.c -> the block's slot 2
+ * IRQ::VBlankHandler -> src/unnamed/arm9/0201/func_02019144.c -> the block's slot 2
  * (src/_ZN10dScEntry_c15graphCallback_c14GraphCallback2Ev.cpp) -> `if (c[8]) func_ov075_021160dc(c[8])` ->
  * src/func_ov075_021160dc.cpp, which is
  *
@@ -1521,7 +1521,7 @@ DSSTATE_END
 }
 
 /* OS_InitContext (0x02058568), a HAND-ASM PRIMITIVE the pinned toolchain
-   assembles and MSVC cannot -- src/func_02058568.c is excluded from the
+   assembles and MSVC cannot -- src/unnamed/arm9/0205/func_02058568.c is excluded from the
    slice and this is its host body, a faithful C transcription of the asm
    (the stores, the pc+4, the sp_svc-0x40, the Thumb-bit CPSR derivation).
    PORT_HOST_ABI: ARM asm primitive. THE FLOOR THIS NOTE DESCRIBED IS GONE
@@ -1559,7 +1559,7 @@ extern "C" void func_02058568(unsigned *ctx, unsigned pc, unsigned sp)
                      COMPILED, not faced -- see the slice's correction note
      UnloadOverlay   MEASURED, and the reason changed (run link100, lane
                      LOADOV). "Nothing to unload" was true and was not the
-                     blocker. src/UnloadOverlay.c is src/func_02017e94.c with
+                     blocker. src/UnloadOverlay.c is src/unnamed/arm9/0201/func_02017e94.c with
                      one word different: both scan data_0209d3c4[12] for an
                      entry whose first word is the id, and where
                      func_02017e94 says `if (found == 0) return;` this one
@@ -1568,7 +1568,7 @@ extern "C" void func_02058568(unsigned *ctx, unsigned pc, unsigned sp)
                      overlay_NN block) and nothing ever fills that table
                      because LoadOverlay is faced -- so the ROM's own body
                      would take the crash arm on its first call. That is why
-                     this row is faced and its twin src/func_02017e94.c is
+                     this row is faced and its twin src/unnamed/arm9/0201/func_02017e94.c is
                      LINKED on port/slice_loadov.txt.
                      Also recorded: port/tools/linkage.py used to report this
                      row with func_0203d9f4's reason. The tag binder ended a
@@ -1587,26 +1587,26 @@ extern "C" void func_02058568(unsigned *ctx, unsigned pc, unsigned sp)
    block with the other three and did not belong there: it is
    `return p[25] == 2`, a read of the thread record's state word and nothing
    else -- no scheduler, no context switch, no hardware. Its one linked caller
-   src/func_0201a1bc.c hands it data_0209d5b8, hal/auto_bss.cpp hosts that
+   src/unnamed/arm9/0201/func_0201a1bc.c hands it data_0209d5b8, hal/auto_bss.cpp hosts that
    record (sized to its ROM span in the same commit, having been 116 bytes
    short), and a never-created thread's state word is zero, so the ROM's own
    body answers the same 0 this face fabricated -- for the ROM's own reason
-   instead of by assertion. src/func_02058158.c is enrolled by
+   instead of by assertion. src/unnamed/arm9/0205/func_02058158.c is enrolled by
    port/slice_gate221.txt.
    THE OTHER THREE STAY, AND THE REASON IS NO LONGER THE ONE THIS BLOCK'S
    FIRST PARAGRAPH GIVES. "The port runs no DS threads" was true when it was
    written and is not now: run link2's lane THR put the ROM's own scheduler in
-   the build on Windows fibers (hal/boot2_thread.cpp), so src/func_02057f54.c,
+   the build on Windows fibers (hal/boot2_thread.cpp), so src/unnamed/arm9/0205/func_02057f54.c,
    src/OS_SleepThread.c and src/OS_WakeupThread.c are all LINKED and
    ARMSaveContext / ARMRestoreContext have honest host bodies. The floor moved
    without this file being told; it is restated here rather than left to read
    as a hardware fact it stopped being.
      func_02058200  RETIRED (run link100, lane THREAD). The section this row
                     quoted is gone from hal/boot2_thread.cpp: thread CREATION
-                    is modelled, src/func_02058200.c runs as the ROM wrote it
+                    is modelled, src/unnamed/arm9/0205/func_02058200.c runs as the ROM wrote it
                     on port/slice_gate223.txt, and a context that file has not
                     seen is ADOPTED off the record func_02058200 built rather
-                    than refused. Its tail src/func_020581a8.cpp is on the same
+                    than refused. Its tail src/unnamed/arm9/0205/func_020581a8.cpp is on the same
                     gate, and the fiber trampoline calls it out of the record's
                     own lr word. The VS carousel worker
                     (func_0201a244 -> func_02058200) therefore creates a real
@@ -1615,7 +1615,7 @@ extern "C" void func_02058568(unsigned *ctx, unsigned pc, unsigned sp)
                     longer a link one.
      func_02057f38  STILL FACED, and its reason is now the opposite of what it
                     was. The guard words 0x7bf9dd5b / 0xfddb597d ARE written --
-                    by src/func_02058200.c, on the ROM's own bytes, and
+                    by src/unnamed/arm9/0205/func_02058200.c, on the ROM's own bytes, and
                     port/tools/thread_create_proof.py reads both of them back
                     off data_020a81bc's stack. What holds this row is that no
                     LINKED caller reaches func_02057f38, so seating it would be
@@ -1626,7 +1626,7 @@ extern "C" void func_02058568(unsigned *ctx, unsigned pc, unsigned sp)
                     three linked callers hand it "the CARD driver's thread at
                     data_020a81bc -- a thread nothing in this build created".
                     Something in this build creates it now: hal/boot_os.cpp
-                    calls src/func_0206002c.c at func_02042f68's own point in
+                    calls src/unnamed/arm9/0206/func_0206002c.c at func_02042f68's own point in
                     the boot, which is the ROM's own line
                     func_02058200(&data_020a81bc, func_020602bc, 0,
                     &data_020a8760, 0x400, 4) followed by

@@ -8,7 +8,7 @@
 // header for the full argument; what follows is this class's own evidence,
 // re-derived rather than inherited.
 //
-// src/_ZN16dScMgPachinko2_cD0Ev.cpp is a matched TU and reads, in full:
+// port/unmatched/hostarm/_ZN16dScMgPachinko2_cD0Ev.cpp is a matched TU and reads, in full:
 //
 //     #include "decl_common.h"
 //     int *_ZN16dScMgPachinko2_cD0Ev(int *t)
@@ -77,7 +77,7 @@
 //
 // ---- WHY THIS COPY OUTLIVED ITS SIBLING (run linkfull wave 27, lane V3B) ---
 //
-// The first premise above is stale: src/_ZN16dScMgPachinko2_cD0Ev.cpp is a
+// The first premise above is stale: port/unmatched/hostarm/_ZN16dScMgPachinko2_cD0Ev.cpp is a
 // real C++ destructor now, spelling neither VT nor HEAP, and
 // port/unmatched/MgPachinko_Dtor.cpp retired its copy the same night for an
 // arm in its src file. This one was measured the same way and KEPT, because it
@@ -90,7 +90,7 @@
 
 // ---- RETIRED AS A HOST COPY (run linkfull wave 31, lane VARIANT4) ----------
 //
-// The base D2 keeps its caller: src/_ZN16dScMgPachinko2_cD0Ev.cpp now defines
+// The base D2 keeps its caller: port/unmatched/hostarm/_ZN16dScMgPachinko2_cD0Ev.cpp now defines
 // the ROM's flat D0 name itself, in its `#ifdef _MSC_VER` arm, and that arm makes
 // the three calls this copy made, in the same order, with the same two words:
 // the store of data_ov006_0213dbbc into the vptr, the flat base destructor
@@ -103,7 +103,7 @@
 
 extern "C" {
 
-/* the ROM's own D0, src/_ZN16dScMgPachinko2_cD0Ev.cpp's _MSC_VER arm */
+/* the ROM's own D0, port/unmatched/hostarm/_ZN16dScMgPachinko2_cD0Ev.cpp's _MSC_VER arm */
 void *_ZN16dScMgPachinko2_cD0Ev(void *self);
 
 void *port_mg_pachinko2_d0(void *self)
