@@ -66,7 +66,7 @@ namespace {
 enum : uint8_t { kWorldTalk = 0x74 };
 enum : int {
     kSeats = 4, kPlayerMax = 16, kSlots = 512,
-    kSendMs = 66, kFreshMs = 600, kLockStaleMs = 10000, kLingerMs = 1200, kLingerBossMs = 4000, kEndSends = 3, kLookTailMs = 2000,
+    kSendMs = 66, kFreshMs = 600, kLockStaleMs = 10000, kLingerMs = 1200, kLingerBossMs = 4000, kEndSends = 3, kLookTailMs = 2000, kCoolMs = 2200,
     kClsKingBobOmb = 189,
 };
 enum : uint8_t { kFTalk = 1, kFLook = 2 };
@@ -116,8 +116,8 @@ unsigned now_ms() { return comms_hub_now_ms() + g_clock_add; }
 // King Bob-omb's intro is one talk per level visit for the whole group: once a friend's King talk ended, mine is refused
 // until the level changes or that friend leaves the group (the fight itself is coop_boss.cpp's).
 int g_kbo_seat = -1, g_kbo_slot = -1; int g_kbo_lv = -1, g_kbo_act = -1;
-// My own cooldown: after my talk with an NPC ends I may not start the next one with it for kLingerMs, the same wait a
-// friend gets, so the one who talked last does not take it first every time.
+// My own cooldown: after my talk with an NPC ends I may not start the next one with it for kCoolMs, one second longer than
+// the wait a friend gets (kLingerMs), so a friend who presses A in that second gets the NPC before the one who talked last.
 int g_cool_slot = -1; unsigned g_cool_until = 0;
 int g_my = -1;
 unsigned g_frame = 0;
@@ -303,7 +303,7 @@ void my_frame(unsigned now) {
     if (ta != g_me.actor) {
         if (g_me.actor) {
             ++g_st.ends;
-            g_cool_slot = g_me.slot; g_cool_until = (now + (unsigned)kLingerMs) | 1u; g_me.talk_end_t = now;
+            g_cool_slot = g_me.slot; g_cool_until = (now + (unsigned)kCoolMs) | 1u; g_me.talk_end_t = now;
             if (g_log) std::fprintf(stderr, "[cotalk] my talk ended: slot %d cls %u w=%lld\n", g_me.slot, g_me.cls, wall_ms());
         }
         if (ta) {
