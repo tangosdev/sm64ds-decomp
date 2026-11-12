@@ -815,7 +815,7 @@ bool boss_down(int slot, unsigned cls) {
         const int o = coop_group_owner();
         b.rule = (o < 0 || seat_runs_owner_rule(o, hub_now())) ? 1 : 2;
         if (g_log) std::fprintf(stderr, "[cbs] owner rule for cls=%u slot=%d: %s (owner seat %d) w=%lld\n", cls, slot,
-                                b.rule == 1 ? "on, the owner gives the star" : "OFF, the owner sends no boss caps (1.0.4): the 1.0.4 authority gives the star",
+                                b.rule == 1 ? "on, the owner gives the star" : "OFF, the owner sends no boss caps (1.0.4): 1.0.4 authority for records, the star kept on each console",
                                 o, wall_ms());
     }
     return b.rule == 1;
