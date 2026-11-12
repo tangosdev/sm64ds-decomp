@@ -75,13 +75,6 @@ struct GrockModelFilePtr : SharedFilePtr {
     ~GrockModelFilePtr();
 };
 
-/* The copy at mPrevAngleX has to go through a struct whose only member is
- * an array. Vector3_16's s16 members scalarise to LDRSH and interleave the
- * store; an unsigned array keeps the ROM's LDRH load-load-store. */
-struct AngleWords {
-    u16 w[3];
-};
-
 /* arm9 C helper with no shared header. func_02012694 has the same body as
  * Sound::PlayBank3 (0x02012664); the ROM calls this copy. */
 extern "C" {
@@ -308,14 +301,12 @@ int daGrock_c::Behavior() {
         int dist = DistToCPlayer();
         if (dist > 0x5dc000) {
             u32 threshold = (dist < 0x1770000) ? 0x70 : 0xe0;
-            if (*(u16 *)&mStateTimer >= threshold) {
-                u8 *spawned = (u8 *)&mSpawnCount;
-                Vector3_16 rot;
+            if ((u16)mStateTimer >= threshold) {
                 u32 rnd;
 
-                *spawned = (u8)(*spawned + 1);
-                *(u16 *)&mStateTimer = 0;
-                *(AngleWords *)&rot = *(AngleWords *)&mPrevAngleX;
+                mSpawnCount++;
+                mStateTimer = 0;
+                Vector3_16 rot = mPrevAngle;
                 rnd = (u32)RandomIntInternal(&data_0209e650.value);
                 rot.y = rot.y + (rnd >> 16) % 0xc00;
                 if (mType == kGrockStarSpawner && mSpawnCount >= 5 && mStarRockOut == 0) {
