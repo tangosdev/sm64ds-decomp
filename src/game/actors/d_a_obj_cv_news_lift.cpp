@@ -94,8 +94,6 @@ int MTX_Inverse43(const struct Matrix4x3 *s, struct Matrix4x3 *d);
 void MTX_MultVec43(Vector3 *src, Matrix4x3 *mtx, Vector3 *dst);
 void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *dst);
 void Quaternion_FromVector3(void *q, Vector3 *axis, Vector3 *v);
-void Quaternion_Normalize(void *q);
-void Quaternion_SLerp(void *q0, void *q1, int t, void *out);
 s32 Vec3_Equal(const Vector3 *a, const Vector3 *b);
 u16 DecIfAbove0_Short(u16 *p);
 u8 DecIfAbove0_Byte(u8 *p);
@@ -140,7 +138,7 @@ void daObjCvNewsLift_c::OnMainMeshRide(dActor_c *player) {
         axis.y = 0x1000;
         axis.z = 0;
         Quaternion_FromVector3(&mTargetRotation, &axis, &inFrame);
-        Quaternion_Normalize(&mTargetRotation);
+        Quaternion_Normalize((int *)&mTargetRotation);
         mTiltHoldTimer = 10;
     }
 }
@@ -386,7 +384,7 @@ s32 daObjCvNewsLift_c::Behavior() {
             mTargetRotation = *(Quaternion *)data_02092768;
         }
     }
-    Quaternion_SLerp(&mRotation, &mTargetRotation, 0x199, &mRotation);
+    Quaternion_SLerp((int *)&mRotation, (int *)&mTargetRotation, 0x199, (int *)&mRotation);
     if (Vec3_Equal(&mPos, &mHomePos))
         mResetTimer = 300;
     if (!DecIfAbove0_Short(&mResetTimer)) {

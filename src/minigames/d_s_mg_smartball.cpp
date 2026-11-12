@@ -170,8 +170,6 @@ extern int OS_SPrintf(char *buffer, const char *format, ...);
 extern void *Ov004_LoadFileByPath(void *p);
 extern void DecompressLZ16(void *src, void *dst);
 extern void Ov004_Deallocate(void *p);
-
-extern void __cxa_vec_ctor(void *, unsigned int, unsigned int, ctor_t, dtor_t);
 extern void SetSubBg0Offset(int x, int y);
 extern void func_0203d738(void);
 extern char sSmartballPathBuf[];

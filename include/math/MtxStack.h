@@ -2,6 +2,7 @@
 #define SM64DS_MATH_MTXSTACK_H
 
 #include "common.h"
+#include "math/Matrix.h"
 
 /* The arm9 matrix library (0x0203bd28..0x0203c1b4; MTX_Concat43 sits apart
  * at 0x02052914, beside MTX_MultVec43 and MTX_Inverse43) and the scratch matrix
@@ -23,7 +24,7 @@
  * Each named parameter below takes a compiler @NNN number in every file that
  * includes this header, so naming an unnamed one renumbers those files.
  *
- * Only the members d_a_mky.cpp needs exist so far. */
+ * Only the members the enrolled callers need exist so far. */
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -41,6 +42,8 @@ void Matrix4x3_ApplyInPlaceToRotationZXYExt(Matrix4x3 *, int, int, int);
 void Matrix4x3_FromRotationXYZExt(Matrix4x3 *, int, int, int);
 void Matrix4x3_FromRotationZXYExt(Matrix4x3 *, int, int, int);
 void MTX_Concat43(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *out);
+void MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
+void MTX_MultVec33(const Vector3 *, const Matrix3x3 *, Vector3 *);
 
 extern Matrix4x3 data_020a0e68;
 

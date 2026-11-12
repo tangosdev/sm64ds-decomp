@@ -106,54 +106,18 @@ struct WalkPath {
     Vector3 *points;
 };
 
-/* Genuine external C callees: the arm9 matrix/vector helpers, the C++
-   runtime and the file-handle veneers. No owning header declares them, so
-   each stays one TU-local declaration; the marker above each group says
-   where its owning header stops. */
-
-/* local extern: math/MtxStack.h names the matrix routines but declares only
-   the builders its includers call. */
-extern "C" void MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
-extern "C" void MTX_MultVec33(void *, void *, void *);
-
-/* local extern: math/Quaternion.h declares only the type. */
-extern "C" void Matrix4x3_FromQuaternion(const Quaternion *, Matrix4x3 *);
-/* local extern: math/Quaternion.h declares only the type; decl_common.h's
-   copy is C++ linkage and takes int* / Vector3*. */
-extern "C" void Quaternion_FromVector3(void *, void *, void *);
-extern "C" void Quaternion_Normalize(void *);
-extern "C" void Quaternion_SLerp(void *, void *, int, void *);
-extern "C" void Quaternion_Multiply(void *, void *, void *);
-
-/* local extern: math/CalcLib.h declares VEC_Add/VEC_Subtract and the
-   distance family, not these helpers. */
-extern "C" int VEC_DotProduct(const Vector3 *, const Vector3 *);
-extern "C" int NormalizeVec3IfNonZero(Vector3 *);
-extern "C" void Vec3_Add(Vector3 *, const Vector3 *, const Vector3 *);
-extern "C" short Vec3_VertAngle(const Vector3 *, const Vector3 *);
-extern "C" void Vec3_MulScalar(Vector3 *, const Vector3 *, int);
-extern "C" void Vec3_MulScalarInPlace(Vector3 *, int);
-extern "C" void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
-
-/* local extern: SharedFilePtr.h declares the class, not these veneers. */
-extern "C" void *SharedFilePtr_Construct_TexSeq(void *, unsigned int);
-extern "C" int SharedFilePtr_Destruct_Anim(void *);
-extern "C" int SharedFilePtr_Destruct_TexSeq(void *);
-
-/* local extern: no include/ header declares the C++ runtime array helpers. */
-extern "C" void __cxa_vec_cleanup(void *, unsigned int, unsigned int, dtor_t);
-extern "C" void __cxa_vec_ctor(void *, unsigned int, unsigned int, ctor_t, dtor_t);
-
-/* local extern: unnamed arm9 runtime routines, no header. */
-extern "C" void func_020169d8(void *, int, unsigned int);
-extern "C" void func_02016a04(void *, int);
-extern "C" void func_02016a14(void *, int);
-extern "C" int func_02017ab4(void *);
-extern "C" void *func_02017acc(void *, unsigned int);
-extern "C" unsigned int func_02012174(unsigned int, unsigned int);
-extern "C" void func_0203ccd4(void *, short);
-extern "C" void func_0203cd80(void *, short);
-extern "C" void func_0203cebc(void *, void *, void *, void *);
+/* local extern: address-named arm9 routines, no owning header. */
+extern "C" {
+void func_020169d8(void *, int, unsigned int);
+void func_02016a04(void *, int);
+void func_02016a14(void *, int);
+int func_02017ab4(void *);
+void *func_02017acc(void *, unsigned int);
+unsigned int func_02012174(unsigned int, unsigned int);
+void func_0203ccd4(void *, short);
+void func_0203cd80(void *, short);
+void func_0203cebc(void *, void *, void *, void *);
+}
 
 /* The overlay's own identity matrix, which the flower model loads. */
 extern Matrix4x3 data_ov006_0213aee8;
@@ -225,7 +189,7 @@ inline DealerAnimationFileHandle::DealerAnimationFileHandle(u32 fileID) {
     Construct(fileID);
 }
 inline DealerAnimationFileHandle::~DealerAnimationFileHandle() {
-    SharedFilePtr_Destruct_Anim(this);
+    SharedFilePtr_Destruct_Anim((int)this);
 }
 inline MascotWalkerModelFilePtr::MascotWalkerModelFilePtr(u32 fileID) {
     func_02017acc(this, fileID);
@@ -237,7 +201,7 @@ inline MascotWalkerAnimationFileHandle::MascotWalkerAnimationFileHandle(u32 file
     Construct(fileID);
 }
 inline MascotWalkerAnimationFileHandle::~MascotWalkerAnimationFileHandle() {
-    SharedFilePtr_Destruct_Anim(this);
+    SharedFilePtr_Destruct_Anim((int)this);
 }
 inline PresenterModelFilePtr::PresenterModelFilePtr(u32 fileID) {
     func_02017acc(this, fileID);
@@ -249,13 +213,13 @@ inline PresenterAnimationFileHandle::PresenterAnimationFileHandle(u32 fileID) {
     Construct(fileID);
 }
 inline PresenterAnimationFileHandle::~PresenterAnimationFileHandle() {
-    SharedFilePtr_Destruct_Anim(this);
+    SharedFilePtr_Destruct_Anim((int)this);
 }
 inline PresenterTexSeqFileHandle::PresenterTexSeqFileHandle(u32 fileID) {
     SharedFilePtr_Construct_TexSeq(this, fileID);
 }
 inline PresenterTexSeqFileHandle::~PresenterTexSeqFileHandle() {
-    SharedFilePtr_Destruct_TexSeq(this);
+    SharedFilePtr_Destruct_TexSeq((int)this);
 }
 inline FlowerFaceModelFilePtr::FlowerFaceModelFilePtr(u32 fileID) {
     func_02017acc(this, fileID);
@@ -267,7 +231,7 @@ inline FlowerFaceAnimationFileHandle::FlowerFaceAnimationFileHandle(u32 fileID) 
     Construct(fileID);
 }
 inline FlowerFaceAnimationFileHandle::~FlowerFaceAnimationFileHandle() {
-    SharedFilePtr_Destruct_Anim(this);
+    SharedFilePtr_Destruct_Anim((int)this);
 }
 
 /* ---- FallingPetal::FallingPetal ---- */
@@ -531,8 +495,8 @@ void FallingPetal::Update() {
         return;
     turn = data_02092768;
     Quaternion_FromVector3(&target, &mAxis, &dir);
-    Quaternion_SLerp(&turn, &target, 0x200, &turn);
-    Quaternion_Normalize(&turn);
+    Quaternion_SLerp((int *)&turn, (int *)&target, 0x200, (int *)&turn);
+    Quaternion_Normalize((int *)&turn);
     Quaternion_Multiply(mRot, &turn, mRot);
 }
 
@@ -549,7 +513,7 @@ void FallingPetal::Draw() {
 void FallingPetal::UpdateMatrix() {
     Matrix4x3 rot;
     Matrix4x3_FromQuaternion(reinterpret_cast<const Quaternion *>(mRot), &rot);
-    MTX_MultVec33(&sPetalUpAxis, &rot, &mAxis);
+    MTX_MultVec33(&sPetalUpAxis, (const Matrix3x3 *)&rot, &mAxis);
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
     MTX_Concat43(&rot, &data_020a0e68, &data_020a0e68);
     mModel.mat4x3 = data_020a0e68;

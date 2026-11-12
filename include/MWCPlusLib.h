@@ -18,6 +18,16 @@
 typedef void (*ctor_t)(void *);
 typedef void (*dtor_t)(void *);
 
+/* The array helpers the compiler emits for `new T[n]` / deleting one. */
+#ifdef __cplusplus
+extern "C" {
+#endif
+void __cxa_vec_cleanup(void *, unsigned int, unsigned int, dtor_t);
+void __cxa_vec_ctor(void *, unsigned int, unsigned int, ctor_t, dtor_t);
+#ifdef __cplusplus
+}
+#endif
+
 /* An exception index entry: start address, size with the inline flag in
  * bit 0, then the action table, or the table itself when inline (see
  * func_02072dac). */

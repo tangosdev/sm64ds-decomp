@@ -109,7 +109,6 @@ extern u8 gSubScreenLayers;
 extern int data_0208ee44;
 extern unsigned int LoadCompressedFileAt(int, void *);
 extern void *LoadFile(int);
-void __cxa_vec_ctor(void *base, unsigned int count, unsigned int stride, void *ctor, void *dtor);
 void Cup_Nothing(void);
 void func_0203d738(void);
 }
@@ -853,8 +852,8 @@ s32 dScMgCup_c::InitResources() {
    constructors, mParticle and mModel are the compiler's, then the two
    arrays of element records. */
 inline dScMgCup_c::dScMgCup_c() {
-    __cxa_vec_ctor(mFx, 0x20, 0x18, (void *)Cup_Nothing, (void *)CupFx_ElemDtor);
-    __cxa_vec_ctor(mCup, 3, 8, (void *)func_0203d738, (void *)NullDestructor_0203d47c);
+    __cxa_vec_ctor(mFx, 0x20, 0x18, (ctor_t)(void *)Cup_Nothing, (dtor_t)(void *)CupFx_ElemDtor);
+    __cxa_vec_ctor(mCup, 3, 8, (ctor_t)(void *)func_0203d738, (dtor_t)(void *)NullDestructor_0203d47c);
 }
 
 extern "C" void *dScMgCup_c_classInit() {
