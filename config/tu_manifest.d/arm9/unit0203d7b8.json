@@ -298,7 +298,7 @@
   "verification": {
     "round": "one compile of the unit source; every function's bytes compared with tools/match.py's compare against the ROM -- text-only, whole TU compiled",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
-    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -w illpragmas -Cpp_exceptions off",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "functions_matched": 38,
     "functions_declared": 38,
     "criteria": {
