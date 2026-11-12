@@ -36,9 +36,11 @@
 #include "nitro/os/interrupt.h"
 #include "nitro/spi/pm.h"
 #include "nitro/ctrdg/ctrdg_common.h"
+#include "nitro/pxi/fifo.h"
+#include "nitro/pxi/init.h"
 
-#define PXI_FIFO_TAG_PM 8
-#define PXI_PROC_ARM7 1
+typedef int BOOL;
+#define FALSE 0
 
 #define REG_IME (*(volatile u16 *)0x04000208)
 #define REG_IF (*(volatile u32 *)0x04000214)
@@ -80,12 +82,8 @@ extern char data_020a8124;         /* an OSMutex */
 
 void OS_SpinWait(u32 cycles);
 void OS_InitMutex(void *mutex);
-void PXI_Init(void);
-int PXI_IsCallbackReady(int tag, int proc);
-void PXI_SetFifoRecvCallback(int tag, void *callback);
-int PXI_SendWordByFifo(unsigned int tag, unsigned int data, unsigned int reply);
 
-void PMi_CommonCallback(int tag, u32 data, int err);
+void PMi_CommonCallback(PXIFifoTag tag, u32 data, BOOL err);
 u32 PMi_SendSleepStart(u16 trigger, u16 keyPattern);
 void PMi_SendPxiData(u32 data);
 
@@ -132,16 +130,16 @@ void PM_Init(void) {
     data_020a8114.lock = 0;
     data_020a8114.callback = 0;
     PXI_Init();
-    while (PXI_IsCallbackReady(PXI_FIFO_TAG_PM, PXI_PROC_ARM7) == 0)
+    while (!PXI_IsCallbackReady(PXI_FIFO_TAG_PM, PXI_PROC_ARM7))
         ;
-    PXI_SetFifoRecvCallback(PXI_FIFO_TAG_PM, (void *)PMi_CommonCallback);
+    PXI_SetFifoRecvCallback(PXI_FIFO_TAG_PM, PMi_CommonCallback);
     for (i = 0; i < 4; i++)
         data_020a8138[i].flag = 0;
     OS_InitMutex(&data_020a8124);
     data_020a8110 = HW_VBLANK_COUNT;
 }
 
-void PMi_CommonCallback(int tag, u32 data, int err) {
+void PMi_CommonCallback(PXIFifoTag tag, u32 data, BOOL err) {
     u16 command;
     u16 result;
 
@@ -313,7 +311,7 @@ u32 PM_GetBackLight(int *top, int *bottom) {
 }
 
 void PMi_SendPxiData(u32 data) {
-    while (PXI_SendWordByFifo(PXI_FIFO_TAG_PM, data, 0) != 0)
+    while (PXI_SendWordByFifo(PXI_FIFO_TAG_PM, data, FALSE) != PXI_FIFO_SUCCESS)
         ;
 }
 

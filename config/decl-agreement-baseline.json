@@ -1131,6 +1131,11 @@
         "param:#1 char *"
       ]
     },
+    "PXI_SetFifoRecvCallback": {
+      "include/nitro/pxi/fifo.h": [
+        "param:#2 void (*)(PXIFifoTag, unsigned int, int)"
+      ]
+    },
     "Quaternion_FromVector3": {
       "include/decl_common.h": [
         "param:#1 int *"

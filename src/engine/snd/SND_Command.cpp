@@ -22,6 +22,10 @@
 #include "nitro/os/cache.h"
 #include "nitro/os/system.h"
 #include "nitro/snd/command.h"
+#include "nitro/pxi/fifo.h"
+
+typedef int BOOL;
+#define FALSE 0
 
 extern "C" {
 
@@ -31,9 +35,6 @@ extern "C" {
 #define SND_CMD_FLAG_BLOCK 0x1
 /* This SDK's number for pret's SND_CMD_SET_SHARED_WORK (0x1d). */
 #define SND_CMD_SET_SHARED_WORK 0x19
-
-#define PXI_FIFO_TAG_SOUND 7
-#define PXI_PROC_ARM7 1
 
 struct SNDSharedWork;
 
@@ -58,9 +59,6 @@ extern unsigned char data_020a7760[];
 
 int OS_IsRunOnEmulator(void);
 void OS_SpinWait(u32 cycles);
-void PXI_SetFifoRecvCallback(int fifotag, void *callback);
-int PXI_IsCallbackReady(int fifotag, int proc);
-int PXI_SendWordByFifo(u32 fifotag, u32 data, u32 err);
 void SNDi_CallAlarmHandler(s32 idx);
 void SNDi_InitSharedWork(SNDSharedWork *sw);
 u32 SNDi_GetFinishedCommandTag(void);
@@ -205,11 +203,11 @@ int SND_FlushCommand(u32 flags) {
 
     DC_FlushRange(data_020a6760, SND_CMD_COUNT * sizeof(SNDCommand));
 
-    if (PXI_SendWordByFifo(PXI_FIFO_TAG_SOUND, (u32)data_020a648c, 0) < 0) {
+    if (PXI_SendWordByFifo(PXI_FIFO_TAG_SOUND, (u32)data_020a648c, FALSE) < 0) {
         if (flags == SND_CMD_FLAG_NOBLOCK)
             return 0;
 
-        while (PXI_SendWordByFifo(PXI_FIFO_TAG_SOUND, (u32)data_020a648c, 0) < 0) {
+        while (PXI_SendWordByFifo(PXI_FIFO_TAG_SOUND, (u32)data_020a648c, FALSE) < 0) {
         }
     }
 
@@ -278,14 +276,14 @@ s32 SND_CountWaitingCommand(void) {
     return SND_CMD_COUNT - SND_CountFreeCommand() - SND_CountReservedCommand();
 }
 
-void PxiFifoCallback(int tag, u32 data, int err) {
+void PxiFifoCallback(PXIFifoTag tag, u32 data, BOOL err) {
     OSIntrMode saved = OS_DisableInterrupts();
     SNDi_CallAlarmHandler((s32)data);
     OS_RestoreInterrupts(saved);
 }
 
 void InitPXI(void) {
-    PXI_SetFifoRecvCallback(PXI_FIFO_TAG_SOUND, (void *)PxiFifoCallback);
+    PXI_SetFifoRecvCallback(PXI_FIFO_TAG_SOUND, PxiFifoCallback);
 
     if (OS_IsRunOnEmulator())
         return;
@@ -299,7 +297,7 @@ void InitPXI(void) {
 }
 
 void RequestCommandProc(void) {
-    while (PXI_SendWordByFifo(PXI_FIFO_TAG_SOUND, 0, 0) < 0) {
+    while (PXI_SendWordByFifo(PXI_FIFO_TAG_SOUND, 0, FALSE) < 0) {
     }
 }
 

@@ -22,7 +22,10 @@
  */
 #include "types.h"
 #include "nitro/os/system.h"
+#include "nitro/os/systemWork.h"
 #include "nitro/spi/tp.h"
+#include "nitro/pxi/fifo.h"
+#include "nitro/pxi/init.h"
 #include "private/nvram_config.h"
 
 typedef int BOOL;
@@ -30,13 +33,6 @@ typedef int BOOL;
 #define FALSE 0
 #define NULL 0
 
-typedef enum { PXI_FIFO_TAG_TOUCHPANEL = 6 } PXIFifoTag;
-#define PXI_PROC_ARM7 1
-
-void PXI_Init(void);
-int PXI_IsCallbackReady(int tag, int proc);
-void PXI_SetFifoRecvCallback(int tag, void *callback);
-int PXI_SendWordByFifo(unsigned int tag, unsigned int data, unsigned int reply);
 void OS_Terminate(void);
 
 /* The SPI channel's PXI word (the SDK's nitro/spi/common/type.h). */
@@ -56,10 +52,6 @@ void OS_Terminate(void);
 #define SPI_PXI_RESULT_INVALID_PARAMETER 0x0002
 #define SPI_PXI_RESULT_ILLEGAL_STATUS 0x0003
 #define SPI_PXI_RESULT_EXCLUSIVE 0x0004
-
-/* The panel sample the ARM7 writes into the system work area. */
-#define HW_TOUCHPANEL_BUF 0x027fffaa
-#define HW_NVRAM_USER_INFO 0x027ffc80
 
 typedef union {
     struct {
@@ -176,8 +168,8 @@ static inline BOOL TPi_SetupStability(u8 retry, u16 range) {
 static inline void TPi_CopyTpFromSystemWork(TPData *result) {
     SPITpData spi_tp;
 
-    spi_tp.halfs[0] = *(u16 *)(HW_TOUCHPANEL_BUF);
-    spi_tp.halfs[1] = *(u16 *)(HW_TOUCHPANEL_BUF + 2);
+    spi_tp.halfs[0] = *(u16 *)(&(OS_GetSystemWork()->touch_panel[0]));
+    spi_tp.halfs[1] = *(u16 *)(&(OS_GetSystemWork()->touch_panel[2]));
 
     result->x = (u16)spi_tp.e.x;
     result->y = (u16)spi_tp.e.y;
@@ -295,11 +287,11 @@ void TP_Init(void) {
     while (!PXI_IsCallbackReady(PXI_FIFO_TAG_TOUCHPANEL, PXI_PROC_ARM7)) {
     }
 
-    PXI_SetFifoRecvCallback(PXI_FIFO_TAG_TOUCHPANEL, (void *)TPi_TpCallback);
+    PXI_SetFifoRecvCallback(PXI_FIFO_TAG_TOUCHPANEL, TPi_TpCallback);
 }
 
 BOOL TP_GetUserInfo(TPCalibrateParam *calibrate) {
-    NVRAMConfigData *info = (NVRAMConfigData *)HW_NVRAM_USER_INFO;
+    NVRAMConfigData *info = (NVRAMConfigData *)(OS_GetSystemWork()->nvramUserInfo);
 
     u16 x1, y1, x2, y2, dx1, dy1, dx2, dy2;
 

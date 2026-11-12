@@ -18,6 +18,7 @@
 
 #include "types.h"
 #include "nitro/os/thread.h"
+#include "nitro/pxi/fifo.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -100,7 +101,7 @@ void CARD_LockBackup(u16);
 void CARD_UnlockBackup(u16);
 
 /* card_request.c */
-void CARDi_OnFifoRecv(int, u32, int);
+void CARDi_OnFifoRecv(PXIFifoTag, u32, int);
 void CARDi_TaskThread(void *);
 int CARDi_Request(CARDiCommon *, s32, s32);
 

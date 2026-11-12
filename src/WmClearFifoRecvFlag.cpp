@@ -2,6 +2,9 @@
 #include "types.h"
 #include "nitro/os/cache.h"
 #include "private/wm_views.h"
+#include "nitro/pxi/fifo.h"
+
+typedef int BOOL;
 
 extern "C" {
 
@@ -39,12 +42,13 @@ extern BufT data_020a89ec;
 extern char data_020a8a00;
 
 /* NitroSDK wm_system.c's static WmReceiveFifo, the PXI receive callback
- * WM_Init installs for tag 0xa: msg is the WMCallback ARM7 left in the
+ * WM_Init installs for PXI_FIFO_TAG_WM: fifo_buf_adr is the WMCallback ARM7 left in the
  * fifo7to9 buffer. Unless err, dispatch it to the
  * indication callback, the port callback or the callback registered for
  * its API id, call WM_Finish after a successful WM_APIID_END (2), and
  * otherwise end in WmClearFifoRecvFlag. */
-void WmReceiveFifo(int tag, u16 *msg, int err) {
+void WmReceiveFifo(PXIFifoTag tag, u32 fifo_buf_adr, BOOL err) {
+    u16 *msg = (u16 *)fifo_buf_adr;
     u16 op;
 
     if (err != 0)

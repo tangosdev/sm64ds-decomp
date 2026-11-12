@@ -2493,9 +2493,10 @@ src/PXI_Init.c:
     complete
     .text start:0x0205b858 end:0x0205b864
 
-src/engine/pxi/PXI_Fifo.cpp:
+src/engine/pxi/PXI_Fifo.c:
     complete
     .text start:0x0205b864 end:0x0205bbdc
+    .bss start:0x020a7fc4 end:0x020a8048
 
 src/engine/fs/FS_CommandDefault.cpp:
     complete
