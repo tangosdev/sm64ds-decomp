@@ -12024,6 +12024,9 @@ list(APPEND SLICE_COMMS_SOURCES hal/coop_minimap.cpp hal/star_tally.cpp)
 # Run mp1 lane COOPCASTLE1: castle Boos and MIPS (profile rows in coop_actor_profiles.inc) + proof knobs. INERT
 # unless SM64DS_COOP is set in a coop room; see hal/coop_castle.h.
 list(APPEND SLICE_COMMS_SOURCES hal/coop_castle.cpp)
+# Run coopfix1 lane RABBIT2: a friend's held rabbit is held on my screen, his caught rabbit caught here too. INERT outside a
+# coop room; see hal/coop_rabbit.h.
+list(APPEND SLICE_COMMS_SOURCES hal/coop_rabbit.cpp)
 # Coop shared targeting and bosses (run mp1, lane BOSSCORE1; see hal/coop_target.h, hal/coop_boss.h).
 list(APPEND SLICE_COMMS_SOURCES hal/coop_target.cpp hal/coop_boss.cpp)
 # Run mp1 lane ARENACORE1: arena-mode VS (no rounds; the referee is the relay).
