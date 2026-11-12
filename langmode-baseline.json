@@ -10,17 +10,17 @@
     "launder_sites": 32,
     "pragma_by_name": {
       "opt_common_subs": 26,
-      "opt_dead_assignments": 2,
+      "opt_dead_assignments": 1,
       "opt_foldconstants": 1,
       "opt_lifetimes": 2,
       "opt_loop_invariants": 12,
       "opt_prelinearize": 1,
-      "opt_propagation": 13,
+      "opt_propagation": 12,
       "opt_strength_reduction": 22,
       "optimize_for_size": 13
     },
-    "pragma_files": 50,
-    "pragma_overrides": 92,
+    "pragma_files": 48,
+    "pragma_overrides": 90,
     "pragma_resets": 0,
     "pragma_resets_by_name": {}
   },
@@ -69,15 +69,15 @@
   },
   "shadow_decls": {
     "header_shadows": 1,
-    "local_body_no_include": 14,
-    "local_body_no_include_cpp": 5,
-    "local_struct_body": 347,
+    "local_body_no_include": 13,
+    "local_body_no_include_cpp": 4,
+    "local_struct_body": 346,
     "local_struct_body_cpp": 315,
     "pad_layout": 18
   },
   "totals": {
-    "c_extension": 824,
-    "cpp_extension": 691,
-    "src_files": 1515
+    "c_extension": 758,
+    "cpp_extension": 678,
+    "src_files": 1436
   }
 }
