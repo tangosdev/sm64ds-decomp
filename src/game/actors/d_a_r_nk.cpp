@@ -829,11 +829,10 @@ int daRNk_c::func_ov062_02119af0() {
     int dot = (dxc >> 0xc) * (dx >> 0xc) + (dzc >> 0xc) * (dz >> 0xc);
     if (dot <= 0 || Vec3_Dist(&p->mPos, (Vector3 *)&p->mPathTarget) < (p->mHorzSpeed >> 1)) {
         int v = p->mPathTarget.x;
-        int *cnt = &p->mCurPathPt;
         p->mPrevPathPt.x = v;
         p->mPrevPathPt.y = p->mPathTarget.y;
         p->mPrevPathPt.z = p->mPathTarget.z;
-        *cnt = *cnt + 1;
+        p->mCurPathPt++;
         if (p->mCurPathPt >= p->mNumPathPts) {
             p->mCurPathPt = 0;
         }
