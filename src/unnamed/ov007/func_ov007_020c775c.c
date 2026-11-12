@@ -1,9 +1,6 @@
 #include "Ov007Spring.h"
+#include "math/CalcLib.h"
 
-/* local extern: math/CalcLib.h is C++ only; this matches its declaration. */
-extern void VEC_Subtract(Vector3 *, Vector3 *, Vector3 *);
-/* local extern: as above */
-extern int VEC_Mag(const Vector3 *);
 
 /* Re-measures each link of the list between its followers' targets. */
 void func_ov007_020c775c(Ov007PointList *list) {

@@ -1,9 +1,6 @@
 #include "Ov007Spring.h"
+#include "math/CalcLib.h"
 
-/* local extern: math/CalcLib.h is C++ only; this matches its declaration. */
-extern void VEC_Subtract(Vector3 *, Vector3 *, Vector3 *);
-/* local extern: as above */
-extern int VEC_Mag(const Vector3 *);
 
 /* Sets each link's rest offset and length from the rest points: link i
  * runs from rest[i] to rest[i + 1], and in a closed list (flags bit 1) the
