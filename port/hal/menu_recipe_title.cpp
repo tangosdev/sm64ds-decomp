@@ -361,6 +361,7 @@ static bool file_page_up()
 bool file_arrow_up() { return file_page_up() && menu_hostimg_ready(MENU_IMG_ARROW_ORANGE); }
 
 bool wrench_hd_ready();      /* HDSELICON1: below, beside wrench_dx */
+bool ds_plate_skip(char *o); /* MENUCUT1: below, beside scene_sprite_xf */
 int title_skip(char *o)
 {
     if (*(unsigned char *)(o + 0x4e) == 0x21 && file_arrow_up()) {
@@ -395,6 +396,9 @@ int title_skip(char *o)
        of the layer, is left out of the submit and the layer can stop above the plates; the main page only */
     if (*(unsigned char *)(o + 0x4e) == 0x21 && main_page_skip_active() && !(menu_hostimg_ready(MENU_IMG_ARROW_UP) && menu_hostimg_ready(MENU_IMG_ARROW_DOWN) &&
         menu_hostimg_ready(MENU_IMG_BTN_MP) && menu_hostimg_ready(MENU_IMG_BTN_ADV) && menu_hostimg_ready(MENU_IMG_BTN_REC))) return 1;
+    /* MENUCUT1: with the DS's own plates in the main menu's full-canvas scene, a plate a code drawn plank stands in for (ONLINE / SOLO in the MP slot,
+       ADVENTURE ONLINE, VS) is not submitted, so it never shows around or under that plank */
+    if (ds_plate_skip(o)) return 1;
     static int trace = -1;
     static unsigned skipk;
     if (trace < 0) {
@@ -753,6 +757,8 @@ static bool egg_page_ok(const MenuLayout *L, bool intro)
     return !(of && of->scr != ONL_SCR_NONE);
 }
 
+bool scene_now();                              /* TITLE092: below */
+MenuPiece scene_layer(const MenuLayout *L);
 void build_main(MenuLayout *L, bool intro)
 {
     int egg_piece = -1, egg_ds = 0;      /* EGG1: the logo piece of this page (egg_ds: the DS backdrop, its logo box) */
@@ -829,6 +835,15 @@ void build_main(MenuLayout *L, bool intro)
     if (t_f && t_f->ch.mode == CH_INTRO && t_f->ch.sw_t >= 0 && !t_f->ch.skip && t_f->ch.sw_t < 9) ent_a = (t_f->ch.sw_t + 1) * 255 / 9;
     if (t_f && t_f->ch.mode == CH_INTRO && t_f->ch.sw_t < 0 && !t_f->ch.skip && t_f->ch.ct >= CH_LOGO_POP + CH_BOUNCE_LEN) ent_a = 1;      /* before the swap the head is still off the picture: nothing of the layer shows */
     if (ent_a < 255) face.alpha = (uint8_t)ent_a;
+    /* MENUCUT1: when this tick's 3D was drawn as the page's full-canvas scene (scene_main_ds: the head at this piece's own transform, the plates and
+       the wrench whole at their own places) the whole 3D layer is the one element, and the head, wrench and plate pieces below only map clicks. The
+       cut pieces stay for a tick the scene did not draw (SM64DS_TITLE_WIDE=0). */
+    const bool sc = scene_now();
+    if (sc) {
+        MenuPiece s3 = scene_layer(L);
+        if (ent_a < 255) s3.alpha = (uint8_t)ent_a;
+        menu_add_piece(L, s3);
+    } else
     menu_add_piece(L, face);
     MenuPiece head = menu_piece_make(SRC_TOP_PIC, 20, 0, 156, 140, MENU_AX_C, MENU_AY_T, tune(2, -18), tune(3, 46), hk, hd);
     head.touch = 1; head.nodraw = 1;
@@ -838,7 +853,7 @@ void build_main(MenuLayout *L, bool intro)
     if (ent_a < 255) wr.alpha = (uint8_t)ent_a;
     if (settings_page_press_look() == 2) { wr.dy = 1; wr.dx = (short)(wrench_dx(L) - 1); }   /* HUDMENU2 (H4): the wrench sinks while the press hold of a pad / key confirm runs */
     const bool wr_hd = wrench_hd_ready();      /* HDSELICON1 */
-    if (wr_hd) wr.nodraw = 1;
+    if (wr_hd || sc) wr.nodraw = 1;            /* MENUCUT1: the scene drew the wrench */
     const int iwr = menu_add_piece(L, wr);
     if (wr_hd) add_wrench_hd(L, wr.dx, wr.dy, ent_a);
     static const int kPlateId[3] = { 1, 0, 2 };                      /* the ROM's element ids: VS, ADVENTURE, REC ROOM */
@@ -898,6 +913,7 @@ void build_main(MenuLayout *L, bool intro)
             const int dhf = 52 * un / ud, cx = L->w / 2 + (kPlateX[k] - 128 + kPlateW[k] / 2) * un / ud;
             pl.fixdest = 1; pl.fx = (short)(cx - dwf / 2); pl.fy = (short)(L->h - dhf); pl.fw = (short)dwf; pl.fh = (short)dhf;
         }
+        if (sc) pl.nodraw = 1;      /* MENUCUT1: the scene drew the plate itself, whole and at its own place (turning: scene_sprite_xf) */
         if (ghost) pl.touch = 0;
         const int ip = menu_add_piece(L, pl);
         if (!ghost) hot(L, ip, &kPlateId[k], 1);
@@ -952,6 +968,9 @@ void build_main(MenuLayout *L, bool intro)
         }
     }
     const Chore cs = t_f ? t_f->ch : Chore();
+    /* MENUCUT1: the head's entrance fade (INTRO2) is now the whole 3D layer's, the DS plates and the wrench with it, so the code planks and the arrow
+       take it too and the lower page fades in as one */
+    if (sc && ent_a < 255) swap_fade_host(L, np_swap, ent_a);
     if (cs.swap_a >= 0) swap_fade_host(L, np_swap, cs.swap_a);      /* TITLEART1: the code planks and the arrow take the ROM's swap fade */
     const int np_ov = L->np;
     { const OnlFacts *of = onl_facts_of(L); online_overlays(L, true, of && of->on); }     /* NAME1: the ? button and the modal screen */
@@ -1513,6 +1532,21 @@ SceneT scene_main()
     t.K = (float)stune(0, 1050) / 1000.f;
     t.Tx = (float)stune(1, 0);
     t.Ty = (float)stune(2, -12);
+    return t;
+}
+/* MENUCUT1 (Tango 11-11, without the HD UI mod at 4:3: "things go through invisible lines where parts were cut out"): THE MAIN MENU WITH THE DS'S
+   OWN ART AS THE SAME FULL-CANVAS SCENE. That page used to cut the finished lower screen in two at DS row 140: rows 0..139 (the head, star and
+   sparkles) as one piece at 2/3 size, rows 140..191 as three plate rects at full size. Anything that crossed row 140 was sliced there: the
+   chin when the idle head dipped (it reaches row 146), a plate's corner when it wobbled. Now the head, star and sparkles are drawn by this transform
+   (the old piece's own: 2/3 of the DS size, the layer's top left at canvas x = centre - 128 * K + dx, y = dy, the SM64DS_TITLE_TUNE knobs 0..3 as
+   before), and the plates and the wrench are sprite objects the 3D draws whole at their own places (scene_sprite_xf), so nothing is cut. */
+SceneT scene_main_ds()
+{
+    const int n = tune(0, 2), d = tune(1, 3);
+    SceneT t;
+    t.K = (n > 0 && d > 0) ? (float)n / (float)d : 2.f / 3.f;
+    t.Tx = (float)(tune(2, -18) + 20);
+    t.Ty = (float)tune(3, 46) - 96.f + 96.f * t.K;
     return t;
 }
 /* the press page (top 4): the ROM grows the head to 1.345 times; the scene is drawn at the main menu's step divided by that growth and
@@ -2575,8 +2609,7 @@ bool title_scene_cb(float xf[4])
         T = scene_main();
         break;
     case V_MAIN:
-        if (!pc) return false;
-        T = scene_main();
+        T = pc ? scene_main() : scene_main_ds();      /* MENUCUT1: the DS-art page is a scene too (scene_main_ds) */
         break;
     case V_TOY:
         if (!pc) {
@@ -2617,6 +2650,24 @@ bool title_scene_cb(float xf[4])
    pixels, o + 4 / o + 8); the scene transform does not touch sprite objects, so each is placed here: the wrench pinned to the top right
    corner of the canvas (and lifted out of the top as the face is pressed), the drawing page's buttons pinned to the left / right /
    bottom edge at their DS rows, anything else on the drawing page (the canvas the strokes are on) by the scene transform. */
+/* MENUCUT1: the main page's plank slot of a DS plate sprite (0 = the MP slot, 1 = ADVENTURE, 2 = REC ROOM) from its own x (DS pixels, its centre):
+   the plates rest at 34 / 128 / 222 and only ever travel outward (in from, and out past, the screen's sides), and its state this tick (the same
+   menu_online_plank_state build_main reads: kind ONL_K_*, w1000 = the turn's width in permille) */
+void ds_plate_state(int x, int *kind, int *w1000)
+{
+    OnlFacts f;
+    menu_online_facts(&f);
+    menu_online_plank_state(&f, x < 68 ? 0 : x > 188 ? 2 : 1, kind, w1000);
+}
+/* MENUCUT1: 1 = this DS plate is not submitted: this frame is the DS-art main menu's scene and a code drawn plank stands in for its slot */
+bool ds_plate_skip(char *o)
+{
+    if (*(unsigned char *)(o + 0x4e) != 0x1b || (((const int *)o)[2] >> 12) < 100) return false;
+    if (!g_sc.on || g_sc.variant != V_MAIN || !data_ov007_0210342c || g_sc.frame + 1 < data_ov007_0210342c[0] || pc_assets_ready()) return false;
+    int kind = 0, w1000 = 1000;
+    ds_plate_state(((const int *)o)[1] >> 12, &kind, &w1000);
+    return kind == ONL_K_ONLINE || kind == ONL_K_SOLO || kind == ONL_K_ADV_ONLINE || kind == ONL_K_VS;
+}
 void scene_sprite_xf(char *o)
 {
     if (!g_sc.on || !data_ov007_0210342c || g_sc.frame + 1 < data_ov007_0210342c[0]) return;      /* the callback ran in this tick's Render, the counter moved on once since (as build's sc_on) */
@@ -2633,6 +2684,15 @@ void scene_sprite_xf(char *o)
             float up = 0.f;
             if (v == V_TOY) { const int tv = title_page_counter(); const float e = tv >= 10 ? 1.f : (float)tv / 10.f; up = e * e * 60.f; }
             ntr::gx_menu_sprite_xf(1.f, 2.f * (sx - (menu_online_on() ? 35.f : 0.f)) / cw, 1.f, 2.f * (sy + up) / ch);      /* NAME1: beside the ? button in online mode; NAME2: the ? (30) and its gap from the window edge (5) */
+        } else if (id == 0x1b && v == V_MAIN && !pc_assets_ready()) {
+            /* MENUCUT1: a DS plate stays at its own DS place (the centred 4:3 box); while its slot turns between its ROM face and a code plank
+               (NAME1) the ROM face narrows about the plate's own centre, as the cut piece used to */
+            int kind = 0, w1000 = 1000;
+            ds_plate_state(x, &kind, &w1000);
+            if (w1000 < 1000) {
+                const float s = (float)w1000 / 1000.f;
+                ntr::gx_menu_sprite_xf(s, 2.f * ((float)x - 128.f) / cw * (1.f - s), 1.f, 0.f);
+            }
         }
         return;
     }
