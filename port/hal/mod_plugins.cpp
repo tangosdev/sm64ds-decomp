@@ -1039,7 +1039,9 @@ extern "C" int port_mod_plugin_switch_undo(const char *id, int on, const char *w
 }
 
 /* load the code mod at list index i in place (the title, after a relatch put it in the list), the way the boot loads it; 1 = it is
-   loaded now (or was already), 0 = skipped (said once, like the boot's skip) */
+   loaded now (or was already), 0 = skipped (said once, like the boot's skip), -1 = refused: its main registered an on_file filter,
+   which files the game already read would never pass, so it is switched off again at once and the relatch refuses (the caller
+   restarts, and the new process loads it at boot before any file is read) */
 extern "C" int port_mod_plugin_load_late(int i, const char *why)
 {
     const char *id = port_mods_id(i);
@@ -1056,6 +1058,15 @@ extern "C" int port_mod_plugin_load_late(int i, const char *why)
     g_resolved = false;   /* its on_file paths are resolved on the next read */
     install_hooks();
     const bool ok = g_nloaded > before;
+    Plugin *p = ok ? find_plugin(id) : 0;
+    if (p && !p->file.empty()) {
+        const int back = switch_plugin(p, 0, "an on_file plugin loaded late");
+        fprintf(stderr, "[plugins] %s refused in place at the title (%s): it registers on_file, and files the game already read would "
+                "never pass its filter; %s, the caller restarts\n", id, why ? why : "?",
+                back ? "switched off again" : "switching it off again FAILED");
+        fflush(stderr);
+        return -1;
+    }
     fprintf(stderr, "[plugins] %s loaded in place at the title (%s): %s\n", id, why ? why : "?",
             ok ? "loaded and on (its main ran now; its level callbacks run from the next level)" : "skipped (the line above says why)");
     fflush(stderr);

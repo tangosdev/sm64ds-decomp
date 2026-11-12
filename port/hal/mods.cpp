@@ -1323,7 +1323,9 @@ int relatch(const char *reason, const char *list_json)
                 if (port_mod_plugin_switch(g_mods[i].id.c_str(), 1, reason)) made.push_back(std::make_pair(g_mods[i].id, 1));
                 else snprintf(why, sizeof why, "code mod %s could not be switched on in place (a code write failed)", g_mods[i].id.c_str());
             } else if (st == 0) {
-                port_mod_plugin_load_late((int)i, reason);
+                const int lr = port_mod_plugin_load_late((int)i, reason);
+                if (lr < 0) snprintf(why, sizeof why, "code mod %s registers on_file and cannot be loaded in place", g_mods[i].id.c_str());
+                else if (lr > 0 && port_mod_plugin_state(g_mods[i].id.c_str()) == 1) made.push_back(std::make_pair(g_mods[i].id, 1));
             }
         }
         for (size_t k = made.size(); why[0] && k-- > 0;)
