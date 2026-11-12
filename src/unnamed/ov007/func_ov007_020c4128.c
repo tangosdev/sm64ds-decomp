@@ -1,7 +1,5 @@
 #include "Ov007Sprite.h"
-
-/* local extern: math/CalcLib.h is C++ only; this matches its declaration. */
-extern void VEC_Subtract(Vector3 *, Vector3 *, Vector3 *);
+#include "math/CalcLib.h"
 
 /* Draws sprite `child` relative to sprite `parent`: child takes parent's
  * scale, colour and alpha, is offset by parent's screen position and depth

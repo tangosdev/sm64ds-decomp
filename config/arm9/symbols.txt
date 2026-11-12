@@ -324,7 +324,7 @@ _ZN8dActor_cC2Ev kind:function(arm,size=0x148) addr:0x0201150c
 func_02011654 kind:function(arm,size=0x44) addr:0x02011654
 func_02011698 kind:function(arm,size=0x2c) addr:0x02011698
 func_020116c4 kind:function(arm,size=0xd8) addr:0x020116c4
-_ZN11SndRegTable13func_0201179cEiiis kind:function(arm,size=0xd0) addr:0x0201179c
+_ZN11SndRegTable13func_0201179cEiiPK7Vector3s kind:function(arm,size=0xd0) addr:0x0201179c
 _ZN11SndRegTable13func_0201186cEiis kind:function(arm,size=0xc8) addr:0x0201186c
 func_02011934 kind:function(arm,size=0x40) addr:0x02011934
 func_02011974 kind:function(arm,size=0x54) addr:0x02011974
@@ -2713,14 +2713,14 @@ CARDi_EndTask kind:function(arm,size=0x74) addr:0x0206081c
 CARD_Init kind:function(arm,size=0x7c) addr:0x02060890
 CARD_WaitRomAsync kind:function(arm,size=0xc) addr:0x0206090c
 CARDi_ReadRom kind:function(arm,size=0x118) addr:0x02060918
-CARDi_ReadRomSyncCore kind:function(arm,size=0x34) addr:0x02060a30
+CARDi_ReadRomSyncCore kind:function(arm,size=0x34) addr:0x02060a30 local
 CARDi_ReadCard kind:function(arm,size=0x100) addr:0x02060a64
 CARDi_TryReadCardDma kind:function(arm,size=0x148) addr:0x02060b64
-CARDi_OnReadCard kind:function(arm,size=0x70) addr:0x02060cac
-CARDi_SetCardDma kind:function(arm,size=0x7c) addr:0x02060d1c
-CARDi_SetRomOp kind:function(arm,size=0xa0) addr:0x02060d98
-CARDi_ReadEnd kind:function(arm,size=0x84) addr:0x02060e38
-CARDi_ReadFromCache kind:function(arm,size=0xa4) addr:0x02060ebc
+CARDi_OnReadCard kind:function(arm,size=0x70) addr:0x02060cac local
+CARDi_SetCardDma kind:function(arm,size=0x7c) addr:0x02060d1c local
+CARDi_SetRomOp kind:function(arm,size=0xa0) addr:0x02060d98 local
+CARDi_ReadEnd kind:function(arm,size=0x84) addr:0x02060e38 local
+CARDi_ReadFromCache kind:function(arm,size=0xa4) addr:0x02060ebc local
 CARDi_Request kind:function(arm,size=0x14c) addr:0x02060f60
 _ZN3IRQ21GameCardIREQMCHandlerEv kind:function(arm,size=0x50) addr:0x020610ac
 func_020610fc kind:function(arm,size=0x2c) addr:0x020610fc
@@ -4919,7 +4919,7 @@ data_0209fd5c kind:bss addr:0x0209fd5c
 data_020a0244 kind:bss addr:0x020a0244
 sPrevHeap$390 kind:bss addr:0x020a0c5c
 _ZGVsPrevHeap$390 kind:bss addr:0x020a0c60
-data_020a0c64 kind:bss addr:0x020a0c64
+sMBJobDone kind:bss addr:0x020a0c64
 sMBGraphCallback kind:bss addr:0x020a0c68
 data_020a0c78 kind:bss addr:0x020a0c78
 data_020a0c80 kind:bss addr:0x020a0c80

@@ -2,7 +2,6 @@
 #include "nitro/mi/memory.h"
 
 extern int func_02065bd0(void);
-extern int WBT_CalcPacketbitmapSize(int a);
 
 /* NitroSDK WBT: reset one peer's packet bitmap for a transfer of length
  * bytes into buffer: the packet count (length over the packet size,
@@ -11,7 +10,7 @@ void func_020647fc(WBTPacketBitmap *pkt, int length, unsigned int *bitmap, unsig
     int d = func_02065bd0();
     int r;
     pkt->length = length;
-    pkt->pad_08 = 0;
+    pkt->next = 0;
     pkt->current = 0;
     pkt->recv_count = 0;
     pkt->count = length / d + (length % d != 0);

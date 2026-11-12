@@ -205,7 +205,7 @@ extern int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State
  * position = the spawn position, then enters the wander state. */
 int daPropeller_Heyho_c::InitResources()
 {
-    mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov070_02123530), 1, -1);
+    mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov070_02123530), 1, -1);
     mShadowModel.InitCylinder();
     dExtFrameCtrl_c::LoadFile(data_ov070_02123520);
     dExtFrameCtrl_c::LoadFile(data_ov070_02123518);

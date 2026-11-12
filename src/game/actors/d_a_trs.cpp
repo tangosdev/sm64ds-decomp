@@ -3075,7 +3075,7 @@ block_39:
         v1.x = x;
         v1.y = w;
         v1.z = z;
-        rc1.SetObjAndPos(v1, (dActor_c*)this);
+        rc1.SetObjAndPos(v1, this);
         if (rc1.DetectClsn() != 0) {
             s32 ground = rc1.clsnY + 0x2000;
             if (mPosY < ground)
@@ -3090,7 +3090,7 @@ block_39:
             v2.x = x;
             v2.y = w;
             v2.z = z;
-            rc2.SetObjAndPos(v2, (dActor_c*)this);
+            rc2.SetObjAndPos(v2, this);
             d1 = (int)(actorID == TRS_ID_TERESA);
             if (d1 != 0) {
                 if (mVariant < 8) {
@@ -3143,7 +3143,7 @@ int daTBasket_c::Behavior()
     int secretDone = 1;
 
     if (mMuteSecretSound == 0)
-        secretDone = Sound::PlaySecretSound((dActor_c *)this, (u16 *)&mSoundTimer);
+        secretDone = Sound::PlaySecretSound(this, (u16 *)&mSoundTimer);
 
     if (mWithMeshClsn.JustHitGround()) {
         int vertSpeed = mVertSpeed;
@@ -3205,7 +3205,7 @@ int daTrs_c::InitResources()
             mFoundActor = 0;
         }
         dExtFrameCtrl_c::LoadFile(data_ov063_0211ede4);
-        mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov063_0211edf4), 1, 1);
+        mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov063_0211edf4), 1, 1);
         mAnmModel.SetAnim((BCA_File *)data_ov063_0211ede4.filePtr, 0, 0x1000, 0);
         mHitPoints = 3;
         mClsnRadius = 0xc8;
@@ -3224,7 +3224,7 @@ int daTrs_c::InitResources()
     } else {
         mVariant = param1 & 0xf;
         dExtFrameCtrl_c::LoadFile(data_ov063_0211eddc);
-        mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov063_0211edc4), 1, 0x16);
+        mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov063_0211edc4), 1, 0x16);
         mAnmModel.SetAnim((BCA_File *)data_ov063_0211eddc.filePtr, 0, 0x1000, 0);
         mHitPoints = 1;
         if (mVariant == 5) {
@@ -3417,7 +3417,7 @@ int daTrs_c::InitResources()
 
 int daTBasket_c::InitResources()
 {
-    BMD_File *bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov063_0211edec);
+    BMD_File *bmd = dExtSimpleModel_c::LoadFile(data_ov063_0211edec);
     if (mModel.SetFile(bmd, 1, -1) == 0)
         return 0;
     if (mShadowModel.InitCylinder() == 0)

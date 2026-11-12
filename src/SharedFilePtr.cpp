@@ -213,15 +213,15 @@ extern "C" int SharedFilePtr_Destruct_Clsn(int self) {
 
 #if !defined(_MSC_VER) || defined(SM64DS_PORT_GATE8)
 /* Loads a KCL collision file; the first holder rebases its offsets. */
-char *dBgW_Kc::LoadFile(SharedFilePtr &ptr) {
+KCL_File *dBgW_Kc::LoadFile(SharedFilePtr &ptr) {
     u8 refs;
-    char *file;
+    KCL_File *file;
 
     ptr.LoadFile();
     refs = ptr.numRefs;
-    file = (char *)ptr.filePtr;
+    file = (KCL_File *)ptr.filePtr;
     if (refs == 1 && file != 0) {
-        UpdateFileOffsets(*(KCL_File *)file);
+        UpdateFileOffsets(*file);
     }
     return file;
 }
@@ -257,13 +257,13 @@ void SharedFilePtr::ReallocateModelFile() {
 #if !defined(_MSC_VER) || defined(SM64DS_PORT_GATE4B)
 /* Loads a BMD model. The first holder rebases its offsets, registers it in
    the common model data array, and trims its allocation to the real size. */
-void *dExtSimpleModel_c::LoadFile(SharedFilePtr &ptr) {
-    void *filePtr;
+BMD_File *dExtSimpleModel_c::LoadFile(SharedFilePtr &ptr) {
+    BMD_File *filePtr;
     ptr.LoadFile();
-    filePtr = ptr.filePtr;
+    filePtr = (BMD_File *)ptr.filePtr;
     if (ptr.numRefs == 1 && filePtr != 0) {
-        UpdateFileOffsets(*(BMD_File *)filePtr);
-        AddToCommonModelDataArr(*(BMD_File *)filePtr);
+        UpdateFileOffsets(*filePtr);
+        AddToCommonModelDataArr(*filePtr);
         ptr.ReallocateModelFile();
     }
     return filePtr;
@@ -286,7 +286,7 @@ extern "C" int func_02017a0c(int self) {
 extern "C" int func_020179b4(SharedFilePtr *filePtr, dExtModel_c *model, int arg) {
     int result = 0;
     if (model) {
-        BMD_File *file = (BMD_File *)dExtSimpleModel_c::LoadFile(*filePtr);
+        BMD_File *file = dExtSimpleModel_c::LoadFile(*filePtr);
         if (file) {
             result = model->SetFile(file, arg, -1);
             if (!result) {
@@ -311,15 +311,15 @@ extern "C" int SharedFilePtr_Destruct_Anim(int self) {
 
 #if !defined(_MSC_VER) || defined(SM64DS_PORT_GATE4B)
 /* Loads a BCA animation; the first holder rebases its offsets. */
-char *dExtFrameCtrl_c::LoadFile(SharedFilePtr &ptr) {
+BCA_File *dExtFrameCtrl_c::LoadFile(SharedFilePtr &ptr) {
     u8 refs;
-    char *file;
+    BCA_File *file;
 
     ptr.LoadFile();
     refs = ptr.numRefs;
-    file = (char *)ptr.filePtr;
+    file = (BCA_File *)ptr.filePtr;
     if (refs == 1 && file != 0) {
-        UpdateFileOffsets(*(BCA_File *)file);
+        UpdateFileOffsets(*file);
     }
     return file;
 }
@@ -337,12 +337,12 @@ extern "C" int SharedFilePtr_Destruct_TexSeq(int self) {
 }
 
 /* Loads a BTP texture animation; the first holder rebases its offsets. */
-void *dExtAnmTexPat_c::LoadFile(SharedFilePtr &ptr) {
-    void *filePtr;
+BTP_File *dExtAnmTexPat_c::LoadFile(SharedFilePtr &ptr) {
+    BTP_File *filePtr;
     ptr.LoadFile();
-    filePtr = ptr.filePtr;
+    filePtr = (BTP_File *)ptr.filePtr;
     if (ptr.numRefs == 1 && filePtr != 0) {
-        UpdateFileOffsets(*(BTP_File *)filePtr);
+        UpdateFileOffsets(*filePtr);
     }
     return filePtr;
 }

@@ -29,6 +29,6 @@ void InitCrashScreen(void)
     ResetCrashScreen();
     ShowCrashScreen();
     GX_DispOn();
-    *(volatile int *)0x4001000 = *(volatile int *)0x4001000 & ~0x10000;
+    GXS_DispOff();
 }
 }

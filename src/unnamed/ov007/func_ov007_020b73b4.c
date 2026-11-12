@@ -1,9 +1,9 @@
 #include "Ov007Display.h"
+#include "Ov007MenuMem.h"
 
-/* The menu's free hook and the per-record frees; the long-branch veneers
- * (func_ov007_020c105c, 020c05f8, 020c8b04, 020c3544, 020c338c, 020c0a9c)
- * all tail-call func_ov007_020c3d1c. */
-extern void func_ov007_020c3d1c(void *p);
+/* The per-record frees; the long-branch veneers (func_ov007_020c105c,
+ * 020c05f8, 020c8b04, 020c3544, 020c338c, 020c0a9c) all tail-call the
+ * menu's free hook, func_ov007_020c3d1c. */
 extern void func_ov007_020c105c(void *p);
 extern void func_ov007_020c05f8(void *p);
 extern void Transition_Destroy(void *p);

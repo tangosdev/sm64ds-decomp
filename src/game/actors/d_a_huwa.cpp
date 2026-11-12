@@ -314,8 +314,8 @@ int daHuwa_c::Behavior() {
 }
 
 int daHuwa_c::InitResources() {
-    void *modelFile = dExtSimpleModel_c::LoadFile(gHuwahuwaModelModelFile);
-    mAnmModel.dExtModel_c::SetFile((BMD_File *)modelFile, 1, -1);
+    BMD_File *modelFile = dExtSimpleModel_c::LoadFile(gHuwahuwaModelModelFile);
+    mAnmModel.dExtModel_c::SetFile(modelFile, 1, -1);
     dExtFrameCtrl_c::LoadFile(gHuwahuwaMoveAnimationFile);
     mAnmModel.SetAnim((BCA_File *)gHuwahuwaMoveAnimationFile.filePtr, 0, 0x1000, 0);
     if (mShadowModel.InitCylinder() == 0)

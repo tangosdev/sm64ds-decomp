@@ -1710,6 +1710,99 @@ class DefinitionOwnershipTests(unittest.TestCase):
         self.assertNotIn("own_target", out)
 
 
+class IncludedTypedefTests(unittest.TestCase):
+    """A typedef a file sees through its `#include`s reads the same on both sides.
+
+    `include/nitro/pxi/fifo.h` declares `PXI_SetFifoRecvCallback(int,
+    PXIFifoCallback)` and typedefs `PXIFifoCallback` itself, so the header side read
+    `void (*)(PXIFifoTag, unsigned int, int)`. `src/engine/pxi/PXI_Fifo.c` includes
+    that header and defines the function with the same spelling, but only its OWN
+    typedefs were resolved, so it kept the bare `PXIFifoCallback` and the two
+    disagreed. Twelve findings on the tree were this and nothing else.
+
+    The first case fails on the tool as it was; the control passes in both states.
+    A `typedef struct T T;` is NOT taken from a header (TAG_ALIAS): folding `T` into
+    `struct T` in includers only turned 30 agreeing `Matrix4x3 *` spellings of the
+    MTX_* helpers into findings on the tree.
+    """
+
+    def test_a_header_function_pointer_typedef_resolves_in_its_includer(self):
+        repo = BigRepo.shared()
+        repo.reset()
+        repo.write("include/own_cb.h",
+                   "typedef void (*OwnCb)(int);\nvoid own_set(OwnCb);\n")
+        repo.write("src/own_set.c",
+                   '#include "own_cb.h"\nvoid own_set(OwnCb cb) { (void)cb; }\n')
+        rc, out = repo.run_main(["--list"])
+        self.assertEqual(rc, 0, out)
+        self.assertNotIn("own_set", out)
+
+    def test_a_real_disagreement_through_the_typedef_still_reports(self):
+        """Control: resolving the alias must not hide a different signature."""
+        repo = BigRepo.shared()
+        repo.reset()
+        repo.write("include/own_cb2.h",
+                   "typedef void (*OwnCb2)(int);\nvoid own_set2(OwnCb2);\n")
+        repo.write("src/own_set2.c",
+                   '#include "own_cb2.h"\n'
+                   "void own_set2(void (*cb)(short)) { (void)cb; }\n")
+        rc, out = repo.run_main(["--list"])
+        self.assertEqual(rc, 1, out)
+        self.assertIn("own_set2", out)
+
+
+class DeclarationScopeTests(unittest.TestCase):
+    """The declaration side of the ownership rule above.
+
+    `namespace Memory { void Deallocate(void *, Heap *); }` in include/Memory.h
+    declares `_ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE`, but it was recorded as a
+    declaration of the flat name `Deallocate`, which the tree ALSO defines (C
+    linkage, src/Deallocate.cpp). That one record made a false arity finding
+    against the C function, and made Memory.h answer the redeclaration gate for
+    every C-linkage `extern void Deallocate(void *);`. The definition branches
+    already claimed nothing in a mangled scope; declarations now do the same.
+
+    The two `assertEqual(..., [])` cases and the end-to-end case fail on the parser
+    as it was; the two controls pass in both states.
+    """
+
+    def _decls(self, rel, code):
+        decls, _defs, _u = CDA.parse_file(rel, code, {})
+        return sorted(d.symbol for d in decls)
+
+    def test_a_namespaced_header_declaration_is_not_the_flat_symbol(self):
+        self.assertEqual(
+            self._decls("include/x.h", "namespace P { void target(void *); }\n"), [])
+
+    def test_a_namespaced_extern_in_a_cxx_TU_is_not_either(self):
+        self.assertEqual(
+            self._decls("src/x.cpp", "//cpp\nnamespace P { extern int target; }\n"), [])
+
+    def test_extern_c_inside_a_namespace_still_declares_the_flat_name(self):
+        """Language linkage beats scope. Control."""
+        self.assertEqual(
+            self._decls("src/x.cpp",
+                        '//cpp\nnamespace P { extern "C" void target(void *); }\n'),
+            ["target"])
+
+    def test_a_plain_header_declaration_still_is(self):
+        """Control: the common case is untouched."""
+        self.assertEqual(self._decls("include/x.h", "void target(void *);\n"),
+                         ["target"])
+
+    def test_a_namespaced_overload_does_not_fabricate_an_arity_finding(self):
+        """The Memory.h false positive, end to end. Fails before the fix, rc 1."""
+        repo = BigRepo.shared()
+        repo.reset()
+        repo.write("include/own_mem.h",
+                   "namespace M { void own_free(void *, int); }\n")
+        repo.write("src/own_free.cpp",
+                   '//cpp\nextern "C" void own_free(void *p) { }\n')
+        rc, out = repo.run_main(["--list"])
+        self.assertEqual(rc, 0, out)
+        self.assertNotIn("own_free", out)
+
+
 class DeletedTypeInputTests(unittest.TestCase):
     """Item 2, `:1407`: `_paths_of` threw away every `D` row.
 
@@ -3027,7 +3120,7 @@ class IncludedInlineDestructorTests(unittest.TestCase):
     def test_real_vector_carriers_reference_inline_header_bodies(self):
         targets=['src/engine/view/d_camera_dtor.cpp', 'src/runtime/actor/d_actor.cpp']
         _, _, defs, _=CDA.collect(REPO, targets)
-        for owner, line in (('Vector3', 61), ('Vector3s', 89)):
+        for owner, line in (('Vector3', 72), ('Vector3s', 100)):
             symbol='_ZN%d%sD1Ev' % (len(owner), owner)
             found=[d for d in defs if d.symbol == symbol]
             self.assertEqual(len(found), 1)

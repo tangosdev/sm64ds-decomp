@@ -2,11 +2,11 @@
 #include "Ov007Work.h"
 #include "Ov007Display.h"
 #include "Ov007Item.h"
+#include "Ov007MenuMem.h"
 extern Ov007ItemLayout data_ov007_020ccbc4[];
 extern u8 data_ov007_020ccb7d[];
 extern u8 data_ov007_020ccb7c[];
 
-extern void *func_ov007_020c3df4(const char *name, int size);
 extern Ov007Item *func_ov007_020aea6c(int id, Ov007ItemLayout *layout, Ov007HitBox *hitBox);
 extern Ov007OamNode *func_ov007_020c11ac(int n);
 extern void func_ov007_020c10b0(Ov007OamNode *parent, Ov007OamNode *child);

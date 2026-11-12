@@ -62,7 +62,7 @@ extern "C" daObjWlPolelift_c *daObjWlPolelift_c_classInit()
  * actor-owned shadow and cylinder. */
 s32 daObjWlPolelift_c::InitResources()
 {
-    model.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov026_02113ea0), 1, -1);
+    model.SetFile(dExtSimpleModel_c::LoadFile(data_ov026_02113ea0), 1, -1);
     if ((data_0209caa0.file.flags1 & 0x204) == 0)
         return 0;
 

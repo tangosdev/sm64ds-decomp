@@ -873,7 +873,7 @@ int daC_Jugem_c::Behavior()
 
 int daC_Jugem_c::InitResources()
 {
-    BMD_File *bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov085_0213074c);
+    BMD_File *bmd = dExtSimpleModel_c::LoadFile(data_ov085_0213074c);
     mAnmModel1.SetFile(bmd, 1, -1);
     dExtFrameCtrl_c::LoadFile(data_ov085_02130744);
     dExtAnmTexPat_c::LoadFile(data_ov085_0213073c);

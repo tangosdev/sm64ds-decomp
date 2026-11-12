@@ -29,9 +29,8 @@ Vector3 data_ov002_0210ddd0[4] = {
     Vector3(-0x190000, 0, 0x12c000),
 };
 
-/* local extern: no shared header declares these. */
+/* local extern: no shared header declares this. */
 extern "C" {
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 

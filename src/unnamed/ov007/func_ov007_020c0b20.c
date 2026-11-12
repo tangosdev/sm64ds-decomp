@@ -1,7 +1,7 @@
 #include "Ov007OamNode.h"
+#include "nitro/gx/gxcommon.h"
 
-struct E8;
-extern int func_ov007_020c0b78(struct E8 *oam, Ov007OamNode *node, int x, int y, int shownIn,
+extern int func_ov007_020c0b78(GXOamAttr *oam, Ov007OamNode *node, int x, int y, int shownIn,
                                unsigned char priorityIn, int mosaicIn, int slot);
 
 /* Draws the list's nodes (the head, its siblings and their subtrees) into

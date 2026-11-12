@@ -1,7 +1,7 @@
 #include "types.h"
 #include "Ov007MenuState.h"
 #include "Ov007Item.h"
-extern void *func_ov007_020c3df4(const char *name, int size);
+#include "Ov007MenuMem.h"
 extern void *func_ov007_020c9388(int initialState);
 extern void func_ov007_020ae810(Ov007Item *item);
 

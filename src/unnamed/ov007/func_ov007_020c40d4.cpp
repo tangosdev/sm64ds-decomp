@@ -1,10 +1,10 @@
 //cpp
 #include "Ov007SpriteGroup.h"
+#include "Ov007MenuMem.h"
 
 extern "C" {
 
 Ov007OamNode *func_ov007_020c11ac(int n);
-void *func_ov007_020c3df4(const char *, int);
 void func_ov007_020c4090(Ov007SpriteItem *item);
 
 /* Allocates a sprite item around a fresh OAM node with room for animCount

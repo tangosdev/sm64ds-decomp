@@ -480,14 +480,12 @@ int daDoor_c::func_ov100_02144730(daPly_c *arg1) {
         arg1->mAreaId = t;
         ChangeArea(t);
         {
-            u32 *p = &gCamera->mFlags;
-            *p &= ~DOOR_CAMERA_FLAGS;
+            gCamera->mFlags &= ~DOOR_CAMERA_FLAGS;
         }
         func_02012694(param1 == DOOR_ALT_SOUND ? SND_SWING_END_ALT : SND_SWING_END, &mCamSpacePosX);
     } else if (mKeyModelIdx != 0) {
         if (mModel.WillHitFrame((u16)(mModel.GetFrameCount() - 0x1c)) != 0) {
-            u32 *p = &gCamera->mFlags;
-            *p &= ~DOOR_CAMERA_FLAGS;
+            gCamera->mFlags &= ~DOOR_CAMERA_FLAGS;
             if (param1 != DOOR_LAST_KEY_MODEL) {
                 Sound::PlayCharVoice(data_0209caa0.file.mCharacter, 0x21, mCamSpacePos);
             } else if (data_ov100_02148704 == 0) {

@@ -40,7 +40,6 @@ struct Matrix2x2Words {
 namespace GX { void DisableAllBanks(); }
 
 extern "C" {
-
 extern Matrix2x2 data_02092668;
 
 extern void Initialise3dGraphics(int arg);

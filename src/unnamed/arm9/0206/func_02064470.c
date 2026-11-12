@@ -2,7 +2,7 @@
 
 /* NitroSDK WBT: peer r2 replied to the running command (self->cmd) with
  * event r1. When the reply carries the command's counter, drop the peer from
- * target_bmp, copy event 3's sync sizes out of the peer's record and raise the
+ * target_bmp, copy RES_SYNC's sync sizes out of the peer's record and raise the
  * command's callback; once no target is left the command slot is cleared. */
 void func_02064470(WBTWork *self, int r1, int r2) {
     WBTPeerRecord *e = &self->peer[r2];
@@ -16,19 +16,19 @@ void func_02064470(WBTWork *self, int r1, int r2) {
         self->cmd.target_bmp &= ~mask;
 
         switch (r1) {
-        case 0:
-        case 1:
-        case 2:
-        case 4:
-        case 5:
-        case 6:
-        case 7:
-        case 8:
-        case 9:
-        case 10:
-        case 11:
+        case WBT_CMD_REQ_NONE:
+        case WBT_CMD_REQ_WAIT:
+        case WBT_CMD_REQ_SYNC:
+        case WBT_CMD_REQ_GET_BLOCK:
+        case WBT_CMD_RES_GET_BLOCK:
+        case WBT_CMD_REQ_GET_BLOCKINFO:
+        case WBT_CMD_RES_GET_BLOCKINFO:
+        case WBT_CMD_REQ_GET_BLOCK_DONE:
+        case WBT_CMD_RES_GET_BLOCK_DONE:
+        case WBT_CMD_REQ_USER_DATA:
+        case WBT_CMD_RES_USER_DATA:
             break;
-        case 3:
+        case WBT_CMD_RES_SYNC:
             self->cmd.u.sync.num_of_list = e->num_of_list;
             self->cmd.u.sync.peer_packet_size = e->peer_packet_size;
             self->cmd.u.sync.my_packet_size = e->my_packet_size;
@@ -37,9 +37,9 @@ void func_02064470(WBTWork *self, int r1, int r2) {
 
         self->cmd.event = r1;
         if (self->cmd.callback != 0) {
-            self->cmd.callback((char *)&self->cmd);
+            self->cmd.callback(&self->cmd);
         }
     }
     if (self->cmd.target_bmp == 0)
-        self->cmd.command = 0;
+        self->cmd.command = WBT_CMD_REQ_NONE;
 }

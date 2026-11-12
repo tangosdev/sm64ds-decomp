@@ -21,9 +21,8 @@
  *   local, so the call copies the triple first. Sink passes a
  *   two-Vector3 stack struct's second triple directly. Those are different
  *   calls; do not unify them.
- * - Sink keeps the mPosY and mStepsLeft pointer
- *   read-modify-writes and `*q = *q - 1`. The else path materializes offset
- *   0x31e from the pool because that displacement is not an ARM immediate.
+ * - Sink's else path materializes offset 0x31e from the pool because that
+ *   displacement is not an ARM immediate.
  *   The early `if (mStepsLeft != 0) return` stays; wrapping the tail is a
  *   different schedule.
  * - OnHitByMegaChar and OnGroundPounded keep the reference-null tests
@@ -99,17 +98,12 @@ void daObjPile_c::NotifyTagPileGone() {
 void daObjPile_c::Sink(int flag) {
     if (flag != 0) {
         unsigned char n = mStepsLeft;
-        int *p = &mPosY;
         int m = n * 0x3c;
-        int y = *p;
-        *p = y - (m << 12);
+        mPosY -= m << 12;
         mStepsLeft = 0;
     } else {
-        int *p = &mPosY;
-        int y = *p;
-        *p = y - 0x3c000;
-        unsigned char *q = &mStepsLeft;
-        *q = *q - 1;
+        mPosY -= 0x3c000;
+        mStepsLeft--;
     }
     mAttackCooldown = 0xf;
     UpdateModelPosAndRotY();
@@ -222,13 +216,12 @@ s32 daObjPile_c::Behavior() {
 }
 
 s32 daObjPile_c::InitResources() {
-    void *m = dExtSimpleModel_c::LoadFile(gPileModelFile);
-    mModel.SetFile((BMD_File *)m, 1, -1);
+    BMD_File *m = dExtSimpleModel_c::LoadFile(gPileModelFile);
+    mModel.SetFile(m, 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    void *k = dBgW_Kc::LoadFile(gPileCollisionFile);
-    mMeshCollider.SetFile((KCL_File *)k, mClsnMat, 0x199, mAngleY,
-                          *(CLPS_Block *)data_ov002_0210d874);
+    KCL_File *k = dBgW_Kc::LoadFile(gPileCollisionFile);
+    mMeshCollider.SetFile(k, mClsnMat, 0x199, mAngleY, *(CLPS_Block *)data_ov002_0210d874);
     mStepsLeft = 3;
     return 1;
 }

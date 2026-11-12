@@ -1,11 +1,8 @@
 #include "types.h"
 #include "Ov007Tween.h"
+#include "math/CalcLib.h"
 
 extern void func_ov007_020c90c0(void *self);
-/* local extern: math/CalcLib.h is C++ only; this matches its declaration. */
-extern void VEC_Subtract(Vector3 *, Vector3 *, Vector3 *);
-/* local extern: as above */
-extern int VEC_Mag(const Vector3 *);
 extern void VEC_Normalize(const Vector3 *v, Vector3 *out);
 extern void VEC_MultAdd(int s, int *a, int *b, int *out);
 

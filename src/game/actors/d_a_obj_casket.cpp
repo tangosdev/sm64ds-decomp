@@ -92,7 +92,7 @@ extern "C" daObjCasket_c *daObjCasket_c_classInit() {
 }
 
 int daObjCasket_c::InitResources() {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov071_021230d0), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov071_021230d0), 1, -1);
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
 
@@ -117,8 +117,8 @@ int daObjCasket_c::InitResources() {
 
     UpdateModelTransform();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov071_021230d8), mClsnMat, 0x199,
-                          mAngleY, data_ov063_0211ebd8);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov071_021230d8), mClsnMat, 0x199, mAngleY,
+                          data_ov063_0211ebd8);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     return 1;
 }

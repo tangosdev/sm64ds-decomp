@@ -2,23 +2,18 @@
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
  */
-typedef struct {
-    unsigned int count;
-    int pad4;
-    int pad8;
-    unsigned char *data;
-} List;
+#include "private/throw_context.h"
 
-extern int __throw_catch_compare(unsigned char *a, unsigned char *b, int *out);
+extern int __throw_catch_compare(const unsigned char *throwtype, const unsigned char *catchtype,
+                                 int *offset_result);
 
-int func_02071f88(void *a, List *list)
-{
+int func_02071f88(void *a, ExSpecification *spec) {
     unsigned char *p;
     unsigned int i;
     unsigned int buf[2];
 
-    p = list->data;
-    for (i = 0; i < list->count; i++) {
+    p = spec->mSpecs;
+    for (i = 0; i < spec->mSpecCount; i++) {
         unsigned int val = p[0] | (p[1] << 8) | (p[2] << 16) | (p[3] << 24);
         buf[0] = val;
         if (__throw_catch_compare((unsigned char *)a, (unsigned char *)val, (int *)&buf[1]))

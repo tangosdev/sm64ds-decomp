@@ -160,8 +160,6 @@ void d_a_owlPlayLongHold(unsigned int a, unsigned int b, unsigned int cc, void *
 int func_ov002_020df7f4(void *c);
 void func_02012694(unsigned int a, void *pos);
 short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-/* local extern: no shared math header declares MTX_MultVec43. */
-void MTX_MultVec43(Vector3 *in, Matrix4x3 *mat, Vector3 *out);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int IsStarCollectedInCurLevel(int);
 }

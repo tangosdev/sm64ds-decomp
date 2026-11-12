@@ -51,7 +51,6 @@ extern MIiGXDmaParams MIi_GXDmaParams;
 
 /* in ITCM */
 extern void MIi_DmaSetParams(u32 dmaNo, u32 src, u32 dest, u32 ctrl);
-extern void OSi_EnterDmaCallback(u32 dmaNo, u32 callback, u32 arg);
 
 void MIi_FIFOCallback(void);
 void MIi_DMACallback(void *arg);
@@ -107,7 +106,7 @@ void MIi_FIFOCallback(void) {
     MIi_GXDmaParams.src += length;
 
     if (!MIi_GXDmaParams.length) {
-        OSi_EnterDmaCallback(MIi_GXDmaParams.dmaNo, (u32)MIi_DMACallback, 0);
+        OSi_EnterDmaCallback(MIi_GXDmaParams.dmaNo, MIi_DMACallback, 0);
         MIi_DmaSetParams(MIi_GXDmaParams.dmaNo, src, REG_GXFIFO_ADDR, MI_CNT_SEND32_IF(length));
         OS_ResetRequestIrqMask(OS_IE_GXFIFO);
     } else {

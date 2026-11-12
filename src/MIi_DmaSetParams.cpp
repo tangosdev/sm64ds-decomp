@@ -13,6 +13,7 @@
  */
 
 #include "nitro/hw/registers.h"
+#include "nitro/mi/dma.h"
 #include "nitro/os/system.h"
 
 extern "C" {

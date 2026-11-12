@@ -147,6 +147,25 @@ typedef enum WMLinkLevel {
     WM_LINK_LEVEL_MAX
 } WMLinkLevel;
 
+/* Data sharing's state (WMDataSharingInfo.state). This SDK predates
+ * WM_PauseDataSharing: the later SDK's PAUSING and PAUSED come between
+ * START and RETRY_SEND there, and wm_ds.c here sets only 1, 2 and 3. */
+typedef enum WMDataSharingState {
+    WM_DS_STATE_READY = 0,
+    WM_DS_STATE_START,
+    WM_DS_STATE_RETRY_SEND,
+    WM_DS_STATE_ERROR
+} WMDataSharingState;
+
+#define WM_NUM_OF_CALLBACK 0x25
+#define WM_NUM_OF_PORT 16
+
+/* The data-sharing set: a 4-byte header, then WM_DS_DATA_SIZE bytes. This
+ * build takes the SDK's WM_DS_DATA_SIZE_252 size. */
+#define WM_DS_HEADER_SIZE 4
+#define WM_DS_DATA_SIZE 252
+#define WM_DS_DATASET_NUM 4
+
 /* The beacon's attribute byte (WMParentParam's flags, as WM_SetGameInfo
  * takes them). */
 #define WM_ATTR_FLAG_ENTRY 0x0001

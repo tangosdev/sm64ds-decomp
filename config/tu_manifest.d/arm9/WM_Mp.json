@@ -9,7 +9,7 @@
     "One contiguous run of the Nitro SDK's wm_mp.c, 0x020623ec..0x02062734: 4 functions, gapless in config/arm9/delinks.txt. WM_StartMPEx and WM_SetMPDataToPortEx compile byte-identical with the signatures, locals and WM_CHECK_RESULT shape of ntrtwl/NitroSDK libraries/wm/src/wm_mp.c; this older SDK makes WMi_StartMP's checks inside WM_StartMPEx and limits the size by mp_maxSendSize instead of WM_SIZE_MP_DATA_MAX.",
     "Order: mwccarm emits the bodies in reverse. pret's pokediamond WM_mp.s holds its wm_mp.c the same way round (WM_EndMP, WM_SetMPDataToPortEx, WM_StartMP, WM_StartMPEx, WMi_StartMP ascending). Here WM_SetMPDataToPort, a function rather than the later SDK's inline, is lowest, and func_0206259c sits between WM_SetMPDataToPortEx and WM_StartMPEx, where the SDK file has its WM_SetMP* parameter calls. WM_EndMP and WM_StartMP are absent: nothing calls them.",
     "No data: no function owns .rodata, .data or .bss.",
-    "BOTTOM EDGE: WM_Enable (src/engine/wm/WM_Standard.c, 0x02062380..0x020623ec), the highest function of pret's WM_standard.s. TOP EDGE: the wm_ds.c run (src/engine/wm/WM_Ds.cpp) starts at 0x02062734."
+    "BOTTOM EDGE: WM_Enable (src/engine/wm/WM_Standard.c, 0x02062380..0x020623ec), the highest function of pret's WM_standard.s. TOP EDGE: the wm_ds.c run (src/engine/wm/WM_Ds.c) starts at 0x02062734."
   ],
   "sections": [
     {

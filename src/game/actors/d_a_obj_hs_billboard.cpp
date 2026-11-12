@@ -75,7 +75,7 @@ int daObjHsBillboard_c::InitResources() {
         break; /* HS_B_STAR */
     }
 
-    BMD_File *file = (BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov031_02111424[mVariant]);
+    BMD_File *file = dExtSimpleModel_c::LoadFile(*data_ov031_02111424[mVariant]);
     mModel.SetFile(file, 1, -1);
     UpdateModelTransform();
     return 1;

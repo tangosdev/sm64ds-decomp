@@ -39,8 +39,8 @@ extern "C" {
  * __sinit_d_s_mg_d3d_base.cpp as a bare bx lr and one .ctor word. */
 int sMgCurCamera;
 void *sD3DSubObjPalette;
-void *sMgSubCamera;
-void *sMgMainCamera;
+MgCamera *sMgSubCamera;
+MgCamera *sMgMainCamera;
 void *sD3DLanguageFile;
 Oam sD3DOamShadow[128];
 extern unsigned char sD3DSoundPanOffsets[];
@@ -200,7 +200,7 @@ void dScMgD3DBase_c::InitEngines()
 {
     void *file;
 
-    *(vu32 *)0x4001000u |= 0x10000u;
+    GXS_DispOn();
     gMainScreenLayers = DISPLAY_LAYER_OBJ;
     gSubScreenLayers = 0x10;
     Mg_ResetBgOffsets();
@@ -274,11 +274,10 @@ int dScMgD3DBase_c::BeforeRender()
 
 void dScMgD3DBase_c::AfterRender(unsigned int arg)
 {
-    volatile unsigned short *reg = (volatile unsigned short *)0x04000006;
-    int line = *reg;
+    int line = REG_VCOUNT;
 
     if (line > 0xb9 && line <= 0xc0) {
-        while ((int)*reg < 0xc0) {
+        while ((int)REG_VCOUNT < 0xc0) {
         }
     }
 
