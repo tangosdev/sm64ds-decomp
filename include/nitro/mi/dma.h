@@ -22,6 +22,11 @@ void MI_DmaCopy32Async(unsigned int, const void *, void *, unsigned int, MIDmaCa
 void MI_WaitDma(unsigned int);
 void MI_StopDma(unsigned int);
 
+/* The SDK's clear wrappers, as macros for the reason memory.h gives. */
+#define MI_DmaClear32(dmaNo, dest, size) MI_DmaFill32((dmaNo), (dest), 0, (size))
+#define MI_DmaClear32Async(dmaNo, dest, size, callback, arg) \
+    MI_DmaFill32Async((dmaNo), (dest), 0, (size), (callback), (arg))
+
 void MI_SendGXCommand(unsigned int, const void *, unsigned int);
 void MI_SendGXCommandAsync(unsigned int, const void *, unsigned int, MIDmaCallback, void *);
 

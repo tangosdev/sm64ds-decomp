@@ -140,6 +140,28 @@
 #define REG_SWAP_BUFFERS (*(volatile u32 *)0x04000540)
 #define REG_VIEWPORT     (*(volatile u32 *)0x04000580)
 
+/* The 3D rendering engine: the clear colour (with its alpha, polygon ID and
+   fog flag in the upper bits), clear depth and clear-image offset, the fog
+   colour and depth offset, and the alpha-test reference. EDGE_COLOR (eight
+   u16s), FOG_TABLE (32 bytes) and TOON_TABLE (32 u16s) are tables, filled
+   from their first address. */
+#define REG_EDGE_COLOR_ADDR 0x04000330
+#define REG_ALPHA_TEST_REF  (*(volatile u16 *)0x04000340)
+#define REG_CLEAR_COLOR     (*(volatile u32 *)0x04000350)
+#define REG_CLEAR_DEPTH     (*(volatile u16 *)0x04000354)
+#define REG_CLRIMAGE_OFFSET (*(volatile u16 *)0x04000356)
+#define REG_FOG_COLOR       (*(volatile u32 *)0x04000358)
+#define REG_FOG_OFFSET      (*(volatile u16 *)0x0400035c)
+#define REG_FOG_TABLE_ADDR  0x04000360
+#define REG_TOON_TABLE_ADDR 0x04000380
+
+/* 3D geometry command: the shininess table, written 32 words in a row. */
+#define REG_SHININESS (*(volatile u32 *)0x040004d0)
+
+/* The geometry engine's status: matrix-stack levels and error flag, the busy
+   flag and the FIFO interrupt condition (bit masks in nitro/gx/g3x.h). */
+#define REG_GXSTAT (*(volatile u32 *)0x04000600)
+
 /* Timer 0. The counter and the control word share an address: reads see the live
    count, writes set the reload value. */
 #define REG_TM0CNT_L (*(volatile u16 *)0x04000100)

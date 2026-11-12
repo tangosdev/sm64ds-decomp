@@ -27,8 +27,7 @@
 #include "types.h"
 #include "nitro/hw/registers.h"
 #include "nitro/gx/gx.h"
-#include "nitro/mi/memory.h"
-#include "nitro/mi/dma.h"
+#include "private/gxdma.h"
 
 #define REG_BG2PD         (*(volatile u16 *)0x04000026)
 #define REG_BG3PD         (*(volatile u16 *)0x04000036)
@@ -80,10 +79,10 @@ void GX_Init(void) {
     REG_DISPSTAT = 0;
     REG_DISPCNT = 0;
 
-    if (GXi_DmaId != -1) {
-        MI_DmaFill32(GXi_DmaId, REG_BG0CNT_ADDR, 0, 0x60);
+    if (GXi_DmaId != GX_DMA_NOT_USE) {
+        MI_DmaClear32(GXi_DmaId, REG_BG0CNT_ADDR, 0x60);
         REG_MASTER_BRIGHT = 0;
-        MI_DmaFill32(GXi_DmaId, REG_DB_DISPCNT_ADDR, 0, 0x70);
+        MI_DmaClear32(GXi_DmaId, REG_DB_DISPCNT_ADDR, 0x70);
     } else {
         volatile u32 zero = 0;
         MI_CpuFill32(REG_BG0CNT_ADDR, zero, 0x60);
