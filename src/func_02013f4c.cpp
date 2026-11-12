@@ -94,7 +94,9 @@ void func_02013f4c(void)
         break;
     }
 
-    while ((int)REG_VCOUNT >= GX_LCD_SIZE_Y) {}
-    while ((int)REG_VCOUNT < GX_LCD_SIZE_Y) {}
+    while ((int)REG_VCOUNT >= GX_LCD_SIZE_Y) {
+    }
+    while ((int)REG_VCOUNT < GX_LCD_SIZE_Y) {
+    }
 }
 }
