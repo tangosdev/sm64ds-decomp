@@ -40,7 +40,7 @@ void MenuGfx_SetBgMode(int mode) {
         BG3CNT = (BG3CNT & ~3) | 1;
         BG2CNT = (BG2CNT & 0x43) | 4;
         BG2CNT = (BG2CNT & ~3);
-        G2x_SetBlendAlpha_((volatile u16 *)0x4000050, 0, 8, 0, 0x10);
+        G2_SetBlendAlpha(0, 8, 0, 0x10);
         break;
     case 4:
         BG0CNT = (BG0CNT & ~3) | 1;

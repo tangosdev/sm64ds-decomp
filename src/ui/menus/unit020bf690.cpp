@@ -293,7 +293,7 @@ void ScreenFade_Start(void) {
     }
 
     if (flags & 0x10) {
-        G2x_SetBlendBrightness_(&REG_BLDCNT, 0x3F, 0);
+        G2_SetBlendBrightness(0x3F, 0);
     }
 
     if (flags & 2) {
@@ -324,7 +324,7 @@ void ScreenFade_Update(void) {
         return;
     int progress = tr->t;
     if (started == 0 && (flags & 2) != 0) {
-        G2x_SetBlendBrightness_(&REG_BLDCNT, 0x3f, 0);
+        G2_SetBlendBrightness(0x3f, 0);
     }
     if (tr->reversed != 0)
         progress = 0x1000 - progress;
@@ -339,6 +339,6 @@ void ScreenFade_Update(void) {
     }
     if (tr->reversed == 0)
         return;
-    G2x_SetBlendBrightness_(&REG_BLDCNT, 0x3f, -0x10);
+    G2_SetBlendBrightness(0x3f, -0x10);
 }
 }
