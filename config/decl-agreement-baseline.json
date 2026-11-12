@@ -2601,9 +2601,6 @@
       "src/WM_Finish.c": [
         "param:#2 int"
       ],
-      "src/unnamed/arm9/0206/func_0206259c.c": [
-        "param:#2 int"
-      ],
       "src/WM_Disconnect.cpp": [
         "arity:6"
       ],
@@ -2615,9 +2612,6 @@
       ],
       "src/WM_StartConnect.cpp": [
         "param:#2 int"
-      ],
-      "src/WM_StartMPEx.cpp": [
-        "arity:3"
       ]
     },
     "WM_GetSystemWork": {
@@ -2642,13 +2636,7 @@
       "src/WM_GetMPSendBufferSize.cpp": [
         "return:int *"
       ],
-      "src/WM_SetMPDataToPortEx.cpp": [
-        "return:int *"
-      ],
       "src/WM_StartConnect.cpp": [
-        "return:int *"
-      ],
-      "src/WM_StartMPEx.cpp": [
         "return:int *"
       ],
       "src/WM_StartScan.cpp": [
@@ -2659,18 +2647,10 @@
       ]
     },
     "WM_SendCommand": {
-      "src/unnamed/arm9/0206/func_0206259c.c": [
-        "param:#1 int",
-        "param:#2 int",
-        "param:#3 int"
-      ],
       "src/WM_Disconnect.cpp": [
         "param:#1 int",
         "param:#2 int",
         "param:#3 int"
-      ],
-      "src/WM_SetMPDataToPortEx.cpp": [
-        "arity:9"
       ],
       "src/WM_SetParentParameter.cpp": [
         "param:#1 int",
@@ -2679,9 +2659,6 @@
       ],
       "src/WM_StartConnect.cpp": [
         "arity:2"
-      ],
-      "src/WM_StartMPEx.cpp": [
-        "arity:12"
       ],
       "src/WM_StartScan.cpp": [
         "arity:2"
@@ -17007,16 +16984,6 @@
     "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b24Ev": {
       "src/game/actors/d_a_demo.cpp": [
         "arity:0"
-      ]
-    },
-    "WM_SetMPDataToPort": {
-      "src/engine/wm/WM_Ds.cpp": [
-        "param:#1 void (*)(void *)"
-      ]
-    },
-    "WM_SetMPDataToPortEx": {
-      "src/WM_SetMPDataToPort.c": [
-        "param:#5 int"
       ]
     },
     "WmCheckParentParameter": {

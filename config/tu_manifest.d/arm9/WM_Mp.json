@@ -1,0 +1,81 @@
+{
+  "id": "arm9/WM_Mp",
+  "module": "arm9",
+  "source": "src/engine/wm/WM_Mp.c",
+  "promoted_source": "src/engine/wm/WM_Mp.c",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "One contiguous run of the Nitro SDK's wm_mp.c, 0x020623ec..0x02062734: 4 functions, gapless in config/arm9/delinks.txt. WM_StartMPEx and WM_SetMPDataToPortEx compile byte-identical with the signatures, locals and WM_CHECK_RESULT shape of ntrtwl/NitroSDK libraries/wm/src/wm_mp.c; this older SDK makes WMi_StartMP's checks inside WM_StartMPEx and limits the size by mp_maxSendSize instead of WM_SIZE_MP_DATA_MAX.",
+    "Order: mwccarm emits the bodies in reverse. pret's pokediamond WM_mp.s holds its wm_mp.c the same way round (WM_EndMP, WM_SetMPDataToPortEx, WM_StartMP, WM_StartMPEx, WMi_StartMP ascending). Here WM_SetMPDataToPort, a function rather than the later SDK's inline, is lowest, and func_0206259c sits between WM_SetMPDataToPortEx and WM_StartMPEx, where the SDK file has its WM_SetMP* parameter calls. WM_EndMP and WM_StartMP are absent: nothing calls them.",
+    "No data: no function owns .rodata, .data or .bss.",
+    "BOTTOM EDGE: WM_Enable (src/WM_Enable.c, 0x02062380..0x020623ec), the highest function of pret's WM_standard.s. TOP EDGE: the wm_ds.c run (src/engine/wm/WM_Ds.cpp) starts at 0x02062734."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020623ec",
+      "end": "0x02062734"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "WM_SetMPDataToPort",
+      "address": "0x020623ec",
+      "size": "0x3c",
+      "legacy_source": "src/WM_SetMPDataToPort.c",
+      "ordinal": 0
+    },
+    {
+      "symbol": "WM_SetMPDataToPortEx",
+      "address": "0x02062428",
+      "size": "0x174",
+      "legacy_source": "src/WM_SetMPDataToPortEx.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_0206259c",
+      "address": "0x0206259c",
+      "size": "0x60",
+      "legacy_source": "src/unnamed/arm9/0206/func_0206259c.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "WM_StartMPEx",
+      "address": "0x020625fc",
+      "size": "0x138",
+      "legacy_source": "src/WM_StartMPEx.cpp",
+      "ordinal": 3
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "relocations": [],
+  "compiler_only_output": [],
+  "notes": [
+    "HAND-BUILT manifest entry, not tools/tubuild.py create output: tu_map does not segment arm9.",
+    "Built as C, like the SDK. The prototypes are declared in include/nitro/wm/wm_api.h with the WM enums and WMCallbackFunc in include/nitro/wm/wm.h; func_0206259c (API 0x23, which later SDKs call SET_MP_PARAMETER with a whole parameter block) keeps its address name and is declared by its one caller."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/arm9-WM_Mp/WM_Mp.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 4,
+    "functions_declared": 4,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

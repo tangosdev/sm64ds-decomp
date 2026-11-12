@@ -2798,21 +2798,9 @@ src/WM_Enable.c:
     complete
     .text start:0x02062380 end:0x020623ec
 
-src/WM_SetMPDataToPort.c:
+src/engine/wm/WM_Mp.c:
     complete
-    .text start:0x020623ec end:0x02062428
-
-src/WM_SetMPDataToPortEx.cpp:
-    complete
-    .text start:0x02062428 end:0x0206259c
-
-src/unnamed/arm9/0206/func_0206259c.c:
-    complete
-    .text start:0x0206259c end:0x020625fc
-
-src/WM_StartMPEx.cpp:
-    complete
-    .text start:0x020625fc end:0x02062734
+    .text start:0x020623ec end:0x02062734
 
 src/engine/wm/WM_Ds.cpp:
     complete

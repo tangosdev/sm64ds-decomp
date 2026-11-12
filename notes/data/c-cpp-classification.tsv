@@ -2626,9 +2626,7 @@ src/WM_PowerOff.c	PURE-C	arm9				1		None		-
 src/WM_PowerOn.c	PURE-C	arm9				1		None		-
 src/WM_Disable.c	PURE-C	arm9				1		None		-
 src/WM_Enable.c	PURE-C	arm9				1		None		-
-src/WM_SetMPDataToPort.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_02062428.c	WEAK-refs-only	arm9				1		None		-
-src/unnamed/arm9/0206/func_0206259c.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_020625fc.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0206/func_02062734.c	PURE-C	arm9				1		None		-
 src/WM_GetSharedDataAddress.c	PURE-C	arm9				1		None		-
