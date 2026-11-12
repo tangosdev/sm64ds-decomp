@@ -11,6 +11,7 @@
  * and were dropped by the linker.
  */
 #include "nitro/os/system.h"
+#include "nitro/os/alloc.h"
 
 #define ALIGNMENT 32
 #define ROUND(n, a) (((u32)(n) + (a) - 1) & ~((a) - 1))
@@ -104,7 +105,7 @@ Cell *DLInsert(Cell *original, Cell *inserted) {
 /* First fit on the heap's free list (heap < 0: the current heap). A
  * remainder under MINOBJSIZE goes with the block; a larger one is split off
  * and stays free. */
-void *OS_AllocFromHeap(int id, int heap, u32 size) {
+void *OS_AllocFromHeap(int id, OSHeapHandle heap, u32 size) {
     OSHeapInfo *heapInfo;
     HeapDesc *hd;
     Cell *cell;
@@ -160,7 +161,7 @@ void *OS_AllocFromHeap(int id, int heap, u32 size) {
     return (char *)cell + HEADERSIZE;
 }
 
-void OS_FreeToHeap(int id, int heap, void *ptr) {
+void OS_FreeToHeap(int id, OSHeapHandle heap, void *ptr) {
     OSHeapInfo *heapInfo;
     HeapDesc *hd;
     Cell *cell;

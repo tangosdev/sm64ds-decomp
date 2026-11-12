@@ -14,6 +14,7 @@
  * OS_SNPrintf is not in this ROM: nothing calls it, so the linker dropped it.
  */
 #include "types.h"
+#include "nitro/os/printf.h"
 
 typedef struct printfStr {
     s32 spaceLeft;
