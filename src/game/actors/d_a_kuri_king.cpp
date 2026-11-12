@@ -253,7 +253,7 @@ struct KuriKingStateTable {
 extern KuriKingStateTable data_ov074_021230f8;
 struct KuriKingPmf { char pad[0x5cc]; s32 mState; };
 
-#pragma defer_codegen off
+#pragma defer_codegen off // without it: D1/D0/D2 .text 0/1/2 -> 57/56/55 (0xa0/0xb4/0xa0)
 
 /* Out of line, and FIRST in this ROM-ascending file: that is what puts D1 and
  * D0 at 0x0211f000 / 0x0211f0a0, the two lowest addresses in the run. */
