@@ -467,7 +467,8 @@ unsigned claim_stamp(unsigned now) { return g_bf2 ? ((now + 3000u) | 1u) : now +
 // runs the rule says so once a second in a boss caps message (SYNW sub-type 0x53, kWorldBossDefeat: 1.0.4 routes it here too and
 // drops it alone as a bad sub-type, nothing else in the batch is lost because world sub-types travel singly). The rule applies to a
 // boss only when the owner is me or was heard sending caps in the last 5 s; otherwise that boss keeps 1.0.4's authority (claims, then
-// the target seat), the rule the 1.0.4 console itself runs. The answer is latched per boss at his defeat, so a late caps message in
+// the target seat) for its records, the rule the 1.0.4 console itself runs, and every console keeps its own star (star_is_mine;
+// coop_spawn merges the copies into one). The answer is latched per boss at his defeat, so a late caps message in
 // the middle of a long defeat talk cannot change who gives the star. King Bob-omb keeps kbo2's rule (1.0.4 runs it too).
 enum : unsigned { kCapsEveryMs = 1000, kCapsFreshMs = 5000 };
 enum : uint8_t { kBossCapsVer = 1, kBossCapOwnerRule = 0x01 };
@@ -2260,6 +2261,13 @@ bool star_is_mine(dActor_c *self) {
     const short slot = rd16((const char *)self, 0xce);
     if (slot < 0 || slot >= kSlots) return true;
     if (g_my < 0) g_my = comms_hub_my_seat();
+    // bossfix4: the owner sends no boss caps (a 1.0.4 owner): the star is kept here. 1.0.4's own answer (the target seat at each
+    // console's star call) can differ between consoles, and both held it back (wk104_g2 row: Whomp King, no star for anyone). A second
+    // copy from a friend is merged by coop_spawn's star dup rule (the lower seat's stays, 1.0.4 runs it too), a taken one is not rebuilt.
+    if (g_bf2 && (cls == 165 || cls == 248 || cls == 176) && !boss_down(slot, cls) && g_boss[slot].rule == 2) {
+        if (g_log) std::fprintf(stderr, "[cbs] star kept here: cls=%u, the owner runs no owner rule (1.0.4) w=%lld\n", cls, wall_ms());
+        return true;
+    }
     const int auth = desc_of(cls) ? auth_for(slot, hub_now(), cls) : coop_target_seat_of_slot(slot);
     if (auth < 0) return true;
     return auth == g_my;
