@@ -1788,8 +1788,10 @@ void process(unsigned now) {
             // DEMOCALL's message, so no talk exists and it stood there for good, deaf to stomps (MOVE_STOP never checks hits); when that
             // console then took the authority, its records froze every friend's copy in 2 as well (far_f5 row: 35 s on both screens).
             // With no talk of its own (it drives no camera) it ends the way the state ends: the boss music, then MOVE_START (and the
-            // MOVE_START way out below), the authority's copy included.
-            if (state_of(b) == 2u && !b.a[0x8e1] && (unsigned char)b.a[0x8da] >= 13u) {
+            // MOVE_START way out below), the authority's copy included. Not on a copy while the authority's own Wiggler is in 2 (its
+            // player is reading the intro): the next record would put it back, and it bounced 2 -> 3 -> 2 every second (far_f6 first try).
+            const bool auth_in_2 = !mine && b.rx.valid && b.rx.w[d.state] == 2u;
+            if (state_of(b) == 2u && !b.a[0x8e1] && (unsigned char)b.a[0x8da] >= 13u && !auth_in_2) {
                 if (++b.wig2_ticks >= 20u) {
                     if (!b.wig_music) { _ZN5Sound22LoadAndSetMusic_Layer3Ej(0x2d); b.wig_music = true; }
                     _ZN12daHanachan_c8SetStateEi(b.a, 3);
