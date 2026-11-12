@@ -428,8 +428,7 @@ ULONGLONG g_skip_until = 0;   // the star select skip lapses at this tick count 
 void disarm_starsel(const char *why) {
     if (!g_skip_starsel) return;
     g_skip_starsel = false;
-    std::fprintf(stderr, "[scenario] star select skip disarmed unused (%s); later star selects show as always
-", why);
+    std::fprintf(stderr, "[scenario] star select skip disarmed unused (%s); later star selects show as always\n", why);
     std::fflush(stderr);
 }
 
