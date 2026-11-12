@@ -47,11 +47,12 @@
  *   SM64DS_PACE_SUM=0         no "[pace]" summary line (one every 30 s by default)
  *
  * PROOF KNOBS (rows only, never needed by a player):
- *   SM64DS_PACE_VBLANK_TEST=frozen|none|jump  spoil the source's vblank time:
- *                             stuck at its first reading, absent (period only),
- *                             or every third reading 2 to 4 refreshes off; the
- *                             trust test below must keep the lock off for frozen
- *                             and none, and ride through jump
+ *   SM64DS_PACE_VBLANK_TEST=frozen|none|jump|clock  spoil the source's vblank
+ *                             time: stuck at its first reading, absent (period
+ *                             only), every third reading 2 to 4 refreshes off,
+ *                             or computed from the clock the way wine does; the
+ *                             trust test below must keep the lock off for frozen,
+ *                             none and clock, and ride through jump
  *   SM64DS_PACE_TOL=<x>       how near a whole number of refreshes a step must be
  *                             (default 0.006, at most 0.25; a 144 Hz desk display
  *                             locks a 16.65 ms turn to k = 2 refreshes with 0.2,
@@ -101,32 +102,41 @@ long long g_ref_at;            /* when g_ref was read (QPC) */
 /* ---- THE VBLANK TRUST TEST ------------------------------------------------
    The lock steers the hand-over to the middle of a refresh, so it needs a real
    vblank time, not only the period. A source that gives the period but no
-   time (the display mode), or a time that does not move with the clock (a
-   compositor that fills the field in once, or makes it up), would park the
-   grid wherever it happened to land: lucky is perfect, unlucky sits on a
-   refresh edge and the 1-or-3 hold stutter never ends. So the lock turns on
-   only when the vblank time is trusted:
-     - three readings, each a current vblank (within three refreshes of now
-       either way; one that is not is skipped) and
-       each a whole number of refreshes after the one before, by about the
-       clock time between them (one that is not starts the count again);
-   and keeps being checked: a reading that is not current, or sits more than
-   a quarter of a refresh off the running estimate's grid (stricter than "more
-   than one refresh away": a whole-refresh difference is only a different
-   vblank of the same grid), is ignored (counted in the summary), and four
-   ignored in a row (about a second) take the trust away until three good ones
-   come back.
-   A trusted reading moves the estimate by a quarter of its disagreement, so a
-   source that wobbles inside a refresh moves the grid only a little.
-   Without trust the lock stays off and the pacer runs as it always did (a
-   few seconds of stutter every 16.7 s at 60 Hz, never a permanent one).
-   Steering by measured present-return times instead was not taken: what a
-   present call's return means differs between flip models, the presenter
-   thread and gamescope, and a wrong guess there is exactly the permanent
-   stutter this test exists to avoid. */
-enum { VBT_REAL = 0, VBT_FROZEN, VBT_NONE, VBT_JUMP };
+   time (the display mode), a time that does not move with the clock (a
+   compositor that fills the field in once) or a time computed from the clock
+   instead of read from the display would park the grid wherever it happened
+   to land: lucky is perfect, unlucky sits on a refresh edge and the 1-or-3
+   hold stutter never ends. So the lock turns on only when the vblank time is
+   trusted:
+     - five readings, each a current vblank (within three refreshes of now
+       either way: Windows 11 reports the next vblank or the one after) and
+       each a whole number of refreshes after the last good one (to within 2%
+       of a refresh; Windows' own are exact), by about the clock time between
+       them. A reading that fails is skipped; four skipped in a row start the
+       count again;
+     - and the time is not computed from the clock: a vblank that is an exact
+       multiple of the period three readings running is what a stand-in
+       compositor makes up (wine's dwmapi rounds the clock down to the period;
+       a real one lands on an exact multiple about once in a hundred thousand
+       readings), so it is never trusted.
+   Once trusted it keeps being checked: a reading that is not current, or sits
+   more than a quarter of a refresh off the running estimate's grid (stricter
+   than "more than one refresh away": a whole-refresh difference is only
+   another vblank of the same grid), is ignored and counted in the summary,
+   and four ignored in a row (about a second) take the trust away until three
+   good ones come back (five). A good reading moves the estimate by a quarter of its
+   disagreement, so a source that wobbles inside a refresh moves the grid only
+   a little.
+   Without trust the lock stays off and the pacer runs exactly as it did
+   before the lock (a few seconds of stutter every 16.7 s at 60 Hz, never a
+   permanent one). Steering by measured present-return times instead was not
+   taken: a present only returns on the vblank with VSync on and a blocking
+   present, which is a player setting, and what it means under the presenter
+   thread or gamescope is unmeasured here; a wrong guess is exactly the
+   permanent stutter this test exists to avoid. */
+enum { VBT_REAL = 0, VBT_FROZEN, VBT_NONE, VBT_JUMP, VBT_CLOCK };
 int g_vb_test;                 /* SM64DS_PACE_VBLANK_TEST: a proof knob that spoils the source's vblank */
-int g_vb_trusted, g_vb_good, g_vb_ignored_run;
+int g_vb_trusted, g_vb_good, g_vb_skip_run, g_vb_ignored_run, g_vb_mult_run;
 int g_vb_ignored_win, g_vb_lost_win;
 long long g_vb_prev, g_vb_prev_at, g_vb_est;
 const char *g_vb_why = "no reading yet";
@@ -139,7 +149,9 @@ void vb_untrust(const char *why)
     }
     g_vb_trusted = 0;
     g_vb_good = 0;
+    g_vb_skip_run = 0;
     g_vb_ignored_run = 0;
+    g_vb_prev = 0;
     g_vb_why = why;
 }
 
@@ -148,67 +160,60 @@ void vb_reading(long long raw, long long period, long long now)
 {
     if (!period || !raw) {
         vb_untrust(period ? "the display gives its period but no vblank time" : "no refresh period");
-        g_vb_prev = 0;
         return;
     }
-    /* Windows 11's compositor reports the NEXT vblank or the one after (seen
-       on a 144 Hz desk display: 7 to 14 ms ahead, advancing by exactly whole
-       refreshes), so "recent" is within three refreshes either way */
+    if (raw % period == 0) {
+        if (++g_vb_mult_run >= 3) {
+            vb_untrust("its vblank time is computed from the clock, not read from the display");
+            return;
+        }
+    } else {
+        g_vb_mult_run = 0;
+    }
     const long long age = now - raw;
     const int recent = age <= 3 * period && age >= -3 * period;
     if (g_vb_trusted) {
         /* the estimate's vblank at or before now, and the reading against it */
         long long n = (now - g_vb_est) / period;
         if (now < g_vb_est) n = -((g_vb_est - now + period - 1) / period);
-        const long long est_latest = g_vb_est + n * period;
-        /* the reading's place inside the refresh against the estimate's: a
-           reading may name a vblank a refresh or two ahead (see above), so
-           whole refreshes are not a disagreement; more than a quarter of a
-           refresh off the estimate's grid is one, and is ignored */
-        long long w = (raw - est_latest) % period;
+        const long long est_at = g_vb_est + n * period;
+        long long w = (raw - est_at) % period;
         if (w > period / 2) w -= period;
         if (w < -period / 2) w += period;
         if (!recent || w * 4 > period || -w * 4 > period) {
             ++g_vb_ignored_win;
             if (++g_vb_ignored_run >= 4)
                 vb_untrust(recent ? "its vblank time jumps off the refresh grid" : "its vblank time is frozen or not current");
-            g_vb_prev = raw;
-            g_vb_prev_at = now;
             return;
         }
         g_vb_ignored_run = 0;
-        g_vb_est = est_latest + w / 4;
-        g_vb_prev = raw;
-        g_vb_prev_at = now;
+        g_vb_est = est_at + w / 4;
         return;
     }
-    if (!recent) {
-        /* not a current vblank: skipped, neither counted for nor against (a
-           frozen time never becomes recent again, so it never earns trust;
-           a lone outlier does not undo two good readings) */
-        g_vb_why = "its vblank time is frozen or not current";
-        return;
-    }
-    int ok = 1;
-    if (g_vb_prev) {
+    int ok = recent;
+    if (!recent) g_vb_why = "its vblank time is frozen or not current";
+    if (ok && g_vb_prev) {
         const long long d = raw - g_vb_prev, el = now - g_vb_prev_at;
-        const double ratio = (double)d / (double)period;
-        const long long whole = (long long)floor(ratio + 0.5);
+        const long long whole = (long long)floor((double)d / (double)period + 0.5);
         const long long resid = d - whole * period;
-        if (whole < 1 || resid * 10 > period || -resid * 10 > period || d - el > 3 * period || el - d > 3 * period) {
+        if (whole < 1 || resid * 50 > period || -resid * 50 > period || d - el > 3 * period || el - d > 3 * period) {
             ok = 0;
             g_vb_why = "its vblank time does not advance with the clock";
         }
     }
+    if (!ok) {
+        if (++g_vb_skip_run >= 4) { g_vb_good = 0; g_vb_skip_run = 0; g_vb_prev = 0; }
+        return;
+    }
+    g_vb_skip_run = 0;
     g_vb_prev = raw;
     g_vb_prev_at = now;
-    if (!ok) { g_vb_good = 0; return; }
-    if (++g_vb_good >= 3) {
+    if (++g_vb_good >= 5) {
         g_vb_trusted = 1;
         g_vb_ignored_run = 0;
         g_vb_est = raw;
         g_vb_why = "";
-        fprintf(stderr, "[pace] vblank time trusted (3 readings, each a current vblank, advancing by whole refreshes with the clock)\n");
+        fprintf(stderr, "[pace] vblank time trusted (5 readings, each a current vblank, advancing by whole refreshes with the clock)\n");
     }
 }
 
@@ -236,7 +241,7 @@ void init_once(void)
     g_knob_hz = e ? atof(e) : 0.0;
     if (g_knob_hz < 20.0 || g_knob_hz > 500.0) g_knob_hz = 0.0;
     e = getenv("SM64DS_PACE_VBLANK_TEST");
-    if (e) g_vb_test = !strcmp(e, "frozen") ? VBT_FROZEN : !strcmp(e, "none") ? VBT_NONE : !strcmp(e, "jump") ? VBT_JUMP : VBT_REAL;
+    if (e) g_vb_test = !strcmp(e, "frozen") ? VBT_FROZEN : !strcmp(e, "none") ? VBT_NONE : !strcmp(e, "jump") ? VBT_JUMP : !strcmp(e, "clock") ? VBT_CLOCK : VBT_REAL;
     e = getenv("SM64DS_PACE_TOL");
     if (e) {
         const double t = atof(e);
@@ -244,7 +249,7 @@ void init_once(void)
     }
     if (g_vb_test || g_tol != 0.006)
         fprintf(stderr, "[pace] proof knobs: SM64DS_PACE_VBLANK_TEST=%s, tolerance %.4f\n",
-                g_vb_test == VBT_FROZEN ? "frozen" : g_vb_test == VBT_NONE ? "none" : g_vb_test == VBT_JUMP ? "jump" : "real", g_tol);
+                g_vb_test == VBT_FROZEN ? "frozen" : g_vb_test == VBT_NONE ? "none" : g_vb_test == VBT_JUMP ? "jump" : g_vb_test == VBT_CLOCK ? "clock" : "real", g_tol);
     if (!g_knob_hz) {
         if (HMODULE d = LoadLibraryA("dwmapi.dll"))
             g_dwm = (DwmTimingFn)GetProcAddress(d, "DwmGetCompositionTimingInfo");
@@ -309,6 +314,8 @@ const Refresh &refresh(void)
     } else if (g_vb_test == VBT_JUMP && r.vblank) {
         static unsigned n;
         if (++n % 3 == 0) r.vblank += (long long)(2 + (n / 3) % 3) * r.period + r.period / 3;   /* every third reading off by 2.3 to 4.3 refreshes */
+    } else if (g_vb_test == VBT_CLOCK && r.period) {
+        r.vblank = now / r.period * r.period;   /* what wine's dwmapi hands back: the clock rounded down to the period */
     }
     if (r.src != g_ref.src || (g_ref.period && llabs(r.period - g_ref.period) * 200 > g_ref.period))
         fprintf(stderr, "[pace] display refresh %.3f Hz (source %s%s)%s\n",
