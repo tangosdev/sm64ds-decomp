@@ -1233,7 +1233,7 @@ matched: yes</title></rect><rect x="213.44" y="127.13" width="25.35" height="5.7
 module: arm9
 addr: 0x020116c4
 size: 216 bytes
-matched: yes</title></rect><rect x="238.79" y="127.13" width="24.41" height="5.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SndRegTable13func_0201179cEiiis
+matched: yes</title></rect><rect x="238.79" y="127.13" width="24.41" height="5.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SndRegTable13func_0201179cEiiPK7Vector3s
 module: arm9
 addr: 0x0201179c
 size: 208 bytes
