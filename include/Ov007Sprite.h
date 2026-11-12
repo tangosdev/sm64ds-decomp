@@ -2,6 +2,7 @@
 #define OV007_SPRITE_H
 
 #include "types.h"
+#include "nitro/fx/fx.h"
 
 /* Reconstructed layout and name, not recovered class identity (no RTTI, no
  * vtable; plain C helpers). The 0x88-byte screen-space textured quad that
@@ -46,7 +47,7 @@ typedef struct Ov007Sprite {
     s32 shadowScaleY;    /* 0x78 */
     u8 shadowAlphaDrop;  /* 0x7c: subtracted from the alpha for the shadow pass */
     u8 shadowPolygonId;  /* 0x7d */
-    s16 shadowOffset[3]; /* 0x7e: c421c passes it as the shadow pass's vector */
+    VecFx16 shadowOffset; /* 0x7e: c421c passes it as the shadow pass's vector */
     u16 *tilemap;        /* 0x84: c4684 tile map when drawFlags & 8 */
 } Ov007Sprite;
 

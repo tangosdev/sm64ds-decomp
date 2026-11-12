@@ -18,7 +18,7 @@ void func_ov007_020c421c(Ov007Sprite *s) {
             shadowAlpha = 0;
         }
         G3_Scale(s->shadowScaleX, s->shadowScaleY, 0x1000);
-        func_ov007_020c4684(s, 0, shadowAlpha & 0xff, s->shadowPolygonId, 0, s->shadowOffset);
+        func_ov007_020c4684(s, 0, shadowAlpha & 0xff, s->shadowPolygonId, 0, &s->shadowOffset.x);
     }
     G3_PopMtx(1);
 }
