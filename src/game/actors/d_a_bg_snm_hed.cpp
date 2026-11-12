@@ -66,6 +66,14 @@ void daBgSnmHed_c::UpdateModel()
     mModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
+#ifdef _MSC_VER
+/* Host only (run coopfix1, lane SNOWBALL1). Set at program start by port/hal/coop_race.cpp; answers 0 outside a coop
+   room, so State3 is the cartridge's there. The DS build never sees this. */
+extern "C" {
+int (*port_coop_snmhed_quiet)(void *head) = 0;
+}
+#endif
+
 // @symbol _ZN12daBgSnmHed_c6State3Ev
 int daBgSnmHed_c::State3()
 {
@@ -81,6 +89,12 @@ int daBgSnmHed_c::State3()
 
     switch (mSubstate) {
     case 0:
+#ifdef _MSC_VER
+        /* Host only (run coopfix1, lane SNOWBALL1): in a coop room, when a friend's roll put the body on my head, his
+           console's head gives the star talk and the star; mine stays quiet (port/hal/coop_race.cpp). */
+        if (port_coop_snmhed_quiet && port_coop_snmhed_quiet(this))
+            break;
+#endif
         mTalkPlayer = ClosestPlayer();
         if (Vec3_HorzDist(&mPosX, &mTalkPlayer->mPosX) < 0x118000) {
             if (mTalkPlayer->StartTalk(*this, true))

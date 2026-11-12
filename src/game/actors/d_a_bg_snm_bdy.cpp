@@ -219,12 +219,105 @@ int daBgSnmBdy_c::InitResources()
     return 1;
 }
 
+#ifdef _MSC_VER
+/* Host only (run coopfix1, lane SNOWBALL1). In a coop room the console whose own player talked to the snowman's body
+   is the only one whose body runs its states; every other console in the course shows the roll as that player's game
+   drives it (port/hal/coop_race.cpp, the same shape as the racing penguin). The hook is set at program start and
+   answers 0 outside a coop room, so Behavior is the cartridge's there. It answers 1 for a body it has just posed from a
+   friend's roll (Behavior then skips the states: no talk, no second roll, no ending of its own), 2 when that pose is
+   rolling (Behavior adds the dust and the rolling sound the states make). The helpers below run the states' own
+   pieces for the follower: the grow block, the head's cue and its sound, the landing quake, and State5's return home.
+   The DS build never sees this. */
+extern "C" {
+int (*port_coop_snmbdy_follow)(void *body) = 0;
+/* State2's grow block for a given scale (Fix12): model scale, radius, cylinder, mesh collision, ranges. */
+void port_snmbdy_scale(void *b, int scale)
+{
+    daBgSnmBdy_c *self = (daBgSnmBdy_c *)b;
+    self->mScaleX = scale;
+    self->mScaleY = scale;
+    self->mScaleZ = scale;
+    self->mRadius = (int)(((long long)scale * 0x82000 + 0x800) >> 12);
+    self->mCylinder.radius = self->mRadius;
+    self->mCylinder.height = self->mRadius << 1;
+    func_0203568c((int *)&self->mWithMeshClsn, self->mRadius);
+    func_02035684((int *)&self->mWithMeshClsn, self->mRadius);
+    _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(
+        self, self->mRadius, self->mRadius, 0x1000000, 0x1000000);
+}
+/* State3 substate 0 -> 1: the head is told to jump and the cue sound plays. */
+void port_snmbdy_cue_head(void *b)
+{
+    daBgSnmBdy_c *self = (daBgSnmBdy_c *)b;
+    dActor_c *head = dActor_c::FindWithActorID(0x111, 0); /* BIG_SNOWMAN_HEAD */
+    if (head)
+        ((daBgSnmHed_c *)head)->unk_336 = 1;
+    func_0201267c(0x114, (const Vector3 *)&self->mCamSpacePosX);
+}
+/* State3 substate 1 -> 2: the landing quake. */
+void port_snmbdy_quake(void *b)
+{
+    daBgSnmBdy_c *self = (daBgSnmBdy_c *)b;
+    Vector3 landPos;
+    landPos.x = self->mPosX;
+    landPos.y = self->mPosY;
+    landPos.z = self->mPosZ;
+    _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(self, &landPos, 0x5dc000);
+}
+/* State5's return: home spot and facing, no talker, State0 (which also resets the scale). */
+void port_snmbdy_reset(void *b)
+{
+    daBgSnmBdy_c *self = (daBgSnmBdy_c *)b;
+    self->mPosX = self->mHomePosX;
+    self->mPosY = self->mHomePosY;
+    self->mPosZ = self->mHomePosZ;
+    self->mAngleX = self->mHomeAngleX;
+    self->mAngleY = self->mHomeAngleY;
+    self->mAngleZ = self->mHomeAngleZ;
+    self->mPrevAngleX = self->mAngleX;
+    self->mPrevAngleY = self->mAngleY;
+    self->mPrevAngleZ = self->mAngleZ;
+    self->mHorzSpeed = 0;
+    self->mVertSpeed = 0;
+    self->mTalkPlayer = 0;
+    self->SetState(0);
+}
+/* The course's reach point and landing point (Fix12), for the coop side's proof knob. */
+void port_snmbdy_points(int *reach, int *landing)
+{
+    reach[0] = data_ov072_02122b40.x;
+    reach[1] = data_ov072_02122b40.y;
+    reach[2] = data_ov072_02122b40.z;
+    landing[0] = data_ov072_02122b58.x;
+    landing[1] = data_ov072_02122b58.y;
+    landing[2] = data_ov072_02122b58.z;
+}
+}
+#endif
+
 /* dCc_c comes from the real dCcAc_c chain now that the header types
    mCylinder; Clear and Update are non-virtual there, so the direct bl is
    unchanged. */
 // @symbol _ZN12daBgSnmBdy_c8BehaviorEv
 int daBgSnmBdy_c::Behavior()
 {
+#ifdef _MSC_VER
+    if (port_coop_snmbdy_follow) {
+        int follow = port_coop_snmbdy_follow(this);
+        if (follow) {
+            if (follow == 2) {
+                _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(mPosX, mPosY, mPosZ);
+                mSoundID = Sound::PlayLong(
+                    mSoundID, 3, 0x8a, *(const Vector3 *)&mCamSpacePosX, 0);
+            }
+            HurtPlayer();
+            mCylinder.Clear();
+            mCylinder.Update();
+            UpdateModel();
+            return 1;
+        }
+    }
+#endif
     CallStateBehavior();
     mCylinder.Clear();
     mCylinder.Update();
