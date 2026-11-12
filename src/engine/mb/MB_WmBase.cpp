@@ -123,10 +123,6 @@ typedef struct {
     u16 w[0x40];
 } GameInfo;
 
-/* The rest of the WM API this file calls (wm_etc.c), whose definitions
- * still take the callback as a void *. The rest is in nitro/wm/wm_api.h. */
-extern int WM_SetLifeTime(void *callback, int tableNo, int camLife, int frameLife);
-extern int WM_SetBeaconIndication(void *callback, int flag);
 
 extern void OS_GetMacAddress(unsigned char *macAddress);
 extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
@@ -207,7 +203,7 @@ void MBi_ParentCallback(void *arg) {
         if (cb->errcode == 0) {
             MBi_CheckWmErrcode(0x83, WM_ReadStatus(&WM_WORK->status));
             MBi_CheckWmErrcode(0x80, WM_SetIndCallback(MBi_ParentCallback));
-            MBi_CheckWmErrcode(0x1D, WM_SetLifeTime((void *)MBi_ParentCallback, 0xFFFF, 0x28, 5));
+            MBi_CheckWmErrcode(0x1D, WM_SetLifeTime(MBi_ParentCallback, 0xFFFF, 0x28, 5));
             return;
         }
         WM_WORK->userCallback(0x100, arg);
@@ -223,7 +219,7 @@ void MBi_ParentCallback(void *arg) {
 
     case 0x7:
         WM_WORK->userCallback(0x15, arg);
-        MBi_CheckWmErrcode(0x19, WM_SetBeaconIndication((void *)MBi_ParentCallback, 1));
+        MBi_CheckWmErrcode(0x19, WM_SetBeaconIndication(MBi_ParentCallback, 1));
         return;
 
     case 0x19:
@@ -460,7 +456,7 @@ void MBi_ChildCallback(void *arg) {
         if (cb->errcode == 0) {
             w->userCallback(0x15, arg);
             MBi_CheckWmErrcode(0x83, WM_ReadStatus(&w->status));
-            MBi_CheckWmErrcode(0x1d, WM_SetLifeTime((void *)MBi_ChildCallback, 0xffff, 0x28, 5));
+            MBi_CheckWmErrcode(0x1d, WM_SetLifeTime(MBi_ChildCallback, 0xffff, 0x28, 5));
             return;
         }
         w->userCallback(0x100, arg);
@@ -895,28 +891,27 @@ int MBi_SendMP(const void *buf, int len, int pollbmp) {
 /* parentParam.ggid[0]. Lead: the reconstruction's MBi_GetGgid returns the
  * whole u32; this SDK keeps the GGID as two u16s (WMParentParam) and has a
  * getter for each half, which the beacon senders pass to WM_SetGameInfo. */
-int func_020688e4(void) {
+u16 func_020688e4(void) {
     return WM_WORK->parentParam.ggid[0];
 }
 
 /* parentParam.ggid[1], the other half (see func_020688e4). */
-int func_020688cc(void) {
+u16 func_020688cc(void) {
     return WM_WORK->parentParam.ggid[1];
 }
 
-int MBi_GetTgid(void) {
+u16 MBi_GetTgid(void) {
     return WM_WORK->parentParam.tgid;
 }
 
 /* The beacon attribute byte for WM_SetGameInfo: entryFlag 1, multiBootFlag
  * 2, KS_Flag 4, CS_Flag 8 (the SDK's WM_ATTR_FLAG_* bits). The beacon senders
- * OR in 2 again. */
-int MBi_GetAttribute(void) {
-    int a = WM_WORK->parentParam.multiBootFlag ? 2 : 0;
-    int b = WM_WORK->parentParam.entryFlag ? 1 : 0;
-    int c = WM_WORK->parentParam.KS_Flag ? 4 : 0;
-    int d = WM_WORK->parentParam.CS_Flag ? 8 : 0;
-    return (d | (c | (b | a))) & 0xff;
+ * OR in WM_ATTR_FLAG_MB again. */
+u8 MBi_GetAttribute(void) {
+    return ((u8)(((WM_WORK->parentParam.entryFlag) ? WM_ATTR_FLAG_ENTRY : 0) |
+                 ((WM_WORK->parentParam.multiBootFlag) ? WM_ATTR_FLAG_MB : 0) |
+                 ((WM_WORK->parentParam.KS_Flag) ? WM_ATTR_FLAG_KS : 0) |
+                 ((WM_WORK->parentParam.CS_Flag) ? WM_ATTR_FLAG_CS : 0)));
 }
 
 void MBi_SetMaxScanTime(u16 time) {

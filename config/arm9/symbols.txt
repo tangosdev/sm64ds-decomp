@@ -5243,7 +5243,7 @@ data_020a89c4 kind:bss addr:0x020a89c4
 data_020a89ec kind:bss addr:0x020a89ec
 data_020a8a00 kind:bss addr:0x020a8a00
 data_020a8a40 kind:bss addr:0x020a8a40
-data_020a9440 kind:bss addr:0x020a9440
+tmpUserGameInfoBuf kind:bss addr:0x020a9440
 data_020a94c0 kind:bss addr:0x020a94c0
 data_020a94c4 kind:bss addr:0x020a94c4
 data_020a94c8 kind:bss addr:0x020a94c8

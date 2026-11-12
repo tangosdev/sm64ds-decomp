@@ -1,6 +1,6 @@
 #include "types.h"
 extern void func_0203f6e8(s16 v);
-extern int func_0203f818(int arg);
+extern int func_0203f818(u16 channel);
 extern int OS_GetTickLo(void);
 extern int __aeabi_idiv(int a, int b);
 

@@ -2730,9 +2730,10 @@ src/engine/wm/WM_Ds.cpp:
     complete
     .text start:0x02062734 end:0x020634fc
 
-src/engine/wm/WM_Etc.cpp:
+src/engine/wm/WM_Etc.c:
     complete
     .text start:0x020634fc end:0x02063718
+    .bss start:0x020a9440 end:0x020a94c0
 
 src/unnamed/arm9/0206/func_02063718.c:
     complete
