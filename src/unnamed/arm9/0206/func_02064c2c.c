@@ -1,22 +1,22 @@
 #include "types.h"
 #include "nitro/mi/memory.h"
 
-int func_02064c2c(int dest, u16 a, u8 b, int c, int d, const void *p, int n) {
+int func_02064c2c(u8 *dst, u16 a, u8 b, int c, int d, const void *p, int n) {
+    u32 len;
     u8 kind = 7;
     u16 a16 = a;
-    int pos;
-    int len;
-    MI_CpuCopy8(&kind, (void *)dest, 1);
-    pos = dest + 1;
-    MI_CpuCopy8(&a16, (void *)pos, 2);
-    pos = (int)(pos + 2);
-    MI_CpuCopy8(&b, (void *)pos, 1);
-    pos = (int)(pos + 1);
-    MI_CpuCopy8(&c, (void *)pos, 4);
-    pos = (int)(pos + 4);
-    MI_CpuCopy8(&d, (void *)pos, 4);
-    len = (int)((long long)n);
-    pos = (int)((long long)(pos + 4));
-    MI_CpuCopy8(p, (void *)pos, (unsigned int)len);
-    return (pos + len) - dest;
+    u8 *p1, *p2, *p3, *p4, *p5;
+    MI_CpuCopy8(&kind, dst, 1);
+    p1 = dst + 1;
+    MI_CpuCopy8(&a16, p1, 2);
+    p2 = p1 + 2;
+    MI_CpuCopy8(&b, p2, 1);
+    p3 = p2 + 1;
+    MI_CpuCopy8(&c, p3, 4);
+    p4 = p3 + 4;
+    MI_CpuCopy8(&d, p4, 4);
+    p5 = p4 + 4;
+    len = n;
+    MI_CpuCopy8(p, p5, len);
+    return (p5 + len) - dst;
 }

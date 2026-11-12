@@ -3,10 +3,7 @@
 #include "common.h"
 #include "Ov007StrokePath.h"
 #include "Ov007Picker.h"
-/* local extern: math/CalcLib.h is C++ only; this matches its declaration. */
-extern void VEC_Subtract(Vector3 *, Vector3 *, Vector3 *);
-/* local extern: as above */
-extern int VEC_Mag(const Vector3 *);
+#include "math/CalcLib.h"
 
 /* Re-measures group idx's links at a pose blended between groupPoints
  * (weight t, Q12) and groupPointCopies: x and y blended, z from the copies.

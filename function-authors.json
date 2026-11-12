@@ -35067,11 +35067,11 @@
     },
     "ov060:0x021163f0": {
       "author": "tangosdev",
-      "name": "daKpaTail_c_classInit"
+      "name": "_Z21daKpaTail_c_classInitv"
     },
     "ov060:0x02116428": {
       "author": "tangosdev",
-      "name": "daKpa_c_classInit"
+      "name": "_Z17daKpa_c_classInitv"
     },
     "ov060:0x02116484": {
       "author": "tangosdev",

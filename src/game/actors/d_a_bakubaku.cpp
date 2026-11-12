@@ -48,6 +48,7 @@ enum daBakubaku_c_AssetId {
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 /* dCc_c bit table: flags/vulnFlags/hitFlags share it. */
 enum {
@@ -88,19 +89,12 @@ extern daBakubaku_c::State data_ov032_02113aac; /* chase */
 extern daBakubaku_c::State data_ov032_02113a7c; /* surface */
 extern daBakubaku_c::State data_ov032_02113abc; /* dive */
 extern s32 data_0209f32c;
-extern Matrix4x3 data_020a0e68;
 
 extern VecFx32 data_ov032_021137cc; /* body cylinder */
 extern VecFx32 data_ov032_021137d8; /* head cylinder */
 
 int AngleDiff(int a, int b);
 s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-
-void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
-void Matrix4x3_FromRotationY(void *m, int angY);
-void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
-void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 
 /* local extern: retain the matched scalar ABI; native Fix12<int> calls remain pending. */
 /* Parameter names keep this TU's @NNN. */

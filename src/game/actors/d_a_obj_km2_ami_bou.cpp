@@ -64,13 +64,13 @@ extern "C" SpawnInfo<daObjKm2_Ami_Bou_c> g_profile_KM2_AMI_BOU = {
     0};
 
 s32 daObjKm2_Ami_Bou_c::InitResources() {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov045_021131b0), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov045_021131b0), 1, -1);
     if (param1 != kUnsetParam)
         mPosY -= kLoweredY;
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov045_021131a8);
+    KCL_File *kcl = dBgW_Kc::LoadFile(data_ov045_021131a8);
     mMeshCollider.SetFile(kcl, mClsnMat, kMeshScale, mAngleY, data_ov045_02112510);
     mdCcAc_c.Init(this, kCylinderRadius, kCylinderHeight, kClsnFlags, 0);
     return 1;

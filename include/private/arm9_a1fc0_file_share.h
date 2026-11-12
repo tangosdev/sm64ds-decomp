@@ -7,11 +7,13 @@
  * cluster, WFS_End .. WFSi_RomArchiveProc), moved here from func_02040c34.c
  * once WFSi_OnChildSystemCallback, WFSi_OnParentSystemCallback and WFSi_ReallocBitmap needed them too. The
  * transfer runs over NitroSDK WBT (wireless block transfer): the child's
- * tables below are the ones WBT_GetBlockInfo/WBT_GetBlock take. Plain C types:
- * WFSi_OnParentSystemCallback and WFSi_ReallocBitmap do not include types.h. data_020a2400 is
- * the same address as mArea (data_020a1fc0 + 0x440), a symbol of its own. */
+ * tables below are the ones WBT_GetBlockInfo/WBT_GetBlock take, and each
+ * parent node embeds the WBTBlockInfoList (nitro/wbt.h) its region is
+ * registered with. data_020a2400 is the same address as mArea
+ * (data_020a1fc0 + 0x440), a symbol of its own. */
 
 #include "nitro/wm/wm.h"
+#include "nitro/wbt.h"
 
 /* Parent area at +0x440: a pool of three 0xcc0-byte nodes, each holding one
  * registered region. A node moves free -> busy (state 1, loading; WFSi_FromFreeToBusy)
@@ -21,9 +23,10 @@ enum { FILE_SHARE_NODE_SIZE = 0xcc0 }; /* node slot stride, sizeof(FileShareNode
 
 typedef struct FileShareNode {
     struct FileShareNode *mNext; /* 0x00 -- list link (WFSi_MoveList moves nodes) */
-    /* 0x04 -- WBT_RegisterBlock (WBT_RegisterBlock) registers it (block id,
-     * size, 0x20-byte name, data); WFSi_FindAliveForID finds a node by its id */
-    unsigned char mRegion[0x34];
+    /* 0x04 -- the block list node WBT_RegisterBlock registers the region
+     * with (block id, size, 0x20-byte name, data); WFSi_FindAliveForID finds a
+     * node by its id */
+    WBTBlockInfoList mRegion;
     /* 0x38 -- FS_InitFile here; WFSi_TaskThread opens, reads and closes the
      * region's file through it, WFSi_OnParentSystemCallback refills a page through it.
      * WFSi_FindAlive matches a request against its open extent and
@@ -89,10 +92,10 @@ typedef struct FileShareParentArea {
      * WFSi_OnParentSystemCallback fills it, WFSi_SendOpenAck sets its file id, WFSi_SendAck
      * sends it */
     unsigned char mReplies[0x10][0xc];
-    FileShareNode mNodes[3];   /* 0x00c0 */
-    FileShareNode *mFreeList;  /* 0x2700 */
-    FileShareNode *mReadyList; /* 0x2704 -- WFSi_FindAliveForID searches it */
-    FileShareNode *mBusyList;  /* 0x2708 -- WFSi_TaskThread loads its state-1 nodes */
+    FileShareNode mNodes[3];                       /* 0x00c0 */
+    FileShareNode *mFreeList;                      /* 0x2700 */
+    FileShareNode *mReadyList;                     /* 0x2704 -- WFSi_FindAliveForID searches it */
+    FileShareNode *mBusyList; /* 0x2708 -- WFSi_TaskThread loads its state-1 nodes */
     /* 0x270c -- children owed a reply, by AID bit (WFSi_OnParentSystemCallback,
      * WFSi_SendOpenAck set; WFSi_SendAck sends and clears) */
     int mReplyPending;

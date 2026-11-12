@@ -84,11 +84,11 @@ extern "C" daObjDpBrock_c *daObjDpBrock_c_classInit() {
 }
 
 int daObjDpBrock_c::InitResources() {
-    mStepModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov025_02113ab8), 1, -1);
+    mStepModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov025_02113ab8), 1, -1);
     UpdateStepModelPosAndRotY();
     UpdateStepClsnPosAndRot();
-    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov025_02113ab0), mClsnMat2, 0x1000,
-                          mAngleY, data_ov025_02112ce8);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov025_02113ab0), mClsnMat2, 0x1000, mAngleY,
+                          data_ov025_02112ce8);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
 
     int phase = param1 & 3;

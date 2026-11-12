@@ -723,7 +723,7 @@ int daFPkn_c::InitResources()
     int type;
     int cmp;
 
-    mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov084_02130dfc), 1, -1);
+    mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov084_02130dfc), 1, -1);
 
     for (i = 0; i < 6; i++)
         dExtFrameCtrl_c::LoadFile(*data_ov084_021302f4[i]);

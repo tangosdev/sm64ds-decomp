@@ -88,7 +88,7 @@ extern "C" daChair_c *daChair_c_classInit(void) {
 }
 
 s32 daChair_c::InitResources() {
-    BMD_File *file = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov020_02114af0);
+    BMD_File *file = dExtSimpleModel_c::LoadFile(data_ov020_02114af0);
     mModel.SetFile(file, 1, -1);
     mShadowModel.InitCylinder();
     mWithMeshClsn.Init(this, 0x32000, 0x64000, 0, 0);

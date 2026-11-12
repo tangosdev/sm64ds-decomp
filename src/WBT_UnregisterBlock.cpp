@@ -1,22 +1,22 @@
 //cpp
 #include "types.h"
 #include "nitro/os/system.h"
-#include "private/wbt_block_info_list.h"
+#include "nitro/wbt.h"
 
 extern "C" {
 
-extern struct WBTBlockInfoList *func_02065ae0(void);
-extern void func_02065ad0(struct WBTBlockInfoList *list);
-struct WBTBlockInfoList *WBT_UnregisterBlock(int key) {
+extern WBTBlockInfoList *func_02065ae0(void);
+extern void func_02065ad0(WBTBlockInfoList *list);
+WBTBlockInfoList *WBT_UnregisterBlock(u32 block_id) {
     OSIntrMode saved = (0, OS_DisableInterrupts());
-    struct WBTBlockInfoList *head = func_02065ae0();
-    struct WBTBlockInfoList *cur;
-    struct WBTBlockInfoList *prev;
+    WBTBlockInfoList *head = func_02065ae0();
+    WBTBlockInfoList *cur;
+    WBTBlockInfoList *prev;
     if (head == 0) {
         OS_RestoreInterrupts(saved);
         return 0;
     }
-    if (head->block_id == key) {
+    if (head->data_info.id == block_id) {
         func_02065ad0(head->next);
         OS_RestoreInterrupts(saved);
         return head;
@@ -24,7 +24,7 @@ struct WBTBlockInfoList *WBT_UnregisterBlock(int key) {
     prev = head;
     cur = prev->next;
     while (cur != 0) {
-        if (cur->block_id == key) {
+        if (cur->data_info.id == block_id) {
             prev->next = cur->next;
             OS_RestoreInterrupts(saved);
             return cur;

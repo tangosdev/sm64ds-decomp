@@ -46,7 +46,6 @@
  * definitions. */
 extern "C" {
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 }
 
 /* --- Collision events, 0x020eea84..0x020ef320. ------------------------------

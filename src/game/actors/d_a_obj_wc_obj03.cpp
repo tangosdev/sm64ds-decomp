@@ -85,7 +85,7 @@ extern "C" daObjWc_Obj03_c *daObjWc_Obj03_c_classInit()
 /* -------------------------------------------------------------------------- */
 int daObjWc_Obj03_c::InitResources()
 {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov029_02114270), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov029_02114270), 1, -1);
     mCylinder.Init(this, 0x32000, 0x64000, 0x800002, 0);
     mWaterID = 0;
     mWaterParam = param1 & 1;

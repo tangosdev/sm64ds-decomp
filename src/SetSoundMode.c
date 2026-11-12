@@ -1,5 +1,5 @@
 extern unsigned char data_0209d4b4;
-extern void func_02011d5c(int self);
+extern void func_02011d5c(int mode);
 
 void SetSoundMode(int mode)
 {

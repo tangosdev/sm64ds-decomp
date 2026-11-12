@@ -1,9 +1,8 @@
 #include "common.h"
 #include "nitro/fx/fx.h"
 #include "Ov007Picker.h"
+#include "math/CalcLib.h"
 
-/* local extern: math/CalcLib.h is C++ only; this matches its declaration. */
-extern void VEC_Add(Vector3 *, Vector3 *, Vector3 *);
 extern void func_ov007_020c7560(Ov007PointList *list, int stiffness, int damping);
 extern void func_ov007_020c7b2c(struct Ov007Link *link, int stiffness, int damping);
 extern void func_ov007_020c81a0(Ov007Follower *f, int damping, int shift);

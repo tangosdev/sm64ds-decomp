@@ -43,6 +43,7 @@
  * MenuMem_SetMaxAllocSizeHook and MenuMem_GetMaxAllocSize.
  */
 #include "nitro/mi/memory.h"
+#include "nitro/os/alloc.h"
 
 extern "C" {
 
@@ -53,10 +54,6 @@ typedef void *(*Ov007AllocHook)(unsigned int size);
 extern Ov007QueryHook data_ov007_02104c14;
 extern Ov007FreeHook data_ov007_02103254;
 extern Ov007AllocHook data_ov007_02103258;
-
-/* local extern: no include/ header declares the OS heap entry points. */
-extern void *OS_AllocFromHeap(int id, int heap, unsigned int size);
-extern void OS_FreeToHeap(int id, int heap, void *ptr);
 
 /* The alloc hook's default (data_ov007_02103258's initial value). */
 void *MenuMem_DefaultAlloc(unsigned int size) {

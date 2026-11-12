@@ -171,17 +171,16 @@ int daObjSimpleBg_c::InitResources() {
     }
 
     idx = mVariant;
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov102_0214e188[idx].modelFile), 1,
-                   -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(*data_ov102_0214e188[idx].modelFile), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
     idx = mVariant;
     if (idx == 0 || idx == 2) {
-        KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(*data_ov102_0214e188[idx].clsnFile);
+        KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov102_0214e188[idx].clsnFile);
         mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, *data_ov102_0214e188[idx].clps);
     } else {
-        KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(*data_ov102_0214e188[idx].clsnFile);
+        KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov102_0214e188[idx].clsnFile);
         mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, *data_ov102_0214e188[idx].clps);
     }
 

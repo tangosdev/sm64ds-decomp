@@ -5,10 +5,8 @@
 /* NitroSDK WBT (wireless block transfer): this raises a system callback for
  * the command a peer sent. `work` is the WBT work area; its system command
  * block (system_cmd, +0x138) is a WBTCommand, named here after the SDK's
- * fields, and `sel` is the peer's command type: 2 REQ_SYNC,
- * 8 REQ_GET_BLOCK_DONE, 10 REQ_USER_DATA, 12 SYSTEM_CALLBACK,
- * 13 PREPARE_SEND_DATA (always raised), 14 REQ_ERROR. The block's command
- * is 0xc, SYSTEM_CALLBACK.
+ * fields, and `sel` is the peer's command type (PREPARE_SEND_DATA is always
+ * raised). The block's command is SYSTEM_CALLBACK.
  *
  * The 0x68-byte per-peer record (peer[], +0x1d4) holds what func_02063ea8
  * parsed out of that peer's packet; its fields are named after the callback
@@ -17,42 +15,42 @@ void func_02064554(WBTWork *work, int sel, int idx, s16 a3) {
     WBTPeerRecord *c = &work->peer[idx];
     WBTCommand *o = &work->system_cmd;
 
-    if (sel != 0xd && c->cmd_counter == c->last_cmd_counter)
+    if (sel != WBT_CMD_PREPARE_SEND_DATA && c->cmd_counter == c->last_cmd_counter)
         return;
 
-    o->command = 0xc;
+    o->command = WBT_CMD_SYSTEM_CALLBACK;
     o->peer_bmp = (s16)(1 << idx);
     c->last_cmd_counter = c->cmd_counter;
     o->peer_cmd_counter = c->cmd_counter;
     o->result = a3;
 
     switch (sel) {
-    case 8:
+    case WBT_CMD_REQ_GET_BLOCK_DONE:
         o->u.blockdone.block_id = c->block_id;
         break;
-    case 2:
+    case WBT_CMD_REQ_SYNC:
         o->u.sync.num_of_list = c->num_of_list;
         o->u.sync.peer_packet_size = c->peer_packet_size;
         o->u.sync.my_packet_size = c->my_packet_size;
         break;
-    case 10: {
+    case WBT_CMD_REQ_USER_DATA: {
         u8 v = c->user_data_size;
-        if (v > 9) {
+        if (v > WBT_SIZE_USER_DATA) {
             o->u.user_data.size = 0;
             break;
         }
         o->u.user_data.size = v;
         MI_CpuCopy8((const void *)c->user_data, (void *)o->u.user_data.data, o->u.user_data.size);
     } break;
-    case 12:
-    case 14:
+    case WBT_CMD_SYSTEM_CALLBACK:
+    case WBT_CMD_REQ_ERROR:
         break;
     }
 
     o->event = sel;
     {
-        void (*fn)(char *) = o->callback;
+        WBTCallback fn = o->callback;
         if (fn)
-            fn((char *)o);
+            fn(o);
     }
 }

@@ -171,7 +171,7 @@ s32 daHolhei_c::OnAimedAtWithEgg() {
    home and previous positions, then the starting state. */
 int daHolhei_c::InitResources()
 {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(gHoruheiModelFile), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(gHoruheiModelFile), 1, -1);
     mShadowModel.InitCylinder();
     dExtFrameCtrl_c::LoadFile(gHoruheiLiftAnimationFile);
     dExtFrameCtrl_c::LoadFile(gHoruheiLiftLoopAnimationFile);
@@ -180,9 +180,9 @@ int daHolhei_c::InitResources()
     dExtFrameCtrl_c::LoadFile(gHoruheiWalkAnimationFile);
     mVertAccel = -0x3000;
     mTerminalVelocity = -0x1e000;
-    mdCc_c.Init((dActor_c *)this, 0xc8000, 0xfa000, 0x200004, 0x3010);
+    mdCc_c.Init(this, 0xc8000, 0xfa000, 0x200004, 0x3010);
     mModel.speed = 0x1000;
-    mMeshClsn.Init((dActor_c *)this, 0x118000, 0x118000, 0, 0);
+    mMeshClsn.Init(this, 0x118000, 0x118000, 0, 0);
     mHomePosX = mPosX;
     mHomePosY = mPosY;
     mHomePosZ = mPosZ;

@@ -268,8 +268,7 @@ void dScMgJump_c::BeginIntro()
 void dScMgJump_c::State_Intro()
 {
     int left;
-    short *countdown = &mStateTimer;
-    *countdown = *countdown - 1;
+    mStateTimer--;
     left = mStateTimer;
     if (left == 0) {
         FreeGfxSlotsById(0x1d);
@@ -293,10 +292,9 @@ void dScMgJump_c::BeginPlay()
 
 void dScMgJump_c::State_Play()
 {
-    int *acc = &mAccum;
-    *acc += mAccumStep >> 12;
+    mAccum += mAccumStep >> 12;
     if (mAccum > 0x1000) {
-        *acc -= 0x1000;
+        mAccum -= 0x1000;
     }
     Heyho_SeparateAll();
     Jump3D_UpdateAll();
@@ -315,23 +313,19 @@ void dScMgJump_c::BeginEnd()
     mState = pmf_dScMgJump_c_State_End;
 }
 
-void dScMgJump_c::State_End()
-{
-  int *acc = &mAccum;
-  *acc += mAccumStep >> 12;
-  if (mAccum > 0x1000)
-  {
-    *acc -= 0x1000;
-  }
-  Heyho_SeparateAll();
-  Jump3D_UpdateAll();
-  if (ApproachLinear2(mStateTimer, 0, 1) == 0)
-  {
-    return;
-  }
-  Jump3D_SetLowGravity();
-  Heyho_ReactAll();
-  mState = pmf_dScMgJump_c_State_Result;
+void dScMgJump_c::State_End() {
+    mAccum += mAccumStep >> 12;
+    if (mAccum > 0x1000) {
+        mAccum -= 0x1000;
+    }
+    Heyho_SeparateAll();
+    Jump3D_UpdateAll();
+    if (ApproachLinear2(mStateTimer, 0, 1) == 0) {
+        return;
+    }
+    Jump3D_SetLowGravity();
+    Heyho_ReactAll();
+    mState = pmf_dScMgJump_c_State_Result;
 }
 
 void dScMgJump_c::State_Result()

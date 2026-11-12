@@ -3,58 +3,32 @@
    .exceptix record at 0x0207391c (func_02072014, length 0x154)
    exists only because this pragma turns exceptions back on. */
 #pragma exceptions on
+#include "private/arm9_action_walk.h"
 namespace std {
 void terminate();
 }
 
 extern "C" {
 
-extern unsigned char func_02072d90(void *p);
-extern unsigned char func_020729f4(void *p);
+extern unsigned char func_02072d90(struct ActionWalk *c);
+extern unsigned char func_020729f4(struct ActionWalk *c);
 extern unsigned char *ReadSignedVarInt(unsigned char *p, int *out);
 
-struct Arr21 {
-    int w[21];
-};
-
-struct Ctx {
-    int f0, f1, f2, f3, f4, f5, f6;
-    struct Arr21 arr;
-};
-
-struct Local {
-    int a[6];
-    struct Ctx cpart;
-};
-
 /* EH runtime, rethrow: walk a copy of the context's actions to action 13,
-   read its signed offset into the frame (ReadSignedVarInt) and return that
-   frame address. c receives the saved catch info found there: [0] the word
-   at +4, [1] the word at +0, [2] 0, [3] the address. Actions 1 and 14, and
-   any unknown action, call the terminate path (std::terminate). */
-int func_02072014(int *c, int *arg)
-{
-    struct Local l;
+   read its signed offset into the frame (ReadSignedVarInt) and return the
+   catch record there. c takes the rethrown exception back from it: its type
+   and object, no destructor, and the record itself as mCatchInfo. Actions 1
+   and 14, and any unknown action, call the terminate path
+   (std::terminate). */
+CatchInfo *func_02072014(ThrowContext *c, struct ActionCursor *cursor) {
+    struct ActionWalk l;
     unsigned char sel;
     int tmp;
-    int base;
-    int bt;
+    CatchInfo *info;
 
-    l.a[0] = arg[0];
-    l.a[1] = arg[1];
-    l.a[2] = arg[2];
-    l.a[3] = arg[3];
-    l.a[4] = arg[4];
-    l.a[5] = arg[5];
-
-    l.cpart.f0 = ((struct Ctx *)c)->f0;
-    l.cpart.f1 = ((struct Ctx *)c)->f1;
-    l.cpart.f2 = ((struct Ctx *)c)->f2;
-    l.cpart.f3 = ((struct Ctx *)c)->f3;
-    l.cpart.f4 = ((struct Ctx *)c)->f4;
-    l.cpart.f5 = ((struct Ctx *)c)->f5;
-    l.cpart.f6 = ((struct Ctx *)c)->f6;
-    l.cpart.arr = ((struct Ctx *)c)->arr;
+    l.iterator = cursor->iterator;
+    l.unknown_14 = cursor->unknown_14;
+    l.mThrow = *c;
 
     sel = func_02072d90(&l);
     for (;;) {
@@ -87,13 +61,12 @@ int func_02072014(int *c, int *arg)
         }
         break;
     }
-    ReadSignedVarInt((unsigned char *)(l.a[2] + 1), &tmp);
-    base = l.cpart.f6;
-    bt = base + tmp;
-    c[0] = *(int *)(bt + 4);
-    c[1] = *(int *)bt;
-    c[2] = 0;
-    c[3] = bt;
-    return bt;
+    ReadSignedVarInt(l.iterator.mAction + 1, &tmp);
+    info = (CatchInfo *)(l.mThrow.mFP + tmp);
+    c->mThrowType = info->mTypeInfo;
+    c->mLocation = info->mLocation;
+    c->mDtor = 0;
+    c->mCatchInfo = info;
+    return info;
 }
 }

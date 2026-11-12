@@ -61,6 +61,7 @@
 #include "Ov007Figure.h"
 #include "Particle__System.h"
 #include "nitro/fx/fx_cp.h"
+#include "Ov007MenuMem.h"
 
 extern "C" {
 
@@ -138,8 +139,6 @@ extern void func_0204dc84(char *self);
 extern void Sprite_SetAnimation(Ov007OamNode *node, int animIndex, int mode, int rev, int frame);
 extern void *func_ov007_020b7690(int i);
 extern void func_ov007_020bfd70(struct Ov007Camera *cam, void *pos, int *outX, int *outY);
-extern void func_ov007_020c3d1c(void *p);
-extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020c3e7c(Ov007SpriteGroup *grp);
 extern void func_ov007_020c3ee8(Ov007SpriteGroup *grp, Ov007OamList *list);
 extern Ov007SpriteGroup *func_ov007_020c3f00(int *layout, int extraAnims);

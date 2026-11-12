@@ -65,12 +65,12 @@ extern "C" daObjRc_Guruguru_c *daObjRc_Guruguru_c_classInit() {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 s32 daObjRc_Guruguru_c::InitResources() {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov036_02113d78.modelFile), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(*data_ov036_02113d78.modelFile), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    void *kcl = dBgW_Kc::LoadFile(*data_ov036_02113d78.clsnFile);
-    mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat, 0x1000, mAngleY, *data_ov036_02113d78.clps);
+    KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov036_02113d78.clsnFile);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, *data_ov036_02113d78.clps);
 
     /* The mesh follows the actor's position AND angles -- this platform turns,
        so the collision has to turn with it. */

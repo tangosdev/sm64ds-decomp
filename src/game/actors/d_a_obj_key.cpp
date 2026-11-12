@@ -211,7 +211,6 @@ extern ObjKeyModelFile gMarioKeyModelFile;
 extern ObjKeyModelFile gWarioKeyModelFile;
 extern Vector3 data_ov089_02132b40;
 extern VecFx32 data_ov089_02132ca4;
-extern Matrix4x3 data_020a0e68;
 extern int *Vec3_LslInPlace(void *v, int sh);
 extern void LoadKeyModels(int idx);
 /* Parameter names keep this TU's @NNN. */

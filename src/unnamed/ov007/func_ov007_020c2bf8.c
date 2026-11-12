@@ -1,8 +1,9 @@
+#include "Ov007MenuMem.h"
+
 /* func_ov007_020c2bf8 at 0x020c2bf8
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov007).
  */
-extern void func_ov007_020c3d1c(void *);
 
 struct S {
     int state;        /* +0 */

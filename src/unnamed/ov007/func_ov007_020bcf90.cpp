@@ -20,7 +20,7 @@ extern void func_ov007_020c2390(struct Ov007Light *light);
 extern void func_ov007_020c232c(struct Ov007Light *light);
 extern void func_ov007_020b91b4(void);
 extern void func_ov007_020bee14(void);
-extern void func_ov007_020b7658(void *viewMatrix, int b);
+extern void func_ov007_020b7658(Matrix4x3 *viewMatrix, int update);
 extern void func_ov007_020b2370(void);
 extern void ScreenFade_Draw(struct Ov007Camera *camera);
 

@@ -132,14 +132,14 @@ int daWbm_c::InitResources()
 
     if (mVariant == 2)
     {
-        bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210da38);
+        bmd = dExtSimpleModel_c::LoadFile(data_ov002_0210da38);
         if (mModel.SetFile(bmd, 1, 0x16) == 0)
             return 0;
     }
     else
     {
         dExtSimpleModel_c::LoadFile(data_ov002_0210da38);
-        bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov098_0213c91c);
+        bmd = dExtSimpleModel_c::LoadFile(data_ov098_0213c91c);
         if (mModel.SetFile(bmd, 1, 0x16) == 0)
             return 0;
     }

@@ -203,13 +203,14 @@ int daObjCtRotateBlock_c::InitResources() {
 
     u8 idx = mVariant;
     {
-        void *bmd = dExtSimpleModel_c::LoadFile(*data_ov065_0211cfd0[idx].model);
-        mModel.SetFile((BMD_File *)bmd, 1, -1);
+        BMD_File *bmd = dExtSimpleModel_c::LoadFile(*data_ov065_0211cfd0[idx].model);
+        mModel.SetFile(bmd, 1, -1);
     }
 
     {
-        void *bmd = dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov065_0211c0a8[mVariant]);
-        mRotatingModel.SetFile((BMD_File *)bmd, 1, -1);
+        BMD_File *bmd =
+            dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov065_0211c0a8[mVariant]);
+        mRotatingModel.SetFile(bmd, 1, -1);
     }
 
     mShadowModel.InitCuboid();
@@ -221,13 +222,11 @@ int daObjCtRotateBlock_c::InitResources() {
 
     idx = mVariant;
     if (idx == 0) {
-        void *kcl = dBgW_Kc::LoadFile(*data_ov065_0211cfd0[idx].collision);
-        mMeshCollider.SetFile((KCL_File *)(kcl), mClsnMat, 0x1000, mAngleY,
-                              *data_ov065_0211cfd0[idx].clps);
+        KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov065_0211cfd0[idx].collision);
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, *data_ov065_0211cfd0[idx].clps);
     } else {
-        void *kcl = dBgW_Kc::LoadFile(*data_ov065_0211cfd0[idx].collision);
-        mMeshCollider.SetFile((KCL_File *)(kcl), mClsnMat, 0x199, mAngleY,
-                              *data_ov065_0211cfd0[idx].clps);
+        KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov065_0211cfd0[idx].collision);
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, *data_ov065_0211cfd0[idx].clps);
     }
 
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);

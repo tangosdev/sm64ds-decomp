@@ -64,8 +64,8 @@ extern "C" daObjKumo_c *daObjKumo_c_classInit(void) {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 int daObjKumo_c::InitResources() {
-    void *f = dExtSimpleModel_c::LoadFile(gOV039ObjKumoModelFile);
-    mModel.SetFile((BMD_File *)f, 1, 2);
+    BMD_File *f = dExtSimpleModel_c::LoadFile(gOV039ObjKumoModelFile);
+    mModel.SetFile(f, 1, 2);
     UpdateModelMatrix();
     data_ov039_021118e0++;
     return 1;

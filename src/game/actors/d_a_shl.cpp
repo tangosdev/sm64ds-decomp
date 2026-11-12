@@ -133,7 +133,7 @@ s32 daShl_c::InitResources()
 {
     mModelIndex = param1 & 1;
     mVariant = (param1 >> 4) & 1;
-    BMD_File *bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov102_0214d70c[mModelIndex]);
+    BMD_File *bmd = dExtSimpleModel_c::LoadFile(*data_ov102_0214d70c[mModelIndex]);
     if (mModel.SetFile(bmd, 1, 1) == 0)
         return 0;
     if (mShadowModel.InitCylinder() == 0)
@@ -342,13 +342,12 @@ int daShl_c::func_ov102_0214d044()
     {
         dActor_c *rider = mCarrier;
         s32 *riderPos = &rider->mPosX;
-        s16 *angle = &mAngleY;
         int x = riderPos[0];
         int ret = 1;
         mPosX = x;
         mPosY = riderPos[1];
         mPosZ = riderPos[2];
-        *angle = *angle + 0x1000;
+        mAngleY += 0x1000;
         return ret;
     }
 }

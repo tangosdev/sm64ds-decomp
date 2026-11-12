@@ -8,10 +8,12 @@
 #include "private/arm9_a0f90_channel_measure.h"
 #include "Memory.h"
 #include "private/fs_views.h"
+#include "nitro/fs/archive.h"
 #include "nitro/wm/wm_api.h"
 #include "nitro/pad/pad.h"
 #include "nitro/spi/tp.h"
 #include "nitro/os/thread.h"
+#include "nitro/os/tick.h"
 #include "nitro/wm/wm.h"
 #include "private/arm9_a1fc0_file_share.h"
 #include "nitro/os/cache.h"
@@ -23,7 +25,6 @@
 #include "private/arm9_wbt.h"
 #include "nitro/hw/registers.h"
 #include "nitro/os/interrupt.h"
-#include "private/wbt_block_info_list.h"
 #include "WmWork.h"
 
 /* The link module and the wireless layer under it: the input record each
@@ -112,10 +113,6 @@ struct EmptyInit {
 
 extern "C" {
 
-extern FSArchive *FS_FindArchive(const char *name, int name_len);
-extern void FS_NotifyArchiveAsyncEnd(void *self, int arg);
-extern void FS_SetArchiveProc(FSArchive *p_arc, FS_ARCHIVE_PROC_FUNC proc, u32 flags);
-extern int FS_UnloadArchive(FSArchive *p_arc);
 extern void MB_End(void);
 extern u32 MB_GetSegmentLength(FSFile *file);
 extern int MB_Init(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, int dma);
@@ -125,24 +122,10 @@ extern int MB_SetParentCommParam(int a, int b, int c);
 extern int MB_StartParent(int param0);
 extern void OS_GetMacAddress(void *p);
 extern void OS_GetOwnerInfo(void *dst);
-extern s64 OS_GetTick(void);
 extern int OS_GetTickLo(void);
-extern void OS_InitTick(void);
-extern void WBT_End(void);
-extern void WBT_InitChild(void (*arg)(void *));
-extern void WBT_InitParent(int a, int b, void (*c)(char *));
 extern void WBT_MpChildRecvHook(int data, int length);
-extern int WBT_MpChildSendHook(int buf, int size);
 extern void WBT_MpParentRecvHook(int data, int length, int aid);
 
-/* NitroSDK WBT_MpParentSendHook and WBT_MpChildSendHook: both return the
-   packet length as an int, which this call site narrows to u16 itself */
-extern int WBT_MpParentSendHook(int buf, int size);
-
-extern int WBT_RegisterBlock(void *node, int a1, void *a2, int a3, int arg5, unsigned short arg6);
-extern void WBT_SetOwnAid(int x);
-extern int WBT_SetPacketSize(int a, int b);
-extern struct WBTBlockInfoList *WBT_UnregisterBlock(int key);
 extern void func_0201a4d0(void);
 extern void func_0203b9bc(TPData *out);
 extern WMErrCode func_0206259c(WMCallbackFunc callback, u32 param);
@@ -301,7 +284,7 @@ void WFS_End(void);
 void WFS_Start(void);
 void WFSi_OnChildSystemCallback(void *arg);
 void WFSi_ReallocBitmap(char *thiz, int n);
-void WFSi_OnParentSystemCallback(char *thiz);
+void WFSi_OnParentSystemCallback(void *arg);
 void func_0204175c(void);
 void WFSi_PortCallback(void *arg);
 void WFSi_OnSetMPDataDone(void *arg);
@@ -522,9 +505,6 @@ void WFSi_LoadTables(void) {
     data_020a1fc0.mTableSize = sl;
 }
 
-extern int FS_LoadArchive(FSArchive *p_arc, u32 base, u32 fat, u32 fat_size, u32 fnt, u32 fnt_size,
-                          FS_ARCHIVE_READ_FUNC read_func, FS_ARCHIVE_WRITE_FUNC write_func);
-
 /* Child: mount the file-share table block (WFSi_LoadTables's layout: a
  * leading word, then the FAT, FNT, ARM9 and ARM7 overlay tables, each as its
  * size word and data rounded up to 0x20) as the "rom" archive.
@@ -706,7 +686,7 @@ void WFSi_SendAck(void) {
         resizeMsg.mFileId = 0;
         resizeMsg.mPacketSizeHigh = (u8)(data_020a1fc0.mParentPacketSize >> 8);
         resizeMsg.mPacketSizeLow = (u8)data_020a1fc0.mParentPacketSize;
-        WBT_PutUserData(children, &resizeMsg, 9, WFSi_OnSendMessageDone);
+        WBT_PutUserData(children, &resizeMsg, WBT_SIZE_USER_DATA, WFSi_OnSendMessageDone);
         area->mReplySending = 1;
         area->mResizeChildren = 0;
     } else {
@@ -777,7 +757,7 @@ void WFSi_SendAck(void) {
         replyMsg.mFileId = fileId;
         replyMsg.mPacketSizeHigh = (u8)(packetSize >> 8);
         replyMsg.mPacketSizeLow = (u8)packetSize;
-        WBT_PutUserData(mask, &replyMsg, 9, WFSi_OnSendMessageDone);
+        WBT_PutUserData(mask, &replyMsg, WBT_SIZE_USER_DATA, WFSi_OnSendMessageDone);
         area->mReplySending = 1;
         area->mReplyPending &= ~mask;
     }
@@ -803,8 +783,8 @@ void WFSi_SendOpenAck(char *r7, FileShareNode *node, int) {
         if (node->mRefCount <= 0) {
             unsigned int diff = FS_GetLength(&node->mFile);
             int fileId = node->mFileId;
-            WBT_RegisterBlock(node->mRegion, fileId, data_02082158,
-                              (diff <= 0x400) ? (int)node->mPages[0] : 0, diff, 0);
+            WBT_RegisterBlock(&node->mRegion, fileId, data_02082158,
+                              (diff <= 0x400) ? node->mPages[0] : 0, diff, 0);
             WFSi_FromBusyToAlive((FileShareParentArea *)r7, node);
         }
         for (bit = 0;; bit++) {
@@ -860,14 +840,14 @@ FileShareNode *WFSi_FindBusy(FileShareParentArea *area, int offset, int size) {
 }
 
 /* The parent's ready-list search: the first ready node (mState 2) whose
- * registered block is blockId (mRegion's first word: the WBT block id
- * WBT_RegisterBlock, WBT_RegisterBlock, stored), else 0. */
+ * registered block is blockId (the WBT block id WBT_RegisterBlock stored in
+ * mRegion), else 0. */
 FileShareNode *WFSi_FindAliveForID(FileShareParentArea *area, int blockId) {
     FileShareNode *node = area->mReadyList;
     if (node == 0)
         return node;
     do {
-        if (node->mState == 2 && *(int *)node->mRegion == blockId)
+        if (node->mState == 2 && node->mRegion.data_info.id == blockId)
             return node;
         node = node->mNext;
     } while (node != 0);
@@ -960,7 +940,7 @@ void WFSi_ReadRequest(FSFile *file) {
     m.offset = pos;
     m.packetSizeHigh = (packetSize >> 8) & 0xff;
     m.packetSizeLow = (u8)packetSize;
-    WBT_PutUserData(1, &m, 9, WFSi_OnSendMessageDone);
+    WBT_PutUserData(1, &m, WBT_SIZE_USER_DATA, WFSi_OnSendMessageDone);
 }
 
 /* Send the pending file-sharing packet on mPort: WBT_MpParentSendHook (parent) or
@@ -981,9 +961,9 @@ void WFSi_SetMPData(void) {
     {
         unsigned char *sub = work->mSendBuf;
         if (f0 != 0)
-            r = (u16)WBT_MpParentSendHook((int)sub, a);
+            r = WBT_MpParentSendHook(sub, a);
         else
-            r = (u16)WBT_MpChildSendHook((int)sub, a);
+            r = WBT_MpChildSendHook(sub, a);
         work->mSendBusy = (WM_SetMPDataToPort(WFSi_OnSetMPDataDone, (u16 *)sub, r, 0xffff,
                                               work->mPort, WM_PRIORITY_LOW) == WM_ERRCODE_OPERATING)
                               ? 1
@@ -1086,13 +1066,13 @@ void func_0204175c(void) {
  * (Msg *)(int) casts on the word-0 and kind reads change nothing, so they are gone.
  */
 
-void WFSi_OnParentSystemCallback(char *thiz) {
+void WFSi_OnParentSystemCallback(void *arg) {
     int sb;
     int type;
     u32 r6;
     FileShareNode *p;
     WBTPrepareSendDataCallback *n;
-    WBTCommand *cmd = (WBTCommand *)thiz;
+    WBTCommand *cmd = (WBTCommand *)arg;
 
     sb = WBT_AidbitmapToAid(cmd->peer_bmp);
     if (cmd->command != 0xc)
@@ -1349,7 +1329,7 @@ void WFSi_OnChildSystemCallback(void *arg) {
             msg.mFileId = region;
             msg.mPacketSizeHigh = (u8)(packetSize >> 8);
             msg.mPacketSizeLow = (u8)packetSize;
-            WBT_PutUserData(1, &msg, 9, WFSi_OnSendMessageDone);
+            WBT_PutUserData(1, &msg, WBT_SIZE_USER_DATA, WFSi_OnSendMessageDone);
         }
         return;
 
@@ -1374,10 +1354,10 @@ void WFSi_OnChildSystemCallback(void *arg) {
 
         case 3: {
             FSFile *p = data_020a1fc0.mReadRequest;
-            void *arc = p->arc;
+            FSArchive *arc = p->arc;
             data_020a1fc0.mReadRequest = 0;
             p->prop.file.pos += p->arg.readfile.len;
-            FS_NotifyArchiveAsyncEnd(arc, 0);
+            FS_NotifyArchiveAsyncEnd(arc, FS_RESULT_SUCCESS);
             return;
         }
         }
@@ -1421,7 +1401,7 @@ void func_02040c34(int isParent, int port, void (*stateCallback)(int),
         data_020a0f88 = 0;
         if (WM_SetPortCallback((u16)port, WFSi_PortCallback, 0) != 0)
             OS_Terminate();
-        FS_Init(-1);
+        FS_Init(FS_DMA_NOT_USE);
 
         if (G->mIsParent != 0) {
             {
@@ -1478,7 +1458,7 @@ void func_02040c34(int isParent, int port, void (*stateCallback)(int),
                 MI_CpuClear8(nd, FILE_SHARE_NODE_SIZE);
                 /* mTableSize is read through data_020a1fc0, not G, here and in the
                    child branch: the G-> spelling comes out 8 bytes short */
-                WBT_RegisterBlock(nd->mRegion, 0x20000, data_02082158, (int)G->mTable,
+                WBT_RegisterBlock(&nd->mRegion, 0x20000, data_02082158, G->mTable,
                                   data_020a1fc0.mTableSize, 0);
                 nd->mNext = *(FileShareNode **)((base + 0x2000) + 0x704);
                 *(FileShareNode **)((base + 0x2000) + 0x704) = nd;
@@ -1566,9 +1546,9 @@ void WFS_End(void) {
             FSFile *p = work->mReadRequest;
             FileShareChildArea *child = (FileShareChildArea *)work->mArea;
             if (p != 0) {
-                void *arg = p->arc;
+                FSArchive *arc = p->arc;
                 work->mReadRequest = 0;
-                FS_NotifyArchiveAsyncEnd(arg, 5);
+                FS_NotifyArchiveAsyncEnd(arc, FS_RESULT_ERROR);
             }
             FileShareFree(child->mRecvWork);
         } else {
