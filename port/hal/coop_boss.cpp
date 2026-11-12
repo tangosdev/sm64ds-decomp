@@ -69,6 +69,10 @@ class daTrs_c { public: void func_ov063_02116244(); };
 
 namespace port {
 namespace {
+// kbo2: SM64DS_COOP_KBO_FIX=0 is the before control (1.0.3 King Bob-omb: target-seat authority to the end, the defeat talk skipped
+// on every console but the authority's, bombs left in a copy's hand, a copy's own HP drop counted when its player is near; Chief Chilly
+// state records matched by address only).
+bool g_kbo_fix = true;
 
 enum : int { kSeats = 4, kSlots = 512, kPayloadMax = kHubCoopMaxDatagram - kHubCoopHeaderBytes };
 
@@ -278,6 +282,17 @@ char *const *chilly_states(int *n) {
 uint32_t chilly_ptr_to_id(uint32_t ptr) {
     int n; char *const *k = chilly_states(&n);
     for (int i = 0; i < n; ++i) if ((uint32_t)(uintptr_t)k[i] == ptr) return (uint32_t)i;
+    // kbo2 (bug 27): his own code can hold a state record at another address than this table's (the same record spelled with other
+    // types in other TUs, port/hal/actor_classes_ov073.cpp): the id was 0xff and every record sent while he sat in such a state was
+    // refused (measured in this lane's Chilly row: field 0 = 255, all before the first hit). The record is the same state when it
+    // holds the same handler pair, so it is matched by its first 8 bytes (the enter handler and the tick handler, each one unique).
+    if (ptr && g_kbo_fix) {
+        const char *rec = (const char *)(uintptr_t)ptr;
+        for (int i = 0; i < n; ++i) if (std::memcmp(rec, k[i], 8) == 0) return (uint32_t)i;
+        static uint32_t s_logged = 0;
+        if (s_logged != ptr) { s_logged = ptr; std::fprintf(stderr, "[cbs] chilly state record %08x matches none of the sixteen
+", (unsigned)ptr); }
+    }
     return 0xffu;
 }
 void *chilly_id_to_ptr(uint32_t id) {
@@ -393,9 +408,6 @@ unsigned g_kpa_jump_every = 0, g_kpa_jump_t = 0;
 struct StallKnob { unsigned at, ms; bool req; } g_stall[2] = {}; int g_nstall = 0; unsigned g_stall_until = 0; bool g_stall_on = false;   // bowser2 proof knob SM64DS_COOP_BOWSER_JUMP=N: the authority's idle Bowser jumps every N ticks
 char *kpa_arena();
 bool g_kpa_fix = true;   // bowser2: SM64DS_COOP_BOWSER_FIX=0 is the before control (no held copy, no intro guard, no camera give-back)
-// kbo2: SM64DS_COOP_KBO_FIX=0 is the before control (1.0.3 King Bob-omb: target-seat authority to the end, the defeat talk skipped
-// on every console but the authority's, bombs left in a copy's hand, a copy's own HP drop counted when its player is near).
-bool g_kbo_fix = true;
 unsigned g_bad_logged = 0;   // kbo2: refused boss records logged so far (the first few per run, with the field and the value)
 bool g_kbo_look = false;     // kbo2 proof log SM64DS_COOP_KBO_LOOK=1
 bool g_regd = false;
