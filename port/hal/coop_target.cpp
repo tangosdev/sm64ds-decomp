@@ -43,6 +43,7 @@ int port_adventure_ghost_drawpos(int slot, int out[3]);
 }
 
 namespace port {
+bool coop_talk_refuse(void *body, void *actor);   // hal/coop_talk.cpp (NPCTALK1)
 namespace {
 
 enum : int {
@@ -419,6 +420,7 @@ int __fastcall starttalk_replacement(void *self, void *edx, void *actor, bool b)
                                 actor ? (unsigned)*(const unsigned short *)((const char *)actor + 0x0c) : 0u);
         return 0;
     }
+    if (live() && self == (void *)local_body() && coop_talk_refuse(self, actor)) return 0;   // NPCTALK1: a friend talks to this NPC
     write_code(g_st_addr, g_st_orig);
     const int r = ((StartTalkFn)g_st_addr)(self, edx, actor, b);
     write_code(g_st_addr, g_st_jmp);
