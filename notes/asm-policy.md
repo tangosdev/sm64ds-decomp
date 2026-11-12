@@ -57,7 +57,7 @@ until someone finds the C.
 **2026-07-24 (`c3635ce7`)** — 116 functions that had been counted as matched were found to
 be whole-function `asm` blocks and reclassified as `// NONMATCHING`, dropping them from the
 matched count (95.2% → 94.2%). 35 SDK/BIOS routines were deliberately excluded and left as
-matched: `Div`, `CpuSet`, the `CpuFastSet`/memcpy family, `ARMSaveContext`/`ARMRestoreContext`,
+matched: `Div`, `CpuSet`, the `CpuFastSet`/memcpy family, `OS_SaveContext`/`OS_LoadContext`,
 `Sqrt`, `Halt`, `IntrWait`, and the CP15 cache operations — all assembly in the original.
 
 **2026-07-25** — auditing the 116 against the objective test above showed the rule had been
@@ -77,7 +77,7 @@ were excluded:
 | `func_02071988` | `swi` |
 | `func_0207199c` | `swi` |
 
-These are indistinguishable in kind from `ARMSaveContext` (`mrs`/`msr`), `Div` (`swi`), and
+These are indistinguishable in kind from `OS_SaveContext` (`mrs`/`msr`), `Div` (`swi`), and
 `CP15::FlushDataCache` (`mcr`; now the SDK's `DC_StoreAll`), which were never in question. They were restored to matched
 status — not as a change of policy, but as a correction of how it was applied. Each was
 restored to its exact pre-reclassify content and re-verified: nine `VERIFIED`, one

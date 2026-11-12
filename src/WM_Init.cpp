@@ -4,7 +4,7 @@
  * for a null or misaligned buf or a DMA channel past 3, WM_DISABLE (4) when
  * ARM7 has no WM handler on PXI_FIFO_TAG_WM. Then clear the buffer with DMA channel
  * ch and carve ARM7's work area, the status block and the two FIFO buffers out
- * of it, clear bit 0 of the shared halfword at 0x027fff96
+ * of it, clear the exception bit of OS_GetSystemWork()->wm_callback_control
  * (WmClearFifoRecvFlag), clear every port callback, fill the free-buffer queue
  * with the ten 0x100-byte FIFO blocks and install the PXI receive callback
  * (WmReceiveFifo). */

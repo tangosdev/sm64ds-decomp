@@ -8,8 +8,8 @@
   "boundary_evidence": [
     "contiguous linker run: 0x0206cf98..0x0206d9cc, 6 functions, gapless in config/arm9/delinks.txt (each entry's end is the next entry's start, all marked `complete`).",
     "FILE NAME: \"isdoverlay.c\" at 0x020868fc, the only source filename in the ROM (Nintendo's IS-Debugger SDK), is the FILE argument of every assert in the run. The assert expressions after it (0x0208690c..0x02086a30) are referenced from these six functions and nowhere else.",
-    "REFERENCE ORDER: mwccarm emits .text in reverse source order, and the assert line numbers ascend the other way: func_0206d940 asserts at line 0x42, func_0206d8c4 at 0x55, func_0206d32c at 0x121..0x151, func_0206cf98 at 0x1a9..0x1ca.",
-    "CALL GRAPH AND DATA: func_0206d868/func_0206d890 (save and restore IRQ, FIQ and MPU region 7) and func_0206d8c4/func_0206d940 (delete and insert an entry) are called only by func_0206cf98 and func_0206d32c. Those two are the only readers of the table pointers data_020a9ec0; their outside callers are FS_EndOverlay (0x0205dd88) and FS_LoadOverlayImage (0x02018be4).",
+    "REFERENCE ORDER: mwccarm emits .text in reverse source order, and the assert line numbers ascend the other way: func_0206d940 asserts at line 0x42, func_0206d8c4 at 0x55, _ISDbgLib_RegistOverlayInfo at 0x121..0x151, _ISDbgLib_UnregistOverlayInfo at 0x1a9..0x1ca.",
+    "CALL GRAPH AND DATA: func_0206d868/func_0206d890 (save and restore IRQ, FIQ and MPU region 7) and func_0206d8c4/func_0206d940 (delete and insert an entry) are called only by _ISDbgLib_UnregistOverlayInfo and _ISDbgLib_RegistOverlayInfo. Those two are the only readers of the table pointers data_020a9ec0; their outside callers are FS_EndOverlay (0x0205dd88) and FS_LoadOverlayImage (0x02018be4).",
     "BOTTOM EDGE: func_0206cf7c (0x0206cf7c..0x0206cf98) tests the debugger flags word for the print helpers below it; it asserts nothing and nothing in the run calls it.",
     "TOP EDGE: func_0206d9cc and func_0206da18 are the hand-written IRQ primitives (IRQ::SetFIQState/SetIRQState entry labels inside them), and CP15 begins at 0x0206da64."
   ],
@@ -22,14 +22,14 @@
   ],
   "functions": [
     {
-      "symbol": "func_0206cf98",
+      "symbol": "_ISDbgLib_UnregistOverlayInfo",
       "address": "0x0206cf98",
       "size": "0x00000394",
       "legacy_source": "src/unnamed/arm9/0206/func_0206cf98.c",
       "ordinal": 0
     },
     {
-      "symbol": "func_0206d32c",
+      "symbol": "_ISDbgLib_RegistOverlayInfo",
       "address": "0x0206d32c",
       "size": "0x0000053c",
       "legacy_source": "src/unnamed/arm9/0206/func_0206d32c.c",
@@ -71,7 +71,7 @@
   "notes": [
     "The ROM's .exceptix records for all six functions (0x0207385c..0x02073898) show the file was built with exceptions on. The source leaves `#pragma exceptions on` out: rombuild's text-only multi-symbol isolate refuses any section beyond .text (the same refusal recorded in NMWException.cpp), so the records stay ROM bytes. The .text is the same either way.",
     "The ROM names the file .c; the source is .cpp because cstd.h and CP15.h (CP15::MPUDataRegion7) are C++ headers. Everything is inside extern \"C\".",
-    "func_0206cf98 and func_0206d32c need the ldm/stm block copy of an entry for their 0x1c/0x44 frames; CopyInfo copies through an array-member struct to get it under C++ (notes/cpp-class-form.md)."
+    "_ISDbgLib_UnregistOverlayInfo and _ISDbgLib_RegistOverlayInfo need the ldm/stm block copy of an entry for their 0x1c/0x44 frames; CopyInfo copies through an array-member struct to get it under C++ (notes/cpp-class-form.md)."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",

@@ -127,7 +127,7 @@
   "data": [],
   "bss": [
     {
-      "symbol": "initial$137",
+      "symbol": "initial$180",
       "address": "0x020a80c8",
       "size": "0x2",
       "binding": "STB_GLOBAL",
@@ -146,7 +146,7 @@
   "undefined_symbol_aliases": [],
   "symbol_binding_rewrites": [
     {
-      "symbol": "initial$137",
+      "symbol": "initial$180",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "function-local static, as the SDK writes it; DSD requires a configured global symbol at 0x020a80c8, and changing the ELF binding preserves its function-local lifetime, storage, relocations and bytes"
@@ -168,7 +168,7 @@
   "notes": [
     "HAND-BUILT manifest entry, not tools/tubuild.py create output: tu_map does not segment arm9.",
     "Built as C. The API and its types are the SDK's nitro/spi/ARM9/tp.h, in include/nitro/spi/tp.h; tpState and TPiCalibrateParam are tp.c's own and stay in the source.",
-    "The .bss names come from the SDK source: data_020a80c8 is TP_Init's initial (its compiler spelling, initial$137, as d_camera.cpp's function-local statics are named) and data_020a80cc is tpState. data_020a80e4 keeps its address name: it is &tpState.calibrate, which TP_GetCalibratedPoint's literal pool names, and dsd needs a symbol at every relocation target.",
+    "The .bss names come from the SDK source: data_020a80c8 is TP_Init's initial (its compiler spelling, initial$180, as d_camera.cpp's function-local statics are named) and data_020a80cc is tpState. data_020a80e4 keeps its address name: it is &tpState.calibrate, which TP_GetCalibratedPoint's literal pool names, and dsd needs a symbol at every relocation target.",
     "This SDK is older than the ntrtwl/NitroSDK copy: TP_RequestSetStabilityAsync sends the retry count and the range as two words (the later SDK sends the range alone), TP_SetCalibrateParam has no zero-dot-size branch, and TP_GetUserInfo returns FALSE when the calibration is absent or rejected instead of clearing it and returning TRUE."
   ],
   "production_mode": "intact-object",

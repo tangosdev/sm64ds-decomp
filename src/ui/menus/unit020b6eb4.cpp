@@ -13,7 +13,7 @@
  * input and menu logic and returns the choice once one is made;
  * func_ov007_020b7040 runs the frame's drawing; func_ov007_020b6eb4 runs the
  * frame's display work (the screen fade, a queued display capture or
- * background mode) under a saved ARM math state; func_ov007_020b6f4c fades
+ * background mode) under a saved divider and square-root context; func_ov007_020b6f4c fades
  * out, tears every module down and returns the flags to hand back.
  * sFrameReady is cleared as the bring-up, the frame's logic and the
  * teardown start, and set once the bring-up or the frame's drawing is done;
@@ -42,7 +42,7 @@
 #include "Ov007Display.h"
 #include "Ov007Settings.h"
 #include "Ov007Touch.h"
-#include "private/arm_math_state.h"
+#include "nitro/cp/context.h"
 #include "nitro/hw/registers.h"
 
 extern "C" {
@@ -193,9 +193,9 @@ int func_ov007_020b6f4c(void) {
 }
 
 int func_ov007_020b6eb4(void) {
-    ARMMathState mathState;
+    CPContext cpContext;
     if (sFrameReady != 0) {
-        ARMMathSaveState(&mathState);
+        CP_SaveContext(&cpContext);
         ScreenFade_Update();
         if (WORK->pendingCapture != 0) {
             MenuGfx_StartCapture();
@@ -206,7 +206,7 @@ int func_ov007_020b6eb4(void) {
             WORK->pendingBgMode = 0;
         }
         Display_Upload();
-        ARMMathLoadState(&mathState);
+        CPi_RestoreContext(&cpContext);
     }
     return 1;
 }

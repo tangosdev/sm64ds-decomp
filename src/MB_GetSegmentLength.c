@@ -1,18 +1,14 @@
 #include "private/fs_views.h"
-
-typedef struct FSFile FSFile;
-
-extern int FS_ReadFile(FSFile *obj, void *buf, int size);
-extern int FS_SeekFile(FSFile *p_file, int offset, FSSeekFileMode origin);
+#include "nitro/fs/file.h"
 
 struct G {
     char pad[0x2c];
-    int f2c;    /* 0x2c */
+    int f2c; /* 0x2c */
     char pad30[0x3c - 0x30];
-    int f3c;    /* 0x3c */
+    int f3c; /* 0x3c */
 };
 
-int MB_GetSegmentLength(struct FSFile *obj) {
+int MB_GetSegmentLength(FSFile *obj) {
     char buf[0x60];
     struct G *g = 0;
     int len;

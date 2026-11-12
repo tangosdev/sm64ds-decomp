@@ -1407,7 +1407,7 @@ src/unnamed/arm9/0203/func_0203d7b8.c:
     complete
     .text start:0x0203d7b8 end:0x0203d7d4
 
-src/unnamed/arm9/0203/func_0203d7d4.c:
+src/unnamed/arm9/0203/func_0203d7d4.cpp:
     complete
     .text start:0x0203d7d4 end:0x0203d81c
 
@@ -1459,11 +1459,11 @@ src/unnamed/arm9/0203/func_0203d950.c:
     complete
     .text start:0x0203d950 end:0x0203d974
 
-src/unnamed/arm9/0203/func_0203d974.c:
+src/unnamed/arm9/0203/func_0203d974.cpp:
     complete
     .text start:0x0203d974 end:0x0203d9b4
 
-src/unnamed/arm9/0203/func_0203d9b4.c:
+src/unnamed/arm9/0203/func_0203d9b4.cpp:
     complete
     .text start:0x0203d9b4 end:0x0203d9f4
 
@@ -1527,7 +1527,7 @@ src/GetPlayerFlagByte.c:
     complete
     .text start:0x0203db4c end:0x0203db64
 
-src/unnamed/arm9/0203/func_0203db64.c:
+src/unnamed/arm9/0203/func_0203db64.cpp:
     complete
     .text start:0x0203db64 end:0x0203df40
 
@@ -2313,7 +2313,7 @@ src/GX_SendFifo48B.c:
     complete
     .text start:0x02056c1c end:0x02056c40
 
-src/data/arm9/data_02099fd4.c:
+src/OSi_IrqCallbackInfoIndex.c:
     complete
     .data start:0x02099fd4 end:0x02099fe4
 
@@ -2345,11 +2345,11 @@ src/OS_InitContext.c:
     complete
     .text start:0x02058568 end:0x020585cc
 
-src/ARMSaveContext.c:
+src/OS_SaveContext.c:
     complete
     .text start:0x020585cc end:0x02058618
 
-src/ARMRestoreContext.c:
+src/OS_LoadContext.c:
     complete
     .text start:0x02058618 end:0x0205865c
 
@@ -2510,52 +2510,10 @@ src/engine/fs/FS_Archive.cpp:
     complete
     .text start:0x0205c7c4 end:0x0205d368
 
-src/FS_SeekFile.c:
+src/engine/fs/FS_File.c:
     complete
-    .text start:0x0205d368 end:0x0205d3d4
-
-src/FS_ReadFile.c:
-    complete
-    .text start:0x0205d3d4 end:0x0205d3e4
-
-src/FS_ReadFileAsync.cpp:
-    complete
-    .text start:0x0205d3e4 end:0x0205d4cc
-src/FS_CloseFile.c:
-    complete
-    .text start:0x0205d4cc end:0x0205d518
-
-src/FS_OpenFile.c:
-    complete
-    .text start:0x0205d518 end:0x0205d568
-
-src/FS_OpenFileFast.c:
-    complete
-    .text start:0x0205d568 end:0x0205d5e8
-
-src/FS_OpenFileDirect.c:
-    complete
-    .text start:0x0205d5e8 end:0x0205d644
-
-src/FS_ConvertPathToFileID.c:
-    complete
-    .text start:0x0205d644 end:0x0205d688
-
-src/FSi_ReadFileCore.c:
-    complete
-    .text start:0x0205d688 end:0x0205d714
-
-src/FSi_FindPath.c:
-    complete
-    .text start:0x0205d714 end:0x0205d874
-
-src/FS_InitFile.c:
-    complete
-    .text start:0x0205d874 end:0x0205d89c
-
-src/FS_Init.c:
-    complete
-    .text start:0x0205d89c end:0x0205d8d8
+    .text start:0x0205d368 end:0x0205d8d8
+    .bss start:0x020a8058 end:0x020a805c
 
 src/FSi_AppendToList.c:
     complete
@@ -2569,7 +2527,7 @@ src/engine/fs/FS_Rom.cpp:
     complete
     .text start:0x0205d94c end:0x0205db88
 
-src/engine/fs/FS_Overlay.cpp:
+src/engine/fs/FS_Overlay.c:
     complete
     .text start:0x0205db88 end:0x0205e0f4
 
@@ -2601,11 +2559,11 @@ src/DGT_SetOverlayTableMode.c:
     complete
     .text start:0x0205e904 end:0x0205e91c
 
-src/ARMMathLoadState.c:
+src/CPi_RestoreContext.c:
     complete
     .text start:0x0205e91c end:0x0205e988
 
-src/ARMMathSaveState.c:
+src/CP_SaveContext.c:
     complete
     .text start:0x0205e988 end:0x0205e9fc
 
@@ -2614,7 +2572,7 @@ src/engine/spi/TP.c:
     .text start:0x0205e9fc end:0x0205f5c0
     .bss start:0x020a80c8 end:0x020a8104
 
-src/engine/spi/PM.cpp:
+src/engine/spi/PM.c:
     complete
     .text start:0x0205f5c0 end:0x0205ff70
 

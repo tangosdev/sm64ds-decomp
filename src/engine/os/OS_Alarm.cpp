@@ -16,12 +16,12 @@
 #include "types.h"
 #include "nitro/os/system.h"
 #include "nitro/os/interrupt.h"
+#include "nitro/os/interrupt_check.h"
 #include "nitro/os/alarm.h"
 
 #define REG_TM1CNT_L (*(volatile u16 *)0x04000104)
 #define REG_TM1CNT_H (*(volatile u16 *)0x04000106)
 
-#define OS_IE_TIMER1 0x10
 #define OSi_TICK_TIMERCONTROL 0xc1 /* enable, IRQ, prescaler /64 */
 
 extern "C" {
@@ -47,9 +47,8 @@ extern void OSi_SetTimerReserved(int timerNum);
 extern void OSi_EnterTimerCallback(u32 idx, u32 handler, u32 arg);
 extern void OS_Terminate(void);
 
-extern u16 data_020a6440;           /* OSi_UseAlarm */
-extern OSiAlarmQueue data_020a6444; /* OSi_AlarmQueue */
-extern short data_023c0000[];       /* HW_DTCM */
+extern u16 OSi_UseAlarm;
+extern OSiAlarmQueue OSi_AlarmQueue;
 
 void OSi_AlarmHandler(void);
 void OSi_InsertAlarm(OSAlarm *alarm, u64 fire);
@@ -75,17 +74,17 @@ void OSi_SetTimer(OSAlarm *alarm) {
 }
 
 void OS_InitAlarm(void) {
-    if (data_020a6440 != 0)
+    if (OSi_UseAlarm != 0)
         return;
-    data_020a6440 = 1;
+    OSi_UseAlarm = 1;
     OSi_SetTimerReserved(1);
-    data_020a6444.head = 0;
-    data_020a6444.tail = 0;
+    OSi_AlarmQueue.head = 0;
+    OSi_AlarmQueue.tail = 0;
     OS_DisableIrqMask(OS_IE_TIMER1);
 }
 
 int OS_IsAlarmAvailable(void) {
-    return data_020a6440;
+    return OSi_UseAlarm;
 }
 
 void OS_CreateAlarm(OSAlarm *alarm) {
@@ -104,7 +103,7 @@ void OSi_InsertAlarm(OSAlarm *alarm, u64 fire) {
     }
     alarm->fire = fire;
 
-    next = data_020a6444.head;
+    next = OSi_AlarmQueue.head;
     if (next != 0) {
         do {
             if ((long long)(fire - next->fire) < 0) {
@@ -115,7 +114,7 @@ void OSi_InsertAlarm(OSAlarm *alarm, u64 fire) {
                     alarm->prev->next = alarm;
                     return;
                 }
-                data_020a6444.head = alarm;
+                OSi_AlarmQueue.head = alarm;
                 OSi_SetTimer(alarm);
                 return;
             }
@@ -125,16 +124,16 @@ void OSi_InsertAlarm(OSAlarm *alarm, u64 fire) {
 
     alarm->next = 0;
     {
-        OSAlarm *prev = data_020a6444.tail;
-        data_020a6444.tail = alarm;
+        OSAlarm *prev = OSi_AlarmQueue.tail;
+        OSi_AlarmQueue.tail = alarm;
         alarm->prev = prev;
         if (prev) {
             prev->next = alarm;
             return;
         }
     }
-    data_020a6444.tail = alarm;
-    data_020a6444.head = alarm;
+    OSi_AlarmQueue.tail = alarm;
+    OSi_AlarmQueue.head = alarm;
     OSi_SetTimer(alarm);
 }
 
@@ -159,13 +158,13 @@ void OS_CancelAlarm(OSAlarm *alarm) {
     }
     next = alarm->next;
     if (next == 0)
-        data_020a6444.tail = alarm->prev;
+        OSi_AlarmQueue.tail = alarm->prev;
     else
         next->prev = alarm->prev;
     if (alarm->prev != 0) {
         alarm->prev->next = next;
     } else {
-        data_020a6444.head = next;
+        OSi_AlarmQueue.head = next;
         if (next != 0)
             OSi_SetTimer(next);
     }
@@ -190,10 +189,9 @@ void OSi_ArrangeTimer(void) {
     u64 tick;
     REG_TM1CNT_H = 0;
     OS_DisableIrqMask(OS_IE_TIMER1);
-    /* OS_SetIrqCheckFlag: HW_INTR_CHECK_BUF, DTCM + 0x3ff8. */
-    *(int *)((int)data_023c0000 + 0x3ff8) |= OS_IE_TIMER1;
+    OS_SetIrqCheckFlag(OS_IE_TIMER1);
     tick = OS_GetTick();
-    alarm = data_020a6444.head;
+    alarm = OSi_AlarmQueue.head;
     if (alarm == 0)
         return;
     if (tick < alarm->fire) {
@@ -201,9 +199,9 @@ void OSi_ArrangeTimer(void) {
         return;
     }
     next = alarm->next;
-    data_020a6444.head = next;
+    OSi_AlarmQueue.head = next;
     if (next == 0)
-        data_020a6444.tail = 0;
+        OSi_AlarmQueue.tail = 0;
     else
         next->prev = 0;
     handler = alarm->handler;
@@ -215,7 +213,7 @@ void OSi_ArrangeTimer(void) {
         alarm->handler = handler;
         OSi_InsertAlarm(alarm, 0);
     }
-    if (data_020a6444.head != 0)
-        OSi_SetTimer(data_020a6444.head);
+    if (OSi_AlarmQueue.head != 0)
+        OSi_SetTimer(OSi_AlarmQueue.head);
 }
 }

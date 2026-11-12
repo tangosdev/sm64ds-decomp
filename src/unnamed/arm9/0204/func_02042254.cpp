@@ -2,9 +2,9 @@
 
 #include "private/arm9_a1fc0_file_share.h"
 #include "nitro/os/system.h"
+#include "nitro/os/thread.h"
 #include "private/fs_views.h"
-
-typedef struct FSFile FSFile;
+#include "nitro/fs/file.h"
 
 extern "C" {
 
@@ -12,12 +12,7 @@ extern char data_02099e6c[]; /* "rom" */
 extern char data_020a2400[];
 
 extern FSArchive *FS_FindArchive(const char *name, int name_len);
-extern void OS_SleepThread(unsigned short *self);
-extern int FS_OpenFileDirect(char *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,
-                             u32 file_index);
-extern int FS_ReadFile(FSFile *file, void *dst, int len);
 extern void func_02041d28(char *base, void *node, int d);
-extern int FS_CloseFile(char *self);
 extern void func_02041a94(FileShareParentArea *area, FileShareNode *node);
 
 /* The parent's loader thread: while the share is up (mState), take each node
@@ -53,7 +48,7 @@ void func_02042254(void) {
         OS_RestoreInterrupts(irq);
 
         if (node->mState == 1) {
-            FS_OpenFileDirect((char *)node->mFile, arc, node->mFileOffset,
+            FS_OpenFileDirect(&node->mFile, arc, node->mFileOffset,
                               node->mFileOffset + node->mFileSize, node->mFileId);
             i = 0;
             {
@@ -61,7 +56,7 @@ void func_02042254(void) {
                 char *ptr = (char *)node->mPages;
                 for (; i < 3; i++) {
                     node->mPageOffset[i] = val;
-                    FS_ReadFile((struct FSFile *)node->mFile, ptr, 0x400);
+                    FS_ReadFile(&node->mFile, ptr, 0x400);
                     val += 0x400;
                     ptr += 0x400;
                 }
@@ -73,7 +68,7 @@ void func_02042254(void) {
             func_02041d28(base, node, d);
             OS_RestoreInterrupts(irq);
         } else {
-            FS_CloseFile((char *)node->mFile);
+            FS_CloseFile(&node->mFile);
             irq = OS_DisableInterrupts();
             func_02041a94(area, node);
             OS_RestoreInterrupts(irq);

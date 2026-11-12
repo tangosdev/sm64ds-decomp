@@ -7,8 +7,8 @@ FileShareNode *func_02041ce0(FileShareParentArea *area, int offset, int size) {
     if (node == 0)
         return node;
     do {
-        if (node->mState == 2 && offset == FILE_SHARE_EXTENT(node)->top &&
-            size == FILE_SHARE_EXTENT(node)->bottom - FILE_SHARE_EXTENT(node)->top)
+        if (node->mState == 2 && offset == node->mFile.prop.file.top &&
+            size == node->mFile.prop.file.bottom - node->mFile.prop.file.top)
             return node;
         node = node->mNext;
     } while (node != 0);

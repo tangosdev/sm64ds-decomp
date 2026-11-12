@@ -41,6 +41,7 @@ enum dScMgLuigi_c_AssetId {
 #include "LevelRng.h"
 #include "Sound.h"
 #include "nitro/os/interrupt.h"
+#include "nitro/os/interrupt_check.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "SpawnInfo.h"
@@ -54,9 +55,6 @@ enum dScMgLuigi_c_AssetId {
 
 typedef void (dScMgLuigi_c::*LuigiSlotHandler)(int);
 typedef void (dScMgLuigi_c::*LuigiStateHandler)();
-
-/* The HBlank interrupt the iris runs on (NitroSDK's OS_IE_H_BLANK). */
-#define OS_IE_H_BLANK 0x2
 
 /* NitroSDK's inline IME helpers (os/common/interrupt.h): each returns the
    previous master enable. */
@@ -172,15 +170,6 @@ void dScMgLuigi_c::AfterCleanupResources(u32 vfSuccess) {
         OS_EnableIrq();
     }
     dScMgBase_c::AfterCleanupResources(vfSuccess);
-}
-
-extern "C" {
-extern short data_023c0000[]; /* HW_DTCM; the IRQ check word sits at +0x3ff8 */
-}
-
-/* NitroSDK's OS_SetIrqCheckFlag: tells OS_WaitIrq the interrupt was taken. */
-static inline void OS_SetIrqCheckFlag(int intr) {
-    *(volatile u32 *)((u32)data_023c0000 + 0x3ff8) |= (u32)intr;
 }
 
 /* The HBlank handler (OS_IE_H_BLANK) StartIris installs as a void(*)() callback.

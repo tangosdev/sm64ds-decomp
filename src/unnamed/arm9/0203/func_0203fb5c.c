@@ -1,7 +1,10 @@
-extern int WM_StartConnect(void *callback, int pInfo, void *ssid);
+#include "types.h"
+#include "private/wm_views.h"
+
+extern int WM_StartConnect(void *callback, const WMBssDesc *pInfo, const u8 *ssid);
 struct WmStartConnectCallback;
 extern void func_0203fec4(struct WmStartConnectCallback *cb);
-extern int data_020a0f54;
+extern WMBssDesc *data_020a0f54;
 
 /* Connect to the chosen parent: WM_StartConnect on the
    WMBssDesc in data_020a0f54, no SSID, with func_0203fec4 as the callback.

@@ -12,15 +12,14 @@ extern unsigned char data_0209d4b4;
 void func_0201973c(void) {}
 
 /* Boot setup (func_0201a054). If both screens' backlights read off
-   (PM_GetBackLight: PMIC control bit 3 for the
-   top, bit 2 for the bottom), the backlight setting data_0208ee3c, which
+   (PM_GetBackLight), the backlight setting data_0208ee3c, which
    TurnBacklightOff clears and the pause menu's option screen shows,
    starts off. Then seed the random state data_0209d4b8 with 1234 and
    apply the sound mode again (SetSoundMode(GetSoundMode's byte)). */
 void func_020196cc(void) {
-    int a, b;
-    if (PM_GetBackLight(&a, &b) == 0 && a == 0) {
-        if (b == 0)
+    PMBackLightSwitch top, bottom;
+    if (PM_GetBackLight(&top, &bottom) == PM_SUCCESS && top == PM_BACKLIGHT_OFF) {
+        if (bottom == PM_BACKLIGHT_OFF)
             data_0208ee3c = 0;
     }
     func_0203b9b4((int *)&data_0209d4b8, 0x4d2);

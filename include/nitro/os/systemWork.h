@@ -1,33 +1,17 @@
 #ifndef NITRO_OS_SYSTEMWORK_H
 #define NITRO_OS_SYSTEMWORK_H
 
-/*
- * The system work block the two CPUs share at the top of main memory, under
- * the Nitro SDK's own names (nitro/os/common/systemWork.h). The ARM7 and the
- * ARM9 each publish state here for the other: the PXI callbacks each side
- * listens on, the last touch-panel sample, the shared lock words.
- *
- * The ROM confirms the layout where this tree reads it: PXI_InitFifo clears
- * pxiHandleChecker[0] at 0x027fff88, and tp.c copies its sample from
- * touch_panel at 0x027fffaa.
- */
+/* The 0x400-byte system work area at HW_MAIN_MEM_SYSTEM (0x027ffc00), which
+ * the ARM9, the ARM7 and the boot code share, under NitroSDK's names
+ * (nitro/os/common/systemWork.h). Each field sits at the HW_*_BUF address
+ * nitro/hw/mmap_shared.h gives it. */
 
 #include "types.h"
-#include "nitro/os/spinLock.h"
+#include "nitro/hw/mmap_shared.h"
 #include "nitro/os/thread.h"
+#include "nitro/os/spinLock.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#define HW_MAIN_MEM_SYSTEM 0x027ffc00
-
-typedef union OSDmaClearSrc {
-    u32 b32;
-    u16 b16;
-} OSDmaClearSrc;
-
-typedef struct OSSystemWork {
+typedef struct {
     u8 bootCheckInfo[0x20];             /* 0x000 */
     u32 resetParameter;                 /* 0x020 */
     u8 padding5[0x8];                   /* 0x024 */
@@ -43,7 +27,7 @@ typedef struct OSSystemWork {
     u8 rom_header[0x160];               /* 0x200 */
     u8 isd_reserved2[32];               /* 0x360 */
     u32 pxiSignalParam[2];              /* 0x380 */
-    u32 pxiHandleChecker[2];            /* 0x388: per PXIProc, a bit per PXIFifoTag */
+    u32 pxiHandleChecker[2];            /* 0x388 */
     u32 mic_last_address;               /* 0x390 */
     u16 mic_sampling_data;              /* 0x394 */
     u16 wm_callback_control;            /* 0x396 */
@@ -72,14 +56,5 @@ typedef struct OSSystemWork {
 } OSSystemWork;
 
 #define OS_GetSystemWork() ((OSSystemWork *)HW_MAIN_MEM_SYSTEM)
-
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; the host port has 64-bit thread pointers. */
-typedef char OSSystemWork_size_must_be_0x400[sizeof(OSSystemWork) == 0x400 ? 1 : -1];
-#endif
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* NITRO_OS_SYSTEMWORK_H */

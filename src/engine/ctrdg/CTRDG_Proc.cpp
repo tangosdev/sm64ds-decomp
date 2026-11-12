@@ -51,7 +51,6 @@ extern int (*data_020a9dec)(int); /* the hook CTRDGi_PulledOutCallback asks befo
 extern int data_020a9e00;
 extern int data_020a9e04;
 
-#define CTRDG_MODULE_INFO ((volatile CTRDGModuleInfo *)0x27ffc30)
 #define CTRDG_HEADER (*(CTRDGHeader *)&data_020a9e00)
 
 void CTRDGi_InitModuleInfo(void);
@@ -76,9 +75,9 @@ void CTRDG_Init(void) {
 
 /* Older than pret's CTRDGi_InitModuleInfo: copy the cartridge's module ID, the
  * three extended LSI IDs, the maker and game codes into the shared module
- * information at 0x027ffc30 and hand the header copy to the ARM7. It reads
+ * information (CTRDGi_GetModuleInfoAddr()) and hand the header copy to the ARM7. It reads
  * the header's last 0x40 bytes with MI_DmaCopy16, and has none of
- * pret's checks of the 0x027fff9b flag or of CTRDG_IsExisting. */
+ * pret's checks of HW_IS_CTRDG_EXIST or of CTRDG_IsExisting. */
 void CTRDGi_InitModuleInfo(void) {
     int sp[4];
     unsigned int irq;
@@ -104,7 +103,7 @@ void CTRDGi_InitModuleInfo(void) {
     CTRDGi_RestoreAccessCycle(sp + 2);
     CTRDGi_UnlockByProcessor(CTRDGi_Work.lockID, sp);
     {
-        volatile CTRDGModuleInfo *cip = CTRDG_MODULE_INFO;
+        CTRDGModuleInfo *cip = CTRDGi_GetModuleInfoAddr();
         CTRDGHeader *chd = &CTRDG_HEADER;
         cip->moduleID = chd->moduleID;
         for (i = 0; i < 3; i++)

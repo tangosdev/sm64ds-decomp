@@ -77,6 +77,13 @@
     }
   ],
   "compiler_only_output": [],
+  "defined_symbol_renames": [
+    {
+      "from": "@72",
+      "to": "@16",
+      "evidence": "mwcc numbers the registration node @72 once the file includes nitro/cp/sqrt.h, whose inline bodies take compiler numbers ahead of it (measured from the compiled object: the only .bss local, size 0xc). @16 is the configured name at 0x020a0ee4."
+    }
+  ],
   "undefined_symbol_aliases": [
     {
       "symbol": "__register_global_object",

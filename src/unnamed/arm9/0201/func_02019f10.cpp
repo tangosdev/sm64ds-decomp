@@ -35,8 +35,8 @@ void func_02019f64(void *arg) {
         func_02019ff4();
         return;
     }
-    PMi_SendLEDPatternCommand(3);
-    PMi_SetLED(1);
+    PMi_SendLEDPatternCommand(PM_LED_PATTERN_BLINK_HIGH);
+    PMi_SetLED(PM_LED_ON);
     r = func_02040714();
     if (r != 0 && r != 1) {
         do {
@@ -47,8 +47,8 @@ void func_02019f64(void *arg) {
                 break;
         } while (r != 1);
     }
-    PMi_SendLEDPatternCommand(1);
-    PMi_SetLED(1);
+    PMi_SendLEDPatternCommand(PM_LED_PATTERN_ON);
+    PMi_SetLED(PM_LED_ON);
     func_02019ff4();
 }
 

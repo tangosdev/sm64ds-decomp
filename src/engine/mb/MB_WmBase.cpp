@@ -47,6 +47,7 @@
 #include "types.h"
 #include "nitro/os/cache.h"
 #include "nitro/os/system.h"
+#include "nitro/os/interrupt_vblank.h"
 #include "WmWork.h"
 #include "private/arm9_a9db8_mb_parent.h"
 #include "private/mb_views.h"
@@ -144,7 +145,7 @@ extern int WM_SetLifeTime(void *callback, int tableNo, int camLife, int frameLif
 extern int WM_SetParentParameter(void *callback, WmParentParam *parentParam);
 extern int WM_SetBeaconIndication(void *callback, int flag);
 extern int WM_StartScan(void *callback, char *scanParam);
-extern int WM_StartConnect(void *callback, int bssDesc, void *ssid);
+extern int WM_StartConnect(void *callback, const WMBssDesc *pInfo, const u8 *ssid);
 extern int WM_StartMPEx(void *callback, int recvBuf, u16 recvBufSize, int sendBuf, u16 sendBufSize,
                         u16 mpFreq, u16 defaultRetryCount, int minPollBmpMode, int singlePacketMode,
                         int fixFreqMode, int ignoreFatalError);
@@ -621,8 +622,8 @@ void MBi_ChildCallback(void *arg) {
     }
 }
 
-/* A number from 0 to 19 from the console's MAC address and the VBlank count at
- * 0x027ffc3c (OS_GetVBlankCount); MB_Init adds it to the beacon period. */
+/* A number from 0 to 19 from the console's MAC address and the VBlank count;
+ * MB_Init adds it to the beacon period. */
 int MBi_GetBeaconPeriodDispersion(void) {
     u8 mac[6];
     u32 sum;
@@ -632,7 +633,7 @@ int MBi_GetBeaconPeriodDispersion(void) {
     for (i = 0, sum = 0; i < 6; i++) {
         sum += mac[i];
     }
-    return (sum + *(int *)0x27ffc3c) * 7 % 20;
+    return (int)((sum + OS_GetVBlankCount()) * 7 % 20);
 }
 
 /* MB_Init: carve the WmWork and mbc out of the caller's buffer (each 32-byte
