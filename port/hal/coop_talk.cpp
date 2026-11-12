@@ -177,6 +177,11 @@ bool lock_cls(unsigned c) {
     for (int i = 0; i < g_nextra; ++i) if (g_extra[i] == c) return true;
     return false;
 }
+// King Bob-omb's defeat talk (HP +0x500 at 0 or below) is never locked: coop_boss.cpp runs it on every console on purpose,
+// and a lock there held the star back until the first talker closed his box.
+bool kbo_defeat(const char *a) {
+    return a && *(const unsigned short *)(a + 0x0c) == kClsKingBobOmb && rd32(a, 0x500) <= 0;
+}
 bool face_cls(unsigned c) {
     for (unsigned short k : kFaceCls) if (k == c) return true;
     return false;
@@ -298,7 +303,7 @@ void my_frame(unsigned now) {
     if (ta) {
         cls = *(const unsigned short *)(ta + 0x0c);
         slot = rd16(ta, 0xce);
-        if (!lock_cls(cls) || slot < 0 || slot >= kSlots) { ta = nullptr; slot = -1; cls = 0; }
+        if (!lock_cls(cls) || slot < 0 || slot >= kSlots || kbo_defeat(ta)) { ta = nullptr; slot = -1; cls = 0; }
     }
     if (ta != g_me.actor) {
         if (g_me.actor) {
@@ -387,7 +392,7 @@ bool coop_talk_refuse(void *body, void *actor) {
     const char *a = (const char *)actor;
     const unsigned cls = *(const unsigned short *)(a + 0x0c);
     const int slot = rd16(a, 0xce);
-    if (!lock_cls(cls) || slot < 0 || slot >= kSlots) return false;
+    if (!lock_cls(cls) || slot < 0 || slot >= kSlots || kbo_defeat(a)) return false;
     if (*(void *const *)((const char *)body + 0x368) == actor) return false;   // already mine: the ROM answers
     g_my = comms_hub_my_seat();
     const unsigned now = now_ms();
