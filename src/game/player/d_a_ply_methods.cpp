@@ -21975,9 +21975,9 @@ int *func_ov002_020e6bb0(void *model) {
 /* Static initializer __sinit_ov002_021019d0, placed in .init by define_section.
  * Still written by hand: the objects it builds keep their ROM-owned .bss
  * homes, so a compiler-emitted initializer has nothing to define. */
-/* Zero-filled .bss owned by this TU (0x0210e14c..0x02110154).
- * data_ov002_02110154 and daPly_c::ST_WAIT are one address. This object
- * emits one BSS symbol per object, so that address stays in the gap.
+/* Zero-filled .bss owned by this TU (0x0210e14c..0x02110924).
+ * data_ov002_02110154 is the St_Wait state. daPly_c::ST_WAIT is its other name.
+ * data_ov002_02110244 is the St_Owl state. daPly_c::ST_OWL is its other name.
  * Outside .init: the section pragma would place these objects in .init.
  * No constructor and no initializer, so __sinit_ov002_021019d0 stays put. */
 extern "C" {
@@ -22765,6 +22765,81 @@ daPly_c::State data_ov002_021100f4;
 daPly_c::State data_ov002_0211010c;
 daPly_c::State data_ov002_02110124;
 daPly_c::State data_ov002_0211013c;
+/* data_ov002_02110154 and daPly_c::ST_WAIT are this one object. The member
+ * stays a declaration; the link assigns _ZN7daPly_c7ST_WAITE at this address. */
+daPly_c::State data_ov002_02110154;
+daPly_c::State data_ov002_0211016c;
+daPly_c::State data_ov002_02110184;
+daPly_c::State data_ov002_0211019c;
+daPly_c::State data_ov002_021101b4;
+daPly_c::State data_ov002_021101cc;
+daPly_c::State data_ov002_021101e4;
+daPly_c::State data_ov002_021101fc;
+daPly_c::State data_ov002_02110214;
+daPly_c::State data_ov002_0211022c;
+/* data_ov002_02110244 and daPly_c::ST_OWL are this one object. The member
+ * stays a declaration; the link assigns _ZN7daPly_c6ST_OWLE at this address. */
+daPly_c::State data_ov002_02110244;
+daPly_c::State data_ov002_0211025c;
+daPly_c::State data_ov002_02110274;
+daPly_c::State data_ov002_0211028c;
+daPly_c::State data_ov002_021102a4;
+daPly_c::State data_ov002_021102bc;
+daPly_c::State data_ov002_021102d4;
+daPly_c::State data_ov002_021102ec;
+daPly_c::State data_ov002_02110304;
+daPly_c::State data_ov002_0211031c;
+daPly_c::State data_ov002_02110334;
+daPly_c::State data_ov002_0211034c;
+daPly_c::State data_ov002_02110364;
+daPly_c::State data_ov002_0211037c;
+daPly_c::State data_ov002_02110394;
+daPly_c::State data_ov002_021103ac;
+daPly_c::State data_ov002_021103c4;
+daPly_c::State data_ov002_021103dc;
+daPly_c::State data_ov002_021103f4;
+daPly_c::State data_ov002_0211040c;
+daPly_c::State data_ov002_02110424;
+daPly_c::State data_ov002_0211043c;
+daPly_c::State data_ov002_02110454;
+daPly_c::State data_ov002_0211046c;
+daPly_c::State data_ov002_02110484;
+daPly_c::State data_ov002_0211049c;
+daPly_c::State data_ov002_021104b4;
+daPly_c::State data_ov002_021104cc;
+daPly_c::State data_ov002_021104e4;
+daPly_c::State data_ov002_021104fc;
+daPly_c::State data_ov002_02110514;
+daPly_c::State data_ov002_0211052c;
+daPly_c::State data_ov002_02110544;
+daPly_c::State data_ov002_0211055c;
+daPly_c::State data_ov002_02110574;
+daPly_c::State data_ov002_0211058c;
+daPly_c::State data_ov002_021105a4;
+daPly_c::State data_ov002_021105bc;
+daPly_c::State data_ov002_021105d4;
+daPly_c::State data_ov002_021105ec;
+daPly_c::State data_ov002_02110604;
+daPly_c::State data_ov002_0211061c;
+daPly_c::State data_ov002_02110634;
+daPly_c::State data_ov002_0211064c;
+daPly_c::State data_ov002_02110664;
+daPly_c::State data_ov002_0211067c;
+daPly_c::State data_ov002_02110694;
+daPly_c::State data_ov002_021106ac;
+daPly_c::State data_ov002_021106c4;
+daPly_c::State data_ov002_021106dc;
+daPly_c::State data_ov002_021106f4;
+daPly_c::State data_ov002_0211070c;
+daPly_c::State data_ov002_02110724;
+void (daPly_c::*data_ov002_0211073c[4])();
+void (daPly_c::*data_ov002_0211075c[7])();
+ScriptCommand data_ov002_02110794[14];
+unsigned short data_ov002_02110804[64];
+/* A PlayerStateFn[20] definition is not trivial: mwcc emits an empty sinit
+ * and a .ctor word for it. The bytes are 160 zero-filled BSS bytes. The
+ * stores below cast this object back to that view. */
+unsigned char data_ov002_02110884[0xa0];
 unsigned int data_ov002_0210e158;
 AnimScriptStep data_ov002_0210e7b8[1];
 }
@@ -23307,13 +23382,16 @@ extern void (daPly_c::*data_ov002_0210a29c)();
 extern void (daPly_c::*data_ov002_0210a30c)();
 extern PlayerFreeVoidPmf data_ov002_0210a334;
 
-/* daPly_c handler tables; the second is indexed by mNoCtrlKind, the third by mStateWork. */
+/* daPly_c handler tables; the second is indexed by mNoCtrlKind, the third by mStateWork.
+ * The objects below 0x02110884 are defined in the zero-filled block. C linkage
+ * keeps the ROM names. data_ov002_02110884 is defined with them. */
+extern "C" {
 extern void (daPly_c::*data_ov002_0211073c[4])();
-extern PlayerStateFn data_ov002_02110884[20];
+extern unsigned char data_ov002_02110884[0xa0];
 extern void (daPly_c::*data_ov002_0211075c[7])();
-
 /* The two 32-entry palette ramps func_ov002_020e69c0 and func_ov002_020e6a78 work on. */
 extern unsigned short data_ov002_02110804[];
+}
 
 #pragma section initsec end
 /* The state records and handler tables are initialized once, from the
@@ -23559,26 +23637,26 @@ static inline void PlayerInitStates() {
     data_ov002_0211073c[1] = data_ov002_0210a47c.pmf;
     data_ov002_0211073c[2] = data_ov002_0210a10c.pmf;
     data_ov002_0211073c[3] = &daPly_c::func_ov002_020e1c20;
-    data_ov002_02110884[0].voidPmf = data_ov002_02109dfc.pmf;
-    data_ov002_02110884[1].voidPmf = data_ov002_0210a264.pmf;
-    data_ov002_02110884[2].voidPmf = data_ov002_0210a244.pmf;
-    data_ov002_02110884[3].voidPmf = data_ov002_0210a23c.pmf;
-    data_ov002_02110884[4].voidPmf = &daPly_c::func_ov002_020c9d68;
-    data_ov002_02110884[5].intPmf = &daPly_c::func_ov002_020c9d1c;
-    data_ov002_02110884[6].voidPmf = &daPly_c::func_ov002_020c9cc0;
-    data_ov002_02110884[7].voidPmf = &daPly_c::func_ov002_020c9c4c;
-    data_ov002_02110884[8].intPmf = &daPly_c::func_ov002_020c9c00;
-    data_ov002_02110884[9].voidPmf = &daPly_c::func_ov002_020c9b7c;
-    data_ov002_02110884[10].voidPmf = &daPly_c::func_ov002_020c9b5c;
-    data_ov002_02110884[11].voidPmf = &daPly_c::func_ov002_020c9ac0;
-    data_ov002_02110884[12].intPmf = &daPly_c::func_ov002_020c9b10;
-    data_ov002_02110884[13].voidPmf = &daPly_c::func_ov002_020c9a04;
-    data_ov002_02110884[14].voidPmf = &daPly_c::func_ov002_020c9998;
-    data_ov002_02110884[15].voidPmf = &daPly_c::func_ov002_020c990c;
-    data_ov002_02110884[16].voidPmf = &daPly_c::func_ov002_020c98a4;
-    data_ov002_02110884[17].voidPmf = &daPly_c::func_ov002_020c9840;
-    data_ov002_02110884[18].voidPmf = &daPly_c::func_ov002_020c97f8;
-    data_ov002_02110884[19].voidPmf = &daPly_c::func_ov002_020c97e0;
+    ((PlayerStateFn *)data_ov002_02110884)[0].voidPmf = data_ov002_02109dfc.pmf;
+    ((PlayerStateFn *)data_ov002_02110884)[1].voidPmf = data_ov002_0210a264.pmf;
+    ((PlayerStateFn *)data_ov002_02110884)[2].voidPmf = data_ov002_0210a244.pmf;
+    ((PlayerStateFn *)data_ov002_02110884)[3].voidPmf = data_ov002_0210a23c.pmf;
+    ((PlayerStateFn *)data_ov002_02110884)[4].voidPmf = &daPly_c::func_ov002_020c9d68;
+    ((PlayerStateFn *)data_ov002_02110884)[5].intPmf = &daPly_c::func_ov002_020c9d1c;
+    ((PlayerStateFn *)data_ov002_02110884)[6].voidPmf = &daPly_c::func_ov002_020c9cc0;
+    ((PlayerStateFn *)data_ov002_02110884)[7].voidPmf = &daPly_c::func_ov002_020c9c4c;
+    ((PlayerStateFn *)data_ov002_02110884)[8].intPmf = &daPly_c::func_ov002_020c9c00;
+    ((PlayerStateFn *)data_ov002_02110884)[9].voidPmf = &daPly_c::func_ov002_020c9b7c;
+    ((PlayerStateFn *)data_ov002_02110884)[10].voidPmf = &daPly_c::func_ov002_020c9b5c;
+    ((PlayerStateFn *)data_ov002_02110884)[11].voidPmf = &daPly_c::func_ov002_020c9ac0;
+    ((PlayerStateFn *)data_ov002_02110884)[12].intPmf = &daPly_c::func_ov002_020c9b10;
+    ((PlayerStateFn *)data_ov002_02110884)[13].voidPmf = &daPly_c::func_ov002_020c9a04;
+    ((PlayerStateFn *)data_ov002_02110884)[14].voidPmf = &daPly_c::func_ov002_020c9998;
+    ((PlayerStateFn *)data_ov002_02110884)[15].voidPmf = &daPly_c::func_ov002_020c990c;
+    ((PlayerStateFn *)data_ov002_02110884)[16].voidPmf = &daPly_c::func_ov002_020c98a4;
+    ((PlayerStateFn *)data_ov002_02110884)[17].voidPmf = &daPly_c::func_ov002_020c9840;
+    ((PlayerStateFn *)data_ov002_02110884)[18].voidPmf = &daPly_c::func_ov002_020c97f8;
+    ((PlayerStateFn *)data_ov002_02110884)[19].voidPmf = &daPly_c::func_ov002_020c97e0;
     data_ov002_0211075c[0] = &daPly_c::func_ov002_020c75f0;
     data_ov002_0211075c[1] = &daPly_c::func_ov002_020c7350;
     data_ov002_0211075c[2] = &daPly_c::func_ov002_020c71e0;

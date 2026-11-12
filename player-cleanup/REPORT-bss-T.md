@@ -2,6 +2,8 @@
 
 Branch `bss/player-T`. Claimed `.bss` end: `0x02110154`. Symbols moved in `0x0210e14c..0x0210f914`: 0. The first symbol that does not match is `data_ov002_02110154`.
 
+The continuation on `bss/player-wait` claims through `0x02110924`. `ST_WAIT` and `ST_OWL` are the other names of `data_ov002_02110154` and `data_ov002_02110244`; the link assigns those names. The five tables are in the same span. The notes below are the record of where this batch stopped.
+
 ## What landed
 
 `src/game/player/d_a_ply_methods.cpp` already owned `.bss` `0x0210e14c..0x0210f914`. This batch adds the contiguous run from `0x0210f914` up to, and not including, `data_ov002_02110154`.
