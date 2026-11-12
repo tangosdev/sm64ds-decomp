@@ -1,13 +1,14 @@
 #include "types.h"
-typedef struct { int a, b, c, d; } S;
-/* The sign of a double: 0x80 if the top byte's sign bit is set, else 0.
-   The parameter is spelled as a 16-byte struct, not a double. */
-int func_0206c90c(S s){
-    char* q = (char*)&s + 7;
+
+/* The sign of the double bit pattern in u64 x: 0x80 if the top byte's sign
+   bit is set, else 0. Byte 7 is read through a u16 load, as func_0206c8b4
+   reads the exponent. */
+int func_0206c90c(u64 x) {
+    char *q = (char *)&x + 7;
     int hi;
     if ((int)q & 1)
-        hi = (*(u16*)(q - 1) & 0xff00) >> 8;
+        hi = (*(u16 *)(q - 1) & 0xff00) >> 8;
     else
-        hi = *(u16*)q & 0xff;
+        hi = *(u16 *)q & 0xff;
     return hi & 0x80;
 }
