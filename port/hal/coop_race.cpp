@@ -514,7 +514,12 @@ struct PgFollowHook { PgFollowHook() { port_coop_pgrcer_follow = pg_follow; } } 
 // invite's yes leads to (a headless row cannot press A in a talk).
 void pg_start_knob(daPgRcer_c *p) {
     static int at = -2;
-    if (at == -2) { at = -1; if (const char *e = std::getenv("SM64DS_COOP_PG_RACE")) at = std::atoi(e); }
+    if (at == -2) {
+        at = -1;
+#ifndef PORT_ROM_CLEAN
+        if (const char *e = std::getenv("SM64DS_COOP_PG_RACE")) at = std::atoi(e);
+#endif
+    }
     if (at < 0 || g_lf != (unsigned)at) return;
     char *me = local_body();
     const bool ok = p && me && p->mAction == 0 && g_pm.lock < 0;

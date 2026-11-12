@@ -310,7 +310,9 @@ void hatena_test(unsigned) {
     static int at = -2; static bool old = false;
     if (at == -2) {
         at = -1;
+#ifndef PORT_ROM_CLEAN
         if (const char *e = std::getenv("SM64DS_COOP_HATENA_TEST")) { at = std::atoi(e); old = std::strstr(e, ":old") != nullptr; }
+#endif
     }
     if (at < 0) return;
     static char *sw = nullptr; static unsigned f = 0;
@@ -341,7 +343,15 @@ void hatena_test(unsigned) {
                      partner == a ? "THE SWITCH (message + save prompt)" : partner ? "something else" : "none");
     }
 }
-struct HatenaTestReg { HatenaTestReg() { if (std::getenv("SM64DS_COOP_HATENA_TEST")) coop_on_frame(hatena_test); } } g_hatena_test_reg;
+struct HatenaTestReg {
+    HatenaTestReg() {
+#ifndef PORT_ROM_CLEAN
+        if (std::getenv("SM64DS_COOP_HATENA_TEST")) coop_on_frame(hatena_test);
+#else
+        (void)hatena_test;   // the kit cannot set the proof knob
+#endif
+    }
+} g_hatena_test_reg;
 int r_water(const char *a) { return rd_i32(a, 0x334); }
 bool ap_water(char *a, int, int value) {
     if (rd_i32(a, 0x334) == value) return false;

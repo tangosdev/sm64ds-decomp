@@ -209,7 +209,9 @@ void read_env() {
 #endif
     const char *l = std::getenv("SM64DS_COOP_WORLDSTAR_LOG");
     g_log = l && l[0] && l[0] != '0';
+#ifndef PORT_ROM_CLEAN
     if (const char *t = std::getenv("SM64DS_COOP_WORLDSTAR_TRACE")) g_trace = std::atoi(t);
+#endif
     if (g_trace > 0) g_log = true;
 }
 bool live() { read_env(); return !g_off && coop_world_active(); }

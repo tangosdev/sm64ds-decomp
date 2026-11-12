@@ -465,6 +465,7 @@ const char *body_name(const char *b) {
 void owl_knobs() {
     if (g_nowlk < 0) {
         g_nowlk = 0;
+#ifndef PORT_ROM_CLEAN
         if (const char *e = std::getenv("SM64DS_COOP_OWL_GRAB")) {
             for (const char *q = e; *q && g_nowlk < 6;) {
                 char *end = nullptr; const unsigned long f = std::strtoul(q, &end, 10);
@@ -477,6 +478,7 @@ void owl_knobs() {
             }
         }
         if (const char *t = std::getenv("SM64DS_COOP_OWL_TRACE")) g_owl_trace = std::atoi(t);
+#endif
     }
     if (!g_nowlk && g_owl_trace <= 0) return;
     char *owl = _ZN8dActor_c15FindWithActorIDEjPS_(kClsHoot, nullptr);
