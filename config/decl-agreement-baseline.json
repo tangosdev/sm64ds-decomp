@@ -16956,6 +16956,11 @@
       "include/nitro/mb/mb.h": [
         "param:#1 void (*)(unsigned short, unsigned int, void *)"
       ]
+    },
+    "func_0203f9d4": {
+      "include/private/arm9_a0f90_channel_measure.h": [
+        "param:#2 void (*)(ChannelMeasureReply *)"
+      ]
     }
   },
   "_comment": "Declaration/definition disagreements present when this gate was built. tools/check_decl_agreement.py fails on any disagreement NOT listed here. Keyed symbol -> declaring file -> \"<kind>:<what differs>\". These are NOT text edits: changing a declaration can change instruction selection at every call site, so each one is matching work that needs a rebuild and byte proof (tools/match.py) before it moves. Regenerate with --update only from a clean checkout, and read the diff: a new entry is usually an extern copied from the wrong sibling."
