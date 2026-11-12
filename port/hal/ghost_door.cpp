@@ -151,7 +151,13 @@ unsigned char pack_area(int area) {
     return (unsigned char)(area + 1);
 }
 
-unsigned char sender_kind(const void *body) {
+/* DOORKEY1: the door the sender's current door step goes through (sender_frame), forgotten whenever he is in no door step,
+   so two steps of the same kind within 500 ms do not reuse the first step's door. */
+static const void *s_door = 0;
+static unsigned char s_kind = kDoorNone;
+static unsigned s_t = 0;
+
+static unsigned char sender_kind_raw(const void *body) {
     if (!body) return kDoorNone;
     const char *c = (const char *)body;
     if (!_ZN6Player7IsStateERNS_5StateE((void *)body, &data_ov002_0211022c))
@@ -167,14 +173,17 @@ unsigned char sender_kind(const void *body) {
     return kDoorNone;
 }
 
+unsigned char sender_kind(const void *body) {
+    const unsigned char kind = sender_kind_raw(body);
+    if (kind == kDoorNone) { s_door = 0; s_kind = kDoorNone; }
+    return kind;
+}
+
 unsigned char sender_frame(const void *body) {
     if (!body) return kDoorFrameNone;
     /* DOORKEY1: the door of a door step is the one nearest him when the step starts, kept until the step ends. Picked
        afresh every tick, a walk through one leaf of a double door on a slant came nearer the other leaf for a few ticks,
        and its frame 0 went out (the friends' copy of the leaf closed and opened again). */
-    static const void *s_door = 0;
-    static unsigned char s_kind = kDoorNone;
-    static unsigned s_t = 0;
     const unsigned now = comms_hub_now_ms();
     const unsigned char kind = sender_kind(body);
     const void *d = 0;
@@ -453,8 +462,10 @@ void watcher_apply(int seat, unsigned char kind, unsigned char frame,
     /* DOORKEY1: until the door has been moved once in this step (a frame above 0 applied) the pick follows him: a sender
        with no step flag (1.0.3) slides from the middle of a double door to the leaf he goes through, and the first frames of
        the swing can find him still halfway, as near one leaf as the other. Once it moved it is kept: a 1.0.3 sender's own
-       pick flips to the other leaf for a few ticks while he walks through on a slant (it reads that leaf's frame 0). */
-    if (d.door[0] && !d.moved && !d.gate && !coop_doorkey_off("leaf")) {
+       pick flips to the other leaf for a few ticks while he walks through on a slant (it reads that leaf's frame 0). The key
+       talk never moves a leaf (frame 0 throughout) and he is placed at the middle of the double door, so there the first pick
+       is kept for the whole talk and the swing that follows picks again. */
+    if (d.door[0] && !d.moved && !d.gate && kind != kDoorTalk && !coop_doorkey_off("leaf")) {
         void *nd = nearest_any(pos[0], pos[1], pos[2]);
         if (nd && nd != d.door[0]) give_back(d);
     }

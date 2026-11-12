@@ -156,7 +156,7 @@ void coop_doorkey_friend_unlock(int seat, int idx) {
                      fp[0] >> 12, fp[1] >> 12, fp[2] >> 12, (fp[0] - spot[0]) >> 12, (fp[1] - spot[1]) >> 12, (fp[2] - spot[2]) >> 12,
                      wall_ms());
     if (coop_doorkey_off("key")) return;
-    // func_ov100_02144a38's key: (-76, 0, 109) from him, turned with him, his area, the open animation
+    // func_ov100_02144a38's key: (-76, 0, 109) from him, turned with him, the door's area, the open animation
     const int kind = e[9] & 7;
     if (!key_model_ready(kind)) {
         if (g_log) std::fprintf(stderr, "[doorkey] key kind %d model not loaded here: no key prop wall=%lld\n", kind, wall_ms());
@@ -166,8 +166,7 @@ void coop_doorkey_friend_unlock(int seat, int idx) {
     int kpos[3];
     Vec3_RotateYAndTranslate(kpos, spot, yaw, koff);
     const short rot[3] = {0, yaw, 0};
-    char *me = local_player();
-    const int area = me ? (int)*(const signed char *)(me + 0xcc) : -1;
+    const int area = (int)*(const signed char *)(best + 0xcc);   // the leaf's own area, where the ROM's key stands
     char *key = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(kKeyCls, (unsigned)e[9], kpos, rot, area, -1);
     if (key) _ZN10daObjKey_c19func_ov089_0213115cEi(key, kKeyAnimOpen);
     if (g_log)
@@ -180,12 +179,11 @@ void coop_doorkey_frame(unsigned frames) {
     if ((int)data_0209f2f8 != g_touch_lvl) {
         g_touch_lvl = (int)data_0209f2f8;
         std::memset(g_cur, 0, sizeof g_cur);
-        for (int i = 0; i < g_ntouch; ++i) g_touch[i].done = false;
     }
     if (!g_touch_read) {
         g_touch_read = true;
         // SM64DS_DOORKEY_TOUCH=F:idx[;F:idx] (proof): at group frame F the leaf of door idx nearest to me does to me what its own
-        // Behavior does to a player in its box (func_ov100_021451c4 into the swing state): a plain walk through a door.
+        // Behavior does to a player in its box (func_ov100_021451c4 into the swing state): a plain walk through a door. Each fires once per run, not again after a level change.
         if (const char *t = std::getenv("SM64DS_DOORKEY_TOUCH")) {
             const char *p = t;
             while (*p && g_ntouch < 4) {
