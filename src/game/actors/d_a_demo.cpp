@@ -135,6 +135,7 @@ enum daDemo_c_AssetId {
 #include "math/Approach.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
+#include "nitro/mi/memory.h"
 
 struct OamAttr;
 
@@ -253,7 +254,6 @@ extern void SetSubBg2Offset(int a, int b);
 extern StaffRollStep data_ov002_02110e24[];
 extern StaffRollStep data_ov002_02110e9c[];
 extern void func_ov002_020f3828(int *c);
-extern void MIi_CpuCopy16(void *src, void *dst, int count);
 extern int data_ov002_021002a0[];
 extern s16 FX_SinCosTable_[];
 extern short atan2_hold_d_a_demo_1(int y, int x);
@@ -388,13 +388,12 @@ void daDemo_c::func_ov002_020f1fcc()
     mScroll->fadeLevel--;
     v = mScroll->fadeLevel;
     if (v != 0) {
-        G2x_SetBlendAlpha_((volatile u16 *)0x4001050, 4, 0x28, v, 0x10 - v);
+        G2S_SetBlendAlpha(4, 0x28, v, 0x10 - v);
         return;
     }
     gSubScreenLayers &= ~4;
-    *(volatile unsigned int *)0x4001000 =
-        (*(volatile unsigned int *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
-    G2x_SetBlendAlpha_((volatile u16 *)0x4001050, 0, 0x28, 0xc, 4);
+    GXS_SetVisiblePlane(gSubScreenLayers);
+    G2S_SetBlendAlpha(0, 0x28, 0xc, 4);
     mScroll->state++;
     for (i = 0; i < 3; i++) {
         mScroll->spriteDelay[i] = (i + 1) << 4;
@@ -564,8 +563,7 @@ int daDemo_c::func_ov002_020f23f0()
             if (mScroll->bg1Y >= 0xe0) {
                 mScroll->state++;
                 gSubScreenLayers = gSubScreenLayers & ~3;
-                *(volatile u32 *)0x4001000 =
-                    (*(volatile u32 *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
+                GXS_SetVisiblePlane(gSubScreenLayers);
             }
         }
         func_ov002_020f237c();
@@ -766,7 +764,7 @@ void StaffRoll::func_ov002_020f2aec(int idx) {
         s->credit[idx].blendTimer = 0;
         s->credit[idx].blend++;
         unsigned char cnt = s->credit[idx].blend;
-        G2x_SetBlendAlpha_((volatile u16 *)0x4001050, 1, 0x36, cnt, 0x10 - cnt);
+        G2S_SetBlendAlpha(1, 0x36, cnt, 0x10 - cnt);
     }
 
     if (s->credit[idx].timer < 30) {
@@ -774,7 +772,7 @@ void StaffRoll::func_ov002_020f2aec(int idx) {
     }
     s->credit[idx].timer = 0;
     s->credit[idx].step++;
-    *(volatile unsigned short *)0x4001050 = 0;
+    G2S_BlendNone();
 }
 
 void StaffRoll::func_ov002_020f2bf4(int idx) {
@@ -788,7 +786,7 @@ void StaffRoll::func_ov002_020f2bf4(int idx) {
         s->credit[idx].blendTimer = 0;
         s->credit[idx].blend++;
         unsigned char cnt = s->credit[idx].blend;
-        G2x_SetBlendAlpha_((volatile u16 *)0x4001050, 1, 0x36, 0x10 - cnt, cnt);
+        G2S_SetBlendAlpha(1, 0x36, 0x10 - cnt, cnt);
     }
 
     if (s->credit[idx].timer < 30) {
@@ -1207,8 +1205,8 @@ void func_ov002_020f39ec(char *self, int idx) {
         int src = i * 0x800 + ((v & 7) << 8);
         if (v & 8)
             src += 0x2000;
-        MIi_CpuCopy16(s->starChars + src,
-                      (u8 *)G2S_GetOBJCharPtr() + 0x2000 + idx * 0x100 + i * 0x400, 0x100);
+        MI_CpuCopy16(s->starChars + src,
+                     (u8 *)G2S_GetOBJCharPtr() + 0x2000 + idx * 0x100 + i * 0x400, 0x100);
     }
 }
 }
@@ -2263,7 +2261,7 @@ void StaffRoll::func_ov002_020f5b24() {
     gSubScreenLayers &= ~6;
     gSubScreenLayers |= 8;
     func_ov002_020f2f64();
-    *(volatile unsigned int *)0x4001000 &= ~0xe000;
+    GXS_SetVisibleWnd(GX_WNDMASK_NONE);
     this->window[0].active = 0;
     func_ov002_020f2a48();
 }
@@ -2487,7 +2485,7 @@ void func_ov002_020f5fe4(char* c)
     SetSubBg1Offset(0, 0);
     SetSubBg2Offset(0, 0);
     SetSubBg3Offset(0, 0);
-    GXS_SetGraphicsMode(0);
+    GXS_SetGraphicsMode(GX_BGMODE_0);
 
     gSubScreenLayers &= ~0x1f;
 
@@ -2499,12 +2497,15 @@ void func_ov002_020f5fe4(char* c)
     GX_LoadOBJPltt(f, 0, 0x200);
     Deallocate(f);
 
-    *(volatile u16*)0x400000e = (*(volatile u16*)0x400000e & ~3);
-    *(volatile u16*)0x400000e = (*(volatile u16*)0x400000e & 0x43) | 0x1100;
-    *(volatile u16*)0x4001008 = (*(volatile u16*)0x4001008 & ~3);
-    *(volatile u16*)0x4001008 = (*(volatile u16*)0x4001008 & 0x43) | 0xe08;
-    *(volatile u16*)0x400100a = (*(volatile u16*)0x400100a & ~3) | 2;
-    *(volatile u16*)0x400100a = (*(volatile u16*)0x400100a & 0x43) | 0x800;
+    G2_SetBG3Priority(0);
+    G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x8800,
+                         GX_BG_CHARBASE_0x00000);
+    G2S_SetBG0Priority(0);
+    G2S_SetBG0Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x7000,
+                      GX_BG_CHARBASE_0x08000, GX_BG_EXTPLTT_01);
+    G2S_SetBG1Priority(2);
+    G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x4000,
+                      GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_4BIT_NCG_BIN);
     DecompressLZ16(f, (void *)G2S_GetBG1CharPtr());
@@ -2519,8 +2520,9 @@ void func_ov002_020f5fe4(char* c)
     GXS_LoadBG1Scr(f, 0, 0x800);
     Deallocate(f);
 
-    *(volatile u16*)0x400100e = (*(volatile u16*)0x400100e & ~3) | 2;
-    *(volatile u16*)0x400100e = (*(volatile u16*)0x400100e & 0x43) | 0xc90;
+    G2S_SetBG3Priority(2);
+    G2S_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_256, GX_BG_SCRBASE_0x6000,
+                          GX_BG_CHARBASE_0x10000);
 
     if (GetOwnerLanguage() == 5) {
         r5 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_8BIT_S_NCG_BIN);
@@ -2539,7 +2541,7 @@ void func_ov002_020f5fe4(char* c)
 
     r5 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_8BIT_NCL_BIN);
     DC_FlushRange(r5, 0x200);
-    GX_SetBankForSubBGExtPltt(0x80);
+    GX_SetBankForSubBGExtPltt(GX_VRAM_SUB_BGEXTPLTT_0123_H);
     GXS_BeginLoadBGExtPltt();
     GXS_LoadBGExtPltt(r5, 0x4000, 0x200);
     GXS_LoadBGExtPltt(r5, 0x6000, 0x200);
@@ -2550,8 +2552,9 @@ void func_ov002_020f5fe4(char* c)
     GXS_LoadBG3Scr(f, 0, 0x800);
     Deallocate(f);
 
-    *(volatile u16*)0x400100c = (*(volatile u16*)0x400100c & ~3) | 2;
-    *(volatile u16*)0x400100c = (*(volatile u16*)0x400100c & 0x43) | 0xa90;
+    G2S_SetBG2Priority(2);
+    G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_256, GX_BG_SCRBASE_0x5000,
+                          GX_BG_CHARBASE_0x10000);
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DARK2_NSC_BIN);
     GXS_LoadBG2Scr(f, 0, 0x800);
@@ -3133,7 +3136,7 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
         if (r != 0 || a != 0) {
             t = (r * 0xa00) >> 12;
             if (t > 0x10) t = 0x10;
-            G2x_SetBlendAlpha_((volatile u16 *)0x4000050, 8, 1, t, 0x10 - t);
+            G2_SetBlendAlpha(8, 1, t, 0x10 - t);
         }
     }
     return 1;

@@ -1,11 +1,10 @@
 #include "types.h"
+#include "nitro/os/system.h"
 struct MatAnimComp { u8 pad0; u8 which; u16 base; };
 struct MatAnimEntry { u16 matIdx; u8 pad2[6]; struct MatAnimComp comp[13]; };
 struct Material { u8 pad0[0x24]; u32 polyAttr; u32 diffAmb; u32 specEmi; };
 struct MatAnimData { u8 pad0[4]; u8 *values; u16 count; u8 pad_a[2]; struct MatAnimEntry *entries; };
 struct Model { u8 pad0[4]; struct Material *materials; };
-
-extern void OS_Terminate(void);
 
 /* dExtAnmMaterial_c::Update's body: for each animated material, set its
    13 colour channels for this frame. Each channel's value is

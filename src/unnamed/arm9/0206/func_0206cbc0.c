@@ -1,4 +1,5 @@
 #include "types.h"
+#include "nitro/hw/mmap_shared.h"
 #include "private/debugger_block.h"
 struct Csl {
     int f0;
@@ -29,7 +30,7 @@ void func_0206ca7c(void *c, int b);
    (+8) counts them all. */
 void func_0206cbc0(struct Csl *sl, u8 *sb, int count)
 {
-    struct DebuggerBlock *sh = (struct DebuggerBlock *)0x027fff60;
+    struct DebuggerBlock *sh = (struct DebuggerBlock *)HW_ISD_RESERVED;
     void *base;
     void (*fn)(void *, int);
     int la[2];

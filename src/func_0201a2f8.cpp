@@ -3,13 +3,10 @@
 #include "Memory.h"
 #include "Sound.h"
 #include "private/fs_views.h"
+#include "nitro/mb/mb.h"
 
 extern "C" {
 
-/* func_0201a2f8 at 0x0201a2f8
- *
- * Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
- */
 extern void func_0201fec8(void);
 extern void func_02018aa4(void);
 extern void func_020134c8(void);
@@ -27,17 +24,25 @@ extern int OVERLAY_0_ID;
 extern int OVERLAY_1_ID;
 extern char data_0208ee5c[];
 
+/* The boot job (dScBoot_c and the download-play scene start it through
+ * func_0201a244). A download-play child first runs the start-up steps
+ * func_0201a054 left out: the link start (func_0201fec8), the file system
+ * (func_02018aa4) and func_020134c8, then reapplies the sound mode. A card
+ * boot loads the FS table into a heap block for the duration. Overlay 0
+ * builds the asset handle table and is unloaded again, and overlay 1 stays.
+ * A child loads sound group 0x2f with bank 0x36 and no font; a card boot
+ * loads the initial sound group and font 0. */
 void func_0201a2f8(int unused) {
-    int cond = (*(unsigned short*)0x27ffc40 == 2);
-    void* ptr;
-    if (cond) {
+    int isChild = MB_IsMultiBootChild();
+    void *ptr;
+    if (isChild) {
         func_0201fec8();
         func_02018aa4();
         func_020134c8();
         SetSoundMode(GetSoundMode());
     }
     ptr = 0;
-    if (!cond) {
+    if (!isChild) {
         int size = FS_TryLoadTable(0, 0);
         ptr = Memory::Allocate(size);
         FS_TryLoadTable(ptr, size);
@@ -50,12 +55,13 @@ void func_0201a2f8(int unused) {
         Memory::Deallocate(ptr);
     }
     LoadOverlay((int)&OVERLAY_1_ID);
-    if (cond) {
+    if (isChild) {
         Sound::LoadGroupAndSetBank(0x2f, 0x36);
     } else {
         Sound::LoadInitialGroup(0);
     }
-    if (cond) return;
-    LoadFont(0);
+    if (!isChild) {
+        LoadFont(0);
+    }
 }
 }

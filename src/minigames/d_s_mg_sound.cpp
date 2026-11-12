@@ -25,6 +25,7 @@ enum dScMgSound_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/g2.h"
 #include "nitro/gx/gx_load.h"
 
 /* The state/phase dispatch tables hold pointer-to-member records: the
@@ -288,7 +289,8 @@ s32 dScMgSound_c::InitResources() {
 
     gSubScreenLayers |= 4;
     file = LoadFile(ASSET_D_2D_MG_BG_SOUND2_NCG_BIN);
-    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x214;
+    G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x1000,
+                          GX_BG_CHARBASE_0x14000);
     DecompressLZ16(file, (void *)G2S_GetBG2CharPtr());
     Deallocate(file);
 
@@ -300,9 +302,9 @@ s32 dScMgSound_c::InitResources() {
     GXS_LoadBG2Scr(file, 0, 0x800);
     Deallocate(file);
 
-    REG_DB_BG2CNT &= ~0x40;
-    REG_DB_BG2OFS = 0;
-    REG_DB_BG2CNT = (REG_DB_BG2CNT & ~3) | 1;
+    G2S_BG2Mosaic(false);
+    G2S_SetBG2Offset(0, 0);
+    G2S_SetBG2Priority(1);
     DecompressLZ16(objChars, G2S_GetOBJCharPtr());
     GXS_LoadOBJPltt(objPltt, 0, 0x100);
     Deallocate(objChars);

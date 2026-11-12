@@ -1,13 +1,10 @@
 //cpp
 #include "nitro/os/cache.h"
-#include "private/fs_views.h"
-
-typedef struct FSFile FSFile;
+#include "nitro/fs/file.h"
 
 extern "C" {
 
 extern int myFS_ReadFile(FSFile *p_file, void *dst, int len);
-extern int FS_CloseFile(void *a);
 extern void func_02018770(void);
 extern int func_02018568(int a);
 
@@ -17,7 +14,7 @@ extern int func_02018568(int a);
    and dropped: this path never decompresses. */
 int func_020184e0(FSFile *self, unsigned int buf, unsigned int n) {
     int r;
-    unsigned int len = self->prop.file.bottom - self->prop.file.top; /* FS_GetLength */
+    unsigned int len = FS_GetLength(self);
     if (len > n)
         len = n;
     DC_FlushRange((void *)buf, len);

@@ -689,7 +689,7 @@ void dScMg3DEsp_c::RowFade(int i)
     mFade += 1;
     {
         unsigned char ip = mFade;
-        G2x_SetBlendAlpha_((volatile unsigned short *)0x4001050, 0, 4, 0x10 - ip, ip);
+        G2S_SetBlendAlpha(0, 4, 0x10 - ip, ip);
     }
     if (mFade < 0x10)
         return;
@@ -1011,7 +1011,7 @@ void dScMg3DEsp_c::Fade()
     if (mFadeTick >= 4) {
         mFadeTick = 0;
         mFade += 1;
-        G2x_SetBlendAlpha_((volatile unsigned short *)0x4001050, 0, 4, mFade, 0x10 - mFade);
+        G2S_SetBlendAlpha(0, 4, mFade, 0x10 - mFade);
     }
     UpdateCards();
     if (mFade < 0x10)
@@ -1242,7 +1242,7 @@ s32 dScMg3DEsp_c::InitResources()
     InitialiseVramGlobals();
 
     /* main BG0CNT: priority 1 */
-    *(volatile unsigned short*)0x4000008 = (*(volatile unsigned short*)0x4000008 & ~3) | 1;
+    G2_SetBG0Priority(1);
     Mg_SetTopScreenYOffset(0x10);
 
     mCamera.mLookAt.x = 0;
@@ -1273,10 +1273,11 @@ s32 dScMg3DEsp_c::InitResources()
 
     gSubScreenLayers |= 4;
     /* sub BG2CNT, then the sub BG2 scroll offsets */
-    *(volatile unsigned short*)0x400100c &= ~3;
-    *(volatile unsigned short*)0x400100c &= ~0x40;
-    *(volatile unsigned int*)0x4001018 = 0;
-    *(volatile unsigned short*)0x400100c = (*(volatile unsigned short*)0x400100c & 0x43) | 0x210;
+    G2S_SetBG2Priority(0);
+    G2S_BG2Mosaic(0);
+    G2S_SetBG2Offset(0, 0);
+    G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x1000,
+                          GX_BG_CHARBASE_0x10000);
 
     f = LoadFile(0x12);
     DecompressLZ16(f, (void *)((unsigned)G2S_GetBG2CharPtr() + 0x4000));

@@ -2,7 +2,8 @@
 #define PRIVATE_ROM_HEADER_VIEW_H
 
 /* The DS cartridge header (NitroSDK RomHeader, 0x160 bytes) as the multiboot
- * code reads it: each static module's entry point and load region. Only
+ * code reads it: each static module's ROM offset, entry point and load
+ * region, and the image size. Field names are the SDK RomHeader's. Only
  * offsets the ROM's code reads are named; everything else stays padding.
  * Plain C types: the consumers are C and C++ files that do not all include
  * types.h. */
@@ -12,13 +13,17 @@ typedef struct RomStaticRegion {
 } RomStaticRegion;
 
 typedef struct RomHeaderView {
-    unsigned char pad_00[0x24];
-    unsigned int main_entry_address; /* 0x24 -- ARM9 static */
+    unsigned char pad_00[0x20];
+    unsigned int main_rom_offset;    /* 0x20 -- ARM9 static */
+    unsigned int main_entry_address; /* 0x24 */
     RomStaticRegion main;            /* 0x28 */
-    unsigned char pad_30[0x34 - 0x30];
-    unsigned int sub_entry_address; /* 0x34 -- ARM7 static */
-    RomStaticRegion sub;            /* 0x38 */
-    unsigned char pad_40[0x160 - 0x40];
+    unsigned int sub_rom_offset;     /* 0x30 -- ARM7 static */
+    unsigned int sub_entry_address;  /* 0x34 */
+    RomStaticRegion sub;             /* 0x38 */
+    unsigned char pad_40[0x80 - 0x40];
+    unsigned int own_size; /* 0x80 -- the ROM image's size, without the
+                              authentication code that follows it */
+    unsigned char pad_84[0x160 - 0x84];
 } RomHeaderView;
 
 typedef char RomHeaderView_size_must_be_0x160[sizeof(RomHeaderView) == 0x160 ? 1 : -1];

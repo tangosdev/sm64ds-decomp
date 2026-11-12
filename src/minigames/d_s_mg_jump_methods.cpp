@@ -206,7 +206,7 @@ s32 dScMgJump_c::InitResources()
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     G3X_SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
-    *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 1;
+    G2_SetBG0Priority(1);
     fov = FX_Div(0xc0000, (s32)data_02082614);
 
     this->mCameras[0].mLookAt.x = 0;

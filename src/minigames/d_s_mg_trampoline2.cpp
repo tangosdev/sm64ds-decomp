@@ -56,6 +56,7 @@ enum d_s_mg_trampoline2_AssetId {
 #include "Sound.h"
 #include "math/MtxStack.h"
 #include "LevelRng.h"
+#include "nitro/mi/memory.h"
 
 /* local: the ROM re-reads the slot byte at each use here, so keep the read volatile. */
 #define ACTIVE_SLOT (*(volatile unsigned char *)&gActivePlayerSlot)
@@ -109,8 +110,6 @@ extern void Trmp2Spinner_Update(char *obj);
 extern void Trmp2Spinner_Init(void *obj, int hitCount);
 extern void Trmp2Spinner_SetModel(void *self);
 extern int sTrmp2BrushWord[];
-extern void MIi_CpuCopy32(int *src, int *dst, int len);
-extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
 extern const u16 sTrmp2BrushPltt[];
 extern dFdBrightness_c *gSceneFader;
 extern int sTrmp2TouchBlocked;
@@ -177,24 +176,24 @@ extern OamAttr *sMgTextSpritesItalian[];
 /* TUBUILD CONFLICT -- alternate declaration of sTrmp2Spinners, from the legacy file for Trmp2Spinner_InitAll, NOT applied: extern unsigned char *sTrmp2Spinners; */
 /* TUBUILD CONFLICT -- alternate declaration of sTrmp2Spinners, from the legacy file for Trmp2Spinner_LoadAll, NOT applied: extern int sTrmp2Spinners; */
 /* TUBUILD CONFLICT -- alternate declaration of sTrmp2StarModelFile, from the legacy file for Trmp2Spinner_Destruct, NOT applied: extern SharedFilePtr sTrmp2StarModelFile; */
-/* TUBUILD CONFLICT -- alternate declaration of MIi_CpuClear16, from the legacy file for _ZN18dScMgTrampoline2_c16OnGraphCallback0Ev, NOT applied: void MIi_CpuClear16(u16 val, char* dst, int nbytes); */
+/* TUBUILD CONFLICT -- alternate declaration of MIi_CpuClear16, from the legacy file for _ZN18dScMgTrampoline2_c16OnGraphCallback0Ev, NOT applied: void MI_CpuFill16(char* dst, u16 val, int nbytes); */
 /* TUBUILD CONFLICT -- alternate declaration of RandomIntInternal, from the legacy file for Trmp2_PickFaceA, NOT applied: extern int RandomIntInternal(void* seed); */
-/* TUBUILD CONFLICT -- alternate declaration of MIi_CpuClear16, from the legacy file for func_ov006_02123b24, NOT applied: extern void MIi_CpuClear16(unsigned short a, int b, int c); */
+/* TUBUILD CONFLICT -- alternate declaration of MIi_CpuClear16, from the legacy file for func_ov006_02123b24, NOT applied: extern void MI_CpuFill16(int b, unsigned short a, int c); */
 /* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for func_ov006_02123bf4, NOT applied: extern int _Z14ApproachLinearRiii(int &v, int a, int b); */
 /* Both callers use the existing ov006 helpers' void(void) contracts. The
  * unrelated daPly_c::St_Null_Init at the same RAM address belongs to ov002. */
 /* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for func_ov006_02123cb4, NOT applied: extern int _Z14ApproachLinearRiii(int *v, int step, int rate); */
 /* TUBUILD CONFLICT -- alternate declaration of func_0203cc28, from the legacy file for func_ov006_02123cb4, NOT applied: extern void func_0203cc28(int *p, int angle); */
 /* TUBUILD CONFLICT -- alternate declaration of TrmpItem_Spawn, from the legacy file for func_ov006_02123cb4, NOT applied: extern char *TrmpItem_Spawn(int a0, int *a1, int a2, int a3); */
-/* TUBUILD CONFLICT -- alternate declaration of MIi_CpuClear16, from the legacy file for func_ov006_02124088, NOT applied: extern void MIi_CpuClear16(u16 val, char *dst, int nbytes); */
+/* TUBUILD CONFLICT -- alternate declaration of MIi_CpuClear16, from the legacy file for func_ov006_02124088, NOT applied: extern void MI_CpuFill16(char *dst, u16 val, int nbytes); */
 /* TUBUILD CONFLICT -- alternate declaration of func_02012718, from the legacy file for func_ov006_02124088, NOT applied: extern void func_02012718(void *a, int b); */
 /* TUBUILD CONFLICT -- alternate declaration of func_02012468, from the legacy file for func_ov006_02124088, NOT applied: extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, int h); */
 /* TUBUILD CONFLICT -- alternate declaration of sTrmpStartTouchY, from the legacy file for func_ov006_02124228, NOT applied: extern short sTrmpStartTouchY; */
 /* TUBUILD CONFLICT -- alternate declaration of GetGameLanguage, from the legacy file for _ZN18dScMgTrampoline2_c11CanEndStateEi, NOT applied: extern int GetGameLanguage(void); */
 /* TUBUILD CONFLICT -- alternate declaration of GetGameLanguage, from the legacy file for _ZN18dScMgTrampoline2_c10StartRoundEi, NOT applied: extern "C" s32 GetGameLanguage(void); */
-/* TUBUILD CONFLICT -- alternate declaration of MIi_CpuClear16, from the legacy file for _ZN18dScMgTrampoline2_c10StartRoundEi, NOT applied: extern "C" void MIi_CpuClear16(u16 val, char *dst, int nbytes); */
+/* TUBUILD CONFLICT -- alternate declaration of MIi_CpuClear16, from the legacy file for _ZN18dScMgTrampoline2_c10StartRoundEi, NOT applied: extern "C" void MI_CpuFill16(char *dst, u16 val, int nbytes); */
 /* TUBUILD CONFLICT -- alternate declaration of GetGameLanguage, from the legacy file for func_ov006_021245a8, NOT applied: extern s32 GetGameLanguage(void); */
-/* TUBUILD CONFLICT -- alternate declaration of MIi_CpuClear16, from the legacy file for func_ov006_021245a8, NOT applied: extern void MIi_CpuClear16(u16 val, char *dst, int nbytes); */
+/* TUBUILD CONFLICT -- alternate declaration of MIi_CpuClear16, from the legacy file for func_ov006_021245a8, NOT applied: extern void MI_CpuFill16(char *dst, u16 val, int nbytes); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN2GX10LoadBGPlttEPKvjj, from the legacy file for func_ov006_021245a8, NOT applied: extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b); */
 
 dScMgTrampoline2_c *dScMgTrampoline2_c_classInit(void);
@@ -238,22 +237,24 @@ void dScMgTrampoline2_c::InitDisplay() {
     bgScr = LoadFile(ASSET_D_2D_MG_BG_TRAMPOLINE_HARD_NSC_BIN);
     bgPltt = LoadFile(ASSET_D_2D_MG_BG_TRAMPOLINE_HARD_NCL_BIN);
 
-    REG_BG2CNT = (REG_BG2CNT & ~3) | 2;
-    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x9110;
-    REG_BG2CNT &= ~0x40;
+    G2_SetBG2Priority(2);
+    G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x512, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x8800,
+                         GX_BG_CHARBASE_0x10000);
+    G2_BG2Mosaic(0);
 
     {
         char *dst = (char *)G2_GetBG2CharPtr();
         sp0 = 0;
-        MIi_CpuClear16(sp0, dst, 0x4000);
+        MI_CpuFill16(dst, sp0, 0x4000);
     }
     DecompressLZ16(bgChar, (void *)((char *)G2_GetBG2CharPtr() + 0x4000));
     DecompressLZ16(bgScr, G2_GetBG2ScrPtr());
     GX_LoadBGPltt(bgPltt, 0x1a0, 0x60);
 
-    REG_BG3CNT = (REG_BG3CNT & ~3) | 1;
-    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1318;
-    REG_BG3CNT &= ~0x40;
+    G2_SetBG3Priority(1);
+    G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9800,
+                         GX_BG_CHARBASE_0x18000);
+    G2_BG3Mosaic(0);
 
     DecompressLZ16(objChar, G2_GetOBJCharPtr());
     GX_LoadOBJPltt(objPltt, 0, 0x60);
@@ -278,7 +279,7 @@ s32 dScMgTrampoline2_c::InitResources() {
     G3X_SetFog(false, 0, 2, 0x1000);
     *(u16 *)0x4000060 = (*(u16 *)0x4000060 & ~0x3000) | 8;
     InitialiseVramGlobals();
-    *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 1;
+    G2_SetBG0Priority(1);
     fov = FX_Div(0xc0000, (s32)data_02082414);
     this->mCameras[0].mLookAt.x = 0;
     this->mCameras[0].mLookAt.y = -0x64000;
@@ -311,7 +312,7 @@ s32 dScMgTrampoline2_c::InitResources() {
 
 /* Vtable slot 18: reset the round. */
 void dScMgTrampoline2_c::StartRound(int /* arg */) {
-    G2x_SetBlendAlpha_((volatile u16 *)0x4000050, 1, 0x2e, 0x10, 0x10);
+    G2_SetBlendAlpha(1, 0x2e, 0x10, 0x10);
 
     mTouchStartX = data_020a0dbc[0];
     mTouchStartY = data_020a0dbc[1];
@@ -343,7 +344,7 @@ void dScMgTrampoline2_c::StartRound(int /* arg */) {
         volatile u16 z;
         char *dst = (char *)G2_GetBG3CharPtr();
         z = 0;
-        MIi_CpuClear16(z, dst, 0x6000);
+        MI_CpuFill16(dst, z, 0x6000);
     }
 
     BeginIntro();
@@ -386,7 +387,7 @@ void dScMgTrampoline2_c::StateIntro() {
         {
             int dst = (int)G2_GetBG3CharPtr();
             volatile u16 tmp = 0;
-            MIi_CpuClear16(tmp, (char *)dst, 0x6000);
+            MI_CpuFill16((void *)dst, tmp, 0x6000);
         }
 
         TrmpLine_CreateStartLineT2();
@@ -538,7 +539,7 @@ void dScMgTrampoline2_c::StateWaitExit() {
         volatile unsigned short h;
         r = (int)G2_GetBG3CharPtr();
         h = 0;
-        MIi_CpuClear16(h, (char *)r, 0x6000);
+        MI_CpuFill16((void *)r, h, 0x6000);
     }
     mRoundOver = 1;
     mState = &dScMgTrampoline2_c::StateDone;
@@ -906,7 +907,7 @@ int dScMgTrampoline2_c::OnGraphCallback0() {
         {
             char *dst = (char *)G2_GetBG3CharPtr();
             buf[0] = 0;
-            MIi_CpuClear16(buf[0], dst, 0x6000);
+            MI_CpuFill16(dst, buf[0], 0x6000);
         }
         mTouching = 0;
         mTouchReleased = 0;
@@ -949,13 +950,13 @@ void dScMgTrampoline2_c::InitBrush(int layer) {
 
     for (i = 0; i < 0x300; i++) {
         t0 = v;
-        MIi_CpuClear16(t0, scrPtr, 2);
+        MI_CpuFill16(scrPtr, t0, 2);
         v = (unsigned short)(v + 1);
         scrPtr += 2;
     }
 
     t1 = 0;
-    MIi_CpuClear16(t1, charPtr, 0x6000);
+    MI_CpuFill16(charPtr, t1, 0x6000);
     GX_LoadBGPltt(sTrmp2BrushPltt, 0xe0, 0x20);
 }
 
@@ -1006,10 +1007,10 @@ void dScMgTrampoline2_c::PaintSquare(int x_base, int y, int val, int n) {
 
                         addr = (int *)((char *)ret + ((x / 8) + (yy / 8) * 32) * 32 + (yy & 7) * 4);
 
-                        MIi_CpuCopy32(addr, sTrmp2BrushWord, 4);
+                        MI_CpuCopy32(addr, sTrmp2BrushWord, 4);
                         sTrmp2BrushWord[0] = (sTrmp2BrushWord[0] & (-1 ^ (mask << ((x & 7) * 4)))) |
                                              (val << ((x & 7) * 4));
-                        MIi_CpuCopy32(sTrmp2BrushWord, addr, 4);
+                        MI_CpuCopy32(sTrmp2BrushWord, addr, 4);
                     }
                 }
             }

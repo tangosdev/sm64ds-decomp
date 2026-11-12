@@ -19,13 +19,11 @@
 #include "types.h"
 #include "nitro/os/system.h"
 #include "nitro/os/interrupt.h"
-
-typedef void (*MIDmaCallback)(void *);
+#include "nitro/mi/dma.h"
 
 #define MIi_GX_LENGTH_ONCE 0x1d8
 #define REG_GXFIFO_ADDR 0x04000400
 #define REG_G3X_GXSTAT (*(vu32 *)0x04000600)
-#define OS_IE_GXFIFO 0x200000
 
 /* MI_CNT_SEND32: enable, 32-bit, destination fixed, start immediately */
 #define MI_CNT_SEND32(size) (0x84400000 | ((size) >> 2))
@@ -54,7 +52,6 @@ extern MIiGXDmaParams MIi_GXDmaParams;
 /* in ITCM */
 extern void MIi_DmaSetParams(u32 dmaNo, u32 src, u32 dest, u32 ctrl);
 extern void OSi_EnterDmaCallback(u32 dmaNo, u32 callback, u32 arg);
-extern void MI_WaitDma(u32 dmaNo);
 
 void MIi_FIFOCallback(void);
 void MIi_DMACallback(void *arg);

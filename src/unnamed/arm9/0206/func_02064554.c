@@ -1,6 +1,6 @@
 #include "types.h"
 #include "private/arm9_wbt.h"
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
+#include "nitro/mi/memory.h"
 
 /* NitroSDK WBT (wireless block transfer): this raises a system callback for
  * the command a peer sent. `work` is the WBT work area; its system command

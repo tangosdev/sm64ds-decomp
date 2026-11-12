@@ -4,10 +4,12 @@
 #include "nitro/fx/fx_trig.h"
 #include "nitro/os/thread.h"
 #include "nitro/spi/pm.h"
+#include "nitro/pxi/fifo.h"
+
+#define FALSE 0
 
 extern "C" {
 
-extern int PXI_SendWordByFifo(u32 arg0, u32 arg1, u32 arg2);
 extern int func_02040714(void);
 extern void func_02040724(void);
 extern void func_0201a4d0(void);
@@ -21,7 +23,7 @@ void func_0201a028(void) {
 }
 
 void func_02019ff4(void) {
-    while (PXI_SendWordByFifo(0xd, 2, 0) != 0) {
+    while (PXI_SendWordByFifo(PXI_FIFO_TAG_CTRDG, 2, FALSE) != PXI_FIFO_SUCCESS) {
     }
     func_0201a028();
 }
@@ -33,8 +35,8 @@ void func_02019f64(void *arg) {
         func_02019ff4();
         return;
     }
-    PMi_SendLEDPatternCommand(3);
-    PMi_SetLED(1);
+    PMi_SendLEDPatternCommand(PM_LED_PATTERN_BLINK_HIGH);
+    PMi_SetLED(PM_LED_ON);
     r = func_02040714();
     if (r != 0 && r != 1) {
         do {
@@ -45,8 +47,8 @@ void func_02019f64(void *arg) {
                 break;
         } while (r != 1);
     }
-    PMi_SendLEDPatternCommand(1);
-    PMi_SetLED(1);
+    PMi_SendLEDPatternCommand(PM_LED_PATTERN_ON);
+    PMi_SetLED(PM_LED_ON);
     func_02019ff4();
 }
 

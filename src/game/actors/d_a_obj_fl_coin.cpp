@@ -38,9 +38,6 @@
 // - The two callback helpers keep their address names and stay free
 //   extern "C" functions.
 // - The two daWater_Hakidasi_c slots past this span are not piece methods.
-// - AdvanceStepScript keeps the p_addr round trip and m1: removing
-//   the locals renumbers the TU's static-init temporaries, which the
-//   manifest pins.
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daObjFl_Coin_c_AssetId {
     ASSET_FL_14_00_BMD = 0x05ff,
@@ -261,7 +258,6 @@ void daObjFl_Puzzle_c::UpdateClsnMatrix() {
  * running and restarts the step timer. */
 void daObjFl_Puzzle_c::AdvanceStepScript() {
     daObjFl_Coin_c *a;
-    int p_addr;
     if (mHadClsn) {
         if (mCoinMgrId) {
             a = (daObjFl_Coin_c *)dActor_c::FindWithID(mCoinMgrId);
@@ -271,23 +267,14 @@ void daObjFl_Puzzle_c::AdvanceStepScript() {
     }
     if (mStepActive)
         return;
-    p_addr = (u32)&mStepIndex;
-    {
-        u8 idx = mStepIndex;
-        s8 *tab = (s8 *)mStepScript;
-        u8 *p = (u8 *)p_addr;
-        int m1 = ~0;
-        mState = tab[idx];
-        *p = *p + 1;
-        if (((s8 *)mStepScript)[mStepIndex] == (s8)m1) {
-            mStepIndex = 0;
-            if (mCoinMgrId) {
-                a = (daObjFl_Coin_c *)dActor_c::FindWithID(mCoinMgrId);
-                if (a) {
-                    u8 *f = &a->mPieceFlags;
-                    *f |= FLCOIN_FLAG_SCRIPT_WRAPPED;
-                }
-            }
+    mState = ((s8 *)mStepScript)[mStepIndex];
+    mStepIndex++;
+    if (((s8 *)mStepScript)[mStepIndex] == -1) {
+        mStepIndex = 0;
+        if (mCoinMgrId) {
+            a = (daObjFl_Coin_c *)dActor_c::FindWithID(mCoinMgrId);
+            if (a)
+                a->mPieceFlags |= FLCOIN_FLAG_SCRIPT_WRAPPED;
         }
     }
     mStepActive = 1;
@@ -323,12 +310,8 @@ void daObjFl_Puzzle_c::ShakeThenSlide(int dx, int dz, int slideTicks) {
         return;
     }
 
-    {
-        int *px = &mPosX;
-        int *pz = &mPosZ;
-        *px += dx;
-        *pz += dz;
-    }
+    mPosX += dx;
+    mPosZ += dz;
 }
 
 /* PIECE_STATE_INIT. Finds the FL_COIN manager; if there is one, remembers its
@@ -336,19 +319,11 @@ void daObjFl_Puzzle_c::ShakeThenSlide(int dx, int dz, int slideTicks) {
  * written back unchanged), ends the step and advances mState to WAIT. With no
  * manager the piece marks itself for destruction. */
 void daObjFl_Puzzle_c::StateInit() {
-    /* Stack shape: the ROM frame reserves these 16 bytes. */
-    volatile int pad[4];
     daObjFl_Coin_c *a = (daObjFl_Coin_c *)dActor_c::FindWithActorID(ACTOR_ID_FL_COIN, 0);
-    (void)&pad;
     if (a != 0) {
-        Vector3 *p = &a->mPos;
+        Vector3 &p = a->mPos;
         mCoinMgrId = a->uniqueID;
-        int z = p->z;
-        int x = p->x;
-        int y = mPosY;
-        a->mPosX = x;
-        a->mPosY = y;
-        a->mPosZ = z;
+        a->mPos = Vector3(p.x, mPos.y, p.z);
         mStepActive = 0;
         mState++;
         return;

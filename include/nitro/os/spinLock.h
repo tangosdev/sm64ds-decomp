@@ -16,19 +16,13 @@
  */
 
 #include "types.h"
+#include "nitro/hw/mmap_shared.h" /* HW_LOCK_ID_FLAG_MAIN, HW_*_LOCK_BUF */
 
 typedef volatile struct OSLockWord {
     u32 lockFlag;
     u16 ownerID;
     u16 extension;
 } OSLockWord;
-
-/* Main-memory lock words, at the top of the shared work area. */
-#define HW_LOCK_ID_FLAG_MAIN 0x027fffb0 /* two u32 masks of free ARM9 lock IDs */
-#define HW_SHARED_LOCK_BUF   0x027fffc0
-#define HW_CARD_LOCK_BUF     0x027fffe0
-#define HW_CTRDG_LOCK_BUF    0x027fffe8
-#define HW_INIT_LOCK_BUF     0x027ffff0
 
 /* Set in a lock word's ownerID while the ARM9 holds it. */
 #define OS_MAINP_LOCKED_FLAG 0x40

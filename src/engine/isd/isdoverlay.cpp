@@ -8,13 +8,13 @@
  *
  * The debugger keeps two tables, one for each processor, and data_020a9ec0
  * points at them. Only the two editors here read that pointer. FS_LoadOverlayImage
- * (func_02018b64) records each overlay it loads with func_0206d32c, and
- * FS_EndOverlay removes it again with func_0206cf98.
+ * (func_02018b64) records each overlay it loads with _ISDbgLib_RegistOverlayInfo, and
+ * FS_EndOverlay removes it again with _ISDbgLib_UnregistOverlayInfo.
  *
  * Why these six functions are one file:
  * - mwccarm emits .text in reverse source order, and the assert line
  *   numbers agree: func_0206d940 asserts at line 0x42, func_0206d8c4 at
- *   0x55, func_0206d32c at 0x121..0x151 and func_0206cf98 at
+ *   0x55, _ISDbgLib_RegistOverlayInfo at 0x121..0x151 and _ISDbgLib_UnregistOverlayInfo at
  *   0x1a9..0x1ca. In ROM order these functions run cf98, d32c, d8c4, d940.
  * - The two editors are the only callers of the other four, and the
  *   isdoverlay.c strings are referenced from these six functions and
@@ -39,9 +39,10 @@
 #include "types.h"
 #include "CP15.h"
 #include "cstd.h"
+#include "isdbglib.h"
 
 /* Both editors need these in force: measured, dropping the two opt offs
- * resizes func_0206cf98 and func_0206d32c outright. mwccarm applies a
+ * resizes _ISDbgLib_UnregistOverlayInfo and _ISDbgLib_RegistOverlayInfo outright. mwccarm applies a
  * pragma's final state to the whole file, so they cover the four helpers as
  * well, and the helpers compile the same with them. optimize_for_size is the
  * reason func_0206d8c4 and func_0206d940 enter their loops at the test. */
@@ -54,8 +55,8 @@
  * address through a 64-bit integer) made no difference to the object and are
  * gone. EB(t, n) is entry n of table t, reached as entry 0 of a table based n
  * entries further on; that one is load-bearing -- spelling those updates
- * `t->m_info[n]` instead costs func_0206cf98 ten words and resizes
- * func_0206d32c, so it is the form the ROM's address arithmetic takes. */
+ * `t->m_info[n]` instead costs _ISDbgLib_UnregistOverlayInfo ten words and resizes
+ * _ISDbgLib_RegistOverlayInfo, so it is the form the ROM's address arithmetic takes. */
 #define EB(t, n) ((struct OverlayTable *)((char *)(t) + ((n) << 4)))
 
 namespace IRQ {
@@ -75,8 +76,8 @@ struct OverlayInfo {
 /* An entry copied whole. C copies any struct with an ldm/stm block move,
  * and so does C++ for a class whose only member is an array. A class of
  * scalar members C++ copies member by member instead (notes/cpp-class-form.md).
- * The block move's register pressure is what gives func_0206cf98 and
- * func_0206d32c their 0x1c- and 0x44-byte frames. Copied as an
+ * The block move's register pressure is what gives _ISDbgLib_UnregistOverlayInfo and
+ * _ISDbgLib_RegistOverlayInfo their 0x1c- and 0x44-byte frames. Copied as an
  * OverlayInfo, the same source compiles with 0x14 and 0x34, three
  * instructions short in each. */
 struct OverlayInfoWords {
@@ -178,7 +179,7 @@ void func_0206d868(const SavedIntState *s) {
  *
  * The asserts index the entries after i as m_info[i + j]. Here j is the
  * absolute index i + 1. */
-int func_0206d32c(int type, u32 nVMA, u32 lma, u32 size) {
+int _ISDbgLib_RegistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 lma, u32 size) {
     unsigned long long end;
     unsigned long long addr64;
     int found;
@@ -330,7 +331,7 @@ int func_0206d32c(int type, u32 nVMA, u32 lma, u32 size) {
  * and an entry crossing either end is split or trimmed. Interrupts are off
  * and the table's lock word is held for the edit. Returns 0 for a bad
  * type. */
-int func_0206cf98(int type, u32 nVMA, u32 size) {
+int _ISDbgLib_UnregistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 size) {
     unsigned long long end;
     unsigned long long addr64;
     int found;

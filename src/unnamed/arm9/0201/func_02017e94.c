@@ -1,5 +1,4 @@
 #include "nitro/fs/overlay.h"
-extern int FS_UnloadOverlay(int a, int b);
 extern int func_0203d7b8(void);
 
 /* A loaded-overlay slot (see func_02017e60.c). */
@@ -29,7 +28,7 @@ void func_02017e94(int key) {
     }
     if (found == 0)
         return;
-    FS_UnloadOverlay(0, key);
+    FS_UnloadOverlay(MI_PROCESSOR_ARM9, key);
     func_02018c00(&info, 0, key);
     if (func_0203d7b8() != 0)
         return;

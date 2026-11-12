@@ -2,8 +2,9 @@
 #include "types.h"
 #include "Memory.h"
 #include "private/mb_views.h"
-
-typedef struct FSFile FSFile;
+#include "nitro/mi/memory.h"
+#include "private/fs_views.h"
+#include "nitro/wm/wm_api.h"
 
 extern "C" {
 
@@ -22,7 +23,7 @@ extern s32 data_020a0f78;
 extern void *data_020a0f7c;
 extern u8 data_020a0f9d[4];
 extern u16 data_020a0fbe[4][3];
-extern u8 data_020a0fec[];
+extern MBGameRegistry data_020a0fec;
 extern u8 data_020a1040[];
 extern u8 data_020a1064[];
 extern MBUserInfo data_020a10fc[4];
@@ -31,11 +32,11 @@ extern u8 data_020a1154[];
 extern u16 data_020a117c[4];
 extern u16 data_020a11a0[4];
 extern u16 data_020a11c4[4];
-extern s32 data_020a1680;
+extern WMStatus data_020a1680;
 extern u8 data_020a1780[];
 
 extern u8 MB_CommGetChildrenNumber(void);
-extern void func_0203f9d4(int a0, int a1);
+extern void func_0203f9d4(void *sysBuf, int callback);
 extern void func_0203e978(struct ChannelReply *reply);
 extern int OS_GetTickLo(void);
 extern int MB_Init(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, int dma);
@@ -43,15 +44,12 @@ extern int MB_SetParentCommParam(int a, int b, int c);
 extern void MB_CommSetParentStateCallback(u32 val);
 extern void func_0203e9a8(u32 a0, int sel, int a2);
 extern int MB_StartParent(int param0);
-extern int MB_GetSegmentLength(void *obj);
-extern int MB_ReadSegment(FSFile *file, void *b, unsigned int c);
-extern int MB_RegisterFile(void *a, void *b);
-extern void MI_CpuFill8(void *dst, unsigned char val, unsigned int size);
-extern int WM_ReadStatus(int *arg);
+extern u32 MB_GetSegmentLength(FSFile *file);
+extern int MB_ReadSegment(FSFile *file, void *buf, u32 len);
+extern int MB_RegisterFile(MBGameRegistry *game_reg, const void *buf);
 extern void *MB_CommGetChildUser(u16 idx);
 extern int MB_CommGetParentState(u16 a);
 extern int MB_CommResponseRequest(u16 arg0, int sel);
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
 extern int MB_CommIsBootable(u16 idx);
 extern void MB_End(void);
 
@@ -93,7 +91,7 @@ void func_0203e20c(void)
         void *ptr = Memory::Allocate(0xB000, 0x20);
         data_020a0f3c = ptr;
         data_020a0f0c = 0;
-        func_0203f9d4((int)ptr, (int)func_0203e978);
+        func_0203f9d4(ptr, (int)func_0203e978);
         data_020a0f50 += 1;
         data_020a0f1c &= 0xFFFB;
         break;
@@ -118,7 +116,7 @@ void func_0203e20c(void)
         p = Memory::Allocate(size, 0x20);
         data_020a0f7c = p;
         if (MB_ReadSegment(0, p, size) != 0) {
-            MB_RegisterFile(data_020a0fec, data_020a0f7c);
+            MB_RegisterFile(&data_020a0fec, data_020a0f7c);
         }
         data_020a0f70 = 0;
         data_020a0f50 += 1;
@@ -146,7 +144,7 @@ void func_0203e20c(void)
         data_020a0f08 = cnt2;
         do {
             *p9 = 0;
-            MI_CpuFill8(p11, 0, 0x16);
+            MI_CpuClear8(p11, 0x16);
             i2 += 1;
             p9 += 1;
             p11 += 0x16;
@@ -267,8 +265,8 @@ void func_0203e20c(void)
             sl = 1;
             do {
                 *p9d = 0;
-                MI_CpuFill8(p1112, 0, 0x16);
-                MI_CpuFill8(pbe, 0, 6);
+                MI_CpuClear8(p1112, 0x16);
+                MI_CpuClear8(pbe, 6);
                 sl += 1;
                 p9d += 1;
                 p1112 += 0x16;

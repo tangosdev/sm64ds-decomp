@@ -17,8 +17,8 @@
 
 // Notes: dBgW_KcMbg::SetFile and dBgActor_c::IsClsnInRange are header member
 // calls whose headers spell Fix12 as Fix12i, a plain s32 (Fix12<int> by value
-// homes the argument and size-DIFFs, 6az). data_ov065_0211c0d0/0211c0d4 speed
-// and timer tables, data_0209f2c0 clock byte, data_0209e650 RNG, and the
+// homes the argument and size-DIFFs, 6az). The data_ov065_0211c0d0 motion
+// table, data_0209f2c0 clock byte, data_0209e650 RNG, and the
 // ov035 CLPS block stay linker-named. g_profile_CT_MECHA08A/B live outside
 // this TU.
 
@@ -65,8 +65,12 @@ enum {
 };
 
 extern CLPS_Block data_ov035_021121b8;
-extern s32 data_ov065_0211c0d0[][2][2]; /* vertical speed, by setting, by direction */
-extern u16 data_ov065_0211c0d4[][2][4]; /* travel timer, by setting, by direction */
+/* The lift's motion for one clock setting and direction. */
+struct LiftMotion {
+    s32 vertSpeed;
+    u16 moveTimer;
+};
+extern LiftMotion data_ov065_0211c0d0[][2]; /* by setting, by direction */
 extern u8 data_0209f2c0;                /* arm9 clock setting */
 
 /* int-returning, so the ROM materializes the 0/1 before testing it. */
@@ -102,8 +106,8 @@ int daObjCtMecha08_c::InitResources() {
     mMoveDir = 0;
 
     u8 setting = data_0209f2c0;
-    mMoveTimer = data_ov065_0211c0d4[setting][mMoveDir][0];
-    mVertSpeed = data_ov065_0211c0d0[setting][mMoveDir][0];
+    mMoveTimer = data_ov065_0211c0d0[setting][mMoveDir].moveTimer;
+    mVertSpeed = data_ov065_0211c0d0[setting][mMoveDir].vertSpeed;
     mTerminalVelocity = -0x3c000;
     return 1;
 }
@@ -134,9 +138,9 @@ int daObjCtMecha08_c::Behavior() {
 
                 int setting = data_0209f2c0;
                 u8 d = mMoveDir;
-                mMoveTimer = data_ov065_0211c0d4[setting][d][0];
+                mMoveTimer = data_ov065_0211c0d0[setting][d].moveTimer;
                 d = mMoveDir;
-                mVertSpeed = data_ov065_0211c0d0[setting][d][0];
+                mVertSpeed = data_ov065_0211c0d0[setting][d].vertSpeed;
                 if (data_0209f2c0 == CLOCK_SETTING_RANDOM) {
                     u32 rnd = (u32)RandomIntInternal(&data_0209e650.value);
                     mMoveTimer = (u16)((rnd % 6) * 0x14 + 0xa);

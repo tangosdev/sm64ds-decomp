@@ -1,10 +1,10 @@
 //cpp
 #include "Ov007Display.h"
 #include "nitro/os/cache.h"
+#include "nitro/mi/dma.h"
 
 extern "C" {
 extern int func_ov007_020be0dc(void);
-extern void MI_DmaFill32(unsigned int ch, void *dst, unsigned int val, unsigned int n);
 extern int func_ov007_020c0b20(Ov007OamList *list, void *oam, int slot);
 extern void func_ov007_020be3bc(void);
 

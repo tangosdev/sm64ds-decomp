@@ -19,17 +19,6 @@
  *   them, overlay .data owns them. The model/KCL handles and the three
  *   spawn tables are defined here.
  * - g_profile_MC_WATER stays outside the licensed .text.
- *
- * Absorbed these legacy one-function sources (ROM address order), all deleted
- * by tools/tu_promote.py:
- *   [0] 0x02111a70  src/_ZN14daObjMcWater_cD1Ev.cpp
- *   [1] 0x02111abc  src/_ZN14daObjMcWater_cD0Ev.cpp
- *   [2] 0x02111b1c  src/func_ov009_02111b1c.cpp
- *   [3] 0x02111bd4  src/_ZN14daObjMcWater_c16CleanupResourcesEv.cpp
- *   [4] 0x02111c18  src/_ZN14daObjMcWater_c6RenderEv.cpp
- *   [5] 0x02111c4c  src/_ZN14daObjMcWater_c8BehaviorEv.cpp
- *   [6] 0x02111c74  src/_ZN14daObjMcWater_c13InitResourcesEv.cpp
- *   [7] 0x02111d8c  src/daObjMcWater_c_classInit.c
  */
 
 #include "common.h"
