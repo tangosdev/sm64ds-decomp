@@ -1,0 +1,9 @@
+{
+  "about": "One Mario with the wing cap on, high above the castle grounds start",
+  "mode": "solo",
+  "save": {"preset": "early"},
+  "proof": {"secs": 90, "shot_ms": 2000},
+  "players": [
+    {"character": "mario", "level": 1, "pos": [-1200, 1800, 6400], "yaw_deg": 180, "power": "wing"}
+  ]
+}

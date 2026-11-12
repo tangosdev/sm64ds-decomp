@@ -1,0 +1,10 @@
+{
+  "about": "Mario next to Klepto in Shifting Sand Land with his cap on; Yoshi elsewhere in the same course",
+  "save": {"preset": "basement"},
+  "room": {"collision": 1, "damage": 1, "interact": 1, "tp": 1},
+  "proof": {"secs": 150, "shot_ms": 2000, "census": [239]},
+  "players": [
+    {"character": "mario", "level": 16, "act": 1, "near": {"class": 239, "dist": 250}, "cap": "on"},
+    {"character": "yoshi", "level": 16, "act": 1}
+  ]
+}

@@ -1656,9 +1656,14 @@ static int port_starsel_painting_on(void)
 extern "C" int port_fader_blend_state_sub(int *evy, int *toWhite);   /* hal/fader_wipes.cpp */
 static unsigned g_apply_pending_scene = 0x187;
 
+extern "C" int port_scenario_take_starsel_skip(void);   /* TESTSPAWN1, hal/scenario.cpp */
 static void port_level_scene_interlude(void)
 {
     if (!port_starsel_painting_on())
+        return;
+    /* TESTSPAWN1: a test scenario's own warp goes straight in, with the act the scenario named, as SM64DS_STARSEL_PAINTING=0
+       does for every entry; once, for that warp only. Always 0 unless SM64DS_SCENARIO is set. */
+    if (port_scenario_take_starsel_skip())
         return;
     if (data_02092664 != 4) {
         if (g_apply_pending_scene != 4)
