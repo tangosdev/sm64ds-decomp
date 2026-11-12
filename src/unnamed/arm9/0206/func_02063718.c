@@ -27,7 +27,7 @@ extern int func_02064cd8(unsigned char *dst, unsigned short target_bmp, unsigned
 extern int func_02064a94(unsigned char *dst, unsigned short target_bmp, unsigned char cmd_counter,
                          const void *data, unsigned char size);
 
-int func_02063718(WBTWork *work, unsigned char *q) {
+int func_02063718(WBTWork *work, void *buf, int size) {
     int t;
     int ret = 0;
     WBTCommand *st = (WBTCommand *)((long long)(unsigned int)&work->queued_cmd);
@@ -46,7 +46,7 @@ int func_02063718(WBTWork *work, unsigned char *q) {
         work->cmd.my_cmd_counter = t;
         ret = func_02065bc0();
         b = func_02065bd0();
-        ret = func_02064f54(q, work->cmd.target_bmp, work->cmd.my_cmd_counter, ret, b);
+        ret = func_02064f54(buf, work->cmd.target_bmp, work->cmd.my_cmd_counter, ret, b);
         break;
     case WBT_CMD_REQ_GET_BLOCKINFO:
         MI_CpuCopy32(st, &work->cmd, sizeof(WBTCommand));
@@ -58,10 +58,10 @@ int func_02063718(WBTWork *work, unsigned char *q) {
                               work->cmd.u.get.recv_buf_table[i]);
         }
         if (((WBTCommand *)((unsigned int)&work->queued_cmd))->command == WBT_CMD_REQ_GET_BLOCK)
-            ret = func_02064e18(q, work->cmd.target_bmp, work->cmd.my_cmd_counter,
+            ret = func_02064e18(buf, work->cmd.target_bmp, work->cmd.my_cmd_counter,
                                 work->cmd.u.get.block_id, 0);
         else
-            ret = func_02064cd8(q, work->cmd.target_bmp, work->cmd.my_cmd_counter,
+            ret = func_02064cd8(buf, work->cmd.target_bmp, work->cmd.my_cmd_counter,
                                 work->cmd.u.get.block_id, 0);
         break;
     case WBT_CMD_REQ_GET_BLOCK:
@@ -74,16 +74,16 @@ int func_02063718(WBTWork *work, unsigned char *q) {
                               work->cmd.u.get.pkt_bmp_table[i], work->cmd.u.get.recv_buf_table[i]);
         }
         if (((WBTCommand *)((unsigned int)&work->queued_cmd))->command == WBT_CMD_REQ_GET_BLOCK)
-            ret = func_02064e18(q, work->cmd.target_bmp, work->cmd.my_cmd_counter,
+            ret = func_02064e18(buf, work->cmd.target_bmp, work->cmd.my_cmd_counter,
                                 work->cmd.u.get.block_id, 0);
         else
-            ret = func_02064cd8(q, work->cmd.target_bmp, work->cmd.my_cmd_counter,
+            ret = func_02064cd8(buf, work->cmd.target_bmp, work->cmd.my_cmd_counter,
                                 work->cmd.u.get.block_id, 0);
         break;
     case WBT_CMD_REQ_USER_DATA:
         MI_CpuCopy32(st, &work->cmd, sizeof(WBTCommand));
         work->cmd.my_cmd_counter = t;
-        ret = func_02064a94(q, work->cmd.target_bmp, work->cmd.my_cmd_counter,
+        ret = func_02064a94(buf, work->cmd.target_bmp, work->cmd.my_cmd_counter,
                             work->cmd.u.user_data.data, work->cmd.u.user_data.size);
         break;
     }

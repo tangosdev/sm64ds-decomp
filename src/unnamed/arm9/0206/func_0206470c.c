@@ -1,19 +1,16 @@
-typedef struct BitmapFind {
-    int field0;
-    int max;
-    int result;
-    int current;
-    int pad10;
-    unsigned int *bits;
-} BitmapFind;
+#include "private/arm9_wbt.h"
 
-int func_0206470c(BitmapFind *self) {
-    int idx = self->current + 1;
+/* The next packet pkt_bmp still lacks, searching on from the one received
+ * last (current) and wrapping at count; it is kept in next and returned, or
+ * -1 once every bit is set. */
+int func_0206470c(WBTPacketBitmap *pkt_bmp) {
+    int idx = pkt_bmp->current + 1;
     int start;
     int bit;
     unsigned int *word;
-    if (idx >= self->max) idx = 0;
-    word = self->bits + (idx >> 5);
+    if (idx >= pkt_bmp->count)
+        idx = 0;
+    word = pkt_bmp->bitmap + (idx >> 5);
     start = idx;
     bit = idx & 0x1f;
     /* found/fail gotos kept. The ROM leaves the loop with a forward branch over the found
@@ -24,7 +21,7 @@ int func_0206470c(BitmapFind *self) {
     for (;;) {
         if (!(*word & (1 << bit))) goto found;
         idx++;
-        if (idx < self->max) {
+        if (idx < pkt_bmp->count) {
             bit++;
             if (bit > 0x1f) {
                 bit = 0;
@@ -33,12 +30,12 @@ int func_0206470c(BitmapFind *self) {
         } else {
             idx = 0;
             bit = 0;
-            word = self->bits;
+            word = pkt_bmp->bitmap;
         }
         if (idx == start) goto fail;
     }
 found:
-    self->result = idx;
+    pkt_bmp->next = idx;
     return idx;
 fail:
     return -1;

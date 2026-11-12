@@ -557,10 +557,7 @@ void daBook_c::StateTiltBack() {
         mAnmModel.SetAnim((BCA_File *)data_ov020_02114aa8.filePtr, 0x40000000, 0x1000, 0);
         mUsesAnmModel = 1;
         mStateTimer = 0;
-        {
-            int *p60 = &mPosY;
-            *p60 = *p60 + 0x32000;
-        }
+        mPosY += 0x32000;
         mClsnOffset.y = -0x19000;
     }
     UpdatePos(0);
@@ -737,8 +734,7 @@ int daBookGen_c::Behavior()
             }
         }
     } else {
-        u16 *timer = &mSpawnTimer;
-        *timer = *timer + 1;
+        mSpawnTimer++;
     }
     return 1;
 }
