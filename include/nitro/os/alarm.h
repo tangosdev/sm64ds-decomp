@@ -3,8 +3,8 @@
 
 /*
  * The alarms of the Nitro SDK's os_alarm.c, under the SDK's own names
- * (pret/pokediamond include/nitro/OS_alarm_shared.h for struct OSiAlarm,
- * include/nitro/OS_thread_shared.h for its OSAlarm typedef, and
+ * (pret pokediamond's OS_alarm_shared.h for struct OSiAlarm,
+ * OS_thread_shared.h for its OSAlarm typedef, and
  * arm9/lib/NitroSDK/include/OS_alarm.h for the calls). The typedef is
  * written on the struct here, not ahead of it as the SDK does. The bodies
  * are in src/engine/os/OS_Alarm.cpp.
