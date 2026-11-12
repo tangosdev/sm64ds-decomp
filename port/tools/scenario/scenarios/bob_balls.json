@@ -1,0 +1,10 @@
+{
+  "about": "Two players at the top of Bob-omb Battlefield's iron ball hill",
+  "save": {"preset": "early"},
+  "room": {"collision": 1, "damage": 1, "interact": 1, "tp": 1},
+  "proof": {"secs": 150, "shot_ms": 2000, "census": [220]},
+  "players": [
+    {"character": "mario", "level": 6, "act": 1, "near": {"class": 220, "dist": 300}},
+    {"character": "luigi", "level": 6, "act": 1, "near": {"class": 220, "dist": 400, "angle_deg": 30}}
+  ]
+}
