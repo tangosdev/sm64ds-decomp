@@ -2657,7 +2657,7 @@ def test_bare_brace_where_a_signature_belongs_is_refused_not_emitted():
 
 def test_elaborated_return_type_is_not_a_shadow_declaration():
     """Real inputs: dCapEnemy_c::RespawnIfHasCap and
-    src/unnamed/arm9/0204/func_02041a94.cpp (flat C when this was written). Both open on the word `struct`, but as an elaborated
+    func_02041a94 (WFSi_FromBusyToFree), now in src/engine/link/unit0203d7b8.cpp (flat C when this was written). Both open on the word `struct`, but as an elaborated
     type specifier on the RETURN type -- the flat-C sources spell it that way
     constantly. Filing the line as a declaration put the function's own
     signature under `shadow struct dActor_c` and left its body headless below;
