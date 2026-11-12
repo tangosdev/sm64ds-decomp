@@ -4,7 +4,8 @@
  */
 #include "private/throw_context.h"
 
-extern int __throw_catch_compare(unsigned char *a, unsigned char *b, int *out);
+extern int __throw_catch_compare(const unsigned char *throwtype, const unsigned char *catchtype,
+                                 int *offset_result);
 
 int func_02071f88(void *a, ExSpecification *spec) {
     unsigned char *p;
