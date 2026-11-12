@@ -1341,6 +1341,30 @@ enum : int {
     kStompTouchDy = 190,         // the bouncer's feet this far over the friend's feet: the body is 150 units tall
     kHeadPushDown = -0x14000,    // an airborne friend underneath falls at least this fast (Fix12 / frame)
 };
+// FRIENDLOOK1 (bug 10): THE REACH OF A REAL STOMP. The cartridge stomps an enemy through its body cylinder
+// (dActor_c::JumpedOnByPlayer, src/runtime/actor/d_actor.cpp): falling, and the cylinders' push says my feet went into
+// his top by less than one frame's fall (pushback.y < 0 and > my vertical speed). A friend's body cylinder is the
+// player's own (func_ov002_020e63a4: 40 wide, 150 tall), so the stomp lands the first frame my feet are at or below his
+// head (150 over his feet) and no more than one frame's fall into it. The old test (feet up to 190 over his feet) took
+// the bounce up to 40 units over his head, off thin air. SM64DS_HEADBOUNCE_REACH=old puts the old test back.
+enum : int {
+    kBodyTop = 150,              // the player's body cylinder height (units)
+    kStompSlack = 10,            // his newest pose against the one drawn, and a frame of rounding
+    kStompDeepest = 75,          // the fastest fall (75 units a frame) reaches this far under his head at most
+};
+bool stomp_reach_old() {
+    static int v = -1;
+    if (v < 0) { const char *e = std::getenv("SM64DS_HEADBOUNCE_REACH"); v = (e && !std::strcmp(e, "old")) ? 1 : 0; }
+    return v == 1;
+}
+bool stomp_reach_ok(int dy, int vy, bool pound) {
+    if (stomp_reach_old()) return dy <= kStompTouchDy;
+    if (dy > kBodyTop) return false;                         // not on his head yet
+    int fall = vy < 0 ? (-vy) >> 12 : 0;                     // units a frame
+    if (pound && fall < kStompDeepest) fall = kStompDeepest; // a ground pound comes down hard, whatever the speed reads
+    if (fall > kBodyTop - kStompDeepest) fall = kBodyTop - kStompDeepest;
+    return dy >= kBodyTop - fall - kStompSlack;              // into his head by less than one frame's fall
+}
 int squash_curve(unsigned at) {
     if (!at || g.frame < at) return 0x1000;
     const unsigned f = g.frame - at;
@@ -1497,7 +1521,7 @@ void attacker_scan(char *me) {
         }
         // HEADBOUNCE1: the reach window starts 260 units up, 110 over a 150-unit body: the bounce came off thin air.
         // Bounce at the head instead (the fastest fall, 75 units a frame, still lands inside the window's 40-unit floor).
-        if (kind == kStomp && g.headbounce && my - s.y > kStompTouchDy) continue;
+        if (kind == kStomp && g.headbounce && !stomp_reach_ok(my - s.y, *(const int *)(me + kVertSpeed), gp_head)) continue;
         if (kind == kGrabCatch) {
             char *vb = body_of_seat(seat);
             if (!vb || !holder_try_grab(me, vb, seat)) continue;
