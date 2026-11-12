@@ -144,8 +144,8 @@ int daObjEmmYuka_c::InitResources()
     mModel.SetFile(dExtSimpleModel_c::LoadFile(*data_ov052_021125a0.model), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*data_ov052_021125a0.collision), mClsnMat,
-                          0x199, mAngleY, *(data_ov052_021125a0.clps));
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*data_ov052_021125a0.collision), mClsnMat, 0x199,
+                          mAngleY, *(data_ov052_021125a0.clps));
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mPath.FromID(param1 & 0xff);
     mPathDir = 1;

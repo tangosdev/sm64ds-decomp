@@ -117,8 +117,8 @@ int daObjCasket_c::InitResources() {
 
     UpdateModelTransform();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov071_021230d8), mClsnMat, 0x199,
-                          mAngleY, data_ov063_0211ebd8);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov071_021230d8), mClsnMat, 0x199, mAngleY,
+                          data_ov063_0211ebd8);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     return 1;
 }

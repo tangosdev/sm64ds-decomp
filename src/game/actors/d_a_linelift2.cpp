@@ -112,8 +112,8 @@ int daLinelift2_c::InitResources() {
     mVariant = param1 >> 8;
     mModel.SetFile(dExtSimpleModel_c::LoadFile(*gLinelift2ModelFiles[mVariant]), 1, -1);
 
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*gLinelift2CollisionFiles[mVariant]),
-                          mClsnMat, 0x199, mAngleY, *gLinelift2ClpsBlocks[mVariant]);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*gLinelift2CollisionFiles[mVariant]), mClsnMat, 0x199,
+                          mAngleY, *gLinelift2ClpsBlocks[mVariant]);
 
     UpdateClsnPosAndRot();
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);

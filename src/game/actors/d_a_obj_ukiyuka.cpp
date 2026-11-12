@@ -97,8 +97,8 @@ int daObjUkiyuka_c::InitResourcesFrom(Resources *resources, int bobAmplitude) {
     mModel.SetFile(dExtSimpleModel_c::LoadFile(*resources->model), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*resources->collision), mClsnMat, 0x1000,
-                          mAngleY, *resources->clps);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*resources->collision), mClsnMat, 0x1000, mAngleY,
+                          *resources->clps);
     mRestY = mPosY;
     mBobAmplitude = bobAmplitude;
     return 1;

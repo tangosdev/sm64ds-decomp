@@ -356,8 +356,7 @@ int daObjEwbIce_c::InitResources() {
         break;
     }
 
-    bmd = dExtSimpleModel_c::LoadFile(
-        *((EwbIceFileSlot *)data_ov073_021231bc)[mVariant].file);
+    bmd = dExtSimpleModel_c::LoadFile(*((EwbIceFileSlot *)data_ov073_021231bc)[mVariant].file);
     mModel.SetFile(bmd, 1, -1);
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
     mModel.mat4x3.t.x = mPosX >> 3;

@@ -380,9 +380,8 @@ int daObjHatenaBlock_c::InitResources()
     UpdateMeshCollider();
     mShadowMat = mModel.mat4x3;
     {
-        void *kcl = dBgW_Kc::LoadFile(data_ov102_0214e7d0);
-        mMeshCollider.SetFile((KCL_File *)(kcl), mClsnMat, 0x199, mAngleY,
-                              *(CLPS_Block *)(&data_ov002_0210d954));
+        KCL_File *kcl = dBgW_Kc::LoadFile(data_ov102_0214e7d0);
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, *(CLPS_Block *)(&data_ov002_0210d954));
     }
     mHomePosY = mPosY;
     mContentType = (unsigned char)param1;

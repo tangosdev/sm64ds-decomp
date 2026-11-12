@@ -2678,8 +2678,7 @@ int daDemo_c::anmModel_c::func_ov002_020f6618(SharedFilePtr *mdl, int nAnims, Sh
     char *self = (char *)this;
     int i;
     mModelFile = mdl;
-    if (((dExtModel_c *)self)
-            ->SetFile(dExtSimpleModel_c::LoadFile(*mModelFile), 1, tsData) == 0)
+    if (((dExtModel_c *)self)->SetFile(dExtSimpleModel_c::LoadFile(*mModelFile), 1, tsData) == 0)
         return 0;
     mNumAnimFiles = (u8)nAnims;
     mAnimFiles = anims;

@@ -171,8 +171,7 @@ int daObjSimpleBg_c::InitResources() {
     }
 
     idx = mVariant;
-    mModel.SetFile(dExtSimpleModel_c::LoadFile(*data_ov102_0214e188[idx].modelFile), 1,
-                   -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(*data_ov102_0214e188[idx].modelFile), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 

@@ -400,8 +400,7 @@ int daObjBlockL_c::InitResources() {
         break;
     }
 
-    mModel.SetFile(
-        dExtSimpleModel_c::LoadFile(*data_ov002_02108ab0[mVariant].modelFile), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(*data_ov002_02108ab0[mVariant].modelFile), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 

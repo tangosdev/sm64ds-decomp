@@ -156,8 +156,8 @@ int daObjBk_Kabe_c::InitResources() {
         mVariant = 1;
     }
     int idx = mVariant;
-    void *mdl = dExtSimpleModel_c::LoadFile(*data_ov079_02128058[idx].model);
-    mModel.SetFile((BMD_File *)mdl, 1, -1);
+    BMD_File *mdl = dExtSimpleModel_c::LoadFile(*data_ov079_02128058[idx].model);
+    mModel.SetFile(mdl, 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     int idx2 = mVariant;

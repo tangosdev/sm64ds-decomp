@@ -195,8 +195,8 @@ int daDossy_c::InitResources()
 {
     int i;
     int j;
-    void *f = dExtSimpleModel_c::LoadFile(data_ov065_0211d720);
-    mAnmModel.SetFile((BMD_File *)f, 1, -1);
+    BMD_File *f = dExtSimpleModel_c::LoadFile(data_ov065_0211d720);
+    mAnmModel.SetFile(f, 1, -1);
     dExtSimpleModel_c::LoadFile(data_ov002_0210d9c0);
     for (i = 0; i < 3; i++)
         dExtFrameCtrl_c::LoadFile(*data_ov065_0211c080[i]);

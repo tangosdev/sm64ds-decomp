@@ -177,13 +177,13 @@ int daObjSimpleLift_c::InitResources() {
      * Both arms stay duplicated so each LoadFile/SetFile pair is emitted. */
     if (mVariant == 6) {
         int tableOffset = mVariant * 0xc;
-        void *kcl = dBgW_Kc::LoadFile(**(SharedFilePtr **)(data_ov091_02135028 + tableOffset));
-        mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat, 0x1000, mAngleY,
+        KCL_File *kcl = dBgW_Kc::LoadFile(**(SharedFilePtr **)(data_ov091_02135028 + tableOffset));
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY,
                               *(CLPS_Block *)(*(void **)(data_ov091_0213502c + tableOffset)));
     } else {
         int tableOffset = mVariant * 0xc;
-        void *kcl = dBgW_Kc::LoadFile(**(SharedFilePtr **)(data_ov091_02135028 + tableOffset));
-        mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat, 0x199, mAngleY,
+        KCL_File *kcl = dBgW_Kc::LoadFile(**(SharedFilePtr **)(data_ov091_02135028 + tableOffset));
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY,
                               *(CLPS_Block *)(*(void **)(data_ov091_0213502c + tableOffset)));
     }
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);

@@ -122,8 +122,8 @@ s32 daKpa2Bg_c::Behavior() {
 int daKpa2Bg_c::InitResources() {
     mModel2.SetFile(dExtSimpleModel_c::LoadFile(daKpa2Bg_c_ModelFile), 1, -1);
     UpdateClsnMatrix();
-    mMovingMeshCollider2.SetFile(dBgW_Kc::LoadFile(daKpa2Bg_c_ClsnFile), mClsnMat,
-                                 0x1000, mAngleY, *(CLPS_Block *)(&data_ov046_021115bc));
+    mMovingMeshCollider2.SetFile(dBgW_Kc::LoadFile(daKpa2Bg_c_ClsnFile), mClsnMat, 0x1000, mAngleY,
+                                 *(CLPS_Block *)(&data_ov046_021115bc));
     mMovingMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mMovingMeshCollider2.Enable(this);
     mAngleXSpeed = 0;

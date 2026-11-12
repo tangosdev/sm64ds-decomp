@@ -65,8 +65,8 @@ extern "C" daObjIceBoard_c *daObjIceBoard_c_classInit() {
 }
 
 int daObjIceBoard_c::InitResources() {
-    void *modelFile = dExtSimpleModel_c::LoadFile(daObjIceBoard_c_ModelFile);
-    mModel.SetFile((BMD_File *)modelFile, 1, -1);
+    BMD_File *modelFile = dExtSimpleModel_c::LoadFile(daObjIceBoard_c_ModelFile);
+    mModel.SetFile(modelFile, 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 

@@ -121,8 +121,8 @@ int daObjCtMecha10_c::InitResources() {
         mModel.SetFile(dExtSimpleModel_c::LoadFile(gCtMechaObj10ModelFile), 1, -1);
         UpdateModelPosAndRotY();
         UpdateClsnPosAndRot();
-        mMeshCollider.SetFile(dBgW_Kc::LoadFile(gCtMechaObj10CollisionFile), mClsnMat,
-                              0x1000, mAngleY, data_ov035_021121d8);
+        mMeshCollider.SetFile(dBgW_Kc::LoadFile(gCtMechaObj10CollisionFile), mClsnMat, 0x1000,
+                              mAngleY, data_ov035_021121d8);
         mMeshCollider.SetEdgeToleranceShift(0);
         mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
         mRotationState = 0;

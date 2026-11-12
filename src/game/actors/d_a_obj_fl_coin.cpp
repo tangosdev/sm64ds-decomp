@@ -165,8 +165,8 @@ int daObjFl_Puzzle_c::InitResources() {
     mModel.SetFile(dExtSimpleModel_c::LoadFile(*data_ov064_0211adc8[mType]), 1, -1);
     UpdateModelMatrix();
     UpdateClsnMatrix();
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov064_0211c800), mClsnMat, 0x1000,
-                          mAngleY, data_ov064_0211baac);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov064_0211c800), mClsnMat, 0x1000, mAngleY,
+                          data_ov064_0211baac);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
     mStepScript = data_ov064_0211c198[mType];
     mStepIndex = 0;

@@ -71,8 +71,8 @@ int daObjKuruma_c::InitResourcesFrom(Resources *resources) {
     mModel.SetFile(dExtSimpleModel_c::LoadFile(*resources->model), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*resources->collision), mClsnMat, 0x199,
-                          mAngleY, *resources->clps);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*resources->collision), mClsnMat, 0x199, mAngleY,
+                          *resources->clps);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
     return 1;
 }

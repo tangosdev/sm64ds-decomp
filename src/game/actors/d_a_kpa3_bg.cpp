@@ -126,8 +126,8 @@ s32 daKpa3Bg_c::InitResources()
     CopyTexPalFromLevelModel(&mModel.data);
     data_0208e738 = 1;
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*data_ov060_0211953c[mVariant]), mClsnMat,
-                          0x1000, mAngleY, *data_ov060_0211a980[mVariant]);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*data_ov060_0211953c[mVariant]), mClsnMat, 0x1000,
+                          mAngleY, *data_ov060_0211a980[mVariant]);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
     mMeshCollider.Enable(this);

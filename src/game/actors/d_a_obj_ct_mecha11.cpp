@@ -148,8 +148,8 @@ int daObjCtMecha11_c::Behavior() {
 }
 
 int daObjCtMecha11_c::InitResources() {
-    void *mf = dExtSimpleModel_c::LoadFile(RotatingClockHand_ModelFile);
-    mModel.SetFile((BMD_File *)mf, 1, -1);
+    BMD_File *mf = dExtSimpleModel_c::LoadFile(RotatingClockHand_ModelFile);
+    mModel.SetFile(mf, 1, -1);
     mShadowModel.InitCuboid();
     UpdateModel();
     UpdateClsnPosAndRot();

@@ -238,8 +238,8 @@ extern "C" int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg)
     self->mModel.SetFile(dExtSimpleModel_c::LoadFile(*arg->model), 1, -1);
     self->UpdateModelTransform();
     self->UpdateClsnPosAndRot();
-    self->mMeshCollider.SetFile(dBgW_Kc::LoadFile(*arg->collision), self->mClsnMat,
-                                0x1000, self->mAngleY, *(arg->clps));
+    self->mMeshCollider.SetFile(dBgW_Kc::LoadFile(*arg->collision), self->mClsnMat, 0x1000,
+                                self->mAngleY, *(arg->clps));
     self->mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
     self->mMeshCollider.SetStoodOnCallback(&daObjMaruta_c::StoodOnCallback);
     self->mRestPosX = self->mPosX;

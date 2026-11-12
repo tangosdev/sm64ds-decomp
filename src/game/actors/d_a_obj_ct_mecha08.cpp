@@ -93,8 +93,8 @@ int daObjCtMecha08_c::InitResources() {
     mModel.SetFile(dExtSimpleModel_c::LoadFile(gCtMechaObj08aModelFile), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(gCtMechaObj08aCollisionFile), mClsnMat,
-                          0x199, mAngleY, data_ov035_021121b8);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(gCtMechaObj08aCollisionFile), mClsnMat, 0x199, mAngleY,
+                          data_ov035_021121b8);
 
     mHomePosX = mPosX;
     mHomePosY = mPosY;

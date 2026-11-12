@@ -61,8 +61,8 @@ s32 daObjEmmLog_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*data_ov052_021124d4.collision), mClsnMat,
-                          0x1000, mAngleY, *data_ov052_021124d4.clps);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*data_ov052_021124d4.collision), mClsnMat, 0x1000,
+                          mAngleY, *data_ov052_021124d4.clps);
 
     mBasePosY = mPosY;
     u8 amplitude = param1 & 0xff;

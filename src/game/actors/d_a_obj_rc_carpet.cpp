@@ -84,8 +84,8 @@ extern "C" SpawnInfo<daObjRcCarpet_c> g_profile_RC_CARPET = {
 
 int daObjRcCarpet_c::InitResources() {
     dExtSimpleModel_c::LoadFile(data_ov002_0210d9f0);
-    void *modelFile = dExtSimpleModel_c::LoadFile(*data_ov036_02113f58.model);
-    mAnmModel.SetFile((BMD_File *)modelFile, 1, -1);
+    BMD_File *modelFile = dExtSimpleModel_c::LoadFile(*data_ov036_02113f58.model);
+    mAnmModel.SetFile(modelFile, 1, -1);
     dExtFrameCtrl_c::LoadFile(gRcCarpetWaitAnimationFile);
     mAnmModel.SetAnim((BCA_File *)gRcCarpetWaitAnimationFile.filePtr, 0, 0x1000, 0);
     UpdateModelTransform();

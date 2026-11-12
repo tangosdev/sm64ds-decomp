@@ -85,8 +85,8 @@ int daObjKaitendai_c::InitResourcesFrom(ResourceDescriptor *descriptor, s16 angl
     mModel.SetFile(dExtSimpleModel_c::LoadFile(*descriptor->model), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*descriptor->collision), mClsnMat, 0x199,
-                          mAngleY, *descriptor->clps);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*descriptor->collision), mClsnMat, 0x199, mAngleY,
+                          *descriptor->clps);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mPrevAngleZ = angle;
     y = mAngleZ;

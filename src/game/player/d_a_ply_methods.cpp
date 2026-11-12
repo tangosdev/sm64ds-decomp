@@ -21671,18 +21671,18 @@ void daPly_c::func_ov002_020e5948() {
                     dExtSimpleModel_c::LoadFile(data_ov002_0210e780), 1, -1);
                 player->mModels.mBodyModels[4]->Func_020162C4(
                     (u32)data_ov002_020ff480[0xC6]->filePtr, 0, 0x1000, 0);
-                player->mModels.mAnmModel1.SetFile(
-                    dExtSimpleModel_c::LoadFile(data_ov002_0210e6f8), 1, 1);
+                player->mModels.mAnmModel1.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e6f8),
+                                                   1, 1);
                 player->mModels.mAnmModel1.SetAnim((BCA_File *)data_ov002_0210e750.filePtr, 0,
                                                    0x1000, 0);
-                player->mModels.mAnmModel2.SetFile(
-                    dExtSimpleModel_c::LoadFile(data_ov002_0210e7b0), 1, 1);
+                player->mModels.mAnmModel2.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e7b0),
+                                                   1, 1);
                 player->mModels.mAnmModel2.SetAnim((BCA_File *)data_ov002_0210e4c0.filePtr, 0,
                                                    0x1000, 0);
             }
         } else {
-            player->mModels.mAnmModel2.SetFile(
-                dExtSimpleModel_c::LoadFile(data_ov002_0210e7b0), 1, 1);
+            player->mModels.mAnmModel2.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e7b0), 1,
+                                               1);
             player->mModels.mAnmModel2.SetAnim((BCA_File *)data_ov002_0210e4c0.filePtr, 0, 0x1000,
                                                0);
         }

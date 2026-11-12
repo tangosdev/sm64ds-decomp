@@ -119,8 +119,8 @@ s32 daObjSwdoor_c::InitResourcesFrom(ResourceDescriptor *descriptor) {
     mModel.SetFile(dExtSimpleModel_c::LoadFile(*descriptor->model), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*descriptor->collision), mClsnMat, 0x1000,
-                          mAngleY, *descriptor->clps);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*descriptor->collision), mClsnMat, 0x1000, mAngleY,
+                          *descriptor->clps);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mMeshCollider.Enable(this);
     mTurnDir = param1 & 1;

@@ -106,8 +106,8 @@ extern "C" daWanwan_c *daWanwan_c_classInit() {
 }
 
 int daWanwan_c::InitResources() {
-    void *f = dExtSimpleModel_c::LoadFile(data_ov014_02114968);
-    mAnmModel.SetFile((BMD_File *)f, 1, 1);
+    BMD_File *f = dExtSimpleModel_c::LoadFile(data_ov014_02114968);
+    mAnmModel.SetFile(f, 1, 1);
     dExtSimpleModel_c::LoadFile(data_ov014_02114978);
     dExtFrameCtrl_c::LoadFile(data_ov014_02114980);
     dExtFrameCtrl_c::LoadFile(data_ov014_02114970);

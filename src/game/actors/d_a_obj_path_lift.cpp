@@ -72,8 +72,8 @@ int daObjPathLift_c::InitResources() {
     mShadowModel.InitCuboid();
     UpdateModelMatrix();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov100_02148a5c), mClsnMat, 0x1000,
-                          mAngleY, data_ov002_0210d7d4);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov100_02148a5c), mClsnMat, 0x1000, mAngleY,
+                          data_ov002_0210d7d4);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mPathSpeed = 0xa000;
     mHorzSpeed = mPathSpeed;

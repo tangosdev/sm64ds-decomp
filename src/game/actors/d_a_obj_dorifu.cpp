@@ -189,8 +189,8 @@ s32 daObjDorifu_c::InitResources(daObjDorifuResources *resources) {
     clsn = mPlankClsn;
     for (; j < 5; ++j) {
         modelDst->mat4x3 = *sourceMat;
-        clsn->SetFile(dBgW_Kc::LoadFile(*clsnResource->clsnFile), mPlatformMat, scale,
-                      mAngleY, *clsnResource->clps);
+        clsn->SetFile(dBgW_Kc::LoadFile(*clsnResource->clsnFile), mPlatformMat, scale, mAngleY,
+                      *clsnResource->clps);
         if (j == mActivePlank)
             clsn->Enable(this);
         modelDst++;
