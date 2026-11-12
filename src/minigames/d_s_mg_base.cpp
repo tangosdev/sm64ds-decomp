@@ -123,6 +123,26 @@ int Mg_GetSaveTable(void *scene);
    GetGameLanguage(); the helpers below hand its lists to the OAM
    wrappers. */
 extern OamAttr **sMgSpriteTables[];
+extern unsigned char gMgSaveDirty;
+extern void Mg_RankSessionBest(dScMgBase_c *scene);
+extern int Mg_GetTopRecord(void);
+extern int Mg_GetSessionBest(void);
+extern void Mg_SetSessionBest(int);
+extern void *LoadFile(int handle);
+extern void *func_020182bc(const char *path);
+extern int sMgSparkleSpritesGuard;
+extern OamAttr *data_ov004_020bea14[];
+extern void d_s_mg_basePlaySubHold(unsigned int a, unsigned int b, unsigned int c, int d, int e);
+extern int Mg_GetMusicMode(void);
+extern int Mg_GetMusicTrack(void);
+extern int sMgPaintWord;
+extern int sMgTopScreenYOffset;
+extern int *sMgMenuItem0SpritesByLanguage[];
+extern int *sMgMenuItem1SpritesByLanguage[];
+extern int *sMgMenuItem2SpritesByLanguage[];
+extern OamAttr *data_ov006_021346bc;
+extern u8 gMainScreenLayers;
+extern u8 gSubScreenLayers;
 }
 
 /* dScMgBase_c::IsAltVariant - slot 35, the LAST slot of dScMgBase_c's own
@@ -193,7 +213,6 @@ int Mg_GetLastRecordRank(dScMgBase_c *scene)
 
 namespace s20ad6fc {
 extern "C" {
-extern MgEntry gMgMenuRow;
 /* Returns the index (0..4) at which `value` would enter the scene's five
    saved records, or -1. Scoring mode 5 (gMgMenuRow.scoringMode) is
    lower-is-better and never places a value <= 0; every other mode is
@@ -218,9 +237,6 @@ int Mg_FindRecordRank(void *scene, int value)
 
 namespace s20ad79c {
 extern "C" {
-extern MgEntry gMgMenuRow;
-extern unsigned char gMgSaveDirty;
-
 /* Saves a two-value result into saved records 0 and 1 of the current scene.
    A first value <= 0 replaces both with the menu row's record defaults 0
    and 1; a second value <= 0 alone falls back to default 1. A positive value
@@ -263,7 +279,6 @@ int Mg_GetSavedRecord1(void) {
 
 namespace s20ad8b8 {
 extern "C" {
-extern MgEntry gMgMenuRow;
 /* Saved record 0 of the current scene; an empty record reads as the menu
    row's record default 0. 0 with no scene. */
 int Mg_GetSavedRecord0(void) {
@@ -280,8 +295,6 @@ int Mg_GetSavedRecord0(void) {
 
 namespace s20ad90c {
 extern "C" {
-extern void Mg_RankSessionBest(dScMgBase_c *scene);
-
 void Mg_CommitRecords(void) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0) return;
@@ -292,12 +305,9 @@ void Mg_CommitRecords(void) {
 
 namespace s20ad940 {
 extern "C" {
-int Mg_GetSessionBest(void);
 int Mg_FindRecordRank(void *scene, int value);
 void Mg_ClearNewRecordFlag(void);
-void Mg_SetSessionBest(int score);
 int Mg_GetSubmittedScore(void);
-extern unsigned char gMgSaveDirty;
 
 /* Ranks the session best (mSessionBest, from Mg_GetSessionBest) among the
    five saved records with Mg_FindRecordRank and keeps that rank in
@@ -348,9 +358,6 @@ void Mg_ClearNewRecordFlag(void) {
 
 namespace s20ada40 {
 extern "C" {
-extern MgEntry gMgMenuRow;
-extern int Mg_GetTopRecord(void);
-
 /* Stores `score` as the session best (mSessionBest). If it beats the saved
    top record (mTopRecord), it becomes the new record and mNewRecord is set.
    Beating it means, compared unsigned: in scoring mode 5, nonzero and either
@@ -391,9 +398,6 @@ int Mg_GetSessionBest(void) {
 
 namespace s20adb1c {
 extern "C" {
-extern int Mg_GetSessionBest(void);
-extern void Mg_SetSessionBest(int);
-extern MgEntry gMgMenuRow;
 /* Submits a score: stores it in mSubmittedScore (outside scoring mode 5, capped
    at the menu row's scoreCap when that is nonzero) and passes it to
    Mg_SetSessionBest when it beats the session best. */
@@ -488,8 +492,7 @@ int Mg_GetWorkBuffer(void) { return sMgWorkBuffer[0]; }
 
 namespace s20adc5c {
 extern "C" {
-void Ov004_Deallocate(void *ptr)
-{
+void Ov004_Deallocate(void *ptr) {
     Deallocate(ptr);
 }
 }
@@ -497,7 +500,6 @@ void Ov004_Deallocate(void *ptr)
 
 namespace s20adc68 {
 extern "C" {
-extern void *LoadFile(int handle);
 void *Ov004_LoadFile(int id) {
     return LoadFile(id);
 }
@@ -506,10 +508,7 @@ void *Ov004_LoadFile(int id) {
 
 namespace s20adc74 {
 extern "C" {
-extern void *func_020182bc(const char *path);
-
-void *Ov004_LoadFileByPath(const char *path)
-{
+void *Ov004_LoadFileByPath(const char *path) {
     return func_020182bc(path);
 }
 }
@@ -524,7 +523,7 @@ extern void Mg_RenderSpriteOnNoMtx(void *, int, int, int, int);
 /* State 1's draw: word 2 of the current language's entry in
    sMgSpriteTables, at mPos >> 12. */
 void MgFx::DrawFlyTo() {
-    int idx=s20adc80::GetGameLanguage();
+    int idx = s20adc80::GetGameLanguage();
     OamAttr **t = sMgSpriteTables[idx];
     s20adc80::Mg_RenderSpriteOnNoMtx(t[2], mPos[0] >> 0xc, mPos[1] >> 0xc, -1, -1);
 }
@@ -532,9 +531,6 @@ void MgFx::DrawFlyTo() {
 namespace s20adcc8 {
 extern "C" {
 extern void Mg_RenderSpriteOnNoMtx(void *a0, int a1, int a2, int a3, int a4);
-extern int sMgSparkleSpritesGuard;
-extern OamAttr *data_ov004_020bea14[];
-extern OamAttr *sMgSparkleSprites[];
 }
 }
 /* State 0's draw. The first call builds the 16-entry frame table
@@ -542,9 +538,9 @@ extern OamAttr *sMgSparkleSprites[];
    sMgSparkleSpritesGuard marks it built); the frame is picked by the low four
    bits of mTimer. */
 void MgFx::DrawSparkle() {
-    if ((s20adcc8::sMgSparkleSpritesGuard & 1) == 0) {
-        OamAttr **s = s20adcc8::data_ov004_020bea14;
-        OamAttr **d = s20adcc8::sMgSparkleSprites;
+    if ((sMgSparkleSpritesGuard & 1) == 0) {
+        OamAttr **s = data_ov004_020bea14;
+        OamAttr **d = sMgSparkleSprites;
         d[0] = s[0];
         d[1] = s[0];
         d[2] = s[0];
@@ -561,19 +557,18 @@ void MgFx::DrawSparkle() {
         d[13] = s[4];
         d[14] = s[4];
         d[15] = s[0];
-        s20adcc8::sMgSparkleSpritesGuard |= 1;
+        sMgSparkleSpritesGuard |= 1;
     }
     {
         int idx = ((int)mTimer) & 0xf;
         int x = mPos[0] >> 0xc;
         int y = mPos[1] >> 0xc;
-        s20adcc8::Mg_RenderSpriteOnNoMtx(s20adcc8::sMgSparkleSprites[idx], x, y, -1, -1);
+        s20adcc8::Mg_RenderSpriteOnNoMtx(sMgSparkleSprites[idx], x, y, -1, -1);
     }
 }
 
 namespace s20add88 {
 extern "C" {
-extern EntPMF sMgFxDrawTable[];
 /* Draws one record through its state's handler. */
 extern "C" void Mg_DrawFx(MgFx *c) {
     (c->*sMgFxDrawTable[c->mState])();
@@ -630,7 +625,6 @@ void MgFx::UpdateDrift() {
 
 namespace s20adf2c {
 extern "C" {
-extern EntPMF sMgFxUpdateTable[];
 /* Updates one record through its state's handler. */
 extern "C" void Mg_UpdateFx(MgFx *c) {
     (c->*sMgFxUpdateTable[c->mState])();
@@ -780,7 +774,6 @@ int dScMgBase_c::OnGraphCallback0()
 
 namespace s20ae1a8 {
 extern "C" {
-extern MgEntry gMgMenuRow;
 /* The menu row's scoring mode, or -1 with no scene. */
 int Mg_GetScoringMode(void) {
     if (gMgScene != 0) {
@@ -793,8 +786,6 @@ int Mg_GetScoringMode(void) {
 
 namespace s20ae1cc {
 extern "C" {
-extern MgEntry gMgMenuRow;
-
 /* The menu row's music mode, or 0 with no scene. The
    music helpers below treat 0 as "stop the music" and 1 as "play
    Mg_GetMusicTrack's track". */
@@ -820,9 +811,6 @@ int Mg_GetMusicTrack(void) {
 
 namespace s20ae20c {
 extern "C" {
-extern void d_s_mg_basePlaySubHold(unsigned int a, unsigned int b, unsigned int c, int d, int e);
-extern int Mg_GetMusicMode(void);
-extern int Mg_GetMusicTrack(void);
 /* Sound::PlaySub with third argument 0 and its flag set starts nothing:
    it only sets the music volume target (sMusicVolumeTarget, which
    ChangeMusicVolume and PauseMusic also write) back to 0x7f, with step
@@ -840,8 +828,6 @@ void Mg_RestoreMusic(void)
 
 namespace s20ae274 {
 extern "C" {
-extern int Mg_GetMusicMode(void);
-
 /* While a scene exists, starts sequence `id` on Sound::PlaySub's own
    player (sSubHandle) unless it is already the current one, and sets
    the music volume target to 0x40 [GUESS: ducks the music; PauseMusic uses
@@ -856,8 +842,6 @@ void Mg_PlayJingle(void* id) {
 
 namespace s20ae2c8 {
 extern "C" {
-int Mg_GetMusicMode(void);
-int Mg_GetMusicTrack(void);
 /* Music mode 0 stops the music; mode 1 plays the scene's track. */
 void Mg_StartMusic(void) {
     if (gMgScene == 0) return;
@@ -874,10 +858,6 @@ void Mg_StartMusic(void) {
 
 namespace s20ae330 {
 extern "C" {
-extern int Mg_GetMusicMode(void);
-extern int Mg_GetMusicTrack(void);
-extern MgEntry gMgMenuRow;
-
 /* Music mode 0 stops the music, and replays the scene's track only when
    the menu row's scene ID is 0x16f; any nonzero mode plays the
    track. */
@@ -896,8 +876,6 @@ void Mg_InitMusic(void) {
 }
 }
 
-namespace s20ae3b4 {
-extern "C" {
 /* dScMgBase_c::PaintSquare - slot 34.  THE BRUSH.
 
    Walks a `size` x `size` square centred on (cx, cy) and paints every cell
@@ -925,15 +903,7 @@ extern "C" {
    after the +0x88 vtable offset. The cartridge names no method of this
    class. */
 
-extern int sMgPaintWord;
-extern int sMgTopScreenYOffset;
-}
-}
-
 void dScMgBase_c::PaintSquare(int cx, int cy, int colour, int size) {
-    using s20ae3b4::sMgPaintWord;
-    using s20ae3b4::sMgTopScreenYOffset;
-
     int oi;
     int x0;
     int ci0;
@@ -1111,11 +1081,6 @@ extern "C" {
 int GetGameLanguage(void);
 void Mg_DrawSpriteList(void *self, int a1, int a2, void *a3);
 }
-
-extern int *sMgMenuItem0SpritesByLanguage[];
-extern int *sMgMenuItem1SpritesByLanguage[];
-extern int *sMgMenuItem2SpritesByLanguage[];
-extern OamAttr *data_ov006_021346bc;
 
 /* Draws the three-item overlay menu: each item's per-language sprite list
    at its mMenuItemNX/Y, followed by data_ov006_021346bc at the same spot.
@@ -1343,8 +1308,6 @@ struct MgMenuSaveArea {
     u8 subBgPltt[0x200];    /* 0x4428 -- first 0x80 bytes of the sub BG palette */
 };
 
-namespace s20aeed8 {
-extern "C" {
 /* dScMgBase_c::RestoreScreenFromMenu - slot 30.
 
    WHAT IT DOES, because the name says the opposite of both halves.  This is
@@ -1360,10 +1323,6 @@ extern "C" {
    down.  It is not a Yoshi egg, and it does not return a vector -- see the
    slot-30 block in include/dScMgBase_c.h for the AAPCS measurement that
    refutes the `ReturnVec` in the name. */
-extern u8 gMainScreenLayers;
-extern u8 gSubScreenLayers;
-extern u8 data_0209d460;
-extern u8 data_0209d458;
 
 /* RETURN TYPE, MEASURED -- and it corrects the header's earlier `int`, which
    that slot's own evidence block called "a HINT".  Declaring this member `int`
@@ -1378,24 +1337,18 @@ extern u8 data_0209d458;
 
    Spelled `void` it is byte-exact.  Both overrides and decl_common.h:2321
    already said void; the retail source did too. */
-}
-}
 
 void dScMgBase_c::RestoreScreenFromMenu() {
-    using s20aeed8::gSubScreenLayers;
-    using s20aeed8::data_0209d458;
-    using s20aeed8::gMainScreenLayers;
-    using s20aeed8::data_0209d460;
     MgMenuSaveArea *save = (MgMenuSaveArea *)this;
 
     gMainScreenLayers = 0;
     gSubScreenLayers = 0;
 
-    *(u32*)0x4000000 &= ~0x1f00;
-    *(u32*)0x4001000 &= ~0x1f00;
+    *(u32 *)0x4000000 &= ~0x1f00;
+    *(u32 *)0x4001000 &= ~0x1f00;
     REG_POWCNT1 = (mSavedScreenSwap << 15) | (REG_POWCNT1 & ~0x8000);
-    *(u32*)0x4000000 = (*(u32*)0x4000000 & ~0xe000) | ((u32)data_0209d460 << 13);
-    *(u32*)0x4001000 = (*(u32*)0x4001000 & ~0xe000) | ((u32)data_0209d458 << 13);
+    *(u32 *)0x4000000 = (*(u32 *)0x4000000 & ~0xe000) | ((u32)data_0209d460 << 13);
+    *(u32 *)0x4001000 = (*(u32 *)0x4001000 & ~0xe000) | ((u32)data_0209d458 << 13);
 
     GX_LoadBGPltt(save->mainBgPltt, 0x20, 0x1e0);
     {
