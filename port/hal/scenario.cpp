@@ -95,6 +95,7 @@ struct Scenario {
     int yaw = -1;                                   // DS angle units, 0x10000 a turn
     int near_cls = -1, near_dist = 200, near_dy = 0, near_index = 0, near_angle = 0, near_param = -1;
     bool drop = true;                               // put a near spot on the floor below it
+    bool drop_set = false;                          // drop named in the file: a position drops too when it is 1
     // state
     char power[16] = {}; int power_ticks = -1;
     int hat = -1;
@@ -164,7 +165,7 @@ void set_key(Scenario &s, const char *k, const char *v) {
     else if (!_stricmp(k, "yaw_deg")) s.yaw = (int)std::lround(std::atof(v) * 65536.0 / 360.0) & 0xffff;
     else if (!_stricmp(k, "near")) std::sscanf(v, "%i:%i:%i:%i:%i", &s.near_cls, &s.near_dist, &s.near_dy, &s.near_index, &s.near_angle);
     else if (!_stricmp(k, "near_param")) s.near_param = (int)std::strtol(v, nullptr, 0);
-    else if (!_stricmp(k, "drop")) s.drop = std::atoi(v) != 0;
+    else if (!_stricmp(k, "drop")) { s.drop = std::atoi(v) != 0; s.drop_set = true; }
     else if (!_stricmp(k, "power")) std::snprintf(s.power, sizeof s.power, "%s", v);
     else if (!_stricmp(k, "power_ticks")) s.power_ticks = std::atoi(v);
     else if (!_stricmp(k, "hat")) s.hat = char_of(v);
@@ -312,6 +313,8 @@ bool place(char *me) {
     if (S.has_pos) {
         x = S.pos[0] << 12; y = S.pos[1] << 12; z = S.pos[2] << 12;
         show_area(me, S.area);
+        int fy = 0;
+        if (S.drop_set && S.drop && floor_below(me, x, y + (300 << 12), z, &fy)) y = fy + (8 << 12);
     } else if (S.near_cls >= 0) {
         char *a = nth_actor(S.near_cls, S.near_index, S.near_param);
         if (!a) return false;

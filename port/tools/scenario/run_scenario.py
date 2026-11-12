@@ -109,6 +109,8 @@ def player_lines(p, proof):
             L.append("%s = %s" % (k, p[k]))
     if p.get("pos"):
         L.append("pos = %d,%d,%d" % tuple(int(v) for v in p["pos"]))
+    if p.get("drop") is not None:          # a position put on the floor below it (a near spot always is, unless near.drop is false)
+        L.append("drop = %d" % (1 if p["drop"] else 0))
     if p.get("yaw_deg") is not None:
         L.append("yaw_deg = %s" % p["yaw_deg"])
     if p.get("near"):

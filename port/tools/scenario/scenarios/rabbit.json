@@ -1,10 +1,44 @@
 {
-  "about": "Mario and Luigi next to a castle grounds rabbit that gives a key (the rabbit bugs 2, 6 and 8)",
-  "save": {"preset": "basement", "flags": ["rabbits_awake"]},
-  "room": {"collision": 1, "damage": 1, "interact": 1, "tp": 1},
-  "proof": {"secs": 150, "shot_ms": 2000, "census": [187]},
+  "about": "Mario next to his castle grounds key rabbit, Luigi a few steps away (the rabbit bugs 2, 6 and 8)",
+  "save": {
+    "preset": "basement",
+    "flags": [
+      "rabbits_awake"
+    ]
+  },
+  "room": {
+    "collision": 1,
+    "damage": 1,
+    "interact": 1,
+    "tp": 1
+  },
+  "proof": {
+    "secs": 150,
+    "shot_ms": 2000,
+    "census": [
+      187
+    ]
+  },
   "players": [
-    {"character": "mario", "level": 1, "near": {"class": 187, "dist": 150}},
-    {"character": "luigi", "level": 1, "near": {"class": 187, "dist": 300, "angle_deg": 40}}
+    {
+      "character": "mario",
+      "level": 1,
+      "near": {
+        "class": 187,
+        "param": 9,
+        "dist": 200,
+        "angle_deg": 180
+      }
+    },
+    {
+      "character": "luigi",
+      "level": 1,
+      "pos": [
+        -4750,
+        560,
+        -1500
+      ],
+      "drop": true
+    }
   ]
 }
