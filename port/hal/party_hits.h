@@ -37,6 +37,9 @@ int attached_holder(int victim_seat, int *kind);
 void attach_offsets(int kind, int *ahead, int *up);
 // TONGUE1: after the follower posed the ghosts, put the objects friends hold at their drawn hands / mouth (kHeldState).
 void held_after_follow();
+// FRIENDLOOK1: true when the friend on `seat` is in a hurt I gave him (a punch or a pound in the last 3 s) and the
+// room's damage is off, so his hurt took no health and the ROM arms no blink at its end (the ghost blink, bug 9).
+bool hurt_without_damage(int seat);
 
 struct Stats {
     unsigned long long claims_sent, claims_recv, applied, refused, bounces, eats_began, eats_spat, eats_aborted;

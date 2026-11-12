@@ -3668,6 +3668,14 @@ bool gw_attach_target(int holder_seat, unsigned tnow, int *x, int *y, int *z, in
     return true;
 }
 
+// FRIENDLOOK1 proof knob (off by default): SM64DS_BLINK_PROOF=1 logs, on the hub clock, when my own
+// invincibility timer (+0x6a0) starts and runs out and when each friend's blink starts and ends here.
+bool blink_proof() {
+    static int v = -1;
+    if (v < 0) v = std::getenv("SM64DS_BLINK_PROOF") ? 1 : 0;
+    return v == 1;
+}
+
 void gw_follow() {
     HITCH_SCOPE(HK_GHOSTFOLLOW);
     static int no_repose = -1, no_swap = -1, no_tongue = -1, no_blink = -1;
@@ -3688,6 +3696,16 @@ void gw_follow() {
     const bool in_cut = data_0209fc48 != 0;
     bool shown_any = false;
     ++g_gw_follow_n;
+    if (blink_proof() && me >= 0 && me < kPortBodySlots && data_0209f394[me]) {
+        static unsigned prev_own;
+        const unsigned own = *(const unsigned short *)((const char *)data_0209f394[me] + player::kInvincibleTimer);
+        if (own && !prev_own)
+            std::fprintf(stderr, "[blinkproof] t=%u f=%u OWN blink on (%u frames, anim %u)\n",
+                         tnow, g_gw_frame, own, (unsigned)player::anim_id(data_0209f394[me]));
+        if (!own && prev_own)
+            std::fprintf(stderr, "[blinkproof] t=%u f=%u OWN blink off\n", tnow, g_gw_frame);
+        prev_own = own;
+    }
     static bool exit_hooked = false;
     if (!exit_hooked) {
         exit_hooked = true;
@@ -3998,7 +4016,8 @@ void gw_follow() {
            frames; nothing counts a ghost's timer down, so this is the count. */
         if (!no_blink) {
             bool started = false;
-            unsigned v = ghost_tongue::blink_step(g_gblink[i], sm.anim, &started);
+            unsigned v = ghost_tongue::blink_step(g_gblink[i], sm.anim, &started,
+                                                  !port::party_hits::hurt_without_damage(s));
             /* LAB (POSE9 pictures): SM64DS_GHOST_BLINK_PIN=1 / 2 holds a ghost that has
                started a blink on the hidden (1) or the drawn (2) frame for good. */
             {
@@ -4009,8 +4028,19 @@ void gw_follow() {
             }
             *(unsigned short *)((char *)a + player::kInvincibleTimer) = (unsigned short)v;
             if (started)
-                std::fprintf(stderr, "[ghost-blink] f=%u seat=%d body=%d hurt anim %u: 36-frame blink\n",
-                             g_gw_frame, s, i, (unsigned)sm.anim);
+                std::fprintf(stderr, "[ghost-blink] f=%u seat=%d body=%d anim %u: %u-frame blink\n",
+                             g_gw_frame, s, i, (unsigned)sm.anim, v);
+            /* FRIENDLOOK1 proof: SM64DS_BLINK_PROOF=1, the wall time a friend's blink starts and ends here */
+            if (blink_proof()) {
+                static unsigned prev_v[kPortBodySlots];
+                if (v && !prev_v[i])
+                    std::fprintf(stderr, "[blinkproof] t=%u f=%u GHOST seat=%d blink on (%u frames, anim %u)\n",
+                                 comms_hub_now_ms(), g_gw_frame, s, v, (unsigned)sm.anim);
+                if (!v && prev_v[i])
+                    std::fprintf(stderr, "[blinkproof] t=%u f=%u GHOST seat=%d blink off\n",
+                                 comms_hub_now_ms(), g_gw_frame, s);
+                prev_v[i] = v;
+            }
             static int blog = -1;       // LAB: SM64DS_GHOST_BLINK_LOG=1, a line per blink frame with the ROM's own draw gate
             if (blog < 0) blog = std::getenv("SM64DS_GHOST_BLINK_LOG") ? 1 : 0;
             if (v && blog)

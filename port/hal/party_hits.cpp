@@ -120,6 +120,7 @@ struct G {
     EatClaimBook book;
     unsigned frame = 0;
     unsigned send_frame[kHubPartySeats] = {};
+    unsigned knock_sent[kHubPartySeats] = {};   // FRIENDLOOK1: the frame I last sent a melee / pound claim at each seat
     unsigned counter = 0;
     int prev_state = 0xFF, state = 0xFF;
     unsigned in_state = 0;
@@ -1546,7 +1547,7 @@ void attacker_scan(char *me) {
             g.squash_at[seat] = g.frame ? g.frame : 1;
             ++g.st.bounces;
         }
-        if (kind == kMelee || kind == kPound) attacker_feedback(seat, s);     // instant feedback on my screen
+        if (kind == kMelee || kind == kPound) { attacker_feedback(seat, s); g.knock_sent[seat] = g.frame ? g.frame : 1; }     // instant feedback on my screen
         if (g.log > 0) std::fprintf(stderr, "[phit] claim sent ik=%d -> seat %d stamp=%u (my %d,%d,%d; his %d,%d,%d)\n", kind, seat, stamp, mx, my, mz, s.x, s.y, s.z);
         return;                                                // one claim per frame
     }
@@ -1702,6 +1703,11 @@ int squash_scale_for_seat(int seat) {
 }
 
 void held_after_follow() { if (g.on && !g.held_off) held_after_follow_impl(); }
+
+bool hurt_without_damage(int seat) {
+    if (seat < 0 || seat >= kHubPartySeats || !g.on || g.judge.tog.damage) return false;
+    return g.knock_sent[seat] && g.frame - g.knock_sent[seat] < 90u;
+}
 
 int attached_holder(int victim_seat, int *kind) {
     if (!g.on || victim_seat < 0 || victim_seat >= kHubPartySeats) return -1;
