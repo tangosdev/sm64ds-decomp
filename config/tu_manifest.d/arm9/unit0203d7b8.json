@@ -599,38 +599,38 @@
       "ordinal": 80
     },
     {
-      "symbol": "func_02040a5c",
+      "symbol": "WFS_EnableSync",
       "address": "0x02040a5c",
       "size": "0x00000028",
-      "legacy_source": "src/unnamed/arm9/0204/func_02040a5c.cpp",
+      "legacy_source": "src/unnamed/arm9/0204/WFS_EnableSync.cpp",
       "ordinal": 81
     },
     {
-      "symbol": "func_02040a84",
+      "symbol": "WFS_GetCurrentBitmap",
       "address": "0x02040a84",
       "size": "0x00000010",
-      "legacy_source": "src/unnamed/arm9/0204/func_02040a84.c",
+      "legacy_source": "src/unnamed/arm9/0204/WFS_GetCurrentBitmap.c",
       "ordinal": 82
     },
     {
-      "symbol": "func_02040a94",
+      "symbol": "WFS_GetStatus",
       "address": "0x02040a94",
       "size": "0x00000010",
-      "legacy_source": "src/unnamed/arm9/0204/func_02040a94.c",
+      "legacy_source": "src/unnamed/arm9/0204/WFS_GetStatus.c",
       "ordinal": 83
     },
     {
-      "symbol": "func_02040aa4",
+      "symbol": "WFS_End",
       "address": "0x02040aa4",
       "size": "0x0000010c",
-      "legacy_source": "src/unnamed/arm9/0204/func_02040aa4.cpp",
+      "legacy_source": "src/unnamed/arm9/0204/WFS_End.cpp",
       "ordinal": 84
     },
     {
-      "symbol": "func_02040bb0",
+      "symbol": "WFS_Start",
       "address": "0x02040bb0",
       "size": "0x00000084",
-      "legacy_source": "src/unnamed/arm9/0204/func_02040bb0.c",
+      "legacy_source": "src/unnamed/arm9/0204/WFS_Start.c",
       "ordinal": 85
     },
     {
@@ -641,24 +641,24 @@
       "ordinal": 86
     },
     {
-      "symbol": "func_02040f30",
+      "symbol": "WFSi_OnChildSystemCallback",
       "address": "0x02040f30",
       "size": "0x000002f4",
-      "legacy_source": "src/unnamed/arm9/0204/func_02040f30.cpp",
+      "legacy_source": "src/unnamed/arm9/0204/WFSi_OnChildSystemCallback.cpp",
       "ordinal": 87
     },
     {
-      "symbol": "func_02041224",
+      "symbol": "WFSi_ReallocBitmap",
       "address": "0x02041224",
       "size": "0x000000cc",
-      "legacy_source": "src/unnamed/arm9/0204/func_02041224.cpp",
+      "legacy_source": "src/unnamed/arm9/0204/WFSi_ReallocBitmap.cpp",
       "ordinal": 88
     },
     {
-      "symbol": "func_020412f0",
+      "symbol": "WFSi_OnParentSystemCallback",
       "address": "0x020412f0",
       "size": "0x0000046c",
-      "legacy_source": "src/unnamed/arm9/0204/func_020412f0.cpp",
+      "legacy_source": "src/unnamed/arm9/0204/WFSi_OnParentSystemCallback.cpp",
       "ordinal": 89
     },
     {
@@ -669,171 +669,171 @@
       "ordinal": 90
     },
     {
-      "symbol": "func_020417d0",
+      "symbol": "WFSi_PortCallback",
       "address": "0x020417d0",
       "size": "0x00000120",
-      "legacy_source": "src/unnamed/arm9/0204/func_020417d0.c",
+      "legacy_source": "src/unnamed/arm9/0204/WFSi_PortCallback.c",
       "ordinal": 91
     },
     {
-      "symbol": "func_020418f0",
+      "symbol": "WFSi_OnSetMPDataDone",
       "address": "0x020418f0",
       "size": "0x00000040",
-      "legacy_source": "src/unnamed/arm9/0204/func_020418f0.c",
+      "legacy_source": "src/unnamed/arm9/0204/WFSi_OnSetMPDataDone.c",
       "ordinal": 92
     },
     {
-      "symbol": "func_02041930",
+      "symbol": "WFSi_SetMPData",
       "address": "0x02041930",
       "size": "0x000000d0",
-      "legacy_source": "src/unnamed/arm9/0204/func_02041930.c",
+      "legacy_source": "src/unnamed/arm9/0204/WFSi_SetMPData.c",
       "ordinal": 93
     },
     {
-      "symbol": "func_02041a00",
+      "symbol": "WFSi_ReadRequest",
       "address": "0x02041a00",
       "size": "0x00000094",
-      "legacy_source": "src/unnamed/arm9/0204/func_02041a00.c",
+      "legacy_source": "src/unnamed/arm9/0204/WFSi_ReadRequest.c",
       "ordinal": 94
     },
     {
-      "symbol": "func_02041a94",
+      "symbol": "WFSi_FromBusyToFree",
       "address": "0x02041a94",
       "size": "0x00000054",
-      "legacy_source": "src/unnamed/arm9/0204/func_02041a94.cpp",
+      "legacy_source": "src/unnamed/arm9/0204/WFSi_FromBusyToFree.cpp",
       "ordinal": 95
     },
     {
-      "symbol": "func_02041ae8",
+      "symbol": "WFSi_FromAliveToBusy",
       "address": "0x02041ae8",
       "size": "0x0000003c",
-      "legacy_source": "src/unnamed/arm9/0204/func_02041a94.cpp",
+      "legacy_source": "src/unnamed/arm9/0204/WFSi_FromBusyToFree.cpp",
       "ordinal": 96
     },
     {
-      "symbol": "func_02041b24",
+      "symbol": "WFSi_FromBusyToAlive",
       "address": "0x02041b24",
       "size": "0x0000003c",
-      "legacy_source": "src/unnamed/arm9/0204/func_02041a94.cpp",
+      "legacy_source": "src/unnamed/arm9/0204/WFSi_FromBusyToFree.cpp",
       "ordinal": 97
     },
     {
-      "symbol": "func_02041b60",
+      "symbol": "WFSi_FromFreeToBusy",
       "address": "0x02041b60",
       "size": "0x0000005c",
-      "legacy_source": "src/unnamed/arm9/0204/func_02041a94.cpp",
+      "legacy_source": "src/unnamed/arm9/0204/WFSi_FromBusyToFree.cpp",
       "ordinal": 98
     },
     {
-      "symbol": "func_02041bbc",
+      "symbol": "WFSi_MoveList",
       "address": "0x02041bbc",
       "size": "0x00000070",
-      "legacy_source": "src/unnamed/arm9/0204/func_02041a94.cpp",
+      "legacy_source": "src/unnamed/arm9/0204/WFSi_FromBusyToFree.cpp",
       "ordinal": 99
     },
     {
-      "symbol": "func_02041c2c",
+      "symbol": "WFSi_FindAliveForID",
       "address": "0x02041c2c",
       "size": "0x00000038",
-      "legacy_source": "src/unnamed/arm9/0204/func_02041c2c.c",
+      "legacy_source": "src/unnamed/arm9/0204/WFSi_FindAliveForID.c",
       "ordinal": 100
     },
     {
-      "symbol": "func_02041c64",
+      "symbol": "WFSi_FindBusy",
       "address": "0x02041c64",
       "size": "0x0000007c",
-      "legacy_source": "src/unnamed/arm9/0204/func_02041c64.c",
+      "legacy_source": "src/unnamed/arm9/0204/WFSi_FindBusy.c",
       "ordinal": 101
     },
     {
-      "symbol": "func_02041ce0",
+      "symbol": "WFSi_FindAlive",
       "address": "0x02041ce0",
       "size": "0x00000048",
-      "legacy_source": "src/unnamed/arm9/0204/func_02041ce0.c",
+      "legacy_source": "src/unnamed/arm9/0204/WFSi_FindAlive.c",
       "ordinal": 102
     },
     {
-      "symbol": "func_02041d28",
+      "symbol": "WFSi_SendOpenAck",
       "address": "0x02041d28",
       "size": "0x000000ec",
-      "legacy_source": "src/unnamed/arm9/0204/func_02041d28.cpp",
+      "legacy_source": "src/unnamed/arm9/0204/WFSi_SendOpenAck.cpp",
       "ordinal": 103
     },
     {
-      "symbol": "func_02041e14",
+      "symbol": "WFSi_SendAck",
       "address": "0x02041e14",
       "size": "0x0000034c",
-      "legacy_source": "src/unnamed/arm9/0204/func_02041e14.c",
+      "legacy_source": "src/unnamed/arm9/0204/WFSi_SendAck.c",
       "ordinal": 104
     },
     {
-      "symbol": "func_02042160",
+      "symbol": "WFSi_OnSendMessageDone",
       "address": "0x02042160",
       "size": "0x00000054",
-      "legacy_source": "src/unnamed/arm9/0204/func_02042160.c",
+      "legacy_source": "src/unnamed/arm9/0204/WFSi_OnSendMessageDone.c",
       "ordinal": 105
     },
     {
-      "symbol": "func_020421b4",
+      "symbol": "WFSi_EndTaskThread",
       "address": "0x020421b4",
       "size": "0x0000004c",
-      "legacy_source": "src/unnamed/arm9/0204/func_020421b4.c",
+      "legacy_source": "src/unnamed/arm9/0204/WFSi_EndTaskThread.c",
       "ordinal": 106
     },
     {
-      "symbol": "func_02042200",
+      "symbol": "WFSi_CreateTaskThread",
       "address": "0x02042200",
       "size": "0x00000054",
-      "legacy_source": "src/unnamed/arm9/0204/func_02042200.c",
+      "legacy_source": "src/unnamed/arm9/0204/WFSi_CreateTaskThread.c",
       "ordinal": 107
     },
     {
-      "symbol": "func_02042254",
+      "symbol": "WFSi_TaskThread",
       "address": "0x02042254",
       "size": "0x00000174",
-      "legacy_source": "src/unnamed/arm9/0204/func_02042254.cpp",
+      "legacy_source": "src/unnamed/arm9/0204/WFSi_TaskThread.cpp",
       "ordinal": 108
     },
     {
-      "symbol": "func_020423c8",
+      "symbol": "WFSi_NotifyBusy",
       "address": "0x020423c8",
       "size": "0x00000014",
-      "legacy_source": "src/unnamed/arm9/0204/func_020423c8.c",
+      "legacy_source": "src/unnamed/arm9/0204/WFSi_NotifyBusy.c",
       "ordinal": 109
     },
     {
-      "symbol": "func_020423dc",
+      "symbol": "WFSi_ReplaceRomArchive",
       "address": "0x020423dc",
       "size": "0x000000e4",
-      "legacy_source": "src/unnamed/arm9/0204/func_020423dc.c",
+      "legacy_source": "src/unnamed/arm9/0204/WFSi_ReplaceRomArchive.c",
       "ordinal": 110
     },
     {
-      "symbol": "func_020424c0",
+      "symbol": "WFSi_LoadTables",
       "address": "0x020424c0",
       "size": "0x000001a8",
-      "legacy_source": "src/unnamed/arm9/0204/func_020424c0.cpp",
+      "legacy_source": "src/unnamed/arm9/0204/WFSi_LoadTables.cpp",
       "ordinal": 111
     },
     {
-      "symbol": "func_02042668",
+      "symbol": "WFSi_RomArchiveProc",
       "address": "0x02042668",
       "size": "0x00000088",
-      "legacy_source": "src/unnamed/arm9/0204/func_02042668.c",
+      "legacy_source": "src/unnamed/arm9/0204/WFSi_RomArchiveProc.c",
       "ordinal": 112
     },
     {
-      "symbol": "func_020426f0",
+      "symbol": "WFSi_WriteRomCallback",
       "address": "0x020426f0",
       "size": "0x00000008",
-      "legacy_source": "src/unnamed/arm9/0204/func_020426f0.c",
+      "legacy_source": "src/unnamed/arm9/0204/WFSi_WriteRomCallback.c",
       "ordinal": 113
     },
     {
-      "symbol": "func_020426f8",
+      "symbol": "WFSi_ReadRomCallback",
       "address": "0x020426f8",
       "size": "0x00000024",
-      "legacy_source": "src/unnamed/arm9/0204/func_020426f8.c",
+      "legacy_source": "src/unnamed/arm9/0204/WFSi_ReadRomCallback.c",
       "ordinal": 114
     },
     {
@@ -937,7 +937,7 @@
   "notes": [
     "The .data and bss stay ROM-owned and are reached by extern, as the one-function sources did; the unit owns its .text, its static initializer (.init) and the .ctors word.",
     "Folded from 117 sources: the link module's 38 (#5389) and the wireless layer's 79 (83 functions). The file is C++ for Memory::Allocate (func_0203e20c, func_0203f604, func_020408b0) and the file-scope EmptyInit object; every function keeps C linkage inside one extern \"C\" block.",
-    "No pragma. func_0203e20c's step 3 reduces its accepted-children count to a result it never reads, as step 5 does with the result it loops on; the optimiser deletes only that last assignment, which keeps the count (the cartridge's addeq/andeq). func_020424c0 starts its size total at 0 and adds the leading word, which keeps the cartridge's add from the zeroed counter.",
+    "No pragma. func_0203e20c's step 3 reduces its accepted-children count to a result it never reads, as step 5 does with the result it loops on; the optimiser deletes only that last assignment, which keeps the count (the cartridge's addeq/andeq). WFSi_LoadTables starts its size total at 0 and adds the leading word, which keeps the cartridge's add from the zeroed counter.",
     "Absorbed arm9/func_02040384 (intact-object): its __sinit_func_02040384.cpp/.p__sinit_func_02040384.cpp are renamed for this file. sEmptyInit stays static and deadstripped, so data_020a0df4 stays a gap.",
     "func_0203e0ac and the tail of func_0203e20c copy the local input record into all four player records with chained field assignments. PlayerInputRecord.inputYaw is u16: both copies read it back with ldrh."
   ],

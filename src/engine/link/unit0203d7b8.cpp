@@ -74,7 +74,7 @@ struct Pair {
 typedef struct {
     char stack[0x400];
     OSThread thread;
-    /* 0x494, just past the OSThread (0x94 bytes in this SDK): func_02042200
+    /* 0x494, just past the OSThread (0x94 bytes in this SDK): WFSi_CreateTaskThread
        clears it before creating the thread; nothing in src/ reads it */
     u16 mFlag;
 } LoaderThreadBlock;
@@ -105,7 +105,7 @@ typedef struct {
     char pad[0xb50];
     u32 field_b50;
     u32 pad_b54;
-    int field_b58; /* func_02040a84 */
+    int field_b58; /* WFS_GetCurrentBitmap */
 } UnkStruct_020a3fc0;
 struct EmptyInit {
     EmptyInit() {}
@@ -215,7 +215,7 @@ extern MBUserInfo data_020a10fc[4];
 extern char data_020a11e4[];
 
 /* A worker thread; its 0x400-byte stack is data_020a11e4, just below it
- * (func_02042200 creates it). */
+ * (WFSi_CreateTaskThread creates it). */
 extern OSThread data_020a15e4;
 
 extern WMStatus data_020a1680;
@@ -277,39 +277,39 @@ void func_02040724(void);
 void func_02040790(void);
 void func_02040820(void);
 void func_020408b0(unsigned short arg);
-void func_02040a5c(u32 val);
-int func_02040a84(void);
-int func_02040a94(void);
-void func_02040aa4(void);
-void func_02040bb0(void);
-void func_02040f30(void *arg);
-void func_02041224(char *thiz, int n);
-void func_020412f0(void *arg);
+void WFS_EnableSync(u32 val);
+int WFS_GetCurrentBitmap(void);
+int WFS_GetStatus(void);
+void WFS_End(void);
+void WFS_Start(void);
+void WFSi_OnChildSystemCallback(void *arg);
+void WFSi_ReallocBitmap(char *thiz, int n);
+void WFSi_OnParentSystemCallback(void *arg);
 void func_0204175c(void);
-void func_020417d0(void *arg);
-void func_020418f0(void *arg);
-void func_02041930(void);
-void func_02041a00(FSFile *file);
-void func_02041a94(FileShareParentArea *area, FileShareNode *node);
-void func_02041ae8(FileShareParentArea *area, FileShareNode *node);
-void func_02041b24(FileShareParentArea *area, FileShareNode *node);
-FileShareNode *func_02041b60(FileShareParentArea *area);
-void func_02041bbc(FileShareNode **from, FileShareNode **to, FileShareNode *node);
-FileShareNode *func_02041c2c(FileShareParentArea *area, int blockId);
-FileShareNode *func_02041c64(FileShareParentArea *area, int offset, int size);
-FileShareNode *func_02041ce0(FileShareParentArea *area, int offset, int size);
-void func_02041d28(char *r7, FileShareNode *node, int);
-void func_02041e14(void);
-void func_02042160(void *arg);
-void func_020421b4(void);
-void func_02042200(void);
-void func_02042254(void);
-void func_020423c8(void);
-int func_020423dc(int *r6);
-void func_020424c0(void);
-int func_02042668(FSFile *self, int sel);
-int func_020426f0(FSArchive *p_arc, const void *src, u32 pos, u32 size);
-int func_020426f8(FSArchive *p_arc, void *dst, u32 pos, u32 size);
+void WFSi_PortCallback(void *arg);
+void WFSi_OnSetMPDataDone(void *arg);
+void WFSi_SetMPData(void);
+void WFSi_ReadRequest(FSFile *file);
+void WFSi_FromBusyToFree(FileShareParentArea *area, FileShareNode *node);
+void WFSi_FromAliveToBusy(FileShareParentArea *area, FileShareNode *node);
+void WFSi_FromBusyToAlive(FileShareParentArea *area, FileShareNode *node);
+FileShareNode *WFSi_FromFreeToBusy(FileShareParentArea *area);
+void WFSi_MoveList(FileShareNode **from, FileShareNode **to, FileShareNode *node);
+FileShareNode *WFSi_FindAliveForID(FileShareParentArea *area, int blockId);
+FileShareNode *WFSi_FindBusy(FileShareParentArea *area, int offset, int size);
+FileShareNode *WFSi_FindAlive(FileShareParentArea *area, int offset, int size);
+void WFSi_SendOpenAck(char *r7, FileShareNode *node, int);
+void WFSi_SendAck(void);
+void WFSi_OnSendMessageDone(void *arg);
+void WFSi_EndTaskThread(void);
+void WFSi_CreateTaskThread(void);
+void WFSi_TaskThread(void);
+void WFSi_NotifyBusy(void);
+int WFSi_ReplaceRomArchive(int *r6);
+void WFSi_LoadTables(void);
+int WFSi_RomArchiveProc(FSFile *self, int sel);
+int WFSi_WriteRomCallback(FSArchive *p_arc, const void *src, u32 pos, u32 size);
+int WFSi_ReadRomCallback(FSArchive *p_arc, void *dst, u32 pos, u32 size);
 int func_0204271c(unsigned short *o);
 int func_02042748(unsigned short *a, unsigned short *b);
 void func_02042778(void);
@@ -379,37 +379,37 @@ int func_0204271c(unsigned short *o) {
     return 1;
 }
 
-/* The read callback func_020423dc gives the child's "rom" archive, a
+/* The read callback WFSi_ReplaceRomArchive gives the child's "rom" archive, a
    NitroSDK FS_ARCHIVE_READ_FUNC: the archive's tables are in memory, so a
    read copies size bytes from address pos to dst and succeeds (0). */
 
-int func_020426f8(FSArchive *p_arc, void *dst, u32 pos, u32 size) {
+int WFSi_ReadRomCallback(FSArchive *p_arc, void *dst, u32 pos, u32 size) {
     MI_CpuCopy8((const void *)pos, dst, size);
     return 0;
 }
 
-/* The write callback func_020423dc gives the child's "rom" archive, a
+/* The write callback WFSi_ReplaceRomArchive gives the child's "rom" archive, a
    NitroSDK FS_ARCHIVE_WRITE_FUNC: 1 (FS_RESULT_FAILURE) for every write. */
 
-int func_020426f0(FSArchive *p_arc, const void *src, u32 pos, u32 size) {
+int WFSi_WriteRomCallback(FSArchive *p_arc, const void *src, u32 pos, u32 size) {
     return 1;
 }
 
-/* The child's archive proc. func_020423dc installs it for every command with
+/* The child's archive proc. WFSi_ReplaceRomArchive installs it for every command with
  * FS_SetArchiveProc, and it returns NitroSDK FSResult codes.
  * A read (FS_COMMAND_READFILE, 0) fails with 5 (ERROR) until the share is
  * ready (mState 2), and succeeds at once (0) when empty. Otherwise
- * func_02041a00 asks the parent for the data and the read goes asynchronous
+ * WFSi_ReadRequest asks the parent for the data and the read goes asynchronous
  * (6, PROC_ASYNC). A write (1) is unsupported (4), and any other command
  * falls through to the default handling (8, PROC_UNKNOWN). */
-int func_02042668(FSFile *self, int sel) {
+int WFSi_RomArchiveProc(FSFile *self, int sel) {
     switch (sel) {
     case 0:
         if (data_020a1fc0.mState != 2)
             return 5;
         if (self->arg.readfile.len == 0)
             return 0;
-        func_02041a00(self);
+        WFSi_ReadRequest(self);
         return 6;
     case 1:
         return 4;
@@ -424,9 +424,9 @@ int func_02042668(FSFile *self, int sel) {
  * the ROM archive: it reads each region, then sets the leading word to the
  * larger of the block size and the largest FAT file. The child only
  * allocates. Its caller func_02040c34 then registers the parent's block as
- * region 0x20000, or on the child passes mTableSize to func_02041224 to grow
+ * region 0x20000, or on the child passes mTableSize to WFSi_ReallocBitmap to grow
  * the receive work. */
-void func_020424c0(void) {
+void WFSi_LoadTables(void) {
     int sizes[4];
     const CARDRomRegion *ptrs[4];
     FSFile file;
@@ -505,19 +505,19 @@ void func_020424c0(void) {
     data_020a1fc0.mTableSize = sl;
 }
 
-/* Child: mount the file-share table block (func_020424c0's layout: a
+/* Child: mount the file-share table block (WFSi_LoadTables's layout: a
  * leading word, then the FAT, FNT, ARM9 and ARM7 overlay tables, each as its
  * size word and data rounded up to 0x20) as the "rom" archive.
  * The calls have the NitroSDK FS shapes:
  * - FS_FindArchive finds the archive by name.
  * - FS_UnloadArchive unloads it.
- * - FS_SetArchiveProc installs func_02042668 as its proc for every command.
+ * - FS_SetArchiveProc installs WFSi_RomArchiveProc as its proc for every command.
  * - FS_LoadArchive loads it from the FAT and FNT here, at base 0.
- *   func_020426f8 copies from memory for reads, and func_020426f0 fails
+ *   WFSi_ReadRomCallback copies from memory for reads, and WFSi_WriteRomCallback fails
  *   writes.
  * - FS_AttachOverlayTable attaches the two overlay tables.
  * Returns the block's leading word. */
-int func_020423dc(int *r6) {
+int WFSi_ReplaceRomArchive(int *r6) {
     int r5;
     FSArchive *h;
     int r3;
@@ -525,7 +525,7 @@ int func_020423dc(int *r6) {
 
     h = FS_FindArchive(data_02099e6c, 3);
     FS_UnloadArchive(h);
-    FS_SetArchiveProc(h, &func_02042668, -1);
+    FS_SetArchiveProc(h, &WFSi_RomArchiveProc, -1);
     r5 = *r6;
     r6++;
     for (r3 = 0; r3 < 4; r3++) {
@@ -533,14 +533,14 @@ int func_020423dc(int *r6) {
         arr[r3].f4 = *r6;
         r6 = (int *)((char *)arr[r3].f0 + ((arr[r3].f4 + 0x1f) & ~0x1f));
     }
-    FS_LoadArchive(h, 0, (u32)arr[0].f0, arr[0].f4, (u32)arr[1].f0, arr[1].f4, &func_020426f8,
-                   &func_020426f0);
+    FS_LoadArchive(h, 0, (u32)arr[0].f0, arr[0].f4, (u32)arr[1].f0, arr[1].f4,
+                   &WFSi_ReadRomCallback, &WFSi_WriteRomCallback);
     FS_AttachOverlayTable(MI_PROCESSOR_ARM9, arr[2].f0, arr[2].f4);
     FS_AttachOverlayTable(MI_PROCESSOR_ARM7, arr[3].f0, arr[3].f4);
     return r5;
 }
 
-void func_020423c8(void) {
+void WFSi_NotifyBusy(void) {
     OS_WakeupThreadDirect(&data_020a15e4);
 }
 
@@ -548,11 +548,11 @@ void func_020423c8(void) {
  * off the busy list; a loading one (state 1) has its region's file opened
  * from the ROM archive (FS_OpenFileDirect over
  * [mFileOffset, mFileOffset + mFileSize), by mFileId), its first three
- * 0x400-byte pages read into the cache, and is handed to func_02041d28; a
+ * 0x400-byte pages read into the cache, and is handed to WFSi_SendOpenAck; a
  * releasing one has its file closed and goes back to the free list
- * (func_02041a94). The arc local is the archive FS_FindArchive finds (by name,
+ * (WFSi_FromBusyToFree). The arc local is the archive FS_FindArchive finds (by name,
  * 3 characters). */
-void func_02042254(void) {
+void WFSi_TaskThread(void) {
     int i;
     FileShareNode *node;
     FSArchive *arc = FS_FindArchive(data_02099e6c, 3);
@@ -594,37 +594,37 @@ void func_02042254(void) {
             node->mLastRefillPage = b;
             node->mLoadingPage = c;
             irq = OS_DisableInterrupts();
-            func_02041d28(base, node, d);
+            WFSi_SendOpenAck(base, node, d);
             OS_RestoreInterrupts(irq);
         } else {
             FS_CloseFile(&node->mFile);
             irq = OS_DisableInterrupts();
-            func_02041a94(area, node);
+            WFSi_FromBusyToFree(area, node);
             OS_RestoreInterrupts(irq);
         }
     }
 }
 
-/* Start the file-share parent's loader thread (func_02042254) in its block
+/* Start the file-share parent's loader thread (WFSi_TaskThread) in its block
    at data_020a11e4: the 0x400-byte stack, then the OSThread (also the
-   symbol data_020a15e4, which func_020423c8 wakes). OS_CreateThread takes
+   symbol data_020a15e4, which WFSi_NotifyBusy wakes). OS_CreateThread takes
    (thread, entry, arg, stack top, stack size, priority 15 here), and
-   OS_WakeupThreadDirect then wakes the thread. Both this and func_020421b4
+   OS_WakeupThreadDirect then wakes the thread. Both this and WFSi_EndTaskThread
    reach the block through a pointer cast; declaring data_020a11e4 itself a
    LoaderThreadBlock changes the code of both. */
-void func_02042200(void) {
+void WFSi_CreateTaskThread(void) {
     LoaderThreadBlock *blk = (LoaderThreadBlock *)data_020a11e4;
     blk->mFlag = 0;
-    OS_CreateThread(&blk->thread, (void (*)(void *))func_02042254, blk,
+    OS_CreateThread(&blk->thread, (void (*)(void *))WFSi_TaskThread, blk,
                     blk->stack + sizeof(blk->stack), sizeof(blk->stack), 0xf);
     OS_WakeupThreadDirect(&blk->thread);
 }
 
-/* Stop the file-share loader thread (see func_02042200): until the thread is
+/* Stop the file-share loader thread (see WFSi_CreateTaskThread): until the thread is
  * terminated (state 2), wake it so that it sees mState cleared and returns,
- * then join it (OS_JoinThread sleeps on its join queue). func_02040aa4 calls
+ * then join it (OS_JoinThread sleeps on its join queue). WFS_End calls
  * this at shutdown. */
-void func_020421b4(void) {
+void WFSi_EndTaskThread(void) {
     LoaderThreadBlock *blk = (LoaderThreadBlock *)data_020a11e4;
     if (OS_IsThreadTerminated(&blk->thread))
         return;
@@ -636,9 +636,9 @@ void func_020421b4(void) {
 
 /* The parent's reply-send callback (WBT_PutUserData's; the WBTCommand it
  * is called with goes unread): once the file-sharing work is up (mState) and
- * running as the parent, clear mReplySending, which func_02041e14 set after
+ * running as the parent, clear mReplySending, which WFSi_SendAck set after
  * its send, and let it send the next reply. */
-void func_02042160(void *arg) {
+void WFSi_OnSendMessageDone(void *arg) {
     FileShareWork *g = &data_020a1fc0;
     if (g->mState == 0)
         return;
@@ -647,11 +647,11 @@ void func_02042160(void *arg) {
     {
         FileShareParentArea *s = (FileShareParentArea *)g->mArea;
         s->mReplySending = 0;
-        func_02041e14();
+        WFSi_SendAck();
     }
 }
 
-void func_02041e14(void) {
+void WFSi_SendAck(void) {
     FileShareParentArea *area = (FileShareParentArea *)FILE_SHARE_WORK->mArea;
     FileShareMsg resizeMsg;
     FileShareMsg replyMsg;
@@ -686,7 +686,7 @@ void func_02041e14(void) {
         resizeMsg.mFileId = 0;
         resizeMsg.mPacketSizeHigh = (u8)(data_020a1fc0.mParentPacketSize >> 8);
         resizeMsg.mPacketSizeLow = (u8)data_020a1fc0.mParentPacketSize;
-        WBT_PutUserData(children, &resizeMsg, WBT_SIZE_USER_DATA, func_02042160);
+        WBT_PutUserData(children, &resizeMsg, WBT_SIZE_USER_DATA, WFSi_OnSendMessageDone);
         area->mReplySending = 1;
         area->mResizeChildren = 0;
     } else {
@@ -757,20 +757,20 @@ void func_02041e14(void) {
         replyMsg.mFileId = fileId;
         replyMsg.mPacketSizeHigh = (u8)(packetSize >> 8);
         replyMsg.mPacketSizeLow = (u8)packetSize;
-        WBT_PutUserData(mask, &replyMsg, WBT_SIZE_USER_DATA, func_02042160);
+        WBT_PutUserData(mask, &replyMsg, WBT_SIZE_USER_DATA, WFSi_OnSendMessageDone);
         area->mReplySending = 1;
         area->mReplyPending &= ~mask;
     }
 }
 
-/* A node has finished loading (func_02042254). The children that asked for it
+/* A node has finished loading (WFSi_TaskThread). The children that asked for it
    while it was loading become owed a reply. If no child holds it yet, it is
    registered with WBT_RegisterBlock (with the first page as data when the region
-   fits in 0x400 bytes) and moved to the ready list by func_02041b24. Each
+   fits in 0x400 bytes) and moved to the ready list by WFSi_FromBusyToAlive. Each
    waiting child then takes a reference and gets the node's file id in its
    reply slot. Only while mState is set. The third word is
-   unused: func_02042254 passes 1 (reloaded from its frame into r2). */
-void func_02041d28(char *r7, FileShareNode *node, int) {
+   unused: WFSi_TaskThread passes 1 (reloaded from its frame into r2). */
+void WFSi_SendOpenAck(char *r7, FileShareNode *node, int) {
     OSIntrMode saved = OS_DisableInterrupts();
     int mask;
 
@@ -785,7 +785,7 @@ void func_02041d28(char *r7, FileShareNode *node, int) {
             int fileId = node->mFileId;
             WBT_RegisterBlock(&node->mRegion, fileId, data_02082158,
                               (diff <= 0x400) ? node->mPages[0] : 0, diff, 0);
-            func_02041b24((FileShareParentArea *)r7, node);
+            WFSi_FromBusyToAlive((FileShareParentArea *)r7, node);
         }
         for (bit = 0;; bit++) {
             if ((1 << bit) > mask) {
@@ -802,8 +802,8 @@ void func_02041d28(char *r7, FileShareNode *node, int) {
 }
 
 /* Find the ready node whose file covers [offset, offset + size); 0 if none.
-   func_020412f0 serves an open request from it. */
-FileShareNode *func_02041ce0(FileShareParentArea *area, int offset, int size) {
+   WFSi_OnParentSystemCallback serves an open request from it. */
+FileShareNode *WFSi_FindAlive(FileShareParentArea *area, int offset, int size) {
     FileShareNode *node = area->mReadyList;
     if (node == 0)
         return node;
@@ -818,9 +818,9 @@ FileShareNode *func_02041ce0(FileShareParentArea *area, int offset, int size) {
 
 /* The parent's node for a child's request (offset, length): a loading node
  * already holding that extent, or a fresh one off the free list
- * (func_02041b60) with the extent stored and the loader thread woken
- * (func_020423c8). */
-FileShareNode *func_02041c64(FileShareParentArea *area, int offset, int size) {
+ * (WFSi_FromFreeToBusy) with the extent stored and the loader thread woken
+ * (WFSi_NotifyBusy). */
+FileShareNode *WFSi_FindBusy(FileShareParentArea *area, int offset, int size) {
     FileShareNode *node;
     node = area->mBusyList;
     while (node != 0) {
@@ -830,11 +830,11 @@ FileShareNode *func_02041c64(FileShareParentArea *area, int offset, int size) {
         node = node->mNext;
     }
     if (node == 0) {
-        node = func_02041b60(area);
+        node = WFSi_FromFreeToBusy(area);
         node->mRefCount = 0;
         node->mFileOffset = offset;
         node->mFileSize = size;
-        func_020423c8();
+        WFSi_NotifyBusy();
     }
     return node;
 }
@@ -842,7 +842,7 @@ FileShareNode *func_02041c64(FileShareParentArea *area, int offset, int size) {
 /* The parent's ready-list search: the first ready node (mState 2) whose
  * registered block is blockId (the WBT block id WBT_RegisterBlock stored in
  * mRegion), else 0. */
-FileShareNode *func_02041c2c(FileShareParentArea *area, int blockId) {
+FileShareNode *WFSi_FindAliveForID(FileShareParentArea *area, int blockId) {
     FileShareNode *node = area->mReadyList;
     if (node == 0)
         return node;
@@ -856,14 +856,14 @@ FileShareNode *func_02041c2c(FileShareParentArea *area, int blockId) {
 
 /* Moves node off the list headed by *from onto the front of the list headed
  * by *to, with interrupts off. The parent's three node lists (free, ready,
- * busy) change only through here: func_02041b60, func_02041b24,
- * func_02041ae8 and func_02041a94 are its four moves.
+ * busy) change only through here: WFSi_FromFreeToBusy, WFSi_FromBusyToAlive,
+ * WFSi_FromAliveToBusy and WFSi_FromBusyToFree are its four moves.
  *
  * The search never advances: the loop either unlinks the node from behind
  * the head or breaks. A node third in its list is left where it is, and
  * nothing is moved. That is the ROM's code (0x02041bf4..0x02041c14), not a
  * decompilation slip; with a pool of three nodes, a list can be three long. */
-void func_02041bbc(FileShareNode **from, FileShareNode **to, FileShareNode *node) {
+void WFSi_MoveList(FileShareNode **from, FileShareNode **to, FileShareNode *node) {
     OSIntrMode saved = OS_DisableInterrupts();
     FileShareNode *cur = *from;
     if (cur == node) {
@@ -885,52 +885,52 @@ void func_02041bbc(FileShareNode **from, FileShareNode **to, FileShareNode *node
 
 /* free -> busy: takes the free list's head to be loaded (state 1) and
  * counts it in mBusyCount. */
-FileShareNode *func_02041b60(FileShareParentArea *area) {
+FileShareNode *WFSi_FromFreeToBusy(FileShareParentArea *area) {
     FileShareNode *node;
     node = area->mFreeList;
-    func_02041bbc(&area->mFreeList, &area->mBusyList, node);
+    WFSi_MoveList(&area->mFreeList, &area->mBusyList, node);
     node->mState = 1;
     area->mBusyCount += 1;
     return node;
 }
 
 /* busy -> ready: the loader has read the region's first pages and
- * func_02041d28 has registered it (state 2). */
-void func_02041b24(FileShareParentArea *area, FileShareNode *node) {
-    func_02041bbc(&area->mBusyList, &area->mReadyList, node);
+ * WFSi_SendOpenAck has registered it (state 2). */
+void WFSi_FromBusyToAlive(FileShareParentArea *area, FileShareNode *node) {
+    WFSi_MoveList(&area->mBusyList, &area->mReadyList, node);
     node->mState = 2;
 }
 
 /* ready -> busy: no child reads the node's region any more, so the loader
  * closes its file (state 3, releasing). */
-void func_02041ae8(FileShareParentArea *area, FileShareNode *node) {
-    func_02041bbc(&area->mReadyList, &area->mBusyList, node);
+void WFSi_FromAliveToBusy(FileShareParentArea *area, FileShareNode *node) {
+    WFSi_MoveList(&area->mReadyList, &area->mBusyList, node);
     node->mState = 3;
 }
 
 /* busy -> free: the loader has closed the node's file (state 0), and the
  * node is no longer counted in mBusyCount. */
-void func_02041a94(FileShareParentArea *area, FileShareNode *node) {
-    func_02041bbc(&area->mBusyList, &area->mFreeList, node);
+void WFSi_FromBusyToFree(FileShareParentArea *area, FileShareNode *node) {
+    WFSi_MoveList(&area->mBusyList, &area->mFreeList, node);
     node->mState = 0;
     area->mBusyCount -= 1;
 }
 
 /* The open request (kind 0) a child sends the parent: FileShareMsg's layout
  * (arm9_a1fc0_file_share.h), with the region's length and offset where the
- * replies carry mFlag and mFileId. func_020412f0 reads it back: it compares the two packet-size bytes with its own mParentPacketSize,
- * and looks the region up by (offset, length) with func_02041ce0 and
- * func_02041c64. */
+ * replies carry mFlag and mFileId. WFSi_OnParentSystemCallback reads it back: it compares the two packet-size bytes with its own mParentPacketSize,
+ * and looks the region up by (offset, length) with WFSi_FindAlive and
+ * WFSi_FindBusy. */
 
 /* Child: ask the parent to open the region the FSFile read covers. The
  * receive work is grown to the read's length first, and the file is kept in
- * mReadRequest until func_02040f30 completes it. */
-void func_02041a00(FSFile *file) {
+ * mReadRequest until WFSi_OnChildSystemCallback completes it. */
+void WFSi_ReadRequest(FSFile *file) {
     OpenRequest m;
     int packetSize;
     int len;
     int pos;
-    func_02041224(data_020a2400, file->arg.readfile.len);
+    WFSi_ReallocBitmap(data_020a2400, file->arg.readfile.len);
     data_020a1fc0.mReadRequest = file;
     len = file->arg.readfile.len;
     pos = file->prop.file.pos;
@@ -940,14 +940,14 @@ void func_02041a00(FSFile *file) {
     m.offset = pos;
     m.packetSizeHigh = (packetSize >> 8) & 0xff;
     m.packetSizeLow = (u8)packetSize;
-    WBT_PutUserData(1, &m, WBT_SIZE_USER_DATA, func_02042160);
+    WBT_PutUserData(1, &m, WBT_SIZE_USER_DATA, WFSi_OnSendMessageDone);
 }
 
 /* Send the pending file-sharing packet on mPort: WBT_MpParentSendHook (parent) or
  * WBT_MpChildSendHook (child), by mIsParent, builds it in the buffer at +0x40 with
  * that side's packet size as the limit, then WM_SetMPDataToPort sends it to AIDs
- * 0xffff with func_020418f0 as the callback. */
-void func_02041930(void) {
+ * 0xffff with WFSi_OnSetMPDataDone as the callback. */
+void WFSi_SetMPData(void) {
     FileShareWork *work = &data_020a1fc0;
     int f0 = work->mIsParent;
     u16 a;
@@ -964,8 +964,8 @@ void func_02041930(void) {
             r = WBT_MpParentSendHook(sub, a);
         else
             r = WBT_MpChildSendHook(sub, a);
-        work->mSendBusy = (WM_SetMPDataToPort(func_020418f0, (u16 *)sub, r, 0xffff, work->mPort,
-                                              WM_PRIORITY_LOW) == WM_ERRCODE_OPERATING)
+        work->mSendBusy = (WM_SetMPDataToPort(WFSi_OnSetMPDataDone, (u16 *)sub, r, 0xffff,
+                                              work->mPort, WM_PRIORITY_LOW) == WM_ERRCODE_OPERATING)
                               ? 1
                               : 0;
     }
@@ -973,26 +973,26 @@ void func_02041930(void) {
     work->mSendRequest = (data_020a1fc0.mSendBusy == 0) ? 1 : 0;
 }
 
-/* The send callback func_02041930 hands the port send: unless the file
-   share is shut down (mState 0), raise mSendRequest, run func_02041e14
-   and send the next packet (func_02041930). */
-void func_020418f0(void *arg) {
+/* The send callback WFSi_SetMPData hands the port send: unless the file
+   share is shut down (mState 0), raise mSendRequest, run WFSi_SendAck
+   and send the next packet (WFSi_SetMPData). */
+void WFSi_OnSetMPDataDone(void *arg) {
     FileShareWork *g = &data_020a1fc0;
     if (g->mState == 0)
         return;
     g->mSendRequest = 1;
-    func_02041e14();
-    func_02041930();
+    WFSi_SendAck();
+    WFSi_SetMPData();
 }
 
 /* The file-sharing port receive callback. Once the work block is up
- * (mState): CONNECTED lets the parent resend (func_02041930) unless a
+ * (mState): CONNECTED lets the parent resend (WFSi_SetMPData) unless a
  * send is in flight; DISCONNECTED drops the child from the parent's
  * mConnectedBitmap; PORT_RECV marks the sender connected and hands
  * its packet to the parent's handler (WBT_MpParentRecvHook), or on a child to
  * WBT_MpChildRecvHook. The argument is a NitroSDK WMPortRecvCallback
  * (private/wm_views.h). */
-void func_020417d0(void *arg) {
+void WFSi_PortCallback(void *arg) {
     WMPortRecvCallback *cb = (WMPortRecvCallback *)arg;
     FileShareWork *g = FILE_SHARE_WORK;
     FileShareParentArea *base = (FileShareParentArea *)g->mArea;
@@ -1006,7 +1006,7 @@ void func_020417d0(void *arg) {
             return;
         if (g->mSendBusy != 0)
             return;
-        func_02041930();
+        WFSi_SetMPData();
         return;
     case WM_STATECODE_DISCONNECTED:
         if (g->mIsParent == 0)
@@ -1046,7 +1046,7 @@ void func_0204175c(void) {
     OS_RestoreInterrupts(state);
 }
 
-/* func_020412f0 @ 0x020412f0 (arm9, size 0x46c)   [mwccarm 2004/b56]
+/* WFSi_OnParentSystemCallback @ 0x020412f0 (arm9, size 0x46c)   [mwccarm 2004/b56]
  * Lever (notes 6y.1 refinement): the byte-triple store into data_020a2409 needs the
  * pooled base in r3 and the derived pointer (base + r6) in r2; every plain spelling
  * inverts them and stalls at 5 divergences. Three things must hold at once: the base
@@ -1066,7 +1066,7 @@ void func_0204175c(void) {
  * (Msg *)(int) casts on the word-0 and kind reads change nothing, so they are gone.
  */
 
-void func_020412f0(void *arg) {
+void WFSi_OnParentSystemCallback(void *arg) {
     int sb;
     int type;
     u32 r6;
@@ -1121,14 +1121,14 @@ void func_020412f0(void *arg) {
                 area->mResizeChildren |= (1 << sb);
                 area->mOpenChildren |= (1 << sb);
             } else {
-                FileShareNode *p = func_02041ce0(area, unk18v, nib1);
+                FileShareNode *p = WFSi_FindAlive(area, unk18v, nib1);
 
                 if (p != 0) {
                     area->mReplyPending |= (1 << sb);
                     *(int *)(base + r6 + 4) = p->mFileId;
                     p->mRefCount += 1;
                 } else {
-                    FileShareNode *q = func_02041c64(area, unk18v, nib1);
+                    FileShareNode *q = WFSi_FindBusy(area, unk18v, nib1);
                     q->mWaitingChildren |= (1 << sb);
                 }
 
@@ -1141,15 +1141,15 @@ void func_020412f0(void *arg) {
             FileShareNode *p;
 
             area->mReplyPending |= (1 << sb);
-            p = func_02041c2c((FileShareParentArea *)base, m->w1);
+            p = WFSi_FindAliveForID((FileShareParentArea *)base, m->w1);
 
             if (p != 0) {
                 p->mRefCount -= 1;
                 if (p->mRefCount <= 0) {
                     p->mWaitingChildren = 0;
                     WBT_UnregisterBlock(m->w1);
-                    func_02041ae8((FileShareParentArea *)base, p);
-                    func_020423c8();
+                    WFSi_FromAliveToBusy((FileShareParentArea *)base, p);
+                    WFSi_NotifyBusy();
                 }
             }
 
@@ -1177,7 +1177,7 @@ void func_020412f0(void *arg) {
         }
 
         n->data_ptr = 0;
-        p = func_02041c2c((FileShareParentArea *)base, key);
+        p = WFSi_FindAliveForID((FileShareParentArea *)base, key);
         if (p == 0)
             break;
 
@@ -1255,7 +1255,7 @@ void func_020412f0(void *arg) {
 
 /* Grow the child's receive work (WBT's packet bitmap) to cover a read of n
  * bytes, or with n < 0 reallocate it at the current mMaxReadSize. */
-void func_02041224(char *thiz, int n) {
+void WFSi_ReallocBitmap(char *thiz, int n) {
     FileShareChildArea *child = (FileShareChildArea *)thiz;
     void *work;
     unsigned int size;
@@ -1278,9 +1278,9 @@ void func_02041224(char *thiz, int n) {
 }
 
 /* The FSFile a child read is for (FileShareWork.mReadRequest, set by
- * func_02041a00). */
+ * WFSi_ReadRequest). */
 
-void func_02040f30(void *arg) {
+void WFSi_OnChildSystemCallback(void *arg) {
     WBTCommand *cmd = (WBTCommand *)arg;
     int aid = WBT_AidbitmapToAid(cmd->peer_bmp);
     FileShareChildArea *child = (FileShareChildArea *)data_020a2400;
@@ -1292,18 +1292,18 @@ void func_02040f30(void *arg) {
         data_020a1fc0.mParentPacketSize = cmd->u.sync.peer_packet_size + 0xe;
         data_020a1fc0.mChildPacketSize = cmd->u.sync.my_packet_size + 0xe;
         if (data_020a1fc0.mState != 2) {
-            WBT_GetBlockInfo(1, 0, child->mBlockInfoTable, func_02040f30);
+            WBT_GetBlockInfo(1, 0, child->mBlockInfoTable, WFSi_OnChildSystemCallback);
             return;
         }
         if (data_020a1fc0.mReadRequest != 0) {
-            func_02041a00(data_020a1fc0.mReadRequest);
+            WFSi_ReadRequest(data_020a1fc0.mReadRequest);
         }
         return;
 
     case 6:
         child->mRecvBufTable[aid] = data_020a1fc0.mTable;
         WBT_GetBlock(1, 0x20000, child->mRecvBufTable, data_020a1fc0.mTableSize,
-                     child->mPacketBitmapTable, func_02040f30);
+                     child->mPacketBitmapTable, WFSi_OnChildSystemCallback);
         return;
 
     case 4:
@@ -1312,7 +1312,7 @@ void func_02040f30(void *arg) {
         }
         if (data_020a1fc0.mState != 2) {
             DC_FlushRange(data_020a1fc0.mTable, data_020a1fc0.mTableSize);
-            func_020423dc((int *)data_020a1fc0.mTable);
+            WFSi_ReplaceRomArchive((int *)data_020a1fc0.mTable);
             data_020a1fc0.mState = 2;
             if (data_020a1fc0.mStateCallback != 0) {
                 data_020a1fc0.mStateCallback(0);
@@ -1329,7 +1329,7 @@ void func_02040f30(void *arg) {
             msg.mFileId = region;
             msg.mPacketSizeHigh = (u8)(packetSize >> 8);
             msg.mPacketSizeLow = (u8)packetSize;
-            WBT_PutUserData(1, &msg, WBT_SIZE_USER_DATA, func_02042160);
+            WBT_PutUserData(1, &msg, WBT_SIZE_USER_DATA, WFSi_OnSendMessageDone);
         }
         return;
 
@@ -1342,14 +1342,14 @@ void func_02040f30(void *arg) {
         switch (m->mKind) {
         case 1:
             if (m->mFlag == 0) {
-                WBT_RequestSync(1, func_02040f30);
+                WBT_RequestSync(1, WFSi_OnChildSystemCallback);
                 return;
             }
             child->mReadRegion = m->mFileId;
             child->mRecvBufTable[aid] = data_020a1fc0.mReadRequest->arg.readfile.dst;
             WBT_GetBlock(1, child->mReadRegion, child->mRecvBufTable,
                          data_020a1fc0.mReadRequest->arg.readfile.len, child->mPacketBitmapTable,
-                         func_02040f30);
+                         WFSi_OnChildSystemCallback);
             return;
 
         case 3: {
@@ -1399,7 +1399,7 @@ void func_02040c34(int isParent, int port, void (*stateCallback)(int),
         G->mParentPacketSize = 0;
         G->mChildPacketSize = 0xe;
         data_020a0f88 = 0;
-        if (WM_SetPortCallback((u16)port, func_020417d0, 0) != 0)
+        if (WM_SetPortCallback((u16)port, WFSi_PortCallback, 0) != 0)
             OS_Terminate();
         FS_Init(FS_DMA_NOT_USE);
 
@@ -1446,8 +1446,9 @@ void func_02040c34(int isParent, int port, void (*stateCallback)(int),
                 area->mNewPacketSize = G->mParentPacketSize;
                 FlushFileShareArea(base, sizeof(FileShareParentArea));
                 DC_WaitWriteBufferEmpty();
-                WBT_InitParent(G->mParentPacketSize, G->mChildPacketSize, func_020412f0);
-                func_020424c0();
+                WBT_InitParent(G->mParentPacketSize, G->mChildPacketSize,
+                               WFSi_OnParentSystemCallback);
+                WFSi_LoadTables();
             }
             {
                 char *base = (char *)G->mArea;
@@ -1462,7 +1463,7 @@ void func_02040c34(int isParent, int port, void (*stateCallback)(int),
                 nd->mNext = *(FileShareNode **)((base + 0x2000) + 0x704);
                 *(FileShareNode **)((base + 0x2000) + 0x704) = nd;
                 nd->mRefCount = 1;
-                func_02042200();
+                WFSi_CreateTaskThread();
             }
         } else {
             char *base = (char *)G->mArea;
@@ -1482,19 +1483,19 @@ void func_02040c34(int isParent, int port, void (*stateCallback)(int),
             arr->mReadRegion = 0;
             G->mParentPacketSize = 0x80;
             arr->mMaxReadSize = 0x100000;
-            func_02041224(base, -1);
+            WFSi_ReallocBitmap(base, -1);
             G->mParentPacketSize = 0;
-            func_020424c0();
-            func_02041224(base, data_020a1fc0.mTableSize);
+            WFSi_LoadTables();
+            WFSi_ReallocBitmap(base, data_020a1fc0.mTableSize);
             FlushFileShareArea(base, sizeof(FileShareChildArea));
             DC_WaitWriteBufferEmpty();
-            WBT_InitChild(func_02040f30);
+            WBT_InitChild(WFSi_OnChildSystemCallback);
         }
     }
     OS_RestoreInterrupts(state);
 }
 
-void func_02040bb0(void) {
+void WFS_Start(void) {
     int old;
     data_020a0f38 = 1;
     old = data_020a1fc0.mIsParent;
@@ -1506,7 +1507,7 @@ void func_02040bb0(void) {
         FileShareChildArea *child = (FileShareChildArea *)data_020a2400;
         WM_ReadStatus(&child->mStatus);
         WBT_SetOwnAid(child->mStatus.aid);
-        WBT_RequestSync(1, func_02040f30);
+        WBT_RequestSync(1, WFSi_OnChildSystemCallback);
     } else {
         void (*fn)(int);
         data_020a1fc0.mState = 2;
@@ -1515,7 +1516,7 @@ void func_02040bb0(void) {
             fn(0);
         }
     }
-    func_02041930();
+    WFSi_SetMPData();
 }
 
 /* The FSFile a child read is in flight on (mReadRequest); only its archive is
@@ -1526,7 +1527,7 @@ void func_02040bb0(void) {
  * mIsParent read goes through data_020a1fc0, not work, as FileShareFree's
  * allocator reads do: the ROM reloads the block's address for it (through
  * work the function comes out shorter). */
-void func_02040aa4(void) {
+void WFS_End(void) {
     FileShareWork *work = &data_020a1fc0;
     OSIntrMode saved0 = OS_DisableInterrupts();
 
@@ -1551,7 +1552,7 @@ void func_02040aa4(void) {
             }
             FileShareFree(child->mRecvWork);
         } else {
-            func_020421b4();
+            WFSi_EndTaskThread();
         }
 
         WBT_End();
@@ -1563,19 +1564,19 @@ void func_02040aa4(void) {
 
 /* The file share's mState: 2 once it is ready.
    func_0203db64 waits for that before the download-play handshakes. */
-int func_02040a94(void) {
+int WFS_GetStatus(void) {
     return data_020a1fc0.mState;
 }
 
-/* The word at +0xb58 of data_020a3fc0 (see func_02040a5c). */
-int func_02040a84(void) {
+/* The word at +0xb58 of data_020a3fc0 (see WFS_EnableSync). */
+int WFS_GetCurrentBitmap(void) {
     return data_020a3fc0.field_b58;
 }
 
 /* Store val with bit 0 clear at +0xb50 of data_020a3fc0, under the IRQ
-   lock. Its one caller, func_0203ea5c, passes it func_02040a84's result
+   lock. Its one caller, func_0203ea5c, passes it WFS_GetCurrentBitmap's result
    when there are more than two players (data_02099e18). */
-void func_02040a5c(u32 val) {
+void WFS_EnableSync(u32 val) {
     OSIntrMode saved = OS_DisableInterrupts();
     data_020a3fc0.field_b50 = val & ~1u;
     OS_RestoreInterrupts(saved);
@@ -2038,7 +2039,7 @@ void func_0203fec4(void *arg) {
 /* The WM_StartMP callback func_0203faa8 installs. On MP_START: in link
    mode 0 reset; as parent (3) or child (4) start data sharing
    (func_0203fa50), and if that fails clear the mode and reset, else copy
-   the mode into the link status data_020a0f94 and go on (func_02040bb0).
+   the mode into the link status data_020a0f94 and go on (WFS_Start).
    TIMEOUT, INVALID_POLLBITMAP and SEND_FAILED are let pass; any other
    error clears the mode and resets. */
 void func_0203fdac(void *arg) {
@@ -2058,7 +2059,7 @@ void func_0203fdac(void *arg) {
                     Wireless_Reset();
                 } else {
                     data_020a0f94 = data_020a0f5c;
-                    func_02040bb0();
+                    WFS_Start();
                 }
                 return;
             default:
@@ -2136,7 +2137,7 @@ int func_0203fcb0(void) {
    returns 0; otherwise 1. func_0203fcb0, func_0203fcec, func_0203fd28
    and func_0203fd64 are the same wrapper on other commands.
    Wireless_Reset is close: it sends WM command 1 (WM_Reset)
-   but shuts the file share down (func_02040aa4) before it checks the
+   but shuts the file share down (WFS_End) before it checks the
    result. */
 int func_0203fc74(void) {
     if (WM_PowerOff(func_02040388) != WM_ERRCODE_OPERATING) {
@@ -2158,7 +2159,7 @@ int func_0203fc38(void) {
 
 int Wireless_Reset(void) {
     int r = WM_Reset(func_020402a0);
-    func_02040aa4();
+    WFS_End();
     if (r != WM_ERRCODE_OPERATING) {
         data_020a0f94 = 1;
         return 0;
@@ -2388,12 +2389,12 @@ void func_0203f650(int x) {
     fn(&reply);
 }
 
-/* func_0203f644 @ 0x203f644 (arm9) -- tail-call veneer to func_02040a94 (0x2040a94).
+/* func_0203f644 @ 0x203f644 (arm9) -- tail-call veneer to WFS_GetStatus (0x2040a94).
  * ldr ip, [pc]; bx ip; .word 0x2040a94
  */
 
 void func_0203f644(int state) {
-    func_02040a94();
+    WFS_GetStatus();
 }
 
 /* func_0203f604 at 0x0203f604
@@ -2641,7 +2642,7 @@ void func_0203ea5c(void) {
                                     if ((allIn != 0) && !(data_020a1154[0].flags & 0x2000) &&
                                         !(data_020a1040.flags & 0x2000)) {
                                         if (data_02099e18 > 2) {
-                                            func_02040a5c(func_02040a84());
+                                            WFS_EnableSync(WFS_GetCurrentBitmap());
                                         }
                                         data_020a0f2c = 0;
                                         while (func_0203fd64() != 1) {
@@ -3170,7 +3171,7 @@ void func_0203db64(void *arg0, void *arg1) {
 
         data_020a0f04 = 2;
         count = 0x4b0;
-        while (!(func_02040a94() == 2 && data_02099e18 == data_020a0f08 && data_020a0f08 != 0) &&
+        while (!(WFS_GetStatus() == 2 && data_02099e18 == data_020a0f08 && data_020a0f08 != 0) &&
                count != 0) {
             data_020a0f1c |= 0x2000;
             func_02042778();
