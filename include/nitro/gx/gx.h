@@ -7,9 +7,6 @@
  * interrupt toggles take and return int for the SDK's BOOL and u32. Parameters stay
  * unnamed: a name in a shared header takes an @NNN in every includer. */
 
-#define GX_LCD_SIZE_X 256
-#define GX_LCD_SIZE_Y 192
-
 #ifdef __cplusplus
 extern "C" {
 #endif

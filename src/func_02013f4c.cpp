@@ -5,7 +5,6 @@
 #include "nitro/mb/mb.h"
 #include "nitro/pad/pad.h"
 #include "nitro/hw/registers.h"
-#include "nitro/gx/gx.h"
 
 extern "C" {
 
@@ -94,9 +93,10 @@ void func_02013f4c(void)
         break;
     }
 
-    while ((int)REG_VCOUNT >= GX_LCD_SIZE_Y) {
+    /* Wait for the next VBlank (line 192): out of this one, then into it. */
+    while ((int)REG_VCOUNT >= 192) {
     }
-    while ((int)REG_VCOUNT < GX_LCD_SIZE_Y) {
+    while ((int)REG_VCOUNT < 192) {
     }
 }
 }
