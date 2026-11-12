@@ -68,11 +68,11 @@ extern "C" daObjPathLift_c *daObjPathLift_c_classInit() {
 int daObjPathLift_c::InitResources() {
     Vector3 pos;
     dExtSimpleModel_c::LoadFile(data_ov002_0210d9f0);
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov100_02148a54), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov100_02148a54), 1, -1);
     mShadowModel.InitCuboid();
     UpdateModelMatrix();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov100_02148a5c), mClsnMat, 0x1000,
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov100_02148a5c), mClsnMat, 0x1000,
                           mAngleY, data_ov002_0210d7d4);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mPathSpeed = 0xa000;

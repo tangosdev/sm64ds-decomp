@@ -2679,7 +2679,7 @@ int daDemo_c::anmModel_c::func_ov002_020f6618(SharedFilePtr *mdl, int nAnims, Sh
     int i;
     mModelFile = mdl;
     if (((dExtModel_c *)self)
-            ->SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*mModelFile), 1, tsData) == 0)
+            ->SetFile(dExtSimpleModel_c::LoadFile(*mModelFile), 1, tsData) == 0)
         return 0;
     mNumAnimFiles = (u8)nAnims;
     mAnimFiles = anims;
@@ -2750,7 +2750,7 @@ daDemo_c::anmModel_c::~anmModel_c()
 int daDemo_c::simpleModel_c::func_ov002_020f6960(SharedFilePtr *fp, int n)
 {
     mFile = fp;
-    BMD_File *f = (BMD_File *)dExtSimpleModel_c::LoadFile(*mFile);
+    BMD_File *f = dExtSimpleModel_c::LoadFile(*mFile);
     return ((dExtModel_c *)this)->SetFile(f, 1, n) != 0 ? 1 : 0;
 }
 

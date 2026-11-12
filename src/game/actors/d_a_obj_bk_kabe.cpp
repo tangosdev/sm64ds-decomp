@@ -161,7 +161,7 @@ int daObjBk_Kabe_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     int idx2 = mVariant;
-    KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(*data_ov079_02128058[idx2].kcl);
+    KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov079_02128058[idx2].kcl);
     mMeshCollider.SetFile(kcl, mClsnMat, kMeshScale, mAngleY, *(data_ov079_02128058[idx2].clps));
     return 1;
 }

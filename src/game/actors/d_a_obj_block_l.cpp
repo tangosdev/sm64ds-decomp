@@ -401,7 +401,7 @@ int daObjBlockL_c::InitResources() {
         break;
     }
 
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov002_02108ab0[mVariant].file), 1,
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(*data_ov002_02108ab0[mVariant].file), 1,
                    -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
@@ -419,18 +419,18 @@ int daObjBlockL_c::InitResources() {
     idx = mVariant;
     if (idx <= 1) {
         if (IsActorID(this, 0x10)) {
-            KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(*data_ov002_02108ab4[idx].file);
+            KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov002_02108ab4[idx].file);
             ((dBgW_KcMbg *)(&mMeshCollider))
                 ->dBgW_KcMbg::SetFile(kcl, *(&mClsnMat), 0x1800, mAngleY,
                                       *(data_ov002_02108ab8[idx].block));
         } else {
-            KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(*data_ov002_02108ab4[idx].file);
+            KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov002_02108ab4[idx].file);
             ((dBgW_KcMbg *)(&mMeshCollider))
                 ->dBgW_KcMbg::SetFile(kcl, *(&mClsnMat), 0x1000, mAngleY,
                                       *(data_ov002_02108ab8[idx].block));
         }
     } else {
-        KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(*data_ov002_02108ab4[idx].file);
+        KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov002_02108ab4[idx].file);
         ((dBgW_KcMbg *)(&mMeshCollider))
             ->dBgW_KcMbg::SetFile(kcl, *(&mClsnMat), 0x199, mAngleY,
                                   *(data_ov002_02108ab8[idx].block));

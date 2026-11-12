@@ -110,9 +110,9 @@ void daLinelift2_c::OnStoodOn(dActor_c *rider) {
 
 int daLinelift2_c::InitResources() {
     mVariant = param1 >> 8;
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*gLinelift2ModelFiles[mVariant]), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(*gLinelift2ModelFiles[mVariant]), 1, -1);
 
-    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*gLinelift2CollisionFiles[mVariant]),
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*gLinelift2CollisionFiles[mVariant]),
                           mClsnMat, 0x199, mAngleY, *gLinelift2ClpsBlocks[mVariant]);
 
     UpdateClsnPosAndRot();

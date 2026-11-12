@@ -236,7 +236,7 @@ int daOts_c::InitResourcesCommon()
     dExtFrameCtrl_c::LoadFile(*CONFIG(this)->files[kAnimHit]);
     dExtFrameCtrl_c::LoadFile(*CONFIG(this)->files[kAnimLedgeTurn]);
     dExtFrameCtrl_c::LoadFile(*CONFIG(this)->files[kAnimWalk]);
-    bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(*CONFIG(this)->files[kFileModel]);
+    bmd = dExtSimpleModel_c::LoadFile(*CONFIG(this)->files[kFileModel]);
     if (mAnmModel.SetFile(bmd, 1, 1) == 0)
         return 0;
     if (mShadowModel.InitCylinder() == 0)

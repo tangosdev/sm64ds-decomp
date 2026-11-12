@@ -136,7 +136,7 @@ s32 daShl_c::InitResources()
 {
     mModelIndex = param1 & 1;
     mVariant = (param1 >> 4) & 1;
-    BMD_File *bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov102_0214d70c[mModelIndex]);
+    BMD_File *bmd = dExtSimpleModel_c::LoadFile(*data_ov102_0214d70c[mModelIndex]);
     if (mModel.SetFile(bmd, 1, 1) == 0)
         return 0;
     if (mShadowModel.InitCylinder() == 0)

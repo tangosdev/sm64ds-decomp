@@ -92,7 +92,7 @@ s32 daObjFl_Seesaw_c::Behavior() {
 
 /* Slot 0. */
 s32 daObjFl_Seesaw_c::InitResources() {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov022_021145a8), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov022_021145a8), 1, -1);
     UpdateModelTransform();
     UpdateClsnPosAndRot();
     char *kcl = dBgW_Kc::LoadFile(data_ov022_021145a0);

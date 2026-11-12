@@ -49,11 +49,11 @@ extern "C" daObjTdFuta_c *daObjTdFuta_c_classInit() {
 }
 
 s32 daObjTdFuta_c::InitResources() {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov032_02113ad4), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov032_02113ad4), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov032_02113acc);
+    KCL_File *kcl = dBgW_Kc::LoadFile(data_ov032_02113acc);
     mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov032_02112f98);
 
     return Event::GetBit(0xe) == 0;

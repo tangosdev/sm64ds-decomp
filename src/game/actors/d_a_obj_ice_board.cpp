@@ -70,7 +70,7 @@ int daObjIceBoard_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    KCL_File *clsnFile = (KCL_File *)dBgW_Kc::LoadFile(daObjIceBoard_c_ClsnFile);
+    KCL_File *clsnFile = dBgW_Kc::LoadFile(daObjIceBoard_c_ClsnFile);
     mMeshCollider.SetFile(clsnFile, mClsnMat, 0x199, mAngleY, data_ov002_0210d754);
     return 1;
 }

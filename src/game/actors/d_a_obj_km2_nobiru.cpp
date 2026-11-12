@@ -98,13 +98,13 @@ int daObjKm2_Nobiru_c::Behavior() {
 }
 
 int daObjKm2_Nobiru_c::InitResources() {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(PoleLift_ModelFile), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(PoleLift_ModelFile), 1, -1);
     UpdateModelTransform();
     UpdateColliderTransform();
 
     /* dBgW_Kc::SetEdgeToleranceShift stays a call because the direct
      * mCollider.edgeToleranceShift = 4 store makes InitResources differ. */
-    mCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(PoleLift_ClsnFile), mColliderTransform, 0x1000,
+    mCollider.SetFile(dBgW_Kc::LoadFile(PoleLift_ClsnFile), mColliderTransform, 0x1000,
                       mAngleY, *(CLPS_Block *)data_ov045_021125b0);
     mCollider.SetEdgeToleranceShift(4);
     mCollider.tolerantWallEdges = true;

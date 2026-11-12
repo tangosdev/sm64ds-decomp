@@ -213,7 +213,7 @@ void dMg3DEspAnimSet_c::InitResources()
     BCA_File *bca;
     int i;
     mSpeed = 0x800;
-    bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(gEspHamonModelFile);
+    bmd = dExtSimpleModel_c::LoadFile(gEspHamonModelFile);
     bca = (BCA_File *)dExtFrameCtrl_c::LoadFile(gEspHamonAnimFile);
     dExtAnmMaterial_c::Prepare(*bmd, *(BMA_File *)&sEsp3DMaterialAnim);
     for (i = 0; i < 3; i++) {

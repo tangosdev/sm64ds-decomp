@@ -287,7 +287,7 @@ s32 daSBird_c::Behavior() {
 }
 
 s32 daSBird_c::InitResources() {
-    BMD_File *modelFile = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov009_02113c20);
+    BMD_File *modelFile = dExtSimpleModel_c::LoadFile(data_ov009_02113c20);
     mAnmModel.SetFile(modelFile, 1, 1);
     BCA_File *animFile = (BCA_File *)dExtFrameCtrl_c::LoadFile(data_ov009_02113c28);
     mAnmModel.SetAnim((BCA_File *)animFile, 0, 0x1000, 0);

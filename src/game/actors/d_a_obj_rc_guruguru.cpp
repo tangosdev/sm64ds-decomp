@@ -61,7 +61,7 @@ extern "C" daObjRc_Guruguru_c *daObjRc_Guruguru_c_classInit() {
 /* -------------------------------------------------------------------------- */
 s32 daObjRc_Guruguru_c::InitResources() {
     mModel.SetFile(
-        (BMD_File *)dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov036_02113d78[0]), 1, -1);
+        dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov036_02113d78[0]), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 

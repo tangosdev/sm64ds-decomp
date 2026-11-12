@@ -343,7 +343,7 @@ int daObjHatenaBlock_c::InitResources()
     switch (actorID - ACTOR_HATENA_BLOCK) {
     case 0:   /* HATENA_BLOCK */
         modelFile = dExtSimpleModel_c::LoadFile(data_ov102_0214e7e8);
-        mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov102_0214e808), 1, 0x19);
+        mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov102_0214e808), 1, 0x19);
         mAnmModel.SetAnim((BCA_File *)(dExtFrameCtrl_c::LoadFile(data_ov102_0214e7f8)), 0, 0x1000,
                           0);
         dExtSimpleModel_c::LoadFile(data_ov002_0210d9e0);

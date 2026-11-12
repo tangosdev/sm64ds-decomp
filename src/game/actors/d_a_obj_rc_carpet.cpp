@@ -90,7 +90,7 @@ int daObjRcCarpet_c::InitResources() {
     mAnmModel.SetAnim((BCA_File *)gRcCarpetWaitAnimationFile.filePtr, 0, 0x1000, 0);
     UpdateModelTransform();
     UpdateClsnPosAndRot();
-    KCL_File *collisionFile = (KCL_File *)dBgW_Kc::LoadFile(*data_ov036_02113f58.collision);
+    KCL_File *collisionFile = dBgW_Kc::LoadFile(*data_ov036_02113f58.collision);
     mMeshCollider.SetFile(collisionFile, mClsnMat, 0x199, mAngleY, *data_ov036_02113f58.clps);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mPathSpeed = 0xa000;

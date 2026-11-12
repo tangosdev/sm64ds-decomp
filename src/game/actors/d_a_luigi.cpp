@@ -122,11 +122,11 @@ extern "C" daLuigi_c *daLuigi_c_classInit() {
 int daLuigi_c::InitResources() {
     VecFx32 t;
 
-    mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210ebb8), 1, -1);
+    mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210ebb8), 1, -1);
     mAnmModel.ClearMaterialFlags(kMatClear);
     mAnmModel.SetMaterialFlags(kMatSet);
 
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210eb20), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210eb20), 1, -1);
     mModel.ClearMaterialFlags(kMatClear);
     mModel.SetMaterialFlags(kMatSet);
 

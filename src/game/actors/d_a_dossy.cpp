@@ -205,7 +205,7 @@ int daDossy_c::InitResources()
     func_ov065_02118838();
 
     for (j = 0; j < 7; j++) {
-        KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(*data_ov065_0211c08c[j]);
+        KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov065_0211c08c[j]);
         mPlatforms[j].mClsn.dBgW_KcMbg::SetFile(kcl, mPlatforms[j].mClsnNextMat, 0x1000, mAngleY,
                                                 *(CLPS_Block *)data_ov065_0211cd68[j]);
         if ((unsigned)j <= 2) {

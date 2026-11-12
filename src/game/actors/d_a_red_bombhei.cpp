@@ -173,7 +173,7 @@ s32 daRedBombhei_c::InitResources()
 {
     Vector3 pos;
 
-    BMD_File *modelFile = (BMD_File *)dExtSimpleModel_c::LoadFile(gRedBombheiModelFile);
+    BMD_File *modelFile = dExtSimpleModel_c::LoadFile(gRedBombheiModelFile);
     mAnmModel.SetFile(modelFile, 1, -1);
     mShadowModel.InitCylinder();
     dExtFrameCtrl_c::LoadFile(gRedBombheiWaitAnimFile);

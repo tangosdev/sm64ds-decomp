@@ -214,7 +214,7 @@ s32 daObjDlPyramidDummy_c::Behavior() {
 }
 
 int daObjDlPyramid_c::InitResources() {
-    BMD_File *bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(gDlPyramidModelFile);
+    BMD_File *bmd = dExtSimpleModel_c::LoadFile(gDlPyramidModelFile);
     mTopModel.SetFile(bmd, 1, -1);
     UpdateModelMatrix();
     UpdateClsnMatrix();

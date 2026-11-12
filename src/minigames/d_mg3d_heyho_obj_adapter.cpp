@@ -142,7 +142,7 @@ Heyho::~Heyho() {
 
 /* ---- Heyho::LoadResources ---- */
 int Heyho::LoadResources() {
-    BMD_File *m = (BMD_File *)dExtSimpleModel_c::LoadFile(gMgPHeyhoMiniModelFile);
+    BMD_File *m = dExtSimpleModel_c::LoadFile(gMgPHeyhoMiniModelFile);
     BCA_File *a = (BCA_File *)dExtFrameCtrl_c::LoadFile(gMgPHeyhoWaitAnimFile);
     if (mAnmModel.SetFile(m, 1, -1) == 0) {
         return 0;

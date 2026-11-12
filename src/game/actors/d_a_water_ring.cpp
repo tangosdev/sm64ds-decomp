@@ -211,7 +211,7 @@ int daWater_Ring_c::Behavior() {
 }
 
 int daWater_Ring_c::InitResources() {
-    BMD_File *f = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210da10);
+    BMD_File *f = dExtSimpleModel_c::LoadFile(data_ov002_0210da10);
     if (mModel.SetFile(f, 1, -1) == 0)
         return 0;
 

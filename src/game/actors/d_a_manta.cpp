@@ -309,7 +309,7 @@ int daManta_c::Behavior() {
 }
 
 int daManta_c::InitResources() {
-    mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov090_02134524), 1, -1);
+    mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov090_02134524), 1, -1);
     dExtSimpleModel_c::LoadFile(data_ov002_0210da10);
     dExtSimpleModel_c::LoadFile(data_ov002_0210d9a8);
     dExtFrameCtrl_c::LoadFile(data_ov090_0213452c);

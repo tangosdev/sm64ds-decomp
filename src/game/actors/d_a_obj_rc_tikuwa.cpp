@@ -126,7 +126,7 @@ s32 daObjRc_Tikuwa_c::Behavior() {
 }
 
 s32 daObjRc_Tikuwa_c::InitResources() {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(gRcTikuwaModelFile), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(gRcTikuwaModelFile), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     void *kcl = dBgW_Kc::LoadFile(gRcTikuwaCollisionFile);

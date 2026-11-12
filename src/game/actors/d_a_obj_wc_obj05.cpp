@@ -81,11 +81,11 @@ void daObjWc_Obj05_c::OnStoodOn(dActor_c *other) {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 s32 daObjWc_Obj05_c::InitResources() {
-    BMD_File *f = (BMD_File *)dExtSimpleModel_c::LoadFile(gWcObj05ModelFile);
+    BMD_File *f = dExtSimpleModel_c::LoadFile(gWcObj05ModelFile);
     mModel.SetFile(f, 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    KCL_File *mc = (KCL_File *)dBgW_Kc::LoadFile(gWcObj05CollisionFile);
+    KCL_File *mc = dBgW_Kc::LoadFile(gWcObj05CollisionFile);
     mMeshCollider.SetFile(mc, mClsnMat, 0x1000, mAngleY, data_ov029_0211306c);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&StoodOnCallback);

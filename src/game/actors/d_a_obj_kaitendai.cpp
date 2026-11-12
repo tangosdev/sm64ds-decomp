@@ -82,10 +82,10 @@ s32 daObjKaitendai_c::Behavior() {
 int daObjKaitendai_c::InitResourcesFrom(ResourceDescriptor *descriptor, s16 angle) {
     s16 y;
 
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*descriptor->model), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(*descriptor->model), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*descriptor->collision), mClsnMat, 0x199,
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*descriptor->collision), mClsnMat, 0x199,
                           mAngleY, *descriptor->clps);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mPrevAngleZ = angle;
