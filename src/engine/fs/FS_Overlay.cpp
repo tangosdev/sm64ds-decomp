@@ -107,7 +107,7 @@ int FSi_LoadOverlayInfoCore(FSOverlayInfo *p_ovi, int target, int id, FSArchive 
 /* While the ARM9 or ARM7 overlay table is in memory, copy entry `id` out of
  * it and set the target. Otherwise read it from the ROM through
  * FSi_LoadOverlayInfoCore, with the ROM archive and the ROM header's ARM9
- * and ARM7 overlay table regions (0x027ffe50, 0x027ffe58). */
+ * and ARM7 overlay table regions. */
 int FS_LoadOverlayInfo(FSOverlayInfo *p_ovi, int target, int id) {
     CARDRomRegion *pr = (target == 0) ? &data_020a8064 : &data_020a806c;
     u32 offset = pr->offset;
@@ -119,10 +119,12 @@ int FS_LoadOverlayInfo(FSOverlayInfo *p_ovi, int target, int id) {
         p_ovi->target = target;
         return 1;
     }
-    CARDRomRegion *ovt9 = (CARDRomRegion *)0x27ffe50;
-    CARDRomRegion *ovt7 = (CARDRomRegion *)0x27ffe58;
-    return FSi_LoadOverlayInfoCore(p_ovi, target, id, &data_020a8074, ovt9->offset, ovt9->length,
-                                   ovt7->offset, ovt7->length);
+    {
+        const CARDRomRegion *const p_ovt9 = CARD_GetRomRegionOVT(MI_PROCESSOR_ARM9);
+        const CARDRomRegion *const p_ovt7 = CARD_GetRomRegionOVT(MI_PROCESSOR_ARM7);
+        return FSi_LoadOverlayInfoCore(p_ovi, target, id, &data_020a8074, p_ovt9->offset,
+                                       p_ovt9->length, p_ovt7->offset, p_ovt7->length);
+    }
 }
 
 /* HMAC the image with the digest key and compare the 20-byte result with

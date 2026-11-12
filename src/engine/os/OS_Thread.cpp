@@ -30,6 +30,7 @@
 #include "nitro/os/thread.h"
 #include "nitro/mi/memory.h"
 #include "nitro/hw/mmap_tcm.h"
+#include "nitro/os/systemWork.h"
 
 /* The SDK's nitro/types.h spellings; include/types.h has no BOOL. */
 typedef int BOOL;
@@ -162,7 +163,7 @@ void OS_InitThread(void) {
     OSi_ThreadInfo.max_entry = OS_THREAD_MAX_NUM;
     OSi_ThreadInfo.isNeedRescheduling = FALSE;
     OSi_ThreadInfo.irqDepth = 0;
-    *(OSThreadInfo **)0x027fffa0 = &OSi_ThreadInfo;
+    OS_GetSystemWork()->threadinfo_mainp = &OSi_ThreadInfo;
 
     OS_SetSwitchThreadCallback(0);
 

@@ -3,6 +3,7 @@
 #include "nitro/os/cache.h"
 #include "nitro/os/system.h"
 #include "nitro/fs/file.h"
+#include "nitro/card/card_rom.h"
 #include "private/file_share_alloc.h"
 
 extern "C" {
@@ -20,12 +21,6 @@ typedef struct {
     int end;
 } Entry;
 
-/* An (offset, size) pair of the card header copy at 0x027ffe00. */
-typedef struct {
-    int offset;
-    int size;
-} RomRegion;
-
 extern char data_02099e6c[]; /* "rom" */
 
 extern FSArchive *FS_FindArchive(const char *name, int name_len);
@@ -40,21 +35,21 @@ extern FSArchive *FS_FindArchive(const char *name, int name_len);
  * the receive work. */
 void func_020424c0(void) {
     int sizes[4];
-    RomRegion *ptrs[4];
+    const CARDRomRegion *ptrs[4];
     FSFile file;
     u32 sl;
     void *fp;
     int i;
 
-    ptrs[0] = (RomRegion *)0x27ffe48; /* FAT */
-    ptrs[1] = (RomRegion *)0x27ffe40; /* FNT */
-    ptrs[2] = (RomRegion *)0x27ffe50; /* ARM9 overlay table */
-    ptrs[3] = (RomRegion *)0x27ffe58; /* ARM7 overlay table */
+    ptrs[0] = CARD_GetRomRegionFAT();
+    ptrs[1] = CARD_GetRomRegionFNT();
+    ptrs[2] = CARD_GetRomRegionOVT(MI_PROCESSOR_ARM9);
+    ptrs[3] = CARD_GetRomRegionOVT(MI_PROCESSOR_ARM7);
 
     i = 0;
     sl = i + 4;
     do {
-        sizes[i] = (ptrs[i]->size + 0x1f) & ~0x1f;
+        sizes[i] = (int)((ptrs[i]->length + 0x1f) & ~0x1f);
         sl += sizes[i] + 4;
         i++;
     } while (i < 4);
@@ -73,15 +68,15 @@ void func_020424c0(void) {
         j = 0;
 
         do {
-            RomRegion *p = ptrs[j];
-            int origSize = p->size;
+            const CARDRomRegion *p = ptrs[j];
+            int origSize = (int)p->length;
             int data0;
             int end;
 
             roundedSize = sizes[j];
             *(int *)buf = origSize;
             buf += 4;
-            data0 = p->offset;
+            data0 = (int)p->offset;
             end = roundedSize + data0;
             FS_OpenFileDirect(&file, sb, data0, end, -1);
             FS_ReadFile(&file, buf, roundedSize);
@@ -92,7 +87,7 @@ void func_020424c0(void) {
 
         {
             Entry *entries = (Entry *)((char *)fp + 8);
-            int count = (int)((u32)ptrs[0]->size >> 3);
+            int count = (int)(ptrs[0]->length >> 3);
             u32 max = sl;
             int k;
             k = 0;

@@ -41,9 +41,6 @@ extern "C" {
 #define FS_RESULT_PROC_ASYNC 6
 #define FS_RESULT_PROC_UNKNOWN 8
 
-/* The ROM header's {offset, length} of the FNT and the FAT. */
-#define HW_ROM_HEADER_BUF 0x027ffe00
-
 extern u32 data_020a8060;           /* fsi_default_dma_no */
 extern s32 data_020a805c;           /* fsi_card_lock_id */
 extern CARDRomRegion data_020a8064; /* fsi_ovt9 */
@@ -68,15 +65,7 @@ int FSi_RomArchiveProc(FSFile *p_arc, int cmd);
 void FSi_InitRom(u32 default_dma_no);
 u32 FS_TryLoadTable(void *p_mem, u32 size);
 
-/* pret's CARD_rom.h inlines. */
-static inline const CARDRomRegion *CARD_GetRomRegionFNT(void) {
-    return (const CARDRomRegion *)(HW_ROM_HEADER_BUF + 0x40);
-}
-
-static inline const CARDRomRegion *CARD_GetRomRegionFAT(void) {
-    return (const CARDRomRegion *)(HW_ROM_HEADER_BUF + 0x48);
-}
-
+/* pret's CARD_rom.h inline. */
 static inline void CARD_ReadRomAsync(u32 dma, const void *src, void *dst, u32 len,
                                      MIDmaCallback callback, void *arg) {
     CARDi_ReadRom(dma, src, dst, len, callback, arg, 1);

@@ -66,7 +66,7 @@ int CARDi_TryReadCardDma(CARDRomStat *p) {
             is_async = 1;
     }
 
-    stat->ctrl = (*(u32 *)0x027ffe60 & ~0x7000000) | 0xa1000000;
+    stat->ctrl = (*(vu32 *)(HW_ROM_HEADER_BUF + 0x60) & ~0x7000000) | 0xa1000000;
 
     if (is_async != 0) {
         saved = OS_DisableInterrupts();
