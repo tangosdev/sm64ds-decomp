@@ -428,11 +428,9 @@ void knobs(char *me) {
     if (sil_at >= 0 && g_lf == (unsigned)sil_at) {
         const int pos[3] = {rd32(me, 0x5c), rd32(me, 0x60) + (600 << 12), rd32(me, 0x64)};
         char *k = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(kClsKlepto, 0x2000, pos, nullptr, *((signed char *)me + 0xcc), -1);
-        std::fprintf(stderr, "[coopws] KNOB klepto silver lf=%u: %s
-", g_lf, !k ? "SPAWN FAILED (no Klepto here)" : "a Klepto carrying a silver star spawned");
+        std::fprintf(stderr, "[coopws] KNOB klepto silver lf=%u: %s\n", g_lf, !k ? "SPAWN FAILED (no Klepto here)" : "a Klepto carrying a silver star spawned");
         if (k) { daJango_c *kk = (daJango_c *)k;
-            std::fprintf(stderr, "[coopws] KNOB klepto silver lf=%u: uid %u slot %d carried %d silver %d held %d
-", g_lf, a_uid(k), (int)a_slot(k), kk->mCarriedItem, kk->mSilverStarFlag, kk->mHeldActorID); }
+            std::fprintf(stderr, "[coopws] KNOB klepto silver lf=%u: uid %u slot %d carried %d silver %d held %d\n", g_lf, a_uid(k), (int)a_slot(k), kk->mCarriedItem, kk->mSilverStarFlag, kk->mHeldActorID); }
     }
     if (hit_at >= 0 && g_lf == (unsigned)hit_at) {
         daJango_c *k = (daJango_c *)_ZN8dActor_c15FindWithActorIDEjPS_(kClsKlepto, nullptr);
