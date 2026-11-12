@@ -106,6 +106,8 @@
 #define REG_MOSAIC_OBJ    (*(volatile u8 *)0x0400004d)
 #define REG_DB_MOSAIC_BG  (*(volatile u8 *)0x0400104c)
 #define REG_DB_MOSAIC_OBJ (*(volatile u8 *)0x0400104d)
+/* The same register as one halfword (the SDK's reg_G2_MOSAIC). */
+#define REG_MOSAIC (*(volatile u16 *)0x0400004c)
 
 /* The geometry command FIFO port: a command word, then its parameter words.
    Packed and immediate-mode senders (nitro/gx/g3.h opcodes) write here. */
