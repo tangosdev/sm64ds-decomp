@@ -1784,6 +1784,19 @@ void process(unsigned now) {
         // health left, then MOVE.
         if (g_on && g_bf2 && d.cls == 248) {
             { const uint32_t st = state_of(b); if (st >= 8u && st <= 10u) b.wig_stag_t = now ? now : 1u; }
+            // bossfix3: DEMOCALL (1) shows the intro to the player its entry asked ClosestPlayer for. Entered from DEMOWAIT's tick, that
+            // second ask in the same frame gets the frame's cached answer (the target seat, coop_target), not my own player
+            // (coop_boss_prefer_local is never asked): on a console whose target is a friend the message never shows, and Wiggler keeps
+            // walking at his wander speed, off his mountain top and out of the world (far_f7b row: y 1800 -> -3000, his star announced
+            // there). The intro is my own player's here, as prefer_local means it to be.
+            if (state_of(b) == 1u) {
+                char *me = local_body();
+                char *pl = nullptr; std::memcpy(&pl, b.a + 0x8c8, sizeof pl);
+                if (me && pl != me) {
+                    std::memcpy(b.a + 0x8c8, &me, sizeof me);
+                    if (g_log) std::fprintf(stderr, "[cbs] wiggler DEMOCALL had a friend's player: the intro is my own player's here w=%lld\n", wall_ms());
+                }
+            }
             // bossfix3: MOVE_STOP (2) ends only when its player's intro talk ends. A copy put into it by its first record skipped
             // DEMOCALL's message, so no talk exists and it stood there for good, deaf to stomps (MOVE_STOP never checks hits); when that
             // console then took the authority, its records froze every friend's copy in 2 as well (far_f5 row: 35 s on both screens).
