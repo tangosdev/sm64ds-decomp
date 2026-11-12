@@ -1344,7 +1344,7 @@ void on_established(int level, int act) {
 void on_snapshot_request(int seat, unsigned nonce) {
     if (!coop_world_active() || seat < 0 || seat >= kCoopMaxSeats || seat == g_my) return;
     Job &j = g_job[seat];
-    j.on = true; j.seat = seat; j.nonce = nonce; j.sent = 0; j.next = 0; j.born = comms_hub_now_ms();
+    j.on = true; j.seat = seat; j.nonce = nonce; j.sent = 0; j.born = comms_hub_now_ms(); j.next = j.born;   // CLOCK1: due now, not 0
 }
 
 void on_member_gone(int seat) {

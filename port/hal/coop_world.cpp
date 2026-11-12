@@ -1277,7 +1277,8 @@ void gone_push(unsigned now) {
 enum : unsigned { kBooResendGapMs = 300u };
 unsigned g_boo_resend_at = 0; int g_boo_resend_i = 0;
 void boo_resend(unsigned now) {
-    if (g_gone_n == 0 || g_grp.others() == 0 || (int)(now - g_boo_resend_at) < 0) return;
+    // CLOCK1: 0 is "never sent", due at once; a bare (int)(now - 0) < 0 holds past 2^31 ms of uptime and the resend never ran
+    if (g_gone_n == 0 || g_grp.others() == 0 || (g_boo_resend_at && (int)(now - g_boo_resend_at) < 0)) return;
     const char *big = lobby_big_boo();
     if (!big || (*(const unsigned short *)(big + 0x5d4) & 0x80u)) return;   // no Big Boo here, or he is beaten (TRS_FLAG_DEFEATED)
     for (int n = 0; n < g_gone_n; ++n) {
@@ -1291,7 +1292,7 @@ void boo_resend(unsigned now) {
         g_boo_resend_i = i + 1;
         break;
     }
-    g_boo_resend_at = now + kBooResendGapMs;
+    g_boo_resend_at = (now + kBooResendGapMs) | 1u;   // never 0, which reads as due
 }
 
 // ---------------------------------------------------------------------------

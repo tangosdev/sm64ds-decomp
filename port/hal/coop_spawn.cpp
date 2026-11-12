@@ -545,7 +545,7 @@ bool register_local(char *a, int cls, unsigned param, const int pos[3], int area
     n->used = true; n->origin = (uint8_t)g_my; n->counter = g_counter; n->cls = (uint16_t)cls;
     n->kind = (uint8_t)(cls == 179 ? kSpKindSilver : kSpKindActor);
     n->param = param; n->pos[0] = pos[0]; n->pos[1] = pos[1]; n->pos[2] = pos[2]; n->area = (int8_t)area;
-    n->a = a; n->uid = a ? a_uid(a) : 0; n->sends = 0; n->next = 0; n->seen = true;
+    n->a = a; n->uid = a ? a_uid(a) : 0; n->sends = 0; n->next = comms_hub_now_ms(); n->seen = true;   // CLOCK1: due now, never 0 (a 0 reads as the future past 2^31 ms of uptime)
     if (cls == 200 && a) { const unsigned ix = *(const unsigned char *)(a + 0x474); n->extra = (uint8_t)(ix <= 40u ? ix : 0u); }   // mMinionIndex
     ++g_st.spawn_local;
     if (g_log)
@@ -740,7 +740,7 @@ void sil_queue_drop(int n) {
     ++g_sseq; if (!g_sseq) g_sseq = 1;
     int fi = 0;
     for (int i = 0; i < kSilOutMax; ++i) if (!g_so[i].on) { fi = i; break; }
-    g_so[fi] = {true, g_sseq, (uint8_t)(n > 5 ? 5 : n), 0, 0};
+    g_so[fi] = {true, g_sseq, (uint8_t)(n > 5 ? 5 : n), 0, comms_hub_now_ms()};   // CLOCK1: due now, not 0
     ++g_sst.drop_local;
 }
 void sil_send_drops(unsigned now) {
@@ -1946,7 +1946,7 @@ void on_established(int level, int act) {
 void on_snapshot_request(int seat, unsigned nonce) {
     if (!coop_world_active() || seat < 0 || seat >= kCoopMaxSeats || seat == g_my) return;
     Job &j = g_job[seat];
-    j.on = true; j.seat = seat; j.nonce = nonce; j.sent = 0; j.next = 0; j.born = comms_hub_now_ms();
+    j.on = true; j.seat = seat; j.nonce = nonce; j.sent = 0; j.born = comms_hub_now_ms(); j.next = j.born;   // CLOCK1: due now, not 0
 }
 
 void on_member_gone(int seat) {
