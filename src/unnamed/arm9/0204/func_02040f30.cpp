@@ -3,7 +3,7 @@
 #include "private/arm9_a1fc0_file_share.h"
 #include "private/arm9_wbt.h"
 #include "nitro/os/cache.h"
-#include "private/fs_views.h"
+#include "nitro/fs/archive.h"
 
 /* The FSFile a child read is for (FileShareWork.mReadRequest, set by
  * func_02041a00). */
@@ -12,7 +12,6 @@ extern "C" {
 
 extern void func_02041a00(FSFile *file);
 extern int func_020423dc(int *table);
-extern void FS_NotifyArchiveAsyncEnd(void *self, int arg);
 extern void func_02042160(void *arg);
 extern void func_02040f30(void *arg);
 extern char data_020a2400[];
@@ -90,10 +89,10 @@ void func_02040f30(void *arg) {
 
         case 3: {
             FSFile *p = data_020a1fc0.mReadRequest;
-            void *arc = p->arc;
+            FSArchive *arc = p->arc;
             data_020a1fc0.mReadRequest = 0;
             p->prop.file.pos += p->arg.readfile.len;
-            FS_NotifyArchiveAsyncEnd(arc, 0);
+            FS_NotifyArchiveAsyncEnd(arc, FS_RESULT_SUCCESS);
             return;
         }
         }

@@ -3,6 +3,7 @@
 #include "private/arm9_a1fc0_file_share.h"
 #include "nitro/os/system.h"
 #include "nitro/fs/file.h"
+#include "nitro/fs/archive.h"
 #include "nitro/os/thread.h"
 
 extern "C" {
@@ -10,7 +11,6 @@ extern "C" {
 extern char data_02099e6c[]; /* "rom" */
 extern char data_020a2400[];
 
-extern FSArchive *FS_FindArchive(const char *name, int name_len);
 extern void func_02041d28(char *base, void *node, int d);
 extern void func_02041a94(FileShareParentArea *area, FileShareNode *node);
 

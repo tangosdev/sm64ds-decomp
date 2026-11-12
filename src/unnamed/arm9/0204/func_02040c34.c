@@ -65,7 +65,7 @@ extern "C" void func_02040c34(int isParent, int port, void (*stateCallback)(int)
         data_020a0f88 = 0;
         if (WM_SetPortCallback((u16)port, func_020417d0, 0) != 0)
             OS_Terminate();
-        FS_Init(-1);
+        FS_Init(FS_DMA_NOT_USE);
 
         if (G->mIsParent != 0) {
             {

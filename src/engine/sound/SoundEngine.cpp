@@ -17,6 +17,7 @@
  */
 #include "types.h"
 #include "nitro/fs/file.h"
+#include "nitro/fs/archive.h"
 #include "Sound.h"
 #include "SoundPlayerRecord.h"
 #include "nnsys/fnd.h"
@@ -352,17 +353,11 @@ struct SNDWaveArc;
 extern void SND_DestroyWaveArc(struct SNDWaveArc *waveArc);
 extern void SND_DestroyBank(struct SNDBankData *bank);
 extern void SND_AssignWaveArc(struct SNDBankData *bank, int index, struct SNDWaveArc *waveArc);
-extern int FS_UnloadArchive(void *thiz);
-extern int FS_LoadArchive(FSArchive *p_arc, u32 base, u32 fat, u32 fat_size, u32 fnt, u32 fnt_size,
-                          FS_ARCHIVE_READ_FUNC read_func, FS_ARCHIVE_WRITE_FUNC write_func);
-extern void FS_ReleaseArchiveName(void *thiz);
-extern int FS_RegisterArchiveName(FSArchive *p_arc, const char *name, int name_len);
-extern void FS_InitArchive(void *o);
 
 /* In-span forward declarations. */
 extern int func_0204eda4(int r0, char* a, u32 idx);
 extern int func_0204ede8(struct S82 *o, unsigned int i);
-extern int func_0204ee10(void *thiz);
+extern int func_0204ee10(struct S82 *self);
 extern int func_0204ee40(struct S82 *self, char *name, char *p);
 extern int func_0204ef9c(void* p);
 extern void func_0204efe0(void);
@@ -2359,7 +2354,7 @@ extern "C" int func_0204ee40(struct S82 *self, char *name, char *p) {
         } while (i < n);
     }
 
-    FS_InitArchive(self);
+    FS_InitArchive(&self->arc);
     self->narc = p;
     self->f54 = (unsigned char *)fatb;
     fimg_off = fimg + 8;
@@ -2373,15 +2368,14 @@ extern "C" int func_0204ee40(struct S82 *self, char *name, char *p) {
                        *(u32 *)(fntb + 4) - 8, 0, 0))
         return 1;
 
-    FS_ReleaseArchiveName(self);
+    FS_ReleaseArchiveName(&self->arc);
     return 0;
 }
 
-extern "C" int func_0204ee10(void *thiz)
-{
-    if (!FS_UnloadArchive(thiz))
+extern "C" int func_0204ee10(struct S82 *self) {
+    if (!FS_UnloadArchive(&self->arc))
         return 0;
-    FS_ReleaseArchiveName(thiz);
+    FS_ReleaseArchiveName(&self->arc);
     return 1;
 }
 

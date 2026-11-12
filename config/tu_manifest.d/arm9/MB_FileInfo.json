@@ -193,9 +193,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@592",
+      "from": "@590",
       "to": "data_0209a080",
-      "evidence": "compiler string literal: mwcc numbers MB_ReadSegment's \"rom\" @592 (re-measured from MB_FileInfo.o after nitro/mi/memory.h replaced the file's local MI externs; it was @633), and that number is already defined by an overlay symbols.txt row, so the literal keeps its configured address name"
+      "evidence": "compiler string literal: mwcc numbers MB_ReadSegment's \"rom\" @590 (re-measured from MB_FileInfo.o after nitro/fs/archive.h replaced the file's local FS_FindArchive extern and its two named parameters; it was @592, and @633 before nitro/mi/memory.h replaced the local MI externs), and that number is already defined by an overlay symbols.txt row, so the literal keeps its configured address name"
     }
   ],
   "notes": [

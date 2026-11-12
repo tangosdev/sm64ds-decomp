@@ -2,14 +2,13 @@
 #include "types.h"
 #include "private/file_share_alloc.h"
 #include "nitro/os/system.h"
-#include "private/fs_views.h"
+#include "nitro/fs/archive.h"
 
 /* The FSFile a child read is in flight on (mReadRequest); only its archive is
  * read here. */
 
 extern "C" {
 
-extern void FS_NotifyArchiveAsyncEnd(void *arc, int result);
 extern void func_020421b4(void);
 extern void WBT_End(void);
 
@@ -39,9 +38,9 @@ void func_02040aa4(void) {
             FSFile *p = work->mReadRequest;
             FileShareChildArea *child = (FileShareChildArea *)work->mArea;
             if (p != 0) {
-                void *arg = p->arc;
+                FSArchive *arc = p->arc;
                 work->mReadRequest = 0;
-                FS_NotifyArchiveAsyncEnd(arg, 5);
+                FS_NotifyArchiveAsyncEnd(arc, FS_RESULT_ERROR);
             }
             FileShareFree(child->mRecvWork);
         } else {
