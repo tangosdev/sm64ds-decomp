@@ -6,6 +6,7 @@
 #include "coop_boss.h"
 #include "coop_target.h"
 #include "coop_world.h"
+#include "coop_spawn.h"
 #include "coop_groups.h"
 #include "coop_wire.h"
 #include "coop_actors.h"
@@ -2445,7 +2446,10 @@ void pkn_star_tick(unsigned now) {
         std::fprintf(stderr, "[cpk] the group was finished before this console watched it (joined): no star made here w=%lld\n", wall_ms());
         return;
     }
-    dActor_c *st = dActor_c::Spawn(178, s.param, s.pos, 0, s.area, -1);
+    // Spawned AND announced: left to coop_spawn's scan, a star that has already linked itself to the placed marker of its number is a
+    // "linked" star every console makes on its own (ctl_p2 row), and the 1.0.4 friend whose kill ended the group would see none.
+    const int pos[3] = { s.pos.x, s.pos.y, s.pos.z };
+    void *st = coop_spawn_and_announce(178, s.param, pos, s.area);
     if (st) coop_camshield_mark(st, "a Big Fire Piranha star from a friend's last kill");
     std::fprintf(stderr, "[cpk] no star %u came in %u ms (the last kill's console made none, a 1.0.4 one): made here at %d,%d,%d (%s) w=%lld\n",
                  s.param & 0xff, (unsigned)kPknStarGraceMs, s.pos.x >> 12, s.pos.y >> 12, s.pos.z >> 12, st ? "spawned" : "SPAWN FAILED", wall_ms());
