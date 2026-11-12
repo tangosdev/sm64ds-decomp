@@ -4,7 +4,7 @@
 /* The Nitro SDK's nitro/wbt.h (wireless block transfer): the WBTCallback a
  * command reports through, the WBTCommandType of a command and of the event
  * a system callback carries, the registered-block list node, the WBTCommand
- * a callback is handed, and the WBT API (src/WBT_*.c, src/WBT_*.cpp) under
+ * a callback is handed, and the WBT API (the WBT_* files in src/) under
  * the SDK's names with C linkage. The library's own work area (WBTWork and
  * the per-peer records) is in private/arm9_wbt.h.
  *
