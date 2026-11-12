@@ -77,6 +77,8 @@ namespace {
 
 typedef HRESULT(WINAPI *DwmTimingFn)(HWND, DWM_TIMING_INFO *);
 typedef BOOL(WINAPI *EnumDsFn)(LPCSTR, DWORD, DEVMODEA *);
+typedef HMONITOR(WINAPI *MonFromWinFn)(HWND, DWORD);
+typedef BOOL(WINAPI *MonInfoFn)(HMONITOR, MONITORINFO *);
 
 enum { SRC_NONE = 0, SRC_KNOB, SRC_DWM, SRC_MODE };
 const char *const kSrcName[] = {"none", "knob", "dwm", "mode"};
@@ -96,6 +98,8 @@ double g_knob_hz;
 double g_tol = 0.006;          /* how near a whole number of refreshes a step must be */
 DwmTimingFn g_dwm;
 EnumDsFn g_enumds;
+MonFromWinFn g_monfromwin;
+MonInfoFn g_moninfo;
 Refresh g_ref;
 long long g_ref_at;            /* when g_ref was read (QPC) */
 
@@ -224,6 +228,47 @@ long long qpc_now(void)
     return n.QuadPart;
 }
 
+/* ---- THE PRIMARY DISPLAY RULE ---------------------------------------------
+   DwmGetCompositionTimingInfo(NULL) times the compositor, and the compositor
+   runs on the PRIMARY display's refresh. A game window on another monitor is
+   shown on that monitor's own vblanks, which drift against the primary's (two
+   crystals, never in step), so a lock to the primary's grid would sit at a
+   wandering phase and stutter in long stretches. So the lock engages on the
+   compositor's vblank only while the game window is on the primary display.
+   Checked at most once a second (two cheap user32 calls, never per frame), and
+   at once when the window is handed over; a drag to another monitor or a
+   change of primary is seen within a second. No window known: lock off. */
+HWND g_hwnd;
+int g_on_primary;              /* 1 = the game window is on the primary display */
+const char *g_mon_why = "no game window known yet";
+long long g_mon_at;            /* when it was last checked (QPC), 0 = check now */
+
+void mon_check(long long now)
+{
+    if (g_mon_at && now - g_mon_at < g_qpf) return;
+    g_mon_at = now;
+    int on = 0;
+    const char *why = "no game window known yet";
+    if (g_hwnd && g_monfromwin && g_moninfo) {
+        why = "the game window's monitor is unknown";
+        /* a minimised window answers with where it was before it was minimised */
+        if (HMONITOR m = g_monfromwin(g_hwnd, MONITOR_DEFAULTTONEAREST)) {
+            MONITORINFO mi;
+            memset(&mi, 0, sizeof mi);
+            mi.cbSize = sizeof mi;
+            if (g_moninfo(m, &mi)) {
+                on = (mi.dwFlags & MONITORINFOF_PRIMARY) ? 1 : 0;
+                why = on ? "" : "window not on the primary display";
+            }
+        }
+    }
+    if (g_hwnd && (on != g_on_primary || strcmp(why, g_mon_why)))
+        fprintf(stderr, on ? "[pace] monitor check: the game window is on the primary display, so the compositor's vblank is its own\n"
+                           : "[pace] monitor check: %s (the compositor's vblank is the primary display's), lock off\n", why);
+    g_on_primary = on;
+    g_mon_why = why;
+}
+
 void init_once(void)
 {
     if (g_init) return;
@@ -237,6 +282,8 @@ void init_once(void)
     g_log_on = (e && e[0] == '1') ? 1 : 0;
     e = getenv("SM64DS_PACE_SUM");
     g_sum_on = (e && e[0] == '0') ? 0 : 1;
+#ifndef PORT_ROM_CLEAN
+    /* proof knobs, compiled out of the shipped build (TOL changes game speed) */
     e = getenv("SM64DS_PACE_REFRESH_HZ");
     g_knob_hz = e ? atof(e) : 0.0;
     if (g_knob_hz < 20.0 || g_knob_hz > 500.0) g_knob_hz = 0.0;
@@ -250,6 +297,11 @@ void init_once(void)
     if (g_vb_test || g_tol != 0.006)
         fprintf(stderr, "[pace] proof knobs: SM64DS_PACE_VBLANK_TEST=%s, tolerance %.4f\n",
                 g_vb_test == VBT_FROZEN ? "frozen" : g_vb_test == VBT_NONE ? "none" : g_vb_test == VBT_JUMP ? "jump" : g_vb_test == VBT_CLOCK ? "clock" : "real", g_tol);
+#endif
+    if (HMODULE u = LoadLibraryA("user32.dll")) {
+        g_monfromwin = (MonFromWinFn)GetProcAddress(u, "MonitorFromWindow");
+        g_moninfo = (MonInfoFn)GetProcAddress(u, "GetMonitorInfoA");
+    }
     if (!g_knob_hz) {
         if (HMODULE d = LoadLibraryA("dwmapi.dll"))
             g_dwm = (DwmTimingFn)GetProcAddress(d, "DwmGetCompositionTimingInfo");
@@ -267,6 +319,7 @@ const Refresh &refresh(void)
     const long long now = qpc_now();
     if (g_ref_at && now - g_ref_at < g_qpf / 4) return g_ref;
     g_ref_at = now;
+    mon_check(now);
     Refresh r = {0, 0, 0, 0, SRC_NONE};
     if (g_knob_hz) {
         static long long anchor;
@@ -337,6 +390,7 @@ const Refresh &refresh(void)
 int lock_k(long long step, const Refresh &r)
 {
     if (!g_lock_on || !r.period || !r.vblank || step <= 0) return 0;   /* r.vblank: only a trusted one */
+    if (r.src == SRC_DWM && !g_on_primary) return 0;   /* the compositor's vblank is the primary display's */
     const double ratio = (double)step / (double)r.period;
     const int k = (int)floor(ratio + 0.5);
     if (k < 1 || k > 16) return 0;
@@ -400,7 +454,10 @@ void sum_maybe(long long now)
             _snprintf(st, sizeof st, "lock off by SM64DS_PACE_LOCK=0");
         else if (!r.period)
             _snprintf(st, sizeof st, "no refresh period known, lock off");
+        else if (r.src == SRC_DWM && !g_on_primary)
+            _snprintf(st, sizeof st, "%s, lock off", g_mon_why);
         else if (!g_vb_trusted)
+            /* "frozen or not current" is normal when Windows is idle or the game is minimised (lock just off) */
             _snprintf(st, sizeof st, "period only, no trusted vblank time (%s), lock off", g_vb_why);
         else if (!g_k_now)
             _snprintf(st, sizeof st, "vblank trusted, but a pacer turn is %.2f refreshes (not a whole number), lock off",
@@ -536,4 +593,11 @@ extern "C" void pace_lock_note_present(int repeat, int tick)
     g_last_idx = idx;
     g_last_tick_pic = now;
     g_have_idx = 1;
+}
+
+extern "C" void pace_lock_set_window(void *hwnd)
+{
+    init_once();
+    g_hwnd = (HWND)hwnd;
+    g_mon_at = 0;   /* check the new window's monitor on the next refresh reading */
 }

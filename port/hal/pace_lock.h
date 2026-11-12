@@ -26,6 +26,11 @@ void pace_lock_note_present(int repeat, int tick);
    the turn overran its deadline. Feeds the summary. */
 void pace_lock_note_turn(double work_ms, double slept_ms, int overran, int tick);
 
+/* The game window, once it exists. The lock follows the compositor's vblank
+   only while this window is on the primary display (the compositor's timing
+   is the primary display's); with no window known the lock stays off. */
+void pace_lock_set_window(void *hwnd);
+
 #ifdef __cplusplus
 }
 #endif

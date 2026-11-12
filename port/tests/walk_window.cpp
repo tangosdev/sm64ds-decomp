@@ -16350,6 +16350,7 @@ static int scene_window_run(void)
        From here on a WM_SIZE or a WM_PAINT can redraw without this loop's
        help, which is what a drag on the sizing border needs. */
     g_present_hwnd = hwnd;
+    pace_lock_set_window(hwnd);   /* HITCH1: the lock needs this window on the primary display */
     g_present_hdc = hdc;
     g_present_bi = &g_bi;
     g_present_fb = (const ntr::Framebuffer *)port_scene_framebuffer();
@@ -18760,6 +18761,7 @@ int main(void)
        sizing border needs -- that drag runs a modal loop inside
        DefWindowProc and the frame loop does not get a turn until it ends. */
     g_present_hwnd = hwnd;
+    pace_lock_set_window(hwnd);   /* HITCH1: the lock needs this window on the primary display */
     g_present_hdc = hdc;
     g_present_bi = &g_bi;
     g_present_fb = &fb;
