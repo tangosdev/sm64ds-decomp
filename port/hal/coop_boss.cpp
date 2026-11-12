@@ -1514,6 +1514,9 @@ void apply_rx(int slot, Boss &b, unsigned now, bool mine) {
     // intro by the authority's DEMOCALL / MOVE_STOP: process() starts it here with my player (the player next to Wiggler got no intro
     // when a friend's console started it first, REVIEW-AL own_al)
     if (g_bf2 && d.cls == 248 && !mine && ls == 0u && (rs == 1u || rs == 2u) && wig_intro_due(b, local_body())) { force = false; b.mism = 0; }
+    // bossfix4: a copy that went on to MOVE_STOP with no intro of its own (not my player's) is not put back into the authority's
+    // DEMOCALL (1): it bounced 2 -> 1 -> 2 once while the friend's message opened (low_g1 row)
+    if (g_bf2 && d.cls == 248 && !mine && ls == 2u && rs == 1u && !b.a[0x8e1]) { force = false; b.mism = 0; }
     // bossfix3: a copy running its own DEAD (the stomper's, at the end of his talk) finishes it (about a second: the poofs, then its
     // star call, which is suppressed here when the star came by announcement) instead of being cut to the authority's MOVE at once.
     // 4 s at most.
@@ -1876,7 +1879,7 @@ void process(unsigned now) {
             // With no talk of its own (it drives no camera) it ends the way the state ends: the boss music, then MOVE_START (and the
             // MOVE_START way out below), the authority's copy included. Not on a copy while the authority's own Wiggler is in 2 (its
             // player is reading the intro): the next record would put it back, and it bounced 2 -> 3 -> 2 every second (far_f6 first try).
-            const bool auth_in_2 = !mine && b.rx.valid && b.rx.w[d.state] == 2u;
+            const bool auth_in_2 = !mine && b.rx.valid && (b.rx.w[d.state] == 2u || b.rx.w[d.state] == 1u);   // bossfix4: or still in 1
             if (state_of(b) == 2u && !b.a[0x8e1] && (unsigned char)b.a[0x8da] >= 13u && !auth_in_2) {
                 if (++b.wig2_ticks >= 20u) {
                     if (!b.wig_music) { _ZN5Sound22LoadAndSetMusic_Layer3Ej(0x2d); b.wig_music = true; }
