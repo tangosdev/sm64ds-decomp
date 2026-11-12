@@ -1,0 +1,52 @@
+{
+  "about": "PAUSE2: Luigi (1 health wedge) opens the coop pause menu below the BoB iron ball spawner and is hurt while it is open (SM64DS_EVENT_TESTHURT=file:..., the row touches the file): the menu must shut itself and the death exit run",
+  "save": {
+    "preset": "early"
+  },
+  "room": {
+    "collision": 1,
+    "damage": 1,
+    "interact": 1,
+    "tp": 1
+  },
+  "proof": {
+    "secs": 200,
+    "shot_ms": 60000,
+    "census": [
+      220
+    ]
+  },
+  "env": {
+    "SM64DS_PAUSE2_LEVEL": "6",
+    "SM64DS_PAUSE2_LOG": "30",
+    "SM64DS_PAUSE2_CLASSES": "206,220,221",
+    "SM64DS_PAUSE2_SHOTS": "600,700,900"
+  },
+  "players": [
+    {
+      "character": "mario",
+      "level": 6,
+      "act": 1,
+      "near": {
+        "class": 220,
+        "param": 2,
+        "dist": 300
+      }
+    },
+    {
+      "character": "luigi",
+      "level": 6,
+      "act": 1,
+      "near": {
+        "class": 220,
+        "param": 2,
+        "dist": 450,
+        "angle_deg": 6
+      },
+      "env": {
+        "SM64DS_PAUSE2_TEST": "450"
+      },
+      "health": 1
+    }
+  ]
+}

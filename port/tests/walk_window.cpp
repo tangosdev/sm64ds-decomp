@@ -14261,7 +14261,12 @@ static int pump_modal_msg(HWND h, UINT m, WPARAM w)
     if (m == WM_ENTERSIZEMOVE || m == WM_ENTERMENULOOP) {
         g_pump_modal_f0 = g_pump_frames;
         g_pump_modal_t0 = GetTickCount();
-        if (g_pump_fiber && GetCurrentFiber() == g_pump_fiber && !g_pump_modal) {
+        /* the timer only while a live online room is up (friends are waiting on
+           this console's frames); solo keeps 1.0.3's freeze during a drag until
+           a real title-bar drag has been tried by hand. The fiber pump itself
+           runs everywhere: without the timer it is the old pump. */
+        if (g_pump_fiber && GetCurrentFiber() == g_pump_fiber && !g_pump_modal &&
+            port::pauseonline::online_live()) {
             g_pump_modal = 1;
             p_SetTimer(h, kPumpTimer, 1, nullptr);
         }
@@ -14286,6 +14291,7 @@ static int pump_modal_msg(HWND h, UINT m, WPARAM w)
     return 0;
 }
 /* the drag test's stand-in for DefWindowProc's move loop (see the banner) */
+#ifndef PORT_ROM_CLEAN
 static LRESULT CALLBACK wndproc(HWND h, UINT m, WPARAM w, LPARAM l);
 static void drag_test_modal(HWND h, unsigned ms)
 {
@@ -14303,6 +14309,7 @@ static void drag_test_modal(HWND h, unsigned ms)
     }
     wndproc(h, WM_EXITSIZEMOVE, 0, 0);
 }
+#endif
 
 static LRESULT CALLBACK wndproc(HWND h, UINT m, WPARAM w, LPARAM l)
 {
@@ -14393,7 +14400,9 @@ static LRESULT CALLBACK wndproc(HWND h, UINT m, WPARAM w, LPARAM l)
     if (m == WM_ENTERSIZEMOVE || m == WM_ENTERMENULOOP || m == WM_EXITSIZEMOVE || m == WM_EXITMENULOOP)
         pump_modal_msg(h, m, w);
     if (m == WM_TIMER && pump_modal_msg(h, m, w)) return 0;
+#ifndef PORT_ROM_CLEAN
     if (m == kDragTestMsg) { drag_test_modal(h, (unsigned)w); return 0; }
+#endif
     switch (m) {
     case WM_DEVICECHANGE:
         /* a controller came or went: the pad backend's worker scans now

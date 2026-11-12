@@ -13,6 +13,12 @@ extern unsigned char data_0209f20c[];    // the level-clear screen
 extern unsigned char data_0209f294[];    // the star select / course intro
 extern unsigned char data_0209f2d8[];    // stage mode, 1 = VS
 extern unsigned char data_0209f2a0[];    // the pause stopped the course timer (PS_Cleanup restarts it)
+extern unsigned char data_0209f22c[];    // the pause screen's closing count (Stage::Behavior: PS_Cleanup at 0)
+extern unsigned char data_0209f244[];    // the chosen plate's blink
+extern unsigned char data_0209f2e0[];    // the chosen plate (0 = Continue)
+extern int data_0208ee44;                // frames per game tick
+extern signed char data_02092110;        // the level the game asked to change to, -1 = none
+extern short data_02092144[];            // per body slot, health in the high byte
 extern char data_0209d4c8[];             // the course timer (hal/coop_world.cpp TIME_TIMER)
 extern signed char data_0209f2f8;        // the level
 extern unsigned char data_0209f250;      // the local body slot
@@ -20,6 +26,8 @@ extern void *data_0209f394[];            // the body slots
 extern const void *port_level_fb_ptr;    // hal/coop_boot.cpp: the level's picture
 void _ZN5Sound12UnpauseMusicEv(void);    // Sound::UnpauseMusic, PS_Cleanup's own call
 void _ZN5Timer10StartTimerEv(void *self);
+void _ZN10dScStage_c17UpdateMenuButtonsEb(int b);
+unsigned int func_02012790(unsigned int snd);   // a system sound effect
 void *_ZN8dActor_c4NextEPKS_(const void *prev);
 int port_adventure_ghost_seat(int slot);
 void port_gw_ident_owe(void);            // hal/comms_sync.cpp: send an identity now
@@ -147,6 +155,8 @@ static bool coop_live() {
 
 bool soft_world() { return g_soft; }
 
+bool online_live() { return comms_hub_state() == kHubLive; }
+
 unsigned char ident_flags() {
     if (legacy()) return 0;
     return (unsigned char)(kIdentPauseAware | (g_menu_was ? kIdentPauseMenu : 0));
@@ -156,10 +166,11 @@ void ident_recv(int seat, unsigned char flags) {
     if (seat < 0 || seat >= kHubMaxSeats) return;
     SeatMenu &z = g_seat[seat];
     const bool menu = (flags & kIdentPauseMenu) != 0;
-    if (menu != z.menu || !z.aware)
+    const bool aware = (flags & kIdentPauseAware) != 0;
+    if (menu != z.menu || aware != z.aware)
         std::fprintf(stderr, "[pause2] seat %d identity: pause-aware %d, pause menu %s\n", seat,
                      (flags & kIdentPauseAware) ? 1 : 0, menu ? "OPEN" : "shut");
-    z.aware = (flags & kIdentPauseAware) != 0;
+    z.aware = aware;
     z.menu = z.aware && menu;
     z.last_ms = GetTickCount();
 }
@@ -209,10 +220,34 @@ extern "C" int port_pause_online_after_stage(void) {
     g_soft = soft;
     if (g_soft) ++g_soft_frames;
 
+    /* THE WORLD WINS. Under the coop menu the player's own death, or a level
+       change the game has already asked for, waits for the menu to shut (the
+       death exit and the change both wait on the pause screen), and friends
+       see him frozen in the hurt pose. So the menu shuts itself, by the very
+       steps PS_Update's Continue takes (d_s_stage_methods.cpp sel1_0): the
+       closing count, the buttons, data_0209f2c4 = 2 and the close sound; the
+       next Stage::Behavior runs the close and PS_Cleanup as on any Continue.
+       Only a menu that is fully up (1), never one already closing. */
+    if (soft && data_0209f2c4[0] == 1) {
+        const int me = data_0209f250 & 15;
+        const int hp = (int)(signed char)(data_02092144[me] >> 8);
+        const bool dead = data_0209f394[me] != nullptr && hp <= 0;
+        if (dead || data_02092110 >= 0) {
+            std::fprintf(stderr, "[pause2] the coop menu shuts itself: %s\n",
+                         dead ? "my player's health reached 0" : "a level change is pending");
+            if (data_0209f2e0[0] == 0) data_0209f244[0] = (unsigned char)(data_0208ee44 << 2);
+            data_0209f2e0[0] = 0;
+            data_0209f22c[0] = (unsigned char)(data_0208ee44 << 3);
+            _ZN10dScStage_c17UpdateMenuButtonsEb(0);
+            data_0209f2c4[0] = 2;
+            func_02012790(3);
+        }
+    }
+
     /* THE TAG. The menu bit goes out in the identity at once on each edge
        (and on every 2 s identity after). A 1.0.3 room pause (legacy) sends
        nothing new. */
-    const bool menu = !legacy() && up && comms_hub_state() == kHubLive;
+    const bool menu = !legacy() && up && coop_live();   // coop rooms only: VS and the rest keep 1.0.3's pause
     if (menu != g_menu_was) {
         g_menu_was = menu;
         port_gw_ident_owe();

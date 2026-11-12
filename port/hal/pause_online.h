@@ -36,6 +36,8 @@ bool legacy();
 // 1 while this console's pause menu is up in a coop room and the world keeps
 // running under it (the actor think gate and the camera read this).
 bool soft_world();
+// A live online room of any kind is up (a window drag keeps ticking only then).
+bool online_live();
 // The identity flag bits this console adds to every SYNI it sends.
 unsigned char ident_flags();
 // A friend's identity arrived (seat, its flags byte).
