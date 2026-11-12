@@ -204,6 +204,32 @@ extern RNkAnimationFileHandle data_ov062_0211e02c;  /* ANIM_JUMP */
 extern RNkAnimationFileHandle data_ov062_0211e004;  /* ANIM_LAND */
 }
 
+#ifdef _MSC_VER
+/* Host only (run coopfix1, lane KTQ1). In a coop room the console whose own player races Koopa is the only one whose
+   Koopa runs his states; every other console in that course shows him as that racer's game drives him.
+   port/hal/coop_race.cpp sets the hook at program start (a static constructor), so it is always set on the host; it
+   answers 1 only in a coop room, for a Koopa it has just posed from the racer's console (position, heading,
+   animation), and Behavior then skips the state handler, the move and the mesh collision. Outside a coop room (solo,
+   party, VS) it answers 0 and Behavior is the cartridge's. The DS build never sees this. */
+extern "C" {
+int (*port_coop_race_follow)(void *koopa) = 0;
+/* The seven animation files by a fixed index (the wire's): 0 idle, 1 talk, 2 run start, 3 run, 4 jump, 5 land, 6 brake. */
+void *port_rnk_anim_file(int i)
+{
+    switch (i) {
+    case 0: return ANIM_IDLE;
+    case 1: return ANIM_TALK;
+    case 2: return ANIM_RUN_START;
+    case 3: return ANIM_RUN;
+    case 4: return ANIM_JUMP;
+    case 5: return ANIM_LAND;
+    case 6: return ANIM_BRAKE;
+    }
+    return 0;
+}
+}
+#endif
+
 // @symbol daRNk_c_classInit
 extern "C" {
 int *daRNk_c_classInit(void)
@@ -299,6 +325,19 @@ int daRNk_c::CleanupResources()
 int daRNk_c::Behavior()
 {
   StateFunc *states = data_ov062_0211e0a4;
+#ifdef _MSC_VER
+  if (port_coop_race_follow && port_coop_race_follow(this)) {
+    /* a friend's race drives this Koopa: the hook posed him; keep the animation, cylinder and shadow going */
+    mModelAnim.Advance();
+    mAngleY = mPrevAngleY;
+    if (mModelAnim.file == (BCA_File *)ANIM_RUN)
+      func_ov062_02119800();
+    mdCcAc_c.Clear();
+    mdCcAc_c.Update();
+    func_ov062_0211aac0();
+    return 1;
+  }
+#endif
   (this->*states[mState])();
   mModelAnim.Advance();
   mAngleY = mPrevAngleY;

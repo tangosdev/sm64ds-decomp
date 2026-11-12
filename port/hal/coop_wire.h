@@ -61,7 +61,7 @@ enum : uint8_t {
     // 0x03 is coop_world.cpp's swallow message (kWorldSwallowGone)
     kWorldCoinCount  = 0x04,  // COOPCOUNT1: my level coin count + "100-coin star is out" (an old build drops it as unknown)
     kWorldSecret     = 0x05,  // COOPCOUNT1: I took this secret coin (class 329); an old build drops it as unknown
-    // 0x06 is spoken for (the shared race, not on this branch)
+    kWorldRacePose   = 0x06,  // KTQ1: the racer's Koopa the Quick pose (hal/coop_race.cpp); an old build drops it as unknown
     kWorldCoinLoose  = 0x07,  // COINS10: my running total of coins with no slot this visit; an old build drops it as unknown
     kWorldRedCount   = 0x08,  // AREACOIN1: my red coin count, for friends in another part of the same course; an old build drops it as unknown
     kWorldLast       = 0x7f,
