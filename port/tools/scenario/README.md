@@ -17,6 +17,34 @@ python port/tools/scenario/run_scenario.py klepto_hats --print            # show
 `--aroot` falls back to `SM64DS_ASSET_ROOT`, `--out` to `SCENARIO_OUT`.
 `--env K=V` (repeatable) adds an environment knob to every game.
 
+## How a lane uses this
+
+1. Build `walk_window` from your branch as usual and point `--exe` at the
+   result. The launcher copies the exe into each player's own folder, so
+   rebuilding while a row runs is safe.
+2. Write `scenarios/<your_bug>.json` for the spot the bug needs (copy the
+   nearest example; `near` with a `census` of the target's class finds an
+   actor's position, param and area on the first run). Check it with
+   `--print`, then `--mode play` if you want to look yourself.
+3. Prove with `--mode proof`. Give the run's row gate with `--rowgate` (or
+   `SCENARIO_ROWGATE`); the ticket name defaults to `SCENARIO-<pid>`, so
+   leave `--lane` alone unless your run asks for a name. Proof rows are
+   silent, minimized and never take focus; they use their own relay and room
+   on a free loopback port and never join a room someone is playing in.
+4. Read what the row prints: every `[scenario]` line, `fatal/fault total`,
+   and the picture paths (`--pics <folder>` gets PNG copies). Each step logs:
+   `save preset applied`, `warp to level`, `near class ... at`, `placed at`,
+   `ready`, `picture ... written`. A `REFUSED` or `no live actor` line means
+   the row did not set up what you asked for.
+5. Put your own bug's knobs on top with `--env K=V` or the scenario's `env`
+   block; the scenario only sets the start, the rest of the row is yours.
+6. A row that is cut short leaves `pids.json`; `--stop <name> --out <folder>`
+   ends only that run's own games and relay.
+
+Keep scenario JSON files that other lanes can reuse in `scenarios/` with an
+`about` line; throwaway ones can live in your run folder and be passed by path
+(`run_scenario.py path/to/mine.json`).
+
 ## The two modes
 
 **play** (default): windows visible, sound on, shown without taking focus.
