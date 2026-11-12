@@ -395,11 +395,20 @@ void shot() {
 
 enum Phase { kWait, kPlace, kDone };
 Phase g_phase = kWait;
-bool g_warped = false;
+bool g_warped = false, g_skip_starsel = false;
 unsigned g_in_level = 0, g_tries = 0, g_next_try = 0;
 ULONGLONG g_shot_at = 0;
 
 }  // namespace
+
+// The level change's star select interlude asks once per entry (hal/level_change.cpp): skip it for the scenario's own warp
+// only, so the act is the one the scenario named and no pad press is needed. Every later entry shows it as always.
+extern "C" int port_scenario_take_starsel_skip(void) {
+    if (!g_skip_starsel) return 0;
+    g_skip_starsel = false;
+    std::fprintf(stderr, "[scenario] star select skipped for the scenario's warp (act %d)\n", S.act);
+    return 1;
+}
 
 extern "C" void port_scenario_boot_env(void) {
     Scenario &s = get();
@@ -467,6 +476,7 @@ extern "C" void port_scenario_frame(int ticked) {
             g_in_level = 0;
             std::fprintf(stderr, "[scenario] warp to level %d act %d entrance %d (LoadLevelNoReturn, as SM64DS_COOP_WARP)\n", s.level, s.act,
                          s.entrance);
+            g_skip_starsel = true;
             LoadLevelNoReturn((unsigned)s.level, (unsigned)s.entrance, (unsigned)s.act, 0);
             if (s.act > 0 && s.act < 8) data_0209f1f0 = (unsigned char)s.act;
         }
