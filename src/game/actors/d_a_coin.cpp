@@ -582,7 +582,7 @@ void daCoin_c::StateBounce() {
             if (mPosY <= flCoin->mPosY) {
                 mPosY = flCoin->mPosY;
                 Sound::PlayBank3(0x52, mCamSpacePos);
-                bits = (CoinFlagBits *)((int)&mCoinFlags);
+                bits = (CoinFlagBits *)&mCoinFlags;
                 bits->bounces++;
                 bounces = ((CoinFlagBits *)&mCoinFlags)->bounces;
                 if (bounces < 3u)
@@ -590,7 +590,7 @@ void daCoin_c::StateBounce() {
                 else
                     damping = 0x555;
                 mVertSpeed = -mVertSpeed * damping / 0x1000;
-                *(int *)((int)&mHorzSpeed) >>= 1;
+                mHorzSpeed >>= 1;
                 if (mVertSpeed >= -mVertAccel)
                     return;
                 mVertSpeed = 0;
@@ -614,7 +614,7 @@ void daCoin_c::StateBounce() {
             if (mDisappearTimer > 0xf000)
                 mDisappearTimer = 0xf;
             Sound::PlayBank3(0x52, mCamSpacePos);
-            bits = (CoinFlagBits *)((int)&mCoinFlags);
+            bits = (CoinFlagBits *)&mCoinFlags;
             bits->bounces++;
             bounces = ((CoinFlagBits *)&mCoinFlags)->bounces;
             if (bounces < 3u)
@@ -622,15 +622,15 @@ void daCoin_c::StateBounce() {
             else
                 damping = 0x555;
             mVertSpeed = -mVertSpeed * damping / 0x1000;
-            *(int *)((int)&mHorzSpeed) >>= 1;
+            mHorzSpeed >>= 1;
         }
     }
 
     if (normal.x != 0 || normal.z != 0) {
         int slide = data_ov002_020ff078[floorClass];
-        int *velocity = (int *)((int)&mSpeedX);
+        int *velocity = (int *)&mSpeedX;
         *velocity += normal.x * slide;
-        *(int *)((int)&mSpeedZ) += normal.z * slide;
+        mSpeedZ += normal.z * slide;
         mHorzSpeed = Vec3_HorzLen(velocity);
         if (mHorzSpeed > 0x1c000) {
             mHorzSpeed = 0x1c000;
