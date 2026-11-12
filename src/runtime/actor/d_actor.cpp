@@ -155,6 +155,15 @@ extern u8 data_0209f20c;
 extern u8 data_0209f294;
 extern u32 data_0209b464; /* flag mask that forces thinking; 0 means "any" */
 }
+/* PAUSE2 (host only): the pause byte as the think gate reads it. In a coop room the pause menu is only a menu and the
+   world runs on under it, so the gate reads 0 there (hal/pause_online.h); everywhere else, and on the cartridge, it is
+   data_0209f2c4 itself. */
+#ifdef _MSC_VER
+extern "C" unsigned char port_pause_think_byte(void);
+#define PAUSE_THINK_BYTE port_pause_think_byte()
+#else
+#define PAUSE_THINK_BYTE data_0209f2c4
+#endif
 #ifdef _MSC_VER
 /* HOST ONLY (settings.json DrawDistance, default 100 = the ROM). Widens what is
    DRAWN and never what is updated: the ROM's own decision below (flag 0x08 and
@@ -252,7 +261,7 @@ static int HostWakeSkipped(dActor_c *a)
    0x20000000 through the castle-grounds opening) or a freeze byte refuses it the same way. */
 static int HostWouldThink(dActor_c *a)
 {
-    if (((data_0209f2c4 | data_0209f20c | data_0209f294) & 0xff) != 0)
+    if (((PAUSE_THINK_BYTE | data_0209f20c | data_0209f294) & 0xff) != 0)
         return 0;
     return data_0209b464 == 0 || (a->mFlags & data_0209b464) != 0 || data_0209fc68 != 0;
 }
@@ -498,7 +507,7 @@ int dActor_c::BeforeBehavior()
         }
     }
 
-    if (((data_0209f2c4 | data_0209f20c | data_0209f294) & 0xff) == 0) {
+    if (((PAUSE_THINK_BYTE | data_0209f20c | data_0209f294) & 0xff) == 0) {
         u32 f = mFlags;
         if ((f & 9) != 9 && (data_0209b464 == 0 || (f & data_0209b464) != 0))
             goto do_copy;
