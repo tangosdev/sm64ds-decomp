@@ -831,7 +831,7 @@ void room_gone_note(const CoopKey &k, int slot, unsigned cls) {
         if (r.level == k.level && r.act == (uint8_t)k.act && r.slot == slot && r.cls == cls) return;
     }
     if (g_room_gone_n < kRoomGoneMax) { g_room_gone[g_room_gone_n++] = {(int16_t)k.level, (uint8_t)k.act, (uint16_t)slot, (uint16_t)cls}; return; }
-    static bool said = false;   // TABLES1: 4 seats hold at most 8 levels, 11 breakable blocks at most each: 88 of 96
+    static bool said = false;   // TABLES1: 4 seats hold at most 8 levels; blocks and Boos both go here, 13 at most in one (the garden) and 11 in any other: 90 of 96
     if (!said) {
         said = true;
         std::fprintf(stderr, "[coop] ROOM GONE LIST FULL (%d): level %d act %d class %u slot %d not kept wall=%lld\n", (int)kRoomGoneMax, k.level,
