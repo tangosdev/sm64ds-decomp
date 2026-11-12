@@ -48,6 +48,7 @@
 #include "nitro/os/cache.h"
 #include "nitro/os/system.h"
 #include "nitro/os/interrupt_vblank.h"
+#include "nitro/wm/wm_api.h"
 #include "WmWork.h"
 #include "private/arm9_a9db8_mb_parent.h"
 #include "private/mb_views.h"
@@ -134,8 +135,8 @@ typedef struct {
 /* The WM API (WM_StartScan, WM_StartConnect, WM_StartMP, WM_SetLifeTime,
  * WM_SetParentParameter, WM_SetBeaconIndication and the rest). The callbacks
  * are WMCallbackFunc pointers in the SDK's headers; the definitions take them
- * as void *, the type of the callback tables they are stored in. Only
- * WM_SetMPDataToPort's definition still takes its callback as an int. */
+ * as void *, the type of the callback tables they are stored in. The MP
+ * calls are in nitro/wm/wm_api.h. */
 extern int WM_Initialize(int buf, void *callback, int dma);
 extern int WM_SetIndCallback(void *callback);
 extern int WM_Reset(void *callback);
@@ -149,11 +150,6 @@ extern int WM_SetParentParameter(void *callback, WmParentParam *parentParam);
 extern int WM_SetBeaconIndication(void *callback, int flag);
 extern int WM_StartScan(void *callback, char *scanParam);
 extern int WM_StartConnect(void *callback, const WMBssDesc *pInfo, const u8 *ssid);
-extern int WM_StartMPEx(void *callback, int recvBuf, u16 recvBufSize, int sendBuf, u16 sendBufSize,
-                        u16 mpFreq, u16 defaultRetryCount, int minPollBmpMode, int singlePacketMode,
-                        int fixFreqMode, int ignoreFatalError);
-/* It returns WM_SetMPDataToPortEx's WM result. */
-extern int WM_SetMPDataToPort(int callback, int data, int size, int aidBitmap, u16 port, u16 prio);
 
 extern void OS_GetMacAddress(unsigned char *macAddress);
 
@@ -273,8 +269,8 @@ void MBi_ParentCallback(void *arg) {
                             mpFreq = 0;
                         }
                         MBi_CheckWmErrcode(
-                            0xE, WM_StartMPEx((void *)MBi_ParentCallback, (int)WM_WORK->recvBuf,
-                                              WM_WORK->recvBufSize, (int)WM_WORK->sendBuf,
+                            0xE, WM_StartMPEx(MBi_ParentCallback, (u16 *)WM_WORK->recvBuf,
+                                              WM_WORK->recvBufSize, (u16 *)WM_WORK->sendBuf,
                                               WM_WORK->sendBufSize, (u16)mpFreq, 0, 0, 0, 1, 1));
                         return;
                     }
@@ -557,8 +553,8 @@ void MBi_ChildCallback(void *arg) {
                 if (WM_SetPortCallback(1, (void *)MBi_ChildPortCallback, 0) != 0)
                     return;
                 MBi_CheckWmErrcode(
-                    0xe, WM_StartMPEx((void *)MBi_ChildCallback, (int)w->recvBuf, w->recvBufSize,
-                                      (int)w->sendBuf, w->sendBufSize,
+                    0xe, WM_StartMPEx(MBi_ChildCallback, (u16 *)w->recvBuf, w->recvBufSize,
+                                      (u16 *)w->sendBuf, w->sendBufSize,
                                       (u16)(w->mpContinuous == 0 ? 1 : 0), 0, 0, 0, 1, 1));
                 return;
             case 9:
@@ -856,11 +852,12 @@ void MB_End(void) {
     OS_RestoreInterrupts(saved);
 }
 
-/* MBi_SetMPData: send on port 1 at priority 3 through WM_SetMPDataToPort.
- * The fourth parameter is unused. Lead: the reconstruction's calls
- * WM_SetMPDataToPortEx and passes the result to MBi_CheckWmErrcode. */
-int MBi_SetMPData(int callback, const u16 *sendData, int size, int unused, u16 aidBitmap) {
-    return WM_SetMPDataToPort(callback, (int)sendData, size, aidBitmap, 1, 3);
+/* MBi_SetMPData: send on port 1 (the SDK's WM_PORT_BT) at low priority.
+ * tmptt is unused. The later SDK also passes the result to
+ * MBi_CheckWmErrcode. */
+int MBi_SetMPData(WMCallbackFunc callback, const u16 *sendData, u16 sendDataSize, u16 tmptt,
+                  u16 pollbmp) {
+    return WM_SetMPDataToPort(callback, sendData, sendDataSize, pollbmp, 1, WM_PRIORITY_LOW);
 }
 
 /* MBi_SendMP: queue one MP send. Fails (1) until MP has started or while a
@@ -869,10 +866,10 @@ int MBi_SetMPData(int callback, const u16 *sendData, int size, int unused, u16 a
  * returns 0; any other code is returned as it is. Lead: the reconstruction's
  * has the same two cases, but this parent case first pads the size up to
  * data_0209a088 (6). */
-int MBi_SendMP(const void *buf, int len, int aidBitmap) {
+int MBi_SendMP(const void *buf, int len, int pollbmp) {
     WmWork *hdr = WM_WORK;
-    int size = (u16)len;
-    u16 aids = aidBitmap;
+    u16 size = (u16)len;
+    u16 pollbitmap = (u16)pollbmp;
     int ret;
     int wait;
     if ((hdr->mpStarted == 0) || (hdr->resetting == 1)) {
@@ -888,7 +885,7 @@ int MBi_SendMP(const void *buf, int len, int aidBitmap) {
         } else {
             wait = 0;
         }
-        ret = MBi_SetMPData((int)hdr->stateCallback, (const u16 *)buf, size, (u16)wait, aids);
+        ret = MBi_SetMPData(hdr->stateCallback, (const u16 *)buf, size, (u16)wait, pollbitmap);
         /* Two tests of OPERATING, as shipped: one if for both costs a word. */
         if (ret == 2) {
             WM_WORK->mpSending = 1;
@@ -899,7 +896,7 @@ int MBi_SendMP(const void *buf, int len, int aidBitmap) {
         return ret;
 
     case 2:
-        ret = MBi_SetMPData((int)MBi_ChildCallback, (const u16 *)buf, size, 0, aids);
+        ret = MBi_SetMPData(MBi_ChildCallback, (const u16 *)buf, size, 0, pollbitmap);
         if (ret == 2) {
             WM_WORK->mpSending = 1;
         }

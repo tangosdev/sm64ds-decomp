@@ -10,6 +10,7 @@
 #include "types.h"
 #include "nitro/os/cache.h"
 #include "nitro/os/system.h"
+#include "nitro/wm/wm_api.h"
 #include "private/wm_views.h"
 #include "nitro/mi/memory.h"
 
@@ -26,11 +27,6 @@ typedef struct WMPortSendCallback {
 } WMPortSendCallback;
 
 extern int WM_SetPortCallback(int port, void *callback, void *arg);
-typedef void (*WMCallbackFunc)(void *arg);
-
-/* sendData stays an int, as WM_SetMPDataToPort.c defines it. */
-extern int WM_SetMPDataToPort(WMCallbackFunc callback, int sendData, int sendDataSize,
-                              int destBitmap, u16 port, u16 prio);
 
 void WmDataSharingSetDataCallback(void *arg);
 void WmDataSharingReceiveCallback_Parent(WMPortRecvCallback *callback);
@@ -130,8 +126,9 @@ int WM_StartDataSharing(WMDataSharingInfo *dsInfo, int port, int aidBitmap, int 
             int cr;
 
             dsInfo->writeIndex = (dsInfo->writeIndex + 1) % 4;
-            cr = WM_SetMPDataToPort(WmDataSharingSetDataCallback, (int)cur, dsInfo->dataSetLength,
-                                    (u16)(dsInfo->aidBitmap & childMask), dsInfo->port, 1);
+            cr = WM_SetMPDataToPort(WmDataSharingSetDataCallback, (u16 *)cur, dsInfo->dataSetLength,
+                                    (u16)(dsInfo->aidBitmap & childMask), dsInfo->port,
+                                    WM_PRIORITY_HIGH);
 
             if (cr == 7) {
                 dsInfo->seqNum[n] = 0xffff;
@@ -206,9 +203,9 @@ int WM_StepDataSharing(WMDataSharingInfo *dsInfo, const void *sendData, WMDataSe
             int cr;
             dsInfo->state = 1;
             n = (u16)((dsInfo->writeIndex + 3) % 4);
-            cr = WM_SetMPDataToPort(WmDataSharingSetDataCallback, (int)&dsInfo->ds[n],
+            cr = WM_SetMPDataToPort(WmDataSharingSetDataCallback, (u16 *)&dsInfo->ds[n],
                                     dsInfo->dataSetLength, (u16)(dsInfo->aidBitmap & childMask),
-                                    dsInfo->port, 1);
+                                    dsInfo->port, WM_PRIORITY_HIGH);
             if (cr == 7) {
                 dsInfo->seqNum[n] = 0xffff;
                 dsInfo->sendIndex = (u16)((dsInfo->sendIndex + 1) % 4);
@@ -265,8 +262,8 @@ int WM_StepDataSharing(WMDataSharingInfo *dsInfo, const void *sendData, WMDataSe
             u8 *addr = (u8 *)&dsInfo->ds[dsInfo->sendIndex] + 0x20;
             int cr;
             MI_CpuCopy16(sendData, addr, dsInfo->dataLength);
-            cr = WM_SetMPDataToPort(WmDataSharingSetDataCallback, (int)addr, dsInfo->dataLength,
-                                    dsInfo->aidBitmap, dsInfo->port, 1);
+            cr = WM_SetMPDataToPort(WmDataSharingSetDataCallback, (u16 *)addr, dsInfo->dataLength,
+                                    dsInfo->aidBitmap, dsInfo->port, WM_PRIORITY_HIGH);
             dsInfo->sendIndex = (u16)((dsInfo->sendIndex + 1) % 4);
             if (cr != 2 && cr != 0) {
                 dsInfo->state = 3;
@@ -460,9 +457,9 @@ void WmDataSharingSendDataSet(WMDataSharingInfo *dsInfo, int excludeParent) {
 
         OS_RestoreInterrupts(saved);
 
-        ret = WM_SetMPDataToPort(WmDataSharingSetDataCallback, (int)&dsInfo->ds[prevSlot],
+        ret = WM_SetMPDataToPort(WmDataSharingSetDataCallback, (u16 *)&dsInfo->ds[prevSlot],
                                  dsInfo->dataSetLength, (u16)(dsInfo->aidBitmap & mask),
-                                 dsInfo->port, 1);
+                                 dsInfo->port, WM_PRIORITY_HIGH);
 
         if (ret == 7) {
             dsInfo->seqNum[prevSlot] = 0xffff;
