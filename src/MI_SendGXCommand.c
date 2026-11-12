@@ -9,6 +9,7 @@
  */
 
 #include "nitro/hw/registers.h"
+#include "nitro/mi/dma.h"
 
 #define DMA_CONTROL_DEST_FIXED (2u << 21)
 #define GXFIFO_DMA_CONTROL (DMA_CONTROL_ENABLE | DMA_CONTROL_32_BIT | DMA_CONTROL_DEST_FIXED)

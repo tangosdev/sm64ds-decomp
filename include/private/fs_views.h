@@ -114,7 +114,7 @@ typedef struct FSOpenFileDirectInfo {
     unsigned int index;  /* 0x08 */
 } FSOpenFileDirectInfo;
 
-struct FSFile {
+typedef struct FSFile {
     FSFileLink link;      /* 0x00 */
     FSArchive *arc;       /* 0x08 */
     unsigned int stat;    /* 0x0c */
@@ -143,7 +143,7 @@ struct FSFile {
         FSOpenFileFastInfo openfilefast;
         FSOpenFileDirectInfo openfiledirect;
     } arg; /* 0x2c */
-};
+} FSFile;
 
 /* FS_SeekFile's origin. */
 typedef enum FSSeekFileMode { FS_SEEK_SET, FS_SEEK_CUR, FS_SEEK_END } FSSeekFileMode;

@@ -3,8 +3,7 @@
    read copies size bytes from address pos to dst and succeeds (0). */
 #include "types.h"
 #include "private/fs_views.h"
-
-extern void MI_CpuCopy8(const void *src, void *dst, u32 size);
+#include "nitro/mi/memory.h"
 
 int func_020426f8(FSArchive *p_arc, void *dst, u32 pos, u32 size) {
     MI_CpuCopy8((const void *)pos, dst, size);

@@ -38,15 +38,12 @@
  */
 #include "types.h"
 #include "private/mb_views.h"
-#include "private/fs_views.h"
+#include "nitro/mi/memory.h"
 #include "nitro/fs/file.h"
 #include "private/mb_common.h"
 #include "nitro/wm/wm_api.h"
 
 /* local extern: MI_Memory.c's asm fills and copies; no header declares them. */
-extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
-extern void MIi_CpuCopy16(const void *src, void *dst, s32 size);
-extern void MIi_CpuClearFast(unsigned val, void *dst, int len);
 extern u16 func_020688e4(void);
 extern u16 func_020688cc(void);
 extern u16 MBi_GetTgid(void);
@@ -132,23 +129,23 @@ void MBi_MakeGameInfo(char *dst, MBGameRegistry *src, const void *parent) {
     volatile unsigned short tmp;
     volatile int z;
     tmp = 0;
-    MIi_CpuClear16(tmp, dst, 0x4b8);
+    MI_CpuFill16(dst, tmp, 0x4b8);
     info->dataAttr = 0;
     if (MBi_ReadIconInfo(src->iconCharPathp, dst, 1) == 0 |
         MBi_ReadIconInfo(src->iconPalettePathp, dst, 0) == 0) {
         info->dataAttr = 1;
         z = 0;
-        MIi_CpuClearFast(z, dst, 0x220);
+        MI_CpuFillFast(dst, z, 0x220);
     }
     info->ggid = src->ggid;
     if (parent) {
-        MIi_CpuCopy16(parent, &info->fixed.parent, 0x16);
+        MI_CpuCopy16(parent, &info->fixed.parent, 0x16);
     }
     info->fixed.maxPlayerNum = src->maxPlayerNum;
-    MIi_CpuCopy16(src->gameNamep, info->fixed.gameName,
-                  (unsigned)(mystrlen(src->gameNamep) << 0x11) >> 0x10);
-    MIi_CpuCopy16(src->gameIntroductionp, info->fixed.gameIntroduction,
-                  (unsigned)(mystrlen(src->gameIntroductionp) << 0x11) >> 0x10);
+    MI_CpuCopy16(src->gameNamep, info->fixed.gameName,
+                 (unsigned)(mystrlen(src->gameNamep) << 0x11) >> 0x10);
+    MI_CpuCopy16(src->gameIntroductionp, info->fixed.gameIntroduction,
+                 (unsigned)(mystrlen(src->gameIntroductionp) << 0x11) >> 0x10);
     info->volat.nowPlayerNum = 1;
     info->volat.nowPlayerFlag = 1;
     info->volat.broadcastedPlayerFlag = 1;
@@ -157,8 +154,7 @@ void MBi_MakeGameInfo(char *dst, MBGameRegistry *src, const void *parent) {
 /* NitroSDK MBi_ReadIconInfo: read one icon file into a game record. With
  * char_flag set it reads 0x200 bytes of character data to iconp + 0x20,
  * otherwise 0x20 bytes of palette to iconp. It fails (0) on a null path, a
- * failed open, or a file whose length (bottom - top, words 9 and 8 of the
- * FSFile) is not exactly that size. Newer SDKs open with
+ * failed open, or a file whose FS_GetLength is not exactly that size. Newer SDKs open with
  * FS_OpenFileEx(file, path, FS_FILEMODE_R); this one takes the
  * two-argument open FS_OpenFile. */
 int MBi_ReadIconInfo(const char *filePathp, char *iconp, int char_flag) {
@@ -178,7 +174,7 @@ int MBi_ReadIconInfo(const char *filePathp, char *iconp, int char_flag) {
     if (FS_OpenFile(&file, filePathp) == 0)
         return 0;
 
-    param = file.prop.file.bottom - file.prop.file.top;
+    param = FS_GetLength(&file);
     if (sz != param) {
         FS_CloseFile(&file);
         return 0;
@@ -201,7 +197,7 @@ void MB_UpdateGameInfoMember(char *self, void *src, unsigned int flags, int s) {
     int i;
     int cnt;
     cnt = 1;
-    MIi_CpuCopy16(src, gameInfo->volat.member, 0x14a);
+    MI_CpuCopy16(src, gameInfo->volat.member, 0x14a);
     for (i = 0; i < 0xf; i++) {
         if (flags & (2 << i))
             cnt = (cnt + 1) & 0xff;
@@ -375,11 +371,11 @@ void MBi_SendFixedBeacon(void) {
         } else {
             data_020a9d40.data.fixed.size = (u8)(lim - (unsigned)cur);
             v = 0;
-            MIi_CpuClear16(v, (char *)data_020a9d4e + data_020a9d40.data.fixed.size,
-                           0x62 - data_020a9d40.data.fixed.size);
+            MI_CpuFill16((char *)data_020a9d4e + data_020a9d40.data.fixed.size, v,
+                         0x62 - data_020a9d40.data.fixed.size);
         }
     }
-    MIi_CpuCopy16(data_020a9d2c.srcp, data_020a9d4e, data_020a9d40.data.fixed.size);
+    MI_CpuCopy16(data_020a9d2c.srcp, data_020a9d4e, data_020a9d40.data.fixed.size);
 
     data_020a9d40.data.fixed.fragmentNo = data_020a9d2c.fragmentNo;
     data_020a9d40.data.fixed.fragmentMaxNum = data_020a9d2c.fragmentMaxNum;
@@ -451,7 +447,7 @@ void MBi_SendVolatBeacon(void) {
     data_020a9d40.data.volat.changePlayerFlag = ptr->volat.changePlayerFlag;
 
     zero = 0;
-    MIi_CpuClear16(zero, (char *)data_020a9d50, 0x58);
+    MI_CpuFill16(data_020a9d50, zero, 0x58);
 
     ptr = data_020a9d2c.nowGameInfop;
     mask = ptr->volat.broadcastedPlayerFlag ^ ptr->volat.nowPlayerFlag;
@@ -459,7 +455,7 @@ void MBi_SendVolatBeacon(void) {
     dst = data_020a9d50;
     for (i = 0; i < 15; i++) {
         if (mask & (2 << i)) {
-            MIi_CpuCopy16(&data_020a9d2c.nowGameInfop->volat.member[i], dst, 0x16);
+            MI_CpuCopy16(&data_020a9d2c.nowGameInfop->volat.member[i], dst, 0x16);
             count++;
             dst += 0x16;
             data_020a9d2c.nowGameInfop->volat.broadcastedPlayerFlag |= 2 << i;

@@ -22,13 +22,12 @@
 #include "nitro/os/cache.h"
 #include "nitro/card/card_common.h"
 #include "nitro/os/spinLock.h"
+#include "nitro/mi/memory.h"
 #include "nitro/pxi/fifo.h"
 
 extern "C" {
 
 /* local extern: no header declares this yet. */
-extern void OS_Terminate(void);
-extern void MIi_CpuClearFast(unsigned val, void *dst, int len);
 
 #define OS_LOCK_ID_ERROR (-3)
 #define CARD_TARGET_NONE 0
@@ -110,7 +109,7 @@ void CARDi_InitCommon(void) {
     {
         /* MI_CpuFillFast's value: the ROM passes it through a stack slot. */
         volatile u32 fill = 0;
-        MIi_CpuClearFast(fill, &cardi_arg, sizeof(cardi_arg));
+        MI_CpuFillFast(&cardi_arg, fill, sizeof(cardi_arg));
     }
     DC_FlushRange(&cardi_arg, sizeof(cardi_arg));
     p->lock_queue = 0;

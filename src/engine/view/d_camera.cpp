@@ -411,7 +411,7 @@ int dCamera_c::Render()
             if ((u8 *)mMode == &data_0208738c) {
                 OAM::Render(0, (OamAttr *)&data_ov002_0210c3b0, 0x80, 0x60, -1, -1, 0x1000, 0x1000,
                             0, -1);
-                G2x_SetBlendAlpha_((volatile unsigned short *)0x04000050, 0x10, 0x2f, 0xc, 6);
+                G2_SetBlendAlpha(0x10, 0x2f, 0xc, 6);
             } else {
                 if (flags & 0x20) {
                     OAM::Render(0, (OamAttr *)data_ov002_0210c3e0[0], 0x14, 0x60, -1, -1, 0x1000,

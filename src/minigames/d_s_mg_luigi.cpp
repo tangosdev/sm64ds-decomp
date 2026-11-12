@@ -48,6 +48,8 @@ enum dScMgLuigi_c_AssetId {
 #include "OamAttr.h"
 #include "nitro/gx/g2_oam.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/g2.h"
+#include "nitro/gx/gx.h"
 #include "nitro/gx/gx_load.h"
 
 /* A random integer in [0, n): the top 15 bits of the shared generator, scaled. */
@@ -68,49 +70,6 @@ static inline int OS_EnableIrq(void) {
     u16 prep = REG_IME;
     REG_IME = 1;
     return prep;
-}
-
-/* NitroSDK's window helpers (gx/gx.h, gx/g2.h) and the masks they take. */
-#define GX_WNDMASK_NONE 0x0
-#define GX_WNDMASK_W0 0x1
-#define GX_WNDMASK_OW 0x4
-
-#define GX_WND_PLANEMASK_BG2 0x04
-#define GX_WND_PLANEMASK_BG3 0x08
-#define GX_WND_PLANEMASK_OBJ 0x10
-
-static inline void GX_SetVisibleWnd(int window) {
-    REG_DISPCNT = (u32)((REG_DISPCNT & ~0xe000) | (window << 13));
-}
-
-static inline void GXS_SetVisibleWnd(int window) {
-    REG_DISPCNT_SUB = (u32)((REG_DISPCNT_SUB & ~0xe000) | (window << 13));
-}
-
-static inline void G2_SetWnd0InsidePlane(int wnd, int effect) {
-    u32 tmp = ((REG_WININ & ~0x3f) | (u32)wnd);
-    if (effect)
-        tmp |= 0x20;
-    REG_WININ = (u16)tmp;
-}
-
-static inline void G2_SetWndOutsidePlane(int wnd, int effect) {
-    u32 tmp = ((REG_WINOUT & ~0x3f) | (u32)wnd);
-    if (effect)
-        tmp |= 0x20;
-    REG_WINOUT = (u16)tmp;
-}
-
-static inline void G2_SetWndOBJInsidePlane(int wnd, int effect) {
-    u32 tmp = ((REG_WINOUT & ~0x3f00) | ((u32)wnd << 8));
-    if (effect)
-        tmp |= 0x20 << 8;
-    REG_WINOUT = (u16)tmp;
-}
-
-static inline void G2_SetWnd0Position(int x1, int y1, int x2, int y2) {
-    REG_WIN0H = (u16)(((x1 << 8) & 0xff00) | (x2 & 0xff));
-    REG_WIN0V = (u16)(((y1 << 8) & 0xff00) | (y2 & 0xff));
 }
 
 /* Scanline window record pushed to the iris hardware. */
@@ -138,7 +97,6 @@ extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 extern void Mg_DrawNumberRotated(int a, int b, int c, int d, int e, int f, u16 g);
 extern void func_020127a4(int a0, int a1, int a2, int a3);
 extern void Hud_RenderSprite(void *sprite, int b, int c, int d, int e);
-extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 extern int Sound_PlayIfNotActive(int a, int b, int c, short d);
 extern void FreeGfxSlotsById(int arg);
 extern void Mg_SetSharedState(int c);
@@ -148,6 +106,7 @@ extern void Luigi_PushScanlineRecord(void);
 extern dScMgLuigi_c *dScMgLuigi_c_classInit(void);
 }
 #include "nitro/os/cache.h"
+#include "nitro/mi/memory.h"
 
 namespace cstd {
 int sqrt(unsigned long long x);
@@ -178,7 +137,6 @@ extern "C" {
 void Luigi_PrepareScanlines(void) {
     extern int data_0209f608;
     extern int data_0209f648[][192];
-    extern void MIi_CpuCopy32(int *src, int *dst, int byteCount);
     int nextLine;
     OS_SetIrqCheckFlag(OS_IE_H_BLANK);
     nextLine = REG_VCOUNT + 1;
@@ -186,7 +144,7 @@ void Luigi_PrepareScanlines(void) {
         Luigi_PushScanlineRecord();
     } else if (nextLine <= 0xc0) {
         if (REG_DISPSTAT & DISPSTAT_HBLANK) {
-            MIi_CpuCopy32(&data_0209f648[data_0209f608][nextLine], (int *)0x04000040, 4);
+            MI_CpuCopy32(&data_0209f648[data_0209f608][nextLine], (int *)0x04000040, 4);
         }
     }
 }
@@ -199,9 +157,8 @@ void Luigi_PushScanlineRecord(void) {
     extern u32 data_0209f60c;
     extern volatile u32 data_0209f608;
     extern struct IrisScanlineTable data_0209f648[];
-    extern void MIi_CpuCopy32(int *src, int *dst, int byteCount);
     data_0209f608 = data_0209f60c;
-    MIi_CpuCopy32((int *)&data_0209f648[data_0209f608], (int *)0x04000040, 4);
+    MI_CpuCopy32((int *)&data_0209f648[data_0209f608], (int *)0x04000040, 4);
 }
 }
 
@@ -1410,7 +1367,7 @@ void dScMgLuigi_c::ChooseTarget() {
         sourceTile = sLuigiWantedPosterTiles[mWanted] + tileRow * 0x20;
         for (tileColumn = 0; tileColumn < 8; tileColumn++) {
             tile = ((u16 *)G2_GetBG3ScrPtr())[sourceTile];
-            MIi_CpuClear16(tile, (char *)dst, 2);
+            MI_CpuFill16(dst, tile, 2);
             sourceTile++;
             dst++;
         }
@@ -1590,7 +1547,6 @@ extern void *sLuigiBg1NcgPath;
 extern void *Ov004_LoadFileByPath(const char *path);
 extern void DecompressLZ16(void *src, void *dst);
 extern void *LoadFile(int handle);
-extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 extern void Ov004_Deallocate(void *ptr);
 extern void GX_LoadBG3Scr(void *, u32, u32);
 extern void GXS_LoadBG2Scr(const void *, u32, u32);
@@ -1664,8 +1620,9 @@ s32 dScMgLuigi_c::InitResources() {
         return 0;
 
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
-    REG_BG3CNT = (REG_BG3CNT & ~3) | 2;
-    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1218;
+    G2_SetBG3Priority(2);
+    G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
+                         GX_BG_CHARBASE_0x18000);
 
     DecompressLZ16(arc, (void *)G2_GetBG3CharPtr());
 
@@ -1678,10 +1635,11 @@ s32 dScMgLuigi_c::InitResources() {
     Deallocate(fileData);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
-    REG_BG2CNT &= ~3;
+    G2_SetBG2Priority(0);
     REG_BG2CNT &= ~BG_CONTROL_MOSAIC;
-    REG_BG2OFS = 0;
-    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1410;
+    G2_SetBG2Offset(0, 0);
+    G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xa000,
+                         GX_BG_CHARBASE_0x10000);
 
     fileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NCG_BIN);
     DecompressLZ16(fileData, (void *)((char *)G2_GetBG2CharPtr() + 0x4000));
@@ -1693,17 +1651,18 @@ s32 dScMgLuigi_c::InitResources() {
 
     screenMap = (char *)G2_GetBG2ScrPtr();
     fillMain = 0x23e1;
-    MIi_CpuClear16(fillMain, screenMap, 0x800);
+    MI_CpuFill16(screenMap, fillMain, 0x800);
 
     objectTiles = LoadFile(ASSET_D_2D_MG_LUIGI_NCG_BIN);
     fileData = LoadFile(ASSET_D_2D_MG_LUIGI_NCL_BIN);
     DecompressLZ16(objectTiles, G2_GetOBJCharPtr());
     GX_LoadOBJPltt(fileData, 0, 0x100);
 
-    REG_DB_BG2CNT &= ~3;
+    G2S_SetBG2Priority(0);
     REG_DB_BG2CNT &= ~BG_CONTROL_MOSAIC;
-    REG_DB_BG2OFS = 0;
-    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x1210;
+    G2S_SetBG2Offset(0, 0);
+    G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
+                          GX_BG_CHARBASE_0x10000);
 
     {
         void *subFileData;
@@ -1720,13 +1679,14 @@ s32 dScMgLuigi_c::InitResources() {
         Deallocate(subFileData);
 
         gSubScreenLayers |= DISPLAY_LAYER_BG3;
-        REG_DB_BG3CNT &= ~3;
-        REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x1410;
+        G2S_SetBG3Priority(0);
+        G2S_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xa000,
+                              GX_BG_CHARBASE_0x10000);
 
         subFileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_BLACK_NSC_BIN);
         screenMap = (char *)G2S_GetBG3ScrPtr();
         fillSub = 0xf3e1;
-        MIi_CpuClear16(fillSub, screenMap, 0x800);
+        MI_CpuFill16(screenMap, fillSub, 0x800);
         Deallocate(subFileData);
     }
 

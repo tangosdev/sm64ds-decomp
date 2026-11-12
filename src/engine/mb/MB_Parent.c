@@ -28,6 +28,7 @@
  * ROM.
  */
 #include "types.h"
+#include "nitro/mi/memory.h"
 #include "nitro/os/system.h"
 #include "private/arm9_a9db8_mb_parent.h"
 #include "private/mb_comm_child_block_header.h"
@@ -67,24 +68,6 @@ typedef struct {
     u16 seqno;
 } MBCommParentBlockHeader;
 
-extern void MIi_CpuClear16(u16 data, char *destp, int size);
-extern void MIi_CpuClearFast(u32 data, void *destp, int size);
-// local extern: MI_Memory.c defines these two as assembly stubs.
-extern void MI_CpuCopy8(const void *src, void *dst, u32 size);
-extern void MI_CpuFill8(void *dst, u8 val, u32 size);
-
-/* nitro/mi/memory.h's clear inlines. */
-static inline void MI_CpuClear8(void *dest, u32 size) {
-    MI_CpuFill8(dest, 0, size);
-}
-
-static inline void MI_CpuClear16(void *dest, u32 size) {
-    MIi_CpuClear16(0, (char *)dest, (int)size);
-}
-
-static inline void MI_CpuClearFast(void *dest, u32 size) {
-    MIi_CpuClearFast(0, dest, (int)size);
-}
 extern u8 *MBi_SetRecvBufferFromChild(u8 *src, u8 *dst);
 extern u8 *MBi_MakeParentSendBuffer(MBCommParentBlockHeader *hdr, u8 *buf);
 extern int MBi_ReceiveRequestDataPiece(u8 *hdr, int aid);
@@ -354,7 +337,7 @@ void MBi_CommParentCallback(u16 type, void *arg) {
          * stores the fill value to the stack and reloads it, which only a
          * volatile reproduces (no inline spelling of the SDK's does). */
         volatile u32 fill = 0;
-        MIi_CpuClearFast(fill, pPwork, sizeof(MB_CommPWork));
+        MI_CpuFillFast(pPwork, fill, sizeof(MB_CommPWork));
         pPwork = NULL;
     }
 }
@@ -649,7 +632,7 @@ static int MBi_CommParentSendData(void) {
         /* MI_CpuClear16(&bmp, sizeof(struct bitmap)), through a volatile
          * fill value as in MBi_CommParentCallback. */
         volatile u16 fill = 0;
-        MIi_CpuClear16(fill, (char *)&bmp, sizeof(struct bitmap));
+        MI_CpuFill16(&bmp, fill, sizeof(struct bitmap));
     }
 
     for (child = 1; child <= WM_NUM_MAX_CHILD; child++) {

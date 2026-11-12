@@ -28,6 +28,7 @@
 #include "types.h"
 #include "nitro/os/system.h"
 #include "nitro/os/thread.h"
+#include "nitro/mi/memory.h"
 #include "nitro/hw/mmap_tcm.h"
 #include "nitro/os/systemWork.h"
 
@@ -57,9 +58,8 @@ extern "C" {
 extern void SDK_SYS_STACKSIZE(void);
 extern void SDK_IRQ_STACKSIZE(void);
 
-/* local extern: no header declares these yet. OSi_UnlockAllMutex is
+/* local extern: no header declares this yet; it is
  * src/engine/os/OS_Mutex.cpp. */
-extern void MIi_CpuClear32(int val, int *dst, int len);
 extern void OSi_UnlockAllMutex(OSThread *thread);
 
 extern OSSwitchThreadCallback OSi_SystemCallbackInSwitchThread;
@@ -205,7 +205,7 @@ void OS_CreateThread(OSThread *thread, void (*func)(void *), void *arg, void *st
     {
         /* MI_CpuClear32's value: the ROM passes it through a stack slot. */
         volatile int fill = 0;
-        MIi_CpuClear32(fill, (int *)((u32)stack - stackSize + 4), stackSize - 8);
+        MI_CpuFill32((void *)((u32)stack - stackSize + 4), fill, stackSize - 8);
     }
 
     thread->mutex = 0;

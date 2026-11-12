@@ -16,13 +16,13 @@
 #include "nitro/os/system.h"
 #include "nitro/hw/registers.h"
 #include "nitro/os/spinLock.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
 
 // local extern: no header declares these SDK helpers yet.
 extern void OS_SpinWait(u32 cycles);
 extern u32 MI_SwapWord(u32 setData, volatile u32 *destp);
-extern void MIi_CpuClear32(int data, int *destp, int size);
 extern u32 data_020a6124; // OS_InitLock's isInitialized
 
 // Run once from OS_Init. Takes the init word as ID 0x7e and waits for the
@@ -53,7 +53,7 @@ void OS_InitLock(void)
     ((u32 *)HW_LOCK_ID_FLAG_MAIN)[1] = 0xffff0000;
 
     zero = 0;
-    MIi_CpuClear32(zero, (int *)HW_SHARED_LOCK_BUF, 0x28);
+    MI_CpuFill32((void *)HW_SHARED_LOCK_BUF, zero, 0x28);
 
     // Card and cartridge buses to the ARM7.
     REG_EXMEMCNT |= 0x800;

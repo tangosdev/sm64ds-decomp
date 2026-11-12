@@ -16,7 +16,6 @@
  *   sequencer member is not what these bodies share.
  */
 #include "types.h"
-#include "private/fs_views.h"
 #include "nitro/fs/file.h"
 #include "Sound.h"
 #include "SoundPlayerRecord.h"
@@ -29,6 +28,7 @@
 #include "nitro/os/thread.h"
 #include "nitro/snd/alarm.h"
 #include "nitro/os/system.h"
+#include "nitro/mi/memory.h"
 
 struct Elem_204f278;
 struct HeapAllocator_205212c;
@@ -287,7 +287,6 @@ struct Elem_204f278 {
 extern "C" {
 /* C-linkage callback types used by foreign decls. */
 /* Foreign callees and data. */
-extern void MIi_CpuClear32(int val, int *dst, int len);
 
 extern int __aeabi_idiv(int a, int b);
 extern s16 data_02086384[];
@@ -612,8 +611,7 @@ extern "C" void func_0205212c(Obj_205212c *self) {
         self->u114 = 0;
     }
     func_020520dc(self);
-    int b = (int)((self->file.stat & FS_FILE_STATUS_IS_FILE) != 0);
-    if (b != 0) {
+    if (FS_IsFile(&self->file)) {
         FS_CloseFile(&self->file);
     }
     OSIntrMode irq = OS_DisableInterrupts();
@@ -1481,7 +1479,7 @@ extern "C" int func_020507e0(void *a0, unsigned int a1, int a2, int a3, int a4, 
     if (data_020a5634.f0 != 0)
         return 0;
     z = 0;
-    MIi_CpuClear32(z, (int *)a0, a1);
+    MI_CpuFill32(a0, z, a1);
     DC_FlushRange(a0, a1);
     return func_020503a4(1, (int)a0, (int)a0 + (a1 >> 1), a1 >> 1, a2, 0, 0, 1, a3, 0x7f, 0, 0x7f,
                          a4, (int)a5, (int)a6);
@@ -1651,9 +1649,9 @@ extern "C" void func_020501b8(void)
     if (g->f0 == 0) return;
     g->f18 = 0;
     a = 0;
-    MIi_CpuClear32(a, (int *)g->fc, g->f14);
+    MI_CpuFill32((void *)g->fc, a, g->f14);
     b = 0;
-    MIi_CpuClear32(b, (int *)g->f10, g->f14);
+    MI_CpuFill32((void *)g->f10, b, g->f14);
     DC_FlushRange((void *)g->fc, g->f14);
     DC_FlushRange((void *)g->f10, g->f14);
     {

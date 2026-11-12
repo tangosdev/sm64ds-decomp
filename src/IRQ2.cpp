@@ -58,7 +58,7 @@ extern "C" void func_0201a4e4(void)
 {
     data_0209d4fc = 0;
     data_0209d500 = 0;
-    OS_SetIrqFunction(1, IRQ::VBlankHandler);
+    OS_SetIrqFunction(OS_IE_V_BLANK, IRQ::VBlankHandler);
     data_0209d4dc = 1;
 }
 

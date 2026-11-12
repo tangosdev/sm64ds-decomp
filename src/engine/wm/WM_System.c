@@ -8,8 +8,11 @@
  * of the command block its caller filled in, and WmReceiveFifo keeps no
  * connected-AID bitmap. */
 #include "types.h"
+#include "nitro/mi/dma.h"
+#include "nitro/mi/memory.h"
 #include "nitro/os/cache.h"
 #include "nitro/os/message.h"
+#include "nitro/os/system.h"
 #include "nitro/os/systemWork.h"
 #include "nitro/pxi/fifo.h"
 #include "nitro/pxi/init.h"
@@ -35,13 +38,6 @@ typedef int BOOL;
 /* nitro/wm/common/wm.h: the bit of OS_GetSystemWork()->wm_callback_control
  * ARM7 sets when it delivers a callback from an exception. */
 #define WM_EXCEPTION_CB_MASK 0x0001
-
-/* local extern: MI_Dma.c and MI_Memory.c define them; nitro/mi/memory.h
- * does not declare them yet. */
-extern void MI_DmaFill32(u32 dmaNo, void *dest, u32 data, u32 size);
-extern void MI_DmaCopy32(u32 dmaNo, const void *src, void *dest, u32 size);
-extern void MIi_CpuCopy16(const void *src, void *dst, s32 size);
-extern void OS_Terminate(void);
 
 /* The result WmReceiveFifo reads past the WMCallback head of a port send. */
 typedef struct WMPortSendCallback {
@@ -101,7 +97,7 @@ WMErrCode WM_Init(void *wmSysBuf, u16 dmaNo) {
     }
 
     DC_InvalidateRange(wmSysBuf, WM_SYSTEM_BUF_SIZE);
-    MI_DmaFill32(dmaNo, wmSysBuf, 0, WM_SYSTEM_BUF_SIZE);
+    MI_DmaClear32(dmaNo, wmSysBuf, WM_SYSTEM_BUF_SIZE);
 
     wm9buf = (WMArm9Buf *)wmSysBuf;
     wm9buf->WM7 = (void *)((u32)wm9buf + WM_ARM9WM_BUF_SIZE);
@@ -317,7 +313,7 @@ static void WmReceiveFifo(PXIFifoTag tag, u32 fifo_buf_adr, BOOL err) {
                 cb_Port.length = 0;
                 cb_Port.aid = aid;
                 cb_Port.seqNo = 0xffff;
-                MIi_CpuCopy16(macAddress, cb_Port.macAddress, WM_SIZE_MACADDR);
+                MI_CpuCopy16(macAddress, cb_Port.macAddress, WM_SIZE_MACADDR);
 
                 for (iPort = 0; iPort < WM_NUM_OF_PORT; iPort++) {
                     cb_Port.port = iPort;

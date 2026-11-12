@@ -1,5 +1,13 @@
 {
   "known": {
+    "__global_destructor_chain": {
+      "src/__register_global_object.c": [
+        "return:DestructorChain *"
+      ],
+      "src/engine/fs/FS_Overlay.c": [
+        "return:MWiDestructorChain *"
+      ]
+    },
     "func_ov002_020eedc0": {
       "src/game/player/d_a_ply_methods.cpp": [
         "return:void"

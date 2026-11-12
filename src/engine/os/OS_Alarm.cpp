@@ -45,7 +45,6 @@ typedef struct OSiAlarmQueue {
 extern long long OS_GetTick(void);
 extern void OSi_SetTimerReserved(int timerNum);
 extern void OSi_EnterTimerCallback(u32 idx, u32 handler, u32 arg);
-extern void OS_Terminate(void);
 
 extern u16 OSi_UseAlarm;
 extern OSiAlarmQueue OSi_AlarmQueue;

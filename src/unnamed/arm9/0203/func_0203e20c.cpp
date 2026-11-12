@@ -3,6 +3,7 @@
 #include "Memory.h"
 #include "private/mb_views.h"
 #include "nitro/mb/mb.h"
+#include "nitro/mi/memory.h"
 #include "private/fs_views.h"
 #include "nitro/wm/wm_api.h"
 #include "private/arm9_a0f90_channel_measure.h"
@@ -45,8 +46,6 @@ extern int MB_StartParent(int param0);
 extern u32 MB_GetSegmentLength(FSFile *file);
 extern int MB_ReadSegment(FSFile *file, void *buf, u32 len);
 extern int MB_RegisterFile(MBGameRegistry *game_reg, const void *buf);
-extern void MI_CpuFill8(void *dst, unsigned char val, unsigned int size);
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
 extern void MB_End(void);
 
 #define H(base, off) (*(u16 *)((char *)(base) + (off)))
@@ -140,7 +139,7 @@ void func_0203e20c(void)
         data_020a0f08 = cnt2;
         do {
             *p9 = 0;
-            MI_CpuFill8(p11, 0, 0x16);
+            MI_CpuClear8(p11, 0x16);
             i2 += 1;
             p9 += 1;
             p11 += 0x16;
@@ -261,8 +260,8 @@ void func_0203e20c(void)
             sl = 1;
             do {
                 *p9d = 0;
-                MI_CpuFill8(p1112, 0, 0x16);
-                MI_CpuFill8(pbe, 0, 6);
+                MI_CpuClear8(p1112, 0x16);
+                MI_CpuClear8(pbe, 6);
                 sl += 1;
                 p9d += 1;
                 p1112 += 0x16;

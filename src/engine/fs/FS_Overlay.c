@@ -29,12 +29,11 @@
 #include "nitro/os/system.h"
 #include "nitro/card/card_rom.h"
 #include "nitro/fs/overlay.h"
-#include "nitro/mb/mb.h"
-#include "private/fs_views.h"
+#include "nitro/mi/memory.h"
 #include "nitro/fs/file.h"
+#include "nitro/mb/mb.h"
 #include "private/fs_rom.h"
 #include "isdbglib.h"
-
 typedef int BOOL;
 #define TRUE  1
 #define FALSE 0
@@ -63,12 +62,9 @@ extern u8 SDK_OVERLAY_DIGEST[];
 extern u8 SDK_OVERLAY_DIGEST_END[];
 extern MWiDestructorChain *__global_destructor_chain;
 
-void MI_CpuCopy8(const void *src, void *dst, u32 size);
-void MI_CpuFill8(void *dst, u8 value, u32 size);
 void DGT_Hash2CalcHmac(u8 *out, u8 *msg, int msglen, u8 *key, int keylen);
 void MIi_UncompressBackward(void *bottom);
 int DGT_SetOverlayTableMode(int flag);
-void OS_Terminate(void);
 
 /* Invalidate the I- and D-cache over the overlay's whole region (image and
  * bss), then zero the bss after the image. */
@@ -191,7 +187,7 @@ void FS_StartOverlay(FSOverlayInfo *p_ovi) {
             }
         }
         if (!ret) {
-            MI_CpuFill8(p_ovi->header.ram_address, 0, rare_size);
+            MI_CpuClear8(p_ovi->header.ram_address, rare_size);
             OS_Terminate();
             return;
         }

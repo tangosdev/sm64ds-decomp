@@ -39,6 +39,7 @@
 #include "MessageBank.h"
 #include "nitro/gx/g2.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx.h"
 #include "private/mb_views.h"
 
 struct OamAttr;
@@ -120,8 +121,6 @@ extern u32 data_0209287c[];
 extern MBUserInfo *func_0203d8a0(int idx);
 extern u8 NumStars(void);
 extern int func_020138dc(void);
-extern void MIi_CpuClear32(int val, int *dst, int len);
-extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 extern void DecompressLZ16(void *src, void *dst);
 extern void *LoadFile(int handle);
 /* local extern: Fix12 wall -- the by-value Fix12<int> form cannot be spelled
@@ -129,6 +128,7 @@ extern void *LoadFile(int handle);
 extern void OamRender10_Message3(int sub, struct OamAttr *attr_, int xOff, int yOff, int palette,
                                  int priority, int scaleX, int scaleY, int rotation, int mode);
 #include "OAM.h"
+#include "nitro/mi/memory.h"
 
 void func_02031cd4(void *arg);
 int func_020321fc(void);
@@ -328,14 +328,14 @@ extern "C" void func_02031428(void) {
     for (i = 0; i < (cnt = ((MessageEntry *)data_0209fd00)->lineCount * 2); i++) {
         for (j = 0; j < data_0209fc78; j++) {
             /* scroll the tile up four pixel rows (4 bytes per 4bpp row) */
-            MIi_CpuCopy32((int *)(base + 4), (int *)base, 0x10);
+            MI_CpuCopy32(base + 4, base, 0x10);
             if (i == ((MessageEntry *)data_0209fd00)->lineCount * 2 - 1) {
                 base[4] = 0;
                 base[5] = 0;
                 base[6] = 0;
                 base[7] = 0;
             } else {
-                MIi_CpuCopy32((int *)(base + data_0209fc78 * 8), (int *)(base + 4), 0x10);
+                MI_CpuCopy32(base + data_0209fc78 * 8, base + 4, 0x10);
             }
             base += 8;
         }
@@ -404,11 +404,10 @@ extern "C" void func_020316d8(int screen, int c, u32 x, void *buf) {
         chr = (u32 *)((char *)G2_GetBG3CharPtr() + ((data_0209fc78 + 0x200 + (x >> 3)) << 5));
 
     if ((x & 0xf) == 0) {
-        MIi_CpuCopy32((int *)((char *)buf + ((((c & 0xf) << 1) + ((c & 0xf0) << 2)) << 5)),
-                      (int *)chr, 0x40);
+        MI_CpuCopy32((char *)buf + ((((c & 0xf) << 1) + ((c & 0xf0) << 2)) << 5), chr, 0x40);
         pitch = (data_0209fc88 + 7) / 8;
-        MIi_CpuCopy32((int *)((char *)buf + (((c & 0xf) + (((c & 0xf0) << 1) + 0x10)) << 6)),
-                      (int *)(chr + pitch * 8), 0x40);
+        MI_CpuCopy32((char *)buf + (((c & 0xf) + (((c & 0xf0) << 1) + 0x10)) << 6),
+                     (void *)(chr + pitch * 8), 0x40);
     } else {
         int lo;
         int hi;
@@ -649,7 +648,7 @@ void Message::LayoutLineVS() {
         data_0209fd1c = 0;
         data_0209fcd8 = 0;
         data_0209fc88 = 0;
-        MIi_CpuClear32(zero, (int *)data_0209fd5c, 0xf00);
+        MI_CpuFill32(data_0209fd5c, zero, 0xf00);
     }
 
     for (;;) {
@@ -782,15 +781,13 @@ extern "C" int func_020321fc(void) {
                 data_0209fcc8 = data_0209fcb4;
 
             if (data_0209fca8 != 0) {
-                REG_DB_WIN0H = ((data_0209fc8c << 8) & 0xff00) |
-                               ((data_0209fce4 * 2 - data_0209fc8c + 1) & 0xff);
-                REG_DB_WIN0V = ((data_0209fc74 << 8) & 0xff00) |
-                               ((data_0209fcc0 * 2 - data_0209fc74 + 1) & 0xff);
+                G2S_SetWnd0Position(data_0209fc8c, data_0209fc74,
+                                    data_0209fce4 * 2 - data_0209fc8c + 1,
+                                    data_0209fcc0 * 2 - data_0209fc74 + 1);
             } else {
-                REG_WIN0H = ((data_0209fc8c << 8) & 0xff00) |
-                            ((data_0209fce4 * 2 - data_0209fc8c + 1) & 0xff);
-                REG_WIN0V = ((data_0209fc74 << 8) & 0xff00) |
-                            ((data_0209fcc0 * 2 - data_0209fc74 + 1) & 0xff);
+                G2_SetWnd0Position(data_0209fc8c, data_0209fc74,
+                                   data_0209fce4 * 2 - data_0209fc8c + 1,
+                                   data_0209fcc0 * 2 - data_0209fc74 + 1);
             }
             return 0;
         }
@@ -814,15 +811,11 @@ extern "C" int func_020321fc(void) {
             data_0209fc74 = data_0209fcc0;
 
         if (data_0209fca8 != 0) {
-            REG_DB_WIN0H =
-                ((data_0209fc8c << 8) & 0xff00) | ((data_0209fce4 * 2 - data_0209fc8c + 1) & 0xff);
-            REG_DB_WIN0V =
-                ((data_0209fc74 << 8) & 0xff00) | ((data_0209fcc0 * 2 - data_0209fc74 + 1) & 0xff);
+            G2S_SetWnd0Position(data_0209fc8c, data_0209fc74, data_0209fce4 * 2 - data_0209fc8c + 1,
+                                data_0209fcc0 * 2 - data_0209fc74 + 1);
         } else {
-            REG_WIN0H =
-                ((data_0209fc8c << 8) & 0xff00) | ((data_0209fce4 * 2 - data_0209fc8c + 1) & 0xff);
-            REG_WIN0V =
-                ((data_0209fc74 << 8) & 0xff00) | ((data_0209fcc0 * 2 - data_0209fc74 + 1) & 0xff);
+            G2_SetWnd0Position(data_0209fc8c, data_0209fc74, data_0209fce4 * 2 - data_0209fc8c + 1,
+                               data_0209fcc0 * 2 - data_0209fc74 + 1);
         }
         return 0;
     }
@@ -831,18 +824,18 @@ extern "C" int func_020321fc(void) {
     data_0209fcb8 = 0;
     if (data_0209fca8 != 0) {
         gSubScreenLayers &= ~2;
-        REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~0x1f00) | (gSubScreenLayers << 8);
-        REG_DB_BLDCNT = 0;
-        REG_DB_WININ &= ~0x3f;
-        REG_DB_WINOUT &= ~0x3f;
-        REG_DISPCNT_SUB &= ~0xe000;
+        GXS_SetVisiblePlane(gSubScreenLayers);
+        G2S_BlendNone();
+        G2S_SetWnd0InsidePlane(GX_WND_PLANEMASK_NONE, 0);
+        G2S_SetWndOutsidePlane(GX_WND_PLANEMASK_NONE, 0);
+        GXS_SetVisibleWnd(GX_WNDMASK_NONE);
     } else {
         gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
-        REG_DISPCNT = (REG_DISPCNT & ~0x1f00) | (gMainScreenLayers << 8);
-        REG_BLDCNT = 0;
-        REG_WININ &= ~0x3f;
-        REG_WINOUT &= ~0x3f;
-        REG_DISPCNT &= ~0xe000;
+        GX_SetVisiblePlane(gMainScreenLayers);
+        G2_BlendNone();
+        G2_SetWnd0InsidePlane(GX_WND_PLANEMASK_NONE, 0);
+        G2_SetWndOutsidePlane(GX_WND_PLANEMASK_NONE, 0);
+        GX_SetVisibleWnd(GX_WNDMASK_NONE);
     }
     return 0;
 }
@@ -1103,11 +1096,11 @@ extern "C" void func_02032f9c(int a) {
 
     p = (int)G2_GetBG3CharPtr() + 0x4000;
     li = 0;
-    MIi_CpuClear32(li, (int *)p, 0x2000);
+    MI_CpuFill32((void *)p, li, 0x2000);
 
     s = (int)G2_GetBG3ScrPtr();
     ls = 0x2ff;
-    MIi_CpuClear16(ls, (char *)s, 0x800);
+    MI_CpuFill16((void *)s, ls, 0x800);
 
     if (a < 0) {
         return;
@@ -1167,7 +1160,7 @@ extern "C" void func_020331fc(int a0, int a1, int a2) {
     {
         int cp = (u32)G2S_GetBG0CharPtr() + 0x4000;
         li = 0;
-        MIi_CpuClear32(li, (int *)(cp + (data_0209fc78 << 5)), 0x800);
+        MI_CpuFill32((void *)(cp + (data_0209fc78 << 5)), li, 0x800);
     }
     scr = (short *)((u32)G2S_GetBG0ScrPtr() + a0 * 2);
     func_02031028(1);
@@ -1216,15 +1209,15 @@ extern "C" void func_02033390(int sub) {
         volatile s32 v;
         int *dst = (int *)((int)G2_GetBG3CharPtr() + 0x4000);
         v = 0;
-        MIi_CpuClear32(v, dst, 0x2000);
-        MIi_CpuClear16(fill = 0x2ff, (char *)G2_GetBG3ScrPtr(), 0x800);
+        MI_CpuFill32(dst, v, 0x2000);
+        MI_CpuFill16((char *)G2_GetBG3ScrPtr(), fill = 0x2ff, 0x800);
     } else {
         volatile u16 fill;
         volatile s32 v;
         int *dst = (int *)((int)G2S_GetBG0CharPtr() + 0x4000);
         v = 0;
-        MIi_CpuClear32(v, dst, 0x2000);
-        MIi_CpuClear16(fill = 0x2ff, (char *)G2S_GetBG0ScrPtr(), 0x800);
+        MI_CpuFill32(dst, v, 0x2000);
+        MI_CpuFill16((char *)G2S_GetBG0ScrPtr(), fill = 0x2ff, 0x800);
     }
 }
 
@@ -1255,7 +1248,7 @@ extern "C" void func_02033464(int arg0, int arg1, int arg2) {
     data_0209fcd8 = 0;
     data_0209fc84 = arg1;
 
-    MIi_CpuClear32(li4, (int *)data_0209fd5c, 0xf00);
+    MI_CpuFill32(data_0209fd5c, li4, 0xf00);
 
     if (arg2 == 0) {
         x = (arg0 * 2 + 8) << 0x15;
@@ -1263,7 +1256,7 @@ extern "C" void func_02033464(int arg0, int arg1, int arg2) {
         t = x >> 16;
         d = (char *)((u32)G2S_GetBG0ScrPtr() + (((x >> 16) & 0xffe0) << 1));
         sv0 = 0x2ff;
-        MIi_CpuClear16(sv0, d, 0x80);
+        MI_CpuFill16(d, sv0, 0x80);
         if (arg1 < 0)
             return;
         func_02031028(0);
@@ -1286,7 +1279,7 @@ extern "C" void func_02033464(int arg0, int arg1, int arg2) {
             int cp = (u32)G2S_GetBG0CharPtr() + 0x4000;
             int *dst = (int *)(cp + (data_0209fc78 << 5));
             li8 = 0;
-            MIi_CpuClear32(li8, dst, 0x300);
+            MI_CpuFill32(dst, li8, 0x300);
         }
         base = (u16 *)((u32)G2S_GetBG0ScrPtr() + ((t + (data_0209fc7c >> 3)) << 1));
         {
@@ -1310,7 +1303,7 @@ extern "C" void func_02033464(int arg0, int arg1, int arg2) {
         data_0209fc94 = 0;
         d = (char *)G2_GetBG3ScrPtr() + (arg0 << 1);
         sv2 = 0x2ff;
-        MIi_CpuClear16(sv2, d, 0x80);
+        MI_CpuFill16(d, sv2, 0x80);
         func_02031028(0);
         n = data_0209fca0;
         data_0209fc7c = 4;
@@ -1331,7 +1324,7 @@ extern "C" void func_02033464(int arg0, int arg1, int arg2) {
             int cp = (int)G2_GetBG3CharPtr() + 0x4000;
             int *dst = (int *)(cp + (data_0209fc78 << 5));
             liC = 0;
-            MIi_CpuClear32(liC, dst, 0x300);
+            MI_CpuFill32(dst, liC, 0x300);
         }
         base = (u16 *)((char *)G2_GetBG3ScrPtr() + ((arg0 + (data_0209fc7c >> 3)) << 1));
         {
@@ -1365,12 +1358,12 @@ extern "C" void func_020337ec(void) {
     {
         int *dst = (int *)((u32)G2S_GetBG0CharPtr() + 0x4000);
         z = 0;
-        MIi_CpuClear32(z, dst, 0x2000);
+        MI_CpuFill32(dst, z, 0x2000);
     }
     {
         char *dst = (char *)G2S_GetBG0ScrPtr();
         v = 0x2ff;
-        MIi_CpuClear16(v, dst, 0x800);
+        MI_CpuFill16(dst, v, 0x800);
     }
     data_0209fce8 = 0x18;
     Message_DrawCenteredLineVS(0x280, 0x20);
@@ -1394,18 +1387,18 @@ extern "C" void func_020338b0(int a, int b, short c, int d) {
     case 0x15:
         p = (u32)G2S_GetBG0CharPtr() + 0x4000;
         li0 = 0;
-        MIi_CpuClear32(li0, (int *)p, 0x3000);
+        MI_CpuFill32((void *)p, li0, 0x3000);
         s = (u32)G2S_GetBG0ScrPtr();
         ls0 = 0x37f;
-        MIi_CpuClear16(ls0, (char *)s, 0x800);
+        MI_CpuFill16((void *)s, ls0, 0x800);
         break;
     default:
         p = (u32)G2S_GetBG0CharPtr() + 0x4000;
         li1 = 0;
-        MIi_CpuClear32(li1, (int *)p, 0x2000);
+        MI_CpuFill32((void *)p, li1, 0x2000);
         s = (u32)G2S_GetBG0ScrPtr();
         ls1 = 0x2ff;
-        MIi_CpuClear16(ls1, (char *)s, 0x800);
+        MI_CpuFill16((void *)s, ls1, 0x800);
         break;
     }
     func_02033e50(a, b);
@@ -1423,10 +1416,10 @@ void Message::DisplayVsExitText(unsigned short n) {
     data_0209fcdc = 0;
     p = (u32)G2S_GetBG0CharPtr() + 0x4000;
     li = 0;
-    MIi_CpuClear32(li, (int *)p, 0x2000);
+    MI_CpuFill32((void *)p, li, 0x2000);
     s = (u32)G2S_GetBG0ScrPtr();
     ls = 0x2ff;
-    MIi_CpuClear16(ls, (char *)s, 0x800);
+    MI_CpuFill16((void *)s, ls, 0x800);
     Message_DrawCenteredLineVS(0x100, 0x20);
     data_0209fce8 = 0x22;
     Message_DrawCenteredLineVS(0x1c0, 0x20);
@@ -1449,10 +1442,10 @@ void Message::DisplayOptionsMenuTextVS(s16 arg) {
     int p, s;
     p = (u32)G2S_GetBG0CharPtr() + 0x4000;
     li = 0;
-    MIi_CpuClear32(li, (int *)p, 0x2000);
+    MI_CpuFill32((void *)p, li, 0x2000);
     s = (u32)G2S_GetBG0ScrPtr();
     ls = 0x2ff;
-    MIi_CpuClear16(ls, (char *)s, 0x800);
+    MI_CpuFill16((void *)s, ls, 0x800);
     func_02033a80(arg);
     data_0209fce8 = 0xc;
     data_0209fcb0 = 1;
@@ -1488,13 +1481,13 @@ extern "C" void func_02033bb8(int param0) {
     {
         int *chr = (int *)((char *)G2S_GetBG0CharPtr() + 0x4000);
         li = 0;
-        MIi_CpuClear32(li, chr, 0x2000);
+        MI_CpuFill32(chr, li, 0x2000);
     }
 
     {
         char *scr0 = (char *)G2S_GetBG0ScrPtr();
         sv = 0x2ff;
-        MIi_CpuClear16(sv, scr0, 0x800);
+        MI_CpuFill16(scr0, sv, 0x800);
     }
 
     Message_DrawLineBG2VS();
@@ -1584,7 +1577,7 @@ extern "C" void func_02033e50(int p0, int p1) {
             {
                 int cp = (u32)G2S_GetBG0CharPtr() + 0x4000;
                 li = 0;
-                MIi_CpuClear32(li, (int *)(cp + (data_0209fc78 << 6)), n << 6);
+                MI_CpuFill32((void *)(cp + (data_0209fc78 << 6)), li, n << 6);
             }
             {
                 short *scr = (short *)((u32)G2S_GetBG0ScrPtr() + p0 * 2);
@@ -1612,7 +1605,7 @@ extern "C" void func_02033e50(int p0, int p1) {
             {
                 int cp = (u32)G2S_GetBG0CharPtr() + 0x4000;
                 li = 0;
-                MIi_CpuClear32(li, (int *)(cp + (data_0209fc78 << 6)), n << 6);
+                MI_CpuFill32((void *)(cp + (data_0209fc78 << 6)), li, n << 6);
             }
             {
                 int v1, v2;
@@ -1656,7 +1649,7 @@ extern "C" void Message_DrawLineBG2VS(void) {
     {
         int p = (int)G2_GetBG2CharPtr() + ((data_0209fcdc + 0x280) << 5);
         li = 0;
-        MIi_CpuClear32(li, (int *)p, n);
+        MI_CpuFill32((void *)p, li, n);
     }
     func_020318a4(1);
     data_0209fcdc = data_0209fcdc + (u8)(((data_0209fc88 + 7) / 8) << 1);
@@ -1681,7 +1674,7 @@ extern "C" void Message_DrawCenteredLineVS(int a0, int a1) {
     {
         int p = (u32)G2S_GetBG0CharPtr() + 0x4000 + (data_0209fc78 << 5);
         li = 0;
-        MIi_CpuClear32(li, (int *)p, n);
+        MI_CpuFill32((void *)p, li, n);
     }
     {
         int sp0 = (u32)G2S_GetBG0ScrPtr() + a0 * 2;
@@ -1704,10 +1697,10 @@ void Message::DisplayPauseTextVS(unsigned short n) {
     data_0209fc94 = 1;
     p = (u32)G2S_GetBG0CharPtr() + 0x4000;
     li = 0;
-    MIi_CpuClear32(li, (int *)p, 0x2000);
+    MI_CpuFill32((void *)p, li, 0x2000);
     s = (u32)G2S_GetBG0ScrPtr();
     ls = 0x2ff;
-    MIi_CpuClear16(ls, (char *)s, 0x800);
+    MI_CpuFill16((void *)s, ls, 0x800);
     Message_DrawCenteredLineVS(0xc0, 0x20);
     data_0209fce8 = data_0209fce8 + 1;
     Message_DrawCenteredLineVS(0x160, 0x20);
@@ -1727,10 +1720,10 @@ void Message::DisplayDontSaveTextVS(unsigned short n) {
     data_0209fc78 = 0;
     p = (u32)G2S_GetBG0CharPtr() + 0x4000;
     li = 0;
-    MIi_CpuClear32(li, (int *)p, 0x2000);
+    MI_CpuFill32((void *)p, li, 0x2000);
     s = (u32)G2S_GetBG0ScrPtr();
     ls = 0x2ff;
-    MIi_CpuClear16(ls, (char *)s, 0x800);
+    MI_CpuFill16((void *)s, ls, 0x800);
     data_0209fce8 = n;
     func_02033e50(0x105, 0xb0);
     data_0209fce8 = 0xf;
@@ -1794,13 +1787,13 @@ extern "C" void func_020345b0(int arg0) {
     {
         void *p = (char *)G2_GetBG3CharPtr() + 0x4000;
         li = 0;
-        MIi_CpuClear32(li, (int *)p, 0x3000);
+        MI_CpuFill32((void *)p, li, 0x3000);
     }
 
     {
         void *s = G2_GetBG3ScrPtr();
         ls = 0x37f;
-        MIi_CpuClear16(ls, (char *)s, 0x800);
+        MI_CpuFill16((void *)s, ls, 0x800);
     }
 
     scr = (u16 *)G2_GetBG3ScrPtr() + 0x21;
@@ -1829,19 +1822,19 @@ extern "C" void func_020345b0(int arg0) {
     }
     data_0209fcb4 = t;
 
-    G2x_SetBlendBrightness_((volatile u16 *)0x4000050, (gMainScreenLayers ^ 0x10) | 0x20, -8);
+    G2_SetBlendBrightness((gMainScreenLayers ^ 0x10) | 0x20, -8);
 
-    REG_WININ = (REG_WININ & ~0x3f) | (gMainScreenLayers | 8) | 0x20;
-    REG_WINOUT = (REG_WINOUT & ~0x3f) | 0x17;
-    *(volatile s16 *)0x4000040 =
-        ((data_0209fc8c << 8) & 0xff00) | (u8)(((data_0209fce4 * 2) - data_0209fc8c) + 1);
-    *(volatile s16 *)0x4000044 =
-        ((data_0209fc74 << 8) & 0xff00) | (u8)(((data_0209fcc0 * 2) - data_0209fc74) + 1);
+    G2_SetWnd0InsidePlane(gMainScreenLayers | GX_WND_PLANEMASK_BG3, 1);
+    G2_SetWndOutsidePlane(GX_WND_PLANEMASK_BG0 | GX_WND_PLANEMASK_BG1 | GX_WND_PLANEMASK_BG2 |
+                              GX_WND_PLANEMASK_OBJ,
+                          0);
+    G2_SetWnd0Position(data_0209fc8c, data_0209fc74, data_0209fce4 * 2 - data_0209fc8c + 1,
+                       data_0209fcc0 * 2 - data_0209fc74 + 1);
 
     data_0209fcc8 = 0;
-    *(volatile s32 *)0x4000000 = (*(volatile s32 *)0x4000000 & ~0xe000) | 0x2000;
+    GX_SetVisibleWnd(GX_WNDMASK_W0);
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
-    *(volatile s32 *)0x4000000 = (*(volatile s32 *)0x4000000 & ~0x1f00) | (gMainScreenLayers << 8);
+    GX_SetVisiblePlane(gMainScreenLayers);
 }
 
 extern "C" void LoadFont3D(void) {
@@ -1849,7 +1842,7 @@ extern "C" void LoadFont3D(void) {
     void *r4;
 
     r5 = LoadFile(0x980e);
-    MIi_CpuCopy32((int *)r5, (int *)G2_GetBG3CharPtr(), 0x4000);
+    MI_CpuCopy32(r5, (int *)G2_GetBG3CharPtr(), 0x4000);
 
     r4 = LoadFile(0x980d);
     DecompressLZ16(r4, (u8 *)G2_GetBG3CharPtr() + 0x8000);
