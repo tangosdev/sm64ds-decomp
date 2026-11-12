@@ -28,7 +28,8 @@
       "near": {
         "class": 353,
         "param": 0,
-        "dist": 120
+        "dist": 120,
+        "angle_deg": 180
       },
       "env": {
         "SM64DS_DOORKEY_TOUCH": "300:0"
@@ -40,7 +41,8 @@
       "near": {
         "class": 353,
         "param": 0,
-        "dist": 450
+        "dist": 450,
+        "angle_deg": 180
       },
       "env": {
         "SM64DS_GHOST_ERR_LOG": "1"
