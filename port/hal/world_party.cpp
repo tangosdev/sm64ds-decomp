@@ -75,6 +75,9 @@ struct State {
     char name_of[kHubMaxSeats][kWparNameMax + 1] = {};   // last name seen of a member
     unsigned accept_ms = 0;       // when I last accepted (suppresses the join chatter)
     bool auto_accept = false;     // test seam (not in a PORT_ROM_CLEAN build)
+    unsigned test_invite_ms = 0;  // test seam: one UP press this long after the party went active (CLOCK1)
+    unsigned test_t0 = 0;
+    bool test_invite_done = false;
     bool announced = false;
 };
 State g;
@@ -124,6 +127,9 @@ void check_env() {
     {   /* TEST ONLY: press UP by itself a moment after an invite prompt shows (the row driver cannot see a prompt) */
         const char *a = std::getenv("SM64DS_WPARTY_TEST_AUTOACCEPT");
         g.auto_accept = a && *a && *a != '0';
+        /* TEST ONLY (CLOCK1): SM64DS_WPARTY_TEST_INVITE=<ms> presses UP once, that long after the party went active */
+        const char *ti = std::getenv("SM64DS_WPARTY_TEST_INVITE");
+        g.test_invite_ms = ti ? (unsigned)std::strtoul(ti, nullptr, 0) : 0u;
     }
 #endif
 }
@@ -387,6 +393,14 @@ unsigned world_party_input(unsigned pad_buttons, bool key_invite, bool key_leave
     bool up_edge = live && g.primed && up_now && !up_prev;
 #ifndef PORT_ROM_CLEAN
     if (g.auto_accept && g.in_seat >= 0 && (int)(now - g.in_first_ms) > 800) up_edge = true;
+    if (g.test_invite_ms && !g.test_invite_done) {
+        if (!g.test_t0) g.test_t0 = now | 1u;
+        else if (now - g.test_t0 >= g.test_invite_ms) {
+            g.test_invite_done = true;
+            up_edge = true;
+            std::fprintf(stderr, "[wparty] t=%u test: UP pressed (cooldown_until=%u inv_to=%d)\n", now, g.cooldown_until, g.inv_to);
+        }
+    }
 #endif
     const bool dn_edge = live && g.primed && dn_now && !dn_prev;
     unsigned consumed = 0;   // pad bits of a press this call acted on: the caller masks them
