@@ -1,4 +1,5 @@
-extern int WM_PowerOff(void *cb);
+#include "nitro/wm/wm_api.h"
+
 extern void func_02040388(unsigned short *cb);
 extern int data_020a0f94;
 
@@ -11,7 +12,7 @@ extern int data_020a0f94;
    but shuts the file share down (func_02040aa4) before it checks the
    result. */
 int func_0203fc74(void) {
-    if (WM_PowerOff((void *)func_02040388) != 2) {
+    if (WM_PowerOff((WMCallbackFunc)func_02040388) != WM_ERRCODE_OPERATING) {
         data_020a0f94 = 1;
         return 0;
     }

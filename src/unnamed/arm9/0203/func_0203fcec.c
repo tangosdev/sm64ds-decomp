@@ -1,4 +1,5 @@
-extern int WM_Disable(void *cb);
+#include "nitro/wm/wm_api.h"
+
 extern void func_02040504(unsigned short *cb);
 extern int data_020a0f94;
 
@@ -6,7 +7,7 @@ extern int data_020a0f94;
    SDK's WM_APIID_DISABLE, stop state only) with func_02040504 as the
    callback. As func_0203fc74 otherwise. */
 int func_0203fcec(void) {
-    if (WM_Disable((void *)func_02040504) != 2) {
+    if (WM_Disable((WMCallbackFunc)func_02040504) != WM_ERRCODE_OPERATING) {
         data_020a0f94 = 1;
         return 0;
     }

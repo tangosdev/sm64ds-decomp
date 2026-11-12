@@ -1,11 +1,10 @@
 //cpp
 #include "Memory.h"
+#include "nitro/wm/wm_api.h"
 #include "private/wm_views.h"
 #include "nitro/mb/mb.h"
 
 extern "C" {
-
-extern int WM_Init(void *buf, int ch);
 
 extern unsigned short data_020a0f14;
 extern int data_020a0f94;
@@ -47,7 +46,7 @@ void func_020408b0(unsigned short arg) {
     data_020a0f60 = Memory::Allocate(0x220, 0x20);
     data_020a0f64 = 0x480;
     data_020a0f68 = Memory::Allocate(0x480, 0x20);
-    ((WmParentParam *)data_020a1064)->channel = data_020a0f28;
+    ((WMParentParam *)data_020a1064)->channel = data_020a0f28;
     WM_Init(data_020a0f4c, 1);
 }
 }

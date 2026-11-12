@@ -1,5 +1,6 @@
+#include "nitro/wm/wm_api.h"
+
 extern void func_0203f650(int x);
-extern int WM_Initialize(int wmSysBuf, void *callback, int dmaNo);
 extern void func_0203f6a4(int v);
 extern int data_02099e20;
 extern int data_020a0f90;
@@ -13,13 +14,13 @@ extern void func_0203f920(unsigned short *cb);
    Every allowed channel is then measured and one of the least busy drawn
    at random (func_0203f714), the shape of NitroSDK's wireless sample
    library's channel measurement. */
-void func_0203f9d4(int sysBuf, int callback) {
+void func_0203f9d4(void *sysBuf, int callback) {
     data_020a0f90 = callback;
     if (data_02099e20 != 3) {
         func_0203f650(-10);
         return;
     }
-    if (WM_Initialize(sysBuf, (void *)func_0203f920, 1) != 2) {
+    if (WM_Initialize(sysBuf, (WMCallbackFunc)func_0203f920, 1) != WM_ERRCODE_OPERATING) {
         func_0203f650(-1);
         return;
     }

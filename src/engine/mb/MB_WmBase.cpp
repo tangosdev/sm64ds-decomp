@@ -69,7 +69,7 @@ extern "C" {
 extern u16 data_020a9db0;
 extern char *data_020a9db4;
 extern char *data_020a9db8;
-extern char data_020a9dc0[];
+extern WMScanParam data_020a9dc0;
 /* The smallest frame a parent sends (6), the SDK's MB_COMM_P_SENDLEN_MIN
  * side of MBi_SendMP. */
 extern int data_0209a088;
@@ -84,16 +84,9 @@ extern u16 *data_0209a084;
  * buffer to a cache line before carving it. */
 #define MATH_ROUNDUP(x, base) (((x) + ((base) - 1)) & ~((base) - 1))
 
-/* WMScanParam (data_020a9dc0), WM_StartScan's argument; changeScanChannel steps
- * its channel through the allowed-channel mask. */
-typedef struct {
-    WmBssDesc *scanBuf; /* 0x0 */
-    u16 channel;        /* 0x4 */
-    u16 maxChannelTime; /* 0x6 */
-    u16 bssid[3];       /* 0x8: SDK u8[6]; all 0xffff = any parent */
-} WmScanParam;
-
-#define SCAN_PARAM ((WmScanParam *)data_020a9dc0)
+/* The WMScanParam WM_StartScan reads; changeScanChannel steps its channel
+ * through the allowed-channel mask. */
+#define SCAN_PARAM (&data_020a9dc0)
 
 /* NitroSDK WM callback arguments. Every one starts with WMCallback's
  * apiid/errcode; the callbacks pick the shape by apiid. */
@@ -130,24 +123,15 @@ typedef struct {
     u16 w[0x40];
 } GameInfo;
 
-/* The WM API (WM_StartScan, WM_StartConnect, WM_StartMP, WM_SetLifeTime,
- * WM_SetParentParameter, WM_SetBeaconIndication and the rest). The callbacks
- * are WMCallbackFunc pointers in the SDK's headers; the definitions take them
- * as void *, the type of the callback tables they are stored in. The MP
- * calls are in nitro/wm/wm_api.h. */
-extern int WM_Initialize(int buf, void *callback, int dma);
+/* The rest of the WM API this file calls (wm_sync.c, wm_etc.c and
+ * wm_system.c), whose definitions still take the callback as a void *. The
+ * state changes and the MP calls are in nitro/wm/wm_api.h. */
 extern int WM_SetIndCallback(void *callback);
-extern int WM_Reset(void *callback);
-extern int WM_End(void *callback);
 extern int WM_ReadStatus(int *status);
-extern int WM_StartParent(void *callback);
 extern int WM_SetPortCallback(int port, void *callback, void *arg);
 extern u16 WM_GetAllowedChannel(void);
 extern int WM_SetLifeTime(void *callback, int tableNo, int camLife, int frameLife);
-extern int WM_SetParentParameter(void *callback, WmParentParam *parentParam);
 extern int WM_SetBeaconIndication(void *callback, int flag);
-extern int WM_StartScan(void *callback, char *scanParam);
-extern int WM_StartConnect(void *callback, const WMBssDesc *pInfo, const u8 *ssid);
 
 extern void OS_GetMacAddress(unsigned char *macAddress);
 extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
@@ -173,7 +157,7 @@ void MBi_SetMaxScanTime(u16 time);
  * dropped in, it compiles to these bytes. It steps WMScanParam.channel as a
  * number and tests bit channel-1. ntrtwl's is the same body. The BW2
  * reconstruction's steps a WMScanExParam.channelList bitmask instead. */
-int changeScanChannel(WmScanParam *param) {
+int changeScanChannel(WMScanParam *param) {
     int allowed = WM_GetAllowedChannel();
     u16 channel, i;
     if (allowed == 0) {
@@ -236,8 +220,7 @@ void MBi_ParentCallback(void *arg) {
 
     case 0x1D:
         if (cb->errcode == 0) {
-            MBi_CheckWmErrcode(
-                7, WM_SetParentParameter((void *)MBi_ParentCallback, &WM_WORK->parentParam));
+            MBi_CheckWmErrcode(7, WM_SetParentParameter(MBi_ParentCallback, &WM_WORK->parentParam));
             return;
         }
         WM_WORK->userCallback(0x100, arg);
@@ -250,7 +233,7 @@ void MBi_ParentCallback(void *arg) {
 
     case 0x19:
         if (cb->errcode == 0) {
-            MBi_CheckWmErrcode(8, WM_StartParent((void *)MBi_ParentCallback));
+            MBi_CheckWmErrcode(8, WM_StartParent(MBi_ParentCallback));
             return;
         }
         WM_WORK->userCallback(0x100, arg);
@@ -337,7 +320,7 @@ void MBi_ParentCallback(void *arg) {
 
     case 0x1:
         if (cb->errcode == 0) {
-            MBi_CheckWmErrcode(2, WM_End((void *)MBi_ParentCallback));
+            MBi_CheckWmErrcode(2, WM_End(MBi_ParentCallback));
             return;
         }
         WM_WORK->resetting = 0;
@@ -457,7 +440,7 @@ void MBi_ChildCallback(void *arg) {
     if (w->resetting != 0) {
         if (cb->apiid == 1) {
             if (cb->errcode == 0) {
-                MBi_CheckWmErrcode(2, WM_End((void *)MBi_ChildCallback));
+                MBi_CheckWmErrcode(2, WM_End(MBi_ChildCallback));
                 return;
             }
             w->resetting = 0;
@@ -500,7 +483,7 @@ void MBi_ChildCallback(void *arg) {
             SCAN_PARAM->bssid[2] = 0xffff;
             w->scanContinue = 1;
             w->scanNextChannel = 1;
-            MBi_CheckWmErrcode(0xa, WM_StartScan((void *)MBi_ChildCallback, data_020a9dc0));
+            MBi_CheckWmErrcode(0xa, WM_StartScan(MBi_ChildCallback, SCAN_PARAM));
             return;
         }
         w->userCallback(0x100, arg);
@@ -518,7 +501,7 @@ void MBi_ChildCallback(void *arg) {
                     return;
                 if (w->scanNextChannel != 0 && changeScanChannel(SCAN_PARAM) == 0)
                     MBi_CheckWmErrcode(2, MBi_CommEnd());
-                MBi_CheckWmErrcode(0xa, WM_StartScan((void *)MBi_ChildCallback, data_020a9dc0));
+                MBi_CheckWmErrcode(0xa, WM_StartScan(MBi_ChildCallback, SCAN_PARAM));
                 return;
             case 4:
                 w->userCallback(5, arg);
@@ -526,7 +509,7 @@ void MBi_ChildCallback(void *arg) {
                     return;
                 if (w->scanNextChannel != 0 && changeScanChannel(SCAN_PARAM) == 0)
                     MBi_CheckWmErrcode(2, MBi_CommEnd());
-                MBi_CheckWmErrcode(0xa, WM_StartScan((void *)MBi_ChildCallback, data_020a9dc0));
+                MBi_CheckWmErrcode(0xa, WM_StartScan(MBi_ChildCallback, SCAN_PARAM));
                 return;
             default:
                 w->userCallback(0x100, arg);
@@ -539,8 +522,7 @@ void MBi_ChildCallback(void *arg) {
 
     case 0xb:
         if (cb->errcode == 0) {
-            MBi_CheckWmErrcode(0xc,
-                               WM_StartConnect((void *)MBi_ChildCallback, w->connectBssDesc, 0));
+            MBi_CheckWmErrcode(0xc, WM_StartConnect(MBi_ChildCallback, w->connectBssDesc, 0));
             return;
         }
         w->userCallback(0x100, arg);
@@ -702,7 +684,7 @@ int MB_Init(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, 
     wm->sendBuf = (char *)mb->mSendBuf;
     wm->recvBuf = (char *)mb->mRecvBuf;
     {
-        WmParentParam *hdr = &wm->parentParam;
+        WMParentParam *hdr = &wm->parentParam;
         hdr->CS_Flag = 1;
         hdr->KS_Flag = 0;
         hdr->ggid[0] = (short)ggid0;
@@ -759,7 +741,7 @@ int MBi_StartCommon(void) {
     *(short *)(data_020a9db4 + 0x1e48) = 0; /* in WmWork.pad_1e48: no reader here */
     MBi_SetMaxScanTime(0xa);
     do {
-        ret = WM_Initialize((int)WM_WORK->wmSysBuf, (void *)WM_WORK->stateCallback, data_020a9db0);
+        ret = WM_Initialize(WM_WORK->wmSysBuf, WM_WORK->stateCallback, data_020a9db0);
     } while (ret == 4);
     if (ret != 2)
         return 8;
@@ -841,7 +823,7 @@ int MBi_CommEnd(void) {
         p->scanContinue = 0;
         /* through the global again: the ROM reloads data_020a9db4 here */
         WM_WORK->resetting = 1;
-        r = WM_Reset((void *)WM_WORK->stateCallback);
+        r = WM_Reset(WM_WORK->stateCallback);
         if (r == 2)
             return 0;
         return r;
@@ -916,7 +898,7 @@ int MBi_SendMP(const void *buf, int len, int pollbmp) {
 }
 
 /* parentParam.ggid[0]. Lead: the reconstruction's MBi_GetGgid returns the
- * whole u32; this SDK keeps the GGID as two u16s (WmParentParam) and has a
+ * whole u32; this SDK keeps the GGID as two u16s (WMParentParam) and has a
  * getter for each half, which the beacon senders pass to WM_SetGameInfo. */
 int func_020688e4(void) {
     return WM_WORK->parentParam.ggid[0];

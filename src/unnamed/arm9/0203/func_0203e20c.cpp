@@ -34,7 +34,7 @@ extern s32 data_020a1680;
 extern u8 data_020a1780[];
 
 extern u8 MB_CommGetChildrenNumber(void);
-extern void func_0203f9d4(int a0, int a1);
+extern void func_0203f9d4(void *sysBuf, int callback);
 extern void func_0203e978(struct ChannelReply *reply);
 extern int OS_GetTickLo(void);
 extern int MB_Init(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, int dma);
@@ -92,7 +92,7 @@ void func_0203e20c(void)
         void *ptr = Memory::Allocate(0xB000, 0x20);
         data_020a0f3c = ptr;
         data_020a0f0c = 0;
-        func_0203f9d4((int)ptr, (int)func_0203e978);
+        func_0203f9d4(ptr, (int)func_0203e978);
         data_020a0f50 += 1;
         data_020a0f1c &= 0xFFFB;
         break;

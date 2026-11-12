@@ -11,7 +11,7 @@ extern "C" {
  * Each status field is invalidated from the data cache before it is read.
  * Field names follow the SDK's WMArm9Buf and WMStatus; only the fields this
  * function reads are spelled out. pparam is WMParentParam in this ROM's
- * layout (maxEntry at +0x0e, see include/WmWork.h's WmParentParam). */
+ * layout (maxEntry at +0x0e, see nitro/wm/wm.h's WMParentParam). */
 int WM_GetMPReceiveBufferSize(void) {
     WMArm9Buf *h = WM_GetSystemWork();
     WMStatus *p;

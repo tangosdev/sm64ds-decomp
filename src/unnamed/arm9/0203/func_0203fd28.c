@@ -1,4 +1,5 @@
-extern int WM_Enable(void *cb);
+#include "nitro/wm/wm_api.h"
+
 extern void func_020405b4(unsigned short *cb);
 extern int data_020a0f94;
 
@@ -6,7 +7,7 @@ extern int data_020a0f94;
    SDK's WM_APIID_ENABLE, ready state only) with func_020405b4 as the
    callback. As func_0203fc74 otherwise. */
 int func_0203fd28(void) {
-    if (WM_Enable((void *)func_020405b4) != 2) {
+    if (WM_Enable((WMCallbackFunc)func_020405b4) != WM_ERRCODE_OPERATING) {
         data_020a0f94 = 1;
         return 0;
     }

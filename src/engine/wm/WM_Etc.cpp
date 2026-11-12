@@ -12,7 +12,6 @@
 extern "C" {
 
 extern int data_020a9440[]; /* the game-info buffer ARM7 reads (pret's UNK_021D68C0) */
-extern int WMi_CheckIdle(void);
 extern void MIi_CpuCopy32(int *src, int *dst, int len);
 
 /* NitroSDK WM_SetGameInfo: refuse unless WM is PARENT (7) or MP_PARENT (9),

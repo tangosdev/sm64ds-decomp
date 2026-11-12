@@ -15,6 +15,10 @@
  *
  * WMCallbackFunc is the callback every asynchronous WM call takes. WM hands
  * it the call's result record, so callbacks take a void * and cast it.
+ *
+ * WMBssDesc, WMParentParam and WMScanParam are this SDK revision's layouts,
+ * which differ from the public header where each says so. Plain C types:
+ * some consumers do not include types.h.
  */
 
 #ifdef __cplusplus
@@ -98,6 +102,72 @@ typedef enum WMPriority {
 } WMPriority;
 
 typedef void (*WMCallbackFunc)(void *);
+
+/* NitroSDK WMBssDesc, the beacon record of a parent (0xc0 bytes: the SDK's
+ * WM_SIZE_BSSDESC). Names are the SDK's; this SDK build reads and writes the
+ * ssid and ggid as halfwords, so ssid is u16[16] where the public header has
+ * u8[32] and gameInfo.ggid is u16[2]; the types choose the load and store
+ * widths, so they stay as the code uses them. Only offsets the ROM's code
+ * reads are named. */
+typedef struct WMBssDesc {
+    unsigned char pad_00[0xc];
+    unsigned short ssid[0x10]; /* 0x0c -- u8[32] in the SDK */
+    unsigned char pad_2c[0xa];
+    unsigned short channel; /* 0x36 */
+    unsigned char pad_38[4];
+    unsigned short gameInfoLength; /* 0x3c */
+    unsigned char pad_3e[6];
+    struct {
+        unsigned short ggid[2];           /* 0x44 */
+        unsigned short tgid;              /* 0x48 */
+        unsigned char userGameInfoLength; /* 0x4a */
+        unsigned char attribute;          /* 0x4b */
+        unsigned short parentMaxSize;     /* 0x4c */
+        unsigned short childMaxSize;      /* 0x4e */
+    } gameInfo;
+    unsigned char pad_50[0xc0 - 0x50];
+} WMBssDesc;
+
+typedef char WMBssDesc_size_must_be_0xc0[sizeof(WMBssDesc) == 0xc0 ? 1 : -1];
+
+/* NitroSDK WMParentParam, the parent parameters WM_SetParentParameter hands
+ * ARM7 (0x40 bytes). ggid is two u16s at 0x06 with no padding before it, so
+ * tgid..childMaxSize sit 2 bytes earlier than in the public NitroSDK header.
+ * That is this ROM's SDK revision: MB_Init fills parentParam at these offsets
+ * byte-identically before WM_SetParentParameter, and the size assert below
+ * holds. Don't realign it to the public header. */
+typedef struct WMParentParam {
+    unsigned short *userGameInfo;      /* 0x00 */
+    unsigned short userGameInfoLength; /* 0x04 */
+    unsigned short ggid[2];            /* 0x06 */
+    unsigned short tgid;               /* 0x0a */
+    unsigned short entryFlag;          /* 0x0c */
+    unsigned short maxEntry;           /* 0x0e */
+    unsigned short multiBootFlag;      /* 0x10 */
+    unsigned short KS_Flag;            /* 0x12 */
+    unsigned short CS_Flag;            /* 0x14 */
+    unsigned short beaconPeriod;       /* 0x16 */
+    unsigned short rsv[12];            /* 0x18 */
+    unsigned short channel;            /* 0x30 */
+    unsigned short parentMaxSize;      /* 0x32 */
+    unsigned short childMaxSize;       /* 0x34 */
+    unsigned short rsv2[5];            /* 0x36 */
+} WMParentParam;
+
+typedef char WMParentParam_size_must_be_0x40[sizeof(WMParentParam) == 0x40 ? 1 : -1];
+
+/* NitroSDK WMScanParam, WM_StartScan's argument (WM_StartScan flushes 0x20
+ * bytes of it). This SDK build copies bssid as three halfwords; the public
+ * header has u8[6]. All 0xffff scans for any parent. */
+typedef struct WMScanParam {
+    WMBssDesc *scanBuf;            /* 0x0 */
+    unsigned short channel;        /* 0x4 -- 1..14 */
+    unsigned short maxChannelTime; /* 0x6 */
+    unsigned short bssid[3];       /* 0x8 */
+    unsigned char pad_0e[0x20 - 0xe];
+} WMScanParam;
+
+typedef char WMScanParam_size_must_be_0x20[sizeof(WMScanParam) == 0x20 ? 1 : -1];
 
 #ifdef __cplusplus
 }

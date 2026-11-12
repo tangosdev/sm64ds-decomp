@@ -1,4 +1,5 @@
 #include "types.h"
+#include "nitro/wm/wm_api.h"
 #include "private/wm_views.h"
 extern int data_020a0f5c;
 extern u16 data_020a0f24;
@@ -10,7 +11,6 @@ extern int Wireless_Reset(void);
 extern int func_0203faa8(void);
 extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
 extern int func_02042748(u16 *a, u16 *b);
-extern int WM_Disconnect(void *callback, unsigned int aid);
 
 /* The parent's WM_StartParent callback. A connecting child stays only when
  * its MAC address equals one of the three entries of data_020a0fbe whose
