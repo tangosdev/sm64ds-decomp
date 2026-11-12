@@ -1,8 +1,5 @@
-#include "private/fs_views.h"
+#include "nitro/fs/file.h"
 
-typedef struct FSFile FSFile;
-
-extern void FS_InitFile(FSFile *p_file);
 extern int myFS_OpenFileFast(FSFile *p_file, FSFileID id);
 extern void OS_Terminate(void);
 extern void *func_0201834c(FSFile *p_file, int flush);

@@ -9,8 +9,6 @@
 
 #include "private/fs_views.h"
 
-typedef struct FSFile FSFile;
-
 extern FSDirPos data_020a804c;
 extern FSArchive *FS_FindArchive(const char *name, int name_len);
 extern int FSi_SendCommand(FSFile *p_file, int command);

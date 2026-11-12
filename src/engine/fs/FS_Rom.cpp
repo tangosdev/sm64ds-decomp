@@ -25,8 +25,6 @@
 #include "nitro/os/spinLock.h"
 #include "private/fs_views.h"
 
-typedef struct FSFile FSFile;
-
 extern "C" {
 
 #define FS_COMMAND_WRITEFILE 1

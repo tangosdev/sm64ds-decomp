@@ -25,9 +25,7 @@
 #include "nitro/os/system.h"
 #include "nitro/card/card_rom.h"
 #include "nitro/fs/overlay.h"
-#include "private/fs_views.h"
-
-typedef struct FSFile FSFile;
+#include "nitro/fs/file.h"
 
 extern "C" {
 
@@ -57,11 +55,6 @@ void MI_CpuCopy8(const void *src, void *dst, u32 size);
 void MI_CpuFill8(void *dst, u8 value, u32 size);
 void DGT_Hash2CalcHmac(void *out, void *msg, int msglen, void *key, int keylen);
 void MIi_UncompressBackward(void *bottom);
-void FS_InitFile(void *s);
-int FS_OpenFileDirect(char *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,
-                      u32 file_index);
-int FS_ReadFile(FSFile *file, void *dst, int len);
-int FS_CloseFile(void *self);
 int func_0206cf98(int a, u32 b, u32 c);
 int DGT_SetOverlayTableMode(s32 newVal);
 void OS_Terminate(void);
@@ -106,7 +99,7 @@ int FSi_LoadOverlayInfoCore(FSOverlayInfo *p_ovi, int target, int id, FSArchive 
     if (pos >= length)
         return 0;
     FS_InitFile(&file);
-    FS_OpenFileDirect((char *)&file, arc, offset + pos, offset + length, -1);
+    FS_OpenFileDirect(&file, arc, offset + pos, offset + length, -1);
     FS_ReadFile(&file, p_ovi, 0x20);
     FS_CloseFile(&file);
     p_ovi->target = target;
