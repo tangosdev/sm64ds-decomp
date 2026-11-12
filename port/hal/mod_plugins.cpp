@@ -835,6 +835,10 @@ void ranges_read(void)
             (unsigned)g_ranges.size(), (unsigned)(total / 1024));
 }
 
+/* The journal assumes every write into the read-only image while a plugin call runs is that plugin's. Today all of the game's own
+   runtime code patches (coop_boss, coop_target, vtable seats) run on the game thread, outside plugin calls. A patcher running on
+   another thread (audio, art workers, a future one) during sm64ds_mod_main or on_level_load would land in that plugin's journal: it
+   would be put back when the plugin switches off and written again when it switches on. Keep such patches on the game thread. */
 void journal_take(void)
 {
     ranges_read();
