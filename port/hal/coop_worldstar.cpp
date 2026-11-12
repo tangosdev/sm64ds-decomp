@@ -44,7 +44,7 @@
 //   SM64DS_COOP_WORLDSTAR_LOG=1    [coopws] lines (a census of the holders at each visit start)
 //   SM64DS_COOP_WORLDSTAR_TRACE=N  every N frames one [coopws] trace line
 //   SM64DS_WS_KLEPTO_SILVER=F      at frame F (before the spawn census arms, so like one placed at load) spawn a Klepto
-//                                  carrying a silver star (param 0x2000, path 0; the cartridge places none in the courses
+//                                  carrying a silver star (param 0x0200, path 0; the cartridge places none in the courses
 //                                  surveyed: SSL acts 1-8, THI): the ROM's own spawn and InitResources. Only in a course
 //                                  whose own Klepto loaded the model (SSL act 2): a spawn where none is placed draws from
 //                                  files that are not loaded
@@ -429,7 +429,7 @@ void knobs(char *me) {
     if (g_lv <= 5) return;          // the knobs act in the course the row warps to, never in the castle the room starts in
     if (sil_at >= 0 && g_lf == (unsigned)sil_at) {
         const int pos[3] = {rd32(me, 0x5c), rd32(me, 0x60) + (600 << 12), rd32(me, 0x64)};
-        char *k = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(kClsKlepto, 0x2000, pos, nullptr, *((signed char *)me + 0xcc), -1);
+        char *k = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(kClsKlepto, 0x0200, pos, nullptr, *((signed char *)me + 0xcc), -1);
         std::fprintf(stderr, "[coopws] KNOB klepto silver lf=%u: %s\n", g_lf, !k ? "SPAWN FAILED (no Klepto here)" : "a Klepto carrying a silver star spawned");
         if (k) { daJango_c *kk = (daJango_c *)k;
             std::fprintf(stderr, "[coopws] KNOB klepto silver lf=%u: uid %u slot %d carried %d silver %d held %d\n", g_lf, a_uid(k), (int)a_slot(k), kk->mCarriedItem, kk->mSilverStarFlag, kk->mHeldActorID); }
