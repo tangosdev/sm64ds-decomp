@@ -9,9 +9,10 @@
 /* TrmpItem, one of Trampoline2's floating rings (its three models are
  * ASSET_RINGA/B/C_BMD, sTrmpItemRing*ModelFile): the 0x1d0-byte record the
  * TrmpItem_* helpers in src/minigames/unit020cd744.cpp spawn, move and draw
- * (the scene builds ten). The name is coined. A layout view only: the helpers
- * are free functions over a char* record and read it through their TRMPITEM()
- * cast. mMotionKind picks the motion (TrmpItem_MotionStill .. SpinDrift);
+ * (the scene builds ten). The name is coined. The helpers take a TrmpItem *
+ * and address these fields by name; the three void * entry points declared in
+ * decl_common.h (MotionHover, MotionSway, UpdateWithJumper) cast at that
+ * boundary. mMotionKind picks the motion (TrmpItem_MotionStill .. SpinDrift);
  * unnamed regions are written in one place only, or sit inside an embedded
  * object. */
 struct TrmpItem {
