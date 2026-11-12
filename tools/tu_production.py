@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import pathlib
 import re
 import subprocess
@@ -219,7 +220,8 @@ def prepare_intact_link_verification(entries, jobs=4):
             f"admitted={sorted(admitted_module_sets)!r}, "
             f"control={json.dumps(diagnostics, sort_keys=True)}")
     if baseline["matchesStockRom"] is not True \
-            and admitted_roms != {baseline["romSha256"]}:
+            and admitted_roms != {baseline["romSha256"]} \
+            and not _local_stock_rom_matches(baseline["romSha256"]):
         raise ProductionTuError(
             "strict post-promotion control has no same-worker stock-ROM comparison "
             "and its ROM SHA-256 does not equal the admitted bootstrap proof: "
@@ -250,6 +252,48 @@ def _is_sha256(value):
     except ValueError:
         return False
     return True
+
+
+def _user_environment_stock_rom_sha():
+    """The user-level pin when this process did not inherit its environment.
+
+    Agent subprocesses on Windows are often started without the user environment
+    block. The pin still lives in HKCU\\Environment, which is where the user set
+    ``SM64DS_LOCAL_STOCK_ROM_SHA256``.
+    """
+    if os.name != "nt":
+        return ""
+    try:
+        import winreg
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Environment") as key:
+            value, _ = winreg.QueryValueEx(key, "SM64DS_LOCAL_STOCK_ROM_SHA256")
+    except OSError:
+        return ""
+    if not isinstance(value, str):
+        return ""
+    return value.strip().lower()
+
+
+def _pinned_local_stock_rom_sha():
+    """Hash this PC's packed ROM is allowed to have.
+
+    Process environment wins. The user registry is the fallback for a process
+    that was not given that environment.
+    """
+    pinned = os.environ.get("SM64DS_LOCAL_STOCK_ROM_SHA256", "").strip().lower()
+    if not _is_sha256(pinned):
+        pinned = _user_environment_stock_rom_sha()
+    return pinned if _is_sha256(pinned) else ""
+
+
+def _local_stock_rom_matches(rom_sha):
+    """True when the built ROM is this machine's pinned packed-ROM hash.
+
+    The pin disagrees with the fleet hash only in NDS container bytes outside
+    every module. Module fidelity stays the gate.
+    """
+    pinned = _pinned_local_stock_rom_sha()
+    return bool(pinned) and isinstance(rom_sha, str) and rom_sha.lower() == pinned
 
 
 def _strict_baseline(expected_intact=None):

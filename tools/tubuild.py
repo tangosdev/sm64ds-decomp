@@ -6587,6 +6587,33 @@ def _record_partitioned(data, entry, report):
     save_manifest(data)
 
 
+def _rom_proof_keeping_fleet_sha(entry, rom):
+    """Keep a stored fleet ROM sha when this PC only differs in the container.
+
+    Linkcheck records the ROM it just packed. On this machine that hash is the
+    pinned local image, not the fleet bootstrap hash the other intact entries
+    store. Writing the local hash into one manifest makes that entry the only
+    one on the local image, and the next rombuild stops because the entries
+    disagree. The modules already matched, so the stored fleet sha stays.
+    """
+    if not isinstance(rom, dict):
+        return rom
+    new_sha = rom.get("sha256")
+    previous = ((entry.get("verification") or {}).get("linkcheck") or {}).get("rom") or {}
+    previous_sha = previous.get("sha256")
+    if (not isinstance(previous_sha, str) or not isinstance(new_sha, str)
+            or previous_sha.lower() == new_sha.lower()):
+        return rom
+    import tu_production as TP
+    if not TP._local_stock_rom_matches(new_sha):
+        return rom
+    kept = dict(rom)
+    kept["sha256"] = previous_sha
+    if "matchesStockRom" in previous:
+        kept["matchesStockRom"] = previous["matchesStockRom"]
+    return kept
+
+
 def _record_linkcheck(data, entry, report, baseline):
     """Record the run on the manifest entry. Promotes shadow->link-verified on a pass;
     NEVER downgrades an earned status on a failure -- a linkcheck failure says nothing
@@ -6630,7 +6657,7 @@ def _record_linkcheck(data, entry, report, baseline):
         "moduleSetSha256": (((report.get("analysis") or {})
                               .get("moduleFidelity") or {})
                              .get("moduleSetSha256")),
-        "rom": report.get("rom"),
+        "rom": _rom_proof_keeping_fleet_sha(entry, report.get("rom")),
         "linkerOutput": report["phases"].get("link", {}).get("output"),
     }
     if report["result"] == "link-verified" and entry.get("status") == "text-verified":

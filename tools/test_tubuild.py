@@ -19,6 +19,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 TOOLS = pathlib.Path(__file__).resolve().parent
 REPO = TOOLS.parent
@@ -2499,6 +2500,34 @@ def test_a_no_rom_linkcheck_leaves_the_stored_rom_proof_alone():
     finally:
         tubuild.save_manifest = original
     assert entry["verification"]["linkcheck"]["rom"]["sha256"] == "b" * 64
+    assert len(saves) == 1
+
+
+def test_linkcheck_keeps_the_fleet_rom_sha_when_the_new_image_is_the_local_pin():
+    """This PC packs a different NDS container than the fleet bootstrap hash.
+    Recording that local hash on one intact entry makes the entries disagree."""
+    import tu_production as TP
+    fleet = "ab" * 32
+    local = "cd" * 32
+    entry = {"id": "arm9/T", "status": "data-verified",
+             "verification": {"linkcheck": {
+                 "rom": {"sha256": fleet, "matchesStockRom": True}}}}
+    report = {"result": "data-verified", "scratch": "build/tu/T/link",
+              "phases": {"link": {"ok": True, "output": ""}},
+              "objectAudit": {}, "symbolsNew": [],
+              "analysis": {"moduleFidelity": {"moduleSetSha256": "ef" * 32}},
+              "rom": {"sha256": local, "matchesStockRom": None, "bytes": 8}}
+    saves = []
+    original = tubuild.save_manifest
+    try:
+        tubuild.save_manifest = saves.append
+        with mock.patch.object(TP, "_local_stock_rom_matches",
+                               side_effect=lambda sha: sha == local):
+            tubuild._record_linkcheck({"entries": [entry]}, entry, report, False)
+    finally:
+        tubuild.save_manifest = original
+    assert entry["verification"]["linkcheck"]["rom"]["sha256"] == fleet
+    assert entry["verification"]["linkcheck"]["rom"]["matchesStockRom"] is True
     assert len(saves) == 1
 
 # ---------------------------------------------------------------- create repairs

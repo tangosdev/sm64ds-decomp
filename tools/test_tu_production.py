@@ -1,4 +1,5 @@
 import json
+import os
 import pathlib
 import sys
 import tempfile
@@ -581,10 +582,60 @@ class ProductionTuObjects(unittest.TestCase):
                 "symbolCheckErrors": [], "moduleSetSha256": "ef" * 32,
                 "rom": {"sha256": "ab" * 32}}},
         }}
-        with mock.patch.object(TP, "_strict_baseline", return_value=baseline):
+        env = os.environ.copy()
+        env.pop("SM64DS_LOCAL_STOCK_ROM_SHA256", None)
+        with mock.patch.dict(os.environ, env, clear=True), \
+                mock.patch.object(TP, "_user_environment_stock_rom_sha",
+                                  return_value=""), \
+                mock.patch.object(TP, "_strict_baseline", return_value=baseline):
             with self.assertRaisesRegex(TP.ProductionTuError,
                                         "no same-worker stock-ROM comparison"):
                 TP.prepare_intact_link_verification(entries)
+
+    def test_pinned_local_stock_rom_sha_accepts_container_difference(self):
+        baseline = {
+            "symbolErrors": [], "romSha256": "cd" * 32,
+            "matchesStockRom": None, "moduleSetSha256": "ef" * 32,
+        }
+        entries = {"src/actors/Thing.cpp": {
+            "id": "ov047/Thing",
+            "verification": {"linkcheck": {
+                "symbolCheckErrors": [], "moduleSetSha256": "ef" * 32,
+                "rom": {"sha256": "ab" * 32}}},
+        }}
+        with mock.patch.dict(os.environ, {"SM64DS_LOCAL_STOCK_ROM_SHA256": "cd" * 32}), \
+                mock.patch.object(TP, "_strict_baseline", return_value=baseline), \
+                mock.patch.object(TP.TB, "manifest_section_claims",
+                                  return_value=([], [])), \
+                mock.patch.object(TP.TB, "partition_vtable_rebiases",
+                                  return_value=({}, [])):
+            prepared = TP.prepare_intact_link_verification(entries)
+        self.assertEqual(prepared["baseline"]["romSha256"], "cd" * 32)
+        self.assertEqual(prepared["admittedRomSha256"], ["ab" * 32])
+
+    def test_user_registry_pin_accepts_container_difference_without_process_env(self):
+        baseline = {
+            "symbolErrors": [], "romSha256": "cd" * 32,
+            "matchesStockRom": None, "moduleSetSha256": "ef" * 32,
+        }
+        entries = {"src/actors/Thing.cpp": {
+            "id": "ov047/Thing",
+            "verification": {"linkcheck": {
+                "symbolCheckErrors": [], "moduleSetSha256": "ef" * 32,
+                "rom": {"sha256": "ab" * 32}}},
+        }}
+        env = os.environ.copy()
+        env.pop("SM64DS_LOCAL_STOCK_ROM_SHA256", None)
+        with mock.patch.dict(os.environ, env, clear=True), \
+                mock.patch.object(TP, "_user_environment_stock_rom_sha",
+                                  return_value="cd" * 32), \
+                mock.patch.object(TP, "_strict_baseline", return_value=baseline), \
+                mock.patch.object(TP.TB, "manifest_section_claims",
+                                  return_value=([], [])), \
+                mock.patch.object(TP.TB, "partition_vtable_rebiases",
+                                  return_value=({}, [])):
+            prepared = TP.prepare_intact_link_verification(entries)
+        self.assertEqual(prepared["baseline"]["romSha256"], "cd" * 32)
 
     def test_same_worker_stock_control_still_requires_admitted_module_set(self):
         baseline = {
