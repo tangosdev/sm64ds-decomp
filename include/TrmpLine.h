@@ -4,18 +4,41 @@
 #include "types.h"
 
 /* TrmpLine, one stylus-drawn trampoline of Trampoline and Trampoline2: the
- * 0x32c-byte slot the TrmpLine_* helpers in src/minigames/unit020cd744.cpp
- * build, flex and draw (the scenes construct three or four). The name is coined.
+ * 0x32c-byte slot whose methods in src/minigames/unit020cd744.cpp build, flex
+ * and draw it (the scenes construct three or four). The name is coined.
  * The constructor and destructor are the class's own, out of line in that file
  * (ROM 0x020d100c and 0x020d1008): the constructor marks the slot free, the
- * destructor is empty. The other helpers take a TrmpLine * and address these
- * fields by name; only TrmpLine_Create's slot walk keeps char * arithmetic.
+ * destructor is empty. The methods address these fields by name; only
+ * TrmpLine::Create's slot walk keeps char * arithmetic.
  * Unnamed regions are touched in one place at most. mAlpha is a byte, but the
  * fade states step it with the int ApproachLinear2 through an (int *) cast of
  * its address. */
 struct TrmpLine {
     TrmpLine();
     ~TrmpLine();
+
+    /* One line: build it, run its state, draw it. */
+    void PointDistance(Vector3 *referencePoint, const Vector3 *offsetVector);
+    void ComputeNormals();
+    void Draw();
+    void Update();
+    void StateFade();
+    void SetStateFade();
+    void StateSettle();
+    void SetStateSettle();
+    void StateFlex();
+    void SetStateFlex();
+    int PushJumper();
+    void Build(short *startPoint, short *endPoint);
+
+    /* The whole line pool. */
+    static int Create(s16 *startPoint, s16 *endPoint);
+    static void DrawAll();
+    static void UpdateAll();
+    static void ClearAll(u32);
+    static void LoadTextures();
+    static void CreateStartLineT2();
+    static void CreateStartLineT1();
 
     /* One patch vertex. Plain data on purpose: Vector3 declares a constructor
        and a destructor, and an array of it makes TrmpLine's constructor and
@@ -38,20 +61,20 @@ struct TrmpLine {
     s32 mHalfWidth;         /* 0x058 -- half the stroke's length */
     Vtx mVerts[16];         /* 0x05c -- the 4x4 patch drawn */
     Vtx mRestVerts[16];     /* 0x11c -- the patch at rest; the flex states start from it */
-    Vtx mNormals[16];       /* 0x1dc -- per-vertex normals, TrmpLine_ComputeNormals */
-    s32 mFlexAmplitude[16]; /* 0x29c -- per-vertex flex depth: TrmpLine_PointDistance sets
+    Vtx mNormals[16];       /* 0x1dc -- per-vertex normals, TrmpLine::ComputeNormals */
+    s32 mFlexAmplitude[16]; /* 0x29c -- per-vertex flex depth: TrmpLine::PointDistance sets
                                it; the flex states scale the deflection by it and decay it */
     s32 mPackedNormals[16]; /* 0x2dc -- mNormals packed 10:10:10 for REG_NORMAL */
     s16 mLifeTimer;         /* 0x31c -- 0x258 frames, then the line fades */
-    s16 mSlotIndex;         /* 0x31e -- index in sTrmpLines; TrmpLine_Create stores it and
-                               the start-line builders store 3. TrmpLine_Draw uses it + 1
+    s16 mSlotIndex;         /* 0x31e -- index in sTrmpLines; TrmpLine::Create stores it and
+                               the start-line builders store 3. TrmpLine::Draw uses it + 1
                                as the polygon ID; StateFlex never fades slot 3 */
     u16 mWobblePhase;       /* 0x320 -- sine phase of the flex */
     u16 mWobbleSpeed;       /* 0x322 -- added to mWobblePhase each frame */
     u16 mBouncesLeft;       /* 0x324 -- at 0 the line settles */
-    u16 mBounceCount;       /* 0x326 -- picks TrmpLine_Draw's diffuse/ambient colour */
+    u16 mBounceCount;       /* 0x326 -- picks TrmpLine::Draw's diffuse/ambient colour */
     u8 mStatus;             /* 0x328 -- 0 free; 1 flexing; 3 settling */
-    u8 mAlpha;              /* 0x329 -- 0x1f on build; TrmpLine_Draw writes it to the
+    u8 mAlpha;              /* 0x329 -- 0x1f on build; TrmpLine::Draw writes it to the
                                polygon alpha bits, the fade states step it to 0 */
     u8 pad_32a[0x2];        /* 0x32a */
 };

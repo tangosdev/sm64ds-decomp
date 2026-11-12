@@ -57,6 +57,7 @@
 #include "Sound.h"
 #include "dMgTrmpln2Mario_c.h"
 #include "dMgTrmpln3DMario_c.h"
+#include "TrmpItem.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
 #include "nitro/fx/fx_cp.h"
@@ -1365,7 +1366,6 @@ extern "C" {
 extern int sTrmp2MarioCount;
 extern char *sTrmp2Marios;
 void Trmp2Mario_Update(void *);
-void TrmpItem_UpdateWithJumper(void *, int);
 void Puff_UpdateAll(void);
 void Trmp2Mario_UpdateAll(void) {
     int i = 0;
@@ -1373,7 +1373,7 @@ void Trmp2Mario_UpdateAll(void) {
         int off = 0;
         do {
             Trmp2Mario_Update(sTrmp2Marios + off);
-            TrmpItem_UpdateWithJumper(sTrmp2Marios + off, i);
+            TrmpItem::UpdateWithJumper((TrampolineObjectCallbacks *)(sTrmp2Marios + off), i);
             i++;
             off += 0xdc;
         } while (i < sTrmp2MarioCount);
@@ -3106,7 +3106,7 @@ int Trmp3DMario_InitPool(unsigned char *a0, int a1) {
 }
 // ---- TrmpRingObjAdapter_Clear
 /* The Clear slot each bounce runs also restarts the combo
-   TrmpItem_UpdateWithJumper scores from. */
+   TrmpItem::UpdateWithJumper scores from. */
 void dMgTrmpRingObjAdapter_c::Clear() {
     dMgTrmpObjAdapter_c::Clear();
     mItemHitCount = 0;
