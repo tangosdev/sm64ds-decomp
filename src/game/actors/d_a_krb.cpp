@@ -63,7 +63,7 @@ enum daKrb_c_AssetId {
     ASSET_KURIBO_LOW_MODEL_BMD = 0x038e
 };
 
-#pragma defer_codegen off // without it: D1, D0, D2 move from the front to the end as D2, D0, D1
+#pragma defer_codegen off
 
 #include "daKrb_c.h"
 #include "nitro/fx/fx.h"
@@ -550,7 +550,6 @@ int daKrb_c::func_ov084_021298d0() {
                     }
                 }
             }
-            /* Integer cast forces add rN, rBase, #0x198. A named flags |= CSEs it. */
             *(int *)((int)&goomba->mdCcAc_c.flags) |= 0x20000;
             goomba->mdCcAc_c.Clear();
             goomba->mdCcAc_c.Update();

@@ -145,7 +145,7 @@ extern s16 gPlayerHealth[];
 extern unsigned int gNextActorUpdateMask;
 extern unsigned int gActorUpdateMask;
 extern u8 data_020755b8[];
-extern volatile int data_02075610[]; // kept: PS_UpdateOkAndBackButtons size 0x154->0x148
+extern volatile int data_02075610[];
 extern u16 data_020755cc[];
 extern u16 data_020755c0[];
 extern u16 data_020755c4[];
@@ -603,7 +603,7 @@ void SetMusic(u32 player, u32 music);
 /* The TouchInfo record at byte offset off (slot * 4) from gTouchHeld. */
 #define TOUCHP(off) ((TouchInfo *)(gTouchHeld + (off)))
 
-#pragma defer_codegen off // kept: section order reverses; CheckCameraInput 0x460->0x450
+#pragma defer_codegen off
 
 /* Destroy through dScStage_c's own three fields -- dBgW_Kc at 0x91c, dExtSimpleModel_c at
  * 0x86c, dPa_c at 0x50 -- in reverse declaration order, then
@@ -1035,8 +1035,7 @@ void dScStage_c::LC_Update() {
         return;
     }
 }
-// kept: the ROM reads data_0209f498[i] by mla beside the cam cursor; strength reduction merges them (0x450)
-#pragma opt_strength_reduction off // kept: CheckCameraInput size 0x460->0x450
+#pragma opt_strength_reduction off
 void dScStage_c::CheckCameraInput() {
     ControllerInput *cam = data_0209f498;
     if ((u8)(gVsExitScreenActive | (gGamePaused | data_0209f20c)) == 0 && data_0209d660 == 0) {
@@ -1148,7 +1147,7 @@ void dScStage_c::CheckCameraInput() {
         }
     }
 }
-#pragma opt_strength_reduction on // kept: RenderNumber size 0x100->0x104
+#pragma opt_strength_reduction on
 void dScStage_c::RenderNumber(unsigned char num, int x, int y, bool b, int p5) {
     int leading = 0;
     Matrix2x2 *mtx = 0;
@@ -1512,22 +1511,12 @@ void dScStage_c::PS_Cleanup() {
     data_0209f280 = 0;
     gGamePaused = 0;
 }
-// Pen-down edge on a held touch. An int-returning inline because the ROM
-// materializes this 0/1 before testing it (the controller-mode rows, case 8).
+// Pen-down edge on a held touch.
 static inline int IsTouchPressed(u8 held, u8 slot) {
     return held != 0 && gTouchEdge[slot * 4] != 0;
 }
-/* Pause-screen update. Four spellings below are load-bearing for the
- * emitted code: case 3's first row stores gGamePaused (not sNextPauseState);
- * the backlight-on guard reuses the stale tmpv left by the sound-mode
- * hit-test chain (tmpv = tx - 0x6e, assigned inside that chain's condition,
- * as are ty2 and t6: with opt_common_subs off, hoisting them reorders the
- * code and reloading gTouchY adds four instructions); the first gTouchY check
- * indexes with a fresh gActivePlayerSlot load; and the f238 store sits in the unconditional scope
- * after the displayed-level normalization so the case-1 literal loads keep
- * ROM order. */
-// kept: with CSE on the function builds 0x3094, 0x18 bytes short of the ROM
-#pragma opt_common_subs off // kept: PS_Update size 0x30ac->0x30a0
+/* Pause-screen update. */
+#pragma opt_common_subs off
 void dScStage_c::PS_Update() {
     u8 var_sl;
     u8 var_fp;
@@ -4066,8 +4055,7 @@ static inline u32 MaskOff(u32 x, u32 m) {
     return x & ~m;
 }
 
-// kept: the ROM reloads data_0209f304 after testing it; with CSE on the function is 0x6e8
-#pragma opt_common_subs off // kept: Behavior size 0x6f0->0x6e8
+#pragma opt_common_subs off
 
 int dScStage_c::Behavior() {
     gActorUpdateMask = gNextActorUpdateMask;
@@ -4223,7 +4211,7 @@ int dScStage_c::Behavior() {
     }
     return 1;
 }
-#pragma opt_common_subs on // kept: CheckInput 0x584->0x558; InitResources 0xa84->0xa90
+#pragma opt_common_subs on
 
 // The ROM reads the touch records through one base pointer (gTouchHeld) plus
 // field offsets, not through the per-lane gTouchX/gTouchY/gTouchEdge symbols.
@@ -4977,7 +4965,7 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
         LoadFileAt(ASSET_D_2D_OP_OBJ_CL_NCL_BIN, 0x5000600);
         {
             char *clearScreenMap = (char *)G2S_GetBG2ScrPtr();
-            volatile u16 fillTile = 0x10d0; // kept: LoadGraphics2D size 0x738->0x730
+            volatile u16 fillTile = 0x10d0;
             MI_CpuFill16(clearScreenMap, fillTile, 0x800);
         }
         gSubScreenLayers = 0x17;
@@ -5061,7 +5049,7 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
     }
 
     if (SublevelToLevel(sublevel) == 0x1d) {
-        volatile u16 blankTile = 0; // kept: LoadGraphics2D size 0x738->0x730
+        volatile u16 blankTile = 0;
         MI_CpuFill16(screenMap, blankTile, 0x40);
         LoadCompressedFileAt(ASSET_D_2D_FRAMEWORK_SELECT_PAUSE_NSC_BIN, screenMap + 0x40);
         LoadCompressedFileAt(ASSET_D_2D_FRAMEWORK_PAGE_NSC_BIN, (char *)G2_GetBG2ScrPtr() + 0x1800);

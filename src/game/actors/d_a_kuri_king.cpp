@@ -253,7 +253,7 @@ struct KuriKingStateTable {
 extern KuriKingStateTable data_ov074_021230f8;
 struct KuriKingPmf { char pad[0x5cc]; s32 mState; };
 
-#pragma defer_codegen off // without it: D1/D0/D2 .text 0/1/2 -> 57/56/55 (0xa0/0xb4/0xa0)
+#pragma defer_codegen off
 
 /* Out of line, and FIRST in this ROM-ascending file: that is what puts D1 and
  * D0 at 0x0211f000 / 0x0211f0a0, the two lowest addresses in the run. */
@@ -753,15 +753,6 @@ extern "C" void func_ov074_021201ec(void)
  * and daPly_c::ShowMessage each gate the rest of the tick, so a refused talk
  * simply retries next frame; on success the music layer flips once (guarded
  * by mMusicStarted) and the state advances to 1.
- *
- * Shape notes: the angle temp is an Ang16 STRUCT COPY, not three field
- * assignments -- mwccarm scalarizes the field form away and drops the
- * memory home the ROM keeps at sp+8. msgpos[0] is filled through a base
- * pointer (the ov073 idiom) while msgpos[1] uses direct offsets; that
- * difference is in the ROM, not an accident. msgpos[0] is dead, kept alive
- * only because &msgpos[1] homes the whole array.
- *
- * Matched byte-for-byte with mwccarm 2004/b56 (ov074); linkcheck VERIFIED.
  */
 void daKuriKing_c::UpdateIntroTalk() {
     struct Ang16 { short v[3]; };
@@ -863,19 +854,6 @@ int daKuriKing_c::AdvanceMaterialChanger() {
  * mScalePhase, which advances 0x1230 per frame. In state 6, each finished
  * step except the last also spits particle 0xb1 at 400.0 * mCurrentScale
  * above the boss.
- *
- * The float arithmetic compiles to the ITCM soft-float helpers (_fsub, _ffix,
- * _fflt, _fadd), as written.
- *
- * Shape notes: the particle position temp must stay MEMORY-HOMED -- reading
- * its words back through the address (the ((int *)&v)[n] form) is what keeps
- * the three dead stores the ROM emits; plain member reads scalarize the
- * struct away and cost four instructions. The wobble reads the table by
- * element index k computed BEFORE d: written as FX_SinIdx/FX_CosIdx (with
- * k first, d first, k block-scoped, u32 or masked) the index web and the
- * mCurrentScale web swap r2 and r3, ten words off the ROM.
- *
- * Matched byte-for-byte with mwccarm 2004/b56 (ov074); linkcheck VERIFIED.
  */
 int daKuriKing_c::StepScaleTransition() {
     struct Vector3 v;

@@ -374,8 +374,7 @@ extern void func_0204f15c(unsigned int mask);
 extern int func_0204f194(unsigned int a);
 extern void func_0204f1e8(void);
 extern void func_0204f214(NNSSndSeqPlayer *player, int prio);
-/* Address is taken as a SndHeapDisposeCallback. mwccarm will not convert a
-   pointer-to-member, so the call site names this member's symbol. */
+/* Address is taken as a SndHeapDisposeCallback. */
 extern void _ZN12Elem_204f27813func_0204f278Ev(Elem_204f278 *);
 extern void func_0204f2d4(NNSSndSeqPlayer *obj);
 extern NNSSndSeqPlayer *func_0204f364(int prio);
@@ -409,7 +408,7 @@ extern void func_0204ff9c(struct C *o);
 extern void func_0204ffcc(struct C *c);
 extern void func_02050008(struct C *o);
 extern void func_02050038(void *arg);
-/* Address is taken as an SNDAlarmCallback. Same constraint as func_0204f278. */
+/* Address is taken as an SNDAlarmCallback. */
 extern void _ZN1T13func_020500a4Ev(struct T *);
 extern void func_020501b8(void);
 extern void func_02050258(void);
@@ -1472,7 +1471,7 @@ extern "C" void func_020508a0(void)
 
 extern "C" int func_020507e0(void *a0, unsigned int a1, int a2, int a3, int a4, void *a5,
                              void *a6) {
-    volatile int z; // without volatile: size 0xb8
+    volatile int z;
     func_02050798();
     if (data_020a5634.f0 != 0)
         return 0;
@@ -1643,8 +1642,8 @@ extern "C" void func_02050258(void)
 extern "C" void func_020501b8(void)
 {
     T *g = &data_020a5634;
-    volatile int a; // without volatile: size 0x98
-    volatile int b; // without volatile: size 0x98
+    volatile int a;
+    volatile int b;
     if (g->f0 == 0) return;
     g->f18 = 0;
     a = 0;

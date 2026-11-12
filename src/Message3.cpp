@@ -27,7 +27,7 @@
  * - Address-named helpers stay address-named.
  */
 
-#pragma defer_codegen off // without it: order shifts, func_02031428 0x2b0->0x23c
+#pragma defer_codegen off
 #include "types.h"
 #include "nitro/hw/registers.h"
 #include "decl_common.h"
@@ -316,8 +316,8 @@ void Message::AddCharPairVS() {
 
 /* opt_common_subs stays off: the ROM re-reads every mask and row word per use
  * and spills the scaled row indices, a CSE-off recompute no spelling reaches. */
-#pragma push                // without it: error, preceding #pragma push is missing
-#pragma opt_common_subs off // without it: func_02031428 0x2b0->0x23c +0x4
+#pragma push
+#pragma opt_common_subs off
 extern "C" void func_02031428(void) {
     int cnt;
     int i;
@@ -392,7 +392,7 @@ extern "C" void func_02031428(void) {
 
     data_0209fc70 += 3;
 }
-#pragma pop // without it: func_020316d8 0x1cc->0x1d4 +0x8, 8 more funcs
+#pragma pop
 
 extern "C" void func_020316d8(int screen, int c, u32 x, void *buf) {
     u32 *chr;
@@ -645,7 +645,7 @@ void Message::LayoutLineVS() {
     data_0209fccc = data_0209fc7c & 7;
     flag = 0;
     if (data_0209fc90 == 0) {
-        volatile int zero = 0; // without it: Message::LayoutLineVS 0x3fc->0x3f8 +0x8
+        volatile int zero = 0;
         data_0209fd1c = 0;
         data_0209fcd8 = 0;
         data_0209fc88 = 0;
@@ -843,8 +843,8 @@ extern "C" int func_020321fc(void) {
 
 /* opt_common_subs stays off for register colour only: without it case 6
  * swaps the slot index and the held byte (r3/r2), 8 words, same size. */
-#pragma push                // without it: error, preceding #pragma push is missing
-#pragma opt_common_subs off // without it: func_020326ac +0x41c
+#pragma push
+#pragma opt_common_subs off
 extern "C" void func_020326ac(void) {
     switch (data_0209fcc8) {
     case 0:
@@ -1035,7 +1035,7 @@ extern "C" void func_020326ac(void) {
     }
     }
 }
-#pragma pop // without it: SetTextGlobalsVS +0x8, 5 more funcs
+#pragma pop
 
 /* Splits the VS-mode text blob at 0x0209fd14 into the four pointers the renderer
  * reads. The blob's own header carries the offset from its second section to the
@@ -1070,8 +1070,8 @@ extern "C" void func_02032f54(void) {
 }
 
 extern "C" void func_02032f9c(int a) {
-    volatile int li;            // without it: func_02032f9c 0x260->0x258 +0x8
-    volatile unsigned short ls; // without it: func_02032f9c 0x260->0x258 +0x8
+    volatile int li;
+    volatile unsigned short ls;
     int idx;
     int p, s;
     int v;
@@ -1144,7 +1144,7 @@ extern "C" void func_02032f9c(int a) {
 }
 
 extern "C" void func_020331fc(int a0, int a1, int a2) {
-    volatile int li; // without it: func_020331fc 0x194->0x18c +0x4
+    volatile int li;
     short *scr;
     int base;
     int cnt;
@@ -1206,15 +1206,15 @@ extern "C" void func_02033390(int sub) {
     data_0209fc78 = 0;
 
     if (sub != 0) {
-        volatile u16 fill; // without it: func_02033390 0xd4->0xcc +0x8
-        volatile s32 v;    // without it: func_02033390 0xd4->0xcc +0x4
+        volatile u16 fill;
+        volatile s32 v;
         int *dst = (int *)((int)G2_GetBG3CharPtr() + 0x4000);
         v = 0;
         MI_CpuFill32(dst, v, 0x2000);
         MI_CpuFill16((char *)G2_GetBG3ScrPtr(), fill = 0x2ff, 0x800);
     } else {
-        volatile u16 fill; // without it: func_02033390 0xd4->0xcc +0x8
-        volatile s32 v;    // without it: func_02033390 0xd4->0xcc +0x4
+        volatile u16 fill;
+        volatile s32 v;
         int *dst = (int *)((int)G2S_GetBG0CharPtr() + 0x4000);
         v = 0;
         MI_CpuFill32(dst, v, 0x2000);
@@ -1227,11 +1227,11 @@ extern "C" void func_02033390(int sub) {
    of the global -- the inner name paints blue and resolves to the extern. */
 #define data_0209fc78 (*(u8 *)&data_0209fc78)
 extern "C" void func_02033464(int arg0, int arg1, int arg2) {
-    volatile unsigned short sv0; // without it: func_02033464 0x388->0x380 +0x18
-    volatile unsigned short sv2; // without it: func_02033464 0x388->0x380 +0x18
-    volatile int li4;            // without it: func_02033464 0x388->0x380 +0x0
-    volatile int li8;            // without it: func_02033464 0x388->0x380 +0x4
-    volatile int liC;            // without it: func_02033464 0x388->0x380 +0x4
+    volatile unsigned short sv0;
+    volatile unsigned short sv2;
+    volatile int li4;
+    volatile int li8;
+    volatile int liC;
     u32 t;
     char *d;
     u16 *base;
@@ -1350,8 +1350,8 @@ extern "C" void func_02033464(int arg0, int arg1, int arg2) {
 #undef data_0209fc78
 
 extern "C" void func_020337ec(void) {
-    volatile unsigned short v; // without it: func_020337ec 0xc4->0xbc +0x4
-    volatile int z;            // without it: func_020337ec 0xc4->0xbc +0x4
+    volatile unsigned short v;
+    volatile int z;
     data_0209fc9c = 0;
     func_02034504();
     data_0209fc94 = 1;
@@ -1374,8 +1374,8 @@ extern "C" void func_020337ec(void) {
 
 extern "C" void func_020338b0(int a, int b, short c, int d) {
     int p, s;
-    volatile int li0, li1;            // without it: func_020338b0 0x110->0x100 +0x4
-    volatile unsigned short ls0, ls1; // without it: func_020338b0 0x110->0x100 +0x8
+    volatile int li0, li1;
+    volatile unsigned short ls0, ls1;
     data_0209fce8 = c;
     data_0209fc9c = 0;
     func_02034504();
@@ -1406,8 +1406,8 @@ extern "C" void func_020338b0(int a, int b, short c, int d) {
 }
 
 void Message::DisplayVsExitText(unsigned short n) {
-    volatile int li;            // without it: Message::DisplayVsExitText 0xc0->0xb8 +0x4
-    volatile unsigned short ls; // without it: Message::DisplayVsExitText 0xc0->0xb8 +0x4
+    volatile int li;
+    volatile unsigned short ls;
     int p, s;
     data_0209fce8 = n;
     data_0209fc9c = 0;
@@ -1438,8 +1438,8 @@ extern "C" void func_02033a80(int arg0) {
 /* The VS twin of Message::DisplayOptionsMenuText: the same two option lines and
    centred footer, drawn from the VS text tables. */
 void Message::DisplayOptionsMenuTextVS(s16 arg) {
-    volatile int li;            // without it: Message::DisplayOptionsMenuTextVS 0xd8->0xd0 +0x10
-    volatile unsigned short ls; // without it: Message::DisplayOptionsMenuTextVS 0xd8->0xd0 +0x14
+    volatile int li;
+    volatile unsigned short ls;
     int p, s;
     p = (u32)G2S_GetBG0CharPtr() + 0x4000;
     li = 0;
@@ -1460,11 +1460,11 @@ void Message::DisplayOptionsMenuTextVS(s16 arg) {
 
 /* opt_common_subs stays off: CSE recompute. The ROM re-reads and recomputes
  * what CSE would share (0x298 bytes; 0x278 with CSE on). */
-#pragma push                // without it: error, preceding #pragma push is missing
-#pragma opt_common_subs off // without it: func_02033bb8 0x298->0x278 +0x0
+#pragma push
+#pragma opt_common_subs off
 extern "C" void func_02033bb8(int param0) {
-    volatile int li;            // without it: func_02033bb8 0x298->0x290 +0x4
-    volatile unsigned short sv; // without it: func_02033bb8 0x298->0x290 +0x4
+    volatile int li;
+    volatile unsigned short sv;
     int n, m, i;
     short *scr;
 
@@ -1550,7 +1550,7 @@ extern "C" void func_02033bb8(int param0) {
     data_0209fce8++;
     Message_DrawCenteredLineVS(0x280, 0x20);
 }
-#pragma pop // without it: func_02033e50 +0xc, 2 more funcs
+#pragma pop
 
 extern "C" void func_02033e50(int p0, int p1) {
     int i;
@@ -1569,7 +1569,7 @@ extern "C" void func_02033e50(int p0, int p1) {
         func_02031cd4(0);
         idx = data_0209fce8;
         if (idx == 0x13 || idx == 0x15) {
-            volatile int li; // without it: func_02033e50 0x248->0x244 +0x4
+            volatile int li;
             data_0209fc7c = 0xc;
             n = ((data_0209fc88 + 0x13) >> 3) & 0xff;
             {
@@ -1598,7 +1598,7 @@ extern "C" void func_02033e50(int p0, int p1) {
             data_0209fc78 = data_0209fc78 + n;
             p0 = (unsigned short)(p0 + 0x40);
         } else {
-            volatile int li; // without it: func_02033e50 0x248->0x244 +0x4
+            volatile int li;
             data_0209fc7c = (unsigned char)((p1 - data_0209fc88) >> 1);
             {
                 int cp = (u32)G2S_GetBG0CharPtr() + 0x4000;
@@ -1632,7 +1632,7 @@ extern "C" void func_02033e50(int p0, int p1) {
 }
 
 extern "C" void Message_DrawLineBG2VS(void) {
-    volatile int li; // without it: Message_DrawLineBG2VS 0x110->0x100 +0x4
+    volatile int li;
     int n;
     int idx = data_0209fce8;
     char *base = (char *)data_0209fd08;
@@ -1654,7 +1654,7 @@ extern "C" void Message_DrawLineBG2VS(void) {
 }
 
 extern "C" void Message_DrawCenteredLineVS(int a0, int a1) {
-    volatile int li; // without it: Message_DrawCenteredLineVS 0x1b0->0x1a8 +0x8
+    volatile int li;
     int n, i, oldc;
     short *scr;
     int idx = data_0209fce8;
@@ -1687,8 +1687,8 @@ extern "C" void Message_DrawCenteredLineVS(int a0, int a1) {
 }
 
 void Message::DisplayPauseTextVS(unsigned short n) {
-    volatile int li;            // without it: Message::DisplayPauseTextVS 0xbc->0xb4 +0x4
-    volatile unsigned short ls; // without it: Message::DisplayPauseTextVS 0xbc->0xb4 +0x4
+    volatile int li;
+    volatile unsigned short ls;
     int p, s;
     data_0209fce8 = n;
     data_0209fc78 = 0;
@@ -1709,8 +1709,8 @@ void Message::DisplayPauseTextVS(unsigned short n) {
 /* The VS twin of Message::DisplayDontSaveText: message `n` in the box, then the
    two centred answer lines. */
 void Message::DisplayDontSaveTextVS(unsigned short n) {
-    volatile int li;            // without it: Message::DisplayDontSaveTextVS 0xf0->0xe8 +0x8
-    volatile unsigned short ls; // without it: Message::DisplayDontSaveTextVS 0xf0->0xe8 +0x8
+    volatile int li;
+    volatile unsigned short ls;
     int p, s;
     data_0209fc9c = 0;
     func_02034504();
@@ -1752,8 +1752,8 @@ extern "C" void func_020345b0(int arg0) {
     s32 cols;
     s32 last;
     u8 t;
-    volatile s32 li; // without it: func_020345b0 0x3a4->0x39c +0x8
-    volatile u16 ls; // without it: func_020345b0 0x3a4->0x39c +0x8
+    volatile s32 li;
+    volatile u16 ls;
 
     if (((MessageInfoSection *)data_0209fcf8)->messageCount <= (u16)arg0) {
         return;

@@ -743,7 +743,6 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
    0x7f000 (127.0 as Fix12) and the sub-channel volume gSubVolume is
    zero. Was a C source. */
 extern "C" int func_ov100_02144f84(void) {
-    /* structured && matched 0x48; sEnterPos $961 -> $959 (@964 -> @962) */
     if (*data_ov100_02148708 != 0)
         goto fail;
     if (gMusicVolume != 0x7f000)
@@ -1126,7 +1125,6 @@ s32 daDoor_c::InitResources() {
                 v = -v;
             if (v <= 0x1f4000) { /* 500 */
                 func_ov100_021453d8(&data_ov100_02148914, r4);
-                /* return 1 in place of this goto is size 0x308, not 0x2fc */
                 goto done;
             }
         }

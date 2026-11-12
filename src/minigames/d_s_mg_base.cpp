@@ -1399,15 +1399,6 @@ extern "C" {
 
 extern void func_02012e1c(void);
 extern void Enable3dEngines();
-
-/* THE EARLY EXITS ARE SPELT AS NESTED IFS, NOT `return;`. mwccarm accepts a
-   valueless `return` in a non-void function; C++ does not, and no host option
-   reaches it (MSVC C2561). The ROM sets no return value on these paths -- it
-   leaves r0 holding whatever the last call left there and branches straight to
-   the epilogue -- so the faithful shape is a body that reaches its closing
-   brace with nothing to return, which is what the host already accepts for the
-   rest of this family. Byte-identical under 2004/b56: the compiled object is
-   unchanged. */
 }
 }
 
@@ -1440,14 +1431,6 @@ extern "C" {
    of mMenuOpen.  That is the three-item overlay menu going up, not a Yoshi egg.
    See the slot 29 block in include/dScMgBase_c.h for why the name is kept. */
 extern int GetGameLanguage(void);
-/* THE EARLY EXITS ARE SPELT AS NESTED IFS, NOT `return;`. mwccarm accepts a
-   valueless `return` in a non-void function; C++ does not, and no host option
-   reaches it (MSVC C2561). The ROM sets no return value on these paths -- it
-   leaves r0 holding whatever the last call left there and branches straight to
-   the epilogue -- so the faithful shape is a body that reaches its closing
-   brace with nothing to return, which is what the host already accepts for the
-   rest of this family. Byte-identical under 2004/b56: the compiled object is
-   unchanged. */
 }
 }
 
@@ -3100,7 +3083,6 @@ void Mg_DrawNumber(int x, int a1, int val, int a3, int a4, int mode, int fb) {
 }
 }
 
-// Kept: without it the thousands counter moves from r0 to r3 (register colour only).
 #pragma push
 #pragma opt_propagation off
 namespace s20b2220 {
@@ -3491,12 +3473,6 @@ extern "C" void Mg_CallStartRound(dScMgBase_c *scene, void *state)
 }
 }
 
-/* The constructor and destructor are the end of the unit, and the one place
-   the file is not in ROM order. Under defer_codegen off the out-of-line
-   destructor comes out D1, D0, D2; the cartridge has D2, D0, D1 and then C2.
-   With deferred codegen mwccarm emits a run of definitions in reverse, so
-   writing the constructor first and the destructor after it, inside this
-   bracket, produces D2, D0, D1, C2 as on the cartridge. */
 #pragma push
 #pragma defer_codegen on
 
@@ -3517,10 +3493,6 @@ dScMgBase_c::dScMgBase_c() : mRunDuringFade(0), unk_0c2(1) {
     mLevel = gMgMenuRow.level; /* dScMiniGm_c::mStartLevel */
 
     mSceneKind = sMgSceneKindByGame[(param1 >> 16) & 0xff];
-    /* param1 &= 0xffff, stored through an s32 lvalue. Spelled as a plain
-       u32 `param1 &= 0xffff` (or `param1 = param1 & 0xffff`), mwccarm forms
-       the address this + 8 in ip first and the constructor grows by 4
-       bytes; `param1 = (u16)param1` shrinks it by 4. */
     *(s32 *)&param1 = param1 & 0xffff;
     mTallyShown = 0;
     mTallyAnimTimer = 0;
