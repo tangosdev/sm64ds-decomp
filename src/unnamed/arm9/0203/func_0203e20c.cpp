@@ -43,7 +43,7 @@ extern int MB_SetParentCommParam(int a, int b, int c);
 extern void MB_CommSetParentStateCallback(u32 val);
 extern void func_0203e9a8(u32 a0, int sel, int a2);
 extern int MB_StartParent(int param0);
-extern int MB_GetSegmentLength(void *obj);
+extern int MB_GetSegmentLength(FSFile *obj);
 extern int MB_ReadSegment(FSFile *file, void *b, unsigned int c);
 extern int MB_RegisterFile(void *a, void *b);
 extern int WM_ReadStatus(int *arg);

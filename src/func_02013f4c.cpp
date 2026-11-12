@@ -3,6 +3,8 @@
 #include "Heap.h"
 #include "nitro/spi/pm.h"
 #include "nitro/mb/mb.h"
+#include "nitro/pad/pad.h"
+#include "nitro/hw/registers.h"
 
 extern "C" {
 
@@ -23,8 +25,8 @@ void func_02013f4c(void)
     u8 sel;
     u16 raw;
 
-    raw = ((*(volatile u16*)0x4000130 | *(volatile u16*)0x27fffa8) ^ 0x2fff) & 0x2fff;
-    cur = raw & 0x3ff;
+    raw = PAD_Read();
+    cur = raw & PAD_KEYPORT_MASK;
     old = data_0209cde4;
     data_0209cde4 = cur;
     old = cur & (old ^ cur);
@@ -32,9 +34,9 @@ void func_02013f4c(void)
 
     switch (sel) {
     case 0:
-        if (old & 0x2000)
+        if (old & PAD_BUTTON_DEBUG)
             data_0209cdcc = 5;
-        if (cur == 0x321)
+        if (cur == (PAD_BUTTON_L | PAD_BUTTON_R | PAD_KEY_LEFT | PAD_BUTTON_A))
             data_0209cdcc++;
         break;
     case 1:
@@ -42,11 +44,11 @@ void func_02013f4c(void)
             data_0209cdcc = sel + 1;
         break;
     case 2:
-        if (cur & ~0x82) {
+        if (cur & ~(PAD_KEY_DOWN | PAD_BUTTON_B)) {
             data_0209cdcc = 0;
             break;
         }
-        if (cur == 0x82)
+        if (cur == (PAD_KEY_DOWN | PAD_BUTTON_B))
             data_0209cdcc = sel + 1;
         break;
     case 3:
@@ -54,11 +56,11 @@ void func_02013f4c(void)
             data_0209cdcc = sel + 1;
         break;
     case 4:
-        if (cur & ~0xc) {
+        if (cur & ~(PAD_BUTTON_START | PAD_BUTTON_SELECT)) {
             data_0209cdcc = 0;
             break;
         }
-        if (cur == 0xc)
+        if (cur == (PAD_BUTTON_START | PAD_BUTTON_SELECT))
             data_0209cdcc = sel + 1;
         break;
     case 5:
@@ -66,23 +68,24 @@ void func_02013f4c(void)
         data_0209cdcc++;
     case 6:
         ShowCrashScreen();
-        if ((cur & 0x30c) == 0x30c) {
+        if ((cur & (PAD_BUTTON_L | PAD_BUTTON_R | PAD_BUTTON_START | PAD_BUTTON_SELECT)) ==
+            (PAD_BUTTON_L | PAD_BUTTON_R | PAD_BUTTON_START | PAD_BUTTON_SELECT)) {
             if (!MB_IsMultiBootChild()) {
                 OS_ResetSystem(0);
             } else {
                 PM_ForceToPowerOff();
             }
         }
-        if (old & 1) {
-            if (cur & 4) {
+        if (old & PAD_BUTTON_A) {
+            if (cur & PAD_BUTTON_SELECT) {
                 mHeap::Heap_t *pa = data_020a0e9c;
                 mHeap::Heap_t *pb = (mHeap::Heap_t *)data_020a0ea0;
                 mHeap::Heap_t *pc = data_020a0eac;
-                if (cur & 0x20) {
+                if (cur & PAD_KEY_LEFT) {
                     pa->Rescue();
-                } else if (cur & 0x10) {
+                } else if (cur & PAD_KEY_RIGHT) {
                     pc->Rescue();
-                } else if (cur & 0x40) {
+                } else if (cur & PAD_KEY_UP) {
                     pb->Rescue();
                 }
             }
@@ -90,7 +93,10 @@ void func_02013f4c(void)
         break;
     }
 
-    while ((int)*(volatile u16*)0x4000006 >= 0xc0) {}
-    while ((int)*(volatile u16*)0x4000006 < 0xc0) {}
+    /* Wait for the next VBlank (line 192): out of this one, then into it. */
+    while ((int)REG_VCOUNT >= 192) {
+    }
+    while ((int)REG_VCOUNT < 192) {
+    }
 }
 }

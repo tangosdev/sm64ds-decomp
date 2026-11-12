@@ -1,4 +1,5 @@
 #include "types.h"
+#include "nitro/pad/pad.h"
 #include "nitro/spi/tp.h"
 #include "private/player_input_record.h"
 
@@ -23,8 +24,7 @@ void func_0203df40(void) {
     TPData sample;
     u8 sel;
 
-    data_020a1040.keys =
-        ((*(volatile u16 *)0x4000130 | *(volatile u16 *)0x27fffa8) ^ 0x2fff) & 0x2fff;
+    data_020a1040.keys = PAD_Read();
 
     func_0203b9bc(&sample);
 

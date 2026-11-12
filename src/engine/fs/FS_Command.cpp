@@ -18,11 +18,9 @@
 #include "nitro/os/system.h"
 #include "nitro/os/thread.h"
 #include "private/fs_views.h"
+#include "nitro/fs/file.h"
 
 extern "C" {
-
-#define FS_FILE_STATUS_SYNC 0x00000004
-#define FS_FILE_STATUS_COMMAND_MASK 0x0000000f /* BUSY | CANCEL | SYNC | ASYNC */
 
 #define FS_ARCHIVE_FLAG_IS_ASYNC 0x00000100
 #define FS_ARCHIVE_FLAG_IS_SYNC 0x00000200
@@ -40,7 +38,8 @@ void FSi_CutFromList(FSFile *elem);
 
 void FSi_ReleaseCommand(FSFile *p_file, int ret) {
     FSi_CutFromList(p_file);
-    p_file->stat &= ~FS_FILE_STATUS_COMMAND_MASK;
+    p_file->stat &=
+        ~(FS_FILE_STATUS_CANCEL | FS_FILE_STATUS_BUSY | FS_FILE_STATUS_SYNC | FS_FILE_STATUS_ASYNC);
     p_file->error = ret;
     OS_WakeupThread(&p_file->queue);
 }

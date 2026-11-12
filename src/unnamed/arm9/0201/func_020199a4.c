@@ -1,4 +1,5 @@
 #include "types.h"
+#include "nitro/pad/pad.h"
 #include "nitro/spi/pm.h"
 #include "private/watchdog_alarm.h"
 
@@ -37,14 +38,12 @@ static inline int IsSkipRequested(void) {
 
 void func_02019ac4(void) {
     int skip;
-    unsigned short lid;
     int delta;
     int closed;
     unsigned int t;
 
     skip = IsSkipRequested();
-    lid = *(unsigned short *)0x027fffa8;
-    closed = (int)(lid & 0x8000) >> 15;
+    closed = PAD_DetectFold();
     t = data_0209fc68;
     delta = data_0208ee44;
     /* materialized compare kept: if (t == 6) or an inline predicate drops 3 insns */

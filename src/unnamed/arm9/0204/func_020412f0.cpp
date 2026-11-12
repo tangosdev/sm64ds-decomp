@@ -19,10 +19,10 @@
  * (Msg *)(int) casts on the word-0 and kind reads change nothing, so they are gone.
  */
 #include "private/arm9_a1fc0_file_share.h"
+#include "nitro/fs/file.h"
 #include "private/arm9_wbt.h"
 #include "private/wbt_block_info_list.h"
 #include "nitro/os/system.h"
-#include "nitro/fs/file.h"
 
 extern "C" {
 
@@ -179,7 +179,8 @@ void func_020412f0(char *thiz)
         unk18v = n->block_seq_no;
 
         if (p->mLoadingPage != 3) {
-            int t = FS_IsBusy(&p->mFile);
+            /* FS_IsBusy: the page read is still in flight */
+            int t = (p->mFile.stat & FS_FILE_STATUS_BUSY) ? 1 : 0;
             if (t == 0)
                 p->mLoadingPage = 3;
         }

@@ -245,13 +245,6 @@
         "param:#1 unsigned short *",
         "param:#3 int"
       ],
-      "src/unnamed/arm9/0201/func_0201818c.cpp": [
-        "param:#1 int",
-        "param:#2 int"
-      ],
-      "src/unnamed/arm9/0201/func_02018c00.c": [
-        "param:#3 int"
-      ],
       "src/unnamed/arm9/0203/func_0203db64.c": [
         "param:#3 int"
       ],
@@ -300,9 +293,6 @@
         "param:#3 int"
       ],
       "src/WBT_RegisterBlock.cpp": [
-        "param:#3 int"
-      ],
-      "src/MB_ReadSegment.cpp": [
         "param:#3 int"
       ]
     },
@@ -429,30 +419,6 @@
     "FS_CloseFile": {
       "src/SharedFilePtr.cpp": [
         "return:void"
-      ],
-      "src/unnamed/arm9/0201/func_020184e0.cpp": [
-        "return:void"
-      ],
-      "src/unnamed/arm9/0201/func_0201818c.cpp": [
-        "return:void"
-      ],
-      "src/unnamed/arm9/0201/func_02018934.cpp": [
-        "return:void"
-      ],
-      "src/engine/mb/MB_GameInfo.c": [
-        "return:void"
-      ]
-    },
-    "FS_ReadFile": {
-      "src/unnamed/arm9/0204/func_02042254.cpp": [
-        "param:#1 char *"
-      ],
-      "src/engine/mb/MB_GameInfo.c": [
-        "return:void"
-      ],
-      "src/engine/sound/SoundEngine.cpp": [
-        "param:#1 int",
-        "param:#2 int"
       ]
     },
     "GetLevelPart": {
@@ -1116,17 +1082,17 @@
         "param:#2 void (*)(void)"
       ]
     },
-    "OS_SleepThread": {
-      "src/myFS_ReadFile.c": [
-        "param:#1 int"
-      ]
-    },
     "OS_WakeupThread": {
       "src/IRQ2.cpp": [
         "param:#1 int *"
       ],
       "src/CARDi_EndTask.cpp": [
         "param:#1 char *"
+      ]
+    },
+    "PXI_SetFifoRecvCallback": {
+      "include/nitro/pxi/fifo.h": [
+        "param:#2 void (*)(PXIFifoTag, unsigned int, int)"
       ]
     },
     "Quaternion_FromVector3": {
@@ -4129,10 +4095,6 @@
       ]
     },
     "_ZN3IRQ7RestoreEj": {
-      "src/unnamed/arm9/0204/func_02040c34.c": [
-        "param:#1 int",
-        "return:void"
-      ],
       "src/MIi_DmaSetParams.cpp": [
         "return:void"
       ],
@@ -4143,15 +4105,6 @@
         "return:void"
       ],
       "src/unnamed/arm9/0204/func_02041a94.cpp": [
-        "return:void"
-      ],
-      "src/engine/fs/FS_Command.cpp": [
-        "return:void"
-      ],
-      "src/TP_CalcCalibrateParam.cpp": [
-        "return:void"
-      ],
-      "src/TP_SetCalibrateParam.cpp": [
         "return:void"
       ],
       "src/unnamed/arm9/0205/func_0205ff20.cpp": [
@@ -8344,22 +8297,12 @@
         "return:unsigned char []"
       ]
     },
-    "data_020a10fc": {
-      "src/unnamed/arm9/0203/func_0203e20c.cpp": [
-        "return:unsigned char []"
-      ]
-    },
     "data_020a1154": {
       "include/private/player_input_record.h": [
         "return:PlayerInputRecord []"
       ],
       "src/unnamed/arm9/0203/func_0203ea5c.c": [
         "return:Rec []"
-      ]
-    },
-    "data_020a1fc0": {
-      "src/unnamed/arm9/0204/func_020424c0.cpp": [
-        "return:WorkInfo"
       ]
     },
     "data_020a3fc0": {
@@ -14592,11 +14535,6 @@
         "return:int"
       ]
     },
-    "func_02017e60": {
-      "src/unnamed/arm9/0201/func_02018aa4.c": [
-        "return:int"
-      ]
-    },
     "func_0201817c": {
       "src/LoadCompressedFileAt.c": [
         "param:#1 unsigned short"
@@ -14610,11 +14548,6 @@
     "func_02018a40": {
       "src/runtime/filesystem/InitializeAssetHandleTable.c": [
         "param:#2 int"
-      ]
-    },
-    "myFS_ConvertPathToFileID": {
-      "src/unnamed/arm9/0201/func_020189f0.c": [
-        "return:void"
       ]
     },
     "func_0201a244": {
@@ -15568,30 +15501,16 @@
     "OS_CreateThread": {
       "src/unnamed/arm9/0204/func_02042200.c": [
         "param:#2 void *"
-      ],
-      "src/engine/sound/SoundEngine.cpp": [
-        "param:#2 void *"
       ]
     },
     "OS_ReceiveMessage": {
       "src/WM_SendCommand.cpp": [
         "return:void"
-      ],
-      "src/engine/sound/SoundEngine.cpp": [
-        "param:#2 void * *"
       ]
     },
     "OS_SendMessage": {
       "src/WM_SendCommand.cpp": [
         "return:void"
-      ],
-      "src/engine/sound/SoundEngine.cpp": [
-        "param:#2 void *"
-      ]
-    },
-    "OS_InitMessageQueue": {
-      "src/engine/sound/SoundEngine.cpp": [
-        "param:#2 void * *"
       ]
     },
     "OS_AllocFromArenaLo": {
@@ -15615,14 +15534,6 @@
       "src/WM_StartConnect.cpp": [
         "param:#2 int"
       ],
-      "src/engine/fs/FS_Archive.cpp": [
-        "param:#2 int",
-        "param:#3 int"
-      ],
-      "src/engine/fs/FS_Overlay.c": [
-        "param:#2 int",
-        "param:#3 int"
-      ],
       "src/engine/mb/MB_Parent.cpp": [
         "param:#2 int"
       ],
@@ -15645,9 +15556,6 @@
         "param:#2 int",
         "param:#3 int"
       ],
-      "src/unnamed/arm9/0203/func_0203e20c.cpp": [
-        "param:#2 int"
-      ],
       "src/unnamed/arm9/0203/func_0203ea5c.c": [
         "param:#2 int",
         "param:#3 int"
@@ -15659,38 +15567,6 @@
       ],
       "src/MBi_ReadSegmentHeader.c": [
         "param:#2 int"
-      ]
-    },
-    "FSi_SendCommand": {
-      "src/FS_OpenFileFast.c": [
-        "arity:4"
-      ],
-      "src/FSi_FindPath.c": [
-        "param:#1 FSFile *"
-      ]
-    },
-    "FS_OpenFileFast": {
-      "src/engine/sound/SoundEngine.cpp": [
-        "arity:3"
-      ]
-    },
-    "FS_SeekFile": {
-      "src/engine/sound/SoundEngine.cpp": [
-        "param:#3 int"
-      ],
-      "src/unnamed/arm9/0204/func_020412f0.cpp": [
-        "param:#3 int"
-      ]
-    },
-    "FS_LoadArchive": {
-      "src/engine/sound/SoundEngine.cpp": [
-        "param:#7 int (*)(FSArchive *, void *, unsigned int, unsigned int)",
-        "param:#8 int (*)(FSArchive *, const void *, unsigned int, unsigned int)"
-      ]
-    },
-    "FS_Init": {
-      "src/unnamed/arm9/0201/func_02018aa4.c": [
-        "return:int"
       ]
     },
     "FS_UnloadOverlay": {
@@ -15709,25 +15585,6 @@
     },
     "func_0205e6e4": {
       "src/DGT_Hash2CalcHmac.c": [
-        "return:void"
-      ]
-    },
-    "TP_CalcCalibrateParam": {
-      "src/TP_GetUserInfo.c": [
-        "param:#1 int",
-        "param:#2 int",
-        "param:#3 int",
-        "param:#4 int",
-        "param:#5 int",
-        "param:#6 int",
-        "param:#7 int",
-        "param:#8 int",
-        "param:#9 int"
-      ]
-    },
-    "TP_GetUserInfo": {
-      "src/unnamed/arm9/0203/func_0203bbc0.c": [
-        "param:#1 void *",
         "return:void"
       ]
     },
@@ -15876,19 +15733,6 @@
     "MBi_MakeGameInfo": {
       "src/MB_RegisterFile.cpp": [
         "param:#3 void *"
-      ]
-    },
-    "MB_SetParentCommParam": {
-      "src/unnamed/arm9/0203/func_0203e20c.cpp": [
-        "return:void"
-      ]
-    },
-    "MB_Init": {
-      "src/unnamed/arm9/0203/func_0203e20c.cpp": [
-        "param:#1 void *",
-        "param:#3 unsigned short",
-        "param:#4 unsigned short",
-        "return:void"
       ]
     },
     "func_0206a928": {

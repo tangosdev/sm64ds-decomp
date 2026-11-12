@@ -20,12 +20,14 @@
 #include "nitro/ctrdg/ctrdg_common.h"
 #include "nitro/os/spinLock.h"
 #include "nitro/hw/registers.h"
+#include "nitro/pxi/fifo.h"
+
+#define FALSE 0
 
 extern "C" {
 
 // local extern: no header declares these yet.
 extern void SVC_CpuSet(void *src, void *dst, u32 ctrl); // SVC_CpuClear
-extern int PXI_SendWordByFifo(u32 tag, u32 data, u32 reply);
 extern void SVC_WaitByLoop(int count);
 
 extern CTRDGWork CTRDGi_Work;
@@ -97,7 +99,8 @@ void CTRDGi_UnlockByProcessor(u16 lockID, int *info) {
 }
 
 void CTRDGi_SendtoPxi(u32 data) {
-    while (PXI_SendWordByFifo(0xd, data, 0) != 0)
+    while (PXI_SendWordByFifo(PXI_FIFO_TAG_CTRDG, data, FALSE) != PXI_FIFO_SUCCESS) {
         SVC_WaitByLoop(1);
+    }
 }
 }

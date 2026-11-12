@@ -27,6 +27,8 @@
 #include "nitro/os/cache.h"
 #include "nitro/os/interrupt.h"
 #include "nitro/ctrdg/ctrdg_common.h"
+#include "nitro/pxi/fifo.h"
+#include "nitro/pxi/init.h"
 #include "nitro/mi/memory.h"
 #include "nitro/os/system.h"
 #include "nitro/hw/registers.h"
@@ -47,17 +49,12 @@ static inline int OS_RestoreIrq(int enable) {
     return prep;
 }
 
-#define PXI_FIFO_TAG_CTRDG 13
-#define PXI_PROC_ARM7 1
+typedef int BOOL;
+#define FALSE 0
+#define NULL 0
 
 extern "C" {
 
-extern void PXI_Init(void);
-/* PXI_IsCallbackReady, PXI_SetFifoRecvCallback and PXI_SendWordByFifo
- * (src/engine/pxi/PXI_Fifo.cpp). */
-extern int PXI_IsCallbackReady(int tag, int proc);
-extern void PXI_SetFifoRecvCallback(int tag, void *callback);
-extern int PXI_SendWordByFifo(u32 tag, u32 data, u32 reply);
 extern void SVC_WaitByLoop(int n);
 
 extern CTRDGWork CTRDGi_Work;
@@ -73,8 +70,8 @@ extern int data_020a9e04;
 #define CTRDG_HEADER (*(CTRDGHeader *)&data_020a9e00)
 
 void CTRDGi_InitModuleInfo(void);
-void CTRDGi_CallbackForInitModuleInfo(int tag, int data);
-void CTRDGi_PulledOutCallback(int tag, int data);
+void CTRDGi_CallbackForInitModuleInfo(PXIFifoTag tag, u32 data, BOOL err);
+void CTRDGi_PulledOutCallback(PXIFifoTag tag, u32 data, BOOL err);
 void CTRDG_TerminateForPulledOut(void);
 
 void CTRDG_Init(void) {
@@ -83,12 +80,12 @@ void CTRDG_Init(void) {
     data_020a9de8 = 1;
     CTRDGi_InitCommon();
     PXI_Init();
-    while (PXI_IsCallbackReady(PXI_FIFO_TAG_CTRDG, PXI_PROC_ARM7) == 0)
+    while (!PXI_IsCallbackReady(PXI_FIFO_TAG_CTRDG, PXI_PROC_ARM7))
         ;
-    PXI_SetFifoRecvCallback(PXI_FIFO_TAG_CTRDG, (void *)CTRDGi_CallbackForInitModuleInfo);
+    PXI_SetFifoRecvCallback(PXI_FIFO_TAG_CTRDG, CTRDGi_CallbackForInitModuleInfo);
     CTRDGi_InitModuleInfo();
-    PXI_SetFifoRecvCallback(PXI_FIFO_TAG_CTRDG, 0);
-    PXI_SetFifoRecvCallback(PXI_FIFO_TAG_CTRDG, (void *)CTRDGi_PulledOutCallback);
+    PXI_SetFifoRecvCallback(PXI_FIFO_TAG_CTRDG, NULL);
+    PXI_SetFifoRecvCallback(PXI_FIFO_TAG_CTRDG, CTRDGi_PulledOutCallback);
     data_020a9dec = 0;
 }
 
@@ -142,8 +139,8 @@ void CTRDGi_InitModuleInfo(void) {
     (void)OS_SetIrqMask(lastIrq);
 }
 
-void CTRDGi_CallbackForInitModuleInfo(int a0, int a1) {
-    if ((a1 & 0x3f) == 1) {
+void CTRDGi_CallbackForInitModuleInfo(PXIFifoTag tag, u32 data, BOOL err) {
+    if ((data & 0x3f) == 1) {
         CTRDGi_Work.subpState = 1;
         return;
     }
@@ -153,8 +150,8 @@ void CTRDGi_CallbackForInitModuleInfo(int a0, int a1) {
 /* Older than pret's CTRDGi_PulledOutCallback: on the ARM7's pulled-out message
  * (command 0x11) ask the hook data_020a9dec, and stop if it returns nonzero.
  * It has no isOnTerminate flag, so it does not remember having asked. */
-void CTRDGi_PulledOutCallback(int unused, int arg) {
-    if ((arg & 0x3f) == 0x11) {
+void CTRDGi_PulledOutCallback(PXIFifoTag tag, u32 data, BOOL err) {
+    if ((data & 0x3f) == 0x11) {
         int r = 0;
         if (data_020a9dec)
             r = data_020a9dec(0);
@@ -170,7 +167,7 @@ void CTRDGi_PulledOutCallback(int unused, int arg) {
  * FIFO and stop. The send is inlined here (retried until it succeeds)
  * where pret's calls CTRDGi_SendtoPxi. */
 void CTRDG_TerminateForPulledOut(void) {
-    while (PXI_SendWordByFifo(PXI_FIFO_TAG_CTRDG, 2, 0) != 0)
+    while (PXI_SendWordByFifo(PXI_FIFO_TAG_CTRDG, 2, FALSE) != PXI_FIFO_SUCCESS)
         ;
     OS_Terminate();
 }

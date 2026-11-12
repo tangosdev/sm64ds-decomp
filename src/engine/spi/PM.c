@@ -37,16 +37,14 @@
 #include "nitro/ctrdg/ctrdg_common.h"
 #include "nitro/hw/mmap_shared.h"
 #include "nitro/mb/mb.h"
+#include "nitro/pxi/fifo.h"
+#include "nitro/pxi/init.h"
 
 /* The SDK's nitro/types.h spellings; include/types.h has no BOOL. */
 typedef int BOOL;
 #define TRUE 1
 #define FALSE 0
 #define NULL 0
-
-#define PXI_FIFO_TAG_PM 8
-#define PXI_PROC_ARM7 1
-#define PXI_FIFO_SUCCESS 0
 
 /* pm.c's packet builders: a start/end bit pair, the packet's sequence number,
  * then a command and one data byte, or a halfword of data. */
@@ -102,12 +100,8 @@ extern OSMutex PMi_Mutex;
 
 void OS_SpinWait(u32 cycles);
 void OS_InitMutex(void *mutex);
-void PXI_Init(void);
-int PXI_IsCallbackReady(int tag, int proc);
-void PXI_SetFifoRecvCallback(int tag, void *callback);
-int PXI_SendWordByFifo(unsigned int tag, unsigned int data, unsigned int reply);
 
-void PMi_CommonCallback(int tag, u32 data, int err);
+void PMi_CommonCallback(PXIFifoTag tag, u32 data, BOOL err);
 u32 PMi_SendSleepStart(u16 trigger, u16 keyPattern);
 void PMi_SendPxiData(u32 data);
 
@@ -168,7 +162,7 @@ void PM_Init(void) {
     while (!PXI_IsCallbackReady(PXI_FIFO_TAG_PM, PXI_PROC_ARM7)) {
     }
 
-    PXI_SetFifoRecvCallback(PXI_FIFO_TAG_PM, (void *)PMi_CommonCallback);
+    PXI_SetFifoRecvCallback(PXI_FIFO_TAG_PM, PMi_CommonCallback);
 
     for (i = 0; i < PMIC_REG_NUMS; i++) {
         PMi_RegisterBuffer[i].flag = FALSE;
@@ -179,7 +173,7 @@ void PM_Init(void) {
     PMi_LCDCount = OS_GetVBlankCount();
 }
 
-void PMi_CommonCallback(int tag, u32 data, int err) {
+void PMi_CommonCallback(PXIFifoTag tag, u32 data, BOOL err) {
     u16 command;
     u16 pxiResult;
 

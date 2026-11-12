@@ -6,7 +6,7 @@
 
 extern "C" {
 
-extern int myFS_OpenFile(void *file, const char *path);
+extern int myFS_OpenFile(FSFile *p_file, const char *path);
 extern int myFS_ReadFile(FSFile *p_file, void *dst, int len);
 extern int func_0204ee40(void *a, void *b, void *c);
 

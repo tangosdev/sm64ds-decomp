@@ -6,7 +6,7 @@
 
 extern int myFS_OpenFileDirect(FSFile *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,
                                u32 file_index);
-extern int myFS_ReadFile(void *s, void *b, int c);
+extern int myFS_ReadFile(FSFile *p_file, void *dst, int len);
 
 /* The card half of func_02018c00: read overlay table entry index (0x20
    bytes) straight out of archive's ROM, the table offset and length coming
