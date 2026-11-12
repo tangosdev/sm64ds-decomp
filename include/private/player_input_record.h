@@ -19,7 +19,7 @@ typedef struct PlayerInputRecord {
      * (func_0203d868, func_0203d81c), bit 0 a handshake wait (func_0203db64) */
     u16 flags;
     u16 keys;          /* 0x0e -- pressed buttons */
-    s16 inputYaw;      /* 0x10 -- the camera's input yaw (func_0203dafc) */
+    u16 inputYaw;      /* 0x10 -- the camera's input yaw (func_0203dafc) */
     u8 settings[0x10]; /* 0x12 -- the link settings bytes (GetPlayerFlagByte) */
     /* 0x22 -- compared across the four records by func_0203ea5c (a mismatch
      * sets link error bit 3); func_0203da4c and func_0203ea5c clear it */

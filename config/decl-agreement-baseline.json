@@ -218,11 +218,8 @@
       "src/unnamed/arm9/0203/func_0203db64.c": [
         "param:#3 int"
       ],
-      "src/unnamed/arm9/0203/func_0203e9a8.c": [
+      "src/engine/link/unit0203d7b8.cpp": [
         "param:#1 int",
-        "param:#3 int"
-      ],
-      "src/unnamed/arm9/0203/func_0203ea5c.c": [
         "param:#3 int"
       ],
       "src/unnamed/arm9/0204/func_02040014.c": [
@@ -7957,7 +7954,7 @@
       ]
     },
     "data_020a10a4": {
-      "src/unnamed/arm9/0203/func_0203ea5c.c": [
+      "src/engine/link/unit0203d7b8.cpp": [
         "return:unsigned char []"
       ]
     },
@@ -14765,17 +14762,17 @@
       ]
     },
     "func_0203f604": {
-      "src/unnamed/arm9/0203/func_0203ea5c.c": [
+      "src/engine/link/unit0203d7b8.cpp": [
         "return:void"
       ]
     },
     "func_020406b4": {
-      "src/unnamed/arm9/0203/func_0203ea5c.c": [
+      "src/engine/link/unit0203d7b8.cpp": [
         "param:#1 void *"
       ]
     },
     "func_02040c34": {
-      "src/unnamed/arm9/0203/func_0203ea5c.c": [
+      "src/engine/link/unit0203d7b8.cpp": [
         "param:#3 void *",
         "param:#4 void *"
       ]
@@ -15194,7 +15191,7 @@
         "param:#2 int",
         "param:#3 int"
       ],
-      "src/unnamed/arm9/0203/func_0203ea5c.c": [
+      "src/engine/link/unit0203d7b8.cpp": [
         "param:#2 int",
         "param:#3 int"
       ],
