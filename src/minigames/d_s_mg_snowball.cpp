@@ -1176,7 +1176,6 @@ void dScMgSnowball_c::ResetScene() {
     s32 tmp[3];
     int i;
     int y;
-    u16 display;
     Pair *saved;
 
     if (IsAltVariant()) {
@@ -1191,8 +1190,7 @@ void dScMgSnowball_c::ResetScene() {
         mTimeLeft = 0x4b0;
     }
 
-    display = *(volatile u16 *)0x04000304;
-    *(volatile u16 *)0x04000304 = display & ~0x8000;
+    GX_SetDispSelect(GX_DISP_SELECT_SUB_MAIN);
     mScreensSwapped = 1;
     Mg_SetTopScreenYOffset(0x50);
 
@@ -1770,25 +1768,25 @@ s32 dScMgSnowball_c::InitResources() {
     G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
                          GX_BG_CHARBASE_0x14000);
     G2_BG2Mosaic(false);
-    *(vu32 *)0x4000018 = 0;
+    G2_SetBG2Offset(0, 0);
     G2_SetBG2Priority(2);
 
     G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
                           GX_BG_CHARBASE_0x14000);
     G2S_BG2Mosaic(false);
-    *(vu32 *)0x4001018 = 0;
+    G2S_SetBG2Offset(0, 0);
     G2S_SetBG2Priority(2);
 
     G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xb000,
                          GX_BG_CHARBASE_0x14000);
     G2_BG3Mosaic(false);
-    *(vu32 *)0x400001c = 0;
+    G2_SetBG3Offset(0, 0);
     G2_SetBG3Priority(3);
 
     G2S_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xb000,
                           GX_BG_CHARBASE_0x14000);
     G2S_BG3Mosaic(false);
-    *(vu32 *)0x400101c = 0;
+    G2S_SetBG3Offset(0, 0);
     G2S_SetBG3Priority(3);
 
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_YUKIDAMA_NCG_BIN, (u8 *)G2_GetBG2CharPtr() + 0x4000);
@@ -1818,7 +1816,7 @@ s32 dScMgSnowball_c::InitResources() {
 
     G2_SetBG0Priority(1);
     G3X_SetFog(false, 0, 2, 0x1000);
-    *(vu16 *)0x4000060 = (*(vu16 *)0x4000060 & ~0x3000) | 8;
+    G3X_AlphaBlend(true);
     InitialiseVramGlobals();
 
     mBallBmd = (BMD_File *)Ov004_LoadFileByPath(&data_ov006_021400fc);

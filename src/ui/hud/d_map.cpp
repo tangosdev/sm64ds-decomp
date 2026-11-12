@@ -42,6 +42,7 @@
 #include "SaveData.h"
 #include "OAM.h"
 #include "nitro/gx/g2.h"
+#include "nitro/gx/gx.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/hw/registers.h"
@@ -606,8 +607,7 @@ L200: {
     }
     gSubScreenLayers &= ~4;
     if (!(u8)flagsOr) {
-        *(volatile s32 *)0x4001000 =
-            (*(volatile s32 *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
+        GXS_SetVisiblePlane(gSubScreenLayers);
         G2S_BlendNone();
     }
     this->mTouchCircleTimer = 0;
@@ -891,7 +891,7 @@ Lbdc:
 Lbf0:
     gSubScreenLayers &= ~DISPLAY_LAYER_BG3;
 Lc00:
-    *(volatile s32 *)0x4001000 = (*(volatile s32 *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
+    GXS_SetVisiblePlane(gSubScreenLayers);
     data_ov002_02111148 = (s8)id;
     this->mTargetInvScale = GetMinimapScale(id);
     }
