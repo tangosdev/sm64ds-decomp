@@ -25964,6 +25964,12 @@ endforeach()
 if(PORT_ROM_CLEAN)
     set_property(SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/hal/event_client.cpp" APPEND PROPERTY COMPILE_DEFINITIONS PORT_ROM_CLEAN)
 endif()
+# run coopfix1, lane WORLDSTAR2: the kit compiles the held-star proof knobs (SM64DS_WS_*) out of hal/coop_worldstar.cpp and the
+# announce delay knob out of hal/coop_spawn.cpp, the same way (APPEND, never SET).
+if(PORT_ROM_CLEAN)
+    set_property(SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/hal/coop_worldstar.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/hal/coop_spawn.cpp"
+                 APPEND PROPERTY COMPILE_DEFINITIONS PORT_ROM_CLEAN)
+endif()
 
 # RPC1: Discord Rich Presence. hal/rich_presence.cpp is called from the scene
 # crossing hook in tests/walk_window.cpp; discord_presence (SahilKDas, PR 3569)

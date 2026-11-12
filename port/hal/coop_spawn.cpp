@@ -102,6 +102,7 @@ bool g_registered = false;
 int g_my = -1;
 
 bool     g_have_key = false;
+unsigned g_ann_delay_ms = 0;      // WORLDSTAR2 proof knob SM64DS_SPAWN_ANN_DELAY (dev builds only)
 int      g_lvl = -1, g_act = 0;
 unsigned g_gen = 0;
 unsigned g_frames = 0;
@@ -342,6 +343,10 @@ void read_env() {
             while (*p == ';' || *p == ',' || *p == ' ') ++p;
         }
     }
+#ifndef PORT_ROM_CLEAN
+    // WORLDSTAR2 proof knob: SM64DS_SPAWN_ANN_DELAY=<ms> holds every friend's SPAWN that long before it is applied here (a late announce)
+    if (const char *e = std::getenv("SM64DS_SPAWN_ANN_DELAY")) g_ann_delay_ms = (unsigned)std::atoi(e);
+#endif
     if (const char *e = std::getenv("SM64DS_SPAWN_TAKE")) {      // frame list: put my player on a runtime star / key
         const char *p = e;
         while (*p && g_nkt < 4) {
@@ -1544,6 +1549,9 @@ void drain_in(unsigned now) {
         if (!e.on) continue;
         if ((unsigned)(now - e.born) > 8000u) { e.on = false; continue; }
         if (!g_armed && e.type != kEvGone) continue;         // a joiner waits until its level is up
+#ifndef PORT_ROM_CLEAN
+        if (e.type == kEvSpawn && g_ann_delay_ms && (unsigned)(now - e.born) < g_ann_delay_ms) continue;   // WORLDSTAR2 proof knob
+#endif
         e.on = false;
         if (e.type == kEvBlock) { SpBlockWire w; std::memcpy(&w, e.buf, sizeof w); apply_block(e.seat, w); }
         else if (e.type == kEvSpawn) { SpSpawnWire w; std::memcpy(&w, e.buf, sizeof w); apply_spawn(e.seat, w, now); }
@@ -1708,6 +1716,9 @@ void send_blocks(unsigned now) {
     }
 }
 
+}  // namespace
+void coop_worldstar_join_served(int seat);                  // hal/coop_worldstar.cpp
+namespace {
 void serve_job(Job &j) {
     SpRedWire r; std::memset(&r, 0, sizeof r);
     r.key = wkey(); r.nonce = j.nonce; r.target = (uint8_t)j.seat;
@@ -1726,6 +1737,7 @@ void serve_job(Job &j) {
         if (e.used && !e.gone && e.seen && n < 8) { send_spawn_of(e); ++n; }
     if (g_log && j.sent == 0)
         std::fprintf(stderr, "[coopspawn] serve join to seat %d: red sum=%d live announced=%d wall=%lld\n", j.seat, s, n, wall_ms());
+    if (j.sent == 0) coop_worldstar_join_served(j.seat);     // WORLDSTAR2: the stars taken (and held stars let go) in this visit
 }
 
 int live_class(unsigned cls) {
@@ -2255,6 +2267,44 @@ bool coop_spawn_star_released(unsigned param) {
     if (g_star_taken[p]) return true;
     for (const Net &n : g_net) if (n.used && n.cls == 178 && (n.param & 0xff) == p) return true;
     return false;
+}
+
+bool coop_spawn_star_taken(unsigned param) {
+    if (!coop_world_active() || !g_have_key) return false;
+    return g_star_taken[param & 0xff];
+}
+
+// WORLDSTAR2 (REVIEW-AK N1): a late joiner's taken memory starts empty, so a star the room took before he came could be made again
+// on his console (a held star's let-go, a race he runs again). A friend who was here says which star numbers were taken; they join
+// this visit's taken set (the SNOWMAN2 refusals then apply), and a copy already standing here is removed quietly: the friends removed
+// theirs long ago, so no GONE goes out for it.
+bool coop_spawn_star_taken_note(unsigned param, int seat) {
+    if (!coop_world_active() || !g_have_key) return false;
+    if (g_toff.startaken) return true;
+    const unsigned p = param & 0xff;
+    if (g_star_taken[p]) return true;
+    star_taken_mark(p, "a friend says it was taken before I came");
+    for (Net &n : g_net) {
+        if (!n.used || n.gone || n.cls != 178 || (n.param & 0xff) != p) continue;
+        if (n.a && !a_dead(n.a) && a_uid(n.a) == n.uid) {
+            if (*(const unsigned *)(n.a + 0x440) == 5u && is_player_ptr(*(void *const *)(n.a + 0x438))) continue;   // being taken here now
+            kill_quiet(n.a);
+        }
+        n.gone = true; n.took = true; n.seen = false; n.gsends = 3;
+        if (g_log) std::fprintf(stderr, "[coopspawn] star taken: my copy of star %u (id %d/%d) removed, seat %d says it was taken before I came frame=%u wall=%lld\n",
+                                p, (int)n.origin, (int)n.counter, seat, g_frames, wall_ms());
+    }
+    for (Lnk &l : g_lnk) {
+        if (!l.used || l.taken || (l.param & 0xff) != p) continue;
+        if (l.a && !a_dead(l.a) && a_uid(l.a) == l.uid) {
+            if (*(const unsigned *)(l.a + 0x440) == 5u && is_player_ptr(*(void *const *)(l.a + 0x438))) continue;
+            kill_quiet(l.a);
+        }
+        l.taken = true; l.seen = false; l.gsends = 3;
+        if (g_log) std::fprintf(stderr, "[coopspawn] star taken: my linked star %u (marker slot=%d) removed, seat %d says it was taken before I came frame=%u wall=%lld\n",
+                                p, (int)l.mslot, seat, g_frames, wall_ms());
+    }
+    return true;
 }
 
 void coop_spawn_note_remote_press(void *switch_actor) {

@@ -35,6 +35,18 @@
 //     its own Klepto's silver go with no star made. Kind 2 above uses the same 8 bytes. A 1.0.4 console drops the unknown sub-type (each world message is
 //     its own datagram, nothing else is lost): next to a 1.0.4 friend the old behaviour stays.
 //
+// WORLDSTAR2 (REVIEW-AK notes N1, N2):
+//   * Late join. A player who comes into the level after a held star was let go AND taken started with an empty taken memory,
+//     heard the let-go (kind 2, resent to a new member) and made a fresh collectible copy. Now every member tells a new member
+//     (and the owner again when it serves his join) the star numbers taken in this visit first (kind 3, "the room's star of
+//     parameter P was taken"), and never resends a let-go of a taken star. The joiner keeps them (hal/coop_spawn.cpp's taken
+//     memory, coop_spawn_star_taken_note): his holder lets go with none made, and any star of that number coop_spawn tracks
+//     (announced, linked to a marker) is never made again on his console, a copy already standing removed.
+//   * The eel's and the cage's stars are ALSO announced by coop_spawn (their stars fly to no placed marker), so a friend's
+//     kind 2 and his announce raced: a kind 2 first made a second native copy. Now a friend's kind 2 only lets the held copy go
+//     (the cage still falls), and the copy comes from his announce; only if no announce comes within kAnnWaitMs is one made here.
+//     A late kind 2 after the announce makes none (the announce counts as released).
+//
 // NOT DONE HERE: two consoles hitting their Klepto inside one network delay each drop a silver (both are announced).
 // The Ukiki's catch itself and the mother's walk are still drawn per console.
 //
@@ -103,8 +115,9 @@ enum : uint8_t { kWorldKleptoSilver = 0x6c };
 struct CoopWsWire {
     CoopKeyWire key;
     uint8_t  ver;        // 1
-    uint8_t  kind;       // 1: the Klepto of this placed slot let go of its silver star; 2: the star of this parameter is out here
-    uint16_t slot;       // kind 1: the Klepto's placed-object slot, 0..511; kind 2: the star's parameter, 0..255
+    uint8_t  kind;       // 1: the Klepto of this placed slot let go of its silver star; 2: the star of this parameter is out here;
+                         // 3 (WORLDSTAR2): the room's star of this parameter was taken in this visit (to a new member)
+    uint16_t slot;       // kind 1: the Klepto's placed-object slot, 0..511; kinds 2 and 3: the star's parameter, 0..255
 };
 #pragma pack(pop)
 static_assert(sizeof(CoopWsWire) == 8, "klepto silver is 8 bytes");
@@ -114,20 +127,32 @@ namespace {
 enum : int { kSeats = 16, kBodies = 16, kSlots = 512, kDropMax = 16 };
 enum : int { kClsStar = 178, kClsSilver = 179, kClsPlayer = 191, kClsKlepto = 239, kClsEel = 242, kClsMother = 257,
              kClsBaby = 256, kClsCage = 103, kClsUkikiStar = 268 };
-enum : unsigned { kResendMs = 100 };
+enum : unsigned { kResendMs = 100, kJoinSends = 5, kJoinGapMs = 250, kAnnWaitMs = 5000 };
 
 bool g_env = false, g_off = false, g_log = false, g_regd = false;
+bool g_off2 = false;               // WORLDSTAR2 must-fail control SM64DS_COOP_WORLDSTAR2=0 (dev builds only): WORLDSTAR1's behaviour
+unsigned g_rx_delay = 0;           // WORLDSTAR2 proof knob SM64DS_WS_RX_DELAY=<ms>: a friend's 0x6c acted on that late (dev builds only)
 int g_trace = 0;
 unsigned g_lf = 0;
 bool g_visit = false; int g_lv = -1, g_ac = -1;
 unsigned g_mask = 0;
 
 struct Stats { unsigned sent, recv, bad, foreign_hits, my_drops, klepto_let_go, eel_let_go, cage_dropped, cage_quiet, ukiki_removed,
-               mother_given, eel_asked, made, told; } g_st = {};
+               mother_given, eel_asked, made, told, taken_sent, taken_heard, waited, wait_made; } g_st = {};
 
 // Klepto silver drops known in this visit (mine or heard), by the Klepto's placed slot
 struct Drop { bool on; int kind; int slot; int from; int sends; unsigned next; };
 Drop g_drop[kDropMax];
+// WORLDSTAR2: the room's taken star numbers a friend told me (kind 3), and whether coop_spawn's taken memory has them yet
+bool g_heard_taken[256], g_taken_pushed[256]; int g_taken_from[256];
+// WORLDSTAR2: taken star numbers to tell a new member (kind 3), sends left
+int g_tsend[256]; unsigned g_tnext[256];
+// WORLDSTAR2: a friend let an announced star go (eel, cage): wait for his announce, make one here only if it never comes
+struct Pend { bool on; unsigned p; int pos[3]; int area; unsigned due; const char *who; };
+enum : int { kPendMax = 8, kRxMax = 16 };
+Pend g_pend[kPendMax];
+struct RxQ { bool on; int seat; CoopWsWire w; unsigned due; };
+RxQ g_rxq[kRxMax];
 
 int rd32(const void *a, int off) { int v; std::memcpy(&v, (const char *)a + off, 4); return v; }
 void wr32(void *a, int off, int v) { std::memcpy((char *)a + off, &v, 4); }
@@ -171,6 +196,11 @@ void read_env() {
     g_env = true;
     const char *e = std::getenv("SM64DS_COOP_WORLDSTAR");
     g_off = e && e[0] == '0' && !e[1];
+#ifndef PORT_ROM_CLEAN
+    const char *e2 = std::getenv("SM64DS_COOP_WORLDSTAR2");
+    g_off2 = e2 && e2[0] == '0' && !e2[1];
+    if (const char *rd = std::getenv("SM64DS_WS_RX_DELAY")) g_rx_delay = (unsigned)std::atoi(rd);
+#endif
     const char *l = std::getenv("SM64DS_COOP_WORLDSTAR_LOG");
     g_log = l && l[0] && l[0] != '0';
     if (const char *t = std::getenv("SM64DS_COOP_WORLDSTAR_TRACE")) g_trace = std::atoi(t);
@@ -189,10 +219,19 @@ Drop *drop_add(int slot, int from, bool send, int kind = 1) {
     if (send) { d->sends = 3; d->next = now_ms(); }
     return d;
 }
+bool taken_here(unsigned p) { p &= 0xff; return g_heard_taken[p] || coop_spawn_star_taken(p); }
 void send_drops() {
     int lv = -1, ac = 0;
     if (!coop_group_key(&lv, &ac)) return;
     const unsigned t = now_ms();
+    for (int p = 0; p < 256; ++p) {
+        if (g_tsend[p] <= 0 || (int)(t - g_tnext[p]) < 0) continue;
+        CoopWsWire w = {};
+        w.key.level = (uint16_t)lv; w.key.act = (uint8_t)ac; w.key.reserved = 0;
+        w.ver = 1; w.kind = 3; w.slot = (uint16_t)p;
+        if (coop_send_world(kWorldKleptoSilver, &w, (int)sizeof w)) { ++g_st.sent; ++g_st.taken_sent; }
+        --g_tsend[p]; g_tnext[p] = t + kJoinGapMs;
+    }
     for (Drop &d : g_drop) {
         if (!d.on || d.sends <= 0 || (int)(t - d.next) < 0) continue;
         CoopWsWire w = {};
@@ -206,15 +245,22 @@ void send_drops() {
 bool ws_validate(const void *p, int len) {
     if (!p || len != (int)sizeof(CoopWsWire)) return false;
     CoopWsWire w; std::memcpy(&w, p, sizeof w);
-    return coop_key_ok(w.key) && w.ver == 1 && ((w.kind == 1 && w.slot < kSlots) || (w.kind == 2 && w.slot < 256));
+    return coop_key_ok(w.key) && w.ver == 1 && ((w.kind == 1 && w.slot < kSlots) || ((w.kind == 2 || w.kind == 3) && w.slot < 256));
 }
 
-void on_world(int seat, int sub, const unsigned char *p, int len, void *) {
-    if (sub != kWorldKleptoSilver || seat < 0 || seat >= kSeats || seat == comms_hub_my_seat() || !ws_validate(p, len)) { ++g_st.bad; return; }
-    CoopWsWire w; std::memcpy(&w, p, sizeof w);
+void apply_ws(int seat, const CoopWsWire &w) {
     int lv = -1, ac = 0;
     if (g_off || !coop_group_key(&lv, &ac) || (int)w.key.level != lv || (int)w.key.act != ac) return;
     ++g_st.recv;
+    if (w.kind == 3) {
+        if (g_off2) return;
+        const unsigned p = w.slot & 0xff;
+        if (g_heard_taken[p]) return;
+        g_heard_taken[p] = true; g_taken_from[p] = seat;
+        ++g_st.taken_heard;
+        if (g_log) std::fprintf(stderr, "[coopws] lf=%u seat %d: the room's star %#x was taken before I came\n", g_lf, seat, p);
+        return;
+    }
     if (!drop_find((int)w.slot, (int)w.kind)) {
         drop_add((int)w.slot, seat, false, (int)w.kind);
         if (!g_log) return;
@@ -223,13 +269,28 @@ void on_world(int seat, int sub, const unsigned char *p, int len, void *) {
     }
 }
 
+void on_world(int seat, int sub, const unsigned char *p, int len, void *) {
+    if (sub != kWorldKleptoSilver || seat < 0 || seat >= kSeats || seat == comms_hub_my_seat() || !ws_validate(p, len)) { ++g_st.bad; return; }
+    CoopWsWire w; std::memcpy(&w, p, sizeof w);
+    if (g_rx_delay) {                               // proof knob: act on it later (a late 0x6c)
+        for (RxQ &q : g_rxq) if (!q.on) { q.on = true; q.seat = seat; q.w = w; q.due = now_ms() + g_rx_delay; return; }
+    }
+    apply_ws(seat, w);
+}
+void rx_tick() {
+    const unsigned t = now_ms();
+    for (RxQ &q : g_rxq) if (q.on && (int)(t - q.due) >= 0) { q.on = false; apply_ws(q.seat, q.w); }
+}
+
 void exit_line() {
     std::fprintf(stderr, "[coopws:exit] sent %u received %u (bad %u); friend-body Klepto hits kept %u, my Klepto silver drops %u, "
                  "held stars let go: Klepto %u eel %u; cages dropped %u (quiet landings %u), Ukiki removed %u, mothers given %u, "
-                 "eel release checks on my body %u; my releases told %u, friends' stars made here %u%s\n", g_st.sent, g_st.recv, g_st.bad,
+                 "eel release checks on my body %u; my releases told %u, friends' stars made here %u; taken told %u heard %u; "
+                 "announce waits %u (made after the wait %u)%s%s\n", g_st.sent, g_st.recv, g_st.bad,
                  g_st.foreign_hits, g_st.my_drops, g_st.klepto_let_go, g_st.eel_let_go, g_st.cage_dropped, g_st.cage_quiet,
-                 g_st.ukiki_removed, g_st.mother_given, g_st.eel_asked, g_st.told, g_st.made,
-                 g_off ? " (CONTROL SM64DS_COOP_WORLDSTAR=0)" : "");
+                 g_st.ukiki_removed, g_st.mother_given, g_st.eel_asked, g_st.told, g_st.made, g_st.taken_sent, g_st.taken_heard,
+                 g_st.waited, g_st.wait_made, g_off ? " (CONTROL SM64DS_COOP_WORLDSTAR=0)" : "",
+                 g_off2 ? " (CONTROL SM64DS_COOP_WORLDSTAR2=0)" : "");
 }
 
 void ensure_registered() {
@@ -267,6 +328,7 @@ int jango_hit(void *kv) {
 struct EelKnob { int at = -2; bool fr = false; } g_eel;
 void *moray_body(void *closest) {
     read_env();
+#ifndef PORT_ROM_CLEAN
     if (g_eel.fr && g_eel.at >= 0 && g_lv > 5 && g_lf >= (unsigned)g_eel.at && g_lf < (unsigned)g_eel.at + 4u && coop_world_active()) {
         char *fb = first_friend_body();
         char *eel = _ZN8dActor_c15FindWithActorIDEjPS_(kClsEel, nullptr);
@@ -278,6 +340,7 @@ void *moray_body(void *closest) {
                              g_lf, rd32(eel, 0x43c) >> 12, rd32(eel, 0x440) >> 12, rd32(eel, 0x444) >> 12);
         }
     }
+#endif
     if (!live()) return closest;
     char *me = local_body();
     if (closest && closest != me) {
@@ -288,11 +351,18 @@ void *moray_body(void *closest) {
     return me ? me : closest;
 }
 
+void pend_add(unsigned p, const void *pos, int area, const char *who);
 // the cage's landing: 1 = the room's star is already out, make none here
 int cage_land(void *c) {
     if (!c || !in_group()) return 0;
     const unsigned rel = (a_param((char *)c) & 0xf) | 0x20;
-    if (!coop_spawn_star_released(rel)) return 0;
+    if (!coop_spawn_star_released(rel) && !g_heard_taken[rel]) {
+        // WORLDSTAR2: a friend's cage opened it and his announce is not here yet: his announce brings the star, none made here now
+        const Drop *d = drop_find((int)rel, 2);
+        if (g_off2 || !d || d->from == comms_hub_my_seat()) return 0;
+        pend_add(rel, (const char *)c + 0x5c, ((const char *)c)[0xcc], "my cage landed");
+        return 1;
+    }
     ++g_st.cage_quiet;
     if (g_log) std::fprintf(stderr, "[coopws] lf=%u my cage landed: the room's star %#x is already out, none made here\n", g_lf, rel);
     return 1;
@@ -304,15 +374,56 @@ struct Hooks { Hooks() { port_coop_ws_jango_hit = jango_hit; port_coop_ws_moray_
 // The released stars of these holders fly to a placed star marker, so coop_spawn links them (each console makes its own,
 // a take removes the others by the marker) and never announces them: the release itself is told here (kind 2).
 bool g_track[256];
-bool released(unsigned p) { p &= 0xff; return coop_spawn_star_released(p) || drop_find((int)p, 2); }
+bool released(unsigned p) { p &= 0xff; return coop_spawn_star_released(p) || drop_find((int)p, 2) || g_heard_taken[p]; }
 // a friend let it out and no copy of it is here (and it is not known taken): this console makes its own, as he did
-bool make_here(unsigned p) { p &= 0xff; return drop_find((int)p, 2) && !coop_spawn_star_released(p); }
+bool make_here(unsigned p) { p &= 0xff; return drop_find((int)p, 2) && !coop_spawn_star_released(p) && !g_heard_taken[p]; }
 char *spawn_star(unsigned p, const void *pos, const void *ang, int area, const char *who) {
     char *s = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(kClsStar, p & 0xff, pos, ang, area, -1);
     if (s) coop_camshield_mark(s, "a friend's release");
     ++g_st.made;
     if (g_log) std::fprintf(stderr, "[coopws] lf=%u %s: the room's star %#x made here as a friend let it out (uid %u)\n", g_lf, who, p & 0xff, s ? a_uid(s) : 0u);
     return s;
+}
+// WORLDSTAR2: an announced star (the eel's, the cage's) a friend let go: his announce makes the copy here (coop_spawn); wait for it
+void pend_add(unsigned p, const void *pos, int area, const char *who) {
+    Pend *s = nullptr;
+    for (Pend &x : g_pend) if (x.on && x.p == (p & 0xff)) return;
+    for (Pend &x : g_pend) if (!x.on) { s = &x; break; }
+    if (!s) { spawn_star(p, pos, nullptr, area, who); return; }
+    *s = Pend(); s->on = true; s->p = p & 0xff; std::memcpy(s->pos, pos, sizeof s->pos); s->area = area; s->due = now_ms() + kAnnWaitMs; s->who = who;
+    ++g_st.waited;
+    if (g_log) std::fprintf(stderr, "[coopws] lf=%u %s: the room's star %#x is out (a friend's release): his announce brings it, none made here now\n", g_lf, who, s->p);
+}
+void pend_tick() {
+    const unsigned t = now_ms();
+    for (Pend &s : g_pend) {
+        if (!s.on) continue;
+        if (coop_spawn_star_released(s.p) || g_heard_taken[s.p]) {
+            s.on = false;
+            if (g_log) std::fprintf(stderr, "[coopws] lf=%u %s: the room's star %#x %s, none made here\n", g_lf, s.who, s.p,
+                                    g_heard_taken[s.p] || coop_spawn_star_taken(s.p) ? "was taken" : "came with the friend's announce");
+            continue;
+        }
+        if ((int)(t - s.due) < 0) continue;
+        s.on = false;
+        ++g_st.wait_made;
+        if (g_log) std::fprintf(stderr, "[coopws] lf=%u %s: no announce of the room's star %#x in %u ms: made here\n", g_lf, s.who, s.p, kAnnWaitMs);
+        spawn_star(s.p, s.pos, nullptr, s.area, s.who);
+    }
+}
+// WORLDSTAR2: tell a new member the taken star numbers (kind 3, first) and the let-goes still standing (kind 2); a let-go of a
+// taken star is not resent (the joiner would make a fresh copy of a star the room already took)
+void arm_join_sends(const char *why) {
+    const unsigned t = now_ms();
+    int nt = 0, nd = 0;
+    if (!g_off2)
+        for (int p = 0; p < 256; ++p) if (taken_here((unsigned)p)) { g_tsend[p] = kJoinSends; g_tnext[p] = t; ++nt; }
+    for (Drop &d : g_drop) {
+        if (!d.on) continue;
+        if (!g_off2 && d.kind == 2 && taken_here((unsigned)d.slot)) { d.sends = 0; continue; }
+        d.sends = g_off2 ? 3 : (int)kJoinSends; d.next = t + (g_off2 ? 0u : kResendMs); ++nd;
+    }
+    if (g_log && (nt || nd)) std::fprintf(stderr, "[coopws] lf=%u %s: tell %d taken star(s) and %d let-go(s)\n", g_lf, why, nt, nd);
 }
 // my own console let one of the tracked stars out: tell the group once (3 sends, again for a new member)
 void watch_releases() {
@@ -367,7 +478,10 @@ void eel_tick() {
         if (!released(rel)) continue;
         _ZN7fBase_c18MarkForDestructionEv(star);
         wr32(a, 0x49c, 0);
-        if (make_here(rel)) spawn_star(rel, a + 0x43c, nullptr, a[0xcc], "my eel");
+        if (make_here(rel)) {
+            if (g_off2) spawn_star(rel, a + 0x43c, nullptr, a[0xcc], "my eel");
+            else pend_add(rel, a + 0x43c, a[0xcc], "my eel");          // the eel's star is announced: the friend's announce brings it
+        }
         ++g_st.eel_let_go;
         if (g_log) std::fprintf(stderr, "[coopws] lf=%u my eel lets go of its tail star: the room's star %#x is out, the held copy removed\n", g_lf, rel);
     }
@@ -487,6 +601,9 @@ int knob_at(const char *name, bool *flag, const char *flagname) {
 }
 
 void knobs(char *me) {
+#ifdef PORT_ROM_CLEAN
+    (void)me;
+#else
     static int hit_at = -2, cage_at = -2, pg_at = -2, sil_at = -2; static bool hit_friend = false, pg_redo = false;
     if (hit_at == -2) {
         sil_at = knob_at("SM64DS_WS_KLEPTO_SILVER", nullptr, nullptr);
@@ -572,12 +689,18 @@ void knobs(char *me) {
             q = end; while (*q == ',' || *q == ' ') ++q;
         }
     }
+#endif
 }
 
 void on_latched(int, int) {
     g_visit = false; g_lf = 0;
     std::memset(g_drop, 0, sizeof g_drop);
     std::memset(g_track, 0, sizeof g_track);
+    std::memset(g_heard_taken, 0, sizeof g_heard_taken);
+    std::memset(g_taken_pushed, 0, sizeof g_taken_pushed);
+    std::memset(g_tsend, 0, sizeof g_tsend);
+    std::memset(g_pend, 0, sizeof g_pend);
+    std::memset(g_rxq, 0, sizeof g_rxq);
 }
 
 void on_frame(unsigned) {
@@ -592,14 +715,17 @@ void on_frame(unsigned) {
     if (!g_visit && g_lf == 30) { g_visit = true; census(); if (!g_off) track(); }
     if (!g_off) {
         const unsigned mask = coop_group_member_mask();
-        if (mask & ~g_mask)                       // a new member: tell him the drops this visit knows
-            for (Drop &d : g_drop) if (d.on) { d.sends = 3; d.next = now_ms(); }
+        if (mask & ~g_mask) arm_join_sends("a new member");     // tell him the taken stars and the drops this visit knows
         g_mask = mask;
+        rx_tick();
+        for (int p = 0; p < 256; ++p)             // the taken stars a friend told me, into coop_spawn's taken memory once it has my level
+            if (g_heard_taken[p] && !g_taken_pushed[p]) g_taken_pushed[p] = coop_spawn_star_taken_note((unsigned)p, g_taken_from[p]);
         if (g_visit) watch_releases();
         klepto_tick();
         eel_tick();
         cage_tick();
         mother_tick();
+        pend_tick();
         send_drops();
     }
     knobs(me);
@@ -614,4 +740,14 @@ struct Reg {
 } g_reg;
 
 }  // namespace
+
+// WORLDSTAR2: hal/coop_spawn.cpp's owner serves a joiner's snapshot request: tell the group the taken stars and let-goes again
+void coop_worldstar_join_served(int seat) {
+    if (!live() || g_off2) return;
+    int lv = -1, ac = 0;
+    if (!coop_group_key(&lv, &ac) || lv != g_lv || ac != g_ac) return;
+    char why[40]; std::snprintf(why, sizeof why, "serving seat %d's join", seat);
+    arm_join_sends(why);
+}
+
 }  // namespace port
