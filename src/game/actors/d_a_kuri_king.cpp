@@ -407,16 +407,15 @@ void daKuriKing_c::UpdateDefeat() {
             if (state != 0) {
                 if (state == 1)
                     return;
-                if (state == 2)
-                    goto nextSubState;
+                if (state != 2)
+                    return;
+            } else {
+                if (player->ShowMessage(*this, (s16)msgId, &vmsg, 1, 2) == 0)
+                    return;
+                func_0201277c(0x15a);
                 return;
             }
-            if (player->ShowMessage(*this, (s16)msgId, &vmsg, 1, 2) == 0)
-                return;
-            func_0201277c(0x15a);
         }
-        return;
-    nextSubState:
         this->mSubState += 1;
         return;
     case 1:
@@ -584,26 +583,25 @@ void daKuriKing_c::func_ov074_0211fc34()
 }
 
 void daKuriKing_c::UpdateKnockback() {
-    if (ApproachAngle(&this->mWalkSpeed, 0, 0xa, 0x100, 1) != 0) goto reset;
-    if (this->mAnmModel.Finished() == 0)
-        return;
-    if (this->mSizeIndex != 0) goto detox;
-    {
-        daPly_c *player = this->ClosestPlayer();
-        if (player->StartTalk(*this, 1) == 0) return;
-        Message::PrepareTalk();
-        if (IsAnimPlaying(1) != 0 || IsAnimPlaying(2) != 0) {
-            PlayAnim(0xc);
+    if (ApproachAngle(&this->mWalkSpeed, 0, 0xa, 0x100, 1) == 0) {
+        if (this->mAnmModel.Finished() == 0)
+            return;
+        if (this->mSizeIndex == 0) {
+            daPly_c *player = this->ClosestPlayer();
+            if (player->StartTalk(*this, 1) == 0)
+                return;
+            Message::PrepareTalk();
+            if (IsAnimPlaying(1) != 0 || IsAnimPlaying(2) != 0) {
+                PlayAnim(0xc);
+                return;
+            }
+            ChangeState(7);
+            this->mTalkPlayer = player;
             return;
         }
-        ChangeState(7);
-        this->mTalkPlayer = player;
+        ChangeState(6);
         return;
     }
-detox:
-    ChangeState(6);
-    return;
-reset:
     WalkAlongRing();
 }
 
@@ -623,16 +621,14 @@ void daKuriKing_c::UpdateSummonGoombas() {
             return;
         PlayAnim(0xb);
         return;
-    } else {
-        if (IsAnimPlaying(0xb) != 0)
-            goto L90;
+    }
+    if (IsAnimPlaying(0xb) == 0) {
         if (StopWalking() == 0)
             return;
         PlayAnim(0xb);
         return;
     }
 
-L90:;
     int spawnTarget = data_ov074_02122d80[this->mSizeIndex];
     daPly_c *pl = this->ClosestPlayer();
     if (this->mSizeIndex == 1 && (int)pl->param1 != 3) spawnTarget = spawnTarget + 1;
@@ -922,23 +918,17 @@ int daKuriKing_c::StopWalking() {
             if ((unsigned short)(this->mAnmModel.currFrame >> 12) == 0) {
                 PlayAnim(9);
             }
-            goto ret0;
+        } else {
+            WalkAlongRing();
         }
-        WalkAlongRing();
-        goto ret0;
-    }
-    if (IsAnimPlaying(0xa) != 0) {
+    } else if (IsAnimPlaying(0xa) != 0) {
         PlayAnim(9);
-        goto ret0;
-    }
-    if (IsAnimPlaying(9) != 0) {
-        if (this->mAnmModel.Finished() != 0) {
+    } else if (IsAnimPlaying(9) != 0) {
+        if (this->mAnmModel.Finished() != 0)
             return 1;
-        }
-        goto ret0;
+    } else {
+        return 1;
     }
-    return 1;
-ret0:
     return 0;
 }
 
