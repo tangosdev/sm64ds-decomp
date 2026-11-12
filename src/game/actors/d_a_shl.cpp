@@ -345,13 +345,12 @@ int daShl_c::func_ov102_0214d044()
     {
         dActor_c *rider = mCarrier;
         s32 *riderPos = &rider->mPosX;
-        s16 *angle = &mAngleY;
         int x = riderPos[0];
         int ret = 1;
         mPosX = x;
         mPosY = riderPos[1];
         mPosZ = riderPos[2];
-        *angle = *angle + 0x1000;
+        mAngleY += 0x1000;
         return ret;
     }
 }
