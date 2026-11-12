@@ -3027,7 +3027,7 @@ class IncludedInlineDestructorTests(unittest.TestCase):
     def test_real_vector_carriers_reference_inline_header_bodies(self):
         targets=['src/engine/view/d_camera_dtor.cpp', 'src/runtime/actor/d_actor.cpp']
         _, _, defs, _=CDA.collect(REPO, targets)
-        for owner, line in (('Vector3', 61), ('Vector3s', 89)):
+        for owner, line in (('Vector3', 72), ('Vector3s', 100)):
             symbol='_ZN%d%sD1Ev' % (len(owner), owner)
             found=[d for d in defs if d.symbol == symbol]
             self.assertEqual(len(found), 1)
