@@ -46,6 +46,7 @@ enum dScMgRoulette_c_AssetId {
 #include "nitro/fx/fx_trig.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "math/CalcLib.h"
 #include "LevelRng.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
@@ -111,7 +112,6 @@ void Vec2_Sub(int *out, int *a, int *b);
 void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *mF, int x, int y, int z);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 int Sound_PlayIfNotActive(int a, int b, int c, short d);
-int RandomIntInternal(int *seed);
 void *LoadFile(int id);
 void DecompressLZ16(void *src, void *dst);
 void Ov004_Deallocate(void *p);

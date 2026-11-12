@@ -32,7 +32,6 @@ extern "C" {
    EntryMeshVec is the POD view used for the grid data; APIs taking Vector3
    receive explicit pointer views so the C++ Vector3 destructor is not emitted. */
 int MTX_Inverse43(const Matrix4x3 *, Matrix4x3 *);
-void VEC_Subtract(Vector3 *, Vector3 *, Vector3 *);
 void VEC_CrossProduct(const Vector3 *, const Vector3 *, Vector3 *);
 void VEC_Normalize(const Vector3 *, Vector3 *);
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
