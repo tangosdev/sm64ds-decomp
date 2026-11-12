@@ -620,6 +620,19 @@ extern "C" void port_grock_local_break(void *raw)
     rock->MarkForDestruction();
 }
 
+/* Host only (INT3, SPAWNERS1 review note 1): a friend broke the star rock while my
+   copy of it had already rolled off, and its fall cleared unk_3c2 here. Set it
+   again, as a star rock broken on this console leaves it, so this spawner makes
+   no second star rock in this visit. Returns 1 when it was cleared. */
+extern "C" int port_grock_set_star_out(void *raw)
+{
+    daGrock_c *sp = (daGrock_c *)raw;
+    if (sp->mType != kGrockStarSpawner || sp->unk_3c2 != 0)
+        return 0;
+    sp->unk_3c2 = 1;
+    return 1;
+}
+
 /* Host only (SPAWNERS1): the spawner fields the coop side reads. */
 extern "C" int port_grock_info(const void *raw, int *type, int *count, int *star_out, int *star_idx)
 {

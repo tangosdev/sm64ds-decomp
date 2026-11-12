@@ -58,6 +58,7 @@ void *port_grock_remote_break(void *rock);
 void coop_camshield_mark(void *a, const char *why);      // hal/coop_camshield.cpp (CANNON2): a friend's star never films here
 void port_grock_local_break(void *rock);
 int port_grock_info(const void *g, int *type, int *count, int *star_out, int *star_idx);
+int port_grock_set_star_out(void *spawner);
 }
 
 namespace port {
@@ -98,6 +99,9 @@ struct Q { bool used; uint8_t op; int seat; RockW r; BreakW b; };
 Q g_q[kMaxQ];
 struct Gone { short slot; uint8_t origin; uint16_t ctr; bool used; };
 Gone g_gone[kGoneRing]; int g_gone_at = 0;
+// INT3 (REVIEW-AN note 1): each spawner's latest star rock by id, kept after its copy is gone (the rock table reuses dead entries)
+struct StarRock { bool on; short slot; uint8_t origin; uint16_t ctr; };
+StarRock g_srk[kMaxSp];
 uint16_t g_ctr = 0;
 unsigned g_hello_last = 0; bool g_hello_sent = false; uint8_t g_hello_mask = 0;
 struct Stats { unsigned made, sent, copies, copy_fail, ignored, breaks_sent, breaks_applied, held, owner_ch, hello_rx; } g_st = {};
@@ -134,6 +138,7 @@ void reset_level() {
     std::memset(g_rk, 0, sizeof g_rk);
     std::memset(g_q, 0, sizeof g_q);
     std::memset(g_gone, 0, sizeof g_gone); g_gone_at = 0;
+    std::memset(g_srk, 0, sizeof g_srk);
     g_hello_sent = false; g_hello_mask = 0; g_lf = 0;
 }
 
@@ -210,6 +215,27 @@ void gone_add(short slot, uint8_t origin, uint16_t ctr) {
     Gone &g = g_gone[g_gone_at]; g_gone_at = (g_gone_at + 1) % kGoneRing;
     g.used = true; g.slot = slot; g.origin = origin; g.ctr = ctr;
 }
+void star_rock_note(short slot, uint8_t origin, uint16_t ctr) {
+    StarRock *f = nullptr;
+    for (StarRock &x : g_srk) if (x.on && x.slot == slot) { f = &x; break; }
+    if (!f) for (StarRock &x : g_srk) if (!x.on) { f = &x; break; }
+    if (f) { f->on = true; f->slot = slot; f->origin = origin; f->ctr = ctr; }
+}
+bool star_rock_is(short slot, uint8_t origin, uint16_t ctr) {
+    for (const StarRock &x : g_srk) if (x.on && x.slot == slot && x.origin == origin && x.ctr == ctr) return true;
+    return false;
+}
+// A friend broke the star rock and my copy of it was already gone (it rolled off here first, a stall or a slow link): its fall
+// cleared my spawner's star-out flag, so the spawner would make a second star rock later. Set the flag again, as a star rock
+// broken here leaves it: one star rock for the room this visit.
+void star_out_after_late_break(short slot, int seat, uint8_t origin, uint16_t ctr) {
+    const int i = sp_by_slot(slot);
+    if (i < 0) return;
+    const int set = port_grock_set_star_out(g_sp[i].a);
+    if (g_log) std::fprintf(stderr, "[cspawn] seat %d broke rock %d:%u (THE STAR ROCK) and my copy was already gone: my spawner slot %d %s lf=%u wall=%lld\n",
+                            seat, (int)origin, (unsigned)ctr, (int)slot, set ? "makes no second star rock this visit" : "already had its star rock out",
+                            g_lf, wall_ms());
+}
 
 // ---- hooks (called from daGrock_c inside the actor frame) -------------------------------------------------------------
 
@@ -241,6 +267,7 @@ void hook_spawned(void *spawner, void *rock, const void *rot) {
         *r = Rk(); r->used = true; r->a = (char *)rock; r->uid = uid_of(rock); r->slot = s.slot; r->origin = (uint8_t)g_my; r->ctr = w.ctr;
         r->star = w.star != 0; r->born_lf = g_lf;
     }
+    if (w.star) star_rock_note(s.slot, (uint8_t)g_my, w.ctr);
     ++g_st.made;
     if (coop_send_world(kWorldSpawners, &w, sizeof w)) ++g_st.sent;
     if (g_log) std::fprintf(stderr, "[cspawn] my spawner slot %d made rock %d:%u%s facing %d count %d lf=%u wall=%lld\n", (int)s.slot, g_my, (unsigned)w.ctr,
@@ -322,6 +349,7 @@ void apply_queue() {
                     *r = Rk(); r->used = true; r->a = b; r->uid = uid_of(b); r->slot = s.slot; r->origin = (uint8_t)q.seat; r->ctr = w.ctr;
                     r->star = w.star != 0; r->born_lf = g_lf;
                 }
+                if (w.star) star_rock_note(s.slot, (uint8_t)q.seat, w.ctr);
                 ++g_st.copies;
                 if (g_log) std::fprintf(stderr, "[cspawn] seat %d's spawner slot %d made rock %d:%u%s: my copy uid %u facing %d count %d lf=%u wall=%lld\n", q.seat,
                                         (int)s.slot, q.seat, (unsigned)w.ctr, w.star ? " (THE STAR ROCK)" : "", uid_of(b), (int)w.rot[1], (int)w.count, g_lf, wall_ms());
@@ -344,8 +372,10 @@ void apply_queue() {
                 }
                 gone_add((short)w.slot, w.origin, w.ctr);
                 Rk *r = rk_find((short)w.slot, w.origin, w.ctr);
+                const bool live = r && alive(r->uid, r->a);
+                if (!live && (r ? r->star : star_rock_is((short)w.slot, w.origin, w.ctr)))
+                    star_out_after_late_break((short)w.slot, q.seat, w.origin, w.ctr);
                 if (!r) continue;
-                const bool live = alive(r->uid, r->a);
                 if (live && r->star && g_take_after >= 0 && !g_take_armed) { g_take_armed = true; g_take_lf = g_lf; std::memcpy(g_take_pos, r->a + 0x5c, 12); }
                 void *star = live ? port_grock_remote_break(r->a) : nullptr;
                 if (star) coop_camshield_mark(star, "a friend broke the star rock");
