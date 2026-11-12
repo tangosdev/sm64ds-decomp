@@ -505,6 +505,10 @@ void write_field(char *a, const BDesc &d, int idx, uint32_t v) {
     // the stomper reads his last talk, so writing it down after this copy's own DEAD entry let the next record run DEAD again (45 times
     // in 37 s, each one poof, sound and a star call). It only ever goes up on a copy.
     if (g_bf2 && d.cls == 248 && f.off == 0x8e0 && (v & 0xffu) <= (unsigned char)a[0x8e0]) return;
+    // bossfix3: DAMAGE_STOP (8) and DAMAGE_START (10) change the body's animations segment by segment at their timer's 3, 6 and 9 and
+    // end when every segment has its new one. A copy forced into them took the authority's timer (13 by then), skipped those steps and
+    // stood in 8 for good (own_f8 row: 13 samples, until the authority's MOVE pulled it out). The enter code's timer stays.
+    if (g_bf2 && d.cls == 248 && f.off == 0x8da && (rd32(a, 0x8c4) == 8 || rd32(a, 0x8c4) == 10)) return;
     if (f.kind & kGoomState) {
         if (v > 8u) return;
         if (v == 5u) func_ov074_02121a4c(a, 2);     // the stomp sets the hit animation before it enters state 5, whose tick waits for it to finish
