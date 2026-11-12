@@ -30,7 +30,7 @@
      used by every function here and by the wireless code that follows.
    - Order: mwccarm emits a file's functions in reverse source order, so
      the file runs from the highest address (func_0203ea5c) down.
-     func_0203ea5c also carries func_0203da4c's body inlined, and only a
+     func_0203ea5c's call to func_0203da4c is inlined, and only a
      function in the same file can be inlined.
    - End: the wireless layer from func_0203f604 uses the same bss run, and
      its words interleave with the link's, so it most likely continues this
@@ -50,6 +50,7 @@
 extern "C" {
 
 extern void func_020408b0(u16 arg);
+void func_0203da4c(void);
 extern s32 func_02040714(void);
 extern void func_02040820(void);
 extern void func_02040790(void);
@@ -397,11 +398,7 @@ void func_0203ea5c(void) {
             data_020a0efc = 3;
         }
         if (data_020a0efc != 0) {
-            data_020a0f1c &= 0xFF60;
-            /* The cartridge stores unk22 twice and never clears unk23
-               (unk23 in the second store moves 22 words). */
-            data_020a1040.unk22 = 0;
-            data_020a1040.unk22 = 0;
+            func_0203da4c();
             data_020a0f30 = 0;
             data_020a1040.flags &= 0xEFFF;
             data_020a0efc--;
@@ -1068,14 +1065,21 @@ unsigned short func_0203da80(unsigned short x) {
 
 /* Clear the link error bits 0x9f of data_020a0f1c and unk22 (byte 0x22) of
    the local input record data_020a1040. func_02030aa4 calls it when a session
-   starts, and dMeter_c when it sets up. func_0203ea5c runs the same three
-   statements inline in its error countdown, so the two shared a translation
-   unit. The cartridge stores unk22 twice here as well. */
+   starts, and dMeter_c when it sets up. The cartridge stores unk22 twice.
+
+   func_0203ea5c's call in its error countdown is the only call the cartridge
+   inlines anywhere in this file: the small functions func_0203db64 calls
+   (func_0203d81c, d854, d8fc, d918) stay calls. Auto-inlining is therefore
+   on for this one function, not the file. mwccarm generates a C++ file's
+   functions after reading all of it, which is why a function defined after
+   its caller can still be inlined into it. */
+#pragma auto_inline on
 void func_0203da4c(void) {
     data_020a0f1c &= 0xff60;
     data_020a1040.unk22 = 0;
     data_020a1040.unk22 = 0;
 }
+#pragma auto_inline reset
 
 /* The link mode data_020a0f04 that func_0203da2c sets (0 local only, 1 and 2
    func_0203ea5c, 3 func_0203e20c). */
