@@ -1,0 +1,9 @@
+{
+  "about": "HYBRIDCAM1: one Mario on the castle grounds start, empty settings (the hybrid camera by default) for mouse / stick / ease-back rows",
+  "mode": "solo",
+  "save": {"preset": "early"},
+  "proof": {"secs": 120, "shot_ms": 60000},
+  "players": [
+    {"character": "mario", "level": 1}
+  ]
+}

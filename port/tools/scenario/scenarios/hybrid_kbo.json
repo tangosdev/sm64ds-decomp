@@ -1,0 +1,9 @@
+{
+  "about": "HYBRIDCAM1: one Mario below King Bob-omb, a few steps from the talk that starts his fight (a game camera moment)",
+  "mode": "solo",
+  "save": {"preset": "fresh", "stars": {"0": "40"}, "flags": ["messages_seen"]},
+  "proof": {"secs": 120, "shot_ms": 60000, "census": [189]},
+  "players": [
+    {"character": "mario", "level": 6, "act": 1, "near": {"class": 189, "dist": 350}}
+  ]
+}

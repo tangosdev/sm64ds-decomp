@@ -41,7 +41,13 @@ int host_setting_swap_camera_turn(void);
    debug menu's camera row writes the key back through
    host_setting_save_camera_mode, the way the run row writes RunMode.
    Boot-latched: F1 and the row move the live mode, the file moves the next
-   boot. */
+   boot.
+   HYBRIDCAM1 (Tango, 11-12): the hybrid camera is the default now. It reads
+   back as 3 (hybrid) when the file says ds and CameraHybrid is not false, so
+   every file that never picked a mode (the launcher writes "ds" as its
+   default) lands on it; set / save take 3 and write CameraMode "ds" with
+   CameraHybrid true, and any other pick writes CameraHybrid false. See
+   CAMERA_MODE_KEY in host_settings.cpp. */
 int host_setting_camera_mode(void);
 int host_setting_save_camera_mode(int mode);
 

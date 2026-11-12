@@ -174,7 +174,7 @@ static int child(const char *which)
         /* refusals */
         check_eq(sl_set(SL_STICK_DEADZONE, 51), 0, "dead zone out of range");
         check_eq(sl_set(SL_RUN_THRESHOLD, 10), 0, "run threshold out of range");
-        check_eq(sl_set(SL_CAMERA_MODE, 3), 0, "camera mode out of range");
+        check_eq(sl_set(SL_CAMERA_MODE, 4), 0, "camera mode out of range");   /* HYBRIDCAM1: 3 is hybrid */
         check_eq(sl_set(SL_CAMERA_SENSITIVITY, 5), 0, "cam sens out of range");
         check_eq(sl_set(SL_IMPROVED_MINIMAP, 0), 0, "improved minimap is read only");
         check_eq(sl_flush(), 1, "flush");

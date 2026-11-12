@@ -4993,8 +4993,10 @@ static void cam93_collide(char *player, const int *pivot, int *eye)
 
 /* the rig's picture: eye from the pivot, collided, pushed. One place for both frame loops. */
 static const int *c3_free_pivot(void *cam, char *player);   /* CAMERA3, below */
+static int hy_ease_draw(void *cam, char *player);            /* HYBRIDCAM1, below */
 static void cam93_rig_draw(void *cam, char *player)
 {
+    if (hy_ease_draw(cam, player)) return;   /* HYBRIDCAM1: the ease back to the DS camera draws its own blend */
     int fceye[3];
     const int *pivot = cam_mode == CAM_ANALOG ? an_pivot : c3_free_pivot(cam, player);
     fc_eye(pivot, fceye);
@@ -5096,6 +5098,179 @@ static void c3_watchdog(void *cam, char *player, int host_excused)
         if (cam_mode != CAM_DS) cam_handover(cam, player, "watchdog");
         g_cam93_scale = 4096;
     }
+}
+
+/* ---- HYBRIDCAM1: THE HYBRID CAMERA, THE DEFAULT ----
+   (run coopfix1, lane HYBRIDCAM1; Tango's S1, a Discord suggestion he made the default.)
+   The player's mode is one of four: analog, freecam, DS, hybrid (settings.json: CameraMode "ds" with CameraHybrid not false, see
+   hal/host_settings.cpp). Hybrid is not a fifth camera, it moves cam_mode between the two that exist:
+     - it starts on the DS camera (cam_mode CAM_DS: the cartridge's own camera, its fixed angles, Q/E and the bumpers step it);
+     - the first mouse move or right-stick push hands the view to the analog cam (cam_mode CAM_ANALOG) through cam_handover,
+       CAMERA3's one hand-over, so a camera a friend's scene holds in a coop room seeds from behind the player. When the game
+       camera is trusted the analog pivot starts on its look-at, so the hand-over does not move the picture;
+     - every camera input (mouse, right stick, Q/E, R/F, zoom, centre, the bumpers) restarts a quiet count; after HY_QUIET ticks
+       (3.5 s) with none the rig eases to the DS camera over HY_EASE ticks: yaw, pitch, distance and pivot each go from where the
+       rig was to where the game camera is NOW (it keeps following the player underneath the whole time), on a smoothstep, so it
+       leaves and arrives without a jolt; the last eased frame is the game camera's own eye and look-at, and the next tick the
+       game camera draws. Any camera input during the ease takes the view back from wherever the ease had got to;
+     - a game camera moment (a cutscene script, a talk, a door or exit look, the cannon, first person, the tail grab, or flag 8
+       held by an actor in single player) drops straight to the DS camera and stays there: the scene plays on the game's own
+       camera and nothing hands back afterwards, so the hybrid never fights it. In a coop room flag 8 is CAMERA3's untrusted
+       camera: the analog cam stays up and the ease waits until the camera is trusted again (the CANNON2 shield's rule).
+   The pause and the F5 menu stop the quiet count; a level change and a state load go to the DS camera. The camera never
+   touches the player's physics: the only thing it hands the walk is the heading (the rig's while it draws, the game
+   camera's otherwise), exactly as the analog and DS modes do.
+   Knobs: SM64DS_HYBRID_CAMERA=1 boots hybrid (wins over the file, like SM64DS_ANALOG_CAMERA), SM64DS_HYBRID_QUIET=<ticks> and
+   SM64DS_HYBRID_EASE=<ticks> move the two times, SM64DS_HYBRID_TRACE=1 one [camhy] line a tick. Dev builds only (proof):
+   SM64DS_HYBRID_MOUSE=<f0>[-<f1>]:<dx>:<dy>,... adds that many mouse pixels a tick to this game (never the real pointer),
+   SM64DS_HYBRID_SHOT=<f0>-<f1>[/<step>],... writes hybrid_f<N>.bmp of the top screen on those frames. */
+static int cam_hybrid;            /* the player's mode is hybrid; cam_mode is CAM_DS or CAM_ANALOG under it */
+static int hy_quiet;              /* ticks with no camera input while the analog cam is up */
+static int hy_ease = -1;          /* -1: not easing; 1..HY_EASE: the tick of the ease back to the DS camera */
+static int hy_mouse_acc;          /* the mouse's recent travel in binangs, decaying, so a one-pixel bump does not switch */
+static short hy_s_yaw, hy_s_pitch;    /* the rig where the ease began */
+static int hy_s_dist;
+static int hy_gyaw_prev, hy_dyaw;     /* the game camera's heading at the last eased draw, and the unwrapped turn to it */
+static int hy_knob(const char *name, int dflt) { const char *e = getenv(name); return e && atoi(e) > 0 ? atoi(e) : dflt; }
+static int hy_quiet_ticks(void) { static int v = -1; if (v < 0) v = hy_knob("SM64DS_HYBRID_QUIET", 105); return v; }   /* 3.5 s at 30 */
+static int hy_ease_ticks(void) { static int v = -1; if (v < 0) v = hy_knob("SM64DS_HYBRID_EASE", 36); return v; }     /* 1.2 s */
+static int hy_trace(void) { static int v = -1; if (v < 0) v = getenv("SM64DS_HYBRID_TRACE") ? 1 : 0; return v; }
+static int hy_user_mode(void) { return cam_hybrid ? 3 : cam_mode; }
+static const char *hy_mode_name(int m) { return m == 3 ? "hybrid" : cam_mode_name(m); }
+static int hy_heading(const int *eye, const int *at)
+{
+    return (int)floor(atan2((double)eye[0] - at[0], (double)eye[2] - at[2]) * (65536.0 / 6.28318530717958647692) + 0.5) & 0xffff;
+}
+/* the player's mode, from F1, the settings page or boot. Hybrid starts on the DS camera. */
+static void hy_set_mode(int m, void *cam, char *player, const char *why)
+{
+    hy_ease = -1;
+    hy_quiet = 0;
+    hy_mouse_acc = 0;
+    if (m == 3) {
+        cam_hybrid = 1;
+        cam_mode = CAM_DS;
+        return;
+    }
+    cam_hybrid = 0;
+    cam_mode = m;
+    if (cam_mode != CAM_DS && cam) cam_handover(cam, player, why);
+    if (cam_mode == CAM_ANALOG) an_pivot_live = 0;
+}
+/* hybrid only: back to the DS camera now (a level change, a state load, a game camera moment) */
+static void hy_to_ds(const char *why, int frame)
+{
+    if (!cam_hybrid) return;
+    if (cam_mode != CAM_DS || hy_ease >= 0)
+        fprintf(stderr, "[camhy] f%d DS camera: %s\n", frame, why);
+    cam_mode = CAM_DS;
+    hy_ease = -1;
+    hy_quiet = 0;
+}
+/* one tick of the hybrid, in the input phase after F1 and the settings request, before the rig reads the input */
+static void hy_frame(void *cam, char *player, int frame, int mouse_dyaw, int mouse_dpitch, int stick_rx, int stick_ry,
+                     int other_input, int held)
+{
+    if (!cam_hybrid || !cam || !player || rb_replaying()) return;
+    const int flag8 = (*(const unsigned *)((const char *)cam + 0x154) & 8u) != 0;
+    const int trusted = c3_trust(cam, player);
+    const int st = cam93_state_idx(cam);
+    const int moment = cam93_ds_owned(cam) || cam10_cutscene() || (flag8 && trusted);
+    const int mtravel = (mouse_dyaw < 0 ? -mouse_dyaw : mouse_dyaw) + 2 * (mouse_dpitch < 0 ? -mouse_dpitch : mouse_dpitch);
+    hy_mouse_acc = hy_mouse_acc * 3 / 4 + mtravel;
+    const int stick = fc_stick_rate(stick_rx, 1000) != 0 || fc_stick_rate(stick_ry, 1000) != 0;
+    if (hy_trace())
+        fprintf(stderr, "[camhy] f%d sub=%s ease=%d quiet=%d st=%d moment=%d trust=%d mouse=%d,%d acc=%d stick=%d,%d other=%d held=%d "
+                "yaw=%04x pitch=%04x dist=%d gyaw=%04x geye=%d,%d,%d gat=%d,%d,%d\n",
+                frame, cam_mode == CAM_DS ? "DS" : "analog", hy_ease, hy_quiet, st, moment, trusted, mouse_dyaw, mouse_dpitch,
+                hy_mouse_acc, stick_rx, stick_ry, other_input, held, (unsigned)(unsigned short)fc_yaw, (unsigned)(unsigned short)fc_pitch,
+                fc_dist >> 12, hy_heading((const int *)((char *)cam + 0x8c), (const int *)((char *)cam + 0x80)),
+                *(int *)((char *)cam + 0x8c) >> 12, *(int *)((char *)cam + 0x90) >> 12, *(int *)((char *)cam + 0x94) >> 12,
+                *(int *)((char *)cam + 0x80) >> 12, *(int *)((char *)cam + 0x84) >> 12, *(int *)((char *)cam + 0x88) >> 12);
+    if (moment) {
+        char why[64];
+        snprintf(why, sizeof why, "the game camera's moment (state %d, cutscene %d, flag 8 %d)", st, cam10_cutscene(), flag8);
+        hy_to_ds(why, frame);
+        return;
+    }
+    if (held) return;   /* the pause or the F5 menu: nothing moves, the quiet count waits */
+    if (cam_mode == CAM_DS) {
+        if (hy_mouse_acc < 144 && !stick) return;   /* about 3 pixels of mouse, or the stick past its floor */
+        cam_mode = CAM_ANALOG;
+        hy_quiet = 0;
+        hy_ease = -1;
+        cam_handover(cam, player, "hybrid: camera input");
+        if (trusted) {   /* the analog pivot starts on the game camera's look-at, so the picture does not move; it eases to the player */
+            const int *at = (const int *)((char *)cam + 0x80);
+            an_pivot[0] = at[0]; an_pivot[1] = at[1]; an_pivot[2] = at[2];
+            an_pivot_live = 1;
+        }
+        fprintf(stderr, "[camhy] f%d analog cam: %s\n", frame, stick ? "right stick" : "mouse");
+        return;
+    }
+    if (hy_mouse_acc || stick || other_input) {
+        hy_quiet = 0;
+        if (hy_ease >= 0) { hy_ease = -1; fprintf(stderr, "[camhy] f%d ease back stopped: camera input\n", frame); }
+        return;
+    }
+    if (hy_ease >= 0 && !trusted) {   /* coop: an actor took the game camera mid-ease; keep the analog cam where the ease got to */
+        hy_ease = -1;
+        hy_quiet = 0;
+        fprintf(stderr, "[camhy] f%d ease back stopped: the game camera is held or far away\n", frame);
+        return;
+    }
+    if (hy_ease >= 0) {
+        if (hy_ease >= hy_ease_ticks()) {
+            cam_mode = CAM_DS;
+            hy_ease = -1;
+            hy_quiet = 0;
+            fprintf(stderr, "[camhy] f%d DS camera: eased back\n", frame);
+        } else {
+            ++hy_ease;
+        }
+        return;
+    }
+    if (++hy_quiet < hy_quiet_ticks() || !trusted) return;   /* a held or far camera (coop): stay on the analog cam */
+    hy_s_yaw = fc_yaw;
+    hy_s_pitch = fc_pitch;
+    hy_s_dist = fc_dist;
+    hy_gyaw_prev = hy_heading((const int *)((char *)cam + 0x8c), (const int *)((char *)cam + 0x80));
+    hy_dyaw = (((hy_gyaw_prev - (unsigned short)fc_yaw) & 0xffff) ^ 0x8000) - 0x8000;
+    hy_ease = 1;
+    fprintf(stderr, "[camhy] f%d easing back to the DS camera after %d quiet ticks (turn %d, pitch %04x->, dist %d)\n", frame,
+            hy_quiet, hy_dyaw, (unsigned)(unsigned short)fc_pitch, fc_dist >> 12);
+}
+/* the eased picture: called by cam93_rig_draw. Returns 1 when it drew. */
+static int hy_ease_draw(void *cam, char *player)
+{
+    if (!cam_hybrid || hy_ease < 1 || cam_mode != CAM_ANALOG || !cam) return 0;
+    const int n = hy_ease_ticks();
+    const double t = hy_ease >= n ? 1.0 : (double)hy_ease / n;
+    const double s = t * t * (3.0 - 2.0 * t);
+    const int *geye = (const int *)((char *)cam + 0x8c), *gat = (const int *)((char *)cam + 0x80);
+    const int gyaw = hy_heading(geye, gat);
+    hy_dyaw += (((gyaw - hy_gyaw_prev) & 0xffff) ^ 0x8000) - 0x8000;   /* the game camera's own turn since the last draw */
+    hy_gyaw_prev = gyaw;
+    int gd[3] = {geye[0] - gat[0], geye[1] - gat[1], geye[2] - gat[2]};
+    const int gdist = LenVec3(gd);
+    int ge[3] = {geye[0], geye[1], geye[2]}, ga[3] = {gat[0], gat[1], gat[2]};
+    const int gpitch = (short)Vec3_VertAngle(ge, ga);
+    fc_yaw = (short)(hy_s_yaw + (int)floor(hy_dyaw * s + 0.5));
+    fc_pitch = (short)(hy_s_pitch + (int)floor((gpitch - hy_s_pitch) * s + 0.5));
+    fc_dist = hy_s_dist + (int)floor(((double)gdist - hy_s_dist) * s + 0.5);
+    int pivot[3], eye[3];
+    for (int k = 0; k < 3; ++k) pivot[k] = an_pivot[k] + (int)floor(((double)gat[k] - an_pivot[k]) * s + 0.5);
+    fc_eye(pivot, eye);
+    cam93_collide(player, pivot, eye);
+    for (int k = 0; k < 3; ++k) eye[k] += (int)floor(((double)geye[k] - eye[k]) * s + 0.5);
+    if (s >= 1.0) for (int k = 0; k < 3; ++k) { eye[k] = geye[k]; pivot[k] = gat[k]; }
+    g_cam93_eye[0] = eye[0]; g_cam93_eye[1] = eye[1]; g_cam93_eye[2] = eye[2];
+    fc_push_view(cam, eye, pivot);
+    if (hy_trace())
+        fprintf(stderr, "[camhy] draw ease=%d s=%.3f eye=%d,%d,%d at=%d,%d,%d geye=%d,%d,%d gat=%d,%d,%d\n", hy_ease, s,
+                eye[0] >> 12, eye[1] >> 12, eye[2] >> 12, pivot[0] >> 12, pivot[1] >> 12, pivot[2] >> 12,
+                geye[0] >> 12, geye[1] >> 12, geye[2] >> 12, gat[0] >> 12, gat[1] >> 12, gat[2] >> 12);
+    return 1;
 }
 
 /* THE RIG'S SEAT ON THE ROM'S CAMERA::RENDER (run linkfull, lane K1LOOP). On a
@@ -13765,7 +13940,7 @@ static int mo_capture_want(int selftest, int stacked)
     if (!mo_capture_opt) why = "setting off";             /* the setting (on by default since MOUSELOCK1) */
     else if (selftest) why = "selftest";                  /* no player, no pointer */
     else if (mo_pen_moment(stacked, &why)) {}             /* the pointer is a pen: see the list above */
-    else if (cam_mode == CAM_DS) why = "DS camera";       /* the mouse steers nothing there */
+    else if (cam_mode == CAM_DS && !cam_hybrid) why = "DS camera";   /* the mouse steers nothing there (the hybrid's DS camera hands it to the analog cam) */
     else if (rb_replaying()) why = "rewind replay";       /* a rewound window is being re-run */
     else if (g_mo_tab_free) why = mo_tab_why;             /* the player asked for the pointer (mo_tab_frame); a click takes it back */
     /* one line each time the answer or its reason changes (focus is the separate term below, and mo_capture_set says when the pointer is
@@ -18632,6 +18807,7 @@ int main(void)
         }
         cam = nc;
         an_pivot_live = 0;
+        hy_to_ds("state load", g_host_key_frame);   /* HYBRIDCAM1 */
         if (cam_mode != CAM_DS && cam) cam_handover(cam, c, "state load");
         /* g_mc IS A FOURTH POINTER INTO THE WORLD, and RELOADRV's reverse scan
            found it: it is the Stage's level MeshCollider at Stage+0x91c, set
@@ -19293,6 +19469,32 @@ int main(void)
             /* CAMERA093: how long the mouse has been quiet (see the block above
                k1_level_camera_render_hook). Capture counts as steering. */
             if (mouse_dyaw || mouse_dpitch || mo_captured || mo_look) g_cam93_mouse_owned = 1;
+#ifndef PORT_ROM_CLEAN
+            {   /* HYBRIDCAM1 proof knob SM64DS_HYBRID_MOUSE=<f0>[-<f1>]:<dx>:<dy>,...: that many mouse pixels a tick, added to THIS
+                   game's own mouse deltas at the rate the real pointer would give (the real pointer is never moved). Inert unset. */
+                static const char *hm = (const char *)1;
+                if (hm == (const char *)1) hm = getenv("SM64DS_HYBRID_MOUSE");
+                if (hm && !selftest && !rb_replaying()) {
+                    const char *p = hm;
+                    while (*p) {
+                        char *q;
+                        const long f0 = strtol(p, &q, 10);
+                        long f1 = f0, x = 0, y = 0;
+                        p = q;
+                        if (*p == '-') { f1 = strtol(p + 1, &q, 10); p = q; }
+                        if (*p == ':') { x = strtol(p + 1, &q, 10); p = q; }
+                        if (*p == ':') { y = strtol(p + 1, &q, 10); p = q; }
+                        if (frame >= f0 && frame <= f1) {
+                            const int ms = host_setting_mouse_sensitivity();
+                            mouse_dyaw += (int)x * MOUSE_YAW * ms / 100;
+                            mouse_dpitch += (int)y * MOUSE_PITCH * ms / 100;
+                        }
+                        while (*p && *p != ',') ++p;
+                        if (*p == ',') ++p;
+                    }
+                }
+            }
+#endif
         }
 
         /* Top of the DS 2D frame: both OAM shadows back to empty, and the
@@ -19360,6 +19562,8 @@ int main(void)
                        &pad_live, &pad);
         stick_script_apply(port_rom_frame_checked(frame, "stick-script"),
                            &pad_live, &pad);
+        rstick_script_apply(port_rom_frame_checked(frame, "rstick-script"),
+                            &pad_live, &pad);   /* HYBRIDCAM1: the scripted right stick in play too (inert unless SM64DS_RSTICK_SCRIPT is set) */
         setlive_test_apply(frame, &pad_live, &pad);
 #ifndef PORT_ROM_CLEAN
         /* SM64DS_CLICK_TEST: the scripted stylus, the same call the windowed
@@ -19470,20 +19674,21 @@ int main(void)
                    otherwise (see the mode block above). host_settings'
                    numbering IS the CAM_ numbering: 0 analog, 1 freecam, 2 ds.
                    The three environment knobs below still win over the file. */
-                cam_mode = selftest ? CAM_DS : host_setting_camera_mode();
-                if (cam_mode < CAM_ANALOG || cam_mode > CAM_DS) cam_mode = CAM_DS;
-                if (getenv("SM64DS_ANALOG_CAMERA")) cam_mode = CAM_ANALOG;
-                if (getenv("SM64DS_DS_CAMERA")) cam_mode = CAM_DS;
-                if (getenv("SM64DS_FREECAM")) cam_mode = CAM_FREE;
-                if (cam_mode != CAM_DS) cam_handover(cam, c, "boot");
+                /* HYBRIDCAM1: 3 is hybrid (the default), which runs on CAM_DS / CAM_ANALOG; SM64DS_HYBRID_CAMERA=1 asks for it */
+                int bm = selftest ? CAM_DS : host_setting_camera_mode();
+                if (bm < CAM_ANALOG || bm > 3) bm = CAM_DS;
+                if (getenv("SM64DS_ANALOG_CAMERA")) bm = CAM_ANALOG;
+                if (getenv("SM64DS_DS_CAMERA")) bm = CAM_DS;
+                if (getenv("SM64DS_FREECAM")) bm = CAM_FREE;
+                if (getenv("SM64DS_HYBRID_CAMERA")) bm = 3;
+                hy_set_mode(bm, cam, c, "boot");
+                fprintf(stderr, "[cam] boot mode %s\n", hy_mode_name(bm));
             }
             /* the settings page (or a launcher edit) set the camera mode */
             if (g_cam_req >= 0) {
-                if (!selftest && g_cam_req != cam_mode) {
-                    cam_mode = g_cam_req;
-                    if (cam_mode != CAM_DS) cam_handover(cam, c, "settings");
-                    if (cam_mode == CAM_ANALOG) an_pivot_live = 0;
-                    fprintf(stderr, "[cam] mode %s (settings)\n", cam_mode_name(cam_mode));
+                if (!selftest && g_cam_req != hy_user_mode() && g_cam_req >= CAM_ANALOG && g_cam_req <= 3) {
+                    hy_set_mode(g_cam_req, cam, c, "settings");
+                    fprintf(stderr, "[cam] mode %s (settings)\n", hy_mode_name(g_cam_req));
                 }
                 g_cam_req = -1;
             }
@@ -19505,13 +19710,16 @@ int main(void)
                 now = 0;
             }
             if (now && !fc_edge) {
-                cam_mode = (cam_mode + 1) % 3;   /* analog -> freecam -> DS */
-                if (cam_mode != CAM_DS) cam_handover(cam, c, "mode key");
-                if (cam_mode == CAM_ANALOG) an_pivot_live = 0;
-                fprintf(stderr, "[cam] mode %s\n", cam_mode_name(cam_mode));
+                const int m = (hy_user_mode() + 1) % 4;   /* HYBRIDCAM1: analog -> freecam -> DS -> hybrid -> analog */
+                hy_set_mode(m, cam, c, "mode key");
+                fprintf(stderr, "[cam] mode %s\n", hy_mode_name(m));
             }
             fc_edge = now;
         }
+        if (real_camera)   /* HYBRIDCAM1: DS camera or analog cam under the hybrid, before the rig reads this tick's input */
+            hy_frame(cam, c, frame, mouse_dyaw, mouse_dpitch, stick_rx, stick_ry,
+                     cb_l_km || cb_r_km || cb_l_pad || cb_r_pad || cb_up || cb_dn || cb_c || cb_zi || cb_zo || mouse_wheel != 0,
+                     cam_paused || menu_on);
         {   /* CAMERA093: back from a DS-owned camera moment (talk, exit look-at,
                zoom ...): seed the rig from the game's eye so the hand-over does
                not jump. */
@@ -22277,6 +22485,7 @@ int main(void)
                     _ZN10dScStage_c10LoadSkyboxEv(stage);
                 }
                 an_pivot_live = 0;        /* do not ease the camera across it */
+                hy_to_ds("level change", g_host_key_frame);   /* HYBRIDCAM1: the entrance plays on the DS camera */
                 if (cam_mode != CAM_DS && cam) cam_handover(cam, c, "level");
                 printf("[lvl] re-seated: player %p camera %p scaleShift %d, "
                        "heap free %u\n", player, cam, level_shift,
@@ -25180,7 +25389,7 @@ int main(void)
             OvlStats os;
             ovl_fill_common(os);
             os.player = c;
-            os.cam_name = cam_mode_name(cam_mode);
+            os.cam_name = cam_hybrid ? (cam_mode == CAM_DS ? "hybrid (DS)" : "hybrid (analog)") : cam_mode_name(cam_mode);   /* HYBRIDCAM1 */
             os.menu_paused = !game_ticked;
             ovl_draw(surf, os);
         }
@@ -25458,6 +25667,33 @@ int main(void)
                 }
             }
         }
+#ifndef PORT_ROM_CLEAN
+        {   /* HYBRIDCAM1 proof knob SM64DS_HYBRID_SHOT=<f0>-<f1>[/<step>],...: hybrid_f<N>.bmp of the top screen on those frames
+               (play runs, not only the selftest). Inert unset. */
+            static const char *hs = (const char *)1;
+            if (hs == (const char *)1) hs = getenv("SM64DS_HYBRID_SHOT");
+            if (hs && !selftest) {
+                const char *p = hs;
+                int hit = 0;
+                while (*p && !hit) {
+                    char *q;
+                    const long f0 = strtol(p, &q, 10);
+                    long f1 = f0, st = 1;
+                    p = q;
+                    if (*p == '-') { f1 = strtol(p + 1, &q, 10); p = q; }
+                    if (*p == '/') { st = strtol(p + 1, &q, 10); p = q; if (st < 1) st = 1; }
+                    if (frame >= f0 && frame <= f1 && (frame - f0) % st == 0) hit = 1;
+                    while (*p && *p != ',') ++p;
+                    if (*p == ',') ++p;
+                }
+                if (hit) {
+                    char nm[64];
+                    snprintf(nm, sizeof nm, "hybrid_f%05d.bmp", frame);
+                    ntr::ppu_write_bmp(nm, fb);
+                }
+            }
+        }
+#endif
         /* SM64DS_LC_WATCH=1 -- AN INERT INSTRUMENT for the level-clear screen.
            It prints, and only when one of the words moves, the pair that gates
            Stage::LC_Update (data_0209f20c, data_0209f2d4), the word the screen

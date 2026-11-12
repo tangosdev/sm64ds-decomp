@@ -147,7 +147,7 @@ static int child(const char *which)
                  "KeyRun agrees with RunButtonKey");
         check_eq(host_setting_pad(HOST_PAD_RUN), host_setting_run_pad(),
                  "PadRun agrees with RunButtonPad");
-        check_eq(host_setting_camera_mode(), 2, "CameraMode ds");
+        check_eq(host_setting_camera_mode(), 3, "CameraMode ds (HYBRIDCAM1: ds with no CameraHybrid is hybrid)");
         check_eq(host_setting_run_mode(), 1, "RunMode analog");
         check_eq(host_setting_chat_scale(), 100, "ChatScale defaults to 100");
         check_eq(host_setting_key(-1), 0, "out of range key is unbound");
@@ -173,7 +173,7 @@ static int child(const char *which)
         check_eq(host_setting_pad(HOST_PAD_SELECT), 0x0020, "PadSelect BACK");
         check_eq(host_setting_pad(HOST_PAD_LOOK), 0, "PadLook unbound: "
                  "the file's PadJump already holds Y");
-        check_eq(host_setting_camera_mode(), 2, "CameraMode ds");
+        check_eq(host_setting_camera_mode(), 3, "CameraMode ds (HYBRIDCAM1: ds with no CameraHybrid is hybrid)");
         /* the run pair was not in the file, so both spellings answer the
            default */
         check_eq(host_setting_run_key(), 0x10, "run key untouched");
@@ -352,7 +352,7 @@ static int child(const char *which)
         check(!strcmp(L.name, "Pad \\ Co"), "name with the backslash");
         check_eq(L.b, 5, "field after the name read");
         check_eq(host_setting_key(HOST_KEY_JUMP), 0x4a, "key after the array read");
-        check_eq(host_setting_camera_mode(), 2, "second key after the array read");
+        check_eq(host_setting_camera_mode(), 3, "second key after the array read (HYBRIDCAM1: ds with no CameraHybrid is hybrid)");
         /* and a save of a name with a backslash writes it without one */
         snprintf(L.name, sizeof L.name, "Back\\slash \"q\"");
         check(host_setting_save_pad_layout(&L), "save wrote");
@@ -375,7 +375,7 @@ static int child(const char *which)
     } else if (!strcmp(which, "padlayouts_bad")) {
         check_eq(host_setting_pad_layout_count(), 0, "unusable PadLayouts is none");
         check_eq(host_setting_key(HOST_KEY_JUMP), 0x4a, "KeyJump J still parsed");
-        check_eq(host_setting_camera_mode(), 2, "CameraMode ds still parsed");
+        check_eq(host_setting_camera_mode(), 3, "CameraMode ds still parsed (HYBRIDCAM1: ds with no CameraHybrid is hybrid)");
     } else if (!strcmp(which, "quality_defaults")) {
         /* no file at all: the three picture keys are the shipped picture.
            0 is the explicit sentinel for "the multiplier the port picks
@@ -415,7 +415,7 @@ static int child(const char *which)
         check_eq(host_setting_anti_aliasing(), 1, "AntiAliasing 1");
         /* the keys around them still parse: a new key must not move an old
            one, which is the whole reason this case carries CameraMode */
-        check_eq(host_setting_camera_mode(), 2, "CameraMode ds still parsed");
+        check_eq(host_setting_camera_mode(), 3, "CameraMode ds still parsed (HYBRIDCAM1: ds with no CameraHybrid is hybrid)");
     } else if (!strcmp(which, "present")) {
         /* run hd2 lane GPU1: all three set, each to a value that is not the
            default, read from a file */
@@ -425,7 +425,7 @@ static int child(const char *which)
         /* the keys around them still parse: a new key must not move an old
            one, the rule the quality case carries CameraMode for */
         check_eq(host_setting_render_scale(), 3, "RenderScale beside them");
-        check_eq(host_setting_camera_mode(), 2, "CameraMode ds still parsed");
+        check_eq(host_setting_camera_mode(), 3, "CameraMode ds still parsed (HYBRIDCAM1: ds with no CameraHybrid is hybrid)");
         /* AND THE RENDERER IS STILL OFF. The two settings are independent and
            a file that only asked for the card to PRESENT must not be read as
            one that asked it to DRAW. */
@@ -454,7 +454,7 @@ static int child(const char *which)
            present keys absent, because the two are independent settings */
         check_eq(host_setting_renderer(), 1, "Renderer 1");
         check_eq(host_setting_present_backend(), 0, "PresentBackend absent is 0");
-        check_eq(host_setting_camera_mode(), 2, "CameraMode ds still parsed");
+        check_eq(host_setting_camera_mode(), 3, "CameraMode ds still parsed (HYBRIDCAM1: ds with no CameraHybrid is hybrid)");
     } else if (!strcmp(which, "renderer_bool")) {
         /* the launcher serialises a C# bool, the RunMode rule every toggle in
            this file follows */
@@ -496,7 +496,7 @@ static int child(const char *which)
     } else if (!strcmp(which, "savemenutop_off")) {
         check_eq(host_setting_save_menu_on_top(), 0, "SaveMenuOnTop 0 is off");
         /* the keys around it still parse: a new key must not move an old one */
-        check_eq(host_setting_camera_mode(), 2, "CameraMode ds still parsed");
+        check_eq(host_setting_camera_mode(), 3, "CameraMode ds still parsed (HYBRIDCAM1: ds with no CameraHybrid is hybrid)");
         check_eq(host_setting_improved_minimap(), 1,
                  "ImprovedMinimap still absent-is-on beside it");
     } else if (!strcmp(which, "savemenutop_bool")) {

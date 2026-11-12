@@ -530,6 +530,18 @@ const char *const RUN_MODE_KEY[3] = { "button", "analog", "auto" };
    Read by name and, like RunMode, by number too. */
 int g_camera_mode;                   /* default 2, ds */
 const char *const CAMERA_MODE_KEY[3] = { "analog", "freecam", "ds" };
+/* HYBRIDCAM1 (run coopfix1, Tango's S1): the hybrid camera, the DS camera that hands over to the analog cam while the mouse or the
+   right stick turns it and eases back after a few quiet seconds. It is the default. It is NOT a fourth CameraMode word: the launcher
+   (Settings.SanitizeCameraMode) turns any word it does not know into "ds" and writes it back, and 1.0.3 does the same on read. So
+   the file keeps CameraMode in its three words and hybrid is "CameraMode ds" with CameraHybrid not false:
+       CameraHybrid absent  -> never picked: hybrid when CameraMode is ds (or absent), the default every file had
+       CameraHybrid true    -> hybrid (the settings page wrote it)
+       CameraHybrid false   -> the player picked a mode on the settings page; ds means the plain DS camera
+   A file that names analog or freecam keeps that mode either way (ds was the default, so those were choices). What an old file
+   cannot say is whether its "ds" was picked or just the default: the launcher writes every key with its default, so both read the
+   same and land on hybrid. host_setting_camera_mode returns 3 for hybrid; the stored word stays 0..2. */
+int g_camera_hybrid = -1;            /* -1 absent, 0 false, 1 true */
+int camera_mode_eff(void) { return (g_camera_mode == 2 && g_camera_hybrid != 0) ? 3 : g_camera_mode; }
 
 /* ---- THE CONTROL BINDINGS -------------------------------------------------
    One settings.json key per action, keyboard and pad in two tables indexed by
@@ -1604,6 +1616,7 @@ void load_once(void)
     g_run_key = 0x10;
     g_run_pad = 0x4000;
     g_camera_mode = 2;   /* CameraMode ds, on Tango's order */
+    g_camera_hybrid = -1;   /* HYBRIDCAM1: absent, so ds reads as hybrid */
     g_stick_dead = STICK_DEAD_DEFAULT;
     g_run_thresh_pct = -1;
     g_invert_camera_y = 0;
@@ -1753,6 +1766,8 @@ void load_once(void)
                     if (n >= 0 && n <= 2) g_camera_mode = n;
                 }
             }
+            /* HYBRIDCAM1: see CAMERA_MODE_KEY */
+            if (json_value(text, "CameraHybrid")) g_camera_hybrid = json_bool(text, "CameraHybrid", 1) ? 1 : 0;
         }
         /* the bindings, each read against its OWN default so a file that
            moves jump and says nothing about the rest is honoured for jump.
@@ -2184,6 +2199,10 @@ void load_once(void)
     if (g_camera_mode != 2)
         fprintf(stderr, "[settings] CameraMode %s (%s)\n",
                 CAMERA_MODE_KEY[g_camera_mode], path);
+    else   /* HYBRIDCAM1: which of the two ds readings this file is */
+        fprintf(stderr, "[settings] CameraMode %s (CameraHybrid %s) (%s)\n",
+                g_camera_hybrid != 0 ? "hybrid" : "ds",
+                g_camera_hybrid < 0 ? "absent: never picked" : (g_camera_hybrid ? "true" : "false"), path);
     for (int i = 0; i < g_padlayout_n; ++i)
         fprintf(stderr, "[settings] PadLayouts: learned layout for %04x:%04x "
                         "%s (%s)\n", (unsigned)g_padlayouts[i].vid,
@@ -2446,9 +2465,11 @@ int reload_controls(const char *text)
     CTL_SET(g_invert_camera_y, json_bool(text, "InvertCameraY", g_invert_camera_y));
     CTL_SET(g_run_mode, read_mode(text, "RunMode", RUN_MODE_KEY, 3, g_run_mode));
     {
-        const int was_cam = g_camera_mode;
+        const int was_cam = camera_mode_eff();
         CTL_SET(g_camera_mode, read_mode(text, "CameraMode", CAMERA_MODE_KEY, 3, g_camera_mode));
-        if (g_camera_mode != was_cam) ++g_cam_gen;
+        if (json_value(text, "CameraHybrid"))   /* HYBRIDCAM1 */
+            CTL_SET(g_camera_hybrid, json_bool(text, "CameraHybrid", 1) ? 1 : 0);
+        if (camera_mode_eff() != was_cam) ++g_cam_gen;
     }
     CTL_SET(g_stick_dead, stick_dead_from_pct(
         json_int(text, "StickDeadzone", stick_dead_to_pct(g_stick_dead))));
@@ -2733,11 +2754,11 @@ extern "C" int host_setting_run_pad(void)
     return g_run_pad;
 }
 
-/* CameraMode: 0 analog, 1 freecam, 2 ds. See the header. */
+/* CameraMode: 0 analog, 1 freecam, 2 ds, 3 hybrid (HYBRIDCAM1). See the header. */
 extern "C" int host_setting_camera_mode(void)
 {
     load_once();
-    return g_camera_mode;
+    return camera_mode_eff();
 }
 
 /* The bindings. An index outside the table is 0, unbound, so a caller that
@@ -3529,12 +3550,14 @@ extern "C" int host_setting_set_run_mode(int mode)
 extern "C" int host_setting_set_camera_mode(int mode)
 {
     load_once();
-    if (mode < 0 || mode > 2) return 0;
+    if (mode < 0 || mode > 3) return 0;
     /* always bumps: the page's pick wins over an F1 cycle done in play */
-    g_camera_mode = mode;
+    g_camera_mode = mode == 3 ? 2 : mode;
+    g_camera_hybrid = mode == 3 ? 1 : 0;   /* HYBRIDCAM1: a pick is a pick, so a later "ds" from the launcher stays plain DS */
     ++g_ctl_gen;
     ++g_cam_gen;
-    queue_word("CameraMode", CAMERA_MODE_KEY[mode]);
+    queue_word("CameraMode", CAMERA_MODE_KEY[g_camera_mode]);
+    queue_bool("CameraHybrid", g_camera_hybrid);
     return 1;
 }
 
@@ -4061,11 +4084,13 @@ extern "C" int host_setting_save_run(int mode, int key, int pad)
 extern "C" int host_setting_save_camera_mode(int mode)
 {
     load_once();
-    if (mode < 0 || mode > 2) mode = 0;
-    g_camera_mode = mode;
+    if (mode < 0 || mode > 3) mode = 0;
+    g_camera_mode = mode == 3 ? 2 : mode;
+    g_camera_hybrid = mode == 3 ? 1 : 0;   /* HYBRIDCAM1 */
     char v[24];
-    snprintf(v, sizeof v, "\"%s\"", CAMERA_MODE_KEY[mode]);
+    snprintf(v, sizeof v, "\"%s\"", CAMERA_MODE_KEY[g_camera_mode]);
     queue_save("CameraMode", v);   /* SETFIX1 (G3): through the queue, then on the spot */
+    queue_save("CameraHybrid", g_camera_hybrid ? "true" : "false");
     return pending_flush();
 }
 
