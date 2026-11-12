@@ -1348,7 +1348,9 @@ bool wig_talk_here(const Boss &b) {
     char *pl = nullptr; std::memcpy(&pl, b.a + 0x8c8, sizeof pl);
     if (!pl || pl != local_body()) return false;
     const uint32_t st = (uint32_t)rd32(b.a, 0x8c4);
-    return st == 1u || st == 2u || st == 5u || st == 6u || (st == 3u && b.a[0x8e1]);
+    // bossfix3: MOVE_STOP (2) and DAMAGETALK (6) count only when this copy started the talk here (it drives the camera, +0x8e1): a copy
+    // put into 2 by its first record skipped DEMOCALL's message, waited for a talk that never existed and was held 60 s
+    return st == 1u || st == 5u || ((st == 2u || st == 3u || st == 6u) && b.a[0x8e1]);
 }
 bool eye_talk_here(const Boss &b) {
     if (b.d->cls != 176 || rd32(b.a, 0x49c) != 0 || state_of(b) != kEyeTalk || rd32(b.a, 0x4a0) == 0) return false;
