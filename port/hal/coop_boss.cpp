@@ -1008,6 +1008,7 @@ int count_minions(const char *boss) {
     return n;
 }
 
+char *local_body();
 void log_sample(int slot, const Boss &b, int auth) {
     char line[768]; int n = std::snprintf(line, sizeof line, "[cbs] w=%lld t=%u slot=%d cls=%u pos=%d,%d,%d auth=%d me=%d hp=%d st=%u",
                                           wall_ms(), g_ticks, slot, (unsigned)b.d->cls, rd32(b.a, 0x5c) >> 12, rd32(b.a, 0x60) >> 12, rd32(b.a, 0x64) >> 12,
@@ -1029,6 +1030,19 @@ void log_sample(int slot, const Boss &b, int auth) {
                            cam ? (unsigned)rd32(cam, 0x154) : 0u, cam ? rd32(cam, 0x8c) >> 12 : 0, cam ? rd32(cam, 0x90) >> 12 : 0, cam ? rd32(cam, 0x94) >> 12 : 0);
     }
     if (b.d->cls == 189) n += std::snprintf(line + n, sizeof line - n, " yaw=%04x", (unsigned)(uint16_t)rd16(b.a, 0x8e));   // kbo2
+    if (b.d->cls == 248 || b.d->cls == 176 || b.d->cls == 198) {   // bossfix2: who the boss talks to, my player's talk and the camera hold
+        const int toff = b.d->cls == 248 ? 0x8c8 : b.d->cls == 176 ? 0x490 : 0x5c8;
+        char *tp = nullptr; std::memcpy(&tp, b.a + toff, sizeof tp);
+        char *lb = local_body();
+        void *partner = nullptr; if (lb) std::memcpy(&partner, lb + 0x368, sizeof partner);
+        const char *cam = (const char *)data_0209f318;
+        n += std::snprintf(line + n, sizeof line - n, " talker=%s mytalk=%s talkst=%d cam=0x%x", !tp ? "none" : tp == lb ? "me" : "friend",
+                           partner == (void *)b.a ? "boss" : partner ? "other" : "none", lb ? ((Player *)lb)->GetTalkState() : -99,
+                           cam ? (unsigned)rd32(cam, 0x154) : 0u);
+        if (b.d->cls == 248) n += std::snprintf(line + n, sizeof line - n, " drive=%d", (int)b.a[0x8e1]);
+        if (b.d->cls == 176) n += std::snprintf(line + n, sizeof line - n, " part=%d sub=%d work1=%d hands=%u", rd32(b.a, 0x49c), rd32(b.a, 0x4a0), rd32(b.a, 0x498), read_global(0));
+        if (b.d->cls == 198) n += std::snprintf(line + n, sizeof line - n, " sub=%d", (int)(unsigned char)b.a[0x603]);
+    }
     n += std::snprintf(line + n, sizeof line - n, " tgt=%d", coop_target_seat_of_slot(slot));
     if (is_bully(b.d->cls)) n += std::snprintf(line + n, sizeof line - n, " claim=%d mover=%d", bully_claim_seat(slot, hub_now()), coop_move_owner(slot));
     std::fprintf(stderr, "%s\n", line);
