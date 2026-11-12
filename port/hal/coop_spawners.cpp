@@ -374,7 +374,7 @@ void break_knob() {
 }
 
 // Proof knob SM64DS_COOP_SPAWNERS_TAKE=<frames>: that many frames after a star rock broke here (my break or a friend's), my
-// player is put on the star it let out (the newest runtime star within 1500 units of the break) for up to 60 frames, so the
+// player is put on the star it let out (the newest runtime star here; it flies from the rock to its marker's spot) for up to 60 frames, so the
 // ROM's own collect runs.
 void take_knob() {
     if (!g_take_armed || g_take_hold >= 60 || g_lf - g_take_lf < (unsigned)g_take_after) return;
@@ -383,11 +383,9 @@ void take_knob() {
     char *best = nullptr; unsigned bu = 0;
     for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
         if (cls_of(a) != 178 || rd16(a, 0xce) >= 0 || ((const unsigned char *)a)[0x0f]) continue;
-        const double dx = (double)(rd32(a, 0x5c) - g_take_pos[0]) / 4096.0, dz = (double)(rd32(a, 0x64) - g_take_pos[2]) / 4096.0;
-        if (dx * dx + dz * dz > 1500.0 * 1500.0) continue;
         if (uid_of(a) > bu) { bu = uid_of(a); best = a; }
     }
-    if (!best) { if (g_take_hold++ == 0) std::fprintf(stderr, "[cspawn] TAKE knob: no star near the break here lf=%u wall=%lld\n", g_lf, wall_ms()); return; }
+    if (!best) { if (g_take_hold++ == 0) std::fprintf(stderr, "[cspawn] TAKE knob: no runtime star here lf=%u wall=%lld\n", g_lf, wall_ms()); return; }
     if (g_take_hold++ == 0)
         std::fprintf(stderr, "[cspawn] TAKE knob: my player goes onto star uid %u at %d,%d,%d lf=%u wall=%lld\n", bu, rd32(best, 0x5c) >> 12, rd32(best, 0x60) >> 12,
                      rd32(best, 0x64) >> 12, g_lf, wall_ms());
