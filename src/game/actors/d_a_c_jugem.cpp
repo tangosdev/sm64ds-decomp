@@ -116,9 +116,7 @@ extern "C" {
 /* Helpers not declared by the included headers. */
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int   Vec3_ApproachHorz(void *cur, const void *tgt, int maxStep);
-int VEC_Mag(const void *v);
 int   AngleDiff(int a, int b);
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 
 /* local extern: each of these real members takes a Fix12<int> BY VALUE,
    which mwccarm passes differently at the call site than the loose scalar

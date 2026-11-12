@@ -5,8 +5,6 @@
 #include "nitro/card/card_common.h"
 #include "nitro/pxi/fifo.h"
 
-extern "C" void OS_SpinWait(unsigned int cycles);
-
 #define TRUE 1
 
 /* The SDK's card_common.h: a request word to the ARM7's card handler. */

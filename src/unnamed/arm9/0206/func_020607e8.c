@@ -4,8 +4,6 @@
  * the task. */
 #include "nitro/card/card_common.h"
 
-extern int CARD_GetCurrentBackupType(void);
-
 void func_020607e8(CARDiCommon *p) {
     p->cmd->type = CARD_GetCurrentBackupType();
     CARDi_Request(p, CARD_REQ_IDENTIFY, 1);

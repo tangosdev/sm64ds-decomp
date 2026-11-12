@@ -36,10 +36,15 @@ void Vec3_Asr(Vector3 *, Vector3 *, int);
 /* ...and left; d may alias s. */
 void Vec3_Lsl(Vector3 *, const Vector3 *, int);
 
+/* NitroSDK fx_vec (0x02053274..0x020538b8). */
 /* out = a + b and a - b, per axis; out may alias either operand. */
 void VEC_Add(Vector3 *, Vector3 *, Vector3 *);
 void VEC_Subtract(Vector3 *, Vector3 *, Vector3 *);
-/* The same two under the name the newer TUs use. */
+/* Length of v. */
+int VEC_Mag(const Vector3 *);
+/* a . b, in 20.12. */
+Fix12i VEC_DotProduct(const Vector3 *, const Vector3 *);
+/* The same two add/subtract routines under the name the newer TUs use. */
 void Vec3_Add(Vector3 *, const Vector3 *, const Vector3 *);
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 
@@ -49,9 +54,7 @@ int Vec3_Dist(const Vector3 *, const Vector3 *);
 int Vec3_Equal(const Vector3 *, const Vector3 *);
 int Vec3_HorzDist(const Vector3 *, const Vector3 *);
 
-/* Dot product in 20.12, and the in-place normalizer (0 when the vector was
- * too short to normalize). */
-Fix12i VEC_DotProduct(const Vector3 *, const Vector3 *);
+/* The in-place normalizer: 0 when the vector was too short. */
 int NormalizeVec3IfNonZero(Vector3 *);
 
 /* out = in * scale and v *= scale, per axis. */

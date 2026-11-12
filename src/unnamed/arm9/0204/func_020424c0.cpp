@@ -3,6 +3,7 @@
 #include "nitro/os/cache.h"
 #include "nitro/os/system.h"
 #include "nitro/fs/file.h"
+#include "nitro/fs/archive.h"
 #include "nitro/card/card_rom.h"
 #include "private/file_share_alloc.h"
 
@@ -22,8 +23,6 @@ typedef struct {
 } Entry;
 
 extern char data_02099e6c[]; /* "rom" */
-
-extern FSArchive *FS_FindArchive(const char *name, int name_len);
 
 /* Allocate one block for the card's FAT, FNT and both overlay tables (each
  * as its size word followed by the data rounded up to 0x20 bytes, after one

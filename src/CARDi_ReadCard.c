@@ -4,14 +4,14 @@
  * the page cache and out through CARDi_ReadFromCache. Stop when len runs
  * out. */
 #include "nitro/card/card_rom.h"
-
-#define REG_CARD_CNT (*(volatile u32 *)0x040001a4)
-#define REG_CARD_DATA (*(volatile u32 *)0x04100010)
-#define CARD_DATA_READY 0x00800000
-#define CARD_START 0x80000000
+#include "nitro/hw/registers.h"
 
 extern void CARDi_SetRomOp(u32 cmd1, u32 cmd2);
 extern int CARDi_ReadFromCache(CARDRomStat *p);
+
+static inline void CARDi_SetRomOpReadPage1(u32 src) {
+    CARDi_SetRomOp((u32)(MROMOP_G_READ_PAGE | (src >> 8)), (u32)(src << 24));
+}
 
 void CARDi_ReadCard(CARDRomStat *p) {
     CARDiCommon *c = &cardi_common;
@@ -33,7 +33,7 @@ void CARDi_ReadCard(CARDRomStat *p) {
             p->cache_page = (u8 *)page;
         }
 
-        CARDi_SetRomOp((page >> 8) | 0xb7000000, page << 24);
+        CARDi_SetRomOpReadPage1(page);
 
         cnt = p->ctrl;
         pos = 0;

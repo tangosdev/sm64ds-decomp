@@ -15433,9 +15433,6 @@
       ]
     },
     "MI_CpuFill8": {
-      "src/engine/mb/MB_Parent.cpp": [
-        "param:#2 int"
-      ],
       "src/engine/mb/MB_WmBase.cpp": [
         "param:#2 int"
       ],
@@ -15756,39 +15753,9 @@
         "param:#1 const unsigned char *"
       ]
     },
-    "func_02071910": {
-      "src/unnamed/arm9/0207/func_020729f4.c": [
-        "arity:2"
-      ],
-      "src/unnamed/arm9/0207/func_02072168.cpp": [
-        "arity:2",
-        "return:int"
-      ]
-    },
     "sys_readc": {
       "src/__read_console.c": [
         "return:unsigned char"
-      ]
-    },
-    "func_02072168": {
-      "src/unnamed/arm9/0207/func_02071f1c.c": [
-        "param:#3 int"
-      ],
-      "src/unnamed/arm9/0207/func_02071be8.cpp": [
-        "param:#1 struct Src *",
-        "param:#2 Ctx *",
-        "param:#3 unsigned char *"
-      ]
-    },
-    "func_02072dac": {
-      "src/unnamed/arm9/0207/func_020729f4.c": [
-        "param:#1 void *"
-      ],
-      "src/unnamed/arm9/0207/func_02071be8.cpp": [
-        "param:#2 Ctx *"
-      ],
-      "src/unnamed/arm9/0207/func_02072168.cpp": [
-        "param:#2 char *"
       ]
     },
     "__throw_catch_compare": {
@@ -16919,35 +16886,6 @@
         "arity:0"
       ]
     },
-    "func_02071864": {
-      "src/unnamed/arm9/0207/func_02071be8.cpp": [
-        "param:#1 struct Src *",
-        "param:#2 Ctx *"
-      ],
-      "src/unnamed/arm9/0207/func_02072168.cpp": [
-        "param:#1 char *",
-        "param:#2 char *"
-      ]
-    },
-    "func_02071ccc": {
-      "src/unnamed/arm9/0207/func_02071be8.cpp": [
-        "param:#1 struct Src *"
-      ]
-    },
-    "func_02071d3c": {
-      "src/unnamed/arm9/0207/func_02071be8.cpp": [
-        "param:#1 struct Src *",
-        "param:#2 Ctx *",
-        "param:#3 int *",
-        "return:unsigned char *"
-      ]
-    },
-    "func_02072014": {
-      "src/unnamed/arm9/0207/func_02071be8.cpp": [
-        "param:#1 struct Src *",
-        "param:#2 Ctx *"
-      ]
-    },
     "func_020729f4": {
       "src/unnamed/arm9/0207/func_02071d3c.cpp": [
         "param:#1 S72d90 *"
@@ -16992,6 +16930,16 @@
     "PMi_SendLEDPatternCommandAsync": {
       "include/nitro/spi/pm.h": [
         "param:#2 void (*)(unsigned int, void *)"
+      ]
+    },
+    "MB_CommSetParentStateCallback": {
+      "include/nitro/mb/mb.h": [
+        "param:#1 void (*)(unsigned short, unsigned int, void *)"
+      ]
+    },
+    "func_0203f9d4": {
+      "include/private/arm9_a0f90_channel_measure.h": [
+        "param:#2 void (*)(ChannelMeasureReply *)"
       ]
     }
   },

@@ -136,6 +136,8 @@ enum daDemo_c_AssetId {
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "nitro/mi/memory.h"
+#include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 struct OamAttr;
 
@@ -222,7 +224,6 @@ struct JugemTexSequenceFilePtr : SharedFilePtr {
 
 extern "C" {
 extern unsigned char gSubScreenLayers;
-extern int RandomIntInternal(int *seed);
 extern int data_0209e650;
 extern OamAttr data_ov002_0210bddc;
 extern void SetSubBg0Offset(int a, int b);
@@ -307,22 +308,18 @@ extern int func_ov002_020f2990(char *c);
 extern void func_ov002_020f5fe4(char *c);
 /* local extern dropped: decl_common.h declares func_ov002_020f6514(unsigned char*, void*, unsigned char) */
 extern void func_02012694(unsigned int, void*);
-extern s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
 /* local extern dropped: decl_common.h declares data_ov002_0210bc88 as 'int'; callers cast the address */
-extern void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
-extern void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 extern int* Vec3_LslInPlace(int *v, int sh);
 extern u16 gKuppaScriptFrame;
 extern char *gCamera;
 extern int data_ov002_0210b958;
 /* local extern dropped: decl_common.h declares data_0209b41c */
 extern s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
-extern int ApproachAngle(s16 *cur, s16 target, int divisor, int band, int maxStep);
 extern void func_0201f138(void);
 extern void func_0201ef38(void);
 extern void Math_Function_0203b0fc(int* p, int target, int scale, int max);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern void Vec3_MulScalar(VecFx32 *out, const VecFx32 *in, int scale);
+extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 
 /* local extern dropped: decl_common.h declares data_0209b41c */
@@ -334,13 +331,6 @@ extern void *gPlayers[];
    scratch as Vector3 renumbers this TU's @NNN literals. */
 extern void Vec3_RotateYAndTranslate(void *out, void *in, short angle, void *src);
 extern int data_ov002_0210b964[3];
-extern Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
-extern Fix12i Vec3_HorzLen(const Vector3 *v);
-/* local extern: the Vector3 spelling math/CalcLib.h declares. */
-extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-extern void Matrix4x3_FromTranslation(Matrix4x3 *m, s32 x, s32 y, s32 z);
-extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, s32 x, s32 y, s32 z);
-extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, s32 x, s32 y, s32 z);
 extern Matrix4x3 data_020a0e68;
 extern Matrix4x3 data_0209b41c;
 extern unsigned char gGameMode;
@@ -3186,7 +3176,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
     tmp.x = diff.x;
     tmp.y = diff.y;
     tmp.z = diff.z;
-    Vec3_MulScalar(&scaled, &tmp, this->mRate);
+    Vec3_MulScalar((Vector3 *)&scaled, (const Vector3 *)&tmp, this->mRate);
     Vec3_Add((Vector3 *)&sum, (const Vector3 *)base, (const Vector3 *)&scaled);
 
     {

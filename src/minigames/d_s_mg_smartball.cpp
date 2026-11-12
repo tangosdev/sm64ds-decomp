@@ -46,6 +46,7 @@ enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
 #include "Memory.h"
 #include "nitro/fx/fx.h"
 #include "nitro/gx/gx_load.h"
+#include "nitro/os/printf.h"
 #include "cstd.h"
 #include "Vector2Math.h"
 #include "nitro/fx/fx_cp.h"
@@ -166,7 +167,6 @@ extern int Mg_GetSubmittedScore(void);
 extern void Mg_SubmitScore(int self);
 extern s16 atan2_hold_d_s_mg_smartball_1(int y, int x);
 extern void Mg_SetTopScreenYOffset(int a);
-extern int OS_SPrintf(char *buffer, const char *format, ...);
 extern void *Ov004_LoadFileByPath(void *p);
 extern void DecompressLZ16(void *src, void *dst);
 extern void Ov004_Deallocate(void *p);
