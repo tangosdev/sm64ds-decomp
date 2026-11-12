@@ -1,24 +1,7 @@
 #include "types.h"
 #include "private/mb_views.h"
 #include "nitro/mi/memory.h"
-/* A calibrated touch-panel sample (nitro/spi/tp.h's TPData, as func_0203df40 uses;
-   x, y, touch, validity). */
-struct Col4 {
-    u16 x, y, touch, validity;
-};
-
-/* The per-frame input record, named as func_0203df40's view: data_020a1040 is
-   the local one, data_020a1154 the four players'. */
-typedef struct {
-    s32 frame;         /* 0x00 */
-    struct Col4 touch; /* 0x04 */
-    u16 flags;         /* 0x0c */
-    u16 keys;          /* 0x0e */
-    s16 inputYaw;      /* 0x10 */
-    u8 settings[0x10]; /* 0x12 -- the link settings bytes (GetPlayerFlagByte, func_0203db3c) */
-    u8 unk22;
-    u8 unk23;
-} Rec;
+#include "private/player_input_record.h"
 
 extern void func_020408b0(u16 arg);
 extern s32 func_02040714(void);
@@ -47,17 +30,15 @@ extern u8 data_020a0ef8;
    the local record and unpacked the same way into data_020a1154 below: +0x0
    flags, +0x2 frame, +0x6 keys, +0x8/+0x9/+0xa touch x/y/touch (one byte
    each), +0xb inputYaw, +0xd data_020a0f08, +0xe data_020a0f00, +0xf the
-   0x11 bytes at Rec 0x12. While data_020a0ef8 counts down it carries instead
-   a chunk index at +0x2 and one of the 0x16-byte chunks at data_020a10a4 at
-   +0x3. */
+   0x11 bytes at the record's 0x12. While data_020a0ef8 counts down it
+   carries instead a chunk index at +0x2 and one of the 0x16-byte chunks at
+   data_020a10a4 at +0x3. */
 extern u8 data_020a1020[0x20];
-extern Rec data_020a1040;
 extern u8 data_020a0f08;
 extern u8 data_020a0f00;
 extern MBUserInfo data_020a10a4[4];
 extern u8 data_020a1112[0x16];
 extern u8 data_020a0f04;
-extern Rec data_020a1154[4];
 extern u8 data_020a0f10;
 extern u8 data_020a0fa6[24];
 extern u16 data_020a0fbe[4][3];
@@ -79,21 +60,21 @@ void func_0203ea5c(void) {
     s32 slot;
     u8 *user;
     u16 sendStatus;
-    Rec *endRec;
-    Rec *inRec;
+    PlayerInputRecord *endRec;
+    PlayerInputRecord *inRec;
     u16(*peerMac)[3];
-    Rec *frameRec;
+    PlayerInputRecord *frameRec;
     s32 frameIdx;
     s32 allReady;
-    Rec *anyRec;
+    PlayerInputRecord *anyRec;
     u8 *info;
     s32 endIdx;
-    Rec *verRec;
+    PlayerInputRecord *verRec;
     s32 anyIdx;
     s32 allEnd;
     s32 peer;
     s32 inIdx;
-    Rec *own;
+    PlayerInputRecord *own;
     s32 verIdx;
     s32 aid;
     s32 allIn;
@@ -101,13 +82,13 @@ void func_0203ea5c(void) {
     u8 *pkt;
     u8 chunk;
     s32 anyIn;
-    Rec *rdyRec;
+    PlayerInputRecord *rdyRec;
     u32 peers;
     s32 rdyIdx;
 
     /* allReady, allIn, anyIn and allEnd stay 0/1 search flags: an inline
        AllPeersHave()/AnyPeerHas() predicate re-colours registers (13-17 insns).
-       Their loops walk a Rec pointer beside the index; indexing
+       Their loops walk a PlayerInputRecord pointer beside the index; indexing
        data_020a1154[i] directly changes the loop's codegen. */
     if (data_02099e1c != 0) {
         func_020408b0(2);
@@ -230,7 +211,7 @@ void func_0203ea5c(void) {
                     } else {
                         for (aid = 0; aid < 4; aid++) {
                             pkt = func_0204068c(aid);
-                            MI_CpuClear8(&data_020a1154[aid], sizeof(Rec));
+                            MI_CpuClear8(&data_020a1154[aid], sizeof(PlayerInputRecord));
                             if (pkt != 0) {
                                 MI_CpuCopy8(pkt, &data_020a1154[aid].flags, 2);
                                 if (data_020a1154[aid].flags & 0x8000) {
