@@ -288,6 +288,17 @@ extern "C" void port_hub_presence_interlude(void) {
     using namespace port;
     static int off = -1;   // SM64DS_STARSEL_PRESENCE=0: the select as 1.0.3 had it (the proof's before arm)
     if (off < 0) { const char *e = std::getenv("SM64DS_STARSEL_PRESENCE"); off = (e && *e == '0') ? 1 : 0; }
+    {   // every 5 s of a select, the hub's queue evictions so far by kind (both arms), one line
+        static unsigned calls;
+        if (++calls % 300 == 0 && comms_hub_active()) {
+            char b[200]; int n = 0;
+            for (int k = 0; k <= kHubKinds && n < 180; ++k)
+                if (const unsigned long long d = comms_hub_queue_drops(k))
+                    n += std::snprintf(b + n, sizeof b - n, " %s%d:%llu", k == kHubKinds ? "movers" : "kind", k, d);
+            std::fprintf(stderr, "[hub] star select: queue evictions by kind so far:%s%s\n", n ? b : " none",
+                         off ? " (SM64DS_STARSEL_PRESENCE=0: presence not drained)" : "");
+        }
+    }
     if (off) return;
     if (!comms_hub_active() || comms_hub_arena() ||
         comms_hub_state() != kHubLive) return;

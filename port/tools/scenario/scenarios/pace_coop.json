@@ -1,0 +1,11 @@
+{
+  "about": "HITCH1: Mario and Luigi standing in Bob-omb Battlefield for the frame pacing summary ([pace] lines) of a coop room",
+  "mode": "coop",
+  "save": {"preset": "early"},
+  "proof": {"secs": 130, "shot_ms": 100000},
+  "env": {"SM64DS_PACE_LOG": "1"},
+  "players": [
+    {"character": "mario", "level": 6},
+    {"character": "luigi", "level": 6}
+  ]
+}

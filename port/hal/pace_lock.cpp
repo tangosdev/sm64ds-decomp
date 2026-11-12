@@ -229,6 +229,9 @@ void sum_maybe(long long now)
                 kSrcName[r.src], g_win_lockturns ? "on" : "off", g_k_now, g_win_lockturns, g_win_turns, h, g_burst_max,
                 g_err_n ? g_err_abs_sum / g_err_n : 0.0, g_pics, g_reps);
     }
+    /* the per-tick lines go out with the summary, once in 30 s: a game that is
+       closed by force (a crash, a killed process) keeps all but the last window */
+    log_flush();
     g_win_t0 = now;
     g_win_ticks = g_win_over = g_win_lockturns = g_win_turns = 0;
     g_win_tick_sum = g_win_tick_max = g_win_work_sum = 0.0;
