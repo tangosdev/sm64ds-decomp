@@ -46,12 +46,11 @@ void *_ZN8dActor_c4NextEPKS_(const void *prev);
 void func_ov102_0214c0b8(void *bmb);                       // daBmb_c: back to walking (State5's wake calls it)
 void func_ov102_0214baa0(char *bmb);                       // daBmb_c: asleep at home, undrawn (the end of a blast)
 void func_ov102_0214b384(void *bmb, unsigned int fuse);    // daBmb_c: light / shorten the fuse
-int _ZN8dActor_c13DistToCPlayerEv(void *self);             // dActor_c::DistToCPlayer (C-named in src)
-extern unsigned char data_0209f2d8;
+extern int data_0208e380;                                  // the distance dActor_c::ClosestPlayer leaves behind
 }
 
-// Only the name, to take the address of the cartridge's State5 (src/game/actors/d_a_bmb.cpp) for the patch below.
-struct daBmb_c { void State5(); };
+// Only the name, to take the address of dActor_c::DistToCPlayer (src/runtime/actor/d_actor.cpp) for the patch below.
+struct dActor_c { int DistToCPlayer(); };
 
 namespace port {
 namespace {
@@ -118,11 +117,12 @@ bool mine_carried(const void *a) {
 
 // A friend's copy stays asleep while the owner's sleeps. State5 wakes a Bob-omb on THIS console's terms (its camera player
 // 2000 units away and the Bob-omb off screen), so a far friend's copy woke alone while the owner's slept on, and putting it
-// back to sleep only made it wake again the next frame. So the cartridge's State5 is replaced by the same body with one
-// extra gate: in a coop group, a placed Bob-omb owned by another console whose fresh record says asleep does not wake.
-// Solo, a quiet owner and an older build's owner (no records) take the cartridge's path unchanged.
+// back to sleep only made it wake again the next frame. State5 is inlined into the Bob-omb's state switch, so the gate sits
+// in the one call it makes, dActor_c::DistToCPlayer: for a sleeping placed Bob-omb owned by another console whose fresh
+// record says asleep, the distance reads 0 and State5 stays put. Every other caller, solo play, a quiet owner and an older
+// build's owner (no records) get the cartridge's body unchanged (ClosestPlayer, then its distance).
 bool hold_asleep(const void *a) {
-    if (!g_on || !coop_group_established()) return false;
+    if (!g_on || cls_of(a) != kBmb || state_of(a) != 5 || !coop_group_established()) return false;
     const short slot = rd16(a, 0xce);
     if (slot < 0 || slot >= kSlots) return false;
     const int owner = coop_move_owner(slot), me = comms_hub_my_seat();
@@ -131,37 +131,40 @@ bool hold_asleep(const void *a) {
     return x.valid && comms_hub_now_ms() - x.t <= 3000u && x.state == 5;
 }
 
-void __fastcall state5_replacement(void *self, void * /*edx*/) {
-    char *a = (char *)self;
-    if (_ZN8dActor_c13DistToCPlayerEv(self) < 0x7d0000) return;
-    if ((rd32(a, 0xb0) & 8) == 0) {
-        if (data_0209f2d8 != 1) return;
-    }
-    if (hold_asleep(a)) {
+typedef void *(__fastcall *ClosestFn)(void *self, void *edx);
+ClosestFn g_closest = nullptr;
+
+int __fastcall dist_replacement(void *self, void * /*edx*/) {
+    if (hold_asleep(self)) {
         if (g_log && (g_st.held++ % 300u) == 0)
-            std::fprintf(stderr, "[cbomb] slot %d: would wake here, the owner's sleeps: held asleep (%u) wall=%lld\n", rd16(a, 0xce), g_st.held, wall_ms());
-        return;
+            std::fprintf(stderr, "[cbomb] slot %d: would wake here, the owner's sleeps: held asleep (%u) wall=%lld\n", rd16(self, 0xce), g_st.held, wall_ms());
+        return 0;
     }
-    func_ov102_0214c0b8(self);
-    wr32(a, 0xb0, rd32(a, 0xb0) | 0x10000001);
-    ((unsigned char *)a)[0x3f3] = 1;
+    g_closest(self, nullptr);
+    return data_0208e380;
 }
 
-bool g_state5_patched = false;
-void install_state5_patch() {
-    if (g_state5_patched) return;
-    g_state5_patched = true;
-    void (daBmb_c::*pmf)() = &daBmb_c::State5;
-    void *from = nullptr; std::memcpy(&from, &pmf, sizeof from);
+bool g_dist_patched = false;
+void install_dist_patch() {
+    if (g_dist_patched) return;
+    g_dist_patched = true;
+    int (dActor_c::*pmf)() = &dActor_c::DistToCPlayer;
+    unsigned char *from = nullptr; std::memcpy(&from, &pmf, sizeof from);
+    if (from[0] == 0xE9) {                                   // an incremental-link thunk: follow it to the body
+        int r; std::memcpy(&r, from + 1, 4); from = from + 5 + r;
+    }
+    if (from[0] != 0xE8) { std::fprintf(stderr, "[cbomb] DistToCPlayer is not the expected call+load, not patched\n"); return; }
+    int rel0; std::memcpy(&rel0, from + 1, 4);
+    g_closest = (ClosestFn)(from + 5 + rel0);                // dActor_c::ClosestPlayer, the body's own first call
     DWORD old = 0;
-    if (!VirtualProtect(from, 8, PAGE_EXECUTE_READWRITE, &old)) { std::fprintf(stderr, "[cbomb] cannot patch daBmb_c::State5\n"); return; }
+    if (!VirtualProtect(from, 8, PAGE_EXECUTE_READWRITE, &old)) { std::fprintf(stderr, "[cbomb] cannot patch DistToCPlayer\n"); return; }
     unsigned char b[5]; b[0] = 0xE9;
-    const int rel = (int)((unsigned char *)&state5_replacement - (unsigned char *)from - 5);
+    const int rel = (int)((unsigned char *)&dist_replacement - from - 5);
     std::memcpy(b + 1, &rel, 4);
     std::memcpy(from, b, 5);
     VirtualProtect(from, 8, old, &old);
     FlushInstructionCache(GetCurrentProcess(), from, 8);
-    if (g_log) std::fprintf(stderr, "[cbomb] daBmb_c::State5 replaced at %p\n", from);
+    if (g_log) std::fprintf(stderr, "[cbomb] dActor_c::DistToCPlayer gated at %p (ClosestPlayer %p)\n", (void *)from, (void *)g_closest);
 }
 
 void apply(char *a, int slot, Rx &x) {
@@ -234,7 +237,7 @@ void coop_bombs_on_world(int seat, const void *payload, int len) {
 void coop_bombs_frame(unsigned now) {
     read_env();
     if (!g_on) return;
-    install_state5_patch();
+    install_dist_patch();
     int lv = -1, ac = -1;
     if (!coop_group_established() || !coop_group_key(&lv, &ac)) return;
     if (lv != g_lv || ac != g_ac) { std::memset(g_tx, 0, sizeof g_tx); std::memset(g_rx, 0, sizeof g_rx); g_lv = lv; g_ac = ac; }
@@ -273,7 +276,7 @@ void coop_bombs_frame(unsigned now) {
     static unsigned last = 0;
     if (g_log && now - last >= 10000u) {
         last = now;
-        std::fprintf(stderr, "[cbomb] stats sent=%u recs=%u rx=%u bad=%u woke=%u lit=%u blown=%u slept=%u carried_skip=%u\n", g_st.sent, g_st.recs,
+        std::fprintf(stderr, "[cbomb] stats sent=%u recs=%u rx=%u bad=%u woke=%u lit=%u blown=%u slept=%u carried_skip=%u held=%u\n", g_st.sent, g_st.recs,
                      g_st.rx, g_st.bad, g_st.woke, g_st.lit, g_st.blown, g_st.slept, g_st.carried_skip, g_st.held);
     }
 }
