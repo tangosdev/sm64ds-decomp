@@ -70,6 +70,7 @@
 #include "LevelRng.h"
 #include "nitro/fx/fx_cp.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 /* Written as the real constructor, which is the form the legacy shard recovered
    and byte-matched. Two steps, and neither is spelled below: the dActor_c
@@ -769,13 +770,6 @@ void dEnemyBase_c::KillByInvincibleChar(const Vector3_16 &spin, daPly_c &player,
    check is spelled. The model spins about the height OnAimedAtWithEgg (vtable
    slot 29) reports, the point Yoshi's egg aims at: it is lifted to that height,
    rotated, and dropped back. */
-extern "C" {
-extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, int x, int y, int z);
-extern Matrix4x3 data_020a0e68;
-}
-
 int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr &clsn, dExtAnmModel_c &anim,
                                              unsigned int flags) {
     Vector3 v;

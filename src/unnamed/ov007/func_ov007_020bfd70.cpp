@@ -27,13 +27,13 @@
 #include "nitro/fx/fx_trig.h"
 #include "Ov007Camera.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/MtxStack.h"
 
 extern "C" {
-void MTX_MultVec43(void *v, void *m, void *out);
 
 void func_ov007_020bfd70(Ov007Camera *cam, void *pos, int *outX, int *outY) {
     int out[3];
-    MTX_MultVec43(pos, &cam->viewMatrix, out);
+    MTX_MultVec43((Vector3 *)pos, &cam->viewMatrix, (Vector3 *)out);
     int z = out[2];
     if (z < 0)
         z = -z;
