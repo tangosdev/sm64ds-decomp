@@ -1,7 +1,7 @@
 #include "types.h"
 #include "dExtModel_c.h"
 #include "Ov007Model.h"
-extern void *func_ov007_020c3df4(const char *name, int size);
+#include "Ov007MenuMem.h"
 extern int func_02046564(void *p);
 extern int func_020462bc(void *p);
 extern void *func_ov007_020c92ac(void);

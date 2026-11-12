@@ -82,10 +82,10 @@ extern "C" daObjWakame_c *daObjWakame_c_classInit(void) {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 s32 daObjWakame_c::InitResources() {
-    void *m = dExtSimpleModel_c::LoadFile(data_ov002_0210e0dc);
-    mAnmModel.SetFile((BMD_File *)m, 1, -1);
-    void *a = dExtFrameCtrl_c::LoadFile(data_ov002_0210e0d4);
-    mAnmModel.SetAnim((BCA_File *)a, 0, 0x1000, 0);
+    BMD_File *m = dExtSimpleModel_c::LoadFile(data_ov002_0210e0dc);
+    mAnmModel.SetFile(m, 1, -1);
+    BCA_File *a = dExtFrameCtrl_c::LoadFile(data_ov002_0210e0d4);
+    mAnmModel.SetAnim(a, 0, 0x1000, 0);
     UpdateModelTransform();
     return 1;
 }

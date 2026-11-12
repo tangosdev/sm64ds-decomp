@@ -511,7 +511,7 @@ int daKinopio_c::InitResources()
     Vector3 objPos;
     dExtFrameCtrl_c::LoadFile(gKinopioIdleAnimFile);
     dExtFrameCtrl_c::LoadFile(gKinopioTalkAnimFile);
-    mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(gKinopioModelFile), 1, 0x16);
+    mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(gKinopioModelFile), 1, 0x16);
     mShadowModel.InitCylinder();
     mCollider.Init(this, 0x78000, 0x8c000, 0x4200004, 0);
     mOpacity = 0xff;

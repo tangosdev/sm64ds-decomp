@@ -37,6 +37,7 @@
 #include "math/Approach.h"
 #include "SpawnInfo.h"
 #include "LevelRng.h"
+#include "math/CalcLib.h"
 
 /* POD views preserve the retail aggregate copies. Matrix4x3 and Vector3 are
    available, but their non-POD copies change these two helpers' codegen; see
@@ -63,15 +64,7 @@ struct V3Quint {
 extern "C" {
 
 /* arm9 scalar ABI and unnamed helpers; see the remaining work above. */
-/* local extern: the shared declaration is in CalcLib.h; this named parameter
- * keeps the TU's compiler-numbered static-initializer aliases stable. */
-extern int RandomIntInternal(int *seed);
-extern unsigned short DecIfAbove0_Short(unsigned short *p);
-extern int ApproachAngle(short *p, short target, int a, int b, int limit);
-extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern void func_02012694(unsigned int id, void *v);
 
 /* ov002 -- unnamed particle helper. */
@@ -155,7 +148,7 @@ s32 daYurei_Mucho_c::OnAimedAtWithEgg()
    absent from symbols.txt. Retain these ABI calls pending interface repair. */
 int daYurei_Mucho_c::InitResources()
 {
-    mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(gYureiMuchoModelFile), 1, -1);
+    mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(gYureiMuchoModelFile), 1, -1);
     dExtSimpleModel_c::LoadFile(data_ov065_0211d610);
     mShadowModel.InitCylinder();
     dExtFrameCtrl_c::LoadFile(gYureiMuchoWaitAnimFile);

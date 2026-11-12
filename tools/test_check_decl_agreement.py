@@ -1710,6 +1710,47 @@ class DefinitionOwnershipTests(unittest.TestCase):
         self.assertNotIn("own_target", out)
 
 
+class IncludedTypedefTests(unittest.TestCase):
+    """A typedef a file sees through its `#include`s reads the same on both sides.
+
+    `include/nitro/pxi/fifo.h` declares `PXI_SetFifoRecvCallback(int,
+    PXIFifoCallback)` and typedefs `PXIFifoCallback` itself, so the header side read
+    `void (*)(PXIFifoTag, unsigned int, int)`. `src/engine/pxi/PXI_Fifo.c` includes
+    that header and defines the function with the same spelling, but only its OWN
+    typedefs were resolved, so it kept the bare `PXIFifoCallback` and the two
+    disagreed. Twelve findings on the tree were this and nothing else.
+
+    The first case fails on the tool as it was; the control passes in both states.
+    A `typedef struct T T;` is NOT taken from a header (TAG_ALIAS): folding `T` into
+    `struct T` in includers only turned 30 agreeing `Matrix4x3 *` spellings of the
+    MTX_* helpers into findings on the tree.
+    """
+
+    def test_a_header_function_pointer_typedef_resolves_in_its_includer(self):
+        repo = BigRepo.shared()
+        repo.reset()
+        repo.write("include/own_cb.h",
+                   "typedef void (*OwnCb)(int);\nvoid own_set(OwnCb);\n")
+        repo.write("src/own_set.c",
+                   '#include "own_cb.h"\nvoid own_set(OwnCb cb) { (void)cb; }\n')
+        rc, out = repo.run_main(["--list"])
+        self.assertEqual(rc, 0, out)
+        self.assertNotIn("own_set", out)
+
+    def test_a_real_disagreement_through_the_typedef_still_reports(self):
+        """Control: resolving the alias must not hide a different signature."""
+        repo = BigRepo.shared()
+        repo.reset()
+        repo.write("include/own_cb2.h",
+                   "typedef void (*OwnCb2)(int);\nvoid own_set2(OwnCb2);\n")
+        repo.write("src/own_set2.c",
+                   '#include "own_cb2.h"\n'
+                   "void own_set2(void (*cb)(short)) { (void)cb; }\n")
+        rc, out = repo.run_main(["--list"])
+        self.assertEqual(rc, 1, out)
+        self.assertIn("own_set2", out)
+
+
 class DeclarationScopeTests(unittest.TestCase):
     """The declaration side of the ownership rule above.
 
@@ -3079,7 +3120,7 @@ class IncludedInlineDestructorTests(unittest.TestCase):
     def test_real_vector_carriers_reference_inline_header_bodies(self):
         targets=['src/engine/view/d_camera_dtor.cpp', 'src/runtime/actor/d_actor.cpp']
         _, _, defs, _=CDA.collect(REPO, targets)
-        for owner, line in (('Vector3', 61), ('Vector3s', 89)):
+        for owner, line in (('Vector3', 72), ('Vector3s', 100)):
             symbol='_ZN%d%sD1Ev' % (len(owner), owner)
             found=[d for d in defs if d.symbol == symbol]
             self.assertEqual(len(found), 1)

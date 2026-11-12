@@ -42,6 +42,7 @@
 #include "SpawnInfo.h"
 #include "private/mtx43.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/CalcLib.h"
 
 struct BCA_File;
 
@@ -132,11 +133,8 @@ int  SublevelToLevel(int sublevel);
 s8   NumRedCoins(void);
 void func_02012694(unsigned int soundID, const Vector3 *camSpacePos);
 
-short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
-int   Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 void  Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-int VEC_Mag(const Vector3 *v);
 void  Vec3_MulScalarInPlace(Vector3 *v, int s);
 void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void  Matrix4x3_FromRotationY(void *m, int angle);
@@ -173,7 +171,7 @@ s32 daRedBombhei_c::InitResources()
 {
     Vector3 pos;
 
-    BMD_File *modelFile = (BMD_File *)dExtSimpleModel_c::LoadFile(gRedBombheiModelFile);
+    BMD_File *modelFile = dExtSimpleModel_c::LoadFile(gRedBombheiModelFile);
     mAnmModel.SetFile(modelFile, 1, -1);
     mShadowModel.InitCylinder();
     dExtFrameCtrl_c::LoadFile(gRedBombheiWaitAnimFile);

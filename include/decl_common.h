@@ -1082,7 +1082,7 @@ extern void *sSlot3FaceSprites[];
 extern void*data_ov006_0213eb40;
 extern void *sBscCardSprites[];
 extern void **sSnowballTextSpritesByLanguage[];
-extern void *sMgMainCamera;
+extern struct MgCamera *sMgMainCamera;
 extern void *sD3DLanguageFile;
 extern void *sJumpBackFile;
 extern void *sRouletteLandedRacer;

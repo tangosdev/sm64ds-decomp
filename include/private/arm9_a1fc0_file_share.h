@@ -4,8 +4,8 @@
 #include "private/fs_views.h"
 
 /* Views of the wireless file-sharing work block at data_020a1fc0 (the 0x0204
- * cluster, func_02040aa4 .. func_02042668), moved here from func_02040c34.c
- * once func_02040f30, func_020412f0 and func_02041224 needed them too. The
+ * cluster, WFS_End .. WFSi_RomArchiveProc), moved here from func_02040c34.c
+ * once WFSi_OnChildSystemCallback, WFSi_OnParentSystemCallback and WFSi_ReallocBitmap needed them too. The
  * transfer runs over NitroSDK WBT (wireless block transfer): the child's
  * tables below are the ones WBT_GetBlockInfo/WBT_GetBlock take, and each
  * parent node embeds the WBTBlockInfoList (nitro/wbt.h) its region is
@@ -16,54 +16,54 @@
 #include "nitro/wbt.h"
 
 /* Parent area at +0x440: a pool of three 0xcc0-byte nodes, each holding one
- * registered region. A node moves free -> busy (state 1, loading; func_02041b60)
- * -> ready (state 2; func_02041b24) -> busy (state 3, releasing; func_02041ae8)
- * -> free (state 0; func_02041a94). */
+ * registered region. A node moves free -> busy (state 1, loading; WFSi_FromFreeToBusy)
+ * -> ready (state 2; WFSi_FromBusyToAlive) -> busy (state 3, releasing; WFSi_FromAliveToBusy)
+ * -> free (state 0; WFSi_FromBusyToFree). */
 enum { FILE_SHARE_NODE_SIZE = 0xcc0 }; /* node slot stride, sizeof(FileShareNode) */
 
 typedef struct FileShareNode {
-    struct FileShareNode *mNext; /* 0x00 -- list link (func_02041bbc moves nodes) */
+    struct FileShareNode *mNext; /* 0x00 -- list link (WFSi_MoveList moves nodes) */
     /* 0x04 -- the block list node WBT_RegisterBlock registers the region
-     * with (block id, size, 0x20-byte name, data); func_02041c2c finds a
+     * with (block id, size, 0x20-byte name, data); WFSi_FindAliveForID finds a
      * node by its id */
     WBTBlockInfoList mRegion;
-    /* 0x38 -- FS_InitFile here; func_02042254 opens, reads and closes the
-     * region's file through it, func_020412f0 refills a page through it.
-     * func_02041ce0 matches a request against its open extent and
-     * func_02041d28 sizes the registration by it */
+    /* 0x38 -- FS_InitFile here; WFSi_TaskThread opens, reads and closes the
+     * region's file through it, WFSi_OnParentSystemCallback refills a page through it.
+     * WFSi_FindAlive matches a request against its open extent and
+     * WFSi_SendOpenAck sizes the registration by it */
     FSFile mFile;
     int mState; /* 0x7c -- 0 free, 1 loading, 2 ready, 3 releasing */
-    /* 0x80 -- func_020412f0: +1 per child reading the region, -1 when it is
+    /* 0x80 -- WFSi_OnParentSystemCallback: +1 per child reading the region, -1 when it is
      * done; at 0 the node is released */
     int mRefCount;
-    /* 0x84 -- func_020412f0: children asking for a region that is still
+    /* 0x84 -- WFSi_OnParentSystemCallback: children asking for a region that is still
      * loading, by AID bit */
     int mWaitingChildren;
-    /* 0x88 -- func_02042254 opens the file by it; func_020412f0 hands it to
+    /* 0x88 -- WFSi_TaskThread opens the file by it; WFSi_OnParentSystemCallback hands it to
      * the requesting child. Seeded per node in func_02040c34 */
     int mFileId;
     /* 0x8c / 0x90 -- the region's extent in the ROM archive: a child's request
      * (offset, length) is stored here when no ready node holds it
-     * (func_02041c64, which also matches loading nodes by the pair), and
-     * func_02042254 opens [mFileOffset, mFileOffset + mFileSize) with
-     * FS_OpenFileDirect. func_02041ce0 matches a ready node by the same pair
+     * (WFSi_FindBusy, which also matches loading nodes by the pair), and
+     * WFSi_TaskThread opens [mFileOffset, mFileOffset + mFileSize) with
+     * FS_OpenFileDirect. WFSi_FindAlive matches a ready node by the same pair
      * through mFile's top and bottom - top */
     int mFileOffset;
     int mFileSize;
     /* 0x94 -- the block sequence number the previous WBT prepare-send asked
-     * for: func_020412f0 serves that one when its bytes are cached, then
-     * stores the new request's number. func_02042254 zeroes it on load */
+     * for: WFSi_OnParentSystemCallback serves that one when its bytes are cached, then
+     * stores the new request's number. WFSi_TaskThread zeroes it on load */
     int mPrevSeqNo;
     /* 0x98 -- page being refilled by an asynchronous read, 3 for none
-     * (func_02042254 loads with 3; func_020412f0 sets it to the page it
+     * (WFSi_TaskThread loads with 3; WFSi_OnParentSystemCallback sets it to the page it
      * refills and back to 3 once mFile is no longer busy); the cache search
      * skips it */
     int mLoadingPage;
-    /* 0x9c -- the last page refilled (func_02042254 loads with 2):
-     * func_020412f0 picks the next one round-robin from it */
+    /* 0x9c -- the last page refilled (WFSi_TaskThread loads with 2):
+     * WFSi_OnParentSystemCallback picks the next one round-robin from it */
     int mLastRefillPage;
     /* 0xa0 -- region file offset each page holds: 0, 0x400, 0x800 on load
-     * (func_02042254), a 0x200-aligned offset on refill (func_020412f0) */
+     * (WFSi_TaskThread), a 0x200-aligned offset on refill (WFSi_OnParentSystemCallback) */
     int mPageOffset[3];
     unsigned char pad_0ac[0x14];
     unsigned char mPages[3][0x400]; /* 0xc0 -- the cached file pages */
@@ -75,9 +75,9 @@ typedef struct FileShareNode {
  * parent packet size rides split across mPacketSizeHigh (bits 8-11) and
  * mPacketSizeLow. In kinds 1-3 mFileId is the region's registered id
  * (FileShareNode::mFileId, the child's mReadRegion), and mFlag is 1, except
- * on the packet-size notice func_02041e14 sends as kind 1 with mFlag 0. The
+ * on the packet-size notice WFSi_SendAck sends as kind 1 with mFlag 0. The
  * open request (kind 0) carries the region's length in those 24 bits and its
- * offset in the second word instead; func_02041a00 builds it under those
+ * offset in the second word instead; WFSi_ReadRequest builds it under those
  * names. */
 typedef struct FileShareMsg {
     unsigned int mKind : 4;
@@ -89,66 +89,66 @@ typedef struct FileShareMsg {
 
 typedef struct FileShareParentArea {
     /* 0x0000 -- one reply per AID, each a FileShareMsg (above):
-     * func_020412f0 fills it, func_02041d28 sets its file id, func_02041e14
+     * WFSi_OnParentSystemCallback fills it, WFSi_SendOpenAck sets its file id, WFSi_SendAck
      * sends it */
     unsigned char mReplies[0x10][0xc];
     FileShareNode mNodes[3];                       /* 0x00c0 */
     FileShareNode *mFreeList;                      /* 0x2700 */
-    FileShareNode *mReadyList;                     /* 0x2704 -- func_02041c2c searches it */
-    FileShareNode *mBusyList; /* 0x2708 -- func_02042254 loads its state-1 nodes */
-    /* 0x270c -- children owed a reply, by AID bit (func_020412f0,
-     * func_02041d28 set; func_02041e14 sends and clears) */
+    FileShareNode *mReadyList;                     /* 0x2704 -- WFSi_FindAliveForID searches it */
+    FileShareNode *mBusyList; /* 0x2708 -- WFSi_TaskThread loads its state-1 nodes */
+    /* 0x270c -- children owed a reply, by AID bit (WFSi_OnParentSystemCallback,
+     * WFSi_SendOpenAck set; WFSi_SendAck sends and clears) */
     int mReplyPending;
-    /* 0x2710 -- children answered as one group, by AID bit: func_02041e14
+    /* 0x2710 -- children answered as one group, by AID bit: WFSi_SendAck
      * sends to exactly this set once all of it is in mReplyPending, leaves
      * it out of any other send, and clears it when a member's reply no
      * longer matches; func_02040c34 zeroes it */
     int mReplyGroup;
-    /* 0x2714 -- func_02041e14 sets it after a send and waits; the send
-     * callback func_02042160 clears it */
+    /* 0x2714 -- WFSi_SendAck sets it after a send and waits; the send
+     * callback WFSi_OnSendMessageDone clears it */
     int mReplySending;
-    /* 0x2718 -- by AID; bit 0 is the parent itself. func_020417d0 sets a
+    /* 0x2718 -- by AID; bit 0 is the parent itself. WFSi_PortCallback sets a
      * child's bit on connect and clears it on disconnect */
     int mConnectedBitmap;
-    /* 0x271c -- children with a region open, by AID bit: func_020412f0 sets
-     * the bit on each open request (message kind 0); func_02041e14 clears it
+    /* 0x271c -- children with a region open, by AID bit: WFSi_OnParentSystemCallback sets
+     * the bit on each open request (message kind 0); WFSi_SendAck clears it
      * when it answers that child's release (kind 2) and masks it by
      * mConnectedBitmap; func_02040c34 zeroes it */
     int mOpenChildren;
-    /* 0x2720 -- func_020412f0: a request named another packet size;
-     * func_02041e14 applies mNewPacketSize once mBusyCount is 0 */
+    /* 0x2720 -- WFSi_OnParentSystemCallback: a request named another packet size;
+     * WFSi_SendAck applies mNewPacketSize once mBusyCount is 0 */
     int mResizePending;
-    /* 0x2724 -- nodes off the free list (func_02041b60 +1, func_02041a94 -1) */
+    /* 0x2724 -- nodes off the free list (WFSi_FromFreeToBusy +1, WFSi_FromBusyToFree -1) */
     int mBusyCount;
-    /* 0x2728 -- children to tell the new size, by AID bit (func_020412f0
-     * sets, func_02041e14 sends) */
+    /* 0x2728 -- children to tell the new size, by AID bit (WFSi_OnParentSystemCallback
+     * sets, WFSi_SendAck sends) */
     int mResizeChildren;
-    int mNewPacketSize; /* 0x272c -- func_02041e14 copies it to mParentPacketSize */
+    int mNewPacketSize; /* 0x272c -- WFSi_SendAck copies it to mParentPacketSize */
 } FileShareParentArea;
 
 /* Child area at +0x440. */
 typedef struct FileShareChildArea {
     /* 0x000 -- a WBTBlockInfoTable: func_02040c34 points entry i at the 0x28-byte
-     * WBTBlockInfo at 0xc0 + i * 0x28; func_02040f30 passes the table to
+     * WBTBlockInfo at 0xc0 + i * 0x28; WFSi_OnChildSystemCallback passes the table to
      * WBT_GetBlockInfo (WBT_GetBlockInfo) */
     void *mBlockInfoTable[0x10];
-    /* 0x040 -- a WBTRecvBufTable: func_02040f30 sets the peer's entry to the
+    /* 0x040 -- a WBTRecvBufTable: WFSi_OnChildSystemCallback sets the peer's entry to the
      * receive buffer before WBT_GetBlock (WBT_GetBlock) */
     void *mRecvBufTable[0x10];
-    /* 0x080 -- a WBTPacketBitmapTable, WBT_GetBlock's last table: func_02041224
+    /* 0x080 -- a WBTPacketBitmapTable, WBT_GetBlock's last table: WFSi_ReallocBitmap
      * points entry 0 at mRecvWork */
     void *mPacketBitmapTable[0x10];
     /* 0x0c0 -- the sixteen 0x28-byte WBTBlockInfo mBlockInfoTable points at
      * (func_02040c34) */
     unsigned char mBlockInfo[0x10][0x28];
-    /* 0x340 -- func_02040bb0's WM_ReadStatus copy of the WM status block;
+    /* 0x340 -- WFS_Start's WM_ReadStatus copy of the WM status block;
      * it reads the aid */
     WMStatus mStatus;
-    /* 0xc70 -- func_02041224 allocates it (about four bytes per packet of
-     * mMaxReadSize); func_02040aa4 frees it */
+    /* 0xc70 -- WFSi_ReallocBitmap allocates it (about four bytes per packet of
+     * mMaxReadSize); WFS_End frees it */
     void *mRecvWork;
-    int mMaxReadSize; /* 0xc74 -- func_02041224 grows it to the largest read */
-    /* 0xc78 -- func_02040f30: offset of the region being read, as the parent
+    int mMaxReadSize; /* 0xc74 -- WFSi_ReallocBitmap grows it to the largest read */
+    /* 0xc78 -- WFSi_OnChildSystemCallback: offset of the region being read, as the parent
      * registered it (the tables are 0x20000) */
     int mReadRegion;
 } FileShareChildArea;
@@ -156,31 +156,31 @@ typedef struct FileShareChildArea {
 /* The wireless file-sharing work block at data_020a1fc0. func_02040c34 stores
  * its five arguments in the fields whose comments name them. */
 typedef struct FileShareWork {
-    int mIsParent;         /* 0x00 -- isParent; the parent builds the node pool at +0x440,
-                              the child the receive tables; func_02041930 picks the
+    int mIsParent;               /* 0x00 -- isParent; the parent builds the node pool at +0x440,
+                              the child the receive tables; WFSi_SetMPData picks the
                               parent or child send from it */
-    int mSendRequest;      /* 0x04 -- set by func_02040bb0/func_020418f0 before
-                              func_02041930, which sends only while it is set */
-    int mSendBusy;         /* 0x08 -- func_02041930: the port send returned 2 */
-    int mState;            /* 0x0c -- 1 here, 2 once ready (func_02040bb0,
-                              func_02040f30), 0 at shutdown (func_02040aa4) */
+    int mSendRequest;            /* 0x04 -- set by WFS_Start/WFSi_OnSetMPDataDone before
+                              WFSi_SetMPData, which sends only while it is set */
+    int mSendBusy;               /* 0x08 -- WFSi_SetMPData: the port send returned 2 */
+    int mState;                  /* 0x0c -- 1 here, 2 once ready (WFS_Start,
+                              WFSi_OnChildSystemCallback), 0 at shutdown (WFS_End) */
     void (*mStateCallback)(int); /* 0x10 -- stateCallback; called with 0 when mState becomes 2 */
     void *(*mAllocFunc)(void *arg, unsigned int size,
                         void *ptr); /* 0x14 -- allocFunc; (arg, size, 0) allocates, (arg, 0, ptr)
-                              frees (func_02041224, func_02040aa4) */
+                              frees (WFSi_ReallocBitmap, WFS_End) */
     void *mAllocArg;                /* 0x18 -- allocArg; first argument to mAllocFunc */
-    struct FSFile *mReadRequest;    /* 0x1c -- child read in flight, an FSFile: func_02041a00
-                              sets it, func_02040f30 completes and clears it */
-    void *mTable;                   /* 0x20 -- func_020424c0: the card header's FNT, FAT and
+    struct FSFile *mReadRequest;    /* 0x1c -- child read in flight, an FSFile: WFSi_ReadRequest
+                              sets it, WFSi_OnChildSystemCallback completes and clears it */
+    void *mTable;                   /* 0x20 -- WFSi_LoadTables: the card header's FNT, FAT and
                               overlay tables, read into one allocation */
     unsigned int mTableSize;        /* 0x24 -- that allocation's size */
-    int mParentPacketSize; /* 0x28 -- parent MP send size; func_02040f30 sets it
+    int mParentPacketSize; /* 0x28 -- parent MP send size; WFSi_OnChildSystemCallback sets it
                               from the WBT sync's peer packet size + 0xe */
     int mChildPacketSize;  /* 0x2c -- child MP send size, likewise */
     unsigned short mPort;  /* 0x30 -- port; WM_SetPortCallback registers the port
-                              callback on it, func_02041930 sends on it */
+                              callback on it, WFSi_SetMPData sends on it */
     unsigned char pad_032[0xe];
-    /* 0x40 -- the MP send buffer, 32-byte aligned (0x020a2000): func_02041930
+    /* 0x40 -- the MP send buffer, 32-byte aligned (0x020a2000): WFSi_SetMPData
      * builds the next packet in it (WBT's parent or child send hook) and hands
      * it to WM_SetMPDataToPort. Its extent is the gap up to mArea. */
     unsigned char mSendBuf[0x400];
@@ -203,7 +203,7 @@ extern FileShareWork data_020a1fc0;
 
 /* The block through a pointer cast. Read as data_020a1fc0.mArea, mArea's
  * address folds into a literal of its own (data_020a1fc0+0x440);
- * func_020417d0 and func_02041e14 add 0x440 to the block's address instead,
+ * WFSi_PortCallback and WFSi_SendAck add 0x440 to the block's address instead,
  * which this spelling keeps. */
 #define FILE_SHARE_WORK ((FileShareWork *)&data_020a1fc0)
 

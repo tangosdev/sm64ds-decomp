@@ -83,16 +83,16 @@ int main(void)
     static char mc_storage[0x60];
     dBgW_Kc *mc = (dBgW_Kc *)mc_storage;
     _ZN7dBgW_KcC1Ev(mc_storage);
-    char *kcl = dBgW_Kc::LoadFile(*(SharedFilePtr *)&ptr);
+    KCL_File *kcl = dBgW_Kc::LoadFile(*(SharedFilePtr *)&ptr);
     CHECK(kcl != NULL);
 
     /* CLPS_Block is opaque; a zeroed buffer takes the lookup's
        wrong-version default path, which is what stages without a CLPS do */
     static char clps_storage[0x100];
-    mc->dBgW_Kc::SetFile((KCL_File *)kcl, *(CLPS_Block *)clps_storage);
+    mc->dBgW_Kc::SetFile(kcl, *(CLPS_Block *)clps_storage);
 
     {
-        KCL_File *f = (KCL_File *)kcl;
+        KCL_File *f = kcl;
         (void)f;
         printf("  kcl: origin (%d,%d,%d) raw, masks %08x %08x %08x, "
                "shifts %u/%u/%u\n", f->origin.x, f->origin.y, f->origin.z,
@@ -102,7 +102,7 @@ int main(void)
     /* vertical probes over a grid derived from the file's own octree box
        (origin and mask extents are in raw units = Fix12i >> 6) */
     /* origin is Fix12i; the mask extents count 0x40-fx cells */
-    KCL_File *f = (KCL_File *)kcl;
+    KCL_File *f = kcl;
     const int ex_ = (int)(~f->xMask + 1) << 6, ez_ = (int)(~f->zMask + 1) << 6;
     const int ey_ = (int)(~f->yMask + 1) << 6;
     const int cx = f->origin.x + ex_ / 2, cz = f->origin.z + ez_ / 2;

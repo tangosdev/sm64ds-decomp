@@ -71,13 +71,13 @@ extern "C" daObjKsWater_c *daObjKsWater_c_classInit() {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 int daObjKsWater_c::InitResources() {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov017_02111c88), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov017_02111c88), 1, -1);
     dExtAnmTexSRT_c::Prepare(*(BMD_File *)data_ov017_02111c88.filePtr, data_ov017_02111a60);
     mTextureTransformer.SetFile(data_ov017_02111a60, 0, 0x1000, 0);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov017_02111c80), mClsnMat, 0x1000,
-                          mAngleY, data_ov017_02111a94);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov017_02111c80), mClsnMat, 0x1000, mAngleY,
+                          data_ov017_02111a94);
     mMeshCollider.Enable(this);
     mOriginalPosY = mPosY;
     return 1;

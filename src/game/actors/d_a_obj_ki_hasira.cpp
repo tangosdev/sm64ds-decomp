@@ -99,13 +99,13 @@ extern "C" daObjKi_Hasira_c *daObjKi_Hasira_c_classInit() {
 
 /* -------------------------------------------------------------------------- */
 s32 daObjKi_Hasira_c::InitResources() {
-    void *f = dExtSimpleModel_c::LoadFile(RockPillar_ModelFile);
-    mModel.SetFile((BMD_File *)f, 1, -1);
+    BMD_File *f = dExtSimpleModel_c::LoadFile(RockPillar_ModelFile);
+    mModel.SetFile(f, 1, -1);
     UpdateModelMatrix();
     UpdateClsnPosAndRot();
 
-    char *k = dBgW_Kc::LoadFile(RockPillar_ClsnFile);
-    mMeshCollider.SetFile((KCL_File *)k, mClsnMat, 0x199, mAngleY, data_ov016_02113cac);
+    KCL_File *k = dBgW_Kc::LoadFile(RockPillar_ClsnFile);
+    mMeshCollider.SetFile(k, mClsnMat, 0x199, mAngleY, data_ov016_02113cac);
 
     Spawn(0x3b, 0, mPos, 0, mAreaId, -1);
     return 1;

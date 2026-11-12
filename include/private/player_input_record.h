@@ -5,12 +5,8 @@
 
 /* One frame's input as the link exchanges it, 0x24 bytes. func_0203df40
  * samples this console's into data_020a1040 every frame; data_020a1154 holds
- * the four players' (func_0203db64 clears all 0x90 bytes). Moved here from
- * func_0203dabc and func_0203db64, which each viewed one field of it; the
- * layout is func_0203df40's. Its accessors that start at a field's own symbol
- * (data_020a1160 flags, data_020a1162 keys, data_020a1164 inputYaw,
- * data_020a1166 settings, data_020a1052 this console's settings) keep their
- * one-field views. Plain C types: the consumers are C. */
+ * the four players' (func_0203db64 clears all 0x90 bytes). The layout is
+ * func_0203df40's. Every user is in src/engine/link/unit0203d7b8.cpp. */
 typedef struct PlayerInputRecord {
     s32 frame;    /* 0x00 -- counted up once per frame by func_0203df40 */
     TPData touch; /* 0x04 -- the calibrated sample func_0203b9bc returns */
@@ -19,9 +15,12 @@ typedef struct PlayerInputRecord {
      * (func_0203d868, func_0203d81c), bit 0 a handshake wait (func_0203db64) */
     u16 flags;
     u16 keys;          /* 0x0e -- pressed buttons */
-    s16 inputYaw;      /* 0x10 -- the camera's input yaw (func_0203dafc) */
+    u16 inputYaw;      /* 0x10 -- the camera's input yaw (func_0203dafc) */
     u8 settings[0x10]; /* 0x12 -- the link settings bytes (GetPlayerFlagByte) */
-    u8 pad_22[2];      /* 0x22 -- func_0203da4c clears the byte at 0x22 */
+    /* 0x22 -- compared across the four records by func_0203ea5c (a mismatch
+     * sets link error bit 3); func_0203da4c and func_0203ea5c clear it */
+    u8 unk22;
+    u8 unk23; /* 0x23 */
 } PlayerInputRecord;
 
 typedef char PlayerInputRecord_size_must_be_0x24[sizeof(PlayerInputRecord) == 0x24 ? 1 : -1];

@@ -2147,154 +2147,154 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@536",
+      "from": "@531",
       "to": "@570",
-      "evidence": "resource-handle registration node. The sinit's relocations map the previous @579 onto @575 after the six function-local Vector3 statics (uniform -4, same targets, same order). Licensed under the existing pin @570 Re-keyed from @590 to @536 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "resource-handle registration node. The sinit's relocations map the previous @579 onto @575 after the six function-local Vector3 statics (uniform -4, same targets, same order). Licensed under the existing pin @570 Re-keyed from @590 to @536 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @536 to @531 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
+    },
+    {
+      "from": "@532",
+      "to": "@571",
+      "evidence": "mwcc numbers this resource-handle registration node @561 per TU; daObjHeart_c's emitted object already carries @561 globally, so the scratch link would multiply-define it Re-keyed from @591 to @537 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @537 to @532 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
       "from": "@537",
-      "to": "@571",
-      "evidence": "mwcc numbers this resource-handle registration node @561 per TU; daObjHeart_c's emitted object already carries @561 globally, so the scratch link would multiply-define it Re-keyed from @591 to @537 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@542",
       "to": "@566",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @580 now; licensed under the existing pin @566 Re-keyed from @596 to @542 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@545",
-      "to": "@569",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @583 now; licensed under the existing pin @569 Re-keyed from @599 to @545 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@534",
-      "to": "@558",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @572 now; licensed under the existing pin @558 Re-keyed from @588 to @534 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@544",
-      "to": "@568",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @582 now; licensed under the existing pin @568 Re-keyed from @598 to @544 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@535",
-      "to": "@559",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @573 now; licensed under the existing pin @559 Re-keyed from @589 to @535 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@543",
-      "to": "@567",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @581 now; licensed under the existing pin @567 Re-keyed from @597 to @543 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@538",
-      "to": "@562",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @576 now; licensed under the existing pin @562 Re-keyed from @592 to @538 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@539",
-      "to": "@563",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @577 now; licensed under the existing pin @563 Re-keyed from @593 to @539 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @580 now; licensed under the existing pin @566 Re-keyed from @596 to @542 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @542 to @537 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
       "from": "@540",
+      "to": "@569",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @583 now; licensed under the existing pin @569 Re-keyed from @599 to @545 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @545 to @540 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
+    },
+    {
+      "from": "@529",
+      "to": "@558",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @572 now; licensed under the existing pin @558 Re-keyed from @588 to @534 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @534 to @529 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
+    },
+    {
+      "from": "@539",
+      "to": "@568",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @582 now; licensed under the existing pin @568 Re-keyed from @598 to @544 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @544 to @539 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
+    },
+    {
+      "from": "@530",
+      "to": "@559",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @573 now; licensed under the existing pin @559 Re-keyed from @589 to @535 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @535 to @530 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
+    },
+    {
+      "from": "@538",
+      "to": "@567",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @581 now; licensed under the existing pin @567 Re-keyed from @597 to @543 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @543 to @538 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
+    },
+    {
+      "from": "@533",
+      "to": "@562",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @576 now; licensed under the existing pin @562 Re-keyed from @592 to @538 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @538 to @533 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
+    },
+    {
+      "from": "@534",
+      "to": "@563",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @577 now; licensed under the existing pin @563 Re-keyed from @593 to @539 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @539 to @534 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
+    },
+    {
+      "from": "@535",
       "to": "@564",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @578 now; licensed under the existing pin @564 Re-keyed from @594 to @540 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @578 now; licensed under the existing pin @564 Re-keyed from @594 to @540 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @540 to @535 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
-      "from": "@541",
+      "from": "@536",
       "to": "@565",
-      "evidence": "resource-handle registration node. The sinit's relocations map the previous @584 onto @580 after the six function-local Vector3 statics (uniform -4, same targets, same order). Licensed under the existing pin @565 Re-keyed from @595 to @541 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "resource-handle registration node. The sinit's relocations map the previous @584 onto @580 after the six function-local Vector3 statics (uniform -4, same targets, same order). Licensed under the existing pin @565 Re-keyed from @595 to @541 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @541 to @536 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
-      "from": "@735",
+      "from": "@730",
       "to": "@764",
-      "evidence": "sFrontOff's registration node. ov091 already defines @776, and objisolate cannot grow a name, so this maps the compiled name to the unused same-length @764 Re-keyed from @791 to @737 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @737 to @735 when the gCamera->mFlags pointer locals were removed (measured from the compiled object)."
+      "evidence": "sFrontOff's registration node. ov091 already defines @776, and objisolate cannot grow a name, so this maps the compiled name to the unused same-length @764 Re-keyed from @791 to @737 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @737 to @735 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from @735 to @730 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
-      "from": "@739",
+      "from": "@734",
       "to": "@821",
-      "evidence": "sBackOff's registration node. ov095 defines the compiled @780 and ov006 unit020cd744 defines @817, so this maps it to the unused same-length @821 Re-keyed from @795 to @741 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @741 to @739 when the gCamera->mFlags pointer locals were removed (measured from the compiled object)."
+      "evidence": "sBackOff's registration node. ov095 defines the compiled @780 and ov006 unit020cd744 defines @817, so this maps it to the unused same-length @821 Re-keyed from @795 to @741 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @741 to @739 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from @739 to @734 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
-      "from": "@743",
+      "from": "@738",
       "to": "@819",
-      "evidence": "sKeyOff's registration node. ov091 already defines @784, and objisolate cannot grow a name, so this maps the compiled name to the unused same-length @819 Re-keyed from @799 to @745 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @745 to @743 when the gCamera->mFlags pointer locals were removed (measured from the compiled object)."
+      "evidence": "sKeyOff's registration node. ov091 already defines @784, and objisolate cannot grow a name, so this maps the compiled name to the unused same-length @819 Re-keyed from @799 to @745 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @745 to @743 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from @743 to @738 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
-      "from": "@969",
+      "from": "@964",
       "to": "@1082",
-      "evidence": "sEnterPos's registration node. ov065 already defines @1006, and objisolate cannot grow a name, so this maps the compiled name to the unused same-length @1082 Re-keyed from @1021 to @967 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @967 to @971 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from @971 to @969 when the gCamera->mFlags pointer locals were removed (measured from the compiled object)."
+      "evidence": "sEnterPos's registration node. ov065 already defines @1006, and objisolate cannot grow a name, so this maps the compiled name to the unused same-length @1082 Re-keyed from @1021 to @967 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @967 to @971 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from @971 to @969 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from @969 to @964 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
-      "from": "@973",
+      "from": "@968",
       "to": "@1084",
-      "evidence": "sEnterNeg's registration node. ov080 already defines @1010, and objisolate cannot grow a name, so this maps the compiled name to the unused same-length @1084 Re-keyed from @1025 to @971 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @971 to @975 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from @975 to @973 when the gCamera->mFlags pointer locals were removed (measured from the compiled object)."
+      "evidence": "sEnterNeg's registration node. ov080 already defines @1010, and objisolate cannot grow a name, so this maps the compiled name to the unused same-length @1084 Re-keyed from @1025 to @971 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @971 to @975 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from @975 to @973 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from @973 to @968 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
-      "from": "@1145",
+      "from": "@1140",
       "to": "@1088",
-      "evidence": "sDoorOff's registration node. ov089 already defines @1178, and objisolate cannot grow a name, so this maps the compiled name to the unused same-length @1088 Re-keyed from @1193 to @1139 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1139 to @1143 when its int[3]/VecFx32 scratch locals that were cast to Vector3* became real Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from @1143 to @1147 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from @1147 to @1145 when the gCamera->mFlags pointer locals were removed (measured from the compiled object)."
+      "evidence": "sDoorOff's registration node. ov089 already defines @1178, and objisolate cannot grow a name, so this maps the compiled name to the unused same-length @1088 Re-keyed from @1193 to @1139 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1139 to @1143 when its int[3]/VecFx32 scratch locals that were cast to Vector3* became real Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from @1143 to @1147 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from @1147 to @1145 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from @1145 to @1140 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
-      "from": "_ZGVsFrontOff$732",
+      "from": "_ZGVsFrontOff$727",
       "to": "_ZGVsFrontOff$778",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsFrontOff$788 to _ZGVsFrontOff$734 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsFrontOff$734 to _ZGVsFrontOff$732 when the gCamera->mFlags pointer locals were removed (measured from the compiled object)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsFrontOff$788 to _ZGVsFrontOff$734 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsFrontOff$734 to _ZGVsFrontOff$732 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from _ZGVsFrontOff$732 to _ZGVsFrontOff$727 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
-      "from": "sFrontOff$732",
+      "from": "sFrontOff$727",
       "to": "sFrontOff$778",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sFrontOff$788 to sFrontOff$734 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sFrontOff$734 to sFrontOff$732 when the gCamera->mFlags pointer locals were removed (measured from the compiled object)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sFrontOff$788 to sFrontOff$734 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sFrontOff$734 to sFrontOff$732 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from sFrontOff$732 to sFrontOff$727 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
-      "from": "_ZGVsBackOff$736",
+      "from": "_ZGVsBackOff$731",
       "to": "_ZGVsBackOff$782",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsBackOff$792 to _ZGVsBackOff$738 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsBackOff$738 to _ZGVsBackOff$736 when the gCamera->mFlags pointer locals were removed (measured from the compiled object)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsBackOff$792 to _ZGVsBackOff$738 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsBackOff$738 to _ZGVsBackOff$736 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from _ZGVsBackOff$736 to _ZGVsBackOff$731 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
-      "from": "sBackOff$736",
+      "from": "sBackOff$731",
       "to": "sBackOff$782",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sBackOff$792 to sBackOff$738 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sBackOff$738 to sBackOff$736 when the gCamera->mFlags pointer locals were removed (measured from the compiled object)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sBackOff$792 to sBackOff$738 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sBackOff$738 to sBackOff$736 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from sBackOff$736 to sBackOff$731 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
-      "from": "_ZGVsKeyOff$740",
+      "from": "_ZGVsKeyOff$735",
       "to": "_ZGVsKeyOff$786",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsKeyOff$796 to _ZGVsKeyOff$742 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsKeyOff$742 to _ZGVsKeyOff$740 when the gCamera->mFlags pointer locals were removed (measured from the compiled object)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsKeyOff$796 to _ZGVsKeyOff$742 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsKeyOff$742 to _ZGVsKeyOff$740 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from _ZGVsKeyOff$740 to _ZGVsKeyOff$735 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
-      "from": "sKeyOff$740",
+      "from": "sKeyOff$735",
       "to": "sKeyOff$786",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sKeyOff$796 to sKeyOff$742 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sKeyOff$742 to sKeyOff$740 when the gCamera->mFlags pointer locals were removed (measured from the compiled object)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sKeyOff$796 to sKeyOff$742 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sKeyOff$742 to sKeyOff$740 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from sKeyOff$740 to sKeyOff$735 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
-      "from": "_ZGVsEnterPos$966",
+      "from": "_ZGVsEnterPos$961",
       "to": "_ZGVsEnterPos$1008",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsEnterPos$1018 to _ZGVsEnterPos$964 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsEnterPos$964 to _ZGVsEnterPos$968 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from _ZGVsEnterPos$968 to _ZGVsEnterPos$966 when the gCamera->mFlags pointer locals were removed (measured from the compiled object)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsEnterPos$1018 to _ZGVsEnterPos$964 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsEnterPos$964 to _ZGVsEnterPos$968 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from _ZGVsEnterPos$968 to _ZGVsEnterPos$966 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from _ZGVsEnterPos$966 to _ZGVsEnterPos$961 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
-      "from": "sEnterPos$966",
+      "from": "sEnterPos$961",
       "to": "sEnterPos$1008",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sEnterPos$1018 to sEnterPos$964 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sEnterPos$964 to sEnterPos$968 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from sEnterPos$968 to sEnterPos$966 when the gCamera->mFlags pointer locals were removed (measured from the compiled object)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sEnterPos$1018 to sEnterPos$964 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sEnterPos$964 to sEnterPos$968 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from sEnterPos$968 to sEnterPos$966 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from sEnterPos$966 to sEnterPos$961 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
-      "from": "_ZGVsEnterNeg$970",
+      "from": "_ZGVsEnterNeg$965",
       "to": "_ZGVsEnterNeg$1012",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsEnterNeg$1022 to _ZGVsEnterNeg$968 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsEnterNeg$968 to _ZGVsEnterNeg$972 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from _ZGVsEnterNeg$972 to _ZGVsEnterNeg$970 when the gCamera->mFlags pointer locals were removed (measured from the compiled object)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsEnterNeg$1022 to _ZGVsEnterNeg$968 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsEnterNeg$968 to _ZGVsEnterNeg$972 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from _ZGVsEnterNeg$972 to _ZGVsEnterNeg$970 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from _ZGVsEnterNeg$970 to _ZGVsEnterNeg$965 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
-      "from": "sEnterNeg$970",
+      "from": "sEnterNeg$965",
       "to": "sEnterNeg$1012",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sEnterNeg$1022 to sEnterNeg$968 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sEnterNeg$968 to sEnterNeg$972 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from sEnterNeg$972 to sEnterNeg$970 when the gCamera->mFlags pointer locals were removed (measured from the compiled object)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sEnterNeg$1022 to sEnterNeg$968 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sEnterNeg$968 to sEnterNeg$972 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from sEnterNeg$972 to sEnterNeg$970 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from sEnterNeg$970 to sEnterNeg$965 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
-      "from": "_ZGVsDoorOff$1142",
+      "from": "_ZGVsDoorOff$1137",
       "to": "_ZGVsDoorOff$1180",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsDoorOff$1190 to _ZGVsDoorOff$1136 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsDoorOff$1136 to _ZGVsDoorOff$1140 when its int[3]/VecFx32 scratch locals that were cast to Vector3* became real Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from _ZGVsDoorOff$1140 to _ZGVsDoorOff$1144 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from _ZGVsDoorOff$1144 to _ZGVsDoorOff$1142 when the gCamera->mFlags pointer locals were removed (measured from the compiled object)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsDoorOff$1190 to _ZGVsDoorOff$1136 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsDoorOff$1136 to _ZGVsDoorOff$1140 when its int[3]/VecFx32 scratch locals that were cast to Vector3* became real Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from _ZGVsDoorOff$1140 to _ZGVsDoorOff$1144 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from _ZGVsDoorOff$1144 to _ZGVsDoorOff$1142 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from _ZGVsDoorOff$1142 to _ZGVsDoorOff$1137 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
-      "from": "sDoorOff$1142",
+      "from": "sDoorOff$1137",
       "to": "sDoorOff$1180",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sDoorOff$1190 to sDoorOff$1136 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sDoorOff$1136 to sDoorOff$1140 when its int[3]/VecFx32 scratch locals that were cast to Vector3* became real Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from sDoorOff$1140 to sDoorOff$1144 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from sDoorOff$1144 to sDoorOff$1142 when the gCamera->mFlags pointer locals were removed (measured from the compiled object)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sDoorOff$1190 to sDoorOff$1136 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sDoorOff$1136 to sDoorOff$1140 when its int[3]/VecFx32 scratch locals that were cast to Vector3* became real Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from sDoorOff$1140 to sDoorOff$1144 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from sDoorOff$1144 to sDoorOff$1142 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from sDoorOff$1142 to sDoorOff$1137 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     }
   ],
   "externalized_output": [],

@@ -3,7 +3,8 @@
  * ROM span 0x02111900..0x02116484, 81 functions: both destructor pairs, the
  * fight helpers, both classes' resource/load/behavior/render methods, both
  * InitResources, and the two registry factories daKpaTail_c_classInit and
- * daKpa_c_classInit.
+ * daKpa_c_classInit (plain C++ definitions, emitted as
+ * `_Z21daKpaTail_c_classInitv` and `_Z17daKpa_c_classInitv`).
  *
  * _ZTS7daKpa_c at 0x0211a5c0, _ZTI7daKpa_c at 0x0211a5cc, _ZTV7daKpa_c at
  * 0x0211a6b8; _ZTS11daKpaTail_c at 0x0211a5e4, _ZTI11daKpaTail_c at
@@ -267,6 +268,9 @@ struct KpaTexSequenceFilePtr : SharedFilePtr {
 typedef void (daKpaTail_c::*KpaTailState)();
 extern KpaTailState data_ov060_0211ae9c[];
 
+/* C linkage for the external symbols this TU reaches without a header: the
+ * data objects below have to stay unmangled, and the address-named callees are
+ * C functions. Declarations only; no definition lives in this block. */
 extern "C" {
 /* The dCamera_c; Bowser publishes himself into its mFramedActor. */
 extern dCamera_c *gCamera;
@@ -378,15 +382,13 @@ daKpaTail_c::~daKpaTail_c()
  * by hand: fBase_c::operator new(0x454), the dActor_c base constructor, the
  * vptr store, then the dExtAnmModel_c, dExtAnmTexPat_c, dBgCh_Actr,
  * dExtShadowModel_c and dCcAcPos_c member constructors. */
-extern "C" daKpa_c *daKpa_c_classInit(void)
-{
+daKpa_c *daKpa_c_classInit(void) {
     return new daKpa_c;
 }
 
 /* KOOPATAIL registry factory: operator new(0x118), the dActor_c base
  * constructor, the vptr store and the dCcAc_c member constructor. */
-extern "C" daKpaTail_c *daKpaTail_c_classInit(void)
-{
+daKpaTail_c *daKpaTail_c_classInit(void) {
     return new daKpaTail_c;
 }
 
@@ -425,7 +427,7 @@ int daKpa_c::InitResources()
     daKpaFire_c *fire;
     daKpaTail_c *tail;
 
-    this->mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov060_0211ac78), 1, 0x16);
+    this->mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov060_0211ac78), 1, 0x16);
 
     for (i = 0; i < 0x1c; i++)
         dExtFrameCtrl_c::LoadFile(*data_ov060_021192dc[i]);

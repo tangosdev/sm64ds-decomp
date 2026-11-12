@@ -39,8 +39,8 @@ extern "C" {
  * __sinit_d_s_mg_d3d_base.cpp as a bare bx lr and one .ctor word. */
 int sMgCurCamera;
 void *sD3DSubObjPalette;
-void *sMgSubCamera;
-void *sMgMainCamera;
+MgCamera *sMgSubCamera;
+MgCamera *sMgMainCamera;
 void *sD3DLanguageFile;
 Oam sD3DOamShadow[128];
 extern unsigned char sD3DSoundPanOffsets[];

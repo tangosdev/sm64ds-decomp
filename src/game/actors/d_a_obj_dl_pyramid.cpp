@@ -214,12 +214,12 @@ s32 daObjDlPyramidDummy_c::Behavior() {
 }
 
 int daObjDlPyramid_c::InitResources() {
-    BMD_File *bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(gDlPyramidModelFile);
+    BMD_File *bmd = dExtSimpleModel_c::LoadFile(gDlPyramidModelFile);
     mTopModel.SetFile(bmd, 1, -1);
     UpdateModelMatrix();
     UpdateClsnMatrix();
-    void *kcl = dBgW_Kc::LoadFile(gDlPyramidCollisionFile);
-    mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat2, 0x199, mAngleY, data_ov024_021129f0);
+    KCL_File *kcl = dBgW_Kc::LoadFile(gDlPyramidCollisionFile);
+    mMeshCollider.SetFile(kcl, mClsnMat2, 0x199, mAngleY, data_ov024_021129f0);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mMeshCollider.Enable(this);
     mHomePosX = mPosX;

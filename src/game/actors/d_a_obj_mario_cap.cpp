@@ -353,9 +353,9 @@ int daObjMarioCap_c::InitResources()
         break;
     }
 
-    if (mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(
-                              *(SharedFilePtr *)data_ov002_020ff0ac[mModelIndex]),
-                          1, -1) == 0)
+    if (mAnmModel.SetFile(
+            dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov002_020ff0ac[mModelIndex]), 1,
+            -1) == 0)
         return 0;
 
     mShadowModel.InitCylinder();

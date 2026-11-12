@@ -33,6 +33,7 @@
  * shared cursor moves it. */
 #include "Ov007SpriteBank.h"
 #include "Ov007BinFile.h"
+#include "Ov007MenuMem.h"
 
 /* List A: a cell's 4-byte header (its record count), then one 0x14-byte
  * record per OAM entry. The names are the OAM attribute fields each byte
@@ -81,7 +82,6 @@ typedef struct Ov007OamAttrs {
 } Ov007OamAttrs;
 
 extern Ov007SpriteBank *func_ov007_020c12ac(int cellCount, int animCount);
-extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020c13a4(Ov007CellAnim *anim, int frameCount, u16 offsetX, u16 offsetY);
 
 Ov007SpriteBank *func_ov007_020c9688(int arg) {

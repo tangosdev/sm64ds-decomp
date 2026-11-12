@@ -27,6 +27,7 @@
 #include "math/Approach.h"
 #include "SpawnInfo.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/CalcLib.h"
 
 extern "C" {
 
@@ -35,11 +36,7 @@ extern SharedFilePtr *data_ov019_0211277c[3];      /* the three BTP handles */
 extern unsigned char data_0209d684;                /* talk-script choice */
 
 extern unsigned char NumStars(void);
-extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern void func_02038414(void *clsn);
-extern Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void Matrix4x3_FromRotationY(Matrix4x3 *m, int angle);
 
 extern void d_a_pg_rcerPlaySubHold(unsigned int a, unsigned int b, unsigned int c, int d, int e);
@@ -124,7 +121,7 @@ int daPgRcer_c::InitResources()
 {
     int i;
 
-    mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(gOV019PenguinModelFile), 1, 1);
+    mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(gOV019PenguinModelFile), 1, 1);
 
     for (i = 0; i < 7; i++)
         dExtFrameCtrl_c::LoadFile(*data_ov019_02112788[i]);

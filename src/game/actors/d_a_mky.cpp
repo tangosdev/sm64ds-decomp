@@ -1472,7 +1472,7 @@ s32 daMky_c::InitResources()
     dExtSimpleModel_c::LoadFile(data_ov002_0210da40);
     dExtSimpleModel_c::LoadFile(data_ov002_0210d9a0);
     dExtSimpleModel_c::LoadFile(data_ov002_0210d9c0);
-    mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov030_02115d00), 1, 1);
+    mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov030_02115d00), 1, 1);
     for (i = 0; i < 10; i++)
         dExtFrameCtrl_c::LoadFile(*data_ov030_02114824[i]);
     if (mShadowModel.InitCylinder() == 0)

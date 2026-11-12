@@ -57,12 +57,12 @@ enum dScMgPanel_c_AssetId {
 #include "nitro/gx/g2.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/mi/memory.h"
+#include "math/CalcLib.h"
 
 /* Callees of the member helpers. Declared here, not in the bodies: a
    declaration inside a member body gets C++ linkage and names a symbol the ROM
    doesn't have. */
 extern "C" {
-int RandomIntInternal(int *seed);
 void SetBg2Offset(int x, int y);
 void SetSubBg2Offset(int x, int y);
 void SetSubBg0Offset(int a, int b);

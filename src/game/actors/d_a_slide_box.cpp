@@ -239,11 +239,11 @@ int daSlide_Box_c::Behavior()
 
 int daSlide_Box_c::InitResources()
 {
-    BMD_File *modelFile = (BMD_File *)dExtSimpleModel_c::LoadFile(ModelFile);
+    BMD_File *modelFile = dExtSimpleModel_c::LoadFile(ModelFile);
     mModel.SetFile(modelFile, 1, -1);
     UpdateModel();
     UpdateClsnPosAndRot();
-    KCL_File *clsnFile = (KCL_File *)dBgW_Kc::LoadFile(ClsnFile);
+    KCL_File *clsnFile = dBgW_Kc::LoadFile(ClsnFile);
     mMeshCollider.SetFile((KCL_File *)(clsnFile), mClsnMat, kMeshScale, mAngleY,
                           *(CLPS_Block *)(data_ov016_02113bac));
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);

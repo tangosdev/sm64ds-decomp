@@ -119,7 +119,7 @@ s32 daObjBk_Dossunbar_c::InitResources() {
     UpdateClsnPosAndRot();
 
     int j = mVariant * 0xc;
-    void *kclFile = dBgW_Kc::LoadFile(**(SharedFilePtr **)((char *)&data_ov015_02114538 + j));
+    KCL_File *kclFile = dBgW_Kc::LoadFile(**(SharedFilePtr **)((char *)&data_ov015_02114538 + j));
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)((int)kclFile), *(const Matrix4x3 *)(&mClsnMat), 0x1000,
                               mAngleY,

@@ -15,10 +15,13 @@
  * name here takes an @NNN in every includer.
  *
  * Only helpers some includer calls are declared so far. The C++ steppers
- * (UpdateAngle, ApproachLinear) are in math/Approach.h. */
+ * (UpdateAngle, ApproachLinear) are in math/Approach.h, which C++ includers
+ * get with this header; C includers get the C helpers alone. */
+#ifdef __cplusplus
 #include "math/Approach.h"
 
 extern "C" {
+#endif
 
 /* Decrement *p unless it is already 0; return the new value. */
 unsigned short DecIfAbove0_Short(unsigned short *);
@@ -50,6 +53,8 @@ Fix12i Vec3_HorzLen(const Vector3 *);
 int Vec3_Dist(const Vector3 *, const Vector3 *);
 int Vec3_Equal(const Vector3 *, const Vector3 *);
 int Vec3_HorzDist(const Vector3 *, const Vector3 *);
+#ifdef __cplusplus
 }
+#endif
 
 #endif

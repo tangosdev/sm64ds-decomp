@@ -111,6 +111,7 @@ enum daDoor_c_AssetId {
 #include "Sound.h"
 #include "private/mtx43.h"
 #include "nitro/fx/fx.h"
+#include "math/CalcLib.h"
 
 /* The vector temps below are VecFx32: a stack Vector3 would run its destructor. */
 /* The door's matrix copies go through the flat Mtx43: a copy through the
@@ -200,13 +201,10 @@ extern "C" {
    does (Sound.h); func_02012694(id, pos) plays it at a position. */
 unsigned int func_0201277c(unsigned int a);
 void func_02012694(unsigned int a, void *b);
-unsigned char DecIfAbove0_Byte(unsigned char *p);
-unsigned short DecIfAbove0_Short(unsigned short *p);
 int func_ov002_020ca78c(void *p);
 void Vec3_RotateYAndTranslate(Vector3 *res, const Vector3 *translation, short angY,
                               const Vector3 *v);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void Vec3_Asr(void *d, void *s, int sh);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(void *m, short angY);
 int AngleDiff(int a, int b);
@@ -1102,7 +1100,7 @@ s32 daDoor_c::InitResources() {
     mModel.SetAnim((BCA_File *)an, 0x40000000, 0x1000, 0);
 
     /* The model matrix takes the position >> 3. */
-    Vec3_Asr(&tmp, &mPosX, 3);
+    Vec3_Asr((Vector3 *)&tmp, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, tmp.x, tmp.y, tmp.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
     *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;

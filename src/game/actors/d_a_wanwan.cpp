@@ -28,6 +28,7 @@
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
 
@@ -77,16 +78,8 @@ void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
-/* local extern: CalcLib's declaration is unnamed; retain these names so this
- * TU's compiler-numbered aliases remain stable. */
-void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
-int Vec3_HorzLen(void *v);
-int VEC_Mag(const Vector3 *v);
-short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 int AngleDiff(int a, int b);
-int ApproachAngle(short *angles, short target, int a, int b, int c);
-unsigned short DecIfAbove0_Short(unsigned short *p);
 int Math_Function_0203b14c(void *p, int a, int b, int c, int d);
 /* local extern: no header this file includes declares it, and it must keep C
  * linkage now that its caller StateEscapeDemoMain is a member. Nonzero once
@@ -106,8 +99,8 @@ extern "C" daWanwan_c *daWanwan_c_classInit() {
 }
 
 int daWanwan_c::InitResources() {
-    void *f = dExtSimpleModel_c::LoadFile(data_ov014_02114968);
-    mAnmModel.SetFile((BMD_File *)f, 1, 1);
+    BMD_File *f = dExtSimpleModel_c::LoadFile(data_ov014_02114968);
+    mAnmModel.SetFile(f, 1, 1);
     dExtSimpleModel_c::LoadFile(data_ov014_02114978);
     dExtFrameCtrl_c::LoadFile(data_ov014_02114980);
     dExtFrameCtrl_c::LoadFile(data_ov014_02114970);

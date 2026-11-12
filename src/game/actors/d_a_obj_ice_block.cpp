@@ -79,12 +79,12 @@ extern "C" daObjIceBlock_c *daObjIceBlock_c_classInit() {
 }
 
 s32 daObjIceBlock_c::InitResources() {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov081_02128fd8), 1, 0x17);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov081_02128fd8), 1, 0x17);
     mCollider.Init(this, 0xc8000, 0x12c000, 0x800002, 0x44000);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov081_02128fd0);
+    KCL_File *kcl = dBgW_Kc::LoadFile(data_ov081_02128fd0);
     mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov002_0210d8d4);
     mScale = 0x1000;
     return 1;

@@ -1,11 +1,9 @@
 //cpp
 #include "common.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_trig.h"
 
 extern "C" {
-/* recovered: shared common types */
-extern short FX_SinCosTable_[];
-
 /* The table reads stay hand-indexed: the ROM doubles all three indices up
    front, before the first call. Through FX_SinIdx/FX_CosIdx
    (nitro/fx/fx_trig.h) each index is doubled at its own call instead, and

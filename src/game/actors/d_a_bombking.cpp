@@ -1522,7 +1522,7 @@ int daBombking_c::InitResources()
     Vector3 v0;
     Vector3 v1;
     int i;
-    f = (BMD_File *)dExtSimpleModel_c::LoadFile(gBombkingModelFile);
+    f = dExtSimpleModel_c::LoadFile(gBombkingModelFile);
     mBlendAnmModel.SetFile(f, 1, 1);
     mShadowModel.InitCylinder();
     dExtFrameCtrl_c::LoadFile(gBombkingGetupAnimationFile);

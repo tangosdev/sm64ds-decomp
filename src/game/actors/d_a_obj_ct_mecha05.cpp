@@ -83,13 +83,13 @@ extern "C" daObjCtMecha05_c *daObjCtMecha05_c_classInit() {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 int daObjCtMecha05_c::InitResources() {
-    void *modelFile = dExtSimpleModel_c::LoadFile(TTC_MovingBar_ModelFile);
-    mModel.SetFile((BMD_File *)modelFile, 1, -1);
+    BMD_File *modelFile = dExtSimpleModel_c::LoadFile(TTC_MovingBar_ModelFile);
+    mModel.SetFile(modelFile, 1, -1);
     mShadowModel.InitCuboid();
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    void *collisionFile = dBgW_Kc::LoadFile(TTC_MovingBar_ClsnFile);
-    mMeshCollider.SetFile((KCL_File *)collisionFile, mClsnMat, 0x199, mAngleY, data_ov035_02112258);
+    KCL_File *collisionFile = dBgW_Kc::LoadFile(TTC_MovingBar_ClsnFile);
+    mMeshCollider.SetFile(collisionFile, mClsnMat, 0x199, mAngleY, data_ov035_02112258);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetClipRadius(0x1c0000);
     mMeshCollider.SetClipOffsetY(0x1000);

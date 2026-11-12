@@ -234,11 +234,11 @@ extern "C" int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist) {
 /* -------------------------------------------------------------------------- */
 extern "C" int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg) {
     struct Vector3 d;
-    self->mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*arg->model), 1, -1);
+    self->mModel.SetFile(dExtSimpleModel_c::LoadFile(*arg->model), 1, -1);
     self->UpdateModelTransform();
     self->UpdateClsnPosAndRot();
-    self->mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*arg->collision), self->mClsnMat,
-                                0x1000, self->mAngleY, *(arg->clps));
+    self->mMeshCollider.SetFile(dBgW_Kc::LoadFile(*arg->collision), self->mClsnMat, 0x1000,
+                                self->mAngleY, *(arg->clps));
     self->mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
     self->mMeshCollider.SetStoodOnCallback(&daObjMaruta_c::StoodOnCallback);
     self->mRestPosX = self->mPosX;

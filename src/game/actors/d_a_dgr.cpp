@@ -97,11 +97,11 @@ s32 daDgr_c::InitResources() {
     UpdateModelMatrix();
     UpdateClsnMatrix();
     {
-        BMD_File *bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov025_02113a68);
+        BMD_File *bmd = dExtSimpleModel_c::LoadFile(data_ov025_02113a68);
         mModel.SetFile(bmd, 1, -1);
     }
     {
-        KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov025_02113a60);
+        KCL_File *kcl = dBgW_Kc::LoadFile(data_ov025_02113a60);
         mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov025_02112c28);
     }
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);

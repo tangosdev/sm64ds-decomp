@@ -69,13 +69,13 @@ s32 daObjWlSubmarine_c::Render() {
 }
 
 s32 daObjWlSubmarine_c::InitResources() {
-    void *m = dExtSimpleModel_c::LoadFile(Submarine_ModelFile);
-    mModel.SetFile((BMD_File *)m, 1, -1);
+    BMD_File *m = dExtSimpleModel_c::LoadFile(Submarine_ModelFile);
+    mModel.SetFile(m, 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     {
-        void *k = dBgW_Kc::LoadFile(Submarine_ClsnFile);
-        mMeshCollider.SetFile((KCL_File *)k, mClsnMat, 0x199, mAngleY, data_ov026_02112fd4);
+        KCL_File *k = dBgW_Kc::LoadFile(Submarine_ClsnFile);
+        mMeshCollider.SetFile(k, mClsnMat, 0x199, mAngleY, data_ov026_02112fd4);
     }
     if (data_0209caa0.file.flags1 & 0x204)
         return 0;

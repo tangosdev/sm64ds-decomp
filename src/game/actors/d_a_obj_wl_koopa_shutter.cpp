@@ -73,13 +73,13 @@ s32 daObjWlKoopaShutter_c::Behavior() {
 }
 
 s32 daObjWlKoopaShutter_c::InitResources() {
-    void *m = dExtSimpleModel_c::LoadFile(BowserShutter_ModelFile);
-    mModel.SetFile((BMD_File *)m, 1, -1);
+    BMD_File *m = dExtSimpleModel_c::LoadFile(BowserShutter_ModelFile);
+    mModel.SetFile(m, 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     {
-        void *k = dBgW_Kc::LoadFile(BowserShutter_ClsnFile);
-        mMeshCollider.SetFile((KCL_File *)k, mClsnMat, 0x199, mAngleY, data_ov026_02112f74);
+        KCL_File *k = dBgW_Kc::LoadFile(BowserShutter_ClsnFile);
+        mMeshCollider.SetFile(k, mClsnMat, 0x199, mAngleY, data_ov026_02112f74);
     }
     if (data_0209caa0.file.flags1 & 0x204)
         return 0;

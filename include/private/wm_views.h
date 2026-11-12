@@ -47,7 +47,7 @@ typedef struct WmStartParentCallback {
 
 /* NitroSDK WMPortRecvCallback. The offsets agree with every port receive
  * callback that reads one (WM_Ds.c's two data-sharing receive callbacks
- * and the file-sharing one, func_020417d0). Nothing here reads past arg, but
+ * and the file-sharing one, WFSi_PortCallback). Nothing here reads past arg, but
  * the size is the SDK's: WmReceiveFifo's static cb_Port starts at 0x020a89ec
  * and the 32-aligned fifoBuf after it at 0x020a8a40, which leaves it
  * 0x35..0x54 bytes, and pret's WM_system.s keeps the same gap. */

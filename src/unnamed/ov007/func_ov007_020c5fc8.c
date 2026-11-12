@@ -3,8 +3,7 @@
 #include "common.h"
 #include "Ov007StrokePath.h"
 #include "Ov007Picker.h"
-extern void VEC_Subtract(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
-extern int VEC_Mag(const Vector3 *v);
+#include "math/CalcLib.h"
 
 /* Re-measures group idx's links at a pose blended between groupPoints
  * (weight t, Q12) and groupPointCopies: x and y blended, z from the copies.

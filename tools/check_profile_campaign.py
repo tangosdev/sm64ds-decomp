@@ -235,6 +235,24 @@ def owning_source(repo, module, address, delinks_cache, symbol_table):
     return None, 0
 
 
+def cpp_source_name(name):
+    """The source name of a global-namespace C++ function symbol, else None.
+
+    `_Z17daKpa_c_classInitv` is `daKpa_c_classInit()` given C++ linkage: the
+    registry proposes the name as the source spells it, and symbols.txt carries
+    whatever linkage the TU gave it. Nested (`_ZN`) and special (`_ZT`) names
+    are not free functions and return None.
+    """
+    m = re.match(r"_Z(\d+)", name)
+    if not m:
+        return None
+    n = int(m.group(1))
+    start = m.end()
+    if n == 0 or len(name) < start + n:
+        return None
+    return name[start:start + n]
+
+
 def symbol_state(table, address, current, proposed):
     """COMPLETE / PENDING / DIVERGED for one symbol.
 
@@ -248,7 +266,8 @@ def symbol_state(table, address, current, proposed):
     names = table.get(address)
     if not names:
         return "DIVERGED", "address not in symbols.txt"
-    if proposed and proposed in names:
+    if proposed and (proposed in names
+                     or any(cpp_source_name(n) == proposed for n in names)):
         return "COMPLETE", None
     if current and current in names:
         return "PENDING", None

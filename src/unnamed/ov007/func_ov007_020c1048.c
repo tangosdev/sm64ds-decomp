@@ -1,8 +1,7 @@
 #include "Ov007OamNode.h"
+#include "Ov007MenuMem.h"
 
-extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020c1048(Ov007OamList *list);
-extern void func_ov007_020c3d1c(void *p);
 
 /* Builds an empty OAM node list. */
 Ov007OamList *func_ov007_020c1068(void) {

@@ -89,12 +89,12 @@ extern "C" SpawnInfo<daObjFm_Battan_c> g_profile_FM_BATTAN = {
     daObjFm_Battan_c_classInit, 0x0054, 0x0124, 0x02000000, 0, 0x00500000, 0x01000000, 0x01000000};
 
 int daObjFm_Battan_c::InitResources() {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov023_02112088), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov023_02112088), 1, -1);
     mShadowModel.InitCuboid();
     UpdateModelTransform();
     UpdateClsnPosAndRot();
 
-    KCL_File *file = (KCL_File *)dBgW_Kc::LoadFile(data_ov023_02112080);
+    KCL_File *file = dBgW_Kc::LoadFile(data_ov023_02112080);
     mMeshCollider.SetFile(file, mClsnMat, 0x1000, mAngleY, data_ov064_0211ba4c);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.Enable(this);

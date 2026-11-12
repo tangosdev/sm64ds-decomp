@@ -315,7 +315,7 @@ int daWater_Tatumaki_c::Behavior() {
 }
 
 int daWater_Tatumaki_c::InitResources() {
-    BMD_File *model = (BMD_File *)dExtSimpleModel_c::LoadFile(gWaterTatumakiModelFile);
+    BMD_File *model = dExtSimpleModel_c::LoadFile(gWaterTatumakiModelFile);
     mAnmModel.SetFile(model, 1, -1);
 
     dExtFrameCtrl_c::LoadFile(gWaterTatumakiAnimationFile);

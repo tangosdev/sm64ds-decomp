@@ -252,7 +252,7 @@ int daBgSnmHed_c::InitResources() {
     struct Vector3 pos;
     int i;
 
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(gBgSnmHedModelFile), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(gBgSnmHedModelFile), 1, -1);
 
     for (i = 0; i < 2; i++) {
         void *tex = ((void **)&data_ov072_02121ffc)[i];

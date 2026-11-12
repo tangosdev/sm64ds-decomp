@@ -1319,24 +1319,24 @@
   },
   "defined_symbol_renames": [
     {
-      "from": "@801",
+      "from": "@798",
       "to": "@756",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @875 to @872 when the press particles' position became a Vector3 local (#821). Re-keyed from @870 to @801 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @875 to @872 when the press particles' position became a Vector3 local (#821). Re-keyed from @870 to @801 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @801 to @798 when d_a_obj_hatena_switch dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
     },
     {
-      "from": "@802",
+      "from": "@799",
       "to": "@757",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @876 to @873 when the press particles' position became a Vector3 local (#821). Re-keyed from @871 to @802 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @876 to @873 when the press particles' position became a Vector3 local (#821). Re-keyed from @871 to @802 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @802 to @799 when d_a_obj_hatena_switch dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
     },
     {
-      "from": "@803",
+      "from": "@800",
       "to": "@758",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @877 to @874 when the press particles' position became a Vector3 local (#821). Re-keyed from @872 to @803 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @877 to @874 when the press particles' position became a Vector3 local (#821). Re-keyed from @872 to @803 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @803 to @800 when d_a_obj_hatena_switch dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
     },
     {
-      "from": "@804",
+      "from": "@801",
       "to": "@759",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @878 to @875 when the press particles' position became a Vector3 local (#821). Re-keyed from @873 to @804 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @878 to @875 when the press particles' position became a Vector3 local (#821). Re-keyed from @873 to @804 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @804 to @801 when d_a_obj_hatena_switch dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
     }
   ]
 }

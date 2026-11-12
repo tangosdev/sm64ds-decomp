@@ -111,7 +111,7 @@ extern void *data_ov006_021402fc;
 extern const HeyhoPath sHeyhoLayoutFlyInPaths[][3];
 extern const HeyhoPath sHeyhoFlyInPaths[][4];
 extern const HeyhoPath sHeyhoSettlePaths[][5];
-extern void *sMgSubCamera;
+extern MgCamera *sMgSubCamera;
 }
 
 /* The Jump scene's three players, seen through the adapter base the Heyhos
@@ -140,8 +140,8 @@ Heyho::~Heyho() {
 
 /* ---- Heyho::LoadResources ---- */
 int Heyho::LoadResources() {
-    BMD_File *m = (BMD_File *)dExtSimpleModel_c::LoadFile(gMgPHeyhoMiniModelFile);
-    BCA_File *a = (BCA_File *)dExtFrameCtrl_c::LoadFile(gMgPHeyhoWaitAnimFile);
+    BMD_File *m = dExtSimpleModel_c::LoadFile(gMgPHeyhoMiniModelFile);
+    BCA_File *a = dExtFrameCtrl_c::LoadFile(gMgPHeyhoWaitAnimFile);
     if (mAnmModel.SetFile(m, 1, -1) == 0) {
         return 0;
     }

@@ -1,7 +1,7 @@
 #include "types.h"
 #include "Ov007SpriteGroup.h"
+#include "Ov007MenuMem.h"
 
-extern void *func_ov007_020c3df4(const char *name, int size);
 extern Ov007OamNode *func_ov007_020c11ac(int n);
 extern Ov007SpriteItem *func_ov007_020c40d4(int animCount);
 extern void func_ov007_020c10b0(Ov007OamNode *parent, Ov007OamNode *child);

@@ -95,16 +95,16 @@ extern "C" daObjC0_Switch_c *daObjC0_Switch_c_classInit() {
  * is set -- some other pillar in the group already reported pressed (see
  * OnGroundPounded), so this one starts sunk and pre-flagged. */
 int daObjC0_Switch_c::InitResources() {
-    void *mdl = dExtSimpleModel_c::LoadFile(data_ov012_021124a8);
-    mModel.SetFile((BMD_File *)mdl, 1, -1);
+    BMD_File *mdl = dExtSimpleModel_c::LoadFile(data_ov012_021124a8);
+    mModel.SetFile(mdl, 1, -1);
     if (data_0209caa0.file.flags2 & 0x80000) {
         mPosY -= 0x64000;
         mPressed = 1;
     }
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    void *kcl = dBgW_Kc::LoadFile(data_ov012_021124a0);
-    mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat, 0x199, mAngleY, data_ov012_02111cd0);
+    KCL_File *kcl = dBgW_Kc::LoadFile(data_ov012_021124a0);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov012_02111cd0);
     return 1;
 }
 

@@ -77,8 +77,8 @@ extern "C" daObjClockHuriko_c *daObjClockHuriko_c_classInit() {
  * A REAL MEMBER ON PURPOSE: the destructor is inline in the header, so this
  * class's key function is its first declared non-inline virtual. */
 s32 daObjClockHuriko_c::InitResources() {
-    void *f = dExtSimpleModel_c::LoadFile(data_ov013_02112280);
-    mModel.SetFile((BMD_File *)f, 1, -1);
+    BMD_File *f = dExtSimpleModel_c::LoadFile(data_ov013_02112280);
+    mModel.SetFile(f, 1, -1);
     UpdateModelTransform();
     mAngSpeed = 0x100;
     return 1;

@@ -61,11 +61,11 @@ extern "C" daObjWanwanShutter_c *daObjWanwanShutter_c_classInit(void) {
 /* Vtable slot 0. Loads the fence's model and collision mesh and plants both at
    the actor's position. Scale 0x1000 is 1.0. */
 int daObjWanwanShutter_c::InitResources() {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov014_021149c0), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov014_021149c0), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     {
-        KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov014_021149b8);
+        KCL_File *kcl = dBgW_Kc::LoadFile(data_ov014_021149b8);
         mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov014_02114558);
     }
     return 1;

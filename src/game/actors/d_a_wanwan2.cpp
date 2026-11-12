@@ -703,7 +703,7 @@ int daWanwan2_c::Behavior()
 int daWanwan2_c::InitResources()
 {
     dExtSimpleModel_c::LoadFile(data_ov002_0211092c);
-    mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov100_021486bc), 1, -1);
+    mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov100_021486bc), 1, -1);
     dExtSimpleModel_c::LoadFile(data_ov100_021486a4);
     dExtFrameCtrl_c::LoadFile(data_ov100_021486ac);
     dExtFrameCtrl_c::LoadFile(data_ov100_021486b4);

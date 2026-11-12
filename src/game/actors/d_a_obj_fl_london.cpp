@@ -71,12 +71,12 @@ extern "C" SpawnInfo<daObjFl_London_c> g_profile_FL_LONDON = {
 };
 
 s32 daObjFl_London_c::InitResources() {
-    void *f = dExtSimpleModel_c::LoadFile(data_ov022_02114580);
-    mModel.SetFile((BMD_File *)f, 1, -1);
+    BMD_File *f = dExtSimpleModel_c::LoadFile(data_ov022_02114580);
+    mModel.SetFile(f, 1, -1);
     UpdateModelMatrix();
     UpdateClsnPosAndRot();
-    void *k = dBgW_Kc::LoadFile(data_ov022_02114578);
-    mMeshCollider.SetFile((KCL_File *)k, mClsnMat, 0x1000, mAngleY, data_ov064_0211bb2c);
+    KCL_File *k = dBgW_Kc::LoadFile(data_ov022_02114578);
+    mMeshCollider.SetFile(k, mClsnMat, 0x1000, mAngleY, data_ov064_0211bb2c);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mFlag = 0;
     mCooldown = 0xf;

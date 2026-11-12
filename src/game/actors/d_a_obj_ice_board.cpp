@@ -65,12 +65,12 @@ extern "C" daObjIceBoard_c *daObjIceBoard_c_classInit() {
 }
 
 int daObjIceBoard_c::InitResources() {
-    void *modelFile = dExtSimpleModel_c::LoadFile(daObjIceBoard_c_ModelFile);
-    mModel.SetFile((BMD_File *)modelFile, 1, -1);
+    BMD_File *modelFile = dExtSimpleModel_c::LoadFile(daObjIceBoard_c_ModelFile);
+    mModel.SetFile(modelFile, 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    KCL_File *clsnFile = (KCL_File *)dBgW_Kc::LoadFile(daObjIceBoard_c_ClsnFile);
+    KCL_File *clsnFile = dBgW_Kc::LoadFile(daObjIceBoard_c_ClsnFile);
     mMeshCollider.SetFile(clsnFile, mClsnMat, 0x199, mAngleY, data_ov002_0210d754);
     return 1;
 }

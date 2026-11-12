@@ -154,7 +154,7 @@ extern "C" int *daPopoi_c_classInit(void)
 int daPopoi_c::InitResources()
 {
     Vector3 v;
-    mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov077_02127c88), 1, -1);
+    mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov077_02127c88), 1, -1);
     dExtFrameCtrl_c::LoadFile(data_ov077_02127ca0);
     dExtFrameCtrl_c::LoadFile(data_ov077_02127c90);
     dExtFrameCtrl_c::LoadFile(data_ov077_02127c98);

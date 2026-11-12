@@ -49,6 +49,7 @@ enum daObjPile_c_AssetId { ASSET_PILE_BMD = 0x0481, ASSET_PILE_KCL = 0x0482 };
 #include "Sound.h"
 #include "SharedFilePtr.h"
 #include "daObjKinokoTag_c.h"
+#include "math/CalcLib.h"
 
 /* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
@@ -65,7 +66,6 @@ struct PileCollisionFilePtr : SharedFilePtr {
 
 /* local extern: no shared header declares these. */
 extern "C" {
-extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern void func_02012694(unsigned int a, void *b);
 }
 
@@ -216,13 +216,12 @@ s32 daObjPile_c::Behavior() {
 }
 
 s32 daObjPile_c::InitResources() {
-    void *m = dExtSimpleModel_c::LoadFile(gPileModelFile);
-    mModel.SetFile((BMD_File *)m, 1, -1);
+    BMD_File *m = dExtSimpleModel_c::LoadFile(gPileModelFile);
+    mModel.SetFile(m, 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    void *k = dBgW_Kc::LoadFile(gPileCollisionFile);
-    mMeshCollider.SetFile((KCL_File *)k, mClsnMat, 0x199, mAngleY,
-                          *(CLPS_Block *)data_ov002_0210d874);
+    KCL_File *k = dBgW_Kc::LoadFile(gPileCollisionFile);
+    mMeshCollider.SetFile(k, mClsnMat, 0x199, mAngleY, *(CLPS_Block *)data_ov002_0210d874);
     mStepsLeft = 3;
     return 1;
 }

@@ -3,7 +3,7 @@
 #include "dExtModel_c.h"
 #include "Ov007Work.h"
 #include "Ov007Model.h"
-extern void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
+#include "math/CalcLib.h"
 
 void func_ov007_020b2454(Vector3 *out, Vector3 *r1) {
     int w;

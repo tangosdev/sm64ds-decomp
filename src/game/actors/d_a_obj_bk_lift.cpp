@@ -113,13 +113,13 @@ int daObjBk_Lift_c::OnStoodOn(dActor_c *rider) {
 }
 
 int daObjBk_Lift_c::InitResources() {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov015_02114a64), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov015_02114a64), 1, -1);
     mShadowModel.InitCuboid();
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov015_02114a5c), mClsnMat, 0x199,
-                          mAngleY, data_ov015_02113594);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov015_02114a5c), mClsnMat, 0x199, mAngleY,
+                          data_ov015_02113594);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
 

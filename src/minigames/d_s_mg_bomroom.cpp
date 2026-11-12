@@ -29,6 +29,7 @@
 #include "cstd.h"
 #include "decl_common.h"
 #include "LevelRng.h"
+#include "math/CalcLib.h"
 #include "Sound.h"
 #include "nitro/gx/g2.h"
 #include "nitro/fx/fx.h"
@@ -60,7 +61,6 @@ extern void *sBomroomMarkerPlainSprites[];
 extern void *sBomroomMarkerLitSprites[];
 extern int sBomroomMarkerY[];
 extern int Mg_GetSubmittedScore(void);
-extern int RandomIntInternal(int *seed);
 extern u16 sBomroomSpawnDelays[];
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);

@@ -65,7 +65,6 @@ extern HeyhoStateTable data_ov002_02111190;
 /* local extern: no shared header declares these. */
 extern "C" {
 void func_02012694(unsigned int a, const Vector3 *v);
-void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
 }
 
 /* Empty. D1 then D0 follow from the members. */
@@ -207,7 +206,7 @@ int daPropeller_Heyho_Fire_c::Behavior() {
 }
 
 int daPropeller_Heyho_Fire_c::InitResources() {
-    BMD_File *file = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov065_0211d610);
+    BMD_File *file = dExtSimpleModel_c::LoadFile(data_ov065_0211d610);
     if (mModel.SetFile(file, 1, -1) == 0)
         return 0;
     unk_358 = param1 & 0xff;

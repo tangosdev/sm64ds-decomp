@@ -94,11 +94,11 @@ s32 daObjUkiyuka_c::Behavior() {
  * is dBgW_Kc::LoadFile, slot 2 is CLPS into SetFile; then mRestY = mPosY
  * and mBobAmplitude = bobAmplitude. */
 int daObjUkiyuka_c::InitResourcesFrom(Resources *resources, int bobAmplitude) {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*resources->model), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(*resources->model), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*resources->collision), mClsnMat, 0x1000,
-                          mAngleY, *resources->clps);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*resources->collision), mClsnMat, 0x1000, mAngleY,
+                          *resources->clps);
     mRestY = mPosY;
     mBobAmplitude = bobAmplitude;
     return 1;

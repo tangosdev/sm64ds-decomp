@@ -70,7 +70,7 @@ extern "C" daObjHmBskt_c *daObjHmBskt_c_classInit() {
 }
 
 s32 daObjHmBskt_c::InitResources() {
-    BMD_File *modelFile = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov030_02115c88);
+    BMD_File *modelFile = dExtSimpleModel_c::LoadFile(data_ov030_02115c88);
     mModel.SetFile(modelFile, 1, -1);
 
     mVertAccel = 0;
@@ -84,7 +84,7 @@ s32 daObjHmBskt_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    KCL_File *clsnFile = (KCL_File *)dBgW_Kc::LoadFile(data_ov030_02115c80);
+    KCL_File *clsnFile = dBgW_Kc::LoadFile(data_ov030_02115c80);
     mMeshCollider.SetFile(clsnFile, mClsnMat, 0x199, mAngleY, data_ov030_02114ee4);
 
     Vector3 starPos;

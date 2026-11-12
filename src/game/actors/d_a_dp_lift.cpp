@@ -133,11 +133,11 @@ s32 daDpLift_c::Behavior() {
 }
 
 s32 daDpLift_c::InitResources() {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov025_02113ae0), 1, -1);
-    mModel2.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210d9f0), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov025_02113ae0), 1, -1);
+    mModel2.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210d9f0), 1, -1);
     UpdateClsnPosAndRot();
 
-    KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov025_02113ad8);
+    KCL_File *kcl = dBgW_Kc::LoadFile(data_ov025_02113ad8);
     mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov025_02112d08);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);

@@ -40,6 +40,7 @@
 #include "private/controller_input.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/CalcLib.h"
 
 extern "C" {
 extern unsigned char sStarSelectCharacterOrder[];
@@ -565,9 +566,6 @@ s32 dScStarSel_c::Render() {
 // splitting `val` alone still leaves 6).
 
 extern "C" {
-u8 DecIfAbove0_Byte(u8 *p);
-u16 DecIfAbove0_Short(u16 *p);
-
 extern dFdBrightness_c *gSceneFader;
 extern dFdColor_c gSceneColorFader;
 }

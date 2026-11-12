@@ -90,11 +90,11 @@ int daObjPushblock_c::InitResources() {
     BMD_File *bmd;
     KCL_File *kcl;
 
-    bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210df9c);
+    bmd = dExtSimpleModel_c::LoadFile(data_ov002_0210df9c);
     mModel.SetFile(bmd, 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov002_0210df94);
+    kcl = dBgW_Kc::LoadFile(data_ov002_0210df94);
     mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, *(CLPS_Block *)&data_ov002_0210d7b4);
 
     mVertAccel = -0x2000;

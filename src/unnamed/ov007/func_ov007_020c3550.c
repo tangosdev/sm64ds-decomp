@@ -1,6 +1,5 @@
 #include "Ov007Display.h"
-
-extern void *func_ov007_020c3df4(const char *name, int size);
+#include "Ov007MenuMem.h"
 
 /* Allocates a character record (the menu's alloc hook) and fills it. */
 Ov007CharRecord *func_ov007_020c3550(const void *tiles, int width, int height, int is8bpp) {

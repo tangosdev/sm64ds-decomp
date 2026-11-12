@@ -777,7 +777,7 @@ int daMenbo_c::InitResources()
     Vector3 pos;
     Vector3 v;
 
-    f = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov090_021344a0);
+    f = dExtSimpleModel_c::LoadFile(data_ov090_021344a0);
     mAnmModel.SetFile(f, 1, -1);
     dExtFrameCtrl_c::LoadFile(data_ov090_02134488);
     dExtFrameCtrl_c::LoadFile(data_ov090_02134480);

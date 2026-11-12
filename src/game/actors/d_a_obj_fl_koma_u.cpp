@@ -146,13 +146,13 @@ s32 daObjFl_KomaU_c::Behavior() {
 s32 daObjFl_KomaU_c::InitResources() {
     int i;
 
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov064_0211adbc.model), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(*data_ov064_0211adbc.model), 1, -1);
     for (i = 0; i < 8; i++)
         mColliders[i].Init(mPos, 0x4b000, 0x96000, 0x200002, 0);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*data_ov064_0211adbc.collision), mClsnMat,
-                          0x199, mAngleY, *data_ov064_0211adbc.clps);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*data_ov064_0211adbc.collision), mClsnMat, 0x199,
+                          mAngleY, *data_ov064_0211adbc.clps);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     return 1;
 }

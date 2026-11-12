@@ -10,9 +10,8 @@
  * 0x02108674 is pointed at by exactly one word, 0x021086b0, this class's
  * own vtable slot.
  *
- * LoadLevel, MTX_MultVec43, MTX_Inverse43, StartExitFaderWipe and
- * IsStarCollectedInLevel are arm9 C helpers with no shared header yet, so they
- * keep a local extern "C" block. The data_ globals are arm9 data this TU does
+ * LoadLevel, StartExitFaderWipe and IsStarCollectedInLevel are arm9 C
+ * helpers with no shared header yet, so they keep a local extern "C" block. The data_ globals are arm9 data this TU does
  * not own.
  */
 
@@ -27,11 +26,9 @@
 #include "math/MtxStack.h"
 
 extern "C" {
-/* local extern: these four have no shared header yet. LoadLevel takes the
+/* local extern: these three have no shared header yet. LoadLevel takes the
    definition's wide spelling; the caller narrows the packed bytes itself. */
 void LoadLevel(int levelID, u32 entranceID, int starID, u32 arg3, s8 returnState);
-void MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
-int MTX_Inverse43(const Matrix4x3 *in, Matrix4x3 *out);
 void StartExitFaderWipe(int);
 int IsStarCollectedInLevel(signed char levelID, int starID);
 }

@@ -36,11 +36,6 @@ extern CLPS_Block data_ov002_0210d7d4;
 extern signed char gCurrentSublevel;
 extern unsigned char gGameMode;
 
-/* local extern: no shared header declares these. */
-extern "C" {
-extern unsigned char DecIfAbove0_Byte(unsigned char *p);
-}
-
 extern SharedFilePtr data_ov002_0210d9f0;
 
 /* File-scope objects at the end of this file construct the two resource
@@ -68,12 +63,12 @@ extern "C" daObjPathLift_c *daObjPathLift_c_classInit() {
 int daObjPathLift_c::InitResources() {
     Vector3 pos;
     dExtSimpleModel_c::LoadFile(data_ov002_0210d9f0);
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov100_02148a54), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov100_02148a54), 1, -1);
     mShadowModel.InitCuboid();
     UpdateModelMatrix();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov100_02148a5c), mClsnMat, 0x1000,
-                          mAngleY, data_ov002_0210d7d4);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov100_02148a5c), mClsnMat, 0x1000, mAngleY,
+                          data_ov002_0210d7d4);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mPathSpeed = 0xa000;
     mHorzSpeed = mPathSpeed;

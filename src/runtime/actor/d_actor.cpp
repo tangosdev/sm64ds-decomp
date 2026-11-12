@@ -779,8 +779,6 @@ dActor_c *dActor_c::SpawnFireball(const Vector3 &pos, const Vector3_16 *rot, Fix
 extern "C" {
 /* local extern: daPly_c has no accessor for the current body model. */
 void *func_ov002_020e496c(daPly_c *p); /* the player's current mBodyModels entry */
-/* local extern: no header declares it. */
-void Vec3_Lsl(Vector3 *vF, const Vector3 *v, int amount);
 }
 Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
     Vector3 t;
