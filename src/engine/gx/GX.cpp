@@ -12,6 +12,7 @@
 #include "types.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_vramcnt.h"
+#include "nitro/mi/memory.h"
 
 extern int GXi_DmaId;      // RENDER_DMA_CHANNEL: DMA channel number, -1 if none
 extern u32 data_020a60ac;  // texture upload window: base address
@@ -30,7 +31,6 @@ extern void MI_WaitDma(u32 dmaNo);
 extern void MI_DmaCopy32Async(u32 dmaNo, const void *src, void *dest, u32 size,
                               void (*callback)(void *), void *arg);
 extern void MI_DmaCopy32(unsigned int channel, const void *src, void *dest, unsigned int len);
-extern void MIi_CpuCopy32(int *src, int *dst, int len);
 
 void GX_BeginLoadTex() {
     int r = GX_ResetBankForTex();

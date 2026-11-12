@@ -22,13 +22,12 @@
 #include "nitro/os/cache.h"
 #include "nitro/card/card_common.h"
 #include "nitro/os/spinLock.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
 
 /* local extern: no header declares this yet. */
-extern void OS_Terminate(void);
 extern void PXI_SetFifoRecvCallback(int tag, void *callback);
-extern void MIi_CpuClearFast(unsigned val, void *dst, int len);
 
 #define OS_LOCK_ID_ERROR (-3)
 #define CARD_TARGET_NONE 0

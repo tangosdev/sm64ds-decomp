@@ -1,6 +1,6 @@
 #include "types.h"
 #include "private/arm9_wbt.h"
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
+#include "nitro/mi/memory.h"
 extern int WBT_GetOwnAid(void);
 extern void func_02064470(void *self, int code, int idx);
 extern void func_02064554(void *self, int sel, int idx, s16 a3);

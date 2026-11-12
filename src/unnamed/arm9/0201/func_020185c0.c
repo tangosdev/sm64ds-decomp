@@ -1,11 +1,11 @@
 #include "private/arm9_archive_table.h"
 
+#include "nitro/os/system.h"
 #include "nitro/fs/file.h"
 
 extern void func_02018598(FSFileID *c, int arg);
 extern int myFS_OpenFileFast(FSFile *p_file, FSFileID id);
 extern int LoadArchive(int idx);
-extern void OS_Terminate(void);
 extern int func_0204eda4(int file, char *archive, unsigned int index);
 
 /* Open game file id into the FSFile at file. Ids below 0x8000 are FAT ids

@@ -50,6 +50,8 @@ void Deallocate(void *ptr);
 } // namespace Memory
 
 #include "nitro/os/cache.h"
+#include "nitro/mi/memory.h"
+#include "nitro/os/system.h"
 #ifndef _MSC_VER
 #include "nitro/fs/file.h"
 #endif
@@ -67,9 +69,7 @@ int func_02018568(int a);
 unsigned int func_02018ac4(unsigned int *p);
 void DecompressLZ16(void *src, void *dst);
 int func_020185c0(void *buf, unsigned int x);
-void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
 void func_02018770(void);
-void OS_Terminate(void);
 int myFS_ReadFile(void *a, void *b, int c);
 }
 

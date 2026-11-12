@@ -14,6 +14,7 @@
  * src/OSi_ReloadRomData.cpp defines OS_ResetSystem.
  */
 #include "types.h"
+#include "nitro/os/system.h"
 
 #define PXI_FIFO_TAG_OS 12
 #define PXI_PROC_ARM7 1
@@ -27,8 +28,6 @@ extern void PXI_Init(void);
 extern int PXI_IsCallbackReady(int tag, int proc);
 extern void PXI_SetFifoRecvCallback(int tag, void *callback);
 extern int PXI_SendWordByFifo(unsigned int tag, unsigned int data, unsigned int err);
-
-extern void OS_Terminate(void);
 
 extern u16 OSi_IsInitReset;
 extern vu16 OSi_IsResetOccurred;

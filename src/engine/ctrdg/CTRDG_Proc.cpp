@@ -27,6 +27,8 @@
 #include "nitro/os/cache.h"
 #include "nitro/os/interrupt.h"
 #include "nitro/ctrdg/ctrdg_common.h"
+#include "nitro/mi/memory.h"
+#include "nitro/os/system.h"
 #include "nitro/hw/registers.h"
 
 /* NitroSDK's inline IME helpers (os/common/interrupt.h): each returns the
@@ -49,7 +51,6 @@ static inline int OS_RestoreIrq(int enable) {
 
 extern "C" {
 
-extern void OS_Terminate(void);
 extern void PXI_Init(void);
 /* PXI_IsCallbackReady, PXI_SetFifoRecvCallback and PXI_SendWordByFifo
  * (src/engine/pxi/PXI_Fifo.cpp). */
@@ -57,7 +58,6 @@ extern int PXI_IsCallbackReady(int tag, int proc);
 extern void PXI_SetFifoRecvCallback(int tag, void *callback);
 extern int PXI_SendWordByFifo(u32 tag, u32 data, u32 reply);
 extern void MI_DmaCopy16(unsigned int channel, void *src, void *dst, unsigned int numHalfs);
-extern void MIi_CpuCopy32(int *dst, int *src, int len);
 extern void SVC_WaitByLoop(int n);
 
 extern CTRDGWork CTRDGi_Work;

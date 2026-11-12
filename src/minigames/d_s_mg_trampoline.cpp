@@ -66,8 +66,10 @@ extern int sTrmpFxCount;
 extern TrmpScorePopup *sTrmpFxPool;
 
 extern int sTrmpBrushWord[];
-extern void MIi_CpuCopy32(int *dst, int *src, int len);
-extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
+/* local extern: these named parameters hold this TU's @NNN numbering; the
+   switch to nitro/mi/memory.h waits on the manifest re-key in #5252. */
+extern void MIi_CpuCopy32(const void *dst, void *src, unsigned int len);
+extern void MIi_CpuClear16(unsigned short val, void *dst, unsigned int nbytes);
 extern const unsigned char sTrmpBrushPltt[];
 extern dFdBrightness_c *gSceneFader;
 extern int sTrmpTouchBlocked;

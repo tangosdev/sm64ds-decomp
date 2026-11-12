@@ -27,6 +27,7 @@
 #include "types.h"
 #include "nitro/os/system.h"
 #include "nitro/os/thread.h"
+#include "nitro/mi/memory.h"
 #include "nitro/fs/file.h"
 
 extern "C" {
@@ -65,9 +66,6 @@ extern "C" {
 
 extern FSArchive *data_020a8048;
 extern FSDirPos data_020a804c;
-
-void MI_CpuCopy8(const void *src, void *dst, u32 size);
-void MI_CpuFill8(void *dst, u8 value, u32 size);
 
 int FSi_TranslateCommand(FSFile *p_file, int command);
 void FSi_ReleaseCommand(FSFile *p_file, int ret);

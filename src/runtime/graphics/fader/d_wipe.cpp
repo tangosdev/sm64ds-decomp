@@ -29,9 +29,9 @@
 #include "nitro/gx/g2.h"
 #include "nitro/hw/registers.h"
 #include "nitro/gx/gx.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
-void MIi_CpuClear32(int val, int *dst, int len);
 void Wipe_HBlankHandler(void);
 }
 

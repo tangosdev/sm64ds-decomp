@@ -25,15 +25,13 @@
  */
 #include "nitro/gx/g3x.h"
 #include "nitro/hw/registers.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
-void MIi_CpuCopy16(const void *src, void *dst, int size);
-void MI_Copy32B(void *src, void *dst);
 extern int GXi_DmaId;
 void MI_DmaFill32Async(unsigned int dmaNo, void *dest, unsigned int data, unsigned int size,
                        void (*callback)(void *), void *arg);
 void MI_DmaFill32(unsigned int channel, void *dst, unsigned int data, unsigned int size);
-void MIi_CpuClear32(int val, int *dst, int len);
 void GXi_NopClearFifo128_(unsigned addr);
 }
 

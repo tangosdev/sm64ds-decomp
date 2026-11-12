@@ -32,9 +32,9 @@
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/fx/fx_trig.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
-void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 void DecompressLZ16(void *src, void *dst);
 
 void func_020308b4(void);

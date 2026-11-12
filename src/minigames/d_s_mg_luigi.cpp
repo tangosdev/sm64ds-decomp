@@ -137,7 +137,6 @@ extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 extern void Mg_DrawNumberRotated(int a, int b, int c, int d, int e, int f, u16 g);
 extern void func_020127a4(int a0, int a1, int a2, int a3);
 extern void Hud_RenderSprite(void *sprite, int b, int c, int d, int e);
-extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 extern int Sound_PlayIfNotActive(int a, int b, int c, short d);
 extern void FreeGfxSlotsById(int arg);
 extern void Mg_SetSharedState(int c);
@@ -147,6 +146,7 @@ extern void Luigi_PushScanlineRecord(void);
 extern dScMgLuigi_c *dScMgLuigi_c_classInit(void);
 }
 #include "nitro/os/cache.h"
+#include "nitro/mi/memory.h"
 
 namespace cstd {
 int sqrt(unsigned long long x);
@@ -186,7 +186,6 @@ extern "C" {
 void Luigi_PrepareScanlines(void) {
     extern int data_0209f608;
     extern int data_0209f648[][192];
-    extern void MIi_CpuCopy32(int *src, int *dst, int byteCount);
     int nextLine;
     OS_SetIrqCheckFlag(OS_IE_H_BLANK);
     nextLine = REG_VCOUNT + 1;
@@ -207,7 +206,6 @@ void Luigi_PushScanlineRecord(void) {
     extern u32 data_0209f60c;
     extern volatile u32 data_0209f608;
     extern struct IrisScanlineTable data_0209f648[];
-    extern void MIi_CpuCopy32(int *src, int *dst, int byteCount);
     data_0209f608 = data_0209f60c;
     MIi_CpuCopy32((int *)&data_0209f648[data_0209f608], (int *)0x04000040, 4);
 }
@@ -1598,7 +1596,6 @@ extern void *sLuigiBg1NcgPath;
 extern void *Ov004_LoadFileByPath(const char *path);
 extern void DecompressLZ16(void *src, void *dst);
 extern void *LoadFile(int handle);
-extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 extern void Ov004_Deallocate(void *ptr);
 extern void GX_LoadBG3Scr(void *, u32, u32);
 extern void GXS_LoadBG2Scr(const void *, u32, u32);

@@ -64,6 +64,7 @@
 #include "dScene_c.h"
 #include "LevelRng.h"
 #include "SaveData.h"
+#include "nitro/mi/memory.h"
 
 struct OamAttr;
 
@@ -142,7 +143,6 @@ int  func_02013638(int n);
 int  RandomIntInternal(int *seed);
 extern void *LoadFile(int id);
 extern void DecompressLZ16(void *src, void *dst);
-extern void MIi_CpuClear16(u16 val, void *dst, int nbytes);
 
 extern void OamRender10_d_s_mini_gm(int sub, OamAttr *attr, int x, int y, int pal, int prio, int sx,
                                     int sy, int c, int d);

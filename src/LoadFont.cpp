@@ -2,6 +2,7 @@
 /* Runtime asset handles resolved through the overlay 0 file table. */
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
+#include "nitro/mi/memory.h"
 
 enum LoadFont_AssetId {
     ASSET_D_2D_MARIO_3DFONT_NCL_BIN = 0x0237
@@ -12,7 +13,6 @@ extern "C" int Mg_GetWorkBuffer(void);
 extern "C" int LoadFileAt(int handle, int dest);
 extern "C" void Deallocate(void *ptr);
 
-extern "C" void MIi_CpuCopy32(int *src, int *dst, int len);
 extern "C" void DecompressLZ16(void *dst, void *src);
 
 extern unsigned char data_0209d698;

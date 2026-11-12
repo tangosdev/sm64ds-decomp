@@ -1,5 +1,5 @@
 #include "nitro/fs/overlay.h"
-extern void OS_Terminate(void);
+#include "nitro/os/system.h"
 extern int FS_UnloadOverlay(int a, int b);
 extern int func_0203d7b8(void);
 

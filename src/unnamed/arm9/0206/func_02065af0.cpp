@@ -1,11 +1,11 @@
 //cpp
 #include "nitro/os/system.h"
 #include "private/arm9_wbt.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
 
 extern WBTCommand *func_02065b88(void);
-extern void MIi_CpuCopy32(int *src, int *dst, int len);
 extern int data_020a94c0;
 extern int data_020a9570;
 

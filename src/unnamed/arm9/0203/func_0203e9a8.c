@@ -1,5 +1,5 @@
 #include "types.h"
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
+#include "nitro/mi/memory.h"
 extern u8 data_020a0fb8[];
 extern int data_020a0f70;
 

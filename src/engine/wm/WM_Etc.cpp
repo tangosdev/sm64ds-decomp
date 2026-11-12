@@ -8,12 +8,12 @@
 #include "types.h"
 #include "nitro/os/cache.h"
 #include "private/wm_views.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
 
 extern int data_020a9440[]; /* the game-info buffer ARM7 reads (pret's UNK_021D68C0) */
 extern int WMi_CheckIdle(void);
-extern void MIi_CpuCopy32(int *src, int *dst, int len);
 
 /* NitroSDK WM_SetGameInfo: refuse unless WM is PARENT (7) or MP_PARENT (9),
  * copy the user game info (at most 0x70 bytes) to the buffer ARM7 reads,

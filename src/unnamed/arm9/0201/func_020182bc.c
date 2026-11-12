@@ -1,7 +1,7 @@
+#include "nitro/os/system.h"
 #include "nitro/fs/file.h"
 
 extern int myFS_OpenFileFast(FSFile *p_file, FSFileID id);
-extern void OS_Terminate(void);
 extern void *func_0201834c(FSFile *p_file, int flush);
 extern int myFS_ConvertPathToFileID(void *out_file_id, const char *path);
 

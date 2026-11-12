@@ -1,6 +1,5 @@
 #include "Ov007Picker.h"
-
-extern void MIi_CpuCopy32(int *src, int *dst, int len);
+#include "nitro/mi/memory.h"
 
 /* Copies each group's live points into groupPointCopies (MIi_CpuCopy32 is
  * (src, dst)) and snapshots pos as restPos. */

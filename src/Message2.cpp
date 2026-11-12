@@ -105,8 +105,6 @@ extern u8 data_ov002_0210c3a0;
 extern u8 data_ov002_0210c3a8;
 extern void (*MSG_GEN_TEXT_FUNCS[])(void);
 
-extern void MIi_CpuCopy32(int *dst, int *src, int len);
-extern void MIi_CpuClear32(int val, int *dst, int len);
 extern int IsButtonInputValid(void);
 extern int func_0201fb4c(void);
 extern u8 NumStars(void);
@@ -119,6 +117,7 @@ void OamRender10_Message2(int a, void *b, int c, int d, int e, int f, int g, int
 struct OamAttr;
 #include "OAM.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/mi/memory.h"
 #include "nitro/gx/g2.h"
 #include "nitro/gx/gx.h"
 

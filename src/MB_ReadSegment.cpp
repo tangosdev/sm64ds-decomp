@@ -1,5 +1,6 @@
 //cpp
 #include "nitro/os/cache.h"
+#include "nitro/mi/memory.h"
 #include "nitro/fs/file.h"
 
 extern "C" {
@@ -24,7 +25,6 @@ typedef struct {
 } Args;
 
 extern FSArchive *FS_FindArchive(const char *name, int name_len);
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
 extern void MBi_ReadSegmentHeader(void *s, unsigned int start, unsigned int end, int flag);
 
 /* One entry of the zero-size-terminated list at mbi_seg_header. */

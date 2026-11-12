@@ -28,6 +28,7 @@
 #include "types.h"
 #include "nitro/os/system.h"
 #include "nitro/os/thread.h"
+#include "nitro/mi/memory.h"
 
 /* The SDK's nitro/types.h spellings; include/types.h has no BOOL. */
 typedef int BOOL;
@@ -65,7 +66,6 @@ extern void SDK_IRQ_STACKSIZE(void);
 extern int ARMSaveContext(void *ctx);
 extern void ARMRestoreContext(void *ctx);
 extern void OS_InitContext(void *ctx, unsigned int pc, unsigned int sp);
-extern void MIi_CpuClear32(int val, int *dst, int len);
 extern void OSi_UnlockAllMutex(OSThread *thread);
 
 extern OSSwitchThreadCallback data_020a6128; /* OSi_SystemCallbackInSwitchThread */

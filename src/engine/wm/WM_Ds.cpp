@@ -11,6 +11,7 @@
 #include "nitro/os/cache.h"
 #include "nitro/os/system.h"
 #include "private/wm_views.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
 
@@ -30,9 +31,6 @@ typedef void (*WMCallbackFunc)(void *arg);
 /* sendData stays an int, as WM_SetMPDataToPort.c defines it. */
 extern int WM_SetMPDataToPort(WMCallbackFunc callback, int sendData, int sendDataSize,
                               int destBitmap, u16 port, u16 prio);
-extern void MIi_CpuClear16(u16 val, void *dst, int nbytes);
-extern void MIi_CpuClearFast(unsigned val, void *dst, int len);
-extern void MIi_CpuCopy16(const void *src, void *dst, int nbytes);
 
 void WmDataSharingSetDataCallback(void *arg);
 void WmDataSharingReceiveCallback_Parent(WMPortRecvCallback *callback);

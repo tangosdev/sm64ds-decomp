@@ -1,9 +1,8 @@
 //cpp
 #include "nitro/gx/gx_vramcnt.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
-extern void MIi_CpuClear32(int val, int *dst, int len);
-extern void MIi_CpuClearFast(unsigned val, void *dst, int len);
 
 void MenuGfx_ResetVram(void) {
     volatile int a;

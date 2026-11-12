@@ -28,6 +28,7 @@
 #include "nitro/os/thread.h"
 #include "nitro/snd/alarm.h"
 #include "nitro/os/system.h"
+#include "nitro/mi/memory.h"
 
 struct Elem_204f278;
 struct HeapAllocator_205212c;
@@ -286,7 +287,6 @@ struct Elem_204f278 {
 extern "C" {
 /* C-linkage callback types used by foreign decls. */
 /* Foreign callees and data. */
-extern void MIi_CpuClear32(int val, int *dst, int len);
 
 extern int __aeabi_idiv(int a, int b);
 extern s16 data_02086384[];

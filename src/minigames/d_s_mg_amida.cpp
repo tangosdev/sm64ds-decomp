@@ -97,13 +97,12 @@ enum dScMgAmida_c_AssetId {
 #include "nitro/os/cache.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/g2.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
 /* --- shared ov004 and main helpers --- */
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 extern void Mg_DrawScoreTally(void *a0, int a1, int a2, int a3);
-extern void MIi_CpuCopy16(void *dst, void *src, int nbytes);
-extern void MIi_CpuClear16(u16 val, void *dst, int nbytes);
 extern void FreeGfxSlotsById(int a);
 extern u32 LoadCompressedFileAt(int fileID, void *target);
 extern void *LoadFile(int handle);

@@ -90,6 +90,7 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 #include "LevelRng.h"
 #include "nitro/fx/fx_cp.h"
 #include "msl/string.h"
+#include "nitro/mi/memory.h"
 
 struct OamAttr;
 
@@ -4915,7 +4916,6 @@ u32 LoadCompressedFileAt(int fileID, void *target);
 int LoadFileAt(int handle, int dest);
 void LoadControllerModeText(int a);
 void LoadFont3D(void);
-void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 void SetSubBg0Offset(int a, int b);
 void SetSubBg1Offset(int a, int b);
 void SetSubBg2Offset(int a, int b);

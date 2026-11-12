@@ -50,6 +50,7 @@
 #include "math/Approach.h"
 #include "nitro/hw/registers.h"
 #include "nitro/fx/fx_cp.h"
+#include "nitro/mi/memory.h"
 
 #pragma defer_codegen off
 
@@ -923,7 +924,6 @@ extern "C" {
    `PaintSquare` is coined here from what the body does; it was `Virtual88`,
    after the +0x88 vtable offset. The cartridge names no method of this
    class. */
-extern void MIi_CpuCopy32(void *a, void *b, int n);
 
 extern int sMgPaintWord;
 extern int sMgTopScreenYOffset;
@@ -931,7 +931,6 @@ extern int sMgTopScreenYOffset;
 }
 
 void dScMgBase_c::PaintSquare(int cx, int cy, int colour, int size) {
-    using s20ae3b4::MIi_CpuCopy32;
     using s20ae3b4::sMgPaintWord;
     using s20ae3b4::sMgTopScreenYOffset;
 
@@ -1472,7 +1471,6 @@ extern "C" {
    this module is dScMgBase_c::OnGraphCallback2, which reaches it only on a rising edge
    of mMenuOpen.  That is the three-item overlay menu going up, not a Yoshi egg.
    See the slot 29 block in include/dScMgBase_c.h for why the name is kept. */
-extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
 extern void func_0201f32c(int arg0);
 extern int GetGameLanguage(void);
 extern void DecompressLZ16(void *src, void *dst);
@@ -1494,7 +1492,6 @@ extern unsigned char gSubScreenLayers;
 int dScMgBase_c::SaveScreenForMenu() {
     using s20af094::DecompressLZ16;
     using s20af094::GetGameLanguage;
-    using s20af094::MIi_CpuClear16;
     using s20af094::gSubScreenLayers;
     using s20af094::gMainScreenLayers;
     using s20af094::func_0201f32c;
@@ -1572,7 +1569,6 @@ void dScMgBase_c::OpenMenu()
 
 namespace s20af2f8 {
 extern "C" {
-extern void MIi_CpuClear16(unsigned short val, void *dst, int nbytes);
 
 extern char sMgBrushPalette;
 

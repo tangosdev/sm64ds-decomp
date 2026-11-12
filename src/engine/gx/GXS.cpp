@@ -11,6 +11,7 @@
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_vramcnt.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/mi/memory.h"
 
 /* OBJ character VRAM has a fixed base, so the SDK's getters
  * (G2_/G2S_GetOBJCharPtr, nitro/gx/gx_bgcnt.h) are inlines, not calls.
@@ -31,8 +32,6 @@ extern void MI_DmaCopy32Async(u32 dmaNo, const void *src, void *dest, u32 size,
                               void (*callback)(void *), void *arg);
 extern void MI_DmaCopy32(u32 ch, const void *src, void *dst, u32 size);
 extern void MI_DmaCopy16(u32 ch, const void *src, volatile void *dst, u32 count);
-extern void MIi_CpuCopy16(const void *src, volatile void *dst, int count);
-extern void MIi_CpuCopy32(int *src, int *dst, int len);
 
 // Loads BG palette data to main-screen (GX) palette VRAM at 0x05000000.
 void GX_LoadBGPltt(const void *src, unsigned int offset, unsigned int size) {
@@ -122,7 +121,7 @@ void GXS_LoadOBJ(const void *src, unsigned int offset, unsigned int count) {
 
 // Loads BG0 screen data to the main-engine plane (G2_GetBG0ScrPtr).
 void GX_LoadBG0Scr(const void *src, int offset, int count) {
-    volatile unsigned char *ptr = (volatile unsigned char *)G2_GetBG0ScrPtr();
+    unsigned char *ptr = (unsigned char *)G2_GetBG0ScrPtr();
     int ch = GXi_DmaId;
     if (ch != -1) {
         MI_DmaCopy16(ch, src, ptr + offset, count);
@@ -133,7 +132,7 @@ void GX_LoadBG0Scr(const void *src, int offset, int count) {
 
 // Loads BG0 screen data to the sub-engine plane (G2S_GetBG0ScrPtr).
 void GXS_LoadBG0Scr(const void *src, int offset, int count) {
-    volatile unsigned char *ptr = (volatile unsigned char *)G2S_GetBG0ScrPtr();
+    unsigned char *ptr = (unsigned char *)G2S_GetBG0ScrPtr();
     int ch = GXi_DmaId;
     if (ch != -1) {
         MI_DmaCopy16(ch, src, ptr + offset, count);
@@ -144,7 +143,7 @@ void GXS_LoadBG0Scr(const void *src, int offset, int count) {
 
 // Loads BG1 screen data to the main-engine plane (G2_GetBG1ScrPtr).
 void GX_LoadBG1Scr(const void *src, int offset, int count) {
-    volatile unsigned char *ptr = (volatile unsigned char *)G2_GetBG1ScrPtr();
+    unsigned char *ptr = (unsigned char *)G2_GetBG1ScrPtr();
     int ch = GXi_DmaId;
     if (ch != -1) {
         MI_DmaCopy16(ch, src, ptr + offset, count);
@@ -155,7 +154,7 @@ void GX_LoadBG1Scr(const void *src, int offset, int count) {
 
 // Loads BG1 screen data to the sub-engine plane (G2S_GetBG1ScrPtr).
 void GXS_LoadBG1Scr(const void *src, int offset, int count) {
-    volatile unsigned char *ptr = (volatile unsigned char *)G2S_GetBG1ScrPtr();
+    unsigned char *ptr = (unsigned char *)G2S_GetBG1ScrPtr();
     int ch = GXi_DmaId;
     if (ch != -1) {
         MI_DmaCopy16(ch, src, ptr + offset, count);

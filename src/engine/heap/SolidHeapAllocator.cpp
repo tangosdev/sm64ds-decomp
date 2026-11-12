@@ -28,8 +28,7 @@
  */
 #include "nnsys/fnd.h"
 #include "msl/stdlib.h"
-
-extern "C" void MIi_CpuClear32(int val, int *dst, int len); /* MIi_CpuClear32 */
+#include "nitro/mi/memory.h"
 
 #define MIN_ALIGNMENT 4
 

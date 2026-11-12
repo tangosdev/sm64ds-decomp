@@ -1,6 +1,6 @@
 #include "types.h"
 #include "private/arm9_wbt.h"
-extern void MIi_CpuCopy32(const void *src, void *dst, s32 size); /* 0x0205a490 */
+#include "nitro/mi/memory.h"
 extern int func_02065af0(int *thiz);
 
 /* NitroSDK WBT_GetBlock: queue a REQ_GET_BLOCK command (4) asking the peers

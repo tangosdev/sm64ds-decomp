@@ -25,6 +25,7 @@
 #include "nitro/os/system.h"
 #include "nitro/card/card_rom.h"
 #include "nitro/fs/overlay.h"
+#include "nitro/mi/memory.h"
 #include "nitro/fs/file.h"
 
 extern "C" {
@@ -51,13 +52,10 @@ extern char data_0209a7ec[];
 extern char data_0209aff8[];
 extern struct MWiDestructorChain *__global_destructor_chain;
 
-void MI_CpuCopy8(const void *src, void *dst, u32 size);
-void MI_CpuFill8(void *dst, u8 value, u32 size);
 void DGT_Hash2CalcHmac(void *out, void *msg, int msglen, void *key, int keylen);
 void MIi_UncompressBackward(void *bottom);
 int func_0206cf98(int a, u32 b, u32 c);
 int DGT_SetOverlayTableMode(s32 newVal);
-void OS_Terminate(void);
 
 /* Invalidate the I- and D-cache over the overlay's whole region (image and
  * bss), then zero the bss after the image. */

@@ -42,6 +42,7 @@
  * Heap::MaxAllocationUnitSize on the game heap; that names
  * MenuMem_SetMaxAllocSizeHook and MenuMem_GetMaxAllocSize.
  */
+#include "nitro/mi/memory.h"
 
 extern "C" {
 
@@ -52,11 +53,6 @@ typedef void *(*Ov007AllocHook)(unsigned int size);
 extern Ov007QueryHook data_ov007_02104c14;
 extern Ov007FreeHook data_ov007_02103254;
 extern Ov007AllocHook data_ov007_02103258;
-
-extern void MIi_CpuClearFast(unsigned val, void *dst, int len);
-extern void MIi_CpuClear32(int val, int *dst, int len);
-extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
-extern void MI_CpuFill8(void *dst, unsigned char value, unsigned int size);
 
 /* local extern: no include/ header declares the OS heap entry points. */
 extern void *OS_AllocFromHeap(int id, int heap, unsigned int size);

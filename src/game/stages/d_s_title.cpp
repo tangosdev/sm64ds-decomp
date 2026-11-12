@@ -49,6 +49,7 @@
 #include "GX.h"
 #include "OAM.h"
 #include "nitro/hw/registers.h"
+#include "nitro/mi/memory.h"
 #include "nitro/gx/g2.h"
 
 /* SetFaders stores the fade controller here; slot 5 waits for the entrance fade. */
@@ -87,7 +88,6 @@ extern int data_0208ee44;
 extern char data_0209ee90[];
 extern u16 DecIfAbove0_Short(u16 *p);
 extern void Enable3dEngines(void);
-extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
 /* The print helper reads name; Behavior reads the signed level ID and entrance.
  * IDs -2 and -1 select the versus and minigame scenes. The two trailing bytes
  * are natural alignment padding; no observed consumer reads them. These type

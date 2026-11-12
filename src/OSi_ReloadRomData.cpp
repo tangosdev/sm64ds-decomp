@@ -2,6 +2,7 @@
 #include "types.h"
 #include "nitro/os/cache.h"
 #include "nitro/os/spinLock.h"
+#include "nitro/os/system.h"
 
 extern "C" {
 
@@ -13,7 +14,6 @@ extern "C" {
 #define ROM_HEADER_ARM7_SIZE       (*(u32 *)0x027FFE3C)
 #define ROM_SECURE_AREA_END 0x8000
 
-extern void OS_Terminate(void);
 extern void OSi_SendToPxi(u16 data);
 extern void OSi_ReloadRomData(void);
 extern void OSi_DoBoot(void);

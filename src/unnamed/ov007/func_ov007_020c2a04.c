@@ -1,6 +1,6 @@
 #include "Ov007StrokePath.h"
+#include "nitro/mi/memory.h"
 
-extern void MIi_CpuCopy32(int *src, int *dst, int len);
 extern Ov007StrokePath *func_ov007_020c2c68(int a, int b, int cc);
 extern void func_ov007_020c27b4(Ov007StrokePath *path);
 extern void func_ov007_020c26fc(Ov007StrokePath *path);

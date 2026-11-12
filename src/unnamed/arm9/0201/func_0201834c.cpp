@@ -1,6 +1,8 @@
 //cpp
 #include "nitro/os/cache.h"
 #include "Memory.h"
+#include "nitro/mi/memory.h"
+#include "nitro/os/system.h"
 #include "nitro/fs/file.h"
 
 extern "C" {
@@ -9,8 +11,6 @@ extern int myFS_ReadFile(void *s, void *b, int c);
 extern int func_02018568(void *a);
 extern unsigned int func_02018ac4(void *p);
 extern void DecompressLZ16(void *src, void *dst);
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
-extern void OS_Terminate(void);
 extern void func_02018770(void);
 
 /* Read the whole open file (more than 8 bytes, or crash) into a new heap

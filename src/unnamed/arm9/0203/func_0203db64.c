@@ -2,8 +2,7 @@
 #include "nitro/os/thread.h"
 #include "private/player_input_record.h"
 #include "private/mb_views.h"
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
-extern void MI_CpuFill8(void *dst, unsigned char c, unsigned int n);
+#include "nitro/mi/memory.h"
 extern void func_02042778(void);
 extern void func_0203df40(void);
 extern int func_02040a94(void);

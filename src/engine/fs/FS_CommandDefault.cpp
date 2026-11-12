@@ -86,7 +86,6 @@ typedef struct FSiSyncReadParam {
 } FSiSyncReadParam;
 
 int FSi_TranslateCommand(FSFile *p_file, int command);
-void MI_CpuCopy8(const void *src, void *dst, u32 size);
 void OS_SleepThread(u16 *queue);
 extern const char data_0209a044[]; /* ":/" */
 
@@ -96,6 +95,7 @@ int FSi_StrNICmp(const u8 *str1, const u8 *str2, int len);
 }
 
 #include "nitro/os/system.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
 

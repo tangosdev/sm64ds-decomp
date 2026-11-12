@@ -32,6 +32,7 @@
 #include "private/arm9_a9db8_mb_parent.h"
 #include "private/mb_comm_child_block_header.h"
 #include "private/wm_views.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
 
@@ -123,10 +124,6 @@ typedef struct WMMpRecvData {
     u16 cdata[1];   /* 0x0a -- the child's packet */
 } WMMpRecvData;
 
-extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
-extern void MIi_CpuClearFast(unsigned val, void *dst, int len);
-extern void MI_CpuCopy8(const void *src, void *dst, u32 size);
-extern void MI_CpuFill8(void *dst, u8 val, u32 size);
 extern char *WM_ReadMPData(char *buf, unsigned int aid);
 extern u8 *MBi_SetRecvBufferFromChild(u8 *src, u8 *dst);
 extern u8 *MBi_MakeParentSendBuffer(MBCommParentBlockHeader *hdr, u8 *buf);

@@ -1,7 +1,6 @@
 #include "types.h"
 #include "Ov007StrokePath.h"
-extern void MIi_CpuClear32(int val, int *dst, int len);
-extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
+#include "nitro/mi/memory.h"
 
 /* Clears the path for reuse: no points, and every per-point table zeroed
  * for its capacity -- the planar coordinates or the 12-byte point storage,

@@ -1,5 +1,6 @@
 #include "types.h"
 #include "private/mb_views.h"
+#include "nitro/mi/memory.h"
 /* A calibrated touch-panel sample (nitro/spi/tp.h's TPData, as func_0203df40 uses;
    x, y, touch, validity). */
 struct Col4 {
@@ -20,8 +21,6 @@ typedef struct {
 } Rec;
 
 extern void func_020408b0(u16 arg);
-extern void MI_CpuCopy8(const void *src, void *dst, u32 size);
-extern void MI_CpuFill8(void *dst, u8 val, u32 len);
 extern s32 func_02040714(void);
 extern void func_02040820(void);
 extern void func_02040790(void);

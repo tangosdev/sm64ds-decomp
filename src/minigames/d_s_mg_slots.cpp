@@ -64,6 +64,7 @@ enum dScMgSlots_AssetId {
 #include "nitro/os/cache.h"
 #include "nitro/gx/gx_load.h"
 #include "LevelRng.h"
+#include "nitro/mi/memory.h"
 
 #pragma defer_codegen off
 /* Codegen is deferred by default in mwccarm 2004/b56, which is why its
@@ -158,7 +159,6 @@ extern dWipe_c data_0209f61c;
 
 extern int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5,
                                     unsigned short a6);
-extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 }
 
 /* ~dScMgSlot1_c() (D1, complete-object destructor). The empty body is the

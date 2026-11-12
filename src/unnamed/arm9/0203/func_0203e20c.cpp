@@ -2,6 +2,7 @@
 #include "types.h"
 #include "Memory.h"
 #include "private/mb_views.h"
+#include "nitro/mi/memory.h"
 #include "private/fs_views.h"
 
 extern "C" {
@@ -45,12 +46,10 @@ extern int MB_StartParent(int param0);
 extern int MB_GetSegmentLength(void *obj);
 extern int MB_ReadSegment(FSFile *file, void *b, unsigned int c);
 extern int MB_RegisterFile(void *a, void *b);
-extern void MI_CpuFill8(void *dst, unsigned char val, unsigned int size);
 extern int WM_ReadStatus(int *arg);
 extern void *MB_CommGetChildUser(u16 idx);
 extern int MB_CommGetParentState(u16 a);
 extern int MB_CommResponseRequest(u16 arg0, int sel);
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
 extern int MB_CommIsBootable(u16 idx);
 extern void MB_End(void);
 

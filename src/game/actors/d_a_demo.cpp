@@ -135,6 +135,7 @@ enum daDemo_c_AssetId {
 #include "math/Approach.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
+#include "nitro/mi/memory.h"
 
 struct OamAttr;
 
@@ -253,7 +254,6 @@ extern void SetSubBg2Offset(int a, int b);
 extern StaffRollStep data_ov002_02110e24[];
 extern StaffRollStep data_ov002_02110e9c[];
 extern void func_ov002_020f3828(int *c);
-extern void MIi_CpuCopy16(void *src, void *dst, int count);
 extern int data_ov002_021002a0[];
 extern s16 FX_SinCosTable_[];
 extern short atan2_hold_d_a_demo_1(int y, int x);
