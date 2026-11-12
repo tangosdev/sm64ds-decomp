@@ -157,7 +157,6 @@ extern void func_02012694(unsigned int a, void *p);
 extern void func_02011cfc(void);
 }
 extern "C" {
-extern void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 // local extern: CalcLib.h does not declare Vec3_VertAngle yet.
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 extern void func_0200fa8c(void *c, int a);
@@ -1437,12 +1436,6 @@ int daBombking_c::Render()
 }
 
 /* -------------------------------------------------------------------------- */
-
-
-extern "C" {
-extern unsigned short DecIfAbove0_Short(unsigned short *p);
-extern unsigned char DecIfAbove0_Byte(unsigned char *p);
-}
 
 int daBombking_c::Behavior()
 {

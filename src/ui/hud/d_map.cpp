@@ -46,6 +46,7 @@
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/hw/registers.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/CalcLib.h"
 
 #pragma defer_codegen off
 /* Codegen is deferred by default in mwccarm 2004/b56, which makes its
@@ -112,7 +113,6 @@ extern dActor_c *STAR_MARKERS[12];
 extern int data_0209f3e8[];
 extern void *data_0209f3a4[];
 extern void SetSubBg2Offset(s32 a, s32 b);
-extern void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
 extern s32 GetMinimapID(dActor_c *actor, s32 arg);
 extern s32  GetMinimapScale(s32 idx);
 extern void UpdateMinimap(s32 *a, u32 b, u32 c, u32 d, u32 e);
