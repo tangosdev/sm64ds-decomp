@@ -1,0 +1,10 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Steam Deck Setup
+Comment=Unpack your Super Mario 64 DS dump and add the PC port to Steam with Proton Experimental
+Icon=steam
+Terminal=true
+Exec=sh -c "cd -- \\"\\$(dirname -- \\"\\$1\\")\\" 2>/dev/null; if [ -f steam_deck_setup.py ]; then exec python3 steam_deck_setup.py; fi; echo The kit folder could not be found. Open a terminal in the kit folder and run: python3 steam_deck_setup.py; echo Press Enter to close.; read x" sh %k
+Categories=Game;
