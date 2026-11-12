@@ -427,12 +427,9 @@ void ModelComponents::func_0204488c(int index, Vector3 *scale) {
     unsigned char* cmd;
     void* partMtx;
     void* lastMat;
-    volatile int* mtxScale;
 
     e = &((struct Entry *)modelFile->displayListGroups)[index];
     part = e->parts;
-
-    mtxScale = (volatile int*)0x400046c;
 
     for (i = 0; i < e->count; i++, part++) {
         cmd = part->cmd;
@@ -445,8 +442,8 @@ void ModelComponents::func_0204488c(int index, Vector3 *scale) {
             fp_index = modelFile->transformBoneMap[b];
             partMtx = &transforms[fp_index];
 
-            *(volatile int*)0x4000440 = 2;
-            *(volatile int*)0x4000454 = 0;
+            G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
+            G3_Identity();
             G3_MultMtx33(data_020a4bd0);
 
             check = bones[fp_index].scaled;
@@ -459,24 +456,13 @@ void ModelComponents::func_0204488c(int index, Vector3 *scale) {
                 lastMat = partMtx;
             }
 
-            *(volatile int*)0x4000440 = 1;
+            G3_MtxMode(GX_MTXMODE_POSITION);
             G3_LoadMtx43(data_020a4bd0);
-            if (scale) {
-                int c2 = scale->z;
-                int c1 = scale->y;
-                int c0 = scale->x;
-                *mtxScale = c0;
-                *mtxScale = c1;
-                *mtxScale = c2;
-            }
+            if (scale)
+                G3_Scale(scale->x, scale->y, scale->z);
             G3_MultMtx43(partMtx);
-            {
-                int white = data_020a4bd4;
-                *mtxScale = white;
-                *mtxScale = white;
-                *mtxScale = white;
-            }
-            *(volatile int*)0x400044c = j;
+            G3_Scale(data_020a4bd4, data_020a4bd4, data_020a4bd4);
+            G3_StoreMtx(j);
         }
 
         if (data_020a4bbc == 2) {
@@ -493,7 +479,7 @@ void ModelComponents::func_0204488c(int index, Vector3 *scale) {
             N[5] = M[4] * sy;
             N[9] = M[7] * sy;
             G3_LoadTexMtxEnv(N);
-            *(volatile int*)0x400044c = 0;
+            G3_StoreMtx(0);
         }
 
         MI_SendGXCommand(3, part->dl, part->dlSize);
@@ -504,15 +490,6 @@ void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
     int i;
     struct MeshEntry* e;
     int off;
-    int j0;
-    int z14;
-    int z18;
-    int z1c;
-    int z20;
-    int z24;
-    int two;
-    int z2c;
-    int three;
     VecFx32 dirv;
     Mtx43 mw;
     Mtx43 m;
@@ -523,7 +500,6 @@ void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
     Mtx43* mp;
     struct MeshEntry* base;
     int cnt;
-    int t0;
 
     dir = &dirv;
     *(struct Vec3w *)&dirv = *(struct Vec3w *)&data_02099f88;
@@ -536,21 +512,9 @@ void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
     if (cnt <= 0)
         return;
 
-    t0 = i;
-    z14 = t0;
-    z20 = t0;
-    z24 = t0;
-    z18 = t0;
-    z1c = t0;
-    two = 2;
-    t0 = i;
-    z2c = t0;
-    three = 3;
-    j0 = i;
-
     do {
         part = e->part;
-        j = j0;
+        j = 0;
         if (part->count > 0) {
             do {
                 unsigned char b = *(volatile unsigned char*)(part->ids + j);
@@ -564,7 +528,7 @@ void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
                     MTX_Concat43((const Matrix4x3 *)mp, (const Matrix4x3 *)&mw, (Matrix4x3 *)&mw);
                     mp = &mw;
                 }
-                m.r[2].y = m.r[2].x = z14;
+                m.r[2].y = m.r[2].x = 0;
                 m.r[2].z = dir->z;
                 m.r[3].x = mp->r[3].x;
                 m.r[3].y = mp->r[3].y;
@@ -577,7 +541,7 @@ void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
                 if (mp->r[1].x * mp->r[1].x + mp->r[1].y * mp->r[1].y > 0x4000) {
                     m.r[1].x = mp->r[1].x;
                     m.r[1].y = mp->r[1].y;
-                    m.r[1].z = z18;
+                    m.r[1].z = 0;
                     VEC_Normalize((const Vector3 *)&m.r[1], (Vector3 *)&m.r[1]);
                     t = FX_MUL(m.r[1].x, dir->x);
                     m.r[1].x = t;
@@ -587,45 +551,37 @@ void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
                         m.r[0].y = -t;
                         t = FX_MUL(ry, dy);
                     }
-                    {
-                        int zz = z1c;
-                        m.r[1].y = t;
-                        m.r[0].x = t;
-                        m.r[0].z = zz;
-                    }
+                    m.r[1].y = t;
+                    m.r[0].x = t;
+                    m.r[0].z = 0;
                 } else {
                     m.r[0].x = mp->r[0].x;
                     m.r[0].y = mp->r[0].y;
-                    m.r[0].z = z20;
+                    m.r[0].z = 0;
                     VEC_Normalize((const Vector3 *)&m.r[0], (Vector3 *)&m.r[0]);
                     m.r[0].x = FX_MUL(m.r[0].x, dir->x);
                     t = FX_MUL(m.r[0].y, dir->y);
                     m.r[1].y = m.r[0].x;
                     m.r[1].x = -t;
-                    {
-                        int zz = z24;
-                        m.r[0].y = t;
-                        m.r[1].z = zz;
-                    }
+                    m.r[0].y = t;
+                    m.r[1].z = 0;
                 }
                 func_020458a8(&m, out);
-                *(int*)0x4000440 = two;
-                *(int*)0x4000454 = z2c;
+                G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
+                G3_Identity();
                 G3_MultMtx33(out);
-                *(int*)0x4000440 = 1;
+                G3_MtxMode(GX_MTXMODE_POSITION);
                 G3_LoadMtx43(&m);
                 {
-                    int v = 1 << (modelFile->scaleShift + 12);
-                    *(int*)0x400046c = v;
-                    *(int*)0x400046c = v;
-                    *(int*)0x400046c = v;
+                    fx32 v = 1 << (modelFile->scaleShift + 12);
+                    G3_Scale(v, v, v);
                 }
-                *(int*)0x400044c = j;
+                G3_StoreMtx(j);
                 j++;
             } while (j < part->count);
         }
-        MI_SendGXCommandAsync(three, part->dl, part->dlSize, 0, 0);
-        MI_WaitDma(three);
+        MI_SendGXCommandAsync(3, part->dl, part->dlSize, 0, 0);
+        MI_WaitDma(3);
         i = i + 1;
         cnt = e->count;
     } while (i < cnt);
