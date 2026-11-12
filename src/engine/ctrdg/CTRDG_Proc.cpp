@@ -105,7 +105,7 @@ void CTRDGi_InitModuleInfo(void) {
     if (data_020a9de4 != 0)
         return;
     data_020a9de4 = 1;
-    if ((*(volatile u16 *)0x4000300 & 1) == 0)
+    if (!(REG_PAUSE & REG_OS_PAUSE_CHK_MASK))
         return;
     lastIrq = OS_SetIrqMask(OS_IE_SPFIFO_RECV);
     lastIme = OS_EnableIrq();
