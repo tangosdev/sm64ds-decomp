@@ -431,6 +431,37 @@ class RegistryScan(Fixture):
         self.assertEqual(rc, 1)
         self.assertIn("factory symbol diverged", out)
 
+    def test_the_proposed_name_with_cpp_linkage_is_complete(self):
+        """symbols.txt carries the linkage; the registry carries the source name.
+
+        `daKpa_c_classInit()` defined in a .cpp without `extern "C"` links as
+        `_Z17daKpa_c_classInitv`: the same function under the same name.
+        """
+        name = "daObjSwitch_c_classInit_HANSWITCH"
+        self.symbols("ov002", [
+            ("_Z%d%sv" % (len(name), name), "0x020baadc", "function(arm,size=0x30)"),
+            ("g_profile_HANSWITCH", "0x02109900", "data(any)"),
+        ])
+        self.delinks("ov002", [("src/d_a_obj_switch_hanswitch.c", "0x020baadc", "0x020bab0c")])
+        self.ledger([])
+        self.registry([self._row()])
+        rc, out = self.run_tool()
+        self.assertEqual(rc, 0, out)
+        self.assertNotIn("diverged [", out)
+
+    def test_a_cpp_mangling_of_another_name_still_diverges(self):
+        """Only the mangled source name is compared, not a prefix of it."""
+        self.symbols("ov002", [
+            ("_Z31daObjSwitch_c_classInit_HANSWITv", "0x020baadc", "function(arm,size=0x30)"),
+            ("g_profile_HANSWITCH", "0x02109900", "data(any)"),
+        ])
+        self.delinks("ov002", [("src/x.c", "0x020baadc", "0x020bab0c")])
+        self.ledger([])
+        self.registry([self._row()])
+        rc, out = self.run_tool()
+        self.assertEqual(rc, 1)
+        self.assertIn("factory symbol diverged", out)
+
     def test_superseded_rows_are_out_of_scope(self):
         self._tree()
         self.registry([self._row(overlay_resolution="superseded_by_ov002",
