@@ -42,11 +42,11 @@ int func_02063bc4(WBTWork *work, int idx, void *buf, int size) {
                     sys->u.prepare_send_data.data_ptr = 0;
                     func_02064554(work, WBT_CMD_PREPARE_SEND_DATA, idx, 0);
                     if (sys->u.prepare_send_data.data_ptr != 0) {
-                        r6 =
-                            func_02064d6c(buf, r7, e->cmd_counter, sys->u.prepare_send_data.block_id,
-                                          sys->u.prepare_send_data.block_seq_no,
-                                          sys->u.prepare_send_data.data_ptr,
-                                          sys->u.prepare_send_data.own_packet_size);
+                        r6 = func_02064d6c(buf, r7, e->cmd_counter,
+                                           sys->u.prepare_send_data.block_id,
+                                           sys->u.prepare_send_data.block_seq_no,
+                                           sys->u.prepare_send_data.data_ptr,
+                                           sys->u.prepare_send_data.own_packet_size);
                     }
                 }
             }

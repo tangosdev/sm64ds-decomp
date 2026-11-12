@@ -13,12 +13,11 @@ extern int func_02064a94(u8 *dst, u16 a1, u8 a2, const void *a3, u8 a4);
 /* NitroSDK WBT: write the running command's next request packet into buf.
  * SYNC and USER_DATA resend the request. GET_BLOCK and GET_BLOCKINFO ask each
  * target peer for the next packet its receive bitmap still lacks
- * (func_0206470c), or send it the done packet (func_02064bac) once none is
- * missing. The receive state steps a whole peer record at a time, as in
- * func_02063718: indexing work->peer[i] or stepping a WBTPeerRecord pointer
- * colours the loop registers differently. */
-int func_02063980(WBTWork *work, void *buf, int size)
-{
+ * (func_0206470c), or send it REQ_GET_BLOCK_DONE (func_02064bac) once none
+ * is missing. The receive state steps a whole peer record at a time, as in
+ * func_02063718: indexing work->peer[i] swaps two loop registers, and
+ * stepping a WBTPeerRecord pointer adds 0x24 before each call. */
+int func_02063980(WBTWork *work, void *buf, int size) {
     int ret = 0;
     int i;
 
@@ -28,8 +27,7 @@ int func_02063980(WBTWork *work, void *buf, int size)
                             func_02065bd0());
         break;
     case WBT_CMD_REQ_GET_BLOCK:
-    case WBT_CMD_REQ_GET_BLOCKINFO:
-    {
+    case WBT_CMD_REQ_GET_BLOCKINFO: {
         WBTPeerRecv *recv = &work->peer[0].recv;
         for (i = 0; i < 16; i++, recv = (WBTPeerRecv *)((char *)recv + sizeof(WBTPeerRecord))) {
             int bit = 1 << i;
@@ -51,8 +49,8 @@ int func_02063980(WBTWork *work, void *buf, int size)
                     return ret;
             }
         }
-    }
         break;
+    }
     case WBT_CMD_REQ_USER_DATA:
         ret = func_02064a94(buf, work->cmd.target_bmp, work->cmd.my_cmd_counter,
                             work->cmd.u.user_data.data, work->cmd.u.user_data.size);

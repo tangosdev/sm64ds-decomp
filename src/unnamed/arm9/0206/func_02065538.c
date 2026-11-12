@@ -5,8 +5,7 @@ extern int func_02064fe8(void *dst, unsigned short b, char c);
 
 extern int data_0209a070;
 
-int func_02065538(void *buf, int size)
-{
+int func_02065538(void *buf, int size) {
     int r;
     int i;
     WBTWork *work = func_02065b94();

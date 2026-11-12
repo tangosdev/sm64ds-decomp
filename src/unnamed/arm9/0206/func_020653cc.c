@@ -3,8 +3,7 @@
 extern WBTWork *func_02065b94(void);
 extern int func_02064fe8(void *dst, unsigned short b, char c);
 
-int func_020653cc(void *buf, int size)
-{
+int func_020653cc(void *buf, int size) {
     int r;
     WBTWork *work = func_02065b94();
     r = func_02063d3c(work, 0, buf, size);

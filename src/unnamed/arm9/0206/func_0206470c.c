@@ -8,7 +8,8 @@ int func_0206470c(WBTPacketBitmap *pkt_bmp) {
     int start;
     int bit;
     unsigned int *word;
-    if (idx >= pkt_bmp->count) idx = 0;
+    if (idx >= pkt_bmp->count)
+        idx = 0;
     word = pkt_bmp->bitmap + (idx >> 5);
     start = idx;
     bit = idx & 0x1f;
