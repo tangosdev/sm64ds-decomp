@@ -1,4 +1,5 @@
-extern unsigned short WM_GetAllowedChannel(void);
+#include "nitro/wm/wm_api.h"
+
 extern int WM_MeasureChannel(void *a, int b, int c, int d, unsigned short e);
 extern void func_0203f920(void *arg);
 

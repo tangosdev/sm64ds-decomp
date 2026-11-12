@@ -6,8 +6,8 @@
 /* NitroSDK WM views over the wireless work buffer data_020a9db4 (0x3700
  * bytes, carved by MB_Init), the multiboot library's sWmWork in
  * src/engine/mb/MB_WmBase.cpp. SDK field names where the SDK has one; the
- * evidence for each is above WmWork. WMBssDesc and WMParentParam come from
- * nitro/wm/wm.h. Plain C types: some consumers do not include types.h. */
+ * evidence for each is above WmWork. WMBssDesc, WMParentParam and WMStatus
+ * come from nitro/wm/wm.h. Plain C types: some consumers do not include types.h. */
 typedef struct {
     unsigned short apiid;          /* 0x00 */
     unsigned short errcode;        /* 0x02 */
@@ -22,14 +22,6 @@ typedef struct {
     unsigned short gameInfoLength; /* 0x36 */
     unsigned short gameInfo[0x40]; /* 0x38, WMGameInfo */
 } WmStartScanCallback;             /* WMStartScanCallback, 0xb8 */
-
-typedef struct {
-    unsigned char pad_000[0x10];
-    int mp_flag; /* 0x010 -- 1 once MP has started (private/wm_views.h's WMStatus) */
-    unsigned char pad_014[0x16a];
-    unsigned short child_bitmap; /* 0x17e */
-    unsigned char pad_180[0x880];
-} WmStatus; /* WMStatus, WM_ReadStatus's buffer */
 
 typedef struct {
     WMBssDesc bssDesc;        /* 0x000 */
@@ -67,7 +59,7 @@ typedef struct WmStartConnectCallback {
  *   resetting       set by MBi_CommEnd before WM_Reset; while set the
  *                   callbacks only accept the RESET and END results
  *   mpStarted       set on WM_StartMP's MP_START state (0xa)
- *   childBitmap     WmStatus.child_bitmap after a parent-side (dis)connect, 1
+ *   childBitmap     status.child_bitmap after a parent-side (dis)connect, 1
  *                   on the child's CONNECTED; gates MBi_IsSendEnabled
  *   mpContinuous    nonzero passes mpFreq 0 (continuous) to WM_StartMP
  *   parentCount, lastParentIndex   the parents[] fill count / last hit
@@ -79,7 +71,7 @@ typedef struct WmStartConnectCallback {
  *                   read) into them; its loops run up to 10 and 16 halfwords,
  *                   so the user name can overrun into gname
  *   status.mp_flag  MBi_ParentCallback starts MP on CONNECTED while it is 0
- * child_bitmap's offset inside WMStatus (+0x17e) is from this code, not the SDK. */
+ * status is WM_ReadStatus's buffer, 0xa00 bytes for the 0x930-byte WMStatus. */
 typedef struct {
     unsigned char wmSysBuf[0x1300];    /* 0x0000 */
     WMParentParam parentParam;         /* 0x1300 */
@@ -92,7 +84,8 @@ typedef struct {
     unsigned char mpSending;           /* 0x1410 */
     unsigned char initialized;         /* 0x1411 */
     unsigned char pad_1412[6];         /* 0x1412 */
-    WmStatus status;                   /* 0x1418 */
+    WMStatus status;                   /* 0x1418 */
+    unsigned char pad_1d48[0xd0];      /* 0x1d48 */
     unsigned short sendBufSize;        /* 0x1e18 */
     unsigned short recvBufSize;        /* 0x1e1a */
     void (*userCallback)(int, void *); /* 0x1e1c */

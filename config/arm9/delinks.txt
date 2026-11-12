@@ -2714,37 +2714,9 @@ src/WM_Init.cpp:
     complete
     .text start:0x020616e8 end:0x020618b8
 
-src/WM_GetLinkLevel.cpp:
+src/engine/wm/WM_Sync.c:
     complete
-    .text start:0x020618b8 end:0x02061960
-
-src/WM_GetAllowedChannel.cpp:
-    complete
-    .text start:0x02061960 end:0x020619ac
-
-src/WM_ReadMPData.cpp:
-    complete
-    .text start:0x020619ac end:0x02061ab0
-
-src/WM_GetMPReceiveBufferSize.cpp:
-    complete
-    .text start:0x02061ab0 end:0x02061b9c
-
-src/WM_GetMPSendBufferSize.cpp:
-    complete
-    .text start:0x02061b9c end:0x02061c20
-
-src/WM_ReadStatus.cpp:
-    complete
-    .text start:0x02061c20 end:0x02061c88
-
-src/WM_SetPortCallback.cpp:
-    complete
-    .text start:0x02061c88 end:0x02061ce4
-
-src/WM_SetIndCallback.cpp:
-    complete
-    .text start:0x02061ce4 end:0x02061d30
+    .text start:0x020618b8 end:0x02061d30
 
 src/engine/wm/WM_Standard.c:
     complete

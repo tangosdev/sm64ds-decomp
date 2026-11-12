@@ -10,6 +10,7 @@
 extern "C" {
 #endif
 
+void MIi_CpuCopyFast(const void *, void *, int);
 void MI_Copy36B(const void *, void *);
 
 #ifdef __cplusplus

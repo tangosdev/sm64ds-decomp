@@ -33,6 +33,7 @@
 #include "private/mb_comm_child_block_header.h"
 #include "private/mb_common.h"
 #include "private/wm_views.h"
+#include "nitro/wm/wm_api.h"
 
 extern "C" {
 
@@ -101,22 +102,10 @@ struct Out {
     u8 segment_no;            /* 0xc */
 };
 
-/* NitroSDK WMMpRecvData, one child's slot of an MP receive buffer, as
- * WM_ReadMPData returns it. */
-typedef struct WMMpRecvData {
-    u16 length;     /* 0x00 */
-    u16 rate;       /* 0x02 */
-    u16 rssi;       /* 0x04 */
-    u16 aid;        /* 0x06 */
-    u16 noResponse; /* 0x08 */
-    u16 cdata[1];   /* 0x0a -- the child's packet */
-} WMMpRecvData;
-
 extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
 extern void MIi_CpuClearFast(unsigned val, void *dst, int len);
 extern void MI_CpuCopy8(const void *src, void *dst, u32 size);
 extern void MI_CpuFill8(void *dst, u8 val, u32 size);
-extern char *WM_ReadMPData(char *buf, unsigned int aid);
 extern u8 *MBi_SetRecvBufferFromChild(u8 *src, u8 *dst);
 extern u8 *MBi_MakeParentSendBuffer(MBCommParentBlockHeader *hdr, u8 *buf);
 extern int MBi_ReceiveRequestDataPiece(u8 *hdr, int aid);
@@ -134,7 +123,7 @@ void MBi_CommParentSendData(void);
 int MBi_CommParentSendBlock(void);
 int MBi_CommParentSendDlFileInfo(void);
 int MBi_CommParentSendMsg(u8 type, u16 pollbmp);
-void MBi_CommParentRecvData(char *arg);
+void MBi_CommParentRecvData(void *arg);
 void MBi_CommParentRecvDataPerChild(void *arg, u32 aid);
 void MBi_CommChangeParentStateCallbackOnly(u32 aid, int state, void *arg);
 void MBi_CommChangeParentState(u32 aid, int state, void *arg);
@@ -540,21 +529,25 @@ void MBi_CommParentRecvDataPerChild(void *arg, u32 aid) {
 
 /* An MP receive: clear each registered file's requested block, then pass
  * every child's nonempty packet on. */
-void MBi_CommParentRecvData(char *arg) {
+void MBi_CommParentRecvData(void *arg) {
+    WMMpRecvHeader *mpHeader = (WMMpRecvHeader *)arg;
     u16 i;
+    WMMpRecvData *datap;
+
     for (i = 0; i < 0x10; i++) {
         if (MB_FILE(i)->mActive != 0)
             MB_FILE(i)->mRequestedBlock = 0;
     }
-    for (i = 1; i <= 0xf; i++) {
-        u16 *p = (u16 *)WM_ReadMPData(arg, i);
-        if (p == 0)
-            continue;
-        if (*p == 0xffff)
-            continue;
-        if (*p == 0)
-            continue;
-        MBi_CommParentRecvDataPerChild(p, i);
+
+    for (i = 1; i <= 0xf; ++i) {
+        datap = WM_ReadMPData(mpHeader, i);
+
+        if (datap != 0) {
+            if (datap->length == 0xffff) {
+            } else if (datap->length != 0) {
+                MBi_CommParentRecvDataPerChild(datap, i);
+            }
+        }
     }
 }
 

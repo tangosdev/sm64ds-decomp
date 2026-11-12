@@ -123,13 +123,8 @@ typedef struct {
     u16 w[0x40];
 } GameInfo;
 
-/* The rest of the WM API this file calls (wm_sync.c, wm_etc.c and
- * wm_system.c), whose definitions still take the callback as a void *. The
- * state changes and the MP calls are in nitro/wm/wm_api.h. */
-extern int WM_SetIndCallback(void *callback);
-extern int WM_ReadStatus(int *status);
-extern int WM_SetPortCallback(int port, void *callback, void *arg);
-extern u16 WM_GetAllowedChannel(void);
+/* The rest of the WM API this file calls (wm_etc.c), whose definitions
+ * still take the callback as a void *. The rest is in nitro/wm/wm_api.h. */
 extern int WM_SetLifeTime(void *callback, int tableNo, int camLife, int frameLife);
 extern int WM_SetBeaconIndication(void *callback, int flag);
 
@@ -210,8 +205,8 @@ void MBi_ParentCallback(void *arg) {
     switch (cb->apiid) {
     case 0x0:
         if (cb->errcode == 0) {
-            MBi_CheckWmErrcode(0x83, WM_ReadStatus((int *)&WM_WORK->status));
-            MBi_CheckWmErrcode(0x80, WM_SetIndCallback((void *)MBi_ParentCallback));
+            MBi_CheckWmErrcode(0x83, WM_ReadStatus(&WM_WORK->status));
+            MBi_CheckWmErrcode(0x80, WM_SetIndCallback(MBi_ParentCallback));
             MBi_CheckWmErrcode(0x1D, WM_SetLifeTime((void *)MBi_ParentCallback, 0xFFFF, 0x28, 5));
             return;
         }
@@ -245,7 +240,7 @@ void MBi_ParentCallback(void *arg) {
             case 0:
                 return;
             case 7:
-                MBi_CheckWmErrcode(0x83, WM_ReadStatus((int *)&WM_WORK->status));
+                MBi_CheckWmErrcode(0x83, WM_ReadStatus(&WM_WORK->status));
                 WM_WORK->childBitmap = WM_WORK->status.child_bitmap;
                 WM_WORK->userCallback(0, arg);
                 if (WM_WORK->status.mp_flag == 0) {
@@ -269,7 +264,7 @@ void MBi_ParentCallback(void *arg) {
                 WM_WORK->userCallback(0x19, 0);
                 return;
             case 9:
-                MBi_CheckWmErrcode(0x83, WM_ReadStatus((int *)&WM_WORK->status));
+                MBi_CheckWmErrcode(0x83, WM_ReadStatus(&WM_WORK->status));
                 WM_WORK->childBitmap = WM_WORK->status.child_bitmap;
                 WM_WORK->userCallback(1, arg);
                 return;
@@ -342,7 +337,7 @@ void MBi_ParentCallback(void *arg) {
         if (cb->errcode != 0) {
             return;
         }
-        MBi_CheckWmErrcode(0x83, WM_ReadStatus((int *)&WM_WORK->status));
+        MBi_CheckWmErrcode(0x83, WM_ReadStatus(&WM_WORK->status));
         WM_WORK->childBitmap = WM_WORK->status.child_bitmap;
         return;
 
@@ -464,7 +459,7 @@ void MBi_ChildCallback(void *arg) {
     case 0:
         if (cb->errcode == 0) {
             w->userCallback(0x15, arg);
-            MBi_CheckWmErrcode(0x83, WM_ReadStatus((int *)&w->status));
+            MBi_CheckWmErrcode(0x83, WM_ReadStatus(&w->status));
             MBi_CheckWmErrcode(0x1d, WM_SetLifeTime((void *)MBi_ChildCallback, 0xffff, 0x28, 5));
             return;
         }
@@ -537,7 +532,7 @@ void MBi_ChildCallback(void *arg) {
                 w->aid = ((WmStartConnectCallback *)arg)->aid;
                 w->userCallback(6, arg);
                 w->childBitmap = 1;
-                if (WM_SetPortCallback(1, (void *)MBi_ChildPortCallback, 0) != 0)
+                if (WM_SetPortCallback(1, MBi_ChildPortCallback, 0) != 0)
                     return;
                 MBi_CheckWmErrcode(
                     0xe, WM_StartMPEx(MBi_ChildCallback, (u16 *)w->recvBuf, w->recvBufSize,
@@ -745,7 +740,7 @@ int MBi_StartCommon(void) {
     } while (ret == 4);
     if (ret != 2)
         return 8;
-    WM_SetIndCallback((void *)WM_WORK->stateCallback);
+    WM_SetIndCallback(WM_WORK->stateCallback);
     WM_WORK->initialized = 1;
     return 0;
 }

@@ -10,6 +10,7 @@
  * (WmReceiveFifo). */
 #include "types.h"
 #include "nitro/os/cache.h"
+#include "nitro/wm/wm_api.h"
 #include "private/wm_views.h"
 #include "nitro/os/message.h"
 #include "nitro/pxi/fifo.h"
@@ -21,7 +22,6 @@ extern "C" {
 
 extern void MI_DmaFill32(u32 dmaNo, void *dest, u32 data, u32 size);
 extern void WmClearFifoRecvFlag(void);
-extern int WM_SetPortCallback(int port, void *callback, void *arg);
 
 extern u16 data_020a89a8;
 extern WMArm9Buf *data_020a89ac;

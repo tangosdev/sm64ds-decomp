@@ -16,9 +16,11 @@
  * WMCallbackFunc is the callback every asynchronous WM call takes. WM hands
  * it the call's result record, so callbacks take a void * and cast it.
  *
- * WMBssDesc, WMParentParam and WMScanParam are this SDK revision's layouts,
- * which differ from the public header where each says so. Plain C types:
- * some consumers do not include types.h.
+ * WMBssDesc, WMParentParam, WMScanParam and WMStatus are this SDK
+ * revision's layouts, which differ from the public header where each says so.
+ * The MP receive records are the public header's: the buffer sizes
+ * WM_GetMPReceiveBufferSize computes from their sizeof are the ROM's. Plain C
+ * types: some consumers do not include types.h.
  */
 
 #ifdef __cplusplus
@@ -93,6 +95,14 @@ typedef enum WMState {
     WM_STATE_MP_CHILD,
     WM_STATE_DCF_CHILD
 } WMState;
+
+typedef enum WMLinkLevel {
+    WM_LINK_LEVEL_0 = 0,
+    WM_LINK_LEVEL_1,
+    WM_LINK_LEVEL_2,
+    WM_LINK_LEVEL_3,
+    WM_LINK_LEVEL_MAX
+} WMLinkLevel;
 
 typedef enum WMPriority {
     WM_PRIORITY_URGENT = 0,
@@ -177,6 +187,81 @@ typedef struct WMScanParam {
 } WMScanParam;
 
 typedef char WMScanParam_size_must_be_0x20[sizeof(WMScanParam) == 0x20 ? 1 : -1];
+
+/* NitroSDK WMMpRecvBuf, the frame a child receives from its parent. */
+typedef struct WMMpRecvBuf {
+    unsigned short rsv1[3];      /* 0x00 */
+    unsigned short length;       /* 0x06 */
+    unsigned short rsv2[1];      /* 0x08 */
+    unsigned short ackTimeStamp; /* 0x0a */
+    unsigned short timeStamp;    /* 0x0c */
+    unsigned short rate_rssi;    /* 0x0e */
+    unsigned short rsv3[2];      /* 0x10 */
+    unsigned short rsv4[2];      /* 0x14 */
+    unsigned char destAdrs[6];   /* 0x18 */
+    unsigned char srcAdrs[6];    /* 0x1e */
+    unsigned short rsv5[3];      /* 0x24 */
+    unsigned short seqCtrl;      /* 0x2a */
+    unsigned short txop;         /* 0x2c */
+    unsigned short bitmap;       /* 0x2e */
+    unsigned short wmHeader;     /* 0x30 */
+    unsigned short data[2];      /* 0x32 */
+} WMMpRecvBuf;
+
+/* NitroSDK WMMpRecvData, one child's block in what a parent receives. */
+typedef struct WMMpRecvData {
+    unsigned short length;     /* 0x0 */
+    unsigned short rate_rssi;  /* 0x2 */
+    unsigned short aid;        /* 0x4 */
+    unsigned short noResponse; /* 0x6 */
+    unsigned short wmHeader;   /* 0x8 */
+    unsigned short cdata[1];   /* 0xa */
+} WMMpRecvData;
+
+/* NitroSDK WMMpRecvHeader: count blocks of length bytes each, from data. */
+typedef struct WMMpRecvHeader {
+    unsigned short bitmap;    /* 0x0 */
+    unsigned short errBitmap; /* 0x2 */
+    unsigned short count;     /* 0x4 */
+    unsigned short length;    /* 0x6 */
+    unsigned short txCount;   /* 0x8 */
+    WMMpRecvData data[1];     /* 0xa */
+} WMMpRecvHeader;
+
+typedef char WMMpRecvBuf_size_must_be_0x36[sizeof(WMMpRecvBuf) == 0x36 ? 1 : -1];
+typedef char WMMpRecvData_size_must_be_0xc[sizeof(WMMpRecvData) == 0xc ? 1 : -1];
+typedef char WMMpRecvHeader_size_must_be_0x16[sizeof(WMMpRecvHeader) == 0x16 ? 1 : -1];
+
+/* NitroSDK WMStatus, the status block ARM7 keeps and WM_ReadStatus copies
+ * (0x930 bytes in this SDK revision). Only the fields some code reads, at
+ * the width it reads them, are named; the rest is padding. linkLevel and
+ * child_bitmap sit 4 bytes lower than in pret's pokediamond, and pparam is
+ * this revision's WMParentParam. */
+typedef struct WMStatus {
+    unsigned short state; /* 0x000 -- a WMState */
+    char pad_002[0x10 - 0x2];
+    int mp_flag; /* 0x010 -- 1 once MP has started */
+    char pad_014[0x46 - 0x14];
+    unsigned short mp_recvBufSize; /* 0x046 -- what WmReceiveFifo invalidates at a recvBuf */
+    char pad_048[0x86 - 0x48];
+    unsigned short mp_readyBitmap; /* 0x086 -- children the parent's data sets wait for */
+    char pad_088[0xb8 - 0x88];
+    unsigned short linkLevel; /* 0x0b8 -- a WMLinkLevel */
+    char pad_0ba[0xe4 - 0xba];
+    WMParentParam pparam; /* 0x0e4 */
+    char pad_124[0x17e - 0x124];
+    unsigned short child_bitmap; /* 0x17e -- connected children, by AID bit */
+    char pad_180[0x184 - 0x180];
+    unsigned short aid; /* 0x184 -- 0 for the parent */
+    char pad_186[0x18e - 0x186];
+    unsigned short mp_maxSendSize; /* 0x18e */
+    unsigned short mp_maxRecvSize; /* 0x190 */
+    char pad_192[0x1f2 - 0x192];
+    unsigned short allowedChannel; /* 0x1f2 -- bit n-1 set when channel n is usable */
+    char pad_1f4[0x930 - 0x1f4];
+} WMStatus;
+
+typedef char WMStatus_size_must_be_0x930[sizeof(WMStatus) == 0x930 ? 1 : -1];
 
 #ifdef __cplusplus
 }
