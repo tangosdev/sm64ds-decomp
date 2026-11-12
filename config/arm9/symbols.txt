@@ -4919,7 +4919,7 @@ data_0209fd5c kind:bss addr:0x0209fd5c
 data_020a0244 kind:bss addr:0x020a0244
 sPrevHeap$390 kind:bss addr:0x020a0c5c
 _ZGVsPrevHeap$390 kind:bss addr:0x020a0c60
-data_020a0c64 kind:bss addr:0x020a0c64
+sMBJobDone kind:bss addr:0x020a0c64
 sMBGraphCallback kind:bss addr:0x020a0c68
 data_020a0c78 kind:bss addr:0x020a0c78
 data_020a0c80 kind:bss addr:0x020a0c80

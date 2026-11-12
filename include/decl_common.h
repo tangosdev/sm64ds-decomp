@@ -667,7 +667,6 @@ extern u8 data_0209f4ab[];
 extern u8 data_0209f600[];
 extern u8 data_0209f604[];
 extern u8 data_0209fc54;
-extern u8 data_020a0c64[];
 extern u8 data_020a4b40[8];
 extern u8 data_ov002_020ff0ec[];
 extern u8 data_ov002_020ff14c[];
