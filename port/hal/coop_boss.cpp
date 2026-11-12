@@ -409,6 +409,7 @@ struct Boss {
     unsigned wig_talk_t;           // bossfix2: wall ms since which this Wiggler copy's own talk kept a forced state away (0 = not)
     unsigned eye_talk_t;           // bossfix2: the same for Eyerok's head (its talk state with my player)
     unsigned wig3_ticks;           // bossfix2: ticks this Wiggler copy has stood in MOVE_START with no talk of its own
+    unsigned wig_stag_t;           // bossfix3: wall ms this Wiggler copy was last seen in its stagger (states 8 to 10; 0 = never)
     unsigned goom_talk_tries;      // bossfix2: StartTalk attempts for a Goomboss copy put into its defeat by a record
     uint32_t bst; bool bst_valid;  // coopbully1: a bully's state at the end of the last tick (a change before the next one is the ROM's own)
     Rx rx;
@@ -497,6 +498,10 @@ void write_field(char *a, const BDesc &d, int idx, uint32_t v) {
         return;
     }
     if (f.kind & kZeroOnForce) { a[f.off] = 0; return; }
+    // bossfix3: Wiggler's mDefeated (+0x8e0) is set by DEAD's enter code and never cleared by the ROM. The authority's is still 0 while
+    // the stomper reads his last talk, so writing it down after this copy's own DEAD entry let the next record run DEAD again (45 times
+    // in 37 s, each one poof, sound and a star call). It only ever goes up on a copy.
+    if (g_bf2 && d.cls == 248 && f.off == 0x8e0 && (v & 0xffu) <= (unsigned char)a[0x8e0]) return;
     if (f.kind & kGoomState) {
         if (v > 8u) return;
         if (v == 5u) func_ov074_02121a4c(a, 2);     // the stomp sets the hit animation before it enters state 5, whose tick waits for it to finish
@@ -1432,16 +1437,19 @@ void apply_rx(int slot, Boss &b, unsigned now, bool mine) {
         }
     }
     // bossfix2: a Wiggler or Eyerok talk with my player on this copy is left to finish (60 s at most); the next records force then
-    if (g_bf2 && !mine && (d.cls == 248 || d.cls == 176) && ls != rs) {
+    // bossfix3: the stamp is cleared whenever no talk runs here (it was cleared only on a record that disagreed, so a talk that began
+    // while the states agreed kept the last talk's stamp, looked 60 s old and was cut at once)
+    if (g_bf2 && (d.cls == 248 || d.cls == 176)) {
         unsigned &t = d.cls == 248 ? b.wig_talk_t : b.eye_talk_t;
-        if (d.cls == 248 ? wig_talk_here(b) : eye_talk_here(b)) {
+        if (mine || !(d.cls == 248 ? wig_talk_here(b) : eye_talk_here(b))) t = 0;
+        else if (ls != rs) {
             if (!t) {
                 t = now ? now : 1u;
                 if (g_log) std::fprintf(stderr, "[cbs] %s talk with my player running on this copy (st=%u): the authority's st=%u waits for its end w=%lld\n", d.name, ls, rs, wall_ms());
             }
             if ((unsigned)(now - t) < 60000u) force = false;
             else if (force) give_camera_back(b, "talk held past 60 s");
-        } else t = 0;
+        }
     }
     // bossfix2 (H1): the authority's hurt talk (5 / 6) is entered here as where it ends (write_field): a copy that is already there or past
     // it (MOVE_START / MOVE with health left, or DEAD already run: mDefeated +0x8e0) is not forced again, record after record
@@ -1449,6 +1457,14 @@ void apply_rx(int slot, Boss &b, unsigned now, bool mine) {
         const bool last = (unsigned char)b.a[0x8db] <= 1u;
         if (last ? b.a[0x8e0] != 0 : (ls == 3u || ls == 4u)) { force = false; b.mism = 0; }
     }
+    // bossfix3: a copy that has run DEAD (mDefeated set) is not sent through it again by the authority's own DEAD (7) that follows
+    // the stomper's talk: its star call and poof ran once here already.
+    if (g_bf2 && d.cls == 248 && !mine && rs == 7u && b.a[0x8e0] != 0 && ls != 7u) { force = false; b.mism = 0; }
+    // bossfix3: the stagger after he hurts a player (DAMAGE_STOP 8 -> DAMAGE_WAIT 9 -> DAMAGE_START 10 -> MOVE) runs on its own
+    // timers. A copy already in it, or out of it less than 3 s ago, finishes it itself: records two behind put it back to 8 over and
+    // over (4->8, 8->9, 4->8, 8->10 within 6 s).
+    if (g_bf2 && d.cls == 248 && !mine && rs >= 8u && rs <= 10u && ls != rs &&
+        ((ls >= 8u && ls <= 10u) || (b.wig_stag_t && (unsigned)(now - b.wig_stag_t) < 3000u))) { force = false; b.mism = 0; }
     // bossfix2 (H2): Eyerok's pre-fight talk is never forced onto a copy (its player would be frozen in a talk his own player did not
     // start); the copy is moved on into the fight by the next records. His after-fight talk is forced, and starts from its first step
     // with my player (coop_boss_prefer_local): that talk ends in his star (only the owner's is real) and his own removal.
@@ -1752,6 +1768,7 @@ void process(unsigned now) {
         // drives no camera) and its walk animation set (the state timer stops at 13), it ends the way the state ends: the hop by the
         // health left, then MOVE.
         if (g_on && g_bf2 && d.cls == 248) {
+            { const uint32_t st = state_of(b); if (st >= 8u && st <= 10u) b.wig_stag_t = now ? now : 1u; }
             if (state_of(b) == 3u && !b.a[0x8e1] && (unsigned char)b.a[0x8da] >= 13u) {
                 if (++b.wig3_ticks >= 20u) {
                     const unsigned hp = (unsigned char)b.a[0x8db];
