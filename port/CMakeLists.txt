@@ -12005,6 +12005,7 @@ list(APPEND SLICE_COMMS_SOURCES hal/coop_actors.cpp)
 # run after093, lane FRIENDVIS1: a coop friend's Yoshi eggs on my console, driven from coop_actors.cpp; see hal/coop_ghost_eggs.h.
 list(APPEND SLICE_COMMS_SOURCES hal/coop_ghost_eggs.cpp)
 list(APPEND SLICE_COMMS_SOURCES hal/coop_cap.cpp)   # CAPLOSS1: a friend's lost cap on my console
+list(APPEND SLICE_COMMS_SOURCES hal/coop_worldstar.cpp)   # WORLDSTAR1: stars held from load, the eel, the Ukiki cage, the mother penguin, Klepto's silver
 list(APPEND SLICE_COMMS_SOURCES hal/coop_talk.cpp)   # NPCTALK1: one talker per NPC, the NPC's facing and the talker's head look
 list(APPEND SLICE_COMMS_SOURCES hal/coop_balls.cpp hal/coop_bombs.cpp)   # BOBSYNC1: the balls a spawner makes, shared (driven from coop_actors.cpp)
 list(APPEND SLICE_COMMS_SOURCES hal/coop_race.cpp)  # KTQ1: Koopa the Quick's race on a friend's screen, the flag counts my own body only

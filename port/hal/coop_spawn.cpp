@@ -2245,6 +2245,18 @@ void *coop_spawn_and_announce(int cls, unsigned param, const int pos[3], int are
     return a;
 }
 
+// WORLDSTAR1: a star that something holds from level load (Klepto's power star, the eel's tail star, the Ukiki cage's star)
+// is released with a fixed parameter (star number | 0x40, or | 0x20 for the cage's landing). True once a star of that
+// parameter has been announced in this visit, by any console (it stands, was taken, or went), or was taken here or by a
+// friend: the room's star of that number is out, so a copy still held on this console is a stale one.
+bool coop_spawn_star_released(unsigned param) {
+    if (!coop_world_active() || !g_have_key) return false;
+    const unsigned p = param & 0xff;
+    if (g_star_taken[p]) return true;
+    for (const Net &n : g_net) if (n.used && n.cls == 178 && (n.param & 0xff) == p) return true;
+    return false;
+}
+
 void coop_spawn_note_remote_press(void *switch_actor) {
     if (!switch_actor || !coop_world_active()) return;
     char *a = (char *)switch_actor;

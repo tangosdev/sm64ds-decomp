@@ -276,6 +276,9 @@ void *coop_spawn_and_announce(int cls, unsigned param, const int pos[3], int are
 // STARCASE2: coop_switch calls this when it applied a FRIEND's press to a star switch (class 12) here, so the star it
 // grows is not this console's to film: its camera cutscene is skipped here. A press by my own player never calls it.
 void coop_spawn_note_remote_press(void *switch_actor);
+// WORLDSTAR1: true once the star of this release parameter (star number | 0x40 / | 0x20) is out in this visit: announced
+// by any console, or taken. Used to let go of a copy held from level load on this console (hal/coop_worldstar.cpp).
+bool coop_spawn_star_released(unsigned param);
 
 }  // namespace port
 

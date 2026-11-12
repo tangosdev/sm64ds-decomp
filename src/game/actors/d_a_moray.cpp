@@ -60,6 +60,14 @@ enum daMoray_c_AssetId {
 
 #pragma defer_codegen off
 
+#ifdef _MSC_VER
+/* Host only (run coopfix1, lane WORLDSTAR1). The tail star is let go when the closest player comes near it, and the
+   closest can be a friend's drawn body: this console then released and filmed the star while its own player was far
+   away. In a coop room port/hal/coop_worldstar.cpp answers with MY body, so only my player releases my copy (a friend's
+   console releases his and the room hears it); outside a coop room it answers what it is given. */
+extern "C" { void *(*port_coop_ws_moray_body)(void *closest) = 0; }
+#endif
+
 enum {
     ACTOR_PLAYER = 191,
     ACTOR_STAR = 178,
@@ -744,6 +752,10 @@ s32 daMoray_c::Behavior()
             goto clear_id;
         if (mVariant == 1) {
             Player *player = ClosestPlayer();
+#ifdef _MSC_VER
+            if (port_coop_ws_moray_body)
+                player = (Player *)port_coop_ws_moray_body(player);
+#endif
             if (player != 0) {
                 if (Vec3_Dist(&mStarPos, (const Vector3 *)&player->mPosX) < 0xfa000) {
                     star->MarkForDestruction();
