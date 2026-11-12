@@ -101,7 +101,7 @@ typedef char MbChildRequest_size_must_be_0x20[sizeof(MbChildRequest) == 0x20 ? 1
 typedef struct MbParentWork {
     /* 0x0000 -- the MP buffers: MB_Init points the WM work's sendBuf at
      * mSendBuf and its recvBuf at mRecvBuf */
-    u8 mSendBuf[0x400];
+    u32 mSendBuf[0x400 / sizeof(u32)];
     u8 mRecvBuf[0xf00];
     /* 0x1300 -- the parent's own MBUserInfo (NitroSDK parentInfo):
      * MB_RegisterFile hands it to MBi_MakeGameInfo, which copies it into each
