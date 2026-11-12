@@ -37,6 +37,17 @@
    * ONE DLL per mod. More than one in plugin/ is refused.
    * NOT IN MULTIPLAYER. Plugins are never loaded in a lobby or VS match (a
      plugin on one side only would desync the match). The log says so.
+     A game that is already running with your plugin and then starts a coop
+     room, a VS match or the online world at its title SWITCHES THE PLUGIN
+     OFF in place instead of restarting, and on again when the player is
+     back to solo: the game stops calling your callbacks, file filters and
+     actor factories, and puts back the bytes your sm64ds_mod_main and
+     on_level_load callbacks changed in the game's code and read-only data
+     (it compares them before and after each of those calls). So make every
+     code patch from sm64ds_mod_main or on_level_load. Patches made from
+     on_frame or an actor factory, and writes to the game's writable data,
+     are not undone. A plugin that registers on_file cannot be switched; the
+     game then restarts for the room as before.
    * NO STATE ACROSS SAVE STATES. The game's F8/F9 save states (and rollback,
      which only exists in multiplayer, where no plugin runs) snapshot and
      restore the game's memory. Memory your plugin owns (its globals, anything
