@@ -8,7 +8,7 @@
  * and lives in nitro/wm/wm.h. Plain C types: some consumers do not include
  * types.h.
  *
- * WM_Init carves the 0x1300-byte WM system buffer data_020a89ac into ARM7's
+ * WM_Init carves the 0x1300-byte WM system buffer wm9buf into ARM7's
  * work area (WM7), the status block, the two FIFO blocks and these callback
  * tables. callbackTable has one slot per WM API id below 0x25; WmReceiveFifo
  * handles ids from 0x25 up (the indication, port and 0x81 events) apart. */
@@ -18,7 +18,7 @@ typedef struct WMArm9Buf {
     char pad_08[0xc - 0x8];
     void *fifo9to7;                 /* 0x00c -- command block sent to ARM7, 0x100 bytes */
     void *fifo7to9;                 /* 0x010 -- callback block ARM7 answers in, 0x100 bytes */
-    void *callbackTable[0x25];      /* 0x014 -- by API id */
+    WMCallbackFunc callbackTable[0x25]; /* 0x014 -- by API id */
     WMCallbackFunc indCallback;     /* 0x0a8 -- the indication callback (op 0x80) */
     WMCallbackFunc portCallbackTable[16]; /* 0x0ac */
     void *portCallbackArgument[16]; /* 0x0ec */
@@ -44,21 +44,31 @@ typedef struct WmStartParentCallback {
     unsigned short aid;          /* 0x10 */
 } WmStartParentCallback;
 
-/* NitroSDK WMPortRecvCallback, the leading fields: the offsets agree with
- * every port receive callback that reads one (WM_Ds.cpp's two data-sharing
- * receive callbacks and the file-sharing one, func_020417d0). */
+/* NitroSDK WMPortRecvCallback. The offsets agree with every port receive
+ * callback that reads one (WM_Ds.cpp's two data-sharing receive callbacks
+ * and the file-sharing one, func_020417d0). Nothing here reads past arg, but
+ * the size is the SDK's: WmReceiveFifo's static cb_Port starts at 0x020a89ec
+ * and the 32-aligned fifoBuf after it at 0x020a8a40, which leaves it
+ * 0x35..0x54 bytes, and pret's WM_system.s keeps the same gap. */
 typedef struct WMPortRecvCallback {
-    unsigned short apiid;        /* 0x00 */
-    unsigned short errcode;      /* 0x02 */
-    unsigned short state;        /* 0x04 -- 7 CONNECTED, 9 DISCONNECTED, 0x15 PORT_RECV */
-    unsigned short port;         /* 0x06 */
-    void *recvBuf;               /* 0x08 */
-    unsigned short *data;        /* 0x0c */
-    unsigned short length;       /* 0x10 -- bytes at data */
-    unsigned short aid;          /* 0x12 -- the sender */
-    unsigned char macAddress[6]; /* 0x14 */
-    unsigned short seqNo;        /* 0x1a */
-    void *arg;                   /* 0x1c -- WM_SetPortCallback's argument */
+    unsigned short apiid;              /* 0x00 */
+    unsigned short errcode;            /* 0x02 */
+    unsigned short state;              /* 0x04 -- 7 CONNECTED, 9 DISCONNECTED, 0x15 PORT_RECV */
+    unsigned short port;               /* 0x06 */
+    void *recvBuf;                     /* 0x08 */
+    unsigned short *data;              /* 0x0c */
+    unsigned short length;             /* 0x10 -- bytes at data */
+    unsigned short aid;                /* 0x12 -- the sender */
+    unsigned char macAddress[6];       /* 0x14 */
+    unsigned short seqNo;              /* 0x1a */
+    void *arg;                         /* 0x1c -- WM_SetPortCallback's argument */
+    unsigned short myAid;              /* 0x20 */
+    unsigned short connectedAidBitmap; /* 0x22 */
+    unsigned char ssid[24];            /* 0x24 -- WM_SIZE_CHILD_SSID */
+    unsigned short reason;             /* 0x3c */
+    unsigned short rsv;                /* 0x3e */
+    unsigned short maxSendDataSize;    /* 0x40 */
+    unsigned short maxRecvDataSize;    /* 0x42 */
 } WMPortRecvCallback;
 
 /* NitroSDK WMDataSet, one data-sharing frame (0x100 bytes): a 4-byte header,
@@ -104,11 +114,11 @@ typedef char WMDataSharingInfo_size_must_be_0x420[sizeof(WMDataSharingInfo) == 0
 extern "C" {
 #endif
 WMArm9Buf *WM_GetSystemWork(void);
-int WM_CheckStateEx(int paramNum, ...);
-int WM_SendCommand(short id, unsigned short paramNum, ...);
-void WM_SetCallbackTable(int apiid, void *callback);
-int WMi_CheckIdle(void);
-int WMi_CheckInitialized(void);
+WMErrCode WM_CheckStateEx(int paramNum, ...);
+WMErrCode WM_SendCommand(WMApiid id, unsigned short paramNum, ...);
+void WM_SetCallbackTable(WMApiid id, WMCallbackFunc callback);
+WMErrCode WMi_CheckIdle(void);
+WMErrCode WMi_CheckInitialized(void);
 
 /* NitroSDK wm_ds.c (WM_Ds.cpp): data sharing. This SDK build takes the
  * bitmap, length and mode as ints. */

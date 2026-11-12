@@ -2684,35 +2684,10 @@ src/engine/card/CARD_PullOut.cpp:
     complete
     .text start:0x020610ac end:0x0206116c
 
-src/WmClearFifoRecvFlag.cpp:
+src/engine/wm/WM_System.c:
     complete
-    .text start:0x0206116c end:0x02061428
-src/WM_CheckStateEx.cpp:
-    complete
-    .text start:0x02061428 end:0x020614d0
-
-src/WMi_CheckIdle.cpp:
-    complete
-    .text start:0x020614d0 end:0x02061548
-src/WM_GetSystemWork.c:
-    complete
-    .text start:0x02061548 end:0x02061558
-
-src/WM_SendCommand.cpp:
-    complete
-    .text start:0x02061558 end:0x0206165c
-
-src/WM_SetCallbackTable.c:
-    complete
-    .text start:0x0206165c end:0x02061674
-
-src/WM_Finish.c:
-    complete
-    .text start:0x02061674 end:0x020616e8
-
-src/WM_Init.cpp:
-    complete
-    .text start:0x020616e8 end:0x020618b8
+    .text start:0x0206116c end:0x020618b8
+    .bss start:0x020a89a8 end:0x020a9440
 
 src/engine/wm/WM_Sync.c:
     complete
