@@ -19,7 +19,7 @@ proof: silent, muted, minimized, never focused; waits for the run-wide row gate 
 Paths are never written into the repo: the exe, the asset root and the output folder come from the arguments (or from
 SM64DS_ASSET_ROOT / SCENARIO_OUT in the environment). See README.md for the scenario format.
 """
-import argparse, hashlib, json, os, re, shutil, subprocess, sys, time
+import argparse, hashlib, json, os, re, shutil, socket, subprocess, sys, time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SCEN_DIR = os.path.join(HERE, "scenarios")
@@ -142,10 +142,57 @@ def compile_file(s, proof, shot_ms):
     return "\n".join(L) + "\n"
 
 
+def port_free(port):
+    """True when nothing holds the port on loopback, TCP or UDP (the relay may use either). A bind alone can succeed on
+    Windows while another program listens on the wildcard address, so a listener is also probed by connecting."""
+    probe = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    probe.settimeout(0.3)
+    try:
+        if probe.connect_ex(("127.0.0.1", port)) == 0:
+            return False
+    finally:
+        probe.close()
+    for kind in (socket.SOCK_STREAM, socket.SOCK_DGRAM):
+        sk = socket.socket(socket.AF_INET, kind)
+        try:
+            sk.bind(("127.0.0.1", port))
+        except OSError:
+            return False
+        finally:
+            sk.close()
+    return True
+
+
 def relay_port():
+    """A free loopback port for this run's own relay: start from one derived from this process id, step by 7 until one binds,
+    never within 32 of the ports people play on."""
     port = 44100 + (os.getpid() % 400) * 7
-    assert abs(port - TANGO_RELAY_PORT) > 32 and abs(port - 51765) > 32
-    return port
+    for _ in range(400):
+        if abs(port - TANGO_RELAY_PORT) > 32 and abs(port - 51765) > 32 and port_free(port):
+            return port
+        port += 7
+        if port > 47000:
+            port = 44100 + (port % 7)
+    sys.exit("no free loopback port for the relay between 44100 and 47000")
+
+
+def proc_info(pid):
+    """(executable path, start time in unix seconds, command line) of a live process, or None."""
+    ps = ("$p = Get-CimInstance Win32_Process -Filter 'ProcessId=%d'; if ($p) { '{0}|{1}|{2}' -f $p.ExecutablePath, "
+          "([DateTimeOffset]$p.CreationDate).ToUnixTimeSeconds(), $p.CommandLine }" % int(pid))
+    r = subprocess.run(["powershell", "-NoProfile", "-NonInteractive", "-Command", ps], capture_output=True, text=True)
+    line = r.stdout.strip()
+    if r.returncode != 0 or "|" not in line:
+        return None
+    exe, start, cmd = line.split("|", 2)
+    try:
+        return exe, int(start), cmd
+    except ValueError:
+        return None
+
+
+def same_file(a, b):
+    return os.path.normcase(os.path.abspath(a or "")) == os.path.normcase(os.path.abspath(b or ""))
 
 
 def room_code(name):
@@ -187,7 +234,7 @@ def launch(args):
         print("row gate: none set (SCENARIO_ROWGATE or --rowgate); running without one", flush=True)
     if proof and gate:
         need = 1 if n <= 2 else 2
-        lane = args.lane or "SCENARIO"
+        lane = args.lane
         print("row gate: acquire %s %d" % (lane, need), flush=True)
         r = subprocess.run([sys.executable, gate, "acquire", lane] + ([str(need)] if need > 1 else []))
         if r.returncode != 0:
@@ -205,7 +252,7 @@ def launch(args):
             rl = open(os.path.join(W, "relay.txt"), "wb"); fhs.append(rl)
             relay = subprocess.Popen([sys.executable, "-u", RELAY_PY], env=renv, stdout=rl, stderr=subprocess.STDOUT,
                                      creationflags=NOWIN)
-            pids["relay"] = relay.pid
+            pids["relay"] = {"pid": relay.pid, "port": port, "started": int(time.time())}
             code = room_code(s["name"])
             print("relay pid %d on 127.0.0.1:%d, room code %s" % (relay.pid, port, code), flush=True)
             time.sleep(2)
@@ -253,7 +300,7 @@ def launch(args):
             fh = open(os.path.join(d, "out.txt"), "wb"); fhs.append(fh)
             pr = subprocess.Popen([mine], cwd=d, env=env, startupinfo=si, stdout=fh, stderr=subprocess.STDOUT, creationflags=flags)
             procs.append(pr)
-            pids["games"].append(pr.pid)
+            pids["games"].append({"pid": pr.pid, "exe": mine, "started": int(time.time())})
             print("player %d (%s) pid %d  folder %s\n  log: %s" % (k, ch, pr.pid, d, os.path.join(d, "playlog", "play_*.log")),
                   flush=True)
             with open(os.path.join(W, "pids.json"), "w") as f:
@@ -278,7 +325,7 @@ def launch(args):
                 try: fh.close()
                 except Exception: pass
             if gate_held:
-                subprocess.run([sys.executable, gate, "release", args.lane or "SCENARIO"])
+                subprocess.run([sys.executable, gate, "release", args.lane])
     if proof:
         report(W, n, args.pics)
     return 0
@@ -339,10 +386,31 @@ def stop_pids(W, quiet=False):
         return
     with open(pf) as f:
         pids = json.load(f)
-    for pid in pids.get("games", []) + ([pids["relay"]] if pids.get("relay") else []):
-        r = subprocess.run(["taskkill", "/PID", str(pid), "/T", "/F"], capture_output=True)
-        if not quiet:
-            print("stop pid %d: %s" % (pid, "killed" if r.returncode == 0 else "already gone"))
+    # Kill a recorded pid only while it is still the very process this run started: a game must be this run's own exe copy,
+    # the relay a python running relay.py, and either must have started within a minute of when the run recorded it. A pid
+    # the system has since handed to something else is left alone.
+    todo = [("game", g) for g in pids.get("games", []) if isinstance(g, dict)]
+    if isinstance(pids.get("relay"), dict):
+        todo.append(("relay", pids["relay"]))
+    for kind, rec in todo:
+        pid = int(rec["pid"])
+        info = proc_info(pid)
+        if not info:
+            verdict = "already gone"
+        else:
+            exe, start, cmd = info
+            fresh = abs(start - int(rec.get("started", 0))) <= 60
+            if kind == "game":
+                ours = fresh and same_file(exe, rec["exe"])
+            else:
+                ours = fresh and os.path.basename(exe).lower().startswith("python") and "relay.py" in cmd.replace("\\", "/")
+            if ours:
+                r = subprocess.run(["taskkill", "/PID", str(pid), "/T", "/F"], capture_output=True)
+                verdict = "killed" if r.returncode == 0 else "kill failed"
+            else:
+                verdict = "LEFT ALONE: now %s, not this run's %s" % (exe or "?", kind)
+        if not quiet or verdict.startswith("LEFT") or verdict == "kill failed":
+            print("stop %s pid %d: %s" % (kind, pid, verdict))
     os.remove(pf)
 
 
@@ -367,11 +435,13 @@ def main():
     ap.add_argument("--aroot")
     ap.add_argument("--out")
     ap.add_argument("--pics", help="proof: also copy each player's picture here as <scenario>_p<k>.png")
-    ap.add_argument("--lane", help="proof: the name the row gate ticket carries")
+    ap.add_argument("--lane", help="proof: the name the row gate ticket carries (default SCENARIO-<pid>, unique per run)")
     ap.add_argument("--secs", type=int)
     ap.add_argument("--env", action="append", default=[], metavar="K=V", help="an extra knob for every game (repeatable)")
     ap.add_argument("--print", action="store_true", help="print the compiled game file and stop")
     a = ap.parse_args()
+    if not a.lane:
+        a.lane = "SCENARIO-%d" % os.getpid()   # one ticket name per run, so two runs never release each other's slots
     if a.list:
         return list_scenarios()
     if a.stop:

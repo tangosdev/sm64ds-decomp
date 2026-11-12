@@ -27,16 +27,20 @@ run folder and returns. The games run until you close them or run `--stop`.
 and never focused (`SM64DS_NO_FOCUS`, `SM64DS_VOLUME=0`, `SM64DS_MINIMIZED`,
 `SM64DS_NO_DIALOG`), run at below-normal priority, and wait for the run-wide
 row gate first (one slot for up to two games, both slots for three or four;
-`--lane NAME` names the ticket, the gate script is `--rowgate` or
+`--lane NAME` names the ticket, default `SCENARIO-<pid>` so two runs never
+release each other's slots; the gate script is `--rowgate` or
 `SCENARIO_ROWGATE`; with neither set the row runs ungated). Each
 player takes a picture from the game's own frame dump `shot_ms` after he is
 placed. The row stops as soon as every picture is written (or after `secs`),
-kills only the processes and relay it started, releases the gate, and prints
+kills only the processes and relay it started (each recorded pid is checked
+to still be that run's own exe copy or relay before it is killed, here and in
+`--stop`), releases the gate, and prints
 the `[scenario]` log lines, the fatal/fault count and the pictures (also
 converted to PNG into `--pics` if given).
 
-A coop room gets its own relay on 127.0.0.1 at a port derived from the
-script's process id (kept well away from the ports people play on) and a
+A coop room gets its own relay on 127.0.0.1 at a free port derived from the
+script's process id (checked free first, kept well away from the ports
+people play on) and a
 fresh room code, so a scenario never joins anyone else's room. Each player
 gets his own folder `<out>/<scenario>/c<k>/` with his own exe copy, empty
 settings and his own save.
@@ -136,6 +140,8 @@ bits are merged between consoles.
 launcher writes (`--print` shows it): an `[all]` section, then one `[p<N>]`
 section per player, `key = value` lines. The game reads it in
 `port/hal/scenario.cpp`, logs every step with a `[scenario]` prefix, and
-refuses to touch the save unless the save is a scenario's own
-(`SM64DS_SAVE_PATH` solo, `SM64DS_COOP_SAVE` coop), so a real save file is
-never changed.
+refuses to touch the save unless it is the scenario's own: the save in use
+(`SM64DS_SAVE_PATH` solo, `SM64DS_COOP_SAVE` coop) must be the file named by
+`SM64DS_SCENARIO_SAVE_OK`, which the launcher sets to the save it made (a solo
+scenario with no save path set picks and vouches for its own). A real save
+named by hand is refused with a log line and never changed.
