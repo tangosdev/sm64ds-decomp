@@ -7,11 +7,13 @@
  * cluster, func_02040aa4 .. func_02042668), moved here from func_02040c34.c
  * once func_02040f30, func_020412f0 and func_02041224 needed them too. The
  * transfer runs over NitroSDK WBT (wireless block transfer): the child's
- * tables below are the ones WBT_GetBlockInfo/WBT_GetBlock take. Plain C types:
- * func_020412f0 and func_02041224 do not include types.h. data_020a2400 is
- * the same address as mArea (data_020a1fc0 + 0x440), a symbol of its own. */
+ * tables below are the ones WBT_GetBlockInfo/WBT_GetBlock take, and each
+ * parent node embeds the WBTBlockInfoList (nitro/wbt.h) its region is
+ * registered with. data_020a2400 is the same address as mArea
+ * (data_020a1fc0 + 0x440), a symbol of its own. */
 
 #include "nitro/wm/wm.h"
+#include "nitro/wbt.h"
 
 /* Parent area at +0x440: a pool of three 0xcc0-byte nodes, each holding one
  * registered region. A node moves free -> busy (state 1, loading; func_02041b60)
@@ -21,9 +23,10 @@ enum { FILE_SHARE_NODE_SIZE = 0xcc0 }; /* node slot stride, sizeof(FileShareNode
 
 typedef struct FileShareNode {
     struct FileShareNode *mNext; /* 0x00 -- list link (func_02041bbc moves nodes) */
-    /* 0x04 -- WBT_RegisterBlock (WBT_RegisterBlock) registers it (block id,
-     * size, 0x20-byte name, data); func_02041c2c finds a node by its id */
-    unsigned char mRegion[0x34];
+    /* 0x04 -- the block list node WBT_RegisterBlock registers the region
+     * with (block id, size, 0x20-byte name, data); func_02041c2c finds a
+     * node by its id */
+    WBTBlockInfoList mRegion;
     /* 0x38 -- FS_InitFile here; func_02042254 opens, reads and closes the
      * region's file through it, func_020412f0 refills a page through it.
      * func_02041ce0 matches a request against its open extent and

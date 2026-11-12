@@ -3,6 +3,7 @@
 #include "private/file_share_alloc.h"
 #include "nitro/os/system.h"
 #include "nitro/fs/archive.h"
+#include "nitro/wbt.h"
 
 /* The FSFile a child read is in flight on (mReadRequest); only its archive is
  * read here. */
@@ -10,7 +11,6 @@
 extern "C" {
 
 extern void func_020421b4(void);
-extern void WBT_End(void);
 
 extern int data_020a0f84;
 

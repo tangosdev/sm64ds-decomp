@@ -1,7 +1,6 @@
 #include "types.h"
 #include "private/arm9_wbt.h"
 #include "nitro/mi/memory.h"
-extern int WBT_GetOwnAid(void);
 extern void func_02064470(void *self, int code, int idx);
 extern void func_02064554(void *self, int sel, int idx, s16 a3);
 extern void func_02065ba0(int size);
