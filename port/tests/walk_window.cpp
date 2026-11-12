@@ -20236,6 +20236,18 @@ int main(void)
                         *(int *)((char *)cam + 0x90) >> 12, *(int *)((char *)cam + 0x94) >> 12,
                         (int)*(unsigned char *)(c + 0x715), *(unsigned *)((char *)cam + 0x154));
         }
+#ifndef PORT_ROM_CLEAN
+        {   /* CLICK1 proof knob, dev builds only: SM64DS_CLICK_STATE_LOG=1 prints the player's state (its handler table, a ROM
+               symbol the symtab names) each time it changes, so a row counts punches and jumps from the game's own state */
+            static int sl = -1;
+            static void *was;
+            if (sl < 0) { const char *e = getenv("SM64DS_CLICK_STATE_LOG"); sl = (e && *e && *e != '0') ? 1 : 0; }
+            if (sl && c && *(void **)(c + 0x370) != was) {
+                was = *(void **)(c + 0x370);
+                fprintf(stderr, "[clickst] f%d hk%d state %p\n", frame, g_host_key_frame, was);
+            }
+        }
+#endif
         {   /* CAMPACK2 test hook (SM64DS_CAM93_DUMPAT=<frame>[,<frame>...]): the Camera actor's first 0x200 bytes as words, to find
                which field holds the Look button's level (far view / close-up) */
             static const char *at = (const char *)-1;

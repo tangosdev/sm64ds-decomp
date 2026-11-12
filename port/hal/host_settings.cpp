@@ -615,7 +615,7 @@ const BindKey MOUSE_BIND[HOST_MOUSE_COUNT] = {
     { "MouseCamMode",    0 },
     { "MouseLook",       0 },
     { "MouseJump",       0 },     /* MOUSEBIND1: the game actions, unbound until the player binds one */
-    { "MouseAttack",     0 },
+    { "MouseAttack",     1 },     /* CLICK1: left click attacks unless the player chose otherwise (mouse_attack_default) */
     { "MouseCrouch",     0 },
     { "MouseRun",        0 },
     { "MouseStart",      0 },
@@ -629,6 +629,22 @@ inline int mouse_vk_ok(int v) { return v == 0 || v == 2 || (v >= 4 && v <= 6); }
 /* MOUSELOCK1: the left button (VK 1) may sit on any action but the Mouse look button (a held left that steers would be the press every
    menu reads as the stylus; Tango asked for left to punch). Where left is the stylus is tests/walk_window.cpp's mo_pen_moment. */
 inline int mouse_vk_ok_for(int action, int v) { return mouse_vk_ok(v) || (v == 1 && action != HOST_MOUSE_CAM_HOLD); }
+/* CLICK1 (Tango, 11-12: "Only left click not the right click to jump"): players expected left click to attack and it did nothing,
+   because every mouse action shipped unbound. Left is Attack now for anyone whose settings.json does not name MouseAttack (a fresh
+   install, and every player who never chose a mouse button for Attack). A file that names a valid MouseAttack, 0 included, is the
+   player's choice and stands; the in-game page's choice is written to the file and stands the same way. And the default steps
+   aside while the player has put left on any other mouse action (MouseJump = 1, a camera button on left), so left is never two
+   actions the player did not ask for. Right click stays unbound (MouseJump 0); right held is still the Mouse look button.
+   The launcher (Settings.GetActionMouse) shows the same answer by the same rule. */
+int g_mouse_attack_named;    /* 1: MouseAttack is the player's own (named in the file, or set on the in-game page) */
+void mouse_attack_default()
+{
+    if (g_mouse_attack_named) return;
+    int left_taken = 0;
+    for (int i = 0; i < HOST_MOUSE_COUNT; ++i)
+        if (i != HOST_MOUSE_ATTACK && g_mouse[i] == 1) left_taken = 1;
+    g_mouse[HOST_MOUSE_ATTACK] = left_taken ? 0 : 1;
+}
 int g_key[HOST_KEY_COUNT];
 int g_pad[HOST_PAD_COUNT];
 /* Which action already held the Look default's key / pad button in a file
@@ -1625,6 +1641,7 @@ void load_once(void)
     for (int i = 0; i < HOST_KEY_COUNT; ++i) g_key[i] = KEY_BIND[i].dflt;
     for (int i = 0; i < HOST_PAD_COUNT; ++i) g_pad[i] = PAD_BIND[i].dflt;
     for (int i = 0; i < HOST_MOUSE_COUNT; ++i) g_mouse[i] = MOUSE_BIND[i].dflt;
+    g_mouse_attack_named = 0;     /* CLICK1: no file names it yet */
     g_camera_stick_zoom = 0;
     g_look_key_taken = 0;
     g_look_pad_taken = 0;
@@ -1790,7 +1807,10 @@ void load_once(void)
         for (int i = 0; i < HOST_MOUSE_COUNT; ++i) {
             const int m = json_int(text, MOUSE_BIND[i].name, MOUSE_BIND[i].dflt);
             if (mouse_vk_ok_for(i, m)) g_mouse[i] = m;
+            if (i == HOST_MOUSE_ATTACK)     /* CLICK1: a value that parsed and is allowed is the player's; a typo is not */
+                g_mouse_attack_named = json_value(text, MOUSE_BIND[i].name) && mouse_vk_ok_for(i, m);
         }
+        mouse_attack_default();
         g_camera_stick_zoom = json_bool(text, "CameraStickZoom", 0);
         /* THE ALIAS: KeyRun / PadRun win when the file names them WITH A VALUE
            THAT PARSED; when it does not, the old RunButtonKey / RunButtonPad
@@ -2211,6 +2231,10 @@ void load_once(void)
         if (g_mouse[i] != MOUSE_BIND[i].dflt)
             fprintf(stderr, "[settings] %s %d (default %d) (%s)\n",
                     MOUSE_BIND[i].name, g_mouse[i], MOUSE_BIND[i].dflt, path);
+    fprintf(stderr, "[settings] MouseAttack %d: %s (%s)\n", g_mouse[HOST_MOUSE_ATTACK],
+            g_mouse_attack_named ? "the player's choice"
+            : g_mouse[HOST_MOUSE_ATTACK] ? "never chosen, left click attacks (CLICK1 default)"
+                                         : "never chosen, left is on another mouse action, so not Attack", path);
     if (g_camera_stick_zoom)
         fprintf(stderr, "[settings] CameraStickZoom on: right stick up/down zooms the camera (%s)\n", path);
     /* one line per binding the player moved, so a support log answers "what
@@ -2500,6 +2524,15 @@ int reload_controls(const char *text)
     for (int i = 0; i < HOST_MOUSE_COUNT; ++i) {
         const int m = json_int(text, MOUSE_BIND[i].name, g_mouse[i]);
         if (mouse_vk_ok_for(i, m)) CTL_SET(g_mouse[i], m);
+    }
+    {   /* CLICK1: the launcher's Reset takes MouseAttack out of the file; the default then answers again */
+        const int m = json_int(text, "MouseAttack", -1);
+        g_mouse_attack_named = json_value(text, "MouseAttack") && mouse_vk_ok_for(HOST_MOUSE_ATTACK, m);
+        const int was = g_mouse[HOST_MOUSE_ATTACK];
+        mouse_attack_default();
+        const int now = g_mouse[HOST_MOUSE_ATTACK];
+        g_mouse[HOST_MOUSE_ATTACK] = was;
+        CTL_SET(g_mouse[HOST_MOUSE_ATTACK], now);
     }
     CTL_SET(g_camera_stick_zoom, json_bool(text, "CameraStickZoom", g_camera_stick_zoom));
     {   /* LLLSHELL1: the turn / tilt defaults follow a gameplay key moved on or off them (cam_turn_yield) */
@@ -3498,9 +3531,17 @@ extern "C" int host_setting_set_mouse(int action, int vk)
     load_once();
     g_refusal[0] = 0;
     if (action < 0 || action >= HOST_MOUSE_COUNT || !mouse_vk_ok_for(action, vk)) return 0;
+    if (action == HOST_MOUSE_ATTACK && !g_mouse_attack_named) {   /* CLICK1: chosen on the page, so it is the player's from now on */
+        g_mouse_attack_named = 1;
+        g_mouse[action] = vk;
+        queue_int(MOUSE_BIND[action].name, vk);
+        ++g_ctl_gen;
+        return 1;
+    }
     if (g_mouse[action] == vk) return 1;
     g_mouse[action] = vk;
     queue_int(MOUSE_BIND[action].name, vk);
+    mouse_attack_default();     /* CLICK1: left moved onto (or off) another action: the unchosen Attack default follows */
     ++g_ctl_gen;
     return 1;
 }

@@ -74,7 +74,7 @@ static const SlInfo INFO[] = {
     { "MouseLook",       SL_KIND_MOUSE, 0, 6, 0, 0, 1 },
     /* MOUSEBIND1: the game actions, in their HOST_MOUSE_ place (after MouseLook) */
     { "MouseJump",        SL_KIND_MOUSE, 0, 6, 0, 0, 1 },
-    { "MouseAttack",      SL_KIND_MOUSE, 0, 6, 0, 0, 1 },
+    { "MouseAttack",      SL_KIND_MOUSE, 0, 6, 1, 0, 1 },     /* CLICK1: left click attacks by default, so the page's Reset puts it back there */
     { "MouseCrouch",      SL_KIND_MOUSE, 0, 6, 0, 0, 1 },
     { "MouseRun",         SL_KIND_MOUSE, 0, 6, 0, 0, 1 },
     { "MouseStart",       SL_KIND_MOUSE, 0, 6, 0, 0, 1 },
