@@ -12,6 +12,11 @@ void coop_rabbit_after_follow();
 // proximity rule. `a` is the local actor in coop sync slot `slot`; any class other than the rabbit (187) gives -1.
 int coop_rabbit_owner(int slot, const char *a);
 
+// party_hits' held message: true when the object in my hands is a rabbit the ROM already let go (Released, +0x45c clear)
+// while my body's held pointer still names it for the put-down animation. Lets the friend's copy go the same frame mine
+// does instead of about 13 frames later. False for anything else, outside a coop room, or with the kill switch.
+bool coop_rabbit_let_go(const char *ob);
+
 }  // namespace port
 
 #endif  // PORT_HAL_COOP_RABBIT_H

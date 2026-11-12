@@ -418,6 +418,7 @@ void held_send(char *me) {
         cls = *(const unsigned short *)(ob + 0x0c);
         slot = *(const short *)(ob + 0xce);
         if (cls >= 1024 || slot < 0) kind = cls = 0, slot = -1;     // a runtime spawn has no slot every console shares
+        if (kind == 1 && coop_rabbit_let_go(ob)) kind = cls = 0, slot = -1;   // RABBIT2: the ROM let the rabbit go already
     }
     if (const int *q = *(int *const *)(me + 0x588)) for (int i = 0; i < 5; ++i) if (q[i]) ++eggs;
     const bool changed = kind != g.ho_kind || cls != g.ho_cls || slot != g.ho_slot || eggs != g.ho_eggs;

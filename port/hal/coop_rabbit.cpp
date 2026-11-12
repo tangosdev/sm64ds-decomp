@@ -25,7 +25,11 @@
 //     stands, can be talked to, and a grab gives Released again, never a key;
 //   * the castle grounds key rabbit (rabbit 7, the one rabbit every character's console has; the others spawn only for their
 //     own character) is also made tame when the room's save already has its key (flags1 0x40) and my copy still runs wild,
-//     which covers a friend who came in after the hold or lost its messages.
+//     which covers a friend who came in after the hold or lost its messages;
+//   * if the holder's drawn body goes away mid-hold (he left, bodies reassigned), my copy is released and tame at once,
+//     so it never keeps a pointer to a body that is no longer his;
+//   * the holder's held message says "nothing" as soon as the ROM let the rabbit go (Released, talker clear), not about
+//     13 frames later when his put-down animation clears the body's held pointer (coop_rabbit_let_go, party_hits).
 //
 // Solo play: nothing here runs outside a coop room (coop_world_active), so a single player game is the cartridge's.
 // Mixed rooms: no new message. A 1.0.3 friend sends the same kHeldState, so my copy follows his hold; a 1.0.3 friend
@@ -45,6 +49,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <chrono>
 
 extern "C" {
 extern void *data_0209f394[];
@@ -94,6 +99,9 @@ char *ghost_body(int seat) {
         if (port_adventure_ghost_seat(i) == seat && data_0209f394[i] && data_0209f394[i] != me) return (char *)data_0209f394[i];
     return nullptr;
 }
+long long wall_ms() {
+    return (long long)std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+}
 bool in_state(const daMip_c *m, const void *rec) { return (const void *)(size_t)(unsigned)m->mState == rec; }
 const char *state_name(const daMip_c *m) {
     if (in_state(m, &data_ov085_021306ac)) return "caught";
@@ -108,8 +116,8 @@ void mirror_hold(int slot, daMip_c *m, char *gb, int seat) {
         m->mHorzSpeed = 0;
         m->SetState(&data_ov085_021306ac);              // StateCaughtInit: step 0, the hold animation, the small cylinder
         ++g_mirrors;
-        std::fprintf(stderr, "[coopr2] f=%u slot %d: seat %d holds the rabbit, my copy is caught in his hands (was %s, tame %d)\n",
-                     g_frame, slot, seat, t.mirrored ? "caught" : "free", (int)m->unk_426);
+        std::fprintf(stderr, "[coopr2] f=%u wall=%lld slot %d: seat %d holds the rabbit, my copy is caught in his hands (was %s, tame %d)\n",
+                     g_frame, wall_ms(), slot, seat, t.mirrored ? "caught" : "free", (int)m->unk_426);
     }
     m->mTalkingPlayer = (Player *)gb;                   // StateCaughtMain needs a talker; the carry flag (+0xb0 0x4000) stays clear
     m->mTalkState = 2;                                  // so neither StateCaughtMain nor Behavior's talk block opens a message here
@@ -118,7 +126,7 @@ void mirror_hold(int slot, daMip_c *m, char *gb, int seat) {
 }
 
 // The friend's hold ended: the holder's rabbit is in Released now (after the key, or a tame one let go). Mine follows.
-void mirror_release(int slot, daMip_c *m) {
+void mirror_release(int slot, daMip_c *m, const char *why = "let the rabbit go") {
     Track &t = g_t[slot];
     m->mTalkingPlayer = 0;
     m->mTalkState = 0;
@@ -126,8 +134,8 @@ void mirror_release(int slot, daMip_c *m) {
     m->mdCcAc_c.flags &= ~2u;
     m->SetState(&data_ov085_021306bc);                  // StateReleasedInit: unk_426 = 1 (tame), gravity, the wait animation
     ++g_releases;
-    std::fprintf(stderr, "[coopr2] f=%u slot %d: seat %d let the rabbit go, my copy is released and tame (unk_426 %d) at %d,%d,%d\n",
-                 g_frame, slot, t.seat, (int)m->unk_426,   /* seat -1: the room's key flag, no hold seen here */
+    std::fprintf(stderr, "[coopr2] f=%u wall=%lld slot %d: seat %d %s, my copy is released and tame (unk_426 %d) at %d,%d,%d\n",
+                 g_frame, wall_ms(), slot, t.seat, why, (int)m->unk_426,   /* seat -1: the room's key flag, no hold seen here */
                  *(const int *)((const char *)m + 0x5c) >> 12, *(const int *)((const char *)m + 0x60) >> 12, *(const int *)((const char *)m + 0x64) >> 12);
     t.mirrored = false; t.seat = -1;
 }
@@ -141,6 +149,19 @@ int coop_rabbit_owner(int slot, const char *a) {
     if (me && *(const char *const *)(a + 0x45c) == me) return comms_hub_my_seat();     // my hands: I own it for the whole hold
     const int s = party_hits::held_by(kClsMip, slot);
     return (s >= 0 && s < kSeats && s != comms_hub_my_seat()) ? s : -1;
+}
+
+bool coop_rabbit_let_go(const char *ob) {
+    read_env();
+    if (!g_on || !ob || *(const unsigned short *)(ob + 0x0c) != kClsMip || !coop_world_active()) return false;
+    const daMip_c *m = (const daMip_c *)ob;
+    const bool gone = !m->mTalkingPlayer && in_state(m, &data_ov085_021306bc);
+    static const char *s_said = nullptr;
+    if (gone && s_said != ob)
+        std::fprintf(stderr, "[coopr2] f=%u wall=%lld: my hands let rabbit slot %d go (Released), friends hear it now\n", g_frame, wall_ms(),
+                     (int)*(const short *)(ob + 0xce));
+    s_said = gone ? ob : nullptr;
+    return gone;
 }
 
 void coop_rabbit_after_follow() {
@@ -167,7 +188,14 @@ void coop_rabbit_after_follow() {
                 continue;
             }
             char *gb = ghost_body(seat);
-            if (!gb) continue;                              // his ghost is not drawn here: nothing to hold it
+            if (!gb) {
+                // His drawn body is gone mid-hold (he left, or the bodies were reassigned): let my copy go now, released
+                // and tame as on a normal let-go, so it never keeps a pointer to a body that is not his any more.
+                if (t.mirrored) mirror_release(slot, m, "has no drawn body here any more");
+                continue;
+            }
+            if (t.mirrored && (char *)m->mTalkingPlayer != gb)
+                std::fprintf(stderr, "[coopr2] f=%u slot %d: seat %d's drawn body moved, my copy follows the new one\n", g_frame, slot, seat);
             mirror_hold(slot, m, gb, seat);
             m->UpdateMatrixAndShadow();                     // party_hits pinned it to his hands after my Behavior drew it: draw it there
             ++g_rebuilds;
