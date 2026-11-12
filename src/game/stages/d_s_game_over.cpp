@@ -168,11 +168,13 @@ s32 dScGameOver_c::InitResources() {
 
     G2_SetBG0Priority(0);
     G2_BG0Mosaic(0);
-    REG_BG0CNT = (REG_BG0CNT & 0x43) | 0xe10;
+    G2_SetBG0Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x7000,
+                     GX_BG_CHARBASE_0x10000, GX_BG_EXTPLTT_01);
     SetBg0Offset(0, 0);
 
     G2_SetBG1Priority(0);
-    REG_BG1CNT = (REG_BG1CNT & 0x43) | 0x1f1c;
+    G2_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xf800,
+                     GX_BG_CHARBASE_0x1c000, GX_BG_EXTPLTT_01);
     G2_BG1Mosaic(0);
     SetBg1Offset(0, 0);
 
@@ -180,7 +182,8 @@ s32 dScGameOver_c::InitResources() {
 
     G2_SetBG2Priority(0);
     G2_BG2Mosaic(0);
-    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0xd10;
+    G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x6800,
+                         GX_BG_CHARBASE_0x10000);
     SetBg2Offset(0, 0);
 
     if (GetOwnerLanguage() == 5) {
@@ -210,7 +213,8 @@ s32 dScGameOver_c::InitResources() {
     Deallocate(f);
 
     G2_SetBG3Priority(0);
-    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1100;
+    G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x8800,
+                         GX_BG_CHARBASE_0x00000);
     G2_BG3Mosaic(0);
     LoadFont(0);
 
@@ -226,12 +230,14 @@ s32 dScGameOver_c::InitResources() {
 
     G2S_SetBG0Priority(0);
     G2S_BG0Mosaic(0);
-    REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0x1100;
+    G2S_SetBG0Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x8800,
+                      GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
     SetSubBg0Offset(0, 0);
 
     G2S_SetBG1Priority(0);
     G2S_BG1Mosaic(0);
-    REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0xc00;
+    G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x6000,
+                      GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
     SetSubBg1Offset(0, 0);
 
     if (GetOwnerLanguage() == 5) {
@@ -258,7 +264,8 @@ s32 dScGameOver_c::InitResources() {
 
     G2S_SetBG2Priority(0);
     G2S_BG2Mosaic(0);
-    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0xd00;
+    G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x6800,
+                          GX_BG_CHARBASE_0x00000);
     SetSubBg2Offset(0, 0);
 
     f = LoadFile(ASSET_D_2D_BTM_GAME_OVER_BG_NSC_BIN);

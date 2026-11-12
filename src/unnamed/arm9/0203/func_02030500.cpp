@@ -56,12 +56,14 @@ void func_02030500(void) {
     GX_SetGraphicsMode(1, 0, 0);
 
     GX_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
-    REG_BG1CNT = (REG_BG1CNT & 0x43) | 8;
+    G2_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,
+                     GX_BG_CHARBASE_0x08000, GX_BG_EXTPLTT_01);
     G2_BG1Mosaic(0);
     GXS_SetGraphicsMode(0);
 
     GXS_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
-    REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 8;
+    G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,
+                      GX_BG_CHARBASE_0x08000, GX_BG_EXTPLTT_01);
     G2S_BG1Mosaic(0);
 
     DecompressLZ16(data_020927b0[GetLanguageIndexVS()], G2_GetBG1CharPtr());

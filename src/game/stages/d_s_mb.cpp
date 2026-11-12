@@ -259,9 +259,11 @@ s32 dScMB_c::InitResources() {
     REG_POWCNT1 = (REG_POWCNT1 & ~0x20e) | 0x20e;
     func_0200f2cc();
 
-    REG_BG1CNT = (REG_BG1CNT & 0x43) | 0x704;
+    G2_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x3800,
+                     GX_BG_CHARBASE_0x04000, GX_BG_EXTPLTT_01);
     G2_BG1Mosaic(0);
-    REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0x408;
+    G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x2000,
+                      GX_BG_CHARBASE_0x08000, GX_BG_EXTPLTT_01);
     G2S_BG1Mosaic(0);
 
     fillMain = 0xffff;

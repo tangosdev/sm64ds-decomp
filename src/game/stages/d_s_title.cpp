@@ -221,7 +221,8 @@ s32 dScTitle_c::InitResources() {
     REG_DISPCNT_SUB |= 0x10000;
     func_020233f4();
     G2_SetBG0Priority(0);
-    REG_BG0CNT = (REG_BG0CNT & 0x43) | 0x1f00;
+    G2_SetBG0Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xf800,
+                     GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
     G2_BG0Mosaic(0);
     GX_LoadBG0Char(data_0208a178, 0, 0x2000);
     GX_LoadBGPltt(data_0208c178, 0, 0x200);
