@@ -23,7 +23,7 @@
       "act": 1,
       "near": {
         "class": 206,
-        "dist": 500
+        "dist": 300
       }
     },
     {
@@ -32,13 +32,13 @@
       "act": 1,
       "near": {
         "class": 206,
-        "dist": 650,
+        "dist": 380,
         "angle_deg": 30
       }
     }
   ],
   "env": {
-    "SM64DS_COOP_BALLS_SAMPLE": "15",
+    "SM64DS_COOP_BALLS_SAMPLE": "4",
     "SM64DS_COOP_BALLS_LOG": "1"
   }
 }

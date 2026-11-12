@@ -24,7 +24,7 @@
       "near": {
         "class": 220,
         "param": 2,
-        "dist": 300
+        "dist": 900
       }
     },
     {
@@ -34,7 +34,7 @@
       "near": {
         "class": 220,
         "param": 2,
-        "dist": 450,
+        "dist": 1100,
         "angle_deg": 6
       },
       "env": {
@@ -43,7 +43,7 @@
     }
   ],
   "env": {
-    "SM64DS_COOP_BALLS_SAMPLE": "15",
+    "SM64DS_COOP_BALLS_SAMPLE": "4",
     "SM64DS_COOP_BALLS_LOG": "1"
   }
 }

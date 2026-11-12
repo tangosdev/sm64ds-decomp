@@ -480,6 +480,7 @@ bool member_ok(int seat) {
 void on_world(int seat, int sub, const unsigned char *p, int len, void *) {
     if (!g_act) { ++g_st.drop_off; return; }
     if (seat < 0 || seat >= kSeats || seat == g_my) { ++g_st.drop_seat; return; }
+    if (sub == kWorldBombState) { coop_bombs_on_world(seat, p, len); return; }   // BOBSYNC1 (hal/coop_bombs.cpp)
     if (sub != kWorldMoverBatch) { ++g_st.drop_bad; return; }
     if (!coop_mover_batch_validate(p, len)) { ++g_st.drop_bad; return; }
     MoverBatchHead h; std::memcpy(&h, p, sizeof h);
@@ -1399,6 +1400,7 @@ void on_frame(unsigned now) {
     ghost_eggs_frame(now);     // FRIENDVIS1: a friend's Yoshi eggs on my console (hal/coop_ghost_eggs.h)
     coop_cap_frame(now);       // CAPLOSS1: a friend's lost cap on my console (hal/coop_cap.cpp)
     coop_balls_frame(now);     // BOBSYNC1: the balls a spawner makes, shared (hal/coop_balls.cpp)
+    coop_bombs_frame(now);     // BOBSYNC1: a placed Bob-omb's life cycle follows its owner's (hal/coop_bombs.cpp)
     if (g_god) {      // lab knob: the proof player does not die and does not fall out of a course whose warp lands in the air
         data_02092144[data_0209f250 & 15] = (short)(8 << 8);
         if (g_spawned && g_lf - g_spawn_lf == 30) { std::memcpy(g_god_pos, pl + 0x5c, 12); g_god_set = true; }

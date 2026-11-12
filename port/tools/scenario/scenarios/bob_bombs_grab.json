@@ -1,0 +1,47 @@
+{
+  "about": "As bob_bombs, Mario picks the Bob-omb up (lab grab knob): is the carried / exploding Bob-omb the same on Luigi's screen?",
+  "save": {
+    "preset": "early"
+  },
+  "room": {
+    "collision": 1,
+    "damage": 1,
+    "interact": 1,
+    "tp": 1
+  },
+  "proof": {
+    "secs": 150,
+    "shot_ms": 40000,
+    "census": [
+      206
+    ]
+  },
+  "players": [
+    {
+      "character": "mario",
+      "level": 6,
+      "act": 1,
+      "near": {
+        "class": 206,
+        "dist": 300
+      },
+      "env": {
+        "SM64DS_GHOST_LAB_GRAB": "206,1000"
+      }
+    },
+    {
+      "character": "luigi",
+      "level": 6,
+      "act": 1,
+      "near": {
+        "class": 206,
+        "dist": 380,
+        "angle_deg": 30
+      }
+    }
+  ],
+  "env": {
+    "SM64DS_COOP_BALLS_SAMPLE": "4",
+    "SM64DS_COOP_BALLS_LOG": "1"
+  }
+}

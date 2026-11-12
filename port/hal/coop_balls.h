@@ -31,6 +31,12 @@ int coop_ball_claim_seat(int slot);
 // Once a frame, from the mover sync's frame (after its records were applied).
 void coop_balls_frame(unsigned now_ms);
 
+// hal/coop_bombs.cpp (bug 19): a placed Bob-omb's life cycle (awake, lit, blown, asleep) follows its owner's copy.
+// SYNW sub-type kWorldBombState, in the mover range (0x10-0x1f); coop_actors.cpp hands it over.
+enum : unsigned char { kWorldBombState = 0x11 };
+void coop_bombs_on_world(int seat, const void *payload, int len);
+void coop_bombs_frame(unsigned now_ms);
+
 }  // namespace port
 
 #endif  // PORT_HAL_COOP_BALLS_H
