@@ -84,7 +84,7 @@ extern u8 data_020a1020[0x20];
 extern u8 data_020a0f08;
 extern u8 data_020a0f00;
 extern MBUserInfo data_020a10a4[4];
-extern u8 data_020a1112[0x16];
+extern MBUserInfo data_020a10fc[4];
 extern u8 data_020a0f04;
 extern u8 data_020a0f10;
 extern u8 data_020a0fa6[24];
@@ -105,7 +105,7 @@ void func_0203ea5c(void) {
     s32 synced;
     u8 *mac;
     s32 slot;
-    u8 *user;
+    MBUserInfo *user;
     u16 sendStatus;
     PlayerInputRecord *endRec;
     PlayerInputRecord *inRec;
@@ -114,7 +114,7 @@ void func_0203ea5c(void) {
     s32 frameIdx;
     s32 allReady;
     PlayerInputRecord *anyRec;
-    u8 *info;
+    MBUserInfo *info;
     s32 endIdx;
     PlayerInputRecord *verRec;
     s32 anyIdx;
@@ -293,13 +293,12 @@ void func_0203ea5c(void) {
                                         if ((allReady != 0) && (peers > 1)) {
                                             data_020a0ef8 = 5;
                                             for (slot = 1, mac = data_020a0fa6,
-                                                user = (u8 *)&data_020a10a4[1];
-                                                 slot < 4; mac += 6, user += 0x16, slot++) {
+                                                user = &data_020a10a4[1];
+                                                 slot < 4; mac += 6, user++, slot++) {
                                                 if (func_0204271c(mac) == 0) {
                                                     for (peerMac = data_020a0fbe,
-                                                        info = data_020a1112, peer = 1;
-                                                         peer < 4;
-                                                         peerMac++, info += 0x16, peer++) {
+                                                        info = &data_020a10fc[1], peer = 1;
+                                                         peer < 4; peerMac++, info++, peer++) {
                                                         if (func_02042748(mac, peerMac) != 0) {
                                                             MI_CpuCopy8(info, user, 0x16);
                                                         }
@@ -488,9 +487,7 @@ extern void *data_020a0f7c;
 extern u8 data_020a0f9d[4];
 extern MBGameRegistry data_020a0fec;
 extern WMParentParam data_020a1064;
-extern MBUserInfo data_020a10fc[4];
 extern WMStatus data_020a1680;
-extern u8 data_020a1780[];
 
 extern void func_0203e978(ChannelMeasureReply *reply);
 extern int OS_GetTickLo(void);
@@ -502,8 +499,6 @@ extern u32 MB_GetSegmentLength(FSFile *file);
 extern int MB_ReadSegment(FSFile *file, void *buf, u32 len);
 extern int MB_RegisterFile(MBGameRegistry *game_reg, const void *buf);
 extern void MB_End(void);
-
-#define H(base, off) (*(u16 *)((char *)(base) + (off)))
 
 /* Link mode 3's step (func_0203df40), a download-play parent by its
    shape. Step 0 allocates 0xb000 bytes of work and picks a channel
@@ -572,10 +567,10 @@ void func_0203e20c(void) {
         int cnt2;
         int i2;
         u8 *p9;
-        u8 *p11;
+        MBUserInfo *profile;
         const MBUserInfo *found;
         u8 *pIdx;
-        u8 *base1112;
+        MBUserInfo *childProfile;
         int idx;
         MBCommResponseRequestType sel1;
         int oneVal;
@@ -583,28 +578,28 @@ void func_0203e20c(void) {
         cnt2 = 1;
         i2 = cnt2;
         p9 = data_020a0f9d;
-        p11 = data_020a1112;
+        profile = &data_020a10fc[1];
 
         data_020a0f1c |= 0x9000;
         data_020a0f08 = cnt2;
         do {
             *p9 = 0;
-            MI_CpuClear8(p11, 0x16);
+            MI_CpuClear8(profile, 0x16);
             i2 += 1;
             p9 += 1;
-            p11 += 0x16;
+            profile++;
         } while (i2 < 4);
 
         WM_ReadStatus(&data_020a1680);
 
         pIdx = data_020a0f9d;
-        base1112 = data_020a1112;
+        childProfile = &data_020a10fc[1];
         idx = 1;
         sel1 = MB_COMM_RESPONSE_REQUEST_ACCEPT;
         oneVal = idx;
         do {
             found = MB_CommGetChildUser(idx);
-            if (found != 0 && ((H(data_020a1780, 0x7e) >> idx) & 1)) {
+            if (found != 0 && ((data_020a1680.child_bitmap >> idx) & 1)) {
                 if (idx < 4) {
                     if (MB_CommGetParentState(idx) == MB_COMM_PSTATE_REQUESTED) {
                         MB_CommResponseRequest(idx, sel1);
@@ -612,7 +607,7 @@ void func_0203e20c(void) {
                         cnt2 += 1;
                     }
                     *pIdx = oneVal;
-                    MI_CpuCopy8(found, base1112, 0x16);
+                    MI_CpuCopy8(found, childProfile, 0x16);
                     data_020a0f08 += 1;
                 } else if (MB_CommGetParentState(idx) == MB_COMM_PSTATE_REQUESTED) {
                     MB_CommResponseRequest(idx, MB_COMM_RESPONSE_REQUEST_KICK);
@@ -620,7 +615,7 @@ void func_0203e20c(void) {
             }
             idx += 1;
             pIdx += 1;
-            base1112 += 0x16;
+            childProfile++;
         } while (idx < 0x10);
 
         if (data_020a0f70 != 0 && data_020a0f08 == cnt2) {
@@ -702,7 +697,7 @@ void func_0203e20c(void) {
         Memory::Deallocate(data_020a0f7c);
         if (data_020a0f40 != 0) {
             u8 *p9d = data_020a0f9d;
-            u8 *p1112 = data_020a1112;
+            MBUserInfo *profile = &data_020a10fc[1];
             u16(*pbe)[3] = data_020a0fbe;
             int sl;
             data_020a0f40 = 0;
@@ -710,11 +705,11 @@ void func_0203e20c(void) {
             sl = 1;
             do {
                 *p9d = 0;
-                MI_CpuClear8(p1112, 0x16);
+                MI_CpuClear8(profile, 0x16);
                 MI_CpuClear8(pbe, 6);
                 sl += 1;
                 p9d += 1;
-                p1112 += 0x16;
+                profile++;
                 pbe += 1;
             } while (sl < 4);
         }
@@ -853,11 +848,10 @@ extern void OS_GetMacAddress(void *p);
    data_020a10fc and data_020a10a4 are each a table of four (0x58 bytes,
    cleared below); func_0203d8a0 hands out player i's from data_020a10fc in
    link mode 3 and from data_020a10a4 otherwise. Off a download-play child
-   this fills in entry 0 of both from the owner settings; data_020a10fe and
-   data_020a10a6 are those entries' nickName fields. */
+   this fills in entry 0 of both from the owner settings. Entries 1..3 of
+   data_020a10fc are the download-play children's, which func_0203e20c
+   fills in as they connect. */
 extern u16 data_020a0fa0[][3];
-extern u8 data_020a10fe[];
-extern u8 data_020a10a6[];
 
 /* The owner settings OS_GetOwnerInfo copies out of the firmware's user info at
    0x27ffc80: NitroSDK's OSOwnerInfo, which OS_GetOwnerInfo fills in (the
@@ -967,8 +961,8 @@ void func_0203db64(void *arg0, void *arg1) {
         data_020a10fc[0].playerNo = 0;
         data_020a10a4[0].playerNo = data_020a10fc[0].playerNo;
         data_020a10a4[0].nameLength = data_020a10fc[0].nameLength;
-        MI_CpuCopy8(buf.nickName, data_020a10fe, buf.nickNameLength * 2);
-        MI_CpuCopy8(buf.nickName, data_020a10a6, buf.nickNameLength * 2);
+        MI_CpuCopy8(buf.nickName, data_020a10fc[0].name, buf.nickNameLength * 2);
+        MI_CpuCopy8(buf.nickName, data_020a10a4[0].name, buf.nickNameLength * 2);
         data_020a0f00 = buf.language;
         OS_GetMacAddress(data_020a0fb8);
         OS_GetMacAddress(data_020a0fa0);
@@ -976,40 +970,30 @@ void func_0203db64(void *arg0, void *arg1) {
     data_020a0ef0 = 1;
 }
 
-extern unsigned char data_020a1166[];
-/* Byte p of player i's link settings: bytes 0x12.. of the players' 0x24-byte
-   input records (data_020a1154, so data_020a1166 is the first one's 0x12).
+/* Byte p of player i's link settings (data_020a1154[i].settings).
    func_0203db3c writes the same bytes in this console's own record,
    data_020a1040. The accessors func_02020028..func_02020388 give the bits
    their roles (ready, go, course, slot mask, controller mode). */
 unsigned char GetPlayerFlagByte(int i, int p) {
-    return *(unsigned char *)((char *)data_020a1166 + i * 0x24 + p);
+    return data_020a1154[i].settings[p];
 }
 
-extern unsigned char data_020a1052[];
-/* Set link settings byte `byte` of this console, at 0x12 of its own input
-   record data_020a1040 (data_020a1052): the writer the 0202 accessors pair
-   with GetPlayerFlagByte. */
+/* Set link settings byte `byte` in this console's own input record
+   data_020a1040: the writer the 0202 accessors pair with GetPlayerFlagByte. */
 void func_0203db3c(int byte, int value) {
-    data_020a1052[byte] = value;
+    data_020a1040.settings[byte] = value;
 }
 
-/* data_020a1154 holds the four players' 0x24-byte input records (func_0203df40's
- * Rec). data_020a1164 is the first record's inputYaw field (0x10), so a view
- * one record long, starting there, steps to player i's. */
-struct RecInputYaw {
-    short inputYaw; /* Rec 0x10 -- the camera's input yaw (func_0203db0c) */
-    char rest[0x24 - 2];
-};
-extern struct RecInputYaw data_020a1164[];
-
+/* Player i's camera input yaw, as func_0203db0c stored it. The field is
+   unsigned (both record copies read it back with ldrh); returning it as a
+   short is what gives this read its ldrsh. */
 short GetAngleToCamera(int i) {
-    return data_020a1164[i].inputYaw;
+    return data_020a1154[i].inputYaw;
 }
 
 /* Set player idx's input yaw (GetAngleToCamera reads it back). */
 void func_0203db0c(int idx, unsigned short val) {
-    data_020a1164[idx].inputYaw = val;
+    data_020a1154[idx].inputYaw = val;
 }
 
 /* Store the camera's input yaw in the input record (data_020a1040.inputYaw);
@@ -1018,18 +1002,9 @@ void func_0203dafc(int v) {
     data_020a1040.inputYaw = v;
 }
 
-/* data_020a1154 holds the four players' 0x24-byte input records (func_0203df40's
- * Rec). data_020a1162 is the first record's keys field (0x0e), so a view one
- * record long, starting there, steps to player idx's. */
-struct RecKeys {
-    unsigned short keys; /* Rec 0x0e -- the buttons held this frame */
-    char rest[0x24 - 2];
-};
-extern struct RecKeys data_020a1162[];
-
 /* daPly_c idx's held buttons (func_0203bc7c and the DSMT scene read them). */
 unsigned short func_0203dae4(int idx) {
-    return data_020a1162[idx].keys;
+    return data_020a1154[idx].keys;
 }
 
 /* The input record's frame counter (data_020a1040.frame, counted up by
@@ -1124,19 +1099,10 @@ int func_0203d974(void) {
     return data_020a0f10 != 0;
 }
 
-/* data_020a1154 holds the four players' 0x24-byte input records (func_0203df40's
- * Rec). data_020a1160 is the first record's flags field (0x0c), so a view one
- * record long, starting there, steps to player i's. */
-struct RecFlags {
-    unsigned short flags; /* Rec 0x0c */
-    unsigned char pad[0x22];
-};
-extern struct RecFlags data_020a1160[];
-
 /* Whether player i's record has flag 0x8000 (func_0203df40 sets it in each
  * frame's local record, data_020a1040). */
 int func_0203d950(int i) {
-    return (data_020a1160[i].flags & 0x8000) != 0;
+    return (data_020a1154[i].flags & 0x8000) != 0;
 }
 
 /* Drop the load request, flag 0x4000 of this console's input record

@@ -5,12 +5,8 @@
 
 /* One frame's input as the link exchanges it, 0x24 bytes. func_0203df40
  * samples this console's into data_020a1040 every frame; data_020a1154 holds
- * the four players' (func_0203db64 clears all 0x90 bytes). Moved here from
- * func_0203dabc and func_0203db64, which each viewed one field of it; the
- * layout is func_0203df40's. Its accessors that start at a field's own symbol
- * (data_020a1160 flags, data_020a1162 keys, data_020a1164 inputYaw,
- * data_020a1166 settings, data_020a1052 this console's settings) keep their
- * one-field views. Plain C types: the consumers are C. */
+ * the four players' (func_0203db64 clears all 0x90 bytes). The layout is
+ * func_0203df40's. Every user is in src/engine/link/unit0203d7b8.cpp. */
 typedef struct PlayerInputRecord {
     s32 frame;    /* 0x00 -- counted up once per frame by func_0203df40 */
     TPData touch; /* 0x04 -- the calibrated sample func_0203b9bc returns */
