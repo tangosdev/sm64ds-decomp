@@ -269,6 +269,7 @@ extern int atan2_hold_Player_15(Fix12i, Fix12i);
 extern int atan2_hold_Player_5(Fix12i y, Fix12i x);
 extern Fix12i atan2_hold_Player_6(Fix12i a, Fix12i b);
 extern int atan2_hold_Player_7(Fix12i a, int b);
+/* local extern: fx_trig.h's inline helpers shift this TU's @NNN count. */
 extern s16 FX_SinCosTable_[];
 extern signed char gCurrentSublevel;
 extern unsigned char data_0209f4ae[];

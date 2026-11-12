@@ -99,13 +99,19 @@ void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other);
 
 /* ---- arm9 / ov002 ---- */
 int AngleDiff(int, int);
+/* local extern: named parameters hold this TU's @NNN count. */
 unsigned char DecIfAbove0_Byte(unsigned char *p);
 int IsStarCollectedInCurLevel(int a);
+/* local extern: MtxStack.h's Matrix4x3* clashes with s32[12] here. */
 void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 a);
+/* local extern: MtxStack.h's Matrix4x3* clashes with s32[12] here. */
 void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 a);
+/* local extern: MtxStack.h's Matrix4x3* clashes with s32[12] here. */
 void Matrix4x3_ApplyInPlaceToRotationZ(void *m, s16 a);
 void Matrix4x3_ApplyInPlaceToScale(void *m, int x, int y, int z);
+/* local extern: MtxStack.h's Matrix4x3* clashes with s32[12] here. */
 void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
+/* local extern: MtxStack.h's Matrix4x3* clashes with s32[12] here. */
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 
 /* Every call below passes &mMovingMeshCollider. Named prototype parameters
@@ -132,9 +138,10 @@ extern u8 gCurrentStarId;
 extern signed char gCurrentSublevel;
 extern dCamera_c *gCamera;
 extern daPly_c *gPlayers[];
-/* local extern: math/MtxStack.h's helpers take Matrix4x3 *, and this file
-   hands them mShadowMatrix, which daBtn_c.h keeps as s32[12]. */
+
+/* local extern: MtxStack.h's Matrix4x3* clashes with s32[12] here. */
 extern Matrix4x3 data_020a0e68;
+
 /* The king's collision mesh takes Whomp's Fortress's own CLPS block. The
    relocation's target address is shared by 15 level overlays; residency
    leaves ov015 and ov026, and only ov015 holds a CLPS block there (ov026's

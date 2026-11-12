@@ -96,7 +96,9 @@ extern SharedFilePtr *data_ov102_0214d70c[];
 /* -- other modules -- */
 int  func_ov002_020ad660(char *self, char *clsn, char *model, int kind);
 int  func_ov002_020cc16c(void *player, void *actor);
+/* local extern: named parameters hold this TU's @NNN count. */
 u8   DecIfAbove0_Byte(u8 *counter);
+/* local extern: named parameters hold this TU's @NNN count. */
 u16  DecIfAbove0_Short(u16 *counter);
 void Matrix4x3_FromRotationY(void *m, int angle);
 int  SurfaceInfo_TestFlag0x20(int *si);
