@@ -674,22 +674,6 @@
       "evidence": "present on origin/main in src/unnamed/arm9/0201/func_02018cbc.c; folded into src/unnamed/arm9/0201/func_02018c00.c with the rest of its contiguous run. rombuild 106/106 exact and prepush_linkcheck VERIFIED for every folded function."
     },
     {
-      "path": "src/WmClearFifoRecvFlag.cpp",
-      "rule": "raw-offset",
-      "match": "(char*)msg+0x14",
-      "count": 2,
-      "reason": "WmReceiveFifo moved here verbatim from its own shard; the offset is carried unchanged because no struct for that object exists yet. Follow-up: replace with the field once the struct is reconstructed.",
-      "evidence": "present on origin/main in src/unnamed/arm9/0206/func_02061188.c; folded into src/unnamed/arm9/0206/func_0206116c.c with the rest of its contiguous run. rombuild 106/106 exact and prepush_linkcheck VERIFIED for every folded function."
-    },
-    {
-      "path": "src/WmClearFifoRecvFlag.cpp",
-      "rule": "raw-offset",
-      "match": "(char*)msg+0x1c",
-      "count": 1,
-      "reason": "WmReceiveFifo moved here verbatim from its own shard; the offset is carried unchanged because no struct for that object exists yet. Follow-up: replace with the field once the struct is reconstructed.",
-      "evidence": "present on origin/main in src/unnamed/arm9/0206/func_02061188.c; folded into src/unnamed/arm9/0206/func_0206116c.c with the rest of its contiguous run. rombuild 106/106 exact and prepush_linkcheck VERIFIED for every folded function."
-    },
-    {
       "path": "src/unnamed/ov002/func_ov002_020e6a78.cpp",
       "rule": "raw-offset",
       "match": "(char*)obj+0x24",

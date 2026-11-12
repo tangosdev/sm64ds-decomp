@@ -2605,11 +2605,6 @@
         "param:#2 const void *"
       ]
     },
-    "WM_CheckStateEx": {
-      "src/WM_Finish.c": [
-        "param:#2 int"
-      ]
-    },
     "_Z11UpdateAngleRssis": {
       "src/game/actors/d_a_demo.cpp": [
         "param:#1 void *"
@@ -8244,20 +8239,6 @@
     "data_020a4bdc": {
       "src/engine/model/Model4.cpp": [
         "return:unsigned int"
-      ]
-    },
-    "data_020a89ac": {
-      "src/WM_GetSystemWork.c": [
-        "return:int"
-      ],
-      "src/WM_SendCommand.cpp": [
-        "return:Ctx *"
-      ],
-      "src/WM_Finish.c": [
-        "return:int"
-      ],
-      "src/WM_Init.cpp": [
-        "return:int *"
       ]
     },
     "data_020a9570": {
@@ -15401,16 +15382,6 @@
     "OS_CreateThread": {
       "src/unnamed/arm9/0204/func_02042200.c": [
         "param:#2 void *"
-      ]
-    },
-    "OS_ReceiveMessage": {
-      "src/WM_SendCommand.cpp": [
-        "return:void"
-      ]
-    },
-    "OS_SendMessage": {
-      "src/WM_SendCommand.cpp": [
-        "return:void"
       ]
     },
     "OS_AllocFromArenaLo": {
