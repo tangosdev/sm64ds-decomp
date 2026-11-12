@@ -81,8 +81,7 @@ int daObjTbox_c::Behavior() {
 }
 
 int daObjTbox_c::Render() {
-    dExtSimpleModel_c *model = &mAnmModel;
-    model->Render(0);
+    mAnmModel.Render(0);
     return 1;
 }
 

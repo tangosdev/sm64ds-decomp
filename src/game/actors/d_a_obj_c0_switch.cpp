@@ -150,7 +150,7 @@ void daObjC0_Switch_c::OnGroundPounded(dActor_c &other) {
     mPressed = 1;
     for (dActor_c *p = dActor_c::FindWithActorID(0x22, 0); p != 0;
          p = dActor_c::FindWithActorID(0x22, p)) {
-        if (p != (dActor_c *)this) {
+        if (p != this) {
             if (((daObjC0_Switch_c *)p)->mPressed) {
                 data_0209caa0.file.flags2 |= 0x80000;
             }

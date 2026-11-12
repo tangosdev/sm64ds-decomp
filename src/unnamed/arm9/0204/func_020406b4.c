@@ -8,7 +8,7 @@ extern WMDataSet *data_020a0f80;
    On success store the received set's receivedBitmap in *out and return 1;
    else 0. */
 int func_020406b4(unsigned char *sendData, unsigned short *out) {
-    if (WM_StepDataSharing(data_020a0f74, sendData, data_020a0f80) != 0)
+    if (WM_StepDataSharing(data_020a0f74, sendData, data_020a0f80) != WM_ERRCODE_SUCCESS)
         return 0;
     *out = data_020a0f80->receivedBitmap;
     return 1;

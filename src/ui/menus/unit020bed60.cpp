@@ -68,7 +68,7 @@ extern Ov007MeshMaterial data_ov007_020d7cf8[2];
 
 extern Ov007MenuState *func_ov007_020b2cdc(void);
 extern Ov007Sprite *NumberSprite_Create(int index);
-extern void func_ov007_020bce70(int n, int m);
+extern void func_ov007_020bce70(short n, int frames);
 extern void func_ov007_020bfe4c(Ov007Camera *camera, int x, int y, int z, void *out);
 extern int func_ov007_020c1da0(int i);
 extern int func_ov007_020c30ac(Vector3 *arr, int count, void *target, int arg4, int *out);
@@ -252,7 +252,7 @@ void func_ov007_020bf304(void) {
  * blends the second material towards the colours of the current main state
  * and the first light towards grey in the file-select states 0xa / 0xb. */
 void func_ov007_020beeb0(void) {
-    int palette;
+    s16 palette;
     int diffuseTarget;
     int ambientTarget;
     Ov007Mesh *mesh;

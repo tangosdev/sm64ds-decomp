@@ -68,12 +68,6 @@ extern s16 data_ov065_0211c0c8[];
 extern s8 data_ov065_0211d26c[];
 extern CLPS_Block data_ov035_02112258;
 
-/* local extern: arm9 vector helpers and the dBgW stores; no shared header. */
-extern "C" {
-extern void MTX_MultVec43(Vector3 *src, Matrix4x3 *matrix, Vector3 *dst);
-extern void VEC_Add(Vector3 *left, Vector3 *right, Vector3 *dst);
-}
-
 /* CT_MECHA05 is the literal ROM registry ID. The g_profile spelling is a
  * lineage-supported reconstruction. The descriptor is at ov065:0x0211d290. */
 extern "C" daObjCtMecha05_c *daObjCtMecha05_c_classInit();

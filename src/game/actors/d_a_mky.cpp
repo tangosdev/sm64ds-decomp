@@ -283,7 +283,7 @@ int daMky_c::HandleContact() {
         return 0;
 
     if (this->mdCcAc_c.hitFlags & 0x1000) {
-        if (player->TryGrab(*(dActor_c *)this)) {
+        if (player->TryGrab(*this)) {
             this->mPlayer = player;
             if (IsUkikiThief(this))
                 ChangeState(3);

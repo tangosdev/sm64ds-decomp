@@ -20,7 +20,7 @@
  *   InitResources, Behavior and CleanupResources into them, so naming them
  *   means converting both leaves in the same change.
  * - func_02012694 (sound 0x1e at mCamSpacePosX), Matrix4x3_FromRotationXYZExt,
- *   Vec3_Sub, VEC_Mag and AngleDiff are arm9 C helpers no header declares yet.
+ *   Vec3_Sub and AngleDiff are arm9 C helpers no header declares yet.
  * - (Vector3 *)&mRestPosX / &mHitPosX: the class stores those triples as
  *   scalars (issue #2566).
  * - Abstract class: the leaves own classInit.
@@ -48,7 +48,6 @@ extern "C" {
 void func_02012694(unsigned int a, void *b);
 int AngleDiff(int a, int b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-int VEC_Mag(void *v);
 
 int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg);
 int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist);

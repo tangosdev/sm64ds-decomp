@@ -938,14 +938,14 @@ void daObjTatefuda_c::OnGroundPounded(dActor_c &other)
     if (other.param1 == 2 || ((daPly_c &)other).mIsMega != 0) {
         mPosY -= (mPoundsLeft * 0x2d) << 12;
         mPoundsLeft = 0;
-        ((dBgActor_c *)this)->UpdateModelPosAndRotY();
-        ((dBgActor_c *)this)->UpdateClsnPosAndRot();
+        UpdateModelPosAndRotY();
+        UpdateClsnPosAndRot();
         mRespawnDelay = 0x1e;
     } else {
         mPosY -= 0x2d000;
         mPoundsLeft -= 1;
-        ((dBgActor_c *)this)->UpdateModelPosAndRotY();
-        ((dBgActor_c *)this)->UpdateClsnPosAndRot();
+        UpdateModelPosAndRotY();
+        UpdateClsnPosAndRot();
         mPoundCooldown = 0xf;
         mRespawnDelay = 0x1e;
     }

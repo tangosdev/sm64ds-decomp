@@ -70,14 +70,13 @@ void func_ov007_020b40c0(void) {
 }
 
 void *func_ov007_020b3f20(int idx) {
-    void *new_var;
     if (idx == 0) {
         return 0;
     }
     if (data_ov007_02103370[idx] == 0) {
-        void *obj = data_ov007_02103368(data_ov007_020d7584[idx]);
-        data_ov007_02103370[idx] = obj;
-        obj = (new_var = data_ov007_02103370[idx]);
+        void *obj;
+        data_ov007_02103370[idx] = data_ov007_02103368(data_ov007_020d7584[idx]);
+        obj = data_ov007_02103370[idx];
         switch (idx) {
         case 0x26:
         case 0x27:

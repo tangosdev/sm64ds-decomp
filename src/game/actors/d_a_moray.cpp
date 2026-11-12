@@ -278,7 +278,7 @@ void daMoray_c::UpdateHitCylinders() {
 /* Retreat execute. When the timer set by the retreat init runs out, stops,
    turns back to the spawn angles and returns to den wait. */
 int daMoray_c::StateRetreatMain() {
-    if (*(u16 *)&this->mStateTimer == 0) {
+    if (this->mStateTimer == 0) {
         this->mHorzSpeed = 0;
         this->mPrevAngleX = this->mInitAngleX;
         this->mPrevAngleY = this->mInitAngleY;
@@ -654,7 +654,7 @@ s32 daMoray_c::Behavior()
     dActor_c *star;
     unsigned starUniqueID;
 
-    DecIfAbove0_Short((u16 *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     if (mState->execute)
         (this->*mState->execute)();
     UpdatePos(&mdCcAcPos_c1);

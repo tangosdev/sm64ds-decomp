@@ -17,7 +17,7 @@
 #include "msl/critical_regions.h"
 #include "msl/stdlib.h"
 #include "file_struc.h"
-#include "nitro/os/thread.h"
+#include "nitro/os/mutex.h"
 
 extern "C" {
 // HAND-ASM PRIMITIVE: `swp` atomic swap has no C equivalent under mwccarm, so asm is the source.
@@ -42,9 +42,6 @@ void __builtin_trap(void)
 extern "C" {
 #pragma push
 #pragma defer_codegen off
-extern int OS_TryLockMutex(void *p);
-extern void OS_LockMutex(void *p);
-extern void OS_UnlockMutex(void *p);
 int fflush(FILE *file);
 extern void _ExitProcess(void);
 

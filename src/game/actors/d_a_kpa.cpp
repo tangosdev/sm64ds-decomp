@@ -115,6 +115,7 @@ enum daKpa_c_AssetId {
 #include "ParticleIds.h"
 #include "LevelRng.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/MtxStack.h"
 
 /* Names for the numbers this file uses. A name describes what the value does
  * at its use sites here; it is not a recovered symbol. */
@@ -303,12 +304,6 @@ extern s16 data_ov060_0211a4e0[];
 extern s16 func_02010844(void *unused, void *v, s16 angle);
 /* local extern: the Vector3 spelling math/CalcLib.h declares. */
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-extern void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 angY);
-extern void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, s16 angX);
-extern void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *m, s16 angZ);
-/* local extern: MtxStack.h declares (a, b, out); the ROM passes dst in r0. */
-extern void MTX_Concat43(void *dst, void *a, void *b);
 extern int *Vec3_LslInPlace(void *v, int sh);
 extern Matrix4x3 data_020a0e68;
 /* Unused; the named parameters pin this TU's @NNN counter (see the header). */
@@ -850,7 +845,7 @@ skip_angles:
     this->mFootPosBX = zero;
     this->mFootPosBY = zero;
     this->mFootPosBZ = zero;
-    MTX_Concat43((char *)&this->mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(&this->mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
     this->mFootPosBX = data_020a0e68.m[9];
     this->mFootPosBY = data_020a0e68.m[10];
     this->mFootPosBZ = data_020a0e68.m[11];
@@ -860,7 +855,7 @@ skip_angles:
     this->mFootPosAY = zero;
     this->mFootPosAZ = zero;
     data_020a0e68 = saved;
-    MTX_Concat43((char *)&this->mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(&this->mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
     this->mFootPosAX = data_020a0e68.m[9];
     this->mFootPosAY = data_020a0e68.m[10];
     this->mFootPosAZ = data_020a0e68.m[11];
@@ -1923,7 +1918,7 @@ void daKpa_c::ActThrown() {
         v.x = xx;
         v.y = yy;
         v.z = zz;
-        rg.SetObjAndPos(v, (dActor_c*)this);
+        rg.SetObjAndPos(v, this);
         if (rg.DetectClsn() != 0) {
             int hy = rg.clsnY;
             if (hy >= this->mHomePosY - 0x64000)
@@ -2030,7 +2025,7 @@ void daKpa_c::ActJumpOntoStage() {
             pos.y = py;
             pos.z = pz;
         }
-        rc.SetObjAndPos(pos, (dActor_c *)this);
+        rc.SetObjAndPos(pos, this);
         if (rc.DetectClsn()) {
             ground = rc.clsnY;
             /* GetClsnID reads the hit record, dBgCh_Gnd's dBgPi base at +0x10. */

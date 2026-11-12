@@ -59,6 +59,7 @@ enum daSnowman_c_AssetId {
 #include "math/Approach.h"
 #include "LevelRng.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/MtxStack.h"
 
 namespace cstd {
 s16 atan2(s32, s32);
@@ -101,19 +102,12 @@ extern Fix12i Vec3_Dist(const struct Vector3 *a, const struct Vector3 *b);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);
 extern void VEC_Subtract(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
-extern void MTX_Concat43(void *dst, void *a, void *b);
-extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 extern struct Matrix4x3 data_020a0e68;
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int b, int c, void *v16, int e);
 extern int atan2_hold_d_a_snowman_1(int a, int b);
-extern void Matrix4x3_FromRotationY(void *m, int ang);
 extern int Vec3_HorzLen(void *v);
-extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
-extern void MTX_MultVec43(Vector3 *a, Matrix4x3 *m, Vector3 *b);
 }
 
 /* File handles the static initializer constructs. The two models use

@@ -88,10 +88,9 @@ extern void DecompressLZ16(const void *src, void *dst);
 extern void *LoadFile(int handle);
 extern void Deallocate(void *p);
 extern void Ov004_Deallocate(void *p);
-extern void GX_LoadBG0Scr(const void *src, int offset, int count);
+/* local extern: nitro/gx/gx_load.h leaves GX_LoadBG3Scr out until
+ * decl_common.h's non-const spelling of it goes. */
 extern void GX_LoadBG3Scr(void *a, u32 b, u32 c);
-extern void GX_LoadBG2Scr(const void *a, u32 b, u32 c);
-extern void GXS_LoadBG2Scr(const void *a, u32 b, u32 c);
 
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
