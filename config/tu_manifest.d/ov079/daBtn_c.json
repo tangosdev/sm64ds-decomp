@@ -522,6 +522,7 @@
     }
   ],
   "notes": [
+    "@NNN re-key 2026-11-12: dActor_c's member declarations and the removed TU-local externs shifted this TU's compiler-local numbering by -3; defined_symbol_renames follows the compiled object.",
     "Hand-assembled: tubuild create generated the 34 class-run members; the two zero-gap factories were folded in by hand, following ov079 d_a_klr.cpp. The shadow was then rewritten by hand (the generated file's conflicting extern views were unified).",
     "Folded __sinit_ov079_02127618: the sixteen SharedFilePtr-flavored resource handles, their sixteen compiler-generated registration nodes and the twelve-entry StateFunc table now emit from this TU.",
     "The bss claim swallows two overlay-ambiguous phantom rows, data_ov079_02128174 (interior to the eight-byte handle data_ov079_02128170) and data_ov079_02128290 (interior to the twelve-entry StateFunc table data_ov079_02128280): both existed only to name the ARM9 load relocs at 0x02090b68/0x02090d30 (module:overlays(79,80)), and the linked object cannot carry a symbol inside another object's storage. Those reloc words are baked literals inside the gap-owned ARM9 region, so per the landed ov014/daWanwan_c fold the reloc rows are dropped together with the phantom symbol rows; the arm9 module is byte-identical and dsd check symbols reports no new errors.",
@@ -1975,82 +1976,82 @@
   "externalized_output": [],
   "defined_symbol_renames": [
     {
-      "from": "@672",
+      "from": "@669",
       "to": "@686",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates. Re-keyed from @736 to @733 after the dBgW_Kc ITCM accessors became members (three named-parameter local externs removed; measured). Re-keyed from @733 to @664 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @664 to @672 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
-      "from": "@673",
+      "from": "@670",
       "to": "@687",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates. Re-keyed from @737 to @734 after the dBgW_Kc ITCM accessors became members (three named-parameter local externs removed; measured). Re-keyed from @734 to @665 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @665 to @673 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
-      "from": "@674",
+      "from": "@671",
       "to": "@688",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates. Re-keyed from @738 to @735 after the dBgW_Kc ITCM accessors became members (three named-parameter local externs removed; measured). Re-keyed from @735 to @666 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @666 to @674 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
-      "from": "@675",
+      "from": "@672",
       "to": "@689",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates. Re-keyed from @739 to @736 after the dBgW_Kc ITCM accessors became members (three named-parameter local externs removed; measured). Re-keyed from @736 to @667 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @667 to @675 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
-      "from": "@676",
+      "from": "@673",
       "to": "@640",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates. Re-keyed from @740 to @737 after the dBgW_Kc ITCM accessors became members (three named-parameter local externs removed; measured). Re-keyed from @737 to @668 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @668 to @676 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
-      "from": "@677",
+      "from": "@674",
       "to": "@691",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates. Re-keyed from @741 to @738 after the dBgW_Kc ITCM accessors became members (three named-parameter local externs removed; measured). Re-keyed from @738 to @669 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @669 to @677 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
-      "from": "@678",
+      "from": "@675",
       "to": "@641",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates. Re-keyed from @742 to @739 after the dBgW_Kc ITCM accessors became members (three named-parameter local externs removed; measured). Re-keyed from @739 to @670 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @670 to @678 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
-      "from": "@679",
+      "from": "@676",
       "to": "@693",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates. Re-keyed from @743 to @740 after the dBgW_Kc ITCM accessors became members (three named-parameter local externs removed; measured). Re-keyed from @740 to @671 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @671 to @679 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
-      "from": "@680",
+      "from": "@677",
       "to": "@694",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates. Re-keyed from @744 to @741 after the dBgW_Kc ITCM accessors became members (three named-parameter local externs removed; measured). Re-keyed from @741 to @672 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @672 to @680 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
-      "from": "@681",
+      "from": "@678",
       "to": "@695",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates. Re-keyed from @745 to @742 after the dBgW_Kc ITCM accessors became members (three named-parameter local externs removed; measured). Re-keyed from @742 to @673 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @673 to @681 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
-      "from": "@682",
+      "from": "@679",
       "to": "@642",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates. Re-keyed from @746 to @743 after the dBgW_Kc ITCM accessors became members (three named-parameter local externs removed; measured). Re-keyed from @743 to @674 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @674 to @682 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
-      "from": "@683",
+      "from": "@680",
       "to": "@697",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates. Re-keyed from @747 to @744 after the dBgW_Kc ITCM accessors became members (three named-parameter local externs removed; measured). Re-keyed from @744 to @675 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @675 to @683 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
-      "from": "@684",
+      "from": "@681",
       "to": "@698",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates. Re-keyed from @748 to @745 after the dBgW_Kc ITCM accessors became members (three named-parameter local externs removed; measured). Re-keyed from @745 to @676 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @676 to @684 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
-      "from": "@685",
+      "from": "@682",
       "to": "@699",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates. Re-keyed from @749 to @746 after the dBgW_Kc ITCM accessors became members (three named-parameter local externs removed; measured). Re-keyed from @746 to @677 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @677 to @685 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
-      "from": "@686",
+      "from": "@683",
       "to": "@643",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates. Re-keyed from @750 to @747 after the dBgW_Kc ITCM accessors became members (three named-parameter local externs removed; measured). Re-keyed from @747 to @678 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @678 to @686 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
-      "from": "@687",
+      "from": "@684",
       "to": "@644",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates. Re-keyed from @751 to @748 after the dBgW_Kc ITCM accessors became members (three named-parameter local externs removed; measured). Re-keyed from @748 to @679 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @679 to @687 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     }
