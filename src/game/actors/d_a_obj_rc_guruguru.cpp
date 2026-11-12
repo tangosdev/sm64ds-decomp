@@ -29,9 +29,14 @@ enum d_a_obj_rc_guruguru_AssetId { ASSET_RC_GURUGURU_BMD = 0x06a4, ASSET_RC_GURU
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 
-/* [0] the BMD's SharedFilePtr (0x021140ac), [1] the KCL's (0x021140b4),
-   [2] the CLPS block dBgW_KcMbg::SetFile is handed (0x02112ac8). */
-extern void *data_ov036_02113d78[];
+/* The BMD's SharedFilePtr (0x021140ac), the KCL's (0x021140b4) and the
+   CLPS block dBgW_KcMbg::SetFile is handed (0x02112ac8). */
+struct RcGuruguruAssets {
+    SharedFilePtr *modelFile;
+    SharedFilePtr *clsnFile;
+    CLPS_Block *clps;
+};
+extern RcGuruguruAssets data_ov036_02113d78;
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
  * off screen. This int-returning predicate is what makes the ROM
@@ -60,14 +65,12 @@ extern "C" daObjRc_Guruguru_c *daObjRc_Guruguru_c_classInit() {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 s32 daObjRc_Guruguru_c::InitResources() {
-    mModel.SetFile(
-        dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov036_02113d78[0]), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(*data_ov036_02113d78.modelFile), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    void *kcl = dBgW_Kc::LoadFile(*(SharedFilePtr *)data_ov036_02113d78[1]);
-    mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat, 0x1000, mAngleY,
-                          *(CLPS_Block *)data_ov036_02113d78[2]);
+    void *kcl = dBgW_Kc::LoadFile(*data_ov036_02113d78.clsnFile);
+    mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat, 0x1000, mAngleY, *data_ov036_02113d78.clps);
 
     /* The mesh follows the actor's position AND angles -- this platform turns,
        so the collision has to turn with it. */
@@ -114,8 +117,8 @@ s32 daObjRc_Guruguru_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
 
-    ((SharedFilePtr *)data_ov036_02113d78[0])->Release();
-    ((SharedFilePtr *)data_ov036_02113d78[1])->Release();
+    data_ov036_02113d78.modelFile->Release();
+    data_ov036_02113d78.clsnFile->Release();
     return 1;
 }
 

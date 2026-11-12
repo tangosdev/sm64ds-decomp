@@ -52,7 +52,6 @@ enum daObjSimpleBg_c_AssetId {
 #include "decl_common.h"
 #include "daObjSimpleBg_c.h"
 #include "SharedFilePtr.h"
-#include "private/clps_row.h"
 
 /* Six model handles construct through func_02017acc and destroy through
  * func_02017ab4. Six collision handles construct through func_02017b4c and
@@ -69,14 +68,16 @@ struct SimpleBgClsnFilePtr : SharedFilePtr {
 typedef char SimpleBgModelFilePtr_size_must_be_8[sizeof(SimpleBgModelFilePtr) == 8 ? 1 : -1];
 typedef char SimpleBgClsnFilePtr_size_must_be_8[sizeof(SimpleBgClsnFilePtr) == 8 ? 1 : -1];
 
-struct FileRow {
-    SharedFilePtr *file;
-    u8 pad[8];
+/* One row of the table at 0x0214e188, indexed by mVariant. */
+struct SimpleBgAssets {
+    SharedFilePtr *modelFile;
+    SharedFilePtr *clsnFile;
+    CLPS_Block *clps;
 };
-typedef char FileRow_size_must_be_0xc[sizeof(FileRow) == 0xc ? 1 : -1];
+typedef char SimpleBgAssets_size_must_be_0xc[sizeof(SimpleBgAssets) == 0xc ? 1 : -1];
 
-extern FileRow data_ov102_0214e188[];
-extern FileRow data_ov102_0214e18c[];
+/* The model, KCL and CLPS for each variant. */
+extern SimpleBgAssets data_ov102_0214e188[];
 extern s8 gCurrentSublevel;
 extern u8 gCurrentStarId;
 extern u8 gGameMode;
@@ -103,8 +104,8 @@ daObjSimpleBg_c::~daObjSimpleBg_c() {}
 int daObjSimpleBg_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
-    data_ov102_0214e188[mVariant].file->Release();
-    data_ov102_0214e18c[mVariant].file->Release();
+    data_ov102_0214e188[mVariant].modelFile->Release();
+    data_ov102_0214e188[mVariant].clsnFile->Release();
     return 1;
 }
 
@@ -170,19 +171,18 @@ int daObjSimpleBg_c::InitResources() {
     }
 
     idx = mVariant;
-    mModel.SetFile(dExtSimpleModel_c::LoadFile(*data_ov102_0214e188[idx].file), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(*data_ov102_0214e188[idx].modelFile), 1,
+                   -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
     idx = mVariant;
     if (idx == 0 || idx == 2) {
-        KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov102_0214e18c[idx].file);
-        mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY,
-                              *((ClpsRow *)data_ov102_0214e190)[idx].block);
+        KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov102_0214e188[idx].clsnFile);
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, *data_ov102_0214e188[idx].clps);
     } else {
-        KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov102_0214e18c[idx].file);
-        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY,
-                              *((ClpsRow *)data_ov102_0214e190)[idx].block);
+        KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov102_0214e188[idx].clsnFile);
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, *data_ov102_0214e188[idx].clps);
     }
 
     if (IsBkTower(this) && gCurrentSublevel == 7) {

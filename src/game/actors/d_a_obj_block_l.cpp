@@ -11,8 +11,8 @@
  *   dBgActor_c::IsClsnInRangeOnScreen and dBgW_KcMbg::SetFile are member
  *   calls through their headers, which spell the Fix12 parameters as
  *   Fix12i, a plain s32 (notes/mwccarm-codegen.md 6az).
- * - the BigBrickBlockFileRow resource table stays file-local: no shared
- *   header owns that 0xc-stride row yet (ClpsRow is private/clps_row.h).
+ * - the BigBrickBlockAssets resource table stays file-local: no shared
+ *   header owns that 0xc row.
  * - linkedActor + 0x3b0 is an unnamed byte on the mega character
  *   (actor 0x121); no header names it.
  * - gCurrentSublevel (the level) and gCurrentStarId (the selected star)
@@ -31,13 +31,14 @@
 #include "Event.h"
 #include "daObjBlockItemTag_c.h"
 #include "Particle__System.h"
-#include "private/clps_row.h"
 #include "nitro/fx/fx.h"
 
-/* File-local resource rows (see the header note above). */
-struct BigBrickBlockFileRow {
-    SharedFilePtr *file;
-    u8 pad[8];
+/* One row of the table at 0x02108ab0, indexed by mVariant: the model,
+ * KCL and CLPS (see the header note above). */
+struct BigBrickBlockAssets {
+    SharedFilePtr *modelFile;
+    SharedFilePtr *clsnFile;
+    CLPS_Block *clps;
 };
 
 /* POD spelling of Vector3's 0x0c bytes: with a user-declared constructor on
@@ -57,11 +58,9 @@ struct daObjBlockLClsnFile : SharedFilePtr {
     ~daObjBlockLClsnFile();
 };
 
-extern BigBrickBlockFileRow data_ov002_02108ab0[];
-extern BigBrickBlockFileRow data_ov002_02108ab4[];
+extern BigBrickBlockAssets data_ov002_02108ab0[];
 extern Vector3 data_ov002_021089e0;
-extern ClpsRow data_ov002_02108ab8[]; /* CLPS blocks,       0xc stride */
-extern s8 gCurrentSublevel;           /* current level */
+extern s8 gCurrentSublevel; /* current level */
 extern u8 gCurrentStarId;
 
 /* local extern: dBgW setters and a coined star helper with no shared header. */
@@ -298,8 +297,8 @@ void daObjBlockL_c::Kill() {
 int daObjBlockL_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
-    data_ov002_02108ab0[mVariant].file->Release();
-    data_ov002_02108ab4[mVariant].file->Release();
+    data_ov002_02108ab0[mVariant].modelFile->Release();
+    data_ov002_02108ab0[mVariant].clsnFile->Release();
     return 1;
 }
 
@@ -401,8 +400,8 @@ int daObjBlockL_c::InitResources() {
         break;
     }
 
-    mModel.SetFile(dExtSimpleModel_c::LoadFile(*data_ov002_02108ab0[mVariant].file), 1,
-                   -1);
+    mModel.SetFile(
+        dExtSimpleModel_c::LoadFile(*data_ov002_02108ab0[mVariant].modelFile), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
@@ -419,21 +418,15 @@ int daObjBlockL_c::InitResources() {
     idx = mVariant;
     if (idx <= 1) {
         if (IsActorID(this, 0x10)) {
-            KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov002_02108ab4[idx].file);
-            ((dBgW_KcMbg *)(&mMeshCollider))
-                ->dBgW_KcMbg::SetFile(kcl, *(&mClsnMat), 0x1800, mAngleY,
-                                      *(data_ov002_02108ab8[idx].block));
+            KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov002_02108ab0[idx].clsnFile);
+            mMeshCollider.SetFile(kcl, mClsnMat, 0x1800, mAngleY, *data_ov002_02108ab0[idx].clps);
         } else {
-            KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov002_02108ab4[idx].file);
-            ((dBgW_KcMbg *)(&mMeshCollider))
-                ->dBgW_KcMbg::SetFile(kcl, *(&mClsnMat), 0x1000, mAngleY,
-                                      *(data_ov002_02108ab8[idx].block));
+            KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov002_02108ab0[idx].clsnFile);
+            mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, *data_ov002_02108ab0[idx].clps);
         }
     } else {
-        KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov002_02108ab4[idx].file);
-        ((dBgW_KcMbg *)(&mMeshCollider))
-            ->dBgW_KcMbg::SetFile(kcl, *(&mClsnMat), 0x199, mAngleY,
-                                  *(data_ov002_02108ab8[idx].block));
+        KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov002_02108ab0[idx].clsnFile);
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, *data_ov002_02108ab0[idx].clps);
     }
 
     if (IsActorID(this, 0x13))
