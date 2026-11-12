@@ -120,9 +120,7 @@ s32 daObjFl_Ring_c::InitResources() {
     UpdateClsnPosAndRot();
 
     void *k = dBgW_Kc::LoadFile(*data_ov022_02113cc8.mClsnFile);
-    ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile((KCL_File *)(k), mClsnMat, 0x199, mAngleY,
-                              *data_ov022_02113cc8.mClps);
+    mMeshCollider.SetFile((KCL_File *)(k), mClsnMat, 0x199, mAngleY, *data_ov022_02113cc8.mClps);
 
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mMeshCollider.SetStoodOnCallback((::StoodOnCallback)StoodOnCallback);
