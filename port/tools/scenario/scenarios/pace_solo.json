@@ -1,0 +1,10 @@
+{
+  "about": "HITCH1: one Mario standing in Bob-omb Battlefield for the frame pacing summary ([pace] lines)",
+  "mode": "solo",
+  "save": {"preset": "early"},
+  "proof": {"secs": 130, "shot_ms": 100000},
+  "env": {"SM64DS_PACE_LOG": "1"},
+  "players": [
+    {"character": "mario", "level": 6}
+  ]
+}
