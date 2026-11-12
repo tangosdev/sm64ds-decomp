@@ -109,8 +109,7 @@ BOOL FSi_LoadOverlayInfoCore(FSOverlayInfo *p_ovi, MIProcessor target, FSOverlay
     } else {
         FSFile file[1];
         FS_InitFile(file);
-        (void)FS_OpenFileDirect(file, p_arc, pr->offset + pos, pr->offset + pr->length,
-                                (u32)~0);
+        (void)FS_OpenFileDirect(file, p_arc, pr->offset + pos, pr->offset + pr->length, (u32)~0);
         (void)FS_ReadFile(file, p_ovi, sizeof(FSOverlayInfoHeader));
         (void)FS_CloseFile(file);
         p_ovi->target = target;
