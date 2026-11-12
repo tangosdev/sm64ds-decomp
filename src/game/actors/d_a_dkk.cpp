@@ -42,8 +42,8 @@ enum daDkk_c_AssetId { ASSET_DONKAKU_BMD = 0x02dc, ASSET_DONKAKU_KCL = 0x02dd };
 
 /* The model handle constructs through func_02017acc and destroys through
  * func_02017ab4. The collision handle constructs through func_02017b4c and
- * destroys through SharedFilePtr_Destruct_Clsn. data_ov025_02113814 stays
- * the file table decl_common.h already declares. */
+ * destroys through SharedFilePtr_Destruct_Clsn. data_ov025_02113814 is
+ * the file table (DsnBaseFileTable, daDsnBase_c.h). */
 struct DkkModelFilePtr : SharedFilePtr {
     DkkModelFilePtr(unsigned int fileId);
     ~DkkModelFilePtr();
@@ -55,8 +55,9 @@ struct DkkClsnFileHandler : SharedFilePtr {
 typedef char DkkModelFilePtr_size_must_be_8[sizeof(DkkModelFilePtr) == 8 ? 1 : -1];
 typedef char DkkClsnFileHandler_size_must_be_8[sizeof(DkkClsnFileHandler) == 8 ? 1 : -1];
 
-/* decl_common.h declares data_ov025_02113814; Sound.h declares
+/* Grindel's resource table; overlay .data owns the bytes. Sound.h declares
  * func_0201267c. */
+extern DsnBaseFileTable data_ov025_02113814;
 
 /* DONKAKU factory. The `new` is the whole body. */
 extern "C" daDkk_c *daDkk_c_classInit() {
@@ -66,7 +67,7 @@ extern "C" daDkk_c *daDkk_c_classInit() {
 /* Stores the file table, then either starts already airborne or raycasts
  * up for the ceiling and lowers mRiseY, the top of the rise, under it. */
 int daDkk_c::InitResources() {
-    mFileTable = (s32)data_ov025_02113814;
+    mFileTable = &data_ov025_02113814;
     int r = Init();
     if (param1 & 1) {
         mState = 6;

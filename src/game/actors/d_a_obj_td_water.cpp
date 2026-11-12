@@ -26,15 +26,6 @@
  * - S14: g_profile_TD_WATER stays outside the licensed .text.
  * - common.h first (dBgActor_c.h must see common.h ahead of dExtSimpleModel_c.h).
  * - no daPly_c.h / dCamera_c.h.
- *
- * Consolidated from these legacy one-function sources (ROM address order):
- *   [0] 0x02112698  src/_ZN14daObjTdWater_cD1Ev.cpp
- *   [1] 0x021126e4  src/_ZN14daObjTdWater_cD0Ev.cpp
- *   [2] 0x02112744  src/_ZN14daObjTdWater_c16CleanupResourcesEv.cpp
- *   [3] 0x02112788  src/_ZN14daObjTdWater_c6RenderEv.cpp
- *   [4] 0x021127bc  src/_ZN14daObjTdWater_c8BehaviorEv.cpp
- *   [5] 0x021127f0  src/_ZN14daObjTdWater_c13InitResourcesEv.cpp
- *   [6] 0x021128b8  src/daObjTdWater_c_classInit.c
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */

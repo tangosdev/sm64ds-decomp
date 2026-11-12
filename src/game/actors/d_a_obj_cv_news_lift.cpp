@@ -203,17 +203,15 @@ s32 daObjCvNewsLift_c::InitResources() {
     UpdateModelTransforms();
     UpdateClsnTransforms();
 
-    ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile((KCL_File *)gCvNewsLiftCollisionFile.filePtr, mClsnMat, 0x199,
-                              mAngleY, data_ov021_02113a60);
+    mMeshCollider.SetFile((KCL_File *)gCvNewsLiftCollisionFile.filePtr, mClsnMat, 0x199, mAngleY,
+                          data_ov021_02113a60);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback(&MainMeshCallback);
     mMeshCollider.Enable(this);
 
     for (int i = 0; i < 4; i++) {
-        ((dBgW_KcMbg *)(&mPlatformColliders[i]))
-            ->dBgW_KcMbg::SetFile((KCL_File *)gCvLiftButtonCollisionFile.filePtr, mPlatformMats[i],
-                                  0x199, mAngleY, data_ov021_02113a80);
+        mPlatformColliders[i].SetFile((KCL_File *)gCvLiftButtonCollisionFile.filePtr,
+                                      mPlatformMats[i], 0x199, mAngleY, data_ov021_02113a80);
         mPlatformColliders[i].SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     }
 

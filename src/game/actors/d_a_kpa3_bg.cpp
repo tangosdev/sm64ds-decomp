@@ -30,8 +30,6 @@
  * - StateStart, StateCheck and StateFall take N64's names for the same
  *   actions (falling_bowser_plat_act_start/check/fall), in the State*
  *   spelling this tree's single-handler state tables use.
- * - dBgW_KcMbg::SetFile is called through its mangled name, with the
- *   Fix12<int> argument passed as a raw int.
  * - dBgW::SetBeforeClsnCallback stores dBgW::UpdatePosWithTransform.
  *   dBgW::SetStoodOnCallback stores the touch veneer StoodOnCallback.
  * - data_ov060_02119564 is the ten-row (x, z, angle) table. Its pool
@@ -128,9 +126,8 @@ s32 daKpa3Bg_c::InitResources()
     CopyTexPalFromLevelModel(&mModel.data);
     data_0208e738 = 1;
     UpdateClsnPosAndRot();
-    ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(*data_ov060_0211953c[mVariant]),
-                              mClsnMat, 0x1000, mAngleY, *data_ov060_0211a980[mVariant]);
+    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*data_ov060_0211953c[mVariant]), mClsnMat,
+                          0x1000, mAngleY, *data_ov060_0211a980[mVariant]);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
     mMeshCollider.Enable(this);

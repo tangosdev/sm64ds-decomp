@@ -79,7 +79,7 @@ struct HasiraCollisionFile : SharedFilePtr {
  * dBgW_KcMbg::SetFile is handed (ov016 .data). */
 extern HasiraModelFile RockPillar_ModelFile;
 extern HasiraCollisionFile RockPillar_ClsnFile;
-extern char data_ov016_02113cac[];
+extern CLPS_Block data_ov016_02113cac;
 
 /* local extern: no shared header declares these. */
 extern "C" {
@@ -105,8 +105,7 @@ s32 daObjKi_Hasira_c::InitResources() {
     UpdateClsnPosAndRot();
 
     char *k = dBgW_Kc::LoadFile(RockPillar_ClsnFile);
-    mMeshCollider.SetFile((KCL_File *)k, mClsnMat, 0x199, mAngleY,
-                          *(CLPS_Block *)data_ov016_02113cac);
+    mMeshCollider.SetFile((KCL_File *)k, mClsnMat, 0x199, mAngleY, data_ov016_02113cac);
 
     Spawn(0x3b, 0, mPos, 0, mAreaId, -1);
     return 1;
