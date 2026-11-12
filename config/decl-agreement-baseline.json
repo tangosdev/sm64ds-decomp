@@ -7229,11 +7229,16 @@
       "include/decl_common.h": [
         "return:unsigned char"
       ]
+
     },
     "gReturnSublevel": {
       "src/_ZN7daPly_c13InitResourcesEv.cpp": [
         "return:unsigned char"
+      ],
+      "src/game/stages/d_s_stage_methods.cpp": [
+        "return:signed char"
       ]
+
     },
     "data_02092128": {
       "src/game/stages/LevelObjects.cpp": [
@@ -7890,7 +7895,11 @@
       ],
       "src/game/actors/d_a_demo.cpp": [
         "return:void * []"
+      ],
+      "src/game/player/d_a_ply_methods.cpp": [
+        "return:char * []"
       ]
+
     },
     "data_0209f3a4": {
       "src/ui/hud/d_map.cpp": [
@@ -9435,7 +9444,11 @@
       ],
       "src/unnamed/ov002/func_ov002_020e5948.c": [
         "return:struct OneUpLogoModelFile"
+      ],
+      "src/game/player/d_a_ply_methods.cpp": [
+        "return:SharedFilePtr"
       ]
+
     },
     "data_ov002_02110ac4": {
       "src/unnamed/ov002/__sinit_ov002_02107304.c": [
@@ -12928,12 +12941,20 @@
     "func_02011ee4": {
       "src/unnamed/ov002/func_ov002_020e6350.c": [
         "param:#1 int"
+      ],
+      "src/game/player/d_a_ply_methods.cpp": [
+        "param:#1 int"
       ]
+
     },
     "func_02011f7c": {
       "src/unnamed/ov002/func_ov002_020e6330.c": [
         "param:#1 int"
+      ],
+      "src/game/player/d_a_ply_methods.cpp": [
+        "param:#1 int"
       ]
+
     },
     "func_02012120": {
       "src/unnamed/ov002/func_ov002_020e1c20.c": [

@@ -424,6 +424,22 @@ extern u32 PlayerNewHold15(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, c
                            void *callback);
 extern void PlayerPlayLongHold_burnfire(unsigned int handle, unsigned int id, unsigned int vol,
                                         const void *vec, unsigned int flags);
+extern char *gPlayers[];
+extern u32 PlayerNewHold16(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+                           void *callback);
+extern int func_02012120(unsigned int p0, unsigned int p1, unsigned int p2, const Vector3 *p3,
+                         short p4);
+extern SharedFilePtr data_ov002_02110aa4;
+extern void MulMat4x3Mat4x3(void *a, void *b, void *c);
+/* local extern: MtxStack's named parameters take an @NNN in every includer. */
+extern void Matrix4x3_ApplyInPlaceToTranslation(struct Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z);
+/* local extern: MtxStack's named parameters take an @NNN in every includer. */
+extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
+/* local extern: including CalcLib.h renumbers this TU's @NNN aliases. */
+extern unsigned short DecIfAbove0_Short(unsigned short *p);
+extern u8 gReturnSublevel;
+extern void func_02011f7c(int a);
+extern int func_02011ee4(int x);
 }
 extern u32 PlayerNewHold2(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                           void *callback);
@@ -17139,7 +17155,6 @@ int daPly_c::St_StomachSlide_Init() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_Dive_Init() {
-    extern int RandomIntInternal(int* seed);
     extern int data_ov002_0210e160;
     Sound::PlayBank0(0x11, mCamSpacePos);
     unsigned int r = (unsigned int)RandomIntInternal(&data_ov002_0210e160);
@@ -17275,7 +17290,6 @@ int daPly_c::St_PunchKick_Main() {
 
 extern "C" {
 void daPly_c::func_ov002_020dd5ec() {
-    extern int RandomIntInternal(int *seed);
     extern u16 data_0209f49c[];
     extern int data_ov002_0210e160;
     int model;
@@ -17382,7 +17396,6 @@ extern "C" {
 void daPly_c::func_ov002_020dd908() {
     extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
     extern unsigned char gGameMode;
-    extern char *gPlayers[];
     int i;
     Vector3 v;
     if ((int)(gGameMode == 1) == 0)
@@ -18489,8 +18502,6 @@ void func_ov002_020df8f0(char* c)
 #define c ((char *)this)
 extern "C" {
 int daPly_c::St_Fly_Main() {
-    extern u32 PlayerNewHold16(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
-                               void *callback);
     extern void MTX_MultVec43(void *dst, void *src, void *out);
     extern void Vec3_MulScalarInPlace(s32 *v, s32 s);
     extern int func_02012194(char *, int a1, int a2, int a3, int s0, void *s1, int s2);
@@ -19458,8 +19469,6 @@ int daPly_c::St_Fall_Init() {
 
 extern "C" {
 void daPly_c::func_ov002_020e1c20() {
-    extern int func_02012120(unsigned int p0, unsigned int p1, unsigned int p2, const Vector3 *p3,
-                             short p4);
     extern unsigned char data_0209f49c[];
     if ((mClsnFlags) & 0xc) {
         ChangeState(data_ov002_021101b4);
@@ -19518,8 +19527,6 @@ void daPly_c::func_ov002_020e1c20() {
 
 extern "C" {
 void func_ov002_020e1e70(char *c) {
-    extern int func_02012120(unsigned int p0, unsigned int p1, unsigned int p2, const Vector3 *p3,
-                             short p4);
     extern unsigned char data_0209f49c[];
     daPly_c *player = (daPly_c *)c;
     player->mVertAccel = -0x4000;
@@ -19742,11 +19749,9 @@ extern "C" void func_ov002_020e25d4(char *c)
 
 extern "C" {
 inline int inline_fn(int *arg0) {
-    extern int RandomIntInternal(int *seed);
     return RandomIntInternal(arg0);
 }
 void daPly_c::func_ov002_020e25f0(int a) {
-    extern int RandomIntInternal(int *seed);
     extern int data_ov002_0210e160[];
     if ((mIsMetal) == 0) {
         Sound::PlayBank0((mGroundSoundType) + 0x30, mCamSpacePos);
@@ -20226,7 +20231,6 @@ int daPly_c::CleanupResources() {
     extern u8 gGameMode;
     extern SharedFilePtr data_ov002_0210e3d8;
     extern SharedFilePtr data_ov002_0210e750;
-    extern SharedFilePtr data_ov002_02110aa4;
     extern SharedFilePtr data_ov002_0210eb88;
     int i;
     u32 b;
@@ -20622,11 +20626,9 @@ extern "C" void func_ov002_020e3e00(dExtSimpleModel_c *obj, Vector3 *vec, unsign
 extern "C" {
 int daPly_c::func_ov002_020e3f90() {
     extern void ApproachAngle(short* v, int target, int a, int b, int c);
-    extern void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *, int x, int y, int z);
     extern void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *, int a);
     extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *, int a);
     extern void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *, int a);
-    extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *, int x, int y, int z);
     extern Matrix4x3 data_020a0e68;
     struct S { short angs[3]; volatile int v[3]; int tgt[3]; } s;
     int b;
@@ -20746,7 +20748,6 @@ void daPly_c::func_ov002_020e444c() {
     extern void Matrix4x3_ApplyInPlaceToRotationY(struct Matrix4x3 *mF, s16 angY);
     extern void Matrix4x3_ApplyInPlaceToRotationX(struct Matrix4x3 *mF, s16 angX);
     extern void Matrix4x3_ApplyInPlaceToRotationZ(struct Matrix4x3 *mF, s16 angZ);
-    extern void Matrix4x3_ApplyInPlaceToTranslation(struct Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z);
     extern struct Matrix4x3 data_020a0e68;
     int sp8, spC;
     int b;
@@ -20997,7 +20998,6 @@ int daPly_c::Behavior() {
         char pad[0x26c];
         s32 flag26c;
     };
-    extern u16 DecIfAbove0_Short(u16 *p);
     extern u8 gGameMode;
     extern G_ee90 data_0209ee90;
     extern s16 data_0209f4a6;
@@ -21288,7 +21288,6 @@ s32 daPly_c::InitResources() {
     extern u8 gGameMode;
     extern s8 data_02092114;
     extern u8 gPrevReturnState;
-    extern u8 gReturnSublevel;
     /* The helpers below take void or char pointers, and this file's match
        depends on declaration and load order documented in the header comment
        above. One alias keeps every one of those decisions untouched. */
@@ -21419,7 +21418,6 @@ void daPly_c::func_ov002_020e5948() {
     extern SharedFilePtr data_ov002_0210e3d8;
     extern SharedFilePtr data_ov002_0210eb88;
     extern SharedFilePtr data_ov002_0210e750;
-    extern SharedFilePtr data_ov002_02110aa4;
     daPly_c *player = this;
     s32 i;
     s32 j;
@@ -21689,16 +21687,12 @@ void daPly_c::func_ov002_020e5948() {
 }
 }
 
-extern "C" {
 void daPly_c::PlayCharacterSound() {
-    extern void func_02011f7c(int a);
     func_02011f7c(data_ov002_020ff0f0[mCharacter & 3]);
-}
 }
 
 extern "C" {
 void daPly_c::func_ov002_020e6350() {
-    extern int func_02011ee4(int x);
     extern unsigned char gGameMode;
     int b = (int)(gGameMode == 1);
     if (b != 0)
