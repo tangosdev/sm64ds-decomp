@@ -16,7 +16,7 @@ extern void func_02065bb0(int v);
 /* NitroSDK WBT_InitChild(callback): as WBT_InitParent (WBT_InitParent), but
  * stores -1 through WBT_SetOwnAid and sets both packet sizes to 0. The
  * callback becomes the system command's callback; func_02040c34
- * passes func_02040f30, the file-share child's. */
+ * passes WFSi_OnChildSystemCallback, the file-share child's. */
 void WBT_InitChild(WBTCallback callback) {
     OSIntrMode saved = OS_DisableInterrupts();
     int i;

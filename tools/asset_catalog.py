@@ -201,7 +201,7 @@ ROM_HEADER_FAT = 0x48
 # And the overlay half of the same header, at 0x50 arm9_ovt_offset, 0x54
 # arm9_ovt_size, 0x58 arm7_ovt_offset, 0x5c arm7_ovt_size.  The ROM mirrors
 # these two pairs at 0x027FFE50 and 0x027FFE58, which is where
-# src/unnamed/arm9/0201/func_02018c00.c, src/engine/fs/FS_Overlay.c and src/unnamed/arm9/0204/func_020424c0.cpp read them
+# src/unnamed/arm9/0201/func_02018c00.c, src/engine/fs/FS_Overlay.c and WFSi_LoadTables (src/engine/link/unit0203d7b8.cpp) read them
 # when the overlay table has not been cached in RAM.  Unlike the FNT and FAT
 # pair a ZERO PAIR IS LEGAL and means "this processor has no overlays": SM64DS
 # has 103 ARM9 overlays and no ARM7 overlay at all, so 0x58 really does read
@@ -231,7 +231,7 @@ def write_nitrofs_tables(directory: pathlib.Path, rom: pathlib.Path) -> dict:
     DS copies the whole cartridge header to 0x027FFE00, and the ROM's overlay
     reader (src/unnamed/arm9/0201/func_02018c00.c, src/engine/fs/FS_Overlay.c) reads the ARM9 pair at
     0x027FFE50 and the ARM7 pair at 0x027FFE58 whenever the overlay table has
-    not been cached into RAM by src/unnamed/arm9/0204/func_020423dc.c -- which, in single-cart
+    not been cached into RAM by WFSi_ReplaceRomArchive (src/engine/link/unit0203d7b8.cpp) -- which, in single-cart
     play, it never is.  The port's HAL writes those two pairs into the mirror
     from these four values, exactly the way it already writes the FNT and FAT
     pairs, so the ROM's own reader reads the cartridge's own words.
