@@ -1344,6 +1344,13 @@ void apply_rx(int slot, Boss &b, unsigned now, bool mine) {
     // coopkbo1: the intro talk is never forced onto a copy. Its tick sees no talk running on this console, reloads the boss music and
     // moves on, the authority's next records force it back, and the music started over and over for the whole dialogue.
     if (d.cls == 189 && rs == kKboTalk) force = false;
+    // kbo2 (REVIEW-T kbo_after): once the group's King is past his intro, this copy's intro is spent too. His idle tick starts the
+    // intro talk with the nearest player while mIntroTalked (+0x508) is 0, so a friend's copy that never talked ran a second full
+    // intro about 4 s after the owner's talk ended. Not during the talk itself (a set flag would send this copy into the fight early).
+    if (d.cls == 189 && g_kbo_fix && rs != kKboIdle && rs != kKboTalk && rs < 18u && b.a[0x508] == 0) {
+        b.a[0x508] = 1;
+        if (g_log) std::fprintf(stderr, "[cbs] kbo intro spent on this copy (the group's King is in st=%u) w=%lld\n", rs, wall_ms());
+    }
     // King Bob-omb's defeat talk on a copy: skip_defeat_talk owns it
     if (d.cls == 189 && !mine && ls == kKboDefeat) force = false;
     // kbo2: a King that is down here runs his own ending (kbo_defeat_tick): no record moves him out of it, the owner's included
