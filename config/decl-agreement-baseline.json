@@ -92,11 +92,6 @@
         "param:#2 Vector3 *",
         "param:#3 Vector3 *"
       ],
-      "src/game/actors/d_a_snm_bth.cpp": [
-        "param:#1 const Vector3 *",
-        "param:#2 const Vector3 *",
-        "param:#3 Vector3 *"
-      ],
       "src/game/actors/d_a_star.cpp": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *",
@@ -106,11 +101,6 @@
         "param:#1 Vector3 *",
         "param:#2 Vector3 *",
         "param:#3 Vector3 *"
-      ],
-      "src/minigames/d_mg_jump3d_mario.cpp": [
-        "param:#1 Jump3DVec *",
-        "param:#2 Jump3DVec *",
-        "param:#3 Jump3DVec *"
       ],
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "param:#1 Vector3 *",
@@ -178,20 +168,10 @@
       "src/game/actors/d_a_obj_fl_ring.cpp": [
         "param:#2 int"
       ],
-      "src/game/actors/d_a_propeller_heyho.cpp": [
-        "return:void"
-      ],
-      "src/game/actors/d_a_snowman.cpp": [
-        "param:#2 int",
-        "return:void"
-      ],
       "src/game/actors/d_a_wanwan2.cpp": [
         "return:void"
       ],
       "src/game/actors/d_a_yegg.cpp": [
-        "return:void"
-      ],
-      "src/game/actors/d_a_yurei_mucho.cpp": [
         "return:void"
       ],
       "src/unnamed/arm9/0200/func_02005000.cpp": [
@@ -356,9 +336,6 @@
         "return:void"
       ],
       "src/game/actors/d_a_spd.cpp": [
-        "return:void"
-      ],
-      "src/runtime/actor/d_enemy_base.cpp": [
         "return:void"
       ],
       "src/engine/view/d_camera.cpp": [
@@ -533,13 +510,7 @@
       "src/game/actors/d_a_owl.cpp": [
         "param:#1 VecFx32 *"
       ],
-      "src/game/actors/d_a_red_bombhei.cpp": [
-        "param:#1 const Vector3 *"
-      ],
       "src/game/actors/d_a_shark.cpp": [
-        "param:#1 Vector3 *"
-      ],
-      "src/game/actors/d_a_snowman.cpp": [
         "param:#1 Vector3 *"
       ],
       "src/game/actors/d_a_trs.cpp": [
@@ -1128,13 +1099,7 @@
       "src/game/actors/d_a_popoi.cpp": [
         "return:unsigned int"
       ],
-      "src/game/actors/d_a_propeller_heyho.cpp": [
-        "return:unsigned int"
-      ],
       "src/game/actors/d_a_s_bird.cpp": [
-        "return:unsigned int"
-      ],
-      "src/game/actors/d_a_yurei_mucho.cpp": [
         "return:unsigned int"
       ]
     },
@@ -1906,11 +1871,6 @@
         "param:#2 PknVec3 *",
         "param:#3 PknVec3 *"
       ],
-      "src/game/actors/d_a_snowman.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
-      ],
       "src/game/actors/d_a_star.cpp": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *",
@@ -2126,10 +2086,6 @@
         "param:#1 Vector3 *",
         "param:#2 Vector3 *"
       ],
-      "src/game/actors/d_a_pg_bby.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *"
-      ],
       "src/game/actors/d_a_pkn.cpp": [
         "param:#1 PknVec3 *",
         "param:#2 PknVec3 *"
@@ -2138,14 +2094,6 @@
         "param:#1 Vector3 *",
         "param:#2 Vector3 *"
       ],
-      "src/game/actors/d_a_snm_bth.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 const Vector3 *"
-      ],
-      "src/game/actors/d_a_snowman.cpp": [
-        "param:#1 int *",
-        "param:#2 int *"
-      ],
       "src/game/actors/d_a_star.cpp": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *"
@@ -2153,24 +2101,13 @@
       "src/game/actors/d_a_trs.cpp": [
         "param:#2 const void *"
       ],
-      "src/game/actors/d_a_water_ring.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *"
-      ],
       "src/game/actors/d_a_wbm.cpp": [
         "param:#1 Vector3 *",
         "param:#2 const Vector3 *"
       ],
-      "src/game/actors/d_a_yurei_mucho.cpp": [
-        "param:#2 const void *"
-      ],
       "src/game/stages/d_ent_obj.cpp": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *"
-      ],
-      "src/runtime/actor/d_actor.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 const Vector3 *"
       ],
       "src/runtime/actor/d_bg_actor.cpp": [
         "param:#1 Vector3 *",
@@ -2179,9 +2116,6 @@
       "src/runtime/actor/d_cap_enemy_arm9.cpp": [
         "param:#1 CapVec *",
         "param:#2 const CapVec *"
-      ],
-      "src/runtime/actor/d_enemy_base.cpp": [
-        "param:#2 const void *"
       ],
       "src/unnamed/ov002/func_ov002_020ad660.cpp": [
         "param:#2 const void *"
@@ -2261,10 +2195,6 @@
         "param:#1 const void *",
         "param:#2 const void *"
       ],
-      "src/game/actors/d_a_btn.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
       "src/game/actors/d_a_c_jugem.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
@@ -2306,10 +2236,6 @@
       ]
     },
     "Vec3_HorzDist": {
-      "src/game/actors/d_a_btn.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
       "src/game/actors/d_a_c_jugem.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
@@ -2355,17 +2281,10 @@
       ],
       "src/game/actors/d_a_ots.cpp": [
         "param:#1 int *"
-      ],
-      "src/runtime/actor/d_actor.cpp": [
-        "param:#1 Vector3 *"
       ]
     },
     "Vec3_Lsl": {
       "src/game/actors/d_a_menbo.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 const Vector3 *"
-      ],
-      "src/runtime/actor/d_actor.cpp": [
         "param:#1 Vector3 *",
         "param:#2 const Vector3 *"
       ]
