@@ -730,7 +730,7 @@ int daBombking_c::TickReturnHome() {
             E.y += 0xc8000;
             m = pl2->mStateFlags & 0x800;
             if (m == 0) {
-                if (pl2->ShowMessage(*(fBase_c *)this, 0x94, &E, 0, 0) != 0) {
+                if (pl2->ShowMessage(*this, 0x94, &E, 0, 0) != 0) {
                     gCamera->SetFlag_3();
                     func_02012694(0x12a, &this->mCamSpacePosX);
                     KingBobOmb_SetState(&data_ov078_021270dc);
@@ -821,7 +821,8 @@ int daBombking_c::TickThrown() {
     daPly_c *other = this->mTalkingPlayer;
     if (other == 0) goto done;
     if ((unsigned short)(other->mStateFlags & 0x800) != 0) goto done;
-    if (other->StartTalk(*(fBase_c *)this, 1) == 0) goto done;
+    if (other->StartTalk(*this, 1) == 0)
+        goto done;
 
     short msg = 0;
     Sound::ChangeMusicVolume(0x14, 0x15666);
@@ -831,7 +832,7 @@ int daBombking_c::TickThrown() {
         msg = 0x95;
     }
 
-    if (other->ShowMessage(*(fBase_c *)this, (unsigned)(int)msg, &this->mPos, 0, 0) == 0)
+    if (other->ShowMessage(*this, (unsigned)(int)msg, &this->mPos, 0, 0) == 0)
         goto done;
     func_02012694(0x12a, &this->mCamSpacePosX);
     KingBobOmb_SetState(&data_ov078_0212705c);
@@ -1263,10 +1264,10 @@ int daBombking_c::TickInactive() {
                 v.z = this->mPosZ;
                 v.y = v.y + 0xc8000;
 
-                if (this->mTalkingPlayer->StartTalk(*(fBase_c *)this, 1)) {
+                if (this->mTalkingPlayer->StartTalk(*this, 1)) {
                     Message::PrepareTalk();
                     b = (gCurrentStarId != 1) ? 0x93 : (unsigned int)(short)(player->param1 + 0x96);
-                    if (player->ShowMessage(*(fBase_c *)this, b, &v, 0, 0)) {
+                    if (player->ShowMessage(*this, b, &v, 0, 0)) {
                         func_02012694(0x12a, &this->mCamSpacePosX);
                         this->mIntroTalked = 1;
                         KingBobOmb_SetState(&data_ov078_0212700c);

@@ -1303,7 +1303,7 @@ int daObjBlockS_c::OnYoshiTryEat()
 void daObjBlockS_c::OnTurnIntoEgg(daPly_c &player) {
     if (player.IsCollectingCap()) {
         if (mCoinsPaid != 1) {
-            ((dActor_c *)this)->GivePlayerCoins(player, 3, 0);
+            GivePlayerCoins(player, 3, 0);
             mCoinsPaid = 1;
         }
     } else {
