@@ -423,6 +423,15 @@ Phase g_phase = kWait;
 bool g_warped = false, g_skip_starsel = false;
 unsigned g_in_level = 0, g_tries = 0, g_next_try = 0;
 ULONGLONG g_shot_at = 0;
+ULONGLONG g_skip_until = 0;   // the star select skip lapses at this tick count if the warp has not reached it
+
+void disarm_starsel(const char *why) {
+    if (!g_skip_starsel) return;
+    g_skip_starsel = false;
+    std::fprintf(stderr, "[scenario] star select skip disarmed unused (%s); later star selects show as always
+", why);
+    std::fflush(stderr);
+}
 
 }  // namespace
 
@@ -430,6 +439,7 @@ ULONGLONG g_shot_at = 0;
 // only, so the act is the one the scenario named and no pad press is needed. Every later entry shows it as always.
 extern "C" int port_scenario_take_starsel_skip(void) {
     if (!g_skip_starsel) return 0;
+    if (GetTickCount64() > g_skip_until) { disarm_starsel("the warp did not reach the star select within 20 s"); return 0; }
     g_skip_starsel = false;
     std::fprintf(stderr, "[scenario] star select skipped for the scenario's warp (act %d)\n", S.act);
     return 1;
@@ -516,12 +526,15 @@ extern "C" void port_scenario_frame(int ticked) {
             std::fprintf(stderr, "[scenario] warp to level %d act %d entrance %d (LoadLevelNoReturn, as SM64DS_COOP_WARP)\n", s.level, s.act,
                          s.entrance);
             g_skip_starsel = true;
+            g_skip_until = GetTickCount64() + 20000;
             LoadLevelNoReturn((unsigned)s.level, (unsigned)s.entrance, (unsigned)s.act, 0);
             if (s.act > 0 && s.act < 8) data_0209f1f0 = (unsigned char)s.act;
         }
         return;
     }
     if (g_in_level < (unsigned)s.settle || g_in_level < g_next_try) return;
+    // settled in the target level: the warp's own star select, if it had one, is long past
+    disarm_starsel("the player is already settled in the target level");
     if (!place(me)) {
         if (++g_tries >= (unsigned)s.tries) {
             std::fprintf(stderr, "[scenario] near class %d #%d: no live actor after %u tries; staying at the entrance\n", s.near_cls,
