@@ -441,6 +441,7 @@ extern "C" void host_menu_cursor_sound_flush(void);   /* hal/menu_compose.cpp: o
 #include "hal/editor_channel.h"   /* run lvled lane B: the editor control channel */
 #include "hal/gpu_present.h"      /* run hd2 lane GPU1: the optional D3D11 present */
 #include "hal/presenter.h"        /* run hunt8 lane PRESENTER1: the presenter thread's clock */
+#include "hal/pace_lock.h"        /* run coopfix1 lane HITCH1: game ticks in step with the display */
 #include "hal/screen_gap.h"       /* run hunt8 lane SCENEINTERP1: the stacked layout, read live */
 #include "hal/pad_pointer.h"      /* run hunt8 lane PADMENUS1: the pad pointer (a controller driven stylus) */
 #include "hal/gpu_raster.h"       /* run hd2 lane GPU2: the optional D3D11 renderer */
@@ -3440,15 +3441,30 @@ static void frame_pace(void)
     const int div = g_pace_div_override ? g_pace_div_override
                                         : port_frame_divider();
     const double budget = PORT_VBLANK_MS * div;
+    /* run coopfix1, lane HITCH1: THE PACE LOCK (hal/pace_lock.cpp). When the
+       display refreshes a whole number of times per turn (60, 90, 120, 240 Hz)
+       the step is exactly that many refreshes and the grid is slewed so the
+       tick's picture lands mid-refresh: every picture is held the same number
+       of refreshes instead of beating against the display. Any other refresh
+       (144 Hz) and SM64DS_PACE_LOCK=0 keep the step above. The tick itself is
+       untouched; only when it starts moves, by at most half a millisecond. */
     const LONGLONG step =
-        (LONGLONG)(budget * (double)qpf.QuadPart / 1000.0 + 0.5);
+        pace_lock_step((LONGLONG)(budget * (double)qpf.QuadPart / 1000.0 + 0.5),
+                       qpf.QuadPart);
 
     double slept = 0.0;
+    double lock_work = -1.0;
+    int lock_over = 0;
     if (!next.QuadPart) {
         next.QuadPart = now.QuadPart;   /* the first frame sets the deadline */
     } else {
+        /* the tick's work: from the turn it began in to here (its first turn) */
+        if (turn == 1)
+            lock_work = (now.QuadPart - next.QuadPart) * 1000.0 / (double)qpf.QuadPart;
         next.QuadPart += step;
+        next.QuadPart -= pace_lock_slew(next.QuadPart, qpf.QuadPart, lock_work);
         if (next.QuadPart <= now.QuadPart) {
+            lock_over = 1;
             /* THE OVERRUN, AND WHICH TURN SEES IT (run hunt5, lane PACE1).
                The tick's work ran before its first turn, so a tick that takes
                longer than one VBLANK arrives here on turn 1 with `next` behind.
@@ -3507,6 +3523,7 @@ static void frame_pace(void)
        take (no slack this turn: an overrun, or under a millisecond left) is
        drawn now rather than lost. Then: the turn that starts now begins at
        `next`; a tick's alpha is measured from the turn it began in. */
+    pace_lock_note_turn(lock_work < 0.0 ? 0.0 : lock_work, slept, lock_over, port_rom_frame());
     if (g_ip_deferred) ip_flush_deferred();
     g_ip_t0 = next.QuadPart;
     /* FrameRate is live (run hunt8, lane FPSLIVE1): SmoothMotion arms or stands
@@ -10029,6 +10046,7 @@ static void present(void)
         const int k = g_pt_kind > 0 ? 1 : 0;
         pt_push(g_pt_stage == PS_PACE ? PS_PRESENT_X : PS_PRESENT);
         present_body();
+        pace_lock_note_present(g_present_repeat, port_rom_frame());   /* HITCH1: the [pace] summary */
         port_gpu_present_set_repeat(0);
         pt_pop();
         if (!first[k] && g_pt_kind >= 0) {
@@ -10038,6 +10056,7 @@ static void present(void)
         return;
     }
     present_body();
+    pace_lock_note_present(g_present_repeat, port_rom_frame());   /* HITCH1: the [pace] summary */
     port_gpu_present_set_repeat(0);
 }
 
@@ -16702,6 +16721,7 @@ static void scene_host_present_frame(HWND hwnd, int stacked,
  * the level loop's own count (port_last_frame + f), so a fixture numbers the
  * interlude's frames the way it numbers every other frame of the session. */
 extern "C" void port_adventure_ghost_interlude(void);   /* hal/comms_sync.cpp */
+extern "C" void port_hub_presence_interlude(void);      /* hal/hub_presence.cpp (HITCH1) */
 extern "C" int port_interlude_frame(int f)
 {
     static XPad ipad;
@@ -16719,6 +16739,9 @@ extern "C" int port_interlude_frame(int f)
     int quit = scene_host_input_frame(g_present_hwnd, port_last_frame + f,
                                       &ipad, &ifocus);
     port_adventure_ghost_interlude();
+    if (port_level_interlude_live())
+        ++g_hl_starsel;              /* HITCH1: the [hitch] line of the level frame holding a STAR SELECT says so (not the crossing's hand-back) */
+    port_hub_presence_interlude();   /* HITCH1: friends' presence drained, mine sent, during the star select */
     if (!quit) {
         port_scene_tick(f, !menu_on);
         scene_host_present_frame(g_present_hwnd, stacked, sfb);
@@ -16783,6 +16806,7 @@ static int scene_window_run(void)
        From here on a WM_SIZE or a WM_PAINT can redraw without this loop's
        help, which is what a drag on the sizing border needs. */
     g_present_hwnd = hwnd;
+    pace_lock_set_window(hwnd);   /* HITCH1: the lock needs this window on the primary display */
     g_present_hdc = hdc;
     g_present_bi = &g_bi;
     g_present_fb = (const ntr::Framebuffer *)port_scene_framebuffer();
@@ -19226,6 +19250,7 @@ int main(void)
        sizing border needs -- that drag runs a modal loop inside
        DefWindowProc and the frame loop does not get a turn until it ends. */
     g_present_hwnd = hwnd;
+    pace_lock_set_window(hwnd);   /* HITCH1: the lock needs this window on the primary display */
     g_present_hdc = hdc;
     g_present_bi = &g_bi;
     g_present_fb = &fb;

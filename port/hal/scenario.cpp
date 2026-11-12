@@ -524,7 +524,8 @@ extern "C" void port_scenario_frame(int ticked) {
             g_in_level = 0;
             std::fprintf(stderr, "[scenario] warp to level %d act %d entrance %d (LoadLevelNoReturn, as SM64DS_COOP_WARP)\n", s.level, s.act,
                          s.entrance);
-            g_skip_starsel = true;
+            /* HITCH1 proof knob: SM64DS_SCENARIO_KEEP_STARSEL=1 keeps the warp's own star select on screen (the select itself is the test) */
+            g_skip_starsel = !(std::getenv("SM64DS_SCENARIO_KEEP_STARSEL") && *std::getenv("SM64DS_SCENARIO_KEEP_STARSEL") == '1');
             g_skip_until = GetTickCount64() + 20000;
             LoadLevelNoReturn((unsigned)s.level, (unsigned)s.entrance, (unsigned)s.act, 0);
             if (s.act > 0 && s.act < 8) data_0209f1f0 = (unsigned char)s.act;

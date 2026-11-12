@@ -1,0 +1,11 @@
+{
+  "about": "HITCH1: Mario stays on the castle grounds while Luigi warps to Bob-omb Battlefield through a star select that stays up about 10 s",
+  "mode": "coop",
+  "save": {"preset": "early"},
+  "proof": {"secs": 110, "shot_ms": 60000},
+  "env": {"SM64DS_PRESENCE_LOG": "1"},
+  "players": [
+    {"character": "mario", "level": 1},
+    {"character": "luigi", "level": 6, "env": {"SM64DS_SCENARIO_KEEP_STARSEL": "1", "SM64DS_STARSEL_FRAMES": "600"}}
+  ]
+}

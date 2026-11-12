@@ -272,3 +272,42 @@ extern "C" void port_hub_presence_frame(void) {
     comms_hub_pump();
     send_if_due();
 }
+
+// THE STAR SELECT'S PRESENCE (run coopfix1, lane HITCH1; tests/walk_window.cpp's
+// port_interlude_frame, once a star-select frame). The star select runs inside
+// one level frame (hal/level_change.cpp's interlude), so the frame hooks above
+// do not run while a player picks an act: the friends' presence piled up in the
+// hub's 16-deep queue (the "drop queue" count) and this console stopped saying
+// where it is, so the friends kept counting it in the course it had just left
+// until its presence went stale. Only the presence kind is drained here: its
+// consumer only stores the newest record, while the world, boss and save
+// consumers act on the level, and the level is torn down during the select
+// (they are drained as before once the next level is up). The send says what
+// the ROM says: no body, so not in a level.
+extern "C" void port_hub_presence_interlude(void) {
+    using namespace port;
+    static int off = -1;   // SM64DS_STARSEL_PRESENCE=0: the select as 1.0.3 had it (the proof's before arm)
+    if (off < 0) { const char *e = std::getenv("SM64DS_STARSEL_PRESENCE"); off = (e && *e == '0') ? 1 : 0; }
+    {   // every 5 s of a select, the hub's queue evictions so far by kind (both arms), one line
+        static unsigned calls;
+        if (++calls % 300 == 0 && comms_hub_active()) {
+            char b[200]; int n = 0;
+            for (int k = 0; k <= kHubKinds && n < 180; ++k)
+                if (const unsigned long long d = comms_hub_queue_drops(k))
+                    n += std::snprintf(b + n, sizeof b - n, " %s%d:%llu", k == kHubKinds ? "movers" : "kind", k, d);
+            std::fprintf(stderr, "[hub] star select: queue evictions by kind so far:%s%s\n", n ? b : " none",
+                         off ? " (SM64DS_STARSEL_PRESENCE=0: presence not drained)" : "");
+        }
+    }
+    if (off) return;
+    if (!comms_hub_active() || comms_hub_arena() ||
+        comms_hub_state() != kHubLive) return;
+    unsigned char buf[kHubMaxDatagram];
+    for (int i = 0; i < 64; ++i) {
+        int seat = -1;
+        const int n = comms_hub_recv(kHubPresence, buf, (int)sizeof buf, &seat);
+        if (n <= 0) break;
+        on_presence(seat, buf, n, nullptr);
+    }
+    send_if_due();
+}

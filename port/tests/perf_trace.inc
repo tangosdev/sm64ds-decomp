@@ -66,6 +66,7 @@ static const char *const k_ps_name[PS_COUNT] = {
 };
 
 static double g_hl_thr = 28.0;     /* HITCH9C: the hitch log's threshold, ms of work */
+static int g_hl_starsel;           /* HITCH1: star-select frames run inside this level frame (tests/walk_window.cpp port_interlude_frame) */
 static int g_pt_on = -1;          /* -1 unread, 0 off, 1 timers, 2 +sampler */
 static volatile int g_pt_stage = PS_BOOT;
 static long long g_pt_last;       /* QPC of the previous mark */
@@ -349,8 +350,12 @@ static void hl_close(long long now)
         const int load = g_pt_cur[PS_HOST_IN] > 150.0 || g_pt_cur[PS_SCENE_IN] > 150.0;
         if (load || printed < 400) {
             char b[720];
-            int n = _snprintf(b, sizeof b, "[hitch] t=%.1fs frame=%u lvl=%d work=%.1f wall=%.1f%s |",
-                              pt_since_create_ms() / 1000.0, frames, g_pt_level, work, wall, load ? " LOAD" : "");
+            /* HITCH1: a level frame that held the star select is the player choosing an act on a running, paced
+               screen (its own frames, input and pictures), not a stalled loop: say so on the line */
+            char ss[48] = "";
+            if (g_hl_starsel) _snprintf(ss, sizeof ss, " STARSEL(%d frames ran inside)", g_hl_starsel);
+            int n = _snprintf(b, sizeof b, "[hitch] t=%.1fs frame=%u lvl=%d work=%.1f wall=%.1f%s%s |",
+                              pt_since_create_ms() / 1000.0, frames, g_pt_level, work, wall, load ? " LOAD" : "", ss);
             for (int s = 0; s < PS_COUNT && n > 0 && n < 400; ++s)
                 if (s != PS_PACE && g_pt_cur[s] >= 1.5)
                     n += _snprintf(b + n, sizeof b - n, " %s=%.1f", k_ps_name[s], g_pt_cur[s]);
@@ -392,6 +397,7 @@ static void hl_close(long long now)
     }
 #endif
     for (int k = 0; k < port::HK_COUNT; ++k) port::g_hitch_cell[k].ms = 0.0, port::g_hitch_cell[k].n = 0;
+    g_hl_starsel = 0;
 }
 
 static void pt_close_frame(long long now)

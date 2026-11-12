@@ -25563,6 +25563,16 @@ foreach(_pres1_t IN ITEMS walk_window walk_window_hires)
     endif()
 endforeach()
 
+# run coopfix1, lane HITCH1: the pace lock (hal/pace_lock.cpp), game ticks in step
+# with the display's refresh, and the [pace] summary. Called from the pacer in
+# tests/walk_window.cpp, so the two targets that compile that file get it. dwmapi
+# and user32 are reached through LoadLibraryA/GetProcAddress: no new import.
+foreach(_hitch1_t IN ITEMS walk_window walk_window_hires)
+    if(TARGET ${_hitch1_t})
+        target_sources(${_hitch1_t} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/hal/pace_lock.cpp")
+    endif()
+endforeach()
+
 # run hunt8, lane SDLPAD1: SDL3's gamepad API as the controller backend's first
 # arm (hal/pad_sdl.cpp, called from hal/pad_backend.cpp). PlayStation, Switch Pro,
 # 8BitDo, generic and Xbox pads connect through SDL's HIDAPI drivers and mapping
