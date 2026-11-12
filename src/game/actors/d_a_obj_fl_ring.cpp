@@ -114,13 +114,13 @@ void daObjFl_Ring_c::OnStoodOn(dActor_c *other) {
 }
 
 s32 daObjFl_Ring_c::InitResources() {
-    void *f = dExtSimpleModel_c::LoadFile(*data_ov022_02113cc8.mModelFile);
-    mModel.SetFile((BMD_File *)f, 1, -1);
+    BMD_File *f = dExtSimpleModel_c::LoadFile(*data_ov022_02113cc8.mModelFile);
+    mModel.SetFile(f, 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    void *k = dBgW_Kc::LoadFile(*data_ov022_02113cc8.mClsnFile);
-    mMeshCollider.SetFile((KCL_File *)(k), mClsnMat, 0x199, mAngleY, *data_ov022_02113cc8.mClps);
+    KCL_File *k = dBgW_Kc::LoadFile(*data_ov022_02113cc8.mClsnFile);
+    mMeshCollider.SetFile(k, mClsnMat, 0x199, mAngleY, *data_ov022_02113cc8.mClps);
 
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mMeshCollider.SetStoodOnCallback((::StoodOnCallback)StoodOnCallback);

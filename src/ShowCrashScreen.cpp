@@ -32,7 +32,6 @@ extern int data_0209cde0;
 extern int data_0209cdd8;
 extern void *data_0209cdd4;
 extern mHeap::Heap_t *data_020a0e9c;
-extern mHeap::Heap_t *data_020a0eac;
 extern u8 data_0209cdd0;
 
 extern char data_0208e538[], data_0208e548[], data_0208e54c[], data_0208e55c[];
@@ -112,8 +111,8 @@ void ShowCrashScreen(void)
 
     if (data_020a0eac->Intact()) {
         int mx = data_020a0eac->MaxAllocationUnitSize();
-        nds_printf(scr + 0x540, data_0208e634,
-                   ((int)((mHeap::Heap_t *)data_020a0eac)->heapSize - mx) / 1024, mx / 1024);
+        nds_printf(scr + 0x540, data_0208e634, ((int)data_020a0eac->heapSize - mx) / 1024,
+                   mx / 1024);
     } else {
         nds_print(scr + 0x500, data_0208e648);
     }

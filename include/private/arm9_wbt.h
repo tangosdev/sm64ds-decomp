@@ -14,9 +14,9 @@
 typedef struct WBTPacketBitmap {
     int length; /* 0x00 */
     int count;  /* 0x04 */
-    int pad_08;
-    /* 0x0c -- the packet func_020647a4 marked last (medium: zeroed by
-     * func_020647fc, not read back in the WBT files) */
+    int next;   /* 0x08 -- the missing packet func_0206470c found last */
+    /* 0x0c -- the packet func_020647a4 marked last; func_0206470c
+     * searches on from it */
     int current;
     /* 0x10 -- packets marked so far: func_020647a4 counts each one */
     int recv_count;
@@ -59,6 +59,33 @@ typedef struct WBTWork {
     WBTCommand system_cmd;  /* 0x138 -- the block system callbacks are raised with */
     WBTPeerRecord peer[16]; /* 0x1d4 -- indexed by aid */
 } WBTWork;
+
+/* The send-packet builders. WBT_MpParentSendHook runs func_02065538 and
+ * WBT_MpChildSendHook runs func_020653cc. Each offers the send buffer in
+ * turn to the responders to a peer's completed request (USER_DATA
+ * func_02063d3c, SYNC func_02063e08, GET_BLOCKINFO func_02063ae4,
+ * GET_BLOCK_DONE func_02063da0, GET_BLOCK func_02063bc4), to the running
+ * command (func_02063980) and to the queued one (func_02063718), returns the
+ * length of the first packet one of them writes, and with none written has
+ * func_02064fe8 write a WAIT packet. Every builder takes the buffer and its
+ * size, as the SDK's later WBTi_TryCreateResponse and WBTi_CheckRequest do
+ * (wbt_context.c); this revision's builders do not read the size, but their
+ * callers pass it. Parameters unnamed. */
+#ifdef __cplusplus
+extern "C" {
+#endif
+int func_02065538(void *, int);
+int func_020653cc(void *, int);
+int func_02063d3c(WBTWork *, int, void *, int);
+int func_02063e08(WBTWork *, int, void *, int);
+int func_02063ae4(WBTWork *, int, void *, int);
+int func_02063da0(WBTWork *, int, void *, int);
+int func_02063bc4(WBTWork *, int, void *, int);
+int func_02063980(WBTWork *, void *, int);
+int func_02063718(WBTWork *, void *, int);
+#ifdef __cplusplus
+}
+#endif
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm: a command is 0x9c bytes, a block list node

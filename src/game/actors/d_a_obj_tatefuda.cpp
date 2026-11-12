@@ -201,8 +201,8 @@ extern "C" daObjTatefuda_c *daObjTatefuda_c_classInit(void)
    declares StartDetectingWater itself. */
 int daObjTatefuda_c::InitResources()
 {
-    void *mf = dExtSimpleModel_c::LoadFile(SignPost_ModelFile);
-    mModel.SetFile((BMD_File*)mf, 1, -1);
+    BMD_File *mf = dExtSimpleModel_c::LoadFile(SignPost_ModelFile);
+    mModel.SetFile(mf, 1, -1);
     mShadowModel.InitCuboid();
 
     int py = mPosY;
@@ -219,8 +219,8 @@ int daObjTatefuda_c::InitResources()
     UpdateClsnPosAndRot();
     UpdateShadowMatrix();
 
-    void *kf = dBgW_Kc::LoadFile(SignPost_ClsnFile);
-    mMeshCollider.SetFile((KCL_File *)kf, mClsnMat, 0x199, mAngleY, data_ov002_0210d714);
+    KCL_File *kf = dBgW_Kc::LoadFile(SignPost_ClsnFile);
+    mMeshCollider.SetFile(kf, mClsnMat, 0x199, mAngleY, data_ov002_0210d714);
 
     mdCcAc_c.Init(this, 0x64000, 0x64000, 0x4800002, 0x41000);
 

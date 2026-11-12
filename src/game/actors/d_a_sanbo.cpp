@@ -66,6 +66,7 @@ enum daSanbo_c_AssetId {
 #include "math/Approach.h"
 #include "LevelRng.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/CalcLib.h"
 
 enum { SANBO_HEAD = 0xf0, SANBO_BODY = 0xf1 };
 
@@ -76,7 +77,6 @@ extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z)
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern struct Matrix4x3 data_020a0e68;
 extern void d_a_sanboNewSimpleHold(unsigned int, int, int, int);
-extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern void func_02038414(void *p);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int b, int c, void *v, int e);
@@ -122,16 +122,16 @@ int daSanbo_c::InitResources()
 
     t = (actorID == SANBO_HEAD);
     if (t != false) {
-        void *m = dExtSimpleModel_c::LoadFile(gSanboHeadModelFile);
-        mModel.SetFile((BMD_File *)m, 1, 1);
+        BMD_File *m = dExtSimpleModel_c::LoadFile(gSanboHeadModelFile);
+        mModel.SetFile(m, 1, 1);
         dExtSimpleModel_c::LoadFile(gSanboBodyModelFile);
         LoadBlueCoinModel();
         mInstantSprout = 1;
     } else {
         t = (actorID == SANBO_BODY);
         if (t != false) {
-            void *m = dExtSimpleModel_c::LoadFile(gSanboBodyModelFile);
-            if (mModel.SetFile((BMD_File *)m, 1, 1) == 0)
+            BMD_File *m = dExtSimpleModel_c::LoadFile(gSanboBodyModelFile);
+            if (mModel.SetFile(m, 1, 1) == 0)
                 return 0;
         }
     }

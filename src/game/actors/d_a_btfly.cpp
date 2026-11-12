@@ -480,9 +480,9 @@ int daBtfly_c::InitResources()
     dExtSimpleModel_c::LoadFile(data_ov002_0210d9d8);
     dExtFrameCtrl_c::LoadFile(gButterflyFlyAnimationFile);
     dExtSimpleModel_c::LoadFile(data_ov100_02148668);
-    void *bmd = dExtSimpleModel_c::LoadFile(gButterflyModelFile);
+    BMD_File *bmd = dExtSimpleModel_c::LoadFile(gButterflyModelFile);
 
-    if (mAnmModel.SetFile((BMD_File *)bmd, 1, 1) == 0)
+    if (mAnmModel.SetFile(bmd, 1, 1) == 0)
         return 0;
     mAnmModel.SetAnim((BCA_File *)gButterflyFlyAnimationFile.filePtr, 0, 0x1000, 0);
     if (mShadowModel1.InitCylinder() == 0)

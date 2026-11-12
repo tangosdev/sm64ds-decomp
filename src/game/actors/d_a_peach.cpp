@@ -352,8 +352,8 @@ int daPeach_c::Behavior() {
 /* dBgCh_Actr::Init's last parameter is a Vector3_16* as well -- the S5_ in
  * ...P10Vector3_16S5_ back-references the pointer type, it is not an int. */
 int daPeach_c::InitResources() {
-    void *f = dExtSimpleModel_c::LoadFile(gPeachModelFile);
-    mAnmModel.SetFile((BMD_File *)f, 1, -1);
+    BMD_File *f = dExtSimpleModel_c::LoadFile(gPeachModelFile);
+    mAnmModel.SetFile(f, 1, -1);
     for (int i = 0; i < 7; i++)
         dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov085_0212f280[i]);
     if (mShadowModel.InitCylinder() == 0)

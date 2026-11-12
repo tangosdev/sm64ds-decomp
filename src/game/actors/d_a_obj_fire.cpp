@@ -24,10 +24,7 @@
 #include "daPly_c.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
-
-extern "C" {
-u8 DecIfAbove0_Byte(u8 *value);
-}
+#include "math/CalcLib.h"
 
 /* Actor ID 0x13d is BLUE_FLAME, 0xbf is PLAYER. dActor_c::mFlags bit
  * 0x20000 is the first of the two yoshi-mouth states, set while Yoshi is

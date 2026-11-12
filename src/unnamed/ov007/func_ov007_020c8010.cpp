@@ -4,8 +4,6 @@
 
 extern "C" {
 
-int VEC_Mag(const Vector3 *);
-
 /* Links two followers: once both have a target, dir is the vector between
  * them and length its length. */
 void func_ov007_020c8010(Ov007Link *link, Ov007Follower *from, Ov007Follower *to) {

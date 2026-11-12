@@ -138,6 +138,7 @@ enum daDemo_c_AssetId {
 #include "nitro/mi/memory.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_trig.h"
 
 struct OamAttr;
 
@@ -256,9 +257,7 @@ extern StaffRollStep data_ov002_02110e24[];
 extern StaffRollStep data_ov002_02110e9c[];
 extern void func_ov002_020f3828(int *c);
 extern int data_ov002_021002a0[];
-extern s16 FX_SinCosTable_[];
 extern short atan2_hold_d_a_demo_1(int y, int x);
-extern short FX_SinCosTable_[];
 extern StaffRollStep data_ov002_02110e34[];
 extern unsigned short data_ov002_021000c0[];
 extern int data_ov002_02100120[];
@@ -2652,8 +2651,7 @@ int daDemo_c::anmModel_c::func_ov002_020f6618(SharedFilePtr *mdl, int nAnims, Sh
     char *self = (char *)this;
     int i;
     mModelFile = mdl;
-    if (((dExtModel_c *)self)
-            ->SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*mModelFile), 1, tsData) == 0)
+    if (((dExtModel_c *)self)->SetFile(dExtSimpleModel_c::LoadFile(*mModelFile), 1, tsData) == 0)
         return 0;
     mNumAnimFiles = (u8)nAnims;
     mAnimFiles = anims;
@@ -2669,8 +2667,8 @@ int daDemo_c::anmModel_c::func_ov002_020f6618(SharedFilePtr *mdl, int nAnims, Sh
         mTexSeqFiles = texs;
         for (i = 0; i < mNumTexSeqFiles; i++) {
             void *bmd = mModelFile->filePtr;
-            void *btp = dExtAnmTexPat_c::LoadFile(*mTexSeqFiles[i]);
-            dExtAnmTexPat_c::Prepare(*(BMD_File *)bmd, *(BTP_File *)btp);
+            BTP_File *btp = dExtAnmTexPat_c::LoadFile(*mTexSeqFiles[i]);
+            dExtAnmTexPat_c::Prepare(*(BMD_File *)bmd, *btp);
         }
         mTexSeq->SetFile(*(BTP_File *)mTexSeqFiles[0]->filePtr, 0, 0x1000, 0);
     }
@@ -2724,7 +2722,7 @@ daDemo_c::anmModel_c::~anmModel_c()
 int daDemo_c::simpleModel_c::func_ov002_020f6960(SharedFilePtr *fp, int n)
 {
     mFile = fp;
-    BMD_File *f = (BMD_File *)dExtSimpleModel_c::LoadFile(*mFile);
+    BMD_File *f = dExtSimpleModel_c::LoadFile(*mFile);
     return ((dExtModel_c *)this)->SetFile(f, 1, n) != 0 ? 1 : 0;
 }
 

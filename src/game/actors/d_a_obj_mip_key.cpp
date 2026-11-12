@@ -5,8 +5,8 @@
 // Notes:
 // - unk_190 and unk_19c stay the header's names. The loose update
 //   approaches through mSpeedX/mSpeedZ, and 19c selects the entry.
-// - CollectMinigameKey, StartMinigameMenu, Vec3_VertAngle, Vec3_Asr and
-//   MTX_MultVec43 are arm9 C helpers no header declares yet.
+// - CollectMinigameKey, StartMinigameMenu, Vec3_VertAngle and MTX_MultVec43
+//   are arm9 C helpers no header declares yet.
 // - The model handle data_ov085_021305d8 is constructed by daMip_c.
 //   g_profile stays with the registry.
 
@@ -25,7 +25,6 @@
 
 extern "C" {
 s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-void Vec3_Asr(Vector3 *dst, Vector3 *src, int sh);
 void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void CollectMinigameKey(int t, int x);
 void StartMinigameMenu(u8 a);
@@ -301,8 +300,8 @@ int daObj_Mip_Key_c::Behavior() {
 
 
 int daObj_Mip_Key_c::InitResources() {
-    void *f = dExtSimpleModel_c::LoadFile(data_ov085_021305d8);
-    if (mModel.SetFile((BMD_File *)f, 1, -1) == 0)
+    BMD_File *f = dExtSimpleModel_c::LoadFile(data_ov085_021305d8);
+    if (mModel.SetFile(f, 1, -1) == 0)
         return 0;
     mShadowModel.InitCylinder();
     unk_19c = param1 & 0xff;

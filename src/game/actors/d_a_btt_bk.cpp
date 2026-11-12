@@ -337,8 +337,8 @@ int daBttBk_c::Behavior() {
 
 int daBttBk_c::InitResources() {
     Vector3 pos;
-    void *file = dExtSimpleModel_c::LoadFile(gBattaBlockModelFile);
-    mModel.SetFile((BMD_File *)file, 1, 1);
+    BMD_File *file = dExtSimpleModel_c::LoadFile(gBattaBlockModelFile);
+    mModel.SetFile(file, 1, 1);
     mShadowModel.InitCuboid();
     mdCcAc_c.Init(this, 0x64000, 0x78000, 0x800004, 0x9010);
     mVertAccel = -0x2000;

@@ -1102,7 +1102,7 @@ void Trmp2Spinner_UpdateMatricesAll(void) {
 }
 
 extern "C" void Trmp2Spinner_SetModel(void *raw) {
-    BMD_File *file = (BMD_File *)dExtSimpleModel_c::LoadFile(sTrmp2StarModelFile);
+    BMD_File *file = dExtSimpleModel_c::LoadFile(sTrmp2StarModelFile);
     ((dExtModel_c *)raw)->SetFile(file, 1, -1);
 }
 

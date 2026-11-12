@@ -3205,7 +3205,7 @@ int daTrs_c::InitResources()
             mFoundActor = 0;
         }
         dExtFrameCtrl_c::LoadFile(data_ov063_0211ede4);
-        mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov063_0211edf4), 1, 1);
+        mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov063_0211edf4), 1, 1);
         mAnmModel.SetAnim((BCA_File *)data_ov063_0211ede4.filePtr, 0, 0x1000, 0);
         mHitPoints = 3;
         mClsnRadius = 0xc8;
@@ -3224,7 +3224,7 @@ int daTrs_c::InitResources()
     } else {
         mVariant = param1 & 0xf;
         dExtFrameCtrl_c::LoadFile(data_ov063_0211eddc);
-        mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov063_0211edc4), 1, 0x16);
+        mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov063_0211edc4), 1, 0x16);
         mAnmModel.SetAnim((BCA_File *)data_ov063_0211eddc.filePtr, 0, 0x1000, 0);
         mHitPoints = 1;
         if (mVariant == 5) {
@@ -3417,7 +3417,7 @@ int daTrs_c::InitResources()
 
 int daTBasket_c::InitResources()
 {
-    BMD_File *bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov063_0211edec);
+    BMD_File *bmd = dExtSimpleModel_c::LoadFile(data_ov063_0211edec);
     if (mModel.SetFile(bmd, 1, -1) == 0)
         return 0;
     if (mShadowModel.InitCylinder() == 0)

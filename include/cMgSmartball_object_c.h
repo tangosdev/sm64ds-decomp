@@ -40,6 +40,8 @@
 #define CMGSMARTBALL_OBJECT_C_H
 #include "types.h"
 
+struct dScMgSmartball_c;
+
 struct cMgSmartball_object_c {
     virtual void SaveSnapshot();   /* slot 0 -- mSnapshot = mCurrent */
     virtual void Update();         /* slot 1 -- empty in this class */
@@ -55,16 +57,14 @@ struct cMgSmartball_object_c {
     /* The C spelling of this class gets no explicit vtable member because
        no .c file declares it; every reader reaches these fields by raw
        offset today. */
-    s32 mpManager;    /* 0x004 -- the constructor's first argument: the
-                          dScMgSmartball_c that owns this object. Every child
-                          dereferences it as that manager (mgr+0x4664 the
-                          index of the ball in play, mgr+0x4668/0x4688 the
-                          tracked-ball count and table, mgr+0x4670/0x46bc the
-                          kinoko count and table, mgr+0x595c/0x595d two pause
-                          flags). DECLARED s32, NOT A POINTER TYPE, because
-                          the manager has no header here and every reader
-                          spells its own cast -- the name states what the word
-                          is, the type states nothing it cannot back up. */
+    dScMgSmartball_c *mpManager; /* 0x004 -- the manager that owns this object.
+                                    Every child dereferences it as that
+                                    dScMgSmartball_c (mgr+0x4664 the index of
+                                    the ball in play, mgr+0x4668/0x4688 the
+                                    tracked-ball count and table,
+                                    mgr+0x4670/0x46bc the kinoko count and
+                                    table, mgr+0x595c/0x595d two pause
+                                    flags). */
     s32 mCurrent0;    /* 0x008 -- restored from mInitial by RestoreInitial */
     s32 mCurrent1;    /* 0x00c */
     s32 mSnapshot0;   /* 0x010 -- written from mCurrent by SaveSnapshot */
@@ -101,9 +101,9 @@ struct cMgSmartball_object_c {
                           and cMgSmartball_kinoko_c::SaveSnapshot skip a
                           tracked ball whose byte at 0x30 is 0. */
 
-    cMgSmartball_object_c(char *a1, int a2, int *a3) {
+    cMgSmartball_object_c(dScMgSmartball_c *a1, int a2, int *a3) {
         int lo, hi;
-        mpManager = (s32)a1;
+        mpManager = a1;
         mIndex = a2;
         hi = a3[1];
         lo = a3[0];

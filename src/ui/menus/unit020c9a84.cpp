@@ -32,11 +32,10 @@
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
 #include "math/ProgressRatio.h"
+#include "Ov007MenuMem.h"
 
 extern "C" {
 
-extern void *func_ov007_020c3df4(const char *name, int size);
-extern void func_ov007_020c3d1c(void *p);
 extern int func_ov007_020c30ac(Vector3 *points, int count, Vector3 *target, int maxDist,
                                int *outDist);
 extern void func_ov007_020c7504(Ov007PointList *list, int damping, int shift);
