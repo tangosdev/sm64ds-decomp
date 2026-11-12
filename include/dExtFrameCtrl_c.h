@@ -69,7 +69,7 @@ struct dExtFrameCtrl_c {
     bool WillHitFrame(int frame) const;
 
     /* --- static --- */
-    static char *LoadFile(SharedFilePtr &ptr);
+    static BCA_File *LoadFile(SharedFilePtr &ptr);
     static void UpdateFileOffsets(BCA_File &file);
 };
 

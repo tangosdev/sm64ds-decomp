@@ -505,7 +505,7 @@ int daStarBase_c::InitResources()
         if (sp != 0) {
             ((daStar_c *)sp)->mBits.switchStar = 1;
         }
-        mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0211093c), 1, 0x18);
+        mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0211093c), 1, 0x18);
         return 0;
     }
 
@@ -535,13 +535,11 @@ int daStarBase_c::InitResources()
 
     if (mState != 0) {
         dExtSimpleModel_c::LoadFile(data_ov002_0210d9a8);
-        if (mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0211092c), 1, 0x19) ==
-            0) {
+        if (mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0211092c), 1, 0x19) == 0) {
             return 0;
         }
     } else {
-        if (mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0211093c), 1, 0x18) ==
-            0) {
+        if (mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0211093c), 1, 0x18) == 0) {
             return 0;
         }
     }

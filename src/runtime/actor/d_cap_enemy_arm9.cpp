@@ -81,8 +81,8 @@ int dCapEnemy_c::AddCap(unsigned int param)
         mCapBank = 0;
     }
 
-    void *file = dExtSimpleModel_c::LoadFile(*data_ov002_020ff028[mCapId]);
-    int ok = mModel.SetFile((BMD_File *)file, 1, -1);
+    BMD_File *file = dExtSimpleModel_c::LoadFile(*data_ov002_020ff028[mCapId]);
+    int ok = mModel.SetFile(file, 1, -1);
     if (ok == 0) {
         mCapId = 6;
         /* Release is void. The value it leaves in r0 is AddCap's result. */

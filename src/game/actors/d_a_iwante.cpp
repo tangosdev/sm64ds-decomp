@@ -2447,7 +2447,7 @@ int daIwante_c::InitResources() {
 
     switch (mPartIdx) {
     case 0:
-        mModel2.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov066_0211ae6c), 1, -1);
+        mModel2.SetFile(dExtSimpleModel_c::LoadFile(data_ov066_0211ae6c), 1, -1);
         dExtSimpleModel_c::LoadFile(data_ov066_0211ae4c);
         dExtSimpleModel_c::LoadFile(data_ov066_0211aeb4);
         dExtAnmTexPat_c::LoadFile(data_ov066_0211aebc);

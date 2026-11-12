@@ -1859,7 +1859,7 @@ int daKing_Donketu_c::InitResources()
     dExtFrameCtrl_c::LoadFile(gKingIceDonketuJumpStAnimationFile);
     dExtFrameCtrl_c::LoadFile(gKingIceDonketuWaitAnimationFile);
     dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov002_0210da30);
-    f = (BMD_File *)dExtSimpleModel_c::LoadFile(gKingIceDonketuModelModelFile);
+    f = dExtSimpleModel_c::LoadFile(gKingIceDonketuModelModelFile);
     mBlendAnmModel.SetFile(f, 1, -1);
     mShadowModel.InitCylinder();
     mVertAccel = -0x3000;

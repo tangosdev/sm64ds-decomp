@@ -148,12 +148,12 @@ int daObjCtMecha11_c::Behavior() {
 }
 
 int daObjCtMecha11_c::InitResources() {
-    void *mf = dExtSimpleModel_c::LoadFile(RotatingClockHand_ModelFile);
-    mModel.SetFile((BMD_File *)mf, 1, -1);
+    BMD_File *mf = dExtSimpleModel_c::LoadFile(RotatingClockHand_ModelFile);
+    mModel.SetFile(mf, 1, -1);
     mShadowModel.InitCuboid();
     UpdateModel();
     UpdateClsnPosAndRot();
-    KCL_File *kf = (KCL_File *)dBgW_Kc::LoadFile(RotatingClockHand_ClsnFile);
+    KCL_File *kf = dBgW_Kc::LoadFile(RotatingClockHand_ClsnFile);
     mMeshCollider.SetFile(kf, mClsnMat, 0x1000, mAngleY, data_ov035_02112238);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetEdgeToleranceShift(0);

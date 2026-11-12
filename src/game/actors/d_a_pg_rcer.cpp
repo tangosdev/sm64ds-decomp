@@ -124,7 +124,7 @@ int daPgRcer_c::InitResources()
 {
     int i;
 
-    mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(gOV019PenguinModelFile), 1, 1);
+    mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(gOV019PenguinModelFile), 1, 1);
 
     for (i = 0; i < 7; i++)
         dExtFrameCtrl_c::LoadFile(*data_ov019_02112788[i]);

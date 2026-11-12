@@ -57,12 +57,12 @@ extern "C" daObjEmmLog_c *daObjEmmLog_c_classInit() {
 }
 
 s32 daObjEmmLog_c::InitResources() {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov052_021124d4.model), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(*data_ov052_021124d4.model), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*data_ov052_021124d4.collision), mClsnMat,
-                          0x1000, mAngleY, *data_ov052_021124d4.clps);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*data_ov052_021124d4.collision), mClsnMat, 0x1000,
+                          mAngleY, *data_ov052_021124d4.clps);
 
     mBasePosY = mPosY;
     u8 amplitude = param1 & 0xff;

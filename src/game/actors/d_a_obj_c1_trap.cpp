@@ -177,11 +177,11 @@ int daObjC1_Trap_c::InitResources() {
     }
 
     mIsSpawner = 0;
-    mDoorModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov010_02112d08), 1, -1);
+    mDoorModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov010_02112d08), 1, -1);
     UpdateModelTransform();
     UpdateCollisionTransform();
-    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov010_02112d00), mDoorMat, 0x1000,
-                          mAngleY, data_ov010_021122f8);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov010_02112d00), mDoorMat, 0x1000, mAngleY,
+                          data_ov010_021122f8);
     mMeshCollider.SetStoodOnCallback(func_ov010_02111984);
     mMeshCollider.Enable(this);
     mOpenSpeed = 0;

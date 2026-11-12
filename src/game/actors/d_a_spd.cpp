@@ -176,8 +176,8 @@ void daSpd_c::OnTurnIntoEgg(daPly_c &player) {
 }
 
 int daSpd_c::InitResources() {
-    void *mf = dExtSimpleModel_c::LoadFile(data_ov071_02122f80);
-    ((dExtModel_c *)(&mAnmModel))->SetFile((BMD_File *)mf, 1, -1);
+    BMD_File *mf = dExtSimpleModel_c::LoadFile(data_ov071_02122f80);
+    ((dExtModel_c *)(&mAnmModel))->SetFile(mf, 1, -1);
     dExtFrameCtrl_c::LoadFile(gSpiderWalkAnimationFile);
     if (((dExtShadowModel_c *)(&mShadowModel))->InitCylinder() == 0)
         return 0;
