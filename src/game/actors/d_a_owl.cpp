@@ -254,12 +254,20 @@ void daOwl_c::func_ov094_021357a4()
 }
 
 #ifdef _MSC_VER
-/* Proof only (SM64DS_COOP_OWL_GRAB in port/hal/coop_talk.cpp): Hoot's own grab, run once as if `body` touched him. */
+/* Proof only (SM64DS_COOP_OWL_GRAB in port/hal/coop_talk.cpp): Hoot's own grab, run once as if `body` touched him while
+   MY B button is down (the Player's attach, func_ov002_020df840, reads the local pad word's bit 1, whoever the body is).
+   The pad bit is put back right after. */
+extern "C" u8 gActivePlayerSlot;
+extern "C" u16 data_0209f49c[];
 extern "C" int port_owl_grab_test(void *owl, void *body)
 {
     daOwl_c *self = (daOwl_c *)owl;
+    u16 *pad = (u16 *)((char *)data_0209f49c + gActivePlayerSlot * 0x18);
+    const u16 was = *pad;
+    *pad = (u16)(was | 2);
     self->mdCcAcPos_c.otherOwner = ((dActor_c *)body)->uniqueID;
     self->func_ov094_021357a4();
+    *pad = was;
     return self->mRider == (Player *)body;
 }
 #endif
