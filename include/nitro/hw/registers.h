@@ -54,6 +54,8 @@
 /* Colour special effects (alpha blending and brightness), one per engine. */
 #define REG_BLDCNT    (*(volatile u16 *)0x04000050)
 #define REG_DB_BLDCNT (*(volatile u16 *)0x04001050)
+#define REG_BLDALPHA    (*(volatile u16 *)0x04000052)
+#define REG_DB_BLDALPHA (*(volatile u16 *)0x04001052)
 
 /* Master brightness: fades the whole engine toward white or black. */
 #define REG_MASTER_BRIGHT    (*(volatile u16 *)0x0400006c)
@@ -84,6 +86,10 @@
 #define REG_BG3PA    (*(volatile u16 *)0x04000030)
 #define REG_DB_BG2PA (*(volatile u16 *)0x04001020)
 #define REG_DB_BG3PA (*(volatile u16 *)0x04001030)
+#define REG_BG2PD    (*(volatile u16 *)0x04000026)
+#define REG_BG3PD    (*(volatile u16 *)0x04000036)
+#define REG_DB_BG2PD (*(volatile u16 *)0x04001026)
+#define REG_DB_BG3PD (*(volatile u16 *)0x04001036)
 
 /* Windows: WIN0H/WIN1H are the x ranges, WIN0V/WIN1V the y ranges, WININ and
    WINOUT the layers shown inside and outside them. */
@@ -165,6 +171,20 @@
 /* Timer 0. The counter and the control word share an address: reads see the live
    count, writes set the reload value. */
 #define REG_TM0CNT_L (*(volatile u16 *)0x04000100)
+
+/* VRAM bank control, one byte per bank. VRAMCNT is A-D as one word and
+   VRAM_HI_CNT is H-I as one halfword; WRAMCNT sits between G and H. */
+#define REG_VRAMCNT     (*(volatile u32 *)0x04000240)
+#define REG_VRAMCNT_A   (*(volatile u8 *)0x04000240)
+#define REG_VRAMCNT_B   (*(volatile u8 *)0x04000241)
+#define REG_VRAMCNT_C   (*(volatile u8 *)0x04000242)
+#define REG_VRAMCNT_D   (*(volatile u8 *)0x04000243)
+#define REG_VRAMCNT_E   (*(volatile u8 *)0x04000244)
+#define REG_VRAMCNT_F   (*(volatile u8 *)0x04000245)
+#define REG_VRAMCNT_G   (*(volatile u8 *)0x04000246)
+#define REG_VRAM_HI_CNT (*(volatile u16 *)0x04000248)
+#define REG_VRAMCNT_H   (*(volatile u8 *)0x04000248)
+#define REG_VRAMCNT_I   (*(volatile u8 *)0x04000249)
 
 /* Memory control */
 #define REG_EXMEMCNT (*(volatile u16 *)0x04000204)
