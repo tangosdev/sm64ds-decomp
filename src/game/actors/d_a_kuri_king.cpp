@@ -103,6 +103,7 @@ enum daKuriKing_c_AssetId {
 #include "LevelRng.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/MtxStack.h"
 
 /* Resource handles this TU's static initializer constructs. The wrapper
  * spellings are reconstructed; constructor and destructor addresses, file
@@ -132,8 +133,6 @@ union KuriKingFreeState {
     KuriKingStateFn pmf;
 };
 
-extern "C" void Matrix4x3_FromRotationY(void *m, int ang);
-extern "C" void MTX_MultVec43(Vector3 *a, Matrix4x3 *m, Vector3 *b);
 extern "C" dCamera_c *gCamera;
 extern "C" int RandomIntInternal(int *seed);
 extern "C" u16 DecIfAbove0_Short(u16* p);
@@ -164,7 +163,6 @@ extern "C" s32 Vec3_HorzLen(const Vector3 *v);
 extern "C" s16 atan2_hold_d_a_kuri_king_1(s32 y, s32 x);
 extern "C" unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern "C" s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
-extern "C" void MTX_Concat43(void *out, void *a, void *b);
 extern "C" int *Vec3_LslInPlace(void *v, int n);
 extern "C" struct Matrix4x3 data_020a0e68;
 extern "C" struct Matrix4x3 IDENTITY_MATRIX4X3;
@@ -182,10 +180,6 @@ extern "C" void *data_ov074_02122e5c[];
 extern BMA_File data_ov010_021123f4;
 extern BTA_File data_ov010_021124ac;
 extern "C" void Vec3_Asr(Vector3* d, Vector3* s, int sh);
-extern "C" void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
-extern "C" void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);
-extern "C" void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z);
-extern "C" void Matrix4x3_ApplyInPlaceToRotationY(void* m, short a);
 extern "C" void Matrix4x3_ApplyInPlaceToScale(void* m, int x, int y, int z);
 extern "C" int func_02037e20(int *p);
 extern "C" unsigned int func_0201277c(unsigned int a);
@@ -1282,7 +1276,6 @@ extern "C" void func_ov074_02121270(Vector3 *out, daKuriKing_c *self, int bone) 
 }
 
 
-extern "C" void Matrix4x3_ApplyInPlaceToRotationY(void *m, short a);
 extern "C" void Matrix4x3_ApplyInPlaceToScale(void *m, int x, int y, int z);
 extern "C" struct Matrix4x3 data_020a0e68;
 void daKuriKing_c::UpdateBodyMatrix() {

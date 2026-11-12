@@ -198,9 +198,8 @@ void __timesdec(Decimal *result, const Decimal *x, const Decimal *y) {
     result->exp = (short)(x->exp + y->exp);
 
     if (accumulator) {
-        short *exp = (short *)(int)((char *)result + 2);
         *--ip = (unsigned char)accumulator;
-        *exp = *exp + 1;
+        result->exp++;
     }
 
     for (i = 0; i < 32 && ip < ep; i++, ip++) {

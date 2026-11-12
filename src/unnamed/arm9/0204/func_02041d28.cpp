@@ -2,10 +2,10 @@
 #include "private/arm9_a1fc0_file_share.h"
 #include "nitro/os/system.h"
 #include "nitro/fs/file.h"
+#include "nitro/wbt.h"
 
 extern "C" {
 
-extern int WBT_RegisterBlock(void *node, int a1, void *a2, int a3, int arg5, unsigned short arg6);
 extern void func_02041b24(FileShareParentArea *area, FileShareNode *node);
 
 extern char data_02082158[];
@@ -30,8 +30,8 @@ void func_02041d28(char *r7, FileShareNode *node, int) {
         if (node->mRefCount <= 0) {
             unsigned int diff = FS_GetLength(&node->mFile);
             int fileId = node->mFileId;
-            WBT_RegisterBlock(node->mRegion, fileId, data_02082158,
-                              (diff <= 0x400) ? (int)node->mPages[0] : 0, diff, 0);
+            WBT_RegisterBlock(&node->mRegion, fileId, data_02082158,
+                              (diff <= 0x400) ? node->mPages[0] : 0, diff, 0);
             func_02041b24((FileShareParentArea *)r7, node);
         }
         for (bit = 0;; bit++) {

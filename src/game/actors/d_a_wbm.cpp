@@ -216,7 +216,7 @@ int daWbm_c::Behavior()
         mdCcAc_c.Clear();
         mdCcAc_c.Update();
     } else {
-        DecIfAbove0_Short((u16 *)&mStateTimer);
+        DecIfAbove0_Short(&mStateTimer);
     }
     return 1;
 }
@@ -279,7 +279,7 @@ void daWbm_c::StateDrop()
     int x, y, z;
     int playerY, bombY;
 
-    if ((u16)mStateTimer != 0)
+    if (mStateTimer != 0)
         return;
     player = ClosestPlayer();
     if (player == 0)

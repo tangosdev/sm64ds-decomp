@@ -32,7 +32,6 @@
  *
  * Known limits:
  *   func_0200fa04 is Behavior's impact dust; no named method in this TU.
- *   VEC_Add: no shared header declares it.
  *   data_ov023_02112088 / 02112080 are resource handles this TU's sinit
  *   owns; data_ov064_0211ba4c (CLPS) is overlay .data.
  *   No daPly_c.h / dCamera_c.h.
@@ -48,11 +47,10 @@ enum d_a_obj_fm_battan_AssetId { ASSET_FM_BATTAN_BMD = 0x0616, ASSET_FM_BATTAN_K
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 
-/* local extern: no shared header declares these. */
 extern CLPS_Block data_ov064_0211ba4c;
 extern "C" {
-extern void VEC_Add(Vector3 *, Vector3 *, Vector3 *);
 extern void *func_0200fa04(dActor_c *, Vector3 *, int);
 
 /* The 8-byte store into the mesh collider's +0x18 callback slot. */

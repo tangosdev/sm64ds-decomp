@@ -143,14 +143,14 @@ struct SwoopPositionWords { int w[3]; };
 extern "C" {
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void* m, short angX);
-/* local extern: no shared math header declares MTX_MultVec43. */
+/* local extern: math/MtxStack.h would clash with the void * MTX_Concat43
+   below, which takes the POD s32[12] mHeldMat. */
 extern void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *res);
 extern Matrix4x3 data_020a0e68;
 extern signed char gCurrentSublevel;
 extern void func_02012694(unsigned int, void *);
 extern s16 Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int VEC_Mag(const Vector3 *v);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z);
@@ -340,9 +340,6 @@ typedef int (daJango_c::*PMF)();
 struct StateRecord { PMF enter; PMF update; };
 struct dCc_c;
 struct dBgCh_Actr;
-extern "C" {
-unsigned short DecIfAbove0_Short(unsigned short *p);
-}
 
 /* One frame: tick the two timers, run the current state's update, apply gravity
    and move, copy the steering angles onto the model angles, rebuild the

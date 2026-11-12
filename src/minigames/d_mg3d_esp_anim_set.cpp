@@ -1067,9 +1067,7 @@ void dScMg3DEsp_c::Results() {
                 while (idx >= 5)
                     idx -= 5;
                 if (gMgScene != 0) {
-                    /* The ROM loads the pointer again here; a plain read
-                       reuses the earlier load. */
-                    dScMgBase_c *g = *(dScMgBase_c * volatile *)&gMgScene;
+                    dScMgBase_c *g = gMgScene;
                     if (g->mHudScore < 9999)
                         g->mHudScore++;
                     if (g->mHudScore > g->mBestHudScore)

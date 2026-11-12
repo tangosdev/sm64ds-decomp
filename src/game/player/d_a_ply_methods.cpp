@@ -2229,7 +2229,6 @@ void daPly_c::func_ov002_020bf88c() {
 
 extern "C" {
 void daPly_c::func_ov002_020bf90c() {
-    extern int func_0201226c(int a0, int a1, int a2, int a3, int a4, short a5);
     if (this->mHorzSpeed == 0) return;
     if (mIsAirborne != 0) return;
     if (mIsInShallowWater != 0) return;
@@ -2242,7 +2241,7 @@ void daPly_c::func_ov002_020bf90c() {
         Particle::RunningSlidingDustAt(this->mPosX, this->mPosY, this->mPosZ);
 
     mLoopingSoundHandle = func_0201226c(mLoopingSoundHandle, 0, mGroundSoundType + 0xe2,
-                                        (int)&mCamSpacePos, this->mHorzSpeed, 0);
+                                        &mCamSpacePos, this->mHorzSpeed, 0);
 }
 }
 
@@ -8042,14 +8041,13 @@ int daPly_c::func_ov002_020cb354() {
 
 extern "C" {
 int daPly_c::func_ov002_020cb400() {
-    extern int func_02012194(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
     int v = mAngleYSpeed / 16;
     if (v >= 0x100)
         v = 0x100;
     int code = 0x107;
     if (mClimbClsn->flags & 0x1000000)
         code = 0x105;
-    int r = func_02012194(mLoopingSoundHandle, 0, code, 3, v, (int)&mCamSpacePos, 0);
+    int r = func_02012194(mLoopingSoundHandle, 0, code, 3, v, &mCamSpacePos, 0);
     mLoopingSoundHandle = r;
     return r;
 }
@@ -8792,7 +8790,6 @@ int daPly_c::St_MetalWaterWater_Init() {
 extern "C" {
 int daPly_c::St_MetalWaterGround_Main() {
     extern void ApproachAngle(void*, short, int, int, int);
-    extern void func_0201251c(int, int, void*, int);
     extern ControllerInput data_0209f498[];
     extern void func_ov002_020cd190(void*);
     if (func_ov002_020cec2c())
@@ -10617,7 +10614,6 @@ int daPly_c::func_ov002_020d0d2c() {
 extern "C" {
 int daPly_c::St_WallSlide_Main() {
     typedef int Fix12i;
-    extern int func_0201226c(int a0, int a1, int a2, int a3, int a4, short a5);
     extern unsigned char data_0209f49e[];
 
     *((int *)((char *)&mPeakY)) = *((int *)((char *)&mPosY));
@@ -10632,10 +10628,8 @@ int daPly_c::St_WallSlide_Main() {
             Particle::RunningSlidingDustAt(*((int *)((char *)&mPosX)), *((int *)((char *)&mPosY)),
                                            *((int *)((char *)&mPosZ)));
         }
-        *((int *)((char *)&mLoopingSoundHandle)) =
-            func_0201226c(*((int *)((char *)&mLoopingSoundHandle)), 0,
-                          (*((int *)((char *)&mGroundSoundType))) + 0xe2,
-                          (int)((char *)&mCamSpacePosX), *((int *)((char *)&mHorzSpeed)), 0);
+        mLoopingSoundHandle = func_0201226c(mLoopingSoundHandle, 0, mGroundSoundType + 0xe2,
+                                            &mCamSpacePos, mHorzSpeed, 0);
         if ((*((unsigned short *)(&data_0209f49e[gActivePlayerSlot * 0x18]))) & 2) {
             if (mStateTimer) {
                 mAngleY = mAngleYSpeed;
@@ -11172,7 +11166,6 @@ void daPly_c::func_ov002_020d1f78(u32 param) {
     extern Rec18 data_0209f4ac[];
     extern Rec18 data_0209f49c[];
     extern Rec18 data_0209f4a0[];
-    extern void func_0201251c(int a, int b, int c, int d);
 
     daPly_c *p = this;
     int idx;
@@ -11220,7 +11213,7 @@ void daPly_c::func_ov002_020d1f78(u32 param) {
         return;
     }
 
-    func_0201251c(0, p->mGroundSoundType + 0x20, (int)(&p->mCamSpacePosX), p->mHorzSpeed);
+    func_0201251c(0, p->mGroundSoundType + 0x20, &p->mCamSpacePos, p->mHorzSpeed);
 
     state = p->mGroundSoundType;
     target = -1;
@@ -11853,7 +11846,6 @@ extern "C" {
 int daPly_c::St_TurnAround_Main() {
 
     extern void ApproachAngle(s16* cur, s16 target, int divisor, int band, int maxStep);
-    extern int func_0201226c(int a0, int a1, int a2, int a3, int a4, s16 a5);
     extern u16 data_0209f49e[];
     extern s16 data_0209f4a0[];
     int r5v;
@@ -11891,7 +11883,7 @@ int daPly_c::St_TurnAround_Main() {
     } else {
         func_ov002_020bf88c();
         mLoopingSoundHandle = func_0201226c(mLoopingSoundHandle, 0, mGroundSoundType + 0xe2,
-                                            (int)&mCamSpacePosX, mHorzSpeed, 0);
+                                            &mCamSpacePos, mHorzSpeed, 0);
     }
 
     AdvanceAnims();
@@ -11964,7 +11956,6 @@ int daPly_c::func_ov002_020d36d8(int arg) {
 extern "C" {
 int daPly_c::St_Walk_Main() {
     extern void ApproachAngle(short* cur, short target, int divisor, int band, int maxStep);
-    extern int func_0201226c(int a0, int a1, int a2, int a3, int a4, short a5);
     extern s16 data_0209f4a0[];
 
     if ((u16)(mStateFlags & 0x800)) {
@@ -11991,7 +11982,7 @@ int daPly_c::St_Walk_Main() {
     if (mIsBraking != 0) {
         if (!this->IsAnim(0x37)) {
             int result = func_0201226c(mLoopingSoundHandle, 0, mGroundSoundType + 0xe2,
-                                       (int)&mCamSpacePosX, mHorzSpeed, 0);
+                                       &mCamSpacePos, mHorzSpeed, 0);
             mLoopingSoundHandle = result;
         }
         if (this->FinishedAnim()) {
@@ -12546,7 +12537,6 @@ void daPly_c::func_ov002_020d4748() {
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 extern "C" {
 void daPly_c::PlayLandingEffects() {
-    extern void func_0201251c(int a, int b, int c, int d);
     int id;
     if (mIsInShallowWater) {
         mParticle1 = Particle::System::NewCheckWaterRipple(mParticle1, kPtclShallowWaterLand, mPosX,
@@ -12562,9 +12552,9 @@ void daPly_c::PlayLandingEffects() {
         }
     } else {
         if (mIsMetal == 0) {
-            func_0201251c(0, mGroundSoundType + 0x20, (int)&mCamSpacePos, mHorzSpeed);
+            func_0201251c(0, mGroundSoundType + 0x20, &mCamSpacePos, mHorzSpeed);
         } else {
-            func_0201251c(0, 0xaa, (int)&mCamSpacePos, mHorzSpeed);
+            func_0201251c(0, 0xaa, &mCamSpacePos, mHorzSpeed);
         }
     }
     if (gSubSoundID == 0x2e)
@@ -16768,7 +16758,6 @@ void daPly_c::func_ov002_020dc560() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_ButtSlide_Main() {
-    extern int func_0201226c(int a0, int a1, int a2, char* a3, int a4, int a5);
     extern u16 data_0209f49e[];
     switch (mStatePhase) {
     case 0:
@@ -16800,7 +16789,7 @@ int daPly_c::St_ButtSlide_Main() {
                 return 1;
             }
             mLoopingSoundHandle = func_0201226c(mLoopingSoundHandle, 0, mGroundSoundType + 0xe2,
-                                                (char *)&mCamSpacePos, mHorzSpeed, 0);
+                                                &mCamSpacePos, mHorzSpeed, 0);
         } else {
             mStateStep = 0;
             mStatePhase = 1;
@@ -18448,7 +18437,6 @@ extern "C" {
 int daPly_c::St_Fly_Main() {
     extern void MTX_MultVec43(void *dst, void *src, void *out);
     extern void Vec3_MulScalarInPlace(s32 *v, s32 s);
-    extern int func_02012194(char *, int a1, int a2, int a3, int s0, void *s1, int s2);
     extern u16 data_0209f49e;
     extern u16 data_0209f49c;
     mPeakY = mPosY;
@@ -18564,8 +18552,7 @@ skip:
         if (r1 >= 0x100) {
             r1 = 0x100;
         }
-        mLoopingSoundHandle =
-            func_02012194((char *)mLoopingSoundHandle, 0, 0x104, 3, r1, &mCamSpacePos, 0);
+        mLoopingSoundHandle = func_02012194(mLoopingSoundHandle, 0, 0x104, 3, r1, &mCamSpacePos, 0);
     }
     AdvanceAnims();
     return 1;

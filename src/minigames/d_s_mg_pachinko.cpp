@@ -121,10 +121,9 @@ extern void FreeGfxSlotsById(int arg);
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 extern void Deallocate(void *p);
+/* local extern: nitro/gx/gx_load.h leaves GX_LoadBG3Scr out until
+ * decl_common.h's non-const spelling of it goes. */
 extern void GX_LoadBG3Scr(void *dst, u32 offset, u32 len);
-extern void GX_LoadBG2Scr(const void *src, u32 offset, u32 count);
-extern void GXS_LoadBG3Scr(const void *src, u32 offset, u32 count);
-extern void GXS_LoadBG0Scr(const void *src, int offset, int count);
 
 /* --- ROM data this TU reads --- */
 extern unsigned char gMainScreenLayers;

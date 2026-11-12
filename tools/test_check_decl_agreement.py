@@ -1710,6 +1710,58 @@ class DefinitionOwnershipTests(unittest.TestCase):
         self.assertNotIn("own_target", out)
 
 
+class DeclarationScopeTests(unittest.TestCase):
+    """The declaration side of the ownership rule above.
+
+    `namespace Memory { void Deallocate(void *, Heap *); }` in include/Memory.h
+    declares `_ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE`, but it was recorded as a
+    declaration of the flat name `Deallocate`, which the tree ALSO defines (C
+    linkage, src/Deallocate.cpp). That one record made a false arity finding
+    against the C function, and made Memory.h answer the redeclaration gate for
+    every C-linkage `extern void Deallocate(void *);`. The definition branches
+    already claimed nothing in a mangled scope; declarations now do the same.
+
+    The two `assertEqual(..., [])` cases and the end-to-end case fail on the parser
+    as it was; the two controls pass in both states.
+    """
+
+    def _decls(self, rel, code):
+        decls, _defs, _u = CDA.parse_file(rel, code, {})
+        return sorted(d.symbol for d in decls)
+
+    def test_a_namespaced_header_declaration_is_not_the_flat_symbol(self):
+        self.assertEqual(
+            self._decls("include/x.h", "namespace P { void target(void *); }\n"), [])
+
+    def test_a_namespaced_extern_in_a_cxx_TU_is_not_either(self):
+        self.assertEqual(
+            self._decls("src/x.cpp", "//cpp\nnamespace P { extern int target; }\n"), [])
+
+    def test_extern_c_inside_a_namespace_still_declares_the_flat_name(self):
+        """Language linkage beats scope. Control."""
+        self.assertEqual(
+            self._decls("src/x.cpp",
+                        '//cpp\nnamespace P { extern "C" void target(void *); }\n'),
+            ["target"])
+
+    def test_a_plain_header_declaration_still_is(self):
+        """Control: the common case is untouched."""
+        self.assertEqual(self._decls("include/x.h", "void target(void *);\n"),
+                         ["target"])
+
+    def test_a_namespaced_overload_does_not_fabricate_an_arity_finding(self):
+        """The Memory.h false positive, end to end. Fails before the fix, rc 1."""
+        repo = BigRepo.shared()
+        repo.reset()
+        repo.write("include/own_mem.h",
+                   "namespace M { void own_free(void *, int); }\n")
+        repo.write("src/own_free.cpp",
+                   '//cpp\nextern "C" void own_free(void *p) { }\n')
+        rc, out = repo.run_main(["--list"])
+        self.assertEqual(rc, 0, out)
+        self.assertNotIn("own_free", out)
+
+
 class DeletedTypeInputTests(unittest.TestCase):
     """Item 2, `:1407`: `_paths_of` threw away every `D` row.
 

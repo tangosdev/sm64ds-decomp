@@ -5,20 +5,20 @@
  * directly where pret calls MI_Init. */
 #include "nitro/os/spinLock.h"
 #include "nitro/os/thread.h"
+#include "nitro/os/reset.h"
 #include "nitro/pxi/init.h"
+#include "nitro/os/interrupt.h"
+#include "nitro/spi/pm.h"
 
 extern "C" {
 
 extern void OS_InitArena(void);
 extern void OS_InitArenaEx(void);
-extern void OS_InitIrqTable(void);
 extern void OS_InitException(void);
 extern void MI_SetWramBank(int cnt);
 extern void OS_InitVAlarm(void);
-extern void OS_InitReset(void);
 extern void CTRDG_Init(void);
 extern void CARD_Init(void);
-extern void PM_Init(void);
 
 void OS_Init(void) {
     OS_InitArena();

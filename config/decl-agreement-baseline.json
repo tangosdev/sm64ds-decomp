@@ -3961,9 +3961,6 @@
     "_ZN3IRQ10EnableIRQsEj": {
       "src/unnamed/arm9/0204/func_0204175c.cpp": [
         "return:void"
-      ],
-      "src/CARDi_TryReadCardDma.cpp": [
-        "return:void"
       ]
     },
     "_ZN3IRQ11DisableIRQsEj": {
@@ -3974,14 +3971,6 @@
     "_ZN3IRQ13SetIRQHandlerEjPFvvE": {
       "src/unnamed/arm9/0201/func_0201a4e4.c": [
         "param:#2 void (*)(void)"
-      ],
-      "src/CARDi_TryReadCardDma.cpp": [
-        "param:#2 void (*)(void)"
-      ]
-    },
-    "_ZN3IRQ15ClearInterruptsEj": {
-      "src/CARDi_TryReadCardDma.cpp": [
-        "return:void"
       ]
     },
     "_ZN3IRQ7DisableEv": {
@@ -3995,9 +3984,6 @@
         "return:int"
       ],
       "src/unnamed/arm9/0206/func_02065af0.cpp": [
-        "return:int"
-      ],
-      "src/CARDi_TryReadCardDma.cpp": [
         "return:int"
       ]
     },
@@ -4039,10 +4025,6 @@
         "return:void"
       ],
       "src/CARDi_TaskThread.cpp": [
-        "return:void"
-      ],
-      "src/CARDi_TryReadCardDma.cpp": [
-        "param:#1 int",
         "return:void"
       ]
     },
@@ -12680,9 +12662,6 @@
     "func_01ff8000": {
       "src/ldexp.c": [
         "kind:function"
-      ],
-      "src/CARDi_TryReadCardDma.cpp": [
-        "kind:data"
       ]
     },
     "func_01ff9378": {
@@ -12843,23 +12822,6 @@
       ],
       "src/unnamed/ov002/func_ov002_020e1e70.c": [
         "return:int"
-      ]
-    },
-    "func_02012194": {
-      "src/_ZN7daPly_c11St_Fly_MainEv.cpp": [
-        "param:#6 void *",
-        "param:#7 int"
-      ]
-    },
-    "func_0201226c": {
-      "src/_ZN7daPly_c17St_ButtSlide_MainEv.cpp": [
-        "param:#4 char *",
-        "param:#6 int"
-      ]
-    },
-    "func_0201251c": {
-      "src/game/stages/d_ent_obj.cpp": [
-        "param:#3 void *"
       ]
     },
     "func_0201267c": {
@@ -15423,9 +15385,6 @@
       ]
     },
     "MI_CpuFill8": {
-      "src/engine/mb/MB_Parent.cpp": [
-        "param:#2 int"
-      ],
       "src/engine/mb/MB_WmBase.cpp": [
         "param:#2 int"
       ],
@@ -15746,39 +15705,9 @@
         "param:#1 const unsigned char *"
       ]
     },
-    "func_02071910": {
-      "src/unnamed/arm9/0207/func_020729f4.c": [
-        "arity:2"
-      ],
-      "src/unnamed/arm9/0207/func_02072168.cpp": [
-        "arity:2",
-        "return:int"
-      ]
-    },
     "sys_readc": {
       "src/__read_console.c": [
         "return:unsigned char"
-      ]
-    },
-    "func_02072168": {
-      "src/unnamed/arm9/0207/func_02071f1c.c": [
-        "param:#3 int"
-      ],
-      "src/unnamed/arm9/0207/func_02071be8.cpp": [
-        "param:#1 struct Src *",
-        "param:#2 Ctx *",
-        "param:#3 unsigned char *"
-      ]
-    },
-    "func_02072dac": {
-      "src/unnamed/arm9/0207/func_020729f4.c": [
-        "param:#1 void *"
-      ],
-      "src/unnamed/arm9/0207/func_02071be8.cpp": [
-        "param:#2 Ctx *"
-      ],
-      "src/unnamed/arm9/0207/func_02072168.cpp": [
-        "param:#2 char *"
       ]
     },
     "__throw_catch_compare": {
@@ -16899,43 +16828,11 @@
     "OS_WakeupThreadDirect": {
       "src/CARDi_EndTask.cpp": [
         "param:#1 char *"
-      ],
-      "src/CARDi_ReadEnd.cpp": [
-        "param:#1 Obj *"
       ]
     },
     "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b24Ev": {
       "src/game/actors/d_a_demo.cpp": [
         "arity:0"
-      ]
-    },
-    "func_02071864": {
-      "src/unnamed/arm9/0207/func_02071be8.cpp": [
-        "param:#1 struct Src *",
-        "param:#2 Ctx *"
-      ],
-      "src/unnamed/arm9/0207/func_02072168.cpp": [
-        "param:#1 char *",
-        "param:#2 char *"
-      ]
-    },
-    "func_02071ccc": {
-      "src/unnamed/arm9/0207/func_02071be8.cpp": [
-        "param:#1 struct Src *"
-      ]
-    },
-    "func_02071d3c": {
-      "src/unnamed/arm9/0207/func_02071be8.cpp": [
-        "param:#1 struct Src *",
-        "param:#2 Ctx *",
-        "param:#3 int *",
-        "return:unsigned char *"
-      ]
-    },
-    "func_02072014": {
-      "src/unnamed/arm9/0207/func_02071be8.cpp": [
-        "param:#1 struct Src *",
-        "param:#2 Ctx *"
       ]
     },
     "func_020729f4": {
@@ -16982,6 +16879,16 @@
     "PMi_SendLEDPatternCommandAsync": {
       "include/nitro/spi/pm.h": [
         "param:#2 void (*)(unsigned int, void *)"
+      ]
+    },
+    "MB_CommSetParentStateCallback": {
+      "include/nitro/mb/mb.h": [
+        "param:#1 void (*)(unsigned short, unsigned int, void *)"
+      ]
+    },
+    "func_0203f9d4": {
+      "include/private/arm9_a0f90_channel_measure.h": [
+        "param:#2 void (*)(ChannelMeasureReply *)"
       ]
     }
   },

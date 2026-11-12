@@ -109,24 +109,19 @@ s32 daObjWc_Obj05_c::Behavior() {
     case 0:
         if (mPlayerOnTop != 0) {
             if (mPrevPlayerOnTop == 0) {
-                u8 *p = &mState;
-                *p = *p + 1;
+                mState++;
             }
         }
         mPrevPlayerOnTop = mPlayerOnTop;
         break;
     case 1: {
-        s32 *p60 = &mPosY;
-        *p60 = *p60 - 0x14000;
+        mPosY -= 0x14000;
         mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x8d, mCamSpacePos, 0);
         {
             int v = mRestPosY + (int)0xff5d8000;
             if (mPosY <= v) {
                 mPosY = v;
-                {
-                    u8 *p = &mState;
-                    *p = *p + 1;
-                }
+                mState++;
                 mDwellTimer = 0;
             }
         }
@@ -136,10 +131,7 @@ s32 daObjWc_Obj05_c::Behavior() {
         if ((u16)mDwellTimer >= 0x6e) {
             int snd = Sound::PlayLong(mSoundHandle, 3, 0x8d, mCamSpacePos, 0);
             mSoundHandle = snd;
-            {
-                s32 *p60 = &mPosY;
-                *p60 = *p60 + 0xa000;
-            }
+            mPosY += 0xa000;
             if (mPosY >= mRestPosY) {
                 mPosY = mRestPosY;
                 mState = 0;

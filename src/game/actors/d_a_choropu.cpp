@@ -420,7 +420,7 @@ void daChoropu_c::func_ov080_02123fcc()
         while (1) {
             a = dActor_c::FindWithActorID(daChoropu_ACTOR_ID, a);
             if (a == 0) break;
-            if (a != (dActor_c *)this) {
+            if (a != this) {
                 if (mGroupId == ((daChoropu_c *)a)->mGroupId) {
                     mPartnerIDs[mNumPartners] = ((daChoropu_c *)a)->uniqueID;
                     (mNumPartners)++;

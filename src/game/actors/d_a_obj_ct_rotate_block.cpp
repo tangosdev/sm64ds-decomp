@@ -76,12 +76,6 @@ struct RotateBlockCollisionFilePtr : SharedFilePtr {
     ~RotateBlockCollisionFilePtr();
 };
 
-extern "C" {
-extern void MTX_MultVec43(Vector3 *src, Matrix4x3 *mtx, Vector3 *dst);
-extern u16 DecIfAbove0_Short(u16 *p);
-extern int RandomIntInternal(int *seed);
-}
-
 extern u8 data_0209f2c0;
 
 #pragma defer_codegen off

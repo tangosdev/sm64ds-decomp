@@ -541,8 +541,7 @@ void daRedBombhei_c::UpdateTalk() {
         u8 pageState = data_0209d6bc;
         if (this->mPrevMsgPageState != pageState) {
             if (pageState == 3 || pageState == 9) {
-                u8 *page = &this->mMsgPage;
-                *page = (u8)(*page + 1);
+                this->mMsgPage++;
             }
         }
     }

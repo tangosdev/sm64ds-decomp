@@ -1,7 +1,6 @@
 #include "common.h"
 #include "nitro/fx/fx_trig.h"
-
-extern void MTX_RotX43_(Matrix4x3 *m, int s, int c);
+#include "math/MtxStack.h"
 
 void Matrix4x3_FromRotationX(Matrix4x3 *m, int angle) {
     int a = (unsigned short)angle >> 4;

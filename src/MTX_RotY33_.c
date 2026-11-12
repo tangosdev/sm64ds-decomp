@@ -6,8 +6,10 @@
 // from (sin, cos): {c, 0, -s, 0, 1, 0, s, 0, c} with 4096 = 1.0. Identified as
 // the Nitro SDK's FX_mtx33.c MTX_RotY33_ from pret's FX_mtx33.c, whose body
 // is the same instructions.
+#include "math/Matrix.h"
+
 #pragma thumb on
-asm void MTX_RotY33_(int *m, int s, int c) {
+asm void MTX_RotY33_(Matrix3x3 *m, int s, int c) {
     str r2, [r0, #0]
     str r2, [r0, #32]
     mov r3, #0
