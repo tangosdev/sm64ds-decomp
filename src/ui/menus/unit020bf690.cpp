@@ -47,6 +47,7 @@
 #include "dExtModel_c.h"
 #include "nitro/hw/registers.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/MtxStack.h"
 
 extern "C" {
 
@@ -66,8 +67,6 @@ typedef char Ov007Fade_size_must_be_0x14[sizeof(Ov007Fade) == 0x14 ? 1 : -1];
 extern Ov007Fade *sScreenFade;
 
 extern void InitialiseVramGlobals(void);
-extern int MTX_Inverse43(const Matrix4x3 *src, Matrix4x3 *dst);
-extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *mat, Vector3 *out);
 extern void func_ov007_020b3edc(int size);
 extern void *func_ov007_020b3f20(int idx);
 extern void func_ov007_020bbff0(void *c);
