@@ -8390,14 +8390,6 @@
         "return:unsigned int"
       ]
     },
-    "data_020a8114": {
-      "src/unnamed/arm9/0205/func_0205ff08.c": [
-        "return:int"
-      ],
-      "src/unnamed/arm9/0205/func_0205ff20.cpp": [
-        "return:unsigned int"
-      ]
-    },
     "data_020a89ac": {
       "src/WM_GetSystemWork.c": [
         "return:int"
@@ -17257,6 +17249,43 @@
     "NNS_FndVisitAllocatedForExpHeap": {
       "include/nnsys/fnd.h": [
         "param:#2 void (*)(void *, NNSFndHeapHandle, unsigned int)"
+      ]
+    }
+,
+    "PM_SendUtilityCommandAsync": {
+      "include/nitro/spi/pm.h": [
+        "param:#2 void (*)(unsigned int, void *)"
+      ]
+    },
+    "PMi_ReadRegisterAsync": {
+      "include/nitro/spi/pm.h": [
+        "param:#3 void (*)(unsigned int, void *)"
+      ]
+    },
+    "PMi_SetLEDAsync": {
+      "include/nitro/spi/pm.h": [
+        "param:#2 void (*)(unsigned int, void *)"
+      ]
+    },
+    "PM_SetBackLightAsync": {
+      "include/nitro/spi/pm.h": [
+        "param:#3 void (*)(unsigned int, void *)"
+      ]
+    },
+    "PM_ForceToPowerOffAsync": {
+      "include/nitro/spi/pm.h": [
+        "param:#1 void (*)(unsigned int, void *)"
+      ]
+    },
+    "PM_GoSleepMode": {
+      "include/nitro/spi/pm.h": [
+        "param:#1 unsigned int",
+        "param:#2 unsigned int"
+      ]
+    },
+    "PMi_SendLEDPatternCommandAsync": {
+      "include/nitro/spi/pm.h": [
+        "param:#2 void (*)(unsigned int, void *)"
       ]
     }
   },

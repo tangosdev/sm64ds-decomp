@@ -31,7 +31,8 @@ typedef struct TPData {
 /* tp.c's state, data_020a80cc.
  *
  * SIZE 0x38, fixed two ways: the first symbol row past the interior
- * data_020a80e4 (below) is data_020a8104, exactly 0x38 from the start, and
+ * data_020a80e4 (below) is pm.c's PMi_IsInit at 0x020a8104, exactly 0x38
+ * from the start, and
  * the last member is the volatile halfword pair the command helpers poll at
  * +0x34/+0x36.
  *

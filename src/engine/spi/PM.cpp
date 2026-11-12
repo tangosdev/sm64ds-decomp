@@ -10,71 +10,97 @@
  * synchronous form passes PMi_DummyCallback, which stores the result in a
  * stack word, and spins in PMi_WaitBusy until the lock drops.
  *
- * Names: pret's pokediamond (SPI_pm.s) and pret's pmd-sky (spi_pm.s) keep
- * this file as assembly under the same function names; pokediamond writes
- * LED and LCD in capitals, pmd-sky Led and Lcd, and this file follows
- * pokediamond. Each function here is matched to one of theirs by its body:
- * the PXI command it sends (0x60 sleep start, 0x63 utility, 0x65 register
- * read, 0x66 LED pattern), the utility command numbers (LED 1..3, backlight
- * 4..9, power off 0xe), and the registers it reads and writes (POWCNT1
- * 0x04000304, IME 0x04000208, OS_GetVBlankCount). mwccarm emits the
- * bodies in reverse, so PMi_Lock, the first in source, is the highest in the
- * ROM.
+ * Names and spellings: ntrtwl/NitroSDK has the C source (spi/ARM9/src/pm.c),
+ * and pret's pokediamond (SPI_pm.s) and pmd-sky (spi_pm.s) carry it as
+ * assembly under the same function names. Each function here is matched to
+ * one of theirs by its body: the PXI command it sends, the utility command
+ * numbers, and the registers it reads and writes. The statics take pm.c's
+ * names. mwccarm emits the bodies in reverse, so PMi_Lock, the first in
+ * source, is the highest in the ROM.
  *
- * This SDK is older than either pret's. The channel state is separate
- * variables, not one PMi_Work struct. There are no sleep callback lists
+ * This SDK is older than all three. There are no sleep callback lists
  * (PM_GoSleepMode saves neither the backlights nor the display registers),
- * no amplifier control (no PMi_SetAmp), and no register write or LED-pattern
- * read, so the LED-pattern sender is the lowest function.
- * PM_ForceToPowerOffAsync sends the command without turning the LCD off
- * first. PMi_WaitBusy spins on the lock without polling the PXI receive FIFO.
- * PMi_CommonCallback stores register replies for commands 0x70..0x73, not
- * 0x70..0x74.
+ * no amplifier or sound control (no PMi_SetAmp), and no register write or
+ * LED-pattern read, so the LED-pattern sender is the lowest function.
+ * PM_ForceToPowerOffAsync sends the command without turning the LCD on
+ * first, and PMi_WaitBusy spins on the lock without polling the PXI receive
+ * FIFO. The register-read slots are four (REG0VALUE..REG3VALUE), not five.
+ * PM_GoSleepMode waits out the wake-up before it checks for a pulled card,
+ * not after.
  */
 #include "types.h"
 #include "nitro/os/system.h"
 #include "nitro/os/interrupt.h"
 #include "nitro/os/interrupt_vblank.h"
+#include "nitro/os/thread.h"
 #include "nitro/hw/registers.h"
 #include "nitro/spi/pm.h"
 #include "nitro/ctrdg/ctrdg_common.h"
+#include "nitro/hw/mmap_shared.h"
+
+/* The SDK's nitro/types.h spellings; include/types.h has no BOOL. */
+typedef int BOOL;
+#define TRUE 1
+#define FALSE 0
+#define NULL 0
 
 #define PXI_FIFO_TAG_PM 8
 #define PXI_PROC_ARM7 1
+#define PXI_FIFO_SUCCESS 0
 
-
-#define PM_TRIGGER_CARD 0x08
-#define PM_TRIGGER_CARTRIDGE 0x10
-
-#define PM_LCD_POWER_OFF 0
-#define PM_LCD_POWER_ON 1
-
-/* The SDK's inline IME helpers: each returns the previous IME. */
-static inline u16 OS_DisableIrq(void) {
-    u16 prep = REG_IME;
-    REG_IME = 0;
-    return prep;
+/* pm.c's packet builders: a start/end bit pair, the packet's sequence number,
+ * then a command and one data byte, or a halfword of data. */
+inline u32 PMi_MakeData1(u32 bit, u32 seq, u32 command, u32 data) {
+    return (bit) | ((seq) << SPI_PXI_INDEX_SHIFT) | ((command) << 8) | ((data) & 0xff);
 }
 
-static inline u16 OS_EnableIrq(void) {
+inline u32 PMi_MakeData2(u32 bit, u32 seq, u32 data) {
+    return (bit) | ((seq) << SPI_PXI_INDEX_SHIFT) | ((data) & 0xffff);
+}
+
+#define PMi_SetCallback(callback, arg)      do {                                        PMi_Work.callback = (callback);         PMi_Work.callbackArg = (arg);       } while (0)
+
+#define PMi_WAIT_FRAME 7
+
+/* The SDK's inline IME helpers (nitro/os/common/interrupt.h): each returns
+ * the previous IME. Local because an inline body in nitro/os/interrupt.h
+ * would renumber the @NNN symbols of all its includers. */
+static inline BOOL OS_EnableIrq(void) {
     u16 prep = REG_IME;
     REG_IME = 1;
-    return prep;
+    return (BOOL)prep;
 }
 
-static inline u16 OS_RestoreIrq(u16 enable) {
+static inline BOOL OS_DisableIrq(void) {
     u16 prep = REG_IME;
-    REG_IME = enable;
-    return prep;
+    REG_IME = 0;
+    return (BOOL)prep;
+}
+
+static inline BOOL OS_RestoreIrq(BOOL enable) {
+    u16 prep = REG_IME;
+    REG_IME = (u16)enable;
+    return (BOOL)prep;
+}
+
+/* The display's power bit (nitro/gx/gx.h's GXi_PowerLCD). */
+#define REG_GX_POWCNT_LCD_MASK 0x0001
+
+static inline void GXi_PowerLCD(BOOL enable) {
+    if (enable) {
+        REG_POWCNT1 |= REG_GX_POWCNT_LCD_MASK;
+    } else {
+        REG_POWCNT1 &= ~REG_GX_POWCNT_LCD_MASK;
+    }
 }
 
 extern "C" {
 
-extern u16 data_020a8104;          /* set once PM_Init has run */
-extern volatile int data_020a8108; /* command 0x60 answered */
-extern int data_020a810c;          /* command 0x62 answered */
-extern u32 data_020a8110;          /* the VBlank count when the LCD last went off */
-extern char data_020a8124;         /* an OSMutex */
+extern u16 PMi_IsInit;
+extern volatile int PMi_SyncFlag; /* SPI_PXI_COMMAND_PM_SYNC (0x60) answered */
+extern int PMi_SleepEndFlag;      /* SPI_PXI_COMMAND_PM_SLEEP_END (0x62) answered */
+extern u32 PMi_LCDCount;          /* the VBlank count when the LCD last went off */
+extern OSMutex PMi_Mutex;
 
 void OS_SpinWait(u32 cycles);
 void OS_InitMutex(void *mutex);
@@ -88,19 +114,23 @@ u32 PMi_SendSleepStart(u16 trigger, u16 keyPattern);
 void PMi_SendPxiData(u32 data);
 
 int PMi_Lock(void) {
-    OSIntrMode saved = OS_DisableInterrupts();
-    if (data_020a8114.lock != 0) {
-        OS_RestoreInterrupts(saved);
-        return 0;
+    OSIntrMode enabled = OS_DisableInterrupts();
+
+    if (PMi_Work.lock) {
+        (void)OS_RestoreInterrupts(enabled);
+        return FALSE;
     }
-    data_020a8114.lock = 1;
-    OS_RestoreInterrupts(saved);
-    return 1;
+
+    PMi_Work.lock = TRUE;
+    (void)OS_RestoreInterrupts(enabled);
+
+    return TRUE;
 }
 
 void PMi_WaitBusy(void) {
-    volatile int *lock = &data_020a8114.lock;
-    while (*lock != 0) {
+    volatile int *p = &PMi_Work.lock;
+
+    while (*p) {
     }
 }
 
@@ -109,311 +139,403 @@ void PMi_DummyCallback(u32 result, void *arg) {
 }
 
 void PMi_CallCallbackAndUnlock(u32 result) {
-    int lock = data_020a8114.lock;
-    PMCallback callback = data_020a8114.callback;
-    void *arg = data_020a8114.callbackArg;
-    if (lock != 0) {
-        data_020a8114.lock = 0;
+    PMCallback callback;
+    void *arg;
+
+    callback = PMi_Work.callback;
+    arg = PMi_Work.callbackArg;
+
+    if (PMi_Work.lock) {
+        PMi_Work.lock = FALSE;
     }
-    if (callback == 0) {
-        return;
+
+    if (callback) {
+        PMi_Work.callback = NULL;
+        (callback)(result, arg);
     }
-    data_020a8114.callback = 0;
-    callback(result, arg);
 }
 
 void PM_Init(void) {
     int i;
-    if (data_020a8104 != 0)
+
+    if (PMi_IsInit) {
         return;
-    data_020a8104 = 1;
-    data_020a8114.lock = 0;
-    data_020a8114.callback = 0;
+    }
+
+    PMi_IsInit = TRUE;
+    PMi_Work.lock = FALSE;
+    PMi_Work.callback = NULL;
+
     PXI_Init();
-    while (PXI_IsCallbackReady(PXI_FIFO_TAG_PM, PXI_PROC_ARM7) == 0)
-        ;
+    while (!PXI_IsCallbackReady(PXI_FIFO_TAG_PM, PXI_PROC_ARM7)) {
+    }
+
     PXI_SetFifoRecvCallback(PXI_FIFO_TAG_PM, (void *)PMi_CommonCallback);
-    for (i = 0; i < 4; i++)
-        data_020a8138[i].flag = 0;
-    OS_InitMutex(&data_020a8124);
-    data_020a8110 = OS_GetVBlankCount();
+
+    for (i = 0; i < PMIC_REG_NUMS; i++) {
+        PMi_RegisterBuffer[i].flag = FALSE;
+    }
+
+    OS_InitMutex(&PMi_Mutex);
+
+    PMi_LCDCount = OS_GetVBlankCount();
 }
 
 void PMi_CommonCallback(int tag, u32 data, int err) {
     u16 command;
-    u16 result;
+    u16 pxiResult;
 
-    if (err != 0) {
-        PMi_CallCallbackAndUnlock(2);
+    if (err) {
+        PMi_CallCallbackAndUnlock(PM_RESULT_ERROR);
         return;
     }
 
-    command = (data & 0x7f00) >> 8;
-    result = data & 0xff;
+    command = (u16)((data & SPI_PXI_RESULT_COMMAND_MASK) >> SPI_PXI_RESULT_COMMAND_SHIFT);
+    pxiResult = (u16)((data & SPI_PXI_RESULT_DATA_MASK) >> SPI_PXI_RESULT_DATA_SHIFT);
 
-    if (command >= 0x70 && command <= 0x73) {
-        int index = command - 0x70;
-        u16 value = result & 0xff;
-        u16 *reply = data_020a8138[index].reply;
-        if (reply != 0) {
-            *reply = value;
+    if (SPI_PXI_COMMAND_PM_REG0VALUE <= command && command <= SPI_PXI_COMMAND_PM_REG3VALUE) {
+        int num = (int)(command - SPI_PXI_COMMAND_PM_REG0VALUE);
+        u16 value = (u16)(pxiResult & 0xff);
+        u16 *buffer = PMi_RegisterBuffer[num].buffer;
+
+        if (buffer) {
+            *buffer = value;
         }
-        data_020a8138[index].flag = 1;
-        result = 0;
-    } else if (command == 0x60) {
-        data_020a8108 = 1;
-    } else if (command == 0x62) {
-        data_020a810c = 1;
-    } else if (command == 0x67) {
-        int *reply = data_020a8114.replyDst;
-        if (reply != 0) {
-            *reply = result;
+        PMi_RegisterBuffer[num].flag = TRUE;
+        pxiResult = PM_RESULT_SUCCESS;
+    } else if (command == SPI_PXI_COMMAND_PM_SYNC) {
+        PMi_SyncFlag = TRUE;
+    } else if (command == SPI_PXI_COMMAND_PM_SLEEP_END) {
+        PMi_SleepEndFlag = TRUE;
+    } else if (command == SPI_PXI_COMMAND_PM_GET_BLINK) {
+        if (PMi_Work.work) {
+            *(u32 *)PMi_Work.work = pxiResult;
         }
-        result = 0;
+        pxiResult = PM_RESULT_SUCCESS;
     }
 
-    PMi_CallCallbackAndUnlock(result);
+    PMi_CallCallbackAndUnlock(pxiResult);
 }
 
-u32 PMi_SendSleepStart(u16 trigger, u16 keyPattern) {
-    volatile int *ready;
+u32 PMi_SendSleepStart(u16 trigger, u16 keyIntrData) {
+    u32 pxi_send_data;
+    volatile int *p;
 
-    if (!PMi_Lock())
-        return 1;
-    data_020a8108 = 0;
-    PMi_SendPxiData(0x3006000);
-    ready = &data_020a8108;
-    while (!*ready) {
+    if (!PMi_Lock()) {
+        return PM_BUSY;
     }
-    *ready = 0;
-    data_020a810c = 0;
-    PMi_SetLCDPower(PM_LCD_POWER_OFF, 2, 0, 0);
-    PMi_SendPxiData((trigger & 0xff) | 0x2006100);
-    PMi_SendPxiData((keyPattern & 0xffff) | 0x1010000);
-    return 0;
+
+    PMi_SyncFlag = 0;
+    pxi_send_data =
+        PMi_MakeData1(SPI_PXI_START_BIT | SPI_PXI_END_BIT, 0, SPI_PXI_COMMAND_PM_SYNC, 0);
+    PMi_SendPxiData(pxi_send_data);
+
+    /* The later SDK spins on PMi_SyncFlag by name; this one waits through a
+     * pointer, as PMi_WaitBusy does. By name, mwcc schedules the clear after
+     * PMi_SetLCDPower's argument set-up instead of before it. */
+    p = &PMi_SyncFlag;
+    while (*p == 0) {
+    }
+
+    *p = 0;
+    PMi_SleepEndFlag = 0;
+
+    (void)PMi_SetLCDPower(PM_LCD_POWER_OFF, PM_LED_BLINK_LOW, FALSE, FALSE);
+
+    pxi_send_data = PMi_MakeData1(SPI_PXI_START_BIT, 0, SPI_PXI_COMMAND_PM_SLEEP_START, trigger);
+    PMi_SendPxiData(pxi_send_data);
+
+    pxi_send_data = PMi_MakeData2(SPI_PXI_END_BIT, 1, keyIntrData);
+    PMi_SendPxiData(pxi_send_data);
+
+    return PM_SUCCESS;
 }
 
 u32 PM_SendUtilityCommandAsync(u32 number, PMCallback callback, void *arg) {
-    if (!PMi_Lock())
-        return 1;
-    data_020a8114.callback = callback;
-    data_020a8114.callbackArg = arg;
-    PMi_SendPxiData(((number >> 16) & 0xff) | 0x2006300);
-    PMi_SendPxiData((number & 0xffff) | 0x1010000);
-    return 0;
+    u32 pxi_send_data;
+
+    if (!PMi_Lock()) {
+        return PM_BUSY;
+    }
+
+    PMi_SetCallback(callback, arg);
+
+    pxi_send_data = PMi_MakeData1(SPI_PXI_START_BIT, 0, SPI_PXI_COMMAND_PM_UTILITY, number >> 16);
+    PMi_SendPxiData(pxi_send_data);
+
+    pxi_send_data = PMi_MakeData2(SPI_PXI_END_BIT, 1, number);
+    PMi_SendPxiData(pxi_send_data);
+
+    return PM_SUCCESS;
 }
 
-u32 PMi_ReadRegisterAsync(u32 registerAddr, u16 *buffer, PMCallback callback, void *arg) {
-    if (!PMi_Lock())
-        return 1;
-    data_020a8138[registerAddr].flag = 0;
-    data_020a8114.callback = callback;
-    data_020a8114.callbackArg = arg;
-    data_020a8138[registerAddr].reply = buffer;
-    PMi_SendPxiData((registerAddr & 0xff) | 0x3006500);
-    return 0;
+u32 PMi_ReadRegisterAsync(u16 registerAddr, u16 *buffer, PMCallback callback, void *arg) {
+    u32 pxi_send_data;
+
+    if (!PMi_Lock()) {
+        return PM_BUSY;
+    }
+
+    PMi_RegisterBuffer[registerAddr].flag = FALSE;
+    PMi_SetCallback(callback, arg);
+    PMi_RegisterBuffer[registerAddr].buffer = buffer;
+
+    pxi_send_data = PMi_MakeData1(SPI_PXI_START_BIT | SPI_PXI_END_BIT, 0,
+                                  SPI_PXI_COMMAND_PM_REG_READ, registerAddr);
+    PMi_SendPxiData(pxi_send_data);
+
+    return PM_SUCCESS;
 }
 
-u32 PMi_ReadRegister(u32 registerAddr, u16 *buffer) {
-    u32 result;
-    u32 sent = PMi_ReadRegisterAsync(registerAddr, buffer, PMi_DummyCallback, &result);
-    if (sent != 0)
-        return sent;
-    PMi_WaitBusy();
-    return result;
+u32 PMi_ReadRegister(u16 registerAddr, u16 *buffer) {
+    u32 commandResult;
+    u32 sendResult = PMi_ReadRegisterAsync(registerAddr, buffer, PMi_DummyCallback, &commandResult);
+
+    if (sendResult == PM_SUCCESS) {
+        PMi_WaitBusy();
+        return commandResult;
+    }
+
+    return sendResult;
 }
 
-u32 PMi_SetLEDAsync(u32 status, PMCallback callback, void *arg) {
+u32 PMi_SetLEDAsync(PMLEDStatus status, PMCallback callback, void *arg) {
     u32 command;
+
     switch (status) {
-    case 1:
-        command = 1;
+    case PM_LED_ON:
+        command = PM_UTIL_LED_ON;
         break;
-    case 3:
-        command = 2;
+    case PM_LED_BLINK_HIGH:
+        command = PM_UTIL_LED_BLINK_HIGH_SPEED;
         break;
-    case 2:
-        command = 3;
+    case PM_LED_BLINK_LOW:
+        command = PM_UTIL_LED_BLINK_LOW_SPEED;
         break;
     default:
         command = 0;
-        break;
     }
-    if (command == 0)
-        return 0xffff;
-    return PM_SendUtilityCommandAsync(command, callback, arg);
+
+    return (command) ? PM_SendUtilityCommandAsync(command, callback, arg) : PM_INVALID_COMMAND;
 }
 
-u32 PMi_SetLED(u32 status) {
-    u32 result;
-    u32 sent = PMi_SetLEDAsync(status, PMi_DummyCallback, &result);
-    if (sent != 0)
-        return sent;
-    PMi_WaitBusy();
-    return result;
+u32 PMi_SetLED(PMLEDStatus status) {
+    u32 commandResult;
+    u32 sendResult = PMi_SetLEDAsync(status, PMi_DummyCallback, &commandResult);
+
+    if (sendResult == PM_SUCCESS) {
+        PMi_WaitBusy();
+        return commandResult;
+    }
+
+    return sendResult;
 }
 
-u32 PM_SetBackLightAsync(u32 target, u32 status, PMCallback callback, void *arg) {
+u32 PM_SetBackLightAsync(PMLCDTarget target, PMBackLightSwitch sw, PMCallback callback, void *arg) {
     u32 command = 0;
-    if (target == 0) {
-        if (status == 1)
-            command = 6;
-        if (status == 0)
-            command = 7;
-    } else if (target == 1) {
-        if (status == 1)
-            command = 4;
-        if (status == 0)
-            command = 5;
-    } else if (target == 2) {
-        if (status == 1)
-            command = 8;
-        if (status == 0)
-            command = 9;
+
+    if (target == PM_LCD_TOP) {
+        if (sw == PM_BACKLIGHT_ON) {
+            command = PM_UTIL_LCD2_BACKLIGHT_ON;
+        }
+        if (sw == PM_BACKLIGHT_OFF) {
+            command = PM_UTIL_LCD2_BACKLIGHT_OFF;
+        }
+    } else if (target == PM_LCD_BOTTOM) {
+        if (sw == PM_BACKLIGHT_ON) {
+            command = PM_UTIL_LCD1_BACKLIGHT_ON;
+        }
+        if (sw == PM_BACKLIGHT_OFF) {
+            command = PM_UTIL_LCD1_BACKLIGHT_OFF;
+        }
+    } else if (target == PM_LCD_ALL) {
+        if (sw == PM_BACKLIGHT_ON) {
+            command = PM_UTIL_LCD12_BACKLIGHT_ON;
+        }
+        if (sw == PM_BACKLIGHT_OFF) {
+            command = PM_UTIL_LCD12_BACKLIGHT_OFF;
+        }
     }
-    if (command == 0)
-        return 0xffff;
-    return PM_SendUtilityCommandAsync(command, callback, arg);
+
+    return (command) ? PM_SendUtilityCommandAsync(command, callback, arg) : PM_INVALID_COMMAND;
 }
 
-u32 PM_SetBackLight(u32 target, u32 status) {
-    u32 result;
-    u32 sent = PM_SetBackLightAsync(target, status, PMi_DummyCallback, &result);
-    if (sent != 0)
-        return sent;
-    PMi_WaitBusy();
-    return result;
+u32 PM_SetBackLight(PMLCDTarget target, PMBackLightSwitch sw) {
+    u32 commandResult;
+    u32 sendResult = PM_SetBackLightAsync(target, sw, PMi_DummyCallback, &commandResult);
+
+    if (sendResult == PM_SUCCESS) {
+        PMi_WaitBusy();
+        return commandResult;
+    }
+
+    return sendResult;
 }
 
 u32 PM_ForceToPowerOffAsync(PMCallback callback, void *arg) {
-    return PM_SendUtilityCommandAsync(0xe, callback, arg);
+    return PM_SendUtilityCommandAsync(PM_UTIL_FORCE_POWER_OFF, callback, arg);
 }
 
 u32 PM_ForceToPowerOff(void) {
-    u32 result;
-    u32 sent = PM_ForceToPowerOffAsync(PMi_DummyCallback, &result);
-    if (sent != 0)
-        return sent;
-    PMi_WaitBusy();
-    return result;
+    u32 commandResult;
+    u32 sendResult = PM_ForceToPowerOffAsync(PMi_DummyCallback, &commandResult);
+
+    if (sendResult == PM_SUCCESS) {
+        PMi_WaitBusy();
+        return commandResult;
+    }
+
+    return sendResult;
 }
 
-u32 PM_GetBackLight(int *top, int *bottom) {
-    u16 flags;
-    u32 result = PMi_ReadRegister(0, &flags);
-    if (result)
-        return result;
-    if (top)
-        *top = (flags & 8) ? 1 : 0;
-    if (bottom)
-        *bottom = (flags & 4) ? 1 : 0;
+u32 PM_GetBackLight(PMBackLightSwitch *top, PMBackLightSwitch *bottom) {
+    u16 reg;
+    u32 result;
+
+    if ((result = PMi_ReadRegister(REG_PMIC_CTL_ADDR, &reg)) == PM_SUCCESS) {
+        if (top) {
+            *top = (reg & PMIC_CTL_BKLT2) ? PM_BACKLIGHT_ON : PM_BACKLIGHT_OFF;
+        }
+        if (bottom) {
+            *bottom = (reg & PMIC_CTL_BKLT1) ? PM_BACKLIGHT_ON : PM_BACKLIGHT_OFF;
+        }
+    }
+
     return result;
 }
 
 void PMi_SendPxiData(u32 data) {
-    while (PXI_SendWordByFifo(PXI_FIFO_TAG_PM, data, 0) != 0)
-        ;
+    while (PXI_SendWordByFifo(PXI_FIFO_TAG_PM, data, FALSE) != PXI_FIFO_SUCCESS) {
+    }
 }
 
-void PM_GoSleepMode(u32 trigger, u32 logic, u32 keyPattern) {
-    OSIntrMode saved_mode;
-    u32 saved_mask;
-    u32 card_pulled = 0;
-    u16 saved_ime;
+void PM_GoSleepMode(PMWakeUpTrigger trigger, PMLogic logic, u16 keyPattern) {
+    BOOL prepIrq;
+    OSIntrMode prepIntrMode;
+    OSIrqMask prepIntrMask;
+    BOOL powerOffFlag = FALSE;
 
-    saved_ime = OS_DisableIrq();
-    saved_mode = OS_DisableInterrupts();
-    saved_mask = OS_DisableIrqMask(0x3fffff);
-    OS_SetIrqMask(OS_IE_SPFIFO_RECV);
-    OS_RestoreInterrupts(saved_mode);
-
+    prepIrq = OS_DisableIrq();
+    prepIntrMode = OS_DisableInterrupts();
+    prepIntrMask = OS_DisableIrqMask((1 << OS_IRQ_TABLE_MAX) - 1);
+    (void)OS_SetIrqMask(OS_IE_SPFIFO_RECV);
+    (void)OS_RestoreInterrupts(prepIntrMode);
     (void)OS_EnableIrq();
+
     if (trigger & PM_TRIGGER_CARD) {
-        /* pret's pmd-sky makes the same test of this word */
-        if (*(volatile u16 *)0x027ffc40 == 2)
+        /* MB_IsMultiBootChild(): a download-play child has no card to pull.
+         * pret's pmd-sky makes the same test of this word. */
+        if (*(volatile u16 *)HW_WM_BOOT_BUF == 2) {
             trigger &= ~PM_TRIGGER_CARD;
+        }
     }
+
     if (trigger & PM_TRIGGER_CARTRIDGE) {
-        if (CTRDG_IsExisting() == 0)
+        if (!CTRDG_IsExisting()) {
             trigger &= ~PM_TRIGGER_CARTRIDGE;
+        }
     }
-    while (PMi_SendSleepStart(trigger, logic | keyPattern) != 0)
-        ;
+
+    while (PMi_SendSleepStart(trigger, logic | keyPattern) != PM_SUCCESS) {
+    }
 
     OS_Halt();
-    OS_SpinWait(0x332340);
-    if (trigger & PM_TRIGGER_CARD) {
-        if (REG_IF & 0x100000)
-            card_pulled = 1;
-    }
-    if (card_pulled == 0) {
-        PMi_SetLCDPower(PM_LCD_POWER_ON, 1, 1, 0);
-    }
-    OS_DisableInterrupts();
-    OS_SetIrqMask(saved_mask);
-    OS_RestoreInterrupts(saved_mode);
 
-    (void)OS_RestoreIrq(saved_ime);
-    if (card_pulled != 0) {
-        PM_ForceToPowerOff();
+    /* 100 ms at the 33.5 MHz system clock. */
+    OS_SpinWait(0x332340);
+
+    if (trigger & PM_TRIGGER_CARD) {
+        if (REG_IF & OS_IE_CARD_IREQ) {
+            powerOffFlag = TRUE;
+        }
+    }
+
+    if (!powerOffFlag) {
+        (void)PMi_SetLCDPower(PM_LCD_POWER_ON, PM_LED_ON, TRUE, FALSE);
+    }
+
+    (void)OS_DisableInterrupts();
+    (void)OS_SetIrqMask(prepIntrMask);
+    (void)OS_RestoreInterrupts(prepIntrMode);
+    (void)OS_RestoreIrq(prepIrq);
+
+    if (powerOffFlag) {
+        (void)PM_ForceToPowerOff();
     }
 }
 
-int PMi_SetLCDPower(u32 sw, u32 led, int skip, int isSync) {
+int PMi_SetLCDPower(PMLCDPower sw, PMLEDStatus led, int skip, int isSync) {
     switch (sw) {
     case PM_LCD_POWER_ON:
-        if (skip == 0) {
-            if (OS_GetVBlankCount() - data_020a8110 <= 7)
-                return 0;
+        if (!skip && OS_GetVBlankCount() - PMi_LCDCount <= PMi_WAIT_FRAME) {
+            return FALSE;
         }
-        if (led != 0) {
-            if (isSync != 0)
-                PMi_SetLED(led);
-            else
-                PMi_SetLEDAsync(led, 0, 0);
+
+        if (led != PM_LED_NONE) {
+            if (isSync) {
+                (void)PMi_SetLED(led);
+            } else {
+                (void)PMi_SetLEDAsync(led, NULL, NULL);
+            }
         }
-        REG_POWCNT1 |= 1;
+
+        GXi_PowerLCD(TRUE);
         break;
     case PM_LCD_POWER_OFF:
-        REG_POWCNT1 &= ~1;
-        data_020a8110 = OS_GetVBlankCount();
-        if (led != 0) {
-            if (isSync != 0)
-                PMi_SetLED(led);
-            else
-                PMi_SetLEDAsync(led, 0, 0);
+        GXi_PowerLCD(FALSE);
+
+        PMi_LCDCount = OS_GetVBlankCount();
+
+        if (led != PM_LED_NONE) {
+            if (isSync) {
+                (void)PMi_SetLED(led);
+            } else {
+                (void)PMi_SetLEDAsync(led, NULL, NULL);
+            }
         }
         break;
     }
-    return 1;
+
+    return TRUE;
 }
 
-int PM_SetLCDPower(u32 sw) {
-    u32 mode = sw;
-    if (sw != PM_LCD_POWER_ON)
-        mode = PM_LCD_POWER_OFF;
-    return PMi_SetLCDPower(mode, 0, 0, 1);
+int PM_SetLCDPower(PMLCDPower sw) {
+    if (sw != PM_LCD_POWER_ON) {
+        sw = PM_LCD_POWER_OFF;
+    }
+
+    return PMi_SetLCDPower(sw, PM_LED_NONE, FALSE, TRUE);
 }
 
-int PM_GetLCDPower(void) {
-    return (REG_POWCNT1 & 1) != 0;
+PMLCDPower PM_GetLCDPower(void) {
+    return (REG_POWCNT1 & REG_GX_POWCNT_LCD_MASK) ? PM_LCD_POWER_ON : PM_LCD_POWER_OFF;
 }
 
-u32 PMi_SendLEDPatternCommandAsync(u32 pattern, PMCallback callback, void *arg) {
-    if (!PMi_Lock())
-        return 1;
-    data_020a8114.callback = callback;
-    data_020a8114.callbackArg = arg;
-    PMi_SendPxiData((pattern & 0xff) | 0x3006600);
-    return 0;
+u32 PMi_SendLEDPatternCommandAsync(PMLEDPattern pattern, PMCallback callback, void *arg) {
+    u32 pxi_send_data;
+
+    if (!PMi_Lock()) {
+        return PM_BUSY;
+    }
+
+    PMi_SetCallback(callback, arg);
+
+    pxi_send_data = PMi_MakeData1(SPI_PXI_START_BIT | SPI_PXI_END_BIT, 0,
+                                  SPI_PXI_COMMAND_PM_SELF_BLINK, pattern);
+    PMi_SendPxiData(pxi_send_data);
+
+    return PM_SUCCESS;
 }
 
-u32 PMi_SendLEDPatternCommand(u32 pattern) {
-    u32 result;
-    u32 sent = PMi_SendLEDPatternCommandAsync(pattern, PMi_DummyCallback, &result);
-    if (sent != 0)
-        return sent;
-    PMi_WaitBusy();
-    return result;
+u32 PMi_SendLEDPatternCommand(PMLEDPattern pattern) {
+    u32 commandResult;
+    u32 sendResult = PMi_SendLEDPatternCommandAsync(pattern, PMi_DummyCallback, &commandResult);
+
+    if (sendResult == PM_SUCCESS) {
+        PMi_WaitBusy();
+        return commandResult;
+    }
+
+    return sendResult;
 }
 }
