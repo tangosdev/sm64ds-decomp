@@ -219,7 +219,7 @@ extern void func_020167a4(void *p);
 extern void func_0201fc88(s16);
 extern void func_02020388(int playerNo);
 extern int func_02035638(void *);
-extern int func_0203564c(int);
+extern void *func_0203564c(void *);
 extern void func_02035798(void *, int);
 extern void func_020371fc(void *);
 extern void func_02037318(void *);
@@ -1299,13 +1299,13 @@ void daPly_c::func_ov002_020bdb50(int arg) {
         if (r == 0) return;
     }
     {
-        char *obj = (char *)mObjInMouth;
-        int b1 = (((dActor_c *)obj)->actorID == 0xbf);
+        dActor_c *obj = mObjInMouth;
+        int b1 = (obj->actorID == 0xbf);
         if (b1) {
             func_ov002_020d5cec();
             (this->mStateFlags) &= ~2;
         } else {
-            ((dActor_c *)obj)->OnTurnIntoEgg(*this);
+            obj->OnTurnIntoEgg(*this);
         }
     }
     this->mObjInMouth = 0;
@@ -1535,7 +1535,7 @@ void daPly_c::SetRealCharacter(unsigned int chr_) {
     mModels.mBodyModels[m1]->Copy(*mModels.mBodyModels[m2],
                                   (char *)data_ov002_020ff480[mCharFileBase + chr]->filePtr, 0);
     m1 = this->GetBodyModelID(chr, 0);
-    mModels.mBodyModels[m1]->Func_020162C4((u32)data_ov002_020ff480[chr + 0xc4]->filePtr, 0, 0x1000,
+    mModels.mBodyModels[m1]->Func_020162C4((BCA_File *)data_ov002_020ff480[chr + 0xc4]->filePtr, 0, 0x1000,
                                            0);
 }
 }
@@ -1679,7 +1679,7 @@ void daPly_c::func_ov002_020be3b0() {
             }
             mm = this->param1;
             mModels.mBodyModels[this->GetBodyModelID((u8)mm, 0)]->Func_020162C4(
-                (u32)((SharedFilePtr *)data_ov002_020ff790[mm])->filePtr, 0, 0x1000, 0);
+                (BCA_File *)((SharedFilePtr *)data_ov002_020ff790[mm])->filePtr, 0, 0x1000, 0);
             data_ov002_020ff480[mCharFileBase + mPrevCharacter]->Release();
             mLoadedResourceFlags &= ~0x40;
             func_ov002_020bdb50(0);
@@ -1877,11 +1877,11 @@ void daPly_c::AdvanceAnims() {
 /* recovered: named members + shared header, real C++ method */
 int daPly_c::IsAnim(unsigned int a) {
   int ip = param1;
-  int* p = (int*)data_ov002_020ff480[ip + a*4];
-  int v = p[1];
+  SharedFilePtr *p = data_ov002_020ff480[ip + a*4];
+  BCA_File *v = (BCA_File *)p->filePtr;
   unsigned int id = this->GetBodyModelID(ip&0xff, 0);
   dExtAnmModel_c *model = mModels.mBodyModels[id];
-  int matches = ((int)model->file == v);
+  int matches = (model->file == v);
   return matches ? 1 : 0;
 }
 
@@ -2411,7 +2411,6 @@ int daPly_c::func_ov002_020bfec0() {
     return 0;
 }
 
-#define AT(p, off) ((void *)(int)((char *)(p) + (off)))
 extern "C" {
 int daPly_c::func_ov002_020c0108(int p1) {
     char *self = (char *)this;
@@ -3924,7 +3923,6 @@ void daPly_c::func_ov002_020c37a4(char *arg) {
 
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
-#define LA(p) ((int)(p))
 extern "C" {
 void daPly_c::JumboStarCutsceneFlying() {
     extern int Vec3_HorzLen(void*);
@@ -5094,7 +5092,7 @@ int daPly_c::St_DeadPit_Init() {
         if (b) {
             func_ov002_020d5cec(mObjInMouth);
             mStateFlags &= ~2;
-            *(int*)((char *)mObjInMouth + 0xd0) = 0;
+            ((daPly_c *)mObjInMouth)->mEatingPlayer = 0;
         }
         mUseAltBodyModel = 0;
         mObjInMouth->mFlags |= 0x80000;
@@ -5187,10 +5185,9 @@ void daPly_c::EnterWhirlpool() {
 }
 
 extern "C" {
-int func_ov002_020c5cd8(char *c, int arg) {
-    daPly_c *player = (daPly_c *)c;
-    if (((daPly_c *)(c))->func_ov002_020c5dec(6)) {
-        player->mAttachedActor = (dActor_c *)arg;
+int func_ov002_020c5cd8(daPly_c *player, dActor_c *actor) {
+    if (player->func_ov002_020c5dec(6)) {
+        player->mAttachedActor = actor;
         return 1;
     }
     return 0;
@@ -5504,13 +5501,13 @@ int daPly_c::St_Squish_Main() {
                         mStateArg = 2;
                 }
                 {
-                    char *a = (char *)mAttachedActor;
+                    dActor_c *a = mAttachedActor;
                     if (a != 0) {
-                        u16 id = ((dActor_c *)a)->actorID;
+                        u16 id = a->actorID;
                         int b1 = (id == 0xa4);
                         int b2;
                         if (b1 || (b2 = (id == 0xa5)) != 0)
-                            *(u8 *)(a + 0x407) = 1;
+                            *((u8 *)a + 0x407) = 1;
                     }
                 }
             } else {
@@ -6630,13 +6627,13 @@ int daPly_c::func_ov002_020c8714() {
                 break;
             }
         } else {
-            int st;
+            daStar_c *st;
             this->mVertSpeed = 0;
             mAttachOffsetY = 0x187;
             func_ov002_020c7ff8();
-            st = (int)Spawn(0xb2, 0x6f, mPos, &mAngle, this->mAreaId, -1);
+            st = (daStar_c *)Spawn(0xb2, 0x6f, mPos, &mAngle, this->mAreaId, -1);
             if (st != 0)
-                ((daStar_c *)st)->CollectNoPose((int)this);
+                st->CollectNoPose(this);
         }
         mStateArg = 0;
     }
@@ -8479,21 +8476,21 @@ int daPly_c::St_Shell_Cleanup() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_Shell_Main() {
-    extern void func_ov002_020eeca8(void*, int arg);
+    extern int func_ov002_020eeca8(dBgCh_Actr *, dActor_c *);
     extern void ApproachAngle(void*, short target, int divisor, int band, int maxStep);
     extern ControllerInput data_0209f498[];
     int flag = 0;
-    void* res;
+    dBgPi *res;
 
     if (func_02035638((u8*)((char*)&mMeshClsn))) {
         flag = 1;
-        res = (void*)func_0203564c((int)((char*)&mMeshClsn));
-        if (((dBgPi *)res)->GetClsnID() != -1) {
-            void *a = dActor_c::FindWithID((u32)((dBgPi *)res)->GetClsnID());
+        res = (dBgPi *)func_0203564c(&mMeshClsn);
+        if (res->GetClsnID() != -1) {
+            dActor_c *a = dActor_c::FindWithID((u32)res->GetClsnID());
             if (a) {
-                u16 type = ((dActor_c *)a)->actorID;
+                u16 type = a->actorID;
                 if ((type == 0x14 ? flag : 0) || (type == 0x15 ? 1 : 0)) {
-                    func_ov002_020eeca8((void*)((char*)&mMeshClsn), (int)((char*)this));
+                    func_ov002_020eeca8(&mMeshClsn, this);
                     flag = 0;
                 }
             }
@@ -8700,7 +8697,7 @@ int daPly_c::St_HurtWater_Init() {
  */
 extern "C" {
 int daPly_c::St_MetalWaterWater_Main() {
-    extern int func_ov002_020eeca8(void*, void*);
+    extern int func_ov002_020eeca8(dBgCh_Actr *, dActor_c *);
     extern void ApproachAngle(void*, int target, int a, int b, int d);
     extern struct S18b2 data_0209f4a0[];
     u32 f;
@@ -9338,7 +9335,6 @@ extern "C" {
 int daPly_c::func_ov002_020ce324() {
     typedef unsigned char u8;
     typedef unsigned short u16;
-    typedef struct dActor_c dActor_c;
     extern struct S18b data_0209f49e[];
     Vector3 a1, a2, b1, b2, nrm;
     int ok;
@@ -9487,7 +9483,6 @@ int daPly_c::func_ov002_020ce5f8() {
 }
 
 void daPly_c::func_ov002_020ce798() {
-    typedef struct dActor_c dActor_c;
     Vector3 v1, v2;
 
     if (!IsState(data_ov002_0211067c))
@@ -13952,7 +13947,7 @@ int daPly_c::St_YoshiPower_Main() {
     Vector3 tmp;
     PVec pos;
     dActor_c *obj0;
-    char* dp;
+    dActor_c *dp;
 
     if (mIsAirborne == 0) {
         ApproachLinear(mHorzSpeed, 0, 0x1000);
@@ -13991,19 +13986,19 @@ int daPly_c::St_YoshiPower_Main() {
                     int id1 = this->GetBodyModelID(this->param1 & 0xff, 0);
                     MTX_MultVec43(&t4->m[9], &mModels.mBodyModels[id1]->mat4x3, &tmp);
                     Vec3_MulScalarInPlace(&tmp, 0x8000);
-                    dp = (char*)mObjInMouth;
-                    ((dActor_c *)dp)->mPosX = tmp.x;
-                    ((dActor_c *)dp)->mPosY = tmp.y;
-                    ((dActor_c *)dp)->mPosZ = tmp.z;
+                    dp = mObjInMouth;
+                    dp->mPosX = tmp.x;
+                    dp->mPosY = tmp.y;
+                    dp->mPosZ = tmp.z;
                 }
             }
             int id2 = this->GetBodyModelID(this->param1 & 0xff, 0);
             if (mModels.mBodyModels[id2]->WillHitFrame(0xa) != 0) {
                 Vector3 *src = &mPos;
-                dp = (char*)mObjInMouth;
-                ((dActor_c *)dp)->mPosX = src->x;
-                ((dActor_c *)dp)->mPosY = src->y;
-                ((dActor_c *)dp)->mPosZ = src->z;
+                dp = mObjInMouth;
+                dp->mPosX = src->x;
+                dp->mPosY = src->y;
+                dp->mPosZ = src->z;
                 dActor_c *o = mObjInMouth;
                 int cond = (o->actorID == 0xbf);
                 if (cond != 0) {
@@ -15856,7 +15851,7 @@ int daPly_c::func_ov002_020dacb4(dActor_c *actor) {
             int player_var = param1;
             int model_idx = GetBodyModelID(player_var & 0xff, 0);
             dExtAnm2Model_c *model = mModels.mBodyModels[model_idx];
-            int j = (int)data_ov002_020ff480[offset + player_var]->filePtr;
+            BCA_File *j = (BCA_File *)data_ov002_020ff480[offset + player_var]->filePtr;
             model->Func_020162C4(j, 0, 0x1000, 0);
         }
     }
@@ -19141,7 +19136,7 @@ int daPly_c::St_LongJump_Init() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_SideFlip_Main() {
-    extern void func_ov002_020eeca8(void* a, void* b);
+    extern int func_ov002_020eeca8(dBgCh_Actr *a, dActor_c *b);
     extern u16 data_0209f49e[];
     extern u16 data_0209f49c[];
     func_ov002_020eeca8(&mMeshClsn, this);
@@ -19239,10 +19234,10 @@ int daPly_c::St_HeadstandJump_Init() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_WallJump_Main() {
-    extern int func_ov002_020eeca8(void*, void*);
+    extern int func_ov002_020eeca8(dBgCh_Actr *, dActor_c *);
     extern unsigned short data_0209f49e[];
     extern void (daPly_c::*data_ov002_0211073c[])();
-    func_ov002_020eeca8(&mMeshClsn, ((void *)this));
+    func_ov002_020eeca8(&mMeshClsn, this);
     func_ov002_020e28d4(0x1800, 0x800);
     if (mIsAirborne == 0) {
         this->ChangeState(data_ov002_02110424);
@@ -19530,10 +19525,10 @@ void func_ov002_020e200c(char* c){
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_Jump_Main() {
-    extern int func_ov002_020eeca8(void*, void*);
+    extern int func_ov002_020eeca8(dBgCh_Actr *, dActor_c *);
     extern u16 data_0209f49e[];
     extern void (daPly_c::*data_ov002_0211073c[])();
-    func_ov002_020eeca8(&mMeshClsn, ((void *)this));
+    func_ov002_020eeca8(&mMeshClsn, this);
     func_ov002_020e28d4(0xd00, 0x800);
 
     if (mIsAirborne == 0) {
@@ -21295,8 +21290,8 @@ Ld0:
     mTrailPos =
         (Vector3 *)__cxa_vec_new(0x32, 0xc, 8, (void *)func_0203d384, (void *)_ZN7Vector3D1Ev);
     mTrailFlags = (u8 *)::operator new[](0x32);
-    mHeldObjQueue = (dActor_c **)::operator new[](0x14);
-    __builtin__clear((void*)mHeldObjQueue, 0x14);
+    mHeldObjQueue = (dActor_c **)::operator new[](5 * sizeof(dActor_c *));
+    __builtin__clear((void*)mHeldObjQueue, 5 * sizeof(dActor_c *));
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
@@ -21509,7 +21504,7 @@ void daPly_c::func_ov002_020e5948() {
         player->mModels.mBodyModels[i] = new dExtAnm2Model_c;
         player->mModels.mBodyModels[i]->SetFile(
             (BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov002_0210a68c[i]), 1, 1);
-        player->mModels.mBodyModels[i]->Func_020162C4((u32)data_ov002_020ff480[i + 0xC4]->filePtr,
+        player->mModels.mBodyModels[i]->Func_020162C4((BCA_File *)data_ov002_020ff480[i + 0xC4]->filePtr,
                                                       0, 0x1000, 0);
         player->mModels.mBodyTexParams[i] =
             func_ov002_020e6bb0(player->mModels.mBodyModels[i]);
@@ -21565,7 +21560,7 @@ void daPly_c::func_ov002_020e5948() {
                 player->mModels.mBodyModels[4]->SetFile(
                     (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210e780), 1, -1);
                 player->mModels.mBodyModels[4]->Func_020162C4(
-                    (u32)data_ov002_020ff480[0xC6]->filePtr, 0, 0x1000, 0);
+                    (BCA_File *)data_ov002_020ff480[0xC6]->filePtr, 0, 0x1000, 0);
                 player->mModels.mAnmModel1.SetFile(
                     (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210e6f8), 1, 1);
                 player->mModels.mAnmModel1.SetAnim((BCA_File *)data_ov002_0210e750.filePtr, 0,

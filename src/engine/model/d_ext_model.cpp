@@ -98,7 +98,7 @@ u32 TrimModelFile(void *ptr);
    components' animation array. The frame stays `int` here: the ROM passes
    func_020162a4's `lsr #16` result with no sign extension, which a `short`
    parameter would add (the banked param:#4 int disagreement). */
-void func_02045e2c(int obj, int i, int a, int b);
+void func_02045e2c(int obj, int i, BCA_File *a, int b);
 /* local extern: no header declares it; blends verts toward the old pose in
    Virtual10/UpdateVerts while blendWeight is still below 1.0 */
 void func_0204531c(ModelComponents *data, s32 weight);
@@ -551,13 +551,13 @@ dExtAnm2Model_c::~dExtAnm2Model_c() {}
 
 /* The second animation's SetAnim, fast path and all: the same body as
    dExtAnmModel_c::SetAnim, run on otherFile and otherAnim. */
-void dExtAnm2Model_c::Func_020162C4(u32 animFile, int flags, Fix12i speed, u16 startFrame) {
+void dExtAnm2Model_c::Func_020162C4(BCA_File *animFile, int flags, Fix12i speed, u16 startFrame) {
     if (animFile == otherFile) {
         otherAnim.SetFlags(flags);
         otherAnim.speed = speed;
     } else {
         otherFile = animFile;
-        otherAnim.SetAnimation(((BCA_File *)animFile)->numFrames, flags, speed, startFrame);
+        otherAnim.SetAnimation(animFile->numFrames, flags, speed, startFrame);
     }
 }
 
@@ -578,7 +578,7 @@ extern "C" void func_0201628c(int self, int bone) {
 
 /* otherAnim.Copy(src) upcasts src to its dExtFrameCtrl_c BASE (+0x50): the
    second animation is seeded from the first one's state. */
-void dExtAnm2Model_c::Copy(const dExtAnm2Model_c &src, char *newFile, u32 newOtherFile) {
+void dExtAnm2Model_c::Copy(const dExtAnm2Model_c &src, char *newFile, BCA_File *newOtherFile) {
     dExtAnmModel_c::Copy(src, newFile);
     otherAnim.Copy(src);
     if (newOtherFile)

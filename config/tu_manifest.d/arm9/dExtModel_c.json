@@ -668,7 +668,7 @@
       "ordinal": 46
     },
     {
-      "symbol": "_ZN15dExtAnm2Model_c4CopyERKS_Pcj",
+      "symbol": "_ZN15dExtAnm2Model_c4CopyERKS_PcP8BCA_File",
       "address": "0x02016254",
       "size": "0x00000038",
       "legacy_source": "src/engine/model/d_ext_anm2_model.cpp",
@@ -689,7 +689,7 @@
       "ordinal": 49
     },
     {
-      "symbol": "_ZN15dExtAnm2Model_c13Func_020162C4Ejiit",
+      "symbol": "_ZN15dExtAnm2Model_c13Func_020162C4EP8BCA_Fileiit",
       "address": "0x020162c4",
       "size": "0x0000005c",
       "legacy_source": "src/engine/model/d_ext_anm2_model.cpp",
