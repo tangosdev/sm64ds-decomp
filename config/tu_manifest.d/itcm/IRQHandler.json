@@ -6,8 +6,8 @@
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "One contiguous run 0x01ffd97c..0x01ffdb28, 2 functions, gapless in config/arm9/itcm/delinks.txt: the ITCM part of the Nitro SDK's os_irqHandler.c, OS_IrqHandler (formerly IRQ::UserInterruptHandler) then OS_IrqHandler_ThreadSwitch (func_01ffd9d4). Both are whole-function asm, which mwccarm emits in source order.",
-    "The two are coupled directly: UserInterruptHandler preloads lr with func_01ffd9d4 before jumping to the dispatched handler, and func_01ffd9d4 has no frame of its own -- its exits are `ldr pc, [sp], #4`, popping the lr UserInterruptHandler pushed.",
+    "One contiguous run 0x01ffd97c..0x01ffdb28, 2 functions, gapless in config/arm9/itcm/delinks.txt: the ITCM part of the Nitro SDK's os_irqHandler.c, OS_IrqHandler (formerly IRQ::UserInterruptHandler) then OS_IrqHandler_ThreadSwitch. Both are whole-function asm, which mwccarm emits in source order.",
+    "The two are coupled directly: UserInterruptHandler preloads lr with OS_IrqHandler_ThreadSwitch (formerly func_01ffd9d4) before jumping to the dispatched handler, and OS_IrqHandler_ThreadSwitch has no frame of its own -- its exits are `ldr pc, [sp], #4`, popping the lr UserInterruptHandler pushed.",
     "TOP EDGE: dBgW_Kc::GetSurfaceInfo ends at 0x01ffd97c and belongs to itcm/dBgW_Kc.",
     "BOTTOM EDGE: OSi_DoBoot (0x01ffdb28..0x01ffdbd8) is the soft-reset hand-off to a freshly loaded ARM9 image (the reset path OS_ResetSystem describes); it shares no state with the IRQ/scheduler pair."
   ],
@@ -27,7 +27,7 @@
       "ordinal": 0
     },
     {
-      "symbol": "func_01ffd9d4",
+      "symbol": "OS_IrqHandler_ThreadSwitch",
       "address": "0x01ffd9d4",
       "size": "0x00000154",
       "legacy_source": "src/unnamed/arm9/01ff/func_01ffd9d4.c",

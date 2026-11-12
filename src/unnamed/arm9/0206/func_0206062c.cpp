@@ -7,10 +7,9 @@
 #include "types.h"
 #include "nitro/os/cache.h"
 #include "nitro/card/card_common.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
-
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int len);
 
 void func_0206062c(CARDiCommon *p) {
     do {

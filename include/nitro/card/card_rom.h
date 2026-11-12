@@ -10,6 +10,8 @@
  */
 
 #include "nitro/card/card_common.h"
+#include "nitro/hw/mmap_shared.h"
+#include "nitro/mi/exMemory.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,6 +26,23 @@ typedef struct CARDRomRegion {
     u32 offset;
     u32 length;
 } CARDRomRegion;
+
+/* The ROM header's file name table, file allocation table and overlay
+ * tables, from the copy of the header the boot code leaves at
+ * HW_ROM_HEADER_BUF. */
+static inline const CARDRomRegion *CARD_GetRomRegionFNT(void) {
+    return (const CARDRomRegion *)((const u8 *)HW_ROM_HEADER_BUF + 0x40);
+}
+
+static inline const CARDRomRegion *CARD_GetRomRegionFAT(void) {
+    return (const CARDRomRegion *)((const u8 *)HW_ROM_HEADER_BUF + 0x48);
+}
+
+static inline const CARDRomRegion *CARD_GetRomRegionOVT(MIProcessor target) {
+    return (target == MI_PROCESSOR_ARM9)
+               ? (const CARDRomRegion *)((const u8 *)HW_ROM_HEADER_BUF + 0x50)
+               : (const CARDRomRegion *)((const u8 *)HW_ROM_HEADER_BUF + 0x58);
+}
 
 /* NitroSDK CARDRomStat (rom_stat, data_020a8780). */
 typedef struct CARDRomStat {

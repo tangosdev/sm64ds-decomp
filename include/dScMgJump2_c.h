@@ -98,7 +98,7 @@ struct dScMgJump2_c : dScMgD3DBase_c {
        do not change ownership of _ZTV12dScMgJump2_c.
        Signatures are include/fBase_c.h's and include/dScMgBase_c.h's own,
        copied unchanged. --- */
-    s32 InitResources();    /* slot 0 -- src/_ZN12dScMgJump2_c13InitResourcesEv.cpp */
+    s32 InitResources();    /* slot 0 -- src/minigames/d_s_mg_jump2.cpp */
     s32 CleanupResources(); /* slot 3 -- ov006 0x020ef110 */
     s32 Behavior();         /* slot 6 -- ov006 0x020ef3e0 */
     s32 Render();           /* slot 9 -- ov006 0x020ef148 */

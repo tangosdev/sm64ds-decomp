@@ -224,9 +224,9 @@ s32 dScDSMT_c::InitResources() {
         func_0201a428();
 
     sBootArgs.messages = (void *)data_0209d6fc;
-    REG_POWCNT1 = (REG_POWCNT1 & 0xfffffdf1) | 0x20e;
+    GX_SetPower(GX_POWER_ALL);
     GX_DispOn();
-    REG_DISPCNT_SUB |= 0x10000;
+    GXS_DispOn();
     Enable3dEngines();
     ::Initialise3dGraphics(0);
     gGraphCallback = &mGraphCallback;

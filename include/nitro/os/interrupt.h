@@ -26,6 +26,43 @@ extern "C" {
 
 typedef u32 OSIrqMask;
 
+/* The IE/IF bits (os/common/interrupt.h). Macros, not enumerators or
+ * inlines, so they cost an including file no @NNN numbers. */
+#define OS_IE_V_BLANK (1UL << 0)
+#define OS_IE_H_BLANK (1UL << 1)
+#define OS_IE_V_COUNT (1UL << 2)
+#define OS_IE_TIMER0 (1UL << 3)
+#define OS_IE_TIMER1 (1UL << 4)
+#define OS_IE_TIMER2 (1UL << 5)
+#define OS_IE_TIMER3 (1UL << 6)
+#define OS_IE_SIO (1UL << 7)
+#define OS_IE_DMA0 (1UL << 8)
+#define OS_IE_DMA1 (1UL << 9)
+#define OS_IE_DMA2 (1UL << 10)
+#define OS_IE_DMA3 (1UL << 11)
+#define OS_IE_KEY (1UL << 12)
+#define OS_IE_CARTRIDGE (1UL << 13)
+#define OS_IE_SUBP (1UL << 16)
+#define OS_IE_SPFIFO_SEND (1UL << 17)
+#define OS_IE_SPFIFO_RECV (1UL << 18)
+#define OS_IE_CARD_DATA (1UL << 19)
+#define OS_IE_CARD_IREQ (1UL << 20)
+#define OS_IE_GXFIFO (1UL << 21)
+
+/* OS_IRQTable has one handler per IE bit; the DMA channels and the timers
+ * dispatch through OSi_IrqCallbackInfo instead, at these indices. */
+#define OS_IRQ_TABLE_MAX 22
+
+#define OSi_IRQCALLBACK_NO_DMA0   0
+#define OSi_IRQCALLBACK_NO_DMA1   1
+#define OSi_IRQCALLBACK_NO_DMA2   2
+#define OSi_IRQCALLBACK_NO_DMA3   3
+#define OSi_IRQCALLBACK_NO_TIMER0 4
+#define OSi_IRQCALLBACK_NO_TIMER1 5
+#define OSi_IRQCALLBACK_NO_TIMER2 6
+#define OSi_IRQCALLBACK_NO_TIMER3 7
+#define OSi_IRQCALLBACK_NUM       (7 + 1)
+
 typedef void (*OSIrqFunction)(void);
 
 typedef struct OSIrqCallbackInfo {
@@ -33,6 +70,9 @@ typedef struct OSIrqCallbackInfo {
     u32 enable;           /* 0x4 -- zero: mask the interrupt again after it */
     void *arg;            /* 0x8 */
 } OSIrqCallbackInfo;
+
+extern OSIrqFunction OS_IRQTable[];
+extern OSIrqCallbackInfo OSi_IrqCallbackInfo[OSi_IRQCALLBACK_NUM];
 
 /* os_interrupt.c */
 void OS_InitIrqTable(void);

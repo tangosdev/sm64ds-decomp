@@ -11,6 +11,8 @@
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_vramcnt.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/hw/mmap_global.h"
+#include "private/gxdma.h"
 
 /* OBJ character VRAM has a fixed base, so the SDK's getters
  * (G2_/G2S_GetOBJCharPtr, nitro/gx/gx_bgcnt.h) are inlines, not calls.
@@ -18,282 +20,127 @@
  * where a literal would fold into each copy's address add. */
 
 /* GX sub-screen extended palette VRAM bases */
-#define GXS_OBJ_EXT_PLTT_BASE 0x068a0000u
-#define GXS_BG_EXT_PLTT_BASE  0x06898000u
+#define GXS_OBJ_EXT_PLTT 0x068a0000u
+#define GXS_BG_EXT_PLTT  0x06898000u
 
-extern int GXi_DmaId;      // RENDER_DMA_CHANNEL: DMA channel number, -1 if none
-extern u32 data_020a60a4;  // BG ext-palette bank saved by BeginLoadBG, restored by EndLoadBG
-extern u32 data_020a60a8;  // OBJ ext-palette bank saved by BeginLoadOBJ, restored by EndLoadOBJ
+extern int GXi_DmaId;     // RENDER_DMA_CHANNEL: DMA channel number, -1 if none
+extern u32 data_020a60a4; // BG ext-palette bank saved by BeginLoadBG, restored by EndLoadBG
+extern u32 data_020a60a8; // OBJ ext-palette bank saved by BeginLoadOBJ, restored by EndLoadOBJ
 
 extern "C" {
-extern void MI_WaitDma(u32 dmaNo);
-extern void MI_DmaCopy32Async(u32 dmaNo, const void *src, void *dest, u32 size,
-                              void (*callback)(void *), void *arg);
-extern void MI_DmaCopy32(u32 ch, const void *src, void *dst, u32 size);
-extern void MI_DmaCopy16(u32 ch, const void *src, volatile void *dst, u32 count);
-extern void MIi_CpuCopy16(const void *src, volatile void *dst, int count);
-extern void MIi_CpuCopy32(int *src, int *dst, int len);
 
-// Loads BG palette data to main-screen (GX) palette VRAM at 0x05000000.
-void GX_LoadBGPltt(const void *src, unsigned int offset, unsigned int size) {
-    int channel = GXi_DmaId;
-    if (channel != -1) {
-        MI_DmaCopy16(channel, src, (void *)((char *)0x05000000 + offset), size);
-    } else {
-        MIi_CpuCopy16(src, (void *)((char *)0x05000000 + offset), size);
-    }
+void GX_LoadBGPltt(const void *pSrc, u32 offset, u32 szByte) {
+    GXi_DmaCopy16(GXi_DmaId, pSrc, (void *)(HW_BG_PLTT + offset), szByte);
 }
 
-// Loads BG palette data to sub-screen (GXS) palette VRAM at 0x05000400.
-void GXS_LoadBGPltt(const void *src, unsigned int offset, unsigned int size) {
-    int channel = GXi_DmaId;
-    if (channel != -1) {
-        MI_DmaCopy16(channel, src, (void *)((char *)0x05000400 + offset), size);
-    } else {
-        MIi_CpuCopy16(src, (void *)((char *)0x05000400 + offset), size);
-    }
+void GXS_LoadBGPltt(const void *pSrc, u32 offset, u32 szByte) {
+    GXi_DmaCopy16(GXi_DmaId, pSrc, (void *)(HW_DB_BG_PLTT + offset), szByte);
 }
 
-// Loads OBJ palette data to main screen (GX) palette VRAM at 0x05000200.
-void GX_LoadOBJPltt(const void *src, unsigned int offset, unsigned int size) {
-    int channel = GXi_DmaId;
-    if (channel != -1) {
-        MI_DmaCopy16(channel, src, (void *)((char *)0x05000200 + offset), size);
-    } else {
-        MIi_CpuCopy16(src, (void *)((char *)0x05000200 + offset), size);
-    }
+void GX_LoadOBJPltt(const void *pSrc, u32 offset, u32 szByte) {
+    GXi_DmaCopy16(GXi_DmaId, pSrc, (void *)(HW_OBJ_PLTT + offset), szByte);
 }
 
-// Loads OBJ palette data to sub-screen (GXS) palette VRAM at 0x05000600.
-void GXS_LoadOBJPltt(const void *src, unsigned int offset, unsigned int size) {
-    int channel = GXi_DmaId;
-    if (channel != -1) {
-        MI_DmaCopy16(channel, src, (void *)((char *)0x05000600 + offset), size);
-    } else {
-        MIi_CpuCopy16(src, (void *)((char *)0x05000600 + offset), size);
-    }
+void GXS_LoadOBJPltt(const void *pSrc, u32 offset, u32 szByte) {
+    GXi_DmaCopy16(GXi_DmaId, pSrc, (void *)(HW_DB_OBJ_PLTT + offset), szByte);
 }
 
-// Copies count words from src to VRAM address (0x07000000 + offset) -- the
-// main-engine OAM block (ARM9 view). DMA channel if assigned, else CPU copy.
-void GX_LoadOAM(const void *src, unsigned int offset, unsigned int count) {
-    unsigned int channel = GXi_DmaId;
-    if (channel != (unsigned int)-1) {
-        MI_DmaCopy32(channel, src, (void *)(0x7000000 + offset), count);
-    } else {
-        MIi_CpuCopy32((int *)src, (int *)(0x7000000 + offset), count);
-    }
+void GX_LoadOAM(const void *pSrc, u32 offset, u32 szByte) {
+    GXi_DmaCopy32(GXi_DmaId, pSrc, (void *)(HW_OAM + offset), szByte);
 }
 
-// Copies count words from src to VRAM address (0x07000400 + offset) -- the
-// sub-engine OAM block (ARM9 view). DMA channel if assigned, else CPU copy.
-void GXS_LoadOAM(const void *src, unsigned int offset, unsigned int count) {
-    unsigned int channel = GXi_DmaId;
-    if (channel != (unsigned int)-1) {
-        MI_DmaCopy32(channel, src, (void *)(0x07000400 + offset), count);
-    } else {
-        MIi_CpuCopy32((int *)src, (int *)(0x07000400 + offset), count);
-    }
+void GXS_LoadOAM(const void *pSrc, u32 offset, u32 szByte) {
+    GXi_DmaCopy32(GXi_DmaId, pSrc, (void *)(HW_DB_OAM + offset), szByte);
 }
 
-// Copies count words from src to VRAM address (0x6400000 + offset) -- main
-// OBJ VRAM.
-void GX_LoadOBJ(const void *src, unsigned int offset, unsigned int count) {
-    unsigned int channel = GXi_DmaId;
-    unsigned int base = (unsigned int)G2_GetOBJCharPtr();
-    if (channel != (unsigned int)-1) {
-        MI_DmaCopy32(channel, src, (void *)(base + offset), count);
-    } else {
-        MIi_CpuCopy32((int *)src, (int *)(base + offset), count);
-    }
+void GX_LoadOBJ(const void *pSrc, u32 offset, u32 szByte) {
+    u32 base = (u32)G2_GetOBJCharPtr();
+    GXi_DmaCopy32(GXi_DmaId, pSrc, (void *)(base + offset), szByte);
 }
 
-// Copies count words from src to VRAM address (0x6600000 + offset) -- sub
-// OBJ VRAM. GX_LoadOBJ's sub-engine twin.
-void GXS_LoadOBJ(const void *src, unsigned int offset, unsigned int count) {
-    unsigned int channel = GXi_DmaId;
-    unsigned int base = (unsigned int)G2S_GetOBJCharPtr();
-    if (channel != (unsigned int)-1) {
-        MI_DmaCopy32(channel, src, (void *)(base + offset), count);
-    } else {
-        MIi_CpuCopy32((int *)src, (int *)(base + offset), count);
-    }
+void GXS_LoadOBJ(const void *pSrc, u32 offset, u32 szByte) {
+    u32 base = (u32)G2S_GetOBJCharPtr();
+    GXi_DmaCopy32(GXi_DmaId, pSrc, (void *)(base + offset), szByte);
 }
 
-// Loads BG0 screen data to the main-engine plane (G2_GetBG0ScrPtr).
-void GX_LoadBG0Scr(const void *src, int offset, int count) {
-    volatile unsigned char *ptr = (volatile unsigned char *)G2_GetBG0ScrPtr();
-    int ch = GXi_DmaId;
-    if (ch != -1) {
-        MI_DmaCopy16(ch, src, ptr + offset, count);
-    } else {
-        MIi_CpuCopy16(src, ptr + offset, count);
-    }
+void GX_LoadBG0Scr(const void *pSrc, int offset, int szByte) {
+    u32 base = (u32)G2_GetBG0ScrPtr();
+    GXi_DmaCopy16(GXi_DmaId, pSrc, (void *)(base + offset), szByte);
 }
 
-// Loads BG0 screen data to the sub-engine plane (G2S_GetBG0ScrPtr).
-void GXS_LoadBG0Scr(const void *src, int offset, int count) {
-    volatile unsigned char *ptr = (volatile unsigned char *)G2S_GetBG0ScrPtr();
-    int ch = GXi_DmaId;
-    if (ch != -1) {
-        MI_DmaCopy16(ch, src, ptr + offset, count);
-    } else {
-        MIi_CpuCopy16(src, ptr + offset, count);
-    }
+void GXS_LoadBG0Scr(const void *pSrc, int offset, int szByte) {
+    u32 base = (u32)G2S_GetBG0ScrPtr();
+    GXi_DmaCopy16(GXi_DmaId, pSrc, (void *)(base + offset), szByte);
 }
 
-// Loads BG1 screen data to the main-engine plane (G2_GetBG1ScrPtr).
-void GX_LoadBG1Scr(const void *src, int offset, int count) {
-    volatile unsigned char *ptr = (volatile unsigned char *)G2_GetBG1ScrPtr();
-    int ch = GXi_DmaId;
-    if (ch != -1) {
-        MI_DmaCopy16(ch, src, ptr + offset, count);
-    } else {
-        MIi_CpuCopy16(src, ptr + offset, count);
-    }
+void GX_LoadBG1Scr(const void *pSrc, int offset, int szByte) {
+    u32 base = (u32)G2_GetBG1ScrPtr();
+    GXi_DmaCopy16(GXi_DmaId, pSrc, (void *)(base + offset), szByte);
 }
 
-// Loads BG1 screen data to the sub-engine plane (G2S_GetBG1ScrPtr).
-void GXS_LoadBG1Scr(const void *src, int offset, int count) {
-    volatile unsigned char *ptr = (volatile unsigned char *)G2S_GetBG1ScrPtr();
-    int ch = GXi_DmaId;
-    if (ch != -1) {
-        MI_DmaCopy16(ch, src, ptr + offset, count);
-    } else {
-        MIi_CpuCopy16(src, ptr + offset, count);
-    }
+void GXS_LoadBG1Scr(const void *pSrc, int offset, int szByte) {
+    u32 base = (u32)G2S_GetBG1ScrPtr();
+    GXi_DmaCopy16(GXi_DmaId, pSrc, (void *)(base + offset), szByte);
 }
 
-// Loads BG2 screen data to the main-engine plane (G2_GetBG2ScrPtr).
-void GX_LoadBG2Scr(const void *src, u32 offset, u32 count) {
-    void *bgPtr;
-    u32 ch;
-
-    bgPtr = G2_GetBG2ScrPtr();
-    ch = GXi_DmaId;
-    if (ch != (u32)-1)
-        MI_DmaCopy16(ch, src, (char *)bgPtr + offset, count);
-    else
-        MIi_CpuCopy16(src, (char *)bgPtr + offset, count);
+void GX_LoadBG2Scr(const void *pSrc, u32 offset, u32 szByte) {
+    u32 base = (u32)G2_GetBG2ScrPtr();
+    GXi_DmaCopy16(GXi_DmaId, pSrc, (void *)(base + offset), szByte);
 }
 
-// Loads BG2 screen data to the sub-engine plane (G2S_GetBG2ScrPtr).
-void GXS_LoadBG2Scr(const void *src, u32 offset, u32 count) {
-    void *bgPtr;
-    u32 ch;
-
-    bgPtr = (void *)G2S_GetBG2ScrPtr();
-    ch = GXi_DmaId;
-    if (ch != (u32)-1)
-        MI_DmaCopy16(ch, src, (char *)bgPtr + offset, count);
-    else
-        MIi_CpuCopy16(src, (char *)bgPtr + offset, count);
+void GXS_LoadBG2Scr(const void *pSrc, u32 offset, u32 szByte) {
+    u32 base = (u32)G2S_GetBG2ScrPtr();
+    GXi_DmaCopy16(GXi_DmaId, pSrc, (void *)(base + offset), szByte);
 }
 
-// Loads BG3 screen data to the main-engine plane (G2_GetBG3ScrPtr).
-void GX_LoadBG3Scr(const void *src, u32 offset, u32 count) {
-    void *bgPtr = G2_GetBG3ScrPtr();
-    s32 ch = GXi_DmaId;
-    if (ch != -1) {
-        MI_DmaCopy16(ch, src, (char *)bgPtr + offset, count);
-    } else {
-        MIi_CpuCopy16(src, (char *)bgPtr + offset, count);
-    }
+void GX_LoadBG3Scr(const void *pSrc, u32 offset, u32 szByte) {
+    u32 base = (u32)G2_GetBG3ScrPtr();
+    GXi_DmaCopy16(GXi_DmaId, pSrc, (void *)(base + offset), szByte);
 }
 
-// Loads BG3 screen data to the sub-engine plane (G2S_GetBG3ScrPtr).
-void GXS_LoadBG3Scr(const void *src, u32 offset, u32 count) {
-    void *bgPtr;
-    u32 ch;
-
-    bgPtr = (void *)G2S_GetBG3ScrPtr();
-    ch = GXi_DmaId;
-    if (ch != (u32)-1)
-        MI_DmaCopy16(ch, src, (char *)bgPtr + offset, count);
-    else
-        MIi_CpuCopy16(src, (char *)bgPtr + offset, count);
+void GXS_LoadBG3Scr(const void *pSrc, u32 offset, u32 szByte) {
+    u32 base = (u32)G2S_GetBG3ScrPtr();
+    GXi_DmaCopy16(GXi_DmaId, pSrc, (void *)(base + offset), szByte);
 }
 
-// Loads character data into MAIN BG0 VRAM (G2_GetBG0CharPtr, 0x2054efc).
-void GX_LoadBG0Char(const void *src, unsigned int offset, unsigned int count) {
-    void *base = G2_GetBG0CharPtr();
-    unsigned int channel = GXi_DmaId;
-    if (channel != (unsigned int)-1) {
-        MI_DmaCopy32(channel, src, (char *)base + offset, count);
-    } else {
-        MIi_CpuCopy32((int *)src, (int *)((char *)base + offset), count);
-    }
+void GX_LoadBG0Char(const void *pSrc, u32 offset, u32 szByte) {
+    u32 base = (u32)G2_GetBG0CharPtr();
+    GXi_DmaCopy32(GXi_DmaId, pSrc, (void *)(base + offset), szByte);
 }
 
-// Loads BG0 character data into SUB BG0 VRAM (G2S_GetBG0CharPtr).
-void GXS_LoadBG0Char(const void *src, u32 offset, u32 size) {
-    void *charPtr = (void *)G2S_GetBG0CharPtr();
-    if (GXi_DmaId != (u32)-1)
-        MI_DmaCopy32(GXi_DmaId, src, (char *)charPtr + offset, size);
-    else
-        MIi_CpuCopy32((int *)src, (int *)((char *)charPtr + offset), size);
+void GXS_LoadBG0Char(const void *pSrc, u32 offset, u32 szByte) {
+    u32 base = (u32)G2S_GetBG0CharPtr();
+    GXi_DmaCopy32(GXi_DmaId, pSrc, (void *)(base + offset), szByte);
 }
 
-// Loads character data into MAIN BG1 VRAM (G2_GetBG1CharPtr, 0x2054ea8).
-void GX_LoadBG1Char(const void *src, unsigned int offset, unsigned int count) {
-    void *base = G2_GetBG1CharPtr();
-    unsigned int channel = GXi_DmaId;
-    if (channel != (unsigned int)-1) {
-        MI_DmaCopy32(channel, src, (char *)base + offset, count);
-    } else {
-        MIi_CpuCopy32((int *)src, (int *)((char *)base + offset), count);
-    }
+void GX_LoadBG1Char(const void *pSrc, u32 offset, u32 szByte) {
+    u32 base = (u32)G2_GetBG1CharPtr();
+    GXi_DmaCopy32(GXi_DmaId, pSrc, (void *)(base + offset), szByte);
 }
 
-// Loads BG1 character data into SUB BG1 VRAM (G2S_GetBG1CharPtr).
-void GXS_LoadBG1Char(const void *src, unsigned int offset, unsigned int count) {
-    void *base = (void *)G2S_GetBG1CharPtr();
-    unsigned int channel = GXi_DmaId;
-    if (channel != (unsigned int)-1) {
-        MI_DmaCopy32(channel, src, (char *)base + offset, count);
-    } else {
-        MIi_CpuCopy32((int *)src, (int *)((char *)base + offset), count);
-    }
+void GXS_LoadBG1Char(const void *pSrc, u32 offset, u32 szByte) {
+    u32 base = (u32)G2S_GetBG1CharPtr();
+    GXi_DmaCopy32(GXi_DmaId, pSrc, (void *)(base + offset), szByte);
 }
 
-// Loads BG2 char data into MAIN BG2 VRAM (G2_GetBG2CharPtr).
-void GX_LoadBG2Char(const void *src, u32 offset, u32 size) {
-    void *charPtr = G2_GetBG2CharPtr();
-    if (GXi_DmaId != (u32)-1)
-        MI_DmaCopy32(GXi_DmaId, src, (char *)charPtr + offset, size);
-    else
-        MIi_CpuCopy32((int *)src, (int *)((char *)charPtr + offset), size);
+void GX_LoadBG2Char(const void *pSrc, u32 offset, u32 szByte) {
+    u32 base = (u32)G2_GetBG2CharPtr();
+    GXi_DmaCopy32(GXi_DmaId, pSrc, (void *)(base + offset), szByte);
 }
 
-// Loads BG2 char data into SUB BG2 VRAM (G2S_GetBG2CharPtr).
-void GXS_LoadBG2Char(const void *src, unsigned int offset, unsigned int count) {
-    void *base = (void *)G2S_GetBG2CharPtr();
-    unsigned int channel = GXi_DmaId;
-    if (channel != (unsigned int)-1) {
-        MI_DmaCopy32(channel, src, (char *)base + offset, count);
-    } else {
-        MIi_CpuCopy32((int *)src, (int *)((char *)base + offset), count);
-    }
+void GXS_LoadBG2Char(const void *pSrc, u32 offset, u32 szByte) {
+    u32 base = (u32)G2S_GetBG2CharPtr();
+    GXi_DmaCopy32(GXi_DmaId, pSrc, (void *)(base + offset), szByte);
 }
 
-// Loads BG3 char data into MAIN BG3 VRAM (0x2054d88 getter).
-void GX_LoadBG3Char(const void *src, unsigned int offset, unsigned int count) {
-    void *base = (void *)G2_GetBG3CharPtr();
-    unsigned int channel = GXi_DmaId;
-    if (channel != (unsigned int)-1) {
-        MI_DmaCopy32(channel, src, (char *)base + offset, count);
-    } else {
-        MIi_CpuCopy32((int *)src, (int *)((char *)base + offset), count);
-    }
+void GX_LoadBG3Char(const void *pSrc, u32 offset, u32 szByte) {
+    u32 base = (u32)G2_GetBG3CharPtr();
+    GXi_DmaCopy32(GXi_DmaId, pSrc, (void *)(base + offset), szByte);
 }
 
-// Loads BG3 char data into SUB BG3 VRAM (G2S_GetBG3CharPtr).
-void GXS_LoadBG3Char(const void *src, u32 offset, u32 size) {
-    void *charPtr = (void *)G2S_GetBG3CharPtr();
-    if (GXi_DmaId != (u32)-1)
-        MI_DmaCopy32(GXi_DmaId, src, (char *)charPtr + offset, size);
-    else
-        MIi_CpuCopy32((int *)src, (int *)((char *)charPtr + offset), size);
+void GXS_LoadBG3Char(const void *pSrc, u32 offset, u32 szByte) {
+    u32 base = (u32)G2S_GetBG3CharPtr();
+    GXi_DmaCopy32(GXi_DmaId, pSrc, (void *)(base + offset), szByte);
 }
 
 // Clears the sub-engine BG ext-palette enable bit and unmaps the bank back to
@@ -303,20 +150,12 @@ void GXS_BeginLoadBGExtPltt() {
     data_020a60a4 = GX_ResetBankForSubBGExtPltt();
 }
 
-void GXS_LoadBGExtPltt(const void *src, u32 destSlotAddr, u32 size) {
-    u32 dmaId = GXi_DmaId;
-    if (dmaId != (u32)-1) {
-        MI_DmaCopy32Async(dmaId, src, (void *)(destSlotAddr + GXS_BG_EXT_PLTT_BASE), size, 0, 0);
-    } else {
-        MIi_CpuCopy32((int *)src, (int *)(destSlotAddr + GXS_BG_EXT_PLTT_BASE), size);
-    }
+void GXS_LoadBGExtPltt(const void *pSrc, u32 destSlotAddr, u32 szByte) {
+    GXi_DmaCopy32Async(GXi_DmaId, pSrc, (void *)(GXS_BG_EXT_PLTT + destSlotAddr), szByte, 0, 0);
 }
 
-void GXS_EndLoadBGExtPltt() {
-    u32 dmaId = GXi_DmaId;
-    if (dmaId != (u32)-1) {
-        MI_WaitDma(dmaId);
-    }
+void GXS_EndLoadBGExtPltt(void) {
+    GXi_WaitDma(GXi_DmaId);
     GX_SetBankForSubBGExtPltt(data_020a60a4);
     data_020a60a4 = 0;
 }
@@ -327,20 +166,12 @@ void GXS_BeginLoadOBJExtPltt() {
     data_020a60a8 = GX_ResetBankForSubOBJExtPltt();
 }
 
-void GXS_LoadOBJExtPltt(const void *src, u32 destSlotAddr, u32 size) {
-    u32 dmaId = GXi_DmaId;
-    if (dmaId != (u32)-1) {
-        MI_DmaCopy32Async(dmaId, src, (void *)(destSlotAddr + GXS_OBJ_EXT_PLTT_BASE), size, 0, 0);
-    } else {
-        MIi_CpuCopy32((int *)src, (int *)(destSlotAddr + GXS_OBJ_EXT_PLTT_BASE), size);
-    }
+void GXS_LoadOBJExtPltt(const void *pSrc, u32 destSlotAddr, u32 szByte) {
+    GXi_DmaCopy32Async(GXi_DmaId, pSrc, (void *)(GXS_OBJ_EXT_PLTT + destSlotAddr), szByte, 0, 0);
 }
 
-void GXS_EndLoadOBJExtPltt() {
-    u32 dmaId = GXi_DmaId;
-    if (dmaId != (u32)-1) {
-        MI_WaitDma(dmaId);
-    }
+void GXS_EndLoadOBJExtPltt(void) {
+    GXi_WaitDma(GXi_DmaId);
     GX_SetBankForSubOBJExtPltt(data_020a60a8);
     data_020a60a8 = 0;
 }

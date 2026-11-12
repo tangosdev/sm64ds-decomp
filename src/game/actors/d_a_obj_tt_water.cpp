@@ -41,7 +41,7 @@ extern TtWaterModelFilePtr data_ov033_021124f0;
 extern TtWaterCollisionFilePtr data_ov033_021124e8;
 
 extern int data_ov033_02111bc8[];
-extern int data_ov033_02111c1c[];
+extern CLPS_Block data_ov033_02111c1c;
 
 /* Emission order is ROM order: the destructor pair must stay first.
  * Do not reorder. */
@@ -97,8 +97,7 @@ int daObjTtWater_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     void *mc = dBgW_Kc::LoadFile(data_ov033_021124e8);
-    mMeshCollider.SetFile((KCL_File *)mc, mClsnMat, 0x1000, mAngleY,
-                          *(CLPS_Block *)data_ov033_02111c1c);
+    mMeshCollider.SetFile((KCL_File *)mc, mClsnMat, 0x1000, mAngleY, data_ov033_02111c1c);
     mMeshCollider.Enable(this);
     mMinPosY = mPosY - 0x3c000;
     return Event::GetBit(0xe) == 0;

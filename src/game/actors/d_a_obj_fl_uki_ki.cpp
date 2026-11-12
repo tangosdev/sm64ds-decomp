@@ -85,8 +85,7 @@ s32 daObjFl_UkiKi_c::InitResources() {
     UpdateClsnPosAndRot();
 
     KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(FloatingFloorLllBig_ClsnFile);
-    ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov064_0211ba6c);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov064_0211ba6c);
 
     /* The platform carries the mesh along by velocity rather than by its
        transform -- it slides straight up and down. */

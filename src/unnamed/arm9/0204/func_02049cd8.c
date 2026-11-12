@@ -1,6 +1,6 @@
 #include "CaptureEffect.h"
+#include "nitro/mi/memory.h"
 
-extern void MIi_CpuClear16(unsigned short val, void *dst, int nbytes);
 extern void SNDi_SetSurroundDecay(int decay);
 extern int func_020507e0(void *buffer, unsigned int size, int format, int rate, int interval,
                          void *callback, void *arg);
@@ -14,7 +14,7 @@ extern int func_020507e0(void *buffer, unsigned int size, int format, int rate, 
    kind 0. */
 void func_02049cd8(void *buffer, int size, int mode) {
     volatile unsigned short tmp = 0;
-    MIi_CpuClear16(tmp, &data_020a4c70, sizeof(data_020a4c70));
+    MI_CpuFill16(&data_020a4c70, tmp, sizeof(data_020a4c70));
     data_020a4c64.kind = mode;
     if (mode == 1)
         SNDi_SetSurroundDecay(0x3000);

@@ -1,4 +1,5 @@
 #include "types.h"
+#include "nitro/pad/pad.h"
 #include "nitro/spi/pm.h"
 #include "private/watchdog_alarm.h"
 
@@ -37,14 +38,12 @@ static inline int IsSkipRequested(void) {
 
 void func_02019ac4(void) {
     int skip;
-    unsigned short lid;
     int delta;
     int closed;
     unsigned int t;
 
     skip = IsSkipRequested();
-    lid = *(unsigned short *)0x027fffa8;
-    closed = (int)(lid & 0x8000) >> 15;
+    closed = PAD_DetectFold();
     t = data_0209fc68;
     delta = data_0208ee44;
     /* materialized compare kept: if (t == 6) or an inline predicate drops 3 insns */
@@ -93,7 +92,7 @@ void func_02019ac4(void) {
                     data_0209d4f4 = 1;
                 }
                 if (skip != 0)
-                    PM_SetLCDPower(0);
+                    PM_SetLCDPower(PM_LCD_POWER_OFF);
                 data_0209d4ec = 3;
             } else {
                 data_0209d504 = tv - delta;
@@ -110,7 +109,7 @@ void func_02019ac4(void) {
         }
     }
     if (data_0209d4ec == 4) {
-        if (PM_GetLCDPower() == 1 || PM_SetLCDPower(1) == 1) {
+        if (PM_GetLCDPower() == PM_LCD_POWER_ON || PM_SetLCDPower(PM_LCD_POWER_ON) == true) {
             if (data_0209d4f4 != 0) {
                 func_02011db4();
                 data_0209d4f4 = 0;
@@ -153,7 +152,7 @@ void func_02019ac4(void) {
 }
 
 void func_02019a58(void) {
-    while (PM_GetLCDPower() != 1 && PM_SetLCDPower(1) != 1) {
+    while (PM_GetLCDPower() != PM_LCD_POWER_ON && PM_SetLCDPower(PM_LCD_POWER_ON) != true) {
         func_0201a4d0();
     }
 

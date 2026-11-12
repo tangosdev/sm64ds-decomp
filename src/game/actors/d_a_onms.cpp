@@ -579,9 +579,8 @@ int daOnms_c::InitResources()
     func_ov092_02131a88((char *)this);
 
     f = dBgW_Kc::LoadFile(gOnimasuCollisionFile);
-    ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile((KCL_File *)f, *(&mClsnMat), 0x1000, mAngleY,
-                              *(CLPS_Block *)(&data_ov092_02132220));
+    mMeshCollider.SetFile((KCL_File *)f, mClsnMat, 0x1000, mAngleY,
+                          *(CLPS_Block *)(&data_ov092_02132220));
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
 
     mOrientBits = (unsigned char)((mAngleX >> 0xe) & 3);

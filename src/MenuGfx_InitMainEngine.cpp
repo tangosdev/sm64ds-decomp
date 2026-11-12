@@ -1,15 +1,17 @@
 //cpp
 #include "nitro/gx/gx_vramcnt.h"
+#include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx.h"
 
 extern "C" void MenuGfx_InitMainEngine(void) {
-    GX_SetBankForTex(3);
-    GX_SetBankForTexPltt(0x20);
-    GX_SetBankForOBJ(0x40);
+    GX_SetBankForTex(GX_VRAM_TEX_01_AB);
+    GX_SetBankForTexPltt(GX_VRAM_TEXPLTT_0_F);
+    GX_SetBankForOBJ(GX_VRAM_OBJ_16_G);
 
-    *(volatile unsigned short*)0x4000008 &= ~0x40;
-    *(volatile unsigned short*)0x400000a &= ~0x40;
-    *(volatile unsigned short*)0x400000c &= ~0x40;
-    *(volatile unsigned short*)0x400000e &= ~0x40;
-    *(volatile unsigned short*)0x400000c &= ~3;
-    *(volatile unsigned int*)0x4000000 &= 0xffcfffef;
+    G2_BG0Mosaic(0);
+    G2_BG1Mosaic(0);
+    G2_BG2Mosaic(0);
+    G2_BG3Mosaic(0);
+    G2_SetBG2Priority(0);
+    GX_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
 }

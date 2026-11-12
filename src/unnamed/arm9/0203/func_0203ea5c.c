@@ -1,5 +1,6 @@
 #include "types.h"
 #include "private/mb_views.h"
+#include "nitro/mi/memory.h"
 /* A calibrated touch-panel sample (nitro/spi/tp.h's TPData, as func_0203df40 uses;
    x, y, touch, validity). */
 struct Col4 {
@@ -20,8 +21,6 @@ typedef struct {
 } Rec;
 
 extern void func_020408b0(u16 arg);
-extern void MI_CpuCopy8(const void *src, void *dst, u32 size);
-extern void MI_CpuFill8(void *dst, u8 val, u32 len);
 extern s32 func_02040714(void);
 extern void func_02040820(void);
 extern void func_02040790(void);
@@ -210,19 +209,19 @@ void func_0203ea5c(void) {
                                 break;
                             case 0:
                                 data_020a1040.flags &= 0xFFFE;
-                                MI_CpuFill8(&data_020a10a4[0], 0, 0x16);
+                                MI_CpuClear8(&data_020a10a4[0], 0x16);
                                 MI_CpuCopy8(hostPkt + 3, &data_020a10a4[0], 0x16);
                                 break;
                             case 1:
-                                MI_CpuFill8(&data_020a10a4[1], 0, 0x16);
+                                MI_CpuClear8(&data_020a10a4[1], 0x16);
                                 MI_CpuCopy8(hostPkt + 3, &data_020a10a4[1], 0x16);
                                 break;
                             case 2:
-                                MI_CpuFill8(&data_020a10a4[2], 0, 0x16);
+                                MI_CpuClear8(&data_020a10a4[2], 0x16);
                                 MI_CpuCopy8(hostPkt + 3, &data_020a10a4[2], 0x16);
                                 break;
                             case 3:
-                                MI_CpuFill8(&data_020a10a4[3], 0, 0x16);
+                                MI_CpuClear8(&data_020a10a4[3], 0x16);
                                 MI_CpuCopy8(hostPkt + 3, &data_020a10a4[3], 0x16);
                                 break;
                             }
@@ -231,7 +230,7 @@ void func_0203ea5c(void) {
                     } else {
                         for (aid = 0; aid < 4; aid++) {
                             pkt = func_0204068c(aid);
-                            MI_CpuFill8(&data_020a1154[aid], 0, sizeof(Rec));
+                            MI_CpuClear8(&data_020a1154[aid], sizeof(Rec));
                             if (pkt != 0) {
                                 MI_CpuCopy8(pkt, &data_020a1154[aid].flags, 2);
                                 if (data_020a1154[aid].flags & 0x8000) {

@@ -6,6 +6,7 @@
 #include "types.h"
 #include "nitro/os/cache.h"
 #include "nitro/card/card_common.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
 
@@ -15,7 +16,6 @@ extern "C" {
    the `buf` alias. */
 #pragma opt_loop_invariants off
 /* MI_CpuCopy8 */
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int len);
 
 void func_0206071c(CARDiCommon *p) {
     u32 len;

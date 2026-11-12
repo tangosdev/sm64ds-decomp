@@ -11,6 +11,8 @@ struct FSArchive;
 struct FSFile;
 struct FSDirEntry;
 
+typedef struct FSFile FSFile;
+
 typedef int (*FS_ARCHIVE_READ_FUNC)(struct FSArchive *p_arc, void *dst, unsigned int pos,
                                     unsigned int size);
 typedef int (*FS_ARCHIVE_WRITE_FUNC)(struct FSArchive *p_arc, const void *src, unsigned int pos,
@@ -112,7 +114,7 @@ typedef struct FSOpenFileDirectInfo {
     unsigned int index;  /* 0x08 */
 } FSOpenFileDirectInfo;
 
-struct FSFile {
+typedef struct FSFile {
     FSFileLink link;      /* 0x00 */
     FSArchive *arc;       /* 0x08 */
     unsigned int stat;    /* 0x0c */
@@ -141,7 +143,7 @@ struct FSFile {
         FSOpenFileFastInfo openfilefast;
         FSOpenFileDirectInfo openfiledirect;
     } arg; /* 0x2c */
-};
+} FSFile;
 
 /* FS_SeekFile's origin. */
 typedef enum FSSeekFileMode { FS_SEEK_SET, FS_SEEK_CUR, FS_SEEK_END } FSSeekFileMode;

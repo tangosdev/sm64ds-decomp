@@ -43,6 +43,7 @@ typedef struct MtxFx43 {
 } MtxFx43;
 
 #define FX32_SHIFT 12
+#define FX32_ONE   ((fx32)0x00001000L)
 #define FX32_CAST(x) ((fx32)(x))
 
 #define FX_MUL(v1, v2) FX32_CAST(((fx64)(v1) * (v2) + 0x800LL) >> FX32_SHIFT)

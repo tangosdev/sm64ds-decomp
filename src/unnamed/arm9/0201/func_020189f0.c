@@ -1,13 +1,15 @@
-extern int myFS_ConvertPathToFileID(void *out_file_id, const char *path);
+#include "private/fs_views.h"
+
+extern int myFS_ConvertPathToFileID(FSFileID *p_file_id, const char *path);
 /* the ROM archive (see func_02018598.c) */
 extern int data_0209d3b4;
 
 /* Resolve a ROM path to its FAT file id, keeping the archive the FSFileID
-   names (buf[0]) for func_02018598. myFS_ConvertPathToFileID crashes on a
-   path that does not resolve. */
+   names for func_02018598. myFS_ConvertPathToFileID crashes on a path that
+   does not resolve. */
 int func_020189f0(const char *path) {
-    int buf[3];
-    myFS_ConvertPathToFileID(buf, path);
-    data_0209d3b4 = buf[0];
-    return buf[1];
+    FSFileID file_id;
+    myFS_ConvertPathToFileID(&file_id, path);
+    data_0209d3b4 = (int)file_id.arc;
+    return file_id.file_id;
 }

@@ -31,7 +31,10 @@
 #include "nitro/os/system.h"
 #include "private/arm9_a9db8_mb_parent.h"
 #include "private/mb_comm_child_block_header.h"
+#include "private/mb_common.h"
 #include "private/wm_views.h"
+#include "nitro/mi/memory.h"
+#include "nitro/wm/wm_api.h"
 
 extern "C" {
 
@@ -100,41 +103,11 @@ struct Out {
     u8 segment_no;            /* 0xc */
 };
 
-/* NitroSDK MBGameRegistry, the game record a file was registered with
- * (MbParentFile.mGameRegistry). */
-typedef struct MBGameRegistry {
-    int romFilePathp;           /* 0x00 */
-    int gameNamep;              /* 0x04 -- u16 string */
-    int gameIntroductionp;      /* 0x08 -- u16 string */
-    int iconCharPathp;          /* 0x0c */
-    int iconPalettePathp;       /* 0x10 */
-    int ggid;                   /* 0x14 -- matched against the child's mChildGameId */
-    unsigned char maxPlayerNum; /* 0x18 -- entries (parent included) at or past it are refused */
-} MBGameRegistry;
-
-/* NitroSDK WMMpRecvData, one child's slot of an MP receive buffer, as
- * WM_ReadMPData returns it. */
-typedef struct WMMpRecvData {
-    u16 length;     /* 0x00 */
-    u16 rate;       /* 0x02 */
-    u16 rssi;       /* 0x04 */
-    u16 aid;        /* 0x06 */
-    u16 noResponse; /* 0x08 */
-    u16 cdata[1];   /* 0x0a -- the child's packet */
-} WMMpRecvData;
-
-extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
-extern void MIi_CpuClearFast(unsigned val, void *dst, int len);
-extern void MI_CpuCopy8(const void *src, void *dst, u32 size);
-extern void MI_CpuFill8(void *dst, u8 val, u32 size);
-extern char *WM_ReadMPData(char *buf, unsigned int aid);
 extern u8 *MBi_SetRecvBufferFromChild(u8 *src, u8 *dst);
 extern u8 *MBi_MakeParentSendBuffer(MBCommParentBlockHeader *hdr, u8 *buf);
 extern int MBi_ReceiveRequestDataPiece(u8 *hdr, int aid);
-extern int MBi_get_blockinfo(struct Out *bi, char *table, u32 block, char *dlinfo);
-/* local extern: defined void, but it hands back MBi_SendMP's result,
-   which the senders here return. */
-extern int MBi_BlockHeaderEnd(u32 size, u32 pollbmp, u32 buf);
+extern int MBi_get_blockinfo(struct Out *bi, MB_BlockInfoTable *table, u32 block,
+                             MbDownloadFileInfoHeader *mdfi);
 extern void MB_SendGameInfoBeacon(void);
 extern void MB_UpdateGameInfoMember(char *self, void *src, u32 flags, int s);
 extern int func_0206881c(void);
@@ -146,8 +119,8 @@ void MBi_Calc_SendBlock(int fid);
 void MBi_CommParentSendData(void);
 int MBi_CommParentSendBlock(void);
 int MBi_CommParentSendDlFileInfo(void);
-int MBi_CommParentSendMsg(u8 type, u32 pollbmp);
-void MBi_CommParentRecvData(char *arg);
+int MBi_CommParentSendMsg(u8 type, u16 pollbmp);
+void MBi_CommParentRecvData(void *arg);
 void MBi_CommParentRecvDataPerChild(void *arg, u32 aid);
 void MBi_CommChangeParentStateCallbackOnly(u32 aid, int state, void *arg);
 void MBi_CommChangeParentState(u32 aid, int state, void *arg);
@@ -263,12 +236,12 @@ void MBi_CommParentCallback(int type, char *arg) {
         u16 v = cb->aid;
         if (v != 0 && v < 0x10) {
             MB_WORK->mChildVersion[v - 1] = 0;
-            MI_CpuFill8(&MB_WORK->mChildGameId[cb->aid - 1], 0, 4);
-            MI_CpuFill8(MB_WORK->mChildUser[cb->aid - 1], 0, 0x16);
+            MI_CpuClear8(&MB_WORK->mChildGameId[cb->aid - 1], 4);
+            MI_CpuClear8(MB_WORK->mChildUser[cb->aid - 1], 0x16);
             {
                 int cur = func_0206881c();
-                MI_CpuFill8(&MB_WORK->mChildRequest[cb->aid - 1], 0,
-                            (cur - 2) * 0x1e / (func_0206881c() - 2));
+                MI_CpuClear8(&MB_WORK->mChildRequest[cb->aid - 1],
+                             (cur - 2) * 0x1e / (func_0206881c() - 2));
             }
             MB_WORK->mChildRequestPieces[cb->aid - 1] = 0;
             {
@@ -311,10 +284,7 @@ void MBi_CommParentCallback(int type, char *arg) {
             if (e->mFiles->mActive != 0) {
                 u16 f48 = e->mFiles->mEntryChanged;
                 if (f48 != 0) {
-                    /* the game info record MB_UpdateGameInfoMember refreshes sits after
-                     * the 0xe4 bytes of mHeader that MBi_CommParentSendDlFileInfo
-                     * sends */
-                    MB_UpdateGameInfoMember((char *)&MB_WORK->mFiles[i].mHeader[0xe4],
+                    MB_UpdateGameInfoMember((char *)&MB_WORK->mFiles[i].mGameInfo,
                                             MB_WORK->mChildUser, e->mFiles->mEntryBitmap, f48);
                     /* the signed-index stepped form; MB_FILE (unsigned sizeof)
                      * or e reallocates registers */
@@ -401,7 +371,7 @@ void MBi_CommParentCallback(int type, char *arg) {
     }
     {
         volatile int sp0 = 0;
-        MIi_CpuClearFast(sp0, data_020a9db8, 0x73e0);
+        MI_CpuFillFast(data_020a9db8, sp0, 0x73e0);
     }
     data_020a9db8 = 0;
 }
@@ -460,7 +430,7 @@ void MBi_CommParentRecvDataPerChild(void *arg, u32 aid) {
         if (physIdx < 0x10) {
             rec = (MbParentWork *)(data_020a9db8 + physIdx * sizeof(MbParentFile));
             if (rec->mFiles[0].mActive != 0) {
-                p = (MBGameRegistry *)rec->mFiles[0].mGameRegistry;
+                p = rec->mFiles[0].mGameRegistry;
                 gv = MB_WORK->mChildGameId[idx];
                 if (gv == p->ggid)
                     goto have;
@@ -556,29 +526,33 @@ void MBi_CommParentRecvDataPerChild(void *arg, u32 aid) {
 
 /* An MP receive: clear each registered file's requested block, then pass
  * every child's nonempty packet on. */
-void MBi_CommParentRecvData(char *arg) {
+void MBi_CommParentRecvData(void *arg) {
+    WMMpRecvHeader *mpHeader = (WMMpRecvHeader *)arg;
     u16 i;
+    WMMpRecvData *datap;
+
     for (i = 0; i < 0x10; i++) {
         if (MB_FILE(i)->mActive != 0)
             MB_FILE(i)->mRequestedBlock = 0;
     }
-    for (i = 1; i <= 0xf; i++) {
-        u16 *p = (u16 *)WM_ReadMPData(arg, i);
-        if (p == 0)
-            continue;
-        if (*p == 0xffff)
-            continue;
-        if (*p == 0)
-            continue;
-        MBi_CommParentRecvDataPerChild(p, i);
+
+    for (i = 1; i <= 0xf; ++i) {
+        datap = WM_ReadMPData(mpHeader, i);
+
+        if (datap != 0) {
+            if (datap->length == 0xffff) {
+            } else if (datap->length != 0) {
+                MBi_CommParentRecvDataPerChild(datap, i);
+            }
+        }
     }
 }
 
-int MBi_CommParentSendMsg(u8 type, u32 pollbmp) {
+int MBi_CommParentSendMsg(u8 type, u16 pollbmp) {
     MBCommParentBlockHeader hd;
     hd.type = type;
-    MBi_MakeParentSendBuffer(&hd, (u8 *)data_020a9db8);
-    return MBi_BlockHeaderEnd(6, pollbmp, (u32)data_020a9db8);
+    MBi_MakeParentSendBuffer(&hd, (u8 *)MB_WORK->mSendBuf);
+    return MBi_BlockHeaderEnd(6, pollbmp, MB_WORK->mSendBuf);
 }
 
 /* Send the download info of the next file (mod 16) that a child in
@@ -626,11 +600,11 @@ int MBi_CommParentSendDlFileInfo(void) {
 
     hd.type = 3;
     hd.fid = found;
-    ret = MBi_MakeParentSendBuffer(&hd, (u8 *)data_020a9db8);
+    ret = MBi_MakeParentSendBuffer(&hd, (u8 *)MB_WORK->mSendBuf);
     if (ret != 0)
-        MI_CpuCopy8(MB_WORK->mFiles[found].mHeader, ret, 0xe4);
+        MI_CpuCopy8(&MB_WORK->mFiles[found].mDlFileInfo, ret, sizeof(MBDownloadFileInfo));
 
-    return MBi_BlockHeaderEnd(0xea, mask, (u32)data_020a9db8);
+    return MBi_BlockHeaderEnd(0xea, mask, MB_WORK->mSendBuf);
 }
 
 /* Typed access through private/arm9_a9db8_mb_parent.h is the match. The raw
@@ -668,9 +642,9 @@ int MBi_CommParentSendBlock(void) {
     MBi_Calc_SendBlock(idxByte);
 
     idxByte = MB_WORK->mCurrentFile;
-    if (MBi_get_blockinfo(&bi, (char *)MB_WORK->mFiles[idxByte].mBlockTable,
+    if (MBi_get_blockinfo(&bi, &MB_WORK->mFiles[idxByte].mBlockTable,
                           MB_WORK->mFiles[idxByte].mCurrentBlock,
-                          (char *)MB_WORK->mFiles[idxByte].mHeader) == 0) {
+                          &MB_WORK->mFiles[idxByte].mDlFileInfo.header) == 0) {
         return 0x15;
     }
 
@@ -682,11 +656,11 @@ int MBi_CommParentSendBlock(void) {
         hd.seqno = g->mFiles[g->mCurrentFile].mCurrentBlock;
     }
 
-    MI_CpuCopy8((void *)bi.offset, MBi_MakeParentSendBuffer(&hd, (u8 *)data_020a9db8), bi.size);
+    MI_CpuCopy8((void *)bi.offset, MBi_MakeParentSendBuffer(&hd, (u8 *)MB_WORK->mSendBuf), bi.size);
 
     idxByte = MB_WORK->mCurrentFile;
     return MBi_BlockHeaderEnd(bi.size + 6, MB_WORK->mFiles[idxByte].mChildBitmap,
-                              (u32)data_020a9db8);
+                              MB_WORK->mSendBuf);
 }
 
 /* A send turn: sort the children by state into AID bitmaps and send one
@@ -699,7 +673,7 @@ void MBi_CommParentSendData(void) {
     int result;
 
     bmp[0] = 0;
-    MIi_CpuClear16(bmp[0], (char *)&bmp[1], 10);
+    MI_CpuFill16((char *)&bmp[1], bmp[0], 10);
 
     for (i = 1; i <= 0xf; i++) {
         switch (MB_WORK->mChildState[i - 1]) {

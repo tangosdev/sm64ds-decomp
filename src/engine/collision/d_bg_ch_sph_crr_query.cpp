@@ -470,16 +470,14 @@ extern "C" int dBgS_ChkPolySafe(void *arg) {
 
 /* The free helper that ends the CLPS_BlockRef run: gates on dBgS_ChkPolySafe,
    indexes the enabled-collider table with dBgPi's collider index and
-   dispatches the entry's stored callback. Calls the gate through a
-   two-word function-pointer cast: the definition takes one word while
-   this site passes two, and the extra register rides along. Named after
+   dispatches the entry's stored callback. Named after
    TWW's dBgS::RideCallBack (the stored callback is its ride callback); the
    dBgS_ prefix is coined. */
 extern "C" void dBgS_RideCallBack(int a, int b) {
     int idx;
     dBgW *entry;
     StoodOnCallback fn;
-    if (((int (*)(int, int))dBgS_ChkPolySafe)(a, b) == 0)
+    if (dBgS_ChkPolySafe((void *)a) == 0)
         return;
     idx = ((dBgPi *)a)->GetColliderIndex();
     entry = data_020a0c80[idx];

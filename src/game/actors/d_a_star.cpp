@@ -783,7 +783,7 @@ int daStarBase_c::CleanupResources()
  * it. */
 void daStarBase_c::OnPendingDestroy()
 {
-    dActor_c *star = (dActor_c *)dActor_c::FindWithID(mLinkedStarID);
+    dActor_c *star = dActor_c::FindWithID(mLinkedStarID);
     if (star == 0) return;
     if (star->mDeathTableID >= 0) return;
     DeathTable_ClearBit(mLinkedStarDeathTableID);
@@ -822,7 +822,7 @@ void daStar_c::StateLaunch() {
     func_02012694(0x57, &mCamSpacePosX);
     mVertSpeed = 0x20000;
     SetDefaultGravity();
-    other = (dActor_c *)dActor_c::FindWithID(mMarkerID);
+    other = dActor_c::FindWithID(mMarkerID);
     if (mKind == KIND_4) {
         if (other == 0 || Vec3_HorzDist(&mPos, &other->mPos) == 0) {
             mVertSpeed = 0x18000;
@@ -870,7 +870,7 @@ void daStar_c::StateLaunch() {
  * trail effect, sound object 6 and the ground probe run every frame. */
 void daStar_c::StateRise() {
     if (mVertSpeed <= -0x20000) {
-        dActor_c *other = (dActor_c *)dActor_c::FindWithID(mMarkerID);
+        dActor_c *other = dActor_c::FindWithID(mMarkerID);
         if (other == 0 || Vec3_HorzDist(&mPos, &other->mPos) == 0) {
             mVertSpeed = 0x18000;
             mState = STATE_LAND;
@@ -911,7 +911,7 @@ void daStar_c::StateRise() {
  * to 200.0 above it, stops horizontally, bounces up at 16.0 (star id 3 on
  * sublevel 0xb) or 24.0 and becomes STATE_LAND. */
 void daStar_c::StateFlyToMarker() {
-    dActor_c *o = (dActor_c *)dActor_c::FindWithID(mMarkerID);
+    dActor_c *o = dActor_c::FindWithID(mMarkerID);
     if (o == 0) { MarkForDestruction(); return; }
     if (Vec3_HorzDist(&mPos, &o->mPos) < mHorzSpeed) {
         int* src = (int*)&o->mPosX;
@@ -2544,7 +2544,7 @@ void daStar_c::ProbeGround() {
 int daStar_c::PlaceCameraAtStarCamera(void *cam) {
     dActor_c *a = 0;
     for (;;) {
-        a = (dActor_c *)dActor_c::FindWithActorID(ACTOR_CAMERA_MARKER, a);
+        a = dActor_c::FindWithActorID(ACTOR_CAMERA_MARKER, a);
         if (a == 0) break;
         if (mStarID == (a->param1 & 0xf)) {
             ((dCamera_c *)cam)->SetLookAt(mPos);
@@ -2964,14 +2964,14 @@ void daStar_c::CheckIceBlock() {
     dActor_c *o;
     if (mIceChecked)
         return;
-    o = (dActor_c *)dActor_c::FindWithActorID(ACTOR_ICE_BLOCK_LL, 0);
+    o = dActor_c::FindWithActorID(ACTOR_ICE_BLOCK_LL, 0);
     while (o) {
         if (Vec3_Dist(&mPos, &o->mPos) < 0xc8000) {
             mInIceBlock = 1;
             ((daObjIceBlock_c *)o)->mContainedActor = this;
             break;
         }
-        o = (dActor_c *)dActor_c::FindWithActorID(ACTOR_ICE_BLOCK_LL, o);
+        o = dActor_c::FindWithActorID(ACTOR_ICE_BLOCK_LL, o);
     }
     mIceChecked = 1;
 }
