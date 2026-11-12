@@ -1,0 +1,310 @@
+{
+  "id": "arm9/unit0203d7b8",
+  "module": "arm9",
+  "source": "src/engine/link/unit0203d7b8.cpp",
+  "promoted_source": "src/engine/link/unit0203d7b8.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous run 0x0203d7b8..0x0203f604, 38 functions, all byte-matched from the one unit source, compiled once.",
+    "start edge (high): cstd::sqrt 0x0203d744..0x0203d7b8 is its own unit (its own .init and .ctors entries); func_0203d7b8 is the next function.",
+    "data window (relocs.txt): the bss run 0x020a0ef0..0x020a15e4 (status words, send packet data_020a1020, the input records data_020a1040 and data_020a1154, the parent parameters data_020a1064, the download-play profiles data_020a10a4/10fc) is referenced by every function in the run.",
+    "inlining: func_0203ea5c carries func_0203da4c's body inline; mwccarm inlines only within one file, and with reverse source emission func_0203ea5c precedes func_0203da4c in the source.",
+    "end edge (medium): the wireless layer from func_0203f604 reads and writes the same bss run, its words interleaved with the link's, so it most likely continues this file. The unit stops at 0x0203f604 until those functions are folded."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0203d7b8",
+      "end": "0x0203f604"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "func_0203d7b8",
+      "address": "0x0203d7b8",
+      "size": "0x0000001c",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203d7b8.c",
+      "ordinal": 0
+    },
+    {
+      "symbol": "func_0203d7d4",
+      "address": "0x0203d7d4",
+      "size": "0x00000048",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203d7d4.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_0203d81c",
+      "address": "0x0203d81c",
+      "size": "0x00000038",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203d81c.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_0203d854",
+      "address": "0x0203d854",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203d854.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_0203d868",
+      "address": "0x0203d868",
+      "size": "0x00000018",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203d868.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "GetOwnerLanguage",
+      "address": "0x0203d880",
+      "size": "0x00000010",
+      "legacy_source": "src/GetOwnerLanguage.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_0203d890",
+      "address": "0x0203d890",
+      "size": "0x00000010",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203d890.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_0203d8a0",
+      "address": "0x0203d8a0",
+      "size": "0x00000034",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203d8a0.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_0203d8d4",
+      "address": "0x0203d8d4",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203d8d4.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_0203d8e8",
+      "address": "0x0203d8e8",
+      "size": "0x00000014",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203d8e8.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_0203d8fc",
+      "address": "0x0203d8fc",
+      "size": "0x0000001c",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203d8fc.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_0203d918",
+      "address": "0x0203d918",
+      "size": "0x00000018",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203d918.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_0203d930",
+      "address": "0x0203d930",
+      "size": "0x00000020",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203d930.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_0203d950",
+      "address": "0x0203d950",
+      "size": "0x00000024",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203d950.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_0203d974",
+      "address": "0x0203d974",
+      "size": "0x00000040",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203d974.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_0203d9b4",
+      "address": "0x0203d9b4",
+      "size": "0x00000040",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203d9b4.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_0203d9f4",
+      "address": "0x0203d9f4",
+      "size": "0x00000038",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203d9f4.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_0203da2c",
+      "address": "0x0203da2c",
+      "size": "0x00000010",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203da2c.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_0203da3c",
+      "address": "0x0203da3c",
+      "size": "0x00000010",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203da3c.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_0203da4c",
+      "address": "0x0203da4c",
+      "size": "0x00000034",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203da4c.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_0203da80",
+      "address": "0x0203da80",
+      "size": "0x0000001c",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203da80.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_0203da9c",
+      "address": "0x0203da9c",
+      "size": "0x00000010",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203da9c.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_0203daac",
+      "address": "0x0203daac",
+      "size": "0x00000010",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203daac.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_0203dabc",
+      "address": "0x0203dabc",
+      "size": "0x00000018",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203dabc.c",
+      "ordinal": 23
+    },
+    {
+      "symbol": "func_0203dad4",
+      "address": "0x0203dad4",
+      "size": "0x00000010",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203dad4.c",
+      "ordinal": 24
+    },
+    {
+      "symbol": "func_0203dae4",
+      "address": "0x0203dae4",
+      "size": "0x00000018",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203dae4.c",
+      "ordinal": 25
+    },
+    {
+      "symbol": "func_0203dafc",
+      "address": "0x0203dafc",
+      "size": "0x00000010",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203dafc.c",
+      "ordinal": 26
+    },
+    {
+      "symbol": "func_0203db0c",
+      "address": "0x0203db0c",
+      "size": "0x00000018",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203db0c.c",
+      "ordinal": 27
+    },
+    {
+      "symbol": "GetAngleToCamera",
+      "address": "0x0203db24",
+      "size": "0x00000018",
+      "legacy_source": "src/GetAngleToCamera.c",
+      "ordinal": 28
+    },
+    {
+      "symbol": "func_0203db3c",
+      "address": "0x0203db3c",
+      "size": "0x00000010",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203db3c.c",
+      "ordinal": 29
+    },
+    {
+      "symbol": "GetPlayerFlagByte",
+      "address": "0x0203db4c",
+      "size": "0x00000018",
+      "legacy_source": "src/GetPlayerFlagByte.c",
+      "ordinal": 30
+    },
+    {
+      "symbol": "func_0203db64",
+      "address": "0x0203db64",
+      "size": "0x000003dc",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203db64.cpp",
+      "ordinal": 31
+    },
+    {
+      "symbol": "func_0203df40",
+      "address": "0x0203df40",
+      "size": "0x0000016c",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203df40.c",
+      "ordinal": 32
+    },
+    {
+      "symbol": "func_0203e0ac",
+      "address": "0x0203e0ac",
+      "size": "0x00000160",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203e0ac.c",
+      "ordinal": 33
+    },
+    {
+      "symbol": "func_0203e20c",
+      "address": "0x0203e20c",
+      "size": "0x0000076c",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203e20c.cpp",
+      "ordinal": 34
+    },
+    {
+      "symbol": "func_0203e978",
+      "address": "0x0203e978",
+      "size": "0x00000030",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203e978.c",
+      "ordinal": 35
+    },
+    {
+      "symbol": "func_0203e9a8",
+      "address": "0x0203e9a8",
+      "size": "0x000000b4",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203e9a8.c",
+      "ordinal": 36
+    },
+    {
+      "symbol": "func_0203ea5c",
+      "address": "0x0203ea5c",
+      "size": "0x00000ba8",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203ea5c.c",
+      "ordinal": 37
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Text only: the .data and bss stay ROM-owned and are reached by extern, as the one-function sources did.",
+    "Folded from 38 sources (33 C, 5 C++). The file is C++ because func_0203e20c calls Memory::Allocate; every function keeps C linkage inside one extern \"C\" block.",
+    "The unit is compiled under one file-level #pragma opt_dead_assignments off, which func_0203e20c needs (a counter it never reads in step 3) and the other 37 functions tolerate. mwccarm generates a C++ file's functions after reading all of it, so a bracket around func_0203e20c alone does not take effect.",
+    "func_0203e0ac and the tail of func_0203e20c copy the local input record into all four player records with chained field assignments (they were 16-bit offset views of two byte arrays, which the PlayerInputRecord type of the same objects no longer allowed). PlayerInputRecord.inputYaw is u16: both copies read it back with ldrh."
+  ],
+  "verification": {
+    "round": "one compile of the unit source; every function's bytes compared with tools/match.py's compare against the ROM -- text-only, whole TU compiled",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -w illpragmas -Cpp_exceptions off",
+    "functions_matched": 38,
+    "functions_declared": 38,
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "functions_occur_in_expected_order": "PASS"
+    }
+  }
+}
