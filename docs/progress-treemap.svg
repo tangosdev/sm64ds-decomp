@@ -34813,11 +34813,11 @@ matched: yes</title></rect><rect x="1146.75" y="313.12" width="8.86" height="3.4
 module: ov060
 addr: 0x021163b4
 size: 60 bytes
-matched: yes</title></rect><rect x="1146.75" y="316.59" width="8.86" height="3.24" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>daKpaTail_c_classInit
+matched: yes</title></rect><rect x="1146.75" y="316.59" width="8.86" height="3.24" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z21daKpaTail_c_classInitv
 module: ov060
 addr: 0x021163f0
 size: 56 bytes
-matched: yes</title></rect><rect x="1146.75" y="319.84" width="8.86" height="5.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>daKpa_c_classInit
+matched: yes</title></rect><rect x="1146.75" y="319.84" width="8.86" height="5.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z17daKpa_c_classInitv
 module: ov060
 addr: 0x02116428
 size: 92 bytes
