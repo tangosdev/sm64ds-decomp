@@ -130,13 +130,33 @@ inline unsigned short hton16(unsigned short v) {
 
 // Milliseconds from the performance counter: GetTickCount steps in ~16 ms,
 // which is a whole ghost frame and too coarse for an RTT readout.
+#ifndef PORT_ROM_CLEAN
+// CLOCK1 proof knob SM64DS_HUB_CLOCK_ADD=ms (dev builds only): the hub clock
+// pushed forward by that much, so a row can play "at 30 days of PC uptime"
+// (3000000000) and see every time test that would flip past 2^31 ms.
+unsigned hub_clock_add() {
+    static const unsigned add = [] {
+        const char *e = std::getenv("SM64DS_HUB_CLOCK_ADD");
+        const unsigned v = e ? (unsigned)std::strtoul(e, nullptr, 0) : 0u;
+        if (v) std::fprintf(stderr, "[hub-knob] clock add %u ms\n", v);
+        return v;
+    }();
+    return add;
+}
+#endif
+
 unsigned now_ms() {
     static LARGE_INTEGER f = {};
     if (!f.QuadPart) ::QueryPerformanceFrequency(&f);
     LARGE_INTEGER c;
     ::QueryPerformanceCounter(&c);
-    return (unsigned)((unsigned long long)c.QuadPart * 1000ull /
-                      (unsigned long long)f.QuadPart);
+    const unsigned t = (unsigned)((unsigned long long)c.QuadPart * 1000ull /
+                                  (unsigned long long)f.QuadPart);
+#ifndef PORT_ROM_CLEAN
+    return t + hub_clock_add();
+#else
+    return t;
+#endif
 }
 
 int str_int(const char *name, const char *s, int def, int lo, int hi) {
