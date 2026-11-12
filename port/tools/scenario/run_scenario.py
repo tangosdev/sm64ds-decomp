@@ -230,6 +230,7 @@ def launch(args):
                 env.update({"SM64DS_ADVENTURE": "1", "SM64DS_COOP": "1", "SM64DS_ROOM_KIND": "coop", "SM64DS_COMMS_CODE": code,
                             "SM64DS_COMMS_RELAY": "127.0.0.1:%d" % port,
                             "SM64DS_COOP_SAVE": os.path.join(d, "save", "coop", "coop.coopsav"),
+                            "SM64DS_SCENARIO_SAVE_OK": os.path.join(d, "save", "coop", "coop.coopsav"),
                             "SM64DS_COOP_SAVE_NAME": "scenario", "SM64DS_COOP_LOG": "1", "SM64DS_LEVEL": "1",
                             "SM64DS_VOICE_ALLOWED": "0"})
                 for rk, ek in ROOM_KEYS.items():
@@ -237,7 +238,7 @@ def launch(args):
                 if k == 0:
                     env["SM64DS_COOP_HOST"] = "1"
             else:
-                env["SM64DS_SAVE_PATH"] = os.path.join(d, "save", "scenario.sav")
+                env["SM64DS_SAVE_PATH"] = env["SM64DS_SCENARIO_SAVE_OK"] = os.path.join(d, "save", "scenario.sav")
             si = subprocess.STARTUPINFO(); si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
             flags = 0
             if proof:

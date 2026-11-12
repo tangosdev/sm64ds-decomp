@@ -248,6 +248,19 @@ Scenario &get() {
 
 bool coop_room() { const char *c = std::getenv("SM64DS_COOP"); return c && *c && *c != '0'; }
 
+// Two spellings of one file: case and slash direction do not matter on Windows.
+bool same_path(const char *a, const char *b) {
+    for (;; ++a, ++b) {
+        char x = *a, y = *b;
+        if (x == '\\') x = '/';
+        if (y == '\\') y = '/';
+        if (x >= 'A' && x <= 'Z') x += 32;
+        if (y >= 'A' && y <= 'Z') y += 32;
+        if (x != y) return false;
+        if (!x) return true;
+    }
+}
+
 void put_env(const char *k, const char *v) {
     const char *was = std::getenv(k);
     if (was && *was) { std::fprintf(stderr, "[scenario] boot knob %s left as the environment set it (%s)\n", k, was); return; }
@@ -436,7 +449,12 @@ extern "C" void port_scenario_boot_env(void) {
             if (s.entrance) { std::snprintf(v, sizeof v, "%d", s.entrance); put_env("SM64DS_ENTRANCE", v); }
         }
         char sp[160]; std::snprintf(sp, sizeof sp, "scenario-saves/%s-p%d.sav", s.name, s.player);
+        const char *had = std::getenv("SM64DS_SAVE_PATH");
+        const bool mine = !(had && *had);
         put_env("SM64DS_SAVE_PATH", sp);
+        // the save path this knob picked itself is the scenario's own; one already in the environment is not, unless the
+        // launcher vouched for it (SM64DS_SCENARIO_SAVE_OK, checked in port_scenario_save_seed)
+        if (mine) _putenv_s("SM64DS_SCENARIO_SAVE_OK", sp);
     }
     std::fflush(stderr);
 }
@@ -453,6 +471,15 @@ extern "C" void port_scenario_save_seed(void) {
     if (!sp || !*sp) {
         std::fprintf(stderr, "[scenario] save preset REFUSED: no %s names this scenario's own save\n",
                      coop_room() ? "SM64DS_COOP_SAVE" : "SM64DS_SAVE_PATH");
+        return;
+    }
+    // Only a save the scenario owns may be seeded: SM64DS_SCENARIO_SAVE_OK must name the very file the game is using (the
+    // launcher sets it to the file it made in the player's own run folder). A real save named by hand is never written.
+    const char *ok = std::getenv("SM64DS_SCENARIO_SAVE_OK");
+    if (!ok || !*ok || !same_path(ok, sp)) {
+        std::fprintf(stderr, "[scenario] save preset REFUSED: the save in use (%s) is not this scenario's own "
+                     "(SM64DS_SCENARIO_SAVE_OK %s); nothing written\n", sp, ok && *ok ? ok : "unset");
+        std::fflush(stderr);
         return;
     }
     const unsigned char last = data_0209f224;   // CollectStar also records "the last star got"; a preset is not a grab
