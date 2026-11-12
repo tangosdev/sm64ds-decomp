@@ -62,6 +62,7 @@
 
 #include "coop_wire.h"
 #include "coop_world.h"
+#include "coop_spawn.h"
 #include "comms_hub.h"
 
 #include "daRNk_c.h"
@@ -752,6 +753,7 @@ int sb_follow(void *bv) {
 struct SbFollowHook { SbFollowHook() { port_coop_snmbdy_follow = sb_follow; } } g_sb_follow_hook;
 
 // The head's question (State3, before its star talk): 1 keeps my head quiet, the roller's head gives the star.
+enum : unsigned { kSnowmanStar = 0x45 };   // the snowman head's star param (star 69), as its announce carries it
 int sb_head_quiet(void *) {
     read_env();
     if (g_off || !g_sm.head_by_friend || !coop_world_active()) return 0;
@@ -759,6 +761,15 @@ int sb_head_quiet(void *) {
         // The roller dropped out after his body cued my head and before it landed (a quit, crash or disconnect):
         // my body went home and my head already sits in its ending. My own roll's landing under it gives the star
         // talk back to my head (once; SNOWMAN2's taken list keeps any repeat to one star).
+        // INT3 (REVIEW-AS note 2): the room's snowman star (0x45) already out or taken keeps my head quiet too, so a second
+        // star never rests on the talk lock alone (a roller who only went silent still gives it on his own console).
+        // Asked only before my head offers: once it offered, its own star talk and announce run on as before.
+        if (!g_sm.offered && coop_spawn_star_released(kSnowmanStar)) {
+            if ((g_st.sb_quiet++ % 600) == 0 && g_log)
+                std::fprintf(stderr, "[coopsb] lf=%u my head stays quiet: the room's snowman star %#x is already out or taken (%u frames so far)\n",
+                             g_lf, kSnowmanStar, g_st.sb_quiet);
+            return 1;
+        }
         const daBgSnmBdy_c *b = g_sm.b;
         if (b && b->mStateValue == 3 && b->mSubstate >= 2) {
             if (!g_sm.offered && g_log)
