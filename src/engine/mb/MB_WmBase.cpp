@@ -696,7 +696,7 @@ int MB_Init(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, 
             *(dst++) = *ptr;
         } while (j < 0x10);
     }
-    MI_CpuCopy8(user, mb->mParentUser, 0x16);
+    MI_CpuCopy8(user, &mb->mParentUser, sizeof(MBUserInfo));
     wm->parentMaxSize = 0x100;
     wm->childMaxSize = 8;
     wm->sendBufSize = 0;

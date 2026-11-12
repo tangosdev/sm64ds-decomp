@@ -100,18 +100,6 @@ struct Out {
     u8 segment_no;            /* 0xc */
 };
 
-/* NitroSDK MBGameRegistry, the game record a file was registered with
- * (MbParentFile.mGameRegistry). */
-typedef struct MBGameRegistry {
-    int romFilePathp;           /* 0x00 */
-    int gameNamep;              /* 0x04 -- u16 string */
-    int gameIntroductionp;      /* 0x08 -- u16 string */
-    int iconCharPathp;          /* 0x0c */
-    int iconPalettePathp;       /* 0x10 */
-    int ggid;                   /* 0x14 -- matched against the child's mChildGameId */
-    unsigned char maxPlayerNum; /* 0x18 -- entries (parent included) at or past it are refused */
-} MBGameRegistry;
-
 /* NitroSDK WMMpRecvData, one child's slot of an MP receive buffer, as
  * WM_ReadMPData returns it. */
 typedef struct WMMpRecvData {
@@ -131,7 +119,8 @@ extern char *WM_ReadMPData(char *buf, unsigned int aid);
 extern u8 *MBi_SetRecvBufferFromChild(u8 *src, u8 *dst);
 extern u8 *MBi_MakeParentSendBuffer(MBCommParentBlockHeader *hdr, u8 *buf);
 extern int MBi_ReceiveRequestDataPiece(u8 *hdr, int aid);
-extern int MBi_get_blockinfo(struct Out *bi, char *table, u32 block, char *dlinfo);
+extern int MBi_get_blockinfo(struct Out *bi, MB_BlockInfoTable *table, u32 block,
+                             MbDownloadFileInfoHeader *mdfi);
 /* local extern: defined void, but it hands back MBi_SendMP's result,
    which the senders here return. */
 extern int MBi_BlockHeaderEnd(u32 size, u32 pollbmp, u32 buf);
@@ -311,10 +300,7 @@ void MBi_CommParentCallback(int type, char *arg) {
             if (e->mFiles->mActive != 0) {
                 u16 f48 = e->mFiles->mEntryChanged;
                 if (f48 != 0) {
-                    /* the game info record MB_UpdateGameInfoMember refreshes sits after
-                     * the 0xe4 bytes of mHeader that MBi_CommParentSendDlFileInfo
-                     * sends */
-                    MB_UpdateGameInfoMember((char *)&MB_WORK->mFiles[i].mHeader[0xe4],
+                    MB_UpdateGameInfoMember((char *)&MB_WORK->mFiles[i].mGameInfo,
                                             MB_WORK->mChildUser, e->mFiles->mEntryBitmap, f48);
                     /* the signed-index stepped form; MB_FILE (unsigned sizeof)
                      * or e reallocates registers */
@@ -460,7 +446,7 @@ void MBi_CommParentRecvDataPerChild(void *arg, u32 aid) {
         if (physIdx < 0x10) {
             rec = (MbParentWork *)(data_020a9db8 + physIdx * sizeof(MbParentFile));
             if (rec->mFiles[0].mActive != 0) {
-                p = (MBGameRegistry *)rec->mFiles[0].mGameRegistry;
+                p = rec->mFiles[0].mGameRegistry;
                 gv = MB_WORK->mChildGameId[idx];
                 if (gv == p->ggid)
                     goto have;
@@ -628,7 +614,7 @@ int MBi_CommParentSendDlFileInfo(void) {
     hd.fid = found;
     ret = MBi_MakeParentSendBuffer(&hd, (u8 *)data_020a9db8);
     if (ret != 0)
-        MI_CpuCopy8(MB_WORK->mFiles[found].mHeader, ret, 0xe4);
+        MI_CpuCopy8(&MB_WORK->mFiles[found].mDlFileInfo, ret, sizeof(MBDownloadFileInfo));
 
     return MBi_BlockHeaderEnd(0xea, mask, (u32)data_020a9db8);
 }
@@ -668,9 +654,9 @@ int MBi_CommParentSendBlock(void) {
     MBi_Calc_SendBlock(idxByte);
 
     idxByte = MB_WORK->mCurrentFile;
-    if (MBi_get_blockinfo(&bi, (char *)MB_WORK->mFiles[idxByte].mBlockTable,
+    if (MBi_get_blockinfo(&bi, &MB_WORK->mFiles[idxByte].mBlockTable,
                           MB_WORK->mFiles[idxByte].mCurrentBlock,
-                          (char *)MB_WORK->mFiles[idxByte].mHeader) == 0) {
+                          &MB_WORK->mFiles[idxByte].mDlFileInfo.header) == 0) {
         return 0x15;
     }
 

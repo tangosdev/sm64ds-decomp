@@ -52,16 +52,6 @@ extern int MBi_GetTgid(void);
 extern int MBi_GetAttribute(void);
 extern int WM_SetGameInfo(int a0, int *src, int len, int a3, int arg5, int arg6, u8 arg7);
 
-typedef struct MBGameRegistry {
-    const char *romFilePathp;     /* 0x00 */
-    const u16 *gameNamep;         /* 0x04 */
-    const u16 *gameIntroductionp; /* 0x08 */
-    const char *iconCharPathp;    /* 0x0c */
-    const char *iconPalettePathp; /* 0x10 */
-    int ggid;                     /* 0x14 */
-    unsigned char maxPlayerNum;   /* 0x18 */
-} MBGameRegistry;
-
 typedef struct MbBeaconSendStatus {
     MBGameInfo *gameInfoListTop; /* 0x00 */
     MBGameInfo *nowGameInfop;    /* 0x04 */

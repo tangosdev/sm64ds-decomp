@@ -4124,9 +4124,6 @@
       "src/unnamed/arm9/0206/func_02065af0.cpp": [
         "return:void"
       ],
-      "src/MB_RegisterFile.cpp": [
-        "return:void"
-      ],
       "src/CARDi_EndTask.cpp": [
         "return:void"
       ],
@@ -7221,7 +7218,6 @@
       "include/decl_common.h": [
         "return:unsigned char"
       ]
-
     },
     "gReturnSublevel": {
       "src/_ZN7daPly_c13InitResourcesEv.cpp": [
@@ -8356,11 +8352,6 @@
         "return:unsigned char []"
       ]
     },
-    "data_020a9db8": {
-      "src/MB_RegisterFile.cpp": [
-        "return:void *"
-      ]
-    },
     "data_ov002_020ff480": {
       "src/unnamed/ov002/func_ov002_020dacb4.c": [
         "return:int []"
@@ -9447,7 +9438,6 @@
       "src/game/player/d_a_ply_methods.cpp": [
         "return:unsigned char"
       ]
-
     },
     "gShowRaceTimer": {
       "src/ui/hud/d_meter.cpp": [
@@ -9456,7 +9446,6 @@
       "src/game/player/d_a_ply_methods.cpp": [
         "return:unsigned char []"
       ]
-
     },
     "data_ov003_020b1704": {
       "src/game/stages/d_s_star_sel_methods.cpp": [
@@ -15559,9 +15548,6 @@
         "param:#1 int",
         "param:#2 int",
         "param:#3 int"
-      ],
-      "src/MBi_ReadSegmentHeader.c": [
-        "param:#2 int"
       ]
     },
     "FS_UnloadOverlay": {
@@ -15723,11 +15709,6 @@
       ],
       "src/WBT_InitParent.cpp": [
         "return:char *"
-      ]
-    },
-    "MBi_MakeGameInfo": {
-      "src/MB_RegisterFile.cpp": [
-        "param:#3 void *"
       ]
     },
     "func_0206a928": {
@@ -17092,8 +17073,7 @@
       "include/nnsys/fnd.h": [
         "param:#2 void (*)(void *, NNSFndHeapHandle, unsigned int)"
       ]
-    }
-,
+    },
     "PM_SendUtilityCommandAsync": {
       "include/nitro/spi/pm.h": [
         "param:#2 void (*)(unsigned int, void *)"
