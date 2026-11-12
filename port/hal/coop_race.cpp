@@ -627,7 +627,9 @@ void pg_frame_tick() {
 //   * The head's star talk (d_a_bg_snm_hed.cpp asks port_coop_snmhed_quiet) belongs to the roller's console: on a
 //     console whose ending came from a friend's roll the head smiles and stays quiet, so the star is made once for the
 //     room, on the roller's console, and reaches friends through the coop star rules (SNOWMAN2's taken guard kept).
-//     If the roller's records stop before his head gave the star (he left or dropped), my head offers it instead.
+//     If the roller's records stop before his head gave the star (he left or dropped), my head offers it instead;
+//     if they stop after my head was cued but before his landing, my body goes home and my head offers the star once
+//     my own roll lands under it.
 //   * 3 s of silence before the landing: let go, my body back home, waiting (the roll fell off, or the roller left).
 //     After the landing my body stays on its spot under the head for the rest of the visit: no second talk or roll.
 // A 1.0.4 console refuses ver 3 as a bad record and keeps the 1.0.4 behaviour (its own body, its own roll).
@@ -677,7 +679,7 @@ void sb_let_go(daBgSnmBdy_c *b, const char *why) {
     ++g_st.sb_letgo;
     if (g_log) std::fprintf(stderr, "[coopsb] lf=%u let go of seat %d's snowman roll (%s): my snowman body back home, waiting\n",
                             g_lf, g_sm.lock, why);
-    g_sm.lock = -1; g_sm.snapped = false; g_sm.cued = false; g_sm.quaked = false;
+    g_sm.lock = -1; g_sm.snapped = false; g_sm.cued = false; g_sm.quaked = false; g_sm.offered = false;
 }
 
 // Behavior's question: 0 run the states (not following), 1 posed from a friend's roll, 2 posed and rolling.
@@ -736,7 +738,23 @@ struct SbFollowHook { SbFollowHook() { port_coop_snmbdy_follow = sb_follow; } } 
 int sb_head_quiet(void *) {
     read_env();
     if (g_off || !g_sm.head_by_friend || !coop_world_active()) return 0;
-    if (g_sm.lock >= 0) {
+    if (g_sm.lock < 0) {
+        // The roller dropped out after his body cued my head and before it landed (a quit, crash or disconnect):
+        // my body went home and my head already sits in its ending. My own roll's landing under it gives the star
+        // talk back to my head (once; SNOWMAN2's taken list keeps any repeat to one star).
+        const daBgSnmBdy_c *b = g_sm.b;
+        if (b && b->mStateValue == 3 && b->mSubstate >= 2) {
+            if (!g_sm.offered && g_log)
+                std::fprintf(stderr, "[coopsb] lf=%u my own snowman body landed under my head (its roller dropped out): my head offers the star\n", g_lf);
+            g_sm.offered = true;
+            return 0;
+        }
+        if ((g_st.sb_quiet++ % 600) == 0 && g_log)
+            std::fprintf(stderr, "[coopsb] lf=%u my head waits for my own snowman body to land (its roller dropped out before the landing; %u frames so far)\n",
+                         g_lf, g_st.sb_quiet);
+        return 1;
+    }
+    {
         const Rx &r = g_srx[g_sm.lock];
         if (!fresh(r, now_ms()) && !(r.w.flags & 2)) {
             if (!g_sm.offered && g_log)
