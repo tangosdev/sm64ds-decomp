@@ -48,6 +48,7 @@
 #include "math/Approach.h"
 #include "math/MtxStack.h"
 #include "LevelRng.h"
+#include "math/CalcLib.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -84,16 +85,6 @@ enum { kFlightSpeed = 0x32000 };
 extern "C" {
 short atan2_hold_d_a_book_1(int, int);
 void Vec3_Sub(Vector3 *d, const Vector3 *a, const Vector3 *b);
-int  Vec3_HorzLen(const Vector3 *);
-Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
-s16  Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-int  Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-/* local extern: include/math/CalcLib.h has the same typed declaration, but
- * including it here conflicts with this TU's other vector helper spellings. */
-void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c_);
-/* local extern: CalcLib.h has this signature without a parameter name; retain
- * the name here so the TU's compiler-numbered aliases remain stable. */
-int RandomIntInternal(int *p);
 void func_ov063_0211cae8(void *found, int mask);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(dBgCh_Actr *self, dActor_c *actor, int radius, int height,

@@ -27,6 +27,8 @@ enum dScMgSound_c_AssetId {
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/g2.h"
 #include "nitro/gx/gx_load.h"
+#include "math/CalcLib.h"
+#include "nitro/fx/fx_trig.h"
 
 /* The state/phase dispatch tables hold pointer-to-member records: the
    sinit copies {pmf, delta} descriptors into them. */
@@ -105,7 +107,6 @@ extern void *sSoundWinSpriteASprites[];
 /* Stored timing suffixes are retained; WinSpriteA reads only indices 0 and 1. */
 extern const u16 sSoundWinSpriteATimes[4] = {50, 4, 50, 0};
 extern void Mg_DrawStockCounter(int a, int b);
-extern const short FX_SinCosTable_[];
 extern u8 data_ov006_0213f54c[];
 extern u8 data_ov006_0213f544[];
 extern u8 data_ov006_0213f65c[];
@@ -154,7 +155,6 @@ u16 sSoundNotePlaybackKinds[42] = {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 2, 
 u16 sSoundNoteSfx[42] = {70,  71,  72,  73,  74,  75,  76,  77,  78,  79,  56,  57,  58,  59,
                          169, 170, 171, 172, 173, 174, 176, 177, 178, 266, 267, 268, 56,  120,
                          184, 248, 57,  121, 185, 249, 58,  122, 186, 250, 59,  123, 187, 251};
-extern int RandomIntInternal(int *seed);
 extern const u8 sSoundPitchCounts[5] = {10, 4, 10, 4, 14};
 extern const u8 sSoundDealCounts[5] = {6, 6, 8, 6, 8};
 extern const u8 sSoundNoteLayoutByPattern[5] = {0, 0, 1, 0, 1};

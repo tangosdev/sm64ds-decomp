@@ -138,6 +138,7 @@ enum daDemo_c_AssetId {
 #include "nitro/mi/memory.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_trig.h"
 
 struct OamAttr;
 
@@ -256,9 +257,7 @@ extern StaffRollStep data_ov002_02110e24[];
 extern StaffRollStep data_ov002_02110e9c[];
 extern void func_ov002_020f3828(int *c);
 extern int data_ov002_021002a0[];
-extern s16 FX_SinCosTable_[];
 extern short atan2_hold_d_a_demo_1(int y, int x);
-extern short FX_SinCosTable_[];
 extern StaffRollStep data_ov002_02110e34[];
 extern unsigned short data_ov002_021000c0[];
 extern int data_ov002_02100120[];

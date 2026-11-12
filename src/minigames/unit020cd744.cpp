@@ -46,6 +46,8 @@
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "math/Quaternion.h"
+#include "math/MtxStack.h"
+#include "MgCamera.h"
 
 /* The one raw-pointer walk left: TrmpLine::Create finds a free slot through
    byte offsets, so it reads each candidate through this cast. */
@@ -133,7 +135,7 @@ void *sTrmp2MarioPtrs[5];
 void *sTrmpJumpers[5];
 
 /* Other units' data. */
-extern void *sMgSubCamera;
+extern MgCamera *sMgSubCamera;
 extern int sTrmpItemHitsOff; /* d_mg_trmpln2_mario: stops item scoring */
 extern int sTrmpItemPatrolLimits[];
 extern int sTrmpItemPatrolSpeed[];
@@ -153,9 +155,6 @@ extern int sTrmpLineWeakPitchMid;
 extern int sTrmpLineStrongPitchEnd;
 extern int sTrmpLineStrongPitchMid;
 extern Vector3 data_020a0ebc;
-/* math/MtxStack.h also declares this, but parsing the MtxStack class ahead of
-   this TU's statics shifts their mwcc @NNN uniquifiers by +76 (measured). */
-extern Matrix4x3 data_020a0e68; /* local extern: the include renumbers the statics */
 extern Matrix4x3 data_0209b3ec; /* the view matrix, Graphics3D.cpp */
 extern int data_02092768[4];
 extern int data_020a0db0;
@@ -180,7 +179,6 @@ extern StateRecord pmf_TrmpLine_StateFlex;
 
 /* Other units' functions (C linkage). */
 extern "C" {
-void Camera_ProjectToScreen(void *, void *, int *, int *);
 void Jump2Popup_Spawn(int, int, int);
 void D3D_PlaySePannedLoop(int, int, int);
 void Trmp2Spinner_InitAll(int);
@@ -189,8 +187,6 @@ int func_0203d524(V2 *, V2 *);
 void func_0203d704(int *, int *, int *);
 void func_0203cd80(int *, short);
 void Matrix4x3_FromQuaternion(const Quaternion *, Matrix4x3 *);
-void Matrix4x3_FromTranslation(Matrix4x3 *, int, int, int);
-void MTX_Concat43(const Matrix4x3 *, const Matrix4x3 *, Matrix4x3 *);
 void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *, int, int, int);
 unsigned int func_02045a50(const void *, unsigned int);
 

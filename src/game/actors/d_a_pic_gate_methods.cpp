@@ -75,6 +75,7 @@ enum daPicGate_c_AssetId {
 #include "SaveBlock.h"
 #include "nitro/gx/g3imm_cmd.h"
 #include "nitro/gx/g3imm_light.h"
+#include "math/CalcLib.h"
 
 enum {
     kCell = 0x64000,         /* 100.0, one width or height step */
@@ -95,7 +96,6 @@ enum {
 extern "C" {
 extern int IsStarCollectedInLevel(signed char levelID, int starID);
 extern Matrix4x3 data_0209b3ec;
-extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern u8 data_ov080_02127714[];
 extern void G3_LoadMtx43(void *mtx);
 extern void *data_ov080_02127834;

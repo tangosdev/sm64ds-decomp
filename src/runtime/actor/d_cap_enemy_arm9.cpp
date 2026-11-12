@@ -30,6 +30,7 @@
 #include "nitro/fx/fx.h"
 #include "private/mtx43.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 
 extern "C" {
 extern SharedFilePtr *data_ov002_020ff028[];
@@ -39,10 +40,6 @@ extern unsigned char data_0208a0e0;
 extern daPly_c *gPlayers[];
 
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-
-/* UpdateCapPos's stack temps are POD: Vector3's empty destructor changes
-   this function's frame. */
-extern void Vec3_Asr(Vector3 *vF, Vector3 *v, int amount);
 }
 
 dCapEnemy_c::dCapEnemy_c() {}

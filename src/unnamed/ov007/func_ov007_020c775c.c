@@ -1,7 +1,5 @@
 #include "Ov007Spring.h"
-
-extern void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
-extern int VEC_Mag(const Vector3 *v);
+#include "math/CalcLib.h"
 
 /* Re-measures each link of the list between its followers' targets. */
 void func_ov007_020c775c(Ov007PointList *list) {

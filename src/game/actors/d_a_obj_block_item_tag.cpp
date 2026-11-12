@@ -28,6 +28,7 @@
 #include "daShl_c.h"
 #include "daStar_c.h"
 #include "daStarBase_c.h"
+#include "math/CalcLib.h"
 
 /* BSS file homes, one per item variant; Init loads them, Cleanup
  * releases them. */
@@ -44,7 +45,6 @@ extern ItemTagAction data_ov002_0210dd30[];
 
 /* arm9 / ov002 C helpers with no shared header. */
 extern "C" {
-extern s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void LoadSilverStarAndNumber();
 }
 
