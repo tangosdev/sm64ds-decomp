@@ -290,8 +290,7 @@ uint32_t chilly_ptr_to_id(uint32_t ptr) {
         const char *rec = (const char *)(uintptr_t)ptr;
         for (int i = 0; i < n; ++i) if (std::memcmp(rec, k[i], 8) == 0) return (uint32_t)i;
         static uint32_t s_logged = 0;
-        if (s_logged != ptr) { s_logged = ptr; std::fprintf(stderr, "[cbs] chilly state record %08x matches none of the sixteen
-", (unsigned)ptr); }
+        if (s_logged != ptr) { s_logged = ptr; std::fprintf(stderr, "[cbs] chilly state record %08x matches none of the sixteen\n", (unsigned)ptr); }
     }
     return 0xffu;
 }
