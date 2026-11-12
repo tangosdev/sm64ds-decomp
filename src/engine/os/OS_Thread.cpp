@@ -28,6 +28,7 @@
 #include "types.h"
 #include "nitro/os/system.h"
 #include "nitro/os/thread.h"
+#include "nitro/os/mutex.h"
 #include "nitro/mi/memory.h"
 #include "nitro/hw/mmap_tcm.h"
 #include "nitro/os/systemWork.h"
@@ -57,10 +58,6 @@ extern "C" {
  * SDK_SYS_STACKSIZE = 0 and SDK_IRQ_STACKSIZE = 0x600). */
 extern void SDK_SYS_STACKSIZE(void);
 extern void SDK_IRQ_STACKSIZE(void);
-
-/* local extern: no header declares this yet; it is
- * src/engine/os/OS_Mutex.cpp. */
-extern void OSi_UnlockAllMutex(OSThread *thread);
 
 extern OSSwitchThreadCallback OSi_SystemCallbackInSwitchThread;
 extern OSThread **OSi_CurrentThreadPtr;
