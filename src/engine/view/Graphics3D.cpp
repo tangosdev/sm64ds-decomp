@@ -17,12 +17,12 @@
 #include "nitro/gx/g3x.h"
 #include "nitro/hw/registers.h"
 #include "nitro/gx/g3imm_cmd.h"
+#include "math/MtxStack.h"
 
 extern "C" {
 extern Matrix4x3 data_0209b3ec; /* the view matrix */
 extern Matrix4x3 data_0209b41c; /* its inverse */
 extern Matrix4x3 IDENTITY_MATRIX4X3;
-int MTX_Inverse43(const Matrix4x3 *src, Matrix4x3 *dst);
 void func_02045d9c(void);
 }
 

@@ -92,11 +92,6 @@
         "param:#2 Vector3 *",
         "param:#3 Vector3 *"
       ],
-      "src/game/actors/d_a_snm_bth.cpp": [
-        "param:#1 const Vector3 *",
-        "param:#2 const Vector3 *",
-        "param:#3 Vector3 *"
-      ],
       "src/game/actors/d_a_star.cpp": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *",
@@ -106,11 +101,6 @@
         "param:#1 Vector3 *",
         "param:#2 Vector3 *",
         "param:#3 Vector3 *"
-      ],
-      "src/minigames/d_mg_jump3d_mario.cpp": [
-        "param:#1 Jump3DVec *",
-        "param:#2 Jump3DVec *",
-        "param:#3 Jump3DVec *"
       ],
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "param:#1 Vector3 *",
@@ -122,17 +112,7 @@
         "param:#2 Vector3 *",
         "param:#3 Vector3 *"
       ],
-      "src/minigames/unit020cd744.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
-      ],
       "src/ui/hud/d_map.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
-      ],
-      "src/unnamed/ov007/func_ov007_020c5188.c": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *",
         "param:#3 Vector3 *"
@@ -178,20 +158,10 @@
       "src/game/actors/d_a_obj_fl_ring.cpp": [
         "param:#2 int"
       ],
-      "src/game/actors/d_a_propeller_heyho.cpp": [
-        "return:void"
-      ],
-      "src/game/actors/d_a_snowman.cpp": [
-        "param:#2 int",
-        "return:void"
-      ],
       "src/game/actors/d_a_wanwan2.cpp": [
         "return:void"
       ],
       "src/game/actors/d_a_yegg.cpp": [
-        "return:void"
-      ],
-      "src/game/actors/d_a_yurei_mucho.cpp": [
         "return:void"
       ],
       "src/unnamed/arm9/0200/func_02005000.cpp": [
@@ -248,11 +218,8 @@
       "src/unnamed/arm9/0203/func_0203db64.c": [
         "param:#3 int"
       ],
-      "src/unnamed/arm9/0203/func_0203e9a8.c": [
+      "src/engine/link/unit0203d7b8.cpp": [
         "param:#1 int",
-        "param:#3 int"
-      ],
-      "src/unnamed/arm9/0203/func_0203ea5c.c": [
         "param:#3 int"
       ],
       "src/unnamed/arm9/0204/func_02040014.c": [
@@ -352,13 +319,7 @@
       "src/game/actors/d_a_obj_sl_ice_block.cpp": [
         "return:int"
       ],
-      "src/game/actors/d_a_owl.cpp": [
-        "return:void"
-      ],
       "src/game/actors/d_a_spd.cpp": [
-        "return:void"
-      ],
-      "src/runtime/actor/d_enemy_base.cpp": [
         "return:void"
       ],
       "src/engine/view/d_camera.cpp": [
@@ -396,12 +357,6 @@
         "param:#2 Vec3 *",
         "param:#2 const Vec3 *",
         "return:Fix12"
-      ],
-      "src/minigames/unit020cd744.cpp": [
-        "param:#1 Vec3 *",
-        "param:#1 Vector3 *",
-        "param:#2 Vec3 *",
-        "param:#2 Vector3 *"
       ]
     },
     "DrawOamSprite": {
@@ -459,14 +414,6 @@
       ]
     },
     "MTX_Inverse43": {
-      "src/engine/view/Graphics3D.cpp": [
-        "param:#1 Matrix4x3 *",
-        "param:#2 Matrix4x3 *",
-        "return:void"
-      ],
-      "src/game/actors/d_a_ch_scene.cpp": [
-        "return:void"
-      ],
       "src/game/actors/d_a_obj_cv_news_lift.cpp": [
         "param:#1 Matrix4x3 *",
         "param:#2 Matrix4x3 *",
@@ -477,22 +424,12 @@
         "param:#2 Matrix4x3 *",
         "return:void"
       ],
-      "src/game/actors/d_a_snm_bth.cpp": [
-        "param:#1 Matrix4x3 *",
-        "param:#2 const Matrix4x3 *",
-        "return:void"
-      ],
       "src/unnamed/arm9/0204/func_02044efc.c": [
         "param:#1 Matrix4x3 *",
         "param:#2 Matrix4x3 *",
         "return:void"
       ],
       "src/unnamed/ov007/func_ov007_020bfe4c.cpp": [
-        "return:void"
-      ],
-      "src/game/stages/d_s_entry_entry.cpp": [
-        "param:#1 Matrix4x3 *",
-        "param:#2 Matrix4x3 *",
         "return:void"
       ]
     },
@@ -527,57 +464,18 @@
       "src/game/actors/d_a_obj_ewm_ice_block.cpp": [
         "param:#1 Vector3 *"
       ],
-      "src/game/actors/d_a_obj_wl_polelift.cpp": [
-        "param:#1 Vector3 *"
-      ],
-      "src/game/actors/d_a_owl.cpp": [
-        "param:#1 VecFx32 *"
-      ],
-      "src/game/actors/d_a_red_bombhei.cpp": [
-        "param:#1 const Vector3 *"
-      ],
       "src/game/actors/d_a_shark.cpp": [
-        "param:#1 Vector3 *"
-      ],
-      "src/game/actors/d_a_snowman.cpp": [
         "param:#1 Vector3 *"
       ],
       "src/game/actors/d_a_trs.cpp": [
         "param:#1 VecFx32 *"
       ],
-      "src/game/actors/d_a_wanwan.cpp": [
-        "param:#1 Vector3 *"
-      ],
       "src/game/actors/d_a_wanwan2.cpp": [
-        "param:#1 Vector3 *"
-      ],
-      "src/minigames/unit020cd744.cpp": [
         "param:#1 Vector3 *"
       ],
       "src/engine/view/d_camera.cpp": [
         "param:#1 Vector3 *",
         "param:#1 const Vector3 *"
-      ],
-      "src/unnamed/ov007/func_ov007_020c5fc8.c": [
-        "param:#1 Vector3 *"
-      ],
-      "src/unnamed/ov007/func_ov007_020c6174.c": [
-        "param:#1 Vector3 *"
-      ],
-      "src/unnamed/ov007/func_ov007_020c6314.c": [
-        "param:#1 Vector3 *"
-      ],
-      "src/unnamed/ov007/func_ov007_020c64c4.c": [
-        "param:#1 Vector3 *"
-      ],
-      "src/unnamed/ov007/func_ov007_020c7694.c": [
-        "param:#1 Vector3 *"
-      ],
-      "src/unnamed/ov007/func_ov007_020c775c.c": [
-        "param:#1 Vector3 *"
-      ],
-      "src/unnamed/arm9/0204/func_02047910.c": [
-        "param:#1 Vector3 *"
       ]
     },
     "LoadArchive": {
@@ -764,9 +662,6 @@
       "src/Matrix4x3_ApplyInPlaceToRotationY.c": [
         "param:#2 short"
       ],
-      "src/game/actors/d_a_bakubaku.cpp": [
-        "param:#2 short"
-      ],
       "src/game/actors/d_a_bg_snwmn.cpp": [
         "param:#2 short"
       ],
@@ -907,11 +802,6 @@
       "src/game/actors/d_a_obj_guragura.cpp": [
         "param:#1 Matrix4x3 *"
       ],
-      "src/minigames/unit020cd744.cpp": [
-        "param:#1 Matrix4x3 *",
-        "param:#2 Matrix4x3 *",
-        "param:#3 Matrix4x3 *"
-      ],
       "src/runtime/actor/d_actor.cpp": [
         "param:#1 Matrix4x3 *",
         "param:#2 Matrix4x3 *",
@@ -950,10 +840,6 @@
         "param:#1 const VecFx32 *",
         "param:#2 const Matrix4x3 *",
         "param:#3 VecFx32 *"
-      ],
-      "src/game/actors/d_a_jango.cpp": [
-        "param:#1 const Vector3 *",
-        "param:#2 const void *"
       ],
       "src/game/actors/d_a_king_donketu.cpp": [
         "param:#1 const void *"
@@ -1122,19 +1008,10 @@
       "src/game/actors/d_a_obj_ct_mecha11.cpp": [
         "param:#1 char *"
       ],
-      "src/game/actors/d_a_owl.cpp": [
-        "return:unsigned int"
-      ],
       "src/game/actors/d_a_popoi.cpp": [
         "return:unsigned int"
       ],
-      "src/game/actors/d_a_propeller_heyho.cpp": [
-        "return:unsigned int"
-      ],
       "src/game/actors/d_a_s_bird.cpp": [
-        "return:unsigned int"
-      ],
-      "src/game/actors/d_a_yurei_mucho.cpp": [
         "return:unsigned int"
       ]
     },
@@ -1896,21 +1773,6 @@
         "param:#2 Vector3 *",
         "param:#3 Vector3 *"
       ],
-      "src/game/actors/d_a_obj_wl_polelift.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
-      ],
-      "src/game/actors/d_a_pkn.cpp": [
-        "param:#1 PknVec3 *",
-        "param:#2 PknVec3 *",
-        "param:#3 PknVec3 *"
-      ],
-      "src/game/actors/d_a_snowman.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
-      ],
       "src/game/actors/d_a_star.cpp": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *",
@@ -1921,47 +1783,7 @@
         "param:#2 Vector3 *",
         "param:#3 Vector3 *"
       ],
-      "src/minigames/unit020cd744.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
-      ],
-      "src/unnamed/ov007/func_ov007_020c2390.c": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
-      ],
       "src/unnamed/ov007/func_ov007_020c30ac.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
-      ],
-      "src/unnamed/ov007/func_ov007_020c5fc8.c": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
-      ],
-      "src/unnamed/ov007/func_ov007_020c6174.c": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
-      ],
-      "src/unnamed/ov007/func_ov007_020c6314.c": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
-      ],
-      "src/unnamed/ov007/func_ov007_020c64c4.c": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
-      ],
-      "src/unnamed/ov007/func_ov007_020c7694.c": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
-      ],
-      "src/unnamed/ov007/func_ov007_020c775c.c": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *",
         "param:#3 Vector3 *"
@@ -1970,11 +1792,6 @@
         "param:#1 Vector3 *",
         "param:#2 Vector3 *",
         "param:#3 Vector3 *"
-      ],
-      "src/game/stages/d_s_entry_entry.cpp": [
-        "param:#1 const EntryMeshVec *",
-        "param:#2 const EntryMeshVec *",
-        "param:#3 EntryMeshVec *"
       ]
     },
     "SublevelToLevel": {
@@ -2096,23 +1913,12 @@
         "param:#1 Vector3 *",
         "param:#2 Vector3 *"
       ],
-      "src/game/actors/d_a_moray.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *"
-      ],
       "src/game/actors/d_a_obj_guragura.cpp": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *"
       ],
-      "src/game/actors/d_a_obj_hatena_switch.cpp": [
-        "param:#2 const void *"
-      ],
       "src/game/actors/d_a_obj_mario_cap.cpp": [
         "param:#1 int *"
-      ],
-      "src/game/actors/d_a_obj_mip_key.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *"
       ],
       "src/game/actors/d_a_obj_sm_lift.cpp": [
         "param:#1 Vector3 *",
@@ -2122,30 +1928,6 @@
         "param:#1 Vector3 *",
         "param:#2 Vector3 *"
       ],
-      "src/game/actors/d_a_owl.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *"
-      ],
-      "src/game/actors/d_a_pg_bby.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *"
-      ],
-      "src/game/actors/d_a_pkn.cpp": [
-        "param:#1 PknVec3 *",
-        "param:#2 PknVec3 *"
-      ],
-      "src/game/actors/d_a_sanbo.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *"
-      ],
-      "src/game/actors/d_a_snm_bth.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 const Vector3 *"
-      ],
-      "src/game/actors/d_a_snowman.cpp": [
-        "param:#1 int *",
-        "param:#2 int *"
-      ],
       "src/game/actors/d_a_star.cpp": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *"
@@ -2153,35 +1935,9 @@
       "src/game/actors/d_a_trs.cpp": [
         "param:#2 const void *"
       ],
-      "src/game/actors/d_a_water_ring.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *"
-      ],
-      "src/game/actors/d_a_wbm.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 const Vector3 *"
-      ],
-      "src/game/actors/d_a_yurei_mucho.cpp": [
-        "param:#2 const void *"
-      ],
       "src/game/stages/d_ent_obj.cpp": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *"
-      ],
-      "src/runtime/actor/d_actor.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 const Vector3 *"
-      ],
-      "src/runtime/actor/d_bg_actor.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Vector3 *"
-      ],
-      "src/runtime/actor/d_cap_enemy_arm9.cpp": [
-        "param:#1 CapVec *",
-        "param:#2 const CapVec *"
-      ],
-      "src/runtime/actor/d_enemy_base.cpp": [
-        "param:#2 const void *"
       ],
       "src/unnamed/ov002/func_ov002_020ad660.cpp": [
         "param:#2 const void *"
@@ -2189,10 +1945,6 @@
       "src/unnamed/ov002/func_ov002_020d8944.cpp": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *"
-      ],
-      "src/game/stages/d_s_entry_entry.cpp": [
-        "param:#1 EntryMeshVec *",
-        "param:#2 const EntryMeshVec *"
       ]
     },
     "Vec3_AsrInPlace": {
@@ -2261,10 +2013,6 @@
         "param:#1 const void *",
         "param:#2 const void *"
       ],
-      "src/game/actors/d_a_btn.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
       "src/game/actors/d_a_c_jugem.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
@@ -2293,23 +2041,11 @@
         "param:#1 const Vec3Raw *",
         "param:#2 const Vec3Raw *"
       ],
-      "src/game/actors/d_a_owl.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/game/actors/d_a_sanbo.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
       "src/game/actors/d_a_trs.cpp": [
         "arity:3"
       ]
     },
     "Vec3_HorzDist": {
-      "src/game/actors/d_a_btn.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
       "src/game/actors/d_a_c_jugem.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
@@ -2329,10 +2065,6 @@
       "src/game/actors/d_a_obj_c1_trap.cpp": [
         "param:#1 const VecFx32 *",
         "param:#2 const VecFx32 *"
-      ],
-      "src/game/actors/d_a_sanbo.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
       ],
       "src/game/actors/d_a_star.cpp": [
         "param:#1 const Vec3 *",
@@ -2355,17 +2087,10 @@
       ],
       "src/game/actors/d_a_ots.cpp": [
         "param:#1 int *"
-      ],
-      "src/runtime/actor/d_actor.cpp": [
-        "param:#1 Vector3 *"
       ]
     },
     "Vec3_Lsl": {
       "src/game/actors/d_a_menbo.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 const Vector3 *"
-      ],
-      "src/runtime/actor/d_actor.cpp": [
         "param:#1 Vector3 *",
         "param:#2 const Vector3 *"
       ]
@@ -7320,9 +7045,6 @@
       "src/minigames/d_s_mg_pachinko2.cpp": [
         "return:int"
       ],
-      "src/minigames/d_s_mg_smartball.cpp": [
-        "return:int"
-      ],
       "src/minigames/d_s_mg_snowball.cpp": [
         "return:int"
       ],
@@ -8056,9 +7778,6 @@
       "src/_ZN7daPly_c6RenderEv.cpp": [
         "return:int"
       ],
-      "src/game/actors/d_a_btn.cpp": [
-        "return:MatrixWords"
-      ],
       "src/game/actors/d_a_btt_bk.cpp": [
         "return:Mtx43"
       ],
@@ -8067,9 +7786,6 @@
       ],
       "src/game/actors/d_a_f_pkn.cpp": [
         "return:int []"
-      ],
-      "src/game/actors/d_a_hanachan.cpp": [
-        "return:char []"
       ],
       "src/game/actors/d_a_obj_ct_rotate_block.cpp": [
         "return:int []"
@@ -8104,17 +7820,11 @@
       "src/ov002_handles.cpp": [
         "return:char"
       ],
-      "src/minigames/d_s_mg_jump2.cpp": [
-        "return:int"
-      ],
       "src/minigames/d_s_mg_jump_methods.cpp": [
         "return:int"
       ],
       "src/runtime/actor/d_cap_enemy_arm9.cpp": [
         "return:CapMtx"
-      ],
-      "src/runtime/actor/d_enemy_base.cpp": [
-        "return:char"
       ],
       "src/engine/view/d_camera.cpp": [
         "return:int []"
@@ -8178,22 +7888,16 @@
     "data_020a1040": {
       "include/private/player_input_record.h": [
         "return:PlayerInputRecord"
-      ],
-      "src/unnamed/arm9/0203/func_0203ea5c.c": [
-        "return:Rec"
       ]
     },
     "data_020a10a4": {
-      "src/unnamed/arm9/0203/func_0203ea5c.c": [
+      "src/engine/link/unit0203d7b8.cpp": [
         "return:unsigned char []"
       ]
     },
     "data_020a1154": {
       "include/private/player_input_record.h": [
         "return:PlayerInputRecord []"
-      ],
-      "src/unnamed/arm9/0203/func_0203ea5c.c": [
-        "return:Rec []"
       ]
     },
     "data_020a3fc0": {
@@ -14975,17 +14679,17 @@
       ]
     },
     "func_0203f604": {
-      "src/unnamed/arm9/0203/func_0203ea5c.c": [
+      "src/engine/link/unit0203d7b8.cpp": [
         "return:void"
       ]
     },
     "func_020406b4": {
-      "src/unnamed/arm9/0203/func_0203ea5c.c": [
+      "src/engine/link/unit0203d7b8.cpp": [
         "param:#1 void *"
       ]
     },
     "func_02040c34": {
-      "src/unnamed/arm9/0203/func_0203ea5c.c": [
+      "src/engine/link/unit0203d7b8.cpp": [
         "param:#3 void *",
         "param:#4 void *"
       ]
@@ -15404,7 +15108,7 @@
         "param:#2 int",
         "param:#3 int"
       ],
-      "src/unnamed/arm9/0203/func_0203ea5c.c": [
+      "src/engine/link/unit0203d7b8.cpp": [
         "param:#2 int",
         "param:#3 int"
       ],
@@ -15663,11 +15367,6 @@
     "wcstombs": {
       "src/unnamed/arm9/0206/func_0206e4a4.c": [
         "return:int"
-      ]
-    },
-    "memcmp": {
-      "src/unnamed/arm9/0201/func_02018568.c": [
-        "param:#1 int"
       ]
     },
     "memchr": {

@@ -117,10 +117,6 @@ void func_ov077_02125304(daTgz_c *self);
 
 int SurfaceInfo_TestFlag0x20(int *p);
 void func_02012694(unsigned int id, const Vector3 *pos);
-/* local extern: named parameters hold this TU's @NNN count. */
-unsigned char DecIfAbove0_Byte(unsigned char *p);
-/* local extern: named parameters hold this TU's @NNN count. */
-int RandomIntInternal(int *seed);
 unsigned int d_a_tgzNewHold(unsigned int uniqueID, unsigned int effectID, int x, int y, int z,
                             const void *dir, void *callback);
 extern int data_0209f32c;

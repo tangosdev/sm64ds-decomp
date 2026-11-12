@@ -76,6 +76,7 @@
 #include "dBgCh_Lin.h"
 #include "dBgCh_Actr.h"
 #include "Sound.h"
+#include "math/CalcLib.h"
 #include "dCamera_c.h"
 #include "SaveData.h"
 #include "Timer.h"
@@ -269,8 +270,8 @@ extern int atan2_hold_Player_15(Fix12i, Fix12i);
 extern int atan2_hold_Player_5(Fix12i y, Fix12i x);
 extern Fix12i atan2_hold_Player_6(Fix12i a, Fix12i b);
 extern int atan2_hold_Player_7(Fix12i a, int b);
-/* local extern: fx_trig.h's inline helpers shift this TU's @NNN count. */
-extern s16 FX_SinCosTable_[];
+/* local extern: including nitro/fx/fx_trig.h renumbers this TU; spelled as the header does. */
+extern const fx16 FX_SinCosTable_[];
 extern signed char gCurrentSublevel;
 extern unsigned char data_0209f4ae[];
 extern unsigned int data_ov002_020ff220[];
@@ -379,8 +380,6 @@ extern void func_ov002_020e69c0(void *unused);
 extern void func_ov002_020e6a78(void *ramp, int blend);
 extern void func_ov002_020e6b3c(void *model);
 extern int func_ov002_020f02c8(int sel);
-/* local extern: including CalcLib.h renumbers this TU's @NNN aliases. */
-extern void VEC_Add(Vector3 *, Vector3 *, Vector3 *);
 extern u32 PlayerNewHold(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                          void *callback);
 extern u32 PlayerNewHold3(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
@@ -389,10 +388,6 @@ extern u32 PlayerNewHold4(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, co
                           void *callback);
 extern void PlayerPlayLongHold_c133c(unsigned int a, unsigned int b, unsigned int c,
                                      Vector3 const *v, unsigned int d);
-/* local extern: including CalcLib.h renumbers this TU's @NNN aliases. */
-extern void VEC_Subtract(Vector3 *, Vector3 *, Vector3 *);
-/* local extern: including CalcLib.h renumbers this TU's @NNN aliases. */
-extern Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern signed char data_02092114;
 extern unsigned char data_0209f2bc[];
 extern int data_0209f32c;
@@ -605,7 +600,6 @@ int daPly_c::func_ov002_020bcd18(unsigned char *params, int beginFrame, int endF
 
 extern "C" {
 int daPly_c::func_ov002_020bcd38(unsigned char *params, int beginFrame, int endFrame) {
-    extern int ApproachAngle(s16 *angle, int from, int start, int speed, int max);
     s16 cur;
 
     if (beginFrame == gKuppaScriptFrame) {
@@ -1091,7 +1085,6 @@ int daPly_c::func_ov002_020bd4c8(unsigned char *params, int beginFrame, int endF
 
 extern "C" {
 int daPly_c::func_ov002_020bd4e0(unsigned char *data, int beginFrame, int endFrame) {
-    extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
     extern char data_0209f4a6[];
     extern char data_0209f4a0[];
     extern char data_0209f4ac[];
@@ -2279,8 +2272,6 @@ void daPly_c::func_ov002_020bf9d4() {
 #define COS(a) FX_SinCosTable_[((u16)(a) >> 4) * 2 + 1]
 extern "C" {
 int daPly_c::func_ov002_020bfa74() {
-    extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
-    extern s32 Vec3_HorzLen(const Vector3 *v);
     s32 n;
     s32 i;
     u32 idx;
@@ -2419,7 +2410,6 @@ int daPly_c::func_ov002_020c0108(int p1) {
     typedef short s16;
     typedef unsigned int u32;
     typedef int s32;
-    extern int Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
     if (this->mIsMetal != 0 || (this->mIsNoControl != 0 && p1 != 0) || this->IsState(data_ov002_02110304) || this->IsState(data_ov002_0211025c))
         return 0;
 
@@ -2524,7 +2514,6 @@ int daPly_c::func_ov002_020c04ac() {
 
 extern "C" {
 int daPly_c::func_ov002_020c04e0() {
-    extern int Vec3_HorzLen(void*);
     int horzLen;
     int angDiff;
     int sel;
@@ -2533,7 +2522,7 @@ int daPly_c::func_ov002_020c04e0() {
     int accel;
     int ret;
 
-    horzLen = Vec3_HorzLen(&mFloorNormalX);
+    horzLen = Vec3_HorzLen((const Vector3 *)&mFloorNormalX);
     angDiff = AngleDiff(mFloorAngle, this->mPrevAngleY);
 
     if (mWalkTimer != 0) {
@@ -2622,8 +2611,6 @@ int daPly_c::func_ov002_020c06fc(int arg) {
        a D1 for daPly_c::Frame$2583Player_cpp. This TU emits no @NNNN/$NNN symbols
        at all today, and such a name depends on declaration order (compare
        Bundle$902d_a_mky_cpp in AGENTS.md). Frame has to stay POD. */
-    extern int Vec3_HorzLen(void*);
-    extern void ApproachAngle(void*, short target, int divisor, int band, int maxStep);
     extern ControllerInput data_0209f498[];
     struct Frame {
         VecFx32 v0;
@@ -2690,7 +2677,7 @@ int daPly_c::func_ov002_020c06fc(int arg) {
     f.v0.x = FX_MUL(v, (int)FX_SinCosTable_[((u16)mFloorAngle >> 4) * 2]);
     f.v0.z = FX_MUL(v, (int)FX_SinCosTable_[((u16)mFloorAngle >> 4) * 2 + 1]);
     {
-        int len = Vec3_HorzLen(&mFloorNormalX);
+        int len = Vec3_HorzLen((const Vector3 *)&mFloorNormalX);
         f.v0.x = FX_MUL(f.v0.x, len);
         f.v0.z = FX_MUL(f.v0.z, len);
     }
@@ -2728,7 +2715,7 @@ int daPly_c::func_ov002_020c06fc(int arg) {
         f.v3.z = fz;
         ang = cstd::atan2(fx, fz);
     }
-    this->mHorzSpeed = Vec3_HorzLen(&f.v3);
+    this->mHorzSpeed = Vec3_HorzLen((const Vector3 *)&f.v3);
     if (this->mHorzSpeed > 0x64000)
         this->mHorzSpeed = 0x64000;
     this->mPrevAngleY = (s16)(ang + this->mAngleYSpeed);
@@ -3928,7 +3915,6 @@ void daPly_c::func_ov002_020c37a4(char *arg) {
 #define LA(p) ((int)(p))
 extern "C" {
 void daPly_c::JumboStarCutsceneFlying() {
-    extern int Vec3_HorzLen(void*);
     V3Quad s;
     int hlen;
     int ang;
@@ -4499,8 +4485,6 @@ int daPly_c::St_Talk_Cleanup() {
 extern "C" {
 int daPly_c::func_ov002_020c47f4() {
     typedef int Fix12i;
-    extern short Vec3_HorzAngle(const void *v0, const void *v1);
-    extern int ApproachAngle(void*, short targetAngle, short invFactor, short maxDelta, short minDelta);
     Vector3 vec;
     int r, a;
     Fix12i y;
@@ -6670,7 +6654,6 @@ int daPly_c::func_ov002_020c897c() {
 /* recovered: shared common types */
 extern "C" {
 int daPly_c::func_ov002_020c8a4c() {
-    extern short Vec3_HorzAngle(const Vector3*, const Vector3*);
     extern void Vec3_RotateYAndTranslate(void*, const Vector3*, int, const Vector3*);
     extern int VEC_Distance(const Vector3 *, const Vector3 *);
     int spd = this->mHorzSpeed >> 3;
@@ -7472,7 +7455,6 @@ int daPly_c::func_ov002_020ca270() {
  */
 extern "C" {
 int daPly_c::JumpIntoBooCage(Vector3 &v_) {
-    extern short Vec3_HorzAngle(const Vector3*, const Vector3*);
     Vector3 *v = &v_;
     if (mIsAirborne) {
         if (mVertSpeed < 0) return 0;
@@ -7529,7 +7511,6 @@ int daPly_c::Unk_020ca488() {
 extern "C" {
 int daPly_c::TryEnterStarDoor(Vector3 &pos_, short kind) {
     extern void Vec3_RotateYAndTranslate(void*, void*, short angle, void*);
-    extern short Vec3_HorzAngle(const void *v0, const void *v1);
     int *pos = (int *)&pos_;
     if (IsState(data_ov002_0211013c) || IsState(data_ov002_02110154) || IsState(data_ov002_0211043c)) {
         if (this->SetNoControlState(0xa, -1, 0)) {
@@ -7541,7 +7522,7 @@ int daPly_c::TryEnterStarDoor(Vector3 &pos_, short kind) {
             /* First entry constructs it: guard, three stores, ~Vector3() registration. */
             static Vector3 sStarDoorOff(0, 0, 0x64000);
             Vec3_RotateYAndTranslate(&mStateTargetX, &mStateAnchorX, mAngleXSpeed, &sStarDoorOff);
-            mAngleY = Vec3_HorzAngle(pos, &mPosX) + 0x8000;
+            mAngleY = Vec3_HorzAngle(&pos_, &mPos) + 0x8000;
             return 1;
         }
     }
@@ -8104,7 +8085,6 @@ int daPly_c::St_Climb_Cleanup() {
 extern "C" {
 int daPly_c::St_Climb_Main() {
     extern void Vec3_RotateYAndTranslate(void *, void *, s16 angle, void *);
-    extern void ApproachAngle(void *, s16 target, s32 divisor, s32 band, s32 maxStep);
     extern void *gCamera;
     extern ControllerInput data_0209f498[];
     s32 vbuf[6];
@@ -8480,7 +8460,6 @@ int daPly_c::St_Shell_Cleanup() {
 extern "C" {
 int daPly_c::St_Shell_Main() {
     extern void func_ov002_020eeca8(void*, int arg);
-    extern void ApproachAngle(void*, short target, int divisor, int band, int maxStep);
     extern ControllerInput data_0209f498[];
     int flag = 0;
     void* res;
@@ -8593,7 +8572,6 @@ int daPly_c::St_Shell_Main() {
 
 extern "C" {
 void daPly_c::func_ov002_020cc660(int angle) {
-    extern s32 ApproachAngle(void*, s16 from, s16 start, s16 speed, s16 max);
     s16 v, w;
     int delta;
     int third;
@@ -8701,7 +8679,6 @@ int daPly_c::St_HurtWater_Init() {
 extern "C" {
 int daPly_c::St_MetalWaterWater_Main() {
     extern int func_ov002_020eeca8(void*, void*);
-    extern void ApproachAngle(void*, int target, int a, int b, int d);
     extern struct S18b2 data_0209f4a0[];
     u32 f;
     int v;
@@ -8788,7 +8765,6 @@ int daPly_c::St_MetalWaterWater_Init() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_MetalWaterGround_Main() {
-    extern void ApproachAngle(void*, short, int, int, int);
     extern ControllerInput data_0209f498[];
     extern void func_ov002_020cd190(void*);
     if (func_ov002_020cec2c())
@@ -9800,7 +9776,6 @@ int daPly_c::func_ov002_020cf20c() {
 
 extern "C" {
 void daPly_c::func_ov002_020cf2f8() {
-    extern int ApproachAngle(void *, int, int, int, int);
     extern ControllerInput data_0209f498[];
     if (data_0209f498[gActivePlayerSlot].mag == 0)
         return;
@@ -10177,7 +10152,7 @@ int daPly_c::func_ov002_020cfea4() {
     dBgCh_Gnd rg;
     {
         int y;
-        short *tbl;
+        const short *tbl;
         int ang = mAngleY;
         tbl = FX_SinCosTable_;
         y = mPosY;
@@ -10210,7 +10185,7 @@ int daPly_c::func_ov002_020cfea4() {
         pts[2].y = yl;
         pts[2].z = pz;
         {
-            short *tbl;
+            const short *tbl;
             int y2;
             int ang = mAngleY;
             y2 = mPosY;
@@ -10660,7 +10635,6 @@ int daPly_c::St_WallSlide_Init() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_Crawl_Main() {
-    extern void ApproachAngle(s16* cur, s16 target, int divisor, int band, int maxStep);
     extern ControllerInput data_0209f498[];
 
     int a = 0;
@@ -10886,7 +10860,6 @@ int daPly_c::St_Crouch_Init() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_HoldHeavy_Main() {
-    extern void ApproachAngle(short* cur, short target, int divisor, int band, int maxStep);
     extern u16 data_0209f49e[];
     extern s16 data_0209f4a0[];
     extern u8 data_0209f4ac[];
@@ -10998,7 +10971,6 @@ int daPly_c::St_HoldLight_Cleanup() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_HoldLight_Main() {
-    extern void ApproachAngle(short* cur, short target, int divisor, int band, int maxStep);
     extern s16 data_0209f4a0[];
     extern u8 data_0209f4ac[];
     extern u16 data_0209f49c[];
@@ -11844,7 +11816,6 @@ void daPly_c::func_ov002_020d3498() {
 extern "C" {
 int daPly_c::St_TurnAround_Main() {
 
-    extern void ApproachAngle(s16* cur, s16 target, int divisor, int band, int maxStep);
     extern u16 data_0209f49e[];
     extern s16 data_0209f4a0[];
     int r5v;
@@ -11954,7 +11925,6 @@ int daPly_c::func_ov002_020d36d8(int arg) {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_Walk_Main() {
-    extern void ApproachAngle(short* cur, short target, int divisor, int band, int maxStep);
     extern s16 data_0209f4a0[];
 
     if ((u16)(mStateFlags & 0x800)) {
@@ -12072,7 +12042,6 @@ static inline int StickScale(void) { return (GetMode() != 2) ? 0x24 : 0x30; }
 static inline int StickLoSpd(void) { return (GetMode() != 2) ? 0xa : 0x10; }
 static inline int StickHiSpd(void) { return (GetMode() != 2) ? 0x15 : 0x20; }
 int daPly_c::func_ov002_020d3b9c() {
-    extern int ApproachAngle(short *cur, short target, int divisor, int band, int maxStep);
     extern short data_0209f4a0[];
     extern char data_0209f49c[];
     extern unsigned char data_0209f4ac[];
@@ -12232,7 +12201,6 @@ int daPly_c::func_ov002_020d3b9c() {
 
 extern "C" {
 void daPly_c::func_ov002_020d413c(int arg) {
-    extern int ApproachAngle(short *angle, int targetAngle, int invFactor, int maxDelta, int minDelta);
     int v;
     int diff;
     short s;
@@ -12247,12 +12215,12 @@ void daPly_c::func_ov002_020d413c(int arg) {
     }
     s = (short)(FX_MUL(((diff - v) / 12), 0x1c71));
     {
-        int t = s;
+        short t = s;
         if (t >= 0x2000) t = 0x2000;
         ApproachAngle(&mSpineRot[2], t, 4, 0x2000, 0x100);
     }
     {
-        int t = (short)((arg - mPrevAngleY) * 6);
+        short t = (short)((arg - mPrevAngleY) * 6);
         if (t < -0x1555) t = -0x1555;
         else if (t > 0x1555) t = 0x1555;
         ApproachAngle(&mSpineRot[1], t, 8, 0x100, 0x10);
@@ -12805,7 +12773,6 @@ int daPly_c::St_BurnFire_Main() {
     extern u16 data_0209f49e[];
     extern s16 data_0209f4a0[];
     extern void func_02012694(unsigned int id, const void *v);
-    extern void ApproachAngle(short *cur, short target, int divisor, int band, int maxStep);
     int speed = 0;
 
     if (mStateWork >= 0xa0 || mIsMetal != 0) {
@@ -13539,7 +13506,6 @@ int daPly_c::func_ov002_020d6790() {
 extern "C" {
 int daPly_c::func_ov002_020d6998() {
     typedef int (*VFunc)(void*);
-    extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
     extern void Vec3_RotateYAndTranslate(int* out, int* in, s16 angle, int* src);
     char* self = (char*)this;
     s16 saved;
@@ -13759,8 +13725,6 @@ int daPly_c::func_ov002_020d7030(void *b) {
 
 extern "C" {
 char *daPly_c::func_ov002_020d708c() {
-    extern int Vec3_Dist(const void* a, const void* b);
-    extern short Vec3_HorzAngle(const void* a, const void* b);
     char* self = (char*)this;
     char* a;
     char* best = 0;
@@ -13934,7 +13898,6 @@ int daPly_c::St_YoshiPower_Main() {
     extern void MTX_MultVec43(void *, void *, void *);
     extern void Vec3_MulScalarInPlace(void*, int);
     extern int func_ov002_020d5cec(void *);
-    extern void ApproachAngle(void*, short, int, int, int);
     extern int data_ov002_0210e3d8[];
     /* The helpers this calls are all declared taking char*, and there are
        thirty-odd call sites. One alias keeps them untouched; the field
@@ -14134,7 +14097,7 @@ int daPly_c::St_YoshiPower_Main() {
             dExtFrameCtrl_c &anim8 = *mModels.mBodyModels[GetBodyModelID(this->param1 & 0xff, 0)];
             if (((unsigned int)(anim8.currFrame << 4) >> 0x10) >= 4) {
                 int i2 = (*(unsigned short*)&mAngleY >> 4) * 2;
-                short *tbl = FX_SinCosTable_;
+                const short *tbl = FX_SinCosTable_;
                 int zv = mPosZ + (int)(((((long long)tbl[i2+1]) << 18) + 0x800) >> 12);
                 int yv = mPosY + 0x37000;
                 pos.x = mPosX + (int)(((((long long)tbl[i2]) << 18) + 0x800) >> 12);
@@ -14440,7 +14403,6 @@ int daPly_c::func_ov002_020d8360(daPly_c *other, unsigned int flags) {
 
 extern "C" {
 int daPly_c::func_ov002_020d853c(dActor_c *o) {
-    extern short Vec3_HorzAngle(const void *v0, const void *v1);
     if (IsState(data_ov002_02110574)) {
         int j = (mPunchKickStep << 1) & 0xff;
         dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
@@ -14749,7 +14711,6 @@ void daPly_c::func_ov002_020d8d10(Vector3 *pos) {
 extern "C" {
 int daPly_c::Hurt(const Vector3 &a, u32 b, Fix12i dmg, u8 arg4, u8 arg5, u8 arg6) {
     extern int func_ov002_020d5cec(void *c);
-    extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
     s16 ang;
     void* p360;
     int hasCap;
@@ -16707,7 +16668,6 @@ int daPly_c::St_SweepKick_Init() {
 extern "C" {
 void daPly_c::func_ov002_020dc560() {
     extern int func_01ffa344(int a, int b);
-    extern void ApproachAngle(short *cur, short target, int divisor, int band, int maxStep);
     extern char data_0209f4a0[];
     ApproachLinear(mHorzSpeed, 0, 0x599);
 
@@ -16873,7 +16833,6 @@ int daPly_c::St_ButtSlide_Init() {
  */
 extern "C" {
 void daPly_c::func_ov002_020dcafc() {
-    extern int ApproachAngle(void* p, int a, int b, int c, int d);
     s16 v5 = 0, v4 = 0;
     int idx;
     s16 a, b;
@@ -17322,7 +17281,6 @@ void daPly_c::func_ov002_020dd8f4() {
 /* recovered: shared common types */
 extern "C" {
 void daPly_c::func_ov002_020dd908() {
-    extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
     extern unsigned char gGameMode;
     int i;
     Vector3 v;
@@ -17687,7 +17645,6 @@ void daPly_c::func_ov002_020de428() {
 /* local extern: the call passes an untyped this, so it cannot use the header method. */
 extern "C" {
 s32 daPly_c::St_Balloon_Main() {
-    extern void ApproachAngle(void *, s16, s16, s16, s32);
     extern s16 data_0209f49e[];
     extern s16 data_0209f4a0[];
     if (mStateArg != 0) {
@@ -18131,7 +18088,6 @@ int daPly_c::St_Owl_Cleanup() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_Owl_Main() {
-    extern int ApproachAngle(short *cur, short target, int divisor, int band, int maxStep);
     extern void func_0201f32c(int a);
     extern unsigned char data_0209f49c[];
     extern char data_0209f4a0[];
@@ -18270,7 +18226,6 @@ int func_ov002_020df7f4(daPly_c *player) {
 extern "C" {
 int daPly_c::func_ov002_020df840(void *arg1, Vector3 *arg2) {
     extern u16 data_0209f49c[];
-    extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
     extern daPly_c::State data_ov002_02110244;
     if (this->mIsMega != 0 || this->mIsBalloon != 0)
         return 0;
@@ -19769,7 +19724,6 @@ ret0:
 
 extern "C" {
 void daPly_c::func_ov002_020e28d4(int a, int b) {
-    extern void ApproachAngle(s16* cur, s16 target, int divisor, int band, int maxStep);
     extern s16 data_0209f4a0[];
     int r4;
 
@@ -20554,7 +20508,6 @@ extern "C" void func_ov002_020e3e00(dExtSimpleModel_c *obj, Vector3 *vec, unsign
 
 extern "C" {
 int daPly_c::func_ov002_020e3f90() {
-    extern void ApproachAngle(short* v, int target, int a, int b, int c);
     extern void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *, int a);
     extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *, int a);
     extern void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *, int a);
