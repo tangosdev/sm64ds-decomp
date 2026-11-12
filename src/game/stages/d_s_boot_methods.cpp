@@ -100,7 +100,7 @@ s32 dScBoot_c::InitResources() {
     GXS_SetGraphicsMode(GX_BGMODE_0);
 
     GX_SetBGScrOffset(1);
-    REG_POWCNT1 = (REG_POWCNT1 & 0xfffffdf1) | 0x20e;
+    GX_SetPower(GX_POWER_ALL);
     GX_DispOn();
 
     GXS_DispOn();

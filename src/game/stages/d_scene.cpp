@@ -100,8 +100,8 @@ void dScene_c::ResetHardwareRegisters()
 
     *(Matrix2x2Words *)&m = *(Matrix2x2Words *)&data_02092668;
 
-    REG_POWCNT1 |= 0x8000;
-    REG_POWCNT1 = (REG_POWCNT1 & 0xfffffdf1) | 0x20e;
+    GX_SetDispSelect(GX_DISP_SELECT_MAIN_SUB);
+    GX_SetPower(GX_POWER_ALL);
     REG_POWCNT1 |= 1;
 
     GX::DisableAllBanks();

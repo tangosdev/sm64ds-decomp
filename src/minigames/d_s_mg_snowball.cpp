@@ -50,6 +50,7 @@ enum dScMgSnowball_c_AssetId {
 #include "nitro/hw/registers.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/g2.h"
+#include "nitro/gx/gx.h"
 #include "SpawnInfo.h"
 #include "types.h"
 #include "nitro/os/cache.h"
@@ -1705,7 +1706,7 @@ s32 dScMgSnowball_c::Behavior() {
 int dScMgSnowball_c::OnGraphCallback2() {
     if (mMenuOpen == 0) {
         if (mScreensSwapped == 0) {
-            *(volatile unsigned short *)0x4000304 |= 0x8000;
+            GX_SetDispSelect(GX_DISP_SELECT_MAIN_SUB);
             SetBg2Offset(0, mScrollY >> 12);
             SetBg3Offset(0, mScrollY >> 12);
             SetSubBg2Offset(0x100, (mScrollY >> 12) + 0x110);
@@ -1715,7 +1716,7 @@ int dScMgSnowball_c::OnGraphCallback2() {
             G2S_SetBG2Offset(0x100, (mScrollY >> 12) + 0x110);
             G2S_SetBG3Offset(0, (mScrollY >> 12) + 0x110);
         } else {
-            *(volatile unsigned short *)0x4000304 &= ~0x8000;
+            GX_SetDispSelect(GX_DISP_SELECT_SUB_MAIN);
             SetBg2Offset(0x100, (mScrollY >> 12) + 0x110);
             SetBg3Offset(0, (mScrollY >> 12) + 0x110);
             SetSubBg2Offset(0, mScrollY >> 12);
@@ -1763,7 +1764,7 @@ s32 dScMgSnowball_c::InitResources() {
     void *buf;
 
     data_0208ee44 = 1;
-    *(vu16 *)0x4000304 &= ~0x8000;
+    GX_SetDispSelect(GX_DISP_SELECT_SUB_MAIN);
     mScreensSwapped = 1;
 
     G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,

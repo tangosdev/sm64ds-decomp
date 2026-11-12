@@ -219,7 +219,7 @@ s32 dScMiniGm_c::InitResources()
     mGfxSlot = 0;
 
     GX::DisableAllBanks();
-    REG_POWCNT1 |= 0x8000;
+    GX_SetDispSelect(GX_DISP_SELECT_MAIN_SUB);
     GX_SetBankForTex(GX_VRAM_TEX_0_A);
     GX_SetBankForBG(GX_VRAM_BG_128_B);
     GX_SetBankForSubBG(GX_VRAM_SUB_BG_128_C);

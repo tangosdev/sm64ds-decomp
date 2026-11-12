@@ -256,7 +256,7 @@ s32 dScMB_c::InitResources() {
     GXS_DispOff();
     func_02030aa4(2);
 
-    REG_POWCNT1 = (REG_POWCNT1 & ~0x20e) | 0x20e;
+    GX_SetPower(GX_POWER_ALL);
     func_0200f2cc();
 
     G2_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x3800,

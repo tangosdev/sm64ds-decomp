@@ -1,5 +1,6 @@
 //cpp
 #include "types.h"
+#include "nitro/gx/gx.h"
 #include "nitro/gx/gx_vramcnt.h"
 #include "dGraph_c.h"
 #include "nitro/hw/registers.h"
@@ -31,7 +32,7 @@ void func_02019440(void) {
     volatile int a;
     volatile int c;
     func_0203bd24();
-    REG_POWCNT1 = (REG_POWCNT1 & 0xfffffdf1) | 0x20e;
+    GX_SetPower(GX_POWER_ALL);
     GX_VBlankIntr(1);
     GX_SetBankForLCDC(GX_VRAM_LCDC_ALL);
     a = 0;

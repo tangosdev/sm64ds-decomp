@@ -1499,12 +1499,12 @@ int dScMgBase_c::SaveScreenForMenu() {
     if (GetDisplayMode() != 0)
         Disable3dEngines();
 
-    mSavedScreenSwap = (REG_POWCNT1 & 0x8000) >> 15;
+    mSavedScreenSwap = GX_GetDispSelect();
 
     mSavedMainBgBits = gMainScreenLayers;
     mSavedSubBgBits = gSubScreenLayers;
 
-    REG_POWCNT1 |= 0x8000;
+    GX_SetDispSelect(GX_DISP_SELECT_MAIN_SUB);
     gMainScreenLayers = 0;
     gSubScreenLayers = 0;
 
@@ -3383,7 +3383,7 @@ void dScMgBase_c::InitEngines() {
     GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_2D);
     GXS_SetGraphicsMode(GX_BGMODE_0);
     *(vu32 *)0x4001000u &= 0xffcfffefu;
-    REG_POWCNT1 |= 0x8000u;
+    GX_SetDispSelect(GX_DISP_SELECT_MAIN_SUB);
     Mg_DisableAllBanks();
     Mg_ResetBgOffsets();
     *(vu32 *)0x4000000u &= ~0x7000000u;

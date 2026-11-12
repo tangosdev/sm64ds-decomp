@@ -161,7 +161,7 @@ s32 dScGameOver_c::InitResources() {
     GXS_SetGraphicsMode(GX_BGMODE_3);
 
     GX_SetBGScrOffset(1);
-    REG_POWCNT1 = (REG_POWCNT1 & ~0x20e) | 0x20e;
+    GX_SetPower(GX_POWER_ALL);
     GX_DispOn();
 
     GXS_DispOn();

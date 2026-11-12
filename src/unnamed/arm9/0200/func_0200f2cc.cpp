@@ -26,7 +26,7 @@ void func_0200f2cc(void)
     GX_SetBGCharOffset(0);
     GX_SetBGScrOffset(0);
     /* Main engine on the top screen. */
-    REG_POWCNT1 |= 0x8000;
+    GX_SetDispSelect(GX_DISP_SELECT_MAIN_SUB);
     GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_3D);
 
     GX_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
