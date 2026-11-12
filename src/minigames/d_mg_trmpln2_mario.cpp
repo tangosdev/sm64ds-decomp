@@ -19,10 +19,10 @@
  * InitPool, Hide and the Trmp3DMario_* equivalents) are module-level free
  * functions called from d_s_mg_trampoline{,2}.cpp and walk the pool by byte
  * offset, so they keep their char* pool and the MARIO2/MARIO3D view macro.
- * Trmp3DMario_EnterWalkIn and Trmp3DMario_IsOffstage are called by the scene
- * with the same byte view and stay free. The pool entry points decl_common.h
- * does not declare are declared here with C linkage, one statement per symbol,
- * and the definitions inherit it; no block wraps a definition. The dispatch in
+ * Their C-linkage declarations live in dMgTrmplnShared.h, which the scenes
+ * include too; this file defines them without a linkage wrapper.
+ * Trmp3DMario_EnterWalkIn and Trmp3DMario_IsOffstage are the scene's entry
+ * points on the same byte view. The dispatch in
  * Update and the state tests are spelled out word by word: the typed forms do
  * not reproduce the cartridge. Measured on this tree, `(this->*fn)()` in
  * Update makes mwccarm call its out-of-line PMF helper and lose the
@@ -30,9 +30,9 @@
  * bytes; both DIFF.
  * The bounce states still walk the line in gotos and raw offsets -- that is
  * the matched state machine, not decoration. Helper prototypes with no owning
- * header (Puff_*, Sound_PlayBank1Panned, Camera_ProjectToScreen*,
- * TrmpFx_Spawn, TrmpItem_UpdateWithJumper, func_0203cd80, VEC_DotProduct,
- * Vec3_MulScalar) stay TU-local until include/ owns them.
+ * header (Puff_*, Sound_PlayBank1Panned, TrmpFx_Spawn,
+ * TrmpItem_UpdateWithJumper, func_0203cd80, VEC_DotProduct, Vec3_MulScalar)
+ * stay TU-local until include/ owns them.
  */
 
 #include "Particle__System.h"
@@ -55,6 +55,8 @@
 #include "Sound.h"
 #include "dMgTrmpln2Mario_c.h"
 #include "dMgTrmpln3DMario_c.h"
+#include "dMgTrmplnShared.h"
+#include "MgCamera.h"
 
 /* Typed view of a pool entry at a char* byte offset. Only the pool walkers
  * below use it; every other function is a member of one of the two classes. */
@@ -212,26 +214,9 @@ extern int sTrmpAnyOnLedge;
 /* the goal-slot bank StateGoal walks; a run of separate 12-byte globals */
 extern TrmpGoal sTrmpGoalSlots;
 
-/* Pool entry points the trampoline scenes call by their unmangled names.
- * decl_common.h already declares the draw / reset / tuning / init-pool family
- * for both classes, so only the rest is declared here. */
-extern "C" int Trmp2Mario_Hide();
-extern "C" void Trmp2Mario_EnterAll();
-extern "C" void Trmp2Mario_MoveToStart();
-extern "C" void Trmp2Mario_PlaceAtStart();
-extern "C" void Trmp2Mario_UpdateAll();
-extern "C" void Trmp3DMario_EnterWalkIn(char *c);
-extern "C" int Trmp3DMario_IsOffstage(int *r0);
-extern "C" int Trmp3DMario_CountFinished();
-extern "C" void Trmp3DMario_StartAll();
-extern "C" void Trmp3DMario_UpdateAll();
-extern "C" void Trmp3DMario_SetTuning(int a);
-extern "C" void Trmp3DMario_SetSpawnHeight(int n);
-
 /* C callees owned by other units; no shared header declares them yet. */
 extern "C" int VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 extern "C" void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
-extern "C" void Camera_ProjectToScreen(void *camera, void *pos, int *outX, int *outY);
 extern "C" void Sound_PlayBank1Panned(int bank, int id, int panX);
 extern "C" void Puff_Spawn(int x, int y);
 extern "C" void Puff_DrawAll();
@@ -1376,10 +1361,10 @@ void dMgTrmpln3DMario_c::StateGoal() {
     sTrmpMariosOnLedges -= 1;
 
     if (mPos.y > 0) {
-        Camera_ProjectToScreen(sMgSubCamera, &mPos, &va, &vb);
+        Camera_ProjectToScreen((MgCamera *)sMgSubCamera, &mPos, &va, &vb);
         vb = vb - (Mg_GetTopScreenYOffset() + 0xc0);
     } else {
-        Camera_ProjectToScreen(sMgMainCamera, &mPos, &va, &vb);
+        Camera_ProjectToScreen((MgCamera *)sMgMainCamera, &mPos, &va, &vb);
     }
     vb -= 0x20;
     TrmpFx_Spawn(vb << 12, (short)sTrmpComboCount);
