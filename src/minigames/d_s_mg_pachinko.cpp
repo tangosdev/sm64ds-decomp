@@ -48,6 +48,7 @@
 #include "nitro/fx/fx_trig.h"
 #include "dScMgPachinko_c.h"
 #include "LevelRng.h"
+#include "math/CalcLib.h"
 
 /* The five state tables are pointer-to-member tables on the scene. */
 typedef void (dScMgPachinko_c::*PMF)(int);
@@ -101,7 +102,6 @@ extern void Mg_SubmitScore(int self);
 extern int  func_020126e8(int a);
 extern int  func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern void SetBg2Offset(int a, int b);
-extern int  RandomIntInternal(int *seed);
 struct OamAttr;
 #include "OAM.h"
 #include "nitro/gx/gx_bgcnt.h"

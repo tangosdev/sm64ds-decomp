@@ -31,6 +31,7 @@ enum d_a_obj_wl_polelift_AssetId {
 #include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 #include "SaveBlock.h"
 #include "nitro/fx/fx_cp.h"
 
@@ -45,11 +46,8 @@ struct PoleliftModelFile : SharedFilePtr {
 };
 
 extern "C" {
-u16 DecIfAbove0_Short(u16 *timer);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-int VEC_Mag(const Vector3 *v);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *a, int scale);
-void VEC_Subtract(Vector3 *out, Vector3 *a, Vector3 *b);
 
 extern Vector3 data_ov026_02113a9c;
 extern PoleliftModelFile data_ov026_02113ea0;

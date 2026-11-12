@@ -1,7 +1,7 @@
 #include "types.h"
 #include "nitro/fx/fx.h"
+#include "math/CalcLib.h"
 
-extern int VEC_Mag(const Vector3 *v);
 extern void VEC_Normalize(const Vector3 *src, Vector3 *dst);
 
 /* Blend the 4x3 matrix m0 toward m1 by t into dst. The Y and X rows lerp

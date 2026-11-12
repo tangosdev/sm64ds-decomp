@@ -324,7 +324,7 @@ int D3D_PlaySeAtX(int a0, int a1);
 void Sound_PlayBank1Panned(int a0, int a1, int a2);
 }
 
-extern "C" void *sMgMainCamera;
+extern "C" MgCamera *sMgMainCamera;
 extern "C" int sTrmpSpeedScale;
 extern "C" int sTrmp2RiseSpeedMax;
 extern "C" int sTrmp2FallSpeed;
@@ -552,7 +552,7 @@ void Trmp2Mario_EnterFall(void *c);
 void Sound_PlayBank1Panned(int a0, int a1, int a2);
 }
 
-extern "C" void *sMgMainCamera;
+extern "C" MgCamera *sMgMainCamera;
 extern "C" int sTrmpSpeedScale;
 extern "C" int sTrmp2RiseSpeedMax;
 extern "C" int sTrmp2FallSpeed;
@@ -893,7 +893,7 @@ void Sound_PlayBank1Panned(int a0, int a1, int a2);
 void Trmp2Mario_EnterMissed(char *c);
 }
 
-extern "C" void *sMgMainCamera;
+extern "C" MgCamera *sMgMainCamera;
 
 struct S8 {
     int a, b;
@@ -1079,7 +1079,7 @@ namespace ns_020ca430 {
 extern "C" {
 typedef struct BMD_File BMD_File;
 
-extern void *sMgMainCamera;
+extern MgCamera *sMgMainCamera;
 
 extern void Trmp2Mario_EnterHidden(char *c);
 
@@ -1651,8 +1651,8 @@ extern int sTrmpRowHeights[];
 extern int sTrmpComboCount;
 extern int sTrmpMariosInPlay;
 extern int sTrmpMariosOnLedges;
-extern void *sMgSubCamera;
-extern void *sMgMainCamera;
+extern MgCamera *sMgSubCamera;
+extern MgCamera *sMgMainCamera;
 extern int sTrmpGoalSlotCursor;
 extern Triple sTrmpGoalSlots[];
 extern Vector3 data_020a0ebc;
@@ -1887,7 +1887,7 @@ void func_02012718(int a, int b);
 int D3D_PlaySeAtX(int a, int b);
 }
 
-extern "C" void *sMgMainCamera;
+extern "C" MgCamera *sMgMainCamera;
 extern "C" int sTrmpRowHeights[2];
 
 extern "C" void Trmp3DMario_StateHardBounce(char *c) {
@@ -2114,7 +2114,7 @@ void Sound_PlayBank1Panned(int a0, int a1, int a2);
 void func_02012718(int a, int b);
 }
 
-extern "C" void *sMgMainCamera;
+extern "C" MgCamera *sMgMainCamera;
 extern "C" int sTrmpRowHeights[2];
 
 extern "C" void Trmp3DMario_StateBounce(char *c) {
@@ -2404,7 +2404,7 @@ int D3D_PlaySeAtX(int a, int b);
 void Trmp3DMario_EnterMissed(void *c);
 }
 
-extern "C" void *sMgMainCamera;
+extern "C" MgCamera *sMgMainCamera;
 extern "C" int sTrmpRowHeights[2];
 
 extern "C" void Trmp3DMario_StateFall(char *c) {
@@ -2806,7 +2806,7 @@ namespace ns_020cce0c {
 extern "C" {
 typedef struct BMD_File BMD_File;
 
-extern void *sMgMainCamera;
+extern MgCamera *sMgMainCamera;
 
 extern void Trmp3DMario_EnterOffstage(char *c);
 

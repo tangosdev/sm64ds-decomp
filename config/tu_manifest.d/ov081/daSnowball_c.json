@@ -558,14 +558,14 @@
   },
   "defined_symbol_renames": [
     {
-      "from": "@757",
+      "from": "@754",
       "to": "@701",
-      "evidence": "Measured compiler input after removing the obsolete native actor-call declarations; exact section index, offset, size, binding, body and complete incoming/outgoing typed graph preserve this canonical descriptor identity. Re-keyed from @809 to @755 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @755 to @757 when its int[3]/VecFx32 scratch locals that were cast to Vector3* became real Vector3 locals (measured from the compiled object: same section, size and order)."
+      "evidence": "Measured compiler input after removing the obsolete native actor-call declarations; exact section index, offset, size, binding, body and complete incoming/outgoing typed graph preserve this canonical descriptor identity. Re-keyed from @809 to @755 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @755 to @757 when its int[3]/VecFx32 scratch locals that were cast to Vector3* became real Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from @757 to @754 when d_a_snowball dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
     },
     {
-      "from": "@759",
+      "from": "@756",
       "to": "@703",
-      "evidence": "Measured compiler input after removing the obsolete native actor-call declarations; exact section index, offset, size, binding, body and complete incoming/outgoing typed graph preserve this canonical descriptor identity. Re-keyed from @811 to @757 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @757 to @759 when its int[3]/VecFx32 scratch locals that were cast to Vector3* became real Vector3 locals (measured from the compiled object: same section, size and order)."
+      "evidence": "Measured compiler input after removing the obsolete native actor-call declarations; exact section index, offset, size, binding, body and complete incoming/outgoing typed graph preserve this canonical descriptor identity. Re-keyed from @811 to @757 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @757 to @759 when its int[3]/VecFx32 scratch locals that were cast to Vector3* became real Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from @759 to @756 when d_a_snowball dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
     }
   ]
 }

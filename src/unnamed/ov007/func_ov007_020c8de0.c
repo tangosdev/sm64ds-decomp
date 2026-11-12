@@ -1,9 +1,8 @@
 #include "types.h"
 #include "Ov007Tween.h"
+#include "math/CalcLib.h"
 
 extern void func_ov007_020c90c0(void *self);
-extern void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
-extern int VEC_Mag(const Vector3 *v);
 extern void VEC_Normalize(const Vector3 *v, Vector3 *out);
 extern void VEC_MultAdd(int s, int *a, int *b, int *out);
 

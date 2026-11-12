@@ -49,6 +49,8 @@ enum daMoray_c_AssetId {
 #include "dExtSimpleModel_c.h"
 #include "daPly_c.h"
 #include "math/Approach.h"
+#include "math/CalcLib.h"
+#include "math/MtxStack.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_cp.h"
 
@@ -94,12 +96,10 @@ extern "C" {
 extern VecFx32 data_ov016_02114d4c; /* cylinder offset, bss */
 
 extern unsigned char gCurrentStarId;        /* the selected star */
-extern Matrix4x3 data_020a0e68;             /* the shared scratch matrix */
 
 int AngleDiff(int a, int b);
 int SublevelToLevel(int sub);
 int IsStarCollected(int level, int star);
-u16 DecIfAbove0_Short(u16 *p);
 /* Sound::Play(3, id, pos). Calling Play directly is one word larger
    (StateLungeInit 0x54 -> 0x58). */
 void func_02012694(unsigned int id, const Vector3 *pos);
@@ -109,23 +109,9 @@ void func_020167a4(dExtAnmModel_c *model);
 /* Blend the posed bones by blendWeight. No named method. */
 void func_0204531c(ModelComponents *data, s32 weight);
 
-short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *out);
-int VEC_Mag(const Vector3 *v);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
-void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-
-void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-void Matrix4x3_FromRotationY(Matrix4x3 *m, int angY);
-void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, short angX);
-void Matrix4x3_ApplyInPlaceToRotationZXYExt(Matrix4x3 *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
-void MTX_Concat43(void *m1, void *m0, void *mF);
 }
 
 /* Render's per-segment bend table, one 0xc record per body bone.
@@ -577,7 +563,8 @@ void daMoray_c::UpdatePose() {
         row->mSegmentPos[0].z = zero[0];
         dst = &data_020a0e68;
         *dst = *modelMtx;
-        MTX_Concat43((char *)this->mBlendAnmModel.data.transforms + transformOffset, dst, dst);
+        MTX_Concat43((Matrix4x3 *)((char *)this->mBlendAnmModel.data.transforms + transformOffset),
+                     dst, dst);
         pos->x = dst->m[9];
         pos->y = dst->m[10];
         pos->z = dst->m[11];

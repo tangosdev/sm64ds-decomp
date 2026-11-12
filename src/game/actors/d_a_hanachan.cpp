@@ -103,7 +103,6 @@ extern short data_ov034_02113820[];
 extern void **data_ov034_021138b0[];
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int data_ov034_02114488[];
-extern Matrix4x3 data_020a0e68;
 // local extern: no shared header declares Vec3_Add.
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int NormalizeVec3IfNonZero(Vector3 *v);

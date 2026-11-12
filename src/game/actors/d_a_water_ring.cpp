@@ -47,7 +47,6 @@ extern char data_ov002_0210d6dc[];  /* the ring's BTA */
 extern "C" {
 s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 int AngleDiff(int a, int b);
-void Vec3_Asr(struct Vector3 *d, struct Vector3 *s, int sh);
 }
 
 extern SharedFilePtr data_ov002_0210da10; /* the ring's BMD */

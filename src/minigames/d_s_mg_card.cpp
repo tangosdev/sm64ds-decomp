@@ -24,6 +24,7 @@
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/g2.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "math/CalcLib.h"
 
 /* By-value five-card ordering table. */
 typedef struct 
@@ -53,7 +54,6 @@ extern int data_ov006_02141770;
 extern void Vec2_Sub(int *o, int *a, int *b);
 extern void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
 extern const Five sCardHandOrder;
-extern int RandomIntInternal(int *seed);
 extern int sCardFaceWeights[];
 extern void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 extern void Mg_DrawCredits(char *a0, int a1, int a2, int a3);

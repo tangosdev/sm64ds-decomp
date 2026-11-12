@@ -67,6 +67,7 @@ enum d_a_btn_AssetId {
 #include "daBtn_c.h"
 #include "ParticleIds.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 #include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
@@ -99,21 +100,8 @@ void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other);
 
 /* ---- arm9 / ov002 ---- */
 int AngleDiff(int, int);
-unsigned char DecIfAbove0_Byte(unsigned char *p);
 int IsStarCollectedInCurLevel(int a);
-void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 a);
-void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 a);
-void Matrix4x3_ApplyInPlaceToRotationZ(void *m, s16 a);
 void Matrix4x3_ApplyInPlaceToScale(void *m, int x, int y, int z);
-void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
-void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-
-/* Every call below passes &mMovingMeshCollider. Named prototype parameters
-   advance mwcc's @NNN counter, and the manifest pins the static
-   initializer's literals at @700..@715. Retiring nineteen mangled
-   prototypes for header-declared calls dropped their 33 named parameters
-   (-33); Message.h and dCamera_c.h came in (+30). These three names put
-   the count back. */
 void *func_0200fa04(void *c, void *v, int b);
 void func_02011cfc(void);
 void func_02011d38(void);
@@ -133,9 +121,6 @@ extern u8 gCurrentStarId;
 extern signed char gCurrentSublevel;
 extern dCamera_c *gCamera;
 extern daPly_c *gPlayers[];
-/* local extern: math/MtxStack.h's helpers take Matrix4x3 *, and this file
-   hands them mShadowMatrix, which daBtn_c.h keeps as s32[12]. */
-extern Matrix4x3 data_020a0e68;
 /* The king's collision mesh takes Whomp's Fortress's own CLPS block. The
    relocation's target address is shared by 15 level overlays; residency
    leaves ov015 and ov026, and only ov015 holds a CLPS block there (ov026's
@@ -300,15 +285,13 @@ int daBtn_c::InitResources()
     if (idx == 0) {
         ((dBgW_KcMbg *)(&mMovingMeshCollider))
             ->dBgW_KcMbg::SetFile(
-                (KCL_File *)(((SharedFilePtr *)data_ov079_02127bf0[idx])->filePtr),
-                *(const Matrix4x3 *)(mMeshMatrix), 0x199, mAngleY,
-                *(CLPS_Block *)(&data_ov079_02127ba0));
+                (KCL_File *)(((SharedFilePtr *)data_ov079_02127bf0[idx])->filePtr), mMeshMatrix,
+                0x199, mAngleY, *(CLPS_Block *)(&data_ov079_02127ba0));
     } else {
         ((dBgW_KcMbg *)(&mMovingMeshCollider))
             ->dBgW_KcMbg::SetFile(
-                (KCL_File *)(((SharedFilePtr *)data_ov079_02127bf0[idx])->filePtr),
-                *(const Matrix4x3 *)(mMeshMatrix), 0x1000, mAngleY,
-                *(CLPS_Block *)(&data_ov015_021135d4));
+                (KCL_File *)(((SharedFilePtr *)data_ov079_02127bf0[idx])->filePtr), mMeshMatrix,
+                0x1000, mAngleY, *(CLPS_Block *)(&data_ov015_021135d4));
     }
 
     mMovingMeshCollider.SetShallowOnly();
@@ -1413,17 +1396,15 @@ void daBtn_c::func_ov079_02124188()
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68,
         (short)(mAngleY + mBodyYaw));
 
-    *(Mtx43 *)mShadowMatrix = *(Mtx43 *)&data_020a0e68;
+    *(Mtx43 *)&mShadowMatrix = *(Mtx43 *)&data_020a0e68;
 
     if (mShouldRender == 0)
         return;
 
     if (mIsKing != 0) {
-        DropShadowScaleXYZ(mShadowModel, *(Matrix4x3 *)mShadowMatrix, 0x1cc000, 0x190000, shadowRad,
-                           0xf);
+        DropShadowScaleXYZ(mShadowModel, mShadowMatrix, 0x1cc000, 0x190000, shadowRad, 0xf);
     } else {
-        DropShadowScaleXYZ(mShadowModel, *(Matrix4x3 *)mShadowMatrix, 0xf0000, 0x190000, shadowRad,
-                           0xf);
+        DropShadowScaleXYZ(mShadowModel, mShadowMatrix, 0xf0000, 0x190000, shadowRad, 0xf);
     }
     return;
 }
@@ -1451,20 +1432,20 @@ void daBtn_c::func_ov079_02124008()
     }
 
     off = (n + 1) * ((s - 0x1000) * 0x168);
-    *(Mtx43 *)mMeshMatrix = *(Mtx43 *)&mAnmModel.mat4x3;
+    *(Mtx43 *)&mMeshMatrix = *(Mtx43 *)&mAnmModel.mat4x3;
 
-    Matrix4x3_ApplyInPlaceToRotationY(mMeshMatrix, mBodyYaw);
+    Matrix4x3_ApplyInPlaceToRotationY(&mMeshMatrix, mBodyYaw);
     if (mState != 1 && mState != 7) {
-        Matrix4x3_ApplyInPlaceToRotationX(mMeshMatrix, mBodyPitch);
-        Matrix4x3_ApplyInPlaceToRotationZ(mMeshMatrix, (s16)(mBodyRoll >> 1));
+        Matrix4x3_ApplyInPlaceToRotationX(&mMeshMatrix, mBodyPitch);
+        Matrix4x3_ApplyInPlaceToRotationZ(&mMeshMatrix, (s16)(mBodyRoll >> 1));
     }
-    Matrix4x3_ApplyInPlaceToScale(mMeshMatrix, 0x1000, s, 0x1000);
+    Matrix4x3_ApplyInPlaceToScale(&mMeshMatrix, 0x1000, s, 0x1000);
 
-    mMeshMatrix[9] = mPosX;
-    mMeshMatrix[10] = mPosY + mTipLift - off;
-    mMeshMatrix[11] = mPosZ;
+    mMeshMatrix.t.x = mPosX;
+    mMeshMatrix.t.y = mPosY + mTipLift - off;
+    mMeshMatrix.t.z = mPosZ;
 
-    mMovingMeshCollider.Transform(*(Matrix4x3 *)mMeshMatrix, mBodyYaw);
+    mMovingMeshCollider.Transform(mMeshMatrix, mBodyYaw);
 }
 
 /* Survey the watched players: the nearest one (index, distance, bearing into
