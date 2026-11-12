@@ -14,8 +14,6 @@
 #define DMA_CONTROL_DEST_FIXED (2u << 21)
 #define GXFIFO_DMA_CONTROL (DMA_CONTROL_ENABLE | DMA_CONTROL_32_BIT | DMA_CONTROL_DEST_FIXED)
 
-extern void MIi_DmaSetParams(u32 dmaNo, u32 src, u32 dest, u32 ctrl);
-
 void MI_SendGXCommand(u32 dmaNo, const void *src, u32 commandLength) {
     volatile u32 *dmaCtrl;
     u32 currentSrc;
@@ -32,7 +30,7 @@ void MI_SendGXCommand(u32 dmaNo, const void *src, u32 commandLength) {
     currentSrc = (u32)src;
     while (commandLength != 0) {
         chunk = commandLength > 0x1d8 ? 0x1d8 : commandLength;
-        MIi_DmaSetParams(dmaNo, currentSrc, 0x04000400, GXFIFO_DMA_CONTROL | (chunk >> 2));
+        MIi_DmaSetParams(dmaNo, currentSrc, (u32)&REG_GXFIFO, GXFIFO_DMA_CONTROL | (chunk >> 2));
         commandLength -= chunk;
         currentSrc += chunk;
     }

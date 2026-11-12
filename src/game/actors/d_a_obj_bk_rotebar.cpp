@@ -61,8 +61,7 @@ s32 daObjBk_Rotebar_c::InitResources() {
     UpdateClsnPosAndRot();
 
     KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov015_02114a84);
-    ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile(kcl, *(&mClsnMat), 0x199, mAngleY, *(&data_ov015_02113654));
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov015_02113654);
 
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
 

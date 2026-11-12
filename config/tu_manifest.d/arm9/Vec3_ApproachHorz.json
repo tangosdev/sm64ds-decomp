@@ -70,14 +70,14 @@
       "address": "0x020a0dc0",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "destructor-registration node for data_020a0dbc. mwcc emits @60, which ov056 already defines, so it is renamed to the unused same-length @20."
+      "evidence": "destructor-registration node for data_020a0dbc. mwcc emits @59, which is renamed to the unused same-length @20."
     },
     {
       "symbol": "@19",
       "address": "0x020a0dcc",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "destructor-registration node for data_020a0db8. mwcc emits @61, which ov026 already defines, so it is renamed to the unused same-length @19. The next symbol is data_020a0dd8."
+      "evidence": "destructor-registration node for data_020a0db8. mwcc emits @60, which ov056 already defines, so it is renamed to the unused same-length @19. The next symbol is data_020a0dd8."
     }
   ],
   "init": [
@@ -136,14 +136,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@60",
+      "from": "@59",
       "to": "@20",
-      "evidence": "ov056 defines @60 as a global. @20 is unused in every symbols.txt and the same length. @18 is the RNG fold's node."
+      "evidence": "mwcc numbers data_020a0dbc's node @59, a name other modules also use. @20 is unused in every symbols.txt and the same length. @18 is the RNG fold's node."
     },
     {
-      "from": "@61",
+      "from": "@60",
       "to": "@19",
-      "evidence": "ov026 defines @61 as a global. @19 is unused in every symbols.txt and the same length."
+      "evidence": "ov056 defines @60 as a global. @19 is unused in every symbols.txt and the same length."
     }
   ],
   "relocations": [
@@ -230,7 +230,7 @@
   ],
   "notes": [
     "Vec3_ApproachHorz matched as extern \"C\" inside this C++ file. ApproachLinear is a real C++ definition; its step is a scalar Fix12i (mangled i), not Fix12<int> (notes/mwccarm-codegen.md 6az).",
-    "Static initializer folded: data_020a0dbc (0, 0) and data_020a0db8 (1, 1) are file-scope Short2 values. mwcc emits __sinit_Vec3_ApproachHorz.cpp. ~Short2 is aliased to NoOpDestructor. The nodes move from @60 and @61 to @20 and @19."
+    "Static initializer folded: data_020a0dbc (0, 0) and data_020a0db8 (1, 1) are file-scope Short2 values. mwcc emits __sinit_Vec3_ApproachHorz.cpp. ~Short2 is aliased to NoOpDestructor. The nodes move from @59 and @60 to @20 and @19."
   ],
   "production_mode": "intact-object",
   "verification": {

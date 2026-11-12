@@ -1,16 +1,14 @@
 #include "types.h"
 #include "private/arm9_wbt.h"
-#include "private/wbt_block_info_list.h"
 
-extern int WBT_GetOwnAid(void);
-extern struct WBTBlockInfoList *func_02065a94(int key);
+extern WBTBlockInfoList *func_02065a94(int key);
 extern int func_0206491c(unsigned int key, int val);
 extern char *func_02064888(unsigned int id, int idx);
 extern int func_02064d6c(int dest, int a, u8 b, int c, int d, const void *p, int n);
 extern int func_02065bc0(void);
 extern void func_02064554(void *base, int a, int b, s16 c);
 
-/* NitroSDK WBT: answer a peer's completed GET_BLOCK request (peer command 4)
+/* NitroSDK WBT: answer a peer's completed GET_BLOCK request (REQ_GET_BLOCK)
  * with one packet of the block. A COMMON block's packet comes straight from
  * the registered data (func_02064888); a USER block's comes from the
  * application, through a PREPARE_SEND_DATA (0xd) system callback on
@@ -26,11 +24,11 @@ int func_02063bc4(void *base, int idx, int r8) {
             r7 = 0xfffe;
         else
             r7 = 1;
-        if (e->command == 4) {
-            struct WBTBlockInfoList *node = func_02065a94(e->block_id);
+        if (e->command == WBT_CMD_REQ_GET_BLOCK) {
+            WBTBlockInfoList *node = func_02065a94(e->block_id);
             if (node != 0) {
                 int v = func_0206491c(e->block_id, e->seq_no);
-                if (node->block_type == 0) {
+                if (node->block_type == WBT_BLOCK_LIST_TYPE_COMMON) {
                     char *data = func_02064888(e->block_id, v);
                     if (data == 0) {
                         r6 = func_02064d6c(r8, r7, e->cmd_counter, e->block_id, e->seq_no, 0, 0);
@@ -38,12 +36,12 @@ int func_02063bc4(void *base, int idx, int r8) {
                         r6 = func_02064d6c(r8, r7, e->cmd_counter, e->block_id, v, data,
                                            func_02065bc0());
                     }
-                } else if (node->block_type == 1) {
+                } else if (node->block_type == WBT_BLOCK_LIST_TYPE_USER) {
                     sys->u.prepare_send_data.block_id = e->block_id;
                     sys->u.prepare_send_data.block_seq_no = v;
                     sys->u.prepare_send_data.own_packet_size = func_02065bc0();
                     sys->u.prepare_send_data.data_ptr = 0;
-                    func_02064554(base, 0xd, idx, 0);
+                    func_02064554(base, WBT_CMD_PREPARE_SEND_DATA, idx, 0);
                     if (sys->u.prepare_send_data.data_ptr != 0) {
                         r6 =
                             func_02064d6c(r8, r7, e->cmd_counter, sys->u.prepare_send_data.block_id,

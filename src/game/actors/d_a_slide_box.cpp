@@ -244,11 +244,10 @@ int daSlide_Box_c::InitResources()
     UpdateModel();
     UpdateClsnPosAndRot();
     KCL_File *clsnFile = (KCL_File *)dBgW_Kc::LoadFile(ClsnFile);
-    ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile((KCL_File *)(clsnFile), *(const Matrix4x3 *)(&mClsnMat), kMeshScale,
-                              mAngleY, *(CLPS_Block *)(data_ov016_02113bac));
+    mMeshCollider.SetFile((KCL_File *)(clsnFile), mClsnMat, kMeshScale, mAngleY,
+                          *(CLPS_Block *)(data_ov016_02113bac));
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
-    mWithMeshClsn.Init((dActor_c *)this, kClsnRadius, kClsnRadius, 0, 0);
+    mWithMeshClsn.Init(this, kClsnRadius, kClsnRadius, 0, 0);
     mVertAccel = kGravity;
     mTerminalVelocity = kTerminalVelocity;
     mShip = 0;

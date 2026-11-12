@@ -2,12 +2,12 @@
 #include "private/arm9_wbt.h"
 extern int func_02065af0(int *thiz);
 
-/* NitroSDK WBT_RequestSync: queue a REQ_SYNC command (2) to the peers in
+/* NitroSDK WBT_RequestSync: queue a REQ_SYNC command to the peers in
  * target_bmp. */
-void WBT_RequestSync(u16 target_bmp, void (*callback)(void *)) {
+void WBT_RequestSync(u16 target_bmp, WBTCallback callback) {
     WBTCommand cmd;
-    cmd.command = 2;
+    cmd.command = WBT_CMD_REQ_SYNC;
     cmd.target_bmp = target_bmp;
-    cmd.callback = (void (*)(char *))callback;
+    cmd.callback = callback;
     func_02065af0((int *)&cmd);
 }

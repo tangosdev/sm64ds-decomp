@@ -494,9 +494,7 @@ int dMeter_c::Render() {
 /* dMeter_c::OnPendingDestroy() at 0x020fd5dc (ov002) -- vtable slot 12.
  * Empty override; the dMeter_c does nothing when marked for destruction.
  */
-void dMeter_c::OnPendingDestroy() {
-    (void)this;
-}
+void dMeter_c::OnPendingDestroy() {}
 
 /* ROM ordinal 14 -- dMeter_c::CleanupResources(), 0x020fd5d4, size 0x8 */
 /* dMeter_c::CleanupResources() at 0x020fd5d4 (ov002) -- vtable slot 3.
@@ -504,7 +502,6 @@ void dMeter_c::OnPendingDestroy() {
  * release on death. dMeter_c : dBase_c : fBase_c.
  */
 s32 dMeter_c::CleanupResources() {
-    (void)this;
     return 1;
 }
 

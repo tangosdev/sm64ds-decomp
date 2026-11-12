@@ -5,6 +5,7 @@
 #include "nitro/mb/mb.h"
 #include "nitro/pad/pad.h"
 #include "nitro/hw/registers.h"
+#include "nitro/os/reset.h"
 
 extern "C" {
 
@@ -16,7 +17,6 @@ extern mHeap::Heap_t *data_020a0eac;
 
 extern void InitCrashScreen(void);
 extern void ShowCrashScreen(void);
-extern void OS_ResetSystem(unsigned int a);
 
 void func_02013f4c(void)
 {

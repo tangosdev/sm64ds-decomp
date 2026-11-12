@@ -18,6 +18,7 @@
 #include "types.h"
 #include "nitro/hw/registers.h"
 #include "nitro/os/system.h"
+#include "nitro/os/interrupt.h"
 #include "nitro/mi/dma.h"
 
 #define MI_CNT_SRC_FIX DMA_CONTROL_SRC_FIXED
@@ -30,7 +31,6 @@ extern "C" {
 /* in ITCM */
 extern void MIi_DmaSetParams(u32 dmaNo, u32 src, u32 dest, u32 ctrl);
 extern void MIi_DmaSetParams_wait(u32 dmaNo, u32 src, u32 dest, u32 ctrl);
-extern void OSi_EnterDmaCallback(u32 dmaNo, u32 callback, u32 arg);
 
 void MI_DmaFill32(u32 dmaNo, void *dest, u32 data, u32 size) {
     vu32 *dmaCntp;
@@ -94,7 +94,7 @@ void MI_DmaFill32Async(u32 dmaNo, void *dest, u32 data, u32 size, MIDmaCallback 
 
     MI_WaitDma(dmaNo);
     if (callback) {
-        OSi_EnterDmaCallback(dmaNo, (u32)callback, (u32)arg);
+        OSi_EnterDmaCallback(dmaNo, callback, arg);
         vu32 *fillReg = (vu32 *)REG_DMA_FILL_ADDR(dmaNo);
         *fillReg = data;
         MIi_DmaSetParams(dmaNo, (u32)fillReg, (u32)dest,
@@ -117,7 +117,7 @@ void MI_DmaCopy32Async(u32 dmaNo, const void *src, void *dest, u32 size, MIDmaCa
 
     MI_WaitDma(dmaNo);
     if (callback) {
-        OSi_EnterDmaCallback(dmaNo, (u32)callback, (u32)arg);
+        OSi_EnterDmaCallback(dmaNo, callback, arg);
         MIi_DmaSetParams(dmaNo, (u32)src, (u32)dest,
                          (size >> 2) | MI_CNT_ENABLE | MI_CNT_IRQ | MI_CNT_32BIT);
     } else {

@@ -5,7 +5,7 @@
  * The Nitro SDK's nitro/wm/ARM9/wm_api.h, the calls whose bodies are folded
  * so far: wm_standard.c (src/engine/wm/WM_Standard.c), wm_sync.c
  * (src/engine/wm/WM_Sync.c), wm_mp.c (src/engine/wm/WM_Mp.c), wm_etc.c
- * (src/engine/wm/WM_Etc.c) and WM_Init.
+ * (src/engine/wm/WM_Etc.c) and wm_system.c (src/engine/wm/WM_System.c).
  *
  * The asynchronous calls return WM_ERRCODE_OPERATING when the request was
  * queued; the callback then answers with the result. The SDK's BOOL
@@ -20,7 +20,8 @@
 extern "C" {
 #endif
 
-int WM_Init(void *, int);
+WMErrCode WM_Init(void *, u16);
+WMErrCode WM_Finish(void);
 
 WMErrCode WM_Enable(WMCallbackFunc);
 WMErrCode WM_Disable(WMCallbackFunc);

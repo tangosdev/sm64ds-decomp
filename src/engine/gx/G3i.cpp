@@ -72,7 +72,7 @@ void G3i_PerspectiveW_(Fix12i fovySin, Fix12i fovyCos, Fix12i aspect, Fix12i n, 
     FX_DivAsyncImm(fovyCot, aspect);
     if (draw) {
         reg_G3_MTX_MODE = GX_MTXMODE_PROJECTION;
-        port = (volatile s32 *)0x04000458;
+        port = &reg_G3_MTX_LOAD_4x4;
     }
     if (mtx) {
         mtx[1] = 0;
@@ -150,7 +150,7 @@ void G3i_LookAt_(const Vector3 *camPos, const Vector3 *camUp, const Vector3 *tar
 
     if (draw) {
         reg_G3_MTX_MODE = GX_MTXMODE_POSITION_VECTOR;
-        port = (volatile s32 *)0x0400045c;
+        port = &reg_G3_MTX_LOAD_4x3;
         *port = vRight.x;
         *port = vUp.x;
         *port = vLook.x;

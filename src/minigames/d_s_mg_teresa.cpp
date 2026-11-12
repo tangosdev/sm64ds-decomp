@@ -56,6 +56,7 @@
 #include "LevelRng.h"
 #include "math/CalcLib.h"
 #include "nitro/gx/g2.h"
+#include "nitro/gx/gx.h"
 #include "PlayerInput.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "cstd.h"
@@ -1547,7 +1548,7 @@ void dScMgTeresa_c::Scene_StateRoundEnd() {
     FoundNumber_ClearAll();
     mSceneState = 4;
     mSceneTimer = 0x60;
-    *(int *)0x4001000 = *(int *)0x4001000 & ~0xe000;
+    GXS_SetVisibleWnd(GX_WNDMASK_NONE);
     gSubScreenLayers = gSubScreenLayers & ~1;
     Sound::PlayBank2_2D(0x1f7);
     BigBoo_ShowResult();
@@ -1725,7 +1726,7 @@ s32 dScMgTeresa_c::InitResources()
     volatile u16 fc;
     G2_SetBG2Priority(0);
     G2_BG2Mosaic(0);
-    *((volatile u32 *) 0x4000018) = 0;
+    G2_SetBG2Offset(0, 0);
     G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
                          GX_BG_CHARBASE_0x10000);
     {
@@ -1736,7 +1737,7 @@ s32 dScMgTeresa_c::InitResources()
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
     G2_SetBG3Priority(0);
     G2_BG3Mosaic(0);
-    *((volatile u32 *) 0x400001c) = 0;
+    G2_SetBG3Offset(0, 0);
     G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x512, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9800,
                          GX_BG_CHARBASE_0x10000);
     t = LoadFile(0x9b);
@@ -1758,7 +1759,7 @@ s32 dScMgTeresa_c::InitResources()
     G2S_SetBG0Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x1000,
                       GX_BG_CHARBASE_0x18000, GX_BG_EXTPLTT_01);
     G2S_BG0Mosaic(0);
-    *((volatile u32 *) 0x4001010) = 0;
+    G2S_SetBG0Offset(0, 0);
     G2S_SetBG0Priority(0);
     {
         void *p = G2S_GetBG0ScrPtr();
@@ -1774,7 +1775,7 @@ s32 dScMgTeresa_c::InitResources()
     gSubScreenLayers |= 4;
     G2S_SetBG2Priority(1);
     G2S_BG2Mosaic(0);
-    *((volatile u32 *) 0x4001018) = 0;
+    G2S_SetBG2Offset(0, 0);
     G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x2000,
                           GX_BG_CHARBASE_0x08000);
     t = LoadFile(0x9f);

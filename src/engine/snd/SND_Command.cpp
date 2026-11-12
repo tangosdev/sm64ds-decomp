@@ -21,6 +21,7 @@
 #include "types.h"
 #include "nitro/os/cache.h"
 #include "nitro/os/system.h"
+#include "nitro/os/emulator.h"
 #include "nitro/snd/command.h"
 #include "nitro/pxi/fifo.h"
 
@@ -57,8 +58,6 @@ extern SNDSharedWork *data_020a7fc0; /* SNDi_SharedWork */
  * label, 0x1000 bytes into the array. */
 extern unsigned char data_020a7760[];
 
-int OS_IsRunOnEmulator(void);
-void OS_SpinWait(u32 cycles);
 void SNDi_CallAlarmHandler(s32 idx);
 void SNDi_InitSharedWork(SNDSharedWork *sw);
 u32 SNDi_GetFinishedCommandTag(void);

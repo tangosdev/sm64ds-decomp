@@ -144,7 +144,7 @@ void dPa_c::Initialise() {
     }
 
     func_0204a17c(mManager, mResourceFile);
-    func_0204a0dc(mManager, (u32(*)(const void *, u32))Particle::Texture::AllocTexVram);
+    func_0204a0dc(mManager, (u32(*)(u32, u32))Particle::Texture::AllocTexVram);
     func_0204a028(mManager, (u32(*)(u32, u32))Particle::Texture::AllocPalVram);
 
     if (mResourceFile != data_02075f14) {

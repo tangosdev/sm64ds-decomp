@@ -327,7 +327,6 @@ int fBase_c::BeforeBehavior()
 /* vtable slot 8. Base does nothing; leaf classes override. */
 void fBase_c::AfterBehavior(u32 vfSuccess)
 {
-    u32 unused = vfSuccess;
 }
 
 /* vtable slot 9. The default render succeeds without drawing anything. */
@@ -347,7 +346,6 @@ int fBase_c::BeforeRender()
 /* vtable slot 11. Base does nothing; leaf classes override. */
 void fBase_c::AfterRender(u32 vfSuccess)
 {
-    u32 unused = vfSuccess;
 }
 
 /* vtable slot 12 (vtable+0x30), fired by MarkForDestruction. Base does

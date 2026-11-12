@@ -164,9 +164,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@567",
+      "from": "@564",
       "to": "@555",
-      "evidence": "mwcc numbers this registration node @542 per TU and ov080/daPicGate_c already defines a global @542 at 0x0212826c, so the scratch link would multiply-define it Re-keyed from @619 to @565 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @565 to @567 when Vector3 locals (measured from the compiled object: same section, size and order)."
+      "evidence": "mwcc numbers this registration node @542 per TU and ov080/daPicGate_c already defines a global @542 at 0x0212826c, so the scratch link would multiply-define it Re-keyed from @619 to @565 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @565 to @567 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from @567 to @564 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
     }
   ],
   "relocations": [

@@ -550,7 +550,7 @@ int daOnms_c::InitResources()
     f = dExtSimpleModel_c::LoadFile(gOnimasuModelFile);
     mModel.SetFile((BMD_File *)f, 1, -1);
 
-    mWithMeshClsn.Init((dActor_c *)this, 0xfa000, 0, 0, 0);
+    mWithMeshClsn.Init(this, 0xfa000, 0, 0, 0);
     mWithMeshClsn.SetLimMovFlag();
 
     mMoveKind = param1 & 3;
@@ -579,9 +579,8 @@ int daOnms_c::InitResources()
     func_ov092_02131a88((char *)this);
 
     f = dBgW_Kc::LoadFile(gOnimasuCollisionFile);
-    ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile((KCL_File *)f, *(&mClsnMat), 0x1000, mAngleY,
-                              *(CLPS_Block *)(&data_ov092_02132220));
+    mMeshCollider.SetFile((KCL_File *)f, mClsnMat, 0x1000, mAngleY,
+                          *(CLPS_Block *)(&data_ov092_02132220));
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
 
     mOrientBits = (unsigned char)((mAngleX >> 0xe) & 3);

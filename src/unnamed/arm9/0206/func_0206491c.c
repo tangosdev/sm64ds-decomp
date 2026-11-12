@@ -1,6 +1,6 @@
-#include "private/wbt_block_info_list.h"
+#include "nitro/wbt.h"
 
-extern struct WBTBlockInfoList *func_02065ae0(void);
+extern WBTBlockInfoList *func_02065ae0(void);
 extern int func_02065bc0(void);
 extern int data_0209a064;
 extern int data_0209a068;
@@ -9,7 +9,7 @@ extern int data_0209a06c;
 int func_0206491c(unsigned int key, int val)
 {
   int n;
-  struct WBTBlockInfoList *node;
+  WBTBlockInfoList *node;
   int q;
 
   node = func_02065ae0();
@@ -18,13 +18,13 @@ int func_0206491c(unsigned int key, int val)
 
   while (node != 0)
   {
-      if (node->block_id == key) {
+      if (node->data_info.id == key) {
           if (key == data_0209a068) {
               n = 0;
               while (val == data_0209a064 || val == data_0209a06c) {
                   val += 1;
                   q = func_02065bc0();
-                  q = (node->block_size + q - 1) / func_02065bc0();
+                  q = (node->data_info.block_size + q - 1) / func_02065bc0();
                   q -= 1;
                   if (val > q)
                       val = 0;

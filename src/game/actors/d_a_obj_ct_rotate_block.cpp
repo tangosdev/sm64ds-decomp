@@ -76,12 +76,6 @@ struct RotateBlockCollisionFilePtr : SharedFilePtr {
     ~RotateBlockCollisionFilePtr();
 };
 
-extern "C" {
-extern void MTX_MultVec43(Vector3 *src, Matrix4x3 *mtx, Vector3 *dst);
-extern u16 DecIfAbove0_Short(u16 *p);
-extern int RandomIntInternal(int *seed);
-}
-
 extern u8 data_0209f2c0;
 
 #pragma defer_codegen off
@@ -228,14 +222,12 @@ int daObjCtRotateBlock_c::InitResources() {
     idx = mVariant;
     if (idx == 0) {
         void *kcl = dBgW_Kc::LoadFile(*data_ov065_0211cfd0[idx].collision);
-        ((dBgW_KcMbg *)(&mMeshCollider))
-            ->dBgW_KcMbg::SetFile((KCL_File *)(kcl), mClsnMat, 0x1000, mAngleY,
-                                  *data_ov065_0211cfd0[idx].clps);
+        mMeshCollider.SetFile((KCL_File *)(kcl), mClsnMat, 0x1000, mAngleY,
+                              *data_ov065_0211cfd0[idx].clps);
     } else {
         void *kcl = dBgW_Kc::LoadFile(*data_ov065_0211cfd0[idx].collision);
-        ((dBgW_KcMbg *)(&mMeshCollider))
-            ->dBgW_KcMbg::SetFile((KCL_File *)(kcl), mClsnMat, 0x199, mAngleY,
-                                  *data_ov065_0211cfd0[idx].clps);
+        mMeshCollider.SetFile((KCL_File *)(kcl), mClsnMat, 0x199, mAngleY,
+                              *data_ov065_0211cfd0[idx].clps);
     }
 
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);

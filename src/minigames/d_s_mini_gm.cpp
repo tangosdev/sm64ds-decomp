@@ -230,15 +230,15 @@ s32 dScMiniGm_c::InitResources()
     gMainScreenLayers &= ~(DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 |
                            DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ);
     gSubScreenLayers &= ~0x1f;
-    REG_DISPCNT &= ~0x1f00;
-    REG_DISPCNT_SUB &= ~0x1f00;
+    GX_SetVisiblePlane(0);
+    GXS_SetVisiblePlane(0);
     GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_3D);
     GXS_SetGraphicsMode(GX_BGMODE_0);
 
-    REG_DISPCNT &= 0xffcfffef;
-    REG_DISPCNT_SUB &= 0xffcfffef;
-    REG_DISPCNT &= ~0x7000000;
-    REG_DISPCNT &= ~0x38000000;
+    GX_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
+    GXS_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
+    GX_SetBGCharOffset(0);
+    GX_SetBGScrOffset(0);
     GX_DispOn();
     GXS_DispOn();
     G3X_SetFog(false, 0, 2, 0x1000);
