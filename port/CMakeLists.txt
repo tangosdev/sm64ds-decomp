@@ -26051,6 +26051,13 @@ endforeach()
 if(PORT_ROM_CLEAN)
     set_property(SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/hal/lobby_client.cpp" APPEND PROPERTY COMPILE_DEFINITIONS PORT_ROM_CLEAN)
 endif()
+# run coopfix1, lane HOSTSTART1: the flight recorder is committed to disk around the lobby restart (hal/playlog_commit.cpp says
+# why). Own block, on the two targets that compile tests/walk_window.cpp, which calls it where the recorder opens.
+foreach(_thost1 walk_window walk_window_hires)
+    if(TARGET ${_thost1})
+        target_sources(${_thost1} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/hal/playlog_commit.cpp")
+    endif()
+endforeach()
 # run after093, lane LOBBYUI1: the in-game lobby page (hal/lobby_page.h), seated in tests/walk_window.cpp like the white door picker; the
 # smoke player links the online menu's logic side, which asks for the page, so it gets inert stubs. The kit compiles the page's proof knobs
 # and stand-in client out. Own block.

@@ -6250,6 +6250,7 @@ static char g_playlog[160] = "off";   /* the flight recorder's current file */
    buffer so the header does not need to name g_playlog's storage. "off" until
    the recorder opens a real file below. */
 extern "C" const char *port_playlog_path = g_playlog;
+extern "C" void port_playlog_successor_boot(void);   /* hal/playlog_commit.cpp (coopfix1 HOSTSTART1) */
 
 /* The harness ground snap and wall clamp, a boot-time const off
    SM64DS_FAKE_SNAP until now, so the A/B was a restart. It is a switch.
@@ -17176,6 +17177,10 @@ int main(void)
             setvbuf(stderr, NULL, _IONBF, 0);
             printf("flight recorder: %s\n", logname);
             fprintf(stderr, "[recorder] session start\n");
+            /* coopfix1 HOSTSTART1: a game the lobby restart started commits
+               this log to disk for its first 30 s (hal/playlog_commit.cpp);
+               any other start returns at once */
+            port_playlog_successor_boot();
         }
         /* run perf1: THE PERFORMANCE REPORT, playlog/perf-<id>.jsonl, opened
            here so it carries the recorder's own id -- including whatever
