@@ -56,7 +56,10 @@
 extern "C" {
 extern void *data_0209f394[];
 extern unsigned char data_0209f250;
+extern unsigned char data_0209f21c;
 short Vec3_HorzAngle(const void *a, const void *b);
+char *_ZN8dActor_c15FindWithActorIDEjPS_(unsigned id, char *prev);
+extern int (*port_coop_owl_refuse)(const void *owl, const void *player);
 }
 
 namespace port {
@@ -67,7 +70,7 @@ enum : uint8_t { kWorldTalk = 0x74 };
 enum : int {
     kSeats = 4, kPlayerMax = 16, kSlots = 512,
     kSendMs = 66, kFreshMs = 600, kLockStaleMs = 10000, kLingerMs = 1200, kLingerBossMs = 4000, kEndSends = 3, kLookTailMs = 2000, kCoolMs = 2200,
-    kClsKingBobOmb = 189,
+    kClsKingBobOmb = 189, kClsHoot = 234, kOwlRider = 0x3cc,
 };
 enum : uint8_t { kFTalk = 1, kFLook = 2 };
 
@@ -104,9 +107,11 @@ const unsigned short kLockCls[] = {
     234,  // HOOT_THE_OWL
     257,  // MOTHER_PENGUIN
     259,  // RACING_PENGUIN
+    273,  // BIG_SNOWMAN_HEAD (NPCFIX1: his talk at the top of Cool Cool Mountain)
+    274,  // BIG_SNOWMAN_BODY (NPCFIX1: the snowball's talk starts its roll)
 };
 // The classes my copy is turned to the talker for (they stand still in a talk; Hoot flies, King Bob-omb is the boss sync's).
-const unsigned short kFaceCls[] = { 181, 185, 188, 257, 259 };
+const unsigned short kFaceCls[] = { 181, 185, 188, 257, 259, 274 };
 unsigned short g_extra[8]; int g_nextra = 0;
 
 bool g_env = false, g_on = true, g_log = false, g_regd = false;
@@ -296,9 +301,19 @@ void send(const char *body, bool talk, bool look) {
     if (coop_send_world(kWorldTalk, &w, sizeof w)) ++g_st.sent;
 }
 
+// NPCFIX1: the Hoot my body rides (daOwl_c mRider +0x3cc), null when none. A ride holds Hoot's lock like a talk, so a
+// friend's console refuses his own grab of his copy (port_coop_owl_refuse) and his talk with it while I ride.
+const char *my_ride(const char *body) {
+    if (!body) return nullptr;
+    for (char *a = _ZN8dActor_c15FindWithActorIDEjPS_(kClsHoot, nullptr); a; a = _ZN8dActor_c15FindWithActorIDEjPS_(kClsHoot, a))
+        if (*(const char *const *)(a + kOwlRider) == body) return a;
+    return nullptr;
+}
+
 void my_frame(unsigned now) {
     char *body = local_body();
     const char *ta = body ? *(const char *const *)(body + 0x368) : nullptr;
+    if (!ta) ta = my_ride(body);
     int slot = -1; unsigned cls = 0;
     if (ta) {
         cls = *(const unsigned short *)(ta + 0x0c);
@@ -423,6 +438,35 @@ bool coop_talk_refuse(void *body, void *actor) {
     }
     return true;
 }
+
+// NPCFIX1: Hoot's grab (d_a_owl.cpp, port_coop_owl_refuse) asks before it takes a player: 1 = refuse. A friend's drawn body is
+// never taken on my console (his own console runs his grab), and my own body is not taken while a friend in my group
+// holds Hoot (he talks to it or rides it).
+struct OwlStats { unsigned foreign, held; } g_owl = {};
+int owl_refuse(const void *owl, const void *pl) {
+    if (!owl || !pl || !coop_world_active()) return 0;
+    read_env();
+    if (!g_on) return 0;
+    const char *me = local_body();
+    if (pl != me) {
+        ++g_owl.foreign;
+        if (g_owl.foreign <= 10 || (g_owl.foreign % 100) == 0)
+            std::fprintf(stderr, "[cotalk] hoot: a friend's body touched my Hoot: not taken (only his own console takes him; %u so far) w=%lld\n",
+                         g_owl.foreign, wall_ms());
+        return 1;
+    }
+    const int slot = rd16((const char *)owl, 0xce);
+    if (slot < 0 || slot >= kSlots) return 0;
+    g_my = comms_hub_my_seat();
+    const int h = holder_of(slot, now_ms());
+    if (h < 0) return 0;
+    ++g_owl.held;
+    if (g_owl.held <= 10 || (g_owl.held % 100) == 0)
+        std::fprintf(stderr, "[cotalk] hoot: my grab refused, seat %d holds Hoot (slot %d: his talk or his ride; %u so far) w=%lld\n",
+                     h, slot, g_owl.held, wall_ms());
+    return 1;
+}
+struct OwlHook { OwlHook() { port_coop_owl_refuse = owl_refuse; } } g_owl_hook;
 
 // comms_sync.cpp's follower, right before it poses a friend's body: his head look from his last TALK datagram.
 void coop_talk_ghost_look(int seat, void *body) {
