@@ -24,7 +24,6 @@
 extern "C" {
 
 extern void OSi_SetTimerReserved(int timerNum);
-extern void OSi_EnterTimerCallback(u32 idx, u32 handler, u32 arg);
 
 extern u16 data_020a6430;          /* OSi_UseTick */
 extern int data_020a6434;          /* OSi_NeedResetTimer */
@@ -54,7 +53,9 @@ void OSi_CountUpTick(void) {
         REG_TM0CNT_H = OSi_TICK_TIMERCONTROL;
         data_020a6434 = 0;
     }
-    OSi_EnterTimerCallback(0, (u32)OSi_CountUpTick, 0);
+    // OSi_CountUpTick is also the timer 0 OSIrqFunction (void(void)), so it
+    // is cast to the callback type here, as in the SDK.
+    OSi_EnterTimerCallback(0, (void (*)(void *))OSi_CountUpTick, 0);
 }
 
 long long OS_GetTick(void) {
