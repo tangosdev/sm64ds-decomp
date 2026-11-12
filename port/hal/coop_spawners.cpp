@@ -45,6 +45,8 @@
 #include <cstring>
 
 extern "C" {
+extern void *data_0209f394[];          // the player bodies
+extern unsigned char data_0209f250;    // my player's slot
 void *_ZN8dActor_c4NextEPKS_(const void *prev);
 void *_ZN8dActor_c10FindWithIDEj(unsigned id);
 // src/game/actors/d_a_grock.cpp, host only
@@ -81,6 +83,7 @@ static_assert(sizeof(HelloW) == 8 && sizeof(RockW) == 16 && sizeof(BreakW) == 12
 bool g_env = false, g_on = true, g_log = false;
 unsigned g_sample = 0;
 int g_break_after = -1;
+int g_take_after = -1; bool g_take_armed = false; unsigned g_take_lf = 0; int g_take_pos[3] = {0, 0, 0}; int g_take_hold = 0;
 int g_my = -1, g_lv = -1, g_ac = -1;
 unsigned g_lf = 0;
 bool g_active = false;                         // established coop group this frame
@@ -120,6 +123,7 @@ void read_env() {
 #ifndef PORT_ROM_CLEAN
     if (const char *s = std::getenv("SM64DS_COOP_SPAWNERS_SAMPLE")) g_sample = (unsigned)std::strtoul(s, nullptr, 10);
     if (const char *b = std::getenv("SM64DS_COOP_SPAWNERS_BREAK")) g_break_after = (int)std::strtol(b, nullptr, 10);
+    if (const char *t = std::getenv("SM64DS_COOP_SPAWNERS_TAKE")) g_take_after = (int)std::strtol(t, nullptr, 10);
 #endif
     if (g_log) std::fprintf(stderr, "[cspawn] shared spawner rocks %s\n", g_on ? "ON" : "OFF (control)");
 }
@@ -252,6 +256,7 @@ void hook_broken(void *rock) {
     coop_send_world(kWorldSpawners, &w, sizeof w);
     if (g_log) std::fprintf(stderr, "[cspawn] rock %d:%u%s broken here: told the room lf=%u wall=%lld\n", (int)r->origin, (unsigned)r->ctr,
                             r->star ? " (THE STAR ROCK)" : "", g_lf, wall_ms());
+    if (r->star && g_take_after >= 0 && !g_take_armed) { g_take_armed = true; g_take_lf = g_lf; std::memcpy(g_take_pos, (char *)rock + 0x5c, 12); }
     gone_add(r->slot, r->origin, r->ctr);
     r->used = false;
 }
@@ -315,6 +320,7 @@ void apply_queue() {
                 Rk *r = rk_find((short)w.slot, w.origin, w.ctr);
                 if (!r) continue;
                 const bool live = alive(r->uid, r->a);
+                if (live && r->star && g_take_after >= 0 && !g_take_armed) { g_take_armed = true; g_take_lf = g_lf; std::memcpy(g_take_pos, r->a + 0x5c, 12); }
                 void *star = live ? port_grock_remote_break(r->a) : nullptr;
                 if (star) coop_camshield_mark(star, "a friend broke the star rock");
                 ++g_st.breaks_applied;
@@ -367,6 +373,27 @@ void break_knob() {
     }
 }
 
+// Proof knob SM64DS_COOP_SPAWNERS_TAKE=<frames>: that many frames after a star rock broke here (my break or a friend's), my
+// player is put on the star it let out (the newest runtime star within 1500 units of the break) for up to 60 frames, so the
+// ROM's own collect runs.
+void take_knob() {
+    if (!g_take_armed || g_take_hold >= 60 || g_lf - g_take_lf < (unsigned)g_take_after) return;
+    void *pl = data_0209f394[data_0209f250 & 15];
+    if (!pl) return;
+    char *best = nullptr; unsigned bu = 0;
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+        if (cls_of(a) != 178 || rd16(a, 0xce) >= 0 || ((const unsigned char *)a)[0x0f]) continue;
+        const double dx = (double)(rd32(a, 0x5c) - g_take_pos[0]) / 4096.0, dz = (double)(rd32(a, 0x64) - g_take_pos[2]) / 4096.0;
+        if (dx * dx + dz * dz > 1500.0 * 1500.0) continue;
+        if (uid_of(a) > bu) { bu = uid_of(a); best = a; }
+    }
+    if (!best) { if (g_take_hold++ == 0) std::fprintf(stderr, "[cspawn] TAKE knob: no star near the break here lf=%u wall=%lld\n", g_lf, wall_ms()); return; }
+    if (g_take_hold++ == 0)
+        std::fprintf(stderr, "[cspawn] TAKE knob: my player goes onto star uid %u at %d,%d,%d lf=%u wall=%lld\n", bu, rd32(best, 0x5c) >> 12, rd32(best, 0x60) >> 12,
+                     rd32(best, 0x64) >> 12, g_lf, wall_ms());
+    std::memcpy((char *)pl + 0x5c, best + 0x5c, 12);
+}
+
 void on_frame(unsigned now) {
     read_env();
     int lv = -1, ac = -1;
@@ -381,6 +408,7 @@ void on_frame(unsigned now) {
     if (!g_on || g_nsp == 0) { break_knob(); return; }
     g_active = true;
     break_knob();
+    take_knob();
     for (Rk &r : g_rk) if (r.used && !alive(r.uid, r.a)) r.used = false;
     apply_queue();
     pick_owners(now);
