@@ -33,8 +33,7 @@
  * - Behavior: one this+0x3a2 halfword for the arrived pitch is
  *   -0xc (0x488 -> 0x47c); &mPitchBase is a pool add of 0x3a2 and the
  *   step stays this+0x300+0xa4.
- * - InitResources: dBgW_KcMbg::SetFile as a method is +4 (0x2b4 -> 0x2b8).
- *   paths[variant].node[index] swaps the mla registers (3 words, same
+ * - InitResources: paths[variant].node[index] swaps the mla registers (3 words, same
  *   size); the char* stride multiply stays.
  */
 
@@ -500,9 +499,8 @@ int daObjRotateUpdownLift_c::InitResources()
 
     variant = mVariant;
     kcl = dBgW_Kc::LoadFile(*data_ov091_02134c34[variant].file);
-    ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile((KCL_File *)kcl, *(&mClsnMat), 0x199, mAngleY,
-                              *(data_ov091_02134c38[variant].clps));
+    mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat, 0x199, mAngleY,
+                          *(data_ov091_02134c38[variant].clps));
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
 
     {

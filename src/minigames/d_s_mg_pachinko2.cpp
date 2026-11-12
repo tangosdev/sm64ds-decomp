@@ -94,9 +94,9 @@ extern void func_02012718(int, int);
 extern void *LoadFile(int handle);
 extern void Deallocate(void *);
 extern void DecompressLZ16(void *src, void *dst);
+/* local extern: nitro/gx/gx_load.h leaves GX_LoadBG3Scr out until
+ * decl_common.h's non-const spelling of it goes. */
 extern void GX_LoadBG3Scr(void *, u32, u32);
-extern void GXS_LoadBG3Scr(const void *, u32, u32);
-extern void GXS_LoadBG0Scr(const void *, int, int);
 
 /* --- ROM data this TU reads --- */
 extern u8 gMainScreenLayers;

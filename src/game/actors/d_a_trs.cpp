@@ -72,6 +72,7 @@ enum daTrs_c_AssetId {
 #include "LevelRng.h"
 #include "SaveBlock.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/MtxStack.h"
 
 /* Views of three classes this Boo reaches through other actors' pointers.
    Their headers are not included because each one renumbers this file's
@@ -118,8 +119,6 @@ void LoadKeyModels(int n);
 void UnloadKeyModels(int n);
 unsigned char NumStars(void);
 int IsStarCollectedInCurLevel(int n);
-void Matrix4x3_FromTranslation(void *m, s32 x, s32 y, s32 z);
-void MTX_Concat43(void *a, void *b, void *dst);
 u8 IsAreaShowing(int idx);
 
 /* ABI seams whose header member forms do not reproduce the ROM (see notes) */
@@ -167,7 +166,6 @@ extern SharedFilePtr data_ov002_0210d9b8;
 /* File-local helpers and engine entry points, with the C-linkage spellings
  * these bodies were matched against. */
 extern "C" {
-void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 angY);
 int d_a_trsPlaySubHold(unsigned int a, unsigned int b, unsigned int c, s32 d, int e);
 int func_020092c4(void *cam, void *out, void *target);
 void func_02012694(unsigned int a, const Vector3 *p);
@@ -177,11 +175,9 @@ void func_ov063_02118f24(daTrsIcon_c *icon, const Vector3 &pos);
 int func_ov063_0211a0a8(int a0, int a1, int a2, int a3, int a4);
 extern void Vec3_MulScalarInPlace(void *v, int s);
 extern void func_020167a4(dExtAnmModel_c *model);
-void Matrix4x3_FromRotationY(Matrix4x3 *m, int angle);
 extern void d_a_trsChangeMusicVolumeHold(unsigned a, int fx);
 extern void func_02011cfc(void);
 extern s16 data_ov063_0211e1c8[];
-extern int VEC_Mag(const Vector3 *v);
 /* The call at 0x02118004 relocates to overlays(27,55). r0 still holds the
    state timer there, so the callee takes no object: ov055's free function at
    0x02111264, not ov027's daObjSlIceBlock_c::CleanupResources. */
@@ -302,8 +298,8 @@ void daTrs_c::func_ov063_02116244() {
 
     if (this->mBooDefeatCount < 5) return;
     if (this->mSpawnedActorID != 0) return;
-    this->mFoundActor = (dActor_c *)dActor_c::Spawn(TRS_ID_ICON_TERESA, this->param1, this->mPos,
-                                                    (const Vector3_16 *)(0), this->mAreaIdx, -1);
+    this->mFoundActor = dActor_c::Spawn(TRS_ID_ICON_TERESA, this->param1, this->mPos,
+                                        (const Vector3_16 *)(0), this->mAreaIdx, -1);
     if (this->mFoundActor != 0) this->mSpawnedActorID = this->mFoundActor->uniqueID;
     this->mFoundActor = 0;
 }
@@ -1815,7 +1811,7 @@ void daTrs_c::func_ov063_02119074() {
 
             this->mHorzSpeed = 0x800;
             this->mState = 5;
-            r = (char *)dActor_c::FindWithActorID(TRS_ID_MERRYGOROUND, (dActor_c *)(0));
+            r = (char *)dActor_c::FindWithActorID(TRS_ID_MERRYGOROUND, 0);
 
             if (r != 0)
                 this->mPrevAngleY = Vec3_HorzAngle(&this->mPos, &((dActor_c *)r)->mPos);
@@ -1939,7 +1935,7 @@ void daTrs_c::func_ov063_0211934c() {
     case 1:
     {
         void *found;
-        this->mFoundActor = (dActor_c *)dActor_c::FindWithID(this->mBigBooID);
+        this->mFoundActor = dActor_c::FindWithID(this->mBigBooID);
         found = (void *)this->mFoundActor;
         if (found != 0) {
             s32 *cnt = &((daTrs_c *)found)->mBooDefeatCount;
@@ -1966,7 +1962,7 @@ void daTrs_c::func_ov063_0211934c() {
         func_0201267c(0xd5, &this->mCamSpacePos);
         if (this->mBigBooID != 0) {
             void *found;
-            this->mFoundActor = (dActor_c *)dActor_c::FindWithID(this->mBigBooID);
+            this->mFoundActor = dActor_c::FindWithID(this->mBigBooID);
             found = (void *)this->mFoundActor;
             if (found != 0 && ((daTrs_c *)found)->mBooDefeatCount == 5) {
                 ((daTrs_c *)found)->func_ov063_02116244();
@@ -2199,7 +2195,7 @@ void daTrs_c::func_ov063_02119c18(unsigned int id) {
 
     void* r = (void*)this->mCachedActorID;
     if (r != 0) return;
-    void* a = (void *)dActor_c::FindWithActorID(id, (dActor_c *)(0));
+    void *a = (void *)dActor_c::FindWithActorID(id, 0);
     this->mFoundActor = (dActor_c *)a;
     a = (void *)this->mFoundActor;
     if (a != 0) {
@@ -2215,7 +2211,7 @@ void daTrs_c::FindParentBigBoo() {
     id = TRS_ID_BOSS_TERESA;
     a = 0;
     for (;;) {
-        a = (dActor_c *)dActor_c::FindWithActorID(id, (dActor_c *)(a));
+        a = dActor_c::FindWithActorID(id, a);
         if (a == 0) return;
         unsigned char t = ((daTrs_c *)a)->mVariant;
         if (t == 0xe) break;
@@ -2506,7 +2502,7 @@ int daTrs_c::UpdateDuringDeath() {
     this->mChildDeaths = 2;
 
     if (this->mVariant != 0 && this->mBigBooID != 0) {
-        this->mFoundActor = (dActor_c *)dActor_c::FindWithID(this->mBigBooID);
+        this->mFoundActor = dActor_c::FindWithID(this->mBigBooID);
         if (this->mFoundActor != 0) {
             if (this->mVariant != 2) {
                 ((daTrs_c *)this->mFoundActor)->mBooDefeatCount += 1;
@@ -3079,7 +3075,7 @@ block_39:
         v1.x = x;
         v1.y = w;
         v1.z = z;
-        rc1.SetObjAndPos(v1, (dActor_c*)this);
+        rc1.SetObjAndPos(v1, this);
         if (rc1.DetectClsn() != 0) {
             s32 ground = rc1.clsnY + 0x2000;
             if (mPosY < ground)
@@ -3094,7 +3090,7 @@ block_39:
             v2.x = x;
             v2.y = w;
             v2.z = z;
-            rc2.SetObjAndPos(v2, (dActor_c*)this);
+            rc2.SetObjAndPos(v2, this);
             d1 = (int)(actorID == TRS_ID_TERESA);
             if (d1 != 0) {
                 if (mVariant < 8) {
@@ -3147,7 +3143,7 @@ int daTBasket_c::Behavior()
     int secretDone = 1;
 
     if (mMuteSecretSound == 0)
-        secretDone = Sound::PlaySecretSound((dActor_c *)this, (u16 *)&mSoundTimer);
+        secretDone = Sound::PlaySecretSound(this, (u16 *)&mSoundTimer);
 
     if (mWithMeshClsn.JustHitGround()) {
         int vertSpeed = mVertSpeed;

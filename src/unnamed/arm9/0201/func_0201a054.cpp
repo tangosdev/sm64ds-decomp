@@ -4,6 +4,7 @@
 #include "nitro/os/system.h"
 #include "nitro/os/interrupt.h"
 #include "nitro/fx/fx.h"
+#include "nitro/gx/gx.h"
 #include "dScene_c.h"
 #include "private/watchdog_alarm.h"
 #include "nitro/gx/g3imm_light.h"
@@ -23,18 +24,15 @@ extern "C" {
 
 extern void func_020427f8(void);
 extern u64 func_02042784(void);
-extern void GX_Init(void);
 extern void func_0203d740(void);
 extern void ClearSaveBlock(void);
 extern void func_0201a4e4(void);
-extern int GX_VBlankIntr(int enable);
 extern void func_0203bbc0(void);
 extern void func_0203bb5c(void);
 extern void func_0201fec8(void);
 extern void func_02042f68(int backupType, void *magic);
 extern void func_02018aa4(void);
 extern void func_0203ad84(void);
-extern void func_0201a9fc(void *c);
 extern void func_02019440(void);
 extern void func_020134c8(void);
 extern void func_0203b684(void);
@@ -43,7 +41,6 @@ extern void func_020196cc(void);
 extern void func_0201a5cc(void);
 
 extern char data_0208ee50[12]; /* save magic, zero padded */
-extern struct WatchdogAlarm data_0209d574;
 extern char ACTOR_SPAWN_TABLE[];
 extern void *data_020a4bb8;
 struct S0209ee90 {
@@ -86,9 +83,9 @@ void func_0201a054(void) {
         OS_DisableIrqMask(OS_IE_CARD_IREQ);
     if (!isChild)
         func_0203ad84();
-    func_0201a9fc((char *)&data_0209d574);
+    func_0201a9fc(&data_0209d574);
     mHeap::Heap_t::InitializeGameHeap(0x3b000, 0);
-    func_0201a9fc((char *)&data_0209d574);
+    func_0201a9fc(&data_0209d574);
     func_02019440();
     if (!isChild)
         func_020134c8();

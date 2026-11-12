@@ -403,16 +403,9 @@ extern "C" void func_02045e2c(int obj, int i, int a, short b)
 extern "C" void func_02045d9c(void)
 {
     OS_EnableDTCM();
-    u16 r3 = *(volatile u16 *)0x4000060;
-    u16 r1 = (u16)0x4000340;
-    int r2 = 0x7fff;
-    r3 = (r3 & ~0x3000u) | 4;
-    *(volatile u16 *)0x4000060 = r3;
-    *(volatile u16 *)0x4000340 = 0;
-    u16 ip = *(volatile u16 *)0x4000060;
-    ip = (ip & ~0x3000u) | 8;
-    *(volatile u16 *)0x4000060 = ip;
-    G3X_SetClearColor(0, 0, r2, 0, false);
+    G3X_AlphaTest(true, 0);
+    G3X_AlphaBlend(true);
+    G3X_SetClearColor(0, 0, 0x7fff, 0, false);
     if (GX_GetBankForTex() == 0) {
         OS_Terminate();
     }

@@ -81,14 +81,6 @@ enum {
 /* How fast a launched book travels: 50 units a frame. */
 enum { kFlightSpeed = 0x32000 };
 
-/* dEnemyBase_c declares mStateTimer as an s16, but every use here reads it as
- * an unsigned halfword (ldrh); a signed read is ldrsh and misses by a word.
- * Member-context pun, valid inside the daBook_c methods only.
- * Measured: (u16)mStateTimer value conversions (the popoi treatment) leave
- * one word in each of the three users with mStateTimer++ (its reload is
- * ldrsh), and five with mStateTimer = (u16)mStateTimer + 1. */
-#define STATE_TIMER (*(u16 *)&mStateTimer)
-
 extern "C" {
 short atan2_hold_d_a_book_1(int, int);
 void Vec3_Sub(Vector3 *d, const Vector3 *a, const Vector3 *b);
@@ -343,8 +335,8 @@ void daBook_c::UpdateSwitchBook() {
     {
         /* waits out mStateTimer, then slides back 4 units a frame until it
          * is 40 units behind its home position */
-        if (STATE_TIMER != 0) {
-            STATE_TIMER -= 1;
+        if (mStateTimer != 0) {
+            mStateTimer -= 1;
             return;
         }
         mPosZ -= 0x4000;
@@ -439,8 +431,8 @@ void daBook_c::StateYoshiSkid() {
  * on the third frame it becomes STATE_FLY at full speed with the collider on. */
 void daBook_c::StateSpawned() {
     mCoinType = 0;
-    STATE_TIMER++;
-    if (STATE_TIMER >= 3) {
+    mStateTimer++;
+    if (mStateTimer >= 3) {
         mState = STATE_FLY;
         mHorzSpeed = kFlightSpeed;
         mdCcAcPos_c.flags &= ~1;
@@ -519,20 +511,20 @@ void daBook_c::StateWindUp() {
         return;
     }
 
-    STATE_TIMER++;
-    if (STATE_TIMER < 5)
+    mStateTimer++;
+    if (mStateTimer < 5)
         return;
 
     AimAtPlayer();
     ApproachLinear(mAngleY, mAimYaw, 0x7d0);
     ApproachLinear(mAngleX, -mAimPitch, 0x7d0);
 
-    if (STATE_TIMER < 9)
+    if (mStateTimer < 9)
         return;
 
     ApproachLinear(mAngleZ, mAimRoll, 0x7d0);
 
-    if (STATE_TIMER < 0x13)
+    if (mStateTimer < 0x13)
         return;
 
     /* collider radius is 50 units and height 100 units at scale 1.0 */

@@ -1,6 +1,7 @@
-extern void func_0201aaa4(void *alarm);
+#include "private/watchdog_alarm.h"
+
 /* Cancel the alarm (func_0201aaa4, OS_CancelAlarm) and return it. */
-void *func_0201aab0(void *alarm) {
+OSAlarm *func_0201aab0(OSAlarm *alarm) {
     func_0201aaa4(alarm);
     return alarm;
 }

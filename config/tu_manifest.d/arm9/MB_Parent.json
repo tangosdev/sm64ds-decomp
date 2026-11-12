@@ -1,15 +1,15 @@
 {
   "id": "arm9/MB_Parent",
   "module": "arm9",
-  "source": "src/engine/mb/MB_Parent.cpp",
-  "promoted_source": "src/engine/mb/MB_Parent.cpp",
+  "source": "src/engine/mb/MB_Parent.c",
+  "promoted_source": "src/engine/mb/MB_Parent.c",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "One contiguous run of the Nitro SDK's mb_parent.c, 0x02065eb8..0x020672d0: 19 functions, gapless in config/arm9/delinks.txt. pret's pmd-sky carries this file as assembly in overlay_00, and 18 of the 19 are matched to its functions by body: the parent states each one sets (MBi_CommChangeParentState's word at pPwork+0x14e8), the message types it sends (0, 1, 2, 3, 4, 5, 6) and receives (7, 8, 9, 10), and the WM callback codes MBi_CommParentCallback switches on.",
     "MB_CommGetChildrenNumber (0x02067194) is not in pmd-sky. Its body returns the accepted-children count at pPwork+0x1535, the byte MBi_CommParentRecvDataPerChild raises and MBi_CommParentCallback lowers, and the name is the SDK's public mb.h API for that count. It sits between MB_CommIsBootable and MB_CommGetChildUser.",
     "Order: MB_CommSetParentStateCallback is highest and MBi_CommCallParentError lowest, the reverse of pret's pmd-sky's order. mwccarm emits the bodies in reverse, so MB_CommSetParentStateCallback comes first in the source.",
-    "Older SDK: no any_recv_bitmap (MBi_Calc_SendBlock has no per-file 'asked this receive' test, and MBi_CommParentRecvData/RecvDataPerChild neither clear nor set it) and no block cache (MBi_CommParentSendBlock reads straight from the file, pmd-sky's MBi_ReloadCache is absent).",
+    "Older SDK: no any_recv_bitmap (MBi_calc_sendblock has no per-file 'asked this receive' test, and MBi_CommParentRecvData/RecvDataPerChild neither clear nor set it) and no block cache (MBi_CommParentSendBlock reads straight from the file, pmd-sky's MBi_ReloadCache is absent).",
     "BOTTOM EDGE: func_02065de4 (0x02065de4..0x02065eb8) and the functions below it are block-header helpers, not mb_parent.c: MBi_MakeParentSendBuffer (0x02065d5c, NitroSDK mb_block.c by body) also matches pret's pmd-sky's MBi_MakeParentSendBuffer, which pmd-sky places outside its MB parent run. func_02065de4 files one piece of a child's entry request: the piece number is bounded by the piece count, the piece is copied to the child's row at piece times piece size, and the piece's bit is set. pmd-sky's MBi_ReceiveRequestDataPiece, also outside its MB parent run, does the same, but that is a lead, not a body match. pmd-sky's version keeps the request buffer in its own work rather than in pPwork, calls IsGetAllRequestData, and returns the completed request. This one counts the bits inline and returns 0 or 1, so it keeps its address name.",
     "TOP EDGE: func_020672d0 (0x020672d0) starts the next file. Its body rebuilds the parent's WMBssDesc from the MBParam the boot loader leaves at 0x027ffc40: boot_type 2 means a multiboot child, and parent_bss_desc sits at +2, the layout pret's pokediamond MB_mb.h gives. MB_ReadMultiBootParentBssDesc is only a lead for its name, because no pret repository carries that function's body. func_02067480's body matches pmd-sky's MBi_IsAbleToRecv, which pmd-sky also places outside its MB parent run."
   ],
@@ -36,14 +36,14 @@
       "ordinal": 1
     },
     {
-      "symbol": "MBi_Calc_NextSendBlock",
+      "symbol": "MBi_calc_nextsendblock",
       "address": "0x02065ef8",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0206/func_02065ef8.c",
       "ordinal": 2
     },
     {
-      "symbol": "MBi_Calc_SendBlock",
+      "symbol": "MBi_calc_sendblock",
       "address": "0x02065f08",
       "size": "0x00000070",
       "legacy_source": "src/unnamed/arm9/0206/func_02065f08.c",
@@ -64,7 +64,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "MBi_CommParentSendDlFileInfo",
+      "symbol": "MBi_CommParentSendDLFileInfo",
       "address": "0x020662c0",
       "size": "0x000001b0",
       "legacy_source": "src/unnamed/arm9/0206/func_020662c0.c",
@@ -162,12 +162,12 @@
   "notes": [
     "Hand-assembled, following arm9/PM: tu_map cannot segment arm9/main.",
     "MB_CommIsBootable and MB_CommSetParentStateCallback kept their names. The other 17 were renamed from their func_ names in this change (symbols/actor_renames.tsv records the evidence).",
-    "Text-only. pPwork (data_020a9db8) and data_0209a078 (the SDK's function-local `static s8 prev_fid = -1` of MBi_CommParentSendDLFileInfo; ROM byte 0xff) are not delinked by any source and keep their address names."
+    "Built as C, like the SDK's mb_parent.c. The twelve functions the SDK declares static are static here, and their config/arm9/symbols.txt rows carry `local` (the WmCheckParentParameter precedent). The SDK's function-local `static s8 prev_fid = -1` (0x0209a078) stays the extern data_0209a078: as a static its object .data is 1 byte, the ROM's three following bytes are linker alignment before MB_FileInfo.c's .data, and a .data claim ending short of the next word inside arm9's shared .data cannot be licensed yet (a 1-byte claim leaves a 3-byte gap object that shifts the module; terminal_linker_fill requires the claim to own a whole logical section). pPwork is the SDK's macro over mbc (0x020a9db8), which no source delinks yet."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
-    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/arm9-MB_Parent/MB_Parent.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 19,

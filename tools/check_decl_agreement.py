@@ -1692,6 +1692,14 @@ def parse_file(rel, text, aliases, statics=None):
                 # `extern "C" { ... }` block. Inside one a declaration need not repeat
                 # the `extern` keyword to be one.
                 continue
+            if mangled_scope:
+                # `namespace Memory { void Deallocate(void *); }` declares
+                # `_ZN6Memory10DeallocateEPv`, not the C-linkage `Deallocate` the
+                # tree also defines. Recording it under the flat name compared it
+                # against the wrong definition and made include/Memory.h look like a
+                # header declaring `::Deallocate`. Claim nothing, exactly as the
+                # definition branches above do.
+                continue
             decls.append(Record(name, rel, line, ret, params, is_fn, linkage,
                                 False, False, _raw_types(piece, name) | file_types))
     # A delinked shard is one function in a file named for its mangled symbol, and

@@ -1,68 +1,59 @@
 #include "types.h"
+#include "dExtModel_c.h"
+#include "private/BTA_File.h"
 #include "nitro/os/system.h"
-struct Entry {
-    u16 id;     /* +0x00 */
-    u16 p2;
-    u16 p4;
-    u16 p6;
-    u16 flag1;  /* +0x08 */
-    u16 idx1;   /* +0x0a */
-    u16 flag2;  /* +0x0c */
-    u16 idx2;   /* +0x0e */
-    u16 flag3;  /* +0x10 */
-    u16 idx3;   /* +0x12 */
-    u16 flag4;  /* +0x14 */
-    u16 idx4;   /* +0x16 */
-    u16 flag5;  /* +0x18 */
-    u16 idx5;   /* +0x1a */
+
+/* Texture-SRT (BTA) step: for each material record of the BTA file, write
+ * the frame's scale, rotation and translation keys into the runtime material
+ * the record drives. dExtAnmTexSRT_c (src/engine/model/d_ext_model.cpp) calls
+ * it with the model's ModelComponents, its BTA_File and the integer frame.
+ *
+ * The 0x30-byte runtime material (MaterialState here, as in func_02046bbc.c;
+ * dExtModel_c.h types ModelComponents::materials as BMD_Material, but its
+ * builder in Model4.cpp lays it out differently) holds the texture SRT words
+ * at 0x08..0x18. */
+struct MaterialState {
+    char pad_00[8];
+    Fix12i texScaleS; /* 0x08 */
+    Fix12i texScaleT; /* 0x0c */
+    u16 texRotation;  /* 0x10 */
+    u16 pad_12;
+    Fix12i texTransS; /* 0x14 */
+    Fix12i texTransT; /* 0x18 */
+    char pad_1c[0x30 - 0x1c];
 };
 
-struct Desc {
-    int f0;             /* +0x00 */
-    int *tableA;        /* +0x04 */
-    u16 *tableB;        /* +0x08 */
-    int *tableC;        /* +0x0c */
-    u16 count;          /* +0x10 */
-    u16 p12;
-    struct Entry *entries; /* +0x14 */
-};
+/* Spelled as Model4.cpp defines it. */
+extern void func_02045e44(void *self, unsigned int value, int index);
 
-struct Ctx {
-    int f0;
-    char *base;         /* +0x04 */
-};
-
-struct Dst {
-    char pad[8];
-    int f8;    /* +0x08 */
-    int fc;    /* +0x0c */
-    u16 f10;   /* +0x10 */
-    u16 p12;
-    int f14;   /* +0x14 */
-    int f18;   /* +0x18 */
-    char pad2[0x30 - 0x1c];
-};
-
-extern void func_02045e44(struct Ctx *self, unsigned int value, int index);
-
-void func_020469e8(struct Ctx *ctx, struct Desc *desc, int sb) {
+void func_020469e8(struct ModelComponents *model, BTA_File *file, int frame) {
     int i;
-    for (i = 0; i < desc->count; i++) {
-        struct Entry *e = &desc->entries[i];
-        struct Dst *dst;
-        if (e->id == 0xffff)
+    for (i = 0; i < file->numMaterialRecords; i++) {
+        BTAMaterialRecord *rec = &file->materialRecords[i];
+        struct MaterialState *mat;
+        if (rec->materialId == 0xffff)
             OS_Terminate();
-        dst = (struct Dst *)(ctx->base + e->id * 0x30);
-        func_02045e44(ctx, 1, e->id);
-        if (e->flag1 == 1) dst->f8 = desc->tableA[e->idx1];
-        else dst->f8 = desc->tableA[e->idx1 + sb];
-        if (e->flag2 == 1) dst->fc = desc->tableA[e->idx2];
-        else dst->fc = desc->tableA[e->idx2 + sb];
-        if (e->flag3 == 1) dst->f10 = desc->tableB[e->idx3];
-        else dst->f10 = desc->tableB[e->idx3 + sb];
-        if (e->flag4 == 1) dst->f14 = desc->tableC[e->idx4];
-        else dst->f14 = desc->tableC[e->idx4 + sb];
-        if (e->flag5 == 1) dst->f18 = desc->tableC[e->idx5];
-        else dst->f18 = desc->tableC[e->idx5 + sb];
+        mat = &((struct MaterialState *)model->materials)[rec->materialId];
+        func_02045e44(model, 1, rec->materialId);
+        if (rec->scaleS.numKeys == 1)
+            mat->texScaleS = file->keyScales[rec->scaleS.firstKey];
+        else
+            mat->texScaleS = file->keyScales[rec->scaleS.firstKey + frame];
+        if (rec->scaleT.numKeys == 1)
+            mat->texScaleT = file->keyScales[rec->scaleT.firstKey];
+        else
+            mat->texScaleT = file->keyScales[rec->scaleT.firstKey + frame];
+        if (rec->rotation.numKeys == 1)
+            mat->texRotation = file->keyRotations[rec->rotation.firstKey];
+        else
+            mat->texRotation = file->keyRotations[rec->rotation.firstKey + frame];
+        if (rec->transS.numKeys == 1)
+            mat->texTransS = file->keyTranslations[rec->transS.firstKey];
+        else
+            mat->texTransS = file->keyTranslations[rec->transS.firstKey + frame];
+        if (rec->transT.numKeys == 1)
+            mat->texTransT = file->keyTranslations[rec->transT.firstKey];
+        else
+            mat->texTransT = file->keyTranslations[rec->transT.firstKey + frame];
     }
 }
