@@ -21,6 +21,7 @@
 
 #include "types.h"
 #include "nitro/os/interrupt.h"
+#include "nitro/os/interrupt_check.h"
 #include "nitro/os/thread.h"
 
 extern "C" {
@@ -29,7 +30,6 @@ extern int data_0208ee44;
 extern u8 data_0209d4f0;
 extern u16 data_0209d500;
 extern u16 data_0209d4fc;
-extern char data_023c0000[];
 extern void func_02019144(void);
 extern void func_02019100(void);
 extern u8 data_0209d4dc;
@@ -48,7 +48,7 @@ void VBlankHandler(void) {
     }
     waiter = &data_0209d4fc;
     OS_WakeupThread(waiter);
-    *(int *)(((int)data_023c0000 + 0x3ff8)) |= 1;
+    OS_SetIrqCheckFlag(OS_IE_V_BLANK);
     func_02019100();
 }
 }

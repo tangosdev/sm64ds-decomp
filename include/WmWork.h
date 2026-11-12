@@ -124,7 +124,7 @@ typedef struct {
     unsigned short sendBufSize;        /* 0x1e18 */
     unsigned short recvBufSize;        /* 0x1e1a */
     void (*userCallback)(int, void *); /* 0x1e1c */
-    int connectBssDesc;                /* 0x1e20 */
+    struct WMBssDesc *connectBssDesc;  /* 0x1e20 */
     unsigned short mode;               /* 0x1e24 */
     unsigned short resetting;          /* 0x1e26 */
     unsigned short mpStarted;          /* 0x1e28 */

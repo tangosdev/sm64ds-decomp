@@ -11,6 +11,8 @@ struct FSArchive;
 struct FSFile;
 struct FSDirEntry;
 
+typedef struct FSFile FSFile;
+
 typedef int (*FS_ARCHIVE_READ_FUNC)(struct FSArchive *p_arc, void *dst, unsigned int pos,
                                     unsigned int size);
 typedef int (*FS_ARCHIVE_WRITE_FUNC)(struct FSArchive *p_arc, const void *src, unsigned int pos,

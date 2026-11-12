@@ -1,20 +1,12 @@
 #include "nitro/card/card_rom.h"
 #include "nitro/fs/overlay.h"
 #include "private/fs_views.h"
+#include "nitro/fs/file.h"
+#include "private/fs_rom.h"
 
-typedef struct FSFile FSFile;
-
-extern void FS_InitFile(void *s);
-extern int myFS_OpenFileDirect(char *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,
+extern int myFS_OpenFileDirect(FSFile *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,
                                u32 file_index);
-extern int myFS_ReadFile(void *s, void *b, int c);
-extern int FS_CloseFile(void *self);
-/* The ARM9 and ARM7 overlay tables when they are in memory: {address,
-   length}, address 0 while not loaded. */
-extern struct CARDRomRegion data_020a8064; /* fsi_ovt9 */
-extern struct CARDRomRegion data_020a806c; /* fsi_ovt7 */
-/* the archive func_02018cbc reads the table out of */
-extern FSArchive data_020a8074; /* fsi_arc_rom */
+extern int myFS_ReadFile(FSFile *p_file, void *dst, int len);
 extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
 
 /* The card half of func_02018c00: read overlay table entry index (0x20
@@ -39,7 +31,7 @@ int func_02018cbc(FSOverlayInfo *info, int flag, int index, FSArchive *archive, 
     if (off >= size)
         return 0;
     FS_InitFile(&file);
-    myFS_OpenFileDirect((char *)&file, archive, base + off, base + size, -1);
+    myFS_OpenFileDirect(&file, archive, base + off, base + size, -1);
     myFS_ReadFile(&file, &info->header, 0x20);
     FS_CloseFile(&file);
     info->target = flag;
@@ -51,10 +43,10 @@ int func_02018cbc(FSOverlayInfo *info, int flag, int index, FSArchive *archive, 
    the 0x24-byte FSOverlayInfo with overlay `index`'s 0x20-byte table entry,
    then the target processor (0 ARM9, 1 ARM7) at +0x20. The entry comes from the
    in-memory table if there is one, else from the card, with the table's ROM
-   offset and length from the cartridge header copy at 0x27ffe00 (+0x50 ARM9,
-   +0x58 ARM7). 0 if index is past the table. */
+   offset and length from the ROM header's overlay table regions. 0 if index is
+   past the table. */
 int func_02018c00(FSOverlayInfo *info, int flag, int index) {
-    struct CARDRomRegion *base = (flag == 0) ? &data_020a8064 : &data_020a806c;
+    struct CARDRomRegion *base = (flag == 0) ? &fsi_ovt9 : &fsi_ovt7;
     u32 ptr = base->offset;
     if (ptr != 0) {
         u32 off = index << 5;
@@ -65,9 +57,9 @@ int func_02018c00(FSOverlayInfo *info, int flag, int index) {
         return 1;
     }
     {
-        struct CARDRomRegion *m = (struct CARDRomRegion *)0x27ffe50;
-        struct CARDRomRegion *n = (struct CARDRomRegion *)0x27ffe58;
-        return func_02018cbc(info, flag, index, &data_020a8074, m->offset, m->length, n->offset,
-                             n->length);
+        const CARDRomRegion *const p_ovt9 = CARD_GetRomRegionOVT(MI_PROCESSOR_ARM9);
+        const CARDRomRegion *const p_ovt7 = CARD_GetRomRegionOVT(MI_PROCESSOR_ARM7);
+        return func_02018cbc(info, flag, index, &fsi_arc_rom, p_ovt9->offset, p_ovt9->length,
+                             p_ovt7->offset, p_ovt7->length);
     }
 }

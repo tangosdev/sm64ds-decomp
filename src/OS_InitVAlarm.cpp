@@ -3,8 +3,6 @@
  * frame counters: it only empties the alarm queue and masks V-count. */
 #include "nitro/os/interrupt.h"
 
-#define OS_IE_V_COUNT 0x4
-
 extern "C" {
 extern volatile u16 data_020a644c; /* OSi_UseVAlarm */
 extern u32 data_020a6450[2];       /* OSi_VAlarmQueue: head, tail */

@@ -11,7 +11,7 @@
  * at 0x02059dd4 up to OS_InitReset at 0x02059e48. The rest of the file is
  * ITCM code: config/arm9/itcm/symbols.txt has OSi_DoBoot, OSReadROMArea,
  * OSi_ReloadRomData and OS_ResetSystem at 0x01ffdb28..0x01ffde00, and
- * src/OSi_ReloadRomData.cpp defines OS_ResetSystem.
+ * src/OSi_ReloadRomData.c defines OS_ResetSystem.
  */
 #include "types.h"
 
@@ -55,7 +55,7 @@ void OSi_CommonCallback(int tag, u32 data, int err) {
 }
 
 /* Sends one OS command to the ARM7, retrying until the FIFO takes it.
- * OS_ResetSystem (ITCM, src/OSi_ReloadRomData.cpp) calls it with
+ * OS_ResetSystem (ITCM, src/OSi_ReloadRomData.c) calls it with
  * OS_PXI_COMMAND_RESET. */
 void OSi_SendToPxi(u16 data) {
     while (PXI_SendWordByFifo(PXI_FIFO_TAG_OS, (u32)data << 8, 0))

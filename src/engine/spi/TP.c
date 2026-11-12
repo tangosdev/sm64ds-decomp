@@ -21,9 +21,11 @@
  * was accepted instead of clearing it on a failure.
  */
 #include "types.h"
+#include "nitro/cp/divider.h"
 #include "nitro/os/system.h"
+#include "nitro/os/systemWork.h"
 #include "nitro/spi/tp.h"
-#include "private/nvram_config.h"
+#include "nitro/spi/userInfo.h"
 
 typedef int BOOL;
 #define TRUE 1
@@ -57,10 +59,6 @@ void OS_Terminate(void);
 #define SPI_PXI_RESULT_ILLEGAL_STATUS 0x0003
 #define SPI_PXI_RESULT_EXCLUSIVE 0x0004
 
-/* The panel sample the ARM7 writes into the system work area. */
-#define HW_TOUCHPANEL_BUF 0x027fffaa
-#define HW_NVRAM_USER_INFO 0x027ffc80
-
 typedef union {
     struct {
         u32 x : 12;
@@ -72,30 +70,6 @@ typedef union {
     u32 raw;
     u16 halfs[2];
 } SPITpData;
-
-/* The CP divider (the SDK's nitro/cp/divider.h). */
-#define REG_DIVCNT (*(volatile u16 *)0x04000280)
-#define REG_DIV_NUMER (*(volatile u32 *)0x04000290)
-#define REG_DIV_DENOM (*(volatile u64 *)0x04000298)
-#define REG_DIV_RESULT (*(volatile u32 *)0x040002a0)
-#define REG_CP_DIVCNT_BUSY_MASK 0x8000
-#define CP_DIVCNT_MODE_32_32 0
-
-static inline void CP_SetDiv32_32(u32 numer, u32 denom) {
-    REG_DIVCNT = CP_DIVCNT_MODE_32_32;
-    REG_DIV_NUMER = numer;
-    REG_DIV_DENOM = denom;
-}
-
-static inline void CP_WaitDiv(void) {
-    while (REG_DIVCNT & REG_CP_DIVCNT_BUSY_MASK) {
-    }
-}
-
-static inline s32 CP_GetDivResult32(void) {
-    CP_WaitDiv();
-    return (s32)REG_DIV_RESULT;
-}
 
 #define GX_LCD_SIZE_X 256
 #define GX_LCD_SIZE_Y 192
@@ -176,8 +150,8 @@ static inline BOOL TPi_SetupStability(u8 retry, u16 range) {
 static inline void TPi_CopyTpFromSystemWork(TPData *result) {
     SPITpData spi_tp;
 
-    spi_tp.halfs[0] = *(u16 *)(HW_TOUCHPANEL_BUF);
-    spi_tp.halfs[1] = *(u16 *)(HW_TOUCHPANEL_BUF + 2);
+    spi_tp.halfs[0] = *(u16 *)(&(OS_GetSystemWork()->touch_panel[0]));
+    spi_tp.halfs[1] = *(u16 *)(&(OS_GetSystemWork()->touch_panel[2]));
 
     result->x = (u16)spi_tp.e.x;
     result->y = (u16)spi_tp.e.y;
@@ -299,18 +273,18 @@ void TP_Init(void) {
 }
 
 BOOL TP_GetUserInfo(TPCalibrateParam *calibrate) {
-    NVRAMConfigData *info = (NVRAMConfigData *)HW_NVRAM_USER_INFO;
+    NVRAMConfig *info = (NVRAMConfig *)(OS_GetSystemWork()->nvramUserInfo);
 
     u16 x1, y1, x2, y2, dx1, dy1, dx2, dy2;
 
-    x1 = info->tp.raw_x1;
-    y1 = info->tp.raw_y1;
-    dx1 = (u16)(info->tp.dx1);
-    dy1 = (u16)(info->tp.dy1);
-    x2 = info->tp.raw_x2;
-    y2 = info->tp.raw_y2;
-    dx2 = (u16)(info->tp.dx2);
-    dy2 = (u16)(info->tp.dy2);
+    x1 = info->ncd.tp.raw_x1;
+    y1 = info->ncd.tp.raw_y1;
+    dx1 = (u16)(info->ncd.tp.dx1);
+    dy1 = (u16)(info->ncd.tp.dy1);
+    x2 = info->ncd.tp.raw_x2;
+    y2 = info->ncd.tp.raw_y2;
+    dx2 = (u16)(info->ncd.tp.dx2);
+    dy2 = (u16)(info->ncd.tp.dy2);
 
     if (x1 == 0 && x2 == 0 && y1 == 0 && y2 == 0) {
         return FALSE;

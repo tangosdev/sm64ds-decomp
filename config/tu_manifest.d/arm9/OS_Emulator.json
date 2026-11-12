@@ -8,7 +8,7 @@
   "boundary_evidence": [
     "One contiguous run of the Nitro SDK's os_emulator.c, 0x0205865c..0x020587e4: 4 functions, gapless in config/arm9/delinks.txt, each identified by its body against pret's pmd-sky os_emulator.c. OSi_IsRunOnDebugger reads HW_CHECK_DEBUGGER_BUF1 or BUF2 as HW_CHECK_DEBUGGER_SW picks. OSi_GetDeviceType tests the GBA-slot ROM for 'NINTENDO' under the cartridge lock. OS_GetConsoleType ORs ENSATA, ISDEBUGGER, ISEMULATOR or NITRO onto the device type, adds HW_MMEMCHECKER_SUB and caches the result. OS_IsRunOnEmulator returns FALSE, as pret's pokediamond OS_emulator.c does.",
     "Order: pmd-sky's file defines OS_IsRunOnEmulator, OS_GetConsoleType, OSi_GetDeviceType and OSi_IsRunOnDebugger. mwccarm emits the bodies in reverse, so OSi_IsRunOnDebugger is lowest and OS_IsRunOnEmulator highest. Nothing else calls the two OSi_ helpers.",
-    "BOTTOM EDGE: ARMRestoreContext (0x02058618..0x0205865c), os_context.c's asm.",
+    "BOTTOM EDGE: OS_LoadContext (0x02058618..0x0205865c), os_context.c's asm.",
     "TOP EDGE: OS_ReceiveMessage at 0x020587e4, the lowest of os_message.c (arm9/OS_Message)."
   ],
   "sections": [

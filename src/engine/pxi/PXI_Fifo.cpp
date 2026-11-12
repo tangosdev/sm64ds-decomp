@@ -2,8 +2,8 @@
 /* PXI FIFO (SDK pxi_fifo.c), .text 0x0205b864..0x0205bbdc.
  * The ARM9 side of the ARM7 command FIFO. A FIFO word packs a 5-bit channel
  * tag, a reply flag and 26 bits of data. Each channel has one callback in
- * data_020a7fc8, and a set bit in the shared system-work word at 0x027fff88
- * tells the ARM7 that the ARM9 listens on that channel.
+ * data_020a7fc8, and a set bit in the system work area's pxiHandleChecker
+ * word tells the ARM7 that the ARM9 listens on that channel.
  *
  * mwccarm emits .text in reverse source order, so the file reads from the
  * top of the run down: init, set callback, ready test, send, receive IRQ.
@@ -13,6 +13,7 @@
  */
 #include "nitro/os/system.h"
 #include "nitro/os/interrupt.h"
+#include "nitro/os/systemWork.h"
 
 typedef void (*PxiCallback)(u32 tag, u32 data, u32 reply);
 
@@ -20,13 +21,6 @@ extern "C" {
 extern u16 data_020a7fc4;           /* set once the FIFO is initialised */
 extern PxiCallback data_020a7fc8[]; /* one callback per channel tag */
 }
-
-/* The OS system-work block shared with the ARM7 (main RAM 0x027ffc00). */
-struct SystemWork {
-    u8 pad[0x388];
-    u32 pxiHandleChecker[2]; /* [0] ARM9, [1] ARM7: listening tags */
-};
-#define SYSTEM_WORK ((SystemWork *)0x027ffc00)
 
 typedef union {
     u32 raw;
@@ -60,7 +54,7 @@ void PXI_InitFifo(void) {
     int i;
     int r5;
     int lr;
-    SystemWork *work;
+    OSSystemWork *p = OS_GetSystemWork();
 
     volatile u16 *reg;
     int ip;
@@ -68,8 +62,7 @@ void PXI_InitFifo(void) {
     state = OS_DisableInterrupts();
     if (data_020a7fc4 == 0) {
         data_020a7fc4 = 1;
-        work = SYSTEM_WORK;
-        work->pxiHandleChecker[0] = 0;
+        p->pxiHandleChecker[0] = 0;
         for (i = 0; i < 0x20; i++) {
             data_020a7fc8[i] = 0;
         }
@@ -107,20 +100,20 @@ void PXI_InitFifo(void) {
 /* PXI_SetFifoRecvCallback. Every caller passes the callback as a void *. */
 void PXI_SetFifoRecvCallback(int tag, void *callback) {
     OSIntrMode saved = OS_DisableInterrupts();
-    SystemWork *work = SYSTEM_WORK;
+    OSSystemWork *p = OS_GetSystemWork();
     data_020a7fc8[tag] = (PxiCallback)callback;
     if (callback != 0) {
-        work->pxiHandleChecker[0] |= (1u << tag);
+        p->pxiHandleChecker[0] |= (1u << tag);
     } else {
-        work->pxiHandleChecker[0] &= ~(1u << tag);
+        p->pxiHandleChecker[0] &= ~(1u << tag);
     }
     OS_RestoreInterrupts(saved);
 }
 
 /* PXI_IsCallbackReady: is `tag` registered on processor `proc`? */
 int PXI_IsCallbackReady(int tag, int proc) {
-    SystemWork *work = SYSTEM_WORK;
-    return (((1 << tag) & work->pxiHandleChecker[proc]) != 0);
+    OSSystemWork *p = OS_GetSystemWork();
+    return (((1 << tag) & p->pxiHandleChecker[proc]) != 0);
 }
 
 /* PXI_SendWordByFifo: 0 on success, -1 on a FIFO error, -2 if full. */

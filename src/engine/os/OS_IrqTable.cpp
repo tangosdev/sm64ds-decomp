@@ -8,18 +8,17 @@
  *
  * The four DMA channels (IE bits 8-11) and the four timers (IE bits 3-6) are
  * not dispatched through the IE handler table: their callbacks live in
- * data_020a60c4 (OSi_IrqCallbackInfo: DMA 0-3, then timers 0-3), which each
- * stub hands to OSi_IrqCallback by index. data_02099fd4
- * (OSi_IrqCallbackInfoIndex) gives each callback entry its IE bit. The masks
+ * OSi_IrqCallbackInfo (DMA 0-3, then timers 0-3), which each stub hands to
+ * OSi_IrqCallback by index. OSi_IrqCallbackInfoIndex gives each callback
+ * entry its IE bit. The masks
  * and the table setters are os_interrupt.c (src/engine/os/OS_Interrupt.cpp).
  */
 
 #include "nitro/os/interrupt.h"
+#include "nitro/os/interrupt_check.h"
 
 extern "C" {
-extern OSIrqCallbackInfo data_020a60c4[];
-extern u16 data_02099fd4[8]; /* DMA 0-3, then timers 0-3 */
-extern short data_023c0000[];
+extern u16 OSi_IrqCallbackInfoIndex[OSi_IRQCALLBACK_NUM]; /* DMA 0-3, then timers 0-3 */
 
 // Installed for vectors that have no handler.
 void OS_IrqDummy(void) {}
@@ -28,49 +27,51 @@ void OS_IrqDummy(void) {}
 // callback, flags the interrupt as serviced for the IRQ wait loop, and
 // masks the interrupt again unless the entry was installed already enabled.
 void OSi_IrqCallback(s32 index) {
-    u16 bit = data_02099fd4[index];
-    OSIrqMask mask = 1u << bit;
-    void (*callback)(void *) = data_020a60c4[index].func;
-    data_020a60c4[index].func = 0;
-    if (0 != callback) {
-        callback(data_020a60c4[index].arg);
+    OSIrqMask imask = 1UL << OSi_IrqCallbackInfoIndex[index];
+    void (*callback)(void *) = OSi_IrqCallbackInfo[index].func;
+
+    OSi_IrqCallbackInfo[index].func = 0;
+
+    if (callback) {
+        callback(OSi_IrqCallbackInfo[index].arg);
     }
-    *(volatile u32 *)((int)data_023c0000 + 0x3ff8) |= mask;
-    if (data_020a60c4[index].enable != 0) {
-        return;
+
+    OS_SetIrqCheckFlag(imask);
+
+    if (!OSi_IrqCallbackInfo[index].enable) {
+        OS_DisableIrqMask(imask);
     }
-    OS_DisableIrqMask(mask);
 }
 
 void OSi_IrqDma0(void) {
-    OSi_IrqCallback(0);
+    OSi_IrqCallback(OSi_IRQCALLBACK_NO_DMA0);
 }
 
 void OSi_IrqDma1(void) {
-    OSi_IrqCallback(1);
+    OSi_IrqCallback(OSi_IRQCALLBACK_NO_DMA1);
 }
 
 void OSi_IrqDma2(void) {
-    OSi_IrqCallback(2);
+    OSi_IrqCallback(OSi_IRQCALLBACK_NO_DMA2);
 }
 
 void OSi_IrqDma3(void) {
-    OSi_IrqCallback(3);
+    OSi_IrqCallback(OSi_IRQCALLBACK_NO_DMA3);
 }
 
 void OSi_IrqTimer0(void) {
-    OSi_IrqCallback(4);
+    OSi_IrqCallback(OSi_IRQCALLBACK_NO_TIMER0);
 }
 
 void OSi_IrqTimer1(void) {
-    OSi_IrqCallback(5);
+    OSi_IrqCallback(OSi_IRQCALLBACK_NO_TIMER1);
 }
 
 void OSi_IrqTimer2(void) {
-    OSi_IrqCallback(6);
+    OSi_IrqCallback(OSi_IRQCALLBACK_NO_TIMER2);
 }
 
 void OSi_IrqTimer3(void) {
-    OSi_IrqCallback(7);
+    OSi_IrqCallback(OSi_IRQCALLBACK_NO_TIMER3);
 }
 }

@@ -19,7 +19,6 @@
 #define REG_TM0CNT_H (*(volatile u16 *)0x04000102)
 #define REG_IF (*(volatile u32 *)0x04000214)
 
-#define OS_IE_TIMER0 0x8
 #define OSi_TICK_TIMERCONTROL 0xc1 /* enable, IRQ, prescaler /64 */
 
 extern "C" {
