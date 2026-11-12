@@ -110,6 +110,7 @@
 #include "LevelRng.h"
 #include "MgBanner.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/CalcLib.h"
 
 struct M { int _00, _01, _10, _11; };
 struct SlotCharNos {
@@ -137,7 +138,6 @@ void DecompressLZ16(void *src, void *dst);
 int Mg_CopySpriteList(int a, void *b, int c, int d);
 void func_0203d704(int *o, int *a, int *b);
 void func_0203d388(int *p, int angle);
-int RandomIntInternal(int *seed);
 void Mg_SpawnFx(int state, short timer, Vector2 *pos, Vector2 *vel, Vector2 *accel);
 void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, M *a5);
 void Mg_RenderSpriteOn(OamAttr *a, int b, int c, int d, int e);

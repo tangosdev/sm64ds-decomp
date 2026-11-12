@@ -1,6 +1,5 @@
 #include "Ov007Sprite.h"
-
-extern void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
+#include "math/CalcLib.h"
 
 /* Draws sprite `child` relative to sprite `parent`: child takes parent's
  * scale, colour and alpha, is offset by parent's screen position and depth

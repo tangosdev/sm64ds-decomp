@@ -16,6 +16,7 @@ enum d_s_mg_bsc_AssetId { ASSET_D_2D_MG_BIG_SMALL_NCL_BIN = 0x00b3 };
 #include "decl_common.h"
 #include "PlayerInput.h"
 #include "math/Approach.h"
+#include "math/CalcLib.h"
 #include "LevelRng.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
@@ -58,7 +59,6 @@ extern void Mg_SetSharedState(int v);
 extern void Mg_SaveRecordPair(int a, int b);
 extern int sBscLaneX[];
 extern int sMgCoinsBetPlaced;
-extern int RandomIntInternal(int *seed);
 extern void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
 extern void FreeGfxSlotsById(int arg);
 extern void MgCoins_Reset(void);

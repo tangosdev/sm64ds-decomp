@@ -1,6 +1,6 @@
 #include "types.h"
 #include "Ov007Camera.h"
-extern s16 FX_SinCosTable_[];
+#include "nitro/fx/fx_trig.h"
 
 /* Places the eye on the orbit around the target: distance away, at the
  * camera's elevation and azimuth. out/base stay pointers into eye and

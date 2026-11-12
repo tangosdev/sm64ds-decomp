@@ -17,15 +17,13 @@
 #include "nitro/fx/fx.h"
 #include "private/mtx43.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 #include "nitro/fx/fx_cp.h"
 
 extern "C" {
 /* Shared math workers.
    local extern: no header in include/ declares them. */
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *res);
-int MTX_Inverse43(const Matrix4x3 *src, Matrix4x3 *dst);
 void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *m, s32 x, s32 y, s32 z);
-int VEC_Mag(const Vector3 *v);
 void VEC_Normalize(const Vector3 *src, Vector3 *dst);
 
 /* The scratch line's lineEnd and dBgPi base (both inside data_020a0d0c,

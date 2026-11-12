@@ -39,18 +39,13 @@
 #include "daPly_c.h"
 #include "Sound.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 #include "nitro/fx/fx_trig.h"
 
-/* ROM symbols with no header of their own. Spelled to agree with their
- * definitions (const Vector3 * Vec3 pairs, void * rotation target); the two
- * mangled names keep TU-local scalar spellings per the leftovers above. */
+/* ROM symbols with no header of their own, spelled to agree with their
+ * definitions. */
 extern "C" {
-s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
-unsigned char DecIfAbove0_Byte(unsigned char *p);
 }
 
 /* --- Collision events, 0x020eea84..0x020ef320. ------------------------------
