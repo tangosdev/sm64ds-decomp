@@ -715,6 +715,7 @@ enum : int {
     kGwIdentMs    = 2000,    // SYNI every 2 s
     kGwIdentGapMs = 250,     // an extra SYNI (roster change) no sooner than this
     kGwInterpMs   = 100,     // draw a remote seat this far behind real time
+    kGwCharSettleMs = 300,   // FRIENDLOOK1: a new character look must hold this long before the body is rebuilt
     kGwReckonMs   = 66,      // dead-reckon past the newest frame at most this
                              // (2 ticks: a late frame is covered, a stalled
                              // sender is held, not carried on and pulled back)
@@ -920,6 +921,13 @@ struct GwSeat {
     unsigned long long sm_hold_old, sm_hold_tele, sm_hold_still;
     unsigned  sm_streak, sm_streak_max;
     unsigned long long sm_swaps;   // character swaps made on its body
+    // FRIENDLOOK1 (bug 29): the character his frames ask for, since when, and the body last drawn with a
+    // look that was settled (so a flicker in what is asked keeps that look instead of rebuilding the model)
+    bool      want_have;
+    unsigned char want_ch;
+    unsigned  want_ms;
+    const void *look_ok_body;
+    unsigned  flips, flip_log_ms;
 };
 
 GwSeat g_gw[kHubMaxSeats];
@@ -949,6 +957,7 @@ struct GwStats {
                                      // sender's own state
     unsigned long long linger_frames;  // ...and drawn fading out in place
     unsigned long long char_holds;   // ...and held back for the wrong character
+    unsigned long long char_flicker_held;   // FRIENDLOOK1: passes a settled look was kept through a flicker
     unsigned long long eaten_hid;    // COOPYOSHI2: follower passes a swallowed friend had no body
     unsigned long long drains;       // hub drains during my own star select
     unsigned long long ident_holds;  // GHOSTID1: passes a seat waited off screen for its identity
@@ -3841,10 +3850,56 @@ void gw_follow() {
            have been driven 30 frames and swapped once every 2 s, so after
            every level entry each friend showed as MY character for about a
            second. A swap that did not take is tried again after 250 ms. */
+        /* FRIENDLOOK1 (bug 29): A NEW LOOK ONLY ONCE IT IS SETTLED. Two 4-player rooms on 1.0.2
+           showed a friend's model flicking between two characters 8 to 10 times in about a second
+           (each flick a model rebuild): what his frames asked for went back and forth, and the
+           swap above followed every change at once. The character he asks for now has to stay
+           the same for kGwCharSettleMs before the body is rebuilt; while it flicks, a body already
+           drawn with a settled look keeps it. The first look a body gets (a level entry, a seat
+           coming on show) is taken at once as before. Each change is logged (rate limited) with
+           what the frame ring holds, so a log shows where a flick came from.
+           SM64DS_GHOST_CHAR_SETTLE=0 puts back the old swap on every change. */
+        {
+            if (!z.want_have || z.want_ch != sm.character) {
+                if (z.want_have) {
+                    ++z.flips;
+                    if (z.flips <= 4 || (unsigned)(now - z.flip_log_ms) >= 1000u) {
+                        z.flip_log_ms = now;
+                        char ring[kGwRing + 1];
+                        int rn = 0;
+                        for (int k = 0; k < z.n && rn < kGwRing; ++k)
+                            ring[rn++] = (char)('0' + (z.ring[k].f.character & 7));
+                        ring[rn] = 0;
+                        const HubGhostFrame &nf = z.ring[z.n ? z.n - 1 : 0].f;
+                        std::fprintf(stderr, "[ghost] seat %d asks character %u after %u (held %u ms, change #%u): "
+                                     "newest frame char %u seq %u lvl %u area %u, ring chars %s, sample mode %c, "
+                                     "body %d shows %u, my character %u\n",
+                                     s, (unsigned)sm.character, (unsigned)z.want_ch, now - z.want_ms, z.flips,
+                                     (unsigned)nf.character, (unsigned)nf.seq, (unsigned)nf.level_id,
+                                     (unsigned)(nf.area & 0x0f), ring, sm.mode ? sm.mode : '-', i, gw_char(a),
+                                     me >= 0 && data_0209f394[me] ? gw_char(data_0209f394[me]) : 9u);
+                    }
+                }
+                z.want_have = true;
+                z.want_ch = sm.character;
+                z.want_ms = now;
+            }
+        }
         if (!no_swap && gw_char(a) != (unsigned)sm.character) {
+            static int settle_ms = -1;
+            if (settle_ms < 0) {
+                const char *e = std::getenv("SM64DS_GHOST_CHAR_SETTLE");
+                settle_ms = e && *e ? std::atoi(e) : (int)kGwCharSettleMs;
+                if (settle_ms < 0) settle_ms = 0;
+            }
+            /* a body already drawn with a settled look waits for the new one to settle;
+               a body not yet drawn as anybody takes the first look it is asked for */
+            const bool has_look = settle_ms > 0 && z.look_ok_body == a;
+            const bool settled = !has_look || (unsigned)(now - z.want_ms) >= (unsigned)settle_ms;
             if (!z.char_wait_ms) z.char_wait_ms = now ? now : 1u;
-            if ((int)(z.char_try_ms - z.char_wait_ms) < 0 ||
-                (unsigned)(now - z.char_try_ms) >= 250u) {
+            if (settled &&
+                ((int)(z.char_try_ms - z.char_wait_ms) < 0 ||
+                 (unsigned)(now - z.char_try_ms) >= 250u)) {
                 z.char_try_ms = now;
                 port_player_set_character(a, sm.character);
                 ghost_tongue::forget(g_gtongue[i]);     // POSE9: the model was rebuilt
@@ -3853,16 +3908,20 @@ void gw_follow() {
                 std::fprintf(stderr, "[ghost] seat %d body %d character -> %u\n",
                              s, i, (unsigned)sm.character);
             }
-            if (gw_char(a) != (unsigned)sm.character &&
-                (unsigned)(now - z.char_wait_ms) < 1500u) {
-                ++g_gws.char_holds;
-                ghostdoor::watcher_release(s);
-                gw_park_body(a);
-                g_drawpos_have[i] = 0;   // COOPYOSHI2: parked = not drawn (peer_visible reads this)
-                continue;
+            if (gw_char(a) != (unsigned)sm.character) {
+                if (!settled) {
+                    ++g_gws.char_flicker_held;   // the settled look stays on show
+                } else if ((unsigned)(now - z.char_wait_ms) < 1500u) {
+                    ++g_gws.char_holds;
+                    ghostdoor::watcher_release(s);
+                    gw_park_body(a);
+                    g_drawpos_have[i] = 0;   // COOPYOSHI2: parked = not drawn (peer_visible reads this)
+                    continue;
+                }
             }
         } else {
             z.char_wait_ms = 0;
+            z.look_ok_body = a;
         }
         /* THE CURSOR. Player::SetAnim only lands its start frame when the
            animation CHANGES: that arm clears the ModelAnim's file word (+0x60,
