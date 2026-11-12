@@ -1470,7 +1470,7 @@ int daKrb_c::OnAimedAtWithEgg()
  * Goomba is removed (func_ov084_02129498). */
 void daKrb_c::OnTurnIntoEgg(daPly_c &playerRef) {
     /* self is unused; deleting it drops @NNN numbers daKrb_c.json pins. */
-    char *self = (char *)this;
+    dActor_c *self = this;
     daPly_c *player = &playerRef;
     int b5;
     bool b4;
@@ -1764,7 +1764,7 @@ int daKrb_c::Behavior() {
  * Fix12 size arguments. mSavedParam keeps the original param1 for the end of
  * STATE_TUMBLE. */
 int daKrb_c::InitResources() {
-    char *c = (char *)this;
+    dActor_c *actor = this;
     int i;
 
     mRewardType = (param1 >> 4) & 0xf;
@@ -1835,13 +1835,12 @@ int daKrb_c::InitResources() {
         mScaleY = scale;
         mScaleZ = scale;
     }
-    mdCcAc_c.Init((dActor_c *)c, mScaleX * 0x3c, data_ov084_02130208[mGoombaType], 0x200000,
-                  0xa6efe0);
+    mdCcAc_c.Init(actor, mScaleX * 0x3c, data_ov084_02130208[mGoombaType], 0x200000, 0xa6efe0);
 
     if (mGoombaType == GOOMBA_LARGE)
         *(int *)((int)&mdCcAc_c.vulnFlags) &= ~HIT_YOSHI_TONGUE;
 
-    mWithMeshClsn.Init((dActor_c *)c, mScaleX * 0x3c, mScaleX * 0x3c, 0, 0);
+    mWithMeshClsn.Init(actor, mScaleX * 0x3c, mScaleX * 0x3c, 0, 0);
     mWithMeshClsn.StartDetectingWater();
 
     mMoveFlags = 0;
