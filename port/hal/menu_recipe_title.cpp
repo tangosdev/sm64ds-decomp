@@ -116,6 +116,7 @@ struct Chore {
     int swap_lv;         /* TITLEUI1: that level as the ROM holds it (0..0x1000), for the trace */
     int leave_w;         /* GLITCHFIX1: the ROM's white fade on the way out of the main page (top-state 6 to the file select / Rec Room), 0..255 whiteness */
     int head_t;          /* GLITCHFIX1: ticks since the intro's head arrived (its entrance lerp at rest), -1 = not yet */
+    int leave_ds;        /* MENUCUT2: leave_w, and the ROM's held white once it has reached it (top-state 7, the page not yet changed); the DS-art page's code pieces only */
 } g_ch;
 static int g_press_tick;      /* INTRO2: a touch / click went into the ROM this tick */
 /* INTRO2: the swap (sw_t counts it) is the logo's 2 s trip in the intro and the planks' own rise on a return; the planks start at their own tick */
@@ -151,6 +152,7 @@ struct TitleFacts {
     int sc_on;                /* TITLE092: this frame's 3D was drawn as the full-canvas scene (g_sc), and sc_T is its transform */
     float sc_K, sc_Tx, sc_Ty, sc_S;
     int pg_top, pg_elem;      /* NAME1: the ROM's top-state and element machine of this tick (-1 = not built) */
+    short plate_a[3];         /* MENUCUT2: the ROM's own alpha (0..31) of the DS plate sprite in each plank slot (0 = the MP slot, 1 ADVENTURE, 2 REC ROOM), 31 = not seen */
 };
 static_assert(sizeof(TitleFacts) <= ONL_FACTS_OFF, "TitleFacts must leave the tail of MenuFacts.blob to the online facts");
 thread_local const TitleFacts *t_f = 0;     /* set for the length of one build() */
@@ -876,7 +878,15 @@ void build_main(MenuLayout *L, bool intro)
            in crossed with its neighbour and cut by the window's edge (VS over SOLO). The ROM's own plate art is not in this picture (it is under the
            code plank), so nothing of the ROM's arrival is lost; a touch during it is not taken by the ROM anyway. */
         const Box rb = rest_box(kPlateId[k], bx);
-        if (online_plank(L, k, rb, 0, 0, cur == kPlateId[k], cur == kPlateId[k] && prs, !ghost, &w1000, ghost ? fk : -1)) continue;   /* NAME1: ONLINE / ADVENTURE ONLINE / VS */
+        /* MENUCUT2 (bug 11): on a choice the ROM fades the plates not chosen out by their own alpha (31 to 0 over about 9 ticks: ADVENTURE went
+           while REC ROOM stayed); a code plank standing in for one of them takes the same fade, and is gone when the ROM's plate is */
+        const int pa = (sc && t_f && t_f->plate_a[k] < 31) ? (t_f->plate_a[k] < 0 ? 0 : t_f->plate_a[k]) : 31;
+        if (pa == 0) {
+            int kd = ONL_K_ONLINE, w0 = 1000;
+            menu_online_plank_state(onl_facts_of(L), k, &kd, &w0);
+            if (kd == ONL_K_ONLINE || kd == ONL_K_SOLO || kd == ONL_K_ADV_ONLINE || kd == ONL_K_VS) continue;
+        }
+        if (online_plank(L, k, rb, 0, pa < 31 ? pa * 255 / 31 : 0, cur == kPlateId[k], cur == kPlateId[k] && prs, !ghost, &w1000, ghost ? fk : -1)) continue;   /* NAME1: ONLINE / ADVENTURE ONLINE / VS */
         if (planks) {
             /* ASSET2: a plank drawn at the window's resolution over the ROM's own box (the 3D plate is not drawn: its
                wallpaper object is skipped at submit and its sprite is not in any piece). 40 units tall (the box height),
@@ -972,9 +982,25 @@ void build_main(MenuLayout *L, bool intro)
        take it too and the lower page fades in as one */
     if (sc && ent_a < 255) swap_fade_host(L, np_swap, ent_a);
     if (cs.swap_a >= 0) swap_fade_host(L, np_swap, cs.swap_a);      /* TITLEART1: the code planks and the arrow take the ROM's swap fade */
+    /* MENUCUT2 (bug 11, Tango 11-11: after REC ROOM the ONLINE plank and the blue arrow stayed on top of the white fade): the way out to the file select
+       or the Rec Room whitens the ROM's own picture with the same brightness fade as the face swap (Chore::leave_w, GLITCHFIX1); the HD page lays a
+       white veil over everything for it, this page is the ROM's picture, so the code drawn pieces take it the way they take the swap's */
+    if (cs.leave_ds > 0) swap_fade_host(L, np_swap, 255 - (cs.leave_ds > 255 ? 255 : cs.leave_ds));
+    if (hal_menu_trace_on() && (ent_a < 255 || cs.swap_a >= 0 || cs.leave_ds > 0 || prs)) {     /* MENUCUT2: the lower page's fades, piece by piece */
+        unsigned lv = 0;
+        if (t_f)
+            for (int j = 0; j < t_f->nbox; ++j)
+                if (t_f->bx[j][0] >= 0 && t_f->bx[j][0] <= 2 && ((t_f->live >> j) & 1)) lv |= 1u << t_f->bx[j][0];
+        fprintf(stderr, "[entfade] f%d sc %d ent_a %d swap_a %d sw_t %d leave_ds %d cur %d prs %d live %x plate_a %d %d %d:", t_f ? t_f->frame : -1, sc ? 1 : 0, ent_a, cs.swap_a,
+                cs.sw_t, cs.leave_ds, cur, prs, lv, t_f ? t_f->plate_a[0] : -1, t_f ? t_f->plate_a[1] : -1, t_f ? t_f->plate_a[2] : -1);
+        for (int i = np_swap; i < L->np; ++i)
+            fprintf(stderr, " %d/src%d/a%d/nd%d/c%d", i, (int)L->p[i].src, (int)L->p[i].alpha, (int)L->p[i].nodraw, L->p[i].custom ? 1 : 0);
+        fprintf(stderr, "\n");
+    }
     const int np_ov = L->np;
     { const OnlFacts *of = onl_facts_of(L); online_overlays(L, true, of && of->on); }     /* NAME1: the ? button and the modal screen */
     { const OnlFacts *of = onl_facts_of(L); if (cs.swap_a >= 0 && !(of && of->scr != ONL_SCR_NONE)) swap_fade_host(L, np_ov, cs.swap_a); }     /* TITLEART1: the ? too */
+    { const OnlFacts *of = onl_facts_of(L); if (cs.leave_ds > 0 && !(of && of->scr != ONL_SCR_NONE)) swap_fade_host(L, np_ov, 255 - (cs.leave_ds > 255 ? 255 : cs.leave_ds)); }     /* MENUCUT2: and the way out */
     if (cs.swap_a >= 0 && hal_menu_trace_on()) fprintf(stderr, "[swapfade-host] f%d level %d alpha %d\n", t_f ? t_f->frame : -1, cs.swap_lv, cs.swap_a);      /* TITLEART2 */
     {
         static const int kDsLogo[4] = { 11, 21, 247, 141 };      /* EGG1: the ROM logo's letters on its upper screen (measured on the 4:3 picture, out/EGG1) */
@@ -1097,7 +1123,7 @@ void chore_step(int variant, int top, int elem, int req)
     const bool fam = variant == V_INTRO || variant == V_MAIN;
     if (!fam) {
         g_face_swap = 0;
-        c.in_fam = 0; c.mode = CH_NONE; c.prev_variant = variant; c.leave_w = 0;
+        c.in_fam = 0; c.mode = CH_NONE; c.prev_variant = variant; c.leave_w = 0; c.leave_ds = 0;
         if (variant == V_ATTRACT && data_ov007_0210342c) {
             const char *sp = *(const char *const *)((const char *)data_ov007_0210342c + 8);
             c.attract_t = sp ? *(const int *)(sp + 0xc) : 0;
@@ -1209,6 +1235,14 @@ void chore_step(int variant, int top, int elem, int req)
     if (!g_face_swap && top == 6 && elem == 0) {
         const int lv = rom_swap_level();
         if (lv > 0) c.leave_w = (lv * 255 + 0x800) / 0x1000;
+    }
+    /* MENUCUT2 (bug 11): once the white is complete the ROM moves to top-state 7 and holds it until the next page is up (f639 on a REC ROOM
+       press, out/MENUCUT2); leave_w is 0 there, so the DS-art page's code planks and arrow came back at full strength over the white for
+       those ticks. leave_ds keeps the white for them; the HD page (leave_w, its veil) is untouched. */
+    c.leave_ds = c.leave_w;
+    if (!g_face_swap && top == 7 && elem == 0) {
+        const int lv = rom_swap_level();
+        if (lv > 0) c.leave_ds = (lv * 255 + 0x800) / 0x1000;
     }
 #ifndef PORT_ROM_CLEAN
     { static int tr = -1; if (tr < 0) tr = getenv("SM64DS_GF1_TRACE") ? 1 : 0;     /* GLITCHFIX1 proof instrument */
@@ -2292,6 +2326,8 @@ int menu_title_up(int scene_id)
 }
 
 /* INT2: THE TITLE'S ROM FACTS for build(), once per tick on the logic thread after menu_title_up (so the choreography clock is this tick's) */
+/* MENUCUT2: each plank slot's DS plate alpha (0..31) as the ROM submitted it, and the title counter it was seen at (ds_plate_skip writes them) */
+static int g_ds_plate_a[3] = { 31, 31, 31 }, g_ds_plate_fr[3] = { -9, -9, -9 };
 void menu_title_facts(MenuFacts *f)
 {
     TitleFacts tf;
@@ -2321,6 +2357,10 @@ void menu_title_facts(MenuFacts *f)
     if (hal_menu_trace_on()) { static int lw = -1; if (tf.wz != lw) { lw = tf.wz; fprintf(stderr, "[filewide] zoom permille %d (active %dx%d present %dx%d)\n", tf.wz, ntr::active_w, ntr::active_h, ntr::present_w(), ntr::present_h()); } }
     tf.sc_on = (tf.wide3d && g_sc.on && data_ov007_0210342c && g_sc.frame + 1 >= data_ov007_0210342c[0]) ? 1 : 0;   /* the callback ran in this tick's Render (the counter moved on once since) */
     tf.sc_K = g_sc.T.K; tf.sc_Tx = g_sc.T.Tx; tf.sc_Ty = g_sc.T.Ty; tf.sc_S = g_sc.T.S;
+    for (int k = 0; k < 3; ++k) {     /* MENUCUT2: a slot's plate alpha counts while it was seen this tick or the one before */
+        const int fr = data_ov007_0210342c ? data_ov007_0210342c[0] : 0;
+        tf.plate_a[k] = (short)((tf.sc_on && fr - g_ds_plate_fr[k] >= 0 && fr - g_ds_plate_fr[k] <= 1 && g_ds_plate_a[k] < 31) ? g_ds_plate_a[k] : 31);
+    }
     tf.toy_v = 0;
     {
         static int last_v = -1, last_e = 0, dd_chain = 0, dd_e = 0, was_dd = 0, out_e = 0, dd_live_c = 0;
@@ -2664,6 +2704,11 @@ bool ds_plate_skip(char *o)
 {
     if (*(unsigned char *)(o + 0x4e) != 0x1b || (((const int *)o)[2] >> 12) < 100) return false;
     if (!g_sc.on || g_sc.variant != V_MAIN || !data_ov007_0210342c || g_sc.frame + 1 < data_ov007_0210342c[0] || pc_assets_ready()) return false;
+    {   /* MENUCUT2: the ROM's own fade of this plate (a choice fades the others out), read before the skip so a plate a code plank stands in for still reports it */
+        const int x = ((const int *)o)[1] >> 12, sl = x < 68 ? 0 : x > 188 ? 2 : 1;
+        g_ds_plate_a[sl] = (((const int *)o)[0x50 / 4] >> 12) & 0xff;
+        g_ds_plate_fr[sl] = data_ov007_0210342c[0];
+    }
     int kind = 0, w1000 = 1000;
     ds_plate_state(((const int *)o)[1] >> 12, &kind, &w1000);
     return kind == ONL_K_ONLINE || kind == ONL_K_SOLO || kind == ONL_K_ADV_ONLINE || kind == ONL_K_VS;
