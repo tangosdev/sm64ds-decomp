@@ -336,12 +336,12 @@ void func_0203ea5c(void) {
         own = &data_020a1154[data_020a0f10];
         for (verIdx = 0, verRec = data_020a1154; verIdx < 4; verIdx++, verRec++) {
             if (verRec->flags & 0x8000) {
-                if (verRec->pad_22[0] != own->pad_22[0]) {
+                if (verRec->unk22 != own->unk22) {
                     data_020a0f1c |= 8;
                     break;
-                } else if (verRec->pad_22[0] != own->pad_22[0]) {
+                } else if (verRec->unk22 != own->unk22) {
                     /* Unreachable: the cartridge tests the same byte twice
-                       (pad_22[1] here moves the code). */
+                       (unk23 here moves the code). */
                     data_020a0f1c |= 0x10;
                     break;
                 }
@@ -352,10 +352,10 @@ void func_0203ea5c(void) {
         }
         if (data_020a0efc != 0) {
             data_020a0f1c &= 0xFF60;
-            /* The cartridge stores byte 0x22 twice and never clears 0x23
-               (pad_22[1] in the second store moves 22 words). */
-            data_020a1040.pad_22[0] = 0;
-            data_020a1040.pad_22[0] = 0;
+            /* The cartridge stores unk22 twice and never clears unk23
+               (unk23 in the second store moves 22 words). */
+            data_020a1040.unk22 = 0;
+            data_020a1040.unk22 = 0;
             data_020a0f30 = 0;
             data_020a1040.flags &= 0xEFFF;
             data_020a0efc--;
