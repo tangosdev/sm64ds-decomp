@@ -31,6 +31,7 @@
 #include "nitro/os/system.h"
 #include "private/arm9_a9db8_mb_parent.h"
 #include "private/mb_comm_child_block_header.h"
+#include "private/mb_common.h"
 #include "private/wm_views.h"
 #include "nitro/mi/memory.h"
 
@@ -118,9 +119,6 @@ extern u8 *MBi_MakeParentSendBuffer(MBCommParentBlockHeader *hdr, u8 *buf);
 extern int MBi_ReceiveRequestDataPiece(u8 *hdr, int aid);
 extern int MBi_get_blockinfo(struct Out *bi, MB_BlockInfoTable *table, u32 block,
                              MbDownloadFileInfoHeader *mdfi);
-/* local extern: defined void, but it hands back MBi_SendMP's result,
-   which the senders here return. */
-extern int MBi_BlockHeaderEnd(u32 size, u32 pollbmp, u32 buf);
 extern void MB_SendGameInfoBeacon(void);
 extern void MB_UpdateGameInfoMember(char *self, void *src, u32 flags, int s);
 extern int func_0206881c(void);
@@ -132,7 +130,7 @@ void MBi_Calc_SendBlock(int fid);
 void MBi_CommParentSendData(void);
 int MBi_CommParentSendBlock(void);
 int MBi_CommParentSendDlFileInfo(void);
-int MBi_CommParentSendMsg(u8 type, u32 pollbmp);
+int MBi_CommParentSendMsg(u8 type, u16 pollbmp);
 void MBi_CommParentRecvData(char *arg);
 void MBi_CommParentRecvDataPerChild(void *arg, u32 aid);
 void MBi_CommChangeParentStateCallbackOnly(u32 aid, int state, void *arg);
@@ -557,11 +555,11 @@ void MBi_CommParentRecvData(char *arg) {
     }
 }
 
-int MBi_CommParentSendMsg(u8 type, u32 pollbmp) {
+int MBi_CommParentSendMsg(u8 type, u16 pollbmp) {
     MBCommParentBlockHeader hd;
     hd.type = type;
-    MBi_MakeParentSendBuffer(&hd, (u8 *)data_020a9db8);
-    return MBi_BlockHeaderEnd(6, pollbmp, (u32)data_020a9db8);
+    MBi_MakeParentSendBuffer(&hd, (u8 *)MB_WORK->mSendBuf);
+    return MBi_BlockHeaderEnd(6, pollbmp, MB_WORK->mSendBuf);
 }
 
 /* Send the download info of the next file (mod 16) that a child in
@@ -609,11 +607,11 @@ int MBi_CommParentSendDlFileInfo(void) {
 
     hd.type = 3;
     hd.fid = found;
-    ret = MBi_MakeParentSendBuffer(&hd, (u8 *)data_020a9db8);
+    ret = MBi_MakeParentSendBuffer(&hd, (u8 *)MB_WORK->mSendBuf);
     if (ret != 0)
         MI_CpuCopy8(&MB_WORK->mFiles[found].mDlFileInfo, ret, sizeof(MBDownloadFileInfo));
 
-    return MBi_BlockHeaderEnd(0xea, mask, (u32)data_020a9db8);
+    return MBi_BlockHeaderEnd(0xea, mask, MB_WORK->mSendBuf);
 }
 
 /* Typed access through private/arm9_a9db8_mb_parent.h is the match. The raw
@@ -665,11 +663,11 @@ int MBi_CommParentSendBlock(void) {
         hd.seqno = g->mFiles[g->mCurrentFile].mCurrentBlock;
     }
 
-    MI_CpuCopy8((void *)bi.offset, MBi_MakeParentSendBuffer(&hd, (u8 *)data_020a9db8), bi.size);
+    MI_CpuCopy8((void *)bi.offset, MBi_MakeParentSendBuffer(&hd, (u8 *)MB_WORK->mSendBuf), bi.size);
 
     idxByte = MB_WORK->mCurrentFile;
     return MBi_BlockHeaderEnd(bi.size + 6, MB_WORK->mFiles[idxByte].mChildBitmap,
-                              (u32)data_020a9db8);
+                              MB_WORK->mSendBuf);
 }
 
 /* A send turn: sort the children by state into AID bitmaps and send one

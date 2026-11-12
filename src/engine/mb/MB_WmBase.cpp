@@ -51,6 +51,7 @@
 #include "WmWork.h"
 #include "private/arm9_a9db8_mb_parent.h"
 #include "private/mb_views.h"
+#include "private/mb_wm_base.h"
 #include "private/wm_views.h"
 #include "nitro/mi/memory.h"
 #include "nitro/mi/dma.h"
@@ -858,8 +859,8 @@ void MB_End(void) {
 /* MBi_SetMPData: send on port 1 at priority 3 through WM_SetMPDataToPort.
  * The fourth parameter is unused. Lead: the reconstruction's calls
  * WM_SetMPDataToPortEx and passes the result to MBi_CheckWmErrcode. */
-int MBi_SetMPData(int callback, int data, int size, int unused, u16 aidBitmap) {
-    return WM_SetMPDataToPort(callback, data, size, aidBitmap, 1, 3);
+int MBi_SetMPData(int callback, const u16 *sendData, int size, int unused, u16 aidBitmap) {
+    return WM_SetMPDataToPort(callback, (int)sendData, size, aidBitmap, 1, 3);
 }
 
 /* MBi_SendMP: queue one MP send. Fails (1) until MP has started or while a
@@ -868,7 +869,7 @@ int MBi_SetMPData(int callback, int data, int size, int unused, u16 aidBitmap) {
  * returns 0; any other code is returned as it is. Lead: the reconstruction's
  * has the same two cases, but this parent case first pads the size up to
  * data_0209a088 (6). */
-int MBi_SendMP(int data, int len, int aidBitmap) {
+int MBi_SendMP(const void *buf, int len, int aidBitmap) {
     WmWork *hdr = WM_WORK;
     int size = (u16)len;
     u16 aids = aidBitmap;
@@ -887,7 +888,7 @@ int MBi_SendMP(int data, int len, int aidBitmap) {
         } else {
             wait = 0;
         }
-        ret = MBi_SetMPData((int)hdr->stateCallback, data, size, (u16)wait, aids);
+        ret = MBi_SetMPData((int)hdr->stateCallback, (const u16 *)buf, size, (u16)wait, aids);
         /* Two tests of OPERATING, as shipped: one if for both costs a word. */
         if (ret == 2) {
             WM_WORK->mpSending = 1;
@@ -898,7 +899,7 @@ int MBi_SendMP(int data, int len, int aidBitmap) {
         return ret;
 
     case 2:
-        ret = MBi_SetMPData((int)MBi_ChildCallback, data, size, 0, aids);
+        ret = MBi_SetMPData((int)MBi_ChildCallback, (const u16 *)buf, size, 0, aids);
         if (ret == 2) {
             WM_WORK->mpSending = 1;
         }

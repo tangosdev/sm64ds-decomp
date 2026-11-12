@@ -40,9 +40,9 @@
 #include "private/mb_views.h"
 #include "nitro/mi/memory.h"
 #include "nitro/fs/file.h"
+#include "private/mb_common.h"
 
 /* local extern: MI_Memory.c's asm fills and copies; no header declares them. */
-extern u16 MBi_calc_cksum(u16 *p, int len);
 extern int func_020688e4(void);
 extern int func_020688cc(void);
 extern int MBi_GetTgid(void);
