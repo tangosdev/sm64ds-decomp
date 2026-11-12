@@ -119,7 +119,7 @@
     "The unit is compiled under one file-level #pragma opt_loop_invariants off, which func_ov007_020b413c needs (four bytes short without) and the other twelve functions tolerate; there is no per-function pragma bracket."
   ],
   "verification": {
-    "round": "tools/match.py per function against the one unit source -- text-only, whole TU compiled",
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "functions_matched": 13,
@@ -127,7 +127,17 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "functions_occur_in_expected_order": "PASS"
+      "functions_occur_in_expected_order": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "object": "build/tu/ov007-unit020b413c/unit020b413c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
     }
   }
 }

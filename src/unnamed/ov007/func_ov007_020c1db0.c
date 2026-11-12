@@ -6,11 +6,13 @@
  * fresh calibrated sample when b is null): patches invalid axes from the
  * previous frame, then tracks press/release positions, held/idle frame
  * counts and the drag and per-frame deltas. */
-void func_ov007_020c1db0(Ov007Touch *a, Ov007TouchSample *b) {
+void func_ov007_020c1db0(Ov007Touch *a, TPData *b) {
     a->prev = a->cur;
     a->cur = a->raw;
     if (b == 0) {
         TPData tp;
+        /* Copied field by field: `a->raw = tp` compiles to a word copy, 6
+         * words off the ROM. */
         TP_RequestCalibratedSampling(&tp);
         a->raw.x = tp.x;
         a->raw.y = tp.y;

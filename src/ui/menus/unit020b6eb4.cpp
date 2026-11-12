@@ -64,7 +64,7 @@ extern int sFrameReady;
 
 extern void func_02045d9c(void);
 extern void func_ov007_020aed98(void);
-extern void func_ov007_020b2e64(Ov007TouchSample *sample);
+extern void func_ov007_020b2e64(TPData *sample);
 extern void func_ov007_020b3050(void);
 extern void func_ov007_020b30b0(void);
 extern void func_ov007_020b40c0(void);
@@ -93,7 +93,7 @@ extern void func_ov007_020be50c(void);
 extern void ScreenFade_Update(void);
 extern void ScreenFade_Destroy(void);
 extern void ScreenFade_Create(void);
-extern void func_ov007_020c1db0(Ov007Touch *touch, Ov007TouchSample *sample);
+extern void func_ov007_020c1db0(Ov007Touch *touch, TPData *sample);
 extern void Pad_Update(struct Ov007Pad *pad, void *src);
 extern void func_ov007_020c3bc8(void);
 extern void MenuMem_SetMaxAllocSizeHook(int v);
@@ -139,7 +139,7 @@ int func_ov007_020b7138(Ov007MenuHooks *hooks, Ov007BootArgs *bootArgs) {
 }
 
 int func_ov007_020b7090(u16 x, u16 y, u16 touch, u16 validity, int keys) {
-    Ov007TouchSample sample;
+    TPData sample;
     int choice = 0;
 
     sFrameReady = 0;
