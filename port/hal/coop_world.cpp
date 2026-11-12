@@ -24,6 +24,8 @@
 #include "comms_hub.h"
 #include "hub_presence.h"
 
+namespace port { bool coop_movers1_on(); }   // hal/coop_actors.cpp (MOVERS1 control switch)
+
 #include <windows.h>
 
 #include <algorithm>
@@ -710,7 +712,12 @@ bool breakable_block(unsigned cls) { if (cls == 18 && bfx_env_off()) return fals
 // removed on the others and kept on the group's list for this visit (a member who joins the group is sent it), but never
 // on the room's list: the star they hold is the breaker's and is announced once, and a later visit after the level emptied
 // finds them as the cartridge builds it. (The Moneybag, 261, dies through KillAndTrackInDeathTable: the death table has it.)
-bool live_gone(unsigned cls) { return cls == 263 || cls == 217; }
+// MOVERS1 (AUDIT-WORLD H5): the same shape for two plain enemies. A plain Whomp (164, daBtn_c, d_a_btn.cpp:1338-1346: the
+// non-King branch of the ground-pound defeat) and the BBH bookend (327, daBook_c::func_ov020_02112110, d_a_book.cpp:705) end in
+// MarkForDestruction with no death bit, so beaten on one console they stood alive on every friend's. They carry no star; the
+// coins / blue coin stay the beater's. This visit only, as the cartridge brings them back on the next visit. 1.0.4 already
+// removes any class on the swallow message (it just keeps no list). SM64DS_COOP_MOVERS1=0 is the control.
+bool live_gone(unsigned cls) { return cls == 263 || cls == 217 || ((cls == 164 || cls == 327) && coop_movers1_on()); }
 // REVCOOPWALLS1: in the act whose star they hold, these two own a minimap star marker from InitResources (TrackStar);
 // the cartridge frees it in UntrackAndSpawnStar on the defeat, which a friend's copy never runs. Free it before the
 // removal, the way coop_boss.cpp does for the big bosses, or the minimap and camera keep reading the freed boss.
