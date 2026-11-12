@@ -1,8 +1,8 @@
 #include "Ov007Work.h"
 #include "Ov007Display.h"
 #include "Ov007LayerSlot.h"
+#include "Ov007MenuMem.h"
 
-extern void *func_ov007_020c3df4(const char *name, int size);
 extern void *func_ov007_020c9388(int a);
 extern void *MenuText_GetMainScreen(void);
 extern void *MenuText_GetSourceScreen(void);

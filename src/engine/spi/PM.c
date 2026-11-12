@@ -31,7 +31,7 @@
 #include "nitro/os/system.h"
 #include "nitro/os/interrupt.h"
 #include "nitro/os/interrupt_vblank.h"
-#include "nitro/os/thread.h"
+#include "nitro/os/mutex.h"
 #include "nitro/hw/registers.h"
 #include "nitro/spi/pm.h"
 #include "nitro/ctrdg/ctrdg_common.h"
@@ -97,9 +97,6 @@ extern volatile int PMi_SyncFlag; /* SPI_PXI_COMMAND_PM_SYNC (0x60) answered */
 extern int PMi_SleepEndFlag;      /* SPI_PXI_COMMAND_PM_SLEEP_END (0x62) answered */
 extern u32 PMi_LCDCount;          /* the VBlank count when the LCD last went off */
 extern OSMutex PMi_Mutex;
-
-void OS_SpinWait(u32 cycles);
-void OS_InitMutex(void *mutex);
 
 void PMi_CommonCallback(PXIFifoTag tag, u32 data, BOOL err);
 u32 PMi_SendSleepStart(u16 trigger, u16 keyPattern);

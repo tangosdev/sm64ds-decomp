@@ -2,6 +2,7 @@
 #include "dFdBrightness_c.h"
 #include "nitro/hw/registers.h"
 #include "math/Approach.h"
+#include "math/CalcLib.h"
 #include "nitro/gx/g3x.h"
 #include "nitro/fx/fx_cp.h"
 /* dScMgTrampoline_c -- Trampoline Time. Draw a line on the touch screen
@@ -45,6 +46,7 @@ enum d_s_mg_trampoline_AssetId {
 #include "dMgTrmplnShared.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
+#include "nitro/mi/memory.h"
 
 /* local: UpdateTouchInput only reproduces through a 4-byte-record view of
    each lane; the flat `gTouchHeld[slot * 4]` and TouchInfo forms DIFF there
@@ -67,10 +69,6 @@ extern int sTrmpFxCount;
 extern TrmpScorePopup *sTrmpFxPool;
 
 extern int sTrmpBrushWord[];
-/* local extern: these named parameters hold this TU's @NNN numbering; the
-   switch to nitro/mi/memory.h waits on the manifest re-key in #5252. */
-extern void MIi_CpuCopy32(const void *dst, void *src, unsigned int len);
-extern void MIi_CpuClear16(unsigned short val, void *dst, unsigned int nbytes);
 extern const unsigned char sTrmpBrushPltt[];
 extern dFdBrightness_c *gSceneFader;
 extern int sTrmpTouchBlocked;
@@ -95,7 +93,6 @@ extern int sTrmp3DLives;
 extern int sTrmpMariosInPlay;
 extern int sTrmpAnyOnLedge;
 extern void TrmpLine_UpdateAll(void);
-extern int RandomIntInternal(int *seed);
 void TrmpLine_CreateStartLineT1(void);
 extern s16 sTrmpIntroFromX;
 extern s16 sTrmpStartTouchX;

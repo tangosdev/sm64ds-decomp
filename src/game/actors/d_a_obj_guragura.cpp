@@ -134,11 +134,11 @@ s32 daObjGuragura_c::Behavior() {
  * is dBgW_Kc::LoadFile, slot 2 is CLPS into SetFile; then install
  * StoodOnCallback as the collider callback. */
 s32 daObjGuragura_c::InitResourcesFrom(ResourceDescriptor *descriptor) {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*descriptor->model), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(*descriptor->model), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*descriptor->collision), mClsnMat, 0x1000,
-                          mAngleY, *descriptor->clps);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*descriptor->collision), mClsnMat, 0x1000, mAngleY,
+                          *descriptor->clps);
     mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&StoodOnCallback);
     return 1;
 }

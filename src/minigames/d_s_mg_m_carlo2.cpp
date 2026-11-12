@@ -23,6 +23,7 @@
 #include "LevelRng.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "math/CalcLib.h"
 
 /* sMCarlo2Cards is the head of the live card list and _02142568 its
  * tail (SetupBoard builds it); _0214256c heads the list of cleared cards,
@@ -56,7 +57,6 @@ extern int data_020a0db0;
 extern unsigned char gSubScreenLayers;
 extern unsigned char gMainScreenLayers;
 
-int  RandomIntInternal(void* seed);
 void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
 int  GetGameLanguage(void);
@@ -142,8 +142,7 @@ int dScMgMCarlo2_c::CanEndState(int /* mode */)
     switch (state) {
     case 4:
         if (Dealer_IsIdle(&mDealer) != 0) {
-            short *p = &mRoundState;
-            *p += 1;
+            mRoundState++;
         }
         break;
     case 5: {
@@ -174,17 +173,12 @@ int dScMgMCarlo2_c::CanEndState(int /* mode */)
     return 0;
 }
 
-/* Slot 6. The state at mRoundState is bumped through an int-cast pointer each
- * time: plain `mRoundState++` recomputes the address, and the ROM keeps it in a
- * register. sMCarlo2DealProgress is the dealt-card count, shifted left 12. */
+/* Slot 6. sMCarlo2DealProgress is the dealt-card count, shifted left 12. */
 s32 dScMgMCarlo2_c::Behavior()
 {
     switch (mRoundState) {
     case 1:
-        {
-        s16 *p = &mRoundState;
-        (*p)++;
-        }
+        mRoundState++;
         if (mPromptBlinkCount == 0) {
             mPromptEnabled = 1;
             mPromptBlinkCount = 1;
@@ -196,10 +190,7 @@ s32 dScMgMCarlo2_c::Behavior()
         if (mDealCount == 4) {
             if (dScMgMCarlo2_c::BoardBusy() == 0) {
                 mDealCount = 0;
-                {
-                    s16 *p = &mRoundState;
-                    (*p)++;
-                }
+                mRoundState++;
             }
         }
         break;
@@ -236,10 +227,7 @@ s32 dScMgMCarlo2_c::Behavior()
                             Dealer_PlayLose(&mDealer);
                             Mg_SetSharedState(MG_STATE_GAME_OVER);
                             mPromptEnabled = 0;
-                            {
-                                s16 *p = &mRoundState;
-                                (*p)++;
-                            }
+                            mRoundState++;
                         }
                     }
                     sMCarlo2PickAllowed = 0;

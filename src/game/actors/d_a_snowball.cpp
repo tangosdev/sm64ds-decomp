@@ -60,7 +60,6 @@ extern daSnowball_StateRec data_ov081_02128eb4;
 /* local extern: no shared header declares these. */
 extern "C" {
 void func_02012694(unsigned int a0, void *a1);
-void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
 }
 
 /* The key function. D1 stores the vtable, destroys the members in reverse
@@ -178,7 +177,7 @@ int daSnowball_c::State0() {
             this->mReachedSpawnY = 1;
         }
     }
-    if ((unsigned short)this->mStateTimer == 0 || mWithMeshClsn.IsOnGround() != 0) {
+    if (this->mStateTimer == 0 || mWithMeshClsn.IsOnGround() != 0) {
         func_02012694(SND3_SNOWBALL_BURST, &this->mCamSpacePosX);
         Particle::System::NewSimple(PTCL_SNOWBALL_BURST, this->mPosX, this->mPosY, this->mPosZ);
         MarkForDestruction();
@@ -249,7 +248,7 @@ int daSnowball_c::Render() {
  * a no-op in source terms; it stays as written, the shape these bytes were
  * matched with. */
 int daSnowball_c::Behavior() {
-    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     daSnowball_StateRec *rec = mStateRec;
     if (rec->update != 0)
         (this->*(rec->update))();
@@ -278,8 +277,8 @@ int daSnowball_c::Behavior() {
  * collision of 0x14000 (20 units); and the two-entry state record installed.
  * Returns 0 if the model file could not be bound, else 1. */
 int daSnowball_c::InitResources() {
-    void *file = dExtSimpleModel_c::LoadFile(data_ov081_02128d90);
-    if (mModel.SetFile((BMD_File *)file, 1, -1) == 0)
+    BMD_File *file = dExtSimpleModel_c::LoadFile(data_ov081_02128d90);
+    if (mModel.SetFile(file, 1, -1) == 0)
         return 0;
 
     mShadowModel.InitCylinder();

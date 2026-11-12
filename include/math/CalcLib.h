@@ -15,10 +15,13 @@
  * name here takes an @NNN in every includer.
  *
  * Only helpers some includer calls are declared so far. The C++ steppers
- * (UpdateAngle, ApproachLinear) are in math/Approach.h. */
+ * (UpdateAngle, ApproachLinear) are in math/Approach.h, which C++ includers
+ * get with this header; C includers get the C helpers alone. */
+#ifdef __cplusplus
 #include "math/Approach.h"
 
 extern "C" {
+#endif
 
 /* Decrement *p unless it is already 0; return the new value. */
 unsigned short DecIfAbove0_Short(unsigned short *);
@@ -36,15 +39,22 @@ void Vec3_Asr(Vector3 *, Vector3 *, int);
 /* ...and left; d may alias s. */
 void Vec3_Lsl(Vector3 *, const Vector3 *, int);
 
+/* NitroSDK fx_vec (0x02053274..0x020538b8). */
 /* out = a + b and a - b, per axis; out may alias either operand. */
 void VEC_Add(Vector3 *, Vector3 *, Vector3 *);
 void VEC_Subtract(Vector3 *, Vector3 *, Vector3 *);
+/* Length of v. */
+int VEC_Mag(const Vector3 *);
+/* a . b, in fx32. */
+Fix12i VEC_DotProduct(const Vector3 *, const Vector3 *);
 
 short Vec3_HorzAngle(const Vector3 *, const Vector3 *);
 Fix12i Vec3_HorzLen(const Vector3 *);
 int Vec3_Dist(const Vector3 *, const Vector3 *);
 int Vec3_Equal(const Vector3 *, const Vector3 *);
 int Vec3_HorzDist(const Vector3 *, const Vector3 *);
+#ifdef __cplusplus
 }
+#endif
 
 #endif

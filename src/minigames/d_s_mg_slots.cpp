@@ -65,6 +65,7 @@ enum dScMgSlots_AssetId {
 #include "nitro/gx/gx_load.h"
 #include "LevelRng.h"
 #include "nitro/mi/memory.h"
+#include "math/CalcLib.h"
 
 #pragma defer_codegen off
 /* Codegen is deferred by default in mwccarm 2004/b56, which is why its
@@ -96,14 +97,12 @@ int GetGameLanguage(void);
 // Retained caller ABI: narrowing to the definition's u16 adds a mask in InitMainScreenBg.
 unsigned int LoadCompressedFileAt(int fileID, void *target);
 extern unsigned char gMainScreenLayers;
-extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 void Mg_AddCredits(void *c, int delta);
 void Mg_SubCredits(void *c, int val);
 extern void Mg_SubmitScore(int self);
 extern int data_ov006_0213e948[];
 extern void Slot3_ReelDigits(char *c, int i);
 extern int Sound_PlayIfNotActive(int, int, int, short);
-extern int RandomIntInternal(int *seed);
 void OamRender10_d_s_mg_slots(int b, void *attr, int a2, int a3, int a4, int a5, int a6, int a7,
                               int a8, int a9);
 void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);

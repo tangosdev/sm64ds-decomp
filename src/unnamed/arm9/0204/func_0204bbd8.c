@@ -3,8 +3,8 @@
 #include "nitro/fx/fx_trig.h"
 #include "private/spl_particle_views.h"
 #include "nitro/gx/g3imm_cmd.h"
+#include "math/MtxStack.h"
 
-extern void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 extern void G3_MultMtx43(int *m);                /* multiply by the 4x3 matrix */
 extern void func_0204c24c(int tileS, int tileT); /* the XY-plane quad */
 

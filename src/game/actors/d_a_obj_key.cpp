@@ -76,6 +76,8 @@ enum daObjKey_c_AssetId {
 #include "Particle__System.h"
 #include "nitro/fx/fx.h"
 #include "SaveBlock.h"
+#include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 #pragma defer_codegen off
 
@@ -196,7 +198,6 @@ extern u32 gNextActorUpdateMask;
 extern void *d_a_obj_keyNewHold(u32 a, u32 b, int c, int d, int e, void *f, void *g);
 extern void func_02012694(unsigned int id, const Vector3 *pos);
 extern void func_ov002_020c3dbc(void *player);
-void Matrix4x3_FromRotationY(void *m, int angle);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void *data_ov089_021328b4[];
 extern ObjKeyFile data_ov002_02110964;
@@ -210,17 +211,7 @@ extern ObjKeyModelFile gMarioKeyModelFile;
 extern ObjKeyModelFile gWarioKeyModelFile;
 extern Vector3 data_ov089_02132b40;
 extern VecFx32 data_ov089_02132ca4;
-extern Matrix4x3 data_020a0e68;
-extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-/* local extern: math/MtxStack.h clashes with this TU's void * matrix externs. */
-extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, short ang);
-extern void MTX_Concat43(void *d, void *a, void *b);
-/* local extern: named parameters keep this TU's compiler-numbered aliases. */
-extern void VEC_Subtract(Vector3 *d, Vector3 *a, Vector3 *b);
 extern int *Vec3_LslInPlace(void *v, int sh);
-/* local extern: CalcLib's declaration is unnamed; retain these names so this
- * TU's compiler-numbered aliases remain stable. */
-extern void VEC_Add(Vector3 *d, Vector3 *a, Vector3 *b);
 extern void LoadKeyModels(int idx);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *thiz, void *actor, int a, int b, void *v, void *w);
@@ -228,8 +219,6 @@ typedef void BgchInitAt_(void *thiz, void *actor, int a, int b, void *v, void *w
    keep that spelling so the declarations of this symbol stay in agreement. */
 extern char data_ov002_0211094c;
 extern int data_0209cef0;
-extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 /* The collect animations, by mAnimID. */
 extern ObjKeyFile *data_ov089_02132880[];
 /* Names stay on this unused prototype so this file's @NNN numbers do not move. */

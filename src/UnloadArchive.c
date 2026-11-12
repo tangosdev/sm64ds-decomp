@@ -1,6 +1,7 @@
 #include "private/arm9_archive_table.h"
 
-extern void func_02018908(void *archive, void *heap);
+struct S82; /* a mounted .narc archive (src/engine/sound/SoundEngine.cpp) */
+extern void func_02018908(struct S82 *archive, void *heap);
 
 /* Give archive i back to the heap it came from, if it is mounted. */
 void UnloadArchive(int i) {

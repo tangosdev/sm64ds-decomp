@@ -1,9 +1,9 @@
 //cpp
 #include "types.h"
 #include "private/arm9_a1fc0_file_share.h"
-#include "private/arm9_wbt.h"
+#include "nitro/wbt.h"
 #include "nitro/os/cache.h"
-#include "private/fs_views.h"
+#include "nitro/fs/archive.h"
 
 /* The FSFile a child read is for (FileShareWork.mReadRequest, set by
  * func_02041a00). */
@@ -12,7 +12,6 @@ extern "C" {
 
 extern void func_02041a00(FSFile *file);
 extern int func_020423dc(int *table);
-extern void FS_NotifyArchiveAsyncEnd(void *self, int arg);
 extern void func_02042160(void *arg);
 extern void func_02040f30(void *arg);
 extern char data_020a2400[];
@@ -21,7 +20,7 @@ void func_02040f30(void *arg) {
     int aid = WBT_AidbitmapToAid(cmd->peer_bmp);
     FileShareChildArea *child = (FileShareChildArea *)data_020a2400;
     switch (cmd->command) {
-    case 2:
+    case WBT_CMD_REQ_SYNC:
         if (cmd->target_bmp != 0) {
             return;
         }
@@ -36,13 +35,13 @@ void func_02040f30(void *arg) {
         }
         return;
 
-    case 6:
+    case WBT_CMD_REQ_GET_BLOCKINFO:
         child->mRecvBufTable[aid] = data_020a1fc0.mTable;
         WBT_GetBlock(1, 0x20000, child->mRecvBufTable, data_020a1fc0.mTableSize,
                      child->mPacketBitmapTable, func_02040f30);
         return;
 
-    case 4:
+    case WBT_CMD_REQ_GET_BLOCK:
         if (cmd->target_bmp != 0) {
             return;
         }
@@ -65,13 +64,13 @@ void func_02040f30(void *arg) {
             msg.mFileId = region;
             msg.mPacketSizeHigh = (u8)(packetSize >> 8);
             msg.mPacketSizeLow = (u8)packetSize;
-            WBT_PutUserData(1, &msg, 9, func_02042160);
+            WBT_PutUserData(1, &msg, WBT_SIZE_USER_DATA, func_02042160);
         }
         return;
 
-    case 0xc: {
+    case WBT_CMD_SYSTEM_CALLBACK: {
         FileShareMsg *m;
-        if (cmd->event != 0xa) {
+        if (cmd->event != WBT_CMD_REQ_USER_DATA) {
             return;
         }
         m = (FileShareMsg *)cmd->u.user_data.data;
@@ -90,10 +89,10 @@ void func_02040f30(void *arg) {
 
         case 3: {
             FSFile *p = data_020a1fc0.mReadRequest;
-            void *arc = p->arc;
+            FSArchive *arc = p->arc;
             data_020a1fc0.mReadRequest = 0;
             p->prop.file.pos += p->arg.readfile.len;
-            FS_NotifyArchiveAsyncEnd(arc, 0);
+            FS_NotifyArchiveAsyncEnd(arc, FS_RESULT_SUCCESS);
             return;
         }
         }

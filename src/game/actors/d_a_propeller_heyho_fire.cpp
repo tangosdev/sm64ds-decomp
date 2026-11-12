@@ -65,7 +65,6 @@ extern HeyhoStateTable data_ov002_02111190;
 /* local extern: no shared header declares these. */
 extern "C" {
 void func_02012694(unsigned int a, const Vector3 *v);
-void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
 }
 
 /* Empty. D1 then D0 follow from the members. */
@@ -128,7 +127,7 @@ void daPropeller_Heyho_Fire_c::CheckPlayerHit() {
 /* The state's main handler. The (u16) read matches the ROM's ldrh; the plain
    s16 read is an ldrsh. */
 int daPropeller_Heyho_Fire_c::State0() {
-    if ((u16)mStateTimer == 0 || mWithMeshClsn.IsOnGround() || mWithMeshClsn.IsOnWall()) {
+    if (mStateTimer == 0 || mWithMeshClsn.IsOnGround() || mWithMeshClsn.IsOnWall()) {
         SmallPoofDust();
         func_02012694(0x166, &mCamSpacePos);
         MarkForDestruction();
@@ -179,7 +178,7 @@ int daPropeller_Heyho_Fire_c::Render() {
 }
 
 int daPropeller_Heyho_Fire_c::Behavior() {
-    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     State *h = mCurrentState;
     if (h->mMain != 0) {
         (this->*(h->mMain))();
@@ -207,7 +206,7 @@ int daPropeller_Heyho_Fire_c::Behavior() {
 }
 
 int daPropeller_Heyho_Fire_c::InitResources() {
-    BMD_File *file = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov065_0211d610);
+    BMD_File *file = dExtSimpleModel_c::LoadFile(data_ov065_0211d610);
     if (mModel.SetFile(file, 1, -1) == 0)
         return 0;
     unk_358 = param1 & 0xff;

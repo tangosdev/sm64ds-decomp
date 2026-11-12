@@ -21,7 +21,8 @@
  * Source runs REVERSE of ROM (highest address first). Do not reorder; the
  * classInit factory, now the highest address in the TU, is written first.
  * decl_common.h is deliberately NOT included; its remaining needed names
- * are declared locally, and shared vector functions come from CalcLib.h. SWOOP uses an array-backed position copy to retain
+ * are declared locally, and the shared vector and matrix functions come from
+ * math/CalcLib.h and math/MtxStack.h. SWOOP uses an array-backed position copy to retain
  * the ROM block move in C++; see its site.
  *
  * deslop leftovers:
@@ -60,6 +61,7 @@ enum daJango_c_AssetId {
 #include "types.h"
 #include "common.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
 #include "LevelRng.h"
@@ -141,21 +143,11 @@ struct BCA_File;
 struct SwoopPositionWords { int w[3]; };
 
 extern "C" {
-extern void Matrix4x3_FromRotationY(void* m, int angle);
-extern void Matrix4x3_ApplyInPlaceToRotationX(void* m, short angX);
-/* local extern: no shared math header declares MTX_MultVec43. */
-extern void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *res);
-extern Matrix4x3 data_020a0e68;
 extern signed char gCurrentSublevel;
 extern void func_02012694(unsigned int, void *);
 extern s16 Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int VEC_Mag(const Vector3 *v);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);
-extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
-extern void MTX_Concat43(void *a, void *b, void *c);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *a, Fix12i b, Fix12i c, void *d, void *e);
 extern SharedFilePtr data_ov002_0210da40;
@@ -340,9 +332,6 @@ typedef int (daJango_c::*PMF)();
 struct StateRecord { PMF enter; PMF update; };
 struct dCc_c;
 struct dBgCh_Actr;
-extern "C" {
-unsigned short DecIfAbove0_Short(unsigned short *p);
-}
 
 /* One frame: tick the two timers, run the current state's update, apply gravity
    and move, copy the steering angles onto the model angles, rebuild the
@@ -515,13 +504,13 @@ void daJango_c::UpdateModelAndShadow() {
                 Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, -0x3000, -0x8000, -0x4000);
             }
             MTX_Concat43(&data_020a0e68, &mHeldMat, &mHeldMat);
-            actor->mCarryMatrix = (Matrix4x3 *)&mHeldMat;
+            actor->mCarryMatrix = &mHeldMat;
         }
     }
 
     Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, (mPosY - 0x18000) >> 3, mPosZ >> 3);
     *(Mtx43 *)&mShadowMat = *(Mtx43 *)&data_020a0e68;
-    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)&mShadowMat, 0x40000, 0x258000, 0xf);
+    DropShadowRadHeight(mShadowModel, mShadowMat, 0x40000, 0x258000, 0xf);
 }
 
 /* Select a state: store the record (its address) in mState, then call the

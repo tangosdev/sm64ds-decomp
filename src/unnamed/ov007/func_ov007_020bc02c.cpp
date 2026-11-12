@@ -5,24 +5,22 @@
 
 extern "C" {
 
-#define LS(a) (*(short*)(a))
-
 extern void func_ov007_020bc968(Ov007Model *m, void *other);
 extern void func_ov007_020bc894(Ov007Model *m);
 extern void func_ov007_020bc7dc(Ov007Model *m);
-extern void func_02044dc4(void *self);
+extern void func_02044dc4(struct ModelComponents *model);
 
 void func_ov007_020bc02c(Ov007Model *m, void *other) {
-    struct ModelComponents *r5 = m->model;
-    int r4 = 0;
+    struct ModelComponents *model = m->model;
+    int advance = 0;
 
     if (m->flags & 2) {
-        Ov007AnimPlayer *r3 = m->boneAnim;
-        if (r3 != 0) {
-            if (LS(&r3->anim) != -1) {
-                if (r3->state == 0) {
-                    if (r3->anim == -1 || r3->frame != r3->frameCount - 1)
-                        r4 = 1;
+        Ov007AnimPlayer *animPlayer = m->boneAnim;
+        if (animPlayer != 0) {
+            if (animPlayer->anim != -1) {
+                if (animPlayer->state == 0) {
+                    if (animPlayer->anim == -1 || animPlayer->frame != animPlayer->frameCount - 1)
+                        advance = 1;
                 }
             }
         }
@@ -31,16 +29,16 @@ void func_ov007_020bc02c(Ov007Model *m, void *other) {
     func_ov007_020bc968(m, other);
     if (m->animTick != 0) {
         func_ov007_020bc894(m);
-        r5->UpdateVertsUsingBones();
-    } else if (r4 != 0) {
+        model->UpdateVertsUsingBones();
+    } else if (advance != 0) {
         Ov007AnimPlayer *o = m->boneAnim;
         struct BCA_File **bones = m->boneAnims;
-        r5->UpdateBones(bones[o->anim], (u16)(o->frame + 1));
-        r5->transforms = m->nextTransforms;
-        r5->UpdateVertsUsingBones();
+        model->UpdateBones(bones[o->anim], (u16)(o->frame + 1));
+        model->transforms = m->nextTransforms;
+        model->UpdateVertsUsingBones();
         unsigned int i = 0;
-        r5->transforms = m->transforms;
-        while (i < r5->modelFile->numBones) {
+        model->transforms = m->transforms;
+        while (i < model->modelFile->numBones) {
             Matrix4x3 *a = &m->transforms[i];
             Matrix4x3 *b = &m->nextTransforms[i];
             a->r.m[0] = (a->r.m[0] + b->r.m[0]) / 2;
@@ -59,11 +57,11 @@ void func_ov007_020bc02c(Ov007Model *m, void *other) {
         }
     }
 
-    if (m->animTick != 0 || r4 != 0) {
+    if (m->animTick != 0 || advance != 0) {
         if (m->blendFrames > 0)
             func_ov007_020bc7dc(m);
-        if (r5->modelFile->numWeightedMatrices != 0)
-            func_02044dc4(r5);
+        if (model->modelFile->numWeightedMatrices != 0)
+            func_02044dc4(model);
     }
 
     {

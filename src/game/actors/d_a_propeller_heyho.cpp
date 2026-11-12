@@ -38,6 +38,7 @@ enum d_a_propeller_heyho_AssetId {
 #include "SpawnInfo.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
+#include "math/CalcLib.h"
 
 /* The cartridge preserves this descriptor's C-ABI symbol but not its source
  * spelling.  Keep that evidence-bounded alias; all seven scalar words and
@@ -204,7 +205,7 @@ extern int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State
  * position = the spawn position, then enters the wander state. */
 int daPropeller_Heyho_c::InitResources()
 {
-    mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov070_02123530), 1, -1);
+    mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov070_02123530), 1, -1);
     mShadowModel.InitCylinder();
     dExtFrameCtrl_c::LoadFile(data_ov070_02123520);
     dExtFrameCtrl_c::LoadFile(data_ov070_02123518);
@@ -231,7 +232,6 @@ int daPropeller_Heyho_c::InitResources()
 extern daPropeller_Heyho_c::State data_ov070_021235cc;
 extern daPropeller_Heyho_c::State data_ov070_021235bc;
 extern "C" {
-extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern void func_ov070_0211f100(daPropeller_Heyho_c *c);
 }
 
@@ -353,12 +353,10 @@ int daPropeller_Heyho_c::CleanupResources()
 /* -------------------------------------------------------------------------- */
 #include "common.h"
 #include "private/mtx43.h"
+#include "math/MtxStack.h"
 
 extern "C" {
 
-extern void Vec3_Asr(void* d, void* s, int sh);
-extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
 extern Matrix4x3 data_020a0e68;
 }
 
@@ -371,7 +369,7 @@ extern Matrix4x3 data_020a0e68;
  * depth 800.0, opacity 15). Behavior calls it on every exit path. */
 void daPropeller_Heyho_c::func_ov070_02120070() {
     Vector3 v;
-    Vec3_Asr(&v, &mPosX, 3);
+    Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
@@ -394,9 +392,6 @@ extern "C" int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::S
 
 /* -------------------------------------------------------------------------- */
 extern "C" {
-/* local extern: retain the named parameter from CalcLib's shared signature
- * to keep this TU's compiler-numbered aliases stable. */
-extern int RandomIntInternal(int *seed);
 /* Wander init: heading = a random multiple of 0x1000 (one of 16 directions,
  * 22.5 degrees apart), timer = 50 + random 0..31 frames, plays the file-02123520
  * animation at speed 1.0. */
@@ -414,15 +409,7 @@ int func_ov070_0211ffa8(daPropeller_Heyho_c* c){
 extern "C" {
 typedef short s16;
 
-extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-// local extern: CalcLib.h conflicts with this TU's retained opaque Vec3_VertAngle declaration.
-extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-extern int ApproachAngle(s16 *dst, s16 target, int a, int b, int c);
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
-/* local extern: no shared math header declares MTX_MultVec43. */
-extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 
 extern Matrix4x3 data_020a0e68;
@@ -505,16 +492,7 @@ int func_ov070_0211fd60(daPropeller_Heyho_c *p) {
 /* -------------------------------------------------------------------------- */
 extern "C" {
 
-// local extern: CalcLib.h conflicts with this TU's retained opaque Vec3_VertAngle declaration.
-extern short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 extern short Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
-extern void Matrix4x3_FromRotationY(void *m, int ang);
-extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
-/* local extern: no shared math header declares MTX_MultVec43. */
-extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
-extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-/* local extern: see the named CalcLib-signature exception above. */
-extern int RandomIntInternal(int *seed);
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 
 extern signed char gCurrentSublevel;
@@ -652,12 +630,6 @@ extern Matrix4x3 data_020a0e68;
 
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);
 extern short Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
-extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-extern u16 DecIfAbove0_Short(u16* p);
-extern void Matrix4x3_FromRotationY(void* m, int angle);
-extern void Matrix4x3_ApplyInPlaceToRotationX(void* mF, s16 angX);
-/* local extern: no shared math header declares MTX_MultVec43. */
-extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 }
 
 /* Dive main. Turns toward mTargetAngY and levels the Z bank. When the animation
@@ -835,8 +807,6 @@ extern "C" int func_ov070_0211f5f0(daPropeller_Heyho_c *c) {
 
 /* -------------------------------------------------------------------------- */
 extern "C" {
-// local extern: CalcLib.h conflicts with this TU's retained opaque Vec3_VertAngle declaration.
-short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 void func_02012694(unsigned int a, void *p);
 int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);

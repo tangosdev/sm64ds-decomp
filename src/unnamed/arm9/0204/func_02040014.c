@@ -21,10 +21,10 @@ void func_02040014(void *arg) {
     WmStartParentCallback *cb = (WmStartParentCallback *)arg;
     int v;
 
-    if (cb->errcode == 0) {
+    if (cb->errcode == WM_ERRCODE_SUCCESS) {
         v = cb->state;
         switch (v) {
-        case 0: {
+        case WM_STATECODE_PARENT_START: {
             int sel = data_020a0f5c;
             data_020a0f24 = 0;
             switch (sel) {
@@ -44,9 +44,9 @@ void func_02040014(void *arg) {
             }
             break;
         }
-        case 2:
+        case WM_STATECODE_BEACON_SENT:
             break;
-        case 7: {
+        case WM_STATECODE_CONNECTED: {
             u16 buf[3];
             int matched;
             int cnt;
@@ -80,7 +80,7 @@ void func_02040014(void *arg) {
             WM_Disconnect(0, cb->aid);
             break;
         }
-        case 9:
+        case WM_STATECODE_DISCONNECTED:
             break;
         }
     } else {

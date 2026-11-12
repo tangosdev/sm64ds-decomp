@@ -31,8 +31,9 @@
  * The bounce states still walk the line in gotos and raw offsets -- that is
  * the matched state machine, not decoration. Helper prototypes with no owning
  * header (Puff_*, Sound_PlayBank1Panned, TrmpFx_Spawn,
- * TrmpItem_UpdateWithJumper, func_0203cd80, VEC_DotProduct, Vec3_MulScalar)
- * stay TU-local until include/ owns them.
+ * TrmpItem_UpdateWithJumper, func_0203cd80, Vec3_MulScalar) stay TU-local
+ * until include/ owns them; VEC_Add/Subtract/DotProduct come from
+ * math/CalcLib.h.
  */
 
 #include "Particle__System.h"
@@ -138,7 +139,7 @@ extern Trmpln2MarioAnimFilePtr sTrmpMarioSdownAnimFile;
 extern Vector3 data_020a0ebc;
 extern Vector3 sTrmp2MarioScale;
 extern Vector3 sTrmp3DMarioScale;
-extern void *sMgSubCamera;
+extern MgCamera *sMgSubCamera;
 extern int sTrmpRowBaseHeights[2];
 extern short sTrmpGoalRow;
 extern int sTrmp2Lives;
@@ -215,7 +216,6 @@ extern int sTrmpAnyOnLedge;
 extern TrmpGoal sTrmpGoalSlots;
 
 /* C callees owned by other units; no shared header declares them yet. */
-extern "C" int VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 extern "C" void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 extern "C" void Sound_PlayBank1Panned(int bank, int id, int panX);
 extern "C" void Puff_Spawn(int x, int y);
@@ -956,7 +956,7 @@ int dMgTrmpln2Mario_c::Load() {
     BMD_File *f;
     int ret;
 
-    f = (BMD_File *)dExtSimpleModel_c::LoadFile(sTrmpMarioModelFile);
+    f = dExtSimpleModel_c::LoadFile(sTrmpMarioModelFile);
     sTrmpAnimJump = (BCA_File *)dExtFrameCtrl_c::LoadFile(sTrmpMarioJumpAnimFile);
     sTrmpAnimDoubleJump1 = (BCA_File *)dExtFrameCtrl_c::LoadFile(sTrmpMarioDoubleJump1AnimFile);
     sTrmpAnimWallJump = (BCA_File *)dExtFrameCtrl_c::LoadFile(sTrmpMarioWallJumpAnimFile);
@@ -1361,7 +1361,7 @@ void dMgTrmpln3DMario_c::StateGoal() {
     sTrmpMariosOnLedges -= 1;
 
     if (mPos.y > 0) {
-        Camera_ProjectToScreen((MgCamera *)sMgSubCamera, &mPos, &va, &vb);
+        Camera_ProjectToScreen(sMgSubCamera, &mPos, &va, &vb);
         vb = vb - (Mg_GetTopScreenYOffset() + 0xc0);
     } else {
         Camera_ProjectToScreen((MgCamera *)sMgMainCamera, &mPos, &va, &vb);
@@ -2191,7 +2191,7 @@ int dMgTrmpln3DMario_c::Load() {
     BMD_File *f;
     int ret;
 
-    f = (BMD_File *)dExtSimpleModel_c::LoadFile(sTrmpMarioModelFile);
+    f = dExtSimpleModel_c::LoadFile(sTrmpMarioModelFile);
     sTrmpAnimJump = (BCA_File *)dExtFrameCtrl_c::LoadFile(sTrmpMarioJumpAnimFile);
     sTrmpAnimDoubleJump1 = (BCA_File *)dExtFrameCtrl_c::LoadFile(sTrmpMarioDoubleJump1AnimFile);
     sTrmpAnimWallJump = (BCA_File *)dExtFrameCtrl_c::LoadFile(sTrmpMarioWallJumpAnimFile);

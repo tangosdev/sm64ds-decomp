@@ -100,7 +100,6 @@ extern "C" {
 extern void Mg_DrawScoreTally(void *thiz, int a, int b, int c);
 extern void Mg_DrawBlinkSprite(void *c, int arg1, int arg2);
 extern s16 atan2_hold_d_s_mg_memory2_1(int y, int x);
-extern s16 FX_SinCosTable_[];
 extern void MgCoins_StartLoseOneMore(void);
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 extern u16 sMemory2CardFrameSprites[];
@@ -478,19 +477,13 @@ void dScMgMemory2_c::CardSelect(int cardIndex) {
 
     mSelectedValues[selectionIndex] = mCards[cardIndex].value;
     mSelectedCards[mSelectedCount] = (u8)cardIndex;
-    {
-        u8 *selectedCount = &mSelectedCount;
-        *selectedCount = *selectedCount + 1;
-    }
+    mSelectedCount++;
     mCards[cardIndex].state = CARD_FLIP_UP;
     func_02012718(0x143, mCards[cardIndex].x);
 
     if (mInputSeen != 0)
         return;
-    {
-        u8 *inputSeen = &mInputSeen;
-        *inputSeen = *inputSeen + 1;
-    }
+    mInputSeen++;
     Mg_SaveRecordPair(mCredits, mHudScore);
 }
 
@@ -573,8 +566,7 @@ void dScMgMemory2_c::ResultFinish() {
 
 void dScMgMemory2_c::ResultTurnCards() {
     if (mCardTimer) {
-        unsigned short *timer = &mCardTimer;
-        *timer = *timer - 1;
+        mCardTimer--;
         return;
     }
     if (mPairsFound >= mTargetPairs) {
@@ -606,8 +598,7 @@ void dScMgMemory2_c::ResultTurnCards() {
 
 void dScMgMemory2_c::ResultReward() {
     if (mCardTimer != 0) {
-        unsigned short *timer = &mCardTimer;
-        *timer = *timer - 1;
+        mCardTimer--;
         if (mCardTimer != 0) {
             return;
         }

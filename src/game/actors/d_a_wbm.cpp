@@ -62,6 +62,7 @@ enum daWbm_c_AssetId {
 #include "Sound.h"
 #include "math/Approach.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 #include "nitro/fx/fx_cp.h"
 
 typedef void (daWbm_c::*State)();
@@ -78,11 +79,6 @@ extern "C" {
 extern SharedFilePtr data_ov002_0210da38;
 /* The five fragments' launch angles. */
 extern u16 data_ov098_0213bf90[];
-
-void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
-s16 Vec3_HorzAngle(const Vector3 *from, const Vector3 *to);
-s32 Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-u16 DecIfAbove0_Short(u16 *counter);
 
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(dBgCh_Actr *self, dActor_c *actor, s32 radius, s32 height, Vector3_16 *a,
@@ -136,14 +132,14 @@ int daWbm_c::InitResources()
 
     if (mVariant == 2)
     {
-        bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210da38);
+        bmd = dExtSimpleModel_c::LoadFile(data_ov002_0210da38);
         if (mModel.SetFile(bmd, 1, 0x16) == 0)
             return 0;
     }
     else
     {
         dExtSimpleModel_c::LoadFile(data_ov002_0210da38);
-        bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov098_0213c91c);
+        bmd = dExtSimpleModel_c::LoadFile(data_ov098_0213c91c);
         if (mModel.SetFile(bmd, 1, 0x16) == 0)
             return 0;
     }
@@ -216,7 +212,7 @@ int daWbm_c::Behavior()
         mdCcAc_c.Clear();
         mdCcAc_c.Update();
     } else {
-        DecIfAbove0_Short((u16 *)&mStateTimer);
+        DecIfAbove0_Short(&mStateTimer);
     }
     return 1;
 }
@@ -279,7 +275,7 @@ void daWbm_c::StateDrop()
     int x, y, z;
     int playerY, bombY;
 
-    if ((u16)mStateTimer != 0)
+    if (mStateTimer != 0)
         return;
     player = ClosestPlayer();
     if (player == 0)

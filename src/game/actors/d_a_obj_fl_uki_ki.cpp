@@ -80,11 +80,11 @@ extern "C" daObjFl_UkiKi_c *daObjFl_UkiKi_c_classInit() {
 }
 
 s32 daObjFl_UkiKi_c::InitResources() {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(FloatingFloorLllBig_ModelFile), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(FloatingFloorLllBig_ModelFile), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(FloatingFloorLllBig_ClsnFile);
+    KCL_File *kcl = dBgW_Kc::LoadFile(FloatingFloorLllBig_ClsnFile);
     mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov064_0211ba6c);
 
     /* The platform carries the mesh along by velocity rather than by its

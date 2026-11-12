@@ -23,9 +23,6 @@
  *    scalar-extern spelling: spelled as
  *    the real member types, mwccarm homes the register arguments and the
  *    callers grow. G3i_PerspectiveW_ is the Fix12i method.
- *  - LAUNDER((char*)) stays on the mModel.data / mAnimation.data /
- *    mModel.mat4x3 alias reads in Render -- the plain member
- *    read changes which value-numbering class mwcc folds them into.
  *  - The Matrix4x3 copies go through the flat Mtx43; assigning Matrix4x3
  *    itself grows .text by 0x6c bytes.
  *  - Behavior's mFellOffThisFrame probe keeps the second `walk` induction variable
@@ -99,7 +96,6 @@ void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short angY);
 int Math_Function_0203b14c(int *p, int target, int a, int b, int c);
 unsigned char DecIfAbove0_Byte(unsigned char *p);
-void func_0201251c(int a, int b, void *pos, int c);
 unsigned int func_02012174(unsigned int a, unsigned int b);
 void func_020167a4(dExtAnmModel_c *model);
 
@@ -172,8 +168,6 @@ struct UnknownVsPlayerStateRow {
 };
 extern "C" UnknownVsPlayerStateRow sVsPlayerMoveStates[];
 extern "C" UnknownVsPlayerStateRow sVsPlayerAnimStates[];
-
-#define LAUNDER(x) ((char*)(x))
 
 #pragma defer_codegen off
 
@@ -532,7 +526,7 @@ void UnknownVsPlayer::Render() {
     func_0204531c((char *)&mModel.data, mModel.blendWeight);
 
     {
-        ModelComponents *components = (ModelComponents *)LAUNDER(&mModel.data);
+        ModelComponents *components = &mModel.data;
         unsigned int materialIndex;
         file = components->modelFile;
         mat = components->materials;
@@ -545,10 +539,10 @@ void UnknownVsPlayer::Render() {
         animation->Virtual10(components->transforms[15]);
     }
 
-    *(Mtx43 *)&mAnimation.mat4x3 = *(Mtx43 *)LAUNDER(&mModel.mat4x3);
+    *(Mtx43 *)&mAnimation.mat4x3 = *(Mtx43 *)&mModel.mat4x3;
 
     {
-        ModelComponents *components = (ModelComponents *)LAUNDER(&mAnimation.data);
+        ModelComponents *components = &mAnimation.data;
         unsigned int materialIndex;
         file = components->modelFile;
         mat = components->materials;
@@ -911,7 +905,7 @@ int dEntObj_c::InitResources() {
     func_0203c178(&data_020a0e68, 0x7d000, 0x7d000, 0x7d000);
     /* 0x888 is +0x1c inside the dExtSimpleModel_c at 0x86c -- its mat4x3. The cartridge's own
        ~dEntObj_c proves the extent; see tools/dtor_members.py. */
-    *(Mtx43 *)((char *)&mModel.mat4x3) = *(Mtx43 *)&data_020a0e68;
+    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 
     if (param1 != 1) {
         mAnmModel.SetFile((BMD_File *)data_ov075_0211d3bc.filePtr, 1, -1);

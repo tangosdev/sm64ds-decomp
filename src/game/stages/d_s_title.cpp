@@ -51,6 +51,7 @@
 #include "nitro/hw/registers.h"
 #include "nitro/mi/memory.h"
 #include "nitro/gx/g2.h"
+#include "math/CalcLib.h"
 
 /* SetFaders stores the fade controller here; slot 5 waits for the entrance fade. */
 
@@ -86,7 +87,6 @@ extern char data_020a0d90[];
 extern u8 gMainScreenLayers;
 extern int data_0208ee44;
 extern char data_0209ee90[];
-extern u16 DecIfAbove0_Short(u16 *p);
 extern void Enable3dEngines(void);
 /* The print helper reads name; Behavior reads the signed level ID and entrance.
  * IDs -2 and -1 select the versus and minigame scenes. The two trailing bytes

@@ -30,6 +30,7 @@
 #include "nitro/fx/fx.h"
 #include "private/mtx43.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 
 extern "C" {
 extern SharedFilePtr *data_ov002_020ff028[];
@@ -39,10 +40,6 @@ extern unsigned char data_0208a0e0;
 extern daPly_c *gPlayers[];
 
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-
-/* UpdateCapPos's stack temps are POD: Vector3's empty destructor changes
-   this function's frame. */
-extern void Vec3_Asr(Vector3 *vF, Vector3 *v, int amount);
 }
 
 dCapEnemy_c::dCapEnemy_c() {}
@@ -81,8 +78,8 @@ int dCapEnemy_c::AddCap(unsigned int param)
         mCapBank = 0;
     }
 
-    void *file = dExtSimpleModel_c::LoadFile(*data_ov002_020ff028[mCapId]);
-    int ok = mModel.SetFile((BMD_File *)file, 1, -1);
+    BMD_File *file = dExtSimpleModel_c::LoadFile(*data_ov002_020ff028[mCapId]);
+    int ok = mModel.SetFile(file, 1, -1);
     if (ok == 0) {
         mCapId = 6;
         /* Release is void. The value it leaves in r0 is AddCap's result. */

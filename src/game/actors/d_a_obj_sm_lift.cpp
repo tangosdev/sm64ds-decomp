@@ -16,8 +16,7 @@
  * - InitResources keeps the param1 mask as an offset read, and the yaw
  *   adjust and node-index add as writes through a pointer to the member.
  *   Plain member arithmetic changed the function size.
- * - Vec3_Asr, AngleDiff, Vec3_Sub, VEC_Mag, Vec3_MulScalar, VEC_Subtract and
- *   Math_Function_0203b14c are arm9 C helpers no header declares yet.
+ * - AngleDiff, Vec3_Sub, Vec3_MulScalar and Math_Function_0203b14c are arm9 C helpers no header declares yet.
  * The file ends with the mesh-collider hook HandlePlayerContact, the
  * veneer StoodOnCallback that InitResources installs, and the registry
  * factory daObjSm_Lift_c_classInit (0x02111818).
@@ -43,13 +42,10 @@ int data_ov018_02112f48[4] = {0x53504c43, 0x00020008, 0x00000fc5, 0x000000ff};
 int data_ov018_02112f58[4] = {0x01000fc5, 0x000000ff, 0xffffffff, 0xffffffff};
 
 extern "C" {
-void Vec3_Asr(Vector3 *d, Vector3 *s, int n);
 int AngleDiff(int, int);
 int Math_Function_0203b14c(void *p, int a, int b, int c, int d);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-int VEC_Mag(void *v);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int scalar);
-void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
 }
 
 /* dExtSimpleModel_c handles construct through func_02017acc and destroy through
@@ -222,13 +218,12 @@ s32 daObjSm_Lift_c::InitResources() {
     mPathId = *(int *)(c + 8) & 0xff;
     if (mPathId == 0xff)
         return 0;
-    void *f = dExtSimpleModel_c::LoadFile(gSmLiftModelFile);
-    ((dExtModel_c *)&mModel)->SetFile((BMD_File *)f, 1, -1);
+    BMD_File *f = dExtSimpleModel_c::LoadFile(gSmLiftModelFile);
+    ((dExtModel_c *)&mModel)->SetFile(f, 1, -1);
     UpdateModelTransform();
     UpdateClsnPosAndRot();
-    void *kf = dBgW_Kc::LoadFile(gSmLiftCollisionFile);
-    mMeshCollider.SetFile((KCL_File *)kf, mClsnMat, 0x1000, mAngleY,
-                          *(CLPS_Block *)data_ov018_02112f48);
+    KCL_File *kf = dBgW_Kc::LoadFile(gSmLiftCollisionFile);
+    mMeshCollider.SetFile(kf, mClsnMat, 0x1000, mAngleY, *(CLPS_Block *)data_ov018_02112f48);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
     mPauseTimer = 0x3c;

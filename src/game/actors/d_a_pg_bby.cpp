@@ -22,6 +22,7 @@
 #include "private/mtx43.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/CalcLib.h"
 
 /* The carry matrix is copied through the flat Mtx43: assigning Matrix4x3
    grows .text by 0x1c bytes. */
@@ -44,10 +45,6 @@ extern "C" {
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *thiz, void *actor, int r, int h, void *v, int b);
 
-int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
-unsigned short DecIfAbove0_Short(unsigned short *p);
-void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 void Matrix4x3_FromRotationY(void *m, int angle);
 
 extern dClipper data_0209f43c;
@@ -75,7 +72,7 @@ void daPgBby_c::OnTurnIntoEgg(daPly_c &player) {
 
 s32 daPgBby_c::InitResources()
 {
-    BMD_File *f = (BMD_File *)dExtSimpleModel_c::LoadFile(gPenguinBabyModelFile);
+    BMD_File *f = dExtSimpleModel_c::LoadFile(gPenguinBabyModelFile);
     mAnmModel.SetFile(f, 1, -1);
     int i;
     for (i = 0; i < 5; i++) {

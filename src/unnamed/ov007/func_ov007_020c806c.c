@@ -1,9 +1,8 @@
 #include "Ov007Spring.h"
 #include "nitro/mi/memory.h"
+#include "Ov007MenuMem.h"
 
-extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020c806c(void *c);
-extern void func_ov007_020c3d1c(void *p);
 
 /* Allocates a link and clears it (func_ov007_020c806c). */
 Ov007Link *func_ov007_020c80a4(void) {

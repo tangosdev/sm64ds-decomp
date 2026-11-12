@@ -3,16 +3,6 @@
 #include "nitro/fx/fx_trig.h"
 #include "private/spl_particle_views.h"
 
-/* File-local view of Particle::System (include/Particle__System.h is C++):
-   the direction and the two axes perpendicular to it. */
-typedef struct {
-    u8 pad_000[0x3c];
-    Vector3s direction; /* 0x3c */
-    u8 pad_042[0x1a];
-    Vector3s basisU; /* 0x5c */
-    Vector3s basisV; /* 0x62 */
-} ParticleSystemView;
-
 typedef struct Node {
     struct Node *next;
     struct Node *prev;
@@ -65,13 +55,12 @@ static inline int FMul(int a, int b) {
     return FX_MUL(a, b);
 }
 
-void func_0204cebc(void *c) {
-    ParticleSystemView *sys = (ParticleSystemView *)c;
+void func_0204cebc(ParticleSystem *sys) {
     Vector3s vecA;
     Vector3s vecB;
 
     vecA = data_02099fc4;
-    VEC_Fx16Normalize(&sys->direction, &vecB);
+    VEC_Fx16Normalize(sys->direction, &vecB);
 
     if (vecA.x == vecB.x && vecA.y == vecB.y && vecA.z == vecB.z) {
         vecA.x = 0x1000;
@@ -88,7 +77,7 @@ void func_0204cebc(void *c) {
     sys->basisV.z = (s16)(FX_MUL(vecB.x, sys->basisU.y) - FX_MUL(vecB.y, sys->basisU.x));
 }
 
-void func_0204cd5c(int *out, int *in, int sel, ParticleSystemView *sys) {
+void func_0204cd5c(int *out, int *in, int sel, ParticleSystem *sys) {
     switch (sel) {
     case 2:
         out[0] = 0;
@@ -113,18 +102,12 @@ void func_0204cd5c(int *out, int *in, int sel, ParticleSystemView *sys) {
     }
 }
 
-void func_0204c584(u8 *self, List *list) {
+void func_0204c584(ParticleSystem *sys, List *list) {
     int i;
     int count;
     int mag1;
     int mag2;
-    int d10;
-    int d14;
-    int d18;
-    int d1c;
-    int d20;
-    int d24;
-    int d28;
+    int ringAngle;
     u16 arr[3];
     Vector3 vecB;
     Vector3 vecC;
@@ -134,7 +117,6 @@ void func_0204c584(u8 *self, List *list) {
     PtclData *def;
     ParticleElement *p;
     int acc;
-    ParticleSystem *sys = (ParticleSystem *)self;
 
     emitter = sys->mDefinition;
     def = emitter->data;
@@ -144,18 +126,12 @@ void func_0204c584(u8 *self, List *list) {
     {
         u32 t = def->emissionType;
         if ((t == 2 || t == 3 || t == 5) && def->circleAxis == 3)
-            func_0204cebc(self);
+            func_0204cebc(sys);
     }
     i = 0;
     if (count <= 0)
         return;
-    d10 = 0;
-    d18 = 0;
-    d14 = 0;
-    d1c = 0x1000;
-    d20 = i;
-    d24 = i;
-    d28 = i;
+    ringAngle = 0;
     do {
         p = (ParticleElement *)func_0204d958(list);
         if (p == 0)
@@ -163,9 +139,7 @@ void func_0204c584(u8 *self, List *list) {
         func_0204d9a0((List *)&sys->particles, (Node *)p);
         switch (def->emissionType) {
         case 0:
-            p->offset.z = d14;
-            p->offset.y = p->offset.z;
-            p->offset.x = p->offset.y;
+            p->offset.x = p->offset.y = p->offset.z = 0;
             break;
         case 1:
             SPLRandom_VecFx32(&p->offset);
@@ -177,20 +151,18 @@ void func_0204c584(u8 *self, List *list) {
             SPLRandom_VecFx32_XY(&vecB);
             vecB.x = FX_MUL(vecB.x, sys->emitRadius);
             vecB.y = FX_MUL(vecB.y, sys->emitRadius);
-            func_0204cd5c((int *)&p->offset, (int *)&vecB, def->circleAxis,
-                          (ParticleSystemView *)self);
+            func_0204cd5c((int *)&p->offset, (int *)&vecB, def->circleAxis, sys);
             break;
         case 3: {
-            int q = d10 / count;
+            int q = ringAngle / count;
             fx16 s, c;
-            d10 += 0x10000;
+            ringAngle += 0x10000;
             s = FX_SinIdx(q >> 4);
             c = FX_CosIdx(q >> 4);
             vecC.x = FMul(s, sys->emitRadius);
             vecC.y = FMul(c, sys->emitRadius);
-            vecC.z = d18;
-            func_0204cd5c((int *)&p->offset, (int *)&vecC, def->circleAxis,
-                          (ParticleSystemView *)self);
+            vecC.z = 0;
+            func_0204cd5c((int *)&p->offset, (int *)&vecC, def->circleAxis, sys);
             break;
         }
         case 4:
@@ -203,8 +175,7 @@ void func_0204c584(u8 *self, List *list) {
             SPLRandom_VecFx32_XY(&vecE);
             vecE.x = FMul(FMul(vecE.x, sys->emitRadius), RandScale());
             vecE.y = FMul(FMul(vecE.y, sys->emitRadius), RandScale());
-            func_0204cd5c((int *)&p->offset, (int *)&vecE, def->circleAxis,
-                          (ParticleSystemView *)self);
+            func_0204cd5c((int *)&p->offset, (int *)&vecE, def->circleAxis, sys);
             break;
         }
         {
@@ -235,7 +206,7 @@ void func_0204c584(u8 *self, List *list) {
             b = def->scaleRandom;
             p->scale = (sys->callbackScale * ((b + 0xff) - ((b * (int)(s >> 0x18)) >> 7))) >> 8;
         }
-        p->animScale = (s16)d1c;
+        p->animScale = 0x1000;
         if (def->hasColorAnim && emitter->colorAnim->randomStartColor) {
             u32 s;
             ColorRamp *anim;
@@ -259,7 +230,7 @@ void func_0204c584(u8 *self, List *list) {
             data_020a4d30 = s;
             p->angle = (u16)s;
         } else {
-            p->angle = (u16)d20;
+            p->angle = 0;
         }
         if (def->hasRotation) {
             p->angularSpeed =
@@ -267,7 +238,7 @@ void func_0204c584(u8 *self, List *list) {
                             (def->minRotation << 0xc)) >>
                       0xc);
         } else {
-            p->angularSpeed = (s16)d24;
+            p->angularSpeed = 0;
         }
         {
             u32 s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
@@ -277,7 +248,7 @@ void func_0204c584(u8 *self, List *list) {
                                  8) +
                                 1);
         }
-        p->age = (u16)d28;
+        p->age = 0;
         {
             u32 hasTexAnim = def->hasTexAnim;
             if (hasTexAnim != 0 && emitter->texAnim->randomizeInit) {

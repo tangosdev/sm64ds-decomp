@@ -167,10 +167,10 @@ int daUdlift_c::InitResources()
         return 0;
     }
 
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov095_02136f68[mVariant]), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(*data_ov095_02136f68[mVariant]), 1, -1);
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*data_ov095_02136f74[mVariant]), mClsnMat,
-                          0x199, mAngleY, *data_ov095_021375a4[mVariant]);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*data_ov095_02136f74[mVariant]), mClsnMat, 0x199,
+                          mAngleY, *data_ov095_021375a4[mVariant]);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&daUdlift_c::OnMeshClsnTouch);
     mRider = 0;

@@ -47,6 +47,8 @@ enum daBakubaku_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
+#include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 /* dCc_c bit table: flags/vulnFlags/hitFlags share it. */
 enum {
@@ -87,24 +89,12 @@ extern daBakubaku_c::State data_ov032_02113aac; /* chase */
 extern daBakubaku_c::State data_ov032_02113a7c; /* surface */
 extern daBakubaku_c::State data_ov032_02113abc; /* dive */
 extern s32 data_0209f32c;
-extern Matrix4x3 data_020a0e68;
 
 extern VecFx32 data_ov032_021137cc; /* body cylinder */
 extern VecFx32 data_ov032_021137d8; /* head cylinder */
 
-int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 int AngleDiff(int a, int b);
-s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-void Vec3_Asr(void *d, void *s, int sh);
-int RandomIntInternal(int *seed);
-unsigned short DecIfAbove0_Short(unsigned short *p);
-
-void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
-void Matrix4x3_FromRotationY(void *m, int angY);
-void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
-void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 
 /* local extern: retain the matched scalar ABI; native Fix12<int> calls remain pending. */
 /* Parameter names keep this TU's @NNN. */
@@ -189,7 +179,7 @@ s32 daBakubaku_c::Behavior()
     if (UpdateKillByInvincibleChar(mWithMeshClsn, mAnmModel, 3) != 0)
         return 1;
 
-    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     DecIfAbove0_Short(&mChaseCooldown);
 
     State *state = mState;
@@ -246,7 +236,7 @@ s32 daBakubaku_c::CleanupResources()
 /* dExtSimpleModel_c matrix, shadow matrix, drop shadow. */
 void daBakubaku_c::UpdateModelMatrix() {
     Vector3 v;
-    Vec3_Asr(&v, &mPosX, 3);
+    Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(
         &data_020a0e68, mAngleX, mAngleY, mAngleZ);
@@ -309,7 +299,7 @@ int daBakubaku_c::ExecuteWander() {
         SetState(&data_ov032_02113aac);
         return 1;
     }
-    if (*(unsigned short *)&mStateTimer == 0) {
+    if (mStateTimer == 0) {
         unsigned int r = (unsigned int)RandomIntInternal(&data_0209e650.value);
         if (((r >> 8) & 3) == 0) {
             SetState(&data_ov032_02113a9c);
@@ -337,7 +327,7 @@ int daBakubaku_c::ExecutePause() {
         SetState(&data_ov032_02113aac);
         return 1;
     }
-    if (*(unsigned short *)&mStateTimer == 0)
+    if (mStateTimer == 0)
         SetState((State *)&data_ov032_02113a8c);
     return 1;
 }
@@ -353,7 +343,7 @@ int daBakubaku_c::EnterChase() {
 /* Chase: close on the stored player position, then surface or dive. */
 int daBakubaku_c::ExecuteChase() {
     /* Out of time, chase aborted, or no target: back to wandering. */
-    if (*(unsigned short *)&mStateTimer == 0 || ShouldReturnHome() == 1 || FindChaseTarget() == 0) {
+    if (mStateTimer == 0 || ShouldReturnHome() == 1 || FindChaseTarget() == 0) {
         mAnmModel.SetAnim((BCA_File *)data_ov032_02113a50.filePtr, 0, 0x1000, 0);
         mChaseCooldown = 0x64;
         SetState((State *)&data_ov032_02113a8c);

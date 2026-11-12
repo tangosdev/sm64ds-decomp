@@ -1,12 +1,6 @@
 #include "types.h"
-#include "private/fs_views.h"
+#include "nitro/fs/archive.h"
 #include "nitro/fs/overlay.h"
-
-extern FSArchive *FS_FindArchive(const char *name, int name_len);
-extern int FS_UnloadArchive(FSArchive *p_arc);
-extern void FS_SetArchiveProc(FSArchive *p_arc, FS_ARCHIVE_PROC_FUNC proc, u32 flags);
-extern int FS_LoadArchive(FSArchive *p_arc, u32 base, u32 fat, u32 fat_size, u32 fnt, u32 fnt_size,
-                          FS_ARCHIVE_READ_FUNC read_func, FS_ARCHIVE_WRITE_FUNC write_func);
 
 extern char data_02099e6c[]; /* "rom" */
 extern int func_02042668(FSFile *p_file, int command);
@@ -38,7 +32,7 @@ int func_020423dc(int *r6) {
 
     h = FS_FindArchive(data_02099e6c, 3);
     FS_UnloadArchive(h);
-    FS_SetArchiveProc(h, &func_02042668, -1);
+    FS_SetArchiveProc(h, &func_02042668, FS_ARCHIVE_PROC_ALL);
     r5 = *r6;
     r6++;
     for (r3 = 0; r3 < 4; r3++) {

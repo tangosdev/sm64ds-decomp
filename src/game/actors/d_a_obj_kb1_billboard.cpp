@@ -43,7 +43,7 @@ extern "C" SpawnInfo<daObjKb1Billboard_c> g_profile_KB1_BILLBOARD = {
     daObjKb1Billboard_c_classInit, 0x012d, 0x00be, 0, 0, 0x00010000, 0, 0};
 
 int daObjKb1Billboard_c::InitResources() {
-    BMD_File *file = (BMD_File *)dExtSimpleModel_c::LoadFile(gKb1BallModelFile);
+    BMD_File *file = dExtSimpleModel_c::LoadFile(gKb1BallModelFile);
     mModel.SetFile(file, 1, -1);
     UpdateModelTransform();
     return 1;

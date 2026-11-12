@@ -1,7 +1,8 @@
 //cpp
+#include "nitro/hw/registers.h"
 
 extern "C" {
 void MenuGfx_StartCapture(void) {
-    *(volatile unsigned int *)0x4000064 = 0x80370010;
+    REG_DISPCAPCNT = 0x80370010;
 }
 }

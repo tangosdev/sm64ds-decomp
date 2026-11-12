@@ -1,6 +1,5 @@
 #include "Ov007Display.h"
-
-extern void *MenuMem_AllocClear(const char *name, int size);
+#include "Ov007MenuMem.h"
 
 /* Sizes the character and palette tables (func_ov007_020b6d40 asks for 4
  * and 6), zeroed. */
