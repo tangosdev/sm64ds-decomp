@@ -53,6 +53,7 @@ struct Blink {
     unsigned long long starts = 0, shown = 0, ends = 0;
 };
 bool is_hurt_anim(unsigned anim);
+bool is_death_anim(unsigned anim);   // FRIENDLOOK1: St_DeadHit's animations (no blink after a fatal hurt)
 // One call per follower pass. Returns the value to write into Player+0x6a0
 // (0 = no blink); *started is set on the pass that arms a new blink.
 // FRIENDLOOK1: the count is armed again (36) when the hurt animation ends, as the

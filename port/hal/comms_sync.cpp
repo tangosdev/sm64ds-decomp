@@ -4098,6 +4098,11 @@ void gw_follow() {
                 if (!v && prev_v[i])
                     std::fprintf(stderr, "[blinkproof] t=%u f=%u GHOST seat=%d blink off\n",
                                  comms_hub_now_ms(), g_gw_frame, s);
+                static unsigned prev_anim[kPortBodySlots];
+                if (sm.anim != prev_anim[i] && ghost_tongue::is_death_anim(sm.anim))
+                    std::fprintf(stderr, "[blinkproof] t=%u f=%u GHOST seat=%d death anim %u (no re-arm), blink left %u\n",
+                                 comms_hub_now_ms(), g_gw_frame, s, (unsigned)sm.anim, v);
+                prev_anim[i] = sm.anim;
                 prev_v[i] = v;
             }
             static int blog = -1;       // LAB: SM64DS_GHOST_BLINK_LOG=1, a line per blink frame with the ROM's own draw gate

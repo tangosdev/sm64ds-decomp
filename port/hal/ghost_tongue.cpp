@@ -14,6 +14,8 @@ extern unsigned char data_ov002_0210a34c[];
 extern unsigned char data_ov002_0210a084[];
 extern unsigned char data_ov002_0210eb88[];
 extern unsigned data_ov002_0210a6d4[];       // St_Hurt_Init's eight hurt animation ids
+extern int data_ov002_0210a424[];            // St_DeadHit_Init's two death animation ids
+extern int data_ov002_0210a07c[];            // St_DeadHit_Main's two (the fall after the knock)
 }
 
 namespace port {
@@ -117,6 +119,14 @@ bool blink_at_start() {
 }
 }  // namespace
 
+// FRIENDLOOK1 review: a hurt that takes the last health ends in St_DeadHit (func_ov002_020c5dec(8)), and the ROM arms
+// no blink then. Its animations are the two of St_DeadHit_Init's table and the two of St_DeadHit_Main's.
+bool is_death_anim(unsigned anim) {
+    for (int i = 0; i < 2; ++i)
+        if ((unsigned)data_ov002_0210a424[i] == anim || (unsigned)data_ov002_0210a07c[i] == anim) return true;
+    return false;
+}
+
 unsigned blink_step(Blink &b, unsigned anim, bool *started, bool end_rearm) {
     if (started) *started = false;
     const bool hurt = is_hurt_anim(anim);
@@ -132,7 +142,7 @@ unsigned blink_step(Blink &b, unsigned anim, bool *started, bool end_rearm) {
             ++b.starts;
             if (started) *started = true;
         }
-        if ((b.prev_hurt && !hurt && end_rearm) || (was_shock && !shock)) {
+        if ((b.prev_hurt && !hurt && end_rearm && !is_death_anim(anim)) || (was_shock && !shock && !is_death_anim(anim))) {
             b.left = 0x24;
             ++b.ends;
             if (started) *started = true;
