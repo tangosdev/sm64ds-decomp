@@ -1,0 +1,51 @@
+{
+  "about": "MOVERS1: the squasher (84) inside the Lethal Lava Land volcano: Mario next to it, Luigi far off; [mvs] samples on both",
+  "save": {
+    "preset": "fresh",
+    "stars": {
+      "0": "7f",
+      "5": "1"
+    },
+    "flags": [
+      "messages_seen"
+    ]
+  },
+  "room": {
+    "collision": 1,
+    "damage": 1,
+    "interact": 1,
+    "tp": 1
+  },
+  "proof": {
+    "secs": 120,
+    "shot_ms": 40000,
+    "census": [
+      84
+    ]
+  },
+  "env": {
+    "SM64DS_COOP_MOVE_SAMPLE": "15",
+    "SM64DS_COOP_MOVE_GOD": "1",
+    "SM64DS_COOP_MOVERS1_SAMPLE": "15"
+  },
+  "players": [
+    {
+      "character": "mario",
+      "level": 15,
+      "act": 1,
+      "near": {
+        "class": 84,
+        "dist": 700
+      }
+    },
+    {
+      "character": "luigi",
+      "level": 15,
+      "act": 1,
+      "near": {
+        "class": 84,
+        "dist": 2500
+      }
+    }
+  ]
+}

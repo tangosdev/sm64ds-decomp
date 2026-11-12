@@ -1,0 +1,52 @@
+{
+  "about": "MOVERS1: Mario on the Lethal Lava Land rolling log (70), Luigi watching from the shore; [mvs] samples of the log on both",
+  "save": {
+    "preset": "fresh",
+    "stars": {
+      "0": "7f"
+    },
+    "flags": [
+      "messages_seen"
+    ]
+  },
+  "room": {
+    "collision": 1,
+    "damage": 1,
+    "interact": 1,
+    "tp": 1
+  },
+  "proof": {
+    "secs": 120,
+    "shot_ms": 40000,
+    "census": [
+      70,
+      102
+    ]
+  },
+  "env": {
+    "SM64DS_COOP_MOVE_SAMPLE": "15",
+    "SM64DS_COOP_MOVE_GOD": "1",
+    "SM64DS_COOP_MOVERS1_SAMPLE": "15"
+  },
+  "players": [
+    {
+      "character": "mario",
+      "level": 14,
+      "act": 1,
+      "near": {
+        "class": 70,
+        "dist": 40,
+        "dy": 300
+      }
+    },
+    {
+      "character": "luigi",
+      "level": 14,
+      "act": 1,
+      "near": {
+        "class": 70,
+        "dist": 900
+      }
+    }
+  ]
+}

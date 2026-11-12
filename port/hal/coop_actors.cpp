@@ -47,7 +47,7 @@ namespace {
 // ---------------------------------------------------------------------------
 CoopMoveStats g_st = {};
 bool g_guard = true;          // SM64DS_COOP_MOVE_GUARD=0 is the proof CONTROL: no size / value guard (the pre-fix behaviour)
-enum : unsigned { kFPhase = 1u, kFSlave = 2u, kFBoss = 4u, kFSampleOnly = 8u };   // kFBoss (MOVERS9): the pose owner is the boss's TARGET seat, the same rule as the boss lane's authority   // kFSlave: the non-owner pins the pose every frame to the owner's, extrapolated
+enum : unsigned { kFPhase = 1u, kFSlave = 2u, kFBoss = 4u, kFSampleOnly = 8u, kFExt = 16u };   // kFExt (MOVERS1): a class 1.0.4 has no row for: its records travel in their own batch (kWorldMoverBatchX)   // kFBoss (MOVERS9): the pose owner is the boss's TARGET seat, the same rule as the boss lane's authority   // kFSlave: the non-owner pins the pose every frame to the owner's, extrapolated
 // A phase field: where it sits, how wide it is, and the range a received value must lie in (signed for width 4, unsigned for 1 / 2).
 struct Field { uint16_t off; uint8_t size; int32_t lo, hi; };
 struct Prof {
@@ -133,6 +133,8 @@ void prof_index() {
         if (p.size == 0) std::fprintf(stderr, "[coopmove] size guard: class %d is not in the size table (pose only, no fields)\n", (int)p.id);
         g_prof_of[p.id] = (short)i;
     }
+    if (!coop_movers1_on())                      // MOVERS1 control: the new rows are only sampled (no owner, no pin, no publish)
+        for (int i = 0; i < g_nprof; ++i) if (g_prof[i].id && (g_prof[i].flags & kFExt)) g_prof[i].flags |= kFSampleOnly;
     if (!g_new_rows) {
         static const uint16_t kNew[] = { 262, 250, 251, 236, 240, 238, 315, 234, 18, 194, 96, 72 };
         for (uint16_t id : kNew) if (g_prof_of[id] >= 0) g_prof[g_prof_of[id]].flags |= kFSampleOnly;
@@ -483,7 +485,9 @@ void on_world(int seat, int sub, const unsigned char *p, int len, void *) {
     if (!g_act) { ++g_st.drop_off; return; }
     if (seat < 0 || seat >= kSeats || seat == g_my) { ++g_st.drop_seat; return; }
     if (sub == kWorldBombState) { coop_bombs_on_world(seat, p, len); return; }   // BOBSYNC1 (hal/coop_bombs.cpp)
-    if (sub != kWorldMoverBatch) { ++g_st.drop_bad; return; }
+    if (sub == kWorldOneWay) { coop_oneway_on_world(seat, p, len); return; }     // MOVERS1 (hal/coop_oneway.cpp)
+    if (sub == kWorldMoverBatchX && !coop_movers1_on()) { ++g_st.drop_bad; return; }   // the control: as 1.0.4 does
+    if (sub != kWorldMoverBatch && sub != kWorldMoverBatchX) { ++g_st.drop_bad; return; }
     if (!coop_mover_batch_validate(p, len)) { ++g_st.drop_bad; return; }
     MoverBatchHead h; std::memcpy(&h, p, sizeof h);
     if (h.pver != kMoverProfileVer) { ++g_st.drop_ver; return; }
@@ -838,6 +842,9 @@ void apply_rec(int slot, Slot &s, Rx &x) {
         wr16(a, 0x8c, x.ax); wr16(a, 0x8e, x.ay); wr16(a, 0x90, x.az);
         for (int k = 0; k < p.nf; ++k) write_field(a, p, p.f[k], x.f[k]);
         fix_lift_heading(slot, a, p, x);
+        // MOVERS1: the WF rotating bridge (51, daObjBk_Rotebar_c) turns mPrevAngleY (+0x94) and copies it to mAngleY each frame,
+        // so the turn is mPrevAngleY: it takes the owner's (always a whole 0x100 step there, the pause test needs that)
+        if (p.id == 51 && (p.flags & kFExt)) wr16(a, 0x94, (int16_t)(uint16_t)(((unsigned)(uint16_t)x.ay + 0x80u) & 0xff00u));
         ++g_st.applied_write; ++g_cs[s.prof].applied;
         if (force) ++g_st.snap_applied;
     } else {
@@ -924,17 +931,19 @@ void scan_ents() {
     }
 }
 
+bool slot_ext(int slot) { return g_slot[slot].prof >= 0 && (g_prof[g_slot[slot].prof].flags & kFExt) != 0; }
+
 bool alive_rx(const Rx &x, unsigned now) {
     return x.valid && (!g_stale_on || (unsigned)(now - x.t) <= (unsigned)kStaleMs);
 }
 
-void send_batch(bool snap, const unsigned char *recs, int nrecs, int bytes) {
+void send_batch(bool snap, const unsigned char *recs, int nrecs, int bytes, bool ext = false) {
     unsigned char buf[kPayloadMax];
     MoverBatchHead h; std::memset(&h, 0, sizeof h);
     h.key = wire_key(); h.flags = snap ? 1 : 0; h.count = (uint8_t)nrecs; h.pver = kMoverProfileVer;
     std::memcpy(buf, &h, sizeof h);
     std::memcpy(buf + sizeof h, recs, (size_t)bytes);
-    if (coop_send_world(kWorldMoverBatch, buf, (int)sizeof h + bytes)) {
+    if (coop_send_world(ext ? kWorldMoverBatchX : kWorldMoverBatch, buf, (int)sizeof h + bytes)) {
         if (snap) { ++g_st.snap_batches_sent; g_st.snap_recs_sent += (unsigned)nrecs; }
         else { ++g_st.batches_sent; g_st.recs_sent += (unsigned)nrecs; }
     }
@@ -983,6 +992,7 @@ void slave(Slot &s, const Rx &x, unsigned now) {
     wr32(a, 0x60, clampi(ty, -kMoverMaxUnits * 4096, kMoverMaxUnits * 4096));
     wr32(a, 0x64, clampi(tz, -kMoverMaxUnits * 4096, kMoverMaxUnits * 4096));
     wr16(a, 0x8c, tax); wr16(a, 0x8e, tay); wr16(a, 0x90, taz);
+    if (p.id == 51 && (p.flags & kFExt)) wr16(a, 0x94, (int16_t)(uint16_t)(((unsigned)(uint16_t)tay + 0x80u) & 0xff00u));   // MOVERS1: the bridge's turn word (apply_rec)
     s.lvalid = false;
     if (s.pin_lf == kPinStay) s.pin_lf = 0;   // TONGUE1: an owner's pose replaced the parked copy
     ++g_st.slaved;
@@ -1012,6 +1022,13 @@ unsigned claim_cd(const char *pl, const Slot &s) {
     // the tilting platform (141) mBumped +0x34c from their mesh callbacks; each Behavior reads and clears its flag.
     if (g_rider_own && ((p.id == 140 && p.size >= 0x327 && *(const unsigned char *)(s.a + 0x326) != 0) ||
                         (p.id == 141 && p.size >= 0x34d && *(const unsigned char *)(s.a + 0x34c) != 0)))
+        return 0;
+    // MOVERS1: the movers a rider drives. The rolling logs (70 LLL, 102 TTM, daObjMaruta_c) set mHitByPlayer +0x342 from their
+    // collision callback when MY player walks them and clear it at the end of Behavior; the BBH trapdoor (160, daTrsTrap_c) keeps
+    // the body standing on it in mStandingActor +0x124 the same way. The walker's console owns them, so friends see the log roll
+    // and the door tip under him. (Offsets checked against the class headers in hal/coop_oneway.cpp.)
+    if (g_rider_own && (p.flags & kFExt) && (((p.id == 70 || p.id == 102) && p.size >= 0x343 && *(const unsigned char *)(s.a + 0x342) != 0) ||
+                                             (p.id == 160 && p.size >= 0x128 && rd32(s.a, 0x124) != 0)))
         return 0;
     return (unsigned)(std::min)(65535.0, dist3(pl, rd32(s.a, 0x5c), rd32(s.a, 0x60), rd32(s.a, 0x64)));
 }
@@ -1209,11 +1226,14 @@ void process(unsigned now) {
     // publish, most overdue first (every third tick, so a datagram carries a whole batch)
     if ((g_lf % 3) != 0) ndue = 0;
     std::sort(due, due + ndue, [](const Due &a, const Due &b) { return a.age > b.age; });
+    // MOVERS1: the classes 1.0.4 knows first, in their own batches; the new classes after them, in kWorldMoverBatchX batches
+    std::stable_partition(due, due + ndue, [](const Due &d) { return !slot_ext(d.slot); });
     int i = 0;
     while (i < ndue) {
         nrec = 0; bytes = 0;
         int first = i;
-        while (i < ndue && nrec < kMoverMaxRecs && bytes + rec_bytes(g_slot[due[i].slot].prof) + (int)sizeof(MoverBatchHead) <= kPayloadMax) {
+        const bool ext = slot_ext(due[i].slot);
+        while (i < ndue && nrec < kMoverMaxRecs && slot_ext(due[i].slot) == ext && bytes + rec_bytes(g_slot[due[i].slot].prof) + (int)sizeof(MoverBatchHead) <= kPayloadMax) {
             Slot &s = g_slot[due[i].slot];
             const unsigned my_cd = link_cd(pl, due[i].slot);
             bytes += fill_rec(recs + bytes, due[i].slot, s, my_cd, false);
@@ -1222,7 +1242,7 @@ void process(unsigned now) {
         if (nrec == 0) { ++i; continue; }
         if (g_tokens < 1.0) { ++g_st.throttled; break; }          // the rest wait for the next tick
         g_tokens -= 1.0;
-        send_batch(false, recs, nrec, bytes);
+        send_batch(false, recs, nrec, bytes, ext);
         for (int k = first; k < i; ++k) {
             Slot &s = g_slot[due[k].slot];
             s.last_pub = now;
@@ -1241,25 +1261,29 @@ void process(unsigned now) {
         if (!member_ok(q)) { j.on = false; continue; }
         int emitted = 0;
         while (j.cursor < kSlots && emitted < 3) {
-            nrec = 0; bytes = 0;
+            // MOVERS1: one walk fills two batches, the classes 1.0.4 knows (0x10) and the new ones (0x12); either one full ends the walk
+            static unsigned char xrecs[kPayloadMax];
+            unsigned char *buf[2] = { recs, xrecs };
+            int nr[2] = { 0, 0 }, by[2] = { 0, 0 };
             const int c0 = j.cursor;
-            while (j.cursor < kSlots && nrec < kMoverMaxRecs) {
+            while (j.cursor < kSlots) {
                 Slot &s = g_slot[j.cursor];
                 const int slot = j.cursor;
                 bool mine = s.a && s.seen >= 3 && !skip_state(s.a, g_prof[s.prof]) && s.owner == g_my && (s.heard || coop_group_i_am_owner()) &&
                             !(s.pin_lf == kPinStay || (s.pin_lf && g_lf - (s.pin_lf - 1) <= 1u));
-                if (mine && bytes + rec_bytes(s.prof) + (int)sizeof(MoverBatchHead) > kPayloadMax) break;
+                const int e = mine && slot_ext(slot) ? 1 : 0;
+                if (mine && (nr[e] >= kMoverMaxRecs || by[e] + rec_bytes(s.prof) + (int)sizeof(MoverBatchHead) > kPayloadMax)) break;
                 ++j.cursor;
                 if (!mine) continue;
                 const unsigned my_cd = link_cd(pl, slot);
-                bytes += fill_rec(recs + bytes, slot, s, my_cd, frozen_state(s.a));
-                ++nrec;
+                by[e] += fill_rec(buf[e] + by[e], slot, s, my_cd, frozen_state(s.a));
+                ++nr[e];
             }
-            if (nrec > 0) {
-                if (g_tokens < 1.0) { j.cursor = c0; ++g_st.throttled; break; }
-                g_tokens -= 1.0;
-                send_batch(true, recs, nrec, bytes);
-                ++emitted;
+            const int need = (nr[0] > 0 ? 1 : 0) + (nr[1] > 0 ? 1 : 0);
+            if (need > 0) {
+                if (g_tokens < (double)need) { j.cursor = c0; ++g_st.throttled; break; }
+                for (int e = 0; e < 2; ++e)
+                    if (nr[e] > 0) { g_tokens -= 1.0; send_batch(true, buf[e], nr[e], by[e], e == 1); ++emitted; }
             }
         }
         if (j.cursor >= kSlots) {
@@ -1417,6 +1441,7 @@ void on_frame(unsigned now) {
     coop_cap_frame(now);       // CAPLOSS1: a friend's lost cap on my console (hal/coop_cap.cpp)
     coop_balls_frame(now);     // BOBSYNC1: the balls a spawner makes, shared (hal/coop_balls.cpp)
     coop_bombs_frame(now);     // BOBSYNC1: a placed Bob-omb's life cycle follows its owner's (hal/coop_bombs.cpp)
+    coop_oneway_frame(now);    // MOVERS1: the knock-down plank's fall, shared (hal/coop_oneway.cpp)
     if (g_god) {      // lab knob: the proof player does not die and does not fall out of a course whose warp lands in the air
         data_02092144[data_0209f250 & 15] = (short)(8 << 8);
         if (g_spawned && g_lf - g_spawn_lf == 30) { std::memcpy(g_god_pos, pl + 0x5c, 12); g_god_set = true; }
@@ -1516,6 +1541,11 @@ int coop_move_class_stats(CoopClassStat *out, int max) {
         o.pin_n = c.pin_n; o.pin_big = c.pin_big; o.held_pins = c.held_pins; o.pin_avg = c.pin_n ? c.pin_sum / c.pin_n : 0.0; o.pin_max = c.pin_max;
     }
     return n;
+}
+
+bool coop_movers1_on() {
+    static const bool on = [] { const char *e = std::getenv("SM64DS_COOP_MOVERS1"); return !(e && *e == '0'); }();
+    return on;
 }
 
 bool coop_mover_req_validate(const void *p, int len) {

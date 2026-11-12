@@ -172,3 +172,19 @@ ROW(152, "RICKSHAW_BS",          50, 8, 150, 2, 0)
 ROW(156, "ROTATING_PLATFORM_BS",  50, 8, 150, 2, 0)
 ROW(130, "FLYING_CARPET",       100, 8, 150, 2, 0)
 ROW(168, "DORRIE",              100, 16, 250, 2, 0)
+// ---- MOVERS1 (coopfix1 wave 3, AUDIT-WORLD H8 / H9): movers that moved on one screen only. flags carry kFExt (16): 1.0.4 has no
+// row for these classes and refuses a WHOLE 0x10 batch holding one, so their records travel in their own kWorldMoverBatchX (0x12)
+// batches, which 1.0.4 drops alone. Field offsets are checked against each class's header in hal/coop_oneway.cpp.
+// Rider-driven (the walker's console owns them, claim_cd): the rolling logs roll by mRollAngVel (+0x33c, daObjMaruta_c) under a
+// walker; the BBH trapdoor tips under the body standing on it (its tilt is the pose's angle X).
+ROW(70,  "ROLLING_LOG_LLL",      50, 8, 150, 19, 1, {0x33c, 2, 0, 0xffff})
+ROW(102, "ROLLING_LOG_TTM",      50, 8, 150, 19, 1, {0x33c, 2, 0, 0xffff})
+ROW(160, "TRAP_DOOR",            50, 8, 150, 18, 0)
+// The BBH merry-go-round turns 0x80 a frame from its own spawn for good (daTrsTrap_c mIndex 3): one shared turn.
+ROW(159, "MERRY_GO_ROUND",      100, 8, 150, 18, 0)
+// Timed hazards on their own clock (H9). The squasher (84, daObjFm_Battan_c) slams when ITS console's player comes within 1000
+// units and lifts on a 60-frame timer: it carries its slam speed, timer and state so every copy slams with the nearest player's.
+// The WF rotating bridge (51, daObjBk_Rotebar_c) pauses 60 frames per half turn: the pause timer rides with the pose and the turn
+// word mPrevAngleY (+0x94, below the field window) is set from the pose's yaw (apply_rec / slave).
+ROW(84,  "SQUASHER",            100, 8, 150, 19, 3, {0x31e, 2, 0, 0xffff}, {0x320, 2, 0, 0xffff}, {0x322, 1, 0, 4})
+ROW(51,  "ROTATING_BRIDGE",     100, 8, 150, 19, 1, {0x31e, 1, 0, 0x3c})

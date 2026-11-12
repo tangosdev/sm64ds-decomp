@@ -1,0 +1,57 @@
+{
+  "about": "MOVERS1: Mario by a plain Whomp in Whomp's Fortress, Luigi near the knock-down plank; census of Whomps, planks and the rotating bridge",
+  "save": {
+    "preset": "fresh",
+    "stars": {
+      "0": "7f",
+      "1": "1"
+    },
+    "flags": [
+      "messages_seen"
+    ]
+  },
+  "room": {
+    "collision": 1,
+    "damage": 1,
+    "interact": 1,
+    "tp": 1
+  },
+  "proof": {
+    "secs": 150,
+    "shot_ms": 45000,
+    "census": [
+      164,
+      44,
+      51
+    ]
+  },
+  "players": [
+    {
+      "character": "mario",
+      "level": 7,
+      "act": 1,
+      "near": {
+        "class": 164,
+        "dist": 500
+      },
+      "env": {
+        "SM64DS_COOP_MOVERS1_POKE": "300:census,600:whomp,660:plank,1500:census"
+      }
+    },
+    {
+      "character": "luigi",
+      "level": 7,
+      "act": 1,
+      "near": {
+        "class": 44,
+        "dist": 400
+      }
+    }
+  ],
+  "env": {
+    "SM64DS_COOP_MOVERS1_POKE": "300:census,1500:census",
+    "SM64DS_COOP_MOVE_SAMPLE": "30",
+    "SM64DS_COOP_ONEWAY_LOG": "1",
+    "SM64DS_COOP_MOVERS1_SAMPLE": "15"
+  }
+}

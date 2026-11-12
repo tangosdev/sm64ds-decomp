@@ -58,7 +58,19 @@ namespace port {
 enum : uint8_t {
     kCtlMoverSnapReq  = 0x06,
     kWorldMoverBatch  = 0x10,
+    // MOVERS1 (1.0.5): movers 1.0.4 has no row for travel in their OWN batches. 1.0.4 refuses a whole 0x10 batch when one
+    // record's class is not in its table, so a new class inside a 0x10 batch would stop every mover a 1.0.4 friend already
+    // syncs. 1.0.4 counts 0x12 / 0x13 as unknown sub-types (drop_bad) and drops each alone.
+    kWorldMoverBatchX = 0x12,     // same head and records as 0x10, only classes whose row carries kFExt
+    kWorldOneWay      = 0x13,     // hal/coop_oneway.cpp: one-way object states (the Whomp's Fortress knock-down plank)
 };
+
+// hal/coop_oneway.cpp (MOVERS1): a placed object whose state only goes one way (standing -> knocked over) follows the
+// furthest state any console in the group reached. Handed SYNW 0x13 by coop_actors.cpp; frame called from the mover frame.
+void coop_oneway_on_world(int seat, const void *payload, int len);
+void coop_oneway_frame(unsigned now_ms);
+// MOVERS1: SM64DS_COOP_MOVERS1=0 is the control (no new rows, no one-way states, no new live_gone classes: the 1.0.4 behaviour).
+bool coop_movers1_on();
 
 enum : int {
     kMoverMaxFields   = 12,
