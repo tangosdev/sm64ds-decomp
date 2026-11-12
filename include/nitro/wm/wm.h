@@ -104,6 +104,13 @@ typedef enum WMLinkLevel {
     WM_LINK_LEVEL_MAX
 } WMLinkLevel;
 
+/* The beacon's attribute byte (WMParentParam's flags, as WM_SetGameInfo
+ * takes them). */
+#define WM_ATTR_FLAG_ENTRY 0x0001
+#define WM_ATTR_FLAG_MB 0x0002
+#define WM_ATTR_FLAG_KS 0x0004
+#define WM_ATTR_FLAG_CS 0x0008
+
 typedef enum WMPriority {
     WM_PRIORITY_URGENT = 0,
     WM_PRIORITY_HIGH,

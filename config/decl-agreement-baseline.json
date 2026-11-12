@@ -2610,11 +2610,6 @@
         "param:#2 int"
       ]
     },
-    "WM_GetSystemWork": {
-      "src/engine/wm/WM_Etc.cpp": [
-        "return:int *"
-      ]
-    },
     "_Z11UpdateAngleRssis": {
       "src/game/actors/d_a_demo.cpp": [
         "param:#1 void *"
@@ -16954,12 +16949,6 @@
     "func_020729f4": {
       "src/unnamed/arm9/0207/func_02071d3c.cpp": [
         "param:#1 S72d90 *"
-      ]
-    },
-    "WM_SetGameInfo": {
-      "src/engine/mb/MB_GameInfo.c": [
-        "param:#5 int",
-        "param:#6 int"
       ]
     },
     "NNS_FndVisitAllocatedForExpHeap": {

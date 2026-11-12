@@ -41,13 +41,13 @@
 #include "nitro/mi/memory.h"
 #include "nitro/fs/file.h"
 #include "private/mb_common.h"
+#include "nitro/wm/wm_api.h"
 
 /* local extern: MI_Memory.c's asm fills and copies; no header declares them. */
-extern int func_020688e4(void);
-extern int func_020688cc(void);
-extern int MBi_GetTgid(void);
-extern int MBi_GetAttribute(void);
-extern int WM_SetGameInfo(int a0, int *src, int len, int a3, int arg5, int arg6, u8 arg7);
+extern u16 func_020688e4(void);
+extern u16 func_020688cc(void);
+extern u16 MBi_GetTgid(void);
+extern u8 MBi_GetAttribute(void);
 
 typedef struct MbBeaconSendStatus {
     MBGameInfo *gameInfoListTop; /* 0x00 */
@@ -393,8 +393,8 @@ void MBi_SendFixedBeacon(void) {
     else
         data_020a9d2c.state = 4;
 
-    WM_SetGameInfo(0, (int *)&data_020a9d40, 0x70, func_020688e4(), func_020688cc(), MBi_GetTgid(),
-                   MBi_GetAttribute() | 2);
+    WM_SetGameInfo(0, (u16 *)&data_020a9d40, 0x70, func_020688e4(), func_020688cc(), MBi_GetTgid(),
+                   (u8)(MBi_GetAttribute() | WM_ATTR_FLAG_MB));
 }
 
 /* NitroSDK MBi_InitSendVolatBeacon, beacon send state 4: start the volatile
@@ -424,9 +424,9 @@ void MBi_SendVolatBeacon(void) {
     int i;
     u32 count;
     u8 *dst;
-    int a;
-    int b;
-    int c;
+    u16 a;
+    u16 b;
+    u16 c;
     u8 seq;
 
     if (data_020a9d2c.seqNoVolat != data_020a9d2c.nowGameInfop->seqNoVolat) {
@@ -480,5 +480,6 @@ void MBi_SendVolatBeacon(void) {
     a = func_020688e4();
     b = func_020688cc();
     c = MBi_GetTgid();
-    WM_SetGameInfo(0, (int *)&data_020a9d40, 0x70, a, b, c, MBi_GetAttribute() | 2);
+    WM_SetGameInfo(0, (u16 *)&data_020a9d40, 0x70, a, b, c,
+                   (u8)(MBi_GetAttribute() | WM_ATTR_FLAG_MB));
 }
