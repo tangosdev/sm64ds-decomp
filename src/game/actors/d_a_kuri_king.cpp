@@ -1290,7 +1290,6 @@ void daKuriKing_c::UpdateCylindersAndFootsteps() {
     int i;
     int h0, r0, y0;
     int d, a, b;
-    char* q;
     int tx, ty, tz;
 
     y0 = FX_MUL(this->mScaleY, 0x40000);
@@ -1305,25 +1304,20 @@ void daKuriKing_c::UpdateCylindersAndFootsteps() {
     yoff[0] = FX_MUL(this->mScaleY, 0x14000);
     rad[0] = FX_MUL(this->mScaleX, 0xb4000);
     hgt[0] = FX_MUL(this->mScaleY, 0x104000);
-    /* q is this shifted by i mCylClsnPos entries, read back through the
-     * class so each load keeps the member offset -- the same walk
-     * UpdateShadows keeps. */
-    q = (char*)this;
     for (i = 0; i < 3; i++) {
         int ax, ay, az;
         func_ov074_02121270(&v[2], this, bone.v[i]);
-        ((daKuriKing_c *)q)->mCylClsnPos[0].x = v[2].x;
-        ((daKuriKing_c *)q)->mCylClsnPos[0].y = v[2].y;
-        ((daKuriKing_c *)q)->mCylClsnPos[0].z = v[2].z;
-        ax = ((daKuriKing_c *)q)->mCylClsnPos[0].x;
-        az = ((daKuriKing_c *)q)->mCylClsnPos[0].z;
-        ay = ((daKuriKing_c *)q)->mCylClsnPos[0].y + yoff[i];
+        this->mCylClsnPos[i].x = v[2].x;
+        this->mCylClsnPos[i].y = v[2].y;
+        this->mCylClsnPos[i].z = v[2].z;
+        ax = this->mCylClsnPos[i].x;
+        az = this->mCylClsnPos[i].z;
+        ay = this->mCylClsnPos[i].y + yoff[i];
         this->mdCc_cs[i + 1].radius = rad[i];
         this->mdCc_cs[i + 1].height = hgt[i];
         this->mdCc_cs[i + 1].pos.x = ax;
         this->mdCc_cs[i + 1].pos.y = ay;
         this->mdCc_cs[i + 1].pos.z = az;
-        q += 0xc;
     }
 
     tx = this->mPosX;
