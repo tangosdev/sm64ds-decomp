@@ -27,7 +27,8 @@ run folder and returns. The games run until you close them or run `--stop`.
 and never focused (`SM64DS_NO_FOCUS`, `SM64DS_VOLUME=0`, `SM64DS_MINIMIZED`,
 `SM64DS_NO_DIALOG`), run at below-normal priority, and wait for the run-wide
 row gate first (one slot for up to two games, both slots for three or four;
-`--lane NAME` names the ticket, the gate script is `SCENARIO_ROWGATE`). Each
+`--lane NAME` names the ticket, the gate script is `--rowgate` or
+`SCENARIO_ROWGATE`; with neither set the row runs ungated). Each
 player takes a picture from the game's own frame dump `shot_ms` after he is
 placed. The row stops as soon as every picture is written (or after `secs`),
 kills only the processes and relay it started, releases the gate, and prints

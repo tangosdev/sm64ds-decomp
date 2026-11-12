@@ -24,7 +24,7 @@ import argparse, hashlib, json, os, re, shutil, subprocess, sys, time
 HERE = os.path.dirname(os.path.abspath(__file__))
 SCEN_DIR = os.path.join(HERE, "scenarios")
 RELAY_PY = os.path.normpath(os.path.join(HERE, "..", "relay", "relay.py"))
-ROWGATE = os.environ.get("SCENARIO_ROWGATE", "C:/tmp/coopfix1/rowgate.py")
+ROWGATE = os.environ.get("SCENARIO_ROWGATE")   # the run-wide row gate script (acquire LANE [n] / release LANE); --rowgate overrides
 TANGO_RELAY_PORT = 43777          # Tango's own play relay: never bind near it
 
 CHARS = ["mario", "luigi", "wario", "yoshi"]
@@ -182,11 +182,14 @@ def launch(args):
         f.write(compile_file(s, proof, shot_ms))
 
     gate_held = False
-    if proof:
+    gate = args.rowgate or ROWGATE
+    if proof and not gate:
+        print("row gate: none set (SCENARIO_ROWGATE or --rowgate); running without one", flush=True)
+    if proof and gate:
         need = 1 if n <= 2 else 2
         lane = args.lane or "SCENARIO"
         print("row gate: acquire %s %d" % (lane, need), flush=True)
-        r = subprocess.run([sys.executable, ROWGATE, "acquire", lane] + ([str(need)] if need > 1 else []))
+        r = subprocess.run([sys.executable, gate, "acquire", lane] + ([str(need)] if need > 1 else []))
         if r.returncode != 0:
             sys.exit("row gate refused (%d)" % r.returncode)
         gate_held = True
@@ -274,7 +277,7 @@ def launch(args):
                 try: fh.close()
                 except Exception: pass
             if gate_held:
-                subprocess.run([sys.executable, ROWGATE, "release", args.lane or "SCENARIO"])
+                subprocess.run([sys.executable, gate, "release", args.lane or "SCENARIO"])
     if proof:
         report(W, n, args.pics)
     return 0
@@ -358,6 +361,7 @@ def main():
     ap.add_argument("--list", action="store_true")
     ap.add_argument("--stop", metavar="NAME")
     ap.add_argument("--mode", choices=["play", "proof"], default="play")
+    ap.add_argument("--rowgate", help="row gate script for proof mode (default SCENARIO_ROWGATE)")
     ap.add_argument("--exe")
     ap.add_argument("--aroot")
     ap.add_argument("--out")
