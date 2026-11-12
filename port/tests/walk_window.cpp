@@ -16758,17 +16758,23 @@ static void port_intro_trace(void)
 {
     static int on = -1;
     if (on < 0) on = getenv("SM64DS_INTRO1_TRACE") ? 1 : 0;
-    if (!on || data_0209fc48 == 0) return;
     const int rf = (int)port_rom_frame();
-    {   /* SM64DS_INTRO1_SHOT=<dir>: the level loop's top screen every 60 ROM frames from 1500 to 2700 (the walk to the castle) */
+    {   /* SM64DS_INTRO1_SHOT=<dir>: the level loop's top screen every SHOT_STEP (60) ROM frames from SHOT_FROM (1500) to SHOT_TO (2700) */
         static const char *sd = getenv("SM64DS_INTRO1_SHOT");
-        if (sd && *sd && port_level_fb_ptr && rf >= 1500 && rf <= 2700 && (rf % 60) == 0) {
+        static int from = -1, to, step;
+        if (from < 0) {
+            const char *e = getenv("SM64DS_INTRO1_SHOT_FROM"); from = e ? atoi(e) : 1500;
+            e = getenv("SM64DS_INTRO1_SHOT_TO"); to = e ? atoi(e) : 2700;
+            e = getenv("SM64DS_INTRO1_SHOT_STEP"); step = (e && atoi(e) > 0) ? atoi(e) : 60;
+        }
+        if (sd && *sd && port_level_fb_ptr && rf >= from && rf <= to && ((rf - from) % step) == 0) {
             char nm[400];
             _snprintf(nm, sizeof nm, "%s/intro_f%04d.bmp", sd, rf);
             CreateDirectoryA(sd, 0);
             ntr::ppu_write_bmp(nm, *(const ntr::Framebuffer *)port_level_fb_ptr);
         }
     }
+    if (!on || (data_0209fc48 == 0 && (((const unsigned char *)data_0209caa0)[8] & 0x80))) return;
     if (rf % 15) return;
     const char *mb = 0;
     for (int i = 0; !mb && i < 4; ++i) mb = (const char *)data_0209f394[i];
