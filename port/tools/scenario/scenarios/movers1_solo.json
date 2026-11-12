@@ -1,0 +1,9 @@
+{
+  "about": "MOVERS1 solo check: Mario alone in Whomp's Fortress act 3 by the knock-down plank; nothing coop may run",
+  "mode": "solo",
+  "save": {"preset": "fresh", "stars": {"0": "7f", "1": "3"}, "flags": ["messages_seen"]},
+  "proof": {"secs": 90, "shot_ms": 40000, "census": [44, 51, 164]},
+  "players": [
+    {"character": "mario", "level": 7, "act": 3, "near": {"class": 44, "dist": 500}}
+  ]
+}

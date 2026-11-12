@@ -23,7 +23,8 @@
   },
   "env": {
     "SM64DS_COOP_MOVE_SAMPLE": "15",
-    "SM64DS_COOP_MOVERS1_SAMPLE": "15"
+    "SM64DS_COOP_MOVERS1_SAMPLE": "15",
+    "SM64DS_COOP_MOVERS1_POKE": "300:census,1200:census"
   },
   "players": [
     {
@@ -32,8 +33,9 @@
       "act": 1,
       "near": {
         "class": 160,
-        "dist": 60,
-        "dy": 200
+        "dist": 80,
+        "dy": 300,
+        "drop": false
       }
     },
     {
@@ -43,6 +45,9 @@
       "near": {
         "class": 160,
         "dist": 500
+      },
+      "env": {
+        "SM64DS_COOP_BALLS_STALL": "450:3000"
       }
     }
   ]

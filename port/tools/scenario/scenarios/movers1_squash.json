@@ -35,7 +35,9 @@
       "act": 1,
       "near": {
         "class": 84,
-        "dist": 700
+        "dist": 0,
+        "dy": 250,
+        "drop": false
       }
     },
     {
@@ -44,7 +46,9 @@
       "act": 1,
       "near": {
         "class": 84,
-        "dist": 2500
+        "dist": 1600,
+        "dy": 250,
+        "drop": false
       }
     }
   ]

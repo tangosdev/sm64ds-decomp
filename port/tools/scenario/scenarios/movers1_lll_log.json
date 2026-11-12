@@ -25,7 +25,6 @@
   },
   "env": {
     "SM64DS_COOP_MOVE_SAMPLE": "15",
-    "SM64DS_COOP_MOVE_GOD": "1",
     "SM64DS_COOP_MOVERS1_SAMPLE": "15"
   },
   "players": [
@@ -35,8 +34,9 @@
       "act": 1,
       "near": {
         "class": 70,
-        "dist": 40,
-        "dy": 300
+        "dist": 60,
+        "dy": 450,
+        "drop": false
       }
     },
     {
