@@ -422,14 +422,6 @@
       ]
     },
     "MTX_Inverse43": {
-      "src/engine/view/Graphics3D.cpp": [
-        "param:#1 Matrix4x3 *",
-        "param:#2 Matrix4x3 *",
-        "return:void"
-      ],
-      "src/game/actors/d_a_ch_scene.cpp": [
-        "return:void"
-      ],
       "src/game/actors/d_a_obj_cv_news_lift.cpp": [
         "param:#1 Matrix4x3 *",
         "param:#2 Matrix4x3 *",
@@ -440,22 +432,12 @@
         "param:#2 Matrix4x3 *",
         "return:void"
       ],
-      "src/game/actors/d_a_snm_bth.cpp": [
-        "param:#1 Matrix4x3 *",
-        "param:#2 const Matrix4x3 *",
-        "return:void"
-      ],
       "src/unnamed/arm9/0204/func_02044efc.c": [
         "param:#1 Matrix4x3 *",
         "param:#2 Matrix4x3 *",
         "return:void"
       ],
       "src/unnamed/ov007/func_ov007_020bfe4c.cpp": [
-        "return:void"
-      ],
-      "src/game/stages/d_s_entry_entry.cpp": [
-        "param:#1 Matrix4x3 *",
-        "param:#2 Matrix4x3 *",
         "return:void"
       ]
     },
@@ -709,9 +691,6 @@
       "src/Matrix4x3_ApplyInPlaceToRotationY.c": [
         "param:#2 short"
       ],
-      "src/game/actors/d_a_bakubaku.cpp": [
-        "param:#2 short"
-      ],
       "src/game/actors/d_a_bg_snwmn.cpp": [
         "param:#2 short"
       ],
@@ -852,11 +831,6 @@
       "src/game/actors/d_a_obj_guragura.cpp": [
         "param:#1 Matrix4x3 *"
       ],
-      "src/minigames/unit020cd744.cpp": [
-        "param:#1 Matrix4x3 *",
-        "param:#2 Matrix4x3 *",
-        "param:#3 Matrix4x3 *"
-      ],
       "src/runtime/actor/d_actor.cpp": [
         "param:#1 Matrix4x3 *",
         "param:#2 Matrix4x3 *",
@@ -895,10 +869,6 @@
         "param:#1 const VecFx32 *",
         "param:#2 const Matrix4x3 *",
         "param:#3 VecFx32 *"
-      ],
-      "src/game/actors/d_a_jango.cpp": [
-        "param:#1 const Vector3 *",
-        "param:#2 const void *"
       ],
       "src/game/actors/d_a_king_donketu.cpp": [
         "param:#1 const void *"
@@ -7162,9 +7132,6 @@
       "src/minigames/d_s_mg_pachinko2.cpp": [
         "return:int"
       ],
-      "src/minigames/d_s_mg_smartball.cpp": [
-        "return:int"
-      ],
       "src/minigames/d_s_mg_snowball.cpp": [
         "return:int"
       ],
@@ -7898,9 +7865,6 @@
       "src/_ZN7daPly_c6RenderEv.cpp": [
         "return:int"
       ],
-      "src/game/actors/d_a_btn.cpp": [
-        "return:MatrixWords"
-      ],
       "src/game/actors/d_a_btt_bk.cpp": [
         "return:Mtx43"
       ],
@@ -7909,9 +7873,6 @@
       ],
       "src/game/actors/d_a_f_pkn.cpp": [
         "return:int []"
-      ],
-      "src/game/actors/d_a_hanachan.cpp": [
-        "return:char []"
       ],
       "src/game/actors/d_a_obj_ct_rotate_block.cpp": [
         "return:int []"
@@ -7946,17 +7907,11 @@
       "src/ov002_handles.cpp": [
         "return:char"
       ],
-      "src/minigames/d_s_mg_jump2.cpp": [
-        "return:int"
-      ],
       "src/minigames/d_s_mg_jump_methods.cpp": [
         "return:int"
       ],
       "src/runtime/actor/d_cap_enemy_arm9.cpp": [
         "return:CapMtx"
-      ],
-      "src/runtime/actor/d_enemy_base.cpp": [
-        "return:char"
       ],
       "src/engine/view/d_camera.cpp": [
         "return:int []"
