@@ -1,0 +1,49 @@
+{
+  "about": "Ball hill as bob_balls, Luigi's game stops 3 s once at frame 900 (a pause or window drag): do the balls stay in step after?",
+  "save": {
+    "preset": "early"
+  },
+  "room": {
+    "collision": 1,
+    "damage": 1,
+    "interact": 1,
+    "tp": 1
+  },
+  "proof": {
+    "secs": 150,
+    "shot_ms": 60000,
+    "census": [
+      220
+    ]
+  },
+  "players": [
+    {
+      "character": "mario",
+      "level": 6,
+      "act": 1,
+      "near": {
+        "class": 220,
+        "param": 2,
+        "dist": 300
+      }
+    },
+    {
+      "character": "luigi",
+      "level": 6,
+      "act": 1,
+      "near": {
+        "class": 220,
+        "param": 2,
+        "dist": 450,
+        "angle_deg": 6
+      },
+      "env": {
+        "SM64DS_COOP_BALLS_STALL": "900:3000"
+      }
+    }
+  ],
+  "env": {
+    "SM64DS_COOP_BALLS_SAMPLE": "15",
+    "SM64DS_COOP_BALLS_LOG": "1"
+  }
+}

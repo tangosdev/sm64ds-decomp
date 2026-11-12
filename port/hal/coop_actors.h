@@ -130,6 +130,10 @@ void coop_move_unpin(int slot);
 bool coop_move_pin_stays(int slot);
 unsigned coop_move_pin_skips();
 
+// BOBSYNC1 (hal/coop_balls.cpp): the last record seat `seat` sent for `slot` (pose, class, age). False when none is held.
+struct CoopMoveRxPose { int x, y, z; unsigned cls; unsigned age_ms; };
+bool coop_move_rx_pose(int slot, int seat, CoopMoveRxPose *out);
+
 // Validators (payload = after the 12-byte head). Exposed for the forged-input rows.
 bool coop_mover_batch_validate(const void *payload, int len);
 bool coop_mover_req_validate(const void *payload, int len);

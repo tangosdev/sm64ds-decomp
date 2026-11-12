@@ -14,6 +14,7 @@
 #include "coop_boss.h"
 #include "coop_stats_log.h"
 #include "coop_ghost_eggs.h"
+#include "coop_balls.h"
 
 #include <windows.h>
 
@@ -897,6 +898,7 @@ void scan_ents() {
         if (g_prof_of[id] < 0) continue;
         short slot = rd16(a, 0xce);
         if (slot < 0 && id == 215) slot = (short)coop_bully_virtual_slot(a);   // coopbully1: the Big Bully's three runtime bullies
+        if (slot < 0 && id == 220) slot = (short)coop_ball_virtual_slot(a);    // BOBSYNC1: a spawner's balls (hal/coop_balls.cpp)
         if (slot < 0 || slot >= kSlots) continue;
         if (is_player_ptr(a)) continue;
         Slot &s = g_slot[slot];
@@ -1141,6 +1143,11 @@ void process(unsigned now) {
             const int cs = coop_boss_bully_claim_seat(slot);
             if (cs == g_my) nown = g_my;
             else if (cs >= 0 && cs < kSeats && ((coop_group_member_mask() >> cs) & 1u) && alive_rx(g_rx[slot][cs], now)) nown = cs;
+        }
+        if (p.id == 220) {                            // BOBSYNC1: a spawner's ball is steered by the seat that owns its spawner
+            const int bs = coop_ball_claim_seat(slot);
+            if (bs == g_my) nown = g_my;
+            else if (bs >= 0 && bs < kSeats && ((coop_group_member_mask() >> bs) & 1u) && alive_rx(g_rx[slot][bs], now)) nown = bs;
         }
         {   // COOPDIAMOND2: a linked member has the owner its lead has (the lead is a lower slot, decided earlier in this pass)
             const int ld = link_lead(slot);
@@ -1391,6 +1398,7 @@ void on_frame(unsigned now) {
     process(now);
     ghost_eggs_frame(now);     // FRIENDVIS1: a friend's Yoshi eggs on my console (hal/coop_ghost_eggs.h)
     coop_cap_frame(now);       // CAPLOSS1: a friend's lost cap on my console (hal/coop_cap.cpp)
+    coop_balls_frame(now);     // BOBSYNC1: the balls a spawner makes, shared (hal/coop_balls.cpp)
     if (g_god) {      // lab knob: the proof player does not die and does not fall out of a course whose warp lands in the air
         data_02092144[data_0209f250 & 15] = (short)(8 << 8);
         if (g_spawned && g_lf - g_spawn_lf == 30) { std::memcpy(g_god_pos, pl + 0x5c, 12); g_god_set = true; }
@@ -1469,6 +1477,15 @@ bool coop_move_pin_stays(int slot) {
 }
 
 unsigned coop_move_pin_skips() { return g_pin_skips; }
+
+bool coop_move_rx_pose(int slot, int seat, CoopMoveRxPose *out) {
+    if (slot < 0 || slot >= kSlots || seat < 0 || seat >= kSeats || !out) return false;
+    const Rx &x = g_rx[slot][seat];
+    if (!x.valid) return false;
+    out->x = x.x; out->y = x.y; out->z = x.z; out->cls = x.cls;
+    out->age_ms = comms_hub_now_ms() - x.t;
+    return true;
+}
 
 int coop_move_class_stats(CoopClassStat *out, int max) {
     int n = 0;
