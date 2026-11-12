@@ -127,7 +127,8 @@ void mirror_release(int slot, daMip_c *m) {
     m->SetState(&data_ov085_021306bc);                  // StateReleasedInit: unk_426 = 1 (tame), gravity, the wait animation
     ++g_releases;
     std::fprintf(stderr, "[coopr2] f=%u slot %d: seat %d let the rabbit go, my copy is released and tame (unk_426 %d) at %d,%d,%d\n",
-                 g_frame, slot, t.seat, (int)m->unk_426,  // (seat -1: the room's key flag, no hold seen here) *(const int *)((const char *)m + 0x5c) >> 12, *(const int *)((const char *)m + 0x60) >> 12, *(const int *)((const char *)m + 0x64) >> 12);
+                 g_frame, slot, t.seat, (int)m->unk_426,   /* seat -1: the room's key flag, no hold seen here */
+                 *(const int *)((const char *)m + 0x5c) >> 12, *(const int *)((const char *)m + 0x60) >> 12, *(const int *)((const char *)m + 0x64) >> 12);
     t.mirrored = false; t.seat = -1;
 }
 
