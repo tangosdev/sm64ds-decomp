@@ -7,7 +7,7 @@
 
 extern "C" {
 
-extern int myFS_ReadFile(void *s, void *b, int c);
+extern int myFS_ReadFile(FSFile *p_file, void *dst, int len);
 extern int func_02018568(void *a);
 extern unsigned int func_02018ac4(void *p);
 extern void DecompressLZ16(void *src, void *dst);

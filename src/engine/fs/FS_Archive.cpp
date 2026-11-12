@@ -10,8 +10,9 @@
  * next to run, FSi_ExecuteAsyncCommand and FSi_ExecuteSyncCommand run them
  * through FSi_TranslateCommand (src/engine/fs/FS_Command.cpp), and
  * FS_NotifyArchiveAsyncEnd ends one an archive's procedure ran
- * asynchronously. Registered archives form the list data_020a8048 (pret's
- * arc_list); data_020a804c is the current directory (current_dir_pos).
+ * asynchronously. Registered archives form the list arc_list, and
+ * current_dir_pos is the current directory; FSi_FindPath (FS_File.c)
+ * starts a relative path there.
  *
  * pret's pokediamond FS_archive.c has the same twenty functions. mwccarm
  * emits them in reverse, so FS_SetArchiveProc sits lowest in the ROM and
@@ -31,11 +32,6 @@
 #include "nitro/fs/file.h"
 
 extern "C" {
-
-#define FS_FILE_STATUS_BUSY 0x00000001
-#define FS_FILE_STATUS_CANCEL 0x00000002
-#define FS_FILE_STATUS_SYNC 0x00000004
-#define FS_FILE_STATUS_ASYNC 0x00000008
 
 #define FS_ARCHIVE_FLAG_REGISTER 0x00000001
 #define FS_ARCHIVE_FLAG_LOADED 0x00000002
@@ -64,8 +60,8 @@ extern "C" {
 
 #define ALIGN_BYTE(n, a) (((u32)(n) + (a) - 1) & ~((a) - 1))
 
-extern FSArchive *data_020a8048;
-extern FSDirPos data_020a804c;
+extern FSArchive *arc_list;
+extern FSDirPos current_dir_pos;
 
 int FSi_TranslateCommand(FSFile *p_file, int command);
 void FSi_ReleaseCommand(FSFile *p_file, int ret);
@@ -193,7 +189,7 @@ int FSi_ReadMemoryCore(FSArchive *p_arc, void *dst, u32 pos, u32 size) {
 FSArchive *FS_FindArchive(const char *name, int name_len) {
     u32 pack = FSi_GetPackedName(name, name_len);
     OSIntrMode bak_psr = OS_DisableInterrupts();
-    FSArchive *p_arc = data_020a8048;
+    FSArchive *p_arc = arc_list;
     while (p_arc != 0 && p_arc->name.pack != pack) {
         p_arc = p_arc->next;
     }
@@ -377,13 +373,13 @@ int FS_RegisterArchiveName(FSArchive *p_arc, const char *name, int name_len) {
     int ret = 0;
     OSIntrMode bak_psr = OS_DisableInterrupts();
     if (!FS_FindArchive(name, name_len)) {
-        FSArchive *p_tail = data_020a8048;
+        FSArchive *p_tail = arc_list;
         if (!p_tail) {
-            data_020a8048 = p_arc;
-            data_020a804c.arc = p_arc;
-            data_020a804c.pos = 0;
-            data_020a804c.index = 0;
-            data_020a804c.own_id = 0;
+            arc_list = p_arc;
+            current_dir_pos.arc = p_arc;
+            current_dir_pos.pos = 0;
+            current_dir_pos.index = 0;
+            current_dir_pos.own_id = 0;
         } else {
             while (p_tail->next)
                 p_tail = p_tail->next;
@@ -411,11 +407,11 @@ void FS_ReleaseArchiveName(FSArchive *p_arc) {
         p_arc->name.pack = 0;
         p_arc->next = p_arc->prev = 0;
         p_arc->flag &= ~FS_ARCHIVE_FLAG_REGISTER;
-        if (data_020a804c.arc == p_arc) {
-            data_020a804c.arc = data_020a8048;
-            data_020a804c.pos = 0;
-            data_020a804c.index = 0;
-            data_020a804c.own_id = 0;
+        if (current_dir_pos.arc == p_arc) {
+            current_dir_pos.arc = arc_list;
+            current_dir_pos.pos = 0;
+            current_dir_pos.index = 0;
+            current_dir_pos.own_id = 0;
         }
         OS_RestoreInterrupts(bak_psr);
     }
