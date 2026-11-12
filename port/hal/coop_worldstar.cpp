@@ -43,6 +43,9 @@
 //   SM64DS_COOP_WORLDSTAR=0        MUST-FAIL control: hooks answer the cartridge's way, nothing sent, nothing let go
 //   SM64DS_COOP_WORLDSTAR_LOG=1    [coopws] lines (a census of the holders at each visit start)
 //   SM64DS_COOP_WORLDSTAR_TRACE=N  every N frames one [coopws] trace line
+//   SM64DS_WS_KLEPTO_SILVER=F      at frame F (before the spawn census arms, so like one placed at load) spawn a Klepto
+//                                  carrying a silver star (param 0x2000, path 0; the cartridge places none in the courses
+//                                  surveyed: SSL acts 1-8, THI): the ROM's own spawn and InitResources
 //   SM64DS_WS_KLEPTO_HIT=F[:friend]  at frame F the first Klepto runs its own contact test punched by my body (or the
 //                                  first friend's drawn body): the ROM's HURT
 //   SM64DS_WS_EEL=F[:friend]       from frame F for 4 frames put my body (or, inside the release check, the first friend's
@@ -126,6 +129,8 @@ short a_slot(const char *a) { return *(const short *)(a + 0xce); }
 unsigned a_uid(const char *a) { return *(const unsigned *)(a + 4); }
 unsigned a_param(const char *a) { return *(const unsigned *)(a + 8); }
 bool a_dead(const char *a) { return *(const unsigned char *)(a + 0x0f) || *(const unsigned char *)(a + 0x0e) == 2; }
+// a Klepto's name on the wire: its placed slot (every console loads the same one), 511 for one with no slot (a spawned one)
+int klepto_key(const char *a) { const int s = a_slot(a); return s >= 0 && s < kSlots - 1 ? s : kSlots - 1; }
 unsigned now_ms() { return comms_hub_now_ms(); }
 
 char *local_body() {
@@ -242,7 +247,7 @@ int jango_hit(void *kv) {
     }
     if (cargo && k->mSilverStarFlag == 2) {
         ++g_st.my_drops;
-        drop_add((int)a_slot((char *)kv), comms_hub_my_seat(), true);
+        drop_add(klepto_key((char *)kv), comms_hub_my_seat(), true);
         if (g_log) std::fprintf(stderr, "[coopws] lf=%u my hit: Klepto slot %d drops the room's silver star here, told to the group\n", g_lf, (int)a_slot((char *)kv));
     }
     return 0;
@@ -252,7 +257,7 @@ int jango_hit(void *kv) {
 struct EelKnob { int at = -2; bool fr = false; } g_eel;
 void *moray_body(void *closest) {
     read_env();
-    if (g_eel.fr && g_eel.at >= 0 && g_lf >= (unsigned)g_eel.at && g_lf < (unsigned)g_eel.at + 4u && coop_world_active()) {
+    if (g_eel.fr && g_eel.at >= 0 && g_lv > 5 && g_lf >= (unsigned)g_eel.at && g_lf < (unsigned)g_eel.at + 4u && coop_world_active()) {
         char *fb = first_friend_body();
         char *eel = _ZN8dActor_c15FindWithActorIDEjPS_(kClsEel, nullptr);
         if (fb && eel && rd32(eel, 0x49c)) {
@@ -295,7 +300,7 @@ void klepto_tick() {
         if (!held) continue;
         const char *why = nullptr;
         if (k->mSilverStarFlag == 2) {
-            if (a_cls(held) == kClsSilver && drop_find((int)a_slot(a))) why = "the room's silver star was dropped by a friend";
+            if (a_cls(held) == kClsSilver && drop_find(klepto_key(a))) why = "the room's silver star was dropped by a friend";
         } else if (a_cls(held) == kClsStar) {
             const unsigned rel = (a_param(held) & 0xf) | 0x40;
             if (coop_spawn_star_released(rel)) why = "the room's star is out";
@@ -411,12 +416,23 @@ int knob_at(const char *name, bool *flag, const char *flagname) {
 }
 
 void knobs(char *me) {
-    static int hit_at = -2, cage_at = -2, pg_at = -2; static bool hit_friend = false, pg_redo = false;
+    static int hit_at = -2, cage_at = -2, pg_at = -2, sil_at = -2; static bool hit_friend = false, pg_redo = false;
     if (hit_at == -2) {
+        sil_at = knob_at("SM64DS_WS_KLEPTO_SILVER", nullptr, nullptr);
         hit_at = knob_at("SM64DS_WS_KLEPTO_HIT", &hit_friend, ":friend");
         cage_at = knob_at("SM64DS_WS_CAGE", nullptr, nullptr);
         pg_at = knob_at("SM64DS_WS_PG", &pg_redo, ":redo");
         g_eel.at = knob_at("SM64DS_WS_EEL", &g_eel.fr, ":friend");
+    }
+    if (g_lv <= 5) return;          // the knobs act in the course the row warps to, never in the castle the room starts in
+    if (sil_at >= 0 && g_lf == (unsigned)sil_at) {
+        const int pos[3] = {rd32(me, 0x5c), rd32(me, 0x60) + (600 << 12), rd32(me, 0x64)};
+        char *k = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(kClsKlepto, 0x2000, pos, nullptr, *((signed char *)me + 0xcc), -1);
+        std::fprintf(stderr, "[coopws] KNOB klepto silver lf=%u: %s
+", g_lf, !k ? "SPAWN FAILED (no Klepto here)" : "a Klepto carrying a silver star spawned");
+        if (k) { daJango_c *kk = (daJango_c *)k;
+            std::fprintf(stderr, "[coopws] KNOB klepto silver lf=%u: uid %u slot %d carried %d silver %d held %d
+", g_lf, a_uid(k), (int)a_slot(k), kk->mCarriedItem, kk->mSilverStarFlag, kk->mHeldActorID); }
     }
     if (hit_at >= 0 && g_lf == (unsigned)hit_at) {
         daJango_c *k = (daJango_c *)_ZN8dActor_c15FindWithActorIDEjPS_(kClsKlepto, nullptr);
