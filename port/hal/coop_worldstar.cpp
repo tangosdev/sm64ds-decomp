@@ -72,6 +72,12 @@
 //   SM64DS_WS_PG=F[:redo]          at frame F the mother's hand-over end (mGaveStar, her star), or with :redo her touch
 //                                  test with my body holding her own baby (a second hand-over starts, or not)
 //   SM64DS_WS_SHOT=f1,f2           ws_f<N>.bmp (the top screen) at those frames
+//   SM64DS_WS_TAKE=F:P             (WORLDSTAR2) at frame F put my body on the live star of parameter P (hex) and run its own
+//                                  collect, as coop_spawn's SM64DS_SPAWN_TAKE does for the first runtime star
+//   SM64DS_WS_RX_DELAY=MS          (WORLDSTAR2) a friend's 0x6c is acted on MS late (a late let-go)
+//   SM64DS_COOP_WORLDSTAR2=0       (WORLDSTAR2) must-fail control: no taken stars told to a joiner, a friend's eel / cage let-go
+//                                  makes its own copy at once (WORLDSTAR1's behaviour)
+// All SM64DS_WS_* knobs and SM64DS_COOP_WORLDSTAR2 are compiled out of the kit (PORT_ROM_CLEAN).
 
 #include "coop_wire.h"
 #include "coop_world.h"
@@ -605,7 +611,9 @@ void knobs(char *me) {
     (void)me;
 #else
     static int hit_at = -2, cage_at = -2, pg_at = -2, sil_at = -2; static bool hit_friend = false, pg_redo = false;
+    static int take_at = -2; static unsigned take_p = 0;
     if (hit_at == -2) {
+        if (const char *t = std::getenv("SM64DS_WS_TAKE")) { unsigned f = 0, pp = 0; if (std::sscanf(t, "%u:%x", &f, &pp) == 2) { take_at = (int)f; take_p = pp & 0xff; } }
         sil_at = knob_at("SM64DS_WS_KLEPTO_SILVER", nullptr, nullptr);
         hit_at = knob_at("SM64DS_WS_KLEPTO_HIT", &hit_friend, ":friend");
         cage_at = knob_at("SM64DS_WS_CAGE", nullptr, nullptr);
@@ -619,6 +627,19 @@ void knobs(char *me) {
         std::fprintf(stderr, "[coopws] KNOB klepto silver lf=%u: %s\n", g_lf, !k ? "SPAWN FAILED (no Klepto here)" : "a Klepto carrying a silver star spawned");
         if (k) { daJango_c *kk = (daJango_c *)k;
             std::fprintf(stderr, "[coopws] KNOB klepto silver lf=%u: uid %u slot %d carried %d silver %d held %d\n", g_lf, a_uid(k), (int)a_slot(k), kk->mCarriedItem, kk->mSilverStarFlag, kk->mHeldActorID); }
+    }
+    if (take_at >= 0 && g_lf == (unsigned)take_at) {
+        char *s = nullptr;
+        for (char *a = _ZN8dActor_c15FindWithActorIDEjPS_(kClsStar, nullptr); a; a = _ZN8dActor_c15FindWithActorIDEjPS_(kClsStar, a))
+            if (!a_dead(a) && (a_param(a) & 0xff) == take_p) { s = a; break; }
+        if (!s) std::fprintf(stderr, "[coopws] KNOB take lf=%u: no live star %#x here\n", g_lf, take_p);
+        else {
+            std::memcpy(me + 0x5c, s + 0x5c, 12);
+            *(unsigned *)(s + 0x134) = a_uid(me);
+            *(unsigned *)(s + 0x130) |= 0x400000;
+            std::fprintf(stderr, "[coopws] KNOB take lf=%u: my body on star %#x (uid %u) at (%d,%d,%d), its collect runs\n", g_lf, take_p, a_uid(s),
+                         rd32(s, 0x5c) >> 12, rd32(s, 0x60) >> 12, rd32(s, 0x64) >> 12);
+        }
     }
     if (hit_at >= 0 && g_lf == (unsigned)hit_at) {
         daJango_c *k = (daJango_c *)_ZN8dActor_c15FindWithActorIDEjPS_(kClsKlepto, nullptr);
