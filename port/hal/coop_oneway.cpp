@@ -85,8 +85,10 @@ void read_env() {
     g_on = coop_movers1_on();
     const char *a = std::getenv("SM64DS_COOP_ACT");
     if (a && *a == '0') g_on = false;
+#ifndef PORT_ROM_CLEAN
     const char *l = std::getenv("SM64DS_COOP_ONEWAY_LOG");
     g_log = l && *l && *l != '0';
+#endif
     if (g_log) std::fprintf(stderr, "[coneway] shared one-way states %s\n", g_on ? "ON" : "OFF (control)");
 }
 
@@ -129,7 +131,11 @@ Poke g_poke[12]; int g_npoke = 0; bool g_poke_read = false; unsigned g_lvf = 0;
 void poke_read() {
     if (g_poke_read) return;
     g_poke_read = true;
+#ifndef PORT_ROM_CLEAN
     const char *e = std::getenv("SM64DS_COOP_MOVERS1_POKE");
+#else
+    const char *e = nullptr;   // the kit cannot set the proof knob
+#endif
     for (const char *q = e; q && *q && g_npoke < 12;) {
         unsigned f = 0; char w[12] = {}; int used = 0;
         if (std::sscanf(q, "%u:%11[a-z]%n", &f, w, &used) < 2 || used <= 0) break;
@@ -187,7 +193,9 @@ void poke_frame() {
 // (slot:class:x:y:z:angleX:angleY:angleZ:first field), so a row can compare two consoles' copies by wall time.
 unsigned g_sample = 0; bool g_sample_read = false;
 void sample_frame() {
+#ifndef PORT_ROM_CLEAN
     if (!g_sample_read) { g_sample_read = true; if (const char *e = std::getenv("SM64DS_COOP_MOVERS1_SAMPLE")) g_sample = (unsigned)std::strtoul(e, nullptr, 10); }
+#endif
     if (!g_sample || (g_lvf % g_sample) != 0) return;
     char line[4096]; int n = std::snprintf(line, sizeof line, "[m1s] w=%lld lf=%u seat=%d", wall_ms(), g_lvf, comms_hub_my_seat());
     for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a && n < (int)sizeof line - 96; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {

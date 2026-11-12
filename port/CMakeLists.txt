@@ -25975,6 +25975,11 @@ if(PORT_ROM_CLEAN)
     set_property(SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/hal/coop_worldstar.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/hal/coop_spawn.cpp"
                  APPEND PROPERTY COMPILE_DEFINITIONS PORT_ROM_CLEAN)
 endif()
+# run coopfix1, fold INT3 (MOVERS1 review note): the kit compiles the mover proof knobs (SM64DS_COOP_MOVERS1_POKE, _SAMPLE) and
+# SM64DS_COOP_ONEWAY_LOG out of hal/coop_oneway.cpp, the same way (APPEND, never SET).
+if(PORT_ROM_CLEAN)
+    set_property(SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/hal/coop_oneway.cpp" APPEND PROPERTY COMPILE_DEFINITIONS PORT_ROM_CLEAN)
+endif()
 
 # RPC1: Discord Rich Presence. hal/rich_presence.cpp is called from the scene
 # crossing hook in tests/walk_window.cpp; discord_presence (SahilKDas, PR 3569)
