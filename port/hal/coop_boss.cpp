@@ -410,6 +410,8 @@ struct Boss {
     unsigned eye_talk_t;           // bossfix2: the same for Eyerok's head (its talk state with my player)
     unsigned wig3_ticks;           // bossfix2: ticks this Wiggler copy has stood in MOVE_START with no talk of its own
     unsigned wig_dead_t;           // bossfix3: wall ms since which this Wiggler copy has been in its own DEAD (0 = not)
+    unsigned wig2_ticks;           // bossfix3: ticks this Wiggler copy has stood in MOVE_STOP with no talk of its own
+    bool wig_music;                // bossfix3: the boss music was started here by the MOVE_STOP way out below (once)
     unsigned wig_stag_t;           // bossfix3: wall ms this Wiggler copy was last seen in its stagger (states 8 to 10; 0 = never)
     unsigned goom_talk_tries;      // bossfix2: StartTalk attempts for a Goomboss copy put into its defeat by a record
     uint32_t bst; bool bst_valid;  // coopbully1: a bully's state at the end of the last tick (a change before the next one is the ROM's own)
@@ -1782,6 +1784,19 @@ void process(unsigned now) {
         // health left, then MOVE.
         if (g_on && g_bf2 && d.cls == 248) {
             { const uint32_t st = state_of(b); if (st >= 8u && st <= 10u) b.wig_stag_t = now ? now : 1u; }
+            // bossfix3: MOVE_STOP (2) ends only when its player's intro talk ends. A copy put into it by its first record skipped
+            // DEMOCALL's message, so no talk exists and it stood there for good, deaf to stomps (MOVE_STOP never checks hits); when that
+            // console then took the authority, its records froze every friend's copy in 2 as well (far_f5 row: 35 s on both screens).
+            // With no talk of its own (it drives no camera) it ends the way the state ends: the boss music, then MOVE_START (and the
+            // MOVE_START way out below), the authority's copy included.
+            if (state_of(b) == 2u && !b.a[0x8e1] && (unsigned char)b.a[0x8da] >= 13u) {
+                if (++b.wig2_ticks >= 20u) {
+                    if (!b.wig_music) { _ZN5Sound22LoadAndSetMusic_Layer3Ej(0x2d); b.wig_music = true; }
+                    _ZN12daHanachan_c8SetStateEi(b.a, 3);
+                    b.wig2_ticks = 0; b.lw_valid = false;
+                    if (g_log) std::fprintf(stderr, "[cbs] wiggler copy in MOVE_STOP with no talk of its own: on to MOVE_START w=%lld\n", wall_ms());
+                }
+            } else b.wig2_ticks = 0;
             if (state_of(b) == 3u && !b.a[0x8e1] && (unsigned char)b.a[0x8da] >= 13u) {
                 if (++b.wig3_ticks >= 20u) {
                     const unsigned hp = (unsigned char)b.a[0x8db];
