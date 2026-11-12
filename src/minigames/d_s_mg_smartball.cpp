@@ -49,6 +49,9 @@ enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
 #include "cstd.h"
 #include "Vector2Math.h"
 #include "nitro/fx/fx_cp.h"
+#include "nitro/fx/fx_trig.h"
+#include "math/CalcLib.h"
+#include "LevelRng.h"
 
 /* Two-word pair that Vec2_Len also accepts as a Vector2. */
 typedef struct {
@@ -134,14 +137,11 @@ extern OamAttr *sSmartballLineSpritesGerman[];
 extern OamAttr *sSmartballLineSpritesFrench[];
 extern OamAttr *sSmartballLineSprites[];
 extern OamAttr *sSmartballCellSprites[];
-extern s16 FX_SinCosTable_[];
 extern s32 sSmartballCellOrder[];
 extern OamAttr *sSmartballCellRowSprites[];
 
 extern void func_02012718(int a, int b);
 extern struct W9 sSmartballCellStartOrder;
-extern int RandomIntInternal(int *seed);
-extern int data_0209d4b8;
 extern int Sound_PlayIfNotActive(int a, int b, int c, short d);
 extern void *sSmartballSlotFrameSprite;
 extern void *sSmartballSlotReelEndSprite;
@@ -1190,7 +1190,8 @@ void cMgSmartball_slot_c::BeginStop() {
     for (i = 0; i < 3; i++) {
         mReelStopping[i] = z;
         c->mReelStopCount[i] =
-            ((((((unsigned)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff) * 3) >> 15) + 3;
+            ((((((unsigned)RandomIntInternal(&data_0209d4b8.value)) >> 16) & 0x7fff) * 3) >> 15) +
+            3;
     }
 }
 
@@ -1213,7 +1214,7 @@ void cMgSmartball_slot_c::UpdateSpin() {
             int flag = 1;
             int ia;
             for (ia = 0; ia < 3; ia++) {
-                int r = RandomIntInternal(&data_0209d4b8);
+                int r = RandomIntInternal(&data_0209d4b8.value);
                 mReelVel[ia].y += ((((u32)r >> 16) & 0x7fff) * 0x20 >> 15) * 0x10;
                 if (mReelVel[ia].y >= 0x3000)
                     mReelVel[ia].y = 0x3000;
@@ -1232,7 +1233,7 @@ void cMgSmartball_slot_c::UpdateSpin() {
                         if (mReelVel[ib].y < 0x200)
                             mReelVel[ib].y = 0x200;
                     } else {
-                        int r = RandomIntInternal(&data_0209d4b8);
+                        int r = RandomIntInternal(&data_0209d4b8.value);
                         mReelVel[ib].y -= ((((u32)r >> 16) & 0x7fff) * 0x40 >> 15) + 0x32;
                         if (mReelVel[ib].y <= 0x800) {
                             mReelStopping[ib] = 1;
@@ -3028,9 +3029,10 @@ outer_loop:
             u32 randomAngle;
             responseScale = FX_MUL(dot, 0x1400);
             randomScale =
-                ((((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 0x10) >> 15) << 12);
+                ((((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 0x10) >> 15)
+                 << 12);
             responseScale += FIX_MUL_SU(responseScale, randomScale >> 6);
-            randomAngle = (u32)RandomIntInternal(&data_0209d4b8);
+            randomAngle = (u32)RandomIntInternal(&data_0209d4b8.value);
             func_0203d388((V2 *)&response,
                           (s16)(((((randomAngle >> 16) & 0x7fff) << 12) >> 15) - 0x800));
         } else if (state.flags[3] == 1) {
@@ -3040,16 +3042,18 @@ outer_loop:
             mVel1 = 0;
             responseScale = -0x2000;
             randomScale =
-                ((((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 0x10) >> 15) << 12);
+                ((((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 0x10) >> 15)
+                 << 12);
             responseScale += FIX_MUL_US(randomScale >> 5, -0x2000);
-            randomAngle = (u32)RandomIntInternal(&data_0209d4b8);
+            randomAngle = (u32)RandomIntInternal(&data_0209d4b8.value);
             func_0203d388((V2 *)&response,
                           (s16)(((((randomAngle >> 16) & 0x7fff) << 12) >> 15) - 0x800));
         } else if (state.flags[2] == 1) {
             u32 randomScale;
             responseScale = FX_MUL(dot, 0x1a00);
             randomScale =
-                ((((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 0x10) >> 15) << 12);
+                ((((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 0x10) >> 15)
+                 << 12);
             responseScale += FIX_MUL_SU(responseScale, randomScale >> 6);
             if (mCurrent0 < 0x18000 && response.z > 0) {
                 response.x = 0;
@@ -3584,7 +3588,7 @@ int dScMgSmartball_c::SparksActive() {
 }
 
 /* Seeds 0x18 sparks around a point, reusing free slots before random ones. */
-#define SPARK_RAND (((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)
+#define SPARK_RAND (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff)
 void dScMgSmartball_c::EmitSparks(int *pair, int a3) {
     int count = 0;
     int i;
@@ -3595,7 +3599,7 @@ void dScMgSmartball_c::EmitSparks(int *pair, int a3) {
             continue;
         mSparks[i].mOrigin[0] = pair[0];
         mSparks[i].mOrigin[1] = pair[1];
-        r = RandomIntInternal(&data_0209d4b8);
+        r = RandomIntInternal(&data_0209d4b8.value);
         mSparks[i].mPos[0] = 0;
         mSparks[i].mPos[1] = (((r >> 16) & 0x7fff) * 0x10000) >> 15;
         func_0203d388((V2 *)mSparks[i].mPos, (s16)(u16)(SPARK_RAND * 2));
@@ -3617,7 +3621,7 @@ void dScMgSmartball_c::EmitSparks(int *pair, int a3) {
         i = SPARK_RAND * 0x40 >> 15;
         mSparks[i].mOrigin[0] = pair[0];
         mSparks[i].mOrigin[1] = pair[1];
-        r = RandomIntInternal(&data_0209d4b8);
+        r = RandomIntInternal(&data_0209d4b8.value);
         mSparks[i].mPos[0] = 0;
         mSparks[i].mPos[1] = (((r >> 16) & 0x7fff) * 0xc000) >> 15;
         func_0203d388((V2 *)mSparks[i].mPos, (s16)(u16)(SPARK_RAND * 2));
@@ -3675,7 +3679,7 @@ void dScMgSmartball_c::UpdateSparks() {
                 if (mSparks[i].mBursts <= 0) {
                     mSparks[i].mActive = 0;
                 } else {
-                    r = RandomIntInternal(&data_0209d4b8);
+                    r = RandomIntInternal(&data_0209d4b8.value);
                     mSparks[i].mPos[0] = 0;
                     mSparks[i].mPos[1] = (((r >> 16) & 0x7fff) * 0x10000) >> 15;
                     func_0203d388((V2 *)mSparks[i].mPos, (s16)(u16)(SPARK_RAND * 2));
@@ -3836,8 +3840,8 @@ void dScMgSmartball_c::SpawnDust(int *origin) {
                 continue;
             }
             {
-                int rnd1 = RandomIntInternal(&data_0209d4b8);
-                int rnd2 = RandomIntInternal(&data_0209d4b8);
+                int rnd1 = RandomIntInternal(&data_0209d4b8.value);
+                int rnd2 = RandomIntInternal(&data_0209d4b8.value);
                 int angB = ((((unsigned int)rnd2 >> 16) & 0x7fff) * 0x8000) >> 16;
                 int angA = ((((unsigned int)rnd1 >> 16) & 0x7fff) * 0x20000) >> 16;
                 s16 sinB = FX_SinCosTable_[(angB >> 4) * 2 + 1];

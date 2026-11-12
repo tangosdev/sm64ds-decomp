@@ -44,6 +44,8 @@
 #include "math/Approach.h"
 #include "math/Quaternion.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
+#include "MgCamera.h"
 
 /* Typed access at the two boundaries that still take a raw pointer: the
    void * entry points decl_common.h declares (MotionHover, MotionSway,
@@ -155,9 +157,6 @@ extern int sTrmpLineWeakPitchMid;
 extern int sTrmpLineStrongPitchEnd;
 extern int sTrmpLineStrongPitchMid;
 extern Vector3 data_020a0ebc;
-/* math/MtxStack.h also declares this, but parsing the MtxStack class ahead of
-   this TU's statics shifts their mwcc @NNN uniquifiers by +76 (measured). */
-extern Matrix4x3 data_020a0e68; /* local extern: the include renumbers the statics */
 extern Matrix4x3 data_0209b3ec; /* the view matrix, Graphics3D.cpp */
 extern int data_02092768[4];
 extern int data_020a0db0;
@@ -181,7 +180,6 @@ extern StateRecord pmf_TrmpLine_StateSettle;
 extern StateRecord pmf_TrmpLine_StateFlex;
 
 /* Other units' functions. */
-void Camera_ProjectToScreen(void *, void *, int *, int *);
 void Jump2Popup_Spawn(int, int, int);
 void D3D_PlaySePannedLoop(int, int, int);
 void Trmp2Spinner_InitAll(int);
@@ -190,8 +188,6 @@ int func_0203d524(V2 *, V2 *);
 void func_0203d704(int *, int *, int *);
 void func_0203cd80(int *, short);
 void Matrix4x3_FromQuaternion(const Quaternion *, Matrix4x3 *);
-void Matrix4x3_FromTranslation(Matrix4x3 *, int, int, int);
-void MTX_Concat43(const Matrix4x3 *, const Matrix4x3 *, Matrix4x3 *);
 void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *, int, int, int);
 unsigned int func_02045a50(const void *, unsigned int);
 
@@ -254,10 +250,10 @@ extern "C" void TrmpItem_GrowScale(TrmpItem *c) {
 extern "C" void TrmpItem_ProjectToScreen(TrmpItem *c, unsigned short scoreValue) {
     int screenX, screenY;
     if (c->mPos.y > 0) {
-        Camera_ProjectToScreen(sMgSubCamera, &c->mPos, &screenX, &screenY);
+        Camera_ProjectToScreen((MgCamera *)sMgSubCamera, &c->mPos, &screenX, &screenY);
         screenY = screenY - (Mg_GetTopScreenYOffset() + 0xc0);
     } else {
-        Camera_ProjectToScreen(sMgMainCamera, &c->mPos, &screenX, &screenY);
+        Camera_ProjectToScreen((MgCamera *)sMgMainCamera, &c->mPos, &screenX, &screenY);
     }
     Jump2Popup_Spawn(screenX << 0xc, screenY << 0xc, (short)scoreValue);
     *(StateRecord *)c = pmf_TrmpItem_GrowScale;
