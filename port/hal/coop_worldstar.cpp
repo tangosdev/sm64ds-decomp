@@ -414,7 +414,15 @@ void pend_tick() {
         s.on = false;
         ++g_st.wait_made;
         if (g_log) std::fprintf(stderr, "[coopws] lf=%u %s: no announce of the room's star %#x in %u ms: made here\n", g_lf, s.who, s.p, kAnnWaitMs);
-        spawn_star(s.p, s.pos, nullptr, s.area, s.who);
+        char *c = spawn_star(s.p, s.pos, nullptr, s.area, s.who);
+        // INT3 (REVIEW-AO note 1): the fallback copy is announced, so it is the room's star and not a loose linked one. A friend's
+        // announce that lands later meets it in coop_spawn's star dup rule (the lower seat's copy stays, one per screen), and a take
+        // of either copy reaches the other console as a GONE of an id it knows, or as "already taken" when his announce lands.
+        if (c && !coop_spawn_announce(c, kClsStar, s.p, s.pos, s.area)) {
+            if (g_log) std::fprintf(stderr, "[coopws] lf=%u %s: the fallback star %#x could not be announced (kept here as a linked star)\n", g_lf, s.who, s.p);
+        } else if (c && g_log) {
+            std::fprintf(stderr, "[coopws] lf=%u %s: the fallback star %#x announced as the room's star\n", g_lf, s.who, s.p);
+        }
     }
 }
 // WORLDSTAR2: tell a new member the taken star numbers (kind 3, first) and the let-goes still standing (kind 2); a let-go of a
