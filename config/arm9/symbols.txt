@@ -2841,19 +2841,19 @@ func_02065c1c kind:function(arm,size=0x10) addr:0x02065c1c
 MBi_SetRecvBufferFromChild kind:function(arm,size=0x130) addr:0x02065c2c
 MBi_MakeParentSendBuffer kind:function(arm,size=0x88) addr:0x02065d5c
 MBi_ReceiveRequestDataPiece kind:function(arm,size=0xd4) addr:0x02065de4
-MBi_CommCallParentError kind:function(arm,size=0x24) addr:0x02065eb8
-IsChildAidValid kind:function(arm,size=0x1c) addr:0x02065edc
-MBi_Calc_NextSendBlock kind:function(arm,size=0x10) addr:0x02065ef8
-MBi_Calc_SendBlock kind:function(arm,size=0x70) addr:0x02065f08
-MBi_CommParentSendData kind:function(arm,size=0x194) addr:0x02065f78
-MBi_CommParentSendBlock kind:function(arm,size=0x1b4) addr:0x0206610c
-MBi_CommParentSendDlFileInfo kind:function(arm,size=0x1b0) addr:0x020662c0
-MBi_CommParentSendMsg kind:function(arm,size=0x44) addr:0x02066470
-MBi_CommParentRecvData kind:function(arm,size=0xa8) addr:0x020664b4
-MBi_CommParentRecvDataPerChild kind:function(arm,size=0x538) addr:0x0206655c
+MBi_CommCallParentError kind:function(arm,size=0x24) addr:0x02065eb8 local
+IsChildAidValid kind:function(arm,size=0x1c) addr:0x02065edc local
+MBi_calc_nextsendblock kind:function(arm,size=0x10) addr:0x02065ef8 local
+MBi_calc_sendblock kind:function(arm,size=0x70) addr:0x02065f08 local
+MBi_CommParentSendData kind:function(arm,size=0x194) addr:0x02065f78 local
+MBi_CommParentSendBlock kind:function(arm,size=0x1b4) addr:0x0206610c local
+MBi_CommParentSendDLFileInfo kind:function(arm,size=0x1b0) addr:0x020662c0 local
+MBi_CommParentSendMsg kind:function(arm,size=0x44) addr:0x02066470 local
+MBi_CommParentRecvData kind:function(arm,size=0xa8) addr:0x020664b4 local
+MBi_CommParentRecvDataPerChild kind:function(arm,size=0x538) addr:0x0206655c local
 MBi_CommParentCallback kind:function(arm,size=0x51c) addr:0x02066a94
-MBi_CommChangeParentStateCallbackOnly kind:function(arm,size=0x3c) addr:0x02066fb0
-MBi_CommChangeParentState kind:function(arm,size=0x50) addr:0x02066fec
+MBi_CommChangeParentStateCallbackOnly kind:function(arm,size=0x3c) addr:0x02066fb0 local
+MBi_CommChangeParentState kind:function(arm,size=0x50) addr:0x02066fec local
 MB_CommResponseRequest kind:function(arm,size=0xfc) addr:0x0206703c
 MB_CommIsBootable kind:function(arm,size=0x5c) addr:0x02067138
 MB_CommGetChildrenNumber kind:function(arm,size=0x20) addr:0x02067194
@@ -5236,13 +5236,13 @@ data_020a8764 kind:bss addr:0x020a8764
 rom_stat kind:bss addr:0x020a8780
 data_020a89a0 kind:bss addr:0x020a89a0
 data_020a89a4 kind:bss addr:0x020a89a4
-data_020a89a8 kind:bss addr:0x020a89a8
-data_020a89ac kind:bss addr:0x020a89ac
-data_020a89b0 kind:bss addr:0x020a89b0
-data_020a89c4 kind:bss addr:0x020a89c4
-data_020a89ec kind:bss addr:0x020a89ec
+wmInitialized kind:bss addr:0x020a89a8
+wm9buf kind:bss addr:0x020a89ac
+bufMsgQ kind:bss addr:0x020a89b0
+bufMsg kind:bss addr:0x020a89c4
+cb_Port$157 kind:bss addr:0x020a89ec
 data_020a8a00 kind:bss addr:0x020a8a00
-data_020a8a40 kind:bss addr:0x020a8a40
+fifoBuf kind:bss addr:0x020a8a40
 tmpUserGameInfoBuf kind:bss addr:0x020a9440
 data_020a94c0 kind:bss addr:0x020a94c0
 data_020a94c4 kind:bss addr:0x020a94c4
@@ -5259,7 +5259,7 @@ data_020a9d4e kind:bss addr:0x020a9d4e
 data_020a9d50 kind:bss addr:0x020a9d50
 data_020a9db0 kind:bss addr:0x020a9db0
 data_020a9db4 kind:bss addr:0x020a9db4
-data_020a9db8 kind:bss addr:0x020a9db8
+mbc kind:bss addr:0x020a9db8
 data_020a9dc0 kind:bss addr:0x020a9dc0
 CTRDGi_Work kind:bss addr:0x020a9de0
 data_020a9de4 kind:bss addr:0x020a9de4
