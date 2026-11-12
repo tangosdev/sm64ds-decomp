@@ -33,6 +33,7 @@ enum d_s_mg_single3_d_base_AssetId {
 #include "nitro/gx/gx_load.h"
 #include "GX.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/g2.h"
 #include "nitro/gx/g3x.h"
 
 /* SDK calls this file makes. */
@@ -165,7 +166,7 @@ extern "C" void LoadCard2SubBg3(void *) {
     GXS_LoadBG3Scr(fileData, 0, 0x800);
     Deallocate(fileData);
     G2S_BG3Mosaic(false);
-    *(vu32 *)0x400101cu = 0;
+    G2S_SetBG3Offset(0, 0);
     G2S_SetBG3Priority(1);
 }
 

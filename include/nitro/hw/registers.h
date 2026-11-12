@@ -188,6 +188,13 @@
 #define REG_CP_SQRTCNT_BUSY_MASK 0x8000
 #define REG_CP_SQRTCNT_MODE_MASK 0x0001
 
+/* PAUSE (POSTFLG): bit 0 is set once the system has booted. The SDK's
+   reg_OS_PAUSE and REG_OS_PAUSE_CHK_MASK (ntrtwl/NitroSDK
+   include/nitro/hw/ARM9/ioreg_OS.h). */
+#define REG_PAUSE (*(volatile u16 *)0x04000300)
+
+#define REG_OS_PAUSE_CHK_MASK 0x0001
+
 /* Power control: bit 0 is the master enable for the 2D/3D hardware. */
 #define REG_POWCNT1 (*(volatile u16 *)0x04000304)
 
