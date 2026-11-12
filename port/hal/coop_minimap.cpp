@@ -10,6 +10,7 @@ extern "C" int port_adventure_ghost_mappos(int slot, int out[3], int *character)
 extern "C" unsigned char data_0209f2d8;
 extern "C" signed char data_02092120;
 extern "C" int port_rom_frame(void);
+extern "C" int port_coop_session_busy(void);   /* hal/coop_boot.cpp */
 
 namespace {
 
@@ -106,5 +107,5 @@ extern "C" void port_coop_minimap_trace(int slot, int gk, int x, int y, int mapi
 }
 
 namespace {
-struct Install { Install() { g_mm_ghost_pos = port_coop_minimap_ghost; } } g_install;
+struct Install { Install() { g_mm_ghost_pos = port_coop_minimap_ghost; g_mm_coop_room = port_coop_session_busy; } } g_install;
 }  // namespace

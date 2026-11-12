@@ -50,6 +50,7 @@ extern "C" {
 extern void (*port_sdat_frame_hook)(void);   /* hal/sdat/consumer.cpp: one call per game frame */
 int port_scene_live_id(void);                /* hal/scene_boot.cpp: 1 = SCENE_TITLE */
 void port_window_quit(int code);             /* hal/handoff_poll.cpp */
+void port_playlog_commit(void);              /* hal/playlog_commit.cpp (coopfix1 HOSTSTART1) */
 }
 
 namespace {
@@ -1205,6 +1206,22 @@ void launch(const JV &plan, LobbyKind kind, bool host, const std::string &match)
         Lock l;
         SetEnvironmentVariableA("SM64DS_LOBBY_RESUME", resume_value().c_str());
     }
+    /* coopfix1 HOSTSTART1 (bug 26): the successor names this process in its first log line and commits its log to disk
+       while it starts (hal/playlog_commit.cpp) */
+    SetEnvironmentVariableA("SM64DS_LOBBY_PREDECESSOR", std::to_string((unsigned long)GetCurrentProcessId()).c_str());
+#ifndef PORT_ROM_CLEAN
+    /* proof knob SM64DS_LOBBY_TEST_SUCCESSOR_ENV=NAME=VALUE: one more variable for the successor only (a row sets
+       SM64DS_FAULT_TEST in the restarted game this way, to show what a crash right after the restart leaves) */
+    std::string succ_name;
+    if (const char *se = std::getenv("SM64DS_LOBBY_TEST_SUCCESSOR_ENV")) {
+        const char *eq = std::strchr(se, '=');
+        if (eq && eq != se) {
+            succ_name.assign(se, (size_t)(eq - se));
+            SetEnvironmentVariableA(succ_name.c_str(), eq + 1);
+            say("test: the successor also gets %s", se);
+        }
+    }
+#endif
     char exe[MAX_PATH] = "";
     GetModuleFileNameA(0, exe, (DWORD)sizeof exe);
     STARTUPINFOA si;
@@ -1218,6 +1235,10 @@ void launch(const JV &plan, LobbyKind kind, bool host, const std::string &match)
 #endif
         ok = CreateProcessA(exe, 0, 0, 0, FALSE, 0, 0, 0, &si, &pi) != 0;
     SetEnvironmentVariableA("SM64DS_LOBBY_RESUME", 0);
+    SetEnvironmentVariableA("SM64DS_LOBBY_PREDECESSOR", 0);
+#ifndef PORT_ROM_CLEAN
+    if (!succ_name.empty()) SetEnvironmentVariableA(succ_name.c_str(), 0);
+#endif
     if (!ok) {
         port_handoff_unset_env(&q);
         Lock l;
@@ -1232,6 +1253,9 @@ void launch(const JV &plan, LobbyKind kind, bool host, const std::string &match)
     CloseHandle(pi.hThread);
     CloseHandle(pi.hProcess);
     say("restarted as pid %lu; this process is ending (the successor carries the room)", (unsigned long)pi.dwProcessId);
+    /* coopfix1 HOSTSTART1 (bug 26): this line and the exit summary reach the disk, not only the system cache */
+    port_playlog_commit();
+    std::atexit(port_playlog_commit);
     {
         Lock l;
         g.phase = LOBBY_STARTING;
