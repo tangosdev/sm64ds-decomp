@@ -1,0 +1,49 @@
+{
+  "about": "Mario on flat ground 300 units from a walking Bob-omb (slot 17 home -1561,0,-2073) and facing it, Luigi on flat ground 2600 away facing away from it (State5 wakes only off camera): after it blows up, asleep or awake on both screens alike?",
+  "save": {
+    "preset": "early"
+  },
+  "room": {
+    "collision": 1,
+    "damage": 1,
+    "interact": 1,
+    "tp": 1
+  },
+  "proof": {
+    "secs": 150,
+    "shot_ms": 70000,
+    "census": [
+      206
+    ]
+  },
+  "players": [
+    {
+      "character": "mario",
+      "level": 6,
+      "act": 1,
+      "pos": [
+        -1561,
+        0,
+        -1773
+      ],
+      "drop": true,
+      "yaw_deg": 180
+    },
+    {
+      "character": "luigi",
+      "level": 6,
+      "act": 1,
+      "pos": [
+        -1561,
+        0,
+        527
+      ],
+      "drop": true,
+      "yaw_deg": 0
+    }
+  ],
+  "env": {
+    "SM64DS_COOP_BALLS_SAMPLE": "4",
+    "SM64DS_COOP_BALLS_LOG": "1"
+  }
+}

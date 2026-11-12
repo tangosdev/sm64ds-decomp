@@ -145,7 +145,12 @@ def main(argv=None):
     def in_code(a):
         return any(lo <= a < hi for lo, hi in code)
 
-    starts = sorted(a for a in names_at if in_code(a))
+    # MSVC's $LN<n> labels are local labels, and a jump table's data words sit
+    # behind some of them; decoded as code those words can read as two short
+    # jmps into each other (seen: d_s_mg_trampoline2.cpp, two $LN labels whose
+    # table entries 0x1024ebNN carry an 0xeb byte). A label is not a function.
+    starts = sorted(a for a in names_at if in_code(a)
+                    and not all(n.startswith("$LN") for n, _ in names_at[a]))
     if not starts:
         print("facecycle_guard: CANNOT RUN, no code symbols in %s" % map_path)
         return 2
