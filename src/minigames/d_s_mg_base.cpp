@@ -143,6 +143,22 @@ extern int *sMgMenuItem2SpritesByLanguage[];
 extern OamAttr *data_ov006_021346bc;
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
+extern void func_0201f32c(int arg0);
+extern char sMgBrushPalette;
+extern void Banner_Free(MgBanner *e);
+extern int sMgBannerButtonsArmed;
+extern void Banner_Press(MgBanner *e);
+extern int Banner_IsPressFinished(MgBanner *e);
+extern void Banner_Init(struct MgBanner *e, int c, int a1, int a2, int a3, int s1, short s2);
+extern char sMgBannerGfxSlotUsed[];
+extern void Mg_DrawRecordRow(dScMgBase_c *scene, int x, int y, int val);
+extern int sMgCounterMaxByDigits[];
+extern void Mg_SubCredits(void *c, int val);
+extern void Mg_AddCredits(void *c, s32 delta);
+extern void Mg_DrawCreditsIcon(int r0, int r1, int r2, int r3);
+extern void DecompressLZ16(void *src, void *dst);
+extern void RenderOamBothScreens(void *attr, int x, int y, int palette, int priority, void *mtx);
+extern void Mg_RenderMainSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, void *a5);
 }
 
 /* dScMgBase_c::IsAltVariant - slot 35, the LAST slot of dScMgBase_c's own
@@ -1423,13 +1439,7 @@ extern "C" {
    this module is dScMgBase_c::OnGraphCallback2, which reaches it only on a rising edge
    of mMenuOpen.  That is the three-item overlay menu going up, not a Yoshi egg.
    See the slot 29 block in include/dScMgBase_c.h for why the name is kept. */
-extern void func_0201f32c(int arg0);
 extern int GetGameLanguage(void);
-extern void DecompressLZ16(void *src, void *dst);
-
-extern unsigned char gMainScreenLayers;
-extern unsigned char gSubScreenLayers;
-
 /* THE EARLY EXITS ARE SPELT AS NESTED IFS, NOT `return;`. mwccarm accepts a
    valueless `return` in a non-void function; C++ does not, and no host option
    reaches it (MSVC C2561). The ROM sets no return value on these paths -- it
@@ -1442,11 +1452,7 @@ extern unsigned char gSubScreenLayers;
 }
 
 int dScMgBase_c::SaveScreenForMenu() {
-    using s20af094::DecompressLZ16;
     using s20af094::GetGameLanguage;
-    using s20af094::gSubScreenLayers;
-    using s20af094::gMainScreenLayers;
-    using s20af094::func_0201f32c;
     MgMenuSaveArea *save = (MgMenuSaveArea *)this;
 
     if (GetDisplayMode() != 0)
@@ -1521,9 +1527,6 @@ void dScMgBase_c::OpenMenu()
 
 namespace s20af2f8 {
 extern "C" {
-
-extern char sMgBrushPalette;
-
 /* Sets up the brush that PaintSquare paints with. `sb` is the scene: stores
    `en` in mBrushOnMain and the layer `mode` (0..3) in mBrushLayer, fills
    the first 0x300 screen entries of that sub-screen BG layer (and of the
@@ -1879,7 +1882,6 @@ extern "C" void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx) {
 namespace s20afdd0 {
 extern "C" {
 extern "C" {
-extern int sMgTopScreenYOffset;
 int OamRender10_d_s_mg_base_b(int, void *, int, int, int, int, int, int, int, int);
 void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4) {
     dScMgBase_c *scene = gMgScene;
@@ -1945,7 +1947,6 @@ extern "C" int Mg_RenderSpriteBothScaled(struct OamAttr *a0, int a1, int a2, int
 
 namespace s20b0104 {
 extern "C" {
-extern int sMgTopScreenYOffset;
 void RenderOamBothScreens(void *attr, int x, int y, int palette, int priority, void *mtx) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
@@ -1970,7 +1971,6 @@ void RenderOamBothScreens(void *attr, int x, int y, int palette, int priority, v
 
 namespace s20b023c {
 extern "C" {
-extern int sMgTopScreenYOffset;
 void Mg_RenderSpriteBothPalMtx(void *a0, int a1, int a2, int a3, void *a4) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
@@ -1994,7 +1994,6 @@ void Mg_RenderSpriteBothPalMtx(void *a0, int a1, int a2, int a3, void *a4) {
 
 namespace s20b0380 {
 extern "C" {
-extern int sMgTopScreenYOffset;
 void Mg_RenderSpriteBothMtx(void *a0, int a1, int a2, void *a3) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
@@ -2018,7 +2017,6 @@ void Mg_RenderSpriteBothMtx(void *a0, int a1, int a2, void *a3) {
 
 namespace s20b04c0 {
 extern "C" {
-extern int sMgTopScreenYOffset;
 /* Get and set sMgTopScreenYOffset: the offset PaintSquare and the sprite
    wrappers above add, with 0xc0, to y on their upper-screen path. */
 int Mg_GetTopScreenYOffset(void) {
@@ -2029,7 +2027,6 @@ int Mg_GetTopScreenYOffset(void) {
 
 namespace s20b04d0 {
 extern "C" {
-extern int sMgTopScreenYOffset;
 void Mg_SetTopScreenYOffset(int v) {
     sMgTopScreenYOffset = v;
 }
@@ -2284,7 +2281,6 @@ extern "C" void Mg_SetSharedState(s32 state)
 
 namespace s20b0aa0 {
 extern "C" {
-extern void Banner_Free(void *c);
 extern MgBanner gMgBanners[];
 /* Calls Banner_Free on each of the three 0x134-byte records at
    gMgBanners whose word at +0x20 equals `arg` -- or, for 0x1d,
@@ -2331,10 +2327,6 @@ struct Vec2 {
 };
 
 extern MgBanner gMgBanners[3];
-extern int sMgBannerButtonsArmed;
-
-extern void Banner_Press(MgBanner *e);
-extern int Banner_IsPressFinished(MgBanner *e);
 
 // The ROM scales idx into the addressing mode here, which only the 4-byte-record view of the lane reproduces.
 #define TOUCH_REC(lane) ((unsigned char (*)[4])(lane))
@@ -2395,7 +2387,6 @@ int Mg_CheckBannerButton(int arg) {
 namespace s20b0cac {
 extern "C" {
 extern struct MgBanner gMgBanners[];
-extern void Banner_Init(struct MgBanner *e, int c, int a1, int a2, int a3, int s1, short s2);
 /* Hands its arguments to Banner_Init for the first of the three
    records at gMgBanners whose mFileIndex is 0x1d (free); does nothing
    when none is. */
@@ -2413,8 +2404,6 @@ void Mg_ShowBanner(int c, int a1, int a2, int a3, int arg5, short arg6) {
 
 namespace s20b0d30 {
 extern "C" {
-extern char sMgBannerGfxSlotUsed[];
-
 void Mg_ResetOverlays(void) {
     FreeGfxSlotsById(0x1d);
     int i = 0;
@@ -2671,8 +2660,6 @@ extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
 namespace s20b14f0 {
 extern "C" {
 extern int Mg_GetLastRecordRank(void* self, int a);
-extern int func_02013580(int a, int b);
-extern void Mg_DrawRecordRow(dScMgBase_c *scene, int x, int y, int val);
 
 /* Draws the five saved records in rows 0x18 apart from (0xa8, 0x28),
    revealing one more row every 0x14 frames as mRecordRevealTimer counts up. mRecordRevealTimer
@@ -2754,8 +2741,6 @@ namespace s20b1710 {
 extern "C" {
 extern int GetGameLanguage(void);
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
-
-extern MgEntry gMgMenuRow;
 
 /* Draws one record row at y. In scoring mode 5 (gMgMenuRow.scoringMode)
    `val` is a time in frames, drawn as seconds, sprite word 7, tenths and
@@ -2841,7 +2826,6 @@ namespace s20b1a5c {
 extern "C" {
 s32 GetGameLanguage(void);
 void RenderOamMainScreen(OamAttr *a, int b, int c, int d, int e);
-extern int sMgCounterMaxByDigits[];
 /* Draws a0, capped at sMgCounterMaxByDigits[a1], right-aligned at (0xf4,
    0xc), and sprite word 4 to its left at an x that a1 sets. */
 void Mg_DrawTopRightCounter(int a0, int a1){
@@ -2872,7 +2856,6 @@ int Mg_GetLevel(void) {
 
 namespace s20b1b08 {
 extern "C" {
-extern void Mg_SubCredits(void *c, int val);
 /* Subtracts `amount` from the scene's mCredits (Mg_SubCredits). */
 void Mg_LoseCredits(int amount) {
     void *v = gMgScene;
@@ -2884,7 +2867,6 @@ void Mg_LoseCredits(int amount) {
 
 namespace s20b1b40 {
 extern "C" {
-extern void Mg_AddCredits(void *c, s32 delta);
 /* Adds `amount` to the scene's mCredits (Mg_AddCredits). */
 void Mg_GainCredits(int amount) {
     void *v = gMgScene;
@@ -2924,7 +2906,6 @@ void Mg_AddCredits(void *c, s32 delta)
 
 namespace s20b1bc8 {
 extern "C" {
-extern void Mg_DrawCreditsIcon(int r0, int r1, int r2, int r3);
 /* Draws sprite word 2 at (a1, a2) on wrapper a3 (Mg_DrawCreditsIcon),
    then the scene's mCreditsShown beside it: below 100 through
    Mg_DrawBigNumber, otherwise through Mg_DrawNumber. */
@@ -2944,8 +2925,6 @@ void Mg_DrawCredits(char *a0, int a1, int a2, int a3)
 namespace s20b1c68 {
 extern "C" {
 struct M { int _00, _01, _10, _11; };
-extern void RenderOamBothScreens(void* a0, int a1, int a2, int a3, int a4, void* a5);
-extern void Mg_RenderMainSpritePalMtx(void* a0, int a1, int a2, int a3, int a4, void* a5);
 /* a3 picks the wrapper: -1 RenderOamBothScreens, 0 Mg_RenderSubSpritePalMtx,
    anything else Mg_RenderMainSpritePalMtx; each is passed -1 in its place. */
 void Mg_RenderSpriteOnMtx(void* a0, int a1, int a2, int a3, int a4, struct M* a5){
