@@ -541,12 +541,18 @@ def steam_pids():
         if not d.isdigit():
             continue
         try:
-            with open("/proc/%s/comm" % d) as f:
-                comm = f.read().strip()
+            with open("/proc/%s/stat" % d) as f:
+                stat = f.read()
         except OSError:
             continue
-        # "steam" is the client itself; steamwebhelper and friends exit with it.
-        if comm == "steam":
+        # /proc/<pid>/stat is "pid (comm) state ...". "steam" is the client itself;
+        # steamwebhelper and friends exit with it. A zombie (state Z) is already gone:
+        # the "steam -shutdown" helper this script starts ends up as one for a moment.
+        lp, rp = stat.find("("), stat.rfind(")")
+        if lp < 0 or rp < 0:
+            continue
+        comm, state = stat[lp + 1:rp], stat[rp + 2:rp + 3]
+        if comm == "steam" and state != "Z":
             pids.append(int(d))
     return pids
 
@@ -570,12 +576,13 @@ def shut_down_steam(ui, root, timeout=90):
                          "Close Steam yourself (Steam menu, Exit) and run this again.")
     ui.say("Closing Steam: " + " ".join(cmd))
     try:
-        subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-                         stdin=subprocess.DEVNULL, start_new_session=True)
+        helper = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                                  stdin=subprocess.DEVNULL, start_new_session=True)
     except OSError as e:
         raise SetupError("Could not ask Steam to close: %s" % e)
     t0 = time.time()
     while time.time() - t0 < timeout:
+        helper.poll()                # reap the helper so it does not count as Steam
         if not steam_pids():
             time.sleep(2)            # let it finish writing its own files
             if not steam_pids():
@@ -729,8 +736,12 @@ def step_steam(ui, kit, args):
     for root, users in plan:
         ui.say("    Steam folder %s, user(s) %s" % (root, ", ".join(users)))
 
+    # Read everything and work out the changes first, so a run with nothing to change
+    # never closes Steam. Steam writes both files when it exits, so once it is closed
+    # they are read again and the changes worked out afresh.
+    ops = prepare_changes(ui, plan, exe_path, kit, quiet=False)
     stopped_root = None
-    if steam_pids():
+    if ops and steam_pids():
         if args.dry_run:
             ui.say("    (dry run) Steam is running; a real run would ask to close it now")
         else:
@@ -740,86 +751,93 @@ def step_steam(ui, kit, args):
                 raise SetupError("Steam was left running, so nothing was added.")
             shut_down_steam(ui, plan[0][0])
             stopped_root = plan[0][0]
+            ops = prepare_changes(ui, plan, exe_path, kit, quiet=True)
 
     stamp = time.strftime("%Y%m%d-%H%M%S")
-    any_proton = False
     try:
-        for root, users in plan:
-            appids = set()
-            for uid in users:
-                cfg_dir = os.path.join(root, "userdata", uid, "config")
-                path = os.path.join(cfg_dir, "shortcuts.vdf")
-                if os.path.isfile(path):
-                    with open(path, "rb") as f:
-                        raw = f.read()
-                    try:
-                        data = bvdf_loads(raw)
-                    except ValueError as e:
-                        raise SetupError("Could not read %s (%s). It was left as it is." % (path, e))
-                    if bvdf_dumps(data) != raw:
-                        raise SetupError("%s did not read back byte for byte, so it was left "
-                                         "alone to be safe." % path)
-                else:
-                    data = [["shortcuts", T_MAP, []]]
-                appid, action, dups = upsert_shortcut(data, exe_path, kit)
-                appids.add(appid)
-                out = bvdf_dumps(data)
-                bvdf_loads(out)                         # must parse before it is written
-                bak = backup(path, stamp, args.dry_run)
-                if args.dry_run:
-                    ui.say("    (dry run) user %s: would %s the shortcut, app id %d%s" %
-                           (uid, "add" if action == "added" else "update", appid,
-                            "" if bak is None else ", backup " + os.path.basename(bak)))
-                else:
-                    os.makedirs(cfg_dir, exist_ok=True)
-                    write_atomic(path, out)
-                    with open(path, "rb") as f:
-                        if f.read() != out:
-                            raise SetupError("%s did not read back the same after writing." % path)
-                    ui.say("    user %s: shortcut %s (app id %d)%s" %
-                           (uid, action, appid,
-                            "" if bak is None else ", old file kept as " + os.path.basename(bak)))
-                if dups:
-                    ui.say("    user %s: %d more old entr%s for this game left as they are" %
-                           (uid, dups, "y" if dups == 1 else "ies"))
-
-            cfg_path = os.path.join(root, "config", "config.vdf")
-            if os.path.isfile(cfg_path):
-                with open(cfg_path, "r", encoding="utf-8", errors="surrogateescape") as f:
-                    text = f.read()
-                try:
-                    cfg = tvdf_loads(text)
-                except ValueError as e:
-                    raise SetupError("Could not read %s (%s). It was left as it is; set the "
-                                     "compatibility tool by hand (step 4 below)." % (cfg_path, e))
-            else:
-                cfg = []
-            results = [(a, set_compat_tool(cfg, a)) for a in sorted(appids)]
-            new_text = tvdf_dumps(cfg)
-            check = tvdf_loads(new_text)
-            for a, _ in results:
-                if read_compat_tool(check, a) != COMPAT_TOOL:
-                    raise SetupError("Setting the compatibility tool did not read back.")
-            if new_text != text:
-                bak = backup(cfg_path, stamp, args.dry_run)
-                if args.dry_run:
-                    ui.say("    (dry run) would set Proton Experimental for app id(s) %s in %s%s" %
-                           (", ".join(str(a) for a, _ in results), cfg_path,
-                            "" if bak is None else ", backup " + os.path.basename(bak)))
-                else:
-                    os.makedirs(os.path.dirname(cfg_path), exist_ok=True)
-                    write_atomic(cfg_path, new_text.encode("utf-8", "surrogateescape"))
-                    ui.say("    Proton Experimental set for app id(s) %s%s" %
-                           (", ".join(str(a) for a, _ in results),
-                            "" if bak is None else ", old config kept as " + os.path.basename(bak)))
-            else:
-                ui.say("    Proton Experimental was already set")
-            if proton_experimental_installed(root):
-                any_proton = True
+        for op in ops:
+            bak = backup(op["path"], stamp, args.dry_run)
+            if args.dry_run:
+                ui.say("    (dry run) would " + op["dry"] +
+                       ("" if bak is None else ", backup " + os.path.basename(bak)))
+                continue
+            os.makedirs(os.path.dirname(op["path"]), exist_ok=True)
+            write_atomic(op["path"], op["data"])
+            with open(op["path"], "rb") as f:
+                if f.read() != op["data"]:
+                    raise SetupError("%s did not read back the same after writing." % op["path"])
+            ui.say("    " + op["done"] +
+                   ("" if bak is None else ", old file kept as " + os.path.basename(bak)))
     finally:
         if stopped_root is not None:
             start_steam(ui, stopped_root)
-    return any_proton
+    return any(proton_experimental_installed(root) for root, _ in plan)
+
+
+def prepare_changes(ui, plan, exe_path, kit, quiet):
+    """Read the Steam files and return the writes needed (nothing is written here)."""
+    say = (lambda s: None) if quiet else ui.say
+    ops = []
+    for root, users in plan:
+        appids = set()
+        for uid in users:
+            path = os.path.join(root, "userdata", uid, "config", "shortcuts.vdf")
+            raw = None
+            if os.path.isfile(path):
+                with open(path, "rb") as f:
+                    raw = f.read()
+                try:
+                    data = bvdf_loads(raw)
+                except ValueError as e:
+                    raise SetupError("Could not read %s (%s). It was left as it is." % (path, e))
+                if bvdf_dumps(data) != raw:
+                    raise SetupError("%s did not read back byte for byte, so it was left "
+                                     "alone to be safe." % path)
+            else:
+                data = [["shortcuts", T_MAP, []]]
+            appid, action, dups = upsert_shortcut(data, exe_path, kit)
+            appids.add(appid)
+            out = bvdf_dumps(data)
+            bvdf_loads(out)                         # must parse before it is written
+            if out == raw:
+                say("    user %s: already in Steam (app id %d), nothing to change" % (uid, appid))
+            else:
+                ops.append({"path": path, "data": out,
+                            "dry": "%s the shortcut for user %s, app id %d" %
+                                   ("add" if action == "added" else "update", uid, appid),
+                            "done": "user %s: shortcut %s (app id %d)" % (uid, action, appid)})
+            if dups:
+                say("    user %s: %d more old entr%s for this game left as they are" %
+                    (uid, dups, "y" if dups == 1 else "ies"))
+
+        cfg_path = os.path.join(root, "config", "config.vdf")
+        text = None
+        if os.path.isfile(cfg_path):
+            with open(cfg_path, "r", encoding="utf-8", errors="surrogateescape") as f:
+                text = f.read()
+            try:
+                cfg = tvdf_loads(text)
+            except ValueError as e:
+                raise SetupError("Could not read %s (%s). It was left as it is; set the "
+                                 "compatibility tool by hand (step 4 below)." % (cfg_path, e))
+        else:
+            cfg = []
+        ids = sorted(appids)
+        for a in ids:
+            set_compat_tool(cfg, a)
+        new_text = tvdf_dumps(cfg)
+        check = tvdf_loads(new_text)
+        for a in ids:
+            if read_compat_tool(check, a) != COMPAT_TOOL:
+                raise SetupError("Setting the compatibility tool did not read back.")
+        if new_text != text:
+            names = ", ".join(str(a) for a in ids)
+            ops.append({"path": cfg_path, "data": new_text.encode("utf-8", "surrogateescape"),
+                        "dry": "set Proton Experimental for app id(s) %s in %s" % (names, cfg_path),
+                        "done": "Proton Experimental set for app id(s) %s" % names})
+        else:
+            say("    Proton Experimental was already set")
+    return ops
 
 
 def main(argv=None):

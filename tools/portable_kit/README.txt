@@ -300,6 +300,32 @@ Easiest way, on a desktop with Steam installed:
 
 On a Steam Deck (or to start it from Steam):
 
+1. Switch to Desktop Mode. Unzip the kit into your home folder (for example
+   into Games), and put your .nds in PLACE YOUR ROM HERE.
+2. Double-click "Steam Deck Setup" in the kit folder.
+   The first time, KDE asks whether to run it, because files that come out
+   of a zip are not marked as programs ("This will start the program: Steam
+   Deck Setup"). Press Continue. It only asks once.
+   A terminal window opens and the setup:
+     - checks your .nds is in PLACE YOUR ROM HERE,
+     - unpacks the game data (about a minute, only the first time),
+     - asks to close Steam for a moment, adds "Super Mario 64 DS PC" to your
+       Steam library set to run with Proton Experimental, and starts Steam
+       again. Your old Steam files are kept next to the new ones with .bak-
+       and the date at the end of their names.
+   Running it again does no harm: it does not add a second entry.
+3. Switch to Gaming Mode and find Super Mario 64 DS PC in your library.
+   If the setup said Proton Experimental is not installed, install it first:
+   Library, set the filter to Tools, Proton Experimental, Install.
+
+If double-clicking does nothing or opens a text editor, open a terminal in the
+kit folder (in Dolphin: right-click inside the folder, Open Terminal Here) and
+run  python3 steam_deck_setup.py  instead. It is the same thing. A kit on a
+memory card formatted as exFAT cannot be marked as a program, so there the
+terminal is the way, or unzip the kit to the Deck's own drive.
+
+The same steps by hand, if the setup stops or you prefer to do it yourself:
+
 1. Switch to Desktop Mode, unzip the kit, put your .nds in PLACE YOUR ROM HERE.
 2. Open a terminal in the kit folder and run  python3 extract_assets.py  once,
    so the game data is unpacked (about a minute).
@@ -368,6 +394,9 @@ WHAT IS IN THIS FOLDER
                            (see above)
     extract_assets.py      Linux and Steam Deck only: unpacks the game data
                            with Python
+    Steam Deck Setup       Steam Deck only: double-click in Desktop Mode to
+                           set everything up (see above). It runs
+    steam_deck_setup.py    which does the work
     extract_assets.ps1     the PowerShell script the launcher uses to unpack
                            your dump on Windows
 

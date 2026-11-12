@@ -277,6 +277,10 @@ def main():
               "second run adds no second entry")
         check(all(open(p, "rb").read() == b for p, b in snap.items()), "second run: files identical")
         check("already set" in out, "second run leaves config.vdf alone")
+        check(out.count("nothing to change") == 2, "second run says both users already have it")
+        nb = [f for d in (os.path.dirname(u1), os.path.dirname(u2), os.path.dirname(cfgp))
+              for f in os.listdir(d) if ".bak-" in f]
+        check(len(nb) == 2, "second run makes no new backups")
 
         # 7. Kit moved: same entry updated, app id kept.
         kit2 = os.path.join(base, "moved kit")
@@ -343,6 +347,20 @@ def main():
         rc, out = run(["--kit", kit, "--steam-root", root, "--yes"])
         check(rc == 1 and "not a Super Mario 64 DS dump" in out and "by hand" in out,
               "extraction failure: reason and manual steps")
+    finally:
+        shutil.rmtree(base, ignore_errors=True)
+
+    # 12a. No config.vdf yet: it is made with just the mapping.
+    base = tempfile.mkdtemp(prefix="sds-test-")
+    try:
+        kit = make_kit(base)
+        root, _ = make_steam(base)
+        os.remove(os.path.join(root, "config", "config.vdf"))
+        rc, out = run(["--kit", kit, "--steam-root", root, "--yes"])
+        cfg = sds.tvdf_loads(open(os.path.join(root, "config", "config.vdf")).read())
+        appid = sds.shortcut_appid('"%s"' % os.path.join(kit, sds.LAUNCHER), sds.APP_NAME)
+        check(rc == 0 and sds.read_compat_tool(cfg, appid) == "proton_experimental",
+              "missing config.vdf: made with the mapping")
     finally:
         shutil.rmtree(base, ignore_errors=True)
 
