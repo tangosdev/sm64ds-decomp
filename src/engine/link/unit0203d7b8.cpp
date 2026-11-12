@@ -73,6 +73,9 @@ struct Pair {
 typedef struct {
     char stack[0x400];
     OSThread thread;
+    /* 0x494, just past the OSThread (0x94 bytes in this SDK): func_02042200
+       clears it before creating the thread; nothing in src/ reads it */
+    u16 mFlag;
 } LoaderThreadBlock;
 typedef struct {
     u32 kind : 4;
@@ -260,7 +263,6 @@ void func_0203f714(WMMeasureChannelCallback *s);
 int func_0203f818(u16 channel);
 void func_0203f8a4(void);
 void func_0203f920(void *arg);
-void func_0203f9d4(void *sysBuf, ChannelMeasureCallback callback);
 int func_0203fa50(void);
 int func_0203faa8(void);
 int func_0203fb5c(void);
@@ -623,28 +625,20 @@ void func_02042254(void) {
     }
 }
 
-/* Start the file-share parent's loader thread (func_02042254).
-   data_020a11e4 is its 0x400-byte stack, and the OSThread follows at +0x400
-   (also the symbol data_020a15e4, which func_020423c8 wakes).
-   OS_CreateThread takes (thread, entry, arg, stack top, stack size,
-   priority 15 here), and OS_WakeupThreadDirect then wakes the thread.
-   The halfword at +0x494 lies just past the OSThread (0x94 bytes in this SDK;
-   OS_Thread.cpp asserts it), still inside the block that ends at
-   data_020a1680. It is cleared here before OS_CreateThread runs, and nothing
-   else in src/ reads it. The (int) launder keeps the one base register the
-   ROM uses for every address: `char *base = data_020a11e4` and direct
-   data_020a11e4[0x400] addressing both fold base + 0x400 into a second
-   literal-pool constant (15 of 21 words differ). */
+/* Start the file-share parent's loader thread (func_02042254) in its block
+   at data_020a11e4: the 0x400-byte stack, then the OSThread (also the
+   symbol data_020a15e4, which func_020423c8 wakes). OS_CreateThread takes
+   (thread, entry, arg, stack top, stack size, priority 15 here), and
+   OS_WakeupThreadDirect then wakes the thread. Both this and func_020421b4
+   reach the block through a pointer cast; declaring data_020a11e4 itself a
+   LoaderThreadBlock changes the code of both. */
 void func_02042200(void) {
-    char *base = (char *)(int)data_020a11e4;
-    *(short *)(base + 0x494) = 0;
-    OS_CreateThread((OSThread *)&base[0x400], (void (*)(void *))func_02042254, base, &base[0x400],
-                    0x400, 0xf);
-    OS_WakeupThreadDirect((OSThread *)&base[0x400]);
+    LoaderThreadBlock *blk = (LoaderThreadBlock *)data_020a11e4;
+    blk->mFlag = 0;
+    OS_CreateThread(&blk->thread, (void (*)(void *))func_02042254, blk,
+                    blk->stack + sizeof(blk->stack), sizeof(blk->stack), 0xf);
+    OS_WakeupThreadDirect(&blk->thread);
 }
-
-/* The loader thread's block at data_020a11e4, as func_02042200 creates it:
- * the thread's 0x400-byte stack, then its OSThread. */
 
 /* Stop the file-share loader thread (see func_02042200): until the thread is
  * terminated (state 2), wake it so that it sees mState cleared and returns,
