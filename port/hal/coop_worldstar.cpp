@@ -351,7 +351,7 @@ void klepto_tick() {
         if (k->mSilverStarFlag == 2) k->mCarriedItem = 0;
         k->mTimer = 0x1e;
         ++g_st.klepto_let_go;
-        if (g_log) std::fprintf(stderr, "[coopws] lf=%u my Klepto slot %d lets go of its %s (%s): removed here, none made\n", g_lf,
+        if (g_log) std::fprintf(stderr, "[coopws] lf=%u my Klepto slot %d lets go of its %s (%s): the held copy removed\n", g_lf,
                                 (int)a_slot(a), k->mSilverStarFlag == 2 ? "silver star" : "star", why);
     }
 }
@@ -369,7 +369,7 @@ void eel_tick() {
         wr32(a, 0x49c, 0);
         if (make_here(rel)) spawn_star(rel, a + 0x43c, nullptr, a[0xcc], "my eel");
         ++g_st.eel_let_go;
-        if (g_log) std::fprintf(stderr, "[coopws] lf=%u my eel lets go of its tail star: the room's star %#x is out, mine removed, none made\n", g_lf, rel);
+        if (g_log) std::fprintf(stderr, "[coopws] lf=%u my eel lets go of its tail star: the room's star %#x is out, the held copy removed\n", g_lf, rel);
     }
 }
 
