@@ -41,6 +41,24 @@ extern char data_ov073_02123320[], data_ov073_02123330[], data_ov073_02123340[],
             data_ov073_02123370[], data_ov073_02123380[], data_ov073_02123390[], data_ov073_021233a0[], data_ov073_021233b0[],
             data_ov073_021233c0[], data_ov073_021233d0[], data_ov073_021233e0[], data_ov073_021233f0[], data_ov073_02123400[],
             data_ov073_02123410[];
+// kbo2: the same sixteen records as src's C++ State objects (d_a_king_donketu.cpp), reached by their mangled names.
+extern "C" char kbo2_cc_3320[], kbo2_cc_3330[], kbo2_cc_3340[], kbo2_cc_3350[], kbo2_cc_3360[], kbo2_cc_3370[], kbo2_cc_3380[], kbo2_cc_3390[], kbo2_cc_33a0[], kbo2_cc_33b0[], kbo2_cc_33c0[], kbo2_cc_33d0[], kbo2_cc_33e0[], kbo2_cc_33f0[], kbo2_cc_3400[], kbo2_cc_3410[];
+#pragma comment(linker, "/alternatename:_kbo2_cc_3320=?data_ov073_02123320@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_3330=?data_ov073_02123330@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_3340=?data_ov073_02123340@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_3350=?data_ov073_02123350@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_3360=?data_ov073_02123360@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_3370=?data_ov073_02123370@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_3380=?data_ov073_02123380@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_3390=?data_ov073_02123390@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_33a0=?data_ov073_021233a0@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_33b0=?data_ov073_021233b0@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_33c0=?data_ov073_021233c0@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_33d0=?data_ov073_021233d0@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_33e0=?data_ov073_021233e0@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_33f0=?data_ov073_021233f0@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_3400=?data_ov073_02123400@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_3410=?data_ov073_02123410@@3UState@daKing_Donketu_c@@A")
 // bossdesc2: Goomboss's ROM transition (state index at +0x5cc, runs the enter pair), its hit animation, Eyerok's transition + records + globals
 void _ZN7fBase_c18MarkForDestructionEv(void *self);
 // coopgoomboss2: a minion's home point (what the summon calls after the Spawn) and the Goomba's own removal at the end of its death
@@ -282,15 +300,17 @@ char *const *chilly_states(int *n) {
 uint32_t chilly_ptr_to_id(uint32_t ptr) {
     int n; char *const *k = chilly_states(&n);
     for (int i = 0; i < n; ++i) if ((uint32_t)(uintptr_t)k[i] == ptr) return (uint32_t)i;
-    // kbo2 (bug 27): his own code can hold a state record at another address than this table's (the same record spelled with other
-    // types in other TUs, port/hal/actor_classes_ov073.cpp): the id was 0xff and every record sent while he sat in such a state was
-    // refused (measured in this lane's Chilly row: field 0 = 255, all before the first hit). The record is the same state when it
-    // holds the same handler pair, so it is matched by its first 8 bytes (the enter handler and the tick handler, each one unique).
+    // kbo2 (bug 27): his own code (src/game/actors/d_a_king_donketu.cpp) holds its sixteen records as C++ State objects, a second
+    // copy beside the flat ov073 tables above (port/unmatched/Ov073_State.cpp). States entered from that code had no id here (0xff)
+    // and every record sent while he sat in one was refused (this lane's Chilly row: field 0 = 255, before the first hit). The
+    // second copy has the same names and the same order, so its index is the same state.
     if (ptr && g_kbo_fix) {
-        const char *rec = (const char *)(uintptr_t)ptr;
-        for (int i = 0; i < n; ++i) if (std::memcmp(rec, k[i], 8) == 0) return (uint32_t)i;
+        static char *const s[] = {
+            kbo2_cc_3320, kbo2_cc_3330, kbo2_cc_3340, kbo2_cc_3350, kbo2_cc_3360, kbo2_cc_3370, kbo2_cc_3380, kbo2_cc_3390,
+            kbo2_cc_33a0, kbo2_cc_33b0, kbo2_cc_33c0, kbo2_cc_33d0, kbo2_cc_33e0, kbo2_cc_33f0, kbo2_cc_3400, kbo2_cc_3410 };
+        for (int i = 0; i < n && i < 16; ++i) if ((uint32_t)(uintptr_t)s[i] == ptr) return (uint32_t)i;
         static uint32_t s_logged = 0;
-        if (s_logged != ptr) { s_logged = ptr; std::fprintf(stderr, "[cbs] chilly state record %08x matches none of the sixteen\n", (unsigned)ptr); }
+        if (s_logged != ptr) { s_logged = ptr; std::fprintf(stderr, "[cbs] chilly state record %08x is in neither table\n", (unsigned)ptr); }
     }
     return 0xffu;
 }
