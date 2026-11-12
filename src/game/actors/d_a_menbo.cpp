@@ -777,7 +777,7 @@ int daMenbo_c::InitResources()
     Vector3 pos;
     Vector3 v;
 
-    f = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov090_021344a0);
+    f = dExtSimpleModel_c::LoadFile(data_ov090_021344a0);
     mAnmModel.SetFile(f, 1, -1);
     dExtFrameCtrl_c::LoadFile(data_ov090_02134488);
     dExtFrameCtrl_c::LoadFile(data_ov090_02134480);
@@ -794,7 +794,7 @@ int daMenbo_c::InitResources()
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
-    mWithMeshClsn.Init((dActor_c *)this, 0xc8000, 0, 0, 0);
+    mWithMeshClsn.Init(this, 0xc8000, 0, 0, 0);
     mWithMeshClsn.SetNoUpdatePosYFlag();
 
     mCoinType = 1;

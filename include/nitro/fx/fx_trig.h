@@ -14,7 +14,7 @@
 
 #include "nitro/fx/fx.h"
 
-extern short FX_SinCosTable_[];
+extern const fx16 FX_SinCosTable_[];
 
 #ifdef __cplusplus
 extern "C" {

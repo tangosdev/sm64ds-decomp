@@ -19,6 +19,7 @@
 #include "nitro/mi/memory.h"
 #include "nitro/card/card_rom.h"
 #include "nitro/fs/file.h"
+#include "nitro/fs/archive.h"
 #include "private/rom_header_view.h"
 #include "private/mb_views.h"
 #include "private/arm9_a9db8_mb_parent.h"
@@ -62,7 +63,6 @@ typedef enum MbSegmentType {
  * .bss, which the TU build cannot claim yet. */
 extern u8 data_020a9d28;
 
-extern FSArchive *FS_FindArchive(const char *name, int name_len);
 extern BOOL MBi_IsStarted(void);
 extern void MBi_MakeGameInfo(char *dst, MBGameRegistry *src, const void *parent);
 extern void MB_AddGameInfo(MBGameInfo *newGameInfo);

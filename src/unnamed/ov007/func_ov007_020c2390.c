@@ -1,8 +1,7 @@
 /* recovered: shared common types */
 #include "common.h"
 #include "Ov007Light.h"
-/* local extern: math/CalcLib.h is C++ only; this matches its declaration. */
-extern void VEC_Subtract(Vector3 *, Vector3 *, Vector3 *);
+#include "math/CalcLib.h"
 extern void VEC_Normalize(const struct Vector3 *a, struct Vector3 *b);
 
 /* Rederives the light's direction from its two points. */

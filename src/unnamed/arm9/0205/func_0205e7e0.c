@@ -1,7 +1,7 @@
 #include "types.h"
 #include "SHA1Context.h"
 
-extern void func_0205e280(char *c);
+extern void func_0205e280(SHA1Context *context);
 
 /* RFC 3174 SHA1Result: 1 (shaNull) without a context or digest, or the
  * stored error. The first call pads the message (func_0205e280,
@@ -15,8 +15,7 @@ int func_0205e7e0(SHA1Context *context, unsigned char *out) {
     r = context->Corrupted;
     if (r != 0) return r;
     if (context->Computed == 0) {
-        char *p = (char *)context;
-        func_0205e280(p);
+        func_0205e280(context);
         for (i = 0; i < 0x40; i++)
             context->Message_Block[i] = 0;
         context->Length_Low = 0;

@@ -779,9 +779,9 @@ done:
 int daTgz_c::InitResources()
 {
     BMD_File *bmd;
-    bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov077_02127b48);
+    bmd = dExtSimpleModel_c::LoadFile(data_ov077_02127b48);
     mModel.SetFile(bmd, 1, -1);
-    bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov077_02127b38);
+    bmd = dExtSimpleModel_c::LoadFile(data_ov077_02127b38);
     mAnmModel.SetFile(bmd, 1, -1);
     dExtFrameCtrl_c::LoadFile(gTgzWalkAnimFile);
     mAnmModel.SetAnim((BCA_File *)TGZ_BCA, 0, 0x1000, 0);

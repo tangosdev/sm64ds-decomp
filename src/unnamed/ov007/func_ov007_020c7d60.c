@@ -3,12 +3,9 @@
 #include "nitro/cp/sqrt.h"
 #include "nitro/fx/fx.h"
 #include "Ov007Spring.h"
+#include "math/CalcLib.h"
 
-/* local extern: math/CalcLib.h is C++ only; this matches its declaration. */
-extern void VEC_Subtract(Vector3 *, Vector3 *, Vector3 *);
 extern void VEC_MultAdd(int s, int *a, int *b, int *out);
-/* local extern: as above */
-extern Fix12i VEC_DotProduct(const Vector3 *, const Vector3 *);
 
 /* func_ov007_020c7560's spring step that holds the link's rest length: adds
  * -r5 times the stretch along the unit from - to direction into each end's

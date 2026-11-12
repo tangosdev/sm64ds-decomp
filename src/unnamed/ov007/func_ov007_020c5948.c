@@ -1,7 +1,5 @@
 #include "Ov007Picker.h"
-
-/* local extern: math/CalcLib.h is C++ only; this matches its declaration. */
-extern void VEC_Add(Vector3 *, Vector3 *, Vector3 *);
+#include "math/CalcLib.h"
 
 /* Moves the picked point to src: its follower's velocity and force are
  * cleared and its x/y set. Then mode 0 moves pos to src, mode 1 moves it

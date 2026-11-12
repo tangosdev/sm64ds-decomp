@@ -137,7 +137,7 @@ int daStarGate_c::InitResources()
 {
     param1 = (u32)param1 >> 16;
 
-    BMD_File *file = (BMD_File *)dExtSimpleModel_c::LoadFile(gObjStargateModelFile);
+    BMD_File *file = dExtSimpleModel_c::LoadFile(gObjStargateModelFile);
     if (!mModel.SetFile(file, 1, 1))
         return 0;
 

@@ -276,7 +276,7 @@ s32 dScMgTrampoline2_c::InitResources() {
     gMainScreenLayers =
         DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ;
     G3X_SetFog(false, 0, 2, 0x1000);
-    *(u16 *)0x4000060 = (*(u16 *)0x4000060 & ~0x3000) | 8;
+    G3X_AlphaBlend(true);
     InitialiseVramGlobals();
     G2_SetBG0Priority(1);
     fov = FX_Div(0xc0000, (s32)data_02082414);
@@ -852,11 +852,11 @@ int dScMgTrampoline2_c::OnGraphCallback2() {
         if (mDrawSubScreen == 0) {
             gMainScreenLayers = gMainScreenLayers & ~DISPLAY_LAYER_BG3;
             SetBg2Offset(0, 0);
-            *(int *)0x4000018 = 0;
+            G2_SetBG2Offset(0, 0);
         } else {
             gMainScreenLayers = gMainScreenLayers | DISPLAY_LAYER_BG3;
             SetBg2Offset(0, 0xc0);
-            *(int *)0x4000018 = 0xc00000;
+            G2_SetBG2Offset(0, 0xc0);
         }
     }
     return 1;
@@ -1102,7 +1102,7 @@ void Trmp2Spinner_UpdateMatricesAll(void) {
 }
 
 extern "C" void Trmp2Spinner_SetModel(void *raw) {
-    BMD_File *file = (BMD_File *)dExtSimpleModel_c::LoadFile(sTrmp2StarModelFile);
+    BMD_File *file = dExtSimpleModel_c::LoadFile(sTrmp2StarModelFile);
     ((dExtModel_c *)raw)->SetFile(file, 1, -1);
 }
 

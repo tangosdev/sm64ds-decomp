@@ -72,11 +72,11 @@ extern "C" daObjKm1_Ukishima_c *daObjKm1_Ukishima_c_classInit() {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 s32 daObjKm1_Ukishima_c::InitResources() {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov043_021125e8), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov043_021125e8), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov043_021125e0);
+    KCL_File *kcl = dBgW_Kc::LoadFile(data_ov043_021125e0);
     mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov043_02111c00);
 
     /* The mesh moves with the actor's velocity rather than its transform --

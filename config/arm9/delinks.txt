@@ -2484,49 +2484,9 @@ src/CARDi_EndTask.cpp:
     complete
     .text start:0x0206081c end:0x02060890
 
-src/CARD_Init.c:
+src/engine/card/CARD_Rom.c:
     complete
-    .text start:0x02060890 end:0x0206090c
-
-src/CARD_WaitRomAsync.c:
-    complete
-    .text start:0x0206090c end:0x02060918
-
-src/CARDi_ReadRom.cpp:
-    complete
-    .text start:0x02060918 end:0x02060a30
-
-src/CARDi_ReadRomSyncCore.c:
-    complete
-    .text start:0x02060a30 end:0x02060a64
-
-src/CARDi_ReadCard.c:
-    complete
-    .text start:0x02060a64 end:0x02060b64
-
-src/CARDi_TryReadCardDma.cpp:
-    complete
-    .text start:0x02060b64 end:0x02060cac
-
-src/CARDi_OnReadCard.cpp:
-    complete
-    .text start:0x02060cac end:0x02060d1c
-
-src/CARDi_SetCardDma.c:
-    complete
-    .text start:0x02060d1c end:0x02060d98
-
-src/CARDi_SetRomOp.c:
-    complete
-    .text start:0x02060d98 end:0x02060e38
-
-src/CARDi_ReadEnd.cpp:
-    complete
-    .text start:0x02060e38 end:0x02060ebc
-
-src/CARDi_ReadFromCache.c:
-    complete
-    .text start:0x02060ebc end:0x02060f60
+    .text start:0x02060890 end:0x02060f60
 
 src/CARDi_Request.cpp:
     complete
@@ -2553,7 +2513,7 @@ src/engine/wm/WM_Mp.c:
     complete
     .text start:0x020623ec end:0x02062734
 
-src/engine/wm/WM_Ds.cpp:
+src/engine/wm/WM_Ds.c:
     complete
     .text start:0x02062734 end:0x020634fc
 

@@ -929,7 +929,7 @@ int daSnowman_c::InitResources()
 {
     Vector3 v;
 
-    mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov081_02128db0), 1, -1);
+    mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov081_02128db0), 1, -1);
     dExtSimpleModel_c::LoadFile(data_ov081_02128d90);
     mShadowModel.InitCylinder();
     dExtFrameCtrl_c::LoadFile(gSnowmanWaitAnimationFile);

@@ -108,8 +108,8 @@ s32 daObjHeart_c::Behavior() {
 }
 
 s32 daObjHeart_c::InitResources() {
-    mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210e104), 1, -1);
-    mAnmModel.SetAnim((BCA_File *)dExtFrameCtrl_c::LoadFile(data_ov002_0210e0fc), 0, 0x1000, 0);
+    mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e104), 1, -1);
+    mAnmModel.SetAnim(dExtFrameCtrl_c::LoadFile(data_ov002_0210e0fc), 0, 0x1000, 0);
     mdCcAc_c.Init(this, 0x3c000, 0x78000, 0x100002, 0x8000);
     mAnimSpeed = 0x1000;
     UpdateModelMatrix();

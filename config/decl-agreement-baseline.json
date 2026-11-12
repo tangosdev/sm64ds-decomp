@@ -414,14 +414,6 @@
       ]
     },
     "MTX_Inverse43": {
-      "src/engine/view/Graphics3D.cpp": [
-        "param:#1 Matrix4x3 *",
-        "param:#2 Matrix4x3 *",
-        "return:void"
-      ],
-      "src/game/actors/d_a_ch_scene.cpp": [
-        "return:void"
-      ],
       "src/game/actors/d_a_obj_cv_news_lift.cpp": [
         "param:#1 Matrix4x3 *",
         "param:#2 Matrix4x3 *",
@@ -432,22 +424,12 @@
         "param:#2 Matrix4x3 *",
         "return:void"
       ],
-      "src/game/actors/d_a_snm_bth.cpp": [
-        "param:#1 Matrix4x3 *",
-        "param:#2 const Matrix4x3 *",
-        "return:void"
-      ],
       "src/unnamed/arm9/0204/func_02044efc.c": [
         "param:#1 Matrix4x3 *",
         "param:#2 Matrix4x3 *",
         "return:void"
       ],
       "src/unnamed/ov007/func_ov007_020bfe4c.cpp": [
-        "return:void"
-      ],
-      "src/game/stages/d_s_entry_entry.cpp": [
-        "param:#1 Matrix4x3 *",
-        "param:#2 Matrix4x3 *",
         "return:void"
       ]
     },
@@ -680,9 +662,6 @@
       "src/Matrix4x3_ApplyInPlaceToRotationY.c": [
         "param:#2 short"
       ],
-      "src/game/actors/d_a_bakubaku.cpp": [
-        "param:#2 short"
-      ],
       "src/game/actors/d_a_bg_snwmn.cpp": [
         "param:#2 short"
       ],
@@ -823,11 +802,6 @@
       "src/game/actors/d_a_obj_guragura.cpp": [
         "param:#1 Matrix4x3 *"
       ],
-      "src/minigames/unit020cd744.cpp": [
-        "param:#1 Matrix4x3 *",
-        "param:#2 Matrix4x3 *",
-        "param:#3 Matrix4x3 *"
-      ],
       "src/runtime/actor/d_actor.cpp": [
         "param:#1 Matrix4x3 *",
         "param:#2 Matrix4x3 *",
@@ -866,10 +840,6 @@
         "param:#1 const VecFx32 *",
         "param:#2 const Matrix4x3 *",
         "param:#3 VecFx32 *"
-      ],
-      "src/game/actors/d_a_jango.cpp": [
-        "param:#1 const Vector3 *",
-        "param:#2 const void *"
       ],
       "src/game/actors/d_a_king_donketu.cpp": [
         "param:#1 const void *"
@@ -3716,9 +3686,6 @@
     "_ZN3IRQ10EnableIRQsEj": {
       "src/unnamed/arm9/0204/func_0204175c.cpp": [
         "return:void"
-      ],
-      "src/CARDi_TryReadCardDma.cpp": [
-        "return:void"
       ]
     },
     "_ZN3IRQ11DisableIRQsEj": {
@@ -3729,14 +3696,6 @@
     "_ZN3IRQ13SetIRQHandlerEjPFvvE": {
       "src/unnamed/arm9/0201/func_0201a4e4.c": [
         "param:#2 void (*)(void)"
-      ],
-      "src/CARDi_TryReadCardDma.cpp": [
-        "param:#2 void (*)(void)"
-      ]
-    },
-    "_ZN3IRQ15ClearInterruptsEj": {
-      "src/CARDi_TryReadCardDma.cpp": [
-        "return:void"
       ]
     },
     "_ZN3IRQ7DisableEv": {
@@ -3750,9 +3709,6 @@
         "return:int"
       ],
       "src/unnamed/arm9/0206/func_02065af0.cpp": [
-        "return:int"
-      ],
-      "src/CARDi_TryReadCardDma.cpp": [
         "return:int"
       ]
     },
@@ -3794,10 +3750,6 @@
         "return:void"
       ],
       "src/CARDi_TaskThread.cpp": [
-        "return:void"
-      ],
-      "src/CARDi_TryReadCardDma.cpp": [
-        "param:#1 int",
         "return:void"
       ]
     },
@@ -7093,9 +7045,6 @@
       "src/minigames/d_s_mg_pachinko2.cpp": [
         "return:int"
       ],
-      "src/minigames/d_s_mg_smartball.cpp": [
-        "return:int"
-      ],
       "src/minigames/d_s_mg_snowball.cpp": [
         "return:int"
       ],
@@ -7829,9 +7778,6 @@
       "src/_ZN7daPly_c6RenderEv.cpp": [
         "return:int"
       ],
-      "src/game/actors/d_a_btn.cpp": [
-        "return:MatrixWords"
-      ],
       "src/game/actors/d_a_btt_bk.cpp": [
         "return:Mtx43"
       ],
@@ -7840,9 +7786,6 @@
       ],
       "src/game/actors/d_a_f_pkn.cpp": [
         "return:int []"
-      ],
-      "src/game/actors/d_a_hanachan.cpp": [
-        "return:char []"
       ],
       "src/game/actors/d_a_obj_ct_rotate_block.cpp": [
         "return:int []"
@@ -7877,17 +7820,11 @@
       "src/ov002_handles.cpp": [
         "return:char"
       ],
-      "src/minigames/d_s_mg_jump2.cpp": [
-        "return:int"
-      ],
       "src/minigames/d_s_mg_jump_methods.cpp": [
         "return:int"
       ],
       "src/runtime/actor/d_cap_enemy_arm9.cpp": [
         "return:CapMtx"
-      ],
-      "src/runtime/actor/d_enemy_base.cpp": [
-        "return:char"
       ],
       "src/engine/view/d_camera.cpp": [
         "return:int []"
@@ -12429,9 +12366,6 @@
     "func_01ff8000": {
       "src/ldexp.c": [
         "kind:function"
-      ],
-      "src/CARDi_TryReadCardDma.cpp": [
-        "kind:data"
       ]
     },
     "func_01ff9378": {
@@ -12592,23 +12526,6 @@
       ],
       "src/unnamed/ov002/func_ov002_020e1e70.c": [
         "return:int"
-      ]
-    },
-    "func_02012194": {
-      "src/_ZN7daPly_c11St_Fly_MainEv.cpp": [
-        "param:#6 void *",
-        "param:#7 int"
-      ]
-    },
-    "func_0201226c": {
-      "src/_ZN7daPly_c17St_ButtSlide_MainEv.cpp": [
-        "param:#4 char *",
-        "param:#6 int"
-      ]
-    },
-    "func_0201251c": {
-      "src/game/stages/d_ent_obj.cpp": [
-        "param:#3 void *"
       ]
     },
     "func_0201267c": {
@@ -15487,39 +15404,9 @@
         "param:#1 const unsigned char *"
       ]
     },
-    "func_02071910": {
-      "src/unnamed/arm9/0207/func_020729f4.c": [
-        "arity:2"
-      ],
-      "src/unnamed/arm9/0207/func_02072168.cpp": [
-        "arity:2",
-        "return:int"
-      ]
-    },
     "sys_readc": {
       "src/__read_console.c": [
         "return:unsigned char"
-      ]
-    },
-    "func_02072168": {
-      "src/unnamed/arm9/0207/func_02071f1c.c": [
-        "param:#3 int"
-      ],
-      "src/unnamed/arm9/0207/func_02071be8.cpp": [
-        "param:#1 struct Src *",
-        "param:#2 Ctx *",
-        "param:#3 unsigned char *"
-      ]
-    },
-    "func_02072dac": {
-      "src/unnamed/arm9/0207/func_020729f4.c": [
-        "param:#1 void *"
-      ],
-      "src/unnamed/arm9/0207/func_02071be8.cpp": [
-        "param:#2 Ctx *"
-      ],
-      "src/unnamed/arm9/0207/func_02072168.cpp": [
-        "param:#2 char *"
       ]
     },
     "__throw_catch_compare": {
@@ -16640,43 +16527,11 @@
     "OS_WakeupThreadDirect": {
       "src/CARDi_EndTask.cpp": [
         "param:#1 char *"
-      ],
-      "src/CARDi_ReadEnd.cpp": [
-        "param:#1 Obj *"
       ]
     },
     "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b24Ev": {
       "src/game/actors/d_a_demo.cpp": [
         "arity:0"
-      ]
-    },
-    "func_02071864": {
-      "src/unnamed/arm9/0207/func_02071be8.cpp": [
-        "param:#1 struct Src *",
-        "param:#2 Ctx *"
-      ],
-      "src/unnamed/arm9/0207/func_02072168.cpp": [
-        "param:#1 char *",
-        "param:#2 char *"
-      ]
-    },
-    "func_02071ccc": {
-      "src/unnamed/arm9/0207/func_02071be8.cpp": [
-        "param:#1 struct Src *"
-      ]
-    },
-    "func_02071d3c": {
-      "src/unnamed/arm9/0207/func_02071be8.cpp": [
-        "param:#1 struct Src *",
-        "param:#2 Ctx *",
-        "param:#3 int *",
-        "return:unsigned char *"
-      ]
-    },
-    "func_02072014": {
-      "src/unnamed/arm9/0207/func_02071be8.cpp": [
-        "param:#1 struct Src *",
-        "param:#2 Ctx *"
       ]
     },
     "func_020729f4": {

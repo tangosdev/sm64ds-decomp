@@ -102,7 +102,7 @@ extern "C" daObjRcBuranko_c *daObjRcBuranko_c_classInit() {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 int daObjRcBuranko_c::InitResources() {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov036_02114028), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov036_02114028), 1, -1);
 
     /* The pendulum starts a quarter of the way over, not hanging straight
        down, so it is already moving on the frame the player first sees it. */
@@ -110,7 +110,7 @@ int daObjRcBuranko_c::InitResources() {
     UpdateModelMatrix();
     UpdateClsnPosAndRot();
 
-    KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov036_02114020);
+    KCL_File *kcl = dBgW_Kc::LoadFile(data_ov036_02114020);
     mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov036_02112b68);
 
     /* A rider is carried by the collider's whole transform, not by a position

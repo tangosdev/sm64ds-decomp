@@ -39,8 +39,8 @@ extern "C" daObjBkBillboard_c *daObjBkBillboard_c_classInit() {
 }
 
 s32 daObjBkBillboard_c::InitResources() {
-    void *file = dExtSimpleModel_c::LoadFile(gBkBillbordModelFile);
-    mModel.SetFile((BMD_File *)file, 1, -1);
+    BMD_File *file = dExtSimpleModel_c::LoadFile(gBkBillbordModelFile);
+    mModel.SetFile(file, 1, -1);
     UpdateModelMatrix();
     return 1;
 }

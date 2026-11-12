@@ -29,13 +29,7 @@ enum daObjRc_Tikuwa_c_AssetId { ASSET_RC_TIKUWA_BMD = 0x06af, ASSET_RC_TIKUWA_KC
 
 #pragma defer_codegen off
 
-/* decl_common.h declares these two handles as int[]. This TU defines them
- * as the 8-byte file objects the static initializer constructs. */
-#define gRcTikuwaCollisionFile data_ov036_02114084_decl
-#define gRcTikuwaModelFile data_ov036_0211408c_decl
 #include "decl_common.h"
-#undef gRcTikuwaCollisionFile
-#undef gRcTikuwaModelFile
 #include "daObjRc_Tikuwa_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
@@ -126,12 +120,11 @@ s32 daObjRc_Tikuwa_c::Behavior() {
 }
 
 s32 daObjRc_Tikuwa_c::InitResources() {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(gRcTikuwaModelFile), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(gRcTikuwaModelFile), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    void *kcl = dBgW_Kc::LoadFile(gRcTikuwaCollisionFile);
-    mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat, 0x1000, mAngleY,
-                          *(CLPS_Block *)data_ov036_02112b48);
+    KCL_File *kcl = dBgW_Kc::LoadFile(gRcTikuwaCollisionFile);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, *(CLPS_Block *)data_ov036_02112b48);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
     mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&StoodOnCallback);
     mWithMeshClsn.Init(this, 0x32000, 0x64000, 0, 0);

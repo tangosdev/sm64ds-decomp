@@ -5,7 +5,7 @@
  * HAND-ASM PRIMITIVE: `swp` has no C spelling under mwccarm, and the SDK
  * writes this function as asm.
  */
-#include "types.h"
+#include "nitro/mi/swap.h"
 
 asm u32 MI_SwapWord(u32 setData, volatile u32 *destp)
 {

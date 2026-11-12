@@ -28,6 +28,7 @@ enum dScMgSound_c_AssetId {
 #include "nitro/gx/g2.h"
 #include "nitro/gx/gx_load.h"
 #include "math/CalcLib.h"
+#include "nitro/fx/fx_trig.h"
 
 /* The state/phase dispatch tables hold pointer-to-member records: the
    sinit copies {pmf, delta} descriptors into them. */
@@ -106,7 +107,6 @@ extern void *sSoundWinSpriteASprites[];
 /* Stored timing suffixes are retained; WinSpriteA reads only indices 0 and 1. */
 extern const u16 sSoundWinSpriteATimes[4] = {50, 4, 50, 0};
 extern void Mg_DrawStockCounter(int a, int b);
-extern const short FX_SinCosTable_[];
 extern u8 data_ov006_0213f54c[];
 extern u8 data_ov006_0213f544[];
 extern u8 data_ov006_0213f65c[];

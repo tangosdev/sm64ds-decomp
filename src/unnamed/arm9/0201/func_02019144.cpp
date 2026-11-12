@@ -7,8 +7,6 @@
 
 extern "C" {
 
-typedef volatile unsigned int vu32;
-
 extern dGraph_c::callback_c *gGraphCallback;
 extern unsigned char gMainScreenLayers;
 extern unsigned char gSubScreenLayers;
