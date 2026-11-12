@@ -416,8 +416,7 @@ int __fastcall starttalk_replacement(void *self, void *edx, void *actor, bool b)
     if (live() && self != (void *)local_body() && is_player_body(self)) {
         learn_actor(actor, comms_hub_now_ms());
         ++g_st.talk_redirects;
-        if (g_log) std::fprintf(stderr, "[cotgt] talk guard: actor %p cls=%u asked a friend's body, now local
-\n", actor,
+        if (g_log) std::fprintf(stderr, "[cotgt] talk guard: actor %p cls=%u asked a friend's body, now local\n", actor,
                                 actor ? (unsigned)*(const unsigned short *)((const char *)actor + 0x0c) : 0u);
         return 0;
     }
