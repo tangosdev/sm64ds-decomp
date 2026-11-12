@@ -11924,7 +11924,8 @@ int daPly_c::St_TurnAround_Main() {
         }
     } else {
         func_ov002_020bf88c();
-        mLoopingSoundHandle = func_0201226c(mLoopingSoundHandle, 0, mGroundSoundType + 0xe2, &mCamSpacePos, mHorzSpeed, 0);
+        mLoopingSoundHandle = func_0201226c(mLoopingSoundHandle, 0, mGroundSoundType + 0xe2,
+                                            &mCamSpacePos, mHorzSpeed, 0);
     }
 
     AdvanceAnims();
@@ -12022,7 +12023,8 @@ int daPly_c::St_Walk_Main() {
 
     if (mIsBraking != 0) {
         if (!this->IsAnim(0x37)) {
-            int result = func_0201226c(mLoopingSoundHandle, 0, mGroundSoundType + 0xe2, &mCamSpacePos, mHorzSpeed, 0);
+            int result = func_0201226c(mLoopingSoundHandle, 0, mGroundSoundType + 0xe2,
+                                       &mCamSpacePos, mHorzSpeed, 0);
             mLoopingSoundHandle = result;
         }
         if (this->FinishedAnim()) {
@@ -18640,8 +18642,7 @@ int daPly_c::St_Fly_Main() {
         if (r1 >= 0x100) {
             r1 = 0x100;
         }
-        mLoopingSoundHandle =
-            func_02012194(mLoopingSoundHandle, 0, 0x104, 3, r1, &mCamSpacePos, 0);
+        mLoopingSoundHandle = func_02012194(mLoopingSoundHandle, 0, 0x104, 3, r1, &mCamSpacePos, 0);
     }
     AdvanceAnims();
     return 1;

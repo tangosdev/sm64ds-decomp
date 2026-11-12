@@ -628,10 +628,10 @@ void Play(unsigned int j1, unsigned int j2, const Vector3 &v)
 
 }
 
-extern "C" void func_0201251c(int a, int b, const Vector3 *c, int d)
-{
+extern "C" void func_0201251c(int a, int b, const Vector3 *c, int d) {
     int r4 = func_02048a18(b, d);
-    if (func_02048a1c(c, a, r4) == 0) return;
+    if (func_02048a1c(c, a, r4) == 0)
+        return;
     Player_PlaySoundEffect(&data_0209b4a4, a, r4);
     func_02048af4(&data_0209b4a4, c, d);
 }
@@ -697,10 +697,10 @@ extern "C" int func_02012310(int handle, int sound, short arg) {
     return Sound_PlayIfNotActive(handle, 2, sound, arg);
 }
 
-extern "C" int func_0201226c(int a0, int a1, int a2, const Vector3 *a3, int a4, short a5)
-{
+extern "C" int func_0201226c(int a0, int a1, int a2, const Vector3 *a3, int a4, short a5) {
     SndRegEntry *p;
-    if (func_02048a1c(a3, a1, a2) == 0) return 0;
+    if (func_02048a1c(a3, a1, a2) == 0)
+        return 0;
     p = (SndRegEntry *)func_02011934((char *)&data_0209b53c, a0);
     if (p != 0) {
         p->inUse = 1;
@@ -710,10 +710,11 @@ extern "C" int func_0201226c(int a0, int a1, int a2, const Vector3 *a3, int a4, 
     return func_020116c4((char *)&data_0209b53c, a1, a2, a3, a4, a5);
 }
 
-extern "C" int func_02012194(int handle, int a1, int a2, int a3, int s0, const Vector3 *s1, short s2)
-{
+extern "C" int func_02012194(int handle, int a1, int a2, int a3, int s0, const Vector3 *s1,
+                             short s2) {
     SndRegEntry *e;
-    if (func_02048a1c(s1, a1, a2) == 0) return 0;
+    if (func_02048a1c(s1, a1, a2) == 0)
+        return 0;
     e = (SndRegEntry *)func_02011934((char *)&data_0209b53c, handle);
     if (e != 0) {
         NNSSndHandle *slot = &e->handle;
@@ -969,14 +970,13 @@ extern "C" void func_02011b38(void *c, int a1, int a2, int a3, short a5)
     Player_PlaySoundEffect(&e->handle, a2, a3);
 }
 
-extern "C" void func_02011af8(void *c, int a1, int a2, int a3, const Vector3 *s0, short s1)
-{
+extern "C" void func_02011af8(void *c, int a1, int a2, int a3, const Vector3 *s0, short s1) {
     func_02011b38(c, a1, a2, a3, s1);
     func_020123c8(&((SndRegEntry *)c)->handle, a2, a3, s0);
 }
 
-extern "C" void func_02011ac4(void *c, int a1, int a2, int a3, const Vector3 *s0, int s1, short s2)
-{
+extern "C" void func_02011ac4(void *c, int a1, int a2, int a3, const Vector3 *s0, int s1,
+                              short s2) {
     func_02011b38(c, a1, a2, a3, s2);
     func_02048c30(&((SndRegEntry *)c)->handle, s0, s1);
 }
@@ -1095,8 +1095,7 @@ int SndRegTable::func_0201179c(int a1, int a2, const Vector3 *a3, short s1) {
     return 0;
 }
 
-extern "C" int func_020116c4(char *c, int a1, int a2, const Vector3 *a3, int s0, short s1)
-{
+extern "C" int func_020116c4(char *c, int a1, int a2, const Vector3 *a3, int s0, short s1) {
     SndRegTable *reg = (SndRegTable *)c;
     int i;
     for (i = 0; i < 0x40; i++) {
