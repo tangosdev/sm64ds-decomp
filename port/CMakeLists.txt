@@ -11988,6 +11988,9 @@ list(APPEND SLICE_COMMS_SOURCES hal/coop_staystar.cpp)
 # Run coopfix1 lane CANNON2: a coop friend's star never takes my camera (the star side is in src/game/actors/d_a_star.cpp,
 # its _MSC_VER hook). INERT outside a coop room; see hal/coop_camshield.cpp.
 list(APPEND SLICE_COMMS_SOURCES hal/coop_camshield.cpp)
+# Run coopfix1 lane PAUSE2: the pause in a coop room is only a menu (the world runs on under it) and the PAUSED tag;
+# see hal/pause_online.h. INERT outside a coop room except the identity's pause-aware bit.
+list(APPEND SLICE_COMMS_SOURCES hal/pause_online.cpp)
 # Run coopfix1 lane CAMERA3: the camera watchdog (frees a stuck game camera, acts in coop rooms) and the trust test the
 # analog and free cameras ask before they copy the game camera; see hal/camera_guard.cpp.
 list(APPEND SLICE_COMMS_SOURCES hal/camera_guard.cpp)

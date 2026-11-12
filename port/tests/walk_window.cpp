@@ -424,6 +424,7 @@ extern "C" void host_menu_cursor_sound_flush(void);   /* hal/menu_compose.cpp: o
 #include "hal/pcore.h"            /* PCORE1: P-core / throttling opt-out */
 #include "hal/settings_live.h"   /* run menu1 SETLIVE1: live, saved settings */
 #include "hal/settings_page.h"   /* run menu1 SETMENU1: the in-game settings page */
+#include "hal/pause_online.h"    /* PAUSE2: the coop pause is only a menu; the window drag ticks on */
 #include "hal/menu_starsel_api.h"   /* run menu1 STARHOOK1: the star select big-star rects (debug outline) */
 #include "hal/perf_log.h"        /* run perf1: the player performance report */
 #include "hal/comms_seam.h"       /* run mg15 lane MP1: the radio seam */
@@ -14141,6 +14142,163 @@ static void port_handoff_show(void)
 }
 
 
+/* ---- PAUSE2 (run coopfix1, bug 4): A WINDOW DRAG DOES NOT STOP THE GAME ----
+   Dragging the title bar (or a border, or opening the system menu) makes
+   Windows run its own MODAL loop inside DefWindowProc, and this program's frame
+   loop is the code that called DispatchMessage: it did not run again until the
+   mouse button came up. The game stood still for the whole drag, nothing went
+   to the room, and the friends saw the player freeze and then jump.
+
+   So the messages are pumped on a FIBER of their own. The frame loop switches
+   to it once a frame; it dispatches what is queued and switches back. When a
+   dispatch enters a modal loop, a 1 ms timer is armed, and each WM_TIMER the
+   modal loop hands to wndproc switches straight back to the frame loop, which
+   runs one whole frame (game, sends, picture, its own frame wait) and comes
+   back through pump_messages, resuming the modal loop exactly where it was.
+   The drag still belongs to Windows; the game keeps its own clock while it
+   happens, and nothing is sent that says "paused".
+
+   SM64DS_DRAG_TICK=0 (or SM64DS_PAUSE_LEGACY=1) is the 1.0.3 blocking pump.
+   SM64DS_DRAG_TEST=<frame>:<ms> (proof only): at that loop frame the window
+   posts itself a message whose handler runs the same kind of modal loop
+   (WM_ENTERSIZEMOVE, a PeekMessage loop for <ms>, WM_EXITSIZEMOVE) on its own
+   hidden window, so a row measures a drag without touching a real window. */
+static void *g_pump_fiber;          /* the fiber messages are dispatched on */
+static void *g_pump_return;         /* the fiber that asked for this pump */
+static int g_pump_quit;
+static int g_pump_modal;            /* inside a move / size / menu modal loop */
+static unsigned g_pump_frames;      /* pump_messages calls: one per loop frame */
+static unsigned g_pump_modal_f0, g_pump_modal_t0;
+static const UINT_PTR kPumpTimer = 0x5032;
+static const UINT kDragTestMsg = WM_APP + 0x152;
+static UINT_PTR(WINAPI *p_SetTimer)(HWND, UINT_PTR, UINT, TIMERPROC);
+static BOOL(WINAPI *p_KillTimer)(HWND, UINT_PTR);
+static BOOL(WINAPI *p_PostMessageA)(HWND, UINT, WPARAM, LPARAM);
+static int pump_fiber_on(void)
+{
+    static int v = -1;
+    if (v < 0) {
+        const char *e = getenv("SM64DS_DRAG_TICK");
+        v = ((e && e[0] == '0') || port::pauseonline::legacy()) ? 0 : 1;
+        HMODULE u = GetModuleHandleA("user32.dll");
+        if (u) {
+            p_SetTimer = (decltype(p_SetTimer))GetProcAddress(u, "SetTimer");
+            p_KillTimer = (decltype(p_KillTimer))GetProcAddress(u, "KillTimer");
+            p_PostMessageA = (decltype(p_PostMessageA))GetProcAddress(u, "PostMessageA");
+        }
+        if (!p_SetTimer || !p_KillTimer) v = 0;
+    }
+    return v;
+}
+static void CALLBACK pump_fiber_main(void *)
+{
+    for (;;) {
+        MSG m;
+        while (W.PeekMessageA_(&m, 0, 0, 0, PM_REMOVE)) {
+            if (m.message == WM_QUIT) { g_pump_quit = 1; break; }
+            W.TranslateMessage_(&m);
+            W.DispatchMessageA_(&m);
+        }
+        SwitchToFiber(g_pump_return);
+    }
+}
+static void drag_test_tick(void)
+{
+#ifndef PORT_ROM_CLEAN
+    static int at = -2, ms = 0;
+    if (at == -2) {
+        at = -1;
+        const char *e = getenv("SM64DS_DRAG_TEST");
+        if (e && sscanf(e, "%d:%d", &at, &ms) == 2 && ms > 0)
+            fprintf(stderr, "[drag] SM64DS_DRAG_TEST: a %d ms move loop at loop frame %d\n", ms, at);
+        else
+            at = -1;
+    }
+    if (at >= 0 && g_pump_frames == (unsigned)at && g_present_hwnd) {
+        pump_fiber_on();
+        if (p_PostMessageA) p_PostMessageA(g_present_hwnd, kDragTestMsg, (WPARAM)ms, 0);
+    }
+#endif
+}
+/* 1 = WM_QUIT. Called once at the head of every loop frame. */
+static int pump_messages(void)
+{
+    ++g_pump_frames;
+    drag_test_tick();
+    static int tried;
+    if (!tried && pump_fiber_on()) {
+        tried = 1;
+        if (!ConvertThreadToFiber(nullptr) && GetLastError() != ERROR_ALREADY_FIBER)
+            fprintf(stderr, "[drag] ConvertThreadToFiber failed (%lu): a window drag blocks the game as before\n",
+                    (unsigned long)GetLastError());
+        else
+            g_pump_fiber = CreateFiber(1024 * 1024, pump_fiber_main, nullptr);
+        fprintf(stderr, "[drag] message pump %s\n", g_pump_fiber ? "on its own fiber: a window drag keeps the game running"
+                                                                  : "NOT on a fiber: a window drag blocks the game");
+    }
+    if (g_pump_fiber && GetCurrentFiber() != g_pump_fiber) {
+        g_pump_return = GetCurrentFiber();
+        SwitchToFiber(g_pump_fiber);
+        return g_pump_quit;
+    }
+    MSG msg;
+    while (W.PeekMessageA_(&msg, 0, 0, 0, PM_REMOVE)) {
+        if (msg.message == WM_QUIT) return 1;
+        W.TranslateMessage_(&msg);
+        W.DispatchMessageA_(&msg);
+    }
+    return 0;
+}
+/* wndproc's half: the modal loop's edges and its timer. 1 = the message was
+   the pump's own timer. */
+static int pump_modal_msg(HWND h, UINT m, WPARAM w)
+{
+    if (m == WM_ENTERSIZEMOVE || m == WM_ENTERMENULOOP) {
+        g_pump_modal_f0 = g_pump_frames;
+        g_pump_modal_t0 = GetTickCount();
+        if (g_pump_fiber && GetCurrentFiber() == g_pump_fiber && !g_pump_modal) {
+            g_pump_modal = 1;
+            p_SetTimer(h, kPumpTimer, 1, nullptr);
+        }
+        fprintf(stderr, "[drag] %s loop began (%s)\n", m == WM_ENTERSIZEMOVE ? "move/size" : "menu",
+                g_pump_modal ? "the game keeps ticking" : "the game waits for it");
+        return 0;
+    }
+    if (m == WM_EXITSIZEMOVE || m == WM_EXITMENULOOP) {
+        if (g_pump_modal) {
+            p_KillTimer(h, kPumpTimer);
+            g_pump_modal = 0;
+        }
+        fprintf(stderr, "[drag] %s loop ended after %lu ms: %u game frames ran during it\n",
+                m == WM_EXITSIZEMOVE ? "move/size" : "menu", (unsigned long)(GetTickCount() - g_pump_modal_t0),
+                g_pump_frames - g_pump_modal_f0);
+        return 0;
+    }
+    if (m == WM_TIMER && w == kPumpTimer) {
+        if (g_pump_modal && g_pump_fiber && GetCurrentFiber() == g_pump_fiber) SwitchToFiber(g_pump_return);
+        return 1;
+    }
+    return 0;
+}
+/* the drag test's stand-in for DefWindowProc's move loop (see the banner) */
+static LRESULT CALLBACK wndproc(HWND h, UINT m, WPARAM w, LPARAM l);
+static void drag_test_modal(HWND h, unsigned ms)
+{
+    wndproc(h, WM_ENTERSIZEMOVE, 0, 0);
+    const DWORD t0 = GetTickCount();
+    while (GetTickCount() - t0 < ms) {
+        MSG q;
+        if (W.PeekMessageA_(&q, 0, 0, 0, PM_REMOVE)) {
+            if (q.message == WM_QUIT) { W.PostQuitMessage_(0); break; }
+            W.TranslateMessage_(&q);
+            W.DispatchMessageA_(&q);
+        } else {
+            Sleep(1);
+        }
+    }
+    wndproc(h, WM_EXITSIZEMOVE, 0, 0);
+}
+
 static LRESULT CALLBACK wndproc(HWND h, UINT m, WPARAM w, LPARAM l)
 {
     /* the capture is dropped here as well as on the frame test, because a
@@ -14226,6 +14384,11 @@ static LRESULT CALLBACK wndproc(HWND h, UINT m, WPARAM w, LPARAM l)
        and they were always the other way out: they arrive as WM_CLOSE, the
        default handler destroys the window, and WM_DESTROY above posts the quit
        message escape used to post directly. */
+    /* PAUSE2: the modal loops' edges and timer (pump_messages' banner) */
+    if (m == WM_ENTERSIZEMOVE || m == WM_ENTERMENULOOP || m == WM_EXITSIZEMOVE || m == WM_EXITMENULOOP)
+        pump_modal_msg(h, m, w);
+    if (m == WM_TIMER && pump_modal_msg(h, m, w)) return 0;
+    if (m == kDragTestMsg) { drag_test_modal(h, (unsigned)w); return 0; }
     switch (m) {
     case WM_DEVICECHANGE:
         /* a controller came or went: the pad backend's worker scans now
@@ -15902,12 +16065,7 @@ static void padptr_frame(int frame, int pad_live, XPad *pad);
 static int scene_host_input_frame(HWND hwnd, int frame, XPad *pad,
                                   int *focus_was)
 {
-    MSG msg;
-    while (W.PeekMessageA_(&msg, 0, 0, 0, PM_REMOVE)) {
-        if (msg.message == WM_QUIT) return 1;
-        W.TranslateMessage_(&msg);
-        W.DispatchMessageA_(&msg);
-    }
+    if (pump_messages()) return 1;   /* PAUSE2: a window drag no longer stops this loop */
     /* the focus edge, read once a frame BEFORE any key is. Coming back,
        every key starts stale; going away needs no work, because key_live
        is already returning released. */
@@ -16971,6 +17129,34 @@ extern "C" void port_frame_ctrl_publish(void)
                     *((unsigned char *)data_0209f4ac + lo) = 1;
                 }
             }
+    /* PAUSE2 (run coopfix1, bug 5): IN A COOP ROOM THE PAUSE MENU IS ONLY A
+       MENU. hal/pause_online.cpp lets the world run on under it (the actor
+       think gate reads the pause byte as 0 there), so the local player's
+       body ticks too, and the menu has every button and the stick: Stage::
+       Behavior's PS_Update has just read them, and the player gets an empty
+       record for the rest of this frame. Solo, VS and other rooms: 0, and
+       nothing here runs. */
+    if (port_pause_online_after_stage()) {
+        const int me = (int)data_0209f250;
+        const int lo = me * 0x18;
+        char *r = (char *)data_0209f498 + lo;
+        *(unsigned short *)(r + 0x04) = 0;            /* held */
+        *(unsigned short *)(r + 0x06) = 0;            /* pressed */
+        *(short *)(r + 0x08) = 0;                     /* mag */
+        *(short *)(r + 0x0a) = 0;                     /* nx */
+        *(short *)(r + 0x0c) = 0;                     /* ny */
+        *(unsigned char *)(r + 0x14) = 0;             /* touching */
+        *(short *)((char *)data_0209f49c + lo) = 0;
+        *(short *)((char *)data_0209f49e + lo) = 0;
+        *(short *)((char *)data_0209f4a0 + lo) = 0;
+        *(short *)((char *)data_0209f4a2 + lo) = 0;
+        *(short *)((char *)data_0209f4a4 + lo) = 0;
+        *((unsigned char *)data_0209f4ac + lo) = 0;
+        int idx = (int)data_020a0e40[0];
+        if (idx < 0 || idx > 3) idx = 0;
+        data_020a0e58[idx] = 0;
+        *(unsigned short *)((char *)data_020a0e5a + idx * 4) = 0;
+    }
 }
 
 int main(void)
@@ -18793,11 +18979,7 @@ int main(void)
            stands and submits nothing new (lane GEOHOLD1): decided at the hold
            below, read by the level pass, the player draws and phase 5. */
         int geo_keep = 0;
-        while (W.PeekMessageA_(&msg, 0, 0, 0, PM_REMOVE)) {
-            if (msg.message == WM_QUIT) { host_settings_save_flush(); return 0; }
-            W.TranslateMessage_(&msg);
-            W.DispatchMessageA_(&msg);
-        }
+        if (pump_messages()) { host_settings_save_flush(); return 0; }   /* PAUSE2: a window drag no longer stops this loop */
 #ifndef PORT_ROM_CLEAN
         list_click_test_apply(frame);   /* MOUSELOCK1: the proof knob's click lands where a pumped WM_LBUTTONDOWN does */
 #endif
@@ -19760,6 +19942,7 @@ int main(void)
                it. Does nothing without the env var. */
             port_input_probe_apply(port_rom_frame_checked(frame,
                                                           "input-probe"));
+            port_pause_online_test_input();   /* PAUSE2: SM64DS_PAUSE2_TEST's START presses, inert unset */
             /* THIS FRAME'S PAD, STASHED FOR THE Ctrl BRIDGE (run link100, lane
                FRAME). port_frame_ctrl_publish runs from inside port_actor_tick
                -- hal/stage_frame.cpp's slot-6 thunk calls it the instant the

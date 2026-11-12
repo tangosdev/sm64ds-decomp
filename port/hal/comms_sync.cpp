@@ -71,6 +71,7 @@
 #include "player_fields.h"
 #include "star_tally.h"      // SMALLS9: per-player star count in a coop room
 #include "ghost_door.h"      // GHOSTDOOR1: door / area / hidden look of a hub ghost
+#include "pause_online.h"    // PAUSE2: the pause menu tag rides the identity; no away rule
 #include "ghost_tongue.h"    // POSE9: a Yoshi ghost's tongue, the hurt blink
 #include "party.h"           // PBODY1: solid party bodies (membership by seat)
 #include "party_hits.h"
@@ -1483,6 +1484,7 @@ void gw_on_ident(const unsigned char *buf, int n, int seat) {
     z.have_ident = true;
     z.noident_ms = 0;
     if ((h.flags & kGwIdentAsk) && !gw_ident_hold_off()) g_gw_ident_owed = true;    /* GHOSTID1 */
+    pauseonline::ident_recv(seat, h.flags);    /* PAUSE2: his pause menu tag */
     ++g_gws.syni_recvd;
 }
 
@@ -2214,6 +2216,7 @@ void gw_send_ident(unsigned now, bool ask) {
     std::memcpy(h.shoes_rgb, g_gw_me.shoes, 3);
     h.flags = g_gw_me.colours ? (unsigned char)kGwIdentColours : 0;
     if (ask) h.flags = (unsigned char)(h.flags | kGwIdentAsk);    /* GHOSTID1 */
+    h.flags = (unsigned char)(h.flags | pauseonline::ident_flags());   /* PAUSE2: pause-aware, menu open */
     h.reserved = 0;
     std::memcpy(buf, &h, sizeof h);
     std::memcpy(buf + 20, g_gw_me.name, (size_t)g_gw_me.name_len);
@@ -2350,7 +2353,12 @@ void gw_send(unsigned now) {
             std::memcpy(g_gw_sp, sp, sizeof sp);
         }
     }
-    const bool away = g_gw_still > kGwAwayFrames && gw_away_rule() && !hal_window_focused();
+    /* PAUSE2 (Tango 11-12): unfocusing the window is not a pause. The away
+       rule above sent a tabbed-out player as paused (2 Hz, the mark), which
+       drew him at about 2 fps on every friend's screen while his own game ran
+       on. It is only kept for SM64DS_PAUSE_LEGACY=1. */
+    const bool away = pauseonline::legacy() && g_gw_still > kGwAwayFrames && gw_away_rule() &&
+                      !hal_window_focused();
     const bool paused = no_tick || g_gw_frozen >= 8 || away;
     const int level = (int)data_0209f2f8;
     if (!paused) {
@@ -3350,8 +3358,12 @@ extern "C" int port_adventure_ghost_seat(int slot) {
    select, a loading hold): his tag shows the pause mark */
 extern "C" int port_adventure_ghost_paused(int slot) {
     const int s = port_adventure_ghost_seat(slot);
-    return s >= 0 && g_gw[s].paused_now ? 1 : 0;
+    /* PAUSE2: a friend on this build is tagged only while his real pause menu
+       is open (his identity says so); a 1.0.3 friend by his paused frames */
+    return s >= 0 && pauseonline::mark(s, g_gw[s].paused_now) ? 1 : 0;
 }
+/* PAUSE2: send my identity at the next chance (the pause menu bit changed) */
+extern "C" void port_gw_ident_owe(void) { g_gw_ident_owed = true; }
 extern "C" const char *port_adventure_ghost_name(int slot) {
     const int s = port_adventure_ghost_seat(slot);
     if (s < 0 || !g_gw[s].have_ident || !g_gw[s].name[0]) return 0;

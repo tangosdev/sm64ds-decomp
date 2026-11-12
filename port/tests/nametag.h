@@ -1046,8 +1046,14 @@ static void nt_paint(const OvlSurface &fb, double blend)
             /* THE PAUSE MARK (Tango 10-28): a paused player stays in the world
                and gets two of the game font's own lower-case l's, one line over
                his tag, the way a pause sign reads */
+            /* PAUSE2 (Tango 11-12): the two l's read as a smudge; a paused
+               friend gets a plain "PAUSED" line instead, in a quiet light
+               grey so it does not compete with his name. It shows only while
+               his real pause menu is open (hal/pause_online.h).
+               SM64DS_PAUSE_LEGACY=1 keeps the old mark. */
             if (it.paused)
-                nt_text_centred(fb, cx, y_top - lh, "ll", scale, 0xFFFFFFFFu, it.alpha);
+                nt_text_centred(fb, cx, y_top - lh, port::pauseonline::legacy() ? "ll" : "PAUSED", scale,
+                                port::pauseonline::legacy() ? 0xFFFFFFFFu : 0xFFD8DCE4u, it.alpha);
         }
         if (it.have) {
             const int bottom = y_top - 2 * scale;

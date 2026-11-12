@@ -77,6 +77,14 @@ extern u8 data_0209f20c;
 extern u8 data_0209f250;
 extern u8 data_0209f294;
 extern u8 data_0209f2c4;
+/* PAUSE2 (host only): the camera follows the player under a coop room's pause menu, where the world runs on
+   (hal/pause_online.h); the cartridge reads data_0209f2c4 itself. */
+#ifdef _MSC_VER
+extern "C" unsigned char port_pause_think_byte(void);
+#define PAUSE_THINK_BYTE port_pause_think_byte()
+#else
+#define PAUSE_THINK_BYTE data_0209f2c4
+#endif
 extern s8 data_0209f2f8;
 extern s32 data_0209f32c;
 extern void *data_0209f394[];
@@ -283,7 +291,7 @@ block_7:
         func_020089f8(c);
     }
 
-    if ((u8)(data_0209f294 | (data_0209f2c4 | data_0209f20c)) == 0 && !(data_0209b454 & 0x40000000)) {
+    if ((u8)(data_0209f294 | (PAUSE_THINK_BYTE | data_0209f20c)) == 0 && !(data_0209b454 & 0x40000000)) {
         enum Bool b2 = (enum Bool)(data_0209fc48 != 0);
         if (b2 == FALSE) {
             if (*(s32 *)(c + 0x154) & 0x2000) {
