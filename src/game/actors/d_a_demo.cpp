@@ -2671,8 +2671,7 @@ int daDemo_c::anmModel_c::func_ov002_020f6618(SharedFilePtr *mdl, int nAnims, Sh
     char *self = (char *)this;
     int i;
     mModelFile = mdl;
-    if (((dExtModel_c *)self)
-            ->SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*mModelFile), 1, tsData) == 0)
+    if (((dExtModel_c *)self)->SetFile(dExtSimpleModel_c::LoadFile(*mModelFile), 1, tsData) == 0)
         return 0;
     mNumAnimFiles = (u8)nAnims;
     mAnimFiles = anims;
@@ -2688,8 +2687,8 @@ int daDemo_c::anmModel_c::func_ov002_020f6618(SharedFilePtr *mdl, int nAnims, Sh
         mTexSeqFiles = texs;
         for (i = 0; i < mNumTexSeqFiles; i++) {
             void *bmd = mModelFile->filePtr;
-            void *btp = dExtAnmTexPat_c::LoadFile(*mTexSeqFiles[i]);
-            dExtAnmTexPat_c::Prepare(*(BMD_File *)bmd, *(BTP_File *)btp);
+            BTP_File *btp = dExtAnmTexPat_c::LoadFile(*mTexSeqFiles[i]);
+            dExtAnmTexPat_c::Prepare(*(BMD_File *)bmd, *btp);
         }
         mTexSeq->SetFile(*(BTP_File *)mTexSeqFiles[0]->filePtr, 0, 0x1000, 0);
     }
@@ -2743,7 +2742,7 @@ daDemo_c::anmModel_c::~anmModel_c()
 int daDemo_c::simpleModel_c::func_ov002_020f6960(SharedFilePtr *fp, int n)
 {
     mFile = fp;
-    BMD_File *f = (BMD_File *)dExtSimpleModel_c::LoadFile(*mFile);
+    BMD_File *f = dExtSimpleModel_c::LoadFile(*mFile);
     return ((dExtModel_c *)this)->SetFile(f, 1, n) != 0 ? 1 : 0;
 }
 

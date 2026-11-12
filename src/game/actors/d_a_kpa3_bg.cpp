@@ -121,13 +121,13 @@ s32 daKpa3Bg_c::InitResources()
     mVariant = (u8)(param1 & 0xf);
     data_0208e738 = 0;
     /* bmd is named for the @NNN count (see the banner). */
-    BMD_File *bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov060_02119514[mVariant]);
+    BMD_File *bmd = dExtSimpleModel_c::LoadFile(*data_ov060_02119514[mVariant]);
     mModel.SetFile(bmd, 1, -1);
     CopyTexPalFromLevelModel(&mModel.data);
     data_0208e738 = 1;
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*data_ov060_0211953c[mVariant]), mClsnMat,
-                          0x1000, mAngleY, *data_ov060_0211a980[mVariant]);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*data_ov060_0211953c[mVariant]), mClsnMat, 0x1000,
+                          mAngleY, *data_ov060_0211a980[mVariant]);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
     mMeshCollider.Enable(this);

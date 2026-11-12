@@ -134,7 +134,7 @@ extern "C" daCnn_c *daCnn_c_classInit() {
 
 /* -------------------------------------------------------------------------- */
 int daCnn_c::InitResources() {
-    BMD_File *file = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov098_0213c8e8);
+    BMD_File *file = dExtSimpleModel_c::LoadFile(data_ov098_0213c8e8);
     mModel.SetFile(file, 1, -1);
     mBarrelRestY = mModel.data.bones[1].transY;
     mVariant = param1 & 3;

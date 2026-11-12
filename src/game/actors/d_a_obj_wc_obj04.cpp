@@ -71,11 +71,11 @@ extern "C" daObjWc_Obj04_c *daObjWc_Obj04_c_classInit() {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 int daObjWc_Obj04_c::InitResources() {
-    mModel2.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov029_0211432c), 1, -1);
+    mModel2.SetFile(dExtSimpleModel_c::LoadFile(data_ov029_0211432c), 1, -1);
     UpdateModelMatrix();
     UpdateClsnMatrix();
     {
-        KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov029_02114324);
+        KCL_File *kcl = dBgW_Kc::LoadFile(data_ov029_02114324);
         mMeshCollider.SetFile(kcl, mClsnMat2, 0x199, mAngleY, data_ov029_0211304c);
     }
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);

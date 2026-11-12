@@ -128,8 +128,8 @@ extern "C" daPgMthr_c *daPgMthr_c_classInit()
 
 int daPgMthr_c::InitResources()
 {
-    void *m = dExtSimpleModel_c::LoadFile(data_ov018_02113c00);
-    mAnmModel.SetFile((BMD_File *)m, 1, 1);
+    BMD_File *m = dExtSimpleModel_c::LoadFile(data_ov018_02113c00);
+    mAnmModel.SetFile(m, 1, 1);
     for (int i = 0; i < 2; i++)
         dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov018_02112c0c[i]);
     for (int i = 0; i < 2; i++) {

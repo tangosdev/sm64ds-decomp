@@ -82,7 +82,7 @@ struct dExtSimpleModel_c : dExtModel_c {
     void LoadAndSetFile(u16 ov0ID, int a, int b);
 
     /* --- static --- */
-    static void *LoadFile(SharedFilePtr &ptr);
+    static BMD_File *LoadFile(SharedFilePtr &ptr);
     static void *AddToCommonModelDataArr(BMD_File &file);
     static void LoadTexAndPal(BMD_File &file);
     static void UpdateFileOffsets(BMD_File &file);

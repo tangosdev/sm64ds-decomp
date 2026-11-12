@@ -148,8 +148,8 @@ int daObjKanban_c::Behavior() {
 
 int daObjKanban_c::InitResources() {
     struct Vector3 v;
-    void *file = dExtSimpleModel_c::LoadFile(data_ov085_02130858);
-    mModel.SetFile((BMD_File *)file, 1, -1);
+    BMD_File *file = dExtSimpleModel_c::LoadFile(data_ov085_02130858);
+    mModel.SetFile(file, 1, -1);
     UpdateModelPosAndRotY();
     v.x = data_ov085_0212f29c.x;
     v.y = data_ov085_0212f29c.y;
