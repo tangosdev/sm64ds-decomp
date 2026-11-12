@@ -46,6 +46,8 @@ enum dScMgRoulette_c_AssetId {
 #include "nitro/fx/fx_trig.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "math/CalcLib.h"
+#include "math/MtxStack.h"
 #include "LevelRng.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
@@ -108,10 +110,7 @@ int GetGameLanguage(void);
 void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
 void Vec2_Sub(int *out, int *a, int *b);
-void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *mF, int x, int y, int z);
-void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 int Sound_PlayIfNotActive(int a, int b, int c, short d);
-int RandomIntInternal(int *seed);
 void *LoadFile(int id);
 void DecompressLZ16(void *src, void *dst);
 void Ov004_Deallocate(void *p);
@@ -144,7 +143,6 @@ extern void *sRouletteStripSprites[];
 extern void **sRouletteTextSpritesByLanguage[];
 extern int sRoulettePayoutMultipliers[];
 extern void *sRouletteRacerSprites;
-extern Matrix4x3 data_020a0e68;
 /* Bet tiles: 0..0xb are single numbers, 0xc..0x1c pairs of numbers and
  * 0x1d..0x22 groups of four (RouletteRacer_GetPayout checks 1, 2 and 4
  * table entries for them and pays 12, 6 and 3). */

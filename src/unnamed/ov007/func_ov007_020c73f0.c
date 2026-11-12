@@ -1,6 +1,6 @@
 #include "Ov007Spring.h"
+#include "Ov007MenuMem.h"
 
-extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020c7348(Ov007Grid *grid);
 extern Ov007PointList *func_ov007_020c798c(int springMode, int count, int pointMass, int flags);
 
