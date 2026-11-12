@@ -382,7 +382,7 @@ s32 dScEntry_c::InitResultResources() {
     int n;
 
     REG_BG1CNT = (u16)((REG_BG1CNT & 0x43) | 0x208);
-    REG_BG1CNT = (u16)(REG_BG1CNT & ~0x40);
+    G2_BG1Mosaic(0);
 
     LoadCompressedFileAt(0x8413, G2_GetBG2CharPtr());
     tmp = LoadFile(0x8414);
@@ -417,7 +417,7 @@ s32 dScEntry_c::InitResultResources() {
     GX_LoadOBJPltt(tmp, 0, 0x140);
     Deallocate(tmp);
 
-    REG_BG1CNT = (u16)((REG_BG1CNT & ~3) | 2);
+    G2_SetBG1Priority(2);
     SetBg1Offset(0, 0);
     LoadCompressedFileAt(0x8402, G2S_GetOBJCharPtr());
     LoadCompressedFileAt(data_ov075_0211c97c[GetLanguageIndex()],
@@ -2090,17 +2090,17 @@ s32 dScEntry_c::InitResources() {
         Deallocate(paletteData);
     }
 
-    *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 3;
-    *(u16 *)0x400000c = (*(u16 *)0x400000c & ~3) | 2;
-    *(u16 *)0x400000e = (*(u16 *)0x400000e & ~3) | 1;
+    G2_SetBG0Priority(3);
+    G2_SetBG2Priority(2);
+    G2_SetBG3Priority(1);
     SetBg0Offset(0, 0);
     SetBg2Offset(0, 0);
     SetBg3Offset(0, 0);
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
 
-    *(u16 *)0x4001008 = (*(u16 *)0x4001008 & ~3) | 1;
-    *(u16 *)0x400100c = (*(u16 *)0x400100c & ~3) | 3;
-    *(u16 *)0x400100e = (*(u16 *)0x400100e & ~3) | 3;
+    G2S_SetBG0Priority(1);
+    G2S_SetBG2Priority(3);
+    G2S_SetBG3Priority(3);
     SetSubBg0Offset(0, 0);
     SetSubBg2Offset(0, 0);
     SetSubBg3Offset(0, 0);

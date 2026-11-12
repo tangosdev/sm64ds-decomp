@@ -46,4 +46,15 @@ void G2x_ChangeBlendBrightness_(volatile unsigned short *, int);
 #define G2_BlendNone() (REG_BLDCNT = 0)
 #define G2S_BlendNone() (REG_DB_BLDCNT = 0)
 
+/* A background's scroll offset: horizontal in BGxOFS bits 0-8, vertical in
+   bits 16-24, written as one word. */
+#define G2_SetBG0Offset(hOffset, vOffset) (REG_BG0OFS = (u32)(((hOffset) & 0x1ff) | (((vOffset) << 16) & 0x1ff0000)))
+#define G2_SetBG1Offset(hOffset, vOffset) (REG_BG1OFS = (u32)(((hOffset) & 0x1ff) | (((vOffset) << 16) & 0x1ff0000)))
+#define G2_SetBG2Offset(hOffset, vOffset) (REG_BG2OFS = (u32)(((hOffset) & 0x1ff) | (((vOffset) << 16) & 0x1ff0000)))
+#define G2_SetBG3Offset(hOffset, vOffset) (REG_BG3OFS = (u32)(((hOffset) & 0x1ff) | (((vOffset) << 16) & 0x1ff0000)))
+#define G2S_SetBG0Offset(hOffset, vOffset) (REG_DB_BG0OFS = (u32)(((hOffset) & 0x1ff) | (((vOffset) << 16) & 0x1ff0000)))
+#define G2S_SetBG1Offset(hOffset, vOffset) (REG_DB_BG1OFS = (u32)(((hOffset) & 0x1ff) | (((vOffset) << 16) & 0x1ff0000)))
+#define G2S_SetBG2Offset(hOffset, vOffset) (REG_DB_BG2OFS = (u32)(((hOffset) & 0x1ff) | (((vOffset) << 16) & 0x1ff0000)))
+#define G2S_SetBG3Offset(hOffset, vOffset) (REG_DB_BG3OFS = (u32)(((hOffset) & 0x1ff) | (((vOffset) << 16) & 0x1ff0000)))
+
 #endif

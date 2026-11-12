@@ -44,6 +44,7 @@
 #include "Ov007Touch.h"
 #include "private/arm_math_state.h"
 #include "nitro/hw/registers.h"
+#include "nitro/gx/gx.h"
 
 extern "C" {
 
@@ -117,8 +118,8 @@ int func_ov007_020b7138(Ov007MenuHooks *hooks, Ov007BootArgs *bootArgs) {
     func_02045d9c();
     G2_SetBlendBrightness(0x3f, -0x10);
     G2S_SetBlendBrightness(0x3f, -0x10);
-    REG_DISPCNT &= ~0x1f00;
-    REG_DISPCNT_SUB &= ~0x1f00;
+    GX_SetVisiblePlane(0);
+    GXS_SetVisiblePlane(0);
     REG_POWCNT1 &= ~0x8000;
     Work_Create();
     WORK->settings->bootArgs = bootArgs;
@@ -175,8 +176,8 @@ int func_ov007_020b6f4c(void) {
     if (work->pendingChoice != 0xa && work->pendingChoice != 0xb && work->choiceReady != 0) {
         G2_SetBlendBrightness(0x3f, 0x10);
         G2S_SetBlendBrightness(0x3f, 0x10);
-        REG_DISPCNT &= ~0x1f00;
-        REG_DISPCNT_SUB &= ~0x1f00;
+        GX_SetVisiblePlane(0);
+        GXS_SetVisiblePlane(0);
     } else {
         G2_SetBlendBrightness(0x20, -0x10);
         G2S_SetBlendBrightness(0x20, -0x10);
