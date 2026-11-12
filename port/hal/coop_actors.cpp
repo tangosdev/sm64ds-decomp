@@ -219,6 +219,7 @@ struct Slot {
     bool     hconf;           // COOPDIAMOND2: the copy's heading was checked against an owner's record (class 135)
     bool     bvalid;          // COOPDIAMOND2: bx/by/bz hold the spawn point a cycle mover's place is measured from
     int32_t  bx, by, bz;
+    bool     kmoved;          // kbo2: the last record published for King Bob-omb carried a change (a settle record follows)
 };
 struct Rx {
     bool     valid, fresh, snap;
@@ -1108,7 +1109,7 @@ void process(unsigned now) {
     }
     link_build();
     unsigned char recs[kPayloadMax]; int nrec = 0, bytes = 0;
-    struct Due { int slot; unsigned age; };
+    struct Due { int slot; unsigned age; bool moved; };
     Due due[kSlots]; int ndue = 0;
     for (int slot = 0; slot < kSlots; ++slot) {
         Slot &s = g_slot[slot];
@@ -1133,7 +1134,8 @@ void process(unsigned now) {
         // drive the room's lift off along its own side of the square); it confirms from that owner's next records, a few frames.
         if (g_dia_heading && p.id == 135 && nown == g_my && was >= 0 && was != g_my && cur_fresh && !s.hconf) { nown = was; ++g_dia_held; }
         if (g_boss_own && (p.flags & kFBoss)) {       // MOVERS9: who steers the pose = who the boss chases (the boss lane's authority rule)
-            const int ts = coop_target_seat_of_slot(slot);
+            int ts = coop_target_seat_of_slot(slot);
+            if (p.id == 189) { const int ds = coop_boss_driver_seat(slot); if (ds >= 0) ts = ds; }   // kbo2: King Bob-omb's driver (talk claim, defeat owner)
             if (ts == g_my) nown = g_my;
             else if (ts >= 0 && ts < kSeats && ((coop_group_member_mask() >> ts) & 1u) && alive_rx(g_rx[slot][ts], now)) nown = ts;
         }
@@ -1172,14 +1174,22 @@ void process(unsigned now) {
         if (g_act) derive_apply(slot, s, now);
         // 3. publish if I own it
         if (!g_act) continue;
-        if (!g_hold && s.owner == g_my && s.seen >= 3 && !skip_state(s.a, p) && !frozen_state(s.a)) {
+        // kbo2 (bug 16): King Bob-omb's driver publishes his pose even while it waits for the group's mover snapshot. Measured in the
+        // side-look row with the fix off: the group owner asked five times, nobody answered, and it published nothing for 1.6 s,
+        // so the friend's copy kept steering him and stood still while the owner's King turned to talk, then snapped round.
+        const bool kbo_drive = p.id == 189 && s.owner == g_my && coop_boss_driver_seat(slot) == g_my;
+        if ((!g_hold || kbo_drive) && s.owner == g_my && s.seen >= 3 && !skip_state(s.a, p) && !frozen_state(s.a)) {
             if (s.pin_lf == kPinStay || (s.pin_lf && g_lf - (s.pin_lf - 1) <= 1u)) { ++g_pin_skips; continue; }   // a friend's held pin owns the pose
             const unsigned age = now - s.last_pub;
             if (age >= p.period) {
                 bool changed = !s.lvalid || rd32(s.a, 0x5c) != s.lx || rd32(s.a, 0x60) != s.ly || rd32(s.a, 0x64) != s.lz ||
                                rd16(s.a, 0x8c) != s.lax || rd16(s.a, 0x8e) != s.lay || rd16(s.a, 0x90) != s.laz;
                 for (int k = 0; !changed && k < p.nf; ++k) changed = read_field(s.a, p.f[k]) != s.lf[k];
-                if (changed || age >= (unsigned)kHeartbeatMs) { due[ndue].slot = slot; due[ndue].age = age; ++ndue; }
+                // kbo2 (bug 16): one more record once King Bob-omb stops turning. A copy extrapolates the last two records 150 ms
+                // ahead, so a turn's last record (still moving) left the friend's King 45 degrees past the end of the turn until the
+                // next heartbeat 1.5 s later, then he snapped back (side-look row, fix on, before this). The settle record has no motion.
+                const bool settle = p.id == 189 && s.kmoved && coop_boss_driver_seat(slot) >= 0;
+                if (changed || settle || age >= (unsigned)kHeartbeatMs) { due[ndue].slot = slot; due[ndue].age = age; due[ndue].moved = changed; ++ndue; }
             }
         }
     }
@@ -1203,6 +1213,7 @@ void process(unsigned now) {
         for (int k = first; k < i; ++k) {
             Slot &s = g_slot[due[k].slot];
             s.last_pub = now;
+            s.kmoved = due[k].moved;
             ++g_cs[s.prof].pub;
             s.lvalid = true; s.lx = rd32(s.a, 0x5c); s.ly = rd32(s.a, 0x60); s.lz = rd32(s.a, 0x64);
             s.lax = rd16(s.a, 0x8c); s.lay = rd16(s.a, 0x8e); s.laz = rd16(s.a, 0x90);

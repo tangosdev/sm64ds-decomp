@@ -41,6 +41,24 @@ extern char data_ov073_02123320[], data_ov073_02123330[], data_ov073_02123340[],
             data_ov073_02123370[], data_ov073_02123380[], data_ov073_02123390[], data_ov073_021233a0[], data_ov073_021233b0[],
             data_ov073_021233c0[], data_ov073_021233d0[], data_ov073_021233e0[], data_ov073_021233f0[], data_ov073_02123400[],
             data_ov073_02123410[];
+// kbo2: the same sixteen records as src's C++ State objects (d_a_king_donketu.cpp), reached by their mangled names.
+extern "C" char kbo2_cc_3320[], kbo2_cc_3330[], kbo2_cc_3340[], kbo2_cc_3350[], kbo2_cc_3360[], kbo2_cc_3370[], kbo2_cc_3380[], kbo2_cc_3390[], kbo2_cc_33a0[], kbo2_cc_33b0[], kbo2_cc_33c0[], kbo2_cc_33d0[], kbo2_cc_33e0[], kbo2_cc_33f0[], kbo2_cc_3400[], kbo2_cc_3410[];
+#pragma comment(linker, "/alternatename:_kbo2_cc_3320=?data_ov073_02123320@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_3330=?data_ov073_02123330@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_3340=?data_ov073_02123340@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_3350=?data_ov073_02123350@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_3360=?data_ov073_02123360@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_3370=?data_ov073_02123370@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_3380=?data_ov073_02123380@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_3390=?data_ov073_02123390@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_33a0=?data_ov073_021233a0@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_33b0=?data_ov073_021233b0@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_33c0=?data_ov073_021233c0@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_33d0=?data_ov073_021233d0@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_33e0=?data_ov073_021233e0@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_33f0=?data_ov073_021233f0@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_3400=?data_ov073_02123400@@3UState@daKing_Donketu_c@@A")
+#pragma comment(linker, "/alternatename:_kbo2_cc_3410=?data_ov073_02123410@@3UState@daKing_Donketu_c@@A")
 // bossdesc2: Goomboss's ROM transition (state index at +0x5cc, runs the enter pair), its hit animation, Eyerok's transition + records + globals
 void _ZN7fBase_c18MarkForDestructionEv(void *self);
 // coopgoomboss2: a minion's home point (what the summon calls after the Spawn) and the Goomba's own removal at the end of its death
@@ -69,6 +87,10 @@ class daTrs_c { public: void func_ov063_02116244(); };
 
 namespace port {
 namespace {
+// kbo2: SM64DS_COOP_KBO_FIX=0 is the before control (1.0.3 King Bob-omb: target-seat authority to the end, the defeat talk skipped
+// on every console but the authority's, bombs left in a copy's hand, a copy's own HP drop counted when its player is near; Chief Chilly
+// state records matched by address only).
+bool g_kbo_fix = true;
 
 enum : int { kSeats = 4, kSlots = 512, kPayloadMax = kHubCoopMaxDatagram - kHubCoopHeaderBytes };
 
@@ -278,6 +300,18 @@ char *const *chilly_states(int *n) {
 uint32_t chilly_ptr_to_id(uint32_t ptr) {
     int n; char *const *k = chilly_states(&n);
     for (int i = 0; i < n; ++i) if ((uint32_t)(uintptr_t)k[i] == ptr) return (uint32_t)i;
+    // kbo2 (bug 27): his own code (src/game/actors/d_a_king_donketu.cpp) holds its sixteen records as C++ State objects, a second
+    // copy beside the flat ov073 tables above (port/unmatched/Ov073_State.cpp). States entered from that code had no id here (0xff)
+    // and every record sent while he sat in one was refused (this lane's Chilly row: field 0 = 255, before the first hit). The
+    // second copy has the same names and the same order, so its index is the same state.
+    if (ptr && g_kbo_fix) {
+        static char *const s[] = {
+            kbo2_cc_3320, kbo2_cc_3330, kbo2_cc_3340, kbo2_cc_3350, kbo2_cc_3360, kbo2_cc_3370, kbo2_cc_3380, kbo2_cc_3390,
+            kbo2_cc_33a0, kbo2_cc_33b0, kbo2_cc_33c0, kbo2_cc_33d0, kbo2_cc_33e0, kbo2_cc_33f0, kbo2_cc_3400, kbo2_cc_3410 };
+        for (int i = 0; i < n && i < 16; ++i) if ((uint32_t)(uintptr_t)s[i] == ptr) return (uint32_t)i;
+        static uint32_t s_logged = 0;
+        if (s_logged != ptr) { s_logged = ptr; std::fprintf(stderr, "[cbs] chilly state record %08x is in neither table\n", (unsigned)ptr); }
+    }
     return 0xffu;
 }
 void *chilly_id_to_ptr(uint32_t id) {
@@ -393,6 +427,8 @@ unsigned g_kpa_jump_every = 0, g_kpa_jump_t = 0;
 struct StallKnob { unsigned at, ms; bool req; } g_stall[2] = {}; int g_nstall = 0; unsigned g_stall_until = 0; bool g_stall_on = false;   // bowser2 proof knob SM64DS_COOP_BOWSER_JUMP=N: the authority's idle Bowser jumps every N ticks
 char *kpa_arena();
 bool g_kpa_fix = true;   // bowser2: SM64DS_COOP_BOWSER_FIX=0 is the before control (no held copy, no intro guard, no camera give-back)
+unsigned g_bad_logged = 0;   // kbo2: refused boss records logged so far (the first few per run, with the field and the value)
+bool g_kbo_look = false;     // kbo2 proof log SM64DS_COOP_KBO_LOOK=1
 bool g_regd = false;
 int  g_my = -1;
 bool g_minion_share = true;   // coopgoomboss2: SM64DS_COOP_GOOMBAS=0 is the must-fail control: every console summons its own goombas (the 1.0.2 behaviour)
@@ -500,8 +536,11 @@ bool value_ok(const BDesc &d, int idx, uint32_t v) {
     }
     if (d.cls == 218) {
         if (idx == 0) return v < 16;                 // one of the sixteen state records
-        if (idx == 1) return v <= 3;                 // knock-downs left
-        if (idx == 2) return v <= 8;                 // sub-state
+        // knock-downs left. kbo2 (bug 27): 0xff too. The hit-reaction state (func_ov073_02120c7c) takes one with no floor, so a copy whose
+        // count the group had already brought to 0 wrapped to 0xff there; every record it sent after that was refused (PLAYLOGS1: 139 of
+        // 1221 and 395 of 1273) and its own falls never reached 0 again. 0xff reads as 0 (apply_rx) and the copy is put back to 0 (process).
+        if (idx == 1) return v <= 3 || v == 0xffu;
+        if (idx == 2) return v <= 3;                 // mPhase, the chase's leg (0..3, func_ov073_02120ed0; it was <= 8)
         return true;
     }
     if (d.cls == 216) {
@@ -583,6 +622,8 @@ void read_env() {
         if (std::sscanf(sw, "%u:%i:%u", &f, &sp, &n) == 3 && n > 0) g_swing = { f, sp, n, 0, 0, 0 };
     }
     g_kpa_fix = flag("SM64DS_COOP_BOWSER_FIX", true);
+    g_kbo_fix = flag("SM64DS_COOP_KBO_FIX", true);
+    g_kbo_look = flag("SM64DS_COOP_KBO_LOOK", false);
     if (const char *j = std::getenv("SM64DS_COOP_BOWSER_JUMP")) g_kpa_jump_every = (unsigned)std::atoi(j);
     if (const char *j = std::getenv("SM64DS_COOP_BOWSER_STALL")) {
         while (*j && g_nstall < 2) {
@@ -670,8 +711,24 @@ int bully_claim_seat(int slot, unsigned wnow) {
     return -1;
 }
 
+int hp_of(const Boss &b);
+// kbo2: ONE KING BOB-OMB FOR THE GROUP AFTER HIS LAST HIT. From the moment a console's copy is down (HP 0) its authority is the group
+// owner, the one seat every console agrees on (OWNER1). The target seat moves with the players (and with a 1 s hold) while the
+// consoles run the defeat talk at different times, so each console asked "who gives the star" at a different moment and could get a
+// different answer: both suppressed it (Tango's bug 21, measured again in this lane's before row). The owner gives the star, every
+// other console's arrives by announcement.
+bool kbo_down(int slot) {
+    if (!g_kbo_fix || slot < 0 || slot >= kSlots) return false;
+    const Boss &b = g_boss[slot];
+    return b.a && b.d && b.d->cls == 189 && (b.def_seen || hp_of(b) <= 0);
+}
+
 // The seat whose copy of this boss is the right one.
 int auth_for(int slot, unsigned wnow, unsigned cls = 0) {
+    if (cls == 189 && kbo_down(slot)) {
+        const int o = coop_group_owner();
+        if (o >= 0) return o;
+    }
     if (is_bully(cls)) {
         const int c = bully_claim_seat(slot, wnow);
         if (c >= 0) return c;
@@ -819,7 +876,8 @@ void scan() {
         if (b.a) continue;
         if (b.d != d) { b = Boss(); b.d = d; }
         b.a = a; ++b.seen; ++g_nb;
-        if (g_deadmark && g_dead_cls[slot] == id && !b.killed_late && b.seen >= 3 && b.seen <= 900) {
+        // kbo2: a King that is down here is not ended by the group's dead mark: his defeat talk and the star run first
+        if (g_deadmark && g_dead_cls[slot] == id && !b.killed_late && b.seen >= 3 && b.seen <= 900 && !(id == 189 && g_kbo_fix && rd32(a, 0x500) <= 0)) {
             b.killed_late = true;           // it has initialised (the loader ran its InitResources) and is new here (the record can arrive a little after the boss): end it the ordinary way
             // The star-marker table (the minimap's glints) holds the boss's pointer from its InitResources; the ROM's own end of a boss
             // (UntrackAndSpawnStar) releases the slot first. Without that the minimap reads a freed boss (measured: Whomp King).
@@ -917,6 +975,7 @@ void log_sample(int slot, const Boss &b, int auth) {
                            rd32(b.a, 0x410), rd32(b.a, 0x3a4) ? "y" : "n", (int)b.kpa_shown, (int)(uint16_t)rd16(b.a, 0x8e), (int)(unsigned char)b.a[0x444],
                            cam ? (unsigned)rd32(cam, 0x154) : 0u, cam ? rd32(cam, 0x8c) >> 12 : 0, cam ? rd32(cam, 0x90) >> 12 : 0, cam ? rd32(cam, 0x94) >> 12 : 0);
     }
+    if (b.d->cls == 189) n += std::snprintf(line + n, sizeof line - n, " yaw=%04x", (unsigned)(uint16_t)rd16(b.a, 0x8e));   // kbo2
     n += std::snprintf(line + n, sizeof line - n, " tgt=%d", coop_target_seat_of_slot(slot));
     if (is_bully(b.d->cls)) n += std::snprintf(line + n, sizeof line - n, " claim=%d mover=%d", bully_claim_seat(slot, comms_hub_now_ms()), coop_move_owner(slot));
     std::fprintf(stderr, "%s\n", line);
@@ -966,6 +1025,7 @@ void kbo_release_bombs(char *a) {
 bool kbo_show_held(Boss &b, int seat) {
     char *body = (char *)coop_target_body_for_seat(seat);
     if (!body || seat == g_my) return false;
+    if (g_kbo_fix) kbo_release_bombs(b.a);    // kbo2: carried, he holds no bomb (the carried state pins every unthrown one to his hand)
     _ZN12daBombking_c19KingBobOmb_SetStateEPv(b.a, kbo_id_to_ptr(kKboHeld));
     std::memcpy(b.a + 0x494, &body, sizeof body);
     uint32_t fl = (uint32_t)rd32(b.a, 0xb0);
@@ -985,7 +1045,45 @@ void kbo_clear_held(Boss &b) {
 // last words. A copy that reaches HP 0 goes straight to its end: King Bob-omb into the defeat state, whose tick finds no talk on
 // this console and ends (the star is suppressed here, the authority's arrives by announcement); Whomp King to step 3 of his
 // defeat (the burst). Only before this console's own copy started a talk: a talk that was started is left to finish.
+// kbo2: THE DEFEAT TALK ON EVERY SCREEN (Tango: the defeat always plays the cartridge talk and drops the star on every screen). A copy
+// whose King is down runs the cartridge's own ending with its OWN player: the hurt state's tick on the ground turns him to the player
+// (ClosestPlayer answers the local player for a downed King, coop_boss_prefer_local), StartTalk / ShowMessage the defeat line with
+// mTalkingPlayer (+0x430), the defeat state (705c) waits for that talk to end, then UntrackAndSpawnStar (only the owner's star is real,
+// star_is_mine) and his end. 1.0.3 skipped the talk on every console but the authority's and left +0x430 on a friend's body, whose talk
+// never runs here: one console ended him at once with no talk, the other stood in the defeat state for ever (bug 21).
+char *local_body() {
+    const int me = (int)data_0209f250;
+    return (me >= 0 && me < 16) ? (char *)data_0209f394[me] : nullptr;
+}
+void kbo_talker_local(Boss &b) {
+    char *mine = local_body();
+    if (!mine) return;
+    char *cur = nullptr; std::memcpy(&cur, b.a + 0x430, sizeof cur);
+    if (cur != mine) std::memcpy(b.a + 0x430, &mine, sizeof mine);
+}
+// Every tick for a King that is down on this console (mine or not). States 0 (hurt), 9 (thrown) and 6 (the defeat talk) end in the
+// defeat by their own code; anything else (a copy that was walking when the last hit's HP arrived, a copy shown carried) is put into
+// the hurt state, whose entry takes a point (put back at 0).
+void kbo_defeat_tick(Boss &b) {
+    if (b.d->cls != 189 || hp_of(b) > 0) return;
+    const uint32_t st = state_of(b);
+    if (st == kKboDefeat) return;          // the talk is running (or ending) with the player it was started with
+    kbo_talker_local(b);
+    if (st == kKboHurt || st == kKboThrown) return;
+    if (st == 7u || st == kKboHeld) {      // held by MY player: his throw (state 9, the landing) ends it the cartridge's way
+        char *holder = nullptr; std::memcpy(&holder, b.a + 0x494, sizeof holder);
+        if (holder && holder == local_body()) return;
+    }
+    kbo_release_bombs(b.a);
+    kbo_clear_held(b);
+    _ZN12daBombking_c19KingBobOmb_SetStateEPv(b.a, kbo_id_to_ptr(kKboHurt));
+    write_field(b.a, *b.d, b.d->hp, 0u);
+    b.synced_hp = 0; b.lw_valid = false;
+    if (g_log) std::fprintf(stderr, "[cbs] kbo down here in st=%u: hurt state, the defeat talk runs with my player w=%lld\n", st, wall_ms());
+}
+
 void skip_defeat_talk(Boss &b, bool hp_just_written) {
+    if (b.d->cls == 189 && g_kbo_fix) { kbo_defeat_tick(b); return; }
     if (b.d->cls == 189) {
         if (hp_of(b) > 0) return;
         const uint32_t st = state_of(b);
@@ -1173,6 +1271,7 @@ void apply_rx(int slot, Boss &b, unsigned now, bool mine) {
     // HP only goes down.
     const int lhp = hp_of(b);
     int rhp = (int)x.w[d.hp];
+    if (d.cls == 218 && rhp == 0xff) rhp = 0;                            // kbo2: Chilly's wrapped count is "none left"
     if (((d.f[d.hp].kind & kS8) || d.cls == 189) && rhp < 0) rhp = 0;   // a signed byte HP (and King Bob-omb's, coopkbo1): anything at or below 0 is "down"; do not chase a double decrement
     // Chief Chilly's knock-down count also goes UP once: after the last fall he waits for a hit and, if none comes, his state function
     // sets it back to 1 (src/func_ov073_02120910.c). Both copies do that by themselves; a record from the other state would put the
@@ -1245,8 +1344,17 @@ void apply_rx(int slot, Boss &b, unsigned now, bool mine) {
     // coopkbo1: the intro talk is never forced onto a copy. Its tick sees no talk running on this console, reloads the boss music and
     // moves on, the authority's next records force it back, and the music started over and over for the whole dialogue.
     if (d.cls == 189 && rs == kKboTalk) force = false;
+    // kbo2 (REVIEW-T kbo_after): once the group's King is past his intro, this copy's intro is spent too. His idle tick starts the
+    // intro talk with the nearest player while mIntroTalked (+0x508) is 0, so a friend's copy that never talked ran a second full
+    // intro about 4 s after the owner's talk ended. Not during the talk itself (a set flag would send this copy into the fight early).
+    if (d.cls == 189 && g_kbo_fix && rs != kKboIdle && rs != kKboTalk && rs < 18u && b.a[0x508] == 0) {
+        b.a[0x508] = 1;
+        if (g_log) std::fprintf(stderr, "[cbs] kbo intro spent on this copy (the group's King is in st=%u) w=%lld\n", rs, wall_ms());
+    }
     // King Bob-omb's defeat talk on a copy: skip_defeat_talk owns it
     if (d.cls == 189 && !mine && ls == kKboDefeat) force = false;
+    // kbo2: a King that is down here runs his own ending (kbo_defeat_tick): no record moves him out of it, the owner's included
+    if (d.cls == 189 && g_kbo_fix && hp_of(b) <= 0) force = false;
     // COOPBOO5: a hidden Big Boo is never forced into or out of his hidden state 0 (see hidden_big_boo)
     if (hidden_big_boo(b) && (ls == 0u || rs == 0u)) {
         static unsigned s_logged = 0;
@@ -1329,6 +1437,25 @@ void process(unsigned now) {
                 }
                 g_claim_until[g_my] = wnow + 3000u;
             }
+            if (g_kbo_fix && me >= 0 && me < 16 && data_0209f394[me] && hp_of(b) > 0) {
+                char *talker = nullptr; std::memcpy(&talker, b.a + 0x430, sizeof talker);
+                // kbo2 (bug 16): my copy is in his pre-fight talk with MY player: this console drives him (state, and the pose through
+                // coop_boss_driver_seat) from the talk's first frame, so every screen shows him turning to the player he talks to.
+                // Never over a friend's live claim: a copy that started a second intro of its own (the talkend row: Luigi's copy
+                // talked while Mario's talk ran, before NPCTALK1's lock) must not take the King from the player already talking.
+                bool friend_claim = false;
+                for (int q = 0; q < kSeats; ++q) if (q != g_my && (int)(g_claim_until[q] - wnow) > 0) friend_claim = true;
+                const bool talk = st == kKboTalk && talker == (char *)data_0209f394[me] && !friend_claim;
+                // kbo2: my player threw him (my claim is live): the claim lasts until he lands, the landing's health point is mine.
+                const bool thrown = st == kKboThrown && (int)(g_claim_until[g_my] - wnow) > 0;
+                if (talk || thrown) {
+                    if ((int)(g_claim_until[g_my] - wnow) <= 0) {
+                        ++g_st.claims;
+                        if (g_log) std::fprintf(stderr, "[cbs] claim slot=%d st=%u (%s) w=%lld\n", slot, st, talk ? "my player is in his talk" : "my player threw him", wall_ms());
+                    }
+                    g_claim_until[g_my] = wnow + 3000u;
+                }
+            }
             claiming = (int)(g_claim_until[g_my] - wnow) > 0;
         }
         if (d.cls == 279) {      // Bowser swung by MY player's hands (his tail): the grabbing console is the authority while the grab lasts
@@ -1375,6 +1502,10 @@ void process(unsigned now) {
         if (bully_claim_new && mine) urgent = true;
         b.mine_last = mine;
         // a hit that landed on my copy: HP below what was last synced
+        if (d.cls == 218 && g_kbo_fix && hp_of(b) == 0xff) {             // kbo2 (bug 27): the reaction state took one more from 0: none left is 0
+            write_field(b.a, d, d.hp, 0u);
+            if (g_log) std::fprintf(stderr, "[cbs] chilly slot=%d knock-downs wrapped to 255 here: put back to 0 (st=%u) w=%lld\n", slot, state_of(b), wall_ms());
+        }
         const int hp = hp_of(b);
         if (hp > b.synced_hp && d.cls == 218) b.synced_hp = hp;    // Chilly's revive raises it by himself
         // COOPBOO5: a hidden Big Boo coming out sets 3 HP (d_a_trs.cpp func_ov063_02119074); the group's fight already took some
@@ -1399,6 +1530,11 @@ void process(unsigned now) {
             // authority. A non-authority drop is its forced copy landing from the throw (state 9's tick takes a point after the
             // thrower's point was already merged: one throw cost two). Only his hurt state's own entry (a hit on this copy) counts.
             if (d.cls == 189 && state_of(b) != kKboHurt) near_me = false;
+            // kbo2 (bugs 18 / 20): never, on a copy. His bombs are each console's own (spawned by each copy's throw state), so one
+            // exploding on this screen only (a bomb left in a copy's hand, a throw at a different moment) hurt this copy alone and was
+            // sent to everyone as a hit. The real hits (his landing after a throw) are the thrower's, who holds the claim and so is the
+            // authority; the proof knob's hits pass above through knob_ok_t.
+            if (d.cls == 189 && g_kbo_fix) near_me = false;
             if (!near_me) {
                 ++g_st.hit_spurious;
                 if (g_log) std::fprintf(stderr, "[cbs] drop ignored slot=%d hp %d->%d (not from my player; auth %d me %d) w=%lld\n", slot, b.synced_hp, hp, auth, g_my, wall_ms());
@@ -1446,6 +1582,12 @@ void process(unsigned now) {
             std::fprintf(stderr, "[cbs-knob] jump: the authority's Bowser sent to his jump w=%lld\n", wall_ms());
         }
         if (g_on && !mine) skip_defeat_talk(b, false);
+        if (g_on && g_kbo_fix && d.cls == 189) {
+            kbo_defeat_tick(b);                   // kbo2: down here, mine or not: the cartridge's ending with my player
+            // kbo2 (bug 18): on a copy a bomb is in his hand only during his throw. A copy that left the throw by a record (or was hurt
+            // in it) kept it pinned to his hand through every later state, the bounce included, until it went off there.
+            if (!mine && state_of(b) != kKboThrowBomb) kbo_release_bombs(b.a);
+        }
         // coopgoomboss2: Goomboss's summon (state 2, func_ov074_0211fd74) runs only on his authority. A copy holds the summon's frame
         // timer (+0x5fc) above 1, so its tick returns before the Spawn; its goombas are the authority's, built here as they are
         // announced (coop_boss_spawn_minion), and the authority's records move the copy on to state 3 when the set is out.
@@ -1493,6 +1635,15 @@ void process(unsigned now) {
             }
         }
         if (g_log && (unsigned)(now - b.sample_t) >= 500u) { b.sample_t = now; log_sample(slot, b, auth); }
+        // kbo2 proof log SM64DS_COOP_KBO_LOOK=1 (off by default): King Bob-omb's facing and who drives him every 2 ticks before the fight
+        if (g_kbo_look && d.cls == 189 && (g_ticks & 1u) == 0) {
+            const uint32_t st = state_of(b);
+            if (st == kKboIdle || st == kKboTalk || st == 2u) {
+                char *talker = nullptr; std::memcpy(&talker, b.a + 0x430, sizeof talker);
+                std::fprintf(stderr, "[kbolook] t=%u st=%u yaw=%04x auth=%d mover=%d tgt=%d talker=%s w=%lld\n", g_ticks, st, (unsigned)(uint16_t)rd16(b.a, 0x8e), auth,
+                             coop_move_owner(slot), coop_target_seat_of_slot(slot), !talker ? "none" : talker == local_body() ? "me" : "friend", wall_ms());
+            }
+        }
         if (!b.announced_dead && hp_of(b) == 0 && g_log) {
             b.announced_dead = true;
             std::fprintf(stderr, "[cbs] defeated slot=%d cls=%u hp=0 st=%u w=%lld\n", slot, (unsigned)d.cls, state_of(b), wall_ms());
@@ -2012,7 +2163,23 @@ CoopBossStats coop_boss_stats() { return g_st; }
 
 // bossfix1 hooks for coop_target and coop_spawn.
 bool coop_boss_prefer_local(const char *actor) {
-    return g_on && actor && *(const unsigned short *)(actor + 0x0c) == 279 && rd32(actor, 0x40c) == 4;
+    if (!g_on || !actor) return false;
+    const unsigned short cls = *(const unsigned short *)(actor + 0x0c);
+    if (cls == 279) return rd32(actor, 0x40c) == 4;
+    // kbo2: King Bob-omb down (HP 0): his hurt state's tick turns to ClosestPlayer before the defeat talk, which runs with my player
+    return cls == 189 && g_kbo_fix && rd32(actor, 0x500) <= 0;
+}
+
+// kbo2: who drives King Bob-omb's pose (coop_actors' MOVERS9 rule asks): the boss's authority, so the pose and the state come from one
+// console. Not while he is carried on this console (states 7 / 8): the carry keeps the MOVERS9 rule it was proven with. -1 = no answer.
+int coop_boss_driver_seat(int slot) {
+    read_env();
+    if (!g_on || !g_kbo_fix || slot < 0 || slot >= kSlots || g_my < 0) return -1;
+    const Boss &b = g_boss[slot];
+    if (!b.a || !b.d || b.d->cls != 189) return -1;
+    const uint32_t st = state_of(b);
+    if (st == 7u || st == kKboHeld) return -1;
+    return auth_for(slot, comms_hub_now_ms(), 189);
 }
 // coopgoomboss2 hooks for coop_spawn.
 namespace {
@@ -2129,7 +2296,15 @@ void coop_boss_on_world(int seat, int sub, const unsigned char *p, int len) {
         if (!b.a || b.d != d) { ++g_st.drop_cls; continue; }
         bool ok = true;
         for (int k = 0; k < d->nf; ++k) if (!value_ok(*d, k, w[k])) ok = false;
-        if (!ok) { ++g_st.drop_bad; continue; }
+        if (!ok) {
+            ++g_st.drop_bad;
+            if (g_bad_logged < 12) {        // kbo2: which field and value a rejected record carried (bug 27 had no trace of it)
+                ++g_bad_logged;
+                for (int k = 0; k < d->nf; ++k)
+                    if (!value_ok(*d, k, w[k])) std::fprintf(stderr, "[cbs] record refused: cls=%u slot=%d field %d (+0x%x) = %u (0x%x) from seat %d w=%lld\n", (unsigned)d->cls, (int)r.slot, k, (unsigned)d->f[k].off, w[k], w[k], seat, wall_ms());
+            }
+            continue;
+        }
         const int auth = auth_for(r.slot, now, d->cls);
         if (sub == kWorldBossHit) {
             ++g_st.hits_rx;
@@ -2146,8 +2321,15 @@ void coop_boss_on_world(int seat, int sub, const unsigned char *p, int len) {
             const uint32_t hst = state_of(b), rst = w[d->state];
             if (hidden_big_boo(b) && hst == 0u && rst != 0u) big_boo_bring_out(b, (int)r.slot, "a friend hit his");
             if (auth == g_my && hidden_big_boo(b) && (hst == 0u || rst == 0u)) continue;
+            // kbo2: the last hit's record is the hitter's King already in its defeat: the owner takes the HP (above) and runs the
+            // cartridge's ending itself (kbo_defeat_tick), with the talk, instead of jumping into the defeat state with no talk
+            if (auth == g_my && d->cls == 189 && g_kbo_fix && (int32_t)read_field(b.a, d->f[d->hp]) <= 0) {
+                kbo_defeat_tick(b);
+                continue;
+            }
             if (auth == g_my) {
                 const int hp_keep = (int)read_field(b.a, d->f[d->hp]);
+                if (d->cls == 189 && g_kbo_fix && w[d->state] != kKboThrowBomb) kbo_release_bombs(b.a);   // kbo2: no bomb left pinned to his hand
                 give_player_ptrs(b);
                 for (int k = 0; k < d->nf; ++k) if (k != d->hp) write_field(b.a, *d, k, w[k]);
                 write_field(b.a, *d, d->hp, (uint32_t)hp_keep);
