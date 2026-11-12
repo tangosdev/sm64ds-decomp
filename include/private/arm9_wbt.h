@@ -4,9 +4,9 @@
 /* Views of NitroSDK WBT (wireless block transfer), moved here from the five
  * files that each declared their own copy: the WBT library in the 0x0206
  * cluster (func_02063718, func_02063ea8, func_02064554) and the
- * file-sharing callbacks in the 0x0204 cluster (func_02040f30,
- * func_020412f0). Field names follow the SDK's. Plain C types:
- * func_020412f0 does not include types.h. */
+ * file-sharing callbacks in the 0x0204 cluster (WFSi_OnChildSystemCallback,
+ * WFSi_OnParentSystemCallback). Field names follow the SDK's. Plain C types:
+ * WFSi_OnParentSystemCallback does not include types.h. */
 
 /* The prepare-send arm of a system callback (event 0xd PREPARE_SEND_DATA):
  * WBT asks the application for the bytes of one block packet. */
