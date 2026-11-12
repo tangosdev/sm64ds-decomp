@@ -23,6 +23,8 @@
 #include <chrono>
 #include <cstring>
 
+extern "C" int port_adventure_ghost_drawn_seat(int seat, int out[3], int *buf_ms);   // comms_sync.cpp: where I draw a friend
+
 extern "C" {
 extern void *data_0209f394[];
 extern unsigned char data_0209f250;       // my player slot
@@ -1489,8 +1491,21 @@ void attacker_scan(char *me) {
             continue;
         }
         HubSeatInfo si; comms_hub_seat_info(seat, &si);
-        const unsigned stamp = stamp_for(si);
+        unsigned stamp = stamp_for(si);
         int kind = ik;
+        // FRIENDLOOK1 review: a stomp is judged on the friend's DRAWN body (the one on my screen, about 100 ms behind
+        // his newest frame), so a friend jumping up is not bounced off above his drawn head. The claim's stamp carries
+        // that draw delay too (capped like any stamp), so his console judges the pose I saw. REACH=old keeps the newest.
+        bool drawn = false;
+        if (!lab && kind == kStomp && g.headbounce && !stomp_reach_old()) {
+            int dp[3], buf = 0;
+            if (port_adventure_ghost_drawn_seat(seat, dp, &buf)) {
+                s.x = dp[0] >> 12; s.y = dp[1] >> 12; s.z = dp[2] >> 12;
+                const unsigned late = stamp + (unsigned)((buf > 0 ? buf + 16 : 0) / 33);
+                stamp = late > 15u ? 15u : late;
+                drawn = true;
+            }
+        }
         if (lab) {
             // LAB: forge a claim from `units` away from the friend, whatever the real positions are. A forged
             // grab still needs the ROM's own TryGrab to take (my punch state), so it retries each frame.
@@ -1548,7 +1563,7 @@ void attacker_scan(char *me) {
             ++g.st.bounces;
         }
         if (kind == kMelee || kind == kPound) { attacker_feedback(seat, s); g.knock_sent[seat] = g.frame ? g.frame : 1; }     // instant feedback on my screen
-        if (g.log > 0) std::fprintf(stderr, "[phit] claim sent ik=%d -> seat %d stamp=%u (my %d,%d,%d; his %d,%d,%d)\n", kind, seat, stamp, mx, my, mz, s.x, s.y, s.z);
+        if (g.log > 0) std::fprintf(stderr, "[phit] claim sent ik=%d -> seat %d stamp=%u (my %d,%d,%d; his %d,%d,%d%s)\n", kind, seat, stamp, mx, my, mz, s.x, s.y, s.z, drawn ? " drawn" : "");
         return;                                                // one claim per frame
     }
 }

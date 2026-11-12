@@ -4432,6 +4432,22 @@ extern "C" int port_adventure_ghost_drawpos(int slot, int out[3]) {
     return 1;
 }
 
+// FRIENDLOOK1 (bug 10): where the follower last drew a hub seat's body (Fix12, the interpolated
+// position about buf_ms behind his newest frame), and that draw delay. 0 when he is not drawn here.
+extern "C" int port_adventure_ghost_drawn_seat(int seat, int out[3], int *buf_ms) {
+    if (!g_hub || seat < 0 || seat >= kHubMaxSeats) return 0;
+    const int nb = (int)data_0209f21c < kPortBodySlots ? (int)data_0209f21c : kPortBodySlots;
+    for (int i = 0; i < nb; ++i) {
+        if (i == (int)data_0209f250 || !g_drawpos_have[i] || gw_seat_for_body(i) != seat) continue;
+        out[0] = g_drawpos[i][0];
+        out[1] = g_drawpos[i][1];
+        out[2] = g_drawpos[i][2];
+        if (buf_ms) *buf_ms = g_gw_last[seat].buf_ms;
+        return 1;
+    }
+    return 0;
+}
+
 // MAPDOTS1: where a hub friend stands in MY level, for the bottom-screen map, whether or
 // not his area is the one loaded here. A friend in another room of the level (Hazy Maze
 // Cave's areas, the castle's) is parked and undrawn on this console (gw_here answers 2 for
