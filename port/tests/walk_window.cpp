@@ -16754,6 +16754,7 @@ static unsigned short g_fc_cam_rot_prev; /* last frame's, for the edge     */
    publish below (what the actor walk will read this frame). Inert unset. */
 extern "C" int data_0209fc68[];
 extern "C" const void *_ZN8dActor_c4NextEPKS_(const void *prev);
+static const bool g_intro_trace_on = getenv("SM64DS_INTRO1_TRACE") || getenv("SM64DS_INTRO1_SHOT");
 static void port_intro_trace(void)
 {
     static int on = -1;
@@ -17016,7 +17017,7 @@ extern "C" void port_frame_ctrl_publish(void)
                     *((unsigned char *)data_0209f4ac + lo) = 1;
                 }
             }
-    port_intro_trace();   /* INTRO1 proof instrument: SM64DS_INTRO1_TRACE=1, inert unset */
+    if (g_intro_trace_on) port_intro_trace();   /* INTRO1 proof instrument: one cached flag test when off; drop with the function at the fold */
 }
 
 int main(void)

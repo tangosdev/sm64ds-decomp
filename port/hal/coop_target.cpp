@@ -288,6 +288,14 @@ void *cp_impl(void *self, bool nonvanish) {
     if (!data_0209b458 && g_on && (int)data_0209f21c > 1 && opening_local_on() && port_coop_boot_opening_hold()) {
         char *lb = local_body();
         if (lb && nonvanish && lb[0x6fb]) lb = nullptr;   // a vanished player is skipped by this entry, as it would be alone
+        // No local body to give (none seated on my record, or this entry skips it as vanished): the old pick below answers
+        // instead of nothing, so the hand-over still finds a player, sets the opening-seen bit and this window closes.
+        static bool said_none = false;
+        if (!lb && !said_none) {
+            said_none = true;
+            std::fprintf(stderr, "[cotgt] opening: no local body to answer with (record %d, %d bodies seated, nonvanish %d); "
+                         "the old nearest pick answers\n", (int)data_0209f250, (int)data_0209f21c, nonvanish ? 1 : 0);
+        }
         if (lb) {
             const int d = Vec3_Dist((char *)self + 0x5c, lb + 0x5c);
             data_0209b458 = lb; data_0209b450 = lb;
@@ -301,8 +309,8 @@ void *cp_impl(void *self, bool nonvanish) {
                 std::fprintf(stderr, "[cotgt] opening: cls=%u asked ClosestPlayer, answered with my own body (seat %d, record %d, "
                              "%d bodies seated)\n", (unsigned)cls, g_my, (int)data_0209f250, (int)data_0209f21c);
             }
+            return data_0209b458;
         }
-        return data_0209b458;
     }
     if (!data_0209b458) {
         data_0208e380 = 0x7fffffff;
