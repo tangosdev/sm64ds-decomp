@@ -36,11 +36,6 @@ extern CLPS_Block data_ov002_0210d7d4;
 extern signed char gCurrentSublevel;
 extern unsigned char gGameMode;
 
-/* local extern: no shared header declares these. */
-extern "C" {
-extern unsigned char DecIfAbove0_Byte(unsigned char *p);
-}
-
 extern SharedFilePtr data_ov002_0210d9f0;
 
 /* File-scope objects at the end of this file construct the two resource

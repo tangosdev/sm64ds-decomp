@@ -2,6 +2,7 @@
 #include "dFdBrightness_c.h"
 #include "nitro/hw/registers.h"
 #include "math/Approach.h"
+#include "math/CalcLib.h"
 #include "nitro/gx/g3x.h"
 #include "nitro/fx/fx_cp.h"
 /* dScMgTrampoline_c -- Trampoline Time. Draw a line on the touch screen
@@ -99,7 +100,6 @@ extern int sTrmpAnyOnLedge;
 extern void TrmpLine_UpdateAll(void);
 extern int Trmp3DMario_IsOffstage(int *r0);
 extern void Trmp3DMario_EnterWalkIn(char *c);
-extern int RandomIntInternal(int *seed);
 extern void Trmp3DMario_SetSpawnHeight(int n);
 extern void Trmp3DMario_SetTuning(int a);
 void TrmpLine_CreateStartLineT1(void);
