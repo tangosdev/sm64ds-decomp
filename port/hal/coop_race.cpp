@@ -45,6 +45,9 @@
 //   SM64DS_COOP_KTQ_LOG=1      [coopktq] lines (state changes, lock / let go, flag touches, the exit line)
 //   SM64DS_COOP_KTQ_TRACE=N    every N frames one [coopktq] trace line (my Koopa, the record I follow, the flag)
 //   SM64DS_COOP_KTQ_SHOT=a,b   at course frames a, b... a picture from the game's own frame dump (ktq_fNNNNN.bmp)
+//   SM64DS_COOP_KTQ_ARM=F      at course frame F arm my own race flag the way Koopa's talk does (mHasTouchedFlag = 0 on
+//                              StartTalk, kept when the offer is declined): the state of a player who talked to Koopa and
+//                              said no, which a headless row cannot drive
 
 #include "coop_wire.h"
 #include "coop_world.h"
@@ -338,6 +341,15 @@ void shots() {
     }
 }
 
+void arm_knob() {
+    static int at = -2;
+    if (at == -2) { at = -1; if (const char *e = std::getenv("SM64DS_COOP_KTQ_ARM")) at = std::atoi(e); }
+    if (at < 0 || g_lf != (unsigned)at) return;
+    char *f = _ZN8dActor_c15FindWithActorIDEjPS_(205, nullptr);
+    if (f) *(unsigned char *)(f + 0x16e) = 0;
+    std::fprintf(stderr, "[coopktq] KNOB arm lf=%u: my race flag %s\n", g_lf, f ? "armed (as after a declined talk)" : "not found");
+}
+
 void trace(daRNk_c *k) {
     if (g_trace <= 0 || (g_lf % (unsigned)g_trace) != 0) return;
     char line[512]; int n = 0;
@@ -371,6 +383,7 @@ void coop_race_frame(unsigned) {
     if (lv != g_lv || ac != g_ac) { reset_visit(); g_lv = lv; g_ac = ac; }
     ++g_lf;
     shots();
+    arm_knob();
     daRNk_c *k = find_koopa();
     if (k != g_m.k) {                 // a new visit's Koopa (or he went away)
         if (g_m.lock >= 0 && g_log) std::fprintf(stderr, "[coopktq] lf=%u my Koopa changed: following stopped\n", g_lf);
