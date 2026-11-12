@@ -45,7 +45,9 @@
 //   SM64DS_COOP_WORLDSTAR_TRACE=N  every N frames one [coopws] trace line
 //   SM64DS_WS_KLEPTO_SILVER=F      at frame F (before the spawn census arms, so like one placed at load) spawn a Klepto
 //                                  carrying a silver star (param 0x2000, path 0; the cartridge places none in the courses
-//                                  surveyed: SSL acts 1-8, THI): the ROM's own spawn and InitResources
+//                                  surveyed: SSL acts 1-8, THI): the ROM's own spawn and InitResources. Only in a course
+//                                  whose own Klepto loaded the model (SSL act 2): a spawn where none is placed draws from
+//                                  files that are not loaded
 //   SM64DS_WS_KLEPTO_HIT=F[:friend]  at frame F the first Klepto runs its own contact test punched by my body (or the
 //                                  first friend's drawn body): the ROM's HURT
 //   SM64DS_WS_EEL=F[:friend]       from frame F for 4 frames put my body (or, inside the release check, the first friend's
@@ -434,6 +436,8 @@ void knobs(char *me) {
     }
     if (hit_at >= 0 && g_lf == (unsigned)hit_at) {
         daJango_c *k = (daJango_c *)_ZN8dActor_c15FindWithActorIDEjPS_(kClsKlepto, nullptr);
+        for (char *x = (char *)k; x; x = _ZN8dActor_c15FindWithActorIDEjPS_(kClsKlepto, x))      // the silver carrier first, if any
+            if (((daJango_c *)x)->mSilverStarFlag == 2) { k = (daJango_c *)x; break; }
         char *who = hit_friend ? first_friend_body() : me;
         if (!k || !who) std::fprintf(stderr, "[coopws] KNOB klepto hit lf=%u: no Klepto (%p) or no body (%p)\n", g_lf, (void *)k, (void *)who);
         else {
