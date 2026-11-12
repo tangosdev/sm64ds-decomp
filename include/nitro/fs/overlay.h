@@ -12,6 +12,7 @@
  */
 
 #include "types.h"
+#include "ds_width.h"
 #include "nitro/mi/exMemory.h"
 #include "private/fs_views.h"
 
@@ -25,11 +26,11 @@ typedef void (*FSOverlayInitFunc)(void);
 
 typedef struct FSOverlayInfoHeader {
     u32 id;                            /* 0x00 */
-    u8 *ram_address;                   /* 0x04 */
+    u8 * DS_P32 ram_address;           /* 0x04 */
     u32 ram_size;                      /* 0x08 */
     u32 bss_size;                      /* 0x0c */
-    FSOverlayInitFunc *sinit_init;     /* 0x10 */
-    FSOverlayInitFunc *sinit_init_end; /* 0x14 */
+    FSOverlayInitFunc * DS_P32 sinit_init;     /* 0x10 */
+    FSOverlayInitFunc * DS_P32 sinit_init_end; /* 0x14 */
     u32 file_id;                       /* 0x18 */
     u32 compressed : 24;               /* 0x1c */
     u32 flag : 8;

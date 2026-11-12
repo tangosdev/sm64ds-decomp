@@ -4,6 +4,7 @@
 #include "types.h"
 #include "MWCPlusLib.h"
 #include "private/throw_context.h"
+#include "ds_width.h"
 
 /* The 0x18-byte cursor func_02071be8 keeps on its stack: the action iterator
  * func_02072dac fills, and one word nothing in this image reads.
@@ -25,7 +26,7 @@ struct ActionWalk {
 
 #ifndef SM64DS_PLATFORM_PC
 typedef char
-    ActionWalk_throw_state_must_start_at_0x18[(int)&((struct ActionWalk *)0)->mThrow == 0x18 ? 1
+    ActionWalk_throw_state_must_start_at_0x18[DS_IADDR(&((struct ActionWalk *)0)->mThrow) == 0x18 ? 1
                                                                                              : -1];
 #endif
 

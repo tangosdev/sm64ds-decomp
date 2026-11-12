@@ -12,8 +12,11 @@ extern Ov007MenuState *PickerScene_GetScaleAnimState(void);
 extern Ov007MenuState *PickerScene_GetMoveAnimState(void);
 extern void PickerScene_Update(void);
 
+#include "ds_width.h"
+#ifndef SM64DS_HOST_64
 typedef char
-    Ov007Work_itemNodes_must_be_at_0xa4[(int)&((Ov007Work *)0)->itemNodes == 0xa4 ? 1 : -1];
+    Ov007Work_itemNodes_must_be_at_0xa4[DS_IADDR(&((Ov007Work *)0)->itemNodes) == 0xa4 ? 1 : -1];
+#endif
 
 /* Every 0xf0 ticks of states[1], from tick 0x3c on, re-arms item node 1's
  * 0x3c-frame wiggle; func_ov007_020af260 picks the state requests below.

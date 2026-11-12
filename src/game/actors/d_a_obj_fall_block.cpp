@@ -48,6 +48,7 @@ enum { ACTOR_FL_KUZURE = 0x53, ACTOR_KM2_KUZURE = 0x8b, ACTOR_STAR = 0xb2 };
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
 #include "nitro/fx/fx_trig.h"
+#include "ds_width.h"
 
 extern "C" {
 s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
@@ -332,11 +333,11 @@ s32 daObjFallBlock_c::Behavior() {
         {
             /* Integer-cast address form: plain mAngleX / mAngleZ
                read-modify-writes shrink Behavior by 8 bytes. */
-            s16 t = *(s16 *)((int)&mAngleX);
+            s16 t = *(s16 *)(DS_IADDR(&mAngleX));
             t = (s16)(t + mShakeX);
-            *(s16 *)((int)&mAngleX) = t;
-            t = (s16)(*(s16 *)((int)&mAngleZ) + mTiltVelZ);
-            *(s16 *)((int)&mAngleZ) = t;
+            *(s16 *)(DS_IADDR(&mAngleX)) = t;
+            t = (s16)(*(s16 *)(DS_IADDR(&mAngleZ)) + mTiltVelZ);
+            *(s16 *)(DS_IADDR(&mAngleZ)) = t;
             UpdatePos(0);
         }
         if (DecIfAbove0_Short(&mStateTimer) == 0) {

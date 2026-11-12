@@ -37,6 +37,7 @@
  * holds calls it.
  */
 #include "types.h"
+#include "ds_width.h"
 #include "common.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
@@ -62,7 +63,9 @@ typedef struct Ov007Fade {
     int request;
 } Ov007Fade;
 
+#ifndef SM64DS_HOST_64
 typedef char Ov007Fade_size_must_be_0x14[sizeof(Ov007Fade) == 0x14 ? 1 : -1];
+#endif
 
 extern Ov007Fade *sScreenFade;
 

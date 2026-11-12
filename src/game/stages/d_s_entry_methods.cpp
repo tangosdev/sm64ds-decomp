@@ -106,6 +106,7 @@ extern "C" dFdBrightness_c *gSceneFader;
 #include "nitro/gx/gx_load.h"
 #include "nitro/mi/memory.h"
 #include "nitro/fx/fx_trig.h"
+#include "ds_width.h"
 
 extern "C" {
 int func_0203d974(void);
@@ -930,8 +931,8 @@ void dScEntry_c::UpdateQuit() {
 void dScEntry_c::EnterQuit() {
     gMainScreenLayers &= ~(DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3);
     mStepDelay = 0x14;
-    UnloadOverlay((int)&OVERLAY_100_ID);
-    UnloadOverlay((int)&OVERLAY_102_ID);
+    UnloadOverlay(DS_IADDR(&OVERLAY_100_ID));
+    UnloadOverlay(DS_IADDR(&OVERLAY_102_ID));
 }
 
 static inline unsigned IsMode6(dScEntry_c *scene) {

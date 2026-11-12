@@ -5,6 +5,7 @@
 // NitroSDK's OS_SaveContext (os_context.c, asm there too): saves the divider and square-root
 // context through CP_SaveContext, then the CPSR, the SVC stack pointer and r0-r14, with the
 // return address set past the `mov r0, #0` so a later OS_LoadContext resumes here returning 1.
+#ifndef SM64DS_PLATFORM_PC
 asm int OS_SaveContext(register OSContext *context)
 {
     stmdb sp!, {r0, lr}
@@ -26,3 +27,6 @@ asm int OS_SaveContext(register OSContext *context)
     mov r0, #0
     bx lr
 }
+#else
+int OS_SaveContext(register OSContext *context);
+#endif

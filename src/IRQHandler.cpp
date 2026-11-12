@@ -33,6 +33,7 @@ void OS_IrqHandler_ThreadSwitch(void);
 }
 
 // Dispatch the lowest pending interrupt.
+#ifndef SM64DS_PLATFORM_PC
 asm void OS_IrqHandler(void)
 {
     stmdb sp!, {lr}
@@ -57,10 +58,12 @@ _loop:
     ldr lr, =OS_IrqHandler_ThreadSwitch
     bx r0
 }
+#endif
 
 extern "C" {
 
 // OS_IrqHandler_ThreadSwitch: wake waiters, then switch threads if asked.
+#ifndef SM64DS_PLATFORM_PC
 asm void OS_IrqHandler_ThreadSwitch(void)
 {
     ldr ip, =OSi_IrqThreadQueue
@@ -154,5 +157,8 @@ _switch:
     stmda sp!, {r0, r1, r2, r3, r12, lr}
     ldmia sp!, {pc}
 }
+#else
+void OS_IrqHandler_ThreadSwitch(void);
+#endif
 
 }

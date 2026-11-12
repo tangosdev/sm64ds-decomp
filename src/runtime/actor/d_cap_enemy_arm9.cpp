@@ -31,6 +31,7 @@
 #include "private/mtx43.h"
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
+#include "ds_width.h"
 
 extern "C" {
 extern SharedFilePtr *data_ov002_020ff028[];
@@ -231,7 +232,7 @@ int dCapEnemy_c::GetCapState() {
     }
 
     mIsDormant = 0;
-    mFlags = *(int *)((long long)(int)&mDormantFlags);
+    mFlags = *(int *)((long long)DS_IADDR(&mDormantFlags));
     mCapId &= 7;
     return 1;
 }

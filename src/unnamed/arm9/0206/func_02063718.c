@@ -1,6 +1,7 @@
 #include "types.h"
 #include "private/arm9_wbt.h"
 #include "nitro/mi/memory.h"
+#include "ds_width.h"
 
 /* NitroSDK WBT (wireless block transfer): start the command the application
  * queued. When no command is running (cmd.command == 0) and one is queued,
@@ -30,7 +31,7 @@ extern int func_02064a94(unsigned char *dst, unsigned short target_bmp, unsigned
 int func_02063718(WBTWork *work, void *buf, int size) {
     int t;
     int ret = 0;
-    WBTCommand *st = (WBTCommand *)((long long)(unsigned int)&work->queued_cmd);
+    WBTCommand *st = (WBTCommand *)((long long)DS_UADDR(&work->queued_cmd));
     int b;
     int i;
     WBTPeerRecv *recv;
@@ -57,7 +58,7 @@ int func_02063718(WBTWork *work, void *buf, int size) {
                 func_020647fc(&recv->pkt_bmp, work->cmd.u.get.recv_data_size, recv->blockinfo_bits,
                               work->cmd.u.get.recv_buf_table[i]);
         }
-        if (((WBTCommand *)((unsigned int)&work->queued_cmd))->command == WBT_CMD_REQ_GET_BLOCK)
+        if (((WBTCommand *)(DS_UADDR(&work->queued_cmd)))->command == WBT_CMD_REQ_GET_BLOCK)
             ret = func_02064e18(buf, work->cmd.target_bmp, work->cmd.my_cmd_counter,
                                 work->cmd.u.get.block_id, 0);
         else
@@ -73,7 +74,7 @@ int func_02063718(WBTWork *work, void *buf, int size) {
                 func_020647fc(&recv->pkt_bmp, work->cmd.u.get.recv_data_size,
                               work->cmd.u.get.pkt_bmp_table[i], work->cmd.u.get.recv_buf_table[i]);
         }
-        if (((WBTCommand *)((unsigned int)&work->queued_cmd))->command == WBT_CMD_REQ_GET_BLOCK)
+        if (((WBTCommand *)(DS_UADDR(&work->queued_cmd)))->command == WBT_CMD_REQ_GET_BLOCK)
             ret = func_02064e18(buf, work->cmd.target_bmp, work->cmd.my_cmd_counter,
                                 work->cmd.u.get.block_id, 0);
         else
@@ -87,6 +88,6 @@ int func_02063718(WBTWork *work, void *buf, int size) {
                             work->cmd.u.user_data.data, work->cmd.u.user_data.size);
         break;
     }
-    ((WBTCommand *)((unsigned int)&work->queued_cmd))->command = WBT_CMD_REQ_NONE;
+    ((WBTCommand *)(DS_UADDR(&work->queued_cmd)))->command = WBT_CMD_REQ_NONE;
     return ret;
 }

@@ -23,6 +23,7 @@
 
 extern unsigned int *func_0207322c(void);
 
+#ifndef SM64DS_PLATFORM_PC
 asm unsigned int __ieee_status(unsigned int mask, unsigned int flags)
 {
     stmdb sp!, {r0, r1, r2, r12, lr}
@@ -36,3 +37,6 @@ asm unsigned int __ieee_status(unsigned int mask, unsigned int flags)
     mov r0, r2
     bx lr
 }
+#else
+unsigned int __ieee_status(unsigned int mask, unsigned int flags);
+#endif

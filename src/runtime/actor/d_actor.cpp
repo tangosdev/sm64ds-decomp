@@ -56,6 +56,7 @@
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "math/MtxStack.h"
+#include "ds_width.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -138,7 +139,7 @@ dActor_c::dActor_c() : mActorListNode(this) {
 }
 
 dActor_c::~dActor_c() {
-    func_0203b27c((int)&data_0209b468, (int)&mActorListNode);
+    func_0203b27c(DS_IADDR(&data_0209b468), DS_IADDR(&mActorListNode));
 }
 
 /* Kills an actor born dead: unless its profile sets 0x08000000 ("spawn even if

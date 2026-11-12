@@ -73,6 +73,7 @@
 
 #include "nitro/os/cache.h"
 #include "nitro/mi/dma.h"
+#include "ds_width.h"
 
 /* The four-pointer block at BMD_File::skin (UpdateFileOffsets rebases all
    four). */
@@ -171,7 +172,7 @@ void ModelComponents::func_020453c0(BMD_Bone *fileBone, BCA_File *file, int fram
         anim = bone->anim;
         frame = bone->animFrame;
     }
-    func_0204547c((int *)anim, (int)&anim->boneTracks[idx], frame, bone);
+    func_0204547c((int *)anim, DS_IADDR(&anim->boneTracks[idx]), frame, bone);
     bone->scaled |= bone[node->f8].scaled;
     if (node->fa != 0)
         func_020453c0(fileBone + node->fa, anim, frame);

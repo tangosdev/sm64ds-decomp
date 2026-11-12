@@ -26,6 +26,7 @@
 #include "dActor_c.h"
 #include "SurfaceInfo.h"
 #include "math/CalcLib.h"
+#include "ds_width.h"
 
 extern "C" {
 int dBgS_ChkPolySafe(void *arg);
@@ -69,7 +70,7 @@ int dBgCh_Gnd::DetectClsn()
             } else {
                 ownerPos.y = ownerPos.y + obj->GetClipOffsetY();
             }
-            Vector3 *selfpos = (Vector3 *)((int)&this->pos);
+            Vector3 *selfpos = (Vector3 *)(DS_IADDR(&this->pos));
             if (selfpos->y < ownerPos.y - clipDist)
                 continue;
             if (Vec3_HorzDist(selfpos, &ownerPos) > clipDist)
@@ -218,7 +219,7 @@ int dBgCh_SphCrr::DetectClsnExceptSlot0() {
         if (owner != 0 && ((owner->mFlags & 2) ? one : zero)) {
             /* The address local must stay declared int -- a pointer local
                diffs. Its value is the dM3dGSph base's centre. */
-            int pos = (int)&((dM3dGSph &)*this).centre;
+            int pos = DS_IADDR(&((dM3dGSph &)*this).centre);
             Vector3 ownerPos;
             Vector3 *src = &owner->mPos;
             int clipDist;

@@ -54,6 +54,7 @@
 #include "Particle__System.h"
 #include "private/mtx43.h"
 #include "nitro/fx/fx_trig.h"
+#include "ds_width.h"
 #include "nitro/fx/fx_cp.h"
 
 /* Actor IDs from symbols/actor_debug_names.tsv. */
@@ -645,10 +646,16 @@ void daIbl_c::SpawnerBehavior() {
            0x5c/0x60/0x64. Read them through the whole daPly_c representation;
            this creates neither a vector view nor an array over those fields.
            Direct named loads lose the shared address under 2004/b56. */
+#ifndef SM64DS_HOST_64
         const unsigned char *coords = reinterpret_cast<const unsigned char *>(pl) + 0x5c;
         pos.x = *reinterpret_cast<const s32 *>(coords);
         pos.y = *reinterpret_cast<const s32 *>(coords + 4);
         pos.z = *reinterpret_cast<const s32 *>(coords + 8);
+#else
+        pos.x = pl->mPosX;
+        pos.y = pl->mPosY;
+        pos.z = pl->mPosZ;
+#endif
     }
 
     if ((param1 & 0xf) != daIbl_KIND_PATH_RAMP) {

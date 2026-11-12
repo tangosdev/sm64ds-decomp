@@ -19,6 +19,7 @@
 extern unsigned int *func_0207322c(void);
 extern float func_0206ddcc(float a, int op);
 
+#ifndef SM64DS_PLATFORM_PC
 asm float _fflt(int value)
 {
     ands r2, r0, #0x80000000
@@ -81,3 +82,6 @@ _pool40000208:
     eor r1, r0, r1
     eor r0, r0, r1
 }
+#else
+float _fflt(int value);
+#endif

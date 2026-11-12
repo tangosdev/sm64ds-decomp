@@ -120,6 +120,7 @@ struct OamAttr;
 #include "nitro/mi/memory.h"
 #include "nitro/gx/g2.h"
 #include "nitro/gx/gx.h"
+#include "ds_width.h"
 
 /* gGameMode (CURRENT_GAMEMODE) is 2 while the fall-in-front-of-castle
  * cutscene runs: ContinueKuppaScriptIfNecessary stores 2 only when the
@@ -446,7 +447,11 @@ void func_0201b388(int a0) {
     n = data_0209d6a4;
     step = (a0 - 1) << 5;
 
+#ifndef SM64DS_HOST_64
     sb = (u32)(((long long)(int)start));
+#else
+    sb = (u32)((uintptr_t)start);
+#endif
     for (j = 0; j < 0x10; j++) {
         for (i = 0; i < n; i++) {
             int blk = sb >> 3;

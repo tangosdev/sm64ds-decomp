@@ -14,9 +14,13 @@
 
 extern void _ull_mod_core(void);
 
+#ifndef SM64DS_PLATFORM_PC
 asm unsigned long long _ll_udiv(unsigned long long num, unsigned long long den)
 {
     stmdb sp!, {r4, r5, r6, r7, r11, ip, lr}
     mov r4, #0
     b _ull_mod_core
 }
+#else
+unsigned long long _ll_udiv(unsigned long long num, unsigned long long den);
+#endif

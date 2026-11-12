@@ -19,11 +19,20 @@
 #error "define exactly one platform"
 #endif
 
+#include "ds_width.h"
+
 #ifdef SM64DS_PLATFORM_PC
-/* The recovered ABI is 32-bit; catch a 64-bit host configuration at compile
- * time rather than as a corrupted struct at runtime. Struct recovery lifts
- * this restriction; until then it is load-bearing. */
+#ifndef SM64DS_HOST_64
+/* The recovered ABI is 32-bit. A 32-bit host that grew an 8-byte pointer is
+ * a misconfigured build, not a layout we can run. */
 typedef char sm64ds_require_4byte_pointers[sizeof(void *) == 4 ? 1 : -1];
+#else
+/* 64-bit host. File images and DS-bus records use `T * DS_P32` so the slot
+ * stays 4 bytes (__ptr32). A value stored through one of those slots has to
+ * sit in the low 4GB. Runtime objects keep native pointers; the vptr is 8
+ * bytes and later fields move with it. Named members follow. Numeric offsets
+ * from a byte pointer do not. */
+#endif
 #endif
 
 #endif

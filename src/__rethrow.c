@@ -28,6 +28,7 @@
 struct ThrowContext;
 extern void func_02071be8(struct ThrowContext *context);
 
+#ifndef SM64DS_PLATFORM_PC
 asm void __rethrow(void) {
     mov ip, sp
     sub sp, sp, #0x70
@@ -49,3 +50,6 @@ asm void __rethrow(void) {
     mov r0, sp
     b func_02071be8
 }
+#else
+void __rethrow(void);
+#endif

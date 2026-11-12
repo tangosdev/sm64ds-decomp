@@ -2,6 +2,7 @@
 // in the original (SDK LZ decompressor), so there is no C to decompile it to --
 // the asm block is the faithful source. Counts as matched (asm-primitive
 // policy), not a C transcription.
+#ifndef SM64DS_PLATFORM_PC
 asm void DecompressLZ16(void *src, void *dst)
 {
 	stmfd	sp!, {r4,r5,r6,r7,r8,r9,r10,lr}
@@ -65,3 +66,6 @@ Ld0:
 	ldmfd	sp!, {r4,r5,r6,r7,r8,r9,r10,lr}
 	bx	lr
 }
+#else
+void DecompressLZ16(void *src, void *dst);
+#endif

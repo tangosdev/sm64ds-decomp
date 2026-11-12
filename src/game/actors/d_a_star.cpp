@@ -82,6 +82,7 @@ enum daStar_c_AssetId {
 #include "math/CalcLib.h"
 #include "LevelRng.h"
 #include "nitro/fx/fx_trig.h"
+#include "ds_width.h"
 
 /* Plain-data stand-ins. Vector3 and Matrix4x3 carry declared destructors, so
  * a local or a struct copy of either one adds cleanup code the cartridge does
@@ -1322,8 +1323,8 @@ big_else:
             st2 = 0x11;
 LA:
         if (mBits.answer == 0) {
-            *(u16 *)((int)&mStarFlags) =
-                (*(u16 *)((int)&mStarFlags) & ~0xc00) | ((data_0209d684 & 3) << 10);
+            *(u16 *)(DS_IADDR(&mStarFlags)) =
+                (*(u16 *)(DS_IADDR(&mStarFlags)) & ~0xc00) | ((data_0209d684 & 3) << 10);
             {
                 u32 b3 = mBits.answer;
                 if (b3 == 1) {
@@ -1868,7 +1869,7 @@ s32 daStar_c::OnYoshiTryEat() {
  * Matched byte-for-byte with mwccarm 2004/b56 (ov002).
  */
 void daStar_c::OnTurnIntoEgg(daPly_c &player) {
-    return CollectByEgg((int)&player);
+    return CollectByEgg(DS_IADDR(&player));
 }
 
 /* -------------------------------------------------------------------------- */

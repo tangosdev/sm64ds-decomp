@@ -20,6 +20,7 @@
 #include "nitro/hw/registers.h"
 #include "nitro/hw/mmap_shared.h"
 #include "private/debugger_block.h"
+#include "ds_width.h"
 
 extern "C" {
 extern const char data_020868a0[52];
@@ -91,12 +92,12 @@ void __builtin_trap();
 // line (data_020868d4) and return. isdoverlay.c is its only caller.
 void __assert(const char *file, int line, const char *exp, int stop) {
     if (stop) {
-        func_0206ccd8((int)&data_020868a0, file, line, exp);
+        func_0206ccd8(DS_IADDR(&data_020868a0), file, line, exp);
         __builtin_trap();
         for (;;) {
         }
     } else {
-        func_0206ccd8((int)&data_020868d4, file, line, exp);
+        func_0206ccd8(DS_IADDR(&data_020868d4), file, line, exp);
     }
 }
 }
@@ -117,7 +118,7 @@ extern "C" void func_0206ccd8(int fmt, ...)
         s.f1 = -1;
         s.cb = (void *)func_0206cbc0;
 
-        p = (int *)(((int)&fmt) & ~3) + 1;
+        p = (int *)((DS_IADDR(&fmt)) & ~3) + 1;
         func_0206a928(&s, fmt, &p, p);
     }
 }

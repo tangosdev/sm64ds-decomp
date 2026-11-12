@@ -5,6 +5,7 @@
 /* The ARM semihosting SYS_WRITEC call (r0 = 3), one of the three stubs of
    the runtime's semihosted_console_io.c (pret pokediamond
    arm9/asm/RUNTIME_ARM_semihosted_console_io.s). */
+#ifndef SM64DS_PLATFORM_PC
 asm void sys_writec(const unsigned char *c) {
     str lr, [sp, #-4]!
     mov r1, r0
@@ -12,3 +13,6 @@ asm void sys_writec(const unsigned char *c) {
     swi 0x123456
     ldr pc, [sp], #4
 }
+#else
+void sys_writec(const unsigned char *c);
+#endif

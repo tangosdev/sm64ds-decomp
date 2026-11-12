@@ -30,6 +30,7 @@
 #include "nnsys/fnd.h"
 #include "msl/stdlib.h"
 #include "nitro/mi/memory.h"
+#include "ds_width.h"
 
 /* local extern: no header declares this yet. */
 
@@ -54,9 +55,16 @@ extern "C" {
         (data) |= newVal << (st);                                                                  \
     } while (0)
 
+#ifndef SM64DS_HOST_64
 static inline u32 NNSiGetUIntPtr(const void *ptr) {
     return (u32)ptr;
 }
+#else
+/* User pointer is just past the block header. sizeof is 0x10 on the DS. */
+static inline uintptr_t NNSiGetUIntPtr(const void *ptr) {
+    return (uintptr_t)ptr;
+}
+#endif
 
 static inline u32 GetOffsetFromPtr(const void *start, const void *end) {
     return NNSiGetUIntPtr(end) - NNSiGetUIntPtr(start);

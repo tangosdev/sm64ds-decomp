@@ -18,6 +18,7 @@
 #include "nitro/pxi/init.h"
 #include "nitro/wm/wm_api.h"
 #include "private/wm_views.h"
+#include "ds_width.h"
 
 typedef int BOOL;
 #define FALSE 0
@@ -169,7 +170,7 @@ WMErrCode WM_SendCommand(WMApiid id, u16 paramNum, ...) {
     }
 
     *(u16 *)tmpAddr = (u16)id;
-    vlist = (char *)(((u32)&paramNum) & ~3) + 4;
+    vlist = (char *)((DS_UADDR(&paramNum)) & ~3) + 4;
     for (i = 0; i < paramNum; i++)
         *(tmpAddr + i + 1) = *(u32 *)((vlist += 4) - 4);
 
@@ -223,7 +224,7 @@ WMErrCode WM_CheckStateEx(s32 paramNum, ...) {
     now = wm9buf->status->state;
 
     result = WM_ERRCODE_ILLEGAL_STATE;
-    vlist = (char *)(((u32)&paramNum) & ~3) + 4;
+    vlist = (char *)((DS_UADDR(&paramNum)) & ~3) + 4;
     for (; paramNum; paramNum--) {
         temp = *(u32 *)((vlist += 4) - 4);
         if (temp == now)

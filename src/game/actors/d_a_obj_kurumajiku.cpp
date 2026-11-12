@@ -18,7 +18,10 @@
 #include "dBgW.h"
 #include "math/MtxStack.h"
 
+#include "ds_width.h"
+#ifndef SM64DS_HOST_64
 typedef char AxleResources_size_must_be_0x0c[sizeof(daObjKurumajiku_c::Resources) == 0x0c ? 1 : -1];
+#endif
 
 /* The four rider mount offsets, one per cart: +-0x190000 on y and on x,
    each 0x12c000 along z. */

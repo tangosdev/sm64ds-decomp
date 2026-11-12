@@ -40,6 +40,7 @@
  * keep their address names for now.
  */
 #include "types.h"
+#include "ds_width.h"
 #include "Ov007MenuState.h"
 #include "Ov007Sprite.h"
 #include "Ov007Work.h"
@@ -75,7 +76,9 @@ typedef struct Ov007Cursor {
     int returnState;
 } Ov007Cursor;
 
+#ifndef SM64DS_HOST_64
 typedef char Ov007Cursor_size_must_be_0x1c[sizeof(Ov007Cursor) == 0x1c ? 1 : -1];
+#endif
 
 extern Ov007Cursor *data_ov007_02103360;
 extern int data_ov007_02103364;

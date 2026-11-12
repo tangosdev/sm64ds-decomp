@@ -1,5 +1,6 @@
 // HAND-ASM PRIMITIVE: byte-faithful asm-block match (assembly-only primitive: block copy,
 // CP15, IRQ/CPSR, svc, matrix/math, context-switch). No C to decompile to. Per asm policy.
+#ifndef SM64DS_PLATFORM_PC
 asm void func_02059d98(void *p, unsigned int n) {
     mov r1, r1, lsr #5
     mov r1, r1, lsl #5
@@ -18,3 +19,13 @@ loop:
     blt loop
     bx lr
 }
+#else
+void func_02059d98(void *p, unsigned int n)
+{
+    unsigned char *d = (unsigned char *)p;
+    unsigned int bytes = n & ~31u;
+    unsigned int i;
+    for (i = 0; i < bytes; i++)
+        d[i] = 0;
+}
+#endif

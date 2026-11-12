@@ -26,6 +26,7 @@ extern void _u32_div_f_core(void);
 extern void _ll_sdiv_core(void);
 extern void _ll_sdiv_L074(void);
 
+#ifndef SM64DS_PLATFORM_PC
 asm unsigned long long _ull_mod(unsigned long long num, unsigned long long den)
 {
     stmdb sp!, {r4, r5, r6, r7, r11, ip, lr}
@@ -49,3 +50,6 @@ _L018:
     orr r4, r4, #1
     b _ll_sdiv_core
 }
+#else
+unsigned long long _ull_mod(unsigned long long num, unsigned long long den);
+#endif

@@ -93,6 +93,7 @@ enum daObjBlockS_c_AssetId {
 #include "ParticleIds.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_cp.h"
+#include "ds_width.h"
 
 /* Actor profile IDs this file compares against (symbols/actor_debug_names.tsv). */
 enum {
@@ -683,9 +684,9 @@ void daObjBlockS_c::ResetToHome() {
     mVertSpeed = 0;
     mSpeedZ = 0;
 
-    ((struct Vector3 *)(((long long)(int)&zero)))->x = 0;
-    ((struct Vector3 *)(((long long)(int)&zero)))->y = 0;
-    ((struct Vector3 *)(((long long)(int)&zero)))->z = 0;
+    ((struct Vector3 *)(((long long)DS_IADDR(&zero))))->x = 0;
+    ((struct Vector3 *)(((long long)DS_IADDR(&zero))))->y = 0;
+    ((struct Vector3 *)(((long long)DS_IADDR(&zero))))->z = 0;
 
     a1.x = zero.x;
     a1.y = zero.y;

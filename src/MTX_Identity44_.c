@@ -2,6 +2,7 @@
 // in the original (SDK/runtime primitive: block copy, matrix/math, CP15, context
 // switch, etc.), so there is no C to decompile it to -- the asm block is the
 // faithful source. Counts as matched (asm-primitive policy), not a C transcription.
+#ifndef SM64DS_PLATFORM_PC
 asm void MTX_Identity44_(void *m) {
     mov r2, #0x1000
     mov r3, #0
@@ -15,3 +16,13 @@ asm void MTX_Identity44_(void *m) {
     stmia r0!, {r1, r2}
     bx lr
 }
+#else
+void MTX_Identity44_(void *m)
+{
+    int *p = (int *)m;
+    int i;
+    for (i = 0; i < 16; i++)
+        p[i] = 0;
+    p[0] = p[5] = p[10] = p[15] = 0x1000;
+}
+#endif

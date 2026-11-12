@@ -13,6 +13,7 @@
 
 #include "nitro/os/tcm.h"
 
+#ifndef SM64DS_PLATFORM_PC
 asm void OS_EnableDTCM(void)
 {
     mrc p15, 0, r0, c1, c0, 0
@@ -20,7 +21,9 @@ asm void OS_EnableDTCM(void)
     mcr p15, 0, r0, c1, c0, 0
     bx lr
 }
+#endif
 
+#ifndef SM64DS_PLATFORM_PC
 asm u32 OS_GetDTCMAddress(void)
 {
     mrc p15, 0, r0, c9, c1, 0
@@ -28,3 +31,4 @@ asm u32 OS_GetDTCMAddress(void)
     and r0, r0, r1
     bx lr
 }
+#endif

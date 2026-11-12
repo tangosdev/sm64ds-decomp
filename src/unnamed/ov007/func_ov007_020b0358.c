@@ -9,9 +9,12 @@ extern void func_ov007_020b76a0(void);
 extern void func_ov007_020bd1c0(int i);
 extern Ov007MenuState *PickerScene_GetDisplayState(void);
 
-typedef char Ov007Work_transitionMode_must_be_at_0x20[(int)&((Ov007Work *)0)->transitionMode == 0x20
+#include "ds_width.h"
+#ifndef SM64DS_HOST_64
+typedef char Ov007Work_transitionMode_must_be_at_0x20[DS_IADDR(&((Ov007Work *)0)->transitionMode) == 0x20
                                                           ? 1
                                                           : -1];
+#endif
 
 void func_ov007_020b0358(void)
 {

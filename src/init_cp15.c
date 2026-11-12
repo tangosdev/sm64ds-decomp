@@ -26,6 +26,7 @@
    init_cp15 is what puts the DTCM there. */
 #include "nitro/hw/mmap_global.h"
 
+#ifndef SM64DS_PLATFORM_PC
 asm void init_cp15(void)
 {
     mrc p15, 0, r0, c1, c0, 0
@@ -75,3 +76,6 @@ asm void init_cp15(void)
     mcr p15, 0, r0, c1, c0, 0
     bx lr
 }
+#else
+void init_cp15(void);
+#endif

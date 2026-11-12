@@ -20,6 +20,7 @@
 extern unsigned int *func_0207322c(void);
 extern float func_0206ddcc(float a, int op);
 
+#ifndef SM64DS_PLATFORM_PC
 asm int _ffix(int bits)
 {
     bic r1, r0, #0x80000000
@@ -89,3 +90,6 @@ _L0e0:
     ldmia sp!, {lr}
     bx lr
 }
+#else
+int _ffix(int bits);
+#endif

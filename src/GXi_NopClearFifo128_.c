@@ -4,6 +4,7 @@
 // It is gx_g3x.c's first function by address but stays its own source: port/tools/hostgen.py
 // skips any file holding an asm block, and the port hostgens G3X.cpp for
 // G3X_ClearFifo (port/ntr/runtime.cpp supplies this function on host).
+#ifndef SM64DS_PLATFORM_PC
 asm void GXi_NopClearFifo128_(unsigned addr)
 {
     mov r1, #0
@@ -44,3 +45,6 @@ asm void GXi_NopClearFifo128_(unsigned addr)
     stmia r0, {r1, r2, r3, r12}
     bx lr
 }
+#else
+void GXi_NopClearFifo128_(unsigned addr);
+#endif

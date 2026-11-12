@@ -3,7 +3,11 @@
 // switch, etc.), so there is no C to decompile it to -- the asm block is the
 // faithful source. Counts as matched (asm-primitive policy), not a C transcription.
 #pragma thumb on
+#ifndef SM64DS_PLATFORM_PC
 asm void SVC_UncompressRL16FromDevice(void) {
     swi 0x15
     bx lr
 }
+#else
+void SVC_UncompressRL16FromDevice(void);
+#endif

@@ -23,7 +23,11 @@ extern "C" {
 // HAND-ASM PRIMITIVE: `swp` atomic swap has no C equivalent under mwccarm, so asm is the source.
 // Store value to *lock and return the word it held. The isdoverlay table
 // edits (_ISDbgLib_UnregistOverlayInfo, _ISDbgLib_RegistOverlayInfo) spin on it with 0x80 to take a lock.
+#ifndef SM64DS_PLATFORM_PC
 asm u32 func_0206dab4(u32 value, void *lock) { swp r0, r0, [r1]; bx lr }
+#else
+u32 func_0206dab4(u32 value, void *lock);
+#endif
 }
 
 #pragma push
@@ -33,7 +37,11 @@ namespace cstd {
 
 void __builtin_trap(void)
 {
+  #ifndef SM64DS_PLATFORM_PC
   asm { dcd 0xe7ffffff }
+  #else
+  /* host: no bkpt */
+  #endif
 }
 
 }

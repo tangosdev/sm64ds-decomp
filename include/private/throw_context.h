@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "MWCPlusLib.h"
+#include "ds_width.h"
 
 /* The catch record in a handler's frame, at a frame offset an action names.
  * func_02071ccc fills the first five words for a catch: the thrown object,
@@ -88,7 +89,7 @@ typedef struct ThrowContext {
 
 #ifndef SM64DS_PLATFORM_PC
 typedef char ThrowContext_args_pushed_must_be_at_0x6a
-    [(int)&((ThrowContext *)0)->mFrame.mArgsPushed == 0x6a ? 1 : -1];
+    [DS_IADDR(&((ThrowContext *)0)->mFrame.mArgsPushed) == 0x6a ? 1 : -1];
 typedef char ThrowContext_must_be_0x70_bytes[sizeof(ThrowContext) == 0x70 ? 1 : -1];
 #endif
 

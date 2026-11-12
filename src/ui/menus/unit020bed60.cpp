@@ -34,6 +34,7 @@
 #include "common.h"
 #include "nitro/fx/fx.h"
 #include "types.h"
+#include "ds_width.h"
 #include "Ov007MenuState.h"
 #include "Ov007Sprite.h"
 #include "Ov007Touch.h"
@@ -57,7 +58,9 @@ typedef struct Ov007MeshScene {
     Ov007Swing *swings[8];           /* 0x10: func_ov007_020ca010, one per item */
 } Ov007MeshScene;
 
+#ifndef SM64DS_HOST_64
 typedef char Ov007MeshScene_size_must_be_0x30[sizeof(Ov007MeshScene) == 0x30 ? 1 : -1];
+#endif
 
 extern Ov007MeshScene *data_ov007_02104bd4;
 extern struct Vector3 data_ov007_020d7d60;

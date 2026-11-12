@@ -26,6 +26,7 @@
 #include "dBgW_Kc.h"
 #include "dActor_c.h"
 #include "daPly_c.h"
+#include "ds_width.h"
 
 extern "C" {
 
@@ -708,7 +709,7 @@ void dBgCh_Actr::UpdateExtraContinous()
             mRaycastLine.SetObjAndLine(prevCentre, newCentre, mActor);
 
             if (mRaycastLine.DetectClsn() &&
-                ((Vector3 *)func_02037dc4((int)&mRaycastLine.surface))->y >= 0) {
+                ((Vector3 *)func_02037dc4(DS_IADDR(&mRaycastLine.surface)))->y >= 0) {
                 Vector3 *hit = &mRaycastLine.lineEnd;
                 pos->x = hit->x;
                 pos->y = hit->y;
@@ -773,7 +774,7 @@ void dBgCh_Actr::UpdateExtraContinous()
                 mRaycastLine.SetObjAndLine(top, foot, mActor);
                 if (mRaycastLine.DetectClsn()) {
                     Vector3 *hit = &mRaycastLine.lineEnd;
-                    Vector3 *normal = (Vector3 *)func_02037dc4((int)&mRaycastLine.surface);
+                    Vector3 *normal = (Vector3 *)func_02037dc4(DS_IADDR(&mRaycastLine.surface));
                     pos->x = hit->x + (normal->x >> 2);
                     pos->y = hit->y + (normal->y >> 2);
                     pos->z = hit->z + (normal->z >> 2);
@@ -784,7 +785,7 @@ void dBgCh_Actr::UpdateExtraContinous()
             if (!(flags & 4) && (flags & 8)) {
                 dBgPi wallResult(*mSphereClsn.GetWallResult());
 
-                if (((Vector3 *)func_02037dc4((int)&wallResult.surface))->y >= 0) {
+                if (((Vector3 *)func_02037dc4(DS_IADDR(&wallResult.surface)))->y >= 0) {
                     Vector3 top;
                     V3D(top, pos, (height << 1))
                     Vector3 foot;
@@ -792,7 +793,7 @@ void dBgCh_Actr::UpdateExtraContinous()
                     mRaycastLine.SetObjAndLine(top, foot, mActor);
                     if (mRaycastLine.DetectClsn()) {
                         Vector3 *hit = &mRaycastLine.lineEnd;
-                        Vector3 *normal = (Vector3 *)func_02037dc4((int)&mRaycastLine.surface);
+                        Vector3 *normal = (Vector3 *)func_02037dc4(DS_IADDR(&mRaycastLine.surface));
                         pos->x = hit->x + (normal->x >> 2);
                         pos->y = hit->y + (normal->y >> 2);
                         pos->z = hit->z + (normal->z >> 2);
@@ -828,7 +829,7 @@ void dBgCh_Actr::UpdateExtraContinous()
                     mRaycastLine.SetObjAndLine(foot, top, mActor);
                     if (mRaycastLine.DetectClsn()) {
                         Vector3 *hit = &mRaycastLine.lineEnd;
-                        Vector3 *normal = (Vector3 *)func_02037dc4((int)&mRaycastLine.surface);
+                        Vector3 *normal = (Vector3 *)func_02037dc4(DS_IADDR(&mRaycastLine.surface));
                         pos->x = hit->x + (normal->x >> 2);
                         pos->y = hit->y + (normal->y >> 2) - twiceHeight;
                         pos->z = hit->z + (normal->z >> 2);
@@ -842,7 +843,7 @@ void dBgCh_Actr::UpdateExtraContinous()
                 mRaycastLine.SetObjAndLine(prevCentre, newCentre, mActor);
                 if (mRaycastLine.DetectClsnSlot0()) {
                     Vector3 *hit = &mRaycastLine.lineEnd;
-                    Vector3 *normal = (Vector3 *)func_02037dc4((int)&mRaycastLine.surface);
+                    Vector3 *normal = (Vector3 *)func_02037dc4(DS_IADDR(&mRaycastLine.surface));
                     pos->x = hit->x + (normal->x >> 2);
                     pos->y = hit->y + (normal->y >> 2);
                     pos->z = hit->z + (normal->z >> 2);

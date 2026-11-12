@@ -2,6 +2,7 @@
 #define BMD_FILE_H
 
 #include "types.h"
+#include "ds_width.h"
 
 /* The BMD0 model file, as the game reads it in place.
  *
@@ -37,7 +38,7 @@
 
 struct BMD_Bone {
     u32 unk_00;
-    void *unk_04;          /* 0x04 - file-relative, fixed up on load */
+    void * DS_P32 unk_04;  /* 0x04 - file-relative, fixed up on load */
     u8 pad_08[0x1c];
     /* 0x24 - rest-pose translation: func_020462d0 copies it into the runtime
        ModelBone (dExtModel_c.h), and RestoreBoneTranslations and
@@ -49,11 +50,11 @@ struct BMD_Bone {
        dScStage_c::RenderModel and RenderModelTransparent */
     u16 numMaterials;
     u8 pad_32[0x2];
-    u8 *materialIds;       /* 0x34 - per-bone material index list */
+    u8 * DS_P32 materialIds; /* 0x34 - per-bone material index list */
     /* 0x38 - file-relative, fixed up on load. Parallel to materialIds:
        ModelComponents::Render draws displayListGroups[displayListIds[j]]
        with materials[materialIds[j]] */
-    u8 *displayListIds;
+    u8 * DS_P32 displayListIds;
     /* 0x3c - bit 0 sends the bone through func_02044534 instead of
        func_0204488c (ModelComponents::Render; read with ldrh) */
     u16 flags;
@@ -66,19 +67,19 @@ struct BMD_Bone {
    and feeds that stream straight to the geometry engine (port/ntr/bmd.cpp). */
 struct BMD_DisplayList {
     u32 unk_00;
-    void *unk_04;          /* 0x04 - file-relative, fixed up on load */
+    void * DS_P32 unk_04;  /* 0x04 - file-relative, fixed up on load */
     u32 size;              /* 0x08 - bytes of packed DS commands at data */
-    void *data;            /* 0x0c - file-relative, fixed up on load */
+    void * DS_P32 data;    /* 0x0c - file-relative, fixed up on load */
 };
 
 /* The display lists are grouped: an array of these, one per group. */
 struct BMD_DisplayListGroup {
     u32 numLists;              /* 0x00 - bounds the loop over lists */
-    struct BMD_DisplayList *lists;  /* 0x04 - file-relative, fixed up on load */
+    struct BMD_DisplayList * DS_P32 lists; /* 0x04 - file-relative, fixed up on load */
 };
 
 struct BMD_Material {
-    char *name;            /* 0x00 - file-relative, fixed up on load */
+    char * DS_P32 name;    /* 0x00 - file-relative, fixed up on load */
     u32 textureId;         /* 0x04 - index into BMD_File::textures */
     u32 paletteId;         /* 0x08 - index into BMD_File::palettes */
     u8 pad_0c[0x14];
@@ -92,8 +93,8 @@ struct BMD_Material {
 };
 
 struct BMD_Texture {
-    char *name;            /* 0x00 - file-relative, fixed up on load */
-    char *data;            /* 0x04 */
+    char * DS_P32 name;    /* 0x00 - file-relative, fixed up on load */
+    char * DS_P32 data;    /* 0x04 */
     u32 size;              /* 0x08 */
     /* 0x0c/0x0e - texels; func_02044b30 builds the texture matrix's
        aspect correction from width / height */
@@ -104,8 +105,8 @@ struct BMD_Texture {
 };
 
 struct BMD_Palette {
-    char *name;            /* 0x00 - file-relative, fixed up on load */
-    char *data;            /* 0x04 */
+    char * DS_P32 name;    /* 0x00 - file-relative, fixed up on load */
+    char * DS_P32 data;    /* 0x04 */
     u32 size;              /* 0x08 */
     u32 vramOffset;        /* 0x0c - written by dExtSimpleModel_c::LoadTexAndPal */
 };
@@ -114,27 +115,27 @@ struct BMD_File {
     u8 scaleShift; /* 0x00 - ModelComponents::Render reads it with ldrb */
     u8 pad_01[0x3];
     u32 numBones;              /* 0x04 */
-    struct BMD_Bone *bones;    /* 0x08 - 0x40-byte records */
+    struct BMD_Bone * DS_P32 bones;    /* 0x08 - 0x40-byte records */
     u32 numDisplayListGroups;  /* 0x0c - bounds the loop over the table below */
-    struct BMD_DisplayListGroup *displayListGroups;  /* 0x10 */
+    struct BMD_DisplayListGroup * DS_P32 displayListGroups;  /* 0x10 */
     u32 numTextures;           /* 0x14 */
-    struct BMD_Texture *textures;   /* 0x18 */
+    struct BMD_Texture * DS_P32 textures;   /* 0x18 */
     u32 numPalettes;           /* 0x1c */
-    struct BMD_Palette *palettes;   /* 0x20 */
+    struct BMD_Palette * DS_P32 palettes;   /* 0x20 */
     u32 numMaterials;          /* 0x24 */
-    struct BMD_Material *materials; /* 0x28 */
+    struct BMD_Material * DS_P32 materials; /* 0x28 */
     /* 0x2c - fixed up on load. Maps a display list's matrix slot to a bone:
        ModelComponents::func_0204488c and func_02044534 read it with ldrh,
        indexed by the slot byte of a display-list record, and index
        ModelComponents::transforms and bones with the result */
-    u16 *transformBoneMap;
+    u16 * DS_P32 transformBoneMap;
     /* 0x30 - matrices past numBones in ModelComponents::transforms:
        func_02046564 sizes transforms as numBones + this, and func_02044dc4
        blends each one from bone matrices. Also guards the block below. */
     u32 numWeightedMatrices;
     /* 0x34 - the four-pointer skinning block func_02044dc4/func_02044e50
        read (struct Sub in ModelComponents.cpp); all four fixed up on load */
-    void *skin;
+    void * DS_P32 skin;
 };
 
 #ifndef SM64DS_PLATFORM_PC

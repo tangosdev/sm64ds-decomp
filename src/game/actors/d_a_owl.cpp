@@ -104,7 +104,10 @@ struct OwlState {
 
 typedef char OwlModelFilePtr_size_must_be_8[sizeof(OwlModelFilePtr) == 8 ? 1 : -1];
 typedef char daOwlAnimationFilePtr_size_must_be_8[sizeof(daOwlAnimationFilePtr) == 8 ? 1 : -1];
+#include "ds_width.h"
+#ifndef SM64DS_HOST_64
 typedef char OwlState_size_must_be_0x10[sizeof(OwlState) == 0x10 ? 1 : -1];
+#endif
 
 extern OwlModelFilePtr data_ov094_02136ae0;
 extern daOwlAnimationFilePtr data_ov094_02136ae8;

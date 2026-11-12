@@ -4,6 +4,7 @@
 #include "Sound.h"
 #include "nitro/fs/archive.h"
 #include "nitro/mb/mb.h"
+#include "ds_width.h"
 
 extern "C" {
 
@@ -45,14 +46,14 @@ void func_0201a2f8(int unused) {
         ptr = Memory::Allocate(size);
         FS_TryLoadTable(ptr, size);
     }
-    LoadOverlay((int)&OVERLAY_0_ID);
+    LoadOverlay(DS_IADDR(&OVERLAY_0_ID));
     InitializeAssetHandleTable();
-    UnloadOverlay((int)&OVERLAY_0_ID);
+    UnloadOverlay(DS_IADDR(&OVERLAY_0_ID));
     if (ptr != 0) {
         FS_UnloadArchiveTables(FS_FindArchive(data_0208ee5c, 3));
         Memory::Deallocate(ptr);
     }
-    LoadOverlay((int)&OVERLAY_1_ID);
+    LoadOverlay(DS_IADDR(&OVERLAY_1_ID));
     if (isChild) {
         Sound::LoadGroupAndSetBank(0x2f, 0x36);
     } else {

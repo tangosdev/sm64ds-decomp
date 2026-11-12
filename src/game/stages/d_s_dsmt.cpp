@@ -51,6 +51,7 @@
 #include "nitro/hw/registers.h"
 #include "math/CalcLib.h"
 #include "Ov007Settings.h"
+#include "ds_width.h"
 
 extern "C" {
 extern FileSaveData *data_0209b33c;
@@ -217,8 +218,8 @@ s32 dScDSMT_c::InitResources() {
 
     func_02023544();
     UnloadArchives();
-    func_02017e94((int)&OVERLAY_100_ID);
-    func_02017e94((int)&OVERLAY_102_ID);
+    func_02017e94(DS_IADDR(&OVERLAY_100_ID));
+    func_02017e94(DS_IADDR(&OVERLAY_102_ID));
 
     if (data_0209d524 != 0)
         func_0201a428();
@@ -284,8 +285,8 @@ s32 dScDSMT_c::Behavior() {
             LoadTextNarcs();
             archiveHeap->Rescue();
             previousHeap->SetDefault();
-            LoadOverlay((int)&OVERLAY_100_ID);
-            LoadOverlay((int)&OVERLAY_102_ID);
+            LoadOverlay(DS_IADDR(&OVERLAY_100_ID));
+            LoadOverlay(DS_IADDR(&OVERLAY_102_ID));
         }
         dScene_c::StartSceneFade(6, 0, 0x7fff);
     } else if (result == 7) {

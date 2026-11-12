@@ -58,6 +58,7 @@ enum d_s_mg_trampoline2_AssetId {
 #include "LevelRng.h"
 #include "nitro/mi/memory.h"
 #include "math/CalcLib.h"
+#include "ds_width.h"
 
 /* local: the ROM re-reads the slot byte at each use here, so keep the read volatile. */
 #define ACTIVE_SLOT (*(volatile unsigned char *)&gActivePlayerSlot)
@@ -475,7 +476,7 @@ void dScMgTrampoline2_c::StatePlay() {
             vecA.y = 0x1000;
             vecA.z = 0;
             func_0203cc28((int *)&vecA, d->angles[i]);
-            TrmpItem_Spawn((int)&d->positions[i], (int *)&vecA, d->itemTypes[i], d->motionTypes[i]);
+            TrmpItem_Spawn(DS_IADDR(&d->positions[i]), (int *)&vecA, d->itemTypes[i], d->motionTypes[i]);
         }
         if (ApproachLinear(mPattern, 6, 1)) {
             mScriptDone = 1;
@@ -492,7 +493,7 @@ void dScMgTrampoline2_c::StatePlay() {
                 vecB.y = 0x1000;
                 vecB.z = 0;
                 func_0203cc28((int *)&vecB, d->angles[i]);
-                TrmpItem_Spawn((int)&d->positions[i], (int *)&vecB, d->itemTypes[i],
+                TrmpItem_Spawn(DS_IADDR(&d->positions[i]), (int *)&vecB, d->itemTypes[i],
                                d->motionTypes[i]);
             }
             mWaveStep = 0;
@@ -763,7 +764,7 @@ void dScMgTrampoline2_c::SpawnWave() {
         variant = 1;
         if (faces[i] == 6)
             variant = 2;
-        TrmpItem_Spawn((int)&sTrmp2RandomSpawnPositions[kinds[i]], (int *)&up, variant, faces[i]);
+        TrmpItem_Spawn(DS_IADDR(&sTrmp2RandomSpawnPositions[kinds[i]]), (int *)&up, variant, faces[i]);
     }
 }
 

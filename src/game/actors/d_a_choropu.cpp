@@ -57,6 +57,7 @@ enum daChoropu_c_AssetId {
 #include "ParticleIds.h"
 #include "LevelRng.h"
 #include "nitro/fx/fx_trig.h"
+#include "ds_width.h"
 
 /* daChoropu_c's state table: one pointer-to-member per state, indexed by
  * the state number at +0x17c. */
@@ -180,7 +181,7 @@ void daChoropu_c::func_ov080_02123924()
         Vector3 v;
         Fix12i *q;
         if (p == 0) return;
-        q = (Fix12i *)((int)&p->mPosX);
+        q = (Fix12i *)(DS_IADDR(&p->mPosX));
         v.x = q[0];
         v.y = q[1];
         v.z = q[2];
@@ -295,8 +296,8 @@ void daChoropu_c::func_ov080_02123c24()
     state = ((unsigned int)raw << 4) >> 16;   /* whole frame number */
 
     if (state == 6) {
-        u32 *p150 = (u32 *)((int)&mdCcAc_c.flags);
-        u32 *pb0 = (u32 *)((int)&mFlags);
+        u32 *p150 = (u32 *)(DS_IADDR(&mdCcAc_c.flags));
+        u32 *pb0 = (u32 *)(DS_IADDR(&mFlags));
         *p150 = *p150 & ~daChoropu_CC_DISABLED;
         *pb0 = *pb0 | daChoropu_FLAG_EMERGED;
     }
@@ -347,7 +348,7 @@ void daChoropu_c::func_ov080_02123c24()
             Vector3 pos;
             short horz;
             int diff;
-            int *pb = (int *)((int)&player->mPosX);
+            int *pb = (int *)(DS_IADDR(&player->mPosX));
             pos.x = pb[0];
             pos.y = pb[1];
             pos.z = pb[2];
@@ -388,8 +389,8 @@ void daChoropu_c::func_ov080_02123ecc()
         daPly_c *p2 = ClosestPlayer();
         mAngleY = Vec3_HorzAngle(&mPos, &p2->mPos);
         {
-            u32 *a = (u32 *)((int)&mdCcAc_c.flags);
-            u32 *b = (u32 *)((int)&mFlags);
+            u32 *a = (u32 *)(DS_IADDR(&mdCcAc_c.flags));
+            u32 *b = (u32 *)(DS_IADDR(&mFlags));
             mPrevAngleY = mAngleY;
             *a = *a & ~daChoropu_CC_DISABLED;
             *b = *b | daChoropu_FLAG_EMERGED;
@@ -410,8 +411,8 @@ void daChoropu_c::func_ov080_02123ecc()
 void daChoropu_c::func_ov080_02123fcc()
 {
     {
-        u32 *p150 = (u32 *)((int)&mdCcAc_c.flags);
-        u32 *pb0 = (u32 *)((int)&mFlags);
+        u32 *p150 = (u32 *)(DS_IADDR(&mdCcAc_c.flags));
+        u32 *pb0 = (u32 *)(DS_IADDR(&mFlags));
         *p150 = *p150 | daChoropu_CC_DISABLED;
         *pb0 = *pb0 & ~daChoropu_FLAG_EMERGED;
     }
