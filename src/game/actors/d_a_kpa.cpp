@@ -1903,7 +1903,7 @@ void daKpa_c::ActBigJump() {
             vec[0] = this->mPosX;
             vec[1] = this->mPosY;
             vec[2] = this->mPosZ;
-            func_0200fa04(vec, 0);
+            func_0200fa04((Vector3 *)vec, 0);
             InitAnimation(0xc, 0x40000000);
         }
         this->mCondFlags &= ~BOWSER_COND_RECOVERING;
