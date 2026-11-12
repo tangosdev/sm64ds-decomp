@@ -15,13 +15,14 @@
  * the vtable/RTTI records land in .data at 0x020926d0..0x02092718.
  *
  * leftovers:
- * - the data_023c0000 wake word, the data_0209f5f8..data_0209f648 table
+ * - the data_0209f5f8..data_0209f648 table
  *   state (shared with the Luigi minigame's iris, d_s_mg_luigi.cpp) and the
  *   0x400xxxx registers stay address-named.
  */
 #include "types.h"
 #include "dWipe_c.h"
 #include "nitro/os/interrupt.h"
+#include "nitro/os/interrupt_check.h"
 #include "decl_common.h"
 #include "cstd.h"
 #include "nitro/os/cache.h"
@@ -40,7 +41,6 @@ extern volatile u8  data_0209f5fc;   /* the next HBlank has a fresh line */
 extern volatile u32 data_0209f608;   /* table index the IRQ reads */
 extern volatile u32 data_0209f60c;   /* table index the CPU fills */
 extern u8           data_0209f648[]; /* two 0x300-byte scanline tables */
-extern short        data_023c0000[];
 
 /* NitroSDK's inline IME helpers (os/common/interrupt.h): each returns the
    previous master enable. File-local because an inline body in a shared
@@ -315,7 +315,7 @@ extern "C" void Wipe_LatchTable(void) {
 extern "C" void Wipe_HBlankHandler(void) {
     int line;
 
-    *(int *)((char *)data_023c0000 + 0x3ff8) |= 2;
+    OS_SetIrqCheckFlag(OS_IE_H_BLANK);
 
     line = *(volatile u16 *)0x4000006 + 1;
 

@@ -15,11 +15,11 @@
  */
 
 #include "nitro/os/interrupt.h"
+#include "nitro/os/interrupt_check.h"
 
 extern "C" {
 extern OSIrqCallbackInfo data_020a60c4[];
 extern u16 data_02099fd4[8]; /* DMA 0-3, then timers 0-3 */
-extern short data_023c0000[];
 
 // Installed for vectors that have no handler.
 void OS_IrqDummy(void) {}
@@ -35,7 +35,7 @@ void OSi_IrqCallback(s32 index) {
     if (0 != callback) {
         callback(data_020a60c4[index].arg);
     }
-    *(volatile u32 *)((int)data_023c0000 + 0x3ff8) |= mask;
+    OS_SetIrqCheckFlag(mask);
     if (data_020a60c4[index].enable != 0) {
         return;
     }

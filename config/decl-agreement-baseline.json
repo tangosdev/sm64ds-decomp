@@ -8430,14 +8430,6 @@
         "return:void *"
       ]
     },
-    "data_023c0000": {
-      "src/_ZN3IRQ13VBlankHandlerEv.cpp": [
-        "return:char []"
-      ],
-      "src/IRQ2.cpp": [
-        "return:char []"
-      ]
-    },
     "data_ov002_020ff480": {
       "src/unnamed/ov002/func_ov002_020dacb4.c": [
         "return:int []"

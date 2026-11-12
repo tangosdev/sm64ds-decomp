@@ -3,11 +3,11 @@
 #include "types.h"
 #include "nitro/os/system.h"
 #include "nitro/fs/file.h"
+#include "nitro/os/thread.h"
 
 extern "C" {
 
 extern int FSi_SendCommand(FSFile *self, int a);
-extern void OS_SleepThread(unsigned short *self);
 extern int FSi_ExecuteSyncCommand(FSFile *);
 extern int FSi_ReadFileCore(FSFile *p_file, void *dst, int len, int async);
 

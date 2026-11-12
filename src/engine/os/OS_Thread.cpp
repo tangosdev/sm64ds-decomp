@@ -29,6 +29,7 @@
 #include "nitro/os/system.h"
 #include "nitro/os/thread.h"
 #include "nitro/mi/memory.h"
+#include "nitro/hw/mmap_tcm.h"
 
 /* The SDK's nitro/types.h spellings; include/types.h has no BOOL. */
 typedef int BOOL;
@@ -68,7 +69,6 @@ extern OSThread data_020a6188;               /* OSi_IdleThread */
  * address is the idle stack's top. The word itself is OS_Arena.cpp's
  * OSi_Initialized. */
 extern u32 data_020a6378;
-extern short data_023c0000[]; /* HW_DTCM */
 
 OSSwitchThreadCallback OS_SetSwitchThreadCallback(OSSwitchThreadCallback callback);
 void OSi_IdleThreadProc(void *unused);
@@ -146,9 +146,9 @@ void OS_InitThread(void) {
     if ((s32)SDK_SYS_STACKSIZE == 0) {
         stackLo = 0x23c0020 - (s32)SDK_SYS_STACKSIZE;
     } else {
-        stackLo = (u32)data_023c0000 + 0x3fc0 - (s32)SDK_IRQ_STACKSIZE - (s32)SDK_SYS_STACKSIZE;
+        stackLo = (u32)HW_DTCM_SVC_STACK_END - (s32)SDK_IRQ_STACKSIZE - (s32)SDK_SYS_STACKSIZE;
     }
-    stackHi = (u32)data_023c0000 + 0x3fc0 - (s32)SDK_IRQ_STACKSIZE;
+    stackHi = (u32)HW_DTCM_SVC_STACK_END - (s32)SDK_IRQ_STACKSIZE;
 
     data_020a621c.stackBottom = stackHi;
     data_020a621c.stackTop = stackLo;
@@ -235,7 +235,7 @@ BOOL OS_IsThreadTerminated(const OSThread *thread) {
     return thread->state == OS_THREAD_STATE_TERMINATED;
 }
 
-void OS_SleepThread(u16 *queue) {
+void OS_SleepThread(OSThreadQueue *queue) {
     OSIntrMode enabled = OS_DisableInterrupts();
     OSThread *currentThread = *data_020a612c;
     if (queue != 0) {
@@ -246,7 +246,7 @@ void OS_SleepThread(u16 *queue) {
     OS_RestoreInterrupts(enabled);
 }
 
-void OS_WakeupThread(u16 *queue) {
+void OS_WakeupThread(OSThreadQueue *queue) {
     OSIntrMode enabled = OS_DisableInterrupts();
     u32 mask = *queue;
     if (mask != 0) {

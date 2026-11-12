@@ -17,6 +17,7 @@
  */
 #include "types.h"
 #include "nitro/fs/file.h"
+#include "nitro/os/thread.h"
 
 extern "C" {
 
@@ -86,7 +87,6 @@ typedef struct FSiSyncReadParam {
 } FSiSyncReadParam;
 
 int FSi_TranslateCommand(FSFile *p_file, int command);
-void OS_SleepThread(u16 *queue);
 extern const char data_0209a044[]; /* ":/" */
 
 void FSi_ReadTable(FSiSyncReadParam *p, void *dst, u32 len);
