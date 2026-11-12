@@ -45,6 +45,7 @@
 #include "private/Ov080Mat.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
+#include "nitro/gx/g3_util.h"
 #include "nitro/gx/g3imm.h"
 #include "nitro/gx/g3imm_cmd.h"
 #include "nitro/gx/g3imm_light.h"
@@ -477,7 +478,6 @@ void daPicGate_c::PlaceCorners() {
 
 extern "C" {
 extern void G3_MultMtx43(void *m);
-extern void G3_LoadTexMtxEnv(void *m);
 extern int data_ov080_0212771c[];
 }
 

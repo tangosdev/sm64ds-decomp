@@ -1,7 +1,7 @@
 #include "types.h"
 #include "private/arm9_a1fc0_file_share.h"
 #include "private/fs_views.h"
-#include "private/arm9_wbt.h"
+#include "nitro/wbt.h"
 extern char data_020a2400[];
 extern void func_02041224(char *thiz, int n);
 extern void func_02042160(void *arg);
@@ -37,5 +37,5 @@ void func_02041a00(FSFile *file) {
     m.offset = pos;
     m.packetSizeHigh = (packetSize >> 8) & 0xff;
     m.packetSizeLow = (u8)packetSize;
-    WBT_PutUserData(1, &m, 9, func_02042160);
+    WBT_PutUserData(1, &m, WBT_SIZE_USER_DATA, func_02042160);
 }

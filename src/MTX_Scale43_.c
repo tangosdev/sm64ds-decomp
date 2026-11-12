@@ -4,8 +4,10 @@
 // faithful source. Counts as matched (asm-primitive policy), not a C transcription.
 // MTX_Scale43_ @ 0x020527e8 (arm9, Thumb): build 4x3 fx32 scale matrix
 // from (sx, sy, sz): rows {sx,0,0},{0,sy,0},{0,0,sz},{0,0,0}.
+#include "math/Matrix.h"
+
 #pragma thumb on
-asm void MTX_Scale43_(int *m, int sx, int sy, int sz) {
+asm void MTX_Scale43_(Matrix4x3 *m, int sx, int sy, int sz) {
     stmia r0!, {r1}
     mov r1, #0
     str r3, [r0, #28]

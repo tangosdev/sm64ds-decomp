@@ -128,8 +128,8 @@ extern "C" daPgMthr_c *daPgMthr_c_classInit()
 
 int daPgMthr_c::InitResources()
 {
-    void *m = dExtSimpleModel_c::LoadFile(data_ov018_02113c00);
-    mAnmModel.SetFile((BMD_File *)m, 1, 1);
+    BMD_File *m = dExtSimpleModel_c::LoadFile(data_ov018_02113c00);
+    mAnmModel.SetFile(m, 1, 1);
     for (int i = 0; i < 2; i++)
         dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov018_02112c0c[i]);
     for (int i = 0; i < 2; i++) {
@@ -266,7 +266,7 @@ int daPgMthr_c::StateTalkUpdate() {
     switch (mTalkStep) {
     case 0:
         if (mdCcAc_c.hitFlags & HIT_TOUCH) {
-            if (mPlayer->StartTalk(*(fBase_c *)this, 1)) {
+            if (mPlayer->StartTalk(*this, 1)) {
                 u8 *p = &mTalkStep;
                 *p = *p + 1;
             }
@@ -284,7 +284,7 @@ int daPgMthr_c::StateTalkUpdate() {
                 mouth[0] = data_020a0e68.m[9];
                 mouth[1] = data_020a0e68.m[10];
                 mouth[2] = data_020a0e68.m[11];
-                if (mPlayer->ShowMessage(*(fBase_c *)this, mMessageId, (Vector3 *)mouth, 0, 0)) {
+                if (mPlayer->ShowMessage(*this, mMessageId, (Vector3 *)mouth, 0, 0)) {
                     func_0201267c(0xdf, &mCamSpacePos);
                     {
                         u8 *p = &mTalkStep;

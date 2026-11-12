@@ -1321,7 +1321,6 @@ void func_ov007_020b91b4(void) {
     int r7;
     Ov007Picker *r6;
     int r5;
-    long long new_var;
     int r4;
     short st;
     int t;
@@ -1338,7 +1337,7 @@ void func_ov007_020b91b4(void) {
     } else if (t <= 0) {
         r7 = 0xc0;
     } else {
-        r7 = (int)(((((long long)(0x1000 - t)) * 0xc0) + (new_var = ((long long)t) << 9)) >> 0xc);
+        r7 = (int)(((long long)(0x1000 - t) * 0xc0 + (long long)t * 0x200) >> 12);
     }
     st = SCENE->states[1]->currentState;
     switch (st) {

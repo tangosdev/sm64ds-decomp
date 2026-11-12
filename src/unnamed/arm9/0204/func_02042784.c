@@ -3,10 +3,9 @@
  * 0 at prescaler 64), and HW_SYSTEM_CLOCK is the SDK's 33514000.
  * The quotient goes through _ll_udiv. */
 #include "types.h"
+#include "nitro/os/tick.h"
 
 #define HW_SYSTEM_CLOCK 33514000
-
-extern s64 OS_GetTick(void);
 
 u64 func_02042784(void)
 {

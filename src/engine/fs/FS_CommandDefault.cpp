@@ -17,19 +17,10 @@
  */
 #include "types.h"
 #include "nitro/fs/file.h"
+#include "nitro/fs/archive.h"
 #include "nitro/os/thread.h"
 
 extern "C" {
-
-#define FS_ARCHIVE_FLAG_IS_SYNC 0x00000200
-
-#define FS_COMMAND_SEEKDIR 2
-#define FS_COMMAND_READDIR 3
-#define FS_COMMAND_OPENFILEDIRECT 7
-
-#define FS_RESULT_SUCCESS 0
-#define FS_RESULT_FAILURE 1
-#define FS_RESULT_PROC_ASYNC 6
 
 #define FS_INVALID_ID 0x10000
 

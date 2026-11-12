@@ -75,7 +75,7 @@ void daPgBby_c::OnTurnIntoEgg(daPly_c &player) {
 
 s32 daPgBby_c::InitResources()
 {
-    BMD_File *f = (BMD_File *)dExtSimpleModel_c::LoadFile(gPenguinBabyModelFile);
+    BMD_File *f = dExtSimpleModel_c::LoadFile(gPenguinBabyModelFile);
     mAnmModel.SetFile(f, 1, -1);
     int i;
     for (i = 0; i < 5; i++) {

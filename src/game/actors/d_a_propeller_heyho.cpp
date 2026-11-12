@@ -204,7 +204,7 @@ extern int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State
  * position = the spawn position, then enters the wander state. */
 int daPropeller_Heyho_c::InitResources()
 {
-    mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov070_02123530), 1, -1);
+    mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov070_02123530), 1, -1);
     mShadowModel.InitCylinder();
     dExtFrameCtrl_c::LoadFile(data_ov070_02123520);
     dExtFrameCtrl_c::LoadFile(data_ov070_02123518);
@@ -353,12 +353,11 @@ int daPropeller_Heyho_c::CleanupResources()
 /* -------------------------------------------------------------------------- */
 #include "common.h"
 #include "private/mtx43.h"
+#include "math/MtxStack.h"
 
 extern "C" {
 
 extern void Vec3_Asr(void* d, void* s, int sh);
-extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
 extern Matrix4x3 data_020a0e68;
 }
 
@@ -419,10 +418,6 @@ extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern int ApproachAngle(s16 *dst, s16 target, int a, int b, int c);
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
-/* local extern: no shared math header declares MTX_MultVec43. */
-extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 
 extern Matrix4x3 data_020a0e68;
@@ -508,10 +503,6 @@ extern "C" {
 // local extern: CalcLib.h conflicts with this TU's retained opaque Vec3_VertAngle declaration.
 extern short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 extern short Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
-extern void Matrix4x3_FromRotationY(void *m, int ang);
-extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
-/* local extern: no shared math header declares MTX_MultVec43. */
-extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 /* local extern: see the named CalcLib-signature exception above. */
 extern int RandomIntInternal(int *seed);
@@ -654,10 +645,6 @@ extern int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State
 extern short Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern u16 DecIfAbove0_Short(u16* p);
-extern void Matrix4x3_FromRotationY(void* m, int angle);
-extern void Matrix4x3_ApplyInPlaceToRotationX(void* mF, s16 angX);
-/* local extern: no shared math header declares MTX_MultVec43. */
-extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 }
 
 /* Dive main. Turns toward mTargetAngY and levels the Z bank. When the animation

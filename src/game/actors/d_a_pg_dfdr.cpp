@@ -269,14 +269,9 @@ void daPgDfdr_c::InitStateWalk() {
 int daPgDfdr_c::StateWalk() {
     int distLeft = mDistanceLeft;
     if (distLeft == 0) {
-        /* Plain `mStepIndex++` emits the same .text (`mStepIndex =
-           mStepIndex + 1` does not: it folds into ldrb [this, #0x3d9] and
-           drops the pooled add, 0x104 -> 0xf8). The pointer local feeds
-           mwccarm's per-TU @NNN counter, one number per named local: without
-           it __sinit's registration nodes come out one number below the
-           ones the manifest renames. */
-        u8 *step = &mStepIndex;
-        (*step)++;
+        /* `mStepIndex = mStepIndex + 1` folds into ldrb [this, #0x3d9] and
+           drops the pooled add (0x104 -> 0xf8); the increment does not. */
+        mStepIndex++;
         if (mStepIndex >= kStepCount)
             mStepIndex = 0;
         SetState(kStateTurn);

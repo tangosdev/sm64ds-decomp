@@ -16,8 +16,8 @@
 // - The four Play*Sound methods call Sound.h's func_0201267c, the
 //   position-relative sound veneer, with mCamSpacePos.
 // - func_ov064_02116110 and func_ov064_0211616c are daOts_c's shared steppers
-//   and keep their labels with that class. data_ov064_0211b834 is the file
-//   table decl_common.h declares. g_profile_DONKETU is not in this TU.
+//   and keep their labels with that class. g_profile_DONKETU is not in this
+//   TU.
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daDonketu_c_AssetId {
@@ -38,6 +38,9 @@ enum daDonketu_c_AssetId {
 
 /* The arm9 RNG step has no shared header; data_0209e650 is its state. */
 extern "C" int RandomIntInternal(int *seed);
+
+/* The Bully's resource block (daOts_c.h); overlay .data owns the bytes. */
+extern BullyResourceConfig data_ov064_0211b834;
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
  * veneer pairs (func_02017acc / func_02017ab4 for the model,
@@ -60,7 +63,7 @@ extern "C" daDonketu_c *daDonketu_c_classInit() {
 
 int daDonketu_c::InitResources() {
     mBigBullyID = 0;
-    mFileTable = (int)&data_ov064_0211b834;
+    mFileTable = &data_ov064_0211b834;
     InitResourcesCommon();
 }
 

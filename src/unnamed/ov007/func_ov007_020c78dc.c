@@ -1,9 +1,9 @@
 #include "Ov007Spring.h"
+#include "Ov007MenuMem.h"
 
 /* func_ov007_020c8440 and func_ov007_020c8098 are long-branch veneers to
  * func_ov007_020c3d1c, the free hook. */
 extern void func_ov007_020c8440(void *p);
-extern void func_ov007_020c3d1c(void *p);
 extern void func_ov007_020c8098(void *p);
 
 /* Frees a point list: its own followers (flags bit 0) and the items array,

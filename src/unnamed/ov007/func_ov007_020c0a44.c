@@ -1,8 +1,7 @@
 #include "Ov007BgLayer.h"
+#include "Ov007MenuMem.h"
 
-extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020c0a44(Ov007BgLayer *layer);
-extern void func_ov007_020c3d1c(void *p);
 
 /* Allocates a BG layer for BG bg at priority, over the width x height-tile
  * screen buffer screen. */

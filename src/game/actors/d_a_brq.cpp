@@ -110,9 +110,9 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 int daBrq_c::InitResources() {
     BMD_File *bmd;
-    bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov070_021235fc);
+    bmd = dExtSimpleModel_c::LoadFile(data_ov070_021235fc);
     mAnmModel.SetFile(bmd, 1, 1);
-    bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov070_02123604);
+    bmd = dExtSimpleModel_c::LoadFile(data_ov070_02123604);
     mModel.SetFile(bmd, 1, 1);
 
     int i;
@@ -121,7 +121,7 @@ int daBrq_c::InitResources() {
     }
 
     BMD_File *bmd2 = (BMD_File *)data_ov070_02123604.filePtr;
-    BTP_File *btp = (BTP_File *)dExtAnmTexPat_c::LoadFile(data_ov070_021235ec);
+    BTP_File *btp = dExtAnmTexPat_c::LoadFile(data_ov070_021235ec);
     dExtAnmTexPat_c::Prepare(*bmd2, *btp);
 
     bmd2 = (BMD_File *)data_ov070_02123604.filePtr;

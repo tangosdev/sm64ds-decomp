@@ -5,9 +5,6 @@
 extern "C" {
 /* recovered: shared common types */
 extern short FX_SinCosTable_[];
-extern void MTX_RotZ43_(struct Matrix4x3 *out, int s, int c);
-extern void MTX_RotY43_(struct Matrix4x3 *out, int s, int c);
-extern void MTX_RotX43_(struct Matrix4x3 *out, int s, int c);
 
 /* The table reads stay hand-indexed: the ROM doubles all three indices up
    front, before the first call. Through FX_SinIdx/FX_CosIdx

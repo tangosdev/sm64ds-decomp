@@ -85,13 +85,13 @@ void daObjWc_Obj02_c::OnStoodOn(dActor_c *other) {
 /* -------------------------------------------------------------------------- */
 int daObjWc_Obj02_c::InitResources() {
     {
-        BMD_File *bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov029_02114250);
+        BMD_File *bmd = dExtSimpleModel_c::LoadFile(data_ov029_02114250);
         mModel.SetFile(bmd, 1, -1);
     }
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     {
-        KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov029_02114248);
+        KCL_File *kcl = dBgW_Kc::LoadFile(data_ov029_02114248);
         mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov029_0211302c);
     }
     {

@@ -136,14 +136,10 @@ extern signed char gNumStageStars[];
 extern signed char NumRedCoins(void);
 extern unsigned char gGameMode;
 extern void func_02035860(void* o, void* src);
-extern int RandomIntInternal(int* seed);
 extern dCamera_c *gCamera;
 extern unsigned char IsAreaShowing(int idx);
-extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern void func_02012694(unsigned int a, void *p);
 extern void func_ov002_020e8244(void *out, daStar_c *b);
-extern void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
-extern void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void* mF, s16 angY);
 /* local extern: math/MtxStack.h takes Matrix4x3 pointers, and
@@ -153,7 +149,6 @@ extern void MTX_Concat43(void *out, void *a, void *b);
 extern int *Vec3_LslInPlace(void *v, int sh);
 extern Matrix4x3 data_020a0e68;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
-extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern int SurfaceInfo_TestFlag0x20(void* p);
 extern int data_0209f32c;
@@ -510,7 +505,7 @@ int daStarBase_c::InitResources()
         if (sp != 0) {
             ((daStar_c *)sp)->mBits.switchStar = 1;
         }
-        mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0211093c), 1, 0x18);
+        mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0211093c), 1, 0x18);
         return 0;
     }
 
@@ -540,13 +535,11 @@ int daStarBase_c::InitResources()
 
     if (mState != 0) {
         dExtSimpleModel_c::LoadFile(data_ov002_0210d9a8);
-        if (mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0211092c), 1, 0x19) ==
-            0) {
+        if (mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0211092c), 1, 0x19) == 0) {
             return 0;
         }
     } else {
-        if (mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0211093c), 1, 0x18) ==
-            0) {
+        if (mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0211093c), 1, 0x18) == 0) {
             return 0;
         }
     }

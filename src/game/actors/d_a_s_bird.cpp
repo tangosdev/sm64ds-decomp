@@ -21,8 +21,7 @@
  * `return new daSBird_c()` through the inherited fBase_c::operator new.
  *
  * NOTES:
- * - Vec3_Asr / Vec3_Sub / VEC_Mag have no shared header and keep local
- *   void * externs. Random() wraps math/CalcLib.h's RandomIntInternal as
+ * - Vec3_Sub has no shared header and keeps a local extern. Random() wraps math/CalcLib.h's RandomIntInternal as
  *   unsigned: a signed % 400 / % 4000 or >> 16 changes codegen.
  * - Behavior builds the model matrix through MtxStack (math/MtxStack.h) but
  *   copies it out as twelve plain words (Mtx43).
@@ -84,12 +83,9 @@ extern SBirdModelFilePtr data_ov009_02113c20;
 extern SBirdAnimationFilePtr data_ov009_02113c28;
 extern SBirdStateTable data_ov009_02113c48;
 
-/* local extern: no shared header declares these helpers; Vec3_Sub uses the
-   shared Vector3 type, while some callers pass raw position-field addresses. */
+/* local extern: no shared header declares Vec3_Sub. */
 extern "C" {
-extern void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern s32 VEC_Mag(void *v);
 }
 
 /* The flock's random draws are unsigned: a signed % or >> changes codegen. */
@@ -287,9 +283,9 @@ s32 daSBird_c::Behavior() {
 }
 
 s32 daSBird_c::InitResources() {
-    BMD_File *modelFile = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov009_02113c20);
+    BMD_File *modelFile = dExtSimpleModel_c::LoadFile(data_ov009_02113c20);
     mAnmModel.SetFile(modelFile, 1, 1);
-    BCA_File *animFile = (BCA_File *)dExtFrameCtrl_c::LoadFile(data_ov009_02113c28);
+    BCA_File *animFile = dExtFrameCtrl_c::LoadFile(data_ov009_02113c28);
     mAnmModel.SetAnim((BCA_File *)animFile, 0, 0x1000, 0);
     mShadowModel.InitCylinder();
     {

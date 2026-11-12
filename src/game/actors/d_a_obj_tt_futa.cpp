@@ -74,12 +74,12 @@ s32 daObjTtFuta_c::Behavior() {
 }
 
 s32 daObjTtFuta_c::InitResources() {
-    void *f = dExtSimpleModel_c::LoadFile(data_ov033_021124c8);
-    mModel.SetFile((BMD_File *)f, 1, -1);
+    BMD_File *f = dExtSimpleModel_c::LoadFile(data_ov033_021124c8);
+    mModel.SetFile(f, 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    void *k = dBgW_Kc::LoadFile(data_ov033_021124c0);
-    mMeshCollider.SetFile((KCL_File *)k, mClsnMat, 0x199, mAngleY, data_ov033_02111bfc);
+    KCL_File *k = dBgW_Kc::LoadFile(data_ov033_021124c0);
+    mMeshCollider.SetFile(k, mClsnMat, 0x199, mAngleY, data_ov033_02111bfc);
     return Event::GetBit(0xe) == 0;
 }
 
