@@ -1,25 +1,22 @@
-//cpp
 /* NitroSDK wm_ds.c: WM data sharing. Every MP frame the parent gathers one
  * data set (a 4-byte header and every member's dataLength bytes in AID
  * order) and sends it to the children, who send their own data back.
  * dsInfo holds four sets in a ring; writeIndex is the set being filled,
  * sendIndex the next to send and readIndex the next WM_StepDataSharing
  * hands over. This SDK is older than pret's pokediamond: the sets go out
- * with WM_SetMPDataToPort, a failed send is state 3, not 5, and
+ * with WM_SetMPDataToPort, WM_DS_STATE_ERROR is 3, not 5, and
  * WM_EndDataSharing is not linked. */
 #include "types.h"
+#include "nitro/mi/memory.h"
 #include "nitro/os/cache.h"
 #include "nitro/os/system.h"
 #include "nitro/wm/wm_api.h"
 #include "private/wm_views.h"
-#include "nitro/mi/memory.h"
-
-extern "C" {
 
 /* NitroSDK WMPortSendCallback: only the fields read here. */
 typedef struct WMPortSendCallback {
     char pad0[2];
-    u16 errcode; /* 0x02 -- 0 sent, 0xa the send queue was full */
+    u16 errcode; /* 0x02 */
     char pad1[0xa - 0x4];
     u16 port; /* 0x0a */
     char pad2[0x1c - 0xc];
@@ -38,15 +35,15 @@ u16 *WmGetSharedDataAddress(WMDataSharingInfo *dsInfo, unsigned aidBitmap, u16 *
 /* NitroSDK WM_StartDataSharing(dsInfo, port, aidBitmap, dataLength,
  * doubleMode): with MP running, clear the sharing info, add this station's
  * own AID bit to aidBitmap and size a data set as dataLength per member
- * plus the 4-byte header (at most 0xfc before the header). The parent
+ * plus the WM_DS_HEADER_SIZE header (at most WM_DS_DATA_SIZE before it). The parent
  * (aid 0) primes the four sets, registers its port receive callback and
  * sends the first set (two in double mode); a child registers its own
  * receive callback and waits. */
-int WM_StartDataSharing(WMDataSharingInfo *dsInfo, u16 port, int aidBitmap, int dataLength,
-                        int doubleMode) {
+WMErrCode WM_StartDataSharing(WMDataSharingInfo *dsInfo, u16 port, int aidBitmap, int dataLength,
+                              int doubleMode) {
     u16 childMask = 1;
     WMArm9Buf *sys;
-    int r;
+    WMErrCode r;
     u16 aid;
     u16 cnt;
     u16 j;
@@ -55,20 +52,20 @@ int WM_StartDataSharing(WMDataSharingInfo *dsInfo, u16 port, int aidBitmap, int 
     volatile unsigned zero;
 
     sys = WM_GetSystemWork();
-    r = WM_CheckStateEx(2, 9, 0xa);
-    if (r != 0)
+    r = WM_CheckStateEx(2, WM_STATE_MP_PARENT, WM_STATE_MP_CHILD);
+    if (r != WM_ERRCODE_SUCCESS)
         return r;
 
     DC_InvalidateRange(&sys->status->mp_flag, 4);
     if (sys->status->mp_flag == 0)
-        return 3;
+        return WM_ERRCODE_ILLEGAL_STATE;
 
     if (dsInfo == 0)
-        return 6;
-    if (port >= 0x10)
-        return 6;
+        return WM_ERRCODE_INVALID_PARAM;
+    if (port >= WM_NUM_OF_PORT)
+        return WM_ERRCODE_INVALID_PARAM;
     if (aidBitmap == 0)
-        return 6;
+        return WM_ERRCODE_INVALID_PARAM;
 
     DC_InvalidateRange(&sys->status->aid, 2);
     aid = sys->status->aid;
@@ -78,7 +75,7 @@ int WM_StartDataSharing(WMDataSharingInfo *dsInfo, u16 port, int aidBitmap, int 
     }
 
     zero = 0;
-    MI_CpuFillFast(dsInfo, zero, 0x420);
+    MI_CpuFillFast(dsInfo, zero, sizeof(WMDataSharingInfo));
 
     dsInfo->writeIndex = 0;
     dsInfo->sendIndex = 0;
@@ -102,39 +99,39 @@ int WM_StartDataSharing(WMDataSharingInfo *dsInfo, u16 port, int aidBitmap, int 
 
     dsInfo->stationNumber = cnt;
     dsInfo->dataSetLength = (u16)(dataLength * cnt);
-    if (dsInfo->dataSetLength > 0xfc) {
+    if (dsInfo->dataSetLength > WM_DS_DATA_SIZE) {
         dsInfo->aidBitmap = 0;
-        return 6;
+        return WM_ERRCODE_INVALID_PARAM;
     }
 
-    dsInfo->dataSetLength += 4;
-    dsInfo->state = 1;
+    dsInfo->dataSetLength += WM_DS_HEADER_SIZE;
+    dsInfo->state = WM_DS_STATE_START;
 
     if (aid == 0) {
         int i;
         WMDataSet *cur;
         int n;
 
-        for (i = 0; i < 4; i++)
+        for (i = 0; i < WM_DS_DATASET_NUM; i++)
             dsInfo->ds[i].aidHeader = (u16)(dsInfo->aidBitmap & (childMask | 1));
 
         WM_SetPortCallback(port, WmDataSharingReceiveCallback_Parent, dsInfo);
 
         cur = dsInfo->ds;
         for (n = 0; n < ((dsInfo->doubleMode == 1) ? 2 : 1); n++) {
-            int cr;
+            WMErrCode cr;
 
-            dsInfo->writeIndex = (dsInfo->writeIndex + 1) % 4;
+            dsInfo->writeIndex = (dsInfo->writeIndex + 1) % WM_DS_DATASET_NUM;
             cr = WM_SetMPDataToPort(WmDataSharingSetDataCallback, (u16 *)cur, dsInfo->dataSetLength,
                                     (u16)(dsInfo->aidBitmap & childMask), dsInfo->port,
                                     WM_PRIORITY_HIGH);
 
-            if (cr == 7) {
+            if (cr == WM_ERRCODE_NO_CHILD) {
                 dsInfo->seqNum[n] = 0xffff;
-                dsInfo->sendIndex = (dsInfo->sendIndex + 1) % 4;
-            } else if (cr != 0 && cr != 2) {
-                dsInfo->state = 3;
-                return 1;
+                dsInfo->sendIndex = (dsInfo->sendIndex + 1) % WM_DS_DATASET_NUM;
+            } else if (cr != WM_ERRCODE_SUCCESS && cr != WM_ERRCODE_OPERATING) {
+                dsInfo->state = WM_DS_STATE_ERROR;
+                return WM_ERRCODE_FAILED;
             }
 
             cur++;
@@ -144,7 +141,7 @@ int WM_StartDataSharing(WMDataSharingInfo *dsInfo, u16 port, int aidBitmap, int 
         WM_SetPortCallback(port, WmDataSharingReceiveCallback_Child, dsInfo);
     }
 
-    return 0;
+    return WM_ERRCODE_SUCCESS;
 }
 
 /* NitroSDK WM_StepDataSharing(dsInfo, sendData, receiveData): one frame of
@@ -153,9 +150,10 @@ int WM_StartDataSharing(WMDataSharingInfo *dsInfo, u16 port, int aidBitmap, int 
  * sendData into the set being filled (WmDataSharingReceiveData) and sends
  * whatever is ready (WmDataSharingSendDataSet). A child arms or hands over
  * the received set and sends its own data to the parent. Returns 0 with a
- * set handed over, 5 when none was ready, 1 on a send error. */
-int WM_StepDataSharing(WMDataSharingInfo *dsInfo, const void *sendData, WMDataSet *receiveData) {
-    int result;
+ * set handed over, NO_DATASET when none was ready, FAILED on a send error. */
+WMErrCode WM_StepDataSharing(WMDataSharingInfo *dsInfo, const void *sendData,
+                             WMDataSet *receiveData) {
+    WMErrCode result;
     u16 aid;
     u16 childMask;
     int did;
@@ -163,20 +161,20 @@ int WM_StepDataSharing(WMDataSharingInfo *dsInfo, const void *sendData, WMDataSe
     int state;
     WMArm9Buf *p = WM_GetSystemWork();
 
-    result = WM_CheckStateEx(2, 9, 0xa);
-    if (result != 0)
+    result = WM_CheckStateEx(2, WM_STATE_MP_PARENT, WM_STATE_MP_CHILD);
+    if (result != WM_ERRCODE_SUCCESS)
         return result;
 
     DC_InvalidateRange(&p->status->mp_flag, 4);
     if (p->status->mp_flag == 0)
-        return 3;
+        return WM_ERRCODE_ILLEGAL_STATE;
 
     if (dsInfo == 0)
-        return 6;
+        return WM_ERRCODE_INVALID_PARAM;
     if (sendData == 0)
-        return 6;
+        return WM_ERRCODE_INVALID_PARAM;
     if (receiveData == 0)
-        return 6;
+        return WM_ERRCODE_INVALID_PARAM;
 
     DC_InvalidateRange(&p->status->aid, 2);
     aid = p->status->aid;
@@ -186,41 +184,41 @@ int WM_StepDataSharing(WMDataSharingInfo *dsInfo, const void *sendData, WMDataSe
     }
 
     state = dsInfo->state;
-    if (state == 3)
-        return 1;
-    if (state != 1 && state != 2)
-        return 3;
+    if (state == WM_DS_STATE_ERROR)
+        return WM_ERRCODE_FAILED;
+    if (state != WM_DS_STATE_START && state != WM_DS_STATE_RETRY_SEND)
+        return WM_ERRCODE_ILLEGAL_STATE;
 
-    result = 5;
+    result = WM_ERRCODE_NO_DATASET;
 
     if (aid == 0) {
         did = 0;
         fp = did;
 
-        if (state == 2) {
+        if (state == WM_DS_STATE_RETRY_SEND) {
             u16 n;
-            int cr;
-            dsInfo->state = 1;
-            n = (u16)((dsInfo->writeIndex + 3) % 4);
+            WMErrCode cr;
+            dsInfo->state = WM_DS_STATE_START;
+            n = (u16)((dsInfo->writeIndex + WM_DS_DATASET_NUM - 1) % WM_DS_DATASET_NUM);
             cr = WM_SetMPDataToPort(WmDataSharingSetDataCallback, (u16 *)&dsInfo->ds[n],
                                     dsInfo->dataSetLength, (u16)(dsInfo->aidBitmap & childMask),
                                     dsInfo->port, WM_PRIORITY_HIGH);
-            if (cr == 7) {
+            if (cr == WM_ERRCODE_NO_CHILD) {
                 dsInfo->seqNum[n] = 0xffff;
-                dsInfo->sendIndex = (u16)((dsInfo->sendIndex + 1) % 4);
-            } else if (cr != 0 && cr != 2) {
-                dsInfo->state = 3;
-                return 1;
+                dsInfo->sendIndex = (u16)((dsInfo->sendIndex + 1) % WM_DS_DATASET_NUM);
+            } else if (cr != WM_ERRCODE_SUCCESS && cr != WM_ERRCODE_OPERATING) {
+                dsInfo->state = WM_DS_STATE_ERROR;
+                return WM_ERRCODE_FAILED;
             }
         }
 
         if (dsInfo->readIndex != dsInfo->sendIndex) {
             dsInfo->ds[dsInfo->readIndex].aidHeader |= 1;
-            MI_CpuCopy16(&dsInfo->ds[dsInfo->readIndex], receiveData, 0x100);
+            MI_CpuCopy16(&dsInfo->ds[dsInfo->readIndex], receiveData, sizeof(WMDataSet));
             did = 1;
-            result = 0;
+            result = WM_ERRCODE_SUCCESS;
             dsInfo->currentSeqNum = dsInfo->seqNum[dsInfo->readIndex];
-            dsInfo->readIndex = (u16)((dsInfo->readIndex + 1) % 4);
+            dsInfo->readIndex = (u16)((dsInfo->readIndex + 1) % WM_DS_DATASET_NUM);
 
             if (dsInfo->doubleMode == 0 && childMask != 0 &&
                 dsInfo->ds[dsInfo->writeIndex].aidHeader == 1)
@@ -239,19 +237,19 @@ int WM_StepDataSharing(WMDataSharingInfo *dsInfo, const void *sendData, WMDataSe
         int changed;
 
         changed = 0;
-        if (state == 2) {
-            dsInfo->state = 1;
+        if (state == WM_DS_STATE_RETRY_SEND) {
+            dsInfo->state = WM_DS_STATE_START;
             changed = 1;
         } else {
             if (dsInfo->readIndex != dsInfo->writeIndex) {
                 if ((dsInfo->ds[dsInfo->readIndex].aidHeader & 1) == 0) {
                     dsInfo->ds[dsInfo->readIndex].aidHeader |= 1;
                 } else {
-                    MI_CpuCopy16(&dsInfo->ds[dsInfo->readIndex], receiveData, 0x100);
+                    MI_CpuCopy16(&dsInfo->ds[dsInfo->readIndex], receiveData, sizeof(WMDataSet));
                     changed = 1;
-                    result = 0;
+                    result = WM_ERRCODE_SUCCESS;
                     dsInfo->currentSeqNum = dsInfo->seqNum[dsInfo->readIndex];
-                    dsInfo->readIndex = (u16)((dsInfo->readIndex + 1) % 4);
+                    dsInfo->readIndex = (u16)((dsInfo->readIndex + 1) % WM_DS_DATASET_NUM);
                 }
             }
         }
@@ -259,14 +257,14 @@ int WM_StepDataSharing(WMDataSharingInfo *dsInfo, const void *sendData, WMDataSe
         if (changed != 0) {
             /* the child stages its own data 0x20 bytes into the set it sends */
             u8 *addr = (u8 *)&dsInfo->ds[dsInfo->sendIndex] + 0x20;
-            int cr;
+            WMErrCode cr;
             MI_CpuCopy16(sendData, addr, dsInfo->dataLength);
             cr = WM_SetMPDataToPort(WmDataSharingSetDataCallback, (u16 *)addr, dsInfo->dataLength,
                                     dsInfo->aidBitmap, dsInfo->port, WM_PRIORITY_HIGH);
-            dsInfo->sendIndex = (u16)((dsInfo->sendIndex + 1) % 4);
-            if (cr != 2 && cr != 0) {
-                dsInfo->state = 3;
-                result = 1;
+            dsInfo->sendIndex = (u16)((dsInfo->sendIndex + 1) % WM_DS_DATASET_NUM);
+            if (cr != WM_ERRCODE_OPERATING && cr != WM_ERRCODE_SUCCESS) {
+                dsInfo->state = WM_DS_STATE_ERROR;
+                result = WM_ERRCODE_FAILED;
             }
         }
     }
@@ -278,8 +276,8 @@ int WM_StepDataSharing(WMDataSharingInfo *dsInfo, const void *sendData, WMDataSe
  * WmDataSharingSendDataSet pass to WM_SetMPDataToPort. The sharing it
  * belongs to is the port's WM_SetPortCallback argument. On success the
  * parent records the sent set's sequence number and steps sendIndex; a full
- * send queue (errcode 0xa) backs a child's sendIndex up and asks for a
- * retry (state 2); any other failure is the error state 3. */
+ * send queue backs a child's sendIndex up and asks for a retry
+ * (WM_DS_STATE_RETRY_SEND); any other failure is WM_DS_STATE_ERROR. */
 void WmDataSharingSetDataCallback(void *arg) {
     WMPortSendCallback *callback = (WMPortSendCallback *)arg;
     WMArm9Buf *c = WM_GetSystemWork();
@@ -287,45 +285,45 @@ void WmDataSharingSetDataCallback(void *arg) {
     DC_InvalidateRange(&c->status->aid, 2);
     u16 v = c->status->aid;
     int kind = callback->errcode;
-    if (kind == 0) {
+    if (kind == WM_ERRCODE_SUCCESS) {
         if (v != 0)
             return;
         r4->seqNum[r4->sendIndex] = (u16)(callback->seqNo >> 1);
-        r4->sendIndex = (u16)((r4->sendIndex + 1) % 4);
-    } else if (kind == 0xa) {
+        r4->sendIndex = (u16)((r4->sendIndex + 1) % WM_DS_DATASET_NUM);
+    } else if (kind == WM_ERRCODE_SEND_QUEUE_FULL) {
         if (v != 0) {
-            r4->sendIndex = (u16)((r4->sendIndex + 3) % 4);
+            r4->sendIndex = (u16)((r4->sendIndex + WM_DS_DATASET_NUM - 1) % WM_DS_DATASET_NUM);
         }
-        r4->state = 2;
+        r4->state = WM_DS_STATE_RETRY_SEND;
     } else {
-        r4->state = 3;
+        r4->state = WM_DS_STATE_ERROR;
     }
 }
 
-/* The parent's port receive callback. PORT_RECV (0x15) stores the child's
- * data and tries to send the next set; CONNECTED (7) just tries the send;
- * DISCONNECTED (9) stops waiting for that child in the current set (and the
+/* The parent's port receive callback. PORT_RECV stores the child's data
+ * and tries to send the next set; CONNECTED just tries the send;
+ * DISCONNECTED stops waiting for that child in the current set (and the
  * next one in double mode) before sending. A failed receive puts the
- * sharing into state 3, the error state. */
+ * sharing into WM_DS_STATE_ERROR. */
 void WmDataSharingReceiveCallback_Parent(void *arg) {
     WMPortRecvCallback *callback = (WMPortRecvCallback *)arg;
     WMDataSharingInfo *dsInfo = (WMDataSharingInfo *)callback->arg;
-    if (callback->errcode == 0) {
+    if (callback->errcode == WM_ERRCODE_SUCCESS) {
         switch (callback->state) {
-        case 0x15:
+        case WM_STATECODE_PORT_RECV:
             WmDataSharingReceiveData(dsInfo, callback->aid, callback->data);
             WmDataSharingSendDataSet(dsInfo, 0);
             return;
-        case 7:
+        case WM_STATECODE_CONNECTED:
             WmDataSharingSendDataSet(dsInfo, 0);
             return;
-        case 9: {
+        case WM_STATECODE_DISCONNECTED: {
             u16 mask = (u16)(1 << callback->aid);
             OSIntrMode saved = OS_DisableInterrupts();
             u16 b408 = dsInfo->writeIndex;
             dsInfo->ds[b408].aidHeader &= ~mask;
             if (dsInfo->doubleMode == 1) {
-                int n = (dsInfo->writeIndex + 1) % 4;
+                int n = (dsInfo->writeIndex + 1) % WM_DS_DATASET_NUM;
                 dsInfo->ds[n].aidHeader &= ~mask;
             }
             OS_RestoreInterrupts(saved);
@@ -338,36 +336,36 @@ void WmDataSharingReceiveCallback_Parent(void *arg) {
             return;
         }
     }
-    dsInfo->state = 3;
+    dsInfo->state = WM_DS_STATE_ERROR;
 }
 
-/* The child's port receive callback. On PORT_RECV (0x15) it copies the
- * parent's whole data set into ds[writeIndex], records its sequence number
- * and steps writeIndex; CONNECTED (7) and DISCONNECTED (9) are ignored. A
- * failed receive (errcode != 0) puts the sharing into state 3. */
+/* The child's port receive callback. On PORT_RECV it copies the parent's
+ * whole data set into ds[writeIndex], records its sequence number and steps
+ * writeIndex; CONNECTED and DISCONNECTED are ignored. A failed receive puts
+ * the sharing into WM_DS_STATE_ERROR. */
 void WmDataSharingReceiveCallback_Child(void *arg) {
     WMPortRecvCallback *callback = (WMPortRecvCallback *)arg;
     WMArm9Buf *h = WM_GetSystemWork();
     WMDataSharingInfo *r5 = (WMDataSharingInfo *)callback->arg;
-    if (callback->errcode == 0) {
+    if (callback->errcode == WM_ERRCODE_SUCCESS) {
         u32 r4;
         u16 *src;
         {
             u16 v = callback->state;
-            if (v == 7)
+            if (v == WM_STATECODE_CONNECTED)
                 return;
-            if (v == 9)
+            if (v == WM_STATECODE_DISCONNECTED)
                 return;
-            if (v != 0x15)
+            if (v != WM_STATECODE_PORT_RECV)
                 return;
         }
         r4 = callback->length;
         if (r4 != r5->dataSetLength) {
-            if (r4 > 0x100)
-                r4 = 0x100;
+            if (r4 > sizeof(WMDataSet))
+                r4 = sizeof(WMDataSet);
         }
         DC_InvalidateRange(&h->status->aid, 2);
-        if (r4 < 4)
+        if (r4 < WM_DS_HEADER_SIZE)
             return;
         src = callback->data;
         if (*src == 0)
@@ -376,9 +374,9 @@ void WmDataSharingReceiveCallback_Child(void *arg) {
             return;
         MI_CpuCopy16(src, &r5->ds[r5->writeIndex], r4);
         r5->seqNum[r5->writeIndex] = callback->seqNo >> 1;
-        r5->writeIndex = (r5->writeIndex + 1) % 4;
+        r5->writeIndex = (r5->writeIndex + 1) % WM_DS_DATASET_NUM;
     } else {
-        r5->state = 3;
+        r5->state = WM_DS_STATE_ERROR;
     }
 }
 
@@ -401,7 +399,7 @@ void WmDataSharingReceiveData(WMDataSharingInfo *dsInfo, int aid, const void *da
     if ((mask & dsInfo->ds[idx].aidHeader) == 0) {
         if (dsInfo->doubleMode != 1)
             return;
-        idx = (idx + 1) % 4;
+        idx = (idx + 1) % WM_DS_DATASET_NUM;
         if ((mask & dsInfo->ds[idx].aidHeader) == 0)
             return;
     }
@@ -422,8 +420,9 @@ void WmDataSharingReceiveData(WMDataSharingInfo *dsInfo, int aid, const void *da
 /* Once every member has filled ds[writeIndex], step writeIndex, open the
  * next set (the one after it in double mode) for the ready children and the
  * parent, and send the full set to the children. excludeParent clears the
- * parent's own bit from the sent header. With no child to send to (7) the
- * set counts as sent; any failure but OPERATING (2) is state 3. */
+ * parent's own bit from the sent header. With no child to send to
+ * (NO_CHILD) the set counts as sent; any failure but OPERATING is
+ * WM_DS_STATE_ERROR. */
 void WmDataSharingSendDataSet(WMDataSharingInfo *dsInfo, int excludeParent) {
     WMArm9Buf *ctx;
     OSIntrMode saved;
@@ -433,7 +432,7 @@ void WmDataSharingSendDataSet(WMDataSharingInfo *dsInfo, int excludeParent) {
     u16 prevSlot;
     u16 newSlot;
     volatile u16 zero;
-    int ret;
+    WMErrCode ret;
 
     ctx = WM_GetSystemWork();
     saved = OS_DisableInterrupts();
@@ -442,12 +441,12 @@ void WmDataSharingSendDataSet(WMDataSharingInfo *dsInfo, int excludeParent) {
         DC_InvalidateRange(&ctx->status->mp_readyBitmap, 2);
 
         prevSlot = dsInfo->writeIndex;
-        next = (u16)((prevSlot + 1) % 4);
+        next = (u16)((prevSlot + 1) % WM_DS_DATASET_NUM);
         mask = ctx->status->mp_readyBitmap;
-        newSlot = (dsInfo->doubleMode == 1) ? (u16)((next + 1) % 4) : next;
+        newSlot = (dsInfo->doubleMode == 1) ? (u16)((next + 1) % WM_DS_DATASET_NUM) : next;
 
         zero = 0;
-        MI_CpuFill16(&dsInfo->ds[newSlot], zero, 0x100);
+        MI_CpuFill16(&dsInfo->ds[newSlot], zero, sizeof(WMDataSet));
 
         dsInfo->ds[newSlot].aidHeader = (u16)(dsInfo->aidBitmap & (mask | 1));
         dsInfo->writeIndex = next;
@@ -462,11 +461,11 @@ void WmDataSharingSendDataSet(WMDataSharingInfo *dsInfo, int excludeParent) {
                                  dsInfo->dataSetLength, (u16)(dsInfo->aidBitmap & mask),
                                  dsInfo->port, WM_PRIORITY_HIGH);
 
-        if (ret == 7) {
+        if (ret == WM_ERRCODE_NO_CHILD) {
             dsInfo->seqNum[prevSlot] = 0xffff;
-            dsInfo->sendIndex = (u16)((dsInfo->sendIndex + 1) % 4);
-        } else if (ret != 0 && ret != 2) {
-            dsInfo->state = 3;
+            dsInfo->sendIndex = (u16)((dsInfo->sendIndex + 1) % WM_DS_DATASET_NUM);
+        } else if (ret != WM_ERRCODE_SUCCESS && ret != WM_ERRCODE_OPERATING) {
+            dsInfo->state = WM_DS_STATE_ERROR;
         }
     } else {
         OS_RestoreInterrupts(saved);
@@ -499,5 +498,4 @@ u16 *WmGetSharedDataAddress(WMDataSharingInfo *dsInfo, unsigned aidBitmap, u16 *
         bit <<= 1;
     }
     return receiveBuf;
-}
 }

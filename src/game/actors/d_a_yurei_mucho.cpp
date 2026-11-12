@@ -72,7 +72,6 @@ extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern void func_02012694(unsigned int id, void *v);
 
 /* ov002 -- unnamed particle helper. */
@@ -156,7 +155,7 @@ s32 daYurei_Mucho_c::OnAimedAtWithEgg()
    absent from symbols.txt. Retain these ABI calls pending interface repair. */
 int daYurei_Mucho_c::InitResources()
 {
-    mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(gYureiMuchoModelFile), 1, -1);
+    mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(gYureiMuchoModelFile), 1, -1);
     dExtSimpleModel_c::LoadFile(data_ov065_0211d610);
     mShadowModel.InitCylinder();
     dExtFrameCtrl_c::LoadFile(gYureiMuchoWaitAnimFile);

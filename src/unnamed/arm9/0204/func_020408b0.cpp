@@ -11,7 +11,7 @@ extern int data_020a0f94;
 extern unsigned short data_020a0f24;
 extern unsigned short data_020a0f2c;
 extern void *data_020a0f4c;
-extern void *data_020a0f44;
+extern WMParentParam *data_020a0f44;
 extern void *data_020a0f48;
 extern WMBssDesc *data_020a0f54;
 extern unsigned short data_020a0f28;
@@ -21,8 +21,8 @@ extern unsigned int data_020a0f58;
 extern void *data_020a0f60;
 extern unsigned int data_020a0f64;
 extern void *data_020a0f68;
-/* The 0x40-byte WMParentParam template func_0203db64 keeps. */
-extern unsigned char data_020a1064[];
+/* The WMParentParam template func_0203db64 keeps. */
+extern WMParentParam data_020a1064;
 
 /* Allocate the link's buffers. On a download-play child, rebuild the parent's WMBssDesc into data_020a0f54, keep its
    channel in data_020a0f28 (and in data_020a1064's channel) and step its tgid. */
@@ -32,7 +32,7 @@ void func_020408b0(unsigned short arg) {
     data_020a0f24 = 0;
     data_020a0f2c = 1;
     data_020a0f4c = Memory::Allocate(0x1300, 0x20);
-    data_020a0f44 = Memory::Allocate(0x40, 0x20);
+    data_020a0f44 = (WMParentParam *)Memory::Allocate(sizeof(WMParentParam), 0x20);
     data_020a0f48 = Memory::Allocate(0x20, 0x20);
     data_020a0f54 = (WMBssDesc *)Memory::Allocate(sizeof(WMBssDesc), 0x20);
     if (MB_IsMultiBootChild()) {
@@ -46,7 +46,7 @@ void func_020408b0(unsigned short arg) {
     data_020a0f60 = Memory::Allocate(0x220, 0x20);
     data_020a0f64 = 0x480;
     data_020a0f68 = Memory::Allocate(0x480, 0x20);
-    ((WMParentParam *)data_020a1064)->channel = data_020a0f28;
+    data_020a1064.channel = data_020a0f28;
     WM_Init(data_020a0f4c, 1);
 }
 }

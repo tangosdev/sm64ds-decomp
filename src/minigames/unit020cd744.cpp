@@ -44,6 +44,7 @@
 #include "dExtSimpleModel_c.h"
 #include "dExtAnmTexSRT_c.h"
 #include "math/Approach.h"
+#include "math/CalcLib.h"
 #include "math/Quaternion.h"
 
 /* The one raw-pointer walk left: TrmpLine::Create finds a free slot through
@@ -193,16 +194,12 @@ void MTX_Concat43(const Matrix4x3 *, const Matrix4x3 *, Matrix4x3 *);
 void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *, int, int, int);
 unsigned int func_02045a50(const void *, unsigned int);
 
-/* Vec3/Vector2 helpers: one-function C sources in src/, no owning header. */
+/* Vec3/Vector2 helpers not declared by math/CalcLib.h: one-function C
+   sources in src/, no owning header. */
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 void Vec3_Add(Vector3 *, const Vector3 *, const Vector3 *);
 void Vec3_MulScalar(Vector3 *, const Vector3 *, int);
 void Vec3_MulScalarInPlace(Vector3 *, int);
-void VEC_Add(Vector3 *, Vector3 *, Vector3 *);
-void VEC_Subtract(Vector3 *, Vector3 *, Vector3 *);
-int Vec3_Dist(const Vector3 *, const Vector3 *);
-int VEC_Mag(const Vector3 *);
-int VEC_DotProduct(const Vector3 *, const Vector3 *);
 void VEC_CrossProduct(const Vector3 *, const Vector3 *, Vector3 *);
 void VEC_Normalize(const Vector3 *, Vector3 *);
 int NormalizeVec3IfNonZero(Vector3 *);

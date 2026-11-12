@@ -11379,11 +11379,11 @@
     },
     "arm9:0x02065ef8": {
       "author": "tangosdev",
-      "name": "MBi_Calc_NextSendBlock"
+      "name": "MBi_calc_nextsendblock"
     },
     "arm9:0x02065f08": {
       "author": "tangosdev",
-      "name": "MBi_Calc_SendBlock"
+      "name": "MBi_calc_sendblock"
     },
     "arm9:0x02065f78": {
       "author": "andrewboudreau",
@@ -11395,7 +11395,7 @@
     },
     "arm9:0x020662c0": {
       "author": "tangosdev",
-      "name": "MBi_CommParentSendDlFileInfo"
+      "name": "MBi_CommParentSendDLFileInfo"
     },
     "arm9:0x02066470": {
       "author": "tangosdev",
@@ -35067,11 +35067,11 @@
     },
     "ov060:0x021163f0": {
       "author": "tangosdev",
-      "name": "daKpaTail_c_classInit"
+      "name": "_Z21daKpaTail_c_classInitv"
     },
     "ov060:0x02116428": {
       "author": "tangosdev",
-      "name": "daKpa_c_classInit"
+      "name": "_Z17daKpa_c_classInitv"
     },
     "ov060:0x02116484": {
       "author": "tangosdev",

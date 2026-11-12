@@ -293,13 +293,13 @@ s32 daDsnBase_c::Init() {
     SharedFilePtr *texAnim;
 
     files = mFileTable;
-    bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(*files->model);
+    bmd = dExtSimpleModel_c::LoadFile(*files->model);
     mModel.SetFile(bmd, 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
     files = mFileTable;
-    kcl = (KCL_File *)dBgW_Kc::LoadFile(*files->collision);
+    kcl = dBgW_Kc::LoadFile(*files->collision);
     clps = files->clps;
     mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, *clps);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);

@@ -60,12 +60,6 @@ struct PushblockClsnFilePtr : SharedFilePtr {
 extern PushblockModelFilePtr data_ov002_0210df9c;
 extern PushblockClsnFilePtr data_ov002_0210df94;
 
-/* local extern: no shared header declares these engine free functions. */
-extern "C" {
-extern void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
-extern void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
-}
-
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 /* Reconstructed source-style name: SM64DS proves daObjPushblock_c through RTTI,
@@ -96,11 +90,11 @@ int daObjPushblock_c::InitResources() {
     BMD_File *bmd;
     KCL_File *kcl;
 
-    bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210df9c);
+    bmd = dExtSimpleModel_c::LoadFile(data_ov002_0210df9c);
     mModel.SetFile(bmd, 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov002_0210df94);
+    kcl = dBgW_Kc::LoadFile(data_ov002_0210df94);
     mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, *(CLPS_Block *)&data_ov002_0210d7b4);
 
     mVertAccel = -0x2000;

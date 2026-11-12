@@ -113,8 +113,6 @@ extern BTA_File data_ov026_02112f40;
 
 /* local extern: no shared header declares these. */
 extern "C" {
-extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
-extern void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
 extern void KillPlayer(void);
 }
 
@@ -317,7 +315,7 @@ int daWater_Tatumaki_c::Behavior() {
 }
 
 int daWater_Tatumaki_c::InitResources() {
-    BMD_File *model = (BMD_File *)dExtSimpleModel_c::LoadFile(gWaterTatumakiModelFile);
+    BMD_File *model = dExtSimpleModel_c::LoadFile(gWaterTatumakiModelFile);
     mAnmModel.SetFile(model, 1, -1);
 
     dExtFrameCtrl_c::LoadFile(gWaterTatumakiAnimationFile);

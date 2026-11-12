@@ -5,10 +5,9 @@
  * with the time template "99h59m59s999".
  * The quotient goes through _ll_udiv. */
 #include "types.h"
+#include "nitro/os/tick.h"
 
 #define HW_SYSTEM_CLOCK 33514000
-
-extern s64 OS_GetTick(void);
 
 u64 func_020427c4(void) {
     return OS_GetTick() * 64ULL / (HW_SYSTEM_CLOCK / 1000);

@@ -145,10 +145,8 @@ s32 daFish_c::InitResources() {
             mVariant = modelIndex - 2;
         mModelIndex = 0;
     }
-    mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov100_021473a4[mModelIndex]), 1,
-                      -1);
-    mAnmModel.SetAnim((BCA_File *)dExtFrameCtrl_c::LoadFile(*data_ov100_021473b0[mModelIndex]), 0,
-                      0x1000, 0);
+    mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(*data_ov100_021473a4[mModelIndex]), 1, -1);
+    mAnmModel.SetAnim(dExtFrameCtrl_c::LoadFile(*data_ov100_021473b0[mModelIndex]), 0, 0x1000, 0);
     mIsSpawner = 1;
     mSpawnerID = uniqueID;
     mState = 0;

@@ -356,8 +356,7 @@ int daObjEwbIce_c::InitResources() {
         break;
     }
 
-    bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(
-        *((EwbIceFileSlot *)data_ov073_021231bc)[mVariant].file);
+    bmd = dExtSimpleModel_c::LoadFile(*((EwbIceFileSlot *)data_ov073_021231bc)[mVariant].file);
     mModel.SetFile(bmd, 1, -1);
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
     mModel.mat4x3.t.x = mPosX >> 3;
@@ -369,7 +368,7 @@ int daObjEwbIce_c::InitResources() {
        The byte has to stay live in a register across the call. */
     {
         u8 variant = mVariant;
-        kcl = (KCL_File *)dBgW_Kc::LoadFile(*((EwbIceFileSlot *)data_ov073_021231c0)[variant].file);
+        kcl = dBgW_Kc::LoadFile(*((EwbIceFileSlot *)data_ov073_021231c0)[variant].file);
         mMeshCollider.SetFile(
             (KCL_File *)(kcl), mClsnMat, 0x1000, mAngleY,
             *(CLPS_Block *)(((EwbIceClpsSlot *)data_ov073_021231c4)[variant].clps));

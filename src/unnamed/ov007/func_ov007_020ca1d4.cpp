@@ -5,14 +5,13 @@
 #include "Ov007MenuState.h"
 #include "Ov007Mesh.h"
 #include "nitro/fx/fx_cp.h"
+#include "Ov007MenuMem.h"
 
 extern "C" {
 
 extern int func_ov007_020c3ba8(int);
-extern void *func_ov007_020c3df4(const char *name, int size);
 extern void *func_ov007_020c9388(int initialState);
 extern void func_ov007_020c937c(void *state);
-extern void func_ov007_020c3d1c(void *);
 extern void func_ov007_020c92d0(Ov007MenuState *state);
 
 /* Steps wave i over the mesh: while it holds a line and keepChance wins it

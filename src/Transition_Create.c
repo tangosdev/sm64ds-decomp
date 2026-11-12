@@ -1,6 +1,6 @@
 #include "Ov007Transition.h"
+#include "Ov007MenuMem.h"
 
-extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020c8ac0(Ov007Transition *tr);
 
 /* Allocates a transition and clears it (func_ov007_020c8ac0). */

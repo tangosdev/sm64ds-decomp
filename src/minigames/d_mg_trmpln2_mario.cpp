@@ -1091,7 +1091,7 @@ int Trmp2Mario_Load(char *c) {
     BMD_File *f;
     int ret;
 
-    f = (BMD_File *)dExtSimpleModel_c::LoadFile(sTrmpMarioModelFile);
+    f = dExtSimpleModel_c::LoadFile(sTrmpMarioModelFile);
     sTrmpAnimJump = (BCA_File *)dExtFrameCtrl_c::LoadFile(sTrmpMarioJumpAnimFile);
     sTrmpAnimDoubleJump1 = (BCA_File *)dExtFrameCtrl_c::LoadFile(sTrmpMarioDoubleJump1AnimFile);
     sTrmpAnimWallJump = (BCA_File *)dExtFrameCtrl_c::LoadFile(sTrmpMarioWallJumpAnimFile);
@@ -2822,7 +2822,7 @@ int Trmp3DMario_Load(char *c) {
     BMD_File *f;
     int ret;
 
-    f = (BMD_File *)dExtSimpleModel_c::LoadFile(sTrmpMarioModelFile);
+    f = dExtSimpleModel_c::LoadFile(sTrmpMarioModelFile);
     sTrmpAnimJump = (BCA_File *)dExtFrameCtrl_c::LoadFile(sTrmpMarioJumpAnimFile);
     sTrmpAnimDoubleJump1 = (BCA_File *)dExtFrameCtrl_c::LoadFile(sTrmpMarioDoubleJump1AnimFile);
     sTrmpAnimWallJump = (BCA_File *)dExtFrameCtrl_c::LoadFile(sTrmpMarioWallJumpAnimFile);

@@ -6,6 +6,9 @@
  * SDK's own name (nitro/snd/ARM9/command.h). The queue lives in
  * src/engine/snd/SND_Command.cpp; src/engine/snd/SND_Interface.cpp packs each
  * call's arguments into one.
+ *
+ * SND_CommandInit is the SDK's (ntrtwl/NitroSDK
+ * nitro/snd/common/command.h); SND_Init runs it once.
  */
 
 #include "types.h"
@@ -17,5 +20,15 @@ typedef struct SNDCommand {
     s32 id;                  /* 0x04 */
     u32 arg[4];              /* 0x08 */
 } SNDCommand;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void SND_CommandInit(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* NITRO_SND_COMMAND_H */

@@ -400,8 +400,7 @@ int daObjBlockL_c::InitResources() {
         break;
     }
 
-    mModel.SetFile(
-        (BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov002_02108ab0[mVariant].modelFile), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(*data_ov002_02108ab0[mVariant].modelFile), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
@@ -418,14 +417,14 @@ int daObjBlockL_c::InitResources() {
     idx = mVariant;
     if (idx <= 1) {
         if (IsActorID(this, 0x10)) {
-            KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(*data_ov002_02108ab0[idx].clsnFile);
+            KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov002_02108ab0[idx].clsnFile);
             mMeshCollider.SetFile(kcl, mClsnMat, 0x1800, mAngleY, *data_ov002_02108ab0[idx].clps);
         } else {
-            KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(*data_ov002_02108ab0[idx].clsnFile);
+            KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov002_02108ab0[idx].clsnFile);
             mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, *data_ov002_02108ab0[idx].clps);
         }
     } else {
-        KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(*data_ov002_02108ab0[idx].clsnFile);
+        KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov002_02108ab0[idx].clsnFile);
         mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, *data_ov002_02108ab0[idx].clps);
     }
 

@@ -107,8 +107,8 @@ int daRFlag_c::Behavior() {
 }
 
 int daRFlag_c::InitResources() {
-    mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov062_0211e0d4), 1, -1);
-    mAnmModel.SetAnim((BCA_File *)dExtFrameCtrl_c::LoadFile(data_ov062_0211e0dc), 0, 0x1000, 0);
+    mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov062_0211e0d4), 1, -1);
+    mAnmModel.SetAnim(dExtFrameCtrl_c::LoadFile(data_ov062_0211e0dc), 0, 0x1000, 0);
     mdCcAc_c.Init(this, 0x35555, 0x294000, 0x280000c, 0);
     mHasTouchedFlag = 0xff;
     mVictoryTimer = 0;

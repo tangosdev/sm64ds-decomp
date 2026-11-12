@@ -58,10 +58,6 @@ struct EyBmVec3 {
 extern EyBmVec3 data_ov071_021230b8;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
-/* local extern: MTX_MultVec43 has no shared header. This TU keeps VecFx32
-   temporaries to avoid Vector3 cleanup, then casts at the helper boundary. */
-extern "C" void MTX_MultVec43(Vector3 *source, Matrix4x3 *matrix, Vector3 *destination);
-
 /* dActor_c::mFlags bits 0x20000 and 0x40000 are the two yoshi-mouth states:
  * Yoshi is eating the actor, then has it in his mouth. Actor ID 0xbf is
  * PLAYER. These int-returning predicates are what make the ROM materialize

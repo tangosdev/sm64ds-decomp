@@ -244,7 +244,7 @@ s32 daObjFl_Amilift_c::InitResources() {
     Vector3 nodeB;
     unsigned char b;
 
-    bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov064_0211c730);
+    bmd = dExtSimpleModel_c::LoadFile(data_ov064_0211c730);
     mModel.SetFile(bmd, 1, -1);
 
     b = (param1 >> 8) & 1;
@@ -258,7 +258,7 @@ s32 daObjFl_Amilift_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov064_0211c728);
+    kcl = dBgW_Kc::LoadFile(data_ov064_0211c728);
     mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov064_0211bb6c);
 
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);

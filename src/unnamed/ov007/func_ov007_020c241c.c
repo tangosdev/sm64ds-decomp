@@ -1,8 +1,8 @@
 #include "types.h"
 #include "Ov007Light.h"
+#include "Ov007MenuMem.h"
 
 extern Vector3 data_ov007_020d7dac;
-extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020c2390(Ov007Light *light);
 
 /* Builds hardware light `id`: white, enabled, shining from

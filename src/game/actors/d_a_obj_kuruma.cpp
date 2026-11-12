@@ -68,11 +68,11 @@ s32 daObjKuruma_c::Behavior() {
  * is dBgW_Kc::LoadFile, slot 2 is CLPS into SetFile; then bind the mesh
  * to dBgW::UpdatePosWithVelocity. No field of this class is seeded. */
 int daObjKuruma_c::InitResourcesFrom(Resources *resources) {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*resources->model), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(*resources->model), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*resources->collision), mClsnMat, 0x199,
-                          mAngleY, *resources->clps);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*resources->collision), mClsnMat, 0x199, mAngleY,
+                          *resources->clps);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
     return 1;
 }

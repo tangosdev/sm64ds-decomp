@@ -332,9 +332,9 @@ void daRNk_c::func_ov062_0211a9c4()
     daRFlag_c *flag;
     struct Vector3 *sp;
 
-    val = *(unsigned short *)&this->mStateTimer;
+    val = this->mStateTimer;
     if (val != 0) {
-        *(unsigned short *)&this->mStateTimer = val - 1;
+        this->mStateTimer = val - 1;
         return;
     }
 
@@ -659,7 +659,7 @@ void daRNk_c::func_ov062_02119be0() {
     int y;
     int z;
 
-    tp = (unsigned short *)&this->mStateTimer;
+    tp = &this->mStateTimer;
     t = *tp;
     if (t != 0) {
         t--;
@@ -668,7 +668,7 @@ void daRNk_c::func_ov062_02119be0() {
 
     switch (this->mStep) {
     case 0:
-        if (*(unsigned short *)&this->mStateTimer != 0)
+        if (this->mStateTimer != 0)
             return;
         {
             Vector3 *pp = &this->mPlayer->mPos;
@@ -829,11 +829,10 @@ int daRNk_c::func_ov062_02119af0() {
     int dot = (dxc >> 0xc) * (dx >> 0xc) + (dzc >> 0xc) * (dz >> 0xc);
     if (dot <= 0 || Vec3_Dist(&p->mPos, (Vector3 *)&p->mPathTarget) < (p->mHorzSpeed >> 1)) {
         int v = p->mPathTarget.x;
-        int *cnt = &p->mCurPathPt;
         p->mPrevPathPt.x = v;
         p->mPrevPathPt.y = p->mPathTarget.y;
         p->mPrevPathPt.z = p->mPathTarget.z;
-        *cnt = *cnt + 1;
+        p->mCurPathPt++;
         if (p->mCurPathPt >= p->mNumPathPts) {
             p->mCurPathPt = 0;
         }

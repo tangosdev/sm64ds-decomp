@@ -216,12 +216,12 @@ int daObjFloatBoard_c::InitResourcesFrom(daObjFloatBoard_c_Resources *fp) {
     KCL_File *kcl;
     int vy, vz, vx;
 
-    bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(*fp->model);
+    bmd = dExtSimpleModel_c::LoadFile(*fp->model);
     mModel.SetFile(bmd, 1, -1);
     mFileTable = fp;
     UpdateModelMatrix();
     UpdateClsnPosAndRot();
-    kcl = (KCL_File *)dBgW_Kc::LoadFile(*fp->collision);
+    kcl = dBgW_Kc::LoadFile(*fp->collision);
     mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, *fp->clps);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
