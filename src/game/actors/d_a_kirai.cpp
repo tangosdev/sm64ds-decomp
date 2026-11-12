@@ -285,7 +285,7 @@ int daKirai_c::InitResources() {
     Vector3 v;
     Vector3 z;
 
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov060_0211b1c4), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov060_0211b1c4), 1, -1);
     v.x = 0;
     v.y = -0x96000;
     v.z = 0;

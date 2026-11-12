@@ -171,7 +171,7 @@ s32 daHolhei_c::OnAimedAtWithEgg() {
    home and previous positions, then the starting state. */
 int daHolhei_c::InitResources()
 {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(gHoruheiModelFile), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(gHoruheiModelFile), 1, -1);
     mShadowModel.InitCylinder();
     dExtFrameCtrl_c::LoadFile(gHoruheiLiftAnimationFile);
     dExtFrameCtrl_c::LoadFile(gHoruheiLiftLoopAnimationFile);

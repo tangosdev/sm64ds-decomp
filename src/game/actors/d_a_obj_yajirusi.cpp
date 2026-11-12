@@ -110,17 +110,16 @@ int daObjYajirusi_c::InitResources() {
     }
 
     u32 modelIndex = mVariant;
-    void *model = dExtSimpleModel_c::LoadFile(*data_ov098_0213c380[modelIndex].modelFile);
-    mModel.dExtModel_c::SetFile((BMD_File *)model, 1, -1);
+    BMD_File *model = dExtSimpleModel_c::LoadFile(*data_ov098_0213c380[modelIndex].modelFile);
+    mModel.dExtModel_c::SetFile(model, 1, -1);
     mShadowModel.InitCuboid();
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     UpdateShadowMatrix();
 
     u32 collisionIndex = mVariant;
-    void *kcl = dBgW_Kc::LoadFile(*data_ov098_0213c380[collisionIndex].clsnFile);
-    mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat, 0x199, mAngleY,
-                          *data_ov098_0213c380[collisionIndex].clps);
+    KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov098_0213c380[collisionIndex].clsnFile);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, *data_ov098_0213c380[collisionIndex].clps);
     return 1;
 }
 

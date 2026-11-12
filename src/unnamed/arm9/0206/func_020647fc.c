@@ -10,7 +10,7 @@ void func_020647fc(WBTPacketBitmap *pkt, int length, unsigned int *bitmap, unsig
     int d = func_02065bd0();
     int r;
     pkt->length = length;
-    pkt->pad_08 = 0;
+    pkt->next = 0;
     pkt->current = 0;
     pkt->recv_count = 0;
     pkt->count = length / d + (length % d != 0);

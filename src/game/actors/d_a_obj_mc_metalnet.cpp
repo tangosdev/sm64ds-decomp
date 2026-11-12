@@ -72,11 +72,11 @@ extern "C" daObjMc_Metalnet_c *daObjMc_Metalnet_c_classInit(void) {
  *   otherwise               the net is removed once the player has 150 stars.
  * Either way, mode 1 short-circuits both and the net always stays. */
 s32 daObjMc_Metalnet_c::InitResources() {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov009_02113e90), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov009_02113e90), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov009_02113e88);
+    KCL_File *kcl = dBgW_Kc::LoadFile(data_ov009_02113e88);
     mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov009_02112bf8);
 
     if ((param1 & 0xff) == 0xff) {

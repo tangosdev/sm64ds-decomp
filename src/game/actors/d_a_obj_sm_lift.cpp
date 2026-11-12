@@ -218,13 +218,12 @@ s32 daObjSm_Lift_c::InitResources() {
     mPathId = *(int *)(c + 8) & 0xff;
     if (mPathId == 0xff)
         return 0;
-    void *f = dExtSimpleModel_c::LoadFile(gSmLiftModelFile);
-    ((dExtModel_c *)&mModel)->SetFile((BMD_File *)f, 1, -1);
+    BMD_File *f = dExtSimpleModel_c::LoadFile(gSmLiftModelFile);
+    ((dExtModel_c *)&mModel)->SetFile(f, 1, -1);
     UpdateModelTransform();
     UpdateClsnPosAndRot();
-    void *kf = dBgW_Kc::LoadFile(gSmLiftCollisionFile);
-    mMeshCollider.SetFile((KCL_File *)kf, mClsnMat, 0x1000, mAngleY,
-                          *(CLPS_Block *)data_ov018_02112f48);
+    KCL_File *kf = dBgW_Kc::LoadFile(gSmLiftCollisionFile);
+    mMeshCollider.SetFile(kf, mClsnMat, 0x1000, mAngleY, *(CLPS_Block *)data_ov018_02112f48);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
     mPauseTimer = 0x3c;

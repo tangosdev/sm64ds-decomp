@@ -136,8 +136,7 @@ int dScMgMCarlo2_c::CanEndState(int /* mode */)
     switch (state) {
     case 4:
         if (mDealer.IsIdle() != 0) {
-            short *p = &mRoundState;
-            *p += 1;
+            mRoundState++;
         }
         break;
     case 5: {
@@ -168,17 +167,12 @@ int dScMgMCarlo2_c::CanEndState(int /* mode */)
     return 0;
 }
 
-/* Slot 6. The state at mRoundState is bumped through an int-cast pointer each
- * time: plain `mRoundState++` recomputes the address, and the ROM keeps it in a
- * register. sMCarlo2DealProgress is the dealt-card count, shifted left 12. */
+/* Slot 6. sMCarlo2DealProgress is the dealt-card count, shifted left 12. */
 s32 dScMgMCarlo2_c::Behavior()
 {
     switch (mRoundState) {
     case 1:
-        {
-        s16 *p = &mRoundState;
-        (*p)++;
-        }
+        mRoundState++;
         if (mPromptBlinkCount == 0) {
             mPromptEnabled = 1;
             mPromptBlinkCount = 1;
@@ -190,10 +184,7 @@ s32 dScMgMCarlo2_c::Behavior()
         if (mDealCount == 4) {
             if (dScMgMCarlo2_c::BoardBusy() == 0) {
                 mDealCount = 0;
-                {
-                    s16 *p = &mRoundState;
-                    (*p)++;
-                }
+                mRoundState++;
             }
         }
         break;
@@ -230,10 +221,7 @@ s32 dScMgMCarlo2_c::Behavior()
                             mDealer.PlayLose();
                             Mg_SetSharedState(MG_STATE_GAME_OVER);
                             mPromptEnabled = 0;
-                            {
-                                s16 *p = &mRoundState;
-                                (*p)++;
-                            }
+                            mRoundState++;
                         }
                     }
                     sMCarlo2PickAllowed = 0;

@@ -151,8 +151,8 @@ void Cursor_SetSpriteMode(Ov007Sprite *sprite, int idx) {
     sprite->width = data_ov007_020d7ddc[idx * 2];
     sprite->height = data_ov007_020d7ddd[idx * 2];
     sprite->shadowPolygonId = data_ov007_020d7dc0[idx];
-    sprite->shadowOffset[0] = data_ov007_020d7de8[idx * 2];
-    sprite->shadowOffset[1] = data_ov007_020d7dea[idx * 2];
+    sprite->shadowOffset.x = data_ov007_020d7de8[idx * 2];
+    sprite->shadowOffset.y = data_ov007_020d7dea[idx * 2];
     if (idx == 1)
         sprite->depth = -0x10c0;
     else

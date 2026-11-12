@@ -470,19 +470,13 @@ void dScMgMemory2_c::CardSelect(int cardIndex) {
 
     mSelectedValues[selectionIndex] = mCards[cardIndex].value;
     mSelectedCards[mSelectedCount] = (u8)cardIndex;
-    {
-        u8 *selectedCount = &mSelectedCount;
-        *selectedCount = *selectedCount + 1;
-    }
+    mSelectedCount++;
     mCards[cardIndex].state = CARD_FLIP_UP;
     func_02012718(0x143, mCards[cardIndex].x);
 
     if (mInputSeen != 0)
         return;
-    {
-        u8 *inputSeen = &mInputSeen;
-        *inputSeen = *inputSeen + 1;
-    }
+    mInputSeen++;
     Mg_SaveRecordPair(mCredits, mHudScore);
 }
 
@@ -565,8 +559,7 @@ void dScMgMemory2_c::ResultFinish() {
 
 void dScMgMemory2_c::ResultTurnCards() {
     if (mCardTimer) {
-        unsigned short *timer = &mCardTimer;
-        *timer = *timer - 1;
+        mCardTimer--;
         return;
     }
     if (mPairsFound >= mTargetPairs) {
@@ -598,8 +591,7 @@ void dScMgMemory2_c::ResultTurnCards() {
 
 void dScMgMemory2_c::ResultReward() {
     if (mCardTimer != 0) {
-        unsigned short *timer = &mCardTimer;
-        *timer = *timer - 1;
+        mCardTimer--;
         if (mCardTimer != 0) {
             return;
         }

@@ -89,15 +89,15 @@ int daObjTtWater_c::Behavior() {
 }
 
 int daObjTtWater_c::InitResources() {
-    void *m = dExtSimpleModel_c::LoadFile(data_ov033_021124f0);
-    mModel.SetFile((BMD_File *)m, 1, 0x14);
+    BMD_File *m = dExtSimpleModel_c::LoadFile(data_ov033_021124f0);
+    mModel.SetFile(m, 1, 0x14);
     dExtAnmTexSRT_c::Prepare(*(BMD_File *)data_ov033_021124f0.filePtr,
                              *(BTA_File *)data_ov033_02111bc8);
     mTextureTransformer.SetFile(*(BTA_File *)data_ov033_02111bc8, 0, 0x1000, 0);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    void *mc = dBgW_Kc::LoadFile(data_ov033_021124e8);
-    mMeshCollider.SetFile((KCL_File *)mc, mClsnMat, 0x1000, mAngleY, data_ov033_02111c1c);
+    KCL_File *mc = dBgW_Kc::LoadFile(data_ov033_021124e8);
+    mMeshCollider.SetFile(mc, mClsnMat, 0x1000, mAngleY, data_ov033_02111c1c);
     mMeshCollider.Enable(this);
     mMinPosY = mPosY - 0x3c000;
     return Event::GetBit(0xe) == 0;

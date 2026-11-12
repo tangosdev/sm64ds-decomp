@@ -42,15 +42,15 @@ void Matrix4x3_ApplyInPlaceToRotationZXYExt(Matrix4x3 *, int, int, int);
 void Matrix4x3_FromRotationXYZExt(Matrix4x3 *, int, int, int);
 void Matrix4x3_FromRotationZXYExt(Matrix4x3 *, int, int, int);
 void MTX_Concat43(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *out);
-/* dst = v * m (rotation and translation). */
-void MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
-/* out = in * m (rotation only). */
-void MTX_MultVec33(const Vector3 *, const Matrix3x3 *, Vector3 *);
 void MTX_Identity43_(Matrix4x3 *);
 /* m = rotation about one axis, from its sine and cosine. */
 void MTX_RotX43_(Matrix4x3 *, int, int);
 void MTX_RotY43_(Matrix4x3 *, int, int);
 void MTX_RotZ43_(Matrix4x3 *, int, int);
+/* dst = v * m (rotation and translation). */
+void MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
+/* out = in * m (rotation only). */
+void MTX_MultVec33(const Vector3 *, const Matrix3x3 *, Vector3 *);
 /* dst = inverse of src; -1 (dst untouched) when src is singular, else 0. */
 int MTX_Inverse43(const Matrix4x3 *, Matrix4x3 *);
 

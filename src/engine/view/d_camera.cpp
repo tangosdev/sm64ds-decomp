@@ -53,6 +53,7 @@
 #include "OAM.h"
 #include "nitro/gx/g2.h"
 #include "nitro/gx/g3_util.h"
+#include "nitro/gx/g3imm_cmd.h"
 #include "nitro/fx/fx_cp.h"
 
 /* Defined at the bottom of this file; every use here only takes the address. */
@@ -451,8 +452,7 @@ int dCamera_c::Render()
 
     SetFovAngle(fov);
 
-    *(volatile s32 *)0x04000580 =
-        mViewport[0] | (mViewport[1] << 8) | (mViewport[2] << 16) | (mViewport[3] << 24);
+    G3_ViewPort(mViewport[0], mViewport[1], mViewport[2], mViewport[3]);
 
     s32 scaleW;
     if (gCurrentSublevel == 0x28) {

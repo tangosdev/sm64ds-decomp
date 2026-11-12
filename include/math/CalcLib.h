@@ -42,7 +42,7 @@ void VEC_Add(Vector3 *, Vector3 *, Vector3 *);
 void VEC_Subtract(Vector3 *, Vector3 *, Vector3 *);
 /* Length of v. */
 int VEC_Mag(const Vector3 *);
-/* a . b, in 20.12. */
+/* a . b, in fx32. */
 Fix12i VEC_DotProduct(const Vector3 *, const Vector3 *);
 /* The same two add/subtract routines under the name the newer TUs use. */
 void Vec3_Add(Vector3 *, const Vector3 *, const Vector3 *);

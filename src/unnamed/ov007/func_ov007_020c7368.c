@@ -1,7 +1,7 @@
 #include "Ov007Spring.h"
+#include "Ov007MenuMem.h"
 
 extern void func_ov007_020c78dc(Ov007PointList *list);
-extern void func_ov007_020c3d1c(void *p);
 
 /* Frees a func_ov007_020c73f0 grid: every row list, then every column list
  * (func_ov007_020c78dc), both list arrays and the grid itself. */
