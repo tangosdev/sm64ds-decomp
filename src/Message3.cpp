@@ -21,9 +21,9 @@
  *   byte stride, so the cast stays at that use.
  * - LayoutLineVS keeps the char-cast handler call: data_02092830[idx - 1]()
  *   subtracts first, a 6-word DIFF.
- * - func_020319fc keeps the char-cast spill-over store and data_0209fd5c read:
- *   dst[wordIdx + 8] grows the function by 4 bytes, and also indexing
- *   data_0209fd5c shrinks it by 8.
+ * - func_020319fc writes the spill-over store as (&dst[wordIdx])[8] and keeps
+ *   the char-cast data_0209fd5c read: dst[wordIdx + 8] grows the function by
+ *   4 bytes, and indexing data_0209fd5c shrinks it by 8.
  * - SetTextGlobalsVS keeps the r2/r3 temps. One expression reorders the load
  *   of *(r2 + 4) against the store of r3.
  * - Address-named helpers stay address-named.
@@ -537,7 +537,7 @@ extern "C" void func_020319fc(int n) {
             rem = col & 7;
             dst[wordIdx] = (data_0209287c[rem] & data_0209fd5c[i + j * 0x10]) | dst[wordIdx];
             if (rem != 0)
-                *(u32 *)((char *)&dst[wordIdx] + 0x20) =
+                (&dst[wordIdx])[8] =
                     data_0209283c[rem] & *(u32 *)((char *)data_0209fd5c + ((i + j * 0x10) << 2));
             col = (col + data_0209fd20[j]) & 0xff;
         }
@@ -1452,11 +1452,8 @@ void Message::DisplayOptionsMenuTextVS(s16 arg) {
     func_02033e50(0x18f, 0x28);
     data_0209fce8 = data_0209fce8 + 1;
     func_02033e50(0x197, 0x28);
-    {
-        u8 old = *(volatile u8 *)&data_0209fc78;
-        data_0209fce8 = 8;
-        data_0209fc78 = old << 1;
-    }
+    data_0209fc78 = data_0209fc78 << 1;
+    data_0209fce8 = 8;
     Message_DrawCenteredLineVS(0x280, 0x20);
 }
 
@@ -1757,7 +1754,7 @@ extern "C" void func_020345b0(int arg0) {
     volatile s32 li;
     volatile u16 ls;
 
-    if (*(u16 *)((char *)data_0209fcf8 + 8) <= (u16)arg0) {
+    if (((MessageInfoSection *)data_0209fcf8)->messageCount <= (u16)arg0) {
         return;
     }
 
@@ -1773,11 +1770,11 @@ extern "C" void func_020345b0(int arg0) {
         (u8 *)(data_0209fd14 + (sizeof(MessageBankHeader) + sizeof(MessageDataSection)) +
                ((MessageInfoSection *)data_0209fcf8)->sectionSize +
                ((MessageEntry *)((char *)data_0209fd08 + data_0209fce8 * 8))->textOffset);
-    data_0209fc78 = (u8)((*(u16 *)((char *)data_0209fd00 + 4) + 7) / 8);
+    data_0209fc78 = (u8)((((MessageEntry *)data_0209fd00)->width + 7) / 8);
     data_0209fce4 = 0x7f;
     data_0209fc6c = (u8)(((0x20 - (data_0209fc78 + 2)) / 2) * 8);
     data_0209fcc0 = 0x63;
-    data_0209fce0 = (u8)(0x64 - (((*(u8 *)((char *)data_0209fd00 + 6) * 2 + 1) * 8) / 2));
+    data_0209fce0 = (u8)(0x64 - (((((MessageEntry *)data_0209fd00)->lineCount * 2 + 1) * 8) / 2));
     data_0209fc8c = 0x7f;
     data_0209fc74 = 0x63;
     data_0209fcac = 0;
@@ -1801,7 +1798,7 @@ extern "C" void func_020345b0(int arg0) {
 
     i = 0;
     cols = data_0209fc78;
-    if ((s32)(cols * (*(u8 *)((char *)data_0209fd00 + 6)) * 2) > 0) {
+    if ((s32)(cols * (((MessageEntry *)data_0209fd00)->lineCount) * 2) > 0) {
         last = cols - 1;
         do {
             s32 rem = i % cols;
@@ -1810,7 +1807,7 @@ extern "C" void func_020345b0(int arg0) {
                 scr += 0x20;
             }
             i++;
-        } while (i < (s32)(cols * (*(u8 *)((char *)data_0209fd00 + 6)) * 2));
+        } while (i < (s32)(cols * (((MessageEntry *)data_0209fd00)->lineCount) * 2));
     }
 
     t = data_0209fcc8;
