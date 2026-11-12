@@ -10,7 +10,7 @@
     "Order: mwccarm emits the bodies in reverse. The SDK file's order (WM_SetIndCallback, WM_SetPortCallback, WM_ReadStatus, WM_GetMPSendBufferSize, WM_GetMPReceiveBufferSize, WM_ReadMPData, WM_GetAllowedChannel, WM_GetLinkLevel, with the uncalled WM_GetDispersionBeaconPeriod, WM_GetDispersionScanPeriod, WM_GetOtherElements and WM_GetNextTgid absent) is the ROM's order reversed, as in pret's pokediamond WM_sync.s.",
     "The SDK's own sizeof expressions in WM_GetMPReceiveBufferSize (WMMpRecvHeader, WMMpRecvData, WMMpRecvBuf at the public header's layouts) produce the ROM's constants 0x29, 0xc and 0x51.",
     "No data: no function owns .rodata, .data or .bss.",
-    "BOTTOM EDGE: WM_Init (src/WM_Init.cpp, 0x020616e8..0x020618b8), wm_system.c. TOP EDGE: the wm_standard.c run (src/engine/wm/WM_Standard.c) starts at 0x02061d30."
+    "BOTTOM EDGE: the wm_system.c run (src/engine/wm/WM_System.c) ends at 0x020618b8 with WM_Init. TOP EDGE: the wm_standard.c run (src/engine/wm/WM_Standard.c) starts at 0x02061d30."
   ],
   "sections": [
     {
