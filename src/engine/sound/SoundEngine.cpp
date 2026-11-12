@@ -388,11 +388,11 @@ extern void func_0204f630(NNSSndSeqPlayer *player);
 extern NNSSndSeqPlayer *func_0204f63c(NNSSndHandle *handle, int playerIdx, int prio);
 extern void func_0204f6f8(NNSSndHandle *handle, int seqArcNo, int index);
 extern void func_0204f720(NNSSndHandle *handle, int seqNo);
-extern void func_0204f934(int **p);
-extern void func_0204f94c(int *p);
+extern void func_0204f934(NNSSndHandle *handle);
+extern void func_0204f94c(NNSSndHandle *handle);
 extern void func_0204f958(int idx, int val);
 extern void func_0204f9c4(int idx, int arg1);
-extern int func_0204fa2c(int *p, int fade);
+extern int func_0204fa2c(NNSSndHandle *handle, int fade);
 extern int func_0204fa3c(int playerNo, struct SndHeap *heap, u32 size);
 extern void func_0204fafc(void);
 extern void func_0204fc40(void);
@@ -467,7 +467,7 @@ extern int func_02051a98(NNSSndHandle *handle, int playerNo, unsigned int bankNo
                          struct Elem *seq, struct ElemTable *arc, int seqArcNo, int index);
 extern int func_02051bd0(NNSSndHandle *handle, int playerNo, unsigned int bankNo, int playerPrio,
                          Sound::InfoSequenceEntry *info, int seqNo);
-extern int func_02051e60(int a, int b, int c, int d, unsigned int arg5, int arg6);
+extern int func_02051e60(NNSSndHandle *handle, int b, int c, int d, unsigned int arg5, int arg6);
 extern int func_02051f1c(void *a0, u32 a1, int a2);
 extern int func_02051fb4(void *thiz, unsigned int id);
 extern int func_02052008(struct SndHeap *heap);
@@ -696,7 +696,7 @@ extern "C" int func_02051f1c(void *handle, u32 seqArcNo, int index) {
                          seq->playerPriority, seq, arc, (int)seqArcNo, index);
 }
 
-extern "C" int func_02051e60(int handle, int playerNo, int bankNo, int playerPrio,
+extern "C" int func_02051e60(NNSSndHandle *handle, int playerNo, int bankNo, int playerPrio,
                              unsigned int seqArcNo, int index) {
     struct SndArchiveInfo *info;
     struct Elem *seq;
@@ -716,8 +716,7 @@ extern "C" int func_02051e60(int handle, int playerNo, int bankNo, int playerPri
         bankNo = seq->bankId;
     if (playerNo < 0)
         playerNo = seq->playerNumber;
-    return func_02051a98((NNSSndHandle *)handle, playerNo, bankNo, playerPrio, seq, arc, seqArcNo,
-                         index);
+    return func_02051a98(handle, playerNo, bankNo, playerPrio, seq, arc, seqArcNo, index);
 }
 
 extern "C" int func_02051bd0(NNSSndHandle *handle, int playerNo, unsigned int bankNo,
@@ -1876,11 +1875,10 @@ extern "C" int func_0204fa3c(int playerNo, struct SndHeap *heap, u32 size) {
     return 1;
 }
 
-extern "C" int func_0204fa2c(int *p, int fade)
-{
+extern "C" int func_0204fa2c(NNSSndHandle *handle, int fade) {
     /* func_0204f5a0 is void, so there is no return: the call is a tail call and r0 is the
        callee's. */
-    func_0204f5a0((NNSSndSeqPlayer *)*p, fade);
+    func_0204f5a0(handle->player, fade);
 }
 
 extern "C" void func_0204f9c4(int idx, int arg1) {
@@ -1907,16 +1905,15 @@ extern "C" void func_0204f958(int idx, int val) {
     } while (cur != 0);
 }
 
-extern "C" void func_0204f94c(int *p)
-{
-    p[0] = 0;
+extern "C" void func_0204f94c(NNSSndHandle *handle) {
+    handle->player = 0;
 }
 
-extern "C" void func_0204f934(int **p) {
-    int *q = *p;
-    if (q != 0) {
-        *q = 0;
-        *p = 0;
+extern "C" void func_0204f934(NNSSndHandle *handle) {
+    NNSSndSeqPlayer *player = handle->player;
+    if (player != 0) {
+        player->handle = 0;
+        handle->player = 0;
     }
 }
 
@@ -2043,7 +2040,7 @@ extern "C" NNSSndSeqPlayer *func_0204f63c(NNSSndHandle *handle, int playerIdx, i
     SoundPlayerRecord *record = &data_020a4d6c[playerIdx];
     NNSSndSeqPlayer *player;
     if (handle->player != 0)
-        func_0204f934((int **)handle);
+        func_0204f934(handle);
     if (record->mLists[0].numObjects >= record->mPlayableSeqCount) {
         NNSSndSeqPlayer *oldest =
             (NNSSndSeqPlayer *)NNS_FndGetNextListObject(&record->mLists[0], 0);
