@@ -363,7 +363,6 @@ extern int data_ov022_0211427c[];
 extern int data_ov025_02112654(void*);
 extern int data_ov025_02113814[];
 /* data_ov026_02113f2c is defined by d_a_water_tatumaki.cpp. */
-extern int data_ov027_021138f4[];
 extern int data_ov029_02112b2c[];
 extern struct daObjFloatBoard_c_Resources data_ov029_02113be8;
 extern struct daObjFloatBoard_c_Resources data_ov029_02113f00;
@@ -393,8 +392,6 @@ extern int data_ov063_0211e22c[];
 extern int data_ov063_0211e27c[];
 extern int data_ov063_0211e28c[];
 extern int data_ov063_0211edc0;
-extern int data_ov064_0211b834;
-extern int data_ov064_0211b93c;
 extern int data_ov064_0211c198[];
 extern int data_ov066_0211ad18[];
 extern int data_ov070_021234c4;
