@@ -2469,6 +2469,7 @@ int port_mods_count(void);
 int port_mods_multiplayer(void);
 const char *port_mods_id(int i);
 const char *port_mods_kind(int i);
+const char *port_mods_code_refusal(void);   /* hal/mods.cpp (SEAMCODE1): a loaded plugin that cannot be switched in place */
 void port_join_settings_rearm(void);                   /* hal/menu_join_plate.cpp */
 void port_luigi_match_reset(void);
 void port_window_quit(int code);                       /* hal/handoff_poll.cpp: WM_QUIT, the window's own way out */
@@ -2575,13 +2576,7 @@ static const char *vs_end_refusal(void)
     if (const char *sc = std::getenv("SM64DS_SCENE"))
         if (*sc) return "a scene-booted process";
     if (!port_scene_is_hosted(1)) return "this build does not host the title scene";
-    for (int i = 0; i < port_mods_count(); ++i) {
-        const char *k = port_mods_kind(i);
-        if (k && !std::strcmp(k, "code")) {
-            std::snprintf(why, sizeof why, "a code mod is loaded (%s) and a plugin cannot be unloaded", port_mods_id(i));
-            return why;
-        }
-    }
+    if (const char *cr = port_mods_code_refusal()) return cr;   /* SEAMCODE1: a code mod is switched off in place, not refused */
     return 0;
 }
 

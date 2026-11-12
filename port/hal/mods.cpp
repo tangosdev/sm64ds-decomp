@@ -922,6 +922,31 @@ const char *port_mods_min_game(int i) { latch(); return i >= 0 && i < (int)g_mod
 int port_mods_api(int i) { latch(); return i >= 0 && i < (int)g_mods.size() ? g_mods[i].api : 0; }
 const char *port_mods_bundle(void) { latch(); return g_bundle.c_str(); }
 
+int port_mod_plugin_state(const char *id);                            /* hal/mod_plugins.cpp (SEAMCODE1) */
+int port_mod_plugin_switch(const char *id, int on, const char *why);
+int port_mod_plugin_load_late(int i, const char *why);
+int port_mod_plugin_switch_undo(const char *id, int on, const char *why);
+
+/* SEAMCODE1: the one answer every in-place start and leave asks about code mods (it replaces their "a code mod is loaded and a plugin
+   cannot be unloaded" loops). A code mod in the list stops nothing by itself any more: hal/mod_plugins.cpp switches a loaded plugin
+   off (its code patches put back, its callbacks no longer called) when the relatch takes it out of the list, and on again (or loads
+   it at the title) when the list brings it back. Only a loaded plugin that cannot be switched refuses, in this one line. 0 = no
+   code mod stands in the way. */
+const char *port_mod_plugin_switch_refusal(const char *id);   /* hal/mod_plugins.cpp */
+const char *port_mods_code_refusal(void)
+{
+    static char buf[240];
+    latch();
+    for (size_t i = 0; i < g_mods.size(); ++i) {
+        if (g_mods[i].kind != "code") continue;
+        if (const char *r = port_mod_plugin_switch_refusal(g_mods[i].id.c_str())) {
+            snprintf(buf, sizeof buf, "code mod %s cannot be switched off in place (%s)", g_mods[i].id.c_str(), r);
+            return buf;
+        }
+    }
+    return 0;
+}
+
 int port_mods_stage_entry(int i, char *path, unsigned cap, const char **mod)
 {
     stage_take();
@@ -983,7 +1008,8 @@ struct UiFileHookSet { UiFileHookSet() { port_ui_file_hook = port_mods_ui_file; 
    what the last latch emitted and read), the textures_hd index is built again and gx.cpp's decode cache dropped with the GPU
    generation it feeds. What is held at the title cannot be switched here, so the call REFUSES, changing nothing, and the caller
    restarts as before:
-     - a code mod on either side (a plugin DLL cannot be unloaded);
+     - a code mod on either side whose loaded plugin cannot be switched off and on in place (SEAMCODE1: hal/mod_plugins.cpp; a
+       plugin leaving the list is switched off, one coming back is switched on or loaded at the title);
      - a change in which mods ship hd_ui/ while the settings page or the character door is open (their pictures are on screen);
        otherwise the seven menu art caches that decode hd_ui/ once are reset below (lane SEAMART1) and the next draw decodes the
        new list's pictures;
@@ -1225,10 +1251,17 @@ int relatch(const char *reason, const char *list_json)
     g_log_hold = 0;
     g_relatching = 0;
 
+    /* SEAMCODE1: a code mod on either side no longer refuses by itself. A plugin leaving the list is switched off below and one
+       coming back is switched on (or loaded here at the title when this process never loaded it); only a loaded plugin that cannot
+       be switched (hal/mod_plugins.cpp port_mod_plugin_switch_refusal) refuses, as before, changing nothing. */
     for (size_t i = 0; i < old_mods.size() && !why[0]; ++i)
-        if (old_mods[i].kind == "code") snprintf(why, sizeof why, "code mod %s is on now", old_mods[i].id.c_str());
+        if (old_mods[i].kind == "code")
+            if (const char *r = port_mod_plugin_switch_refusal(old_mods[i].id.c_str()))
+                snprintf(why, sizeof why, "code mod %s is on now and cannot be switched in place (%s)", old_mods[i].id.c_str(), r);
     for (size_t i = 0; i < g_mods.size() && !why[0]; ++i)
-        if (g_mods[i].kind == "code") snprintf(why, sizeof why, "code mod %s would be on", g_mods[i].id.c_str());
+        if (g_mods[i].kind == "code")
+            if (const char *r = port_mod_plugin_switch_refusal(g_mods[i].id.c_str()))
+                snprintf(why, sizeof why, "code mod %s would be on and cannot be switched in place (%s)", g_mods[i].id.c_str(), r);
     /* sound/ is not on this list any more (lane SEAMSND1): a change in the mods shipping it re-seats the sound archive below,
        hal/sdat/sdat.cpp sdat_reseat_mods, with the output device kept open. Nor is hd_ui/ (lane SEAMART1): a change in the mods
        shipping it resets the seven art caches below, unless a page drawing that art is open now (a busy art worker refused above). */
@@ -1269,6 +1302,34 @@ int relatch(const char *reason, const char *list_json)
                          held_path(it->first).c_str(), held_when(it->first));
             }
         }
+    }
+    if (!why[0]) {   /* SEAMCODE1: the plugins follow the new list (before the files layer below gathers the claims again). A code
+                        write that fails refuses the relatch: the switches already made are taken back, newest first, and the caller
+                        restarts, as it did for every code mod before SEAMCODE1. */
+        std::vector<std::pair<std::string, int> > made;   /* (id, state it was switched to) */
+        for (size_t i = 0; i < old_mods.size() && !why[0]; ++i) {
+            if (old_mods[i].kind != "code") continue;
+            bool kept = false;
+            for (size_t k = 0; k < g_mods.size() && !kept; ++k) kept = g_mods[k].id == old_mods[i].id;
+            const int st = port_mod_plugin_state(old_mods[i].id.c_str());
+            if (kept || st == 0 || st == 2) continue;
+            if (port_mod_plugin_switch(old_mods[i].id.c_str(), 0, reason)) made.push_back(std::make_pair(old_mods[i].id, 0));
+            else snprintf(why, sizeof why, "code mod %s could not be switched off in place (a code write failed)", old_mods[i].id.c_str());
+        }
+        for (size_t i = 0; i < g_mods.size() && !why[0]; ++i) {
+            if (g_mods[i].kind != "code") continue;
+            const int st = port_mod_plugin_state(g_mods[i].id.c_str());
+            if (st == 2) {
+                if (port_mod_plugin_switch(g_mods[i].id.c_str(), 1, reason)) made.push_back(std::make_pair(g_mods[i].id, 1));
+                else snprintf(why, sizeof why, "code mod %s could not be switched on in place (a code write failed)", g_mods[i].id.c_str());
+            } else if (st == 0) {
+                const int lr = port_mod_plugin_load_late((int)i, reason);
+                if (lr < 0) snprintf(why, sizeof why, "code mod %s registers on_file and cannot be loaded in place", g_mods[i].id.c_str());
+                else if (lr > 0 && port_mod_plugin_state(g_mods[i].id.c_str()) == 1) made.push_back(std::make_pair(g_mods[i].id, 1));
+            }
+        }
+        for (size_t k = made.size(); why[0] && k-- > 0;)
+            port_mod_plugin_switch_undo(made[k].first.c_str(), !made[k].second, "taking back a refused relatch");
     }
     if (why[0]) {
         g_mods = old_mods;

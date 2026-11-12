@@ -403,6 +403,7 @@ int port_mods_multiplayer(void);
 int port_mods_count(void);
 const char *port_mods_id(int i);
 const char *port_mods_kind(int i);
+const char *port_mods_code_refusal(void);   /* hal/mods.cpp (SEAMCODE1): a loaded plugin that cannot be switched in place */
 void host_setting_adventure_env_reread(void);                 /* hal/host_settings.cpp */
 int host_setting_lovesme_character(void);
 int host_setting_voice_enabled(void);
@@ -547,13 +548,10 @@ extern "C" int port_online_leave_refusal(const char **why)
     if (comms_transport()) { *why = "a DS session transport is installed"; return 1; }
     if (env_any("SM64DS_VS_COLORS")) { *why = "the lobby colours were read once at boot (SM64DS_VS_COLORS)"; return 1; }
     if (env_any("SM64DS_SCENE")) { *why = "a scene-booted process"; return 1; }
-    for (int i = 0; i < port_mods_count(); ++i) {
-        const char *k = port_mods_kind(i);
-        if (k && !std::strcmp(k, "code")) {
-            std::snprintf(buf, sizeof buf, "a code mod is loaded (%s) and a plugin cannot be unloaded", port_mods_id(i));
-            *why = buf;
-            return 1;
-        }
+    if (const char *cr = port_mods_code_refusal()) {   /* SEAMCODE1: a code mod is switched off in place, not refused */
+        std::snprintf(buf, sizeof buf, "%s", cr);
+        *why = buf;
+        return 1;
     }
     {   /* voice chat keeps its own device and thread (hal/voice_chat.cpp); this leave does not tear them down */
         const char *va = online_session_get(kSessVoiceAllowed);
@@ -653,13 +651,7 @@ const char *join_refusal()
     if (comms_transport()) return "a DS session transport is installed";
     if (comms_hub_active()) return "a hub of an earlier session is still installed";
     if (env_any("SM64DS_VS_COLORS")) return "the lobby colours were read once at boot (SM64DS_VS_COLORS)";
-    for (int i = 0; i < port_mods_count(); ++i) {
-        const char *k = port_mods_kind(i);
-        if (k && !std::strcmp(k, "code")) {
-            std::snprintf(buf, sizeof buf, "a code mod is loaded (%s) and a plugin cannot be unloaded", port_mods_id(i));
-            return buf;
-        }
-    }
+    if (const char *cr = port_mods_code_refusal()) return cr;   /* SEAMCODE1: a code mod is switched off in place, not refused */
     if (port_scene_live_id() != 1) return "the title is not the live scene";
     unsigned extra = 0;
     if (hub_game_heap_carved(&extra) && extra < hub_heap_need()) {
