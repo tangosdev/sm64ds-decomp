@@ -178,7 +178,7 @@ int daSnowball_c::State0() {
             this->mReachedSpawnY = 1;
         }
     }
-    if ((unsigned short)this->mStateTimer == 0 || mWithMeshClsn.IsOnGround() != 0) {
+    if (this->mStateTimer == 0 || mWithMeshClsn.IsOnGround() != 0) {
         func_02012694(SND3_SNOWBALL_BURST, &this->mCamSpacePosX);
         Particle::System::NewSimple(PTCL_SNOWBALL_BURST, this->mPosX, this->mPosY, this->mPosZ);
         MarkForDestruction();
@@ -249,7 +249,7 @@ int daSnowball_c::Render() {
  * a no-op in source terms; it stays as written, the shape these bytes were
  * matched with. */
 int daSnowball_c::Behavior() {
-    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     daSnowball_StateRec *rec = mStateRec;
     if (rec->update != 0)
         (this->*(rec->update))();
