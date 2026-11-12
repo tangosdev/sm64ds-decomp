@@ -583,19 +583,25 @@ extern "C" void *port_grock_spawn_copy(void *raw, const void *rotp, int star, in
 }
 
 /* Host only (SPAWNERS1). A friend broke this rock on his console: it breaks here
-   with the same dust and sound, and a star rock lets go of its star marker
-   without making a star (the breaker's console makes the one star and the coop
-   spawn sync shows it here). */
-extern "C" void port_grock_remote_break(void *raw)
+   with the same dust and sound, and a star rock lets its star out here too, the
+   way func_ov021_02112294 does. That star is linked to the level's placed star
+   marker on every console, so taking it on any console removes the others (the
+   coop spawn sync's linked-star rule): still one star for the room. Returns the
+   star made here (the coop side keeps its camera scene off this console), or 0. */
+extern "C" void *port_grock_remote_break(void *raw)
 {
     daGrock_c *rock = (daGrock_c *)raw;
+    dActor_c *star = 0;
 
     func_02012694(0x17a, &rock->mCamSpacePosX);
     rock->TriplePoofDust();
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x67, rock->mPosX, rock->mPosY, rock->mPosZ);
     if (rock->unk_3c1 != 0xff)
-        rock->UntrackStar(grock_star_slot(rock));
+        star = rock->UntrackAndSpawnStar(grock_star_slot(rock), rock->unk_3c1,
+                                         *(Vector3 *)&rock->mPosX,
+                                         rock->mType == kGrockStill ? 2 : 4);
     rock->MarkForDestruction();
+    return star;
 }
 
 /* Host only (SPAWNERS1), dev proof knob SM64DS_COOP_SPAWNERS_BREAK: the Mega

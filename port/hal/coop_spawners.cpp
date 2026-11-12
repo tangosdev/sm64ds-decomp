@@ -8,15 +8,17 @@
 // broke his made a star the others saw pop out of nothing while their own star rock and its marker rolled on, and a second
 // break made the star a second time (the coop spawn sync then had to throw the double away).
 //
-// The rule now. One console makes a spawner's rocks: its OWNER, the console that made the last one, or when that console is
-// gone (left the group, its spawner asleep in another area, no word for 3 s) the lowest seat whose spawner is awake. The
+// The rule now. One console makes a spawner's rocks: its OWNER, the lowest seat in the group whose spawner is awake (the
+// spawner of a console whose player is in another area of the level sleeps; a seat with no word for 3 s does not count). The
 // owner tells the room each rock it made (spawner slot, its id, its facing, star or not, the spawner's rock count); every
 // other console's spawner is held (the hook in daGrock_c::Behavior), and each friend makes the same rock the same way
 // (port_grock_spawn_copy: the spawner branch's own Spawn with the owner's facing). A rock's path is a pure function of its
 // facing (it rolls on fixed ground and nothing pushes it), so the copies roll the same path, a message delay behind.
 // A rock broken on one console (the hit handler's two break branches) is announced; the others break their copy with the
-// same dust and sound, and a star rock there lets go of its star marker WITHOUT making a star: the breaker's console makes
-// the one star, and the coop spawn sync (coop_spawn.cpp, runtime star announce) shows it everywhere.
+// same dust and sound, and a star rock lets its star out there too. That star is linked to the level's placed star marker
+// (slot 123 in act 1), the coop spawn sync never announces a linked star, and a take on any console removes the others'
+// (its linked-star gone rule), so the room still gets one star. The friend's copy never plays the star camera
+// (coop_camshield_mark).
 //
 // WIRE: SYNW sub-type kWorldSpawners = 0x6e, one datagram per message, three ops (hello, rock, break). 1.0.4 and older
 // builds have no handler for 0x6e: coop_world.cpp counts it as drop_unknown_sub and drops that one datagram, nothing else.
@@ -50,7 +52,8 @@ extern int (*port_coop_grock_held)(void *spawner);
 extern void (*port_coop_grock_spawned)(void *spawner, void *rock, const void *rot);
 extern void (*port_coop_grock_broken)(void *rock);
 void *port_grock_spawn_copy(void *spawner, const void *rot, int star, int count);
-void port_grock_remote_break(void *rock);
+void *port_grock_remote_break(void *rock);
+void coop_camshield_mark(void *a, const char *why);      // hal/coop_camshield.cpp (CANNON2): a friend's star never films here
 void port_grock_local_break(void *rock);
 int port_grock_info(const void *g, int *type, int *count, int *star_out, int *star_idx);
 }
@@ -171,7 +174,6 @@ bool seat_valid(int seat, int i, unsigned now) {
 void pick_owners(unsigned now) {
     for (int i = 0; i < g_nsp; ++i) {
         Sp &s = g_sp[i];
-        if (s.owner >= 0 && seat_valid(s.owner, i, now)) continue;
         int pick = -1;
         for (int q = 0; q < kCoopSeats && pick < 0; ++q) if (seat_valid(q, i, now)) pick = q;
         if (pick != s.owner) {
@@ -294,16 +296,9 @@ void apply_queue() {
                 const int i = sp_by_slot((short)w.slot);
                 if (i < 0) { ++g_st.ignored; continue; }
                 Sp &s = g_sp[i];
-                if (s.owner == g_my && q.seat > g_my) {     // two owners at once: the lower seat keeps it, the other yields
-                    ++g_st.ignored;
-                    if (g_log) std::fprintf(stderr, "[cspawn] seat %d's rock %u for spawner slot %d: I own it (lower seat): not copied wall=%lld\n", q.seat, (unsigned)w.ctr, (int)s.slot, wall_ms());
-                    continue;
-                }
-                if (s.owner != q.seat) {
-                    ++g_st.owner_ch;
-                    if (g_log) std::fprintf(stderr, "[cspawn] spawner slot %d: owner %d -> %d (its rock arrived) wall=%lld\n", (int)s.slot, s.owner, q.seat, wall_ms());
-                    s.owner = q.seat;
-                }
+                // Every friend's rock is copied, even one made while two consoles both thought they owned the spawner (the
+                // owner is the lowest seat whose spawner is awake, so that only lasts until his hello arrives): the rock already
+                // rolls on his screen, so it rolls on mine too.
                 if (rk_find(s.slot, (uint8_t)q.seat, w.ctr) || gone_has(s.slot, (uint8_t)q.seat, w.ctr)) continue;
                 char *b = (char *)port_grock_spawn_copy(s.a, w.rot, w.star, w.count);
                 if (!b) { ++g_st.copy_fail; continue; }
@@ -320,10 +315,11 @@ void apply_queue() {
                 Rk *r = rk_find((short)w.slot, w.origin, w.ctr);
                 if (!r) continue;
                 const bool live = alive(r->uid, r->a);
-                if (live) port_grock_remote_break(r->a);
+                void *star = live ? port_grock_remote_break(r->a) : nullptr;
+                if (star) coop_camshield_mark(star, "a friend broke the star rock");
                 ++g_st.breaks_applied;
                 if (g_log) std::fprintf(stderr, "[cspawn] seat %d broke rock %d:%u%s: %s lf=%u wall=%lld\n", q.seat, (int)w.origin, (unsigned)w.ctr,
-                                        r->star ? " (THE STAR ROCK)" : "", live ? "my copy breaks too (no star made here)" : "my copy was already gone", g_lf, wall_ms());
+                                        r->star ? " (THE STAR ROCK)" : "", !live ? "my copy was already gone" : star ? "my copy breaks too and lets out its star (linked to the placed marker)" : "my copy breaks too", g_lf, wall_ms());
                 r->used = false;
             }
         }
@@ -382,9 +378,9 @@ void on_frame(unsigned now) {
     if (g_my < 0 || g_my >= kCoopSeats) return;
     scan();
     if (g_sample && (g_lf % g_sample) == 0) sample();
-    break_knob();
-    if (!g_on || g_nsp == 0) return;
+    if (!g_on || g_nsp == 0) { break_knob(); return; }
     g_active = true;
+    break_knob();
     for (Rk &r : g_rk) if (r.used && !alive(r.uid, r.a)) r.used = false;
     apply_queue();
     pick_owners(now);
