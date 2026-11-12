@@ -24,6 +24,7 @@
 #include "GX.h"
 #include "nitro/hw/registers.h"
 #include "nitro/gx/g3imm_light.h"
+#include "nitro/gx/gx_bgcnt.h"
 
 #include "Matrix2x2.h"
 
@@ -39,12 +40,10 @@ struct Matrix2x2Words {
 namespace GX { void DisableAllBanks(); }
 
 extern "C" {
-/* local extern: nitro/gx/gx.h declares these three; the parameter names here
+/* local extern: nitro/gx/gx.h declares these two; the parameter names here
    hold this TU's @NNN numbers. */
 extern int GX_HBlankIntr(int enable);
 extern int GX_VBlankIntr(int enable);
-
-extern void GXx_SetMasterBrightness_(u16 *out, int v);
 
 extern Matrix2x2 data_02092668;
 
@@ -101,100 +100,104 @@ void dScene_c::ResetHardwareRegisters()
 
     *(Matrix2x2Words *)&m = *(Matrix2x2Words *)&data_02092668;
 
-    REG_POWCNT1 |= 0x8000;
-    REG_POWCNT1 = (REG_POWCNT1 & 0xfffffdf1) | 0x20e;
+    GX_SetDispSelect(GX_DISP_SELECT_MAIN_SUB);
+    GX_SetPower(GX_POWER_ALL);
     REG_POWCNT1 |= 1;
 
     GX::DisableAllBanks();
     GX_HBlankIntr(0);
     GX_VBlankIntr(1);
-    GX_SetGraphicsMode(1, 0, 0);
+    GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_2D);
 
-    REG_DISPCNT &= ~0x1f00;
-    REG_DISPCNT &= ~0xe000;
-    REG_DISPCNT &= ~0x38000000;
-    REG_DISPCNT &= ~0x7000000;
-    REG_DISPCNT &= 0xffcfffef;
-    REG_DISPCNT &= 0xffbfff9f;
-    REG_DISPCNT &= ~0x800000;
+    GX_SetVisiblePlane(0);
+    GX_SetVisibleWnd(GX_WNDMASK_NONE);
+    GX_SetBGScrOffset(0);
+    GX_SetBGCharOffset(0);
+    GX_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
+    GX_SetOBJVRamModeBmp(GX_OBJVRAMMODE_BMP_2D_W128);
+    GX_HBlankOBJProc(0);
     REG_DISPCAPCNT = 0x80000000;
 
-    REG_BG0CNT &= 0x43;
-    REG_BG1CNT &= 0x43;
-    REG_BG2CNT &= 0x43;
-    REG_BG3CNT &= 0x43;
-    REG_BG0CNT &= ~0x40;
-    REG_BG1CNT &= ~0x40;
-    REG_BG2CNT &= ~0x40;
-    REG_BG3CNT &= ~0x40;
-    REG_BG0CNT &= ~3;
-    REG_BG1CNT &= ~3;
-    REG_BG2CNT &= ~3;
-    REG_BG3CNT &= ~3;
+    G2_SetBG0Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,
+                     GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
+    G2_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,
+                     GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
+    G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,
+                         GX_BG_CHARBASE_0x00000);
+    G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,
+                         GX_BG_CHARBASE_0x00000);
+    G2_BG0Mosaic(0);
+    G2_BG1Mosaic(0);
+    G2_BG2Mosaic(0);
+    G2_BG3Mosaic(0);
+    G2_SetBG0Priority(0);
+    G2_SetBG1Priority(0);
+    G2_SetBG2Priority(0);
+    G2_SetBG3Priority(0);
 
-    REG_BG0OFS = 0;
-    REG_BG1OFS = 0;
-    REG_BG2OFS = 0;
-    REG_BG3OFS = 0;
+    G2_SetBG0Offset(0, 0);
+    G2_SetBG1Offset(0, 0);
+    G2_SetBG2Offset(0, 0);
+    G2_SetBG3Offset(0, 0);
 
-    G2x_SetBGyAffine_(&REG_BG2PA, &m, 0, 0, 0, 0);
-    G2x_SetBGyAffine_(&REG_BG3PA, &m, 0, 0, 0, 0);
+    G2_SetBG2Affine(&m, 0, 0, 0, 0);
+    G2_SetBG3Affine(&m, 0, 0, 0, 0);
 
-    REG_WININ &= ~0x3f;
-    REG_WININ &= ~0x3f00;
-    REG_WINOUT &= ~0x3f;
-    REG_WINOUT &= ~0x3f00;
+    G2_SetWnd0InsidePlane(GX_WND_PLANEMASK_NONE, 0);
+    G2_SetWnd1InsidePlane(GX_WND_PLANEMASK_NONE, 0);
+    G2_SetWndOutsidePlane(GX_WND_PLANEMASK_NONE, 0);
+    G2_SetWndOBJInsidePlane(GX_WND_PLANEMASK_NONE, 0);
 
-    REG_WIN0H = 0;
-    REG_WIN0V = 0;
-    REG_WIN1H = 0;
-    REG_WIN1V = 0;
+    G2_SetWnd0Position(0, 0, 0, 0);
+    G2_SetWnd1Position(0, 0, 0, 0);
     REG_MOSAIC_BG = 0;
     REG_MOSAIC_OBJ = 0;
 
-    GXx_SetMasterBrightness_((u16 *)0x400006c, 0);
-    GXS_SetGraphicsMode(0);
+    GX_SetMasterBrightness(0);
+    GXS_SetGraphicsMode(GX_BGMODE_0);
 
-    REG_DISPCNT_SUB &= ~0x1f00;
-    REG_DISPCNT_SUB &= ~0xe000;
-    REG_DISPCNT_SUB &= 0xffcfffef;
-    REG_DISPCNT_SUB &= 0xffbfff9f;
-    REG_DISPCNT_SUB &= ~0x800000;
+    GXS_SetVisiblePlane(0);
+    GXS_SetVisibleWnd(GX_WNDMASK_NONE);
+    GXS_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
+    GXS_SetOBJVRamModeBmp(GX_OBJVRAMMODE_BMP_2D_W128);
+    GXS_HBlankOBJProc(0);
 
-    REG_DB_BG0CNT &= 0x43;
-    REG_DB_BG1CNT &= 0x43;
-    REG_DB_BG2CNT &= 0x43;
-    REG_DB_BG3CNT &= 0x43;
-    REG_DB_BG0CNT &= ~0x40;
-    REG_DB_BG1CNT &= ~0x40;
-    REG_DB_BG2CNT &= ~0x40;
-    REG_DB_BG3CNT &= ~0x40;
-    REG_DB_BG0CNT &= ~3;
-    REG_DB_BG1CNT &= ~3;
-    REG_DB_BG2CNT &= ~3;
-    REG_DB_BG3CNT &= ~3;
+    G2S_SetBG0Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,
+                      GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
+    G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,
+                      GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
+    G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,
+                          GX_BG_CHARBASE_0x00000);
+    G2S_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,
+                          GX_BG_CHARBASE_0x00000);
+    G2S_BG0Mosaic(0);
+    G2S_BG1Mosaic(0);
+    G2S_BG2Mosaic(0);
+    G2S_BG3Mosaic(0);
+    G2S_SetBG0Priority(0);
+    G2S_SetBG1Priority(0);
+    G2S_SetBG2Priority(0);
+    G2S_SetBG3Priority(0);
 
-    REG_DB_BG0OFS = 0;
-    REG_DB_BG1OFS = 0;
-    REG_DB_BG2OFS = 0;
-    REG_DB_BG3OFS = 0;
+    G2S_SetBG0Offset(0, 0);
+    G2S_SetBG1Offset(0, 0);
+    G2S_SetBG2Offset(0, 0);
+    G2S_SetBG3Offset(0, 0);
 
-    G2x_SetBGyAffine_(&REG_DB_BG2PA, &m, 0, 0, 0, 0);
-    G2x_SetBGyAffine_(&REG_DB_BG3PA, &m, 0, 0, 0, 0);
+    G2S_SetBG2Affine(&m, 0, 0, 0, 0);
+    G2S_SetBG3Affine(&m, 0, 0, 0, 0);
 
-    REG_DB_WININ &= ~0x3f;
-    REG_DB_WININ &= ~0x3f00;
-    REG_DB_WINOUT &= ~0x3f;
-    REG_DB_WINOUT &= ~0x3f00;
+    G2S_SetWnd0InsidePlane(GX_WND_PLANEMASK_NONE, 0);
+    G2S_SetWnd1InsidePlane(GX_WND_PLANEMASK_NONE, 0);
+    G2S_SetWndOutsidePlane(GX_WND_PLANEMASK_NONE, 0);
+    G2S_SetWndOBJInsidePlane(GX_WND_PLANEMASK_NONE, 0);
 
-    REG_DB_WIN0H = 0;
-    REG_DB_WIN0V = 0;
-    REG_DB_WIN1H = 0;
-    REG_DB_WIN1V = 0;
+    G2S_SetWnd0Position(0, 0, 0, 0);
+    G2S_SetWnd1Position(0, 0, 0, 0);
     REG_DB_MOSAIC_BG = 0;
     REG_DB_MOSAIC_OBJ = 0;
 
-    GXx_SetMasterBrightness_((u16 *)0x400106c, 0);
+    GXS_SetMasterBrightness(0);
 }
 
 namespace GX {
@@ -218,20 +221,20 @@ void DisableAllBanks() {
 
 void dScStage_c::SetVramBanks() {
     GX::DisableAllBanks();
-    GX_SetBankForTex(3);
-    GX_SetBankForTexPltt(0x30);
-    GX_SetBankForBG(8);
-    GX_SetBankForOBJ(0x40);
-    GX_SetBankForSubBG(4);
-    GX_SetBankForSubBGExtPltt(0x80);
-    GX_SetBankForSubOBJ(0x100);
+    GX_SetBankForTex(GX_VRAM_TEX_01_AB);
+    GX_SetBankForTexPltt(GX_VRAM_TEXPLTT_01234_EF);
+    GX_SetBankForBG(GX_VRAM_BG_128_D);
+    GX_SetBankForOBJ(GX_VRAM_OBJ_16_G);
+    GX_SetBankForSubBG(GX_VRAM_SUB_BG_128_C);
+    GX_SetBankForSubBGExtPltt(GX_VRAM_SUB_BGEXTPLTT_0123_H);
+    GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_16_I);
 }
 
 void dScene_c::Initialise3dGraphics()
 {
     ResetHardwareRegisters();
     G3X_Init();
-    GX_SetGraphicsMode(1, 0, 1);
+    GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_3D);
     G3_LightVector(GX_LIGHTID_0, 0, -0xb50, -0xb50); /* (0, -1/sqrt2, -1/sqrt2) */
     G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
     REG_DIF_AMB = GX_RGB(31, 31, 31);

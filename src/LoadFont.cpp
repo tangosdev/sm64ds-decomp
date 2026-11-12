@@ -2,6 +2,7 @@
 /* Runtime asset handles resolved through the overlay 0 file table. */
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
+#include "nitro/mi/memory.h"
 
 enum LoadFont_AssetId {
     ASSET_D_2D_MARIO_3DFONT_NCL_BIN = 0x0237
@@ -12,7 +13,6 @@ extern "C" int Mg_GetWorkBuffer(void);
 extern "C" int LoadFileAt(int handle, int dest);
 extern "C" void Deallocate(void *ptr);
 
-extern "C" void MIi_CpuCopy32(int *src, int *dst, int len);
 extern "C" void DecompressLZ16(void *dst, void *src);
 
 extern unsigned char data_0209d698;
@@ -34,12 +34,12 @@ extern "C" void LoadFont(unsigned char arg)
         GX_LoadBGPltt((char *)file + 2, 2, 0x20);
         Deallocate(file);
     } else if (data_0209d698 == 1) {
-        MIi_CpuCopy32((int *)r4, (int *)G2S_GetBG1CharPtr(), 0x4000);
+        MI_CpuCopy32(r4, (int *)G2S_GetBG1CharPtr(), 0x4000);
         file = LoadFile(ASSET_D_2D_MARIO_3DFONT_NCL_BIN);
         GXS_LoadBGPltt(file, 0x40, 0x20);
         Deallocate(file);
     } else {
-        MIi_CpuCopy32((int *)r4, (int *)G2_GetBG3CharPtr(), 0x4000);
+        MI_CpuCopy32(r4, (int *)G2_GetBG3CharPtr(), 0x4000);
         file = LoadFile(0x980d);
         DecompressLZ16(file, (void *)((int)G2_GetBG3CharPtr() + 0x8000));
         Deallocate(file);

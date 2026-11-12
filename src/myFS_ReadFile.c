@@ -9,13 +9,12 @@
  * when func_0203d7d4(0) is nonzero. myFS_ReadFile treats a short read as a
  * failure. */
 #include "types.h"
-#include "private/fs_views.h"
 #include "nitro/fs/file.h"
 #include "nitro/os/thread.h"
+#include "nitro/os/system.h"
 
 extern int func_0203d7d4(int);
 extern void *data_0209d3c0;
-extern void OS_Terminate(void);
 extern int data_0208ecd8[7];
 extern int data_0208ecc4;
 extern char data_0208ec74;

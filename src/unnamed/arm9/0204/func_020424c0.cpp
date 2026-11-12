@@ -2,9 +2,8 @@
 #include "types.h"
 #include "nitro/os/cache.h"
 #include "nitro/os/system.h"
-#include "nitro/card/card_rom.h"
-#include "private/fs_views.h"
 #include "nitro/fs/file.h"
+#include "nitro/card/card_rom.h"
 #include "private/file_share_alloc.h"
 
 extern "C" {

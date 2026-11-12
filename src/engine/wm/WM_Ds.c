@@ -7,6 +7,7 @@
  * with WM_SetMPDataToPort, WM_DS_STATE_ERROR is 3, not 5, and
  * WM_EndDataSharing is not linked. */
 #include "types.h"
+#include "nitro/mi/memory.h"
 #include "nitro/os/cache.h"
 #include "nitro/os/system.h"
 #include "nitro/wm/wm_api.h"
@@ -22,9 +23,6 @@ typedef struct WMPortSendCallback {
     u16 seqNo; /* 0x1c */
 } WMPortSendCallback;
 
-extern void MIi_CpuClear16(u16 val, void *dst, int nbytes);
-extern void MIi_CpuClearFast(unsigned val, void *dst, int len);
-extern void MIi_CpuCopy16(const void *src, void *dst, int nbytes);
 
 void WmDataSharingSetDataCallback(void *arg);
 void WmDataSharingReceiveCallback_Parent(void *arg);
@@ -77,7 +75,7 @@ WMErrCode WM_StartDataSharing(WMDataSharingInfo *dsInfo, u16 port, int aidBitmap
     }
 
     zero = 0;
-    MIi_CpuClearFast(zero, dsInfo, sizeof(WMDataSharingInfo));
+    MI_CpuFillFast(dsInfo, zero, sizeof(WMDataSharingInfo));
 
     dsInfo->writeIndex = 0;
     dsInfo->sendIndex = 0;
@@ -216,7 +214,7 @@ WMErrCode WM_StepDataSharing(WMDataSharingInfo *dsInfo, const void *sendData,
 
         if (dsInfo->readIndex != dsInfo->sendIndex) {
             dsInfo->ds[dsInfo->readIndex].aidHeader |= 1;
-            MIi_CpuCopy16(&dsInfo->ds[dsInfo->readIndex], receiveData, sizeof(WMDataSet));
+            MI_CpuCopy16(&dsInfo->ds[dsInfo->readIndex], receiveData, sizeof(WMDataSet));
             did = 1;
             result = WM_ERRCODE_SUCCESS;
             dsInfo->currentSeqNum = dsInfo->seqNum[dsInfo->readIndex];
@@ -247,7 +245,7 @@ WMErrCode WM_StepDataSharing(WMDataSharingInfo *dsInfo, const void *sendData,
                 if ((dsInfo->ds[dsInfo->readIndex].aidHeader & 1) == 0) {
                     dsInfo->ds[dsInfo->readIndex].aidHeader |= 1;
                 } else {
-                    MIi_CpuCopy16(&dsInfo->ds[dsInfo->readIndex], receiveData, sizeof(WMDataSet));
+                    MI_CpuCopy16(&dsInfo->ds[dsInfo->readIndex], receiveData, sizeof(WMDataSet));
                     changed = 1;
                     result = WM_ERRCODE_SUCCESS;
                     dsInfo->currentSeqNum = dsInfo->seqNum[dsInfo->readIndex];
@@ -260,7 +258,7 @@ WMErrCode WM_StepDataSharing(WMDataSharingInfo *dsInfo, const void *sendData,
             /* the child stages its own data 0x20 bytes into the set it sends */
             u8 *addr = (u8 *)&dsInfo->ds[dsInfo->sendIndex] + 0x20;
             WMErrCode cr;
-            MIi_CpuCopy16(sendData, addr, dsInfo->dataLength);
+            MI_CpuCopy16(sendData, addr, dsInfo->dataLength);
             cr = WM_SetMPDataToPort(WmDataSharingSetDataCallback, (u16 *)addr, dsInfo->dataLength,
                                     dsInfo->aidBitmap, dsInfo->port, WM_PRIORITY_HIGH);
             dsInfo->sendIndex = (u16)((dsInfo->sendIndex + 1) % WM_DS_DATASET_NUM);
@@ -374,7 +372,7 @@ void WmDataSharingReceiveCallback_Child(void *arg) {
             return;
         if ((1u << h->status->aid) == 0)
             return;
-        MIi_CpuCopy16(src, &r5->ds[r5->writeIndex], r4);
+        MI_CpuCopy16(src, &r5->ds[r5->writeIndex], r4);
         r5->seqNum[r5->writeIndex] = callback->seqNo >> 1;
         r5->writeIndex = (r5->writeIndex + 1) % WM_DS_DATASET_NUM;
     } else {
@@ -408,10 +406,10 @@ void WmDataSharingReceiveData(WMDataSharingInfo *dsInfo, int aid, const void *da
 
     slot = WmGetSharedDataAddress(dsInfo, aidBitmap, dsInfo->ds[idx].data, aid);
     if (data != 0) {
-        MIi_CpuCopy16(data, slot, dsInfo->dataLength);
+        MI_CpuCopy16(data, slot, dsInfo->dataLength);
     } else {
         zero = 0;
-        MIi_CpuClear16(zero, slot, dsInfo->dataLength);
+        MI_CpuFill16(slot, zero, dsInfo->dataLength);
     }
     s = OS_DisableInterrupts();
     dsInfo->ds[idx].aidHeader &= ~mask;
@@ -448,7 +446,7 @@ void WmDataSharingSendDataSet(WMDataSharingInfo *dsInfo, int excludeParent) {
         newSlot = (dsInfo->doubleMode == 1) ? (u16)((next + 1) % WM_DS_DATASET_NUM) : next;
 
         zero = 0;
-        MIi_CpuClear16(zero, &dsInfo->ds[newSlot], sizeof(WMDataSet));
+        MI_CpuFill16(&dsInfo->ds[newSlot], zero, sizeof(WMDataSet));
 
         dsInfo->ds[newSlot].aidHeader = (u16)(dsInfo->aidBitmap & (mask | 1));
         dsInfo->writeIndex = next;

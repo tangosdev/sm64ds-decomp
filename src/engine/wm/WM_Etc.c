@@ -8,6 +8,7 @@
  * request straight into the ARM9-to-ARM7 command block. */
 #include "types.h"
 #include "nitro/os/cache.h"
+#include "nitro/mi/memory.h"
 #include "nitro/wm/wm_api.h"
 #include "private/wm_views.h"
 
@@ -15,10 +16,6 @@
 
 #define WM_SIZE_USER_GAMEINFO 0x70
 #define WM_SIZE_TEMP_USR_GAME_INFO_BUF 128
-
-/* local extern: MI_Memory.c defines it; nitro/mi/memory.h does not declare
- * it yet. */
-extern void MIi_CpuCopy32(int *src, int *dst, int len);
 
 /* The MEASURE_CHANNEL request, written into the command block (fifo9to7). */
 typedef struct WMMeasureChannelReq {
@@ -44,7 +41,7 @@ WMErrCode WM_SetGameInfo(WMCallbackFunc callback, const u16 *userGameInfo, u16 u
         return WM_ERRCODE_INVALID_PARAM;
     if (userGameInfoSize > WM_SIZE_USER_GAMEINFO)
         return WM_ERRCODE_INVALID_PARAM;
-    MIi_CpuCopy32((int *)userGameInfo, (int *)tmpUserGameInfoBuf, userGameInfoSize);
+    MI_CpuCopy32(userGameInfo, tmpUserGameInfoBuf, userGameInfoSize);
     DC_StoreRange((void *)tmpUserGameInfoBuf, userGameInfoSize);
     WM_SetCallbackTable(WM_APIID_SET_GAMEINFO, callback);
     result = WM_SendCommand(WM_APIID_SET_GAMEINFO, 6, (u32)tmpUserGameInfoBuf,

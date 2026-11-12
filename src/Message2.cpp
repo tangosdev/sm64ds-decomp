@@ -105,8 +105,6 @@ extern u8 data_ov002_0210c3a0;
 extern u8 data_ov002_0210c3a8;
 extern void (*MSG_GEN_TEXT_FUNCS[])(void);
 
-extern void MIi_CpuCopy32(int *dst, int *src, int len);
-extern void MIi_CpuClear32(int val, int *dst, int len);
 extern int IsButtonInputValid(void);
 extern int func_0201fb4c(void);
 extern u8 NumStars(void);
@@ -119,6 +117,9 @@ void OamRender10_Message2(int a, void *b, int c, int d, int e, int f, int g, int
 struct OamAttr;
 #include "OAM.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/mi/memory.h"
+#include "nitro/gx/g2.h"
+#include "nitro/gx/gx.h"
 
 /* gGameMode (CURRENT_GAMEMODE) is 2 while the fall-in-front-of-castle
  * cutscene runs: ContinueKuppaScriptIfNecessary stores 2 only when the
@@ -263,14 +264,14 @@ void func_0201adfc(void) {
 
     for (i = 0; i < data_0209d6f0[6] * 2; i++) {
         for (j = 0; j < data_0209d6a8; j++) {
-            MIi_CpuCopy32((int *)(p + 4), (int *)p, 0x10);
+            MI_CpuCopy32(p + 4, p, 0x10);
             if (i == data_0209d6f0[6] * 2 - 1) {
                 p[4] = 0;
                 p[5] = 0;
                 p[6] = 0;
                 p[7] = 0;
             } else {
-                MIi_CpuCopy32((int *)(p + data_0209d6a8 * 8), (int *)(p + 4), 0x10);
+                MI_CpuCopy32(p + data_0209d6a8 * 8, p + 4, 0x10);
             }
             p += 8;
         }
@@ -357,10 +358,10 @@ void func_0201b100(int mode) {
             int lo2 = opcode & 0xf;
             int hi2 = opcode & 0xf0;
             int w;
-            MIi_CpuCopy32((int *)(base + (((lo2 << 1) + (hi2 << 2)) << 5)), (int *)r4addr, size);
+            MI_CpuCopy32((void *)(base + (((lo2 << 1) + (hi2 << 2)) << 5)), (void *)r4addr, size);
             w = ((int)data_0209d6b0 + 7) / 8;
-            MIi_CpuCopy32((int *)(base + ((lo2 + ((hi2 << 1) + 0x10)) << 6)),
-                          (int *)(r4addr + (w << 5)), size);
+            MI_CpuCopy32((void *)(base + ((lo2 + ((hi2 << 1) + 0x10)) << 6)),
+                         (void *)(r4addr + (w << 5)), size);
         } else {
             int lo;
             int hi;
@@ -554,7 +555,7 @@ void Message::LayoutLine() {
         data_0209d704 = 0;
         data_0209d6a4 = 0;
         data_0209d6b0 = 0;
-        MIi_CpuClear32(fill, data_0209d74c, 0xf00);
+        MI_CpuFill32(data_0209d74c, fill, 0xf00);
     }
 
     while (1) {
@@ -689,15 +690,13 @@ int Message::UpdateWindow() {
                 data_0209d6bc = data_0209d6ac;
 
             if (data_0209d698 != 0) {
-                REG_DB_WIN0H = ((gMsgBoxWinLeft << 8) & 0xff00) |
-                               ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff);
-                REG_DB_WIN0V = ((gMsgBoxWinTop << 8) & 0xff00) |
-                               ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff);
+                G2S_SetWnd0Position(gMsgBoxWinLeft, gMsgBoxWinTop,
+                                    gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1,
+                                    gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1);
             } else {
-                REG_WIN0H = ((gMsgBoxWinLeft << 8) & 0xff00) |
-                            ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff);
-                REG_WIN0V = ((gMsgBoxWinTop << 8) & 0xff00) |
-                            ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff);
+                G2_SetWnd0Position(gMsgBoxWinLeft, gMsgBoxWinTop,
+                                   gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1,
+                                   gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1);
             }
             return 0;
         }
@@ -721,15 +720,13 @@ int Message::UpdateWindow() {
             gMsgBoxWinTop = gMsgBoxCenterY;
 
         if (data_0209d698 != 0) {
-            REG_DB_WIN0H = ((gMsgBoxWinLeft << 8) & 0xff00) |
-                           ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff);
-            REG_DB_WIN0V =
-                ((gMsgBoxWinTop << 8) & 0xff00) | ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff);
+            G2S_SetWnd0Position(gMsgBoxWinLeft, gMsgBoxWinTop,
+                                gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1,
+                                gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1);
         } else {
-            REG_WIN0H = ((gMsgBoxWinLeft << 8) & 0xff00) |
-                        ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff);
-            REG_WIN0V =
-                ((gMsgBoxWinTop << 8) & 0xff00) | ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff);
+            G2_SetWnd0Position(gMsgBoxWinLeft, gMsgBoxWinTop,
+                               gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1,
+                               gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1);
         }
         return 0;
     }
@@ -742,18 +739,18 @@ int Message::UpdateWindow() {
     data_0209d670 = 0;
     if (data_0209d698 != 0) {
         gSubScreenLayers &= ~2;
-        REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~0x1f00) | (gSubScreenLayers << 8);
-        REG_DB_BLDCNT = 0;
-        REG_DB_WININ &= ~0x3f;
-        REG_DB_WINOUT &= ~0x3f;
-        REG_DISPCNT_SUB &= ~0xe000;
+        GXS_SetVisiblePlane(gSubScreenLayers);
+        G2S_BlendNone();
+        G2S_SetWnd0InsidePlane(GX_WND_PLANEMASK_NONE, 0);
+        G2S_SetWndOutsidePlane(GX_WND_PLANEMASK_NONE, 0);
+        GXS_SetVisibleWnd(GX_WNDMASK_NONE);
     } else {
         gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
-        REG_DISPCNT = (REG_DISPCNT & ~0x1f00) | (gMainScreenLayers << 8);
-        REG_BLDCNT = 0;
-        REG_WININ &= ~0x3f;
-        REG_WINOUT &= ~0x3f;
-        REG_DISPCNT &= ~0xe000;
+        GX_SetVisiblePlane(gMainScreenLayers);
+        G2_BlendNone();
+        G2_SetWnd0InsidePlane(GX_WND_PLANEMASK_NONE, 0);
+        G2_SetWndOutsidePlane(GX_WND_PLANEMASK_NONE, 0);
+        GX_SetVisibleWnd(GX_WNDMASK_NONE);
     }
     return 0;
 }

@@ -50,6 +50,7 @@
 #include "math/Approach.h"
 #include "nitro/hw/registers.h"
 #include "nitro/fx/fx_cp.h"
+#include "nitro/mi/memory.h"
 
 #pragma defer_codegen off
 
@@ -923,7 +924,6 @@ extern "C" {
    `PaintSquare` is coined here from what the body does; it was `Virtual88`,
    after the +0x88 vtable offset. The cartridge names no method of this
    class. */
-extern void MIi_CpuCopy32(void *a, void *b, int n);
 
 extern int sMgPaintWord;
 extern int sMgTopScreenYOffset;
@@ -931,7 +931,6 @@ extern int sMgTopScreenYOffset;
 }
 
 void dScMgBase_c::PaintSquare(int cx, int cy, int colour, int size) {
-    using s20ae3b4::MIi_CpuCopy32;
     using s20ae3b4::sMgPaintWord;
     using s20ae3b4::sMgTopScreenYOffset;
 
@@ -1012,10 +1011,10 @@ void dScMgBase_c::PaintSquare(int cx, int cy, int colour, int size) {
                     }
                 }
                 cell = (int*)((char*)base + ((xx / 8 + (yy / 8) * 32) * 32) + ((yy & 7) * 4));
-                MIi_CpuCopy32(cell, &sMgPaintWord, four);
+                MI_CpuCopy32(cell, &sMgPaintWord, four);
                 sh = (xx & 7) << 2;
                 sMgPaintWord = (sMgPaintWord & (-1 ^ (m << sh))) | (colour << sh);
-                MIi_CpuCopy32(&sMgPaintWord, cell, four);
+                MI_CpuCopy32(&sMgPaintWord, cell, four);
             inc:;
             } while (++ci < size);
         }
@@ -1407,8 +1406,7 @@ void dScMgBase_c::RestoreScreenFromMenu() {
     }
 
     if (GetDisplayMode() != 2) {
-        MIi_CpuCopy32((int *)save->subObjChars, (int *)((u8 *)G2S_GetOBJCharPtr() + 0x6000),
-                      0x2000);
+        MI_CpuCopy32(save->subObjChars, (u8 *)G2S_GetOBJCharPtr() + 0x6000, 0x2000);
     }
 
     gMainScreenLayers = (u8)mSavedMainBgBits;
@@ -1472,7 +1470,6 @@ extern "C" {
    this module is dScMgBase_c::OnGraphCallback2, which reaches it only on a rising edge
    of mMenuOpen.  That is the three-item overlay menu going up, not a Yoshi egg.
    See the slot 29 block in include/dScMgBase_c.h for why the name is kept. */
-extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
 extern void func_0201f32c(int arg0);
 extern int GetGameLanguage(void);
 extern void DecompressLZ16(void *src, void *dst);
@@ -1494,7 +1491,6 @@ extern unsigned char gSubScreenLayers;
 int dScMgBase_c::SaveScreenForMenu() {
     using s20af094::DecompressLZ16;
     using s20af094::GetGameLanguage;
-    using s20af094::MIi_CpuClear16;
     using s20af094::gSubScreenLayers;
     using s20af094::gMainScreenLayers;
     using s20af094::func_0201f32c;
@@ -1503,12 +1499,12 @@ int dScMgBase_c::SaveScreenForMenu() {
     if (GetDisplayMode() != 0)
         Disable3dEngines();
 
-    mSavedScreenSwap = (REG_POWCNT1 & 0x8000) >> 15;
+    mSavedScreenSwap = GX_GetDispSelect();
 
     mSavedMainBgBits = gMainScreenLayers;
     mSavedSubBgBits = gSubScreenLayers;
 
-    REG_POWCNT1 |= 0x8000;
+    GX_SetDispSelect(GX_DISP_SELECT_MAIN_SUB);
     gMainScreenLayers = 0;
     gSubScreenLayers = 0;
 
@@ -1517,11 +1513,11 @@ int dScMgBase_c::SaveScreenForMenu() {
     *(volatile int *)0x4000000 &= ~0xe000;
     *(volatile int *)0x4001000 &= ~0xe000;
 
-    MIi_CpuCopy32((int *)0x5000020, (int *)save->mainBgPltt, 0x1e0);
+    MI_CpuCopy32((int *)0x5000020, save->mainBgPltt, 0x1e0);
     {
         /* stepped from mainBgPltt: save->subBgPltt moves the literal pool */
         int *pltt = (int *)save->mainBgPltt;
-        MIi_CpuCopy32((int *)0x5000400, pltt + 0x80, 0x80);
+        MI_CpuCopy32((int *)0x5000400, pltt + 0x80, 0x80);
     }
     DC_FlushRange(save->mainBgPltt, 0x400);
 
@@ -1530,11 +1526,11 @@ int dScMgBase_c::SaveScreenForMenu() {
 
     {
         volatile unsigned short tmp = 0;
-        MIi_CpuClear16(tmp, (char *)0x5000000, 2);
+        MI_CpuFill16((char *)0x5000000, tmp, 2);
     }
     {
         volatile unsigned short tmp = 0;
-        MIi_CpuClear16(tmp, (char *)0x5000400, 2);
+        MI_CpuFill16((char *)0x5000400, tmp, 2);
     }
 
     func_0201f32c(mSceneKind);
@@ -1544,7 +1540,7 @@ int dScMgBase_c::SaveScreenForMenu() {
 
     if (GetDisplayMode() != 2) {
         int *vram = (int *)((u8 *)G2S_GetOBJCharPtr() + 0x6000);
-        MIi_CpuCopy32(vram, (int *)save->subObjChars, 0x2000);
+        MI_CpuCopy32(vram, save->subObjChars, 0x2000);
         int idx = GetGameLanguage();
         DecompressLZ16(sMgMenuScreenByLanguage[idx], vram);
         DC_FlushRange(save->subObjChars, 0x2000);
@@ -1572,7 +1568,6 @@ void dScMgBase_c::OpenMenu()
 
 namespace s20af2f8 {
 extern "C" {
-extern void MIi_CpuClear16(unsigned short val, void *dst, int nbytes);
 
 extern char sMgBrushPalette;
 
@@ -1605,34 +1600,34 @@ void Mg_InitBrush(char* sb, char en, int mode, int base)
         case 0:
             if (scene->mBrushOnMain) {
                 t = (char *)G2_GetBG0ScrPtr() + off;
-                MIi_CpuClear16(v0 = val, t, 2);
+                MI_CpuFill16(t, v0 = val, 2);
             }
             t = (char *)G2S_GetBG0ScrPtr() + off;
-            MIi_CpuClear16(v1 = val, t, 2);
+            MI_CpuFill16(t, v1 = val, 2);
             break;
         case 1:
             if (scene->mBrushOnMain) {
                 t = (char *)G2_GetBG1ScrPtr() + off;
-                MIi_CpuClear16(v2 = val, t, 2);
+                MI_CpuFill16(t, v2 = val, 2);
             }
             t = (char *)G2S_GetBG1ScrPtr() + off;
-            MIi_CpuClear16(v3 = val, t, 2);
+            MI_CpuFill16(t, v3 = val, 2);
             break;
         case 2:
             if (scene->mBrushOnMain) {
                 t = (char *)G2_GetBG2ScrPtr() + off;
-                MIi_CpuClear16(v4 = val, t, 2);
+                MI_CpuFill16(t, v4 = val, 2);
             }
             t = (char *)G2S_GetBG2ScrPtr() + off;
-            MIi_CpuClear16(v5 = val, t, 2);
+            MI_CpuFill16(t, v5 = val, 2);
             break;
         case 3:
             if (scene->mBrushOnMain) {
                 t = (char *)G2_GetBG3ScrPtr() + off;
-                MIi_CpuClear16(v6 = val, t, 2);
+                MI_CpuFill16(t, v6 = val, 2);
             }
             t = (char *)G2S_GetBG3ScrPtr() + off;
-            MIi_CpuClear16(v7 = val, t, 2);
+            MI_CpuFill16(t, v7 = val, 2);
             break;
         default:
             return;
@@ -1644,41 +1639,41 @@ void Mg_InitBrush(char* sb, char en, int mode, int base)
         if (scene->mBrushOnMain) {
             t = G2_GetBG0CharPtr();
             w0 = 0;
-            MIi_CpuClear16(w0, t, 0x6000);
+            MI_CpuFill16(t, w0, 0x6000);
         }
         t = G2S_GetBG0CharPtr();
         w1 = 0;
-        MIi_CpuClear16(w1, t, 0x6000);
+        MI_CpuFill16(t, w1, 0x6000);
         break;
     case 1:
         if (scene->mBrushOnMain) {
             t = G2_GetBG1CharPtr();
             w2 = 0;
-            MIi_CpuClear16(w2, t, 0x6000);
+            MI_CpuFill16(t, w2, 0x6000);
         }
         t = G2S_GetBG1CharPtr();
         w3 = 0;
-        MIi_CpuClear16(w3, t, 0x6000);
+        MI_CpuFill16(t, w3, 0x6000);
         break;
     case 2:
         if (scene->mBrushOnMain) {
             t = G2_GetBG2CharPtr();
             w4 = 0;
-            MIi_CpuClear16(w4, t, 0x6000);
+            MI_CpuFill16(t, w4, 0x6000);
         }
         t = G2S_GetBG2CharPtr();
         w5 = 0;
-        MIi_CpuClear16(w5, t, 0x6000);
+        MI_CpuFill16(t, w5, 0x6000);
         break;
     case 3:
         if (scene->mBrushOnMain) {
             t = (void *)G2_GetBG3CharPtr();
             w6 = 0;
-            MIi_CpuClear16(w6, t, 0x6000);
+            MI_CpuFill16(t, w6, 0x6000);
         }
         t = G2S_GetBG3CharPtr();
         w7 = 0;
-        MIi_CpuClear16(w7, t, 0x6000);
+        MI_CpuFill16(t, w7, 0x6000);
         break;
     default:
         return;
@@ -3385,19 +3380,19 @@ void dScMgBase_c::InitEngines() {
     mBrushOnMain = 0;
     mBrushLayer = -1;
     *(vu32 *)0x4001000u |= 0x10000u;
-    GX_SetGraphicsMode(1, 0, 0);
-    GXS_SetGraphicsMode(0);
+    GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_2D);
+    GXS_SetGraphicsMode(GX_BGMODE_0);
     *(vu32 *)0x4001000u &= 0xffcfffefu;
-    REG_POWCNT1 |= 0x8000u;
+    GX_SetDispSelect(GX_DISP_SELECT_MAIN_SUB);
     Mg_DisableAllBanks();
     Mg_ResetBgOffsets();
     *(vu32 *)0x4000000u &= ~0x7000000u;
     *(vu32 *)0x4000000u &= ~0x38000000u;
-    GX_SetBankForBG(3);
-    GX_SetBankForOBJ(0x10);
+    GX_SetBankForBG(GX_VRAM_BG_256_AB);
+    GX_SetBankForOBJ(GX_VRAM_OBJ_64_E);
     gMainScreenLayers = DISPLAY_LAYER_OBJ;
-    GX_SetBankForSubBG(4);
-    GX_SetBankForSubOBJ(8);
+    GX_SetBankForSubBG(GX_VRAM_SUB_BG_128_C);
+    GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_128_D);
     p = Ov004_LoadFile(sMgStockCounterFiles[GetGameLanguage()]);
     DecompressLZ16(p, (u8 *)G2_GetOBJCharPtr() + 0x4000);
     DecompressLZ16(p, (u8 *)G2S_GetOBJCharPtr() + 0x4000);
@@ -3447,9 +3442,10 @@ void dScMgBase_c::InitMainScreenBg() {
     using s20b27f4::LoadCompressedFileAt;
     using s20b27f4::gMainScreenLayers;
     int f;
-    REG_BG1CNT = REG_BG1CNT & ~3;
-    REG_BG1CNT = (REG_BG1CNT & 0x43) | 0x1000;
-    REG_BG1CNT = REG_BG1CNT & ~0x40;
+    G2_SetBG1Priority(0);
+    G2_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x8000,
+                     GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
+    G2_BG1Mosaic(false);
     SetBg1Offset(0, 0);
     gMainScreenLayers &= ~DISPLAY_LAYER_BG1;
     f = GetGameLanguage();
@@ -3487,9 +3483,10 @@ int dScMgBase_c::InitSubScreenBg() {
     using s20b2880::LoadCompressedFileAt;
     using s20b2880::gSubScreenLayers;
     int f;
-    REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0x10;
-    REG_DB_BG1CNT = REG_DB_BG1CNT & ~0x40;
-    REG_DB_BG1CNT = REG_DB_BG1CNT & ~3;
+    G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,
+                      GX_BG_CHARBASE_0x10000, GX_BG_EXTPLTT_01);
+    G2S_BG1Mosaic(false);
+    G2S_SetBG1Priority(0);
     SetSubBg1Offset(0, 0);
     gSubScreenLayers &= ~2;
     f = GetGameLanguage();

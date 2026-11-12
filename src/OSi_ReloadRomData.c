@@ -1,11 +1,11 @@
 #include "types.h"
 #include "nitro/os/cache.h"
 #include "nitro/os/spinLock.h"
+#include "nitro/os/system.h"
 #include "nitro/hw/registers.h"
 #include "nitro/hw/mmap_shared.h"
 #include "nitro/mb/mb.h"
 
-extern void OS_Terminate(void);
 extern void OSi_SendToPxi(u16 data);
 extern void OSi_ReloadRomData(void);
 extern void OSi_DoBoot(void);

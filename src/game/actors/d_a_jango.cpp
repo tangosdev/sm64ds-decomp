@@ -140,26 +140,6 @@ struct BCA_File;
    6ay, the struct-copy lever). */
 struct SwoopPositionWords { int w[3]; };
 
-/* TUBUILD CONFLICT -- alternate body of typedef 'Vector3', from the legacy file for func_ov062_0211b51c, NOT applied:
-typedef struct { int x, y, z; } Vector3;
-*/
-
-/* TUBUILD CONFLICT -- alternate body of struct 'dExtBlendAnmModel_c', from the legacy file for func_ov062_0211b930, NOT applied:
-struct dExtBlendAnmModel_c {
-    int SetAnim(BCA_File& f, int a, int b, Fix12 spd, unsigned short t);
-};
-*/
-
-/* TUBUILD CONFLICT -- alternate body of struct 'dExtBlendAnmModel_c', from the legacy file for func_ov062_0211bc54, NOT applied:
-struct dExtBlendAnmModel_c {
-    void SetAnim(BCA_File &a, int b, int c, int d, unsigned short e);
-};
-*/
-
-/* TUBUILD CONFLICT -- alternate body of typedef 'Vector3', from the legacy file for func_ov062_0211c594, NOT applied:
-typedef struct { int x, y, z; } Vector3;
-*/
-
 extern "C" {
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void* m, short angX);
@@ -182,44 +162,6 @@ extern SharedFilePtr data_ov002_0210da40;
 extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9c0;
 extern daPly_c *gPlayers[];
-/* TUBUILD CONFLICT -- alternate declaration of func_ov062_0211c658, from the legacy file for func_ov062_0211b800, NOT applied: extern void func_ov062_0211c658(void *c, void *p); */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov062_0211e17c, from the legacy file for func_ov062_0211b8d8, NOT applied: extern void* data_ov062_0211e17c; */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov062_0211c658, from the legacy file for func_ov062_0211b8d8, NOT applied: extern "C" int func_ov062_0211c658(unsigned char* c, void* p); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov062_0211c658, from the legacy file for func_ov062_0211ba84, NOT applied: extern int func_ov062_0211c658(char *c, void *p); */
-/* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_FromRotationY, from the legacy file for func_ov062_0211ba84, NOT applied: extern void Matrix4x3_FromRotationY(void *m, int angle); */
-/* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_ApplyInPlaceToRotationX, from the legacy file for func_ov062_0211ba84, NOT applied: extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX); */
-/* TUBUILD CONFLICT -- alternate declaration of MTX_MultVec43, from the legacy file for func_ov062_0211ba84, NOT applied: extern void MTX_MultVec43(const Vector3 *v, void *m, Vector3 *out); */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov062_0211e17c, from the legacy file for func_ov062_0211ba84, NOT applied: extern void *data_ov062_0211e17c; */
-/* TUBUILD CONFLICT -- alternate declaration of gCurrentSublevel, from the legacy file for func_ov062_0211bc54, NOT applied: extern "C" signed char gCurrentSublevel; */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for func_ov062_0211bc54, NOT applied: extern "C" void func_02012694(int a0, void *a1); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZNK10dBgCh_Actr8IsOnWallEv, from the legacy file for func_ov062_0211bd10, NOT applied: extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *self); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov062_0211bd10, NOT applied: extern s16 Vec3_HorzAngle(const void *a, const void *b); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_VertAngle, from the legacy file for func_ov062_0211bd10, NOT applied: extern s16 Vec3_VertAngle(const void *a, const void *b); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov062_0211c658, from the legacy file for func_ov062_0211bd10, NOT applied: extern int func_ov062_0211c658(void *self, void *state); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN7PathPtrC1Ev, from the legacy file for func_ov062_0211bd10, NOT applied: extern void _ZN7PathPtrC1Ev(void *self); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN7PathPtr6FromIDEj, from the legacy file for func_ov062_0211bd10, NOT applied: extern void _ZN7PathPtr6FromIDEj(void *self, unsigned int id); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZNK7PathPtr7GetNodeER7Vector3j, from the legacy file for func_ov062_0211bd10, NOT applied: extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *self, Vector3 *v, unsigned int i); */
-/* TUBUILD CONFLICT -- alternate declaration of gCurrentSublevel, from the legacy file for func_ov062_0211bd10, NOT applied: extern s8 gCurrentSublevel; */
-/* TUBUILD CONFLICT -- alternate declaration of RandomIntInternal, from the legacy file for func_ov062_0211c218, NOT applied: extern int RandomIntInternal(int *seed); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov062_0211c2f4, NOT applied: extern s16 Vec3_HorzAngle(const void *a, const void *b); */
-/* TUBUILD CONFLICT -- alternate declaration of ApproachAngle, from the legacy file for func_ov062_0211c2f4, NOT applied: extern int ApproachAngle(void *p, int target, int a, int b, int c); */
-/* TUBUILD CONFLICT -- alternate declaration of RandomIntInternal, from the legacy file for func_ov062_0211c2f4, NOT applied: extern int RandomIntInternal(int *seed); */
-/* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_FromRotationY, from the legacy file for func_ov062_0211c2f4, NOT applied: extern void Matrix4x3_FromRotationY(void *m, int angle); */
-/* TUBUILD CONFLICT -- alternate declaration of MTX_MultVec43, from the legacy file for func_ov062_0211c2f4, NOT applied: extern void MTX_MultVec43(Vector3 *in, void *m, void *out); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov062_0211c658, from the legacy file for func_ov062_0211c2f4, NOT applied: extern void func_ov062_0211c658(void *c, void *p); */
-/* TUBUILD CONFLICT -- alternate declaration of gCurrentSublevel, from the legacy file for func_ov062_0211c2f4, NOT applied: extern s8 gCurrentSublevel; */
-/* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_FromRotationY, from the legacy file for func_ov062_0211c594, NOT applied: extern void Matrix4x3_FromRotationY(struct Matrix4x3 *m, short angY); */
-/* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_ApplyInPlaceToRotationX, from the legacy file for func_ov062_0211c594, NOT applied: extern void Matrix4x3_ApplyInPlaceToRotationX(struct Matrix4x3 *m, short angX); */
-/* TUBUILD CONFLICT -- alternate declaration of MTX_MultVec43, from the legacy file for func_ov062_0211c594, NOT applied: extern void MTX_MultVec43(const Vector3 *v, const struct Matrix4x3 *m, Vector3 *out); */
-/* TUBUILD CONFLICT -- alternate declaration of data_020a0e68, from the legacy file for func_ov062_0211c594, NOT applied: extern struct Matrix4x3 data_020a0e68; */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN7PathPtrC1Ev, from the legacy file for _ZN9daJango_c13InitResourcesEv, NOT applied: extern void _ZN7PathPtrC1Ev(void *self); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN7PathPtr6FromIDEj, from the legacy file for _ZN9daJango_c13InitResourcesEv, NOT applied: extern void _ZN7PathPtr6FromIDEj(void *self, unsigned int id); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZNK7PathPtr7GetNodeER7Vector3j, from the legacy file for _ZN9daJango_c13InitResourcesEv, NOT applied: extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *self, void *v, unsigned int idx); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov062_0211c658, from the legacy file for _ZN9daJango_c13InitResourcesEv, NOT applied: extern void func_ov062_0211c658(void *c, void *p); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for _ZN9daJango_c13InitResourcesEv, NOT applied: extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b); */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov062_0211e114, from the legacy file for _ZN9daJango_c13InitResourcesEv, NOT applied: extern SharedFilePtr data_ov062_0211e114; */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov062_0211e104, from the legacy file for _ZN9daJango_c13InitResourcesEv, NOT applied: extern SharedFilePtr data_ov062_0211e104; */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov062_0211e17c, from the legacy file for _ZN9daJango_c13InitResourcesEv, NOT applied: extern char data_ov062_0211e17c; */
 }
 
 /* Actor ids (symbols/actor_debug_names.tsv). */

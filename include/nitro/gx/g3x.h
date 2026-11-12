@@ -11,13 +11,39 @@
  * g3imm.h: an inline body there renumbers ov075/d_s_entry_entry's pinned
  * @NNN (src/unnamed/ov007/func_ov007_020c4684.c). */
 
+#define REG_G3X_DISP3DCNT_TME_MASK 0x0001
 #define REG_G3X_DISP3DCNT_THS_MASK 0x0002
+#define REG_G3X_DISP3DCNT_ATE_MASK 0x0004
 #define REG_G3X_DISP3DCNT_ABE_MASK 0x0008
 #define REG_G3X_DISP3DCNT_AAE_MASK 0x0010
 #define REG_G3X_DISP3DCNT_EME_MASK 0x0020
+#define REG_G3X_DISP3DCNT_FMOD_MASK 0x0040
+#define REG_G3X_DISP3DCNT_FME_MASK  0x0080
+#define REG_G3X_DISP3DCNT_FOG_SHIFT_MASK 0x0f00
 #define REG_G3X_DISP3DCNT_RO_MASK  0x1000
 #define REG_G3X_DISP3DCNT_GO_MASK  0x2000
 #define REG_G3X_DISP3DCNT_THS_SHIFT 1
+#define REG_G3X_DISP3DCNT_FMOD_SHIFT 6
+#define REG_G3X_DISP3DCNT_FOG_SHIFT_SHIFT 8
+
+/* GXSTAT (REG_GXSTAT): the position/vector and projection stack levels, the
+ * stack busy and stack error flags (writing 1 to SE clears it), the geometry
+ * engine's busy flag and the FIFO interrupt condition. */
+#define REG_G3X_GXSTAT_PV_MASK 0x00001f00
+#define REG_G3X_GXSTAT_PJ_MASK 0x00002000
+#define REG_G3X_GXSTAT_SB_MASK 0x00004000
+#define REG_G3X_GXSTAT_SE_MASK 0x00008000
+#define REG_G3X_GXSTAT_B_MASK  0x08000000
+#define REG_G3X_GXSTAT_FI_MASK 0xc0000000
+#define REG_G3X_GXSTAT_PV_SHIFT 8
+#define REG_G3X_GXSTAT_PJ_SHIFT 13
+#define REG_G3X_GXSTAT_FI_SHIFT 30
+
+/* G3X_SetFifoIntrCond's conditions: the FIFO interrupt never fires, fires
+ * below half full, or fires when the FIFO is empty. */
+#define GX_FIFOINTR_COND_DISABLE   0
+#define GX_FIFOINTR_COND_UNDERHALF 1
+#define GX_FIFOINTR_COND_EMPTY     2
 
 /* gx_g3x.c, under the SDK's names with C linkage (ntrtwl/NitroSDK
  * libraries/gx/src/g3x.c). Parameters unnamed: a named parameter here

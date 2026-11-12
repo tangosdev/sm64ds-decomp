@@ -806,8 +806,7 @@ s32 dScStarSel_c::Behavior() {
 s32 dScStarSel_c::CleanupResources() {
     CleanCommonModelDataArr();
     Sound::UnsetPlayerVoiceGroup();
-    unsigned short *p = (unsigned short *)0x4000304;
-    *p = *p | 0x8000;
+    GX_SetDispSelect(GX_DISP_SELECT_MAIN_SUB);
     return 1;
 }
 
@@ -902,39 +901,41 @@ s32 dScStarSel_c::InitResources() {
     } else {
         Sound::LoadAndSetMusic_Layer1(0x16);
     }
-    REG_POWCNT1 |= 0x8000;
+    GX_SetDispSelect(GX_DISP_SELECT_MAIN_SUB);
     ::Initialise3dGraphics(0);
     G3X_SetClearColor(0x7FFF, 0x1F, 0x7FFF, 0x3F, false);
     GX::DisableAllBanks();
-    GX_SetBankForTex(3);
-    GX_SetBankForTexPltt(0x30);
-    GX_SetBankForBG(4);
-    GX_SetBankForOBJ(0x40);
-    GX_SetBankForSubBG(0x80);
-    GX_SetBankForSubOBJ(8);
-    GX_SetBankForSubOBJExtPltt(0x100);
-    REG_DISPCNT &= 0xFFCFFFEF;
-    REG_DISPCNT_SUB &= 0xFFCFFFEF;
-    GX_SetGraphicsMode(1, 0, 1);
-    GXS_SetGraphicsMode(0);
-    REG_DISPCNT = (REG_DISPCNT & ~0x38000000) | 0x08000000;
-    REG_POWCNT1 = (REG_POWCNT1 & 0xFFFFFDF1) | 0x20E;
+    GX_SetBankForTex(GX_VRAM_TEX_01_AB);
+    GX_SetBankForTexPltt(GX_VRAM_TEXPLTT_01234_EF);
+    GX_SetBankForBG(GX_VRAM_BG_128_C);
+    GX_SetBankForOBJ(GX_VRAM_OBJ_16_G);
+    GX_SetBankForSubBG(GX_VRAM_SUB_BG_32_H);
+    GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_128_D);
+    GX_SetBankForSubOBJExtPltt(GX_VRAM_SUB_OBJEXTPLTT_0_I);
+    GX_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
+    GXS_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
+    GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_3D);
+    GXS_SetGraphicsMode(GX_BGMODE_0);
+    GX_SetBGScrOffset(1);
+    GX_SetPower(GX_POWER_ALL);
     GX_DispOn();
-    REG_DISPCNT_SUB |= 0x10000;
+    GXS_DispOn();
     G3X_SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
     models[0].LoadAndSetFile(0x8015, 1, -1);
     models[1].LoadAndSetFile(0x8017, 1, -1);
-    REG_BG0CNT = (REG_BG0CNT & ~3) | 2;
+    G2_SetBG0Priority(2);
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ;
-    REG_BG3CNT &= ~3;
-    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1700;
-    REG_BG3CNT &= ~0x40;
+    G2_SetBG3Priority(0);
+    G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xb800,
+                         GX_BG_CHARBASE_0x00000);
+    G2_BG3Mosaic(0);
     LoadFont(0);
     if (SublevelToLevel(gNextSublevel) >= 0xF) {
-        REG_BG2CNT = (REG_BG2CNT & ~3) | 1;
-        REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1610;
-        REG_BG2CNT &= ~0x40;
+        G2_SetBG2Priority(1);
+        G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xb000,
+                             GX_BG_CHARBASE_0x10000);
+        G2_BG2Mosaic(0);
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_KOOPA_BG_NCG_BIN);
         DecompressLZ16(file, G2_GetBG2CharPtr());
         Deallocate(file);
@@ -949,9 +950,10 @@ s32 dScStarSel_c::InitResources() {
         gMainScreenLayers |= DISPLAY_LAYER_BG2;
         gMainScreenLayers &= ~DISPLAY_LAYER_BG0;
     } else {
-        REG_BG2CNT = (REG_BG2CNT & ~3) | 1;
-        REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1610;
-        REG_BG2CNT &= ~0x40;
+        G2_SetBG2Priority(1);
+        G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xb000,
+                             GX_BG_CHARBASE_0x10000);
+        G2_BG2Mosaic(0);
         if (GetOwnerLanguage() == 5) {
             file = LoadFile(ASSET_D_2D_SCENARIO_PLAYER_SELECT_COURSE_NUMBER_BG_S_NCG_BIN);
         } else if (GetOwnerLanguage() == 4) {
@@ -1187,8 +1189,8 @@ s32 dScStarSel_c::InitResources() {
     mBounceDelay = 0x78;
     mAnimFlip = 0;
     gSubScreenLayers = 0x10;
-    REG_DISPCNT = (REG_DISPCNT & ~0x1F00) | (gMainScreenLayers << 8);
-    REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~0x1F00) | 0x1000;
+    GX_SetVisiblePlane(gMainScreenLayers);
+    REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~0x1f00) | 0x1000;
     mLifeIcon = data_0209caa0.file.mCharacter;
     data_0208ee44 = 1;
     return 1;

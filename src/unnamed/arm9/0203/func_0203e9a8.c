@@ -1,8 +1,7 @@
 #include "types.h"
 #include "nitro/mb/mb.h"
+#include "nitro/mi/memory.h"
 #include "private/wm_views.h"
-// local extern: MI_Memory.c defines MI_CpuCopy8 as an assembly stub.
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
 extern u8 data_020a0fb8[];
 extern int data_020a0f70;
 
