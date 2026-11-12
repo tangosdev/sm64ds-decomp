@@ -887,6 +887,11 @@
       "reason": "include/types.h defines ~Vector3() {} in-class, so every TU holding a Vector3 local (OnHitByMegaChar's pos/dust, func_ov079_02123a8c's probe point, func_ov079_02124dec's coin position, func_ov079_02125240's quake and dust points) emits this 4-byte vague-linkage bx lr. The cartridge's single copy is arm9:0x020072c0; nothing in this TU's .text run calls it."
     },
     {
+      "symbol": "_ZN9Matrix4x3D1Ev",
+      "disposition": "deadstrip",
+      "reason": "mwccarm emits Matrix4x3's vague-linkage D1 while lowering the synthesized ctor and dtor over the Matrix4x3 members mShadowMatrix (0x36c) and mMeshMatrix (0x5e0); no configured ROM symbol of that name exists in any module and no surviving reference reaches it. Same row as config/tu_manifest.d/ov070/daKpFr_c.json."
+    },
+    {
       "symbol": "_ZTI7fBase_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",

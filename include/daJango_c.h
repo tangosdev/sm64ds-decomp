@@ -48,17 +48,17 @@ struct daJango_c : dEnemyBase_c {
     dBgCh_Actr                 mWithMeshClsn;         /* 0x178 */
     dExtBlendAnmModel_c mBlendAnmModel;               /* 0x334 */
     dExtShadowModel_c                  mShadowModel;          /* 0x3a4 */
-    /* Both matrices are 12 words rather than a Matrix4x3 member: a Matrix4x3
-       member makes the synthesised constructor emit a Matrix4x3 destructor that
-       the ROM has no symbol for, and the ROM build refuses the object.
+    /* Both Matrix4x3 members make the synthesised constructor emit Matrix4x3's
+       vague-linkage destructor, which the ROM has no symbol for; the TU
+       manifest deadstrips it, as for daKpFr_c.
        Drop-shadow matrix: UpdateModelAndShadow builds it from mPos >> 3 (dropped
        0x18000 = 24 units) every frame and hands it to DropShadowRadHeight. */
-    s32                          mShadowMat[12];        /* 0x3cc -- a Matrix4x3 spelled as 12 words */
+    Matrix4x3 mShadowMat; /* 0x3cc */
     /* Where the carried actor is drawn: the bone matrix of the model (entry 6 of
        its transforms) times the model matrix, then a fixed offset and rotation
        that depend on mCarriedItem. UpdateModelAndShadow builds it and stores its
        address in the carried actor's +0xc8 word. */
-    s32                          mHeldMat[12];          /* 0x3fc -- a Matrix4x3 spelled as 12 words */
+    Matrix4x3 mHeldMat; /* 0x3fc */
     /* Behavior reads this word as a pointer to a pair of pointers-to-member,
        {enter, update}: ChangeState(this, record) stores it and calls
        `enter` at once, Behavior calls `update` (the +0x08 member) on `this`

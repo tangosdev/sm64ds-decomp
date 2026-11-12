@@ -484,8 +484,7 @@ void daJango_c::UpdateModelAndShadow() {
             mHeldPosX = 0;
             mHeldPosY = 0;
             mHeldPosZ = 0;
-            MTX_Concat43(&mBlendAnmModel.data.transforms[6], &mBlendAnmModel.mat4x3,
-                         (Matrix4x3 *)&mHeldMat);
+            MTX_Concat43(&mBlendAnmModel.data.transforms[6], &mBlendAnmModel.mat4x3, &mHeldMat);
             mHeldPosX = data_020a0e68.t.x;
             mHeldPosY = data_020a0e68.t.y;
             mHeldPosZ = data_020a0e68.t.z;
@@ -504,14 +503,14 @@ void daJango_c::UpdateModelAndShadow() {
                 Matrix4x3_FromTranslation(&data_020a0e68, -0x7000, 0x1800, 0);
                 Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, -0x3000, -0x8000, -0x4000);
             }
-            MTX_Concat43(&data_020a0e68, (Matrix4x3 *)&mHeldMat, (Matrix4x3 *)&mHeldMat);
-            actor->mCarryMatrix = (Matrix4x3 *)&mHeldMat;
+            MTX_Concat43(&data_020a0e68, &mHeldMat, &mHeldMat);
+            actor->mCarryMatrix = &mHeldMat;
         }
     }
 
     Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, (mPosY - 0x18000) >> 3, mPosZ >> 3);
     *(Mtx43 *)&mShadowMat = *(Mtx43 *)&data_020a0e68;
-    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)&mShadowMat, 0x40000, 0x258000, 0xf);
+    DropShadowRadHeight(mShadowModel, mShadowMat, 0x40000, 0x258000, 0xf);
 }
 
 /* Select a state: store the record (its address) in mState, then call the
