@@ -29,7 +29,7 @@ struct Mascot {
     /* 0x70 bytes. UpdateMatrix sets its mat4x3 and turns bone 6 of its
        data.transforms, the head. */
     dExtBlendAnmModel_c mModel; /* 0x10 */
-    Vector3 mLookTarget;  /* 0x80 -- what LookAt turns the head toward */
+    Vector3 mLookTarget;        /* 0x80 -- what LookAt turns the head toward */
     Vector3 mPos;         /* 0x8c */
     s16 mRot[3];          /* 0x98 -- [1] is the body's yaw, eased toward the target */
     u8 pad_9e[0x4];       /* 0x9e */

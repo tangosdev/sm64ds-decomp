@@ -12,7 +12,7 @@
 #include "MWCPlusLib.h"
 
 extern "C" void __cxa_vec_cleanup(void *base, unsigned int count, unsigned int stride,
-                                 void (*dtor)(void *));
+                                  void (*dtor)(void *));
 extern "C" void CupFx_ElemDtor(void);
 extern "C" void NullDestructor_0203d47c(void);
 

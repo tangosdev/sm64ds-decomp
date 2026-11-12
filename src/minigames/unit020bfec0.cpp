@@ -357,7 +357,6 @@ void FlowerFace::PlayIdle() {
 
 void FlowerFace::StateIdle() {}
 
-
 void FlowerFace::PlayPetalPulled() {
     int i;
     /* The spawn point and velocity, and the copies Spawn is handed. */
@@ -430,7 +429,6 @@ void FallingPetal::SetModel(BMD_File *model) {
     mActive = 0;
 }
 
-
 void FallingPetal::Spawn(const VecFx32 *pos, const VecFx32 *vel) {
     /* Every petal spins about +Y. Constructed on the first spawn: mwcc emits
        the guard test, the three stores and the ~Vector3() registration here. */
@@ -457,7 +455,6 @@ void FallingPetal::Spawn(const VecFx32 *pos, const VecFx32 *vel) {
     Quaternion_FromVector3(mRot, &sAxis, &mAxis);
     mActive = 1;
 }
-
 
 void FallingPetal::Update() {
     Vector3 sway;
@@ -557,7 +554,6 @@ Presenter::~Presenter() {
     mSurprisedTexSeq.Release();
 }
 
-
 int Presenter::Load() {
     void *faceFile;
     void *backFile;
@@ -590,12 +586,10 @@ int Presenter::Load() {
     dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile, *(BTP_File *)mMistakeTexSeq.filePtr);
     dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile, *(BTP_File *)mWinTexSeq.filePtr);
     dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile, *(BTP_File *)mLoseTexSeq.filePtr);
-    dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile,
-                             *(BTP_File *)mLoseStartTexSeq.filePtr);
+    dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile, *(BTP_File *)mLoseStartTexSeq.filePtr);
     dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile, *(BTP_File *)mLoseEndTexSeq.filePtr);
     dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile, *(BTP_File *)mSmileTexSeq.filePtr);
-    dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile,
-                             *(BTP_File *)mSurprisedTexSeq.filePtr);
+    dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile, *(BTP_File *)mSurprisedTexSeq.filePtr);
 
     dExtAnmTexSRT_c::Prepare(*(BMD_File *)faceFile, *(BTA_File *)sPresenterIdleTexAnim);
     dExtAnmTexSRT_c::Prepare(*(BMD_File *)faceFile, *(BTA_File *)sPresenterMissTexAnim);
@@ -619,7 +613,6 @@ int Presenter::Load() {
     mBack.mat4x3 = data_020a0e68;
     return 1;
 }
-
 
 /* Eases the four mSway words (Presenter::Draw adds them to two face
    materials' texture offsets) a quarter of the way toward targets set by
@@ -763,13 +756,11 @@ void Presenter::PlayIdle() {
     if (mFace.file != (BCA_File *)mWaitAnim.filePtr) {
         int blendFrames = 0;
         if (gSceneFader->IsAtEnd() == 0) {
-            if (mFace.Finished() == 0 ||
-                mFace.file == (BCA_File *)mSurprisedAnim.filePtr) {
+            if (mFace.Finished() == 0 || mFace.file == (BCA_File *)mSurprisedAnim.filePtr) {
                 blendFrames = 8;
             }
         }
-        mFace.SetAnim(*(BCA_File *)mWaitAnim.filePtr, blendFrames, 0, 0x800,
-                                 0);
+        mFace.SetAnim(*(BCA_File *)mWaitAnim.filePtr, blendFrames, 0, 0x800, 0);
         mTexSeq.SetFile(*(BTP_File *)mWaitTexSeq.filePtr, 0, 0x800, 0);
         mTexAnim.SetFile(*(BTA_File *)sPresenterIdleTexAnim, 0, 0x800, 0);
     }
@@ -815,11 +806,9 @@ void Presenter::StateWin() {
     PlayIdle();
 }
 
-
 void Presenter::PlayMiss() {
     mFace.SetAnim(*(BCA_File *)mMistakeAnim.filePtr, 4, 0x40000000, 0x800, 0);
-    mTexSeq.SetFile(*(BTP_File *)mMistakeTexSeq.filePtr, 0x40000000, 0x800,
-                               0);
+    mTexSeq.SetFile(*(BTP_File *)mMistakeTexSeq.filePtr, 0x40000000, 0x800, 0);
     mTexAnim.SetFile(*(BTA_File *)sPresenterMissTexAnim, 0x40000000, 0x800, 0);
     *(StateSlot *)this = pmf_Presenter_StateMistake;
 }
@@ -837,10 +826,8 @@ void Presenter::PlayCheer() {
     if ((mQuiet) == 0) {
         func_02012174(0, 3);
     }
-    mFace.SetAnim(*(BCA_File *)mSurprisedAnim.filePtr, 8, 0x40000000, 0x800,
-                             0);
-    mTexSeq.SetFile(*(BTP_File *)mSurprisedTexSeq.filePtr, 0x40000000, 0x800,
-                               0);
+    mFace.SetAnim(*(BCA_File *)mSurprisedAnim.filePtr, 8, 0x40000000, 0x800, 0);
+    mTexSeq.SetFile(*(BTP_File *)mSurprisedTexSeq.filePtr, 0x40000000, 0x800, 0);
     mTexAnim.SetFile(*(BTA_File *)sPresenterCheerTexAnim, 0x40000000, 0x800, 0);
     *((long long *)this) = pmf_Presenter_StateSurprisedThenSmile;
 }
@@ -860,10 +847,8 @@ void Presenter::StateSurprisedThenSmile() {
 void Presenter::PlayLose() {
     if (mQuiet == 0)
         Sound::PlayBank2_2D(0x1c9);
-    mFace.SetAnim(*(BCA_File *)mLoseStartAnim.filePtr, 0, 0x40000000, 0x800,
-                             0);
-    mTexSeq.SetFile(*(BTP_File *)mLoseStartTexSeq.filePtr, 0x40000000, 0x800,
-                               0);
+    mFace.SetAnim(*(BCA_File *)mLoseStartAnim.filePtr, 0, 0x40000000, 0x800, 0);
+    mTexSeq.SetFile(*(BTP_File *)mLoseStartTexSeq.filePtr, 0x40000000, 0x800, 0);
     mTexAnim.SetFile(*(BTA_File *)sPresenterLoseTexAnim, 0x40000000, 0x800, 0);
     *(StateSlot *)this = pmf_Presenter_StateLoseStart;
 }
@@ -883,10 +868,8 @@ void Presenter::PlayCheerLoop() {
     if (mQuiet == 0) {
         func_02012174(0, 3);
     }
-    mFace.SetAnim(*(BCA_File *)mSurprisedAnim.filePtr, 8, 0x40000000, 0x800,
-                             0);
-    mTexSeq.SetFile(*(BTP_File *)mSurprisedTexSeq.filePtr, 0x40000000, 0x800,
-                               0);
+    mFace.SetAnim(*(BCA_File *)mSurprisedAnim.filePtr, 8, 0x40000000, 0x800, 0);
+    mTexSeq.SetFile(*(BTP_File *)mSurprisedTexSeq.filePtr, 0x40000000, 0x800, 0);
     mTexAnim.SetFile(*(BTA_File *)sPresenterCheerTexAnim, 0x40000000, 0x800, 0);
     /* The u64 identity mask and the local copy are load-bearing: storing the
        record straight through costs the function its bytes (measured). */
@@ -901,8 +884,7 @@ void Presenter::StateSurprisedThenIdle() {
 }
 
 void Presenter::UpdateMatrix() {
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y,
-                              mPos.z);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
     mFace.mat4x3 = data_020a0e68;
 }
 
@@ -1070,7 +1052,6 @@ Dealer::~Dealer() {
     mLoseAnim.Release();
 }
 
-
 int Dealer::Load() {
     void *file;
     BMD_Material *materials;
@@ -1223,7 +1204,6 @@ int Dealer::IsIdleAtRest() {
     return atRest;
 }
 
-
 void Dealer::StartShuffle(int, short count, s16 *counter) {
     if (mShuffleRound == 0) {
         mShuffleLeft = 4;
@@ -1276,15 +1256,12 @@ void Dealer::StartDeal(short count, s16 *counter) {
     mDealLeft = count;
     mDealCounter = counter;
     if (IsIdle() && mModel.file != (BCA_File *)mDealWaitAnim.filePtr) {
-        mModel.SetAnim(*(BCA_File *)mShuffleStartAnim.filePtr, 0, 0x40000000, 0x800,
-                               0);
+        mModel.SetAnim(*(BCA_File *)mShuffleStartAnim.filePtr, 0, 0x40000000, 0x800, 0);
     } else {
-        mModel.SetAnim(*(BCA_File *)mDealStartAnim.filePtr, 0, 0x40000000, 0x800,
-                               0);
+        mModel.SetAnim(*(BCA_File *)mDealStartAnim.filePtr, 0, 0x40000000, 0x800, 0);
     }
     *(StateSlot *)this = pmf_Dealer_StateDeal;
 }
-
 
 void Dealer::StateDeal() {
     BCA_File *anim = mModel.file;
@@ -1309,16 +1286,14 @@ void Dealer::StateDeal() {
             if (mDealLeft-- <= 0) {
                 short state = mHand;
                 if (state == 0) {
-                    mModel.SetAnim(*(BCA_File *)mDealEndAnim.filePtr, 0, 0x40000000,
-                                           0x800, 0);
+                    mModel.SetAnim(*(BCA_File *)mDealEndAnim.filePtr, 0, 0x40000000, 0x800, 0);
                     if (mDealSoundPlayed != 0)
                         return;
                     Sound::PlayBank2_2D(0x13a);
                     mDealSoundPlayed = 1;
                     return;
                 } else if (state == 2) {
-                    mModel.SetAnim(*(BCA_File *)mDealEnd2Anim.filePtr, 0,
-                                           0x40000000, 0x800, 0);
+                    mModel.SetAnim(*(BCA_File *)mDealEnd2Anim.filePtr, 0, 0x40000000, 0x800, 0);
                     if (mDealSoundPlayed != 0)
                         return;
                     Sound::PlayBank2_2D(0x13a);
@@ -1342,12 +1317,10 @@ void Dealer::StateDeal() {
 
     if (anim == mShuffleStartAnim.filePtr) {
         if (mModel.Finished()) {
-            mModel.SetAnim(*(BCA_File *)mDealStartAnim.filePtr, 0, 0x40000000,
-                                   0x800, 0);
+            mModel.SetAnim(*(BCA_File *)mDealStartAnim.filePtr, 0, 0x40000000, 0x800, 0);
         }
     }
 }
-
 
 void Dealer::StartReveal(int count, s16 *counter) {
     mDealLeft = count;
@@ -1366,16 +1339,14 @@ void Dealer::StateReveal() {
             mDealCounter = 0;
             hand = mHand;
             if (hand == 0) {
-                mModel.SetAnim(*(BCA_File *)mDealEndAnim.filePtr, 0, 0x40000000,
-                                       0x800, 0);
+                mModel.SetAnim(*(BCA_File *)mDealEndAnim.filePtr, 0, 0x40000000, 0x800, 0);
                 if (mDealSoundPlayed != 0)
                     return;
                 Sound::PlayBank2_2D(0x13a);
                 mDealSoundPlayed = 1;
                 return;
             } else if (hand == 2) {
-                mModel.SetAnim(*(BCA_File *)mDealEnd2Anim.filePtr, 0, 0x40000000,
-                                       0x800, 0);
+                mModel.SetAnim(*(BCA_File *)mDealEnd2Anim.filePtr, 0, 0x40000000, 0x800, 0);
                 if (mDealSoundPlayed != 0)
                     return;
                 Sound::PlayBank2_2D(0x13a);
@@ -1403,7 +1374,6 @@ other:
             PlayIdle();
     }
 }
-
 
 int Dealer::IsBusy() {
     int *record = pmf_Dealer_StateDeal_2;
@@ -1433,7 +1403,6 @@ int Dealer::IsAnimDone() {
     return mModel.Finished();
 }
 
-
 void Dealer::StartSwap() {
     mModel.SetAnim(*(BCA_File *)mThrowAnim.filePtr, 0, 0x40000000, 0x800, 0);
     mModel.HideMaterial(2, 0);
@@ -1447,8 +1416,7 @@ void Dealer::StateSwap() {
         mShuffleSoundPlayed = 1;
     }
     /* 0x6c is the dExtFrameCtrl_c inside mModel (its +0x50). */
-    if (mModel.file == (BCA_File *)mThrowAnim.filePtr &&
-        mModel.Finished()) {
+    if (mModel.file == (BCA_File *)mThrowAnim.filePtr && mModel.Finished()) {
         mModel.HideMaterial(1, 0);
         mModel.ShowMaterial(2, 0);
         return;
@@ -1459,12 +1427,10 @@ void Dealer::StateSwap() {
 
 void Dealer::PlayLose() {
     if (mHand == 1) {
-        mModel.SetAnim(*(BCA_File *)mDealEndAnim.filePtr, 0, 0x40000000,
-                                  0x800, 0);
+        mModel.SetAnim(*(BCA_File *)mDealEndAnim.filePtr, 0, 0x40000000, 0x800, 0);
     } else {
         Sound::PlayBank2_2D(0x13c);
-        mModel.SetAnim(*(BCA_File *)mLoseAnim.filePtr, 0, 0x40000000, 0x800,
-                                  0);
+        mModel.SetAnim(*(BCA_File *)mLoseAnim.filePtr, 0, 0x40000000, 0x800, 0);
     }
     *(StateSlot *)this = pmf_Dealer_StateLose;
 }
@@ -1489,22 +1455,18 @@ void Dealer::PlayWin() {
 }
 
 void Dealer::StateWin() {
-    if (mModel.file == (BCA_File *)mWinStartAnim.filePtr &&
-        mModel.Finished()) {
+    if (mModel.file == (BCA_File *)mWinStartAnim.filePtr && mModel.Finished()) {
         mModel.SetAnim(*(BCA_File *)mWinAnim.filePtr, 0, 0, 0x800, 0);
         return;
     }
-    if (mModel.file == (BCA_File *)mWinAnim.filePtr &&
-        mModel.WillHitFrame(0)) {
+    if (mModel.file == (BCA_File *)mWinAnim.filePtr && mModel.WillHitFrame(0)) {
         mShuffleLeft -= 1;
         if (mShuffleLeft == 0) {
-            mModel.SetAnim(*(BCA_File *)mWinEndAnim.filePtr, 0, 0x40000000, 0x800,
-                                   0);
+            mModel.SetAnim(*(BCA_File *)mWinEndAnim.filePtr, 0, 0x40000000, 0x800, 0);
             return;
         }
     }
-    if (mModel.file == (BCA_File *)mWinEndAnim.filePtr &&
-        mModel.Finished()) {
+    if (mModel.file == (BCA_File *)mWinEndAnim.filePtr && mModel.Finished()) {
         PlayIdle();
     }
 }
@@ -1622,8 +1584,7 @@ void MascotWalker::UpdateMatrix() {
     data_020a0e68 = mModel.data.transforms[6];
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mHeadAngle);
     mModel.data.transforms[6] = data_020a0e68;
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y,
-                              mPos.z);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
     mModel.mat4x3 = data_020a0e68;
 }
@@ -1736,7 +1697,6 @@ void MascotWalker::StateWalk() {
 
     StartPause();
 }
-
 
 void MascotWalker::StartPause() {
     mModel.SetAnim(*(BCA_File *)mPauseAnimFile.filePtr, 8, 0, 0x800, 0);

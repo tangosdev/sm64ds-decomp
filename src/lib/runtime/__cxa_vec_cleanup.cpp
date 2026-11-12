@@ -27,8 +27,7 @@ void terminate();
 }
 
 extern "C" void __cxa_vec_cleanup(void *block, unsigned int n, unsigned int size,
-                                  void (*dtor)(void *))
-{
+                                  void (*dtor)(void *)) {
     if (dtor) {
         char *p = (char *)block + n * size;
         try {

@@ -194,8 +194,7 @@ s32 dScMgMCarlo2_c::Behavior()
             if (sMCarlo2PickAllowed == 1)
                 sMCarlo2PickAllowed = 0;
             dealt = sMCarlo2DealProgress >> 12;
-            if (sMCarlo2DeckSize != 0 && dealt > 10 && dealt <= 18 &&
-                mDealer.IsIdle() != 0) {
+            if (sMCarlo2DeckSize != 0 && dealt > 10 && dealt <= 18 && mDealer.IsIdle() != 0) {
                 mDealCount = 0;
                 mDealer.mReserved = 0;
                 mDealer.StartReveal(2, &mDealCount);
