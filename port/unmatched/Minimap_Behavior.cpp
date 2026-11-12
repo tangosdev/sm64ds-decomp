@@ -22,6 +22,8 @@ typedef int s32;
 typedef int Fix12;
 
 #include "Minimap_wide.h"
+#include <cstdio>
+#include <cstdlib>
 
 /* The single Minimap actor's per-player tables, sixteen wide, shared with the
  * Render host copy (declared extern there). Zero-initialised; reseated below
@@ -30,6 +32,7 @@ int         g_mm_iconX[kMinimapWidePlayers];
 int         g_mm_iconY[kMinimapWidePlayers];
 signed char g_mm_mapID[kMinimapWidePlayers];
 int (*g_mm_ghost_pos)(int slot, int pos[3]) = 0;
+int (*g_mm_coop_room)(void) = 0;   /* coopfix1 HOSTSTART1: 1 while a coop room is up; seated by hal/coop_minimap.cpp */
 
 /* Luigi Infection minimap hide, defined in hal/luigi_infection.cpp; inert when
  * the mode is off. Called at the tail of Behavior, below. */
@@ -139,8 +142,40 @@ extern void _ZN6dMap_c20GetPosFromMinimapPosER7Vector3S1_5Fix12IiEsS1_(Vector3 *
 extern void Vec3_Sub(Vector3 *out, Vector3 *a, Vector3 *b);
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern s32  GetMinimapID(Obj *obj, s32 arg);
+extern s8   data_02092120;                      /* the current area; the port sets it to -1 on a level change */
 extern s32  GetMinimapScale(s32 idx);
 extern void UpdateMinimap(s32 *a, s32 b, s32 c, s32 d, s32 e);
+}
+
+/* coopfix1 HOSTSTART1, bug 25 (coop rooms only). 1.0.2 players' MINIMAP actor faulted at GetMinimapID+0x33, the read of
+ * the area's minimap-change list: GetMinimapID indexes the eight-entry area table with the object's area byte (+0xcc),
+ * or with data_02092120 when that byte is negative, and checks neither. An area index outside 0..7 reads past the table
+ * and walks a pointer that is not a list node. In a coop room a marker or a friend's body whose final area index is not
+ * 0..7 is now left off the map for that frame (-1, as an empty slot) instead of being looked up, and named in the log
+ * once per slot. Outside a coop room this is never consulted and GetMinimapID runs exactly as before.
+ * Kill switch: SM64DS_COOP_MMGUARD=0. */
+static s32 mm_id_coop_checked(Obj *o, s32 arg, int list, int slot)
+{
+    static int off = -1;
+    if (off < 0) {
+        const char *e = std::getenv("SM64DS_COOP_MMGUARD");
+        off = (e && e[0] == '0' && e[1] == 0) ? 1 : 0;
+    }
+    if (!off && g_mm_coop_room && g_mm_coop_room()) {
+        int idx = *(s8 *)((char *)o + 0xcc);
+        if (idx < 0) idx = data_02092120;
+        if (idx < 0 || idx > 7) {
+            static unsigned char said[3][16];
+            static const char *names[3] = {"player", "star marker", "cap marker"};
+            if (slot >= 0 && slot < 16 && !said[list][slot]) {
+                said[list][slot] = 1;
+                std::fprintf(stderr, "[mmguard] %s slot %d (%p) has area index %d (byte %d, current area %d): left off the map, "
+                        "not looked up\n", names[list], slot, (void *)o, idx, (int)*(s8 *)((char *)o + 0xcc), (int)data_02092120);
+            }
+            return -1;
+        }
+    }
+    return GetMinimapID(o, arg);
 }
 
 #define F218 (*(s32 *)(((int)self + 0x218)))
@@ -373,7 +408,7 @@ L738:
         else if (gk == 2)
             g_mm_mapID[i] = -1;
         else if (i != data_0209f250)
-            g_mm_mapID[i] = (s8)GetMinimapID(o, -1);
+            g_mm_mapID[i] = (s8)mm_id_coop_checked(o, -1, 0, i);
         else
             g_mm_mapID[i] = (s8)GetMinimapID(o, data_ov002_02111148);
         } else {
@@ -388,7 +423,7 @@ L738:
         self->aa0[i] = (v8.x + 0x800) >> 12;
         self->ad0[i] = (v8.z + 0x800) >> 12;
         if (data_0209f37c[i] != 4)
-            self->a222[i] = (s8)GetMinimapID(o, -1);
+            self->a222[i] = (s8)mm_id_coop_checked(o, -1, 1, i);
         else
             self->a222[i] = 1;
         } else {
@@ -402,7 +437,7 @@ L738:
         _ZN6dMap_c15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(&o->pos, &self->v1f4, self->f1f0, self->ang, &v8);
         self->a100[i] = (v8.x + 0x800) >> 12;
         self->a124[i] = (v8.z + 0x800) >> 12;
-        self->a23a[i] = (s8)GetMinimapID(o, -1);
+        self->a23a[i] = (s8)mm_id_coop_checked(o, -1, 2, i);
         } else { self->a23a[i] = -1; }
     }
 

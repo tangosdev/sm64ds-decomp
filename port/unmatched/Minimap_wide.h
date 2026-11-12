@@ -55,6 +55,7 @@ extern signed char g_mm_mapID[kMinimapWidePlayers];   /* was Minimap +0x21e */
  * ghost that is not in this level, 3 = (MAPDOTS1) a ghost in another AREA of this level (pos[3] = his
  * newest synced position; the icon is clamped to the map's edge). NULL = never installed (solo, VS). */
 extern int (*g_mm_ghost_pos)(int slot, int pos[3]);
+extern int (*g_mm_coop_room)(void);   /* coopfix1 HOSTSTART1: the bug 25 guard asks this; 0 outside coop builds */
 
 /* Both loops run the full sixteen slots and lean on the ROM's own per-slot
  * presence gates -- data_0209f394[i] != 0 in Behavior (absent slot -> mapID
