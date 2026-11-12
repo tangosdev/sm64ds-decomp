@@ -1568,6 +1568,8 @@ DSSTATE_BEGIN
 static int g_boot_target = -1;
 DSSTATE_END
 
+extern "C" void port_scenario_save_seed(void);   /* TESTSPAWN1, hal/scenario.cpp */
+
 static int port_level_env_want(void)
 {
     static int want = -2;
@@ -3788,6 +3790,9 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
         }
         caps_seeded = true;
     }
+    /* TESTSPAWN1: a test scenario's save preset (hal/scenario.cpp), once, beside the seeds above. INERT UNLESS SM64DS_SCENARIO
+       is set. */
+    port_scenario_save_seed();
     /* SM64DS_DEATH_SEED=<n> and SM64DS_DEATH_WATCH=1 -- the actor DEATH TABLE,
        data_0209f4f8, read here because nothing else in the harness can see it.
 

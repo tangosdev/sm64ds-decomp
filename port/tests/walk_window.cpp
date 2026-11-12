@@ -683,6 +683,9 @@ void port_star_popup_frame(void);
 void port_event_frame(void);   /* run hunt8 lane EVENTS1 (hal/event_client.cpp) */
 int port_star_popup_stop_now(void);   /* run mp1 lane STARPOP1 (hal/star_popup.cpp) */
 extern "C" void port_career_frame(int ticked);
+/* TESTSPAWN1: test scenarios (hal/scenario.cpp), inert unless SM64DS_SCENARIO is set */
+extern "C" void port_scenario_boot_env(void);
+extern "C" void port_scenario_frame(int ticked);
 extern "C" void menu_pause_rom_career_draw(uint32_t *px, int stride, int w, int h);   /* CAREER1: hal/menu_recipe_pause.cpp */   /* run after093 lane CAREER1 (hal/career.cpp) */
 /* PARTY: per-slot party-member predicate (hal/comms_sync.cpp). */
 extern "C" int port_party_member(int slot);
@@ -16973,6 +16976,7 @@ extern "C" void port_frame_ctrl_publish(void)
 int main(void)
 {
     pt_arm();   /* run perf2: SM64DS_PERF_TRACE, inert unset */
+    port_scenario_boot_env();   /* TESTSPAWN1: the boot knobs a SM64DS_SCENARIO file implies, inert unset */
     /* THE ASPECT IS CHOSEN HERE, ONCE, BEFORE ANYTHING TOUCHES THE FRAMEBUFFER.
        host_setting_aspect() reads the Aspect key from settings.json (or
        SM64DS_ASPECT, or the legacy SM64DS_WIDESCREEN) as a RATIO -- width over
@@ -23025,6 +23029,7 @@ int main(void)
             port_star_popup_frame();   /* hook: STARPOP1, inert outside party / coop rooms */
             port_event_frame();        /* hook: EVENTS1, inert outside a live world hub */
             port_career_frame(game_ticked);   /* hook: CAREER1, the pause Career page's playtime (hal/career.h) */
+            port_scenario_frame(game_ticked);   /* hook: TESTSPAWN1, a test scenario's spot and state; inert unless SM64DS_SCENARIO */
         }
         /* PARTY: the render boundary (a party body solid+colliding vs a
            non-party ghost translucent+pass-through) and party-body liveness.

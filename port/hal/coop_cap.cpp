@@ -472,3 +472,30 @@ void coop_cap_frame(unsigned) {
 }
 
 }  // namespace port
+
+// TESTSPAWN1 (run coopfix1): the scenario knob's "cap held by Klepto" (hal/scenario.cpp), solo or coop. The same ROM calls
+// the SM64DS_COOP_CAP_STEAL proof knob makes: Klepto's own SWOOP state setter, then his own contact test with this body as
+// the one he touched, so the theft (the save's lost bit, the cap in his claws) is the cartridge's. A star carrier lets its
+// star go first, as the knob does. Returns 1 when Klepto holds a cap afterwards. Only called when the scenario asks.
+extern "C" int port_scenario_klepto_steal(void *who) {
+    using namespace port;
+    daJango_c *k = first_klepto();
+    if (!k || !who) {
+        std::fprintf(stderr, "[scenario] Klepto steal: no Klepto (%p) or no body (%p)\n", (void *)k, who);
+        return 0;
+    }
+    if (k->mHeldActorID && k->mCarriedItem != 0) {
+        char *star = _ZN8dActor_c10FindWithIDEj((unsigned)k->mHeldActorID);
+        if (star) _ZN7fBase_c18MarkForDestructionEv(star);
+        k->mHeldActorID = 0;
+        k->mCarriedItem = 0;
+    }
+    k->func_ov062_0211c658(&data_ov062_0211e18c);
+    k->mdCcAc_c2.otherOwner = uid_of(who);
+    k->func_ov062_0211b51c();
+    char *held = k->mHeldActorID ? _ZN8dActor_c10FindWithIDEj((unsigned)k->mHeldActorID) : nullptr;
+    const bool cap = held && (rd32(held, 0x0c) & 0xffff) == kCapClass;
+    std::fprintf(stderr, "[scenario] Klepto steal: Klepto at (%d,%d,%d) holds %s\n", k->mPosX >> 12, k->mPosY >> 12, k->mPosZ >> 12,
+                 cap ? "a CAP" : held ? "something else" : "nothing");
+    return cap ? 1 : 0;
+}

@@ -11999,6 +11999,8 @@ list(APPEND SLICE_COMMS_SOURCES hal/coop_actors.cpp)
 # run after093, lane FRIENDVIS1: a coop friend's Yoshi eggs on my console, driven from coop_actors.cpp; see hal/coop_ghost_eggs.h.
 list(APPEND SLICE_COMMS_SOURCES hal/coop_ghost_eggs.cpp)
 list(APPEND SLICE_COMMS_SOURCES hal/coop_cap.cpp)   # CAPLOSS1: a friend's lost cap on my console
+# Run coopfix1 lane TESTSPAWN1: test scenarios (SM64DS_SCENARIO, port/tools/scenario). INERT unless the knob is set.
+list(APPEND SLICE_COMMS_SOURCES hal/scenario.cpp)
 # Run mp1 lane MOVERS9: always-on [syncstat] sync numbers (per class, per queue, per lane). INERT outside a coop room.
 list(APPEND SLICE_COMMS_SOURCES hal/coop_stats_log.cpp)
 # Run mp1 wave 56 lane PSTAR1: party shared stars. INERT unless SM64DS_PARTY=1.
