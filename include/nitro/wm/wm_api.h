@@ -3,8 +3,8 @@
 
 /*
  * The Nitro SDK's nitro/wm/ARM9/wm_api.h, the calls whose bodies are folded
- * so far: wm_standard.c (src/engine/wm/WM_Standard.c), wm_mp.c
- * (src/engine/wm/WM_Mp.c), WM_Init and the MP buffer sizes.
+ * so far: wm_standard.c (src/engine/wm/WM_Standard.c), wm_sync.c
+ * (src/engine/wm/WM_Sync.c), wm_mp.c (src/engine/wm/WM_Mp.c) and WM_Init.
  *
  * The asynchronous calls return WM_ERRCODE_OPERATING when the request was
  * queued; the callback then answers with the result. The SDK's BOOL
@@ -34,8 +34,14 @@ WMErrCode WM_StartScan(WMCallbackFunc, const WMScanParam *);
 WMErrCode WM_StartConnect(WMCallbackFunc, const WMBssDesc *, const u8 *);
 WMErrCode WM_Disconnect(WMCallbackFunc, u16);
 
+WMErrCode WM_SetIndCallback(WMCallbackFunc);
+WMErrCode WM_SetPortCallback(u16, WMCallbackFunc, void *);
+WMErrCode WM_ReadStatus(WMStatus *);
 int WM_GetMPSendBufferSize(void);
 int WM_GetMPReceiveBufferSize(void);
+WMMpRecvData *WM_ReadMPData(const WMMpRecvHeader *, u16);
+u16 WM_GetAllowedChannel(void);
+WMLinkLevel WM_GetLinkLevel(void);
 
 WMErrCode WM_StartMPEx(WMCallbackFunc, u16 *, u16, u16 *, u16, u16, u16, int, int, int, int);
 WMErrCode WM_SetMPDataToPortEx(WMCallbackFunc, void *, const u16 *, u16, u16, u16, u16);

@@ -11,6 +11,8 @@
  * func_020412f0 and func_02041224 do not include types.h. data_020a2400 is
  * the same address as mArea (data_020a1fc0 + 0x440), a symbol of its own. */
 
+#include "nitro/wm/wm.h"
+
 /* Parent area at +0x440: a pool of three 0xcc0-byte nodes, each holding one
  * registered region. A node moves free -> busy (state 1, loading; func_02041b60)
  * -> ready (state 2; func_02041b24) -> busy (state 3, releasing; func_02041ae8)
@@ -136,9 +138,9 @@ typedef struct FileShareChildArea {
     /* 0x0c0 -- the sixteen 0x28-byte WBTBlockInfo mBlockInfoTable points at
      * (func_02040c34) */
     unsigned char mBlockInfo[0x10][0x28];
-    /* 0x340 -- func_02040bb0's WM_ReadStatus copy of the WM status block
-     * (a WMStatus, 0x930 bytes); it reads the aid */
-    unsigned char mStatus[0x930];
+    /* 0x340 -- func_02040bb0's WM_ReadStatus copy of the WM status block;
+     * it reads the aid */
+    WMStatus mStatus;
     /* 0xc70 -- func_02041224 allocates it (about four bytes per packet of
      * mMaxReadSize); func_02040aa4 frees it */
     void *mRecvWork;

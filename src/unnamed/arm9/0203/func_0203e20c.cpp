@@ -4,6 +4,7 @@
 #include "private/mb_views.h"
 #include "nitro/mi/memory.h"
 #include "private/fs_views.h"
+#include "nitro/wm/wm_api.h"
 
 extern "C" {
 
@@ -31,7 +32,7 @@ extern u8 data_020a1154[];
 extern u16 data_020a117c[4];
 extern u16 data_020a11a0[4];
 extern u16 data_020a11c4[4];
-extern s32 data_020a1680;
+extern WMStatus data_020a1680;
 extern u8 data_020a1780[];
 
 extern u8 MB_CommGetChildrenNumber(void);
@@ -46,7 +47,6 @@ extern int MB_StartParent(int param0);
 extern u32 MB_GetSegmentLength(FSFile *file);
 extern int MB_ReadSegment(FSFile *file, void *buf, u32 len);
 extern int MB_RegisterFile(MBGameRegistry *game_reg, const void *buf);
-extern int WM_ReadStatus(int *arg);
 extern void *MB_CommGetChildUser(u16 idx);
 extern int MB_CommGetParentState(u16 a);
 extern int MB_CommResponseRequest(u16 arg0, int sel);

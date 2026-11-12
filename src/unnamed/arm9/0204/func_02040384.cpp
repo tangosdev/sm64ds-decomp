@@ -1,6 +1,6 @@
 //cpp
 /* Empty: the WM indication callback func_0203fc38 installs. */
-extern "C" void func_02040384(void) {}
+extern "C" void func_02040384(void *arg) {}
 
 /* A file-scope object with an empty inline constructor. mwcc emits the
    4-byte bx lr at 0x02075150. The object stays static so the linker drops

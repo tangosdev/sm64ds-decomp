@@ -2608,27 +2608,9 @@
     "WM_CheckStateEx": {
       "src/WM_Finish.c": [
         "param:#2 int"
-      ],
-      "src/WM_GetMPSendBufferSize.cpp": [
-        "arity:3"
       ]
     },
     "WM_GetSystemWork": {
-      "src/WM_GetAllowedChannel.cpp": [
-        "return:void *"
-      ],
-      "src/WM_SetPortCallback.cpp": [
-        "return:char *"
-      ],
-      "src/WM_SetIndCallback.cpp": [
-        "return:void *"
-      ],
-      "src/WM_GetLinkLevel.cpp": [
-        "return:void *"
-      ],
-      "src/WM_GetMPSendBufferSize.cpp": [
-        "return:int *"
-      ],
       "src/engine/wm/WM_Etc.cpp": [
         "return:int *"
       ]
@@ -4016,9 +3998,6 @@
       "src/OS_Terminate.cpp": [
         "return:void"
       ],
-      "src/WM_SetIndCallback.cpp": [
-        "return:int"
-      ],
       "src/WBT_End.cpp": [
         "return:int"
       ],
@@ -4046,10 +4025,6 @@
         "return:void"
       ],
       "src/unnamed/arm9/0205/func_0205ff20.cpp": [
-        "return:void"
-      ],
-      "src/WM_SetIndCallback.cpp": [
-        "param:#1 int",
         "return:void"
       ],
       "src/WBT_End.cpp": [

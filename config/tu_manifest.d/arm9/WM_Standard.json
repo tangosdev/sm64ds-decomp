@@ -10,7 +10,7 @@
     "Order: mwccarm emits the bodies in reverse. The SDK file's order (WM_Enable, WM_Disable, WM_PowerOn, WM_PowerOff, WM_Initialize, WM_Reset, WM_End, WM_SetParentParameter, WmCheckParentParameter, WM_StartParent, WM_StartScan, WM_StartConnect, WM_Disconnect, with the uncalled WM_EndParent, WM_StartScanEx, WM_EndScan and WM_DisconnectChildren absent) is the ROM's order reversed, as in pret's pokediamond WM_standard.s.",
     "WmCheckParentParameter is static, as in the SDK; it is not inlined into its one caller.",
     "No data: no function owns .rodata, .data or .bss.",
-    "BOTTOM EDGE: WM_SetIndCallback (src/WM_SetIndCallback.cpp, 0x02061ce4..0x02061d30), the highest function of pret's WM_sync.s. TOP EDGE: the wm_mp.c run (src/engine/wm/WM_Mp.c) starts at 0x020623ec."
+    "BOTTOM EDGE: the wm_sync.c run (src/engine/wm/WM_Sync.c) ends at 0x02061d30 with WM_SetIndCallback. TOP EDGE: the wm_mp.c run (src/engine/wm/WM_Mp.c) starts at 0x020623ec."
   ],
   "sections": [
     {
