@@ -84,6 +84,9 @@ CoopBossStats coop_boss_stats();
 // bossfix1. True while a Bowser (class 279) is in its defeat state: coop_target then answers the LOCAL player for it, so the defeat talk
 // runs with each console's own player instead of a parked friend.
 bool coop_boss_prefer_local(const char *actor);
+// kbo2: the seat that drives King Bob-omb (class 189) in placed slot `slot`: his boss authority (a talk or carry claim, the target seat,
+// the group owner once he is down), the same answer on every console. -1 when there is no answer (not King Bob-omb, carried here, off).
+int coop_boss_driver_seat(int slot);
 // True when a boss was seen on this console within the last 4 s and another console is its authority: a reward (key, Grand Star)
 // spawned here natively is then a duplicate of the authority's announced one.
 bool coop_boss_reward_not_mine();

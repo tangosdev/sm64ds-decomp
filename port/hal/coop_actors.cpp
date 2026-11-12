@@ -1133,7 +1133,8 @@ void process(unsigned now) {
         // drive the room's lift off along its own side of the square); it confirms from that owner's next records, a few frames.
         if (g_dia_heading && p.id == 135 && nown == g_my && was >= 0 && was != g_my && cur_fresh && !s.hconf) { nown = was; ++g_dia_held; }
         if (g_boss_own && (p.flags & kFBoss)) {       // MOVERS9: who steers the pose = who the boss chases (the boss lane's authority rule)
-            const int ts = coop_target_seat_of_slot(slot);
+            int ts = coop_target_seat_of_slot(slot);
+            if (p.id == 189) { const int ds = coop_boss_driver_seat(slot); if (ds >= 0) ts = ds; }   // kbo2: King Bob-omb's driver (talk claim, defeat owner)
             if (ts == g_my) nown = g_my;
             else if (ts >= 0 && ts < kSeats && ((coop_group_member_mask() >> ts) & 1u) && alive_rx(g_rx[slot][ts], now)) nown = ts;
         }
