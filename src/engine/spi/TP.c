@@ -34,8 +34,6 @@ typedef int BOOL;
 #define FALSE 0
 #define NULL 0
 
-void OS_Terminate(void);
-
 /* The SPI channel's PXI word (the SDK's nitro/spi/common/type.h). */
 #define SPI_PXI_START_BIT 0x02000000
 #define SPI_PXI_END_BIT 0x01000000

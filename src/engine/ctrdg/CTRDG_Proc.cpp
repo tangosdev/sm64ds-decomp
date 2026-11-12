@@ -29,6 +29,25 @@
 #include "nitro/ctrdg/ctrdg_common.h"
 #include "nitro/pxi/fifo.h"
 #include "nitro/pxi/init.h"
+#include "nitro/mi/memory.h"
+#include "nitro/os/system.h"
+#include "nitro/hw/registers.h"
+#include "nitro/mi/dma.h"
+
+/* NitroSDK's inline IME helpers (os/common/interrupt.h): each returns the
+ * previous master enable. File-local because an inline body in a shared
+ * header renumbers every includer's @NNN symbols. */
+static inline int OS_EnableIrq(void) {
+    u16 prep = REG_IME;
+    REG_IME = 1;
+    return prep;
+}
+
+static inline int OS_RestoreIrq(int enable) {
+    u16 prep = REG_IME;
+    REG_IME = (u16)enable;
+    return prep;
+}
 
 typedef int BOOL;
 #define FALSE 0
@@ -36,9 +55,6 @@ typedef int BOOL;
 
 extern "C" {
 
-extern void OS_Terminate(void);
-extern void MI_DmaCopy16(unsigned int channel, void *src, void *dst, unsigned int numHalfs);
-extern void MIi_CpuCopy32(int *dst, int *src, int len);
 extern void SVC_WaitByLoop(int n);
 
 extern CTRDGWork CTRDGi_Work;
@@ -80,9 +96,9 @@ void CTRDG_Init(void) {
  * pret's checks of HW_IS_CTRDG_EXIST or of CTRDG_IsExisting. */
 void CTRDGi_InitModuleInfo(void) {
     int sp[4];
-    unsigned int irq;
+    OSIrqMask lastIrq;
     int flag;
-    u16 save208;
+    int lastIme;
     int i;
     u32 data;
 
@@ -91,15 +107,14 @@ void CTRDGi_InitModuleInfo(void) {
     data_020a9de4 = 1;
     if ((*(volatile u16 *)0x4000300 & 1) == 0)
         return;
-    irq = OS_SetIrqMask(0x40000);
-    save208 = *(volatile u16 *)0x4000208;
-    *(volatile u16 *)0x4000208 = 1;
+    lastIrq = OS_SetIrqMask(OS_IE_SPFIFO_RECV);
+    lastIme = OS_EnableIrq();
     CTRDGi_LockByProcessor(CTRDGi_Work.lockID, sp);
-    flag = ((int)*(volatile u16 *)0x4000204 & 0x8000) >> 15;
+    flag = ((int)REG_EXMEMCNT & 0x8000) >> 15;
     CTRDGi_ChangeLatestAccessCycle(sp + 2);
-    *(volatile u16 *)0x4000204 &= ~0x8000;
+    REG_EXMEMCNT &= ~0x8000;
     MI_DmaCopy16(0, (void *)0x8000080, (void *)((char *)&CTRDG_HEADER + 0x80), 0x40);
-    *(volatile u16 *)0x4000204 = (*(volatile u16 *)0x4000204 & ~0x8000) | (flag << 15);
+    REG_EXMEMCNT = (REG_EXMEMCNT & ~0x8000) | (flag << 15);
     CTRDGi_RestoreAccessCycle(sp + 2);
     CTRDGi_UnlockByProcessor(CTRDGi_Work.lockID, sp);
     {
@@ -111,7 +126,7 @@ void CTRDGi_InitModuleInfo(void) {
         cip->makerCode = chd->makerCode;
         cip->gameCode = chd->gameCode;
     }
-    MIi_CpuCopy32((int *)0xffff0020, &data_020a9e04, 0x9c);
+    MI_CpuCopy32((int *)0xffff0020, &data_020a9e04, 0x9c);
     DC_FlushAll();
     data = (((unsigned int)&data_020a9e00 + 0xfe000000) >> 5) << 6 | 1;
     CTRDGi_SendtoPxi(data);
@@ -120,9 +135,8 @@ void CTRDGi_InitModuleInfo(void) {
             SVC_WaitByLoop(1);
         } while (CTRDGi_Work.subpState != 1);
     }
-    (void)*(volatile u16 *)0x4000208;
-    *(volatile u16 *)0x4000208 = save208;
-    OS_SetIrqMask(irq);
+    (void)OS_RestoreIrq(lastIme);
+    (void)OS_SetIrqMask(lastIrq);
 }
 
 void CTRDGi_CallbackForInitModuleInfo(PXIFifoTag tag, u32 data, BOOL err) {

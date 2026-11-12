@@ -27,8 +27,6 @@ typedef int BOOL;
 
 #define PXI_PROC_ARM PXI_PROC_ARM9
 
-#define OS_IE_FIFO_RECV (1UL << 18)
-
 /* The ARM9 side's PXI registers (nitro/hw/ARM9/ioreg_PXI.h). */
 #define reg_PXI_INTF (*(volatile u16 *)0x04000180)
 #define reg_PXI_FIFO_CNT (*(volatile u16 *)0x04000184)
@@ -64,8 +62,8 @@ void PXI_InitFifo(void) {
             FifoRecvCallbackTable[i] = NULL;
         }
 
-        OS_SetIrqFunction(OS_IE_FIFO_RECV, PXIi_HandlerRecvFifoNotEmpty);
-        (void)OS_EnableIrqMask(OS_IE_FIFO_RECV);
+        OS_SetIrqFunction(OS_IE_SPFIFO_RECV, PXIi_HandlerRecvFifoNotEmpty);
+        (void)OS_EnableIrqMask(OS_IE_SPFIFO_RECV);
 
         reg_PXI_FIFO_CNT = (REG_PXI_FIFO_CNT_SEND_CL_MASK | REG_PXI_FIFO_CNT_RECV_RI_MASK |
                             REG_PXI_FIFO_CNT_E_MASK | REG_PXI_FIFO_CNT_ERR_MASK);

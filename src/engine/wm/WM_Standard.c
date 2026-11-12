@@ -8,6 +8,7 @@
  * WmCheckParentParameter also checks the MP exchange time. */
 #include "types.h"
 #include "nitro/os/cache.h"
+#include "nitro/mi/memory.h"
 #include "nitro/wm/wm_api.h"
 #include "private/wm_views.h"
 
@@ -24,11 +25,6 @@ typedef int BOOL;
 #define WM_SIZE_MP_CHILD_PADDING 0x4
 #define WM_SIZE_CHILD_SSID 0x18
 #define WM_NUM_MAX_CHILD 15
-
-/* MI_CpuCopy8 and MI_CpuClear8 (nitro/mi/memory.h; this SDK's MI_CpuClear8
- * is MI_CpuFill8 with 0). local extern: no nitro/mi/memory.h header yet. */
-extern void MI_CpuCopy8(const void *src, void *dest, u32 size);
-extern void MI_CpuFill8(void *dest, u8 data, u32 size);
 
 /* The START_SCAN request, written into the command block (fifo9to7). */
 typedef struct WMStartScanReq {
@@ -277,7 +273,7 @@ WMErrCode WM_StartConnect(WMCallbackFunc callback, const WMBssDesc *pInfo, const
         if (ssid != NULL) {
             MI_CpuCopy8(ssid, req->ssid, WM_SIZE_CHILD_SSID);
         } else {
-            MI_CpuFill8(req->ssid, 0, WM_SIZE_CHILD_SSID);
+            MI_CpuClear8(req->ssid, WM_SIZE_CHILD_SSID);
         }
         result = WM_SendCommand(WM_APIID_START_CONNECT, 0);
         if (result != WM_ERRCODE_SUCCESS)

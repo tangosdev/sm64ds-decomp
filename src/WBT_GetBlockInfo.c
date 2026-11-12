@@ -1,6 +1,6 @@
 #include "types.h"
 #include "private/arm9_wbt.h"
-extern void MIi_CpuCopy32(const void *src, void *dst, s32 size); /* 0x0205a490 */
+#include "nitro/mi/memory.h"
 extern int func_02065af0(int *thiz);
 
 /* NitroSDK WBT_GetBlockInfo: WBT_GetBlock's REQ_GET_BLOCK built as
@@ -15,6 +15,6 @@ void WBT_GetBlockInfo(u16 target_bmp, u32 block_id, const void *recv_buf_table,
     cmd.callback = (void (*)(char *))callback;
     cmd.u.get.block_id = block_id;
     cmd.u.get.recv_data_size = 0x28;
-    MIi_CpuCopy32(recv_buf_table, cmd.u.get.recv_buf_table, 0x40);
+    MI_CpuCopy32(recv_buf_table, cmd.u.get.recv_buf_table, 0x40);
     func_02065af0((int *)&cmd);
 }

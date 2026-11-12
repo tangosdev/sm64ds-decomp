@@ -1,5 +1,5 @@
 #include "nitro/fs/overlay.h"
-extern void OS_Terminate(void);
+#include "nitro/os/system.h"
 extern int func_0203d7b8(void);
 
 /* A loaded-overlay slot (see func_02017e60.c): the overlay id, -1 when the

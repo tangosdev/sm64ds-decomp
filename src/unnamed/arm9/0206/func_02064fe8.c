@@ -1,8 +1,8 @@
+#include "nitro/mi/memory.h"
 /* func_02064fe8 at 0x02064fe8
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
  */
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
 
 int func_02064fe8(void *dst, unsigned short b, char c) {
     char *p;

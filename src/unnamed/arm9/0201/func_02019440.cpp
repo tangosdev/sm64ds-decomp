@@ -1,8 +1,10 @@
 //cpp
 #include "types.h"
+#include "nitro/gx/gx.h"
 #include "nitro/gx/gx_vramcnt.h"
 #include "dGraph_c.h"
 #include "nitro/hw/registers.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
 
@@ -14,7 +16,6 @@ extern int data_0209d4b0;
 
 extern void func_0203bd24(void);
 extern int GX_VBlankIntr(int enable);
-extern void MIi_CpuClearFast(unsigned val, void *dst, int len);
 extern void func_0200f4f4(void);
 extern void func_0200f46c(void);
 
@@ -31,16 +32,16 @@ void func_02019440(void) {
     volatile int a;
     volatile int c;
     func_0203bd24();
-    REG_POWCNT1 = (REG_POWCNT1 & 0xfffffdf1) | 0x20e;
+    GX_SetPower(GX_POWER_ALL);
     GX_VBlankIntr(1);
-    GX_SetBankForLCDC(0x1ff);
+    GX_SetBankForLCDC(GX_VRAM_LCDC_ALL);
     a = 0;
-    MIi_CpuClearFast(a, (int *)0x6800000, 0xa4000);
+    MI_CpuFillFast((int *)0x6800000, a, 0xa4000);
     GX_DisableBankForLCDC();
     b = 0xc0;
-    MIi_CpuClearFast(b, (int *)0x7000000, 0x400);
+    MI_CpuFillFast((int *)0x7000000, b, 0x400);
     c = 0;
-    MIi_CpuClearFast(c, (int *)0x5000000, 0x400);
+    MI_CpuFillFast((int *)0x5000000, c, 0x400);
     gGraphCallback = 0;
     data_0209d4ac = 0;
     data_0209d4b0 = 0;

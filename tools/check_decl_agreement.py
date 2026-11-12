@@ -599,6 +599,11 @@ def parse_params(text, aliases, cxx):
             continue
         # A default argument is not part of the type.
         piece = split_top(piece, seps=("=",))[0].strip()
+        # Nor is `register`: it is a storage class. mwccarm needs it on an asm
+        # function's parameter to name the parameter as an operand
+        # (`asm void OS_InitContext(register OSContext *context, ...)`), and
+        # the header's declaration of that function has no reason to repeat it.
+        piece = re.sub(r"^register\s+", "", piece)
         # A function-pointer parameter. The inner identifier is the PARAMETER NAME
         # and has to come out, or `void (*ctor)(void*)` and `void (*)(void*)` read
         # as two different types when they are one.

@@ -14,6 +14,7 @@
  * src/OSi_ReloadRomData.c defines OS_ResetSystem.
  */
 #include "types.h"
+#include "nitro/os/system.h"
 #include "nitro/pxi/fifo.h"
 #include "nitro/pxi/init.h"
 
@@ -23,8 +24,6 @@ typedef int BOOL;
 #define OS_PXI_COMMAND_MASK 0x00007f00
 #define OS_PXI_COMMAND_SHIFT 8
 #define OS_PXI_COMMAND_RESET 0x10
-
-extern void OS_Terminate(void);
 
 extern u16 OSi_IsInitReset;
 extern vu16 OSi_IsResetOccurred;

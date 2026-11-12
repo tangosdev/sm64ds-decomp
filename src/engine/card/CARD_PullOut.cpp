@@ -30,15 +30,13 @@ extern int data_020a89a0;          /* set once the card has been pulled */
 extern CardCallback data_020a89a4; /* nonzero return: terminate */
 }
 
-#define IRQ_CARD_IREQ_MC 0x100000
-
 extern "C" {
 
 // Install the pull-out handler on the card interrupt.
 void func_02061138(void) {
     OSIntrMode saved = OS_DisableInterrupts();
-    OS_SetIrqFunction(IRQ_CARD_IREQ_MC, IRQ::GameCardIREQMCHandler);
-    OS_EnableIrqMask(IRQ_CARD_IREQ_MC);
+    OS_SetIrqFunction(OS_IE_CARD_IREQ, IRQ::GameCardIREQMCHandler);
+    OS_EnableIrqMask(OS_IE_CARD_IREQ);
     OS_RestoreInterrupts(saved);
 }
 

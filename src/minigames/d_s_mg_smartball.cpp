@@ -29,6 +29,7 @@ enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
 #include "cMgSmartball_board_c.h"
 #include "types.h"
 #include "cMgSmartball_slot_c.h"
+#include "nitro/mi/memory.h"
 #include "cMgSmartball_pakkun_c.h"
 #include "cMgSmartball_dokan_c.h"
 #include "cMgSmartball_propeller_c.h"
@@ -137,7 +138,6 @@ extern s16 FX_SinCosTable_[];
 extern s32 sSmartballCellOrder[];
 extern OamAttr *sSmartballCellRowSprites[];
 
-extern void MIi_CpuClear16(u16 val, void *dst, int nbytes);
 extern void func_02012718(int a, int b);
 extern struct W9 sSmartballCellStartOrder;
 extern int RandomIntInternal(int *seed);
@@ -798,7 +798,7 @@ void cMgSmartball_board_c::PaintCell(int idx, int *pos) {
             }
             p = (char *)G2S_GetBG3ScrPtr();
             t1 = tile | 0xf000;
-            MIi_CpuClear16(t1, p + row + cx * 2 + kk, layer);
+            MI_CpuFill16(p + row + cx * 2 + kk, t1, layer);
             kk += 2;
             jj++;
         } while (jj <= 0);
@@ -819,7 +819,7 @@ void cMgSmartball_board_c::PaintCell(int idx, int *pos) {
         for (i2 = -1; i2 <= 1; i2++) {
             p = (char *)G2S_GetBG3ScrPtr() + ((cy + i2) << 6);
             t2 = (bas2 + 0x20 * i2) | 0xf000;
-            MIi_CpuClear16(t2, p + cx * 2 - 4, lay2);
+            MI_CpuFill16(p + cx * 2 - 4, t2, lay2);
         }
     }
 
@@ -830,7 +830,7 @@ void cMgSmartball_board_c::PaintCell(int idx, int *pos) {
         for (i3 = -1; i3 <= 0; i3++) {
             p = (char *)G2S_GetBG3ScrPtr() + ((cy + i3) << 6);
             t3 = (bas3 + 0x20 * i3) | 0xf000;
-            MIi_CpuClear16(t3, p + cx * 2 + 2, lay3);
+            MI_CpuFill16(p + cx * 2 + 2, t3, lay3);
         }
         return;
     }
@@ -842,7 +842,7 @@ void cMgSmartball_board_c::PaintCell(int idx, int *pos) {
         for (i4 = -1; i4 <= 1; i4++) {
             p = (char *)G2S_GetBG3ScrPtr() + ((cy + i4) << 6);
             t4 = (bas4 + 0x20 * i4) | 0xf000;
-            MIi_CpuClear16(t4, p + cx * 2 + 2, lay4);
+            MI_CpuFill16(p + cx * 2 + 2, t4, lay4);
         }
         return;
     }
@@ -854,7 +854,7 @@ void cMgSmartball_board_c::PaintCell(int idx, int *pos) {
         for (i5 = -1; i5 <= 1; i5++) {
             p = (char *)G2S_GetBG3ScrPtr() + ((cy + i5) << 6);
             t5 = (bas5 + 0x20 * i5) | 0xf000;
-            MIi_CpuClear16(t5, p + cx * 2 + 2, lay5);
+            MI_CpuFill16(p + cx * 2 + 2, t5, lay5);
         }
     }
 }
@@ -5372,16 +5372,17 @@ s32 dScMgSmartball_c::Behavior() {
 /* Slot 18: starts a round and sets up both screen blends. */
 void dScMgSmartball_c::StartRound(int /* arg */) {
     SpawnObjects();
-    G2x_SetBlendAlpha_((volatile unsigned short *)0x4000050, 0, 0x18, 4, 0xa);
-    G2x_SetBlendAlpha_((volatile unsigned short *)0x4001050, 0, 0x18, 4, 0xa);
+    G2_SetBlendAlpha(0, 0x18, 4, 0xa);
+    G2S_SetBlendAlpha(0, 0x18, 4, 0xa);
 }
 
 /* Slot 31: loads the option palette and tilemap for the sub screen. */
 int dScMgSmartball_c::InitSubScreenBg() {
     int f;
-    *(volatile unsigned short *)0x400100a = (*(volatile unsigned short *)0x400100a & 0x43) | 4;
-    *(volatile unsigned short *)0x400100a = *(volatile unsigned short *)0x400100a & ~0x40;
-    *(volatile unsigned short *)0x400100a = *(volatile unsigned short *)0x400100a & ~3;
+    G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,
+                      GX_BG_CHARBASE_0x04000, GX_BG_EXTPLTT_01);
+    G2S_BG1Mosaic(0);
+    G2S_SetBG1Priority(0);
     SetSubBg1Offset(0, 0);
     gSubScreenLayers[0] &= ~2;
     f = GetGameLanguage();
@@ -5418,17 +5419,18 @@ s32 dScMgSmartball_c::InitResources() {
         }
     }
     data_0208ee44 = 1;
-    *((volatile u16 *)0x4001008) = ((*((volatile u16 *)0x4001008)) & 0x43) | 0x520c;
-    *((volatile u16 *)0x4001008) &= ~0x40;
-    *((volatile s32 *)0x4001010) = 0x100;
-    *((volatile u16 *)0x4001008) &= ~3;
+    G2S_SetBG0Control(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
+                      GX_BG_CHARBASE_0x0c000, GX_BG_EXTPLTT_01);
+    G2S_BG0Mosaic(false);
+    G2S_SetBG0Offset(0x100, 0);
+    G2S_SetBG0Priority(0);
     f = Ov004_LoadFileByPath(&sSmartballResultBgNcgPath);
     DecompressLZ16(f, G2S_GetBG0CharPtr());
     Ov004_Deallocate(f);
     {
         /* volatile: same stack round trip of the fill value as PaintCell. */
         volatile u16 v;
-        MIi_CpuClear16((u16)(v = 0), G2S_GetBG0ScrPtr(), 0x1000);
+        MI_CpuFill16(G2S_GetBG0ScrPtr(), (u16)(v = 0), 0x1000);
     }
     f = Ov004_LoadFileByPath(&sSmartballResultBgNscPath);
     DecompressLZ16(f, G2S_GetBG0ScrPtr());
@@ -5437,22 +5439,26 @@ s32 dScMgSmartball_c::InitResources() {
     DC_FlushRange(f, 0x20);
     GXS_LoadBGPltt(((char *)f) + 2, 2, 0x1e);
     Ov004_Deallocate(f);
-    *((volatile u16 *)0x400000c) = (((*((volatile u16 *)0x400000c)) & 0xFFFF) & 0x43) | 0x1410;
-    *((volatile u16 *)0x400000c) &= ~0x40;
-    *((volatile s32 *)0x4000018) = 0;
-    *((volatile u16 *)0x400000c) = ((*((volatile u16 *)0x400000c)) & (~3)) | 1;
-    *((volatile u16 *)0x400100c) = ((*((volatile u16 *)0x400100c)) & 0x43) | 0x1410;
-    *((volatile u16 *)0x400100c) &= ~0x40;
-    *((volatile s32 *)0x4001018) = 0;
-    *((volatile u16 *)0x400100c) = ((*((volatile u16 *)0x400100c)) & (~3)) | 1;
-    *((volatile u16 *)0x400000e) = ((*((volatile u16 *)0x400000e)) & 0x43) | 0x1618;
-    *((volatile u16 *)0x400000e) &= ~0x40;
-    *((volatile s32 *)0x400001c) = 0;
-    *((volatile u16 *)0x400000e) = ((*((volatile u16 *)0x400000e)) & (~3)) | 2;
-    *((volatile u16 *)0x400100e) = ((*((volatile u16 *)0x400100e)) & 0x43) | 0x1618;
-    *((volatile u16 *)0x400100e) &= ~0x40;
-    *((volatile s32 *)0x400101c) = 0;
-    *((volatile u16 *)0x400100e) = ((*((volatile u16 *)0x400100e)) & (~3)) | 2;
+    G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xa000,
+                         GX_BG_CHARBASE_0x10000);
+    G2_BG2Mosaic(false);
+    G2_SetBG2Offset(0, 0);
+    G2_SetBG2Priority(1);
+    G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xa000,
+                          GX_BG_CHARBASE_0x10000);
+    G2S_BG2Mosaic(false);
+    G2S_SetBG2Offset(0, 0);
+    G2S_SetBG2Priority(1);
+    G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xb000,
+                         GX_BG_CHARBASE_0x18000);
+    G2_BG3Mosaic(false);
+    G2_SetBG3Offset(0, 0);
+    G2_SetBG3Priority(2);
+    G2S_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xb000,
+                          GX_BG_CHARBASE_0x18000);
+    G2S_BG3Mosaic(false);
+    G2S_SetBG3Offset(0, 0);
+    G2S_SetBG3Priority(2);
     if (((u8)(*((s32 *)(c + 8)))) == 0) {
         f = Ov004_LoadFileByPath(&sSmartballLay0Bg1FrameNcgPath);
         DecompressLZ16(f, G2_GetBG2CharPtr());
@@ -5557,8 +5563,8 @@ s32 dScMgSmartball_c::InitResources() {
     mpSlot = 0;
     mpBoard = 0;
     mpWing = 0;
-    G2x_SetBlendAlpha_((volatile u16 *)0x4000050, 0, 0x18, 4, 0xa);
-    G2x_SetBlendAlpha_((volatile u16 *)0x4001050, 0, 0x18, 4, 0xa);
+    G2_SetBlendAlpha(0, 0x18, 4, 0xa);
+    G2S_SetBlendAlpha(0, 0x18, 4, 0xa);
     G2_SetOBJMode(sSmartballBallSprites[1], GX_OAM_MODE_XLU,
                   G2_GetOBJColorParam(sSmartballBallSprites[1]));
     G2_SetOBJMode(sSmartballBallSpritesAlt[1], GX_OAM_MODE_XLU,

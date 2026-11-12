@@ -1,6 +1,8 @@
 #ifndef ARM9_A1FC0_FILE_SHARE_H
 #define ARM9_A1FC0_FILE_SHARE_H
 
+#include "private/fs_views.h"
+
 /* Views of the wireless file-sharing work block at data_020a1fc0 (the 0x0204
  * cluster, func_02040aa4 .. func_02042668), moved here from func_02040c34.c
  * once func_02040f30, func_020412f0 and func_02041224 needed them too. The
@@ -9,7 +11,6 @@
  * func_020412f0 and func_02041224 do not include types.h. data_020a2400 is
  * the same address as mArea (data_020a1fc0 + 0x440), a symbol of its own. */
 
-#include "private/fs_views.h"
 #include "nitro/wm/wm.h"
 
 /* Parent area at +0x440: a pool of three 0xcc0-byte nodes, each holding one
@@ -24,7 +25,9 @@ typedef struct FileShareNode {
      * size, 0x20-byte name, data); func_02041c2c finds a node by its id */
     unsigned char mRegion[0x34];
     /* 0x38 -- FS_InitFile here; func_02042254 opens, reads and closes the
-     * region's file through it, func_020412f0 refills a page through it */
+     * region's file through it, func_020412f0 refills a page through it.
+     * func_02041ce0 matches a request against its open extent and
+     * func_02041d28 sizes the registration by it */
     FSFile mFile;
     int mState; /* 0x7c -- 0 free, 1 loading, 2 ready, 3 releasing */
     /* 0x80 -- func_020412f0: +1 per child reading the region, -1 when it is

@@ -3,6 +3,7 @@
 #include "private/arm9_a1fc0_file_share.h"
 #include "nitro/os/system.h"
 #include "nitro/os/cache.h"
+#include "nitro/mi/memory.h"
 #include "nitro/fs/file.h"
 #include "nitro/wm/wm_api.h"
 
@@ -15,10 +16,8 @@ static inline void FlushFileShareArea(char *base, unsigned int size) {
  * the ROM uses; the node's mFreeList and mReadyList updates below use it too.
  * The other callees are C. */
 extern "C" {
-extern void OS_Terminate(void);
 extern void WBT_InitParent(int a, int b, void (*c)(char *));
 extern void func_020424c0(void);
-extern void MI_CpuFill8(void *p, u8 v, u32 n);
 extern int WBT_RegisterBlock(void *node, int a1, void *a2, int a3, int arg5, unsigned short arg6);
 extern void func_02042200(void);
 extern void func_02041224(char *thiz, int n);
@@ -119,7 +118,7 @@ extern "C" void func_02040c34(int isParent, int port, void (*stateCallback)(int)
                 FileShareNode *nd;
                 nd = *(FileShareNode **)((base + 0x2000) + 0x700);
                 *(FileShareNode **)((base + 0x2000) + 0x700) = nd->mNext;
-                MI_CpuFill8(nd, 0, FILE_SHARE_NODE_SIZE);
+                MI_CpuClear8(nd, FILE_SHARE_NODE_SIZE);
                 /* mTableSize is read through data_020a1fc0, not G, here and in the
                    child branch: the G-> spelling comes out 8 bytes short */
                 WBT_RegisterBlock(nd->mRegion, 0x20000, data_02082158, (int)G->mTable,

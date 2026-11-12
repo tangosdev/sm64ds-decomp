@@ -72,9 +72,9 @@ int CARDi_TryReadCardDma(CARDRomStat *p) {
         saved = OS_DisableInterrupts();
         DC_FlushRange((void *)c->dst, c->len);
         IC_InvalidateRange((void *)c->dst, c->len);
-        OS_SetIrqFunction(0x80000, CARDi_OnReadCard);
-        OS_ResetRequestIrqMask(0x80000);
-        OS_EnableIrqMask(0x80000);
+        OS_SetIrqFunction(OS_IE_CARD_DATA, CARDi_OnReadCard);
+        OS_ResetRequestIrqMask(OS_IE_CARD_DATA);
+        OS_EnableIrqMask(OS_IE_CARD_DATA);
         DC_WaitWriteBufferEmpty();
         OS_RestoreInterrupts(saved);
         CARDi_SetCardDma();

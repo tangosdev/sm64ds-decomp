@@ -588,11 +588,13 @@ s32 dMap_c::Behavior()
             SetSubBg2Offset(0x100 - data_0209f498[gActivePlayerSlot].tx,
                             0x80 - data_0209f498[gActivePlayerSlot].ty);
         }
-        G2x_SetBlendAlpha_((volatile u16 *)0x4001050, 4, 0x28, 4, 0xd);
+        G2S_SetBlendAlpha(4, 0x28, 4, 0xd);
         if (data_0209f498[gActivePlayerSlot].mode != 2)
-            REG_DB_BG2CNT = (u16)((REG_DB_BG2CNT & 0x43) | 0x5300);
+            G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16,
+                                  GX_BG_SCRBASE_0x9800, GX_BG_CHARBASE_0x00000);
         else
-            REG_DB_BG2CNT = (u16)((REG_DB_BG2CNT & 0x43) | 0x5500);
+            G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16,
+                                  GX_BG_SCRBASE_0xa800, GX_BG_CHARBASE_0x00000);
         goto L2a4;
     }
 
@@ -606,7 +608,7 @@ L200: {
     if (!(u8)flagsOr) {
         *(volatile s32 *)0x4001000 =
             (*(volatile s32 *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
-        REG_DB_BLDCNT = 0;
+        G2S_BlendNone();
     }
     this->mTouchCircleTimer = 0;
     goto L2a4;
@@ -920,9 +922,10 @@ int dMap_c::InitResources()
     u16 *p;
     s32 i;
 
-    REG_DB_BG3CNT = (REG_DB_BG3CNT & ~3) | 2;
-    REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x1f10;
-    REG_DB_BG3CNT &= ~0x40;
+    G2S_SetBG3Priority(2);
+    G2S_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xf800,
+                          GX_BG_CHARBASE_0x10000);
+    G2S_BG3Mosaic(0);
 
     {
         int id1 = func_0202a980();

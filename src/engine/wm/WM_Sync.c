@@ -63,8 +63,7 @@ WMErrCode WM_SetPortCallback(u16 port, WMCallbackFunc callback, void *arg) {
     return WM_ERRCODE_SUCCESS;
 }
 
-/* Copy the status block into statusBuf. MI_CpuCopyFast is an inline over
- * MIi_CpuCopyFast in the SDK; it is called directly here. */
+/* Copy the status block into statusBuf. */
 WMErrCode WM_ReadStatus(WMStatus *statusBuf) {
     WMErrCode result;
     WMArm9Buf *p = WM_GetSystemWork();
@@ -77,7 +76,7 @@ WMErrCode WM_ReadStatus(WMStatus *statusBuf) {
         return WM_ERRCODE_INVALID_PARAM;
 
     DC_InvalidateRange(p->status, sizeof(WMStatus));
-    MIi_CpuCopyFast(p->status, statusBuf, sizeof(WMStatus));
+    MI_CpuCopyFast(p->status, statusBuf, sizeof(WMStatus));
 
     return WM_ERRCODE_SUCCESS;
 }

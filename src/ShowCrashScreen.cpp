@@ -4,6 +4,7 @@
 #include "Heap.h"
 #include "fListNode.h"
 #include "fBase_c.h"
+#include "nitro/hw/registers.h"
 
 extern "C" {
 
@@ -74,8 +75,8 @@ void ShowCrashScreen(void)
         nds_printf(scr + 0x200, data_0208e5b0, data_0209d3bc);
 
     {
-        u32 dispb = *(volatile u32 *)0x4000214;
-        u32 dispa = *(volatile u32 *)0x4000210;
+        u32 dispb = REG_IF;
+        u32 dispa = REG_IE;
         nds_printf(scr + 0x280, data_0208e5c0, dispa, dispb);
     }
 

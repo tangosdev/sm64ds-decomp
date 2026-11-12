@@ -1,7 +1,7 @@
 #include "types.h"
 #include "private/arm9_a9db8_mb_parent.h"
 #include "private/mb_comm_child_block_header.h"
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
+#include "nitro/mi/memory.h"
 
 /* NitroSDK MBi_SetRecvBufferFromChild: unpack a child's MP message into its
  * block header. Type 7 (file request) carries a piece number and one piece

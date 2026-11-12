@@ -1,6 +1,6 @@
 #include "nitro/spi/tp.h"
+#include "nitro/os/system.h"
 
-extern void OS_Terminate(void);
 extern TPCalibrateParam data_020a0de0;
 extern volatile TPData data_020a0df8[];
 

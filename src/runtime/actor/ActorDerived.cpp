@@ -20,11 +20,21 @@
  *   roles belong to the factory's TU (fBase_c::fBase_make), not this one.
  */
 #include "dBase_c.h"
+#include "nitro/hw/registers.h"
 
 extern "C" {
 /* local extern: no header declares it; the next ROM entry's crash-forward
  * target, called only by the absorbed spin below. */
 extern void func_02013f4c(void);
+}
+
+/* NitroSDK's inline IME helper (os/common/interrupt.h); returns the previous
+ * master enable. File-local: an inline body in a shared header renumbers
+ * every includer's @NNN symbols. */
+static inline int OS_DisableIrq(void) {
+    u16 prep = REG_IME;
+    REG_IME = 0;
+    return prep;
 }
 
 /* Absorbed from the retired arm9 helper func_02013f28
@@ -33,8 +43,7 @@ extern void func_02013f4c(void);
  * source order, so the tail body lands at the run's right edge. */
 extern "C" void func_02013f28(void)
 {
-    *(volatile unsigned short *)0x4000208;
-    *(volatile unsigned short *)0x4000208 = 0;
+    (void)OS_DisableIrq();
     for (;;)
         func_02013f4c();
 }

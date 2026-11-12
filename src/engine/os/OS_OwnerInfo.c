@@ -15,9 +15,7 @@
 #include "types.h"
 #include "nitro/os/systemWork.h"
 #include "nitro/spi/userInfo.h"
-
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
-extern void MIi_CpuCopy16(const void *src, void *dst, int size);
+#include "nitro/mi/memory.h"
 
 void OS_GetMacAddress(unsigned char *macAddress) {
     u8 *src;
@@ -52,6 +50,6 @@ void OS_GetOwnerInfo(unsigned char *dst) {
     info->birthdayDay = src->ncd.owner.birthday.day;
     info->nickNameLength = src->ncd.owner.nickname.length;
     info->commentLength = src->ncd.owner.comment.length;
-    MIi_CpuCopy16(src->ncd.owner.nickname.str, info->nickName, sizeof(info->nickName));
-    MIi_CpuCopy16(src->ncd.owner.comment.str, info->comment, sizeof(info->comment));
+    MI_CpuCopy16(src->ncd.owner.nickname.str, info->nickName, sizeof(info->nickName));
+    MI_CpuCopy16(src->ncd.owner.comment.str, info->comment, sizeof(info->comment));
 }

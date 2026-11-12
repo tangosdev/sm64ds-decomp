@@ -1,5 +1,4 @@
 #include "nitro/fs/overlay.h"
-#include "private/fs_views.h"
 #include "nitro/fs/file.h"
 #include "isdbglib.h"
 /* The game's copy of NitroSDK's FS_LoadOverlayImage, in an older SDK's
@@ -12,15 +11,11 @@
 extern int myFS_OpenFileFast(FSFile *p_file, FSFileID id);
 extern int myFS_ReadFile(FSFile *p_file, void *dst, int len);
 
-/* NitroSDK nitro/fs/file.h's accessors, with their volatile parameter: a
- * plain field read schedules the ROM-offset load one slot later. No header
- * in this tree carries them yet. */
+/* NitroSDK nitro/fs/file.h's FS_GetFileImageTop, with its volatile
+ * parameter: a plain field read schedules the ROM-offset load one slot
+ * later. The header here carries FS_GetLength but not this one yet. */
 static inline u32 FS_GetFileImageTop(volatile const FSFile *p_file) {
     return p_file->prop.file.top;
-}
-
-static inline u32 FS_GetLength(volatile const FSFile *p_file) {
-    return p_file->prop.file.bottom - p_file->prop.file.top;
 }
 
 int func_02018b64(FSOverlayInfo *p_ovi) {

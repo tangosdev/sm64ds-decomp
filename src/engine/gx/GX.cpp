@@ -3,115 +3,89 @@
  * family (GX_EndLoadTexPltt .. GX_BeginLoadTex). Below sits GX_LoadBGPltt at
  * 0x02056870, the last function of gx_load2d.c (src/engine/gx/GXS.cpp);
  * above is GX_SendFifo48B at 0x02056c1c.
+ *
+ * A Begin call takes the texture (or texture-palette) banks into LCDC mode and
+ * records where their slots appear there; Load copies into that window; End
+ * waits for the copy and gives the banks back.
  */
-// leftovers: LoadTex's base/top stay plain int (the register web the bytes
-// were built against). BeginLoadTex's byte-offset table reads stay a char *
-// tower (indexing reschedules the body). GXi_DmaId is the render DMA
-// channel, -1 if none.
-
 #include "types.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_vramcnt.h"
+#include "private/gxdma.h"
 
-extern int GXi_DmaId;      // RENDER_DMA_CHANNEL: DMA channel number, -1 if none
-extern u32 data_020a60ac;  // texture upload window: base address
-extern u32 data_020a60b0;  // texture-palette VRAM base address
-extern u32 data_020a60b4;  // texture-palette bank selector (BeginLoadTexPltt result)
-extern u32 data_020a60b8;  // texture bank selector (BeginLoadTex result)
-extern u32 data_020a60bc;  // texture upload window: secondary bank base
-extern u32 data_020a60c0;  // texture upload window: top of the base window
-extern const u16 data_02086314[8];
-extern u16 data_02086324[];
-extern u16 data_02086326[];
-extern u16 data_02086328[];
+/* One row per texture-bank combination (GX_ResetBankForTex's result): the
+ * LCDC addresses of the texture slots' first and second blocks and the size of
+ * the first block, all in 4 KiB units. */
+typedef struct {
+    u16 blk1;
+    u16 blk2;
+    u16 szBlk1;
+} GXTexStartAddr;
+
+extern int GXi_DmaId;                        // RENDER_DMA_CHANNEL: DMA channel number, -1 if none
+extern u32 data_020a60ac;                    // texture slots' first LCDC block
+extern u32 data_020a60b0;                    // texture-palette slots' LCDC block
+extern int data_020a60b4;                    // texture-palette banks taken by BeginLoadTexPltt
+extern int data_020a60b8;                    // texture banks taken by BeginLoadTex
+extern u32 data_020a60bc;                    // texture slots' second LCDC block, 0 if contiguous
+extern u32 data_020a60c0;                    // size of the first block
+extern const u16 data_02086314[8];           // texture-palette LCDC block, by bank combination
+extern const GXTexStartAddr data_02086324[]; // texture blocks, by bank combination
 
 extern "C" {
-extern void MI_WaitDma(u32 dmaNo);
-extern void MI_DmaCopy32Async(u32 dmaNo, const void *src, void *dest, u32 size,
-                              void (*callback)(void *), void *arg);
-extern void MI_DmaCopy32(unsigned int channel, const void *src, void *dest, unsigned int len);
-extern void MIi_CpuCopy32(int *src, int *dst, int len);
 
 void GX_BeginLoadTex() {
-    int r = GX_ResetBankForTex();
-    int i = r * 6;
-    data_020a60b8 = r;
-    data_020a60ac = (int)*(u16 *)((char *)data_02086324 + i) << 12;
-    data_020a60bc = (int)*(u16 *)((char *)data_02086326 + i) << 12;
-    data_020a60c0 = (int)*(u16 *)((char *)data_02086328 + i) << 12;
+    data_020a60b8 = GX_ResetBankForTex();
+    data_020a60ac = data_02086324[data_020a60b8].blk1 << 12;
+    data_020a60bc = data_02086324[data_020a60b8].blk2 << 12;
+    data_020a60c0 = data_02086324[data_020a60b8].szBlk1 << 12;
 }
 
-// VRAM texture upload with banked destination: below-top goes to the base
-// window, above-top to the secondary bank, straddling splits into two DMA (or
-// CPU copy) halves.
-void GX_LoadTex(const void *src, unsigned int offset, unsigned int size) {
-    unsigned int dst;
-    int base = data_020a60bc;
-    if (base == 0) {
-        dst = data_020a60ac + offset;
+// A copy that straddles the end of the first block is split into two. That
+// branch tests the DMA channel once for both halves rather than going
+// through the GXi_ helpers, which would test it again before the second.
+void GX_LoadTex(const void *pSrc, u32 destSlotAddr, u32 szByte) {
+    void *pLCDC;
+    if (data_020a60bc == 0) {
+        pLCDC = (void *)(data_020a60ac + destSlotAddr);
+    } else if (destSlotAddr + szByte < data_020a60c0) {
+        pLCDC = (void *)(data_020a60ac + destSlotAddr);
+    } else if (destSlotAddr >= data_020a60c0) {
+        pLCDC = (void *)(data_020a60bc + destSlotAddr - data_020a60c0);
     } else {
-        int top = data_020a60c0;
-        if (offset + size < top) {
-            dst = data_020a60ac + offset;
-        } else if (offset >= top) {
-            dst = base + offset - top;
+        void *pLCDC2 = (void *)data_020a60bc;
+        u32 sz = data_020a60c0 - destSlotAddr;
+        pLCDC = (void *)(data_020a60ac + destSlotAddr);
+        if (GXi_DmaId != GX_DMA_NOT_USE) {
+            MI_DmaCopy32(GXi_DmaId, pSrc, pLCDC, sz);
+            MI_DmaCopy32Async(GXi_DmaId, (const u8 *)pSrc + sz, pLCDC2, szByte - sz, 0, 0);
         } else {
-            top -= offset;
-            unsigned int d0 = data_020a60ac + offset;
-            int ch = GXi_DmaId;
-            if (ch != -1) {
-                MI_DmaCopy32(ch, src, (void *)d0, top);
-                MI_DmaCopy32Async(GXi_DmaId, (char *)src + top, (void *)base, size - top, 0, 0);
-                return;
-            }
-            MIi_CpuCopy32((int *)src, (int *)d0, top);
-            MIi_CpuCopy32((int *)((char *)src + top), (int *)base, size - top);
-            return;
+            MI_CpuCopy32(pSrc, pLCDC, sz);
+            MI_CpuCopy32((const u8 *)pSrc + sz, pLCDC2, szByte - sz);
         }
-    }
-    if (GXi_DmaId != -1) {
-        MI_DmaCopy32Async(GXi_DmaId, src, (void *)dst, size, 0, 0);
         return;
     }
-    MIi_CpuCopy32((int *)src, (int *)dst, size);
+    GXi_DmaCopy32Async(GXi_DmaId, pSrc, pLCDC, szByte, 0, 0);
 }
 
-// Ends a banked texture upload: waits on the upload DMA channel if one is
-// active, restores the texture bank, then clears the four upload-window globals.
 void GX_EndLoadTex() {
-    if (GXi_DmaId != -1) {
-        MI_WaitDma(GXi_DmaId);
-    }
+    GXi_WaitDma(GXi_DmaId);
     GX_SetBankForTex(data_020a60b8);
-    data_020a60c0 = 0;
-    data_020a60bc = 0;
-    data_020a60ac = 0;
+    data_020a60ac = data_020a60bc = data_020a60c0 = 0;
     data_020a60b8 = 0;
 }
 
 void GX_BeginLoadTexPltt() {
-    int r = GX_ResetBankForTexPltt();
-    data_020a60b4 = r;
-    data_020a60b0 = (int)data_02086314[r >> 4] << 12;
+    data_020a60b4 = GX_ResetBankForTexPltt();
+    data_020a60b0 = data_02086314[data_020a60b4 >> 4] << 12;
 }
 
-// Loads a texture palette into VRAM: async DMA when a channel is configured
-// (GXi_DmaId != -1), otherwise MIi_CpuCopy32.
-void GX_LoadTexPltt(const void *src, u32 destSlotAddr, u32 size) {
-    void *dest = (void *)(data_020a60b0 + destSlotAddr);
-    s32 dmaCh = GXi_DmaId;
-    if (dmaCh != -1) {
-        MI_DmaCopy32Async(dmaCh, src, dest, size, 0, 0);
-    } else {
-        MIi_CpuCopy32((int *)src, (int *)dest, size);
-    }
+void GX_LoadTexPltt(const void *pSrc, u32 destSlotAddr, u32 szByte) {
+    GXi_DmaCopy32Async(GXi_DmaId, pSrc, (void *)(data_020a60b0 + destSlotAddr), szByte, 0, 0);
 }
 
 void GX_EndLoadTexPltt() {
-    u32 dmaId = GXi_DmaId;
-    if (dmaId != (u32)-1) {
-        MI_WaitDma(dmaId);
-    }
+    GXi_WaitDma(GXi_DmaId);
     GX_SetBankForTexPltt(data_020a60b4);
     data_020a60b4 = 0;
     data_020a60b0 = 0;

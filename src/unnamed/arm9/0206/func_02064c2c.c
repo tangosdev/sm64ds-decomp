@@ -1,5 +1,5 @@
 #include "types.h"
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
+#include "nitro/mi/memory.h"
 
 int func_02064c2c(int dest, u16 a, u8 b, int c, int d, const void *p, int n) {
     u8 kind = 7;
