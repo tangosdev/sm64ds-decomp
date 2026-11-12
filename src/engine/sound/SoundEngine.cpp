@@ -198,6 +198,7 @@ struct T {
     /* 0x38 */ NNSSndFader fade; /* channel volume ramp, func_020508a0 */
     /* 0x48 */ int f48;          /* stop once fade finishes */
     /* 0x4c */ int f4c;          /* last volume sent with SND_SetChannelVolume */
+    void func_020500a4();
 };
 /* One message the alarm posts to data_020a5600 (the 8-slot ring
    data_020a5718): the stream, the block size, its offset, and the block
@@ -283,6 +284,7 @@ struct Elem_204f278 {
     /* 0x08 */ struct SndHeap *heap;    /* func_0205130c's heap, freed by func_020512f0 */
     /* 0x0c */ NNSSndSeqPlayer *player; /* claimant; its heap word points back here */
     /* 0x10 */ int playerIndex;         /* data_020a4d6c slot whose list holds this */
+    void func_0204f278();
 };
 
 extern "C" {
@@ -372,7 +374,9 @@ extern void func_0204f15c(unsigned int mask);
 extern int func_0204f194(unsigned int a);
 extern void func_0204f1e8(void);
 extern void func_0204f214(NNSSndSeqPlayer *player, int prio);
-extern void func_0204f278(void *mem, u32 size, u32 data1, u32 data2);
+/* Address is taken as a SndHeapDisposeCallback. mwccarm will not convert a
+   pointer-to-member, so the call site names this member's symbol. */
+extern void _ZN12Elem_204f27813func_0204f278Ev(Elem_204f278 *);
 extern void func_0204f2d4(NNSSndSeqPlayer *obj);
 extern NNSSndSeqPlayer *func_0204f364(int prio);
 extern void func_0204f3e0(NNSSndSeqPlayer *player);
@@ -405,7 +409,8 @@ extern void func_0204ff9c(struct C *o);
 extern void func_0204ffcc(struct C *c);
 extern void func_02050008(struct C *o);
 extern void func_02050038(void *arg);
-extern void func_020500a4(void *arg);
+/* Address is taken as an SNDAlarmCallback. Same constraint as func_0204f278. */
+extern void _ZN1T13func_020500a4Ev(struct T *);
 extern void func_020501b8(void);
 extern void func_02050258(void);
 extern void func_020502b8(void);
@@ -1563,7 +1568,8 @@ extern "C" int func_020503a4(int a, int b, int c, int d, int p5, int p6, int p7,
         SND_SetupChannelPcm(3, fmt1, (void *)c, pp8 != 0 ? 1 : 2, 0, qlen, pp10, 0, align, p12);
         SND_SetupCapture(1, fmt2, (void *)c, qlen, pp8, p6, p7);
         if (handle >= 0) {
-            SND_SetupAlarm(handle, total + chunk, total, func_020500a4, g);
+            SND_SetupAlarm(handle, total + chunk, total, (SNDAlarmCallback)_ZN1T13func_020500a4Ev,
+                           g);
         }
         if (a == 1) {
             SND_SetOutputSelector(3, 3, 1, 1);
@@ -1654,8 +1660,8 @@ extern "C" void func_020501b8(void)
     }
 }
 
-extern "C" void func_020500a4(void *arg) {
-    struct T *strm = (struct T *)arg;
+void T::func_020500a4() {
+    struct T *strm = this;
     int quot = strm->f14 / strm->f2c;
     int prod = quot * strm->f18;
     int e6 = strm->fc + prod;
@@ -1670,7 +1676,8 @@ extern "C" void func_020500a4(void *arg) {
         slot->f10 = e5;
         OS_SendMessage(&data_020a5600, slot, 0);
         data_020a55f8 = data_020a55f8 + 1;
-        if (data_020a55f8 >= 8) data_020a55f8 = 0;
+        if (data_020a55f8 >= 8)
+            data_020a55f8 = 0;
     } else {
         DC_InvalidateRange((void *)e6, quot);
         DC_InvalidateRange((void *)e5, quot);
@@ -1860,7 +1867,9 @@ void Sound::Player::SetPlayableSeqCount(int index, int count)
 extern "C" int func_0204fa3c(int playerNo, struct SndHeap *heap, u32 size) {
     Elem_204f278 *block;
     struct SndHeap *seqHeap;
-    block = (Elem_204f278 *)func_020511d4(heap, size + sizeof(Elem_204f278), func_0204f278, 0, 0);
+    block = (Elem_204f278 *)func_020511d4(
+        heap, size + sizeof(Elem_204f278),
+        (SndHeapDisposeCallback)_ZN12Elem_204f27813func_0204f278Ev, 0, 0);
     if (!block)
         return 0;
     block->player = 0;
@@ -2186,8 +2195,8 @@ extern "C" void func_0204f2d4(NNSSndSeqPlayer *obj) {
     obj->status = 0;
 }
 
-extern "C" void func_0204f278(void *mem, u32 size, u32 data1, u32 data2) {
-    Elem_204f278 *ph = (Elem_204f278 *)mem;
+void Elem_204f278::func_0204f278() {
+    Elem_204f278 *ph = this;
     struct SndHeap *heap = ph->heap;
     if (heap == 0)
         return;
