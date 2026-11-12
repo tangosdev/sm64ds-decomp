@@ -1734,6 +1734,11 @@ void process(unsigned now) {
             }
             b.last_st = stn;
         }
+        // bossfix3: the talk hold's stamp is cleared every tick no talk of my player runs on this copy (or I am its authority). Cleared only
+        // when a record came in, it kept the intro talk's stamp through a stretch as authority (no records taken), and the stomper's
+        // last talk, held from its first record, looked 60 s old and was cut at once (own_f9 row: "talk held past 60 s" 22 s in).
+        if (g_bf2 && d.cls == 248 && (mine || !wig_talk_here(b))) b.wig_talk_t = 0;
+        if (g_bf2 && d.cls == 176 && (mine || !eye_talk_here(b))) b.eye_talk_t = 0;
         if (g_on) apply_rx(slot, b, now, mine);
         if (g_on && d.cls == 279) { kpa_tick(b, mine, now); if (g_kpa_fix) { kpa_intro_camera_done(b); kpa_bfs_guard(b, mine, now); } }
         // bowser2 proof knob: the authority's idle Bowser jumps (variant 1 lands in the arena-tilt state: the rocking slam)
