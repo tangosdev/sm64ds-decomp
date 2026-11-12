@@ -149,8 +149,7 @@ int daObjCtMecha09_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov065_0211d9cc);
-    ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov035_02112118);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov035_02112118);
 
     mStartPosY = mPosY;
     {

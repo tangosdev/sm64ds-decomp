@@ -26,8 +26,7 @@
  *   Comparing actorID in the if size-DIFFs 0xf0 -> 0xe4. Combining
  *   dustPos.y into `mPosY + 0x3c000` size-DIFFs 0xf0 -> 0xec.
  * - Init keeps the two-step probePos.y (combined form size-DIFFs
- *   0x1a8 -> 0x1a4). dBgW_KcMbg::SetFile with Fix12<int> size-DIFFs
- *   0x1a8 -> 0x1ac. Storing beforeClsnCallback directly size-DIFFs
+ *   0x1a8 -> 0x1a4). Storing beforeClsnCallback directly size-DIFFs
  *   0x1a8 -> 0x1a4; the body calls dBgW::SetBeforeClsnCallback.
  * - CleanupResources reloads mFileTable around each Release. One pointer
  *   across the three calls is a 20-word DIFF.
@@ -322,8 +321,7 @@ s32 daDsnBase_c::Init() {
     files = (DsnBaseFileTable *)mFileTable;
     kcl = (KCL_File *)dBgW_Kc::LoadFile(*files->collision);
     clps = files->clps;
-    ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile(kcl, *(&mClsnMat), 0x199, mAngleY, *(clps));
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, *clps);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mMeshCollider.Enable(this);
 

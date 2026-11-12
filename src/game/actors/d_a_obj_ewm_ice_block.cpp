@@ -141,10 +141,8 @@ int daObjEwmIceBlock_c::InitResources()
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov056_02113314[0]), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile((KCL_File *)(dBgW_Kc::LoadFile(*data_ov056_02113314[1])),
-                              *(&mClsnMat), 0x199, mAngleY,
-                              *(CLPS_Block *)(data_ov056_02113314[2]));
+    mMeshCollider.SetFile((KCL_File *)(dBgW_Kc::LoadFile(*data_ov056_02113314[1])), mClsnMat, 0x199,
+                          mAngleY, *(CLPS_Block *)(data_ov056_02113314[2]));
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mPath.FromID(param1 & 0xff);
     mPathDir = 1;

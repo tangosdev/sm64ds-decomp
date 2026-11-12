@@ -400,9 +400,8 @@ s32 daObjFallBlock_c::InitResourcesFrom(ResourceDescriptor *fp) {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*fp->model), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile((KCL_File *)(dBgW_Kc::LoadFile(*fp->collision)), mClsnMat, 0x199,
-                              mAngleY, *fp->clps);
+    mMeshCollider.SetFile((KCL_File *)(dBgW_Kc::LoadFile(*fp->collision)), mClsnMat, 0x199, mAngleY,
+                          *fp->clps);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
     v.x = mPosX;
     y = mPosY;
