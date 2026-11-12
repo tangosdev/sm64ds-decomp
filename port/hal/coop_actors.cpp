@@ -14,6 +14,7 @@
 #include "coop_boss.h"
 #include "coop_stats_log.h"
 #include "coop_ghost_eggs.h"
+#include "coop_rabbit.h"
 
 #include <windows.h>
 
@@ -1141,6 +1142,10 @@ void process(unsigned now) {
             const int cs = coop_boss_bully_claim_seat(slot);
             if (cs == g_my) nown = g_my;
             else if (cs >= 0 && cs < kSeats && ((coop_group_member_mask() >> cs) & 1u) && alive_rx(g_rx[slot][cs], now)) nown = cs;
+        }
+        if (p.id == 187) {                            // RABBIT2: the hands that hold a rabbit own it for the whole hold (no stale hand-over)
+            const int hs = coop_rabbit_owner(slot, s.a);
+            if (hs == g_my || (hs >= 0 && hs < kSeats && ((coop_group_member_mask() >> hs) & 1u))) nown = hs;
         }
         {   // COOPDIAMOND2: a linked member has the owner its lead has (the lead is a lower slot, decided earlier in this pass)
             const int ld = link_lead(slot);

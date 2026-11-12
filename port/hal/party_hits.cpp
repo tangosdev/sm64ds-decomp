@@ -16,6 +16,7 @@
 #include "player_fields.h"
 #include "ghost_tongue.h"
 #include "coop_ghost_eggs.h"
+#include "coop_rabbit.h"
 
 #include <cmath>
 #include <cstdio>
@@ -1677,7 +1678,18 @@ int squash_scale_for_seat(int seat) {
     return squash_curve(g.squash_at[seat]);
 }
 
-void held_after_follow() { if (g.on && !g.held_off) held_after_follow_impl(); }
+void held_after_follow() {
+    if (g.on && !g.held_off) held_after_follow_impl();
+    coop_rabbit_after_follow();                     // RABBIT2: a friend's held / released rabbit, after his hands were posed
+}
+int held_by(int cls, int slot) {
+    if (!g.on || g.held_off || slot < 0) return -1;
+    for (int seat = 0; seat < kHubPartySeats; ++seat) {
+        const G::HeldIn &h = g.held_in[seat];
+        if (h.kind == 1 && h.cls == cls && h.slot == slot && g.frame < h.until) return seat;
+    }
+    return -1;
+}
 
 int attached_holder(int victim_seat, int *kind) {
     if (!g.on || victim_seat < 0 || victim_seat >= kHubPartySeats) return -1;
