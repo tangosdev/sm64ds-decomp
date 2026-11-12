@@ -3285,7 +3285,7 @@ data_ov002_0210f17c kind:bss addr:0x0210f17c
 data_ov002_0210f188 kind:bss addr:0x0210f188
 data_ov002_0210f194 kind:bss addr:0x0210f194
 data_ov002_0210f1a0 kind:bss addr:0x0210f1a0
-@4651 kind:bss addr:0x0210f1ac
+@4675 kind:bss addr:0x0210f1ac
 data_ov002_0210f1b8 kind:bss addr:0x0210f1b8
 data_ov002_0210f1c4 kind:bss addr:0x0210f1c4
 data_ov002_0210f1d0 kind:bss addr:0x0210f1d0

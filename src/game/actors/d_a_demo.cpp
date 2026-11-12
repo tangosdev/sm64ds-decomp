@@ -980,8 +980,7 @@ void StaffRoll::func_ov002_020f30f8(int i) {
     ff = this->window[i].bottom >> 12;
     cc = this->window[i].left >> 12;
     dd = this->window[i].top >> 12;
-    *(unsigned short *)0x4001042 = ((cc << 8) & 0xff00) | (ee & 0xff);
-    *(unsigned short *)0x4001046 = ((dd << 8) & 0xff00) | (ff & 0xff);
+    G2S_SetWnd1Position(cc, dd, ee, ff);
     SetSubBg1Offset(this->window[i].bgX >> 12, this->window[i].bgY >> 12);
     SetSubBg2Offset(this->window[i].bgX >> 12, this->window[i].bgY >> 12);
 }
@@ -999,41 +998,31 @@ void StaffRoll::func_ov002_020f3310(int idx) {
 }
 
 void StaffRoll::func_ov002_020f335c(int i) {
-    char *o = (char *)this;
-    StaffRoll *s = (StaffRoll *)o;
-    s->window[i].top += 0x1800;
-    if (s->window[i].top >= 0x66000) {
-        s->window[i].top = 0x66000;
-        s->window[i].active = 0;
-        s->window[i].step = 0;
+    this->window[i].top += 0x1800;
+    if (this->window[i].top >= 0x66000) {
+        this->window[i].top = 0x66000;
+        this->window[i].active = 0;
+        this->window[i].step = 0;
     }
-    int left = s->window[i].left >> 0xc;
-    int right = s->window[i].right >> 0xc;
-    int bottom = s->window[i].bottom >> 0xc;
-    int top = s->window[i].top >> 0xc;
-    *(volatile unsigned short *)0x4001042 =
-        (unsigned short)(((left << 8) & 0xff00) | (right & 0xff));
-    *(volatile unsigned short *)0x4001046 =
-        (unsigned short)(((top << 8) & 0xff00) | (bottom & 0xff));
+    int left = this->window[i].left >> 0xc;
+    int right = this->window[i].right >> 0xc;
+    int bottom = this->window[i].bottom >> 0xc;
+    int top = this->window[i].top >> 0xc;
+    G2S_SetWnd1Position(left, top, right, bottom);
 }
 
 void StaffRoll::func_ov002_020f340c(int i) {
-    char *o = (char *)this;
-    StaffRoll *s = (StaffRoll *)o;
-    s->window[i].top += 0x1800;
-    if (s->window[i].top >= 0x66000) {
-        s->window[i].top = 0x66000;
-        s->window[i].active = 0;
-        s->window[i].step = 0;
+    this->window[i].top += 0x1800;
+    if (this->window[i].top >= 0x66000) {
+        this->window[i].top = 0x66000;
+        this->window[i].active = 0;
+        this->window[i].step = 0;
     }
-    int left = s->window[i].left >> 0xc;
-    int right = s->window[i].right >> 0xc;
-    int bottom = s->window[i].bottom >> 0xc;
-    int top = s->window[i].top >> 0xc;
-    *(volatile unsigned short *)0x4001042 =
-        (unsigned short)(((left << 8) & 0xff00) | (right & 0xff));
-    *(volatile unsigned short *)0x4001046 =
-        (unsigned short)(((top << 8) & 0xff00) | (bottom & 0xff));
+    int left = this->window[i].left >> 0xc;
+    int right = this->window[i].right >> 0xc;
+    int bottom = this->window[i].bottom >> 0xc;
+    int top = this->window[i].top >> 0xc;
+    G2S_SetWnd1Position(left, top, right, bottom);
 }
 
 void StaffRoll::func_ov002_020f34bc(int idx) {
@@ -1065,8 +1054,7 @@ void StaffRoll::func_ov002_020f34bc(int idx) {
     cs = c >> 12;
     ds = d >> 12;
     as_ = a >> 12;
-    *(unsigned short *)0x4001042 = ((bs << 8) & 0xff00) | (cs & 0xff);
-    *(unsigned short *)0x4001046 = ((as_ << 8) & 0xff00) | (ds & 0xff);
+    G2S_SetWnd1Position(bs, as_, cs, ds);
 }
 
 void StaffRoll::func_ov002_020f35e4(int i) {
@@ -1074,16 +1062,17 @@ void StaffRoll::func_ov002_020f35e4(int i) {
     this->window[i].top = 0x66000;
     this->window[i].right = 0xe0000;
     this->window[i].bottom = 0x66000;
-    *((volatile unsigned int *) 0x4001000) = ((*((volatile unsigned int *) 0x4001000)) & (~0xe000)) | 0x4000;
-    *((volatile unsigned short *) 0x4001048) = (unsigned short) (((((*((volatile unsigned short *) 0x4001048)) & (~0x3f00)) | 0x1700) & 0xFFFFFFFFFFFFFFFFull) | 0x2000);
-    *((volatile unsigned short *) 0x400104a) = (unsigned short) (((((*((volatile unsigned short *) 0x400104a)) & (~0x3f)) | 0x11) & 0xFFFFFFFFFFFFFFFFull) | 0x20);
+    GXS_SetVisibleWnd(GX_WNDMASK_W1);
+    G2S_SetWnd1InsidePlane(GX_WND_PLANEMASK_BG0 | GX_WND_PLANEMASK_BG1 | GX_WND_PLANEMASK_BG2 |
+                               GX_WND_PLANEMASK_OBJ,
+                           true);
+    G2S_SetWndOutsidePlane(GX_WND_PLANEMASK_BG0 | GX_WND_PLANEMASK_OBJ, true);
     {
         int a = this->window[i].left >> 12;
         int d = this->window[i].right >> 12;
         int e = this->window[i].bottom >> 12;
         int b = this->window[i].top >> 12;
-        *((volatile unsigned short *) 0x4001042) = (unsigned short) (((a << 8) & 0xff00) | (d & 0xff));
-        *((volatile unsigned short *) 0x4001046) = (unsigned short) (((b << 8) & 0xff00) | (e & 0xff));
+        G2S_SetWnd1Position(a, b, d, e);
     }
     this->window[i].bgX = -0x60000;
     this->window[i].bgY = -0x38000;
@@ -1126,25 +1115,17 @@ void func_ov002_020f3828(int *c)
     ((StaffRoll *)c)->window[0].top = 0x66000;
     ((StaffRoll *)c)->window[0].right = 0xfc000;
     ((StaffRoll *)c)->window[0].bottom = 0xbc000;
-    *((volatile unsigned int *)0x4001000) =
-        ((*((volatile unsigned int *)0x4001000)) & (~0xe000)) | 0x4000;
-    *((volatile unsigned short *)0x4001048) =
-        (unsigned short)(((((*((volatile unsigned short *)0x4001048)) & (~0x3f00)) | 0x1700) &
-                          0xFFFFFFFFFFFFFFFFull) |
-                         0x2000);
-    *((volatile unsigned short *)0x400104a) =
-        (unsigned short)(((((*((volatile unsigned short *)0x400104a)) & (~0x3f)) | 1) &
-                          0xFFFFFFFFFFFFFFFFull) |
-                         0x20);
+    GXS_SetVisibleWnd(GX_WNDMASK_W1);
+    G2S_SetWnd1InsidePlane(GX_WND_PLANEMASK_BG0 | GX_WND_PLANEMASK_BG1 | GX_WND_PLANEMASK_BG2 |
+                               GX_WND_PLANEMASK_OBJ,
+                           true);
+    G2S_SetWndOutsidePlane(GX_WND_PLANEMASK_BG0, true);
     {
         int a = ((StaffRoll *)c)->window[0].left >> 12;
         int d = ((StaffRoll *)c)->window[0].right >> 12;
         int e = ((StaffRoll *)c)->window[0].bottom >> 12;
         int b = ((StaffRoll *)c)->window[0].top >> 12;
-        *((volatile unsigned short *)0x4001042) =
-            (unsigned short)(((a << 8) & 0xff00) | (d & 0xff));
-        *((volatile unsigned short *)0x4001046) =
-            (unsigned short)(((b << 8) & 0xff00) | (e & 0xff));
+        G2S_SetWnd1Position(a, b, d, e);
     }
     ((StaffRoll *)c)->window[0].bgX = -0x60000;
     ((StaffRoll *)c)->window[0].bgY = -0x38000;
