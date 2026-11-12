@@ -38,6 +38,11 @@
 // the same hole (each console its own penguin, so a friend never saw the race and could start a second one). It rides the
 // same sub-type with ver 2 and the same rules; see the penguin section below.
 //
+// THE SNOWMAN'S ROLLING BODY (run coopfix1 lane SNOWBALL1, the NPCFIX1 leftover): after one player's talk with the
+// snowman's body in Cool Cool Mountain the body rolled only on his screen, so a friend could start his own talk a moment
+// later and watch a different roll. It rides the same sub-type with ver 3 and the same rules, plus the ending: see the
+// snowman section below.
+//
 // MIXED ROOMS. A 1.0.3 console drops SYNW 0x06 as an unknown sub-type (coop_world.cpp's dispatcher counts it, never
 // guesses), so a 1.0.3 friend simply keeps the 1.0.3 behaviour; this build with a 1.0.3 racer hears no records and
 // its Koopa stays as in 1.0.3. The flag rule is local and needs nothing from the friend.
@@ -61,6 +66,8 @@
 
 #include "daRNk_c.h"
 #include "daPgRcer_c.h"
+#include "daBgSnmBdy_c.h"
+#include "daBgSnmHed_c.h"
 
 #include <windows.h>
 
@@ -85,12 +92,14 @@ void *port_pgrcer_tex_file(int i);
 void port_pgrcer_reset(void *penguin, short ang);
 void port_pgrcer_start(void *penguin, void *talker);
 void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *seq, void *btp, int flags, int speed, unsigned int start);
-extern int (*port_coop_pgrcer_follow)(void *penguin);
-void *port_pgrcer_anim_file(int i);
-void *port_pgrcer_tex_file(int i);
-void port_pgrcer_reset(void *penguin, short ang);
-void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *seq, void *btp, int flags, int speed, unsigned int start);
 extern const void *port_level_fb_ptr;
+extern int (*port_coop_snmbdy_follow)(void *body);
+extern int (*port_coop_snmhed_quiet)(void *head);
+void port_snmbdy_scale(void *body, int scale);
+void port_snmbdy_cue_head(void *body);
+void port_snmbdy_quake(void *body);
+void port_snmbdy_reset(void *body);
+void port_snmbdy_points(int *reach, int *landing);
 }
 namespace ntr { struct Framebuffer; bool ppu_write_bmp(const char *path, const Framebuffer &fb); }
 
@@ -102,15 +111,17 @@ namespace port {
 // RACE_POSE payload (after the 12-byte head), 32 bytes.
 struct CoopRaceWire {
     CoopKeyWire key;
-    uint8_t  ver;        // 1 Koopa the Quick, 2 the racing penguin (NPCFIX1; a 1.0.4 console refuses ver 2 as bad)
-    uint8_t  state;      // the racer's Koopa state, 2..5
-    uint8_t  anim;       // 0 idle, 1 talk, 2 run start, 3 run, 4 jump, 5 land, 6 brake
+    uint8_t  ver;        // 1 Koopa the Quick, 2 the racing penguin (NPCFIX1), 3 the snowman's rolling body (SNOWBALL1);
+                         // a 1.0.4 console refuses ver 2 and 3 as bad records, one record each, nothing else lost
+    uint8_t  state;      // the racer's Koopa state, 2..5 (ver 3: the body's state, 2..5)
+    uint8_t  anim;       // 0 idle, 1 talk, 2 run start, 3 run, 4 jump, 5 land, 6 brake (ver 3: always 0)
     uint8_t  flags;      // bit 0 racing, bit 1 finished, bit 2 the animation plays once
+                         // (ver 3: bit 0 rolling, bit 1 the head gave its star, bits 2-3 the body's substate 0..2)
     int32_t  x, y, z;    // Fix12
     int16_t  ang;        // heading
     uint16_t seq;        // the sender's record counter
-    int32_t  frame;      // animation frame, 20.12
-    int32_t  speed;      // animation speed, 0x1000 = 1.0
+    int32_t  frame;      // animation frame, 20.12 (ver 3: the body's scale, Fix12 0x800..0x1800)
+    int32_t  speed;      // animation speed, 0x1000 = 1.0 (ver 3: the body's roll angle, 0..0xffff)
 };
 #pragma pack(pop)
 static_assert(sizeof(CoopRaceWire) == 32, "race pose is 32 bytes");
@@ -120,8 +131,12 @@ bool coop_race_validate(const void *p, int len) {
     CoopRaceWire w; std::memcpy(&w, p, sizeof w);
     const int lim = 0x7d00000;        // 32000 units
     // ver 2 (the penguin) also carries his face in flags bits 3-4 (0 unknown, 1..3 his three BTP files)
-    if (!coop_key_ok(w.key) || (w.ver != 1 && w.ver != 2) || w.state < 2 || w.state > 5 || w.anim > 6) return false;
-    if (w.flags > (w.ver == 2 ? 0x1f : 7) || (w.ver == 2 && (w.flags >> 3) > 3)) return false;
+    if (!coop_key_ok(w.key) || w.ver < 1 || w.ver > 3 || w.state < 2 || w.state > 5 || w.anim > 6) return false;
+    if (w.ver == 3) {
+        if (w.anim != 0 || w.flags > 0x0f || ((w.flags >> 2) & 3) > 2 || w.frame < 0x800 || w.frame > 0x1800 || w.speed > 0xffff) return false;
+    } else if (w.flags > (w.ver == 2 ? 0x1f : 7) || (w.ver == 2 && (w.flags >> 3) > 3)) {
+        return false;
+    }
     if (w.x < -lim || w.x > lim || w.y < -lim || w.y > lim || w.z < -lim || w.z > lim) return false;
     if (w.frame < 0 || w.frame > (4096 << 12) || w.speed < 0 || w.speed > 0x10000) return false;
     return true;
@@ -137,7 +152,8 @@ int g_trace = 0;
 unsigned g_lf = 0;
 int g_lv = -1, g_ac = -1;
 
-struct Stats { unsigned sent, recv, bad, other_key, locks, letgo, followed, flag_refused, flag_counted, pg_sent, pg_locks, pg_letgo, pg_followed; } g_st = {};
+struct Stats { unsigned sent, recv, bad, other_key, locks, letgo, followed, flag_refused, flag_counted, pg_sent, pg_locks, pg_letgo, pg_followed,
+                sb_sent, sb_locks, sb_letgo, sb_followed, sb_quiet; } g_st = {};
 
 // what friends sent
 struct Rx {
@@ -146,6 +162,7 @@ struct Rx {
 };
 Rx g_rx[kSeats];
 Rx g_prx[kSeats];            // the racing penguin's records (ver 2)
+Rx g_srx[kSeats];            // the snowman's rolling body's records (ver 3)
 
 // my side
 struct Mine {
@@ -210,10 +227,10 @@ void on_world(int seat, int sub, const unsigned char *p, int len, void *) {
         return;
     }
     CoopRaceWire w; std::memcpy(&w, p, sizeof w);
-    Rx &r = (w.ver == 2 ? g_prx : g_rx)[seat];
+    Rx &r = (w.ver == 3 ? g_srx : w.ver == 2 ? g_prx : g_rx)[seat];
     const unsigned t = now_ms();
     if (r.have && r.level == w.key.level && r.act == w.key.act && (uint16_t)(w.seq - r.w.seq) >= 0x8000u) return;   // older than what I hold
-    const bool changed = !r.have || r.w.state != w.state;
+    const bool changed = !r.have || r.w.state != w.state || (w.ver == 3 && r.w.flags != w.flags);
     if (r.have && r.level == w.key.level && r.act == w.key.act) {
         r.have_prev = true; r.px = r.w.x; r.py = r.w.y; r.pz = r.w.z; r.pt_ms = r.t_ms;
     } else {
@@ -221,7 +238,11 @@ void on_world(int seat, int sub, const unsigned char *p, int len, void *) {
     }
     r.have = true; r.level = w.key.level; r.act = w.key.act; r.w = w; r.t_ms = t;
     ++g_st.recv;
-    if (g_log && changed && w.ver == 2)
+    if (g_log && changed && w.ver == 3)
+        std::fprintf(stderr, "[coopsb] in lf=%u from seat %d: his snowman body state %d sub %d flags %x at (%d,%d,%d) (level %d act %d)\n", g_lf,
+                     seat, (int)w.state, (w.flags >> 2) & 3, (unsigned)w.flags, w.x >> 12, w.y >> 12, w.z >> 12, (int)w.key.level,
+                     (int)w.key.act);
+    else if (g_log && changed && w.ver == 2)
         std::fprintf(stderr, "[cooppg] in lf=%u from seat %d: his penguin state %d at (%d,%d,%d) (level %d act %d)\n", g_lf, seat,
                      (int)w.state, w.x >> 12, w.y >> 12, w.z >> 12, (int)w.key.level, (int)w.key.act);
     else if (g_log && changed)
@@ -235,6 +256,8 @@ void exit_line() {
                  g_st.flag_refused, g_st.flag_counted, g_off ? " (CONTROL SM64DS_COOP_KTQ=0)" : "");
     std::fprintf(stderr, "[cooppg:exit] penguin: sent %u, locks %u, let go %u, frames followed %u%s\n", g_st.pg_sent, g_st.pg_locks,
                  g_st.pg_letgo, g_st.pg_followed, g_off ? " (CONTROL SM64DS_COOP_KTQ=0)" : "");
+    std::fprintf(stderr, "[coopsb:exit] snowman body: sent %u, locks %u, let go %u, frames followed %u, head talks kept quiet %u%s\n",
+                 g_st.sb_sent, g_st.sb_locks, g_st.sb_letgo, g_st.sb_followed, g_st.sb_quiet, g_off ? " (CONTROL SM64DS_COOP_KTQ=0)" : "");
 }
 
 void ensure_registered() {
@@ -246,8 +269,10 @@ void ensure_registered() {
 }
 
 void pg_reset_visit();
+void sb_reset_visit();
 void reset_visit() {
     pg_reset_visit();
+    sb_reset_visit();
     g_m = Mine();
     g_m.k = nullptr; g_m.last_state = -1; g_m.lock = -1;
     g_lf = 0;
@@ -583,6 +608,248 @@ void pg_frame_tick() {
     pg_trace(p);
 }
 
+
+// ---- the snowman's rolling body (Cool Cool Mountain, class 274; run coopfix1 lane SNOWBALL1) -------------
+// The body talks (state 1), then rolls down its path (state 2). If its talker kept up it turns to the landing point,
+// cues the head (class 273) to jump, lands under it (state 3, substates 0, 1, 2) and the head, now on its body, gives
+// the star in a talk; otherwise it rolls on off the edge (state 4) and goes home out of sight (state 5, then 0).
+// Each console runs its own body, and NPCFIX1 only locked the TALK to one player: once the talk ended, the roll ran
+// on the talker's screen only and every friend's body still waited, so a friend could start his own talk and roll.
+// Now, the same shape as the penguin:
+//   * The talker's console (his own body in state 2 or later with the local player as its talker) sends RACE_POSE
+//     ver 3: state, substate, position, heading, roll angle, scale, rolling bit and "the head gave its star" bit,
+//     every frame while it moves (states 2 and 4, state 3 before it lands) and on every change, else once a second.
+//   * A console whose own body still waits (state 0) locks onto the first roller it hears and poses its body from his
+//     records (d_a_bg_snm_bdy.cpp's Behavior asks port_coop_snmbdy_follow and skips the states: no talk, no roll and
+//     no ending of its own; it keeps the dust, the rolling sound, the cylinder and the hurt on touch while rolling).
+//     When his body cues the head, mine is cued too (the head jumps and lands on my body as on his screen), and when
+//     his body lands, mine shakes the same way.
+//   * The head's star talk (d_a_bg_snm_hed.cpp asks port_coop_snmhed_quiet) belongs to the roller's console: on a
+//     console whose ending came from a friend's roll the head smiles and stays quiet, so the star is made once for the
+//     room, on the roller's console, and reaches friends through the coop star rules (SNOWMAN2's taken guard kept).
+//     If the roller's records stop before his head gave the star (he left or dropped), my head offers it instead.
+//   * 3 s of silence before the landing: let go, my body back home, waiting (the roll fell off, or the roller left).
+//     After the landing my body stays on its spot under the head for the rest of the visit: no second talk or roll.
+// A 1.0.4 console refuses ver 3 as a bad record and keeps the 1.0.4 behaviour (its own body, its own roll).
+enum : int { kSnowBodyClass = 274, kSnowHeadClass = 273 };
+
+struct SbMine {
+    daBgSnmBdy_c *b; int last_state, last_sub, last_flags; uint16_t seq; unsigned last_send; bool sent_any;
+    int lock; bool snapped, cued, quaked, done, head_by_friend, offered;
+};
+SbMine g_sm = {nullptr, -1, -1, -1, 0, 0, false, -1, false, false, false, false, false, false};
+
+void sb_reset_visit() {
+    g_sm = SbMine();
+    g_sm.b = nullptr; g_sm.last_state = -1; g_sm.last_sub = -1; g_sm.last_flags = -1; g_sm.lock = -1;
+}
+
+daBgSnmHed_c *sb_head() { return (daBgSnmHed_c *)_ZN8dActor_c15FindWithActorIDEjPS_(kSnowHeadClass, nullptr); }
+
+int sb_sub(const daBgSnmBdy_c *b) { return b->mStateValue == 3 ? (b->mSubstate > 2 ? 2 : (int)b->mSubstate) : 0; }
+bool sb_moving(int state, int sub) { return state == 2 || state == 4 || (state == 3 && sub < 2); }
+
+int sb_flags(const daBgSnmBdy_c *b) {
+    const daBgSnmHed_c *h = sb_head();
+    const bool star = h && h->mStateValue == 3 && h->mSubstate >= 3;      // head State3 substate 3: the star was spawned
+    return (b->mHorzSpeed != 0 ? 1 : 0) | (star ? 2 : 0) | (sb_sub(b) << 2);
+}
+
+void sb_send(daBgSnmBdy_c *b, bool changed) {
+    const unsigned t = now_ms();
+    const int s = b->mStateValue, sub = sb_sub(b);
+    if (!changed && !sb_moving(s, sub) && g_sm.sent_any && t - g_sm.last_send < kBeatMs) return;
+    CoopRaceWire w = {};
+    w.key.level = (uint16_t)g_lv; w.key.act = (uint8_t)g_ac; w.key.reserved = 0;
+    w.ver = 3; w.state = (uint8_t)s; w.anim = 0;
+    w.flags = (uint8_t)sb_flags(b);
+    w.x = b->mPosX; w.y = b->mPosY; w.z = b->mPosZ;
+    w.ang = b->mAngleY;
+    w.seq = ++g_sm.seq;
+    const int sc = b->mScaleX;
+    w.frame = sc < 0x800 ? 0x800 : sc > 0x1800 ? 0x1800 : sc;
+    w.speed = (int32_t)(unsigned short)b->mAngleX;
+    if (coop_send_world(kWorldRacePose, &w, (int)sizeof w)) { ++g_st.sb_sent; g_sm.sent_any = true; g_sm.last_send = t; }
+}
+
+void sb_let_go(daBgSnmBdy_c *b, const char *why) {
+    if (b) port_snmbdy_reset(b);
+    ++g_st.sb_letgo;
+    if (g_log) std::fprintf(stderr, "[coopsb] lf=%u let go of seat %d's snowman roll (%s): my snowman body back home, waiting\n",
+                            g_lf, g_sm.lock, why);
+    g_sm.lock = -1; g_sm.snapped = false; g_sm.cued = false; g_sm.quaked = false;
+}
+
+// Behavior's question: 0 run the states (not following), 1 posed from a friend's roll, 2 posed and rolling.
+int sb_follow(void *bv) {
+    read_env();
+    if (g_off || g_sm.lock < 0 || !bv || bv != g_sm.b) return 0;
+    daBgSnmBdy_c *b = (daBgSnmBdy_c *)bv;
+    int lv = -1, ac = 0;
+    if (!coop_world_active() || !coop_group_key(&lv, &ac)) { g_sm.done = false; sb_let_go(b, "the coop room ended"); return 1; }
+    const Rx &r = g_srx[g_sm.lock];
+    const unsigned t = now_ms();
+    const bool fr = fresh(r, t);
+    // before the landing a silent roller is let go; after it the last record (the landed body) holds for the visit
+    if (!fr && !g_sm.done) { sb_let_go(b, "his records stopped"); return 1; }
+    double tx = r.w.x, ty = r.w.y, tz = r.w.z;
+    if (fr && r.have_prev && r.t_ms != r.pt_ms && r.t_ms - r.pt_ms < 500u) {
+        const double dt = (double)(r.t_ms - r.pt_ms);
+        double age = (double)(t - r.t_ms); if (age > 250.0) age = 250.0;
+        tx += (r.w.x - r.px) / dt * age; ty += (r.w.y - r.py) / dt * age; tz += (r.w.z - r.pz) / dt * age;
+    }
+    const double dx = tx - b->mPosX, dy = ty - b->mPosY, dz = tz - b->mPosZ;
+    const double d = std::sqrt(dx * dx + dy * dy + dz * dz) / 4096.0;
+    if (!g_sm.snapped || d > 800.0) {
+        b->mPosX = (int)tx; b->mPosY = (int)ty; b->mPosZ = (int)tz;
+        g_sm.snapped = true;
+    } else {
+        b->mPosX += (int)(dx * 0.35); b->mPosY += (int)(dy * 0.35); b->mPosZ += (int)(dz * 0.35);
+    }
+    const int sub = (r.w.flags >> 2) & 3;
+    const bool rolling = (r.w.flags & 1) != 0;
+    b->mAngleY = b->mPrevAngleY = r.w.ang;
+    b->mAngleX = b->mPrevAngleX = (short)(unsigned short)r.w.speed;
+    b->mHorzSpeed = rolling ? 0x28000 : 0;      // HurtPlayer hurts on touch only while this is not 0, as on his screen
+    b->mVertSpeed = 0;
+    if (b->mScaleX != r.w.frame) port_snmbdy_scale(b, r.w.frame);
+    b->mStateValue = r.w.state; b->mSubstate = (unsigned char)(r.w.state == 3 ? sub : 0);
+    b->mFlags &= ~1u;                            // as every state after 0 has it
+    if (r.w.state == 3 && sub >= 1 && !g_sm.cued) {
+        g_sm.cued = true; g_sm.head_by_friend = true;
+        port_snmbdy_cue_head(b);
+        if (g_log) std::fprintf(stderr, "[coopsb] lf=%u seat %d's snowman body reached its head: my head is cued to jump onto my body\n",
+                                g_lf, g_sm.lock);
+    }
+    if (r.w.state == 3 && sub >= 2 && !g_sm.quaked) {
+        g_sm.quaked = true; g_sm.done = true;
+        port_snmbdy_quake(b);
+        if (g_log) std::fprintf(stderr, "[coopsb] lf=%u seat %d's snowman body landed at (%d,%d,%d): mine landed there too, and stays for the visit\n",
+                                g_lf, g_sm.lock, b->mPosX >> 12, b->mPosY >> 12, b->mPosZ >> 12);
+    }
+    ++g_st.sb_followed;
+    return rolling ? 2 : 1;
+}
+struct SbFollowHook { SbFollowHook() { port_coop_snmbdy_follow = sb_follow; } } g_sb_follow_hook;
+
+// The head's question (State3, before its star talk): 1 keeps my head quiet, the roller's head gives the star.
+int sb_head_quiet(void *) {
+    read_env();
+    if (g_off || !g_sm.head_by_friend || !coop_world_active()) return 0;
+    if (g_sm.lock >= 0) {
+        const Rx &r = g_srx[g_sm.lock];
+        if (!fresh(r, now_ms()) && !(r.w.flags & 2)) {
+            if (!g_sm.offered && g_log)
+                std::fprintf(stderr, "[coopsb] lf=%u seat %d's records stopped before his head gave the star: my head offers it\n", g_lf, g_sm.lock);
+            g_sm.offered = true;
+            return 0;
+        }
+    }
+    if ((g_st.sb_quiet++ % 600) == 0 && g_log)
+        std::fprintf(stderr, "[coopsb] lf=%u my head stays quiet: seat %d's console gives the snowman's star (%u frames so far)\n", g_lf,
+                     g_sm.lock, g_st.sb_quiet);
+    return 1;
+}
+struct SbHeadHook { SbHeadHook() { port_coop_snmhed_quiet = sb_head_quiet; } } g_sb_head_hook;
+
+#ifndef PORT_ROM_CLEAN
+// SM64DS_COOP_SNOWBALL_ESCORT=1 (proof only, not in the kit build): a headless row cannot run after the snowball, so
+// while my own body rolls with me as its talker my player is carried: over the body until it passes the reach point,
+// then beside the landing point (inside the 768 units State2 asks for) until it lands, then once beside the head for
+// its star talk.
+void sb_escort(daBgSnmBdy_c *b, char *me) {
+    static int on = -1, phase = 0;
+    if (on < 0) { const char *e = std::getenv("SM64DS_COOP_SNOWBALL_ESCORT"); on = e && e[0] == '1'; }
+    if (!on || !me || (const char *)b->mTalkPlayer != me || g_sm.lock >= 0) return;
+    const int s = b->mStateValue, sub = sb_sub(b);
+    int reach[3], land[3];
+    port_snmbdy_points(reach, land);
+    int x, y, z;
+    if (s == 2 && !b->mPlayerReachedPath) {
+        x = b->mPosX; y = b->mPosY + (b->mRadius << 1) + (150 << 12); z = b->mPosZ;
+        if (phase != 1) { phase = 1; std::fprintf(stderr, "[coopsb] KNOB escort lf=%u: carried over my rolling body\n", g_lf); }
+    } else if (s == 2 || (s == 3 && sub < 2)) {
+        x = land[0] + (500 << 12); y = land[1] + (300 << 12); z = land[2];
+        if (phase != 2) { phase = 2; std::fprintf(stderr, "[coopsb] KNOB escort lf=%u: carried beside the landing point\n", g_lf); }
+    } else if (s == 3 && phase == 2) {
+        const daBgSnmHed_c *h = sb_head();
+        if (!h) return;
+        x = h->mPosX + (200 << 12); y = h->mPosY + (100 << 12); z = h->mPosZ;
+        phase = 3;
+        std::fprintf(stderr, "[coopsb] KNOB escort lf=%u: set down beside the head at (%d,%d,%d)\n", g_lf, x >> 12, y >> 12, z >> 12);
+    } else {
+        return;
+    }
+    *(int *)(me + 0x5c) = x; *(int *)(me + 0x60) = y; *(int *)(me + 0x64) = z;
+    *(int *)(me + 0x98) = 0; *(int *)(me + 0xa4) = 0; *(int *)(me + 0xa8) = 0; *(int *)(me + 0xac) = 0;
+}
+#endif
+
+void sb_trace(daBgSnmBdy_c *b) {
+    if (g_trace <= 0 || (g_lf % (unsigned)g_trace) != 0) return;
+    char line[512]; int n = 0;
+    const char *me = local_body();
+    n += std::snprintf(line + n, sizeof line - n, "[coopsb] trace lf=%u", g_lf);
+    if (me) n += std::snprintf(line + n, sizeof line - n, " me (%d,%d,%d)", *(const int *)(me + 0x5c) >> 12,
+                               *(const int *)(me + 0x60) >> 12, *(const int *)(me + 0x64) >> 12);
+    n += std::snprintf(line + n, sizeof line - n, " | body state %d sub %d at (%d,%d,%d) scale %04x roll %04x node %u talker %s",
+                       b->mStateValue, sb_sub(b), b->mPosX >> 12, b->mPosY >> 12, b->mPosZ >> 12, (unsigned)b->mScaleX,
+                       (unsigned)(unsigned short)b->mAngleX, (unsigned)b->mPathNode,
+                       !b->mTalkPlayer ? "none" : (const char *)b->mTalkPlayer == me ? "me" : "friend");
+    if (const daBgSnmHed_c *h = sb_head())
+        n += std::snprintf(line + n, sizeof line - n, " | head state %d sub %d", h->mStateValue, (int)h->mSubstate);
+    if (g_sm.lock >= 0) {
+        const Rx &r = g_srx[g_sm.lock];
+        n += std::snprintf(line + n, sizeof line - n, " | FOLLOW seat %d: his state %d sub %d at (%d,%d,%d) %u ms old%s", g_sm.lock,
+                           (int)r.w.state, (r.w.flags >> 2) & 3, r.w.x >> 12, r.w.y >> 12, r.w.z >> 12, now_ms() - r.t_ms,
+                           g_sm.done ? " (landed: kept)" : "");
+    }
+    std::fprintf(stderr, "%s\n", line);
+}
+
+void sb_frame_tick() {
+    daBgSnmBdy_c *b = (daBgSnmBdy_c *)_ZN8dActor_c15FindWithActorIDEjPS_(kSnowBodyClass, nullptr);
+    if (b != g_sm.b) {
+        if (g_sm.lock >= 0 && g_log) std::fprintf(stderr, "[coopsb] lf=%u my snowman body changed: following stopped\n", g_lf);
+        sb_reset_visit();
+        g_sm.b = b;
+    }
+    if (!b) return;
+    char *me = local_body();
+#ifndef PORT_ROM_CLEAN
+    sb_escort(b, me);
+#endif
+    const int s = b->mStateValue, sub = sb_sub(b), fl = sb_flags(b);
+    const bool changed = s != g_sm.last_state || sub != g_sm.last_sub || fl != g_sm.last_flags;
+    if (changed && g_log && g_sm.last_state >= 0 && g_sm.lock < 0)
+        std::fprintf(stderr, "[coopsb] lf=%u my snowman body state %d sub %d -> state %d sub %d flags %x (talker %s) at (%d,%d,%d)\n", g_lf,
+                     g_sm.last_state, g_sm.last_sub, s, sub, (unsigned)fl,
+                     !b->mTalkPlayer ? "none" : (const char *)b->mTalkPlayer == me ? "me" : "friend", b->mPosX >> 12, b->mPosY >> 12,
+                     b->mPosZ >> 12);
+    g_sm.last_state = s; g_sm.last_sub = sub; g_sm.last_flags = fl;
+    if (g_off) { sb_trace(b); return; }
+    const unsigned t = now_ms();
+    if (s >= 2 && g_sm.lock < 0 && me && (const char *)b->mTalkPlayer == me) {
+        sb_send(b, changed);
+        sb_trace(b);
+        return;
+    }
+    if (g_sm.lock >= 0) {
+        if (!g_sm.done && !fresh(g_srx[g_sm.lock], t)) sb_let_go(b, "his records stopped");
+    } else if (s == 0) {
+        for (int seat = 0; seat < kSeats; ++seat) {
+            if (seat == comms_hub_my_seat() || !fresh(g_srx[seat], t)) continue;
+            g_sm.lock = seat; g_sm.snapped = false;
+            ++g_st.sb_locks;
+            if (g_log) std::fprintf(stderr, "[coopsb] lf=%u seat %d rolls the snowman's body: my body now shows that roll (his state %d at (%d,%d,%d))\n",
+                                    g_lf, seat, (int)g_srx[seat].w.state, g_srx[seat].w.x >> 12, g_srx[seat].w.y >> 12,
+                                    g_srx[seat].w.z >> 12);
+            break;
+        }
+    }
+    sb_trace(b);
+}
+
 }  // namespace
 
 // Once a frame in an established coop group (coop_world.cpp's tick, next to the race proof knobs).
@@ -596,6 +863,7 @@ void coop_race_frame(unsigned) {
     shots();
     arm_knob();
     pg_frame_tick();                  // NPCFIX1: the racing penguin, same shape
+    sb_frame_tick();                  // SNOWBALL1: the snowman's rolling body, same shape
     daRNk_c *k = find_koopa();
     if (k != g_m.k) {                 // a new visit's Koopa (or he went away)
         if (g_m.lock >= 0 && g_log) std::fprintf(stderr, "[coopktq] lf=%u my Koopa changed: following stopped\n", g_lf);
