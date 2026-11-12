@@ -1056,8 +1056,8 @@
 0x02056e18	OS_SetIrqMask	function
 0x02056ee4	OS_GetIrqFunction	function
 0x02056f70	OS_SetIrqFunction	function
-0x020585cc	ARMSaveContext	function
-0x02058618	ARMRestoreContext	function
+0x020585cc	OS_SaveContext	function
+0x02058618	OS_LoadContext	function
 0x02058bb0	DC_StoreAll	function
 0x02058bdc	DC_FlushAll	function
 0x02058c08	DC_InvalidateRange	function
@@ -1093,8 +1093,8 @@
 0x0205a754	DecompressLZ16	function
 0x0205b864	PXIi_HandlerRecvFifoNotEmpty	function
 0x0205b988	IPCSend	function
-0x0205e91c	ARMMathLoadState	function
-0x0205e988	ARMMathSaveState	function
+0x0205e91c	CPi_RestoreContext	function
+0x0205e988	CP_SaveContext	function
 0x020610ac	_ZN3IRQ21GameCardIREQMCHandlerEv	function
 0x0206cd44	_ZN4cstd8__assertEPKciS1_i	function
 0x0206d9dc	_ZN3IRQ11SetFIQStateEb	data

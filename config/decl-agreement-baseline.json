@@ -15,16 +15,6 @@
         "return:unsigned char []"
       ]
     },
-    "ARMMathLoadState": {
-      "src/ui/menus/unit020b6eb4.cpp": [
-        "param:#1 ARMMathState *"
-      ]
-    },
-    "ARMMathSaveState": {
-      "src/ARMSaveContext.c": [
-        "arity:0"
-      ]
-    },
     "VEC_Add": {
       "src/engine/view/d_camera.cpp": [
         "param:#2 const void *",
@@ -7278,7 +7268,6 @@
       "include/decl_common.h": [
         "return:unsigned char"
       ]
-
     },
     "gReturnSublevel": {
       "src/_ZN7daPly_c13InitResourcesEv.cpp": [
@@ -9535,7 +9524,6 @@
       "src/game/player/d_a_ply_methods.cpp": [
         "return:unsigned char"
       ]
-
     },
     "gShowRaceTimer": {
       "src/ui/hud/d_meter.cpp": [
@@ -9544,7 +9532,6 @@
       "src/game/player/d_a_ply_methods.cpp": [
         "return:unsigned char []"
       ]
-
     },
     "data_ov003_020b1704": {
       "src/game/stages/d_s_star_sel_methods.cpp": [

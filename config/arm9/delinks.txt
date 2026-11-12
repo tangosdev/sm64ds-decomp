@@ -2345,11 +2345,11 @@ src/OS_InitContext.c:
     complete
     .text start:0x02058568 end:0x020585cc
 
-src/ARMSaveContext.c:
+src/OS_SaveContext.c:
     complete
     .text start:0x020585cc end:0x02058618
 
-src/ARMRestoreContext.c:
+src/OS_LoadContext.c:
     complete
     .text start:0x02058618 end:0x0205865c
 
@@ -2600,11 +2600,11 @@ src/DGT_SetOverlayTableMode.c:
     complete
     .text start:0x0205e904 end:0x0205e91c
 
-src/ARMMathLoadState.c:
+src/CPi_RestoreContext.c:
     complete
     .text start:0x0205e91c end:0x0205e988
 
-src/ARMMathSaveState.c:
+src/CP_SaveContext.c:
     complete
     .text start:0x0205e988 end:0x0205e9fc
 

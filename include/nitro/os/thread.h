@@ -13,6 +13,7 @@
  */
 
 #include "types.h"
+#include "nitro/os/context.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -20,15 +21,10 @@ extern "C" {
 
 #define OS_THREAD_MAX_NUM 16
 
-typedef struct OSContext {
-    u32 cpsr;            /* 0x00 */
-    u32 r[13];           /* 0x04 */
-    u32 sp;              /* 0x38 */
-    u32 lr;              /* 0x3c */
-    u32 pc_plus4;        /* 0x40 */
-    u32 sp_svc;          /* 0x44 */
-    u8 cp_context[0x1c]; /* 0x48 -- divider / sqrt state */
-} OSContext;
+/* OSThread::state */
+#define OS_THREAD_STATE_WAITING 0
+#define OS_THREAD_STATE_READY 1
+#define OS_THREAD_STATE_TERMINATED 2
 
 struct OSMutex; /* os_mutex.c */
 
@@ -78,6 +74,21 @@ typedef struct OSThreadInfo {
     OSSwitchThreadCallback switchCallback; /* 0x10 */
     OSThread *entry[OS_THREAD_MAX_NUM];    /* 0x14 */
 } OSThreadInfo;
+
+/* The asm offsets of the SDK's thread.h, for the IRQ thread switch. */
+#define OS_THREADINFO_OFFSET_ISNEEDRESCHEDULING 0
+#define OS_THREADINFO_OFFSET_MAX_ENTRY 2
+#define OS_THREADINFO_OFFSET_IRQDEPTH 4
+#define OS_THREADINFO_OFFSET_PADDING 6
+#define OS_THREADINFO_OFFSET_CURRENT 8
+#define OS_THREADINFO_OFFSET_LIST 12
+#define OS_THREADINFO_OFFSET_SWITCHCALLBACK 16
+#define OS_THREADINFO_OFFSET_ENTRY 20
+
+#define OS_THREAD_OFFSET_CONTEXT 0
+#define OS_THREAD_OFFSET_STATE (sizeof(OSContext))
+#define OS_THREAD_OFFSET_NEXT (sizeof(OSContext) + sizeof(s32))
+#define OS_THREAD_OFFSET_ID (OS_THREAD_OFFSET_NEXT + sizeof(OSThread *))
 
 extern OSThreadInfo data_020a6134; /* OSi_ThreadInfo */
 extern OSThread data_020a621c;     /* OSi_LauncherThread: the thread NitroMain() runs on */
