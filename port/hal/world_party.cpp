@@ -279,6 +279,13 @@ int test_target(const Info info[kHubMaxSeats], int my_seat, int best) {
     return best;
 }
 
+// CLOCK1: the invite cooldown is still running. 0 is "no cooldown": a bare
+// (int)(now - 0) < 0 holds once the clock passes 2^31 ms (24.9 days of PC
+// uptime), and then every press said "Wait a moment" and Invite was hidden.
+bool cooling(unsigned now) {
+    return g.cooldown_until != 0 && (int)(now - g.cooldown_until) < 0;
+}
+
 int party_size() {
     int n = g.my_id ? 1 : 0;
     for (int s = 0; s < kHubMaxSeats; ++s) n += g.member[s] ? 1 : 0;
@@ -543,7 +550,7 @@ unsigned world_party_input(unsigned pad_buttons, bool key_invite, bool key_leave
             g.in_seat = -1;
         } else if (g.inv_to >= 0) {
             say("Invite already sent", nullptr, now);
-        } else if ((int)(now - g.cooldown_until) < 0) {
+        } else if (cooling(now)) {
             say("Wait a moment", nullptr, now);
         } else {
             int best = nearest_target(info, my_seat);
@@ -701,7 +708,7 @@ void world_party_hint(WparHint *out) {
         std::strcpy(out->up, "Cancel");
     } else if (incoming) {
         if (g.my_id == 0 || party_size() < kWparMaxMembers) std::strcpy(out->up, "Accept");
-    } else if (g.inv_to < 0 && (int)(now - g.cooldown_until) >= 0) {
+    } else if (g.inv_to < 0 && !cooling(now)) {
         Info info[kHubMaxSeats];
         for (int s = 0; s < kHubMaxSeats; ++s) {
             if (s == my_seat) continue;
