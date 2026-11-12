@@ -1923,7 +1923,7 @@ void daKpa_c::ActThrown() {
         v.x = xx;
         v.y = yy;
         v.z = zz;
-        rg.SetObjAndPos(v, (dActor_c*)this);
+        rg.SetObjAndPos(v, this);
         if (rg.DetectClsn() != 0) {
             int hy = rg.clsnY;
             if (hy >= this->mHomePosY - 0x64000)
@@ -2030,7 +2030,7 @@ void daKpa_c::ActJumpOntoStage() {
             pos.y = py;
             pos.z = pz;
         }
-        rc.SetObjAndPos(pos, (dActor_c *)this);
+        rc.SetObjAndPos(pos, this);
         if (rc.DetectClsn()) {
             ground = rc.clsnY;
             /* GetClsnID reads the hit record, dBgCh_Gnd's dBgPi base at +0x10. */
