@@ -266,11 +266,24 @@ bool ap_hatch(char *a, int, int) {
 }
 // The big "?" switch (HATENA_SWITCH 26): the shared fact is bit 31 of the save record word [1]
 // (the ? blocks read it); the press itself is +0x71a with the 8-frame countdown at +0x718.
+extern "C" int _ZN4dBgW9IsEnabledEv(void *self);
+extern "C" int _ZN4dBgW7DisableEv(void *self);
+// NPCFIX1: the replay is the press's swap and nothing else. The old replay (+0x71a pressed, +0x718 = 0) ran the whole press
+// on the friend's console, and the press opens a talk with the CLOSEST player (mTalking +0x71b, then StartTalk on the local
+// body): every friend in the level got the "?" message and the save prompt, or, when the save record had already brought
+// bit 31, nothing at all and his switch stayed up. Now: the save bit, the static collider (+0x324) off, the moving one
+// (+0x4ec) made active (+0x320), as Behavior does on a press; its own UpdateClsnState enables it and the press animation
+// runs on to the end with its sound. mTalking is never set, so no talk, no message, no save prompt. A switch already down
+// (moving collider active) or in my own press (mTalking) is left alone.
 int r_hatena(const char *) { return (int)((*(const unsigned *)(data_0209caa0 + 4)) >> 31); }
 bool ap_hatena(char *a, int, int) {
-    if ((*(const unsigned *)(data_0209caa0 + 4)) & 0x80000000u) return false;
-    *(unsigned char *)(a + 0x718) = 0;
-    *(unsigned char *)(a + 0x71a) = 1;
+    char *const st = a + 0x324, *const mv = a + 0x4ec;
+    *(unsigned *)(data_0209caa0 + 4) |= 0x80000000u;
+    if (*(char **)(a + 0x320) == mv || *(const unsigned char *)(a + 0x71b) != 0) return false;
+    if (_ZN4dBgW9IsEnabledEv(st)) _ZN4dBgW7DisableEv(st);
+    *(char **)(a + 0x320) = mv;
+    *(unsigned char *)(a + 0x71a) = 0;
+    *(unsigned char *)(a + 0x718) = 8;
     return true;
 }
 int r_water(const char *a) { return rd_i32(a, 0x334); }
