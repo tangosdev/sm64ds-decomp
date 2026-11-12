@@ -2004,8 +2004,9 @@ int gw_look_probe() {
 // GHOSTSMOOTH1: SM64DS_GHOST_ERR_LOG=1. The drawn-vs-truth rows' input, the
 // hub twin of PUPPET1's [pup-truth] / [pup]: one line per game tick for my own
 // body as it is when the frame is built ([gwtruth]) and one per shown ghost per
-// follower pass ([gwdraw]), both on the hub's own clock (comms_hub_now_ms, the
-// clock every console on one machine shares). Reads only; inert unset.
+// follower pass ([gwdraw]), both on the hub's own clock (comms_hub_now_ms). Since
+// CLOCK1 that clock counts from each console's own start, so lines from two
+// consoles need an offset (their start gap) to line up by t=. Reads only; inert unset.
 bool gw_err_log() {
     static int p = -1;
     if (p < 0) p = std::getenv("SM64DS_GHOST_ERR_LOG") ? 1 : 0;
