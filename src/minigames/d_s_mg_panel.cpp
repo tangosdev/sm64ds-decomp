@@ -1528,11 +1528,9 @@ extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 extern void FreeGfxSlotsById(int arg);
 extern void SetSubBg0Offset(int, int);
-extern void GXS_LoadBG3Scr(const void *, u32, u32);
+/* local extern: nitro/gx/gx_load.h leaves GX_LoadBG3Scr out until
+ * decl_common.h's non-const spelling of it goes. */
 extern void GX_LoadBG3Scr(void *, u32, u32);
-extern void GXS_LoadBG2Scr(const void *, u32, u32);
-extern void GX_LoadBG2Scr(const void *, u32, u32);
-extern void GXS_LoadBG0Scr(const void *, int, int);
 extern void Mg_SubmitScore(int);
 extern void Mg_SetTopScreenYOffset(int);
 extern void Mg_ShowBanner(int, int, int, int, int, s16);

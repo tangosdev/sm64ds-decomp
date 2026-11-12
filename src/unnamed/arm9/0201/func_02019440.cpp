@@ -15,7 +15,6 @@ extern dFdBrightness_c *data_0209d4ac; /* the brightness fader (d_scene.cpp) */
 extern int data_0209d4b0;
 
 extern void func_0203bd24(void);
-extern int GX_VBlankIntr(int enable);
 extern void func_0200f4f4(void);
 extern void func_0200f46c(void);
 
