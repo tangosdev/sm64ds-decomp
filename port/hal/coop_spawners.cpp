@@ -250,6 +250,17 @@ void hook_spawned(void *spawner, void *rock, const void *rot) {
 void hook_broken(void *rock) {
     if (!g_on || !g_active) return;
     Rk *r = rk_by_actor(rock);
+    const short pslot = rd16(rock, 0xce);
+    if (!r && pslot >= 0) {
+        // A PLACED rock (kind 4, the still rock that holds a star, slot 138 in act 1) broken here: the room breaks its copy too and
+        // lets the same star out there (origin 0xff = a placed rock, found by its slot).
+        BreakW w = {}; w.h = head(kOpBreak); w.slot = (uint16_t)pslot; w.ctr = 0; w.origin = 0xff;
+        ++g_st.breaks_sent;
+        coop_send_world(kWorldSpawners, &w, sizeof w);
+        if (g_log) std::fprintf(stderr, "[cspawn] placed rock slot %d broken here: told the room lf=%u wall=%lld\n", (int)pslot, g_lf, wall_ms());
+        if (g_take_after >= 0 && !g_take_armed) { g_take_armed = true; g_take_lf = g_lf; }
+        return;
+    }
     if (!r || !alive(r->uid, r->a)) return;
     BreakW w = {}; w.h = head(kOpBreak); w.slot = (uint16_t)r->slot; w.ctr = r->ctr; w.origin = r->origin;
     ++g_st.breaks_sent;
@@ -316,6 +327,21 @@ void apply_queue() {
                                         (int)s.slot, q.seat, (unsigned)w.ctr, w.star ? " (THE STAR ROCK)" : "", uid_of(b), (int)w.rot[1], (int)w.count, g_lf, wall_ms());
             } else {
                 const BreakW &w = q.b;
+                if (w.origin == 0xff) {                     // a placed rock (see hook_broken)
+                    char *pr = nullptr;
+                    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a && !pr; a = (char *)_ZN8dActor_c4NextEPKS_(a))
+                        if (cls_of(a) == kRockCls && rd16(a, 0xce) == (short)w.slot && !((const unsigned char *)a)[0x0f]) pr = a;
+                    int type = -1;
+                    if (pr) port_grock_info(pr, &type, nullptr, nullptr, nullptr);
+                    if (!pr || type != 4) { if (g_log) std::fprintf(stderr, "[cspawn] seat %d broke placed rock slot %d: none here\n", q.seat, (int)w.slot); continue; }
+                    if (g_take_after >= 0 && !g_take_armed) { g_take_armed = true; g_take_lf = g_lf; }
+                    void *star = port_grock_remote_break(pr);
+                    if (star) coop_camshield_mark(star, "a friend broke the rock that holds a star");
+                    ++g_st.breaks_applied;
+                    if (g_log) std::fprintf(stderr, "[cspawn] seat %d broke placed rock slot %d: mine breaks too%s lf=%u wall=%lld\n", q.seat, (int)w.slot,
+                                            star ? " and lets out its star" : "", g_lf, wall_ms());
+                    continue;
+                }
                 gone_add((short)w.slot, w.origin, w.ctr);
                 Rk *r = rk_find((short)w.slot, w.origin, w.ctr);
                 if (!r) continue;
@@ -359,9 +385,9 @@ void break_knob() {
     if (g_break_after < 0) return;
     static unsigned seen_lf[256]; static unsigned seen_uid[256]; static int nseen = 0;
     for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
-        if (cls_of(a) != kRockCls || rd16(a, 0xce) >= 0) continue;
-        int type = 0; port_grock_info(a, &type, nullptr, nullptr, nullptr);
-        if (type != 3) continue;
+        if (cls_of(a) != kRockCls || ((const unsigned char *)a)[0x0f]) continue;
+        int type = 0, sidx = 0xff; port_grock_info(a, &type, nullptr, nullptr, &sidx);
+        if (!(type == 3 && rd16(a, 0xce) < 0) && !(type == 4 && sidx != 0xff)) continue;   // the star rock, or the still rock that holds a star
         const unsigned uid = uid_of(a);
         int k = 0;
         while (k < nseen && seen_uid[k] != uid) ++k;
