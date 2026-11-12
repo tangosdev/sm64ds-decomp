@@ -441,6 +441,14 @@ uint16_t g_dead_cls[kSlots];    // slot -> class of a boss the group knows is de
 uint8_t  g_dead_tx[kSlots];     // sends still owed for it
 unsigned g_dead_t[kSlots];
 unsigned g_claim_until[kSeats];     // wall ms until which a seat's claim holds
+// bossfix2 (H5): a claim of 0 is "none". The test was (int)(until - now) > 0 alone, which for until = 0 is true once the hub clock
+// (milliseconds of PC uptime) passes 2^31, about 24.9 days: every seat then looked claimed and the lowest seat was every boss's
+// authority. A stamp is never 0 ((now + 3000) | 1), and 0 is never live. SM64DS_COOP_BOSSFIX2=0 brings the old test back (control).
+bool g_bf2 = true;
+unsigned g_clock_add = 0;   // SM64DS_COOP_BOSS_CLOCK_ADD=ms (dev builds only): this file's clock pushed forward, to run a row "at 30 days uptime"
+unsigned hub_now() { return comms_hub_now_ms() + g_clock_add; }
+bool claim_live(unsigned until, unsigned now) { return (until != 0 || !g_bf2) && (int)(until - now) > 0; }
+unsigned claim_stamp(unsigned now) { return g_bf2 ? ((now + 3000u) | 1u) : now + 3000u; }
 // coopbully1: A BULLY BELONGS TO THE PLAYER WHO KNOCKED IT. A bump exists only on the hitter's console (a friend's body is parked away
 // between draws, coop_target.h), so the console whose own copy entered the knocked-back state by itself owns that bully, pose and state,
 // while the knock or the lava death lasts and kBullyClaimMs after. Per slot (several bullies at once), unlike the per-seat claim above.
@@ -632,6 +640,10 @@ void read_env() {
             const char *c = std::strchr(j, ','); if (!c) break; j = c + 1;
         }
     }
+    g_bf2 = flag("SM64DS_COOP_BOSSFIX2", true);
+#ifndef PORT_ROM_CLEAN
+    if (const char *ca = std::getenv("SM64DS_COOP_BOSS_CLOCK_ADD")) g_clock_add = (unsigned)std::strtoul(ca, nullptr, 0);
+#endif
     g_god = flag("SM64DS_COOP_BOSS_GOD", false);
     g_bomb = flag("SM64DS_COOP_BOSS_BOMB", false);
     g_face = flag("SM64DS_COOP_BOSS_FACE", false);
@@ -668,7 +680,7 @@ void read_env() {
             ++g_nforge; p += used; while (*p == ',' || *p == ';' || *p == ' ') ++p;
         }
     }
-    std::fprintf(stderr, "[cbs] boss sync %s%s\n", g_on ? "on" : "OFF (control)", g_log ? " log" : "");
+    std::fprintf(stderr, "[cbs] boss sync %s%s bossfix2=%d clock_add=%u\n", g_on ? "on" : "OFF (control)", g_log ? " log" : "", (int)g_bf2, g_clock_add);
 }
 
 bool is_player_ptr(const void *a) {
@@ -738,7 +750,7 @@ int auth_for(int slot, unsigned wnow, unsigned cls = 0) {
         }
     }
     for (int s = 0; s < kSeats; ++s)
-        if ((int)(g_claim_until[s] - wnow) > 0 && (s == g_my || ((coop_group_member_mask() >> s) & 1u))) return s;
+        if (claim_live(g_claim_until[s], wnow) && (s == g_my || ((coop_group_member_mask() >> s) & 1u))) return s;
     int s = coop_target_seat_of_slot(slot);
     if (s >= 0) return s;
     const int o = coop_group_owner();
@@ -977,7 +989,7 @@ void log_sample(int slot, const Boss &b, int auth) {
     }
     if (b.d->cls == 189) n += std::snprintf(line + n, sizeof line - n, " yaw=%04x", (unsigned)(uint16_t)rd16(b.a, 0x8e));   // kbo2
     n += std::snprintf(line + n, sizeof line - n, " tgt=%d", coop_target_seat_of_slot(slot));
-    if (is_bully(b.d->cls)) n += std::snprintf(line + n, sizeof line - n, " claim=%d mover=%d", bully_claim_seat(slot, comms_hub_now_ms()), coop_move_owner(slot));
+    if (is_bully(b.d->cls)) n += std::snprintf(line + n, sizeof line - n, " claim=%d mover=%d", bully_claim_seat(slot, hub_now()), coop_move_owner(slot));
     std::fprintf(stderr, "%s\n", line);
 }
 
@@ -1413,7 +1425,7 @@ void apply_rx(int slot, Boss &b, unsigned now, bool mine) {
 }
 
 void process(unsigned now) {
-    const unsigned wnow = comms_hub_now_ms();
+    const unsigned wnow = hub_now();
     unsigned char recs[kPayloadMax]; int nrec = 0, bytes = 0; bool urgent = false;
     for (int slot = 0; slot < kSlots; ++slot) {
         Boss &b = g_boss[slot];
@@ -1431,11 +1443,11 @@ void process(unsigned now) {
             char *holder = nullptr; std::memcpy(&holder, b.a + 0x494, sizeof holder);
             const int me = (int)data_0209f250;
             if ((st == 7 || st == 8) && holder && me >= 0 && me < 16 && holder == (char *)data_0209f394[me]) {
-                if ((int)(g_claim_until[g_my] - wnow) <= 0) {
+                if (!claim_live(g_claim_until[g_my], wnow)) {
                     ++g_st.claims;
                     if (g_log) std::fprintf(stderr, "[cbs] claim slot=%d st=%u holder=me w=%lld\n", slot, st, wall_ms());
                 }
-                g_claim_until[g_my] = wnow + 3000u;
+                g_claim_until[g_my] = claim_stamp(wnow);
             }
             if (g_kbo_fix && me >= 0 && me < 16 && data_0209f394[me] && hp_of(b) > 0) {
                 char *talker = nullptr; std::memcpy(&talker, b.a + 0x430, sizeof talker);
@@ -1444,19 +1456,19 @@ void process(unsigned now) {
                 // Never over a friend's live claim: a copy that started a second intro of its own (the talkend row: Luigi's copy
                 // talked while Mario's talk ran, before NPCTALK1's lock) must not take the King from the player already talking.
                 bool friend_claim = false;
-                for (int q = 0; q < kSeats; ++q) if (q != g_my && (int)(g_claim_until[q] - wnow) > 0) friend_claim = true;
+                for (int q = 0; q < kSeats; ++q) if (q != g_my && claim_live(g_claim_until[q], wnow)) friend_claim = true;
                 const bool talk = st == kKboTalk && talker == (char *)data_0209f394[me] && !friend_claim;
                 // kbo2: my player threw him (my claim is live): the claim lasts until he lands, the landing's health point is mine.
-                const bool thrown = st == kKboThrown && (int)(g_claim_until[g_my] - wnow) > 0;
+                const bool thrown = st == kKboThrown && claim_live(g_claim_until[g_my], wnow);
                 if (talk || thrown) {
-                    if ((int)(g_claim_until[g_my] - wnow) <= 0) {
+                    if (!claim_live(g_claim_until[g_my], wnow)) {
                         ++g_st.claims;
                         if (g_log) std::fprintf(stderr, "[cbs] claim slot=%d st=%u (%s) w=%lld\n", slot, st, talk ? "my player is in his talk" : "my player threw him", wall_ms());
                     }
-                    g_claim_until[g_my] = wnow + 3000u;
+                    g_claim_until[g_my] = claim_stamp(wnow);
                 }
             }
-            claiming = (int)(g_claim_until[g_my] - wnow) > 0;
+            claiming = claim_live(g_claim_until[g_my], wnow);
         }
         if (d.cls == 279) {      // Bowser swung by MY player's hands (his tail): the grabbing console is the authority while the grab lasts
             const int32_t sub = rd32(b.a, 0x410);
@@ -1468,13 +1480,13 @@ void process(unsigned now) {
                     b.kpa_quiet_t = 0;
                     if (g_log) std::fprintf(stderr, "[cbs] bowser quiet window ended: my player has him (sub=%d) w=%lld\n", (int)sub, wall_ms());
                 }
-                if ((int)(g_claim_until[g_my] - wnow) <= 0) {
+                if (!claim_live(g_claim_until[g_my], wnow)) {
                     ++g_st.claims;
                     if (g_log) std::fprintf(stderr, "[cbs] claim slot=%d sub=%d holder=me w=%lld\n", slot, (int)sub, wall_ms());
                 }
-                g_claim_until[g_my] = wnow + 3000u;
+                g_claim_until[g_my] = claim_stamp(wnow);
             }
-            claiming = (int)(g_claim_until[g_my] - wnow) > 0;
+            claiming = claim_live(g_claim_until[g_my], wnow);
         }
         bool bully_claim_new = false;
         if (g_bully_on && g_on && is_bully(d.cls) && g_my >= 0 && g_my < kSeats) {
@@ -1698,7 +1710,7 @@ void do_hit_knob(HitKnob &k) {
     }
     Boss &b = g_boss[k.slot];
     if (!b.a) { k.done = true; return; }
-    b.knob_ok_t = comms_hub_now_ms();
+    b.knob_ok_t = hub_now();
     if (hp_of(b) < k.hp0) {
         k.done = true;
         std::fprintf(stderr, "[cbs-knob] hit taken slot=%d hp %d->%d st=%u w=%lld\n", k.slot, k.hp0, hp_of(b), state_of(b), wall_ms());
@@ -1961,7 +1973,7 @@ bool star_is_mine(dActor_c *self) {
     const short slot = rd16((const char *)self, 0xce);
     if (slot < 0 || slot >= kSlots) return true;
     if (g_my < 0) g_my = comms_hub_my_seat();
-    const int auth = desc_of(cls) ? auth_for(slot, comms_hub_now_ms(), cls) : coop_target_seat_of_slot(slot);
+    const int auth = desc_of(cls) ? auth_for(slot, hub_now(), cls) : coop_target_seat_of_slot(slot);
     if (auth < 0) return true;
     return auth == g_my;
 }
@@ -2062,6 +2074,7 @@ void do_swing_knob() {
 
 void on_frame(unsigned now) {
     read_env();
+    now += g_clock_add;                       // bossfix2: the proof clock (0 unless SM64DS_COOP_BOSS_CLOCK_ADD is set in a dev build)
     if (!coop_world_active()) return;
     if (!g_regd) { g_regd = true; g_my = comms_hub_my_seat(); }
     install_star_patch();
@@ -2179,7 +2192,7 @@ int coop_boss_driver_seat(int slot) {
     if (!b.a || !b.d || b.d->cls != 189) return -1;
     const uint32_t st = state_of(b);
     if (st == 7u || st == kKboHeld) return -1;
-    return auth_for(slot, comms_hub_now_ms(), 189);
+    return auth_for(slot, hub_now(), 189);
 }
 // coopgoomboss2 hooks for coop_spawn.
 namespace {
@@ -2203,7 +2216,7 @@ bool coop_boss_minion_mine(const char *minion) {
     const short slot = rd16(boss, 0xce);
     if (slot < 0 || slot >= kSlots) return true;
     if (g_my < 0) g_my = comms_hub_my_seat();
-    return auth_for(slot, comms_hub_now_ms()) == g_my;
+    return auth_for(slot, hub_now()) == g_my;
 }
 
 bool coop_boss_minion_ready() {
@@ -2234,14 +2247,14 @@ bool coop_boss_reward_not_mine() {
         if (g_log) std::fprintf(stderr, "[cbs] reward decision: no (off=%d on=%d world=%d est=%d recent=%u)\n", (int)off, (int)g_on, (int)coop_world_active(), (int)coop_group_established(), g_recent_t);
         return false;
     }
-    const bool r = (int)(comms_hub_now_ms() - g_recent_t) < 4000 && !g_recent_mine;
-    if (g_log) std::fprintf(stderr, "[cbs] reward decision: not mine=%d (boss seen %u ms ago, mine=%d)\n", (int)r, (unsigned)(comms_hub_now_ms() - g_recent_t), (int)g_recent_mine);
+    const bool r = (int)(hub_now() - g_recent_t) < 4000 && !g_recent_mine;
+    if (g_log) std::fprintf(stderr, "[cbs] reward decision: not mine=%d (boss seen %u ms ago, mine=%d)\n", (int)r, (unsigned)(hub_now() - g_recent_t), (int)g_recent_mine);
     return r;
 }
 
 int coop_boss_bully_claim_seat(int slot) {
     if (!g_on || !coop_world_active()) return -1;
-    return bully_claim_seat(slot, comms_hub_now_ms());
+    return bully_claim_seat(slot, hub_now());
 }
 int coop_bully_virtual_slot(const void *actor) {
     return trip_slot_of(static_cast<const char *>(actor));
@@ -2277,7 +2290,7 @@ void coop_boss_on_world(int seat, int sub, const unsigned char *p, int len) {
     ++g_st.rx;
     if (!g_key.valid() || h.key.level != (uint16_t)g_key.level || h.key.act != (uint8_t)g_key.act) { ++g_st.drop_group; return; }
     if (!((coop_group_member_mask() >> seat) & 1u)) { ++g_st.drop_member; return; }
-    const unsigned now = comms_hub_now_ms();
+    const unsigned now = hub_now();
     int off = (int)sizeof h;
     for (int i = 0; i < (int)h.count; ++i) {
         BossRec r; std::memcpy(&r, p + off, sizeof r);
@@ -2348,8 +2361,8 @@ void coop_boss_on_world(int seat, int sub, const unsigned char *p, int len) {
             g_bclaim[r.slot][seat] = (now + kBullyClaimMs) | 1u; ++g_st.claims;
             if (auth_for(r.slot, now, d->cls) != seat) { ++g_st.drop_notauth; continue; }   // two claims at once: the lower seat's copy is the one
         } else if (r.rflags & 2) {               // a claim: that seat's copy is carried by its player
-            if (g_log && (int)(g_claim_until[seat] - now) <= 0) std::fprintf(stderr, "[cbs] claim-rx slot=%d from seat %d (that console's player holds the boss) w=%lld\n", (int)r.slot, seat, wall_ms());
-            g_claim_until[seat] = now + 3000u; ++g_st.claims;
+            if (g_log && !claim_live(g_claim_until[seat], now)) std::fprintf(stderr, "[cbs] claim-rx slot=%d from seat %d (that console's player holds the boss) w=%lld\n", (int)r.slot, seat, wall_ms());
+            g_claim_until[seat] = claim_stamp(now); ++g_st.claims;
         } else if (seat != auth) {
             // a late record from the authority before this one, within two seconds, still counts
             if (!(b.last_auth == seat && (unsigned)(now - b.auth_t) < 2000u)) {
