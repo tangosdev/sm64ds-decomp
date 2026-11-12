@@ -1,7 +1,7 @@
 //cpp
 #include "Memory.h"
+#include "nitro/mi/memory.h"
 extern "C" {
-extern void MI_CpuFill8(void *, unsigned char, unsigned int);
 /* the asset handle table (see func_02018a24.c) and its entry count */
 extern unsigned short *data_0209d3b8;
 extern int data_0209d3b0;
@@ -11,7 +11,7 @@ int AllocAssetHandleTable(int n) {
     unsigned int sz = n * 2;
     unsigned short *p = (unsigned short *)Memory::Allocate(sz);
     data_0209d3b8 = p;
-    MI_CpuFill8(p, 0, sz);
+    MI_CpuClear8(p, sz);
     data_0209d3b0 = n;
     return 1;
 }

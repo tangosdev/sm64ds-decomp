@@ -16,6 +16,7 @@
 #include "nitro/hw/mmap_shared.h"
 #include "nitro/os/system.h"
 #include "nitro/os/cache.h"
+#include "nitro/mi/memory.h"
 #include "nitro/card/card_rom.h"
 #include "nitro/fs/file.h"
 #include "private/rom_header_view.h"
@@ -73,9 +74,6 @@ extern char *data_020a9db8;
  * .bss, which the TU build cannot claim yet. */
 extern u8 data_020a9d28;
 
-extern void OS_Terminate(void);
-extern void MI_CpuFill8(void *dest, u8 data, u32 size);
-extern void MI_CpuCopy8(const void *src, void *dest, u32 size);
 extern FSArchive *FS_FindArchive(const char *name, int name_len);
 extern BOOL MBi_IsStarted(void);
 extern void MBi_MakeGameInfo(char *dst, MBGameRegistry *src, const void *parent);
@@ -85,10 +83,6 @@ extern void MB_AddGameInfo(MBGameInfo *newGameInfo);
  * renumber every C++ file that includes it. */
 static inline u32 FS_GetPosition(FSFile *p_file) {
     return p_file->prop.file.pos - p_file->prop.file.top;
-}
-
-static inline void MI_CpuClear8(void *dest, u32 size) {
-    MI_CpuFill8(dest, 0, size);
 }
 
 const MbSegmentType MBi_defaultLoadSegList[MB_DL_SEGMENT_NUM] = {

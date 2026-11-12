@@ -54,6 +54,8 @@
 #include "private/mb_views.h"
 #include "private/mb_wm_base.h"
 #include "private/wm_views.h"
+#include "nitro/mi/memory.h"
+#include "nitro/mi/dma.h"
 
 /* The SDK built this file as C, where the GameInfo copy in
  * RecordScannedParent is an inline 0x20-pass halfword loop. As C++ it is an
@@ -125,13 +127,6 @@ typedef struct {
 
 
 extern void OS_GetMacAddress(unsigned char *macAddress);
-extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
-extern void MIi_CpuClear32(int val, int *dst, int len);
-extern void MIi_CpuCopy16(const void *src, void *dst, int count);
-extern void MI_DmaCopy16(unsigned int ch, void *src, void *dst, unsigned int n);
-// local extern: MI_Memory.c defines these two as assembly stubs.
-extern void MI_CpuCopy8(const void *src, void *dst, u32 size);
-extern void MI_CpuFill8(void *dst, u8 val, u32 size);
 
 extern void MB_CommSetParentStateCallback(u32 callback);
 extern void MB_InitSendGameInfoStatus(void);
@@ -409,7 +404,7 @@ static inline void RecordScannedParent(WmWork *const w, WmStartScanCallback *con
     }
     if (i < 0x10) {
         w->parentCount = i + 1;
-        MIi_CpuCopy16(cb, &tbl[i].scan, 0xb8);
+        MI_CpuCopy16(cb, &tbl[i].scan, 0xb8);
         DC_InvalidateRange(&w->parents[i], 0xc0);
         MI_DmaCopy16(data_020a9db0, &w->scanBuf, &w->parents[i], 0xc0);
         w->lastParentIndex = i;
@@ -634,9 +629,9 @@ int MB_Init(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, 
     data_020a9db0 = (u16)dma;
     data_020a9db4 = (char *)wm;
     data_020a9db8 = (char *)mb;
-    MIi_CpuClear32(fill_i, (int *)wm, sizeof(WmWork));
+    MI_CpuFill32(wm, fill_i, sizeof(WmWork));
     fill_s = 0;
-    MIi_CpuClear16(fill_s, (char *)mb, 0x1340);
+    MI_CpuFill16(mb, fill_s, 0x1340);
     /* The user's name and L"multiboot" (MB_Init's static game-name pointer,
      stepped as it is read); 10 halfwords overrun the 8-byte uname into
      gname, which the second copy then overwrites */
@@ -764,7 +759,7 @@ int MB_StartParent(int channel) {
     cb = MB_WORK->mParentCallback;
 
     fill0 = 0;
-    MIi_CpuClear16(fill0, (char *)MB_WORK->mChildUser, 0x60a0);
+    MI_CpuFill16(MB_WORK->mChildUser, fill0, 0x60a0);
 
     MB_CommSetParentStateCallback(cb);
 
@@ -779,9 +774,9 @@ int MB_StartParent(int channel) {
     MB_WORK->mFileCount = 0;
 
     fill1 = 0;
-    MIi_CpuClear16(fill1, (char *)MB_WORK->mFiles, 0x5c40);
+    MI_CpuFill16(MB_WORK->mFiles, fill1, 0x5c40);
 
-    MI_CpuFill8(MB_WORK->mChildResponse, 0, 0x1e);
+    MI_CpuClear8(MB_WORK->mChildResponse, 0x1e);
 
     WM_WORK->mode = 1;
     WM_WORK->userCallback = (void (*)(int, void *))MBi_CommParentCallback;

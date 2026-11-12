@@ -748,7 +748,7 @@ extern void Math_Function_0203b0fc(int*, int, int, int);
 extern void Matrix4x3_FromRotationXYZExt(Matrix4x3 *, int, int, int);
 extern void Matrix4x3_FromRotationZXYExt(Matrix4x3 *, int, int, int);
 extern void MTX_Concat33(void *, void *, void *);
-extern void MIi_CpuCopy32(int *, int *, int);
+extern void MIi_CpuCopy32(const void *, void *, unsigned int);
 extern void OpenCannonInCurLevel(void);
 extern void Quaternion_FromVector3(int*, struct Vector3*, struct Vector3*);
 extern void Quaternion_Normalize(int*);
@@ -864,7 +864,7 @@ extern void GX_LoadBG3Scr(void *, u32, u32);
 extern void GXS_LoadBG2Scr(const void *, u32, u32);
 extern void GX_LoadBG2Scr(const void *, u32, u32);
 extern void GXS_LoadBG0Scr(const void *, int, int);
-extern void MI_CpuFill8(void *, u8, u32);
+extern void MI_CpuFill8(void *, unsigned char, unsigned int);
 extern void __cxa_vec_delete(void *, int, int, void (*)(void *));
 extern void data_ov001_020ad494(void);
 

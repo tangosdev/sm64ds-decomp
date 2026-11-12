@@ -1,7 +1,7 @@
 #include "private/arm9_archive_table.h"
+#include "nitro/os/system.h"
 
 extern int LoadArchive(int idx);
-extern void OS_Terminate(void);
 extern int func_0204ede8(void *o, unsigned int i);
 
 /* The address of archived file val's bytes inside its mounted archive

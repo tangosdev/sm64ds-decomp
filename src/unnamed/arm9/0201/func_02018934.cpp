@@ -2,7 +2,6 @@
 #include "types.h"
 #include "nitro/os/cache.h"
 #include "Heap.h"
-#include "private/fs_views.h"
 #include "nitro/fs/file.h"
 
 extern "C" {
@@ -23,7 +22,7 @@ void *func_02018934(char *name, char *path, void *heap) {
 
     FS_InitFile(&file);
     myFS_OpenFile(&file, path);
-    diff = file.prop.file.bottom - file.prop.file.top;
+    diff = FS_GetLength(&file);
     aligned = (diff + 0xf) & ~0xf;
     ptr = ((mHeap::Heap_t *)heap)->_Allocate(aligned + 0x60, -0x10);
     p60 = (char *)ptr + 0x60;

@@ -24,6 +24,7 @@
 #include "dFdDummy_c.h"
 #include "decl_common.h"
 #include "nitro/gx/g2.h"
+#include "nitro/gx/gx.h"
 #include "dExtModel_c.h"
 #include "math/MtxStack.h"
 #include "nitro/gx/gx_load.h"
@@ -34,7 +35,6 @@
 int ApproachLinear(Fix12i &value, Fix12i target, Fix12i step);
 
 extern "C" {
-void GXx_SetMasterBrightness_(u16 *reg, int value);
 void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *m, Fix12i x, Fix12i y, Fix12i z);
 }
 
@@ -62,8 +62,8 @@ void dFdBrightness_c::AdvanceFade()
         return;
 
     level = -(currInterp << 4) >> 0xc;
-    GXx_SetMasterBrightness_((u16 *)0x400006c, level);
-    GXx_SetMasterBrightness_((u16 *)0x400106c, level);
+    GX_SetMasterBrightness(level);
+    GXS_SetMasterBrightness(level);
     if (level > -0x10)
         return;
 
@@ -152,11 +152,11 @@ void dFdColor_c::AdvanceFade()
         int m = color ? 0x10 : -0x10;
         int r = (currInterp * m) >> 12;
         if (r != 0) {
-            G2x_SetBlendBrightness_((volatile unsigned short *)0x4000050, 0x3f, r);
-            G2x_SetBlendBrightness_((volatile unsigned short *)0x4001050, 0x3f, r);
+            G2_SetBlendBrightness(0x3f, r);
+            G2S_SetBlendBrightness(0x3f, r);
         } else {
-            *(unsigned short*)0x4000050 = 0;
-            *(unsigned short*)0x4001050 = 0;
+            G2_BlendNone();
+            G2S_BlendNone();
         }
     }
 }
@@ -185,10 +185,11 @@ void dFdWipe_c::AdvanceFade()
     cur = currInterp;
     if (cur == 0 && cur == old) return;
     if (cur == 0x1000) {
-        G2x_SetBlendBrightness_((volatile u16 *)0x4000050, 0x3f, -0x10);
+        G2_SetBlendBrightness(0x3f, -0x10);
     } else {
         if (speed != 0) {
-            if (old != 0x1000) *(u16*)0x4000050 = 0;
+            if (old != 0x1000)
+                G2_BlendNone();
         }
         if (currInterp != 0) {
             Fix12i scale = FX_MUL(0x1000 - currInterp, 0x20000);
@@ -206,10 +207,10 @@ void dFdWipe_c::AdvanceFade()
         int prod = currInterp * m;
         int r = prod >> 12;
         if (r != 0) {
-            G2x_SetBlendBrightness_((volatile u16 *)0x4001050, 0x3f, r);
+            G2S_SetBlendBrightness(0x3f, r);
         } else {
-            *(u16*)0x4000050 = 0;
-            *(u16*)0x4001050 = 0;
+            G2_BlendNone();
+            G2S_BlendNone();
         }
     }
 }

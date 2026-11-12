@@ -32,9 +32,9 @@
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/fx/fx_trig.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
-void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 void DecompressLZ16(void *src, void *dst);
 
 void func_020308b4(void);
@@ -176,8 +176,8 @@ s32 dScMB_c::Behavior() {
         DecompressLZ16(data_0208a0e4[GetLanguageIndex()], G2S_GetOBJCharPtr());
         gMainScreenLayers = DISPLAY_LAYER_OBJ;
         gSubScreenLayers = 0x10;
-        REG_DISPCNT = (REG_DISPCNT & ~0x1f00) | 0x1000;
-        REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~0x1f00) | 0x1000;
+        GX_SetVisiblePlane(DISPLAY_LAYER_OBJ);
+        GXS_SetVisiblePlane(DISPLAY_LAYER_OBJ);
         mStep++;
         break;
 
@@ -253,21 +253,23 @@ s32 dScMB_c::InitResources() {
     volatile u16 fillSub;
 
     GX_DispOff();
-    REG_DISPCNT_SUB &= ~0x10000;
+    GXS_DispOff();
     func_02030aa4(2);
 
-    REG_POWCNT1 = (REG_POWCNT1 & ~0x20e) | 0x20e;
+    GX_SetPower(GX_POWER_ALL);
     func_0200f2cc();
 
-    REG_BG1CNT = (REG_BG1CNT & 0x43) | 0x704;
-    REG_BG1CNT &= ~0x40;
-    REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0x408;
-    REG_DB_BG1CNT &= ~0x40;
+    G2_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x3800,
+                     GX_BG_CHARBASE_0x04000, GX_BG_EXTPLTT_01);
+    G2_BG1Mosaic(0);
+    G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x2000,
+                      GX_BG_CHARBASE_0x08000, GX_BG_EXTPLTT_01);
+    G2S_BG1Mosaic(0);
 
     fillMain = 0xffff;
-    MIi_CpuClear16(fillMain, (char *)0x5000000, 2);
+    MI_CpuFill16((char *)0x5000000, fillMain, 2);
     fillSub = 0xffff;
-    MIi_CpuClear16(fillSub, (char *)0x5000400, 2);
+    MI_CpuFill16((char *)0x5000400, fillSub, 2);
 
     /* From OBJ tile 0x94 onwards; a 4bpp tile is 0x20 bytes. */
     DecompressLZ16(&data_0209446c, (u8 *)G2_GetOBJCharPtr() + 0x94 * 0x20);
@@ -275,18 +277,18 @@ s32 dScMB_c::InitResources() {
     GX_LoadOBJPltt((const void *)&data_020945d0, 0xa0, 0x20);
     GXS_LoadOBJPltt((const void *)&data_0209444c, 0, 0x20);
 
-    REG_BG1CNT &= ~3;
-    REG_DB_BG1CNT &= ~3;
+    G2_SetBG1Priority(0);
+    G2S_SetBG1Priority(0);
     SetBg1Offset(0, 0);
     SetSubBg1Offset(0, 0);
 
     gMainScreenLayers = 0;
     gSubScreenLayers = 0;
-    REG_DISPCNT &= ~0x1f00;
-    REG_DISPCNT_SUB &= ~0x1f00;
+    GX_SetVisiblePlane(0);
+    GXS_SetVisiblePlane(0);
     GX_DispOn();
 
-    REG_DISPCNT_SUB |= 0x10000;
+    GXS_DispOn();
     func_02034b1c(&sMBGraphCallback, this);
 
     gGraphCallback = &sMBGraphCallback;

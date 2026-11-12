@@ -3,12 +3,12 @@
 #include "math/Matrix.h"
 #include "private/spl_particle_views.h"
 #include "nitro/gx/g3imm_cmd.h"
+#include "nitro/mi/memory.h"
 
 /* No header declares these. */
 extern void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *out);
 struct Vector3;
 extern void VEC_Normalize(const struct Vector3 *v, struct Vector3 *out);
-extern void MI_Copy36B(const void *src, void *dst);
 extern void MTX_MultVec33(const Vector3 *in, const Matrix3x3 *m, Vector3 *out);
 extern void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 extern void G3_MultMtx43(int *m);                /* multiply by the 4x3 matrix */

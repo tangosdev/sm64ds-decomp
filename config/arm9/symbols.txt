@@ -5240,7 +5240,7 @@ wmInitialized kind:bss addr:0x020a89a8
 wm9buf kind:bss addr:0x020a89ac
 bufMsgQ kind:bss addr:0x020a89b0
 bufMsg kind:bss addr:0x020a89c4
-cb_Port$168 kind:bss addr:0x020a89ec
+cb_Port$157 kind:bss addr:0x020a89ec
 data_020a8a00 kind:bss addr:0x020a8a00
 fifoBuf kind:bss addr:0x020a8a40
 tmpUserGameInfoBuf kind:bss addr:0x020a9440

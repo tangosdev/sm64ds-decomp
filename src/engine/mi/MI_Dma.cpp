@@ -18,8 +18,7 @@
 #include "types.h"
 #include "nitro/hw/registers.h"
 #include "nitro/os/system.h"
-
-typedef void (*MIDmaCallback)(void *);
+#include "nitro/mi/dma.h"
 
 #define MI_CNT_SRC_FIX DMA_CONTROL_SRC_FIXED
 #define MI_CNT_32BIT DMA_CONTROL_32_BIT
@@ -32,8 +31,6 @@ extern "C" {
 extern void MIi_DmaSetParams(u32 dmaNo, u32 src, u32 dest, u32 ctrl);
 extern void MIi_DmaSetParams_wait(u32 dmaNo, u32 src, u32 dest, u32 ctrl);
 extern void OSi_EnterDmaCallback(u32 dmaNo, u32 callback, u32 arg);
-
-void MI_WaitDma(u32 dmaNo);
 
 void MI_DmaFill32(u32 dmaNo, void *dest, u32 data, u32 size) {
     vu32 *dmaCntp;

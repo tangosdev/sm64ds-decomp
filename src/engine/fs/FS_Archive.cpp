@@ -28,7 +28,7 @@
 #include "types.h"
 #include "nitro/os/system.h"
 #include "nitro/os/thread.h"
-#include "private/fs_views.h"
+#include "nitro/mi/memory.h"
 #include "nitro/fs/file.h"
 
 extern "C" {
@@ -62,9 +62,6 @@ extern "C" {
 
 extern FSArchive *arc_list;
 extern FSDirPos current_dir_pos;
-
-void MI_CpuCopy8(const void *src, void *dst, u32 size);
-void MI_CpuFill8(void *dst, u8 value, u32 size);
 
 int FSi_TranslateCommand(FSFile *p_file, int command);
 void FSi_ReleaseCommand(FSFile *p_file, int ret);
@@ -364,7 +361,7 @@ void FS_NotifyArchiveAsyncEnd(FSArchive *p_arc, int ret) {
  * is a 16-bit mask of thread ids, so emptying one is a store of 0 where
  * pret's calls OS_InitThreadQueue. */
 void FS_InitArchive(FSArchive *p_arc) {
-    MI_CpuFill8(p_arc, 0, sizeof(FSArchive));
+    MI_CpuClear8(p_arc, sizeof(FSArchive));
     p_arc->sync_q = 0;
     p_arc->stat_q = 0;
 }

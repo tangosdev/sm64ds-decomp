@@ -1,7 +1,7 @@
 #include "types.h"
 #include "nitro/mb/mb.h"
 #include "private/wm_views.h"
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
+#include "nitro/mi/memory.h"
 
 /* On a download-play child, rebuild the parent's WMBssDesc from the
  * MBParentBssDesc the boot loader left in MBParam (nitro/mb/mb.h). This is

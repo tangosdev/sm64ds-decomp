@@ -126,11 +126,11 @@
       "evidence": "The SDK's `static OSMessage bufMsg[WM_BUF_MSG_NUM]`, bufMsgQ's ten slots."
     },
     {
-      "symbol": "cb_Port$168",
+      "symbol": "cb_Port$157",
       "address": "0x020a89ec",
       "size": "0x44",
       "binding": "STB_GLOBAL",
-      "evidence": "WmReceiveFifo's function-local `static WMPortRecvCallback cb_Port` (its compiler spelling, cb_Port$168, as TP_Init's initial$180 is named), the record it passes every port callback on a CONNECTED or DISCONNECTED notice. data_020a8a00 keeps its address name: it is &cb_Port.macAddress (+0x14), the MIi_CpuCopy16 destination WmReceiveFifo's literal pool names, and dsd needs a symbol at every relocation target."
+      "evidence": "WmReceiveFifo's function-local `static WMPortRecvCallback cb_Port` (its compiler spelling, cb_Port$157, as TP_Init's initial$180 is named), the record it passes every port callback on a CONNECTED or DISCONNECTED notice. data_020a8a00 keeps its address name: it is &cb_Port.macAddress (+0x14), the MIi_CpuCopy16 destination WmReceiveFifo's literal pool names, and dsd needs a symbol at every relocation target."
     },
     {
       "symbol": "fifoBuf",
@@ -168,7 +168,7 @@
       "evidence": "file-scope static, as the SDK writes it; dsd cannot record a local symbol in symbols.txt, so it is published global at 0x020a89c4"
     },
     {
-      "symbol": "cb_Port$168",
+      "symbol": "cb_Port$157",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "function-local static, as the SDK writes it; dsd requires a configured global symbol at 0x020a89ec, and changing the ELF binding preserves its function-local lifetime, storage, relocations and bytes"

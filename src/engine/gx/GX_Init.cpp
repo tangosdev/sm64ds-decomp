@@ -27,9 +27,8 @@
 #include "types.h"
 #include "nitro/hw/registers.h"
 #include "nitro/gx/gx.h"
+#include "private/gxdma.h"
 
-#define REG_DISPSTAT      (*(volatile u16 *)0x04000004)
-#define REG_MASTER_BRIGHT (*(volatile u16 *)0x0400006c)
 #define REG_BG2PD         (*(volatile u16 *)0x04000026)
 #define REG_BG3PD         (*(volatile u16 *)0x04000036)
 #define REG_DB_BG2PD      (*(volatile u16 *)0x04001026)
@@ -66,8 +65,6 @@ extern int GXi_DmaId; // GX DMA channel, -1 if none
 extern u16 sDispMode; // display mode parked by GX_DispOff
 
 void GX_InitGXState(void);
-void MI_DmaFill32(u32 channel, void *dst, u32 data, u32 size);
-void MIi_CpuClear32(int val, int *dst, int len);
 
 // Power the display engines, reset the VRAM state, and clear both
 // engines' 2D registers. The ROM spills each zero of the CPU path to its own
@@ -82,16 +79,16 @@ void GX_Init(void) {
     REG_DISPSTAT = 0;
     REG_DISPCNT = 0;
 
-    if (GXi_DmaId != -1) {
-        MI_DmaFill32(GXi_DmaId, REG_BG0CNT_ADDR, 0, 0x60);
+    if (GXi_DmaId != GX_DMA_NOT_USE) {
+        MI_DmaClear32(GXi_DmaId, REG_BG0CNT_ADDR, 0x60);
         REG_MASTER_BRIGHT = 0;
-        MI_DmaFill32(GXi_DmaId, REG_DB_DISPCNT_ADDR, 0, 0x70);
+        MI_DmaClear32(GXi_DmaId, REG_DB_DISPCNT_ADDR, 0x70);
     } else {
         volatile u32 zero = 0;
-        MIi_CpuClear32(zero, (int *)REG_BG0CNT_ADDR, 0x60);
+        MI_CpuFill32(REG_BG0CNT_ADDR, zero, 0x60);
         REG_MASTER_BRIGHT = 0;
         volatile u32 subZero = 0;
-        MIi_CpuClear32(subZero, (int *)REG_DB_DISPCNT_ADDR, 0x70);
+        MI_CpuFill32(REG_DB_DISPCNT_ADDR, subZero, 0x70);
     }
 
     // Identity scale for the affine BGs of both engines.
@@ -158,7 +155,7 @@ void GXS_SetGraphicsMode(int bgMode) {
 
 // reg is either engine's MASTER_BRIGHT. Positive
 // levels fade up toward white, negative ones down toward black.
-void GXx_SetMasterBrightness_(u16 *reg, int brightness) {
+void GXx_SetMasterBrightness_(volatile u16 *reg, int brightness) {
     if (brightness == 0)
         *reg = 0;
     else if (brightness > 0)

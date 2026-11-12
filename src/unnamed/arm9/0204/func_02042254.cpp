@@ -2,9 +2,8 @@
 
 #include "private/arm9_a1fc0_file_share.h"
 #include "nitro/os/system.h"
-#include "nitro/os/thread.h"
-#include "private/fs_views.h"
 #include "nitro/fs/file.h"
+#include "nitro/os/thread.h"
 
 extern "C" {
 
