@@ -61,13 +61,10 @@ extern CTRDGWork CTRDGi_Work;
 extern int data_020a9de4;         /* CTRDGi_InitModuleInfo's done flag */
 extern int data_020a9de8;         /* CTRDG_Init's done flag */
 extern int (*data_020a9dec)(int); /* the hook CTRDGi_PulledOutCallback asks before stopping */
-/* data_020a9e00 is a 0xc0-byte copy of the CTRDGHeader at 0x08000000; the
- * DMA in CTRDGi_InitModuleInfo fills its last 0x40 bytes (+0x80) from the cartridge,
- * and the BIOS logo goes into nintendoLogo (data_020a9e04). */
-extern int data_020a9e00;
-extern int data_020a9e04;
-
-#define CTRDG_HEADER (*(CTRDGHeader *)&data_020a9e00)
+/* The copy of the CTRDGHeader at 0x08000000; the DMA in CTRDGi_InitModuleInfo
+ * fills its last 0x40 bytes (+0x80) from the cartridge, and the BIOS logo goes
+ * into nintendoLogo. */
+extern CTRDGHeader data_020a9e00;
 
 void CTRDGi_InitModuleInfo(void);
 void CTRDGi_CallbackForInitModuleInfo(PXIFifoTag tag, u32 data, BOOL err);
@@ -105,7 +102,7 @@ void CTRDGi_InitModuleInfo(void) {
     if (data_020a9de4 != 0)
         return;
     data_020a9de4 = 1;
-    if ((*(volatile u16 *)0x4000300 & 1) == 0)
+    if (!(REG_PAUSE & REG_OS_PAUSE_CHK_MASK))
         return;
     lastIrq = OS_SetIrqMask(OS_IE_SPFIFO_RECV);
     lastIme = OS_EnableIrq();
@@ -113,20 +110,20 @@ void CTRDGi_InitModuleInfo(void) {
     flag = ((int)REG_EXMEMCNT & 0x8000) >> 15;
     CTRDGi_ChangeLatestAccessCycle(sp + 2);
     REG_EXMEMCNT &= ~0x8000;
-    MI_DmaCopy16(0, (void *)0x8000080, (void *)((char *)&CTRDG_HEADER + 0x80), 0x40);
+    MI_DmaCopy16(0, (void *)0x8000080, (void *)((char *)&data_020a9e00 + 0x80), 0x40);
     REG_EXMEMCNT = (REG_EXMEMCNT & ~0x8000) | (flag << 15);
     CTRDGi_RestoreAccessCycle(sp + 2);
     CTRDGi_UnlockByProcessor(CTRDGi_Work.lockID, sp);
     {
         CTRDGModuleInfo *cip = CTRDGi_GetModuleInfoAddr();
-        CTRDGHeader *chd = &CTRDG_HEADER;
+        CTRDGHeader *chd = &data_020a9e00;
         cip->moduleID = chd->moduleID;
         for (i = 0; i < 3; i++)
             cip->exLsiID[i] = chd->exLsiID[i];
         cip->makerCode = chd->makerCode;
         cip->gameCode = chd->gameCode;
     }
-    MI_CpuCopy32((int *)0xffff0020, &data_020a9e04, 0x9c);
+    MI_CpuCopy32((int *)0xffff0020, data_020a9e00.nintendoLogo, 0x9c);
     DC_FlushAll();
     data = (((unsigned int)&data_020a9e00 + 0xfe000000) >> 5) << 6 | 1;
     CTRDGi_SendtoPxi(data);

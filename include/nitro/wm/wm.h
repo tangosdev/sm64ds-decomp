@@ -7,14 +7,18 @@
  * WMApiid is listed up to MEASURE_CHANNEL (0x1e): every WM_* wrapper in src/
  * sends the id the SDK gives its name, up to WM_MeasureChannel's 0x1e.
  * Later SDKs add ids past it; this one's callback table has 0x25 slots, so it
- * has some of them too, but not under names any body here confirms.
- * WMErrCode, WMState and WMPriority are the SDK's values, and the ROM's
+ * has some of them too, but not under names any body here confirms. The ids
+ * ARM7 sends outside any request, INDICATION 0x80 and the two port ids after
+ * it, are the ones WmReceiveFifo tests; READ_STATUS 0x83 is WM_ReadStatus's.
+ * WMErrCode, WMState, WMStateCode and WMPriority are the SDK's values, and the ROM's
  * code agrees with them: MP data needs MP_PARENT 9 or MP_CHILD 0xa, a bad
  * buffer is INVALID_PARAM 6 and a parent without children NO_CHILD 7, and
  * data sharing sends at HIGH 1 where multiboot sends at LOW 3.
  *
  * WMCallbackFunc is the callback every asynchronous WM call takes. WM hands
- * it the call's result record, so callbacks take a void * and cast it.
+ * it the call's result record, so callbacks take a void * and cast it. The
+ * records past WMCallback are declared as far as the SDK's public header
+ * and this SDK's code agree.
  *
  * WMBssDesc, WMParentParam, WMScanParam and WMStatus are this SDK
  * revision's layouts, which differ from the public header where each says so.
@@ -58,7 +62,11 @@ typedef enum WMApiid {
     WM_APIID_STOP_TESTMODE,
     WM_APIID_VALARM_MP,
     WM_APIID_SET_LIFETIME,
-    WM_APIID_MEASURE_CHANNEL
+    WM_APIID_MEASURE_CHANNEL,
+    WM_APIID_INDICATION = 0x80,
+    WM_APIID_PORT_SEND,
+    WM_APIID_PORT_RECV,
+    WM_APIID_READ_STATUS
 } WMApiid;
 
 typedef enum WMErrCode {
@@ -78,7 +86,11 @@ typedef enum WMErrCode {
     WM_ERRCODE_OVER_MAX_ENTRY = 12,
     WM_ERRCODE_INVALID_POLLBITMAP = 13,
     WM_ERRCODE_NO_DATA = 14,
-    WM_ERRCODE_SEND_FAILED = 15
+    WM_ERRCODE_SEND_FAILED = 15,
+    WM_ERRCODE_DCF_TEST,
+    WM_ERRCODE_WL_INVALID_PARAM,
+    WM_ERRCODE_WL_LENGTH_ERR,
+    WM_ERRCODE_FLASH_ERROR
 } WMErrCode;
 
 typedef enum WMState {
@@ -96,6 +108,37 @@ typedef enum WMState {
     WM_STATE_DCF_CHILD
 } WMState;
 
+/* The state a callback reports (its result record's `state`). */
+typedef enum WMStateCode {
+    WM_STATECODE_PARENT_START = 0,
+    WM_STATECODE_BEACON_SENT = 2,
+    WM_STATECODE_SCAN_START = 3,
+    WM_STATECODE_PARENT_NOT_FOUND = 4,
+    WM_STATECODE_PARENT_FOUND = 5,
+    WM_STATECODE_CONNECT_START = 6,
+    WM_STATECODE_BEACON_LOST = 8,
+    WM_STATECODE_CONNECTED = 7,
+    WM_STATECODE_CHILD_CONNECTED = 7,
+    WM_STATECODE_DISCONNECTED = 9,
+    WM_STATECODE_DISCONNECTED_FROM_MYSELF = 26,
+    WM_STATECODE_MP_START = 10,
+    WM_STATECODE_MPEND_IND = 11,
+    WM_STATECODE_MP_IND = 12,
+    WM_STATECODE_MPACK_IND = 13,
+    WM_STATECODE_DCF_START = 14,
+    WM_STATECODE_DCF_IND = 15,
+    WM_STATECODE_BEACON_RECV = 16,
+    WM_STATECODE_DISASSOCIATE = 17,
+    WM_STATECODE_REASSOCIATE = 18,
+    WM_STATECODE_AUTHENTICATE = 19,
+    WM_STATECODE_PORT_INIT = 25,
+    WM_STATECODE_PORT_SEND = 20,
+    WM_STATECODE_PORT_RECV = 21,
+    WM_STATECODE_FIFO_ERROR = 22,
+    WM_STATECODE_INFORMATION = 23,
+    WM_STATECODE_UNKNOWN = 24
+} WMStateCode;
+
 typedef enum WMLinkLevel {
     WM_LINK_LEVEL_0 = 0,
     WM_LINK_LEVEL_1,
@@ -103,6 +146,25 @@ typedef enum WMLinkLevel {
     WM_LINK_LEVEL_3,
     WM_LINK_LEVEL_MAX
 } WMLinkLevel;
+
+/* Data sharing's state (WMDataSharingInfo.state). This SDK predates
+ * WM_PauseDataSharing: the later SDK's PAUSING and PAUSED come between
+ * START and RETRY_SEND there, and wm_ds.c here sets only 1, 2 and 3. */
+typedef enum WMDataSharingState {
+    WM_DS_STATE_READY = 0,
+    WM_DS_STATE_START,
+    WM_DS_STATE_RETRY_SEND,
+    WM_DS_STATE_ERROR
+} WMDataSharingState;
+
+#define WM_NUM_OF_CALLBACK 0x25
+#define WM_NUM_OF_PORT 16
+
+/* The data-sharing set: a 4-byte header, then WM_DS_DATA_SIZE bytes. This
+ * build takes the SDK's WM_DS_DATA_SIZE_252 size. */
+#define WM_DS_HEADER_SIZE 4
+#define WM_DS_DATA_SIZE 252
+#define WM_DS_DATASET_NUM 4
 
 /* The beacon's attribute byte (WMParentParam's flags, as WM_SetGameInfo
  * takes them). */
@@ -238,6 +300,43 @@ typedef struct WMMpRecvHeader {
 typedef char WMMpRecvBuf_size_must_be_0x36[sizeof(WMMpRecvBuf) == 0x36 ? 1 : -1];
 typedef char WMMpRecvData_size_must_be_0xc[sizeof(WMMpRecvData) == 0xc ? 1 : -1];
 typedef char WMMpRecvHeader_size_must_be_0x16[sizeof(WMMpRecvHeader) == 0x16 ? 1 : -1];
+
+/* NitroSDK WMStartMPCallback, WM_StartMP's record: MP_START once, then an
+ * MPEND_IND or MP_IND with the received data in recvBuf for every exchange. */
+typedef struct WMStartMPCallback {
+    unsigned short apiid;   /* 0x00 */
+    unsigned short errcode; /* 0x02 */
+    unsigned short state;   /* 0x04 -- a WMStateCode */
+    unsigned char reserved[2];
+    WMMpRecvBuf *recvBuf;      /* 0x08 */
+    unsigned short timeStamp;  /* 0x0c */
+    unsigned short rate_rssi;  /* 0x0e */
+    unsigned char destAdrs[6]; /* 0x10 */
+    unsigned char srcAdrs[6];  /* 0x16 */
+    unsigned short seqNum;     /* 0x1c */
+    unsigned short tmptt;      /* 0x1e */
+    unsigned short pollbmp;    /* 0x20 */
+    unsigned short reserved2;  /* 0x22 */
+} WMStartMPCallback;
+
+/* NitroSDK WMMeasureChannelCallback, WM_MeasureChannel's record. */
+typedef struct WMMeasureChannelCallback {
+    unsigned short apiid;        /* 0x0 */
+    unsigned short errcode;      /* 0x2 */
+    unsigned short wlCmdID;      /* 0x4 */
+    unsigned short wlResult;     /* 0x6 */
+    unsigned short channel;      /* 0x8 */
+    unsigned short ccaBusyRatio; /* 0xa -- percent */
+} WMMeasureChannelCallback;
+
+/* NitroSDK WMIndCallback, the record of an INDICATION ARM7 sends outside any
+ * request. */
+typedef struct WMIndCallback {
+    unsigned short apiid;   /* 0x0 */
+    unsigned short errcode; /* 0x2 */
+    unsigned short state;   /* 0x4 -- a WMStateCode */
+    unsigned short reason;  /* 0x6 */
+} WMIndCallback;
 
 /* NitroSDK WMStatus, the status block ARM7 keeps and WM_ReadStatus copies
  * (0x930 bytes in this SDK revision). Only the fields some code reads, at

@@ -5,6 +5,7 @@
 #include "private/mb_views.h"
 #include "nitro/mb/mb.h"
 #include "nitro/mi/memory.h"
+#include "nitro/wm/wm.h"
 
 extern "C" {
 
@@ -27,7 +28,7 @@ extern void OS_GetMacAddress(void *p);
    this fills in entry 0 of both from the owner settings; data_020a10fe and
    data_020a10a6 are those entries' nickName fields. */
 extern u8 data_020a0ef0;
-extern u8 data_020a1064[];
+extern WMParentParam data_020a1064;
 extern MBGameRegistry data_020a0fec;
 extern u8 data_020a0fb8[];
 extern u16 data_020a0fa0[][3];
@@ -69,7 +70,7 @@ void func_0203db64(void *arg0, void *arg1) {
     OwnerInfo buf;
 
     data_020a0ef0 = 0;
-    MI_CpuCopy8(arg0, data_020a1064, 0x40);
+    MI_CpuCopy8(arg0, &data_020a1064, sizeof(WMParentParam));
     MI_CpuCopy8(arg1, &data_020a0fec, sizeof(MBGameRegistry));
     MI_CpuClear8(&data_020a1040, 0x24);
     MI_CpuClear8(data_020a0fb8, 0x18);
@@ -149,8 +150,8 @@ void func_0203db64(void *arg0, void *arg1) {
         data_020a10fc[0].favoriteColor = buf.favoriteColor;
         data_020a10fc[0].nameLength = buf.nickNameLength;
         data_020a10a4[0].favoriteColor = data_020a10fc[0].favoriteColor;
-        data_020a10fc[0].unknown_04 = 0;
-        data_020a10a4[0].unknown_04 = data_020a10fc[0].unknown_04;
+        data_020a10fc[0].playerNo = 0;
+        data_020a10a4[0].playerNo = data_020a10fc[0].playerNo;
         data_020a10a4[0].nameLength = data_020a10fc[0].nameLength;
         MI_CpuCopy8(buf.nickName, data_020a10fe, buf.nickNameLength * 2);
         MI_CpuCopy8(buf.nickName, data_020a10a6, buf.nickNameLength * 2);

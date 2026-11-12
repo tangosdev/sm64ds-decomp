@@ -44,7 +44,7 @@ extern "C" {
    One voice slot: the sound handle (the player pointer) and its last
    listener distance. */
 typedef struct SoundSlot {
-    void *obj;
+    NNSSndHandle handle;
     int dist;
 } SoundSlot;
 
@@ -59,9 +59,9 @@ extern SoundSlot data_020a4c08[];
 extern SoundSlot data_020a4bf8[];
 extern SoundSlot data_020a4bf0;
 
-extern int func_0204fa2c(int *obj, int v);
-extern void func_0204f934(int **slot);
-extern void func_0204f94c(void *slot);
+extern int func_0204fa2c(NNSSndHandle *handle, int v);
+extern void func_0204f934(NNSSndHandle *handle);
+extern void func_0204f94c(NNSSndHandle *handle);
 extern void *func_02050cdc(int kind, int id);
 
 int func_02049018(Vector3 *v) {
@@ -93,12 +93,12 @@ void func_02048f34(int *owner) {
     int i;
     data_020a4bec = owner;
     for (i = 0; i < 6; i++)
-        func_0204f94c(&data_020a4c18[i]);
+        func_0204f94c(&data_020a4c18[i].handle);
     for (i = 0; i < 2; i++)
-        func_0204f94c(&data_020a4c08[i]);
+        func_0204f94c(&data_020a4c08[i].handle);
     for (i = 0; i < 2; i++)
-        func_0204f94c(&data_020a4bf8[i]);
-    func_0204f94c(&data_020a4bf0);
+        func_0204f94c(&data_020a4bf8[i].handle);
+    func_0204f94c(&data_020a4bf0.handle);
     SetSoundRange(0);
 }
 
@@ -207,7 +207,7 @@ void func_02048c30(NNSSndHandle *handle, Vector3 *p, int q) {
                 t = (int)((hi - n) * 0x7f) / (int)(hi - lo);
             }
         } else {
-            func_0204fa2c((int *)handle, 0);
+            func_0204fa2c(handle, 0);
         }
     } else {
         t = 0x7f;
@@ -262,7 +262,7 @@ void func_02048af4(NNSSndHandle *handle, Vector3 *p, int q) {
         NNS_SndPlayerSetTrackPan(handle, data_02099fa4, a);
         return;
     }
-    func_0204fa2c((int *)handle, 0);
+    func_0204fa2c(handle, 0);
 }
 
 int func_02048a1c(Vector3 *pos, int kind, int id) {
@@ -303,7 +303,7 @@ int func_02048a18(int a, int b) {
     return a;
 }
 
-void func_02048908(void *obj, Vector3 *p) {
+void func_02048908(SoundSlot *slot, Vector3 *p) {
     int num = data_02099fac;
     int den = data_02099fa8;
     int a = 0x7f;
@@ -313,9 +313,9 @@ void func_02048908(void *obj, Vector3 *p) {
     int cur, arg;
     int half;
 
-    if (obj == 0)
+    if (slot == 0)
         return;
-    s = *(NNSSndSeqPlayer **)obj;
+    s = slot->handle.player;
     if (s == 0)
         return;
 
@@ -338,12 +338,12 @@ void func_02048908(void *obj, Vector3 *p) {
         }
     }
 
-    cur = ((int *)obj)[1];
+    cur = slot->dist;
     if ((unsigned)cur < (unsigned)den)
         arg = a;
     else
         arg = b + (a - b) * (num - cur) / (num - den);
-    NNS_SndPlayerSetVolume((NNSSndHandle *)obj, arg);
+    NNS_SndPlayerSetVolume(&slot->handle, arg);
 
     half = p->x >> 12;
     half = half / 2;
@@ -351,7 +351,7 @@ void func_02048908(void *obj, Vector3 *p) {
         half = 0x3f;
     else if (half < -0x40)
         half = -0x40;
-    NNS_SndPlayerSetTrackPan((NNSSndHandle *)obj, data_02099fa4, half);
+    NNS_SndPlayerSetTrackPan(&slot->handle, data_02099fa4, half);
 }
 
 void *func_02048720(Vector3 *v, int kind, int id) {
@@ -406,13 +406,13 @@ void *func_02048720(Vector3 *v, int kind, int id) {
     }
 
     for (i = 0; i < count; i++) {
-        if (table[i].obj == 0)
+        if (table[i].handle.player == 0)
             pick = i;
     }
 
     if (pick < 0) {
         for (i = 0; i < count; i++) {
-            p = ((NNSSndSeqPlayer *)table[i].obj)->prio;
+            p = table[i].handle.player->prio;
             if (best_pri > p) {
                 best_pri = p;
                 best_idx = i;
@@ -436,8 +436,8 @@ void *func_02048720(Vector3 *v, int kind, int id) {
         return 0;
     }
     if (pick >= 0 && pick < count) {
-        func_0204fa2c((int *)&table[pick], 1);
-        func_0204f934((int **)&table[pick]);
+        func_0204fa2c(&table[pick].handle, 1);
+        func_0204f934(&table[pick].handle);
         table[pick].dist = (int)dist;
         return &table[pick];
     }

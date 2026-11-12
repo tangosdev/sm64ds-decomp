@@ -97,6 +97,7 @@ enum Eyerok_AssetId {
 #include "private/mtx43.h"
 #include "nitro/fx/fx.h"
 #include "LevelRng.h"
+#include "math/MtxStack.h"
 
 /* Actor ids, from symbols/actor_debug_names.tsv. */
 enum {
@@ -343,11 +344,6 @@ extern Matrix4x3 data_020a0e68;
 extern int AngleDiff(int a, int b);
 extern int ApproachAngle(s16 *angle, s16 target, int a, int b, int max);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
-extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
-extern void Matrix4x3_FromRotationY(void *m, int ang);
-extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-/* local extern: no shared math header declares MTX_MultVec43. */
-extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern int RandomIntInternal(int *seed);
 extern int Vec3_ApproachHorz(void *out, void *a, int maxStep);
 extern int Vec3_Dist(const void *a, const void *b);

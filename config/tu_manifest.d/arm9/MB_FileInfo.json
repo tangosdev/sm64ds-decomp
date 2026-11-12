@@ -193,14 +193,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@592",
+      "from": "@608",
       "to": "data_0209a080",
-      "evidence": "compiler string literal: mwcc numbers MB_ReadSegment's \"rom\" @592 (re-measured from MB_FileInfo.o after nitro/mi/memory.h replaced the file's local MI externs; it was @633), and that number is already defined by an overlay symbols.txt row, so the literal keeps its configured address name"
+      "evidence": "compiler string literal: mwcc numbers MB_ReadSegment's \"rom\" @608 (re-measured from MB_FileInfo.o, re-keyed by address, once nitro/mi/memory.h, nitro/mb/mb.h and nitro/fs/archive.h together replaced the file's local declarations; #5352 alone measured @590 and the mb.h change alone @610), and the literal keeps its configured address name"
     }
   ],
   "notes": [
     "HAND-BUILT manifest entry, not tools/tubuild.py create output: tu_map does not segment arm9.",
-    "Built as C, like the SDK and the other mb TUs (MB_GameInfo.c). The SDK's constants and MbSegmentType are mb_fileinfo.c's and mb_child.h's own and stay in the source; the shared types (MbParentWork, MbParentFile, MB_BlockInfoTable, MBDownloadFileInfo, MBGameRegistry, RomHeaderView) are in include/private.",
+    "Built as C, like the SDK and the other mb TUs (MB_GameInfo.c). The SDK's constants and MbSegmentType are mb_fileinfo.c's and mb_child.h's own and stay in the source; the shared types (MB_CommPWork, MbParentFile, MB_BlockInfoTable, MBDownloadFileInfo, MBGameRegistry, RomHeaderView) are in include/private.",
     "This SDK is older than the ntrtwl/NitroSDK copy: no segment cache (MBiCacheList), so MB_GetSegmentLength is the header, authentication code and two static modules with no minimum, MB_ReadSegment reads both modules whole and the authentication code after them, MB_RegisterFile passes that code's address to MBi_MakeDownloadFileInfo as a third argument, and MB_ReadSegment does not patch _start_AutoloadDoneCallback.",
     "MB_ReadSegment's own-binary path writes the 16 MiB default into the ROM header at HW_ROM_HEADER_BUF itself (the later SDK keeps it in a local).",
     "MB_RegisterFile's sequence counter is the SDK's function-local `static u8 update` at 0x020a9d28 (one byte, then three bytes of alignment before mb_gameinfo.c's mbss at 0x020a9d2c). The source names it data_020a9d28 as an extern: dsd sizes a .bss symbol to the next symbol (0x4), while tubuild requires the object's .bss contribution (0x1) to fill the claim, so the one-byte static cannot be owned until tubuild accepts trailing .bss alignment."

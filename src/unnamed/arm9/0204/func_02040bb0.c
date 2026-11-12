@@ -1,12 +1,11 @@
 #include "types.h"
 #include "private/arm9_a1fc0_file_share.h"
 #include "private/wm_views.h"
-#include "private/arm9_wbt.h"
+#include "nitro/wbt.h"
 #include "nitro/wm/wm_api.h"
 extern int data_020a0f38;
 extern char data_020a2400[];
 
-extern void WBT_SetOwnAid(int x);
 extern void func_02041930(void);
 extern void func_02040f30(void *arg);
 

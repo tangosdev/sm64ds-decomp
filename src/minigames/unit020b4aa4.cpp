@@ -121,15 +121,15 @@ extern void Mg_LoseCredits(int x);
 extern void Mg_DrawCreditsIcon(int a, int b, int c, int d);
 extern int Mg_GetTopScreenYOffset(void);
 extern int Mg_GetScoringMode(void);
-extern void Mg_SubmitScore(int self);
+extern void Mg_SubmitScore(int score);
 extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *d);
 extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
 
-extern void Coin_PlacePayout(Sprite* s, int* in);
+extern void Coin_PlacePayout(Sprite *s, Vec2i *in);
 extern void Coin_Return(Sprite* s);
 extern void Coin_Spend(Sprite* s);
 extern void Coin_SendOff(Sprite* s);
-extern void Coin_Launch(Sprite* s, int* in);
+extern void Coin_Launch(Sprite *s, Vec2i *in);
 extern void Coin_Hide(Sprite* s);
 extern void Coin_Draw(Sprite* s);
 extern void Coin_Update(Sprite* s);
@@ -352,7 +352,7 @@ extern "C" void MgCoins_AddBetCoin(void) {
    are out. */
 extern "C" void MgCoins_StepLaunch(void)
 {
-    int in[2];
+    Vec2i in;
     int n;
     int idx;
     if (gMgCoinsInPlay <= sMgCoinsIndex) return;
@@ -360,9 +360,9 @@ extern "C" void MgCoins_StepLaunch(void)
     n = -Mg_GetTopScreenYOffset();
     idx = sMgCoinsIndex;
     n = (n - 0x10) << 12;
-    in[0] = (idx * 16 + 8) << 12;
-    in[1] = n;
-    Coin_Launch(&sMgCoins[idx], in);
+    in.x = (idx * 16 + 8) << 12;
+    in.y = n;
+    Coin_Launch(&sMgCoins[idx], &in);
     Sound::PlayBank2_2D(0x14d);
     {
         int b = sMgCoinsIndex;
@@ -381,8 +381,8 @@ extern "C" void MgCoins_StepLaunch(void)
    with no wait or sound. */
 extern "C" void MgCoins_StepLaunchQuick(void)
 {
-    int inA[2];
-    int inB[2];
+    Vec2i inA;
+    Vec2i inB;
     if (gMgCoinsInPlay <= sMgCoinsIndex)
         return;
     if (sMgCoinsIndex < sMgCoinsSlowLaunches) {
@@ -391,10 +391,10 @@ extern "C" void MgCoins_StepLaunchQuick(void)
         {
             int v1 = (-Mg_GetTopScreenYOffset() - 0x10) << 12;
             int v0 = (sMgCoinsIndex * 16 + 8) << 12;
-            inA[0] = v0;
-            inA[1] = v1;
+            inA.x = v0;
+            inA.y = v1;
         }
-        Coin_Launch(&sMgCoins[sMgCoinsIndex], inA);
+        Coin_Launch(&sMgCoins[sMgCoinsIndex], &inA);
         Sound::PlayBank2_2D(0x14d);
         sMgCoinsWait = 0x18;
         if (sMgCoinsIndex == gMgCoinsInPlay - 1) {
@@ -409,9 +409,9 @@ extern "C" void MgCoins_StepLaunchQuick(void)
     {
         int v1 = (-Mg_GetTopScreenYOffset() - 0x10) << 12;
         int v0 = (sMgCoinsIndex * 16 + 8) << 12;
-        inB[0] = v0;
-        inB[1] = v1;
-        Coin_Launch(&sMgCoins[sMgCoinsIndex], inB);
+        inB.x = v0;
+        inB.y = v1;
+        Coin_Launch(&sMgCoins[sMgCoinsIndex], &inB);
     }
     sMgCoinsLaunchPending = 0;
     if (sMgCoinsIndex == gMgCoinsInPlay - 1) {
@@ -618,7 +618,7 @@ extern "C" void MgCoins_StepPayoutLayout(void)
 {
     int step, idx, n, limit;
     int cx, rx;
-    int sp[2];
+    Vec2i sp;
     Sprite* e;
     int delay;
     if (ApproachLinear(sMgCoinsWait, 0, 1) == 0)
@@ -638,17 +638,17 @@ extern "C" void MgCoins_StepPayoutLayout(void)
             rx = -(row << 0x10);
             {
                 int ret = -Mg_GetTopScreenYOffset();
-                sp[1] = (ret - 0x10) << 0xc;
+                sp.y = (ret - 0x10) << 0xc;
             }
-            sp[0] = 0x60000;
+            sp.x = 0x60000;
             {
                 int c2 = sMgCoinsPayoutLeft;
                 if (c2 < 5)
-                    sp[0] = (0x80 - ((c2 - 1) << 3)) << 0xc;
+                    sp.x = (0x80 - ((c2 - 1) << 3)) << 0xc;
             }
-            sp[0] = sp[0] + cx;
-            sp[1] = sp[1] + rx;
-            Coin_PlacePayout(e, sp);
+            sp.x = sp.x + cx;
+            sp.y = sp.y + rx;
+            Coin_PlacePayout(e, &sp);
             e->mDelay += delay;
             idx++;
             e++;
@@ -666,7 +666,7 @@ extern "C" void MgCoins_StepPayoutNext(void)
 {
     int step, i, idx, n, limit;
     Sprite* e;
-    int sp[2];
+    Vec2i sp;
 
     e = sMgCoins;
     for (i = 0; i < 0x14; i++) {
@@ -695,17 +695,17 @@ extern "C" void MgCoins_StepPayoutNext(void)
                 int cx = col << 0x10;
                 int rx = -(row << 0x10);
                 int ret = -Mg_GetTopScreenYOffset();
-                sp[1] = (ret - 0x10) << 0xc;
-                sp[0] = 0x60000;
+                sp.y = (ret - 0x10) << 0xc;
+                sp.x = 0x60000;
                 {
                     int c2 = sMgCoinsPayoutLeft;
                     if (c2 < 5) {
-                        sp[0] = (0x80 - ((c2 - 1) << 3)) << 0xc;
+                        sp.x = (0x80 - ((c2 - 1) << 3)) << 0xc;
                     }
                 }
-                sp[0] = sp[0] + cx;
-                sp[1] = sp[1] + rx;
-                Coin_PlacePayout(e, sp);
+                sp.x = sp.x + cx;
+                sp.y = sp.y + rx;
+                Coin_PlacePayout(e, &sp);
                 e->mDelay = i;
                 idx++;
                 e++;
@@ -760,15 +760,17 @@ extern "C" void Coin_Move(Sprite *s)
 
 /* State: move; on arrival call Mg_GainCredits(1), hide, and stop. */
 extern "C" void Coin_MoveThenBank(Sprite* s) {
-  int out[2];
-  ApproachLinear(s->mPos.x, s->mTarget.x, s->mStep.x);
-  ApproachLinear(s->mPos.y, s->mTarget.y, s->mStep.y);
-  Vec2_Sub(out, &s->mTarget, &s->mPos);
-  if (out[0] != 0) return;
-  if (out[1] != 0) return;
-  Mg_GainCredits(1);
-  Coin_Hide(s);
-  s->mState = pmf_Coin_Move_2;
+    Vec2i out;
+    ApproachLinear(s->mPos.x, s->mTarget.x, s->mStep.x);
+    ApproachLinear(s->mPos.y, s->mTarget.y, s->mStep.y);
+    Vec2_Sub(&out, &s->mTarget, &s->mPos);
+    if (out.x != 0)
+        return;
+    if (out.y != 0)
+        return;
+    Mg_GainCredits(1);
+    Coin_Hide(s);
+    s->mState = pmf_Coin_Move_2;
 }
 
 extern "C" void Coin_Hide(Sprite *s)
@@ -779,19 +781,18 @@ extern "C" void Coin_Hide(Sprite *s)
 /* Launch from the corner (12, 12) to `in`, at 1/16 of the distance per
    frame. Unless the sprite is already in Coin_MoveThenBank, call
    Mg_LoseCredits(1). */
-extern "C" void Coin_Launch(Sprite* s, int* in)
-{
-    int loc0[2];
-    int loc2[2];
+extern "C" void Coin_Launch(Sprite *s, Vec2i *in) {
+    Vec2i loc0;
+    Vec2i loc2;
     s->mVisible = 1;
     s->mPos.x = 0xc000;
     s->mPos.y = 0xc000;
-    s->mTarget.x = in[0];
-    s->mTarget.y = in[1];
-    Vec2_Sub(loc0, &s->mTarget, &s->mPos);
-    func_0203d680(loc2, loc0, 0x100);
-    s->mStep.x = loc2[0];
-    s->mStep.y = loc2[1];
+    s->mTarget.x = in->x;
+    s->mTarget.y = in->y;
+    Vec2_Sub(&loc0, &s->mTarget, &s->mPos);
+    func_0203d680(&loc2, &loc0, 0x100);
+    s->mStep.x = loc2.x;
+    s->mStep.y = loc2.y;
     {
         int v = s->mStep.x;
         if (v < 0) v = -v;
@@ -835,12 +836,14 @@ extern "C" void Coin_SendOff(Sprite *s)
 
 /* State: move; on arrival rise (Coin_Rise). */
 extern "C" void Coin_MoveThenRise(Sprite *s) {
-    int v[2];
+    Vec2i v;
     ApproachLinear(s->mPos.x, s->mTarget.x, s->mStep.x);
     ApproachLinear(s->mPos.y, s->mTarget.y, s->mStep.y);
-    Vec2_Sub(v, &s->mTarget, &s->mPos);
-    if (v[0] != 0) return;
-    if (v[1] == 0) s->mState = pmf_Coin_Rise;
+    Vec2_Sub(&v, &s->mTarget, &s->mPos);
+    if (v.x != 0)
+        return;
+    if (v.y == 0)
+        s->mState = pmf_Coin_Rise;
 }
 
 /* State: rise. g = sMgCoinRiseFrames is 0x14 in the ROM; for mDelay
@@ -891,12 +894,14 @@ extern "C" void Coin_Spend(Sprite *s)
 
 /* State: move; on arrival rise (Coin_RiseSpent). */
 extern "C" void Coin_MoveThenRiseSpent(Sprite *s) {
-    int v[2];
+    Vec2i v;
     ApproachLinear(s->mPos.x, s->mTarget.x, s->mStep.x);
     ApproachLinear(s->mPos.y, s->mTarget.y, s->mStep.y);
-    Vec2_Sub(v, &s->mTarget, &s->mPos);
-    if (v[0] != 0) return;
-    if (v[1] == 0) s->mState = pmf_Coin_RiseSpent;
+    Vec2_Sub(&v, &s->mTarget, &s->mPos);
+    if (v.x != 0)
+        return;
+    if (v.y == 0)
+        s->mState = pmf_Coin_RiseSpent;
 }
 
 /* State: the same rise as Coin_Rise. */
@@ -932,44 +937,48 @@ extern "C" void Coin_Return(Sprite* s){
 }
 
 /* State: move; on arrival leave play, call Mg_GainCredits(1), reset. */
-extern "C" void Coin_MoveThenRefund(Sprite* s){
-  int v[2];
-  ApproachLinear(s->mPos.x, s->mTarget.x, s->mStep.x);
-  ApproachLinear(s->mPos.y, s->mTarget.y, s->mStep.y);
-  Vec2_Sub(v, &s->mTarget, &s->mPos);
-  if (v[0] != 0) return;
-  if (v[1] != 0) return;
-  ApproachLinear(gMgCoinsInPlay, 0, 1);
-  Mg_GainCredits(1);
-  Coin_Reset(s);
+extern "C" void Coin_MoveThenRefund(Sprite *s) {
+    Vec2i v;
+    ApproachLinear(s->mPos.x, s->mTarget.x, s->mStep.x);
+    ApproachLinear(s->mPos.y, s->mTarget.y, s->mStep.y);
+    Vec2_Sub(&v, &s->mTarget, &s->mPos);
+    if (v.x != 0)
+        return;
+    if (v.y != 0)
+        return;
+    ApproachLinear(gMgCoinsInPlay, 0, 1);
+    Mg_GainCredits(1);
+    Coin_Reset(s);
 }
 
 /* Place a sprite at `in`, visible, aimed at the corner (12, 12) at 1/16 of
    the distance per frame (Coin_FlyToCounter). */
-extern "C" void Coin_PlacePayout(Sprite* s, int* in){
-  Vec2i a;
-  Vec2i b;
-  s->mPos.x = in[0];
-  s->mPos.y = in[1];
-  s->mDelay = 0;
-  s->mVisible = 1;
-  s->mTarget.x = 0xc000;
-  s->mTarget.y = 0xc000;
-  Vec2_Sub(&a, &s->mTarget, &s->mPos);
-  func_0203d680(&b, &a, 0x100);
-  s->mStep.x = b.x;
-  s->mStep.y = b.y;
-  {
-    int x = s->mStep.x;
-    if (x < 0) x = -x;
-    s->mStep.x = x;
-  }
-  {
-    int y = s->mStep.y;
-    if (y < 0) y = -y;
-    s->mStep.y = y;
-  }
-  s->mState = pmf_Coin_FlyToCounter;
+extern "C" void Coin_PlacePayout(Sprite *s, Vec2i *in) {
+    Vec2i a;
+    Vec2i b;
+    s->mPos.x = in->x;
+    s->mPos.y = in->y;
+    s->mDelay = 0;
+    s->mVisible = 1;
+    s->mTarget.x = 0xc000;
+    s->mTarget.y = 0xc000;
+    Vec2_Sub(&a, &s->mTarget, &s->mPos);
+    func_0203d680(&b, &a, 0x100);
+    s->mStep.x = b.x;
+    s->mStep.y = b.y;
+    {
+        int x = s->mStep.x;
+        if (x < 0)
+            x = -x;
+        s->mStep.x = x;
+    }
+    {
+        int y = s->mStep.y;
+        if (y < 0)
+            y = -y;
+        s->mStep.y = y;
+    }
+    s->mState = pmf_Coin_FlyToCounter;
 }
 
 /* State: wait out mDelay, then move; on arrival play sound 0x149, call

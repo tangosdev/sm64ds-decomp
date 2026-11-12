@@ -20,22 +20,14 @@
  */
 #include "private/arm9_a1fc0_file_share.h"
 #include "nitro/fs/file.h"
-#include "private/arm9_wbt.h"
-#include "private/wbt_block_info_list.h"
+#include "nitro/wbt.h"
 #include "nitro/os/system.h"
 
 extern "C" {
 
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef signed short s16;
-typedef signed int s32;
-
 extern FileShareNode *func_02041ce0(void *area, int offset, int size);
 extern FileShareNode *func_02041c64(void *area, int offset, int size);
 extern FileShareNode *func_02041c2c(void *area, int blockId);
-extern struct WBTBlockInfoList *WBT_UnregisterBlock(int key);
 extern void func_02041ae8(void *base, void *node);
 extern void func_020423c8(void);
 extern void func_0204175c(void);
@@ -58,29 +50,28 @@ typedef struct {
     s16 hc;
 } Msg;
 
-void func_020412f0(char *thiz)
-{
+void func_020412f0(void *arg) {
     int sb;
     int type;
     u32 r6;
     FileShareNode *p;
     WBTPrepareSendDataCallback *n;
-    WBTCommand *cmd = (WBTCommand *)thiz;
+    WBTCommand *cmd = (WBTCommand *)arg;
 
     sb = WBT_AidbitmapToAid(cmd->peer_bmp);
-    if (cmd->command != 0xc)
+    if (cmd->command != WBT_CMD_SYSTEM_CALLBACK)
         return;
 
     type = cmd->event;
 
     switch (type) {
-    case 2:
+    case WBT_CMD_REQ_SYNC:
         break;
 
-    case 8:
+    case WBT_CMD_REQ_GET_BLOCK_DONE:
         break;
 
-    case 0xa: {
+    case WBT_CMD_REQ_USER_DATA: {
         r6 = sb * 0xc;
         Msg *m = (Msg *)cmd->u.user_data.data;
         char *base = data_020a2400;
@@ -154,7 +145,7 @@ void func_020412f0(char *thiz)
         break;
     }
 
-    case 0xd: {
+    case WBT_CMD_PREPARE_SEND_DATA: {
         char *base = data_020a2400;
         int key;
 

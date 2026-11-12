@@ -49,6 +49,7 @@
 #include "Vector3s.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_cp.h"
+#include "nitro/cp/sqrt.h"
 
 extern "C" {
 
@@ -76,47 +77,17 @@ Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
    local extern: no header in include/ declares it. */
 extern dBgPc data_020a0cec;
 
-/* The ROM inlines a RAW hardware sqrt at four sites -- NOT cstd::sqrt(u64)
-   (0x0203d744), which pre-shifts `x << 2` and rounds its result `(r + 1) >> 1`.
-   Neither the shift nor the rounding is present here, so this is a separate
-   inline helper, and the `0` and `1` it writes are loaded from frame slots
-   (sp+0x118, sp+0x10c) rather than immediates -- which is what four expansions
-   of one inline function look like on this compiler. */
+/* The ROM issues the hardware sqrt inline at four sites, through the SDK's
+   CP_SetSqrt64 / CP_WaitSqrt -- NOT cstd::sqrt(u64) (0x0203d744), which
+   pre-shifts `x << 2` and rounds its result `(r + 1) >> 1`. */
 /* The sqrt unit's result register.  Read through a CONST pointer, not a volatile
    one, and that is load-bearing rather than sloppy: mwccarm coalesces a local that is
    assigned straight from a volatile lvalue into a compiler temporary, so a volatile
    read here puts the three hypotenuses in the spill pool at 0x110/0x118/0x120.  The
    cartridge has them at 0xac/0xb0/0xb4 -- packed inside the declaration chain, which
-   is where an ordinary local goes.  The busy-wait in SqrtStart is the synchronisation;
-   by the time this is read the value is already settled. */
-#define SQRT_RESULT (*(const s32 *)0x40002b4)
-
-static inline void SqrtStart(u64 x, s32 zval, s32 one)
-{
-    volatile u16 *ime = (volatile u16 *)0x4000208;
-    u16 saved = *ime;
-    *ime = (u16)zval;
-    *(volatile u16 *)0x40002b0 = (u16)one;
-    *(volatile u64 *)0x40002b8 = x;
-    *ime;
-    *ime = saved;
-    while (*(volatile u16 *)0x40002b0 & 0x8000)
-        ;
-}
-
-static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
-{
-    volatile u16 *ime = (volatile u16 *)0x4000208;
-    u16 saved = *ime;
-    *ime = (u16)zval;
-    *(volatile u16 *)0x40002b0 = (u16)one;
-    *(volatile u64 *)0x40002b8 = x;
-    *ime;
-    *ime = saved;
-    while (*(volatile u16 *)0x40002b0 & 0x8000)
-        ;
-    return *(volatile s32 *)0x40002b4;
-}
+   is where an ordinary local goes.  CP_WaitSqrt is the synchronisation; by the time
+   this is read the value is already settled. */
+#define SQRT_RESULT (*(const s32 *)&REG_SQRT_RESULT)
 
 /* The scale-preserving product for the normals' 1.0 == 0x400 scale. Both
    operands stay 64-bit into the shift; letting this collapse to 32 bits is the
@@ -185,7 +156,7 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
    the hardware sqrt, then the contact angle through FX_Div, compared
    against upAxis. IsNearZeroDivisor guards the divisor: |x| <= 8 means near-zero,
    so bail. */
-#define EDGE_FILTER(d, zval, hypv)                                                 \
+#define EDGE_FILTER(d, hypv)                                                       \
     if (!(sphere.flags & 2)) {                                                     \
         if (cls == 1) {                                                            \
             if (data_020a0cec.surface.clps.GetFloorClass() == 1) {                         \
@@ -209,7 +180,8 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
             dh = (d) >> 4;                                                         \
             fh = faceDot >> 4;                                                     \
             axisDot = VEC_DotProduct(&sn, (const Vector3 *)&upAxis);                       \
-            SqrtStart((s64)fh * fh + (s64)dh * dh, zval, k1);                 \
+            CP_SetSqrt64((s64)fh * fh + (s64)dh * dh);                         \
+            CP_WaitSqrt();                                                     \
             hypv = SQRT_RESULT;                                                    \
             if (IsNearZeroDivisor(hypv))                                               \
                 continue;                                                          \
@@ -436,12 +408,8 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     s32 z108;
     s32 k1;
     s32 k0;
-    s32 z118;
-    s32 z11c;
-    s32 z120;
     s32 z154;
     s32 k3;
-    s32 z15c;
     s32 k2;
     s32 tlen;
     u32 z;
@@ -570,12 +538,8 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     rsq = (s64)rsc * rsc;
     k0 = loPX;
     k1 = 1;
-    z118 = loPX;
-    z11c = loPX;
-    z120 = loPX;
     z154 = loPX;
     k3 = 3;
-    z15c = loPX;
     k2 = 2;
     z108 = loPX;
 
@@ -811,19 +775,19 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                         }
 
                     edge1:
-                        EDGE_FILTER(dot1, z118, hyp1)
+                        EDGE_FILTER(dot1, hyp1)
                         d1h = dot1 >> 31;
                         dsq = rsq - (s64)dot1 * dot1;
                         goto tail;
 
                     edge2:
-                        EDGE_FILTER(dot2, z11c, hyp2)
+                        EDGE_FILTER(dot2, hyp2)
                         d2h = dot2 >> 31;
                         dsq = rsq - (s64)dot2 * dot2;
                         goto tail;
 
                     edge3:
-                        EDGE_FILTER(dot3, z120, hyp3)
+                        EDGE_FILTER(dot3, hyp3)
                         d3h = dot3 >> 31;
                         dsq = rsq - (s64)dot3 * dot3;
                         goto tail;
@@ -850,7 +814,9 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                         contactKind = k3;
 
                     tail:
-                        depth = SqrtRaw((u64)dsq, z15c, k1) - faceDot;
+                        CP_SetSqrt64((u64)dsq);
+                        CP_WaitSqrt();
+                        depth = (s32)CP_GetSqrtResultImm32() - faceDot;
                         if (depth < 0)
                             continue;
                         if (!contactKind)
