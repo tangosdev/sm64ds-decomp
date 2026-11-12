@@ -2101,7 +2101,7 @@ void daKpa_c::ActJumpOntoStage() {
             if (this->mVariantID == 1) {
                 dActor_c *r;
                 this->mState = BOWSER_STATE_ARENA_TILT;
-                r = (dActor_c *)dActor_c::FindWithActorID(BOWSER_ACTOR_KOOPA2BG, 0);
+                r = dActor_c::FindWithActorID(BOWSER_ACTOR_KOOPA2BG, 0);
                 if (r) this->mArenaBgUniqueID = r->uniqueID;
                 this->mVertAccel = -0x2000;
             }
