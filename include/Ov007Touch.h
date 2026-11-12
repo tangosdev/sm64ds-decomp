@@ -2,28 +2,22 @@
 #define OV007_TOUCH_H
 
 #include "types.h"
+#include "nitro/spi/tp.h"
 
-/* Reconstructed layouts and names, not recovered class identity.
+/* Reconstructed layouts and names, not recovered class identity. Each
+ * stylus reading is the SDK's TPData (nitro/spi/tp.h): func_ov007_020c1db0
+ * patches an axis from the previous frame when validity bit 0 (x) or bit 1
+ * (y) is set.
  *
- * Ov007TouchSample is one stylus reading in the shape TP_WaitCalibratedResult fills
- * (the SDK's x/y/touch/validity record): func_ov007_020c1db0 patches an axis
- * from the previous frame when validity bit 0 (x) or bit 1 (y) is set. */
-typedef struct Ov007TouchSample {
-    u16 x;        /* 0x0 */
-    u16 y;        /* 0x2 */
-    u16 touch;    /* 0x4: nonzero while the stylus is down */
-    u16 validity; /* 0x6: bit 0 x invalid, bit 1 y invalid */
-} Ov007TouchSample;
-
-/* The 0x44-byte touch-panel record func_ov007_020c2068 allocates (cleared by
+ * The 0x44-byte touch-panel record func_ov007_020c2068 allocates (cleared by
  * func_ov007_020c2024), stored at the ov007 manager's +0x50 and updated once
  * a frame by func_ov007_020c1db0. Every role below is from c1db0's own
  * reads and writes. */
 typedef struct Ov007Touch {
-    Ov007TouchSample raw;      /* 0x00: this frame's reading, before patching */
-    Ov007TouchSample cur;      /* 0x08: raw with invalid axes patched */
-    Ov007TouchSample prev;     /* 0x10: last frame's cur */
-    Ov007TouchSample lastDown; /* 0x18: the latest cur with the stylus down */
+    TPData raw;                /* 0x00: this frame's reading, before patching */
+    TPData cur;                /* 0x08: raw with invalid axes patched */
+    TPData prev;               /* 0x10: last frame's cur */
+    TPData lastDown;           /* 0x18: the latest cur with the stylus down */
     u32 heldFrames;            /* 0x20: 0 on the press frame, +1 per held frame */
     u32 releasedFrames;        /* 0x24: 0 on the release frame, +1 per idle frame */
     s32 countdown;             /* 0x28: c1db0 counts it down to 0 every frame */

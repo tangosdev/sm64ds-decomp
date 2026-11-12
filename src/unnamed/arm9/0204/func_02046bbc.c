@@ -1,6 +1,7 @@
 #include "types.h"
 #include "dExtModel_c.h"
 #include "private/BTP_File.h"
+#include "nitro/os/system.h"
 
 /* Texture-pattern (BTP) step: for each sequence of the BTP file, find the
  * last key whose frame is <= the requested frame, then point the material
@@ -37,7 +38,6 @@ struct MaterialState {
 typedef char MaterialState_size_must_be_0x30[sizeof(struct MaterialState) == 0x30 ? 1 : -1];
 #endif
 
-extern void OS_Terminate(void);
 void func_02046bbc(struct ModelComponents *model, struct BTP_File *file, unsigned int frame) {
     int i;
     if (frame >= file->numFrames) {

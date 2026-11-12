@@ -1,0 +1,145 @@
+{
+  "id": "arm9/WM_Standard",
+  "module": "arm9",
+  "source": "src/engine/wm/WM_Standard.c",
+  "promoted_source": "src/engine/wm/WM_Standard.c",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "One contiguous run of the Nitro SDK's wm_standard.c, 0x02061d30..0x020623ec: 13 functions, gapless in config/arm9/delinks.txt. Every body compiles byte-identical with the signatures, locals and WM_CHECK_RESULT shape of ntrtwl/NitroSDK libraries/wm/src/wm_standard.c; this older SDK sends WM_Enable and WM_Initialize's three buffers without miscFlags, sends START_PARENT with no powerSave, writes the scan and connect requests straight into the ARM9-to-ARM7 command block, and checks the MP exchange time in WmCheckParentParameter.",
+    "Order: mwccarm emits the bodies in reverse. The SDK file's order (WM_Enable, WM_Disable, WM_PowerOn, WM_PowerOff, WM_Initialize, WM_Reset, WM_End, WM_SetParentParameter, WmCheckParentParameter, WM_StartParent, WM_StartScan, WM_StartConnect, WM_Disconnect, with the uncalled WM_EndParent, WM_StartScanEx, WM_EndScan and WM_DisconnectChildren absent) is the ROM's order reversed, as in pret's pokediamond WM_standard.s.",
+    "WmCheckParentParameter is static, as in the SDK; it is not inlined into its one caller.",
+    "No data: no function owns .rodata, .data or .bss.",
+    "BOTTOM EDGE: the wm_sync.c run (src/engine/wm/WM_Sync.c) ends at 0x02061d30 with WM_SetIndCallback. TOP EDGE: the wm_mp.c run (src/engine/wm/WM_Mp.c) starts at 0x020623ec."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02061d30",
+      "end": "0x020623ec"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "WM_Disconnect",
+      "address": "0x02061d30",
+      "size": "0x108",
+      "legacy_source": "src/WM_Disconnect.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "WM_StartConnect",
+      "address": "0x02061e38",
+      "size": "0xac",
+      "legacy_source": "src/WM_StartConnect.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "WM_StartScan",
+      "address": "0x02061ee4",
+      "size": "0xf8",
+      "legacy_source": "src/WM_StartScan.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "WM_StartParent",
+      "address": "0x02061fdc",
+      "size": "0x48",
+      "legacy_source": "src/WM_StartParent.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "WmCheckParentParameter",
+      "address": "0x02062024",
+      "size": "0x8c",
+      "legacy_source": "src/WmCheckParentParameter.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "WM_SetParentParameter",
+      "address": "0x020620b0",
+      "size": "0x108",
+      "legacy_source": "src/WM_SetParentParameter.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "WM_End",
+      "address": "0x020621b8",
+      "size": "0x48",
+      "legacy_source": "src/WM_End.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "WM_Reset",
+      "address": "0x02062200",
+      "size": "0x40",
+      "legacy_source": "src/WM_Reset.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "WM_Initialize",
+      "address": "0x02062240",
+      "size": "0x68",
+      "legacy_source": "src/WM_Initialize.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "WM_PowerOff",
+      "address": "0x020622a8",
+      "size": "0x48",
+      "legacy_source": "src/WM_PowerOff.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "WM_PowerOn",
+      "address": "0x020622f0",
+      "size": "0x48",
+      "legacy_source": "src/WM_PowerOn.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "WM_Disable",
+      "address": "0x02062338",
+      "size": "0x48",
+      "legacy_source": "src/WM_Disable.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "WM_Enable",
+      "address": "0x02062380",
+      "size": "0x6c",
+      "legacy_source": "src/WM_Enable.c",
+      "ordinal": 12
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "relocations": [],
+  "compiler_only_output": [],
+  "notes": [
+    "HAND-BUILT manifest entry, not tools/tubuild.py create output: tu_map does not segment arm9.",
+    "Built as C, like the SDK. The prototypes are declared in include/nitro/wm/wm_api.h; WMBssDesc, WMParentParam and WMScanParam are in include/nitro/wm/wm.h."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/arm9-WM_Standard/WM_Standard.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 13,
+    "functions_declared": 13,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

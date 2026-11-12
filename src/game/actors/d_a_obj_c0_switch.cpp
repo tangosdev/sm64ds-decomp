@@ -33,16 +33,6 @@
  * - data_ov012_021124a8 / 021124a0 are this overlay's BMD/KCL handles,
  *   defined here. data_ov012_02111cd0 is the CLPS block this TU does
  *   not own. data_0209caa0 is an arm9 shared-flags global.
- *
- * Consolidated from these legacy one-function sources (ROM address order):
- *   [0] 0x021111a0  src/_ZN16daObjC0_Switch_cD1Ev.cpp
- *   [1] 0x021111e4  src/_ZN16daObjC0_Switch_cD0Ev.cpp
- *   [2] 0x0211123c  src/_ZN16daObjC0_Switch_c15OnGroundPoundedER8dActor_c.cpp
- *   [3] 0x021112ec  src/_ZN16daObjC0_Switch_c16CleanupResourcesEv.cpp
- *   [4] 0x02111324  src/_ZN16daObjC0_Switch_c6RenderEv.cpp
- *   [5] 0x0211134c  src/_ZN16daObjC0_Switch_c8BehaviorEv.cpp
- *   [6] 0x02111370  src/_ZN16daObjC0_Switch_c13InitResourcesEv.cpp
- *   [7] 0x02111420  src/daObjC0_Switch_c_Spawn.c
  */
 
 /* daObjC0_Switch_c.h FIRST: it pulls in dBgActor_c.h, which must reach

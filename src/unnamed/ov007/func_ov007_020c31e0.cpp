@@ -1,5 +1,6 @@
 //cpp
 #include "types.h"
+#include "nitro/cp/sqrt.h"
 
 extern "C" {
 inline s64 inline_fn(int arg0) {
@@ -24,18 +25,9 @@ int func_ov007_020c31e0(int *xa, int *xb, int n, int cx, int qy, int maxr, int *
     }
 
     if ((maxr < 0) || ((inline_fn(maxr) * maxr) >= bestd)) {
-        u16 ime = *((volatile u16 *)0x4000208);
-        *((volatile u16 *)0x4000208) = 0;
-        *((volatile u16 *)0x40002b0) = 1;
-        *((volatile u64 *)0x40002b8) = ((u64)bestd) << 2;
-        *((volatile u16 *)0x4000208);
-        *((volatile u16 *)0x4000208) = ime;
+        CP_SetSqrt64((u64)bestd << 2);
         if (out) {
-            while ((*((volatile u16 *)0x40002b0)) & 0x8000) {
-                ;
-            }
-
-            *out = ((*((volatile int *)0x40002b4)) + 1) >> 1;
+            *out = ((s32)CP_GetSqrtResult32() + 1) >> 1;
         }
         return best;
     }

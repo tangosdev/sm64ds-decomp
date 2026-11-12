@@ -1329,8 +1329,9 @@ int dScMgCoin_c::InitResources() {
     void *a, *b, *d;
 
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
-    *(volatile u16 *)0x400000e &= ~3;
-    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1210;
+    G2_SetBG3Priority(0);
+    G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
+                         GX_BG_CHARBASE_0x10000);
 
     a = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_NCG_BIN);
     DecompressLZ16(a, (void *)((int)G2_GetBG3CharPtr() + 0x4000));
@@ -1350,8 +1351,9 @@ int dScMgCoin_c::InitResources() {
     GX_LoadOBJPltt(a, 0, 0x100);
 
     gSubScreenLayers |= 8;
-    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 3;
-    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & 0x43) | 0x1210;
+    G2S_SetBG3Priority(3);
+    G2S_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
+                          GX_BG_CHARBASE_0x10000);
 
     d = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_NCG_BIN);
     DecompressLZ16(d, (void *)((char *)G2S_GetBG3CharPtr() + 0x4000));

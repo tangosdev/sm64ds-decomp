@@ -1,8 +1,11 @@
 #include "types.h"
+#include "nitro/cp/divider.h"
+#include "nitro/cp/sqrt.h"
+
+/* v / |v|: 1 / |v|^2 in the divider while the square-root unit takes |v|,
+   then each component times their product (NitroSDK fx_vec.c). */
 void VEC_Normalize(const Vector3 *v, Vector3 *out) {
     s64 sq;
-    volatile u16 *ime;
-    u16 saved;
     int len;
     s64 recip;
     s64 scale;
@@ -12,22 +15,12 @@ void VEC_Normalize(const Vector3 *v, Vector3 *out) {
     sq += (s64)v->y * v->y;
     sq += (s64)v->z * v->z;
 
-    *(volatile u16 *)0x4000280 = 2;
-    *(volatile u64 *)0x4000290 = (u64)0x1000000 << 32;
-    *(volatile u64 *)0x4000298 = sq;
+    CP_SetDiv64_64((u64)0x1000000 << 32, (u64)sq);
+    sq <<= 2;
+    CP_SetSqrt64((u64)sq);
 
-    ime = (volatile u16 *)0x4000208;
-    saved = *ime;
-    *ime = 0;
-    *(volatile u16 *)0x40002b0 = 1;
-    *(volatile u64 *)0x40002b8 = (u64)sq << 2;
-    *ime;
-    *ime = saved;
-
-    while (*(volatile u16 *)0x40002b0 & 0x8000) {}
-    len = *(volatile int *)0x40002b4;
-    while (*(volatile u16 *)0x4000280 & 0x8000) {}
-    recip = *(volatile s64 *)0x40002a0;
+    len = CP_GetSqrtResult32();
+    recip = CP_GetDivResult64();
 
     scale = recip * (s64)len;
 

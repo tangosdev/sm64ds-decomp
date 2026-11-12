@@ -138,7 +138,7 @@ extern "C" void GXi_NopClearFifo128_(unsigned addr) {
 extern "C" {
 // storage for the game's DMA bookkeeping (BSS on the DS)
 int MIi_GXDmaParams[8];                                /* GX-DMA state */
-struct { unsigned handler, active, arg; } data_020a60c4[8]; /* per-channel cbs */
+struct { unsigned handler, active, arg; } OSi_IrqCallbackInfo[8]; /* per-channel cbs */
 }
 
 namespace {
@@ -175,8 +175,8 @@ extern "C" void MIi_DmaSetParams(int ch, int src, int dst, int ctrl) {
                reinterpret_cast<uint32_t *>(static_cast<uintptr_t>(dst)), words);
     if (static_cast<uintptr_t>(dst) == 0x04000400u) {
         if (ctrl & 0x40000000) {
-            const unsigned h = data_020a60c4[ch & 7].handler;
-            if (h) reinterpret_cast<void (*)(unsigned)>(h)(data_020a60c4[ch & 7].arg);
+            const unsigned h = OSi_IrqCallbackInfo[ch & 7].handler;
+            if (h) reinterpret_cast<void (*)(unsigned)>(h)(OSi_IrqCallbackInfo[ch & 7].arg);
         } else if (g_ie & 0x200000u) {
             if (g_gxfifo_handler) g_gxfifo_handler();
         }

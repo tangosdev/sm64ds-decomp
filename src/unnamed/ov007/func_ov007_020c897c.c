@@ -1,4 +1,6 @@
 #include "Ov007Transition.h"
+#include "nitro/gx/g2.h"
+#include "nitro/gx/gx_bgcnt.h"
 
 /* Stops the transition: idle, at t = 1.0, with the request cleared, and
  * turns its effect off on each of its screens. Mosaic (1) clears the mosaic
@@ -10,26 +12,26 @@ void func_ov007_020c897c(Ov007Transition *tr) {
     switch (tr->effect) {
     case 1:
         if (tr->screens & 1) {
-            *(volatile u16 *)0x4000008 &= ~0x40;
-            *(volatile u16 *)0x400000a &= ~0x40;
-            *(volatile u16 *)0x400000c &= ~0x40;
-            *(volatile u16 *)0x400000e &= ~0x40;
+            G2_BG0Mosaic(0);
+            G2_BG1Mosaic(0);
+            G2_BG2Mosaic(0);
+            G2_BG3Mosaic(0);
         }
         if (tr->screens & 2) {
-            *(volatile u16 *)0x4001008 &= ~0x40;
-            *(volatile u16 *)0x400100a &= ~0x40;
-            *(volatile u16 *)0x400100c &= ~0x40;
-            *(volatile u16 *)0x400100e &= ~0x40;
+            G2S_BG0Mosaic(0);
+            G2S_BG1Mosaic(0);
+            G2S_BG2Mosaic(0);
+            G2S_BG3Mosaic(0);
         }
         break;
     case 2:
     case 3:
     case 4:
         if (tr->screens & 1) {
-            *(volatile u16 *)0x4000050 = 0;
+            G2_BlendNone();
         }
         if (tr->screens & 2) {
-            *(volatile u16 *)0x4001050 = 0;
+            G2S_BlendNone();
         }
         break;
     }

@@ -79,9 +79,32 @@
 #include "dExtAnmTexPat_c.h"
 #include "dExtShadowModel_c.h"
 
+struct SharedFilePtr;
+struct CLPS_Block;
+
+/* The per-leaf resource table both InitResources store into mFileTable (the
+ * Thwomp's at data_ov091_02135138, Grindel's at data_ov025_02113814). Shaped
+ * from its consumers: Init loads the model/collision files,
+ * binds the CLPS block and, when [3] is non-null, the texture animation;
+ * CleanupResources releases [0], [1] and [3]; Render animates only when [3]
+ * is set; UpdateDropShadow reads [4]/[5] as shadow extents. Owned by the
+ * leaf overlays, never defined in this class's TU. */
+struct DsnBaseFileTable {
+    SharedFilePtr *model;     /* +0x00, BMD */
+    SharedFilePtr *collision; /* +0x04, KCL */
+    CLPS_Block *clps;         /* +0x08, CLPS block: not a file, not released */
+    SharedFilePtr *texAnim;   /* +0x0c, BTP, or null when the leaf has none */
+    int shadowExtentX;        /* +0x10, DropShadow X base */
+    int shadowExtentZ;        /* +0x14, DropShadow Z base */
+};
+
+#ifndef SM64DS_PLATFORM_PC
+typedef char DsnBaseFileTable_size_must_be_0x18[sizeof(DsnBaseFileTable) == 0x18 ? 1 : -1];
+#endif
+
 struct daDsnBase_c : dBgActor_c {
     /* Field NAMES are placeholders. Offsets, widths and types are observed. */
-    s32 mFileTable;                   /* 0x320 - a void** in practice */
+    DsnBaseFileTable *mFileTable;     /* 0x320 */
     dExtAnmTexPat_c mTextureSequence; /* 0x324 */
     dExtShadowModel_c mShadowModel;   /* 0x338 */
 

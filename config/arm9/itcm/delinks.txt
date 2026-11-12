@@ -88,7 +88,7 @@ src/OSReadROMArea.c:
     complete
     .text start:0x01ffdbd8 end:0x01ffdd08
 
-src/OSi_ReloadRomData.cpp:
+src/OSi_ReloadRomData.c:
     complete
     .text start:0x01ffdd08 end:0x01ffde00
 src/MIi_DmaSetParams_wait.cpp:

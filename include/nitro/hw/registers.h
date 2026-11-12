@@ -48,11 +48,16 @@
 #define REG_DB_BG2CNT (*(volatile u16 *)0x0400100c)
 #define REG_DB_BG3CNT (*(volatile u16 *)0x0400100e)
 
+#define BG_CONTROL_PRIORITY_MASK 3u
 #define BG_CONTROL_MOSAIC (1u << 6)
 
 /* Colour special effects (alpha blending and brightness), one per engine. */
 #define REG_BLDCNT    (*(volatile u16 *)0x04000050)
 #define REG_DB_BLDCNT (*(volatile u16 *)0x04001050)
+
+/* Master brightness: fades the whole engine toward white or black. */
+#define REG_MASTER_BRIGHT    (*(volatile u16 *)0x0400006c)
+#define REG_DB_MASTER_BRIGHT (*(volatile u16 *)0x0400106c)
 
 /* DISPSTAT bit 1 is the HBlank flag; VCOUNT is the line being drawn. */
 #define REG_DISPSTAT (*(volatile u16 *)0x04000004)
@@ -135,6 +140,28 @@
 #define REG_SWAP_BUFFERS (*(volatile u32 *)0x04000540)
 #define REG_VIEWPORT     (*(volatile u32 *)0x04000580)
 
+/* The 3D rendering engine: the clear colour (with its alpha, polygon ID and
+   fog flag in the upper bits), clear depth and clear-image offset, the fog
+   colour and depth offset, and the alpha-test reference. EDGE_COLOR (eight
+   u16s), FOG_TABLE (32 bytes) and TOON_TABLE (32 u16s) are tables, filled
+   from their first address. */
+#define REG_EDGE_COLOR_ADDR 0x04000330
+#define REG_ALPHA_TEST_REF  (*(volatile u16 *)0x04000340)
+#define REG_CLEAR_COLOR     (*(volatile u32 *)0x04000350)
+#define REG_CLEAR_DEPTH     (*(volatile u16 *)0x04000354)
+#define REG_CLRIMAGE_OFFSET (*(volatile u16 *)0x04000356)
+#define REG_FOG_COLOR       (*(volatile u32 *)0x04000358)
+#define REG_FOG_OFFSET      (*(volatile u16 *)0x0400035c)
+#define REG_FOG_TABLE_ADDR  0x04000360
+#define REG_TOON_TABLE_ADDR 0x04000380
+
+/* 3D geometry command: the shininess table, written 32 words in a row. */
+#define REG_SHININESS (*(volatile u32 *)0x040004d0)
+
+/* The geometry engine's status: matrix-stack levels and error flag, the busy
+   flag and the FIFO interrupt condition (bit masks in nitro/gx/g3x.h). */
+#define REG_GXSTAT (*(volatile u32 *)0x04000600)
+
 /* Timer 0. The counter and the control word share an address: reads see the live
    count, writes set the reload value. */
 #define REG_TM0CNT_L (*(volatile u16 *)0x04000100)
@@ -143,12 +170,23 @@
 #define REG_EXMEMCNT (*(volatile u16 *)0x04000204)
 #define REG_WRAMCNT  (*(volatile u8  *)0x04000247)
 
-/* Hardware square root. SQRTCNT bit 15 is the busy flag; the ROM spins on it
-   through a pointer, so the address form is what that loop needs. */
-#define REG_SQRTCNT     (*(volatile u16 *)0x040002b0)
-#define REG_SQRT_RESULT (*(volatile s32 *)0x040002b4)
+/* The divider and square-root coprocessor (NitroSDK's ioreg_CP.h). The
+   operand and result registers are 64 bits wide and are read or written either
+   whole or by their low word, so they are named by address; nitro/cp/divider.h
+   and nitro/cp/sqrt.h are the accessors. */
+#define REG_DIVCNT             (*(volatile u16 *)0x04000280)
+#define REG_DIV_NUMER_ADDR     0x04000290
+#define REG_DIV_DENOM_ADDR     0x04000298
+#define REG_DIV_RESULT_ADDR    0x040002a0
+#define REG_DIVREM_RESULT_ADDR 0x040002a8
+#define REG_SQRTCNT            (*(volatile u16 *)0x040002b0)
+#define REG_SQRT_RESULT        (*(volatile u32 *)0x040002b4)
+#define REG_SQRT_PARAM_ADDR    0x040002b8
 
-#define SQRT_CONTROL_BUSY (1u << 15)
+#define REG_CP_DIVCNT_BUSY_MASK  0x8000
+#define REG_CP_DIVCNT_MODE_MASK  0x0003
+#define REG_CP_SQRTCNT_BUSY_MASK 0x8000
+#define REG_CP_SQRTCNT_MODE_MASK 0x0001
 
 /* Power control: bit 0 is the master enable for the 2D/3D hardware. */
 #define REG_POWCNT1 (*(volatile u16 *)0x04000304)
@@ -172,6 +210,26 @@
 #define REG_IE (*(volatile u32 *)0x04000210)
 #define REG_IF (*(volatile u32 *)0x04000214)
 
-#define IRQ_GAME_CARD (1u << 19)
+/* The IE/IF bit numbers (nitro/hw/ARM9/ioreg_OS.h); nitro/os/interrupt.h
+   has the OS_IE_* masks. */
+#define REG_OS_IE_VB_SHIFT  0
+#define REG_OS_IE_HB_SHIFT  1
+#define REG_OS_IE_VE_SHIFT  2
+#define REG_OS_IE_T0_SHIFT  3
+#define REG_OS_IE_T1_SHIFT  4
+#define REG_OS_IE_T2_SHIFT  5
+#define REG_OS_IE_T3_SHIFT  6
+#define REG_OS_IE_D0_SHIFT  8
+#define REG_OS_IE_D1_SHIFT  9
+#define REG_OS_IE_D2_SHIFT  10
+#define REG_OS_IE_D3_SHIFT  11
+#define REG_OS_IE_K_SHIFT   12
+#define REG_OS_IE_I_D_SHIFT 13
+#define REG_OS_IE_A7_SHIFT  16
+#define REG_OS_IE_IFE_SHIFT 17
+#define REG_OS_IE_IFN_SHIFT 18
+#define REG_OS_IE_MC_SHIFT  19
+#define REG_OS_IE_MI_SHIFT  20
+#define REG_OS_IE_GF_SHIFT  21
 
 #endif /* NITRO_HW_REGISTERS_H */

@@ -82,8 +82,8 @@ extern void  Mg_DrawScoreTally(void *, int, int, int);
 extern int   Mg_IsNewRecord(void);
 extern int   func_020126e8(int a);
 extern int   func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
-extern void MIi_CpuClear16(u16 val, void *dst, int nbytes);
 #include "OAM.h"
+#include "nitro/mi/memory.h"
 extern void OamRender10_d_s_mg_teresa(int sub, struct OamAttr *data, s32 x, s32 y, s32 palette,
                                       s32 priority, s32 scaleX, s32 scaleY, s32 rotation, s32 mode);
 
@@ -437,7 +437,7 @@ void dScMgTeresa_c::BigBoo_Start()
     mBigBoo[0].frame = 8;
     mBigBoo[0].moveRight = 0;
     mBigBoo[0].done = 0;
-    G2x_SetBlendAlpha_(&REG_BLDCNT, 0, 0xc, 0xc, 0x10);
+    G2_SetBlendAlpha(0, 0xc, 0xc, 0x10);
 }
 
 void dScMgTeresa_c::BigBoo_Hide()
@@ -1097,7 +1097,7 @@ void dScMgTeresa_c::Boo_StateFadeAway(int i) {
     mBoos[i].mFade++;
     mBoos[i].mTimer = 0;
     if (i == mLastSettledBoo) {
-        G2x_SetBlendAlpha_(&REG_DB_BLDCNT, 0, 4, 0x10 - mBoos[i].mFade, 0x10);
+        G2S_SetBlendAlpha(0, 4, 0x10 - mBoos[i].mFade, 0x10);
     }
     if (mBoos[i].mFade >= 0x10) {
         mBoos[i].mInPlay = 0;
@@ -1143,7 +1143,7 @@ void dScMgTeresa_c::Boo_StateFadeIn(int i) {
     mBoos[i].mTimer = 0;
 
     if (i == mLastSettledBoo) {
-        G2x_SetBlendAlpha_(&REG_DB_BLDCNT, 0, 1, mBoos[i].mFade, 0x10);
+        G2S_SetBlendAlpha(0, 1, mBoos[i].mFade, 0x10);
     }
 
     if (mBoos[i].mFade < 0x10)
@@ -1211,7 +1211,7 @@ void dScMgTeresa_c::Boo_StateFadeOut(int i) {
     mBoos[i].mFade++;
     mBoos[i].mTimer = 0;
     if (i == 0)
-        G2x_SetBlendAlpha_(&REG_DB_BLDCNT, 0, 1, 0x10 - mBoos[i].mFade, 0x10);
+        G2S_SetBlendAlpha(0, 1, 0x10 - mBoos[i].mFade, 0x10);
     if (mBoos[i].mFade < 0x10)
         return;
     mBoos[i].mFade = 0;
@@ -1629,9 +1629,9 @@ void dScMgTeresa_c::PaintSquare(int cx, int cy, int val, int n)
                         if (y >= -0xc0 - sMgTopScreenYOffset && y >= 0 && y < 0xc0) {
                             addr = (int *)((char *)G2S_GetBG0CharPtr() +
                                            ((x / 8) + (y / 8) * 32) * 32 + (y & 7) * 4);
-                            MIi_CpuCopy32(addr, &buf, 4);
+                            MI_CpuCopy32(addr, &buf, 4);
                             buf = (buf & (-1 ^ (0xf << ((x & 7) * 4)))) | (val << ((x & 7) * 4));
-                            MIi_CpuCopy32(&buf, addr, 4);
+                            MI_CpuCopy32(&buf, addr, 4);
                         }
                     }
                 }
@@ -1678,7 +1678,7 @@ void dScMgTeresa_c::StartRound(int reset) {
     SpawnBoos();
     char *dst = (char *)G2S_GetBG0CharPtr();
     val = 0x1111;
-    MIi_CpuClear16(val, dst, 0x6000);
+    MI_CpuFill16(dst, val, 0x6000);
     mSceneState = 0;
     FreeGfxSlotsById(0x1d);
     mBannerTimer = 0x20;
@@ -1723,20 +1723,22 @@ s32 dScMgTeresa_c::InitResources()
     volatile u16 fa;
     volatile u16 fb;
     volatile u16 fc;
-    REG_BG2CNT &= ~3;
-    REG_BG2CNT &= ~0x40;
+    G2_SetBG2Priority(0);
+    G2_BG2Mosaic(0);
     *((volatile u32 *) 0x4000018) = 0;
-    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1210;
+    G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
+                         GX_BG_CHARBASE_0x10000);
     {
         void *p = G2_GetBG2ScrPtr();
         fa = 0x5300;
-        MIi_CpuClear16(fa, p, 0x800);
+        MI_CpuFill16(p, fa, 0x800);
     }
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
-    REG_BG3CNT = REG_BG3CNT & ~3;
-    REG_BG3CNT &= ~0x40;
+    G2_SetBG3Priority(0);
+    G2_BG3Mosaic(0);
     *((volatile u32 *) 0x400001c) = 0;
-    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x9310;
+    G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x512, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9800,
+                         GX_BG_CHARBASE_0x10000);
     t = LoadFile(0x9b);
     DecompressLZ16(t, G2_GetBG2CharPtr());
     Deallocate(t);
@@ -1753,26 +1755,28 @@ s32 dScMgTeresa_c::InitResources()
     f2 = LoadFile(0x102);
     DecompressLZ16(f1, G2_GetOBJCharPtr());
     GX_LoadOBJPltt(f2, 0, 0x100);
-    REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0x218;
-    REG_DB_BG0CNT &= ~0x40;
+    G2S_SetBG0Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x1000,
+                      GX_BG_CHARBASE_0x18000, GX_BG_EXTPLTT_01);
+    G2S_BG0Mosaic(0);
     *((volatile u32 *) 0x4001010) = 0;
-    REG_DB_BG0CNT &= ~3;
+    G2S_SetBG0Priority(0);
     {
         void *p = G2S_GetBG0ScrPtr();
         fb = 0;
-        MIi_CpuClear16(fb, p, 0x800);
+        MI_CpuFill16(p, fb, 0x800);
     }
     Mg_InitBrush((char *)this, 0, 0, 0);
     {
         void *p = (char *)G2S_GetBG0CharPtr();
         fc = 0x1111;
-        MIi_CpuClear16(fc, p, 0x6000);
+        MI_CpuFill16(p, fc, 0x6000);
     }
     gSubScreenLayers |= 4;
-    REG_DB_BG2CNT = (REG_DB_BG2CNT & ~3) | 1;
-    REG_DB_BG2CNT &= ~0x40;
+    G2S_SetBG2Priority(1);
+    G2S_BG2Mosaic(0);
     *((volatile u32 *) 0x4001018) = 0;
-    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x408;
+    G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x2000,
+                          GX_BG_CHARBASE_0x08000);
     t = LoadFile(0x9f);
     DecompressLZ16(t, G2S_GetBG2CharPtr());
     Deallocate(t);

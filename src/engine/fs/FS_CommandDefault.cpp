@@ -16,14 +16,11 @@
  * first). Its thread queues are 16-bit masks of thread ids.
  */
 #include "types.h"
-#include "private/fs_views.h"
-
-typedef struct FSFile FSFile;
+#include "nitro/fs/file.h"
+#include "nitro/os/thread.h"
 
 extern "C" {
 
-#define FS_FILE_STATUS_SYNC 0x00000004
-#define FS_FILE_STATUS_IS_DIR 0x00000020
 #define FS_ARCHIVE_FLAG_IS_SYNC 0x00000200
 
 #define FS_COMMAND_SEEKDIR 2
@@ -88,9 +85,6 @@ typedef struct FSiSyncReadParam {
 } FSiSyncReadParam;
 
 int FSi_TranslateCommand(FSFile *p_file, int command);
-void FS_InitFile(void *p_file);
-void MI_CpuCopy8(const void *src, void *dst, u32 size);
-void OS_SleepThread(u16 *queue);
 extern const char data_0209a044[]; /* ":/" */
 
 void FSi_ReadTable(FSiSyncReadParam *p, void *dst, u32 len);
@@ -99,6 +93,7 @@ int FSi_StrNICmp(const u8 *str1, const u8 *str2, int len);
 }
 
 #include "nitro/os/system.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
 

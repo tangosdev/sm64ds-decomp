@@ -124,8 +124,8 @@ s32 dScMgCard_c::InitResources()
     Deallocate(mainPalette);
     Deallocate(subTiles);
     Deallocate(subPalette);
-    G2x_SetBlendAlpha_((volatile u16 *)0x04000050, 0, 1, 0x10, 8);
-    REG_DB_BLDCNT = 0;
+    G2_SetBlendAlpha(0, 1, 0x10, 8);
+    G2S_BlendNone();
 
     {
         OamAttrTmpl *entry = (OamAttrTmpl *)data_ov006_02134028;
@@ -144,7 +144,7 @@ s32 dScMgCard_c::InitResources()
         } while (last != 0xffff);
     }
 
-    REG_BG0CNT = (REG_BG0CNT & ~3) | 1;
+    G2_SetBG0Priority(1);
 
     Camera_InitDealerView(&mCamera);
     if (mDealer.Load() == 0)

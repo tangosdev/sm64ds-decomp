@@ -28,8 +28,7 @@
  */
 #include "nnsys/fnd.h"
 #include "msl/stdlib.h"
-
-extern "C" void MIi_CpuClear32(int val, int *dst, int len); /* MIi_CpuClear32 */
+#include "nitro/mi/memory.h"
 
 #define MIN_ALIGNMENT 4
 
@@ -67,7 +66,7 @@ static inline u16 GetOptForHeap(const NNSiFndHeapHead *pHeapHd) {
 static inline void FillAllocMemory(NNSiFndHeapHead *pHeapHd, void *address, u32 size) {
     if (GetOptForHeap(pHeapHd) & 1) {
         volatile int fill = 0;
-        MIi_CpuClear32(fill, (int *)address, size);
+        MI_CpuFill32(address, fill, size);
     }
 }
 

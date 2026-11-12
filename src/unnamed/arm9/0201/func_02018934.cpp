@@ -2,17 +2,13 @@
 #include "types.h"
 #include "nitro/os/cache.h"
 #include "Heap.h"
-#include "private/fs_views.h"
-
-typedef struct FSFile FSFile;
+#include "nitro/fs/file.h"
 
 extern "C" {
 
-extern void FS_InitFile(FSFile *p_file);
-extern int myFS_OpenFile(void *file, const char *path);
+extern int myFS_OpenFile(FSFile *p_file, const char *path);
 extern int myFS_ReadFile(FSFile *p_file, void *dst, int len);
 extern int func_0204ee40(void *a, void *b, void *c);
-extern int FS_CloseFile(void *p_file);
 
 /* LoadArchive's loader: read the .narc at path whole into one heap block,
    after a 0x60-byte head, and mount it there under name (func_0204ee40).
@@ -26,7 +22,7 @@ void *func_02018934(char *name, char *path, void *heap) {
 
     FS_InitFile(&file);
     myFS_OpenFile(&file, path);
-    diff = file.prop.file.bottom - file.prop.file.top;
+    diff = FS_GetLength(&file);
     aligned = (diff + 0xf) & ~0xf;
     ptr = ((mHeap::Heap_t *)heap)->_Allocate(aligned + 0x60, -0x10);
     p60 = (char *)ptr + 0x60;

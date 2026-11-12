@@ -1,76 +1,55 @@
 //cpp
 /* daKpa_c + daKpaTail_c -- Bowser and his tail, the ov060 boss-fight actors.
- * ROM span 0x02111900..0x02116484, 81 functions: both destructor pairs,
- * the shared fight helpers, both classes' resource/load/behavior/render
- * methods, both InitResources, and the two registry factories
- * daKpaTail_c_classInit and daKpa_c_classInit. The class names are the cartridge's
- * own RTTI spellings: ex-coined Bowser/BowserTail, renamed with the
- * aliased-vtable evidence (shared _ZTV addresses, typeinfo slots and
- * reconstructed classInit factory names), the same S35 shape as daKpaFire_c.
+ * ROM span 0x02111900..0x02116484, 81 functions: both destructor pairs, the
+ * fight helpers, both classes' resource/load/behavior/render methods, both
+ * InitResources, and the two registry factories daKpaTail_c_classInit and
+ * daKpa_c_classInit.
  *
- * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
- * emits one .text section per function, in the REVERSE of source order, so
- * the highest-address ROM function is written FIRST here. Do not reorder;
- * see notes/tu-reconstruction-pilot-report.md sec 3 for the one documented
- * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
+ * _ZTS7daKpa_c at 0x0211a5c0, _ZTI7daKpa_c at 0x0211a5cc, _ZTV7daKpa_c at
+ * 0x0211a6b8; _ZTS11daKpaTail_c at 0x0211a5e4, _ZTI11daKpaTail_c at
+ * 0x0211a5d8, _ZTV11daKpaTail_c at 0x0211a634. The type-name bytes are what
+ * renamed the tree's old Bowser / BowserTail classes. Both destructors are
+ * the key functions, so the TU emits the two RTTI triples and both vtables;
+ * those emitted copies are deadstripped and the cartridge copies above own
+ * the addresses. D1/D0 at 0x02111900/0x02111950 (daKpa_c) and
+ * 0x021119b4/0x021119e4 (daKpaTail_c); the cartridge carries no D2 for
+ * either class.
  *
- * Folded from the 79 legacy one-function sources in ROM order (ordinals
- * 0-78, 0x02111900..0x021163f0), retired at promotion; per-symbol credit
- * survives in attribution.json path#symbol overrides.
+ * Codegen is deferred, so .text comes out in reverse source order. The two
+ * destructor bodies are the eager window at the top: under `defer_codegen off`
+ * each emits its D1,D0 pair at the definition, and they must stay first or the
+ * second class's pair rides the deferred flush to the end of the object.
  *
- * READABILITY PASS (byte-neutral). Every function below has a comment saying what
- * it does and, where this file shows it, where it is called from; the numbers that name a thing are enums
- * (Bowser_State, Bowser_HoldState, BowserTail_State, Bowser_CondFlag,
- * Bowser_ActorID, Bowser_Sound, Bowser_CcFlag, Bowser_Anim); and the fields are
- * reached through the real members of daKpa_c / daKpaTail_c. In the comments a
- * Fix12 value is read as 0x1000 = 1.0 and an angle as 0x10000 = a full turn.
+ * In comments a Fix12 value reads 0x1000 = 1.0 and an angle 0x10000 = a full
+ * turn.
  *
- * deslop leftovers:
- *  - the legacy func_ov060_* helpers are now daKpa_c / daKpaTail_c members;
- *    their names keep the ROM addresses for tooling, the state tables' PMF
- *    and vtable-slot records resolve through symbols.txt.
- *  - Spellings kept because the bytes depend on them (most are noted at the
- *    function): the mOpacity += / -= 0x14 form; the angle-copy pointer in
- *    func_ov060_02115d68; the overwritten first pos[] stores in
- *    RunIntroTalk; the (unsigned short) and *(u16 *)& angle reads; the
- *    volatile walk pointer in ActTiltLavaPlatform; the gotos
- *    in func_ov060_02115c1c; the data_ov060_02119294/6/8 + offset reads; and the
- *    `obj` copy of this in Bowser_IsAnimAtLastFrame.
- *  - Callees known only by address, whose purpose this file does not establish:
- *    func_020092c4, func_0200fa04, func_ov002_020c56f0,
- *    func_02038408, func_02011d50, func_02011cfc. Likewise the trailing arguments
- *    of daPly_c::Hurt and Sound::ChangeMusicVolume, the KOOPAFIRE spawn-parameter
- *    bits and bit 0x400 of the tail's mFlags are given as numbers.
- *  - Animation indices stay numbers (only the idle pose, 0x10, is named);
+ * Leftovers:
+ *  - Measured spellings: the mOpacity += / -= 0x14 form; the angle-copy
+ *    pointer in func_ov060_02115d68; the overwritten first pos[] stores in
+ *    RunIntroTalk; the volatile walk pointer in ActTiltLavaPlatform; the
+ *    gotos in func_ov060_02115c1c; the data_ov060_02119294/6/8 + offset
+ *    reads; and the `obj` copy of `this` in Bowser_IsAnimAtLastFrame.
+ *  - Address-named callees with a known body but no header: func_020092c4 eases
+ *    a camera vector toward a target (d_camera.cpp); func_0200fa04 spawns the
+ *    boss landing dust (d_actor.cpp); func_02038408 is the
+ *    UpdateContinuousExceptSlot0 veneer; func_02011d50 / func_02011cfc are the
+ *    Sound.cpp init/cleanup veneers; func_ov002_020c56f0 is a daPly_c state
+ *    transition. The unnamed arguments of daPly_c::Hurt and
+ *    Sound::ChangeMusicVolume and the KOOPAFIRE spawn-parameter bits are still
+ *    numbers where no name is proven.
+ *  - Animation indices stay numbers (only the idle pose is named);
  *    Bowser_Anim lists where each one is used.
- *  - unk_420 and unk_422 of daKpa_c and the dActor_c words at 0xa4 / 0xac are
- *    unnamed: the first two are written here and never read.
- *  - Remaining TUBUILD CONFLICT blocks are the legacy alternates tubuild
- *    create commented out; the ones whose kept side has since been deleted
- *    are noted RESOLVED in the manifest and their blocks removed.
- *  - Sound::ChangeMusicVolume keeps its mangled free-function decl (Fix12<int> by value, S13 wall); no Sound.h spelling mangles to it. */
+ *  - unk_420 and unk_422 are written here and never read, so they keep
+ *    placeholder names.
+ *  - BgchInitAt_ and the three d_a_kpa*Hold prototypes are unused, but their
+ *    named parameters pin mwcc's per-TU @NNN counter, which the manifest's
+ *    compiler temporaries are keyed to; deleting them renumbers those
+ *    temporaries unless the manifest is re-keyed.
+ */
 
-/* TUBUILD NOTE -- codegen is deferred, so .text emits in reverse source
- * order and the function bodies below are ROM-descending. The exception is
- * the destructor window directly under the declaration block: bracketed by
- * `defer_codegen off/on` they generate eagerly in source order, and placed
- * before any deferred function both D1,D0 groups lead the object as the
- * ROM requires (left deferred the variants come out D2,D0,D1, and in a
- * later window the second class's group rides the deferred flush to the
- * end of the object). Same shape as the promoted daKpaFire_c. The legacy
- * ActTiltLavaPlatform shard carried `#pragma opt_common_subs off` /
- * `opt_lifetimes off`; under a merged TU that state is file-global
- * last-wins at codegen, so it is spelled out in source instead: the walk
- * pointer is volatile and the flag/value locals are split. The
- * opt_common_subs off on ThrownDroppedUpdate's shard was not needed --
- * verified without it. */
-
-/* common.h must come first. It carries Matrix4x3 behind a guard, and both
- * spellings are 0x30 bytes and both are real -- Matrix4x3_ApplyInPlace* wants
- * `m[i]` while the model headers want `.r`/`.t`. Whichever is seen first in a TU
- * stands. The class headers reach dExtSimpleModel_c.h, so including them ahead of common.h
- * hands the TU the `.r`/`.t` form and the helpers below stop compiling. Same
- * ordering constraint daKpa2Bg_c documents. */
+/* common.h must precede the class headers: both Matrix4x3 spellings are real,
+ * Matrix4x3_ApplyInPlace* wants `m[i]` while the model headers want `.r`/`.t`,
+ * and whichever is seen first wins for the TU. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daKpa_c_AssetId {
     ASSET_KOOPA_DAMAGE_BCA = 0x035f,
@@ -137,11 +116,8 @@ enum daKpa_c_AssetId {
 #include "LevelRng.h"
 #include "nitro/fx/fx_cp.h"
 
-/* -------------------------------------------------------------------------- */
-/* Names for the numbers this file uses. The values are the ROM's; the names are
- * what each value does at its use sites in this file -- nothing here comes from
- * a symbol table, so a name that only describes an animation or a call is spelled
- * that way on purpose. */
+/* Names for the numbers this file uses. A name describes what the value does
+ * at its use sites here; it is not a recovered symbol. */
 
 /* daKpa_c::mState, the index into the state table at data_ov060_0211aed4. The
  * handler for each state is named on its own header below. A state with no
@@ -181,7 +157,7 @@ enum Bowser_State {
 enum Bowser_HoldState {
     BOWSER_HOLD_NONE = 0,        /* normal: run the state table */
     BOWSER_HOLD_HELD = 1,        /* a daPly_c has grabbed the tail and is swinging Bowser by it */
-    BOWSER_HOLD_RELEASE_NOW = 2, /* the tail's flag bit 0x400 was set: let go at once */
+    BOWSER_HOLD_RELEASE_NOW = 2, /* the tail's BOWSER_TAIL_RELEASED flag was set: let go at once */
     BOWSER_HOLD_RELEASE_AFTER_ANIM =
         3 /* the daPly_c no longer holds an object or the hold countdown ran out: let go once the animation ends */
 };
@@ -204,6 +180,11 @@ enum BowserTail_State {
         1,                  /* after a release: back to FREE once mTimer passes 0x1e (30 frames) */
     BOWSER_TAIL_HOLDING = 2 /* a daPly_c is holding it (mHeldPlayer) */
 };
+
+/* dActor_c::mFlags bit daPly_c sets on the actor it releases
+ * (d_a_ply_methods.cpp func_ov002_020daa74); the tail tests it to release
+ * Bowser at once. */
+enum BowserTail_Flag { BOWSER_TAIL_RELEASED = 0x400 };
 
 /* Actor IDs, from symbols/actor_debug_names.tsv. */
 enum Bowser_ActorID {
@@ -253,10 +234,8 @@ enum Bowser_Anim {
     BOWSER_ANIM_IDLE = 0x10
 };
 
-/* Remaining local views and scalar ABI bridges from the legacy shards.
- * Native actor, daPly_c and collision interfaces use the existing headers. */
-/* Bowser's hold/state tables at data_ov060_0211aeb4 / 0211aed4 use
- * daKpa_c member pointers. The separate tail state table at
+/* The state tables: daKpa_c's hold and state tables at
+ * data_ov060_0211aeb4 / 0211aed4 use daKpa_c member pointers; the tail's at
  * data_ov060_0211ae9c uses KpaTailState / daKpaTail_c member pointers. */
 typedef void (daKpa_c::*PMF)();
 
@@ -287,35 +266,25 @@ struct KpaTexSequenceFilePtr : SharedFilePtr {
 typedef void (daKpaTail_c::*KpaTailState)();
 extern KpaTailState data_ov060_0211ae9c[];
 
-/* TUBUILD CONFLICT -- alternate body of struct 'Obj', from the legacy file for _ZN7daKpa_c6RenderEv, NOT applied:
-struct Obj { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void m(void*); };
-*/
-
-
-/* 0x0203adec; called by the turn-to-target and charge handlers on mAngleY,
- * which both ignore the result. */
-/* 0x0203ae58 (ApproachAngle.cpp); steps mHorzSpeed and the cutscene camera
- * points toward their targets. */
-
 extern "C" {
 /* The dCamera_c; Bowser publishes himself into its mFramedActor. */
 extern dCamera_c *gCamera;
 extern int Vec3_HorzDist(const struct Vector3*, const struct Vector3*);
 extern short Vec3_HorzAngle(const struct Vector3*, const struct Vector3*);
+/* Eases a camera vector toward a target; 1 when it arrives (d_camera.cpp). */
 extern int func_020092c4(void*, void*, void*);
 extern KpaAnimationFileHandle data_ov060_0211acd0;
 extern unsigned char data_ov060_02119264[];
 extern PmfEnt data_ov060_0211aeb4[];
-/* func_02012694 takes (soundId, position) -- see src/engine/sound/Sound.cpp, whose
- * body is a single Sound::Play(3, id, pos) forward. Two shards here passed a
- * third argument the callee does not take (a counter byte, and a value stored
- * on the line above); dropped here rather than widening the signature. */
+/* Sound::Play(3, id, pos) (sound/Sound.cpp). The legacy shards passed a third
+ * argument the callee does not take; dropped rather than widening the
+ * signature. */
 extern void func_02012694(unsigned int id, const Vector3 *v);
+/* Veneer to dBgCh_Actr::UpdateContinuousExceptSlot0. */
 void func_02038408(dBgCh_Actr *self);
-
 extern PmfEnt data_ov060_0211aed4[];
-
 extern unsigned char NumStars(void);
+/* Unused; the named parameters pin this TU's @NNN counter (see the header). */
 extern void *d_a_kpaNewHold(unsigned a, unsigned b, int x, int y, int z, void *v, void *cb);
 extern void d_a_kpaChangeMusicVolumeHold(unsigned int a, int b);
 extern KpaAnimationFileHandle data_ov060_0211ac88;
@@ -323,6 +292,7 @@ extern KpaAnimationFileHandle data_ov060_0211ac60;
 extern int Vec3_HorzLen(const Vector3* v);
 extern int RandomIntInternal(int* seed);
 extern KpaAnimationFileHandle data_ov060_0211abe0;
+/* Spawns the boss landing dust particle at a position (d_actor.cpp). */
 extern void *func_0200fa04(void *c, void *v, int a);
 extern KpaAnimationFileHandle data_ov060_0211acd8;
 extern KpaAnimationFileHandle data_ov060_0211acf0;
@@ -337,10 +307,13 @@ extern void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 angY);
 extern void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, s16 angX);
 extern void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *m, s16 angZ);
+/* local extern: MtxStack.h declares (a, b, out); the ROM passes dst in r0. */
 extern void MTX_Concat43(void *dst, void *a, void *b);
 extern int *Vec3_LslInPlace(void *v, int sh);
 extern Matrix4x3 data_020a0e68;
+/* Unused; the named parameters pin this TU's @NNN counter (see the header). */
 void d_a_kpaEarthquakeHold(void *self, struct Vector3 *v, int f);
+/* Sound.cpp 0xc-byte cleanup veneer. */
 extern void func_02011cfc(void);
 /* One declaration per resource handle, typed from how InitResources and
  * CleanupResources use it:
@@ -380,120 +353,24 @@ extern KpaAnimationFileHandle data_ov060_0211ac90;
 extern short data_ov060_02119294[];
 extern short data_ov060_02119296[];
 extern short data_ov060_02119298[];
-/* Parameter names keep this TU's @NNN. */
+/* Unused; the named parameters pin this TU's @NNN counter (see the header). */
 typedef void BgchInitAt_(void *self, void *act, int a, int b, void *d1, void *d2);
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzDist, from the legacy file for BowserLoop, NOT applied: int Vec3_HorzDist(const Vector3* a, const Vector3* b); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for BowserLoop, NOT applied: short Vec3_HorzAngle(const Vector3* a, const Vector3* b); */
-/* TUBUILD CONFLICT -- alternate declaration of InitAnimation, from the legacy file for ThrownDroppedUpdate, NOT applied: extern int InitAnimation(char *c, int a, int b); */
-/* TUBUILD CONFLICT -- alternate declaration of InitAnimation, from the legacy file for HeldUpdate, NOT applied: extern void InitAnimation(char *c, int idx, int a); */
-/* TUBUILD CONFLICT -- alternate declaration of Bowser_IsAnimAtLastFrame, from the legacy file for HeldUpdate, NOT applied: extern int Bowser_IsAnimAtLastFrame(char *o); */
 
-/* TUBUILD CONFLICT -- alternate declaration of InitAnimation, from the legacy file for DeadFinalStageEnding, NOT applied: extern void InitAnimation(void *c, int a, int b, int d); */
-
-/* TUBUILD CONFLICT -- alternate declaration of InitAnimation, from the legacy file for DeadDefaultStageEnding, NOT applied: extern void InitAnimation(void* c, int a, int b, int d); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN5Sound22StopLoadedMusic_Layer1Ej, from the legacy file for DeadDefaultStageEnding, NOT applied: extern void _ZN5Sound22StopLoadedMusic_Layer1Ej(unsigned int a); */
-/* TUBUILD CONFLICT -- alternate declaration of DeadHide, from the legacy file for DeadDefaultStageEnding, NOT applied: extern void DeadHide(void* c); */
-/* TUBUILD CONFLICT -- alternate declaration of SpawnCollectable, from the legacy file for DeadDefaultStageEnding, NOT applied: extern void SpawnCollectable(void* c); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE, from the legacy file for DeadTwirlUp, NOT applied: extern int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned int a, unsigned int b, int fix, int t1, int t2, void *v, void *cb); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzDist, from the legacy file for DeadWaitForMario, NOT applied: extern int Vec3_HorzDist(const struct Vector3* a, const struct Vector3* b); */
-
-/* TUBUILD CONFLICT -- alternate declaration of InitAnimation, from the legacy file for DeadBounce, NOT applied: extern void InitAnimation(void* c, int a, int b); */
-
-/* TUBUILD CONFLICT -- alternate declaration of InitAnimation, from the legacy file for FlyBackDead, NOT applied: extern void InitAnimation(char *c, int a, int b); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for FlyBackDead, NOT applied: extern void func_02012694(int a, void *p, int b); */
-/* TUBUILD CONFLICT -- alternate declaration of InitAnimation, from the legacy file for ActDance, NOT applied: extern void InitAnimation(void *c, int a, int b); */
-/* TUBUILD CONFLICT -- alternate declaration of Bowser_IsAnimAtLastFrame, from the legacy file for ActDance, NOT applied: extern int Bowser_IsAnimAtLastFrame(void *c); */
-/* TUBUILD CONFLICT -- alternate declaration of InitAnimation, from the legacy file for ActJumpOntoStage, NOT applied: extern void InitAnimation(void *c, int a, int b); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for ActJumpOntoStage, NOT applied: extern void func_02012694(int a, void *p); */
-/* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for ActJumpOntoStage, NOT applied: extern void _Z14ApproachLinearRiii(int *v, int target, int step); */
-/* TUBUILD CONFLICT -- alternate declaration of Bowser_IsAnimAtLastFrame, from the legacy file for ActJumpOntoStage, NOT applied: extern int Bowser_IsAnimAtLastFrame(void *c); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for SetGoalInvisible, NOT applied: extern s16 Vec3_HorzAngle(const Vector3* v0, const Vector3* v1); */
-/* TUBUILD CONFLICT -- alternate declaration of InitAnimation, from the legacy file for ActThrown, NOT applied: void InitAnimation(char* c, int a, int b); */
-/* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for ActThrown, NOT applied: void _Z14ApproachLinearRiii(int* v, int a, int b); */
-/* TUBUILD CONFLICT -- alternate declaration of BounceEffects, from the legacy file for ActThrown, NOT applied: void BounceEffects(char* c, char* arg); */
-/* TUBUILD CONFLICT -- alternate declaration of Bowser_IsAnimAtLastFrame, from the legacy file for ActThrown, NOT applied: int Bowser_IsAnimAtLastFrame(char* c); */
-/* TUBUILD CONFLICT -- alternate declaration of InitAnimation, from the legacy file for TurnOnTimer, NOT applied: extern void InitAnimation(void *c, int a, int b); */
-/* TUBUILD CONFLICT -- alternate declaration of Bowser_IsAnimAtLastFrame, from the legacy file for TurnOnTimer, NOT applied: extern int Bowser_IsAnimAtLastFrame(void *c); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for ActSpitFireOntoFloor, NOT applied: extern void func_02012694(int id, void* pos); */
-/* TUBUILD CONFLICT -- alternate declaration of Bowser_IsAnimAtLastFrame, from the legacy file for ActSpitFireOntoFloor, NOT applied: extern int Bowser_IsAnimAtLastFrame(void* self); */
-/* TUBUILD CONFLICT -- alternate declaration of InitAnimation, from the legacy file for ActSpitFireOntoFloor, NOT applied: extern void InitAnimation(void* self, int a, int b); */
-/* TUBUILD CONFLICT -- alternate declaration of InitAnimation, from the legacy file for ActHitEdge, NOT applied: extern void InitAnimation(void *c, int a, int b); */
-/* TUBUILD CONFLICT -- alternate declaration of Bowser_IsAnimAtLastFrame, from the legacy file for ActHitEdge, NOT applied: extern int Bowser_IsAnimAtLastFrame(void *c); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for ActQuickJump, NOT applied: extern void func_02012694(int a, char *b, int cnt); */
-/* TUBUILD CONFLICT -- alternate declaration of Bowser_IsAnimAtLastFrame, from the legacy file for ActQuickJump, NOT applied: extern int Bowser_IsAnimAtLastFrame(void *c); */
-/* TUBUILD CONFLICT -- alternate declaration of SetAnimJump, from the legacy file for ActBigJump, NOT applied: extern int SetAnimJump(void* c); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for ActBigJump, NOT applied: extern void func_02012694(int a, void* b); */
-/* TUBUILD CONFLICT -- alternate declaration of ResetFallenOffStage, from the legacy file for ActBigJump, NOT applied: extern void ResetFallenOffStage(void* c); */
-/* TUBUILD CONFLICT -- alternate declaration of BowserLand, from the legacy file for ActBigJump, NOT applied: extern int BowserLand(void* c); */
-/* TUBUILD CONFLICT -- alternate declaration of InitAnimation, from the legacy file for ActBigJump, NOT applied: extern void InitAnimation(char* c, int idx, int b); */
-/* TUBUILD CONFLICT -- alternate declaration of SpawnShockwave, from the legacy file for ActBigJump, NOT applied: extern void SpawnShockwave(char* c); */
-
-/* TUBUILD CONFLICT -- alternate declaration of Bowser_IsAnimAtLastFrame, from the legacy file for ActBigJump, NOT applied: extern int Bowser_IsAnimAtLastFrame(void* o); */
-
-/* TUBUILD CONFLICT -- alternate declaration of func_0200fa04, from the legacy file for BowserLand, NOT applied: extern void func_0200fa04(void *c, void *v, int flag); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for BowserLand, NOT applied: extern void func_02012694(int a, void *b); */
-
-/* TUBUILD CONFLICT -- alternate declaration of InitAnimation, from the legacy file for SetAnimJump, NOT applied: extern "C" void InitAnimation(void *c, int a1, int a2); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for ActHitMine, NOT applied: extern void func_02012694(int a, void *b); */
-/* TUBUILD CONFLICT -- alternate declaration of InitAnimation, from the legacy file for ActHitMine, NOT applied: extern void InitAnimation(char *c, int idx, int m); */
-/* TUBUILD CONFLICT -- alternate declaration of BounceEffects, from the legacy file for ActHitMine, NOT applied: extern void BounceEffects(char *c, char *arg); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN5Sound8PlayLongEjjjRK7Vector3s, from the legacy file for ActSpitFireIntoSky, NOT applied: extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 cc, const Vector3 *v, u32 e); */
-/* TUBUILD CONFLICT -- alternate declaration of RandomIntInternal, from the legacy file for ActSpitFireIntoSky, NOT applied: extern int RandomIntInternal(int *seed); */
-
-/* TUBUILD CONFLICT -- alternate declaration of Bowser_IsAnimAtLastFrame, from the legacy file for ActSpitFireIntoSky, NOT applied: extern int Bowser_IsAnimAtLastFrame(void *o); */
-/* TUBUILD CONFLICT -- alternate declaration of InitAnimation, from the legacy file for ActSpitFireIntoSky, NOT applied: extern void InitAnimation(char *c, int idx, int a); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for ActSpitFireIntoSky, NOT applied: extern void func_02012694(int a, void *p); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for ActTeleport, NOT applied: extern void func_02012694(int a, void *b); */
-
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for ActBreathFire, NOT applied: extern "C" int func_02012694(int a, int* b); */
-/* TUBUILD CONFLICT -- alternate declaration of Bowser_IsAnimAtLastFrame, from the legacy file for ActBreathFire, NOT applied: extern "C" int Bowser_IsAnimAtLastFrame(void* o); */
-/* TUBUILD CONFLICT -- alternate declaration of InitAnimation, from the legacy file for ActBreathFire, NOT applied: extern "C" void InitAnimation(void* o, int a, int b); */
-/* TUBUILD CONFLICT -- alternate declaration of Bowser_IsAnimAtLastFrame, from the legacy file for ActIdle, NOT applied: extern int Bowser_IsAnimAtLastFrame(void *); */
-/* TUBUILD CONFLICT -- alternate declaration of RandomIntInternal, from the legacy file for BitfsActions, NOT applied: extern int RandomIntInternal(int *seed); */
-/* TUBUILD CONFLICT -- alternate declaration of SetAnimLookUpAndWalk, from the legacy file for ActIntroWalk, NOT applied: extern int SetAnimLookUpAndWalk(void *c); */
-/* TUBUILD CONFLICT -- alternate declaration of SetAnimSlowGait, from the legacy file for ActIntroWalk, NOT applied: extern int SetAnimSlowGait(void *c); */
-/* TUBUILD CONFLICT -- alternate declaration of SetAnimLookDownStopWalk, from the legacy file for ActIntroWalk, NOT applied: extern int SetAnimLookDownStopWalk(void *c); */
-/* TUBUILD CONFLICT -- alternate declaration of InitAnimation, from the legacy file for ActIntroWalk, NOT applied: extern void InitAnimation(char *c, int idx, int extra); */
-/* TUBUILD CONFLICT -- alternate declaration of UpdateIntroCamera, from the legacy file for ActWait, NOT applied: extern int UpdateIntroCamera(void *c); */
-/* TUBUILD CONFLICT -- alternate declaration of InitAnimation, from the legacy file for ActWait, NOT applied: extern int InitAnimation(void *c, int a, int b); */
-/* TUBUILD CONFLICT -- alternate declaration of RunIntroTalk, from the legacy file for ActWait, NOT applied: extern int RunIntroTalk(void *c); */
-
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for RunIntroTalk, NOT applied: extern void func_02012694(int a, void *v); */
-/* TUBUILD CONFLICT -- alternate declaration of UpdateIntroCamera, from the legacy file for RunIntroTalk, NOT applied: extern int UpdateIntroCamera(void *self); */
-/* TUBUILD CONFLICT -- alternate declaration of InitAnimation, from the legacy file for SetAnimLookDownStopWalk, NOT applied: extern void InitAnimation(void *c, int a, int b); */
-/* TUBUILD CONFLICT -- alternate declaration of Bowser_IsAnimAtLastFrame, from the legacy file for SetAnimLookDownStopWalk, NOT applied: extern int Bowser_IsAnimAtLastFrame(void *c); */
-/* TUBUILD CONFLICT -- alternate declaration of InitAnimation, from the legacy file for SetAnimSlowGait, NOT applied: extern void InitAnimation(void *c, int a, int b); */
-/* TUBUILD CONFLICT -- alternate declaration of Bowser_IsAnimAtLastFrame, from the legacy file for SetAnimSlowGait, NOT applied: extern int Bowser_IsAnimAtLastFrame(void *c); */
-/* TUBUILD CONFLICT -- alternate declaration of InitAnimation, from the legacy file for SetAnimLookUpAndWalk, NOT applied: extern void InitAnimation(void *c, int a, int b); */
-/* TUBUILD CONFLICT -- alternate declaration of Bowser_IsAnimAtLastFrame, from the legacy file for SetAnimLookUpAndWalk, NOT applied: extern int Bowser_IsAnimAtLastFrame(void *c); */
-
-/* TUBUILD CONFLICT -- alternate declaration of SetTangible, from the legacy file for func_ov060_02115d68, NOT applied: extern "C" void SetTangible(void *a, int b); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for _ZN7daKpa_c8BehaviorEv, NOT applied: extern s16 Vec3_HorzAngle(const Vector3* a, const Vector3* b); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzDist, from the legacy file for _ZN7daKpa_c8BehaviorEv, NOT applied: extern Fix12i Vec3_HorzDist(const Vector3* a, const Vector3* b); */
-/* TUBUILD CONFLICT -- alternate declaration of gCamera, from the legacy file for _ZN7daKpa_c8BehaviorEv, NOT applied: extern char* gCamera; */
-
-/* TUBUILD CONFLICT -- alternate declaration of InitAnimation, from the legacy file for _ZN7daKpa_c13InitResourcesEv, NOT applied: extern void InitAnimation(void *c, int a, int b); */
 }
 
 /* The two destructor bodies are defined first so their D1/D0 groups lead the
- * object in ROM order. Under defer_codegen off each out-of-line destructor
- * emits its D1, D0 and a homeless D2 at the definition. With the deferred
- * queue still empty here both groups land before every deferred function;
- * placed later, the second class's group instead rides the deferred flush and
- * ends the object. */
+ * object: the eager window is the only one before the deferred queue fills. */
 #pragma defer_codegen off
 
-/*
-Bowser's destructors. The body is empty: the member and base teardown and the
-D1/D0 pair are compiler-generated. */
+/* Empty body: the member/base teardown and the D1/D0 pair are compiler-
+ * generated. */
 #ifndef _MSC_VER
 daKpa_c::~daKpa_c()
 {
 }
 #endif
 
-/*
-The tail's destructors. The body is empty, as for Bowser's. */
+/* Empty body, as for Bowser's. */
 #ifndef _MSC_VER
 daKpaTail_c::~daKpaTail_c()
 {
@@ -502,32 +379,16 @@ daKpaTail_c::~daKpaTail_c()
 
 #pragma defer_codegen on
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 80 -- daKpa_c_classInit, 0x02116428, size 0x5c */
-/* -------------------------------------------------------------------------- */
-/* Reconstructed source-style name: SM64DS proves daKpa_c through RTTI,
- * allocation size, vtable identity, and the KOOPA registry profile;
- * later EAD lineage supplies classInit. Exact original spelling is not
- * preserved. Historical alias: Bowser_Spawn.
- *
- * `new daKpa_c` is the whole sequence the loose factory spelled by hand:
- * fBase_c::operator new(0x454), dActor_c's base constructor, the vptr store,
- * then the dExtAnmModel_c, dExtAnmTexPat_c, dBgCh_Actr, dExtShadowModel_c and
- * dCcAcPos_c member constructors in declaration order. */
+/* KOOPA registry factory. `new daKpa_c` is the sequence the old shard spelled
+ * by hand: fBase_c::operator new(0x454), the dActor_c base constructor, the
+ * vptr store, then the dExtAnmModel_c, dExtAnmTexPat_c, dBgCh_Actr,
+ * dExtShadowModel_c and dCcAcPos_c member constructors. */
 extern "C" daKpa_c *daKpa_c_classInit(void)
 {
     return new daKpa_c;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 79 -- daKpaTail_c_classInit, 0x021163f0, size 0x38 */
-/* -------------------------------------------------------------------------- */
-/* Reconstructed source-style name: SM64DS proves daKpaTail_c through RTTI,
- * allocation size, vtable identity, and the KOOPATAIL registry profile;
- * later EAD lineage supplies classInit. Exact original spelling is not
- * preserved. Historical alias: BowserTail_Spawn.
- *
- * `new daKpaTail_c` is fBase_c::operator new(0x118), dActor_c's base
+/* KOOPATAIL registry factory: operator new(0x118), the dActor_c base
  * constructor, the vptr store and the dCcAc_c member constructor. */
 extern "C" daKpaTail_c *daKpaTail_c_classInit(void)
 {
@@ -545,28 +406,23 @@ int daKpaTail_c::InitResources()
     return 1;
 }
 
-/*
-Bowser's setup, in order: load the model file and hand it to dExtModel_c::SetFile,
-load the 0x1c Animation files and the six dExtAnmTexPat_c files, then two more
-dExtSimpleModel_c files (CleanupResources releases the same set); shadow cylinder; start the
-idle animation (0x10) and its texture pattern; body collider (cylinder, radius 0x78000 = 120 units, height
-0x118000 = 280, flags 0x200004); remember the spawn position in mHomePos; gravity
--0x2000 (-2.0) and terminal velocity -0x3c000 (-60.0); floor collider (0x50000 =
-80 for both of its Fix12 arguments); decode param1 (bits 0-1 = variant, bit 2 =
-jump-only); reset the working fields (InitFightState finishes that); then
-spawn KOOPAFIRE and KOOPATAIL at his position and give each his uniqueID.
-Returns 0 only if the shadow cylinder fails, otherwise 1. */
-/*
- * The other half of daKpa_c::CleanupResources. Every handle this loads is one
- * the cleanup releases, in the same order and with the same counts -- one
- * single, a 0x1c-entry table, a six-entry table, then two more singles, the
- * last of which (data_ov089_02132c50) lives in ov089 rather than this overlay.
- * That pairing is why the tail's and the fire's CleanupResources are bare
- * `return 1`s: daKpa_c loads the whole fight's resources, so daKpa_c frees them.
+/* Bowser's setup, and with it the whole fight's resources. Load the model and
+ * hand it to dExtModel_c::SetFile, load the 0x1c animations and the six
+ * dExtAnmTexPat_c files, then two more dExtSimpleModel_c files; shadow
+ * cylinder; idle animation (0x10) and its texture pattern; body cylinder
+ * (radius 0x78000 = 120 units, height 0x118000 = 280, flags 0x200004); spawn
+ * position into mHomePos; gravity -0x2000 (-2.0) and terminal velocity
+ * -0x3c000 (-60.0); floor collider (0x50000 = 80 for both Fix12 arguments);
+ * param1 (bits 0-1 = variant, bit 2 = jump-only); InitFightState for the rest;
+ * then spawn KOOPAFIRE and KOOPATAIL at his position and exchange uniqueIDs.
+ * Returns 0 only if the shadow cylinder fails, otherwise 1.
  *
- * The two loops are reproduced rather than unrolled, for the same reason as in
- * the cleanup: 0x1c and 6 are the counts the ROM's own comparisons test.
- */
+ * This is the other half of CleanupResources: every handle loaded here is one
+ * that cleanup releases, in the same order and with the same counts (one
+ * single, a 0x1c table, a six table, then two singles, the last in ov089).
+ * That pairing is why the tail's and the fire's CleanupResources are bare
+ * `return 1`s. The loops stay loops because 0x1c and 6 are the counts the ROM
+ * compares against. */
 int daKpa_c::InitResources()
 {
     int i;
@@ -673,25 +529,17 @@ int daKpaTail_c::Behavior()
     return 1;
 }
 
-/*
-One frame of Bowser, in order: advance the random state once (result unused);
-find the closest daPly_c and record the angle and the horizontal distance to him
-(no daPly_c: angle = his own facing, distance 0x7fffffff); BowserLoop
-(condition flags, hold-state handler, opacity fade); UpdateFootfalls
-(footfall effects); copy mAngleY to mPrevAngleY; advance the model animation at
-mAnimSpeed; UpdateModelMatrix (model matrix, foot points, shadow); store this
-actor in the camera's mFramedActor; clear and refresh the body collider,
-offset (0, 0, 0x50000) = 80 units on Z relative to the actor; and drop
-mCapActorAlive once no cap actor exists any more. Always returns 1. */
-/*
- * One frame of the fight: pick the closest player and record the angle and distance
- * to him, run the two state workers, advance the animation, publish `this` into the
- * camera's mFramedActor, then rebuild the body cylinder 0x50000 in front of
- * the actor. mdCcAcPos_c is a dCc_c by inheritance (dCcAcPos_c -> dCcAc_c ->
- * dCc_c), so Clear() and Update() are its own. The animation speed written here
- * (0x130) is the `speed` of the dExtFrameCtrl_c base inside mAnmModel (+0x50,
- * +0x0c), so advancing the animation is advancing the model.
- */
+/* One frame of the fight: advance the random state once (result unused), pick
+ * the closest player and record the angle and distance to him (none: his own
+ * facing and 0x7fffffff), run BowserLoop and UpdateFootfalls, copy mAngleY to
+ * mPrevAngleY, advance the model animation at mAnimSpeed, place the model and
+ * shadow (UpdateModelMatrix), publish `this` into the camera's mFramedActor,
+ * then rebuild the body cylinder 0x50000 in front of the actor. Always 1.
+ *
+ * mdCcAcPos_c inherits dCc_c through dCcAcPos_c/dCcAc_c, so Clear and Update
+ * are its own. The animation speed (0x130) is the dExtFrameCtrl_c base's
+ * `speed` inside mAnmModel (+0x50, +0x0c), so advancing it advances the
+ * model. */
 int daKpa_c::Behavior()
 {
     RandomIntInternal(&data_0209e650.value);
@@ -760,22 +608,11 @@ int daKpaTail_c::CleanupResources()
     return 1;
 }
 
-/*
-Release every handle InitResources loaded (the model, the 0x1c animations, the six
-texture patterns, then two more dExtSimpleModel_c files), call func_02011cfc (no arguments;
-its purpose is not established here) and return 1. */
-/*
- * daKpa_c frees the whole fight. One single, then a 0x1c-entry table and a
- * six-entry table walked by index, then two more singles -- one of which
- * (data_ov089_02132c50) lives in ov089, not this overlay.
- *
- * The two loops are reproduced rather than unrolled: 0x1c and 6 are the counts
- * the ROM's own comparisons test against, and the tables are arrays of
- * POINTERS to handles, unlike the singles which are handles themselves.
- *
- * That is why his siblings release almost nothing -- daKpaFire_c and daKpaTail_c
- * hold no reference at all, and daFRing_c shares 0211b208 with him.
- */
+/* Release the whole fight. One single, then the 0x1c-entry and six-entry
+ * tables walked by index, then two more singles, the last in ov089. The tables
+ * hold POINTERS to handles; the singles are handles. The loops stay loops:
+ * 0x1c and 6 are the counts the ROM compares against. func_02011cfc is the
+ * Sound.cpp cleanup veneer. Always 1. */
 int daKpa_c::CleanupResources()
 {
     int i;
@@ -790,9 +627,6 @@ int daKpa_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 69 -- func_ov060_02115d68, 0x02115d68, size 0x118 */
-/* -------------------------------------------------------------------------- */
 /*
 Tail state BOWSER_TAIL_FREE (0), per frame: nobody holds the tail. Switch the
 tail's own collider on (clear its disabled bit). If Bowser is in
@@ -839,9 +673,6 @@ skip_13:
     this->mHoldCountdown = 0x96;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 68 -- func_ov060_02115d50, 0x02115d50, size 0x18 */
-/* -------------------------------------------------------------------------- */
 /*
 Tail state BOWSER_TAIL_COOLDOWN (1), per frame: once mTimer is above 0x1e (30)
 the tail goes back to BOWSER_TAIL_FREE. */
@@ -850,9 +681,6 @@ void daKpaTail_c::func_ov060_02115d50(){
         this->mState = BOWSER_TAIL_FREE;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 67 -- func_ov060_02115c1c, 0x02115c1c, size 0x134 */
-/* -------------------------------------------------------------------------- */
 /*
 Tail state BOWSER_TAIL_HOLDING (2), per frame. If Bowser is in
 BOWSER_STATE_ARENA_TILT, switch his body collider on and go to BOWSER_TAIL_FREE
@@ -876,7 +704,7 @@ void daKpaTail_c::func_ov060_02115c1c(){
         this->mState = BOWSER_TAIL_FREE;
     }
 
-    cond = (int)((this->mFlags & 0x400) != 0);
+    cond = (int)((this->mFlags & BOWSER_TAIL_RELEASED) != 0);
     if (cond != 0) {
         this->mState = BOWSER_TAIL_COOLDOWN;
         this->mHeldPlayer = 0;
@@ -912,9 +740,6 @@ tail:
     this->mdCcAc_c.flags |= BOWSER_CC_DISABLED;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 66 -- func_ov060_02115b84, 0x02115b84, size 0x98 */
-/* -------------------------------------------------------------------------- */
 /*
 The tail's per-frame dispatcher (called from daKpaTail_c::Behavior). Find
 Bowser; run the handler for mState through the table at data_ov060_0211ae9c
@@ -938,9 +763,6 @@ void daKpaTail_c::func_ov060_02115b84(){
     this->mdCcAc_c.Update();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 65 -- SpawnShockwave, 0x02115b0c, size 0x78 */
-/* -------------------------------------------------------------------------- */
 /*
 Landing effect for the variant-2 fight (nothing happens for the other variants):
 dActor_c::Earthquake at his position with the Fix12 argument 0x7d0000 (2000.0,
@@ -956,9 +778,6 @@ void daKpa_c::SpawnShockwave() {
     dActor_c::Spawn(BOWSER_ACTOR_FIRERING, 0, mPos, 0, this->mAreaId, -1);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 64 -- BounceEffects, 0x02115a84, size 0x88 */
-/* -------------------------------------------------------------------------- */
 /*
 Landing-dust helper. On a frame where the floor collider reports a fresh ground
 hit (dBgCh_Actr::JustHitGround), add one to the u16 counter passed in (every
@@ -977,25 +796,18 @@ void daKpa_c::BounceEffects(char *counter) {
     func_02012694(BOWSER_SND_LAND_SOFT, &mCamSpacePos);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 63 -- Bowser_IsAnimAtLastFrame, 0x02115a30, size 0x54 */
-/* -------------------------------------------------------------------------- */
 /*
 True once the model's animation has reached its last frame or will reach it on
 the coming advance (dExtFrameCtrl_c::Finished, or WillHitFrame(frame count - 1)).
 Reads mAnmModel through a copy of this: the plain this->mAnmModel form builds
 the same code but draws one @NNN fewer, renumbering every pinned @NNN in this
 TU (measured). */
-// Bowser_IsAnimAtLastFrame at 0x02115a30 -- matched byte-for-byte with mwccarm 1.2/sp2p3 (ov060).
 bool daKpa_c::Bowser_IsAnimAtLastFrame(){
     daKpa_c *obj = this;
     return obj->mAnmModel.Finished() ||
            obj->mAnmModel.WillHitFrame((unsigned short)(obj->mAnmModel.GetFrameCount() - 1));
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 62 -- UpdateModelMatrix, 0x0211577c, size 0x2b4 */
-/* -------------------------------------------------------------------------- */
 /*
 Per-frame model placement, called from Behavior. 1) On the ground and not held,
 set mAngleX from the floor normal mGroundNormal and mAngleY, and mAngleZ from the
@@ -1075,9 +887,6 @@ skip_angles:
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 61 -- SetAnimLookUpAndWalk, 0x02115744, size 0x38 */
-/* -------------------------------------------------------------------------- */
 /*
 First animation of the turn / intro sequence: play animation 0x13 once; when it
 reaches its last frame, set mHorzSpeed to 0x3000 (3.0) and return 1, otherwise
@@ -1093,9 +902,6 @@ int daKpa_c::SetAnimLookUpAndWalk() {
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 60 -- SetAnimSlowGait, 0x02115718, size 0x2c */
-/* -------------------------------------------------------------------------- */
 /*
 Play animation 0x11 looping with mHorzSpeed 0x3000 (3.0); return whether it is at
 its last frame. */
@@ -1105,9 +911,6 @@ int daKpa_c::SetAnimSlowGait() {
     return Bowser_IsAnimAtLastFrame();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 59 -- SetAnimLookDownStopWalk, 0x021156ec, size 0x2c */
-/* -------------------------------------------------------------------------- */
 /*
 Play animation 0x12 once with mHorzSpeed 0; return whether it is at its last
 frame. */
@@ -1117,9 +920,6 @@ int daKpa_c::SetAnimLookDownStopWalk() {
     return Bowser_IsAnimAtLastFrame();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 58 -- RunIntroTalk, 0x02115518, size 0x1d4 */
-/* -------------------------------------------------------------------------- */
 /*
 The intro conversation, one step per mTalkStep (nothing happens without a target
 daPly_c). Step 0: daPly_c::StartTalk(this, 1); when it succeeds, mState becomes
@@ -1212,9 +1012,6 @@ void daKpa_c::RunIntroTalk() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 57 -- ActWait, 0x021154e8, size 0x30 */
-/* -------------------------------------------------------------------------- */
 /*
 State BOWSER_STATE_INTRO_WAIT (5): run the intro camera (UpdateIntroCamera),
 stand still on the idle animation (0x10) and run the conversation
@@ -1226,9 +1023,6 @@ void daKpa_c::ActWait() {
     RunIntroTalk();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 56 -- ActIntroWalk, 0x021153f8, size 0xf0 */
-/* -------------------------------------------------------------------------- */
 /*
 State BOWSER_STATE_INTRO (6): run the intro camera (UpdateIntroCamera), then by
 mStep. Step 0: SetAnimLookUpAndWalk (animation 0x13), advancing when it returns 1.
@@ -1265,9 +1059,6 @@ void daKpa_c::ActIntroWalk() {
     RunIntroTalk();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 55 -- BitdwActions, 0x02115314, size 0xe4 */
-/* -------------------------------------------------------------------------- */
 /*
 Idle pick for variant 0, called from ActDefault. With mPickToggle 0: if
 he faces the target (BOWSER_COND_FACING_TARGET), go to BOWSER_STATE_ANIM_CHAIN
@@ -1303,9 +1094,6 @@ void daKpa_c::BitdwActions() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 54 -- BitfsActions, 0x021151d4, size 0x140 */
-/* -------------------------------------------------------------------------- */
 /*
 Idle pick for variant 1, called from ActDefault. With mPickToggle set:
 clear it and go to BOWSER_STATE_TURN_TO_TARGET. Otherwise, if he is not facing
@@ -1360,9 +1148,6 @@ clear_toggle:
     this->mState = BOWSER_STATE_TURN_TO_TARGET;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 53 -- BitsActionList, 0x021150d0, size 0x104 */
-/* -------------------------------------------------------------------------- */
 /*
 Choose an attack for variant 2, called from BitsActions. If he faces the
 target: with DistToCPlayer() < 0x3e8000 (1000 units), a draw modulo 10 below 4
@@ -1394,18 +1179,12 @@ void daKpa_c::BitsActionList() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 52 -- SetActBigJump, 0x021150c4, size 0xc */
-/* -------------------------------------------------------------------------- */
 /*
 Pick BOWSER_STATE_JUMP (the choice for variants with mChooseJumpOnly set). */
 void daKpa_c::SetActBigJump() {
     this->mState = BOWSER_STATE_JUMP;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 51 -- BitsActions, 0x02115060, size 0x64 */
-/* -------------------------------------------------------------------------- */
 /*
 Idle pick for variant 2, called from ActDefault. With mPickToggle 0:
 BitsActionList, or SetActBigJump when mChooseJumpOnly is set, then set
@@ -1429,9 +1208,6 @@ void daKpa_c::BitsActions() {
     this->mState = BOWSER_STATE_TURN_TO_TARGET;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 50 -- ResetFallenOffStage, 0x02115018, size 0x48 */
-/* -------------------------------------------------------------------------- */
 /*
 Fall catch for the variant-2 jumps: if he is moving down (mVertSpeed < 0) and
 mPosY is below mHomePosY - 0x12c000 (300 units below the arena level), put him
@@ -1450,9 +1226,6 @@ void daKpa_c::ResetFallenOffStage() {
     this->mHorzSpeed = 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 49 -- ActIdle, 0x02114ff8, size 0x20 */
-/* -------------------------------------------------------------------------- */
 /*
 State BOWSER_STATE_WAIT_ANIM_END (0x12): back to BOWSER_STATE_IDLE once the
 animation is at its last frame. */
@@ -1463,9 +1236,6 @@ void daKpa_c::ActIdle() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 48 -- ActDefault, 0x02114f88, size 0x70 */
-/* -------------------------------------------------------------------------- */
 /*
 State BOWSER_STATE_IDLE (0): clear unk_422, play the idle animation (0x10), zero
 mSpinSpeed and both speeds, then let the variant pick the next state:
@@ -1485,9 +1255,6 @@ void daKpa_c::ActDefault() {
         BitsActions();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 47 -- ActBreathFire, 0x02114e9c, size 0xec */
-/* -------------------------------------------------------------------------- */
 /*
 State BOWSER_STATE_ANIM_CHAIN (0xf): mHorzSpeed 0. While animation 8 is playing
 (data_ov060_0211ac20 is entry 8 of the animation table), sound 0xb5 plays when
@@ -1519,9 +1286,6 @@ void daKpa_c::ActBreathFire() {
     InitAnimation(8, 0x40000000);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 46 -- ActWalkToMario, 0x02114d08, size 0x194 */
-/* -------------------------------------------------------------------------- */
 /*
 State BOWSER_STATE_TURN_TO_TARGET (0xe). Each frame turn mAngleY toward
 mAngleToTarget by 0x400 (5.6 degrees) for variant 1 and for mHealth above 2, by
@@ -1535,10 +1299,10 @@ this frame's turn is under 0x2000 (45 degrees), restart the animation, advance
 the step and clear the counter. Later: SetAnimLookDownStopWalk
 (animation 0x12), then BOWSER_STATE_IDLE when it returns 1. */
 void daKpa_c::ActWalkToMario() {
-    int r4;
+    int angleDiff;
     short step;
 
-    r4 = this->GetSubtraction(this->mAngleY, this->mAngleToTarget);
+    angleDiff = this->GetSubtraction(this->mAngleY, this->mAngleToTarget);
 
     if (this->mVariantID == 1) {
         step = 0x400;
@@ -1570,7 +1334,8 @@ void daKpa_c::ActWalkToMario() {
             this->mCondFlags &= ~BOWSER_COND_BREATHING;
             return;
         }
-        if (r4 >= 0x2000) return;
+        if (angleDiff >= 0x2000)
+            return;
         this->mAnmModel.currFrame = 0;
         (this->mStep)++;
         this->mStepCounter = 0;
@@ -1580,9 +1345,6 @@ void daKpa_c::ActWalkToMario() {
         this->mState = BOWSER_STATE_IDLE;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 45 -- ActTeleport, 0x02114b60, size 0x1a8 */
-/* -------------------------------------------------------------------------- */
 /*
 State BOWSER_STATE_VANISH_DASH (0x10). The body collider is switched off every
 frame. Step 0: target opacity 0, mStepCounter = 0x1e; play sound 0xb9 on the first
@@ -1665,9 +1427,6 @@ void daKpa_c::ActTeleport() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 44 -- ActSpitFireIntoSky, 0x02114858, size 0x308 */
-/* -------------------------------------------------------------------------- */
 /*
 State BOWSER_STATE_FIRE_BREATH (8). While animation 0x15 plays, or animation 0x16
 after frame 0x2a (data_ov060_0211acd8 and data_ov060_0211acf0 are entries 0x15
@@ -1736,9 +1495,6 @@ void daKpa_c::ActSpitFireIntoSky() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 43 -- ActHitMine, 0x021146d0, size 0x188 */
-/* -------------------------------------------------------------------------- */
 /*
 State BOWSER_STATE_HURT_HOP (0xc), the knock-back after a bomb hit. On the first
 frame: mHorzSpeed -0x1c000 (-28.0), mVertSpeed 0x50000 (80.0), mAngleY = angle to
@@ -1751,10 +1507,6 @@ animation 2 once when the counter reaches 1 and, at 3, zeroes both speeds and
 advances; 2 waits for the last frame, then goes to BOWSER_STATE_PLAY_ANIM_0F when
 mHealth is 1 and to BOWSER_STATE_IDLE otherwise; unk_422 is cleared on every
 frame of step 2. */
-/* ActHitMine at 0x021146d0 (ov060), size 0x188
- * Matched byte-for-byte with mwccarm 1.2/sp2p3.
- * flags: -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
- */
 void daKpa_c::ActHitMine() {
     if (this->mTimer == 0) {
         this->mHorzSpeed = -0x1c000;
@@ -1797,9 +1549,6 @@ void daKpa_c::ActHitMine() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 42 -- SetAnimJump, 0x0211469c, size 0x34 */
-/* -------------------------------------------------------------------------- */
 /*
 Jump wind-up: play animation 0xb once; return 1 when the animation will cross
 frame 0x20 on this advance, otherwise 0. */
@@ -1810,9 +1559,6 @@ int daKpa_c::SetAnimJump() {
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 41 -- BowserLand, 0x021145d4, size 0xc8 */
-/* -------------------------------------------------------------------------- */
 /*
 Jump landing check. If the floor collider says he is on the ground: zero both
 speeds, call func_0200fa04 with his position, play animation 0xc once, play sound
@@ -1841,9 +1587,6 @@ int daKpa_c::BowserLand() {
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 40 -- ShortSecondHop, 0x021145a8, size 0x2c */
-/* -------------------------------------------------------------------------- */
 /*
 Variant 2 only, and only while BOWSER_COND_RECOVERING is set: when mDistToCenter
 is above 0x3e8000 (1000 units) set mHorzSpeed to 0x1e000 (30.0). */
@@ -1855,9 +1598,6 @@ void daKpa_c::ShortSecondHop() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 39 -- ActBigJump, 0x021143b8, size 0x1f0 */
-/* -------------------------------------------------------------------------- */
 /*
 State BOWSER_STATE_JUMP (0xd). Step 0: wind-up (SetAnimJump); then
 mVertSpeed = 0x28000 (40.0) for variant 2 while BOWSER_COND_RECOVERING is set,
@@ -1930,9 +1670,6 @@ void daKpa_c::ActBigJump() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 38 -- ActQuickJump, 0x02114300, size 0xb8 */
-/* -------------------------------------------------------------------------- */
 /*
 State BOWSER_STATE_HOP (0x11). Step 0: wind-up (SetAnimJump); then
 mVertSpeed 0x32000 (50.0), mHorzSpeed 0x19000 (25.0), mStepCounter 0, sound 0xb1,
@@ -1957,9 +1694,6 @@ void daKpa_c::ActQuickJump() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 37 -- ActHitEdge, 0x021142b4, size 0x4c */
-/* -------------------------------------------------------------------------- */
 /*
 State BOWSER_STATE_PLAY_ANIM_1B (0xa): mHorzSpeed 0, clear mStepCounter on the
 first frame, play animation 0x1b once, then BOWSER_STATE_TURN_IN_PLACE at its last
@@ -1976,9 +1710,6 @@ void daKpa_c::ActHitEdge() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 36 -- ActSpitFireOntoFloor, 0x021140c0, size 0x1f4 */
-/* -------------------------------------------------------------------------- */
 /*
 State BOWSER_STATE_FIREBALLS (9). On the first frame choose mFireballShots: 3 if
 the target daPly_c has 4 or fewer health (daPly_c::GetHealth), else a random 1 to 3
@@ -2026,9 +1757,6 @@ void daKpa_c::ActSpitFireOntoFloor() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 35 -- TurnOnTimer, 0x02113ff4, size 0xcc */
-/* -------------------------------------------------------------------------- */
 /*
 Turn in place for the caller's frame count: by mStep, play animation 0x13 once,
 then 0x12 once (each step ends at the animation's last frame), then the idle
@@ -2058,23 +1786,17 @@ int daKpa_c::TurnOnTimer(unsigned short minFrames, int turnStep) {
     return done;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 34 -- ActTurnFromEdge, 0x02113fcc, size 0x28 */
-/* -------------------------------------------------------------------------- */
 /*
 State BOWSER_STATE_TURN_IN_PLACE (0xb): TurnOnTimer with 0x3e frames and
 0x200 (2.8 degrees) per frame, about 177 degrees in all (63 calls, mTimer 0 to
 0x3e); BOWSER_STATE_IDLE when it returns 1. */
 void daKpa_c::ActTurnFromEdge() {
-    int r0 = TurnOnTimer(0x3e, 0x200);
-    if (r0 != 0) {
+    int finished = TurnOnTimer(0x3e, 0x200);
+    if (finished != 0) {
         this->mState = BOWSER_STATE_IDLE;
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 33 -- ActChargeMario, 0x02113d8c, size 0x240 */
-/* -------------------------------------------------------------------------- */
 /*
 State BOWSER_STATE_CHARGE (7). mHorzSpeed is zeroed on the first frame. By mStep:
 0 plays animation 0x18 once, clears mStepCounter and, at its last frame, goes to
@@ -2153,15 +1875,10 @@ void daKpa_c::ActChargeMario() {
     this->mHorzSpeed = 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 32 -- CheckHitMine, 0x02113d20, size 0x6c */
-/* -------------------------------------------------------------------------- */
 /*
 Bomb hit test: find the closest KIRAI actor (0x11c, daKirai_c); if it reports
 that his position is close enough (IsInTriggerRange), set it off
 (Explode) and return 1, otherwise return 0. */
-// CheckHitMine at 0x02113d20
-// Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov060).
 int daKpa_c::CheckHitMine() {
     Vector3 v;
     dActor_c *closest = this->ClosestWithActorID(BOWSER_ACTOR_KIRAI);
@@ -2177,9 +1894,6 @@ int daKpa_c::CheckHitMine() {
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 31 -- ActThrown, 0x02113b5c, size 0x1c4 */
-/* -------------------------------------------------------------------------- */
 /*
 State BOWSER_STATE_THROWN (1), the handler that runs after the tail lets go.
 mStepCounter is cleared for the first two frames. The ground height under him is
@@ -2198,7 +1912,7 @@ void daKpa_c::ActThrown() {
         this->mStepCounter = 0;
     }
 
-    int r4 = this->mPosY;
+    int referenceY = this->mPosY;
     if (this->mPosY > this->mHomePosY) {
         Vector3 v;
         dBgCh_Gnd rg;
@@ -2212,14 +1926,15 @@ void daKpa_c::ActThrown() {
         rg.SetObjAndPos(v, (dActor_c*)this);
         if (rg.DetectClsn() != 0) {
             int hy = rg.clsnY;
-            if (hy >= this->mHomePosY - 0x64000) r4 = hy;
+            if (hy >= this->mHomePosY - 0x64000)
+                referenceY = hy;
         }
     }
 
     if (this->mStep == 0) {
         InitAnimation(9, 0);
 
-        int dy = this->mPosY - r4;
+        int dy = this->mPosY - referenceY;
         if (dy > 0xc8000 || this->mDistToCenter > 0xdac000) {
             if (this->mHorzSpeed >= 0x1e000) {
                 ApproachLinear(this->mHorzSpeed, 0x1e000, 0x4000);
@@ -2252,9 +1967,6 @@ void daKpa_c::ActThrown() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 30 -- SetGoalInvisible, 0x02113a94, size 0xc8 */
-/* -------------------------------------------------------------------------- */
 /*
 Keep him out of sight under the arena during BOWSER_STATE_RECOVER: target
 opacity 0; once mOpacity is 0, zero both speeds, put him 0x3e8000 (1000 units)
@@ -2281,9 +1993,6 @@ void daKpa_c::SetGoalInvisible() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 29 -- ActJumpOntoStage, 0x02113740, size 0x354 */
-/* -------------------------------------------------------------------------- */
 /*
 State BOWSER_STATE_RECOVER (2), entered when he has fallen 1000 units below the
 arena (CheckFallenOffStage). Each frame: ground = mHomePosY - 0x7d0000 (2000
@@ -2392,7 +2101,7 @@ void daKpa_c::ActJumpOntoStage() {
             if (this->mVariantID == 1) {
                 dActor_c *r;
                 this->mState = BOWSER_STATE_ARENA_TILT;
-                r = (dActor_c *)dActor_c::FindWithActorID(BOWSER_ACTOR_KOOPA2BG, 0);
+                r = dActor_c::FindWithActorID(BOWSER_ACTOR_KOOPA2BG, 0);
                 if (r) this->mArenaBgUniqueID = r->uniqueID;
                 this->mVertAccel = -0x2000;
             }
@@ -2410,9 +2119,6 @@ void daKpa_c::ActJumpOntoStage() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 28 -- ActDance, 0x02113710, size 0x30 */
-/* -------------------------------------------------------------------------- */
 /*
 State BOWSER_STATE_PLAY_ANIM_0F (3): play animation 0xf looping until its last
 frame, then BOWSER_STATE_IDLE. */
@@ -2423,9 +2129,6 @@ void daKpa_c::ActDance() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 27 -- SpawnCollectable, 0x021135fc, size 0x114 */
-/* -------------------------------------------------------------------------- */
 /*
 The defeat payoff. Switch the body collider off. Variant 2: spawn the LAST_STAR
 actor (0x11b, parameter 7) 0xa0000 (160 units) above him. Other variants:
@@ -2452,9 +2155,6 @@ void daKpa_c::SpawnCollectable() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 26 -- FlyBackDead, 0x02113564, size 0x98 */
-/* -------------------------------------------------------------------------- */
 /*
 Defeat step 0 (from ActDead): knock-back launch. Animation 0 once,
 mHorzSpeed -0x1c000 (-28.0) for variant 2 and -0x19000 (-25.0) otherwise,
@@ -2477,9 +2177,6 @@ void daKpa_c::FlyBackDead() {
     func_02012694(BOWSER_SND_LEAP, &mCamSpacePos);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 25 -- DeadBounce, 0x021134ac, size 0xb8 */
-/* -------------------------------------------------------------------------- */
 /*
 Defeat step 1: airborne after the launch. Sets unk_422, runs the landing-dust
 helper on mStepCounter; on a fresh ground hit it starts animation 5 once when the
@@ -2504,9 +2201,6 @@ void daKpa_c::DeadBounce() {
     LoopLayDownAnimation();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 24 -- DeadWaitForMario, 0x02113404, size 0xa8 */
-/* -------------------------------------------------------------------------- */
 /*
 Defeat step 2: wait for the daPly_c. LoopLayDownAnimation runs first. Returns 1
 when the current animation is animation 3 (data_ov060_0211ac60 is entry 3 of the
@@ -2536,9 +2230,6 @@ int daKpa_c::DeadWaitForMario() {
     return r;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 23 -- DeadTwirlUp, 0x021132a4, size 0x160 */
-/* -------------------------------------------------------------------------- */
 /*
 Defeat shrink-and-spin for variants 0 and 1, per frame; returns 1 once done.
 Particle 0x99 is spawned 50 units above him each frame (mParticleHandle).
@@ -2587,9 +2278,6 @@ int daKpa_c::DeadTwirlUp() {
     return done;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 22 -- DeadHide, 0x02113260, size 0x44 */
-/* -------------------------------------------------------------------------- */
 /*
 Park him after the defeat: X and Z set to 0 (Y kept), scale 0, both speeds and
 gravity 0, no shadow, body collider switched off. */
@@ -2609,9 +2297,6 @@ void daKpa_c::DeadHide() {
     this->mdCcAcPos_c.flags |= BOWSER_CC_DISABLED;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 21 -- DeadDefaultStageEnding, 0x021130c0, size 0x1a0 */
-/* -------------------------------------------------------------------------- */
 /*
 Defeat conversation and shrink for variants 0 and 1 (defeat step 3). mStepCounter
 is the phase: while it is 0 or 1 the conversation runs by mTalkStep, then
@@ -2672,9 +2357,6 @@ int daKpa_c::DeadDefaultStageEnding() {
     return ret;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- DeadFinalStageEnding, 0x02112ee0, size 0x1e0 */
-/* -------------------------------------------------------------------------- */
 /*
 Defeat conversation and fade-out for variant 2 (defeat step 0xa). mStepCounter is
 the phase as in DeadDefaultStageEnding. Talk step 0: daPly_c::StartTalk(this, 1).
@@ -2737,9 +2419,6 @@ int daKpa_c::DeadFinalStageEnding() {
     return ret;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 19 -- ActDead, 0x02112ddc, size 0x104 */
-/* -------------------------------------------------------------------------- */
 /*
 State BOWSER_STATE_DEFEATED (4), by mStep. 0: FlyBackDead (launch). 1:
 DeadBounce (airborne until landed). 2: DeadWaitForMario; when it
@@ -2774,9 +2453,6 @@ void daKpa_c::ActDead() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 18 -- TiltPlatform, 0x02112d48, size 0x94 */
-/* -------------------------------------------------------------------------- */
 /*
 Tilt the arena: find the KOOPA2BG actor by mArenaBgUniqueID (nothing if it is
 gone) and set its mAngleXSpeed to tiltSpeed * cos and its mAngleZSpeed to
@@ -2791,9 +2467,6 @@ void daKpa_c::TiltPlatform(int tiltSpeed) {
     arena->mAngleZSpeed = (tiltSpeed * -FX_SinIdx((u16)angle >> 4)) >> 12;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 17 -- ActTiltLavaPlatform, 0x02112bfc, size 0x14c */
-/* -------------------------------------------------------------------------- */
 /*
 State BOWSER_STATE_ARENA_TILT (0x13): the arena rocks for 186 frames. mVertSpeed
 is held at mTerminalVelocity. If the KOOPA2BG actor is gone, back to
@@ -2817,17 +2490,17 @@ void daKpa_c::ActTiltLavaPlatform() {
     i = 0;
     flag = 1;
     while (p[2] != 0) {
-        int r1 = this->mTimer;
-        if (r1 < p[2]) {
+        int timer = this->mTimer;
+        if (timer < p[2]) {
             int off = i * 6;
             short a = *(short*)((char*)data_ov060_02119294 + off);
             short b = *(short*)((char*)data_ov060_02119296 + off);
             int v;
             if (a > 0) {
-                v = (short)(b * (*(short*)((char*)data_ov060_02119298 + off) - 1 - r1));
+                v = (short)(b * (*(short *)((char *)data_ov060_02119298 + off) - 1 - timer));
             } else {
                 i -= 1; off = i * 6;
-                v = (short)(b * (r1 - *(short*)((char*)data_ov060_02119298 + off)));
+                v = (short)(b * (timer - *(short *)((char *)data_ov060_02119298 + off)));
             }
             TiltPlatform(v);
             if (v != 0 && (this->mTimer & 1)) {
@@ -2849,9 +2522,6 @@ void daKpa_c::ActTiltLavaPlatform() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 16 -- CheckFallenOffStage, 0x02112ba8, size 0x54 */
-/* -------------------------------------------------------------------------- */
 /*
 True when he has fallen 0x3e8000 (1000 units) below mHomePosY while not already
 in BOWSER_STATE_RECOVER or BOWSER_STATE_ARENA_TILT. (The result of the
@@ -2865,9 +2535,6 @@ int daKpa_c::CheckFallenOffStage() {
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 15 -- FreeUpdate, 0x021128c0, size 0x2e8 */
-/* -------------------------------------------------------------------------- */
 /*
 Hold state BOWSER_HOLD_NONE (0), the normal per-frame handler, called through the
 hold table by BowserLoop. Clears mHoldStep. Unless he is defeated, if the
@@ -2881,7 +2548,7 @@ collider (variant 1 uses func_02038408, others the continuous update); on the
 ground, copy the floor normal into mGroundNormal and remember mLastGroundPos;
 with mBounceOnLand set, a fresh ground hit makes mVertSpeed -60 percent of itself,
 at most 0x14000 (20.0); otherwise, when the floor normal's Y is non-zero,
-mVertSpeed is recomputed from the floor normal and the unnamed dActor_c words at 0xa4 and 0xac, minus 0x8000.
+mVertSpeed is recomputed from the floor normal and mSpeedX/mSpeedZ, minus 0x8000.
 For the states whose byte is 1 in data_ov060_02119268 (0, 3, 7..0xb, 0xe..0x10,
 0x12 and 0x13), if he has left the ground he is put back at mLastGroundPos and
 moved 8 units toward the centre (the sin/cos table entry shifted left 3), else
@@ -2959,9 +2626,6 @@ void daKpa_c::FreeUpdate() {
     this->mTimer = 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- HeldUpdate, 0x02112724, size 0x19c */
-/* -------------------------------------------------------------------------- */
 /*
 Hold state BOWSER_HOLD_HELD (1): a daPly_c has grabbed the tail and swings him
 around. BOWSER_COND_BREATHING is cleared. By mHoldStep: 0 switches the body collider
@@ -3011,9 +2675,6 @@ void daKpa_c::HeldUpdate() {
     mPosZ += FX_CosIdx((u16)a >> 4) * 0xa0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- ThrownDroppedUpdate, 0x021125f0, size 0x134 */
-/* -------------------------------------------------------------------------- */
 /*
 Hold states BOWSER_HOLD_RELEASE_NOW (2) and BOWSER_HOLD_RELEASE_AFTER_ANIM (3):
 the release. Plays animation 0xe once; state 3 waits for its last frame. Then: clear
@@ -3055,9 +2716,6 @@ void daKpa_c::ThrownDroppedUpdate() {
     this->mWithMeshClsn.ClearGroundFlag();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- BowserLoop, 0x02112434, size 0x1bc */
-/* -------------------------------------------------------------------------- */
 /*
 Per-frame conditions, hold-state dispatch and opacity fade. Measure the
 horizontal distance and angle to the arena centre (the origin) into
@@ -3116,9 +2774,6 @@ void daKpa_c::BowserLoop() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- InitFightState, 0x021123dc, size 0x58 */
-/* -------------------------------------------------------------------------- */
 /*
 Fight-start values, called from InitResources: mPickToggle 1, fully opaque, variant
 3 treated as 0, mHealth from the byte table at data_ov060_02119264 (1, 1, 3 in the
@@ -3136,9 +2791,6 @@ void daKpa_c::InitFightState() {
     this->unk_422 = 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- OnTailReleased, 0x021123c8, size 0x14 */
-/* -------------------------------------------------------------------------- */
 /*
 Called when the tail lets go of a daPly_c: set mBounceOnLand (FreeUpdate
 then bounces him when he next hits the ground) and forget the grabbed daPly_c. */
@@ -3147,9 +2799,6 @@ void daKpa_c::OnTailReleased() {
     this->mGrabbedPlayer = 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- SetTangible, 0x021123a0, size 0x28 */
-/* -------------------------------------------------------------------------- */
 /*
 Body collider switch: a non-zero argument clears the disabled bit (dCc_c flags
 bit 0) of mdCcAcPos_c, zero sets it. */
@@ -3160,9 +2809,6 @@ void daKpa_c::SetTangible(int enable) {
         this->mdCcAcPos_c.flags |= BOWSER_CC_DISABLED;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- LoopLayDownAnimation, 0x02112350, size 0x50 */
-/* -------------------------------------------------------------------------- */
 /*
 When the current animation has finished and is animation 5 (data_ov060_0211acd0
 is entry 5 of the animation table), start animation 3 (looping). */
@@ -3174,9 +2820,6 @@ void daKpa_c::LoopLayDownAnimation() {
     InitAnimation(3, 0);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- UpdateIntroCamera, 0x02111f08, size 0x448 */
-/* -------------------------------------------------------------------------- */
 /*
 The intro camera, one step per mCutsceneStep, run each frame by the two intro
 states and once more by the conversation. Returns 1 at once when there is no
@@ -3281,9 +2924,6 @@ int daKpa_c::UpdateIntroCamera() {
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- InitAnimation, 0x02111cc0, size 0x248 */
-/* -------------------------------------------------------------------------- */
 /*
 Switch the model to animation idx (entries 0..0x1b of the table at
 data_ov060_021192dc; each handle's filePtr is the file) and pick the texture
@@ -3340,9 +2980,6 @@ void daKpa_c::InitAnimation(int idx, int animFlags) {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- GetMouthFireRow, 0x02111c68, size 0x58 */
-/* -------------------------------------------------------------------------- */
 /*
 Row number for the mouth fire in daKpaFire_c, or -1. While animation 8 plays
 (data_ov060_0211ac20 is entry 8 of the animation table) the row is the whole
@@ -3360,9 +2997,6 @@ int daKpa_c::GetMouthFireRow() {
     return -1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- UpdateFootfalls, 0x02111a28, size 0x240 */
-/* -------------------------------------------------------------------------- */
 /*
 Footfall detection, called from Behavior each frame. For six animations the whole
 frame number n is tested against windows that pick a foot point: 1 means
@@ -3444,11 +3078,9 @@ void daKpa_c::UpdateFootfalls() {
     }
 }
 
-/* The static-init globals -- mwcc emits __sinit_d_a_kpa.cpp from these: one ctor
- * veneer plus destructor registration per file handle (the anonymous @NNN
- * registration nodes and .data descriptor records are compiler temporaries),
- * then the three pointer-to-member state tables. Order matches the retail
- * initializer exactly. */
+/* The static-init globals: one ctor veneer and destructor registration per
+ * file handle (the @NNN nodes and .data descriptors are compiler
+ * temporaries), then the three pointer-to-member state tables. */
 KpaModelFilePtr data_ov060_0211ac78(ASSET_KOOPA_MODEL_BMD);
 KpaAnimationFileHandle data_ov060_0211ac88(ASSET_KOOPA_DAMAGE_BCA);
 KpaAnimationFileHandle data_ov060_0211ac50(ASSET_KOOPA_DAMAGE2_ST_BCA);

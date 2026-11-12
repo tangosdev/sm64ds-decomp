@@ -27,7 +27,7 @@ void CARD_IdentifyBackup(int type) {
     func_02060364(type);
     p->callback = 0;
     p->callback_arg = 0;
-    cardi_common.cur_th = data_020a6134.current;
+    cardi_common.cur_th = OSi_ThreadInfo.current;
     func_020607e8(p);
 }
 }

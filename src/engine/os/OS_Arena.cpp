@@ -18,6 +18,7 @@
  */
 #include "types.h"
 #include "nitro/os/protectionRegion.h"
+#include "nitro/hw/mmap_tcm.h"
 
 /* OSArenaId */
 #define OS_ARENA_MAIN 0
@@ -44,10 +45,7 @@ extern int OS_GetConsoleType(void);
 extern void SDK_IRQ_STACKSIZE(void);
 extern void SDK_SYS_STACKSIZE(void);
 
-/* OSi_Initialized. OS_Thread.cpp takes this word's address as the top of
- * OSi_IdleThreadStack, which ends here. */
-extern unsigned int data_020a6378;
-extern short data_023c0000[]; /* HW_DTCM */
+extern unsigned int OSi_Initialized;
 
 unsigned int OS_GetArenaHi(int id);
 unsigned int OS_GetArenaLo(int id);
@@ -57,9 +55,9 @@ void OS_SetArenaHi(int id, unsigned int newHi);
 void OS_SetArenaLo(int id, unsigned int newLo);
 
 void OS_InitArena(void) {
-    if (data_020a6378 != 0)
+    if (OSi_Initialized != 0)
         return;
-    data_020a6378 = 1;
+    OSi_Initialized = 1;
     OS_SetArenaHi(OS_ARENA_MAIN, OS_GetInitArenaHi(OS_ARENA_MAIN));
     OS_SetArenaLo(OS_ARENA_MAIN, OS_GetInitArenaLo(OS_ARENA_MAIN));
     OS_SetArenaLo(OS_ARENA_MAINEX, 0);
@@ -99,16 +97,16 @@ unsigned int OS_GetInitArenaHi(int id) {
     case OS_ARENA_ITCM:
         return 0x2000000;
     case OS_ARENA_DTCM: {
-        u32 irqStackLo = (u32)data_023c0000 + 0x3f80 - (s32)SDK_IRQ_STACKSIZE;
+        u32 irqStackLo = (u32)HW_DTCM_IRQ_STACK_END - (s32)SDK_IRQ_STACKSIZE;
         u32 sysStackLo;
 
         if (!(s32)SDK_SYS_STACKSIZE) {
-            sysStackLo = (u32)data_023c0000;
+            sysStackLo = HW_DTCM;
             if (sysStackLo < 0x23c0020) {
                 sysStackLo = 0x23c0020;
             }
         } else if ((s32)SDK_SYS_STACKSIZE < 0) {
-            sysStackLo = (u32)data_023c0000 - (s32)SDK_SYS_STACKSIZE;
+            sysStackLo = HW_DTCM - (s32)SDK_SYS_STACKSIZE;
         } else {
             sysStackLo = irqStackLo - (s32)SDK_SYS_STACKSIZE;
         }

@@ -1,4 +1,5 @@
-extern int WM_GetLinkLevel(void);
+#include "nitro/wm/wm_api.h"
+
 extern unsigned short data_020a0f1c;
 /* While link bit 0x8000 of data_020a0f1c is set (func_0203e20c sets it
    with 0x1000), WM_GetLinkLevel's value, else 0. func_0203083c indexes its

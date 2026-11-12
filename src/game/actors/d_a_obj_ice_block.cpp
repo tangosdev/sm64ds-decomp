@@ -85,8 +85,7 @@ s32 daObjIceBlock_c::InitResources() {
     UpdateClsnPosAndRot();
 
     KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov081_02128fd0);
-    ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov002_0210d8d4);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov002_0210d8d4);
     mScale = 0x1000;
     return 1;
 }
