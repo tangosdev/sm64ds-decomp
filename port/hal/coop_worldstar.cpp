@@ -656,7 +656,16 @@ void knobs(char *me) {
                          (int)a_slot((char *)k), hit_friend ? "a FRIEND's" : "MY", held0, k->mHeldActorID, k->mCarriedItem, k->mSilverStarFlag);
         }
     }
+    static int eel_home[3]; static bool eel_home_on = false;
+    if (g_eel.at >= 0 && !g_eel.fr && g_lf == (unsigned)g_eel.at + 4u && eel_home_on) {
+        // WORLDSTAR2: back to where my body stood (the tail star sits in the eel's hole: left there it falls out of the level)
+        eel_home_on = false;
+        wr32(me, 0x5c, eel_home[0]); wr32(me, 0x60, eel_home[1]); wr32(me, 0x64, eel_home[2]);
+        wr32(me, 0x98, 0); wr32(me, 0xa8, 0);
+        std::fprintf(stderr, "[coopws] KNOB eel lf=%u: my body back at (%d,%d,%d)\n", g_lf, eel_home[0] >> 12, eel_home[1] >> 12, eel_home[2] >> 12);
+    }
     if (g_eel.at >= 0 && !g_eel.fr && g_lf >= (unsigned)g_eel.at && g_lf < (unsigned)g_eel.at + 4u) {
+        if (g_lf == (unsigned)g_eel.at) { eel_home[0] = rd32(me, 0x5c); eel_home[1] = rd32(me, 0x60); eel_home[2] = rd32(me, 0x64); eel_home_on = true; }
         char *eel = _ZN8dActor_c15FindWithActorIDEjPS_(kClsEel, nullptr);
         if (eel && rd32(eel, 0x49c)) {
             wr32(me, 0x5c, rd32(eel, 0x43c)); wr32(me, 0x60, rd32(eel, 0x440)); wr32(me, 0x64, rd32(eel, 0x444));
