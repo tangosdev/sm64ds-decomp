@@ -800,7 +800,15 @@ Gone g_gone[kGoneMax]; int g_gone_n = 0;
 unsigned g_gone_push_at = 0; int g_gone_push_left = 0;
 void gone_note(int slot, unsigned cls) {
     for (int i = 0; i < g_gone_n; ++i) if (g_gone[i].slot == slot && g_gone[i].cls == cls) return;
-    if (g_gone_n < kGoneMax) g_gone[g_gone_n++] = {(uint16_t)slot, (uint16_t)cls};
+    static bool said = false;
+    if (g_gone_n < kGoneMax) { g_gone[g_gone_n++] = {(uint16_t)slot, (uint16_t)cls}; said = false; return; }
+    // TABLES1: no level places more than 13 of these (the castle garden: 3 blocks and 10 Boos, counted from the ROM object tables), so a full
+    // list means something new feeds it. Say so once a visit instead of dropping it without a word.
+    if (!said) {
+        said = true;
+        std::fprintf(stderr, "[coop] GONE LIST FULL (%d): class %u slot %d not kept for this visit (a late joiner will see it standing) wall=%lld\n",
+                     (int)kGoneMax, cls, slot, wall_ms());
+    }
 }
 // The ROOM keeps them too, per (level, act): the breaker usually drops straight through the hole he opened, so by the time
 // his friend walks in nobody is left in the level to tell him. Every console stores every break it hears about (its own
@@ -815,7 +823,13 @@ void room_gone_note(const CoopKey &k, int slot, unsigned cls) {
         const RoomGone &r = g_room_gone[i];
         if (r.level == k.level && r.act == (uint8_t)k.act && r.slot == slot && r.cls == cls) return;
     }
-    if (g_room_gone_n < kRoomGoneMax) g_room_gone[g_room_gone_n++] = {(int16_t)k.level, (uint8_t)k.act, (uint16_t)slot, (uint16_t)cls};
+    if (g_room_gone_n < kRoomGoneMax) { g_room_gone[g_room_gone_n++] = {(int16_t)k.level, (uint8_t)k.act, (uint16_t)slot, (uint16_t)cls}; return; }
+    static bool said = false;   // TABLES1: 4 seats hold at most 8 levels, 11 breakable blocks at most each: 88 of 96
+    if (!said) {
+        said = true;
+        std::fprintf(stderr, "[coop] ROOM GONE LIST FULL (%d): level %d act %d class %u slot %d not kept wall=%lld\n", (int)kRoomGoneMax, k.level,
+                     k.act, cls, slot, wall_ms());
+    }
 }
 // Who still has a level. A seat has (level, act) while it is in it, and it keeps the level it came straight from while it
 // is in a course it reached from there (not one of the castle levels 1 to 5): the breaker who drops through the garden
@@ -3044,24 +3058,38 @@ bool coop_world_active() {
 
 CoopWorldStats coop_world_stats() { return g_st; }
 
+// TABLES1: a refused registration switches a coop module off for the whole run, and most callers never look at the answer.
+// Say it once per table, in dev and kit builds alike, and again in the table summary once the room runs (the first lines can
+// land before the play log is open).
+int g_reg_refused = 0;
+static void reg_refused(const char *table, const char *why, int lo, int hi, int used, int cap) {
+    ++g_reg_refused;
+    static unsigned said = 0;
+    const unsigned bit = table[0] == 'c' ? 1u : table[0] == 'w' ? 2u : table[0] == 'f' ? 4u : table[0] == 'l' ? 8u : table[0] == 'e' ? 16u
+                       : table[0] == 's' ? 32u : 64u;
+    if (said & bit) return;
+    said |= bit;
+    std::fprintf(stderr, "[coop-reg] REFUSED: %s registration (%s, sub %#x..%#x, %d of %d used): that coop module is OFF this run\n", table, why,
+                 lo, hi, used, cap);
+}
 static bool register_range(Reg *arr, int *n, int lo, int hi, int mine_lo, int mine_hi,
-                           CoopSubFn fn, void *user) {
-    if (!fn || lo < 0 || hi > 255 || lo > hi) return false;
-    if (!(hi < mine_lo || lo > mine_hi)) return false;
+                           CoopSubFn fn, void *user, const char *table) {
+    if (!fn || lo < 0 || hi > 255 || lo > hi) { reg_refused(table, "bad range", lo, hi, *n, kMaxRegs); return false; }
+    if (!(hi < mine_lo || lo > mine_hi)) { reg_refused(table, "overlaps coop_world's own", lo, hi, *n, kMaxRegs); return false; }
     for (int i = 0; i < *n; ++i) {
         // SEAMCOOP1: the very same range and handler again (a once-per-room latch reset for a second room in place): already there
         if (arr[i].lo == lo && arr[i].hi == hi && arr[i].fn == fn && arr[i].user == user) return true;
-        if (!(hi < arr[i].lo || lo > arr[i].hi)) return false;
+        if (!(hi < arr[i].lo || lo > arr[i].hi)) { reg_refused(table, "overlaps another module", lo, hi, *n, kMaxRegs); return false; }
     }
-    if (*n >= kMaxRegs) return false;
+    if (*n >= kMaxRegs) { reg_refused(table, "table full", lo, hi, *n, kMaxRegs); return false; }
     arr[(*n)++] = {lo, hi, fn, user};
     return true;
 }
 bool coop_ctl_register(int lo, int hi, CoopSubFn fn, void *user) {
-    return register_range(g_reg_ctl, &g_nreg_ctl, lo, hi, kCtlGroupHello, kCtlOwnerChange, fn, user);
+    return register_range(g_reg_ctl, &g_nreg_ctl, lo, hi, kCtlGroupHello, kCtlOwnerChange, fn, user, "ctl");
 }
 bool coop_world_register(int lo, int hi, CoopSubFn fn, void *user) {
-    return register_range(g_reg_world, &g_nreg_world, lo, hi, kWorldDeathDelta, kWorldDeathFull, fn, user);
+    return register_range(g_reg_world, &g_nreg_world, lo, hi, kWorldDeathDelta, kWorldDeathFull, fn, user, "world");
 }
 bool coop_group_key(int *level, int *act) {
     if (!coop_world_active() || !g_key.valid()) return false;
@@ -3077,21 +3105,22 @@ unsigned coop_group_member_mask() { return coop_group_established() ? g_grp.memb
 // TABLES1 proof knob: SM64DS_COOP_REG_CAP=N makes every callback table hold N entries, so a row reaches the limit.
 static int reg_cap_knob() { static const int c = [] { const char *e = std::getenv("SM64DS_COOP_REG_CAP"); return e ? std::atoi(e) : 0; }(); return c; }
 #endif
-template <class F, int N> static bool add_cb(F (&arr)[N], int *n, F fn) {
+template <class F, int N> static bool add_cb(F (&arr)[N], int *n, F fn, const char *table) {
     int cap = N;
 #ifndef PORT_ROM_CLEAN
     if (reg_cap_knob() > 0 && reg_cap_knob() < N) cap = reg_cap_knob();
 #endif
-    if (!fn || *n >= cap) return false;
+    if (fn && *n >= cap) { reg_refused(table, "table full", 0, 0, *n, cap); return false; }   // a repeat or a null below is the caller's slip
+    if (!fn) return false;
     for (int i = 0; i < *n; ++i) if (arr[i] == fn) return false;
     arr[(*n)++] = fn;
     return true;
 }
-bool coop_on_frame(void (*fn)(unsigned now_ms)) { return add_cb(g_cb_frame, &g_n_frame, fn); }
-bool coop_on_group_latched(void (*fn)(int level, int act)) { return add_cb(g_cb_latched, &g_n_latched, fn); }
-bool coop_on_group_established(void (*fn)(int level, int act)) { return add_cb(g_cb_estab, &g_n_estab, fn); }
-bool coop_on_snapshot_request(void (*fn)(int seat, unsigned nonce)) { return add_cb(g_cb_snapreq, &g_n_snapreq, fn); }
-bool coop_on_member_gone(void (*fn)(int seat)) { return add_cb(g_cb_gone, &g_n_gone, fn); }
+bool coop_on_frame(void (*fn)(unsigned now_ms)) { return add_cb(g_cb_frame, &g_n_frame, fn, "frame"); }
+bool coop_on_group_latched(void (*fn)(int level, int act)) { return add_cb(g_cb_latched, &g_n_latched, fn, "latched"); }
+bool coop_on_group_established(void (*fn)(int level, int act)) { return add_cb(g_cb_estab, &g_n_estab, fn, "established"); }
+bool coop_on_snapshot_request(void (*fn)(int seat, unsigned nonce)) { return add_cb(g_cb_snapreq, &g_n_snapreq, fn, "snapshot"); }
+bool coop_on_member_gone(void (*fn)(int seat)) { return add_cb(g_cb_gone, &g_n_gone, fn, "gone"); }
 
 // Proof only: SM64DS_COOP_API_TEST=1 registers one callback of each kind and logs what the registries hand out.
 static void api_t_frame(unsigned) {
@@ -3181,6 +3210,10 @@ extern "C" void port_coop_world_frame(void) {
     refresh_presence(now);
     if (g_frame % 30 == 0) { room_forget(now); room_bits_forget(now); }   // AREACOIN1: room bits too   // Tango's rule: a level nobody has loaded loses its broken blocks
     for (int i = 0; i < g_n_frame; ++i) g_cb_frame[i](now);
+    if (g_frame == 300)   // TABLES1: how full the registration tables are once every module has had its first frames
+        std::fprintf(stderr, "[coop-reg] tables: frame %d/%d latched %d/%d established %d/%d snapshot %d/%d gone %d/%d ctl %d/%d world %d/%d"
+                             " refused %d%s\n", g_n_frame, kMaxCbs, g_n_latched, kMaxCbs, g_n_estab, kMaxCbs, g_n_snapreq, kMaxCbs, g_n_gone,
+                     kMaxCbs, g_nreg_ctl, kMaxRegs, g_nreg_world, kMaxRegs, g_reg_refused, g_reg_refused ? " (A COOP MODULE IS OFF)" : "");
     {   // members that left my group since last frame
         g_grp.update(now);
         const unsigned m = g_grp.member_mask();
