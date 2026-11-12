@@ -15,36 +15,32 @@
  */
 #include "types.h"
 #include "nitro/os/system.h"
+#include "nitro/pxi/fifo.h"
+#include "nitro/pxi/init.h"
 
-#define PXI_FIFO_TAG_OS 12
-#define PXI_PROC_ARM7 1
+typedef int BOOL;
+#define FALSE 0
 
 #define OS_PXI_COMMAND_MASK 0x00007f00
 #define OS_PXI_COMMAND_SHIFT 8
 #define OS_PXI_COMMAND_RESET 0x10
 
-/* local extern: no PXI header in include/ yet (src/engine/pxi/PXI_Fifo.cpp). */
-extern void PXI_Init(void);
-extern int PXI_IsCallbackReady(int tag, int proc);
-extern void PXI_SetFifoRecvCallback(int tag, void *callback);
-extern int PXI_SendWordByFifo(unsigned int tag, unsigned int data, unsigned int err);
-
 extern u16 OSi_IsInitReset;
 extern vu16 OSi_IsResetOccurred;
 
-void OSi_CommonCallback(int tag, u32 data, int err);
+void OSi_CommonCallback(PXIFifoTag tag, u32 data, BOOL err);
 
 void OS_InitReset(void) {
     if (OSi_IsInitReset != 0)
         return;
     OSi_IsInitReset = 1;
     PXI_Init();
-    while (PXI_IsCallbackReady(PXI_FIFO_TAG_OS, PXI_PROC_ARM7) == 0)
+    while (!PXI_IsCallbackReady(PXI_FIFO_TAG_OS, PXI_PROC_ARM7))
         ;
-    PXI_SetFifoRecvCallback(PXI_FIFO_TAG_OS, (void *)OSi_CommonCallback);
+    PXI_SetFifoRecvCallback(PXI_FIFO_TAG_OS, OSi_CommonCallback);
 }
 
-void OSi_CommonCallback(int tag, u32 data, int err) {
+void OSi_CommonCallback(PXIFifoTag tag, u32 data, BOOL err) {
     u16 command = (u16)((data & OS_PXI_COMMAND_MASK) >> OS_PXI_COMMAND_SHIFT);
     if (command == OS_PXI_COMMAND_RESET) {
         OSi_IsResetOccurred = 1;
@@ -57,6 +53,6 @@ void OSi_CommonCallback(int tag, u32 data, int err) {
  * OS_ResetSystem (ITCM, src/OSi_ReloadRomData.c) calls it with
  * OS_PXI_COMMAND_RESET. */
 void OSi_SendToPxi(u16 data) {
-    while (PXI_SendWordByFifo(PXI_FIFO_TAG_OS, (u32)data << 8, 0))
+    while (PXI_SendWordByFifo(PXI_FIFO_TAG_OS, (u32)data << 8, FALSE))
         ;
 }

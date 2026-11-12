@@ -5205,8 +5205,8 @@ data_020a7760 kind:bss addr:0x020a7760
 data_020a7f48 kind:bss addr:0x020a7f48
 data_020a7f60 kind:bss addr:0x020a7f60
 data_020a7fc0 kind:bss addr:0x020a7fc0
-data_020a7fc4 kind:bss addr:0x020a7fc4
-data_020a7fc8 kind:bss addr:0x020a7fc8
+FifoCtrlInit kind:bss addr:0x020a7fc4
+FifoRecvCallbackTable kind:bss addr:0x020a7fc8
 arc_list kind:bss addr:0x020a8048
 current_dir_pos kind:bss addr:0x020a804c
 is_init kind:bss addr:0x020a8058
@@ -5216,7 +5216,7 @@ fsi_ovt9 kind:bss addr:0x020a8064
 fsi_ovt7 kind:bss addr:0x020a806c
 fsi_arc_rom kind:bss addr:0x020a8074
 data_020a80c4 kind:bss addr:0x020a80c4
-initial$188 kind:bss addr:0x020a80c8
+initial$180 kind:bss addr:0x020a80c8
 tpState kind:bss addr:0x020a80cc
 data_020a80e4 kind:bss addr:0x020a80e4
 PMi_IsInit kind:bss addr:0x020a8104

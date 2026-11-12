@@ -25,20 +25,14 @@
 #include "nitro/os/system.h"
 #include "nitro/os/systemWork.h"
 #include "nitro/spi/tp.h"
+#include "nitro/pxi/fifo.h"
+#include "nitro/pxi/init.h"
 #include "nitro/spi/userInfo.h"
 
 typedef int BOOL;
 #define TRUE 1
 #define FALSE 0
 #define NULL 0
-
-typedef enum { PXI_FIFO_TAG_TOUCHPANEL = 6 } PXIFifoTag;
-#define PXI_PROC_ARM7 1
-
-void PXI_Init(void);
-int PXI_IsCallbackReady(int tag, int proc);
-void PXI_SetFifoRecvCallback(int tag, void *callback);
-int PXI_SendWordByFifo(unsigned int tag, unsigned int data, unsigned int reply);
 
 /* The SPI channel's PXI word (the SDK's nitro/spi/common/type.h). */
 #define SPI_PXI_START_BIT 0x02000000
@@ -268,7 +262,7 @@ void TP_Init(void) {
     while (!PXI_IsCallbackReady(PXI_FIFO_TAG_TOUCHPANEL, PXI_PROC_ARM7)) {
     }
 
-    PXI_SetFifoRecvCallback(PXI_FIFO_TAG_TOUCHPANEL, (void *)TPi_TpCallback);
+    PXI_SetFifoRecvCallback(PXI_FIFO_TAG_TOUCHPANEL, TPi_TpCallback);
 }
 
 BOOL TP_GetUserInfo(TPCalibrateParam *calibrate) {

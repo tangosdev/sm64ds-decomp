@@ -3,28 +3,32 @@
 #include "nitro/os/cache.h"
 #include "nitro/os/system.h"
 #include "nitro/card/card_common.h"
-extern "C" int PXI_IsCallbackReady(int tag, int proc);
+#include "nitro/pxi/fifo.h"
+
 extern "C" void OS_SpinWait(unsigned int cycles);
-extern "C" int PXI_SendWordByFifo(unsigned int a, unsigned int c, unsigned int b);
 
-/* NitroSDK CARDi_Request(p, req_type, retry_count): the first time, wait
- * for ARM7's FS PXI callback (tag 0xb) and send the INIT request (0)
- * recursively; then flush the request block and send req_type until the
- * result is not TIMEOUT (4) or the retries run out, sleeping until ARM7
- * clears CARD_STAT_REQ. INIT also sends the request block's address.
- * Returns whether the request succeeded. */
-extern "C" int CARDi_Request(CARDiCommon *p, s32 req_type, s32 retry_count) {
-    OSIntrMode saved;
-    int r;
+#define TRUE 1
 
-    if (!(p->flag & CARD_STAT_INIT_CMD)) {
+/* The SDK's card_common.h: a request word to the ARM7's card handler. */
+static inline void CARDi_SendPxi(u32 data) {
+    while (PXI_SendWordByFifo(PXI_FIFO_TAG_FS, data, TRUE) < 0)
+        ;
+}
+
+/* NitroSDK CARDi_Request (card_request.c): the first time, wait for the
+ * ARM7's card handler on PXI_FIFO_TAG_FS and send it CARD_REQ_INIT; then
+ * flush the command block and send req_type (CARD_REQ_INIT also sends the
+ * block's address) until the result is not CARD_RESULT_TIMEOUT or the
+ * retries run out, sleeping until CARDi_OnFifoRecv clears CARD_STAT_REQ.
+ * This SDK does not invalidate the block after the reply. */
+extern "C" int CARDi_Request(CARDiCommon *p, int req_type, int retry_count) {
+    if ((p->flag & CARD_STAT_INIT_CMD) == 0) {
         p->flag |= CARD_STAT_INIT_CMD;
-        if (PXI_IsCallbackReady(0xb, 1) == 0) {
-            do {
-                OS_SpinWait(0x64);
-            } while (PXI_IsCallbackReady(0xb, 1) == 0);
+        while (!PXI_IsCallbackReady(PXI_FIFO_TAG_FS, PXI_PROC_ARM7)) {
+            OS_SpinWait(100);
         }
-        CARDi_Request(p, CARD_REQ_INIT, 1);
+
+        (void)CARDi_Request(p, CARD_REQ_INIT, 1);
     }
 
     DC_FlushRange(p->cmd, sizeof(*p->cmd));
@@ -33,28 +37,21 @@ extern "C" int CARDi_Request(CARDiCommon *p, s32 req_type, s32 retry_count) {
     do {
         p->command = req_type;
         p->flag |= CARD_STAT_REQ;
+        CARDi_SendPxi((u32)req_type);
 
-        while (PXI_SendWordByFifo(0xb, req_type, 1) < 0) {
-        }
-
-        if (req_type == CARD_REQ_INIT) {
-            CARDiCommandArg *q = p->cmd;
-            while (PXI_SendWordByFifo(0xb, (unsigned int)q, 1) < 0) {
-            }
-        }
-
-        saved = OS_DisableInterrupts();
-        while (p->flag & CARD_STAT_REQ) {
-            OS_SleepThread(0);
-        }
-        OS_RestoreInterrupts(saved);
-
-        r = p->cmd->result;
-        if (r != CARD_RESULT_TIMEOUT) {
+        switch (req_type) {
+        case CARD_REQ_INIT:
+            CARDi_SendPxi((u32)p->cmd);
             break;
         }
-        retry_count--;
-    } while (retry_count > 0);
+        {
+            OSIntrMode bak_psr = OS_DisableInterrupts();
+            while ((p->flag & CARD_STAT_REQ) != 0) {
+                OS_SleepThread(0);
+            }
+            (void)OS_RestoreInterrupts(bak_psr);
+        }
+    } while ((p->cmd->result == CARD_RESULT_TIMEOUT) && (--retry_count > 0));
 
-    return r == CARD_RESULT_SUCCESS;
+    return (p->cmd->result == CARD_RESULT_SUCCESS);
 }

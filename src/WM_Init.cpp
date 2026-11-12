@@ -2,7 +2,7 @@
 /* NitroSDK wm_system.c WM_Init: take buf (0x1300 bytes, 32-byte aligned) as the
  * WM system buffer, once. ILLEGAL_STATE (3) on a second call, INVALID_PARAM (6)
  * for a null or misaligned buf or a DMA channel past 3, WM_DISABLE (4) when
- * ARM7 has no WM handler on PXI tag 0xa. Then clear the buffer with DMA channel
+ * ARM7 has no WM handler on PXI_FIFO_TAG_WM. Then clear the buffer with DMA channel
  * ch and carve ARM7's work area, the status block and the two FIFO buffers out
  * of it, clear the exception bit of OS_GetSystemWork()->wm_callback_control
  * (WmClearFifoRecvFlag), clear every port callback, fill the free-buffer queue
@@ -13,21 +13,22 @@
 #include "private/wm_views.h"
 #include "nitro/os/message.h"
 #include "nitro/mi/dma.h"
+#include "nitro/pxi/fifo.h"
+#include "nitro/pxi/init.h"
+
+typedef int BOOL;
 
 extern "C" {
 
-extern void PXI_Init(void);
-extern int PXI_IsCallbackReady(int tag, int proc);
 extern void WmClearFifoRecvFlag(void);
 extern int WM_SetPortCallback(int port, void *callback, void *arg);
-extern void PXI_SetFifoRecvCallback(int tag, void *callback);
 
 extern u16 data_020a89a8;
 extern WMArm9Buf *data_020a89ac;
 extern OSMessageQueue data_020a89b0; /* the free FIFO-buffer message queue */
 extern OSMessage data_020a89c4[];
 extern char data_020a8a40[];
-extern void WmReceiveFifo(int tag, u16 *msg, int err);
+extern void WmReceiveFifo(PXIFifoTag tag, u32 fifo_buf_adr, BOOL err);
 
 int WM_Init(void *buf, int ch) {
     if (data_020a89a8 != 0)
@@ -47,7 +48,7 @@ int WM_Init(void *buf, int ch) {
     }
 
     PXI_Init();
-    if (PXI_IsCallbackReady(0xa, 1) == 0) {
+    if (!PXI_IsCallbackReady(PXI_FIFO_TAG_WM, PXI_PROC_ARM7)) {
         data_020a89a8 = 0;
         return 4;
     }
@@ -81,7 +82,7 @@ int WM_Init(void *buf, int ch) {
         }
     }
 
-    PXI_SetFifoRecvCallback(0xa, (void *)WmReceiveFifo);
+    PXI_SetFifoRecvCallback(PXI_FIFO_TAG_WM, WmReceiveFifo);
     return 0;
 }
 }

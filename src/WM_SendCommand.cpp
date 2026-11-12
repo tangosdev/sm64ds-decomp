@@ -4,10 +4,12 @@
 #include "private/wm_views.h"
 #include "nitro/os/message.h"
 #include "nitro/mi/dma.h"
+#include "nitro/pxi/fifo.h"
+
+#define FALSE 0
 
 extern "C" {
 
-extern int PXI_SendWordByFifo(u32 a, u32 c, u32 b);
 extern OSMessageQueue data_020a89b0;
 
 extern WMArm9Buf *data_020a89ac;
@@ -35,7 +37,7 @@ int WM_SendCommand(short a0, unsigned short count, ...)
     }
 
     DC_StoreRange(buf, 0x100);
-    r = PXI_SendWordByFifo(0xa, (u32)buf, 0);
+    r = PXI_SendWordByFifo(PXI_FIFO_TAG_WM, (u32)buf, FALSE);
     OS_SendMessage(&data_020a89b0, buf, OS_MESSAGE_BLOCK);
     if (r < 0) return 8;
     return 2;

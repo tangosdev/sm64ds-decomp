@@ -23,11 +23,11 @@
 #include "nitro/card/card_common.h"
 #include "nitro/os/spinLock.h"
 #include "nitro/mi/memory.h"
+#include "nitro/pxi/fifo.h"
 
 extern "C" {
 
 /* local extern: no header declares this yet. */
-extern void PXI_SetFifoRecvCallback(int tag, void *callback);
 
 #define OS_LOCK_ID_ERROR (-3)
 #define CARD_TARGET_NONE 0
@@ -117,7 +117,7 @@ void CARDi_InitCommon(void) {
     p->priority = CARD_THREAD_PRIORITY_DEFAULT;
     OS_CreateThread(&p->thread, CARDi_TaskThread, 0, &data_020a8760, 0x400, p->priority);
     OS_WakeupThreadDirect(&p->thread);
-    PXI_SetFifoRecvCallback(0xb, (void *)CARDi_OnFifoRecv);
+    PXI_SetFifoRecvCallback(PXI_FIFO_TAG_FS, CARDi_OnFifoRecv);
 }
 
 int CARDi_WaitAsync(void) {
