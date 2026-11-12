@@ -267,8 +267,52 @@ bool is_talker(const char *self) {
     return lb && *(const void *const *)(lb + 0x368) == self;
 }
 
+// INTRO1 (coopfix1 bug 1): THE OPENING ASKS FOR THE ONE PLAYER A ONE-PLAYER GAME HAS. From a new file's opening start until
+// its seen bit (port_coop_boot_opening_hold) the ROM's own nearest pick runs, so the cast and the hand-over work on the local
+// body. That pick walks every seated body, and the closing load seats all of them again: the hand-over's LakituBro
+// (daC_Jugem_c::StateArriveInit) asks ClosestPlayer from the grounds' far end at (-1440, 448, 6758), puts what it gets to sleep
+// (func_ov002_020d228c) and talks to it. On a guest the host's body is drawn at the host's spot, (-1200, 254, 6800), nearer
+// to Lakitu than the guest's own (-1080, 254, 6800), so the host's ghost was put to sleep and the guest's own character stood
+// in its wait state through the whole hand-over (Tango 11-11: "the intro Luigi did not move"; with 3 or 4 players any seat
+// whose spot is nearer than the local one does the same, the host included). In one player the answer is always the local
+// body, so in the opening it is the local body here too. SM64DS_COOP_OPENING_LOCAL=0 brings the old pick back (proof rows).
+bool opening_local_on() {
+    static int on = -1;
+    if (on < 0) { const char *e = std::getenv("SM64DS_COOP_OPENING_LOCAL"); on = (e && e[0] == '0') ? 0 : 1; }
+    return on != 0;
+}
+unsigned g_open_local = 0;     // calls answered with the local body in the opening (logged once per class)
+unsigned short g_open_cls[16]; int g_open_ncls = 0;
+
 void *cp_impl(void *self, bool nonvanish) {
     ++g_st.cp_calls;
+    if (!data_0209b458 && g_on && (int)data_0209f21c > 1 && opening_local_on() && port_coop_boot_opening_hold()) {
+        char *lb = local_body();
+        if (lb && nonvanish && lb[0x6fb]) lb = nullptr;   // a vanished player is skipped by this entry, as it would be alone
+        // No local body to give (none seated on my record, or this entry skips it as vanished): the old pick below answers
+        // instead of nothing, so the hand-over still finds a player, sets the opening-seen bit and this window closes.
+        static bool said_none = false;
+        if (!lb && !said_none) {
+            said_none = true;
+            std::fprintf(stderr, "[cotgt] opening: no local body to answer with (record %d, %d bodies seated, nonvanish %d); "
+                         "the old nearest pick answers\n", (int)data_0209f250, (int)data_0209f21c, nonvanish ? 1 : 0);
+        }
+        if (lb) {
+            const int d = Vec3_Dist((char *)self + 0x5c, lb + 0x5c);
+            data_0209b458 = lb; data_0209b450 = lb;
+            data_0208e380 = d; data_0208e37c = d;
+            ++g_open_local;
+            const unsigned short cls = *(const unsigned short *)((const char *)self + 0x0c);
+            bool said = false;
+            for (int i = 0; i < g_open_ncls; ++i) if (g_open_cls[i] == cls) said = true;
+            if (!said && g_open_ncls < 16) {
+                g_open_cls[g_open_ncls++] = cls;
+                std::fprintf(stderr, "[cotgt] opening: cls=%u asked ClosestPlayer, answered with my own body (seat %d, record %d, "
+                             "%d bodies seated)\n", (unsigned)cls, g_my, (int)data_0209f250, (int)data_0209f21c);
+            }
+            return data_0209b458;
+        }
+    }
     if (!data_0209b458) {
         data_0208e380 = 0x7fffffff;
         data_0208e37c = (int)0x80000000;
