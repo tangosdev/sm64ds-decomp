@@ -12,7 +12,6 @@ extern void MenuText_Init(void *unused, void *sheet, int baseTile, void *plane0,
                           int plane2, void *bank);
 extern void func_ov007_020c32e8(Ov007Palette *pal, int target, unsigned int row, int skip);
 extern void func_ov007_020b3edc(int r0);
-extern void GX_LoadBG3Char(const void *src, unsigned int offset, unsigned int count);
 extern void func_ov007_020bcdb8(int idx);
 extern void func_ov007_020c33d0(Ov007CharRecord *rec, int target, unsigned int offset);
 extern void MenuText_LoadFontPalette(void);

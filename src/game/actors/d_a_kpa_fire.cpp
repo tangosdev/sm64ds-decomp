@@ -198,7 +198,7 @@ int daKpaFire_c::InitResources()
         this->mGroundY = this->mPosY;
 
     /* the variant's init, from the ROM-filled table */
-    (((dActor_c *)this)->*data_ov060_0211af74[this->mVariant])();
+    (this->*data_ov060_0211af74[this->mVariant])();
 
     this->mSoundHandle = 0;
     this->mSoundID = 0;
@@ -749,7 +749,7 @@ void daKpaFire_c::func_ov060_021167c8() {
  * and neither daPly_c::mIsMetal nor daPly_c::mIsVanish is set it calls
  * daPly_c::Burn. */
 void daKpaFire_c::func_ov060_02116740() {
-    unsigned int id = ((daKpaFire_c *)this)->mdCcAc_c.otherOwner;
+    unsigned int id = mdCcAc_c.otherOwner;
     if (id == 0)
         return;
     daPly_c *player = (daPly_c *)dActor_c::FindWithID(id);

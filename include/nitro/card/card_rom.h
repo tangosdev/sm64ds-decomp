@@ -19,6 +19,10 @@ extern "C" {
 
 #define CARD_ROM_PAGE_SIZE 0x200
 
+/* The card's normal-mode "read page" command, in the top byte of the first
+ * command word (pret NitroSDK card_rom.c's MROMOP_G_READ_PAGE). */
+#define MROMOP_G_READ_PAGE 0xB7000000
+
 /* NitroSDK CARDRomRegion: an {offset, length} span of the card ROM, the
  * shape of the ROM header's FNT and FAT entries and of the overlay tables
  * (fsi_ovt9, fsi_ovt7). */

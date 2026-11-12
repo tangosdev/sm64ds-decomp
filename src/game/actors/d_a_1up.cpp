@@ -1131,16 +1131,16 @@ int da1up_c::InitResources()
         return 0;
 
     if (mMushroomType == 6 || mMushroomType == 8 || (unsigned int)(mMushroomType - 0xb) <= 1) {
-        mdCcAc_c.Init((dActor_c *)this, 0x64000, 0x40000, 0x100002, 0);
+        mdCcAc_c.Init(this, 0x64000, 0x40000, 0x100002, 0);
         if ((unsigned int)(mMushroomType - 0xb) <= 1) {
             mdCcAc_c.vulnFlags |= CC_VULN_YOSHI_TONGUE;
         }
     } else {
         isMega = (actorID == ACTOR_SCALEUP_KINOKO);
         if (isMega) {
-            mdCcAc_c.Init((dActor_c *)this, 0x41000, 0x41000, 0x100002, 0);
+            mdCcAc_c.Init(this, 0x41000, 0x41000, 0x100002, 0);
         } else {
-            mdCcAc_c.Init((dActor_c *)this, 0x32000, 0x32000, 0x100002, 0);
+            mdCcAc_c.Init(this, 0x32000, 0x32000, 0x100002, 0);
         }
     }
 
@@ -1163,7 +1163,7 @@ int da1up_c::InitResources()
     mSpawnPosZ = mPosZ;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x32000;
-    mWithMeshClsn.Init((dActor_c *)this, 0x32000, 0x32000, 0, 0);
+    mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
     mWithMeshClsn.SetLimMovFlag();
     mParticleID = 0;
 

@@ -33,12 +33,11 @@ typedef struct OSiAlarmQueue {
 
 extern long long OS_GetTick(void);
 extern void OSi_SetTimerReserved(int timerNum);
-extern void OSi_EnterTimerCallback(u32 idx, u32 handler, u32 arg);
 
 extern u16 OSi_UseAlarm;
 extern OSiAlarmQueue OSi_AlarmQueue;
 
-void OSi_AlarmHandler(void);
+void OSi_AlarmHandler(void *arg);
 void OSi_InsertAlarm(OSAlarm *alarm, u64 fire);
 void OSi_ArrangeTimer(void);
 
@@ -49,7 +48,7 @@ void OSi_SetTimer(OSAlarm *alarm) {
     tick = OS_GetTick();
     REG_TM1CNT_H = 0;
     delta = alarm->fire - tick;
-    OSi_EnterTimerCallback(1, (u32)OSi_AlarmHandler, 0);
+    OSi_EnterTimerCallback(1, OSi_AlarmHandler, 0);
     if (delta < 0)
         timerCount = 0xfffe;
     else if (delta < 0x10000)
@@ -163,7 +162,7 @@ void OS_CancelAlarm(OSAlarm *alarm) {
 
 /* The timer 1 IRQ entry. It pushes lr alone and calls out with no stack pad,
  * which mwccarm never emits for C: the SDK writes this one as asm. */
-asm void OSi_AlarmHandler(void) {
+asm void OSi_AlarmHandler(void *arg) {
     stmdb sp!, {lr}
     bl OSi_ArrangeTimer
     ldmia sp!, {lr}

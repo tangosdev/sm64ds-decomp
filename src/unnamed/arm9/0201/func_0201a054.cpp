@@ -4,6 +4,7 @@
 #include "nitro/os/system.h"
 #include "nitro/os/interrupt.h"
 #include "nitro/fx/fx.h"
+#include "nitro/gx/gx.h"
 #include "dScene_c.h"
 #include "private/watchdog_alarm.h"
 #include "nitro/gx/g3imm_light.h"
@@ -23,11 +24,9 @@ extern "C" {
 
 extern void func_020427f8(void);
 extern u64 func_02042784(void);
-extern void GX_Init(void);
 extern void func_0203d740(void);
 extern void ClearSaveBlock(void);
 extern void func_0201a4e4(void);
-extern int GX_VBlankIntr(int enable);
 extern void func_0203bbc0(void);
 extern void func_0203bb5c(void);
 extern void func_0201fec8(void);

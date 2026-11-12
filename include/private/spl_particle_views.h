@@ -142,7 +142,9 @@ typedef struct ParticleSystem {
     char pad_56[2];
     u8 emitInterval; /* 0x58 */
     u8 baseAlpha;    /* 0x59 */
-    char pad_5a[0xe];
+    char pad_5a[2];
+    Vector3s basisU;       /* 0x5c -- with basisV, perpendicular to direction */
+    Vector3s basisV;       /* 0x62 */
     void *callback;        /* 0x68 */
     int m6c;               /* 0x6c */
     int m70;               /* 0x70 */

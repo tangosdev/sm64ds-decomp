@@ -1,8 +1,6 @@
 #include "Ov007BgLayer.h"
 #include "nitro/gx/gx_bgcnt.h"
 
-typedef volatile unsigned short vu16;
-
 /* Per BG, its bit in Ov007BgList.mask. */
 extern int data_ov007_020d7d6c[];
 extern void func_ov007_020c076c(Ov007BgLayer *layer, int engines);
