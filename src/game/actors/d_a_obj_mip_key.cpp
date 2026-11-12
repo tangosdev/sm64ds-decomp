@@ -200,7 +200,7 @@ int daObj_Mip_Key_c::StateLoose() {
     Vector3 *ppos;
 
     c->mAngleX += 0x1000;
-    if ((u16)c->mStateTimer != 0) {
+    if (c->mStateTimer != 0) {
         return 1;
     }
     player = c->ClosestPlayer();
@@ -287,7 +287,7 @@ int daObj_Mip_Key_c::Render() {
 
 
 int daObj_Mip_Key_c::Behavior() {
-    DecIfAbove0_Short((u16 *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     if (mState->execute)
         (this->*mState->execute)();
     int nextSpeed = mVertSpeed + mVertAccel;

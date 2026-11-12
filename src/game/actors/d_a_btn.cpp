@@ -435,12 +435,8 @@ int daBtn_c::Behavior()
 
         {
             /* mStateTimer counts frames spent in the current state: it is
-               incremented here and reset the moment the handler changed mState.
-               Spelling both the increment and the reset through mStateTimer
-               changes Behavior's code (either one alone does not), and so
-               does `mStateTimer++`; the increment keeps the u16 pointer. */
-            unsigned short* ctr = (unsigned short*)&mStateTimer;
-            *ctr = *ctr + 1;
+               incremented here and reset the moment the handler changed mState. */
+            mStateTimer++;
             if (idx != mState) {
                 mStateTimer = 0;
                 mSubState = 0;
@@ -690,7 +686,7 @@ void daBtn_c::func_ov079_021256d4()
     ApproachLinear(mPrevAngleY, mTargetAngle, 0x200);
     mAngleY = mPrevAngleY;
 
-    if ((u16)mStateTimer > 0x1e) {
+    if (mStateTimer > 0x1e) {
         if (mFrontDist < 0x5dc000) {
             mHorzSpeed = 0xd800;
             mAnmModel.speed = 0x3000;
@@ -843,9 +839,9 @@ void daBtn_c::func_ov079_0212538c()
     mMovingMeshCollider.ClearShallowOnly();
     mMovingMeshCollider.SetDepthByDir();
     mAnmModel.Advance();
-    if ((u16)mStateTimer == 0)
+    if (mStateTimer == 0)
         mVertSpeed = data_ov079_021275e4[mIsKing];
-    if ((u16)mStateTimer < 8)
+    if (mStateTimer < 8)
         return;
     if (mIsKing) {
         mPitchSpeed += 0x130;
@@ -1072,7 +1068,7 @@ void daBtn_c::func_ov079_02124b08()
 
         {
             int lim = mIsKing * 0x14 + 0x64;
-            u16 cur = (u16)mStateTimer;
+            u16 cur = mStateTimer;
             if ((int)cur <= lim) {
                 if (unk_407 != 1)
                     return;
@@ -1163,7 +1159,7 @@ void daBtn_c::func_ov079_021249f0()
     if (mSubState == 0) {
         mHorzSpeed = 0;
         mAnmModel.speed = 0x2000;
-        if ((u16)mStateTimer >= 0x20) {
+        if (mStateTimer >= 0x20) {
             mSubState++;
         } else {
             mPrevAngleY += 0x400;
@@ -1171,7 +1167,7 @@ void daBtn_c::func_ov079_021249f0()
         }
     } else {
         mHorzSpeed = data_ov079_021275dc[mIsKing];
-        if ((u16)mStateTimer > 0x2a) {
+        if (mStateTimer > 0x2a) {
             mState = 1;
             mAnmModel.SetAnim(
                 (BCA_File *)(((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5 + 3])->filePtr), 0,
@@ -1686,10 +1682,10 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
         if (mState != 0xa) {
             /* Both reads are measured. A plain mState read here or at the
                second site below shrinks the function 0x288 -> 0x284; plain
-               reads at both sites give 0x280. `(u16)mStateTimer` or a plain
+               reads at both sites give 0x280. `mStateTimer` or a plain
                timer read also changes it. */
             mResumeState = *(volatile s32 *)&mState;
-            mSavedStateTimer = *(u16 *)&mStateTimer;
+            mSavedStateTimer = mStateTimer;
             mSavedSubState = mSubState;
         }
         mWobbleTimer = 0x5a;
@@ -1711,7 +1707,7 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
         }
         if (mState != 0xa) {
             mResumeState = *(volatile s32 *)&mState;
-            mSavedStateTimer = *(u16 *)&mStateTimer;
+            mSavedStateTimer = mStateTimer;
             mSavedSubState = mSubState;
         }
         {

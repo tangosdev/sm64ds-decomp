@@ -127,14 +127,9 @@ s32 daKlr_c::Behavior() {
         }
     }
 
-    /* The frame counter is bumped through an unsigned view of the field;
-       a plain mStateTimer++ misses by one word. */
-    {
-        u16 *timer = (u16 *)&mStateTimer;
-        *timer = *timer + 1;
-        if (which != (u32)mState)
-            *timer = 0;
-    }
+    mStateTimer++;
+    if (which != (u32)mState)
+        mStateTimer = 0;
 
     UpdateModelAndShadow();
 
@@ -191,13 +186,13 @@ void daKlr_c::StateFly() {
     if (this->DistToCPlayer() > 0x12c000)
         ApproachLinear(this->mPrevAngleY, this->HorzAngleToCPlayer(), 0x200);
     this->mAngleY = this->mPrevAngleY;
-    if ((u16)this->mStateTimer == 50) {
+    if (this->mStateTimer == 50) {
         func_0201267c(0xd4, &this->mCamSpacePos);
         this->mCylClsn.flags &= ~1;
     }
     {
         int hit = 0;
-        if ((u16)this->mStateTimer > 150)
+        if (this->mStateTimer > 150)
             hit = 1;
         if (this->mWallClsn.IsOnWall() != 0) {
             dBgPi *wall = this->mWallClsn.GetWallResult();
@@ -211,7 +206,7 @@ void daKlr_c::StateFly() {
         if (hit == 0)
             return;
     }
-    if ((u16)this->mStateTimer > 150) {
+    if (this->mStateTimer > 150) {
         func_02012694(0x79, &this->mCamSpacePos);
         this->PoofDust();
     } else {
@@ -223,13 +218,13 @@ void daKlr_c::StateFly() {
 
 /* State 1: shot down -- pitch over and climb, then burst after 90 frames. */
 void daKlr_c::StateShotDown() {
-    if ((u16)this->mStateTimer == 0) {
+    if (this->mStateTimer == 0) {
         this->mHorzSpeed = -0x1e000;
         this->mCylClsn.flags |= 1;
     }
     this->mAngleX += 0x2000;
     this->mPosY += 0x14000;
-    if ((u16)this->mStateTimer <= 90)
+    if (this->mStateTimer <= 90)
         return;
     Particle::System::NewSimple(kBurstParticle, this->mPosX, this->mPosY, this->mPosZ);
     func_02012694(0x78, &this->mCamSpacePos);
