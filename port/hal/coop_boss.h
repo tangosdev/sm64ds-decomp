@@ -111,6 +111,11 @@ bool coop_boss_validate(const void *payload, int len);
 // Called by coop_target.cpp's dispatcher for sub-types 0x51-0x53.
 void coop_boss_on_world(int seat, int sub, const unsigned char *payload, int len);
 
+// PIRANHA1: coop_world's reconcile asks before it removes a Big Fire Piranha (class 251) a friend's death bit names. The kill is
+// counted on this console's group leader first (what the cartridge's StateWait does for a kill made here). Returns false when the
+// copy must stay: the group leader (kept in its defeated state, as on the killer's console) or a plant whose group is not set up yet.
+bool coop_boss_pkn_remote_kill(char *actor);
+
 }  // namespace port
 
 #endif  // PORT_HAL_COOP_BOSS_H

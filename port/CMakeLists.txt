@@ -26134,3 +26134,10 @@ foreach(_tpkb2 walk_window walk_window_hires)
         target_sources(${_tpkb2} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/hal/pad_keyboard_draw.cpp")
     endif()
 endforeach()
+
+# run coopfix1, lane PIRANHA1: the kit (PORT_ROM_CLEAN) compiles the coop boss proof knobs out of hal/coop_boss.cpp (SM64DS_COOP_BOSS_CLOCK_ADD,
+# SM64DS_COOP_BOSS_CAPS, SM64DS_COOP_PIRANHA, SM64DS_COOP_PKN_HIT). The source is built into a shared library, not walk_window itself, so
+# the define goes on the source, as for hal/event_client.cpp; APPEND, never SET. Own block.
+if(PORT_ROM_CLEAN)
+    set_property(SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/hal/coop_boss.cpp" APPEND PROPERTY COMPILE_DEFINITIONS PORT_ROM_CLEAN)
+endif()
