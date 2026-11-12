@@ -1,0 +1,8 @@
+{
+ "about": "HMC act 1 rock chute, solo (no coop room): rocks must roll exactly as before; picture at 12 s looking up the chute",
+ "mode": "solo",
+ "save": {"preset": "upstairs"},
+ "proof": {"secs": 60, "shot_ms": 12000, "census": [221]},
+ "players": [{"character": "luigi", "level": 13, "act": 1, "power": "vanish", "power_ticks": 20000, "near": {"class": 221, "param": 1537, "dist": 2000, "angle_deg": 0}}],
+ "env": {"SM64DS_COOP_SPAWNERS_LOG": "1", "SM64DS_COOP_SPAWNERS_SAMPLE": "4", "SM64DS_COOP_SPAWNERS_BREAK": "90"}
+}

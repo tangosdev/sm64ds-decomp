@@ -151,6 +151,20 @@ extern int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
     void *player, struct Vector3 *pos, u32 kind, int knockback, u32 a, u32 b, u32 c);
 }
 
+#ifdef _MSC_VER
+/* Host only (run coopfix1, lane SPAWNERS1): set by port/hal/coop_spawners.cpp in a
+   coop room, null otherwise. held: 1 while another console makes this spawner's
+   rocks (my spawner makes none). spawned: a spawner of mine just made rock `rock`
+   with facing `rot`. broken: a rock was broken here (mega or Wario), before it
+   goes. The rock copies and the remote break are made by the two functions at
+   the end of this file. */
+extern "C" {
+int (*port_coop_grock_held)(void *spawner) = 0;
+void (*port_coop_grock_spawned)(void *spawner, void *rock, const void *rot) = 0;
+void (*port_coop_grock_broken)(void *rock) = 0;
+}
+#endif
+
 /* D1 stores this vtable, destroys the members in reverse declaration order,
  * then dEnemyBase_c::~dEnemyBase_c. D0 adds dEnemyBase_c's operator delete. */
 // @symbol _ZN9daGrock_cD1Ev
@@ -220,6 +234,10 @@ extern "C" void func_ov021_021123b0(char *raw)
 
     hit = rock->mdCcAcPos_c.hitFlags;
     if ((hit & 0x10) != 0) {
+#ifdef _MSC_VER
+        if (port_coop_grock_broken)
+            port_coop_grock_broken(rock);
+#endif
         func_02012694(0x17a, &rock->mCamSpacePosX);
         ((Player *)other)->IncMegaKillCount();
         rock->TriplePoofDust();
@@ -238,6 +256,10 @@ extern "C" void func_ov021_021123b0(char *raw)
 
     if ((hit & 0x3c0) != 0) {
         if (other->param1 == 2) {
+#ifdef _MSC_VER
+            if (port_coop_grock_broken)
+                port_coop_grock_broken(rock);
+#endif
             func_02012694(0x17a, &rock->mCamSpacePosX);
             rock->MarkForDestruction();
             rock->TriplePoofDust();
@@ -409,7 +431,11 @@ int daGrock_c::Behavior()
         int dist = DistToCPlayer();
         if (dist > 0x5dc000) {
             u32 threshold = (dist < 0x1770000) ? 0x70 : 0xe0;
-            if (*(u16 *)&mStateTimer >= threshold) {
+            if (*(u16 *)&mStateTimer >= threshold
+#ifdef _MSC_VER
+                && !(port_coop_grock_held && port_coop_grock_held(this))
+#endif
+                ) {
                 u8 *spawned = (u8 *)(int)&unk_3bf;
                 Vector3_16 rot;
                 u32 rnd;
@@ -419,6 +445,9 @@ int daGrock_c::Behavior()
                 *(AngleWords *)&rot = *(AngleWords *)&mPrevAngleX;
                 rnd = (u32)RandomIntInternal(&data_0209e650);
                 rot.y = rot.y + (rnd >> 16) % 0xc00;
+#ifdef _MSC_VER
+                daGrock_c *port_rock = 0;
+#endif
                 if (mType == kGrockStarSpawner && unk_3bf >= 5 && unk_3c2 == 0) {
                     daGrock_c *child;
 
@@ -429,10 +458,20 @@ int daGrock_c::Behavior()
                     unk_3bf = 0;
                     if (child)
                         child->unk_3b4 = uniqueID;
+#ifdef _MSC_VER
+                    port_rock = child;
+#endif
                 } else {
+#ifdef _MSC_VER
+                    port_rock = (daGrock_c *)
+#endif
                     dActor_c::Spawn(0xdd, kGrockRolling, *(Vector3 *)&mPosX,
                                     &rot, mAreaId, -1);
                 }
+#ifdef _MSC_VER
+                if (port_coop_grock_spawned)
+                    port_coop_grock_spawned(this, port_rock, &rot);
+#endif
             }
         }
         {
@@ -516,3 +555,79 @@ extern "C" daGrock_c *daGrock_c_classInit()
  * and registers the destructor; the registration node is a compiler
  * temporary. */
 GrockModelFilePtr data_ov021_02114a50(ASSET_CV_GORO_ROCK_BMD);
+
+#ifdef _MSC_VER
+/* Host only (SPAWNERS1). A friend's spawner made a rock: make my copy the way
+   Behavior's spawner branch makes it (same place, facing, area and param, the
+   star rock's link back to its spawner), and take the friend's rock count so
+   the fifth-rock star keeps its rhythm if this spawner becomes mine. */
+extern "C" void *port_grock_spawn_copy(void *raw, const void *rotp, int star, int count)
+{
+    daGrock_c *sp = (daGrock_c *)raw;
+    Vector3_16 rot = *(const Vector3_16 *)rotp;
+    daGrock_c *child;
+
+    if (star) {
+        sp->unk_3c2 = 1;
+        child = (daGrock_c *)dActor_c::Spawn(
+            0xdd, (sp->unk_3c1 << 8) | kGrockStar, *(Vector3 *)&sp->mPosX,
+            &rot, sp->mAreaId, -1);
+        if (child)
+            child->unk_3b4 = sp->uniqueID;
+    } else {
+        child = (daGrock_c *)dActor_c::Spawn(0xdd, kGrockRolling, *(Vector3 *)&sp->mPosX,
+                                             &rot, sp->mAreaId, -1);
+    }
+    sp->unk_3bf = (u8)count;
+    return child;
+}
+
+/* Host only (SPAWNERS1). A friend broke this rock on his console: it breaks here
+   with the same dust and sound, and a star rock lets its star out here too, the
+   way func_ov021_02112294 does. That star is linked to the level's placed star
+   marker on every console, so taking it on any console removes the others (the
+   coop spawn sync's linked-star rule): still one star for the room. Returns the
+   star made here (the coop side keeps its camera scene off this console), or 0. */
+extern "C" void *port_grock_remote_break(void *raw)
+{
+    daGrock_c *rock = (daGrock_c *)raw;
+    dActor_c *star = 0;
+
+    func_02012694(0x17a, &rock->mCamSpacePosX);
+    rock->TriplePoofDust();
+    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x67, rock->mPosX, rock->mPosY, rock->mPosZ);
+    if (rock->unk_3c1 != 0xff)
+        star = rock->UntrackAndSpawnStar(grock_star_slot(rock), rock->unk_3c1,
+                                         *(Vector3 *)&rock->mPosX,
+                                         rock->mType == kGrockStill ? 2 : 4);
+    rock->MarkForDestruction();
+    return star;
+}
+
+/* Host only (SPAWNERS1), dev proof knob SM64DS_COOP_SPAWNERS_BREAK: the Mega
+   hit's break with no player behind it (no Mega kill count): the coop hook, the
+   sound and dust, the star when it carries one, then the rock goes. */
+extern "C" void port_grock_local_break(void *raw)
+{
+    daGrock_c *rock = (daGrock_c *)raw;
+
+    if (port_coop_grock_broken)
+        port_coop_grock_broken(rock);
+    func_02012694(0x17a, &rock->mCamSpacePosX);
+    rock->TriplePoofDust();
+    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x67, rock->mPosX, rock->mPosY, rock->mPosZ);
+    func_ov021_02112294(rock);
+    rock->MarkForDestruction();
+}
+
+/* Host only (SPAWNERS1): the spawner fields the coop side reads. */
+extern "C" int port_grock_info(const void *raw, int *type, int *count, int *star_out, int *star_idx)
+{
+    const daGrock_c *g = (const daGrock_c *)raw;
+    if (type) *type = g->mType;
+    if (count) *count = g->unk_3bf;
+    if (star_out) *star_out = g->unk_3c2;
+    if (star_idx) *star_idx = g->unk_3c1;
+    return 1;
+}
+#endif

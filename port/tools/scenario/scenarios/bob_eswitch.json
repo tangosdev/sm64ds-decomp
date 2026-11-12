@@ -1,0 +1,11 @@
+{
+ "about": "BoB act 4 enemy spawner (358): Mario is put on the first trigger volume (357); Luigi stands 600 from the first spawner. Does every console drop the lit Bob-omb together?",
+ "save": {"preset": "upstairs"},
+ "room": {"collision": 1, "damage": 1, "interact": 1, "tp": 1},
+ "proof": {"secs": 75, "shot_ms": 40000, "census": [357, 358]},
+ "players": [
+  {"character": "mario", "level": 6, "act": 4, "near": {"class": 357, "index": 0, "dist": 1}},
+  {"character": "luigi", "level": 6, "act": 4, "near": {"class": 358, "index": 0, "dist": 600}}
+ ],
+ "env": {"SM64DS_SPAWN_CENSUS": "1", "SM64DS_COOP_LOG": "1"}
+}
