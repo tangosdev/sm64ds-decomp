@@ -409,6 +409,7 @@ struct Boss {
     unsigned wig_talk_t;           // bossfix2: wall ms since which this Wiggler copy's own talk kept a forced state away (0 = not)
     unsigned eye_talk_t;           // bossfix2: the same for Eyerok's head (its talk state with my player)
     unsigned wig3_ticks;           // bossfix2: ticks this Wiggler copy has stood in MOVE_START with no talk of its own
+    unsigned wig_dead_t;           // bossfix3: wall ms since which this Wiggler copy has been in its own DEAD (0 = not)
     unsigned wig_stag_t;           // bossfix3: wall ms this Wiggler copy was last seen in its stagger (states 8 to 10; 0 = never)
     unsigned goom_talk_tries;      // bossfix2: StartTalk attempts for a Goomboss copy put into its defeat by a record
     uint32_t bst; bool bst_valid;  // coopbully1: a bully's state at the end of the last tick (a change before the next one is the ROM's own)
@@ -1460,6 +1461,16 @@ void apply_rx(int slot, Boss &b, unsigned now, bool mine) {
     // bossfix3: a copy that has run DEAD (mDefeated set) is not sent through it again by the authority's own DEAD (7) that follows
     // the stomper's talk: its star call and poof ran once here already.
     if (g_bf2 && d.cls == 248 && !mine && rs == 7u && b.a[0x8e0] != 0 && ls != 7u) { force = false; b.mism = 0; }
+    // bossfix3: a copy running its own DEAD (the stomper's, at the end of his talk) finishes it (about a second: the poofs, then its
+    // star call, which is suppressed here when the star came by announcement) instead of being cut to the authority's MOVE at once.
+    // 4 s at most.
+    if (g_bf2 && d.cls == 248 && !mine) {
+        if (ls != 7u) b.wig_dead_t = 0;
+        else if (rs != 7u) {
+            if (!b.wig_dead_t) b.wig_dead_t = now ? now : 1u;
+            if ((unsigned)(now - b.wig_dead_t) < 4000u) { force = false; b.mism = 0; }
+        }
+    }
     // bossfix3: the stagger after he hurts a player (DAMAGE_STOP 8 -> DAMAGE_WAIT 9 -> DAMAGE_START 10 -> MOVE) runs on its own
     // timers. A copy already in it, or out of it less than 3 s ago, finishes it itself: records two behind put it back to 8 over and
     // over (4->8, 8->9, 4->8, 8->10 within 6 s).
