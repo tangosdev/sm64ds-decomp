@@ -5216,8 +5216,8 @@ fsi_ovt9 kind:bss addr:0x020a8064
 fsi_ovt7 kind:bss addr:0x020a806c
 fsi_arc_rom kind:bss addr:0x020a8074
 data_020a80c4 kind:bss addr:0x020a80c4
-data_020a80c8 kind:bss addr:0x020a80c8
-data_020a80cc kind:bss addr:0x020a80cc
+initial$188 kind:bss addr:0x020a80c8
+tpState kind:bss addr:0x020a80cc
 data_020a80e4 kind:bss addr:0x020a80e4
 PMi_IsInit kind:bss addr:0x020a8104
 PMi_SyncFlag kind:bss addr:0x020a8108
