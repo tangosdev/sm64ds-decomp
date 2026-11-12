@@ -2,14 +2,12 @@
 #pragma long_calls on
 #include "types.h"
 #include "nitro/os/system.h"
-#include "private/fs_views.h"
-
-typedef struct FSFile FSFile;
+#include "nitro/fs/file.h"
+#include "nitro/os/thread.h"
 
 extern "C" {
 
 extern int FSi_SendCommand(FSFile *self, int a);
-extern void OS_SleepThread(unsigned short *self);
 extern int FSi_ExecuteSyncCommand(FSFile *);
 extern int FSi_ReadFileCore(FSFile *p_file, void *dst, int len, int async);
 
@@ -24,11 +22,6 @@ int FS_GetPathName(FSFile *p_file, char *buf, u32 len) {
     p_file->arg.getpath.buf = (unsigned char *)buf;
     p_file->arg.getpath.buf_len = len;
     return FSi_SendCommand(p_file, 5);
-}
-
-/* NitroSDK FS_IsBusy: stat bit 0 (FS_FILE_STATUS_BUSY) as a BOOL. */
-static inline int FS_IsBusy(FSFile *p_file) {
-    return (p_file->stat & 1) ? 1 : 0;
 }
 
 int FS_WaitAsync(FSFile *p_file) {

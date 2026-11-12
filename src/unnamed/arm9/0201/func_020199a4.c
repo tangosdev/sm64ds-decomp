@@ -93,7 +93,7 @@ void func_02019ac4(void) {
                     data_0209d4f4 = 1;
                 }
                 if (skip != 0)
-                    PM_SetLCDPower(0);
+                    PM_SetLCDPower(PM_LCD_POWER_OFF);
                 data_0209d4ec = 3;
             } else {
                 data_0209d504 = tv - delta;
@@ -110,7 +110,7 @@ void func_02019ac4(void) {
         }
     }
     if (data_0209d4ec == 4) {
-        if (PM_GetLCDPower() == 1 || PM_SetLCDPower(1) == 1) {
+        if (PM_GetLCDPower() == PM_LCD_POWER_ON || PM_SetLCDPower(PM_LCD_POWER_ON) == true) {
             if (data_0209d4f4 != 0) {
                 func_02011db4();
                 data_0209d4f4 = 0;
@@ -153,7 +153,7 @@ void func_02019ac4(void) {
 }
 
 void func_02019a58(void) {
-    while (PM_GetLCDPower() != 1 && PM_SetLCDPower(1) != 1) {
+    while (PM_GetLCDPower() != PM_LCD_POWER_ON && PM_SetLCDPower(PM_LCD_POWER_ON) != true) {
         func_0201a4d0();
     }
 

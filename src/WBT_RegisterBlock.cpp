@@ -2,12 +2,12 @@
 #include "types.h"
 #include "nitro/os/system.h"
 #include "private/wbt_block_info_list.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
 
 extern struct WBTBlockInfoList *func_02065ae0(void);
 extern void func_02065ad0(struct WBTBlockInfoList *list);
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
 
 int WBT_RegisterBlock(struct WBTBlockInfoList *node, int blockId, void *userId, int dataPtr,
                       int dataSize, u16 permissionBmp) {

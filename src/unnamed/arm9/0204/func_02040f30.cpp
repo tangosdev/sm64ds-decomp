@@ -7,7 +7,6 @@
 
 /* The FSFile a child read is for (FileShareWork.mReadRequest, set by
  * func_02041a00). */
-typedef struct FSFile FSFile;
 
 extern "C" {
 

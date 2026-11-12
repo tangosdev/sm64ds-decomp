@@ -11,10 +11,10 @@
 // (MIi_CpuClear32, the same five instructions), and it aligns sp before the jump.
 // 0x02004ad8 is _start_ModuleParams (BuildInfo, the name dsd needs); +0x14 is the end of
 // the compressed static image.
+#include "nitro/mi/memory.h"
 extern void init_cp15(void);
 extern void MIi_UncompressBackward(void *bottom);
 extern void do_autoload(void);
-extern void MIi_CpuClear32(int val, int *dst, int len);
 extern void _fp_init(void);
 extern void NitroStartUp(void);
 extern void __call_static_initializers(void);

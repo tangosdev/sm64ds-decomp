@@ -22,13 +22,12 @@
 #include "nitro/os/cache.h"
 #include "nitro/card/card_common.h"
 #include "nitro/os/spinLock.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
 
 /* local extern: no header declares this yet. */
-extern void OS_Terminate(void);
 extern void PXI_SetFifoRecvCallback(int tag, void *callback);
-extern void MIi_CpuClearFast(unsigned val, void *dst, int len);
 
 #define OS_LOCK_ID_ERROR (-3)
 #define CARD_TARGET_NONE 0
@@ -49,12 +48,12 @@ void CARDi_SetTask(void (*task)(CARDiCommon *)) {
     u32 priority = p->priority;
     switch (priority) {
     case CARD_THREAD_PRIORITY_HIGHER:
-        priority = OS_GetThreadPriority(data_020a6134.current);
+        priority = OS_GetThreadPriority(OSi_ThreadInfo.current);
         if (priority != 0)
             priority -= 1;
         break;
     case CARD_THREAD_PRIORITY_LOWER:
-        priority = OS_GetThreadPriority(data_020a6134.current);
+        priority = OS_GetThreadPriority(OSi_ThreadInfo.current);
         if (priority < 0x1f)
             priority += 1;
         break;
@@ -110,7 +109,7 @@ void CARDi_InitCommon(void) {
     {
         /* MI_CpuFillFast's value: the ROM passes it through a stack slot. */
         volatile u32 fill = 0;
-        MIi_CpuClearFast(fill, &cardi_arg, sizeof(cardi_arg));
+        MI_CpuFillFast(&cardi_arg, fill, sizeof(cardi_arg));
     }
     DC_FlushRange(&cardi_arg, sizeof(cardi_arg));
     p->lock_queue = 0;

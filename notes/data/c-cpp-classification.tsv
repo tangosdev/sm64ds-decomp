@@ -1,9 +1,9 @@
 path	tier	module	rtti_class	class_names	evidence	funcs_in_file	cpp_marker	has_header	extern_ZTV	blockers
-src/ARMMathLoadState.c	PURE-C	arm9				1		None		-
-src/ARMMathSaveState.c	PURE-C	arm9				1		None		-
+src/CPi_RestoreContext.c	PURE-C	arm9				1		None		-
+src/CP_SaveContext.c	PURE-C	arm9				1		None		-
 src/ARMProcessorMode.c	PURE-C	arm9				1		None		-
-src/ARMRestoreContext.c	PURE-C	arm9				1		None		-
-src/ARMSaveContext.c	PURE-C	arm9				1		None		-
+src/OS_LoadContext.c	PURE-C	arm9				1		None		-
+src/OS_SaveContext.c	PURE-C	arm9				1		None		-
 src/AddSpikeBomb.c	PURE-C	arm9				1		None		-
 src/AddVec3.c	PURE-C	arm9				1		None		-
 src/daSetSE_c_Spawn.c	WEAK-refs-only	ov002				1		None		-

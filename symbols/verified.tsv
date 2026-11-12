@@ -1056,8 +1056,8 @@
 0x02056e18	OS_SetIrqMask	function
 0x02056ee4	OS_GetIrqFunction	function
 0x02056f70	OS_SetIrqFunction	function
-0x020585cc	ARMSaveContext	function
-0x02058618	ARMRestoreContext	function
+0x020585cc	OS_SaveContext	function
+0x02058618	OS_LoadContext	function
 0x02058bb0	DC_StoreAll	function
 0x02058bdc	DC_FlushAll	function
 0x02058c08	DC_InvalidateRange	function
@@ -1093,8 +1093,8 @@
 0x0205a754	DecompressLZ16	function
 0x0205b864	PXIi_HandlerRecvFifoNotEmpty	function
 0x0205b988	IPCSend	function
-0x0205e91c	ARMMathLoadState	function
-0x0205e988	ARMMathSaveState	function
+0x0205e91c	CPi_RestoreContext	function
+0x0205e988	CP_SaveContext	function
 0x020610ac	_ZN3IRQ21GameCardIREQMCHandlerEv	function
 0x0206cd44	_ZN4cstd8__assertEPKciS1_i	function
 0x0206d9dc	_ZN3IRQ11SetFIQStateEb	data
@@ -1217,8 +1217,8 @@
 0x02099edc	_ZTV7fBase_c	data
 0x02099f24	PROCESS_STATE	data
 0x02099fd0	RENDER_DMA_CHANNEL	data
-0x02099fd4	_ZN3IRQ13DmaTimIndicesE	data
-0x02099fe4	_ZN3IRQ12IRQFunctionsE	data
+0x02099fd4	OSi_IrqCallbackInfoIndex	data
+0x02099fe4	OS_IRQTable	data
 0x0209b138	KS_CAMERA_FUNCTIONS	data
 0x0209b270	KS_NUM_PLAYERS	data
 0x0209b274	KS_FRAME_COUNTER	data
@@ -1422,7 +1422,7 @@
 0x020a4d38	_ZN6Memory16rootHeapIteratorE	data
 0x020a4d6c	_ZN5Sound7PLAYERSE	data
 0x020a5bb8	_ZN5Sound8SDAT_RAM3PTRE	data
-0x020a60c4	_ZN3IRQ15DmaTimFunctionsE	data
+0x020a60c4	OSi_IrqCallbackInfo	bss
 0x020ab800	_ZN3OAM13MM_MARIO_ICONE	data
 0x020ab808	_ZN3OAM19MM_MARIO_W_CAP_ICONE	data
 0x020ab820	_ZN3OAM19MM_MARIO_L_CAP_ICONE	data

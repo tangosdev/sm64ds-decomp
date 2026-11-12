@@ -1,5 +1,5 @@
+#include "nitro/os/system.h"
 extern int WM_End(void *p);
-extern void OS_Terminate(void);
 extern void func_0203f920(unsigned short *cb);
 /* Shut the wireless hardware down after a measurement: WM_End
    sends WM_APIID_END (2) through callback slot 2, with

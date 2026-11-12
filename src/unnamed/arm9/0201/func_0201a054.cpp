@@ -7,6 +7,16 @@
 #include "dScene_c.h"
 #include "private/watchdog_alarm.h"
 #include "nitro/gx/g3imm_light.h"
+#include "nitro/hw/registers.h"
+#include "nitro/mb/mb.h"
+
+/* NitroSDK's inline IME helper (os/common/interrupt.h); returns the previous
+ * master enable. */
+static inline int OS_EnableIrq(void) {
+    u16 prep = REG_IME;
+    REG_IME = 1;
+    return prep;
+}
 
 extern "C" {
 
@@ -43,7 +53,7 @@ struct S0209ee90 {
 extern struct S0209ee90 data_0209ee90;
 
 /* The game's start-up, run once from main before the frame loop
-   (func_020197b8). On a download-play child (boot type 2 at 0x27ffc40) it
+   (func_020197b8). On a download-play child (MB_IsMultiBootChild) it
    leaves out func_0201fec8 (which reads the owner's language and starts the
    link through func_0203db64), the file system (func_02018aa4) and
    func_020134c8; the boot job func_0201a2f8 runs those three later for a
@@ -52,7 +62,7 @@ extern struct S0209ee90 data_0209ee90;
    calls the save setup (func_02042f68) and sets up the game heap, the
    display (func_02019440), the actor spawn table and the boot scene. */
 void func_0201a054(void) {
-    int isChild = (*(u16 *)0x27ffc40 == 2);
+    int isChild = MB_IsMultiBootChild();
     func_020427f8();
     func_02042784();
     FX_Init();
@@ -61,13 +71,8 @@ void func_0201a054(void) {
     func_0203d740();
     ClearSaveBlock();
     func_0201a4e4();
-    OS_EnableIrqMask(1);
-    {
-        /* REG_IME = 1, NitroSDK's OS_EnableIrq inlined */
-        volatile u16 *p = (volatile u16 *)0x4000208;
-        u16 old = *p;
-        *p = 1;
-    }
+    OS_EnableIrqMask(OS_IE_V_BLANK);
+    (void)OS_EnableIrq();
     OS_EnableInterrupts();
     GX_VBlankIntr(1);
     func_0203bbc0();
@@ -78,7 +83,7 @@ void func_0201a054(void) {
     if (!isChild)
         func_02018aa4();
     if (isChild)
-        OS_DisableIrqMask(0x100000);
+        OS_DisableIrqMask(OS_IE_CARD_IREQ);
     if (!isChild)
         func_0203ad84();
     func_0201a9fc((char *)&data_0209d574);

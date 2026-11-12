@@ -58,7 +58,7 @@ check against, and they don't.
 | OS_exception.c | 0x020593f4..0x02059624 | 5 of 5 plus 1: 4 exact, OS_InitException 0x70 to 0x90 (it also tests OS_GetConsoleType), 1 extra (OS_SetUserExceptionHandler, not in pret's revision); the three asm functions first, then the C bodies reversed: folded as arm9/OS_Exception |
 | OS_tick.c | 0x02059640..0x02059824 | 4 of 5, all exact, in pret's source order reversed; OS_IsTickAvailable dropped by the linker: folded as arm9/OS_Tick |
 | OS_alarm.c | 0x02059824..0x02059cb4 | 9 of 9: 8 exact, OSi_ArrangeTimer 0x118 to 0x11c; asm OSi_AlarmHandler first, then the C bodies reversed: folded as arm9/OS_Alarm |
-| OS_reset.c | 0x02059dd4..0x02059eb0 | 3 of 9, each identified by body against pret's pokediamond OS_reset.c (OSi_SendToPxi, OSi_CommonCallback, OS_InitReset), in its source order reversed; OS_ResetSystem, OSi_DoBoot, OSi_ReloadRomData and OSReadROMArea are ITCM code (src/OSi_ReloadRomData.cpp): folded as arm9/OS_Reset |
+| OS_reset.c | 0x02059dd4..0x02059eb0 | 3 of 9, each identified by body against pret's pokediamond OS_reset.c (OSi_SendToPxi, OSi_CommonCallback, OS_InitReset), in its source order reversed; OS_ResetSystem, OSi_DoBoot, OSi_ReloadRomData and OSReadROMArea are ITCM code (src/OSi_ReloadRomData.c): folded as arm9/OS_Reset |
 | OS_ownerInfo.c | 0x02059eb0..0x02059f48 | 2 of 3, each identified by body against pret's pokediamond OS_ownerInfo.c (OS_GetOwnerInfo, OS_GetMacAddress), in its source order reversed; OS_GetOwnerRtcOffset dropped by the linker: folded as arm9/OS_OwnerInfo |
 | MI_dma.c | 0x02059f58..0x0205a21c | 7, each identified by body against pret's pokediamond MI_dma.c (MI_StopDma, MI_WaitDma, MI_DmaCopy32Async, MI_DmaFill32Async, MI_DmaCopy16, MI_DmaCopy32, MI_DmaFill32), in its source order reversed; from an older SDK (MI_WaitDma only spins on the enable bit, MI_StopDma has no DMA0 workaround); the MIi_DmaSetParams family is in ITCM and the rest of the file is dropped by the linker: folded as arm9/MI_Dma |
 | MI_dma_gxcommand.c | 0x0205a21c..0x0205a448 | 3, each identified by body against pret's pokediamond MI_dma_gxcommand.c (MIi_DMACallback, MIi_FIFOCallback, MI_SendGXCommandAsync), in its source order reversed; MI_SendGXCommand is in ITCM; from an older SDK (no MIi_CheckDma0SourceAddress, and MIi_GXDmaParams.isBusy is not volatile); MI_SendGXCommandAsyncFast is not in the ROM: folded as arm9/MI_DmaGXCommand |
@@ -86,7 +86,7 @@ OS_init.c's OS_Init is src/OS_Init.cpp (0x02058c84). It makes pret's calls in pr
 each callee: PXI_init.c's PXI_Init (src/PXI_Init.c, 0x0205b858), MI_wram.c's MI_SetWramBank
 (src/MI_SetWramBank.c), OS_valarm.c's OS_InitVAlarm (src/OS_InitVAlarm.cpp), OS_reset.c's
 OS_InitReset (arm9/OS_Reset), CTRDG_Init (src/engine/ctrdg/CTRDG_Proc.cpp) and PM_Init
-(src/engine/spi/PM.cpp).
+(src/engine/spi/PM.c).
 OS_timer.c's OSi_SetTimerReserved is src/OSi_SetTimerReserved.c (0x02059624, 0x1c), between the
 OS_exception.c and OS_tick.c runs.
 OS_reset.c's OSi_SendToPxi and OSi_CommonCallback (0x02059dd4, 0x02059e04) sit just below OS_InitReset

@@ -19,7 +19,7 @@ extern mHeap::Heap_t *data_020a0e9c;
 void NitroMain(void) {
     OS_InitTick();
     OS_InitAlarm();
-    OS_SetUserExceptionHandler(func_0201a03c, &data_020a621c);
+    OS_SetUserExceptionHandler(func_0201a03c, &OSi_LauncherThread);
     data_020a0e9c->SetNodeID(2);
     func_0201a054();
     data_020a0e9c->SetNodeID(3);

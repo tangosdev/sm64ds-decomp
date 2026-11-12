@@ -2,8 +2,7 @@
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
  */
-extern void MI_CpuFill8(void *dst, unsigned char val, unsigned int size);
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
+#include "nitro/mi/memory.h"
 struct S { unsigned int f0; unsigned char *f4; unsigned char *f8; unsigned int fc; };
 void MBi_ReadSegmentHeader(struct S *s, unsigned int start, unsigned int end, int flag) {
     unsigned int f0 = s->f0;
@@ -16,7 +15,7 @@ void MBi_ReadSegmentHeader(struct S *s, unsigned int start, unsigned int end, in
     if (end > top) end = top;
     if (start >= end) return;
     if (flag)
-        MI_CpuFill8(s->f8 + start, 0, end - start);
+        MI_CpuClear8(s->f8 + start, end - start);
     else
         MI_CpuCopy8(s->f4 + start, s->f8 + start, end - start);
 }

@@ -2,6 +2,13 @@
 #include "types.h"
 #include "nitro/os/cache.h"
 #include "private/wm_views.h"
+#include "nitro/mi/memory.h"
+#include "nitro/os/system.h"
+#include "nitro/os/systemWork.h"
+
+/* nitro/wm/common/wm.h: the bit of OS_GetSystemWork()->wm_callback_control
+ * the ARM7 sets when a callback is delivered from an exception. */
+#define WM_EXCEPTION_CB_MASK 0x0001
 
 extern "C" {
 
@@ -30,8 +37,6 @@ typedef struct WMPortSendCallback {
     Handler callback; /* 0x14 */
 } WMPortSendCallback;
 
-extern void OS_Terminate(void);
-extern void MIi_CpuCopy16(const void *src, void *dst, s32 count);
 extern int WM_Finish(void);
 extern void WmClearFifoRecvFlag(void);
 extern WMArm9Buf *data_020a89ac;
@@ -113,7 +118,7 @@ void WmReceiveFifo(int tag, u16 *msg, int err) {
                     data_020a89ec.w10 = 0;
                     data_020a89ec.w12 = v5;
                     data_020a89ec.w1a = 0xffff;
-                    MIi_CpuCopy16(p, &data_020a8a00, 6);
+                    MI_CpuCopy16(p, &data_020a8a00, 6);
                     for (i = 0; i < 0x10; i++) {
                         data_020a89ec.w6 = i;
                         if (data_020a89ac->portCallbackTable[i] != 0) {
@@ -135,11 +140,11 @@ void WmReceiveFifo(int tag, u16 *msg, int err) {
     WmClearFifoRecvFlag();
 }
 
-/* NitroSDK wm_system.c's static WmClearFifoRecvFlag: clear bit 0 of the
- * WM callback-control halfword shared with ARM7 (0x027fff96). */
+/* NitroSDK wm_system.c's static WmClearFifoRecvFlag: clear the exception
+ * bit of the WM callback-control halfword shared with the ARM7. */
 void WmClearFifoRecvFlag(void) {
-    u16 *p = (u16 *)0x027fff96;
-    if (*p & 1)
-        *p &= ~1;
+    if (OS_GetSystemWork()->wm_callback_control & WM_EXCEPTION_CB_MASK) {
+        OS_GetSystemWork()->wm_callback_control &= ~WM_EXCEPTION_CB_MASK;
+    }
 }
 }

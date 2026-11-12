@@ -1,8 +1,7 @@
 //cpp
 #include "nitro/os/cache.h"
-#include "private/fs_views.h"
-
-typedef struct FSFile FSFile;
+#include "nitro/mi/memory.h"
+#include "nitro/fs/file.h"
 
 extern "C" {
 
@@ -25,14 +24,7 @@ typedef struct {
     unsigned int a, b, c, d;
 } Args;
 
-extern int FS_ReadFile(FSFile *p_file, void *dst, int len);
-extern void FS_InitFile(FSFile *p_file);
 extern FSArchive *FS_FindArchive(const char *name, int name_len);
-extern int FS_OpenFileDirect(char *p_file, FSArchive *p_arc, unsigned int image_top,
-                             unsigned int image_bottom, unsigned int file_index);
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
-extern int FS_SeekFile(FSFile *p_file, int offset, FSSeekFileMode origin);
-extern int FS_CloseFile(char *self);
 extern void MBi_ReadSegmentHeader(void *s, unsigned int start, unsigned int end, int flag);
 
 /* One entry of the zero-size-terminated list at mbi_seg_header. */
@@ -83,7 +75,7 @@ int MB_ReadSegment(FSFile *a, Ctx *b, unsigned int c) {
             }
             FS_InitFile(&file);
             node = FS_FindArchive(data_0209a080, 3);
-            FS_OpenFileDirect((char *)&file, node, 0, ctx->f80 + 0x88, -1);
+            FS_OpenFileDirect(&file, node, 0, ctx->f80 + 0x88, -1);
             a = &file;
             base = file.prop.file.pos - file.prop.file.top;
             MI_CpuCopy8(ctx, cur, 0x160);
@@ -114,7 +106,7 @@ int MB_ReadSegment(FSFile *a, Ctx *b, unsigned int c) {
         FS_SeekFile(a, base, FS_SEEK_SET);
 
         if (flag) {
-            FS_CloseFile((char *)&file);
+            FS_CloseFile(&file);
             if (result) {
                 args.a = ctx->wr;
                 rgn = mbi_seg_header;

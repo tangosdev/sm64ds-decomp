@@ -1,6 +1,4 @@
-#include "private/fs_views.h"
-
-typedef struct FSFile FSFile;
+#include "nitro/fs/file.h"
 
 void FS_InitFile(FSFile *p_file) {
     p_file->link.prev = 0;

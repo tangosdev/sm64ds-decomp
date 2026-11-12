@@ -1,6 +1,6 @@
 #include "types.h"
 #include "private/arm9_wbt.h"
-extern void MI_CpuCopy8(const void *src, void *dst, u32 size); /* memcpy-like */
+#include "nitro/mi/memory.h"
 extern int func_02065af0(int *thiz);
 
 /* NitroSDK WBT_PutUserData: queue a REQ_USER_DATA command (10) that sends

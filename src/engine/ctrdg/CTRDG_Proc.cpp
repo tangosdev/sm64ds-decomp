@@ -27,21 +27,37 @@
 #include "nitro/os/cache.h"
 #include "nitro/os/interrupt.h"
 #include "nitro/ctrdg/ctrdg_common.h"
+#include "nitro/mi/memory.h"
+#include "nitro/os/system.h"
+#include "nitro/hw/registers.h"
+#include "nitro/mi/dma.h"
+
+/* NitroSDK's inline IME helpers (os/common/interrupt.h): each returns the
+ * previous master enable. File-local because an inline body in a shared
+ * header renumbers every includer's @NNN symbols. */
+static inline int OS_EnableIrq(void) {
+    u16 prep = REG_IME;
+    REG_IME = 1;
+    return prep;
+}
+
+static inline int OS_RestoreIrq(int enable) {
+    u16 prep = REG_IME;
+    REG_IME = (u16)enable;
+    return prep;
+}
 
 #define PXI_FIFO_TAG_CTRDG 13
 #define PXI_PROC_ARM7 1
 
 extern "C" {
 
-extern void OS_Terminate(void);
 extern void PXI_Init(void);
 /* PXI_IsCallbackReady, PXI_SetFifoRecvCallback and PXI_SendWordByFifo
  * (src/engine/pxi/PXI_Fifo.cpp). */
 extern int PXI_IsCallbackReady(int tag, int proc);
 extern void PXI_SetFifoRecvCallback(int tag, void *callback);
 extern int PXI_SendWordByFifo(u32 tag, u32 data, u32 reply);
-extern void MI_DmaCopy16(unsigned int channel, void *src, void *dst, unsigned int numHalfs);
-extern void MIi_CpuCopy32(int *dst, int *src, int len);
 extern void SVC_WaitByLoop(int n);
 
 extern CTRDGWork CTRDGi_Work;
@@ -54,7 +70,6 @@ extern int (*data_020a9dec)(int); /* the hook CTRDGi_PulledOutCallback asks befo
 extern int data_020a9e00;
 extern int data_020a9e04;
 
-#define CTRDG_MODULE_INFO ((volatile CTRDGModuleInfo *)0x27ffc30)
 #define CTRDG_HEADER (*(CTRDGHeader *)&data_020a9e00)
 
 void CTRDGi_InitModuleInfo(void);
@@ -79,14 +94,14 @@ void CTRDG_Init(void) {
 
 /* Older than pret's CTRDGi_InitModuleInfo: copy the cartridge's module ID, the
  * three extended LSI IDs, the maker and game codes into the shared module
- * information at 0x027ffc30 and hand the header copy to the ARM7. It reads
+ * information (CTRDGi_GetModuleInfoAddr()) and hand the header copy to the ARM7. It reads
  * the header's last 0x40 bytes with MI_DmaCopy16, and has none of
- * pret's checks of the 0x027fff9b flag or of CTRDG_IsExisting. */
+ * pret's checks of HW_IS_CTRDG_EXIST or of CTRDG_IsExisting. */
 void CTRDGi_InitModuleInfo(void) {
     int sp[4];
-    unsigned int irq;
+    OSIrqMask lastIrq;
     int flag;
-    u16 save208;
+    int lastIme;
     int i;
     u32 data;
 
@@ -95,19 +110,18 @@ void CTRDGi_InitModuleInfo(void) {
     data_020a9de4 = 1;
     if ((*(volatile u16 *)0x4000300 & 1) == 0)
         return;
-    irq = OS_SetIrqMask(0x40000);
-    save208 = *(volatile u16 *)0x4000208;
-    *(volatile u16 *)0x4000208 = 1;
+    lastIrq = OS_SetIrqMask(OS_IE_SPFIFO_RECV);
+    lastIme = OS_EnableIrq();
     CTRDGi_LockByProcessor(CTRDGi_Work.lockID, sp);
-    flag = ((int)*(volatile u16 *)0x4000204 & 0x8000) >> 15;
+    flag = ((int)REG_EXMEMCNT & 0x8000) >> 15;
     CTRDGi_ChangeLatestAccessCycle(sp + 2);
-    *(volatile u16 *)0x4000204 &= ~0x8000;
+    REG_EXMEMCNT &= ~0x8000;
     MI_DmaCopy16(0, (void *)0x8000080, (void *)((char *)&CTRDG_HEADER + 0x80), 0x40);
-    *(volatile u16 *)0x4000204 = (*(volatile u16 *)0x4000204 & ~0x8000) | (flag << 15);
+    REG_EXMEMCNT = (REG_EXMEMCNT & ~0x8000) | (flag << 15);
     CTRDGi_RestoreAccessCycle(sp + 2);
     CTRDGi_UnlockByProcessor(CTRDGi_Work.lockID, sp);
     {
-        volatile CTRDGModuleInfo *cip = CTRDG_MODULE_INFO;
+        CTRDGModuleInfo *cip = CTRDGi_GetModuleInfoAddr();
         CTRDGHeader *chd = &CTRDG_HEADER;
         cip->moduleID = chd->moduleID;
         for (i = 0; i < 3; i++)
@@ -115,7 +129,7 @@ void CTRDGi_InitModuleInfo(void) {
         cip->makerCode = chd->makerCode;
         cip->gameCode = chd->gameCode;
     }
-    MIi_CpuCopy32((int *)0xffff0020, &data_020a9e04, 0x9c);
+    MI_CpuCopy32((int *)0xffff0020, &data_020a9e04, 0x9c);
     DC_FlushAll();
     data = (((unsigned int)&data_020a9e00 + 0xfe000000) >> 5) << 6 | 1;
     CTRDGi_SendtoPxi(data);
@@ -124,9 +138,8 @@ void CTRDGi_InitModuleInfo(void) {
             SVC_WaitByLoop(1);
         } while (CTRDGi_Work.subpState != 1);
     }
-    (void)*(volatile u16 *)0x4000208;
-    *(volatile u16 *)0x4000208 = save208;
-    OS_SetIrqMask(irq);
+    (void)OS_RestoreIrq(lastIme);
+    (void)OS_SetIrqMask(lastIrq);
 }
 
 void CTRDGi_CallbackForInitModuleInfo(int a0, int a1) {

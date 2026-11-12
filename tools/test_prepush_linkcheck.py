@@ -179,17 +179,17 @@ class Verify(unittest.TestCase):
         exercises the real resolver (stamp_provenance.load_symbol -> relocs.module_universe)
         this gate actually ships. That resolver used to walk config/ with a regex that only
         recognized a directory named arm9, arm7, or arm9/overlays/ovNNN, so every ITCM-
-        housed symbol -- OSReadROMArea real one among them -- read NO-SYM here regardless
+        housed symbol -- OSi_DoBoot, a real one, among them -- read NO-SYM here regardless
         of `symbols_for`, because the module lookup itself, not the file-to-function
         mapping, was blind to config/arm9/itcm/symbols.txt. Only `_run_linkcheck` (the
         compiler/linker subprocess) is mocked; symbol resolution reads the real, committed
         config/arm9/itcm/symbols.txt, so this is stdlib-only and needs no toolchain."""
-        with mock.patch.object(PL.srcpath, "symbols_for", return_value=["OSReadROMArea"]), \
+        with mock.patch.object(PL.srcpath, "symbols_for", return_value=["OSi_DoBoot"]), \
              mock.patch.object(PL, "_run_linkcheck",
-                               _linkcheck_table({"OSReadROMArea": ("VERIFIED", 0, [])})):
-            rows = PL.verify("src/OSReadROMArea.c")
-        self.assertEqual(rows, [{"file": "src/OSReadROMArea.c", "name": "OSReadROMArea",
-                                  "module": "itcm", "addr": "0x1ffdbd8",
+                               _linkcheck_table({"OSi_DoBoot": ("VERIFIED", 0, [])})):
+            rows = PL.verify("src/OSi_DoBoot.c")
+        self.assertEqual(rows, [{"file": "src/OSi_DoBoot.c", "name": "OSi_DoBoot",
+                                  "module": "itcm", "addr": "0x1ffdb28",
                                   "verdict": "VERIFIED", "blind": 0, "diffs": []}])
 
     def test_error_is_retried_once_per_function_not_once_per_file(self):
@@ -371,7 +371,7 @@ class InProcessLinkcheck(unittest.TestCase):
             "_sp_test", PL.REPO / "tools" / "stamp_provenance.py")
         sp = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(sp)
-        for name in ("OSReadROMArea", "func_02031028", "func_0209aaaa_not_a_symbol"):
+        for name in ("OSi_DoBoot", "func_02031028", "func_0209aaaa_not_a_symbol"):
             self.assertEqual(PL._load_symbol(name), sp.load_symbol(name), name)
 
 

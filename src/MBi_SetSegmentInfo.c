@@ -1,7 +1,6 @@
 #include "private/rom_header_view.h"
 #include "private/arm9_a9db8_mb_parent.h"
-
-extern void OS_Terminate(void);
+#include "nitro/os/system.h"
 
 /* NitroSDK MBi_SetSegmentInfo(mrh, seg_type, seg_info, child_recv_buff_addr):
  * fill one segment row for MBi_MakeDownloadFileInfo (MBi_MakeDownloadFileInfo). Segment

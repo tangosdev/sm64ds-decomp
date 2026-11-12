@@ -76,14 +76,14 @@ void dScMgSingle3DBase_c::InitEngines()
     gSubScreenLayers = 0x10;
     REG_DISPCNT &= ~0x7000000u;
     REG_DISPCNT &= ~0x38000000u;
-    GX_SetBankForBG(2);
-    GX_SetBankForOBJ(0x10);
-    GX_SetBankForTex(1);
-    GX_SetBankForTexPltt(0x20);
-    GX_SetGraphicsMode(1, 0, 1);
+    GX_SetBankForBG(GX_VRAM_BG_128_B);
+    GX_SetBankForOBJ(GX_VRAM_OBJ_64_E);
+    GX_SetBankForTex(GX_VRAM_TEX_0_A);
+    GX_SetBankForTexPltt(GX_VRAM_TEXPLTT_0_F);
+    GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_3D);
     REG_DISPCNT &= ~0x300010u;
-    GX_SetBankForSubBG(4);
-    GX_SetBankForSubOBJ(8);
+    GX_SetBankForSubBG(GX_VRAM_SUB_BG_128_C);
+    GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_128_D);
     fileData = Ov004_LoadFile(sSingle3DCommonNcgByLanguage[GetGameLanguage()]);
     DecompressLZ16(fileData, (u8 *)G2_GetOBJCharPtr() + 0x4000);
     DecompressLZ16(fileData, (u8 *)G2S_GetOBJCharPtr() + 0x4000);
@@ -154,7 +154,8 @@ int dScMgSingle3DBase_c::GetDisplayMode()
 extern "C" void LoadCard2SubBg3(void *) {
     void *fileData = LoadFile(ASSET_D_2D_MG_BG_CARD2_NCG_BIN);
     gSubScreenLayers |= 8;
-    *(vu16 *)0x400100eu = (*(vu16 *)0x400100eu & 0x43) | 0x214;
+    G2S_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x1000,
+                          GX_BG_CHARBASE_0x14000);
     DecompressLZ16(fileData, (void *)G2S_GetBG3CharPtr());
     Ov004_Deallocate(fileData);
     fileData = LoadFile(ASSET_D_2D_MG_BG_CARD2_NCL_BIN);
@@ -163,9 +164,9 @@ extern "C" void LoadCard2SubBg3(void *) {
     fileData = LoadFile(ASSET_D_2D_MG_BG_CARD2_NSC_BIN);
     GXS_LoadBG3Scr(fileData, 0, 0x800);
     Deallocate(fileData);
-    *(vu16 *)0x400100eu &= ~0x40;
+    G2S_BG3Mosaic(false);
     *(vu32 *)0x400101cu = 0;
-    *(vu16 *)0x400100eu = (*(vu16 *)0x400100eu & ~3) | 1;
+    G2S_SetBG3Priority(1);
 }
 
 /* The inline destructor plus AfterInitResources as key function emit D1

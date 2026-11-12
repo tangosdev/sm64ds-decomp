@@ -17,6 +17,7 @@
 #include "msl/string.h"
 #include "GX.h"
 #include "nitro/os/tcm.h"
+#include "nitro/os/system.h"
 
 extern "C" {
 extern u32 data_020a4bc8;
@@ -26,7 +27,6 @@ extern u32 data_020a4bdc;
 extern u32 data_020a4be0;
 extern u32 data_020a4be4;
 extern u32 data_020a4be8;
-void OS_Terminate();
 }
 
 #define REBASE(p) ((char *)(p) + base)

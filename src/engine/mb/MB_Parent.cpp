@@ -32,6 +32,7 @@
 #include "private/arm9_a9db8_mb_parent.h"
 #include "private/mb_comm_child_block_header.h"
 #include "private/wm_views.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
 
@@ -123,10 +124,6 @@ typedef struct WMMpRecvData {
     u16 cdata[1];   /* 0x0a -- the child's packet */
 } WMMpRecvData;
 
-extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
-extern void MIi_CpuClearFast(unsigned val, void *dst, int len);
-extern void MI_CpuCopy8(const void *src, void *dst, u32 size);
-extern void MI_CpuFill8(void *dst, u8 val, u32 size);
 extern char *WM_ReadMPData(char *buf, unsigned int aid);
 extern u8 *MBi_SetRecvBufferFromChild(u8 *src, u8 *dst);
 extern u8 *MBi_MakeParentSendBuffer(MBCommParentBlockHeader *hdr, u8 *buf);
@@ -263,12 +260,12 @@ void MBi_CommParentCallback(int type, char *arg) {
         u16 v = cb->aid;
         if (v != 0 && v < 0x10) {
             MB_WORK->mChildVersion[v - 1] = 0;
-            MI_CpuFill8(&MB_WORK->mChildGameId[cb->aid - 1], 0, 4);
-            MI_CpuFill8(MB_WORK->mChildUser[cb->aid - 1], 0, 0x16);
+            MI_CpuClear8(&MB_WORK->mChildGameId[cb->aid - 1], 4);
+            MI_CpuClear8(MB_WORK->mChildUser[cb->aid - 1], 0x16);
             {
                 int cur = func_0206881c();
-                MI_CpuFill8(&MB_WORK->mChildRequest[cb->aid - 1], 0,
-                            (cur - 2) * 0x1e / (func_0206881c() - 2));
+                MI_CpuClear8(&MB_WORK->mChildRequest[cb->aid - 1],
+                             (cur - 2) * 0x1e / (func_0206881c() - 2));
             }
             MB_WORK->mChildRequestPieces[cb->aid - 1] = 0;
             {
@@ -401,7 +398,7 @@ void MBi_CommParentCallback(int type, char *arg) {
     }
     {
         volatile int sp0 = 0;
-        MIi_CpuClearFast(sp0, data_020a9db8, 0x73e0);
+        MI_CpuFillFast(data_020a9db8, sp0, 0x73e0);
     }
     data_020a9db8 = 0;
 }
@@ -699,7 +696,7 @@ void MBi_CommParentSendData(void) {
     int result;
 
     bmp[0] = 0;
-    MIi_CpuClear16(bmp[0], (char *)&bmp[1], 10);
+    MI_CpuFill16((char *)&bmp[1], bmp[0], 10);
 
     for (i = 1; i <= 0xf; i++) {
         switch (MB_WORK->mChildState[i - 1]) {

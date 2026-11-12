@@ -1,5 +1,13 @@
 {
   "known": {
+    "__global_destructor_chain": {
+      "src/__register_global_object.c": [
+        "return:DestructorChain *"
+      ],
+      "src/engine/fs/FS_Overlay.c": [
+        "return:MWiDestructorChain *"
+      ]
+    },
     "func_ov002_020eedc0": {
       "src/game/player/d_a_ply_methods.cpp": [
         "return:void"
@@ -13,16 +21,6 @@
     "data_0209f2bc": {
       "src/game/player/d_a_ply_methods.cpp": [
         "return:unsigned char []"
-      ]
-    },
-    "ARMMathLoadState": {
-      "src/ui/menus/unit020b6eb4.cpp": [
-        "param:#1 ARMMathState *"
-      ]
-    },
-    "ARMMathSaveState": {
-      "src/ARMSaveContext.c": [
-        "arity:0"
       ]
     },
     "VEC_Add": {
@@ -7278,7 +7276,6 @@
       "include/decl_common.h": [
         "return:unsigned char"
       ]
-
     },
     "gReturnSublevel": {
       "src/_ZN7daPly_c13InitResourcesEv.cpp": [
@@ -8401,19 +8398,6 @@
         "return:unsigned int"
       ]
     },
-    "data_020a6134": {
-      "src/unnamed/arm9/0207/func_0207037c.c": [
-        "return:char * []"
-      ]
-    },
-    "data_020a8114": {
-      "src/unnamed/arm9/0205/func_0205ff08.c": [
-        "return:int"
-      ],
-      "src/unnamed/arm9/0205/func_0205ff20.cpp": [
-        "return:unsigned int"
-      ]
-    },
     "data_020a89ac": {
       "src/WM_GetSystemWork.c": [
         "return:int"
@@ -8439,14 +8423,6 @@
     "data_020a9db8": {
       "src/MB_RegisterFile.cpp": [
         "return:void *"
-      ]
-    },
-    "data_023c0000": {
-      "src/_ZN3IRQ13VBlankHandlerEv.cpp": [
-        "return:char []"
-      ],
-      "src/IRQ2.cpp": [
-        "return:char []"
       ]
     },
     "data_ov002_020ff480": {
@@ -9535,7 +9511,6 @@
       "src/game/player/d_a_ply_methods.cpp": [
         "return:unsigned char"
       ]
-
     },
     "gShowRaceTimer": {
       "src/ui/hud/d_meter.cpp": [
@@ -9544,7 +9519,6 @@
       "src/game/player/d_a_ply_methods.cpp": [
         "return:unsigned char []"
       ]
-
     },
     "data_ov003_020b1704": {
       "src/game/stages/d_s_star_sel_methods.cpp": [
@@ -15645,7 +15619,7 @@
         "param:#2 int",
         "param:#3 int"
       ],
-      "src/engine/fs/FS_Overlay.cpp": [
+      "src/engine/fs/FS_Overlay.c": [
         "param:#2 int",
         "param:#3 int"
       ],
@@ -17235,11 +17209,6 @@
         "return:void"
       ]
     },
-    "func_0206cf98": {
-      "src/engine/fs/FS_Overlay.cpp": [
-        "return:void"
-      ]
-    },
     "func_02071864": {
       "src/unnamed/arm9/0207/func_02071be8.cpp": [
         "param:#1 struct Src *",
@@ -17283,6 +17252,43 @@
     "NNS_FndVisitAllocatedForExpHeap": {
       "include/nnsys/fnd.h": [
         "param:#2 void (*)(void *, NNSFndHeapHandle, unsigned int)"
+      ]
+    }
+,
+    "PM_SendUtilityCommandAsync": {
+      "include/nitro/spi/pm.h": [
+        "param:#2 void (*)(unsigned int, void *)"
+      ]
+    },
+    "PMi_ReadRegisterAsync": {
+      "include/nitro/spi/pm.h": [
+        "param:#3 void (*)(unsigned int, void *)"
+      ]
+    },
+    "PMi_SetLEDAsync": {
+      "include/nitro/spi/pm.h": [
+        "param:#2 void (*)(unsigned int, void *)"
+      ]
+    },
+    "PM_SetBackLightAsync": {
+      "include/nitro/spi/pm.h": [
+        "param:#3 void (*)(unsigned int, void *)"
+      ]
+    },
+    "PM_ForceToPowerOffAsync": {
+      "include/nitro/spi/pm.h": [
+        "param:#1 void (*)(unsigned int, void *)"
+      ]
+    },
+    "PM_GoSleepMode": {
+      "include/nitro/spi/pm.h": [
+        "param:#1 unsigned int",
+        "param:#2 unsigned int"
+      ]
+    },
+    "PMi_SendLEDPatternCommandAsync": {
+      "include/nitro/spi/pm.h": [
+        "param:#2 void (*)(unsigned int, void *)"
       ]
     }
   },

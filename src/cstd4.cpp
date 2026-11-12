@@ -22,7 +22,7 @@
 extern "C" {
 // HAND-ASM PRIMITIVE: `swp` atomic swap has no C equivalent under mwccarm, so asm is the source.
 // Store value to *lock and return the word it held. The isdoverlay table
-// edits (func_0206cf98, func_0206d32c) spin on it with 0x80 to take a lock.
+// edits (_ISDbgLib_UnregistOverlayInfo, _ISDbgLib_RegistOverlayInfo) spin on it with 0x80 to take a lock.
 asm u32 func_0206dab4(u32 value, void *lock) { swp r0, r0, [r1]; bx lr }
 }
 
@@ -62,13 +62,13 @@ extern void (*__console_exit)(void);
 void __exit(int status)
 {
     if (OS_TryLockMutex(&__cs[atexit_funcs_access]) == 0) {
-        __cs_id[atexit_funcs_access] = data_020a6134.current->id;
+        __cs_id[atexit_funcs_access] = OSi_ThreadInfo.current->id;
         __cs_ref[atexit_funcs_access] = 1;
-    } else if (__cs_id[atexit_funcs_access] == data_020a6134.current->id) {
+    } else if (__cs_id[atexit_funcs_access] == OSi_ThreadInfo.current->id) {
         __cs_ref[atexit_funcs_access]++;
     } else {
         OS_LockMutex(&__cs[atexit_funcs_access]);
-        __cs_id[atexit_funcs_access] = data_020a6134.current->id;
+        __cs_id[atexit_funcs_access] = OSi_ThreadInfo.current->id;
         __cs_ref[atexit_funcs_access] = 1;
     }
 

@@ -19,6 +19,7 @@
 #include "nitro/os/system.h"
 #include "nitro/ctrdg/ctrdg_common.h"
 #include "nitro/os/spinLock.h"
+#include "nitro/hw/registers.h"
 
 extern "C" {
 
@@ -29,10 +30,6 @@ extern void SVC_WaitByLoop(int count);
 
 extern CTRDGWork CTRDGi_Work;
 
-#define HW_CTRDG_ROM 0x08000000
-#define CTRDG_IS_ROM_CODE 0x96
-/* Where a cartridge that is not ROM code keeps its module ID. */
-#define CTRDG_MODULE_ID_IMAGE (*(u16 *)0x0801fffe)
 
 void CTRDGi_InitCommon(void) {
     u32 local = 0;
@@ -44,7 +41,7 @@ int CTRDG_IsExisting(void) {
     int lockInfo[2];
     int cycle[2];
     int ret = 1;
-    CTRDGModuleInfo *cip = (CTRDGModuleInfo *)0x27ffc30;
+    CTRDGModuleInfo *cip = CTRDGi_GetModuleInfoAddr();
     CTRDGHeader *chp = (CTRDGHeader *)HW_CTRDG_ROM;
 
     if (cip->moduleID == 0xffff)
@@ -56,7 +53,7 @@ int CTRDG_IsExisting(void) {
     CTRDGi_ChangeLatestAccessCycle(cycle);
 
     if ((chp->isRomCode == CTRDG_IS_ROM_CODE && cip->moduleID != chp->moduleID) ||
-        (chp->isRomCode != CTRDG_IS_ROM_CODE && cip->moduleID != CTRDG_MODULE_ID_IMAGE) ||
+        (chp->isRomCode != CTRDG_IS_ROM_CODE && cip->moduleID != *CTRDGi_GetModuleIDImageAddr()) ||
         (cip->gameCode != chp->gameCode && cip->isAgbCartridge)) {
         ret = 0;
         cip->detectPullOut = 1;
@@ -68,10 +65,10 @@ int CTRDG_IsExisting(void) {
 }
 
 void CTRDGi_ChangeLatestAccessCycle(int *cycle) {
-    cycle[0] = (*(volatile u16 *)0x4000204 & 0xc) >> 2;
-    cycle[1] = (*(volatile u16 *)0x4000204 & 0x10) >> 4;
-    *(volatile u16 *)0x4000204 = (*(volatile u16 *)0x4000204 & ~0xc) | 0xc;
-    *(volatile u16 *)0x4000204 = *(volatile u16 *)0x4000204 & ~0x10;
+    cycle[0] = (REG_EXMEMCNT & 0xc) >> 2;
+    cycle[1] = (REG_EXMEMCNT & 0x10) >> 4;
+    REG_EXMEMCNT = (REG_EXMEMCNT & ~0xc) | 0xc;
+    REG_EXMEMCNT = REG_EXMEMCNT & ~0x10;
 }
 
 void CTRDGi_RestoreAccessCycle(int *cycle) {
