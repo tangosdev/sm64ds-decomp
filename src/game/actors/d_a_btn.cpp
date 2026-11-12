@@ -99,7 +99,6 @@ void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other);
 
 /* ---- arm9 / ov002 ---- */
 int AngleDiff(int, int);
-unsigned char DecIfAbove0_Byte(unsigned char *p);
 int IsStarCollectedInCurLevel(int a);
 void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 a);
 void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 a);

@@ -42,10 +42,10 @@ enum d_a_star_gate_AssetId {
 #include "math/Approach.h"
 #include "nitro/fx/fx.h"
 #include "SaveBlock.h"
+#include "math/CalcLib.h"
 
 extern "C" {
 int func_ov100_02144fcc(...);
-unsigned char DecIfAbove0_Byte(unsigned char *p);
 void func_02012694(int soundID, void *position, ...);
 void Vec3_RotateYAndTranslate(Vector3 *out, void *m, short angle, const Vector3 *in);
 void ChangeArea(int areaID);

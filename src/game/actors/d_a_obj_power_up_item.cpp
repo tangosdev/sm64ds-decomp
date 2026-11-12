@@ -52,6 +52,7 @@
 #include "ParticleIds.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/CalcLib.h"
 
 /* One row of the state table: enter action (pmf[0]), per-frame update
  * (pmf[1]) and a name literal. */
@@ -89,7 +90,6 @@ enum {
 };
 
 extern "C" {
-extern u8 DecIfAbove0_Byte(u8* p);
 extern void func_02012694(unsigned int id, const Vector3 *v);
 extern dCamera_c *gCamera;
 extern void Matrix4x3_FromRotationY(void* m, int angle);
