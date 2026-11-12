@@ -33,6 +33,7 @@
 #include "nitro/fs/file.h"
 #include "nitro/mb/mb.h"
 #include "private/fs_rom.h"
+#include "isdbglib.h"
 typedef int BOOL;
 #define TRUE  1
 #define FALSE 0
@@ -45,10 +46,6 @@ typedef struct MWiDestructorChain {
     void (*dtor)(void *);
     void *obj;
 } MWiDestructorChain;
-
-/* The IS-NITRO debugger's overlay list (isdoverlay.cpp): which processor's
- * table an overlay goes in. */
-typedef enum { OVERLAYPROC_ARM9, OVERLAYPROC_ARM7 } OVERLAYPROC;
 
 #define FS_OVERLAY_FLAG_COMP   0x0001
 #define FS_OVERLAY_FLAG_AUTH   0x0002
@@ -67,7 +64,6 @@ extern MWiDestructorChain *__global_destructor_chain;
 
 void DGT_Hash2CalcHmac(u8 *out, u8 *msg, int msglen, u8 *key, int keylen);
 void MIi_UncompressBackward(void *bottom);
-int func_0206cf98(int type, u32 nVMA, u32 size); /* _ISDbgLib_UnregistOverlayInfo */
 int DGT_SetOverlayTableMode(int flag);
 
 /* Invalidate the I- and D-cache over the overlay's whole region (image and
@@ -216,8 +212,7 @@ void FS_StartOverlay(FSOverlayInfo *p_ovi) {
 /* With interrupts disabled, unlink every __global_destructor_chain entry
  * whose destructor lies in the overlay's image or whose object lies in its
  * bss, run the ones unlinked, and repeat until a pass finds none. Then take
- * the overlay off the IS-NITRO debugger's list (func_0206cf98, the SDK's
- * _ISDbgLib_UnregistOverlayInfo). */
+ * the overlay off the IS-NITRO debugger's list. */
 void FS_EndOverlay(FSOverlayInfo *p_ovi) {
     for (;;) {
         MWiDestructorChain *head = NULL, *tail = NULL;
@@ -273,8 +268,9 @@ void FS_EndOverlay(FSOverlayInfo *p_ovi) {
         } while (head);
     }
 
-    (void)func_0206cf98((p_ovi->target == MI_PROCESSOR_ARM9) ? OVERLAYPROC_ARM9 : OVERLAYPROC_ARM7,
-                        (u32)FS_GetOverlayAddress(p_ovi), FS_GetOverlayImageSize(p_ovi));
+    (void)_ISDbgLib_UnregistOverlayInfo(
+        (p_ovi->target == MI_PROCESSOR_ARM9) ? OVERLAYPROC_ARM9 : OVERLAYPROC_ARM7,
+        (u32)FS_GetOverlayAddress(p_ovi), FS_GetOverlayImageSize(p_ovi));
 }
 
 BOOL FS_UnloadOverlayImage(FSOverlayInfo *p_ovi) {
