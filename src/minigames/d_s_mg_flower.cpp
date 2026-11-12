@@ -22,8 +22,8 @@
  * at link.
  *
  * comment leftovers:
- *  - The FlowerFace_* helpers are free functions over a char* record in
- *    src/minigames/unit020bfec0.cpp, so mFace is passed by address.
+ *  - The FlowerFace and FallingPetal methods live in
+ *    src/minigames/unit020bfec0.cpp.
  *  - Behavior keeps one launder: the touch sample's `touchY ? touchX : touchX`,
  *    which loads both bytes before the first cursor store.
  */
@@ -201,7 +201,7 @@ void dScMgFlower_c::StartRound(int /* arg */) {
     } else {
         mHoldTimer = 0;
     }
-    FlowerFace_Reset(&mFace);
+    mFace.Reset();
     DealPetals();
 }
 
@@ -235,7 +235,7 @@ s32 dScMgFlower_c::Render() {
     }
 
     Camera_InitFlowerView(&mCamera);
-    FlowerFace_Draw(&mFace);
+    mFace.Draw();
     return 1;
 }
 
@@ -351,7 +351,7 @@ s32 dScMgFlower_c::Behavior() {
                     if (mPetals[mHeldPetal].counted == 0) {
                         newlyCounted = 1;
                         mPetals[mHeldPetal].counted = 1;
-                        FlowerFace_PlayPetalPulled((char *)&mFace);
+                        mFace.PlayPetalPulled();
                     }
                 }
                 mPetals[mHeldPetal].held = 0;
@@ -386,11 +386,11 @@ s32 dScMgFlower_c::Behavior() {
                     mState = 1;
                     Mg_SetSharedState(MG_STATE_RETRY_PROMPT_WIDE);
                 }
-                if (FlowerFace_IsIdle((char *)&mFace) != 0) {
+                if (mFace.IsIdle() != 0) {
                     if (mPetalToggle == 1)
-                        FlowerFace_PlayLike((char *)&mFace);
+                        mFace.PlayLike();
                     else
-                        FlowerFace_PlayHate((char *)&mFace);
+                        mFace.PlayHate();
                 }
             } else {
                 FreeGfxSlotsById(0x1d);
@@ -437,11 +437,11 @@ s32 dScMgFlower_c::Behavior() {
         UpdatePetals();
         break;
     case 1:
-        if (FlowerFace_IsIdle((char *)&mFace) != 0) {
+        if (mFace.IsIdle() != 0) {
             if (mPetalToggle == 1)
-                FlowerFace_PlayLike((char *)&mFace);
+                mFace.PlayLike();
             else
-                FlowerFace_PlayHate((char *)&mFace);
+                mFace.PlayHate();
         }
         mPromptEnabled = 0;
         UpdatePetals();
@@ -449,7 +449,7 @@ s32 dScMgFlower_c::Behavior() {
     default:
         break;
     }
-    FlowerFace_Update((char *)&mFace);
+    mFace.Update();
     return 1;
 }
 #pragma opt_common_subs on
@@ -535,7 +535,7 @@ s32 dScMgFlower_c::InitResources() {
 
     gMainScreenLayers |= DISPLAY_LAYER_BG0;
     REG_BG0CNT = (REG_BG0CNT & ~3) | 1;
-    FlowerFace_Load((char *)&mFace);
+    mFace.Load();
     Camera_InitFlowerView(&mCamera);
 
     return 1;

@@ -85,10 +85,7 @@ extern IdxPair sCupSwapFirst[];
 extern RestPos sCupHomePositions[];
 extern int RandomIntInternal(int *seed);
 extern void Mg_SetSharedState(int c);
-extern void Presenter_PlayCheer(void *c);
 extern void Mg_SubCredits(void *c, int val);
-extern void Presenter_PlayMiss(char *c);
-extern void Presenter_PlayLose(char *c);
 extern void Mg_SubmitScore(int self);
 extern void FreeGfxSlotsById(int arg);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
@@ -98,7 +95,6 @@ struct CupShuffleOffset {
     s8 x, y;
 };
 extern CupShuffleOffset sCupShuffleOffsets[];
-extern void Presenter_ResetPose(char *c);
 void CupFx_DrawForCup(CupFx *fx, int cup);
 void CupFx_UpdateAll(CupFx *fx);
 void CupFx_ClearAll(CupFx *fx);
@@ -111,7 +107,6 @@ extern AnimStep *sCupAnimTable[];
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 extern int data_0208ee44;
-extern int Presenter_Load(char *);
 extern unsigned int LoadCompressedFileAt(int, void *);
 extern void *LoadFile(int);
 void __cxa_vec_ctor(void *base, unsigned int count, unsigned int stride, void *ctor, void *dtor);
@@ -381,16 +376,16 @@ void dScMgCup_c::StateResult() {
     score = mHudScore;
     if (mCorrect != 0) {
         mTimer = 0x3c;
-        Presenter_PlayCheer(&mModel);
+        mModel.PlayCheer();
         score++;
     } else {
         Mg_SubCredits(this, 1);
         if (mCredits > 0) {
             mTimer = 0x96;
-            Presenter_PlayMiss((char *)&mModel);
+            mModel.PlayMiss();
         } else {
             mTimer = 0x1e;
-            Presenter_PlayLose((char *)&mModel);
+            mModel.PlayLose();
         }
         func_02012790(0x12f);
     }
@@ -672,7 +667,7 @@ void dScMgCup_c::StateSetup() {
 
 /* Slot 20: the win animation on mModel. */
 void dScMgCup_c::OnNewRecord() {
-    Presenter_PlayCheer(&mModel);
+    mModel.PlayCheer();
 }
 
 void dScMgCup_c::StartRound(int msg) {
@@ -718,7 +713,7 @@ void dScMgCup_c::StartRound(int msg) {
     mTimer = 0x3c;
     mState = 0;
     mModel.mTouchLocked = 0;
-    Presenter_ResetPose((char *)&mModel);
+    mModel.ResetPose();
 
     mLevel = mHudScore;
     if (mLevel > 0x270e) {
@@ -767,7 +762,7 @@ s32 dScMgCup_c::Render() {
 
     Mg_DrawStockCounter(mCredits, 1);
     Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
-    Presenter_Draw((char *)&mModel);
+    mModel.Draw();
     return 1;
 }
 
@@ -789,7 +784,7 @@ s32 dScMgCup_c::Behavior() {
         }
     }
     CupFx_UpdateAll(mFx);
-    Presenter_Update((char *)&mModel);
+    mModel.Update();
     return 1;
 }
 
@@ -800,7 +795,7 @@ s32 dScMgCup_c::InitResources() {
 
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     Camera_InitPresenterView(&mCamera);
-    if (Presenter_Load((char *)&mModel) == 0)
+    if (mModel.Load() == 0)
         return 0;
 
     REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0x2214;

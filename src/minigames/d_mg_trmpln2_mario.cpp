@@ -50,6 +50,7 @@
 #include "types.h"
 #include "nitro/fx/fx.h"
 #include "common.h"
+#include "MgCamera.h"
 #include "decl_common.h"
 #include "SharedFilePtr.h"
 #include "dExtAnmModel_c.h"
@@ -320,7 +321,6 @@ namespace ns_020c91ac {
 extern "C" {
 void Trmp2Mario_EnterFall(void *c);
 int D3D_PlaySeAtX(int a0, int a1);
-void Camera_ProjectToScreen16(void *a0, void *a1, short *a2);
 void Sound_PlayBank1Panned(int a0, int a1, int a2);
 }
 
@@ -344,7 +344,7 @@ extern "C" void Trmp2Mario_StateBounce(char *c) {
         }
     }
 
-    Camera_ProjectToScreen16(sMgMainCamera, &MARIO2(c)->mPos, MARIO2(c)->mScreenPos);
+    Camera_ProjectToScreen16((MgCamera *)sMgMainCamera, &MARIO2(c)->mPos, MARIO2(c)->mScreenPos);
 
     v24 = MARIO2(c)->mPos.x;
 
@@ -549,7 +549,6 @@ namespace ns_020c97bc {
 
 extern "C" {
 void Trmp2Mario_EnterFall(void *c);
-void Camera_ProjectToScreen16(void *a0, void *a1, short *a2);
 void Sound_PlayBank1Panned(int a0, int a1, int a2);
 }
 
@@ -566,7 +565,7 @@ extern "C" void Trmp2Mario_StateWallBounce(char *c) {
         return;
     }
 
-    Camera_ProjectToScreen16(sMgMainCamera, &MARIO2(c)->mPos, MARIO2(c)->mScreenPos);
+    Camera_ProjectToScreen16((MgCamera *)sMgMainCamera, &MARIO2(c)->mPos, MARIO2(c)->mScreenPos);
 
     v24 = MARIO2(c)->mPos.x;
 
@@ -890,7 +889,6 @@ namespace ns_020ca070 {
 extern "C" {
 void Trmp2Mario_BounceOffLineB(char *c);
 void Trmp2Mario_BounceOffLineA(char *c);
-void Camera_ProjectToScreen16(void *a0, void *a1, short *a2);
 void Sound_PlayBank1Panned(int a0, int a1, int a2);
 void Trmp2Mario_EnterMissed(char *c);
 }
@@ -915,7 +913,7 @@ extern "C" void Trmp2Mario_StateFall(char *c) {
         return;
     }
 
-    Camera_ProjectToScreen16(sMgMainCamera, &MARIO2(c)->mPos, MARIO2(c)->mScreenPos);
+    Camera_ProjectToScreen16((MgCamera *)sMgMainCamera, &MARIO2(c)->mPos, MARIO2(c)->mScreenPos);
 
     v24 = MARIO2(c)->mPos.x;
 
@@ -1083,7 +1081,6 @@ typedef struct BMD_File BMD_File;
 
 extern void *sMgMainCamera;
 
-extern void Camera_ProjectToScreen16(void *p, void *q, short *s);
 extern void Trmp2Mario_EnterHidden(char *c);
 
 int Trmp2Mario_Load(char *c) {
@@ -1107,7 +1104,7 @@ int Trmp2Mario_Load(char *c) {
     ret = MARIO2(c)->mAnmModel.SetFile(f, 1, -1);
     MARIO2(c)->mAnim = 0;
     if (sMgMainCamera != 0)
-        Camera_ProjectToScreen16(sMgMainCamera, &MARIO2(c)->mPos, MARIO2(c)->mScreenPos);
+        Camera_ProjectToScreen16((MgCamera *)sMgMainCamera, &MARIO2(c)->mPos, MARIO2(c)->mScreenPos);
     MARIO2(c)->mGravityStep = 0;
     func_02016a14(&MARIO2(c)->mAnmModel, 0x73ff);
     func_02016a04(&MARIO2(c)->mAnmModel, 0x3e52);
@@ -1661,7 +1658,6 @@ extern Triple sTrmpGoalSlots[];
 extern Vector3 data_020a0ebc;
 
 extern void func_02012718(int, int);
-extern void Camera_ProjectToScreen(void *, void *, int *, int *);
 extern int Mg_GetTopScreenYOffset(void);
 extern void TrmpFx_Spawn(int, int);
 extern void Trmp3DMario_EnterOffstage(char *);
@@ -1707,10 +1703,10 @@ void Trmp3DMario_StateGoal(void *self) {
     sTrmpMariosOnLedges -= 1;
 
     if (MARIO3D(c)->mPos.y > 0) {
-        Camera_ProjectToScreen(sMgSubCamera, &MARIO3D(c)->mPos, &va, &vb);
+        Camera_ProjectToScreen((MgCamera *)sMgSubCamera, &MARIO3D(c)->mPos, &va, &vb);
         vb = vb - (Mg_GetTopScreenYOffset() + 0xc0);
     } else {
-        Camera_ProjectToScreen(sMgMainCamera, &MARIO3D(c)->mPos, &va, &vb);
+        Camera_ProjectToScreen((MgCamera *)sMgMainCamera, &MARIO3D(c)->mPos, &va, &vb);
     }
     vb -= 0x20;
     TrmpFx_Spawn(vb << 12, (short)sTrmpComboCount);
@@ -1884,7 +1880,6 @@ namespace ns_020cb838 {
 
 extern "C" {
 void Trmp3DMario_EnterFall(void *c);
-void Camera_ProjectToScreen16(void *a0, void *a1, short *a2);
 void Trmp3DMario_EnterFallToLedge(void *c);
 void Trmp3DMario_EnterLand(void *c);
 void Sound_PlayBank1Panned(int a0, int a1, int a2);
@@ -1909,7 +1904,7 @@ extern "C" void Trmp3DMario_StateHardBounce(char *c) {
         }
     }
 
-    Camera_ProjectToScreen16(sMgMainCamera, &MARIO3D(c)->mPos, MARIO3D(c)->mScreenPos);
+    Camera_ProjectToScreen16((MgCamera *)sMgMainCamera, &MARIO3D(c)->mPos, MARIO3D(c)->mScreenPos);
 
     v = MARIO3D(c)->mPos.x;
 
@@ -2113,7 +2108,6 @@ namespace ns_020cbd7c {
 
 extern "C" {
 void Trmp3DMario_EnterFall(void *c);
-void Camera_ProjectToScreen16(void *a0, void *a1, short *a2);
 void Trmp3DMario_EnterFallToLedge(void *c);
 void Trmp3DMario_EnterLand(void *c);
 void Sound_PlayBank1Panned(int a0, int a1, int a2);
@@ -2131,7 +2125,7 @@ extern "C" void Trmp3DMario_StateBounce(char *c) {
         return;
     }
 
-    Camera_ProjectToScreen16(sMgMainCamera, &MARIO3D(c)->mPos, MARIO3D(c)->mScreenPos);
+    Camera_ProjectToScreen16((MgCamera *)sMgMainCamera, &MARIO3D(c)->mPos, MARIO3D(c)->mScreenPos);
 
     v = MARIO3D(c)->mPos.x;
 
@@ -2404,7 +2398,6 @@ namespace ns_020cc408 {
 extern "C" {
 void Trmp3DMario_BounceOffLineB(void *c);
 void Trmp3DMario_BounceOffLineA(void *c);
-void Camera_ProjectToScreen16(void *a0, void *a1, short *a2);
 void Trmp3DMario_EnterFallToLedge(void *c);
 void Trmp3DMario_EnterLand(void *c);
 int D3D_PlaySeAtX(int a, int b);
@@ -2427,7 +2420,7 @@ extern "C" void Trmp3DMario_StateFall(char *c) {
         return;
     }
 
-    Camera_ProjectToScreen16(sMgMainCamera, &MARIO3D(c)->mPos, MARIO3D(c)->mScreenPos);
+    Camera_ProjectToScreen16((MgCamera *)sMgMainCamera, &MARIO3D(c)->mPos, MARIO3D(c)->mScreenPos);
 
     v = MARIO3D(c)->mPos.x;
 
@@ -2815,7 +2808,6 @@ typedef struct BMD_File BMD_File;
 
 extern void *sMgMainCamera;
 
-extern void Camera_ProjectToScreen16(void *p, void *q, short *s);
 extern void Trmp3DMario_EnterOffstage(char *c);
 
 int Trmp3DMario_Load(char *c) {
@@ -2838,7 +2830,7 @@ int Trmp3DMario_Load(char *c) {
     ret = MARIO3D(c)->mAnmModel.SetFile(f, 1, -1);
     MARIO3D(c)->mAnim = 0;
     if (sMgMainCamera != 0)
-        Camera_ProjectToScreen16(sMgMainCamera, &MARIO3D(c)->mPos, MARIO3D(c)->mScreenPos);
+        Camera_ProjectToScreen16((MgCamera *)sMgMainCamera, &MARIO3D(c)->mPos, MARIO3D(c)->mScreenPos);
     MARIO3D(c)->mGravityStep = 0;
     func_02016a14(&MARIO3D(c)->mAnmModel, 0x6bff);
     func_02016a04(&MARIO3D(c)->mAnmModel, 0x21d);

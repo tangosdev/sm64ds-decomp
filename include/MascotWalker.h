@@ -31,12 +31,21 @@ struct WalkPath;
  * and kino_walk.bca. The name is coined. The constructor and destructor are
  * the class's own (ov006 0x020c0a48 and 0x020c09f8, in
  * src/minigames/unit020bfec0.cpp), so Dealer's own constructor and destructor
- * build and tear it down as a member. The other MascotWalker_* helpers there
- * are free functions over the record. Unnamed regions are touched in one place
- * at most, or sit inside an embedded object. */
+ * build and tear it down as a member. Its methods are defined there too.
+ * Unnamed regions are touched in one place at most, or sit inside an embedded
+ * object. */
 struct MascotWalker {
     MascotWalker();
     ~MascotWalker();
+
+    void Load();
+    void Update();
+    void Draw();
+    void UpdateMatrix();
+    void StartNextPath();
+    void StateWalk();
+    void StartPause();
+    void StatePause();
 
     MascotWalkerModelFilePtr mModelFile; /* 0x00 -- kino_d.bmd (0x205) */
     /* kino_wait.bca (0x206): its file is the BCA Load starts and StartPause restarts. */
@@ -59,7 +68,7 @@ struct MascotWalker {
     s32 mPathPoint;   /* 0xe0 -- the point being walked to */
     s32 mPathIndex;   /* 0xe4 -- which of the four paths, cycling */
     /* Load copies data_020a0edc's x/y/z into 0xe8/0xea/0xec, the same start
-       rotation Dealer_Load copies into Dealer::mRot. */
+       rotation Dealer::Load copies into Dealer::mRot. */
     s16 mAngleX;      /* 0xe8 */
     s16 mAngleY;      /* 0xea -- eased toward mTargetAngle */
     s16 mAngleZ;      /* 0xec */

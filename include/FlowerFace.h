@@ -13,12 +13,17 @@
  * yoshi_hate.bca. The constructors and destructors are the classes' own
  * (FlowerFace: ov006 0x020c3f54 and 0x020c3e70; FallingPetal: 0x020c402c and
  * 0x020c3e54), so the flower scene holds a typed FlowerFace member and the
- * compiler builds the petal array. The other helpers are free functions
- * over the records; the ones the scenes declare with a char* parameter keep
- * that spelling and cast once. */
+ * compiler builds the petal array. Their methods are defined in
+ * src/minigames/unit020bfec0.cpp. */
 struct FallingPetal {
     FallingPetal();
     ~FallingPetal();
+
+    void SetModel(BMD_File *model);
+    void Spawn(const VecFx32 *pos, const VecFx32 *vel);
+    void Update();
+    void Draw();
+    void UpdateMatrix();
 
     Vector3 mPos;    /* 0x00 */
     Vector3 mVel;    /* 0x0c -- mPos += mVel each frame */
@@ -50,6 +55,20 @@ struct FlowerFaceAnimationFileHandle : SharedFilePtr {
 struct FlowerFace {
     FlowerFace();
     ~FlowerFace();
+
+    int Load();
+    void Update();
+    void Draw();
+    void Reset();
+    int IsIdle();
+    void PlayIdle();
+    void PlayPetalPulled();
+    void StatePick();
+    void PlayLike();
+    void PlayHate();
+    void StateIdle();
+    void StateLike();
+    void StateHate();
 
     s32 mState[2];             /* 0x000 -- the current state's member-pointer record */
     FallingPetal mPetals[22];  /* 0x008 */

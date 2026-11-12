@@ -26,6 +26,7 @@
 #include "nitro/gx/g3imm_cmd.h"
 #include "nitro/gx/g3imm_light.h"
 #include "nitro/hw/registers.h"
+#include "MgCamera.h"
 #include "decl_common.h"
 #include "common.h"
 #include "SharedFilePtr.h"
@@ -110,7 +111,6 @@ extern "C" void TrmpItem_GrowScale(char *c) {
 }
 
 namespace s020cd7b8 {
-extern "C" void Camera_ProjectToScreen(void *a, void *b, int *c, int *d);
 extern "C" int Mg_GetTopScreenYOffset(void);
 extern "C" void Jump2Popup_Spawn(int a, int b, int c);
 extern "C" {
@@ -129,10 +129,10 @@ extern struct P2 pmf_TrmpItem_GrowScale;
 extern "C" void TrmpItem_ProjectToScreen(char *c, unsigned short scoreValue) {
     int screenX, screenY;
     if (TRMPITEM(c)->mPos.y > 0) {
-        Camera_ProjectToScreen(sMgSubCamera, &TRMPITEM(c)->mPos, &screenX, &screenY);
+        Camera_ProjectToScreen((MgCamera *)sMgSubCamera, &TRMPITEM(c)->mPos, &screenX, &screenY);
         screenY = screenY - (Mg_GetTopScreenYOffset() + 0xc0);
     } else {
-        Camera_ProjectToScreen(sMgMainCamera, &TRMPITEM(c)->mPos, &screenX, &screenY);
+        Camera_ProjectToScreen((MgCamera *)sMgMainCamera, &TRMPITEM(c)->mPos, &screenX, &screenY);
     }
     Jump2Popup_Spawn(screenX << 0xc, screenY << 0xc, (short)scoreValue);
     *(struct P2 *)c = pmf_TrmpItem_GrowScale;

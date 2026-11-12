@@ -29,12 +29,34 @@ struct DealerAnimationFileHandle : SharedFilePtr {
  * deal_end2, deal_wait, throw, win_start, win, win_end and lose.bca.
  * The constructor and destructor are the class's own (ov006 0x020c1d80 and
  * 0x020c1c64, in src/minigames/unit020bfec0.cpp), so the scenes hold a typed
- * Dealer member and the compiler builds and tears it down. The other Dealer_*
- * helpers there are free functions over the record; the ones the scenes
- * declare with a char* parameter keep that spelling and cast once. */
+ * Dealer member and the compiler builds and tears it down. Its methods are the
+ * game's state machine: Idle/Shuffle/Deal/Reveal/Swap/Lose/Win. */
 struct Dealer {
     Dealer();
     ~Dealer();
+
+    int Load();
+    void Update();
+    void Draw();
+    void PlayIdle();
+    int IsIdle();
+    int IsIdleAtRest();
+    void StartShuffle(int, short count, s16 *counter);
+    void StateShuffle();
+    void StartDeal(short count, s16 *counter);
+    void StateDeal();
+    void StartReveal(int count, s16 *counter);
+    void StateReveal();
+    int IsBusy();
+    int IsAnimDone();
+    void StartSwap();
+    void StateSwap();
+    void PlayLose();
+    void StateLose();
+    void PlayWin();
+    void StateWin();
+    void ResetMatrices();
+    void StateIdle();
 
     s32 mState[2]; /* 0x000 -- the current state's member-pointer record */
     Vector3 mPos;  /* 0x008 */
