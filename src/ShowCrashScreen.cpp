@@ -111,8 +111,8 @@ void ShowCrashScreen(void)
 
     if (data_020a0eac->Intact()) {
         int mx = data_020a0eac->MaxAllocationUnitSize();
-        nds_printf(scr + 0x540, data_0208e634,
-                   ((int)data_020a0eac->heapSize - mx) / 1024, mx / 1024);
+        nds_printf(scr + 0x540, data_0208e634, ((int)data_020a0eac->heapSize - mx) / 1024,
+                   mx / 1024);
     } else {
         nds_print(scr + 0x500, data_0208e648);
     }
