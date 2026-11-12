@@ -37,7 +37,7 @@
     {
       "name": ".bss",
       "start": "0x0210e14c",
-      "end": "0x0210f914"
+      "end": "0x02110154"
     }
   ],
   "functions": [
@@ -10801,6 +10801,1133 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "destructor-registration chain node for a Player SharedFilePtr; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210f914",
+      "address": "0x0210f914",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210f920",
+      "address": "0x0210f920",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210f92c",
+      "address": "0x0210f92c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "twelve zero-filled bytes; the readers index it as three ints. No constructor."
+    },
+    {
+      "symbol": "data_ov002_0210f938",
+      "address": "0x0210f938",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210f944",
+      "address": "0x0210f944",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210f950",
+      "address": "0x0210f950",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210f95c",
+      "address": "0x0210f95c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210f968",
+      "address": "0x0210f968",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210f974",
+      "address": "0x0210f974",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210f980",
+      "address": "0x0210f980",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210f98c",
+      "address": "0x0210f98c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210f998",
+      "address": "0x0210f998",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210f9a4",
+      "address": "0x0210f9a4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210f9b0",
+      "address": "0x0210f9b0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210f9bc",
+      "address": "0x0210f9bc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210f9c8",
+      "address": "0x0210f9c8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210f9d4",
+      "address": "0x0210f9d4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210f9e0",
+      "address": "0x0210f9e0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210f9ec",
+      "address": "0x0210f9ec",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210f9f8",
+      "address": "0x0210f9f8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fa04",
+      "address": "0x0210fa04",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fa10",
+      "address": "0x0210fa10",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fa1c",
+      "address": "0x0210fa1c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fa28",
+      "address": "0x0210fa28",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fa34",
+      "address": "0x0210fa34",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fa40",
+      "address": "0x0210fa40",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fa4c",
+      "address": "0x0210fa4c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fa58",
+      "address": "0x0210fa58",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fa64",
+      "address": "0x0210fa64",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fa70",
+      "address": "0x0210fa70",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fa7c",
+      "address": "0x0210fa7c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fa88",
+      "address": "0x0210fa88",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fa94",
+      "address": "0x0210fa94",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210faa0",
+      "address": "0x0210faa0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210faac",
+      "address": "0x0210faac",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fab8",
+      "address": "0x0210fab8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fac4",
+      "address": "0x0210fac4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fad0",
+      "address": "0x0210fad0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fadc",
+      "address": "0x0210fadc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fae8",
+      "address": "0x0210fae8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210faf4",
+      "address": "0x0210faf4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fb00",
+      "address": "0x0210fb00",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fb0c",
+      "address": "0x0210fb0c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fb18",
+      "address": "0x0210fb18",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fb24",
+      "address": "0x0210fb24",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fb30",
+      "address": "0x0210fb30",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fb3c",
+      "address": "0x0210fb3c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fb48",
+      "address": "0x0210fb48",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fb54",
+      "address": "0x0210fb54",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fb60",
+      "address": "0x0210fb60",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fb6c",
+      "address": "0x0210fb6c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fb78",
+      "address": "0x0210fb78",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fb84",
+      "address": "0x0210fb84",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fb90",
+      "address": "0x0210fb90",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fb9c",
+      "address": "0x0210fb9c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fba8",
+      "address": "0x0210fba8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fbb4",
+      "address": "0x0210fbb4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fbc0",
+      "address": "0x0210fbc0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fbcc",
+      "address": "0x0210fbcc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fbd8",
+      "address": "0x0210fbd8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fbe4",
+      "address": "0x0210fbe4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fbf0",
+      "address": "0x0210fbf0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fbfc",
+      "address": "0x0210fbfc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fc08",
+      "address": "0x0210fc08",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fc14",
+      "address": "0x0210fc14",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fc20",
+      "address": "0x0210fc20",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fc2c",
+      "address": "0x0210fc2c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fc38",
+      "address": "0x0210fc38",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fc44",
+      "address": "0x0210fc44",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fc50",
+      "address": "0x0210fc50",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fc5c",
+      "address": "0x0210fc5c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fc68",
+      "address": "0x0210fc68",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fc74",
+      "address": "0x0210fc74",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fc80",
+      "address": "0x0210fc80",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fc8c",
+      "address": "0x0210fc8c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fc98",
+      "address": "0x0210fc98",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fca4",
+      "address": "0x0210fca4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fcb0",
+      "address": "0x0210fcb0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fcbc",
+      "address": "0x0210fcbc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fcc8",
+      "address": "0x0210fcc8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fcd4",
+      "address": "0x0210fcd4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fce0",
+      "address": "0x0210fce0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fcec",
+      "address": "0x0210fcec",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fcf8",
+      "address": "0x0210fcf8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fd04",
+      "address": "0x0210fd04",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fd10",
+      "address": "0x0210fd10",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fd1c",
+      "address": "0x0210fd1c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fd28",
+      "address": "0x0210fd28",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fd34",
+      "address": "0x0210fd34",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fd40",
+      "address": "0x0210fd40",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fd4c",
+      "address": "0x0210fd4c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fd58",
+      "address": "0x0210fd58",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fd64",
+      "address": "0x0210fd64",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fd70",
+      "address": "0x0210fd70",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fd7c",
+      "address": "0x0210fd7c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fd88",
+      "address": "0x0210fd88",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fd94",
+      "address": "0x0210fd94",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fda0",
+      "address": "0x0210fda0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fdac",
+      "address": "0x0210fdac",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fdb8",
+      "address": "0x0210fdb8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fdc4",
+      "address": "0x0210fdc4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fdd0",
+      "address": "0x0210fdd0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fddc",
+      "address": "0x0210fddc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fde8",
+      "address": "0x0210fde8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fdf4",
+      "address": "0x0210fdf4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fe00",
+      "address": "0x0210fe00",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fe0c",
+      "address": "0x0210fe0c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fe18",
+      "address": "0x0210fe18",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fe24",
+      "address": "0x0210fe24",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fe30",
+      "address": "0x0210fe30",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fe3c",
+      "address": "0x0210fe3c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fe48",
+      "address": "0x0210fe48",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fe54",
+      "address": "0x0210fe54",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fe60",
+      "address": "0x0210fe60",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fe6c",
+      "address": "0x0210fe6c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fe78",
+      "address": "0x0210fe78",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fe84",
+      "address": "0x0210fe84",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fe90",
+      "address": "0x0210fe90",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fe9c",
+      "address": "0x0210fe9c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fea8",
+      "address": "0x0210fea8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210feb4",
+      "address": "0x0210feb4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fec0",
+      "address": "0x0210fec0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fecc",
+      "address": "0x0210fecc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fed8",
+      "address": "0x0210fed8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fee4",
+      "address": "0x0210fee4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fef0",
+      "address": "0x0210fef0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210fefc",
+      "address": "0x0210fefc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210ff08",
+      "address": "0x0210ff08",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210ff14",
+      "address": "0x0210ff14",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210ff20",
+      "address": "0x0210ff20",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210ff2c",
+      "address": "0x0210ff2c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210ff38",
+      "address": "0x0210ff38",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210ff44",
+      "address": "0x0210ff44",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210ff50",
+      "address": "0x0210ff50",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210ff5c",
+      "address": "0x0210ff5c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210ff68",
+      "address": "0x0210ff68",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210ff74",
+      "address": "0x0210ff74",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210ff80",
+      "address": "0x0210ff80",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210ff8c",
+      "address": "0x0210ff8c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210ff98",
+      "address": "0x0210ff98",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210ffa4",
+      "address": "0x0210ffa4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210ffb0",
+      "address": "0x0210ffb0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210ffbc",
+      "address": "0x0210ffbc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210ffc8",
+      "address": "0x0210ffc8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210ffd4",
+      "address": "0x0210ffd4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210ffe0",
+      "address": "0x0210ffe0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "destructor-registration chain node; zero-filled .bss, no constructor"
+    },
+    {
+      "symbol": "data_ov002_0210ffec",
+      "address": "0x0210ffec",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "daPly_c::State zero-filled in .bss; PlayerInitStates writes the three handler slots. No dynamic initializer."
+    },
+    {
+      "symbol": "data_ov002_02110004",
+      "address": "0x02110004",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "daPly_c::State zero-filled in .bss; PlayerInitStates writes the three handler slots. No dynamic initializer."
+    },
+    {
+      "symbol": "data_ov002_0211001c",
+      "address": "0x0211001c",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "daPly_c::State zero-filled in .bss; PlayerInitStates writes the three handler slots. No dynamic initializer."
+    },
+    {
+      "symbol": "data_ov002_02110034",
+      "address": "0x02110034",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "daPly_c::State zero-filled in .bss; PlayerInitStates writes the three handler slots. No dynamic initializer."
+    },
+    {
+      "symbol": "data_ov002_0211004c",
+      "address": "0x0211004c",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "daPly_c::State zero-filled in .bss; PlayerInitStates writes the three handler slots. No dynamic initializer."
+    },
+    {
+      "symbol": "data_ov002_02110064",
+      "address": "0x02110064",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "daPly_c::State zero-filled in .bss; PlayerInitStates writes the three handler slots. No dynamic initializer."
+    },
+    {
+      "symbol": "data_ov002_0211007c",
+      "address": "0x0211007c",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "daPly_c::State zero-filled in .bss; PlayerInitStates writes the three handler slots. No dynamic initializer."
+    },
+    {
+      "symbol": "data_ov002_02110094",
+      "address": "0x02110094",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "daPly_c::State zero-filled in .bss; PlayerInitStates writes the three handler slots. No dynamic initializer."
+    },
+    {
+      "symbol": "data_ov002_021100ac",
+      "address": "0x021100ac",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "daPly_c::State zero-filled in .bss; PlayerInitStates writes the three handler slots. No dynamic initializer."
+    },
+    {
+      "symbol": "data_ov002_021100c4",
+      "address": "0x021100c4",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "daPly_c::State zero-filled in .bss; PlayerInitStates writes the three handler slots. No dynamic initializer."
+    },
+    {
+      "symbol": "data_ov002_021100dc",
+      "address": "0x021100dc",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "daPly_c::State zero-filled in .bss; PlayerInitStates writes the three handler slots. No dynamic initializer."
+    },
+    {
+      "symbol": "data_ov002_021100f4",
+      "address": "0x021100f4",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "daPly_c::State zero-filled in .bss; PlayerInitStates writes the three handler slots. No dynamic initializer."
+    },
+    {
+      "symbol": "data_ov002_0211010c",
+      "address": "0x0211010c",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "daPly_c::State zero-filled in .bss; PlayerInitStates writes the three handler slots. No dynamic initializer."
+    },
+    {
+      "symbol": "data_ov002_02110124",
+      "address": "0x02110124",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "daPly_c::State zero-filled in .bss; PlayerInitStates writes the three handler slots. No dynamic initializer."
+    },
+    {
+      "symbol": "data_ov002_0211013c",
+      "address": "0x0211013c",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "daPly_c::State zero-filled in .bss; PlayerInitStates writes the three handler slots. No dynamic initializer."
     }
   ],
   "init": [
