@@ -1117,20 +1117,19 @@ extern "C" void func_02051244(struct SndHeap *heap) {
     NNSFndList *level;
     struct SndHeapBlock *block;
     level = (NNSFndList *)NNS_FndGetPrevListObject(&heap->levels, 0);
-    if (level == 0)
-        goto end;
-    do {
-        block = (struct SndHeapBlock *)NNS_FndGetPrevListObject(level, 0);
-        while (block != 0) {
-            if (block->callback != 0) {
-                block->callback(block->mem, block->size, block->data1, block->data2);
+    if (level != 0) {
+        do {
+            block = (struct SndHeapBlock *)NNS_FndGetPrevListObject(level, 0);
+            while (block != 0) {
+                if (block->callback != 0) {
+                    block->callback(block->mem, block->size, block->data1, block->data2);
+                }
+                block = (struct SndHeapBlock *)NNS_FndGetPrevListObject(level, block);
             }
-            block = (struct SndHeapBlock *)NNS_FndGetPrevListObject(level, block);
-        }
-        NNS_FndRemoveListObject(&heap->levels, level);
-        level = (NNSFndList *)NNS_FndGetPrevListObject(&heap->levels, 0);
-    } while (level != 0);
-end:
+            NNS_FndRemoveListObject(&heap->levels, level);
+            level = (NNSFndList *)NNS_FndGetPrevListObject(&heap->levels, 0);
+        } while (level != 0);
+    }
     NNS_FndFreeToFrmHeap(heap->frmHeap, NNS_FND_FRMHEAP_FREE_ALL);
     func_02050fb0();
     func_02050fd4(heap);
