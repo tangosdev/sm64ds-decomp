@@ -62,13 +62,13 @@ extern void (*__console_exit)(void);
 void __exit(int status)
 {
     if (OS_TryLockMutex(&__cs[atexit_funcs_access]) == 0) {
-        __cs_id[atexit_funcs_access] = data_020a6134.current->id;
+        __cs_id[atexit_funcs_access] = OSi_ThreadInfo.current->id;
         __cs_ref[atexit_funcs_access] = 1;
-    } else if (__cs_id[atexit_funcs_access] == data_020a6134.current->id) {
+    } else if (__cs_id[atexit_funcs_access] == OSi_ThreadInfo.current->id) {
         __cs_ref[atexit_funcs_access]++;
     } else {
         OS_LockMutex(&__cs[atexit_funcs_access]);
-        __cs_id[atexit_funcs_access] = data_020a6134.current->id;
+        __cs_id[atexit_funcs_access] = OSi_ThreadInfo.current->id;
         __cs_ref[atexit_funcs_access] = 1;
     }
 

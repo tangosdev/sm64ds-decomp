@@ -154,7 +154,7 @@
   "notes": [
     "Hand-assembled, following arm9/MI_Memory, arm9/OS_SpinLock, arm9/CTRDG_Common and arm9/CARD_Common: tu_map cannot segment arm9/main.",
     "Sixteen symbols were renamed from their func_ names to the SDK names in this change (symbols/actor_renames.tsv records the evidence); OS_WakeupThread and OS_SleepThread already carried theirs.",
-    "Text-only: OSi_ThreadInfo (data_020a6134), OSi_CurrentThreadPtr (data_020a612c), OSi_IsThreadInitialized (data_020a6130), OSi_SystemCallbackInSwitchThread (data_020a6128), the launcher and idle threads (data_020a621c, data_020a6188) and the idle stack (ends at data_020a6378) stay externs. The file claims no data.",
+    "Text-only: OSi_ThreadInfo, OSi_CurrentThreadPtr, OSi_IsThreadInitialized, OSi_SystemCallbackInSwitchThread, the launcher and idle threads (OSi_LauncherThread, OSi_IdleThread) and OSi_IdleThreadStack stay externs. The file claims no data.",
     "pret's static helpers (OSi_GetUnusedThreadId, OSi_InsertThreadToList, OSi_RemoveThreadFromList, OSi_IdleThreadProc) keep external linkage here like every other arm9 symbol."
   ],
   "verification": {

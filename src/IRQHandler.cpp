@@ -4,10 +4,9 @@
  *
  * OS_IrqHandler (pret/pokediamond OS_irqHandler.c): read IE & IF,
  * acknowledge the highest-priority (lowest) set bit and jump to its handler
- * in data_02099fe4 (the table OS_SetIrqFunction fills), with lr preloaded so
- * the handler returns into func_01ffd9d4. That is
- * OS_IrqHandler_ThreadSwitch: wake the threads waiting on the DTCM interrupt
- * mask, then, when a reschedule is pending, save the interrupted thread's
+ * in OS_IRQTable (the table OS_SetIrqFunction fills), with lr preloaded so
+ * the handler returns into OS_IrqHandler_ThreadSwitch: wake the threads
+ * waiting on the DTCM interrupt mask, then, when a reschedule is pending, save the interrupted thread's
  * user-mode registers and switch to the highest-priority ready one.
  *
  * HAND-ASM PRIMITIVE: both are whole-function asm, as in the SDK: `clz`, the
@@ -17,21 +16,20 @@
  * Asm-only functions are emitted in source order.
  *
  * The switch addresses the thread, its context and the scheduler head
- * (data_020a6134, OSi_ThreadInfo) through the SDK's OS_THREAD_OFFSET_*,
+ * (OSi_ThreadInfo) through the SDK's OS_THREAD_OFFSET_*,
  * OS_CONTEXT_* and OS_THREADINFO_OFFSET_* (nitro/os/thread.h,
  * nitro/os/context.h).
  *
- * leftovers: data_02099fe4 and data_020a6134 belong to other
+ * leftovers: OS_IRQTable and OSi_ThreadInfo belong to other
  * files and are not claimed here.
  */
 #include "nitro/os/interrupt.h"
-#include "nitro/os/thread.h" /* data_020a6134, the thread scheduler head */
+#include "nitro/os/thread.h" /* OSi_ThreadInfo, the thread scheduler head */
 #include "nitro/hw/armArch.h"
 
 extern "C" {
-extern OSIrqFunction data_02099fe4[]; /* one handler per IE bit */
 extern OSThreadQueue OSi_IrqThreadQueue; /* in DTCM: threads waiting on an interrupt */
-void func_01ffd9d4(void);
+void OS_IrqHandler_ThreadSwitch(void);
 }
 
 // Dispatch the lowest pending interrupt.
@@ -54,16 +52,16 @@ _loop:
     mov r1, r3, lsr r0
     str r1, [ip, #0x4]
     rsbs r0, r0, #0x1f
-    ldr r1, =data_02099fe4
+    ldr r1, =OS_IRQTable
     ldr r0, [r1, r0, lsl #2]
-    ldr lr, =func_01ffd9d4
+    ldr lr, =OS_IrqHandler_ThreadSwitch
     bx r0
 }
 
 extern "C" {
 
 // OS_IrqHandler_ThreadSwitch: wake waiters, then switch threads if asked.
-asm void func_01ffd9d4(void)
+asm void OS_IrqHandler_ThreadSwitch(void)
 {
     ldr ip, =OSi_IrqThreadQueue
     ldrh r3, [ip]
@@ -71,7 +69,7 @@ asm void func_01ffd9d4(void)
     cmp r3, #0
     beq _resched
     strh r0, [ip]
-    ldr ip, =data_020a6134
+    ldr ip, =OSi_ThreadInfo
     mov r1, #1
     strh r1, [ip, #OS_THREADINFO_OFFSET_ISNEEDRESCHEDULING]
     ldr ip, [ip, #OS_THREADINFO_OFFSET_LIST]
@@ -86,7 +84,7 @@ _wake:
     b _wake
 
 _resched:
-    ldr ip, =data_020a6134
+    ldr ip, =OSi_ThreadInfo
     ldrh r1, [ip, #OS_THREADINFO_OFFSET_ISNEEDRESCHEDULING]
     cmp r1, #0
     ldreq pc, [sp], #4

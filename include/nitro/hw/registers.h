@@ -210,4 +210,26 @@
 #define REG_IE (*(volatile u32 *)0x04000210)
 #define REG_IF (*(volatile u32 *)0x04000214)
 
+/* The IE/IF bit numbers (nitro/hw/ARM9/ioreg_OS.h); nitro/os/interrupt.h
+   has the OS_IE_* masks. */
+#define REG_OS_IE_VB_SHIFT  0
+#define REG_OS_IE_HB_SHIFT  1
+#define REG_OS_IE_VE_SHIFT  2
+#define REG_OS_IE_T0_SHIFT  3
+#define REG_OS_IE_T1_SHIFT  4
+#define REG_OS_IE_T2_SHIFT  5
+#define REG_OS_IE_T3_SHIFT  6
+#define REG_OS_IE_D0_SHIFT  8
+#define REG_OS_IE_D1_SHIFT  9
+#define REG_OS_IE_D2_SHIFT  10
+#define REG_OS_IE_D3_SHIFT  11
+#define REG_OS_IE_K_SHIFT   12
+#define REG_OS_IE_I_D_SHIFT 13
+#define REG_OS_IE_A7_SHIFT  16
+#define REG_OS_IE_IFE_SHIFT 17
+#define REG_OS_IE_IFN_SHIFT 18
+#define REG_OS_IE_MC_SHIFT  19
+#define REG_OS_IE_MI_SHIFT  20
+#define REG_OS_IE_GF_SHIFT  21
+
 #endif /* NITRO_HW_REGISTERS_H */

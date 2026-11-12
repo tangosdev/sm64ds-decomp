@@ -8390,11 +8390,6 @@
         "return:unsigned int"
       ]
     },
-    "data_020a6134": {
-      "src/unnamed/arm9/0207/func_0207037c.c": [
-        "return:char * []"
-      ]
-    },
     "data_020a8114": {
       "src/unnamed/arm9/0205/func_0205ff08.c": [
         "return:int"

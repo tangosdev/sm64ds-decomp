@@ -40,7 +40,7 @@ void CARDi_ReadRom(u32 dma, const void *src, void *dst, u32 len, MIDmaCallback c
     } else if (is_async) {
         CARDi_SetTask(CARDi_ReadRomSyncCore);
     } else {
-        c->cur_th = data_020a6134.current;
+        c->cur_th = OSi_ThreadInfo.current;
         CARDi_ReadRomSyncCore(c);
     }
 }

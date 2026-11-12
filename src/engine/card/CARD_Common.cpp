@@ -48,12 +48,12 @@ void CARDi_SetTask(void (*task)(CARDiCommon *)) {
     u32 priority = p->priority;
     switch (priority) {
     case CARD_THREAD_PRIORITY_HIGHER:
-        priority = OS_GetThreadPriority(data_020a6134.current);
+        priority = OS_GetThreadPriority(OSi_ThreadInfo.current);
         if (priority != 0)
             priority -= 1;
         break;
     case CARD_THREAD_PRIORITY_LOWER:
-        priority = OS_GetThreadPriority(data_020a6134.current);
+        priority = OS_GetThreadPriority(OSi_ThreadInfo.current);
         if (priority < 0x1f)
             priority += 1;
         break;
