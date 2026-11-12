@@ -25,6 +25,7 @@ enum dScMgSound_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/g2.h"
 #include "nitro/gx/gx_load.h"
 
 /* The state/phase dispatch tables hold pointer-to-member records: the
@@ -302,7 +303,7 @@ s32 dScMgSound_c::InitResources() {
     Deallocate(file);
 
     G2S_BG2Mosaic(false);
-    REG_DB_BG2OFS = 0;
+    G2S_SetBG2Offset(0, 0);
     G2S_SetBG2Priority(1);
     DecompressLZ16(objChars, G2S_GetOBJCharPtr());
     GXS_LoadOBJPltt(objPltt, 0, 0x100);

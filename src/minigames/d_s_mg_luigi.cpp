@@ -47,6 +47,8 @@ enum dScMgLuigi_c_AssetId {
 #include "OamAttr.h"
 #include "nitro/gx/g2_oam.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/g2.h"
+#include "nitro/gx/gx.h"
 #include "nitro/gx/gx_load.h"
 
 /* A random integer in [0, n): the top 15 bits of the shared generator, scaled. */
@@ -67,49 +69,6 @@ static inline int OS_EnableIrq(void) {
     u16 prep = REG_IME;
     REG_IME = 1;
     return prep;
-}
-
-/* NitroSDK's window helpers (gx/gx.h, gx/g2.h) and the masks they take. */
-#define GX_WNDMASK_NONE 0x0
-#define GX_WNDMASK_W0 0x1
-#define GX_WNDMASK_OW 0x4
-
-#define GX_WND_PLANEMASK_BG2 0x04
-#define GX_WND_PLANEMASK_BG3 0x08
-#define GX_WND_PLANEMASK_OBJ 0x10
-
-static inline void GX_SetVisibleWnd(int window) {
-    REG_DISPCNT = (u32)((REG_DISPCNT & ~0xe000) | (window << 13));
-}
-
-static inline void GXS_SetVisibleWnd(int window) {
-    REG_DISPCNT_SUB = (u32)((REG_DISPCNT_SUB & ~0xe000) | (window << 13));
-}
-
-static inline void G2_SetWnd0InsidePlane(int wnd, int effect) {
-    u32 tmp = ((REG_WININ & ~0x3f) | (u32)wnd);
-    if (effect)
-        tmp |= 0x20;
-    REG_WININ = (u16)tmp;
-}
-
-static inline void G2_SetWndOutsidePlane(int wnd, int effect) {
-    u32 tmp = ((REG_WINOUT & ~0x3f) | (u32)wnd);
-    if (effect)
-        tmp |= 0x20;
-    REG_WINOUT = (u16)tmp;
-}
-
-static inline void G2_SetWndOBJInsidePlane(int wnd, int effect) {
-    u32 tmp = ((REG_WINOUT & ~0x3f00) | ((u32)wnd << 8));
-    if (effect)
-        tmp |= 0x20 << 8;
-    REG_WINOUT = (u16)tmp;
-}
-
-static inline void G2_SetWnd0Position(int x1, int y1, int x2, int y2) {
-    REG_WIN0H = (u16)(((x1 << 8) & 0xff00) | (x2 & 0xff));
-    REG_WIN0V = (u16)(((y1 << 8) & 0xff00) | (y2 & 0xff));
 }
 
 /* Scanline window record pushed to the iris hardware. */
@@ -1686,7 +1645,7 @@ s32 dScMgLuigi_c::InitResources() {
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
     G2_SetBG2Priority(0);
     REG_BG2CNT &= ~BG_CONTROL_MOSAIC;
-    REG_BG2OFS = 0;
+    G2_SetBG2Offset(0, 0);
     G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xa000,
                          GX_BG_CHARBASE_0x10000);
 
@@ -1709,7 +1668,7 @@ s32 dScMgLuigi_c::InitResources() {
 
     G2S_SetBG2Priority(0);
     REG_DB_BG2CNT &= ~BG_CONTROL_MOSAIC;
-    REG_DB_BG2OFS = 0;
+    G2S_SetBG2Offset(0, 0);
     G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
                           GX_BG_CHARBASE_0x10000);
 

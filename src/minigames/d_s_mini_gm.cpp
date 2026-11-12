@@ -55,6 +55,7 @@
 #include "decl_Scene.h"
 #include "decl_common.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/g2.h"
 #include "nitro/gx/gx.h"
 #include "nitro/gx/gx_vramcnt.h"
 #include "nitro/gx/gx_load.h"
@@ -250,7 +251,7 @@ s32 dScMiniGm_c::InitResources()
     G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x2000,
                          GX_BG_CHARBASE_0x10000);
     G2_BG2Mosaic(false);
-    REG_BG2OFS = 0;
+    G2_SetBG2Offset(0, 0);
     SetBg2Offset(0, 0);
 
     f = LoadFile(0x4e);
@@ -289,14 +290,14 @@ s32 dScMiniGm_c::InitResources()
     G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x2000,
                           GX_BG_CHARBASE_0x04000);
     G2S_BG2Mosaic(false);
-    REG_DB_BG2OFS = 0;
+    G2S_SetBG2Offset(0, 0);
     SetSubBg2Offset(0, 0);
 
     G2S_SetBG3Priority(3);
     G2S_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x3000,
                           GX_BG_CHARBASE_0x04000);
     G2S_BG3Mosaic(false);
-    REG_DB_BG3OFS = mSubBgScrollX & 0x1ff;
+    G2S_SetBG3Offset(mSubBgScrollX, 0);
     SetSubBg3Offset(mSubBgScrollX, 0);
 
     f = LoadFile(0x53);
@@ -312,7 +313,7 @@ s32 dScMiniGm_c::InitResources()
     G2S_SetBG0Control(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,
                       GX_BG_CHARBASE_0x10000, GX_BG_EXTPLTT_23);
     G2S_BG0Mosaic(false);
-    REG_DB_BG0OFS = mSubBgScrollX & 0x1ff;
+    G2S_SetBG0Offset(mSubBgScrollX, 0);
     SetSubBg0Offset(mSubBgScrollX, 0);
 
     dst = (char *)G2S_GetBG0CharPtr();
