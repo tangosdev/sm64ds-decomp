@@ -1,5 +1,5 @@
 {
-  "about": "Mario and Luigi on King Bob-omb's summit, in front of the King, before the talk",
+  "about": "Mario and Luigi at the top of the path below King Bob-omb, in front of him, before the talk (a few steps up starts it)",
   "save": {
     "preset": "fresh",
     "stars": {
@@ -38,8 +38,8 @@
       "act": 1,
       "near": {
         "class": 189,
-        "dist": 450,
-        "angle_deg": 25
+        "dist": 420,
+        "angle_deg": 12
       }
     }
   ]

@@ -1,10 +1,45 @@
 {
   "about": "Mario holding the basement key in front of the basement door, Luigi a few steps behind him",
-  "save": {"preset": "early", "star_count": 8, "flags": ["basement_key"]},
-  "room": {"collision": 1, "damage": 1, "interact": 1, "tp": 1},
-  "proof": {"secs": 150, "shot_ms": 2000, "census": [353]},
+  "save": {
+    "preset": "early",
+    "star_count": 8,
+    "flags": [
+      "basement_key"
+    ]
+  },
+  "room": {
+    "collision": 1,
+    "damage": 1,
+    "interact": 1,
+    "tp": 1
+  },
+  "proof": {
+    "secs": 150,
+    "shot_ms": 2000,
+    "census": [
+      353
+    ]
+  },
   "players": [
-    {"character": "mario", "level": 2, "near": {"class": 353, "param": 7, "dist": 150}},
-    {"character": "luigi", "level": 2, "near": {"class": 353, "param": 7, "dist": 400}}
+    {
+      "character": "mario",
+      "level": 2,
+      "near": {
+        "class": 353,
+        "param": 7,
+        "dist": 150
+      },
+      "area": 4
+    },
+    {
+      "character": "luigi",
+      "level": 2,
+      "near": {
+        "class": 353,
+        "param": 7,
+        "dist": 400
+      },
+      "area": 4
+    }
   ]
 }
