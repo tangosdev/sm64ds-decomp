@@ -806,7 +806,7 @@ void load_one(int i, const std::string &release)
      - ON: the journal is written again oldest first and the calls resume. A plugin whose first on_level_load had not run yet (Special
        Triple Jump before any level) simply runs it at the next level load, as it would have.
    What cannot be switched (the caller keeps the restart): a plugin that registered an on_file filter (a file the game already read
-   keeps the plugin's bytes), and a journal that could not be written back. Patches a plugin makes from on_frame or from an actor
+   keeps the plugin's bytes), a journal that could not be written back, and two plugins whose patch runs overlap. Patches a plugin makes from on_frame or from an actor
    factory, or writes to writable data, are not journaled: neither live mod does that, and the plugin API rules say callbacks stay
    short; such a plugin would keep those changes while off. */
 std::vector<std::pair<u8 *, size_t> > g_ranges;   /* the image's read-only sections */
@@ -935,6 +935,23 @@ extern "C" const char *port_mod_plugin_switch_refusal(const char *id)
     if (!p) return 0;
     if (g_journal_bad) return "a plugin's code patches could not be written back earlier in this run";
     if (!p->file.empty()) return "it edits ROM files (on_file), which the game may already hold";
+    /* each plugin's journal is put back newest first, but plugins switch one at a time: two plugins whose patch runs share a byte
+       would leave stale bytes whichever goes first, so that pair is never switched in place (the caller restarts) */
+    for (size_t i = 0; i < g_plugins.size(); ++i) {
+        const Plugin *q = g_plugins[i];
+        if (q == p) continue;
+        for (size_t a = 0; a < p->patches.size(); ++a)
+            for (size_t b = 0; b < q->patches.size(); ++b) {
+                const u8 *a0 = p->patches[a].at, *a1 = a0 + p->patches[a].was.size();
+                const u8 *b0 = q->patches[b].at, *b1 = b0 + q->patches[b].was.size();
+                if (a0 < b1 && b0 < a1) {
+                    static char buf[200];
+                    snprintf(buf, sizeof buf, "its code patches overlap %s's, and the two cannot be put back in the right order",
+                             q->id.c_str());
+                    return buf;
+                }
+            }
+    }
     return 0;
 }
 
