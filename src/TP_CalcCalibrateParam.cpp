@@ -4,31 +4,11 @@
  * of range, when the two points share a raw or screen coordinate, or when a
  * result does not fit. */
 #include "types.h"
+#include "nitro/cp/divider.h"
 #include "nitro/os/system.h"
 #include "nitro/spi/tp.h"
 
 extern "C" {
-
-#define reg_DIVCNT (*(volatile u16 *)0x4000280)
-#define reg_DIV_NUMER_L (*(volatile u32 *)0x4000290)
-#define reg_DIV_DENOM (*(volatile u64 *)0x4000298)
-#define reg_DIV_RESULT_L (*(volatile u32 *)0x40002a0)
-
-static inline void CP_SetDiv32_32(u32 numer, u32 denom) {
-    reg_DIVCNT = 0;
-    reg_DIV_NUMER_L = numer;
-    reg_DIV_DENOM = denom;
-}
-
-static inline void CP_WaitDiv(void) {
-    while (reg_DIVCNT & 0x8000) {
-    }
-}
-
-static inline s32 CP_GetDivResult32(void) {
-    CP_WaitDiv();
-    return (s32)reg_DIV_RESULT_L;
-}
 
 #define IN_S16_RANGE(x) ((x) < 0x8000 && (x) >= -0x8000)
 
