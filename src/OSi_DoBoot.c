@@ -1,7 +1,7 @@
 // HAND-ASM PRIMITIVE: byte-faithful asm-block match (assembly-only primitive). Per asm policy.
 //
 // OSi_DoBoot at 0x01ffdb28 (ITCM) -- NitroSDK, the last step of OS_ResetSystem (see
-// src/OSi_ReloadRomData.cpp): after OSi_ReloadRomData has reloaded both binaries off the
+// src/OSi_ReloadRomData.c): after OSi_ReloadRomData has reloaded both binaries off the
 // card, this hands off to the freshly loaded ARM9 image and never returns. The SDK ships
 // it as an asm function in OS_reset.c. pret/pokediamond's copy has the same shape: IME
 // off, the REG_IPCSYNC handshake, scratch clears that keep the exception-vector word at
@@ -27,7 +27,7 @@
 // and 0x027fff80 -- preserving the word at 0x027ffd9c across the first clear -- then
 // wait for the ARM7 to drop its 1 and release the register. 0x027ffe24 is the ARM9
 // entry-address field of the cartridge header copy at 0x027ffe00, the same block
-// src/OSi_ReloadRomData.cpp reads its ROM offset / RAM address / size triples out of.
+// src/OSi_ReloadRomData.c reads its ROM offset / RAM address / size triples out of.
 //
 // 0x04000208 is REG_IME; storing 0x04000000 there clears bit 0, i.e. interrupts off.
 // The I/O base doubles as both the value and the store's base register.

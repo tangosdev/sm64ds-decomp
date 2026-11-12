@@ -1,4 +1,3 @@
-//cpp
 /* The power-management PXI channel (the Nitro SDK's spi/ARM9/pm.c),
  * arm9 .text 0x0205f5c0..0x0205ff70.
  *
@@ -37,6 +36,7 @@
 #include "nitro/spi/pm.h"
 #include "nitro/ctrdg/ctrdg_common.h"
 #include "nitro/hw/mmap_shared.h"
+#include "nitro/mb/mb.h"
 
 /* The SDK's nitro/types.h spellings; include/types.h has no BOOL. */
 typedef int BOOL;
@@ -93,8 +93,6 @@ static inline void GXi_PowerLCD(BOOL enable) {
         REG_POWCNT1 &= ~REG_GX_POWCNT_LCD_MASK;
     }
 }
-
-extern "C" {
 
 extern u16 PMi_IsInit;
 extern volatile int PMi_SyncFlag; /* SPI_PXI_COMMAND_PM_SYNC (0x60) answered */
@@ -423,9 +421,7 @@ void PM_GoSleepMode(PMWakeUpTrigger trigger, PMLogic logic, u16 keyPattern) {
     (void)OS_EnableIrq();
 
     if (trigger & PM_TRIGGER_CARD) {
-        /* MB_IsMultiBootChild(): a download-play child has no card to pull.
-         * pret's pmd-sky makes the same test of this word. */
-        if (*(volatile u16 *)HW_WM_BOOT_BUF == 2) {
+        if (MB_IsMultiBootChild()) {
             trigger &= ~PM_TRIGGER_CARD;
         }
     }
@@ -537,5 +533,4 @@ u32 PMi_SendLEDPatternCommand(PMLEDPattern pattern) {
     }
 
     return sendResult;
-}
 }

@@ -3,7 +3,7 @@
 
 /*
  * The ARM9 side of the NitroSDK power-management PXI channel (spi/ARM9/pm.c),
- * defined in src/engine/spi/PM.cpp. Each function is named by its body
+ * defined in src/engine/spi/PM.c. Each function is named by its body
  * against pret's pokediamond and pret's pmd-sky (both carry this file as
  * spi_pm.s); that file's banner gives the evidence. Parameters stay unnamed:
  * a name here takes an @NNN in every C++ includer.

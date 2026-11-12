@@ -2,6 +2,7 @@
 #include "types.h"
 #include "Heap.h"
 #include "nitro/spi/pm.h"
+#include "nitro/mb/mb.h"
 
 extern "C" {
 
@@ -66,8 +67,7 @@ void func_02013f4c(void)
     case 6:
         ShowCrashScreen();
         if ((cur & 0x30c) == 0x30c) {
-            int b = (*(volatile u16*)0x27ffc40 == 2);
-            if (b == 0) {
+            if (!MB_IsMultiBootChild()) {
                 OS_ResetSystem(0);
             } else {
                 PM_ForceToPowerOff();

@@ -15611,7 +15611,7 @@
         "param:#2 int",
         "param:#3 int"
       ],
-      "src/engine/fs/FS_Overlay.cpp": [
+      "src/engine/fs/FS_Overlay.c": [
         "param:#2 int",
         "param:#3 int"
       ],
@@ -17202,7 +17202,7 @@
       ]
     },
     "func_0206cf98": {
-      "src/engine/fs/FS_Overlay.cpp": [
+      "src/engine/fs/FS_Overlay.c": [
         "return:void"
       ]
     },

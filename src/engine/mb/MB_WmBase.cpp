@@ -147,7 +147,7 @@ extern int WM_SetLifeTime(void *callback, int tableNo, int camLife, int frameLif
 extern int WM_SetParentParameter(void *callback, WmParentParam *parentParam);
 extern int WM_SetBeaconIndication(void *callback, int flag);
 extern int WM_StartScan(void *callback, char *scanParam);
-extern int WM_StartConnect(void *callback, int bssDesc, void *ssid);
+extern int WM_StartConnect(void *callback, const WMBssDesc *pInfo, const u8 *ssid);
 extern int WM_StartMPEx(void *callback, int recvBuf, u16 recvBufSize, int sendBuf, u16 sendBufSize,
                         u16 mpFreq, u16 defaultRetryCount, int minPollBmpMode, int singlePacketMode,
                         int fixFreqMode, int ignoreFatalError);

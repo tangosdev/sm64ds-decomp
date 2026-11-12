@@ -1,4 +1,3 @@
-//cpp
 /* Overlays (the Nitro SDK's FS_overlay.c), arm9 .text 0x0205db88..0x0205e0f4.
  *
  * FS_LoadOverlayInfo reads an overlay's 0x20-byte table entry, from the
@@ -27,8 +26,7 @@
 #include "nitro/fs/overlay.h"
 #include "nitro/mi/memory.h"
 #include "nitro/fs/file.h"
-
-extern "C" {
+#include "nitro/mb/mb.h"
 
 /* The __global_destructor_chain entries the runtime keeps for objects with
  * static storage. */
@@ -146,8 +144,8 @@ int FSi_CompareDigest(char *spec_digest, void *src, int len) {
     return i == 0x14;
 }
 
-/* Once an overlay's image is in RAM, a multiboot child (the halfword at
- * 0x027ffc40 reads 2) checks the digest of an overlay flagged authenticated
+/* Once an overlay's image is in RAM, a multiboot child (MB_IsMultiBootChild)
+ * checks the digest of an overlay flagged authenticated
  * against its entry at data_0209a7ec. It clears the image and crashes when
  * the check fails, and also when the overlay is not flagged authenticated
  * at all. Then the image is decompressed in place when flagged compressed
@@ -161,7 +159,7 @@ void FS_StartOverlay(FSOverlayInfo *p_ovi) {
     } else {
         rare_size = p_ovi->header.ram_size;
     }
-    if (*(unsigned short *)0x27ffc40 == 2) {
+    if (MB_IsMultiBootChild()) {
         int ret = 0;
         if (flags & 2) {
             int odt_max = (int)(data_0209aff8 - data_0209a7ec) / 20;
@@ -301,5 +299,4 @@ void FS_AttachOverlayTable(int target, void *ptr, u32 size) {
     pr->offset = (u32)ptr;
     pr->length = size;
     OS_RestoreInterrupts(irqState);
-}
 }

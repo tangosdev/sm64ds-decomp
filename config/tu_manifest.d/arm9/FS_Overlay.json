@@ -1,8 +1,8 @@
 {
   "id": "arm9/FS_Overlay",
   "module": "arm9",
-  "source": "src/engine/fs/FS_Overlay.cpp",
-  "promoted_source": "src/engine/fs/FS_Overlay.cpp",
+  "source": "src/engine/fs/FS_Overlay.c",
+  "promoted_source": "src/engine/fs/FS_Overlay.c",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
