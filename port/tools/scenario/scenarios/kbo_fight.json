@@ -1,10 +1,46 @@
 {
   "about": "Mario and Luigi on King Bob-omb's summit, in front of the King, before the talk",
-  "save": {"preset": "early"},
-  "room": {"collision": 1, "damage": 1, "interact": 1, "tp": 1},
-  "proof": {"secs": 150, "shot_ms": 2000, "census": [189]},
+  "save": {
+    "preset": "fresh",
+    "stars": {
+      "0": "40"
+    },
+    "flags": [
+      "messages_seen"
+    ]
+  },
+  "room": {
+    "collision": 1,
+    "damage": 1,
+    "interact": 1,
+    "tp": 1
+  },
+  "proof": {
+    "secs": 150,
+    "shot_ms": 2000,
+    "census": [
+      189
+    ]
+  },
   "players": [
-    {"character": "mario", "level": 6, "act": 1, "near": {"class": 189, "dist": 700}},
-    {"character": "luigi", "level": 6, "act": 1, "near": {"class": 189, "dist": 850, "angle_deg": 20}}
+    {
+      "character": "mario",
+      "level": 6,
+      "act": 1,
+      "near": {
+        "class": 189,
+        "dist": 350
+      }
+    },
+    {
+      "character": "luigi",
+      "level": 6,
+      "act": 1,
+      "near": {
+        "class": 189,
+        "dist": 450,
+        "angle_deg": 25
+      }
+    }
   ]
 }

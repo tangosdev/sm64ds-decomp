@@ -32,13 +32,14 @@ CHARS = ["mario", "luigi", "wario", "yoshi"]
 # Named save presets. A scenario's "save" block may name one and override any field.
 PRESETS = {
     "fresh": {},
-    "early": {"star_count": 1},
-    "basement": {"star_count": 10, "characters": ["luigi", "wario"], "flags": ["basement_key", "basement_door"]},
+    "early": {"star_count": 1, "flags": ["messages_seen"]},
+    "basement": {"star_count": 10, "characters": ["luigi", "wario"], "flags": ["messages_seen", "basement_key", "basement_door"]},
     "upstairs": {"star_count": 30, "characters": ["luigi", "wario", "yoshi"],
-                 "flags": ["basement_key", "basement_door", "upstairs_key", "upstairs_door", "moat_drained"]},
+                 "flags": ["messages_seen", "basement_key", "basement_door", "upstairs_key", "upstairs_door", "moat_drained"]},
     "all_open": {"star_count": 105, "characters": ["luigi", "wario", "yoshi"],
-                 "flags": ["basement_key", "basement_door", "upstairs_key", "upstairs_door", "moat_drained", "rabbits_awake"],
-                 "cannons": list(range(1, 16))},
+                 "flags": ["messages_seen", "basement_key", "basement_door", "upstairs_key", "upstairs_door", "moat_drained",
+                           "rabbits_awake"],
+                 "cannons": list(range(0, 15))},
 }
 
 ROOM_KEYS = {"collision": "SM64DS_ROOM_COLLISION", "damage": "SM64DS_ROOM_DAMAGE", "interact": "SM64DS_ROOM_INTERACT",

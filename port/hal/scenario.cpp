@@ -52,6 +52,8 @@ extern unsigned char data_0209cab4[];          // its star bytes, one per course
 extern unsigned char data_0209f224;            // the last collected star (CollectStar sets it)
 extern signed char data_0209f2f4[];            // lives
 extern short data_02092144[];                  // health, per player, 0x100 a wedge
+extern void *data_0209f318;                    // the camera
+void func_0200d1e4(char *camera);              // the camera's own snap behind its player (Player::St_Teleport's call)
 void *_ZN8dActor_c4NextEPKS_(const void *prev);
 void LoadLevelNoReturn(unsigned level, unsigned entrance, unsigned star, unsigned reason);
 void ChangeArea(int areaID);
@@ -141,6 +143,10 @@ bool named_flag(const char *n, unsigned *f1, unsigned *f2) {
         {"upstairs_door", 0x100u << 1, 0},  // key door 1
         {"rabbits_awake", 0x40000000u, 0},  // daKinopio_c: the Toad's rabbit line; daMip_c spawns only with it
         {"moat_drained", 0, 0x80000u},      // the basement pillars' drain bit, flags2
+        // the one-time messages, as seen: the castle's "Welcome. No one's home!" (Player::func_ov002_020c44c4, level 2,
+        // flags2 0x200) and the power-up hints Player::func_ov002_020c43c4 records (flags2 0x400..0x4000, 0x10000000). A
+        // course's own entry text shows only while that course has no star (the same function), so a preset gives it one.
+        {"messages_seen", 0, 0x200u | 0x400u | 0x800u | 0x1000u | 0x2000u | 0x4000u | 0x10000000u},
     };
     for (const auto &e : k) if (!_stricmp(n, e.name)) { *f1 |= e.f1; *f2 |= e.f2; return true; }
     return false;
@@ -274,8 +280,9 @@ void census() {
         int n = 0;
         for (char *a = (char *)_ZN8dActor_c4NextEPKS_(nullptr); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
             if (*(const unsigned short *)(a + 0x0c) != (unsigned)S.census[c] || is_player(a)) continue;
-            std::fprintf(stderr, "[scenario] census class %d #%d pos %d,%d,%d yaw %04x param %08x area %d slot %d%s\n", S.census[c], n++,
-                         rd(a, 0x5c) >> 12, rd(a, 0x60) >> 12, rd(a, 0x64) >> 12, (unsigned)(unsigned short)*(const short *)(a + 0x8e),
+            std::fprintf(stderr, "[scenario] census class %d #%d pos %d,%d,%d yaw %04x ax %d az %d param %08x area %d slot %d%s\n", S.census[c],
+                         n++, rd(a, 0x5c) >> 12, rd(a, 0x60) >> 12, rd(a, 0x64) >> 12, (unsigned)(unsigned short)*(const short *)(a + 0x8e),
+                         (int)*(const short *)(a + 0x8c), (int)*(const short *)(a + 0x90),
                          (unsigned)rd(a, 0x08), (int)*(const signed char *)(a + 0xcc), (int)*(const short *)(a + 0xce), going(a) ? " (going)" : "");
         }
         std::fprintf(stderr, "[scenario] census class %d: %d live\n", S.census[c], n);
@@ -330,6 +337,8 @@ bool place(char *me) {
     wr(me, 0x5c, x); wr(me, 0x60, y); wr(me, 0x64, z);
     wr(me, 0x98, 0); wr(me, 0xa4, 0); wr(me, 0xa8, 0); wr(me, 0xac, 0);
     if (yaw >= 0) *(short *)(me + 0x8e) = (short)yaw;
+    // what the game's own teleport does next (Player.cpp St_Teleport): the camera snaps behind the player and shows his area
+    if (char *cam = (char *)data_0209f318) if (*(char **)(cam + 0x110) == me) func_0200d1e4(cam);
     std::fprintf(stderr, "[scenario] %s p%d placed at %d,%d,%d facing %04x in level %d area %d\n", S.name, S.player, x >> 12, y >> 12,
                  z >> 12, (unsigned)(unsigned short)*(const short *)(me + 0x8e), (int)data_0209f2f8, (int)*(const signed char *)(me + 0xcc));
     return true;
@@ -446,8 +455,8 @@ extern "C" void port_scenario_save_seed(void) {
     const unsigned char last = data_0209f224;   // CollectStar also records "the last star got"; a preset is not a grab
     for (int i = 0; i < s.nstars; ++i)
         for (int b = 0; b < 8; ++b) if (s.stars[i].bits & (1u << b)) CollectStar(s.stars[i].course, b);
-    if (s.star_count > 0) {   // fill the main courses in order, seven stars each, until the count is reached
-        for (int c = 1; c <= 15 && NumStars() < s.star_count; ++c)
+    if (s.star_count > 0) {   // fill the main courses in order (course 0 is Bob-omb Battlefield), seven stars each
+        for (int c = 0; c < 15 && NumStars() < s.star_count; ++c)
             for (int b = 0; b < 7 && NumStars() < s.star_count; ++b) if (!(data_0209cab4[c] & (1u << b))) CollectStar(c, b);
     }
     data_0209f224 = last;
