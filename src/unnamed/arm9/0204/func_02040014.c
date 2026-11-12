@@ -1,4 +1,5 @@
 #include "types.h"
+#include "nitro/wm/wm_api.h"
 #include "private/wm_views.h"
 #include "nitro/mi/memory.h"
 extern int data_020a0f5c;
@@ -10,17 +11,14 @@ extern u16 data_020a0fa0[][3];
 extern int Wireless_Reset(void);
 extern int func_0203faa8(void);
 extern int func_02042748(u16 *a, u16 *b);
-extern int WM_Disconnect(void *callback, unsigned int aid);
 
 /* The parent's WM_StartParent callback. A connecting child stays only when
  * its MAC address equals one of the three entries of data_020a0fbe whose
  * data_020a0f9d flag is set (func_02042748 compares the three halfwords);
  * data_020a0fa0[aid] then takes the address. Any other child is
- * disconnected (WM_Disconnect). The parameter keeps its
- * char * spelling: the other declaration is checked against it. */
-void func_02040014(char *a)
-{
-    WmStartParentCallback *cb = (WmStartParentCallback *)a;
+ * disconnected (WM_Disconnect). */
+void func_02040014(void *arg) {
+    WmStartParentCallback *cb = (WmStartParentCallback *)arg;
     int v;
 
     if (cb->errcode == 0) {

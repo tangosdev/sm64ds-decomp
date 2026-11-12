@@ -9,7 +9,7 @@
     "contiguous linker run: 0x02067f68..0x0206879c, 13 functions, gapless in config/arm9/delinks.txt (each entry's end is the next entry's start, all marked `complete`).",
     "SOURCE ORDER: mwccarm emits .text in reverse source order. Read from the top down, the run is the parent-side function order of NitroSDK's mb_gameinfo.c (ntrtwl's copy; Pokemon D/P's agrees): MBi_MakeGameInfo, MBi_ReadIconInfo, MB_UpdateGameInfoMember, mystrlen, MB_AddGameInfo, MB_InitSendGameInfoStatus, MBi_ClearSendStatus, MB_SendGameInfoBeacon, MBi_ReadyBeaconSendStatus, MBi_InitSendFixedBeacon, MBi_SendFixedBeacon, MBi_InitSendVolatBeacon, MBi_SendVolatBeacon, every function in its place. Lego Star Wars II's symbols.txt has the same thirteen names in the same order at 0x020daa6c..0x020db2a8. MB_DeleteGameInfo and the child's beacon-receive functions are absent from both ROMs: nothing calls them, so they were dead-stripped.",
     "DATA: the beacon send status (data_020a9d2c, the SDK's mbss) and the beacon buffer (data_020a9d40, bsendBuff; data_020a9d48, data_020a9d4e and data_020a9d50 are its checksum span, fixed piece and volatile members) are used by the functions in this run and by no other code in the tree.",
-    "BOTTOM EDGE: func_02067f2c (0x02067f2c) flushes the data cache and starts a DMA copy. It is not game-record code.",
+    "BOTTOM EDGE: MBi_BlockHeaderEnd (0x02067f2c..0x02067f68) is mb_common.c's (arm9/MB_Common, src/engine/mb/MB_Common.c): it flushes the send buffer from the data cache and hands it to MBi_SendMP. It is not game-record code.",
     "TOP EDGE: MBi_CheckWmErrcode (0x0206879c) opens the SDK's mb_wm_base.c (arm9/MB_WmBase)."
   ],
   "sections": [

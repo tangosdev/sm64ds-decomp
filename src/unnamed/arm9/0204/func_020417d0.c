@@ -12,9 +12,8 @@ extern void WBT_MpChildRecvHook(int data, int length);
  * its packet to the parent's handler (WBT_MpParentRecvHook), or on a child to
  * WBT_MpChildRecvHook. The argument is a NitroSDK WMPortRecvCallback
  * (private/wm_views.h). */
-void func_020417d0(char *p)
-{
-    WMPortRecvCallback *cb = (WMPortRecvCallback *)p;
+void func_020417d0(void *arg) {
+    WMPortRecvCallback *cb = (WMPortRecvCallback *)arg;
     FileShareWork *g = FILE_SHARE_WORK;
     FileShareParentArea *base = (FileShareParentArea *)g->mArea;
 

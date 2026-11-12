@@ -2616,19 +2616,8 @@ src/unnamed/arm9/0206/func_02061c88.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0206/func_02061ce4.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0206/func_02061d30.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0206/func_02061e38.c	WEAK-refs-only	arm9				1		None		-
-src/WM_StartParent.c	PURE-C	arm9				1		None		-
-src/WmCheckParentParameter.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_020620b0.c	WEAK-refs-only	arm9				1		None		-
-src/WM_End.c	PURE-C	arm9				1		None		-
-src/WM_Reset.c	PURE-C	arm9				1		None		-
-src/WM_Initialize.c	PURE-C	arm9				1		None		-
-src/WM_PowerOff.c	PURE-C	arm9				1		None		-
-src/WM_PowerOn.c	PURE-C	arm9				1		None		-
-src/WM_Disable.c	PURE-C	arm9				1		None		-
-src/WM_Enable.c	PURE-C	arm9				1		None		-
-src/WM_SetMPDataToPort.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_02062428.c	WEAK-refs-only	arm9				1		None		-
-src/unnamed/arm9/0206/func_0206259c.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_020625fc.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0206/func_02062734.c	PURE-C	arm9				1		None		-
 src/WM_GetSharedDataAddress.c	PURE-C	arm9				1		None		-
@@ -2710,7 +2699,6 @@ src/unnamed/arm9/0206/func_02065de4.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_020672d0.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_0206736c.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_02067480.c	PURE-C	arm9				1		None		-
-src/MBi_get_blockinfo.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_02067604.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_020676e0.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_020678a4.c	PURE-C	arm9				1		None		-

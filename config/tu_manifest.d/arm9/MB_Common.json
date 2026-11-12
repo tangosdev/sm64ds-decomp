@@ -1,0 +1,67 @@
+{
+  "id": "arm9/MB_Common",
+  "module": "arm9",
+  "source": "src/engine/mb/MB_Common.c",
+  "promoted_source": "src/engine/mb/MB_Common.c",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "One contiguous run of the Nitro SDK's mb_common.c, 0x02067ee4..0x02067f68: 2 functions, gapless in config/arm9/delinks.txt. Both compile byte-identical from the SDK's own text in ntrtwl/NitroSDK libraries/mb/src/mb_common.c (MBi_calc_cksum, MBi_BlockHeaderEnd).",
+    "Order: mwccarm emits the bodies in reverse. The SDK's file order of the two is MBi_BlockHeaderEnd, MBi_calc_cksum, and the ROM holds exactly that reversed. MBi_BlockHeaderBegin, MB_GetParentSystemBufSize and MB_GetChildSystemBufSize, which sit around them in the SDK, are absent: nothing calls them; the debug printers are compiled only under PRINT_DEBUG.",
+    "No data: neither function owns .rodata, .data or .bss.",
+    "BOTTOM EDGE: MB_GetSegmentLength (0x02067e70..0x02067ee4) is mb_fileinfo.c's (arm9/MB_FileInfo). TOP EDGE: the mb_gameinfo.c run (src/engine/mb/MB_GameInfo.c) starts at 0x02067f68."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02067ee4",
+      "end": "0x02067f68"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "MBi_calc_cksum",
+      "address": "0x02067ee4",
+      "size": "0x48",
+      "legacy_source": "src/MBi_calc_cksum.c",
+      "ordinal": 0
+    },
+    {
+      "symbol": "MBi_BlockHeaderEnd",
+      "address": "0x02067f2c",
+      "size": "0x3c",
+      "legacy_source": "src/MBi_BlockHeaderEnd.cpp",
+      "ordinal": 1
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "relocations": [],
+  "compiler_only_output": [],
+  "notes": [
+    "HAND-BUILT manifest entry, not tools/tubuild.py create output: tu_map does not segment arm9.",
+    "Built as C, like the SDK and the other mb TUs. The two prototypes are declared in include/private/mb_common.h, the SDK's private libraries/mb/include/mb_common.h cut to what the ROM carries; MBi_SendMP, which MBi_BlockHeaderEnd calls, is declared in include/private/mb_wm_base.h."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/arm9-MB_Common/MB_Common.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 2,
+    "functions_declared": 2,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

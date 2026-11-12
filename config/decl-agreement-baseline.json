@@ -2608,91 +2608,6 @@
     "WM_CheckStateEx": {
       "src/WM_Finish.c": [
         "param:#2 int"
-      ],
-      "src/unnamed/arm9/0206/func_0206259c.c": [
-        "param:#2 int"
-      ],
-      "src/WM_Disconnect.cpp": [
-        "arity:6"
-      ],
-      "src/WM_GetMPSendBufferSize.cpp": [
-        "arity:3"
-      ],
-      "src/WM_SetParentParameter.cpp": [
-        "param:#2 int"
-      ],
-      "src/WM_StartConnect.cpp": [
-        "param:#2 int"
-      ],
-      "src/WM_StartMPEx.cpp": [
-        "arity:3"
-      ]
-    },
-    "WM_GetSystemWork": {
-      "src/WM_GetAllowedChannel.cpp": [
-        "return:void *"
-      ],
-      "src/WM_SetPortCallback.cpp": [
-        "return:char *"
-      ],
-      "src/WM_SetIndCallback.cpp": [
-        "return:void *"
-      ],
-      "src/WM_Initialize.c": [
-        "return:int *"
-      ],
-      "src/WM_Enable.c": [
-        "return:int *"
-      ],
-      "src/WM_GetLinkLevel.cpp": [
-        "return:void *"
-      ],
-      "src/WM_GetMPSendBufferSize.cpp": [
-        "return:int *"
-      ],
-      "src/WM_SetMPDataToPortEx.cpp": [
-        "return:int *"
-      ],
-      "src/WM_StartConnect.cpp": [
-        "return:int *"
-      ],
-      "src/WM_StartMPEx.cpp": [
-        "return:int *"
-      ],
-      "src/WM_StartScan.cpp": [
-        "return:char *"
-      ],
-      "src/engine/wm/WM_Etc.cpp": [
-        "return:int *"
-      ]
-    },
-    "WM_SendCommand": {
-      "src/unnamed/arm9/0206/func_0206259c.c": [
-        "param:#1 int",
-        "param:#2 int",
-        "param:#3 int"
-      ],
-      "src/WM_Disconnect.cpp": [
-        "param:#1 int",
-        "param:#2 int",
-        "param:#3 int"
-      ],
-      "src/WM_SetMPDataToPortEx.cpp": [
-        "arity:9"
-      ],
-      "src/WM_SetParentParameter.cpp": [
-        "param:#1 int",
-        "param:#2 int",
-        "param:#3 void *"
-      ],
-      "src/WM_StartConnect.cpp": [
-        "arity:2"
-      ],
-      "src/WM_StartMPEx.cpp": [
-        "arity:12"
-      ],
-      "src/WM_StartScan.cpp": [
-        "arity:2"
       ]
     },
     "_Z11UpdateAngleRssis": {
@@ -4078,9 +3993,6 @@
       "src/OS_Terminate.cpp": [
         "return:void"
       ],
-      "src/WM_SetIndCallback.cpp": [
-        "return:int"
-      ],
       "src/WBT_End.cpp": [
         "return:int"
       ],
@@ -4110,10 +4022,6 @@
       "src/unnamed/arm9/0205/func_0205ff20.cpp": [
         "return:void"
       ],
-      "src/WM_SetIndCallback.cpp": [
-        "param:#1 int",
-        "return:void"
-      ],
       "src/WBT_End.cpp": [
         "return:void"
       ],
@@ -4130,9 +4038,6 @@
         "return:void"
       ],
       "src/unnamed/arm9/0206/func_02065af0.cpp": [
-        "return:void"
-      ],
-      "src/MB_RegisterFile.cpp": [
         "return:void"
       ],
       "src/CARDi_EndTask.cpp": [
@@ -8361,11 +8266,6 @@
       ],
       "src/unnamed/arm9/0206/func_02065b88.c": [
         "return:unsigned char []"
-      ]
-    },
-    "data_020a9db8": {
-      "src/MB_RegisterFile.cpp": [
-        "return:void *"
       ]
     },
     "data_ov002_020ff480": {
@@ -15531,9 +15431,6 @@
       ]
     },
     "MI_CpuFill8": {
-      "src/WM_StartConnect.cpp": [
-        "param:#2 int"
-      ],
       "src/engine/mb/MB_Parent.cpp": [
         "param:#2 int"
       ],
@@ -15564,9 +15461,6 @@
         "param:#1 int",
         "param:#2 int",
         "param:#3 int"
-      ],
-      "src/MBi_ReadSegmentHeader.c": [
-        "param:#2 int"
       ]
     },
     "FS_UnloadOverlay": {
@@ -15601,11 +15495,6 @@
     "func_02061128": {
       "src/unnamed/arm9/0201/func_02019ebc.c": [
         "param:#1 int (*)(void)"
-      ]
-    },
-    "WM_Init": {
-      "src/WM_Initialize.c": [
-        "param:#1 int"
       ]
     },
     "func_02063718": {
@@ -15728,11 +15617,6 @@
       ],
       "src/WBT_InitParent.cpp": [
         "return:char *"
-      ]
-    },
-    "MBi_MakeGameInfo": {
-      "src/MB_RegisterFile.cpp": [
-        "param:#3 void *"
       ]
     },
     "func_0206a928": {
@@ -17033,26 +16917,6 @@
         "arity:0"
       ]
     },
-    "MBi_BlockHeaderEnd": {
-      "src/engine/mb/MB_Parent.cpp": [
-        "return:int"
-      ]
-    },
-    "WM_SetMPDataToPort": {
-      "src/engine/wm/WM_Ds.cpp": [
-        "param:#1 void (*)(void *)"
-      ]
-    },
-    "WM_SetMPDataToPortEx": {
-      "src/WM_SetMPDataToPort.c": [
-        "param:#5 int"
-      ]
-    },
-    "WmCheckParentParameter": {
-      "src/WM_SetParentParameter.cpp": [
-        "return:void"
-      ]
-    },
     "func_02071864": {
       "src/unnamed/arm9/0207/func_02071be8.cpp": [
         "param:#1 struct Src *",
@@ -17087,18 +16951,11 @@
         "param:#1 S72d90 *"
       ]
     },
-    "WM_SetGameInfo": {
-      "src/engine/mb/MB_GameInfo.c": [
-        "param:#5 int",
-        "param:#6 int"
-      ]
-    },
     "NNS_FndVisitAllocatedForExpHeap": {
       "include/nnsys/fnd.h": [
         "param:#2 void (*)(void *, NNSFndHeapHandle, unsigned int)"
       ]
-    }
-,
+    },
     "PM_SendUtilityCommandAsync": {
       "include/nitro/spi/pm.h": [
         "param:#2 void (*)(unsigned int, void *)"

@@ -2714,113 +2714,26 @@ src/WM_Init.cpp:
     complete
     .text start:0x020616e8 end:0x020618b8
 
-src/WM_GetLinkLevel.cpp:
+src/engine/wm/WM_Sync.c:
     complete
-    .text start:0x020618b8 end:0x02061960
+    .text start:0x020618b8 end:0x02061d30
 
-src/WM_GetAllowedChannel.cpp:
+src/engine/wm/WM_Standard.c:
     complete
-    .text start:0x02061960 end:0x020619ac
+    .text start:0x02061d30 end:0x020623ec
 
-src/WM_ReadMPData.cpp:
+src/engine/wm/WM_Mp.c:
     complete
-    .text start:0x020619ac end:0x02061ab0
-
-src/WM_GetMPReceiveBufferSize.cpp:
-    complete
-    .text start:0x02061ab0 end:0x02061b9c
-
-src/WM_GetMPSendBufferSize.cpp:
-    complete
-    .text start:0x02061b9c end:0x02061c20
-
-src/WM_ReadStatus.cpp:
-    complete
-    .text start:0x02061c20 end:0x02061c88
-
-src/WM_SetPortCallback.cpp:
-    complete
-    .text start:0x02061c88 end:0x02061ce4
-
-src/WM_SetIndCallback.cpp:
-    complete
-    .text start:0x02061ce4 end:0x02061d30
-
-src/WM_Disconnect.cpp:
-    complete
-    .text start:0x02061d30 end:0x02061e38
-
-src/WM_StartConnect.cpp:
-    complete
-    .text start:0x02061e38 end:0x02061ee4
-
-src/WM_StartScan.cpp:
-    complete
-    .text start:0x02061ee4 end:0x02061fdc
-
-src/WM_StartParent.c:
-    complete
-    .text start:0x02061fdc end:0x02062024
-
-src/WmCheckParentParameter.c:
-    complete
-    .text start:0x02062024 end:0x020620b0
-
-src/WM_SetParentParameter.cpp:
-    complete
-    .text start:0x020620b0 end:0x020621b8
-
-src/WM_End.c:
-    complete
-    .text start:0x020621b8 end:0x02062200
-
-src/WM_Reset.c:
-    complete
-    .text start:0x02062200 end:0x02062240
-
-src/WM_Initialize.c:
-    complete
-    .text start:0x02062240 end:0x020622a8
-
-src/WM_PowerOff.c:
-    complete
-    .text start:0x020622a8 end:0x020622f0
-
-src/WM_PowerOn.c:
-    complete
-    .text start:0x020622f0 end:0x02062338
-
-src/WM_Disable.c:
-    complete
-    .text start:0x02062338 end:0x02062380
-
-src/WM_Enable.c:
-    complete
-    .text start:0x02062380 end:0x020623ec
-
-src/WM_SetMPDataToPort.c:
-    complete
-    .text start:0x020623ec end:0x02062428
-
-src/WM_SetMPDataToPortEx.cpp:
-    complete
-    .text start:0x02062428 end:0x0206259c
-
-src/unnamed/arm9/0206/func_0206259c.c:
-    complete
-    .text start:0x0206259c end:0x020625fc
-
-src/WM_StartMPEx.cpp:
-    complete
-    .text start:0x020625fc end:0x02062734
+    .text start:0x020623ec end:0x02062734
 
 src/engine/wm/WM_Ds.cpp:
     complete
     .text start:0x02062734 end:0x020634fc
 
-src/engine/wm/WM_Etc.cpp:
+src/engine/wm/WM_Etc.c:
     complete
     .text start:0x020634fc end:0x02063718
+    .bss start:0x020a9440 end:0x020a94c0
 
 src/unnamed/arm9/0206/func_02063718.c:
     complete
@@ -3093,48 +3006,15 @@ src/MB_ReadMultiBootParentBssDesc.c:
     complete
     .text start:0x020672d0 end:0x0206736c
 
-src/IsAbleToLoad.c:
+src/engine/mb/MB_FileInfo.c:
     complete
-    .text start:0x0206736c end:0x02067530
-src/MBi_get_blockinfo.c:
-    complete
-    .text start:0x02067530 end:0x02067604
+    .text start:0x0206736c end:0x02067ee4
+    .rodata start:0x0208685c end:0x02086880
+    .data start:0x0209a07c end:0x0209a084
 
-src/MBi_MakeBlockInfoTable.c:
+src/engine/mb/MB_Common.c:
     complete
-    .text start:0x02067604 end:0x020676e0
-
-src/MBi_SetSegmentInfo.c:
-    complete
-    .text start:0x020676e0 end:0x020678a4
-
-src/MBi_MakeDownloadFileInfo.c:
-    complete
-    .text start:0x020678a4 end:0x02067928
-
-src/MB_RegisterFile.cpp:
-    complete
-    .text start:0x02067928 end:0x02067b68
-
-src/MBi_ReadSegmentHeader.c:
-    complete
-    .text start:0x02067b68 end:0x02067bfc
-
-src/MB_ReadSegment.cpp:
-    complete
-    .text start:0x02067bfc end:0x02067e70
-
-src/MB_GetSegmentLength.c:
-    complete
-    .text start:0x02067e70 end:0x02067ee4
-
-src/MBi_calc_cksum.c:
-    complete
-    .text start:0x02067ee4 end:0x02067f2c
-
-src/MBi_BlockHeaderEnd.cpp:
-    complete
-    .text start:0x02067f2c end:0x02067f68
+    .text start:0x02067ee4 end:0x02067f68
 
 src/engine/mb/MB_GameInfo.c:
     complete

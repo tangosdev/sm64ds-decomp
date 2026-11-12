@@ -5,6 +5,7 @@
 #include "nitro/os/cache.h"
 #include "nitro/mi/memory.h"
 #include "nitro/fs/file.h"
+#include "nitro/wm/wm_api.h"
 
 static inline void FlushFileShareArea(char *base, unsigned int size) {
     DC_FlushRange(base, size);
@@ -15,7 +16,6 @@ static inline void FlushFileShareArea(char *base, unsigned int size) {
  * the ROM uses; the node's mFreeList and mReadyList updates below use it too.
  * The other callees are C. */
 extern "C" {
-extern int WM_SetPortCallback(int port, void *callback, void *arg);
 extern void WBT_InitParent(int a, int b, void (*c)(char *));
 extern void func_020424c0(void);
 extern int WBT_RegisterBlock(void *node, int a1, void *a2, int a3, int arg5, unsigned short arg6);
@@ -23,7 +23,7 @@ extern void func_02042200(void);
 extern void func_02041224(char *thiz, int n);
 extern void WBT_InitChild(void (*arg)(void *));
 
-extern void func_020417d0(char *arg);
+extern void func_020417d0(void *arg);
 extern void func_020412f0(char *arg);
 extern void func_02040f30(void *arg);
 
@@ -63,7 +63,7 @@ extern "C" void func_02040c34(int isParent, int port, void (*stateCallback)(int)
         G->mParentPacketSize = 0;
         G->mChildPacketSize = 0xe;
         data_020a0f88 = 0;
-        if (WM_SetPortCallback((u16)port, (void *)func_020417d0, 0) != 0)
+        if (WM_SetPortCallback((u16)port, func_020417d0, 0) != 0)
             OS_Terminate();
         FS_Init(-1);
 

@@ -2748,7 +2748,7 @@ WM_Disconnect kind:function(arm,size=0x108) addr:0x02061d30
 WM_StartConnect kind:function(arm,size=0xac) addr:0x02061e38
 WM_StartScan kind:function(arm,size=0xf8) addr:0x02061ee4
 WM_StartParent kind:function(arm,size=0x48) addr:0x02061fdc
-WmCheckParentParameter kind:function(arm,size=0x8c) addr:0x02062024
+WmCheckParentParameter kind:function(arm,size=0x8c) addr:0x02062024 local
 WM_SetParentParameter kind:function(arm,size=0x108) addr:0x020620b0
 WM_End kind:function(arm,size=0x48) addr:0x020621b8
 WM_Reset kind:function(arm,size=0x40) addr:0x02062200
@@ -5243,7 +5243,7 @@ data_020a89c4 kind:bss addr:0x020a89c4
 data_020a89ec kind:bss addr:0x020a89ec
 data_020a8a00 kind:bss addr:0x020a8a00
 data_020a8a40 kind:bss addr:0x020a8a40
-data_020a9440 kind:bss addr:0x020a9440
+tmpUserGameInfoBuf kind:bss addr:0x020a9440
 data_020a94c0 kind:bss addr:0x020a94c0
 data_020a94c4 kind:bss addr:0x020a94c4
 data_020a94c8 kind:bss addr:0x020a94c8

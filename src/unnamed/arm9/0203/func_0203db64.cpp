@@ -28,7 +28,7 @@ extern void OS_GetMacAddress(void *p);
    data_020a10a6 are those entries' nickName fields. */
 extern u8 data_020a0ef0;
 extern u8 data_020a1064[];
-extern u8 data_020a0fec[];
+extern MBGameRegistry data_020a0fec;
 extern u8 data_020a0fb8[];
 extern u16 data_020a0fa0[][3];
 extern MBUserInfo data_020a10fc[4];
@@ -70,7 +70,7 @@ void func_0203db64(void *arg0, void *arg1) {
 
     data_020a0ef0 = 0;
     MI_CpuCopy8(arg0, data_020a1064, 0x40);
-    MI_CpuCopy8(arg1, data_020a0fec, 0x1c);
+    MI_CpuCopy8(arg1, &data_020a0fec, sizeof(MBGameRegistry));
     MI_CpuClear8(&data_020a1040, 0x24);
     MI_CpuClear8(data_020a0fb8, 0x18);
     MI_CpuClear8(data_020a0fa0, 0x18);
