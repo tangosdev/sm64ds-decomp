@@ -1,0 +1,55 @@
+{
+  "about": "DOORKEY1: Mario uses the basement key on its door (the ROM's own key-door start at group frame 300), Luigi watches from behind",
+  "save": {
+    "preset": "early",
+    "star_count": 8,
+    "flags": [
+      "basement_key"
+    ]
+  },
+  "room": {
+    "collision": 1,
+    "damage": 1,
+    "interact": 1,
+    "tp": 1
+  },
+  "proof": {
+    "secs": 110,
+    "shot_ms": 60000,
+    "census": [
+      353
+    ]
+  },
+  "env": {
+    "SM64DS_GHOST_DOOR_PROBE": "1",
+    "SM64DS_DOORKEY_PROBE": "1"
+  },
+  "players": [
+    {
+      "character": "mario",
+      "level": 2,
+      "near": {
+        "class": 353,
+        "param": 7,
+        "dist": 150
+      },
+      "area": 4,
+      "env": {
+        "SM64DS_SW_PRESS": "300:353:107"
+      }
+    },
+    {
+      "character": "luigi",
+      "level": 2,
+      "near": {
+        "class": 353,
+        "param": 7,
+        "dist": 450
+      },
+      "area": 4,
+      "env": {
+        "SM64DS_GHOST_ERR_LOG": "1"
+      }
+    }
+  ]
+}

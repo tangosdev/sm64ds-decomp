@@ -13,6 +13,7 @@
 // the cursor is the whole visual, with no game logic run at all.
 #include "ghost_door.h"
 #include "comms_hub.h"       // comms_hub_now_ms(): the probe lines' clock
+#include "coop_doorkey.h"     // DOORKEY1: the 1.0.3 two-leaf arm (SM64DS_DOORKEY_OFF=leaf)
 
 #include <cstdio>
 #include <cstdlib>
@@ -257,14 +258,21 @@ void sender_probe(const void *body, unsigned frame, unsigned char kind) {
 // The watcher.
 namespace {
 /* A door is often two leaves (the front door, the star doors, the basement
-   doors): each leaf is its own Door actor, 150 units apart, and the ROM opens
-   both. The nearest leaf is the one the sender read its frame from; a second
-   Door actor within kPairR of it is driven with the same frame. */
+   doors): each leaf is its own Door actor, 150 units apart. DOORKEY1: the ROM
+   opens ONE: the leaf whose own Behavior found the player in its box
+   (func_ov100_02144cf8 -> func_ov100_021451c4), and nothing links a leaf to
+   its neighbour. Driving the neighbour with the same frame swung it the wrong
+   way on its own (it faces the other way, Tango's bug 12). Only the leaf the
+   sender read its frame from is driven, and it is picked again whenever his
+   door kind changes: a key door's talk stands him at the middle of the pair
+   (75 units from either leaf), its swing then puts him 100 units in front of
+   the leaf he goes through. SM64DS_DOORKEY_OFF=leaf drives both, as 1.0.3. */
 enum { kLeaves = 2, kPairR = 200 << 12 };
 struct Drive {
     void *door[kLeaves];   // the doors this seat is driving (door[0] null: none)
     bool  gate;            // door[0] is a star gate
     unsigned stamp;        // the pass that last drove it (watcher_end_pass)
+    unsigned char kind;    // DOORKEY1: the door kind it was picked for
 };
 Drive g_drive[kMaxSeats];
 unsigned g_pass = 1;
@@ -423,13 +431,24 @@ void watcher_apply(int seat, unsigned char kind, unsigned char frame,
     if (d.door[0] && !door_alive(d.door[0])) {      // a level change took it
         give_back(d);
     }
+    if (d.door[0] && d.kind != kind && !coop_doorkey_off("leaf")) {   // DOORKEY1: a new step of his door sequence, pick again
+        give_back(d);
+    }
+    /* DOORKEY1: while the door has not moved yet (frame 0) the pick follows him: a sender with no step flag (1.0.3) slides
+       from the middle of a double door to the leaf he goes through, and the first frames of the swing can find him still
+       halfway, as near one leaf as the other */
+    if (d.door[0] && frame == 0 && !d.gate && !coop_doorkey_off("leaf")) {
+        void *nd = nearest_any(pos[0], pos[1], pos[2]);
+        if (nd && nd != d.door[0]) give_back(d);
+    }
     d.stamp = g_pass;
     if (!d.door[0]) {
         void *nd = nearest_any(pos[0], pos[1], pos[2]);
         if (!nd) { ++g_stats.no_door; return; }
         d.gate = is_gate(nd);
         d.door[0] = nd;
-        d.door[1] = d.gate ? 0 : pair_leaf(nd);
+        d.door[1] = d.gate || !coop_doorkey_off("leaf") ? 0 : pair_leaf(nd);
+        d.kind = kind;
         for (int k = 0; k < kLeaves; ++k)
             if (d.door[k] && !held_take(d.door[k], d.gate)) d.door[k] = 0;   // table full: not driven
         if (!d.door[0]) { d.door[0] = d.door[1]; d.door[1] = 0; }

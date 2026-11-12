@@ -1238,6 +1238,10 @@ void scan(unsigned now) {
                         }
                     } else if ((cls == 276 || cls == 277) && born_at_hit_block(a, blk_pos, nblk)) {
                         // a block's own prize: per player, not announced
+                    } else if (cls == 282 && *(const int *)(a + 0x448) != 0) {
+                        // DOORKEY1: a key already in an animation when first seen is a key door's unlock key (the door starts its
+                        // open animation the frame it makes it) or the prop of a friend's unlock (coop_doorkey.cpp): part of a
+                        // cutscene, never a reward. Not announced.
                     } else if (cls == 200 && !coop_boss_minion_mine(a)) {
                         // coopgoomboss2: a Goomba that is not a minion of a Goomboss this console is the authority of: not announced
                     } else {

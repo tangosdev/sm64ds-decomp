@@ -71,6 +71,7 @@
 #include "player_fields.h"
 #include "star_tally.h"      // SMALLS9: per-player star count in a coop room
 #include "ghost_door.h"      // GHOSTDOOR1: door / area / hidden look of a hub ghost
+#include "coop_doorkey.h"     // DOORKEY1: a friend in a key-door talk stands on the ROM's spot
 #include "ghost_tongue.h"    // POSE9: a Yoshi ghost's tongue, the hurt blink
 #include "party.h"           // PBODY1: solid party bodies (membership by seat)
 #include "party_hits.h"
@@ -2384,7 +2385,11 @@ void gw_send(unsigned now) {
        sequence is flagged as a teleport, so they hold him and snap. */
     const unsigned char dkind = gw_legacy() ? 0 : ghostdoor::sender_kind(a);
     if (!gw_legacy()) ghostdoor::sender_probe(a, g_gw_frame, dkind);
-    if (dkind && !g_gw_prev_dkind) {
+    /* DOORKEY1: every new step of a door sequence, not only the first: a key
+       door's talk stands him at the middle of the double door, and its swing
+       then puts him 100 units in front of the leaf he goes through, 75 units
+       to the side, in one tick (func_ov100_021451c4). */
+    if (dkind && dkind != g_gw_prev_dkind) {
         g_gw_warp = true;
         g_gw_v[0] = g_gw_v[1] = g_gw_v[2] = 0;
         ++g_gws.door_snaps;
@@ -3789,6 +3794,14 @@ void gw_follow() {
                         std::fprintf(stderr, "[attach] f=%u seat=%d kind=%d held by seat %d at (%d,%d,%d) holder (%d,%d,%d)\n",
                                      g_gw_frame, s, akind, holder, sm.x >> 12, sm.y >> 12, sm.z >> 12, hx >> 12, hy >> 12, hz >> 12);
                 }
+            }
+        }
+        /* DOORKEY1: in a friend's key-door talk he stands where the ROM put him
+           (coop_doorkey.cpp, from his kick), the key prop beside him */
+        if (sm.door_kind == ghostdoor::kDoorTalk && holder < 0) {
+            int hp[3]; short hy;
+            if (coop_doorkey_hold(s, hp, &hy)) {
+                sm.x = hp[0]; sm.y = hp[1]; sm.z = hp[2]; sm.yaw = hy;
             }
         }
         if (gw_err_log())
