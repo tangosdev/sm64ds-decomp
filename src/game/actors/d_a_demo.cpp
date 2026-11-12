@@ -2694,8 +2694,8 @@ int daDemo_c::anmModel_c::func_ov002_020f6618(SharedFilePtr *mdl, int nAnims, Sh
         mTexSeqFiles = texs;
         for (i = 0; i < mNumTexSeqFiles; i++) {
             void *bmd = mModelFile->filePtr;
-            void *btp = dExtAnmTexPat_c::LoadFile(*mTexSeqFiles[i]);
-            dExtAnmTexPat_c::Prepare(*(BMD_File *)bmd, *(BTP_File *)btp);
+            BTP_File *btp = dExtAnmTexPat_c::LoadFile(*mTexSeqFiles[i]);
+            dExtAnmTexPat_c::Prepare(*(BMD_File *)bmd, *btp);
         }
         mTexSeq->SetFile(*(BTP_File *)mTexSeqFiles[0]->filePtr, 0, 0x1000, 0);
     }

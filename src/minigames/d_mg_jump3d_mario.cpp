@@ -866,12 +866,12 @@ int dMgJump3DMario_c::LoadResources()
     if (func_020179b4(&gMarioModelMgModelFile, &mAnmModel, 1) == 0)
         return 0;
 
-    sJump3DAnimJump = (BCA_File *)dExtFrameCtrl_c::LoadFile(sJump3DMarioJumpAnimFile);
-    sJump3DAnimDoubleJump1 = (BCA_File *)dExtFrameCtrl_c::LoadFile(sJump3DMarioDoubleJump1AnimFile);
-    sJump3DAnimRollJump = (BCA_File *)dExtFrameCtrl_c::LoadFile(sJump3DMarioRollJumpAnimFile);
-    sJump3DAnimWallJump = (BCA_File *)dExtFrameCtrl_c::LoadFile(sJump3DMarioWallJumpAnimFile);
-    sJump3DAnimSdown = (BCA_File *)dExtFrameCtrl_c::LoadFile(sJump3DMarioSdownAnimFile);
-    sJump3DAnimStruggle = (BCA_File *)dExtFrameCtrl_c::LoadFile(sJump3DMarioStruggleAnimFile);
+    sJump3DAnimJump = dExtFrameCtrl_c::LoadFile(sJump3DMarioJumpAnimFile);
+    sJump3DAnimDoubleJump1 = dExtFrameCtrl_c::LoadFile(sJump3DMarioDoubleJump1AnimFile);
+    sJump3DAnimRollJump = dExtFrameCtrl_c::LoadFile(sJump3DMarioRollJumpAnimFile);
+    sJump3DAnimWallJump = dExtFrameCtrl_c::LoadFile(sJump3DMarioWallJumpAnimFile);
+    sJump3DAnimSdown = dExtFrameCtrl_c::LoadFile(sJump3DMarioSdownAnimFile);
+    sJump3DAnimStruggle = dExtFrameCtrl_c::LoadFile(sJump3DMarioStruggleAnimFile);
 
     mAnimIdx = 0;
     if (sMgMainCamera != 0)

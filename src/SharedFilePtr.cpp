@@ -317,15 +317,15 @@ extern "C" int SharedFilePtr_Destruct_Anim(int self) {
 
 #if !defined(_MSC_VER) || defined(SM64DS_PORT_GATE4B)
 /* Loads a BCA animation; the first holder rebases its offsets. */
-char *dExtFrameCtrl_c::LoadFile(SharedFilePtr &ptr) {
+BCA_File *dExtFrameCtrl_c::LoadFile(SharedFilePtr &ptr) {
     u8 refs;
-    char *file;
+    BCA_File *file;
 
     ptr.LoadFile();
     refs = ptr.numRefs;
-    file = (char *)ptr.filePtr;
+    file = (BCA_File *)ptr.filePtr;
     if (refs == 1 && file != 0) {
-        UpdateFileOffsets(*(BCA_File *)file);
+        UpdateFileOffsets(*file);
     }
     return file;
 }
@@ -343,12 +343,12 @@ extern "C" int SharedFilePtr_Destruct_TexSeq(int self) {
 }
 
 /* Loads a BTP texture animation; the first holder rebases its offsets. */
-void *dExtAnmTexPat_c::LoadFile(SharedFilePtr &ptr) {
-    void *filePtr;
+BTP_File *dExtAnmTexPat_c::LoadFile(SharedFilePtr &ptr) {
+    BTP_File *filePtr;
     ptr.LoadFile();
-    filePtr = ptr.filePtr;
+    filePtr = (BTP_File *)ptr.filePtr;
     if (ptr.numRefs == 1 && filePtr != 0) {
-        UpdateFileOffsets(*(BTP_File *)filePtr);
+        UpdateFileOffsets(*filePtr);
     }
     return filePtr;
 }

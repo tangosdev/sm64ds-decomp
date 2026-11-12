@@ -139,7 +139,7 @@ int daLuigi_c::InitResources() {
 
     mShadowModel.InitCylinder();
 
-    mAnmModel.SetAnim((BCA_File *)dExtFrameCtrl_c::LoadFile(data_ov002_0210eaa0), 0, kFxOne, 0);
+    mAnmModel.SetAnim(dExtFrameCtrl_c::LoadFile(data_ov002_0210eaa0), 0, kFxOne, 0);
 
     Vec3_Asr((Vector3 *)&t, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
