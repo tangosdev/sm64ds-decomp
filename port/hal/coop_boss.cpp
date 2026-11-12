@@ -2454,8 +2454,8 @@ void pkn_star_tick(unsigned now) {
 #ifndef PORT_ROM_CLEAN
 void pkn_knob_tick() {
     PknKnob &k = g_pknk;
-    if (!k.on || g_ticks < k.tick || k.at >= k.n) return;
-    if (!k.listed) {
+    if (!k.on || k.at >= k.n) return;
+    if (!k.listed) {                                   // listed at the first sight (before a friend's kill can take one away)
         k.nslots = 0;
         for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a && k.nslots < 8; a = (char *)_ZN8dActor_c4NextEPKS_(a))
             if (*(const unsigned short *)(a + 0x0c) == kPknCls) k.slots[k.nslots++] = rd16(a, 0xce);
@@ -2465,6 +2465,7 @@ void pkn_knob_tick() {
         std::fprintf(stderr, "[cpk-knob] %d plants, slots %d %d %d %d %d (by index)\n", k.nslots, k.slots[0], k.nslots > 1 ? k.slots[1] : -1,
                      k.nslots > 2 ? k.slots[2] : -1, k.nslots > 3 ? k.slots[3] : -1, k.nslots > 4 ? k.slots[4] : -1);
     }
+    if (g_ticks < k.tick) return;
     const int want = k.idx[k.at];
     char *a = nullptr;
     if (want >= 0 && want < k.nslots)
