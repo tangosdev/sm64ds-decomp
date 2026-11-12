@@ -2485,7 +2485,7 @@ void func_ov002_020f5fe4(char* c)
     SetSubBg1Offset(0, 0);
     SetSubBg2Offset(0, 0);
     SetSubBg3Offset(0, 0);
-    GXS_SetGraphicsMode(0);
+    GXS_SetGraphicsMode(GX_BGMODE_0);
 
     gSubScreenLayers &= ~0x1f;
 

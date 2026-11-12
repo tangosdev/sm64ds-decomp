@@ -9,6 +9,37 @@
 
 #include "nitro/hw/registers.h"
 
+/* DISPCNT's BG fields, under the SDK's names: the BG mode, and the main
+ * engine's character and screen offsets (64 KiB units). */
+#define REG_GX_DISPCNT_BGMODE_SHIFT         0
+#define REG_GX_DISPCNT_BGMODE_MASK          0x00000007
+#define REG_GX_DISPCNT_BGCHAROFFSET_SHIFT   24
+#define REG_GX_DISPCNT_BGCHAROFFSET_MASK    0x07000000
+#define REG_GX_DISPCNT_BGSCREENOFFSET_SHIFT 27
+#define REG_GX_DISPCNT_BGSCREENOFFSET_MASK  0x38000000
+
+/* The SDK's GXDispMode, GXBGMode and GXBG0As, as macros: the setters take
+ * int. A display mode that shows a VRAM bank carries the bank above the
+ * mode bits. */
+#define GX_DISPMODE_OFF      0
+#define GX_DISPMODE_GRAPHICS 1
+#define GX_DISPMODE_VRAM_A   2
+#define GX_DISPMODE_VRAM_B   6
+#define GX_DISPMODE_VRAM_C   10
+#define GX_DISPMODE_VRAM_D   14
+#define GX_DISPMODE_MMEM     3
+
+#define GX_BGMODE_0 0
+#define GX_BGMODE_1 1
+#define GX_BGMODE_2 2
+#define GX_BGMODE_3 3
+#define GX_BGMODE_4 4
+#define GX_BGMODE_5 5
+#define GX_BGMODE_6 6
+
+#define GX_BG0_AS_2D 0
+#define GX_BG0_AS_3D 1
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -69,8 +100,10 @@ void GXx_SetMasterBrightness_(volatile unsigned short *, int);
 /* Engine A's BG character and screen base offsets, DISPCNT bits 24-26 and
  * 27-29, in 64 KB steps (the SDK's GX_BGCHAROFFSET_0x?0000 and
  * GX_BGSCROFFSET_0x?0000 are 0 to 7). */
-#define GX_SetBGCharOffset(offset) (REG_DISPCNT = (u32)((REG_DISPCNT & ~0x07000000) | ((offset) << 24)))
-#define GX_SetBGScrOffset(offset) (REG_DISPCNT = (u32)((REG_DISPCNT & ~0x38000000) | ((offset) << 27)))
+#define GX_SetBGCharOffset(offset) \
+    (REG_DISPCNT = (u32)((REG_DISPCNT & ~REG_GX_DISPCNT_BGCHAROFFSET_MASK) | ((offset) << REG_GX_DISPCNT_BGCHAROFFSET_SHIFT)))
+#define GX_SetBGScrOffset(offset) \
+    (REG_DISPCNT = (u32)((REG_DISPCNT & ~REG_GX_DISPCNT_BGSCREENOFFSET_MASK) | ((offset) << REG_GX_DISPCNT_BGSCREENOFFSET_SHIFT)))
 
 /* DISPCNT bit 23: OBJ processing during H-blank. */
 #define GX_HBlankOBJProc(proc) ((proc) ? (void)(REG_DISPCNT |= 0x800000) : (void)(REG_DISPCNT &= ~0x800000))

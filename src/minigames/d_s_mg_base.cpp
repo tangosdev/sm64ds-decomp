@@ -3380,8 +3380,8 @@ void dScMgBase_c::InitEngines() {
     mBrushOnMain = 0;
     mBrushLayer = -1;
     *(vu32 *)0x4001000u |= 0x10000u;
-    GX_SetGraphicsMode(1, 0, 0);
-    GXS_SetGraphicsMode(0);
+    GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_2D);
+    GXS_SetGraphicsMode(GX_BGMODE_0);
     *(vu32 *)0x4001000u &= 0xffcfffefu;
     REG_POWCNT1 |= 0x8000u;
     Mg_DisableAllBanks();

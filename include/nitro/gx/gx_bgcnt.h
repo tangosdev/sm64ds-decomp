@@ -9,8 +9,11 @@
  * `mov #0x6600000 / add #0x2000` (func_ov002_020f39ec) where a literal
  * address would load it from the pool. */
 
-/* The two engines' OBJ character VRAM, under the SDK's memory-map names. */
-#define HW_OBJ_VRAM 0x06400000
+/* The two engines' BG and OBJ character VRAM, under the SDK's memory-map
+ * names. */
+#define HW_BG_VRAM     0x06000000
+#define HW_DB_BG_VRAM  0x06200000
+#define HW_OBJ_VRAM    0x06400000
 #define HW_DB_OBJ_VRAM 0x06600000
 
 /* The SDK's BGxCNT field setters, as macros rather than its static inlines:

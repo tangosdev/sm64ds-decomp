@@ -27,7 +27,7 @@ void func_0200f2cc(void)
     GX_SetBGScrOffset(0);
     /* Main engine on the top screen. */
     REG_POWCNT1 |= 0x8000;
-    GX_SetGraphicsMode(1, 0, 1);
+    GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_3D);
 
     GX_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
     G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,
@@ -36,7 +36,7 @@ void func_0200f2cc(void)
     G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_512x512, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0800,
                          GX_BG_CHARBASE_0x08000);
     G2_BG2Mosaic(0);
-    GXS_SetGraphicsMode(0);
+    GXS_SetGraphicsMode(GX_BGMODE_0);
 
     GXS_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
     G2S_SetBG0Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,

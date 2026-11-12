@@ -915,8 +915,8 @@ s32 dScStarSel_c::InitResources() {
     GX_SetBankForSubOBJExtPltt(GX_VRAM_SUB_OBJEXTPLTT_0_I);
     GX_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
     GXS_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
-    GX_SetGraphicsMode(1, 0, 1);
-    GXS_SetGraphicsMode(0);
+    GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_3D);
+    GXS_SetGraphicsMode(GX_BGMODE_0);
     GX_SetBGScrOffset(1);
     REG_POWCNT1 = (REG_POWCNT1 & 0xFFFFFDF1) | 0x20E;
     GX_DispOn();

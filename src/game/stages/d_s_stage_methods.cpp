@@ -4708,9 +4708,8 @@ int dScStage_c::InitResources() {
         volatile u32 *p1 = (volatile u32 *)0x04001000;
         *p0 &= 0xFFCFFFEF;
         *p1 &= 0xFFCFFFEF;
-        int one = 1;
-        GX_SetGraphicsMode(one, 0, one);
-        GXS_SetGraphicsMode(3);
+        GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_3D);
+        GXS_SetGraphicsMode(GX_BGMODE_3);
         *p0 = (*p0 & ~0x38000000) | 0x08000000;
         REG_POWCNT1 = (REG_POWCNT1 & 0xFFFFFDF1) | 0x20E;
         GX_DispOn();
