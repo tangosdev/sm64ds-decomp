@@ -2330,7 +2330,7 @@ void refresh_presence(unsigned now) {
         const bool fresh = got && age < kPresenceMs;
         // Heavy loss: presence packets go missing for seconds while the seat's hello and deltas for this very group still
         // arrive. That is proof it is here: keep it a member instead of dropping it and giving up on its kills.
-        const bool graced = got && !fresh && !g_leg_grace && g_heard[s] != 0 && (unsigned)(now - g_heard[s]) < kGraceMs;
+        const bool graced = got && !fresh && !g_leg_grace && g_heard[s] != 0 && coop_age_ms(now, g_heard[s]) < kGraceMs;
         const bool have = fresh || graced;
         g_grp.note_presence(s, have, graced ? g_key : have ? CoopKey(p.level, p.act) : CoopKey(), now);
     }

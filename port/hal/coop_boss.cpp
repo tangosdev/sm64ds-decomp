@@ -501,7 +501,7 @@ PknKnob g_pknk = {};
 bool seat_runs_owner_rule(int s, unsigned now) {
     if (s == g_my) return true;
     if (s < 0 || s >= kSeats || !g_caps_t[s]) return false;
-    return (unsigned)(now - g_caps_t[s]) < kCapsFreshMs && (g_caps[s] & kBossCapOwnerRule);
+    return coop_age_ms(now, g_caps_t[s]) < kCapsFreshMs && (g_caps[s] & kBossCapOwnerRule);
 }
 // coopbully1: A BULLY BELONGS TO THE PLAYER WHO KNOCKED IT. A bump exists only on the hitter's console (a friend's body is parked away
 // between draws, coop_target.h), so the console whose own copy entered the knocked-back state by itself owns that bully, pose and state,
@@ -2869,7 +2869,7 @@ bool coop_boss_pkn_remote_kill(char *actor) {
     if (leader->mGroupDefeatedCount == kPknGroupSize) {
         PknStar &s = g_pkn_star;
         s = PknStar();
-        s.pending = true; s.due = (now + kPknStarGraceMs) | 1u; s.join = (unsigned)(now - g_pkn_first_t) < kPknJoinMs;
+        s.pending = true; s.due = (now + kPknStarGraceMs) | 1u; s.join = coop_age_ms(now, g_pkn_first_t) < kPknJoinMs;
         s.pos.x = p->mPosX; s.pos.y = p->mPosY; s.pos.z = p->mPosZ; s.area = p->mAreaId;
         s.param = (unsigned)p->mStarID | 0x40u; s.slot = rd16(actor, 0xce);
         std::fprintf(stderr, "[cpk] group done by a friend's kill: the killer's console makes star %u%s w=%lld\n", s.param & 0xff,

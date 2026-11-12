@@ -197,6 +197,13 @@ static_assert(sizeof(CoopSecretWire) == 8, "secret is 8 bytes");
 // Validators. Each takes the PAYLOAD (after the 12-byte head) and its length,
 // range-checks everything, and returns false for anything not exactly right.
 // ---------------------------------------------------------------------------
+// How long ago a hub-ms stamp was taken. Stamps are kept odd (stamp | 1) so 0 can mean "never", which puts a stamp taken on an
+// even millisecond 1 ms ahead of a now read in that same millisecond; such a stamp (or any a few ms ahead) is age 0, not the
+// 4294967295 an unsigned difference gives. Callers check the 0 = never case themselves.
+inline unsigned coop_age_ms(unsigned now, unsigned stamp) {
+    const int d = (int)(now - stamp);
+    return d < 0 ? 0u : (unsigned)d;
+}
 inline bool coop_key_ok(const CoopKeyWire &k) {
     return k.reserved == 0 && k.level < 256 && k.act <= 8;
 }
