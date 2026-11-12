@@ -408,6 +408,7 @@ struct Boss {
     unsigned kpa_air_t;            // bowser2 BFS: wall ms since which this copy has been far above the authority's Bowser (0 = not)
     unsigned wig_talk_t;           // bossfix2: wall ms since which this Wiggler copy's own talk kept a forced state away (0 = not)
     unsigned eye_talk_t;           // bossfix2: the same for Eyerok's head (its talk state with my player)
+    unsigned wig3_ticks;           // bossfix2: ticks this Wiggler copy has stood in MOVE_START with no talk of its own
     unsigned goom_talk_tries;      // bossfix2: StartTalk attempts for a Goomboss copy put into its defeat by a record
     uint32_t bst; bool bst_valid;  // coopbully1: a bully's state at the end of the last tick (a change before the next one is the ROM's own)
     Rx rx;
@@ -532,6 +533,7 @@ void write_field(char *a, const BDesc &d, int idx, uint32_t v) {
         // point (DAMAGETALK's own choice, StateDamageTalkMain). The HP is merged before the state, so it is the group's here.
         if (v == 5u || v == 6u) {
             const unsigned hp = (unsigned char)a[0x8db];
+            if (hp <= 1u ? a[0x8e0] != 0 : (rd32(a, 0x8c4) == 3 || rd32(a, 0x8c4) == 4)) return;   // already where that talk ends
             const uint32_t nv = hp > 1u ? 3u : 7u;
             if (g_log) std::fprintf(stderr, "[cbs] wiggler copy: wire state %u is the stomper's hurt talk, entered as %u here (hp %u) w=%lld\n", v, nv, hp, wall_ms());
             v = nv;
@@ -1429,7 +1431,7 @@ void apply_rx(int slot, Boss &b, unsigned now, bool mine) {
             if ((unsigned)(now - b.kpa_talk_t) < 20000u) force = false;
         }
     }
-    // bossfix2: a Wiggler or Eyerok talk with my player on this copy is left to finish (25 s at most); the next records force then
+    // bossfix2: a Wiggler or Eyerok talk with my player on this copy is left to finish (60 s at most); the next records force then
     if (g_bf2 && !mine && (d.cls == 248 || d.cls == 176) && ls != rs) {
         unsigned &t = d.cls == 248 ? b.wig_talk_t : b.eye_talk_t;
         if (d.cls == 248 ? wig_talk_here(b) : eye_talk_here(b)) {
@@ -1437,9 +1439,15 @@ void apply_rx(int slot, Boss &b, unsigned now, bool mine) {
                 t = now ? now : 1u;
                 if (g_log) std::fprintf(stderr, "[cbs] %s talk with my player running on this copy (st=%u): the authority's st=%u waits for its end w=%lld\n", d.name, ls, rs, wall_ms());
             }
-            if ((unsigned)(now - t) < 25000u) force = false;
-            else if (force) give_camera_back(b, "talk held past 25 s");
+            if ((unsigned)(now - t) < 60000u) force = false;
+            else if (force) give_camera_back(b, "talk held past 60 s");
         } else t = 0;
+    }
+    // bossfix2 (H1): the authority's hurt talk (5 / 6) is entered here as where it ends (write_field): a copy that is already there or past
+    // it (MOVE_START / MOVE with health left, or DEAD already run: mDefeated +0x8e0) is not forced again, record after record
+    if (g_bf2 && d.cls == 248 && !mine && (rs == 5u || rs == 6u)) {
+        const bool last = (unsigned char)b.a[0x8db] <= 1u;
+        if (last ? b.a[0x8e0] != 0 : (ls == 3u || ls == 4u)) { force = false; b.mism = 0; }
     }
     // bossfix2 (H2): Eyerok's pre-fight talk is never forced onto a copy (its player would be frozen in a talk his own player did not
     // start); the copy is moved on into the fight by the next records. His after-fight talk is forced, and starts from its first step
@@ -1737,6 +1745,25 @@ void process(unsigned now) {
                     if (g_log) std::fprintf(stderr, "[cbs] goomboss authority found the set already out (%u of %u) in the summon: on to state 3, no extra goomba w=%lld\n", cnt, target, wall_ms());
                 }
             }
+        }
+        // bossfix2 (H1): MOVE_START (3) waits for its player's HasFinishedTalking, true only right after a talk. A copy that came into
+        // it with no talk of its own (the stomper's talk entered as 3 here, or the ROM's own way back from DEAD) stood there for good,
+        // the authority's copy included (measured: 60 s in state 3 on the console that did not stomp). With no talk of its own (it
+        // drives no camera) and its walk animation set (the state timer stops at 13), it ends the way the state ends: the hop by the
+        // health left, then MOVE.
+        if (g_on && g_bf2 && d.cls == 248) {
+            if (state_of(b) == 3u && !b.a[0x8e1] && (unsigned char)b.a[0x8da] >= 13u) {
+                if (++b.wig3_ticks >= 20u) {
+                    const unsigned hp = (unsigned char)b.a[0x8db];
+                    if (hp < 4u && hp > 1u) {
+                        const int32_t vs = 0x41000 - (((int)(hp - 2) * 10) << 12), va = -0x4000;
+                        std::memcpy(b.a + 0xa8, &vs, 4); std::memcpy(b.a + 0x9c, &va, 4);
+                    }
+                    _ZN12daHanachan_c8SetStateEi(b.a, 4);
+                    b.wig3_ticks = 0; b.lw_valid = false;
+                    if (g_log) std::fprintf(stderr, "[cbs] wiggler copy in MOVE_START with no talk of its own: on to MOVE (hp %u) w=%lld\n", hp, wall_ms());
+                }
+            } else b.wig3_ticks = 0;
         }
         // bossfix2 (H7): Goomboss's defeat talk (state 7, d_a_kuri_king.cpp func_ov074_0211f5b8) shows its message to mTalkPlayer and
         // waits on it, but the talk itself is started by state 5's tick (func_ov074_0211fc38: StartTalk, then state 7). A copy put into
