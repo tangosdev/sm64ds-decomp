@@ -110,6 +110,15 @@ const unsigned short kFaceCls[] = { 181, 185, 188, 257, 259 };
 unsigned short g_extra[8]; int g_nextra = 0;
 
 bool g_env = false, g_on = true, g_log = false, g_regd = false;
+bool g_kbo_once = true;      // SM64DS_COOP_TALK_KBO_ONCE=0: control, a friend's finished King talk does not end mine for the visit
+unsigned g_clock_add = 0;    // SM64DS_COOP_TALK_CLOCK_ADD=ms (proof only): the clock this file reads, pushed forward
+unsigned now_ms() { return comms_hub_now_ms() + g_clock_add; }
+// King Bob-omb's intro is one talk per level visit for the whole group: once a friend's King talk ended, mine is refused
+// until the level changes or that friend leaves the group (the fight itself is coop_boss.cpp's).
+int g_kbo_seat = -1, g_kbo_slot = -1; int g_kbo_lv = -1, g_kbo_act = -1;
+// My own cooldown: after my talk with an NPC ends I may not start the next one with it for kLingerMs, the same wait a
+// friend gets, so the one who talked last does not take it first every time.
+int g_cool_slot = -1; unsigned g_cool_until = 0;
 int g_my = -1;
 unsigned g_frame = 0;
 
@@ -124,7 +133,7 @@ struct Friend {             // what a friend last told me
     bool have; unsigned t;
     bool talk; int slot; unsigned cls; int16_t ang;
     bool look; uint8_t mode; int16_t look6[6];
-    int linger_slot; unsigned linger_until; unsigned linger_cls;
+    int linger_slot; unsigned linger_until; unsigned linger_cls; bool linger_set;   // linger_set: a real end time was taken
     bool look_applied;      // his body carries a look block from me (put back to neutral once it goes stale)
     bool raced;
 };
@@ -149,6 +158,9 @@ void read_env() {
     g_on = !(e && *e == '0');
     const char *l = std::getenv("SM64DS_COOP_TALK_LOG");
     g_log = l && *l && *l != '0';
+    const char *ko = std::getenv("SM64DS_COOP_TALK_KBO_ONCE");
+    g_kbo_once = !(ko && *ko == '0');
+    if (const char *ca = std::getenv("SM64DS_COOP_TALK_CLOCK_ADD")) g_clock_add = (unsigned)std::strtoul(ca, nullptr, 0);
     if (const char *c = std::getenv("SM64DS_COOP_TALK_CLS")) {
         for (const char *p = c; *p && g_nextra < 8;) {
             char *end = nullptr; unsigned long v = std::strtoul(p, &end, 0);
@@ -205,7 +217,7 @@ void on_world(int seat, int sub, const unsigned char *p, int len, void *) {
     CoopKeyWire k;
     if (!member(seat) || !my_key(&k) || k.level != w.key.level || k.act != w.key.act) { ++g_st.group; return; }
     Friend &f = g_fr[seat];
-    const unsigned now = comms_hub_now_ms();
+    const unsigned now = now_ms();
     const bool was_talk = f.have && f.talk;
     const int was_slot = f.slot;
     const unsigned was_cls = f.cls;
@@ -219,7 +231,14 @@ void on_world(int seat, int sub, const unsigned char *p, int len, void *) {
     std::memcpy(f.look6, w.look, sizeof f.look6);
     if (was_talk && (!f.talk || f.slot != was_slot)) {
         f.linger_slot = was_slot; f.linger_cls = was_cls;
-        f.linger_until = now + (was_cls == kClsKingBobOmb ? (unsigned)kLingerBossMs : (unsigned)kLingerMs);
+        f.linger_until = (now + (was_cls == kClsKingBobOmb ? (unsigned)kLingerBossMs : (unsigned)kLingerMs)) | 1u;   // never 0: 0 is "no linger"
+        f.linger_set = true;
+        if (was_cls == kClsKingBobOmb && g_kbo_once && g_kbo_seat < 0) {
+            int lv = -1, ac = -1; coop_group_key(&lv, &ac);
+            g_kbo_seat = seat; g_kbo_slot = was_slot; g_kbo_lv = lv; g_kbo_act = ac;
+            std::fprintf(stderr, "[cotalk] king talk done by seat %d (slot %d): my King intro is refused for this level visit w=%lld\n",
+                         seat, was_slot, wall_ms());
+        }
         if (g_log) std::fprintf(stderr, "[cotalk] lock out: seat %d done with slot %d cls %u (held for me %u ms more) w=%lld\n",
                                 seat, was_slot, was_cls, f.linger_until - now, wall_ms());
     }
@@ -251,7 +270,7 @@ int holder_of(int slot, unsigned now) {
         if (!member(s)) continue;
         const Friend &f = g_fr[s];
         if (friend_fresh(f, now) && f.talk && f.slot == slot) return s;
-        if (f.linger_slot == slot && (int)(f.linger_until - now) > 0) return s;
+        if (f.linger_set && f.linger_slot == slot && (int)(f.linger_until - now) > 0) return s;
     }
     return -1;
 }
@@ -283,7 +302,8 @@ void my_frame(unsigned now) {
     }
     if (ta != g_me.actor) {
         if (g_me.actor) {
-            ++g_st.ends; g_me.talk_end_t = now;
+            ++g_st.ends;
+            g_cool_slot = g_me.slot; g_cool_until = (now + (unsigned)kLingerMs) | 1u; g_me.talk_end_t = now;
             if (g_log) std::fprintf(stderr, "[cotalk] my talk ended: slot %d cls %u w=%lld\n", g_me.slot, g_me.cls, wall_ms());
         }
         if (ta) {
@@ -328,13 +348,23 @@ void face_frame(unsigned now) {
     }
 }
 
-void on_frame(unsigned now) {
+void on_frame(unsigned) {
     read_env();
+    const unsigned now = now_ms();
     ensure_registered();
     ++g_frame;
     g_my = comms_hub_my_seat();
     for (int s = 0; s < kSeats; ++s)
         if (!member(s) && (g_fr[s].have || g_fr[s].linger_until)) { const bool la = g_fr[s].look_applied; g_fr[s] = Friend{}; g_fr[s].linger_slot = -1; g_fr[s].look_applied = la; }
+    if (g_kbo_seat >= 0) {
+        int lv = -1, ac = -1;
+        const bool k = coop_group_key(&lv, &ac);
+        const char *why = !k || lv != g_kbo_lv || ac != g_kbo_act ? "level changed" : !member(g_kbo_seat) ? "that friend left" : nullptr;
+        if (why) {
+            std::fprintf(stderr, "[cotalk] king talk refusal cleared (%s) w=%lld\n", why, wall_ms());
+            g_kbo_seat = -1; g_kbo_slot = -1;
+        }
+    }
     my_frame(now);
     if (g_on) face_frame(now);
     if (g_log && g_frame % 1800u == 0)
@@ -343,7 +373,9 @@ void on_frame(unsigned now) {
                      g_st.looks, g_st.races, g_st.starts, g_st.ends);
 }
 
-struct Reg { Reg() { coop_on_frame(on_frame); } } g_reg;
+struct Reg {
+    Reg() { if (!coop_on_frame(on_frame)) std::fprintf(stderr, "[cotalk] frame callback NOT registered (table full): talk lock off\n"); }
+} g_reg;
 
 }  // namespace
 
@@ -358,7 +390,24 @@ bool coop_talk_refuse(void *body, void *actor) {
     if (!lock_cls(cls) || slot < 0 || slot >= kSlots) return false;
     if (*(void *const *)((const char *)body + 0x368) == actor) return false;   // already mine: the ROM answers
     g_my = comms_hub_my_seat();
-    const unsigned now = comms_hub_now_ms();
+    const unsigned now = now_ms();
+    if (cls == kClsKingBobOmb && g_kbo_once && g_kbo_seat >= 0 && slot == g_kbo_slot && rd32(a, 0x500) > 0) {   // intro only (HP > 0), never the defeat talk
+        ++g_st.refused;
+        if (g_log && (unsigned)(now - g_refuse_log_t) >= 1000u) {
+            g_refuse_log_t = now;
+            std::fprintf(stderr, "[cotalk] refused: my King intro (seat %d's King talk ended this visit) w=%lld\n", g_kbo_seat, wall_ms());
+        }
+        return true;
+    }
+    if (g_cool_slot == slot && (int)(g_cool_until - now) > 0 && coop_group_member_mask()) {
+        ++g_st.refused;
+        if (g_log && (unsigned)(now - g_refuse_log_t) >= 1000u) {
+            g_refuse_log_t = now;
+            std::fprintf(stderr, "[cotalk] refused: my own cooldown on slot %d cls %u (%d ms left) w=%lld\n", slot, cls,
+                         (int)(g_cool_until - now), wall_ms());
+        }
+        return true;
+    }
     const int h = holder_of(slot, now);
     if (h < 0) return false;
     ++g_st.refused;
@@ -375,7 +424,7 @@ void coop_talk_ghost_look(int seat, void *body) {
     if (!body || seat < 0 || seat >= kSeats || !g_on || !g_env) return;
     Friend &f = g_fr[seat];
     char *b = (char *)body;
-    const unsigned now = comms_hub_now_ms();
+    const unsigned now = now_ms();
     if (f.have && f.look && (unsigned)(now - f.t) < (unsigned)kFreshMs && coop_world_active()) {
         *(unsigned char *)(b + 0x742) = f.mode;
         for (int i = 0; i < 6; ++i) wr16(b, 0x75c + 2 * i, f.look6[i]);
