@@ -2,6 +2,7 @@
 // CP15, IRQ/CPSR, svc, matrix/math, context-switch). No C to decompile to. Per asm policy.
 // NitroSDK fx_mtx33.c: copies the 3x3 src into the upper-left of the 4x4 dst and
 // fills the rest of dst from the identity.
+#ifndef SM64DS_PLATFORM_PC
 asm void MTX_Copy33To44_(void *src, void *dst) {
     stmdb sp!, {r4}
     mov ip, #0
@@ -19,3 +20,6 @@ asm void MTX_Copy33To44_(void *src, void *dst) {
     ldmia sp!, {r4}
     bx lr
 }
+#else
+void MTX_Copy33To44_(void *src, void *dst);
+#endif

@@ -54,6 +54,7 @@
 #include "Heap.h"
 #include "BCA_File.h"
 #include "nitro/fx/fx_cp.h"
+#include "ds_width.h"
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
@@ -567,13 +568,13 @@ void dExtAnm2Model_c::Func_020162C4(u32 animFile, int flags, Fix12i speed, u16 s
 extern "C" void func_020162a4(int self, int bone) {
     dExtAnm2Model_c *model = (dExtAnm2Model_c *)self;
     s32 frame = model->otherAnim.currFrame;
-    func_02045e2c((int)&model->data, bone, model->otherFile, (u32)(frame << 4) >> 16);
+    func_02045e2c(DS_IADDR(&model->data), bone, model->otherFile, (u32)(frame << 4) >> 16);
 }
 
 /* Release bone `bone` back to the primary animation (no file, frame 0). */
 extern "C" void func_0201628c(int self, int bone) {
     dExtAnm2Model_c *model = (dExtAnm2Model_c *)self;
-    func_02045e2c((int)&model->data, bone, 0, 0);
+    func_02045e2c(DS_IADDR(&model->data), bone, 0, 0);
 }
 
 /* otherAnim.Copy(src) upcasts src to its dExtFrameCtrl_c BASE (+0x50): the

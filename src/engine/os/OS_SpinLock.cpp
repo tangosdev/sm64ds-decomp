@@ -183,14 +183,17 @@ void OSi_WaitByLoop(void)
 
 // The SDK's misspelled-name compatibility entry. A compiled forwarder would
 // route the address through ip; the SDK writes this one as asm through r1.
+#ifndef SM64DS_PLATFORM_PC
 asm s32 OS_UnLockCartridge(u16 lockID)
 {
     ldr r1, =OS_UnlockCartridge
     bx r1
 }
+#endif
 
 // Takes the lowest free ID from the two masks at HW_LOCK_ID_FLAG_MAIN:
 // 0x40 + bit for the first word, 0x60 + bit for the second, -3 if none is left.
+#ifndef SM64DS_PLATFORM_PC
 asm s32 OS_GetLockID(void)
 {
     ldr r3, =HW_LOCK_ID_FLAG_MAIN
@@ -215,7 +218,9 @@ found:
     str r2, [r3, #0]
     bx lr
 }
+#endif
 
+#ifndef SM64DS_PLATFORM_PC
 asm void OS_ReleaseLockID(u16 lockID)
 {
     ldr r3, =HW_LOCK_ID_FLAG_MAIN
@@ -230,5 +235,6 @@ asm void OS_ReleaseLockID(u16 lockID)
     str r2, [r3, #0]
     bx lr
 }
+#endif
 
 } // extern "C"

@@ -48,6 +48,7 @@
 #include "MgCamera.h"
 #include "math/Quaternion.h"
 #include "nitro/fx/fx_cp.h"
+#include "ds_width.h"
 /* Typed access to a MascotWalker record from the char* helpers below. */
 #define WALKER(p) ((MascotWalker *)(p))
 /* Typed access to a Presenter record from the char* helpers below. */
@@ -2140,7 +2141,7 @@ void MascotWalker_StartNextPath(char *c) {
     } else {
         WALKER(c)->mPathIndex = 0;
     }
-    WALKER(c)->mPath = (int)&sMascotWalkerPaths[WALKER(c)->mPathIndex];
+    WALKER(c)->mPath = DS_IADDR(&sMascotWalkerPaths[WALKER(c)->mPathIndex]);
     WALKER(c)->mPathPoint = 0;
     {
         Vector3 *point = &((WalkPath *)WALKER(c)->mPath)->points[WALKER(c)->mPathPoint];

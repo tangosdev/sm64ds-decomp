@@ -55,6 +55,7 @@
 #include "nitro/gx/g3_util.h"
 #include "nitro/gx/g3imm_cmd.h"
 #include "nitro/fx/fx_cp.h"
+#include "ds_width.h"
 
 /* Defined at the bottom of this file; every use here only takes the address. */
 extern dCamera_c::State data_0209b008;
@@ -285,7 +286,7 @@ int dCamera_c::Behavior()
     mPrevPos.y = pos.y;
     mPrevPos.z = pos.z;
     mFlags &= ~0x1000u;
-    if ((u32)mAreaMode != (u32)&data_0208733c) {
+    if ((u32)mAreaMode != DS_UADDR(&data_0208733c)) {
         mFlags &= ~0x60u;
     }
     flags = mFlags;
@@ -706,9 +707,9 @@ void dCamera_c::GoBehindPlayer(unsigned int j)
     slot4 = (int)mMode;
     slotc = 0;
     func_0200c66c(&mTargetPlayer->mPos, &slot8, &slot4, &slotc);
-    if (slot4 == (int)&data_020873dc)
+    if (slot4 == DS_IADDR(&data_020873dc))
         return;
-    if (slot4 == (int)&data_0208742c)
+    if (slot4 == DS_IADDR(&data_0208742c))
         return;
     ChangeState((State *)&data_0209b0e8);
 }
@@ -1012,7 +1013,7 @@ int dCamera_c::ChangeState(State * state)
 }
 
 void dCamera_c::SetMode(int index) {
-    mMode = (CamMode *)(index * 0x28 + (int)&data_02086fcc);
+    mMode = (CamMode *)(index * 0x28 + DS_IADDR(&data_02086fcc));
 }
 
 /* State dispatch: honors the deferred-change flags, then calls the state's
@@ -1152,7 +1153,7 @@ int dCamera_c::func_0200c66c(void *posArg, int *viewArg, int *modeArg, int *outF
         if (viewId != 0x3f)
             *outView = GetViewObj(viewId);
         if (func_0200c394(areaType, *outView, pos, outMode, outFramed) == 0) {
-            if ((u32)mMode <= (u32)&data_02086ff4 || *outMode == (void *)&data_02087274) {
+            if ((u32)mMode <= DS_UADDR(&data_02086ff4) || *outMode == (void *)&data_02087274) {
                 if (*outView != 0 && ((CamViewObj *)*outView)->type == 6)
                     *outMode = (void *)&data_0208742c;
             }

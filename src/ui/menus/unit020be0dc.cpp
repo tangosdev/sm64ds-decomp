@@ -57,6 +57,7 @@
 #include "nitro/fx/fx_trig.h"
 #include "nitro/gx/gxcommon.h"
 #include "types.h"
+#include "ds_width.h"
 #include "Ov007Model.h"
 #include "Ov007Figure.h"
 #include "Particle__System.h"
@@ -98,7 +99,9 @@ struct TrackingRecord {
     void *particle; /* 0x08: the tracked particle, 0 = free */
 };
 
+#ifndef SM64DS_HOST_64
 typedef char TrackingRecord_size_must_be_0xc[sizeof(TrackingRecord) == 0xc ? 1 : -1];
+#endif
 
 /* NitroSDK's GXOamAffine: one OBJ affine matrix, its four Q8 parameters in
  * the fourth halfword of four consecutive OAM entries. */
@@ -125,8 +128,10 @@ typedef struct Ov007ParticleSprites {
     int affine[16][4];
 } Ov007ParticleSprites;
 
+#ifndef SM64DS_HOST_64
 typedef char
     Ov007ParticleSprites_size_must_be_0x108[sizeof(Ov007ParticleSprites) == 0x108 ? 1 : -1];
+#endif
 
 extern Ov007ParticleSprites *data_ov007_02104bc0;
 extern int data_ov007_02103230;

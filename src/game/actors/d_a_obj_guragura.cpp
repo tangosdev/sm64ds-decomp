@@ -27,6 +27,7 @@
 #include "SharedFilePtr.h"
 #include "math/CalcLib.h"
 #include "math/Quaternion.h"
+#include "ds_width.h"
 
 #include "ResourceDescriptor.h"
 #include "math/MtxStack.h"
@@ -154,7 +155,11 @@ void daObjGuragura_c::TiltToward(unsigned char *arg) {
     mBumped = 1;
     data_020a0e68 = mClsnMat;
     MTX_Inverse43(&data_020a0e68, &data_020a0e68);
+#ifndef SM64DS_HOST_64
     MTX_MultVec43((Vector3 *)(arg + 0x5c), &data_020a0e68, &v);
+#else
+    MTX_MultVec43(&((dActor_c *)arg)->mPos, &data_020a0e68, &v);
+#endif
     v.y = v.y << 1;
     axis.x = 0;
     axis.z = 0;

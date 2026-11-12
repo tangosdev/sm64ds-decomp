@@ -10,6 +10,7 @@
  */
 
 #include "types.h"
+#include "ds_width.h"
 #include "nnsys/fnd.h"
 #include "nnsys/snd/fader.h"
 
@@ -41,7 +42,9 @@ typedef struct NNSSndSeqPlayer {
     u16 pad3_;                   /* 0x42 */
 } NNSSndSeqPlayer;
 
+#ifndef SM64DS_HOST_64
 typedef char NNSSndSeqPlayer_size_must_be_0x44[sizeof(NNSSndSeqPlayer) == 0x44 ? 1 : -1];
+#endif
 
 typedef struct NNSSndHandle {
     NNSSndSeqPlayer *player;

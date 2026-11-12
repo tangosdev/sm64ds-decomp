@@ -75,6 +75,7 @@ enum dScMgSnowball_c_AssetId {
 #include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
 #include "nitro/mi/memory.h"
+#include "ds_width.h"
 
 /* Declarations the recovered sources need that no project header supplies.
  * Each one was checked against include/*.h first; these are the residue. */
@@ -86,7 +87,7 @@ typedef struct Pair {
 
 /* Byte offset of a dScMgSnowball_c member, for the sites that must keep
    `pointer + constant` arithmetic because every member spelling moved bytes. */
-#define SNOW_OFF(m) ((int)&((dScMgSnowball_c *)0)->m)
+#define SNOW_OFF(m) (DS_IADDR(&((dScMgSnowball_c *)0)->m))
 
 
 extern "C" {
@@ -575,7 +576,11 @@ void dScMgSnowball_c::UpdateSnowball() {
             sys = Particle::System::FromUniqueID(id1);
             if (sys != 0) {
                 /* 0x44 lies in Particle::System's unnamed pad_042. */
+#ifndef SM64DS_HOST_64
                 ((int *)sys)[0x44 / 4] = (s16)((mBallSize - 0x4000) * 11 / 60 + 0x3000);
+#else
+                sys->emitRadius = (s16)((mBallSize - 0x4000) * 11 / 60 + 0x3000);
+#endif
                 sys->callbackParam = (s16)((mBallSize - 0x4000) * 36 / 10 / 60 + 0x1333);
                 sys->callbackVelocity = (s16)((mBallSize - 0x4000) * 26 / 10 / 60 + 0x1666);
                 sys->callbackScale = (s16)((mBallSize - 0x4000) * 8 / 10 / 60 + 0x666);
@@ -1316,7 +1321,7 @@ s32 dScMgSnowball_c::Render() {
         char *p = (char *)this + i;
         if (((dScMgSnowball_c *)p)->mArray1Active[0] == 1) {
             int scrollY = mScrollY;
-            int y = *(int *)(int)&((dScMgSnowball_c *)((char *)this + i * 8))->mArray1[0].y;
+            int y = *(int *)DS_IADDR(&((dScMgSnowball_c *)((char *)this + i * 8))->mArray1[0].y);
             if (y >= scrollY - 0x20000 &&
                 y < scrollY + 0x1a0000 + (Mg_GetTopScreenYOffset() << 0xc)) {
                 if (mArray1Kind[i] == 1) {
@@ -1337,7 +1342,7 @@ s32 dScMgSnowball_c::Render() {
     for (int i = 0; i < 0x80; i++) {
         if (mArray2Active[i] == 1) {
             int scrollY = mScrollY;
-            int y = *(int *)(int)&((dScMgSnowball_c *)((char *)this + i * 8))->mArray2[0].y;
+            int y = *(int *)DS_IADDR(&((dScMgSnowball_c *)((char *)this + i * 8))->mArray2[0].y);
             if (y >= scrollY - 0x40000 &&
                 y < scrollY + 0x1c0000 + (Mg_GetTopScreenYOffset() << 0xc)) {
                 switch (mArray2Kind[i]) {
@@ -1658,7 +1663,11 @@ s32 dScMgSnowball_c::Behavior() {
                     p = Particle::System::FromUniqueID(id1);
                     if (p != 0) {
                         /* 0x44 lies in Particle::System's unnamed pad_042. */
+#ifndef SM64DS_HOST_64
                         ((int *)p)[0x44 / 4] = 0xffff8222;
+#else
+                        p->emitRadius = 0xffff8222;
+#endif
                         p->callbackParam = 0x2e14;
                         p->callbackVelocity = 0x29cf;
                         p->callbackScale = 0xc5f;

@@ -32,6 +32,7 @@
 #include "nitro/gx/gx_load.h"
 #include "nitro/fx/fx_trig.h"
 #include "nitro/mi/memory.h"
+#include "ds_width.h"
 
 extern "C" {
 void DecompressLZ16(void *src, void *dst);
@@ -239,8 +240,8 @@ void LoadMultiBootResources(int unused) {
     LoadArchive(1);
     sPrevHeap->SetDefault();
     func_0201a5f8(6);
-    LoadOverlay((int)&OVERLAY_100_ID);
-    LoadOverlay((int)&OVERLAY_102_ID);
+    LoadOverlay(DS_IADDR(&OVERLAY_100_ID));
+    LoadOverlay(DS_IADDR(&OVERLAY_102_ID));
     sPrevHeap = ((mHeap::Heap_t *)func_0201a3e4())->SetDefault();
     LoadArchive(7);
     sPrevHeap->SetDefault();

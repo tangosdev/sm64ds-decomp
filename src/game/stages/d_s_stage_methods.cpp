@@ -91,6 +91,7 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 #include "nitro/fx/fx_cp.h"
 #include "msl/string.h"
 #include "nitro/mi/memory.h"
+#include "ds_width.h"
 
 struct OamAttr;
 
@@ -5153,14 +5154,14 @@ void LoadOrUnloadObjectOverlays(void (*fn)(int), int idx) {
         }
     }
     if (idx == 0x24 || idx == 0x26 || idx == 0x28) {
-        fn((int)&OVERLAY_60_ID);
+        fn(DS_IADDR(&OVERLAY_60_ID));
         return;
     }
     b = (gGameMode == 1);
     if (b == 0) {
-        fn((int)&OVERLAY_98_ID);
+        fn(DS_IADDR(&OVERLAY_98_ID));
     }
-    fn((int)&OVERLAY_102_ID);
+    fn(DS_IADDR(&OVERLAY_102_ID));
 }
 
 /* The STAGE registry factory. Every instruction falls out of the one `new`:

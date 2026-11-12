@@ -11,6 +11,7 @@
 // flush per block that this older SDK does not do. It uses r4-r7 without saving them and
 // never returns by itself, so there is no C to write. Per asm policy.
 extern void AutoloadCallback(void *argv[]);
+#ifndef SM64DS_PLATFORM_PC
 asm void do_autoload(void) {
     ldr     r0, =0x2004ad8
     ldr     r1, [r0]
@@ -45,3 +46,6 @@ in3:
     blo     in3
     b       AutoloadCallback
 }
+#else
+void do_autoload(void);
+#endif

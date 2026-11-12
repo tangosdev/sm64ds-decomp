@@ -93,6 +93,7 @@
 #include "private/mtx43.h"
 #include "LevelRng.h"
 #include "nitro/fx/fx_cp.h"
+#include "ds_width.h"
 
 struct dBgPi;
 
@@ -565,7 +566,7 @@ void daYegg_c::SeekHoming() {
             b = (s32)((fb0 & daYegg_FLAG_FLYING) != 0);
             if (b != 0) {
                 if (mWithMeshClsn.GetResultFlag1() != 0) {
-                    HandleWallHit((int)&mWithMeshClsn);
+                    HandleWallHit(DS_IADDR(&mWithMeshClsn));
                     func_ov002_020edca4(this);
                     return;
                 }

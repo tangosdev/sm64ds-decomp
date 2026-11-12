@@ -33,6 +33,7 @@
 #include "nitro/os/system.h"
 #include "nitro/hw/registers.h"
 #include "nitro/mi/dma.h"
+#include "ds_width.h"
 
 /* NitroSDK's inline IME helpers (os/common/interrupt.h): each returns the
  * previous master enable. File-local because an inline body in a shared
@@ -125,7 +126,7 @@ void CTRDGi_InitModuleInfo(void) {
     }
     MI_CpuCopy32((int *)0xffff0020, data_020a9e00.nintendoLogo, 0x9c);
     DC_FlushAll();
-    data = (((unsigned int)&data_020a9e00 + 0xfe000000) >> 5) << 6 | 1;
+    data = ((DS_UADDR(&data_020a9e00) + 0xfe000000) >> 5) << 6 | 1;
     CTRDGi_SendtoPxi(data);
     if (CTRDGi_Work.subpState != 1) {
         do {

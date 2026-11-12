@@ -1,5 +1,6 @@
 //cpp
 #include "types.h"
+#include "ds_width.h"
 #include "Ov007MenuState.h"
 #include "Ov007Work.h"
 #include "Ov007Item.h"
@@ -9,8 +10,10 @@
 
 extern "C" {
 
+#ifndef SM64DS_HOST_64
 typedef char
-    Ov007Work_itemViews_must_be_at_0x114[(int)&((Ov007Work *)0)->itemViews == 0x114 ? 1 : -1];
+    Ov007Work_itemViews_must_be_at_0x114[DS_IADDR(&((Ov007Work *)0)->itemViews) == 0x114 ? 1 : -1];
+#endif
 
 /* Per-item idle effects, by item id: item 0 bobs its y about the layout's
  * home row on a 50-frame sine; item 1 arms a 60-frame wiggle every 270 frames

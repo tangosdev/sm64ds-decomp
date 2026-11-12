@@ -1,5 +1,6 @@
 //cpp
 #include "types.h"
+#include "ds_width.h"
 #include "private/watchdog_alarm.h"
 #include "nitro/os/system.h"
 #include "nitro/os/alarm.h"
@@ -36,7 +37,9 @@ inline WatchdogAlarm::WatchdogAlarm() {
     func_0201aa18(this);
 }
 
+#ifndef SM64DS_HOST_64
 typedef char WatchdogAlarm_must_be_0x44[sizeof(WatchdogAlarm) == 0x44 ? 1 : -1];
+#endif
 
 unsigned short data_0209d534[32];
 WatchdogAlarm data_0209d574;

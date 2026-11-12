@@ -71,6 +71,7 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "ds_width.h"
 
 /* Written as the real constructor, which is the form the legacy shard recovered
    and byte-matched. Two steps, and neither is spelled below: the dActor_c
@@ -385,7 +386,7 @@ int dEnemyBase_c::UpdateDeath(dBgCh_Actr &clsn) {
 extern "C" int func_ov002_020ae5c8(dEnemyBase_c *c, int x);
 
 int EnemyDeathC::func_ov002_020ae64c(dBgCh_Actr &clsn) {
-    int x = (int)&clsn;
+    int x = DS_IADDR(&clsn);
     if (mDeathTimer >= 5) {
         int v = mScaleY - 0x23d;
         if (v < 0x4cc)

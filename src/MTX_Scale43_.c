@@ -7,6 +7,7 @@
 #include "math/Matrix.h"
 
 #pragma thumb on
+#ifndef SM64DS_PLATFORM_PC
 asm void MTX_Scale43_(Matrix4x3 *m, int sx, int sy, int sz) {
     stmia r0!, {r1}
     mov r1, #0
@@ -20,3 +21,6 @@ asm void MTX_Scale43_(Matrix4x3 *m, int sx, int sy, int sz) {
     stmia r0!, {r1, r2, r3}
     bx lr
 }
+#else
+void MTX_Scale43_(Matrix4x3 *m, int sx, int sy, int sz);
+#endif

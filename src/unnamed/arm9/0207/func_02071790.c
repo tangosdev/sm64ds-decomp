@@ -13,6 +13,7 @@
 struct ThrowContext;
 struct ActionIterator;
 
+#ifndef SM64DS_PLATFORM_PC
 asm void func_02071790(struct ThrowContext *context, struct ActionIterator *iterator, int pad) {
     ldr r4, [r0, #0x2c]
     ldr r5, [r0, #0x30]
@@ -27,3 +28,6 @@ asm void func_02071790(struct ThrowContext *context, struct ActionIterator *iter
     sub sp, sp, r12
     mov pc, r2
 }
+#else
+void func_02071790(struct ThrowContext *context, struct ActionIterator *iterator, int pad);
+#endif

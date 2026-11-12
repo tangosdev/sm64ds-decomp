@@ -1,4 +1,5 @@
 #include "types.h"
+#include "ds_width.h"
 #include "Ov007Work.h"
 #include "Ov007Display.h"
 #include "Ov007Item.h"
@@ -22,7 +23,9 @@ typedef struct Ov007NodeSprites {
     u8 *animIndices; /* 0x04: per animation, its index in the bank */
 } Ov007NodeSprites;
 
+#ifndef SM64DS_HOST_64
 typedef char Ov007NodeSprites_size_must_be_0x8[sizeof(Ov007NodeSprites) == 0x8 ? 1 : -1];
+#endif
 
 /* Builds item node `index` (func_ov007_020b6d40 builds nine): the item, with
  * its layout row from data_ov007_020ccbc4 and no hit box, and its OAM node

@@ -87,6 +87,7 @@ enum daKuriKing_c_AssetId {
 #include "common.h"
 #include "daKuriKing_c.h"
 #include "types.h"
+#include "ds_width.h"
 #include "SharedFilePtr.h"
 #include "SpawnInfo.h"
 #include "dExtAnmMaterial_c.h"
@@ -536,14 +537,14 @@ void daKuriKing_c::UpdateScaleChange() {
             unsigned char* p;
             b = FinishTurnAround();
             if (b == 0) return;
-            p = (unsigned char*)(((int)&this->mSubState));
+            p = (unsigned char*)((DS_IADDR(&this->mSubState)));
             *p = *p + 1;
             PlayAnim(0);
             func_02012694(0x15c, &this->mCamSpacePosX);
             return;
         }
         {
-            unsigned char* p = (unsigned char*)(((int)&this->mSubState));
+            unsigned char* p = (unsigned char*)((DS_IADDR(&this->mSubState)));
             *p = *p + 1;
         }
         PlayAnim(0);
@@ -664,7 +665,7 @@ L90:;
 
     sp2->mMinionIndex = this->mSpawnedCount;
     /* Same pool-address increment as mSubState: 0x602 is not an ARM immediate. */
-    u8* spawnedCount = (u8*)(((int)&this->mSpawnedCount));
+    u8* spawnedCount = (u8*)((DS_IADDR(&this->mSpawnedCount)));
     *spawnedCount = (u8)(*spawnedCount + 1);
     this->mTimer = 2;
 
@@ -802,7 +803,7 @@ void daKuriKing_c::UpdateIntroTalk() {
     player->mAngleZ = ang.v[2];
 
     {
-        int pv = (int)&player->mPosX;
+        int pv = DS_IADDR(&player->mPosX);
         msgpos[0].x = *(int*)pv;
         msgpos[0].y = *(int*)(pv + 4);
         msgpos[0].z = *(int*)(pv + 8);
@@ -1467,7 +1468,7 @@ void daKuriKing_c::UpdateAnimation() {
 /* The animation table behind data_ov074_02122f34: one record per clip --
  * the SharedFilePtr that holds the BCA_File, the matching BTA_File for the
  * texture transformer, and SetAnim's animation index. */
-struct KuriKingAnimFile { u16 fileID; u8 numRefs; void *filePtr; };
+struct KuriKingAnimFile { u16 fileID; u8 numRefs; void * DS_P32 filePtr; };
 struct KuriKingAnimEntry { KuriKingAnimFile *anim; void *btaFile; int animArg; };
 extern KuriKingAnimEntry data_ov074_02122f34[];
 

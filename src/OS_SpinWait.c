@@ -12,6 +12,7 @@
  */
 #include "nitro/os/system.h"
 
+#ifndef SM64DS_PLATFORM_PC
 asm void OS_SpinWait(u32 cycles)
 {
 L0:
@@ -19,3 +20,11 @@ L0:
     bhs L0;
     bx lr
 }
+#else
+void OS_SpinWait(u32 cycles)
+{
+    /* subs/bhs: four cycles per pass, stop once fewer than four remain. */
+    while (cycles >= 4)
+        cycles -= 4;
+}
+#endif

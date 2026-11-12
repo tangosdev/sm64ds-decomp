@@ -33,6 +33,7 @@ extern float func_0206ddcc(float a, int op);
 extern float func_0206dd30(float a, float b, int op);
 extern void _fsub_core(void);
 
+#ifndef SM64DS_PLATFORM_PC
 asm float _fadd(float a, float b)
 {
     mov r2, #1
@@ -343,3 +344,6 @@ _L448:
     ldmia sp!, {lr}
     bx lr
 }
+#else
+float _fadd(float a, float b);
+#endif

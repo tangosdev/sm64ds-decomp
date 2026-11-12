@@ -4,6 +4,7 @@
 #include "types.h"
 #include "Ov007StrokePath.h"
 #include "Ov007Spring.h"
+#include "ds_width.h"
 
 /* Reconstructed names and layout, not an original class identity. */
 
@@ -111,7 +112,7 @@ typedef struct Ov007Picker {
 
 #ifndef SM64DS_PLATFORM_PC
 typedef char Ov007Picker_size_must_be_0xd0[sizeof(Ov007Picker) == 0xd0 ? 1 : -1];
-typedef char Ov007Picker_camera_must_be_at_0xa8[(int)&((Ov007Picker *)0)->camera == 0xa8 ? 1 : -1];
+typedef char Ov007Picker_camera_must_be_at_0xa8[DS_IADDR(&((Ov007Picker *)0)->camera) == 0xa8 ? 1 : -1];
 #endif
 
 #ifdef __cplusplus

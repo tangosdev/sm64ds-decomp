@@ -116,7 +116,10 @@ struct daSnowmanAnimationFilePtr : SharedFilePtr {
 };
 typedef char daSnowmanModelFilePtr_size_must_be_8[sizeof(daSnowmanModelFilePtr) == 8 ? 1 : -1];
 typedef char daSnowmanAnimationFilePtr_size_must_be_8[sizeof(daSnowmanAnimationFilePtr) == 8 ? 1 : -1];
+#include "ds_width.h"
+#ifndef SM64DS_HOST_64
 typedef char daSnowman_State_size_must_be_0x10[sizeof(daSnowman_c::State) == 0x10 ? 1 : -1];
+#endif
 
 extern daSnowmanModelFilePtr data_ov081_02128d90; /* snowball model, file 0x424 */
 extern daSnowmanModelFilePtr data_ov081_02128db0; /* body model, file 0x420 */

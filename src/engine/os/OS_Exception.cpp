@@ -61,6 +61,7 @@ void OS_SetUserExceptionHandler(OSExceptionHandler handler, void *arg) {
 /* Run the debugger's handler if there is one. Otherwise save r0-r3, sp and
  * lr below the end of ITCM, record the context on an abort (mode 0x17) or an
  * undefined instruction (0x1b), and halt. */
+#ifndef SM64DS_PLATFORM_PC
 asm void OSi_ExceptionHandler(void) {
     ldr ip, =data_020a63a8
     ldr ip, [ip]
@@ -94,9 +95,13 @@ Lspin2:
     mov sp, ip
     bx lr
 }
+#else
+void OSi_ExceptionHandler(void);
+#endif
 
 /* Pushes lr alone and calls out with no stack pad, which mwccarm never
  * emits for C: the SDK writes this one as asm. */
+#ifndef SM64DS_PLATFORM_PC
 asm void OSi_GetAndDisplayContext(void) {
     stmdb sp!, {lr}
     bl OSi_SetExContext
@@ -104,10 +109,14 @@ asm void OSi_GetAndDisplayContext(void) {
     ldmia sp!, {lr}
     bx lr
 }
+#else
+void OSi_GetAndDisplayContext(void);
+#endif
 
 /* Copy the faulting context into OSi_ExContext: the registers saved at ip,
  * r4-r11, the CP15 and exception-mode words, and the banked sp, lr and spsr
  * of the mode that faulted. */
+#ifndef SM64DS_PLATFORM_PC
 asm void OSi_SetExContext(void) {
     ldr r1, =data_020a63ac
     mrs r2, cpsr
@@ -145,18 +154,25 @@ asm void OSi_SetExContext(void) {
     msr cpsr_fsxc, r0
     bx lr
 }
+#else
+void OSi_SetExContext(void);
+#endif
 
 /* Call the user's exception handler in system mode (0x9f) on the current
  * stack, with the protection unit on. */
 void OSi_DisplayExContext(void) {
     if (data_020a63a0 == 0)
         return;
+    #ifndef SM64DS_PLATFORM_PC
     asm {
         mov r0, sp
         ldr r1, =0x9f
         msr cpsr_fsxc, r1
         mov sp, r0
     }
+    #else
+    /* host: no cpsr mode switch */
+    #endif
     OS_EnableProtectionUnit();
     data_020a63a0((u32)&data_020a63ac, data_020a63a4);
     OS_DisableProtectionUnit();

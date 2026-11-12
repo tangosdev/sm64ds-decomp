@@ -10,6 +10,7 @@
  * This SDK is older than pret's: nothing here takes the sound mutex, and
  * the linker dropped the instrument and wave-data readers. */
 #include "types.h"
+#include "ds_width.h"
 #include "nitro/os/cache.h"
 
 extern "C" {
@@ -17,13 +18,13 @@ extern "C" {
 struct SNDWaveArc;
 
 struct SNDWaveArcLink {
-    SNDWaveArc *waveArc;  /* 0x00 */
-    SNDWaveArcLink *next; /* 0x04 */
+    SNDWaveArc * DS_P32 waveArc;  /* 0x00 */
+    SNDWaveArcLink * DS_P32 next; /* 0x04 */
 };
 
 struct SNDWaveArc {
     char header[0x18];       /* 0x00 -- file header and data block header */
-    SNDWaveArcLink *topLink; /* 0x18 */
+    SNDWaveArcLink * DS_P32 topLink; /* 0x18 */
     char reserved[0x1c];     /* 0x1c */
     u32 waveCount;           /* 0x38 */
 };

@@ -32,6 +32,7 @@
 // Header order preserves the measured mwccarm 2004/b56 output.
 #include "PathLift.h"
 #include "types.h"
+#include "ds_width.h"
 #include "decl_PathPtr.h"
 #include "decl_common.h"
 #include "common.h"
@@ -59,7 +60,7 @@ struct BMD_File;
 struct PathStuff {
     u16 fileID;
     u8 numRefs;
-    void *filePtr;
+    void * DS_P32 filePtr;
 };
 extern PathStuff data_ov002_0210d9f0;
 
@@ -147,7 +148,7 @@ void dPathLiftActor_c::StateFall()
         raw = mFallAngle;
         v = FX_SinIdx((u16)(int)(long long)raw >> 4);
         mPosY = mFallStartY + (s32)(u32)((((long long)v << 15) + 0x800) >> 12);
-        *(u16 *)((int)&mFallAngle) = (u16)(*(u16 *)((int)&mFallAngle) + 0x3000);
+        *(u16 *)(DS_IADDR(&mFallAngle)) = (u16)(*(u16 *)(DS_IADDR(&mFallAngle)) + 0x3000);
         return;
     }
     UpdatePos(0);

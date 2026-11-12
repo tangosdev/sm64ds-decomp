@@ -36,6 +36,7 @@
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "LevelRng.h"
+#include "ds_width.h"
 
 /* File 0x217 / 0x218 resource handles. The static initializer registers
  * their destructors; the spellings are this TU's, mapped onto
@@ -1323,7 +1324,7 @@ void Heyho_SeparateAll(void) {
                 if (sHeyhos[j].IsChasing() != 0) {
                     /* The long long widening is load-bearing (re-measured 2026-11-11):
                        dropping it costs Heyho_SeparateAll 15 words. */
-                    oj = (Heyho *)((long long)(int)&sHeyhos[j]);
+                    oj = (Heyho *)((long long)DS_IADDR(&sHeyhos[j]));
                     pj = &oj->mPos;
                     Vec3_Sub(&v1, pi, pj);
                     Vec3_Sub(&v2, ai, &oj->mVel);

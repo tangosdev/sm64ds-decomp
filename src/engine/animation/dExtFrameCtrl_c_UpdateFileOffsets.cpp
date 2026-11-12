@@ -11,8 +11,8 @@
 
 void dExtFrameCtrl_c::UpdateFileOffsets(BCA_File &file)
 {
-    file.scaleValues = (s32 *)((char *)&file + (int)file.scaleValues);
-    file.rotationValues = (s16 *)((char *)&file + (int)file.rotationValues);
-    file.translationValues = (s32 *)((char *)&file + (int)file.translationValues);
-    file.boneTracks = (BCA_BoneTrack *)((char *)&file + (int)file.boneTracks);
+    file.scaleValues = (s32 *)((char *)&file + DS_IADDR(file.scaleValues));
+    file.rotationValues = (s16 *)((char *)&file + DS_IADDR(file.rotationValues));
+    file.translationValues = (s32 *)((char *)&file + DS_IADDR(file.translationValues));
+    file.boneTracks = (BCA_BoneTrack *)((char *)&file + DS_IADDR(file.boneTracks));
 }

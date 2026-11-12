@@ -24,6 +24,7 @@
 
 extern unsigned int *func_0207322c(void);
 
+#ifndef SM64DS_PLATFORM_PC
 asm unsigned int __fp_status(unsigned int mask, unsigned int flags)
 {
     and r2, r0, #0x1f
@@ -46,3 +47,6 @@ asm unsigned int __fp_status(unsigned int mask, unsigned int flags)
     orr r0, r0, #0x40000000
     bx lr
 }
+#else
+unsigned int __fp_status(unsigned int mask, unsigned int flags);
+#endif

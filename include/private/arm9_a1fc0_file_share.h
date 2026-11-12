@@ -189,13 +189,22 @@ typedef struct FileShareWork {
                                                          mIsParent */
 } FileShareWork;
 
+#include "ds_width.h"
+#ifndef SM64DS_HOST_64
 typedef char
     FileShareNode_size_must_be_0xcc0[sizeof(FileShareNode) == FILE_SHARE_NODE_SIZE ? 1 : -1];
+#endif
+#ifndef SM64DS_HOST_64
 typedef char
     FileShareParentArea_size_must_be_0x2730[sizeof(FileShareParentArea) == 0x2730 ? 1 : -1];
+#endif
+#ifndef SM64DS_HOST_64
 typedef char FileShareChildArea_size_must_be_0xc7c[sizeof(FileShareChildArea) == 0xc7c ? 1 : -1];
+#endif
 typedef char FileShareMsg_size_must_be_0xc[sizeof(FileShareMsg) == 0xc ? 1 : -1];
+#ifndef SM64DS_HOST_64
 typedef char FileShareWork_size_must_be_0x2b70[sizeof(FileShareWork) == 0x2b70 ? 1 : -1];
+#endif
 
 /* The work block itself, in .bss: it ends at 0x020a4b30, below the next
  * symbol (0x020a4b40). data_020a2400 is its mArea under a symbol of its own. */

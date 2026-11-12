@@ -2,6 +2,7 @@
 #define OV007_SETTINGS_H
 
 #include "types.h"
+#include "ds_width.h"
 
 /* Reconstructed names and layout, not an original class identity. */
 
@@ -41,7 +42,7 @@ typedef struct Ov007BootArgs {
 
 #ifndef SM64DS_PLATFORM_PC
 typedef char
-    Ov007BootArgs_messages_must_be_at_0x9c[(int)&((Ov007BootArgs *)0)->messages == 0x9c ? 1 : -1];
+    Ov007BootArgs_messages_must_be_at_0x9c[DS_IADDR(&((Ov007BootArgs *)0)->messages) == 0x9c ? 1 : -1];
 /* It lives at data_0209b340 (data_0209b34b, 0209b34e and 0209b3d8 are its
  * fileUsed, highestUnlockedPlusOne and level1dStars). The next symbol past
  * it is 0xac bytes in, but nothing in ov007 reads past messages. */

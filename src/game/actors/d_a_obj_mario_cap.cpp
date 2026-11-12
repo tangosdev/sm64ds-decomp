@@ -140,6 +140,7 @@ enum daObjMarioCap_c_AssetId {
 #include "math/Approach.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
+#include "ds_width.h"
 
 /* --------------------------------------------------------------------------
  * Local shapes the merged members need.
@@ -593,7 +594,7 @@ int daObjMarioCap_c::Render()
 
     int t = mType;
     if (t == 4 || t == 17 || t == 5 || t == 18 || t == 16 || t == 11 || (unsigned)(t - 6) <= 3) {
-        if (!(mBlinkHidden & 1) || mStateEntry == (int)&data_ov002_0210df54) {
+        if (!(mBlinkHidden & 1) || mStateEntry == DS_IADDR(&data_ov002_0210df54)) {
             mAnmModel.dExtSimpleModel_c::Render(&mScale);
         }
     } else {

@@ -20,6 +20,7 @@
 #include "nitro/os/protectionRegion.h"
 #include "nitro/hw/mmap_tcm.h"
 #include "nitro/os/emulator.h"
+#include "ds_width.h"
 
 /* OSArenaId */
 #define OS_ARENA_MAIN 0
@@ -29,8 +30,14 @@
 #define OS_ARENA_SHARED 5
 #define OS_ARENA_WRAM_MAIN 6
 
+#ifndef SM64DS_HOST_64
 #define OSi_ARENA_LO ((unsigned int *)0x027ffda0)
 #define OSi_ARENA_HI ((unsigned int *)0x027ffdc4)
+#else
+/* 4-byte bus slots. The constant is zero-extended to a pointer on a 64-bit host. */
+#define OSi_ARENA_LO ((unsigned int *)(uintptr_t)0x027ffda0)
+#define OSi_ARENA_HI ((unsigned int *)(uintptr_t)0x027ffdc4)
+#endif
 
 extern "C" {
 

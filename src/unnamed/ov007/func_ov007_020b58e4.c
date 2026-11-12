@@ -1,12 +1,15 @@
 #include "types.h"
+#include "ds_width.h"
 #include "Ov007MenuState.h"
 #include "Ov007Sprite.h"
 #include "Ov007Work.h"
 #include "Ov007Item.h"
 
-typedef char Ov007Work_transitionMode_must_be_at_0x20[(int)&((Ov007Work *)0)->transitionMode == 0x20
+#ifndef SM64DS_HOST_64
+typedef char Ov007Work_transitionMode_must_be_at_0x20[DS_IADDR(&((Ov007Work *)0)->transitionMode) == 0x20
                                                           ? 1
                                                           : -1];
+#endif
 
 /* Load-bearing: reading view->item in place instead of through this inline
  * costs 19 mismatches at 2004/b56. */

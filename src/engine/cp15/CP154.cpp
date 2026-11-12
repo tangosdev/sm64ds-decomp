@@ -11,6 +11,7 @@
 extern "C" {
 // HAND-ASM PRIMITIVE: CP15 control-register primitive; mrc/mcr p15 are
 // unreachable from C, so the asm block is the source.
+#ifndef SM64DS_PLATFORM_PC
 asm int func_0206da64(void) {
     mov r0, #1
     b lbl
@@ -26,14 +27,25 @@ lbl:
     mov r0, r2
     bx lr
 }
+#else
+int func_0206da64(void);
+#endif
 
 // HAND-ASM PRIMITIVE: CP15 cache primitive; mrc p15 is unreachable from C, so
 // the asm block is the source.
+#ifndef SM64DS_PLATFORM_PC
 asm void func_0206da94(void) { mrc p15, 0, r0, c7, c10, 1; bx lr }
+#else
+void func_0206da94(void);
+#endif
 
 // HAND-ASM PRIMITIVE: CP15 cache primitive; mrc p15 is unreachable from C, so
 // the asm block is the source.
+#ifndef SM64DS_PLATFORM_PC
 asm void func_0206da9c(void) { mrc p15, 0, r0, c7, c6, 1; bx lr }
+#else
+void func_0206da9c(void);
+#endif
 }
 
 #pragma push
@@ -46,7 +58,11 @@ namespace CP15 {
 unsigned int MPUGetDataRegion7(void)
 {
     unsigned int v;
+    #ifndef SM64DS_PLATFORM_PC
     asm { mrc p15,0,v,c6,c7,0 }
+    #else
+    v = 0;
+    #endif
     return v;
 }
 
@@ -62,7 +78,11 @@ namespace CP15 {
 
 void MPUDataRegion7(unsigned int x)
 {
+    #ifndef SM64DS_PLATFORM_PC
     asm { mcr p15,0,x,c6,c7,0 }
+    #else
+    (void)x;
+    #endif
 }
 
 }

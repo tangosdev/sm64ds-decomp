@@ -22,6 +22,7 @@ extern unsigned int *func_0207322c(void);
 extern float func_0206dd30(float a, float b, int op);
 extern float func_0206dc7c(double a, double b, int op);
 
+#ifndef SM64DS_PLATFORM_PC
 asm double func_01ff97d8(double a, double b)
 {
     mov r3, #0xff000000
@@ -826,3 +827,6 @@ _Lb4c:
     ldmia sp!, {lr}
     bx lr
 }
+#else
+double func_01ff97d8(double a, double b);
+#endif
