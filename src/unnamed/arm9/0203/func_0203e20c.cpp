@@ -2,6 +2,7 @@
 #include "types.h"
 #include "Memory.h"
 #include "private/mb_views.h"
+#include "nitro/mb/mb.h"
 #include "private/fs_views.h"
 #include "nitro/wm/wm_api.h"
 
@@ -34,24 +35,18 @@ extern u16 data_020a11c4[4];
 extern WMStatus data_020a1680;
 extern u8 data_020a1780[];
 
-extern u8 MB_CommGetChildrenNumber(void);
 extern void func_0203f9d4(void *sysBuf, int callback);
 extern void func_0203e978(struct ChannelReply *reply);
 extern int OS_GetTickLo(void);
 extern int MB_Init(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, int dma);
 extern int MB_SetParentCommParam(int a, int b, int c);
-extern void MB_CommSetParentStateCallback(u32 val);
-extern void func_0203e9a8(u32 a0, int sel, int a2);
+extern void func_0203e9a8(u16 aid, u32 status, void *arg);
 extern int MB_StartParent(int param0);
 extern u32 MB_GetSegmentLength(FSFile *file);
 extern int MB_ReadSegment(FSFile *file, void *buf, u32 len);
 extern int MB_RegisterFile(MBGameRegistry *game_reg, const void *buf);
 extern void MI_CpuFill8(void *dst, unsigned char val, unsigned int size);
-extern void *MB_CommGetChildUser(u16 idx);
-extern int MB_CommGetParentState(u16 a);
-extern int MB_CommResponseRequest(u16 arg0, int sel);
 extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
-extern int MB_CommIsBootable(u16 idx);
 extern void MB_End(void);
 
 #define H(base, off) (*(u16 *)((char *)(base) + (off)))
@@ -111,7 +106,7 @@ void func_0203e20c(void)
         MB_Init(data_020a0f3c, data_020a10fc, H(data_020a1064, 6), H(data_020a1064, 8),
                 data_020a0f20, 1);
         MB_SetParentCommParam(0x1fe, 8, 3);
-        MB_CommSetParentStateCallback((u32)func_0203e9a8);
+        MB_CommSetParentStateCallback(func_0203e9a8);
         MB_StartParent(data_020a0f28);
         size = MB_GetSegmentLength(0);
         p = Memory::Allocate(size, 0x20);
@@ -129,11 +124,11 @@ void func_0203e20c(void)
         int i2;
         u8 *p9;
         u8 *p11;
-        void *found;
+        const MBUserInfo *found;
         u8 *pIdx;
         u8 *base1112;
         int idx;
-        int sel1;
+        MBCommResponseRequestType sel1;
         int oneVal;
 
         cnt2 = 1;
@@ -156,22 +151,22 @@ void func_0203e20c(void)
         pIdx = data_020a0f9d;
         base1112 = data_020a1112;
         idx = 1;
-        sel1 = idx;
+        sel1 = MB_COMM_RESPONSE_REQUEST_ACCEPT;
         oneVal = idx;
         do {
             found = MB_CommGetChildUser(idx);
             if (found != 0 && ((H(data_020a1780, 0x7e) >> idx) & 1)) {
                 if (idx < 4) {
-                    if (MB_CommGetParentState(idx) == 0xA) {
+                    if (MB_CommGetParentState(idx) == MB_COMM_PSTATE_REQUESTED) {
                         MB_CommResponseRequest(idx, sel1);
-                    } else if (MB_CommGetParentState(idx) == 0xE) {
+                    } else if (MB_CommGetParentState(idx) == MB_COMM_PSTATE_WAIT_TO_SEND) {
                         cnt2 += 1;
                     }
                     *pIdx = oneVal;
                     MI_CpuCopy8(found, base1112, 0x16);
                     data_020a0f08 += 1;
-                } else if (MB_CommGetParentState(idx) == 0xA) {
-                    MB_CommResponseRequest(idx, 0);
+                } else if (MB_CommGetParentState(idx) == MB_COMM_PSTATE_REQUESTED) {
+                    MB_CommResponseRequest(idx, MB_COMM_RESPONSE_REQUEST_KICK);
                 }
             }
             idx += 1;
@@ -183,10 +178,10 @@ void func_0203e20c(void)
             if ((u32)data_020a0f08 > 1U) {
                 u8 j;
                 u8 deadcnt;
-                int sel2;
+                MBCommResponseRequestType sel2;
                 deadcnt = 0;
                 j = 1;
-                sel2 = 2;
+                sel2 = MB_COMM_RESPONSE_REQUEST_DOWNLOAD;
                 do {
                     if (MB_CommResponseRequest(j, sel2) == 1) {
                         deadcnt = (u8)(deadcnt + 1);
@@ -227,7 +222,7 @@ void func_0203e20c(void)
                 cnt = 0;
                 m = 1;
                 do {
-                    if (MB_CommResponseRequest(m, 3) == 1) {
+                    if (MB_CommResponseRequest(m, MB_COMM_RESPONSE_REQUEST_BOOT) == 1) {
                         cnt = (u8)(cnt + 1);
                     }
                     m = (u8)(m + 1);

@@ -65,20 +65,16 @@
 
 extern "C" {
 
-/* sDmaNo, sWmWork, mbc (MB_Parent.cpp's pPwork) and sScanParam. */
+/* sDmaNo, sWmWork and sScanParam; mbc and pPwork are mb_parent's
+ * (private/arm9_a9db8_mb_parent.h). */
 extern u16 data_020a9db0;
 extern char *data_020a9db4;
-extern char *data_020a9db8;
 extern WMScanParam data_020a9dc0;
 /* The smallest frame a parent sends (6), the SDK's MB_COMM_P_SENDLEN_MIN
  * side of MBi_SendMP. */
 extern int data_0209a088;
 /* MB_Init's cursor over the parent name, a static in the SDK's MB_Init. */
 extern u16 *data_0209a084;
-
-/* Typed through a cast: the other declarations of data_020a9db8 spell it as
- * a byte pointer (MB_Parent.cpp's MB_WORK). */
-#define MB_WORK ((MbParentWork *)data_020a9db8)
 
 /* nitro/math.h's round-up, which MB_Init uses to align the caller's work
  * buffer to a cache line before carving it. */
@@ -133,9 +129,7 @@ extern void MI_DmaCopy16(unsigned int ch, void *src, void *dst, unsigned int n);
 extern void MI_CpuCopy8(const void *src, void *dst, u32 size);
 extern void MI_CpuFill8(void *dst, u8 val, u32 size);
 
-extern void MB_CommSetParentStateCallback(u32 callback);
 extern void MB_InitSendGameInfoStatus(void);
-extern void MBi_CommParentCallback(int type, char *arg);
 
 void MBi_CheckWmErrcode(int apiid, int errcode);
 int MBi_CommEnd(void);
@@ -193,7 +187,7 @@ int MBi_IsSendEnabled(void) {
  * MBi_EndCommon, starts the parent with WMi_StartParentEx and keeps the child
  * bitmap from each callback's aid; this one calls the WM functions itself,
  * refreshes the bitmap through WM_ReadStatus and decides on starting MP from
- * the status's mp_flag instead of mpStarted; mStartMpBusy is the SDK's
+ * the status's mp_flag instead of mpStarted; start_mp_busy is the SDK's
  * start_mp_busy. */
 void MBi_ParentCallback(void *arg) {
     WmCallback *cb = (WmCallback *)arg;
@@ -240,10 +234,10 @@ void MBi_ParentCallback(void *arg) {
                 WM_WORK->childBitmap = WM_WORK->status.child_bitmap;
                 WM_WORK->userCallback(0, arg);
                 if (WM_WORK->status.mp_flag == 0) {
-                    MbParentWork *mb = MB_WORK;
-                    if (mb->mStartMpBusy == 0) {
+                    MB_CommPWork *mb = pPwork;
+                    if (mb->common.start_mp_busy == 0) {
                         int mpFreq = 1;
-                        mb->mStartMpBusy = 1;
+                        mb->common.start_mp_busy = 1;
                         if (WM_WORK->mpContinuous != 0) {
                             mpFreq = 0;
                         }
@@ -277,7 +271,7 @@ void MBi_ParentCallback(void *arg) {
         }
 
     case 0xE:
-        MB_WORK->mStartMpBusy = 0;
+        mbc->start_mp_busy = 0;
         switch (((WmStartMPCallback *)arg)->state) {
         case 0xA:
             WM_WORK->mpStarted = 1;
@@ -321,7 +315,7 @@ void MBi_ParentCallback(void *arg) {
     case 0x2:
         if (cb->errcode == 0) {
             WM_WORK->initialized = 0;
-            MB_WORK->mIsMbInitialized = 0;
+            mbc->isMbInitialized = 0;
             WM_WORK->userCallback(0x11, arg);
             return;
         }
@@ -442,7 +436,7 @@ void MBi_ChildCallback(void *arg) {
             return;
         if (cb->errcode == 0) {
             w->initialized = 0;
-            MB_WORK->mIsMbInitialized = 0;
+            mbc->isMbInitialized = 0;
             w->userCallback(0x11, arg);
             return;
         }
@@ -609,7 +603,7 @@ int MBi_GetBeaconPeriodDispersion(void) {
 /* MB_Init: carve the WmWork and mbc out of the caller's buffer (each 32-byte
  * aligned), clear them, copy the user name and the parent name, store the
  * user info and set the parent parameters. Refused (2) while
- * mIsMbInitialized (the SDK's isMbInitialized) is set. Lead: the reconstruction's MB_Init
+ * isMbInitialized (the SDK's isMbInitialized) is set. Lead: the reconstruction's MB_Init
  * takes (work, user, ggid, tgid, dma), resolves MB_TGID_AUTO and sets the
  * lifetimes and the power-save flag; this one takes the GGID as two halves
  * (ggid0, ggid1) and does none of that. */
@@ -622,21 +616,21 @@ int MB_Init(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, 
      pointer arithmetic. With int bases each offset is materialized from the
      literal pool and stored through a register index, 15 words longer. */
     WmWork *wm;
-    MbParentWork *mb;
+    MB_CommPWork *mb;
     OSIntrMode irq;
-    if ((data_020a9db8 != 0) && (MB_WORK->mIsMbInitialized != 0)) {
+    if ((mbc != 0) && (mbc->isMbInitialized != 0)) {
         return 2;
     }
     wm = (WmWork *)MATH_ROUNDUP((u32)work, 32);
-    mb = (MbParentWork *)MATH_ROUNDUP((int)wm + sizeof(WmWork), 32);
+    mb = (MB_CommPWork *)MATH_ROUNDUP((int)wm + sizeof(WmWork), 32);
     irq = OS_DisableInterrupts();
     fill_i = 0;
     data_020a9db0 = (u16)dma;
     data_020a9db4 = (char *)wm;
-    data_020a9db8 = (char *)mb;
+    mbc = &mb->common;
     MIi_CpuClear32(fill_i, (int *)wm, sizeof(WmWork));
     fill_s = 0;
-    MIi_CpuClear16(fill_s, (char *)mb, 0x1340);
+    MIi_CpuClear16(fill_s, (char *)mb, sizeof(MB_CommCommonWork));
     /* The user's name and L"multiboot" (MB_Init's static game-name pointer,
      stepped as it is read); 10 halfwords overrun the 8-byte uname into
      gname, which the second copy then overwrites */
@@ -666,14 +660,14 @@ int MB_Init(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, 
             *(dst++) = *ptr;
         } while (j < 0x10);
     }
-    MI_CpuCopy8(user, &mb->mParentUser, sizeof(MBUserInfo));
+    MI_CpuCopy8(user, &mb->common.user, sizeof(MBUserInfo));
     wm->parentMaxSize = 0x100;
     wm->childMaxSize = 8;
     wm->sendBufSize = 0;
     wm->recvBufSize = 0;
     wm->mpContinuous = 1;
-    wm->sendBuf = (char *)mb->mSendBuf;
-    wm->recvBuf = (char *)mb->mRecvBuf;
+    wm->sendBuf = (char *)mb->common.sendbuf;
+    wm->recvBuf = (char *)mb->common.recvbuf;
     {
         WMParentParam *hdr = &wm->parentParam;
         hdr->CS_Flag = 1;
@@ -688,9 +682,9 @@ int MB_Init(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, 
     }
     wm->mpSending = 0;
     wm->initialized = 0;
-    mb->mStartMpBusy = 0;
+    mb->common.start_mp_busy = 0;
     OS_RestoreInterrupts(irq);
-    mb->mIsMbInitialized = 1;
+    mb->common.isMbInitialized = 1;
     return 0;
 }
 
@@ -742,7 +736,7 @@ int MBi_StartCommon(void) {
 }
 
 /* MBi_StartParentCore with MB_StartParent: record the channel, clear the
- * parent work from mChildUser on (keeping the parent callback across the
+ * parent work from childUser on (keeping the parent callback across the
  * clear), size the blocks and the child request pieces from the MP packet
  * sizes, mark every child as in no file, clear the file table and the
  * pending answers, then hand WM the parent callbacks and buffer sizes and
@@ -753,7 +747,7 @@ int MB_StartParent(int channel) {
     OSIntrMode saved;
     volatile u16 fill0;
     volatile u16 fill1;
-    u32 cb;
+    MBCommPStateCallback cb;
     int i;
     int result;
 
@@ -761,27 +755,28 @@ int MB_StartParent(int channel) {
 
     WM_WORK->parentParam.channel = channel;
 
-    cb = MB_WORK->mParentCallback;
+    cb = pPwork->parent_callback;
 
     fill0 = 0;
-    MIi_CpuClear16(fill0, (char *)MB_WORK->mChildUser, 0x60a0);
+    MIi_CpuClear16(fill0, (char *)pPwork->childUser,
+                   sizeof(MB_CommPWork) - sizeof(MB_CommCommonWork));
 
     MB_CommSetParentStateCallback(cb);
 
-    MB_WORK->mBlockSize = WM_WORK->parentMaxSize - 6;
-    MB_WORK->mReqPieceSize = WM_WORK->childMaxSize - 2;
-    MB_WORK->mReqPieceCount = 30 / (WM_WORK->childMaxSize - 2);
+    mbc->block_size_max = WM_WORK->parentMaxSize - 6;
+    mbc->req_data_piece_size = WM_WORK->childMaxSize - 2;
+    mbc->req_data_piece_num = 30 / (WM_WORK->childMaxSize - 2);
 
     for (i = 0; i < 0xf; i++) {
-        MB_WORK->mChildState[i] = 0;
-        MB_WORK->mChildFile[i] = -1;
+        pPwork->p_comm_state[i] = 0;
+        pPwork->fileid_of_child[i] = -1;
     }
-    MB_WORK->mFileCount = 0;
+    pPwork->file_num = 0;
 
     fill1 = 0;
-    MIi_CpuClear16(fill1, (char *)MB_WORK->mFiles, 0x5c40);
+    MIi_CpuClear16(fill1, (char *)pPwork->fileinfo, sizeof(pPwork->fileinfo));
 
-    MI_CpuFill8(MB_WORK->mChildResponse, 0, 0x1e);
+    MI_CpuFill8(pPwork->req2child, 0, sizeof(pPwork->req2child));
 
     WM_WORK->mode = 1;
     WM_WORK->userCallback = (void (*)(int, void *))MBi_CommParentCallback;

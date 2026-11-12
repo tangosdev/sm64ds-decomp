@@ -2973,7 +2973,7 @@ src/MBi_ReceiveRequestDataPiece.c:
     complete
     .text start:0x02065de4 end:0x02065eb8
 
-src/engine/mb/MB_Parent.cpp:
+src/engine/mb/MB_Parent.c:
     complete
     .text start:0x02065eb8 end:0x020672d0
 

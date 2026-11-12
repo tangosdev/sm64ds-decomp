@@ -150,8 +150,8 @@ void func_0203db64(void *arg0, void *arg1) {
         data_020a10fc[0].favoriteColor = buf.favoriteColor;
         data_020a10fc[0].nameLength = buf.nickNameLength;
         data_020a10a4[0].favoriteColor = data_020a10fc[0].favoriteColor;
-        data_020a10fc[0].unknown_04 = 0;
-        data_020a10a4[0].unknown_04 = data_020a10fc[0].unknown_04;
+        data_020a10fc[0].playerNo = 0;
+        data_020a10a4[0].playerNo = data_020a10fc[0].playerNo;
         data_020a10a4[0].nameLength = data_020a10fc[0].nameLength;
         MI_CpuCopy8(buf.nickName, data_020a10fe, buf.nickNameLength * 2);
         MI_CpuCopy8(buf.nickName, data_020a10a6, buf.nickNameLength * 2);
