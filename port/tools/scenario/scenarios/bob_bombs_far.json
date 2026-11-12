@@ -1,5 +1,5 @@
 {
-  "about": "Mario next to a walking Bob-omb, Luigi 2500 units away: after it blows up, is it asleep or awake on both screens alike?",
+  "about": "Mario on flat ground 300 units from a walking Bob-omb (slot 17 home -1561,0,-2073), Luigi on flat ground 2600 away: after it blows up, asleep or awake on both screens alike?",
   "save": {
     "preset": "early"
   },
@@ -11,7 +11,7 @@
   },
   "proof": {
     "secs": 150,
-    "shot_ms": 50000,
+    "shot_ms": 70000,
     "census": [
       206
     ]
@@ -21,20 +21,25 @@
       "character": "mario",
       "level": 6,
       "act": 1,
-      "near": {
-        "class": 206,
-        "dist": 300
-      }
+      "pos": [
+        -1561,
+        0,
+        -1773
+      ],
+      "drop": true,
+      "yaw_deg": 180
     },
     {
       "character": "luigi",
       "level": 6,
       "act": 1,
-      "near": {
-        "class": 206,
-        "dist": 2500,
-        "angle_deg": 30
-      }
+      "pos": [
+        -1561,
+        0,
+        527
+      ],
+      "drop": true,
+      "yaw_deg": 180
     }
   ],
   "env": {
