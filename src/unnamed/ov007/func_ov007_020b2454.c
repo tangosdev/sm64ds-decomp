@@ -3,7 +3,8 @@
 #include "dExtModel_c.h"
 #include "Ov007Work.h"
 #include "Ov007Model.h"
-extern void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
+/* local extern: math/CalcLib.h is C++ only; this matches its declaration. */
+extern void VEC_Add(Vector3 *, Vector3 *, Vector3 *);
 
 void func_ov007_020b2454(Vector3 *out, Vector3 *r1) {
     int w;
