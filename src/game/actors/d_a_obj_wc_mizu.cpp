@@ -35,18 +35,6 @@ enum d_a_obj_wc_mizu_AssetId { ASSET_WC_MIZU_BMD = 0x06ca, ASSET_WC_MIZU_KCL = 0
  * - S14: g_profile_WC_MIZU stays outside the licensed .text.
  * - UpdateModelTransform (0x021122b4) and UpdateClsnTransform (0x02112250)
  *   are TU-local; Behavior calls both every frame.
- *
- * Absorbed these legacy one-function sources (ROM address order), all deleted
- * by tools/tu_promote.py:
- *   [0] 0x021121a4  src/_ZN14daObjWc_Mizu_cD1Ev.cpp
- *   [1] 0x021121f0  src/_ZN14daObjWc_Mizu_cD0Ev.cpp
- *   [2] 0x02112250  src/func_ov029_02112250.cpp
- *   [3] 0x021122b4  src/func_ov029_021122b4.c
- *   [4] 0x021122dc  src/_ZN14daObjWc_Mizu_c16CleanupResourcesEv.cpp
- *   [5] 0x02112320  src/_ZN14daObjWc_Mizu_c6RenderEv.cpp
- *   [6] 0x02112354  src/_ZN14daObjWc_Mizu_c8BehaviorEv.cpp
- *   [7] 0x021124d0  src/_ZN14daObjWc_Mizu_c13InitResourcesEv.cpp
- *   [8] 0x021125f8  src/daObjWc_Mizu_c_classInit.c
  */
 
 #include "common.h"
