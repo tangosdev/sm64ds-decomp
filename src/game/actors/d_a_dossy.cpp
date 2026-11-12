@@ -269,7 +269,7 @@ int daDossyCap_c::Behavior()
         dActor_c *spit = dActor_c::Spawn(0x10d, 0x1210, mPos, &mAngle, mAreaId, -1);
         if (spit != 0) {
             ((MarioCapEatView *)spit)->mEatingPlayer = mEatingPlayer;
-            ((daPly_c *)mEatingPlayer)->mObjInMouth = (s32)spit;
+            ((daPly_c *)mEatingPlayer)->mObjInMouth = spit;
             spit->mFlags |= 0x20000;
             mFlags &= ~0x20000;
             mEatingPlayer = 0;
