@@ -19,6 +19,7 @@
 #include "decl_Platform.h"
 #include "decl_dCcAc_c.h"
 #include "decl_common.h"
+#include "math/CalcLib.h"
 
 #include "daObj_volcanoCannon_c.h"
 #include "daObjFl_Ring_c.h"
@@ -26,10 +27,6 @@
 #include "LevelRng.h"
 
 extern "C" {
-unsigned short DecIfAbove0_Short(unsigned short *p);
-}
-extern "C" {
-int RandomIntInternal(int *seed);
 
 /* The state table, ov022 .bss; the definition at the end of this file
  * fills it from the two .data handler constants. One State (init + behavior). */

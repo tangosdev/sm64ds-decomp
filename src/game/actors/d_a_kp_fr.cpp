@@ -151,9 +151,6 @@ int daKpFr_c::func_ov070_02121fb0()
 }
 
 
-extern "C" {
-extern unsigned char DecIfAbove0_Byte(unsigned char* p);
-}
 int daKpFr_c::func_ov070_02121f18() {
     daPly_c *player;
     if (DecIfAbove0_Byte(&mStateTimer) == 0)

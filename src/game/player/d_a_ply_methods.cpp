@@ -270,7 +270,8 @@ extern int atan2_hold_Player_15(Fix12i, Fix12i);
 extern int atan2_hold_Player_5(Fix12i y, Fix12i x);
 extern Fix12i atan2_hold_Player_6(Fix12i a, Fix12i b);
 extern int atan2_hold_Player_7(Fix12i a, int b);
-extern s16 FX_SinCosTable_[];
+/* local extern: including nitro/fx/fx_trig.h renumbers this TU; spelled as the header does. */
+extern const fx16 FX_SinCosTable_[];
 extern signed char gCurrentSublevel;
 extern unsigned char data_0209f4ae[];
 extern unsigned int data_ov002_020ff220[];
@@ -10178,7 +10179,7 @@ int daPly_c::func_ov002_020cfea4() {
     dBgCh_Gnd rg;
     {
         int y;
-        short *tbl;
+        const short *tbl;
         int ang = mAngleY;
         tbl = FX_SinCosTable_;
         y = mPosY;
@@ -10211,7 +10212,7 @@ int daPly_c::func_ov002_020cfea4() {
         pts[2].y = yl;
         pts[2].z = pz;
         {
-            short *tbl;
+            const short *tbl;
             int y2;
             int ang = mAngleY;
             y2 = mPosY;
@@ -14135,7 +14136,7 @@ int daPly_c::St_YoshiPower_Main() {
             dExtFrameCtrl_c &anim8 = *mModels.mBodyModels[GetBodyModelID(this->param1 & 0xff, 0)];
             if (((unsigned int)(anim8.currFrame << 4) >> 0x10) >= 4) {
                 int i2 = (*(unsigned short*)&mAngleY >> 4) * 2;
-                short *tbl = FX_SinCosTable_;
+                const short *tbl = FX_SinCosTable_;
                 int zv = mPosZ + (int)(((((long long)tbl[i2+1]) << 18) + 0x800) >> 12);
                 int yv = mPosY + 0x37000;
                 pos.x = mPosX + (int)(((((long long)tbl[i2]) << 18) + 0x800) >> 12);

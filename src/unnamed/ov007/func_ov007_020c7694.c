@@ -1,7 +1,5 @@
 #include "Ov007Spring.h"
-
-extern void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
-extern int VEC_Mag(const Vector3 *v);
+#include "math/CalcLib.h"
 
 /* Sets each link's rest offset and length from the rest points: link i
  * runs from rest[i] to rest[i + 1], and in a closed list (flags bit 1) the

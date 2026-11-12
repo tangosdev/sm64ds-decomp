@@ -1,7 +1,7 @@
 /* recovered: shared common types */
 #include "common.h"
 #include "Ov007Light.h"
-extern void VEC_Subtract(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
+#include "math/CalcLib.h"
 extern void VEC_Normalize(const struct Vector3 *a, struct Vector3 *b);
 
 /* Rederives the light's direction from its two points. */

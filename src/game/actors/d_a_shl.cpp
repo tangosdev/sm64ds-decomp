@@ -63,6 +63,7 @@
 #include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
 #include "nitro/fx/fx.h"
+#include "math/CalcLib.h"
 
 /* Two 8-byte pointers-to-member. The second word is the this-adjustment;
    retail stores 0 for every entry. */
@@ -97,8 +98,6 @@ extern SharedFilePtr *data_ov102_0214d70c[];
 int  func_ov002_020ad660(char *self, char *clsn, char *model, int kind);
 int  func_ov002_020cc16c(void *player, void *actor);
 void func_020105cc(void *self, u32 flags);
-u8   DecIfAbove0_Byte(u8 *counter);
-u16  DecIfAbove0_Short(u16 *counter);
 void Matrix4x3_FromRotationY(void *m, int angle);
 int  SurfaceInfo_TestFlag0x20(int *si);
 

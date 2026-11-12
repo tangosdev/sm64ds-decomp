@@ -105,6 +105,7 @@ extern "C" dFdBrightness_c *gSceneFader;
 #include "Message.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/mi/memory.h"
+#include "nitro/fx/fx_trig.h"
 
 extern "C" {
 int func_0203d974(void);
@@ -135,7 +136,6 @@ void func_ov001_020ab3f0(void *);
 
 extern u8 data_0208f274;
 extern OamAttr *data_0208a0f8[];
-extern s16 FX_SinCosTable_[];
 extern dScEntry_c::StepSet data_ov075_0211d918;
 // Behavior slot of the player-sync step set, at data_ov075_0211d918 + 8.
 extern dScEntry_c::Step data_ov075_0211d920;

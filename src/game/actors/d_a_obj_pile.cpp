@@ -49,6 +49,7 @@ enum daObjPile_c_AssetId { ASSET_PILE_BMD = 0x0481, ASSET_PILE_KCL = 0x0482 };
 #include "Sound.h"
 #include "SharedFilePtr.h"
 #include "daObjKinokoTag_c.h"
+#include "math/CalcLib.h"
 
 /* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
@@ -65,7 +66,6 @@ struct PileCollisionFilePtr : SharedFilePtr {
 
 /* local extern: no shared header declares these. */
 extern "C" {
-extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern void func_02012694(unsigned int a, void *b);
 }
 
