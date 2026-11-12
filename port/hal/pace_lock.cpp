@@ -106,13 +106,16 @@ long long g_ref_at;            /* when g_ref was read (QPC) */
    grid wherever it happened to land: lucky is perfect, unlucky sits on a
    refresh edge and the 1-or-3 hold stutter never ends. So the lock turns on
    only when the vblank time is trusted:
-     - three readings, each the latest vblank (no more than two refreshes
-       old, no more than one in the future; one that is not is skipped) and
+     - three readings, each a current vblank (within three refreshes of now
+       either way; one that is not is skipped) and
        each a whole number of refreshes after the one before, by about the
        clock time between them (one that is not starts the count again);
-   and keeps being checked: a reading more than one refresh away from the
-   running estimate is ignored (counted in the summary), and four ignored in a
-   row (about a second) take the trust away until three good ones come back.
+   and keeps being checked: a reading that is not current, or sits more than
+   a quarter of a refresh off the running estimate's grid (stricter than "more
+   than one refresh away": a whole-refresh difference is only a different
+   vblank of the same grid), is ignored (counted in the summary), and four
+   ignored in a row (about a second) take the trust away until three good ones
+   come back.
    A trusted reading moves the estimate by a quarter of its disagreement, so a
    source that wobbles inside a refresh moves the grid only a little.
    Without trust the lock stays off and the pacer runs as it always did (a
@@ -148,36 +151,42 @@ void vb_reading(long long raw, long long period, long long now)
         g_vb_prev = 0;
         return;
     }
+    /* Windows 11's compositor reports the NEXT vblank or the one after (seen
+       on a 144 Hz desk display: 7 to 14 ms ahead, advancing by exactly whole
+       refreshes), so "recent" is within three refreshes either way */
     const long long age = now - raw;
-    const int recent = age <= 2 * period && age >= -period;
+    const int recent = age <= 3 * period && age >= -3 * period;
     if (g_vb_trusted) {
-        /* the estimate's latest vblank at or before now, and the reading against it */
+        /* the estimate's vblank at or before now, and the reading against it */
         long long n = (now - g_vb_est) / period;
         if (now < g_vb_est) n = -((g_vb_est - now + period - 1) / period);
         const long long est_latest = g_vb_est + n * period;
-        const long long dis = raw - est_latest;
-        if (!recent || dis > period || dis < -period) {
+        /* the reading's place inside the refresh against the estimate's: a
+           reading may name a vblank a refresh or two ahead (see above), so
+           whole refreshes are not a disagreement; more than a quarter of a
+           refresh off the estimate's grid is one, and is ignored */
+        long long w = (raw - est_latest) % period;
+        if (w > period / 2) w -= period;
+        if (w < -period / 2) w += period;
+        if (!recent || w * 4 > period || -w * 4 > period) {
             ++g_vb_ignored_win;
             if (++g_vb_ignored_run >= 4)
-                vb_untrust(recent ? "its vblank time jumps by more than a refresh" : "its vblank time is frozen or not the latest");
+                vb_untrust(recent ? "its vblank time jumps off the refresh grid" : "its vblank time is frozen or not current");
             g_vb_prev = raw;
             g_vb_prev_at = now;
             return;
         }
         g_vb_ignored_run = 0;
-        long long w = dis % period;
-        if (w > period / 2) w -= period;
-        if (w < -period / 2) w += period;
         g_vb_est = est_latest + w / 4;
         g_vb_prev = raw;
         g_vb_prev_at = now;
         return;
     }
     if (!recent) {
-        /* not the latest vblank: skipped, neither counted for nor against (a
+        /* not a current vblank: skipped, neither counted for nor against (a
            frozen time never becomes recent again, so it never earns trust;
            a lone outlier does not undo two good readings) */
-        g_vb_why = "its vblank time is frozen or not the latest";
+        g_vb_why = "its vblank time is frozen or not current";
         return;
     }
     int ok = 1;
@@ -186,7 +195,7 @@ void vb_reading(long long raw, long long period, long long now)
         const double ratio = (double)d / (double)period;
         const long long whole = (long long)floor(ratio + 0.5);
         const long long resid = d - whole * period;
-        if (whole < 1 || resid * 10 > period || -resid * 10 > period || d - el > period || el - d > period) {
+        if (whole < 1 || resid * 10 > period || -resid * 10 > period || d - el > 3 * period || el - d > 3 * period) {
             ok = 0;
             g_vb_why = "its vblank time does not advance with the clock";
         }
@@ -199,7 +208,7 @@ void vb_reading(long long raw, long long period, long long now)
         g_vb_ignored_run = 0;
         g_vb_est = raw;
         g_vb_why = "";
-        fprintf(stderr, "[pace] vblank time trusted (3 readings in a row, each the latest vblank, advancing by whole refreshes with the clock)\n");
+        fprintf(stderr, "[pace] vblank time trusted (3 readings, each a current vblank, advancing by whole refreshes with the clock)\n");
     }
 }
 
