@@ -662,12 +662,14 @@ void sb_send(daBgSnmBdy_c *b, bool changed) {
     const int s = b->mStateValue, sub = sb_sub(b);
     if (!changed && !sb_moving(s, sub) && g_sm.sent_any && t - g_sm.last_send < kBeatMs) return;
 #ifndef PORT_ROM_CLEAN
-    // SM64DS_COOP_SNOWBALL_MUTE=1 (proof only, not in the kit build): my records stop once my body has cued the head,
-    // as when my game drops out between the cue and the landing (REVIEW-AQ's quit_cue, without the timing luck)
+    // SM64DS_COOP_SNOWBALL_MUTE=1 (proof only, not in the kit build): my records stop right after the one that cues the
+    // head, as when my game drops out between the cue and the landing (REVIEW-AQ's quit_cue, without the timing luck)
     static int mute = -1;
     if (mute < 0) { const char *e = std::getenv("SM64DS_COOP_SNOWBALL_MUTE"); mute = e && e[0] == '1'; }
-    if (mute && s == 3 && sub >= 1) {
-        if (mute == 1) { mute = 2; std::fprintf(stderr, "[coopsb] KNOB mute lf=%u: my snowman records stop here (body state 3 sub %d)\n", g_lf, sub); }
+    if (mute == 1 && s == 3 && sub >= 1) {
+        mute = 3;                    // the first record of the cue still goes out, so friends' heads are cued
+    } else if (mute >= 2 && s == 3 && sub >= 1) {
+        if (mute == 3) { mute = 2; std::fprintf(stderr, "[coopsb] KNOB mute lf=%u: my snowman records stop here (body state 3 sub %d)\n", g_lf, sub); }
         return;
     }
 #endif
