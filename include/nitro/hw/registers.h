@@ -186,6 +186,21 @@
 #define REG_VRAMCNT_H   (*(volatile u8 *)0x04000248)
 #define REG_VRAMCNT_I   (*(volatile u8 *)0x04000249)
 
+/* Game card bus: the slot's master control byte (high byte of MCCNT0), the
+   ROM transfer control word (bit 31 start/busy, bit 23 word ready), the
+   8-byte command buffer, and the data-in port a transfer's words arrive
+   through. Spelling follows pret's NitroSDK card_rom.c and OS_reset.c. */
+#define REG_CARD_MASTERCNT (*(volatile u8  *)0x040001a1)
+#define REG_CARD_CNT       (*(volatile u32 *)0x040001a4)
+#define REG_CARD_CMD       (*(volatile u8  *)0x040001a8)
+#define REG_CARD_DATA      (*(volatile u32 *)0x04100010)
+
+#define CARDMST_SEL_ROM   0x00
+#define CARDMST_IF_ENABLE 0x40
+#define CARDMST_ENABLE    0x80
+#define CARD_DATA_READY   0x00800000
+#define CARD_START        0x80000000
+
 /* Memory control */
 #define REG_EXMEMCNT (*(volatile u16 *)0x04000204)
 #define REG_WRAMCNT  (*(volatile u8  *)0x04000247)
