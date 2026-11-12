@@ -19,7 +19,6 @@
 //   through int flag locals. Tested inline, the branches change shape.
 // - TryDropItem writes a byte at +0x42b on actor 279 so a second
 //   cap is not dropped. Nothing here names that field.
-// - mStateTimer is incremented through a u16 cast. The ROM loads it unsigned.
 
 #pragma defer_codegen off
 
@@ -316,8 +315,7 @@ int daFPknBall_c::Behavior() {
         MarkForDestruction();
     }
 
-    /* The ROM loads this halfword unsigned, so not the s16 mStateTimer += 1. */
-    *(u16 *)&mStateTimer += 1;
+    mStateTimer += 1;
     UpdateVisuals();
     return 1;
 }

@@ -4,6 +4,7 @@
 #include "types.h"
 #include "dExtFrameCtrl_c.h"
 #include "math/Fix12.h"
+#include "private/BMA_File.h"
 
 /* dExtFrameCtrl_c child that drives BMA-file playback, vtable _ZTV17dExtAnmMaterial_c at 0x0208e7f4:
  * two slots, the destructor pair, nothing else. Update is a plain method;
@@ -37,7 +38,6 @@
 
 struct ModelComponents;
 struct BMD_File;
-struct BMA_File { u16 numFrames; };
 struct dExtAnmMaterial_c : dExtFrameCtrl_c {
     BMA_File *file;           /* 0x10 */
 
