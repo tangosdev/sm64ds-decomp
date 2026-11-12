@@ -4744,9 +4744,15 @@ static void an_step_pivot(char *player)
 /* the view the mod draws with: the ROM's own two entry points, fed the rig's
    eye and pivot in scene units (the (v + 4) >> 3 Camera::Render applies to
    its own) */
+static void fc_push_view_fov(void *cam, const int *eye, const int *at, int fov);
 static void fc_push_view(void *cam, const int *eye, const int *at)
 {
-    const int i = ((int)*(unsigned short *)((char *)cam + 0x17a) >> 4) * 2;
+    fc_push_view_fov(cam, eye, at, *(unsigned short *)((char *)cam + 0x17a));
+}
+/* HYBRIDCAM1: the same push with the field of view given (the hybrid's ease blends it into the one Camera::Render uses) */
+static void fc_push_view_fov(void *cam, const int *eye, const int *at, int fov)
+{
+    const int i = ((int)(unsigned short)fov >> 4) * 2;
     int e[3], a[3], mat[12];
     int q;
     for (q = 0; q < 3; ++q) {
@@ -4994,6 +5000,7 @@ static void cam93_collide(char *player, const int *pivot, int *eye)
 /* the rig's picture: eye from the pivot, collided, pushed. One place for both frame loops. */
 static const int *c3_free_pivot(void *cam, char *player);   /* CAMERA3, below */
 static int hy_ease_draw(void *cam, char *player);            /* HYBRIDCAM1, below */
+static void hy_game_view(void *cam, int *eye, int *at, int *fov);
 static void cam93_rig_draw(void *cam, char *player)
 {
     if (hy_ease_draw(cam, player)) return;   /* HYBRIDCAM1: the ease back to the DS camera draws its own blend */
@@ -5181,12 +5188,14 @@ static void hy_frame(void *cam, char *player, int frame, int mouse_dyaw, int mou
     const int stick = fc_stick_rate(stick_rx, 1000) != 0 || fc_stick_rate(stick_ry, 1000) != 0;
     if (hy_trace())
         fprintf(stderr, "[camhy] f%d sub=%s ease=%d quiet=%d st=%d moment=%d trust=%d mouse=%d,%d acc=%d stick=%d,%d other=%d held=%d "
-                "yaw=%04x pitch=%04x dist=%d gyaw=%04x geye=%d,%d,%d gat=%d,%d,%d\n",
+                "yaw=%04x pitch=%04x dist=%d gyaw=%04x geye=%d,%d,%d gat=%d,%d,%d cf=%x c168=%x c134=%d fov=%04x\n",
                 frame, cam_mode == CAM_DS ? "DS" : "analog", hy_ease, hy_quiet, st, moment, trusted, mouse_dyaw, mouse_dpitch,
                 hy_mouse_acc, stick_rx, stick_ry, other_input, held, (unsigned)(unsigned short)fc_yaw, (unsigned)(unsigned short)fc_pitch,
                 fc_dist >> 12, hy_heading((const int *)((char *)cam + 0x8c), (const int *)((char *)cam + 0x80)),
                 *(int *)((char *)cam + 0x8c) >> 12, *(int *)((char *)cam + 0x90) >> 12, *(int *)((char *)cam + 0x94) >> 12,
-                *(int *)((char *)cam + 0x80) >> 12, *(int *)((char *)cam + 0x84) >> 12, *(int *)((char *)cam + 0x88) >> 12);
+                *(int *)((char *)cam + 0x80) >> 12, *(int *)((char *)cam + 0x84) >> 12, *(int *)((char *)cam + 0x88) >> 12,
+                *(unsigned *)((char *)cam + 0x154), *(unsigned *)((char *)cam + 0x168), *(int *)((char *)cam + 0x134) >> 12,
+                (unsigned)*(unsigned short *)((char *)cam + 0x17a));
     if (moment) {
         char why[64];
         snprintf(why, sizeof why, "the game camera's moment (state %d, cutscene %d, flag 8 %d)", st, cam10_cutscene(), flag8);
@@ -5234,11 +5243,41 @@ static void hy_frame(void *cam, char *player, int frame, int mouse_dyaw, int mou
     hy_s_yaw = fc_yaw;
     hy_s_pitch = fc_pitch;
     hy_s_dist = fc_dist;
-    hy_gyaw_prev = hy_heading((const int *)((char *)cam + 0x8c), (const int *)((char *)cam + 0x80));
+    {
+        int ge[3], ga[3], gf;
+        hy_game_view(cam, ge, ga, &gf);
+        hy_gyaw_prev = hy_heading(ge, ga);
+    }
     hy_dyaw = (((hy_gyaw_prev - (unsigned short)fc_yaw) & 0xffff) ^ 0x8000) - 0x8000;
     hy_ease = 1;
     fprintf(stderr, "[camhy] f%d easing back to the DS camera after %d quiet ticks (turn %d, pitch %04x->, dist %d)\n", frame,
             hy_quiet, hy_dyaw, (unsigned)(unsigned short)fc_pitch, fc_dist >> 12);
+}
+/* the picture Camera::Render (src/engine/view/d_camera.cpp) makes from the camera this frame: its eye and look-at (or last tick's when
+   both moved under one unit), raised by +0x134, and its field of view drawn toward 0xaaa by +0x168 (outside a cutscene and flag 8).
+   The roll and the shake (+0x178, +0x18c, +0x18e) are left out: they are moments, not a resting view. The rig's own push uses +0x17a
+   and no +0x134; in a coop room the castle grounds run with +0x168 moved (the view narrows), so ending the ease on the raw eye and
+   +0x17a left a visible zoom on the hand-back. */
+static void hy_game_view(void *cam, int *eye, int *at, int *fov)
+{
+    const char *k = (const char *)cam;
+    const int *a = (const int *)(k + 0x80), *e = (const int *)(k + 0x8c), *pa = (const int *)(k + 0xc8), *pe = (const int *)(k + 0xd4);
+    double da = 0, de = 0;
+    for (int i = 0; i < 3; ++i) {
+        da += ((double)a[i] - pa[i]) * ((double)a[i] - pa[i]);
+        de += ((double)e[i] - pe[i]) * ((double)e[i] - pe[i]);
+        at[i] = a[i]; eye[i] = e[i];
+    }
+    if (sqrt(da) < 4096.0 && sqrt(de) < 4096.0)
+        for (int i = 0; i < 3; ++i) { at[i] = pa[i]; eye[i] = pe[i]; }
+    int f = *(const short *)(k + 0x17a);
+    if (data_0209fc48 == 0 && !(*(const int *)(k + 0x154) & 8)) {
+        const int t = *(const int *)(k + 0x168);
+        if (t != 0x1000) f = (short)(f + (short)(((long long)(0xaaa - f) * t + 0x800) >> 12));
+    }
+    at[1] += *(const int *)(k + 0x134);
+    eye[1] += *(const int *)(k + 0x134);
+    *fov = f;
 }
 /* the eased picture: called by cam93_rig_draw. Returns 1 when it drew. */
 static int hy_ease_draw(void *cam, char *player)
@@ -5247,7 +5286,10 @@ static int hy_ease_draw(void *cam, char *player)
     const int n = hy_ease_ticks();
     const double t = hy_ease >= n ? 1.0 : (double)hy_ease / n;
     const double s = t * t * (3.0 - 2.0 * t);
-    const int *geye = (const int *)((char *)cam + 0x8c), *gat = (const int *)((char *)cam + 0x80);
+    int geye[3], gat[3], gfov;
+    hy_game_view(cam, geye, gat, &gfov);
+    const int rfov = *(const short *)((char *)cam + 0x17a);
+    const int fov = rfov + (int)floor(((double)gfov - rfov) * s + 0.5);
     const int gyaw = hy_heading(geye, gat);
     hy_dyaw += (((gyaw - hy_gyaw_prev) & 0xffff) ^ 0x8000) - 0x8000;   /* the game camera's own turn since the last draw */
     hy_gyaw_prev = gyaw;
@@ -5265,11 +5307,12 @@ static int hy_ease_draw(void *cam, char *player)
     for (int k = 0; k < 3; ++k) eye[k] += (int)floor(((double)geye[k] - eye[k]) * s + 0.5);
     if (s >= 1.0) for (int k = 0; k < 3; ++k) { eye[k] = geye[k]; pivot[k] = gat[k]; }
     g_cam93_eye[0] = eye[0]; g_cam93_eye[1] = eye[1]; g_cam93_eye[2] = eye[2];
-    fc_push_view(cam, eye, pivot);
+    fc_push_view_fov(cam, eye, pivot, fov);
     if (hy_trace())
-        fprintf(stderr, "[camhy] draw ease=%d s=%.3f eye=%d,%d,%d at=%d,%d,%d geye=%d,%d,%d gat=%d,%d,%d\n", hy_ease, s,
-                eye[0] >> 12, eye[1] >> 12, eye[2] >> 12, pivot[0] >> 12, pivot[1] >> 12, pivot[2] >> 12,
-                geye[0] >> 12, geye[1] >> 12, geye[2] >> 12, gat[0] >> 12, gat[1] >> 12, gat[2] >> 12);
+        fprintf(stderr, "[camhy] draw ease=%d s=%.3f eye=%d,%d,%d at=%d,%d,%d fov=%04x geye=%d,%d,%d gat=%d,%d,%d gfov=%04x rfov=%04x\n", hy_ease, s,
+                eye[0] >> 12, eye[1] >> 12, eye[2] >> 12, pivot[0] >> 12, pivot[1] >> 12, pivot[2] >> 12, (unsigned)(unsigned short)fov,
+                geye[0] >> 12, geye[1] >> 12, geye[2] >> 12, gat[0] >> 12, gat[1] >> 12, gat[2] >> 12,
+                (unsigned)(unsigned short)gfov, (unsigned)(unsigned short)rfov);
     return 1;
 }
 
