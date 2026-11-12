@@ -4,7 +4,7 @@ extern void func_0203f650(int x);
 extern void func_0203f6a4(int v);
 extern int data_02099e20;
 extern int data_020a0f90;
-extern void func_0203f920(unsigned short *cb);
+extern void func_0203f920(void *arg);
 
 /* Pick a quiet wireless channel. sysBuf is the WM system buffer
    (func_0203e20c allocates 0xb000 bytes), callback the one that receives
@@ -20,7 +20,7 @@ void func_0203f9d4(void *sysBuf, int callback) {
         func_0203f650(-10);
         return;
     }
-    if (WM_Initialize(sysBuf, (WMCallbackFunc)func_0203f920, 1) != WM_ERRCODE_OPERATING) {
+    if (WM_Initialize(sysBuf, func_0203f920, 1) != WM_ERRCODE_OPERATING) {
         func_0203f650(-1);
         return;
     }

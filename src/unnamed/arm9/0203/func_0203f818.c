@@ -1,6 +1,6 @@
 extern unsigned short WM_GetAllowedChannel(void);
 extern int WM_MeasureChannel(void *a, int b, int c, int d, unsigned short e);
-extern void func_0203f920(unsigned short *cb);
+extern void func_0203f920(void *arg);
 
 /* Measure the next channel from `arg` on that the allowed-channel mask
    (WM_GetAllowedChannel, read from the WM status) permits: 1 when none is left

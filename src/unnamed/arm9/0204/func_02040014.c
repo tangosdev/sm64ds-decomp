@@ -16,11 +16,9 @@ extern int func_02042748(u16 *a, u16 *b);
  * its MAC address equals one of the three entries of data_020a0fbe whose
  * data_020a0f9d flag is set (func_02042748 compares the three halfwords);
  * data_020a0fa0[aid] then takes the address. Any other child is
- * disconnected (WM_Disconnect). The parameter keeps its
- * char * spelling: the other declaration is checked against it. */
-void func_02040014(char *a)
-{
-    WmStartParentCallback *cb = (WmStartParentCallback *)a;
+ * disconnected (WM_Disconnect). */
+void func_02040014(void *arg) {
+    WmStartParentCallback *cb = (WmStartParentCallback *)arg;
     int v;
 
     if (cb->errcode == 0) {
