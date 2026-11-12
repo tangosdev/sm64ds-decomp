@@ -1239,6 +1239,7 @@ extern "C" int port_level_is_mounted(int level);
 extern "C" int port_mods_relatch_after_level(const char *reason);
 extern "C" const char *port_mods_id(int i);
 extern "C" const char *port_mods_kind(int i);
+extern "C" const char *port_mods_code_refusal(void);   /* hal/mods.cpp (SEAMCODE1): a loaded plugin that cannot be switched in place */
 extern "C" int port_vs_matches_ended_in_place(void);               /* hal/star_flow.cpp */
 extern "C" void port_luigi_reset(void);                            /* hal/luigi_infection.cpp (SEAMCLEAN1) */
 extern "C" void host_setting_adventure_env_reread(void);           /* hal/host_settings.cpp */
@@ -1277,13 +1278,7 @@ static const char *port_vs_handoff(const PortHandoffRequest *r)
         return "a lockstep VS match (no SM64DS_VS_NETMODE=arena): the lockstep carrier (hal/comms_loopback.cpp) is not installed in place yet";
     const char *relay = port_handoff_value(r, "SM64DS_COMMS_RELAY");
     if (!relay || !*relay) return "the VS request names no relay (SM64DS_COMMS_RELAY)";
-    for (int i = 0; i < port_mods_count(); ++i) {
-        const char *k = port_mods_kind(i);
-        if (k && !strcmp(k, "code")) {
-            snprintf(buf, sizeof buf, "a code mod is loaded (%s) and a plugin cannot be unloaded", port_mods_id(i));
-            return buf;
-        }
-    }
+    if (const char *cr = port_mods_code_refusal()) return cr;   /* SEAMCODE1: a code mod is switched off in place, not refused */
     if (port_scene_live_id() != 1) return "the title is not the live scene";
     const int mi = map[0] - '0';
     port_level_mounts_install();

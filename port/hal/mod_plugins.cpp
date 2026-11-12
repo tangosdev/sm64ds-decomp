@@ -110,7 +110,11 @@ struct Plugin {
     std::map<std::string, std::string> settings;
     std::string values;
     bool values_read;
-    Plugin() : dll(0), dead(false), nfactory(0), values_read(false) { memset(&api, 0, sizeof api); }
+    /* SEAMCODE1: the plugin's code patches (journaled around its main and its level callbacks) and its off switch */
+    struct Patch { u8 *at; std::vector<u8> was, now; };
+    std::vector<Patch> patches;
+    bool off;
+    Plugin() : dll(0), dead(false), nfactory(0), values_read(false), off(false) { memset(&api, 0, sizeof api); }
 };
 
 std::vector<Plugin *> g_plugins;
@@ -282,7 +286,7 @@ std::vector<Over> g_over;                 /* latest thunk per actor id */
 void *run_slot(int n)
 {
     FSlot &s = g_fs[n];
-    if (!s.p->dead) {
+    if (!s.p->dead && !s.p->off) {   /* SEAMCODE1: a plugin switched off spawns the actor it replaced, as a dead one does */
         if (seh_factory(s.fn)) return g_fac_ret;
         kill_plugin(s.p, "an actor factory");
     }
@@ -502,7 +506,7 @@ u32 plugin_filter(unsigned fileID, u8 **data, u32 size)
     resolve_files();
     for (size_t i = 0; i < g_plugins.size(); ++i) {
         Plugin *p = g_plugins[i];
-        if (p->dead) continue;
+        if (p->dead || p->off) continue;
         for (size_t k = 0; k < p->file.size() && !p->dead; ++k) {
             FileCb &c = p->file[k];
             if (c.id != fileID) continue;
@@ -551,7 +555,7 @@ void plugin_claims(void (*claim)(unsigned fileID))
 {
     resolve_files();
     for (size_t i = 0; i < g_plugins.size(); ++i)
-        for (size_t k = 0; k < g_plugins[i]->file.size(); ++k)
+        for (size_t k = 0; k < g_plugins[i]->file.size() && !g_plugins[i]->off; ++k)
             if (g_plugins[i]->file[k].id)
                 claim(g_plugins[i]->file[k].id);
     if (g_prev_claims)
@@ -565,19 +569,27 @@ void frame_hook(void)
     if (g_port_rb_replaying) return;
     for (size_t i = 0; i < g_plugins.size(); ++i) {
         Plugin *p = g_plugins[i];
+        if (p->off) continue;
         for (size_t k = 0; k < p->frame.size() && !p->dead; ++k)
             if (!seh_frame(p->frame[k].fn, p->frame[k].user))
                 kill_plugin(p, "on_frame");
     }
 }
 
+void journal_take(void);
+void journal_note(Plugin *p, const char *where);
+
 void level_hook(int level_id)
 {
+    bool taken = false;
     for (size_t i = 0; i < g_plugins.size(); ++i) {
         Plugin *p = g_plugins[i];
+        if (p->off || p->dead || p->level.empty()) continue;
+        if (!taken) { journal_take(); taken = true; }   /* SEAMCODE1: what a level callback patches is journaled */
         for (size_t k = 0; k < p->level.size() && !p->dead; ++k)
             if (!seh_level(p->level[k].fn, level_id, p->level[k].user))
                 kill_plugin(p, "on_level_load");
+        journal_note(p, "on_level_load");
     }
 }
 
@@ -742,7 +754,10 @@ void load_one(int i, const std::string &release)
     a.free = api_free;
     g_plugins.push_back(p);
 
-    if (!seh_main(fn, &a)) {
+    journal_take();
+    const bool main_ok = seh_main(fn, &a);
+    journal_note(p, "sm64ds_mod_main");
+    if (!main_ok) {
         kill_plugin(p, "sm64ds_mod_main");
         say_skip(id, "faulted in sm64ds_mod_main");
         return;
@@ -758,7 +773,215 @@ void load_one(int i, const std::string &release)
     g_loaded += id;
 }
 
+/* ==== SEAMCODE1: A PLUGIN SWITCHED OFF AND ON IN PLACE (run coopfix1) ====================================================
+   A coop, VS or online-world start at the title used to restart the whole game when a code mod was loaded ("a plugin cannot be
+   unloaded"), because the multiplayer rule turns every code mod off (hal/mods.cpp online_ok) and nothing could take a plugin's
+   changes back out of the running game. The DLL still is never unloaded; what it changed is undone instead:
+     - CODE PATCHES. Both live code mods change the game by patching its code (Walljumps for Everyone NOPs a jump in
+       sm64ds_mod_main; Special Triple Jump writes JMP / CALL sites in its first on_level_load). Around every call into a plugin's
+       sm64ds_mod_main and on_level_load the game's read-only image sections (code and read-only data, never .data) are compared
+       before and after: every byte run the call changed is journaled for that plugin (the bytes before and after). The game's own
+       patches (coop_boss, coop_target, vtable seats) never run inside a plugin call, so they are never in a plugin's journal.
+     - OFF: the journal is put back newest first (the bytes before the plugin wrote them), and the game stops calling the plugin:
+       no on_frame, no on_level_load, no file filter, no file claim; a replaced actor spawns through the factory it replaced.
+     - ON: the journal is written again oldest first and the calls resume. A plugin whose first on_level_load had not run yet (Special
+       Triple Jump before any level) simply runs it at the next level load, as it would have.
+   What cannot be switched (the caller keeps the restart): a plugin that registered an on_file filter (a file the game already read
+   keeps the plugin's bytes), and a journal that could not be written back. Patches a plugin makes from on_frame or from an actor
+   factory, or writes to writable data, are not journaled: neither live mod does that, and the plugin API rules say callbacks stay
+   short; such a plugin would keep those changes while off. */
+std::vector<std::pair<u8 *, size_t> > g_ranges;   /* the image's read-only sections */
+std::vector<u8> g_snap;                          /* their bytes before the current plugin call */
+bool g_ranges_read, g_journal_bad;
+
+void ranges_read(void)
+{
+    if (g_ranges_read) return;
+    g_ranges_read = true;
+    u8 *im = (u8 *)GetModuleHandleA(0);
+    const IMAGE_DOS_HEADER *dh = (const IMAGE_DOS_HEADER *)im;
+    const IMAGE_NT_HEADERS32 *nt = (const IMAGE_NT_HEADERS32 *)(im + dh->e_lfanew);
+    const IMAGE_SECTION_HEADER *sh = IMAGE_FIRST_SECTION(nt);
+    size_t total = 0;
+    for (unsigned i = 0; i < nt->FileHeader.NumberOfSections; ++i) {
+        const DWORD ch = sh[i].Characteristics;
+        if (ch & IMAGE_SCN_MEM_WRITE) continue;
+        if (!(ch & (IMAGE_SCN_CNT_CODE | IMAGE_SCN_CNT_INITIALIZED_DATA))) continue;
+        if (!sh[i].Misc.VirtualSize) continue;
+        g_ranges.push_back(std::make_pair(im + sh[i].VirtualAddress, (size_t)sh[i].Misc.VirtualSize));
+        total += sh[i].Misc.VirtualSize;
+    }
+    g_snap.resize(total);
+    fprintf(stderr, "[plugins] code patch journal: %u read-only section(s), %u KB compared around each plugin main and level callback\n",
+            (unsigned)g_ranges.size(), (unsigned)(total / 1024));
+}
+
+void journal_take(void)
+{
+    ranges_read();
+    size_t o = 0;
+    for (size_t r = 0; r < g_ranges.size(); ++r) {
+        memcpy(&g_snap[o], g_ranges[r].first, g_ranges[r].second);
+        o += g_ranges[r].second;
+    }
+}
+
+/* the runs that differ from the snapshot become p's patches (runs closer than 8 bytes are one); the snapshot takes the new bytes */
+void journal_note(Plugin *p, const char *where)
+{
+    size_t o = 0;
+    unsigned runs = 0, bytes = 0;
+    for (size_t r = 0; r < g_ranges.size(); ++r) {
+        u8 *base = g_ranges[r].first;
+        const size_t n = g_ranges[r].second;
+        size_t i = 0;
+        while (i < n) {
+            const size_t blk = n - i >= 64 ? 64 : n - i;
+            if (!memcmp(base + i, &g_snap[o + i], blk)) { i += blk; continue; }
+            if (base[i] == g_snap[o + i]) { ++i; continue; }
+            size_t e = i + 1, same = 0;
+            while (e < n && same < 8) {
+                if (base[e] == g_snap[o + e]) ++same; else same = 0;
+                ++e;
+            }
+            e -= same;
+            Plugin::Patch pt;
+            pt.at = base + i;
+            pt.was.assign(&g_snap[o + i], &g_snap[o + i] + (e - i));
+            pt.now.assign(base + i, base + e);
+            memcpy(&g_snap[o + i], base + i, e - i);
+            p->patches.push_back(pt);
+            ++runs;
+            bytes += (unsigned)(e - i);
+            i = e;
+        }
+        o += n;
+    }
+    if (runs) {
+        fprintf(stderr, "[plugins] %s: %s patched the game's code: %u run(s), %u byte(s) journaled (%u run(s) in all)\n", p->id.c_str(),
+                where, runs, bytes, (unsigned)p->patches.size());
+        fflush(stderr);
+    }
+}
+
+bool write_code(u8 *at, const std::vector<u8> &b)
+{
+    DWORD old, tmp;
+    if (!VirtualProtect(at, b.size(), PAGE_EXECUTE_READWRITE, &old)) return false;
+    memcpy(at, &b[0], b.size());
+    VirtualProtect(at, b.size(), old, &tmp);
+    FlushInstructionCache(GetCurrentProcess(), at, b.size());
+    return true;
+}
+
+Plugin *find_plugin(const char *id)
+{
+    for (size_t i = 0; i < g_plugins.size(); ++i)
+        if (id && g_plugins[i]->id == id) return g_plugins[i];
+    return 0;
+}
+
+std::vector<std::string> g_late_tried;   /* code mods the boot or a late load already tried (a skip is said once) */
+
+void install_hooks(void)
+{
+    static bool done;
+    if (done || g_plugins.empty()) return;
+    done = true;
+    g_prev_filter = port_fs_mod_filter;
+    port_fs_mod_filter = plugin_filter;
+    g_prev_claims = port_fs_mod_claims;
+    port_fs_mod_claims = plugin_claims;
+    port_mod_hook_frame = frame_hook;
+    port_mod_hook_level = level_hook;
+    port_mod_hook_registry = registry_hook;
+}
+
 }  /* namespace */
+
+/* 0 = no plugin of that id was loaded in this process; 1 = loaded and on; 2 = loaded and switched off; 3 = loaded but dead (faulted or
+   its main refused) */
+extern "C" int port_mod_plugin_state(const char *id)
+{
+    Plugin *p = find_plugin(id);
+    if (!p) return 0;
+    if (p->off) return 2;
+    return p->dead ? 3 : 1;
+}
+
+/* why the loaded plugin `id` cannot be switched off and on in place; 0 = it can (or nothing of that id is loaded) */
+extern "C" const char *port_mod_plugin_switch_refusal(const char *id)
+{
+    Plugin *p = find_plugin(id);
+    if (!p) return 0;
+    if (g_journal_bad) return "a plugin's code patches could not be written back earlier in this run";
+    if (!p->file.empty()) return "it edits ROM files (on_file), which the game may already hold";
+    return 0;
+}
+
+/* switch the loaded plugin `id` off (on = 0) or on (on = 1) at the title; 1 = done (or already so), 0 = refused, nothing changed */
+extern "C" int port_mod_plugin_switch(const char *id, int on, const char *why)
+{
+    Plugin *p = find_plugin(id);
+    if (!p) return 0;
+    if (!!on == !p->off) return 1;
+    if (const char *r = port_mod_plugin_switch_refusal(id)) {
+        fprintf(stderr, "[plugins] %s stays %s (%s): %s\n", p->id.c_str(), p->off ? "off" : "on", why ? why : "?", r);
+        fflush(stderr);
+        return 0;
+    }
+    unsigned bytes = 0, bad = 0;
+    if (!on) {
+        for (size_t k = p->patches.size(); k-- > 0;) {
+            if (!write_code(p->patches[k].at, p->patches[k].was)) ++bad;
+            bytes += (unsigned)p->patches[k].was.size();
+        }
+    } else {
+        for (size_t k = 0; k < p->patches.size(); ++k) {
+            if (!write_code(p->patches[k].at, p->patches[k].now)) ++bad;
+            bytes += (unsigned)p->patches[k].now.size();
+        }
+    }
+    /* the check a proof reads: every journaled run now holds the bytes it should */
+    unsigned match = 0;
+    for (size_t k = 0; k < p->patches.size(); ++k) {
+        const std::vector<u8> &want = on ? p->patches[k].now : p->patches[k].was;
+        if (!memcmp(p->patches[k].at, &want[0], want.size())) ++match;
+    }
+    if (bad) g_journal_bad = true;
+    p->off = !on;
+    if (g_ranges_read) journal_take();   /* the next journaled call compares against the image as it is now */
+    fprintf(stderr, "[plugins] %s switched %s in place (%s): %u code patch run(s), %u byte(s) %s, %u of %u verified%s; its "
+            "callbacks %s\n", p->id.c_str(), on ? "ON" : "OFF", why ? why : "?", (unsigned)p->patches.size(), bytes,
+            on ? "written again" : "put back to the game's own", match, (unsigned)p->patches.size(), bad ? " (A WRITE FAILED)" : "",
+            on ? "run again" : "are not called while it is off");
+    fflush(stderr);
+    return 1;
+}
+
+/* load the code mod at list index i in place (the title, after a relatch put it in the list), the way the boot loads it; 1 = it is
+   loaded now (or was already), 0 = skipped (said once, like the boot's skip) */
+extern "C" int port_mod_plugin_load_late(int i, const char *why)
+{
+    const char *id = port_mods_id(i);
+    if (!id || !port_mods_kind(i) || strcmp(port_mods_kind(i), "code")) return 0;
+    if (find_plugin(id)) return 1;
+    for (size_t k = 0; k < g_late_tried.size(); ++k)
+        if (g_late_tried[k] == id) return 0;
+    g_late_tried.push_back(id);
+    const char *off = getenv("SM64DS_MOD_PLUGINS");
+    const std::string release = PORT_GAME_VERSION;
+    if ((off && !strcmp(off, "0")) || release.empty()) return 0;
+    const int before = g_nloaded;
+    load_one(i, release);
+    g_resolved = false;   /* its on_file paths are resolved on the next read */
+    install_hooks();
+    const bool ok = g_nloaded > before;
+    fprintf(stderr, "[plugins] %s loaded in place at the title (%s): %s\n", id, why ? why : "?",
+            ok ? "loaded and on (its main ran now; its level callbacks run from the next level)" : "skipped (the line above says why)");
+    fflush(stderr);
+    return ok ? 1 : 0;
+}
 
 extern "C" void port_mod_plugins_load(void)
 {
@@ -779,20 +1002,14 @@ extern "C" void port_mod_plugins_load(void)
         return;
     }
     for (int i = 0; i < n; ++i)
-        if (!strcmp(port_mods_kind(i), "code"))
+        if (!strcmp(port_mods_kind(i), "code")) {
+            g_late_tried.push_back(port_mods_id(i));
             load_one(i, release);
+        }
 
     fprintf(stderr, "[plugins] %d loaded: %s | %d skipped%s%s (game %s, api %d)\n", g_nloaded,
             g_nloaded ? g_loaded.c_str() : "-", g_nskipped, g_nskipped ? ": " : "",
             g_skipped.c_str(), release.c_str(), SM64DS_MOD_API_VERSION);
     fflush(stderr);
-    if (g_plugins.empty()) return;
-
-    g_prev_filter = port_fs_mod_filter;
-    port_fs_mod_filter = plugin_filter;
-    g_prev_claims = port_fs_mod_claims;
-    port_fs_mod_claims = plugin_claims;
-    port_mod_hook_frame = frame_hook;
-    port_mod_hook_level = level_hook;
-    port_mod_hook_registry = registry_hook;
+    install_hooks();
 }

@@ -64,9 +64,13 @@ int port_mods_ui_file(const char *rel, char *out, unsigned cap);
    once, from the list as the game started: the relatch at the title does not change it. Documented at the definition. */
 int port_mods_stage_entry(int i, char *path, unsigned cap, const char **mod);
 
+/* SEAMCODE1: why a code mod in the list stops an in-place switch of the mod list (a loaded plugin that cannot be switched off and
+   on in place, hal/mod_plugins.cpp), or 0 when none does. Every in-place start and leave asks this instead of refusing any code mod. */
+const char *port_mods_code_refusal(void);
+
 /* Switch the mod list IN PLACE at the title, with no level loaded (run after093, lane SEAMMODS1; one-process plan M3a): reads
    EnabledMods again (and the multiplayer rule as it stands), rebuilds the files/ layer the card serves, re-indexes textures_hd and
-   drops the texture caches. Refuses, changing nothing, when a code mod is on either side, when the set of mods shipping hd_ui/,
+   drops the texture caches. Refuses, changing nothing, when a code mod on either side cannot be switched in place, when the set of mods shipping hd_ui/,
    sound/ or a character changes, or when files/ would change a file the game read before or at the title; returns 1 switched,
    0 refused (the caller then restarts the way it does today). Logs one line either way. Game thread only. */
 int port_mods_relatch_at_title(const char *reason);

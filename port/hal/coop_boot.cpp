@@ -1320,6 +1320,7 @@ int port_mods_multiplayer(void);
 int port_mods_count(void);
 const char *port_mods_id(int i);
 const char *port_mods_kind(int i);
+const char *port_mods_code_refusal(void);   /* hal/mods.cpp (SEAMCODE1): a loaded plugin that cannot be switched in place */
 void host_setting_adventure_env_reread(void);                 /* hal/host_settings.cpp */
 void port_join_settings_rearm(void);                          /* hal/menu_join_plate.cpp */
 extern int port_front_end_in_place;                           /* hal/level_change.cpp (SEAMQUIT1) */
@@ -1652,13 +1653,10 @@ extern "C" int port_coop_leave_refusal(const char **why) {
     if (!coop) return 0;
     if (LV.st == kLvFade) return 1;   // this file's own request (the host left)
     if (LV.st == kLvTitle) { *why = "a coop leave is already under way"; return 1; }
-    for (int i = 0; i < port_mods_count(); ++i) {
-        const char *k = port_mods_kind(i);
-        if (k && !std::strcmp(k, "code")) {
-            std::snprintf(buf, sizeof buf, "a code mod is loaded (%s) and a plugin cannot be unloaded", port_mods_id(i));
-            *why = buf;
-            return 1;
-        }
+    if (const char *cr = port_mods_code_refusal()) {   /* SEAMCODE1: a code mod is switched off in place, not refused */
+        std::snprintf(buf, sizeof buf, "%s", cr);
+        *why = buf;
+        return 1;
     }
     if (!port_online_leave_restart_hook) { *why = "this build has no restart for a refusal at the title"; return 1; }
     return 1;
@@ -1919,13 +1917,7 @@ extern "C" const char *port_coop_handoff_apply(int nset, const char *const *sn, 
     if (C.on || LV.st != kLvNone || IP.st != kIpNone) return "a coop room is still up in this process";
     if (comms_hub_active() || comms_hub_state() != kHubOff || comms_hub_arena()) return "a hub session is still up in this process";
     if (env_any("SM64DS_SCENE")) return "a scene-booted process";
-    for (int i = 0; i < port_mods_count(); ++i) {
-        const char *k = port_mods_kind(i);
-        if (k && !std::strcmp(k, "code")) {
-            std::snprintf(buf, sizeof buf, "a code mod is loaded (%s) and a plugin cannot be unloaded", port_mods_id(i));
-            return buf;
-        }
-    }
+    if (const char *cr = port_mods_code_refusal()) return cr;   /* SEAMCODE1: a code mod is switched off in place, not refused */
     if (port_scene_live_id() != 1) return "the title is not the live scene";
     if (!data_ov007_0210342c) return "the title scene is not built yet";
     const char *hs = hv(nset, sn, sv, "SM64DS_COOP_HOST");

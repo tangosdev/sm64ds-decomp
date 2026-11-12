@@ -7013,6 +7013,7 @@ extern "C" int port_level_crossing_live(void);        /* hal/level_change.cpp */
 extern "C" int port_mods_count(void);                 /* hal/mods.cpp */
 extern "C" const char *port_mods_id(int i);
 extern "C" const char *port_mods_kind(int i);
+extern "C" const char *port_mods_code_refusal(void);   /* hal/mods.cpp (SEAMCODE1) */
 extern "C" int port_mods_multiplayer(void);
 
 /* SEAMQUIT1: THE QUIT GOES BACK TO THE TITLE IN THIS PROCESS, THE WAY GAME OVER'S QUIT ALREADY DOES.
@@ -7068,14 +7069,8 @@ static const char *port_quit_in_place_refusal(void)
     if (port::comms_hub_active()) return "the multiplayer hub is installed";
     if (port_mods_multiplayer()) return "this run is under the multiplayer mod rule";
     if (port::adventure_ghost_mode()) return "Adventure ghosts are on (settings.json AdventureGhosts)";
-    for (int i = 0; i < port_mods_count(); ++i) {
-        const char *k = port_mods_kind(i);
-        if (k && !strcmp(k, "code")) {
-            _snprintf(why, sizeof why, "a code mod is loaded (%s) and a plugin cannot be unloaded", port_mods_id(i));
-            why[sizeof why - 1] = 0;
-            return why;
-        }
-    }
+    /* SEAMCODE1: no code mod check here. A solo quit to the title keeps the same mod list, so a loaded plugin stays as it is
+       (on, its patches in place); nothing has to be unloaded. */
     if (!port_scene_is_hosted(1)) return "this build does not host the title scene";
     return 0;
 }
@@ -8253,10 +8248,7 @@ static int menu_vs_go(int map)
     if (!why && getenv("SM64DS_SCENE")) why = "a scene-booted process (its VS match could not end at the title in place)";
     if (!why && !port_scene_is_hosted(1)) why = "this build does not host the title scene";
     if (!why) {
-        for (int i = 0; i < port_mods_count(); ++i) {
-            const char *k = port_mods_kind(i);
-            if (k && !strcmp(k, "code")) { why = "a code mod is loaded and a plugin cannot be unloaded"; break; }
-        }
+        why = port_mods_code_refusal();   /* SEAMCODE1: a code mod is switched off in place, not refused */
     }
     if (why) {
         fprintf(stderr, "[seamless] in place refused: %s; restarting\n", why);
