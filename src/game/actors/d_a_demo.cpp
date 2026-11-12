@@ -2541,7 +2541,7 @@ void func_ov002_020f5fe4(char* c)
 
     r5 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_8BIT_NCL_BIN);
     DC_FlushRange(r5, 0x200);
-    GX_SetBankForSubBGExtPltt(0x80);
+    GX_SetBankForSubBGExtPltt(GX_VRAM_SUB_BGEXTPLTT_0123_H);
     GXS_BeginLoadBGExtPltt();
     GXS_LoadBGExtPltt(r5, 0x4000, 0x200);
     GXS_LoadBGExtPltt(r5, 0x6000, 0x200);

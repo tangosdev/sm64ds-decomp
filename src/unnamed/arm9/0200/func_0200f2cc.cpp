@@ -16,12 +16,12 @@ extern "C" {
 void func_0200f2cc(void)
 {
     GX::DisableAllBanks();
-    GX_SetBankForTex(3);
-    GX_SetBankForTexPltt(0x10);
-    GX_SetBankForBG(4);
-    GX_SetBankForOBJ(0x60);
-    GX_SetBankForSubBG(0x180);
-    GX_SetBankForSubOBJ(8);
+    GX_SetBankForTex(GX_VRAM_TEX_01_AB);
+    GX_SetBankForTexPltt(GX_VRAM_TEXPLTT_0123_E);
+    GX_SetBankForBG(GX_VRAM_BG_128_C);
+    GX_SetBankForOBJ(GX_VRAM_OBJ_32_FG);
+    GX_SetBankForSubBG(GX_VRAM_SUB_BG_48_HI);
+    GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_128_D);
 
     GX_SetBGCharOffset(0);
     GX_SetBGScrOffset(0);

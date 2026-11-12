@@ -17,7 +17,7 @@ void InitCrashScreen(void)
     dScene_c::ResetHardwareRegisters();
     *(volatile short *)0x4000050 = 0;
     *(volatile short *)0x4001050 = 0;
-    GX_SetBankForBG(8);
+    GX_SetBankForBG(GX_VRAM_BG_128_D);
     *(volatile int *)0x4000000 = (*(volatile int *)0x4000000 & ~0x1f00) | 0x200;
     *(volatile short *)0x400000a = (unsigned short)((REG_BG1CNT & 0x43) | 0x1e10);
     GX_LoadBG1Char(data_0208a178, 0, 0x2000);

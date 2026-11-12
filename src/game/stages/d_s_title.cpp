@@ -214,8 +214,8 @@ s32 dScTitle_c::InitResources() {
     UnloadArchives();
     Enable3dEngines();
     GX::DisableAllBanks();
-    GX_SetBankForBG(8);
-    GX_SetBankForOBJ(1);
+    GX_SetBankForBG(GX_VRAM_BG_128_D);
+    GX_SetBankForOBJ(GX_VRAM_OBJ_128_A);
     GX_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
     GX_SetGraphicsMode(1, 0, 0);
     GXS_DispOn();

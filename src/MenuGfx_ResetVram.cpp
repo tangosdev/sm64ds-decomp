@@ -15,7 +15,7 @@ void MenuGfx_ResetVram(void) {
     GX_ResetBankForTexPltt();
     GX_ResetBankForSubBG();
     GX_ResetBankForSubOBJ();
-    GX_SetBankForLCDC(0x1ff);
+    GX_SetBankForLCDC(GX_VRAM_LCDC_ALL);
 
     b = 0;
     MI_CpuFill32((int *)0x6800000, b, 0xa4000);

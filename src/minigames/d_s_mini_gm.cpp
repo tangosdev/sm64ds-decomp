@@ -219,12 +219,12 @@ s32 dScMiniGm_c::InitResources()
 
     GX::DisableAllBanks();
     REG_POWCNT1 |= 0x8000;
-    GX_SetBankForTex(1);
-    GX_SetBankForBG(2);
-    GX_SetBankForSubBG(4);
-    GX_SetBankForSubOBJ(8);
-    GX_SetBankForOBJ(0x10);
-    GX_SetBankForTexPltt(0x20);
+    GX_SetBankForTex(GX_VRAM_TEX_0_A);
+    GX_SetBankForBG(GX_VRAM_BG_128_B);
+    GX_SetBankForSubBG(GX_VRAM_SUB_BG_128_C);
+    GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_128_D);
+    GX_SetBankForOBJ(GX_VRAM_OBJ_64_E);
+    GX_SetBankForTexPltt(GX_VRAM_TEXPLTT_0_F);
 
     gMainScreenLayers &= ~(DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 |
                            DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ);

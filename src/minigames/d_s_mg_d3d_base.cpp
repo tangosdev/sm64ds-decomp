@@ -87,8 +87,8 @@ namespace Particle { void RenderAll(); }
 extern "C" void D3D_CaptureToMain(void) {
     REG_POWCNT1 |= 0x8000;
     GX_ResetBankForSubOBJ();
-    GX_SetBankForSubBG(4);
-    GX_SetBankForLCDC(8);
+    GX_SetBankForSubBG(GX_VRAM_SUB_BG_128_C);
+    GX_SetBankForLCDC(GX_VRAM_LCDC_D);
     REG_DISPCAPCNT = 0x80330010;
     gSubScreenLayers &= ~0x10;
     gSubScreenLayers |= 4;
@@ -102,8 +102,8 @@ extern "C" void D3D_CaptureToSub(void)
 {
     REG_POWCNT1 &= ~0x8000;
     GX_ResetBankForSubBG();
-    GX_SetBankForSubOBJ(8);
-    GX_SetBankForLCDC(4);
+    GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_128_D);
+    GX_SetBankForLCDC(GX_VRAM_LCDC_C);
     *(volatile int *)0x4000064 = 0x80360010;
     GXS_SetGraphicsMode(5);
     gSubScreenLayers |= 0x10;
@@ -160,8 +160,8 @@ extern "C" void D3D_InitDualScreen(void)
 {
     GX_ResetBankForSubBG();
     GX_ResetBankForSubOBJ();
-    GX_SetBankForSubOBJ(8);
-    GX_SetBankForSubBG(4);
+    GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_128_D);
+    GX_SetBankForSubBG(GX_VRAM_SUB_BG_128_C);
     *(unsigned int *)0x4001000 &= ~0x300010;
 }
 
@@ -171,13 +171,13 @@ extern "C" void D3D_InitDualScreen(void)
 int dScMgD3DBase_c::InitSubScreenBg()
 {
     mSavedSubObjBank = GX_GetBankForSubOBJ();
-    GX_SetBankForSubOBJ(0x100);
+    GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_16_I);
     LoadCompressedFileAt(sD3DCommonNcgByLanguage[GetGameLanguage()], G2S_GetOBJCharPtr());
     DecompressLZ16((void *)sD3DSubScreenBgByLanguage[GetGameLanguage()],
                    (u8 *)G2S_GetOBJCharPtr() + 0x2000);
     GX_SetBankForSubOBJ(mSavedSubObjBank);
     mSubBgBank = GX_GetBankForSubBG();
-    GX_SetBankForSubBG(0x80);
+    GX_SetBankForSubBG(GX_VRAM_SUB_BG_32_H);
     {
         volatile u16 *p = (volatile u16*)0x400100a;
         *p = (*p & 0x43) | 0x800;
@@ -208,13 +208,13 @@ void dScMgD3DBase_c::InitEngines()
     Mg_DisableAllBanks();
     data_0209e660 = 1;
     GX::DisableAllBanks();
-    GX_SetBankForTex(1);
-    GX_SetBankForTexPltt(0x40);
+    GX_SetBankForTex(GX_VRAM_TEX_0_A);
+    GX_SetBankForTexPltt(GX_VRAM_TEXPLTT_0_G);
     *(vu32 *)0x4000000u &= ~0x7000000u;
     *(vu32 *)0x4000000u &= ~0x38000000u;
-    GX_SetBankForBGExtPltt(0);
-    GX_SetBankForOBJ(0x10);
-    GX_SetBankForBG(2);
+    GX_SetBankForBGExtPltt(GX_VRAM_BGEXTPLTT_NONE);
+    GX_SetBankForOBJ(GX_VRAM_OBJ_64_E);
+    GX_SetBankForBG(GX_VRAM_BG_128_B);
     file = Ov004_LoadFile(sD3DCommonNcgByLanguage[GetGameLanguage()]);
     sD3DLanguageFile = file;
     DecompressLZ16(file, (u8 *)G2_GetOBJCharPtr() + 0x4000);
@@ -385,9 +385,9 @@ int dScMgD3DBase_c::SaveScreenForMenu()
     GXS_LoadOBJPltt(sD3DSubObjPalette, 0x100, 0x100);
     data_0209e660 = 0;
     mSubBgBank = GX_GetBankForSubBG();
-    GX_SetBankForSubBG(0x80);
+    GX_SetBankForSubBG(GX_VRAM_SUB_BG_32_H);
     mSavedSubObjBank = GX_GetBankForSubOBJ();
-    GX_SetBankForSubOBJ(0x100);
+    GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_16_I);
     return dScMgBase_c::SaveScreenForMenu();
 }
 
