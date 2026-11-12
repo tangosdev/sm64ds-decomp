@@ -1441,7 +1441,11 @@ void process(unsigned now) {
                 char *talker = nullptr; std::memcpy(&talker, b.a + 0x430, sizeof talker);
                 // kbo2 (bug 16): my copy is in his pre-fight talk with MY player: this console drives him (state, and the pose through
                 // coop_boss_driver_seat) from the talk's first frame, so every screen shows him turning to the player he talks to.
-                const bool talk = st == kKboTalk && talker == (char *)data_0209f394[me];
+                // Never over a friend's live claim: a copy that started a second intro of its own (the talkend row: Luigi's copy
+                // talked while Mario's talk ran, before NPCTALK1's lock) must not take the King from the player already talking.
+                bool friend_claim = false;
+                for (int q = 0; q < kSeats; ++q) if (q != g_my && (int)(g_claim_until[q] - wnow) > 0) friend_claim = true;
+                const bool talk = st == kKboTalk && talker == (char *)data_0209f394[me] && !friend_claim;
                 // kbo2: my player threw him (my claim is live): the claim lasts until he lands, the landing's health point is mine.
                 const bool thrown = st == kKboThrown && (int)(g_claim_until[g_my] - wnow) > 0;
                 if (talk || thrown) {
