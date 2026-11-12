@@ -461,7 +461,7 @@ extern void func_0204531c(char *, int);
 extern int func_02045ce0(void);
 extern int func_02045cf0(void);
 extern int func_02045d10(void);
-extern int func_02049018(struct Vector3*);
+extern int func_02049018(const struct Vector3*);
 extern void func_02049f58(void *);
 extern int func_0204a028(void*, unsigned int (*cb)(unsigned int, unsigned int));
 extern int func_0204a0dc(void*, u32 (*cb)(const void*, u32));

@@ -12843,23 +12843,6 @@
         "return:int"
       ]
     },
-    "func_02012194": {
-      "src/_ZN7daPly_c11St_Fly_MainEv.cpp": [
-        "param:#6 void *",
-        "param:#7 int"
-      ]
-    },
-    "func_0201226c": {
-      "src/_ZN7daPly_c17St_ButtSlide_MainEv.cpp": [
-        "param:#4 char *",
-        "param:#6 int"
-      ]
-    },
-    "func_0201251c": {
-      "src/game/stages/d_ent_obj.cpp": [
-        "param:#3 void *"
-      ]
-    },
     "func_0201267c": {
       "src/game/actors/d_a_wanwan.cpp": [
         "param:#1 int",
