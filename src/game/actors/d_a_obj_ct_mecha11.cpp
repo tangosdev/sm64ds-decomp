@@ -154,8 +154,7 @@ int daObjCtMecha11_c::InitResources() {
     UpdateModel();
     UpdateClsnPosAndRot();
     KCL_File *kf = (KCL_File *)dBgW_Kc::LoadFile(RotatingClockHand_ClsnFile);
-    ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile(kf, mClsnMat, 0x1000, mAngleY, data_ov035_02112238);
+    mMeshCollider.SetFile(kf, mClsnMat, 0x1000, mAngleY, data_ov035_02112238);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetEdgeToleranceShift(0);
     Vector3 v;

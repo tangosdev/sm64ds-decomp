@@ -220,8 +220,7 @@ int daObjTatefuda_c::InitResources()
     UpdateShadowMatrix();
 
     void *kf = dBgW_Kc::LoadFile(SignPost_ClsnFile);
-    ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile((KCL_File *)kf, mClsnMat, 0x199, mAngleY, data_ov002_0210d714);
+    mMeshCollider.SetFile((KCL_File *)kf, mClsnMat, 0x199, mAngleY, data_ov002_0210d714);
 
     mdCcAc_c.Init(this, 0x64000, 0x64000, 0x4800002, 0x41000);
 

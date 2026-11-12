@@ -85,8 +85,7 @@ s32 daObjHmBskt_c::InitResources() {
     UpdateClsnPosAndRot();
 
     KCL_File *clsnFile = (KCL_File *)dBgW_Kc::LoadFile(data_ov030_02115c80);
-    ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile(clsnFile, mClsnMat, 0x199, mAngleY, data_ov030_02114ee4);
+    mMeshCollider.SetFile(clsnFile, mClsnMat, 0x199, mAngleY, data_ov030_02114ee4);
 
     Vector3 starPos;
     starPos.x = mPosX;
