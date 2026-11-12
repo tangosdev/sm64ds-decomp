@@ -5,6 +5,7 @@
 #include "nitro/mb/mb.h"
 #include "private/fs_views.h"
 #include "nitro/wm/wm_api.h"
+#include "private/arm9_a0f90_channel_measure.h"
 
 extern "C" {
 
@@ -25,7 +26,7 @@ extern u8 data_020a0f9d[4];
 extern u16 data_020a0fbe[4][3];
 extern MBGameRegistry data_020a0fec;
 extern u8 data_020a1040[];
-extern u8 data_020a1064[];
+extern WMParentParam data_020a1064;
 extern MBUserInfo data_020a10fc[4];
 extern u8 data_020a1112[];
 extern u8 data_020a1154[];
@@ -35,8 +36,7 @@ extern u16 data_020a11c4[4];
 extern WMStatus data_020a1680;
 extern u8 data_020a1780[];
 
-extern void func_0203f9d4(void *sysBuf, int callback);
-extern void func_0203e978(struct ChannelReply *reply);
+extern void func_0203e978(ChannelMeasureReply *reply);
 extern int OS_GetTickLo(void);
 extern int MB_Init(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, int dma);
 extern int MB_SetParentCommParam(int a, int b, int c);
@@ -87,7 +87,7 @@ void func_0203e20c(void)
         void *ptr = Memory::Allocate(0xB000, 0x20);
         data_020a0f3c = ptr;
         data_020a0f0c = 0;
-        func_0203f9d4(ptr, (int)func_0203e978);
+        func_0203f9d4(ptr, func_0203e978);
         data_020a0f50 += 1;
         data_020a0f1c &= 0xFFFB;
         break;
@@ -103,7 +103,7 @@ void func_0203e20c(void)
         void *p;
         int size;
         data_020a0f20 = (u16)OS_GetTickLo();
-        MB_Init(data_020a0f3c, data_020a10fc, H(data_020a1064, 6), H(data_020a1064, 8),
+        MB_Init(data_020a0f3c, data_020a10fc, data_020a1064.ggid[0], data_020a1064.ggid[1],
                 data_020a0f20, 1);
         MB_SetParentCommParam(0x1fe, 8, 3);
         MB_CommSetParentStateCallback(func_0203e9a8);

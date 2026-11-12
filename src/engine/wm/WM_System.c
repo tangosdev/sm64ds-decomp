@@ -36,17 +36,6 @@ typedef int BOOL;
  * ARM7 sets when it delivers a callback from an exception. */
 #define WM_EXCEPTION_CB_MASK 0x0001
 
-/* The API ids ARM7 sends outside any request, and the state codes this file
- * tests. */
-#define WM_APIID_INDICATION 0x80
-#define WM_APIID_PORT_SEND 0x81
-#define WM_APIID_PORT_RECV 0x82
-#define WM_ERRCODE_FLASH_ERROR 0x13
-#define WM_STATECODE_CONNECTED 7
-#define WM_STATECODE_DISCONNECTED 9
-#define WM_STATECODE_MPEND_IND 11
-#define WM_STATECODE_MP_IND 12
-
 /* local extern: MI_Dma.c and MI_Memory.c define them; nitro/mi/memory.h
  * does not declare them yet. */
 extern void MI_DmaFill32(u32 dmaNo, void *dest, u32 data, u32 size);
@@ -54,15 +43,7 @@ extern void MI_DmaCopy32(u32 dmaNo, const void *src, void *dest, u32 size);
 extern void MIi_CpuCopy16(const void *src, void *dst, s32 size);
 extern void OS_Terminate(void);
 
-/* The results WmReceiveFifo reads past the WMCallback head. */
-typedef struct WMStartMPCallback {
-    u16 apiid;   /* 0x00 */
-    u16 errcode; /* 0x02 */
-    u16 state;   /* 0x04 */
-    u8 reserved[2];
-    void *recvBuf; /* 0x08 */
-} WMStartMPCallback;
-
+/* The result WmReceiveFifo reads past the WMCallback head of a port send. */
 typedef struct WMPortSendCallback {
     u16 apiid;   /* 0x00 */
     u16 errcode; /* 0x02 */
