@@ -326,7 +326,7 @@ void PM_GoSleepMode(u32 trigger, u32 logic, u32 keyPattern) {
     saved_ime = OS_DisableIrq();
     saved_mode = OS_DisableInterrupts();
     saved_mask = OS_DisableIrqMask(0x3fffff);
-    OS_SetIrqMask(0x40000);
+    OS_SetIrqMask(OS_IE_SPFIFO_RECV);
     OS_RestoreInterrupts(saved_mode);
 
     (void)OS_EnableIrq();

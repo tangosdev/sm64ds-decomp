@@ -41,6 +41,21 @@ extern volatile u32 data_0209f60c;   /* table index the CPU fills */
 extern u8           data_0209f648[]; /* two 0x300-byte scanline tables */
 extern short        data_023c0000[];
 
+/* NitroSDK's inline IME helpers (os/common/interrupt.h): each returns the
+   previous master enable. File-local because an inline body in a shared
+   header renumbers every includer's @NNN symbols. */
+static inline int OS_DisableIrq(void) {
+    u16 prep = REG_IME;
+    REG_IME = 0;
+    return prep;
+}
+
+static inline int OS_EnableIrq(void) {
+    u16 prep = REG_IME;
+    REG_IME = 1;
+    return prep;
+}
+
 dWipe_c::dWipe_c() : dFdColor_c(0)
 {
     Reset();
@@ -58,16 +73,12 @@ dWipe_c::~dWipe_c()
    WIN0/WIN1/OBJWIN enables in both engines' DISPCNT, and if a type change
    was stashed mid-transition, commit it now. */
 void dWipe_c::DisableWindows() {
-    u16 ime = REG_IME;
-    REG_IME = 0;
-    OS_DisableIrqMask(2);
+    int enabled = OS_DisableIrq();
+    OS_DisableIrqMask(OS_IE_H_BLANK);
     GX_HBlankIntr(0);
-    OS_SetIrqFunction(2, 0);
-    if (ime != 0) {
-        u16 dead = REG_IME;
-        REG_IME = 1;
-        (void)dead;
-    }
+    OS_SetIrqFunction(OS_IE_H_BLANK, 0);
+    if (enabled)
+        (void)OS_EnableIrq();
     REG_DISPCNT &= ~0xe000;
     REG_DISPCNT_SUB &= ~0xe000;
     if (typePending == 1) {
@@ -120,16 +131,12 @@ int dWipe_c::SetBackwardTime(u32 frames, u32 extra) {
         EnableWindows();
 
         {
-            u16 ime = REG_IME;
-            REG_IME = 0;
-            OS_SetIrqFunction(2, Wipe_HBlankHandler);
-            OS_EnableIrqMask(2);
+            int enabled = OS_DisableIrq();
+            OS_SetIrqFunction(OS_IE_H_BLANK, Wipe_HBlankHandler);
+            OS_EnableIrqMask(OS_IE_H_BLANK);
             GX_HBlankIntr(1);
-            if (ime != 0) {
-                u16 dead = REG_IME;
-                REG_IME = 1;
-                (void)dead;
-            }
+            if (enabled)
+                (void)OS_EnableIrq();
         }
 
         needsCleanup = 1;
@@ -150,7 +157,7 @@ int dWipe_c::SetBackwardTime(u32 frames, u32 extra) {
 int dWipe_c::SetForwardTime(u32 frames, u32 extra) {
     if (state == 0 || state == 2) {
         int t;
-        u16 saved;
+        int enabled;
 
         if (type == 1)
             return dFdBrightness_c::SetForwardTime(frames, extra);
@@ -188,16 +195,12 @@ int dWipe_c::SetForwardTime(u32 frames, u32 extra) {
         state = 3;
         EnableWindows();
 
-        saved = REG_IME;
-        REG_IME = 0;
-        OS_SetIrqFunction(2, Wipe_HBlankHandler);
-        OS_EnableIrqMask(2);
+        enabled = OS_DisableIrq();
+        OS_SetIrqFunction(OS_IE_H_BLANK, Wipe_HBlankHandler);
+        OS_EnableIrqMask(OS_IE_H_BLANK);
         GX_HBlankIntr(1);
-        if (saved != 0) {
-            u16 dead = REG_IME;
-            REG_IME = 1;
-            (void)dead;
-        }
+        if (enabled)
+            (void)OS_EnableIrq();
 
         needsCleanup = 1;
         return 0;

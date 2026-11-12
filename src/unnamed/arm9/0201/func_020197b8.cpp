@@ -66,10 +66,10 @@ void func_020197b8(void) {
         data_0209d50c = 5; func_02019404();
         data_0209d50c = 6;
         data_020a0db0 = data_020a0db0 + 1;
-        OS_DisableIrqMask(1);
+        OS_DisableIrqMask(OS_IE_V_BLANK);
         func_020190b8();
         data_0209d4f0 = 1;
-        OS_EnableIrqMask(1);
+        OS_EnableIrqMask(OS_IE_V_BLANK);
         data_0209d50c = 7; func_0201a4bc();
         data_0209d4f0 = 0;
         data_0209d50c = 0x15; func_0201ffcc();

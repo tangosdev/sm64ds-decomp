@@ -47,8 +47,6 @@ typedef union {
 #define FIFO_CNT_ERROR 0x4000       /* recv-empty read or send-full write */
 #define FIFO_CNT_ERROR_CLEAR 0xc000 /* clears the error, flushes send */
 
-#define IRQ_RECV_FIFO_NOT_EMPTY 0x40000
-
 extern "C" {
 
 void PXIi_HandlerRecvFifoNotEmpty(void);
@@ -73,8 +71,8 @@ void PXI_InitFifo(void) {
         for (i = 0; i < 0x20; i++) {
             data_020a7fc8[i] = 0;
         }
-        OS_SetIrqFunction(IRQ_RECV_FIFO_NOT_EMPTY, PXIi_HandlerRecvFifoNotEmpty);
-        OS_EnableIrqMask(IRQ_RECV_FIFO_NOT_EMPTY);
+        OS_SetIrqFunction(OS_IE_SPFIFO_RECV, PXIi_HandlerRecvFifoNotEmpty);
+        OS_EnableIrqMask(OS_IE_SPFIFO_RECV);
         REG_SUBP_FIFO_CNT = 0xc408;
 
         ip = 0;
