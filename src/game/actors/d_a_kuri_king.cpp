@@ -427,7 +427,7 @@ void daKuriKing_c::UpdateDefeat() {
         return;
     case 1:
         if (DecIfAbove0_Short(&this->mTimer) == 0) {
-            dActor_c* actor = (dActor_c*)dActor_c::FindWithActorID(0xc8, 0);
+            dActor_c *actor = dActor_c::FindWithActorID(0xc8, 0);
             if (actor != 0) {
                 u32 id = 0xc8;
                 while (1) {
@@ -443,14 +443,14 @@ void daKuriKing_c::UpdateDefeat() {
                         this->mTimer = 2;
                         return;
                     }
-                    actor = (dActor_c*)dActor_c::FindWithActorID(id, actor);
+                    actor = dActor_c::FindWithActorID(id, actor);
                     if (actor == 0)
                         break;
                 }
             }
         }
         if (this->mSpawnedCount == 1) {
-            dActor_c* a2 = (dActor_c*)dActor_c::FindWithActorID(0xc8, 0);
+            dActor_c *a2 = dActor_c::FindWithActorID(0xc8, 0);
             if (a2 != 0) {
                 s32 flag2;
                 if (a2->mFlags & 0x40000)
@@ -1143,7 +1143,7 @@ void daKuriKing_c::HandleCylinderHits() {
     do {
         cur = p;
         if (cur->otherOwner != 0)
-            player = (dActor_c *)dActor_c::FindWithID(cur->otherOwner);
+            player = dActor_c::FindWithID(cur->otherOwner);
         if (player != 0)
             break;
         i++;

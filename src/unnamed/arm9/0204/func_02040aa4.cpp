@@ -6,7 +6,6 @@
 
 /* The FSFile a child read is in flight on (mReadRequest); only its archive is
  * read here. */
-typedef struct FSFile FSFile;
 
 extern "C" {
 

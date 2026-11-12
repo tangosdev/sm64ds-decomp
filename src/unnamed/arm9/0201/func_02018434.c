@@ -1,5 +1,5 @@
 #include "private/fs_views.h"
-extern int myFS_ConvertPathToFileID(void *out_file_id, const char *path);
+extern int myFS_ConvertPathToFileID(FSFileID *p_file_id, const char *path);
 extern int func_02018474(FSFileID fileId, int dst, int size);
 
 /* Read up to size bytes of the ROM file at path into dst (func_02018474).

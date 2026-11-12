@@ -15,8 +15,7 @@
  * setting still cannot be narrowed to it -- this TU leaves codegen deferred,
  * so mwccarm reads the state at the end of the file and an `on` placed after
  * PaintSquare (or after the function following it) puts hoisting back for
- * PaintSquare as well. TUBUILD CONFLICT comments are paired with the
- * manifest; leave them.
+ * PaintSquare as well.
  *
  * leftovers:
  * - The score pool (TrmpFx_Unlink..TrmpFx_InitPool) stays free:
@@ -56,30 +55,6 @@ typedef struct Vec2s {
     s16 x, y;
 } Vec2s;
 
-/* TUBUILD CONFLICT -- alternate body of struct 'Obj', from the legacy file for _ZN17dScMgTrampoline_c13InitResourcesEv, NOT applied:
-struct Obj {
-    virtual void m00();
-    virtual void m04();
-    virtual void m08();
-    virtual void m0c();
-    virtual void m10();
-    virtual void m14();
-    virtual void m18();
-    virtual void m1c();
-    virtual void m20();
-    virtual void m24();
-    virtual void m28();
-    virtual void m2c();
-    virtual void m30();
-    virtual void m34();
-    virtual void m38();
-    virtual void m3c();
-    virtual void m40();
-    virtual void m44();
-    virtual void m48(int a);
-};
-*/
-
 extern "C" {
 extern void Mg_RenderSpriteBoth(void *a, int b, int c, int d, int e);
 extern int sTrmpRowScreenY[];
@@ -91,8 +66,10 @@ extern int sTrmpFxCount;
 extern TrmpScorePopup *sTrmpFxPool;
 
 extern int sTrmpBrushWord[];
-extern void MIi_CpuCopy32(int *dst, int *src, int len);
-extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
+/* local extern: these named parameters hold this TU's @NNN numbering; the
+   switch to nitro/mi/memory.h waits on the manifest re-key in #5252. */
+extern void MIi_CpuCopy32(const void *dst, void *src, unsigned int len);
+extern void MIi_CpuClear16(unsigned short val, void *dst, unsigned int nbytes);
 extern const unsigned char sTrmpBrushPltt[];
 extern dFdBrightness_c *gSceneFader;
 extern int sTrmpTouchBlocked;
@@ -177,33 +154,6 @@ OamAttr **sTrmpTextSpritesByLanguage[] = {sMgTextSpritesEnglish, sMgTextSpritesS
                                           sMgTextSpritesItalian};
 int sTrmpPuffXByLanguage[] = {(int)sTrmpPuffEnglish, (int)sTrmpPuffSpanish, (int)sTrmpPuffFrench,
                               (int)sTrmpPuffGerman, (int)sTrmpPuffItalian};
-/* TUBUILD CONFLICT -- alternate declaration of sTrmpFxList, from the legacy file for TrmpFx_Link, NOT applied: extern void *sTrmpFxList; */
-/* TUBUILD CONFLICT -- alternate declaration of sTrmpFxList, from the legacy file for TrmpFx_DrawAll, NOT applied: extern void *sTrmpFxList; */
-/* TUBUILD CONFLICT -- alternate declaration of sTrmpFxPool, from the legacy file for TrmpFx_ClearAll, NOT applied: extern char* sTrmpFxPool; */
-/* TUBUILD CONFLICT -- alternate declaration of sTrmpFxList, from the legacy file for TrmpFx_ClearAll, NOT applied: extern int sTrmpFxList; */
-/* TUBUILD CONFLICT -- alternate declaration of MIi_CpuClear16, from the legacy file for _ZN17dScMgTrampoline_c16OnGraphCallback0Ev, NOT applied: void MIi_CpuClear16(u16 val, void* dst, int nbytes); */
-/* TUBUILD CONFLICT -- alternate declaration of Mg_RenderSpriteBoth, from the legacy file for _ZN17dScMgTrampoline_c6RenderEv, NOT applied: void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4); */
-/* TUBUILD CONFLICT -- alternate declaration of MIi_CpuClear16, from the legacy file for func_ov006_02121778, NOT applied: extern void MIi_CpuClear16(unsigned short a, int b, int c); */
-/* TUBUILD CONFLICT -- alternate declaration of Trmp3DMario_UpdateAll, from the legacy file for func_ov006_021218fc, NOT applied: extern void Trmp3DMario_UpdateAll(...); */
-/* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for func_ov006_021218fc, NOT applied: extern int _Z14ApproachLinearRiii(int *v, int step, int rate); */
-/* TUBUILD CONFLICT -- alternate declaration of _Z15ApproachLinear2Rsss, from the legacy file for func_ov006_021218fc, NOT applied: extern int _Z15ApproachLinear2Rsss(short *v, short step, short rate); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN5Sound12PlayBank2_2DEj, from the legacy file for func_ov006_021218fc, NOT applied: extern void _ZN5Sound12PlayBank2_2DEj(unsigned int bank); */
-/* TUBUILD CONFLICT -- alternate declaration of sTrmpComboCount, from the legacy file for func_ov006_02121bc8, NOT applied: extern "C" int sTrmpComboCount; */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov006_02120a18, from the legacy file for func_ov006_02121cf4, NOT applied: extern void func_ov006_02120a18(char* p, int v); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN5Sound12PlayBank2_2DEj, from the legacy file for func_ov006_02121cf4, NOT applied: extern void _ZN5Sound12PlayBank2_2DEj(unsigned int n); */
-/* TUBUILD CONFLICT -- alternate declaration of TrmpLine_UpdateAll, from the legacy file for func_ov006_02121d64, NOT applied: void TrmpLine_UpdateAll(void); */
-/* TUBUILD CONFLICT -- alternate declaration of MIi_CpuClear16, from the legacy file for func_ov006_02121d64, NOT applied: void MIi_CpuClear16(u16 val, char *dst, int nbytes); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012718, from the legacy file for func_ov006_02121d64, NOT applied: void func_02012718(void *a, int b); */
-/* TUBUILD CONFLICT -- alternate declaration of RandomIntInternal, from the legacy file for func_ov006_02121d64, NOT applied: int RandomIntInternal(int *seed); */
-/* TUBUILD CONFLICT -- alternate declaration of func_020126e8, from the legacy file for func_ov006_02121d64, NOT applied: int func_020126e8(int a); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012468, from the legacy file for func_ov006_02121d64, NOT applied: int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h); */
-/* TUBUILD CONFLICT -- alternate declaration of sTrmpStartTouchX, from the legacy file for func_ov006_02121f04, NOT applied: extern short sTrmpStartTouchX; */
-/* TUBUILD CONFLICT -- alternate declaration of sTrmpStartTouchY, from the legacy file for func_ov006_02121f04, NOT applied: extern short sTrmpStartTouchY; */
-/* TUBUILD CONFLICT -- alternate declaration of GetGameLanguage, from the legacy file for _ZN17dScMgTrampoline_c11CanEndStateEi, NOT applied: extern int GetGameLanguage(void); */
-/* TUBUILD CONFLICT -- alternate declaration of gMainScreenLayers, from the legacy file for _ZN17dScMgTrampoline_c13InitResourcesEv, NOT applied: extern u8 gMainScreenLayers; */
-/* TUBUILD CONFLICT -- alternate declaration of GetGameLanguage, from the legacy file for func_ov006_0212231c, NOT applied: extern s32 GetGameLanguage(void); */
-/* TUBUILD CONFLICT -- alternate declaration of MIi_CpuClear16, from the legacy file for func_ov006_0212231c, NOT applied: extern void MIi_CpuClear16(u16 val, char *dst, int nbytes); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN2GX10LoadBGPlttEPKvjj, from the legacy file for func_ov006_0212231c, NOT applied: extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b); */
 }
 
 TrmpScorePopup::TrmpScorePopup() {}
@@ -225,9 +175,10 @@ void dScMgTrampoline_c::InitDisplay() {
     objChar = LoadFile(sTrmpNcgByLanguage[GetGameLanguage()]);
     objPltt = LoadFile(ASSET_D_2D_MG_TRAMPOLINE_NCL_BIN);
 
-    REG_BG2CNT = (REG_BG2CNT & ~3) | 2;
-    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x9110;
-    REG_BG2CNT &= ~0x40;
+    G2_SetBG2Priority(2);
+    G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x512, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x8800,
+                         GX_BG_CHARBASE_0x10000);
+    G2_BG2Mosaic(0);
 
     {
         char *dst = (char *)G2_GetBG2CharPtr();
@@ -238,9 +189,10 @@ void dScMgTrampoline_c::InitDisplay() {
     DecompressLZ16(bgScr, (void *)G2_GetBG2ScrPtr());
     GX_LoadBGPltt(bgPltt, 0x1a0, 0x60);
 
-    REG_BG3CNT = (REG_BG3CNT & ~3) | 1;
-    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1318;
-    REG_BG3CNT &= ~0x40;
+    G2_SetBG3Priority(1);
+    G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9800,
+                         GX_BG_CHARBASE_0x18000);
+    G2_BG3Mosaic(0);
 
     DecompressLZ16(objChar, G2_GetOBJCharPtr());
     GX_LoadOBJPltt(objPltt, 0, 0x60);
@@ -267,7 +219,7 @@ s32 dScMgTrampoline_c::InitResources() {
     G3X_SetFog(false, 0, 2, 0x1000);
     REG_DISP3DCNT = (REG_DISP3DCNT & ~0x3000) | 8;
     InitialiseVramGlobals();
-    REG_BG0CNT = (REG_BG0CNT & ~3) | 1;
+    G2_SetBG0Priority(1);
     fov = FX_Div(0xc0000, (s32)data_02082414);
     this->mCameras[0].mLookAt.x = 0;
     this->mCameras[0].mLookAt.y = -0x64000;
@@ -301,7 +253,7 @@ void dScMgTrampoline_c::StartRound(int /* arg */) {
     volatile unsigned short fill;
     int heightMix;
 
-    G2x_SetBlendAlpha_(&REG_BLDCNT, 1, 0x3e, 0x10, 0x10);
+    G2_SetBlendAlpha(1, 0x3e, 0x10, 0x10);
 
     mTouchStartX = data_020a0dbc[0];
     mTouchStartY = data_020a0dbc[1];
@@ -711,12 +663,11 @@ int dScMgTrampoline_c::OnGraphCallback2() {
         if (mDrawSubScreen == 0) {
             gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
             SetBg2Offset(0, mScrollY + mScrollOffsetY);
-            REG_BG2OFS = (mScrollY + mScrollOffsetY) << 16 & 0x1ff0000;
+            G2_SetBG2Offset(0, mScrollY + mScrollOffsetY);
         } else {
             gMainScreenLayers |= DISPLAY_LAYER_BG3;
             SetBg2Offset(0, mScrollY + 0xc0 + mScrollOffsetY + Mg_GetTopScreenYOffset());
-            REG_BG2OFS =
-                (mScrollY + 0xc0 + mScrollOffsetY + Mg_GetTopScreenYOffset()) << 16 & 0x1ff0000;
+            G2_SetBG2Offset(0, mScrollY + 0xc0 + mScrollOffsetY + Mg_GetTopScreenYOffset());
         }
     }
     return 1;

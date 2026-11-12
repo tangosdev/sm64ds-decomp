@@ -10,13 +10,16 @@
  *   though src/unnamed/arm9/0206/func_0206a928.c defines it with three
  *   (ctx, fmt, ap): func_0206ccd8's call passes the trailing `p` in r3,
  *   and dropping it diffs.
- * - The card-ROM bus pokes at 0x9fe2ffe / 0x9fe20f0 and the WRAM latency
- *   mirror at 0x27fff72 stay raw addresses: func_0206cf7c's card-wait gate
- *   is the only consumer and no header names them.
+ * - The debugger bus pokes at 0x9fe2ffe / 0x9fe20f0 stay raw addresses:
+ *   these two helpers are their only consumers and no header names them.
+ *   The value written there is mirrored in the debugger block
+ *   (DebuggerBlock::busMirror, private/debugger_block.h).
  */
 
 #include "types.h"
 #include "nitro/hw/registers.h"
+#include "nitro/hw/mmap_shared.h"
+#include "private/debugger_block.h"
 
 extern "C" {
 extern const char data_020868a0[52];
@@ -31,7 +34,7 @@ void func_0206cbc0(struct Csl *sl, u8 *sb, int count);
 
 struct CardBusState {
     unsigned short exmemcnt;
-    unsigned short latency;
+    unsigned short busMirror;
     unsigned short ready;
 };
 
@@ -45,9 +48,9 @@ void func_0206ce20(struct CardBusState* s){
   REG_EXMEMCNT = (v & 0xffe3) | 0xf;
   if(func_0206cf7c(1) != 0){
     s->ready = 1;
-    s->latency = *(volatile unsigned short*)0x27fff72;
+    s->busMirror = ((struct DebuggerBlock *)HW_ISD_RESERVED)->busMirror;
     *(volatile unsigned short*)0x9fe2ffe = 0x20;
-    *(volatile unsigned short*)0x27fff72 = 0x20;
+    ((struct DebuggerBlock *)HW_ISD_RESERVED)->busMirror = 0x20;
   }
 }
 }
@@ -59,16 +62,16 @@ void func_0206cd9c(struct CardBusState *s)
     volatile unsigned short scratch;
 
     if (func_0206cf7c(1) != 0 && s->ready != 0) {
-        volatile unsigned short *p27;
-        volatile unsigned short *p9fe;
+        volatile unsigned short *mirror;
+        volatile unsigned short *busReg;
         unsigned short v2;
 
-        p27 = (volatile unsigned short *)0x27fff72;
-        p9fe = (volatile unsigned short *)0x9fe2ffe;
-        v2 = s->latency;
-        *p27 = v2;
-        v2 = s->latency;
-        *p9fe = v2;
+        mirror = &((struct DebuggerBlock *)HW_ISD_RESERVED)->busMirror;
+        busReg = (volatile unsigned short *)0x9fe2ffe;
+        v2 = s->busMirror;
+        *mirror = v2;
+        v2 = s->busMirror;
+        *busReg = v2;
         scratch = *(volatile unsigned short *)0x9fe20f0;
         scratch = *(volatile unsigned short *)0x9fe20f0;
         scratch = *(volatile unsigned short*)0x9fe20f0;

@@ -112,7 +112,7 @@
     "func_ov007_020b3c54 is defined void(void) with its mode an uninitialised local, as its one caller (func_ov007_020b3360) calls it; the shard spelled the leftover r1 as a second parameter."
   ],
   "verification": {
-    "round": "tools/match.py per function against the one unit source -- text-only, whole TU compiled",
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "functions_matched": 12,
@@ -120,7 +120,17 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "functions_occur_in_expected_order": "PASS"
+      "functions_occur_in_expected_order": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "object": "build/tu/ov007-unit020b2cdc/unit020b2cdc.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
     }
   }
 }

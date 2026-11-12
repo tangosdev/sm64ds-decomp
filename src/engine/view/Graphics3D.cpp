@@ -49,8 +49,8 @@ void Initialise3dGraphics(int arg) {
 // Full 3D setup: engine state, texture banks, an identity view.
 void func_0200f4f4(void) {
     Initialise3dGraphics(0);
-    GX_SetBankForTex(3);
-    GX_SetBankForTexPltt(0x30);
+    GX_SetBankForTex(GX_VRAM_TEX_01_AB);
+    GX_SetBankForTexPltt(GX_VRAM_TEXPLTT_01234_EF);
     func_02045d9c();
     data_0209b3ec = IDENTITY_MATRIX4X3;
     MTX_Inverse43(&data_0209b3ec, &data_0209b41c);

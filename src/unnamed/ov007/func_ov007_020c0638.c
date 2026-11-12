@@ -1,6 +1,5 @@
 #include "Ov007BgLayer.h"
-extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
-extern void MIi_CpuCopy16(const void *src, void *dst, int nbytes);
+#include "nitro/mi/memory.h"
 
 /* Rebuilds the layer's screen scrolled to pixel (x, y): fills it with tile,
  * copies the overlapping part of source in at the tile offset and keeps the
@@ -43,13 +42,13 @@ void func_ov007_020c0638(Ov007BgLayer *self, int x, int y, u16 tile) {
         sh -= ty;
     }
     v = tile;
-    MIi_CpuClear16(v, dst, self->width * self->height * 2);
+    MI_CpuFill16(dst, v, self->width * self->height * 2);
     self->fineScrollX = -rx << 12;
     self->fineScrollY = -ry << 12;
     if (sw > 0 && sh > 0) {
         for (rx = ty + sh; ty < rx; ty++, sy++) {
-            MIi_CpuCopy16(src + sy * self->width * 2 + sx * 2, dst + ty * self->width * 2 + tx * 2,
-                          sw * 2);
+            MI_CpuCopy16(src + sy * self->width * 2 + sx * 2, dst + ty * self->width * 2 + tx * 2,
+                         sw * 2);
         }
     }
     self->dirty = 1;

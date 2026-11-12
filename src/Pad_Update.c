@@ -1,5 +1,6 @@
 #include "types.h"
 #include "Ov007Pad.h"
+#include "nitro/pad/pad.h"
 
 /* Reads the keys (KEYINPUT and the ARM7's X/Y, or *src when given) into the
  * pad, honours inputLock, sets the three axes and steps each button's held
@@ -15,7 +16,7 @@ void Pad_Update(Ov007Pad *pad, u16 *src) {
     do { flags[i] = 0; i = i + 1; } while (i < 0xc);
     pad->prevKeys = pad->keys;
     if (src == 0) {
-        pad->keys = ((*(volatile u16 *)0x4000130 | *(volatile u16 *)0x27fffa8) ^ 0x2fff) & 0x2fff;
+        pad->keys = PAD_Read();
     } else {
         pad->keys = *src;
     }
@@ -34,34 +35,38 @@ void Pad_Update(Ov007Pad *pad, u16 *src) {
     pad->shoulder = (s8)i;
     pad->dirY = pad->shoulder;
     pad->dirX = pad->dirY;
-    if ((pad->keys & 0x40) != 0) {
+    if ((pad->keys & PAD_KEY_UP) != 0) {
         pad->dirY = 1;
         flags[0] = 1;
     }
-    if ((pad->keys & 0x80) != 0) {
+    if ((pad->keys & PAD_KEY_DOWN) != 0) {
         pad->dirY = -1;
         flags[1] = 1;
     }
-    if ((pad->keys & 0x10) != 0) {
+    if ((pad->keys & PAD_KEY_RIGHT) != 0) {
         pad->dirX = 1;
         flags[2] = 1;
     }
-    if ((pad->keys & 0x20) != 0) {
+    if ((pad->keys & PAD_KEY_LEFT) != 0) {
         pad->dirX = -1;
         flags[3] = 1;
     }
-    if ((pad->keys & 0x200) != 0) {
+    if ((pad->keys & PAD_BUTTON_L) != 0) {
         pad->shoulder = 1;
         flags[8] = 1;
     }
-    if ((pad->keys & 0x100) != 0) {
+    if ((pad->keys & PAD_BUTTON_R) != 0) {
         pad->shoulder = -1;
         flags[9] = 1;
     }
     keys = pad->keys;
     i = 0;
-    flags[4] = keys & 1; flags[5] = keys & 2; flags[6] = keys & 0x400;
-    flags[7] = keys & 0x800; flags[10] = keys & 8; flags[11] = keys & 4;
+    flags[4] = keys & PAD_BUTTON_A;
+    flags[5] = keys & PAD_BUTTON_B;
+    flags[6] = keys & PAD_BUTTON_X;
+    flags[7] = keys & PAD_BUTTON_Y;
+    flags[10] = keys & PAD_BUTTON_START;
+    flags[11] = keys & PAD_BUTTON_SELECT;
     za = i; zb = i;
     do {
         if (flags[i] != 0) {

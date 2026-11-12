@@ -63,9 +63,9 @@ enum daObjSimpleLift_c_AssetId {
 #include "dBgW.h"
 #include "math/CalcLib.h"
 
-/* Per-variant asset row is three pointers, stride 0xc. dExtSimpleModel_c and KCL are
- * data_ov091_02135024 / data_ov091_02135028; the CLPS word is named here.
- * Heading offsets and travel times are data_ov091_02134514 / 02134504.
+/* Per-variant asset row: the model file, the collision file and the CLPS block,
+ * indexed by mVariant. Heading offsets and travel times are data_ov091_02134514 /
+ * 02134504.
  * dBgW::SetBeforeClsnCallback stores the beforeClsn callback; an inlined store is four
  * bytes short. */
 struct SimpleLiftModelFilePtr : SharedFilePtr {
@@ -78,7 +78,13 @@ struct SimpleLiftClsnFileHandle : SharedFilePtr {
     ~SimpleLiftClsnFileHandle();
 };
 
-extern char data_ov091_0213502c[];
+struct SimpleLiftAssets {
+    SharedFilePtr *modelFile;
+    SharedFilePtr *clsnFile;
+    CLPS_Block *clps;
+};
+
+extern SimpleLiftAssets data_ov091_02135024[7];
 
 extern SimpleLiftModelFilePtr gKm1DeruModelFile;
 extern SimpleLiftClsnFileHandle gKm1DeruCollisionFile;
@@ -106,8 +112,8 @@ daObjSimpleLift_c::~daObjSimpleLift_c() {}
 int daObjSimpleLift_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
-    (*(SharedFilePtr **)(data_ov091_02135024 + mVariant * 0xc))->Release();
-    (*(SharedFilePtr **)(data_ov091_02135028 + mVariant * 0xc))->Release();
+    data_ov091_02135024[mVariant].modelFile->Release();
+    data_ov091_02135024[mVariant].clsnFile->Release();
     return 1;
 }
 
@@ -157,8 +163,7 @@ int daObjSimpleLift_c::InitResources() {
         break; /* KM2_RIFUT02 */
     }
 
-    void *bmd =
-        dExtSimpleModel_c::LoadFile(**(SharedFilePtr **)(data_ov091_02135024 + mVariant * 0xc));
+    void *bmd = dExtSimpleModel_c::LoadFile(*data_ov091_02135024[mVariant].modelFile);
     mModel.SetFile((BMD_File *)bmd, 1, -1);
 
     mPrevAngleY = mAngleY + data_ov091_02134514[mVariant];
@@ -175,16 +180,15 @@ int daObjSimpleLift_c::InitResources() {
 
     /* Variant 6 (BK_TRANSBAR) is full scale; the other six are 0x199.
      * Both arms stay duplicated so each LoadFile/SetFile pair is emitted. */
-    if (mVariant == 6) {
-        int tableOffset = mVariant * 0xc;
-        void *kcl = dBgW_Kc::LoadFile(**(SharedFilePtr **)(data_ov091_02135028 + tableOffset));
+    int v = mVariant;
+    if (v == 6) {
+        void *kcl = dBgW_Kc::LoadFile(*data_ov091_02135024[v].clsnFile);
         mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat, 0x1000, mAngleY,
-                              *(CLPS_Block *)(*(void **)(data_ov091_0213502c + tableOffset)));
+                              *data_ov091_02135024[v].clps);
     } else {
-        int tableOffset = mVariant * 0xc;
-        void *kcl = dBgW_Kc::LoadFile(**(SharedFilePtr **)(data_ov091_02135028 + tableOffset));
+        void *kcl = dBgW_Kc::LoadFile(*data_ov091_02135024[v].clsnFile);
         mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat, 0x199, mAngleY,
-                              *(CLPS_Block *)(*(void **)(data_ov091_0213502c + tableOffset)));
+                              *data_ov091_02135024[v].clps);
     }
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     return 1;

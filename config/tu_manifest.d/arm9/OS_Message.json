@@ -48,7 +48,7 @@
   "notes": [
     "Hand-assembled, following arm9/OS_Tick and arm9/OS_Alarm: tu_map cannot segment arm9/main.",
     "The SDK names were given in this change (symbols/actor_renames.tsv records the evidence).",
-    "Text-only. OSMessageQueue is this SDK's layout (u16 thread queues) and stays local to the file: the callers (SoundEngine.cpp, WM_Init.cpp, WM_SendCommand.cpp) declare their own spellings."
+    "Text-only. OSMessageQueue is this SDK's layout (u16 thread queues) and stays local to the file: the callers (SoundEngine.cpp, WM_System.c) take it from include/nitro/os/message.h."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",

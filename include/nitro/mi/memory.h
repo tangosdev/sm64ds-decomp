@@ -2,15 +2,42 @@
 #define NITRO_MI_MEMORY_H
 
 /* NitroSDK's mi_memory.c (nitro/mi/memory.h), defined in
- * src/engine/mi/MI_Memory.c. Only what a header consumer needs is declared
- * here; the parameters stay unnamed, because a named parameter in a
- * declaration costs every C++ includer a compiler @NNN number. */
+ * src/engine/mi/MI_Memory.c, with the SDK's signatures. The parameters stay
+ * unnamed, because a named parameter in a declaration costs every C++
+ * includer a compiler @NNN number. The SDK spells the sizes u32 and the fill
+ * values u16/u32/u8; the plain types here are the same ones, so that the C
+ * files that typedef u32 themselves can include this without types.h. */
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+void MIi_CpuClear16(unsigned short, void *, unsigned int);
+void MIi_CpuCopy16(const void *, void *, unsigned int);
+void MIi_CpuClear32(unsigned int, void *, unsigned int);
+void MIi_CpuCopy32(const void *, void *, unsigned int);
+void MIi_CpuClearFast(unsigned int, void *, unsigned int);
+void MIi_CpuCopyFast(const void *, void *, unsigned int);
+void MI_Copy32B(const void *, void *);
 void MI_Copy36B(const void *, void *);
+void MI_Copy48B(const void *, void *);
+void MI_CpuFill8(void *, unsigned char, unsigned int);
+void MI_CpuCopy8(const void *, void *, unsigned int);
+
+/* The SDK's public wrappers. The SDK spells these as static inline
+ * functions; they are macros here because an inline body in a shared header
+ * renumbers every C++ includer's @NNN symbols, and the call each one makes is
+ * the same either way. */
+#define MI_CpuFill16(dest, data, size)    MIi_CpuClear16((data), (dest), (size))
+#define MI_CpuClear16(dest, size)         MIi_CpuClear16(0, (dest), (size))
+#define MI_CpuCopy16(src, dest, size)     MIi_CpuCopy16((src), (dest), (size))
+#define MI_CpuFill32(dest, data, size)    MIi_CpuClear32((data), (dest), (size))
+#define MI_CpuClear32(dest, size)         MIi_CpuClear32(0, (dest), (size))
+#define MI_CpuCopy32(src, dest, size)     MIi_CpuCopy32((src), (dest), (size))
+#define MI_CpuFillFast(dest, data, size)  MIi_CpuClearFast((data), (dest), (size))
+#define MI_CpuClearFast(dest, size)       MIi_CpuClearFast(0, (dest), (size))
+#define MI_CpuCopyFast(src, dest, size)   MIi_CpuCopyFast((src), (dest), (size))
+#define MI_CpuClear8(dest, size)          MI_CpuFill8((dest), 0, (size))
 
 #ifdef __cplusplus
 }

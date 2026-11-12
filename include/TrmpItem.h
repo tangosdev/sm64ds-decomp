@@ -9,9 +9,10 @@
 /* TrmpItem, one of Trampoline2's floating rings (its three models are
  * ASSET_RINGA/B/C_BMD, sTrmpItemRing*ModelFile): the 0x1d0-byte record the
  * TrmpItem_* helpers in src/minigames/unit020cd744.cpp spawn, move and draw
- * (the scene builds ten). The name is coined. A layout view only: the helpers
- * are free functions over a char* record and read it through their TRMPITEM()
- * cast. mMotionKind picks the motion (TrmpItem_MotionStill .. SpinDrift);
+ * (the scene builds ten). The name is coined. The helpers take a TrmpItem *
+ * and address these fields by name; the three void * entry points declared in
+ * decl_common.h (MotionHover, MotionSway, UpdateWithJumper) cast at that
+ * boundary. mMotionKind picks the motion (TrmpItem_MotionStill .. SpinDrift);
  * unnamed regions are written in one place only, or sit inside an embedded
  * object. */
 struct TrmpItem {
@@ -31,7 +32,11 @@ struct TrmpItem {
     s32 mRotation[4];     /* 0x074 -- quaternion built from mForward */
     s32 mActive;          /* 0x084 -- updated and drawn only while set */
     s32 mAppearScale;     /* 0x088 -- grows to 0x800 as the item appears */
-    u8 pad_08c[0xa];      /* 0x08c */
+    u8 pad_08c[0x6];      /* 0x08c */
+    /* TrmpItem_Init stores 0x5a here; nothing in either trampoline TU reads
+       it, so the role, and the name, are unknown (as for mUnusedVec). */
+    s16 mUnusedInit;      /* 0x092 */
+    u8 pad_094[0x2];      /* 0x094 */
     s16 mSizeIdx;         /* 0x096 -- row of the speed, range and hit-width tables */
     s16 mMotionKind;      /* 0x098 -- 0 still .. 8 spin-drift */
     u16 mPhase;           /* 0x09a -- the sway and hover motions' phase */

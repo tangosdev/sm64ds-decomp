@@ -6,8 +6,6 @@ extern char data_020a2400[];
 extern void func_02041224(char *thiz, int n);
 extern void func_02042160(void *arg);
 
-typedef struct FSFile FSFile;
-
 /* The open request (kind 0) a child sends the parent: FileShareMsg's layout
  * (arm9_a1fc0_file_share.h), with the region's length and offset where the
  * replies carry mFlag and mFileId. func_020412f0 reads it back: it compares the two packet-size bytes with its own mParentPacketSize,

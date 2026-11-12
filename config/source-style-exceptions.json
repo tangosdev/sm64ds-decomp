@@ -674,22 +674,6 @@
       "evidence": "present on origin/main in src/unnamed/arm9/0201/func_02018cbc.c; folded into src/unnamed/arm9/0201/func_02018c00.c with the rest of its contiguous run. rombuild 106/106 exact and prepush_linkcheck VERIFIED for every folded function."
     },
     {
-      "path": "src/WmClearFifoRecvFlag.cpp",
-      "rule": "raw-offset",
-      "match": "(char*)msg+0x14",
-      "count": 2,
-      "reason": "WmReceiveFifo moved here verbatim from its own shard; the offset is carried unchanged because no struct for that object exists yet. Follow-up: replace with the field once the struct is reconstructed.",
-      "evidence": "present on origin/main in src/unnamed/arm9/0206/func_02061188.c; folded into src/unnamed/arm9/0206/func_0206116c.c with the rest of its contiguous run. rombuild 106/106 exact and prepush_linkcheck VERIFIED for every folded function."
-    },
-    {
-      "path": "src/WmClearFifoRecvFlag.cpp",
-      "rule": "raw-offset",
-      "match": "(char*)msg+0x1c",
-      "count": 1,
-      "reason": "WmReceiveFifo moved here verbatim from its own shard; the offset is carried unchanged because no struct for that object exists yet. Follow-up: replace with the field once the struct is reconstructed.",
-      "evidence": "present on origin/main in src/unnamed/arm9/0206/func_02061188.c; folded into src/unnamed/arm9/0206/func_0206116c.c with the rest of its contiguous run. rombuild 106/106 exact and prepush_linkcheck VERIFIED for every folded function."
-    },
-    {
       "path": "src/unnamed/ov002/func_ov002_020e6a78.cpp",
       "rule": "raw-offset",
       "match": "(char*)obj+0x24",
@@ -1328,6 +1312,110 @@
       "count": 1,
       "reason": "Not an object view: G2_GetBG2ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
       "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "include/nitro/ctrdg/ctrdg_common.h",
+      "rule": "raw-offset",
+      "match": "(u16*)(HW_CTRDG_ROM+0x0001fffe",
+      "count": 1,
+      "reason": "NitroSDK's own CTRDGi_GetModuleIDImageAddr macro, verbatim: the module-ID halfword a non-ROM-code cartridge keeps at a fixed address in the GBA slot. A memory-mapped bus address, not an object view.",
+      "evidence": "ntrtwl/NitroSDK include/nitro/ctrdg/common/ctrdg_common.h:186; CTRDG_IsExisting reads it, arm9/CTRDG_Common 7/7 TEXT-VERIFIED"
+    },
+    {
+      "path": "src/CARDi_TryReadCardDma.cpp",
+      "rule": "raw-offset",
+      "match": "(vu32*)(HW_ROM_HEADER_BUF+0x60",
+      "count": 1,
+      "reason": "The ROM-control word of the boot code's copy of the cartridge header, spelled as NitroSDK spells it (os_reset.c's hdr_GAME_BUF; later card_rom.h reads it through cardi_rom_header_addr + 0x60). The ROM loads the absolute literal 0x027ffe60, so this older SDK used HW_ROM_HEADER_BUF directly. Follow-up: a CARDi_GetRomFlag inline once the card ROM constants are in include/.",
+      "evidence": "pret/pokediamond arm9/lib/NitroSDK/src/OS_reset.c:194, include/CARD_rom.h:134; ROM arm9 0x02060b64 size 0x148 fdiff 82/82"
+    },
+    {
+      "path": "src/OSReadROMArea.c",
+      "rule": "raw-offset",
+      "match": "(vu8*)(HW_REG_BASE+0x1a1",
+      "count": 1,
+      "reason": "The card registers and the header word, spelled as the SDK's os_reset.c spells them: volatile MMIO pointers and the boot loader's control word in the cartridge header copy, not an object view.",
+      "evidence": "NitroSDK libraries/os/common/src/os_reset.c OSi_ReadCardRom32 declares these five pointers with these offsets; ROM itcm 0x01ffdbd8 size 0x130 matches 2004/b56"
+    },
+    {
+      "path": "src/OSReadROMArea.c",
+      "rule": "raw-offset",
+      "match": "(vu8*)(HW_REG_BASE+0x1a8",
+      "count": 1,
+      "reason": "The card registers and the header word, spelled as the SDK's os_reset.c spells them: volatile MMIO pointers and the boot loader's control word in the cartridge header copy, not an object view.",
+      "evidence": "NitroSDK libraries/os/common/src/os_reset.c OSi_ReadCardRom32 declares these five pointers with these offsets; ROM itcm 0x01ffdbd8 size 0x130 matches 2004/b56"
+    },
+    {
+      "path": "src/OSReadROMArea.c",
+      "rule": "raw-offset",
+      "match": "(vu32*)(HW_REG_BASE+0x1a4",
+      "count": 1,
+      "reason": "The card registers and the header word, spelled as the SDK's os_reset.c spells them: volatile MMIO pointers and the boot loader's control word in the cartridge header copy, not an object view.",
+      "evidence": "NitroSDK libraries/os/common/src/os_reset.c OSi_ReadCardRom32 declares these five pointers with these offsets; ROM itcm 0x01ffdbd8 size 0x130 matches 2004/b56"
+    },
+    {
+      "path": "src/OSReadROMArea.c",
+      "rule": "raw-offset",
+      "match": "(vu32*)(HW_REG_BASE+0x100010",
+      "count": 1,
+      "reason": "The card registers and the header word, spelled as the SDK's os_reset.c spells them: volatile MMIO pointers and the boot loader's control word in the cartridge header copy, not an object view.",
+      "evidence": "NitroSDK libraries/os/common/src/os_reset.c OSi_ReadCardRom32 declares these five pointers with these offsets; ROM itcm 0x01ffdbd8 size 0x130 matches 2004/b56"
+    },
+    {
+      "path": "src/OSReadROMArea.c",
+      "rule": "raw-offset",
+      "match": "(vu32*)(HW_ROM_HEADER_BUF+0x60",
+      "count": 1,
+      "reason": "The card registers and the header word, spelled as the SDK's os_reset.c spells them: volatile MMIO pointers and the boot loader's control word in the cartridge header copy, not an object view.",
+      "evidence": "NitroSDK libraries/os/common/src/os_reset.c OSi_ReadCardRom32 declares these five pointers with these offsets; ROM itcm 0x01ffdbd8 size 0x130 matches 2004/b56"
+    },
+    {
+      "path": "src/OSi_ReloadRomData.c",
+      "rule": "raw-offset",
+      "match": "(u32*)(p+0x20",
+      "count": 1,
+      "reason": "The cartridge header copy's ARM9/ARM7 rom offset, ram address and size, read as the SDK's os_reset.c reads them. No shared header declares a ROM-header struct, and adding one would be a speculative type.",
+      "evidence": "NitroSDK libraries/os/common/src/os_reset.c OSi_ReloadRomData reads these six header fields through p = HW_ROM_HEADER_BUF at these offsets; ROM itcm 0x01ffdd08 size 0x90 matches 2004/b56"
+    },
+    {
+      "path": "src/OSi_ReloadRomData.c",
+      "rule": "raw-offset",
+      "match": "(u32*)(p+0x28",
+      "count": 1,
+      "reason": "The cartridge header copy's ARM9/ARM7 rom offset, ram address and size, read as the SDK's os_reset.c reads them. No shared header declares a ROM-header struct, and adding one would be a speculative type.",
+      "evidence": "NitroSDK libraries/os/common/src/os_reset.c OSi_ReloadRomData reads these six header fields through p = HW_ROM_HEADER_BUF at these offsets; ROM itcm 0x01ffdd08 size 0x90 matches 2004/b56"
+    },
+    {
+      "path": "src/OSi_ReloadRomData.c",
+      "rule": "raw-offset",
+      "match": "(u32*)(p+0x2c",
+      "count": 1,
+      "reason": "The cartridge header copy's ARM9/ARM7 rom offset, ram address and size, read as the SDK's os_reset.c reads them. No shared header declares a ROM-header struct, and adding one would be a speculative type.",
+      "evidence": "NitroSDK libraries/os/common/src/os_reset.c OSi_ReloadRomData reads these six header fields through p = HW_ROM_HEADER_BUF at these offsets; ROM itcm 0x01ffdd08 size 0x90 matches 2004/b56"
+    },
+    {
+      "path": "src/OSi_ReloadRomData.c",
+      "rule": "raw-offset",
+      "match": "(u32*)(p+0x30",
+      "count": 1,
+      "reason": "The cartridge header copy's ARM9/ARM7 rom offset, ram address and size, read as the SDK's os_reset.c reads them. No shared header declares a ROM-header struct, and adding one would be a speculative type.",
+      "evidence": "NitroSDK libraries/os/common/src/os_reset.c OSi_ReloadRomData reads these six header fields through p = HW_ROM_HEADER_BUF at these offsets; ROM itcm 0x01ffdd08 size 0x90 matches 2004/b56"
+    },
+    {
+      "path": "src/OSi_ReloadRomData.c",
+      "rule": "raw-offset",
+      "match": "(u32*)(p+0x38",
+      "count": 1,
+      "reason": "The cartridge header copy's ARM9/ARM7 rom offset, ram address and size, read as the SDK's os_reset.c reads them. No shared header declares a ROM-header struct, and adding one would be a speculative type.",
+      "evidence": "NitroSDK libraries/os/common/src/os_reset.c OSi_ReloadRomData reads these six header fields through p = HW_ROM_HEADER_BUF at these offsets; ROM itcm 0x01ffdd08 size 0x90 matches 2004/b56"
+    },
+    {
+      "path": "src/OSi_ReloadRomData.c",
+      "rule": "raw-offset",
+      "match": "(u32*)(p+0x3c",
+      "count": 1,
+      "reason": "The cartridge header copy's ARM9/ARM7 rom offset, ram address and size, read as the SDK's os_reset.c reads them. No shared header declares a ROM-header struct, and adding one would be a speculative type.",
+      "evidence": "NitroSDK libraries/os/common/src/os_reset.c OSi_ReloadRomData reads these six header fields through p = HW_ROM_HEADER_BUF at these offsets; ROM itcm 0x01ffdd08 size 0x90 matches 2004/b56"
     }
   ]
 }

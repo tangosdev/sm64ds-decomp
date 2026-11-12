@@ -2,10 +2,10 @@
 #include "private/arm9_a1fc0_file_share.h"
 #include "private/wm_views.h"
 #include "private/arm9_wbt.h"
+#include "nitro/wm/wm_api.h"
 extern int data_020a0f38;
 extern char data_020a2400[];
 
-extern int WM_ReadStatus(int *arg);
 extern void WBT_SetOwnAid(int x);
 extern void func_02041930(void);
 extern void func_02040f30(void *arg);
@@ -20,8 +20,8 @@ void func_02040bb0(void) {
            mStatus (6 on a NULL buffer, then a cache-invalidated copy); its
            aid goes to WBT_SetOwnAid. */
         FileShareChildArea *child = (FileShareChildArea *)data_020a2400;
-        WM_ReadStatus((int *)child->mStatus);
-        WBT_SetOwnAid(((WMStatus *)child->mStatus)->aid);
+        WM_ReadStatus(&child->mStatus);
+        WBT_SetOwnAid(child->mStatus.aid);
         WBT_RequestSync(1, func_02040f30);
     } else {
         void (*fn)(int);

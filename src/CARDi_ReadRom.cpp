@@ -2,10 +2,10 @@
 #include "types.h"
 #include "nitro/os/system.h"
 #include "nitro/card/card_rom.h"
+#include "nitro/mi/dma.h"
 
 extern "C" {
 
-void MI_StopDma(u32 dmaNo);
 void CARDi_ReadRomSyncCore(CARDiCommon *c);
 
 /* NitroSDK CARDi_ReadRom (card_rom.c): wait out the request in flight and
@@ -40,7 +40,7 @@ void CARDi_ReadRom(u32 dma, const void *src, void *dst, u32 len, MIDmaCallback c
     } else if (is_async) {
         CARDi_SetTask(CARDi_ReadRomSyncCore);
     } else {
-        c->cur_th = data_020a6134.current;
+        c->cur_th = OSi_ThreadInfo.current;
         CARDi_ReadRomSyncCore(c);
     }
 }

@@ -1,13 +1,26 @@
 {
   "known": {
-    "ARMMathLoadState": {
-      "src/ui/menus/unit020b6eb4.cpp": [
-        "param:#1 ARMMathState *"
+    "__global_destructor_chain": {
+      "src/__register_global_object.c": [
+        "return:DestructorChain *"
+      ],
+      "src/engine/fs/FS_Overlay.c": [
+        "return:MWiDestructorChain *"
       ]
     },
-    "ARMMathSaveState": {
-      "src/ARMSaveContext.c": [
-        "arity:0"
+    "func_ov002_020eedc0": {
+      "src/game/player/d_a_ply_methods.cpp": [
+        "return:void"
+      ]
+    },
+    "func_ov002_020edca4": {
+      "src/game/player/d_a_ply_methods.cpp": [
+        "return:int"
+      ]
+    },
+    "data_0209f2bc": {
+      "src/game/player/d_a_ply_methods.cpp": [
+        "return:unsigned char []"
       ]
     },
     "VEC_Add": {
@@ -232,13 +245,6 @@
         "param:#1 unsigned short *",
         "param:#3 int"
       ],
-      "src/unnamed/arm9/0201/func_0201818c.cpp": [
-        "param:#1 int",
-        "param:#2 int"
-      ],
-      "src/unnamed/arm9/0201/func_02018c00.c": [
-        "param:#3 int"
-      ],
       "src/unnamed/arm9/0203/func_0203db64.c": [
         "param:#3 int"
       ],
@@ -287,9 +293,6 @@
         "param:#3 int"
       ],
       "src/WBT_RegisterBlock.cpp": [
-        "param:#3 int"
-      ],
-      "src/MB_ReadSegment.cpp": [
         "param:#3 int"
       ]
     },
@@ -416,30 +419,6 @@
     "FS_CloseFile": {
       "src/SharedFilePtr.cpp": [
         "return:void"
-      ],
-      "src/unnamed/arm9/0201/func_020184e0.cpp": [
-        "return:void"
-      ],
-      "src/unnamed/arm9/0201/func_0201818c.cpp": [
-        "return:void"
-      ],
-      "src/unnamed/arm9/0201/func_02018934.cpp": [
-        "return:void"
-      ],
-      "src/engine/mb/MB_GameInfo.c": [
-        "return:void"
-      ]
-    },
-    "FS_ReadFile": {
-      "src/unnamed/arm9/0204/func_02042254.cpp": [
-        "param:#1 char *"
-      ],
-      "src/engine/mb/MB_GameInfo.c": [
-        "return:void"
-      ],
-      "src/engine/sound/SoundEngine.cpp": [
-        "param:#1 int",
-        "param:#2 int"
       ]
     },
     "GetLevelPart": {
@@ -1103,17 +1082,17 @@
         "param:#2 void (*)(void)"
       ]
     },
-    "OS_SleepThread": {
-      "src/myFS_ReadFile.c": [
-        "param:#1 int"
-      ]
-    },
     "OS_WakeupThread": {
       "src/IRQ2.cpp": [
         "param:#1 int *"
       ],
       "src/CARDi_EndTask.cpp": [
         "param:#1 char *"
+      ]
+    },
+    "PXI_SetFifoRecvCallback": {
+      "include/nitro/pxi/fifo.h": [
+        "param:#2 void (*)(PXIFifoTag, unsigned int, int)"
       ]
     },
     "Quaternion_FromVector3": {
@@ -2626,96 +2605,6 @@
         "param:#2 const void *"
       ]
     },
-    "WM_CheckStateEx": {
-      "src/WM_Finish.c": [
-        "param:#2 int"
-      ],
-      "src/unnamed/arm9/0206/func_0206259c.c": [
-        "param:#2 int"
-      ],
-      "src/WM_Disconnect.cpp": [
-        "arity:6"
-      ],
-      "src/WM_GetMPSendBufferSize.cpp": [
-        "arity:3"
-      ],
-      "src/WM_SetParentParameter.cpp": [
-        "param:#2 int"
-      ],
-      "src/WM_StartConnect.cpp": [
-        "param:#2 int"
-      ],
-      "src/WM_StartMPEx.cpp": [
-        "arity:3"
-      ]
-    },
-    "WM_GetSystemWork": {
-      "src/WM_GetAllowedChannel.cpp": [
-        "return:void *"
-      ],
-      "src/WM_SetPortCallback.cpp": [
-        "return:char *"
-      ],
-      "src/WM_SetIndCallback.cpp": [
-        "return:void *"
-      ],
-      "src/WM_Initialize.c": [
-        "return:int *"
-      ],
-      "src/WM_Enable.c": [
-        "return:int *"
-      ],
-      "src/WM_GetLinkLevel.cpp": [
-        "return:void *"
-      ],
-      "src/WM_GetMPSendBufferSize.cpp": [
-        "return:int *"
-      ],
-      "src/WM_SetMPDataToPortEx.cpp": [
-        "return:int *"
-      ],
-      "src/WM_StartConnect.cpp": [
-        "return:int *"
-      ],
-      "src/WM_StartMPEx.cpp": [
-        "return:int *"
-      ],
-      "src/WM_StartScan.cpp": [
-        "return:char *"
-      ],
-      "src/engine/wm/WM_Etc.cpp": [
-        "return:int *"
-      ]
-    },
-    "WM_SendCommand": {
-      "src/unnamed/arm9/0206/func_0206259c.c": [
-        "param:#1 int",
-        "param:#2 int",
-        "param:#3 int"
-      ],
-      "src/WM_Disconnect.cpp": [
-        "param:#1 int",
-        "param:#2 int",
-        "param:#3 int"
-      ],
-      "src/WM_SetMPDataToPortEx.cpp": [
-        "arity:9"
-      ],
-      "src/WM_SetParentParameter.cpp": [
-        "param:#1 int",
-        "param:#2 int",
-        "param:#3 void *"
-      ],
-      "src/WM_StartConnect.cpp": [
-        "arity:2"
-      ],
-      "src/WM_StartMPEx.cpp": [
-        "arity:12"
-      ],
-      "src/WM_StartScan.cpp": [
-        "arity:2"
-      ]
-    },
     "_Z11UpdateAngleRssis": {
       "src/game/actors/d_a_demo.cpp": [
         "param:#1 void *"
@@ -4099,9 +3988,6 @@
       "src/OS_Terminate.cpp": [
         "return:void"
       ],
-      "src/WM_SetIndCallback.cpp": [
-        "return:int"
-      ],
       "src/WBT_End.cpp": [
         "return:int"
       ],
@@ -4116,10 +4002,6 @@
       ]
     },
     "_ZN3IRQ7RestoreEj": {
-      "src/unnamed/arm9/0204/func_02040c34.c": [
-        "param:#1 int",
-        "return:void"
-      ],
       "src/MIi_DmaSetParams.cpp": [
         "return:void"
       ],
@@ -4132,20 +4014,7 @@
       "src/unnamed/arm9/0204/func_02041a94.cpp": [
         "return:void"
       ],
-      "src/engine/fs/FS_Command.cpp": [
-        "return:void"
-      ],
-      "src/TP_CalcCalibrateParam.cpp": [
-        "return:void"
-      ],
-      "src/TP_SetCalibrateParam.cpp": [
-        "return:void"
-      ],
       "src/unnamed/arm9/0205/func_0205ff20.cpp": [
-        "return:void"
-      ],
-      "src/WM_SetIndCallback.cpp": [
-        "param:#1 int",
         "return:void"
       ],
       "src/WBT_End.cpp": [
@@ -4164,9 +4033,6 @@
         "return:void"
       ],
       "src/unnamed/arm9/0206/func_02065af0.cpp": [
-        "return:void"
-      ],
-      "src/MB_RegisterFile.cpp": [
         "return:void"
       ],
       "src/CARDi_EndTask.cpp": [
@@ -7259,12 +7125,20 @@
     "data_02092114": {
       "src/ui/hud/CapIconMgr.cpp": [
         "return:signed char"
+      ],
+      "include/decl_common.h": [
+        "return:unsigned char"
       ]
+
     },
     "gReturnSublevel": {
       "src/_ZN7daPly_c13InitResourcesEv.cpp": [
         "return:unsigned char"
+      ],
+      "src/game/stages/d_s_stage_methods.cpp": [
+        "return:signed char"
       ]
+
     },
     "data_02092128": {
       "src/game/stages/LevelObjects.cpp": [
@@ -7921,7 +7795,11 @@
       ],
       "src/game/actors/d_a_demo.cpp": [
         "return:void * []"
+      ],
+      "src/game/player/d_a_ply_methods.cpp": [
+        "return:char * []"
       ]
+
     },
     "data_0209f3a4": {
       "src/ui/hud/d_map.cpp": [
@@ -8328,22 +8206,12 @@
         "return:unsigned char []"
       ]
     },
-    "data_020a10fc": {
-      "src/unnamed/arm9/0203/func_0203e20c.cpp": [
-        "return:unsigned char []"
-      ]
-    },
     "data_020a1154": {
       "include/private/player_input_record.h": [
         "return:PlayerInputRecord []"
       ],
       "src/unnamed/arm9/0203/func_0203ea5c.c": [
         "return:Rec []"
-      ]
-    },
-    "data_020a1fc0": {
-      "src/unnamed/arm9/0204/func_020424c0.cpp": [
-        "return:WorkInfo"
       ]
     },
     "data_020a3fc0": {
@@ -8382,52 +8250,12 @@
         "return:unsigned int"
       ]
     },
-    "data_020a6134": {
-      "src/unnamed/arm9/0207/func_0207037c.c": [
-        "return:char * []"
-      ]
-    },
-    "data_020a8114": {
-      "src/unnamed/arm9/0205/func_0205ff08.c": [
-        "return:int"
-      ],
-      "src/unnamed/arm9/0205/func_0205ff20.cpp": [
-        "return:unsigned int"
-      ]
-    },
-    "data_020a89ac": {
-      "src/WM_GetSystemWork.c": [
-        "return:int"
-      ],
-      "src/WM_SendCommand.cpp": [
-        "return:Ctx *"
-      ],
-      "src/WM_Finish.c": [
-        "return:int"
-      ],
-      "src/WM_Init.cpp": [
-        "return:int *"
-      ]
-    },
     "data_020a9570": {
       "src/unnamed/arm9/0206/func_02065af0.cpp": [
         "return:int"
       ],
       "src/unnamed/arm9/0206/func_02065b88.c": [
         "return:unsigned char []"
-      ]
-    },
-    "data_020a9db8": {
-      "src/MB_RegisterFile.cpp": [
-        "return:void *"
-      ]
-    },
-    "data_023c0000": {
-      "src/_ZN3IRQ13VBlankHandlerEv.cpp": [
-        "return:char []"
-      ],
-      "src/IRQ2.cpp": [
-        "return:char []"
       ]
     },
     "data_ov002_020ff480": {
@@ -9497,7 +9325,11 @@
       ],
       "src/unnamed/ov002/func_ov002_020e5948.c": [
         "return:struct OneUpLogoModelFile"
+      ],
+      "src/game/player/d_a_ply_methods.cpp": [
+        "return:SharedFilePtr"
       ]
+
     },
     "data_ov002_02110ac4": {
       "src/unnamed/ov002/__sinit_ov002_02107304.c": [
@@ -9512,11 +9344,17 @@
     "gMeterShownHealth": {
       "src/_ZN7daPly_c16St_BurnLava_MainEv.cpp": [
         "return:unsigned char"
+      ],
+      "src/game/player/d_a_ply_methods.cpp": [
+        "return:unsigned char"
       ]
     },
     "gShowRaceTimer": {
       "src/ui/hud/d_meter.cpp": [
         "return:unsigned char"
+      ],
+      "src/game/player/d_a_ply_methods.cpp": [
+        "return:unsigned char []"
       ]
     },
     "data_ov003_020b1704": {
@@ -12984,12 +12822,20 @@
     "func_02011ee4": {
       "src/unnamed/ov002/func_ov002_020e6350.c": [
         "param:#1 int"
+      ],
+      "src/game/player/d_a_ply_methods.cpp": [
+        "param:#1 int"
       ]
+
     },
     "func_02011f7c": {
       "src/unnamed/ov002/func_ov002_020e6330.c": [
         "param:#1 int"
+      ],
+      "src/game/player/d_a_ply_methods.cpp": [
+        "param:#1 int"
       ]
+
     },
     "func_02012120": {
       "src/unnamed/ov002/func_ov002_020e1c20.c": [
@@ -14591,11 +14437,6 @@
         "return:int"
       ]
     },
-    "func_02017e60": {
-      "src/unnamed/arm9/0201/func_02018aa4.c": [
-        "return:int"
-      ]
-    },
     "func_0201817c": {
       "src/LoadCompressedFileAt.c": [
         "param:#1 unsigned short"
@@ -14609,11 +14450,6 @@
     "func_02018a40": {
       "src/runtime/filesystem/InitializeAssetHandleTable.c": [
         "param:#2 int"
-      ]
-    },
-    "myFS_ConvertPathToFileID": {
-      "src/unnamed/arm9/0201/func_020189f0.c": [
-        "return:void"
       ]
     },
     "func_0201a244": {
@@ -15567,30 +15403,6 @@
     "OS_CreateThread": {
       "src/unnamed/arm9/0204/func_02042200.c": [
         "param:#2 void *"
-      ],
-      "src/engine/sound/SoundEngine.cpp": [
-        "param:#2 void *"
-      ]
-    },
-    "OS_ReceiveMessage": {
-      "src/WM_SendCommand.cpp": [
-        "return:void"
-      ],
-      "src/engine/sound/SoundEngine.cpp": [
-        "param:#2 void * *"
-      ]
-    },
-    "OS_SendMessage": {
-      "src/WM_SendCommand.cpp": [
-        "return:void"
-      ],
-      "src/engine/sound/SoundEngine.cpp": [
-        "param:#2 void *"
-      ]
-    },
-    "OS_InitMessageQueue": {
-      "src/engine/sound/SoundEngine.cpp": [
-        "param:#2 void * *"
       ]
     },
     "OS_AllocFromArenaLo": {
@@ -15611,17 +15423,6 @@
       ]
     },
     "MI_CpuFill8": {
-      "src/WM_StartConnect.cpp": [
-        "param:#2 int"
-      ],
-      "src/engine/fs/FS_Archive.cpp": [
-        "param:#2 int",
-        "param:#3 int"
-      ],
-      "src/engine/fs/FS_Overlay.cpp": [
-        "param:#2 int",
-        "param:#3 int"
-      ],
       "src/engine/mb/MB_Parent.cpp": [
         "param:#2 int"
       ],
@@ -15644,9 +15445,6 @@
         "param:#2 int",
         "param:#3 int"
       ],
-      "src/unnamed/arm9/0203/func_0203e20c.cpp": [
-        "param:#2 int"
-      ],
       "src/unnamed/arm9/0203/func_0203ea5c.c": [
         "param:#2 int",
         "param:#3 int"
@@ -15655,41 +15453,6 @@
         "param:#1 int",
         "param:#2 int",
         "param:#3 int"
-      ],
-      "src/MBi_ReadSegmentHeader.c": [
-        "param:#2 int"
-      ]
-    },
-    "FSi_SendCommand": {
-      "src/FS_OpenFileFast.c": [
-        "arity:4"
-      ],
-      "src/FSi_FindPath.c": [
-        "param:#1 FSFile *"
-      ]
-    },
-    "FS_OpenFileFast": {
-      "src/engine/sound/SoundEngine.cpp": [
-        "arity:3"
-      ]
-    },
-    "FS_SeekFile": {
-      "src/engine/sound/SoundEngine.cpp": [
-        "param:#3 int"
-      ],
-      "src/unnamed/arm9/0204/func_020412f0.cpp": [
-        "param:#3 int"
-      ]
-    },
-    "FS_LoadArchive": {
-      "src/engine/sound/SoundEngine.cpp": [
-        "param:#7 int (*)(FSArchive *, void *, unsigned int, unsigned int)",
-        "param:#8 int (*)(FSArchive *, const void *, unsigned int, unsigned int)"
-      ]
-    },
-    "FS_Init": {
-      "src/unnamed/arm9/0201/func_02018aa4.c": [
-        "return:int"
       ]
     },
     "FS_UnloadOverlay": {
@@ -15711,25 +15474,6 @@
         "return:void"
       ]
     },
-    "TP_CalcCalibrateParam": {
-      "src/TP_GetUserInfo.c": [
-        "param:#1 int",
-        "param:#2 int",
-        "param:#3 int",
-        "param:#4 int",
-        "param:#5 int",
-        "param:#6 int",
-        "param:#7 int",
-        "param:#8 int",
-        "param:#9 int"
-      ]
-    },
-    "TP_GetUserInfo": {
-      "src/unnamed/arm9/0203/func_0203bbc0.c": [
-        "param:#1 void *",
-        "return:void"
-      ]
-    },
     "CARD_GetBackupTotalSize": {
       "src/engine/save/SaveData2.cpp": [
         "return:unsigned int"
@@ -15743,11 +15487,6 @@
     "func_02061128": {
       "src/unnamed/arm9/0201/func_02019ebc.c": [
         "param:#1 int (*)(void)"
-      ]
-    },
-    "WM_Init": {
-      "src/WM_Initialize.c": [
-        "param:#1 int"
       ]
     },
     "func_02063718": {
@@ -15870,24 +15609,6 @@
       ],
       "src/WBT_InitParent.cpp": [
         "return:char *"
-      ]
-    },
-    "MBi_MakeGameInfo": {
-      "src/MB_RegisterFile.cpp": [
-        "param:#3 void *"
-      ]
-    },
-    "MB_SetParentCommParam": {
-      "src/unnamed/arm9/0203/func_0203e20c.cpp": [
-        "return:void"
-      ]
-    },
-    "MB_Init": {
-      "src/unnamed/arm9/0203/func_0203e20c.cpp": [
-        "param:#1 void *",
-        "param:#3 unsigned short",
-        "param:#4 unsigned short",
-        "return:void"
       ]
     },
     "func_0206a928": {
@@ -17188,31 +16909,6 @@
         "arity:0"
       ]
     },
-    "MBi_BlockHeaderEnd": {
-      "src/engine/mb/MB_Parent.cpp": [
-        "return:int"
-      ]
-    },
-    "WM_SetMPDataToPort": {
-      "src/engine/wm/WM_Ds.cpp": [
-        "param:#1 void (*)(void *)"
-      ]
-    },
-    "WM_SetMPDataToPortEx": {
-      "src/WM_SetMPDataToPort.c": [
-        "param:#5 int"
-      ]
-    },
-    "WmCheckParentParameter": {
-      "src/WM_SetParentParameter.cpp": [
-        "return:void"
-      ]
-    },
-    "func_0206cf98": {
-      "src/engine/fs/FS_Overlay.cpp": [
-        "return:void"
-      ]
-    },
     "func_02071864": {
       "src/unnamed/arm9/0207/func_02071be8.cpp": [
         "param:#1 struct Src *",
@@ -17247,15 +16943,45 @@
         "param:#1 S72d90 *"
       ]
     },
-    "WM_SetGameInfo": {
-      "src/engine/mb/MB_GameInfo.c": [
-        "param:#5 int",
-        "param:#6 int"
-      ]
-    },
     "NNS_FndVisitAllocatedForExpHeap": {
       "include/nnsys/fnd.h": [
         "param:#2 void (*)(void *, NNSFndHeapHandle, unsigned int)"
+      ]
+    },
+    "PM_SendUtilityCommandAsync": {
+      "include/nitro/spi/pm.h": [
+        "param:#2 void (*)(unsigned int, void *)"
+      ]
+    },
+    "PMi_ReadRegisterAsync": {
+      "include/nitro/spi/pm.h": [
+        "param:#3 void (*)(unsigned int, void *)"
+      ]
+    },
+    "PMi_SetLEDAsync": {
+      "include/nitro/spi/pm.h": [
+        "param:#2 void (*)(unsigned int, void *)"
+      ]
+    },
+    "PM_SetBackLightAsync": {
+      "include/nitro/spi/pm.h": [
+        "param:#3 void (*)(unsigned int, void *)"
+      ]
+    },
+    "PM_ForceToPowerOffAsync": {
+      "include/nitro/spi/pm.h": [
+        "param:#1 void (*)(unsigned int, void *)"
+      ]
+    },
+    "PM_GoSleepMode": {
+      "include/nitro/spi/pm.h": [
+        "param:#1 unsigned int",
+        "param:#2 unsigned int"
+      ]
+    },
+    "PMi_SendLEDPatternCommandAsync": {
+      "include/nitro/spi/pm.h": [
+        "param:#2 void (*)(unsigned int, void *)"
       ]
     }
   },

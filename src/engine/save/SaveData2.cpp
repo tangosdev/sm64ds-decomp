@@ -16,6 +16,7 @@
 #include "SaveData.h"
 #include "nitro/card/card_common.h"
 #include "nitro/os/spinLock.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
 int func_0203da3c(void);
@@ -46,7 +47,7 @@ extern "C" void func_02042f68(int type, unsigned char *magic) {
         return;
     CARD_Init();
     CARD_IdentifyBackup(type);
-    MI_CpuFill8(data_020a4b40, 0, 8);
+    MI_CpuClear8(data_020a4b40, 8);
     d = data_020a4b40;
     for (i = 0; i < 8; i++) {
         unsigned char c = magic[i];

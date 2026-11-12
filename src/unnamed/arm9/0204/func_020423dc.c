@@ -1,14 +1,12 @@
 #include "types.h"
 #include "private/fs_views.h"
-
-typedef struct FSFile FSFile;
+#include "nitro/fs/overlay.h"
 
 extern FSArchive *FS_FindArchive(const char *name, int name_len);
 extern int FS_UnloadArchive(FSArchive *p_arc);
 extern void FS_SetArchiveProc(FSArchive *p_arc, FS_ARCHIVE_PROC_FUNC proc, u32 flags);
 extern int FS_LoadArchive(FSArchive *p_arc, u32 base, u32 fat, u32 fat_size, u32 fnt, u32 fnt_size,
                           FS_ARCHIVE_READ_FUNC read_func, FS_ARCHIVE_WRITE_FUNC write_func);
-extern void FS_AttachOverlayTable(int target, void *ptr, u32 size);
 
 extern char data_02099e6c[]; /* "rom" */
 extern int func_02042668(FSFile *p_file, int command);
@@ -50,7 +48,7 @@ int func_020423dc(int *r6) {
     }
     FS_LoadArchive(h, 0, (u32)arr[0].f0, arr[0].f4, (u32)arr[1].f0, arr[1].f4, &func_020426f8,
                    &func_020426f0);
-    FS_AttachOverlayTable(0, arr[2].f0, arr[2].f4);
-    FS_AttachOverlayTable(1, arr[3].f0, arr[3].f4);
+    FS_AttachOverlayTable(MI_PROCESSOR_ARM9, arr[2].f0, arr[2].f4);
+    FS_AttachOverlayTable(MI_PROCESSOR_ARM7, arr[3].f0, arr[3].f4);
     return r5;
 }

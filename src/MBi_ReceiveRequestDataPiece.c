@@ -1,7 +1,7 @@
 #include "types.h"
 #include "private/arm9_a9db8_mb_parent.h"
+#include "nitro/mi/memory.h"
 extern char *data_020a9db8;
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
 
 /* File one piece of child idx's entry request into the multiboot parent
  * work (data_020a9db8): a0[2] is the piece number and the data starts at

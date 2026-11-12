@@ -101,12 +101,13 @@ extern void Mg_SubmitScore(int self);
 extern int  func_020126e8(int a);
 extern int  func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern void SetBg2Offset(int a, int b);
-extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
 extern int  RandomIntInternal(int *seed);
 struct OamAttr;
 #include "OAM.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/g2.h"
 #include "nitro/gx/gx_load.h"
+#include "nitro/mi/memory.h"
 extern void Mg_RenderSpriteBothPalMtx(void *sprite, int x, int y, int a3, void *m);
 extern int  Mg_RenderSpriteBothScaled(OamAttr *a, int b, int c, int d, int e, int f, int g);
 extern void Mg_SetSharedState(int a);
@@ -322,7 +323,7 @@ void dScMgPachinko_c::Bg_StateWaiting(int idx) {
     x = mBg[idx].x >> 12;
     y = mBg[idx].y >> 12;
     mBg[idx].state = 1;
-    *(volatile int *)0x4000018 = (0x1ff & x) | (0x1ff0000 & (y << 16));
+    G2_SetBG2Offset(x, y);
     Deco_ShowAll();
 }
 
@@ -342,8 +343,7 @@ void dScMgPachinko_c::Bg_Start() {
     mBg[0].vy = 0;
     mBg[0].state = 0;
     mBg[0].timer = 0;
-    *(volatile int *)0x4000018 =
-        (0x1ff & (mBg[0].x >> 12)) | (0x1ff0000 & ((mBg[0].y >> 12) << 16));
+    G2_SetBG2Offset(mBg[0].x >> 12, mBg[0].y >> 12);
 }
 
 void dScMgPachinko_c::Bg_Stop() {
@@ -652,7 +652,7 @@ void dScMgPachinko_c::CheckTargetsLeft() {
     {
         unsigned chars = (unsigned)G2S_GetBG2CharPtr();
         zero = 0;
-        MIi_CpuClear16(zero, (char *)chars, 0x6000);
+        MI_CpuFill16((void *)chars, zero, 0x6000);
     }
     mUnused5c30 = 0;
     BobOmb_ClearAll();
@@ -728,7 +728,7 @@ void dScMgPachinko_c::ClearAimLine() {
     {
         char *dst = (char *)G2S_GetBG2CharPtr();
         zero = 0;
-        MIi_CpuClear16(zero, dst, 0x6000);
+        MI_CpuFill16(dst, zero, 0x6000);
     }
 }
 
@@ -780,7 +780,7 @@ void dScMgPachinko_c::DrawAimLine() {
     if (mShot[idx].x != mShot[idx].prevX || mShot[idx].y != mShot[idx].prevY) {
         char *buf = (char *)G2S_GetBG2CharPtr();
         fill = 0;
-        MIi_CpuClear16(fill, buf, 0x6000);
+        MI_CpuFill16(buf, fill, 0x6000);
         for (i = 0; i < 2; i++) {
             if (i == 0) {
                 cx = 0x6c;
@@ -2161,10 +2161,11 @@ s32 dScMgPachinko_c::InitResources()
     int x;
 
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
-    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 1;
-    *(volatile u16 *)0x400000e &= ~0x40;
-    *(volatile u32 *)0x400001c = 0;
-    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1210;
+    G2_SetBG3Priority(1);
+    G2_BG3Mosaic(false);
+    G2_SetBG3Offset(0, 0);
+    G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
+                         GX_BG_CHARBASE_0x10000);
 
     f = LoadFile(0x5f);
     DecompressLZ16(f, (void *)G2_GetBG3CharPtr());
@@ -2178,9 +2179,10 @@ s32 dScMgPachinko_c::InitResources()
     GX_LoadBG3Scr(f, 0, 0x800);
     Deallocate(f);
 
-    *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 1;
-    *(volatile u16 *)0x400000c &= ~0x40;
-    *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & 0x43) | 0x5418;
+    G2_SetBG2Priority(1);
+    G2_BG2Mosaic(false);
+    G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xa000,
+                         GX_BG_CHARBASE_0x18000);
 
     f = LoadFile(0x46);
     DecompressLZ16(f, G2_GetBG2CharPtr());
@@ -2188,7 +2190,7 @@ s32 dScMgPachinko_c::InitResources()
 
     b = (char *)G2_GetBG2ScrPtr();
     fillScr = 0x3073;
-    MIi_CpuClear16(fillScr, b, 0x1000);
+    MI_CpuFill16(b, fillScr, 0x1000);
 
     f = LoadFile(6);
     GX_LoadBG2Scr(f, 0, 0x800);
@@ -2200,31 +2202,33 @@ s32 dScMgPachinko_c::InitResources()
     GX_LoadOBJPltt(objPltt, 0, 0x100);
 
     gSubScreenLayers |= 0xd;
-    *(volatile u16 *)0x400100c &= ~3;
-    *(volatile u16 *)0x400100c &= ~0x40;
-    *(volatile u32 *)0x4001018 = 0;
-    *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x418;
+    G2S_SetBG2Priority(0);
+    G2S_BG2Mosaic(false);
+    G2S_SetBG2Offset(0, 0);
+    G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x2000,
+                          GX_BG_CHARBASE_0x18000);
 
     Mg_InitBrush(c, 0, 2, 0);
 
     b = (char *)G2S_GetBG2CharPtr();
     fillZero = 0;
-    MIi_CpuClear16(fillZero, b, 0x6000);
+    MI_CpuFill16(b, fillZero, 0x6000);
 
     n = 0;
     for (y = 0; y < 0x18; y++) {
         for (x = 0; x < 0x20; x++) {
             dst = (char *)((u16 *)G2S_GetBG2ScrPtr() + x + y * 0x20);
             fillIdx = n;
-            MIi_CpuClear16(fillIdx, dst, 2);
+            MI_CpuFill16(dst, fillIdx, 2);
             n++;
         }
     }
 
-    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 2;
-    *(volatile u16 *)0x400100e &= ~0x40;
-    *(volatile u32 *)0x400101c = 0;
-    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & 0x43) | 0x208;
+    G2S_SetBG3Priority(2);
+    G2S_BG3Mosaic(false);
+    G2S_SetBG3Offset(0, 0);
+    G2S_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x1000,
+                          GX_BG_CHARBASE_0x08000);
 
     f = LoadFile(0x5c);
     DecompressLZ16(f, (void *)G2S_GetBG3CharPtr());
@@ -2238,10 +2242,11 @@ s32 dScMgPachinko_c::InitResources()
     GXS_LoadBG3Scr(f, 0, 0x800);
     Deallocate(f);
 
-    *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & ~3) | 1;
-    *(volatile u16 *)0x4001008 &= ~0x40;
-    *(volatile u32 *)0x4001010 = 0;
-    *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & 0x43) | 0x608;
+    G2S_SetBG0Priority(1);
+    G2S_BG0Mosaic(false);
+    G2S_SetBG0Offset(0, 0);
+    G2S_SetBG0Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x3000,
+                      GX_BG_CHARBASE_0x08000, GX_BG_EXTPLTT_01);
 
     f = LoadFile(5);
     GXS_LoadBG0Scr(f, 0, 0x800);

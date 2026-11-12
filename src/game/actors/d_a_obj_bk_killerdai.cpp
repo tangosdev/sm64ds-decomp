@@ -171,9 +171,8 @@ s32 daObjBkKillerdai_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     file = dBgW_Kc::LoadFile(*(SharedFilePtr *)data_ov079_02127f64[1]);
-    ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile((KCL_File *)(file), *(const Matrix4x3 *)(&mClsnMat), 0x199, mAngleY,
-                              *(CLPS_Block *)(data_ov079_02127f64[2]));
+    mMeshCollider.SetFile((KCL_File *)(file), mClsnMat, 0x199, mAngleY,
+                          *(CLPS_Block *)(data_ov079_02127f64[2]));
 
     mSpawnedUniqueID = 0;
 

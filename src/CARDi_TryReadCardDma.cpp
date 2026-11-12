@@ -66,15 +66,15 @@ int CARDi_TryReadCardDma(CARDRomStat *p) {
             is_async = 1;
     }
 
-    stat->ctrl = (*(u32 *)0x027ffe60 & ~0x7000000) | 0xa1000000;
+    stat->ctrl = (*(vu32 *)(HW_ROM_HEADER_BUF + 0x60) & ~0x7000000) | 0xa1000000;
 
     if (is_async != 0) {
         saved = OS_DisableInterrupts();
         DC_FlushRange((void *)c->dst, c->len);
         IC_InvalidateRange((void *)c->dst, c->len);
-        OS_SetIrqFunction(0x80000, CARDi_OnReadCard);
-        OS_ResetRequestIrqMask(0x80000);
-        OS_EnableIrqMask(0x80000);
+        OS_SetIrqFunction(OS_IE_CARD_DATA, CARDi_OnReadCard);
+        OS_ResetRequestIrqMask(OS_IE_CARD_DATA);
+        OS_EnableIrqMask(OS_IE_CARD_DATA);
         DC_WaitWriteBufferEmpty();
         OS_RestoreInterrupts(saved);
         CARDi_SetCardDma();

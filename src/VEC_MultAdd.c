@@ -1,13 +1,10 @@
-typedef short s16;
+#include "types.h"
+#include "nitro/cp/divider.h"
+#include "nitro/cp/sqrt.h"
 
-typedef long long s64;
-
-typedef unsigned long long u64;
-
+/* VEC_Normalize for a 4.12 vector (NitroSDK fx_vec.c). */
 void VEC_Fx16Normalize(s16 *in, s16 *out) {
     u64 sq;
-    volatile unsigned short *ime;
-    unsigned short saved;
     int sqrtResult;
     s64 divResult;
     s64 scale;
@@ -17,24 +14,11 @@ void VEC_Fx16Normalize(s16 *in, s16 *out) {
     sq += (in[1] * in[1]);
     sq += (in[2] * in[2]);
 
-    *(volatile unsigned short *)0x4000280 = 2;
-    *(volatile u64 *)0x4000290 = (u64)0x1000000 << 32;
-    *(volatile u64 *)0x4000298 = sq;
+    CP_SetDiv64_64((u64)0x1000000 << 32, sq);
+    CP_SetSqrt64(sq << 2);
 
-    ime = (volatile unsigned short *)0x4000208;
-    saved = *ime;
-    *ime = 0;
-    *(volatile unsigned short *)0x40002b0 = 1;
-    *(volatile u64 *)0x40002b8 = sq << 2;
-    *ime;
-    *ime = saved;
-
-    while (*(volatile unsigned short *)0x40002b0 & 0x8000) {
-    }
-    sqrtResult = *(volatile int *)0x40002b4;
-    while (*(volatile unsigned short *)0x4000280 & 0x8000) {
-    }
-    divResult = *(volatile s64 *)0x40002a0;
+    sqrtResult = CP_GetSqrtResult32();
+    divResult = CP_GetDivResult64();
 
     scale = divResult * (s64)sqrtResult;
 
