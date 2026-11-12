@@ -1,0 +1,53 @@
+{
+ "about": "HMC act 1 rolling rock chute (spawner slot 101, kind 1, the fifth rock carries star 6): Mario and Luigi (vanish: rocks pass through them) 2000 units down the chute; [rockpos] every 4 frames",
+ "save": {
+  "preset": "upstairs"
+ },
+ "room": {
+  "collision": 1,
+  "damage": 1,
+  "interact": 1,
+  "tp": 1
+ },
+ "proof": {
+  "secs": 110,
+  "shot_ms": 90000,
+  "census": [
+   221,
+   178
+  ]
+ },
+ "players": [
+  {
+   "character": "mario",
+   "level": 13,
+   "act": 1,
+   "near": {
+    "class": 221,
+    "param": 1537,
+    "dist": 2000,
+    "angle_deg": 0
+   },
+   "power": "vanish",
+   "power_ticks": 20000
+  },
+  {
+   "character": "luigi",
+   "level": 13,
+   "act": 1,
+   "near": {
+    "class": 221,
+    "param": 1537,
+    "dist": 2300,
+    "angle_deg": 4
+   },
+   "power": "vanish",
+   "power_ticks": 20000
+  }
+ ],
+ "env": {
+  "SM64DS_COOP_SPAWNERS_LOG": "1",
+  "SM64DS_COOP_SPAWNERS_SAMPLE": "4",
+  "SM64DS_COOP_LOG": "1"
+ }
+}
