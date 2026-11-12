@@ -16749,6 +16749,45 @@ static int  g_fc_selftest;
 static unsigned short g_fc_cam_rot;      /* this frame's held rotate bits  */
 static unsigned short g_fc_cam_rot_prev; /* last frame's, for the edge     */
 
+/* INTRO1 proof instrument (coopfix1, bug 1): SM64DS_INTRO1_TRACE=1 prints, every 15 ROM frames while a Kuppa script runs, every
+   Player actor (its player number, character, position, state) and the split Ctrl record its player number reads, right after the
+   publish below (what the actor walk will read this frame). Inert unset. */
+extern "C" int data_0209fc68[];
+extern "C" const void *_ZN8dActor_c4NextEPKS_(const void *prev);
+static void port_intro_trace(void)
+{
+    static int on = -1;
+    if (on < 0) on = getenv("SM64DS_INTRO1_TRACE") ? 1 : 0;
+    if (!on || data_0209fc48 == 0) return;
+    const int rf = (int)port_rom_frame();
+    {   /* SM64DS_INTRO1_SHOT=<dir>: the level loop's top screen every 60 ROM frames from 1500 to 2700 (the walk to the castle) */
+        static const char *sd = getenv("SM64DS_INTRO1_SHOT");
+        if (sd && *sd && port_level_fb_ptr && rf >= 1500 && rf <= 2700 && (rf % 60) == 0) {
+            char nm[400];
+            _snprintf(nm, sizeof nm, "%s/intro_f%04d.bmp", sd, rf);
+            CreateDirectoryA(sd, 0);
+            ntr::ppu_write_bmp(nm, *(const ntr::Framebuffer *)port_level_fb_ptr);
+        }
+    }
+    if (rf % 15) return;
+    const char *mb = 0;
+    for (int i = 0; !mb && i < 4; ++i) mb = (const char *)data_0209f394[i];
+    fprintf(stderr, "[intro1] f%d me=%d count=%d sess=%d script=%08x body0=%p\n", rf, (int)data_0209f250, (int)data_0209f21c,
+            (int)data_0209fc68[0], (unsigned)data_0209fc48, (const void *)data_0209f394[0]);
+    if (!mb) return;
+    const void *vt = *(void *const *)mb;
+    for (const char *a = (const char *)_ZN8dActor_c4NextEPKS_(0); a; a = (const char *)_ZN8dActor_c4NextEPKS_(a)) {
+        if (*(void *const *)a != vt) continue;
+        const int pn = (int)*(const unsigned char *)(a + 0x6d8);
+        const int o = (pn & 3) * 0x18;
+        fprintf(stderr, "[intro1]   actor %p pn=%d ch=%d pos=(%.0f,%.0f,%.0f) st=%08x ctrl mag=%d ang=%d touch=%d held=%04x\n",
+                (const void *)a, pn, (int)(*(const unsigned char *)(a + 0x6d9) & 7), *(const int *)(a + 0x5c) / 4096.0,
+                *(const int *)(a + 0x60) / 4096.0, *(const int *)(a + 0x64) / 4096.0, (*(const unsigned *const *)(a + 0x370)) ? **(const unsigned *const *)(a + 0x370) : 0u,
+                (int)*(const short *)((const char *)data_0209f4a0 + o), (int)*(const short *)((const char *)data_0209f4a6 + o),
+                (int)*((const unsigned char *)data_0209f4ac + o), (unsigned)*(const unsigned short *)((const char *)data_0209f49c + o));
+    }
+}
+
 extern "C" int port_ctrl_script_wrote(int pi, int fld);   /* hal/stage_frame.cpp: PLAY093 */
 extern "C" void port_frame_ctrl_publish(void)
 {
@@ -16971,6 +17010,7 @@ extern "C" void port_frame_ctrl_publish(void)
                     *((unsigned char *)data_0209f4ac + lo) = 1;
                 }
             }
+    port_intro_trace();   /* INTRO1 proof instrument: SM64DS_INTRO1_TRACE=1, inert unset */
 }
 
 int main(void)
