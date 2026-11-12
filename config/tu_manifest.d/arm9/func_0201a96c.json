@@ -47,7 +47,7 @@
       "symbol": "data_0209d528",
       "address": "0x0209d528",
       "size": "0xc",
-      "evidence": "compiler-generated destructor-registration node for data_0209d574. mwcc emits it as @52, which ov002 already defines, so the configured address name is kept. Retail __sinit passes it as the third __register_global_object argument.",
+      "evidence": "compiler-generated destructor-registration node for data_0209d574. mwcc numbers it @45, and the configured address name is kept. Retail __sinit passes it as the third __register_global_object argument.",
       "binding": "STB_GLOBAL"
     },
     {
@@ -126,9 +126,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@48",
+      "from": "@45",
       "to": "data_0209d528",
-      "evidence": "compiler temp: the destructor-registration node for data_0209d574. mwcc numbers it @52, which ov002 already defines, so it keeps its configured address name. Re-keyed from @53 to @48 when include/IRQ.h, whose five named parameters each held an @NNN number, gave way to the unnamed-parameter nitro/os/system.h and nitro/os/interrupt.h."
+      "evidence": "compiler temp: the destructor-registration node for data_0209d574. mwcc numbers it @45 and it keeps its configured address name. Re-keyed from @53 to @48 when include/IRQ.h, whose five named parameters each held an @NNN number, gave way to the unnamed-parameter nitro/os/system.h and nitro/os/interrupt.h, and from @48 to @45 when the local Struct_0201a96c view, the raw-byte WatchdogAlarm and the file's own externs gave way to private/watchdog_alarm.h."
     }
   ],
   "relocations": [

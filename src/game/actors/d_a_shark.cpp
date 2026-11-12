@@ -53,11 +53,8 @@ enum daShark_c_AssetId { ASSET_HOJIRO_BMD = 0x0325, ASSET_HOJIRO_SWIM_BCA = 0x03
 /* local extern: no shared header declares these. */
 extern "C" {
 extern void func_02012694(unsigned int, void *);
-extern void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern s32 VEC_Mag(const Vector3 *value);
 extern s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-extern void MTX_MultVec43(Vector3 *a, Matrix4x3 *matrix, Vector3 *b);
 }
 
 typedef daShark_c::StateFn SharkFn;

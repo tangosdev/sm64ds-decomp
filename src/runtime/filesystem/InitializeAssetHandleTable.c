@@ -4,15 +4,9 @@
 #include "nitro/os/thread.h"
 #include "private/watchdog_alarm.h"
 
-struct WatchdogAlarm;
-extern struct WatchdogAlarm data_0209d574;
-
-extern unsigned char func_0201a9ec(void *timer);
 extern int AllocAssetHandleTable(int count);
 extern int func_020189f0(const char *path);
 extern void SetAssetHandleFileID(unsigned handle, int fileId);
-extern void func_0201a9fc(void *timer);
-extern unsigned char func_0201a96c(struct WatchdogAlarm *context, int suspended);
 
 enum { ASSET_HANDLE_COUNT = 0x80a, ASSET_LOOKUP_PRIORITY = 0x1f };
 

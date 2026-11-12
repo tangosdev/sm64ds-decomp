@@ -1,116 +1,83 @@
 
-/* Metrowerks __throw_catch_compare: does a catch clause's type string b
-   accept the thrown type string a? A null b is catch (...) and accepts
-   everything. A void pointer catch (P, optional V and K, then v) accepts
-   any pointer throw (P or *). A class throw (!) is a list of !name!offset
-   entries, the class first and then its bases; the first entry whose name
-   matches the catch type puts its offset in *out. Otherwise the pointer
-   and reference qualifiers are matched (the catch may add K and V, never
-   drop them) and the rest compared. Returns 1 on a match, 0 otherwise. */
-static inline int IsQualifiedPtr(unsigned char ca, unsigned char *p) {
-    return ((ca == 'P') || (ca == 'R')) && (ca == (*p));
-}
+/* Metrowerks __throw_catch_compare: does a catch clause's type string
+   catchtype accept the thrown type string throwtype? A null catchtype is
+   catch (...) and accepts everything. A void pointer catch (P, optional V
+   and K, then v) accepts any pointer throw (P or *). A class throw (!) is a
+   list of !name!offset entries, the class first and then its bases; the
+   first entry whose name matches the catch type puts its offset in
+   *offset_result. Otherwise the pointer and reference qualifiers are
+   matched (the catch may add K and V, never drop them) and the rest
+   compared. Returns 1 on a match, 0 otherwise. Written in the shape of the
+   Metrowerks runtime's own source; the const on both strings is load-
+   bearing (without it the function is one instruction shorter). */
+int __throw_catch_compare(const unsigned char *throwtype, const unsigned char *catchtype,
+                          int *offset_result) {
+    const unsigned char *cptr1;
+    const unsigned char *cptr2;
 
-int __throw_catch_compare(unsigned char *a, unsigned char *b, int *out) {
-    unsigned char *p = b;
-    unsigned char *q;
-    unsigned char ca;
-    unsigned char cb;
-    int num;
-    unsigned char *new_var;
-    *out = 0;
-    if (b == 0) {
+    *offset_result = 0;
+    if ((cptr2 = catchtype) == 0) {
         return 1;
     }
-    if ((*b) == 'P') {
-        if ((*(++p)) == 'V') {
-            p++;
-        }
-        if ((*p) == 'K') {
-            p++;
-        }
-        if ((*p) == 'v') {
-            if (((*a) == 'P') || ((*a) == '*')) {
+    cptr1 = throwtype;
+    if (*cptr2 == 'P') {
+        cptr2++;
+        if (*cptr2 == 'V')
+            cptr2++;
+        if (*cptr2 == 'K')
+            cptr2++;
+        if (*cptr2 == 'v') {
+            if (*cptr1 == 'P' || *cptr1 == '*')
                 return 1;
-            }
         }
-        p = b;
+        cptr2 = catchtype;
     }
-    ca = *((volatile unsigned char *)a);
-    if ((ca == '!') || (ca == '*')) {
-        ca = *a;
-        cb = *(p++);
-        q = a + 1;
-        if (ca != cb) {
+    switch (*cptr1) {
+    case '*':
+    case '!':
+        if (*cptr1++ != *cptr2++)
             return 0;
-        }
-        a = q;
         for (;;) {
-            ca = *a;
-
-            cb = *(p++);
-            if (ca == cb) {
-                a++;
-                new_var = b;
-                if (ca != '!') {
-                    continue;
+            if (*cptr1 == *cptr2++) {
+                if (*cptr1++ == '!') {
+                    int offset;
+                    for (offset = 0; *cptr1 != '!';)
+                        offset = offset * 10 + *cptr1++ - '0';
+                    *offset_result = offset;
+                    return 1;
                 }
-                num = 0;
-                if ((*((volatile unsigned char *)a)) != '!') {
-                    do {
-                        num = ((num * 10) + (*a)) - '0';
-                        a++;
-                    } while ((*a) != '!');
+            } else {
+                while (*cptr1++ != '!') {
                 }
-                *out = num;
-                return 1;
+                while (*cptr1++ != '!') {
+                }
+                if (*cptr1 == 0)
+                    return 0;
+                cptr2 = catchtype + 1;
             }
-            do {
-                ca = *(a++);
-            } while (ca != '!');
-
-            do {
-                ca = *(a++);
-            } while (ca != '!');
-            if ((*a) == 0) {
-                return 0;
-            }
-            p = new_var + 1;
         }
     }
-    while (IsQualifiedPtr(ca = *a, p)) {
-        cb = *(++p);
-
-        a++;
-        if (cb == 'K') {
-            p++;
-            if ((*a) == 'K') {
-                a++;
-            }
+    while ((*cptr1 == 'P' || *cptr1 == 'R') && *cptr1 == *cptr2) {
+        cptr1++;
+        cptr2++;
+        if (*cptr2 == 'K') {
+            if (*cptr1 == 'K')
+                cptr1++;
+            cptr2++;
         }
-        ca = *a;
-        if (ca == 'K') {
+        if (*cptr1 == 'K')
             return 0;
+        if (*cptr2 == 'V') {
+            if (*cptr1 == 'V')
+                cptr1++;
+            cptr2++;
         }
-        if ((*p) == 'V') {
-            if (ca == 'V') {
-                a++;
-            }
-            p++;
-        }
-        if ((*((volatile unsigned char *)a)) == 'V') {
+        if (*cptr1 == 'V')
             return 0;
-        }
     }
-    cb = *p;
-    if (ca == cb) {
-        do {
-            if (ca == 0) {
-                return 1;
-            }
-            ca = *(++a);
-            cb = *(++p);
-        } while (ca == cb);
+    for (; *cptr1 == *cptr2; cptr1++, cptr2++) {
+        if (*cptr1 == 0)
+            return 1;
     }
     return 0;
 }

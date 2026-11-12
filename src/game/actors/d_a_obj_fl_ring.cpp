@@ -54,7 +54,7 @@ enum daObjFl_Ring_c_AssetId { ASSET_FL_RING_BMD = 0x060e, ASSET_FL_RING_KCL = 0x
 struct daObjFl_Ring_c_Files {
     SharedFilePtr *mModelFile;
     SharedFilePtr *mClsnFile;
-    void *mClps;
+    CLPS_Block *mClps;
 };
 
 /* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
@@ -120,9 +120,7 @@ s32 daObjFl_Ring_c::InitResources() {
     UpdateClsnPosAndRot();
 
     void *k = dBgW_Kc::LoadFile(*data_ov022_02113cc8.mClsnFile);
-    ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile((KCL_File *)(k), mClsnMat, 0x199, mAngleY,
-                              *(CLPS_Block *)(data_ov022_02113cc8.mClps));
+    mMeshCollider.SetFile((KCL_File *)(k), mClsnMat, 0x199, mAngleY, *data_ov022_02113cc8.mClps);
 
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mMeshCollider.SetStoodOnCallback((::StoodOnCallback)StoodOnCallback);

@@ -1,0 +1,20 @@
+#ifndef NITRO_OS_INIT_H
+#define NITRO_OS_INIT_H
+
+/*
+ * The Nitro SDK's OS start-up call, under its own name (ntrtwl/NitroSDK
+ * nitro/os/common/init.h). The body is in src/OS_Init.cpp; the
+ * game's NitroStartUp runs it before any static constructor.
+ */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void OS_Init(void);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* NITRO_OS_INIT_H */

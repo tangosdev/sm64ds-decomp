@@ -74,13 +74,6 @@ extern Mecha03ModelFilePtr data_ov065_0211d88c;
 extern Mecha03ClsnFilePtr data_ov065_0211d894;
 extern CLPS_Block data_ov035_02112198;
 
-/* local extern: arm9 matrix/vector helpers and dBgW stores with no shared
- * header. */
-extern "C" {
-extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
-extern void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
-}
-
 extern "C" daObjCtMecha03_c *daObjCtMecha03_c_classInit() {
     return new daObjCtMecha03_c();
 }

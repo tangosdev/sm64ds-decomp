@@ -11297,11 +11297,11 @@ matched: yes</title></rect><rect x="115.82" y="831.02" width="6.81" height="2.76
 module: arm9
 addr: 0x02065edc
 size: 28 bytes
-matched: yes</title></rect><rect x="115.82" y="833.78" width="6.81" height="1.58" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>MBi_Calc_NextSendBlock
+matched: yes</title></rect><rect x="115.82" y="833.78" width="6.81" height="1.58" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>MBi_calc_nextsendblock
 module: arm9
 addr: 0x02065ef8
 size: 16 bytes
-matched: yes</title></rect><rect x="115.82" y="835.36" width="6.81" height="11.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>MBi_Calc_SendBlock
+matched: yes</title></rect><rect x="115.82" y="835.36" width="6.81" height="11.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>MBi_calc_sendblock
 module: arm9
 addr: 0x02065f08
 size: 112 bytes
@@ -11313,7 +11313,7 @@ matched: yes</title></rect><rect x="115.82" y="886.21" width="6.81" height="42.9
 module: arm9
 addr: 0x0206610c
 size: 436 bytes
-matched: yes</title></rect><rect x="115.82" y="929.17" width="6.81" height="42.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>MBi_CommParentSendDlFileInfo
+matched: yes</title></rect><rect x="115.82" y="929.17" width="6.81" height="42.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>MBi_CommParentSendDLFileInfo
 module: arm9
 addr: 0x020662c0
 size: 432 bytes

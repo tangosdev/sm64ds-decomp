@@ -1,8 +1,7 @@
 #include "types.h"
 #include "private/arm9_a1fc0_file_share.h"
-#include "private/arm9_wbt.h"
+#include "nitro/wbt.h"
 
-extern int WBT_SetPacketSize(int a, int b);
 extern void func_02042160(void *arg);
 
 void func_02041e14(void)
@@ -41,7 +40,7 @@ void func_02041e14(void)
         resizeMsg.mFileId = 0;
         resizeMsg.mPacketSizeHigh = (u8)(data_020a1fc0.mParentPacketSize >> 8);
         resizeMsg.mPacketSizeLow = (u8)data_020a1fc0.mParentPacketSize;
-        WBT_PutUserData(children, &resizeMsg, 9, func_02042160);
+        WBT_PutUserData(children, &resizeMsg, WBT_SIZE_USER_DATA, func_02042160);
         area->mReplySending = 1;
         area->mResizeChildren = 0;
     } else {
@@ -112,7 +111,7 @@ void func_02041e14(void)
         replyMsg.mFileId = fileId;
         replyMsg.mPacketSizeHigh = (u8)(packetSize >> 8);
         replyMsg.mPacketSizeLow = (u8)packetSize;
-        WBT_PutUserData(mask, &replyMsg, 9, func_02042160);
+        WBT_PutUserData(mask, &replyMsg, WBT_SIZE_USER_DATA, func_02042160);
         area->mReplySending = 1;
         area->mReplyPending &= ~mask;
     }

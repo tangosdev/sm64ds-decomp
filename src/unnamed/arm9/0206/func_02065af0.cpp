@@ -18,7 +18,7 @@ int func_02065af0(int *thiz)
         return 0;
     }
     r = func_02065b88();
-    if (r == 0 || r->command != 0) {
+    if (r == 0 || r->command != WBT_CMD_REQ_NONE) {
         OS_RestoreInterrupts(saved);
         return 0;
     }

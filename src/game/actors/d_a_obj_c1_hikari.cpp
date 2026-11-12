@@ -23,8 +23,7 @@
  * - data_0209caa0.file.flags1 & 0x80000000; this Init is the consumer, no recovered
  *   name for that save-flag bit
  * - Sound::PlaySmallSecretSound stays TU-local; Sound.h has no declaration.
- *   MTX_MultVec43, Vec3_Add, AngleDiff and NumStars have no shared header
- *   either, so they keep a local extern "C" block.
+ *   Vec3_Add, AngleDiff and NumStars have no shared header either, so they keep a local extern "C" block.
  * - S14 no g_profile_C1_HIKARI (sinit / data outside this .text)
  */
 
@@ -56,7 +55,6 @@ extern C1HikariModelFilePtr gC1HikariModelFile;
 
 /* local extern: arm9 math and save helpers with no shared header. */
 extern "C" {
-extern void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *res);
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int AngleDiff(int a, int b);
 extern unsigned char NumStars(void);

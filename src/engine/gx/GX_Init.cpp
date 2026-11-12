@@ -29,11 +29,6 @@
 #include "nitro/gx/gx.h"
 #include "private/gxdma.h"
 
-#define REG_BG2PD         (*(volatile u16 *)0x04000026)
-#define REG_BG3PD         (*(volatile u16 *)0x04000036)
-#define REG_DB_BG2PD      (*(volatile u16 *)0x04001026)
-#define REG_DB_BG3PD      (*(volatile u16 *)0x04001036)
-
 /* The 2D registers GX_Init clears: engine A 0x60 bytes from BG0CNT, up to
    (not including) DISP_MMEM_FIFO at 0x04000068; engine B 0x70 bytes from
    its DISPCNT, through (including) its MASTER_BRIGHT at 0x0400106c. */

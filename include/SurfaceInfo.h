@@ -24,10 +24,11 @@
  * dummy}, two method-only shells, the correct {clps, normal}, and one at 0x24.
  * Seven definitions of one type is how a wrong one silently wins.
  *
- * The 0x24 one, in src/func_ov018_02111bf0.cpp, was not a competing layout at
- * all: it was used as `struct dBgPi { void *vt; SurfaceInfo info; }', i.e. as a
- * filler for the REST of dBgPi (0x28 = 4 + 0x24). It has been renamed there to
- * say what it is, so the name SurfaceInfo now means one thing tree-wide.
+ * The 0x24 one, in what is now daPgMthr_c::UpdateFloorAndWalls
+ * (src/game/actors/d_a_pg_mthr.cpp), was not a competing layout at all: it was
+ * used as `struct dBgPi { void *vt; SurfaceInfo info; }', i.e. as a filler for
+ * the REST of dBgPi (0x28 = 4 + 0x24). That code uses dBgPi itself now, so the
+ * name SurfaceInfo means one thing tree-wide.
  */
 
 /* types.h already defines Vector3 for both languages, so there is one struct

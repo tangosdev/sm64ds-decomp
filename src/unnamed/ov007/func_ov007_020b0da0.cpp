@@ -16,6 +16,7 @@ extern "C" {
 #include "Ov007Work.h"
 #include "Ov007Figure.h"
 #include "math/ProgressRatio.h"
+#include "math/MtxStack.h"
 
 /* Vector3 declares a constructor and destructor under C++, which makes its
  * assignment copy word by word. The ROM copies these with C's ldm/stm block
@@ -24,7 +25,6 @@ typedef struct Vec3Words {
     Fix12i w[3];
 } Vec3Words;
 
-extern void MTX_Identity43_(void *mat);
 
 /* stateWork bits, by what this file does with them; medium confidence */
 #define OV007_FIGURE_SWAY 1    /* rock the model and bob it (periods 160 and 40 ticks) */

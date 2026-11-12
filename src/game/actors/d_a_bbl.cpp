@@ -112,7 +112,7 @@ int daBbl_c::Behavior() {
         return 1;
     }
 
-    DecIfAbove0_Short((u16 *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
 
     {
         u32 otherID = mdCcAc_c.otherOwner;
@@ -181,7 +181,7 @@ int daBbl_c::EnterFountain() {
  * 0xd6 -- the bubble that actually jumps -- 120.0 above this one, and start
  * the wait over. This is what makes the fixed flame a flame fountain. */
 int daBbl_c::ExecuteFountain() {
-    if ((u16)mStateTimer == 0) {
+    if (mStateTimer == 0) {
         mStateTimer = 0xb4;
         Vector3 spawnPos(mPosX, mPosY + 0x78000, mPosZ);
         dActor_c::Spawn(0xd6, 0, spawnPos, &mPrevAngle, mAreaId, -1);
@@ -218,7 +218,7 @@ int daBbl_c::ExecuteJump() {
                                           mPosY + 0x37000, mPosZ, 0, 0);
     mSmokeParticle = Particle::System::New(mSmokeParticle, kPtclLavaBubbleSmoke, mPosX,
                                            mPosY + 0x37000, mPosZ, 0, 0);
-    if ((u16)mStateTimer == 0)
+    if (mStateTimer == 0)
         MarkForDestruction();
     return 1;
 }

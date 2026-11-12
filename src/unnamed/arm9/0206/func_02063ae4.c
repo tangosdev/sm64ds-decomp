@@ -1,6 +1,5 @@
 #include "types.h"
 #include "private/arm9_wbt.h"
-extern int WBT_GetOwnAid(void);
 extern int func_0206491c(unsigned int a, int b);
 extern char *func_02064888(unsigned int id, int idx);
 extern int func_02064c2c(int dest, int a, int b, int c, int d, const void *p, int n);
@@ -15,7 +14,7 @@ int func_02063ae4(WBTWork *work, int idx, int r6) {
             r5 = 0xffff;
         else
             r5 = 1;
-        if (e->command == 6) {
+        if (e->command == WBT_CMD_REQ_GET_BLOCKINFO) {
             int r8 = func_0206491c(e->block_id, e->seq_no);
             char *data = func_02064888(e->block_id, r8);
             if (data == 0) {
