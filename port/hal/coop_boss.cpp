@@ -396,8 +396,8 @@ bool g_kpa_fix = true;   // bowser2: SM64DS_COOP_BOWSER_FIX=0 is the before cont
 // kbo2: SM64DS_COOP_KBO_FIX=0 is the before control (1.0.3 King Bob-omb: target-seat authority to the end, the defeat talk skipped
 // on every console but the authority's, bombs left in a copy's hand, a copy's own HP drop counted when its player is near).
 bool g_kbo_fix = true;
-unsigned g_bad_logged = 0;
-bool g_kbo_look = false;     // kbo2 proof log SM64DS_COOP_KBO_LOOK=1   // kbo2: rejected record values logged so far (the first few per run, with the field and the value)
+unsigned g_bad_logged = 0;   // kbo2: refused boss records logged so far (the first few per run, with the field and the value)
+bool g_kbo_look = false;     // kbo2 proof log SM64DS_COOP_KBO_LOOK=1
 bool g_regd = false;
 int  g_my = -1;
 bool g_minion_share = true;   // coopgoomboss2: SM64DS_COOP_GOOMBAS=0 is the must-fail control: every console summons its own goombas (the 1.0.2 behaviour)

@@ -16,8 +16,8 @@
     "tp": 1
   },
   "proof": {
-    "secs": 200,
-    "shot_ms": 160000,
+    "secs": 150,
+    "shot_ms": 109000,
     "census": [
       189
     ]
