@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Steam Deck Setup
+Comment=Unpack your Super Mario 64 DS dump and add the PC port to Steam with Proton Experimental
+Icon=steam
+Terminal=true
+Exec=sh -c "cd -- \\"\\$(dirname -- \\"\\$1\\")\\" && exec python3 ./steam_deck_setup.py" sh %k
+Categories=Game;

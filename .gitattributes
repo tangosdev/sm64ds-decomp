@@ -50,3 +50,5 @@ config/tu_manifest.d/**/*.json text eol=lf
 
 tools/portable_kit/launch.sh text eol=lf
 tools/portable_kit/extract_assets.py text eol=lf
+tools/portable_kit/steam_deck_setup.py text eol=lf
+tools/portable_kit/*.desktop text eol=lf
