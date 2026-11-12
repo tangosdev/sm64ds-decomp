@@ -47,6 +47,8 @@ struct SharedFilePtr {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char SharedFilePtr_size_must_be_0x8[sizeof(SharedFilePtr) == 0x8 ? 1 : -1];
 
+#endif
+
 /* The C veneers for the texture-sequence and animation handles; their
  * definitions live in src/SharedFilePtr.cpp. The self parameter is the
  * handle's address, which the compiled ROM passes in r0 as an int. */
@@ -58,7 +60,6 @@ int SharedFilePtr_Destruct_Anim(int);
 int SharedFilePtr_Destruct_TexSeq(int);
 #ifdef __cplusplus
 }
-#endif
 #endif
 
 #endif

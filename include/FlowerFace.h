@@ -6,8 +6,8 @@
 #include "dExtAnmModel_c.h"
 
 /* FlowerFace, Yoshi in the "loves me, loves me not" flower game, and the 22
- * petals that fall off the flower, animated by the FlowerFace_* /
- * FallingPetal_* helpers in src/minigames/unit020bfec0.cpp. Both names are
+ * petals that fall off the flower, animated by the two classes' methods in
+ * src/minigames/unit020bfec0.cpp. Both names are
  * coined. The files resolve (tools/asset_catalog.py) to MG/yoshi_model.bmd,
  * the petal MG/f_parts.bmd, and MG/yoshi_wait, yoshi_pick, yoshi_like and
  * yoshi_hate.bca. The constructors and destructors are the classes' own
