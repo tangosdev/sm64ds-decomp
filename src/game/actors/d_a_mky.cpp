@@ -559,6 +559,14 @@ int daMky_c::func_ov030_02112578()
     extern void *gMonkeyRunAnimationFile[];
     dActor_c *cage = dActor_c::FindWithActorID(0x67, 0);
     Player *player = this->ClosestPlayer();
+#ifdef _MSC_VER
+    /* Host only (run coopfix1, lane WORLDSTAR1): in a coop room a friend's catch can open the cage first (port/hal/
+       coop_worldstar.cpp drops this console's copy). With the cage gone the steps that push it have nothing to push:
+       go straight to the last step, which removes this Ukiki the way it does once its cage has landed. The cartridge
+       never reaches these steps without a cage. */
+    if (cage == 0 && this->mSubState >= 6 && this->mSubState <= 9)
+        this->mSubState = 10;
+#endif
     s32 v[3];
     *(s32 *)((u8 *)v + 0) = 0x981;
     *(s32 *)((u8 *)v + 4) = 0x77a;

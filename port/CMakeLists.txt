@@ -12005,6 +12005,7 @@ list(APPEND SLICE_COMMS_SOURCES hal/coop_actors.cpp)
 # run after093, lane FRIENDVIS1: a coop friend's Yoshi eggs on my console, driven from coop_actors.cpp; see hal/coop_ghost_eggs.h.
 list(APPEND SLICE_COMMS_SOURCES hal/coop_ghost_eggs.cpp)
 list(APPEND SLICE_COMMS_SOURCES hal/coop_cap.cpp)   # CAPLOSS1: a friend's lost cap on my console
+list(APPEND SLICE_COMMS_SOURCES hal/coop_worldstar.cpp)   # WORLDSTAR1: stars held from load, the eel, the Ukiki cage, the mother penguin, Klepto's silver
 list(APPEND SLICE_COMMS_SOURCES hal/coop_talk.cpp)   # NPCTALK1: one talker per NPC, the NPC's facing and the talker's head look
 list(APPEND SLICE_COMMS_SOURCES hal/coop_balls.cpp hal/coop_bombs.cpp)   # BOBSYNC1: the balls a spawner makes, shared (driven from coop_actors.cpp)
 list(APPEND SLICE_COMMS_SOURCES hal/coop_oneway.cpp)   # MOVERS1: one-way object states (the knock-down plank), shared
@@ -25967,6 +25968,12 @@ foreach(_tevc walk_window walk_window_hires)
 endforeach()
 if(PORT_ROM_CLEAN)
     set_property(SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/hal/event_client.cpp" APPEND PROPERTY COMPILE_DEFINITIONS PORT_ROM_CLEAN)
+endif()
+# run coopfix1, lane WORLDSTAR2: the kit compiles the held-star proof knobs (SM64DS_WS_*) out of hal/coop_worldstar.cpp and the
+# announce delay knob out of hal/coop_spawn.cpp, the same way (APPEND, never SET).
+if(PORT_ROM_CLEAN)
+    set_property(SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/hal/coop_worldstar.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/hal/coop_spawn.cpp"
+                 APPEND PROPERTY COMPILE_DEFINITIONS PORT_ROM_CLEAN)
 endif()
 
 # RPC1: Discord Rich Presence. hal/rich_presence.cpp is called from the scene

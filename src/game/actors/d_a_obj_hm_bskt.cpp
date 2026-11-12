@@ -82,6 +82,13 @@ void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
     unsigned int, int, int, int);
 }
 
+#ifdef _MSC_VER
+/* Host only (run coopfix1, lane WORLDSTAR1). In a coop room a friend's cage opened first: his landing made the room's
+   star and announced it, and port/hal/coop_worldstar.cpp drops this console's cage after it. When it lands, 1 here
+   means the room's star is already out, so this landing makes none (the particles and the removal stay). */
+extern "C" { int (*port_coop_ws_cage_land)(void *cage) = 0; }
+#endif
+
 // @symbol daObjHmBskt_c_classInit
 extern "C" daObjHmBskt_c *daObjHmBskt_c_classInit()
 {
@@ -179,6 +186,9 @@ extern "C" int func_ov030_0211124c(char *c, char *mc)
     int pz = *(int *)(c + 0x64);
     int py = *(int *)(c + 0x60) + 0x96000;
     Vector3 p(px, py, pz);
+#ifdef _MSC_VER
+    if (!port_coop_ws_cage_land || !port_coop_ws_cage_land(c))
+#endif
     dActor_c::Spawn(
         0xb2, (unsigned char)((*(unsigned int *)(c + 8)) & 0xf) | 0x20, p, 0,
         *(signed char *)(c + 0xcc), -1);

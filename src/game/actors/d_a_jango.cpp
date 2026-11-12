@@ -76,6 +76,10 @@ extern "C" int AngleDiff(int a, int b);
 /* Host only (run coopfix1, lane CAPLOSS1): set by port/hal/coop_cap.cpp in a coop room, 1 for a friend's drawn body;
    defined in d_a_obj_mario_cap.cpp. */
 extern "C" int (*port_coop_cap_foreign)(const void *player);
+/* Host only (run coopfix1, lane WORLDSTAR1). Asked by HURT enter: 1 when a friend's drawn body hit this Klepto in a coop
+   room (mdCcAc_c1.otherOwner). His own console runs his hit and drops the room's star; this one keeps its cargo, and
+   port/hal/coop_worldstar.cpp lets it go once that star is heard. Set at program start; 0 outside a coop room. */
+extern "C" { int (*port_coop_ws_jango_hit)(void *klepto) = 0; }
 #endif
 
 /* Static-init ownership (was the handwritten __sinit_ov062_0211d6fc shard).
@@ -1114,6 +1118,11 @@ int daJango_c::func_ov062_0211b930()
     dActor_c* found;
     _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&(mBlendModelAnim), *data_ov062_0211e10c.filePtr, 4, 0x40000000, 0x1000, 0);
     unk_43c = 1;
+#ifdef _MSC_VER
+    if (port_coop_ws_jango_hit && port_coop_ws_jango_hit(this))
+        found = 0;
+    else
+#endif
     if (mHeldActorID != 0 && (found = dActor_c::FindWithID(mHeldActorID)) != 0) {
         found->mVertAccel = -0x2000;
         found->mTerminalVelocity = -0x32000;
