@@ -1,5 +1,5 @@
 {
-  "about": "Mario on flat ground 300 units from a walking Bob-omb (slot 17 home -1561,0,-2073), Luigi on flat ground 2600 away: after it blows up, asleep or awake on both screens alike?",
+  "about": "Mario on flat ground 300 units from a walking Bob-omb (slot 17 home -1561,0,-2073) and facing it, Luigi on flat ground 2600 away facing away from it (State5 wakes only off camera): after it blows up, asleep or awake on both screens alike?",
   "save": {
     "preset": "early"
   },
@@ -39,7 +39,7 @@
         527
       ],
       "drop": true,
-      "yaw_deg": 180
+      "yaw_deg": 0
     }
   ],
   "env": {
