@@ -4,11 +4,15 @@
 
 extern "C" {
 
-/* func_02018908 at 0x02018908 */
-extern int func_0204ee10(void *self);
+/* A mounted .narc archive (src/engine/sound/SoundEngine.cpp): its
+   FSArchive, then the NARC it was mounted from. */
+struct S82;
 
-void func_02018908(void *self, void *heap)
-{
+/* func_02018908 at 0x02018908 */
+extern int func_0204ee10(struct S82 *self);
+
+/* Unmount the archive and give its block back to heap. */
+void func_02018908(struct S82 *self, void *heap) {
     func_0204ee10(self);
     ((mHeap::Heap_t *)heap)->_Deallocate(self);
 }
