@@ -207,9 +207,10 @@ extern RNkAnimationFileHandle data_ov062_0211e004;  /* ANIM_LAND */
 #ifdef _MSC_VER
 /* Host only (run coopfix1, lane KTQ1). In a coop room the console whose own player races Koopa is the only one whose
    Koopa runs his states; every other console in that course shows him as that racer's game drives him.
-   port/hal/coop_race.cpp sets the hook while a coop room runs: it answers 1 for a Koopa it has just posed from the
-   racer's console (position, heading, animation), and Behavior then skips the state handler, the move and the mesh
-   collision. With no room (solo) it stays 0 and Behavior is the cartridge's. The DS build never sees this. */
+   port/hal/coop_race.cpp sets the hook at program start (a static constructor), so it is always set on the host; it
+   answers 1 only in a coop room, for a Koopa it has just posed from the racer's console (position, heading,
+   animation), and Behavior then skips the state handler, the move and the mesh collision. Outside a coop room (solo,
+   party, VS) it answers 0 and Behavior is the cartridge's. The DS build never sees this. */
 extern "C" {
 int (*port_coop_race_follow)(void *koopa) = 0;
 /* The seven animation files by a fixed index (the wire's): 0 idle, 1 talk, 2 run start, 3 run, 4 jump, 5 land, 6 brake. */

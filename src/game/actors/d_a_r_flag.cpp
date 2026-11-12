@@ -59,9 +59,10 @@ extern RFlagAnimResFileHandle data_ov062_0211e0dc;
 #ifdef _MSC_VER
 /* Host only (run coopfix1, lane KTQ1). In a coop room a friend's body is drawn on my console as a real Player (actor
    0xbf), so this flag's cylinder can report it: a friend who is not in my race would stop my timer, play the finish
-   song and win my race for me. port/hal/coop_race.cpp sets the hook while a coop room runs; it answers 1 for a touch
-   that must not count (a friend's body, or my own body while a friend's race is the one shown here). With no room
-   (solo) it stays 0 and the touch test is the cartridge's. The DS build never sees this. */
+   song and win my race for me. port/hal/coop_race.cpp sets the hook at program start (a static constructor), so it is
+   always set on the host; in a coop room it answers 1 for a touch that must not count (a friend's body, or my own body
+   while a friend's race is the one shown here). Outside a coop room (solo, party, VS) it answers 0 and the touch test
+   is the cartridge's. The DS build never sees this. */
 extern "C" { int (*port_coop_race_foreign)(const void *toucher) = 0; }
 #endif
 

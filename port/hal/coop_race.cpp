@@ -78,7 +78,7 @@ namespace ntr { struct Framebuffer; bool ppu_write_bmp(const char *path, const F
 
 namespace port {
 
-enum : uint8_t { kWorldRacePose = 0x06 };   // coop_world.cpp left 0x06 for the race (COINS10's note)
+// SYNW sub-type kWorldRacePose (0x06) is named in coop_wire.h's SYNW list.
 
 #pragma pack(push, 1)
 // RACE_POSE payload (after the 12-byte head), 32 bytes.
@@ -265,11 +265,15 @@ void let_go(daRNk_c *k, const char *why) {
 // Behavior's question: 1 when this Koopa is posed from a friend's race this frame.
 int race_follow(void *kv) {
     read_env();
-    if (g_off || g_m.lock < 0 || !kv || kv != g_m.k || !coop_world_active()) return 0;
+    if (g_off || g_m.lock < 0 || !kv || kv != g_m.k) return 0;
     daRNk_c *k = (daRNk_c *)kv;
+    // The room ended (or the group went away) or the racer went quiet: send him home first, and skip his own states
+    // this one frame, so his waiting code never runs at the posed spot (no talk can start out on the course).
+    int lv = -1, ac = 0;
+    if (!coop_world_active() || !coop_group_key(&lv, &ac)) { let_go(k, "the coop room ended"); return 1; }
     const Rx &r = g_rx[g_m.lock];
     const unsigned t = now_ms();
-    if (!fresh(r, t)) return 0;     // the frame callback lets go next frame
+    if (!fresh(r, t)) { let_go(k, "his records stopped"); return 1; }
     // where the racer's Koopa is now: his last record moved on by his own speed since it arrived
     double tx = r.w.x, ty = r.w.y, tz = r.w.z;
     if (r.have_prev && r.t_ms != r.pt_ms && r.t_ms - r.pt_ms < 500u) {
@@ -360,7 +364,7 @@ void trace(daRNk_c *k) {
     if (k) n += std::snprintf(line + n, sizeof line - n, " | koopa %s step %d at (%d,%d,%d) ang %04x anim %d frame %d racing %d won %d racer %s",
                               state_name(k->mState), (int)k->mStep, k->mPosX >> 12, k->mPosY >> 12, k->mPosZ >> 12,
                               (unsigned)(unsigned short)k->mAngleY, anim_index(k), anim_frame(k) >> 12, (int)k->mIsRacing,
-                              (int)k->mPlayerWon, !k->mPlayer ? "none" : (const char *)k->mPlayer == me ? "me" : "friend");
+                              (int)k->mPlayerWon, !k->mPlayer || k->mState == 0 ? "none" : (const char *)k->mPlayer == me ? "me" : "friend");
     else n += std::snprintf(line + n, sizeof line - n, " | no koopa");
     if (g_m.lock >= 0) {
         const Rx &r = g_rx[g_m.lock];
