@@ -146,6 +146,8 @@ int WBT_NumOfRegisteredBlock(void);
 int WBT_RegisterBlock(WBTBlockInfoList *, u32, const void *, const void *, int, u16);
 WBTBlockInfoList *WBT_UnregisterBlock(u32);
 int WBT_SetPacketSize(int, int);
+int WBT_MpParentSendHook(void *, int);
+int WBT_MpChildSendHook(void *, int);
 
 void WBT_RequestSync(u16, WBTCallback);
 void WBT_GetBlockInfo(u16, int, const void *, WBTCallback);
