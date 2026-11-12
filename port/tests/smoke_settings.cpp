@@ -523,6 +523,22 @@ static int child(const char *which)
         check_eq(host_setting_chat_scale(), 100, "ChatScale junk is 100");
     } else if (!strcmp(which, "padtranslate")) {
         check(port_pad_selftest(), "pad_backend translation selftest");
+    } else if (!strncmp(which, "hy_", 3)) {
+        /* HYBRIDCAM1: hy_<want>_<label>, the camera mode the file reads as
+           (0 analog, 1 freecam, 2 plain DS, 3 hybrid) */
+        check_eq(host_setting_camera_mode(), which[3] - '0', which);
+    } else if (!strncmp(which, "hysave_", 7)) {
+        /* HYBRIDCAM1: hysave_<m>, the settings page picks mode m; the file
+           keeps the three words and says whether the pick was hybrid */
+        static const char *const word[4] = { "analog", "freecam", "ds", "ds" };
+        const int m = which[7] - '0';
+        check(host_setting_save_camera_mode(m), "save_camera_mode wrote");
+        check_eq(host_setting_camera_mode(), m, "live camera moved");
+        const char *t = slurp("settings.json");
+        char w[64];
+        snprintf(w, sizeof w, "\"CameraMode\": \"%s\"", word[m]);
+        check(t && strstr(t, w), w);
+        check(t && strstr(t, m == 3 ? "\"CameraHybrid\": true" : "\"CameraHybrid\": false"), "CameraHybrid written");
     } else {
         fprintf(stderr, "  unknown case %s\n", which);
         return 2;
@@ -780,6 +796,26 @@ int main(int argc, char **argv)
     bad |= run_case(exe, dir, "chatscale_big", "{ \"ChatScale\": 900 }");
     bad |= run_case(exe, dir, "chatscale_junk", "{ \"ChatScale\": \"big\" }");
     bad |= run_case(exe, dir, "padtranslate", 0);
+    /* HYBRIDCAM1: never picked vs picked. A file that never chose (no file,
+       {}, "ds" or 2 with no CameraHybrid) is hybrid; ds + false is the plain
+       DS camera a player picked; the other words keep their mode. Then each
+       pick written and read back by a fresh boot. */
+    bad |= run_case(exe, dir, "hy_3_nofile", 0);
+    bad |= run_case(exe, dir, "hy_3_empty", "{}");
+    bad |= run_case(exe, dir, "hy_3_ds", "{ \"CameraMode\": \"ds\" }");
+    bad |= run_case(exe, dir, "hy_3_num2", "{ \"CameraMode\": 2 }");
+    bad |= run_case(exe, dir, "hy_2_ds_false", "{ \"CameraMode\": \"ds\", \"CameraHybrid\": false }");
+    bad |= run_case(exe, dir, "hy_3_ds_true", "{ \"CameraMode\": \"ds\", \"CameraHybrid\": true }");
+    bad |= run_case(exe, dir, "hy_0_analog", "{ \"CameraMode\": \"analog\" }");
+    bad |= run_case(exe, dir, "hy_1_freecam", "{ \"CameraMode\": \"freecam\" }");
+    bad |= run_case(exe, dir, "hy_1_freecam_true", "{ \"CameraMode\": \"freecam\", \"CameraHybrid\": true }");
+    bad |= run_case(exe, dir, "hy_3_junk", "{ \"CameraMode\": \"hybrid\" }");
+    bad |= run_case_x(exe, dir, "hysave_3", "{ \"Volume\": 37 }", 1);
+    bad |= run_case(exe, dir, "hy_3_after_save3", (const char *)1);
+    bad |= run_case_x(exe, dir, "hysave_2", "{ \"Volume\": 37 }", 1);
+    bad |= run_case(exe, dir, "hy_2_after_save2", (const char *)1);
+    bad |= run_case_x(exe, dir, "hysave_0", "{ \"Volume\": 37 }", 1);
+    bad |= run_case(exe, dir, "hy_0_after_save0", (const char *)1);
     _rmdir(dir);
     if (bad) {
         printf("smoke_settings: FAIL\n");
@@ -787,6 +823,6 @@ int main(int argc, char **argv)
     }
     /* the count is the run_case calls above, counted rather than remembered:
        it was one out of date before run hd1 added five cases to it */
-    printf("smoke_settings: ok, 39 cases\n");
+    printf("smoke_settings: ok, 61 cases\n");
     return 0;
 }

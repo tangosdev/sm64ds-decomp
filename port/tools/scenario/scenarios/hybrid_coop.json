@@ -1,5 +1,5 @@
 {
-  "about": "HYBRIDCAM1: Mario and Luigi on the castle grounds, both on the hybrid camera (empty settings); Mario's game gets a mouse turn at frame 900",
+  "about": "HYBRIDCAM1: Mario and Luigi on the castle grounds, both on the hybrid camera (empty settings); Mario's game gets a click in the game at frame 890 (a windowed hybrid holds the pointer only after a click) and a mouse turn at frame 900",
   "save": {
     "preset": "early"
   },
@@ -18,6 +18,7 @@
       "character": "mario",
       "level": 1,
       "env": {
+        "SM64DS_HYBRID_MSG": "890:click",
         "SM64DS_HYBRID_MOUSE": "900-912:10:0",
         "SM64DS_HYBRID_SHOT": "880-1150/6"
       }

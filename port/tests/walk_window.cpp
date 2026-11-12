@@ -5182,7 +5182,39 @@ static void hy_frame(void *cam, char *player, int frame, int mouse_dyaw, int mou
     const int flag8 = (*(const unsigned *)((const char *)cam + 0x154) & 8u) != 0;
     const int trusted = c3_trust(cam, player);
     const int st = cam93_state_idx(cam);
-    const int moment = cam93_ds_owned(cam) || cam10_cutscene() || (flag8 && trusted);
+    /* REVIEW-Y note 2: in a coop room cam_guard_trust is 0 whenever flag 8 is set, so a boss or actor camera that only sets
+       flag 8 would never take over from the analog cam. The camera keeps no record of which actor set the flag, so "my own
+       scene set it" cannot be read directly. What can be read: the hold looks at MY part of the world (look-at within 3000
+       units of my player, eye-to-look-at length inside the rig's clamp: every trust test but the flag itself), and it is
+       young. Such a hold counts as the game camera's moment for up to 300 ticks from the flag's rise (camera_guard's own T2
+       limit for a leaked flag 8). A hold looking far away (a friend's scene) or one that outlives 300 ticks stays untrusted
+       and the analog cam may take it, exactly as before; the rig still copies nothing from it (CAMERA3 and CANNON2 untouched). */
+    static int hy_f8_run, hy_f8_said = -1;
+    hy_f8_run = flag8 ? hy_f8_run + 1 : 0;
+    if (!flag8) hy_f8_said = -1;
+    int coop_hold = 0;
+    if (flag8 && !trusted && !c3_old()) {
+        const int *at = (const int *)((const char *)cam + 0x80), *eye = (const int *)((const char *)cam + 0x8c);
+        const int *me = (const int *)(player + 0x5c);
+        double dm = 0, de = 0;
+        for (int k = 0; k < 3; ++k) {
+            const double a = ((double)at[k] - me[k]) / 4096.0, b = ((double)eye[k] - at[k]) / 4096.0;
+            dm += a * a;
+            de += b * b;
+        }
+        const double len = sqrt(de) * 4096.0;
+        const int near_me = dm <= 3000.0 * 3000.0 && len >= (double)0x30000 && len <= (double)0x2000000;
+        coop_hold = near_me && hy_f8_run <= 300;
+        const int now = near_me ? (coop_hold ? 1 : 2) : 0;
+        if (now != hy_f8_said) {
+            hy_f8_said = now;
+            fprintf(stderr, "[camhy] f%d coop flag 8 hold %s (held %d ticks, look-at %d units from me)\n", frame,
+                    now == 1 ? "near me: the game camera's moment" : now == 2 ? "near me but over 300 ticks: the analog cam may take it"
+                                                                        : "far from me: not my scene, the analog cam may take it",
+                    hy_f8_run, (int)sqrt(dm));
+        }
+    }
+    const int moment = cam93_ds_owned(cam) || cam10_cutscene() || (flag8 && trusted) || coop_hold;
     const int mtravel = (mouse_dyaw < 0 ? -mouse_dyaw : mouse_dyaw) + 2 * (mouse_dpitch < 0 ? -mouse_dpitch : mouse_dpitch);
     hy_mouse_acc = hy_mouse_acc * 3 / 4 + mtravel;
     const int stick = fc_stick_rate(stick_rx, 1000) != 0 || fc_stick_rate(stick_ry, 1000) != 0;
@@ -13955,6 +13987,14 @@ static const char *mo_lock_said = (const char *)1;     /* the reason last printe
    capturing (the row takes Tab as the new key), while the window is in the background, and in menus (the pointer is free there). */
 static int g_mo_tab_free;
 static const char mo_tab_why[] = "Tab";                  /* the lock's reason while Tab has the pointer free (mo_click compares it) */
+/* HYBRIDCAM1 round 2 (REVIEW-Y note 1): 1.0.3's default DS camera never held the pointer, so a windowed player could move out
+   to another window, the title bar, the border or the corner stylus panel. Hybrid in a WINDOW keeps that: the pointer is free
+   until a left click inside the client area (WM_LBUTTONDOWN only, so a title-bar or border press, WM_NCLBUTTONDOWN, never
+   counts, and neither does a frame run during a title-bar drag). That click takes the pointer and does nothing else; mouse
+   movement then wakes the analog cam. Losing focus forgets the click, so coming back to the window needs a click again.
+   Escape (the menu) and Tab let go as before. Fullscreen holds the pointer the way it always did. */
+static int g_hy_clicked;
+static const char mo_hy_why[] = "hybrid in a window: free until a click in the game";
 static int mo_key_bound(int vk)
 {
     for (int i = 0; i < HOST_KEY_COUNT; ++i)
@@ -13986,6 +14026,7 @@ static int mo_capture_want(int selftest, int stacked)
     else if (cam_mode == CAM_DS && !cam_hybrid) why = "DS camera";   /* the mouse steers nothing there (the hybrid's DS camera hands it to the analog cam) */
     else if (rb_replaying()) why = "rewind replay";       /* a rewound window is being re-run */
     else if (g_mo_tab_free) why = mo_tab_why;             /* the player asked for the pointer (mo_tab_frame); a click takes it back */
+    else if (cam_hybrid && !g_fullscreen && !g_hy_clicked) why = mo_hy_why;   /* hybrid in a window: free until a click in the game */
     /* one line each time the answer or its reason changes (focus is the separate term below, and mo_capture_set says when the pointer is
        really taken); this is what the MOUSELOCK1 rows read, since a test window is never the foreground one */
     const char *said = mo_lock_said;
@@ -14024,8 +14065,16 @@ static int mo_click(int cx, int cy, int on_picture)
     /* ROUND 3: the click takes the pointer back only while Tab is the lock's reason, i.e. in play. In a menu, the pause, a message
        window, the star select or the title (a pen moment or the scene path) the click is that screen's and passes on; the Tab flag is
        kept, so the pointer is still free when play resumes and the next click there takes it back. */
+    if (mo_lock_said == mo_hy_why) {   /* HYBRIDCAM1: the windowed hybrid's first click takes the pointer and is not a game click */
+        g_hy_clicked = 1;
+        g_mouse_click_new = 0;
+        g_left_eaten = 1;
+        fprintf(stderr, "[mouse] hybrid: click in the game takes the pointer f%d\n", g_host_key_frame);
+        return 1;
+    }
     if (!g_mo_tab_free || mo_lock_said != mo_tab_why) return 0;
     g_mo_tab_free = 0;
+    g_hy_clicked = 1;   /* HYBRIDCAM1: Tab's take-back click counts as the hybrid's click too */
     g_mouse_click_new = 0;
     g_left_eaten = 1;
     fprintf(stderr, "[mouse] click in the window takes the pointer back f%d\n", g_host_key_frame);
@@ -14478,7 +14527,21 @@ static LRESULT CALLBACK wndproc(HWND h, UINT m, WPARAM w, LPARAM l)
            is the moment they have alt-tabbed away and want their pointer. */
         mo_capture_set(h, 0);
         mo_release();
+        if (g_hy_clicked) {   /* HYBRIDCAM1: coming back to the window needs a click again */
+            g_hy_clicked = 0;
+            fprintf(stderr, "[mouse] hybrid: focus lost, the next click in the game takes the pointer f%d\n", g_host_key_frame);
+        }
         return 0;
+    case WM_NCLBUTTONDOWN:
+        /* HYBRIDCAM1: a press on the title bar or the border is the window's, never the game's: it takes no pointer. Logged so
+           the proof row can show it arrived. */
+        fprintf(stderr, "[mouse] non-client press (hit test %d) f%d: the pointer stays free\n", (int)w, g_host_key_frame);
+#ifndef PORT_ROM_CLEAN
+        /* the proof knob's own press (lParam 0x7fff7fff) stops here: the default handler would start a real move loop on a
+           hidden test window */
+        if (l == (LPARAM)0x7fff7fff) return 0;
+#endif
+        break;
     case WM_CAPTURECHANGED:
         /* NOT a capture drop: this is win32's mouse capture (SetCapture), a
            different thing that happens to share the word. Losing it ends a
@@ -19527,10 +19590,54 @@ int main(void)
                         if (*p == '-') { f1 = strtol(p + 1, &q, 10); p = q; }
                         if (*p == ':') { x = strtol(p + 1, &q, 10); p = q; }
                         if (*p == ':') { y = strtol(p + 1, &q, 10); p = q; }
-                        if (frame >= f0 && frame <= f1) {
+                        /* round 2: a real pointer only reaches the camera while the lock holds it, so the knob's pixels count
+                           only on a frame the lock is wanted (mo_capture_set adds the focus term, which a hidden test window
+                           never has and which must not be faked: an engaged capture moves the real pointer) */
+                        if (frame >= f0 && frame <= f1 && mo_lock_said != 0) {
+                            static int said_drop = -10;
+                            if (frame > said_drop + 1)
+                                fprintf(stderr, "[camhy] f%d mouse knob pixels dropped: the pointer is not held (%s)\n", frame,
+                                        mo_lock_said == (const char *)1 ? "not asked yet" : mo_lock_said);
+                            said_drop = frame;
+                        } else if (frame >= f0 && frame <= f1) {
                             const int ms = host_setting_mouse_sensitivity();
                             mouse_dyaw += (int)x * MOUSE_YAW * ms / 100;
                             mouse_dpitch += (int)y * MOUSE_PITCH * ms / 100;
+                        }
+                        while (*p && *p != ',') ++p;
+                        if (*p == ',') ++p;
+                    }
+                }
+            }
+            {   /* HYBRIDCAM1 round 2 proof knob SM64DS_HYBRID_MSG=<frame>:<what>,... posts window messages to THIS game's own
+                   window (never the real pointer, never another window): click = WM_LBUTTONDOWN at client 100,100 and its
+                   WM_LBUTTONUP, nc = WM_NCLBUTTONDOWN on the title bar (HTCAPTION, stopped in the window procedure before
+                   the default move loop) and its WM_NCLBUTTONUP, focus = WM_SETFOCUS, kill = WM_KILLFOCUS. Inert unset. */
+                static const char *hmsg = (const char *)1;
+                if (hmsg == (const char *)1) hmsg = getenv("SM64DS_HYBRID_MSG");
+                if (hmsg && !selftest && g_present_hwnd) {
+                    typedef BOOL(WINAPI * PostFnH)(HWND, UINT, WPARAM, LPARAM);
+                    static PostFnH postm;
+                    if (!postm) {
+                        HMODULE u = GetModuleHandleA("user32.dll");
+                        postm = u ? (PostFnH)GetProcAddress(u, "PostMessageA") : 0;
+                    }
+                    const char *p = hmsg;
+                    while (postm && *p) {
+                        char *q;
+                        const long f0 = strtol(p, &q, 10);
+                        p = q;
+                        if (*p == ':') ++p;
+                        const LPARAM at = (LPARAM)(100 | (100 << 16));
+                        if (frame == f0) {
+                            if (!strncmp(p, "click", 5)) postm(g_present_hwnd, WM_LBUTTONDOWN, MK_LBUTTON, at);
+                            else if (!strncmp(p, "nc", 2)) postm(g_present_hwnd, WM_NCLBUTTONDOWN, HTCAPTION, (LPARAM)0x7fff7fff);
+                            else if (!strncmp(p, "focus", 5)) postm(g_present_hwnd, WM_SETFOCUS, 0, 0);
+                            else if (!strncmp(p, "kill", 4)) postm(g_present_hwnd, WM_KILLFOCUS, 0, 0);
+                            fprintf(stderr, "[camhy] f%d proof message posted: %.5s\n", frame, p);
+                        } else if (frame == f0 + 1) {
+                            if (!strncmp(p, "click", 5)) postm(g_present_hwnd, WM_LBUTTONUP, 0, at);
+                            else if (!strncmp(p, "nc", 2)) postm(g_present_hwnd, WM_NCLBUTTONUP, HTCAPTION, (LPARAM)0x7fff7fff);
                         }
                         while (*p && *p != ',') ++p;
                         if (*p == ',') ++p;
