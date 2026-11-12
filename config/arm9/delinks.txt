@@ -2746,57 +2746,9 @@ src/WM_SetIndCallback.cpp:
     complete
     .text start:0x02061ce4 end:0x02061d30
 
-src/WM_Disconnect.cpp:
+src/engine/wm/WM_Standard.c:
     complete
-    .text start:0x02061d30 end:0x02061e38
-
-src/WM_StartConnect.cpp:
-    complete
-    .text start:0x02061e38 end:0x02061ee4
-
-src/WM_StartScan.cpp:
-    complete
-    .text start:0x02061ee4 end:0x02061fdc
-
-src/WM_StartParent.c:
-    complete
-    .text start:0x02061fdc end:0x02062024
-
-src/WmCheckParentParameter.c:
-    complete
-    .text start:0x02062024 end:0x020620b0
-
-src/WM_SetParentParameter.cpp:
-    complete
-    .text start:0x020620b0 end:0x020621b8
-
-src/WM_End.c:
-    complete
-    .text start:0x020621b8 end:0x02062200
-
-src/WM_Reset.c:
-    complete
-    .text start:0x02062200 end:0x02062240
-
-src/WM_Initialize.c:
-    complete
-    .text start:0x02062240 end:0x020622a8
-
-src/WM_PowerOff.c:
-    complete
-    .text start:0x020622a8 end:0x020622f0
-
-src/WM_PowerOn.c:
-    complete
-    .text start:0x020622f0 end:0x02062338
-
-src/WM_Disable.c:
-    complete
-    .text start:0x02062338 end:0x02062380
-
-src/WM_Enable.c:
-    complete
-    .text start:0x02062380 end:0x020623ec
+    .text start:0x02061d30 end:0x020623ec
 
 src/engine/wm/WM_Mp.c:
     complete

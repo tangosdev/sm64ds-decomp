@@ -8,7 +8,7 @@
 #include "nitro/wm/wm_api.h"
 
 /* The WMParentParam func_0203fbc4 hands to WM_SetParentParameter. */
-extern WmParentParam *data_020a0f44;
+extern WMParentParam *data_020a0f44;
 extern unsigned int data_020a0f58;
 extern unsigned int data_020a0f64;
 extern void *data_020a0f68;

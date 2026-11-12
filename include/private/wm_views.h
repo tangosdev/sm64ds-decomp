@@ -23,7 +23,7 @@ typedef struct WMStatus {
     char pad_088[0xb8 - 0x88];
     unsigned short linkLevel; /* 0x0b8 -- WMLinkLevel, 0 (weakest) to 3 */
     char pad_0ba[0xe4 - 0xba];
-    WmParentParam pparam; /* 0x0e4 -- maxEntry (+0xe) read by WM_GetMPReceiveBufferSize */
+    WMParentParam pparam; /* 0x0e4 -- maxEntry (+0xe) read by WM_GetMPReceiveBufferSize */
     char pad_124[0x17e - 0x124];
     unsigned short child_bitmap; /* 0x17e -- connected children, by AID bit */
     char pad_180[0x184 - 0x180];
@@ -56,33 +56,6 @@ typedef struct WMArm9Buf {
     char pad_140[0x560 - 0x140];
     unsigned short dmaNo; /* 0x560 -- the DMA channel WM_Init was given */
 } WMArm9Buf;
-
-/* NitroSDK WMBssDesc, the beacon record of a parent (0xc0 bytes: the SDK's
- * WM_SIZE_BSSDESC). Names are the SDK's; this SDK build reads and writes the
- * ssid and ggid as halfwords, so ssid is u16[16] where the public header has
- * u8[32] and gameInfo.ggid is u16[2]; the types choose the load and store
- * widths, so they stay as the code uses them. Only offsets the ROM's code
- * reads are named. */
-typedef struct WMBssDesc {
-    unsigned char pad_00[0xc];
-    unsigned short ssid[0x10]; /* 0x0c -- u8[32] in the SDK */
-    unsigned char pad_2c[0xa];
-    unsigned short channel; /* 0x36 */
-    unsigned char pad_38[4];
-    unsigned short gameInfoLength; /* 0x3c */
-    unsigned char pad_3e[6];
-    struct {
-        unsigned short ggid[2];           /* 0x44 */
-        unsigned short tgid;              /* 0x48 */
-        unsigned char userGameInfoLength; /* 0x4a */
-        unsigned char attribute;          /* 0x4b */
-        unsigned short parentMaxSize;     /* 0x4c */
-        unsigned short childMaxSize;      /* 0x4e */
-    } gameInfo;
-    unsigned char pad_50[0xc0 - 0x50];
-} WMBssDesc;
-
-typedef char WMBssDesc_size_must_be_0xc0[sizeof(WMBssDesc) == 0xc0 ? 1 : -1];
 
 /* Leading fields of NitroSDK WMStartParentCallback, the argument the WM
  * parent callback (MBi_ParentCallback) passes for CONNECTED (code 0),
@@ -163,6 +136,7 @@ WMArm9Buf *WM_GetSystemWork(void);
 int WM_CheckStateEx(int paramNum, ...);
 int WM_SendCommand(short id, unsigned short paramNum, ...);
 void WM_SetCallbackTable(int apiid, void *callback);
+int WMi_CheckIdle(void);
 
 /* NitroSDK wm_ds.c (WM_Ds.cpp): data sharing. This SDK build takes the
  * port, bitmap, length and mode as ints. */
