@@ -2,10 +2,10 @@
  * page src is in, copy what the transfer needs from it and advance. Returns
  * whether bytes are left to read. */
 #include "nitro/card/card_rom.h"
+#include "nitro/mi/memory.h"
 
 /* MI_CpuCopy8. local extern: no include/ header declares MI_CpuCopy8; it is
  * defined as an asm body in src/engine/mi/MI_Memory.c. */
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int len);
 
 int CARDi_ReadFromCache(CARDRomStat *p) {
     CARDiCommon *c = &cardi_common;

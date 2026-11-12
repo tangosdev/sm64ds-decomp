@@ -178,7 +178,7 @@ int daSnowball_c::State0() {
             this->mReachedSpawnY = 1;
         }
     }
-    if ((unsigned short)this->mStateTimer == 0 || mWithMeshClsn.IsOnGround() != 0) {
+    if (this->mStateTimer == 0 || mWithMeshClsn.IsOnGround() != 0) {
         func_02012694(SND3_SNOWBALL_BURST, &this->mCamSpacePosX);
         Particle::System::NewSimple(PTCL_SNOWBALL_BURST, this->mPosX, this->mPosY, this->mPosZ);
         MarkForDestruction();
@@ -211,9 +211,9 @@ int daSnowball_c::SetState(daSnowball_StateRec *p) {
  * and the three angles, through the scratch matrix data_020a0e68, and copies it
  * to mModel.mat4x3. */
 void daSnowball_c::UpdateModelMatrix() {
-    int v[3];
-    Vec3_Asr((Vector3 *)v, (Vector3 *)&mPosX, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
+    Vector3 v;
+    Vec3_Asr(&v, &mPos, 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     mModel.mat4x3 = data_020a0e68;
 }
@@ -249,7 +249,7 @@ int daSnowball_c::Render() {
  * a no-op in source terms; it stays as written, the shape these bytes were
  * matched with. */
 int daSnowball_c::Behavior() {
-    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     daSnowball_StateRec *rec = mStateRec;
     if (rec->update != 0)
         (this->*(rec->update))();

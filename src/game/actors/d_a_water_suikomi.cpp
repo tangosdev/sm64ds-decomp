@@ -115,7 +115,7 @@ int daWater_Suikomi_c::Render() {
 }
 
 int daWater_Suikomi_c::Behavior() {
-    DecIfAbove0_Short((u16 *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     State *s = mState;
     if (s->mMain != 0) {
         (this->*(s->mMain))();

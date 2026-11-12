@@ -52,6 +52,7 @@ enum daOnms_c_AssetId {
 #include "dBgW.h"
 #include "Sound.h"
 #include "math/CalcLib.h"
+#include "nitro/fx/fx_trig.h"
 
 /* mMoveDir indexes the member-pointer table this file defines below. The
    compiler copies the nine pointer-to-member descriptors into it at
@@ -108,7 +109,6 @@ void func_02012694(unsigned int id, const Vector3 *v);
 /* Stores mRadius: p[6] = value, the word at dBgCh_Actr + 0x18. */
 s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-s16 FX_SinCosTable_[];
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(dBgCh_Actr *self, int a1, int a2, int a3, int sp0, int sp1);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
@@ -366,10 +366,10 @@ void daOnms_c::Roll(s32 stepZ, s32 stepX, s32 pitch, s16 bank)
 
     {
         s16 t = (s16)((mStateTimer + 1) << 12);
-        idx = ((u16)t >> 4) * 2;
+        idx = (u16)t >> 4;
     }
     y = mRestPos.y + 0x3000;
-    mv = FX_SinCosTable_[idx];
+    mv = FX_SinIdx(idx);
     mPosY = y + ((mv * 0x6793a) >> 12);
 
     mPosX += stepX;
@@ -435,9 +435,9 @@ void daOnms_c::Launch(dActor_c *player, u32 how)
     else mPrevAngleY = Vec3_HorzAngle(ActorPos(player), ActorPos(this));
 
     unsigned n = ((u16)mPrevAngleY) >> 4;
-    mTumbleVelX = (s16)(FX_SinCosTable_[(n << 1) + 1] >> 2);
+    mTumbleVelX = (s16)(FX_CosIdx(n) >> 2);
     mTumbleVelY = 0;
-    mTumbleVelZ = (s16)((-(int)FX_SinCosTable_[n << 1]) >> 2);
+    mTumbleVelZ = (s16)((-(int)FX_SinIdx(n)) >> 2);
     mFlags &= ~0x2000000;
     mdCcAcPos_c.radius = 0x1a9000;
 }
@@ -550,7 +550,7 @@ int daOnms_c::InitResources()
     f = dExtSimpleModel_c::LoadFile(gOnimasuModelFile);
     mModel.SetFile((BMD_File *)f, 1, -1);
 
-    mWithMeshClsn.Init((dActor_c *)this, 0xfa000, 0, 0, 0);
+    mWithMeshClsn.Init(this, 0xfa000, 0, 0, 0);
     mWithMeshClsn.SetLimMovFlag();
 
     mMoveKind = param1 & 3;
@@ -579,9 +579,8 @@ int daOnms_c::InitResources()
     func_ov092_02131a88((char *)this);
 
     f = dBgW_Kc::LoadFile(gOnimasuCollisionFile);
-    ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile((KCL_File *)f, *(&mClsnMat), 0x1000, mAngleY,
-                              *(CLPS_Block *)(&data_ov092_02132220));
+    mMeshCollider.SetFile((KCL_File *)f, mClsnMat, 0x1000, mAngleY,
+                          *(CLPS_Block *)(&data_ov092_02132220));
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
 
     mOrientBits = (unsigned char)((mAngleX >> 0xe) & 3);

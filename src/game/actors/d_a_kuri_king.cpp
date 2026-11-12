@@ -102,6 +102,7 @@ enum daKuriKing_c_AssetId {
 #include "ParticleIds.h"
 #include "LevelRng.h"
 #include "nitro/fx/fx_cp.h"
+#include "nitro/fx/fx_trig.h"
 
 /* Resource handles this TU's static initializer constructs. The wrapper
  * spellings are reconstructed; constructor and destructor addresses, file
@@ -137,7 +138,6 @@ extern "C" dCamera_c *gCamera;
 extern "C" int RandomIntInternal(int *seed);
 extern "C" u16 DecIfAbove0_Short(u16* p);
 extern "C" s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
-extern "C" s16 FX_SinCosTable_[];
 extern "C" void func_02012694(u32 a, void* b);
 
 /* local extern: include/Sound.h does not declare the layer-3 pair yet. */
@@ -149,20 +149,16 @@ extern "C" void func_02011cfc();
 namespace Sound {
 void ChangeMusicVolume(u32 a, int f);
 }
-extern "C" int func_01ffa344(int f);
 extern "C" unsigned short data_ov074_02122e04[];
 extern "C" int ApproachAngle(short *, short, int, int, int);
 extern "C" void func_ov084_021296b0(void* a, void* b);
 extern "C" int __aeabi_idiv(int a, int b);
 extern "C" int AngleDiff(int a, int b);
-extern "C" int func_01ffa594(int a, int b);
-extern "C" int func_01ffa4bc(int a);
-extern "C" int func_01ff9378(int a, int b);
 extern "C" int Math_Function_0203b14c(int* p, int a, int b, int d, int e);
 extern "C" unsigned short data_ov074_02122dfc[];
 extern "C" int data_ov074_0212291c[];
 extern "C" int data_ov074_0212290c[];
-extern "C" void *data_ov074_02122e4c[];
+extern "C" float data_ov074_02122e4c[];
 extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern "C" s32 Vec3_HorzLen(const Vector3 *v);
 extern "C" s16 atan2_hold_d_a_kuri_king_1(s32 y, s32 x);
@@ -374,11 +370,8 @@ int daKuriKing_c::SpawnVanishCopy() {
             spawnAngle.y=(short)((this->mSpawnedCount-0xc)*0x5555+spawnAngle.y);
             radius=0x84000;
         }
-        {
-            int sinIdx=((u16)spawnAngle.y>>4)<<1;
-            spawnPos.x += FX_MUL(radius, FX_SinCosTable_[sinIdx]);
-            spawnPos.z += FX_MUL(radius, FX_SinCosTable_[sinIdx + 1]);
-        }
+        spawnPos.x += FX_MUL(radius, FX_SinIdx((u16)spawnAngle.y >> 4));
+        spawnPos.z += FX_MUL(radius, FX_CosIdx((u16)spawnAngle.y >> 4));
         spawnAngle.x=Vec3_VertAngle(&basePos, &spawnPos);
         dActor_c::Spawn(0xc7, 0x1111, spawnPos, &spawnAngle, this->mAreaId, -1);
         this->mSpawnedCount += 1;
@@ -434,7 +427,7 @@ void daKuriKing_c::UpdateDefeat() {
         return;
     case 1:
         if (DecIfAbove0_Short(&this->mTimer) == 0) {
-            dActor_c* actor = (dActor_c*)dActor_c::FindWithActorID(0xc8, 0);
+            dActor_c *actor = dActor_c::FindWithActorID(0xc8, 0);
             if (actor != 0) {
                 u32 id = 0xc8;
                 while (1) {
@@ -450,14 +443,14 @@ void daKuriKing_c::UpdateDefeat() {
                         this->mTimer = 2;
                         return;
                     }
-                    actor = (dActor_c*)dActor_c::FindWithActorID(id, actor);
+                    actor = dActor_c::FindWithActorID(id, actor);
                     if (actor == 0)
                         break;
                 }
             }
         }
         if (this->mSpawnedCount == 1) {
-            dActor_c* a2 = (dActor_c*)dActor_c::FindWithActorID(0xc8, 0);
+            dActor_c *a2 = dActor_c::FindWithActorID(0xc8, 0);
             if (a2 != 0) {
                 s32 flag2;
                 if (a2->mFlags & 0x40000)
@@ -527,7 +520,7 @@ void daKuriKing_c::UpdateDefeat() {
 
 void daKuriKing_c::EnterDefeat() {
     this->mSizeIndex = 0;
-    int v = func_01ffa344((int)data_ov074_02122e4c[1]);
+    int v = data_ov074_02122e4c[1];
     this->mScaleX = v;
     this->mScaleY = v;
     this->mScaleZ = v;
@@ -871,28 +864,26 @@ int daKuriKing_c::AdvanceMaterialChanger() {
 
 /* daKuriKing_c shrink/grow interpolation tick.
  *
- * Called from UpdateDefeat and UpdateScaleChange. Picks a pair of
- * float sizes out of data_ov074_02122e4c (12288.0f, 9557.0f, 6826.0f,
- * 4096.0f -- Fix12 scales stored as IEEE singles), divides their difference
- * by the remaining step count in mScaleSteps, and steps mTargetScale toward
- * the next one. Math_Function_0203b14c eases mCurrentScale toward that target;
- * unless the last step has just finished, the scale triple then gets a
- * wobble from a sin/cos pair out of FX_SinCosTable_ indexed by mScalePhase,
- * which advances 0x1230 per frame. In state 6, each finished step except
- * the last also spits particle 0xb1 at 400.0 * mCurrentScale above the boss.
+ * Called from UpdateDefeat and UpdateScaleChange. data_ov074_02122e4c holds
+ * the boss's four sizes as floats (3.0, 2.333, 1.666 and 1.0 in Fix12 units);
+ * mTargetScale is the next size plus the gap back to the current one,
+ * divided by the steps left in mScaleSteps. Math_Function_0203b14c eases
+ * mCurrentScale toward that target; unless the last step has just finished,
+ * the scale triple then gets a wobble from the sine and cosine of
+ * mScalePhase, which advances 0x1230 per frame. In state 6, each finished
+ * step except the last also spits particle 0xb1 at 400.0 * mCurrentScale
+ * above the boss.
  *
- * The float arithmetic goes through the ITCM soft-float block by hand, the
- * way the rest of this tree calls it: func_01ffa594 (single add/sub),
- * func_01ffa344 (float to int), func_01ffa4bc (int to float) and
- * func_01ff9378, with FX_Div doing the Fix12 divide in between.
+ * The float arithmetic compiles to the ITCM soft-float helpers (_fsub, _ffix,
+ * _fflt, _fadd), as written.
  *
  * Shape notes: the particle position temp must stay MEMORY-HOMED -- reading
  * its words back through the address (the ((int *)&v)[n] form) is what keeps
  * the three dead stores the ROM emits; plain member reads scalarize the
- * struct away and cost four instructions. And k has to be computed BEFORE d,
- * which is worth ten words of register identity in the tail: with d first,
- * the index web takes r2 and the mCurrentScale web takes r3, exactly reversed
- * from the ROM.
+ * struct away and cost four instructions. The wobble reads the table by
+ * element index k computed BEFORE d: written as FX_SinIdx/FX_CosIdx (with
+ * k first, d first, k block-scoped, u32 or masked) the index web and the
+ * mCurrentScale web swap r2 and r3, ten words off the ROM.
  *
  * Matched byte-for-byte with mwccarm 2004/b56 (ov074); linkcheck VERIFIED.
  */
@@ -900,12 +891,9 @@ int daKuriKing_c::StepScaleTransition() {
     struct Vector3 v;
     int d, k;
 
-    this->mTargetScale = func_01ffa344(func_01ff9378(
-        (int)data_ov074_02122e4c[this->mSizeIndex + 1],
-        func_01ffa4bc(
-            FX_Div(func_01ffa344(func_01ffa594((int)data_ov074_02122e4c[this->mSizeIndex],
-                                               (int)data_ov074_02122e4c[this->mSizeIndex + 1])),
-                   this->mScaleSteps << 12))));
+    mTargetScale = data_ov074_02122e4c[mSizeIndex + 1] +
+                   FX_Div(data_ov074_02122e4c[mSizeIndex] - data_ov074_02122e4c[mSizeIndex + 1],
+                          mScaleSteps << 12);
 
     if (Math_Function_0203b14c(&this->mCurrentScale, this->mTargetScale, 0x78, 0x100, 0x20) == 0) {
         if (this->mScalePhase == 0) {
@@ -924,11 +912,11 @@ int daKuriKing_c::StepScaleTransition() {
                                         ((int *)&v)[2]);
         }
     }
-    k = ((u16)this->mScalePhase >> 4) * 2;
-    d = this->mTargetScale - this->mCurrentScale + 0x11e;
-    this->mScaleY = this->mCurrentScale + FX_MUL(d, FX_SinCosTable_[k]);
-    this->mScaleX = this->mCurrentScale;
-    this->mScaleX = this->mCurrentScale + FX_MUL(d, FX_SinCosTable_[k + 1]);
+    k = ((u16)mScalePhase >> 4) * 2;
+    d = mTargetScale - mCurrentScale + 0x11e;
+    mScaleY = mCurrentScale + FX_MUL(d, FX_SinCosTable_[k]);
+    mScaleX = mCurrentScale;
+    mScaleX = mCurrentScale + FX_MUL(d, FX_SinCosTable_[k + 1]);
     this->mScaleZ = this->mScaleX;
     this->mScalePhase += 0x1230;
     return 0;
@@ -999,7 +987,6 @@ extern "C" void func_ov074_0212087c(int* out, daKuriKing_c* self, int n_)
         int sum;
         int prod;
         int diff;
-        int idx;
         u8 mode;
 
         rem = n % 3;
@@ -1017,11 +1004,9 @@ extern "C" void func_ov074_0212087c(int* out, daKuriKing_c* self, int n_)
         sum = (s16)(q * 0x350 + 0x500) + (s16)(rem * 0x600);
         prod = self->mDirection * sum;
         diff = (self->mWalkAngle + self->mMaxWalkSpeed) - prod;
-        idx = ((u16)(s16)diff >> 4) * 2;
-
-        out[0] = FX_MUL(scale, FX_SinCosTable_[idx]);
+        out[0] = FX_MUL(scale, FX_SinIdx((u16)(s16)diff >> 4));
         out[1] += 0x32000;
-        out[2] = FX_MUL(scale, FX_SinCosTable_[idx + 1]);
+        out[2] = FX_MUL(scale, FX_CosIdx((u16)(s16)diff >> 4));
     } else {
         int lim;
         int one;
@@ -1033,7 +1018,6 @@ extern "C" void func_ov074_0212087c(int* out, daKuriKing_c* self, int n_)
         int prod2;
         int prod3;
         int diff2;
-        int idx2;
 
         lim = 3;
         if (self->mSizeIndex == 1)
@@ -1056,11 +1040,9 @@ extern "C" void func_ov074_0212087c(int* out, daKuriKing_c* self, int n_)
         prod2 = self->mDirection * sum2;
         prod3 = sign * prod2;
         diff2 = (self->mWalkAngle + self->mWalkSpeed) - prod3;
-        idx2 = ((u16)(s16)diff2 >> 4) * 2;
-
-        out[0] = FX_MUL(scale2, FX_SinCosTable_[idx2]);
+        out[0] = FX_MUL(scale2, FX_SinIdx((u16)(s16)diff2 >> 4));
         out[1] += 0x32000;
-        out[2] = FX_MUL(scale2, FX_SinCosTable_[idx2 + 1]);
+        out[2] = FX_MUL(scale2, FX_CosIdx((u16)(s16)diff2 >> 4));
     }
 }
 
@@ -1112,13 +1094,10 @@ void daKuriKing_c::SpawnHitParticles(dActor_c *other, dCcAcPos_c *clsn, int mode
     aX = cstd::atan2(v.x, v.z);
     aY = cstd::atan2(v.y, Vec3_HorzLen(&v));
 
-    iY = (u16)aY >> 4;
-    iX = (u16)aX >> 4;
-
-    s = FX_MUL(w, FX_SinCosTable_[iY * 2 + 1]);
-    dst.x += FX_MUL(s, FX_SinCosTable_[iX * 2]);
-    dst.y += FX_MUL(w, FX_SinCosTable_[iY * 2]);
-    dst.z += FX_MUL(s, FX_SinCosTable_[iX * 2 + 1]);
+    s = FX_MUL(w, FX_CosIdx((u16)aY >> 4));
+    dst.x += FX_MUL(s, FX_SinIdx((u16)aX >> 4));
+    dst.y += FX_MUL(w, FX_SinIdx((u16)aY >> 4));
+    dst.z += FX_MUL(s, FX_CosIdx((u16)aX >> 4));
 
     switch (mode) {
     case 0:
@@ -1164,7 +1143,7 @@ void daKuriKing_c::HandleCylinderHits() {
     do {
         cur = p;
         if (cur->otherOwner != 0)
-            player = (dActor_c *)dActor_c::FindWithID(cur->otherOwner);
+            player = dActor_c::FindWithID(cur->otherOwner);
         if (player != 0)
             break;
         i++;
@@ -1246,9 +1225,9 @@ void daKuriKing_c::HandleCylinderHits() {
                                                          0x600) +
                                                     (this->mWalkAngle + this->mMaxWalkSpeed))) >>
                                         4;
-                                    v0.x = FX_MUL(FX_SinCosTable_[k * 2], 0x546000LL);
+                                    v0.x = FX_MUL(FX_SinIdx(k), 0x546000LL);
                                     v0.y += 0x32000;
-                                    v0.z = FX_MUL(FX_SinCosTable_[k * 2 + 1], 0x546000LL);
+                                    v0.z = FX_MUL(FX_CosIdx(k), 0x546000LL);
                                     this->mMegaMushroomID =
                                         dActor_c::Spawn(0x115, 0, v0, 0, this->mAreaId, -1)
                                             ->uniqueID;
@@ -1418,8 +1397,8 @@ void daKuriKing_c::UpdateCylindersAndFootsteps() {
 int daKuriKing_c::WalkAlongRing() {
     if (this->mWithMeshClsn.IsOnGround()) {
         this->mWalkAngle += this->mWalkSpeed;
-        this->mPosX = FX_MUL(FX_SinCosTable_[(((u16)this->mWalkAngle) >> 4) * 2], 0x546000);
-        this->mPosZ = FX_MUL(FX_SinCosTable_[(((u16)this->mWalkAngle) >> 4) * 2 + 1], 0x546000);
+        this->mPosX = FX_MUL(FX_SinIdx(((u16)this->mWalkAngle) >> 4), 0x546000);
+        this->mPosZ = FX_MUL(FX_CosIdx(((u16)this->mWalkAngle) >> 4), 0x546000);
     }
     ApproachAngle(&this->mAngleY, (this->mDirection * 0x4500) + this->mWalkAngle, 0xa, 0x800, 0x10);
 }
@@ -1681,7 +1660,7 @@ int daKuriKing_c::InitResources()
     } while (j < 3);
 
     mSizeIndex = 3;
-    p = (void *)func_01ffa344((s32)data_ov074_02122e4c[mSizeIndex]);
+    p = (void *)(s32)data_ov074_02122e4c[mSizeIndex];
     mScaleX = (s32)p;
     mScaleY = (s32)p;
     mScaleZ = (s32)p;
@@ -1694,7 +1673,7 @@ int daKuriKing_c::InitResources()
 
     k = 0;
     do {
-        mdCc_cs[k].Init(this, *(Vector3 *)&mPosX, mScaleX * 0xa, mScaleY * 0xa, 0x200004, 0x26fe0);
+        mdCc_cs[k].Init(this, mPos, mScaleX * 0xa, mScaleY * 0xa, 0x200004, 0x26fe0);
         k++;
     } while (k < 4);
 
@@ -1726,8 +1705,8 @@ int daKuriKing_c::InitResources()
     mWalkAngle = 0x1000;
     mWalkAngle += mWalkSpeed;
 
-    mPosX = FX_MUL(FX_SinCosTable_[((u16)mWalkAngle >> 4) * 2], 0x546000);
-    mPosZ = FX_MUL(FX_SinCosTable_[((u16)mWalkAngle >> 4) * 2 + 1], 0x546000);
+    mPosX = FX_MUL(FX_SinIdx((u16)mWalkAngle >> 4), 0x546000);
+    mPosZ = FX_MUL(FX_CosIdx((u16)mWalkAngle >> 4), 0x546000);
 
     {
         s32 a2;

@@ -138,6 +138,7 @@ enum daObjHatenaBlock_c_AssetId {
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_trig.h"
 
 struct CLPS_Block;
 struct KCL_File;
@@ -189,7 +190,6 @@ extern int data_0209f32c;
 extern unsigned char gGameMode;
 extern dCamera_c *gCamera;
 extern char data_020a0edc[];
-extern s16 FX_SinCosTable_[];
 
 extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9c0;
@@ -381,9 +381,8 @@ int daObjHatenaBlock_c::InitResources()
     mShadowMat = mModel.mat4x3;
     {
         void *kcl = dBgW_Kc::LoadFile(data_ov102_0214e7d0);
-        ((dBgW_KcMbg *)(&mMeshCollider))
-            ->dBgW_KcMbg::SetFile((KCL_File *)(kcl), *(const Matrix4x3 *)(&mClsnMat), 0x199,
-                                  mAngleY, *(CLPS_Block *)(&data_ov002_0210d954));
+        mMeshCollider.SetFile((KCL_File *)(kcl), mClsnMat, 0x199, mAngleY,
+                              *(CLPS_Block *)(&data_ov002_0210d954));
     }
     mHomePosY = mPosY;
     mContentType = (unsigned char)param1;
@@ -774,7 +773,6 @@ void daObjHatenaBlock_c::EnterBouncing() {
  *  - enters STATE_POPPED.
  * The `ch >= 4` tests below cannot fire: ch was clamped to 3 above. */
 void daObjHatenaBlock_c::UpdateBouncing() {
-    daObjHatenaBlock_c *self = this;
     Vector3 pos;
     int ch;
     u16 typ;
@@ -782,22 +780,11 @@ void daObjHatenaBlock_c::UpdateBouncing() {
     func_ov102_02149684((int *)&pos, this);
     if (DecIfAbove0_Short(&mBounceTimer) != 0) {
 
-        s16 *pang = (s16 *)&mBounceAng;
-        u16 ang = mBounceAng;
-        s16 s = FX_SinCosTable_[(ang >> 4) * 2];
-        int conf = 0x999;
-        int t = (int)s + 0x1000;
-        int y = FX_MUL(t, conf);
-        mScaleY = y + 0x666;
-        ang = mBounceAng;
-        s = FX_SinCosTable_[(ang >> 4) * 2];
-        int u = 0x1000 - (int)s;
-        mScaleX = FX_MUL(u, 0x1000) + 0x1000;
+        mScaleY = FX_MUL(FX_SinIdx((u16)mBounceAng >> 4) + 0x1000, 0x999) + 0x666;
+        mScaleX = FX_MUL(0x1000 - FX_SinIdx((u16)mBounceAng >> 4), 0x1000) + 0x1000;
         mScaleZ = mScaleX;
-        ang = mBounceAng;
-        s = FX_SinCosTable_[(ang >> 4) * 2];
-        mBounceYOffs = (0x1000 - (int)s) * 0xd;
-        *pang += 0x1000;
+        mBounceYOffs = (0x1000 - FX_SinIdx((u16)mBounceAng >> 4)) * 0xd;
+        mBounceAng += 0x1000;
 
         return;
     }
@@ -829,14 +816,14 @@ void daObjHatenaBlock_c::UpdateBouncing() {
     case 1: {   /* ITEM_BLOCK */
         PMF (*tbl)[4] = data_ov102_0214e8c0;
         u8 content = mContentType;
-        (self->*tbl[content][0])();
+        (this->*tbl[content][0])();
         break;
     }
     case 2: {   /* VS_ITEM_BLOCK */
         PMF (*tbl)[4] = data_ov102_0214e870;
         u8 content = mContentType;
         if (ch >= 4) ch = 0;
-        (self->*tbl[content][ch])();
+        (this->*tbl[content][ch])();
         break;
     }
     case 0:     /* HATENA_BLOCK */
@@ -844,7 +831,7 @@ void daObjHatenaBlock_c::UpdateBouncing() {
             PMF (*tbl)[4] = data_ov102_0214e8c0;
             u8 content = mContentType;
             if (ch >= 4) ch = 0;
-            (self->*tbl[content][ch])();
+            (this->*tbl[content][ch])();
         } else {
             SpawnPrizeBobOmb();
         }

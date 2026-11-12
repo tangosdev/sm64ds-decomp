@@ -52,6 +52,7 @@ enum dScMgCoin_c_AssetId {
 #include "nitro/gx/gx_bgcnt.h"
 #include "decl_common.h"
 #include "LevelRng.h"
+#include "math/CalcLib.h"
 #include "Sound.h"
 #include "dScMgCoin_c.h"
 #include "PlayerInput.h"
@@ -96,7 +97,6 @@ enum {
 };
 
 extern "C" {
-extern int RandomIntInternal(int *seed);
 extern const int sCoinBagRowTopY[];
 extern const int sCoinBagRowHeight[];
 extern const int sCoinBagHopVX[];
@@ -229,6 +229,9 @@ void dScMgCoin_c::Bag_Draw() {
         u16 idx_h = mBouncer[0].spin;
         s32 xr = mBouncer[0].x;
         s32 yr = mBouncer[0].y;
+        /* The table reads stay hand-indexed: through FX_SinIdx/FX_CosIdx
+           (nitro/fx/fx_trig.h), with or without an index local, the
+           function compiles to a different body. */
         int i = (idx_h >> 4) * 2;
         int vec[4];
         u8 idx_l = mBouncer[0].sprite;
@@ -266,11 +269,9 @@ void dScMgCoin_c::Bag_StateBounceDown(int i) {
     }
 
     if (mBouncer[i].bouncesLeft != 0) {
-        unsigned int roll;
         if (height < (sCoinBagRowTopY[stageIndex] - sCoinBagRowHeight[stageIndex]))
             return;
-        roll = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
-        mBouncer[i].vx = sCoinBagHopVX[((roll >> 16 & 0x7fff) << 1) >> 15];
+        mBouncer[i].vx = sCoinBagHopVX[MG_RAND(2)];
         mBouncer[i].vy = kHopVy;
         mBouncer[i].bouncesLeft--;
         func_02012718(kSndBounce, mBouncer[i].x);
@@ -735,15 +736,11 @@ void dScMgCoin_c::LayOutCoins() {
     int i;
 
     for (k = 0; k < 3; k++) {
-        a[k] = (int)((((((unsigned int)RandomIntInternal(&data_0209d4b8.value)) >> 16) & 0x7fff)
-                      << 3) >>
-                     15);
+        a[k] = MG_RAND(8);
     }
 
     for (k = 0; k < 3; k++) {
-        unsigned int w =
-            ((((unsigned int)RandomIntInternal(&data_0209d4b8.value)) >> 16) & 0x7fff) * 6;
-        b[k] = (a[k] + (int)(w >> 15) + 1) & 7;
+        b[k] = (a[k] + MG_RAND(6) + 1) & 7;
     }
 
     row = 0;
@@ -907,8 +904,7 @@ void dScMgCoin_c::Block_StateWander(int i) {
         mBlocks[i].y = rowY * 0x1000;
         mBlocks[i].vy = 0;
         if (mBlocks[i].vx == 0) {
-            unsigned int rv = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
-            if ((((rv >> 16) & 0x7fff) << 1) >> 15)
+            if (MG_RAND(2))
                 mBlocks[i].vx = 0xc00;
             else
                 mBlocks[i].vx = -0xc00;
@@ -958,14 +954,12 @@ void dScMgCoin_c::Block_StateHopDown(int i) {
     y = mBlocks[i].y >> 12;
     stage = mBlocks[i].stage;
     if (hops != 0) {
-        unsigned int rnd;
         int pan;
 
         if (y < sCoinBlockHopRowY[stage] - sCoinBlockHopRowHeight[stage])
             return;
 
-        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
-        mBlocks[i].vx = sCoinBlockHopVX[(((rnd >> 16) & 0x7fff) * 3) >> 15];
+        mBlocks[i].vx = sCoinBlockHopVX[MG_RAND(3)];
         mBlocks[i].vy = -0x2e00;
         mBlocks[i].y = (sCoinBlockHopRowY[stage] - sCoinBlockHopRowHeight[stage]) << 12;
         mBlocks[i].hops--;
@@ -984,8 +978,7 @@ void dScMgCoin_c::Block_StateHopDown(int i) {
     } else {
         unsigned int r;
         mBlocks[i].hops = 1;
-        r = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
-        r = (((r >> 16) & 0x7fff) << 3) >> 15;
+        r = MG_RAND(8);
         if (r == 2 || r == 5)
             mBlocks[i].hops++;
     }
@@ -1057,15 +1050,11 @@ void dScMgCoin_c::SpawnBlocks() {
     int i;
     n = IsAltVariant() != 0 ? 0x10 : 0x28;
     for (i = 0; i < n; i++) {
-        unsigned int v = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-        mBlocks[i].x = ((((v << 3) >> 15) << 5) + 0x10) << 12;
+        mBlocks[i].x = ((MG_RAND(8) << 5) + 0x10) << 12;
         mBlocks[i].y = -0xf0000;
         mBlocks[i].active = 1;
         mBlocks[i].visible = 1;
-        {
-            unsigned int w = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-            mBlocks[i].delay = ((i & 0xf) << 3) + (((w << 4) >> 15) << 4);
-        }
+        mBlocks[i].delay = ((i & 0xf) << 3) + (MG_RAND(16) << 4);
         mBlocks[i].row = row + 3;
         row++;
         if (row >= 3)
@@ -1340,8 +1329,9 @@ int dScMgCoin_c::InitResources() {
     void *a, *b, *d;
 
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
-    *(volatile u16 *)0x400000e &= ~3;
-    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1210;
+    G2_SetBG3Priority(0);
+    G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
+                         GX_BG_CHARBASE_0x10000);
 
     a = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_NCG_BIN);
     DecompressLZ16(a, (void *)((int)G2_GetBG3CharPtr() + 0x4000));
@@ -1361,8 +1351,9 @@ int dScMgCoin_c::InitResources() {
     GX_LoadOBJPltt(a, 0, 0x100);
 
     gSubScreenLayers |= 8;
-    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 3;
-    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & 0x43) | 0x1210;
+    G2S_SetBG3Priority(3);
+    G2S_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
+                          GX_BG_CHARBASE_0x10000);
 
     d = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_NCG_BIN);
     DecompressLZ16(d, (void *)((char *)G2S_GetBG3CharPtr() + 0x4000));

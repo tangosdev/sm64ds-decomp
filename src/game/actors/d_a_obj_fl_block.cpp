@@ -55,7 +55,7 @@ struct FlBlockCollisionFilePtr : SharedFilePtr {
  * end of this file so the constructors do not enter .text. */
 extern FlBlockModelFilePtr data_ov022_02114558;
 extern FlBlockCollisionFilePtr data_ov022_02114550;
-extern char data_ov064_0211bb0c[];
+extern CLPS_Block data_ov064_0211bb0c;
 
 extern "C" {
 /* local extern: stores the callbacks at dBgW+0x18 and +0x1c. d_bg_w.cpp
@@ -98,9 +98,7 @@ s32 daObjFl_Block_c::InitResources() {
     UpdateClsnPosAndRot();
 
     char *kcl = dBgW_Kc::LoadFile(data_ov022_02114550);
-    ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile((KCL_File *)(kcl), mClsnMat, 0x199, mAngleY,
-                              *(CLPS_Block *)(data_ov064_0211bb0c));
+    mMeshCollider.SetFile((KCL_File *)(kcl), mClsnMat, 0x199, mAngleY, data_ov064_0211bb0c);
 
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);

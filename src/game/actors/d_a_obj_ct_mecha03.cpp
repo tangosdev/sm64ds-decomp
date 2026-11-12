@@ -28,12 +28,11 @@
  *   Dropping the bobPos zeros sizes it 0x12c->0x120.
  * - UpdateModelMatrix returns the local z. Returning m[11] after the shift
  *   store sizes it 0x48->0x4c.
- * - Behavior's angle store is I16(0x322). mSwingAngle = mSwingAngle +
- *   mSwingSpeed sizes Behavior 0x190->0x184. *accelP += (short)(spd * pos)
- *   sizes it 0x190->0x198. if (vx * vy > 0) stays 0x190 and differs by 4
- *   words. if (mSoundTimer != 0) stays 0x190 and differs by 1 word. Reading
- *   the angle through I16(0x322) sizes it 0x190->0x194.
- *   offsetof(daObjCtMecha03_c, mSwingAngle) does not compile ("( expected").
+ * - Behavior's angle store is the compound mSwingAngle += mSwingSpeed;
+ *   mSwingAngle = mSwingAngle + mSwingSpeed sizes Behavior 0x190->0x184.
+ *   *accelP += (short)(spd * pos) sizes it 0x190->0x198. if (vx * vy > 0)
+ *   stays 0x190 and differs by 4 words. if (mSoundTimer != 0) stays 0x190
+ *   and differs by 1 word.
  * - Matrix4x3.t is not a member of the flat spelling.
  * - The data_ov065_* handles, g_profile_CT_MECHA03, and data_ov035_02112198
  *   are not this TU's data.
@@ -56,10 +55,6 @@ enum daObjCtMecha03_c_AssetId {
 #include "LevelRng.h"
 
 struct CLPS_Block;
-
-/* Angle accumulation only. Naming that store mSwingAngle shifts Behavior
-   from 0x190 to 0x184. The masked absolute address is the store that matches. */
-#define I16(off) (*(short *)(((int)this + (off)) & 0xFFFFFFFF))
 
 /* Resource handles constructed by this TU's static initializer. The
  * constructor and destructor bodies stay out of line; mwcc registers them. */
@@ -154,7 +149,7 @@ int daObjCtMecha03_c::Behavior() {
             if (mSwingSpeed == 0) {
                 mSoundTimer = (u16)mPauseTimer + 0xf;
             }
-            I16(0x322) += mSwingSpeed;
+            mSwingAngle += mSwingSpeed;
         }
         mAngleZ = mSwingAngle;
     }

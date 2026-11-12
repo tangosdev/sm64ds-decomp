@@ -18,20 +18,17 @@
  *     dExtAnmModel_c                  0x0d4 + 0x064 = 0x138   -> mTextureSequence
  *     dExtAnmTexPat_c            0x138 + 0x014 = 0x14c   -> mWithMeshClsn
  *     dBgCh_Actr               0x14c + 0x1bc = 0x308   -> mShadowModel
- *     dExtShadowModel_c                0x308 + 0x028 = 0x330   -> padding
+ *     dExtShadowModel_c                0x308 + 0x028 = 0x330   -> mShadowMtx
+ *     (mShadowMtx)                    0x330 + 0x030 = 0x360   -> mdCcAcPos_c
  *     dCcAcPos_c  0x360 + 0x040 = 0x3a0   -> mTargetPlayer
  *
- * TWO OF THE GENERATED HEADER'S FIELDS WERE THE dExtAnmModel_c'S OWN INSIDES and are
- * gone from this half: `mAnimation` at 0x124 is 0x0d4 + 0x50, the dExtFrameCtrl_c base
- * inside dExtAnmModel_c, and `unk_130` at 0x130 is 0x0d4 + 0x5c. Both were declared as
- * siblings of a `u8 mAnmModel` marker whose pad stopped short of the real object.
- * Same shape as daPly_c's two dExtAnmModel_c members.
+ * mAnimation at 0x124 and unk_130 at 0x130 were the dExtAnmModel_c's own
+ * dExtFrameCtrl_c base (0x0d4 + 0x50, 0x0d4 + 0x5c), not siblings; like
+ * daPly_c's two dExtAnmModel_c members, they are gone.
  *
  * sizeof is 0x454, which is not inferred from the fields: daKpa_c_classInit asks
  * fBase_c::operator new for 1108 bytes -- and the last declared field, mSoundID,
- * happens to end there too.
- *
- * The unk_ entries are placeholders. */
+ * happens to end there too. */
 #ifndef DAKPA_C_H
 #define DAKPA_C_H
 #include "types.h"
@@ -66,7 +63,7 @@ struct daKpa_c : dActor_c {
     /* uniqueID of the KOOPATAIL actor (ID 278) that InitResources spawns. */
     s32 mTailUniqueID;            /* 0x3a8 */
     /* uniqueID of the KOOPA2BG actor (ID 166) found with FindWithActorID. The
-       tilt state writes its tilt angles (+0x31e/+0x320/+0x322). */
+       tilt state writes that actor's tilt speeds (+0x31e/+0x320/+0x322). */
     u32 mArenaBgUniqueID;         /* 0x3ac */
     s32 mHomePosX;            /* 0x3b0 -- spawn position; Y is the arena floor level */
     s32 mHomePosY;            /* 0x3b4    that the fall and recover tests measure from */

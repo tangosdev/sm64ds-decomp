@@ -10,12 +10,18 @@
  */
 
 #include "nitro/card/card_common.h"
+#include "nitro/hw/mmap_shared.h"
+#include "nitro/mi/exMemory.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #define CARD_ROM_PAGE_SIZE 0x200
+
+/* The card's normal-mode "read page" command, in the top byte of the first
+ * command word (pret NitroSDK card_rom.c's MROMOP_G_READ_PAGE). */
+#define MROMOP_G_READ_PAGE 0xB7000000
 
 /* NitroSDK CARDRomRegion: an {offset, length} span of the card ROM, the
  * shape of the ROM header's FNT and FAT entries and of the overlay tables
@@ -24,6 +30,23 @@ typedef struct CARDRomRegion {
     u32 offset;
     u32 length;
 } CARDRomRegion;
+
+/* The ROM header's file name table, file allocation table and overlay
+ * tables, from the copy of the header the boot code leaves at
+ * HW_ROM_HEADER_BUF. */
+static inline const CARDRomRegion *CARD_GetRomRegionFNT(void) {
+    return (const CARDRomRegion *)((const u8 *)HW_ROM_HEADER_BUF + 0x40);
+}
+
+static inline const CARDRomRegion *CARD_GetRomRegionFAT(void) {
+    return (const CARDRomRegion *)((const u8 *)HW_ROM_HEADER_BUF + 0x48);
+}
+
+static inline const CARDRomRegion *CARD_GetRomRegionOVT(MIProcessor target) {
+    return (target == MI_PROCESSOR_ARM9)
+               ? (const CARDRomRegion *)((const u8 *)HW_ROM_HEADER_BUF + 0x50)
+               : (const CARDRomRegion *)((const u8 *)HW_ROM_HEADER_BUF + 0x58);
+}
 
 /* NitroSDK CARDRomStat (rom_stat, data_020a8780). */
 typedef struct CARDRomStat {

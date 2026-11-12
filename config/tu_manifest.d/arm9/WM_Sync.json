@@ -1,0 +1,110 @@
+{
+  "id": "arm9/WM_Sync",
+  "module": "arm9",
+  "source": "src/engine/wm/WM_Sync.c",
+  "promoted_source": "src/engine/wm/WM_Sync.c",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "One contiguous run of the Nitro SDK's wm_sync.c, 0x020618b8..0x02061d30: 8 functions, gapless in config/arm9/delinks.txt. Every body compiles byte-identical with the signatures, locals and statements of ntrtwl/NitroSDK libraries/wm/src/wm_sync.c, apart from this older SDK's WM_SetPortCallback, which builds and delivers no PORT_INIT record, and WM_GetAllowedChannel, which answers 0 before WM_Init.",
+    "Order: mwccarm emits the bodies in reverse. The SDK file's order (WM_SetIndCallback, WM_SetPortCallback, WM_ReadStatus, WM_GetMPSendBufferSize, WM_GetMPReceiveBufferSize, WM_ReadMPData, WM_GetAllowedChannel, WM_GetLinkLevel, with the uncalled WM_GetDispersionBeaconPeriod, WM_GetDispersionScanPeriod, WM_GetOtherElements and WM_GetNextTgid absent) is the ROM's order reversed, as in pret's pokediamond WM_sync.s.",
+    "The SDK's own sizeof expressions in WM_GetMPReceiveBufferSize (WMMpRecvHeader, WMMpRecvData, WMMpRecvBuf at the public header's layouts) produce the ROM's constants 0x29, 0xc and 0x51.",
+    "No data: no function owns .rodata, .data or .bss.",
+    "BOTTOM EDGE: the wm_system.c run (src/engine/wm/WM_System.c) ends at 0x020618b8 with WM_Init. TOP EDGE: the wm_standard.c run (src/engine/wm/WM_Standard.c) starts at 0x02061d30."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020618b8",
+      "end": "0x02061d30"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "WM_GetLinkLevel",
+      "address": "0x020618b8",
+      "size": "0xa8",
+      "legacy_source": "src/WM_GetLinkLevel.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "WM_GetAllowedChannel",
+      "address": "0x02061960",
+      "size": "0x4c",
+      "legacy_source": "src/WM_GetAllowedChannel.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "WM_ReadMPData",
+      "address": "0x020619ac",
+      "size": "0x104",
+      "legacy_source": "src/WM_ReadMPData.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "WM_GetMPReceiveBufferSize",
+      "address": "0x02061ab0",
+      "size": "0xec",
+      "legacy_source": "src/WM_GetMPReceiveBufferSize.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "WM_GetMPSendBufferSize",
+      "address": "0x02061b9c",
+      "size": "0x84",
+      "legacy_source": "src/WM_GetMPSendBufferSize.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "WM_ReadStatus",
+      "address": "0x02061c20",
+      "size": "0x68",
+      "legacy_source": "src/WM_ReadStatus.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "WM_SetPortCallback",
+      "address": "0x02061c88",
+      "size": "0x5c",
+      "legacy_source": "src/WM_SetPortCallback.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "WM_SetIndCallback",
+      "address": "0x02061ce4",
+      "size": "0x4c",
+      "legacy_source": "src/WM_SetIndCallback.cpp",
+      "ordinal": 7
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "relocations": [],
+  "compiler_only_output": [],
+  "notes": [
+    "HAND-BUILT manifest entry, not tools/tubuild.py create output: tu_map does not segment arm9.",
+    "Built as C, like the SDK. The prototypes are declared in include/nitro/wm/wm_api.h; WMStatus and the MP receive records are in include/nitro/wm/wm.h."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/arm9-WM_Sync/WM_Sync.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 8,
+    "functions_declared": 8,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

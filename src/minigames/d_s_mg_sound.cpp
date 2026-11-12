@@ -5,12 +5,6 @@
  *
  * The compiler emits .text in reverse source order, so the functions run
  * here from the highest address down. Do not reorder.
- *
- * Leftover: DrawNotes reads mState as the raw word at 0x5608.
- *   The member spelling in the note draw loop grows it by 8 bytes.
- * Leftover: DealNotes's deal loop reaches mPairUses[0] and
- *   mPairNotes[0] through the stepped (dScMgSound_c *)q, q = this + pair.
- *   Indexing the members by pair grows the function by 8 bytes.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -31,18 +25,8 @@ enum dScMgSound_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/g2.h"
 #include "nitro/gx/gx_load.h"
-
-/* A cursor keeps the add-#0x5000 split on a walk that advances the scene
-   pointer. Pointing the record itself at the slot pools the base instead. */
-struct dMgSoundNoteCur {
-    char pad[0x50e8];
-    dMgSoundNote_c note;
-};
-struct dMgSoundPopCur {
-    char pad[0x51b0];
-    dMgSoundPop_c pop;
-};
 
 /* The state/phase dispatch tables hold pointer-to-member records: the
    sinit copies {pmf, delta} descriptors into them. */
@@ -52,7 +36,6 @@ struct PmfEntry {
 };
 
 #define RND (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff)
-#define LAUNDER(p) ((int)(p))
 
 /* ROM PMF descriptor constants; the runtime tables below use native C++ PMFs. */
 extern Pmf pmf_dScMgSound_c_Note_StateWait;
@@ -306,7 +289,8 @@ s32 dScMgSound_c::InitResources() {
 
     gSubScreenLayers |= 4;
     file = LoadFile(ASSET_D_2D_MG_BG_SOUND2_NCG_BIN);
-    *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x214;
+    G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x1000,
+                          GX_BG_CHARBASE_0x14000);
     DecompressLZ16(file, (void *)G2S_GetBG2CharPtr());
     Deallocate(file);
 
@@ -318,9 +302,9 @@ s32 dScMgSound_c::InitResources() {
     GXS_LoadBG2Scr(file, 0, 0x800);
     Deallocate(file);
 
-    *(volatile u16 *)0x400100c &= ~0x40;
-    *(volatile u32 *)0x4001018 = 0;
-    *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 1;
+    G2S_BG2Mosaic(false);
+    G2S_SetBG2Offset(0, 0);
+    G2S_SetBG2Priority(1);
     DecompressLZ16(objChars, G2S_GetOBJCharPtr());
     GXS_LoadOBJPltt(objPltt, 0, 0x100);
     Deallocate(objChars);
@@ -487,19 +471,16 @@ void dScMgSound_c::ResetRound() {
     int popSlot;
     int noteSlot;
     int pairIndex;
-    char *cursor = (char *)this;
 
     for (noteSlot = 0; noteSlot < 10; noteSlot++) {
-        dMgSoundNoteCur *note = (dMgSoundNoteCur *)cursor;
-        note->note.x = 0;
-        note->note.y = 0;
-        note->note.timer = 0;
-        note->note.state = 0;
-        note->note.alive = 0;
-        note->note.shown = 0;
-        note->note.frame = 0;
-        note->note.note = 0;
-        cursor += 0x14;
+        mNotes[noteSlot].x = 0;
+        mNotes[noteSlot].y = 0;
+        mNotes[noteSlot].timer = 0;
+        mNotes[noteSlot].state = 0;
+        mNotes[noteSlot].alive = 0;
+        mNotes[noteSlot].shown = 0;
+        mNotes[noteSlot].frame = 0;
+        mNotes[noteSlot].note = 0;
     }
 
     for (pairIndex = 0; pairIndex < 5; pairIndex++) {
@@ -507,25 +488,22 @@ void dScMgSound_c::ResetRound() {
         mPairNotes[pairIndex] = 0;
     }
 
-    cursor = (char *)this;
     for (popSlot = 0; popSlot < 0x1e; popSlot++) {
-        dMgSoundPopCur *pop = (dMgSoundPopCur *)cursor;
-        pop->pop.x = 0;
-        pop->pop.y = 0;
-        pop->pop.velX = 0;
-        pop->pop.velY = 0;
-        pop->pop.scale = 0;
-        pop->pop.timer = 0;
-        pop->pop.active = 0;
-        pop->pop.visible = 0;
-        pop->pop.sprite = 0;
-        pop->pop.unk_1f = 0;
-        pop->pop.active = 0; /* stored twice, as in the ROM */
-        pop->pop.state = 0;
-        pop->pop.phase = 0;
-        pop->pop.kind = 0;
-        pop->pop.dir = 0;
-        cursor += 0x24;
+        mPops[popSlot].x = 0;
+        mPops[popSlot].y = 0;
+        mPops[popSlot].velX = 0;
+        mPops[popSlot].velY = 0;
+        mPops[popSlot].scale = 0;
+        mPops[popSlot].timer = 0;
+        mPops[popSlot].active = 0;
+        mPops[popSlot].visible = 0;
+        mPops[popSlot].sprite = 0;
+        mPops[popSlot].unk_1f = 0;
+        mPops[popSlot].active = 0; /* stored twice, as in the ROM */
+        mPops[popSlot].state = 0;
+        mPops[popSlot].phase = 0;
+        mPops[popSlot].kind = 0;
+        mPops[popSlot].dir = 0;
     }
 
     mSpriteB.active = 0;
@@ -559,6 +537,8 @@ void dScMgSound_c::DealNotes() {
     int pairCount;
     int pitchCount;
     int pairIndex;
+    int pair;
+    int layout;
 
     selectedPattern = mLevel;
     mPrevPattern = mPattern;
@@ -619,44 +599,21 @@ void dScMgSound_c::DealNotes() {
     for (pairIndex = 0; pairIndex < pairCount; pairIndex++) {
         mPairNotes[pairIndex] += sSoundPairNoteOffsets[mPattern];
     }
-    {
-        int xIndex;
-        char *noteCursor;
-        int yIndex;
-        char *q;
-        u8 *pairUses;
-        int layout;
-
-        noteIndex = 0;
-        if (noteCount <= 0)
-            return;
-        yIndex = 1;
-        xIndex = 0;
-        noteCursor = (char *)this;
+    for (noteIndex = 0; noteIndex < noteCount; noteIndex++) {
+        layout = sSoundNoteLayoutByPattern[mPattern];
+        mNotes[noteIndex].x = sSoundNotePositions[layout][noteIndex * 2] << 12;
+        mNotes[noteIndex].y = sSoundNotePositions[layout][noteIndex * 2 + 1] << 12;
+        mNotes[noteIndex].timer = 0;
+        mNotes[noteIndex].state = 0;
+        mNotes[noteIndex].alive = 1;
+        mNotes[noteIndex].shown = 1;
+        mNotes[noteIndex].frame = 0;
+        mNotes[noteIndex].checked = 0;
         do {
-            dMgSoundNoteCur *note = (dMgSoundNoteCur *)noteCursor;
-            layout = sSoundNoteLayoutByPattern[mPattern];
-            note->note.x = sSoundNotePositions[layout][xIndex] << 12;
-            note->note.y = (*(u16 *volatile *)&sSoundNotePositions[layout])[yIndex] << 12;
-            note->note.timer = 0;
-            note->note.state = 0;
-            note->note.alive = 1;
-            note->note.shown = 1;
-            note->note.frame = 0;
-            note->note.checked = 0;
-            do {
-                /* q is this advanced by the picked pair, so its mPairUses[0] and
-                   mPairNotes[0] are that pair's. */
-                q = (char *)this + ((u32)(RND * pairCount) >> 15);
-                pairUses = (u8 *)LAUNDER(&((dScMgSound_c *)q)->mPairUses[0]);
-            } while (*pairUses >= 2);
-            note->note.note = ((dScMgSound_c *)q)->mPairNotes[0];
-            (*pairUses)++;
-            xIndex += 2;
-            noteCursor += 0x14;
-            yIndex += 2;
-            noteIndex++;
-        } while (noteIndex < noteCount);
+            pair = (u32)(RND * pairCount) >> 15;
+        } while (mPairUses[pair] >= 2);
+        mNotes[noteIndex].note = mPairNotes[pair];
+        mPairUses[pair]++;
     }
 }
 
@@ -868,17 +825,12 @@ void dScMgSound_c::RevealUnmatched() {
 }
 
 void dScMgSound_c::UpdateNotes() {
-    int slot = 0;
-    char *noteCursor = (char *)this;
-    do {
-        dMgSoundNoteCur *note = (dMgSoundNoteCur *)noteCursor;
-        if (note->note.alive != 0) {
-            int state = note->note.state;
-            (this->*sSoundNoteStateTable[state].pmf)(slot);
+    int slot;
+    for (slot = 0; slot < 10; slot++) {
+        if (mNotes[slot].alive != 0) {
+            (this->*sSoundNoteStateTable[mNotes[slot].state].pmf)(slot);
         }
-        slot++;
-        noteCursor += 0x14;
-    } while (slot < 10);
+    }
 }
 
 /* Queue entries pack the note slot in the high byte and pitch + 1 in
@@ -919,16 +871,13 @@ void dScMgSound_c::CheckRoundOver() {
     }
     {
         int hasAliveNote = 0;
-        int slot = 0;
-        char *noteCursor = (char *)this;
-        do {
-            if (((dMgSoundNoteCur *)noteCursor)->note.alive != 0) {
+        int slot;
+        for (slot = 0; slot < 10; slot++) {
+            if (mNotes[slot].alive != 0) {
                 hasAliveNote++;
                 break;
             }
-            slot++;
-            noteCursor += 0x14;
-        } while (slot < 0xa);
+        }
         if (hasAliveNote != 0)
             return;
         mResultTimer = 0x50;
@@ -970,17 +919,12 @@ void dScMgSound_c::SpawnPops(int noteSlot) {
 }
 
 void dScMgSound_c::UpdatePops() {
-    int slot = 0;
-    char *popCursor = (char *)this;
-    do {
-        dMgSoundPopCur *pop = (dMgSoundPopCur *)popCursor;
-        if (pop->pop.active != 0) {
-            int state = pop->pop.state;
-            (this->*sSoundPopUpdateTable[state].pmf)(slot);
+    int slot;
+    for (slot = 0; slot < 30; slot++) {
+        if (mPops[slot].active != 0) {
+            (this->*sSoundPopUpdateTable[mPops[slot].state].pmf)(slot);
         }
-        slot++;
-        popCursor += 0x24;
-    } while (slot < 30);
+    }
 }
 
 void dScMgSound_c::Pop00_Update(int slot) {
@@ -1494,29 +1438,28 @@ void dScMgSound_c::Pop12_Finish(int slot) {
 extern "C" void Mg_RenderSpriteBothPalMtx(void *a0, int a1, int a2, int a3, void *a4);
 
 void dScMgSound_c::DrawPops() {
-    char *popCursor = (char *)this;
     int slot;
+    /* sin 0 and cos 0, read from the table by hand: FX_SinIdx(0) and
+       FX_CosIdx(0) compile to a different body. */
     int sinAngle = FX_SinCosTable_[0];
     long long cosAngle = FX_SinCosTable_[1];
 
     for (slot = 0; slot < 30; slot++) {
-        dMgSoundPopCur *pop = (dMgSoundPopCur *)popCursor;
-        if (pop->pop.visible) {
+        if (mPops[slot].visible) {
             int matrix[4];
-            long long scale = pop->pop.scale;
-            int x = pop->pop.x;
-            int y = pop->pop.y;
+            long long scale = mPops[slot].scale;
+            int x = mPops[slot].x;
+            int y = mPops[slot].y;
             int scaledCos = (int)((cosAngle * scale + 0x800) >> 12);
             int scaledSin = FX_MUL(sinAngle, (int)scale);
             matrix[0] = scaledCos;
             matrix[3] = scaledCos;
             matrix[1] = scaledSin;
             matrix[2] = -scaledSin;
-            Mg_RenderSpriteBothPalMtx(sSoundPopsSprites[pop->pop.sprite], (x >> 12) - 8,
+            Mg_RenderSpriteBothPalMtx(sSoundPopsSprites[mPops[slot].sprite], (x >> 12) - 8,
                                       (y >> 12) - 0x10, -1, matrix);
         }
         sinAngle = FX_SinCosTable_[0];
-        popCursor += 0x24;
     }
 }
 
@@ -1531,21 +1474,17 @@ void *sSoundNotesSprites[7] = {data_ov006_02133c58, data_ov006_02133c40, data_ov
                                data_ov006_02133c28, data_ov006_02133bf0, data_ov006_02133be0,
                                data_ov006_02133c00};
 void dScMgSound_c::DrawNotes() {
-    char *sceneBytes = (char *)this;
     int slot;
-    char *noteCursor = sceneBytes;
     for (slot = 0; slot < 10; slot++) {
-        dMgSoundNoteCur *note = (dMgSoundNoteCur *)noteCursor;
-        if (note->note.shown != 0 && note->note.alive != 0) {
-            int screenX = note->note.x >> 12;
-            int screenY = note->note.y >> 12;
+        if (mNotes[slot].shown != 0 && mNotes[slot].alive != 0) {
+            int screenX = mNotes[slot].x >> 12;
+            int screenY = mNotes[slot].y >> 12;
             int priority = 0;
             if (mState != 1)
                 priority = 1;
-            unsigned char frame = note->note.frame;
-            Hud_RenderSprite(sSoundNotesSprites[frame], screenX, screenY, -1, priority);
+            Hud_RenderSprite(sSoundNotesSprites[mNotes[slot].frame], screenX, screenY, -1,
+                             priority);
         }
-        noteCursor += 0x14;
     }
 }
 

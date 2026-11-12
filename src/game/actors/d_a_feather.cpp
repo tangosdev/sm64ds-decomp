@@ -16,12 +16,12 @@
  * - dBgCh_Actr_UpdateContinuous_Veneer: arm9's own 0x020383fc tail; no method.
  * - Vec3_Asr: its definition takes a plain triple and no header declares it,
  *   so it keeps a local extern "C".
- * - The *(short*)&mSwayAngle increment: the cartridge sign-extends it
- *   (ldrsh) while the index below zero-extends (ldrh). The plain u16
- *   re-read holds the reload (volatile disproved, FEATHER-2713-01).
+ * - mSwayAngle is an s16 angle: the increment sign-extends it (ldrsh) and
+ *   FX_SinIdx((u16)mSwayAngle >> 4) re-reads it zero-extended (ldrh), the
+ *   SM64 angle idiom.
  * - dCamera_c::mAngleY (gCamera): the halfword InitResources and Behavior
  *   add 0x4000 to.
- * - gGameMode game-mode flag, FX_SinCosTable_ sin/cos table,
+ * - gGameMode game-mode flag,
  *   data_020a0e68 scratch matrix, data_ov002_0210da58 file handle: ROM labels.
  * - g_profile_FEATHER stays carved (unowned) between the stripped _ZTI/_ZTS
  *   and the stripped vtable (all three deadstrip-data, BBH-leaf shape);
@@ -35,6 +35,7 @@
 #include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
@@ -48,7 +49,6 @@ extern "C" void Vec3_Asr(struct Vector3 *d, struct Vector3 *s, int sh);
 extern SharedFilePtr data_ov002_0210da58;
 extern unsigned char gGameMode;
 extern dCamera_c *gCamera;
-extern s16 FX_SinCosTable_[];
 
 /* ==========================================================================
  *
@@ -128,31 +128,21 @@ int daFeather_c::Behavior() {
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
 
     if (mWithMeshClsn.IsOnGround() != 0) {
-        ApproachLinear2(*(short *)&mSwayAngle, 0, 0x50);
+        ApproachLinear2(mSwayAngle, 0, 0x50);
         ApproachLinear(mHorzSpeed, 0, 0x555);
         if (DecIfAbove0_Byte(&mLifeTimer) == 0) {
             Particle::System::NewSimple(kPtclItemVanish, mPosX, mPosY, mPosZ);
             MarkForDestruction();
         }
     } else {
-        /* The short* increment is load-bearing: the cartridge sign-extends
-           it (ldrsh) while the index below zero-extends (ldrh), so a plain
-           `mSwayAngle += 0x400` on the u16 field misses. The plain re-read
-           still holds the cartridge's reload (FEATHER-2713-01). */
-        *(short *)&mSwayAngle += 0x400;
-        u16 newv = mSwayAngle;
-        int idx = ((newv >> 4) << 1) + 1;
-        mHorzSpeed = FX_MUL(mDriftSpeed, FX_SinCosTable_[idx]);
+        mSwayAngle += 0x400;
+        mHorzSpeed = FX_MUL(mDriftSpeed, FX_CosIdx((u16)mSwayAngle >> 4));
     }
 
     ApproachLinear(mDriftSpeed, 0x10000, 0x332);
 
-    {
-        int idx2 = (mSwayAngle >> 4) << 1;
-        mAngleX = FX_SinCosTable_[idx2] + 0x4000;
-        int idx3 = ((mSwayAngle >> 4) << 1) + 1;
-        mAngleZ = FX_SinCosTable_[idx3] * 2 - 0x6000;
-    }
+    mAngleX = FX_SinIdx((u16)mSwayAngle >> 4) + 0x4000;
+    mAngleZ = FX_CosIdx((u16)mSwayAngle >> 4) * 2 - 0x6000;
 
     {
         int b = (gGameMode == 1);

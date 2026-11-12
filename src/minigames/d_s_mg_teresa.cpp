@@ -54,6 +54,7 @@
 #include "dScMgTeresa_c.h"
 #include "decl_common.h"
 #include "LevelRng.h"
+#include "math/CalcLib.h"
 #include "nitro/gx/g2.h"
 #include "PlayerInput.h"
 #include "nitro/gx/gx_bgcnt.h"
@@ -70,8 +71,7 @@ extern "C" {
 
 extern void  RenderOamMainScreen(void*, int, int, int, int);
 extern void *LoadFile(int handle);
-extern void  DecompressLZ16(const void *src, void *dst);
-extern int   RandomIntInternal(int *seed);
+extern void DecompressLZ16(const void *src, void *dst);
 extern void  FreeGfxSlotsById(int arg);
 extern int   GetGameLanguage(void);
 struct Matrix2x2;
@@ -82,8 +82,8 @@ extern void  Mg_DrawScoreTally(void *, int, int, int);
 extern int   Mg_IsNewRecord(void);
 extern int   func_020126e8(int a);
 extern int   func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
-extern void MIi_CpuClear16(u16 val, void *dst, int nbytes);
 #include "OAM.h"
+#include "nitro/mi/memory.h"
 extern void OamRender10_d_s_mg_teresa(int sub, struct OamAttr *data, s32 x, s32 y, s32 palette,
                                       s32 priority, s32 scaleX, s32 scaleY, s32 rotation, s32 mode);
 
@@ -383,9 +383,10 @@ void dScMgTeresa_c::BigBoo_StateHover(int i) {
     gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
     SetBg3Offset(0, 0x100);
     {
+        /* The draw lands in its own int: through MG_RAND the pick colours
+           differently (5 words). */
         int rnd = RandomIntInternal(&data_0209d4b8.value);
-        mBigBoo[i].state =
-            sTeresaBigBooHoverPicks[((unsigned int)(((unsigned int)rnd >> 16) & 0x7fff) * 2) >> 15];
+        mBigBoo[i].state = sTeresaBigBooHoverPicks[((((u32)rnd >> 16) & 0x7fff) * 2) >> 15];
     }
     mBigBoo[i].frameTimer = 0;
     mBigBoo[i].frame = 0;
@@ -436,7 +437,7 @@ void dScMgTeresa_c::BigBoo_Start()
     mBigBoo[0].frame = 8;
     mBigBoo[0].moveRight = 0;
     mBigBoo[0].done = 0;
-    G2x_SetBlendAlpha_(&REG_BLDCNT, 0, 0xc, 0xc, 0x10);
+    G2_SetBlendAlpha(0, 0xc, 0xc, 0x10);
 }
 
 void dScMgTeresa_c::BigBoo_Hide()
@@ -1096,7 +1097,7 @@ void dScMgTeresa_c::Boo_StateFadeAway(int i) {
     mBoos[i].mFade++;
     mBoos[i].mTimer = 0;
     if (i == mLastSettledBoo) {
-        G2x_SetBlendAlpha_(&REG_DB_BLDCNT, 0, 4, 0x10 - mBoos[i].mFade, 0x10);
+        G2S_SetBlendAlpha(0, 4, 0x10 - mBoos[i].mFade, 0x10);
     }
     if (mBoos[i].mFade >= 0x10) {
         mBoos[i].mInPlay = 0;
@@ -1142,7 +1143,7 @@ void dScMgTeresa_c::Boo_StateFadeIn(int i) {
     mBoos[i].mTimer = 0;
 
     if (i == mLastSettledBoo) {
-        G2x_SetBlendAlpha_(&REG_DB_BLDCNT, 0, 1, mBoos[i].mFade, 0x10);
+        G2S_SetBlendAlpha(0, 1, mBoos[i].mFade, 0x10);
     }
 
     if (mBoos[i].mFade < 0x10)
@@ -1210,7 +1211,7 @@ void dScMgTeresa_c::Boo_StateFadeOut(int i) {
     mBoos[i].mFade++;
     mBoos[i].mTimer = 0;
     if (i == 0)
-        G2x_SetBlendAlpha_(&REG_DB_BLDCNT, 0, 1, 0x10 - mBoos[i].mFade, 0x10);
+        G2S_SetBlendAlpha(0, 1, 0x10 - mBoos[i].mFade, 0x10);
     if (mBoos[i].mFade < 0x10)
         return;
     mBoos[i].mFade = 0;
@@ -1313,17 +1314,13 @@ void dScMgTeresa_c::SpawnBoos() {
     int valB;
     int cval;
     int full;
-    unsigned int r;
 
     sel = mLevel;
     if (sel >= 0xf) {
         int k;
-        r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-        k = (r << 2) >> 15;
+        k = MG_RAND(4);
         if (k + 0xa == mBooPattern) {
-            k += (((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 3) >>
-                  15) +
-                 1;
+            k += MG_RAND(3) + 1;
             if (k >= 4) k -= 4;
         }
         sel = k + 0xa;
@@ -1332,12 +1329,9 @@ void dScMgTeresa_c::SpawnBoos() {
     count = sTeresaSpawnCounts[sel];
     mBooCount = count;
 
-    r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-    phase = ((r << 4) >> 15) << 12;
-    r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-    valA = ((((r << 3) >> 15) << 3) + 0x60) << 12;
-    r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-    valB = ((((r << 3) >> 15) << 3) + 0x60) << 12;
+    phase = MG_RAND(16) << 12;
+    valA = ((MG_RAND(8) << 3) + 0x60) << 12;
+    valB = ((MG_RAND(8) << 3) + 0x60) << 12;
 
     i = 0;
     if (count <= 0) {
@@ -1348,12 +1342,9 @@ void dScMgTeresa_c::SpawnBoos() {
     full = 0x10000;
     do {
         if (flagA == 0) {
-            r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-            mBoos[i].mX = ((((r * 0xf) >> 15) << 4) + 0x10) << 12;
-            r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-            mBoos[i].mY = ((((r * 0xb) >> 15) << 4) + 0x10) << 12;
-            r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-            mBoos[i].mHeading = ((r << 5) >> 15) << 11;
+            mBoos[i].mX = ((MG_RAND(0xf) << 4) + 0x10) << 12;
+            mBoos[i].mY = ((MG_RAND(0xb) << 4) + 0x10) << 12;
+            mBoos[i].mHeading = MG_RAND(32) << 11;
         } else {
             mBoos[i].mX = valA;
             mBoos[i].mY = valB;
@@ -1638,9 +1629,9 @@ void dScMgTeresa_c::PaintSquare(int cx, int cy, int val, int n)
                         if (y >= -0xc0 - sMgTopScreenYOffset && y >= 0 && y < 0xc0) {
                             addr = (int *)((char *)G2S_GetBG0CharPtr() +
                                            ((x / 8) + (y / 8) * 32) * 32 + (y & 7) * 4);
-                            MIi_CpuCopy32(addr, &buf, 4);
+                            MI_CpuCopy32(addr, &buf, 4);
                             buf = (buf & (-1 ^ (0xf << ((x & 7) * 4)))) | (val << ((x & 7) * 4));
-                            MIi_CpuCopy32(&buf, addr, 4);
+                            MI_CpuCopy32(&buf, addr, 4);
                         }
                     }
                 }
@@ -1687,7 +1678,7 @@ void dScMgTeresa_c::StartRound(int reset) {
     SpawnBoos();
     char *dst = (char *)G2S_GetBG0CharPtr();
     val = 0x1111;
-    MIi_CpuClear16(val, dst, 0x6000);
+    MI_CpuFill16(dst, val, 0x6000);
     mSceneState = 0;
     FreeGfxSlotsById(0x1d);
     mBannerTimer = 0x20;
@@ -1732,20 +1723,22 @@ s32 dScMgTeresa_c::InitResources()
     volatile u16 fa;
     volatile u16 fb;
     volatile u16 fc;
-    REG_BG2CNT &= ~3;
-    REG_BG2CNT &= ~0x40;
+    G2_SetBG2Priority(0);
+    G2_BG2Mosaic(0);
     *((volatile u32 *) 0x4000018) = 0;
-    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1210;
+    G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
+                         GX_BG_CHARBASE_0x10000);
     {
         void *p = G2_GetBG2ScrPtr();
         fa = 0x5300;
-        MIi_CpuClear16(fa, p, 0x800);
+        MI_CpuFill16(p, fa, 0x800);
     }
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
-    REG_BG3CNT = REG_BG3CNT & ~3;
-    REG_BG3CNT &= ~0x40;
+    G2_SetBG3Priority(0);
+    G2_BG3Mosaic(0);
     *((volatile u32 *) 0x400001c) = 0;
-    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x9310;
+    G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x512, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9800,
+                         GX_BG_CHARBASE_0x10000);
     t = LoadFile(0x9b);
     DecompressLZ16(t, G2_GetBG2CharPtr());
     Deallocate(t);
@@ -1762,26 +1755,28 @@ s32 dScMgTeresa_c::InitResources()
     f2 = LoadFile(0x102);
     DecompressLZ16(f1, G2_GetOBJCharPtr());
     GX_LoadOBJPltt(f2, 0, 0x100);
-    REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0x218;
-    REG_DB_BG0CNT &= ~0x40;
+    G2S_SetBG0Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x1000,
+                      GX_BG_CHARBASE_0x18000, GX_BG_EXTPLTT_01);
+    G2S_BG0Mosaic(0);
     *((volatile u32 *) 0x4001010) = 0;
-    REG_DB_BG0CNT &= ~3;
+    G2S_SetBG0Priority(0);
     {
         void *p = G2S_GetBG0ScrPtr();
         fb = 0;
-        MIi_CpuClear16(fb, p, 0x800);
+        MI_CpuFill16(p, fb, 0x800);
     }
     Mg_InitBrush((char *)this, 0, 0, 0);
     {
         void *p = (char *)G2S_GetBG0CharPtr();
         fc = 0x1111;
-        MIi_CpuClear16(fc, p, 0x6000);
+        MI_CpuFill16(p, fc, 0x6000);
     }
     gSubScreenLayers |= 4;
-    REG_DB_BG2CNT = (REG_DB_BG2CNT & ~3) | 1;
-    REG_DB_BG2CNT &= ~0x40;
+    G2S_SetBG2Priority(1);
+    G2S_BG2Mosaic(0);
     *((volatile u32 *) 0x4001018) = 0;
-    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x408;
+    G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x2000,
+                          GX_BG_CHARBASE_0x08000);
     t = LoadFile(0x9f);
     DecompressLZ16(t, G2S_GetBG2CharPtr());
     Deallocate(t);

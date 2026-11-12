@@ -128,7 +128,7 @@ void daPropeller_Heyho_Fire_c::CheckPlayerHit() {
 /* The state's main handler. The (u16) read matches the ROM's ldrh; the plain
    s16 read is an ldrsh. */
 int daPropeller_Heyho_Fire_c::State0() {
-    if ((u16)mStateTimer == 0 || mWithMeshClsn.IsOnGround() || mWithMeshClsn.IsOnWall()) {
+    if (mStateTimer == 0 || mWithMeshClsn.IsOnGround() || mWithMeshClsn.IsOnWall()) {
         SmallPoofDust();
         func_02012694(0x166, &mCamSpacePos);
         MarkForDestruction();
@@ -157,9 +157,9 @@ int daPropeller_Heyho_Fire_c::SetState(State *state) {
 /* The model matrix: position (shifted right by 3, Vec3_Asr) and the
    X/Y/Z angles, built in the scratch matrix and copied out. */
 void daPropeller_Heyho_Fire_c::UpdateModelMatrix() {
-    int v[3];
-    Vec3_Asr((Vector3 *)v, (Vector3 *)&mPosX, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
+    Vector3 v;
+    Vec3_Asr(&v, &mPos, 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 }
@@ -179,7 +179,7 @@ int daPropeller_Heyho_Fire_c::Render() {
 }
 
 int daPropeller_Heyho_Fire_c::Behavior() {
-    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     State *h = mCurrentState;
     if (h->mMain != 0) {
         (this->*(h->mMain))();

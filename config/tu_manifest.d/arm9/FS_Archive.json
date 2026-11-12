@@ -168,7 +168,7 @@
   "notes": [
     "Hand-assembled, following arm9/FS_Command: tu_map cannot segment arm9/main.",
     "FS_SuspendArchive, FS_UnloadArchiveTables, FS_LoadArchiveTables, FS_UnloadArchive, FS_NotifyArchiveAsyncEnd, FSi_ReadMemoryCore, FSi_WriteMemCallback and FSi_ReadMemCallback were renamed from their func_ names in this change (symbols/actor_renames.tsv records the evidence). The other twelve kept their names.",
-    "Text-only. The archive list (data_020a8048, pret's arc_list) and the current directory (data_020a804c, current_dir_pos) stay with their owners and keep their address names. FSFile and FSArchive are this SDK's layouts and stay local to the file."
+    "Text-only. The archive list (arc_list) and the current directory (current_dir_pos) are .bss this TU would own; they stay ROM-provided until its .bss is enrolled. FSFile and FSArchive are this SDK's layouts and stay local to the file."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",

@@ -310,7 +310,7 @@ int daSnmBth_c::Behavior()
                     *idx = *idx % 0x32;
                 } while (b == 0);
             }
-            mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x184, *(Vector3 *)&mCamSpacePosX, 0);
+            mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x184, mCamSpacePos, 0);
         }
     }
 

@@ -49,7 +49,7 @@ enum d_a_i_donketu_AssetId {
  * SharedFilePtr::Construct / SharedFilePtr_Destruct_Anim for the four
  * animation handles), spelled through declared-only subclasses so the
  * static initializer names the real entry points. The code reaches them
- * through the data_ov027_021138f4 pointer table. */
+ * through the data_ov027_021138f4 resource block. */
 struct IDonketuModelFilePtr : SharedFilePtr {
     IDonketuModelFilePtr(u32 fileID);
     ~IDonketuModelFilePtr();
@@ -59,7 +59,8 @@ struct IDonketuAnimationFileHandle : SharedFilePtr {
     ~IDonketuAnimationFileHandle();
 };
 
-extern int data_ov027_021138f4[];
+/* The Chill Bully's resource block (daOts_c.h); overlay .data owns the bytes. */
+extern BullyResourceConfig data_ov027_021138f4;
 
 /* -------------------------------------------------------------------------- */
 /* Factory: `return new` emits the size (0x3fc), the base C2, the member
@@ -79,7 +80,7 @@ extern "C" daIDonketu_c *daIDonketu_c_classInit(void) {
  * every one of its three children has to supply this. This one points the shared
  * file table at its own list and then claims a star slot. */
 int daIDonketu_c::InitResources() {
-    mFileTable = (int)data_ov027_021138f4;
+    mFileTable = &data_ov027_021138f4;
     int r = InitResourcesCommon();
     mStarIdx = param1 & 0xf;
     mStarSlot = TrackStar(mStarIdx, 2);

@@ -33,6 +33,8 @@
 #include "types.h"
 #include "decl_common.h"
 #include "LevelRng.h"
+#include "math/CalcLib.h"
+#include "nitro/fx/fx_trig.h"
 #include "Sound.h"
 #include "nitro/gx/g2.h"
 #include "PlayerInput.h"
@@ -41,6 +43,7 @@
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/os/cache.h"
 #include "nitro/gx/gx_load.h"
+#include "nitro/fx/fx_trig.h"
 
 #pragma defer_codegen off
 
@@ -50,10 +53,8 @@ struct SpriteAttr {
 };
 
 extern "C" {
-extern int RandomIntInternal(int *seed);
 extern void func_0203d388(int *p, int angle);
 extern void Mg_SetTopScreenYOffset(int n);
-extern s16 FX_SinCosTable_[];
 void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5, u16 a6);
 /* The dragged petal's two adjacent fixed-point coordinates. */
@@ -85,32 +86,31 @@ dScMgFlower_c::Petal::~Petal() {}
  * 0x4000, and go inactive once below the screen. mPetalsSettled stays 1 only if
  * no petal is still on the flower, held, or falling. */
 void dScMgFlower_c::UpdatePetals() {
-    dScMgFlower_c *self = this;
     int i;
 
-    self->mPetalsSettled = 1;
+    mPetalsSettled = 1;
     for (i = 0; i < 22; i++) {
-        if (self->mPetals[i].active == 0)
+        if (mPetals[i].active == 0)
             continue;
-        if (self->mPetals[i].held == 1) {
-            self->mPetalsSettled = 0;
-            continue;
-        }
-        if (self->mPetals[i].released == 0) {
-            self->mPetalsSettled = 0;
+        if (mPetals[i].held == 1) {
+            mPetalsSettled = 0;
             continue;
         }
-        if (i == self->mHeldPetal)
+        if (mPetals[i].released == 0) {
+            mPetalsSettled = 0;
             continue;
-        self->mPetals[i].fallSpeed += 0x100;
-        if (self->mPetals[i].fallSpeed >= 0x4000)
-            self->mPetals[i].fallSpeed = 0x4000;
-        self->mPetals[i].x += self->mPetals[i].driftX;
-        self->mPetals[i].y += self->mPetals[i].fallSpeed;
-        if (self->mPetals[i].y >= 0x100000)
-            self->mPetals[i].active = 0;
+        }
+        if (i == mHeldPetal)
+            continue;
+        mPetals[i].fallSpeed += 0x100;
+        if (mPetals[i].fallSpeed >= 0x4000)
+            mPetals[i].fallSpeed = 0x4000;
+        mPetals[i].x += mPetals[i].driftX;
+        mPetals[i].y += mPetals[i].fallSpeed;
+        if (mPetals[i].y >= 0x100000)
+            mPetals[i].active = 0;
         else
-            self->mPetalsSettled = 0;
+            mPetalsSettled = 0;
     }
 }
 
@@ -123,83 +123,72 @@ void dScMgFlower_c::UpdatePetals() {
  * with random partners, and the round state is reset. The rotation takes
  * the angle signed; the swap moves it as the stored u16. */
 void dScMgFlower_c::DealPetals() {
-    dScMgFlower_c *self = this;
-    unsigned int roll;
     int shuffleIndex;
     int petalIndex;
     int clearIndex;
     int baseAngle;
 
-    self->mCursorX = 0;
-    self->mCursorY = 0;
-    self->mPrevCursorX = self->mCursorX;
-    self->mPrevCursorY = self->mCursorY;
+    mCursorX = 0;
+    mCursorY = 0;
+    mPrevCursorX = mCursorX;
+    mPrevCursorY = mCursorY;
     Mg_SetTopScreenYOffset(0x20);
     for (clearIndex = 0; clearIndex < 0x16; clearIndex++) {
-        self->mPetals[clearIndex].active = 0;
-        self->mPetals[clearIndex].held = 0;
-        self->mPetals[clearIndex].released = 0;
-        self->mPetals[clearIndex].counted = 0;
-        self->mPetals[clearIndex].x = 0;
-        self->mPetals[clearIndex].y = 0;
-        self->mPetals[clearIndex].touchStartX = 0;
-        self->mPetals[clearIndex].touchStartY = 0;
-        self->mPetals[clearIndex].driftX = 0;
-        self->mPetals[clearIndex].fallSpeed = 0;
+        mPetals[clearIndex].active = 0;
+        mPetals[clearIndex].held = 0;
+        mPetals[clearIndex].released = 0;
+        mPetals[clearIndex].counted = 0;
+        mPetals[clearIndex].x = 0;
+        mPetals[clearIndex].y = 0;
+        mPetals[clearIndex].touchStartX = 0;
+        mPetals[clearIndex].touchStartY = 0;
+        mPetals[clearIndex].driftX = 0;
+        mPetals[clearIndex].fallSpeed = 0;
     }
-    if (self->mHoldTimer == 0x14) {
-        roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-        self->mPetalsLeft = ((roll * 2) >> 15) + 1;
+    if (mHoldTimer == 0x14) {
+        mPetalsLeft = MG_RAND(2) + 1;
+    } else if (MG_RAND(10) == 0) {
+        mPetalsLeft = MG_RAND(2) + 0x14;
     } else {
-        int raw = RandomIntInternal(&data_0209d4b8.value);
-        roll = ((unsigned int)raw >> 16) & 0x7fff;
-        if (((roll * 10) >> 15) == 0) {
-            roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-            self->mPetalsLeft = ((roll * 2) >> 15) + 0x14;
-        } else {
-            roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-            self->mPetalsLeft = ((roll * 8) >> 15) + 8;
-        }
+        mPetalsLeft = MG_RAND(8) + 8;
     }
-    roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-    baseAngle = (roll * 0x10000) >> 15;
-    for (petalIndex = 0; petalIndex < self->mPetalsLeft; petalIndex++) {
-        self->mPetals[petalIndex].angle = baseAngle + petalIndex * 0x10000 / self->mPetalsLeft;
-        self->mPetals[petalIndex].x = 0;
-        self->mPetals[petalIndex].y = 0x30000;
-        func_0203d388(&self->mPetals[petalIndex].x, (s16)self->mPetals[petalIndex].angle);
-        self->mPetals[petalIndex].x += 0x80000;
-        self->mPetals[petalIndex].y += 0x60000;
-        self->mPetals[petalIndex].active = 1;
+    baseAngle = MG_RAND(0x10000);
+    for (petalIndex = 0; petalIndex < mPetalsLeft; petalIndex++) {
+        mPetals[petalIndex].angle = baseAngle + petalIndex * 0x10000 / mPetalsLeft;
+        mPetals[petalIndex].x = 0;
+        mPetals[petalIndex].y = 0x30000;
+        func_0203d388(&mPetals[petalIndex].x, (s16)mPetals[petalIndex].angle);
+        mPetals[petalIndex].x += 0x80000;
+        mPetals[petalIndex].y += 0x60000;
+        mPetals[petalIndex].active = 1;
     }
-    for (shuffleIndex = 0; shuffleIndex < self->mPetalsLeft; shuffleIndex++) {
+    for (shuffleIndex = 0; shuffleIndex < mPetalsLeft; shuffleIndex++) {
         int swapIndex;
-        roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-        swapIndex = (self->mPetalsLeft * roll) >> 15;
+        swapIndex = MG_RAND(mPetalsLeft);
         if (swapIndex != shuffleIndex) {
             u16 savedAngle;
             dScMgFlower_c::Vec2 savedPosition;
-            savedAngle = self->mPetals[shuffleIndex].angle;
-            self->mPetals[shuffleIndex].angle = self->mPetals[swapIndex].angle;
-            self->mPetals[swapIndex].angle = savedAngle;
-            savedPosition.x = self->mPetals[shuffleIndex].x;
-            savedPosition.y = self->mPetals[shuffleIndex].y;
-            self->mPetals[shuffleIndex].x = self->mPetals[swapIndex].x;
-            self->mPetals[shuffleIndex].y = self->mPetals[swapIndex].y;
-            self->mPetals[swapIndex].x = savedPosition.x;
-            self->mPetals[swapIndex].y = savedPosition.y;
+            savedAngle = mPetals[shuffleIndex].angle;
+            mPetals[shuffleIndex].angle = mPetals[swapIndex].angle;
+            mPetals[swapIndex].angle = savedAngle;
+            savedPosition.x = mPetals[shuffleIndex].x;
+            savedPosition.y = mPetals[shuffleIndex].y;
+            mPetals[shuffleIndex].x = mPetals[swapIndex].x;
+            mPetals[shuffleIndex].y = mPetals[swapIndex].y;
+            mPetals[swapIndex].x = savedPosition.x;
+            mPetals[swapIndex].y = savedPosition.y;
         }
     }
-    self->mHeldPetal = -1;
-    self->mPetalToggle = 0;
-    self->mState = 0;
-    self->mHintTimer = 0;
-    self->mResultTimer = 0;
-    self->mFaceSprite = 2;
-    self->mPetalsSettled = 0;
-    self->mBgScrollPhase = 0;
-    REG_BLDCNT = 0;
-    G2x_SetBlendAlpha_(&REG_DB_BLDCNT, 4, 8, 6, 0xa);
+    mHeldPetal = -1;
+    mPetalToggle = 0;
+    mState = 0;
+    mHintTimer = 0;
+    mResultTimer = 0;
+    mFaceSprite = 2;
+    mPetalsSettled = 0;
+    mBgScrollPhase = 0;
+    G2_BlendNone();
+    G2S_SetBlendAlpha(4, 8, 6, 0xa);
 }
 
 /* Slot 18: bump mHoldTimer (reset once it passes 0x14), reset the face
@@ -222,15 +211,11 @@ s32 dScMgFlower_c::Render() {
 
     mBgScrollPhase += 0xc0;
     {
-        int sine = FX_SinCosTable_[(mBgScrollPhase >> 4) << 1];
-        int t = sine + 0x80;
-        int off = (t + (int)((unsigned)(t >> 7) >> 24)) >> 8;
+        int off = (FX_SinIdx(mBgScrollPhase >> 4) + 0x80) / 256;
         SetSubBg2Offset(off, off + 8);
     }
     {
-        int sine = FX_SinCosTable_[(mBgScrollPhase >> 4) << 1];
-        int t = 0x80 - sine;
-        int off = (t + (int)((unsigned)(t >> 7) >> 24)) >> 8;
+        int off = (0x80 - FX_SinIdx(mBgScrollPhase >> 4)) / 256;
         SetSubBg3Offset(off, off);
     }
     Mg_RenderSpriteBoth(sFlowerFaceSprites[mFaceSprite], 0x80, 0x60, -1, 1);
@@ -477,20 +462,23 @@ s32 dScMgFlower_c::InitResources() {
 
     data_0208ee44 = 1;
 
-    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1414;
-    REG_BG2CNT &= ~BG_CONTROL_MOSAIC;
-    *(volatile u32 *)0x4000018 = 0; /* BG2OFS */
-    REG_BG2CNT = (REG_BG2CNT & ~3) | 3;
+    G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xa000,
+                         GX_BG_CHARBASE_0x14000);
+    G2_BG2Mosaic(0);
+    G2_SetBG2Offset(0, 0); /* BG2OFS */
+    G2_SetBG2Priority(3);
 
-    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x1414;
-    REG_DB_BG2CNT &= ~BG_CONTROL_MOSAIC;
-    *(volatile u32 *)0x4001018 = 0; /* DB_BG2OFS */
-    REG_DB_BG2CNT = (REG_DB_BG2CNT & ~3) | 3;
+    G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xa000,
+                          GX_BG_CHARBASE_0x14000);
+    G2S_BG2Mosaic(0);
+    G2S_SetBG2Offset(0, 0); /* DB_BG2OFS */
+    G2S_SetBG2Priority(3);
 
-    REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x1414;
-    REG_DB_BG3CNT &= ~BG_CONTROL_MOSAIC;
-    *(volatile u32 *)0x400101c = 0; /* DB_BG3OFS */
-    REG_DB_BG3CNT = (REG_DB_BG3CNT & ~3) | 3;
+    G2S_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xa000,
+                          GX_BG_CHARBASE_0x14000);
+    G2S_BG3Mosaic(0);
+    G2S_SetBG3Offset(0, 0); /* DB_BG3OFS */
+    G2S_SetBG3Priority(3);
 
     fileData = Ov004_LoadFileByPath(&sFlowerBgUpNcgPath);
     DecompressLZ16(fileData, G2_GetBG2CharPtr());
@@ -519,8 +507,8 @@ s32 dScMgFlower_c::InitResources() {
     GXS_LoadBGPltt(fileData, 0x60, 0x1a0);
     Ov004_Deallocate(fileData);
 
-    REG_BLDCNT = 0;
-    G2x_SetBlendAlpha_(&REG_DB_BLDCNT, 4, 8, 6, 0xa);
+    G2_BlendNone();
+    G2S_SetBlendAlpha(4, 8, 6, 0xa);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
     gSubScreenLayers |= 0xc;
@@ -547,7 +535,7 @@ s32 dScMgFlower_c::InitResources() {
     DealPetals();
 
     gMainScreenLayers |= DISPLAY_LAYER_BG0;
-    REG_BG0CNT = (REG_BG0CNT & ~3) | 1;
+    G2_SetBG0Priority(1);
     FlowerFace_Load((char *)&mFace);
     Camera_InitFlowerView(&mCamera);
 

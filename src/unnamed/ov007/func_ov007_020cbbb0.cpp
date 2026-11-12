@@ -30,7 +30,7 @@ extern void func_ov007_020cb3dc(Ov007Mesh *mesh);
  * The link table holds one Ov007Link * per cell but is allocated
  * sizeof(Ov007Link) bytes per cell, six times what it uses. */
 Ov007Mesh *func_ov007_020cbbb0(int columns, int rows, int width, Ov007MeshParams *params) {
-    int cellWidth, cellHeight, t, halfWidth, halfHeight, cellRows, cellColumns, j, i, k, i2;
+    int cellWidth, cellHeight, t, halfWidth, halfHeight, cellRows, cellColumns, j, i;
     Ov007Mesh *mesh;
 
     mesh = (Ov007Mesh *)func_ov007_020c3df4(0, sizeof(Ov007Mesh));

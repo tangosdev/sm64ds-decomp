@@ -42,6 +42,7 @@ enum daObjCtMecha11_c_AssetId {
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_trig.h"
 
 /* Resource handles constructed by this TU's static initializer. The
  * constructor and destructor bodies stay out of line; mwcc registers them. */
@@ -62,7 +63,6 @@ extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern int RandomIntInternal(int *p);
 }
 
-extern short FX_SinCosTable_[];
 extern Mecha11ClsnFilePtr RotatingClockHand_ClsnFile;
 extern Mecha11ModelFilePtr RotatingClockHand_ModelFile;
 extern unsigned char data_0209f2c0;
@@ -86,8 +86,7 @@ void daObjCtMecha11_c::UpdateShadow() {
     mShadowMat.m[9] = mPosX >> 3;
     mShadowMat.m[10] = mFloorPosY >> 3;
     mShadowMat.m[11] = mPosZ >> 3;
-    int idx = (unsigned short)mAngleX >> 4;
-    int s = FX_SinCosTable_[(idx << 1) + 1];
+    int s = FX_CosIdx((u16)mAngleX >> 4);
     int sa = s < 0 ? -s : s;
     int scaled = FX_MUL(sa, 0x26c000);
     DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x12c000, 0x32000, scaled + 0x50000, 0xf);
@@ -155,8 +154,7 @@ int daObjCtMecha11_c::InitResources() {
     UpdateModel();
     UpdateClsnPosAndRot();
     KCL_File *kf = (KCL_File *)dBgW_Kc::LoadFile(RotatingClockHand_ClsnFile);
-    ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile(kf, mClsnMat, 0x1000, mAngleY, data_ov035_02112238);
+    mMeshCollider.SetFile(kf, mClsnMat, 0x1000, mAngleY, data_ov035_02112238);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetEdgeToleranceShift(0);
     Vector3 v;

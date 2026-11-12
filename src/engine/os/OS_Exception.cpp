@@ -21,7 +21,7 @@
 
 /* The debugger's exception vector slot in the shared work area. A debugger
  * that owns exceptions leaves a main-RAM handler address there. */
-#define HW_EXCEP_VECTOR_BUF_FOR_DEBUGGER 0x027ffd9c
+#define HW_EXCP_VECTOR_BUF_FOR_DEBUGGER 0x027ffd9c
 
 extern "C" {
 
@@ -39,7 +39,7 @@ void OSi_SetExContext(void);
 void OSi_DisplayExContext(void);
 
 void OS_InitException(void) {
-    u32 debugger = *(u32 *)HW_EXCEP_VECTOR_BUF_FOR_DEBUGGER;
+    u32 debugger = *(u32 *)HW_EXCP_VECTOR_BUF_FOR_DEBUGGER;
     if (debugger >= 0x2600000 && debugger < 0x2800000)
         data_020a63a8 = debugger;
     else
@@ -51,7 +51,7 @@ void OS_InitException(void) {
          * DTCM system reserve. Written as one constant address, it no longer
          * matches. */
         char *base = (char *)0x23c3000;
-        *(void **)HW_EXCEP_VECTOR_BUF_FOR_DEBUGGER = (void *)OSi_ExceptionHandler;
+        *(void **)HW_EXCP_VECTOR_BUF_FOR_DEBUGGER = (void *)OSi_ExceptionHandler;
         *(void **)(base + 0xfdc) = (void *)OSi_ExceptionHandler;
     }
     data_020a63a0 = 0;

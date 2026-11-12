@@ -16,12 +16,13 @@
 #include "msl/string.h"
 #include "msl/critical_regions.h"
 #include "msl/stdlib.h"
+#include "file_struc.h"
 #include "nitro/os/thread.h"
 
 extern "C" {
 // HAND-ASM PRIMITIVE: `swp` atomic swap has no C equivalent under mwccarm, so asm is the source.
 // Store value to *lock and return the word it held. The isdoverlay table
-// edits (func_0206cf98, func_0206d32c) spin on it with 0x80 to take a lock.
+// edits (_ISDbgLib_UnregistOverlayInfo, _ISDbgLib_RegistOverlayInfo) spin on it with 0x80 to take a lock.
 asm u32 func_0206dab4(u32 value, void *lock) { swp r0, r0, [r1]; bx lr }
 }
 
@@ -44,8 +45,7 @@ extern "C" {
 extern int OS_TryLockMutex(void *p);
 extern void OS_LockMutex(void *p);
 extern void OS_UnlockMutex(void *p);
-typedef struct S6e06c S6e06c;
-int fflush(S6e06c *p);
+int fflush(FILE *file);
 extern void _ExitProcess(void);
 
 extern volatile int __atexit_curr_func;
@@ -62,13 +62,13 @@ extern void (*__console_exit)(void);
 void __exit(int status)
 {
     if (OS_TryLockMutex(&__cs[atexit_funcs_access]) == 0) {
-        __cs_id[atexit_funcs_access] = data_020a6134.current->id;
+        __cs_id[atexit_funcs_access] = OSi_ThreadInfo.current->id;
         __cs_ref[atexit_funcs_access] = 1;
-    } else if (__cs_id[atexit_funcs_access] == data_020a6134.current->id) {
+    } else if (__cs_id[atexit_funcs_access] == OSi_ThreadInfo.current->id) {
         __cs_ref[atexit_funcs_access]++;
     } else {
         OS_LockMutex(&__cs[atexit_funcs_access]);
-        __cs_id[atexit_funcs_access] = data_020a6134.current->id;
+        __cs_id[atexit_funcs_access] = OSi_ThreadInfo.current->id;
         __cs_ref[atexit_funcs_access] = 1;
     }
 
@@ -264,26 +264,23 @@ void func_0206de14(int a0, Pair p1, Pair p2, unsigned int flags)
 #pragma push
 #pragma defer_codegen off
 /* MSL __flush_all, statement for statement with Spirit Tracks' copy of
-   ansi_files.c: walk the three console FILEs of the __files table
-   (0x4c bytes each), fflush every FILE whose file_kind, bits
-   7..9 of the mode word at +4, is not closed, and return -1 if any flush
+   ansi_files.c: walk the three console FILEs of the __files table,
+   fflush every one that is not closed, and return -1 (EOF) if any flush
    fails. fflush(NULL) calls it, as MSL's does. */
-extern char __files[];
-typedef struct S6e06c S6e06c;
-int fflush(S6e06c *p);
+extern FILE __files[];
 
 int __flush_all(void) {
     int result = 0;
-    char *p = __files;
+    FILE *file = &__files[0];
     int i = 1;
     do {
-        if (((unsigned int)*(int *)(p + 4) << 22) >> 29) {
-            if (fflush((S6e06c *)p)) {
+        if (file->mode.file_kind != __closed_file) {
+            if (fflush(file)) {
                 result = -1;
             }
         }
-        p = (i < 3) ? (__files + i++ * 0x4c) : 0;
-    } while (p);
+        file = (i < 3) ? &__files[i++] : 0;
+    } while (file);
     return result;
 }
 #pragma pop
@@ -304,131 +301,100 @@ int abs(int x)
 extern "C" {
 #pragma push
 #pragma defer_codegen off
-void __convert_from_newlines(int a, int *b);
-void __prep_buffer(char *self);
-typedef int (*Fn)(int, int, int *, int);
+void __convert_from_newlines(unsigned char *buffer, size_t *count);
+void __prep_buffer(FILE *file);
 /* MSL's buffer_io.c: __flush_buffer, __prep_buffer and
    __convert_from_newlines, statement for statement with Spirit Tracks'
-   copy. In MSL's FILE terms: +0x00 handle, +0x18 position, +0x1c buffer,
-   +0x20 buffer_size, +0x24 buffer_ptr, +0x28 buffer_len, +0x2c
-   buffer_alignment, +0x34 buffer_pos, +0x40 write_proc, +0x48 ref_con, and
-   the bit tested at +0x04 is mode.binary_io. In Spirit Tracks this file is
-   its own TU between arith.c (abs) and file_io.c (fflush), the same
-   neighbours it has here; it stays inside this run because a TU claims one
-   contiguous span, and cutting it out would leave a fflush..__pformatter
-   tail with no name of its own. */
-int __flush_buffer(char *thiz, int *out)
-{
-  char *new_var;
-  int diff = (*((int *) (thiz + 0x24))) - (*((int *) (thiz + 0x1c)));
-  if (diff != 0)
-  {
-    int r;
-    *((int *) (thiz + 0x28)) = diff;
-    if (((((unsigned int) ((*((unsigned int *) (thiz + 4))) << 0x13)) >> 9) >> 22) == 0)
-    {
-      __convert_from_newlines(*((int *) (thiz + 0x1c)), (int *) (thiz + 0x28));
+   copy. In Spirit Tracks this file is its own TU between arith.c (abs) and
+   file_io.c (fflush), the same neighbours it has here; it stays inside this
+   run because a TU claims one contiguous span, and cutting it out would
+   leave a fflush..__pformatter tail with no name of its own.
+   __flush_buffer hands the buffered bytes to the FILE's write_proc and
+   advances position by what it wrote; __prep_buffer then empties the
+   buffer for the next run at position. */
+int __flush_buffer(FILE *file, size_t *bytes_flushed) {
+    size_t buffer_len = file->buffer_ptr - file->buffer;
+    if (buffer_len != 0) {
+        int ioresult;
+        file->buffer_len = buffer_len;
+        if (!file->mode.binary_io) {
+            __convert_from_newlines(file->buffer, &file->buffer_len);
+        }
+        ioresult =
+            (*file->write_proc)(file->handle, file->buffer, &file->buffer_len, file->idle_proc);
+        if (bytes_flushed != 0) {
+            *bytes_flushed = file->buffer_len;
+        }
+        if (ioresult != 0) {
+            return ioresult;
+        }
+        file->position += file->buffer_len;
     }
-    r = (*((Fn *) (thiz + 0x40)))(*((int *) thiz), *((int *) (thiz + 0x1c)), (int *) (thiz + 0x28), *((int *) (thiz + 0x48)));
-    if (out != 0)
-    {
-      *out = *((int *) (thiz + 0x28));
-    }
-    if (r != 0)
-    {
-      return r;
-    }
-    new_var = thiz + 0x18;
-    *(int *)(new_var) += *((int *) (thiz + 0x28));
-  }
-  __prep_buffer(thiz);
-  return 0;
-}
-#pragma pop
-
-#pragma push
-#pragma defer_codegen off
-void __prep_buffer(char *self)
-{
-    *(int *)(self + 0x24) = *(int *)(self + 0x1c);
-    *(int *)(self + 0x28) = *(int *)(self + 0x20);
-    *(int *)(self + 0x28) -=
-        (*(int *)(self + 0x18) & *(int *)(self + 0x2c));
-    *(int *)(self + 0x34) = *(int *)(self + 0x18);
-}
-#pragma pop
-
-#pragma push
-#pragma defer_codegen off
-void __convert_from_newlines(int a, int *b)
-{
-}
-#pragma pop
-
-#pragma push
-#pragma defer_codegen off
-typedef struct S6e06c {
-    int unk0;
-    unsigned int b4a:2;
-    unsigned int b4b:3;
-    unsigned int b4gap:2;
-    unsigned int b4c:3;
-    unsigned int b4rest:22;
-    unsigned int b8:3;
-    unsigned int b8rest:29;
-    unsigned char fc;
-    unsigned char fd;
-    char pad_0e[0x0a];
-    unsigned int position;   /* 0x18 */
-    char pad_1c[0x0c];
-    unsigned int buffer_len; /* 0x28 */
-} S6e06c;
-
-
-/* MSL fflush, statement for statement with Spirit Tracks' copy of
-   file_io.c. In MSL's FILE terms: b4c is file_kind, b4b io_mode, b8
-   io_state, fd the error flag, +0x18 position and +0x28 buffer_len.
-   fflush(NULL) flushes every FILE through __flush_all; a FILE in error or
-   closed fails; one open for reading succeeds; otherwise write out the
-   buffer (__flush_buffer) and reset the state, position and length. */
-int fflush(S6e06c *p)
-{
-    if (p == 0) {
-        return __flush_all();
-    }
-
-    if (p->fd != 0 || p->b4c == 0)
-        return -1;
-
-    if (p->b4b == 1)
-        return 0;
-
-    if (p->b8 >= 3)
-        p->b8 = 2;
-
-    if (p->b8 == 2)
-        p->buffer_len = 0;
-
-    if (p->b8 != 1) {
-        p->b8 = 0;
-        return 0;
-    }
-
-    if (__flush_buffer((char *)p, 0) != 0) {
-        p->fd = 1;
-        p->buffer_len = 0;
-        return -1;
-    }
-    p->b8 = 0;
-    p->position = 0;
-    p->buffer_len = 0;
+    __prep_buffer(file);
     return 0;
 }
 #pragma pop
 
 #pragma push
 #pragma defer_codegen off
-int wctomb(int a, int b);
+void __prep_buffer(FILE *file) {
+    file->buffer_ptr = file->buffer;
+    file->buffer_len = file->buffer_size;
+    file->buffer_len -= file->position & file->buffer_alignment;
+    file->buffer_pos = file->position;
+}
+#pragma pop
+
+#pragma push
+#pragma defer_codegen off
+/* Text-mode newline translation; nothing to translate on this target. */
+void __convert_from_newlines(unsigned char *buffer, size_t *count) {}
+#pragma pop
+
+#pragma push
+#pragma defer_codegen off
+/* MSL fflush, statement for statement with Spirit Tracks' copy of
+   file_io.c. fflush(NULL) flushes every FILE through __flush_all; a FILE
+   in error or closed fails; one open only for reading succeeds; otherwise
+   write out the buffer (__flush_buffer) and return the FILE to neutral. A
+   failed write sets the error flag (MSL's set_error). */
+int fflush(FILE *file) {
+    if (file == 0) {
+        return __flush_all();
+    }
+
+    if (file->state.error != 0 || file->mode.file_kind == __closed_file)
+        return -1;
+
+    if (file->mode.io_mode == __read)
+        return 0;
+
+    if (file->state.io_state >= __rereading)
+        file->state.io_state = __reading;
+
+    if (file->state.io_state == __reading)
+        file->buffer_len = 0;
+
+    if (file->state.io_state != __writing) {
+        file->state.io_state = __neutral;
+        return 0;
+    }
+
+    if (__flush_buffer(file, 0) != 0) {
+        file->state.error = 1;
+        file->buffer_len = 0;
+        return -1;
+    }
+    file->state.io_state = __neutral;
+    file->position = 0;
+    file->buffer_len = 0;
+    return 0;
+}
+#pragma pop
+
+#pragma push
+#pragma defer_codegen off
+int wctomb(char *s, unsigned short wchar);
 
 u32 wcstombs(char *dst, u16 *src, u32 max)
 {
@@ -446,7 +412,7 @@ u32 wcstombs(char *dst, u16 *src, u32 max)
             break;
         }
         src++;
-        len = wctomb((int)bp, code);
+        len = wctomb(bp, code);
         if (total + len > max)
             break;
         strncpy(dst + total, bp, len);
@@ -462,9 +428,9 @@ u32 wcstombs(char *dst, u16 *src, u32 max)
 #pragma defer_codegen off
 extern void *data_0209a438[];
 
-int wctomb(int a, int b) {
+int wctomb(char *s, unsigned short wchar) {
     void **p = (void **)data_0209a438[2];
-    ((void (*)(int, int))p[1])(a, b);
+    return ((int (*)(char *, unsigned short))p[1])(s, wchar);
 }
 #pragma pop
 
@@ -577,7 +543,15 @@ enum {
 
 extern unsigned char *parse_format(unsigned char *format_string, char **arg, print_format *format);
 
-extern int __StringWrite(char *obj, const void *src, unsigned int n);
+/* MSL's __OutStrCtrl: the string vsnprintf formats into, written through
+ * __StringWrite. */
+typedef struct {
+    char *CharStr;
+    size_t MaxCharCount;
+    size_t CharsWritten;
+} __OutStrCtrl;
+
+extern int __StringWrite(void *osc, const char *Buffer, size_t NumChars);
 extern int __pformatter(int (*WriteProc)(void *, const char *, size_t), void *WriteProcArg,
                         const unsigned char *format_str, char *arg);
 extern char *float2str(double x, char *buff_end, print_format format);
@@ -650,42 +624,36 @@ void __fill_mem(void *dst, int val, u32 n)
 
 #pragma push
 #pragma defer_codegen off
-struct Ctx { char *buf; unsigned int len; int z; };
-unsigned int vsnprintf(char *buf, unsigned int len,
-                           unsigned int fmtAddr, unsigned int val) {
-    struct Ctx ctx;
-    unsigned int r;
-    ctx.buf = buf;
-    ctx.len = len;
-    ctx.z = 0;
-    r = __pformatter((int (*)(void *, const char *, size_t))__StringWrite, &ctx,
-                     (const unsigned char *)fmtAddr, (char *)val);
-    if (buf == 0) return r;
-    if (r < len) {
-        buf[r] = 0;
-        return r;
+/* MSL vsnprintf: format into s through __StringWrite, then terminate the
+ * string within n bytes. Returns the length the whole text would take. */
+int vsnprintf(char *s, size_t n, const char *format, char *arg) {
+    int end;
+    __OutStrCtrl osc;
+    osc.CharStr = s;
+    osc.MaxCharCount = n;
+    osc.CharsWritten = 0;
+    end = __pformatter(__StringWrite, &osc, (const unsigned char *)format, arg);
+    if (s) {
+        if (end < n)
+            s[end] = 0;
+        else if (n > 0)
+            s[n - 1] = 0;
     }
-    if (len != 0) {
-        char *end = buf + len;
-        end[-1] = 0;
-    }
-    return r;
+    return end;
 }
 #pragma pop
 
 #pragma push
 #pragma defer_codegen off
-int __StringWrite(char *obj, const void *src, unsigned int n)
-{
-    unsigned int off = *(unsigned int*)(obj + 8);
-    unsigned int len = *(unsigned int*)(obj + 4);
-    if (off + n > len)
-        n = len - off;
-    memcpy(*(char**)(obj) + off, src, n);
-    {
-        int *p = (int*)(obj + 8);
-        *p = *p + n;
-    }
+/* MSL __StringWrite: copy what still fits of Buffer to the end of the
+ * __OutStrCtrl string. Never fails. */
+int __StringWrite(void *osc, const char *Buffer, size_t NumChars) {
+    __OutStrCtrl *Oscp = (__OutStrCtrl *)osc;
+    size_t CharsToBeWritten = (Oscp->CharsWritten + NumChars <= Oscp->MaxCharCount)
+                                  ? NumChars
+                                  : Oscp->MaxCharCount - Oscp->CharsWritten;
+    memcpy(Oscp->CharStr + Oscp->CharsWritten, Buffer, CharsToBeWritten);
+    Oscp->CharsWritten += CharsToBeWritten;
     return 1;
 }
 #pragma pop

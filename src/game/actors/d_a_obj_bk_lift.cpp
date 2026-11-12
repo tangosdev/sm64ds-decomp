@@ -58,6 +58,7 @@ enum daObjBk_Lift_c_AssetId { ASSET_BK_LIFT01_BMD = 0x0599, ASSET_BK_LIFT01_KCL 
 #include "nitro/fx/fx.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
+#include "nitro/fx/fx_trig.h"
 
 /* The constructors and destructors are the ROM resource-family veneers,
  * aliased in the manifest. */
@@ -74,7 +75,6 @@ struct BkLiftCollisionFilePtr : SharedFilePtr {
 extern BkLiftCollisionFilePtr data_ov015_02114a5c; /* collision KCL */
 extern BkLiftModelFilePtr data_ov015_02114a64;     /* step BMD */
 extern CLPS_Block data_ov015_02113594;
-extern s16 FX_SinCosTable_[]; /* arm9 sin/cos table */
 extern s8 gCurrentSublevel;
 extern u8 gCurrentStarId;
 
@@ -118,9 +118,8 @@ int daObjBk_Lift_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov015_02114a5c), *(&mClsnMat),
-                              0x199, mAngleY, *(&data_ov015_02113594));
+    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov015_02114a5c), mClsnMat, 0x199,
+                          mAngleY, data_ov015_02113594);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
 
@@ -137,10 +136,10 @@ int daObjBk_Lift_c::InitResources() {
         mFloorPosY = ground.clsnY;
 
     u16 angle = mAngleY;
-    int sine = FX_SinCosTable_[(angle >> 4) * 2];
+    int sine = FX_SinIdx(angle >> 4);
     mShadowOffsetX = FX_MUL(sine, 0xc8000);
     angle = mAngleY;
-    int cosine = FX_SinCosTable_[(angle >> 4) * 2 + 1];
+    int cosine = FX_CosIdx(angle >> 4);
     mShadowOffsetY = FX_MUL(cosine, 0xc8000);
 
     UpdateShadow();

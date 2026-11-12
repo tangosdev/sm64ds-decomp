@@ -16,11 +16,10 @@
  * not have.
  *
  * Kept shapes (each alternative was measured against the ROM):
- * - Behavior: `mAngleX = (s16)(mAngleX + mAngleXSpeed)` size-DIFF
- *   0x3ec->0x3e8. The halfword is updated through an s16*.
- * - Behavior: `speedDivisor = -speedDivisor` size-DIFF 0x3ec->0x3e4, and
- *   `bob = -bob` size-DIFF 0x3ec->0x3e4. Both keep
- *   `s32 neg = -1; x = x * neg`.
+ * - Behavior: `mAngleX = mAngleX + mAngleXSpeed` size-DIFF 0x3ec->0x3e8;
+ *   the ROM's update is `mAngleX += mAngleXSpeed`.
+ * - Behavior: `speedDivisor = -speedDivisor` and `bob = -bob` size-DIFF
+ *   0x3ec->0x3e4. The ROM multiplies, `x *= -1`.
  * - Behavior: deleting the `loc[0..2] = mPos*` seed size-DIFF 0x3ec->0x3d4.
  *   Two Vec3 locals instead of `s32 loc[6]` size-DIFF 0x3ec->0x3ac
  *   (a Vector3 local emits ~Vector3). The six words stay.
@@ -28,8 +27,6 @@
  *   0x3ec->0x3f4. Earthquake's Fix12<int> magnitude size-DIFF
  *   0x3ec->0x3f8. Particle::System::New with Fix12<int> coordinates
  *   size-DIFF 0x3ec->0x41c. All three stay scalar externs.
- * - InitResources: dBgW_KcMbg::SetFile with a Fix12<int> temporary
- *   size-DIFF 0xbc->0xc8. The scalar extern stays.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -41,6 +38,7 @@ enum daDgr_c_AssetId { ASSET_DONGURU_BMD = 0x02da, ASSET_DONGURU_KCL = 0x02db };
 #include "Particle__System.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_trig.h"
 
 /* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
@@ -73,7 +71,6 @@ enum {
 
 extern DgrModelFilePtr data_ov025_02113a68;
 extern DgrCollisionFilePtr data_ov025_02113a60;
-extern s16 FX_SinCosTable_[];
 /* CLPS.h keeps the block opaque: header with the entry stride at +4, then
    the entries. This TU hands SetFile a one-entry block. */
 struct CLPS_Block {
@@ -105,8 +102,7 @@ s32 daDgr_c::InitResources() {
     }
     {
         KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov025_02113a60);
-        ((dBgW_KcMbg *)(&mMeshCollider))
-            ->dBgW_KcMbg::SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov025_02112c28);
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov025_02112c28);
     }
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mAngleY = 0;
@@ -141,10 +137,8 @@ s32 daDgr_c::Behavior() {
     }
 
     speedDivisor = 10 - mRollStage;
-    if (speedDivisor < 0) {
-        s32 neg = -1;
-        speedDivisor = speedDivisor * neg;
-    }
+    if (speedDivisor < 0)
+        speedDivisor *= -1;
     speedDivisor = speedDivisor - 6;
     if (speedDivisor < 0)
         speedDivisor = 0;
@@ -176,24 +170,15 @@ s32 daDgr_c::Behavior() {
             mAngleXSpeed = (s16)((-kRollAngleStep) / speedDivisor);
         }
 
-        {
-            s16 *angleX = &mAngleX;
-            mPosZ = mPosZ + mSpeedZ;
-            *angleX = (s16)(*angleX + mAngleXSpeed);
-            if ((mAngleX & kGrindAngleMask) < kGrindWindow) {
-                if (mAngleXSpeed != 0)
-                    func_02012694(kGrindSound, &mCamSpacePos);
-            }
-        }
+        mPosZ += mSpeedZ;
+        mAngleX += mAngleXSpeed;
+        if ((mAngleX & kGrindAngleMask) < kGrindWindow && mAngleXSpeed != 0)
+            func_02012694(kGrindSound, &mCamSpacePos);
 
         {
-            s16 angleX = mAngleX;
-            s32 idx = ((u16)(s16)(angleX << 2) >> 4) * 2;
-            s32 bob = (s32)FX_SinCosTable_[idx] * kBobScale;
-            if (bob < 0) {
-                s32 neg = -1;
-                bob = bob * neg;
-            }
+            s32 bob = FX_SinIdx((u16)(s16)(mAngleX << 2) >> 4) * kBobScale;
+            if (bob < 0)
+                bob *= -1;
             mPosY = mBasePosY + bob;
         }
 
@@ -210,10 +195,10 @@ s32 daDgr_c::Behavior() {
         {
             s32 along;
             s32 across;
-            across = FX_SinCosTable_[((u16)mAngleY >> 4) * 2 + 1];
+            across = FX_CosIdx((u16)mAngleY >> 4);
             loc[0] = across * kDustReach + mPosX;
             loc[1] = mBasePosY - kDustDrop;
-            along = FX_SinCosTable_[((u16)mAngleY >> 4) * 2];
+            along = FX_SinIdx((u16)mAngleY >> 4);
             loc[2] = along * kDustReach + mPosZ;
             mDustParticle1 = Particle::System::New(mDustParticle1, kDustEffect, loc[0], loc[1],
                                                    loc[2], (const Vector3_16f *)((void *)0),
@@ -222,9 +207,9 @@ s32 daDgr_c::Behavior() {
         {
             s32 along;
             s32 across;
-            across = FX_SinCosTable_[((u16)mAngleY >> 4) * 2 + 1];
+            across = FX_CosIdx((u16)mAngleY >> 4);
             loc[0] = mPosX - across * kDustReach;
-            along = FX_SinCosTable_[((u16)mAngleY >> 4) * 2];
+            along = FX_SinIdx((u16)mAngleY >> 4);
             loc[2] = mPosZ - along * kDustReach;
             mDustParticle2 = Particle::System::New(mDustParticle2, kDustEffect, loc[0], loc[1],
                                                    loc[2], (const Vector3_16f *)((void *)0),

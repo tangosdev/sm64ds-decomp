@@ -17,11 +17,8 @@
 #include "math/Approach.h"
 #include "nitro/fx/fx_cp.h"
 
-struct Vec3 { int x, y, z; };
-/* Not types.h's: its inline ~Vector3 adds a _ZN7Vector3D1Ev copy and renumbers @60/@61 (measured). */
+/* Not types.h's: its inline ~Vector3 adds a _ZN7Vector3D1Ev copy and renumbers the registration nodes (measured). */
 struct Vector3 { int x, y, z; };
-/* Unused, but deleting it renumbers the @60/@61 destructor-registration nodes (measured). */
-typedef struct { int x, y, z; } Vec3_Fix12;
 
 extern "C" {
 extern void Vec3_Sub(struct Vector3 *out, const struct Vector3 *a, const struct Vector3 *b);

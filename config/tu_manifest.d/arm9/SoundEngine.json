@@ -130,7 +130,7 @@
       "ordinal": 15
     },
     {
-      "symbol": "_ZN21HeapAllocator_204f46013func_0204f214Ei",
+      "symbol": "func_0204f214",
       "address": "0x0204f214",
       "legacy_source": "src/func_0204f214.cpp",
       "size": "0x00000064",
@@ -200,14 +200,14 @@
       "ordinal": 25
     },
     {
-      "symbol": "_ZN2E113func_0204f5a0Ei",
+      "symbol": "func_0204f5a0",
       "address": "0x0204f5a0",
       "legacy_source": "src/func_0204f5a0.c",
       "size": "0x00000060",
       "ordinal": 26
     },
     {
-      "symbol": "_ZN2E113func_0204f600Eiii",
+      "symbol": "func_0204f600",
       "address": "0x0204f600",
       "legacy_source": "src/func_0204f600.c",
       "size": "0x00000030",
@@ -683,7 +683,7 @@
       "ordinal": 94
     },
     {
-      "symbol": "_ZN9HeapOwner13func_020510a4Ei",
+      "symbol": "func_020510a4",
       "address": "0x020510a4",
       "legacy_source": "src/func_020510a4.c",
       "size": "0x000000d8",
@@ -704,7 +704,7 @@
       "ordinal": 97
     },
     {
-      "symbol": "_ZN9HeapOwner13func_02051244Ev",
+      "symbol": "func_02051244",
       "address": "0x02051244",
       "legacy_source": "src/func_02051244.c",
       "size": "0x000000ac",

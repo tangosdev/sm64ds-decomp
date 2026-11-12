@@ -2222,19 +2222,19 @@
       "evidence": "sKeyOff's registration node. ov091 already defines @784, and objisolate cannot grow a name, so this maps the compiled name to the unused same-length @819 Re-keyed from @799 to @745 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@967",
-      "to": "@1082",
-      "evidence": "sEnterPos's registration node. ov065 already defines @1006, and objisolate cannot grow a name, so this maps the compiled name to the unused same-length @1082 Re-keyed from @1021 to @967 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
       "from": "@971",
-      "to": "@1084",
-      "evidence": "sEnterNeg's registration node. ov080 already defines @1010, and objisolate cannot grow a name, so this maps the compiled name to the unused same-length @1084 Re-keyed from @1025 to @971 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "@1082",
+      "evidence": "sEnterPos's registration node. ov065 already defines @1006, and objisolate cannot grow a name, so this maps the compiled name to the unused same-length @1082 Re-keyed from @1021 to @967 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @967 to @971 when Vector3 locals (measured from the compiled object: same section, size and order)."
     },
     {
-      "from": "@1139",
+      "from": "@975",
+      "to": "@1084",
+      "evidence": "sEnterNeg's registration node. ov080 already defines @1010, and objisolate cannot grow a name, so this maps the compiled name to the unused same-length @1084 Re-keyed from @1025 to @971 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @971 to @975 when Vector3 locals (measured from the compiled object: same section, size and order)."
+    },
+    {
+      "from": "@1147",
       "to": "@1088",
-      "evidence": "sDoorOff's registration node. ov089 already defines @1178, and objisolate cannot grow a name, so this maps the compiled name to the unused same-length @1088 Re-keyed from @1193 to @1139 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "sDoorOff's registration node. ov089 already defines @1178, and objisolate cannot grow a name, so this maps the compiled name to the unused same-length @1088 Re-keyed from @1193 to @1139 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1139 to @1143 when its int[3]/VecFx32 scratch locals that were cast to Vector3* became real Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from @1143 to @1147 when Vector3 locals (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "_ZGVsFrontOff$734",
@@ -2267,34 +2267,34 @@
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sKeyOff$796 to sKeyOff$742 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "_ZGVsEnterPos$964",
+      "from": "_ZGVsEnterPos$968",
       "to": "_ZGVsEnterPos$1008",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsEnterPos$1018 to _ZGVsEnterPos$964 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsEnterPos$1018 to _ZGVsEnterPos$964 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsEnterPos$964 to _ZGVsEnterPos$968 when Vector3 locals (measured from the compiled object: same section, size and order)."
     },
     {
-      "from": "sEnterPos$964",
+      "from": "sEnterPos$968",
       "to": "sEnterPos$1008",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sEnterPos$1018 to sEnterPos$964 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sEnterPos$1018 to sEnterPos$964 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sEnterPos$964 to sEnterPos$968 when Vector3 locals (measured from the compiled object: same section, size and order)."
     },
     {
-      "from": "_ZGVsEnterNeg$968",
+      "from": "_ZGVsEnterNeg$972",
       "to": "_ZGVsEnterNeg$1012",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsEnterNeg$1022 to _ZGVsEnterNeg$968 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsEnterNeg$1022 to _ZGVsEnterNeg$968 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsEnterNeg$968 to _ZGVsEnterNeg$972 when Vector3 locals (measured from the compiled object: same section, size and order)."
     },
     {
-      "from": "sEnterNeg$968",
+      "from": "sEnterNeg$972",
       "to": "sEnterNeg$1012",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sEnterNeg$1022 to sEnterNeg$968 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sEnterNeg$1022 to sEnterNeg$968 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sEnterNeg$968 to sEnterNeg$972 when Vector3 locals (measured from the compiled object: same section, size and order)."
     },
     {
-      "from": "_ZGVsDoorOff$1136",
+      "from": "_ZGVsDoorOff$1144",
       "to": "_ZGVsDoorOff$1180",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsDoorOff$1190 to _ZGVsDoorOff$1136 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsDoorOff$1190 to _ZGVsDoorOff$1136 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsDoorOff$1136 to _ZGVsDoorOff$1140 when its int[3]/VecFx32 scratch locals that were cast to Vector3* became real Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from _ZGVsDoorOff$1140 to _ZGVsDoorOff$1144 when Vector3 locals (measured from the compiled object: same section, size and order)."
     },
     {
-      "from": "sDoorOff$1136",
+      "from": "sDoorOff$1144",
       "to": "sDoorOff$1180",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sDoorOff$1190 to sDoorOff$1136 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sDoorOff$1190 to sDoorOff$1136 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sDoorOff$1136 to sDoorOff$1140 when its int[3]/VecFx32 scratch locals that were cast to Vector3* became real Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from sDoorOff$1140 to sDoorOff$1144 when Vector3 locals (measured from the compiled object: same section, size and order)."
     }
   ],
   "externalized_output": [],

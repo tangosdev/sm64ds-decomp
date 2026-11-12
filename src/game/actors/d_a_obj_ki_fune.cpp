@@ -3,7 +3,6 @@
  * - FX_SinCosTable_ is the sine table. gCurrentStarId is the star index.
  * - data_ov016_021136dc, 021136e4 and 021149d4 are the overlay file
  *   and CLPS tables, indexed by mModelIndex. This TU does not own them.
- * - mBobAngle += 0xda is an s16 pun. The u16 member spelling fails.
  * - UpdateModelMatrix is a coined name; the ROM records none.
  *
  * daObjKi_Fune_c, the Jolly Roger Bay ship (KI_FUNE / KI_FUNE_UP).
@@ -25,6 +24,7 @@ enum d_a_obj_ki_fune_AssetId {
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "dBgW.h"
+#include "nitro/fx/fx_trig.h"
 
 /* Two model handles construct through func_02017acc and destroy through
  * func_02017ab4. Two collision handles construct through func_02017b4c and
@@ -44,7 +44,6 @@ typedef char KiFuneClsnFileHandle_size_must_be_8[sizeof(KiFuneClsnFileHandle) ==
 extern "C" {
 
 extern int IsStarCollected(int a, int b);
-extern short FX_SinCosTable_[];
 extern unsigned char gCurrentStarId;
 }
 
@@ -101,8 +100,8 @@ int daObjKi_Fune_c::Behavior() {
     }
     mMeshCollider.SetClipRadius(0x2000000);
     if (mModelIndex == 0) {
-        *(s16 *)&mBobAngle += 0xda;
-        mAngleX = (s16)((FX_SinCosTable_[(mBobAngle >> 4) * 2] << 0xa) >> 0xc);
+        mBobAngle += 0xda;
+        mAngleX = (s16)((FX_SinIdx((u16)mBobAngle >> 4) << 0xa) >> 0xc);
         if (DistToCPlayer() < 0xbb8000) {
             mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x8b, mCamSpacePos, 0);
         }

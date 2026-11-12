@@ -22,7 +22,7 @@
  *   dThIcon field writer (kind, x, y, w, h). This TU's icon_c::Place
  *   calls it. Naming belongs in ov001.
  * Leftover: func_0203d974 is still the arm9 vs/region gate
- *   (0x27ffc40 == 2, else data_020a0f10). This TU's icon_c::Render
+ *   (MB_IsMultiBootChild, else data_020a0f10). This TU's icon_c::Render
  *   case 13. Naming belongs in arm9.
  * Leftover: ApproachLinear2 stays mangled. No header. This TU's
  *   icon_c::Behavior.
@@ -65,6 +65,7 @@
 #include "OAM.h"
 #include "OamAttr.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/hw/registers.h"
 #include "math/Approach.h"
 
 extern "C" {
@@ -286,9 +287,8 @@ void dScEntry_c::graphCallback_c::QueueBg2Screen(void *screen) {
 }
 
 int dScEntry_c::graphCallback_c::GraphCallback2() {
-    volatile unsigned short *reg = (volatile unsigned short *)0x400100c;
-    unsigned short value = (unsigned short)(*reg & ~0x1f00);
-    *reg = value | (bg2ScreenBase << 8);
+    u16 value = (u16)(REG_DB_BG2CNT & ~0x1f00);
+    REG_DB_BG2CNT = value | (bg2ScreenBase << 8);
 
     if (compressedBg2Screen != 0) {
         unsigned short *screen = (unsigned short *)G2S_GetBG2ScrPtr();

@@ -948,15 +948,14 @@ int daObjBlockS_c::UpdateFloorContact() {
 
 
     {
-        int sMove = (u16)ang >> 4;
         int sPrev = (u16)mPrevAngleY >> 4;
         s32 speed = mHorzSpeed;
-        a1.x = FX_MUL(speed, FX_SinCosTable_[sPrev * 2]);
+        a1.x = FX_MUL(speed, FX_SinIdx(sPrev));
         a1.y = 0;
-        a1.z = FX_MUL(speed, FX_SinCosTable_[sPrev * 2 + 1]);
-        a2.x = FX_MUL(hl, FX_SinCosTable_[sMove * 2]);
+        a1.z = FX_MUL(speed, FX_CosIdx(sPrev));
+        a2.x = FX_MUL(hl, FX_SinIdx((u16)ang >> 4));
         a2.y = 0;
-        a2.z = FX_MUL(hl, FX_SinCosTable_[sMove * 2 + 1]);
+        a2.z = FX_MUL(hl, FX_CosIdx((u16)ang >> 4));
     }
     Vec3_MulScalarInPlace(&a2, Vec3_HorzLen((Vector3 *)&mFloorNormalX));
     Vec3_Add(&sum, &a1, &a2);
@@ -1259,10 +1258,8 @@ int daObjBlockS_c::InitResources()
     mHomeAngleZ = mAngleZ;
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(**(SharedFilePtr **)(f)), 1, -1);
     mShadowModel.InitCuboid();
-    ((dBgW_KcMbg *)((char *)&mMeshCollider))
-        ->dBgW_KcMbg::SetFile((KCL_File *)((int)dBgW_Kc::LoadFile(**(SharedFilePtr **)(f + 4))),
-                              *(const Matrix4x3 *)((char *)&mClsnMat), 0x199, mAngleY,
-                              *(CLPS_Block *)(*(int *)(f + 8)));
+    mMeshCollider.SetFile((KCL_File *)((int)dBgW_Kc::LoadFile(**(SharedFilePtr **)(f + 4))),
+                          mClsnMat, 0x199, mAngleY, *(CLPS_Block *)(*(int *)(f + 8)));
     mWithMeshClsn.Init((dActor_c *)((char *)this), 0x28000, 0x28000, 0, 0);
     mWithMeshClsn.StartDetectingWater();
     mVertAccel = -0x2000;
@@ -1304,7 +1301,7 @@ int daObjBlockS_c::OnYoshiTryEat()
 void daObjBlockS_c::OnTurnIntoEgg(daPly_c &player) {
     if (player.IsCollectingCap()) {
         if (mCoinsPaid != 1) {
-            ((dActor_c *)this)->GivePlayerCoins(player, 3, 0);
+            GivePlayerCoins(player, 3, 0);
             mCoinsPaid = 1;
         }
     } else {

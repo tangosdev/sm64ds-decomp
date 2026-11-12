@@ -2,6 +2,7 @@
 #include "types.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/os/cache.h"
+#include "nitro/gx/g2.h"
 #include "Ov007BgLayer.h"
 
 extern "C" {
@@ -66,16 +67,16 @@ void func_ov007_020c076c(Ov007BgLayer *layer, int engines) {
     if (engines & 1) {
         switch (layer->bg) {
         case 0:
-            *(volatile u32 *)0x4000010 = (x & 0x1ff) | ((y << 16) & 0x1ff0000);
+            G2_SetBG0Offset(x, y);
             break;
         case 1:
-            *(volatile u32 *)0x4000014 = (x & 0x1ff) | ((y << 16) & 0x1ff0000);
+            G2_SetBG1Offset(x, y);
             break;
         case 2:
-            *(volatile u32 *)0x4000018 = (x & 0x1ff) | ((y << 16) & 0x1ff0000);
+            G2_SetBG2Offset(x, y);
             break;
         case 3:
-            *(volatile u32 *)0x400001c = (x & 0x1ff) | ((y << 16) & 0x1ff0000);
+            G2_SetBG3Offset(x, y);
             break;
         }
     }
@@ -83,16 +84,16 @@ void func_ov007_020c076c(Ov007BgLayer *layer, int engines) {
     if (engines & 2) {
         switch (layer->bg) {
         case 0:
-            *(volatile u32 *)0x4001010 = (x & 0x1ff) | ((y << 16) & 0x1ff0000);
+            G2S_SetBG0Offset(x, y);
             break;
         case 1:
-            *(volatile u32 *)0x4001014 = (x & 0x1ff) | ((y << 16) & 0x1ff0000);
+            G2S_SetBG1Offset(x, y);
             break;
         case 2:
-            *(volatile u32 *)0x4001018 = (x & 0x1ff) | ((y << 16) & 0x1ff0000);
+            G2S_SetBG2Offset(x, y);
             break;
         case 3:
-            *(volatile u32 *)0x400101c = (x & 0x1ff) | ((y << 16) & 0x1ff0000);
+            G2S_SetBG3Offset(x, y);
             break;
         }
     }

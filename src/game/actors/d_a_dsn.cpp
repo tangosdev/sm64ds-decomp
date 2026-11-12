@@ -76,9 +76,8 @@ extern DsnTextureSeqFileHandle gDosuneTextureSequenceFile;
      +0x00 SharedFilePtr * BMD      +0x0c SharedFilePtr * BTP
      +0x04 SharedFilePtr * KCL      +0x10 shadow extent X
      +0x08 CLPS block (not a file)  +0x14 shadow extent Z
-   It is declared int [] as include/decl_common.h has it. The symbol stays
-   the overlay's; this TU does not own the bytes. */
-extern int data_ov091_02135138[];
+   The symbol stays the overlay's; this TU does not own the bytes. */
+extern DsnBaseFileTable data_ov091_02135138;
 
 /* The bank-3 sound veneer (src/engine/sound/Sound.cpp); no shared header. */
 extern "C" void func_02012694(unsigned int id, const Vector3 *pos);
@@ -102,7 +101,7 @@ extern "C" daDsn_c *daDsn_c_classInit() {
    data_ov091_02135138 is the table daDsnBase_c::Init reads: model, KCL,
    CLPS, BTP, then the two shadow extents. Overlay .data owns the bytes. */
 int daDsn_c::InitResources() {
-    mFileTable = (int)data_ov091_02135138;
+    mFileTable = &data_ov091_02135138;
     int result = Init();
     mState = 0;
     mHoldTimer = 0;

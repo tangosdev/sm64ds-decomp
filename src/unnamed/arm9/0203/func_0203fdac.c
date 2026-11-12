@@ -17,7 +17,8 @@ struct WMStartMPCallback {
    the mode into the link status data_020a0f94 and go on (func_02040bb0).
    Errcodes 9, 0xd and 0xf are let pass; any other error clears the mode
    and resets. */
-void func_0203fdac(struct WMStartMPCallback *cb) {
+void func_0203fdac(void *arg) {
+    struct WMStartMPCallback *cb = (struct WMStartMPCallback *)arg;
     unsigned short errcode = cb->errcode;
     if (errcode == 0) {
         switch (cb->state) {

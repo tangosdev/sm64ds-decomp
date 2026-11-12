@@ -8,10 +8,11 @@
  * build, flex and draw (the scenes construct three or four). The name is coined.
  * The constructor and destructor are the class's own, out of line in that file
  * (ROM 0x020d100c and 0x020d1008): the constructor marks the slot free, the
- * destructor is empty. The other helpers are free functions over a char* slot
- * and read it through their TRMPLINE() cast. Unnamed regions are touched in one
- * place at most. mAlpha is a byte, but the fade states step it with the int
- * ApproachLinear2 through an (int *) cast of its address. */
+ * destructor is empty. The other helpers take a TrmpLine * and address these
+ * fields by name; only TrmpLine_Create's slot walk keeps char * arithmetic.
+ * Unnamed regions are touched in one place at most. mAlpha is a byte, but the
+ * fade states step it with the int ApproachLinear2 through an (int *) cast of
+ * its address. */
 struct TrmpLine {
     TrmpLine();
     ~TrmpLine();

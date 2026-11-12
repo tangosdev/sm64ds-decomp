@@ -82,9 +82,7 @@ int daObjEmmYuka_c::Render()
 
 int daObjEmmYuka_c::Behavior()
 {
-    /* VecFx32, not Vector3: its inline destructor comes out out-of-line
-     * here (_ZN7Vector3D1Ev), which the link step refuses as unlicensed. */
-    VecFx32 prev, node, diff, scaled1, scaled2;
+    Vector3 prev, node, diff, scaled1, scaled2;
     int looped;
     int delta;
     int len;
@@ -99,24 +97,22 @@ int daObjEmmYuka_c::Behavior()
         } else if (delta >= (int)mPath.NumNodes()) {
             delta = 0;
         }
-        mPath.GetNode(*(Vector3 *)&node, delta);
+        mPath.GetNode(node, delta);
     } else if (delta < 0 || delta >= (int)mPath.NumNodes()) {
-        node.x = mPosX;
-        node.y = mPosY;
-        node.z = mPosZ;
+        node = mPos;
     } else {
-        mPath.GetNode(*(Vector3 *)&node, delta);
+        mPath.GetNode(node, delta);
     }
-    mPath.GetNode(*(Vector3 *)&prev, mNodeIndex);
-    Vec3_Sub((Vector3 *)&diff, (const Vector3 *)&mPosX, (const Vector3 *)&prev);
-    len = VEC_Mag((const Vector3 *)&diff);
+    mPath.GetNode(prev, mNodeIndex);
+    Vec3_Sub(&diff, &mPos, &prev);
+    len = VEC_Mag(&diff);
     if (len == 0 || len <= mHorzSpeed) {
-        Vec3_MulScalar((Vector3 *)&scaled1, (const Vector3 *)&diff, FX_Div(mHorzSpeed, len));
-        VEC_Subtract((Vector3 *)&mPosX, (Vector3 *)&scaled1, (Vector3 *)&mPosX);
+        Vec3_MulScalar(&scaled1, &diff, FX_Div(mHorzSpeed, len));
+        VEC_Subtract(&mPos, &scaled1, &mPos);
         looped = 1;
     } else {
-        Vec3_MulScalar((Vector3 *)&scaled2, (const Vector3 *)&diff, FX_Div(mHorzSpeed, len));
-        VEC_Subtract((Vector3 *)&mPosX, (Vector3 *)&scaled2, (Vector3 *)&mPosX);
+        Vec3_MulScalar(&scaled2, &diff, FX_Div(mHorzSpeed, len));
+        VEC_Subtract(&mPos, &scaled2, &mPos);
     }
     if (looped) {
         mNodeIndex += mPathDir;
@@ -148,9 +144,8 @@ int daObjEmmYuka_c::InitResources()
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov052_021125a0.model), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(*data_ov052_021125a0.collision),
-                              *(&mClsnMat), 0x199, mAngleY, *(data_ov052_021125a0.clps));
+    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*data_ov052_021125a0.collision), mClsnMat,
+                          0x199, mAngleY, *(data_ov052_021125a0.clps));
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mPath.FromID(param1 & 0xff);
     mPathDir = 1;

@@ -286,6 +286,13 @@
       "reason": "daPicGate_c's typeinfo chain makes mwcc emit fBase_c's typeinfo name as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e60, outside this TU's only licensed range (.text 0x02125404-0x021261f4), so dsd supplies that ROM data independently. romdata_check compares this emitted copy against the cartridge, relocations applied, before production isolation discards it.",
       "canonical_module": "arm9",
       "canonical_address": "0x02086e60"
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "BuildGateMatrix and HitTest hold Vector3 locals filled by Vec3_Asr, so mwccarm re-emits Vector3's trivial vague-linkage D1 alongside the licensed text. The cartridge keeps one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and an enrolled source already owns it; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
     }
   ]
 }

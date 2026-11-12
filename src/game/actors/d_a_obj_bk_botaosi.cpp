@@ -57,6 +57,7 @@ enum daObjBk_Botaosi_c_AssetId { ASSET_BK_BOTAOSI_BMD = 0x0589, ASSET_BK_BOTAOSI
 #include "nitro/fx/fx.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_trig.h"
 
 /* The constructors and destructors are the ROM resource-family veneers,
  * aliased in the manifest. */
@@ -73,7 +74,6 @@ struct BkBotaosiCollisionFilePtr : SharedFilePtr {
 extern BkBotaosiCollisionFilePtr data_ov015_02114974; /* collision KCL */
 extern BkBotaosiModelFilePtr data_ov015_0211497c;     /* plank BMD */
 extern CLPS_Block data_ov015_02113574;
-extern s16 FX_SinCosTable_[]; /* arm9 sin/cos table */
 extern s8 gCurrentSublevel;
 extern u8 gCurrentStarId;
 
@@ -168,8 +168,7 @@ void daObjBk_Botaosi_c::HandleHit(dActor_c *other) {
 void daObjBk_Botaosi_c::UpdateShadow() {
     u16 yaw;
     int lean = 0;
-    int idx = (u16)mAngleX >> 4;
-    int sine = FX_SinCosTable_[idx * 2];
+    int sine = FX_SinIdx((u16)mAngleX >> 4);
     int tilt = FX_MUL(sine, 0x7d0000);
     yaw = 0x8000;
     if (tilt <= 0) {
@@ -180,13 +179,13 @@ void daObjBk_Botaosi_c::UpdateShadow() {
     Matrix4x3_FromRotationY(&mShadowMat, (s16)(mAngleY + yaw));
     {
         int front = mFrontPosX;
-        int cosine = FX_SinCosTable_[((u16)(s16)(mAngleY + yaw) >> 4) * 2 + 1];
+        int cosine = FX_CosIdx((u16)(s16)(mAngleY + yaw) >> 4);
         mShadowMat.t.x = (front + FX_MUL(cosine, (lean >> 1))) >> 3;
     }
     mShadowMat.t.y = mFrontPosY >> 3;
     {
         int front = mFrontPosZ;
-        int sine2 = FX_SinCosTable_[((u16)(s16)(mAngleY + yaw) >> 4) * 2];
+        int sine2 = FX_SinIdx((u16)(s16)(mAngleY + yaw) >> 4);
         mShadowMat.t.z = (front + FX_MUL(sine2, (lean >> 1))) >> 3;
     }
     if (mState >= 2)
@@ -228,8 +227,7 @@ int daObjBk_Botaosi_c::Behavior() {
         break;
     case 1: {
         unsigned short ang = mWobbleAng;
-        int idx = ang >> 4;
-        int s = FX_SinCosTable_[idx * 2];
+        int s = FX_SinIdx(ang >> 4);
         int amp = mKnockDir;
         int prod = amp * s;
         int d = FX_MUL(prod, mWobbleTimer);
@@ -305,10 +303,8 @@ int daObjBk_Botaosi_c::InitResources() {
     mShadowModel.InitCuboid();
     UpdateModelMatrix();
     UpdateClsnPosAndRot();
-    ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile((KCL_File *)(dBgW_Kc::LoadFile(data_ov015_02114974)),
-                              *(const Matrix4x3 *)(&mClsnMat), 0x1000, mAngleY,
-                              *(CLPS_Block *)(&data_ov015_02113574));
+    mMeshCollider.SetFile((KCL_File *)(dBgW_Kc::LoadFile(data_ov015_02114974)), mClsnMat, 0x1000,
+                          mAngleY, *(CLPS_Block *)(&data_ov015_02113574));
 
     mAngleY += 0x8000;
     a.x = 0;

@@ -2,10 +2,10 @@
 #include "OAM.h"
 #include "dGraph_c.h"
 #include "nitro/gx/g3x.h"
+#include "nitro/gx/g2.h"
+#include "nitro/gx/gx.h"
 
 extern "C" {
-
-typedef volatile unsigned int vu32;
 
 extern dGraph_c::callback_c *gGraphCallback;
 extern unsigned char gMainScreenLayers;
@@ -44,20 +44,20 @@ void func_02019144(void)
     }
     OAM::Flush();
     OAM::Load();
-    *(vu32 *)0x4000000 = (*(vu32 *)0x4000000 & ~0x1f00) | (gMainScreenLayers << 8);
-    *(vu32 *)0x4001000 = (*(vu32 *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
-    if (!(*(vu32 *)0x4000000 & 8)) {
-        *(vu32 *)0x4000010 = (gBg0HOffset & 0x1ff) | (0x1ff0000 & (gBg0VOffset << 16));
+    GX_SetVisiblePlane(gMainScreenLayers);
+    GXS_SetVisiblePlane(gSubScreenLayers);
+    if (!(REG_DISPCNT & 8)) {
+        G2_SetBG0Offset(gBg0HOffset, gBg0VOffset);
     } else {
         G3X_SetHOffset(gBg0HOffset);
     }
-    *(vu32 *)0x4000014 = (gBg1HOffset & 0x1ff) | (0x1ff0000 & (gBg1VOffset << 16));
-    *(vu32 *)0x4000018 = (gBg2HOffset & 0x1ff) | (0x1ff0000 & (gBg2VOffset << 16));
-    *(vu32 *)0x400001c = (gBg3HOffset & 0x1ff) | (0x1ff0000 & (gBg3VOffset << 16));
-    *(vu32 *)0x4001000;
-    *(vu32 *)0x4001010 = (gSubBg0HOffset & 0x1ff) | (0x1ff0000 & (gSubBg0VOffset << 16));
-    *(vu32 *)0x4001014 = (gSubBg1HOffset & 0x1ff) | (0x1ff0000 & (gSubBg1VOffset << 16));
-    *(vu32 *)0x4001018 = (gSubBg2HOffset & 0x1ff) | (0x1ff0000 & (gSubBg2VOffset << 16));
-    *(vu32 *)0x400101c = (gSubBg3HOffset & 0x1ff) | (0x1ff0000 & (gSubBg3VOffset << 16));
+    G2_SetBG1Offset(gBg1HOffset, gBg1VOffset);
+    G2_SetBG2Offset(gBg2HOffset, gBg2VOffset);
+    G2_SetBG3Offset(gBg3HOffset, gBg3VOffset);
+    REG_DISPCNT_SUB;
+    G2S_SetBG0Offset(gSubBg0HOffset, gSubBg0VOffset);
+    G2S_SetBG1Offset(gSubBg1HOffset, gSubBg1VOffset);
+    G2S_SetBG2Offset(gSubBg2HOffset, gSubBg2VOffset);
+    G2S_SetBG3Offset(gSubBg3HOffset, gSubBg3VOffset);
 }
 }

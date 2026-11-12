@@ -77,6 +77,7 @@ enum d_a_btn_AssetId {
 #include "math/Approach.h"
 #include "Particle__System.h"
 #include "private/mtx43.h"
+#include "nitro/fx/fx_trig.h"
 
 /* local extern: include/Sound.h does not declare the layer-3 pair yet. It
    sits outside the extern "C" block below, where the names would come out
@@ -125,7 +126,6 @@ extern void hold_d_a_btn(void *mc, void *kcl, void *mtx, int fix, s16 s, void *c
 void d_a_btnEarthquakeHold(void *self, const void *v, int f);
 
 /* ---- data ---- */
-extern s16 FX_SinCosTable_[];
 extern unsigned int gNextActorUpdateMask;
 extern u8 data_0209d660;
 extern u8 gNumPlayers;
@@ -335,9 +335,9 @@ int daBtn_c::InitResources()
     anim = ((SharedFilePtr *)data_ov079_021275ec[idx * 5 + 3])->filePtr;
     mAnmModel.SetAnim((BCA_File *)anim, 0, 0x1000, 0);
 
-    mSpawnPosX = mPosX;
-    mSpawnPosY = mPosY;
-    mSpawnPosZ = mPosZ;
+    mSpawnPos.x = mPosX;
+    mSpawnPos.y = mPosY;
+    mSpawnPos.z = mPosZ;
     mSpawnAngleX = mAngleX;
     mSpawnAngleY = mAngleY;
     mSpawnAngleZ = mAngleZ;
@@ -435,12 +435,8 @@ int daBtn_c::Behavior()
 
         {
             /* mStateTimer counts frames spent in the current state: it is
-               incremented here and reset the moment the handler changed mState.
-               Spelling both the increment and the reset through mStateTimer
-               changes Behavior's code (either one alone does not), and so
-               does `mStateTimer++`; the increment keeps the u16 pointer. */
-            unsigned short* ctr = (unsigned short*)&mStateTimer;
-            *ctr = *ctr + 1;
+               incremented here and reset the moment the handler changed mState. */
+            mStateTimer++;
             if (idx != mState) {
                 mStateTimer = 0;
                 mSubState = 0;
@@ -494,7 +490,7 @@ int daBtn_c::CleanupResources()
    message box is up, and after the talk ends start walking (state 2). */
 void daBtn_c::func_ov079_02125b44()
 {
-    int pos[3];
+    Vector3 pos;
 
     if (mAnmModel.Finished() != 0) {
         mAnmModel.SetAnim(
@@ -528,23 +524,20 @@ void daBtn_c::func_ov079_02125b44()
         case 2:
             if (mPlayers[mNearestPlayer]->GetTalkState() == 0) {
                 u16 ang;
-                int i;
                 int y;
                 {
                     daPly_c *p = mPlayers[mNearestPlayer];
                     int *src = &p->mPosX;
-                    pos[0] = src[0];
-                    pos[1] = src[1];
-                    pos[2] = src[2];
+                    pos.x = src[0];
+                    pos.y = src[1];
+                    pos.z = src[2];
                 }
-                ang = ::Vec3_HorzAngle((const ::Vector3 *)pos, (const ::Vector3 *)&mPosX);
-                i = (u16)ang >> 4;
-                y = pos[1] + 0x96000;
-                pos[0] = FX_SinCosTable_[i * 2] * 0xd7 + pos[0];
-                pos[2] = FX_SinCosTable_[i * 2 + 1] * 0xd7 + pos[2];
-                pos[1] = y;
-                if (mPlayers[mNearestPlayer]->ShowMessage(
-                        *this, 0xa4, (Vector3 *)pos, 0, 0) != 0) {
+                ang = ::Vec3_HorzAngle(&pos, &mPos);
+                y = pos.y + 0x96000;
+                pos.x = FX_SinIdx((u16)ang >> 4) * 0xd7 + pos.x;
+                pos.z = FX_CosIdx((u16)ang >> 4) * 0xd7 + pos.z;
+                pos.y = y;
+                if (mPlayers[mNearestPlayer]->ShowMessage(*this, 0xa4, &pos, 0, 0) != 0) {
                     mSubState++;
                     Message::PrepareTalk();
                     func_0201267c(0x133, &mCamSpacePos);
@@ -633,7 +626,7 @@ void daBtn_c::func_ov079_021258fc()
     else
         lim = 0x2bc000;
     mAnmModel.speed = 0x1000;
-    if (::Vec3_HorzDist((const ::Vector3 *)&mPosX, (const ::Vector3 *)&mSpawnPosX) > lim) {
+    if (::Vec3_HorzDist(&mPos, &mSpawnPos) > lim) {
         mState = 7;
         mAnmModel.SetAnim(
             (BCA_File *)(((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5 + 3])->filePtr), 0,
@@ -693,7 +686,7 @@ void daBtn_c::func_ov079_021256d4()
     ApproachLinear(mPrevAngleY, mTargetAngle, 0x200);
     mAngleY = mPrevAngleY;
 
-    if ((u16)mStateTimer > 0x1e) {
+    if (mStateTimer > 0x1e) {
         if (mFrontDist < 0x5dc000) {
             mHorzSpeed = 0xd800;
             mAnmModel.speed = 0x3000;
@@ -728,10 +721,10 @@ void daBtn_c::func_ov079_021256d4()
         Sound::StopLoadedMusic_Layer3();
         func_02011cfc();
         mState = 0;
-        mPosX = mSpawnPosX;
-        mPosY = mSpawnPosY;
+        mPosX = mSpawnPos.x;
+        mPosY = mSpawnPos.y;
         five = 5;
-        mPosZ = mSpawnPosZ;
+        mPosZ = mSpawnPos.z;
         tab = data_ov079_021275ec;
         t = mSpawnAngleX;
         ma = &mAnmModel;
@@ -809,15 +802,13 @@ void daBtn_c::func_ov079_02125504()
         }
 
         if (frame <= 7) {
-            int idx = (u16)t >> 4;
-            s16 sn = FX_SinCosTable_[idx * 2];
-            s16 cs = FX_SinCosTable_[idx * 2 + 1];
+            s16 sn = FX_SinIdx((u16)t >> 4);
+            s16 cs = FX_CosIdx((u16)t >> 4);
             v[0].x = px - sn * 0xaa;
             v[0].z = pz - cs * 0xaa;
         } else {
-            int idx = (u16)t >> 4;
-            s16 sn = FX_SinCosTable_[idx * 2];
-            s16 cs = FX_SinCosTable_[idx * 2 + 1];
+            s16 sn = FX_SinIdx((u16)t >> 4);
+            s16 cs = FX_CosIdx((u16)t >> 4);
             v[0].x = px + sn * 0xaa;
             v[0].z = pz + cs * 0xaa;
         }
@@ -848,9 +839,9 @@ void daBtn_c::func_ov079_0212538c()
     mMovingMeshCollider.ClearShallowOnly();
     mMovingMeshCollider.SetDepthByDir();
     mAnmModel.Advance();
-    if ((u16)mStateTimer == 0)
+    if (mStateTimer == 0)
         mVertSpeed = data_ov079_021275e4[mIsKing];
-    if ((u16)mStateTimer < 8)
+    if (mStateTimer < 8)
         return;
     if (mIsKing) {
         mPitchSpeed += 0x130;
@@ -1077,7 +1068,7 @@ void daBtn_c::func_ov079_02124b08()
 
         {
             int lim = mIsKing * 0x14 + 0x64;
-            u16 cur = (u16)mStateTimer;
+            u16 cur = mStateTimer;
             if ((int)cur <= lim) {
                 if (unk_407 != 1)
                     return;
@@ -1168,7 +1159,7 @@ void daBtn_c::func_ov079_021249f0()
     if (mSubState == 0) {
         mHorzSpeed = 0;
         mAnmModel.speed = 0x2000;
-        if ((u16)mStateTimer >= 0x20) {
+        if (mStateTimer >= 0x20) {
             mSubState++;
         } else {
             mPrevAngleY += 0x400;
@@ -1176,7 +1167,7 @@ void daBtn_c::func_ov079_021249f0()
         }
     } else {
         mHorzSpeed = data_ov079_021275dc[mIsKing];
-        if ((u16)mStateTimer > 0x2a) {
+        if (mStateTimer > 0x2a) {
             mState = 1;
             mAnmModel.SetAnim(
                 (BCA_File *)(((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5 + 3])->filePtr), 0,
@@ -1214,16 +1205,14 @@ void daBtn_c::func_ov079_021246dc()
                 daPly_c *other = mPlayers[idx];
                 Vector3 *op = &other->mPos;
                 unsigned short ang;
-                int i;
                 short mag = 0x10e;
                 pos.x = op->x;
                 pos.y = op->y;
                 pos.z = op->z;
-                ang = ::Vec3_HorzAngle((const ::Vector3 *)&pos, (const ::Vector3 *)&mPosX);
-                i = ang >> 4;
+                ang = ::Vec3_HorzAngle(&pos, &mPos);
                 pos.y += 0x32000;
-                pos.x = FX_SinCosTable_[i * 2] * mag + pos.x;
-                pos.z = FX_SinCosTable_[i * 2 + 1] * mag + pos.z;
+                pos.x = FX_SinIdx(ang >> 4) * mag + pos.x;
+                pos.z = FX_CosIdx(ang >> 4) * mag + pos.z;
                 if (mPounder->ShowMessage(*this, 0xa5, (Vector3 *)&pos, 0, 0) == 0)
                     return;
                 mSubState++;
@@ -1290,7 +1279,7 @@ void daBtn_c::func_ov079_02124638()
         {
             s32 amp = (s32)((t - 0x50) << 6);
             u16 ang = (u16)(s16)(t << 13);
-            mAngleX = (s16)FX_MUL(amp, FX_SinCosTable_[(ang >> 4) * 2]);
+            mAngleX = (s16)FX_MUL(amp, FX_SinIdx(ang >> 4));
         }
         return;
     }
@@ -1366,7 +1355,7 @@ int daBtn_c::func_ov079_021243e0(int range)
     }
 
     player = ClosestPlayer();
-    dist = ::Vec3_Dist((const ::Vector3 *)&v, (const ::Vector3 *)&player->mPosX);
+    dist = ::Vec3_Dist(&v, &player->mPos);
     if (dist > range) {
         if (mMovingMeshCollider.IsEnabled())
             mMovingMeshCollider.Disable();
@@ -1387,8 +1376,8 @@ void daBtn_c::func_ov079_02124188()
     Vector3 pos;
     Vector3 asr;
     int shadowRad;
-    int cosv;
-    int sinComp;
+    int tiltSin;
+    int lean;
     char *bone;
 
     Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngleX, mAngleY, mAngleZ);
@@ -1407,17 +1396,17 @@ void daBtn_c::func_ov079_02124188()
     mBodyRoll = (short)(*(unsigned short *)(bone + 0x1e) - 0x4000);
 
     if (mIsKing != 0) {
-        cosv = FX_SinCosTable_[((unsigned short)mAngleX >> 4) << 1];
-        sinComp = cosv * 0x190;
-        shadowRad = cosv * 0x1a9 + 0xc8000;
+        tiltSin = FX_SinIdx((unsigned short)mAngleX >> 4);
+        lean = tiltSin * 0x190;
+        shadowRad = tiltSin * 0x1a9 + 0xc8000;
     } else {
-        cosv = FX_SinCosTable_[((unsigned short)mAngleX >> 4) << 1];
-        sinComp = cosv * 0xc8;
-        shadowRad = cosv * 0xd2 + 0x64000;
+        tiltSin = FX_SinIdx((unsigned short)mAngleX >> 4);
+        lean = tiltSin * 0xc8;
+        shadowRad = tiltSin * 0xd2 + 0x64000;
     }
 
-    pos.x += FX_MUL(sinComp, FX_SinCosTable_[((unsigned short)mAngleY >> 4) << 1]);
-    pos.z += FX_MUL(sinComp, FX_SinCosTable_[(((unsigned short)mAngleY >> 4) << 1) + 1]);
+    pos.x += FX_MUL(lean, FX_SinIdx((unsigned short)mAngleY >> 4));
+    pos.z += FX_MUL(lean, FX_CosIdx((unsigned short)mAngleY >> 4));
 
     ::Vec3_Asr((::Vector3 *)&asr, (::Vector3 *)&pos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
@@ -1502,8 +1491,8 @@ void daBtn_c::func_ov079_02123f34()
         v.x = p->x;
         v.y = p->y;
         v.z = p->z;
-        dist = ::Vec3_HorzDist((const ::Vector3 *)&mPosX, (const ::Vector3 *)&v);
-        angle = ::Vec3_HorzAngle((const ::Vector3 *)&mPosX, (const ::Vector3 *)&v);
+        dist = ::Vec3_HorzDist(&mPos, &v);
+        angle = ::Vec3_HorzAngle(&mPos, &v);
         if (dist < minDist) {
             mNearestPlayer = i;
             minDist = dist;
@@ -1555,16 +1544,15 @@ extern "C" void func_ov079_02123d4c(Vector3 *out, daBtn_c *self) {
         int m;
         int d;
         if (self->mIsKing) {
-            m = (s16)FX_SinCosTable_[((unsigned short)self->mAngleX >> 4) * 2] * (s16)0x190;
+            m = (s16)FX_SinIdx((unsigned short)self->mAngleX >> 4) * (s16)0x190;
         } else {
-            m = (s16)FX_SinCosTable_[((unsigned short)self->mAngleX >> 4) * 2] * (s16)0xc8;
+            m = (s16)FX_SinIdx((unsigned short)self->mAngleX >> 4) * (s16)0xc8;
         }
-        out->x = out->x + FX_MUL(m, FX_SinCosTable_[((unsigned short)self->mAngleY >> 4) * 2]);
+        out->x = out->x + FX_MUL(m, FX_SinIdx((unsigned short)self->mAngleY >> 4));
         d = self->OnAimedAtWithEgg();
         {
             out->y += d;
-            out->z =
-                out->z + FX_MUL(m, FX_SinCosTable_[((unsigned short)self->mAngleY >> 4) * 2 + 1]);
+            out->z = out->z + FX_MUL(m, FX_CosIdx((unsigned short)self->mAngleY >> 4));
         }
     }
 }
@@ -1585,23 +1573,21 @@ int daBtn_c::func_ov079_02123bcc() {
     p = &player->mPosX;
     v[0] = p[0]; v[1] = p[1]; v[2] = p[2];
     if (v[1] > mPosY) return 0;
-    dist = ::Vec3_HorzDist((const ::Vector3 *)v, (const ::Vector3 *)&mPosX);
+    dist = ::Vec3_HorzDist((const ::Vector3 *)v, &mPos);
     a0 = mAngleY; a1 = mBodyYaw; a2 = mTargetAngle;
     raw = (a0 + a1) << 16; ang = a2 + (raw >> 16); rangle = raw >> 16;
-    idx = (u16)(s16)ang >> 4;
-    cosv = FX_SinCosTable_[idx * 2 + 1];
+    cosv = FX_CosIdx((u16)(s16)ang >> 4);
     hc = FX_MUL(dist, cosv);
     if (hc < 0) hc = -hc;
     if (hc <= 0x3c000) {
-        sinv = FX_SinCosTable_[idx * 2];
+        sinv = FX_SinIdx((u16)(s16)ang >> 4);
         hs = FX_MUL(dist, sinv);
         if (hs < 0) hs = -hs;
         if (hs <= 0xe1000) {
             int vx, vy, vz;
             int i;
-            idx2 = (u16)rangle >> 4;
-            sin2 = FX_SinCosTable_[idx2 * 2];
-            cos2 = FX_SinCosTable_[idx2 * 2 + 1];
+            sin2 = FX_SinIdx((u16)rangle >> 4);
+            cos2 = FX_CosIdx((u16)rangle >> 4);
             vx = v[0]; vy = v[1]; vz = v[2];
             nx = (s16)sin2 * 5 + vx;
             nz = (s16)cos2 * 5 + vz;
@@ -1620,10 +1606,10 @@ s32 daBtn_c::OnAimedAtWithEgg() {
     int idx;
     if(mIsKing!=0){
         idx = ((int)(unsigned short)mAngleX >> 4);
-        return FX_SinCosTable_[idx * 2 + 1] * 0x11d + 0x4b000;
+        return FX_CosIdx(idx) * 0x11d + 0x4b000;
     }
     idx = ((int)(unsigned short)mAngleX >> 4);
-    return FX_SinCosTable_[idx * 2 + 1] * 0x90 + 0x24000;
+    return FX_CosIdx(idx) * 0x90 + 0x24000;
 }
 
 Vector3 daBtn_c::OnAimedAtWithEggReturnVec()
@@ -1646,7 +1632,7 @@ int daBtn_c::func_ov079_02123a8c()
         v.y = mPosY;
         v.z = mPosZ;
         v.y = v.y + OnAimedAtWithEgg();
-        int dist = ::Vec3_Dist((const ::Vector3 *)&v, (const ::Vector3 *)&closest->mPosX);
+        int dist = ::Vec3_Dist(&v, &closest->mPos);
         if (dist < (mClipRadius << 3)) {
             if (!mMovingMeshCollider.IsEnabled())
                 mMovingMeshCollider.Enable(this);
@@ -1666,10 +1652,11 @@ int daBtn_c::func_ov079_02123a8c()
 void daBtn_c::func_ov079_02123804(dActor_c *other)
 {
     Vector3 v;
-    int idx;
-    s16 cosv, sinv;
+    s16 sinv, cosv;
     int ang;
 
+    /* Copied through a pointer: `v = other->mPrevPos` loads the three words
+       in a different order and moves the literal pool. */
     {
         int* q = &other->mPrevPosX;
         v.x = q[0];
@@ -1677,13 +1664,12 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
         v.z = q[2];
     }
 
-    idx = (unsigned short)other->mPrevAngleY >> 4;
-    cosv = FX_SinCosTable_[idx * 2];
-    sinv = FX_SinCosTable_[idx * 2 + 1];
-    v.x = v.x - cosv * 0x50;
-    v.z = v.z - sinv * 0x50;
+    sinv = FX_SinIdx((u16)other->mPrevAngleY >> 4);
+    cosv = FX_CosIdx((u16)other->mPrevAngleY >> 4);
+    v.x = v.x - sinv * 0x50;
+    v.z = v.z - cosv * 0x50;
 
-    ang = ::Vec3_HorzAngle((const ::Vector3 *)&mPosX, (const ::Vector3 *)&v);
+    ang = ::Vec3_HorzAngle(&mPos, &v);
 
     if (AngleDiff(ang, (s16)(mAngleY + mBodyYaw)) < 0x3c00) {
         int r1 = mState;
@@ -1696,10 +1682,9 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
         if (mState != 0xa) {
             /* Both reads are measured. A plain mState read here or at the
                second site below shrinks the function 0x288 -> 0x284; plain
-               reads at both sites give 0x280. `(u16)mStateTimer` or a plain
-               timer read also changes it. */
+               reads at both sites give 0x280. */
             mResumeState = *(volatile s32 *)&mState;
-            mSavedStateTimer = *(u16 *)&mStateTimer;
+            mSavedStateTimer = mStateTimer;
             mSavedSubState = mSubState;
         }
         mWobbleTimer = 0x5a;
@@ -1721,7 +1706,7 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
         }
         if (mState != 0xa) {
             mResumeState = *(volatile s32 *)&mState;
-            mSavedStateTimer = *(u16 *)&mStateTimer;
+            mSavedStateTimer = mStateTimer;
             mSavedSubState = mSubState;
         }
         {

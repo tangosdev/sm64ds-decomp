@@ -19,7 +19,6 @@
 //   through int flag locals. Tested inline, the branches change shape.
 // - TryDropItem writes a byte at +0x42b on actor 279 so a second
 //   cap is not dropped. Nothing here names that field.
-// - mStateTimer is incremented through a u16 cast. The ROM loads it unsigned.
 
 #pragma defer_codegen off
 
@@ -36,6 +35,7 @@
 #include "ParticleIds.h"
 #include "nitro/fx/fx.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_trig.h"
 
 /* Actor IDs, from symbols/actor_debug_names.tsv. */
 enum {
@@ -59,7 +59,6 @@ enum { HIT_MEGA_CHARACTER = 0x10 };
 extern s32 data_ov002_02100320[];
 extern s32 data_ov002_02100334[];
 extern s32 data_ov002_02100348[];
-extern s16 FX_SinCosTable_[];
 
 /* local extern: arm9/ov002 C helpers with no shared header yet. Vec3_Asr is
    not among them any more -- math/CalcLib.h, included above, declares it. */
@@ -283,10 +282,10 @@ int daFPknBall_c::Behavior() {
     /* mPrevAngleY is the heading (ApproachLinear steers it toward
      * mTargetAngleY) and mPrevAngleX the pitch; FX_SinCosTable_ holds (sin, cos)
      * pairs in fix12. */
-    flatSpeed = (mHorzSpeed * FX_SinCosTable_[((u16)mPrevAngleX >> 4) * 2 + 1]) / 4096;
-    mSpeedX = (flatSpeed * FX_SinCosTable_[((u16)mPrevAngleY >> 4) * 2]) / 4096;
-    mVertSpeed = (-mHorzSpeed * FX_SinCosTable_[((u16)mPrevAngleX >> 4) * 2]) / 4096;
-    mSpeedZ = (flatSpeed * FX_SinCosTable_[((u16)mPrevAngleY >> 4) * 2 + 1]) / 4096;
+    flatSpeed = (mHorzSpeed * FX_CosIdx((u16)mPrevAngleX >> 4)) / 4096;
+    mSpeedX = (flatSpeed * FX_SinIdx((u16)mPrevAngleY >> 4)) / 4096;
+    mVertSpeed = (-mHorzSpeed * FX_SinIdx((u16)mPrevAngleX >> 4)) / 4096;
+    mSpeedZ = (flatSpeed * FX_CosIdx((u16)mPrevAngleY >> 4)) / 4096;
     mPosX += mSpeedX;
     mPosY += mVertSpeed;
     mPosZ += mSpeedZ;
@@ -316,8 +315,7 @@ int daFPknBall_c::Behavior() {
         MarkForDestruction();
     }
 
-    /* The ROM loads this halfword unsigned, so not the s16 mStateTimer += 1. */
-    *(u16 *)&mStateTimer += 1;
+    mStateTimer += 1;
     UpdateVisuals();
     return 1;
 }

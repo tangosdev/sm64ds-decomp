@@ -6,9 +6,8 @@
  * SEESAW, BOMB_SEESAW, KM1_SEESAW, KM2_YOKOSEESAW, KM3_SEESAW,
  * KM3_YOKOSEESAW and RC_SEESAW share this body. A ground pound
  * pitches mAngleX toward the side that was hit; Behavior springs it
- * back to level. mVariant, from actorID, selects the model, the
- * collision and the CLPS. Those three symbols are one record, stride
- * 0xc, so each is indexed from its own base.
+ * back to level. mVariant, from actorID, selects the SeesawAssets row
+ * (model, collision and CLPS).
  *
  * decl_common.h stays first. It pulls common.h's flat Matrix4x3
  * (s32 m[12]). daObjSeesaw_c.h includes dBgW_KcMbg.h, which includes
@@ -81,9 +80,6 @@ enum { kMegaPoundScale = 0x2000 };
 /* PlayLong bank-3 id while |mAngleXSpeed| > 0xa. */
 enum { kTiltSound = 0x8b };
 
-/* The three symbols are the first record's model, collision and CLPS.
- * Variant i lives at symbol + i * 0xc (one 3-word record). */
-enum { kFileStride = 0xc };
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
  * veneer pairs (func_02017acc / func_02017ab4 for the model, func_02017b4c /
@@ -100,6 +96,16 @@ struct SeesawCollisionFilePtr : SharedFilePtr {
 };
 
 extern int data_ov095_02136f58[];
+
+/* Per-variant asset row: the model file, the collision file and the CLPS block,
+ * indexed by mVariant. */
+struct SeesawAssets {
+    SharedFilePtr *modelFile;
+    SharedFilePtr *clsnFile;
+    CLPS_Block *clps;
+};
+
+extern SeesawAssets data_ov095_021374a0[7];
 
 /* D1 stores this vtable, then dBgActor_c's (inlined), then destroys
  * mMeshCollider and mModel. D0 is that plus the inline operator delete.
@@ -144,30 +150,26 @@ void daObjSeesaw_c::OnGroundPounded(dActor_c &other) {
 
 /* Spring *angle toward target by *speed. Behavior calls this with
  * &mAngleX, &mAngleXSpeed, target 0, thresh 6, accel 3, mult 3. It reads
- * nothing from the seesaw itself. Returns 1 once the angle has settled. */
-#pragma push
-/* Without it the two (short)accel casts share one sign-extend and both
- * smulbb become muls: 21 of 44 words differ (0xb4 with `*speed += accel`). */
-#pragma opt_common_subs off
-int daObjSeesaw_c::SpringAngle(short *angle, short *speed, int target, short thresh, int accel,
+ * nothing from the seesaw itself. Returns 1 once the angle has settled.
+ * accel is a short: the ROM sign-extends it after the negation and
+ * multiplies it with smulbb. */
+int daObjSeesaw_c::SpringAngle(short *angle, short *speed, int target, short thresh, short accel,
                                short mult) {
-    short old = angle[0];
-    angle[0] = old + speed[0];
-    short now = angle[0];
-    if (now == target ||
-        ((now - target) * (old - target) < 0 && speed[0] > -thresh && speed[0] < thresh)) {
-        angle[0] = target;
-        speed[0] = 0;
+    short old = *angle;
+    *angle += *speed;
+    if (*angle == target ||
+        ((*angle - target) * (old - target) < 0 && *speed > -thresh && *speed < thresh)) {
+        *angle = target;
+        *speed = 0;
         return 1;
     }
-    if (now >= target)
-        accel = (short)-accel;
-    if ((short)speed[0] * (short)accel < 0)
-        accel = (short)accel * (short)mult;
-    speed[0] = speed[0] + accel;
+    if (*angle >= target)
+        accel = -accel;
+    if (*speed * accel < 0)
+        accel *= mult;
+    *speed += accel;
     return 0;
 }
-#pragma pop
 
 /* Model matrix from the actor angles, translation = position >> 3
  * (world fix12 to the model's units). */
@@ -181,8 +183,8 @@ void daObjSeesaw_c::UpdateModelMatrix() {
 int daObjSeesaw_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
-    (*(SharedFilePtr **)(data_ov095_021374a0 + mVariant * kFileStride))->Release();
-    (*(SharedFilePtr **)(data_ov095_021374a4 + mVariant * kFileStride))->Release();
+    data_ov095_021374a0[mVariant].modelFile->Release();
+    data_ov095_021374a0[mVariant].clsnFile->Release();
     return 1;
 }
 
@@ -223,8 +225,7 @@ int daObjSeesaw_c::Behavior() {
 }
 
 int daObjSeesaw_c::InitResources() {
-    unsigned char idx;
-    int f;
+    void *f;
     switch (actorID) {
     case ACTOR_SEESAW:
         mVariant = 0;
@@ -248,17 +249,15 @@ int daObjSeesaw_c::InitResources() {
         mVariant = 6;
         break;
     }
-    idx = mVariant;
-    f = (int)dExtSimpleModel_c::LoadFile(
-        **(SharedFilePtr **)(data_ov095_021374a0 + idx * kFileStride));
+    f = dExtSimpleModel_c::LoadFile(*data_ov095_021374a0[mVariant].modelFile);
     mModel.SetFile((BMD_File *)f, 1, -1);
     UpdateModelMatrix();
     UpdateClsnPosAndRot();
     {
-        unsigned char i = mVariant;
-        f = (int)dBgW_Kc::LoadFile(**(SharedFilePtr **)(data_ov095_021374a4 + i * kFileStride));
+        int i = mVariant;
+        f = dBgW_Kc::LoadFile(*data_ov095_021374a0[i].clsnFile);
         mMeshCollider.SetFile((KCL_File *)f, mClsnMat, 0x1000, mAngleY,
-                              *(CLPS_Block *)(*(void **)(data_ov095_021374a8 + i * kFileStride)));
+                              *data_ov095_021374a0[i].clps);
     }
     /* dBgW::SetBeforeClsnCallback stores dBgW+0x18 (beforeClsnCallback). dBgW::SetStoodOnCallback
      * stores dBgW+0x1c, the stood-on callback: StoodOnCallback, the
@@ -339,8 +338,8 @@ extern "C" daObjSeesaw_c *daObjSeesaw_c_classInit_SEESAW() {
     return new daObjSeesaw_c();
 }
 
-/* Seven variants, each a model/collision handle pair; the pointer table at
- * data_ov095_021374a0 indexes them through kFileStride. */
+/* Seven variants, each a model/collision handle pair, reached through the
+ * SeesawAssets rows at data_ov095_021374a0. */
 SeesawModelFilePtr gObjSeesawModelFile(ASSET_OBJ_SEESAW_BMD);
 SeesawModelFilePtr gBSiSoModelFile(ASSET_B_SI_SO_BMD);
 SeesawModelFilePtr gKm1ShisoModelFile(ASSET_KM1_SHISO_BMD);

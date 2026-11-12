@@ -78,6 +78,7 @@ enum daObjTatefuda_c_AssetId {
 #include "ParticleIds.h"
 #include "private/mtx43.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_trig.h"
 
 /* Local shadow declarations carried from the legacy files verbatim.
  * NOT reconciled against real project headers -- check include/*.h for
@@ -135,7 +136,6 @@ extern Vector3 data_ov002_020ff0d4[];
 extern void func_02012694(unsigned int a, void *b);
 
 extern s16 Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
-extern s16 FX_SinCosTable_[];
 extern u8 data_0209d660;
 extern u8 data_0209d6bc;
 extern u8 gShowTouchScreenArrows;
@@ -220,8 +220,7 @@ int daObjTatefuda_c::InitResources()
     UpdateShadowMatrix();
 
     void *kf = dBgW_Kc::LoadFile(SignPost_ClsnFile);
-    ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile((KCL_File *)kf, mClsnMat, 0x199, mAngleY, data_ov002_0210d714);
+    mMeshCollider.SetFile((KCL_File *)kf, mClsnMat, 0x199, mAngleY, data_ov002_0210d714);
 
     mdCcAc_c.Init(this, 0x64000, 0x64000, 0x4800002, 0x41000);
 
@@ -682,12 +681,12 @@ void daObjTatefuda_c::Talk()
 
 
     ang = (s32) * (u16 *)&mAngleY;
-    sinV = FX_SinCosTable_[(ang >> 4) * 2];
+    sinV = FX_SinIdx(ang >> 4);
     tx = tx + FX_MUL(scale, sinV);
     tgt.x = tx;
 
     ang = (s32) * (u16 *)&mAngleY;
-    cosV = FX_SinCosTable_[(ang >> 4) * 2 + 1];
+    cosV = FX_CosIdx(ang >> 4);
     tz = tz + FX_MUL(scale, cosV);
     tgt.z = tz;
 
@@ -939,14 +938,14 @@ void daObjTatefuda_c::OnGroundPounded(dActor_c &other)
     if (other.param1 == 2 || ((daPly_c &)other).mIsMega != 0) {
         mPosY -= (mPoundsLeft * 0x2d) << 12;
         mPoundsLeft = 0;
-        ((dBgActor_c *)this)->UpdateModelPosAndRotY();
-        ((dBgActor_c *)this)->UpdateClsnPosAndRot();
+        UpdateModelPosAndRotY();
+        UpdateClsnPosAndRot();
         mRespawnDelay = 0x1e;
     } else {
         mPosY -= 0x2d000;
         mPoundsLeft -= 1;
-        ((dBgActor_c *)this)->UpdateModelPosAndRotY();
-        ((dBgActor_c *)this)->UpdateClsnPosAndRot();
+        UpdateModelPosAndRotY();
+        UpdateClsnPosAndRot();
         mPoundCooldown = 0xf;
         mRespawnDelay = 0x1e;
     }

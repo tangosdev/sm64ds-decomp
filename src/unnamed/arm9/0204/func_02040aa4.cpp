@@ -1,12 +1,11 @@
 //cpp
 #include "types.h"
-#include "private/arm9_a1fc0_file_share.h"
+#include "private/file_share_alloc.h"
 #include "nitro/os/system.h"
 #include "private/fs_views.h"
 
 /* The FSFile a child read is in flight on (mReadRequest); only its archive is
  * read here. */
-typedef struct FSFile FSFile;
 
 extern "C" {
 
@@ -16,29 +15,20 @@ extern void WBT_End(void);
 
 extern int data_020a0f84;
 
-/* mAllocFunc: (arg, size, 0) allocates, (arg, 0, ptr) frees. */
-typedef void (*CallbackFn)(void *ctx, int zero, int val);
-
 /* Shut the file share down: free the card tables (mTable), and as a child
  * cancel the read in flight and free the receive work (mRecvWork). The
- * mAllocFunc/mAllocArg and mIsParent reads go through data_020a1fc0, not
- * work: the ROM reloads the block's address for them (through work the
- * function is 12 bytes shorter). */
+ * mIsParent read goes through data_020a1fc0, not work, as FileShareFree's
+ * allocator reads do: the ROM reloads the block's address for it (through
+ * work the function comes out shorter). */
 void func_02040aa4(void) {
     FileShareWork *work = &data_020a1fc0;
     OSIntrMode saved0 = OS_DisableInterrupts();
 
     if (data_020a0f84 != 0) {
-        int table = work->mTable;
+        void *table = work->mTable;
 
         if (table != 0) {
-            if (table != 0) {
-                OSIntrMode saved1 = OS_DisableInterrupts();
-                void *ctxArg = (void *)data_020a1fc0.mAllocArg;
-                CallbackFn fn = (CallbackFn)data_020a1fc0.mAllocFunc;
-                fn(ctxArg, 0, table);
-                OS_RestoreInterrupts(saved1);
-            }
+            FileShareFree(table);
             work->mTable = 0;
             work->mTableSize = 0;
         }
@@ -46,24 +36,14 @@ void func_02040aa4(void) {
         work->mState = 0;
 
         if (data_020a1fc0.mIsParent == 0) {
-            FSFile *p = (FSFile *)work->mReadRequest;
+            FSFile *p = work->mReadRequest;
             FileShareChildArea *child = (FileShareChildArea *)work->mArea;
             if (p != 0) {
                 void *arg = p->arc;
                 work->mReadRequest = 0;
                 FS_NotifyArchiveAsyncEnd(arg, 5);
             }
-
-            {
-                int recvWork = child->mRecvWork;
-                if (recvWork != 0) {
-                    OSIntrMode saved2 = OS_DisableInterrupts();
-                    void *ctxArg2 = (void *)data_020a1fc0.mAllocArg;
-                    CallbackFn fn2 = (CallbackFn)data_020a1fc0.mAllocFunc;
-                    fn2(ctxArg2, 0, recvWork);
-                    OS_RestoreInterrupts(saved2);
-                }
-            }
+            FileShareFree(child->mRecvWork);
         } else {
             func_020421b4();
         }

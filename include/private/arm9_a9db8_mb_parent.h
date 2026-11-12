@@ -1,6 +1,7 @@
 #ifndef ARM9_A9DB8_MB_PARENT_H
 #define ARM9_A9DB8_MB_PARENT_H
 #include "types.h"
+#include "private/mb_views.h"
 
 /* The wireless-download parent work block that data_020a9db8 points at
  * (arm9 func_02065c2c .. MBi_ParentCallback). Only the fields those functions
@@ -23,7 +24,7 @@ typedef struct MbSegmentInfo {
     u32 rsv : 31;
 } MbSegmentInfo;
 
-/* NitroSDK MbDownloadFileInfoHeader, the start of MbParentFile.mHeader
+/* NitroSDK MbDownloadFileInfoHeader, the start of MBDownloadFileInfo
  * (MBi_MakeDownloadFileInfo builds it). */
 typedef struct MbDownloadFileInfoHeader {
     u32 arm9EntryAddr;    /* 0x00 */
@@ -40,20 +41,25 @@ typedef struct MB_BlockInfoTable {
     u16 block_num;          /* 0x12 */
 } MB_BlockInfoTable;
 
+/* NitroSDK MBDownloadFileInfo: what MBi_CommParentSendDlFileInfo sends a
+ * child (0xe4 bytes): the segment table, the authentication code that
+ * follows the program image, and the boot parameters. */
+typedef struct MBDownloadFileInfo {
+    MbDownloadFileInfoHeader header; /* 0x00 */
+    u8 auth_code[136];               /* 0x3c */
+    u8 reserved[0x20];               /* 0xc4 -- HW_DOWNLOAD_PARAMETER_SIZE */
+} MBDownloadFileInfo;
+
 typedef struct MbParentFile {
-    u8 mHeader[0x59c];    /* 0x000 -- download info; MBi_CommParentSendDlFileInfo sends 0xe4 of
-                             it, func_02067530 reads three 16-byte segment rows
-                             at +0xc */
-    u8 mBlockTable[0x14]; /* 0x59c -- NitroSDK MB_BlockInfoTable: 3 segment
-                             byte offsets (running sums of the segment sizes),
-                             3 head block numbers, block count; built by
-                             MBi_MakeBlockInfoTable, read by func_02067530 */
-    u8 *mGameRegistry;    /* 0x5b0 -- the NitroSDK MBGameRegistry the file was
-                             registered with: MB_RegisterFile stores its first
-                             argument here (and refuses it twice) and builds
-                             the MBGameInfo from it at +0xe4 (MBi_MakeGameInfo);
-                             MBi_CommParentRecvDataPerChild checks a child's ggid (+0x14) and
-                             maxPlayerNum (+0x18) in it */
+    MBDownloadFileInfo mDlFileInfo; /* 0x000 -- built by MBi_MakeDownloadFileInfo */
+    MBGameInfo mGameInfo;           /* 0x0e4 -- built by MBi_MakeGameInfo, then
+                                       chained into the beacon list */
+    MB_BlockInfoTable mBlockTable;  /* 0x59c -- built by MBi_MakeBlockInfoTable,
+                                       read by MBi_get_blockinfo */
+    MBGameRegistry *mGameRegistry;  /* 0x5b0 -- the program the file was
+                                      registered with: MB_RegisterFile stores
+                                      it (and refuses it twice) and builds
+                                      mGameInfo from it */
     s32 mSrcAddr;         /* 0x5b4 -- added to a block's offset before MI_CpuCopy8 */
     u16 mCurrentBlock;    /* 0x5b8 -- block number being sent */
     u16 mRequestedBlock;  /* 0x5ba -- highest block a child asked for this
@@ -93,18 +99,21 @@ typedef char MbChildRequest_size_must_be_0x20[sizeof(MbChildRequest) == 0x20 ? 1
 #endif
 
 typedef struct MbParentWork {
-    u8 pad_0000[0x1300];
+    /* 0x0000 -- the MP buffers: MB_Init points the WM work's sendBuf at
+     * mSendBuf and its recvBuf at mRecvBuf */
+    u32 mSendBuf[0x400 / sizeof(u32)];
+    u8 mRecvBuf[0xf00];
     /* 0x1300 -- the parent's own MBUserInfo (NitroSDK parentInfo):
-     * MB_RegisterFile hands it to MBi_MakeGameInfo, which copies its 0x16 bytes
-     * into each registered file's game record */
-    u8 mParentUser[0x16];
+     * MB_RegisterFile hands it to MBi_MakeGameInfo, which copies it into each
+     * registered file's game record */
+    MBUserInfo mParentUser;
     /* 0x1316 -- the multiboot work is set up (the BW2 reconstruction's
      * mbc->isMbInitialized): MB_Init refuses while it is set and sets it last,
      * and the WM_End result clears it on either side (MBi_EndCommon) */
     u16 mIsMbInitialized;
     /* 0x1318 -- bytes of a file carried per block: MB_StartParent sets it to
      * the MP parent size less 6; MBi_MakeBlockInfoTable divides each segment by it
-     * and func_02067530 turns a block number back into an offset with it */
+     * and MBi_get_blockinfo turns a block number back into an offset with it */
     u32 mBlockSize;
     /* 0x131c -- bytes of the child's entry request carried per piece:
      * MB_StartParent sets it to the MP child size less 2, and

@@ -317,6 +317,16 @@ class TypedefAliasTests(unittest.TestCase):
         findings, _d, _f, _files = build(tree)
         self.assertEqual(kinds(findings, "Load"), [])
 
+    def test_a_register_parameter_is_the_same_type_without_it(self):
+        """`register` is a storage class, as on an asm function's parameters."""
+        def tree(t):
+            t.write("src/Load.c",
+                    "asm void Load(register int *a, register unsigned b)\n{\n"
+                    "    bx lr\n}\n")
+            t.write("src/caller.c", "extern void Load(int *, unsigned int);\n")
+        findings, _d, _f, _files = build(tree)
+        self.assertEqual(kinds(findings, "Load"), [])
+
     def test_a_const_on_a_POINTEE_is_a_disagreement(self):
         """The one const that changes the type. It must NOT be folded away."""
         def tree(t):

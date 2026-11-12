@@ -39,15 +39,6 @@
  * and sits immediately after InitResources in the ROM's own .text order, so it
  * is part of this TU. Written first here, being the highest-address member.
  *
- * Consolidated from these legacy one-function sources (ROM address order):
- *   [0] 0x02111580  src/_ZN14daObjRc_Hane_cD1Ev.cpp
- *   [1] 0x021115b0  src/_ZN14daObjRc_Hane_cD0Ev.cpp
- *   [2] 0x021115f4  src/_ZN14daObjRc_Hane_c16CleanupResourcesEv.cpp
- *   [3] 0x02111618  src/func_ov036_02111618.c
- *   [4] 0x0211169c  src/_ZN14daObjRc_Hane_c6RenderEv.cpp
- *   [5] 0x021116c0  src/_ZN14daObjRc_Hane_c8BehaviorEv.cpp
- *   [6] 0x02111854  src/_ZN14daObjRc_Hane_c13InitResourcesEv.cpp
- *   [7] 0x02111904  src/daObjRc_Hane_c_classInit.c
  *
  * common.h FIRST: UpdateModelTransform assigns a whole Matrix4x3, and the ROM
  * copies it as three 4-word ldm/stm pairs. common.h's flat s32 m[12] is that

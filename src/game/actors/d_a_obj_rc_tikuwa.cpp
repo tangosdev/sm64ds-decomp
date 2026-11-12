@@ -29,13 +29,7 @@ enum daObjRc_Tikuwa_c_AssetId { ASSET_RC_TIKUWA_BMD = 0x06af, ASSET_RC_TIKUWA_KC
 
 #pragma defer_codegen off
 
-/* decl_common.h declares these two handles as int[]. This TU defines them
- * as the 8-byte file objects the static initializer constructs. */
-#define gRcTikuwaCollisionFile data_ov036_02114084_decl
-#define gRcTikuwaModelFile data_ov036_0211408c_decl
 #include "decl_common.h"
-#undef gRcTikuwaCollisionFile
-#undef gRcTikuwaModelFile
 #include "daObjRc_Tikuwa_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"

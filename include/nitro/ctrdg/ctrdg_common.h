@@ -14,6 +14,8 @@
  */
 
 #include "types.h"
+#include "nitro/hw/mmap_global.h"
+#include "nitro/hw/mmap_shared.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -47,6 +49,13 @@ typedef struct CTRDGModuleInfo {
     u16 makerCode; /* 0x6 */
     u32 gameCode;  /* 0x8 */
 } CTRDGModuleInfo;
+
+#define CTRDG_IS_ROM_CODE 0x96
+
+/* Where a cartridge that is not ROM code keeps its module ID, and the copy of
+ * the module information the ARM7 shares in the system work area. */
+#define CTRDGi_GetModuleIDImageAddr() ((u16 *)(HW_CTRDG_ROM + 0x0001fffe))
+#define CTRDGi_GetModuleInfoAddr()    ((CTRDGModuleInfo *)HW_CTRDG_MODULE_INFO_BUF)
 
 /* NitroSDK CTRDGWork (CTRDGi_Work, 0x020a9de0): CTRDGi_InitCommon clears
  * it and stores the lock ID; the PXI callback sets subpState to 1 when the

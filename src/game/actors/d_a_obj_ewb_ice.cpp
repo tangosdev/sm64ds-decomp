@@ -52,6 +52,7 @@ enum daObjEwbIce_c_AssetId {
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_trig.h"
 
 struct CLPS_Block;
 
@@ -141,7 +142,6 @@ unsigned short DecIfAbove0_Short(unsigned short *p);
 /* local extern: d_bg_w.cpp defines these; no header declares them. */
 }
 
-extern s16 FX_SinCosTable_[];
 extern int data_02092138;
 extern u8 data_ov073_02123420[];
 extern u8 data_ov073_02123424[];
@@ -191,7 +191,7 @@ int daObjEwbIce_c::StateArena_Update() {
         mWobblePhase += kWobbleStep;
         angle = mWobblePhase;
         amp = mWobbleAmp;
-        sine = FX_SinCosTable_[(((int)((unsigned)(angle << 16) >> 16)) >> 4) * 2];
+        sine = FX_SinIdx(((int)((unsigned)(angle << 16) >> 16)) >> 4);
         mAngleX = (s16)(amp + FX_MUL(amp, sine));
         ApproachLinear(mWobbleAmp, 0, kWobbleApproach);
         return 1;
@@ -370,10 +370,9 @@ int daObjEwbIce_c::InitResources() {
     {
         u8 variant = mVariant;
         kcl = (KCL_File *)dBgW_Kc::LoadFile(*((EwbIceFileSlot *)data_ov073_021231c0)[variant].file);
-        ((dBgW_KcMbg *)(&mMeshCollider))
-            ->dBgW_KcMbg::SetFile(
-                (KCL_File *)(kcl), mClsnMat, 0x1000, mAngleY,
-                *(CLPS_Block *)(((EwbIceClpsSlot *)data_ov073_021231c4)[variant].clps));
+        mMeshCollider.SetFile(
+            (KCL_File *)(kcl), mClsnMat, 0x1000, mAngleY,
+            *(CLPS_Block *)(((EwbIceClpsSlot *)data_ov073_021231c4)[variant].clps));
     }
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&StoodOnCallback);

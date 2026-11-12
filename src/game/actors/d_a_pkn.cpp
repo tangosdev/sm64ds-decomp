@@ -229,11 +229,7 @@ int daPkn_c::Behavior()
     TrackClosestPlayer();
     old = mState;
     (this->*data_ov084_02130e80[old])();
-    {
-        /* mStateTimer is s16; the ROM counts it as a u16 (ldrh, not ldrsh). */
-        u16 *timer = (u16 *)&mStateTimer;
-        *timer = *timer + 1;
-    }
+    mStateTimer++;
     cur = mState;
     if (old != cur) {
         if (cur == 5) {
@@ -469,8 +465,8 @@ void daPkn_c::StateWake()
 {
     Sound::PlaySub(0x36, 0x7f, 0, 0xcb33, 0);
     if (CheckHits() != 0) return;
-    /* mStateTimer is s16; the ROM compares it as a u16 (ldrh). */
-    if ((u16)mStateTimer <= 0xb) return;
+    if (mStateTimer <= 0xb)
+        return;
     if (!mAnmModel.Finished())
         return;
     mAnmModel.SetAnim((BCA_File *)data_ov084_02130e14.filePtr, 0x40000000, 0x1000, 0);
@@ -502,13 +498,13 @@ void daPkn_c::StateDie()
 
     Sound::PlaySub(0x36, 0x7f, 0, 0xcb33, 0);
     mClsnEnabled = 0;
-    if ((u16)mStateTimer < 0xa) {
+    if (mStateTimer < 0xa) {
         pos.x = mPosX;
         pos.y = mPosY;
         pos.z = mPosZ;
-        pos.x += data_ov084_0213030c[(u16)mStateTimer] * FX_SinIdx((u16)mAngleY >> 4);
-        pos.z += data_ov084_0213030c[(u16)mStateTimer] * FX_CosIdx((u16)mAngleY >> 4);
-        pos.y += data_ov084_02130334[(u16)mStateTimer] << 12;
+        pos.x += data_ov084_0213030c[mStateTimer] * FX_SinIdx((u16)mAngleY >> 4);
+        pos.z += data_ov084_0213030c[mStateTimer] * FX_CosIdx((u16)mAngleY >> 4);
+        pos.y += data_ov084_02130334[mStateTimer] << 12;
         mParticleHandle = (s32)Particle::System::New(mParticleHandle, kPtclPiranhaDeathBurst, pos.x,
                                                      pos.y, pos.z, 0, 0);
     }
@@ -526,7 +522,7 @@ void daPkn_c::StateShrink()
 
     mClsnEnabled = 0;
     scale = mScaleX;
-    if ((u16)mStateTimer == 0) {
+    if (mStateTimer == 0) {
         func_02012694(0x11f, &mCamSpacePosX);
         scale = 0x1000;
     }
@@ -569,7 +565,7 @@ void daPkn_c::StateRegrow()
     int v;
     mClsnEnabled = 0;
     v = mScaleX;
-    if ((u16)mStateTimer == 0)
+    if (mStateTimer == 0)
         v = 0x4cc;
     if (v < 0x1000) {
         v += 0x52;
@@ -722,7 +718,7 @@ void daPkn_c::UpdatePose()
     int lr;
     int scale;
 
-    Vec3_Asr((Vector3 *)&L.v, (Vector3 *)&mPosX, 3);
+    Vec3_Asr((Vector3 *)&L.v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, L.v.x, L.v.y, L.v.z);
     L.saved = data_020a0e68;
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
@@ -745,7 +741,7 @@ void daPkn_c::UpdatePose()
     mHeadClsnOffset.y = data_020a0e68.m[10];
     mHeadClsnOffset.z = data_020a0e68.m[11];
     Vec3_LslInPlace((int *)&mHeadClsnOffset, 3);
-    VEC_Subtract((Vector3 *)&mHeadClsnOffset, (Vector3 *)&mPosX, (Vector3 *)&mHeadClsnOffset);
+    VEC_Subtract(&mHeadClsnOffset, &mPos, &mHeadClsnOffset);
 
     /* Still a hand-indexed FX_SinIdx: through the inline the table base loads
        before mHeadClsnOffset.y and ang[0], and no spelling tried (local, index

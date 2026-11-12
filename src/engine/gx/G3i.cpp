@@ -3,19 +3,30 @@
  *
  * The geometry engine's matrix builders, under the SDK's names with C
  * linkage (include/nitro/gx/g3_util.h; ntrtwl/NitroSDK
- * libraries/gx/src/g3_util.c): G3i_LookAt_ builds a camera basis
- * (right/up2/forward) and streams it to the position-matrix port,
- * G3i_PerspectiveW_ drives the division unit at 0x4000290 to build a
- * perspective projection and streams it to the projection port. Both
- * optionally mirror the matrix into the caller's Matrix4x3.
+ * libraries/gx/src/g3_util.c): G3i_LookAt_ builds a camera basis and loads
+ * it as the position/vector matrix, G3i_PerspectiveW_ runs the divider to
+ * build a perspective projection and loads it as the projection matrix.
+ * Both optionally store the matrix to the caller's as well.
+ *
+ * G3_LoadTexMtxEnv, the TU's first function, selects the texture matrix mode
+ * and loads a 4x4 matrix, the first twelve words shifted left by 4.
+ *
+ * PC port: the port builds this file through port/tools/hostgen.py, which
+ * routes each literal MMIO dereference through the host's register model
+ * (the divider and the geometry ports act on the write). The SDK's ioreg
+ * names are therefore defined here as literal dereferences rather than taken
+ * from nitro/hw/registers.h, whose macros reach the host unrewritten.
+ *
+ * PerspectiveW_ and LookAt_ stream their matrix through a port pointer
+ * bound inside the draw branch: the ROM holds that address in a register
+ * across the divider and VEC calls, and writing reg_G3_MTX_LOAD_* at each
+ * store instead reloads it and grows both functions.
  */
-// G3_LoadTexMtxEnv, the TU's first function, is the Nitro SDK's g3_util.c
-// function of that name: it selects the texture matrix mode and loads a 4x4
-// matrix, the first twelve words shifted left by 4.
 #include "nitro/gx/g3_util.h"
 #include "math/Matrix.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_cp.h"
+#include "nitro/gx/g3imm_cmd.h"
 
 extern "C" {
 void VEC_Normalize(const Vector3 *v, Vector3 *out);
@@ -23,28 +34,45 @@ void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *out);
 Fix12i VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 }
 
-/* The Nitro SDK's G3i_PerspectiveW_: the load flag is a BOOL. Spelled bool,
-   the body tests it differently from the ROM; int reproduces it. */
-void G3i_PerspectiveW_(Fix12i sinF, Fix12i cosF, Fix12i aspect, Fix12i n, Fix12i f, Fix12i scaleW,
-                       int flag, Matrix4x3 *mtxp) {
+#define reg_CP_DIV_NUMER    (*(volatile u64 *)0x04000290)
+#define reg_CP_DIV_DENOM    (*(volatile u64 *)0x04000298)
+#define reg_G3_MTX_MODE     (*(volatile u32 *)0x04000440)
+#define reg_G3_MTX_LOAD_4x4 (*(volatile s32 *)0x04000458)
+#define reg_G3_MTX_LOAD_4x3 (*(volatile s32 *)0x0400045c)
+
+/* The SDK's fx_cp.h inlines: start a 64/32 division without waiting. */
+static inline void FX_DivAsyncImm(fx32 numer, fx32 denom) {
+    reg_CP_DIV_NUMER = (u64)(u32)numer << 32;
+    reg_CP_DIV_DENOM = (u32)denom;
+}
+
+static inline void FX_InvAsyncImm(fx32 denom) {
+    reg_CP_DIV_NUMER = (u64)FX32_ONE << 32;
+    reg_CP_DIV_DENOM = (u32)denom;
+}
+
+/* The Nitro SDK's G3i_PerspectiveW_: the draw flag is a BOOL. Spelled bool,
+   the body tests it differently from the ROM; int reproduces it. The matrix
+   is the SDK's MtxFx44, sixteen words. */
+void G3i_PerspectiveW_(Fix12i fovySin, Fix12i fovyCos, Fix12i aspect, Fix12i n, Fix12i f,
+                       Fix12i scaleW, int draw, Matrix4x3 *mtxp) {
     int *mtx = (int *)mtxp;
-    int tmp;
-    volatile int *port;
-    int xx;
-    s64 q;
-    int zz;
-    int v;
-    int wz;
+    fx32 fovyCot;
+    volatile s32 *port;
+    fx32 xScale;
+    fx64c invNearMinusFar;
+    fx32 zScale;
+    fx32 nearFar2;
+    fx32 wScale;
 
-    tmp = FX_Div(cosF, sinF);
-    if (scaleW != 0x1000)
-        tmp = tmp * scaleW / 0x1000;
+    fovyCot = FX_Div(fovyCos, fovySin);
+    if (scaleW != FX32_ONE)
+        fovyCot = fovyCot * scaleW / FX32_ONE;
 
-    *(volatile u64 *)0x4000290 = (u64)(unsigned)tmp << 32;
-    *(volatile u64 *)0x4000298 = (unsigned)aspect;
-    if (flag) {
-        *(volatile int *)0x4000440 = 0;
-        port = (volatile int *)0x4000458;
+    FX_DivAsyncImm(fovyCot, aspect);
+    if (draw) {
+        reg_G3_MTX_MODE = GX_MTXMODE_PROJECTION;
+        port = &reg_G3_MTX_LOAD_4x4;
     }
     if (mtx) {
         mtx[1] = 0;
@@ -60,125 +88,124 @@ void G3i_PerspectiveW_(Fix12i sinF, Fix12i cosF, Fix12i aspect, Fix12i n, Fix12i
         mtx[13] = 0;
         mtx[15] = 0;
     }
-    xx = FX_GetDivResult();
-    *(volatile u64 *)0x4000290 = (u64)0x1000 << 32;
-    *(volatile u64 *)0x4000298 = (unsigned)(n - f);
-    if (flag) {
-        *port = xx;
+    xScale = FX_GetDivResult();
+    FX_InvAsyncImm(n - f);
+    if (draw) {
+        *port = xScale;
         *port = 0;
         *port = 0;
         *port = 0;
         *port = 0;
-        *port = tmp;
+        *port = fovyCot;
         *port = 0;
         *port = 0;
         *port = 0;
         *port = 0;
     }
     if (mtx) {
-        mtx[0] = xx;
-        mtx[5] = tmp;
+        mtx[0] = xScale;
+        mtx[5] = fovyCot;
     }
-    q = FX_GetDivResultFx64c();
-    if (scaleW != 0x1000)
-        q = q * scaleW / 0x1000;
-    zz = (int)(((f + n) * q + 0x80000000LL) >> 32);
-    v = FX_MUL((n << 1), f);
-    wz = (int)((q * v + 0x80000000LL) >> 32);
-    if (flag) {
-        *port = zz;
+    invNearMinusFar = FX_GetDivResultFx64c();
+    if (scaleW != FX32_ONE)
+        invNearMinusFar = invNearMinusFar * scaleW / FX32_ONE;
+    zScale = (fx32)(((f + n) * invNearMinusFar + 0x80000000LL) >> 32);
+    nearFar2 = FX_MUL(n << 1, f);
+    wScale = (fx32)((invNearMinusFar * nearFar2 + 0x80000000LL) >> 32);
+    if (draw) {
+        *port = zScale;
         *port = -scaleW;
         *port = 0;
         *port = 0;
-        *port = wz;
+        *port = wScale;
         *port = 0;
     }
     if (mtx) {
-        mtx[10] = zz;
-        mtx[14] = wz;
+        mtx[10] = zScale;
+        mtx[14] = wScale;
     }
 }
 
-void G3i_LookAt_(const Vector3 *camPos, const Vector3 *up, const Vector3 *target, bool draw,
-                 Matrix4x3 *mat) {
-    Vector3 forward;
-    Vector3 right;
-    Vector3 up2;
+void G3i_LookAt_(const Vector3 *camPos, const Vector3 *camUp, const Vector3 *target, bool draw,
+                 Matrix4x3 *mtx) {
+    Vector3 vLook;
+    Vector3 vRight;
+    Vector3 vUp;
     Fix12i tx;
     Fix12i ty;
     Fix12i tz;
-    volatile int *mtx;
+    volatile s32 *port;
 
     /* The view's z axis, from the target back toward the camera (the
      * camera looks down -z). */
-    forward.x = camPos->x - target->x;
-    forward.y = camPos->y - target->y;
-    forward.z = camPos->z - target->z;
-    VEC_Normalize(&forward, &forward);
+    vLook.x = camPos->x - target->x;
+    vLook.y = camPos->y - target->y;
+    vLook.z = camPos->z - target->z;
+    VEC_Normalize(&vLook, &vLook);
 
-    VEC_CrossProduct(up, &forward, &right);
-    VEC_Normalize(&right, &right);
+    VEC_CrossProduct(camUp, &vLook, &vRight);
+    VEC_Normalize(&vRight, &vRight);
 
-    VEC_CrossProduct(&forward, &right, &up2);
-
-    if (draw) {
-        *(volatile int *)0x4000440 = 2;
-        mtx = (volatile int *)0x400045c;
-        *mtx = right.x;
-        *mtx = up2.x;
-        *mtx = forward.x;
-        *mtx = right.y;
-        *mtx = up2.y;
-        *mtx = forward.y;
-        *mtx = right.z;
-        *mtx = up2.z;
-        *mtx = forward.z;
-    }
-
-    tx = -VEC_DotProduct(camPos, &right);
-    ty = -VEC_DotProduct(camPos, &up2);
-    tz = -VEC_DotProduct(camPos, &forward);
+    VEC_CrossProduct(&vLook, &vRight, &vUp);
 
     if (draw) {
-        *mtx = tx;
-        *mtx = ty;
-        *mtx = tz;
+        reg_G3_MTX_MODE = GX_MTXMODE_POSITION_VECTOR;
+        port = &reg_G3_MTX_LOAD_4x3;
+        *port = vRight.x;
+        *port = vUp.x;
+        *port = vLook.x;
+        *port = vRight.y;
+        *port = vUp.y;
+        *port = vLook.y;
+        *port = vRight.z;
+        *port = vUp.z;
+        *port = vLook.z;
     }
 
-    if (mat == 0) {
+    tx = -VEC_DotProduct(camPos, &vRight);
+    ty = -VEC_DotProduct(camPos, &vUp);
+    tz = -VEC_DotProduct(camPos, &vLook);
+
+    if (draw) {
+        *port = tx;
+        *port = ty;
+        *port = tz;
+    }
+
+    if (mtx == 0) {
         return;
     }
 
-    mat->r.m[0] = right.x;
-    mat->r.m[1] = up2.x;
-    mat->r.m[2] = forward.x;
-    mat->r.m[3] = right.y;
-    mat->r.m[4] = up2.y;
-    mat->r.m[5] = forward.y;
-    mat->r.m[6] = right.z;
-    mat->r.m[7] = up2.z;
-    mat->r.m[8] = forward.z;
-    mat->t.x = tx;
-    mat->t.y = ty;
-    mat->t.z = tz;
+    mtx->r.m[0] = vRight.x;
+    mtx->r.m[1] = vUp.x;
+    mtx->r.m[2] = vLook.x;
+    mtx->r.m[3] = vRight.y;
+    mtx->r.m[4] = vUp.y;
+    mtx->r.m[5] = vLook.y;
+    mtx->r.m[6] = vRight.z;
+    mtx->r.m[7] = vUp.z;
+    mtx->r.m[8] = vLook.z;
+    mtx->t.x = tx;
+    mtx->t.y = ty;
+    mtx->t.z = tz;
 }
 
 extern "C" void G3_LoadTexMtxEnv(int *m) {
-    *(volatile int *)0x4000440 = 3;
-    *(volatile int *)0x4000458 = m[0] << 4;
-    *(volatile int *)0x4000458 = m[1] << 4;
-    *(volatile int *)0x4000458 = m[2] << 4;
-    *(volatile int *)0x4000458 = m[3] << 4;
-    *(volatile int *)0x4000458 = m[4] << 4;
-    *(volatile int *)0x4000458 = m[5] << 4;
-    *(volatile int *)0x4000458 = m[6] << 4;
-    *(volatile int *)0x4000458 = m[7] << 4;
-    *(volatile int *)0x4000458 = m[8] << 4;
-    *(volatile int *)0x4000458 = m[9] << 4;
-    *(volatile int *)0x4000458 = m[10] << 4;
-    *(volatile int *)0x4000458 = m[11] << 4;
-    *(volatile int *)0x4000458 = m[12];
-    *(volatile int *)0x4000458 = m[13];
-    *(volatile int *)0x4000458 = m[14];
-    *(volatile int *)0x4000458 = m[15];
+    reg_G3_MTX_MODE = GX_MTXMODE_TEXTURE;
+    reg_G3_MTX_LOAD_4x4 = m[0] << 4;
+    reg_G3_MTX_LOAD_4x4 = m[1] << 4;
+    reg_G3_MTX_LOAD_4x4 = m[2] << 4;
+    reg_G3_MTX_LOAD_4x4 = m[3] << 4;
+    reg_G3_MTX_LOAD_4x4 = m[4] << 4;
+    reg_G3_MTX_LOAD_4x4 = m[5] << 4;
+    reg_G3_MTX_LOAD_4x4 = m[6] << 4;
+    reg_G3_MTX_LOAD_4x4 = m[7] << 4;
+    reg_G3_MTX_LOAD_4x4 = m[8] << 4;
+    reg_G3_MTX_LOAD_4x4 = m[9] << 4;
+    reg_G3_MTX_LOAD_4x4 = m[10] << 4;
+    reg_G3_MTX_LOAD_4x4 = m[11] << 4;
+    reg_G3_MTX_LOAD_4x4 = m[12];
+    reg_G3_MTX_LOAD_4x4 = m[13];
+    reg_G3_MTX_LOAD_4x4 = m[14];
+    reg_G3_MTX_LOAD_4x4 = m[15];
 }

@@ -48,6 +48,7 @@
 #include "Ov007Pad.h"
 #include "Ov007Touch.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/ProgressRatio.h"
 
 extern "C" {
 
@@ -103,7 +104,7 @@ extern void *func_ov007_020c9388(int initialState);
 
 /* Writes a stylus touch at the current item's position, in pixels: touch
  * down, both axes valid. */
-void Cursor_TouchItem(Ov007TouchSample *sample) {
+void Cursor_TouchItem(TPData *sample) {
     Ov007Item *item = WORK->itemViews[CURSOR->state->currentState]->item;
     int x = item->posX;
     int y = item->posY;
@@ -678,7 +679,7 @@ void func_ov007_020b3050(void) {
  * it is in state 0xff; a confirm also flips data_ov007_02103364 and
  * replaces this frame's touch sample with a touch on the current item
  * (Cursor_TouchItem). */
-void func_ov007_020b2e64(Ov007TouchSample *sample) {
+void func_ov007_020b2e64(TPData *sample) {
     unsigned int *held;
     int dir;
     int accept;
@@ -762,13 +763,7 @@ void func_ov007_020b2cf0(void) {
         y = dy + (q->screenY >> 12);
     }
     if (ticks <= 4) {
-        if (ticks <= 0) {
-            factor = 0;
-        } else if (ticks >= 4) {
-            factor = 0x1000;
-        } else {
-            factor = FX_DivS32(ticks << 12, 4);
-        }
+        factor = ProgressRatio(ticks, 4);
         factor = 0x1000 - factor;
         easeX = -data_ov007_02103360->nudgeX * factor * 6;
         easeY = -data_ov007_02103360->nudgeY * factor * 6;

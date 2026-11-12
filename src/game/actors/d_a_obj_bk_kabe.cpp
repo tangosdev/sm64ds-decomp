@@ -29,23 +29,14 @@
  *   size-DIFF, 0x60 to 0x54. The compare stays a 0/1 local.
  * - Kill: a Vector3 built from mCamSpacePosX/Y/Z for PlayBank3 is a
  *   size-DIFF, 0x60 to 0x84. The call passes mCamSpacePos.
- * - Kill: Particle::System::NewSimple(kBreakParticle, mPosX, mPosY, mPosZ)
- *   does not compile (int does not convert to Fix12<int>). Fix12<int>
- *   locals are a size-DIFF, 0x60 to 0x90. The scalar extern stays.
  * - Behavior: `if (actorID == kBreakableActor && mBroken)` is a size-DIFF,
  *   0xf0 to 0xe4. The 0/1 local stays.
  * - Behavior: `pos.y = mPosY + kStarPopY` is a size-DIFF, 0xf0 to 0xec.
  *   Y is stored, then increased.
  * - Behavior: assigning mMeshCollider.clipRadius is a size-DIFF, 0xf0 to 0xe8.
  *   dBgW::SetClipRadius stays; that is the call the ROM makes.
- * - Behavior: IsClsnInRange(kClsnRange, 0) does not compile (no conversion
- *   to Fix12<int>). Fix12<int> locals are a size-DIFF, 0xf0 to 0x108. The
- *   scalar extern stays.
  * - InitResources: indexing the row with mVariant, instead of a local, is
  *   a size-DIFF, 0xe8 to 0xf4. idx and idx2 stay.
- * - InitResources: mMeshCollider.SetFile(..., kMeshScale, ...) does not
- *   compile (kMeshScale does not convert to Fix12<int>). A Fix12<int>
- *   local is a size-DIFF, 0xe8 to 0xf4. The scalar extern stays.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -85,10 +76,6 @@ struct BkKabeCollisionFilePtr : SharedFilePtr {
 };
 
 extern KabeFiles data_ov079_02128058[];
-
-
-/* Scalar ABI. Particle__System.h's NewSimple takes Fix12<int> by value, and
- * that spelling does not compile against the ints Kill passes (see above). */
 
 enum {
     kBreakableActor = 0x30, /* BK_KABE00 */
@@ -175,9 +162,7 @@ int daObjBk_Kabe_c::InitResources() {
     UpdateClsnPosAndRot();
     int idx2 = mVariant;
     KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(*data_ov079_02128058[idx2].kcl);
-    ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile(kcl, *(&mClsnMat), kMeshScale, mAngleY,
-                              *(data_ov079_02128058[idx2].clps));
+    mMeshCollider.SetFile(kcl, mClsnMat, kMeshScale, mAngleY, *(data_ov079_02128058[idx2].clps));
     return 1;
 }
 

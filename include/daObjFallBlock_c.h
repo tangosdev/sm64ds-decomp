@@ -140,11 +140,9 @@ struct daObjFallBlock_c : dBgActor_c {
        unaffected.
 
        It is also this class's KEY FUNCTION, the destructor above being inline,
-       so src/_ZN16daObjFallBlock_c4KillEv.cpp emits _ZTV16daObjFallBlock_c,
-       _ZTI16daObjFallBlock_c and the destructor variants alongside the one
-       function it is bound to. objisolate.py reduces the object back to that
-       one 0xc0 .text before eligible.py and rombuild.py judge it -- checked,
-       not assumed: build_pin.verify returns True either way. */
+       so the TU that defines it (src/game/actors/d_a_obj_fall_block.cpp) is
+       the one that emits _ZTV16daObjFallBlock_c, _ZTI16daObjFallBlock_c and
+       the destructor variants. */
     virtual void Kill(); /* slot 31 */
 
     /* Slot 6, this class's own override -- the whole fall-block state

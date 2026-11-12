@@ -1,1 +1,2 @@
-data_023c0000 kind:data(any) addr:0x023c0000
+OSi_IrqThreadQueue kind:data(any) addr:0x023c0000
+SDK_AUTOLOAD_DTCM_START kind:data(any) addr:0x023c0000

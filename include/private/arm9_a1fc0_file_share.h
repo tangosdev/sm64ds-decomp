@@ -1,6 +1,8 @@
 #ifndef ARM9_A1FC0_FILE_SHARE_H
 #define ARM9_A1FC0_FILE_SHARE_H
 
+#include "private/fs_views.h"
+
 /* Views of the wireless file-sharing work block at data_020a1fc0 (the 0x0204
  * cluster, func_02040aa4 .. func_02042668), moved here from func_02040c34.c
  * once func_02040f30, func_020412f0 and func_02041224 needed them too. The
@@ -8,6 +10,8 @@
  * tables below are the ones WBT_GetBlockInfo/WBT_GetBlock take. Plain C types:
  * func_020412f0 and func_02041224 do not include types.h. data_020a2400 is
  * the same address as mArea (data_020a1fc0 + 0x440), a symbol of its own. */
+
+#include "nitro/wm/wm.h"
 
 /* Parent area at +0x440: a pool of three 0xcc0-byte nodes, each holding one
  * registered region. A node moves free -> busy (state 1, loading; func_02041b60)
@@ -21,8 +25,10 @@ typedef struct FileShareNode {
      * size, 0x20-byte name, data); func_02041c2c finds a node by its id */
     unsigned char mRegion[0x34];
     /* 0x38 -- FS_InitFile here; func_02042254 opens, reads and closes the
-     * region's file through it, func_020412f0 refills a page through it */
-    unsigned char mFile[0x44];
+     * region's file through it, func_020412f0 refills a page through it.
+     * func_02041ce0 matches a request against its open extent and
+     * func_02041d28 sizes the registration by it */
+    FSFile mFile;
     int mState; /* 0x7c -- 0 free, 1 loading, 2 ready, 3 releasing */
     /* 0x80 -- func_020412f0: +1 per child reading the region, -1 when it is
      * done; at 0 the node is released */
@@ -59,18 +65,6 @@ typedef struct FileShareNode {
     unsigned char pad_0ac[0x14];
     unsigned char mPages[3][0x400]; /* 0xc0 -- the cached file pages */
 } FileShareNode;
-
-/* mFile's open extent: FSFile prop.file.top and prop.file.bottom (this ROM's
- * FSFile has its prop union at 0x1c; see func_02040f30.cpp). func_02041ce0
- * matches a request against it and func_02041d28 sizes the registration by
- * it. */
-typedef struct FileShareFileExtent {
-    unsigned char pad_00[0x20];
-    int top;    /* 0x20 -- prop.file.top */
-    int bottom; /* 0x24 -- prop.file.bottom */
-} FileShareFileExtent;
-
-#define FILE_SHARE_EXTENT(node) ((FileShareFileExtent *)(node)->mFile)
 
 /* One file-share message: 9 bytes on the air (WBT_PutUserData), 0xc as a slot
  * of FileShareParentArea::mReplies. mKind is 0 for a child's open request,
@@ -134,22 +128,22 @@ typedef struct FileShareChildArea {
     /* 0x000 -- a WBTBlockInfoTable: func_02040c34 points entry i at the 0x28-byte
      * WBTBlockInfo at 0xc0 + i * 0x28; func_02040f30 passes the table to
      * WBT_GetBlockInfo (WBT_GetBlockInfo) */
-    int mBlockInfoTable[0x10];
+    void *mBlockInfoTable[0x10];
     /* 0x040 -- a WBTRecvBufTable: func_02040f30 sets the peer's entry to the
      * receive buffer before WBT_GetBlock (WBT_GetBlock) */
-    int mRecvBufTable[0x10];
+    void *mRecvBufTable[0x10];
     /* 0x080 -- a WBTPacketBitmapTable, WBT_GetBlock's last table: func_02041224
      * points entry 0 at mRecvWork */
-    int mPacketBitmapTable[0x10];
+    void *mPacketBitmapTable[0x10];
     /* 0x0c0 -- the sixteen 0x28-byte WBTBlockInfo mBlockInfoTable points at
      * (func_02040c34) */
     unsigned char mBlockInfo[0x10][0x28];
-    /* 0x340 -- func_02040bb0's WM_ReadStatus copy of the WM status block
-     * (a WMStatus, 0x930 bytes); it reads the aid */
-    unsigned char mStatus[0x930];
+    /* 0x340 -- func_02040bb0's WM_ReadStatus copy of the WM status block;
+     * it reads the aid */
+    WMStatus mStatus;
     /* 0xc70 -- func_02041224 allocates it (about four bytes per packet of
      * mMaxReadSize); func_02040aa4 frees it */
-    int mRecvWork;
+    void *mRecvWork;
     int mMaxReadSize; /* 0xc74 -- func_02041224 grows it to the largest read */
     /* 0xc78 -- func_02040f30: offset of the region being read, as the parent
      * registered it (the tables are 0x20000) */
@@ -167,15 +161,16 @@ typedef struct FileShareWork {
     int mSendBusy;         /* 0x08 -- func_02041930: the port send returned 2 */
     int mState;            /* 0x0c -- 1 here, 2 once ready (func_02040bb0,
                               func_02040f30), 0 at shutdown (func_02040aa4) */
-    int mStateCallback;    /* 0x10 -- stateCallback; called with 0 when mState becomes 2 */
-    int mAllocFunc;        /* 0x14 -- allocFunc; (arg, size, 0) allocates, (arg, 0, ptr)
+    void (*mStateCallback)(int); /* 0x10 -- stateCallback; called with 0 when mState becomes 2 */
+    void *(*mAllocFunc)(void *arg, unsigned int size,
+                        void *ptr); /* 0x14 -- allocFunc; (arg, size, 0) allocates, (arg, 0, ptr)
                               frees (func_02041224, func_02040aa4) */
-    int mAllocArg;         /* 0x18 -- allocArg; first argument to mAllocFunc */
-    int mReadRequest;      /* 0x1c -- child read in flight, an FSFile: func_02041a00
+    void *mAllocArg;                /* 0x18 -- allocArg; first argument to mAllocFunc */
+    struct FSFile *mReadRequest;    /* 0x1c -- child read in flight, an FSFile: func_02041a00
                               sets it, func_02040f30 completes and clears it */
-    int mTable;            /* 0x20 -- func_020424c0: the card header's FNT, FAT and
+    void *mTable;                   /* 0x20 -- func_020424c0: the card header's FNT, FAT and
                               overlay tables, read into one allocation */
-    int mTableSize;        /* 0x24 -- that allocation's size */
+    unsigned int mTableSize;        /* 0x24 -- that allocation's size */
     int mParentPacketSize; /* 0x28 -- parent MP send size; func_02040f30 sets it
                               from the WBT sync's peer packet size + 0xe */
     int mChildPacketSize;  /* 0x2c -- child MP send size, likewise */

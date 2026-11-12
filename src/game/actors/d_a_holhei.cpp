@@ -16,7 +16,7 @@
  * their handlers keep func_ov062_*.
  *
  * Known limits, measured in this TU:
- * - func_ov062_02116d28 reloads mHeld before each pos word.
+ * - UpdateHeldShadow reloads mHeld before each pos word.
  *   func_ov062_02116a08 copies the player's position through one int
  *   pointer; three separate pl->mPos loads change the code.
  * - BuildHoldMatrix hands &mHoldMtx out through this object's
@@ -74,9 +74,6 @@ DecIfAbove0_Short(unsigned short *p); /* local extern: named parameters preserve
 extern signed char gCurrentSublevel;
 extern int AngleDiff(int a, int b);
 int RandomIntInternal(int *s); /* local extern: named parameters preserve @NNN */
-
-void func_ov062_02116010(daHolhei_c *self);
-void func_ov062_02116dbc(daHolhei_c *self);
 }
 
 /* Resource handles owned by this TU. The static initializer constructs the
@@ -186,9 +183,9 @@ int daHolhei_c::InitResources()
     dExtFrameCtrl_c::LoadFile(gHoruheiWalkAnimationFile);
     mVertAccel = -0x3000;
     mTerminalVelocity = -0x1e000;
-    mdCc_c.Init((dActor_c *)this, 0xc8000, 0xfa000, 0x200004, 0x3010);
+    mdCc_c.Init(this, 0xc8000, 0xfa000, 0x200004, 0x3010);
     mModel.speed = 0x1000;
-    mMeshClsn.Init((dActor_c *)this, 0x118000, 0x118000, 0, 0);
+    mMeshClsn.Init(this, 0x118000, 0x118000, 0, 0);
     mHomePosX = mPosX;
     mHomePosY = mPosY;
     mHomePosZ = mPosZ;
@@ -253,7 +250,7 @@ int daHolhei_c::Behavior()
 
     if (mState == &data_ov062_0211ded0 || mState == &data_ov062_0211dee0 ||
         mState == &data_ov062_0211de90 || mState == &data_ov062_0211df00) {
-        func_ov062_02116010(this);
+        HandleCylinderHit();
     }
 
     mdCc_c.Clear();
@@ -262,14 +259,14 @@ int daHolhei_c::Behavior()
 
     dActor_c *held = mHeld;
     if (held != 0 && IsFlagSet(this, 0x4000) && held->mCarryMatrix != 0) {
-        func_ov062_02116d28();
+        UpdateHeldShadow();
     } else {
         mdCc_c.Update();
         mCarryOffsX = 0;
         mCarryOffsY = 0;
         mCarryOffsZ = 0;
         BuildHoldMatrix();
-        func_ov062_02116dbc(this);
+        UpdateShadow();
     }
     return 1;
 }
@@ -323,22 +320,20 @@ void daHolhei_c::BuildHoldMatrix() {
 }
 
 /* Shadow under this actor. Off the ground the radius grows. */
-extern "C" void func_ov062_02116dbc(daHolhei_c *self)
-{
-    self->mShadowMtx = IDENTITY_MATRIX4X3;
-    self->mShadowMtx.m[9] = self->mPosX >> 3;
-    self->mShadowMtx.m[10] = self->mPosY >> 3;
-    self->mShadowMtx.m[11] = self->mPosZ >> 3;
-    if (self->mMeshClsn.IsOnGround() != 0) {
-        self->DropShadowRadHeight(self->mShadowModel, self->mShadowMtx, 0x12c000, 0x32000, 0xf);
+void daHolhei_c::UpdateShadow() {
+    mShadowMtx = IDENTITY_MATRIX4X3;
+    mShadowMtx.m[9] = mPosX >> 3;
+    mShadowMtx.m[10] = mPosY >> 3;
+    mShadowMtx.m[11] = mPosZ >> 3;
+    if (mMeshClsn.IsOnGround() != 0) {
+        DropShadowRadHeight(mShadowModel, mShadowMtx, 0x12c000, 0x32000, 0xf);
     } else {
-        self->DropShadowRadHeight(self->mShadowModel, self->mShadowMtx, 0x12c000, 0x3e8000, 0xf);
+        DropShadowRadHeight(mShadowModel, mShadowMtx, 0x12c000, 0x3e8000, 0xf);
     }
 }
 
 /* Shadow under the held actor. mHeld is reloaded before each word. */
-void daHolhei_c::func_ov062_02116d28()
-{
+void daHolhei_c::UpdateHeldShadow() {
     mShadowMtx = IDENTITY_MATRIX4X3;
     mShadowMtx.m[9] = mHeld->mPosX >> 3;
     mShadowMtx.m[10] = mHeld->mPosY >> 3;
@@ -677,28 +672,25 @@ int daHolhei_c::func_ov062_021161a8() {
    than 0x2000 (45 degrees) off Chuckya's facing, hit flag 0x1000 lets the
    hitter try to grab it; within 0x2000, Chuckya tries to grab the hitter
    (func_ov002_020db5f4). */
-extern "C" void func_ov062_02116010(daHolhei_c *self)
-{
+void daHolhei_c::HandleCylinderHit() {
     u32 id;
     dActor_c *a;
     int angle;
     struct Vector3_16 v;
 
-    id = self->mdCc_c.otherOwner;
-    if (id != 0 &&
-        (a = dActor_c::FindWithID(id)) != 0 &&
-        (self->mdCc_c.hitFlags & 0x10) != 0) {
+    id = mdCc_c.otherOwner;
+    if (id != 0 && (a = dActor_c::FindWithID(id)) != 0 && (mdCc_c.hitFlags & 0x10) != 0) {
         v.x = 0x1000;
         v.y = 0;
         v.z = 0;
-        self->KillByInvincibleChar(v, *(daPly_c *)a, 0);
-        func_02012694(0x125, &self->mCamSpacePosX);
+        KillByInvincibleChar(v, *(daPly_c *)a, 0);
+        func_02012694(0x125, &mCamSpacePosX);
         return;
     }
 
-    self->mFlags &= ~0x80;
+    mFlags &= ~0x80;
 
-    id = self->mdCc_c.otherOwner;
+    id = mdCc_c.otherOwner;
     if (id == 0)
         return;
     a = dActor_c::FindWithID(id);
@@ -707,25 +699,25 @@ extern "C" void func_ov062_02116010(daHolhei_c *self)
     if (!IsPlayerActor(a))
         return;
     daPly_c *player = static_cast<daPly_c *>(a);
-    angle = self->HorzAngleToCPlayer();
-    angle = AngleDiff(angle, self->mAngleY);
+    angle = HorzAngleToCPlayer();
+    angle = AngleDiff(angle, mAngleY);
     if (angle > 0x2000) {
-        if ((self->mdCc_c.hitFlags & 0x1000) == 0)
+        if ((mdCc_c.hitFlags & 0x1000) == 0)
             return;
-        self->mFlags |= 0x80;
-        if (player->TryGrab(*self) == 0)
+        mFlags |= 0x80;
+        if (player->TryGrab(*this) == 0)
             return;
-        self->mHeld = player;
-        self->mdCc_c.flags |= 2;
-        self->mHorzSpeed = 0;
-        ::daHolhei_c_ChangeState(self, &data_ov062_0211dea0);
+        mHeld = player;
+        mdCc_c.flags |= 2;
+        mHorzSpeed = 0;
+        ::daHolhei_c_ChangeState(this, &data_ov062_0211dea0);
         return;
     }
-    if (func_ov002_020db5f4(player, self) == 0)
+    if (func_ov002_020db5f4(player, this) == 0)
         return;
-    self->mHeld = player;
-    self->mHorzSpeed = 0;
-    ::daHolhei_c_ChangeState(self, &data_ov062_0211def0);
+    mHeld = player;
+    mHorzSpeed = 0;
+    ::daHolhei_c_ChangeState(this, &data_ov062_0211def0);
 }
 
 /* 1 on a wall, 2 on a slope steeper than 0x1000, else 0. */

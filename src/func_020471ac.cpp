@@ -2,10 +2,9 @@
 #include "types.h"
 #include "msl/string.h"
 #include "BMD_File.h"
+#include "nitro/os/system.h"
 
 extern "C" {
-
-extern void OS_Terminate(void);
 
 /* The index of the BMD texture called name: the walk over numTextures and
    the 0x14-byte textures records. */

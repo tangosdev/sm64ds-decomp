@@ -34,7 +34,7 @@ int func_02060484(u32 dst, const void *src, u32 len, MIDmaCallback callback, voi
         CARDi_SetTask(func_0206062c);
         return 1;
     }
-    cardi_common.cur_th = data_020a6134.current;
+    cardi_common.cur_th = OSi_ThreadInfo.current;
     func_0206062c(p);
     return p->cmd->result == CARD_RESULT_SUCCESS;
 }

@@ -1,115 +1,96 @@
 #include "types.h"
 #include "private/arm9_wbt.h"
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
+#include "nitro/mi/memory.h"
 extern int WBT_GetOwnAid(void);
 extern void func_02064470(void *self, int code, int idx);
 extern void func_02064554(void *self, int sel, int idx, s16 a3);
-extern void func_02065ba0(int v);
-extern void func_02065bb0(int v);
+extern void func_02065ba0(int size);
+extern void func_02065bb0(int size);
 extern int func_020647d8(void *p, int i);
 extern int func_02064674(void *p, int idx, int dst);
 extern void func_020647a4(void *p, int value);
 
+/* Whether this console's aid is set in a packet's target bitmap. */
+static inline int IsTargeted(u16 bmp) {
+    if (WBT_GetOwnAid() == -1) {
+        return 0;
+    } else if (bmp & (1 << WBT_GetOwnAid())) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
 /* NitroSDK WBT (wireless block transfer): parse one peer's packet into its
- * 0x68-byte record (peer[arg1], +0x1d4) and act on it. arg2 is the packet,
- * arg3 its length; returns the bytes consumed. The parse runs as a field
+ * 0x68-byte record (peer[aid], +0x1d4) and act on it. buf is the packet,
+ * size its length; returns the bytes consumed. The parse runs as a field
  * state machine: command (1), target bitmap (2), command counter (3), then by
  * command the list count (4), packet sizes (5), block id (7), sequence number
  * (8), user-data size (10) and the payload address (9). state goes 1 while
  * parsing and 2 once the record is complete. The record's recv is the
  * per-peer packet bitmap that func_020647d8 / func_02064674 / func_020647a4
  * test, store and mark. The views are in private/arm9_wbt.h. */
-int func_02063ea8(char *arg0, int arg1, int arg2, int arg3)
-{
-    WBTWork *work = (WBTWork *)arg0;
-    int r7;
-    int r6;
+int func_02063ea8(WBTWork *work, int aid, int buf, int size) {
+    int consumed;
+    int field;
     WBTPeerRecord *peer;
     int off;
-    int r8;
-    int sp0;
-    char *sp4;
+    const u8 *cur;
+    char *recv;
 
-    off = arg1 * sizeof(WBTPeerRecord);
-    sp0 = arg3;
-    peer = &work->peer[arg1];
-    r6 = 1;
-    sp4 = (char *)&work->peer[0].recv + off;
-    r7 = 0;
-    r8 = arg2;
+    off = aid * sizeof(WBTPeerRecord);
+    peer = &work->peer[aid];
+    field = 1;
+    /* Not &peer->recv: the cartridge forms the address from the
+       record offset a second time. */
+    recv = (char *)&work->peer[0].recv + off;
+    consumed = 0;
+    cur = (const u8 *)buf;
     peer->state = 1;
-    if (sp0 == 0) {
-        return r7;
+    if (size == 0) {
+        return 0;
     }
-    if (sp0 > 0) {
-        int sp8 = 1;
-        int spC = 0;
-        int sp10 = 1;
-        int sp14 = 0;
-        int sp18 = 3;
-        int sp1C = 1;
-        int sp20 = 5;
-        int sp24 = 0xA;
-        int sp28 = 7;
-        int sp2C = 1;
-        int sp30 = 9;
-        int sp34 = 8;
-        int sp38 = 0xF;
-        int r4 = 4;
-        int fp = 2;
-
-        for (;;) {
-            switch (r6) {
+    if (size > 0) {
+        do {
+            switch (field) {
             case 1:
-                MI_CpuCopy8((const void *)r8, &peer->command, (unsigned int)sp8);
-                r8 += 1;
-                r7 += 1;
-                r6 = fp;
+                MI_CpuCopy8(cur, &peer->command, 1);
+                cur += 1;
+                consumed += 1;
+                field = 2;
                 break;
             case 2:
-            {
-                u16 t;
-                int v;
-                MI_CpuCopy8((const void *)r8, &peer->target_bmp, (unsigned int)fp);
-                r8 += 2;
-                r7 += 2;
-                t = peer->target_bmp;
-                if (WBT_GetOwnAid() == -1) {
-                    v = spC;
-                } else if (t & (sp10 << WBT_GetOwnAid())) {
-                    v = sp10;
-                } else {
-                    v = sp14;
+                MI_CpuCopy8(cur, &peer->target_bmp, 2);
+                cur += 2;
+                consumed += 2;
+                if (!IsTargeted(peer->target_bmp)) {
+                    return consumed;
                 }
-                if (v == 0) {
-                    return r7;
-                }
-                r6 = sp18;
+                field = 3;
                 break;
-            }
             case 3:
             {
-                u8 v;
-                MI_CpuCopy8((const void *)r8, &peer->cmd_counter, (unsigned int)sp1C);
-                v = peer->command;
-                r8 += 1;
-                r7 += 1;
-                switch (v) {
+                u8 cmd;
+                MI_CpuCopy8(cur, &peer->cmd_counter, 1);
+                cmd = peer->command;
+                cur += 1;
+                consumed += 1;
+                switch (cmd) {
                 case 1:
-                    return r7;
+                    return consumed;
                 case 2:
-                    r6 = sp20;
+                    field = 5;
                     break;
                 case 3:
-                    r6 = 4;
+                    field = 4;
                     break;
                 case 11:
                     if (work->cmd.command == 0xA) {
-                        func_02064470(arg0, v, arg1);
+                        func_02064470(work, cmd, aid);
                     }
-                    return r7;
+                    return consumed;
                 case 10:
-                    r6 = sp24;
+                    field = 0xA;
                     break;
                 default:
                 case 0:
@@ -119,130 +100,131 @@ int func_02063ea8(char *arg0, int arg1, int arg2, int arg3)
                 case 7:
                 case 8:
                 case 9:
-                    r6 = sp28;
+                    field = 7;
                     break;
                 }
                 break;
             }
             case 10:
-                MI_CpuCopy8((const void *)r8, &peer->user_data_size, (unsigned int)sp2C);
-                r8 += 1;
-                r7 += 1;
-                r6 = sp30;
+                MI_CpuCopy8(cur, &peer->user_data_size, 1);
+                cur += 1;
+                consumed += 1;
+                field = 9;
                 break;
             case 9:
-                peer->user_data = r8;
-                func_02064554(arg0, peer->command, arg1, 0);
+                peer->user_data = (int)cur;
+                func_02064554(work, peer->command, aid, 0);
                 peer->state = 2;
-                return r7 + 9;
+                return consumed + 9;
             case 4:
-                MI_CpuCopy8((const void *)r8, &peer->num_of_list, (unsigned int)fp);
-                r8 += 2;
-                r7 += 2;
+                MI_CpuCopy8(cur, &peer->num_of_list, 2);
+                cur += 2;
+                consumed += 2;
                 if (peer->command == 3) {
-                    r6 = sp20;
+                    field = 5;
                 }
                 break;
             case 5:
             {
-                u8 v;
-                MI_CpuCopy8((const void *)r8, &peer->peer_packet_size, 2);
-                MI_CpuCopy8((const void *)(r8 + 2), &peer->my_packet_size, 2);
+                u8 cmd;
+                MI_CpuCopy8(cur, &peer->peer_packet_size, 2);
+                MI_CpuCopy8(cur + 2, &peer->my_packet_size, 2);
                 if (WBT_GetOwnAid() != 0) {
                     func_02065ba0(peer->my_packet_size);
                     func_02065bb0(peer->peer_packet_size);
                 }
-                v = peer->command;
-                switch (v) {
+                cmd = peer->command;
+                switch (cmd) {
                 case 2:
-                    func_02064554(arg0, v, arg1, 0);
+                    func_02064554(work, cmd, aid, 0);
                     peer->state = 2;
-                    return r7 + 4;
+                    return consumed + 4;
                 case 3:
                     if (work->cmd.command == 2) {
-                        func_02064470(arg0, v, arg1);
+                        func_02064470(work, cmd, aid);
                     }
-                    return r7 + 4;
+                    return consumed + 4;
                 default:
-                    func_02064554(arg0, 0xF, arg1, 3);
-                    return r7 + 4;
+                    func_02064554(work, 0xF, aid, 3);
+                    return consumed + 4;
                 }
             }
             case 7:
             {
-                u8 v;
-                MI_CpuCopy8((const void *)r8, &peer->block_id, (unsigned int)r4);
-                v = peer->command;
-                r8 += 4;
-                r7 += 4;
-                switch (v) {
+                u8 cmd;
+                MI_CpuCopy8(cur, &peer->block_id, 4);
+                cmd = peer->command;
+                cur += 4;
+                consumed += 4;
+                switch (cmd) {
                 case 8:
-                    func_02064554(arg0, v, arg1, 0);
+                    func_02064554(work, cmd, aid, 0);
                     peer->state = 2;
-                    return r7;
+                    return consumed;
                 case 9:
                 {
-                    int st = work->cmd.command;
-                    if (st == 4) {
+                    int cur_cmd = work->cmd.command;
+                    if (cur_cmd == 4) {
                         if (work->cmd.u.get.block_id == peer->block_id) {
-                            func_02064470(arg0, 5, arg1);
+                            func_02064470(work, 5, aid);
                         }
-                    } else if (st == 6 && work->cmd.u.get.block_id == peer->block_id) {
-                        func_02064470(arg0, 7, arg1);
+                    } else if (cur_cmd == 6 && work->cmd.u.get.block_id == peer->block_id) {
+                        func_02064470(work, 7, aid);
                     }
-                    return r7;
+                    return consumed;
                 }
                 case 4:
                 case 5:
                 case 6:
                 case 7:
-                    r6 = sp34;
+                    field = 8;
                     break;
                 default:
                 case 0:
                 case 1:
                 case 2:
                 case 3:
-                    func_02064554(arg0, sp38, arg1, sp18);
+                    func_02064554(work, 0xF, aid, 3);
                     break;
                 }
                 break;
             }
             case 8:
             {
-                u8 v;
-                MI_CpuCopy8((const void *)r8, &peer->seq_no, (unsigned int)r4);
-                v = peer->command;
-                r8 += 4;
-                r7 += 4;
-                switch (v) {
+                u8 cmd;
+                MI_CpuCopy8(cur, &peer->seq_no, 4);
+                cmd = peer->command;
+                cur += 4;
+                consumed += 4;
+                switch (cmd) {
                 case 4:
                 case 6:
                     peer->state = 2;
-                    return r7;
+                    return consumed;
                 case 5:
                 case 7:
                 {
-                    int st;
-                    peer->user_data = r8;
-                    st = work->cmd.command;
-                    if ((st == 4 || st == 6) && peer->block_id == work->cmd.u.get.block_id &&
-                        (work->cmd.target_bmp & (u16)(1 << arg1)) &&
-                        func_020647d8(sp4, peer->seq_no) == 0) {
-                        if (func_02064674(sp4, peer->seq_no, peer->user_data) == 1) {
-                            func_020647a4(sp4, peer->seq_no);
+                    int cur_cmd;
+                    peer->user_data = (int)cur;
+                    cur_cmd = work->cmd.command;
+                    if ((cur_cmd == 4 || cur_cmd == 6) &&
+                        peer->block_id == work->cmd.u.get.block_id &&
+                        (work->cmd.target_bmp & (u16)(1 << aid)) &&
+                        func_020647d8(recv, peer->seq_no) == 0) {
+                        if (func_02064674(recv, peer->seq_no, peer->user_data) == 1) {
+                            func_020647a4(recv, peer->seq_no);
                         } else {
-                            func_02064554(arg0, 0xF, arg1, 6);
+                            func_02064554(work, 0xF, aid, 6);
                         }
                     }
-                    return r7;
+                    return consumed;
                 }
                 default:
                 case 0:
                 case 1:
                 case 2:
                 case 3:
-                    func_02064554(arg0, sp38, arg1, sp18);
+                    func_02064554(work, 0xF, aid, 3);
                     break;
                 }
                 break;
@@ -250,14 +232,11 @@ int func_02063ea8(char *arg0, int arg1, int arg2, int arg3)
             default:
             case 0:
             case 6:
-                func_02064554(arg0, sp38, arg1, r4);
+                func_02064554(work, 0xF, aid, 4);
                 break;
             }
-            if (r7 >= sp0) {
-                break;
-            }
-        }
+        } while (consumed < size);
     }
-    func_02064554(arg0, 0xF, arg1, 5);
-    return r7;
+    func_02064554(work, 0xF, aid, 5);
+    return consumed;
 }

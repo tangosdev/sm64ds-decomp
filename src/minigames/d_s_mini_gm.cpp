@@ -55,6 +55,7 @@
 #include "decl_Scene.h"
 #include "decl_common.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/g2.h"
 #include "nitro/gx/gx.h"
 #include "nitro/gx/gx_vramcnt.h"
 #include "nitro/gx/gx_load.h"
@@ -64,6 +65,7 @@
 #include "dScene_c.h"
 #include "LevelRng.h"
 #include "SaveData.h"
+#include "nitro/mi/memory.h"
 
 struct OamAttr;
 
@@ -142,7 +144,6 @@ int  func_02013638(int n);
 int  RandomIntInternal(int *seed);
 extern void *LoadFile(int id);
 extern void DecompressLZ16(void *src, void *dst);
-extern void MIi_CpuClear16(u16 val, void *dst, int nbytes);
 
 extern void OamRender10_d_s_mini_gm(int sub, OamAttr *attr, int x, int y, int pal, int prio, int sx,
                                     int sy, int c, int d);
@@ -218,38 +219,39 @@ s32 dScMiniGm_c::InitResources()
     mGfxSlot = 0;
 
     GX::DisableAllBanks();
-    *(volatile u16 *)0x4000304 |= 0x8000;
-    GX_SetBankForTex(1);
-    GX_SetBankForBG(2);
-    GX_SetBankForSubBG(4);
-    GX_SetBankForSubOBJ(8);
-    GX_SetBankForOBJ(0x10);
-    GX_SetBankForTexPltt(0x20);
+    GX_SetDispSelect(GX_DISP_SELECT_MAIN_SUB);
+    GX_SetBankForTex(GX_VRAM_TEX_0_A);
+    GX_SetBankForBG(GX_VRAM_BG_128_B);
+    GX_SetBankForSubBG(GX_VRAM_SUB_BG_128_C);
+    GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_128_D);
+    GX_SetBankForOBJ(GX_VRAM_OBJ_64_E);
+    GX_SetBankForTexPltt(GX_VRAM_TEXPLTT_0_F);
 
     gMainScreenLayers &= ~(DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 |
                            DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ);
     gSubScreenLayers &= ~0x1f;
-    *(volatile u32 *)0x4000000 &= ~0x1f00;
-    *(volatile u32 *)0x4001000 &= ~0x1f00;
-    GX_SetGraphicsMode(1, 0, 1);
-    GXS_SetGraphicsMode(0);
+    GX_SetVisiblePlane(0);
+    GXS_SetVisiblePlane(0);
+    GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_3D);
+    GXS_SetGraphicsMode(GX_BGMODE_0);
 
-    *(volatile u32 *)0x4000000 &= 0xffcfffef;
-    *(volatile u32 *)0x4001000 &= 0xffcfffef;
-    *(volatile u32 *)0x4000000 &= ~0x7000000;
-    *(volatile u32 *)0x4000000 &= ~0x38000000;
+    GX_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
+    GXS_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
+    GX_SetBGCharOffset(0);
+    GX_SetBGScrOffset(0);
     GX_DispOn();
-    *(volatile u32 *)0x4001000 |= 0x10000;
+    GXS_DispOn();
     G3X_SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
     G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
     G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));
     func_020233f4();
 
-    *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 1;
-    *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & 0x43) | 0x410;
-    *(volatile u16 *)0x400000c &= ~0x40;
-    *(volatile u32 *)0x4000018 = 0;
+    G2_SetBG2Priority(1);
+    G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x2000,
+                         GX_BG_CHARBASE_0x10000);
+    G2_BG2Mosaic(false);
+    G2_SetBG2Offset(0, 0);
     SetBg2Offset(0, 0);
 
     f = LoadFile(0x4e);
@@ -284,16 +286,18 @@ s32 dScMiniGm_c::InitResources()
     GX_LoadOBJPltt(f, 0, 0x100);
     Deallocate(f);
 
-    *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 1;
-    *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x404;
-    *(volatile u16 *)0x400100c &= ~0x40;
-    *(volatile u32 *)0x4001018 = 0;
+    G2S_SetBG2Priority(1);
+    G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x2000,
+                          GX_BG_CHARBASE_0x04000);
+    G2S_BG2Mosaic(false);
+    G2S_SetBG2Offset(0, 0);
     SetSubBg2Offset(0, 0);
 
-    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 3;
-    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & 0x43) | 0x4604;
-    *(volatile u16 *)0x400100e &= ~0x40;
-    *(volatile u32 *)0x400101c = mSubBgScrollX & 0x1ff;
+    G2S_SetBG3Priority(3);
+    G2S_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x3000,
+                          GX_BG_CHARBASE_0x04000);
+    G2S_BG3Mosaic(false);
+    G2S_SetBG3Offset(mSubBgScrollX, 0);
     SetSubBg3Offset(mSubBgScrollX, 0);
 
     f = LoadFile(0x53);
@@ -305,18 +309,19 @@ s32 dScMiniGm_c::InitResources()
     GXS_LoadBGPltt(f, 0, 0x200);
     Deallocate(f);
 
-    *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & ~3) | 2;
-    *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & 0x43) | 0x6010;
-    *(volatile u16 *)0x4001008 &= ~0x40;
-    *(volatile u32 *)0x4001010 = mSubBgScrollX & 0x1ff;
+    G2S_SetBG0Priority(2);
+    G2S_SetBG0Control(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,
+                      GX_BG_CHARBASE_0x10000, GX_BG_EXTPLTT_23);
+    G2S_BG0Mosaic(false);
+    G2S_SetBG0Offset(mSubBgScrollX, 0);
     SetSubBg0Offset(mSubBgScrollX, 0);
 
     dst = (char *)G2S_GetBG0CharPtr();
     sp0 = 0;
-    MIi_CpuClear16(sp0, dst, 0x8000);
+    MI_CpuFill16(dst, sp0, 0x8000);
     dst = (char *)G2S_GetBG0ScrPtr();
     sp2 = 0x1f;
-    MIi_CpuClear16(sp2, dst, 0x1000);
+    MI_CpuFill16(dst, sp2, 0x1000);
 
     MiniGm_LoadGroupIcons((char *)this);
 
@@ -441,7 +446,7 @@ void MiniGm_LoadGroupIcons(void *selfv)
                     dstp = scr + destOff;
                     dstp = destOff ? dstp : dstp; /* register-dest pin; arms identical */
                     valA = (u16)fill;
-                    MIi_CpuClear16(valA, dstp, nbytes);
+                    MI_CpuFill16(dstp, valA, nbytes);
                     destOff += 2;
                     off += 1;
                     col += 1;
@@ -470,7 +475,7 @@ void MiniGm_LoadGroupIcons(void *selfv)
                 ch = (char *)G2S_GetBG0CharPtr();
                 scr = ch + (idx / 4) * 0x2400 + (idx % 4) * 0xc0 + destOff;
                 ch = (char *)G2S_GetBG0CharPtr();
-                MIi_CpuCopy32((int *)(ch + 0x8000 + destOff), (int *)scr, copyLen);
+                MI_CpuCopy32(ch + 0x8000 + destOff, scr, copyLen);
                 destOff += 0x400;
             } while (++row < 9);
 
@@ -494,7 +499,7 @@ void MiniGm_LoadGroupIcons(void *selfv)
                     dstp = scr + destOff;
                     dstp = idx ? dstp : dstp; /* register-dest pin; arms identical */
                     valB = (u16)(q + (p + ((idx % 4) * 6 + ((idx / 4) * 0x120 + (idx << 12)))));
-                    MIi_CpuClear16(valB, dstp, nbytes);
+                    MI_CpuFill16(dstp, valB, nbytes);
                     destOff += 2;
                     off += 1;
                     q += 1;

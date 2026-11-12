@@ -588,11 +588,13 @@ s32 dMap_c::Behavior()
             SetSubBg2Offset(0x100 - data_0209f498[gActivePlayerSlot].tx,
                             0x80 - data_0209f498[gActivePlayerSlot].ty);
         }
-        G2x_SetBlendAlpha_((volatile u16 *)0x4001050, 4, 0x28, 4, 0xd);
+        G2S_SetBlendAlpha(4, 0x28, 4, 0xd);
         if (data_0209f498[gActivePlayerSlot].mode != 2)
-            *(volatile u16 *)0x400100c = (u16)((*(volatile u16 *)0x400100c & 0x43) | 0x5300);
+            G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16,
+                                  GX_BG_SCRBASE_0x9800, GX_BG_CHARBASE_0x00000);
         else
-            *(volatile u16 *)0x400100c = (u16)((*(volatile u16 *)0x400100c & 0x43) | 0x5500);
+            G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16,
+                                  GX_BG_SCRBASE_0xa800, GX_BG_CHARBASE_0x00000);
         goto L2a4;
     }
 
@@ -606,7 +608,7 @@ L200: {
     if (!(u8)flagsOr) {
         *(volatile s32 *)0x4001000 =
             (*(volatile s32 *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
-        *(volatile u16 *)0x4001050 = 0;
+        G2S_BlendNone();
     }
     this->mTouchCircleTimer = 0;
     goto L2a4;
@@ -879,10 +881,10 @@ Lb84:
     if (SublevelToLevel(gCurrentSublevel) != -1)
         goto Lbc0;
 Lb9c:
-        *(volatile u16 *)0x400100e = ((0x1f - id) << 8) | ((*(volatile u16 *)0x400100e & 0x43) | 0x4010);
-        goto Lbdc;
+    REG_DB_BG3CNT = ((0x1f - id) << 8) | ((REG_DB_BG3CNT & 0x43) | 0x4010);
+    goto Lbdc;
 Lbc0:
-        *(volatile u16 *)0x400100e = ((0x1f - id) << 8) | ((*(volatile u16 *)0x400100e & 0x43) | 0x10);
+    REG_DB_BG3CNT = ((0x1f - id) << 8) | ((REG_DB_BG3CNT & 0x43) | 0x10);
 Lbdc:
     gSubScreenLayers |= DISPLAY_LAYER_BG3;
     goto Lc00;
@@ -920,9 +922,10 @@ int dMap_c::InitResources()
     u16 *p;
     s32 i;
 
-    *(volatile u16*)0x400100e = (*(volatile u16*)0x400100e & ~3) | 2;
-    *(volatile u16*)0x400100e = (*(volatile u16*)0x400100e & 0x43) | 0x1f10;
-    *(volatile u16*)0x400100e &= ~0x40;
+    G2S_SetBG3Priority(2);
+    G2S_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xf800,
+                          GX_BG_CHARBASE_0x10000);
+    G2S_BG3Mosaic(0);
 
     {
         int id1 = func_0202a980();
@@ -970,7 +973,8 @@ int dMap_c::InitResources()
             SublevelToLevel(gCurrentSublevel) == 4 ||
             (SublevelToLevel(gCurrentSublevel) == 0x13 && gCurrentSublevel == 0x2e) ||
             SublevelToLevel(gCurrentSublevel) == -1) {
-            *(volatile u16*)0x400100e = (u16)(((0x1f - data_ov002_02111148) << 8) | ((*(volatile u16*)0x400100e & 0x43) | 0x4010));
+            REG_DB_BG3CNT =
+                (u16)(((0x1f - data_ov002_02111148) << 8) | ((REG_DB_BG3CNT & 0x43) | 0x4010));
             mMapWidth = 0x100;
             mMapCenterOffset = 0x80;
 
@@ -991,7 +995,8 @@ int dMap_c::InitResources()
             }
             mArrowType = 1;
         } else {
-            *(volatile u16*)0x400100e = (u16)(((0x1f - data_ov002_02111148) << 8) | ((*(volatile u16*)0x400100e & 0x43) | 0x10));
+            REG_DB_BG3CNT =
+                (u16)(((0x1f - data_ov002_02111148) << 8) | ((REG_DB_BG3CNT & 0x43) | 0x10));
             mMapWidth = 0x80;
             mMapCenterOffset = 0x40;
             mMapOriginX = 0;

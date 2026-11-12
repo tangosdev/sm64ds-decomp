@@ -17,6 +17,7 @@
 #include "msl/string.h"
 #include "GX.h"
 #include "nitro/os/tcm.h"
+#include "nitro/os/system.h"
 
 extern "C" {
 extern u32 data_020a4bc8;
@@ -26,7 +27,6 @@ extern u32 data_020a4bdc;
 extern u32 data_020a4be0;
 extern u32 data_020a4be4;
 extern u32 data_020a4be8;
-void OS_Terminate();
 }
 
 #define REBASE(p) ((char *)(p) + base)
@@ -271,20 +271,17 @@ extern "C" void func_020462b4(int *p, int v)
     p[4] = v;
 }
 
-extern "C" void func_02046288(void *self, void *value, int index)
-{
-    ModelComponents *obj = (ModelComponents *)self;
-    BMD_Material *e = &obj->materials[index];
+void ModelComponents::SetMaterialPolygonMode(int mode, int index) {
+    BMD_Material *e = &materials[index];
     e->flags &= ~0x30;
-    e->flags |= (unsigned int)value << 4;
+    e->flags |= mode << 4;
 }
 
-extern "C" void func_02046234(void *a, void *b)
-{
+void ModelComponents::SetPolygonMode(int mode) {
     int i;
-    int count = ((ModelComponents *)a)->modelFile->numMaterials;
+    int count = modelFile->numMaterials;
     for (i = 0; i < count; i++)
-        func_02046288(a, b, i);
+        SetMaterialPolygonMode(mode, i);
 }
 
 extern "C" void func_02046208(void *self, unsigned int value, int index)
@@ -295,101 +292,94 @@ extern "C" void func_02046208(void *self, unsigned int value, int index)
     e->flags |= value << 16;
 }
 
-extern "C" void func_020461b4(void *a, unsigned int b)
-{
+void ModelComponents::SetAlpha(unsigned int alpha) {
     int i;
-    int count = ((ModelComponents *)a)->modelFile->numMaterials;
+    int count = modelFile->numMaterials;
     for (i = 0; i < count; i++)
-        func_02046208(a, b, i);
+        func_02046208(this, alpha, i);
 }
 
-extern "C" void func_02046120(void *self, int a)
-{
-    ModelComponents *obj = (ModelComponents *)self;
+/* The two passes dExtShadowModel_c::RenderAll draws each shadow volume with.
+   The mask pass draws back faces as shadow polygons with polygon ID 0, which
+   marks the stencil; the draw pass draws front faces as shadow polygons
+   with polygonID, which shades what the mask marked. */
+void ModelComponents::SetShadowMask(int alpha) {
     int i;
-    int n = obj->modelFile->numMaterials;
+    int n = modelFile->numMaterials;
     for (i = 0; i < n; i++) {
-        BMD_Material *e = &obj->materials[i];
+        BMD_Material *e = &materials[i];
         e->flags &= 0xc0ffff0f;
         e->flags |= 0x40;
         e->flags |= 0x30;
         e->flags &= ~0x1f0000;
-        e->flags |= a << 16;
+        e->flags |= alpha << 16;
     }
 }
 
-extern "C" void func_02046088(void *self, int a, int b)
-{
-    ModelComponents *obj = (ModelComponents *)self;
+void ModelComponents::SetShadowDraw(int alpha, int polygonID) {
     int i;
-    int n = obj->modelFile->numMaterials;
+    int n = modelFile->numMaterials;
     for (i = 0; i < n; i++) {
-        BMD_Material *e = &obj->materials[i];
+        BMD_Material *e = &materials[i];
         e->flags &= 0xc0ffff0f;
-        e->flags |= b << 24;
+        e->flags |= polygonID << 24;
         e->flags |= 0x80;
         e->flags |= 0x30;
         e->flags &= ~0x1f0000;
-        e->flags |= a << 16;
+        e->flags |= alpha << 16;
     }
 }
 
-extern "C" void func_0204605c(void *self, int value, int index) {
-    ModelComponents *obj = (ModelComponents *)self;
-    BMD_Material *e = &obj->materials[index];
+void ModelComponents::SetMaterialPolygonID(int id, int index) {
+    BMD_Material *e = &materials[index];
     e->flags &= ~0x3f000000;
-    e->flags |= (unsigned int)value << 24;
+    e->flags |= id << 24;
 }
 
-extern "C" void func_02046008(void *a, int b) {
+void ModelComponents::SetPolygonID(int id) {
     int i;
-    int count = ((ModelComponents *)a)->modelFile->numMaterials;
+    int count = modelFile->numMaterials;
     for (i = 0; i < count; i++)
-        func_0204605c(a, b, i);
+        SetMaterialPolygonID(id, i);
 }
 
-extern "C" void func_02045fd4(void *self, unsigned int value, int index) {
-    ModelComponents *obj = (ModelComponents *)self;
-    BMD_Material *e = &obj->materials[index];
+void ModelComponents::SetMaterialDiffuse(unsigned int color, int index) {
+    BMD_Material *e = &materials[index];
     e->diffuseAmbient &= 0xffff8000;
-    e->diffuseAmbient |= value;
+    e->diffuseAmbient |= color;
 }
 
-extern "C" void func_02045f80(void *a, unsigned int b) {
+void ModelComponents::SetDiffuse(unsigned int color) {
     int i;
-    int count = ((ModelComponents *)a)->modelFile->numMaterials;
+    int count = modelFile->numMaterials;
     for (i = 0; i < count; i++)
-        func_02045fd4(a, b, i);
+        SetMaterialDiffuse(color, i);
 }
 
-extern "C" void func_02045f4c(void *self, unsigned int value, int index) {
-    ModelComponents *obj = (ModelComponents *)self;
-    BMD_Material *e = &obj->materials[index];
+void ModelComponents::SetMaterialAmbient(unsigned int color, int index) {
+    BMD_Material *e = &materials[index];
     e->diffuseAmbient &= 0xffff;
-    e->diffuseAmbient |= value << 16;
+    e->diffuseAmbient |= color << 16;
 }
 
-extern "C" void func_02045ef8(void *a, unsigned int b) {
+void ModelComponents::SetAmbient(unsigned int color) {
     int i;
-    int count = ((ModelComponents *)a)->modelFile->numMaterials;
+    int count = modelFile->numMaterials;
     for (i = 0; i < count; i++)
-        func_02045f4c(a, b, i);
+        SetMaterialAmbient(color, i);
 }
 
-extern "C" void func_02045ec4(char *self, unsigned int value, int index)
-{
-    ModelComponents *obj = (ModelComponents *)self;
-    BMD_Material *e = &obj->materials[index];
+void ModelComponents::SetMaterialEmission(unsigned int color, int index) {
+    BMD_Material *e = &materials[index];
     e->specularEmission &= 0xffff;
-    e->specularEmission |= value << 16;
+    e->specularEmission |= color << 16;
 }
 
-extern "C" void func_02045e70(char *self, unsigned int arg1) {
-    ModelComponents *obj = (ModelComponents *)self;
+void ModelComponents::SetEmission(unsigned int color) {
     int i;
-    int count = obj->modelFile->numMaterials;
+    int count = modelFile->numMaterials;
     for (i = 0; i < count; i++)
-        func_02045ec4(self, arg1, i);
+        SetMaterialEmission(color, i);
 }
 
 extern "C" void func_02045e44(void *self, unsigned int value, int index)

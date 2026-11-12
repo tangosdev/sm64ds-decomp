@@ -1,4 +1,6 @@
 #include "types.h"
+#include "nitro/cp/divider.h"
+#include "nitro/cp/sqrt.h"
 #include "nitro/fx/fx.h"
 #include "Ov007Spring.h"
 
@@ -13,9 +15,7 @@ extern int VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 void func_ov007_020c7d60(Ov007Link *link, int r5, int r4) {
     Vector3 d;
     s64 sq;
-    volatile u16 *ime;
-    u16 saved;
-    int sqrt_raw, len, dot, s, rest, *p_sqrt;
+    int sqrt_raw, len, dot, s, rest;
     Vector3 v1, v2;
     int delta;
 
@@ -26,33 +26,25 @@ void func_ov007_020c7d60(Ov007Link *link, int r5, int r4) {
     sq += (s64)(d.y) * (d.y);
     sq += (s64)(d.z) * (d.z);
 
-    ime = (volatile u16 *)0x4000208;
-    saved = *ime;
-    *ime = 0;
-    *(volatile u16 *)0x40002b0 = 1;
-    *(volatile u64 *)0x40002b8 = (u64)sq << 2;
-    *ime;
-    *ime = saved;
+    CP_SetSqrt64((u64)sq << 2);
+    CP_SetDiv64_64((u64)0x1000000 << 32, (u64)sq);
 
-    *(volatile u16 *)0x4000280 = 2;
-    *(volatile u64 *)0x4000290 = (u64)0x1000000 << 32;
-    *(volatile u64 *)0x4000298 = (u64)sq;
+    CP_WaitSqrt();
 
-    while (*(volatile u16 *)0x40002b0 & 0x8000) {}
-
-    p_sqrt = (int *)0x40002b4;
     rest = link->length;
-    sqrt_raw = *p_sqrt;
+    sqrt_raw = CP_GetSqrtResultImm32();
     len = (sqrt_raw + 1) / 2;
 
     delta = len - rest;
     r5 = FX_MUL(delta, r5);
     r5 = -r5;
 
-    while (*(volatile u16 *)0x4000280 & 0x8000) {}
+    CP_WaitDiv();
 
     {
-        s64 t = (s64)sqrt_raw * *(volatile s64 *)0x40002a0;
+        /* The register read, not CP_GetDivResultImm64(): the inline's
+           return temporary takes a different register pair. */
+        s64 t = (s64)sqrt_raw * *(volatile s64 *)REG_DIV_RESULT_ADDR;
         d.x = (int)((t * d.x + (1LL << 44)) >> 45);
         d.y = (int)((t * d.y + (1LL << 44)) >> 45);
         d.z = (int)((t * d.z + (1LL << 44)) >> 45);
