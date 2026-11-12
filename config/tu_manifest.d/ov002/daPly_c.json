@@ -17130,147 +17130,147 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "_ZGVsLevelIntroOff$4408",
+      "from": "_ZGVsLevelIntroOff$4427",
       "to": "_ZGVsLevelIntroOff$4424",
       "evidence": "compiler temp; re-keyed after the full Player data band shifted compiler uniquifiers Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
     {
-      "from": "@4411",
+      "from": "@4430",
       "to": "@4427",
       "evidence": "compiler temp; re-keyed after the full Player data band shifted compiler uniquifiers Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
     {
-      "from": "sLevelIntroOff$4408",
+      "from": "sLevelIntroOff$4427",
       "to": "sLevelIntroOff$4424",
       "evidence": "compiler temp; re-keyed after the full Player data band shifted compiler uniquifiers Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
     {
-      "from": "_ZGVsTalkOff$4626",
+      "from": "_ZGVsTalkOff$4645",
       "to": "_ZGVsTalkOff$4648",
       "evidence": "compiler temp; re-keyed after the full Player data band shifted compiler uniquifiers Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
     {
-      "from": "@4629",
+      "from": "@4648",
       "to": "@4651",
       "evidence": "compiler temp; re-keyed after the full Player data band shifted compiler uniquifiers Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
     {
-      "from": "sTalkOff$4626",
+      "from": "sTalkOff$4645",
       "to": "sTalkOff$4648",
       "evidence": "compiler temp; re-keyed after the full Player data band shifted compiler uniquifiers Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
     {
-      "from": "_ZGVsAnchorOff$6180",
+      "from": "_ZGVsAnchorOff$6192",
       "to": "_ZGVsAnchorOff$6223",
       "evidence": "compiler temp; re-keyed after the full Player data band shifted compiler uniquifiers Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
     {
-      "from": "@6183",
+      "from": "@6195",
       "to": "@6226",
       "evidence": "compiler temp; re-keyed after the full Player data band shifted compiler uniquifiers Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
     {
-      "from": "sAnchorOff$6180",
+      "from": "sAnchorOff$6192",
       "to": "sAnchorOff$6223",
       "evidence": "compiler temp; re-keyed after the full Player data band shifted compiler uniquifiers Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
     {
-      "from": "_ZGVsDoorMsgOff$6208",
+      "from": "_ZGVsDoorMsgOff$6220",
       "to": "_ZGVsDoorMsgOff$6251",
       "evidence": "compiler temp; re-keyed after the full Player data band shifted compiler uniquifiers Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
     {
-      "from": "@6211",
+      "from": "@6223",
       "to": "@6254",
       "evidence": "compiler temp; re-keyed after the full Player data band shifted compiler uniquifiers Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
     {
-      "from": "sDoorMsgOff$6208",
+      "from": "sDoorMsgOff$6220",
       "to": "sDoorMsgOff$6251",
       "evidence": "compiler temp; re-keyed after the full Player data band shifted compiler uniquifiers Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
     {
-      "from": "_ZGVsStarDoorOff$6855",
+      "from": "_ZGVsStarDoorOff$6867",
       "to": "_ZGVsStarDoorOff$6917",
       "evidence": "compiler temp; re-keyed after the full Player data band shifted compiler uniquifiers Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
     {
-      "from": "@6858",
+      "from": "@6870",
       "to": "@6920",
       "evidence": "compiler temp; re-keyed after the full Player data band shifted compiler uniquifiers Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
     {
-      "from": "sStarDoorOff$6855",
+      "from": "sStarDoorOff$6867",
       "to": "sStarDoorOff$6917",
       "evidence": "compiler temp; re-keyed after the full Player data band shifted compiler uniquifiers Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
     {
-      "from": "@1225",
+      "from": "@1244",
       "to": "data_ov002_0210a14c",
       "evidence": "_ZN7daPly_c19func_ov002_020bd600EPhii as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
     {
-      "from": "@1227",
+      "from": "@1246",
       "to": "data_ov002_0210a124",
       "evidence": "_ZN7daPly_c19func_ov002_020bd4e0EPhii as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
     {
-      "from": "@1229",
+      "from": "@1248",
       "to": "data_ov002_0210a054",
       "evidence": "_ZN7daPly_c19func_ov002_020bd4c8EPhii as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
     {
-      "from": "@1231",
+      "from": "@1250",
       "to": "data_ov002_0210a0dc",
       "evidence": "_ZN7daPly_c19func_ov002_020bd4acEPhii as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
     {
-      "from": "@1233",
+      "from": "@1252",
       "to": "data_ov002_0210a534",
       "evidence": "_ZN7daPly_c19func_ov002_020bd480EPhii as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
     {
-      "from": "@1235",
+      "from": "@1254",
       "to": "data_ov002_0210a0b4",
       "evidence": "_ZN7daPly_c19func_ov002_020bd45cEPhii as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
     {
-      "from": "@1237",
+      "from": "@1256",
       "to": "data_ov002_0210a094",
       "evidence": "_ZN7daPly_c19func_ov002_020bd438EPhii as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
     {
-      "from": "@1239",
+      "from": "@1258",
       "to": "data_ov002_0210a40c",
       "evidence": "_ZN7daPly_c19func_ov002_020bd3a0EPhii as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
     {
-      "from": "@1241",
+      "from": "@1260",
       "to": "data_ov002_0210a474",
       "evidence": "_ZN7daPly_c19func_ov002_020bd354EPhii as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
     {
-      "from": "@1243",
+      "from": "@1262",
       "to": "data_ov002_0210a44c",
       "evidence": "_ZN7daPly_c19func_ov002_020bd250EPhii as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
     {
-      "from": "@1245",
+      "from": "@1264",
       "to": "data_ov002_0210a3fc",
       "evidence": "_ZN7daPly_c19func_ov002_020bd20cEPhii as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
     {
-      "from": "@1247",
+      "from": "@1266",
       "to": "data_ov002_0210a3c4",
       "evidence": "_ZN7daPly_c19func_ov002_020bcd38EPhii as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
     {
-      "from": "@1249",
+      "from": "@1268",
       "to": "data_ov002_0210a064",
       "evidence": "_ZN7daPly_c19func_ov002_020bcd18EPhii as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
     {
-      "from": "@1251",
+      "from": "@1270",
       "to": "data_ov002_0210a36c",
       "evidence": "_ZN7daPly_c19func_ov002_020bccfcEPhii as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU."
     },
