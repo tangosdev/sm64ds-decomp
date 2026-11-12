@@ -142,6 +142,10 @@ void apply(char *a, int slot, Rx &x) {
             return;
         }
         if (fuse_of(a) != 0) return;                         // mine is going off by itself already
+        {   // the Bob-omb's own back-home step only parks variants 0, 1 and 5; any other variant it removes through the death table
+            const unsigned char v = ((const unsigned char *)a)[0x3f5];
+            if (!(v < 2 || v == 5)) return;
+        }
         func_ov102_0214baa0(a);                              // I woke it alone: back to sleep at home
         ++g_st.slept;
         if (g_log) std::fprintf(stderr, "[cbomb] slot %d: the owner's Bob-omb sleeps, mine went back home wall=%lld\n", slot, wall_ms());

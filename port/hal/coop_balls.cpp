@@ -33,7 +33,8 @@ namespace {
 enum : int {
     kCls = 220, kBmb = 206,
     kBallSlot0 = 480, kSpawners = 4, kRing = 6,          // virtual slots 480..503 (the Big Bully's three are 505..507)
-    kFreshUnits = 250,                                   // a record this close to the spawner is a ball that was just made
+    kFreshUnits = 250,                                   // owner side: a ball this close to its spawner was just made
+    kCopyUnits = 700,                                    // friend side: the owner's first record may come 100-200 ms late (mover throttle, 4 players)
     kStaleUnits = 600,                                   // a local copy this far from such a record is an old ball in a reused slot
     kRxFreshMs = 400, kCopyGapFrames = 12, kOpportunities = 2,
 };
@@ -47,6 +48,7 @@ bool g_clash = false;
 
 struct Sp { char *a; unsigned uid; short slot; unsigned copy_lf; int opp; bool held_logged; };
 Sp g_sp[kSpawners]; int g_nsp = 0;
+Sp g_prev[kSpawners]; int g_nprev = 0;                 // per-spawner state carried from frame to frame (written back at the END of the frame)
 struct Map { char *a; unsigned uid; };
 Map g_map[kSpawners][kRing];
 bool g_shares[4], g_noshare[4];
@@ -85,6 +87,7 @@ void read_env() {
 
 void reset_level() {
     std::memset(g_sp, 0, sizeof g_sp); g_nsp = 0;
+    std::memset(g_prev, 0, sizeof g_prev); g_nprev = 0;
     std::memset(g_map, 0, sizeof g_map);
     std::memset(g_shares, 0, sizeof g_shares); std::memset(g_noshare, 0, sizeof g_noshare);
     g_lf = 0; g_clash = false;
@@ -138,14 +141,12 @@ void scan() {
     // spawners in slot order: every console numbers them the same
     for (int i = 0; i < nf; ++i)
         for (int j = i + 1; j < nf; ++j) if (found[j].slot < found[i].slot) { Sp t = found[i]; found[i] = found[j]; found[j] = t; }
-    static Sp prev[kSpawners]; static int nprev = 0;
     for (int i = 0; i < nf; ++i) {
         Sp n = found[i]; n.copy_lf = 0; n.opp = 0; n.held_logged = false;
-        for (int k = 0; k < nprev; ++k) if (prev[k].uid == n.uid) { n.copy_lf = prev[k].copy_lf; n.opp = prev[k].opp; n.held_logged = prev[k].held_logged; }
+        for (int k = 0; k < g_nprev; ++k) if (g_prev[k].uid == n.uid) { n.copy_lf = g_prev[k].copy_lf; n.opp = g_prev[k].opp; n.held_logged = g_prev[k].held_logged; }
         g_sp[i] = n;
     }
     g_nsp = nf;
-    std::memcpy(prev, g_sp, sizeof prev); nprev = nf;
     for (int i = 0; i < kSpawners; ++i)
         for (int k = 0; k < kRing; ++k) {
             Map &m = g_map[i][k];
@@ -177,6 +178,7 @@ void assign_mine(int i) {
 // Friend side: hold my spawner and spawn the owner's balls.
 void follow(int i, int owner, unsigned now) {
     Sp &s = g_sp[i];
+    if (g_noshare[owner]) return;                       // that seat sends no balls: my spawner rolls its own and I copy nothing from it
     // 1. a ball the owner just made: spawn my copy at the spawner
     for (int k = 0; k < kRing; ++k) {
         const int slot = kBallSlot0 + i * kRing + k;
@@ -185,13 +187,16 @@ void follow(int i, int owner, unsigned now) {
         const double from_sp = units(s.a, x.x, x.y, x.z);
         Map &m = g_map[i][k];
         if (m.a) {
-            if (from_sp > kFreshUnits || units(m.a, x.x, x.y, x.z) < kStaleUnits) continue;
+            if (from_sp > kCopyUnits || units(m.a, x.x, x.y, x.z) < kStaleUnits) continue;
             // my copy in this slot is an older ball (it outlived the owner's): the owner's new ball takes the slot
             if (g_log) std::fprintf(stderr, "[cball] virtual slot %d: my old ball uid %u is %.0f units from the owner's new one: replaced\n", slot, m.uid, units(m.a, x.x, x.y, x.z));
             _ZN7fBase_c18MarkForDestructionEv(m.a);
             m.a = nullptr; m.uid = 0; ++g_st.replaced;
         }
-        if (from_sp > kFreshUnits) continue;            // already rolling: a late copy would start from the wrong path node
+        if (from_sp > kCopyUnits) {                     // already far down the hill: too late to copy (the pin could not hold a path ball that far off)
+            if (g_log && x.age_ms < 17) std::fprintf(stderr, "[cball] virtual slot %d: the owner's ball is %.0f units from the spawner at its first record here: not copied\n", slot, from_sp);
+            continue;
+        }
         if (s.copy_lf && g_lf - s.copy_lf < (unsigned)kCopyGapFrames) continue;
         char *b = spawn_copy(s);
         if (!b) { ++g_st.copy_fail; continue; }
@@ -201,7 +206,6 @@ void follow(int i, int owner, unsigned now) {
                                 owner, i, m.uid, slot, from_sp, x.age_ms, g_lf, wall_ms());
     }
     // 2. hold my spawner: its timer never reaches 0 while the owner makes the balls
-    if (g_noshare[owner]) return;
     short t = rd16(s.a, 0x100);
     if (t != 0) return;
     ++g_st.held_frames;
@@ -289,6 +293,7 @@ void coop_balls_frame(unsigned now) {
         if (o >= 0 && o < 4 && o != g_my && ((mask >> o) & 1u)) follow(i, o, now);
         else assign_mine(i);                            // mine, or nobody's yet: my spawner runs as the cartridge's
     }
+    std::memcpy(g_prev, g_sp, sizeof g_prev); g_nprev = g_nsp;   // opp / copy_lf / held_logged written above survive to the next frame
     static unsigned last = 0;
     if (g_log && now - last >= 10000u) {
         last = now;
