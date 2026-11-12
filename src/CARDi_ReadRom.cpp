@@ -2,10 +2,10 @@
 #include "types.h"
 #include "nitro/os/system.h"
 #include "nitro/card/card_rom.h"
+#include "nitro/mi/dma.h"
 
 extern "C" {
 
-void MI_StopDma(u32 dmaNo);
 void CARDi_ReadRomSyncCore(CARDiCommon *c);
 
 /* NitroSDK CARDi_ReadRom (card_rom.c): wait out the request in flight and

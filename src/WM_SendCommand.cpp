@@ -3,10 +3,10 @@
 #include "nitro/os/cache.h"
 #include "private/wm_views.h"
 #include "nitro/os/message.h"
+#include "nitro/mi/dma.h"
 
 extern "C" {
 
-extern void MI_DmaCopy32(u32 dmaNo, const void *src, void *dest, u32 size);
 extern int PXI_SendWordByFifo(u32 a, u32 c, u32 b);
 extern OSMessageQueue data_020a89b0;
 

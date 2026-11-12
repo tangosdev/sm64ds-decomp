@@ -30,6 +30,7 @@
 #include "nitro/mi/memory.h"
 #include "nitro/os/system.h"
 #include "nitro/hw/registers.h"
+#include "nitro/mi/dma.h"
 
 /* NitroSDK's inline IME helpers (os/common/interrupt.h): each returns the
  * previous master enable. File-local because an inline body in a shared
@@ -57,7 +58,6 @@ extern void PXI_Init(void);
 extern int PXI_IsCallbackReady(int tag, int proc);
 extern void PXI_SetFifoRecvCallback(int tag, void *callback);
 extern int PXI_SendWordByFifo(u32 tag, u32 data, u32 reply);
-extern void MI_DmaCopy16(unsigned int channel, void *src, void *dst, unsigned int numHalfs);
 extern void SVC_WaitByLoop(int n);
 
 extern CTRDGWork CTRDGi_Work;

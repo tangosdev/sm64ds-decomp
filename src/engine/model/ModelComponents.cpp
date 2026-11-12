@@ -72,6 +72,7 @@
 #include "nitro/gx/g3imm_cmd.h"
 
 #include "nitro/os/cache.h"
+#include "nitro/mi/dma.h"
 
 /* The four-pointer block at BMD_File::skin (UpdateFileOffsets rebases all
    four). */
@@ -141,9 +142,6 @@ void MTX_Scale43_(Mtx43 *m, int x, int y, int z);
 void VEC_Normalize(const Vector3 *a, Vector3 *b);
 void func_020458a8(void *src, void *dst);
 void G3_MultMtx33(void *m);
-void MI_SendGXCommandAsync(u32 dmaNo, const void *src, u32 commandLength, void (*callback)(void *),
-                           void *arg);
-void MI_WaitDma(u32 dmaNo);
 extern VecFx32 data_02099f88;
 extern u32 data_020a4bd4;
 /* Identity, used when Render is given no matrix. */
@@ -158,7 +156,6 @@ void G3_MultMtx43(void *m);
 void MTX_Concat33(void *a, void *b, void *dst);
 void MTX_Copy33To44_(void *a, void *b);
 void G3_LoadTexMtxEnv(int *n);
-void MI_SendGXCommand(u32 dmaNo, const void *src, u32 commandLength);
 }
 
 /* Bone-tree walk at 0x020453c0. UpdateBones forwards here. Samples each
