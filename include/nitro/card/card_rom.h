@@ -2,8 +2,10 @@
 #define NITRO_CARD_ROM_H
 
 /*
- * Card ROM reads, under the NitroSDK's own names (card_rom.c). Each body is
- * still its own file.
+ * Card ROM reads, under the NitroSDK's own names. The bodies are card_rom.c,
+ * in src/engine/card/CARD_Rom.c; the file's own helpers (CARDi_ReadFromCache,
+ * CARDi_ReadEnd, CARDi_SetRomOp, CARDi_SetCardDma, CARDi_OnReadCard,
+ * CARDi_ReadRomSyncCore) are static there, so they are not declared here.
  *
  * The parameters are unnamed on purpose: a named parameter in a shared
  * declaration costs every including C++ file an @NNN number.

@@ -2591,13 +2591,9 @@ src/unnamed/arm9/0206/func_020607e8.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_0206081c.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0206/func_02060890.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_02060918.c	WEAK-refs-only	arm9				1		None		-
-src/CARDi_ReadCard.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_02060b64.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0206/func_02060cac.c	WEAK-refs-only	arm9				1		None		-
-src/CARDi_SetCardDma.c	PURE-C	arm9				1		None		-
-src/CARDi_SetRomOp.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_02060e38.c	WEAK-refs-only	arm9				1		None		-
-src/CARDi_ReadFromCache.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_020610fc.c	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
 src/unnamed/arm9/0206/func_02061138.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0206/func_0206116c.c	PURE-C	arm9				1		None		-
