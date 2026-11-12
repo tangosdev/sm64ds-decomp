@@ -1,8 +1,8 @@
 #include "types.h"
 #include "Ov007StrokePath.h"
 #include "Ov007Picker.h"
+#include "Ov007MenuMem.h"
 
-void func_ov007_020c3d1c(void* p);
 void func_ov007_020c8440(void* p);
 void func_ov007_020c8098(void* p);
 void func_ov007_020c2bf8(void* p);

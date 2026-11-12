@@ -43,6 +43,7 @@
  * MenuMem_SetMaxAllocSizeHook and MenuMem_GetMaxAllocSize.
  */
 #include "nitro/mi/memory.h"
+#include "Ov007MenuMem.h"
 
 extern "C" {
 

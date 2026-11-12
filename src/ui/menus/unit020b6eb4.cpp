@@ -45,6 +45,7 @@
 #include "nitro/cp/context.h"
 #include "nitro/hw/registers.h"
 #include "nitro/gx/gx.h"
+#include "Ov007MenuMem.h"
 
 extern "C" {
 
@@ -97,9 +98,6 @@ extern void ScreenFade_Create(void);
 extern void func_ov007_020c1db0(Ov007Touch *touch, TPData *sample);
 extern void Pad_Update(struct Ov007Pad *pad, void *src);
 extern void func_ov007_020c3bc8(void);
-extern void MenuMem_SetMaxAllocSizeHook(int v);
-extern void MenuMem_SetFreeHook(int v);
-extern void MenuMem_SetAllocHook(int v);
 
 int func_ov007_020b7138(Ov007MenuHooks *hooks, Ov007BootArgs *bootArgs) {
     int flags;
