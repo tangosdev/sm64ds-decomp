@@ -68,11 +68,16 @@ const int kMenuRows = kMenuLastRow - kMenuFirstRow;
    kPlateRows.) */
 const int kPlatePitch = 0x28;
 const int kPlateRows = 0x22;
+/* MENUCUT2 (Tango 11-11, bug 22: with HD textures off the CONTINUE button was cut along its bottom): the rows the three plates
+   really cover. kMenuRows ends at the third touch box's last row (0x97), but the third plate, like the other two, is two rows
+   taller than its box, so drawing kMenuRows sliced its black bottom edge and shadow row off. The drawn plate pieces take this
+   span (the whole third plate); the touch boxes stay the ROM's own. */
+const int kPlateSpanRows = 2 * kPlatePitch + kPlateRows;
 
 int menu_plate_row(int sy)
 {
     const int o = sy - kMenuFirstRow;
-    return o >= 0 && o < kMenuRows && o % kPlatePitch < kPlateRows;
+    return o >= 0 && o < kPlateSpanRows && o % kPlatePitch < kPlateRows;
 }
 
 /* The top screen's two bands, in DS rows. Both measured. */
@@ -138,16 +143,16 @@ void lc_geom_for(int w, int h, LcGeom *o, int record, int high, int boss)
     g.t_lift_h = g.t_h;
     if (g.cy_src > g.ty_src && g.cy_src < g.ty_src + g.t_h)
         g.t_lift_h = g.cy_src - g.ty_src;
-    /* THE MIDDLE, AND THE PLATES IN IT: the largest fraction that fits with 256:112 kept */
+    /* THE MIDDLE, AND THE PLATES IN IT: the largest fraction that fits with 256:114 kept (MENUCUT2: the whole third plate, kPlateSpanRows) */
     const int my0 = g.ty_dst + g.t_h, mh = g.cy_dst - my0;
     if (mh < 4) { *o = g; return; }
     int num, den;
-    if ((long long)w * kMenuRows <= (long long)mh * SUB_W) {
+    if ((long long)w * kPlateSpanRows <= (long long)mh * SUB_W) {
         num = w;
         den = SUB_W;
     } else {
         num = mh;
-        den = kMenuRows;
+        den = kPlateSpanRows;
     }
     if (num < 1) num = 1;
     if (den < 1) den = 1;
@@ -159,7 +164,7 @@ void lc_geom_for(int w, int h, LcGeom *o, int record, int high, int boss)
     g.pnum = num;
     g.pden = den;
     g.pw = SUB_W * num / den;
-    g.ph = kMenuRows * num / den;
+    g.ph = kPlateSpanRows * num / den;
     if (g.pw > w) g.pw = w;
     if (g.ph > mh) g.ph = mh;
     g.px = (w - g.pw) / 2;
@@ -255,7 +260,7 @@ void build_lc(int variant, MenuLayout *L)
         return;
     }
     /* the three plates, BG0 | BG1 of engine B, placed and sampled by the legacy rational */
-    MenuPiece p = menu_piece_make(SRC_SUB, 0, kMenuFirstRow, SUB_W, kMenuRows, MENU_AX_L, MENU_AY_T, 0, 0, 1, 1);
+    MenuPiece p = menu_piece_make(SRC_SUB, 0, kMenuFirstRow, SUB_W, kPlateSpanRows, MENU_AX_L, MENU_AY_T, 0, 0, 1, 1);
     p.layers = MENU_L_BG0 | MENU_L_BG1;
     p.key_backdrop = 1;
     p.row_ok = menu_plate_row;
@@ -465,7 +470,7 @@ void build_lc2(int variant, MenuLayout *L)
         plates_h = 3 * ph + 2 * pgap;
     } else {
         fbw = U(256) / 2;
-        fbh = U(kMenuRows) / 2;
+        fbh = U(kPlateSpanRows) / 2;     /* MENUCUT2: the whole third plate, not cut at its touch box */
         plates_h = fbh;
     }
     /* the ROM's own status box ("Saving file..." / "File saved.") that takes the plates' place while the save runs: drawn at a whole
@@ -523,7 +528,7 @@ void build_lc2(int variant, MenuLayout *L)
         }
     } else if (dimp >= 255) {
         /* the ROM's own plates at 1/2, host-fixed like lc's (S4: no fade for these, they wait for the end of the dim): dest pixel -> source = floor(pixel * 2 uden / unum) */
-        MenuPiece p = menu_piece_make(SRC_SUB, 0, kMenuFirstRow, SUB_W, kMenuRows, MENU_AX_L, MENU_AY_T, 0, 0, 1, 1);
+        MenuPiece p = menu_piece_make(SRC_SUB, 0, kMenuFirstRow, SUB_W, kPlateSpanRows, MENU_AX_L, MENU_AY_T, 0, 0, 1, 1);
         p.layers = MENU_L_BG0 | MENU_L_BG1;
         p.key_backdrop = 1;
         p.row_ok = menu_plate_row;
@@ -533,7 +538,7 @@ void build_lc2(int variant, MenuLayout *L)
         const int pi = menu_add_piece(L, p);
         for (int b = 0; b < 3; ++b) {
             menu_add_hotspot(L, pi, 0, kMenuFirstRow + b * kPlatePitch, SUB_W, 0x20, b);
-            hs_top[b] = py0 + (b * kPlatePitch) * fbh / kMenuRows;
+            hs_top[b] = py0 + (b * kPlatePitch) * fbh / kPlateSpanRows;
         }
     }
     if (arrow && show && (planks || dimp >= 255)) {
@@ -607,10 +612,10 @@ extern "C" void hal_lc_trace(int w, int h, int frame, int composed)
  * Asserts the composed picture over the shapes the option can be asked for: both framebuffer tiers and the five
  * aspects the launcher offers. It solves the REAL recipe and inverts through the REAL menu_inverse, the two
  * functions the draw and the stylus run, and needs no game state (variant 1).
- *   S1 the four corners of the PLATE rectangle invert to within ONE DS pixel of DS (0,0x28), (255,0x28), (0,0x97),
- *      (255,0x97) and read INSIDE.
+ *   S1 the four corners of the PLATE rectangle invert to within ONE DS pixel of DS (0,0x28), (255,0x28), (0,0x99),
+ *      (255,0x99) and read INSIDE.
  *   S2 one pixel outside each of its four edges reads OUTSIDE.
- *   S3 the plate rectangle keeps 256:112 within a pixel, fits between the two text bands, and the bands neither
+ *   S3 the plate rectangle keeps 256:114 within a pixel, fits between the two text bands, and the bands neither
  *      overlap each other nor leave the picture.
  *   S4 each of the menu's own touch boxes lands inside the plate rectangle and its centre inverts back into that
  *      same DS box. */
@@ -644,9 +649,9 @@ extern "C" int hal_menu_lc_selftest(void)
                 inv(x1, g.py);
                 if (!in || dx < SUB_W - 2 || dy > kMenuFirstRow + 1) ok = 0;
                 inv(g.px, y1);
-                if (!in || dx > 1 || dy < kMenuLastRow - 2) ok = 0;
+                if (!in || dx > 1 || dy < kMenuFirstRow + kPlateSpanRows - 2) ok = 0;
                 inv(x1, y1);
-                if (!in || dx < SUB_W - 2 || dy < kMenuLastRow - 2) ok = 0;
+                if (!in || dx < SUB_W - 2 || dy < kMenuFirstRow + kPlateSpanRows - 2) ok = 0;
             }
             if (!ok) fails[nf++] = '1';
             ok = 1;
@@ -665,9 +670,9 @@ extern "C" int hal_menu_lc_selftest(void)
             ok = 1;
             if (g.pw < 1 || g.ph < 1) ok = 0;
             else {
-                const long long l = (long long)g.pw * kMenuRows;
+                const long long l = (long long)g.pw * kPlateSpanRows;
                 const long long r = (long long)g.ph * SUB_W;
-                const long long tol = (long long)SUB_W + kMenuRows;
+                const long long tol = (long long)SUB_W + kPlateSpanRows;
                 if (l - r > tol || r - l > tol) ok = 0;
             }
             if (g.px < 0 || g.py < g.t_h || g.px + g.pw > w || g.py + g.ph > g.cy_dst) ok = 0;

@@ -659,13 +659,18 @@ int add_plank(MenuLayout *L, int img, const PauseRect &r, int bx, int by, int bw
 /* PAUSEFULL1: the ROM's own plate as one element: the engine-B rows of its box (the plate is BG1 tiles, Stage::UpdateMenuButtons recolours
    them with the palette bank of the chosen plate, so the lit look is the ROM's own), keyed on the backdrop, stretched over the slot rect. The
    click maps back into the ROM's own box. */
+/* MENUCUT2 (Tango 11-11, bug 22's family: without the HD UI mod the plates were cut along their bottom): a ROM plate is two rows taller than
+   its 0x20 row touch box (its black bottom edge and its shadow row, the same plate art as the save screen's, hal/menu_recipe_lc.cpp
+   kPlateRows), so the piece takes those two rows too and its host rect grows by the same share; the click still maps into the ROM's box */
+const int kRomPlateFoot = 2;
 int add_rom_piece(MenuLayout *L, const PauseRect &r, int bx, int by, int bw, int bh)
 {
-    MenuPiece p = menu_piece_make(SRC_SUB, bx, by, bw, bh, MENU_AX_L, MENU_AY_T, 0, 0, 1, 1);
+    const int sh = bh == 0x20 ? bh + kRomPlateFoot : bh;
+    MenuPiece p = menu_piece_make(SRC_SUB, bx, by, bw, sh, MENU_AX_L, MENU_AY_T, 0, 0, 1, 1);
     p.layers = MENU_L_BG0 | MENU_L_BG1 | MENU_L_OBJ;
     p.key_backdrop = 1;
     p.touch = 1;
-    p.fixdest = 1; p.fx = (short)r.x; p.fy = (short)r.y; p.fw = (short)r.w; p.fh = (short)r.h;
+    p.fixdest = 1; p.fx = (short)r.x; p.fy = (short)r.y; p.fw = (short)r.w; p.fh = (short)(r.h * sh / bh);
     return menu_add_piece(L, p);
 }
 

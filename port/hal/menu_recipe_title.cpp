@@ -116,6 +116,7 @@ struct Chore {
     int swap_lv;         /* TITLEUI1: that level as the ROM holds it (0..0x1000), for the trace */
     int leave_w;         /* GLITCHFIX1: the ROM's white fade on the way out of the main page (top-state 6 to the file select / Rec Room), 0..255 whiteness */
     int head_t;          /* GLITCHFIX1: ticks since the intro's head arrived (its entrance lerp at rest), -1 = not yet */
+    int leave_ds;        /* MENUCUT2: leave_w, and the ROM's held white once it has reached it (top-state 7, the page not yet changed); the DS-art page's code pieces only */
 } g_ch;
 static int g_press_tick;      /* INTRO2: a touch / click went into the ROM this tick */
 /* INTRO2: the swap (sw_t counts it) is the logo's 2 s trip in the intro and the planks' own rise on a return; the planks start at their own tick */
@@ -151,6 +152,7 @@ struct TitleFacts {
     int sc_on;                /* TITLE092: this frame's 3D was drawn as the full-canvas scene (g_sc), and sc_T is its transform */
     float sc_K, sc_Tx, sc_Ty, sc_S;
     int pg_top, pg_elem;      /* NAME1: the ROM's top-state and element machine of this tick (-1 = not built) */
+    short plate_a[3];         /* MENUCUT2: the ROM's own alpha (0..31) of the DS plate sprite in each plank slot (0 = the MP slot, 1 ADVENTURE, 2 REC ROOM), 31 = not seen */
 };
 static_assert(sizeof(TitleFacts) <= ONL_FACTS_OFF, "TitleFacts must leave the tail of MenuFacts.blob to the online facts");
 thread_local const TitleFacts *t_f = 0;     /* set for the length of one build() */
@@ -361,6 +363,7 @@ static bool file_page_up()
 bool file_arrow_up() { return file_page_up() && menu_hostimg_ready(MENU_IMG_ARROW_ORANGE); }
 
 bool wrench_hd_ready();      /* HDSELICON1: below, beside wrench_dx */
+bool ds_plate_skip(char *o); /* MENUCUT1: below, beside scene_sprite_xf */
 int title_skip(char *o)
 {
     if (*(unsigned char *)(o + 0x4e) == 0x21 && file_arrow_up()) {
@@ -395,6 +398,9 @@ int title_skip(char *o)
        of the layer, is left out of the submit and the layer can stop above the plates; the main page only */
     if (*(unsigned char *)(o + 0x4e) == 0x21 && main_page_skip_active() && !(menu_hostimg_ready(MENU_IMG_ARROW_UP) && menu_hostimg_ready(MENU_IMG_ARROW_DOWN) &&
         menu_hostimg_ready(MENU_IMG_BTN_MP) && menu_hostimg_ready(MENU_IMG_BTN_ADV) && menu_hostimg_ready(MENU_IMG_BTN_REC))) return 1;
+    /* MENUCUT1: with the DS's own plates in the main menu's full-canvas scene, a plate a code drawn plank stands in for (ONLINE / SOLO in the MP slot,
+       ADVENTURE ONLINE, VS) is not submitted, so it never shows around or under that plank */
+    if (ds_plate_skip(o)) return 1;
     static int trace = -1;
     static unsigned skipk;
     if (trace < 0) {
@@ -753,6 +759,8 @@ static bool egg_page_ok(const MenuLayout *L, bool intro)
     return !(of && of->scr != ONL_SCR_NONE);
 }
 
+bool scene_now();                              /* TITLE092: below */
+MenuPiece scene_layer(const MenuLayout *L);
 void build_main(MenuLayout *L, bool intro)
 {
     int egg_piece = -1, egg_ds = 0;      /* EGG1: the logo piece of this page (egg_ds: the DS backdrop, its logo box) */
@@ -829,6 +837,15 @@ void build_main(MenuLayout *L, bool intro)
     if (t_f && t_f->ch.mode == CH_INTRO && t_f->ch.sw_t >= 0 && !t_f->ch.skip && t_f->ch.sw_t < 9) ent_a = (t_f->ch.sw_t + 1) * 255 / 9;
     if (t_f && t_f->ch.mode == CH_INTRO && t_f->ch.sw_t < 0 && !t_f->ch.skip && t_f->ch.ct >= CH_LOGO_POP + CH_BOUNCE_LEN) ent_a = 1;      /* before the swap the head is still off the picture: nothing of the layer shows */
     if (ent_a < 255) face.alpha = (uint8_t)ent_a;
+    /* MENUCUT1: when this tick's 3D was drawn as the page's full-canvas scene (scene_main_ds: the head at this piece's own transform, the plates and
+       the wrench whole at their own places) the whole 3D layer is the one element, and the head, wrench and plate pieces below only map clicks. The
+       cut pieces stay for a tick the scene did not draw (SM64DS_TITLE_WIDE=0). */
+    const bool sc = scene_now();
+    if (sc) {
+        MenuPiece s3 = scene_layer(L);
+        if (ent_a < 255) s3.alpha = (uint8_t)ent_a;
+        menu_add_piece(L, s3);
+    } else
     menu_add_piece(L, face);
     MenuPiece head = menu_piece_make(SRC_TOP_PIC, 20, 0, 156, 140, MENU_AX_C, MENU_AY_T, tune(2, -18), tune(3, 46), hk, hd);
     head.touch = 1; head.nodraw = 1;
@@ -838,7 +855,7 @@ void build_main(MenuLayout *L, bool intro)
     if (ent_a < 255) wr.alpha = (uint8_t)ent_a;
     if (settings_page_press_look() == 2) { wr.dy = 1; wr.dx = (short)(wrench_dx(L) - 1); }   /* HUDMENU2 (H4): the wrench sinks while the press hold of a pad / key confirm runs */
     const bool wr_hd = wrench_hd_ready();      /* HDSELICON1 */
-    if (wr_hd) wr.nodraw = 1;
+    if (wr_hd || sc) wr.nodraw = 1;            /* MENUCUT1: the scene drew the wrench */
     const int iwr = menu_add_piece(L, wr);
     if (wr_hd) add_wrench_hd(L, wr.dx, wr.dy, ent_a);
     static const int kPlateId[3] = { 1, 0, 2 };                      /* the ROM's element ids: VS, ADVENTURE, REC ROOM */
@@ -861,7 +878,15 @@ void build_main(MenuLayout *L, bool intro)
            in crossed with its neighbour and cut by the window's edge (VS over SOLO). The ROM's own plate art is not in this picture (it is under the
            code plank), so nothing of the ROM's arrival is lost; a touch during it is not taken by the ROM anyway. */
         const Box rb = rest_box(kPlateId[k], bx);
-        if (online_plank(L, k, rb, 0, 0, cur == kPlateId[k], cur == kPlateId[k] && prs, !ghost, &w1000, ghost ? fk : -1)) continue;   /* NAME1: ONLINE / ADVENTURE ONLINE / VS */
+        /* MENUCUT2 (bug 11): on a choice the ROM fades the plates not chosen out by their own alpha (31 to 0 over about 9 ticks: ADVENTURE went
+           while REC ROOM stayed); a code plank standing in for one of them takes the same fade, and is gone when the ROM's plate is */
+        const int pa = (sc && t_f && t_f->plate_a[k] < 31) ? (t_f->plate_a[k] < 0 ? 0 : t_f->plate_a[k]) : 31;
+        if (pa == 0) {
+            int kd = ONL_K_ONLINE, w0 = 1000;
+            menu_online_plank_state(onl_facts_of(L), k, &kd, &w0);
+            if (kd == ONL_K_ONLINE || kd == ONL_K_SOLO || kd == ONL_K_ADV_ONLINE || kd == ONL_K_VS) continue;
+        }
+        if (online_plank(L, k, rb, 0, pa < 31 ? pa * 255 / 31 : 0, cur == kPlateId[k], cur == kPlateId[k] && prs, !ghost, &w1000, ghost ? fk : -1)) continue;   /* NAME1: ONLINE / ADVENTURE ONLINE / VS */
         if (planks) {
             /* ASSET2: a plank drawn at the window's resolution over the ROM's own box (the 3D plate is not drawn: its
                wallpaper object is skipped at submit and its sprite is not in any piece). 40 units tall (the box height),
@@ -898,6 +923,7 @@ void build_main(MenuLayout *L, bool intro)
             const int dhf = 52 * un / ud, cx = L->w / 2 + (kPlateX[k] - 128 + kPlateW[k] / 2) * un / ud;
             pl.fixdest = 1; pl.fx = (short)(cx - dwf / 2); pl.fy = (short)(L->h - dhf); pl.fw = (short)dwf; pl.fh = (short)dhf;
         }
+        if (sc) pl.nodraw = 1;      /* MENUCUT1: the scene drew the plate itself, whole and at its own place (turning: scene_sprite_xf) */
         if (ghost) pl.touch = 0;
         const int ip = menu_add_piece(L, pl);
         if (!ghost) hot(L, ip, &kPlateId[k], 1);
@@ -952,10 +978,29 @@ void build_main(MenuLayout *L, bool intro)
         }
     }
     const Chore cs = t_f ? t_f->ch : Chore();
+    /* MENUCUT1: the head's entrance fade (INTRO2) is now the whole 3D layer's, the DS plates and the wrench with it, so the code planks and the arrow
+       take it too and the lower page fades in as one */
+    if (sc && ent_a < 255) swap_fade_host(L, np_swap, ent_a);
     if (cs.swap_a >= 0) swap_fade_host(L, np_swap, cs.swap_a);      /* TITLEART1: the code planks and the arrow take the ROM's swap fade */
+    /* MENUCUT2 (bug 11, Tango 11-11: after REC ROOM the ONLINE plank and the blue arrow stayed on top of the white fade): the way out to the file select
+       or the Rec Room whitens the ROM's own picture with the same brightness fade as the face swap (Chore::leave_w, GLITCHFIX1); the HD page lays a
+       white veil over everything for it, this page is the ROM's picture, so the code drawn pieces take it the way they take the swap's */
+    if (cs.leave_ds > 0) swap_fade_host(L, np_swap, 255 - (cs.leave_ds > 255 ? 255 : cs.leave_ds));
+    if (hal_menu_trace_on() && (ent_a < 255 || cs.swap_a >= 0 || cs.leave_ds > 0 || prs)) {     /* MENUCUT2: the lower page's fades, piece by piece */
+        unsigned lv = 0;
+        if (t_f)
+            for (int j = 0; j < t_f->nbox; ++j)
+                if (t_f->bx[j][0] >= 0 && t_f->bx[j][0] <= 2 && ((t_f->live >> j) & 1)) lv |= 1u << t_f->bx[j][0];
+        fprintf(stderr, "[entfade] f%d sc %d ent_a %d swap_a %d sw_t %d leave_ds %d cur %d prs %d live %x plate_a %d %d %d:", t_f ? t_f->frame : -1, sc ? 1 : 0, ent_a, cs.swap_a,
+                cs.sw_t, cs.leave_ds, cur, prs, lv, t_f ? t_f->plate_a[0] : -1, t_f ? t_f->plate_a[1] : -1, t_f ? t_f->plate_a[2] : -1);
+        for (int i = np_swap; i < L->np; ++i)
+            fprintf(stderr, " %d/src%d/a%d/nd%d/c%d", i, (int)L->p[i].src, (int)L->p[i].alpha, (int)L->p[i].nodraw, L->p[i].custom ? 1 : 0);
+        fprintf(stderr, "\n");
+    }
     const int np_ov = L->np;
     { const OnlFacts *of = onl_facts_of(L); online_overlays(L, true, of && of->on); }     /* NAME1: the ? button and the modal screen */
     { const OnlFacts *of = onl_facts_of(L); if (cs.swap_a >= 0 && !(of && of->scr != ONL_SCR_NONE)) swap_fade_host(L, np_ov, cs.swap_a); }     /* TITLEART1: the ? too */
+    { const OnlFacts *of = onl_facts_of(L); if (cs.leave_ds > 0 && !(of && of->scr != ONL_SCR_NONE)) swap_fade_host(L, np_ov, 255 - (cs.leave_ds > 255 ? 255 : cs.leave_ds)); }     /* MENUCUT2: and the way out */
     if (cs.swap_a >= 0 && hal_menu_trace_on()) fprintf(stderr, "[swapfade-host] f%d level %d alpha %d\n", t_f ? t_f->frame : -1, cs.swap_lv, cs.swap_a);      /* TITLEART2 */
     {
         static const int kDsLogo[4] = { 11, 21, 247, 141 };      /* EGG1: the ROM logo's letters on its upper screen (measured on the 4:3 picture, out/EGG1) */
@@ -1078,7 +1123,7 @@ void chore_step(int variant, int top, int elem, int req)
     const bool fam = variant == V_INTRO || variant == V_MAIN;
     if (!fam) {
         g_face_swap = 0;
-        c.in_fam = 0; c.mode = CH_NONE; c.prev_variant = variant; c.leave_w = 0;
+        c.in_fam = 0; c.mode = CH_NONE; c.prev_variant = variant; c.leave_w = 0; c.leave_ds = 0;
         if (variant == V_ATTRACT && data_ov007_0210342c) {
             const char *sp = *(const char *const *)((const char *)data_ov007_0210342c + 8);
             c.attract_t = sp ? *(const int *)(sp + 0xc) : 0;
@@ -1190,6 +1235,14 @@ void chore_step(int variant, int top, int elem, int req)
     if (!g_face_swap && top == 6 && elem == 0) {
         const int lv = rom_swap_level();
         if (lv > 0) c.leave_w = (lv * 255 + 0x800) / 0x1000;
+    }
+    /* MENUCUT2 (bug 11): once the white is complete the ROM moves to top-state 7 and holds it until the next page is up (f639 on a REC ROOM
+       press, out/MENUCUT2); leave_w is 0 there, so the DS-art page's code planks and arrow came back at full strength over the white for
+       those ticks. leave_ds keeps the white for them; the HD page (leave_w, its veil) is untouched. */
+    c.leave_ds = c.leave_w;
+    if (!g_face_swap && top == 7 && elem == 0) {
+        const int lv = rom_swap_level();
+        if (lv > 0) c.leave_ds = (lv * 255 + 0x800) / 0x1000;
     }
 #ifndef PORT_ROM_CLEAN
     { static int tr = -1; if (tr < 0) tr = getenv("SM64DS_GF1_TRACE") ? 1 : 0;     /* GLITCHFIX1 proof instrument */
@@ -1513,6 +1566,21 @@ SceneT scene_main()
     t.K = (float)stune(0, 1050) / 1000.f;
     t.Tx = (float)stune(1, 0);
     t.Ty = (float)stune(2, -12);
+    return t;
+}
+/* MENUCUT1 (Tango 11-11, without the HD UI mod at 4:3: "things go through invisible lines where parts were cut out"): THE MAIN MENU WITH THE DS'S
+   OWN ART AS THE SAME FULL-CANVAS SCENE. That page used to cut the finished lower screen in two at DS row 140: rows 0..139 (the head, star and
+   sparkles) as one piece at 2/3 size, rows 140..191 as three plate rects at full size. Anything that crossed row 140 was sliced there: the
+   chin when the idle head dipped (it reaches row 146), a plate's corner when it wobbled. Now the head, star and sparkles are drawn by this transform
+   (the old piece's own: 2/3 of the DS size, the layer's top left at canvas x = centre - 128 * K + dx, y = dy, the SM64DS_TITLE_TUNE knobs 0..3 as
+   before), and the plates and the wrench are sprite objects the 3D draws whole at their own places (scene_sprite_xf), so nothing is cut. */
+SceneT scene_main_ds()
+{
+    const int n = tune(0, 2), d = tune(1, 3);
+    SceneT t;
+    t.K = (n > 0 && d > 0) ? (float)n / (float)d : 2.f / 3.f;
+    t.Tx = (float)(tune(2, -18) + 20);
+    t.Ty = (float)tune(3, 46) - 96.f + 96.f * t.K;
     return t;
 }
 /* the press page (top 4): the ROM grows the head to 1.345 times; the scene is drawn at the main menu's step divided by that growth and
@@ -2258,6 +2326,8 @@ int menu_title_up(int scene_id)
 }
 
 /* INT2: THE TITLE'S ROM FACTS for build(), once per tick on the logic thread after menu_title_up (so the choreography clock is this tick's) */
+/* MENUCUT2: each plank slot's DS plate alpha (0..31) as the ROM submitted it, and the title counter it was seen at (ds_plate_skip writes them) */
+static int g_ds_plate_a[3] = { 31, 31, 31 }, g_ds_plate_fr[3] = { -9, -9, -9 };
 void menu_title_facts(MenuFacts *f)
 {
     TitleFacts tf;
@@ -2287,6 +2357,10 @@ void menu_title_facts(MenuFacts *f)
     if (hal_menu_trace_on()) { static int lw = -1; if (tf.wz != lw) { lw = tf.wz; fprintf(stderr, "[filewide] zoom permille %d (active %dx%d present %dx%d)\n", tf.wz, ntr::active_w, ntr::active_h, ntr::present_w(), ntr::present_h()); } }
     tf.sc_on = (tf.wide3d && g_sc.on && data_ov007_0210342c && g_sc.frame + 1 >= data_ov007_0210342c[0]) ? 1 : 0;   /* the callback ran in this tick's Render (the counter moved on once since) */
     tf.sc_K = g_sc.T.K; tf.sc_Tx = g_sc.T.Tx; tf.sc_Ty = g_sc.T.Ty; tf.sc_S = g_sc.T.S;
+    for (int k = 0; k < 3; ++k) {     /* MENUCUT2: a slot's plate alpha counts while it was seen this tick or the one before */
+        const int fr = data_ov007_0210342c ? data_ov007_0210342c[0] : 0;
+        tf.plate_a[k] = (short)((tf.sc_on && fr - g_ds_plate_fr[k] >= 0 && fr - g_ds_plate_fr[k] <= 1 && g_ds_plate_a[k] < 31) ? g_ds_plate_a[k] : 31);
+    }
     tf.toy_v = 0;
     {
         static int last_v = -1, last_e = 0, dd_chain = 0, dd_e = 0, was_dd = 0, out_e = 0, dd_live_c = 0;
@@ -2575,8 +2649,7 @@ bool title_scene_cb(float xf[4])
         T = scene_main();
         break;
     case V_MAIN:
-        if (!pc) return false;
-        T = scene_main();
+        T = pc ? scene_main() : scene_main_ds();      /* MENUCUT1: the DS-art page is a scene too (scene_main_ds) */
         break;
     case V_TOY:
         if (!pc) {
@@ -2617,6 +2690,29 @@ bool title_scene_cb(float xf[4])
    pixels, o + 4 / o + 8); the scene transform does not touch sprite objects, so each is placed here: the wrench pinned to the top right
    corner of the canvas (and lifted out of the top as the face is pressed), the drawing page's buttons pinned to the left / right /
    bottom edge at their DS rows, anything else on the drawing page (the canvas the strokes are on) by the scene transform. */
+/* MENUCUT1: the main page's plank slot of a DS plate sprite (0 = the MP slot, 1 = ADVENTURE, 2 = REC ROOM) from its own x (DS pixels, its centre):
+   the plates rest at 34 / 128 / 222 and only ever travel outward (in from, and out past, the screen's sides), and its state this tick (the same
+   menu_online_plank_state build_main reads: kind ONL_K_*, w1000 = the turn's width in permille) */
+void ds_plate_state(int x, int *kind, int *w1000)
+{
+    OnlFacts f;
+    menu_online_facts(&f);
+    menu_online_plank_state(&f, x < 68 ? 0 : x > 188 ? 2 : 1, kind, w1000);
+}
+/* MENUCUT1: 1 = this DS plate is not submitted: this frame is the DS-art main menu's scene and a code drawn plank stands in for its slot */
+bool ds_plate_skip(char *o)
+{
+    if (*(unsigned char *)(o + 0x4e) != 0x1b || (((const int *)o)[2] >> 12) < 100) return false;
+    if (!g_sc.on || g_sc.variant != V_MAIN || !data_ov007_0210342c || g_sc.frame + 1 < data_ov007_0210342c[0] || pc_assets_ready()) return false;
+    {   /* MENUCUT2: the ROM's own fade of this plate (a choice fades the others out), read before the skip so a plate a code plank stands in for still reports it */
+        const int x = ((const int *)o)[1] >> 12, sl = x < 68 ? 0 : x > 188 ? 2 : 1;
+        g_ds_plate_a[sl] = (((const int *)o)[0x50 / 4] >> 12) & 0xff;
+        g_ds_plate_fr[sl] = data_ov007_0210342c[0];
+    }
+    int kind = 0, w1000 = 1000;
+    ds_plate_state(((const int *)o)[1] >> 12, &kind, &w1000);
+    return kind == ONL_K_ONLINE || kind == ONL_K_SOLO || kind == ONL_K_ADV_ONLINE || kind == ONL_K_VS;
+}
 void scene_sprite_xf(char *o)
 {
     if (!g_sc.on || !data_ov007_0210342c || g_sc.frame + 1 < data_ov007_0210342c[0]) return;      /* the callback ran in this tick's Render, the counter moved on once since (as build's sc_on) */
@@ -2633,6 +2729,15 @@ void scene_sprite_xf(char *o)
             float up = 0.f;
             if (v == V_TOY) { const int tv = title_page_counter(); const float e = tv >= 10 ? 1.f : (float)tv / 10.f; up = e * e * 60.f; }
             ntr::gx_menu_sprite_xf(1.f, 2.f * (sx - (menu_online_on() ? 35.f : 0.f)) / cw, 1.f, 2.f * (sy + up) / ch);      /* NAME1: beside the ? button in online mode; NAME2: the ? (30) and its gap from the window edge (5) */
+        } else if (id == 0x1b && v == V_MAIN && !pc_assets_ready()) {
+            /* MENUCUT1: a DS plate stays at its own DS place (the centred 4:3 box); while its slot turns between its ROM face and a code plank
+               (NAME1) the ROM face narrows about the plate's own centre, as the cut piece used to */
+            int kind = 0, w1000 = 1000;
+            ds_plate_state(x, &kind, &w1000);
+            if (w1000 < 1000) {
+                const float s = (float)w1000 / 1000.f;
+                ntr::gx_menu_sprite_xf(s, 2.f * ((float)x - 128.f) / cw * (1.f - s), 1.f, 0.f);
+            }
         }
         return;
     }
