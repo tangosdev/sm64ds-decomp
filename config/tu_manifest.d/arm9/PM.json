@@ -9,7 +9,7 @@
     "One contiguous run of the Nitro SDK's spi/ARM9/pm.c, 0x0205f5c0..0x0205ff70: 24 functions, gapless in config/arm9/delinks.txt. pret's pokediamond and pret's pmd-sky both carry this file as spi_pm.s under the same function names, and every function here is matched to one of theirs by its body: the PXI command it sends (0x60, 0x63, 0x65, 0x66), the utility command numbers (LED 1..3, backlight 4..9, power off 0xe), and the registers it touches.",
     "Order: PMi_Lock is highest and PMi_SendLEDPatternCommand lowest, the same address order as pret's pokediamond and the reverse of pret's pmd-sky's. mwccarm emits deferred bodies in reverse, so PMi_Lock comes first in the source.",
     "Older SDK: the functions pret has after the LED-pattern sender (PM_GetLEDPatternAsync, the sleep-callback lists) and PMi_WriteRegister/PMi_SetAmp are absent, and PM_GoSleepMode, PMi_SetLCDPower, PM_ForceToPowerOffAsync and PMi_WaitBusy are the shorter bodies of an SDK without them. PMi_CommonCallback is pokediamond's length (0xec); only its reply range differs (0x73 here, 0x74 in pret).",
-    "BOTTOM EDGE: TPi_TpCallback (0x0205f300..0x0205f5c0, src/TPi_TpCallback.c) is tp.c.",
+    "BOTTOM EDGE: TPi_TpCallback (0x0205f300..0x0205f5c0) is the highest function of tp.c (arm9/TP, src/engine/spi/TP.c).",
     "TOP EDGE: CARD_UnlockBackup and the rest of card_common.c (arm9/CARD_Common) start at 0x0205ff70."
   ],
   "sections": [
@@ -201,7 +201,7 @@
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
-    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/arm9-PM/PM.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 24,

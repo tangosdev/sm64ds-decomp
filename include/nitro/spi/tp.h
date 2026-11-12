@@ -2,13 +2,10 @@
 #define NITRO_SPI_TP_H
 
 /*
- * The touch panel, under the NitroSDK's own names. The bodies are SPI_tp.c,
- * still one function per file under src/, each named for its TP_ function
- * (TP_Init.c, TP_GetCalibratedPoint.c, ..., TPi_TpCallback.c).
- *
- * TPData and its members are the SDK's own spellings (they match pret's
- * pokediamond and pmd-sky tp.h). TPWork's members are coined from how the
- * sibling functions use them; the cartridge carries no names.
+ * The touch panel API: the Nitro SDK's nitro/spi/ARM9/tp.h, its types and
+ * the prototypes of the functions this ROM keeps (src/engine/spi/TP.c), and
+ * the synchronous wrappers the SDK header defines inline over them. The
+ * SDK's BOOL return is spelled int: no shared header here defines BOOL.
  */
 
 #include "types.h"
@@ -17,10 +14,47 @@
 extern "C" {
 #endif
 
-/* One panel sample. TP_GetCalibratedPoint transforms a raw pair into screen
-   coordinates and copies the other two words through unchanged, so the first
-   two are the axes and the last two the touch and validity flags the SDK
-   carries alongside them. func_0203df40's input record carries one at +0x4. */
+#define TP_SAMPLING_FREQUENCY_MAX 16
+
+#define TP_TOUCH_OFF 0
+#define TP_TOUCH_ON 1
+
+#define TP_VALIDITY_VALID 0
+#define TP_VALIDITY_INVALID_X 1
+#define TP_VALIDITY_INVALID_Y 2
+#define TP_VALIDITY_INVALID_XY (TP_VALIDITY_INVALID_X | TP_VALIDITY_INVALID_Y)
+
+typedef enum {
+    TP_REQUEST_COMMAND_SAMPLING = 0x0,
+    TP_REQUEST_COMMAND_AUTO_ON = 0x1,
+    TP_REQUEST_COMMAND_AUTO_OFF = 0x2,
+    TP_REQUEST_COMMAND_SET_STABILITY = 0x3,
+    TP_REQUEST_COMMAND_AUTO_SAMPLING = 0x10
+} TPRequestCommand;
+
+typedef enum {
+    TP_REQUEST_COMMAND_FLAG_SAMPLING = 1 << TP_REQUEST_COMMAND_SAMPLING,
+    TP_REQUEST_COMMAND_FLAG_AUTO_ON = 1 << TP_REQUEST_COMMAND_AUTO_ON,
+    TP_REQUEST_COMMAND_FLAG_AUTO_OFF = 1 << TP_REQUEST_COMMAND_AUTO_OFF,
+    TP_REQUEST_COMMAND_FLAG_SET_STABILITY = 1 << TP_REQUEST_COMMAND_SET_STABILITY
+} TPRequestCommandFlag;
+
+typedef enum {
+    TP_RESULT_SUCCESS = 0,
+    TP_RESULT_INVALID_PARAMETER,
+    TP_RESULT_ILLEGAL_STATUS,
+    TP_RESULT_EXCLUSIVE,
+    TP_RESULT_PXI_BUSY
+} TPRequestResult;
+
+typedef enum {
+    TP_STATE_READY = 0,
+    TP_STATE_SAMPLING,
+    TP_STATE_AUTO_SAMPLING,
+    TP_STATE_AUTO_WAIT_END
+} TPState;
+
+/* One panel sample: the axes, then TP_TOUCH_* and TP_VALIDITY_*. */
 typedef struct TPData {
     u16 x;        /* 0x0 */
     u16 y;        /* 0x2 */
@@ -28,67 +62,57 @@ typedef struct TPData {
     u16 validity; /* 0x6 */
 } TPData;
 
-/* tp.c's state, data_020a80cc.
- *
- * SIZE 0x38, fixed two ways: the first symbol row past the interior
- * data_020a80e4 (below) is pm.c's PMi_IsInit at 0x020a8104, exactly 0x38
- * from the start, and
- * the last member is the volatile halfword pair the command helpers poll at
- * +0x34/+0x36.
- *
- * Offsets from the sibling functions: TPi_TpCallback, the PXI receive
- * callback, calls mCallback, fills mBuf, advances mIndex through
- * mSamplingBufs up to mBufSize, sets mState and the per-command bits in
- * mErrFlags / mCommandFlags; TP_RequestAutoSamplingStartAsync sets up auto
- * sampling (mSamplingBufs, mIndex, mFrequency, mBufSize);
- * TP_SetCalibrateParam fills mCalibration and sets mCalibrated, or clears
- * mCalibrated when given no parameters; TP_GetCalibratedPoint reads
- * mCalibration and mCalibrated to transform a sample.
- *
- * mCalibration keeps its own symbol row, data_020a80e4: relocs.txt names that
- * address from TP_GetCalibratedPoint's literal pool, and dsd needs a symbol at
- * every relocation target. The compiler reaches it as data_020a80cc + 0x18,
- * which resolves to the same word.
- *
- * mSamplingBufs is a TPData array: TP_RequestAutoSamplingStartAsync clears
- * each entry's third word with a byte stride of 8 (`(i << 3) + 4`), and
- * TPi_TpCallback indexes it by mIndex with that same stride. */
-typedef struct TPWork {
-    void (*mCallback)(int, int, int); /* 0x00 */
-    TPData mBuf;                      /* 0x04 -- the last sample */
-    u16 mIndex;                       /* 0x0c -- into mSamplingBufs */
-    u16 mFrequency;                   /* 0x0e */
-    TPData *mSamplingBufs;            /* 0x10 */
-    u16 mBufSize;                     /* 0x14 -- entries in mSamplingBufs */
-    u8 pad_16[2];                     /* 0x16 */
-    int mCalibration[6];              /* 0x18 */
-    u16 mCalibrated;                  /* 0x30 -- zero until calibrated */
-    volatile u16 mState;              /* 0x32 */
-    volatile u16 mErrFlags;           /* 0x34 */
-    volatile u16 mCommandFlags;       /* 0x36 */
-} TPWork;
+#define TP_CALIBRATE_DOT_SCALE_SHIFT 8
+#define TP_CALIBRATE_ORIGIN_SCALE_SHIFT 2
 
-/* The one work block, as include/nitro/card/card_common.h declares cardi_common.
-   Every TP function reaches it by this name. */
-extern TPWork data_020a80cc;
-
-/* The SDK's TPCalibrateParam: the screen origin and dot size, in raw panel
-   units, that TP_CalcCalibrateParam derives from two point pairs. */
-typedef struct TPCalibrateParam {
+/* The screen origin and dot size, in raw panel units, that
+   TP_CalcCalibrateParam derives from two point pairs. */
+typedef struct NvTpData {
     s16 x0;       /* 0x0 */
     s16 y0;       /* 0x2 */
     s16 xDotSize; /* 0x4 */
     s16 yDotSize; /* 0x6 */
 } TPCalibrateParam;
 
+typedef void (*TPRecvCallback)(TPRequestCommand command, TPRequestResult result, u16 index);
+
+void TP_Init(void);
+void TP_SetCalibrateParam(const TPCalibrateParam *param);
+void TP_RequestSamplingAsync(void);
+u32 TP_WaitCalibratedResult(TPData *result);
+u32 TP_GetCalibratedResult(TPData *result);
+void TP_RequestAutoSamplingStartAsync(u16 vcount, u16 frequence, TPData samplingBufs[],
+                                      u16 bufSize);
+void TP_RequestSetStabilityAsync(u8 retry, u16 range);
+void TP_WaitBusy(TPRequestCommandFlag command_flgs);
+u32 TP_CheckError(TPRequestCommandFlag command);
+u16 TP_GetLatestIndexInAuto(void);
 u32 TP_CalcCalibrateParam(TPCalibrateParam *calibrate, u16 raw_x1, u16 raw_y1, u16 dx1, u16 dy1,
                           u16 raw_x2, u16 raw_y2, u16 dx2, u16 dy2);
 int TP_GetUserInfo(TPCalibrateParam *calibrate);
+void TP_GetCalibratedPoint(TPData *disp, const TPData *raw);
+
+static inline u32 TP_RequestSetStability(u8 retry, u16 range) {
+    TP_RequestSetStabilityAsync(retry, range);
+    TP_WaitBusy(TP_REQUEST_COMMAND_FLAG_SET_STABILITY);
+    return TP_CheckError(TP_REQUEST_COMMAND_FLAG_SET_STABILITY);
+}
+
+static inline u32 TP_RequestAutoSamplingStart(u16 vcount, u16 frequence, TPData samplingBufs[],
+                                              u16 bufSize) {
+    TP_RequestAutoSamplingStartAsync(vcount, frequence, samplingBufs, bufSize);
+    TP_WaitBusy(TP_REQUEST_COMMAND_FLAG_AUTO_ON);
+    return TP_CheckError(TP_REQUEST_COMMAND_FLAG_AUTO_ON);
+}
+
+static inline u32 TP_RequestCalibratedSampling(TPData *result) {
+    TP_RequestSamplingAsync();
+    return TP_WaitCalibratedResult(result);
+}
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char TPData_size_must_be_0x8[sizeof(struct TPData) == 0x8 ? 1 : -1];
-typedef char TPWork_size_must_be_0x38[sizeof(struct TPWork) == 0x38 ? 1 : -1];
 #endif
 
 #ifdef __cplusplus

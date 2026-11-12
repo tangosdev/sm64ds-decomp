@@ -6,9 +6,10 @@
  * d_a_kpa.cpp). Its resource, behavior and state-worker functions are real
  * methods defined in d_a_kpa.cpp.
  *
- * Readability pass: the members are named from how those workers use them and
- * BowserTail_State (d_a_kpa.cpp) names the three mState values. Leftover: bit
- * 0x400 of the tail's mFlags, which d_a_kpa.cpp only tests, is not named.
+ * The members are named from how those workers use them and
+ * BowserTail_State (d_a_kpa.cpp) names the three mState values; bit 0x400 of
+ * the tail's mFlags is BOWSER_TAIL_RELEASED, set by daPly_c when it releases
+ * the tail.
  *
  * One sub-object, and its offset is checked twice -- once by dCcAc_c's
  * own size assertion, once by closing exactly on the next named field:

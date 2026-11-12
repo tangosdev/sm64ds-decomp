@@ -5,11 +5,11 @@
  * directly where pret calls MI_Init. */
 #include "nitro/os/spinLock.h"
 #include "nitro/os/thread.h"
+#include "nitro/pxi/init.h"
 
 extern "C" {
 
 extern void OS_InitArena(void);
-extern void PXI_Init(void);
 extern void OS_InitArenaEx(void);
 extern void OS_InitIrqTable(void);
 extern void OS_InitException(void);

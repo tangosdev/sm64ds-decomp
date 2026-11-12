@@ -1,5 +1,20 @@
 {
   "known": {
+    "func_ov002_020eedc0": {
+      "src/game/player/d_a_ply_methods.cpp": [
+        "return:void"
+      ]
+    },
+    "func_ov002_020edca4": {
+      "src/game/player/d_a_ply_methods.cpp": [
+        "return:int"
+      ]
+    },
+    "data_0209f2bc": {
+      "src/game/player/d_a_ply_methods.cpp": [
+        "return:unsigned char []"
+      ]
+    },
     "VEC_Add": {
       "src/engine/view/d_camera.cpp": [
         "param:#2 const void *",
@@ -1065,6 +1080,11 @@
       ],
       "src/CARDi_EndTask.cpp": [
         "param:#1 char *"
+      ]
+    },
+    "PXI_SetFifoRecvCallback": {
+      "include/nitro/pxi/fifo.h": [
+        "param:#2 void (*)(PXIFifoTag, unsigned int, int)"
       ]
     },
     "Quaternion_FromVector3": {
@@ -4077,12 +4097,6 @@
         "return:void"
       ],
       "src/unnamed/arm9/0204/func_02041a94.cpp": [
-        "return:void"
-      ],
-      "src/TP_CalcCalibrateParam.cpp": [
-        "return:void"
-      ],
-      "src/TP_SetCalibrateParam.cpp": [
         "return:void"
       ],
       "src/unnamed/arm9/0205/func_0205ff20.cpp": [
@@ -7203,7 +7217,11 @@
     "data_02092114": {
       "src/ui/hud/CapIconMgr.cpp": [
         "return:signed char"
+      ],
+      "include/decl_common.h": [
+        "return:unsigned char"
       ]
+
     },
     "gReturnSublevel": {
       "src/_ZN7daPly_c13InitResourcesEv.cpp": [
@@ -9425,12 +9443,20 @@
     "gMeterShownHealth": {
       "src/_ZN7daPly_c16St_BurnLava_MainEv.cpp": [
         "return:unsigned char"
+      ],
+      "src/game/player/d_a_ply_methods.cpp": [
+        "return:unsigned char"
       ]
+
     },
     "gShowRaceTimer": {
       "src/ui/hud/d_meter.cpp": [
         "return:unsigned char"
+      ],
+      "src/game/player/d_a_ply_methods.cpp": [
+        "return:unsigned char []"
       ]
+
     },
     "data_ov003_020b1704": {
       "src/game/stages/d_s_star_sel_methods.cpp": [
@@ -15554,25 +15580,6 @@
     },
     "func_0205e6e4": {
       "src/DGT_Hash2CalcHmac.c": [
-        "return:void"
-      ]
-    },
-    "TP_CalcCalibrateParam": {
-      "src/TP_GetUserInfo.c": [
-        "param:#1 int",
-        "param:#2 int",
-        "param:#3 int",
-        "param:#4 int",
-        "param:#5 int",
-        "param:#6 int",
-        "param:#7 int",
-        "param:#8 int",
-        "param:#9 int"
-      ]
-    },
-    "TP_GetUserInfo": {
-      "src/unnamed/arm9/0203/func_0203bbc0.c": [
-        "param:#1 void *",
         "return:void"
       ]
     },

@@ -13,6 +13,9 @@
  */
 #include "nitro/os/system.h"
 #include "nitro/os/interrupt.h"
+#include "nitro/pxi/fifo.h"
+
+#define FALSE 0
 
 namespace IRQ {
 
@@ -25,7 +28,6 @@ typedef int (*CardCallback)(void);
 extern "C" {
 extern int data_020a89a0;          /* set once the card has been pulled */
 extern CardCallback data_020a89a4; /* nonzero return: terminate */
-int PXI_SendWordByFifo(unsigned int tag, unsigned int data, unsigned int reply);
 }
 
 #define IRQ_CARD_IREQ_MC 0x100000
@@ -47,10 +49,7 @@ void func_02061128(CardCallback callback) {
 
 // Tell the ARM7 the card is gone, then stop for good.
 void func_020610fc(void) {
-    int tag = 0xd; /* PXI channel */
-    int data = 2;
-    int reply = 0;
-    while (PXI_SendWordByFifo(tag, data, reply) != 0)
+    while (PXI_SendWordByFifo(PXI_FIFO_TAG_CTRDG, 2, FALSE) != PXI_FIFO_SUCCESS)
         ;
     for (;;)
         ;

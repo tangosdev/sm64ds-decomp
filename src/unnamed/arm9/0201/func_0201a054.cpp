@@ -8,13 +8,13 @@
 #include "private/watchdog_alarm.h"
 #include "nitro/gx/g3imm_light.h"
 #include "nitro/mb/mb.h"
+#include "nitro/pxi/init.h"
 
 extern "C" {
 
 extern void func_020427f8(void);
 extern u64 func_02042784(void);
 extern void GX_Init(void);
-extern void PXI_Init(void);
 extern void func_0203d740(void);
 extern void ClearSaveBlock(void);
 extern void func_0201a4e4(void);
