@@ -1,0 +1,49 @@
+{
+ "about": "NPCFIX1: the racing penguin (CCM slide act 3). Mario races (proof knob at lf 120); Luigi starts at the entrance and is put at the penguin start at lf 400",
+ "save": {
+  "preset": "all_open",
+  "flags": [
+   "messages_seen"
+  ]
+ },
+ "room": {
+  "collision": 1,
+  "damage": 1,
+  "interact": 1,
+  "tp": 1
+ },
+ "proof": {
+  "secs": 130,
+  "shot_ms": 400000,
+  "census": [
+   259
+  ]
+ },
+ "env": {
+  "SM64DS_COOP_KTQ_LOG": "1",
+  "SM64DS_COOP_KTQ_TRACE": "60",
+  "SM64DS_COOP_TALK_LOG": "1"
+ },
+ "players": [
+  {
+   "character": "mario",
+   "level": 11,
+   "act": 3,
+   "near": {
+    "class": 259,
+    "dist": 250
+   },
+   "env": {
+    "SM64DS_COOP_PG_RACE": "120"
+   }
+  },
+  {
+   "character": "luigi",
+   "level": 11,
+   "act": 3,
+   "env": {
+    "SM64DS_COOP_PLACE": "400:-4775,6508,-5871"
+   }
+  }
+ ]
+}

@@ -1,0 +1,42 @@
+{
+ "about": "NPCFIX1: a friend press of the ? switch replayed on a spawned switch (Mario and Luigi on the castle grounds)",
+ "save": {
+  "preset": "all_open",
+  "flags": [
+   "messages_seen"
+  ]
+ },
+ "room": {
+  "collision": 1,
+  "damage": 1,
+  "interact": 1,
+  "tp": 1
+ },
+ "proof": {
+  "secs": 75,
+  "shot_ms": 400000,
+  "census": [
+   26
+  ]
+ },
+ "players": [
+  {
+   "character": "mario",
+   "level": 1,
+   "env": {
+    "SM64DS_SPAWN_ACTOR": "26",
+    "SM64DS_COOP_HATENA_TEST": "240"
+   }
+  },
+  {
+   "character": "luigi",
+   "level": 1,
+   "pos": [
+    -1000,
+    254,
+    6800
+   ],
+   "drop": true
+  }
+ ]
+}
