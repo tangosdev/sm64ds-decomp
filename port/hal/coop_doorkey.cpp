@@ -11,8 +11,8 @@
 // ON A FRIEND'S SCREEN nothing of this ran: the key actor is made only on the key user's console (coop_spawn announces it,
 // but a key is refused outside the boss arenas, key_ok), and the friend's ghost is drawn where his frames put him. Here a
 // friend's key-door kick (coop_switch, DOOR state 2, sent the moment his unlock starts, 1.0.3 sends it too) builds the same
-// key prop with the same ROM call at the same place relative to the spot the ROM stands him on, and the follower draws the
-// friend on that spot while his frames say he is in the key-door talk. The key prop is never announced (coop_spawn skips a
+// key prop with the same ROM call at the same place relative to the spot the ROM stands him on. His body needs no help: his
+// frames carry the spot (the door step goes out as a snap) and every step of his walk to the keyhole. The key prop is never announced (coop_spawn skips a
 // key that is playing an animation from its first frame) and nobody can take it: a key in an animation has no collider
 // (daObjKey_c::Behavior returns before it updates one) and deletes itself when the animation ends, as on the cartridge.
 //
@@ -53,7 +53,6 @@ enum : int {
     kBoxX      = 75 << 12,    // func_ov100_021452e4's box, inclusive
     kBoxY      = 50 << 12,
     kBoxZ      = 110 << 12,
-    kHoldMs    = 8000,        // the longest a key-door talk is drawn held (the key animation is about 3 s)
 };
 
 long long wall_ms() {
@@ -103,9 +102,6 @@ bool key_model_ready(int kind) {
     return sfp != 0 && *(void *const *)((const char *)(intptr_t)sfp + 4) != nullptr;
 }
 
-struct Hold { bool on; int pos[3]; short yaw; long long t0; int idx; };
-Hold g_hold[kSeats];
-
 struct TouchKnob { unsigned frame; int idx; bool done; };
 TouchKnob g_touch[4]; int g_ntouch = 0;
 bool g_touch_read = false;
@@ -153,16 +149,12 @@ void coop_doorkey_friend_unlock(int seat, int idx) {
     const short yaw = (short)(l[2] > 0 ? yaw_of(best) + 0x8000 : yaw_of(best));
     int spot[3];
     Vec3_RotateYAndTranslate(spot, best + 0x5c, yaw_of(best), off);
-    Hold &h = g_hold[seat];
-    h.on = !coop_doorkey_off("snap");
-    std::memcpy(h.pos, spot, sizeof spot);
-    h.yaw = yaw; h.t0 = wall_ms(); h.idx = idx;
     if (g_log)
         std::fprintf(stderr, "[doorkey] seat %d key door idx=%d leaf at %d,%d,%d (%s): the ROM stands him at %d,%d,%d yaw=%d; drawn at %d,%d,%d "
-                     "(off by %d,%d,%d) snap=%d wall=%lld\n", seat, idx, rd(best, 0x5c) >> 12, rd(best, 0x60) >> 12, rd(best, 0x64) >> 12,
+                     "(off by %d,%d,%d) wall=%lld\n", seat, idx, rd(best, 0x5c) >> 12, rd(best, 0x60) >> 12, rd(best, 0x64) >> 12,
                      in_box ? "he is in its box" : "nearest", spot[0] >> 12, spot[1] >> 12, spot[2] >> 12, (int)yaw,
                      fp[0] >> 12, fp[1] >> 12, fp[2] >> 12, (fp[0] - spot[0]) >> 12, (fp[1] - spot[1]) >> 12, (fp[2] - spot[2]) >> 12,
-                     (int)h.on, wall_ms());
+                     wall_ms());
     if (coop_doorkey_off("key")) return;
     // func_ov100_02144a38's key: (-76, 0, 109) from him, turned with him, his area, the open animation
     const int kind = e[9] & 7;
@@ -183,22 +175,10 @@ void coop_doorkey_friend_unlock(int seat, int idx) {
                      kpos[0] >> 12, kpos[1] >> 12, kpos[2] >> 12, area, wall_ms());
 }
 
-bool coop_doorkey_hold(int seat, int pos[3], short *yaw) {
-    if (seat < 0 || seat >= kSeats) return false;
-    Hold &h = g_hold[seat];
-    if (!h.on) return false;
-    if (wall_ms() - h.t0 > kHoldMs) { h.on = false; return false; }
-    std::memcpy(pos, h.pos, sizeof h.pos);
-    *yaw = h.yaw;
-    return true;
-}
-
 void coop_doorkey_frame(unsigned frames) {
     read_env();
-    // a held friend whose door talk ended is let go by the follower (it stops asking); a level change ends every hold
     if ((int)data_0209f2f8 != g_touch_lvl) {
         g_touch_lvl = (int)data_0209f2f8;
-        std::memset(g_hold, 0, sizeof g_hold);
         std::memset(g_cur, 0, sizeof g_cur);
         for (int i = 0; i < g_ntouch; ++i) g_touch[i].done = false;
     }

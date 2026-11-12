@@ -169,7 +169,22 @@ unsigned char sender_kind(const void *body) {
 
 unsigned char sender_frame(const void *body) {
     if (!body) return kDoorFrameNone;
-    const void *d = nearest_any(rd(body, 0x5c), rd(body, 0x60), rd(body, 0x64));
+    /* DOORKEY1: the door of a door step is the one nearest him when the step starts, kept until the step ends. Picked
+       afresh every tick, a walk through one leaf of a double door on a slant came nearer the other leaf for a few ticks,
+       and its frame 0 went out (the friends' copy of the leaf closed and opened again). */
+    static const void *s_door = 0;
+    static unsigned char s_kind = kDoorNone;
+    static unsigned s_t = 0;
+    const unsigned now = comms_hub_now_ms();
+    const unsigned char kind = sender_kind(body);
+    const void *d = 0;
+    if (kind != kDoorNone && kind == s_kind && s_door && now - s_t < 500u && door_alive(s_door) && !coop_doorkey_off("leaf"))
+        d = s_door;
+    else
+        d = nearest_any(rd(body, 0x5c), rd(body, 0x60), rd(body, 0x64));
+    s_door = kind != kDoorNone ? d : 0;
+    s_kind = kind;
+    s_t = now;
     if (!d) return kDoorFrameNone;
     if (is_gate(d)) return gate_frame(d);     // a star door has no model cursor
     int f = rd(d, kCursor) >> 12;
@@ -273,6 +288,7 @@ struct Drive {
     bool  gate;            // door[0] is a star gate
     unsigned stamp;        // the pass that last drove it (watcher_end_pass)
     unsigned char kind;    // DOORKEY1: the door kind it was picked for
+    bool moved;            // DOORKEY1: a frame above 0 was applied since the pick
 };
 Drive g_drive[kMaxSeats];
 unsigned g_pass = 1;
@@ -434,10 +450,11 @@ void watcher_apply(int seat, unsigned char kind, unsigned char frame,
     if (d.door[0] && d.kind != kind && !coop_doorkey_off("leaf")) {   // DOORKEY1: a new step of his door sequence, pick again
         give_back(d);
     }
-    /* DOORKEY1: while the door has not moved yet (frame 0) the pick follows him: a sender with no step flag (1.0.3) slides
-       from the middle of a double door to the leaf he goes through, and the first frames of the swing can find him still
-       halfway, as near one leaf as the other */
-    if (d.door[0] && frame == 0 && !d.gate && !coop_doorkey_off("leaf")) {
+    /* DOORKEY1: until the door has been moved once in this step (a frame above 0 applied) the pick follows him: a sender
+       with no step flag (1.0.3) slides from the middle of a double door to the leaf he goes through, and the first frames of
+       the swing can find him still halfway, as near one leaf as the other. Once it moved it is kept: a 1.0.3 sender's own
+       pick flips to the other leaf for a few ticks while he walks through on a slant (it reads that leaf's frame 0). */
+    if (d.door[0] && !d.moved && !d.gate && !coop_doorkey_off("leaf")) {
         void *nd = nearest_any(pos[0], pos[1], pos[2]);
         if (nd && nd != d.door[0]) give_back(d);
     }
@@ -449,6 +466,7 @@ void watcher_apply(int seat, unsigned char kind, unsigned char frame,
         d.door[0] = nd;
         d.door[1] = d.gate || !coop_doorkey_off("leaf") ? 0 : pair_leaf(nd);
         d.kind = kind;
+        d.moved = false;
         for (int k = 0; k < kLeaves; ++k)
             if (d.door[k] && !held_take(d.door[k], d.gate)) d.door[k] = 0;   // table full: not driven
         if (!d.door[0]) { d.door[0] = d.door[1]; d.door[1] = 0; }
@@ -510,6 +528,8 @@ void watcher_apply(int seat, unsigned char kind, unsigned char frame,
         int f = (int)frame;
         const int n = door_frames(d.door[k]);
         if (n > 0 && f >= n) f = n - 1;
+        if (f > 0) d.moved = true;
+        if (f == 0 && d.moved && !coop_doorkey_off("leaf")) continue;   // DOORKEY1: a 1.0.3 sender's stray 0 (see the pick)
         h->last = f << 12;
         *(int *)((char *)d.door[k] + kCursor) = h->last;
         ++g_stats.applied;
