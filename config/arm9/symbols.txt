@@ -324,7 +324,7 @@ _ZN8dActor_cC2Ev kind:function(arm,size=0x148) addr:0x0201150c
 func_02011654 kind:function(arm,size=0x44) addr:0x02011654
 func_02011698 kind:function(arm,size=0x2c) addr:0x02011698
 func_020116c4 kind:function(arm,size=0xd8) addr:0x020116c4
-_ZN11SndRegTable13func_0201179cEiiis kind:function(arm,size=0xd0) addr:0x0201179c
+_ZN11SndRegTable13func_0201179cEiiPK7Vector3s kind:function(arm,size=0xd0) addr:0x0201179c
 _ZN11SndRegTable13func_0201186cEiis kind:function(arm,size=0xc8) addr:0x0201186c
 func_02011934 kind:function(arm,size=0x40) addr:0x02011934
 func_02011974 kind:function(arm,size=0x54) addr:0x02011974
@@ -1753,40 +1753,40 @@ func_02040724 kind:function(arm,size=0x6c) addr:0x02040724
 func_02040790 kind:function(arm,size=0x90) addr:0x02040790
 func_02040820 kind:function(arm,size=0x90) addr:0x02040820
 func_020408b0 kind:function(arm,size=0x1ac) addr:0x020408b0
-func_02040a5c kind:function(arm,size=0x28) addr:0x02040a5c
-func_02040a84 kind:function(arm,size=0x10) addr:0x02040a84
-func_02040a94 kind:function(arm,size=0x10) addr:0x02040a94
-func_02040aa4 kind:function(arm,size=0x10c) addr:0x02040aa4
-func_02040bb0 kind:function(arm,size=0x84) addr:0x02040bb0
+WFS_EnableSync kind:function(arm,size=0x28) addr:0x02040a5c
+WFS_GetCurrentBitmap kind:function(arm,size=0x10) addr:0x02040a84
+WFS_GetStatus kind:function(arm,size=0x10) addr:0x02040a94
+WFS_End kind:function(arm,size=0x10c) addr:0x02040aa4
+WFS_Start kind:function(arm,size=0x84) addr:0x02040bb0
 func_02040c34 kind:function(arm,size=0x2fc) addr:0x02040c34
-func_02040f30 kind:function(arm,size=0x2f4) addr:0x02040f30
-func_02041224 kind:function(arm,size=0xcc) addr:0x02041224
-func_020412f0 kind:function(arm,size=0x46c) addr:0x020412f0
+WFSi_OnChildSystemCallback kind:function(arm,size=0x2f4) addr:0x02040f30
+WFSi_ReallocBitmap kind:function(arm,size=0xcc) addr:0x02041224
+WFSi_OnParentSystemCallback kind:function(arm,size=0x46c) addr:0x020412f0
 func_0204175c kind:function(arm,size=0x74) addr:0x0204175c
-func_020417d0 kind:function(arm,size=0x120) addr:0x020417d0
-func_020418f0 kind:function(arm,size=0x40) addr:0x020418f0
-func_02041930 kind:function(arm,size=0xd0) addr:0x02041930
-func_02041a00 kind:function(arm,size=0x94) addr:0x02041a00
-func_02041a94 kind:function(arm,size=0x54) addr:0x02041a94
-func_02041ae8 kind:function(arm,size=0x3c) addr:0x02041ae8
-func_02041b24 kind:function(arm,size=0x3c) addr:0x02041b24
-func_02041b60 kind:function(arm,size=0x5c) addr:0x02041b60
-func_02041bbc kind:function(arm,size=0x70) addr:0x02041bbc
-func_02041c2c kind:function(arm,size=0x38) addr:0x02041c2c
-func_02041c64 kind:function(arm,size=0x7c) addr:0x02041c64
-func_02041ce0 kind:function(arm,size=0x48) addr:0x02041ce0
-func_02041d28 kind:function(arm,size=0xec) addr:0x02041d28
-func_02041e14 kind:function(arm,size=0x34c) addr:0x02041e14
-func_02042160 kind:function(arm,size=0x54) addr:0x02042160
-func_020421b4 kind:function(arm,size=0x4c) addr:0x020421b4
-func_02042200 kind:function(arm,size=0x54) addr:0x02042200
-func_02042254 kind:function(arm,size=0x174) addr:0x02042254
-func_020423c8 kind:function(arm,size=0x14) addr:0x020423c8
-func_020423dc kind:function(arm,size=0xe4) addr:0x020423dc
-func_020424c0 kind:function(arm,size=0x1a8) addr:0x020424c0
-func_02042668 kind:function(arm,size=0x88) addr:0x02042668
-func_020426f0 kind:function(arm,size=0x8) addr:0x020426f0
-func_020426f8 kind:function(arm,size=0x24) addr:0x020426f8
+WFSi_PortCallback kind:function(arm,size=0x120) addr:0x020417d0
+WFSi_OnSetMPDataDone kind:function(arm,size=0x40) addr:0x020418f0
+WFSi_SetMPData kind:function(arm,size=0xd0) addr:0x02041930
+WFSi_ReadRequest kind:function(arm,size=0x94) addr:0x02041a00
+WFSi_FromBusyToFree kind:function(arm,size=0x54) addr:0x02041a94
+WFSi_FromAliveToBusy kind:function(arm,size=0x3c) addr:0x02041ae8
+WFSi_FromBusyToAlive kind:function(arm,size=0x3c) addr:0x02041b24
+WFSi_FromFreeToBusy kind:function(arm,size=0x5c) addr:0x02041b60
+WFSi_MoveList kind:function(arm,size=0x70) addr:0x02041bbc
+WFSi_FindAliveForID kind:function(arm,size=0x38) addr:0x02041c2c
+WFSi_FindBusy kind:function(arm,size=0x7c) addr:0x02041c64
+WFSi_FindAlive kind:function(arm,size=0x48) addr:0x02041ce0
+WFSi_SendOpenAck kind:function(arm,size=0xec) addr:0x02041d28
+WFSi_SendAck kind:function(arm,size=0x34c) addr:0x02041e14
+WFSi_OnSendMessageDone kind:function(arm,size=0x54) addr:0x02042160
+WFSi_EndTaskThread kind:function(arm,size=0x4c) addr:0x020421b4
+WFSi_CreateTaskThread kind:function(arm,size=0x54) addr:0x02042200
+WFSi_TaskThread kind:function(arm,size=0x174) addr:0x02042254
+WFSi_NotifyBusy kind:function(arm,size=0x14) addr:0x020423c8
+WFSi_ReplaceRomArchive kind:function(arm,size=0xe4) addr:0x020423dc
+WFSi_LoadTables kind:function(arm,size=0x1a8) addr:0x020424c0
+WFSi_RomArchiveProc kind:function(arm,size=0x88) addr:0x02042668
+WFSi_WriteRomCallback kind:function(arm,size=0x8) addr:0x020426f0
+WFSi_ReadRomCallback kind:function(arm,size=0x24) addr:0x020426f8
 func_0204271c kind:function(arm,size=0x2c) addr:0x0204271c
 func_02042748 kind:function(arm,size=0x30) addr:0x02042748
 func_02042778 kind:function(arm,size=0xc) addr:0x02042778
@@ -2713,14 +2713,14 @@ CARDi_EndTask kind:function(arm,size=0x74) addr:0x0206081c
 CARD_Init kind:function(arm,size=0x7c) addr:0x02060890
 CARD_WaitRomAsync kind:function(arm,size=0xc) addr:0x0206090c
 CARDi_ReadRom kind:function(arm,size=0x118) addr:0x02060918
-CARDi_ReadRomSyncCore kind:function(arm,size=0x34) addr:0x02060a30
+CARDi_ReadRomSyncCore kind:function(arm,size=0x34) addr:0x02060a30 local
 CARDi_ReadCard kind:function(arm,size=0x100) addr:0x02060a64
 CARDi_TryReadCardDma kind:function(arm,size=0x148) addr:0x02060b64
-CARDi_OnReadCard kind:function(arm,size=0x70) addr:0x02060cac
-CARDi_SetCardDma kind:function(arm,size=0x7c) addr:0x02060d1c
-CARDi_SetRomOp kind:function(arm,size=0xa0) addr:0x02060d98
-CARDi_ReadEnd kind:function(arm,size=0x84) addr:0x02060e38
-CARDi_ReadFromCache kind:function(arm,size=0xa4) addr:0x02060ebc
+CARDi_OnReadCard kind:function(arm,size=0x70) addr:0x02060cac local
+CARDi_SetCardDma kind:function(arm,size=0x7c) addr:0x02060d1c local
+CARDi_SetRomOp kind:function(arm,size=0xa0) addr:0x02060d98 local
+CARDi_ReadEnd kind:function(arm,size=0x84) addr:0x02060e38 local
+CARDi_ReadFromCache kind:function(arm,size=0xa4) addr:0x02060ebc local
 CARDi_Request kind:function(arm,size=0x14c) addr:0x02060f60
 _ZN3IRQ21GameCardIREQMCHandlerEv kind:function(arm,size=0x50) addr:0x020610ac
 func_020610fc kind:function(arm,size=0x2c) addr:0x020610fc
@@ -2841,19 +2841,19 @@ func_02065c1c kind:function(arm,size=0x10) addr:0x02065c1c
 MBi_SetRecvBufferFromChild kind:function(arm,size=0x130) addr:0x02065c2c
 MBi_MakeParentSendBuffer kind:function(arm,size=0x88) addr:0x02065d5c
 MBi_ReceiveRequestDataPiece kind:function(arm,size=0xd4) addr:0x02065de4
-MBi_CommCallParentError kind:function(arm,size=0x24) addr:0x02065eb8
-IsChildAidValid kind:function(arm,size=0x1c) addr:0x02065edc
-MBi_Calc_NextSendBlock kind:function(arm,size=0x10) addr:0x02065ef8
-MBi_Calc_SendBlock kind:function(arm,size=0x70) addr:0x02065f08
-MBi_CommParentSendData kind:function(arm,size=0x194) addr:0x02065f78
-MBi_CommParentSendBlock kind:function(arm,size=0x1b4) addr:0x0206610c
-MBi_CommParentSendDlFileInfo kind:function(arm,size=0x1b0) addr:0x020662c0
-MBi_CommParentSendMsg kind:function(arm,size=0x44) addr:0x02066470
-MBi_CommParentRecvData kind:function(arm,size=0xa8) addr:0x020664b4
-MBi_CommParentRecvDataPerChild kind:function(arm,size=0x538) addr:0x0206655c
+MBi_CommCallParentError kind:function(arm,size=0x24) addr:0x02065eb8 local
+IsChildAidValid kind:function(arm,size=0x1c) addr:0x02065edc local
+MBi_calc_nextsendblock kind:function(arm,size=0x10) addr:0x02065ef8 local
+MBi_calc_sendblock kind:function(arm,size=0x70) addr:0x02065f08 local
+MBi_CommParentSendData kind:function(arm,size=0x194) addr:0x02065f78 local
+MBi_CommParentSendBlock kind:function(arm,size=0x1b4) addr:0x0206610c local
+MBi_CommParentSendDLFileInfo kind:function(arm,size=0x1b0) addr:0x020662c0 local
+MBi_CommParentSendMsg kind:function(arm,size=0x44) addr:0x02066470 local
+MBi_CommParentRecvData kind:function(arm,size=0xa8) addr:0x020664b4 local
+MBi_CommParentRecvDataPerChild kind:function(arm,size=0x538) addr:0x0206655c local
 MBi_CommParentCallback kind:function(arm,size=0x51c) addr:0x02066a94
-MBi_CommChangeParentStateCallbackOnly kind:function(arm,size=0x3c) addr:0x02066fb0
-MBi_CommChangeParentState kind:function(arm,size=0x50) addr:0x02066fec
+MBi_CommChangeParentStateCallbackOnly kind:function(arm,size=0x3c) addr:0x02066fb0 local
+MBi_CommChangeParentState kind:function(arm,size=0x50) addr:0x02066fec local
 MB_CommResponseRequest kind:function(arm,size=0xfc) addr:0x0206703c
 MB_CommIsBootable kind:function(arm,size=0x5c) addr:0x02067138
 MB_CommGetChildrenNumber kind:function(arm,size=0x20) addr:0x02067194
@@ -3097,7 +3097,7 @@ __sinit_func_0203bb5c.cpp kind:function(arm,size=0x4) addr:0x020750b4
 __sinit_Heap.cpp kind:function(arm,size=0x34) addr:0x020750b8
 __sinit_Vec2_Len.cpp kind:function(arm,size=0x30) addr:0x020750ec
 __sinit_cstd_sqrt.cpp kind:function(arm,size=0x34) addr:0x0207511c
-__sinit_func_02040384.cpp kind:function(arm,size=0x4) addr:0x02075150
+__sinit_unit0203d7b8.cpp kind:function(arm,size=0x4) addr:0x02075150
 __sinit_fListNode.cpp kind:function(arm,size=0xdc) addr:0x02075154
 data_02075230 kind:data(any) addr:0x02075230
 data_02075238 kind:data(any) addr:0x02075238
@@ -3228,7 +3228,7 @@ __ptmf_null kind:data(any) addr:0x02086b58
 .p__sinit_Heap.cpp kind:data(word) addr:0x02086ba8
 .p__sinit_Vec2_Len.cpp kind:data(word) addr:0x02086bac
 .p__sinit_cstd_sqrt.cpp kind:data(word) addr:0x02086bb0
-.p__sinit_func_02040384.cpp kind:data(word) addr:0x02086bb4
+.p__sinit_unit0203d7b8.cpp kind:data(word) addr:0x02086bb4
 .p__sinit_fListNode.cpp kind:data(word) addr:0x02086bb8
 data_02086bc0 kind:data(any) addr:0x02086bc0
 data_02086bc8 kind:data(any) addr:0x02086bc8
@@ -4919,7 +4919,7 @@ data_0209fd5c kind:bss addr:0x0209fd5c
 data_020a0244 kind:bss addr:0x020a0244
 sPrevHeap$390 kind:bss addr:0x020a0c5c
 _ZGVsPrevHeap$390 kind:bss addr:0x020a0c60
-data_020a0c64 kind:bss addr:0x020a0c64
+sMBJobDone kind:bss addr:0x020a0c64
 sMBGraphCallback kind:bss addr:0x020a0c68
 data_020a0c78 kind:bss addr:0x020a0c78
 data_020a0c80 kind:bss addr:0x020a0c80
@@ -5259,7 +5259,7 @@ data_020a9d4e kind:bss addr:0x020a9d4e
 data_020a9d50 kind:bss addr:0x020a9d50
 data_020a9db0 kind:bss addr:0x020a9db0
 data_020a9db4 kind:bss addr:0x020a9db4
-data_020a9db8 kind:bss addr:0x020a9db8
+mbc kind:bss addr:0x020a9db8
 data_020a9dc0 kind:bss addr:0x020a9dc0
 CTRDGi_Work kind:bss addr:0x020a9de0
 data_020a9de4 kind:bss addr:0x020a9de4

@@ -1,8 +1,8 @@
 //cpp
 #include "Ov007Sprite.h"
+#include "Ov007MenuMem.h"
 
 extern "C" {
-void func_ov007_020c3d1c(void *);
 
 /* Frees a sprite func_ov007_020c44e4 built: its frames array, then the
  * sprite. */

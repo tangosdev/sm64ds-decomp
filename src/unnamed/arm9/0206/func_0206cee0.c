@@ -16,41 +16,35 @@ extern int func_0206d9cc(void);
  * already owns it. On success *out gets the flags func_0206ce90 restores
  * from: 1 IRQ was on, 2 FIQ was on, 0x20 this call took the lock. On failure
  * the interrupt states are put back and *out is 0. func_0206cec0 spins on it.
- * The new_var temporaries and the `if (0, new_var2)` test look like permuter
- * output; no cleaner spelling has been tried against the bytes yet. No SDK or
- * MSL function with this body has been found. */
+ * No SDK or MSL function with this body has been found. */
 int func_0206cee0(int *out) {
-    int v8 = func_0206da18();
-    int v7 = func_0206d9cc();
-    int new_var;
-    int v6 = 0;
-    int new_var2;
-    int v5 = 0;
+    int irq = func_0206da18();
+    int fiq = func_0206d9cc();
+    int locked = 0;
+    int took = 0;
     if (OS_TryLockCartridge(0x70) == 0) {
-        v5 = 1;
-        new_var = 1;
-        v6 = new_var;
+        took = 1;
+        locked = 1;
     } else if (OS_ReadOwnerOfLockCartridge() & OS_MAINP_LOCKED_FLAG) {
-        v6 = 1;
+        locked = 1;
     }
-    new_var2 = v8;
-    if (0 != v6) {
+    if (locked) {
         int f = 0;
-        if (0, new_var2) {
+        if (irq) {
             f |= 1;
         }
-        if (v7) {
+        if (fiq) {
             f |= 2;
         }
-        if (v5) {
+        if (took) {
             f |= 0x20;
         }
         *out = f;
     } else {
-        ((void (*)(int))IRQ::SetFIQState)(v7);
-        ((void (*)(int))IRQ::SetIRQState)(v8);
+        ((void (*)(int))IRQ::SetFIQState)(fiq);
+        ((void (*)(int))IRQ::SetIRQState)(irq);
         *out = 0;
     }
-    return v6;
+    return locked;
 }
 }

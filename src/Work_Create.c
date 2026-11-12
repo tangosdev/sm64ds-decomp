@@ -1,11 +1,11 @@
 #include "types.h"
 #include "Ov007Work.h"
+#include "Ov007MenuMem.h"
 
 /* "global data": the heap name func_ov007_020c3df4 is handed (and does not
  * forward) */
 extern char data_ov007_02102dc4[];
 
-extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020b6a84(void);
 extern void func_ov007_020b697c(void);
 extern void func_ov007_020b69c4(void);

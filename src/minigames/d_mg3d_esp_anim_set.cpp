@@ -213,8 +213,8 @@ void dMg3DEspAnimSet_c::InitResources()
     BCA_File *bca;
     int i;
     mSpeed = 0x800;
-    bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(gEspHamonModelFile);
-    bca = (BCA_File *)dExtFrameCtrl_c::LoadFile(gEspHamonAnimFile);
+    bmd = dExtSimpleModel_c::LoadFile(gEspHamonModelFile);
+    bca = dExtFrameCtrl_c::LoadFile(gEspHamonAnimFile);
     dExtAnmMaterial_c::Prepare(*bmd, *(BMA_File *)&sEsp3DMaterialAnim);
     for (i = 0; i < 3; i++) {
         mModels[i].SetFile(bmd, 1, -1);
@@ -1067,9 +1067,7 @@ void dScMg3DEsp_c::Results() {
                 while (idx >= 5)
                     idx -= 5;
                 if (gMgScene != 0) {
-                    /* The ROM loads the pointer again here; a plain read
-                       reuses the earlier load. */
-                    dScMgBase_c *g = *(dScMgBase_c * volatile *)&gMgScene;
+                    dScMgBase_c *g = gMgScene;
                     if (g->mHudScore < 9999)
                         g->mHudScore++;
                     if (g->mHudScore > g->mBestHudScore)

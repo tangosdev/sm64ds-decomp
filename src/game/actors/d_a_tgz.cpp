@@ -117,8 +117,6 @@ void func_ov077_02125304(daTgz_c *self);
 
 int SurfaceInfo_TestFlag0x20(int *p);
 void func_02012694(unsigned int id, const Vector3 *pos);
-unsigned char DecIfAbove0_Byte(unsigned char *p);
-int RandomIntInternal(int *seed);
 unsigned int d_a_tgzNewHold(unsigned int uniqueID, unsigned int effectID, int x, int y, int z,
                             const void *dir, void *callback);
 extern int data_0209f32c;
@@ -780,9 +778,9 @@ done:
 int daTgz_c::InitResources()
 {
     BMD_File *bmd;
-    bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov077_02127b48);
+    bmd = dExtSimpleModel_c::LoadFile(data_ov077_02127b48);
     mModel.SetFile(bmd, 1, -1);
-    bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov077_02127b38);
+    bmd = dExtSimpleModel_c::LoadFile(data_ov077_02127b38);
     mAnmModel.SetFile(bmd, 1, -1);
     dExtFrameCtrl_c::LoadFile(gTgzWalkAnimFile);
     mAnmModel.SetAnim((BCA_File *)TGZ_BCA, 0, 0x1000, 0);

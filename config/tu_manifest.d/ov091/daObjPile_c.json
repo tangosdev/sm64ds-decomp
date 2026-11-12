@@ -654,14 +654,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@695",
+      "from": "@690",
       "to": "@783",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier Re-keyed from @764 to @695 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier Re-keyed from @764 to @695 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @695 to @691 when the member-pointer locals were removed (measured from the compiled object). Re-keyed from @691 to @690 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
-      "from": "@696",
+      "from": "@691",
       "to": "@784",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier Re-keyed from @765 to @696 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier Re-keyed from @765 to @696 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @696 to @692 when the member-pointer locals were removed (measured from the compiled object). Re-keyed from @692 to @691 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     }
   ]
 }

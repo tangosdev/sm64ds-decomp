@@ -1692,6 +1692,14 @@ def parse_file(rel, text, aliases, statics=None):
                 # `extern "C" { ... }` block. Inside one a declaration need not repeat
                 # the `extern` keyword to be one.
                 continue
+            if mangled_scope:
+                # `namespace Memory { void Deallocate(void *); }` declares
+                # `_ZN6Memory10DeallocateEPv`, not the C-linkage `Deallocate` the
+                # tree also defines. Recording it under the flat name compared it
+                # against the wrong definition and made include/Memory.h look like a
+                # header declaring `::Deallocate`. Claim nothing, exactly as the
+                # definition branches above do.
+                continue
             decls.append(Record(name, rel, line, ret, params, is_fn, linkage,
                                 False, False, _raw_types(piece, name) | file_types))
     # A delinked shard is one function in a file named for its mangled symbol, and
@@ -2263,8 +2271,75 @@ def _inline_changed_symbols(touched, base, root):
             if marker is not None:
                 symbols.add(marker[0])
     return symbols
+INCLUDE_LINE = re.compile(r'^\s*#\s*include\s+"([^"]+)"', re.M)
+TAG_ALIAS = re.compile(r"^(?:(?:const|volatile)\s+)*(?:struct|union|enum|class)\b")
+
+
+class IncludedTypedefs:
+    """The scalar and function-pointer typedefs a file sees through its `#include`s.
+
+    `local_typedefs` resolves a file's OWN typedefs, so `include/nitro/pxi/fifo.h`
+    declaring `PXI_SetFifoRecvCallback(int, PXIFifoCallback)` reads as
+    `void (*)(PXIFifoTag, unsigned int, int)`, while `src/engine/pxi/PXI_Fifo.c`,
+    which includes that header and defines the function with the same spelling, kept
+    the bare `PXIFifoCallback`. One type, two spellings, and a finding. Following the
+    file's quoted includes (transitively, as the compiler does) gives both sides the
+    same reading. The nearest header's typedef wins over a deeper one, and
+    `include/types.h` wins over both (see `collect`). A file re-typedefing a name a
+    header it includes already typedefs is a redeclaration the compiler accepts only
+    when the two agree, so which one is read makes no difference."""
+
+    def __init__(self, root, aliases):
+        self.root = pathlib.Path(root)
+        self.aliases = aliases
+        self._own = {}
+
+    def _resolve(self, name, from_rel):
+        for base in (self.root / "include", (self.root / from_rel).parent):
+            path = base / name
+            if path.is_file():
+                try:
+                    return path.resolve().relative_to(
+                        self.root.resolve()).as_posix()
+                except ValueError:
+                    return None
+        return None
+
+    def _own_and_includes(self, rel):
+        if rel not in self._own:
+            text = (self.root / rel).read_text(encoding="utf-8", errors="replace")
+            code, _marks = scrub(text)
+            incs = [self._resolve(n, rel) for n in INCLUDE_LINE.findall(text)]
+            self._own[rel] = (local_typedefs(code, self.aliases),
+                              [i for i in incs if i])
+        return self._own[rel]
+
+    def visible(self, rel, text):
+        """{name: resolved type} from every header `text` (the file `rel`) includes."""
+        queue = [self._resolve(n, rel) for n in INCLUDE_LINE.findall(text)]
+        seen, order = set(), []
+        while queue:
+            inc = queue.pop(0)
+            if not inc or inc in seen:
+                continue
+            seen.add(inc)
+            order.append(inc)
+            queue.extend(self._own_and_includes(inc)[1])
+        out = {}
+        for inc in order:
+            for k, v in self._own_and_includes(inc)[0].items():
+                if TAG_ALIAS.match(v):
+                    # `typedef struct Matrix4x3 Matrix4x3;`: the elaborated-specifier
+                    # rule already makes the two spellings one type, and folding the
+                    # name INTO its tag here would split them again.
+                    continue
+                out.setdefault(k, v)
+        return out
+
+
 def collect(root=REPO, files=None):
     aliases = scalar_typedefs(root)
+    included = IncludedTypedefs(root, aliases)
     targets = list(files) if files is not None else scan_targets(root)
     # EVERY header, never `targets`. `--changed` narrows what is compared, but a
     # class body is not a declaration of anything this tool collects, so no scope
@@ -2279,7 +2354,12 @@ def collect(root=REPO, files=None):
         if not path.exists():
             continue
         text = path.read_text(encoding="utf-8", errors="replace")
-        d, f, u = parse_file(rel, text, aliases, statics)
+        file_aliases = aliases
+        seen = included.visible(rel, text)
+        if seen:
+            file_aliases = dict(seen)
+            file_aliases.update(aliases)
+        d, f, u = parse_file(rel, text, file_aliases, statics)
         decls.extend(d)
         defs.extend(f)
         unparsed += u

@@ -9,13 +9,13 @@ namespace std {
 void terminate();
 }
 extern "C" {
-extern void *func_02071910(char *a, void *b);
+extern void *func_02071910(ThrowContext *c, void *s);
 extern void func_02072dac(int x, ActionIterator *b);
-extern void func_02071864(void *a, void *b);
+extern void func_02071864(ThrowContext *t, ActionIterator *it);
 extern u8 *ReadSignedVarInt(u8 *p, int *out);
 extern u8 *func_02071a50(u8 *p, int *out);
 u8 func_020729f4(ActionWalk *c) {
-    char *frame = &c->mThrow;
+    ThrowContext *frame = &c->mThrow;
     u8 *ip;
     u8 op;
     int m;
@@ -41,7 +41,7 @@ u8 func_020729f4(ActionWalk *c) {
         if (c->iterator.mActionTable == 0) {
             std::terminate();
         }
-        func_02071864(frame, c);
+        func_02071864(frame, &c->iterator);
         if (c->iterator.mAction == 0) {
             continue;
         }

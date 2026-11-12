@@ -30,6 +30,11 @@ void MI_StopDma(unsigned int);
 void MI_SendGXCommand(unsigned int, const void *, unsigned int);
 void MI_SendGXCommandAsync(unsigned int, const void *, unsigned int, MIDmaCallback, void *);
 
+/* Arms one channel: source, destination, then the control word that starts
+ * it, with interrupts masked (pret/pokediamond MI_dma.h). The body is in
+ * ITCM, src/MIi_DmaSetParams.cpp. */
+void MIi_DmaSetParams(unsigned int, unsigned int, unsigned int, unsigned int);
+
 #ifdef __cplusplus
 }
 #endif

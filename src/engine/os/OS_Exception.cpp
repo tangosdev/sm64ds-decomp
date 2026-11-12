@@ -18,15 +18,13 @@
 #include "types.h"
 #include "nitro/os/protectionUnit.h"
 #include "nitro/os/exception.h"
+#include "nitro/os/emulator.h"
 
 /* The debugger's exception vector slot in the shared work area. A debugger
  * that owns exceptions leaves a main-RAM handler address there. */
 #define HW_EXCP_VECTOR_BUF_FOR_DEBUGGER 0x027ffd9c
 
 extern "C" {
-
-/* local extern: no header declares OS_GetConsoleType (os_emulator.c). */
-extern int OS_GetConsoleType(void);
 
 extern OSExceptionHandler data_020a63a0; /* OSi_UserExceptionHandler */
 extern void *data_020a63a4;              /* OSi_UserExceptionHandlerArg */
@@ -44,9 +42,7 @@ void OS_InitException(void) {
         data_020a63a8 = debugger;
     else
         data_020a63a8 = 0;
-    /* 0x40000000 is the console-type bit OS_GetConsoleType sets when
-     * OSi_IsRunOnDebugger's probe succeeds. */
-    if (data_020a63a8 == 0 || (OS_GetConsoleType() & 0x40000000) == 0) {
+    if (data_020a63a8 == 0 || (OS_GetConsoleType() & OS_CONSOLE_ISDEBUGGER) == 0) {
         /* base + 0xfdc is HW_EXCP_VECTOR_BUF, the exception vector in the
          * DTCM system reserve. Written as one constant address, it no longer
          * matches. */

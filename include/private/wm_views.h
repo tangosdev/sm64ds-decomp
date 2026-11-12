@@ -10,7 +10,8 @@
  *
  * WM_Init carves the 0x1300-byte WM system buffer wm9buf into ARM7's
  * work area (WM7), the status block, the two FIFO blocks and these callback
- * tables. callbackTable has one slot per WM API id below 0x25; WmReceiveFifo
+ * tables. callbackTable has one slot per WM API id below 0x25
+ * (WM_NUM_OF_CALLBACK); WmReceiveFifo
  * handles ids from 0x25 up (the indication, port and 0x81 events) apart. */
 typedef struct WMArm9Buf {
     void *WM7;        /* 0x000 -- buf + 0x600, ARM7's work area */
@@ -18,10 +19,10 @@ typedef struct WMArm9Buf {
     char pad_08[0xc - 0x8];
     void *fifo9to7;                 /* 0x00c -- command block sent to ARM7, 0x100 bytes */
     void *fifo7to9;                 /* 0x010 -- callback block ARM7 answers in, 0x100 bytes */
-    WMCallbackFunc callbackTable[0x25]; /* 0x014 -- by API id */
+    WMCallbackFunc callbackTable[WM_NUM_OF_CALLBACK]; /* 0x014 -- by API id */
     WMCallbackFunc indCallback;     /* 0x0a8 -- the indication callback (op 0x80) */
-    WMCallbackFunc portCallbackTable[16]; /* 0x0ac */
-    void *portCallbackArgument[16]; /* 0x0ec */
+    WMCallbackFunc portCallbackTable[WM_NUM_OF_PORT]; /* 0x0ac */
+    void *portCallbackArgument[WM_NUM_OF_PORT];       /* 0x0ec */
     char pad_12c[0x13c - 0x12c];
     int initCleared; /* 0x13c -- WM_Init zeroes it; nothing else in src/ touches it */
     char pad_140[0x560 - 0x140];
@@ -45,8 +46,8 @@ typedef struct WmStartParentCallback {
 } WmStartParentCallback;
 
 /* NitroSDK WMPortRecvCallback. The offsets agree with every port receive
- * callback that reads one (WM_Ds.cpp's two data-sharing receive callbacks
- * and the file-sharing one, func_020417d0). Nothing here reads past arg, but
+ * callback that reads one (WM_Ds.c's two data-sharing receive callbacks
+ * and the file-sharing one, WFSi_PortCallback). Nothing here reads past arg, but
  * the size is the SDK's: WmReceiveFifo's static cb_Port starts at 0x020a89ec
  * and the 32-aligned fifoBuf after it at 0x020a8a40, which leaves it
  * 0x35..0x54 bytes, and pret's WM_system.s keeps the same gap. */
@@ -76,7 +77,7 @@ typedef struct WMPortRecvCallback {
 typedef struct WMDataSet {
     unsigned short aidHeader;      /* 0x00 -- members whose data the set holds */
     unsigned short receivedBitmap; /* 0x02 -- members whose data arrived */
-    unsigned short data[0x7e];     /* 0x04 */
+    unsigned short data[WM_DS_DATA_SIZE / sizeof(unsigned short)]; /* 0x04 */
 } WMDataSet;
 
 typedef char WMDataSet_size_must_be_0x100[sizeof(WMDataSet) == 0x100 ? 1 : -1];
@@ -86,8 +87,8 @@ typedef char WMDataSet_size_must_be_0x100[sizeof(WMDataSet) == 0x100 ? 1 : -1];
  * set being filled, sendIndex the next to send and readIndex the next
  * WM_StepDataSharing hands over. */
 typedef struct WMDataSharingInfo {
-    WMDataSet ds[4];              /* 0x000 */
-    unsigned short seqNum[4];     /* 0x400 -- each set's MP sequence number */
+    WMDataSet ds[WM_DS_DATASET_NUM];          /* 0x000 */
+    unsigned short seqNum[WM_DS_DATASET_NUM]; /* 0x400 -- each set's MP sequence number */
     unsigned short writeIndex;    /* 0x408 */
     unsigned short sendIndex;     /* 0x40a */
     unsigned short readIndex;     /* 0x40c */
@@ -98,7 +99,7 @@ typedef struct WMDataSharingInfo {
     unsigned short port;          /* 0x416 */
     unsigned short doubleMode;    /* 0x418 */
     unsigned short currentSeqNum; /* 0x41a */
-    unsigned short state;         /* 0x41c -- 1 running, 2 retry the send, 3 error */
+    unsigned short state;         /* 0x41c -- WMDataSharingState */
     unsigned short reserved[1];   /* 0x41e */
 } WMDataSharingInfo;
 
@@ -120,10 +121,10 @@ void WM_SetCallbackTable(WMApiid id, WMCallbackFunc callback);
 WMErrCode WMi_CheckIdle(void);
 WMErrCode WMi_CheckInitialized(void);
 
-/* NitroSDK wm_ds.c (WM_Ds.cpp): data sharing. This SDK build takes the
+/* NitroSDK wm_ds.c (WM_Ds.c): data sharing. This SDK build takes the
  * bitmap, length and mode as ints. */
-int WM_StartDataSharing(WMDataSharingInfo *, unsigned short, int, int, int);
-int WM_StepDataSharing(WMDataSharingInfo *, const void *, WMDataSet *);
+WMErrCode WM_StartDataSharing(WMDataSharingInfo *, unsigned short, int, int, int);
+WMErrCode WM_StepDataSharing(WMDataSharingInfo *, const void *, WMDataSet *);
 unsigned short *WM_GetSharedDataAddress(WMDataSharingInfo *, WMDataSet *, int);
 #ifdef __cplusplus
 }

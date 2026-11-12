@@ -173,7 +173,7 @@ int daNknk_c::InitResources()
     for (i = 0; i < 9; i++)
         dExtFrameCtrl_c::LoadFile(*data_ov062_0211cee8[i]);
 
-    f = (BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov062_0211ced8[mModelIndex]);
+    f = dExtSimpleModel_c::LoadFile(*data_ov062_0211ced8[mModelIndex]);
     if (mAnmModel.SetFile(f, 1, -1) == 0)
         return 0;
 

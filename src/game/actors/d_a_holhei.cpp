@@ -39,6 +39,7 @@
 #include "math/CalcLib.h"
 #include "SpawnInfo.h"
 #include "LevelRng.h"
+#include "math/MtxStack.h"
 
 /* A state record: daHolhei_c_ChangeState stores its address in mState
    and calls a non-null enter; past the UpdateKillByInvincibleChar check,
@@ -64,15 +65,11 @@ short Vec3_HorzAngle(const Vector3 *v0,
 int Vec3_Dist(const Vector3 *a,
               const Vector3 *b); /* local extern: named parameters preserve @NNN */
 extern Matrix4x3 IDENTITY_MATRIX4X3;
-extern void Matrix4x3_FromRotationY(struct Matrix4x3 *mF, int angY);
-extern void MTX_Concat43(const struct Matrix4x3 *m1, const struct Matrix4x3 *m0,
-                         struct Matrix4x3 *mF);
 extern int Math_Function_0203b14c(void*, int, int, int, int);
 unsigned short
 DecIfAbove0_Short(unsigned short *p); /* local extern: named parameters preserve @NNN */
 extern signed char gCurrentSublevel;
 extern int AngleDiff(int a, int b);
-int RandomIntInternal(int *s); /* local extern: named parameters preserve @NNN */
 }
 
 /* Resource handles owned by this TU. The static initializer constructs the
@@ -173,7 +170,7 @@ s32 daHolhei_c::OnAimedAtWithEgg() {
    home and previous positions, then the starting state. */
 int daHolhei_c::InitResources()
 {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(gHoruheiModelFile), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(gHoruheiModelFile), 1, -1);
     mShadowModel.InitCylinder();
     dExtFrameCtrl_c::LoadFile(gHoruheiLiftAnimationFile);
     dExtFrameCtrl_c::LoadFile(gHoruheiLiftLoopAnimationFile);
@@ -182,9 +179,9 @@ int daHolhei_c::InitResources()
     dExtFrameCtrl_c::LoadFile(gHoruheiWalkAnimationFile);
     mVertAccel = -0x3000;
     mTerminalVelocity = -0x1e000;
-    mdCc_c.Init((dActor_c *)this, 0xc8000, 0xfa000, 0x200004, 0x3010);
+    mdCc_c.Init(this, 0xc8000, 0xfa000, 0x200004, 0x3010);
     mModel.speed = 0x1000;
-    mMeshClsn.Init((dActor_c *)this, 0x118000, 0x118000, 0, 0);
+    mMeshClsn.Init(this, 0x118000, 0x118000, 0, 0);
     mHomePosX = mPosX;
     mHomePosY = mPosY;
     mHomePosZ = mPosZ;

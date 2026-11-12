@@ -69,6 +69,8 @@
 #include "private/mtx43.h"
 #include "LevelRng.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 /* Written as the real constructor, which is the form the legacy shard recovered
    and byte-matched. Two steps, and neither is spelled below: the dActor_c
@@ -156,7 +158,6 @@ void dEnemyBase_c::UpdateWMClsn(dBgCh_Actr &clsn, unsigned int sel) {
    types.h's Vector3 -- which declares ~Vector3(){} and is therefore NOT a POD --
    for the local `v` costs nothing here, all 0x13c bytes reproduce, which is what
    lets dActor_c::Spawn take it by const reference as its real signature says. */
-extern "C" int RandomIntInternal(int *seed);
 extern u16 data_ov002_020ff014[]; /* coin actor IDs: 0x120, 0x121, 0x122 */
 
 void dEnemyBase_c::SpawnCoin()
@@ -325,8 +326,6 @@ void Aea30C::func_ov002_020ae87c(dActor_c* a, dBgCh_Actr*)
     func_ov002_020ae8b8(this, a);
 }
 
-extern "C" s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
-
 void Aea30C::func_ov002_020ae844(dActor_c* a, dBgCh_Actr*)
 {
     s16 angle = Vec3_HorzAngle(&a->mPos, &mPos);
@@ -360,10 +359,6 @@ void Aea30C::func_ov002_020ae73c(dActor_c* a, dBgCh_Actr*)
    FUNCTION, then the position and mesh collision are updated regardless. */
 typedef int (dEnemyBase_c::*DeathPMF)(dBgCh_Actr &);
 extern DeathPMF data_ov002_0210dbc0[];
-
-extern "C" {
-extern unsigned short DecIfAbove0_Short(unsigned short *p);
-}
 
 int dEnemyBase_c::UpdateDeath(dBgCh_Actr &clsn) {
     int ret;
@@ -546,9 +541,6 @@ int dEnemyBase_c::AngleAwayFromWallOrCliff(dBgCh_Actr &clsn, short &outAngle) {
    mSpeedX/mSpeedZ and mHorzSpeed becomes the horizontal length of the
    mSpeedX/mVertSpeed/mSpeedZ triple. mSpitOutTimer is set to 5 at the spit
    and counted down here; the subclasses read 5 and 0 off it. */
-extern "C" {
-extern s32 Vec3_HorzLen(const Vector3 *v);
-}
 
 /* The three dActor_c::mFlags bits Yoshi's mouth drives. */
 enum { YOSHI_SWALLOWED = 0x20000, YOSHI_HOLDING = 0x40000, YOSHI_SPAT_OUT = 0x80000 };
@@ -778,14 +770,6 @@ void dEnemyBase_c::KillByInvincibleChar(const Vector3_16 &spin, daPly_c &player,
    check is spelled. The model spins about the height OnAimedAtWithEgg (vtable
    slot 29) reports, the point Yoshi's egg aims at: it is lifted to that height,
    rotated, and dropped back. */
-extern "C" {
-extern void Vec3_Asr(Vector3 *dst, Vector3 *src, int sh);
-extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, int x, int y, int z);
-extern Matrix4x3 data_020a0e68;
-}
-
 int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr &clsn, dExtAnmModel_c &anim,
                                              unsigned int flags) {
     Vector3 v;

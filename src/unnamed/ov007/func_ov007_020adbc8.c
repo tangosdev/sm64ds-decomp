@@ -1,7 +1,7 @@
 #include "Ov007BgLayer.h"
 #include "Ov007LayerSlot.h"
+#include "Ov007MenuMem.h"
 
-extern void func_ov007_020c3d1c(void *p);
 extern void func_ov007_020c937c(void *state);
 
 /* Frees a layer slot: kinds 1 and 5 own the 0x800-byte screen buffer

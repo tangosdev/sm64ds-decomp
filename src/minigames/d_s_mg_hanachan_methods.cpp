@@ -78,6 +78,7 @@ enum dScMgHanachan_c_AssetId {
 #include "SpawnInfo.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "math/CalcLib.h"
 #include "LevelRng.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
@@ -184,7 +185,6 @@ extern int func_0203d5dc(const int *a, const int *b);
 extern void func_0203d704(int *o, int *a, int *b);
 extern void Vec2_Sub(int *o, int *a, int *b);
 extern void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
-extern int RandomIntInternal(int *seed);
 /* sHanaPickedLow is only read where it is unsigned and only written as a
    halfword, so the unsigned spelling costs the writer nothing. */
 extern unsigned short sHanaPickedLow;

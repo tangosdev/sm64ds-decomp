@@ -63,11 +63,6 @@ static inline int IsOffScreen(dActor_c *actor) {
     return (actor->mFlags & 8) != 0;
 }
 
-/* local extern: no shared header declares this. */
-extern "C" {
-extern void Vec3_Asr(Vector3 *destination, Vector3 *source, s32 shift);
-}
-
 /* Retail static init constructs these 8-byte handles and registers their
  * destructors. Wrapper spellings are reconstructed; ctor/dtor addresses,
  * file IDs, widths, and BSS order are ROM evidence. */

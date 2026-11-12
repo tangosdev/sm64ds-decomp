@@ -150,7 +150,7 @@ struct dBgW_Kc : dBgW {
     void SetDepthDir(const Vector3 *); /* 0x01ffb07c */
 
     /* --- static --- */
-    static char *LoadFile(SharedFilePtr &ptr);
+    static KCL_File *LoadFile(SharedFilePtr &ptr);
     static void UpdateFileOffsets(KCL_File &file);
     /* Geometry division guard: abs(value) <= 8. */
     static bool IsNearZeroDivisor(int);

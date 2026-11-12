@@ -24,9 +24,8 @@
  * - g_profile_SET_SE is ov002 gap data outside this TU (S14), as are the
  *   sound table and the WATERFALL_SOUNDS_DISABLED flag this TU reads and
  *   writes.
- * - InitResources keeps the volatile param1 RMW (param1 &= 0xf
- *   materializes an extra base pointer) and the (int)-cast re-tests
- *   (direct tests come out six words short of the ROM).
+ * - InitResources keeps the (int)-cast re-tests (direct tests, bool
+ *   locals and inline bool predicates all miss the ROM).
  */
 
 #include "daSetSE_c.h"
@@ -57,10 +56,11 @@ int daSetSE_c::InitResources()
     if (gCurrentSublevel == 8 && (gCurrentStarId == 1 || IsStarCollectedInLevel(8, 1) == 0))
         return 0;
 
-    /* Volatile keeps CW from materializing an extra base pointer for this
-       inherited-field RMW; the ROM loads and stores [this + 0x08] directly. */
-    u32 soundID = *(volatile u32 *)&param1;
-    *(volatile u32 *)&param1 = soundID & 0xf;
+    /* The int local is load-bearing: a u32 temporary or `param1 &= 0xf`
+       makes CW materialize this + 0x08 into its own base register, where
+       the ROM loads and stores [this + 0x08] directly. */
+    int soundID = param1 & 0xf;
+    param1 = soundID;
 
     /* The (int) casts are load-bearing, not noise: each forces its boolean
        to materialize into a word before the re-test, and spelling the

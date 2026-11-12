@@ -22,9 +22,6 @@
  * func_0203b244 and func_0203b27c take its address and stay free C functions.
  *
  * Measured spellings kept for the bytes:
- * - AfterInitResources stores mFlags through `*(u32 *)&mFlags`: the ROM
- *   materialises the address first, while the plain member OR folds the offset
- *   into the load/store and comes out 4 bytes short.
  * - The constructor runs an unreachable Vector3s[2], which odr-uses
  *   _ZN8Vector3sD1Ev into its helper slot (0x02011508, four bytes) between C1
  *   and C2. The union and dBase_c destructors mwcc emits in the same slot have
@@ -203,12 +200,7 @@ bool dActor_c::BeforeInitResources()
 void dActor_c::AfterInitResources(u32 vfSuccess)
 {
     dBase_c::AfterInitResources(vfSuccess);
-    /* The store through `*(u32 *)&mFlags` is a codegen launder, not a type
-       conversion: the ROM materialises the address into a register first
-       (`add r1,r4,#0xb0`) and then does the read-modify-write through it.
-       Writing `mFlags |= 0x38` folds the offset into the ldr/str and comes
-       out 4 bytes short. */
-    *(u32 *)&mFlags |= 0x38;
+    mFlags |= 0x38;
 }
 
 int dActor_c::BeforeCleanupResources()
@@ -259,10 +251,9 @@ int dActor_c::BeforeBehavior()
                 if (mFlags & 0x10000)
                     return 0;
             } else {
-                u32 *p = &mFlags;
-                *p &= ~0x38;
+                mFlags &= ~0x38;
                 if (r > mFarDistance)
-                    *p |= 0x10;
+                    mFlags |= 0x10;
             }
         } else {
             mFlags &= ~0x38;

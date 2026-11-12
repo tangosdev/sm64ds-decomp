@@ -1,6 +1,6 @@
 #include "types.h"
 #include "Ov007Mesh.h"
-extern void *func_ov007_020c3df4(const char *name, int size);
+#include "Ov007MenuMem.h"
 
 /* Allocates a material, copied from src when given, else the defaults:
  * opaque, white diffuse, no texture. */

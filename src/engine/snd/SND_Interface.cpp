@@ -19,6 +19,7 @@
 #include "types.h"
 #include "nitro/snd/alarm.h"
 #include "nitro/snd/command.h"
+#include "nitro/snd/interface.h"
 
 extern "C" {
 

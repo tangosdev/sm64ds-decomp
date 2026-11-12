@@ -1,7 +1,7 @@
-#include "private/wbt_block_info_list.h"
+#include "nitro/wbt.h"
 
-extern struct WBTBlockInfoList *data_020a94d0;
+extern WBTBlockInfoList *data_020a94d0;
 
-void func_02065ad0(struct WBTBlockInfoList *list) {
+void func_02065ad0(WBTBlockInfoList *list) {
     data_020a94d0 = list;
 }

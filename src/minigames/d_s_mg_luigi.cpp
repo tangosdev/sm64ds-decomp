@@ -84,7 +84,6 @@ struct IrisScanline {
 
 /* C-linkage engine calls and the remaining local helpers. */
 extern "C" {
-extern int GX_HBlankIntr(int);
 /* Functions the members call need C linkage at file scope. Data names do
    not mangle, so the data_* declarations stay next to their users. */
 extern int RandomIntInternal(int *seed);

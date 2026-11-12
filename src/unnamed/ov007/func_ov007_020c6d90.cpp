@@ -1,9 +1,9 @@
 //cpp
 #include "Ov007Picker.h"
+#include "Ov007MenuMem.h"
 
 extern "C" {
 extern void func_ov007_020c78dc(Ov007PointList *list);
-extern void func_ov007_020c3d1c(void *p);
 /* A long-branch veneer to func_ov007_020c3d1c, the free hook. */
 extern void func_ov007_020c8098(void *p);
 extern void func_ov007_020c2bf8(void *path);

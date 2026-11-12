@@ -1,4 +1,6 @@
 //cpp
+#include "nitro/gx/gxcommon.h"
+#include "Ov007SpriteBank.h"
 enum { FLIP_HORIZONTAL = 0x10000000, FLIP_VERTICAL = 0x20000000, FLIP_BOTH = 0x30000000 };
 // Keep mode membership integer-valued; mwcc otherwise shares C++ bool tests.
 static inline int HasOamFlip(int mode, int axis) {
@@ -11,7 +13,7 @@ extern "C" {
 extern unsigned short data_ov007_020d7d7c[][4];
 extern unsigned short data_ov007_020d7d94[][4];
 
-void func_ov007_020c0eb0(unsigned short *dst, unsigned short *src, int xoff, int yoff,
+void func_ov007_020c0eb0(GXOamAttr *dst, const Ov007CellEntry *src, int xoff, int yoff,
                          unsigned char prio, int flip, int mosaic, int affineIdx) {
     unsigned short attr0;
     unsigned short attr1;
@@ -25,15 +27,15 @@ void func_ov007_020c0eb0(unsigned short *dst, unsigned short *src, int xoff, int
     int sy;
     int sx;
 
-    attr0 = src[0];
-    attr1 = src[1];
+    attr0 = src->attr0;
+    attr1 = src->attr1;
     tx = attr1 << 7;
     ty = attr0 << 8;
     x = tx >> 7;
     y = ty >> 8;
     size = attr1 >> 14;
     shape = attr0 >> 14;
-    attr2 = src[2];
+    attr2 = src->attr2;
 
     if (!(attr0 & 0x100) && flip != 0) {
         if (HasOamFlip(flip, FLIP_HORIZONTAL)) {
@@ -46,21 +48,21 @@ void func_ov007_020c0eb0(unsigned short *dst, unsigned short *src, int xoff, int
         }
     }
 
-    dst[0] = attr0;
-    dst[1] = attr1;
-    dst[2] = attr2;
+    dst->attr0 = attr0;
+    dst->attr1 = attr1;
+    dst->attr2 = attr2;
 
     if (affineIdx >= 0) {
-        *(unsigned int *)dst = (*(unsigned int *)dst & 0xc1fffcff) | 0x100 | (affineIdx << 25);
+        dst->attr01 = (dst->attr01 & 0xc1fffcff) | 0x100 | (affineIdx << 25);
     }
     sy = y + yoff;
     sx = x + xoff;
-    *(unsigned int *)dst = (*(unsigned int *)dst & 0xfe00ff00) | (sy & 0xff) | ((sx & 0x1ff) << 16);
-    dst[2] = (dst[2] & ~0xc00) | (prio << 10);
+    dst->attr01 = (dst->attr01 & 0xfe00ff00) | (sy & 0xff) | ((sx & 0x1ff) << 16);
+    dst->attr2 = (dst->attr2 & ~0xc00) | (prio << 10);
     if (mosaic) {
-        *(unsigned int *)dst |= 0x1000;
+        dst->attr01 |= 0x1000;
     } else {
-        *(unsigned int *)dst &= ~0x1000;
+        dst->attr01 &= ~0x1000;
     }
 }
 }

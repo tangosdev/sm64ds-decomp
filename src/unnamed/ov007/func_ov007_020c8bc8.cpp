@@ -1,5 +1,6 @@
 //cpp
 #include "Ov007Transition.h"
+#include "nitro/hw/registers.h"
 typedef long long s64;
 
 /* Eases EVA and EVB by the Q12 progress t and writes BLDALPHA on the chosen
@@ -27,8 +28,8 @@ extern "C" void func_ov007_020c8bc8(Ov007Transition *tr, int t) {
         if (tr->effect == 3)
             vip = 0x10 - v2;
         if (tr->screens & 1)
-            *(volatile unsigned short *)0x4000052 = (unsigned short)(v2 | (vip << 8));
+            REG_BLDALPHA = (u16)(v2 | (vip << 8));
         if (tr->screens & 2)
-            *(volatile unsigned short *)0x4001052 = (unsigned short)(v2 | (vip << 8));
+            REG_DB_BLDALPHA = (u16)(v2 | (vip << 8));
     }
 }

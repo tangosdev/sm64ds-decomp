@@ -1,10 +1,10 @@
 //cpp
 #include "types.h"
 #include "Heap.h"
+#include "nitro/os/init.h"
 
 extern "C" {
 
-extern void OS_Init(void);
 extern void func_0201a490(void);
 extern void func_02019ebc(void);
 extern mHeap::Heap_t *data_020a0e9c;

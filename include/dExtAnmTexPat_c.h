@@ -61,7 +61,7 @@ struct dExtAnmTexPat_c : dExtFrameCtrl_c {
 
     /* --- static --- */
     static void Prepare(BMD_File &model, BTP_File &animFile);
-    static void *LoadFile(SharedFilePtr &ptr);
+    static BTP_File *LoadFile(SharedFilePtr &ptr);
     static void UpdateFileOffsets(BTP_File &file);
 };
 

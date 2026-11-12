@@ -187,28 +187,6 @@ enum {
     kHopSpeed = 0xf000              /* 15 units a frame upward */
 };
 
-/* Local stand-ins with no header of their own. */
-
-/* The resource block mFileTable points at. CleanupResources releases files[0..4];
- * SetAnim loads each file's BCA through filePtr; OnAimedAtWithEgg reads
- * eggAimHeight (slot-29 return, added to pos.y); 02115f98 / 021165d8 / 0211616c
- * read the rest. */
-struct BullyResourceConfig {
-    SharedFilePtr *files[5];    /* +0x00 -- see kFileModel / kAnim* */
-    s32 cylinderRadius;         /* +0x14 -- dCcAc_c radius; also how far along the aim direction func_ov064_02115f98 places the hit effect */
-    s32 cylinderHeight;         /* +0x18 -- dCcAc_c height (InitResourcesCommon) */
-    s32 horzDecel;              /* +0x1c -- copied to Tail::mHorzDecel */
-    s32 modelYOffset;           /* +0x20 -- copied to Tail::mModelYOffset */
-    Fix12i eggAimHeight;        /* +0x24 -- passed as both radius and height to dBgCh_Actr::Init; OnAimedAtWithEgg returns it as the aim height */
-    s32 shadowRadius;           /* +0x28 -- copied to Tail::mShadowRadius */
-    s32 cliffDown;              /* +0x2c -- IsGoingOffCliff's `down` probe depth */
-    u32 particleId;             /* +0x30 -- first of two ids func_ov064_0211616c spawns */
-};
-
-/* The resource block of an actor, and the BCA of one of its animation slots. */
-#define CONFIG(obj) ((BullyResourceConfig *)(obj)->mFileTable)
-#define CONFIG_BCA(obj, slot) ((BCA_File *)CONFIG(obj)->files[slot]->filePtr)
-
 /* ROM symbols with no header of their own. `extern` on every data declaration:
  * without it the block form defines rather than declares. */
 extern "C" {
@@ -232,17 +210,17 @@ int daOts_c::InitResourcesCommon()
 {
     BMD_File *bmd;
 
-    dExtFrameCtrl_c::LoadFile(*CONFIG(this)->files[kAnimDeath]);
-    dExtFrameCtrl_c::LoadFile(*CONFIG(this)->files[kAnimHit]);
-    dExtFrameCtrl_c::LoadFile(*CONFIG(this)->files[kAnimLedgeTurn]);
-    dExtFrameCtrl_c::LoadFile(*CONFIG(this)->files[kAnimWalk]);
-    bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(*CONFIG(this)->files[kFileModel]);
+    dExtFrameCtrl_c::LoadFile(*mFileTable->files[kAnimDeath]);
+    dExtFrameCtrl_c::LoadFile(*mFileTable->files[kAnimHit]);
+    dExtFrameCtrl_c::LoadFile(*mFileTable->files[kAnimLedgeTurn]);
+    dExtFrameCtrl_c::LoadFile(*mFileTable->files[kAnimWalk]);
+    bmd = dExtSimpleModel_c::LoadFile(*mFileTable->files[kFileModel]);
     if (mAnmModel.SetFile(bmd, 1, 1) == 0)
         return 0;
     if (mShadowModel.InitCylinder() == 0)
         return 0;
-    mAnmModel.SetAnim((BCA_File *)(CONFIG_BCA(this, kAnimWalk)), 0, kAnimSpeedNormal, 0);
-    mdCcAc_c.Init(this, CONFIG(this)->cylinderRadius, CONFIG(this)->cylinderHeight, 0x200000,
+    mAnmModel.SetAnim((BCA_File *)mFileTable->files[kAnimWalk]->filePtr, 0, kAnimSpeedNormal, 0);
+    mdCcAc_c.Init(this, mFileTable->cylinderRadius, mFileTable->cylinderHeight, 0x200000,
                   kHitAttackMask | kHitEgg);
     {
         int isD9 = (int)(actorID == kChillBullyActorId);
@@ -258,12 +236,11 @@ int daOts_c::InitResourcesCommon()
     tail().mPosBeforeMoveZ = mPosZ;
     mVertAccel = -0x4000;
     mTerminalVelocity = -0x32000;
-    tail().mHorzDecel = CONFIG(this)->horzDecel;
-    tail().mModelYOffset = CONFIG(this)->modelYOffset;
+    tail().mHorzDecel = mFileTable->horzDecel;
+    tail().mModelYOffset = mFileTable->modelYOffset;
     mStateTimer = 0;
-    mWithMeshClsn.Init((dActor_c *)this, CONFIG(this)->eggAimHeight, CONFIG(this)->eggAimHeight, 0,
-                       0);
-    tail().mShadowRadius = CONFIG(this)->shadowRadius;
+    mWithMeshClsn.Init((dActor_c *)this, mFileTable->eggAimHeight, mFileTable->eggAimHeight, 0, 0);
+    tail().mShadowRadius = mFileTable->shadowRadius;
     mParticle1 = 0;
     mParticle0 = mParticle1;
     return 1;
@@ -306,7 +283,8 @@ int daOts_c::BehaviorCommon()
         mHorzSpeed = kWalkSpeed;
         if (ReturnHomeIfSafe() != 0) {
             tail().mState = STATE_CHASE;
-            mAnmModel.SetAnim((BCA_File *)(CONFIG_BCA(this, kAnimWalk)), 0, kAnimSpeedDouble, 0);
+            mAnmModel.SetAnim((BCA_File *)mFileTable->files[kAnimWalk]->filePtr, 0,
+                              kAnimSpeedDouble, 0);
         }
         Step();
         mAngleY = mPrevAngleY;
@@ -380,11 +358,11 @@ int daOts_c::CleanupResources()
 {
     /* Caching the block in a local (`cfg->files[i]->Release()`) size-DIFFs; going
        through mFileTable each time is the MATCH form. */
-    CONFIG(this)->files[kFileModel]->Release();
-    CONFIG(this)->files[kAnimDeath]->Release();
-    CONFIG(this)->files[kAnimHit]->Release();
-    CONFIG(this)->files[kAnimLedgeTurn]->Release();
-    CONFIG(this)->files[kAnimWalk]->Release();
+    mFileTable->files[kFileModel]->Release();
+    mFileTable->files[kAnimDeath]->Release();
+    mFileTable->files[kAnimHit]->Release();
+    mFileTable->files[kAnimLedgeTurn]->Release();
+    mFileTable->files[kAnimWalk]->Release();
     return 1;
 }
 
@@ -469,8 +447,9 @@ void daOts_c::CheckMarioCollision() {
             this->mHorzSpeed = kHitSpeedHeavy;
         else
             this->mHorzSpeed = kHitSpeedLight;
-        this->mAnmModel.SetAnim((BCA_File *)(CONFIG_BCA(this, kAnimHit)), 0, kAnimSpeedNormal, 0);
-        func_ov064_02115f98((char*)hitPlayer);
+        this->mAnmModel.SetAnim((BCA_File *)mFileTable->files[kAnimHit]->filePtr, 0,
+                                kAnimSpeedNormal, 0);
+        func_ov064_02115f98((char *)hitPlayer);
         tail().mState = STATE_KNOCKED_BACK;
         tail().mHopCount = 0;
         this->PlayHitSound();
@@ -480,8 +459,9 @@ void daOts_c::CheckMarioCollision() {
     if (hitFlags & kHitEgg) {
         this->mPrevAngleY = hitPlayer->mPrevAngleY;
         this->mHorzSpeed = kHitSpeedLight;
-        this->mAnmModel.SetAnim((BCA_File *)(CONFIG_BCA(this, kAnimHit)), 0, kAnimSpeedNormal, 0);
-        func_ov064_02115f98((char*)hitPlayer);
+        this->mAnmModel.SetAnim((BCA_File *)mFileTable->files[kAnimHit]->filePtr, 0,
+                                kAnimSpeedNormal, 0);
+        func_ov064_02115f98((char *)hitPlayer);
         tail().mState = STATE_KNOCKED_BACK;
         tail().mHopCount = 0;
         this->PlayHitSound();
@@ -495,7 +475,7 @@ void daOts_c::CheckMarioCollision() {
             v[0] = 0x2000;
             v[1] = 0;
             v[2] = 0;
-            KillByInvincibleChar(*(Vector3_16 *)v, *hitPlayer, CONFIG(this)->eggAimHeight);
+            KillByInvincibleChar(*(Vector3_16 *)v, *hitPlayer, mFileTable->eggAimHeight);
             this->PlayHitSound();
             return;
         }
@@ -504,8 +484,9 @@ void daOts_c::CheckMarioCollision() {
     if (hitFlags & kHitBit40000) {
         this->mPrevAngleY = hitPlayer->mAngleY;
         this->mHorzSpeed = kHitSpeedBit40000;
-        this->mAnmModel.SetAnim((BCA_File *)(CONFIG_BCA(this, kAnimHit)), 0, kAnimSpeedNormal, 0);
-        func_ov064_02115f98((char*)hitPlayer);
+        this->mAnmModel.SetAnim((BCA_File *)mFileTable->files[kAnimHit]->filePtr, 0,
+                                kAnimSpeedNormal, 0);
+        func_ov064_02115f98((char *)hitPlayer);
         tail().mState = STATE_KNOCKED_BACK;
         tail().mHopCount = 0;
         this->PlayHitSound();
@@ -518,8 +499,9 @@ void daOts_c::CheckMarioCollision() {
             this->mHorzSpeed = kHitSpeedHeavy;
         else
             this->mHorzSpeed = kHitSpeedLight;
-        this->mAnmModel.SetAnim((BCA_File *)(CONFIG_BCA(this, kAnimHit)), 0, kAnimSpeedNormal, 0);
-        func_ov064_02115f98((char*)hitPlayer);
+        this->mAnmModel.SetAnim((BCA_File *)mFileTable->files[kAnimHit]->filePtr, 0,
+                                kAnimSpeedNormal, 0);
+        func_ov064_02115f98((char *)hitPlayer);
         tail().mState = STATE_KNOCKED_BACK;
         tail().mHopCount = 0;
         this->PlayHitSound();
@@ -530,9 +512,10 @@ void daOts_c::CheckMarioCollision() {
         hitPlayer->mHorzSpeed = -this->mHorzSpeed;
         this->mPrevAngleY = (s16)(this->mAngleY + 0x8000);
         this->mHorzSpeed = kHitSpeedLight;
-        this->mAnmModel.SetAnim((BCA_File *)(CONFIG_BCA(this, kAnimWalk)), 0, kAnimSpeedNormal, 0);
+        this->mAnmModel.SetAnim((BCA_File *)mFileTable->files[kAnimWalk]->filePtr, 0,
+                                kAnimSpeedNormal, 0);
         this->PlayShellHitSound();
-        func_ov064_02115f98((char*)hitPlayer);
+        func_ov064_02115f98((char *)hitPlayer);
         tail().mState = STATE_KNOCKED_BACK;
         tail().mHopCount = 0;
         this->PlayHitSound();
@@ -564,7 +547,8 @@ void daOts_c::CheckMarioCollision() {
         else
             this->mHorzSpeed = kHurtRecoilSpeedBigBully;
     }
-    this->mAnmModel.SetAnim((BCA_File *)(CONFIG_BCA(this, kAnimWalk)), 0, kAnimSpeedNormal, 0);
+    this->mAnmModel.SetAnim((BCA_File *)mFileTable->files[kAnimWalk]->filePtr, 0, kAnimSpeedNormal,
+                            0);
     this->PlayShellHitSound();
 }
 
@@ -605,17 +589,14 @@ int daOts_c::ReturnHomeIfSafe() {
 void daOts_c::Step() {
     this->UpdatePos(0);
 
-    if (this->IsGoingOffCliff(
-            this->mWithMeshClsn,
-            CONFIG(this)->cliffDown,
-            0x2888, 0, 1, 0x32000) != 0
-        && tail().mState != STATE_KNOCKED_BACK
-        && tail().mState != STATE_LEDGE_TURN) {
+    if (this->IsGoingOffCliff(this->mWithMeshClsn, mFileTable->cliffDown, 0x2888, 0, 1, 0x32000) !=
+            0 &&
+        tail().mState != STATE_KNOCKED_BACK && tail().mState != STATE_LEDGE_TURN) {
         this->mPosX = tail().mPosBeforeMoveX;
         this->mPosZ = tail().mPosBeforeMoveZ;
         tail().mState = STATE_LEDGE_TURN;
-        this->mAnmModel.SetAnim((BCA_File *)(CONFIG_BCA(this, kAnimLedgeTurn)), 0, kAnimSpeedNormal,
-                                0);
+        this->mAnmModel.SetAnim((BCA_File *)mFileTable->files[kAnimLedgeTurn]->filePtr, 0,
+                                kAnimSpeedNormal, 0);
     }
 
     this->UpdateWMClsn(this->mWithMeshClsn, 0);
@@ -651,7 +632,7 @@ void daOts_c::ActChaseMario() {
     if (IsPlayerInRange(tail().mHomePosX, this->mPosY, tail().mHomePosZ, kKeepChaseRange))
         return;
     tail().mState = STATE_RETURN_HOME;
-    mAnmModel.SetAnim((BCA_File *)(CONFIG_BCA(this, kAnimWalk)), 0, kAnimSpeedNormal, 0);
+    mAnmModel.SetAnim((BCA_File *)mFileTable->files[kAnimWalk]->filePtr, 0, kAnimSpeedNormal, 0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -684,7 +665,7 @@ void daOts_c::ActKnockback() {
         tail().mState = STATE_CHASE;
         this->mPrevAngleY = this->mAngleY;
         {
-            BCA_File *anim = CONFIG_BCA(this, kAnimWalk);
+            BCA_File *anim = (BCA_File *)mFileTable->files[kAnimWalk]->filePtr;
             this->mAnmModel.SetAnim((BCA_File *)anim, 0, kAnimSpeedDouble, 0);
         }
         return;
@@ -713,7 +694,7 @@ void daOts_c::ActBackUp() {
         return;
     mPrevAngleY = mAngleY;
     tail().mState = STATE_RETURN_HOME;
-    BCA_File *f = CONFIG_BCA(this, kAnimWalk);
+    BCA_File *f = (BCA_File *)mFileTable->files[kAnimWalk]->filePtr;
     mAnmModel.SetAnim((BCA_File *)f, 0, kAnimSpeedNormal, 0);
     return;
 }
@@ -790,7 +771,7 @@ void daOts_c::CheckFloorDeath() {
                 tail().mState = STATE_REMOVE;
             } else if (r == 1) {
                 tail().mState = STATE_DYING;
-                this->mAnmModel.SetAnim((BCA_File *)(CONFIG_BCA(this, kAnimDeath)), 0,
+                this->mAnmModel.SetAnim((BCA_File *)mFileTable->files[kAnimDeath]->filePtr, 0,
                                         kAnimSpeedNormal, 0);
                 this->mFlags &= ~1u;
                 this->PlayDeathSound();
@@ -817,10 +798,10 @@ int daOts_c::func_ov064_0211616c() {
     }
     this->mPosY = this->mPosY - 0x5000;
     this->mParticle0 =
-        (u32)Particle::System::New(this->mParticle0, CONFIG(this)->particleId, tail().mHomePosX,
+        (u32)Particle::System::New(this->mParticle0, mFileTable->particleId, tail().mHomePosX,
                                    tail().mHomePosY, tail().mHomePosZ, 0, 0);
     this->mParticle1 =
-        (u32)Particle::System::New(this->mParticle1, CONFIG(this)->particleId + 1, tail().mHomePosX,
+        (u32)Particle::System::New(this->mParticle1, mFileTable->particleId + 1, tail().mHomePosX,
                                    tail().mHomePosY, tail().mHomePosZ, 0, 0);
     return 0;
 }
@@ -874,7 +855,7 @@ void daOts_c::func_ov064_02115f98(char* a1)
     pos1[2] = p1[2];
     tmpy = tmpy + 0x46000;
 
-    scale = CONFIG(this)->cylinderRadius;
+    scale = mFileTable->cylinderRadius;
     pos0[1] = y0 + tail().mModelYOffset;
     pos1[1] = tmpy;
 
@@ -914,7 +895,7 @@ void daOts_c::func_ov064_02115f98(char* a1)
  * config->eggAimHeight, or 20 units when there is no config block. */
 int daOts_c::OnAimedAtWithEgg()
 {
-    BullyResourceConfig *config = (BullyResourceConfig *)mFileTable;
+    BullyResourceConfig *config = mFileTable;
     Fix12i aimHeight = 0x14000;
     if (config != 0)
         aimHeight = config->eggAimHeight;

@@ -97,9 +97,9 @@ extern KrpaModelFilePtr gKeronpaModelFile;
 
 int daKrpa_c::InitResources() {
     Vector3 offset;
-    void *bmd = dExtSimpleModel_c::LoadFile(gKeronpaModelFile);
+    BMD_File *bmd = dExtSimpleModel_c::LoadFile(gKeronpaModelFile);
     int groundDistance;
-    mAnmModel.SetFile((BMD_File *)bmd, 1, 1);
+    mAnmModel.SetFile(bmd, 1, 1);
     if (!mShadowModel.InitCylinder())
         return 0;
 

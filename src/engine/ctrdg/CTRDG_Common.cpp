@@ -74,9 +74,8 @@ void CTRDGi_ChangeLatestAccessCycle(int *cycle) {
 }
 
 void CTRDGi_RestoreAccessCycle(int *cycle) {
-    volatile u16 *reg = (volatile u16 *)0x4000204;
-    *reg = (cycle[0] << 2) | (*reg & ~0xc);
-    *reg = (cycle[1] << 4) | (*reg & ~0x10);
+    REG_EXMEMCNT = (cycle[0] << 2) | (REG_EXMEMCNT & ~0xc);
+    REG_EXMEMCNT = (cycle[1] << 4) | (REG_EXMEMCNT & ~0x10);
 }
 
 void CTRDGi_LockByProcessor(u16 lockID, int *info) {

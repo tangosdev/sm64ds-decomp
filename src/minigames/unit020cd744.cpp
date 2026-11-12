@@ -43,6 +43,9 @@
 #include "dExtAnmTexSRT_c.h"
 #include "math/Approach.h"
 #include "math/Quaternion.h"
+#include "math/CalcLib.h"
+#include "math/MtxStack.h"
+#include "MgCamera.h"
 
 /* Typed access at the two boundaries that still take a raw pointer: the
    void * entry points decl_common.h declares (MotionHover, MotionSway,
@@ -134,7 +137,7 @@ void *sTrmp2MarioPtrs[5];
 void *sTrmpJumpers[5];
 
 /* Other units' data. */
-extern void *sMgSubCamera;
+extern MgCamera *sMgSubCamera;
 extern int sTrmpItemHitsOff; /* d_mg_trmpln2_mario: stops item scoring */
 extern int sTrmpItemPatrolLimits[];
 extern int sTrmpItemPatrolSpeed[];
@@ -154,9 +157,6 @@ extern int sTrmpLineWeakPitchMid;
 extern int sTrmpLineStrongPitchEnd;
 extern int sTrmpLineStrongPitchMid;
 extern Vector3 data_020a0ebc;
-/* math/MtxStack.h also declares this, but parsing the MtxStack class ahead of
-   this TU's statics shifts their mwcc @NNN uniquifiers by +76 (measured). */
-extern Matrix4x3 data_020a0e68; /* local extern: the include renumbers the statics */
 extern Matrix4x3 data_0209b3ec; /* the view matrix, Graphics3D.cpp */
 extern int data_02092768[4];
 extern int data_020a0db0;
@@ -180,7 +180,6 @@ extern StateRecord pmf_TrmpLine_StateSettle;
 extern StateRecord pmf_TrmpLine_StateFlex;
 
 /* Other units' functions. */
-void Camera_ProjectToScreen(void *, void *, int *, int *);
 void Jump2Popup_Spawn(int, int, int);
 void D3D_PlaySePannedLoop(int, int, int);
 void Trmp2Spinner_InitAll(int);
@@ -189,8 +188,6 @@ int func_0203d524(V2 *, V2 *);
 void func_0203d704(int *, int *, int *);
 void func_0203cd80(int *, short);
 void Matrix4x3_FromQuaternion(const Quaternion *, Matrix4x3 *);
-void Matrix4x3_FromTranslation(Matrix4x3 *, int, int, int);
-void MTX_Concat43(const Matrix4x3 *, const Matrix4x3 *, Matrix4x3 *);
 void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *, int, int, int);
 unsigned int func_02045a50(const void *, unsigned int);
 
@@ -199,11 +196,6 @@ void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 void Vec3_Add(Vector3 *, const Vector3 *, const Vector3 *);
 void Vec3_MulScalar(Vector3 *, const Vector3 *, int);
 void Vec3_MulScalarInPlace(Vector3 *, int);
-void VEC_Add(Vector3 *, Vector3 *, Vector3 *);
-void VEC_Subtract(Vector3 *, Vector3 *, Vector3 *);
-int Vec3_Dist(const Vector3 *, const Vector3 *);
-int VEC_Mag(const Vector3 *);
-int VEC_DotProduct(const Vector3 *, const Vector3 *);
 void VEC_CrossProduct(const Vector3 *, const Vector3 *, Vector3 *);
 void VEC_Normalize(const Vector3 *, Vector3 *);
 int NormalizeVec3IfNonZero(Vector3 *);

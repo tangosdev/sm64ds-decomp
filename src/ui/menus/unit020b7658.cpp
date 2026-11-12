@@ -39,11 +39,11 @@
 
 extern "C" {
 
-extern void func_02049f58(void *);
-extern void func_02049ee8(void *, void *);
-extern void func_02049d78(void *, void *);
-extern int func_0204a0dc(void *, void *);
-extern int func_0204a028(void *, void *);
+extern void func_02049f58(Particle::Manager *);
+extern void func_02049ee8(Particle::Manager *, Matrix4x3 *);
+extern void func_02049d78(Particle::Manager *, Particle::System *);
+extern int func_0204a0dc(Particle::Manager *, u32 (*allocTexVram)(u32, u32));
+extern int func_0204a028(Particle::Manager *, u32 (*allocPalVram)(u32, u32));
 extern char *func_0204a4c8(char *(*alloc)(int), int, int, int, unsigned short);
 extern void func_0204a17c(Particle::Manager *, char *);
 extern int func_02045d00(void);
@@ -62,36 +62,36 @@ extern int data_ov007_02103438;
 extern int data_ov007_0210343c;
 extern int data_ov007_02103440;
 extern int data_ov007_02103444;
-extern int data_ov007_02103448;
-extern void *data_ov007_0210344c;
+extern char *data_ov007_02103448;
+extern Particle::Manager *data_ov007_0210344c;
 extern Particle::System *data_ov007_02103450[];
 
-int func_ov007_020b7948(int x, int cond) {
+u32 func_ov007_020b7948(u32 size, u32 isTexel4x4) {
     int r;
-    if (cond) {
+    if (isTexel4x4) {
         r = data_ov007_02103440;
-        data_ov007_02103440 = r + x;
+        data_ov007_02103440 = r + size;
     } else {
-        r = data_ov007_0210343c - x;
+        r = data_ov007_0210343c - size;
         data_ov007_0210343c = r;
     }
     return r;
 }
 
-int func_ov007_020b7914(int x, int cond) {
+u32 func_ov007_020b7914(u32 size, u32 fromLowAddress) {
     int r;
-    if (cond) {
+    if (fromLowAddress) {
         r = data_ov007_02103438;
-        data_ov007_02103438 = r + x;
+        data_ov007_02103438 = r + size;
     } else {
-        r = data_ov007_02103434 - x;
+        r = data_ov007_02103434 - size;
         data_ov007_02103434 = r;
     }
     return r;
 }
 
-int func_ov007_020b78d0(int x) {
-    int rv = data_ov007_02103448 + data_ov007_02103444;
+char *func_ov007_020b78d0(int x) {
+    char *rv = data_ov007_02103448 + data_ov007_02103444;
     data_ov007_02103444 += (x << 1) - (x & ~3);
     return rv;
 }
@@ -99,17 +99,17 @@ int func_ov007_020b78d0(int x) {
 void func_ov007_020b782c(void) {
     int i;
     Particle::System *empty;
-    data_ov007_02103448 = (int)func_ov007_020c3df4(data_ov007_02102dd0, 0x3c00);
+    data_ov007_02103448 = (char *)func_ov007_020c3df4(data_ov007_02102dd0, 0x3c00);
     data_ov007_02103444 = 0;
-    data_ov007_0210344c = func_0204a4c8((char *(*)(int))func_ov007_020b78d0, 2, 0xc8, 0x23, 0x25);
+    data_ov007_0210344c =
+        (Particle::Manager *)func_0204a4c8(func_ov007_020b78d0, 2, 0xc8, 0x23, 0x25);
     i = 0;
     empty = 0;
     do {
         data_ov007_02103450[i] = empty;
         i++;
     } while (i < 2);
-    func_0204a17c(static_cast<Particle::Manager *>(data_ov007_0210344c),
-                  static_cast<char *>(func_ov007_020b3f20(0x17)));
+    func_0204a17c(data_ov007_0210344c, static_cast<char *>(func_ov007_020b3f20(0x17)));
 }
 
 void func_ov007_020b77ac(void) {
@@ -117,33 +117,32 @@ void func_ov007_020b77ac(void) {
     data_ov007_0210343c = func_02045d00();
     data_ov007_02103438 = func_ov007_020c17f4();
     data_ov007_02103434 = func_02045ce0();
-    func_0204a0dc(data_ov007_0210344c, (void *)func_ov007_020b7948);
-    func_0204a028(data_ov007_0210344c, (void *)func_ov007_020b7914);
+    func_0204a0dc(data_ov007_0210344c, func_ov007_020b7948);
+    func_0204a028(data_ov007_0210344c, func_ov007_020b7914);
 }
 
 void func_ov007_020b7764(void) {
     func_ov007_020b3edc(0x17);
     if (data_ov007_02103448 == 0)
         return;
-    func_ov007_020c3d1c((void *)data_ov007_02103448);
+    func_ov007_020c3d1c(data_ov007_02103448);
     data_ov007_02103448 = 0;
 }
 
 void func_ov007_020b7708(int idx, void *pos) {
     if (data_ov007_02103450[idx] == 0) {
         Particle::System *system;
-        data_ov007_02103450[idx] = static_cast<Particle::Manager *>(data_ov007_0210344c)
-                                       ->AddSystem(0, *static_cast<Vector3 *>(pos));
+        data_ov007_02103450[idx] = data_ov007_0210344c->AddSystem(0, *static_cast<Vector3 *>(pos));
         system = data_ov007_02103450[idx];
         system->callbackFlags |= 2;
     }
 }
 
 void func_ov007_020b76c4(int c) {
-    void *r1 = data_ov007_02103450[c];
-    if (!r1)
+    Particle::System *system = data_ov007_02103450[c];
+    if (!system)
         return;
-    func_02049d78(data_ov007_0210344c, r1);
+    func_02049d78(data_ov007_0210344c, system);
     data_ov007_02103450[c] = 0;
 }
 
@@ -158,10 +157,10 @@ void *func_ov007_020b7690(int i) {
     return data_ov007_02103450[i];
 }
 
-void func_ov007_020b7658(void *c, int flag) {
-    if (flag) {
+void func_ov007_020b7658(Matrix4x3 *viewMatrix, int update) {
+    if (update) {
         func_02049f58(data_ov007_0210344c);
     }
-    func_02049ee8(data_ov007_0210344c, c);
+    func_02049ee8(data_ov007_0210344c, viewMatrix);
 }
 }

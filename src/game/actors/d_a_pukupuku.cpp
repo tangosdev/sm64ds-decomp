@@ -141,7 +141,7 @@ int daPukupuku_c::Behavior() {
     {
         PukuMainView *q = (PukuMainView *)mState;
         if (q->main != 0)
-            (((dEnemyBase_c *)this)->*(q->main))();
+            (this->*(q->main))();
     }
     mAngleY = mPrevAngleY;
     mAnmModel.speed = 0x1000;

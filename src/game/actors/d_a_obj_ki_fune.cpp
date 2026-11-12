@@ -3,7 +3,6 @@
  * - FX_SinCosTable_ is the sine table. gCurrentStarId is the star index.
  * - data_ov016_021136dc, 021136e4 and 021149d4 are the overlay file
  *   and CLPS tables, indexed by mModelIndex. This TU does not own them.
- * - mBobAngle += 0xda is an s16 pun. The u16 member spelling fails.
  * - UpdateModelMatrix is a coined name; the ROM records none.
  *
  * daObjKi_Fune_c, the Jolly Roger Bay ship (KI_FUNE / KI_FUNE_UP).
@@ -101,8 +100,8 @@ int daObjKi_Fune_c::Behavior() {
     }
     mMeshCollider.SetClipRadius(0x2000000);
     if (mModelIndex == 0) {
-        *(s16 *)&mBobAngle += 0xda;
-        mAngleX = (s16)((FX_SinIdx(mBobAngle >> 4) << 0xa) >> 0xc);
+        mBobAngle += 0xda;
+        mAngleX = (s16)((FX_SinIdx((u16)mBobAngle >> 4) << 0xa) >> 0xc);
         if (DistToCPlayer() < 0xbb8000) {
             mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x8b, mCamSpacePos, 0);
         }

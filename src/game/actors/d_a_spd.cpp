@@ -176,13 +176,13 @@ void daSpd_c::OnTurnIntoEgg(daPly_c &player) {
 }
 
 int daSpd_c::InitResources() {
-    void *mf = dExtSimpleModel_c::LoadFile(data_ov071_02122f80);
-    ((dExtModel_c *)(&mAnmModel))->SetFile((BMD_File *)mf, 1, -1);
+    BMD_File *mf = dExtSimpleModel_c::LoadFile(data_ov071_02122f80);
+    ((dExtModel_c *)(&mAnmModel))->SetFile(mf, 1, -1);
     dExtFrameCtrl_c::LoadFile(gSpiderWalkAnimationFile);
     if (((dExtShadowModel_c *)(&mShadowModel))->InitCylinder() == 0)
         return 0;
-    mdCcAc_c.Init(((dActor_c *)this), 0x46000, 0x64000, 0x200000, 0x6eff0);
-    mWithMeshClsn.Init(((dActor_c *)this), 0x50000, 0x50000, (Vector3_16 *)0, (Vector3_16 *)0);
+    mdCcAc_c.Init(this, 0x46000, 0x64000, 0x200000, 0x6eff0);
+    mWithMeshClsn.Init(this, 0x50000, 0x50000, (Vector3_16 *)0, (Vector3_16 *)0);
     mWithMeshClsn.StartDetectingWater();
     mHomeX = mPosX;
     mHomeY = mPosY;
@@ -606,7 +606,7 @@ void daSpd_c::func_ov071_0211f498() {
         SetState(0);
         return;
     }
-    ((fBase_c *)this)->MarkForDestruction();
+    MarkForDestruction();
 }
 
 void daSpd_c::func_ov071_0211f29c() {
@@ -689,7 +689,7 @@ void daSpd_c::func_ov071_0211f148(dBgCh_Actr *w) {
             pos.y = py;
             pos.z = pz;
         }
-        rc.SetObjAndPos(pos, (dActor_c *)this);
+        rc.SetObjAndPos(pos, this);
         if (!rc.DetectClsn() || rc.clsnY < mPosY - 0x32000) {
             mHorzSpeed = 0;
             mPosX = mPrevPosX;

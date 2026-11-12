@@ -53,11 +53,8 @@ enum daShark_c_AssetId { ASSET_HOJIRO_BMD = 0x0325, ASSET_HOJIRO_SWIM_BCA = 0x03
 /* local extern: no shared header declares these. */
 extern "C" {
 extern void func_02012694(unsigned int, void *);
-extern void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern s32 VEC_Mag(const Vector3 *value);
 extern s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-extern void MTX_MultVec43(Vector3 *a, Matrix4x3 *matrix, Vector3 *b);
 }
 
 typedef daShark_c::StateFn SharkFn;
@@ -259,7 +256,7 @@ int daShark_c::Behavior() {
 int daShark_c::InitResources() {
     /* Each PathPtr constructs at its declaration. The first call is
      * before the cylinder init and the second is after it. */
-    mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov090_021345a4), 1, -1);
+    mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov090_021345a4), 1, -1);
     dExtFrameCtrl_c::LoadFile(data_ov090_021345ac);
     mPathID = (*(s32 *)&param1) & 0xff;
     if (mPathID < 0)

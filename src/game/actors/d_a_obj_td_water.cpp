@@ -74,7 +74,7 @@ extern "C" daObjTdWater_c *daObjTdWater_c_classInit(void) {
 }
 
 s32 daObjTdWater_c::InitResources() {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov032_02113afc), 1, 0x14);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov032_02113afc), 1, 0x14);
 
     /* The BMD the SharedFilePtr is holding: the ROM re-reads it out of the
        descriptor rather than reusing LoadFile's return value. */
@@ -84,7 +84,7 @@ s32 daObjTdWater_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov032_02113af4);
+    KCL_File *kcl = dBgW_Kc::LoadFile(data_ov032_02113af4);
     mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov032_02112fb8);
     mMeshCollider.Enable(this);
 

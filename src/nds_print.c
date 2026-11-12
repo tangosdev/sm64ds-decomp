@@ -1,9 +1,7 @@
-extern void func_020147bc(unsigned short* r0, int r1);
+extern void func_020147bc(unsigned short *dst, int glyph);
 
-void nds_print(unsigned short* dst, volatile signed char* str) {
+void nds_print(unsigned short *dst, const char *str) {
     while (*str != 0) {
-        func_020147bc(dst, *str);
-        ++dst;
-        ++str;
+        func_020147bc(dst++, *str++);
     }
 }

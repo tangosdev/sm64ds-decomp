@@ -70,6 +70,11 @@ void FS_AttachOverlayTable(MIProcessor target, const void *ptr, u32 len);
 int func_02018c00(FSOverlayInfo *info, int target, int id);
 /* Poison an unloaded overlay's code and bss with an undefined instruction. */
 void func_02017fd0(FSOverlayInfo *info);
+/* The game's copy of FS_LoadOverlay (src/FS_LoadOverlay.c): load overlay
+   id for target and start it; 0 if its entry or image could not be read.
+   Parameters unnamed: a named parameter here renumbers every C++
+   includer's @NNN. */
+int FS_LoadOverlay(MIProcessor, FSOverlayID);
 
 #ifdef __cplusplus
 }

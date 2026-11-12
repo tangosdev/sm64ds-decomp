@@ -216,7 +216,7 @@ rebound.
 
 | offset | name | evidence |
 | --- | --- | --- |
-| 0x004 | `mpManager` | Every child dereferences it as the `dScMgSmartball_c` that owns the object: `mgr+0x4664`, `mgr+0x4668`, `mgr+0x4670`, `mgr+0x4688`, `mgr+0x46bc`, `mgr+0x595c`, `mgr+0x595d`. Kept declared `s32`: the manager has no header in this tree and each of the fifteen readers writes its own cast, so widening the declaration to a pointer would state more than the evidence does. |
+| 0x004 | `mpManager` | Every child dereferences it as the `dScMgSmartball_c` that owns the object: `mgr+0x4664`, `mgr+0x4668`, `mgr+0x4670`, `mgr+0x4688`, `mgr+0x46bc`, `mgr+0x595c`, `mgr+0x595d`. Declared `dScMgSmartball_c *`: the manager's own layout lives in `include/dScMgSmartball_c.h`, so the field is a real pointer and every reader dereferences it directly. |
 | 0x020 | `mVel0` | `cMgSmartball_ball_c::SaveSnapshot` does `mCurrent0 += mVel0; mCurrent1 += mVel1;` -- and passes `&mVel0` to `Vec2_Len` as a 2-vector, i.e. the pair is contiguous and is a velocity, not two unrelated scalars. |
 | 0x024 | `mVel1` | Same statement; also the value `cMgSmartball_spring_c::SaveSnapshot` eases `mCurrent1` back to rest with. |
 | 0x028 | `mRadius` | Each child's constructor writes its own constant (0x8000 ball, 0x14000 pakkun, 0x18000 board, 0x20000 dokan/propeller/spring, 0x7000 kinoko) and both readers use it as a distance: `cMgSmartball_ball_c::SaveSnapshot` compares a signed plane distance against `-mRadius`, and `cMgSmartball_kinoko_c` eases it to 0 and back to 0x7000 as the mushroom squashes, with `Update` turning it into a render scale. |

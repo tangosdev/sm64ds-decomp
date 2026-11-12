@@ -622,14 +622,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@476",
+      "from": "@472",
       "to": "@60",
-      "evidence": "mwcc numbers this registration node @491 per TU and ov100 already defines a global @491, so the scratch link would multiply-define it Re-keyed from @500 to @498 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @500 to @478 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "mwcc numbers this registration node @491 per TU and ov100 already defines a global @491, so the scratch link would multiply-define it Re-keyed from @500 to @498 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @500 to @478 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @476 to @472 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
     },
     {
-      "from": "@475",
+      "from": "@471",
       "to": "@490",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @509 now; licensed under the existing pin @490 Re-keyed from @499 to @497 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @499 to @477 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @509 now; licensed under the existing pin @490 Re-keyed from @499 to @497 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @499 to @477 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @475 to @471 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
     }
   ]
 }

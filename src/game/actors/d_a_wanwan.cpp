@@ -28,6 +28,7 @@
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
 
@@ -77,16 +78,8 @@ void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
-/* local extern: CalcLib's declaration is unnamed; retain these names so this
- * TU's compiler-numbered aliases remain stable. */
-void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
-int Vec3_HorzLen(void *v);
-int VEC_Mag(const Vector3 *v);
-short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 int AngleDiff(int a, int b);
-int ApproachAngle(short *angles, short target, int a, int b, int c);
-unsigned short DecIfAbove0_Short(unsigned short *p);
 int Math_Function_0203b14c(void *p, int a, int b, int c, int d);
 /* local extern: no header this file includes declares it, and it must keep C
  * linkage now that its caller StateEscapeDemoMain is a member. Nonzero once
@@ -106,8 +99,8 @@ extern "C" daWanwan_c *daWanwan_c_classInit() {
 }
 
 int daWanwan_c::InitResources() {
-    void *f = dExtSimpleModel_c::LoadFile(data_ov014_02114968);
-    mAnmModel.SetFile((BMD_File *)f, 1, 1);
+    BMD_File *f = dExtSimpleModel_c::LoadFile(data_ov014_02114968);
+    mAnmModel.SetFile(f, 1, 1);
     dExtSimpleModel_c::LoadFile(data_ov014_02114978);
     dExtFrameCtrl_c::LoadFile(data_ov014_02114980);
     dExtFrameCtrl_c::LoadFile(data_ov014_02114970);
@@ -776,11 +769,6 @@ void daWanwan_c::StateEscapeDemoInit() {
 }
 
 /* State 3 update: the fence-break cutscene. mReleaseStep is the phase. */
-static inline void incRelease(daWanwan_c *self) {
-    u8 *p = &self->mReleaseStep;
-    *p = (u8)(*p + 1);
-}
-
 void daWanwan_c::StateEscapeDemoMain() {
     daObjWanwanShutter_c *fence;
     Vector3 partnerPos;
@@ -794,11 +782,10 @@ void daWanwan_c::StateEscapeDemoMain() {
         s32 *src = &fence->mPosX;
         s32 fifth = 0x80;
         partnerPos.x = src[0];
-        short *ap = &mAngleX;
         partnerPos.y = src[1];
         s32 z = 0;
         partnerPos.z = src[2];
-        ApproachAngle(ap, z, 4, 0x200, fifth);
+        ApproachAngle(&mAngleX, z, 4, 0x200, fifth);
     }
     camera = gCamera;
     angleToPlayer = HorzAngleToCPlayer();
@@ -809,7 +796,7 @@ void daWanwan_c::StateEscapeDemoMain() {
         camera->mFocusActor = this;
         if (ApproachLinear(mAngleY, angleToPlayer, 0x320) != 0 &&
             DecIfAbove0_Short(&mActionTimer) == 0)
-            incRelease(this);
+            mReleaseStep++;
         mPrevAngleY = mAngleY;
         break;
     case 1:
@@ -823,7 +810,7 @@ void daWanwan_c::StateEscapeDemoMain() {
             mAngleY = mPrevAngleY;
             mVertSpeed = 0x32000;
             mHorzSpeed = 0x1e000;
-            incRelease(this);
+            mReleaseStep++;
         }
         break;
     case 5:
@@ -834,7 +821,7 @@ void daWanwan_c::StateEscapeDemoMain() {
             mAngleY = mPrevAngleY;
             mVertSpeed = 0x32000;
             mHorzSpeed = 0x1e000;
-            incRelease(this);
+            mReleaseStep++;
             if (fence->mDisabled != 0)
                 mReleaseStep = 7;
         }
@@ -854,7 +841,7 @@ void daWanwan_c::StateEscapeDemoMain() {
             target.x += FX_MUL(FX_SinIdx((u16)fence->mAngleY >> 4), 0x96000);
             target.z += FX_MUL(FX_CosIdx((u16)fence->mAngleY >> 4), 0x96000);
             if (Vec3_ApproachHorz(&mPos, &target, mReleaseSpeed) != 0) {
-                incRelease(this);
+                mReleaseStep++;
                 mPrevAngleY = (s16)(Vec3_HorzAngle(&mPos, &partnerPos) + 0x8000);
                 mHorzSpeed = 0x28000;
                 mVertSpeed = 0xa000;
@@ -877,14 +864,14 @@ void daWanwan_c::StateEscapeDemoMain() {
                 mVertSpeed = kChainSlack;
             }
             camera->SetFlag_3();
-            incRelease(this);
+            mReleaseStep++;
         }
         break;
     case 8:
         if (DecIfAbove0_Short(&mActionTimer) == 0) {
             camera->mFlags &= ~8u;
             if (ClosestPlayer()->Unk_020ca150(4) != 0) {
-                incRelease(this);
+                mReleaseStep++;
                 mActionTimer = 0x3c;
             }
         } else {

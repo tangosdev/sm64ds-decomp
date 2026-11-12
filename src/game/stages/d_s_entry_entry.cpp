@@ -13,6 +13,7 @@
 #include "nitro/gx/g3imm_cmd.h"
 #include "nitro/gx/g3imm_light.h"
 #include "nitro/fx/fx_cp.h"
+#include "nitro/fx/fx_trig.h"
 
 /* ROM order: the ENTRY factory, then EntryMesh (0x0211a948..0x0211b524). */
 #pragma defer_codegen off
@@ -28,11 +29,9 @@ extern "C" void *dScEntry_c_classInit_ENTRY(void) {
  * InitGrid, UpdateRipple and DrawGrid. */
 
 extern "C" {
-/* local extern: no header declares these arm9 vector and matrix helpers.
+/* local extern: no header declares these arm9 vector helpers.
    EntryMeshVec is the POD view used for the grid data; APIs taking Vector3
    receive explicit pointer views so the C++ Vector3 destructor is not emitted. */
-int MTX_Inverse43(const Matrix4x3 *, Matrix4x3 *);
-void VEC_Subtract(Vector3 *, Vector3 *, Vector3 *);
 void VEC_CrossProduct(const Vector3 *, const Vector3 *, Vector3 *);
 void VEC_Normalize(const Vector3 *, Vector3 *);
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
@@ -44,12 +43,10 @@ unsigned int func_02045a50(const void *, unsigned int);
    clashes with dScEntry_c.h's vtable spellings. */
 void G3_LoadMtx43(void *);
 void *func_0201787c(SharedFilePtr *);
-/* local extern: the veneer to operator delete (src/engine/heap/Heap.cpp). */
 }
-/* local extern: the camera matrix and the interleaved sine/cosine table,
-   declared per consumer (d_ext_model.cpp, d_ent_obj.cpp). */
+/* local extern: the camera matrix, declared per consumer (d_ext_model.cpp,
+   d_ent_obj.cpp). */
 extern Matrix4x3 data_0209b3ec;
-extern short FX_SinCosTable_[];
 /* File 0x8418. The ctor and dtor are func_020178cc / func_020178b4; this
    TU does not define them. The handler row is filled by the static
    initializer those two objects emit. */

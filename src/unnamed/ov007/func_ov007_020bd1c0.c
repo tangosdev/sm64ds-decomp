@@ -2,6 +2,7 @@
 #include "Ov007Work.h"
 #include "Ov007Settings.h"
 #include "Ov007Light.h"
+#include "nitro/gx/g3x.h"
 
 /* The lights' source points: lights[0] per menu, lights[1] in menu 0. */
 extern Vector3 data_ov007_020d7c34[];
@@ -49,9 +50,8 @@ void func_ov007_020bd1c0(int n)
     switch (n) {
     case 0:
         {
-            volatile u16* reg = (volatile u16*)0x4000060;
             func_ov007_020b1fa4(1);
-            *reg = *reg & ~0x3002;
+            G3X_SetShading(GX_SHADING_TOON);
             WORK->lights[1]->source = data_ov007_020d7c28;
             WORK->lights[1]->color = 0x18c6;
             func_ov007_020bd4a0(0);
@@ -79,9 +79,8 @@ void func_ov007_020bd1c0(int n)
         break;
     case 2:
         {
-            volatile u16* reg = (volatile u16*)0x4000060;
             func_ov007_020b1fa4(3);
-            *reg = (*reg & ~0x3002) | 2;
+            G3X_SetShading(GX_SHADING_HIGHLIGHT);
             func_ov007_020bce70(4, 0);
             func_ov007_020bd4a0(0);
             func_ov007_020bfbdc(WORK->cameras[0]);

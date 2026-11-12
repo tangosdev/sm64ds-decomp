@@ -729,7 +729,7 @@ s32 daEykn_c::InitResources()
     LoadBlueCoinModel();
 
     dExtSimpleModel_c::LoadFile(data_ov002_0210da38);
-    bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(gEyknModelFile);
+    bmd = dExtSimpleModel_c::LoadFile(gEyknModelFile);
     ((dExtModel_c *)&mAnmModel)->SetFile(bmd, 1, 1);
 
     int i;

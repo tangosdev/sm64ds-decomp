@@ -57,9 +57,8 @@ extern unsigned char data_0209cab4[]; /* star bits per course */
 extern unsigned char data_0209f224;   /* last collected star id */
 extern void ClearCapHeldByToad(void); /* forward: called by func_02013a88 above its definition */
 extern void UnlockMinigame(int minigame); /* forward: defined at the end of this file */
-/* local extern: src/SublevelToLevel.cpp is int(int), but these four callers match only as s8.
- * An int declaration widens each of them by 8 bytes. */
-extern s8 SublevelToLevel(s8 levelID);
+/* local extern: no header declares it */
+extern int SublevelToLevel(int levelID);
 }
 
 extern "C" void ClearSaveBlock(void) {
@@ -261,13 +260,11 @@ extern "C" void OpenCannon(int n) {
 }
 
 extern "C" int IsCannonOpenInLevel(s8 levelID) {
-    s8 courseID = SublevelToLevel(levelID);
-    return IsCannonOpen(courseID);
+    return IsCannonOpen(SublevelToLevel(levelID));
 }
 
 extern "C" void OpenCannonInLevel(s8 levelID) {
-    s8 courseID = SublevelToLevel(levelID);
-    OpenCannon(courseID);
+    OpenCannon(SublevelToLevel(levelID));
 }
 
 extern "C" int IsStarCollected(s32 courseID, s32 starID) {
@@ -304,13 +301,11 @@ extern "C" u8 CountStarsCollectedInLevelToDisplay(s32 courseID) {
 }
 
 extern "C" int IsStarCollectedInLevel(s8 levelID, s32 starID) {
-    s8 courseID = SublevelToLevel(levelID);
-    return IsStarCollected(courseID, starID);
+    return IsStarCollected(SublevelToLevel(levelID), starID);
 }
 
 extern "C" void CollectStarInLevel(s8 levelID, s32 starID) {
-    s8 courseID = SublevelToLevel(levelID);
-    CollectStar(courseID, starID);
+    CollectStar(SublevelToLevel(levelID), starID);
 }
 
 extern "C" u8 NumStars(void) {

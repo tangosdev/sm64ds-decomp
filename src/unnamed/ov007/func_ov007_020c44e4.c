@@ -1,16 +1,10 @@
 #include "types.h"
-/* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
-/* recovered: shared common types */
-#include "common.h"
-#define AT(p, off) ((void*)(int)((char*)(p)+(off)))
-
 #include "Ov007Sprite.h"
 
 Ov007Sprite *func_ov007_020c44e4(int count) {
     Ov007Sprite *p = func_ov007_020c3df4(0, 0x88);
     int i;
-    u16 zs[3];
 
     p->frame = 0;
     p->frameCount = (s16)count;
@@ -64,17 +58,8 @@ Ov007Sprite *func_ov007_020c44e4(int count) {
     p->shadowPolygonId = 0x24;
 
     {
-        u16 *zw = (u16 *)AT(zs, 0);
-        zw[0] = 0;
-        zw[1] = 0;
-        zw[2] = 0;
-    }
-    {
-        u16 a = ((volatile u16 *)zs)[0];
-        u16 b = ((volatile u16 *)zs)[1];
-        p->shadowOffset[0] = a;
-        p->shadowOffset[1] = b;
-        p->shadowOffset[2] = zs[2];
+        VecFx16 zero = {0, 0, 0};
+        p->shadowOffset = zero;
     }
     p->tilemap = 0;
     return p;

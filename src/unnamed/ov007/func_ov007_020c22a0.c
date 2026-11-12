@@ -1,9 +1,8 @@
 #include "Ov007Pad.h"
+#include "Ov007MenuMem.h"
 
 extern char data_ov007_0210324c[]; /* "pad" */
-extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020c22a0(Ov007Pad *pad);
-extern void func_ov007_020c3d1c(void *p);
 
 /* Allocates the pad record Ov007Work::pad points at and clears it. */
 Ov007Pad *func_ov007_020c2304(void) {

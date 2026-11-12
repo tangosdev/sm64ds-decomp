@@ -16,7 +16,7 @@
  * leftovers: func_02058960 keeps its address name; no SDK source spells it.
  */
 #include "nitro/os/system.h"
-#include "nitro/os/thread.h"
+#include "nitro/os/mutex.h"
 
 extern "C" {
 

@@ -62,8 +62,8 @@ extern "C" daObjNumber_c *daObjNumber_c_classInit(void) {
 s32 daObjNumber_c::InitResources() {
     if (param1 & 0x10) {
         dExtAnmTexPat_c::LoadFile(data_ov002_0210da08);
-        void *m = dExtSimpleModel_c::LoadFile(data_ov002_0210da28);
-        if (mModel.SetFile((BMD_File *)m, 1, 1) == 0)
+        BMD_File *m = dExtSimpleModel_c::LoadFile(data_ov002_0210da28);
+        if (mModel.SetFile(m, 1, 1) == 0)
             return 0;
         dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov002_0210da28.filePtr,
                                  *(BTP_File *)data_ov002_0210da08.filePtr);
@@ -71,8 +71,8 @@ s32 daObjNumber_c::InitResources() {
         mTextureSequence.currFrame = (int)((((unsigned int)(param1 & 0xf) % 10) << 16) >> 4);
     } else {
         dExtAnmTexPat_c::LoadFile(data_ov002_0210d9e8);
-        void *m = dExtSimpleModel_c::LoadFile(data_ov002_0210d9a8);
-        if (mModel.SetFile((BMD_File *)m, 1, 1) == 0)
+        BMD_File *m = dExtSimpleModel_c::LoadFile(data_ov002_0210d9a8);
+        if (mModel.SetFile(m, 1, 1) == 0)
             return 0;
         dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov002_0210d9a8.filePtr,
                                  *(BTP_File *)data_ov002_0210d9e8.filePtr);

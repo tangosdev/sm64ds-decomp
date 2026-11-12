@@ -703,7 +703,7 @@ int daWanwan2_c::Behavior()
 int daWanwan2_c::InitResources()
 {
     dExtSimpleModel_c::LoadFile(data_ov002_0211092c);
-    mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov100_021486bc), 1, -1);
+    mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov100_021486bc), 1, -1);
     dExtSimpleModel_c::LoadFile(data_ov100_021486a4);
     dExtFrameCtrl_c::LoadFile(data_ov100_021486ac);
     dExtFrameCtrl_c::LoadFile(data_ov100_021486b4);
@@ -787,9 +787,8 @@ int daWanwan2_c::InitResources()
         path.GetNode(mPos, mPathNodeIndex);
     }
 
-    /* Raise it 100 units (0x64000). Preserve the ROM's materialized
-       read-modify-write address for mPosY. */
-    *(s32 *)((int)&mPosY) += 0x64000;
+    /* Raise it 100 units (0x64000). */
+    mPosY += 0x64000;
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;

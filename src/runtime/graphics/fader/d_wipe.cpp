@@ -317,7 +317,7 @@ extern "C" void Wipe_HBlankHandler(void) {
 
     OS_SetIrqCheckFlag(OS_IE_H_BLANK);
 
-    line = *(volatile u16 *)0x4000006 + 1;
+    line = REG_VCOUNT + 1;
 
     if (line >= 0xc0) {
         if (data_0209f5fc != 1)

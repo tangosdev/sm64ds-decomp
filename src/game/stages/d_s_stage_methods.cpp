@@ -2753,7 +2753,7 @@ void dScStage_c::PS_Init() {
     if (subLayers & 4) {
         gSubScreenLayers = subLayers & ~4;
         subLayers = gSubScreenLayers;
-        *(volatile s32 *)0x04001000 = (*(volatile s32 *)0x04001000 & ~0x1f00) | (subLayers << 8);
+        GXS_SetVisiblePlane(subLayers);
     }
 
     specialPauseState = sPausedWithSelect;
@@ -3910,7 +3910,7 @@ void dScStage_c::RenderFog() {
             fog++;
     }
     G3X_SetFog(fog->mEnabled, 0, fog->mShift, fog->mOffset);
-    *(volatile unsigned int *)0x4000358 = fog->mColor | 0x1f0000;
+    G3X_SetFogColor(fog->mColor, 31);
     G3X_SetFogTable(fog);
 }
 

@@ -144,11 +144,11 @@
       "evidence": "guard word of LoadMultiBootResources's function-local static sPrevHeap; mwcc emits the tst #1 test and the orr #1 store exactly as retail."
     },
     {
-      "symbol": "data_020a0c64",
+      "symbol": "sMBJobDone",
       "address": "0x020a0c64",
       "size": "0x4",
       "binding": "STB_GLOBAL",
-      "evidence": "an int word, spelled u8[] by include/decl_common.h and defined here as u8[4] with that spelling: whether the loader job has finished. InitResources stores func_0201a244's return value (1 when the job ran synchronously) and Behavior's step 1 stores each func_0201a1bc poll; they are its only readers and writers. arm9 .bss slots are sorted by ascending size within a TU, so the three 4-byte words sit below the 0x10-byte sMBGraphCallback in this TU's run. The name stays a placeholder because include/decl_common.h declares it."
+      "evidence": "an int word: whether the loader job has finished. InitResources stores func_0201a244's return value (1 when the job ran synchronously) and Behavior's step 1 stores each func_0201a1bc poll; they are its only readers and writers. arm9 .bss slots are sorted by ascending size within a TU, so the three 4-byte words sit below the 0x10-byte sMBGraphCallback in this TU's run. Named after d_s_boot's sBootJobDone, which does the same for the boot scene's job (a coined name, not a ROM one)."
     },
     {
       "symbol": "sMBGraphCallback",
@@ -162,7 +162,7 @@
     "Text-only. The class's _ZTV/_ZTI/_ZTS and the nested graphCallback_c records stay in the cartridge .data at 0x02094364..0x0209440c; this TU re-emits them and deadstrips the copies.",
     "Destructor is the key function, defined out of line under defer_codegen off, so the file is ROM-ascending. D2 is deadstripped.",
     "Static initializer folded: sMBGraphCallback, the scene's global dScMB_c::graphCallback_c, is now defined in this TU (it was declared u8[] in decl_common.h and built by the handwritten src/unnamed/arm9/0207/__sinit_02074fb8.c). graphCallback_c gains the inline constructor the retail initializer implies (mOwner(0); func_02034b1c sets the other fields later). mwcc emits __sinit_d_s_mb.cpp and its .ctor word; both plus the object's .bss are byte- and relocation-identical to retail. The class has no destructor, so there is no registration call and no @NNN node.",
-    "Function-local static folded (0x020a0c5c..0x020a0c68): the hand-written `if (!(data_020a0c60 & 1)) { data_020a0c5c = heap->SetDefault(); data_020a0c60 |= 1; }` in LoadMultiBootResources was the decompiler's rendering of `static mHeap::Heap_t *sPrevHeap = heap->SetDefault();`. mwcc emits the guard test and store itself, byte- and relocation-identical. data_020a0c64, the loader-job flag, is now defined here too, as u8[4] to agree with decl_common.h's u8[] declaration; its two int stores keep the cast. Re-spelling it int is a decl_common.h change."
+    "Function-local static folded (0x020a0c5c..0x020a0c68): the hand-written `if (!(data_020a0c60 & 1)) { data_020a0c5c = heap->SetDefault(); data_020a0c60 |= 1; }` in LoadMultiBootResources was the decompiler's rendering of `static mHeap::Heap_t *sPrevHeap = heap->SetDefault();`. mwcc emits the guard test and store itself, byte- and relocation-identical. The loader-job flag sMBJobDone (was data_020a0c64) is defined here too, as the int it is; decl_common.h no longer declares it."
   ],
   "compiler_only_output": [
     {
@@ -283,24 +283,24 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/arm9-dScMB_c/dScMB_c.o (gitignored)",
+    "object": "build/tu/arm9-dScMB_c/d_s_mb.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 13,
     "functions_declared": 13,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN7dScMB_cD2Ev"
+        "_ZN7dScMB_cD2Ev",
+        "_ZN8dScene_cD2Ev",
+        "_ZN7dBase_cD2Ev"
       ],
       "deadstripped": [
-        "_ZN7dScMB_cD2Ev"
+        "_ZN7dBase_cD2Ev",
+        "_ZN7dScMB_cD2Ev",
+        "_ZN8dScene_cD2Ev"
       ],
       "droppedSections": [
-        9,
-        10,
-        28,
-        29,
-        30,
-        31,
+        11,
+        12,
         32,
         33,
         34,
@@ -318,7 +318,15 @@
         46,
         47,
         48,
-        49
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -351,12 +359,13 @@
         "_ZTSN8dGraph_c10callback_cE",
         "_ZTV7dScMB_c",
         "_ZTVN7dScMB_c15graphCallback_cE"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },

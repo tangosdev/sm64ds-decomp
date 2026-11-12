@@ -45,6 +45,7 @@
 #include "Ov007Texture.h"
 #include "nitro/gx/g3imm.h"
 #include "nitro/os/system.h"
+#include "Ov007MenuMem.h"
 
 extern "C" {
 
@@ -52,9 +53,6 @@ extern u32 data_ov007_02104bdc; /* next free texture slot */
 extern u32 data_ov007_02104be0; /* end of the palette region */
 extern u32 data_ov007_02104be4; /* end of the texture region */
 extern u32 data_ov007_02104be8; /* next free palette slot */
-
-extern void *func_ov007_020c3df4(const char *name, int size);
-extern void func_ov007_020c3d1c(void *self);
 
 void func_ov007_020c15ec(Ov007Texture *tex);
 void Texture_GetSizes(int fmt, int width, int height, int colorCount, u32 *texSize, u32 *plttSize);

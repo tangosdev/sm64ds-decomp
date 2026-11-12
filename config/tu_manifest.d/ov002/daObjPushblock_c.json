@@ -630,14 +630,14 @@
   },
   "defined_symbol_renames": [
     {
-      "from": "@749",
+      "from": "@743",
       "to": "@716",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Deleting the leaf operator new from daObjPushblock_c.h moved the emission from @730 to @724 (same entity: section 21, symbol index 23) Re-keyed from @823 to @749 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Deleting the leaf operator new from daObjPushblock_c.h moved the emission from @730 to @724 (same entity: section 21, symbol index 23) Re-keyed from @823 to @749 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @749 to @743 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
     },
     {
-      "from": "@750",
+      "from": "@744",
       "to": "@717",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Deleting the leaf operator new from daObjPushblock_c.h moved the emission from @731 to @725 (same entity: section 14, symbol index 22) Re-keyed from @824 to @750 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Deleting the leaf operator new from daObjPushblock_c.h moved the emission from @731 to @725 (same entity: section 14, symbol index 22) Re-keyed from @824 to @750 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @750 to @744 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
     }
   ]
 }

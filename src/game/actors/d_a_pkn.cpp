@@ -34,6 +34,7 @@
 #include "math/Approach.h"
 #include "SpawnInfo.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 
@@ -99,11 +100,7 @@ extern int data_ov084_0213030c[];        /* per-frame particle X/Z offset (0212f
 extern int data_ov084_02130334[];        /* per-frame particle Y offset */
 extern u8  data_ov084_021302ec[];        /* five indices {0,3,4,5,6}; 0212ec60 sums s16 at [i]*0x34+0x1c into ang[1] (dead -- later y-adjust reads ang[0]==0, so the offset is constant 0x32000). 0x34 is not BMD_Bone (0x40). */
 
-int   Vec3_Dist(const Vector3 *a, const Vector3 *b);
-short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
-void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 int *Vec3_LslInPlace(int *v, int sh);
-void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
 
 void *d_a_pknNewHold(u32 handle, u32 id, int x, int y, int z, const void *f, void *cb);
 int d_a_pknPlaySubHold(u32 a, u32 b, u32 c, int t, int flag);
@@ -228,11 +225,7 @@ int daPkn_c::Behavior()
     TrackClosestPlayer();
     old = mState;
     (this->*data_ov084_02130e80[old])();
-    {
-        /* mStateTimer is s16; the ROM counts it as a u16 (ldrh, not ldrsh). */
-        u16 *timer = (u16 *)&mStateTimer;
-        *timer = *timer + 1;
-    }
+    mStateTimer++;
     cur = mState;
     if (old != cur) {
         if (cur == 5) {
@@ -468,8 +461,8 @@ void daPkn_c::StateWake()
 {
     Sound::PlaySub(0x36, 0x7f, 0, 0xcb33, 0);
     if (CheckHits() != 0) return;
-    /* mStateTimer is s16; the ROM compares it as a u16 (ldrh). */
-    if ((u16)mStateTimer <= 0xb) return;
+    if (mStateTimer <= 0xb)
+        return;
     if (!mAnmModel.Finished())
         return;
     mAnmModel.SetAnim((BCA_File *)data_ov084_02130e14.filePtr, 0x40000000, 0x1000, 0);
@@ -501,13 +494,13 @@ void daPkn_c::StateDie()
 
     Sound::PlaySub(0x36, 0x7f, 0, 0xcb33, 0);
     mClsnEnabled = 0;
-    if ((u16)mStateTimer < 0xa) {
+    if (mStateTimer < 0xa) {
         pos.x = mPosX;
         pos.y = mPosY;
         pos.z = mPosZ;
-        pos.x += data_ov084_0213030c[(u16)mStateTimer] * FX_SinIdx((u16)mAngleY >> 4);
-        pos.z += data_ov084_0213030c[(u16)mStateTimer] * FX_CosIdx((u16)mAngleY >> 4);
-        pos.y += data_ov084_02130334[(u16)mStateTimer] << 12;
+        pos.x += data_ov084_0213030c[mStateTimer] * FX_SinIdx((u16)mAngleY >> 4);
+        pos.z += data_ov084_0213030c[mStateTimer] * FX_CosIdx((u16)mAngleY >> 4);
+        pos.y += data_ov084_02130334[mStateTimer] << 12;
         mParticleHandle = (s32)Particle::System::New(mParticleHandle, kPtclPiranhaDeathBurst, pos.x,
                                                      pos.y, pos.z, 0, 0);
     }
@@ -525,7 +518,7 @@ void daPkn_c::StateShrink()
 
     mClsnEnabled = 0;
     scale = mScaleX;
-    if ((u16)mStateTimer == 0) {
+    if (mStateTimer == 0) {
         func_02012694(0x11f, &mCamSpacePosX);
         scale = 0x1000;
     }
@@ -568,7 +561,7 @@ void daPkn_c::StateRegrow()
     int v;
     mClsnEnabled = 0;
     v = mScaleX;
-    if ((u16)mStateTimer == 0)
+    if (mStateTimer == 0)
         v = 0x4cc;
     if (v < 0x1000) {
         v += 0x52;

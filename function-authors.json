@@ -7019,23 +7019,23 @@
     },
     "arm9:0x02040a5c": {
       "author": "tangosdev",
-      "name": "func_02040a5c"
+      "name": "WFS_EnableSync"
     },
     "arm9:0x02040a84": {
       "author": "tangosdev",
-      "name": "func_02040a84"
+      "name": "WFS_GetCurrentBitmap"
     },
     "arm9:0x02040a94": {
       "author": "tangosdev",
-      "name": "func_02040a94"
+      "name": "WFS_GetStatus"
     },
     "arm9:0x02040aa4": {
       "author": "andrewboudreau",
-      "name": "func_02040aa4"
+      "name": "WFS_End"
     },
     "arm9:0x02040bb0": {
       "author": "tangosdev",
-      "name": "func_02040bb0"
+      "name": "WFS_Start"
     },
     "arm9:0x02040c34": {
       "author": "aitddlabs",
@@ -7043,15 +7043,15 @@
     },
     "arm9:0x02040f30": {
       "author": "tangosdev",
-      "name": "func_02040f30"
+      "name": "WFSi_OnChildSystemCallback"
     },
     "arm9:0x02041224": {
       "author": "tangosdev",
-      "name": "func_02041224"
+      "name": "WFSi_ReallocBitmap"
     },
     "arm9:0x020412f0": {
       "author": "tangosdev",
-      "name": "func_020412f0"
+      "name": "WFSi_OnParentSystemCallback"
     },
     "arm9:0x0204175c": {
       "author": "tangosdev",
@@ -7059,99 +7059,99 @@
     },
     "arm9:0x020417d0": {
       "author": "tangosdev",
-      "name": "func_020417d0"
+      "name": "WFSi_PortCallback"
     },
     "arm9:0x020418f0": {
       "author": "tangosdev",
-      "name": "func_020418f0"
+      "name": "WFSi_OnSetMPDataDone"
     },
     "arm9:0x02041930": {
       "author": "tangosdev",
-      "name": "func_02041930"
+      "name": "WFSi_SetMPData"
     },
     "arm9:0x02041a00": {
       "author": "tangosdev",
-      "name": "func_02041a00"
+      "name": "WFSi_ReadRequest"
     },
     "arm9:0x02041a94": {
       "author": "tangosdev",
-      "name": "func_02041a94"
+      "name": "WFSi_FromBusyToFree"
     },
     "arm9:0x02041ae8": {
       "author": "tangosdev",
-      "name": "func_02041ae8"
+      "name": "WFSi_FromAliveToBusy"
     },
     "arm9:0x02041b24": {
       "author": "tangosdev",
-      "name": "func_02041b24"
+      "name": "WFSi_FromBusyToAlive"
     },
     "arm9:0x02041b60": {
       "author": "tangosdev",
-      "name": "func_02041b60"
+      "name": "WFSi_FromFreeToBusy"
     },
     "arm9:0x02041bbc": {
       "author": "tangosdev",
-      "name": "func_02041bbc"
+      "name": "WFSi_MoveList"
     },
     "arm9:0x02041c2c": {
       "author": "tangosdev",
-      "name": "func_02041c2c"
+      "name": "WFSi_FindAliveForID"
     },
     "arm9:0x02041c64": {
       "author": "ruspecial",
-      "name": "func_02041c64"
+      "name": "WFSi_FindBusy"
     },
     "arm9:0x02041ce0": {
       "author": "tangosdev",
-      "name": "func_02041ce0"
+      "name": "WFSi_FindAlive"
     },
     "arm9:0x02041d28": {
       "author": "tangosdev",
-      "name": "func_02041d28"
+      "name": "WFSi_SendOpenAck"
     },
     "arm9:0x02041e14": {
       "author": "tangosdev",
-      "name": "func_02041e14"
+      "name": "WFSi_SendAck"
     },
     "arm9:0x02042160": {
       "author": "tangosdev",
-      "name": "func_02042160"
+      "name": "WFSi_OnSendMessageDone"
     },
     "arm9:0x020421b4": {
       "author": "tangosdev",
-      "name": "func_020421b4"
+      "name": "WFSi_EndTaskThread"
     },
     "arm9:0x02042200": {
       "author": "tangosdev",
-      "name": "func_02042200"
+      "name": "WFSi_CreateTaskThread"
     },
     "arm9:0x02042254": {
       "author": "andrewboudreau",
-      "name": "func_02042254"
+      "name": "WFSi_TaskThread"
     },
     "arm9:0x020423c8": {
       "author": "ruspecial",
-      "name": "func_020423c8"
+      "name": "WFSi_NotifyBusy"
     },
     "arm9:0x020423dc": {
       "author": "tangosdev",
-      "name": "func_020423dc"
+      "name": "WFSi_ReplaceRomArchive"
     },
     "arm9:0x020424c0": {
       "author": "tangosdev",
-      "name": "func_020424c0"
+      "name": "WFSi_LoadTables"
     },
     "arm9:0x02042668": {
       "author": "tangosdev",
-      "name": "func_02042668"
+      "name": "WFSi_RomArchiveProc"
     },
     "arm9:0x020426f0": {
       "author": "tangosdev",
-      "name": "func_020426f0"
+      "name": "WFSi_WriteRomCallback"
     },
     "arm9:0x020426f8": {
       "author": "tangosdev",
-      "name": "func_020426f8"
+      "name": "WFSi_ReadRomCallback"
     },
     "arm9:0x0204271c": {
       "author": "tangosdev",
@@ -11379,11 +11379,11 @@
     },
     "arm9:0x02065ef8": {
       "author": "tangosdev",
-      "name": "MBi_Calc_NextSendBlock"
+      "name": "MBi_calc_nextsendblock"
     },
     "arm9:0x02065f08": {
       "author": "tangosdev",
-      "name": "MBi_Calc_SendBlock"
+      "name": "MBi_calc_sendblock"
     },
     "arm9:0x02065f78": {
       "author": "andrewboudreau",
@@ -11395,7 +11395,7 @@
     },
     "arm9:0x020662c0": {
       "author": "tangosdev",
-      "name": "MBi_CommParentSendDlFileInfo"
+      "name": "MBi_CommParentSendDLFileInfo"
     },
     "arm9:0x02066470": {
       "author": "tangosdev",
@@ -35067,11 +35067,11 @@
     },
     "ov060:0x021163f0": {
       "author": "tangosdev",
-      "name": "daKpaTail_c_classInit"
+      "name": "_Z21daKpaTail_c_classInitv"
     },
     "ov060:0x02116428": {
       "author": "tangosdev",
-      "name": "daKpa_c_classInit"
+      "name": "_Z17daKpa_c_classInitv"
     },
     "ov060:0x02116484": {
       "author": "tangosdev",

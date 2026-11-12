@@ -25,6 +25,7 @@
 #include "Memory.h"
 #include "math/Approach.h"
 #include "nnsys/snd/player.h"
+#include "private/sound_positional.h"
 
 /* SoundEngine's sound heap, opaque here. */
 struct SndHeap;
@@ -34,7 +35,7 @@ extern "C" {
 
 /* Foreign callees. */
 extern int func_02051f1c(void *a, u32 b, int c);
-extern int func_02051e60(int a, int b, int c, int d, unsigned int e, int f);
+extern int func_02051e60(NNSSndHandle *handle, int b, int c, int d, unsigned int e, int f);
 extern u32 func_02051074(struct SndHeap *heap);
 extern void func_020510a4(struct SndHeap *heap, int level);
 extern void *func_020511d4(struct SndHeap *heap, u32 size, SndHeapDisposeCallback callback,
@@ -42,73 +43,52 @@ extern void *func_020511d4(struct SndHeap *heap, u32 size, SndHeapDisposeCallbac
 extern int func_0203d974(void);
 extern s32 func_0205117c(struct SndHeap *heap);
 extern int func_0203d7d4(int a);
-extern int func_02048a1c(int *a0, int kind, int id);
-extern int func_02048a18(int x, int y);
-extern void func_02048af4(void *p, int b, int c);
-extern void func_02048d80(void *obj, int *p);
-extern void func_02048c30(void *a, int b, int c);
-extern void func_020485f0(int a0, int a1);
-extern void func_02048528(int a0, int a1);
 extern void func_0204f9c4(int a, int b);
 extern void func_0204f958(int a, int b);
-extern int func_0204fa2c(int *g, int z);
+extern int func_0204fa2c(NNSSndHandle *handle, int z);
 extern void func_0204f94c(void *p);
 extern void func_0204f070(void);
 extern struct SndHeap *func_0205130c(u32 addr, u32 size);
-extern void func_0201a9fc(char *c);
 extern void func_02050f34(void *arc, const char *path, struct SndHeap *heap, int loadSymbols);
 extern int func_02052008(struct SndHeap *heap);
 extern void func_020506fc(int arg);
 extern void func_02049cd8(void *a, int b, int mode);
-extern void func_02048f34(void *owner);
-extern int func_0201a9ec(int *c);
 extern int func_02051918(unsigned int id, struct SndHeap *heap);
-extern unsigned char func_0201a96c(struct WatchdogAlarm *context, int suspended);
 extern int func_02051fb4(void *g, unsigned int x);
 extern void func_02049764(void);
-extern void func_0204921c(int *g, int v);
+extern void func_0204921c(NNSSndHandle *handle, int v);
 extern void func_020494cc(void *p, int s);
 extern void func_020490b0(void *p);
 extern void func_0204f03c(void);
 extern void *func_02050cdc(int a, int idx);
-extern int func_02048720(const Vector3 *v, int a, int b);
-extern void func_02048908(int x, const Vector3 *v);
-extern void func_02048e54(void);
-extern void func_02048e74(void);
-extern void func_02048e94(void);
 extern void func_02049c48(int self);
-extern void func_02048ed4(void);
-extern void func_02048ef4(void);
-extern void func_02048f04(void);
-extern void func_02048f14(void);
-extern void func_02048f24(void);
 extern void func_0204efe0(void);
 extern void func_0204effc(void);
 
 /* In-TU functions, declared once so callers ahead of their definitions link. */
-extern void func_02013524(int fileRef, int vol, int mode);
+extern void func_02013524(NNSSndHandle *handle, int vol, int mode);
 extern int func_020134d8(void *a, struct SndHeap *heap);
 extern void func_020133bc(void);
 extern int func_02013078(void);
 extern void func_02012d64(void);
-extern void func_02012860(void *a, int flags, int c, int d, int e);
+extern void func_02012860(NNSSndHandle *handle, int flags, int c, int d, int e);
 extern void func_020127ec(int a0, int a1, int a2, int a3, int a4, int a5);
 extern int func_020126e8(int a);
-extern void func_020123c8(int a0, int type, int code, int arg);
-extern int func_02011dcc(int *g, int x);
+extern void func_020123c8(NNSSndHandle *handle, int type, int code, const Vector3 *arg);
+extern int func_02011dcc(NNSSndHandle *handle, int x);
 extern void func_02011c54(void);
 extern void func_02011b7c(void);
 extern void func_02011b38(void *c, int a1, int a2, int a3, short a5);
-extern void func_02011af8(void *c, int a1, int a2, int a3, int s0, short s1);
-extern void func_02011ac4(void *c, int a1, int a2, int a3, int s0, int s1, short s2);
+extern void func_02011af8(void *c, int a1, int a2, int a3, const Vector3 *s0, short s1);
+extern void func_02011ac4(void *c, int a1, int a2, int a3, const Vector3 *s0, int s1, short s2);
 extern int func_02011aa0(void *c);
 extern void func_02011a28(char *c);
 extern void func_020119c8(void *base);
 extern void *func_02011934(char *table, int id);
-extern int func_020116c4(char *c, int a1, int a2, int a3, int s0, short s1);
+extern int func_020116c4(char *c, int a1, int a2, const Vector3 *a3, int s0, short s1);
 extern void func_02011698(char *table, char *n);
 extern int func_02011654(char *table, char *n);
-extern int Player_PlaySoundEffect(int arg0, int arg1, int arg2);
+extern int Player_PlaySoundEffect(NNSSndHandle *handle, int arg1, int arg2);
 extern int Sound_PlayIfNotActive(int a, int b, int c, short d);
 
 /* Module state. Volumes are 0..0x7f; the current ones are 20.12 fixed point
@@ -171,16 +151,16 @@ static struct SndHeap *sSndHeap;
 
 int gSubVolume;
 
-/* Sequence handles, each one word. */
-static int sMusicHandle[1];
-static int data_0209b4a4[1];
+/* Sequence handles. */
+static NNSSndHandle sMusicHandle;
+static NNSSndHandle data_0209b4a4;
 
 static int data_0209b4a8;
 
 /* The music now playing on sMusicHandle; daSetSE_c reads it. */
 int gCurrentMusicID;
 
-static int sSubHandle[1];
+static NNSSndHandle sSubHandle;
 
 /* The sound archive func_020133bc opens. */
 static char sSndArc[0x88];
@@ -192,7 +172,6 @@ extern int data_0209baa0;
    sPlayerSeqLimits). It stays extern because it ends 2 bytes short of the
    next 4-aligned object, and that tail fill cannot be claimed yet. */
 extern char data_0208e498[];
-extern struct WatchdogAlarm data_0209d574;
 extern unsigned char gLocalPlayerId;
 extern signed char gCurrentSublevel;
 extern void *gPlayers[];
@@ -221,7 +200,7 @@ typedef struct SndRegEntry {
     short fadeFrames;              /* 0x04 - fade-out passed to func_0204fa2c */
     unsigned char inUse;           /* in-use flag checked by the sweeps */
     unsigned char pad7[1];
-    int handle;               /* 0x08 - the entry's NNSSndHandle */
+    NNSSndHandle handle;      /* 0x08 */
     struct SndRegEntry *prev; /* 0x0c - bucket chain, toward the head */
     struct SndRegEntry *next; /* 0x10 - bucket chain, away from the head */
 } SndRegEntry;
@@ -235,7 +214,7 @@ typedef struct SndRegTable {
     SndRegEntry entries[0x40];   /* 0x08 */
     SndRegEntry *buckets[16];    /* 0x508 - chain heads by id&0xf */
 
-    int func_0201179c(int a1, int a2, int a3, short s1);
+    int func_0201179c(int a1, int a2, const Vector3 *a3, short s1);
     int func_0201186c(int a1, int a2, short a3);
 
     SndRegTable() {
@@ -253,12 +232,12 @@ void LoadAndSetMusic_Layer1(int j)
     gMusicTrackModeOverride = -1;
     data_0209b48c = 0;
     if (j < 0) {
-        func_0204fa2c(sMusicHandle, 0);
+        func_0204fa2c(&sMusicHandle, 0);
     } else {
         if (!(gSubSoundID >= 0 && gCurrentMusicID >= 0 && sLayer1Music == j))
-            func_02011dcc(sMusicHandle, j);
-        func_02013524((int)sMusicHandle, 0x7f, 0);
-        func_0204fa2c(sSubHandle, 0);
+            func_02011dcc(&sMusicHandle, j);
+        func_02013524(&sMusicHandle, 0x7f, 0);
+        func_0204fa2c(&sSubHandle, 0);
     }
     gCurrentMusicID = j;
     sLayer1Music = j;
@@ -315,7 +294,7 @@ namespace Sound {
 void StopLoadedMusic_Layer1(unsigned int arg)
 {
     gCurrentMusicID = ~0u;
-    func_0204fa2c(sMusicHandle, arg);
+    func_0204fa2c(&sMusicHandle, arg);
 }
 
 void PauseMusic(void)
@@ -392,7 +371,7 @@ extern "C" void func_02012dbc(int a)
 extern "C" void func_02012d64(void)
 {
     ApproachLinear(gMusicVolume, (s32)sMusicVolumeTarget << 12, sVolumeRampStep);
-    func_02013524((int)sMusicHandle, gMusicVolume >> 12, 0);
+    func_02013524(&sMusicHandle, gMusicVolume >> 12, 0);
 }
 
 namespace Sound {
@@ -423,7 +402,7 @@ bool PlaySub(unsigned int a, unsigned int b, unsigned int c, int d, bool e) {
                     if (a != 0x2e)
                         gSubVolume = c & 0xff;
                 }
-                func_02011dcc(sSubHandle, a);
+                func_02011dcc(&sSubHandle, a);
             }
         } else if (x != (int)a) {
             return false;
@@ -441,7 +420,7 @@ namespace Sound {
 void LoadAndSetMusic_Layer3(unsigned int musicId)
 {
     sLayer3Music = musicId;
-    func_02011dcc(sMusicHandle, musicId);
+    func_02011dcc(&sMusicHandle, musicId);
 }
 
 void StopLoadedMusic_Layer3(void)
@@ -456,14 +435,14 @@ void StopLoadedMusic_Layer3(void)
     if (a == b) {
         int e440 = sLayer2Music;
         if (e440 >= 0) {
-            func_02011dcc(sMusicHandle, e440);
+            func_02011dcc(&sMusicHandle, e440);
             return;
         }
     }
     if (a < 0 || b < 0)
-        func_0204fa2c(sMusicHandle, 0);
+        func_0204fa2c(&sMusicHandle, 0);
     else
-        func_02011dcc(sMusicHandle, a);
+        func_02011dcc(&sMusicHandle, a);
 }
 
 void SetMusic(unsigned int j1, unsigned int j2)
@@ -477,7 +456,7 @@ void SetMusic(unsigned int j1, unsigned int j2)
     int e = sLayer3Music;
     gCurrentMusicID = j2;
     if (e >= 0) return;
-    func_02011dcc(sMusicHandle, j2);
+    func_02011dcc(&sMusicHandle, j2);
 }
 
 /* ONE parameter, although this symbol used to be spelled with two (`...Ejj`).
@@ -497,14 +476,14 @@ void EndMusic(unsigned int playerNo) {
     if (e444 >= 0) return;
     int e440 = sLayer2Music;
     if (e440 >= 0) {
-        func_02011dcc(sMusicHandle, e440);
+        func_02011dcc(&sMusicHandle, e440);
         return;
     }
     if (e43c >= 0) {
-        func_02011dcc(sMusicHandle, e43c);
+        func_02011dcc(&sMusicHandle, e43c);
         return;
     }
-    func_0204fa2c(sMusicHandle, 0);
+    func_0204fa2c(&sMusicHandle, 0);
 }
 
 void LoadAndSetMusic_Layer2(unsigned int j)
@@ -513,7 +492,7 @@ void LoadAndSetMusic_Layer2(unsigned int j)
     int b = sLayer1Music;
     sLayer2Music = j;
     if (a != b) return;
-    func_02011dcc(sMusicHandle, j);
+    func_02011dcc(&sMusicHandle, j);
 }
 
 void StopLoadedMusic_Layer2(void)
@@ -525,41 +504,40 @@ void StopLoadedMusic_Layer2(void)
     }
     sLayer2Music = -1;
     if (a < 0) {
-        func_0204fa2c(sMusicHandle, 0);
+        func_0204fa2c(&sMusicHandle, 0);
         return;
     }
-    func_02011dcc(sMusicHandle, a);
+    func_02011dcc(&sMusicHandle, a);
 }
 
 }
 
-extern "C" void func_02012860(void *a, int flags, int c, int d, int e)
-{
+extern "C" void func_02012860(NNSSndHandle *handle, int flags, int c, int d, int e) {
     if (flags & 1)
-        NNS_SndPlayerSetTrackVolume((NNSSndHandle *)a, 0xffff, c);
+        NNS_SndPlayerSetTrackVolume(handle, 0xffff, c);
     if (flags & 2)
-        NNS_SndPlayerSetTrackPitch((NNSSndHandle *)a, 0xffff, d);
+        NNS_SndPlayerSetTrackPitch(handle, 0xffff, d);
     if (flags & 4)
-        NNS_SndPlayerSetTrackPan((NNSSndHandle *)a, 0xffff, e - 0x40);
+        NNS_SndPlayerSetTrackPan(handle, 0xffff, e - 0x40);
 }
 
 namespace Sound {
 
 unsigned int Play2D(unsigned int j1, unsigned int j2) {
-    return Player_PlaySoundEffect((int)data_0209b4a4, j1, j2);
+    return Player_PlaySoundEffect(&data_0209b4a4, j1, j2);
 }
 }
 
 extern "C" void func_020127ec(int a0, int a1, int a2, int a3, int a4, int a5)
 {
-    Player_PlaySoundEffect((int)data_0209b4a4, a0, a1);
-    func_02012860(data_0209b4a4, a2, a3, a4, a5);
+    Player_PlaySoundEffect(&data_0209b4a4, a0, a1);
+    func_02012860(&data_0209b4a4, a2, a3, a4, a5);
 }
 
 extern "C" void func_020127a4(int r0, int r1, int r2, int r3)
 {
-    Player_PlaySoundEffect((int)data_0209b4a4, r0, r1);
-    NNS_SndPlayerSetTrackPan((NNSSndHandle *)data_0209b4a4, r2, r3);
+    Player_PlaySoundEffect(&data_0209b4a4, r0, r1);
+    NNS_SndPlayerSetTrackPan(&data_0209b4a4, r2, r3);
 }
 
 extern "C" unsigned int func_02012790(unsigned int a)
@@ -631,26 +609,26 @@ void Play(unsigned int j1, unsigned int j2, const Vector3 &v)
     char *s = (char *)func_02050cdc(j1, j2);
     int t = *(unsigned char *)(s + 5);
     if (t == 9 || t == 2) {
-        int r = func_02048720(&v, j1, j2);
-        if (r == 0)
+        SoundSlot *slot = func_02048720(&v, j1, j2);
+        if (slot == 0)
             return;
-        Player_PlaySoundEffect(r, j1, j2);
-        func_02048908(r, &v);
+        Player_PlaySoundEffect(&slot->handle, j1, j2);
+        func_02048908(slot, &v);
         return;
     }
-    if (func_02048a1c((int *)&v, j1, j2) == 0)
+    if (func_02048a1c(&v, j1, j2) == 0)
         return;
-    Player_PlaySoundEffect((int)data_0209b4a4, j1, j2);
-    func_02048d80(data_0209b4a4, (int *)&v);
+    Player_PlaySoundEffect(&data_0209b4a4, j1, j2);
+    func_02048d80(&data_0209b4a4, &v);
 }
 
 }
 
-extern "C" void func_0201251c(int a, int b, int c, int d)
-{
+extern "C" void func_0201251c(int a, int b, const Vector3 *c, int d) {
     int r4 = func_02048a18(b, d);
-    if (func_02048a1c((int *)c, a, r4) == 0) return;
-    Player_PlaySoundEffect((int)data_0209b4a4, a, r4);
+    if (func_02048a1c(c, a, r4) == 0)
+        return;
+    Player_PlaySoundEffect(&data_0209b4a4, a, r4);
     func_02048af4(&data_0209b4a4, c, d);
 }
 
@@ -676,38 +654,37 @@ extern "C" int func_02012468(int a, int b, int c, int d, int e, int f, int g, sh
     return x;
 }
 
-extern "C" void func_020123c8(int a0, int type, int code, int arg)
-{
+extern "C" void func_020123c8(NNSSndHandle *handle, int type, int code, const Vector3 *arg) {
     if (type == 3 && code >= 0x100 && code <= 0x103) {
-        func_020485f0(a0, arg);
+        func_020485f0(handle, arg);
         return;
     }
     if (type == 3 && code == 0x18d) {
-        func_02048528(a0, arg);
+        func_02048528(handle, arg);
         return;
     }
     if (type == 3 && code == 0x81) {
-        func_020485f0(a0, arg);
+        func_020485f0(handle, arg);
         return;
     }
-    func_02048d80((void *)a0, (int *)arg);
+    func_02048d80(handle, arg);
 }
 
 namespace Sound {
 
 int PlayLong(u32 handle, u32 a, u32 b, const Vector3 &pos, s16 e)
 {
-    if (func_02048a1c((int *)&pos, a, b) == 0)
+    if (func_02048a1c(&pos, a, b) == 0)
         return 0;
 
     SndRegEntry *slot = (SndRegEntry *)func_02011934((char *)&data_0209b53c, handle);
     if (slot) {
         slot->inUse = 1;
-        func_020123c8((int)&slot->handle, a, b, (int)&pos);
+        func_020123c8(&slot->handle, a, b, &pos);
         return slot->id;
     }
 
-    return data_0209b53c.func_0201179c(a, b, (int)&pos, e);
+    return data_0209b53c.func_0201179c(a, b, &pos, e);
 }
 
 }
@@ -716,10 +693,10 @@ extern "C" int func_02012310(int handle, int sound, short arg) {
     return Sound_PlayIfNotActive(handle, 2, sound, arg);
 }
 
-extern "C" int func_0201226c(int a0, int a1, int a2, int a3, int a4, short a5)
-{
+extern "C" int func_0201226c(int a0, int a1, int a2, const Vector3 *a3, int a4, short a5) {
     SndRegEntry *p;
-    if (func_02048a1c((int *)a3, a1, a2) == 0) return 0;
+    if (func_02048a1c(a3, a1, a2) == 0)
+        return 0;
     p = (SndRegEntry *)func_02011934((char *)&data_0209b53c, a0);
     if (p != 0) {
         p->inUse = 1;
@@ -729,23 +706,24 @@ extern "C" int func_0201226c(int a0, int a1, int a2, int a3, int a4, short a5)
     return func_020116c4((char *)&data_0209b53c, a1, a2, a3, a4, a5);
 }
 
-extern "C" int func_02012194(char *c, int a1, int a2, int a3, int s0, int s1, short s2)
-{
+extern "C" int func_02012194(int handle, int a1, int a2, int a3, int s0, const Vector3 *s1,
+                             short s2) {
     SndRegEntry *e;
-    if (func_02048a1c((int *)s1, a1, a2) == 0) return 0;
-    e = (SndRegEntry *)func_02011934((char *)&data_0209b53c, (int)c);
+    if (func_02048a1c(s1, a1, a2) == 0)
+        return 0;
+    e = (SndRegEntry *)func_02011934((char *)&data_0209b53c, handle);
     if (e != 0) {
-        int *slot = &e->handle;
+        NNSSndHandle *slot = &e->handle;
         e->inUse = 1;
-        func_02048d80(slot, (int *)s1);
-        NNS_SndPlayerSetTrackPitch((NNSSndHandle *)slot, a3, s0);
+        func_02048d80(slot, s1);
+        NNS_SndPlayerSetTrackPitch(slot, a3, s0);
         return e->id;
     } else {
-        char *n = (char *)data_0209b53c.func_0201179c(a1, a2, s1, s2);
-        SndRegEntry *e2 = (SndRegEntry *)func_02011934((char *)&data_0209b53c, (int)n);
+        int n = data_0209b53c.func_0201179c(a1, a2, s1, s2);
+        SndRegEntry *e2 = (SndRegEntry *)func_02011934((char *)&data_0209b53c, n);
         if (e2 != 0)
-            NNS_SndPlayerSetTrackPitch((NNSSndHandle *)&e2->handle, a3, s0);
-        return (int)n;
+            NNS_SndPlayerSetTrackPitch(&e2->handle, a3, s0);
+        return n;
     }
 }
 
@@ -844,23 +822,21 @@ extern "C" void *func_02011e94(int *out) {
     return block;
 }
 
-extern "C" int Player_PlaySoundEffect(int arg0, int arg1, int arg2)
-{
+extern "C" int Player_PlaySoundEffect(NNSSndHandle *handle, int arg1, int arg2) {
     if (gSoundInitialized == 0)
         return 1;
     if (arg1 != 3)
-        return func_02051f1c((void *)arg0, arg1, arg2);
-    return func_02051e60(arg0, -1, sCurrentBank, -1, arg1, arg2);
+        return func_02051f1c(handle, arg1, arg2);
+    return func_02051e60(handle, -1, sCurrentBank, -1, arg1, arg2);
 }
 
-extern "C" int func_02011dcc(int *g, int x)
-{
-    int r4 = func_02051fb4(g, x);
-    if (r4 != 0 && g == sMusicHandle) {
+extern "C" int func_02011dcc(NNSSndHandle *handle, int x) {
+    int r4 = func_02051fb4(handle, x);
+    if (r4 != 0 && handle == &sMusicHandle) {
         func_02049764();
         func_02013078();
         if (sMusicTrackMode >= 0) {
-            func_0204921c(g, sMusicTrackMode);
+            func_0204921c(handle, sMusicTrackMode);
         }
     }
     return r4;
@@ -970,7 +946,7 @@ extern "C" void func_02011b7c(void)
     sVolumeRampStep = 0x7f000;
     if (v >= 0) {
         gSubSoundID = -1;
-        func_0204fa2c(sSubHandle, 0);
+        func_0204fa2c(&sSubHandle, 0);
     }
     sLayer3Music = -1;
     sLayer2Music = -1;
@@ -987,17 +963,16 @@ extern "C" void func_02011b38(void *c, int a1, int a2, int a3, short a5)
     e->inUse = 1;
     e->prev = 0;
     e->next = 0;
-    Player_PlaySoundEffect((int)&e->handle, a2, a3);
+    Player_PlaySoundEffect(&e->handle, a2, a3);
 }
 
-extern "C" void func_02011af8(void *c, int a1, int a2, int a3, int s0, short s1)
-{
+extern "C" void func_02011af8(void *c, int a1, int a2, int a3, const Vector3 *s0, short s1) {
     func_02011b38(c, a1, a2, a3, s1);
-    func_020123c8((int)&((SndRegEntry *)c)->handle, a2, a3, s0);
+    func_020123c8(&((SndRegEntry *)c)->handle, a2, a3, s0);
 }
 
-extern "C" void func_02011ac4(void *c, int a1, int a2, int a3, int s0, int s1, short s2)
-{
+extern "C" void func_02011ac4(void *c, int a1, int a2, int a3, const Vector3 *s0, int s1,
+                              short s2) {
     func_02011b38(c, a1, a2, a3, s2);
     func_02048c30(&((SndRegEntry *)c)->handle, s0, s1);
 }
@@ -1099,7 +1074,7 @@ int SndRegTable::func_0201186c(int a1, int a2, short a3) {
     return 0;
 }
 
-int SndRegTable::func_0201179c(int a1, int a2, int a3, short s1) {
+int SndRegTable::func_0201179c(int a1, int a2, const Vector3 *a3, short s1) {
     SndRegTable *reg = this;
     int i;
     for (i = 0; i < 0x40; i++) {
@@ -1116,8 +1091,7 @@ int SndRegTable::func_0201179c(int a1, int a2, int a3, short s1) {
     return 0;
 }
 
-extern "C" int func_020116c4(char *c, int a1, int a2, int a3, int s0, short s1)
-{
+extern "C" int func_020116c4(char *c, int a1, int a2, const Vector3 *a3, int s0, short s1) {
     SndRegTable *reg = (SndRegTable *)c;
     int i;
     for (i = 0; i < 0x40; i++) {
@@ -1176,10 +1150,10 @@ extern "C" void func_020132d8(void)
     func_02012d64();
     if (gSubSoundID >= 0) {
         ApproachLinear(gSubVolume, sSubVolumeTarget << 0xc, sVolumeRampStep);
-        func_02013524((int)sSubHandle, gSubVolume >> 0xc, 0);
+        func_02013524(&sSubHandle, gSubVolume >> 0xc, 0);
         if (gSubVolume == 0) {
             gSubSoundID = -1;
-            func_0204fa2c(sSubHandle, 0);
+            func_0204fa2c(&sSubHandle, 0);
         }
     }
     int s = func_02013078();
@@ -1198,14 +1172,14 @@ extern "C" void func_020133bc(void)
     func_0204f070();
     sSndHeap = func_0205130c((u32)Memory::Allocate(0x100000), 0x100000);
     anim = data_0208e498;
-    func_0201a9fc((char *)&data_0209d574);
+    func_0201a9fc(&data_0209d574);
     func_02050f34(&sSndArc, anim, sSndHeap, 0);
-    func_0201a9fc((char *)&data_0209d574);
+    func_0201a9fc(&data_0209d574);
     func_02052008(func_0203d974() == 0 ? sSndHeap : 0);
     if (func_0203d974() == 0) {
-        func_0201a9fc((char *)&data_0209d574);
+        func_0201a9fc(&data_0209d574);
         func_020134d8((void *)1, sSndHeap);
-        func_0201a9fc((char *)&data_0209d574);
+        func_0201a9fc(&data_0209d574);
     }
     func_0204f94c(&sMusicHandle);
     func_0204f94c(&sSubHandle);
@@ -1224,18 +1198,17 @@ extern "C" void func_020133bc(void)
 #pragma opt_propagation on
 #pragma defer_codegen on
 
-extern "C" void func_02013524(int a, int b, int c)
-{
+extern "C" void func_02013524(NNSSndHandle *handle, int b, int c) {
     if (gSoundMuted != 0) {
         c = b = 0;
     }
-    NNS_SndPlayerMoveVolume((NNSSndHandle *)a, b, c);
+    NNS_SndPlayerMoveVolume(handle, b, c);
 }
 
 extern "C" int func_020134d8(void *a, struct SndHeap *heap) {
-    int s = func_0201a9ec((int *)&data_0209d574);
+    int s = func_0201a9ec(&data_0209d574);
     int r = func_02051918((u32)a, heap);
-    func_0201a9fc((char *)&data_0209d574);
+    func_0201a9fc(&data_0209d574);
     func_0201a96c(&data_0209d574, s);
     return r;
 }

@@ -1,4 +1,5 @@
 #include "Ov007Work.h"
+#include "Ov007MenuMem.h"
 
 extern void func_ov007_020c937c(void *state);
 extern void func_ov007_020c020c(struct Ov007Camera *cam);
@@ -6,7 +7,6 @@ extern void func_ov007_020c2410(void *p);
 extern void func_ov007_020c2018(void *p);
 extern void func_ov007_020c22f8(void *p);
 extern void func_ov007_020c9080(void *p);
-extern void func_ov007_020c3d1c(void *p);
 extern void func_ov007_020c1620(void *tex);
 extern void func_ov007_020b3edc(int a);
 extern void func_ov007_020c9460(void *p);

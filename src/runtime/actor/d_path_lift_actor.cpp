@@ -18,9 +18,6 @@
  * is its ROM location.
  *
  * Known limits:
- * - VEC_Mag remains declared with void * parameters because no shared header
- *   records its signature. The other vector helpers use the shared Vector3
- *   spelling.
  * - data_ov002_0210d9f0 is a SharedFilePtr, read here through a local
  *   PathStuff struct: including SharedFilePtr.h renumbers the @NNN labels.
  * - IsUnk42cSet keeps its symbol-bound name; the field it reads is
@@ -42,6 +39,7 @@
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/CalcLib.h"
 
 typedef void (dPathLiftActor_c::*PathLiftStateFn)();
 
@@ -67,17 +65,9 @@ extern PathStuff data_ov002_0210d9f0;
 
 /* ROM symbols with no header of their own. */
 extern "C" {
-extern u16 DecIfAbove0_Short(u16 *p);
-extern u8 DecIfAbove0_Byte(u8 *p);
-extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int VEC_Mag(void *v);
-extern short Vec3_HorzAngle(const Vector3 *from, const Vector3 *to);
 extern short Vec3_VertAngle(const Vector3 *from, const Vector3 *to);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
-/* local extern: CalcLib agrees on the type, but including it renumbers the
-   compiler-local sinit aliases and changes their relocation targets. */
-extern void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *out);
 /* Sound.cpp: plays sound `id' at a camera-space position. */
 void func_02012694(unsigned int id, const Vector3 *camSpacePos);
 /* dBgW.cpp: sets a collider's stoodOnCallback. */

@@ -122,15 +122,14 @@ int daObjCtKaitendai_c::InitResources() {
         mVariant = 0;
     }
 
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov065_0211d35c[mVariant].model), 1,
-                   -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(*data_ov065_0211d35c[mVariant].model), 1, -1);
 
     mShadowModel.InitCylinder();
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*data_ov065_0211d35c[mVariant].collision),
-                          mClsnMat, 0x199, mAngleY, *data_ov065_0211d35c[mVariant].clps);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*data_ov065_0211d35c[mVariant].collision), mClsnMat,
+                          0x199, mAngleY, *data_ov065_0211d35c[mVariant].clps);
 
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
 

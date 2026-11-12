@@ -63,7 +63,7 @@
       "ordinal": 2
     },
     {
-      "symbol": "_ZN11SndRegTable13func_0201179cEiiis",
+      "symbol": "_ZN11SndRegTable13func_0201179cEiiPK7Vector3s",
       "address": "0x0201179c",
       "legacy_source": "src/func_0201179c.c",
       "size": "0x000000d0",

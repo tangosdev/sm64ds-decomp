@@ -67,6 +67,7 @@ struct OamAttr;
 #include "LevelRng.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
+#include "math/CalcLib.h"
 
 extern "C" {
 int CupFx_FindFree(CupFx *fx, int kind, int x, int y);
@@ -76,14 +77,12 @@ extern unsigned char sCupFxFrameSprites[];
 extern OamAttr *sCupFxSprites[];
 extern int OamRender8_d_s_mg_cup(int show, struct OamAttr *attr, int a, int b, int c, int d, int e,
                                  int f);
-extern unsigned char DecIfAbove0_Byte(unsigned char *counter);
 extern int Mg_RenderSubSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
                                     unsigned short a6);
 extern RoundRow sCupRoundTable[];
 extern s16 sCupShuffleSpeeds[];
 extern IdxPair sCupSwapFirst[];
 extern RestPos sCupHomePositions[];
-extern int RandomIntInternal(int *seed);
 extern void Mg_SetSharedState(int c);
 extern void Presenter_PlayCheer(void *c);
 extern void Mg_SubCredits(void *c, int val);

@@ -1,3 +1,5 @@
+#include "nitro/wbt.h"
+
 int func_02065bd0(void);
 
 int WBT_CalcPacketbitmapSize(int a) {

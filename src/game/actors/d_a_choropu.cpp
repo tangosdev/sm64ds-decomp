@@ -420,7 +420,7 @@ void daChoropu_c::func_ov080_02123fcc()
         while (1) {
             a = dActor_c::FindWithActorID(daChoropu_ACTOR_ID, a);
             if (a == 0) break;
-            if (a != (dActor_c *)this) {
+            if (a != this) {
                 if (mGroupId == ((daChoropu_c *)a)->mGroupId) {
                     mPartnerIDs[mNumPartners] = ((daChoropu_c *)a)->uniqueID;
                     (mNumPartners)++;
@@ -772,7 +772,7 @@ s32 daChoropu_c::InitResources()
     for (i = 0; i < 4; i++) dExtFrameCtrl_c::LoadFile(*data_ov080_0212766c[i]);
     dExtSimpleModel_c::LoadFile(data_ov002_0210d9d8);
     dExtSimpleModel_c::LoadFile(data_ov080_021283c8);
-    mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov080_021283c0), 1, -1);
+    mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov080_021283c0), 1, -1);
     mAnmModel.SetAnim((BCA_File *)data_ov080_021283d8.filePtr, 0, 0x1000, 0);
     mdCcAc_c.Init(this, 0x50000, 0x64000, 0x200000, 0x66fe0);
     mGroupMode = param1 & 0xf;
@@ -795,7 +795,7 @@ s32 daChoropu_c::InitResources()
  * 0.5 (0x800) for a small one. */
 s32 daChoro_Rock_c::InitResources()
 {
-    if (!mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov080_021283c8), 1, -1))
+    if (!mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov080_021283c8), 1, -1))
         return 0;
     mdCcAc_c.Init(this, 0x1e000, 0x1e000, 0x200004, 0);
     mIsSmall = param1 & 1;

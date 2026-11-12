@@ -1,7 +1,6 @@
 #include "types.h"
 #include "Ov007Model.h"
 #include "math/MtxStack.h"
-extern void MTX_Identity43_(void *mat);
 extern void func_ov007_020c39f8(void *mat, int a, int b, int c);
 
 /* Builds the model's matrix: rotation, then pos as the translation, then

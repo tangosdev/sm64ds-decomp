@@ -64,7 +64,7 @@ struct daPgRcer_c : dActor_c {
     u8 mPlayerFinished;               /* 0x393 */
     u8 mPlayerCheated;                /* 0x394 -- long fall or cheat volume */
     u8 mPenguinWon;                   /* 0x395 */
-    u8 mStarSlot;                     /* 0x396 -- TrackStar result */
+    s8 mStarSlot;                     /* 0x396 -- TrackStar result */
     u8 pad_397;                       /* 0x397 -- closes on 0x398 */
 
     /* Inline so mwcc emits retail D1 then D0 and no D2. Slots 16/17. */

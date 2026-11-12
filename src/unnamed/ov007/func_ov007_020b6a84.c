@@ -1,5 +1,6 @@
 #include "Ov007Work.h"
 #include "Ov007Settings.h"
+#include "Ov007MenuMem.h"
 
 extern void *func_ov007_020c9388(int initialState);
 extern struct Ov007Camera *func_ov007_020c023c(void);
@@ -7,7 +8,6 @@ extern struct Ov007Light *func_ov007_020c241c(int id);
 extern struct Ov007Touch *func_ov007_020c2068(void);
 extern struct Ov007Pad *func_ov007_020c2304(void);
 extern struct Ov007Tween *func_ov007_020c908c(s32 *out);
-extern void *func_ov007_020c3df4(const char *name, int size);
 extern void OS_GetOwnerInfo(unsigned char *dst);
 
 void func_ov007_020b6a84(void) {

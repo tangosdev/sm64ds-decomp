@@ -9,10 +9,11 @@
 // PC offset. The function reloads r4-r11 from the context's saved registers
 // at 0x2c..0x48, sets sp to the word at 0x5c minus the word at 0x64, and
 // branches. __rethrow stores the caller's sp at 0x5c, and func_02071864 fills
-// 0x64 from the frame header. r0 and r1 reach the pad unchanged. The two
-// callers spell the context and iterator with different types, so they stay
-// void * here.
-asm void func_02071790(void *context, void *iterator, int pad) {
+// 0x64 from the frame header. r0 and r1 reach the pad unchanged.
+struct ThrowContext;
+struct ActionIterator;
+
+asm void func_02071790(struct ThrowContext *context, struct ActionIterator *iterator, int pad) {
     ldr r4, [r0, #0x2c]
     ldr r5, [r0, #0x30]
     ldr r6, [r0, #0x34]

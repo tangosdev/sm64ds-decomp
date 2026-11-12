@@ -1,8 +1,7 @@
 #include "Ov007Model.h"
+#include "Ov007MenuMem.h"
 
-extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020c9268(Ov007AnimPlayer *p);
-extern void func_ov007_020c3d1c(void *p);
 
 void *func_ov007_020c92ac(void) {
     void *c = func_ov007_020c3df4(0, 0x1c);

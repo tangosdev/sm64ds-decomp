@@ -227,16 +227,14 @@ void func_0204a17c(Particle::Manager *manager, char *resource) {
     }
 }
 
-int func_0204a0dc(Particle::Manager *manager, u32 (*allocTexVram)(const void *, u32)) {
+int func_0204a0dc(Particle::Manager *manager, u32 (*allocTexVram)(u32, u32)) {
     int i;
     GX_BeginLoadTex();
     for (i = 0; i < manager->mNumTextures; i++) {
         TextureEntry *texture = &manager->mTextures[i];
         TextureEntry::Resource *record = texture->resource;
         u32 isTexel4x4 = (record->params.format == 5) ? 1 : 0;
-        /* The callback's first argument is the texel size; decl_common.h and
-           Particle.cpp's cast spell its type const void *. */
-        u32 address = allocTexVram((const void *)record->texelSize, isTexel4x4);
+        u32 address = allocTexVram(record->texelSize, isTexel4x4);
         /* The texels follow the 0x20-byte record header. */
         GX_LoadTex(texture->resource + 1, address, record->texelSize);
         texture->texelAddress = address;

@@ -32,6 +32,7 @@
 #include "math/Matrix.h"
 #include "dBgCh_Gnd.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 extern "C" {
 /* local extern: no header in include/ declares these (dClipper.h only
@@ -40,7 +41,6 @@ extern dClipper data_0209f43c;
 extern Matrix4x3 data_0209b3ec;
 extern Matrix4x3 data_0209b41c;
 extern s32 data_0209f32c;
-void MTX_MultVec43(Vector3 *vector, Matrix4x3 *matrix, Vector3 *result);
 void func_0204dab4(void *system, void *records, int count, u32 mask, void *callback);
 /* This initializer's 0xc-byte layout is evidenced, but its original class
  * name is not. Keep that single unresolved ABI boundary explicit. */

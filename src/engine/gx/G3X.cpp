@@ -46,18 +46,6 @@ static inline bool G3X_IsGeometryBusy(void) {
     return (REG_GXSTAT & REG_G3X_GXSTAT_B_MASK) != 0;
 }
 
-static inline void G3X_AlphaTest(bool enable, int ref) {
-    if (enable) {
-        REG_ALPHA_TEST_REF = (u16)ref;
-        REG_DISP3DCNT =
-            (u16)(REG_DISP3DCNT & ~(REG_G3X_DISP3DCNT_RO_MASK | REG_G3X_DISP3DCNT_GO_MASK) |
-                  REG_G3X_DISP3DCNT_ATE_MASK);
-    } else {
-        REG_DISP3DCNT &= (u16) ~(REG_G3X_DISP3DCNT_ATE_MASK | REG_G3X_DISP3DCNT_RO_MASK |
-                                 REG_G3X_DISP3DCNT_GO_MASK);
-    }
-}
-
 static inline void G3X_SetFifoIntrCond(int cond) {
     REG_GXSTAT = (REG_GXSTAT & ~REG_G3X_GXSTAT_FI_MASK) | (cond << REG_G3X_GXSTAT_FI_SHIFT);
 }

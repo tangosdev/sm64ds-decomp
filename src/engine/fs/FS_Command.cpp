@@ -19,18 +19,9 @@
 #include "nitro/os/thread.h"
 #include "private/fs_views.h"
 #include "nitro/fs/file.h"
+#include "nitro/fs/archive.h"
 
 extern "C" {
-
-#define FS_ARCHIVE_FLAG_IS_ASYNC 0x00000100
-#define FS_ARCHIVE_FLAG_IS_SYNC 0x00000200
-
-#define FS_RESULT_SUCCESS 0
-#define FS_RESULT_FAILURE 1
-#define FS_RESULT_UNSUPPORTED 4
-#define FS_RESULT_PROC_ASYNC 6
-#define FS_RESULT_PROC_DEFAULT 7
-#define FS_RESULT_PROC_UNKNOWN 8
 
 extern int (*fsi_default_command[])(FSFile *p_file);
 

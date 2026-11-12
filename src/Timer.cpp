@@ -4,15 +4,12 @@
  * the ROM order 0x02019584..0x02019664. func_0201964c stays a free function;
  * Timer::Timer() would rename the symbol. OS_GetTick is the SDK tick read
  * (timer 0 at 0x4000100 plus the counter at data_020a6438).
- * local extern: decl_common.h declares it too, but that is a generated
- * catch-all, not the SDK's header, so this file does not include it.
  */
 /* Timer: arm9 stopwatch. mTime is the start tick while running and the
  * frozen elapsed count while stopped.
  */
 #include "Timer.h"
-
-extern "C" s64 OS_GetTick(void);
+#include "nitro/os/tick.h"
 
 #pragma defer_codegen off
 

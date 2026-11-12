@@ -5,10 +5,8 @@
  *   dScBoot_c method: Behavior is its only caller, and the body reads
  *   mSelectedButton and mButtonFlashTimer.
  * - opt_common_subs off stays file-global. Behavior's countdown
- *   updates need it.
- * - The volatile reads and LADR() writes in Behavior stay. A plain
- *   member read lets the compiler reuse the field address and drops
- *   an instruction.
+ *   updates need it: without it the compiler reuses each timer's
+ *   field address and Behavior drops an instruction.
  * - The destructor pair and dScBoot_c_classInit live in src/game/stages/d_s_boot.cpp.
  *
  * dScBoot_c, the title screen. fBase_c, dBase_c, dScene_c, then this
@@ -69,8 +67,6 @@ enum BootMenuState {
     STATE_CANCEL_ERASE = 6,
     STATE_POST_ERASE_WAIT = 7
 };
-
-#define LADR(p) ((void *)(unsigned int)(p))
 
 /* dScBoot_c::InitResources -- vtable slot 0, arm9 0x02005a58.
  *
@@ -177,8 +173,8 @@ s32 dScBoot_c::Behavior() {
     if (sBootJobDone == 0) {
         sBootJobDone = func_0201a1bc();
         if (sBootJobDone == 0) {
-            if (*(volatile u16 *)&mFadeTimer > frameStep * 2) {
-                *(u16 *)LADR(&mFadeTimer) -= frameStep;
+            if (mFadeTimer > frameStep * 2) {
+                mFadeTimer -= frameStep;
             }
             return 1;
         }
@@ -186,22 +182,22 @@ s32 dScBoot_c::Behavior() {
     }
 
     if (gSceneFader->IsAtStart() != 0) {
-        if (*(volatile u8 *)&mButtonFlashTimer != 0) {
-            *(u8 *)LADR(&mButtonFlashTimer) -= frameStep;
+        if (mButtonFlashTimer != 0) {
+            mButtonFlashTimer -= frameStep;
             if (mButtonFlashTimer == 0) {
                 UpdateButtonPalettes();
             }
         }
-        if (*(volatile u8 *)&mInputLockTimer != 0) {
-            *(u8 *)LADR(&mInputLockTimer) -= frameStep;
+        if (mInputLockTimer != 0) {
+            mInputLockTimer -= frameStep;
             return 1;
         }
 
         switch (mState) {
         case STATE_BOOT_WAIT:
         case STATE_POST_ERASE_WAIT:
-            if (*(volatile u16 *)&mFadeTimer != 0) {
-                *(u16 *)LADR(&mFadeTimer) -= frameStep;
+            if (mFadeTimer != 0) {
+                mFadeTimer -= frameStep;
                 if (mFadeTimer == 0) {
                     StartSceneFade(func_0203da3c() != 0 ? 6 : 1, 0, 0);
                 } else if (mState == STATE_BOOT_WAIT &&
@@ -341,10 +337,10 @@ s32 dScBoot_c::Behavior() {
             if (mEraseEffectTimer == 0x3c) {
                 SaveData::EraseAllSaveData();
             }
-            if (*(volatile u8 *)&mEraseEffectTimer != 0) {
+            if (mEraseEffectTimer != 0) {
                 u8 eraseFramesLeft;
 
-                *(u8 *)LADR(&mEraseEffectTimer) -= frameStep;
+                mEraseEffectTimer -= frameStep;
                 eraseFramesLeft = mEraseEffectTimer;
                 if (eraseFramesLeft == 0x3c) {
                     Message::DisplaySaveStatusText(0x29d);

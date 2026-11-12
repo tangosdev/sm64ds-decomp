@@ -167,7 +167,7 @@ int daHyuhyu_c::InitResources() {
     dExtSimpleModel_c::LoadFile(data_ov002_0210da40);
     dExtSimpleModel_c::LoadFile(data_ov002_0210d9a0);
     dExtSimpleModel_c::LoadFile(data_ov002_0210d9c0);
-    mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov091_02135674), 1, -1);
+    mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov091_02135674), 1, -1);
     dExtFrameCtrl_c::LoadFile(data_ov091_0213567c);
     dExtFrameCtrl_c::LoadFile(data_ov091_02135684);
     mAnmModel.speed = 0x1000;

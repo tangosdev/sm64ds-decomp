@@ -64,11 +64,11 @@ void daObjKm2_Agaru_c::OnStoodOn(dActor_c *other) {
 }
 
 s32 daObjKm2_Agaru_c::InitResources() {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov045_02113188), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov045_02113188), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov045_02113180);
+    KCL_File *kcl = dBgW_Kc::LoadFile(data_ov045_02113180);
     mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov045_021125d0);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);

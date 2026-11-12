@@ -5,7 +5,7 @@
  * length), then drawn with nds_print. */
 #include "types.h"
 extern int vsnprintf(char *s, size_t n, const char *format, char *arg);
-extern void nds_print(void *arg0, char *buf);
+extern void nds_print(unsigned short *dst, const char *str);
 extern char data_0209cde8[]; /* 0x0209cde8 */
 void nds_vprintf(void *dst, const char *fmt, char *args) {
     vsnprintf(data_0209cde8, 0x100, fmt, args);

@@ -15,6 +15,7 @@
  */
 #include "types.h"
 #include "nitro/os/system.h"
+#include "nitro/os/reset.h"
 #include "nitro/pxi/fifo.h"
 #include "nitro/pxi/init.h"
 

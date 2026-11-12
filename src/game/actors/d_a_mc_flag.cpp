@@ -44,8 +44,8 @@ extern "C" daMcFlag_c *daMcFlag_c_classInit() {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 s32 daMcFlag_c::InitResources() {
-    mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov009_02113eb8), 1, -1);
-    mAnmModel.SetAnim((BCA_File *)dExtFrameCtrl_c::LoadFile(data_ov009_02113eb0), 0, 0x1000, 0);
+    mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov009_02113eb8), 1, -1);
+    mAnmModel.SetAnim(dExtFrameCtrl_c::LoadFile(data_ov009_02113eb0), 0, 0x1000, 0);
     return 1;
 }
 

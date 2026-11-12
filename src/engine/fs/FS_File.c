@@ -21,28 +21,19 @@
 #include "private/fs_rom.h"
 #include "private/fs_views.h"
 #include "nitro/fs/file.h"
+#include "nitro/fs/archive.h"
 
 typedef int BOOL;
 #define TRUE 1
 #define FALSE 0
 #define NULL 0
 
-#define FS_ARCHIVE_FLAG_LOADED 0x00000002
-#define FS_ARCHIVE_NAME_LEN_MAX 3
-
-#define FS_COMMAND_READFILE 0
-#define FS_COMMAND_FINDPATH 4
-#define FS_COMMAND_GETPATH 5
-#define FS_COMMAND_OPENFILEFAST 6
-#define FS_COMMAND_OPENFILEDIRECT 7
-#define FS_COMMAND_CLOSEFILE 8
+/* The command an idle FSFile holds: FS_InitFile and FS_CloseFile store 12,
+   past the last command FSCommandType names (FS_COMMAND_IDLE, 10). */
 #define FS_COMMAND_INVALID 12
-
-#define FS_RESULT_SUCCESS 0
 
 extern FSDirPos current_dir_pos;
 
-FSArchive *FS_FindArchive(const char *name, int name_len);
 BOOL FSi_SendCommand(FSFile *p_file, int command);
 BOOL FSi_ExecuteSyncCommand(FSFile *p_file);
 

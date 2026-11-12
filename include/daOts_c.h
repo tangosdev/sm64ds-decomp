@@ -88,6 +88,35 @@
  * ROM build compares .text only. The zero words were always the evidence; the
  * declaration is what makes the compiler act on it.
  */
+struct SharedFilePtr;
+
+/* The per-variant resource block mFileTable points at: the Bully's at
+ * data_ov064_0211b834, the Big Bully's at data_ov064_0211b93c, the Chill
+ * Bully's at data_ov027_021138f4. Each child's InitResources stores its own;
+ * the leaf overlays own the bytes. CleanupResources releases files[0..4];
+ * SetAnim loads each file's BCA through filePtr; OnAimedAtWithEgg reads
+ * eggAimHeight (slot-29 return, added to pos.y); 02115f98 / 021165d8 /
+ * 0211616c read the rest. */
+struct BullyResourceConfig {
+    SharedFilePtr *files[5]; /* +0x00 -- see kFileModel / kAnim* in d_a_ots.cpp */
+    /* +0x14 -- dCcAc_c radius; also how far along the aim direction
+       func_ov064_02115f98 places the hit effect */
+    s32 cylinderRadius;
+    s32 cylinderHeight; /* +0x18 -- dCcAc_c height (InitResourcesCommon) */
+    s32 horzDecel;      /* +0x1c -- copied to Tail::mHorzDecel */
+    s32 modelYOffset;   /* +0x20 -- copied to Tail::mModelYOffset */
+    /* +0x24 -- passed as both radius and height to dBgCh_Actr::Init;
+       OnAimedAtWithEgg returns it as the aim height */
+    Fix12i eggAimHeight;
+    s32 shadowRadius; /* +0x28 -- copied to Tail::mShadowRadius */
+    s32 cliffDown;    /* +0x2c -- IsGoingOffCliff's `down` probe depth */
+    u32 particleId;   /* +0x30 -- first of two ids func_ov064_0211616c spawns */
+};
+
+#ifndef SM64DS_PLATFORM_PC
+typedef char BullyResourceConfig_size_must_be_0x34[sizeof(BullyResourceConfig) == 0x34 ? 1 : -1];
+#endif
+
 struct daOts_c : dEnemyBase_c {
     /* A view of the whole object that names the bytes 0x398..0x3f9, which the
        children still declare as pad_398 (see the SIZE note above). The offsets in
@@ -141,14 +170,10 @@ struct daOts_c : dEnemyBase_c {
 
     dExtAnmModel_c mAnmModel;                 /* 0x110 */
     dBgCh_Actr        mWithMeshClsn;          /* 0x174 */
-    /* Pointer to a per-variant config block (this TU reads it through CONFIG()). All
-       three children declare a field here, which is what makes it the base's
-       rather than any one of theirs. daDonketu_c::InitResources points it at
-       data_ov064_0211b834; daOts_c::CleanupResources (inherited by daDonketu_c)
-       releases five SharedFilePtrs through it. daBDonketu_c's own header called it
-       a u8; two of the three call it a word, and the use above is a pointer, so
-       a word it is. */
-    s32                 mFileTable;             /* 0x330 */
+    /* The variant's resource block. All three children store one here, which is
+       what makes the field the base's rather than any one of theirs;
+       daOts_c::CleanupResources releases five SharedFilePtrs through it. */
+    BullyResourceConfig *mFileTable; /* 0x330 */
     /* Particle::System::New unique ids. func_ov064_0211616c stores both; the
        eight bytes were pad_334 while untyped. */
     u32                 mParticle0;             /* 0x334 */

@@ -3,10 +3,9 @@
 #include "nitro/cp/sqrt.h"
 #include "nitro/fx/fx.h"
 #include "Ov007Spring.h"
+#include "math/CalcLib.h"
 
-extern void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
 extern void VEC_MultAdd(int s, int *a, int *b, int *out);
-extern int VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 
 /* func_ov007_020c7560's spring step that holds the link's rest length: adds
  * -r5 times the stretch along the unit from - to direction into each end's

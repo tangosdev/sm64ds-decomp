@@ -7,7 +7,7 @@
  * its meaning in this SDK revision is not established. */
 typedef struct MBUserInfo {
     unsigned char favoriteColor : 4;
-    unsigned char unknown_04 : 4;
+    unsigned char playerNo : 4;
     unsigned char nameLength;
     unsigned short name[10];
 } MBUserInfo;
@@ -31,7 +31,7 @@ typedef struct MBGameRegistry {
  * code reads it: built by MBi_MakeGameInfo, chained by MB_AddGameInfo and
  * sent by the beacon state machine (src/engine/mb/MB_GameInfo.c); the
  * parent's file registration (MB_RegisterFile) fills fileNo and seqNoFixed in
- * the copy at MbParentFile::mGameInfo. Field names follow the SDK's
+ * the copy at MbParentFile::game_info. Field names follow the SDK's
  * mb.h; unread bytes stay padding. Plain C types so C and C++ files can
  * include it without types.h. */
 typedef struct MBGameInfoFixed {

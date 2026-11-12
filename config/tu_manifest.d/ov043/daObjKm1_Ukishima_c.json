@@ -161,14 +161,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@348",
+      "from": "@347",
       "to": "@379",
-      "evidence": "mwcc numbers this model registration node @377 per TU and ov022 already defines a global @377, so the scratch link would multiply-define it Re-keyed from @370 to @348 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "mwcc numbers this model registration node @377 per TU and ov022 already defines a global @377, so the scratch link would multiply-define it Re-keyed from @370 to @348 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @348 to @347 when d_a_obj_km1_ukishima dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
     },
     {
-      "from": "@349",
+      "from": "@348",
       "to": "@378",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @392 now; licensed under the existing pin @378 Re-keyed from @371 to @349 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @392 now; licensed under the existing pin @378 Re-keyed from @371 to @349 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @349 to @348 when d_a_obj_km1_ukishima dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
     }
   ],
   "undefined_symbol_aliases": [

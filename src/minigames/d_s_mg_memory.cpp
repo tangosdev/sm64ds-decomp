@@ -550,8 +550,7 @@ void dScMgMemory_c::ResultTurnCards() {
     int flipped;
     int cardIndex;
     if (mCardTimer != 0) {
-        unsigned short *timer = &mCardTimer;
-        *timer = *timer - 1;
+        mCardTimer--;
         return;
     }
     if (mPairsFound >= mTargetPairs) {
@@ -603,8 +602,7 @@ void dScMgMemory_c::ResultWait() {
                     Mg_SetPerfectBanner();
                 Mg_SetSharedState(MG_STATE_WIN);
                 if (mHudScore < 0x270f) {
-                    int *score = &mHudScore;
-                    *score += 1;
+                    mHudScore++;
                 }
                 if (mHudScore > mBestHudScore)
                     mBestHudScore = mHudScore;
@@ -613,8 +611,7 @@ void dScMgMemory_c::ResultWait() {
             } else {
                 Mg_SetSharedState(MG_STATE_LOSE);
                 if (mHudScore > 0) {
-                    int *score = &mHudScore;
-                    *score -= 1;
+                    mHudScore--;
                 }
                 Dealer_PlayLose(&mDealer);
             }

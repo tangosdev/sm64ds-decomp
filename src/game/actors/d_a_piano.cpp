@@ -11,8 +11,7 @@
  *
  * What stays:
  * - common.h supplies the flat Matrix4x3 representation.
- * - The vector helpers (Vec3_Sub, VEC_Mag, MTX_MultVec43, VEC_Add) stay
- *   local externs: no shared header declares them.
+ * - Vec3_Sub stays a local extern: no shared header declares it.
  * - The CLPS payload and external g_profile_PIANO are not reconstructed
  *   here.
  * - func_0201267c is an enrolled Sound.cpp forwarder to Sound::Play;
@@ -54,9 +53,6 @@ extern char data_ov063_0211ecb8;
 /* local extern: no shared header declares these. */
 extern "C" {
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int VEC_Mag(const Vector3 *v);
-extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
-extern void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
 }
 
 /* Reconstructed registry name; the class identity is backed by retail RTTI.

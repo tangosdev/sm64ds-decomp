@@ -816,8 +816,8 @@ int daGmch_c::InitResources()
     extern Matrix4x3 IDENTITY_MATRIX4X3;
 
     Vector3 pos;
-    void *modelFile = dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov081_02128ed4);
-    mAnmModel.SetFile((BMD_File *)modelFile, 1, 1);
+    BMD_File *modelFile = dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov081_02128ed4);
+    mAnmModel.SetFile(modelFile, 1, 1);
     if (mModel.SetFile((BMD_File *)data_ov002_0210d9b8.filePtr, 1, 1) == 0)
         return 0;
     for (int i = 0; i < 4; i++)

@@ -10,7 +10,7 @@
  * unreachable at the exact 12-byte shape. Established across 20 mwccarm builds
  * x 7 optimization levels x 8 pragmas.
  */
-#include "types.h"
+#include "nitro/os/system.h"
 
 asm void OS_SpinWait(u32 cycles)
 {

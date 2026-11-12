@@ -11,21 +11,20 @@
  * Matched byte-for-byte with mwccarm 1.2/sp2p3
  * flags: -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  */
-void *func_02071910(char *self, void *) {
-    ThrowContext *c = (ThrowContext *)self;
-    int off = (c->mArgsPushed != 0) ? 0x10 : 0;
-    int frameSize = c->mFrameSize;
+void *func_02071910(ThrowContext *c, void *) {
+    int off = (c->mFrame.mArgsPushed != 0) ? 0x10 : 0;
+    int frameSize = c->mFrame.mFrameSize;
     char *save = (char *)((int)c->mFP + frameSize - off);
     int i;
 
     for (i = 15; i >= 0; i--) {
-        u16 flags = c->mSavedRegMask;
+        u16 flags = c->mFrame.mSavedRegMask;
         if (flags & (1 << i)) {
             save -= 4;
-            c->mGPR[i] = *(int *)save;
+            c->mFrame.mGPR[i] = *(int *)save;
         }
     }
 
     c->mSP = c->mFP + frameSize;
-    return (void *)c->mGPR[14];
+    return (void *)c->mFrame.mGPR[14];
 }

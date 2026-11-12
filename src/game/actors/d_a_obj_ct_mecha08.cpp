@@ -94,11 +94,11 @@ extern "C" daObjCtMecha08_c *daObjCtMecha08_c_classInit_CT_MECHA08B() {
    direction 0 with that direction's speed and timer for the current clock
    setting. */
 int daObjCtMecha08_c::InitResources() {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(gCtMechaObj08aModelFile), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(gCtMechaObj08aModelFile), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(gCtMechaObj08aCollisionFile), mClsnMat,
-                          0x199, mAngleY, data_ov035_021121b8);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(gCtMechaObj08aCollisionFile), mClsnMat, 0x199, mAngleY,
+                          data_ov035_021121b8);
 
     mHomePosX = mPosX;
     mHomePosY = mPosY;

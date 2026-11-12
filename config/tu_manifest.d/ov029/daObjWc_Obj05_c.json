@@ -587,14 +587,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@415",
+      "from": "@411",
       "to": "@441",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @455 now; licensed under the existing pin @441 Re-keyed from @437 to @415 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @455 now; licensed under the existing pin @441 Re-keyed from @437 to @415 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @415 to @411 when the member-pointer locals were removed (measured from the compiled object)."
     },
     {
-      "from": "@414",
+      "from": "@410",
       "to": "@440",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @454 now; licensed under the existing pin @440 Re-keyed from @436 to @414 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @454 now; licensed under the existing pin @440 Re-keyed from @436 to @414 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @414 to @410 when the member-pointer locals were removed (measured from the compiled object)."
     }
   ]
 }
