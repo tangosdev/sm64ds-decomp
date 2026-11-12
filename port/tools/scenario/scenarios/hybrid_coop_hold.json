@@ -1,0 +1,31 @@
+{
+  "about": "HYBRIDCAM1 round 2: coop camera hold. Mario's game clicks in at 890 and turns the mouse at 900 (analog cam); at guard frame 1000 camera_guard's leak knob sets flag 8 near him (an actor's hold in a coop room, untrusted). The hybrid treats a young hold near the player as the game's moment for 300 ticks: the mouse at 1150 is ignored, the mouse at 1500 wakes the analog cam again.",
+  "save": {
+    "preset": "early"
+  },
+  "room": {
+    "collision": 1,
+    "damage": 1,
+    "interact": 1,
+    "tp": 1
+  },
+  "proof": {
+    "secs": 110,
+    "shot_ms": 70000
+  },
+  "players": [
+    {
+      "character": "mario",
+      "level": 1,
+      "env": {
+        "SM64DS_HYBRID_MSG": "890:click",
+        "SM64DS_HYBRID_MOUSE": "900-912:10:0,1150-1160:10:0,1500-1512:10:0",
+        "SM64DS_CAMWD_LEAK": "1000:8"
+      }
+    },
+    {
+      "character": "luigi",
+      "level": 1
+    }
+  ]
+}

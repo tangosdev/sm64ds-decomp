@@ -627,7 +627,9 @@ int ch_idx(const Row &R, int v)
 enum { MAXR = 40 };                 /* rows a tab can hold */
 
 const char *const RUN_LABELS[] = { "Hold button", "Analog stick", "Always run" };
-const char *const CAM_LABELS[] = { "Analog chase", "Free camera", "DS stepped" };
+/* HYBRIDCAM1: Hybrid first (the default), then the three that were; CAM_VALS is the CameraMode value of each (3 hybrid) */
+const char *const CAM_LABELS[] = { "Hybrid", "Analog chase", "Free camera", "DS stepped" };
+const int CAM_VALS[] = { 3, 0, 1, 2 };
 const char *const GAPLOOK_LABELS[] = { "Solid", "Blur", "Peek" };
 const char *const GAPCOLOR_LABELS[] = { "Black", "White", "Gray", "Blue", "Red", "Green" };
 
@@ -661,7 +663,8 @@ const Row *patches_rows(int *n)
 }
 /* PAUSE3: CONTROLS is the old CONTROLS and CAMERA tabs together (the camera rows first, then the run rows, then the bindings) */
 const Row ROWS_CONTROLS[] = {
-    { R_CHOICE, "Camera", SL_CAMERA_MODE, -1, 0, CAM_LABELS, 3 },
+    { R_CHOICE, "Camera", SL_CAMERA_MODE, -1, 0, CAM_LABELS, 4, CAM_VALS },
+    { R_NOTE, "Hybrid: DS camera until the mouse or right stick turns it.", -1, -1, 0, 0, 0 },
     { R_CHOICE, "Run", SL_RUN_MODE, -1, 0, RUN_LABELS, 3 },
     { R_SLIDER, "Camera speed", SL_CAMERA_SENSITIVITY, -1, 5, 0, 0 },
     { R_SLIDER, "Mouse speed", SL_MOUSE_SENSITIVITY, -1, 5, 0, 0 },

@@ -1,0 +1,32 @@
+{
+  "about": "HYBRIDCAM1: one Mario put right in front of King Bob-omb late (settle 500), so his talk starts while the analog cam is up",
+  "mode": "solo",
+  "save": {
+    "preset": "fresh",
+    "stars": {
+      "0": "40"
+    },
+    "flags": [
+      "messages_seen"
+    ]
+  },
+  "proof": {
+    "secs": 120,
+    "shot_ms": 60000,
+    "census": [
+      189
+    ]
+  },
+  "players": [
+    {
+      "character": "mario",
+      "level": 6,
+      "act": 1,
+      "near": {
+        "class": 189,
+        "dist": 110
+      },
+      "settle": 500
+    }
+  ]
+}

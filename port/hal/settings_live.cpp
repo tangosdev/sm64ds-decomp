@@ -8,7 +8,7 @@
 #include <string.h>
 
 static const char *const RUN_NAMES[3] = { "button", "analog", "auto" };
-static const char *const CAM_NAMES[3] = { "analog", "freecam", "ds" };
+static const char *const CAM_NAMES[4] = { "analog", "freecam", "ds", "hybrid" };   /* HYBRIDCAM1: 3 hybrid (the file says ds + CameraHybrid) */
 static const char *const GAPLOOK_NAMES[3] = { "solid", "blur", "peek" };
 static const char *const GAPCOLOR_NAMES[6] = { "black", "white", "gray", "blue", "red", "green" };
 /* the preset colours of SL_GAP_COLOR (0xRRGGBB), in the order of GAPCOLOR_NAMES */
@@ -85,7 +85,7 @@ static const SlInfo INFO[] = {
     { "RunMode",                SL_KIND_ENUM,    0, 2, 1, RUN_NAMES, 1 },
     { "StickDeadzone",          SL_KIND_PERCENT, 0, 50, 24, 0, 1 },
     { "RunThreshold",           SL_KIND_PERCENT, 30, 100, 89, 0, 1 },
-    { "CameraMode",             SL_KIND_ENUM,    0, 2, 2, CAM_NAMES, 1 },
+    { "CameraMode",             SL_KIND_ENUM,    0, 3, 3, CAM_NAMES, 1 },   /* HYBRIDCAM1: hybrid (3) is the default */
     { "SwapCameraTurnDirection", SL_KIND_BOOL,   0, 1, 0, 0, 1 },
     { "InvertCameraY",          SL_KIND_BOOL,    0, 1, 0, 0, 1 },
     { "CameraSensitivity",      SL_KIND_PERCENT, 10, 400, 100, 0, 1 },
