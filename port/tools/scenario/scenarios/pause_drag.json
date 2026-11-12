@@ -1,0 +1,47 @@
+{
+  "about": "PAUSE2: Mario and Luigi below the BoB iron ball spawner; Mario's window is dragged (a synthetic move loop) and then he sits unfocused; both must keep running and sending at full rate",
+  "save": {
+    "preset": "early"
+  },
+  "room": {
+    "collision": 1,
+    "damage": 1,
+    "interact": 1,
+    "tp": 1
+  },
+  "proof": {
+    "secs": 150,
+    "shot_ms": 45000
+  },
+  "env": {
+    "SM64DS_PAUSE2_LEVEL": "6",
+    "SM64DS_PAUSE2_LOG": "15",
+    "SM64DS_PAUSE2_SHOTS": "300,450,600"
+  },
+  "players": [
+    {
+      "character": "mario",
+      "level": 6,
+      "act": 1,
+      "near": {
+        "class": 220,
+        "param": 2,
+        "dist": 300
+      },
+      "env": {
+        "SM64DS_DRAG_TEST": "360:4000"
+      }
+    },
+    {
+      "character": "luigi",
+      "level": 6,
+      "act": 1,
+      "near": {
+        "class": 220,
+        "param": 2,
+        "dist": 450,
+        "angle_deg": 6
+      }
+    }
+  ]
+}

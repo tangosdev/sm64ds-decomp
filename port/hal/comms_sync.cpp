@@ -3364,6 +3364,18 @@ extern "C" int port_adventure_ghost_paused(int slot) {
 }
 /* PAUSE2: send my identity at the next chance (the pause menu bit changed) */
 extern "C" void port_gw_ident_owe(void) { g_gw_ident_owed = true; }
+/* PAUSE2 probe (hal/pause_online.cpp's [pause2] line): seat's newest ghost frame and the send / receive totals */
+extern "C" int port_gw_pause2_seat(int seat, int *xyz, int *paused) {
+    if (seat < 0 || seat >= kHubMaxSeats || g_gw[seat].n <= 0) return 0;
+    const HubGhostFrame &f = g_gw[seat].ring[g_gw[seat].n - 1].f;
+    xyz[0] = f.x >> 12; xyz[1] = f.y >> 12; xyz[2] = f.z >> 12;
+    *paused = (f.flags & kGhostPaused) ? 1 : 0;
+    return 1;
+}
+extern "C" void port_gw_pause2_counts(unsigned long long *sent, unsigned long long *sent_paused,
+                                      unsigned long long *recvd) {
+    *sent = g_gws.syng_sent; *sent_paused = g_gws.syng_paused; *recvd = g_gws.syng_recvd;
+}
 extern "C" const char *port_adventure_ghost_name(int slot) {
     const int s = port_adventure_ghost_seat(slot);
     if (s < 0 || !g_gw[s].have_ident || !g_gw[s].name[0]) return 0;

@@ -14159,7 +14159,8 @@ static void port_handoff_show(void)
    happens, and nothing is sent that says "paused".
 
    SM64DS_DRAG_TICK=0 (or SM64DS_PAUSE_LEGACY=1) is the 1.0.3 blocking pump.
-   SM64DS_DRAG_TEST=<frame>:<ms> (proof only): at that loop frame the window
+   SM64DS_DRAG_TEST=<frame>:<ms> (proof only): at that level frame (hal/pause_online.h's
+   proof clock, SM64DS_PAUSE2_LEVEL) the window
    posts itself a message whose handler runs the same kind of modal loop
    (WM_ENTERSIZEMOVE, a PeekMessage loop for <ms>, WM_EXITSIZEMOVE) on its own
    hidden window, so a row measures a drag without touching a real window. */
@@ -14210,11 +14211,15 @@ static void drag_test_tick(void)
         at = -1;
         const char *e = getenv("SM64DS_DRAG_TEST");
         if (e && sscanf(e, "%d:%d", &at, &ms) == 2 && ms > 0)
-            fprintf(stderr, "[drag] SM64DS_DRAG_TEST: a %d ms move loop at loop frame %d\n", ms, at);
+            fprintf(stderr, "[drag] SM64DS_DRAG_TEST: a %d ms move loop at level frame %d\n", ms, at);
         else
             at = -1;
     }
-    if (at >= 0 && g_pump_frames == (unsigned)at && g_present_hwnd) {
+    static int fired;
+    if (at >= 0 && !fired && port_pause_online_level_frames() >= (unsigned)at && g_present_hwnd) {
+        fired = 1;
+        fprintf(stderr, "[drag] SM64DS_DRAG_TEST fires at level frame %u (loop frame %u)\n",
+                port_pause_online_level_frames(), g_pump_frames);
         pump_fiber_on();
         if (p_PostMessageA) p_PostMessageA(g_present_hwnd, kDragTestMsg, (WPARAM)ms, 0);
     }
@@ -19540,6 +19545,10 @@ int main(void)
            set and unreachable from a selftest; see its banner. */
         pad_test_apply(port_rom_frame_checked(frame, "pad-test"),
                        &pad_live, &pad);
+        if (const unsigned p2 = port_pause_online_test_pad()) {   /* PAUSE2: SM64DS_PAUSE2_TEST's START, inert unset */
+            if (!pad_live) { memset(&pad, 0, sizeof pad); pad_live = 1; }
+            pad.buttons = (unsigned short)(pad.buttons | p2);
+        }
         stick_script_apply(port_rom_frame_checked(frame, "stick-script"),
                            &pad_live, &pad);
         setlive_test_apply(frame, &pad_live, &pad);
@@ -19942,7 +19951,6 @@ int main(void)
                it. Does nothing without the env var. */
             port_input_probe_apply(port_rom_frame_checked(frame,
                                                           "input-probe"));
-            port_pause_online_test_input();   /* PAUSE2: SM64DS_PAUSE2_TEST's START presses, inert unset */
             /* THIS FRAME'S PAD, STASHED FOR THE Ctrl BRIDGE (run link100, lane
                FRAME). port_frame_ctrl_publish runs from inside port_actor_tick
                -- hal/stage_frame.cpp's slot-6 thunk calls it the instant the

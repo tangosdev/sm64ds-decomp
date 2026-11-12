@@ -16,16 +16,15 @@ extern unsigned char data_0209f2a0[];    // the pause stopped the course timer (
 extern char data_0209d4c8[];             // the course timer (hal/coop_world.cpp TIME_TIMER)
 extern signed char data_0209f2f8;        // the level
 extern unsigned char data_0209f250;      // the local body slot
-extern unsigned char data_020a0e40[];    // the local pad slot (input_probe.cpp's idx)
 extern void *data_0209f394[];            // the body slots
-extern int data_020a0e58[];              // PadData[]: u16 held, u16 pressed
-extern int data_020a0e5a[];              // the pressed word's split symbol
 extern const void *port_level_fb_ptr;    // hal/coop_boot.cpp: the level's picture
 void _ZN5Sound12UnpauseMusicEv(void);    // Sound::UnpauseMusic, PS_Cleanup's own call
 void _ZN5Timer10StartTimerEv(void *self);
 void *_ZN8dActor_c4NextEPKS_(const void *prev);
 int port_adventure_ghost_seat(int slot);
 void port_gw_ident_owe(void);            // hal/comms_sync.cpp: send an identity now
+int port_gw_pause2_seat(int seat, int *xyz, int *paused);
+void port_gw_pause2_counts(unsigned long long *sent, unsigned long long *sent_paused, unsigned long long *recvd);
 }
 namespace ntr { struct Framebuffer; bool ppu_write_bmp(const char *path, const Framebuffer &fb); }
 
@@ -91,13 +90,29 @@ void log_line(const char *why) {
     char rest[700];
     int w = 0;
     rest[0] = 0;
+    /* every body slot but mine (as drawn here), then each seat's newest ghost frame and the send / receive counts since
+       the last line: a friend sent at full rate shows ~30 (moving) or ~10 (standing) frames a second, a paused one 2 */
     for (int i = 0; i < 16 && w < 600; ++i) {
         const void *b = data_0209f394[i];
         if (!b || i == me) continue;
-        const int s = port_adventure_ghost_seat(i);
-        if (s < 0) continue;
-        w += std::snprintf(rest + w, sizeof rest - (size_t)w, " friend%d=(%d,%d,%d)", s, rd(b, 0x5c) >> 12,
-                           rd(b, 0x60) >> 12, rd(b, 0x64) >> 12);
+        w += std::snprintf(rest + w, sizeof rest - (size_t)w, " body%d[s%d]=(%d,%d,%d)", i, port_adventure_ghost_seat(i),
+                           rd(b, 0x5c) >> 12, rd(b, 0x60) >> 12, rd(b, 0x64) >> 12);
+    }
+    for (int s = 0; s < 4 && w < 600; ++s) {
+        int xyz[3], pz = 0;
+        if (s == comms_hub_my_seat() || !port_gw_pause2_seat(s, xyz, &pz)) continue;
+        w += std::snprintf(rest + w, sizeof rest - (size_t)w, " ghost%d=(%d,%d,%d)%s tag=%d", s, xyz[0], xyz[1], xyz[2],
+                           pz ? "P" : "", mark(s, pz != 0) ? 1 : 0);
+    }
+    {
+        static unsigned long long ls, lp, lr;
+        static unsigned lt;
+        unsigned long long cs, cp, cr;
+        port_gw_pause2_counts(&cs, &cp, &cr);
+        const unsigned now = GetTickCount();
+        w += std::snprintf(rest + w, sizeof rest - (size_t)w, " sent+%llu(paused+%llu) recvd+%llu in %ums", cs - ls,
+                           cp - lp, cr - lr, lt ? now - lt : 0u);
+        ls = cs; lp = cp; lr = cr; lt = now;
     }
     for (int c = 0; c < g_nclasses && w < 600; ++c) {
         int k = 0;
@@ -228,21 +243,25 @@ extern "C" int port_pause_online_after_stage(void) {
     return g_soft ? 1 : 0;
 }
 
-extern "C" void port_pause_online_test_input(void) {
+extern "C" unsigned port_pause_online_test_pad(void) {
     parse_once();
-    if (g_ntest <= 0 || !in_test_level()) return;
-    int idx = (int)data_020a0e40[0];
-    if (idx < 0 || idx > 3) idx = 0;
+    if (g_ntest <= 0 || !in_test_level()) return 0;
     for (int i = 0; i < g_ntest; ++i) {
         const int d = (int)g_lvl_frames - g_test[i];
         if (d < 0 || d > 2) continue;
-        unsigned short *pd = (unsigned short *)&data_020a0e58[idx];
-        pd[0] |= 0x0008;                                          // START held
-        if (d == 0) {
-            pd[1] |= 0x0008;                                      // START pressed (the edge)
-            *(unsigned short *)((char *)data_020a0e5a + idx * 4) |= 0x0008;
+        static int said = -1;
+        if (said != i) {
+            said = i;
             std::fprintf(stderr, "[pause2] test: START pressed at level frame %u (%s)\n", g_lvl_frames,
                          (i & 1) ? "close" : "open");
         }
+        return 0x0010;   // XINPUT_GAMEPAD_START, held 3 level frames
     }
+    return 0;
+}
+
+/* the proof rows' clock: Stage::Behavior calls in the test level this visit (0 outside it) */
+extern "C" unsigned port_pause_online_level_frames(void) {
+    parse_once();
+    return in_test_level() ? g_lvl_frames : 0;
 }

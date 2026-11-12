@@ -56,8 +56,11 @@ unsigned char port_pause_think_byte(void);
 // port_frame_ctrl_publish): the open / close edges, and 1 when the local
 // player's input must be emptied for this frame (the menu has it).
 int port_pause_online_after_stage(void);
-// The proof driver (SM64DS_PAUSE2_TEST), before Stage::CheckInput.
-void port_pause_online_test_input(void);
+// The proof driver (SM64DS_PAUSE2_TEST): XInput buttons to OR into this
+// frame's pad, at the seam SM64DS_HOST_PAD uses.
+unsigned port_pause_online_test_pad(void);
+// Stage::Behavior calls in the test level this visit (SM64DS_PAUSE2_LEVEL), 0 outside it.
+unsigned port_pause_online_level_frames(void);
 }
 
 #endif
