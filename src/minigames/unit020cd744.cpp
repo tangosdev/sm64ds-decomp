@@ -754,10 +754,8 @@ extern "C" void TrmpItem_ProjectOnLine(TrmpItem *item, TrampolineObjectCallbacks
 
 extern "C" void TrmpItem_UpdateMatrix(TrmpItem *self) {
     Matrix4x3 rotation;
-    Matrix4x3_FromQuaternion(reinterpret_cast<const Quaternion *>(self->mRotation),
-                             &rotation);
-    Matrix4x3_FromTranslation(&data_020a0e68, self->mPos.x, self->mPos.y,
-                              self->mPos.z);
+    Matrix4x3_FromQuaternion(reinterpret_cast<const Quaternion *>(self->mRotation), &rotation);
+    Matrix4x3_FromTranslation(&data_020a0e68, self->mPos.x, self->mPos.y, self->mPos.z);
     MTX_Concat43(&rotation, &data_020a0e68, &data_020a0e68);
     self->mModel->mat4x3 = data_020a0e68;
     self->mTexAnim.Update(self->mModel->data);
@@ -840,7 +838,7 @@ extern "C" void TrmpItem_Init(TrmpItem *self, int *position, int *normal, int it
     self->mScale.y = data_020a0ebc.y;
     self->mScale.z = data_020a0ebc.z;
     self->mAppearScale = 0;
-    *(short *)((char *)self + 0x92) = 0x5a;
+    self->mUnusedInit = 0x5a;
     TrmpItem_StartAppear(self);
 }
 
@@ -1029,11 +1027,9 @@ extern "C" void TrmpLine_Draw(TrmpLine *obj) {
     int i;
     Matrix4x3 m2;
     Matrix4x3 m1;
-    Matrix4x3_FromTranslation(&data_020a0e68, obj->mCenter.x, obj->mCenter.y,
-                              obj->mCenter.z);
+    Matrix4x3_FromTranslation(&data_020a0e68, obj->mCenter.x, obj->mCenter.y, obj->mCenter.z);
     MTX_Concat43(&data_020a0e68, &data_0209b3ec, &m1);
-    Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, obj->mScale.x, obj->mScale.y,
-                                  obj->mScale.z);
+    Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, obj->mScale.x, obj->mScale.y, obj->mScale.z);
     MTX_Concat43(&data_020a0e68, &data_0209b3ec, &m2);
     G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
     G3_LoadMtx43(m1.m);
@@ -1363,8 +1359,7 @@ extern "C" int TrmpLine_PushJumper(TrmpLine *c) {
             c->mContactMotion.y = movementDelta.y;
             c->mContactMotion.z = movementDelta.z;
 
-            edgeRatio = FX_Div((currentAlong < 0) ? -currentAlong : currentAlong,
-                                   c->mHalfWidth);
+            edgeRatio = FX_Div((currentAlong < 0) ? -currentAlong : currentAlong, c->mHalfWidth);
             {
                 int halfLength = c->mHalfWidth;
                 int absoluteAlong = (currentAlong < 0) ? -currentAlong : currentAlong;
@@ -1393,8 +1388,7 @@ extern "C" int TrmpLine_PushJumper(TrmpLine *c) {
                 jumpers[jumperIndex]->alongLine = currentAlong;
                 jumpers[jumperIndex]->lineHalfLength = c->mHalfWidth;
                 c->mWobblePhase = 0;
-                TrmpLine_PointDistance(c, &c->mContactPoint,
-                                       &c->mContactMotion);
+                TrmpLine_PointDistance(c, &c->mContactPoint, &c->mContactMotion);
 
                 c->mBouncesLeft -= 1;
                 if (c->mBouncesLeft == 0) {
