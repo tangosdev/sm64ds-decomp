@@ -33,6 +33,17 @@ void func_0201267c(unsigned int, const Vector3 *);
 unsigned int func_02012790(unsigned int);
 }
 
+/* Positioned sounds, defined in src/engine/sound/Sound.cpp. The position is
+   the sound's camera-space Vector3 (dActor_c::mCamSpacePos). func_0201251c
+   plays a one-shot; func_0201226c and func_02012194 keep a looping sound
+   going, taking the registry id it was given last time (0 for none) and
+   returning the id now playing. */
+extern "C" {
+void func_0201251c(int, int, const Vector3 *, int);
+int func_0201226c(int, int, int, const Vector3 *, int, short);
+int func_02012194(int, int, int, int, int, const Vector3 *, short);
+}
+
 namespace Sound {
 
 /* A bank-bound wrapper over Sound::Play, defined in
