@@ -579,9 +579,28 @@ void frame_hook(void)
 void journal_take(void);
 void journal_note(Plugin *p, const char *where);
 
+/* SEAMCODE1: what each patched plugin's code holds as a level boots (a few bytes compared): the in-level proof that a plugin
+   switched off left the game's own code and one switched on has its patches in place. One line per plugin with patches. */
+void level_patch_line(int level_id)
+{
+    for (size_t i = 0; i < g_plugins.size(); ++i) {
+        Plugin *p = g_plugins[i];
+        if (p->patches.empty()) continue;
+        unsigned plug = 0, game = 0;
+        for (size_t k = 0; k < p->patches.size(); ++k) {
+            const Plugin::Patch &pt = p->patches[k];
+            if (!memcmp(pt.at, &pt.now[0], pt.now.size())) ++plug;
+            else if (!memcmp(pt.at, &pt.was[0], pt.was.size())) ++game;
+        }
+        fprintf(stderr, "[plugins] level %d boots with %s %s: %u of %u patch run(s) hold the plugin's bytes, %u the game's own\n", level_id,
+                p->id.c_str(), p->off ? "OFF" : "on", plug, (unsigned)p->patches.size(), game);
+    }
+}
+
 void level_hook(int level_id)
 {
     bool taken = false;
+    level_patch_line(level_id);
     for (size_t i = 0; i < g_plugins.size(); ++i) {
         Plugin *p = g_plugins[i];
         if (p->off || p->dead || p->level.empty()) continue;
