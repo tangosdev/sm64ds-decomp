@@ -878,25 +878,24 @@ int daDoor_c::func_ov100_021452e4(daPly_c *r1) {
     v = mScaleX;
     if (v < 0)
         v = -v;
-    if (v > 0x4b000)
-        goto fail;
-    v = mScaleY;
-    if (v < 0)
-        v = -v;
-    if (v > 0x32000)
-        goto fail;
-    z = mScaleZ;
-    v = (z < 0) ? -z : z;
-    if (v > 0x6e000)
-        goto fail;
-    if (z < 0)
-        a = mAngleY;
-    else
-        a = mAngleY + 0x8000;
-    a = (short)a;
-    if (AngleDiff(a, r1->mAngleY) < 0x2000)
-        return 1;
-fail:
+    if (v <= 0x4b000) {
+        v = mScaleY;
+        if (v < 0)
+            v = -v;
+        if (v <= 0x32000) {
+            z = mScaleZ;
+            v = (z < 0) ? -z : z;
+            if (v <= 0x6e000) {
+                if (z < 0)
+                    a = mAngleY;
+                else
+                    a = mAngleY + 0x8000;
+                a = (short)a;
+                if (AngleDiff(a, r1->mAngleY) < 0x2000)
+                    return 1;
+            }
+        }
+    }
     return 0;
 }
 
@@ -971,11 +970,7 @@ void daDoor_c::OnPendingDestroy() {}
  * The two virtual calls are dExtSimpleModel_c's slot 4 Virtual10(Matrix4x3&) and slot
  * 5 Render(const Vector3*), exactly what the ROM dispatches. */
 s32 daDoor_c::Render() {
-    if (IsAreaShowing((char)mAngleX) == 0) {
-        if (IsAreaShowing((char)mAngleZ) == 0)
-            goto done;
-    }
-    {
+    if (IsAreaShowing((char)mAngleX) != 0 || IsAreaShowing((char)mAngleZ) != 0) {
         /* &mModel is taken HERE and not at the top of the function: hoisting
            it costs a callee-saved register and a stack adjust the ROM does
            not have. The ROM computes it lazily, so this does too. */
@@ -983,12 +978,11 @@ s32 daDoor_c::Render() {
         dExtSimpleModel_c *key;
         body->Render(0);
         key = mKeyModel;
-        if (key == 0)
-            goto done;
-        key->Virtual10(*mModel.data.transforms);
-        mKeyModel->Render(0);
+        if (key != 0) {
+            key->Virtual10(*mModel.data.transforms);
+            mKeyModel->Render(0);
+        }
     }
-done:
     return 1;
 }
 
@@ -1122,22 +1116,21 @@ s32 daDoor_c::InitResources() {
     v = mScaleX;
     if (v < 0)
         v = -v;
-    if (v > 0x4b000) /* 75 units */
-        goto big;
-    v = mScaleY;
-    if (v < 0)
-        v = -v;
-    if (v > 0x32000) /* 50 */
-        goto big;
-    v = mScaleZ;
-    if (v < 0)
-        v = -v;
-    if (v > 0x1f4000) /* 500 */
-        goto big;
-
-    func_ov100_021453d8(&data_ov100_02148914, r4);
-    goto done;
-big:
+    if (v <= 0x4b000) { /* 75 units */
+        v = mScaleY;
+        if (v < 0)
+            v = -v;
+        if (v <= 0x32000) { /* 50 */
+            v = mScaleZ;
+            if (v < 0)
+                v = -v;
+            if (v <= 0x1f4000) { /* 500 */
+                func_ov100_021453d8(&data_ov100_02148914, r4);
+                /* return 1 in place of this goto is size 0x308, not 0x2fc */
+                goto done;
+            }
+        }
+    }
     func_ov100_021453d8(&data_ov100_021488b4, r4);
 done:
     return 1;
