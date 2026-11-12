@@ -39,7 +39,7 @@ void GX_LoadBGPltt(const void *src, unsigned int offset, unsigned int size) {
     if (channel != -1) {
         MI_DmaCopy16(channel, src, (void *)((char *)0x05000000 + offset), size);
     } else {
-        MIi_CpuCopy16(src, (void *)((char *)0x05000000 + offset), size);
+        MI_CpuCopy16(src, (char *)0x05000000 + offset, size);
     }
 }
 
@@ -49,7 +49,7 @@ void GXS_LoadBGPltt(const void *src, unsigned int offset, unsigned int size) {
     if (channel != -1) {
         MI_DmaCopy16(channel, src, (void *)((char *)0x05000400 + offset), size);
     } else {
-        MIi_CpuCopy16(src, (void *)((char *)0x05000400 + offset), size);
+        MI_CpuCopy16(src, (char *)0x05000400 + offset, size);
     }
 }
 
@@ -59,7 +59,7 @@ void GX_LoadOBJPltt(const void *src, unsigned int offset, unsigned int size) {
     if (channel != -1) {
         MI_DmaCopy16(channel, src, (void *)((char *)0x05000200 + offset), size);
     } else {
-        MIi_CpuCopy16(src, (void *)((char *)0x05000200 + offset), size);
+        MI_CpuCopy16(src, (char *)0x05000200 + offset, size);
     }
 }
 
@@ -69,7 +69,7 @@ void GXS_LoadOBJPltt(const void *src, unsigned int offset, unsigned int size) {
     if (channel != -1) {
         MI_DmaCopy16(channel, src, (void *)((char *)0x05000600 + offset), size);
     } else {
-        MIi_CpuCopy16(src, (void *)((char *)0x05000600 + offset), size);
+        MI_CpuCopy16(src, (char *)0x05000600 + offset, size);
     }
 }
 
@@ -80,7 +80,7 @@ void GX_LoadOAM(const void *src, unsigned int offset, unsigned int count) {
     if (channel != (unsigned int)-1) {
         MI_DmaCopy32(channel, src, (void *)(0x7000000 + offset), count);
     } else {
-        MIi_CpuCopy32((int *)src, (int *)(0x7000000 + offset), count);
+        MI_CpuCopy32(src, (void *)(0x7000000 + offset), count);
     }
 }
 
@@ -91,7 +91,7 @@ void GXS_LoadOAM(const void *src, unsigned int offset, unsigned int count) {
     if (channel != (unsigned int)-1) {
         MI_DmaCopy32(channel, src, (void *)(0x07000400 + offset), count);
     } else {
-        MIi_CpuCopy32((int *)src, (int *)(0x07000400 + offset), count);
+        MI_CpuCopy32(src, (void *)(0x07000400 + offset), count);
     }
 }
 
@@ -103,7 +103,7 @@ void GX_LoadOBJ(const void *src, unsigned int offset, unsigned int count) {
     if (channel != (unsigned int)-1) {
         MI_DmaCopy32(channel, src, (void *)(base + offset), count);
     } else {
-        MIi_CpuCopy32((int *)src, (int *)(base + offset), count);
+        MI_CpuCopy32(src, (void *)(base + offset), count);
     }
 }
 
@@ -115,7 +115,7 @@ void GXS_LoadOBJ(const void *src, unsigned int offset, unsigned int count) {
     if (channel != (unsigned int)-1) {
         MI_DmaCopy32(channel, src, (void *)(base + offset), count);
     } else {
-        MIi_CpuCopy32((int *)src, (int *)(base + offset), count);
+        MI_CpuCopy32(src, (void *)(base + offset), count);
     }
 }
 
@@ -126,7 +126,7 @@ void GX_LoadBG0Scr(const void *src, int offset, int count) {
     if (ch != -1) {
         MI_DmaCopy16(ch, src, ptr + offset, count);
     } else {
-        MIi_CpuCopy16(src, ptr + offset, count);
+        MI_CpuCopy16(src, ptr + offset, count);
     }
 }
 
@@ -137,7 +137,7 @@ void GXS_LoadBG0Scr(const void *src, int offset, int count) {
     if (ch != -1) {
         MI_DmaCopy16(ch, src, ptr + offset, count);
     } else {
-        MIi_CpuCopy16(src, ptr + offset, count);
+        MI_CpuCopy16(src, ptr + offset, count);
     }
 }
 
@@ -148,7 +148,7 @@ void GX_LoadBG1Scr(const void *src, int offset, int count) {
     if (ch != -1) {
         MI_DmaCopy16(ch, src, ptr + offset, count);
     } else {
-        MIi_CpuCopy16(src, ptr + offset, count);
+        MI_CpuCopy16(src, ptr + offset, count);
     }
 }
 
@@ -159,7 +159,7 @@ void GXS_LoadBG1Scr(const void *src, int offset, int count) {
     if (ch != -1) {
         MI_DmaCopy16(ch, src, ptr + offset, count);
     } else {
-        MIi_CpuCopy16(src, ptr + offset, count);
+        MI_CpuCopy16(src, ptr + offset, count);
     }
 }
 
@@ -173,7 +173,7 @@ void GX_LoadBG2Scr(const void *src, u32 offset, u32 count) {
     if (ch != (u32)-1)
         MI_DmaCopy16(ch, src, (char *)bgPtr + offset, count);
     else
-        MIi_CpuCopy16(src, (char *)bgPtr + offset, count);
+        MI_CpuCopy16(src, (char *)bgPtr + offset, count);
 }
 
 // Loads BG2 screen data to the sub-engine plane (G2S_GetBG2ScrPtr).
@@ -186,7 +186,7 @@ void GXS_LoadBG2Scr(const void *src, u32 offset, u32 count) {
     if (ch != (u32)-1)
         MI_DmaCopy16(ch, src, (char *)bgPtr + offset, count);
     else
-        MIi_CpuCopy16(src, (char *)bgPtr + offset, count);
+        MI_CpuCopy16(src, (char *)bgPtr + offset, count);
 }
 
 // Loads BG3 screen data to the main-engine plane (G2_GetBG3ScrPtr).
@@ -196,7 +196,7 @@ void GX_LoadBG3Scr(const void *src, u32 offset, u32 count) {
     if (ch != -1) {
         MI_DmaCopy16(ch, src, (char *)bgPtr + offset, count);
     } else {
-        MIi_CpuCopy16(src, (char *)bgPtr + offset, count);
+        MI_CpuCopy16(src, (char *)bgPtr + offset, count);
     }
 }
 
@@ -210,7 +210,7 @@ void GXS_LoadBG3Scr(const void *src, u32 offset, u32 count) {
     if (ch != (u32)-1)
         MI_DmaCopy16(ch, src, (char *)bgPtr + offset, count);
     else
-        MIi_CpuCopy16(src, (char *)bgPtr + offset, count);
+        MI_CpuCopy16(src, (char *)bgPtr + offset, count);
 }
 
 // Loads character data into MAIN BG0 VRAM (G2_GetBG0CharPtr, 0x2054efc).
@@ -220,7 +220,7 @@ void GX_LoadBG0Char(const void *src, unsigned int offset, unsigned int count) {
     if (channel != (unsigned int)-1) {
         MI_DmaCopy32(channel, src, (char *)base + offset, count);
     } else {
-        MIi_CpuCopy32((int *)src, (int *)((char *)base + offset), count);
+        MI_CpuCopy32(src, (char *)base + offset, count);
     }
 }
 
@@ -230,7 +230,7 @@ void GXS_LoadBG0Char(const void *src, u32 offset, u32 size) {
     if (GXi_DmaId != (u32)-1)
         MI_DmaCopy32(GXi_DmaId, src, (char *)charPtr + offset, size);
     else
-        MIi_CpuCopy32((int *)src, (int *)((char *)charPtr + offset), size);
+        MI_CpuCopy32(src, (char *)charPtr + offset, size);
 }
 
 // Loads character data into MAIN BG1 VRAM (G2_GetBG1CharPtr, 0x2054ea8).
@@ -240,7 +240,7 @@ void GX_LoadBG1Char(const void *src, unsigned int offset, unsigned int count) {
     if (channel != (unsigned int)-1) {
         MI_DmaCopy32(channel, src, (char *)base + offset, count);
     } else {
-        MIi_CpuCopy32((int *)src, (int *)((char *)base + offset), count);
+        MI_CpuCopy32(src, (char *)base + offset, count);
     }
 }
 
@@ -251,7 +251,7 @@ void GXS_LoadBG1Char(const void *src, unsigned int offset, unsigned int count) {
     if (channel != (unsigned int)-1) {
         MI_DmaCopy32(channel, src, (char *)base + offset, count);
     } else {
-        MIi_CpuCopy32((int *)src, (int *)((char *)base + offset), count);
+        MI_CpuCopy32(src, (char *)base + offset, count);
     }
 }
 
@@ -261,7 +261,7 @@ void GX_LoadBG2Char(const void *src, u32 offset, u32 size) {
     if (GXi_DmaId != (u32)-1)
         MI_DmaCopy32(GXi_DmaId, src, (char *)charPtr + offset, size);
     else
-        MIi_CpuCopy32((int *)src, (int *)((char *)charPtr + offset), size);
+        MI_CpuCopy32(src, (char *)charPtr + offset, size);
 }
 
 // Loads BG2 char data into SUB BG2 VRAM (G2S_GetBG2CharPtr).
@@ -271,7 +271,7 @@ void GXS_LoadBG2Char(const void *src, unsigned int offset, unsigned int count) {
     if (channel != (unsigned int)-1) {
         MI_DmaCopy32(channel, src, (char *)base + offset, count);
     } else {
-        MIi_CpuCopy32((int *)src, (int *)((char *)base + offset), count);
+        MI_CpuCopy32(src, (char *)base + offset, count);
     }
 }
 
@@ -282,7 +282,7 @@ void GX_LoadBG3Char(const void *src, unsigned int offset, unsigned int count) {
     if (channel != (unsigned int)-1) {
         MI_DmaCopy32(channel, src, (char *)base + offset, count);
     } else {
-        MIi_CpuCopy32((int *)src, (int *)((char *)base + offset), count);
+        MI_CpuCopy32(src, (char *)base + offset, count);
     }
 }
 
@@ -292,7 +292,7 @@ void GXS_LoadBG3Char(const void *src, u32 offset, u32 size) {
     if (GXi_DmaId != (u32)-1)
         MI_DmaCopy32(GXi_DmaId, src, (char *)charPtr + offset, size);
     else
-        MIi_CpuCopy32((int *)src, (int *)((char *)charPtr + offset), size);
+        MI_CpuCopy32(src, (char *)charPtr + offset, size);
 }
 
 // Clears the sub-engine BG ext-palette enable bit and unmaps the bank back to
@@ -307,7 +307,7 @@ void GXS_LoadBGExtPltt(const void *src, u32 destSlotAddr, u32 size) {
     if (dmaId != (u32)-1) {
         MI_DmaCopy32Async(dmaId, src, (void *)(destSlotAddr + GXS_BG_EXT_PLTT_BASE), size, 0, 0);
     } else {
-        MIi_CpuCopy32((int *)src, (int *)(destSlotAddr + GXS_BG_EXT_PLTT_BASE), size);
+        MI_CpuCopy32(src, (void *)(destSlotAddr + GXS_BG_EXT_PLTT_BASE), size);
     }
 }
 
@@ -331,7 +331,7 @@ void GXS_LoadOBJExtPltt(const void *src, u32 destSlotAddr, u32 size) {
     if (dmaId != (u32)-1) {
         MI_DmaCopy32Async(dmaId, src, (void *)(destSlotAddr + GXS_OBJ_EXT_PLTT_BASE), size, 0, 0);
     } else {
-        MIi_CpuCopy32((int *)src, (int *)(destSlotAddr + GXS_OBJ_EXT_PLTT_BASE), size);
+        MI_CpuCopy32(src, (void *)(destSlotAddr + GXS_OBJ_EXT_PLTT_BASE), size);
     }
 }
 

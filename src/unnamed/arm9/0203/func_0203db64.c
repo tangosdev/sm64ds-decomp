@@ -68,12 +68,12 @@ void func_0203db64(void *arg0, void *arg1) {
     data_020a0ef0 = 0;
     MI_CpuCopy8(arg0, data_020a1064, 0x40);
     MI_CpuCopy8(arg1, data_020a0fec, 0x1c);
-    MI_CpuFill8(&data_020a1040, 0, 0x24);
-    MI_CpuFill8(data_020a0fb8, 0, 0x18);
-    MI_CpuFill8(data_020a0fa0, 0, 0x18);
-    MI_CpuFill8(data_020a10fc, 0, 0x58);
-    MI_CpuFill8(data_020a10a4, 0, 0x58);
-    MI_CpuFill8(data_020a1154, 0, 0x90);
+    MI_CpuClear8(&data_020a1040, 0x24);
+    MI_CpuClear8(data_020a0fb8, 0x18);
+    MI_CpuClear8(data_020a0fa0, 0x18);
+    MI_CpuClear8(data_020a10fc, 0x58);
+    MI_CpuClear8(data_020a10a4, 0x58);
+    MI_CpuClear8(data_020a1154, 0x90);
     data_020a0f08 = 0;
     data_020a0f1c = 0;
     data_020a0f30 = 0;
@@ -146,7 +146,7 @@ void func_0203db64(void *arg0, void *arg1) {
         }
     } else {
         OS_GetOwnerInfo(&buf);
-        MI_CpuFill8(&data_020a10fc[0], 0, 0x16);
+        MI_CpuClear8(&data_020a10fc[0], 0x16);
         data_020a10fc[0].favoriteColor = buf.favoriteColor;
         data_020a10fc[0].nameLength = buf.nickNameLength;
         data_020a10a4[0].favoriteColor = data_020a10fc[0].favoriteColor;

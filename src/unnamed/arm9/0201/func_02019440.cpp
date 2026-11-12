@@ -35,12 +35,12 @@ void func_02019440(void) {
     GX_VBlankIntr(1);
     GX_SetBankForLCDC(0x1ff);
     a = 0;
-    MIi_CpuClearFast(a, (int *)0x6800000, 0xa4000);
+    MI_CpuFillFast((int *)0x6800000, a, 0xa4000);
     GX_DisableBankForLCDC();
     b = 0xc0;
-    MIi_CpuClearFast(b, (int *)0x7000000, 0x400);
+    MI_CpuFillFast((int *)0x7000000, b, 0x400);
     c = 0;
-    MIi_CpuClearFast(c, (int *)0x5000000, 0x400);
+    MI_CpuFillFast((int *)0x5000000, c, 0x400);
     gGraphCallback = 0;
     data_0209d4ac = 0;
     data_0209d4b0 = 0;

@@ -696,7 +696,7 @@ void dScMgSnowball_c::RedrawCourse() {
  * Copies one 16-row column of 2x2 BG tiles into the BG2 screen of both the
  * main and the sub engine. Each cell index comes from the u16 grid at
  * self+0x4f38 (row stride 0x5c0, column `col`); its four tiles are the four
- * u16 words of sSnowballCourseTiles[idx], written with MIi_CpuClear16 (two
+ * u16 words of sSnowballCourseTiles[idx], written with MI_CpuFill16 (two
  * halfwords each) at screen offset ((col & 0xf) << 7) + 2*j, +2, +0x40,
  * +0x42. flag == 1 targets the first half of the screen block, anything else
  * the half at +0x800.
@@ -738,42 +738,42 @@ void dScMgSnowball_c::DrawCourseColumn(int col, int flag) {
             idx = *(u16 *)(row + SNOW_OFF(mTileMap));
             tile = sSnowballCourseTiles[idx][0];
             scr = (u16 *)((char *)G2_GetBG2ScrPtr() + off);
-            MIi_CpuClear16(v0 = tile, scr + j, n);
+            MI_CpuFill16(scr + j, v0 = tile, n);
 
             idx = *(u16 *)(row + SNOW_OFF(mTileMap));
             tile = sSnowballCourseTiles[idx][1];
             scr = (u16 *)((char *)G2_GetBG2ScrPtr() + off);
-            MIi_CpuClear16(v1 = tile, scr + j + 1, n);
+            MI_CpuFill16(scr + j + 1, v1 = tile, n);
 
             idx = *(u16 *)(row + SNOW_OFF(mTileMap));
             tile = sSnowballCourseTiles[idx][2];
             scr = (u16 *)((char *)G2_GetBG2ScrPtr() + off);
-            MIi_CpuClear16(v2 = tile, scr + j + 0x20, n);
+            MI_CpuFill16(scr + j + 0x20, v2 = tile, n);
 
             idx = *(u16 *)(row + SNOW_OFF(mTileMap));
             tile = sSnowballCourseTiles[idx][3];
             scr = (u16 *)((char *)G2_GetBG2ScrPtr() + off);
-            MIi_CpuClear16(v3 = tile, scr + j + 0x21, n);
+            MI_CpuFill16(scr + j + 0x21, v3 = tile, n);
 
             idx = *(u16 *)(row + SNOW_OFF(mTileMap));
             tile = sSnowballCourseTiles[idx][0];
             scr = (u16 *)((char *)G2S_GetBG2ScrPtr() + off);
-            MIi_CpuClear16(v4 = tile, scr + j, n);
+            MI_CpuFill16(scr + j, v4 = tile, n);
 
             idx = *(u16 *)(row + SNOW_OFF(mTileMap));
             tile = sSnowballCourseTiles[idx][1];
             scr = (u16 *)((char *)G2S_GetBG2ScrPtr() + off);
-            MIi_CpuClear16(v5 = tile, scr + j + 1, n);
+            MI_CpuFill16(scr + j + 1, v5 = tile, n);
 
             idx = *(u16 *)(row + SNOW_OFF(mTileMap));
             tile = sSnowballCourseTiles[idx][2];
             scr = (u16 *)((char *)G2S_GetBG2ScrPtr() + off);
-            MIi_CpuClear16(v6 = tile, scr + j + 0x20, n);
+            MI_CpuFill16(scr + j + 0x20, v6 = tile, n);
 
             idx = *(u16 *)(row + SNOW_OFF(mTileMap));
             tile = sSnowballCourseTiles[idx][3];
             scr = (u16 *)((char *)G2S_GetBG2ScrPtr() + off);
-            MIi_CpuClear16(v7 = tile, scr + j + 0x21, n);
+            MI_CpuFill16(scr + j + 0x21, v7 = tile, n);
 
             row += 0x5c0;
             j += 2;
@@ -793,42 +793,42 @@ void dScMgSnowball_c::DrawCourseColumn(int col, int flag) {
         idx = *(u16 *)(row + SNOW_OFF(mTileMap));
         tile = sSnowballCourseTiles[idx][0];
         scr = (u16 *)((char *)G2_GetBG2ScrPtr() + 0x800 + off);
-        MIi_CpuClear16(w0 = tile, scr + j, n);
+        MI_CpuFill16(scr + j, w0 = tile, n);
 
         idx = *(u16 *)(row + SNOW_OFF(mTileMap));
         tile = sSnowballCourseTiles[idx][1];
         scr = (u16 *)((char *)G2_GetBG2ScrPtr() + 0x802 + off);
-        MIi_CpuClear16(w1 = tile, scr + j, n);
+        MI_CpuFill16(scr + j, w1 = tile, n);
 
         idx = *(u16 *)(row + SNOW_OFF(mTileMap));
         tile = sSnowballCourseTiles[idx][2];
         scr = (u16 *)((char *)G2_GetBG2ScrPtr() + 0x840 + off);
-        MIi_CpuClear16(w2 = tile, scr + j, n);
+        MI_CpuFill16(scr + j, w2 = tile, n);
 
         idx = *(u16 *)(row + SNOW_OFF(mTileMap));
         tile = sSnowballCourseTiles[idx][3];
         scr = (u16 *)((char *)G2_GetBG2ScrPtr() + k842 + off);
-        MIi_CpuClear16(w3 = tile, scr + j, n);
+        MI_CpuFill16(scr + j, w3 = tile, n);
 
         idx = *(u16 *)(row + SNOW_OFF(mTileMap));
         tile = sSnowballCourseTiles[idx][0];
         scr = (u16 *)((char *)G2S_GetBG2ScrPtr() + 0x800 + off);
-        MIi_CpuClear16(w4 = tile, scr + j, n);
+        MI_CpuFill16(scr + j, w4 = tile, n);
 
         idx = *(u16 *)(row + SNOW_OFF(mTileMap));
         tile = sSnowballCourseTiles[idx][1];
         scr = (u16 *)((char *)G2S_GetBG2ScrPtr() + 0x802 + off);
-        MIi_CpuClear16(w5 = tile, scr + j, n);
+        MI_CpuFill16(scr + j, w5 = tile, n);
 
         idx = *(u16 *)(row + SNOW_OFF(mTileMap));
         tile = sSnowballCourseTiles[idx][2];
         scr = (u16 *)((char *)G2S_GetBG2ScrPtr() + 0x840 + off);
-        MIi_CpuClear16(w6 = tile, scr + j, n);
+        MI_CpuFill16(scr + j, w6 = tile, n);
 
         idx = *(u16 *)(row + SNOW_OFF(mTileMap));
         tile = sSnowballCourseTiles[idx][3];
         scr = (u16 *)((char *)G2S_GetBG2ScrPtr() + k842 + off);
-        MIi_CpuClear16(w7 = tile, scr + j, n);
+        MI_CpuFill16(scr + j, w7 = tile, n);
 
         row += 0x5c0;
         j += 2;

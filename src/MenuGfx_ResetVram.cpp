@@ -18,14 +18,14 @@ void MenuGfx_ResetVram(void) {
     GX_SetBankForLCDC(0x1ff);
 
     b = 0;
-    MIi_CpuClear32(b, (int *)0x6800000, 0xa4000);
+    MI_CpuFill32((int *)0x6800000, b, 0xa4000);
 
     GX_DisableBankForLCDC();
 
     a = 0xc0;
-    MIi_CpuClearFast(a, (int *)0x7000000, 0x400);
+    MI_CpuFillFast((int *)0x7000000, a, 0x400);
 
     c = 0;
-    MIi_CpuClear32(c, (int *)0x5000000, 0x400);
+    MI_CpuFill32((int *)0x5000000, c, 0x400);
 }
 }

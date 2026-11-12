@@ -22,7 +22,7 @@ int func_02065af0(int *thiz)
         OS_RestoreInterrupts(saved);
         return 0;
     }
-    MIi_CpuCopy32(thiz, &data_020a9570, 0x9c);
+    MI_CpuCopy32(thiz, &data_020a9570, 0x9c);
     OS_RestoreInterrupts(saved);
     return 1;
 }

@@ -14,7 +14,7 @@ void WBT_GetBlock(u16 target_bmp, u32 block_id, const void *recv_buf_table, u32 
     cmd.callback = (void (*)(char *))callback;
     cmd.u.get.block_id = block_id;
     cmd.u.get.recv_data_size = recv_size;
-    MIi_CpuCopy32(recv_buf_table, cmd.u.get.recv_buf_table, 0x40);
-    MIi_CpuCopy32(pkt_bmp_table, cmd.u.get.pkt_bmp_table, 0x40);
+    MI_CpuCopy32(recv_buf_table, cmd.u.get.recv_buf_table, 0x40);
+    MI_CpuCopy32(pkt_bmp_table, cmd.u.get.pkt_bmp_table, 0x40);
     func_02065af0((int *)&cmd);
 }

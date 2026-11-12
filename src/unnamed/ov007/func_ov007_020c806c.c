@@ -22,5 +22,5 @@ void func_ov007_020c8098(void *p) {
 
 void func_ov007_020c806c(void *c) {
     volatile int li = 0;
-    MIi_CpuClear32(li, c, 0x18);
+    MI_CpuFill32(c, li, 0x18);
 }

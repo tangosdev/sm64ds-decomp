@@ -11,7 +11,7 @@ int AllocAssetHandleTable(int n) {
     unsigned int sz = n * 2;
     unsigned short *p = (unsigned short *)Memory::Allocate(sz);
     data_0209d3b8 = p;
-    MI_CpuFill8(p, 0, sz);
+    MI_CpuClear8(p, sz);
     data_0209d3b0 = n;
     return 1;
 }

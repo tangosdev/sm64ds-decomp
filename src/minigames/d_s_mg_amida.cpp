@@ -1282,17 +1282,17 @@ void dScMgAmida_c::StepWalkers() {
 
 extern "C" void Amida_RestoreBgChars(void *) {
     char *mainChars = (char *)G2_GetBG0CharPtr();
-    MIi_CpuCopy16((char *)G2_GetBG0CharPtr() + 0xc000, mainChars, 0x6000);
+    MI_CpuCopy16((char *)G2_GetBG0CharPtr() + 0xc000, mainChars, 0x6000);
     char *subChars = (char *)G2S_GetBG0CharPtr();
-    MIi_CpuCopy16((char *)G2S_GetBG0CharPtr() + 0x6000, subChars, 0x6000);
+    MI_CpuCopy16((char *)G2S_GetBG0CharPtr() + 0x6000, subChars, 0x6000);
 }
 
 /* The scene pointer its caller passes is never read. */
 extern "C" void Amida_SaveBgChars(void *) {
     char *mainChars = (char *)G2_GetBG0CharPtr() + 0xc000;
-    MIi_CpuCopy16((char *)G2_GetBG0CharPtr(), mainChars, 0x6000);
+    MI_CpuCopy16((char *)G2_GetBG0CharPtr(), mainChars, 0x6000);
     char *subChars = (char *)G2S_GetBG0CharPtr() + 0x6000;
-    MIi_CpuCopy16(G2S_GetBG0CharPtr(), subChars, 0x6000);
+    MI_CpuCopy16(G2S_GetBG0CharPtr(), subChars, 0x6000);
 }
 
 /* Both four-lane shuffles keep the generator's value in `rand` and mask it
@@ -1488,10 +1488,10 @@ void dScMgAmida_c::SetupRound() {
         volatile u16 fillSub;
         chars = G2_GetBG0CharPtr();
         fillMain = 0;
-        MIi_CpuClear16(fillMain, chars, 0x6000);
+        MI_CpuFill16(chars, fillMain, 0x6000);
         chars = G2S_GetBG0CharPtr();
         fillSub = 0;
-        MIi_CpuClear16(fillSub, chars, 0x6000);
+        MI_CpuFill16(chars, fillSub, 0x6000);
     }
 
     mLineStart.x = -1;
@@ -2093,7 +2093,7 @@ s32 dScMgAmida_c::InitResources() {
 
     file = G2_GetBG0CharPtr();
     fillMain = 0;
-    MIi_CpuClear16(fillMain, file, 0x6000);
+    MI_CpuFill16(file, fillMain, 0x6000);
 
     G2S_SetBG0Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x1000,
                       GX_BG_CHARBASE_0x14000, GX_BG_EXTPLTT_23);
@@ -2103,7 +2103,7 @@ s32 dScMgAmida_c::InitResources() {
 
     file = G2S_GetBG0CharPtr();
     fillSub = 0;
-    MIi_CpuClear16(fillSub, file, 0x6000);
+    MI_CpuFill16(file, fillSub, 0x6000);
 
     Mg_InitBrush((char *)this, 1, 0, 2);
 

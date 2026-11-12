@@ -365,7 +365,7 @@ void FS_NotifyArchiveAsyncEnd(FSArchive *p_arc, int ret) {
  * is a 16-bit mask of thread ids, so emptying one is a store of 0 where
  * pret's calls OS_InitThreadQueue. */
 void FS_InitArchive(FSArchive *p_arc) {
-    MI_CpuFill8(p_arc, 0, sizeof(FSArchive));
+    MI_CpuClear8(p_arc, sizeof(FSArchive));
     p_arc->sync_q = 0;
     p_arc->stat_q = 0;
 }

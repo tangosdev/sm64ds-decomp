@@ -1473,7 +1473,7 @@ s32 dScMgSlot1_c::InitResources() {
     {
         char *d3 = (char *)G2S_GetBG3ScrPtr();
         fill = 0x43e4;
-        MIi_CpuClear16(fill, d3, 0x800);
+        MI_CpuFill16(d3, fill, 0x800);
     }
 
     LoadCompressedFileAt(sSlotNcgByLanguage[GetGameLanguage()], G2_GetOBJCharPtr());

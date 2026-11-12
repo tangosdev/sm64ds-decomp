@@ -1479,7 +1479,7 @@ extern "C" int func_020507e0(void *a0, unsigned int a1, int a2, int a3, int a4, 
     if (data_020a5634.f0 != 0)
         return 0;
     z = 0;
-    MIi_CpuClear32(z, (int *)a0, a1);
+    MI_CpuFill32(a0, z, a1);
     DC_FlushRange(a0, a1);
     return func_020503a4(1, (int)a0, (int)a0 + (a1 >> 1), a1 >> 1, a2, 0, 0, 1, a3, 0x7f, 0, 0x7f,
                          a4, (int)a5, (int)a6);
@@ -1649,9 +1649,9 @@ extern "C" void func_020501b8(void)
     if (g->f0 == 0) return;
     g->f18 = 0;
     a = 0;
-    MIi_CpuClear32(a, (int *)g->fc, g->f14);
+    MI_CpuFill32((void *)g->fc, a, g->f14);
     b = 0;
-    MIi_CpuClear32(b, (int *)g->f10, g->f14);
+    MI_CpuFill32((void *)g->f10, b, g->f14);
     DC_FlushRange((void *)g->fc, g->f14);
     DC_FlushRange((void *)g->f10, g->f14);
     {

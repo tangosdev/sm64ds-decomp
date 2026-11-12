@@ -18,5 +18,5 @@ void func_020647fc(WBTPacketBitmap *pkt, int length, unsigned int *bitmap, unsig
     pkt->bitmap = bitmap;
     pkt->buffer = buffer;
     r = WBT_CalcPacketbitmapSize(length);
-    MI_CpuFill8(bitmap, 0, r);
+    MI_CpuClear8(bitmap, r);
 }

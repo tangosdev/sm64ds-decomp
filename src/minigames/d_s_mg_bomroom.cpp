@@ -1782,7 +1782,7 @@ s32 dScMgBomroom_c::InitResources() {
     f = LoadFile(ASSET_D_2D_ELEVATOR_NSC_BIN);
     b = (char *)G2_GetBG2ScrPtr();
     fill = 0xf23f;
-    MIi_CpuClear16(fill, b, 0x1000);
+    MI_CpuFill16(b, fill, 0x1000);
     GX_LoadBG2Scr(f, 0, 0x800);
     Deallocate(f);
 

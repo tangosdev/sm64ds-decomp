@@ -1205,8 +1205,8 @@ void func_ov002_020f39ec(char *self, int idx) {
         int src = i * 0x800 + ((v & 7) << 8);
         if (v & 8)
             src += 0x2000;
-        MIi_CpuCopy16(s->starChars + src,
-                      (u8 *)G2S_GetOBJCharPtr() + 0x2000 + idx * 0x100 + i * 0x400, 0x100);
+        MI_CpuCopy16(s->starChars + src,
+                     (u8 *)G2S_GetOBJCharPtr() + 0x2000 + idx * 0x100 + i * 0x400, 0x100);
     }
 }
 }

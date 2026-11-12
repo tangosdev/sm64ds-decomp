@@ -25,6 +25,6 @@ void func_02017fd0(FSOverlayInfo *info) {
     DC_InvalidateRange(ptr, len);
 
     fillVal = 0xe6000010;
-    MIi_CpuClear32(fillVal, ptr, len);
+    MI_CpuFill32(ptr, fillVal, len);
 }
 }

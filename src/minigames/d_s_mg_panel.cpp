@@ -1636,7 +1636,7 @@ s32 dScMgPanel_c::InitResources() {
 
     b = (char *)G2_GetBG2ScrPtr();
     mainFill = 0xf361;
-    MIi_CpuClear16(mainFill, b, 0x1000);
+    MI_CpuFill16(b, mainFill, 0x1000);
 
     file = LoadFile(ASSET_D_2D_YOSIFINX_NORMAL_NSC_BIN);
     GX_LoadBG2Scr(file, 0x800, 0x800);
@@ -1685,7 +1685,7 @@ s32 dScMgPanel_c::InitResources() {
 
         b = (char *)G2S_GetBG2ScrPtr();
         subFill = 0xf361;
-        MIi_CpuClear16(subFill, b, 0x1000);
+        MI_CpuFill16(b, subFill, 0x1000);
 
         subFile = LoadFile(ASSET_D_2D_YOSIFINX_NORMAL_NSC_BIN);
         GXS_LoadBG2Scr(subFile, 0, 0x800);

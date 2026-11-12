@@ -23,7 +23,7 @@ void func_02049c48(int kind) {
     }
     savedIRQ = OS_DisableInterrupts();
     tmp = 0;
-    MIi_CpuClear16(tmp, &data_020a4c70, sizeof(data_020a4c70));
+    MI_CpuFill16(&data_020a4c70, tmp, sizeof(data_020a4c70));
     data_020a4c64.kind = kind;
     OS_RestoreInterrupts(savedIRQ);
     if (kind == 1) {

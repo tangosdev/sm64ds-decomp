@@ -34,12 +34,12 @@ extern "C" void LoadFont(unsigned char arg)
         GX_LoadBGPltt((char *)file + 2, 2, 0x20);
         Deallocate(file);
     } else if (data_0209d698 == 1) {
-        MIi_CpuCopy32((int *)r4, (int *)G2S_GetBG1CharPtr(), 0x4000);
+        MI_CpuCopy32(r4, (int *)G2S_GetBG1CharPtr(), 0x4000);
         file = LoadFile(ASSET_D_2D_MARIO_3DFONT_NCL_BIN);
         GXS_LoadBGPltt(file, 0x40, 0x20);
         Deallocate(file);
     } else {
-        MIi_CpuCopy32((int *)r4, (int *)G2_GetBG3CharPtr(), 0x4000);
+        MI_CpuCopy32(r4, (int *)G2_GetBG3CharPtr(), 0x4000);
         file = LoadFile(0x980d);
         DecompressLZ16(file, (void *)((int)G2_GetBG3CharPtr() + 0x8000));
         Deallocate(file);

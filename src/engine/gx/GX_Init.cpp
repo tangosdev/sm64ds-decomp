@@ -86,10 +86,10 @@ void GX_Init(void) {
         MI_DmaFill32(GXi_DmaId, REG_DB_DISPCNT_ADDR, 0, 0x70);
     } else {
         volatile u32 zero = 0;
-        MIi_CpuClear32(zero, (int *)REG_BG0CNT_ADDR, 0x60);
+        MI_CpuFill32(REG_BG0CNT_ADDR, zero, 0x60);
         REG_MASTER_BRIGHT = 0;
         volatile u32 subZero = 0;
-        MIi_CpuClear32(subZero, (int *)REG_DB_DISPCNT_ADDR, 0x70);
+        MI_CpuFill32(REG_DB_DISPCNT_ADDR, subZero, 0x70);
     }
 
     // Identity scale for the affine BGs of both engines.

@@ -1305,7 +1305,7 @@ void dScEntry_c::EnterResults() {
     {
         void *bg0 = G2S_GetBG0ScrPtr();
         volatile int zero = 0;
-        MIi_CpuClear32(zero, bg0, 0x800);
+        MI_CpuFill32(bg0, zero, 0x800);
     }
 
     func_02033390(0);

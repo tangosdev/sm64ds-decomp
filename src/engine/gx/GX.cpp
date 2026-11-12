@@ -64,8 +64,8 @@ void GX_LoadTex(const void *src, unsigned int offset, unsigned int size) {
                 MI_DmaCopy32Async(GXi_DmaId, (char *)src + top, (void *)base, size - top, 0, 0);
                 return;
             }
-            MIi_CpuCopy32((int *)src, (int *)d0, top);
-            MIi_CpuCopy32((int *)((char *)src + top), (int *)base, size - top);
+            MI_CpuCopy32(src, (void *)d0, top);
+            MI_CpuCopy32((char *)src + top, (void *)base, size - top);
             return;
         }
     }
@@ -73,7 +73,7 @@ void GX_LoadTex(const void *src, unsigned int offset, unsigned int size) {
         MI_DmaCopy32Async(GXi_DmaId, src, (void *)dst, size, 0, 0);
         return;
     }
-    MIi_CpuCopy32((int *)src, (int *)dst, size);
+    MI_CpuCopy32(src, (void *)dst, size);
 }
 
 // Ends a banked texture upload: waits on the upload DMA channel if one is
@@ -103,7 +103,7 @@ void GX_LoadTexPltt(const void *src, u32 destSlotAddr, u32 size) {
     if (dmaCh != -1) {
         MI_DmaCopy32Async(dmaCh, src, dest, size, 0, 0);
     } else {
-        MIi_CpuCopy32((int *)src, (int *)dest, size);
+        MI_CpuCopy32(src, dest, size);
     }
 }
 

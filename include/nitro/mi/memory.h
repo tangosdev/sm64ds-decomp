@@ -24,6 +24,21 @@ void MI_Copy48B(const void *, void *);
 void MI_CpuFill8(void *, unsigned char, unsigned int);
 void MI_CpuCopy8(const void *, void *, unsigned int);
 
+/* The SDK's public wrappers. The SDK spells these as static inline
+ * functions; they are macros here because an inline body in a shared header
+ * renumbers every C++ includer's @NNN symbols, and the call each one makes is
+ * the same either way. */
+#define MI_CpuFill16(dest, data, size)    MIi_CpuClear16((data), (dest), (size))
+#define MI_CpuClear16(dest, size)         MIi_CpuClear16(0, (dest), (size))
+#define MI_CpuCopy16(src, dest, size)     MIi_CpuCopy16((src), (dest), (size))
+#define MI_CpuFill32(dest, data, size)    MIi_CpuClear32((data), (dest), (size))
+#define MI_CpuClear32(dest, size)         MIi_CpuClear32(0, (dest), (size))
+#define MI_CpuCopy32(src, dest, size)     MIi_CpuCopy32((src), (dest), (size))
+#define MI_CpuFillFast(dest, data, size)  MIi_CpuClearFast((data), (dest), (size))
+#define MI_CpuClearFast(dest, size)       MIi_CpuClearFast(0, (dest), (size))
+#define MI_CpuCopyFast(src, dest, size)   MIi_CpuCopyFast((src), (dest), (size))
+#define MI_CpuClear8(dest, size)          MI_CpuFill8((dest), 0, (size))
+
 #ifdef __cplusplus
 }
 #endif

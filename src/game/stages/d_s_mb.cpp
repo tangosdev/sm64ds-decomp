@@ -267,9 +267,9 @@ s32 dScMB_c::InitResources() {
     G2S_BG1Mosaic(0);
 
     fillMain = 0xffff;
-    MIi_CpuClear16(fillMain, (char *)0x5000000, 2);
+    MI_CpuFill16((char *)0x5000000, fillMain, 2);
     fillSub = 0xffff;
-    MIi_CpuClear16(fillSub, (char *)0x5000400, 2);
+    MI_CpuFill16((char *)0x5000400, fillSub, 2);
 
     /* From OBJ tile 0x94 onwards; a 4bpp tile is 0x20 bytes. */
     DecompressLZ16(&data_0209446c, (u8 *)G2_GetOBJCharPtr() + 0x94 * 0x20);

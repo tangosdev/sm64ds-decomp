@@ -109,7 +109,7 @@ void CARDi_InitCommon(void) {
     {
         /* MI_CpuFillFast's value: the ROM passes it through a stack slot. */
         volatile u32 fill = 0;
-        MIi_CpuClearFast(fill, &cardi_arg, sizeof(cardi_arg));
+        MI_CpuFillFast(&cardi_arg, fill, sizeof(cardi_arg));
     }
     DC_FlushRange(&cardi_arg, sizeof(cardi_arg));
     p->lock_queue = 0;

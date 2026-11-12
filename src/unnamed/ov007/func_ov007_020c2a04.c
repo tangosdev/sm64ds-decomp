@@ -16,16 +16,15 @@ Ov007StrokePath *func_ov007_020c2a04(Ov007StrokePath *src, int start, int end) {
     d->pointCount = n;
     switch (src->representation) {
     case OV007_PATH_PLANAR:
-        MIi_CpuCopy32(src->xCoords + start, d->xCoords, n << 2);
-        MIi_CpuCopy32(src->yCoords + start, d->yCoords, n << 2);
+        MI_CpuCopy32(src->xCoords + start, d->xCoords, n << 2);
+        MI_CpuCopy32(src->yCoords + start, d->yCoords, n << 2);
         break;
     case 1:
-        MIi_CpuCopy32((int *)((char *)src->pointStorage + start * 0xc), (int *)d->pointStorage,
-                      n * 0xc);
+        MI_CpuCopy32((char *)src->pointStorage + start * 0xc, d->pointStorage, n * 0xc);
         break;
     }
     if (src->flags & OV007_PATH_HAS_PROGRESS) {
-        MIi_CpuCopy32(src->progressThresholds + start, d->progressThresholds, n << 2);
+        MI_CpuCopy32(src->progressThresholds + start, d->progressThresholds, n << 2);
     }
     func_ov007_020c27b4(d);
     func_ov007_020c26fc(d);

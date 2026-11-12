@@ -313,10 +313,10 @@ s32 dScMiniGm_c::InitResources()
 
     dst = (char *)G2S_GetBG0CharPtr();
     sp0 = 0;
-    MIi_CpuClear16(sp0, dst, 0x8000);
+    MI_CpuFill16(dst, sp0, 0x8000);
     dst = (char *)G2S_GetBG0ScrPtr();
     sp2 = 0x1f;
-    MIi_CpuClear16(sp2, dst, 0x1000);
+    MI_CpuFill16(dst, sp2, 0x1000);
 
     MiniGm_LoadGroupIcons((char *)this);
 
@@ -441,7 +441,7 @@ void MiniGm_LoadGroupIcons(void *selfv)
                     dstp = scr + destOff;
                     dstp = destOff ? dstp : dstp; /* register-dest pin; arms identical */
                     valA = (u16)fill;
-                    MIi_CpuClear16(valA, dstp, nbytes);
+                    MI_CpuFill16(dstp, valA, nbytes);
                     destOff += 2;
                     off += 1;
                     col += 1;
@@ -470,7 +470,7 @@ void MiniGm_LoadGroupIcons(void *selfv)
                 ch = (char *)G2S_GetBG0CharPtr();
                 scr = ch + (idx / 4) * 0x2400 + (idx % 4) * 0xc0 + destOff;
                 ch = (char *)G2S_GetBG0CharPtr();
-                MIi_CpuCopy32((int *)(ch + 0x8000 + destOff), (int *)scr, copyLen);
+                MI_CpuCopy32(ch + 0x8000 + destOff, scr, copyLen);
                 destOff += 0x400;
             } while (++row < 9);
 
@@ -494,7 +494,7 @@ void MiniGm_LoadGroupIcons(void *selfv)
                     dstp = scr + destOff;
                     dstp = idx ? dstp : dstp; /* register-dest pin; arms identical */
                     valB = (u16)(q + (p + ((idx % 4) * 6 + ((idx / 4) * 0x120 + (idx << 12)))));
-                    MIi_CpuClear16(valB, dstp, nbytes);
+                    MI_CpuFill16(dstp, valB, nbytes);
                     destOff += 2;
                     off += 1;
                     q += 1;
