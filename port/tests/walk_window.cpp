@@ -14238,8 +14238,10 @@ static int pump_messages(void)
                     (unsigned long)GetLastError());
         else
             g_pump_fiber = CreateFiber(1024 * 1024, pump_fiber_main, nullptr);
-        fprintf(stderr, "[drag] message pump %s\n", g_pump_fiber ? "on its own fiber: a window drag keeps the game running"
-                                                                  : "NOT on a fiber: a window drag blocks the game");
+        fprintf(stderr, "[drag] message pump %s\n",
+                g_pump_fiber ? "on its own fiber: a window drag keeps the game running in an online room, "
+                               "solo waits for the drag as before"
+                             : "NOT on a fiber: a window drag blocks the game");
     }
     if (g_pump_fiber && GetCurrentFiber() != g_pump_fiber) {
         g_pump_return = GetCurrentFiber();
