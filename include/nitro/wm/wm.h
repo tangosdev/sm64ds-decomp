@@ -103,6 +103,15 @@ typedef enum WMPriority {
 
 typedef void (*WMCallbackFunc)(void *);
 
+/* NitroSDK WMCallback, the head of every result record a WMCallbackFunc
+ * receives: the call's API id and its result. */
+typedef struct WMCallback {
+    unsigned short apiid;    /* 0x0 */
+    unsigned short errcode;  /* 0x2 */
+    unsigned short wlCmdID;  /* 0x4 */
+    unsigned short wlResult; /* 0x6 */
+} WMCallback;
+
 /* NitroSDK WMBssDesc, the beacon record of a parent (0xc0 bytes: the SDK's
  * WM_SIZE_BSSDESC). Names are the SDK's; this SDK build reads and writes the
  * ssid and ggid as halfwords, so ssid is u16[16] where the public header has

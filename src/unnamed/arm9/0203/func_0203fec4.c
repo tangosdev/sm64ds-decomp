@@ -16,7 +16,8 @@ extern int func_0203faa8(void);
      DISCONNECTED (9): clear data_020a0f5c; reset unless data_020a0f94 is 2.
      CONNECT_START (6), BEACON_LOST (8): nothing.
      anything else: clear data_020a0f5c and reset. */
-void func_0203fec4(WmStartConnectCallback *p) {
+void func_0203fec4(void *arg) {
+    WmStartConnectCallback *p = (WmStartConnectCallback *)arg;
     int g;
     if (p->errcode == 0) {
         g = data_020a0f5c;
