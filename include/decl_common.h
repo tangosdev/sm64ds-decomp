@@ -449,7 +449,7 @@ extern int func_02045d10(void);
 extern int func_02049018(struct Vector3*);
 extern void func_02049f58(void *);
 extern int func_0204a028(void*, unsigned int (*cb)(unsigned int, unsigned int));
-extern int func_0204a0dc(void*, u32 (*cb)(const void*, u32));
+extern int func_0204a0dc(void *, u32 (*cb)(u32, u32));
 extern int func_0204fa2c(int*, int);
 extern int GX_HBlankIntr(int);
 extern int VEC_Distance(const Vector3 *, const Vector3 *);
