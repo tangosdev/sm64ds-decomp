@@ -102,7 +102,7 @@ struct Out { uint16_t slot; uint8_t sent; unsigned next; };
 enum : int { kOwnerTries = 3, kGuestTries = 40, kStarSeen = 16 };
 struct Job { bool on; uint32_t nonce; CoopKey key; unsigned start, last; };
 struct Reg { int lo, hi; CoopSubFn fn; void *user; };
-enum : int { kMaxRegs = 8, kMaxCbs = 8 };
+enum : int { kMaxRegs = 16, kMaxCbs = 16 };   // NPCTALK1: 8 frame callbacks were all taken with hal/coop_talk.cpp
 // STEP-0 callback registries (the phase-2 lanes hang off these; no walk_window lines)
 void (*g_cb_frame[kMaxCbs])(unsigned); int g_n_frame = 0;
 void (*g_cb_latched[kMaxCbs])(int, int); int g_n_latched = 0;

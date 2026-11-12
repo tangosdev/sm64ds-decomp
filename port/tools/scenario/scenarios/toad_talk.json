@@ -1,0 +1,11 @@
+{
+  "about": "NPCTALK1: Mario and Luigi both in front of the same castle Toad pressing A (bugs 13, 14: one talker, the Toad turned to him on both screens, his head look)",
+  "save": {"preset": "basement", "flags": ["messages_seen"]},
+  "room": {"collision": 1, "damage": 1, "interact": 1, "tp": 1},
+  "proof": {"secs": 120, "shot_ms": 6000, "census": [185]},
+  "env": {"SM64DS_COOP_TALK_LOG": "1"},
+  "players": [
+    {"character": "mario", "level": 2, "near": {"class": 185, "dist": 70}},
+    {"character": "luigi", "level": 2, "settle": 150, "near": {"class": 185, "dist": 110, "angle_deg": 70}}
+  ]
+}

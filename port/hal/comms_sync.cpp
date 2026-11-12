@@ -180,6 +180,7 @@ int _ZN6Player8HasNoCapEv(void *self);
 }
 
 namespace port { int coop_cap_seat_nocap(int seat); }   // hal/coop_cap.cpp (CAPLOSS1)
+namespace port { void coop_talk_ghost_look(int seat, void *body); }   // hal/coop_talk.cpp (NPCTALK1)
 namespace port {
 namespace {
 
@@ -3939,6 +3940,7 @@ void gw_follow() {
             *((unsigned char *)a + 0x717) = 0;
             func_ov002_020e444c((char *)a);
         }
+        port::coop_talk_ghost_look(s, a);   /* NPCTALK1: his head look in a talk (hal/coop_talk.cpp), before the pose reads it */
         if (!no_repose) {
             func_ov002_020e4768((char *)a);
             ++g_gws.reposes;
