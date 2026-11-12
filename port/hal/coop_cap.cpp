@@ -66,6 +66,7 @@ int _ZN6Player8HasNoCapEv(void *self);
 int _ZN8SaveData16HasPlayerLostCapEv(void);
 int port_adventure_ghost_seat(int slot);
 extern int (*port_coop_cap_foreign)(const void *player);
+extern void *(*port_coop_cap_mine)(void *nearest);
 extern const void *port_level_fb_ptr;
 }
 namespace ntr { struct Framebuffer; bool ppu_write_bmp(const char *path, const Framebuffer &fb); }
@@ -168,6 +169,20 @@ int cap_foreign(const void *pl) {
     return 0;
 }
 struct ForeignHook { ForeignHook() { port_coop_cap_foreign = cap_foreign; } } g_foreign_hook;
+
+// NPCFIX1: the cap Ukiki (d_a_mky.cpp) builds my lost cap from the nearest player's character; in a coop room it is
+// always my own body's. (The talker list in coop_target.cpp already answers ClosestPlayer with my body for 267 while
+// the group is established; this also covers the moments it is not, and a friend's body seated then.)
+void *cap_mine(void *nearest) {
+    read_env();
+    if (g_off || !coop_world_active()) return nearest;
+    char *me = local_body();
+    if (!me) return nearest;
+    if (nearest != me && g_log)
+        std::fprintf(stderr, "[coopcap] lf=%u the cap Ukiki built my lost cap from MY character (nearest was a friend's body)\n", g_lf);
+    return me;
+}
+struct MineHook { MineHook() { port_coop_cap_mine = cap_mine; } } g_mine_hook;
 
 daObjMarioCap_c *as_cap(char *a) { return (daObjMarioCap_c *)a; }
 daJango_c *first_klepto() { return (daJango_c *)_ZN8dActor_c15FindWithActorIDEjPS_(kKleptoClass, nullptr); }
