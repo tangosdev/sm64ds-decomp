@@ -11042,99 +11042,97 @@ int daPly_c::St_HoldLight_Main() {
                 }
             }
         }
-        goto end;
-    }
-
-    if (func_ov002_020c5244()) {
-        return 1;
-    }
-
-    if (mSinkDepth > 0x19000) {
-        ReleaseHeldActor();
-        this->ChangeState(data_ov002_0211013c);
-        return 1;
-    }
-
-    int var_r4 = 0;
-    if (data_0209f498[gActivePlayerSlot].mag != 0) {
-        s16 t = mDesiredAngleY;
-        if (mStateArg != 0) {
-            mPrevAngleY = t;
-            mStateArg = 0;
-        }
-        ApproachAngle(&mPrevAngleY, t, 4, 0x2000, 0x800);
-        var_r4 = data_ov002_020ff1c0[param1];
-    }
-
-    if (data_0209f498[gActivePlayerSlot].touching == 0) {
-        if (!(data_0209f498[gActivePlayerSlot].held & 0x800)) {
-            var_r4 = FX_MUL(var_r4, 0xa00);
-        }
     } else {
-        var_r4 = func_ov002_020bf224(var_r4, 0);
-    }
 
-    mStateArg = 0;
-    if (mHorzSpeed == 0) {
-        mStateArg = 1;
-        mAngleY = mPrevAngleY;
-    } else {
-        ApproachAngle(&mAngleY, mPrevAngleY, 8, 0x2000, 0x800);
-    }
-
-    func_ov002_020d4d88(var_r4, 0x1000);
-
-    {
-        u16 flags = data_0209f498[gActivePlayerSlot].pressed;
-        if (flags & 1) {
-            this->ChangeState(data_ov002_021105d4);
+        if (func_ov002_020c5244()) {
             return 1;
         }
-        if (flags & 2) {
-            mJumpComboTimer = 0;
-            this->ChangeState(data_ov002_0211019c);
+
+        if (mSinkDepth > 0x19000) {
+            ReleaseHeldActor();
+            this->ChangeState(data_ov002_0211013c);
             return 1;
         }
-        if (flags & 0x400) {
-            if (ReleaseHeldActor()) {
-                this->ChangeState(data_ov002_0211013c);
+
+        int var_r4 = 0;
+        if (data_0209f498[gActivePlayerSlot].mag != 0) {
+            s16 t = mDesiredAngleY;
+            if (mStateArg != 0) {
+                mPrevAngleY = t;
+                mStateArg = 0;
             }
+            ApproachAngle(&mPrevAngleY, t, 4, 0x2000, 0x800);
+            var_r4 = data_ov002_020ff1c0[param1];
+        }
+
+        if (data_0209f498[gActivePlayerSlot].touching == 0) {
+            if (!(data_0209f498[gActivePlayerSlot].held & 0x800)) {
+                var_r4 = FX_MUL(var_r4, 0xa00);
+            }
+        } else {
+            var_r4 = func_ov002_020bf224(var_r4, 0);
+        }
+
+        mStateArg = 0;
+        if (mHorzSpeed == 0) {
+            mStateArg = 1;
+            mAngleY = mPrevAngleY;
+        } else {
+            ApproachAngle(&mAngleY, mPrevAngleY, 8, 0x2000, 0x800);
+        }
+
+        func_ov002_020d4d88(var_r4, 0x1000);
+
+        {
+            u16 flags = data_0209f498[gActivePlayerSlot].pressed;
+            if (flags & 1) {
+                this->ChangeState(data_ov002_021105d4);
+                return 1;
+            }
+            if (flags & 2) {
+                mJumpComboTimer = 0;
+                this->ChangeState(data_ov002_0211019c);
+                return 1;
+            }
+            if (flags & 0x400) {
+                if (ReleaseHeldActor()) {
+                    this->ChangeState(data_ov002_0211013c);
+                }
+                return 1;
+            }
+        }
+
+        if (mIsAirborne != 0) {
+            this->ChangeState(data_ov002_021101b4);
             return 1;
         }
-    }
+        if (func_ov002_020d9dcc()) {
+            return 1;
+        }
 
-    if (mIsAirborne != 0) {
-        this->ChangeState(data_ov002_021101b4);
-        return 1;
-    }
-    if (func_ov002_020d9dcc()) {
-        return 1;
-    }
-
-    if (mHorzSpeed == 0) {
-        if (this->FinishedAnim() ||
-            !mModels.mBodyModels[this->GetBodyModelID((u8)param1, 0)]->GetFlags()) {
-            dActor_c *light = (dActor_c *)mHeldObj;
-            u32 animId = 0x33;
-            if (light != 0) {
-                int b = (light->mFlags & 0x8000) != 0;
-                if (b) {
-                    animId = 0x87;
-                    if (param1 == 2) {
-                        int b2 = (light->actorID == 0xce);
-                        if (b2) {
-                            animId = 0x33;
+        if (mHorzSpeed == 0) {
+            if (this->FinishedAnim() ||
+                !mModels.mBodyModels[this->GetBodyModelID((u8)param1, 0)]->GetFlags()) {
+                dActor_c *light = (dActor_c *)mHeldObj;
+                u32 animId = 0x33;
+                if (light != 0) {
+                    int b = (light->mFlags & 0x8000) != 0;
+                    if (b) {
+                        animId = 0x87;
+                        if (param1 == 2) {
+                            int b2 = (light->actorID == 0xce);
+                            if (b2) {
+                                animId = 0x33;
+                            }
                         }
                     }
                 }
+                this->SetAnim(animId, 0, 0x1000, 0);
             }
-            this->SetAnim(animId, 0, 0x1000, 0);
+        } else {
+            func_ov002_020d1f78(0x48);
         }
-    } else {
-        func_ov002_020d1f78(0x48);
     }
-
-end:
     AdvanceAnims();
     return 1;
 }
@@ -11226,20 +11224,14 @@ void daPly_c::func_ov002_020d1f78(u32 param) {
 
     state = p->mGroundSoundType;
     target = -1;
-    if (state == 6)
-        goto state_case6;
-    if (state == 8)
-        goto state_case8;
-    if (state == 9) {
-        target = 0xe6;
-    }
-    goto state_merge;
-state_case8:
-    target = 0xe4;
-    goto state_merge;
-state_case6:
-    target = 0xe5;
-state_merge:
+    if (state != 6) {
+        if (state != 8) {
+            if (state == 9)
+                target = 0xe6;
+        } else
+            target = 0xe4;
+    } else
+        target = 0xe5;
     if (target == -1)
         return;
 
@@ -11379,6 +11371,7 @@ int daPly_c::St_Wait_Main() {
             }
         }
         case 0: {
+            /* structured form changes size 0x99c to 0x9cc */
             unsigned char f2d8_0 = gGameMode;
             int b0 = (f2d8_0 == 1);
             if (b0 == 0) {
@@ -11692,23 +11685,16 @@ void daPly_c::func_ov002_020d2f24() {
         v = (u32)(anim.currFrame << 4) >> 0x10;
     }
 
-    if (v >= 6) {
-        if (v <= 0x1c) {
-            r4 -= 0x180;
-            goto store;
-        }
-    }
-    if (v >= 0x24 && v <= 0x3a) {
+    if (v >= 6 && v <= 0x1c) {
+        r4 -= 0x180;
+    } else if (v >= 0x24 && v <= 0x3a) {
         if (r4 < 0x2800) r4 += 0x180;
         else r4 += 0x300;
-        goto store;
-    }
-    if (v == 0x3b) {
+    } else if (v == 0x3b) {
         if (mStateArg != 0)
             r4 += 0x10;
     }
 
-store:
     if (r4 < 0x400) r4 = 0x400;
     if (r4 > 0x4000) r4 = 0x4000;
     mSleepBubbleScaleX = r4;
@@ -11828,6 +11814,7 @@ Lbc:
     return 1;
 
 Ld8:
+    /* early returns shrink 0x1dc to 0x1d0; || changes beq at +0xe0 from #0x5c to #0x2c */
     if (mToxicSurfaceY == 0x80000000)
         goto L13c;
     if (mPosY >= mToxicSurfaceY - 0x64000)
@@ -12018,22 +12005,25 @@ int daPly_c::St_Walk_Main() {
                 }
             }
         }
-        goto end;
-    }
+    } else {
 
-    if (mHorzSpeed != 0) goto label_29c;
+        /* duplicating func_ov002_020d4748 grows 0x2dc to 0x2f0 */
+        if (mHorzSpeed != 0)
+            goto label_29c;
 
-    {
-        u8 idx = gActivePlayerSlot;
-        int off = idx * 0x18;
-        u8 b = data_0209f4ae[off];
-        int thresh = (b != 2) ? 0x471 : 0x555;
-        u8 v710 = mIsWalkPace;
-        int rhs = thresh - (v710 << 7);
-        short lhs = *(s16*)((char*)data_0209f4a0 + off);
-        if (lhs < rhs) goto label_1f0;
-        if ((u16)(mStateFlags & 0xc) == 0) goto label_29c;
-    }
+        {
+            u8 idx = gActivePlayerSlot;
+            int off = idx * 0x18;
+            u8 b = data_0209f4ae[off];
+            int thresh = (b != 2) ? 0x471 : 0x555;
+            u8 v710 = mIsWalkPace;
+            int rhs = thresh - (v710 << 7);
+            short lhs = *(s16 *)((char *)data_0209f4a0 + off);
+            if (lhs < rhs)
+                goto label_1f0;
+            if ((u16)(mStateFlags & 0xc) == 0)
+                goto label_29c;
+        }
 
 label_1f0:
     if (mIsMega != 0) {
@@ -12063,7 +12053,7 @@ label_27c:
 label_29c:
     func_ov002_020d4748();
     mStateWork = 1;
-
+}
 end:
     AdvanceAnims();
     return 1;
@@ -12302,6 +12292,7 @@ int daPly_c::St_Walk_Init() {
     }
 
     if (data_0209f498[gActivePlayerSlot].mag == 0) {
+        /* structured form rewrites the mode test into r2 and flips == 2 at +0xa4 */
         int byte1 = gGameMode;
         int cond = (byte1 == 1);
         if (cond) goto do_anim;
@@ -12499,6 +12490,7 @@ void daPly_c::func_ov002_020d4748() {
                 this->mStateStep = 0;
             d = gGameMode;
             b = (d == 1);
+            /* one condition shrinks 0x4e8 to 0x4dc; two stores grow it to 0x4f0 */
             if (b == false) {
                 if (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) {
                     int b2 = (d == 2);
@@ -12614,6 +12606,7 @@ int daPly_c::St_Bonk_Main() {
     if (mStateTimer != 0) {
         mHorzSpeed = 0x40000;
         mVertSpeed = 0x8000;
+        /* early return duplicates the shared epilogue, 0x1a4 to 0x1b0 */
         goto ret1;
     }
 
@@ -12642,30 +12635,21 @@ int daPly_c::St_Bonk_Main() {
 
     ApproachLinear(mHorzSpeed, 0, rate);
 
-    if (mHorzSpeed != 0) {
-        goto willhit;
-    }
-    if (mIsAirborne == 0) {
-        goto finishedanim;
-    }
-willhit:
-    {
+    if (mHorzSpeed != 0 || mIsAirborne != 0) {
         u32 arg = (u8)param1;
         int modelIdx = this->GetBodyModelID(arg, 0);
         if (mModels.mBodyModels[modelIdx]->WillHitFrame(0x2e) != 0) {
             mStateWork = 1;
         }
+    } else {
+        mStateWork = 0;
+        if (this->FinishedAnim() != 0) {
+            mPrevAngleY = mPrevAngleY + 0x8000;
+            mAngleY = mPrevAngleY;
+            this->ChangeState(data_ov002_0211013c);
+            return 1;
+        }
     }
-    goto tail;
-finishedanim:
-    mStateWork = 0;
-    if (this->FinishedAnim() != 0) {
-        mPrevAngleY = mPrevAngleY + 0x8000;
-        mAngleY = mPrevAngleY;
-        this->ChangeState(data_ov002_0211013c);
-        return 1;
-    }
-tail:
     if (mStateWork == 0) {
         AdvanceAnims();
     }
@@ -13108,13 +13092,10 @@ int daPly_c::func_ov002_020d5c6c() {
     if (f == 0)
         return 0;
     p = (void *)mObjInMouth;
-    if (p != 0) {
-        if (func_ov002_020d600c(p))
-            goto change;
+    if (p == 0 || func_ov002_020d600c(p) == 0) {
+        *(u16 *)(void *)(int)(&mStateFlags) &= ~2;
+        return 0;
     }
-    *(u16 *)(void *)(int)(&mStateFlags) &= ~2;
-    return 0;
-change:
     ChangeState(data_ov002_02110034);
     return 1;
 }
@@ -13425,47 +13406,34 @@ int daPly_c::St_Swallow_Main() {
 
     if (mModels.mBodyModels[this->GetBodyModelID(param1 & 0xff, 0)]->WillHitFrame(3)) {
         func_ov002_020d71a0();
-        goto L65ec;
-    }
-    if (mModels.mBodyModels[this->GetBodyModelID(param1 & 0xff, 0)]->WillHitFrame(7) == 0) {
-        goto L65ec;
-    }
-
-    p360 = (dActor_c *)mObjInMouth;
-    if (p360 == 0) goto L65e4;
-    {
-        int b = (p360->actorID == 0xbf);
-        if (b == 0) goto L653c;
-    }
-    p360->mAngleX = mAngleX;
-    p360->mAngleY = mAngleY;
-    p360->mAngleZ = mAngleZ;
-    func_ov002_020d5ab4((void *)mObjInMouth);
-    Sound::PlayCharVoice(0, 0x100, mCamSpacePos);
-    goto L65e4;
-
-L653c:
-    p360->OnTurnIntoEgg(*this);
-    {
-        void *q = (void *)mObjInMouth;
-        if (((dActor_c *)q)->OnYoshiTryEat() == 1)
-            goto L65e4;
-    }
-    if ((unsigned short)(mStateFlags & 0x1000)) goto L65e4;
-    {
-        unsigned char flag = 0;
-        int b_c2 = (((dActor_c *)mObjInMouth)->actorID == 0xc2);
-        if (b_c2 || *(int*)((char*)data_0209ee90 + 0x238) != 0) {
-            flag |= 1;
+    } else if (mModels.mBodyModels[this->GetBodyModelID(param1 & 0xff, 0)]->WillHitFrame(7) != 0) {
+        p360 = (dActor_c *)mObjInMouth;
+        if (p360 != 0) {
+            int b = (p360->actorID == 0xbf);
+            if (b != 0) {
+                p360->mAngleX = mAngleX;
+                p360->mAngleY = mAngleY;
+                p360->mAngleZ = mAngleZ;
+                func_ov002_020d5ab4((void *)mObjInMouth);
+                Sound::PlayCharVoice(0, 0x100, mCamSpacePos);
+            } else {
+                p360->OnTurnIntoEgg(*this);
+                void *q = (void *)mObjInMouth;
+                if (((dActor_c *)q)->OnYoshiTryEat() != 1 &&
+                    (unsigned short)(mStateFlags & 0x1000) == 0) {
+                    unsigned char flag = 0;
+                    int b_c2 = (((dActor_c *)mObjInMouth)->actorID == 0xc2);
+                    if (b_c2 || *(int *)((char *)data_0209ee90 + 0x238) != 0) {
+                        flag |= 1;
+                    }
+                    mEggParams |= (flag + 1);
+                    func_ov002_020d6368();
+                    Sound::PlayCharVoice(0, 0x100, mCamSpacePos);
+                }
+            }
         }
-        mEggParams |= (flag + 1);
+        mObjInMouth = 0;
     }
-    func_ov002_020d6368();
-    Sound::PlayCharVoice(0, 0x100, mCamSpacePos);
-
-L65e4:
-    mObjInMouth = 0;
-L65ec:
     if (mIsUnderwater != 0) {
         mVertSpeed += func_ov002_020ceaf4();
     }
@@ -13525,14 +13493,11 @@ int daPly_c::func_ov002_020d6790() {
 
     int isbf = (o->actorID == 0xbf);
     if (isbf) {
-        if (mIsNoControl != 0)
-            goto isbf_ret0;
-        if (mIsTakingDamage != 0)
-            goto isbf_ret0;
-        ChangeState(data_ov002_02110034);
-        DisableInteraction();
-        return 1;
-isbf_ret0:
+        if (mIsNoControl == 0 && mIsTakingDamage == 0) {
+            ChangeState(data_ov002_02110034);
+            DisableInteraction();
+            return 1;
+        }
         return 0;
     }
 
@@ -13548,6 +13513,7 @@ isbf_ret0:
     case 2:
     case 4:
         func_ov002_020d7430(*this);
+        /* a return in each case grows 0x208 to 0x214 */
         goto ret0;
     case 5: {
         int eq132 = (((dActor_c *)mObjInMouth)->actorID == 0x132);
@@ -13572,10 +13538,10 @@ isbf_ret0:
         ((dActor_c *)mObjInMouth)->mFlags |= 0x40000;
         ((dActor_c *)mObjInMouth)->mFlags &= ~0x20000;
         mUseAltBodyModel = 1;
-case7_ret1:
+    case7_ret1:
         return 1;
     default:
-ret0:
+    ret0:
         return 0;
     }
 }
@@ -13612,69 +13578,61 @@ int daPly_c::func_ov002_020d6998() {
     }
     this->mAngleY = saved;
 
-    if (mObjInMouth != 0)
-        goto fail;
-    id = this->mAttackClsn.otherOwner;
-    if (id == 0) goto fail;
-    other = dActor_c::FindWithID(id);
-    if (other == 0) goto fail;
-    if (other == this) goto fail;
+    if (mObjInMouth == 0) {
+        id = this->mAttackClsn.otherOwner;
+        if (id != 0) {
+            other = dActor_c::FindWithID(id);
+            if (other != 0 && other != this) {
+                if (IsCollectingCap() == 0 && ((dActor_c *)other)->OnYoshiTryEat() != 0) {
+                    u8 isType = (((dActor_c *)other)->actorID == 0xbf);
+                    if (isType) {
+                        if (((dActor_c *)other)->param1 == 3) {
+                            if (func_ov002_020d6c60((daPly_c *)other) != 0)
+                                return 1;
+                        } else {
+                            Vector3 out;
+                            Vector3_16 pos16;
+                            Vector3 rotSrc;
+                            s16 angle;
+                            int idx;
 
-    if (IsCollectingCap() != 0) goto react;
-    if (((dActor_c *)other)->OnYoshiTryEat() == 0)
-        goto react;
+                            angle = Vec3_HorzAngle(&((dActor_c *)other)->mPos, &mPos);
+                            idx = ((u16)angle >> 4) * 2;
 
-    {
-        u8 isType = (((dActor_c *)other)->actorID == 0xbf);
-        if (isType) {
-            if (((dActor_c *)other)->param1 == 3) {
-                if (func_ov002_020d6c60((daPly_c *)other) == 0)
-                    goto react;
-                return 1;
-            } else {
-                Vector3 out;
-                Vector3_16 pos16;
-                Vector3 rotSrc;
-                s16 angle;
-                int idx;
+                            pos16.x = FX_SinCosTable_[idx];
+                            pos16.y = 0;
+                            pos16.z = FX_SinCosTable_[idx + 1];
 
-                angle = Vec3_HorzAngle(&((dActor_c *)other)->mPos, &mPos);
-                idx = ((u16)angle >> 4) * 2;
+                            rotSrc.x = 0;
+                            rotSrc.y = 0x32000;
+                            rotSrc.z = 0x32000;
 
-                pos16.x = FX_SinCosTable_[idx];
-                pos16.y = 0;
-                pos16.z = FX_SinCosTable_[idx + 1];
+                            Vec3_RotateYAndTranslate(&out.x, &((dActor_c *)other)->mPosX, angle,
+                                                     &rotSrc.x);
 
-                rotSrc.x = 0;
-                rotSrc.y = 0x32000;
-                rotSrc.z = 0x32000;
-
-                Vec3_RotateYAndTranslate(&out.x, &((dActor_c *)other)->mPosX, angle, &rotSrc.x);
-
-                Particle::System::New(0, kPtclTongueHitA, out.x, out.y, out.z,
-                                      (const Vector3_16f *)(&pos16), 0);
-                Particle::System::New(0, kPtclTongueHitB, out.x, out.y, out.z,
-                                      (const Vector3_16f *)(&pos16), 0);
-                goto react;
+                            Particle::System::New(0, kPtclTongueHitA, out.x, out.y, out.z,
+                                                  (const Vector3_16f *)(&pos16), 0);
+                            Particle::System::New(0, kPtclTongueHitB, out.x, out.y, out.z,
+                                                  (const Vector3_16f *)(&pos16), 0);
+                        }
+                    } else {
+                        int r;
+                        if (func_ov002_020d7030(other) != 0) {
+                            r = ((dActor_c *)other)->OnYoshiTryEat();
+                            if (r == 4)
+                                DisableInteraction();
+                            return 1;
+                        }
+                    }
+                }
+                if ((this->mAttackClsn.hitFlags & 2) == 0) {
+                    func_ov002_020d71ec(2);
+                    Sound::PlayCharVoice(0, 0xfe, mCamSpacePos);
+                    return 1;
+                }
             }
-        } else {
-            int r;
-            if (func_ov002_020d7030(other) == 0)
-                goto react;
-            r = ((dActor_c *)other)->OnYoshiTryEat();
-            if (r == 4)
-                DisableInteraction();
-            return 1;
         }
     }
-
-react:
-    if (this->mAttackClsn.hitFlags & 2) goto fail;
-    func_ov002_020d71ec(2);
-    Sound::PlayCharVoice(0, 0xfe, mCamSpacePos);
-    return 1;
-
-fail:
     func_ov002_020db8d8();
     mAttackClsn.Clear();
     mAttackClsn.Update();
@@ -13693,6 +13651,7 @@ int daPly_c::func_ov002_020d6c60(daPly_c *other) {
     int y;
     int *q;
     void *sp;
+    /* early returns change size 0x14c to 0x148 with || and to 0x15c when split */
     if (other->func_ov002_020d82f0() == 0)
         goto ret0a;
     b = (other->mObjInMouth != 0);
@@ -13932,19 +13891,15 @@ int daPly_c::St_YoshiPower_Cleanup() {
     }
     if (mUseAltBodyModel == 0) {
         char *q = (char *)mObjInMouth;
-        if (q != 0) {
-            int eq = (int)(((dActor_c *)q)->actorID == 0xbf);
-            if (eq == 0) {
-                func_ov002_020d6790();
-                goto end;
-            }
+        if (q != 0 && (int)(((dActor_c *)q)->actorID == 0xbf) == 0) {
+            func_ov002_020d6790();
+        } else {
+            func_ov002_020d718c();
         }
-        func_ov002_020d718c();
     } else {
         if ((char *)mObjInMouth == 0 && mFireBreaths == 0)
             func_ov002_020d71a0();
     }
-end:
     return 1;
 }
 
@@ -14021,7 +13976,7 @@ int daPly_c::St_YoshiPower_Main() {
         if (this->FinishedAnim() != 0) {
             func_ov002_020d71ec(0);
         }
-        goto common_tail;
+        break;
     }
 
     case 1: {
@@ -14072,7 +14027,7 @@ int daPly_c::St_YoshiPower_Main() {
                             f2 = 0;
                         if (f2 != 0) mStateTimer = 0xc;
                         unk_6ee = 1;
-                        goto common_tail;
+                        break;
                     }
                 }
             } else {
@@ -14110,7 +14065,7 @@ int daPly_c::St_YoshiPower_Main() {
             }
             return 1;
         }
-        goto common_tail;
+        break;
     }
 
     case 2: {
@@ -14129,7 +14084,7 @@ int daPly_c::St_YoshiPower_Main() {
             }
             return 1;
         }
-        goto common_tail;
+        break;
     }
 
     case 3:
@@ -14145,7 +14100,7 @@ int daPly_c::St_YoshiPower_Main() {
             }
             return 1;
         }
-        goto common_tail;
+        break;
 
     case 4: {
         int id5 = this->GetBodyModelID(this->param1 & 0xff, 0);
@@ -14182,7 +14137,7 @@ int daPly_c::St_YoshiPower_Main() {
             this->ChangeState(data_ov002_0211013c);
             return 1;
         }
-        goto common_tail;
+        break;
     }
 
     case 5: {
@@ -14222,7 +14177,7 @@ int daPly_c::St_YoshiPower_Main() {
             this->ChangeState(data_ov002_0211013c);
             return 1;
         }
-        goto common_tail;
+        break;
     }
 
     case 6: {
@@ -14235,23 +14190,24 @@ int daPly_c::St_YoshiPower_Main() {
         if (mModels.mBodyModels[id10]->WillHitFrame(6) != 0) {
             this->func_ov002_020daa74();
             Sound::PlayCharVoice(0, 0x102, mCamSpacePos);
-            goto common_tail;
+            break;
         }
         if (this->FinishedAnim() != 0) {
             this->ChangeState(data_ov002_0211013c);
             return 1;
         }
-        goto common_tail;
+        break;
     }
 
     default:
-    common_tail:
-        AdvanceAnims();
-        if (mUseAltBodyModel == 0 && mStateStep != 6) {
-            ((dExtAnmModel_c *)mModels.mHeadModels[3])->Advance();
-        }
-        return 1;
+        break;
     }
+
+    AdvanceAnims();
+    if (mUseAltBodyModel == 0 && mStateStep != 6) {
+        ((dExtAnmModel_c *)mModels.mHeadModels[3])->Advance();
+    }
+    return 1;
 }
 }
 
