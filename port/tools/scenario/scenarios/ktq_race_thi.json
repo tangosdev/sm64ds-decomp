@@ -1,0 +1,56 @@
+{
+  "about": "Koopa the Quick rematch (Tiny-Huge Island, huge side, act 3): Mario next to Koopa at the start (the racer), Luigi beside the finish flag (not in the race)",
+  "save": {
+    "preset": "early",
+    "stars": {
+      "12": "03"
+    },
+    "flags": [
+      "messages_seen"
+    ]
+  },
+  "room": {
+    "collision": 1,
+    "damage": 1,
+    "interact": 1,
+    "tp": 1
+  },
+  "proof": {
+    "secs": 200,
+    "shot_ms": 400000,
+    "census": [
+      188,
+      205
+    ]
+  },
+  "env": {
+    "SM64DS_COOP_KTQ_LOG": "1",
+    "SM64DS_COOP_KTQ_TRACE": "60"
+  },
+  "players": [
+    {
+      "character": "mario",
+      "level": 24,
+      "act": 3,
+      "near": {
+        "class": 188,
+        "dist": 320
+      },
+      "env": {
+        "SM64DS_COOP_RACE": "300"
+      }
+    },
+    {
+      "character": "luigi",
+      "level": 24,
+      "act": 3,
+      "near": {
+        "class": 205,
+        "dist": 450
+      },
+      "env": {
+        "SM64DS_COOP_RACEGO": "900:f"
+      }
+    }
+  ]
+}

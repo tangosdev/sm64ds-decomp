@@ -2045,6 +2045,10 @@ enum : int {
 unsigned g_race_go_at = 0; char g_race_go_what = 0; bool g_race_go_done = true;
 unsigned g_race_knob_at = 0; bool g_race_knob_done = true;
 
+}  // namespace
+void coop_race_frame(unsigned now_ms);   // hal/coop_race.cpp (KTQ1)
+namespace {
+
 void race_read_knobs() {
     static bool read = false;
     if (read) return;
@@ -2856,6 +2860,7 @@ void tick_est(unsigned now) {
     }
     if (g_sync) { coin_tick(now); watch_secrets(now); }   // COOPCOUNT1
     race_read_knobs(); race_knobs(now);   // COOPRACE1 proof knobs
+    coop_race_frame(now);                 // KTQ1: Koopa the Quick's race on a friend's screen (hal/coop_race.cpp)
     // 3. hello, owner full resend, owner announcement
     if ((unsigned)(now - g_hello_t) >= kHelloMs) send_hello(now);
     g_grp.update(now);
