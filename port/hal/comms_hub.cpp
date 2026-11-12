@@ -130,6 +130,16 @@ inline unsigned short hton16(unsigned short v) {
 
 // Milliseconds from the performance counter: GetTickCount steps in ~16 ms,
 // which is a whole ghost frame and too coarse for an RTT readout.
+// CLOCK1: counted from this process's first reading, starting at
+// kClockBaseMs, not from the PC's boot. The coop timers keep 32-bit "due at"
+// and "until" times and compare them as (int)(a - b); with the boot clock a
+// PC up for 24.9 days put every one of them past 2^31 ms and the tests that
+// treat 0 as "long ago" flipped (no late-join snapshot, no runtime star
+// announced, invites stuck on "Wait a moment"). The base keeps "now - 0" as
+// large as it was on a freshly booted PC (4.6 hours), so a timer that starts
+// at 0 still reads as due at once. Nothing compares this clock with another
+// process's or another PC's: ghost frame stamps and the referee clock both
+// go through offsets measured on arrival.
 #ifndef PORT_ROM_CLEAN
 // CLOCK1 proof knob SM64DS_HUB_CLOCK_ADD=ms (dev builds only): the hub clock
 // pushed forward by that much, so a row can play "at 30 days of PC uptime"
@@ -145,13 +155,18 @@ unsigned hub_clock_add() {
 }
 #endif
 
+enum : unsigned { kClockBaseMs = 1u << 24 };   // 16777216 ms, 4.66 hours
+
 unsigned now_ms() {
     static LARGE_INTEGER f = {};
     if (!f.QuadPart) ::QueryPerformanceFrequency(&f);
     LARGE_INTEGER c;
     ::QueryPerformanceCounter(&c);
-    const unsigned t = (unsigned)((unsigned long long)c.QuadPart * 1000ull /
-                                  (unsigned long long)f.QuadPart);
+    static const long long c0 = c.QuadPart;   // the first reading (thread-safe static)
+    long long d = c.QuadPart - c0;            // a thread that read before c0 was set: 0, never negative
+    if (d < 0) d = 0;
+    const unsigned t = kClockBaseMs + (unsigned)((unsigned long long)d * 1000ull /
+                                                 (unsigned long long)f.QuadPart);
 #ifndef PORT_ROM_CLEAN
     return t + hub_clock_add();
 #else
