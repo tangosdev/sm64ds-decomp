@@ -79,6 +79,10 @@ enum : int { kPendMax = 64, kObjOutMax = 48 };
 // State.
 // ---------------------------------------------------------------------------
 bool g_env = false, g_log = false;
+// TABLES1: entries per STATES message (the wire's kSwMaxStateEnt). SM64DS_COOP_SNAP_CAP lowers it in a dev build so a row can
+// reach the limit in a level with only a few watched objects (the real worst case, Big Boo Battle's 59 falling floor blocks,
+// needs a long visit to fill).
+int g_snap_cap = kSwMaxStateEnt;
 struct Off { bool word, press, kick, field, globals; } g_off = {};
 CoopSwitchStats g_st = {};
 bool g_registered = false, g_hooked = false;
@@ -150,6 +154,13 @@ void read_env() {
     const char *l = std::getenv("SM64DS_COOP_LOG");
     g_log = l && *l && *l != '0';
     if (const char *k = std::getenv("SM64DS_SW_KEEP_LOCAL")) g_keep_local = *k != '0';
+#ifndef PORT_ROM_CLEAN
+    if (const char *c = std::getenv("SM64DS_COOP_SNAP_CAP")) {
+        const int v = std::atoi(c);
+        if (v >= 1 && v < kSwMaxStateEnt) g_snap_cap = v;
+        std::fprintf(stderr, "[coopsw-knob] snapshot cap %d entries per message\n", g_snap_cap);
+    }
+#endif
     if (const char *h = std::getenv("SM64DS_SW_HOLD_FIELD")) g_hold_field = *h != '0';
     if (const char *o = std::getenv("SM64DS_SW_OFF")) {
         g_off.word = std::strstr(o, "word") != nullptr;
@@ -637,7 +648,7 @@ void serve_job(Job &j) {
     if (send_ctl(kSwCtlGlobals, &g, sizeof g)) ++g_st.sent_globals;
     unsigned char buf[sizeof(SwStatesHead) + kSwMaxStateEnt * sizeof(SwStateEntry)];
     SwStateEntry ent[kSwMaxStateEnt];
-    const int n = collect_states(ent, kSwMaxStateEnt);
+    const int n = collect_states(ent, g_snap_cap);
     SwStatesHead h; std::memset(&h, 0, sizeof h);
     h.key = wkey(); h.nonce = j.nonce; h.target = (uint8_t)j.seat; h.count = (uint8_t)n;
     std::memcpy(buf, &h, sizeof h); std::memcpy(buf + sizeof h, ent, (size_t)n * sizeof(SwStateEntry));

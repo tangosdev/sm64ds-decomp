@@ -3073,8 +3073,16 @@ bool coop_group_established() { return coop_world_active() && g_key.valid() && g
 int coop_group_owner() { return coop_group_established() ? g_grp.owner() : -1; }
 bool coop_group_i_am_owner() { return coop_group_established() && g_grp.i_am_owner(); }
 unsigned coop_group_member_mask() { return coop_group_established() ? g_grp.member_mask() : 0u; }
+#ifndef PORT_ROM_CLEAN
+// TABLES1 proof knob: SM64DS_COOP_REG_CAP=N makes every callback table hold N entries, so a row reaches the limit.
+static int reg_cap_knob() { static const int c = [] { const char *e = std::getenv("SM64DS_COOP_REG_CAP"); return e ? std::atoi(e) : 0; }(); return c; }
+#endif
 template <class F, int N> static bool add_cb(F (&arr)[N], int *n, F fn) {
-    if (!fn || *n >= N) return false;
+    int cap = N;
+#ifndef PORT_ROM_CLEAN
+    if (reg_cap_knob() > 0 && reg_cap_knob() < N) cap = reg_cap_knob();
+#endif
+    if (!fn || *n >= cap) return false;
     for (int i = 0; i < *n; ++i) if (arr[i] == fn) return false;
     arr[(*n)++] = fn;
     return true;
