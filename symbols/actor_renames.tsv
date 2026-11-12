@@ -2217,9 +2217,9 @@ ov060	0x02116078	func_ov060_02116078	_ZN11daKpaTail_c8BehaviorEv	vtable slot 6
 ov060	0x02116130	func_ov060_02116130	_ZN7daKpa_c13InitResourcesEv	vtable slot 0
 ov060	0x021163b4	func_ov060_021163b4	_ZN11daKpaTail_c13InitResourcesEv	vtable slot 0
 ov060	0x021163f0	func_ov060_021163f0	BowserTail_Spawn	spawnfunc
-ov060	0x021163f0	BowserTail_Spawn	daKpaTail_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
+ov060	0x021163f0	BowserTail_Spawn	_Z21daKpaTail_c_classInitv	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov060	0x02116428	func_ov060_02116428	Bowser_Spawn	spawnfunc
-ov060	0x02116428	Bowser_Spawn	daKpa_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
+ov060	0x02116428	Bowser_Spawn	_Z17daKpa_c_classInitv	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov060	0x02116484	func_ov060_02116484	_ZN11daKpaFire_cD1Ev	vtable slot 16 (was _ZN10BowserFireD1Ev)
 ov060	0x021164c4	func_ov060_021164c4	_ZN11daKpaFire_cD0Ev	vtable slot 17 (was _ZN10BowserFireD0Ev)
 ov060	0x021176c4	func_ov060_021176c4	_ZN11daKpaFire_c16CleanupResourcesEv	vtable slot 3 (was _ZN10BowserFire16CleanupResourcesEv)
