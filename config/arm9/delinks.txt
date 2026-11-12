@@ -2701,7 +2701,7 @@ src/engine/wm/WM_Mp.c:
     complete
     .text start:0x020623ec end:0x02062734
 
-src/engine/wm/WM_Ds.cpp:
+src/engine/wm/WM_Ds.c:
     complete
     .text start:0x02062734 end:0x020634fc
 
