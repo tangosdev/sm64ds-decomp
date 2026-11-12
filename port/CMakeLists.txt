@@ -11979,6 +11979,9 @@ list(APPEND SLICE_COMMS_SOURCES hal/coop_groups.cpp hal/coop_world.cpp)
 # Run mp1 coop phase 2 lane COOPSW1: switches, WDW water, kicks. INERT unless
 # SM64DS_COOP is set in a coop room; see hal/coop_switch.h.
 list(APPEND SLICE_COMMS_SOURCES hal/coop_switch.cpp)
+# Run coopfix1 lane DOORKEY1: a friend's key-door unlock on this screen (the key prop, his spot).
+# INERT outside a coop room; see hal/coop_doorkey.h.
+list(APPEND SLICE_COMMS_SOURCES hal/coop_doorkey.cpp)
 # Run mp1 coop phase 2 lane COOPSPAWN1: ? / ! block hits, red-coin counter, announced
 # runtime stars and prizes. INERT unless SM64DS_COOP is set in a coop room; see hal/coop_spawn.h.
 list(APPEND SLICE_COMMS_SOURCES hal/coop_spawn.cpp)

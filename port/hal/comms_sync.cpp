@@ -2393,7 +2393,11 @@ void gw_send(unsigned now) {
        sequence is flagged as a teleport, so they hold him and snap. */
     const unsigned char dkind = gw_legacy() ? 0 : ghostdoor::sender_kind(a);
     if (!gw_legacy()) ghostdoor::sender_probe(a, g_gw_frame, dkind);
-    if (dkind && !g_gw_prev_dkind) {
+    /* DOORKEY1: every new step of a door sequence, not only the first: a key
+       door's talk stands him at the middle of the double door, and its swing
+       then puts him 100 units in front of the leaf he goes through, 75 units
+       to the side, in one tick (func_ov100_021451c4). */
+    if (dkind && dkind != g_gw_prev_dkind) {
         g_gw_warp = true;
         g_gw_v[0] = g_gw_v[1] = g_gw_v[2] = 0;
         ++g_gws.door_snaps;

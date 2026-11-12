@@ -1,0 +1,52 @@
+{
+  "about": "DOORKEY1: Mario walks through a plain double door (door 0 of the castle hall, the ROM's own door touch at group frame 300), Luigi watches",
+  "save": {
+    "preset": "early",
+    "star_count": 8
+  },
+  "room": {
+    "collision": 1,
+    "damage": 1,
+    "interact": 1,
+    "tp": 1
+  },
+  "proof": {
+    "secs": 100,
+    "shot_ms": 50000,
+    "census": [
+      353
+    ]
+  },
+  "env": {
+    "SM64DS_GHOST_DOOR_PROBE": "1",
+    "SM64DS_DOORKEY_PROBE": "1"
+  },
+  "players": [
+    {
+      "character": "mario",
+      "level": 2,
+      "near": {
+        "class": 353,
+        "param": 0,
+        "dist": 120,
+        "angle_deg": 180
+      },
+      "env": {
+        "SM64DS_DOORKEY_TOUCH": "300:0"
+      }
+    },
+    {
+      "character": "luigi",
+      "level": 2,
+      "near": {
+        "class": 353,
+        "param": 0,
+        "dist": 450,
+        "angle_deg": 180
+      },
+      "env": {
+        "SM64DS_GHOST_ERR_LOG": "1"
+      }
+    }
+  ]
+}

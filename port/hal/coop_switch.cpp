@@ -10,6 +10,7 @@
 
 #include "coop_switch.h"
 #include "coop_world.h"
+#include "coop_doorkey.h"
 #include "coop_wire.h"
 #include "comms_hub.h"
 #include "hub_presence.h"
@@ -768,6 +769,7 @@ bool apply_entry(int kind, int slot, int cls, int state, int value, int seat) {
             ++g_st.kick_applied;
             if (g_log) std::fprintf(stderr, "[coopsw] apply %s idx=%d state=%d flags=%08x wall=%lld\n", w->name, slot, state, *save_flags(), wall_ms());
         }
+        if (seat >= 0 && cls == 353 && state == 2) coop_doorkey_friend_unlock(seat, slot);   // DOORKEY1: his unlock, shown here
         return true;
     }
     char *a = find_actor(slot, cls);
@@ -1411,6 +1413,7 @@ void on_frame(unsigned now) {
     watch_record();
     watch_field(now);
     ul_step();
+    coop_doorkey_frame(g_frames);     // DOORKEY1: proof knobs and probe
     if (g_rec_on) {
         for (int i = 0; i < 3; ++i) if (g_rec_n == i && g_frames >= g_rec[i]) { rec_take(i); ++g_rec_n; if (i == 2) rec_report(); }
     }
