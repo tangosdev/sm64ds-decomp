@@ -22,7 +22,10 @@
 //     and its draw matrix is rebuilt right after that pin, so this frame draws it there;
 //   * coop sync keeps the holder as the owner for the whole hold (coop_rabbit_owner below), so nobody adopts a held rabbit;
 //   * when the hold ends, my copy goes to the ROM's Released state exactly as the holder's did (unk_426 = 1, tame): it
-//     stands, can be talked to, and a grab gives Released again, never a key.
+//     stands, can be talked to, and a grab gives Released again, never a key;
+//   * the castle grounds key rabbit (rabbit 7, the one rabbit every character's console has; the others spawn only for their
+//     own character) is also made tame when the room's save already has its key (flags1 0x40) and my copy still runs wild,
+//     which covers a friend who came in after the hold or lost its messages.
 //
 // Solo play: nothing here runs outside a coop room (coop_world_active), so a single player game is the cartridge's.
 // Mixed rooms: no new message. A 1.0.3 friend sends the same kHeldState, so my copy follows his hold; a 1.0.3 friend
@@ -47,6 +50,7 @@ extern "C" {
 extern void *data_0209f394[];
 extern unsigned char data_0209f250;       // my player slot
 extern unsigned char data_0209f21c;       // number of player bodies
+extern int data_0209caa0[];               // the live save record: [1] flags1 (0x40 = rabbit 7's key was taken)
 void *_ZN8dActor_c4NextEPKS_(const void *prev);
 int port_adventure_ghost_seat(int slot);  // the hub seat a ghost body in player slot `slot` shows (-1: none)
 // the rabbit's state records (ov085 .bss; C names from portsync3_flat_aliases.cpp)
@@ -123,7 +127,7 @@ void mirror_release(int slot, daMip_c *m) {
     m->SetState(&data_ov085_021306bc);                  // StateReleasedInit: unk_426 = 1 (tame), gravity, the wait animation
     ++g_releases;
     std::fprintf(stderr, "[coopr2] f=%u slot %d: seat %d let the rabbit go, my copy is released and tame (unk_426 %d) at %d,%d,%d\n",
-                 g_frame, slot, t.seat, (int)m->unk_426, *(const int *)((const char *)m + 0x5c) >> 12, *(const int *)((const char *)m + 0x60) >> 12, *(const int *)((const char *)m + 0x64) >> 12);
+                 g_frame, slot, t.seat, (int)m->unk_426,  // (seat -1: the room's key flag, no hold seen here) *(const int *)((const char *)m + 0x5c) >> 12, *(const int *)((const char *)m + 0x60) >> 12, *(const int *)((const char *)m + 0x64) >> 12);
     t.mirrored = false; t.seat = -1;
 }
 
@@ -167,6 +171,15 @@ void coop_rabbit_after_follow() {
             m->UpdateMatrixAndShadow();                     // party_hits pinned it to his hands after my Behavior drew it: draw it there
             ++g_rebuilds;
         } else if (t.mirrored) {
+            mirror_release(slot, m);
+        } else if (m->mRabbitId == 7 && (data_0209caa0[1] & 0x40) && !m->mTalkingPlayer && !m->unk_426 &&
+                   !in_state(m, &data_ov085_021306ac) && !in_state(m, &data_ov085_021306bc)) {
+            // The castle grounds key rabbit (rabbit 7, the only rabbit every character's console has) whose key the room
+            // already has (flags1 0x40, set by its key and merged into every console's save): a copy still running wild here
+            // missed the hold (I came in later, or the hold's messages were lost). On the catcher's screen it stands tame;
+            // here too, so no second key comes out of it. (A reloaded level never spawns it: InitResources checks 0x40.)
+            t.seat = -1;
+            std::fprintf(stderr, "[coopr2] f=%u slot %d: the room already has rabbit 7's key, my wild copy is made tame\n", g_frame, slot);
             mirror_release(slot, m);
         }
         if (g_log && (g_frame % 120u) == 0)

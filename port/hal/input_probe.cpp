@@ -452,6 +452,19 @@ static void *find_actor_by_class(unsigned short cls)
     }
     return 0;
 }
+/* RABBIT2 (coop rows): the actor of class `cls` whose spawn parameter (param1 & 0xffff) is `param`, or 0. */
+static void *find_actor_by_class_param(unsigned short cls, unsigned param)
+{
+    struct Node { void *x0; Node *next; char **x8; };
+    Node *n = *(Node **)&data_0209b468;
+    for (; n; n = n->next) {
+        char *a = (char *)n->x8;
+        if (a && *(unsigned short *)(a + 0xc) == cls && (*(unsigned *)(a + 0x08) & 0xffffu) == param) return a;
+    }
+    return 0;
+}
+extern "C" void *data_0209f394[];
+extern "C" unsigned char data_0209f250;
 /* TEMPORARY star-touch trigger, the STAR half of the same seam the buddy, the
  * sign and the rabbit already stand in for.
  *
@@ -1220,6 +1233,13 @@ extern "C" void port_probe_rabbit_trigger(int frame)
 
     char *rb = (char *)find_actor_by_class(187);
     char *player = (char *)find_actor_by_class(0xbf);
+    /* RABBIT2 (coop rows): SM64DS_RABBIT_TRIGGER_PARAM=<param1> picks the rabbit with that spawn parameter (a coop console
+       has several, the first in the list is not always the row's), and the grabbing body is MY player (in a coop room the
+       first Player in the actor list can be a friend's ghost body). Unset: as before. */
+    if (const char *tp = std::getenv("SM64DS_RABBIT_TRIGGER_PARAM")) {
+        rb = (char *)find_actor_by_class_param(187, (unsigned)std::strtoul(tp, 0, 0));
+        if (data_0209f250 < 16 && data_0209f394[data_0209f250]) player = (char *)data_0209f394[data_0209f250];
+    }
     if (!rb || !player) return;
 
     /* THE RABBIT-HUNT-IS-ON FLAG, the second half of this stand-in.
