@@ -100,6 +100,7 @@ extern int data_ov084_0213030c[];        /* per-frame particle X/Z offset (0212f
 extern int data_ov084_02130334[];        /* per-frame particle Y offset */
 extern u8  data_ov084_021302ec[];        /* five indices {0,3,4,5,6}; 0212ec60 sums s16 at [i]*0x34+0x1c into ang[1] (dead -- later y-adjust reads ang[0]==0, so the offset is constant 0x32000). 0x34 is not BMD_Bone (0x40). */
 
+int *Vec3_LslInPlace(int *v, int sh);
 
 void *d_a_pknNewHold(u32 handle, u32 id, int x, int y, int z, const void *f, void *cb);
 int d_a_pknPlaySubHold(u32 a, u32 b, u32 c, int t, int flag);
