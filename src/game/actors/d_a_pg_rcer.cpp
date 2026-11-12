@@ -131,9 +131,67 @@ int daPgRcer_c::InitResources()
     return 1;
 }
 
+#ifdef _MSC_VER
+/* Host only (run coopfix1, lane NPCFIX1). In a coop room the console whose own player races the penguin is the only
+   one whose penguin runs his states; every other console in that course shows him as that racer's game drives him
+   (port/hal/coop_race.cpp, the same shape as Koopa the Quick in d_a_r_nk.cpp). The hook is set at program start and
+   answers 1 only in a coop room, for a penguin it has just posed from the racer's console; Behavior then skips the
+   state handler (so no talk, no second race, no star here) and keeps the animation, texture, cylinder, shadow and the
+   slide's dust and sound. Outside a coop room it answers 0 and Behavior is the cartridge's. The DS build never sees
+   this. */
+extern "C" {
+int (*port_coop_pgrcer_follow)(void *penguin) = 0;
+/* The seven BCA and three BTP files by their table index (the wire's). */
+void *port_pgrcer_anim_file(int i)
+{
+    return (i >= 0 && i < 7) ? LOADED(*data_ov019_02112788[i]) : 0;
+}
+void *port_pgrcer_tex_file(int i)
+{
+    return (i >= 0 && i < 3) ? LOADED(*data_ov019_0211277c[i]) : 0;
+}
+/* Back to the waiting penguin a fresh load has: path node 0, facing ang, state 0 (idle anim and face). */
+void port_pgrcer_reset(void *p, short ang)
+{
+    daPgRcer_c *self = (daPgRcer_c *)p;
+    self->mPathNodeIndex = 0;
+    self->mPath.GetNode(*(Vector3 *)&self->mPosX, 0);
+    self->func_ov019_021113b0();
+    self->mAngleY = ang;
+    self->mPrevAngleY = ang;
+    self->mHorzSpeed = 0;
+    self->mVertSpeed = 0;
+    self->mTalkWaitTimer = 0;
+    self->func_ov019_021122dc(0);
+}
+/* Proof only (SM64DS_COOP_PG_RACE): the race state entered as the invite's yes enters it, with the talker given. */
+void port_pgrcer_start(void *p, void *talker)
+{
+    daPgRcer_c *self = (daPgRcer_c *)p;
+    self->mTalkPlayer = (Player *)talker;
+    self->func_ov019_021122dc(3);
+}
+}
+#endif
+
 // @symbol _ZN10daPgRcer_c8BehaviorEv
 int daPgRcer_c::Behavior()
 {
+#ifdef _MSC_VER
+    if (port_coop_pgrcer_follow && port_coop_pgrcer_follow(this)) {
+        mModelAnim.dExtFrameCtrl_c::Advance();
+        mTextureSequence.Advance();
+        if (mAction == 3) {
+            mSlideSound = Sound::PlayLong(mSlideSound, 3, 0x185, *(const Vector3 *)&mCamSpacePosX, 0);
+            mDustParticle = (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+                mDustParticle, 0x101, mPosX, mPosY + 0x32000, mPosZ, 0, 0);
+        }
+        mdCcAc_c.Clear();
+        mdCcAc_c.Update();
+        func_ov019_021114ec(this);
+        return 1;
+    }
+#endif
     func_ov019_02112268();
     mModelAnim.dExtFrameCtrl_c::Advance();
     mTextureSequence.Advance();

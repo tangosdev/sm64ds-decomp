@@ -190,6 +190,15 @@ int IsStarCollectedInCurLevel(int);
 void DecIfAbove0_Short(void *);
 }
 
+#ifdef _MSC_VER
+/* Host only (run coopfix1, lane NPCFIX1). In a coop room Hoot takes only MY player, and not while a friend rides his
+   copy of Hoot: port/hal/coop_talk.cpp sets the hook at program start and answers 1 for a friend's drawn body touching
+   my Hoot (his console runs his own grab; on mine the follower would be thrown into the carry with my button) and for
+   my own body while a friend in my group holds Hoot (his talk or his ride). Outside a coop room it answers 0 and the
+   grab is the cartridge's. The DS build never sees this. */
+extern "C" { int (*port_coop_owl_refuse)(const void *owl, const void *player) = 0; }
+#endif
+
 // @symbol _ZN7daOwl_cD1Ev
 // @symbol _ZN7daOwl_cD0Ev
 /* The whole body is compiler-emitted: one vptr store, then dExtShadowModel_c
@@ -223,6 +232,10 @@ void daOwl_c::func_ov094_021357a4()
     unsigned eq = (t == ACTOR_PLAYER);
     if (!eq)
         return;
+#ifdef _MSC_VER
+    if (port_coop_owl_refuse && port_coop_owl_refuse(this, other))
+        return;
+#endif
     mRider = (Player *)other;
     st[0] = 0;
     st[1] = 0;
@@ -239,6 +252,25 @@ void daOwl_c::func_ov094_021357a4()
     }
     func_ov094_02136188(OWL_STATE_CARRY);
 }
+
+#ifdef _MSC_VER
+/* Proof only (SM64DS_COOP_OWL_GRAB in port/hal/coop_talk.cpp): Hoot's own grab, run once as if `body` touched him while
+   MY B button is down (the Player's attach, func_ov002_020df840, reads the local pad word's bit 1, whoever the body is).
+   The pad bit is put back right after. */
+extern "C" u8 gActivePlayerSlot;
+extern "C" u16 data_0209f49c[];
+extern "C" int port_owl_grab_test(void *owl, void *body)
+{
+    daOwl_c *self = (daOwl_c *)owl;
+    u16 *pad = (u16 *)((char *)data_0209f49c + gActivePlayerSlot * 0x18);
+    const u16 was = *pad;
+    *pad = (u16)(was | 2);
+    self->mdCcAcPos_c.otherOwner = ((dActor_c *)body)->uniqueID;
+    self->func_ov094_021357a4();
+    *pad = was;
+    return self->mRider == (Player *)body;
+}
+#endif
 
 // @symbol _ZN7daOwl_c19func_ov094_021358b4Ev
 /* Main of the return state. Phase 0 fades the owl out (with an upward speed);

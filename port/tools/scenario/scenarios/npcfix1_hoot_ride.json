@@ -1,0 +1,58 @@
+{
+ "about": "NPCFIX1: Hoot (class 234, Cool Cool Mountain): Luigi rides (his own grab), then on Mario a friend body grab and my own grab",
+ "save": {
+  "preset": "all_open",
+  "flags": [
+   "messages_seen"
+  ]
+ },
+ "room": {
+  "collision": 1,
+  "damage": 1,
+  "interact": 1,
+  "tp": 1
+ },
+ "proof": {
+  "secs": 110,
+  "shot_ms": 400000,
+  "census": [
+   234
+  ]
+ },
+ "env": {
+  "SM64DS_COOP_TALK_LOG": "1",
+  "SM64DS_COOP_OWL_TRACE": "120"
+ },
+ "players": [
+  {
+   "character": "mario",
+   "level": 10,
+   "act": 5,
+   "pos": [
+    1500,
+    -3900,
+    5000
+   ],
+   "drop": true,
+   "settle": 45,
+   "env": {
+    "SM64DS_COOP_OWL_GRAB": "900:friend,1200:me"
+   }
+  },
+  {
+   "character": "luigi",
+   "level": 10,
+   "act": 5,
+   "pos": [
+    1000,
+    -3900,
+    5000
+   ],
+   "drop": true,
+   "settle": 45,
+   "env": {
+    "SM64DS_COOP_OWL_GRAB": "500:me"
+   }
+  }
+ ]
+}

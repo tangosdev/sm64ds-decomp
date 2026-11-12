@@ -34,6 +34,10 @@
 //   heard. The Koopa star is the racer's, through the coop star rules already in place.
 //   Bob-omb Battlefield and Tiny-Huge Island run the same class; nothing here reads the level beyond the group key.
 //
+// THE RACING PENGUIN (run coopfix1 lane NPCFIX1, from the AUDIT-NPCS finding H1): Cool Cool Mountain's penguin race had
+// the same hole (each console its own penguin, so a friend never saw the race and could start a second one). It rides the
+// same sub-type with ver 2 and the same rules; see the penguin section below.
+//
 // MIXED ROOMS. A 1.0.3 console drops SYNW 0x06 as an unknown sub-type (coop_world.cpp's dispatcher counts it, never
 // guesses), so a 1.0.3 friend simply keeps the 1.0.3 behaviour; this build with a 1.0.3 racer hears no records and
 // its Koopa stays as in 1.0.3. The flag rule is local and needs nothing from the friend.
@@ -45,6 +49,8 @@
 //   SM64DS_COOP_KTQ_LOG=1      [coopktq] lines (state changes, lock / let go, flag touches, the exit line)
 //   SM64DS_COOP_KTQ_TRACE=N    every N frames one [coopktq] trace line (my Koopa, the record I follow, the flag)
 //   SM64DS_COOP_KTQ_SHOT=a,b   at course frames a, b... a picture from the game's own frame dump (ktq_fNNNNN.bmp)
+//   SM64DS_COOP_PG_RACE=F      at course frame F my idle racing penguin starts his race with my player (state 3, as the
+//                              invite's yes leads to); the penguin's lines are [cooppg] and use the KTQ_LOG / KTQ_TRACE knobs
 //   SM64DS_COOP_KTQ_ARM=F      at course frame F arm my own race flag the way Koopa's talk does (mHasTouchedFlag = 0 on
 //                              StartTalk, kept when the offer is declined): the state of a player who talked to Koopa and
 //                              said no, which a headless row cannot drive
@@ -54,6 +60,7 @@
 #include "comms_hub.h"
 
 #include "daRNk_c.h"
+#include "daPgRcer_c.h"
 
 #include <windows.h>
 
@@ -72,6 +79,17 @@ int port_adventure_ghost_seat(int slot);
 extern int (*port_coop_race_follow)(void *koopa);
 extern int (*port_coop_race_foreign)(const void *toucher);
 void *port_rnk_anim_file(int i);
+extern int (*port_coop_pgrcer_follow)(void *penguin);
+void *port_pgrcer_anim_file(int i);
+void *port_pgrcer_tex_file(int i);
+void port_pgrcer_reset(void *penguin, short ang);
+void port_pgrcer_start(void *penguin, void *talker);
+void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *seq, void *btp, int flags, int speed, unsigned int start);
+extern int (*port_coop_pgrcer_follow)(void *penguin);
+void *port_pgrcer_anim_file(int i);
+void *port_pgrcer_tex_file(int i);
+void port_pgrcer_reset(void *penguin, short ang);
+void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *seq, void *btp, int flags, int speed, unsigned int start);
 extern const void *port_level_fb_ptr;
 }
 namespace ntr { struct Framebuffer; bool ppu_write_bmp(const char *path, const Framebuffer &fb); }
@@ -84,7 +102,7 @@ namespace port {
 // RACE_POSE payload (after the 12-byte head), 32 bytes.
 struct CoopRaceWire {
     CoopKeyWire key;
-    uint8_t  ver;        // 1
+    uint8_t  ver;        // 1 Koopa the Quick, 2 the racing penguin (NPCFIX1; a 1.0.4 console refuses ver 2 as bad)
     uint8_t  state;      // the racer's Koopa state, 2..5
     uint8_t  anim;       // 0 idle, 1 talk, 2 run start, 3 run, 4 jump, 5 land, 6 brake
     uint8_t  flags;      // bit 0 racing, bit 1 finished, bit 2 the animation plays once
@@ -101,7 +119,9 @@ bool coop_race_validate(const void *p, int len) {
     if (!p || len != (int)sizeof(CoopRaceWire)) return false;
     CoopRaceWire w; std::memcpy(&w, p, sizeof w);
     const int lim = 0x7d00000;        // 32000 units
-    if (!coop_key_ok(w.key) || w.ver != 1 || w.state < 2 || w.state > 5 || w.anim > 6 || w.flags > 7) return false;
+    // ver 2 (the penguin) also carries his face in flags bits 3-4 (0 unknown, 1..3 his three BTP files)
+    if (!coop_key_ok(w.key) || (w.ver != 1 && w.ver != 2) || w.state < 2 || w.state > 5 || w.anim > 6) return false;
+    if (w.flags > (w.ver == 2 ? 0x1f : 7) || (w.ver == 2 && (w.flags >> 3) > 3)) return false;
     if (w.x < -lim || w.x > lim || w.y < -lim || w.y > lim || w.z < -lim || w.z > lim) return false;
     if (w.frame < 0 || w.frame > (4096 << 12) || w.speed < 0 || w.speed > 0x10000) return false;
     return true;
@@ -117,7 +137,7 @@ int g_trace = 0;
 unsigned g_lf = 0;
 int g_lv = -1, g_ac = -1;
 
-struct Stats { unsigned sent, recv, bad, other_key, locks, letgo, followed, flag_refused, flag_counted; } g_st = {};
+struct Stats { unsigned sent, recv, bad, other_key, locks, letgo, followed, flag_refused, flag_counted, pg_sent, pg_locks, pg_letgo, pg_followed; } g_st = {};
 
 // what friends sent
 struct Rx {
@@ -125,6 +145,7 @@ struct Rx {
     bool have_prev; int px, py, pz; unsigned pt_ms;
 };
 Rx g_rx[kSeats];
+Rx g_prx[kSeats];            // the racing penguin's records (ver 2)
 
 // my side
 struct Mine {
@@ -189,7 +210,7 @@ void on_world(int seat, int sub, const unsigned char *p, int len, void *) {
         return;
     }
     CoopRaceWire w; std::memcpy(&w, p, sizeof w);
-    Rx &r = g_rx[seat];
+    Rx &r = (w.ver == 2 ? g_prx : g_rx)[seat];
     const unsigned t = now_ms();
     if (r.have && r.level == w.key.level && r.act == w.key.act && (uint16_t)(w.seq - r.w.seq) >= 0x8000u) return;   // older than what I hold
     const bool changed = !r.have || r.w.state != w.state;
@@ -200,7 +221,10 @@ void on_world(int seat, int sub, const unsigned char *p, int len, void *) {
     }
     r.have = true; r.level = w.key.level; r.act = w.key.act; r.w = w; r.t_ms = t;
     ++g_st.recv;
-    if (g_log && changed)
+    if (g_log && changed && w.ver == 2)
+        std::fprintf(stderr, "[cooppg] in lf=%u from seat %d: his penguin state %d at (%d,%d,%d) (level %d act %d)\n", g_lf, seat,
+                     (int)w.state, w.x >> 12, w.y >> 12, w.z >> 12, (int)w.key.level, (int)w.key.act);
+    else if (g_log && changed)
         std::fprintf(stderr, "[coopktq] in lf=%u from seat %d: his Koopa %s at (%d,%d,%d) (level %d act %d)\n", g_lf, seat,
                      state_name(w.state), w.x >> 12, w.y >> 12, w.z >> 12, (int)w.key.level, (int)w.key.act);
 }
@@ -209,6 +233,8 @@ void exit_line() {
     std::fprintf(stderr, "[coopktq:exit] sent %u, received %u (bad %u), locks %u, let go %u, frames followed %u, flag touches "
                  "refused %u counted %u%s\n", g_st.sent, g_st.recv, g_st.bad, g_st.locks, g_st.letgo, g_st.followed,
                  g_st.flag_refused, g_st.flag_counted, g_off ? " (CONTROL SM64DS_COOP_KTQ=0)" : "");
+    std::fprintf(stderr, "[cooppg:exit] penguin: sent %u, locks %u, let go %u, frames followed %u%s\n", g_st.pg_sent, g_st.pg_locks,
+                 g_st.pg_letgo, g_st.pg_followed, g_off ? " (CONTROL SM64DS_COOP_KTQ=0)" : "");
 }
 
 void ensure_registered() {
@@ -219,7 +245,9 @@ void ensure_registered() {
     if (g_log || !ok) std::fprintf(stderr, "[coopktq] SYNW sub-type 0x%02x %s\n", kWorldRacePose, ok ? "registered" : "NOT registered (range taken)");
 }
 
+void pg_reset_visit();
 void reset_visit() {
+    pg_reset_visit();
     g_m = Mine();
     g_m.k = nullptr; g_m.last_state = -1; g_m.lock = -1;
     g_lf = 0;
@@ -376,6 +404,185 @@ void trace(daRNk_c *k) {
     std::fprintf(stderr, "%s\n", line);
 }
 
+// ---- the racing penguin (Cool Cool Mountain, class 259; run coopfix1 lane NPCFIX1) -----------------------
+// The same shape as Koopa: the console whose own penguin races with the local player as his talker (state 2 the jump
+// into the countdown, 3 the race, 4 the walk up, 5 the result) sends RACE_POSE ver 2 every frame in states 2 to 4 and
+// on change, once a second in state 5 (he stays at the finish for the rest of the visit, so friends keep seeing him
+// there). A console whose own penguin is idle (state 0) locks onto the first racer it hears and poses its penguin
+// (d_a_pg_rcer.cpp's Behavior asks port_coop_pgrcer_follow and on 1 skips the states: no talk, no second race, no
+// star here). 3 s of silence: let go, back on his path start, idle. The star is the racer's (coop star rules).
+// A 1.0.4 console refuses ver 2 as a bad record and keeps the 1.0.4 behaviour (its own penguin, its own race).
+enum : int { kPenguinClass = 259 };
+
+struct PgMine {
+    daPgRcer_c *p; int last_state; uint16_t seq; unsigned last_send; bool sent_any;
+    bool home_set; short hang;
+    int lock; bool snapped; uint16_t applied_seq;
+};
+PgMine g_pm = {nullptr, -1, 0, 0, false, false, 0, -1, false, 0};
+
+void pg_reset_visit() { g_pm = PgMine(); g_pm.p = nullptr; g_pm.last_state = -1; g_pm.lock = -1; }
+
+int pg_anim_index(const daPgRcer_c *p) {
+    const void *f = p->mModelAnim.file;
+    for (int i = 0; i < 7; ++i) if (f && port_pgrcer_anim_file(i) == f) return i;
+    return -1;
+}
+int pg_tex_index(const daPgRcer_c *p) {
+    const void *f = p->mTextureSequence.file;
+    for (int i = 0; i < 3; ++i) if (f && port_pgrcer_tex_file(i) == f) return i;
+    return -1;
+}
+int &pg_frame(daPgRcer_c *p) { return *(int *)&p->mModelAnim.currFrame; }
+int &pg_speed(daPgRcer_c *p) { return *(int *)&p->mModelAnim.speed; }
+unsigned &pg_flags(daPgRcer_c *p) { return *(unsigned *)&p->mModelAnim.numFramesAndFlags; }
+
+void pg_send(daPgRcer_c *p, bool changed) {
+    const unsigned t = now_ms();
+    const int s = p->mAction;
+    const bool running = s >= 2 && s <= 4;
+    if (!changed && !running && g_pm.sent_any && t - g_pm.last_send < kBeatMs) return;
+    const int ai = pg_anim_index(p), ti = pg_tex_index(p);
+    CoopRaceWire w = {};
+    w.key.level = (uint16_t)g_lv; w.key.act = (uint8_t)g_ac; w.key.reserved = 0;
+    w.ver = 2; w.state = (uint8_t)s; w.anim = (uint8_t)(ai < 0 ? 0 : ai);
+    w.flags = (uint8_t)((s == 3 ? 1 : 0) | (s == 5 ? 2 : 0) | ((pg_flags(p) & kOnce) ? 4 : 0) | ((ti < 0 ? 0 : ti + 1) << 3));
+    w.x = p->mPosX; w.y = p->mPosY; w.z = p->mPosZ;
+    w.ang = p->mAngleY;
+    w.seq = ++g_pm.seq;
+    w.frame = pg_frame(p) < 0 ? 0 : pg_frame(p);
+    w.speed = pg_speed(p) < 0 ? 0 : (pg_speed(p) > 0x10000 ? 0x10000 : pg_speed(p));
+    if (coop_send_world(kWorldRacePose, &w, (int)sizeof w)) { ++g_st.pg_sent; g_pm.sent_any = true; g_pm.last_send = t; }
+}
+
+void pg_let_go(daPgRcer_c *p, const char *why) {
+    if (p) port_pgrcer_reset(p, g_pm.home_set ? g_pm.hang : p->mAngleY);
+    ++g_st.pg_letgo;
+    if (g_log) std::fprintf(stderr, "[cooppg] lf=%u let go of seat %d's penguin race (%s): my penguin back at his start, waiting\n",
+                            g_lf, g_pm.lock, why);
+    g_pm.lock = -1; g_pm.snapped = false;
+}
+
+// Behavior's question: 1 when this penguin is posed from a friend's race this frame.
+int pg_follow(void *pv) {
+    read_env();
+    if (g_off || g_pm.lock < 0 || !pv || pv != g_pm.p) return 0;
+    daPgRcer_c *p = (daPgRcer_c *)pv;
+    int lv = -1, ac = 0;
+    if (!coop_world_active() || !coop_group_key(&lv, &ac)) { pg_let_go(p, "the coop room ended"); return 1; }
+    const Rx &r = g_prx[g_pm.lock];
+    const unsigned t = now_ms();
+    if (!fresh(r, t)) { pg_let_go(p, "his records stopped"); return 1; }
+    double tx = r.w.x, ty = r.w.y, tz = r.w.z;
+    if (r.have_prev && r.t_ms != r.pt_ms && r.t_ms - r.pt_ms < 500u) {
+        const double dt = (double)(r.t_ms - r.pt_ms);
+        double age = (double)(t - r.t_ms); if (age > 250.0) age = 250.0;
+        tx += (r.w.x - r.px) / dt * age; ty += (r.w.y - r.py) / dt * age; tz += (r.w.z - r.pz) / dt * age;
+    }
+    const double dx = tx - p->mPosX, dy = ty - p->mPosY, dz = tz - p->mPosZ;
+    const double d = std::sqrt(dx * dx + dy * dy + dz * dz) / 4096.0;
+    if (!g_pm.snapped || d > 800.0) {
+        p->mPosX = (int)tx; p->mPosY = (int)ty; p->mPosZ = (int)tz;
+        g_pm.snapped = true;
+    } else {
+        p->mPosX += (int)(dx * 0.35); p->mPosY += (int)(dy * 0.35); p->mPosZ += (int)(dz * 0.35);
+    }
+    p->mAngleY = p->mPrevAngleY = r.w.ang;
+    p->mHorzSpeed = 0; p->mVertSpeed = 0;
+    p->mAction = r.w.state;            // Behavior's follow branch makes the slide's dust and sound in state 3
+    void *file = port_pgrcer_anim_file(r.w.anim);
+    if (file && (void *)p->mModelAnim.file != file) {
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&p->mModelAnim, file, (r.w.flags & 4) ? kOnce : 0, r.w.speed, 0);
+        pg_frame(p) = r.w.frame;
+        g_pm.applied_seq = r.w.seq;
+    } else if (g_pm.applied_seq != r.w.seq) {
+        const int fd = pg_frame(p) - r.w.frame;
+        if (fd > (3 << 12) || fd < -(3 << 12)) pg_frame(p) = r.w.frame;
+        pg_speed(p) = r.w.speed;
+        g_pm.applied_seq = r.w.seq;
+    }
+    const int ti = (r.w.flags >> 3) - 1;
+    void *tex = ti >= 0 ? port_pgrcer_tex_file(ti) : nullptr;
+    if (tex && (void *)p->mTextureSequence.file != tex)
+        _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&p->mTextureSequence, tex, 0, 0x1000, 0);
+    ++g_st.pg_followed;
+    return 1;
+}
+struct PgFollowHook { PgFollowHook() { port_coop_pgrcer_follow = pg_follow; } } g_pg_follow_hook;
+
+// SM64DS_COOP_PG_RACE=F (proof only): at course frame F my idle penguin starts his race with my player, the state the
+// invite's yes leads to (a headless row cannot press A in a talk).
+void pg_start_knob(daPgRcer_c *p) {
+    static int at = -2;
+    if (at == -2) { at = -1; if (const char *e = std::getenv("SM64DS_COOP_PG_RACE")) at = std::atoi(e); }
+    if (at < 0 || g_lf != (unsigned)at) return;
+    char *me = local_body();
+    const bool ok = p && me && p->mAction == 0 && g_pm.lock < 0;
+    if (ok) port_pgrcer_start(p, me);
+    std::fprintf(stderr, "[cooppg] KNOB race lf=%u: %s\n", g_lf, ok ? "my penguin races my player (state 3, as after the invite's yes)"
+                 : !p ? "no penguin" : g_pm.lock >= 0 ? "not started: my penguin follows a friend's race" : "not started: my penguin is not idle");
+}
+
+void pg_trace(daPgRcer_c *p) {
+    if (g_trace <= 0 || (g_lf % (unsigned)g_trace) != 0) return;
+    char line[512]; int n = 0;
+    const char *me = local_body();
+    n += std::snprintf(line + n, sizeof line - n, "[cooppg] trace lf=%u", g_lf);
+    if (me) n += std::snprintf(line + n, sizeof line - n, " me (%d,%d,%d)", *(const int *)(me + 0x5c) >> 12,
+                               *(const int *)(me + 0x60) >> 12, *(const int *)(me + 0x64) >> 12);
+    if (p) n += std::snprintf(line + n, sizeof line - n, " | penguin state %d step %d at (%d,%d,%d) ang %04x anim %d face %d frame %d node %d talker %s",
+                              p->mAction, (int)p->mActionStep, p->mPosX >> 12, p->mPosY >> 12, p->mPosZ >> 12,
+                              (unsigned)(unsigned short)p->mAngleY, pg_anim_index(p), pg_tex_index(p), pg_frame(p) >> 12,
+                              p->mPathNodeIndex, !p->mTalkPlayer ? "none" : (const char *)p->mTalkPlayer == me ? "me" : "friend");
+    else n += std::snprintf(line + n, sizeof line - n, " | no penguin");
+    if (g_pm.lock >= 0) {
+        const Rx &r = g_prx[g_pm.lock];
+        n += std::snprintf(line + n, sizeof line - n, " | FOLLOW seat %d: his state %d at (%d,%d,%d) %u ms old", g_pm.lock,
+                           (int)r.w.state, r.w.x >> 12, r.w.y >> 12, r.w.z >> 12, now_ms() - r.t_ms);
+    }
+    std::fprintf(stderr, "%s\n", line);
+}
+
+void pg_frame_tick() {
+    daPgRcer_c *p = (daPgRcer_c *)_ZN8dActor_c15FindWithActorIDEjPS_(kPenguinClass, nullptr);
+    if (p != g_pm.p) {
+        if (g_pm.lock >= 0 && g_log) std::fprintf(stderr, "[cooppg] lf=%u my penguin changed: following stopped\n", g_lf);
+        g_pm.p = p; g_pm.last_state = -1; g_pm.lock = -1; g_pm.snapped = false; g_pm.home_set = false;
+    }
+    if (!p) return;
+    pg_start_knob(p);
+    if (!g_pm.home_set && p->mAction == 0 && g_pm.lock < 0) { g_pm.home_set = true; g_pm.hang = p->mAngleY; }
+    const char *me = local_body();
+    const int s = p->mAction;
+    const bool changed = s != g_pm.last_state;
+    if (changed && g_log && g_pm.last_state >= 0 && g_pm.lock < 0)
+        std::fprintf(stderr, "[cooppg] lf=%u my penguin state %d -> %d (talker %s) at (%d,%d,%d)\n", g_lf, g_pm.last_state, s,
+                     !p->mTalkPlayer ? "none" : (const char *)p->mTalkPlayer == me ? "me" : "friend", p->mPosX >> 12,
+                     p->mPosY >> 12, p->mPosZ >> 12);
+    g_pm.last_state = s;
+    if (g_off) { pg_trace(p); return; }
+    const unsigned t = now_ms();
+    if (s >= 2 && g_pm.lock < 0 && me && (const char *)p->mTalkPlayer == me) {
+        pg_send(p, changed);
+        pg_trace(p);
+        return;
+    }
+    if (g_pm.lock >= 0) {
+        if (!fresh(g_prx[g_pm.lock], t)) pg_let_go(p, "his records stopped");
+    } else if (s == 0) {
+        for (int seat = 0; seat < kSeats; ++seat) {
+            if (seat == comms_hub_my_seat() || !fresh(g_prx[seat], t)) continue;
+            g_pm.lock = seat; g_pm.snapped = false; g_pm.applied_seq = 0;
+            ++g_st.pg_locks;
+            if (g_log) std::fprintf(stderr, "[cooppg] lf=%u seat %d races the penguin: my penguin now shows that race (his state %d at (%d,%d,%d))\n",
+                                    g_lf, seat, (int)g_prx[seat].w.state, g_prx[seat].w.x >> 12, g_prx[seat].w.y >> 12,
+                                    g_prx[seat].w.z >> 12);
+            break;
+        }
+    }
+    pg_trace(p);
+}
+
 }  // namespace
 
 // Once a frame in an established coop group (coop_world.cpp's tick, next to the race proof knobs).
@@ -388,6 +595,7 @@ void coop_race_frame(unsigned) {
     ++g_lf;
     shots();
     arm_knob();
+    pg_frame_tick();                  // NPCFIX1: the racing penguin, same shape
     daRNk_c *k = find_koopa();
     if (k != g_m.k) {                 // a new visit's Koopa (or he went away)
         if (g_m.lock >= 0 && g_log) std::fprintf(stderr, "[coopktq] lf=%u my Koopa changed: following stopped\n", g_lf);

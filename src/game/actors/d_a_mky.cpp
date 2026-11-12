@@ -1592,6 +1592,14 @@ s32 daMky_c::Render()
     return 1;
 }
 
+#ifdef _MSC_VER
+/* Host only (run coopfix1, lane NPCFIX1). The cap Ukiki rebuilds MY lost cap (the local save's lost bit) as the
+   character of the player nearest him. In a coop room port/hal/coop_cap.cpp answers with my own body, so the cap is
+   always my character's and never a friend's (a friend's cap would turn me into him when I pick it up). Outside a coop
+   room it answers what it is given and the choice is the cartridge's. The DS build never sees this. */
+extern "C" { void *(*port_coop_cap_mine)(void *nearest) = 0; }
+#endif
+
 // @symbol _ZN7daMky_c8BehaviorEv
 /* Vtable slot 6. */
 s32 daMky_c::Behavior()
@@ -1601,6 +1609,10 @@ s32 daMky_c::Behavior()
         int b = (actorID == 0x10b);
         if (b != 0 && mHasSpawnedCap == 0 && SaveData::HasPlayerLostCap() != 0) {
             Player *pl = ClosestPlayer();
+#ifdef _MSC_VER
+            if (port_coop_cap_mine)
+                pl = (Player *)port_coop_cap_mine(pl);
+#endif
             unsigned cp = pl->param1;
             if (cp < 3) {
                 dActor_c *spawned;
