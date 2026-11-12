@@ -938,7 +938,66 @@ extern "C" const char *port_mod_plugin_switch_refusal(const char *id)
     return 0;
 }
 
-/* switch the loaded plugin `id` off (on = 0) or on (on = 1) at the title; 1 = done (or already so), 0 = refused, nothing changed */
+namespace {
+
+/* writes p's journal: ON oldest run first, OFF newest run first. A write that fails takes back, newest first, the writes this call
+   already made, so the image and p->off stay as they were; the journal is then marked bad (no plugin switches in place again in
+   this run, port_mod_plugin_switch_refusal) and 0 comes back, so the relatch refuses and its caller restarts, as before SEAMCODE1. */
+int switch_plugin(Plugin *p, int on, const char *why)
+{
+    const size_t n = p->patches.size();
+#ifndef PORT_ROM_CLEAN
+    /* proof knob: SM64DS_MOD_FAIL_WRITE=<plugin id> fails that plugin's last code write of a switch (nothing is written for it) */
+    const char *fw = getenv("SM64DS_MOD_FAIL_WRITE");
+    const bool force_fail = fw && p->id == fw;
+#endif
+    size_t done = 0;
+    unsigned bytes = 0;
+    for (; done < n; ++done) {
+        const Plugin::Patch &pt = p->patches[on ? done : n - 1 - done];
+        bool ok;
+#ifndef PORT_ROM_CLEAN
+        if (force_fail && done == n - 1) ok = false; else
+#endif
+        ok = write_code(pt.at, on ? pt.now : pt.was);
+        if (!ok) break;
+        bytes += (unsigned)pt.now.size();
+    }
+    if (done < n) {
+        const size_t failed_at = done;
+        unsigned back_bad = 0;
+        while (done-- > 0) {
+            const Plugin::Patch &pt = p->patches[on ? done : n - 1 - done];
+            if (!write_code(pt.at, on ? pt.was : pt.now)) ++back_bad;
+        }
+        g_journal_bad = true;
+        if (g_ranges_read) journal_take();
+        fprintf(stderr, "[plugins] %s could not be switched %s in place (%s): code write %u of %u failed; %s, it stays %s, and no "
+                "plugin switches in place again in this run (the caller restarts)\n", p->id.c_str(), on ? "ON" : "OFF", why ? why : "?",
+                (unsigned)failed_at + 1, (unsigned)n, back_bad ? "taking back the earlier writes ALSO failed" : "the earlier writes were taken back",
+                p->off ? "off" : "on");
+        fflush(stderr);
+        return 0;
+    }
+    /* the check a proof reads: every journaled run now holds the bytes it should */
+    unsigned match = 0;
+    for (size_t k = 0; k < n; ++k) {
+        const std::vector<u8> &want = on ? p->patches[k].now : p->patches[k].was;
+        if (!memcmp(p->patches[k].at, &want[0], want.size())) ++match;
+    }
+    p->off = !on;
+    if (g_ranges_read) journal_take();   /* the next journaled call compares against the image as it is now */
+    fprintf(stderr, "[plugins] %s switched %s in place (%s): %u code patch run(s), %u byte(s) %s, %u of %u verified; its callbacks %s\n",
+            p->id.c_str(), on ? "ON" : "OFF", why ? why : "?", (unsigned)n, bytes, on ? "written again" : "put back to the game's own",
+            match, (unsigned)n, on ? "run again" : "are not called while it is off");
+    fflush(stderr);
+    return 1;
+}
+
+}  /* namespace */
+
+/* switch the loaded plugin `id` off (on = 0) or on (on = 1) at the title; 1 = done (or already so), 0 = refused or a write failed
+   (nothing changed: the plugin stays as it was) */
 extern "C" int port_mod_plugin_switch(const char *id, int on, const char *why)
 {
     Plugin *p = find_plugin(id);
@@ -949,33 +1008,17 @@ extern "C" int port_mod_plugin_switch(const char *id, int on, const char *why)
         fflush(stderr);
         return 0;
     }
-    unsigned bytes = 0, bad = 0;
-    if (!on) {
-        for (size_t k = p->patches.size(); k-- > 0;) {
-            if (!write_code(p->patches[k].at, p->patches[k].was)) ++bad;
-            bytes += (unsigned)p->patches[k].was.size();
-        }
-    } else {
-        for (size_t k = 0; k < p->patches.size(); ++k) {
-            if (!write_code(p->patches[k].at, p->patches[k].now)) ++bad;
-            bytes += (unsigned)p->patches[k].now.size();
-        }
-    }
-    /* the check a proof reads: every journaled run now holds the bytes it should */
-    unsigned match = 0;
-    for (size_t k = 0; k < p->patches.size(); ++k) {
-        const std::vector<u8> &want = on ? p->patches[k].now : p->patches[k].was;
-        if (!memcmp(p->patches[k].at, &want[0], want.size())) ++match;
-    }
-    if (bad) g_journal_bad = true;
-    p->off = !on;
-    if (g_ranges_read) journal_take();   /* the next journaled call compares against the image as it is now */
-    fprintf(stderr, "[plugins] %s switched %s in place (%s): %u code patch run(s), %u byte(s) %s, %u of %u verified%s; its "
-            "callbacks %s\n", p->id.c_str(), on ? "ON" : "OFF", why ? why : "?", (unsigned)p->patches.size(), bytes,
-            on ? "written again" : "put back to the game's own", match, (unsigned)p->patches.size(), bad ? " (A WRITE FAILED)" : "",
-            on ? "run again" : "are not called while it is off");
-    fflush(stderr);
-    return 1;
+    return switch_plugin(p, on, why);
+}
+
+/* a refused relatch takes back the switches it already made: the same writes, with no refusal check (the journal may be marked bad by
+   the switch that failed after them) */
+extern "C" int port_mod_plugin_switch_undo(const char *id, int on, const char *why)
+{
+    Plugin *p = find_plugin(id);
+    if (!p) return 0;
+    if (!!on == !p->off) return 1;
+    return switch_plugin(p, on, why);
 }
 
 /* load the code mod at list index i in place (the title, after a relatch put it in the list), the way the boot loads it; 1 = it is

@@ -925,6 +925,7 @@ const char *port_mods_bundle(void) { latch(); return g_bundle.c_str(); }
 int port_mod_plugin_state(const char *id);                            /* hal/mod_plugins.cpp (SEAMCODE1) */
 int port_mod_plugin_switch(const char *id, int on, const char *why);
 int port_mod_plugin_load_late(int i, const char *why);
+int port_mod_plugin_switch_undo(const char *id, int on, const char *why);
 
 /* SEAMCODE1: the one answer every in-place start and leave asks about code mods (it replaces their "a code mod is loaded and a plugin
    cannot be unloaded" loops). A code mod in the list stops nothing by itself any more: hal/mod_plugins.cpp switches a loaded plugin
@@ -1302,6 +1303,32 @@ int relatch(const char *reason, const char *list_json)
             }
         }
     }
+    if (!why[0]) {   /* SEAMCODE1: the plugins follow the new list (before the files layer below gathers the claims again). A code
+                        write that fails refuses the relatch: the switches already made are taken back, newest first, and the caller
+                        restarts, as it did for every code mod before SEAMCODE1. */
+        std::vector<std::pair<std::string, int> > made;   /* (id, state it was switched to) */
+        for (size_t i = 0; i < old_mods.size() && !why[0]; ++i) {
+            if (old_mods[i].kind != "code") continue;
+            bool kept = false;
+            for (size_t k = 0; k < g_mods.size() && !kept; ++k) kept = g_mods[k].id == old_mods[i].id;
+            const int st = port_mod_plugin_state(old_mods[i].id.c_str());
+            if (kept || st == 0 || st == 2) continue;
+            if (port_mod_plugin_switch(old_mods[i].id.c_str(), 0, reason)) made.push_back(std::make_pair(old_mods[i].id, 0));
+            else snprintf(why, sizeof why, "code mod %s could not be switched off in place (a code write failed)", old_mods[i].id.c_str());
+        }
+        for (size_t i = 0; i < g_mods.size() && !why[0]; ++i) {
+            if (g_mods[i].kind != "code") continue;
+            const int st = port_mod_plugin_state(g_mods[i].id.c_str());
+            if (st == 2) {
+                if (port_mod_plugin_switch(g_mods[i].id.c_str(), 1, reason)) made.push_back(std::make_pair(g_mods[i].id, 1));
+                else snprintf(why, sizeof why, "code mod %s could not be switched on in place (a code write failed)", g_mods[i].id.c_str());
+            } else if (st == 0) {
+                port_mod_plugin_load_late((int)i, reason);
+            }
+        }
+        for (size_t k = made.size(); why[0] && k-- > 0;)
+            port_mod_plugin_switch_undo(made[k].first.c_str(), !made[k].second, "taking back a refused relatch");
+    }
     if (why[0]) {
         g_mods = old_mods;
         g_override = old_override;
@@ -1316,20 +1343,6 @@ int relatch(const char *reason, const char *list_json)
         return 0;
     }
     fputs(held_log.c_str(), stderr);
-    {   /* SEAMCODE1: the plugins follow the new list (before the files layer below gathers the claims again) */
-        for (size_t i = 0; i < old_mods.size(); ++i) {
-            if (old_mods[i].kind != "code") continue;
-            bool kept = false;
-            for (size_t k = 0; k < g_mods.size() && !kept; ++k) kept = g_mods[k].id == old_mods[i].id;
-            if (!kept && port_mod_plugin_state(old_mods[i].id.c_str()) != 0) port_mod_plugin_switch(old_mods[i].id.c_str(), 0, reason);
-        }
-        for (size_t i = 0; i < g_mods.size(); ++i) {
-            if (g_mods[i].kind != "code") continue;
-            const int st = port_mod_plugin_state(g_mods[i].id.c_str());
-            if (st == 2) port_mod_plugin_switch(g_mods[i].id.c_str(), 1, reason);
-            else if (st == 0) port_mod_plugin_load_late((int)i, reason);
-        }
-    }
     {
         const std::string stg_old = ids_with(old_mods, "/stage"), stg_new = ids_with(g_mods, "/stage");
         if (stg_old != stg_new)
