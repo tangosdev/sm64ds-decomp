@@ -888,8 +888,8 @@ particle:
             vv[1].z = z0;
             /* Inherited volatile read preserves the retail stack reload of X
              * into r2 at 0x020bcfb8 before the particle call. */
-            player->mParticle1 = Particle::System::New(
-                player->mParticle1, 0x36, *(volatile int *)&vv[1].x, vv[1].y, vv[1].z, 0, 0);
+            player->mParticle1 = Particle::System::New(player->mParticle1, 0x36, *(int *)&vv[1].x,
+                                                       vv[1].y, vv[1].z, 0, 0);
         }
     }
 
@@ -979,7 +979,7 @@ void daPly_c::func_ov002_020bd06c(unsigned int state2) {
         s16 var_deathTableID;
 
         var_areaID = this->mAreaId;
-        var_self8 = *(volatile u32 *)&this->param1;
+        var_self8 = *(volatile u32 *)&this->param1; // without volatile, 8 words differ
         var_deathTableID = -1;
 
         this->mCapActor =
@@ -1665,12 +1665,10 @@ void daPly_c::func_ov002_020be3b0() {
             if (mHatCharacter == mCharacter) {
                 mHasNoCap = 0;
             }
-            func_ov002_020e6b74(
-                mModels.mBodyModels[this->GetBodyModelID(mHatCharacter, 0)],
-                (int *)mModels.mBodyTexParams[*(volatile u8 *)&this->mHatCharacter]);
-            func_ov002_020e6b74(
-                mModels.mBodyModels[this->GetBodyModelID(mPrevCharacter, 0)],
-                (int *)mModels.mBodyTexParams[*(volatile u8 *)&this->mPrevCharacter]);
+            func_ov002_020e6b74(mModels.mBodyModels[this->GetBodyModelID(mHatCharacter, 0)],
+                                (int *)mModels.mBodyTexParams[*(u8 *)&this->mHatCharacter]);
+            func_ov002_020e6b74(mModels.mBodyModels[this->GetBodyModelID(mPrevCharacter, 0)],
+                                (int *)mModels.mBodyTexParams[*(u8 *)&this->mPrevCharacter]);
             {
                 int h1 = func_ov002_020becf4(mHatCharacter, 0);
                 func_ov002_020e6b74(mModels.mHeadModels[h1], (int *)mModels.mHeadTexParams[h1]);
@@ -1955,7 +1953,7 @@ void daPly_c::func_ov002_020bf13c() {
        must have an address, and that pushes v onto the stack and grows the frame
        to 0x20. No other instruction in the function changes. This is a second
        reason for a POD, besides the copy lowering include/types.h describes. */
-    volatile int pad[4];
+    volatile int pad[4]; // without volatile, the function shrinks 0xe8 to 0xd8
     int vel; int* dst; short s, cs; int ang; int r6, flags;
     VecFx32 v;
     (void)&pad;
@@ -6587,7 +6585,7 @@ int daPly_c::func_ov002_020c8540() {
  * fanfare (mode 0x10) or spawns the star and hands the player to it.
  */
 int daPly_c::func_ov002_020c8714() {
-    volatile int v[3];
+    volatile int v[3]; // without volatile, the function shrinks 0x268 to 0x24c
 
     if (mStateArg == 0) {
         Sound::ChangeMusicVolume(0x14, 0x15666);
@@ -6612,8 +6610,9 @@ int daPly_c::func_ov002_020c8714() {
         /* mPosY (+0x60), re-read by index: this->mPosY lets the compiler reuse the
            load above and drops the ROM's second load (one word short, measured). */
         v[1] = ((int *)this)[0x18] + 0x3c000;
-        mParticle1 = Particle::System::New(*(volatile int *)&this->mParticle1, 0x27, v[0], v[1],
-                                           this->mPosZ, 0, 0);
+        mParticle1 =
+            Particle::System::New(*(volatile int *)&this->mParticle1, 0x27, v[0], v[1], this->mPosZ,
+                                  0, 0); // without volatile, two instructions swap
     } else if (this->FinishedAnim() != 0) {
         if (mNoCtrlKind == 0x10) {
             mStateStep = 0x19;
@@ -9479,7 +9478,8 @@ int daPly_c::func_ov002_020ce5f8() {
     Vec3_LslInPlace(&pos, 3);
 
     if (pos.y < data_0209f32c - 0x1e000) {
-        Particle::System::NewBubble(pos.x, *(volatile int *)&pos.y, pos.z);
+        Particle::System::NewBubble(pos.x, *(volatile int *)&pos.y,
+                                    pos.z); // without volatile, the function shrinks 0x1a0 to 0x19c
         if (mStateWaitTimer == 0) {
             Sound::PlayBank3(0xb, mCamSpacePos);
             mStateWaitTimer = 0xa;
@@ -13063,9 +13063,9 @@ int func_ov002_020d5ab4(daPly_c *p) {
     pos.y = pp[1];
     pos.z = pp[2];
 
-    a = (unsigned short)(short)(*(volatile short *)(&p->mAngleY) + 0x8000) >> 4;
+    a = (unsigned short)(short)(*(short *)(&p->mAngleY) + 0x8000) >> 4;
     pos.x = pos.x + FX_MUL(FX_SinCosTable_[a * 2], 0x64000);
-    a = (unsigned short)(short)(*(volatile short *)(&p->mAngleY) + 0x8000) >> 4;
+    a = (unsigned short)(short)(*(short *)(&p->mAngleY) + 0x8000) >> 4;
     pos.z = pos.z + FX_MUL(FX_SinCosTable_[a * 2 + 1], 0x64000);
 
     p->mPosX = pos.x;
@@ -13368,7 +13368,7 @@ int daPly_c::func_ov002_020d6334(int val) {
 /* recovered: shared common types */
 void daPly_c::func_ov002_020d6368() {
     typedef long long s64;
-    volatile Vector3_16 rot;
+    Vector3_16 rot;
     Vector3 pos;
     void *spawned;
     int a;
@@ -13379,10 +13379,10 @@ void daPly_c::func_ov002_020d6368() {
     pos.y = mPosY;
     pos.z = mPosZ;
 
-    a = *(volatile unsigned short *)(&mAngleY) >> 4;
+    a = *(unsigned short *)(&mAngleY) >> 4;
     pos.x = pos.x - FX_MUL(FX_SinCosTable_[a * 2], 0x14000);
 
-    a = *(volatile unsigned short *)(&mAngleY) >> 4;
+    a = *(unsigned short *)(&mAngleY) >> 4;
     pos.y = pos.y - FX_MUL(FX_SinCosTable_[a * 2 + 1], 0x14000);
 
     rotY = mAngleY;
@@ -14855,7 +14855,9 @@ int daPly_c::Hurt(const Vector3 &a, u32 b, Fix12i dmg, u8 arg4, u8 arg5, u8 arg6
     if (this->mIsUnderwater == 0) {
         if (this->mHurtDamage != 0) {
             if (arg6 != 0) {
-                volatile struct { int x, y, z; } v;
+                volatile struct {
+                    int x, y, z;
+                } v; // without volatile, Hurt shrinks 0x348 to 0x344
                 int y = this->mPosY;
                 int z = this->mPosZ;
                 int x = this->mPosX;
@@ -14863,7 +14865,7 @@ int daPly_c::Hurt(const Vector3 &a, u32 b, Fix12i dmg, u8 arg4, u8 arg5, u8 arg6
                 v.x = x;
                 v.y = y;
                 v.z = z;
-                if (*(volatile int *)((char *)&this->mHurtDamage) == 1) {
+                if (*(int *)((char *)&this->mHurtDamage) == 1) {
                     Particle::System::NewSimple(kPtclPlayerHurtOneA, x, y, z);
                     Particle::System::NewSimple(kPtclPlayerHurtOneB, v.x, v.y, v.z);
                 } else {
@@ -16063,7 +16065,7 @@ int daPly_c::St_Grabbed_Main() {
     u8* p;
     unsigned int id;
     int ret;
-    volatile int* pRate;
+    int *pRate;
     char* model;
 
     mPeakY = mPosY;
@@ -18752,8 +18754,8 @@ tail:
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-#pragma push
-#pragma opt_common_subs off
+#pragma push                // without it, the later pop does not compile
+#pragma opt_common_subs off // without it, St_Land_Init shrinks 0x1d8 to 0x1d4
 extern "C" {
 int daPly_c::St_Land_Init() {
     void func_ov002_020e25d4(char* c);
@@ -18815,7 +18817,7 @@ int daPly_c::St_Land_Init() {
     return 1;
 }
 }
-#pragma pop
+#pragma pop // without it, opt_common_subs stays off and later functions change
 
 int daPly_c::func_ov002_020e0a64() {
     if (IsAnim(0x54) == 0)
@@ -20571,7 +20573,11 @@ int daPly_c::func_ov002_020e3f90() {
     extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *, int a);
     extern void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *, int a);
     extern Matrix4x3 data_020a0e68;
-    struct S { short angs[3]; volatile int v[3]; int tgt[3]; } s;
+    struct S {
+        short angs[3];
+        volatile int v[3];
+        int tgt[3];
+    } s; // without volatile, the function shrinks 0x3e4 to 0x39c
     int b;
     int t;
     int t1;
@@ -20589,8 +20595,7 @@ int daPly_c::func_ov002_020e3f90() {
     s.v[0] = 0;
     s.v[1] = 0;
     s.v[2] = 0;
-    data_020a0e68 =
-        **(Matrix4x3 *volatile *)&((dActor_c *)*(char *volatile *)&mGrabbedByActor)->mCarryMatrix;
+    data_020a0e68 = **(Matrix4x3 **)&((dActor_c *)*(char **)&mGrabbedByActor)->mCarryMatrix;
     p = (daPly_c *)mGrabbedByActor;
     if (((dActor_c *)p)->actorID == 0xbf)
         b = 1;
@@ -20636,9 +20641,9 @@ int daPly_c::func_ov002_020e3f90() {
         }
     }
     mShadowMatrix = data_020a0e68;
-    t = ((volatile Matrix4x3 *)&data_020a0e68)->m[9];
-    t1 = ((volatile Matrix4x3 *)&data_020a0e68)->m[10];
-    t2 = ((volatile Matrix4x3 *)&data_020a0e68)->m[11];
+    t = ((Matrix4x3 *)&data_020a0e68)->m[9];
+    t1 = ((volatile Matrix4x3 *)&data_020a0e68)->m[10]; // without volatile, 7 words differ
+    t2 = ((volatile Matrix4x3 *)&data_020a0e68)->m[11]; // without volatile, 10 words differ
     s.v[1] = t1;
     s.v[2] = t2;
     s.v[0] = t;
@@ -20948,7 +20953,7 @@ int daPly_c::Behavior() {
     s32 temp;
     s32 mul;
     s32 fallFlag;
-    volatile Vector3 v0;
+    Vector3 v0;
     Vector3 v1;
 
     if (gGameMode == 1)
@@ -21904,7 +21909,7 @@ unsigned short *func_ov002_020e6ad4(unsigned short *ramp) {
         *copy++ = grey;
         i++;
     } while (i < 0x20);
-    *(volatile unsigned short *)0x4000060 &= ~0x3002;
+    *(unsigned short *)0x4000060 &= ~0x3002;
     return ramp;
 }
 
@@ -22601,8 +22606,10 @@ unsigned int data_ov002_0210e158;
 AnimScriptStep data_ov002_0210e7b8[1];
 }
 
-#pragma define_section initsec ".init" ".init" ".init" far_absolute RX
-#pragma section initsec begin
+#pragma define_section initsec ".init"                                                             \
+                               ".init"                                                             \
+                               ".init" far_absolute RX // __sinit would leave .init
+#pragma section initsec begin                          // without it, __sinit would leave .init
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum sinit_ov002_021019d0_AssetId {
     ASSET_B_MARIO_ALL_BMD = 0x04be,
@@ -24556,4 +24563,3 @@ void __sinit_ov002_021019d0(void) {
 }
 }
 
-#pragma section initsec end
