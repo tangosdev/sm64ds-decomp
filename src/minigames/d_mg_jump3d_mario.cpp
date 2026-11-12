@@ -155,7 +155,7 @@ extern int pmf_dMgJump3DMario_c_StateIdle[2];
 
 extern u8  data_ov006_02140400;
 extern u16 sJump3DSpinAngle;
-extern void *sMgMainCamera;
+extern struct MgCamera *sMgMainCamera;
 extern void *sMgCurCamera;
 extern OamAttr *data_ov006_02134d1c;
 extern Vector3 sJump3DMarioScale;

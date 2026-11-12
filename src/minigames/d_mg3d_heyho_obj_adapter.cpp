@@ -111,7 +111,7 @@ extern void *data_ov006_021402fc;
 extern const HeyhoPath sHeyhoLayoutFlyInPaths[][3];
 extern const HeyhoPath sHeyhoFlyInPaths[][4];
 extern const HeyhoPath sHeyhoSettlePaths[][5];
-extern void *sMgSubCamera;
+extern MgCamera *sMgSubCamera;
 }
 
 /* The Jump scene's three players, seen through the adapter base the Heyhos

@@ -137,7 +137,7 @@ void *sTrmp2MarioPtrs[5];
 void *sTrmpJumpers[5];
 
 /* Other units' data. */
-extern void *sMgSubCamera;
+extern MgCamera *sMgSubCamera;
 extern int sTrmpItemHitsOff; /* d_mg_trmpln2_mario: stops item scoring */
 extern int sTrmpItemPatrolLimits[];
 extern int sTrmpItemPatrolSpeed[];
@@ -250,10 +250,10 @@ extern "C" void TrmpItem_GrowScale(TrmpItem *c) {
 extern "C" void TrmpItem_ProjectToScreen(TrmpItem *c, unsigned short scoreValue) {
     int screenX, screenY;
     if (c->mPos.y > 0) {
-        Camera_ProjectToScreen((MgCamera *)sMgSubCamera, &c->mPos, &screenX, &screenY);
+        Camera_ProjectToScreen(sMgSubCamera, &c->mPos, &screenX, &screenY);
         screenY = screenY - (Mg_GetTopScreenYOffset() + 0xc0);
     } else {
-        Camera_ProjectToScreen((MgCamera *)sMgMainCamera, &c->mPos, &screenX, &screenY);
+        Camera_ProjectToScreen(sMgMainCamera, &c->mPos, &screenX, &screenY);
     }
     Jump2Popup_Spawn(screenX << 0xc, screenY << 0xc, (short)scoreValue);
     *(StateRecord *)c = pmf_TrmpItem_GrowScale;
