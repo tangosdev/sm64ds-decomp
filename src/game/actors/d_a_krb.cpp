@@ -63,7 +63,7 @@ enum daKrb_c_AssetId {
     ASSET_KURIBO_LOW_MODEL_BMD = 0x038e
 };
 
-#pragma defer_codegen off
+#pragma defer_codegen off // without it: D1, D0, D2 move from the front to the end as D2, D0, D1
 
 #include "daKrb_c.h"
 #include "nitro/fx/fx.h"
