@@ -3093,40 +3093,11 @@ src/MB_ReadMultiBootParentBssDesc.c:
     complete
     .text start:0x020672d0 end:0x0206736c
 
-src/IsAbleToLoad.c:
+src/engine/mb/MB_FileInfo.c:
     complete
-    .text start:0x0206736c end:0x02067530
-src/MBi_get_blockinfo.c:
-    complete
-    .text start:0x02067530 end:0x02067604
-
-src/MBi_MakeBlockInfoTable.c:
-    complete
-    .text start:0x02067604 end:0x020676e0
-
-src/MBi_SetSegmentInfo.c:
-    complete
-    .text start:0x020676e0 end:0x020678a4
-
-src/MBi_MakeDownloadFileInfo.c:
-    complete
-    .text start:0x020678a4 end:0x02067928
-
-src/MB_RegisterFile.cpp:
-    complete
-    .text start:0x02067928 end:0x02067b68
-
-src/MBi_ReadSegmentHeader.c:
-    complete
-    .text start:0x02067b68 end:0x02067bfc
-
-src/MB_ReadSegment.cpp:
-    complete
-    .text start:0x02067bfc end:0x02067e70
-
-src/MB_GetSegmentLength.c:
-    complete
-    .text start:0x02067e70 end:0x02067ee4
+    .text start:0x0206736c end:0x02067ee4
+    .rodata start:0x0208685c end:0x02086880
+    .data start:0x0209a07c end:0x0209a084
 
 src/MBi_calc_cksum.c:
     complete

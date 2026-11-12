@@ -1,0 +1,321 @@
+{
+  "id": "arm9/MB_FileInfo",
+  "module": "arm9",
+  "source": "src/engine/mb/MB_FileInfo.c",
+  "promoted_source": "src/engine/mb/MB_FileInfo.c",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "One contiguous run of the Nitro SDK's mb_fileinfo.c, 0x0206736c..0x02067ee4: 10 functions, gapless in config/arm9/delinks.txt. Each is identified by its body against ntrtwl/NitroSDK libraries/mb/src/mb_fileinfo.c, and seven of the ten compile byte-identical from the SDK's own text (IsAbleToLoad, MBi_IsAbleToRecv, MBi_get_blockinfo, MBi_MakeBlockInfoTable, MBi_SetSegmentInfo, MBi_ReadSegmentHeader, MBi_MakeDownloadFileInfo); MB_GetSegmentLength, MB_ReadSegment and MB_RegisterFile are the same functions before the SDK added the segment cache.",
+    "Order: mwccarm emits the bodies in reverse. The SDK's file order of the surviving functions is MB_GetSegmentLength, MB_ReadSegment, MBi_ReadSegmentHeader, MB_RegisterFile, MBi_MakeDownloadFileInfo, MBi_SetSegmentInfo, MBi_MakeBlockInfoTable, MBi_get_blockinfo, MBi_IsAbleToRecv, IsAbleToLoad, and the ROM holds exactly that reversed. MB_UnregisterFile and MBi_get_blocknum, which sit between them in the SDK, are absent: nothing calls them.",
+    "DATA: .rodata 0x0208685c..0x02086880 is MBi_defaultLoadSegList {MB_SEG_ROMHEADER, MB_SEG_ARM9STATIC, MB_SEG_ARM7STATIC} = {2, 0, 1} and mbi_seg_header_default {{0x4000, 0x1000}, {0x7000, 0x1000}, {0, 0}}, the SDK's two file-scope constants in its order; .data 0x0209a07c..0x0209a084 is mbi_seg_header (= 0x02086868, &mbi_seg_header_default) and MB_ReadSegment's \"rom\" literal. MB_RegisterFile's function-local `static u8 update` is data_020a9d28, the first byte of mb_gameinfo.c's .bss neighbourhood; it stays outside this claim (see notes).",
+    "BOTTOM EDGE: MB_ReadMultiBootParentBssDesc (0x020672d0) is mb_child.c's. TOP EDGE: MBi_calc_cksum (0x02067ee4) is mb_block.c's."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0206736c",
+      "end": "0x02067ee4"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x0208685c",
+      "end": "0x02086880"
+    },
+    {
+      "name": ".data",
+      "start": "0x0209a07c",
+      "end": "0x0209a084"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "IsAbleToLoad",
+      "address": "0x0206736c",
+      "size": "0x114",
+      "legacy_source": "src/IsAbleToLoad.c",
+      "ordinal": 0
+    },
+    {
+      "symbol": "MBi_IsAbleToRecv",
+      "address": "0x02067480",
+      "size": "0xb0",
+      "legacy_source": "src/IsAbleToLoad.c",
+      "ordinal": 1
+    },
+    {
+      "symbol": "MBi_get_blockinfo",
+      "address": "0x02067530",
+      "size": "0xd4",
+      "legacy_source": "src/MBi_get_blockinfo.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "MBi_MakeBlockInfoTable",
+      "address": "0x02067604",
+      "size": "0xdc",
+      "legacy_source": "src/MBi_MakeBlockInfoTable.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "MBi_SetSegmentInfo",
+      "address": "0x020676e0",
+      "size": "0x1c4",
+      "legacy_source": "src/MBi_SetSegmentInfo.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "MBi_MakeDownloadFileInfo",
+      "address": "0x020678a4",
+      "size": "0x84",
+      "legacy_source": "src/MBi_MakeDownloadFileInfo.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "MB_RegisterFile",
+      "address": "0x02067928",
+      "size": "0x240",
+      "legacy_source": "src/MB_RegisterFile.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "MBi_ReadSegmentHeader",
+      "address": "0x02067b68",
+      "size": "0x94",
+      "legacy_source": "src/MBi_ReadSegmentHeader.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "MB_ReadSegment",
+      "address": "0x02067bfc",
+      "size": "0x274",
+      "legacy_source": "src/MB_ReadSegment.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "MB_GetSegmentLength",
+      "address": "0x02067e70",
+      "size": "0x74",
+      "legacy_source": "src/MB_GetSegmentLength.c",
+      "ordinal": 9
+    }
+  ],
+  "data": [
+    {
+      "symbol": "mbi_seg_header",
+      "address": "0x0209a07c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "the SDK's file-scope `static const CARDRomRegion *mbi_seg_header = mbi_seg_header_default` (its word is 0x02086868)"
+    },
+    {
+      "symbol": "data_0209a080",
+      "address": "0x0209a080",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "MB_ReadSegment's string literal \"rom\" (FS_FindArchive(\"rom\", 3))"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "MBi_defaultLoadSegList",
+      "address": "0x0208685c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "the SDK's `const MbSegmentType MBi_defaultLoadSegList[MB_DL_SEGMENT_NUM]` = {2, 0, 1}; MBi_MakeDownloadFileInfo, MBi_IsAbleToRecv and IsAbleToLoad index it"
+    },
+    {
+      "symbol": "mbi_seg_header_default",
+      "address": "0x02086868",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "the SDK's file-scope `static const CARDRomRegion mbi_seg_header_default[]`, the zero-terminated list of secure-area ranges MB_ReadSegment copies back"
+    }
+  ],
+  "bss": [],
+  "relocations": [
+    {
+      "section": ".data",
+      "source": "0x0209a07c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "mbi_seg_header_default",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02086868"
+    }
+  ],
+  "compiler_only_output": [],
+  "undefined_symbol_aliases": [],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "mbi_seg_header_default",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope static, as the SDK writes it; dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x02086868"
+    },
+    {
+      "symbol": "mbi_seg_header",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "file-scope static, as the SDK writes it; published global at 0x0209a07c for symbols.txt"
+    },
+    {
+      "symbol": "IsAbleToLoad",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "static in the SDK; published global at 0x0206736c for symbols.txt"
+    },
+    {
+      "symbol": "MBi_SetSegmentInfo",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "static in the SDK; published global at 0x020676e0 for symbols.txt"
+    },
+    {
+      "symbol": "MBi_MakeDownloadFileInfo",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "static in the SDK; published global at 0x020678a4 for symbols.txt"
+    },
+    {
+      "symbol": "MBi_ReadSegmentHeader",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "static in the SDK; published global at 0x02067b68 for symbols.txt"
+    },
+    {
+      "symbol": "data_0209a080",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "the renamed \"rom\" literal is the last local in the symbol table, after the statics this TU publishes; ELF needs every local before every nonlocal and the rewrite does not reorder, so the literal is published global at its configured address too (bytes and relocations unchanged)"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@633",
+      "to": "data_0209a080",
+      "evidence": "compiler string literal: mwcc numbers MB_ReadSegment's \"rom\" @633, and that number is already defined by an overlay symbols.txt row, so the literal keeps its configured address name"
+    }
+  ],
+  "notes": [
+    "HAND-BUILT manifest entry, not tools/tubuild.py create output: tu_map does not segment arm9.",
+    "Built as C, like the SDK and the other mb TUs (MB_GameInfo.c). The SDK's constants and MbSegmentType are mb_fileinfo.c's and mb_child.h's own and stay in the source; the shared types (MbParentWork, MbParentFile, MB_BlockInfoTable, MBDownloadFileInfo, MBGameRegistry, RomHeaderView) are in include/private.",
+    "This SDK is older than the ntrtwl/NitroSDK copy: no segment cache (MBiCacheList), so MB_GetSegmentLength is the header, authentication code and two static modules with no minimum, MB_ReadSegment reads both modules whole and the authentication code after them, MB_RegisterFile passes that code's address to MBi_MakeDownloadFileInfo as a third argument, and MB_ReadSegment does not patch _start_AutoloadDoneCallback.",
+    "MB_ReadSegment's own-binary path writes the 16 MiB default into the ROM header at HW_ROM_HEADER_BUF itself (the later SDK keeps it in a local).",
+    "MB_RegisterFile's sequence counter is the SDK's function-local `static u8 update` at 0x020a9d28 (one byte, then three bytes of alignment before mb_gameinfo.c's mbss at 0x020a9d2c). The source names it data_020a9d28 as an extern: dsd sizes a .bss symbol to the next symbol (0x4), while tubuild requires the object's .bss contribution (0x1) to fill the claim, so the one-byte static cannot be owned until tubuild accepts trailing .bss alignment."
+  ],
+  "production_mode": "intact-object",
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/arm9-MB_FileInfo/MB_FileInfo.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 10,
+    "functions_declared": 10,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/arm9-MB_FileInfo/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": true,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0206736c",
+        "end": "0x02067ee4",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0206736c",
+          "end": "0x02067ee4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x0208685c",
+          "end": "0x02086880",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0209a07c",
+          "end": "0x0209a084",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 14
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".rodata",
+            "original": [
+              7,
+              8
+            ],
+            "desired": [
+              7,
+              8
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              25
+            ],
+            "desired": [
+              5,
+              25
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  }
+}

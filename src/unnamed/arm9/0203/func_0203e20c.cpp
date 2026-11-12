@@ -22,7 +22,7 @@ extern s32 data_020a0f78;
 extern void *data_020a0f7c;
 extern u8 data_020a0f9d[4];
 extern u16 data_020a0fbe[4][3];
-extern u8 data_020a0fec[];
+extern MBGameRegistry data_020a0fec;
 extern u8 data_020a1040[];
 extern u8 data_020a1064[];
 extern MBUserInfo data_020a10fc[4];
@@ -43,9 +43,9 @@ extern int MB_SetParentCommParam(int a, int b, int c);
 extern void MB_CommSetParentStateCallback(u32 val);
 extern void func_0203e9a8(u32 a0, int sel, int a2);
 extern int MB_StartParent(int param0);
-extern int MB_GetSegmentLength(FSFile *obj);
-extern int MB_ReadSegment(FSFile *file, void *b, unsigned int c);
-extern int MB_RegisterFile(void *a, void *b);
+extern u32 MB_GetSegmentLength(FSFile *file);
+extern int MB_ReadSegment(FSFile *file, void *buf, u32 len);
+extern int MB_RegisterFile(MBGameRegistry *game_reg, const void *buf);
 extern int WM_ReadStatus(int *arg);
 extern void *MB_CommGetChildUser(u16 idx);
 extern int MB_CommGetParentState(u16 a);
@@ -116,7 +116,7 @@ void func_0203e20c(void)
         p = Memory::Allocate(size, 0x20);
         data_020a0f7c = p;
         if (MB_ReadSegment(0, p, size) != 0) {
-            MB_RegisterFile(data_020a0fec, data_020a0f7c);
+            MB_RegisterFile(&data_020a0fec, data_020a0f7c);
         }
         data_020a0f70 = 0;
         data_020a0f50 += 1;
