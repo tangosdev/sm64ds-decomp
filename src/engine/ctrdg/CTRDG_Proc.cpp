@@ -27,6 +27,7 @@
 #include "nitro/os/cache.h"
 #include "nitro/os/interrupt.h"
 #include "nitro/ctrdg/ctrdg_common.h"
+#include "nitro/hw/registers.h"
 
 #define PXI_FIFO_TAG_CTRDG 13
 #define PXI_PROC_ARM7 1
@@ -96,14 +97,14 @@ void CTRDGi_InitModuleInfo(void) {
     if ((*(volatile u16 *)0x4000300 & 1) == 0)
         return;
     irq = OS_SetIrqMask(0x40000);
-    save208 = *(volatile u16 *)0x4000208;
-    *(volatile u16 *)0x4000208 = 1;
+    save208 = REG_IME;
+    REG_IME = 1;
     CTRDGi_LockByProcessor(CTRDGi_Work.lockID, sp);
-    flag = ((int)*(volatile u16 *)0x4000204 & 0x8000) >> 15;
+    flag = ((int)REG_EXMEMCNT & 0x8000) >> 15;
     CTRDGi_ChangeLatestAccessCycle(sp + 2);
-    *(volatile u16 *)0x4000204 &= ~0x8000;
+    REG_EXMEMCNT &= ~0x8000;
     MI_DmaCopy16(0, (void *)0x8000080, (void *)((char *)&CTRDG_HEADER + 0x80), 0x40);
-    *(volatile u16 *)0x4000204 = (*(volatile u16 *)0x4000204 & ~0x8000) | (flag << 15);
+    REG_EXMEMCNT = (REG_EXMEMCNT & ~0x8000) | (flag << 15);
     CTRDGi_RestoreAccessCycle(sp + 2);
     CTRDGi_UnlockByProcessor(CTRDGi_Work.lockID, sp);
     {
@@ -124,8 +125,8 @@ void CTRDGi_InitModuleInfo(void) {
             SVC_WaitByLoop(1);
         } while (CTRDGi_Work.subpState != 1);
     }
-    (void)*(volatile u16 *)0x4000208;
-    *(volatile u16 *)0x4000208 = save208;
+    (void)REG_IME;
+    REG_IME = save208;
     OS_SetIrqMask(irq);
 }
 

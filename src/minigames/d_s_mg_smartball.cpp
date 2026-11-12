@@ -5379,9 +5379,9 @@ void dScMgSmartball_c::StartRound(int /* arg */) {
 /* Slot 31: loads the option palette and tilemap for the sub screen. */
 int dScMgSmartball_c::InitSubScreenBg() {
     int f;
-    *(volatile unsigned short *)0x400100a = (*(volatile unsigned short *)0x400100a & 0x43) | 4;
-    *(volatile unsigned short *)0x400100a = *(volatile unsigned short *)0x400100a & ~0x40;
-    *(volatile unsigned short *)0x400100a = *(volatile unsigned short *)0x400100a & ~3;
+    REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 4;
+    REG_DB_BG1CNT = REG_DB_BG1CNT & ~0x40;
+    REG_DB_BG1CNT = REG_DB_BG1CNT & ~3;
     SetSubBg1Offset(0, 0);
     gSubScreenLayers[0] &= ~2;
     f = GetGameLanguage();

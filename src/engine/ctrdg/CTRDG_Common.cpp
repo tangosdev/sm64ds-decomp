@@ -19,6 +19,7 @@
 #include "nitro/os/system.h"
 #include "nitro/ctrdg/ctrdg_common.h"
 #include "nitro/os/spinLock.h"
+#include "nitro/hw/registers.h"
 
 extern "C" {
 
@@ -68,10 +69,10 @@ int CTRDG_IsExisting(void) {
 }
 
 void CTRDGi_ChangeLatestAccessCycle(int *cycle) {
-    cycle[0] = (*(volatile u16 *)0x4000204 & 0xc) >> 2;
-    cycle[1] = (*(volatile u16 *)0x4000204 & 0x10) >> 4;
-    *(volatile u16 *)0x4000204 = (*(volatile u16 *)0x4000204 & ~0xc) | 0xc;
-    *(volatile u16 *)0x4000204 = *(volatile u16 *)0x4000204 & ~0x10;
+    cycle[0] = (REG_EXMEMCNT & 0xc) >> 2;
+    cycle[1] = (REG_EXMEMCNT & 0x10) >> 4;
+    REG_EXMEMCNT = (REG_EXMEMCNT & ~0xc) | 0xc;
+    REG_EXMEMCNT = REG_EXMEMCNT & ~0x10;
 }
 
 void CTRDGi_RestoreAccessCycle(int *cycle) {

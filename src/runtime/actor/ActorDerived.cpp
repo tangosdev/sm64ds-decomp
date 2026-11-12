@@ -20,6 +20,7 @@
  *   roles belong to the factory's TU (fBase_c::fBase_make), not this one.
  */
 #include "dBase_c.h"
+#include "nitro/hw/registers.h"
 
 extern "C" {
 /* local extern: no header declares it; the next ROM entry's crash-forward
@@ -33,8 +34,8 @@ extern void func_02013f4c(void);
  * source order, so the tail body lands at the run's right edge. */
 extern "C" void func_02013f28(void)
 {
-    *(volatile unsigned short *)0x4000208;
-    *(volatile unsigned short *)0x4000208 = 0;
+    REG_IME;
+    REG_IME = 0;
     for (;;)
         func_02013f4c();
 }
