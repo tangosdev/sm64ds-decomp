@@ -414,6 +414,8 @@ struct Boss {
     bool wig_music;                // bossfix3: the boss music was started here by the MOVE_STOP way out below (once)
     unsigned wig_stag_t;           // bossfix3: wall ms this Wiggler copy was last seen in its stagger (states 8 to 10; 0 = never)
     unsigned goom_talk_tries;      // bossfix2: StartTalk attempts for a Goomboss copy put into its defeat by a record
+    uint8_t rule;                  // bossfix4: the owner-after-defeat rule for this boss, latched at its defeat (0 not yet, 1 on, 2 off)
+    bool wig_call_seen;            // bossfix4: this Wiggler copy was already seen in DEMOCALL (1) on an earlier tick
     uint32_t bst; bool bst_valid;  // coopbully1: a bully's state at the end of the last tick (a change before the next one is the ROM's own)
     Rx rx;
 };
@@ -459,6 +461,29 @@ unsigned g_clock_add = 0;   // SM64DS_COOP_BOSS_CLOCK_ADD=ms (dev builds only): 
 unsigned hub_now() { return comms_hub_now_ms() + g_clock_add; }
 bool claim_live(unsigned until, unsigned now) { return (until != 0 || !g_bf2) && (int)(until - now) > 0; }
 unsigned claim_stamp(unsigned now) { return g_bf2 ? ((now + 3000u) | 1u) : now + 3000u; }
+// bossfix4: WHO RUNS THE OWNER-AFTER-DEFEAT RULE. bossfix2 hands a defeated Whomp King, Wiggler or Eyerok to the group owner and holds
+// back every other console's star, but a 1.0.4 console does not know that rule: as the owner it never took the boss over and never
+// made the star (REVIEW-AL mixed_k1_al: no star for anyone, the 1.0.4 friend's Wiggler stuck in his hurt talk). Every console that
+// runs the rule says so once a second in a boss caps message (SYNW sub-type 0x53, kWorldBossDefeat: 1.0.4 routes it here too and
+// drops it alone as a bad sub-type, nothing else in the batch is lost because world sub-types travel singly). The rule applies to a
+// boss only when the owner is me or was heard sending caps in the last 5 s; otherwise that boss keeps 1.0.4's authority (claims, then
+// the target seat), the rule the 1.0.4 console itself runs. The answer is latched per boss at his defeat, so a late caps message in
+// the middle of a long defeat talk cannot change who gives the star. King Bob-omb keeps kbo2's rule (1.0.4 runs it too).
+enum : unsigned { kCapsEveryMs = 1000, kCapsFreshMs = 5000 };
+enum : uint8_t { kBossCapsVer = 1, kBossCapOwnerRule = 0x01 };
+#pragma pack(push, 1)
+struct BossCaps { CoopKeyWire key; uint8_t ver; uint8_t caps; uint16_t reserved; };
+#pragma pack(pop)
+static_assert(sizeof(BossCaps) == 8, "boss caps are 8 bytes");
+unsigned g_caps_t[kSeats];   // hub ms (|1) a seat's caps were last heard, 0 = never
+uint8_t  g_caps[kSeats];     // that seat's caps bits
+unsigned g_caps_tx_t = 0;
+bool g_caps_send = true;     // SM64DS_COOP_BOSS_CAPS=0 (dev builds only): this console sends no caps, so friends treat it as a 1.0.4 one
+bool seat_runs_owner_rule(int s, unsigned now) {
+    if (s == g_my) return true;
+    if (s < 0 || s >= kSeats || !g_caps_t[s]) return false;
+    return (unsigned)(now - g_caps_t[s]) < kCapsFreshMs && (g_caps[s] & kBossCapOwnerRule);
+}
 // coopbully1: A BULLY BELONGS TO THE PLAYER WHO KNOCKED IT. A bump exists only on the hitter's console (a friend's body is parked away
 // between draws, coop_target.h), so the console whose own copy entered the knocked-back state by itself owns that bully, pose and state,
 // while the knock or the lava death lasts and kBullyClaimMs after. Per slot (several bullies at once), unlike the per-seat claim above.
@@ -681,6 +706,7 @@ void read_env() {
     g_bf2 = flag("SM64DS_COOP_BOSSFIX2", true);
 #ifndef PORT_ROM_CLEAN
     if (const char *ca = std::getenv("SM64DS_COOP_BOSS_CLOCK_ADD")) g_clock_add = (unsigned)std::strtoul(ca, nullptr, 0);
+    g_caps_send = flag("SM64DS_COOP_BOSS_CAPS", true);
 #endif
     g_god = flag("SM64DS_COOP_BOSS_GOD", false);
     g_bomb = flag("SM64DS_COOP_BOSS_BOMB", false);
@@ -718,7 +744,8 @@ void read_env() {
             ++g_nforge; p += used; while (*p == ',' || *p == ';' || *p == ' ') ++p;
         }
     }
-    std::fprintf(stderr, "[cbs] boss sync %s%s bossfix2=%d clock_add=%u\n", g_on ? "on" : "OFF (control)", g_log ? " log" : "", (int)g_bf2, g_clock_add);
+    std::fprintf(stderr, "[cbs] boss sync %s%s bossfix2=%d clock_add=%u caps=%d\n", g_on ? "on" : "OFF (control)", g_log ? " log" : "", (int)g_bf2, g_clock_add,
+                 (int)(g_bf2 && g_caps_send));
 }
 
 bool is_player_ptr(const void *a) {
@@ -780,8 +807,17 @@ bool is_defeated(const Boss &b);
 bool boss_down(int slot, unsigned cls) {
     if (cls == 189) return kbo_down(slot);
     if (!g_bf2 || (cls != 165 && cls != 248 && cls != 176) || slot < 0 || slot >= kSlots) return false;
-    const Boss &b = g_boss[slot];
-    return b.d && b.d->cls == cls && (b.def_seen || (b.a && is_defeated(b)));
+    Boss &b = g_boss[slot];
+    if (!(b.d && b.d->cls == cls && (b.def_seen || (b.a && is_defeated(b))))) return false;
+    // bossfix4: only when the owner runs the rule too (latched at the first ask after the defeat)
+    if (!b.rule) {
+        const int o = coop_group_owner();
+        b.rule = (o < 0 || seat_runs_owner_rule(o, hub_now())) ? 1 : 2;
+        if (g_log) std::fprintf(stderr, "[cbs] owner rule for cls=%u slot=%d: %s (owner seat %d) w=%lld\n", cls, slot,
+                                b.rule == 1 ? "on, the owner gives the star" : "OFF, the owner sends no boss caps (1.0.4): the 1.0.4 authority gives the star",
+                                o, wall_ms());
+    }
+    return b.rule == 1;
 }
 
 // The seat whose copy of this boss is the right one.
@@ -1358,6 +1394,11 @@ bool wig_talk_here(const Boss &b) {
     // put into 2 by its first record skipped DEMOCALL's message, waited for a talk that never existed and was held 60 s
     return st == 1u || st == 5u || ((st == 2u || st == 3u || st == 6u) && b.a[0x8e1]);
 }
+// bossfix4: the cartridge's own intro check (StateDemoWaitMain): a player more than 300 units (0x12c000) above Wiggler. Asked of MY
+// body here; the ROM asks ClosestPlayer, which in a room is the target seat's body, a friend's on most consoles.
+bool wig_intro_due(const Boss &b, const char *me) {
+    return me && rd32(me, 0x60) > rd32(b.a, 0x60) + 0x12c000;
+}
 bool eye_talk_here(const Boss &b) {
     if (b.d->cls != 176 || rd32(b.a, 0x49c) != 0 || state_of(b) != kEyeTalk || rd32(b.a, 0x4a0) == 0) return false;
     char *pl = nullptr; std::memcpy(&pl, b.a + 0x490, sizeof pl);
@@ -1469,6 +1510,10 @@ void apply_rx(int slot, Boss &b, unsigned now, bool mine) {
     // bossfix3: a copy that has run DEAD (mDefeated set) is not sent through it again by the authority's own DEAD (7) that follows
     // the stomper's talk: its star call and poof ran once here already.
     if (g_bf2 && d.cls == 248 && !mine && rs == 7u && b.a[0x8e0] != 0 && ls != 7u) { force = false; b.mism = 0; }
+    // bossfix4: a copy still waiting in DEMOWAIT (0) while MY player is up where the cartridge starts the intro is not pushed past the
+    // intro by the authority's DEMOCALL / MOVE_STOP: process() starts it here with my player (the player next to Wiggler got no intro
+    // when a friend's console started it first, REVIEW-AL own_al)
+    if (g_bf2 && d.cls == 248 && !mine && ls == 0u && (rs == 1u || rs == 2u) && wig_intro_due(b, local_body())) { force = false; b.mism = 0; }
     // bossfix3: a copy running its own DEAD (the stomper's, at the end of his talk) finishes it (about a second: the poofs, then its
     // star call, which is suppressed here when the star came by announcement) instead of being cut to the authority's MOVE at once.
     // 4 s at most.
@@ -1793,19 +1838,38 @@ void process(unsigned now) {
         // health left, then MOVE.
         if (g_on && g_bf2 && d.cls == 248) {
             { const uint32_t st = state_of(b); if (st >= 8u && st <= 10u) b.wig_stag_t = now ? now : 1u; }
-            // bossfix3: DEMOCALL (1) shows the intro to the player its entry asked ClosestPlayer for. Entered from DEMOWAIT's tick, that
-            // second ask in the same frame gets the frame's cached answer (the target seat, coop_target), not my own player
-            // (coop_boss_prefer_local is never asked): on a console whose target is a friend the message never shows, and Wiggler keeps
-            // walking at his wander speed, off his mountain top and out of the world (far_f7b row: y 1800 -> -3000, his star announced
-            // there). The intro is my own player's here, as prefer_local means it to be.
+            // bossfix4: the intro is shown the cartridge's way, to MY player when he is where its check starts it (more than 300 units
+            // above Wiggler, wig_intro_due), and to nobody here otherwise. REVIEW-AL: with bossfix3 every player in the area got it,
+            // even one 2500 units off, while the player next to Wiggler could miss it when a friend's console started it first.
+            // In DEMOWAIT (0) my own player is checked as well as ClosestPlayer's answer (a friend's body on most consoles).
+            char *me = local_body();
+            if (state_of(b) == 0u && me && wig_intro_due(b, me)) {
+                const bool auth_past = !mine && b.rx.valid && b.rx.w[d.state] > 2u;
+                if (!auth_past) {
+                    _ZN12daHanachan_c8SetStateEi(b.a, 1);
+                    if (g_log) std::fprintf(stderr, "[cbs] wiggler DEMOWAIT: my player is above him, the intro starts here w=%lld\n", wall_ms());
+                }
+            }
             if (state_of(b) == 1u) {
-                char *me = local_body();
                 char *pl = nullptr; std::memcpy(&pl, b.a + 0x8c8, sizeof pl);
-                if (me && pl != me) {
+                const bool first = !b.wig_call_seen;
+                b.wig_call_seen = true;
+                // Not my intro: on the tick DEMOCALL is first seen (this hook runs after the actor phase that entered it, so no message was
+                // asked of my player yet), or while it holds a friend's body (whose message never shows), the copy goes on to MOVE_STOP
+                // with no message, where it stops and waits like the authority's (the MOVE_STOP way out below moves it on).
+                if (me && !b.a[0x8e1] && !wig_intro_due(b, me) && (first || pl != me)) {
+                    _ZN12daHanachan_c8SetStateEi(b.a, 2);
+                    if (g_log) std::fprintf(stderr, "[cbs] wiggler DEMOCALL: my player is not above him, no intro on this screen (dy %d) w=%lld\n",
+                                            (rd32(me, 0x60) - rd32(b.a, 0x60)) >> 12, wall_ms());
+                } else if (me && pl != me) {
+                    // bossfix3: DEMOCALL (1) shows the intro to the player its entry asked ClosestPlayer for. Entered from DEMOWAIT's tick,
+                    // that second ask in the same frame gets the frame's cached answer (the target seat, coop_target), not my own player
+                    // (coop_boss_prefer_local is never asked): on a console whose target is a friend the message never showed, and
+                    // Wiggler kept walking at his wander speed, off his mountain top and out of the world (far_f7b row).
                     std::memcpy(b.a + 0x8c8, &me, sizeof me);
                     if (g_log) std::fprintf(stderr, "[cbs] wiggler DEMOCALL had a friend's player: the intro is my own player's here w=%lld\n", wall_ms());
                 }
-            }
+            } else b.wig_call_seen = false;
             // bossfix3: MOVE_STOP (2) ends only when its player's intro talk ends. A copy put into it by its first record skipped
             // DEMOCALL's message, so no talk exists and it stood there for good, deaf to stomps (MOVE_STOP never checks hits); when that
             // console then took the authority, its records froze every friend's copy in 2 as well (far_f5 row: 35 s on both screens).
@@ -2345,6 +2409,12 @@ void on_frame(unsigned now) {
         }
     }
     pump_dead(now);
+    if (g_on && g_bf2 && g_caps_send && (!g_caps_tx_t || (unsigned)(now - g_caps_tx_t) >= kCapsEveryMs)) {   // bossfix4: my boss caps
+        g_caps_tx_t = now | 1u;
+        BossCaps c; std::memset(&c, 0, sizeof c);
+        c.key = wire_key(); c.ver = kBossCapsVer; c.caps = kBossCapOwnerRule;
+        coop_send_world(kWorldBossDefeat, &c, (int)sizeof c);
+    }
     if (g_swing.phase >= 0 && g_swing.phase < 2 && g_ticks >= g_swing.from && g_nb > 0) do_swing_knob();
     if (g_face && g_nb > 0 && (g_ticks % 12) == 0) {
         for (int slot = 0; slot < kSlots; ++slot) {
@@ -2507,6 +2577,16 @@ void coop_boss_on_world(int seat, int sub, const unsigned char *p, int len) {
     read_env();
     if (!g_on) { ++g_st.drop_off; return; }
     if (seat < 0 || seat >= kSeats || seat == g_my) { ++g_st.drop_seat; return; }
+    if (sub == kWorldBossDefeat) {                // bossfix4: a friend's boss caps
+        BossCaps c;
+        if (len != (int)sizeof c) { ++g_st.drop_bad; return; }
+        std::memcpy(&c, p, sizeof c);
+        if (!coop_key_ok(c.key) || c.ver < kBossCapsVer) { ++g_st.drop_bad; return; }
+        if (!g_caps_t[seat] && g_log) std::fprintf(stderr, "[cbs] boss caps from seat %d: 0x%x (owner rule %s) w=%lld\n", seat, (unsigned)c.caps,
+                                                   (c.caps & kBossCapOwnerRule) ? "yes" : "no", wall_ms());
+        g_caps[seat] = c.caps; g_caps_t[seat] = hub_now() | 1u;
+        return;
+    }
     if (sub != kWorldBossState && sub != kWorldBossHit) { ++g_st.drop_bad; return; }
     if (!coop_boss_validate(p, len)) { ++g_st.drop_bad; return; }
     BossHead h; std::memcpy(&h, p, sizeof h);
