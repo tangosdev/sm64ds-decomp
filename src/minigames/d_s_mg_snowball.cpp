@@ -1765,25 +1765,29 @@ s32 dScMgSnowball_c::InitResources() {
     *(vu16 *)0x4000304 &= ~0x8000;
     mScreensSwapped = 1;
 
-    *(vu16 *)0x400000c = (*(vu16 *)0x400000c & 0x43) | 0x5214;
-    *(vu16 *)0x400000c &= ~0x40;
+    G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
+                         GX_BG_CHARBASE_0x14000);
+    G2_BG2Mosaic(false);
     *(vu32 *)0x4000018 = 0;
-    *(vu16 *)0x400000c = (*(vu16 *)0x400000c & ~3) | 2;
+    G2_SetBG2Priority(2);
 
-    *(vu16 *)0x400100c = (*(vu16 *)0x400100c & 0x43) | 0x5214;
-    *(vu16 *)0x400100c &= ~0x40;
+    G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
+                          GX_BG_CHARBASE_0x14000);
+    G2S_BG2Mosaic(false);
     *(vu32 *)0x4001018 = 0;
-    *(vu16 *)0x400100c = (*(vu16 *)0x400100c & ~3) | 2;
+    G2S_SetBG2Priority(2);
 
-    *(vu16 *)0x400000e = (*(vu16 *)0x400000e & 0x43) | 0x1614;
-    *(vu16 *)0x400000e &= ~0x40;
+    G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xb000,
+                         GX_BG_CHARBASE_0x14000);
+    G2_BG3Mosaic(false);
     *(vu32 *)0x400001c = 0;
-    *(vu16 *)0x400000e = (*(vu16 *)0x400000e & ~3) | 3;
+    G2_SetBG3Priority(3);
 
-    *(vu16 *)0x400100e = (*(vu16 *)0x400100e & 0x43) | 0x1614;
-    *(vu16 *)0x400100e &= ~0x40;
+    G2S_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xb000,
+                          GX_BG_CHARBASE_0x14000);
+    G2S_BG3Mosaic(false);
     *(vu32 *)0x400101c = 0;
-    *(vu16 *)0x400100e = (*(vu16 *)0x400100e & ~3) | 3;
+    G2S_SetBG3Priority(3);
 
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_YUKIDAMA_NCG_BIN, (u8 *)G2_GetBG2CharPtr() + 0x4000);
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_YUKIDAMA_NCG_BIN, (u8 *)G2S_GetBG2CharPtr() + 0x4000);
@@ -1810,7 +1814,7 @@ s32 dScMgSnowball_c::InitResources() {
     GXS_LoadOBJPltt(buf, 0, 0x100);
     Ov004_Deallocate(buf);
 
-    *(vu16 *)0x4000008 = (*(vu16 *)0x4000008 & ~3) | 1;
+    G2_SetBG0Priority(1);
     G3X_SetFog(false, 0, 2, 0x1000);
     *(vu16 *)0x4000060 = (*(vu16 *)0x4000060 & ~0x3000) | 8;
     InitialiseVramGlobals();
@@ -1821,7 +1825,7 @@ s32 dScMgSnowball_c::InitResources() {
     if (!mModel.SetFile(mBallBmd, 1, -1))
         return 0;
 
-    *(vu16 *)0x4000008 = (*(vu16 *)0x4000008 & ~3) | 1;
+    G2_SetBG0Priority(1);
     gMainScreenLayers |= DISPLAY_LAYER_BG0;
 
     ResetScene();

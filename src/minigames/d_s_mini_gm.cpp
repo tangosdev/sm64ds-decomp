@@ -246,9 +246,10 @@ s32 dScMiniGm_c::InitResources()
     G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));
     func_020233f4();
 
-    REG_BG2CNT = (REG_BG2CNT & ~3) | 1;
-    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x410;
-    REG_BG2CNT &= ~0x40;
+    G2_SetBG2Priority(1);
+    G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x2000,
+                         GX_BG_CHARBASE_0x10000);
+    G2_BG2Mosaic(false);
     REG_BG2OFS = 0;
     SetBg2Offset(0, 0);
 
@@ -284,15 +285,17 @@ s32 dScMiniGm_c::InitResources()
     GX_LoadOBJPltt(f, 0, 0x100);
     Deallocate(f);
 
-    REG_DB_BG2CNT = (REG_DB_BG2CNT & ~3) | 1;
-    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x404;
-    REG_DB_BG2CNT &= ~0x40;
+    G2S_SetBG2Priority(1);
+    G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x2000,
+                          GX_BG_CHARBASE_0x04000);
+    G2S_BG2Mosaic(false);
     REG_DB_BG2OFS = 0;
     SetSubBg2Offset(0, 0);
 
-    REG_DB_BG3CNT = (REG_DB_BG3CNT & ~3) | 3;
-    REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x4604;
-    REG_DB_BG3CNT &= ~0x40;
+    G2S_SetBG3Priority(3);
+    G2S_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x3000,
+                          GX_BG_CHARBASE_0x04000);
+    G2S_BG3Mosaic(false);
     REG_DB_BG3OFS = mSubBgScrollX & 0x1ff;
     SetSubBg3Offset(mSubBgScrollX, 0);
 
@@ -305,9 +308,10 @@ s32 dScMiniGm_c::InitResources()
     GXS_LoadBGPltt(f, 0, 0x200);
     Deallocate(f);
 
-    REG_DB_BG0CNT = (REG_DB_BG0CNT & ~3) | 2;
-    REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0x6010;
-    REG_DB_BG0CNT &= ~0x40;
+    G2S_SetBG0Priority(2);
+    G2S_SetBG0Control(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,
+                      GX_BG_CHARBASE_0x10000, GX_BG_EXTPLTT_23);
+    G2S_BG0Mosaic(false);
     REG_DB_BG0OFS = mSubBgScrollX & 0x1ff;
     SetSubBg0Offset(mSubBgScrollX, 0);
 

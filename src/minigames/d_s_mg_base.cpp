@@ -3442,9 +3442,10 @@ void dScMgBase_c::InitMainScreenBg() {
     using s20b27f4::LoadCompressedFileAt;
     using s20b27f4::gMainScreenLayers;
     int f;
-    REG_BG1CNT = REG_BG1CNT & ~3;
-    REG_BG1CNT = (REG_BG1CNT & 0x43) | 0x1000;
-    REG_BG1CNT = REG_BG1CNT & ~0x40;
+    G2_SetBG1Priority(0);
+    G2_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x8000,
+                     GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
+    G2_BG1Mosaic(false);
     SetBg1Offset(0, 0);
     gMainScreenLayers &= ~DISPLAY_LAYER_BG1;
     f = GetGameLanguage();
@@ -3482,9 +3483,10 @@ int dScMgBase_c::InitSubScreenBg() {
     using s20b2880::LoadCompressedFileAt;
     using s20b2880::gSubScreenLayers;
     int f;
-    REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0x10;
-    REG_DB_BG1CNT = REG_DB_BG1CNT & ~0x40;
-    REG_DB_BG1CNT = REG_DB_BG1CNT & ~3;
+    G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,
+                      GX_BG_CHARBASE_0x10000, GX_BG_EXTPLTT_01);
+    G2S_BG1Mosaic(false);
+    G2S_SetBG1Priority(0);
     SetSubBg1Offset(0, 0);
     gSubScreenLayers &= ~2;
     f = GetGameLanguage();

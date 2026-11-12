@@ -803,15 +803,17 @@ s32 dScMgCup_c::InitResources() {
     if (Presenter_Load((char *)&mModel) == 0)
         return 0;
 
-    REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0x2214;
-    REG_DB_BG0CNT &= ~0x40;
-    REG_DB_BG0CNT &= ~3;
+    G2S_SetBG0Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x1000,
+                      GX_BG_CHARBASE_0x14000, GX_BG_EXTPLTT_23);
+    G2S_BG0Mosaic(false);
+    G2S_SetBG0Priority(0);
     SetSubBg0Offset(0, 0);
 
     gSubScreenLayers |= 1;
-    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x414;
-    REG_DB_BG2CNT &= ~0x40;
-    REG_DB_BG2CNT = (REG_DB_BG2CNT & ~3) | 3;
+    G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x2000,
+                          GX_BG_CHARBASE_0x14000);
+    G2S_BG2Mosaic(false);
+    G2S_SetBG2Priority(3);
     SetSubBg2Offset(0, 0);
 
     gSubScreenLayers |= 4;

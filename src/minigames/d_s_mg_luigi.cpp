@@ -1669,8 +1669,9 @@ s32 dScMgLuigi_c::InitResources() {
         return 0;
 
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
-    REG_BG3CNT = (REG_BG3CNT & ~3) | 2;
-    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1218;
+    G2_SetBG3Priority(2);
+    G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
+                         GX_BG_CHARBASE_0x18000);
 
     DecompressLZ16(arc, (void *)G2_GetBG3CharPtr());
 
@@ -1683,10 +1684,11 @@ s32 dScMgLuigi_c::InitResources() {
     Deallocate(fileData);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
-    REG_BG2CNT &= ~3;
+    G2_SetBG2Priority(0);
     REG_BG2CNT &= ~BG_CONTROL_MOSAIC;
     REG_BG2OFS = 0;
-    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1410;
+    G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xa000,
+                         GX_BG_CHARBASE_0x10000);
 
     fileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NCG_BIN);
     DecompressLZ16(fileData, (void *)((char *)G2_GetBG2CharPtr() + 0x4000));
@@ -1705,10 +1707,11 @@ s32 dScMgLuigi_c::InitResources() {
     DecompressLZ16(objectTiles, G2_GetOBJCharPtr());
     GX_LoadOBJPltt(fileData, 0, 0x100);
 
-    REG_DB_BG2CNT &= ~3;
+    G2S_SetBG2Priority(0);
     REG_DB_BG2CNT &= ~BG_CONTROL_MOSAIC;
     REG_DB_BG2OFS = 0;
-    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x1210;
+    G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
+                          GX_BG_CHARBASE_0x10000);
 
     {
         void *subFileData;
@@ -1725,8 +1728,9 @@ s32 dScMgLuigi_c::InitResources() {
         Deallocate(subFileData);
 
         gSubScreenLayers |= DISPLAY_LAYER_BG3;
-        REG_DB_BG3CNT &= ~3;
-        REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x1410;
+        G2S_SetBG3Priority(0);
+        G2S_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xa000,
+                              GX_BG_CHARBASE_0x10000);
 
         subFileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_BLACK_NSC_BIN);
         screenMap = (char *)G2S_GetBG3ScrPtr();

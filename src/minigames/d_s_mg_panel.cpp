@@ -1610,11 +1610,12 @@ s32 dScMgPanel_c::InitResources() {
     void *msgFile;
 
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
-    REG_BG3CNT = (REG_BG3CNT & ~3) | 1;
-    REG_BG3CNT &= ~0x40;
+    G2_SetBG3Priority(1);
+    G2_BG3Mosaic(false);
     REG_BG3OFS = 0;
-    REG_BG3CNT = (REG_BG3CNT & ~3) | 1;
-    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1210;
+    G2_SetBG3Priority(1);
+    G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
+                         GX_BG_CHARBASE_0x10000);
 
     file = LoadFile(ASSET_D_2D_MG_BG_PAZZLE_PANEL_NCG_BIN);
     DecompressLZ16(file, (void *)((int)G2_GetBG3CharPtr() + 0x4000));
@@ -1629,10 +1630,11 @@ s32 dScMgPanel_c::InitResources() {
     Deallocate(file);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
-    REG_BG2CNT &= ~0x40;
+    G2_BG2Mosaic(false);
     REG_BG2OFS = 0;
-    REG_BG2CNT = (REG_BG2CNT & ~3) | 1;
-    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x9410;
+    G2_SetBG2Priority(1);
+    G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x512, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xa000,
+                         GX_BG_CHARBASE_0x10000);
 
     b = (char *)G2_GetBG2ScrPtr();
     mainFill = 0xf361;
@@ -1658,11 +1660,12 @@ s32 dScMgPanel_c::InitResources() {
     GX_LoadOBJPltt(file, 0, 0x100);
 
     gSubScreenLayers |= 8;
-    REG_DB_BG3CNT = (REG_DB_BG3CNT & ~3) | 1;
-    REG_DB_BG3CNT &= ~0x40;
+    G2S_SetBG3Priority(1);
+    G2S_BG3Mosaic(false);
     REG_DB_BG3OFS = 0;
-    REG_DB_BG3CNT = (REG_DB_BG3CNT & ~3) | 1;
-    REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x210;
+    G2S_SetBG3Priority(1);
+    G2S_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x1000,
+                          GX_BG_CHARBASE_0x10000);
 
     {
         void *subFile = LoadFile(ASSET_D_2D_MG_BG_PAZZLE_PANEL_NCG_BIN);
@@ -1678,10 +1681,11 @@ s32 dScMgPanel_c::InitResources() {
         Deallocate(subFile);
 
         gSubScreenLayers |= 4;
-        REG_DB_BG2CNT &= ~0x40;
+        G2S_BG2Mosaic(false);
         REG_DB_BG2OFS = 0;
-        REG_DB_BG2CNT = (REG_DB_BG2CNT & ~3) | 1;
-        REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x8410;
+        G2S_SetBG2Priority(1);
+        G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x512, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x2000,
+                              GX_BG_CHARBASE_0x10000);
 
         b = (char *)G2S_GetBG2ScrPtr();
         subFill = 0xf361;
@@ -1691,8 +1695,9 @@ s32 dScMgPanel_c::InitResources() {
         GXS_LoadBG2Scr(subFile, 0, 0x800);
         Deallocate(subFile);
 
-        REG_DB_BG0CNT &= ~3;
-        REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0x610;
+        G2S_SetBG0Priority(0);
+        G2S_SetBG0Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x3000,
+                          GX_BG_CHARBASE_0x10000, GX_BG_EXTPLTT_01);
 
         subFile = LoadFile(ASSET_D_2D_YOSIFINX_BIKKURI_NSC_BIN);
         GXS_LoadBG0Scr(subFile, 0, 0x800);
