@@ -1,65 +1,59 @@
 #include "types.h"
-typedef struct Sub {
-    u8 pad[0x68];
-} Sub;
-
-typedef struct S {
-    int f0;            /* 0x00 */
-    int pad04;         /* 0x04 */
-    u16 f8;            /* 0x08 */
-    u16 padA;          /* 0x0a */
-    u8 fC;             /* 0x0c */
-    u8 padD[7];        /* 0x0d */
-    u32 f14;           /* 0x14 */
-    u8 pad18[5];       /* 0x18 */
-    u8 f1d;            /* 0x1d */
-    u8 pad1e[0x1f8 - 0x1e]; /* 0x1e */
-    Sub elems[16];     /* 0x1f8 */
-} S;
+#include "private/arm9_wbt.h"
 
 extern int func_02065bc0(void);
 extern int func_02065bd0(void);
 extern int func_02064f54(u8 *dst, u16 a1, u8 a2, int a3, int a4);
-extern int func_0206470c(Sub *e);
+extern int func_0206470c(WBTPacketBitmap *pkt_bmp);
 extern int func_02064bac(u8 *dst, u16 a1, u8 a2, u32 a3);
 extern int func_02064e18(u8 *dst, u16 a1, u8 a2, u32 a3, u32 a4);
 extern int func_02064cd8(u8 *dst, u16 a1, u8 a2, u32 a3, u32 a4);
 extern int func_02064a94(u8 *dst, u16 a1, u8 a2, const void *a3, u8 a4);
 
-int func_02063980(S *s, u8 *dst)
-{
+/* NitroSDK WBT: write the running command's next request packet into buf.
+ * SYNC and USER_DATA resend the request. GET_BLOCK and GET_BLOCKINFO ask each
+ * target peer for the next packet its receive bitmap still lacks
+ * (func_0206470c), or send it REQ_GET_BLOCK_DONE (func_02064bac) once none
+ * is missing. The receive state steps a whole peer record at a time, as in
+ * func_02063718: indexing work->peer[i] swaps two loop registers, and
+ * stepping a WBTPeerRecord pointer adds 0x24 before each call. */
+int func_02063980(WBTWork *work, void *buf, int size) {
     int ret = 0;
     int i;
 
-    switch (s->f0) {
-    case 2:
-        ret = func_02064f54(dst, s->f8, s->fC, func_02065bc0(), func_02065bd0());
+    switch (work->cmd.command) {
+    case WBT_CMD_REQ_SYNC:
+        ret = func_02064f54(buf, work->cmd.target_bmp, work->cmd.my_cmd_counter, func_02065bc0(),
+                            func_02065bd0());
         break;
-    case 4:
-    case 6:
-    {
-        Sub *e = s->elems;
-        for (i = 0; i < 16; i++, e++) {
+    case WBT_CMD_REQ_GET_BLOCK:
+    case WBT_CMD_REQ_GET_BLOCKINFO: {
+        WBTPeerRecv *recv = &work->peer[0].recv;
+        for (i = 0; i < 16; i++, recv = (WBTPeerRecv *)((char *)recv + sizeof(WBTPeerRecord))) {
             int bit = 1 << i;
-            if (s->f8 & (u16)bit) {
-                int v = func_0206470c(e);
+            if (work->cmd.target_bmp & (u16)bit) {
+                int v = func_0206470c(&recv->pkt_bmp);
                 if (v == -1) {
-                    ret = func_02064bac(dst, (u16)bit, s->fC, s->f14);
+                    ret = func_02064bac(buf, (u16)bit, work->cmd.my_cmd_counter,
+                                        work->cmd.u.get.block_id);
                 } else {
-                    u16 mask = s->f8;
-                    if (s->f0 == 4)
-                        ret = func_02064e18(dst, mask, s->fC, s->f14, v);
+                    u16 mask = work->cmd.target_bmp;
+                    if (work->cmd.command == WBT_CMD_REQ_GET_BLOCK)
+                        ret = func_02064e18(buf, mask, work->cmd.my_cmd_counter,
+                                            work->cmd.u.get.block_id, v);
                     else
-                        ret = func_02064cd8(dst, mask, s->fC, s->f14, v);
+                        ret = func_02064cd8(buf, mask, work->cmd.my_cmd_counter,
+                                            work->cmd.u.get.block_id, v);
                 }
                 if (ret != 0)
                     return ret;
             }
         }
-    }
         break;
-    case 10:
-        ret = func_02064a94(dst, s->f8, s->fC, &s->f14, s->f1d);
+    }
+    case WBT_CMD_REQ_USER_DATA:
+        ret = func_02064a94(buf, work->cmd.target_bmp, work->cmd.my_cmd_counter,
+                            work->cmd.u.user_data.data, work->cmd.u.user_data.size);
         break;
     }
     return ret;

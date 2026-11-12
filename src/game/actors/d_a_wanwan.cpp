@@ -776,11 +776,6 @@ void daWanwan_c::StateEscapeDemoInit() {
 }
 
 /* State 3 update: the fence-break cutscene. mReleaseStep is the phase. */
-static inline void incRelease(daWanwan_c *self) {
-    u8 *p = &self->mReleaseStep;
-    *p = (u8)(*p + 1);
-}
-
 void daWanwan_c::StateEscapeDemoMain() {
     daObjWanwanShutter_c *fence;
     Vector3 partnerPos;
@@ -794,11 +789,10 @@ void daWanwan_c::StateEscapeDemoMain() {
         s32 *src = &fence->mPosX;
         s32 fifth = 0x80;
         partnerPos.x = src[0];
-        short *ap = &mAngleX;
         partnerPos.y = src[1];
         s32 z = 0;
         partnerPos.z = src[2];
-        ApproachAngle(ap, z, 4, 0x200, fifth);
+        ApproachAngle(&mAngleX, z, 4, 0x200, fifth);
     }
     camera = gCamera;
     angleToPlayer = HorzAngleToCPlayer();
@@ -809,7 +803,7 @@ void daWanwan_c::StateEscapeDemoMain() {
         camera->mFocusActor = this;
         if (ApproachLinear(mAngleY, angleToPlayer, 0x320) != 0 &&
             DecIfAbove0_Short(&mActionTimer) == 0)
-            incRelease(this);
+            mReleaseStep++;
         mPrevAngleY = mAngleY;
         break;
     case 1:
@@ -823,7 +817,7 @@ void daWanwan_c::StateEscapeDemoMain() {
             mAngleY = mPrevAngleY;
             mVertSpeed = 0x32000;
             mHorzSpeed = 0x1e000;
-            incRelease(this);
+            mReleaseStep++;
         }
         break;
     case 5:
@@ -834,7 +828,7 @@ void daWanwan_c::StateEscapeDemoMain() {
             mAngleY = mPrevAngleY;
             mVertSpeed = 0x32000;
             mHorzSpeed = 0x1e000;
-            incRelease(this);
+            mReleaseStep++;
             if (fence->mDisabled != 0)
                 mReleaseStep = 7;
         }
@@ -854,7 +848,7 @@ void daWanwan_c::StateEscapeDemoMain() {
             target.x += FX_MUL(FX_SinIdx((u16)fence->mAngleY >> 4), 0x96000);
             target.z += FX_MUL(FX_CosIdx((u16)fence->mAngleY >> 4), 0x96000);
             if (Vec3_ApproachHorz(&mPos, &target, mReleaseSpeed) != 0) {
-                incRelease(this);
+                mReleaseStep++;
                 mPrevAngleY = (s16)(Vec3_HorzAngle(&mPos, &partnerPos) + 0x8000);
                 mHorzSpeed = 0x28000;
                 mVertSpeed = 0xa000;
@@ -877,14 +871,14 @@ void daWanwan_c::StateEscapeDemoMain() {
                 mVertSpeed = kChainSlack;
             }
             camera->SetFlag_3();
-            incRelease(this);
+            mReleaseStep++;
         }
         break;
     case 8:
         if (DecIfAbove0_Short(&mActionTimer) == 0) {
             camera->mFlags &= ~8u;
             if (ClosestPlayer()->Unk_020ca150(4) != 0) {
-                incRelease(this);
+                mReleaseStep++;
                 mActionTimer = 0x3c;
             }
         } else {

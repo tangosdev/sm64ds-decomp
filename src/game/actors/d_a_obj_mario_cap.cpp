@@ -1051,9 +1051,8 @@ int daObjMarioCap_c::InitTaken()
     mCarryMatrix = 0;
     mTaken = 1;
 
-    /* (int)self + off is the MATCH form; mFlags &= / vulnFlags &= CSE. */
-    *(u32 *)((int)&mFlags) &= ~0x40000u;
-    *(u32 *)((int)&mdCcAc_c.vulnFlags) &= ~0x8000u;
+    mFlags &= ~0x40000u;
+    mdCcAc_c.vulnFlags &= ~0x8000u;
 
     if (mPlayer == 0) {
         mPlayer = ClosestPlayer();

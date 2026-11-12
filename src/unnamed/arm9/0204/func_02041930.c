@@ -2,15 +2,12 @@
 #include "nitro/wm/wm_api.h"
 #include "private/arm9_a1fc0_file_share.h"
 extern void func_020418f0(void *arg);
-/* NitroSDK WBT_MpParentSendHook and WBT_MpChildSendHook: both return the
-   packet length as an int, which this call site narrows to u16 itself */
-extern int WBT_MpParentSendHook(int buf, int size);
-extern int WBT_MpChildSendHook(int buf, int size);
 
 /* Send the pending file-sharing packet on mPort: WBT_MpParentSendHook (parent) or
  * WBT_MpChildSendHook (child), by mIsParent, builds it in the buffer at +0x40 with
  * that side's packet size as the limit, then WM_SetMPDataToPort sends it to AIDs
- * 0xffff with func_020418f0 as the callback. */
+ * 0xffff with func_020418f0 as the callback. The hooks return the packet
+ * length as an int; it is kept as a u16. */
 void func_02041930(void)
 {
     FileShareWork *work = &data_020a1fc0;
@@ -26,9 +23,9 @@ void func_02041930(void)
     {
         unsigned char *sub = work->mSendBuf;
         if (f0 != 0)
-            r = (u16)WBT_MpParentSendHook((int)sub, a);
+            r = WBT_MpParentSendHook(sub, a);
         else
-            r = (u16)WBT_MpChildSendHook((int)sub, a);
+            r = WBT_MpChildSendHook(sub, a);
         work->mSendBusy = (WM_SetMPDataToPort(func_020418f0, (u16 *)sub, r, 0xffff, work->mPort,
                                               WM_PRIORITY_LOW) == WM_ERRCODE_OPERATING)
                               ? 1

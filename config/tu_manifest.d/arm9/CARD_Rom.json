@@ -1,0 +1,133 @@
+{
+  "id": "arm9/CARD_Rom",
+  "module": "arm9",
+  "source": "src/engine/card/CARD_Rom.c",
+  "promoted_source": "src/engine/card/CARD_Rom.c",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "One contiguous run of the Nitro SDK's card_rom.c, 0x02060890..0x02060f60: 11 functions, gapless in config/arm9/delinks.txt. ntrtwl/NitroSDK libraries/card/src/card_rom.c (and pret/pokediamond arm9/lib/NitroSDK/src/CARD_rom.c) define CARDi_ReadFromCache, CARDi_SetRomOp, CARDi_SetCardDma, CARDi_OnReadCard, CARDi_TryReadCardDma, CARDi_ReadCard, CARDi_ReadRomIDCore, CARDi_ReadRomSyncCore, CARDi_ReadRom, CARD_Init, CARD_WaitRomAsync, CARD_TryWaitRomAsync and CARDi_GetRomAccessor; every one this ROM keeps compiles byte-identical from that file's bodies (CARDi_ReadFromCache, CARDi_SetRomOp, CARDi_ReadCard, CARDi_OnReadCard and CARDi_ReadRomSyncCore in the SDK's own spelling).",
+    "Order: built as C, mwccarm emits the bodies in reverse, so source order is the ROM's read top-down: CARDi_ReadFromCache, CARDi_ReadEnd, CARDi_SetRomOp, CARDi_SetCardDma, CARDi_OnReadCard, CARDi_TryReadCardDma, CARDi_ReadCard, CARDi_ReadRomSyncCore, CARDi_ReadRom, CARD_WaitRomAsync, CARD_Init. That is the SDK's order with two differences of this older SDK: CARDi_ReadEnd is a function of the file (the SDK's later card_rom.h makes it an inline that also runs the pulled-out check, which brings in CARDi_ReadRomIDCore), and CARD_WaitRomAsync precedes CARD_Init. CARDi_ReadRomIDCore, CARD_TryWaitRomAsync and CARDi_GetRomAccessor are not in this ROM (CARD_Init stores CARDi_ReadCard directly).",
+    "Statics: the SDK declares CARDi_ReadFromCache, CARDi_SetRomOp, CARDi_SetCardDma, CARDi_OnReadCard and CARDi_ReadRomSyncCore static, and CARDi_ReadEnd is header-private; all six are static here, none is inlined, and each config/arm9/symbols.txt row carries ` local`. Every caller of each is in this file.",
+    "Data: text-only. rom_stat (0x020a8780) is card_rom.c's, but no .bss is claimed; it stays an extern, as cardi_common does for arm9/CARD_Common.",
+    "BOTTOM EDGE: CARD_Init (0x02060890) is card_rom.c's in both SDK sources and installs rom_stat.read_func. Below it, CARDi_EndTask (0x0206081c) is the SDK's card_common.h helper, out of line in this SDK; its callers are CARDi_TaskThread (card_request.c, 0x020602bc) and the backup-request functions at 0x0206062c..0x0206081c, none of them in this file, and CARDi_ReadEnd carries its body inline rather than calling it.",
+    "TOP EDGE: CARDi_Request (0x02060f60) is card_request.c's in ntrtwl/NitroSDK; it does not touch rom_stat, and to sit above CARDi_ReadFromCache in this reversed file it would have to be defined first, ahead of the SDK file's first function. Its source is out of scope here (PR #5357 changes it). Above it, CARD_PullOut (src/engine/card/CARD_PullOut.cpp) starts at 0x020610ac."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02060890",
+      "end": "0x02060f60"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "CARD_Init",
+      "address": "0x02060890",
+      "size": "0x0000007c",
+      "legacy_source": "src/CARD_Init.c",
+      "ordinal": 0
+    },
+    {
+      "symbol": "CARD_WaitRomAsync",
+      "address": "0x0206090c",
+      "size": "0x0000000c",
+      "legacy_source": "src/CARD_WaitRomAsync.c",
+      "ordinal": 1
+    },
+    {
+      "symbol": "CARDi_ReadRom",
+      "address": "0x02060918",
+      "size": "0x00000118",
+      "legacy_source": "src/CARDi_ReadRom.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "CARDi_ReadRomSyncCore",
+      "address": "0x02060a30",
+      "size": "0x00000034",
+      "legacy_source": "src/CARDi_ReadRomSyncCore.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "CARDi_ReadCard",
+      "address": "0x02060a64",
+      "size": "0x00000100",
+      "legacy_source": "src/CARDi_ReadCard.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "CARDi_TryReadCardDma",
+      "address": "0x02060b64",
+      "size": "0x00000148",
+      "legacy_source": "src/CARDi_TryReadCardDma.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "CARDi_OnReadCard",
+      "address": "0x02060cac",
+      "size": "0x00000070",
+      "legacy_source": "src/CARDi_OnReadCard.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "CARDi_SetCardDma",
+      "address": "0x02060d1c",
+      "size": "0x0000007c",
+      "legacy_source": "src/CARDi_SetCardDma.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "CARDi_SetRomOp",
+      "address": "0x02060d98",
+      "size": "0x000000a0",
+      "legacy_source": "src/CARDi_SetRomOp.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "CARDi_ReadEnd",
+      "address": "0x02060e38",
+      "size": "0x00000084",
+      "legacy_source": "src/CARDi_ReadEnd.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "CARDi_ReadFromCache",
+      "address": "0x02060ebc",
+      "size": "0x000000a4",
+      "legacy_source": "src/CARDi_ReadFromCache.c",
+      "ordinal": 10
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "relocations": [],
+  "compiler_only_output": [],
+  "notes": [
+    "HAND-BUILT manifest entry, not tools/tubuild.py create output: tu_map does not segment arm9.",
+    "Built as C, like the SDK. CARDi_TryReadCardDma, CARDi_ReadCard, CARDi_ReadRom and CARD_WaitRomAsync are declared in include/nitro/card/card_rom.h; the six statics are declared nowhere else.",
+    "CARDi_TryReadCardDma keeps a flag per test of the SDK's one && chain; the single-expression form compiles 12 bytes shorter (the first two tests fold into branches)."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/arm9-CARD_Rom/CARD_Rom.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 11,
+    "functions_declared": 11,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}
