@@ -296,7 +296,7 @@ void exit_line() {
                  g_st.foreign_hits, g_st.my_drops, g_st.klepto_let_go, g_st.eel_let_go, g_st.cage_dropped, g_st.cage_quiet,
                  g_st.ukiki_removed, g_st.mother_given, g_st.eel_asked, g_st.told, g_st.made, g_st.taken_sent, g_st.taken_heard,
                  g_st.waited, g_st.wait_made, g_off ? " (CONTROL SM64DS_COOP_WORLDSTAR=0)" : "",
-                 g_off2 ? " (CONTROL SM64DS_COOP_WORLDSTAR2=0)" : "");
+                 g_off2 ? " (CONTROL: the WORLDSTAR2 part off)" : "");
 }
 
 void ensure_registered() {
