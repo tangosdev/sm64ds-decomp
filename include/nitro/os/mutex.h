@@ -3,7 +3,7 @@
 
 /*
  * The mutex calls of the Nitro SDK's os_mutex.c, under the SDK's own names
- * (ntrtwl/NitroSDK include/nitro/os/common/mutex.h). The bodies are in
+ * (ntrtwl/NitroSDK nitro/os/common/mutex.h). The bodies are in
  * src/engine/os/OS_Mutex.cpp; the OSMutex record is in nitro/os/thread.h.
  *
  * OS_TryLockMutex answers the SDK's BOOL as an int: 1 when the calling

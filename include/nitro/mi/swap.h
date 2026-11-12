@@ -3,7 +3,7 @@
 
 /*
  * The Nitro SDK's mi_swap.c, under the SDK's own name (ntrtwl/NitroSDK
- * include/nitro/mi/swap.h). The body is src/MI_SwapWord.c: one `swp` that
+ * nitro/mi/swap.h). The body is src/MI_SwapWord.c: one `swp` that
  * stores the first argument at the second and returns the word that was
  * there.
  *

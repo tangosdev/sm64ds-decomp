@@ -3,7 +3,7 @@
 
 /*
  * Console detection, the Nitro SDK's os_emulator.c, under the SDK's own
- * names (ntrtwl/NitroSDK include/nitro/os/common/emulator.h). The bodies are
+ * names (ntrtwl/NitroSDK nitro/os/common/emulator.h). The bodies are
  * in src/engine/os/OS_Emulator.cpp.
  *
  * OS_GetConsoleType answers the machine in the high nibble, the device in

@@ -24,7 +24,7 @@ void G3i_LookAt_(const struct Vector3 *, const struct Vector3 *, const struct Ve
 
 /* Loads the environment-mapping texture matrix: the SDK's MtxFx44, spelled
  * int * as its definition in src/engine/gx/G3i.cpp and decl_common.h spell
- * it (ntrtwl/NitroSDK include/nitro/gx/g3_util.h). */
+ * it (ntrtwl/NitroSDK nitro/gx/g3_util.h). */
 void G3_LoadTexMtxEnv(int *);
 #ifdef __cplusplus
 }

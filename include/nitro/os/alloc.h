@@ -3,7 +3,7 @@
 
 /*
  * The heap calls of the Nitro SDK's os_alloc.c, under the SDK's own names
- * (ntrtwl/NitroSDK include/nitro/os/common/alloc.h). The bodies are in
+ * (ntrtwl/NitroSDK nitro/os/common/alloc.h). The bodies are in
  * src/engine/os/OS_Alloc.cpp.
  *
  * The first parameter is the SDK's OSArenaId, spelled int: the arena ids are

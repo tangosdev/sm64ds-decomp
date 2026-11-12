@@ -3,7 +3,7 @@
 
 /*
  * The ARM9 sound command calls of the Nitro SDK's SND_interface.c, under the
- * SDK's own names (ntrtwl/NitroSDK include/nitro/snd/ARM9/interface.h). The
+ * SDK's own names (ntrtwl/NitroSDK nitro/snd/ARM9/interface.h). The
  * bodies are in src/engine/snd/SND_Interface.cpp; each queues one command for
  * the ARM7 driver.
  *

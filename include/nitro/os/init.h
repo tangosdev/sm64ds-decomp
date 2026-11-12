@@ -3,7 +3,7 @@
 
 /*
  * The Nitro SDK's OS start-up call, under its own name (ntrtwl/NitroSDK
- * include/nitro/os/common/init.h). The body is in src/OS_Init.cpp; the
+ * nitro/os/common/init.h). The body is in src/OS_Init.cpp; the
  * game's NitroStartUp runs it before any static constructor.
  */
 

@@ -8,7 +8,7 @@
  * call's arguments into one.
  *
  * SND_CommandInit is the SDK's (ntrtwl/NitroSDK
- * include/nitro/snd/common/command.h); SND_Init runs it once.
+ * nitro/snd/common/command.h); SND_Init runs it once.
  */
 
 #include "types.h"

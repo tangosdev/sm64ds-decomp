@@ -3,7 +3,7 @@
 
 /*
  * The system tick of the Nitro SDK's os_tick.c, under the SDK's own names
- * (ntrtwl/NitroSDK include/nitro/os/common/tick.h). The bodies are in
+ * (ntrtwl/NitroSDK nitro/os/common/tick.h). The bodies are in
  * src/engine/os/OS_Tick.cpp. A tick is 64 system-clock cycles: timer 0 runs
  * at prescaler 64 and its overflow interrupt counts the high bits.
  *
