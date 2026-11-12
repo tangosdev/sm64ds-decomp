@@ -106,12 +106,27 @@ struct WalkPath {
     Vector3 *points;
 };
 
-/* Genuine external C callees: the arm9 helpers, the C++ runtime and the
-   file-handle veneers. No shared header declares these, so they stay
-   TU-local single declarations. */
+/* Genuine external C callees: the arm9 matrix/vector helpers, the C++
+   runtime and the file-handle veneers. No owning header declares them, so
+   each stays one TU-local declaration; the marker above each group says
+   where its owning header stops. */
+
+/* local extern: math/MtxStack.h names the matrix routines but declares only
+   the builders its includers call. */
 extern "C" void MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
 extern "C" void MTX_MultVec33(void *, void *, void *);
+
+/* local extern: math/Quaternion.h declares only the type. */
 extern "C" void Matrix4x3_FromQuaternion(const Quaternion *, Matrix4x3 *);
+/* local extern: math/Quaternion.h declares only the type; decl_common.h's
+   copy is C++ linkage and takes int* / Vector3*. */
+extern "C" void Quaternion_FromVector3(void *, void *, void *);
+extern "C" void Quaternion_Normalize(void *);
+extern "C" void Quaternion_SLerp(void *, void *, int, void *);
+extern "C" void Quaternion_Multiply(void *, void *, void *);
+
+/* local extern: math/CalcLib.h declares VEC_Add/VEC_Subtract and the
+   distance family, not these helpers. */
 extern "C" int VEC_DotProduct(const Vector3 *, const Vector3 *);
 extern "C" int NormalizeVec3IfNonZero(Vector3 *);
 extern "C" void Vec3_Add(Vector3 *, const Vector3 *, const Vector3 *);
@@ -119,15 +134,17 @@ extern "C" short Vec3_VertAngle(const Vector3 *, const Vector3 *);
 extern "C" void Vec3_MulScalar(Vector3 *, const Vector3 *, int);
 extern "C" void Vec3_MulScalarInPlace(Vector3 *, int);
 extern "C" void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
-extern "C" void Quaternion_FromVector3(void *, void *, void *);
-extern "C" void Quaternion_Normalize(void *);
-extern "C" void Quaternion_SLerp(void *, void *, int, void *);
-extern "C" void Quaternion_Multiply(void *, void *, void *);
+
+/* local extern: SharedFilePtr.h declares the class, not these veneers. */
 extern "C" void *SharedFilePtr_Construct_TexSeq(void *, unsigned int);
 extern "C" int SharedFilePtr_Destruct_Anim(void *);
 extern "C" int SharedFilePtr_Destruct_TexSeq(void *);
+
+/* local extern: no include/ header declares the C++ runtime array helpers. */
 extern "C" void __cxa_vec_cleanup(void *, unsigned int, unsigned int, dtor_t);
 extern "C" void __cxa_vec_ctor(void *, unsigned int, unsigned int, ctor_t, dtor_t);
+
+/* local extern: unnamed arm9 runtime routines, no header. */
 extern "C" void func_020169d8(void *, int, unsigned int);
 extern "C" void func_02016a04(void *, int);
 extern "C" void func_02016a14(void *, int);
