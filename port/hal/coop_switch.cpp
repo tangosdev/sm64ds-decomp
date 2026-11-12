@@ -73,12 +73,18 @@ enum : unsigned {
     kStatesAge     = 900,      // pending object states are dropped after this many frames
     kJobMs         = 150,
 };
-enum : int { kPendMax = 64, kObjOutMax = 48 };
+// TABLES1: kPendMax holds a whole snapshot (every watched object can be non-idle at once: Big Boo Battle places 59 falling floor
+// blocks); kEarlyMax keeps that many STATES parts that came in while my level was still loading (slot 0 is the GLOBALS).
+enum : int { kPendMax = 256, kObjOutMax = 48, kEarlyMax = 9 };
 
 // ---------------------------------------------------------------------------
 // State.
 // ---------------------------------------------------------------------------
 bool g_env = false, g_log = false;
+// TABLES1: entries per STATES message (the wire's kSwMaxStateEnt). SM64DS_COOP_SNAP_CAP lowers it in a dev build so a row can
+// reach the limit in a level with only a few watched objects (the real worst case, Big Boo Battle's 59 falling floor blocks,
+// needs a long visit to fill).
+int g_snap_cap = kSwMaxStateEnt;
 struct Off { bool word, press, kick, field, globals; } g_off = {};
 CoopSwitchStats g_st = {};
 bool g_registered = false, g_hooked = false;
@@ -126,7 +132,9 @@ unsigned g_states_t = 0;
 
 // an early GLOBALS / STATES from a sender not yet a member
 struct Early { bool on; int seat; int kind; int lvl, act; unsigned char buf[sizeof(SwStatesHead) + kSwMaxStateEnt * sizeof(SwStateEntry)]; int len; };
-Early g_early[2];
+Early g_early[kEarlyMax];
+int g_early_next = 1;   // TABLES1: the STATES part slot overwritten next when all are taken
+bool g_pend_full_said = false;
 
 // proof knobs
 struct Knob { unsigned frame; int bit; bool set; bool done; };
@@ -150,6 +158,13 @@ void read_env() {
     const char *l = std::getenv("SM64DS_COOP_LOG");
     g_log = l && *l && *l != '0';
     if (const char *k = std::getenv("SM64DS_SW_KEEP_LOCAL")) g_keep_local = *k != '0';
+#ifndef PORT_ROM_CLEAN
+    if (const char *c = std::getenv("SM64DS_COOP_SNAP_CAP")) {
+        const int v = std::atoi(c);
+        if (v >= 1 && v < kSwMaxStateEnt) g_snap_cap = v;
+        std::fprintf(stderr, "[coopsw-knob] snapshot cap %d entries per message\n", g_snap_cap);
+    }
+#endif
     if (const char *h = std::getenv("SM64DS_SW_HOLD_FIELD")) g_hold_field = *h != '0';
     if (const char *o = std::getenv("SM64DS_SW_OFF")) {
         g_off.word = std::strstr(o, "word") != nullptr;
@@ -635,13 +650,28 @@ void serve_job(Job &j) {
     for (int i = 0; i < 4; ++i) if (g.globals[i] > 7) g.globals[i] = 0;
     for (int i = 0; i < kSwBits; ++i) g.stamp[i] = (uint16_t)g_bit[i].stamp;
     if (send_ctl(kSwCtlGlobals, &g, sizeof g)) ++g_st.sent_globals;
-    unsigned char buf[sizeof(SwStatesHead) + kSwMaxStateEnt * sizeof(SwStateEntry)];
-    SwStateEntry ent[kSwMaxStateEnt];
-    const int n = collect_states(ent, kSwMaxStateEnt);
-    SwStatesHead h; std::memset(&h, 0, sizeof h);
-    h.key = wkey(); h.nonce = j.nonce; h.target = (uint8_t)j.seat; h.count = (uint8_t)n;
-    std::memcpy(buf, &h, sizeof h); std::memcpy(buf + sizeof h, ent, (size_t)n * sizeof(SwStateEntry));
-    if (send_ctl(kSwCtlStates, buf, (int)sizeof h + n * (int)sizeof(SwStateEntry))) ++g_st.sent_states;
+    // TABLES1: every watched object goes out, in as many STATES parts of at most kSwMaxStateEnt entries as it takes (one part
+    // used to carry the first 40 and drop the rest without a word). Each part is a whole STATES message as 1.0.4 already accepts
+    // it: the joiner adds every entry of every part to its pending list, so the parts need no order and no new field. The part
+    // order turns every round, so each part is the newest one on some round (a 1.0.4 joiner still loading keeps only the
+    // newest STATES).
+    static SwStateEntry ent[kSwSlots];
+    const int n = collect_states(ent, kSwSlots);
+    const int per = g_snap_cap;
+    const int parts = n == 0 ? 1 : (n + per - 1) / per;
+    for (int k = 0; k < parts; ++k) {
+        const int part = (j.sent + 1 + k) % parts;
+        const int first = part * per;
+        const int cnt = n - first < per ? n - first : per;
+        unsigned char buf[sizeof(SwStatesHead) + kSwMaxStateEnt * sizeof(SwStateEntry)];
+        SwStatesHead h; std::memset(&h, 0, sizeof h);
+        h.key = wkey(); h.nonce = j.nonce; h.target = (uint8_t)j.seat; h.count = (uint8_t)cnt;
+        std::memcpy(buf, &h, sizeof h); std::memcpy(buf + sizeof h, ent + first, (size_t)cnt * sizeof(SwStateEntry));
+        if (send_ctl(kSwCtlStates, buf, (int)sizeof h + cnt * (int)sizeof(SwStateEntry))) ++g_st.sent_states;
+    }
+    if (parts > 1 && j.sent == 0)   // dev and kit: a snapshot this big is rare (Big Boo Battle's falling floor), so say so
+        std::fprintf(stderr, "[coopsw] snapshot to seat %d: %d entries in %d STATES messages of up to %d wall=%lld\n", j.seat, n, parts, per,
+                     wall_ms());
     if (g_log && j.sent == 0)
         std::fprintf(stderr, "[coopsw] serve globals to seat %d: word=%08x f2c0=%d,%d,%d,%d states=%d wall=%lld\n",
                      j.seat, (unsigned)data_0209f34c, data_0209f2c0[0], data_0209f2c0[1], data_0209f2c0[2], data_0209f2c0[3], n, wall_ms());
@@ -869,7 +899,14 @@ void put_pending(const SwStateEntry &e) {
         if (g_pend[i].on && g_pend[i].kind == e.kind && g_pend[i].slot == e.slot && g_pend[i].cls == e.cls) { free_i = i; break; }
         if (!g_pend[i].on && free_i < 0) free_i = i;
     }
-    if (free_i < 0) return;
+    if (free_i < 0) {   // TABLES1: never silent
+        if (!g_pend_full_said) {
+            g_pend_full_said = true;
+            std::fprintf(stderr, "[coopsw] PENDING TABLE FULL (%d): a snapshot entry slot=%d cls=%d was dropped wall=%lld\n", (int)kPendMax,
+                         (int)e.slot, (int)e.cls, wall_ms());
+        }
+        return;
+    }
     g_pend[free_i] = {true, e.kind, e.slot, e.cls, e.state, e.value, g_frames};
     ++g_st.states_pending;
 }
@@ -931,7 +968,13 @@ void on_ctl(int seat, int sub, const unsigned char *p, int len, void *) {
         if (seat == g_my || h.target != g_my) return;
         if (!live_key_is(h.key)) { ++g_st.drop_group; return; }
         if (!ready_for(h.key) || !is_member(seat)) {
-            Early &e = g_early[1]; e.on = true; e.seat = seat; e.kind = sub; e.lvl = h.key.level; e.act = h.key.act; e.len = len; std::memcpy(e.buf, p, (size_t)len);
+            // TABLES1: a snapshot can come in several STATES parts: keep each one (a repeat of a part already kept is skipped)
+            for (int i = 1; i < kEarlyMax; ++i)
+                if (g_early[i].on && g_early[i].seat == seat && g_early[i].len == len && !std::memcmp(g_early[i].buf, p, (size_t)len)) return;
+            int at = -1;
+            for (int i = 1; i < kEarlyMax && at < 0; ++i) if (!g_early[i].on) at = i;
+            if (at < 0) { at = g_early_next; g_early_next = g_early_next + 1 >= kEarlyMax ? 1 : g_early_next + 1; }
+            Early &e = g_early[at]; e.on = true; e.seat = seat; e.kind = sub; e.lvl = h.key.level; e.act = h.key.act; e.len = len; std::memcpy(e.buf, p, (size_t)len);
             return;
         }
         apply_states(p, len);
@@ -1304,8 +1347,8 @@ void stats_line() {
 // Level lifecycle and the frame.
 // ---------------------------------------------------------------------------
 void new_level() {
-    Early keep[2];
-    for (int i = 0; i < 2; ++i) { keep[i] = g_early[i]; if (keep[i].on && !(keep[i].lvl == g_lvl && keep[i].act == g_act)) keep[i].on = false; }
+    Early keep[kEarlyMax];
+    for (int i = 0; i < kEarlyMax; ++i) { keep[i] = g_early[i]; if (keep[i].on && !(keep[i].lvl == g_lvl && keep[i].act == g_act)) keep[i].on = false; }
     std::memset(g_bit, 0, sizeof g_bit);
     std::memset(g_pb, 0, sizeof g_pb);
     std::memset(g_trk, 0, sizeof g_trk);
@@ -1323,7 +1366,7 @@ void new_level() {
     for (int i = 0; i < g_npress; ++i) g_press[i].done = false;
     g_rec_n = 0;
     g_new_level = false;
-    for (int i = 0; i < 2; ++i) g_early[i] = keep[i];
+    for (int i = 0; i < kEarlyMax; ++i) g_early[i] = keep[i];
 }
 
 void on_latched(int level, int act) {
