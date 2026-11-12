@@ -1,54 +1,72 @@
 #include "types.h"
+#include "nitro/hw/mmap_shared.h"
 
-/* Blocking, polled read of a byte range out of the cartridge ROM.
+/* OSReadROMArea at 0x01ffdbd8 (ITCM) -- NitroSDK os_reset.c's static
+ * OSi_ReadCardRom32: a blocking, polled read of [src, src + len) from the card
+ * into dst, for OSi_ReloadRomData (src/OSi_ReloadRomData.c).
  *
- * The card can only be read in 0x200-byte blocks, so the transfer starts at the
- * block containing romAddr and words that fall outside [0, len) are discarded.
- *
- * Registers touched (all addresses are the documented DS gamecard I/O ports):
- *   0x040001a1  high byte of the AUXSPI control register (0x80 = slot enabled)
- *   0x040001a4  gamecard ROM control: bit31 start/busy, bit23 word ready,
- *               bits 24-26 block size (1 = 0x200 bytes)
- *   0x040001a8  8-byte command buffer; 0xb7 is the "read data" command
- *   0x04100010  gamecard data-in port
- *   0x027ffe60  copy of the cartridge header in main RAM, +0x60 = the value to
- *               program into 0x040001a4 for normal commands
+ * The page-read command fetches 512-byte pages, so the transfer starts at the
+ * page that holds src and drops the words that fall outside [0, len). The
+ * control word is the one the boot loader left in the cartridge header copy
+ * (HW_ROM_HEADER_BUF + 0x60), with its block-size field set to one page.
  */
-void OSReadROMArea(u32 romAddr, void *dst, s32 len)
-{
-    u8 *out = (u8 *)dst;
-    u32 ctrl = (*(u32 *)0x27ffe60 & ~0x7000000) | 0xa1000000;
-    s32 i = -(s32)(romAddr & 0x1ff);
+void OSReadROMArea(u32 src, void *dst, int len) {
+    vu8 *const reg_CARD_MASTERCNT = (vu8 *)(HW_REG_BASE + 0x1a1);
+    vu8 *const reg_CARD_CMD = (vu8 *)(HW_REG_BASE + 0x1a8);
+    vu32 *const reg_CARD_CNT = (vu32 *)(HW_REG_BASE + 0x1a4);
+    vu32 *const reg_CARD_DATA = (vu32 *)(HW_REG_BASE + 0x100010);
+    vu32 *const hdr_GAME_BUF = (vu32 *)(HW_ROM_HEADER_BUF + 0x60);
 
-    while (*(volatile u32 *)0x40001a4 & 0x80000000)
-        ;
-    *(volatile u8 *)0x40001a1 = 0x80;
+    enum {
+        CARD_MASTER_SELECT_ROM = 0x00,
+        CARD_MASTER_ENABLE = 0x80,
+        CARD_CMD_READ_PAGE = 0xb7,
+        CARD_CTRL_CMD_MASK = 0x07000000,
+        CARD_CTRL_CMD_PAGE = 0x01000000,
+        CARD_CTRL_READ = 0x00000000,
+        CARD_CTRL_RESET_HI = 0x20000000,
+        CARD_CTRL_START = 0x80000000,
+        CARD_CTRL_READY = 0x00800000,
+        CARD_ENUM_END
+    };
 
-    romAddr += i;
+    const u32 ctrl_start =
+        (u32)((*hdr_GAME_BUF & ~CARD_CTRL_CMD_MASK) |
+              (CARD_CTRL_CMD_PAGE | CARD_CTRL_READ | CARD_CTRL_START | CARD_CTRL_RESET_HI));
 
-    while (i < len) {
-        u32 status;
+    int pos = -(int)(src & (512 - 1));
 
-        *(volatile u8 *)0x40001a8 = 0xb7;
-        *(volatile u8 *)0x40001a9 = (u8)(romAddr >> 24);
-        *(volatile u8 *)0x40001aa = (u8)(romAddr >> 16);
-        *(volatile u8 *)0x40001ab = (u8)(romAddr >> 8);
-        *(volatile u8 *)0x40001ac = (u8)romAddr;
-        *(volatile u8 *)0x40001ad = 0;
-        *(volatile u8 *)0x40001ae = 0;
-        *(volatile u8 *)0x40001af = 0;
+    while ((*reg_CARD_CNT & CARD_CTRL_START) != 0) {
+    }
+    *reg_CARD_MASTERCNT = (u32)(CARD_MASTER_SELECT_ROM | CARD_MASTER_ENABLE);
 
-        *(volatile u32 *)0x40001a4 = ctrl;
-        do {
-            status = *(volatile u32 *)0x40001a4;
-            if (status & 0x800000) {
-                u32 data = *(volatile u32 *)0x4100010;
-                if (i >= 0 && i < len)
-                    *(u32 *)(out + i) = data;
-                i += 4;
+    for (src = (u32)(src + pos); pos < len; src += 512) {
+        reg_CARD_CMD[0] = (u8)(CARD_CMD_READ_PAGE);
+        reg_CARD_CMD[1] = (u8)(src >> 24);
+        reg_CARD_CMD[2] = (u8)(src >> 16);
+        reg_CARD_CMD[3] = (u8)(src >> 8);
+        reg_CARD_CMD[4] = (u8)(src >> 0);
+        reg_CARD_CMD[5] = (u8)(0);
+        reg_CARD_CMD[6] = (u8)(0);
+        reg_CARD_CMD[7] = (u8)(0);
+
+        *reg_CARD_CNT = ctrl_start;
+        for (;;) {
+            u32 ctrl = *reg_CARD_CNT;
+
+            if ((ctrl & CARD_CTRL_READY) != 0) {
+                const u32 data = *reg_CARD_DATA;
+
+                if ((pos >= 0) && (pos < len)) {
+                    *(u32 *)((u32)dst + pos) = data;
+                }
+
+                pos += sizeof(u32);
             }
-        } while (status & 0x80000000);
 
-        romAddr += 0x200;
+            if (!(ctrl & CARD_CTRL_START)) {
+                break;
+            }
+        }
     }
 }

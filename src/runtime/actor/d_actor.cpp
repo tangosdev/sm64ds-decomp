@@ -1,74 +1,40 @@
 //cpp
-/* dActor_c translation unit -- arm9.  Nintendo's dActor_c.
+/* dActor_c -- the base class of every actor, arm9 0x0200f658..0x02011654
+ * (97 functions).
  *
- * This file owns 0x0200f658..0x02011654 (97 functions); see the worked
- * example in notes/tu-reconstruction-pilot-report.md and the boundary
- * evidence in config/tu_manifest.d/arm9/Actor.json.
+ * Source order is the reverse of the ROM's: mwccarm emits one .text section per
+ * function in reverse declaration order, so the constructor tops this file and
+ * the leaf helpers end it.
  *
- * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S. mwccarm 2004/b56
- * emits one .text section per function, in the REVERSE of source order, so the
- * highest-address ROM function is written FIRST -- the constructor tops the
- * file and the leaf helpers sit at the bottom, the natural shape of a
- * hand-written .cpp.
+ * ROM evidence: ~dActor_c is the key function, so one out-of-line definition
+ * emits D2 0x020112c8, D0 0x02011314 and D1 0x02011374, and the object emits
+ * this class's _ZTS8dActor_c (0x0208e384), _ZTI8dActor_c (0x0208e390) and
+ * _ZTV8dActor_c (0x0208e3a4). The manifest keeps those three as deadstrip-data
+ * at their symbols.txt homes, so the linked table is the cartridge's.
+ * dActor_c::dActor_c() emits C1 0x020113c0 and C2 0x0201150c.
  *
- * THE TAIL IS IN THIS FILE. One out-of-line ~dActor_c(), written after the
- * constructor, emits D2, D0, D1 under default codegen (defer_codegen left
- * on). That is the cartridge order 0x020112c8, 0x02011314, 0x02011374.
- * ~dActor_c is still the key function, so this object also emits
- * _ZTV8dActor_c, _ZTI8dActor_c and _ZTS8dActor_c; those stay the ROM's
- * copies (deadstrip-data at their symbols.txt homes), not a second table.
- * One dActor_c::dActor_c() emits C1 then C2. The ROM keeps Vector3s::~Vector3s
- * (four bytes, bx lr) between them. An unreachable Vector3s array in the
- * constructor odr-uses that destructor into the slot and adds no
- * instructions; the union and base dtors mwcc drops in the same slot are
- * compiler-only and are deadstripped, so the kept run is C1, Vector3sD1, C2.
+ * Merged from 91 legacy one-function sources. The declarations are their union,
+ * reconciled to the headers that own each type (fBase_c, dBase_c, dCc_c,
+ * daPly_c, dBgCh_Gnd/Lin, SpawnInfo, SharedFilePtr, Sound) and spelled with
+ * those headers' field names -- dCc_c's hitFlags/otherOwner/pushback, fBase_c's
+ * MarkForDestruction, SharedFilePtr's Release. data_0209b468, the global actor
+ * list, is defined here as ActorList (a coined name); the list helpers
+ * func_0203b244 and func_0203b27c take its address and stay free C functions.
  *
- * Declarations are reconciled IN PLACE: each member carries whatever it needs
- * that no earlier member already supplied. Nothing is hoisted but the includes.
+ * Measured spellings kept for the bytes:
+ * - AfterInitResources stores mFlags through `*(u32 *)&mFlags`: the ROM
+ *   materialises the address first, while the plain member OR folds the offset
+ *   into the load/store and comes out 4 bytes short.
+ * - The constructor runs an unreachable Vector3s[2], which odr-uses
+ *   _ZN8Vector3sD1Ev into its helper slot (0x02011508, four bytes) between C1
+ *   and C2. The union and dBase_c destructors mwcc emits in the same slot have
+ *   no ROM home and are deadstripped.
+ *
+ * common.h is included before any math/Matrix.h consumer, so Matrix4x3 is the
+ * flat s32 m[12] spelling; UpdateCarry's twelve-word copies depend on that.
  */
 
-/* RECONCILIATION -- what merging 91 files into one TU forced, and nothing else.
- *
- * Every item below exists only BECAUSE these are now one translation unit: two
- * files describing the same global with different types, a local shadow struct
- * standing in for a type the merged TU really has, or a declaration whose
- * parameter list disagrees with the definition that used to live in another
- * file. Not one of them changes what a function does, and every one was held to
- * the byte gate: 91/91 members reproduce the cartridge.
- *
- *  - Shadow types dropped for the real header's: dActor_c, Vector3, Vector3_16,
- *    Matrix4x3, dCc_c, daPly_c, Sound, Heap, and `typedef int Fix12`
- *    (types.h has a Fix12<T> TEMPLATE, so that typedef is not even legal here).
- *    Field names follow: deathTableId -> mDeathTableID, flags -> mFlags, camSpacePos
- *    -> mCamSpacePosX, pos -> mPosX, speed -> mSpeedX, areaID -> mAreaId.
- *  - One spelling per global, chosen for what the ROM's use of it supports:
- *    data_0209b468, the global actor list, is defined below; the list
- *    helpers take its address, and Next() reads its first link.
- *  - One prototype per function, taken from whichever file had recovered the
- *    most: func_02010e78's caller knew (const Vector3*, const Vector3_16*, s8,
- *    s16) where its own file only knew (int, int, uchar, short);
- *    Particle::System::NewSimple uses the shared `void *` return type from its
- *    definition; the two int-returning C helpers cast that value explicitly.
- *    dActor_c::ClosestPlayer is DEFINED here, so the three disagreeing
- *    extern "C" guesses at its prototype are simply gone.
- *  - Ordinals 12, 14, 16 and 18 use the real dBgCh_Gnd header and its
- *    collision-height field; their automatic query objects own the normal
- *    C++ lifetime (12 and 18 used to spell the C1/D1 calls by hand on a
- *    stand-in struct). Ordinal 0 takes the real dBgCh_Lin instead: its
- *    ctor/dtor are out-of-line declarations, so the member spelling emits
- *    the same calls the retired shard proved.
- *
- * include/dActor_c.h gained three declarations for this file: a `struct Matrix4x3;`
- * forward declaration, `void UntrackInDeathTable();` and
- * `Matrix4x3 *UpdateCarry(daPly_c &, const Vector3 &);`. All three are
- * NON-VIRTUAL, so the class layout, its 0xd0 size assertion and its 31 vtable
- * slots are untouched, and ~dActor_c() is still the key function. */
-
-/* Includes: union of the admitted legacy files', first-seen in emission
- * order. Header-guarded, so the union is safe; ordering constraints are
- * not otherwise checked. daFPknBall_c.h, daObjNumber_c.h and daCoin_c.h
- * came later, for the classes SpawnFireball, SpawnNumber and
- * GivePlayerCoins spawn. */
+/* Includes are the union of the 91 legacy sources' (header-guarded). */
 #include "types.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
@@ -92,35 +58,27 @@
 #include "dClipper.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
-#include "daObjNumber_c.h"
-#include "daCoin_c.h"
-#include "daFPknBall_c.h"
 #include "math/MtxStack.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
 
-/* Spawn globals the constructor reads. The s16* spellings are the ones
-   func_02010e78 already uses; a second void* declaration in this TU is
-   rejected. */
+/* The spawn arguments func_02010e78 stages for the constructor. */
 extern "C" {
 extern s16 *data_0209b460;
 extern s16 *data_0209b45c;
 extern s16 data_0208e378;
-/* local extern: no header declares it. List link, same call the shard proved. */
+/* local extern: no header declares it. */
 int func_0203b244(void *list, void *node);
-/* local extern: no header declares it. Actor info table, indexed by actorID. */
+/* local extern: no header declares it. The actor registry, indexed by actorID. */
 extern void *data_020a4bb8;
 /* local extern: no header declares it. Game mode; 2 pushes the clip distance. */
 extern unsigned char gGameMode;
-/* Defined below as extern "C". Fix12-by-value, so it is not a method. */
 }
 
-/* The global actor list every dActor_c links its mActorListNode into: the
-   first and last nodes. Its inline constructor empties it, so mwcc emits
-   __sinit_d_actor.cpp to run that (was the handwritten __sinit_02074d90).
-   The list helpers (func_0203b244 links, func_0203b27c unlinks, the
-   ActorBase.cpp searches) take its address. */
+/* The global actor list: every dActor_c links its mActorListNode into it. The
+   inline constructor empties it (mwcc emits __sinit_d_actor.cpp for that);
+   func_0203b244 links a node and func_0203b27c unlinks one. */
 struct ActorList {
     fLiNdBa_c *first;
     fLiNdBa_c *last;
@@ -129,7 +87,7 @@ struct ActorList {
 };
 ActorList data_0209b468;
 
-/* Constructor first in source so reverse emission puts C1/C2 above the
+/* Constructor first in source: reverse emission puts C1/C2 above the
    destructor. Both variants are this one body. */
 dActor_c::dActor_c() : mActorListNode(this) {
     func_0203b244(&data_0209b468, &mActorListNode);
@@ -172,11 +130,10 @@ dActor_c::dActor_c() : mActorListNode(this) {
             SetRanges(info->clipOffsetY, info->clipRadius, clipDistance, farDistance);
         }
     }
-    /* Unreachable. Vector3s's empty destructor inlines at a direct call, but
-       an array cleanup has to pass its address to __cxa_vec_cleanup, so mwcc
-       emits the out-of-line Vector3s::~Vector3s() (D1) in the constructor's helper slot, between C1 and
-       C2. -O4 deletes the cleanup itself: both variants stay 0x148. The body
-       is the inline destructor in include/types.h. */
+    /* Unreachable. An array cleanup has to pass the element address to
+       __cxa_vec_cleanup, so mwcc emits the out-of-line Vector3s::~Vector3s()
+       in the constructor's helper slot between C1 and C2. -O4 deletes the
+       cleanup itself: both variants stay 0x148. */
     if (0) {
         Vector3s tmp[2];
         (void)tmp;
@@ -187,9 +144,8 @@ dActor_c::~dActor_c() {
     func_0203b27c((int)&data_0209b468, (int)&mActorListNode);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 90 -- dActor_c::BeforeInitResources()
- * 0x02011268  size 0x60 */
+/* Kills an actor born dead: unless its profile sets 0x08000000 ("spawn even if
+   the death table says already killed"), a death-table hit destroys it. */
 bool dActor_c::BeforeInitResources()
 {
     int spawnEvenIfKilledBefore = (mFlags & 0x8000000) ? 1 : 0;
@@ -203,9 +159,6 @@ bool dActor_c::BeforeInitResources()
     return true;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 89 -- dActor_c::AfterInitResources(unsigned int)
- * 0x02011244  size 0x24 */
 void dActor_c::AfterInitResources(u32 vfSuccess)
 {
     dBase_c::AfterInitResources(vfSuccess);
@@ -217,9 +170,6 @@ void dActor_c::AfterInitResources(u32 vfSuccess)
     *(u32 *)&mFlags |= 0x38;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 88 -- dActor_c::BeforeCleanupResources()
- * 0x02011220  size 0x24 */
 int dActor_c::BeforeCleanupResources()
 {
     if (fBase_c::BeforeCleanupResources() != 0)
@@ -227,32 +177,28 @@ int dActor_c::BeforeCleanupResources()
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 87 -- dActor_c::AfterCleanupResources(unsigned int)
- * 0x02011214  size 0xc */
 void dActor_c::AfterCleanupResources(u32 vfSuccess)
 {
     fBase_c::AfterCleanupResources(vfSuccess);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 86 -- dActor_c::BeforeBehavior()
- * 0x02010fd4  size 0x240 */
 extern "C" {
 u8 IsAreaShowing(int areaId);
 void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 extern int data_0209fc68; /* nonzero forces the actor to think anyway */
 extern Matrix4x3 data_0209b3ec; /* world -> camera */
 extern dClipper data_0209f43c;  /* the dClipper instance */
-extern u8 data_0209f274; /* doubles the far-away threshold when set */
+extern u8 data_0209f274;        /* doubles the clip distance when set */
 extern u8 gGamePaused;
 extern u8 data_0209f20c;
 extern u8 gVsExitScreenActive;
-/* This frame's actor update mask, copied from gNextActorUpdateMask by
-   dScStage_c::Behavior: while non-zero, only actors whose mFlags share a bit
-   with it behave. */
+/* This frame's actor update mask, copied from gNextActorUpdateMask; see
+   ACTOR_UPDATE_MASK_STAGE_ENDING in dActor_c.h. */
 extern u32 gActorUpdateMask;
 }
+/* Culls the actor for this frame: flags 0x38 plus a far-away camera position
+   when its area is hidden or the dClipper rejects it, then the pause and
+   update-mask gates, then snapshots mPos into mPrevPos. */
 int dActor_c::BeforeBehavior()
 {
     if (!fBase_c::BeforeBehavior())
@@ -307,17 +253,13 @@ int dActor_c::BeforeBehavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 85 -- dActor_c::AfterBehavior(unsigned int)
- * 0x02010fc8  size 0xc */
 void dActor_c::AfterBehavior(u32 vfSuccess)
 {
     fBase_c::AfterBehavior(vfSuccess);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 84 -- dActor_c::BeforeRender()
- * 0x02010f78  size 0x50 */
+/* Skips render when the area is not showing (0x20), or when the actor is off
+   screen (0x08) and mFlags has the profile's 0x02 skip-render bit. */
 int dActor_c::BeforeRender()
 {
     u32 flags;
@@ -331,17 +273,11 @@ int dActor_c::BeforeRender()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 83 -- dActor_c::AfterRender(unsigned int)
- * 0x02010f6c  size 0xc */
 void dActor_c::AfterRender(u32 vfSuccess)
 {
     fBase_c::AfterRender(vfSuccess);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 82 -- dActor_c::FindWithID(unsigned int)
- * 0x02010f3c  size 0x30 */
 extern "C" {
 /* local extern: defined in ActorBase.cpp, which has no header. */
 extern fLiNdBa_c *func_02043f98(fLiNdBa_c **head, unsigned int key);
@@ -354,9 +290,6 @@ dActor_c *dActor_c::FindWithID(u32 id)
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 81 -- dActor_c::FindWithActorID(unsigned int, dActor_c *)
- * 0x02010ef0  size 0x4c */
 dActor_c *dActor_c::FindWithActorID(u32 actorID, dActor_c *after) {
     fLiNdBa_c *node;
     if (after)
@@ -368,9 +301,6 @@ dActor_c *dActor_c::FindWithActorID(u32 actorID, dActor_c *after) {
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 80 -- dActor_c::Next(dActor_c const *)
- * 0x02010ecc  size 0x24 */
 dActor_c *dActor_c::Next(const dActor_c *after)
 {
     fLiNdBa_c *node;
@@ -383,9 +313,6 @@ dActor_c *dActor_c::Next(const dActor_c *after)
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 79 -- func_02010e78
- * 0x02010e78  size 0x54 */
 extern "C" {
 extern s16 *data_0209b460;          /* spawn position, or null to leave it at 0 */
 extern s16 *data_0209b45c;          /* spawn rotation, or null */
@@ -401,9 +328,6 @@ extern "C" void func_02010e78(const Vector3 *pos, const Vector3_16 *rot, s8 area
     data_0209b458 = 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 78 -- dActor_c::Spawn(unsigned int, unsigned int, Vector3 const &, Vector3_16 const *, signed char, short)
- * 0x02010e2c  size 0x4c */
 extern "C" {
 extern fBase_c *gCurrentScene;
 void func_02010e78(const Vector3 *pos, const Vector3_16 *rot, s8 areaID, s16 deathTableID);
@@ -415,11 +339,8 @@ dActor_c *dActor_c::Spawn(u32 actorID, u32 spawnParam, const Vector3 &pos,
     return (dActor_c *)dBase_c::Spawn(actorID, gCurrentScene, spawnParam, 2);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 77 -- dActor_c::SetRanges(int, int, int, int)
- * 0x02010e08  size 0x24 */
-/* The three ranges are stored at 1/8 scale, the scale BeforeBehavior projects
-   into. */
+/* The radius, clip distance and far distance are stored at 1/8 scale, the
+   scale BeforeBehavior projects into. */
 void dActor_c::SetRanges(Fix12i clipOffsetY, Fix12i clipRadius, Fix12i clipDistance,
                          Fix12i farDistance) {
     mClipOffsetY = clipOffsetY;
@@ -428,9 +349,6 @@ void dActor_c::SetRanges(Fix12i clipOffsetY, Fix12i clipRadius, Fix12i clipDista
     mFarDistance = farDistance >> 3;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 76 -- dActor_c::func_02010da4()
- * 0x02010da4  size 0x64 */
 /* Clamps each axis of mPos to +-32000.0, the edge of the world. */
 void dActor_c::func_02010da4() {
     s32 v;
@@ -451,12 +369,6 @@ void dActor_c::func_02010da4() {
         mPosZ = 0x7d00000;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 75 -- dActor_c::UpdatePosWithOnlySpeed(dCc_c *)
- * 0x02010d40  size 0x64 */
-extern "C" {
-void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
-}
 /* Adds the velocity (mSpeedX, mVertSpeed, mSpeedZ) to mPos, then the
    cylinder's horizontal push-out, then clamps to the world bounds. */
 void dActor_c::UpdatePosWithOnlySpeed(dCc_c *clsn) {
@@ -468,9 +380,6 @@ void dActor_c::UpdatePosWithOnlySpeed(dCc_c *clsn) {
     func_02010da4();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 74 -- dActor_c::UpdatePosWithHorzSpeedAndAng()
- * 0x02010c5c  size 0xe4 */
 /* Splits mHorzSpeed along mPrevAngleY (the heading the velocity follows) into
    the x/z velocity words, x by sin and z by cos, and applies mVertAccel to
    mVertSpeed, clamped at mTerminalVelocity. */
@@ -509,18 +418,12 @@ void dActor_c::UpdatePosWithHorzSpeedAndAng() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 73 -- dActor_c::UpdatePos(dCc_c *)
- * 0x02010c30  size 0x2c */
 void dActor_c::UpdatePos(dCc_c *clsn)
 {
     UpdatePosWithHorzSpeedAndAng();
     UpdatePosWithOnlySpeed(clsn);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 72 -- dActor_c::DropShadowRadHeight(dExtShadowModel_c &, Matrix4x3 &, int, int, unsigned char)
- * 0x02010be8  size 0x48 */
 void dActor_c::DropShadowRadHeight(dExtShadowModel_c &shadow, Matrix4x3 &matrix, Fix12i radius,
                                    Fix12i depth, u8 opacity) {
     if (mFlags & 0x10) /* beyond mFarDistance: no drop shadow */
@@ -528,9 +431,6 @@ void dActor_c::DropShadowRadHeight(dExtShadowModel_c &shadow, Matrix4x3 &matrix,
     shadow.InitModel(&matrix, radius, depth, radius, opacity);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 71 -- dActor_c::DropShadowScaleXYZ(dExtShadowModel_c &, Matrix4x3 &, int, int, int, unsigned char)
- * 0x02010b9c  size 0x4c */
 void dActor_c::DropShadowScaleXYZ(dExtShadowModel_c &shadow, Matrix4x3 &matrix, Fix12i scaleX,
                                   Fix12i scaleY, Fix12i scaleZ, u8 opacity) {
     if (mFlags & 0x10)
@@ -538,9 +438,6 @@ void dActor_c::DropShadowScaleXYZ(dExtShadowModel_c &shadow, Matrix4x3 &matrix, 
     shadow.InitModel(&matrix, scaleX, scaleY, scaleZ, opacity);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 70 -- dActor_c::ClosestPlayer()
- * 0x02010ad8  size 0xc4 */
 extern "C" {
 extern int data_0208e380;           /* distance to the cached closest player */
 extern int data_0208e37c;           /* distance to the cached farthest player */
@@ -570,9 +467,6 @@ daPly_c *dActor_c::ClosestPlayer() {
     return (daPly_c *)data_0209b458;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 69 -- dActor_c::ClosestNonVanishPlayer()
- * 0x02010a08  size 0xd0 */
 daPly_c *dActor_c::ClosestNonVanishPlayer() {
     if (!data_0209b458) {
         data_0208e380 = 0x7fffffff;
@@ -598,27 +492,18 @@ daPly_c *dActor_c::ClosestNonVanishPlayer() {
     return (daPly_c *)data_0209b458;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 68 -- dActor_c::DistToCPlayer()
- * 0x020109e4  size 0x24 */
 s32 dActor_c::DistToCPlayer()
 {
     ClosestPlayer();
     return data_0208e380;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 67 -- dActor_c::HorzAngleToCPlayer()
- * 0x020109b8  size 0x2c */
 s16 dActor_c::HorzAngleToCPlayer()
 {
     ClosestPlayer();
     return Vec3_HorzAngle(&mPos, &((dActor_c *)data_0209b458)->mPos);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 66 -- dActor_c::HorzAngleToCPlayerOrAng()
- * 0x0201097c  size 0x3c */
 s16 dActor_c::HorzAngleToCPlayerOrAng()
 {
     dActor_c *player;
@@ -631,26 +516,17 @@ s16 dActor_c::HorzAngleToCPlayerOrAng()
     return Vec3_HorzAngle(&mPos, &player->mPos);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 65 -- dActor_c::FarthestPlayer()
- * 0x02010958  size 0x24 */
 daPly_c *dActor_c::FarthestPlayer() {
     ClosestPlayer();
     return (daPly_c *)data_0209b450;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 64 -- dActor_c::HorzAngleToFPlayer()
- * 0x0201092c  size 0x2c */
 s16 dActor_c::HorzAngleToFPlayer()
 {
     ClosestPlayer();
     return Vec3_HorzAngle(&mPos, &((dActor_c *)data_0209b450)->mPos);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 63 -- dActor_c::ClosestWithActorID(unsigned int)
- * 0x020108c4  size 0x68 */
 dActor_c *dActor_c::ClosestWithActorID(u32 actorID)
 {
     dActor_c *actor = 0;
@@ -673,12 +549,6 @@ dActor_c *dActor_c::ClosestWithActorID(u32 actorID)
     return closest;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 62 -- func_02010844
- * 0x02010844  size 0x80 */
-extern "C" {
-extern s16 atan2_hold_d_actor_1(Fix12i y, Fix12i x);
-}
 /* atan2 of v's horizontal length, projected onto heading `angle`, against
    v->y. The leading actor argument is unused. */
 extern "C" s16 func_02010844(void *actor, Vector3 *v, s16 angle) {
@@ -691,15 +561,9 @@ extern "C" s16 func_02010844(void *actor, Vector3 *v, s16 angle) {
     return cstd::atan2(FX_MUL(horzLen, FX_CosIdx((u16)angle >> 4)), v->y);
 }
 
-/* -------------------------------------------------------------------------- */
-extern "C" {
-extern int RandomIntInternal(int *seed);
-}
-/* ROM ordinal 61 -- dActor_c::SpawnCoins(Vector3 const &, int, int, short)
- * 0x02010714  size 0x130 */
-/* count is SIGNED, although every local extern of this symbol and the old
-   mangled name claimed unsigned: 0x02010734 branches with `ble` and the loop
-   closes with `blt`, which an unsigned count assembles as `bls`/`blo`. */
+/* count is SIGNED, although the old mangled name claimed unsigned: 0x02010734
+   branches with `ble` and the loop closes with `blt`, which an unsigned count
+   assembles as `bls`/`blo`. */
 void dActor_c::SpawnCoins(const Vector3 &pos, s32 count, Fix12i spread, s16 angle) {
     dActor_c *actor;
     s32 ang;
@@ -745,15 +609,14 @@ void dActor_c::SpawnCoins(const Vector3 &pos, s32 count, Fix12i spread, s16 angl
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 60 -- dActor_c::GivePlayerCoins(daPly_c &, unsigned char, unsigned int)
- * 0x0201061c  size 0xf8 */
 extern "C" {
 extern const u16 data_02075230[4]; /* yellow, red, blue */
 extern const u32 data_02075238[3];
 void GiveCoins(s32 playerNo, s32 amount); /* 0x0202a7b8 */
 }
 void dActor_c::GivePlayerCoins(daPly_c &player, u8 count, u32 coinKind) {
+    /* Null-tested on purpose: the mangled name says R6Player and the ROM's
+       test is real (see dActor_c.h). */
     if (&player == 0)
         return;
     if (count == 0)
@@ -789,9 +652,6 @@ void dActor_c::GivePlayerCoins(daPly_c &player, u8 count, u32 coinKind) {
         coin->mFollowTarget = &player;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 59 -- func_020105cc
- * 0x020105cc  size 0x50 */
 extern "C" void func_020105cc(dActor_c *actor, u32 flags) {
     if (flags & 0x380) {
         Sound::PlayBank0(0xa, actor->mCamSpacePos);
@@ -803,10 +663,9 @@ extern "C" void func_020105cc(dActor_c *actor, u32 flags) {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 58 -- dActor_c::JumpedOnByPlayer(dCc_c &, daPly_c &)
- * 0x0201054c  size 0x80 */
 int dActor_c::JumpedOnByPlayer(dCc_c &clsn, daPly_c &player) {
+    /* The ROM reserves 0x10 bytes of stack (`sub sp, sp, #0x10`); this
+       volatile, address-taken array is what produces that frame. */
     volatile s32 pad[4];
     s32 vel = player.mVertSpeed;
 
@@ -824,9 +683,6 @@ int dActor_c::JumpedOnByPlayer(dCc_c &clsn, daPly_c &player) {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 57 -- dActor_c::BumpedUnderneathByPlayer(daPly_c &)
- * 0x02010518  size 0x34 */
 int dActor_c::BumpedUnderneathByPlayer(daPly_c &player) {
     if (player.mIsAirborne != 0 && player.mVertSpeed > 0
         && player.mPosY < mPosY)
@@ -835,9 +691,6 @@ int dActor_c::BumpedUnderneathByPlayer(daPly_c &player) {
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 56 -- dActor_c::IsPlayerInRange(int)
- * 0x020104dc  size 0x3c */
 bool dActor_c::IsPlayerInRange(s32 maxDist)
 {
     daPly_c *closest = ClosestPlayer();
@@ -845,9 +698,6 @@ bool dActor_c::IsPlayerInRange(s32 maxDist)
     return Vec3_Dist(&mPos, &closest->mPos) < (maxDist << 12);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 55 -- dActor_c::IsPlayerInRange(int, int, int, int)
- * 0x02010498  size 0x44 */
 bool dActor_c::IsPlayerInRange(Fix12i posX, Fix12i posY, Fix12i posZ, s32 maxDist) {
     Vector3 pos;
     pos.x = posX;
@@ -857,9 +707,6 @@ bool dActor_c::IsPlayerInRange(Fix12i posX, Fix12i posY, Fix12i posZ, s32 maxDis
     return Vec3_Dist(&pos, &closest->mPos) < (maxDist << 12);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 54 -- dActor_c::IsPlayerInRange(Vector3 const &, int)
- * 0x0201045c  size 0x3c */
 bool dActor_c::IsPlayerInRange(const Vector3 &pos, s32 maxDist)
 {
     daPly_c *closest = ClosestPlayer();
@@ -867,9 +714,6 @@ bool dActor_c::IsPlayerInRange(const Vector3 &pos, s32 maxDist)
     return Vec3_Dist(&pos, &closest->mPos) < (maxDist << 12);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 53 -- dActor_c::ReflectAngle(int, int, short)
- * 0x02010428  size 0x34 */
 /* Mirrors angToReflect, turned around, about the normal's heading. */
 s16 dActor_c::ReflectAngle(Fix12i normalX, Fix12i normalZ, s16 angToReflect) {
     s16 normalAngle = cstd::atan2(normalX, normalZ);
@@ -877,9 +721,6 @@ s16 dActor_c::ReflectAngle(Fix12i normalX, Fix12i normalZ, s16 angToReflect) {
     return (s16)(normalAngle - delta);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 52 -- dActor_c::GetSubtraction(short, short)
- * 0x020103f4  size 0x34 */
 /* The magnitude of the shortest turn from angle a to angle b. */
 int dActor_c::GetSubtraction(short a, short b)
 {
@@ -891,9 +732,6 @@ int dActor_c::GetSubtraction(short a, short b)
     return d;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 51 -- dActor_c::FindEgg(dCc_c &)
- * 0x020103b4  size 0x40 */
 dActor_c *dActor_c::FindEgg(dCc_c &clsn)
 {
     u32 id = clsn.otherOwner;
@@ -907,9 +745,6 @@ dActor_c *dActor_c::FindEgg(dCc_c &clsn)
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 50 -- dActor_c::FindExplosionActor(dCc_c &)
- * 0x02010374  size 0x40 */
 dActor_c *dActor_c::FindExplosionActor(dCc_c &clsn)
 {
     u32 id = clsn.otherOwner;
@@ -923,9 +758,6 @@ dActor_c *dActor_c::FindExplosionActor(dCc_c &clsn)
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 49 -- dActor_c::func_02010304(dCc_c *)
- * 0x02010304  size 0x70 */
 /* Returns the player behind `clsn`'s last hit if that hit carried hitFlags
    0x1000 and the player then grabs this actor; otherwise null. 0xbf is the
    player's actor ID. */
@@ -940,13 +772,9 @@ daPly_c *dActor_c::func_02010304(dCc_c *clsn) {
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 48 -- dActor_c::SpawnFireball(Vector3 const &, Vector3_16 const *, int, int, unsigned int)
- * 0x020102b0  size 0x54 */
 /* Spawns actor 0xfe, daFPknBall_c (the fire piranha plant's fireball), with
-   its starting speed and the speed it then approaches. RETURNS THE BALL:
-   r0 holds it from the Spawn call to the `bx lr`, and daTrs_c reads it back
-   after the call, so the void the old local externs mostly spelled was wrong. */
+   its starting speed and the speed it then approaches. Returns the ball: r0
+   holds it from the Spawn call to the `bx lr`, and daTrs_c reads it back. */
 dActor_c *dActor_c::SpawnFireball(const Vector3 &pos, const Vector3_16 *rot, Fix12i horzSpeed,
                                   Fix12i targetSpeed, u32 param1) {
     dActor_c *ball = dActor_c::Spawn(0xfe, param1, pos, rot, mAreaId, -1);
@@ -957,12 +785,10 @@ dActor_c *dActor_c::SpawnFireball(const Vector3 &pos, const Vector3_16 *rot, Fix
     return ball;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 47 -- dActor_c::UpdateCarry(daPly_c &, Vector3 const &)
- * 0x02010180  size 0x130 */
 extern "C" {
+/* local extern: daPly_c has no accessor for the current body model. */
 void *func_ov002_020e496c(daPly_c *p); /* the player's current mBodyModels entry */
-void Vec3_Asr(Vector3 *vF, Vector3 *v, int amount);
+/* local extern: no header declares it. */
 void Vec3_Lsl(Vector3 *vF, const Vector3 *v, int amount);
 }
 Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
@@ -996,105 +822,62 @@ Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
     return &data_020a0e68;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 46 -- dActor_c::Earthquake(Vector3 const &, int)
- * 0x02010168  size 0x18 */
 extern "C" {
 extern dCamera_c *gCamera; /* the camera */
 }
-/* r1 is the position and r2 the intensity; both are forwarded untouched. */
 void dActor_c::Earthquake(const Vector3 &pos, Fix12i magnitude) {
     gCamera->func_0200d8c8(&pos, magnitude);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 45 -- dActor_c::OnYoshiTryEat()
- * 0x02010160  size 0x8 */
 int dActor_c::OnYoshiTryEat()
 {
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 44 -- dActor_c::OnTurnIntoEgg(daPly_c &)
- * 0x02010154  size 0xc */
 void dActor_c::OnTurnIntoEgg(daPly_c &player) {
     KillAndTrackInDeathTable();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 43 -- dActor_c::Virtual50()
- * 0x0201014c  size 0x8 */
 int dActor_c::Virtual50()
 {
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 42 -- dActor_c::OnGroundPounded(dActor_c &)
- * 0x02010148  size 0x4 */
 void dActor_c::OnGroundPounded(dActor_c &pounder)
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 41 -- dActor_c::OnAttacked1(dActor_c &)
- * 0x02010144  size 0x4 */
 int dActor_c::OnAttacked1(dActor_c &attacker)
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 40 -- dActor_c::OnAttacked2(dActor_c &)
- * 0x02010140  size 0x4 */
 int dActor_c::OnAttacked2(dActor_c &attacker)
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 39 -- dActor_c::OnKicked(dActor_c &)
- * 0x0201013c  size 0x4 */
 void dActor_c::OnKicked(dActor_c &kicker)
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 38 -- dActor_c::OnPushed(dActor_c &)
- * 0x02010138  size 0x4 */
 int dActor_c::OnPushed(dActor_c &pusher)
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 37 -- dActor_c::OnHitByCannonBlastedChar(dActor_c &)
- * 0x02010134  size 0x4 */
 int dActor_c::OnHitByCannonBlastedChar(dActor_c &attacker)
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 36 -- dActor_c::OnHitByMegaChar(daPly_c &)
- * 0x02010130  size 0x4 */
 void dActor_c::OnHitByMegaChar(daPly_c &player) {}
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 35 -- dActor_c::OnHitFromUnderneath(dActor_c &)
- * 0x0201012c  size 0x4 */
 int dActor_c::OnHitFromUnderneath(dActor_c &attacker)
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 34 -- dActor_c::OnAimedAtWithEgg()
- * 0x02010124  size 0x8 */
 int dActor_c::OnAimedAtWithEgg()
 {
     return 0x14000;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 33 -- dActor_c::OnAimedAtWithEggReturnVec()
- * 0x020100dc  size 0x48 */
 Vector3 dActor_c::OnAimedAtWithEggReturnVec()
 {
     Vector3 result;
@@ -1105,9 +888,6 @@ Vector3 dActor_c::OnAimedAtWithEggReturnVec()
     return result;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 32 -- dActor_c::SpawnNumber(Vector3 const &, unsigned int, bool, unsigned short, dActor_c *)
- * 0x02010044  size 0x98 */
 /* Spawns actor 0x14a, daObjNumber_c, the number that pops up over an actor. */
 dActor_c *dActor_c::SpawnNumber(const Vector3 &pos, u32 value, bool packLowNibble, u16 delay,
                                 dActor_c *owner) {
@@ -1126,9 +906,6 @@ dActor_c *dActor_c::SpawnNumber(const Vector3 &pos, u32 value, bool packLowNibbl
     return number->SetOwner(owner);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 31 -- dActor_c::TrackStar(unsigned int, unsigned int)
- * 0x0200ff94  size 0xb0 */
 extern "C" {
 extern u8 gCurrentStarId[];        /* the star index this mission was entered for */
 extern s8 gCurrentSublevel[];      /* the current sublevel id */
@@ -1159,9 +936,6 @@ s32 dActor_c::TrackStar(u32 starIdx, u32 markerType)
     return -1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 30 -- dActor_c::UntrackStar(signed char &)
- * 0x0200ff60  size 0x34 */
 void dActor_c::UntrackStar(s8 &starID)
 {
     s8 slot = starID;
@@ -1172,21 +946,16 @@ void dActor_c::UntrackStar(s8 &starID)
     starID = -1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 29 -- dActor_c::UntrackAndSpawnStar(signed char &, unsigned int, Vector3 const &, unsigned char)
- * 0x0200ff14  size 0x4c */
 dActor_c *dActor_c::UntrackAndSpawnStar(s8 &trackStarID, u32 starID,
                                   const Vector3 &spawnPos, u8 howToSpawnStar)
 {
     UntrackStar(trackStarID);
 
+    /* 0xb2 is the star actor. */
     return Spawn(0xb2, starID | (howToSpawnStar << 4), spawnPos, 0,
                  mAreaId, -1);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 28 -- dActor_c::GetWaterHeightWDW()
- * 0x0200fec8  size 0x4c */
 extern "C" {
 extern unsigned char data_0209f2c0[]; /* WDW's water level, 0..2 */
 extern int data_02075244[];           /* the water height for each level */
@@ -1205,29 +974,20 @@ s32 dActor_c::GetWaterHeightWDW()
     return height;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 27 -- dActor_c::LoadBlueCoinModel()
- * 0x0200fe9c  size 0x2c */
 extern "C" {
-extern SharedFilePtr data_ov002_0210da00; /* 0x0210da00 */
-extern SharedFilePtr data_ov002_0210d9c8; /* 0x0210d9c8 */
+extern SharedFilePtr data_ov002_0210da00; /* the blue coin's two model files */
+extern SharedFilePtr data_ov002_0210d9c8;
 }
 void dActor_c::LoadBlueCoinModel() {
     dExtSimpleModel_c::LoadFile(data_ov002_0210da00);
     dExtSimpleModel_c::LoadFile(data_ov002_0210d9c8);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 26 -- dActor_c::UnloadBlueCoinModel()
- * 0x0200fe70  size 0x2c */
 void dActor_c::UnloadBlueCoinModel() {
     data_ov002_0210da00.Release();
     data_ov002_0210d9c8.Release();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 25 -- dActor_c::PoofDust()
- * 0x0200fe3c  size 0x34 */
 void dActor_c::PoofDust()
 {
     Vector3 pos;
@@ -1237,18 +997,12 @@ void dActor_c::PoofDust()
     PoofDustAt(pos);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 24 -- dActor_c::PoofDustAt(Vector3 const &)
- * 0x0200fdfc  size 0x40 */
 void dActor_c::PoofDustAt(const Vector3 &pos)
 {
     Particle::System::NewSimple(kPtclPoofDustA, pos.x, pos.y, pos.z);
     Particle::System::NewSimple(kPtclPoofDustB, pos.x, pos.y, pos.z);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 23 -- dActor_c::TriplePoofDust()
- * 0x0200fdc8  size 0x34 */
 void dActor_c::TriplePoofDust()
 {
     Vector3 pos;
@@ -1258,9 +1012,6 @@ void dActor_c::TriplePoofDust()
     TriplePoofDustAt(pos);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 22 -- dActor_c::TriplePoofDustAt(Vector3 const &)
- * 0x0200fd74  size 0x54 */
 void dActor_c::TriplePoofDustAt(const Vector3 &pos)
 {
     Particle::System::NewSimple(kPtclTriplePoofA, pos.x, pos.y, pos.z);
@@ -1268,9 +1019,6 @@ void dActor_c::TriplePoofDustAt(const Vector3 &pos)
     Particle::System::NewSimple(kPtclTriplePoofC, pos.x, pos.y, pos.z);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 21 -- dActor_c::SmallPoofDust()
- * 0x0200fd40  size 0x34 */
 void dActor_c::SmallPoofDust()
 {
     Vector3 pos;
@@ -1280,18 +1028,12 @@ void dActor_c::SmallPoofDust()
     DisappearPoofDustAt(pos);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- dActor_c::DisappearPoofDustAt(Vector3 const &)
- * 0x0200fd04  size 0x3c */
 void dActor_c::DisappearPoofDustAt(const Vector3 &pos)
 {
     Particle::System::NewSimple(kPtclDisappearPoofA, pos.x, pos.y, pos.z);
     Particle::System::NewSimple(kPtclDisappearPoofB, pos.x, pos.y, pos.z);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 19 -- dActor_c::func_0200fccc(int)
- * 0x0200fccc  size 0x38 */
 extern "C" {
 extern int func_0200fc44(dActor_c *actor, Vector3 *pos, int doRaycast);
 }
@@ -1304,9 +1046,6 @@ int dActor_c::func_0200fccc(int doRaycast) {
     return func_0200fc44(this, &pos, doRaycast);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 18 -- func_0200fc44
- * 0x0200fc44  size 0x88 */
 /* Particle 0xb3 25.0 above pos, optionally first dropping pos onto the
    ground below it; pos is moved. The leading actor argument is unused. */
 extern "C" int func_0200fc44(dActor_c *actor, Vector3 *pos, int doRaycast) {
@@ -1321,9 +1060,8 @@ extern "C" int func_0200fc44(dActor_c *actor, Vector3 *pos, int doRaycast) {
     return (int)Particle::System::NewSimple(kPtclGroundPuff, pos->x, pos->y, pos->z);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 17 -- dActor_c::LandingDust(bool)
- * 0x0200fc0c  size 0x38 */
+/* LandingDust and HugeLandingDust call each other's `...At` worker; the names
+   are imported and the ROM really is crossed (see dActor_c.h). */
 void dActor_c::LandingDust(bool doRaycast)
 {
     Vector3 pos;
@@ -1333,9 +1071,6 @@ void dActor_c::LandingDust(bool doRaycast)
     HugeLandingDustAt(pos, doRaycast);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 16 -- dActor_c::HugeLandingDustAt(Vector3 &, bool)
- * 0x0200fb84  size 0x88 */
 /* Particle 0xb2 40.0 above pos, optionally first dropping pos onto the
    ground below it; pos is moved. */
 void dActor_c::HugeLandingDustAt(Vector3 &pos, bool doRaycast) {
@@ -1350,9 +1085,6 @@ void dActor_c::HugeLandingDustAt(Vector3 &pos, bool doRaycast) {
     Particle::System::NewSimple(kPtclLandingDust, pos.x, pos.y, pos.z);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 15 -- dActor_c::HugeLandingDust(bool)
- * 0x0200fb4c  size 0x38 */
 void dActor_c::HugeLandingDust(bool doRaycast)
 {
     Vector3 pos;
@@ -1362,9 +1094,6 @@ void dActor_c::HugeLandingDust(bool doRaycast)
     LandingDustAt(pos, doRaycast);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- dActor_c::LandingDustAt(Vector3 &, bool)
- * 0x0200fac4  size 0x88 */
 /* As HugeLandingDustAt, with particle 0xb1 raised 90.0. */
 void dActor_c::LandingDustAt(Vector3 &pos, bool doRaycast) {
     if (doRaycast) {
@@ -1378,13 +1107,10 @@ void dActor_c::LandingDustAt(Vector3 &pos, bool doRaycast) {
     Particle::System::NewSimple(kPtclHugeLandingDust, pos.x, pos.y, pos.z);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- func_0200fa8c
- * 0x0200fa8c  size 0x38 */
 extern "C" {
 extern void *func_0200fa04(dActor_c *actor, Vector3 *pos, int doRaycast);
 }
-/* func_0200fa04 at this actor's position; void * as decl_common.h spells it. */
+/* func_0200fa04 at this actor's position; its void * result is ignored here. */
 extern "C" void func_0200fa8c(void *actorp, int doRaycast) {
     dActor_c *actor = (dActor_c *)actorp;
     Vector3 pos;
@@ -1394,9 +1120,6 @@ extern "C" void func_0200fa8c(void *actorp, int doRaycast) {
     func_0200fa04(actor, &pos, doRaycast);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- func_0200fa04
- * 0x0200fa04  size 0x88 */
 /* As func_0200fc44, with particle 0x1b raised 120.0 instead of 25.0. */
 extern "C" void *func_0200fa04(dActor_c *actor, Vector3 *pos, int doRaycast) {
     if (doRaycast) {
@@ -1410,9 +1133,6 @@ extern "C" void *func_0200fa04(dActor_c *actor, Vector3 *pos, int doRaycast) {
     return Particle::System::NewSimple(kPtclBossLandingDust, pos->x, pos->y, pos->z);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- dActor_c::GetBitInDeathTable()
- * 0x0200f9f4  size 0x10 */
 extern "C" {
 unsigned int DeathTable_GetBit(int id);
 }
@@ -1421,9 +1141,6 @@ int dActor_c::GetBitInDeathTable()
     return DeathTable_GetBit(mDeathTableID);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- dActor_c::TrackInDeathTable()
- * 0x0200f9e4  size 0x10 */
 extern "C" {
 void DeathTable_SetBit(int id);
 }
@@ -1432,9 +1149,6 @@ void dActor_c::TrackInDeathTable()
     DeathTable_SetBit(mDeathTableID);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- dActor_c::UntrackInDeathTable()
- * 0x0200f9d4  size 0x10 */
 extern "C" {
 void DeathTable_ClearBit(int id);
 }
@@ -1443,31 +1157,18 @@ void dActor_c::UntrackInDeathTable()
     DeathTable_ClearBit(mDeathTableID);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- dActor_c::KillAndTrackInDeathTable()
- * 0x0200f9b8  size 0x1c */
 void dActor_c::KillAndTrackInDeathTable()
 {
     TrackInDeathTable();
     MarkForDestruction();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- dActor_c::SpawnSoundObj(unsigned int)
- * 0x0200f97c  size 0x3c */
 dActor_c *dActor_c::SpawnSoundObj(u32 soundObjParam) {
     return Spawn(0x167, soundObjParam, mPos, 0, mAreaId, -1);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- Sound::PlaySecretSound(dActor_c *, unsigned short *)
- * 0x0200f8f8  size 0x84 */
-extern "C" {
-/* local extern: its five named parameters hold this TU's @NNN count. */
-int d_actorPlaySubHold(unsigned int soundID, unsigned int vol, unsigned int pan, Fix12i dist,
-                       int loop);
+/* PlaySub's distance for the is-it-finished poll. */
 static const int kPoolDist = 0x8777;
-}
 namespace Sound {
 
 int PlaySecretSound(dActor_c *actor, u16 *counter) {
@@ -1481,9 +1182,6 @@ int PlaySecretSound(dActor_c *actor, u16 *counter) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- Sound::PlaySmallSecretSound(dActor_c *, unsigned short *)
- * 0x0200f874  size 0x84 */
 namespace Sound {
 
 int PlaySmallSecretSound(dActor_c *actor, u16 *counter) {
@@ -1497,9 +1195,6 @@ int PlaySmallSecretSound(dActor_c *actor, u16 *counter) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- func_0200f7f0
- * 0x0200f7f0  size 0x84 */
 extern "C" int func_0200f7f0(dActor_c *actor, u16 *counter) {
     if (*counter < 0x69) {
         Sound::PlaySub(0x21, 0x14, 0x7f, 0x6b000, 0);
@@ -1510,9 +1205,6 @@ extern "C" int func_0200f7f0(dActor_c *actor, u16 *counter) {
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- dActor_c::MakeVanishLuigiWork(dCc_c &)
- * 0x0200f7a8  size 0x48 */
 void dActor_c::MakeVanishLuigiWork(dCc_c &clsn)
 {
     daPly_c *player;
@@ -1527,9 +1219,6 @@ void dActor_c::MakeVanishLuigiWork(dCc_c &clsn)
         clsn.flags |= 2;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- dActor_c::func_0200f760(dCc_c *)
- * 0x0200f760  size 0x48 */
 /* MakeVanishLuigiWork again, taking the cylinder by pointer; the ROM keeps
    both copies. */
 void dActor_c::func_0200f760(dCc_c *clsn) {
@@ -1543,9 +1232,6 @@ void dActor_c::func_0200f760(dCc_c *clsn) {
         clsn->flags |= 2;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- dActor_c::IsTooFarAwayFromPlayer(int)
- * 0x0200f70c  size 0x54 */
 /* True only while the actor is off screen (mFlags 0x08), nothing forces it to
    think, and the closest player is at least threshold away. */
 int dActor_c::IsTooFarAwayFromPlayer(Fix12i threshold) {
@@ -1559,9 +1245,8 @@ int dActor_c::IsTooFarAwayFromPlayer(Fix12i threshold) {
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- dActor_c::DetectRaycastClsn(Vector3 &, Vector3 &, bool)
- * 0x0200f658  size 0xb4 */
+/* func_02037dc4 is still an address label: it returns the hit surface's
+   normal. */
 extern "C" Vector3 *func_02037dc4(SurfaceInfo *surface);
 
 bool dActor_c::DetectRaycastClsn(Vector3 &start, Vector3 &end, bool storeHitPos)

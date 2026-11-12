@@ -27,8 +27,6 @@
  *   0x3ec->0x3f4. Earthquake's Fix12<int> magnitude size-DIFF
  *   0x3ec->0x3f8. Particle::System::New with Fix12<int> coordinates
  *   size-DIFF 0x3ec->0x41c. All three stay scalar externs.
- * - InitResources: dBgW_KcMbg::SetFile with a Fix12<int> temporary
- *   size-DIFF 0xbc->0xc8. The scalar extern stays.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -104,8 +102,7 @@ s32 daDgr_c::InitResources() {
     }
     {
         KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov025_02113a60);
-        ((dBgW_KcMbg *)(&mMeshCollider))
-            ->dBgW_KcMbg::SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov025_02112c28);
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov025_02112c28);
     }
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mAngleY = 0;

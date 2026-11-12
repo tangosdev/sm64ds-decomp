@@ -1,13 +1,10 @@
 //cpp
 #include "Memory.h"
+#include "nitro/wm/wm_api.h"
 #include "private/wm_views.h"
+#include "nitro/mb/mb.h"
 
 extern "C" {
-
-/* MB_ReadMultiBootParentBssDesc */
-extern void MB_ReadMultiBootParentBssDesc(void *thiz, int parentMaxSize, int childMaxSize,
-                                          int ksFlag, int csFlag);
-extern int WM_Init(void *buf, int ch);
 
 extern unsigned short data_020a0f14;
 extern int data_020a0f94;
@@ -16,7 +13,7 @@ extern unsigned short data_020a0f2c;
 extern void *data_020a0f4c;
 extern void *data_020a0f44;
 extern void *data_020a0f48;
-extern void *data_020a0f54;
+extern WMBssDesc *data_020a0f54;
 extern unsigned short data_020a0f28;
 extern WMDataSharingInfo *data_020a0f74;
 extern WMDataSet *data_020a0f80;
@@ -27,11 +24,9 @@ extern void *data_020a0f68;
 /* The 0x40-byte WMParentParam template func_0203db64 keeps. */
 extern unsigned char data_020a1064[];
 
-/* Allocate the link's buffers. On a download-play child (the halfword at
-   0x27ffc40 is 2), rebuild the parent's WMBssDesc into data_020a0f54, keep its
+/* Allocate the link's buffers. On a download-play child, rebuild the parent's WMBssDesc into data_020a0f54, keep its
    channel in data_020a0f28 (and in data_020a1064's channel) and step its tgid. */
 void func_020408b0(unsigned short arg) {
-    int b;
     data_020a0f14 = arg;
     data_020a0f94 = 0;
     data_020a0f24 = 0;
@@ -39,14 +34,11 @@ void func_020408b0(unsigned short arg) {
     data_020a0f4c = Memory::Allocate(0x1300, 0x20);
     data_020a0f44 = Memory::Allocate(0x40, 0x20);
     data_020a0f48 = Memory::Allocate(0x20, 0x20);
-    data_020a0f54 = Memory::Allocate(0xc0, 0x20);
-    b = (*(volatile unsigned short *)0x27ffc40 == 2);
-    if (b != 0) {
-        WMBssDesc *desc;
+    data_020a0f54 = (WMBssDesc *)Memory::Allocate(sizeof(WMBssDesc), 0x20);
+    if (MB_IsMultiBootChild()) {
         MB_ReadMultiBootParentBssDesc(data_020a0f54, 0x200, 0x20, 0, 1);
-        desc = (WMBssDesc *)data_020a0f54;
-        data_020a0f28 = desc->channel;
-        ++desc->gameInfo.tgid;
+        data_020a0f28 = data_020a0f54->channel;
+        ++data_020a0f54->gameInfo.tgid;
     }
     data_020a0f74 = (WMDataSharingInfo *)Memory::Allocate(sizeof(WMDataSharingInfo), 0x20);
     data_020a0f80 = (WMDataSet *)Memory::Allocate(sizeof(WMDataSet), 0x20);
@@ -54,7 +46,7 @@ void func_020408b0(unsigned short arg) {
     data_020a0f60 = Memory::Allocate(0x220, 0x20);
     data_020a0f64 = 0x480;
     data_020a0f68 = Memory::Allocate(0x480, 0x20);
-    ((WmParentParam *)data_020a1064)->channel = data_020a0f28;
+    ((WMParentParam *)data_020a1064)->channel = data_020a0f28;
     WM_Init(data_020a0f4c, 1);
 }
 }

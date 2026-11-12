@@ -1,4 +1,4 @@
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
+#include "nitro/mi/memory.h"
 
 int func_02064cd8(unsigned char *dst, unsigned short a1, unsigned char a2, unsigned int a3, unsigned int a4)
 {

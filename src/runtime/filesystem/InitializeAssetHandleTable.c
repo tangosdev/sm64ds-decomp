@@ -2085,7 +2085,7 @@ void InitializeAssetHandleTable(void) {
     unsigned char savedTimerState = func_0201a9ec(&data_0209d574);
     AllocAssetHandleTable(ASSET_HANDLE_COUNT);
 
-    OSThread *currentThread = data_020a6134.current;
+    OSThread *currentThread = OSi_ThreadInfo.current;
     unsigned int savedPriority = OS_GetThreadPriority(currentThread);
     OS_SetThreadPriority(currentThread, ASSET_LOOKUP_PRIORITY);
 

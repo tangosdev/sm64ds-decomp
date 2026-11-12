@@ -1,4 +1,5 @@
 #include "types.h"
+#include "nitro/os/system.h"
 struct Entry {
     u16 id;     /* +0x00 */
     u16 p2;
@@ -42,7 +43,6 @@ struct Dst {
     char pad2[0x30 - 0x1c];
 };
 
-extern void OS_Terminate(void);
 extern void func_02045e44(struct Ctx *self, unsigned int value, int index);
 
 void func_020469e8(struct Ctx *ctx, struct Desc *desc, int sb) {

@@ -46,6 +46,7 @@
 
 #include "Matrix2x2.h"
 #include "nitro/fx/fx_cp.h"
+#include "nitro/mi/memory.h"
 
 extern u8  data_0209e660;    /* sub-OAM suppress flag / single-buffer select */
 extern int data_0209e664;    /* main-buffer fill counter */
@@ -62,8 +63,6 @@ extern const unsigned char data_020755ac[12]; /* OBJ height, stride 4 */
 extern "C" {
 void GX_LoadOAM(const void *src, unsigned int offset, unsigned int count);
 void GXS_LoadOAM(const void *src, unsigned int offset, unsigned int count);
-void MIi_CpuCopy32(int *dst, int *src, int len);
-void MIi_CpuCopyFast(const void *src, void *dst, int len);
 
 int func_0202043c(void *thiz);
 }
@@ -677,9 +676,9 @@ void OAM::Reset() {
     } else {
         data_0209e674[0].attr01 = 0xc0;
         data_0209e674[0].attr2 = 0;
-        MIi_CpuCopy32((int *)data_0209e674, data_0209e67c, 0x18);
-        MIi_CpuCopyFast(data_0209e674, data_0209e694, 0x3e0);
-        MIi_CpuCopyFast(data_0209e674, data_0209ea74, 0x400);
+        MI_CpuCopy32(data_0209e674, data_0209e67c, 0x18);
+        MI_CpuCopyFast(data_0209e674, data_0209e694, 0x3e0);
+        MI_CpuCopyFast(data_0209e674, data_0209ea74, 0x400);
         data_0209e670 = 0;
         data_0209e66c = 0;
     }

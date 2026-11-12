@@ -4,9 +4,6 @@
 extern volatile TPData data_020a0df8[];
 extern TPData data_020a0dd8;
 
-extern int TP_GetLatestIndexInAuto(void);
-extern void TP_GetCalibratedPoint(TPData *dst, TPData *src);
-
 /* Read the touch panel through the auto-sampling ring func_0203bbc0 starts
    (data_020a0df8, nine samples, four samples a frame). Of the four samples
    before the latest index (TP_GetLatestIndexInAuto), an invalid one counts

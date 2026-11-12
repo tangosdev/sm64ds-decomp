@@ -47,8 +47,8 @@ int func_02030e4c(void);
    the link started or a link error up, the session check
    (func_02030e4c). */
 void func_020197b8(void) {
-    G2x_SetBlendBrightness_(&REG_BLDCNT, 0x3f, 0x1f);
-    G2x_SetBlendBrightness_(&REG_DB_BLDCNT, 0x3f, 0x1f);
+    G2_SetBlendBrightness(0x3f, 0x1f);
+    G2S_SetBlendBrightness(0x3f, 0x1f);
     do {
         unsigned short v;
         data_0209d50c = 0xb; func_02019ac4();
@@ -66,10 +66,10 @@ void func_020197b8(void) {
         data_0209d50c = 5; func_02019404();
         data_0209d50c = 6;
         data_020a0db0 = data_020a0db0 + 1;
-        OS_DisableIrqMask(1);
+        OS_DisableIrqMask(OS_IE_V_BLANK);
         func_020190b8();
         data_0209d4f0 = 1;
-        OS_EnableIrqMask(1);
+        OS_EnableIrqMask(OS_IE_V_BLANK);
         data_0209d50c = 7; func_0201a4bc();
         data_0209d4f0 = 0;
         data_0209d50c = 0x15; func_0201ffcc();

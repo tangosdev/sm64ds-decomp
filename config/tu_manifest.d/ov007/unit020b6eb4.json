@@ -62,7 +62,7 @@
     "Folded from 5 sources (3 C, 2 C++) that each declared a private view of the work block; the unit reads it through include/Ov007Work.h, which now names the two words these functions give meaning to (frameCount at 0x000, choiceReady at 0x014). The bring-up's argument record is typed as Ov007MenuHooks."
   ],
   "verification": {
-    "round": "tools/match.py per function against the one unit source -- text-only, whole TU compiled",
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "functions_matched": 5,
@@ -70,7 +70,17 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "functions_occur_in_expected_order": "PASS"
+      "functions_occur_in_expected_order": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "object": "build/tu/ov007-unit020b6eb4/unit020b6eb4.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
     }
   }
 }

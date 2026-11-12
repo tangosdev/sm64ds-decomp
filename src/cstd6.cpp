@@ -208,13 +208,13 @@ int raise(int sig) {
     if (sig < 1 || sig > 7)
         return -1;
     if (OS_TryLockMutex(&__cs[signal_funcs_access]) == 0) {
-        __cs_id[signal_funcs_access] = data_020a6134.current->id;
+        __cs_id[signal_funcs_access] = OSi_ThreadInfo.current->id;
         __cs_ref[signal_funcs_access] = 1;
-    } else if (__cs_id[signal_funcs_access] == data_020a6134.current->id) {
+    } else if (__cs_id[signal_funcs_access] == OSi_ThreadInfo.current->id) {
         __cs_ref[signal_funcs_access] += 1;
     } else {
         OS_LockMutex(&__cs[signal_funcs_access]);
-        __cs_id[signal_funcs_access] = data_020a6134.current->id;
+        __cs_id[signal_funcs_access] = OSi_ThreadInfo.current->id;
         __cs_ref[signal_funcs_access] = 1;
     }
     signal_func = signal_funcs[sig - 1];

@@ -1,4 +1,4 @@
-extern int func_0203f818(int a);
+extern int func_0203f818(unsigned short channel);
 extern void func_0203f6e8(short v);
 extern void func_0203f6a4(int v);
 extern short data_020a0f18;

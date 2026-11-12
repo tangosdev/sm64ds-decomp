@@ -15,6 +15,7 @@
  * pokediamond, while OS_GetConsoleType still does the full detection.
  */
 #include "nitro/os/system.h"
+#include "nitro/hw/mmap_shared.h"
 #include "nitro/os/spinLock.h"
 
 #define OSi_CONSOLE_NOT_DETECT 0xffffffff
@@ -26,12 +27,6 @@
 
 #define OS_CONSOLE_DEV_CARTRIDGE 0x01000000
 #define OS_CONSOLE_DEV_CARD 0x02000000
-
-#define HW_CTRDG_ROM 0x08000000
-#define HW_CHECK_DEBUGGER_BUF1 0x027ff814
-#define HW_CHECK_DEBUGGER_SW 0x027ffc10
-#define HW_CHECK_DEBUGGER_BUF2 0x027ffc14
-#define HW_MMEMCHECKER_SUB 0x027ffffa
 
 extern "C" {
 

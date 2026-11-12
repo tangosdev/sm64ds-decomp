@@ -81,8 +81,6 @@ addr	state	modules	config_names	config_kinds	verified_name	verified_kind	verdict
 0x02099e70	CONFIG-PLACEHOLDER	arm9	data_02099e70	data	NEXT_UNIQUE_ACTOR_ID	data	placeholder		
 0x02099f24	CONFIG-PLACEHOLDER	arm9	data_02099f24	data	PROCESS_STATE	data	placeholder		
 0x02099fd0	CONFIG-PLACEHOLDER	arm9	data_02099fd0	data	RENDER_DMA_CHANNEL	data	placeholder		
-0x02099fd4	CONFIG-PLACEHOLDER	arm9	data_02099fd4	data	_ZN3IRQ13DmaTimIndicesE	data	placeholder		
-0x02099fe4	CONFIG-PLACEHOLDER	arm9	data_02099fe4	data	_ZN3IRQ12IRQFunctionsE	data	placeholder		
 0x0209b138	CONFIG-PLACEHOLDER	arm9	data_0209b138	bss	KS_CAMERA_FUNCTIONS	data	placeholder		
 0x0209b270	CONFIG-PLACEHOLDER	arm9	data_0209b270	bss	KS_NUM_PLAYERS	data	placeholder		
 0x0209b274	CONFIG-PLACEHOLDER	arm9	data_0209b274	bss	KS_FRAME_COUNTER	data	placeholder		
@@ -286,7 +284,6 @@ addr	state	modules	config_names	config_kinds	verified_name	verified_kind	verdict
 0x020a4d38	CONFIG-PLACEHOLDER	arm9	data_020a4d38	bss	_ZN6Memory16rootHeapIteratorE	data	placeholder		
 0x020a4d6c	CONFIG-PLACEHOLDER	arm9	data_020a4d6c	bss	_ZN5Sound7PLAYERSE	data	placeholder		
 0x020a5bb8	CONFIG-PLACEHOLDER	arm9	data_020a5bb8	bss	_ZN5Sound8SDAT_RAM3PTRE	data	placeholder		
-0x020a60c4	CONFIG-PLACEHOLDER	arm9	data_020a60c4	bss	_ZN3IRQ15DmaTimFunctionsE	data	placeholder		
 0x020abac8	CONFIG-PLACEHOLDER	ov000,ov001	data_ov000_020abac8;data_ov001_020abac8	data	_ZN3OAM11SILVER_STARE	data	placeholder		
 0x020aea30	CONFIG-PLACEHOLDER	ov002,ov004	func_ov002_020aea30;func_ov004_020aea30	function	_ZN5Enemy12KillByAttackER5Actor	function	placeholder		
 0x020e2e88	NO-SLOT	-	-	-	FALL_DAMAGE_BIG	data	no-slot		

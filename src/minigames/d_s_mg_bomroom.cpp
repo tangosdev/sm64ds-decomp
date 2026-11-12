@@ -35,6 +35,7 @@
 #include "nitro/fx/fx_trig.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "PlayerInput.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
 extern void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
@@ -63,8 +64,6 @@ extern int RandomIntInternal(int *seed);
 extern u16 sBomroomSpawnDelays[];
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
-
-extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 
 extern void GX_LoadBG0Scr(const void *src, int offset, int count);
 extern u8 gMainScreenLayers;
@@ -1711,7 +1710,7 @@ void dScMgBomroom_c::StartRound(int /* arg */) {
     ResetRound();
     mTallyCount = 0;
     mSceneState = 0;
-    G2x_SetBlendAlpha_(&REG_BLDCNT, 1, 0x1c, 4, 3);
+    G2_SetBlendAlpha(1, 0x1c, 4, 3);
     SetBg0Offset(0, 0);
 }
 
@@ -1759,8 +1758,9 @@ s32 dScMgBomroom_c::InitResources() {
     void *arc;
 
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
-    REG_BG3CNT = (REG_BG3CNT & ~3) | 2;
-    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1210;
+    G2_SetBG3Priority(2);
+    G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
+                         GX_BG_CHARBASE_0x10000);
 
     f = LoadFile(ASSET_D_2D_MG_BG_BOMROOM_NCG_BIN);
     DecompressLZ16(f, (void *)((int)G2_GetBG3CharPtr() + 0x4000));
@@ -1775,19 +1775,21 @@ s32 dScMgBomroom_c::InitResources() {
     Deallocate(f);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
-    REG_BG2CNT = (REG_BG2CNT & ~3) | 1;
-    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x9410;
+    G2_SetBG2Priority(1);
+    G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x512, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xa000,
+                         GX_BG_CHARBASE_0x10000);
 
     f = LoadFile(ASSET_D_2D_ELEVATOR_NSC_BIN);
     b = (char *)G2_GetBG2ScrPtr();
     fill = 0xf23f;
-    MIi_CpuClear16(fill, b, 0x1000);
+    MI_CpuFill16(b, fill, 0x1000);
     GX_LoadBG2Scr(f, 0, 0x800);
     Deallocate(f);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG0;
-    REG_BG0CNT = REG_BG0CNT & ~3;
-    REG_BG0CNT = (REG_BG0CNT & 0x43) | 0x5610;
+    G2_SetBG0Priority(0);
+    G2_SetBG0Control(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xb000,
+                     GX_BG_CHARBASE_0x10000, GX_BG_EXTPLTT_01);
 
     f = LoadFile(ASSET_D_2D_BLUE_SHADOW_NSC_BIN);
     GX_LoadBG0Scr(f, 0, 0x800);
@@ -1797,7 +1799,7 @@ s32 dScMgBomroom_c::InitResources() {
     GX_LoadBG0Scr(f, 0x800, 0x800);
     Deallocate(f);
 
-    G2x_SetBlendAlpha_(&REG_BLDCNT, 1, 0x1c, 4, 3);
+    G2_SetBlendAlpha(1, 0x1c, 4, 3);
 
     arc = LoadFile(ASSET_D_2D_MG_BOMROOM_NCG_BIN);
     f = LoadFile(ASSET_D_2D_MG_BOMROOM_NCL_BIN);
@@ -1805,8 +1807,9 @@ s32 dScMgBomroom_c::InitResources() {
     GX_LoadOBJPltt(f, 0, 0x100);
 
     gSubScreenLayers |= DISPLAY_LAYER_BG3;
-    REG_DB_BG3CNT = (REG_DB_BG3CNT & ~3) | 1;
-    REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x210;
+    G2S_SetBG3Priority(1);
+    G2S_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x1000,
+                          GX_BG_CHARBASE_0x10000);
 
     {
         void *f7 = LoadFile(ASSET_D_2D_MG_BG_BOMROOM_NCG_BIN);

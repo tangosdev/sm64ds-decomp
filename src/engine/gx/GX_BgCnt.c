@@ -2,14 +2,14 @@
  * arm9 .text 0x02054d38..0x020551f0.
  *
  * For each of BG0..BG3 there is a screen-base and a character-base getter
- * for the main engine (G2_, BGxCNT at 0x04000008..0x0400000e, VRAM
- * 0x06000000) and for the sub engine (G2S_, 0x04001008..0x0400100e, VRAM
- * 0x06200000). Only the main engine's getters add DISPCNT's screen and
- * character offsets (bits 27-29 and 24-26); the sub engine has fixed bases.
- * BG2 and BG3 depend on the mode: where the layer is extended-affine (BG2 in
- * mode 5, BG3 in modes 3-5), bit 7 of its control word selects a bitmap,
- * whose screen base counts in 16 KiB units and which has no character base.
- * BG3 has no layer in modes 6 and 7.
+ * for the main engine (G2_, VRAM at HW_BG_VRAM) and for the sub engine
+ * (G2S_, HW_DB_BG_VRAM). Only the main engine's getters add DISPCNT's
+ * screen and character offsets, in 64 KiB blocks; the sub engine has fixed
+ * bases. A screen base counts in 2 KiB units and a character base in 16 KiB
+ * units. BG2 and BG3 depend on the BG mode: where the layer is
+ * extended-affine (BG2 in mode 5, BG3 in modes 3-5), the colour-mode bit of
+ * its control word selects a bitmap, whose screen base counts in 16 KiB units
+ * and which has no character base. BG3 has no layer in mode 6.
  *
  * pret's pokediamond GX_bgcnt.c defines the sixteen getters in this order,
  * each G2S_ getter directly after its G2_ twin: BG0 screen through BG3
@@ -20,71 +20,121 @@
  */
 #include "types.h"
 #include "nitro/hw/registers.h"
+#include "nitro/gx/gx.h"
 #include "nitro/gx/gx_bgcnt.h"
 
+/* The BG control words' base fields, under the SDK's names. */
+#define REG_G2_BG0CNT_SCREENBASE_SHIFT     8
+#define REG_G2_BG0CNT_SCREENBASE_MASK      0x1f00
+#define REG_G2_BG0CNT_CHARBASE_SHIFT       2
+#define REG_G2_BG0CNT_CHARBASE_MASK        0x003c
+#define REG_G2_BG1CNT_SCREENBASE_SHIFT     8
+#define REG_G2_BG1CNT_SCREENBASE_MASK      0x1f00
+#define REG_G2_BG1CNT_CHARBASE_SHIFT       2
+#define REG_G2_BG1CNT_CHARBASE_MASK        0x003c
+#define REG_G2_BG2CNT_SCREENBASE_SHIFT     8
+#define REG_G2_BG2CNT_SCREENBASE_MASK      0x1f00
+#define REG_G2_BG2CNT_COLORMODE_MASK       0x0080
+#define REG_G2_BG2CNT_CHARBASE_SHIFT       2
+#define REG_G2_BG2CNT_CHARBASE_MASK        0x003c
+#define REG_G2_BG3CNT_SCREENBASE_SHIFT     8
+#define REG_G2_BG3CNT_SCREENBASE_MASK      0x1f00
+#define REG_G2_BG3CNT_COLORMODE_MASK       0x0080
+#define REG_G2_BG3CNT_CHARBASE_SHIFT       2
+#define REG_G2_BG3CNT_CHARBASE_MASK        0x003c
+
+#define REG_G2S_DB_BG0CNT_SCREENBASE_SHIFT 8
+#define REG_G2S_DB_BG0CNT_SCREENBASE_MASK  0x1f00
+#define REG_G2S_DB_BG0CNT_CHARBASE_SHIFT   2
+#define REG_G2S_DB_BG0CNT_CHARBASE_MASK    0x003c
+#define REG_G2S_DB_BG1CNT_SCREENBASE_SHIFT 8
+#define REG_G2S_DB_BG1CNT_SCREENBASE_MASK  0x1f00
+#define REG_G2S_DB_BG1CNT_CHARBASE_SHIFT   2
+#define REG_G2S_DB_BG1CNT_CHARBASE_MASK    0x003c
+#define REG_G2S_DB_BG2CNT_SCREENBASE_SHIFT 8
+#define REG_G2S_DB_BG2CNT_SCREENBASE_MASK  0x1f00
+#define REG_G2S_DB_BG2CNT_COLORMODE_MASK   0x0080
+#define REG_G2S_DB_BG2CNT_CHARBASE_SHIFT   2
+#define REG_G2S_DB_BG2CNT_CHARBASE_MASK    0x003c
+#define REG_G2S_DB_BG3CNT_SCREENBASE_SHIFT 8
+#define REG_G2S_DB_BG3CNT_SCREENBASE_MASK  0x1f00
+#define REG_G2S_DB_BG3CNT_COLORMODE_MASK   0x0080
+#define REG_G2S_DB_BG3CNT_CHARBASE_SHIFT   2
+#define REG_G2S_DB_BG3CNT_CHARBASE_MASK    0x003c
+
 void *G2_GetBG0ScrPtr(void) {
-    int off = (REG_BG0CNT & 0x1f00) >> 8;
-    unsigned int sbase = REG_DISPCNT & 0x38000000;
-    return (void *)(0x6000000 + ((sbase >> 0x1b) << 0x10) + (off << 11));
+    int offset = (REG_BG0CNT & REG_G2_BG0CNT_SCREENBASE_MASK) >> REG_G2_BG0CNT_SCREENBASE_SHIFT;
+    u32 blockOffset =
+        (REG_DISPCNT & REG_GX_DISPCNT_BGSCREENOFFSET_MASK) >> REG_GX_DISPCNT_BGSCREENOFFSET_SHIFT;
+
+    return (void *)(HW_BG_VRAM + blockOffset * 0x10000 + offset * 0x800);
 }
 
 void *G2S_GetBG0ScrPtr(void) {
-    int v = REG_DB_BG0CNT;
-    return (void *)((((v & 0x1f00) >> 8) << 0xb) + 0x6200000);
+    int offset =
+        (REG_DB_BG0CNT & REG_G2S_DB_BG0CNT_SCREENBASE_MASK) >> REG_G2S_DB_BG0CNT_SCREENBASE_SHIFT;
+
+    return (void *)(HW_DB_BG_VRAM + offset * 0x800);
 }
 
 void *G2_GetBG1ScrPtr(void) {
-    int off = (REG_BG1CNT & 0x1f00) >> 8;
-    unsigned int sbase = REG_DISPCNT & 0x38000000;
-    return (void *)(0x6000000 + ((sbase >> 0x1b) << 0x10) + (off << 11));
+    int offset = (REG_BG1CNT & REG_G2_BG1CNT_SCREENBASE_MASK) >> REG_G2_BG1CNT_SCREENBASE_SHIFT;
+    u32 blockOffset =
+        (REG_DISPCNT & REG_GX_DISPCNT_BGSCREENOFFSET_MASK) >> REG_GX_DISPCNT_BGSCREENOFFSET_SHIFT;
+
+    return (void *)(HW_BG_VRAM + blockOffset * 0x10000 + offset * 0x800);
 }
 
 void *G2S_GetBG1ScrPtr(void) {
-    int v = REG_DB_BG1CNT;
-    return (void *)((((v & 0x1f00) >> 8) << 0xb) + 0x6200000);
+    int offset =
+        (REG_DB_BG1CNT & REG_G2S_DB_BG1CNT_SCREENBASE_MASK) >> REG_G2S_DB_BG1CNT_SCREENBASE_SHIFT;
+
+    return (void *)(HW_DB_BG_VRAM + offset * 0x800);
 }
 
-/* Mode 6 (large bitmap) returns the engine's VRAM base itself; mode 7 and
- * anything else returns null. */
+/* Mode 6 (the large bitmap) returns the engine's VRAM itself. */
 void *G2_GetBG2ScrPtr(void) {
-    unsigned int mode = REG_DISPCNT & 7;
-    unsigned short bg2cnt = REG_BG2CNT;
-    unsigned int sbase = ((REG_DISPCNT & 0x38000000) >> 0x1b) << 0x10;
-    unsigned int off = ((unsigned int)(bg2cnt & 0x1f00)) >> 8;
-    switch (mode) {
-    case 0:
-    case 1:
-    case 2:
-    case 3:
-    case 4:
-        return (void *)(0x6000000 + sbase + (off << 11));
-    case 5:
-        if (bg2cnt & 0x80)
-            return (void *)(0x6000000 + (off << 0xe));
-        return (void *)(0x6000000 + sbase + (off << 11));
-    case 6:
-        return (void *)0x6000000;
+    u32 bgMode = (REG_DISPCNT & REG_GX_DISPCNT_BGMODE_MASK) >> REG_GX_DISPCNT_BGMODE_SHIFT;
+    u32 bg = REG_BG2CNT;
+    u32 blockOffset = 0x10000 * ((REG_DISPCNT & REG_GX_DISPCNT_BGSCREENOFFSET_MASK) >>
+                                 REG_GX_DISPCNT_BGSCREENOFFSET_SHIFT);
+    u32 offset = (bg & REG_G2_BG2CNT_SCREENBASE_MASK) >> REG_G2_BG2CNT_SCREENBASE_SHIFT;
+
+    switch (bgMode) {
+    case GX_BGMODE_0:
+    case GX_BGMODE_1:
+    case GX_BGMODE_2:
+    case GX_BGMODE_3:
+    case GX_BGMODE_4:
+        return (void *)(HW_BG_VRAM + blockOffset + offset * 0x800);
+    case GX_BGMODE_5:
+        if (bg & REG_G2_BG2CNT_COLORMODE_MASK)
+            return (void *)(HW_BG_VRAM + offset * 0x4000);
+        return (void *)(HW_BG_VRAM + blockOffset + offset * 0x800);
+    case GX_BGMODE_6:
+        return (void *)HW_BG_VRAM;
     default:
-        return (void *)0;
+        return 0;
     }
 }
 
 void *G2S_GetBG2ScrPtr(void) {
-    int m = REG_DISPCNT_SUB & 7;
-    unsigned int v = REG_DB_BG2CNT;
-    unsigned int r1 = (v & 0x1f00) >> 8;
-    switch (m) {
-    case 0:
-    case 1:
-    case 2:
-    case 3:
-    case 4:
-        return (void *)((r1 << 0xb) + 0x6200000);
-    case 5:
-        if (v & 0x80)
-            return (void *)((r1 << 0xe) + 0x6200000);
-        return (void *)((r1 << 0xb) + 0x6200000);
-    case 6:
+    int bgMode = (REG_DISPCNT_SUB & REG_GX_DISPCNT_BGMODE_MASK) >> REG_GX_DISPCNT_BGMODE_SHIFT;
+    u32 bg = REG_DB_BG2CNT;
+    u32 offset = (bg & REG_G2S_DB_BG2CNT_SCREENBASE_MASK) >> REG_G2S_DB_BG2CNT_SCREENBASE_SHIFT;
+
+    switch (bgMode) {
+    case GX_BGMODE_0:
+    case GX_BGMODE_1:
+    case GX_BGMODE_2:
+    case GX_BGMODE_3:
+    case GX_BGMODE_4:
+        return (void *)(HW_DB_BG_VRAM + offset * 0x800);
+    case GX_BGMODE_5:
+        if (bg & REG_G2S_DB_BG2CNT_COLORMODE_MASK)
+            return (void *)(HW_DB_BG_VRAM + offset * 0x4000);
+        return (void *)(HW_DB_BG_VRAM + offset * 0x800);
+    case GX_BGMODE_6:
         return 0;
     default:
         return 0;
@@ -92,44 +142,47 @@ void *G2S_GetBG2ScrPtr(void) {
 }
 
 void *G2_GetBG3ScrPtr(void) {
-    unsigned int mode = REG_DISPCNT & 7;
-    unsigned short bg3cnt = REG_BG3CNT;
-    unsigned int sbase = ((REG_DISPCNT & 0x38000000) >> 0x1b) << 0x10;
-    unsigned int off = ((unsigned int)(bg3cnt & 0x1f00)) >> 8;
-    switch (mode) {
-    case 0:
-    case 1:
-    case 2:
-        return (void *)(0x6000000 + sbase + (off << 11));
-    case 3:
-    case 4:
-    case 5:
-        if (bg3cnt & 0x80)
-            return (void *)(0x6000000 + (off << 0xe));
-        return (void *)(0x6000000 + sbase + (off << 11));
-    case 6:
-        return (void *)0;
+    u32 bgMode = (REG_DISPCNT & REG_GX_DISPCNT_BGMODE_MASK) >> REG_GX_DISPCNT_BGMODE_SHIFT;
+    u32 bg = REG_BG3CNT;
+    u32 blockOffset = 0x10000 * ((REG_DISPCNT & REG_GX_DISPCNT_BGSCREENOFFSET_MASK) >>
+                                 REG_GX_DISPCNT_BGSCREENOFFSET_SHIFT);
+    u32 offset = (bg & REG_G2_BG3CNT_SCREENBASE_MASK) >> REG_G2_BG3CNT_SCREENBASE_SHIFT;
+
+    switch (bgMode) {
+    case GX_BGMODE_0:
+    case GX_BGMODE_1:
+    case GX_BGMODE_2:
+        return (void *)(HW_BG_VRAM + blockOffset + offset * 0x800);
+    case GX_BGMODE_3:
+    case GX_BGMODE_4:
+    case GX_BGMODE_5:
+        if (bg & REG_G2_BG3CNT_COLORMODE_MASK)
+            return (void *)(HW_BG_VRAM + offset * 0x4000);
+        return (void *)(HW_BG_VRAM + blockOffset + offset * 0x800);
+    case GX_BGMODE_6:
+        return 0;
     default:
-        return (void *)0;
+        return 0;
     }
 }
 
 void *G2S_GetBG3ScrPtr(void) {
-    int m = REG_DISPCNT_SUB & 7;
-    unsigned int v = REG_DB_BG3CNT;
-    unsigned int r1 = (v & 0x1f00) >> 8;
-    switch (m) {
-    case 0:
-    case 1:
-    case 2:
-        return (void *)((r1 << 0xb) + 0x6200000);
-    case 3:
-    case 4:
-    case 5:
-        if (v & 0x80)
-            return (void *)((r1 << 0xe) + 0x6200000);
-        return (void *)((r1 << 0xb) + 0x6200000);
-    case 6:
+    int bgMode = (REG_DISPCNT_SUB & REG_GX_DISPCNT_BGMODE_MASK) >> REG_GX_DISPCNT_BGMODE_SHIFT;
+    u32 bg = REG_DB_BG3CNT;
+    u32 offset = (bg & REG_G2S_DB_BG3CNT_SCREENBASE_MASK) >> REG_G2S_DB_BG3CNT_SCREENBASE_SHIFT;
+
+    switch (bgMode) {
+    case GX_BGMODE_0:
+    case GX_BGMODE_1:
+    case GX_BGMODE_2:
+        return (void *)(HW_DB_BG_VRAM + offset * 0x800);
+    case GX_BGMODE_3:
+    case GX_BGMODE_4:
+    case GX_BGMODE_5:
+        if (bg & REG_G2S_DB_BG3CNT_COLORMODE_MASK)
+            return (void *)(HW_DB_BG_VRAM + offset * 0x4000);
+        return (void *)(HW_DB_BG_VRAM + offset * 0x800);
+    case GX_BGMODE_6:
         return 0;
     default:
         return 0;
@@ -137,60 +190,85 @@ void *G2S_GetBG3ScrPtr(void) {
 }
 
 void *G2_GetBG0CharPtr(void) {
-    int off = (REG_BG0CNT & 0x3c) >> 2;
-    unsigned int sbase = REG_DISPCNT & 0x7000000;
-    return (void *)(0x6000000 + ((sbase >> 0x18) << 0x10) + (off << 14));
+    int offset = (REG_BG0CNT & REG_G2_BG0CNT_CHARBASE_MASK) >> REG_G2_BG0CNT_CHARBASE_SHIFT;
+    u32 blockOffset =
+        (REG_DISPCNT & REG_GX_DISPCNT_BGCHAROFFSET_MASK) >> REG_GX_DISPCNT_BGCHAROFFSET_SHIFT;
+
+    return (void *)(HW_BG_VRAM + blockOffset * 0x10000 + offset * 0x4000);
 }
 
 void *G2S_GetBG0CharPtr(void) {
-    int v = REG_DB_BG0CNT;
-    return (void *)((((v & 0x3c) >> 2) << 0xe) + 0x6200000);
+    int offset =
+        (REG_DB_BG0CNT & REG_G2S_DB_BG0CNT_CHARBASE_MASK) >> REG_G2S_DB_BG0CNT_CHARBASE_SHIFT;
+
+    return (void *)(HW_DB_BG_VRAM + offset * 0x4000);
 }
 
 void *G2_GetBG1CharPtr(void) {
-    int off = (REG_BG1CNT & 0x3c) >> 2;
-    unsigned int sbase = REG_DISPCNT & 0x7000000;
-    return (void *)(0x6000000 + ((sbase >> 0x18) << 0x10) + (off << 14));
+    int offset = (REG_BG1CNT & REG_G2_BG1CNT_CHARBASE_MASK) >> REG_G2_BG1CNT_CHARBASE_SHIFT;
+    u32 blockOffset =
+        (REG_DISPCNT & REG_GX_DISPCNT_BGCHAROFFSET_MASK) >> REG_GX_DISPCNT_BGCHAROFFSET_SHIFT;
+
+    return (void *)(HW_BG_VRAM + blockOffset * 0x10000 + offset * 0x4000);
 }
 
 void *G2S_GetBG1CharPtr(void) {
-    int v = REG_DB_BG1CNT;
-    return (void *)((((v & 0x3c) >> 2) << 0xe) + 0x6200000);
+    int offset =
+        (REG_DB_BG1CNT & REG_G2S_DB_BG1CNT_CHARBASE_MASK) >> REG_G2S_DB_BG1CNT_CHARBASE_SHIFT;
+
+    return (void *)(HW_DB_BG_VRAM + offset * 0x4000);
 }
 
+/* A bitmap layer has no character base. */
 void *G2_GetBG2CharPtr(void) {
-    int mode = REG_DISPCNT & 7;
-    unsigned int bg2cnt = REG_BG2CNT;
-    if (mode < 5 || !(bg2cnt & 0x80))
-        return (void *)(0x6000000 + (((REG_DISPCNT & 0x7000000) >> 0x18) << 0x10) +
-                        (((bg2cnt & 0x3c) >> 2) << 14));
-    return (void *)0;
+    int bgMode = (REG_DISPCNT & REG_GX_DISPCNT_BGMODE_MASK) >> REG_GX_DISPCNT_BGMODE_SHIFT;
+    u32 bg = REG_BG2CNT;
+
+    if (bgMode < GX_BGMODE_5 || !(bg & REG_G2_BG2CNT_COLORMODE_MASK)) {
+        u32 blockOffset =
+            (REG_DISPCNT & REG_GX_DISPCNT_BGCHAROFFSET_MASK) >> REG_GX_DISPCNT_BGCHAROFFSET_SHIFT;
+        u32 offset = (bg & REG_G2_BG2CNT_CHARBASE_MASK) >> REG_G2_BG2CNT_CHARBASE_SHIFT;
+
+        return (void *)(HW_BG_VRAM + blockOffset * 0x10000 + offset * 0x4000);
+    }
+    return 0;
 }
 
 void *G2S_GetBG2CharPtr(void) {
-    int v1 = REG_DISPCNT_SUB;
-    unsigned short v2 = REG_DB_BG2CNT;
-    if (!((v1 & 7) >= 5 && (v2 & 0x80)))
-        return (void *)(((unsigned)(v2 & 0x3c) >> 2 << 0xe) + 0x6200000);
+    int bgMode = (REG_DISPCNT_SUB & REG_GX_DISPCNT_BGMODE_MASK) >> REG_GX_DISPCNT_BGMODE_SHIFT;
+    u32 bg = REG_DB_BG2CNT;
+
+    if (bgMode < GX_BGMODE_5 || !(bg & REG_G2S_DB_BG2CNT_COLORMODE_MASK)) {
+        u32 offset = (bg & REG_G2S_DB_BG2CNT_CHARBASE_MASK) >> REG_G2S_DB_BG2CNT_CHARBASE_SHIFT;
+
+        return (void *)(HW_DB_BG_VRAM + offset * 0x4000);
+    }
     return 0;
 }
 
 void *G2_GetBG3CharPtr(void) {
-    unsigned int mode = REG_DISPCNT & 7;
-    unsigned short h = REG_BG3CNT;
-    if ((int)mode < 3 || ((int)mode < 6 && !(h & 0x80))) {
-        unsigned int v = REG_DISPCNT;
-        return (void *)(0x6000000 + (((v & 0x7000000) >> 0x18) << 0x10) +
-                        (((unsigned int)(h & 0x3c) >> 2) << 14));
+    int bgMode = (REG_DISPCNT & REG_GX_DISPCNT_BGMODE_MASK) >> REG_GX_DISPCNT_BGMODE_SHIFT;
+    u32 bg = REG_BG3CNT;
+
+    if (bgMode < GX_BGMODE_3 || (bgMode < GX_BGMODE_6 && !(bg & REG_G2_BG3CNT_COLORMODE_MASK))) {
+        u32 blockOffset =
+            (REG_DISPCNT & REG_GX_DISPCNT_BGCHAROFFSET_MASK) >> REG_GX_DISPCNT_BGCHAROFFSET_SHIFT;
+        u32 offset = (bg & REG_G2_BG3CNT_CHARBASE_MASK) >> REG_G2_BG3CNT_CHARBASE_SHIFT;
+
+        return (void *)(HW_BG_VRAM + blockOffset * 0x10000 + offset * 0x4000);
     }
     return 0;
 }
 
 void *G2S_GetBG3CharPtr(void) {
-    int cfg = REG_DISPCNT_SUB;
-    unsigned int v = REG_DB_BG3CNT;
-    int m = cfg & 7;
-    if (m < 3 || (m < 6 && !(v & 0x80)))
-        return (void *)((((v & 0x3c) >> 2) << 0xe) + 0x6200000);
+    int bgMode = (REG_DISPCNT_SUB & REG_GX_DISPCNT_BGMODE_MASK) >> REG_GX_DISPCNT_BGMODE_SHIFT;
+    u32 bg = REG_DB_BG3CNT;
+
+    if (bgMode < GX_BGMODE_3 ||
+        (bgMode < GX_BGMODE_6 && !(bg & REG_G2S_DB_BG3CNT_COLORMODE_MASK))) {
+        u32 offset = (bg & REG_G2S_DB_BG3CNT_CHARBASE_MASK) >> REG_G2S_DB_BG3CNT_CHARBASE_SHIFT;
+
+        return (void *)(HW_DB_BG_VRAM + offset * 0x4000);
+    }
     return 0;
 }

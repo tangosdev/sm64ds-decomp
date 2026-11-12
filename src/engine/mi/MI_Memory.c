@@ -11,10 +11,10 @@
  * this ROM (nothing called them, so the linker dropped them).
  */
 #include "types.h"
+#include "nitro/mi/memory.h"
 
-/* Fills nbytes bytes with the halfword val. */
-asm void MIi_CpuClear16(unsigned short val, char *dst, int nbytes)
-{
+/* Fills size bytes with the halfword data. */
+asm void MIi_CpuClear16(u16 data, void *destp, u32 size) {
     mov r3, #0
 loop:
     cmp r3, r2
@@ -25,8 +25,7 @@ loop:
 }
 
 /* Copies size bytes one halfword at a time. */
-asm void MIi_CpuCopy16(const void *src, void *dst, s32 size)
-{
+asm void MIi_CpuCopy16(const void *srcp, void *destp, u32 size) {
     mov ip, #0
 loop:
     cmp ip, r2
@@ -37,9 +36,8 @@ loop:
     bx lr
 }
 
-/* Fills len bytes (a multiple of 4) with the word val. */
-asm void MIi_CpuClear32(int val, int *dst, int len)
-{
+/* Fills size bytes (a multiple of 4) with the word data. */
+asm void MIi_CpuClear32(u32 data, void *destp, u32 size) {
     add ip, r1, r2
 loop:
     cmp r1, ip
@@ -48,9 +46,8 @@ loop:
     bx lr
 }
 
-/* Copies len bytes (a multiple of 4) one word at a time. */
-asm void MIi_CpuCopy32(int *src, int *dst, int len)
-{
+/* Copies size bytes (a multiple of 4) one word at a time. */
+asm void MIi_CpuCopy32(const void *srcp, void *destp, u32 size) {
     add ip, r1, r2
 loop:
     cmp r1, ip
@@ -60,8 +57,8 @@ loop:
     bx lr
 }
 
-/* Fills len bytes with the word val: 32 bytes per stm, then a word tail. */
-asm void MIi_CpuClearFast(unsigned val, void *dst, int len) {
+/* Fills size bytes with the word data: 32 bytes per stm, then a word tail. */
+asm void MIi_CpuClearFast(u32 data, void *destp, u32 size) {
     stmdb sp!, {r4, r5, r6, r7, r8, r9}
     add r9, r1, r2
     mov ip, r2, lsr #5
@@ -85,8 +82,8 @@ loop4:
     bx lr
 }
 
-/* Copies len bytes: 32 bytes per ldm/stm, then a word tail. */
-asm void MIi_CpuCopyFast(const void *src, void *dst, int len) {
+/* Copies size bytes: 32 bytes per ldm/stm, then a word tail. */
+asm void MIi_CpuCopyFast(const void *srcp, void *destp, u32 size) {
     stmdb sp!, {r4, r5, r6, r7, r8, r9, r10}
     add r10, r1, r2
     mov ip, r2, lsr #5
@@ -106,8 +103,7 @@ loop4:
 }
 
 /* Copies 32 bytes, three words per ldm/stm. */
-asm void MI_Copy32B(const void *src, void *dst)
-{
+asm void MI_Copy32B(const void *pSrc, void *pDest) {
     ldmia r0!, {r2, r3, ip}
     stmia r1!, {r2, r3, ip}
     ldmia r0!, {r2, r3, ip}
@@ -118,8 +114,7 @@ asm void MI_Copy32B(const void *src, void *dst)
 }
 
 /* Copies 36 bytes, three words per ldm/stm. */
-asm void MI_Copy36B(const void *src, void *dst)
-{
+asm void MI_Copy36B(const void *pSrc, void *pDest) {
     ldmia r0!, {r2, r3, ip}
     stmia r1!, {r2, r3, ip}
     ldmia r0!, {r2, r3, ip}
@@ -130,8 +125,7 @@ asm void MI_Copy36B(const void *src, void *dst)
 }
 
 /* Copies 48 bytes, three words per ldm/stm. */
-asm void MI_Copy48B(const void *src, void *dst)
-{
+asm void MI_Copy48B(const void *pSrc, void *pDest) {
     ldmia r0!, {r2, r3, ip}
     stmia r1!, {r2, r3, ip}
     ldmia r0!, {r2, r3, ip}
@@ -147,8 +141,7 @@ asm void MI_Copy48B(const void *src, void *dst)
  * halfword and then a word with read-modify-write at the unaligned head and
  * tail (so the adjacent byte survives), replicates the fill byte across the
  * word, and runs a str-writeback word loop. */
-asm void MI_CpuFill8(void *dst, u8 data, u32 size)
-{
+asm void MI_CpuFill8(void *dstp, u8 data, u32 size) {
     cmp r2, #0
     bxeq lr
     tst r0, #1
@@ -198,8 +191,7 @@ L74:
  * write, then the copy runs as a halfword shift (when source and destination
  * parity differ) or a word+halfword bulk loop, closing with the same edge RMW
  * tail. */
-asm void MI_CpuCopy8(const void *src, void *dst, u32 size)
-{
+asm void MI_CpuCopy8(const void *srcp, void *dstp, u32 size) {
     cmp r2, #0
     bxeq lr
     tst r1, #1

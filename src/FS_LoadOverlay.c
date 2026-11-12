@@ -1,7 +1,6 @@
 #include "nitro/fs/overlay.h"
+#include "nitro/os/system.h"
 extern int func_02018b64(FSOverlayInfo *info);
-extern void OS_Terminate(void);
-extern void FS_StartOverlay(FSOverlayInfo *p_ovi);
 /* Only its address is used: 0x020aa420, where the overlay region starts
  * (ov000 loads there too). */
 extern void CapIconMgr_DispatchVs(void);
