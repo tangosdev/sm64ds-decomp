@@ -14,6 +14,7 @@
 #include "dActor_c.h"
 #include "Player.h"
 #include "Message.h"
+#include "daFPkn_c.h"
 
 #include <windows.h>
 
@@ -86,6 +87,7 @@ extern char data_ov078_02126ffc[], data_ov078_0212700c[], data_ov078_0212701c[],
 // COOPBOO5: daTrs_c::func_ov063_02116244 (src/game/actors/d_a_trs.cpp): with the count at 5 or more and nothing spawned yet, a Big
 // Boo spawns his icon, the actor his star comes from. Declared bare, as in coop_world.cpp: only the member's name is needed.
 class daTrs_c { public: void func_ov063_02116244(); };
+extern "C" void coop_camshield_mark(void *a, const char *why);   // hal/coop_camshield.cpp (CANNON2): a friend's star never films here
 
 namespace port {
 namespace {
@@ -480,6 +482,21 @@ unsigned g_caps_t[kSeats];   // hub ms (|1) a seat's caps were last heard, 0 = n
 uint8_t  g_caps[kSeats];     // that seat's caps bits
 unsigned g_caps_tx_t = 0;
 bool g_caps_send = true;     // SM64DS_COOP_BOSS_CAPS=0 (dev builds only): this console sends no caps, so friends treat it as a 1.0.4 one
+// PIRANHA1 (the Big Fire Piranha group count, see pkn_census below for the whole story).
+enum : unsigned { kPknCls = 251, kPknGroupSize = 5, kPknStarGraceMs = 3000, kPknJoinMs = 8000 };
+enum : int { kPknStateWait = 1, kPknStateSpit = 2, kPknStateDefeated = 4 };
+bool g_pkn_on = true;                  // SM64DS_COOP_PIRANHA=0 (dev builds only): the 1.0.4 control
+unsigned g_pkn_first_t = 0;            // hub ms (|1) this console first saw the group in this visit
+struct PknStar { bool pending, join; unsigned due; Vector3 pos; s8 area; unsigned param; int slot; };
+PknStar g_pkn_star = {};
+#ifndef PORT_ROM_CLEAN
+// SM64DS_COOP_PKN_HIT=F:i.j.k[:dist]: from boss tick F, THIS console's player kills plants i, j, k (indices into the group's slots in
+// slot order) one after the other: he is put dist units (default 250) beside the plant every 30 ticks, and once the plant is up at
+// full size and spitting its mouth collider is given his hit, the way the ROM's collision pass fills it (otherOwner = the player,
+// hitFlags = a damage kind), so CheckClsnHits takes the rest. A plant that is gone already (a friend's kill) is skipped.
+struct PknKnob { bool on, listed, hit_logged; unsigned tick, next_place; int idx[8], n, at, slots[8], nslots, dist; };
+PknKnob g_pknk = {};
+#endif
 bool seat_runs_owner_rule(int s, unsigned now) {
     if (s == g_my) return true;
     if (s < 0 || s >= kSeats || !g_caps_t[s]) return false;
@@ -708,6 +725,21 @@ void read_env() {
 #ifndef PORT_ROM_CLEAN
     if (const char *ca = std::getenv("SM64DS_COOP_BOSS_CLOCK_ADD")) g_clock_add = (unsigned)std::strtoul(ca, nullptr, 0);
     g_caps_send = flag("SM64DS_COOP_BOSS_CAPS", true);
+    g_pkn_on = flag("SM64DS_COOP_PIRANHA", true);           // PIRANHA1: 0 = the 1.0.4 control (a friend's kill is not counted here)
+    if (const char *ph = std::getenv("SM64DS_COOP_PKN_HIT")) {
+        unsigned f = 0; int used = 0;
+        if (std::sscanf(ph, "%u:%n", &f, &used) >= 1 && used > 0) {
+            PknKnob &k = g_pknk;
+            k = PknKnob(); k.tick = f; k.dist = 250;
+            const char *p = ph + used;
+            while (*p >= '0' && *p <= '9' && k.n < 8) {
+                k.idx[k.n++] = *p - '0'; ++p;
+                if (*p == '.') ++p;
+            }
+            if (*p == ':') k.dist = std::atoi(p + 1);
+            k.on = k.n > 0;
+        }
+    }
 #endif
     g_god = flag("SM64DS_COOP_BOSS_GOD", false);
     g_bomb = flag("SM64DS_COOP_BOSS_BOMB", false);
@@ -2367,6 +2399,107 @@ void do_swing_knob() {
     std::fprintf(stderr, "[cbs-knob] swing: let go of the tail after %u ticks (swing %d) w=%lld\n", g_swing.dur, rd32(b.a, 0x3f0), wall_ms());
 }
 
+// ---------------------------------------------------------------------------
+// PIRANHA1 (AUDIT-BOSSES H3): THE BIG FIRE PIRANHA GROUP COUNTS EVERY PLAYER'S KILLS.
+// The five FIREPAKUN (251) on Tiny-Huge Island's huge side (level 24, every act, star 1) are one group: the first to run StateInit is
+// the leader (d_a_f_pkn.cpp:665-685) and holds mGroupDefeatedCount; a kill made here adds one (StateWait, :561-593) and the fifth spawns
+// the star. Each kill also leaves a death bit (KillAndTrackInDeathTable, or TrackInDeathTable for the leader, which stays in
+// STATE_DEFEATED), and the room already shares death bits: a friend's kill removed my copy with no count, so kills split between
+// players reached 5 on no console (no star), and a friend's leader kill took my leader away (KillAndTrackInDeathTable), after which
+// my plants never came up again (StateWait returns when FindWithID(mGroupLeaderID) is null).
+// Now coop_world's reconcile asks coop_boss_pkn_remote_kill before it removes a copy a friend's bit names: the kill is added to my
+// leader the way StateWait adds one (the alive count down if my copy was up), my leader copy is kept in its defeated state instead of
+// removed, and the group's fifth kill, when it is a friend's, takes my leader away as the cartridge does. The killer's own console
+// spawns the star (his count is 5 too) and coop_spawn announces it. A 1.0.4 friend sends the same death bits but counts nobody else's
+// kills, so a fifth kill of his can make no star: if no star of that number stands here kPknStarGraceMs after my count reached 5
+// this console spawns it, the cartridge's own call; coop_spawn's dup and taken rules (1.0.4 runs the dup rule too) keep it one star.
+// No new message: the death bits are what 1.0.4 already sends, so his kills count here too.
+// SM64DS_COOP_PIRANHA=0 (dev builds only) is the 1.0.4 control; SM64DS_COOP_PKN_HIT is the proof's hit (below).
+// ---------------------------------------------------------------------------
+bool pkn_live(const char *a) { return a && !a[0x0f] && a[0x0e] != 2; }
+
+void pkn_census(unsigned now) {
+    if (g_pkn_first_t || (g_ticks % 15u) != 0) return;
+    int n = 0;
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+        if (*(const unsigned short *)(a + 0x0c) != kPknCls || !pkn_live(a)) continue;
+        const daFPkn_c *p = reinterpret_cast<const daFPkn_c *>(a);
+        if (p->mState == 0) return;                    // StateInit has not picked the leader yet
+        if (!n++) g_pkn_first_t = now | 1u;
+        std::fprintf(stderr, "[cpk] group here: slot=%d %s state=%d count=%u alive=%u star=%u at %d,%d,%d w=%lld\n", (int)rd16(a, 0xce),
+                     p->mRespawnMode == 1 ? "leader" : "member", (int)p->mState, (unsigned)p->mGroupDefeatedCount, (unsigned)p->mGroupAliveCount,
+                     (unsigned)p->mStarID, p->mPosX >> 12, p->mPosY >> 12, p->mPosZ >> 12, wall_ms());
+    }
+}
+
+void pkn_star_tick(unsigned now) {
+    PknStar &s = g_pkn_star;
+    if (!s.pending || (int)(now - s.due) < 0) return;
+    s.pending = false;
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+        if (*(const unsigned short *)(a + 0x0c) != 178 || !pkn_live(a) || (rd32(a, 0x08) & 0xff) != (s.param & 0xff)) continue;
+        std::fprintf(stderr, "[cpk] star %u is here already (the killer's, announced): none made here w=%lld\n", s.param & 0xff, wall_ms());
+        return;
+    }
+    if (s.join) {
+        std::fprintf(stderr, "[cpk] the group was finished before this console watched it (joined): no star made here w=%lld\n", wall_ms());
+        return;
+    }
+    dActor_c *st = dActor_c::Spawn(178, s.param, s.pos, 0, s.area, -1);
+    if (st) coop_camshield_mark(st, "a Big Fire Piranha star from a friend's last kill");
+    std::fprintf(stderr, "[cpk] no star %u came in %u ms (the last kill's console made none, a 1.0.4 one): made here at %d,%d,%d (%s) w=%lld\n",
+                 s.param & 0xff, (unsigned)kPknStarGraceMs, s.pos.x >> 12, s.pos.y >> 12, s.pos.z >> 12, st ? "spawned" : "SPAWN FAILED", wall_ms());
+}
+
+#ifndef PORT_ROM_CLEAN
+void pkn_knob_tick() {
+    PknKnob &k = g_pknk;
+    if (!k.on || g_ticks < k.tick || k.at >= k.n) return;
+    if (!k.listed) {
+        k.nslots = 0;
+        for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a && k.nslots < 8; a = (char *)_ZN8dActor_c4NextEPKS_(a))
+            if (*(const unsigned short *)(a + 0x0c) == kPknCls) k.slots[k.nslots++] = rd16(a, 0xce);
+        if (!k.nslots) return;
+        std::sort(k.slots, k.slots + k.nslots);
+        k.listed = true;
+        std::fprintf(stderr, "[cpk-knob] %d plants, slots %d %d %d %d %d (by index)\n", k.nslots, k.slots[0], k.nslots > 1 ? k.slots[1] : -1,
+                     k.nslots > 2 ? k.slots[2] : -1, k.nslots > 3 ? k.slots[3] : -1, k.nslots > 4 ? k.slots[4] : -1);
+    }
+    const int want = k.idx[k.at];
+    char *a = nullptr;
+    if (want >= 0 && want < k.nslots)
+        for (char *x = (char *)_ZN8dActor_c4NextEPKS_(0); x; x = (char *)_ZN8dActor_c4NextEPKS_(x))
+            if (*(const unsigned short *)(x + 0x0c) == kPknCls && rd16(x, 0xce) == k.slots[want] && pkn_live(x)) { a = x; break; }
+    daFPkn_c *p = reinterpret_cast<daFPkn_c *>(a);
+    if (!p || p->mState == kPknStateDefeated) {
+        std::fprintf(stderr, "[cpk-knob] plant %d (slot %d) is gone here already: next w=%lld\n", want, want >= 0 && want < k.nslots ? k.slots[want] : -1, wall_ms());
+        ++k.at; k.hit_logged = false; return;
+    }
+    if (p->mSpinCount != 0 || p->mSuppressDeathReward == 0) {
+        std::fprintf(stderr, "[cpk-knob] plant %d (slot %d) took the hit (spin %u): next w=%lld\n", want, k.slots[want], (unsigned)p->mSpinCount, wall_ms());
+        ++k.at; k.hit_logged = false; k.next_place = 0; return;
+    }
+    const int me = (int)data_0209f250 & 15;
+    char *pl = (char *)data_0209f394[me];
+    if (!pl) return;
+    if (g_ticks >= k.next_place) {
+        k.next_place = g_ticks + 30;
+        const int32_t x = p->mPosX + (k.dist << 12), y = p->mPosY + 0x8000, z = p->mPosZ, zero = 0;
+        const int16_t ang = (int16_t)0xc000;           // facing -x, toward the plant
+        std::memcpy(pl + 0x5c, &x, 4); std::memcpy(pl + 0x60, &y, 4); std::memcpy(pl + 0x64, &z, 4);
+        std::memcpy(pl + 0x98, &zero, 4); std::memcpy(pl + 0x8e, &ang, 2);
+    }
+    if (p->mEmerged && p->mScale == p->mMaxScale && p->mState == kPknStateSpit) {
+        p->mdCcAcPos_c.otherOwner = reinterpret_cast<dActor_c *>(pl)->uniqueID;
+        p->mdCcAcPos_c.hitFlags = 0x20;
+        if (!k.hit_logged) {
+            k.hit_logged = true;
+            std::fprintf(stderr, "[cpk-knob] plant %d (slot %d) is up: my player's hit given to its mouth collider w=%lld\n", want, k.slots[want], wall_ms());
+        }
+    }
+}
+#endif
+
 void on_frame(unsigned now) {
     read_env();
     now += g_clock_add;                       // bossfix2: the proof clock (0 unless SM64DS_COOP_BOSS_CLOCK_ADD is set in a dev build)
@@ -2382,10 +2515,15 @@ void on_frame(unsigned now) {
         g_recent_t = 0; g_recent_mine = true;
         std::memset(g_dead_cls, 0, sizeof g_dead_cls); std::memset(g_dead_tx, 0, sizeof g_dead_tx);
         std::memset(g_bclaim, 0, sizeof g_bclaim); g_trip = Trip();
+        g_pkn_first_t = 0; g_pkn_star = PknStar();     // PIRANHA1: a new visit, a new group
         g_key = nk;
     }
     ++g_ticks; ++g_st.ticks;
     scan();
+    if (g_pkn_on) { pkn_census(now); pkn_star_tick(now); }   // PIRANHA1
+#ifndef PORT_ROM_CLEAN
+    pkn_knob_tick();
+#endif
     g_st.bosses = (unsigned long long)g_nb;
     if (g_god) { const int me = (int)data_0209f250 & 15; data_02092144[me] = (short)((data_02092144[me] & 0xff) | (8 << 8)); }
     if (!g_stand_done && g_ticks >= g_stand_tick && g_nb > 0) {
@@ -2696,6 +2834,50 @@ void coop_boss_on_world(int seat, int sub, const unsigned char *p, int len) {
         b.rx.valid = true; b.rx.fresh = true; b.rx.t = now; b.rx.seq = r.seq; b.rx.rflags = r.rflags; b.rx.from = seat;
         std::memcpy(b.rx.w, w, sizeof w);
     }
+}
+
+// PIRANHA1: a friend's death bit names my copy of a Big Fire Piranha. Count his kill on my leader the way StateWait counts mine
+// (d_a_f_pkn.cpp:561-593: the alive count down when the plant was up here, the defeated count up, the fifth ends the group), then
+// tell reconcile whether to remove the copy. The leader's own end on the killer's console is TrackInDeathTable + STATE_DEFEATED, so
+// my leader copy goes the same way (hidden, its colliders off) and stays: the other plants here still find their leader. The bit
+// stays in the room's remote set, so reconcile asks again later: a copy already in STATE_DEFEATED is left alone.
+bool coop_boss_pkn_remote_kill(char *actor) {
+    read_env();
+    if (!g_on || !g_pkn_on || !actor || *(const unsigned short *)(actor + 0x0c) != kPknCls) return true;
+    daFPkn_c *p = reinterpret_cast<daFPkn_c *>(actor);
+    if (p->mState == kPknStateDefeated) return false;              // my leader copy, already counted and kept
+    if (p->mState == 0 || p->mGroupLeaderID == 0) return false;     // StateInit has not set the group up yet: the next pass
+    daFPkn_c *leader = reinterpret_cast<daFPkn_c *>(dActor_c::FindWithID(p->mGroupLeaderID));
+    if (!leader || !pkn_live(reinterpret_cast<char *>(leader))) {
+        std::fprintf(stderr, "[cpk] friend's kill of slot=%d: no group leader here, removed uncounted w=%lld\n", (int)rd16(actor, 0xce), wall_ms());
+        return true;
+    }
+    const unsigned now = hub_now();
+    if (!g_pkn_first_t) g_pkn_first_t = now | 1u;
+    const bool was_up = p->mEmerged != 0;
+    if (was_up) { p->mEmerged = 0; if (leader->mGroupAliveCount) --leader->mGroupAliveCount; }
+    ++leader->mGroupDefeatedCount;
+    const bool is_leader = p == leader;
+    std::fprintf(stderr, "[cpk] friend's kill counted here: slot=%d (%s%s), group count %u/%u, up %u w=%lld\n", (int)rd16(actor, 0xce),
+                 is_leader ? "the leader" : "a member", was_up ? ", up on this screen" : "", (unsigned)leader->mGroupDefeatedCount,
+                 (unsigned)kPknGroupSize, (unsigned)leader->mGroupAliveCount, wall_ms());
+    if (leader->mGroupDefeatedCount == kPknGroupSize) {
+        PknStar &s = g_pkn_star;
+        s = PknStar();
+        s.pending = true; s.due = (now + kPknStarGraceMs) | 1u; s.join = (unsigned)(now - g_pkn_first_t) < kPknJoinMs;
+        s.pos.x = p->mPosX; s.pos.y = p->mPosY; s.pos.z = p->mPosZ; s.area = p->mAreaId;
+        s.param = (unsigned)p->mStarID | 0x40u; s.slot = rd16(actor, 0xce);
+        std::fprintf(stderr, "[cpk] group done by a friend's kill: the killer's console makes star %u%s w=%lld\n", s.param & 0xff,
+                     s.join ? " (finished before I watched)" : "; made here if none comes", wall_ms());
+        if (!is_leader) leader->KillAndTrackInDeathTable();         // the cartridge's group end: leader, then the fifth plant
+        return true;
+    }
+    if (is_leader) {
+        p->mState = kPknStateDefeated; p->mScale = 0; p->mSpinCount = 0;
+        p->mdCcAc_c.flags |= 1; p->mdCcAcPos_c.flags |= 1; p->mFlags &= ~0x10000000u;
+        return false;
+    }
+    return true;
 }
 
 }  // namespace port

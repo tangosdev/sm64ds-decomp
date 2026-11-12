@@ -21,6 +21,7 @@
 #include "coop_groups.h"
 #include "coop_wire.h"
 #include "coop_spawn.h"
+#include "coop_boss.h"
 #include "comms_hub.h"
 #include "hub_presence.h"
 
@@ -627,6 +628,7 @@ int reconcile() {
         if (!((g_remote[slot >> 5] >> (slot & 31)) & 1u)) continue;
         if (*(const unsigned char *)(a + 0x0f) || *(const unsigned char *)(a + 0x0e) == 2) continue;
         if (is_player_ptr(a)) continue;
+        if (*(const unsigned short *)(a + 0x0c) == 251 && !coop_boss_pkn_remote_kill(a)) continue;   // PIRANHA1: counted, leader kept
         release_mouth_of(a);
         if (count_boo(a) && *(const unsigned char *)(a + kBooVar) != 2) boo_credit(a, -1, "death bit");
         if (is_goomba(*(const unsigned short *)(a + 0x0c))) goomba_glint_off(a, false, "death bit");     // COOPSILVER3
