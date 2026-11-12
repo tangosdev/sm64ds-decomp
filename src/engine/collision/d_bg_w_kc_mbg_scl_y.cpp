@@ -19,11 +19,11 @@
 #include "dBgPi.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/MtxStack.h"
 
 extern "C" {
-/* Shared math workers.
-   local extern: no header in include/ declares them. */
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *res);
+/* Shared math worker.
+   local extern: no header in include/ declares it. */
 void VEC_Normalize(const Vector3 *src, Vector3 *dst);
 
 /* local extern: no header in include/ declares these three. */

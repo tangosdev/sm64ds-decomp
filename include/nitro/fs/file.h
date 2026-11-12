@@ -22,6 +22,9 @@ extern "C" {
 #define FS_FILE_STATUS_IS_FILE 0x00000010
 #define FS_FILE_STATUS_IS_DIR 0x00000020
 
+/* FS_Init's DMA channel: none, the card is read by the CPU. */
+#define FS_DMA_NOT_USE ((u32)~0)
+
 void FS_Init(u32);
 void FS_InitFile(FSFile *);
 int FS_ConvertPathToFileID(FSFileID *, const char *);

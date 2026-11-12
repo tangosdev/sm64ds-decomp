@@ -48,6 +48,7 @@
 #include "math/CalcLib.h"
 #include "Particle__System.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/MtxStack.h"
 
 /* LEVEL_ID 0xc is Big Boo's Haunt (its course overlay is ov020). */
 enum {
@@ -70,7 +71,6 @@ extern signed char gCurrentSublevel;
 extern short data_ov095_02136f98[];
 
 extern "C" {
-extern void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 

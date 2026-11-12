@@ -6,7 +6,7 @@
 /* NitroSDK MBCommChildBlockHeader, a child packet unpacked by
  * MBi_SetRecvBufferFromChild: the type byte, then either the block number a
  * child asks for (types 8 and 9, the latter with reserved data) or one piece of
- * its entry request (type 7, which MBi_ReceiveRequestDataPiece files into mChildRequest). */
+ * its entry request (type 7, which MBi_ReceiveRequestDataPiece files into req_data_buf.data_buf). */
 typedef struct MBCommChildBlockHeader {
     u8 type; /* 0x00 */
     u8 pad1[1];

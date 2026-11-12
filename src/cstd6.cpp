@@ -17,14 +17,11 @@
 #include "types.h"
 #include "msl/string.h"
 #include "msl/stdlib.h"
-#include "nitro/os/thread.h"
+#include "nitro/os/mutex.h"
 #include "msl/critical_regions.h"
 
 extern "C" {
 extern unsigned int random_next;
-extern int OS_TryLockMutex(void *p);
-extern void OS_LockMutex(void *p);
-extern void OS_UnlockMutex(void *p);
 extern void exit(int status);
 typedef void (*sig_func)(int);
 extern sig_func signal_funcs[];

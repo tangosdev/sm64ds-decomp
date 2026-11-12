@@ -54,9 +54,9 @@
  *   Writing them as mAnmModel members hoists the base.
  * Leftover: state-timer reads use a u16 cast. mStateTimer is s16; the ROM
  *   loads it unsigned.
- * Leftover: RandomIntInternal stays unsigned so EnterHover keeps its
- *   logical shift. Behavior tests the carry state twice; the else is what
- *   the ROM emits.
+ * Leftover: RandomIntInternal returns int (math/CalcLib.h); UpdateHover and
+ *   EnterHover shift it as u32, the ROM's logical shift. Behavior tests the
+ *   carry state twice; the else is what the ROM emits.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -77,6 +77,7 @@ enum daOwl_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 #include "LevelRng.h"
 
 /* Resource handles the static initializer constructs. The wrapper spellings
@@ -158,19 +159,9 @@ void d_a_owlPlayLongHold(unsigned int a, unsigned int b, unsigned int cc, void *
                          unsigned int d);
 int func_ov002_020df7f4(void *c);
 void func_02012694(unsigned int a, void *pos);
-int ApproachAngle(short *p, short target, int a, int b, int c);
-// local extern: math/CalcLib.h declares these, but its int RandomIntInternal(int *) conflicts with the unsigned prototype below.
-int Vec3_Dist(const Vector3 *, const Vector3 *);
-short Vec3_HorzAngle(const Vector3 *, const Vector3 *);
 short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-unsigned int RandomIntInternal(void *seed);
-/* local extern: no shared math header declares MTX_MultVec43. */
-void MTX_MultVec43(Vector3 *in, Matrix4x3 *mat, Vector3 *out);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-int VEC_Mag(const Vector3 *v);
-void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 int IsStarCollectedInCurLevel(int);
-unsigned short DecIfAbove0_Short(void *);
 }
 
 /* Actor ID 0xbf is PLAYER. This int-returning predicate is what makes the
@@ -386,8 +377,8 @@ int daOwl_c::UpdateHover() {
  * 50..113 frame wander timer. */
 int daOwl_c::EnterHover() {
     mAnmModel.SetAnim((BCA_File *)data_ov094_02136af0.filePtr, 0, 0x1000, 0);
-    mWanderAngleY = (short)((RandomIntInternal(&data_0209e650.value) >> 8) << 0xc);
-    mStateTimer = (short)(((RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 0x32);
+    mWanderAngleY = (short)(((u32)RandomIntInternal(&data_0209e650.value) >> 8) << 0xc);
+    mStateTimer = (short)((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 0x32);
     mAnimSpeed = 0x1000;
     return 1;
 }
@@ -552,7 +543,7 @@ int daOwl_c::Render()
 
 int daOwl_c::Behavior()
 {
-    DecIfAbove0_Short(&mStateTimer);
+    DecIfAbove0_Short(&OWL_TIMER(this));
     {
         State *o = mCurrentState;
         if (o->mMain != 0) {

@@ -47,7 +47,6 @@ extern char data_ov002_0210d6dc[];  /* the ring's BTA */
 extern "C" {
 s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 int AngleDiff(int a, int b);
-void Vec3_Asr(struct Vector3 *d, struct Vector3 *s, int sh);
 }
 
 extern SharedFilePtr data_ov002_0210da10; /* the ring's BMD */
@@ -103,7 +102,7 @@ int daWater_Ring_c::StatePassed() {
     ApproachLinear(mScaleX, 0x3000, 0x199);
     mScaleZ = mScaleX;
     mScaleY = mScaleZ;
-    if ((u16)mStateTimer == 0 || mScaleX >= 0x2ffd)
+    if (mStateTimer == 0 || mScaleX >= 0x2ffd)
         MarkForDestruction();
     return 1;
 }
@@ -132,7 +131,7 @@ int daWater_Ring_c::InitStatePassed() {
 int daWater_Ring_c::StateActive() {
     int spd;
     CheckPlayerPass();
-    if ((u16)mStateTimer < 0x1e) {
+    if (mStateTimer < 0x1e) {
         if (mOpacity >= 2)
             mOpacity--;
     }
@@ -152,7 +151,7 @@ int daWater_Ring_c::StateActive() {
     }
     mScaleZ = mScaleX;
     mScaleY = mScaleZ;
-    if ((u16)mStateTimer == 0 || mOpacity <= 1)
+    if (mStateTimer == 0 || mOpacity <= 1)
         MarkForDestruction();
     return 1;
 }
@@ -196,7 +195,7 @@ int daWater_Ring_c::Render() {
 }
 
 int daWater_Ring_c::Behavior() {
-    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     if (mState->execute)
         (this->*mState->execute)();
     UpdatePos(&mdCcAcPos_c);
@@ -211,7 +210,7 @@ int daWater_Ring_c::Behavior() {
 }
 
 int daWater_Ring_c::InitResources() {
-    BMD_File *f = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210da10);
+    BMD_File *f = dExtSimpleModel_c::LoadFile(data_ov002_0210da10);
     if (mModel.SetFile(f, 1, -1) == 0)
         return 0;
 

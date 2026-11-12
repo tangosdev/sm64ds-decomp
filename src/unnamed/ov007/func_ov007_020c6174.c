@@ -1,9 +1,8 @@
 #include "Ov007Picker.h"
+#include "math/CalcLib.h"
 
 extern void func_ov007_020c7694(Ov007PointList *list, Vector3 *rest);
 extern void func_ov007_020c775c(Ov007PointList *list);
-extern void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
-extern int VEC_Mag(const Vector3 *v);
 
 /* Re-measures group idx's own links and, with more than one group, its head
  * and tail links. With flag set it measures from the rest copies

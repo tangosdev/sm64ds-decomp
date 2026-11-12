@@ -1322,12 +1322,12 @@
       "evidence": "ntrtwl/NitroSDK include/nitro/ctrdg/common/ctrdg_common.h:186; CTRDG_IsExisting reads it, arm9/CTRDG_Common 7/7 TEXT-VERIFIED"
     },
     {
-      "path": "src/CARDi_TryReadCardDma.cpp",
+      "path": "src/engine/card/CARD_Rom.c",
       "rule": "raw-offset",
       "match": "(vu32*)(HW_ROM_HEADER_BUF+0x60",
       "count": 1,
-      "reason": "The ROM-control word of the boot code's copy of the cartridge header, spelled as NitroSDK spells it (os_reset.c's hdr_GAME_BUF; later card_rom.h reads it through cardi_rom_header_addr + 0x60). The ROM loads the absolute literal 0x027ffe60, so this older SDK used HW_ROM_HEADER_BUF directly. Follow-up: a CARDi_GetRomFlag inline once the card ROM constants are in include/.",
-      "evidence": "pret/pokediamond arm9/lib/NitroSDK/src/OS_reset.c:194, include/CARD_rom.h:134; ROM arm9 0x02060b64 size 0x148 fdiff 82/82"
+      "reason": "The ROM-control word of the boot code's copy of the cartridge header, read by the file-local CARDi_GetRomFlag inline as NitroSDK's card_rom.h reads it (cardi_rom_header_addr + 0x60 there). The ROM loads the absolute literal 0x027ffe60, so this older SDK used HW_ROM_HEADER_BUF directly.",
+      "evidence": "ntrtwl/NitroSDK libraries/card/include/card_rom.h CARDi_GetRomFlag; ROM arm9 0x02060b64 size 0x148 (CARDi_TryReadCardDma), arm9/CARD_Rom 11/11 TEXT-VERIFIED"
     },
     {
       "path": "src/OSReadROMArea.c",

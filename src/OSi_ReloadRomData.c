@@ -2,6 +2,7 @@
 #include "nitro/os/cache.h"
 #include "nitro/os/spinLock.h"
 #include "nitro/os/system.h"
+#include "nitro/os/reset.h"
 #include "nitro/hw/registers.h"
 #include "nitro/hw/mmap_shared.h"
 #include "nitro/mb/mb.h"

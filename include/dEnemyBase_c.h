@@ -70,8 +70,10 @@ struct dEnemyBase_c : dActor_c {
        (daBtn_c) -- see notes/enemy-provenance.md and
        notes/enemy-leaf-provenance.md. Named mStateTimer, not mTimer, because
        daJango_c already owns an unrelated mTimer and the shorter name silently
-       rebinds it. */
-    s16 mStateTimer;              /* 0x100 */
+       rebinds it. Unsigned: DecIfAbove0_Short takes an unsigned short *, and
+       every subclass read is an ldrh. Typed s16, it needed a u16 cast at
+       each use to reproduce the ROM. */
+    u16 mStateTimer;              /* 0x100 */
     u16 mDeathTimer;              /* 0x102 */
     /* UpdateYoshiEat sets it to 5 on the frame Yoshi spits the enemy out and
        counts it down once a frame while the body flies. Subclasses read 5 as

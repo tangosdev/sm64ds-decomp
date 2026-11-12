@@ -75,8 +75,6 @@ extern SharedFilePtr data_ov098_0213c91c;
 extern SharedFilePtr data_ov002_0210da38;
 /* The smoke particles' base rotation, x/y/z. */
 extern u16 data_ov098_0213c63c[3];
-/* The sine and cosine table. */
-extern s16 FX_SinCosTable_[];
 
 /* local extern: arm9/ov002/ov102 C helpers with no shared header yet. The
    two daPly_c helpers are defined in d_a_ply_methods.cpp, the Bob-omb one in
@@ -134,7 +132,7 @@ extern "C" daCnn_c *daCnn_c_classInit() {
 
 /* -------------------------------------------------------------------------- */
 int daCnn_c::InitResources() {
-    BMD_File *file = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov098_0213c8e8);
+    BMD_File *file = dExtSimpleModel_c::LoadFile(data_ov098_0213c8e8);
     mModel.SetFile(file, 1, -1);
     mBarrelRestY = mModel.data.bones[1].transY;
     mVariant = param1 & 3;
@@ -267,7 +265,7 @@ void daCnn_c::StateFire() {
 
     if (timer == 60) {
         dActor_c *ball;
-        s16 *sinCos;
+        const s16 *sinCos;
         int speed;
         s16 elevation;
         int idx;
@@ -279,7 +277,7 @@ void daCnn_c::StateFire() {
 
         {
             dActor_c *spawned = dActor_c::Spawn(kWaterBombActorID, 3, pos, 0, mAreaId, -1);
-            s16 *table = FX_SinCosTable_;
+            const s16 *table = FX_SinCosTable_;
             int launchSpeed = 100;
             s16 pitch = mPrevAngleX;
             int up = (s16)(0x4000 - pitch);

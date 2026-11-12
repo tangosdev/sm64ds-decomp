@@ -82,6 +82,7 @@ enum daKrb_c_AssetId {
 #include "daStarBase_c.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
 
@@ -187,7 +188,6 @@ extern void func_ov002_020aea30(void *self, void *actor, void *collision);
 extern int *data_ov084_0213088c;
 extern int data_ov084_02130248[];
 extern u8 data_ov084_02130204[];
-extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern char data_ov084_0213089c;
 extern int data_ov084_02130228[];
 extern int data_ov084_02130268[];
@@ -709,9 +709,8 @@ void daKrb_c::func_ov084_02129cf4(Fix12i distThresh) {
     goomba->mClosestPlayer = goomba->ClosestPlayer();
 
     if (goomba->mClosestPlayer == 0 ||
-        (Vec3_Dist(&goomba->mPos, (struct Vector3 *)&goomba->mHomePos) > distThresh &&
-         goomba->mCapId >= 6)) {
-        goomba->mInitAngleY = Vec3_HorzAngle(&goomba->mPos, (struct Vector3 *)&goomba->mHomePos);
+        (Vec3_Dist(&goomba->mPos, &goomba->mHomePos) > distThresh && goomba->mCapId >= 6)) {
+        goomba->mInitAngleY = Vec3_HorzAngle(&goomba->mPos, &goomba->mHomePos);
         goomba->mDistToPlayer = 0x61a8000;
         return;
     }
@@ -724,11 +723,10 @@ void daKrb_c::func_ov084_02129cf4(Fix12i distThresh) {
     }
 
     if (goomba->mCapId < 6) {
-        if (Vec3_Dist(&goomba->mPos, (struct Vector3 *)&goomba->mHomePos) > distThresh &&
+        if (Vec3_Dist(&goomba->mPos, &goomba->mHomePos) > distThresh &&
             !goomba->mWithMeshClsn.IsOnWall()) {
             goomba->mDistToPlayer = 0x61a8000;
-            goomba->mInitAngleY =
-                Vec3_HorzAngle(&goomba->mPos, (struct Vector3 *)&goomba->mHomePos);
+            goomba->mInitAngleY = Vec3_HorzAngle(&goomba->mPos, &goomba->mHomePos);
             return;
         }
 
@@ -745,7 +743,7 @@ void daKrb_c::func_ov084_02129cf4(Fix12i distThresh) {
         return;
     }
 
-    if (Vec3_Dist((struct Vector3*)&goomba->mHomePos, &ppos) > distThresh) {
+    if (Vec3_Dist(&goomba->mHomePos, &ppos) > distThresh) {
         goomba->mDistToPlayer = 0x61a8000;
         return;
     }
@@ -1262,7 +1260,7 @@ void daKrb_c::func_ov084_0212abd4() {
         } else {
             goomba->mTargetHorzSpeed = data_ov084_02130228[goomba->mGoombaType];
             goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce8.filePtr, 0, 0x1000, 0);
-            goomba->mTargetAngleY = Vec3_HorzAngle(&goomba->mPos, (Vector3 *)&goomba->mHomePos);
+            goomba->mTargetAngleY = Vec3_HorzAngle(&goomba->mPos, &goomba->mHomePos);
             step = 0x400;
         }
         ApproachLinear(*(short *)&goomba->mPrevAngleY, goomba->mTargetAngleY, step);
@@ -1280,8 +1278,7 @@ void daKrb_c::func_ov084_0212abd4() {
     }
     if (!((Flags *)&goomba->mMoveFlags)->b0) {
         if (goomba->mDistToPlayer < goomba->mChaseRadius ||
-            (goomba->mCapId < 6 &&
-             Vec3_Dist(&goomba->mPos, (Vector3 *)&goomba->mHomePos) > 0x3e8000)) {
+            (goomba->mCapId < 6 && Vec3_Dist(&goomba->mPos, &goomba->mHomePos) > 0x3e8000)) {
             if (goomba->mTargetHorzSpeed <= data_ov084_02130228[goomba->mGoombaType]) {
                 goomba->BeginJump();
             } else {

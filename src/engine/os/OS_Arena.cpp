@@ -19,6 +19,7 @@
 #include "types.h"
 #include "nitro/os/protectionRegion.h"
 #include "nitro/hw/mmap_tcm.h"
+#include "nitro/os/emulator.h"
 
 /* OSArenaId */
 #define OS_ARENA_MAIN 0
@@ -28,17 +29,10 @@
 #define OS_ARENA_SHARED 5
 #define OS_ARENA_WRAM_MAIN 6
 
-#define OS_CONSOLE_SIZE_MASK 3
-#define OS_CONSOLE_SIZE_8MB 2
-
 #define OSi_ARENA_LO ((unsigned int *)0x027ffda0)
 #define OSi_ARENA_HI ((unsigned int *)0x027ffdc4)
 
 extern "C" {
-
-/* local extern: no header declares OS_GetConsoleType (the SDK's
- * os_emulator.c) yet. */
-extern int OS_GetConsoleType(void);
 
 /* NitroSDK linker constants: the address is the value (the LCF assigns
  * SDK_SYS_STACKSIZE = 0 and SDK_IRQ_STACKSIZE = 0x600). */

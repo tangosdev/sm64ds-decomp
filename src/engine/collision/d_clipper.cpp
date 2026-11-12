@@ -29,11 +29,10 @@
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/MtxStack.h"
 
-/* local extern: no non-generated header declares these vector helpers or the
-   sine/cosine pair table. */
+/* local extern: no non-generated header declares these vector helpers. */
 extern "C" {
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *res);
 void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *result);
 void VEC_Normalize(const Vector3 *src, Vector3 *dst);
 }

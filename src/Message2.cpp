@@ -298,20 +298,20 @@ void func_0201adfc(void) {
                 u8 bit = pos & 7;
                 int word = (u32)pos >> 3;
                 u32 *q = &p[word << 3];
-                volatile u32 *mask = (volatile u32 *)&data_0208eeac[bit];
+                u32 *mask = (u32 *)&data_0208eeac[bit];
 
-                p[word << 3] |= *mask & ((volatile u32 *)data_0209d74c)[base];
-                q[1] |= *mask & ((volatile u32 *)data_0209d74c)[base + 1];
-                q[2] |= *mask & ((volatile u32 *)data_0209d74c)[base + 2];
-                q[3] |= *mask & ((volatile u32 *)data_0209d74c)[base + 3];
+                p[word << 3] |= *mask & ((u32 *)data_0209d74c)[base];
+                q[1] |= *mask & ((u32 *)data_0209d74c)[base + 1];
+                q[2] |= *mask & ((u32 *)data_0209d74c)[base + 2];
+                q[3] |= *mask & ((u32 *)data_0209d74c)[base + 3];
 
                 if (bit != 0) {
-                    volatile u32 *omask = (volatile u32 *)&data_0208ee8c[bit];
+                    u32 *omask = (u32 *)&data_0208ee8c[bit];
 
-                    q[8] = ((volatile u32 *)data_0209d74c)[base] & *omask;
-                    q[9] = ((volatile u32 *)data_0209d74c)[base + 1] & *omask;
-                    q[10] = ((volatile u32 *)data_0209d74c)[base + 2] & *omask;
-                    q[11] = ((volatile u32 *)data_0209d74c)[base + 3] & *omask;
+                    q[8] = ((u32 *)data_0209d74c)[base] & *omask;
+                    q[9] = ((u32 *)data_0209d74c)[base + 1] & *omask;
+                    q[10] = ((u32 *)data_0209d74c)[base + 2] & *omask;
+                    q[11] = ((u32 *)data_0209d74c)[base + 3] & *omask;
                 }
 
                 pos = (u8)(pos + *sp2);

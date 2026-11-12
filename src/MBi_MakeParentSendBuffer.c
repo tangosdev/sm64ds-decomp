@@ -2,7 +2,7 @@
 // NitroSDK MBi_MakeParentSendBuffer: packs a parent packet's header into the
 // send buffer: the type byte, then for a block (type 4) its file id and
 // sequence number little-endian. Returns the advanced buffer pointer, or 0
-// for an unknown type. The header layout is MB_Parent.cpp's.
+// for an unknown type. The header layout is MB_Parent.c's.
 typedef struct MBCommParentBlockHeader {
     u8 type;
     u8 pad1[1];

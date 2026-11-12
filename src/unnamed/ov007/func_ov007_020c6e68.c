@@ -3,6 +3,7 @@
 #include "Ov007Picker.h"
 #include "Ov007Camera.h"
 #include "nitro/fx/fx_cp.h"
+#include "Ov007MenuMem.h"
 
 /* Builds group `idx`'s spring chain: a point list over the stroke's points
  * (func_ov007_020c798c), each point's position (the stroke point
@@ -18,7 +19,6 @@
  * bases lengthen the function by 12 bytes. */
 
 extern int func_ov007_020c249c(Ov007StrokePath *path);
-extern void *func_ov007_020c3df4(const char *name, int size);
 extern Ov007Link *func_ov007_020c80a4(void);
 extern void func_ov007_020c8010(Ov007Link *link, Ov007Follower *from, Ov007Follower *to);
 extern void func_ov007_020bfe4c(Ov007Camera *cam, int a, int b, int c, Vector3 *out);

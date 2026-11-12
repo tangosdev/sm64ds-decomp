@@ -71,10 +71,7 @@ extern HakPmfSlot data_ov064_0211c2e4;
 extern HakPmfSlot data_ov064_0211c2dc;
 extern HakPmfTable data_ov064_0211c934;
 
-/* local extern: no shared header declares MTX_MultVec43 yet. Its definition
- * takes Vector3 and Matrix4x3; State0's VecFx32 values are local POD views. */
 extern "C" {
-extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern int SublevelToLevel(int);
 extern int IsStarCollected(int r0, int r1);
 }

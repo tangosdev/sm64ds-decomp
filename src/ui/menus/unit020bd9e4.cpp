@@ -45,10 +45,10 @@
 
 extern "C" {
 
-extern void func_0204f934(int **);
-extern void func_0204f94c(int *);
-extern int func_0204fa2c(int *, int);
-extern int func_02051f1c(int *, unsigned int, int);
+extern void func_0204f934(NNSSndHandle *);
+extern void func_0204f94c(NNSSndHandle *);
+extern int func_0204fa2c(NNSSndHandle *, int);
+extern int func_02051f1c(void *, unsigned int, int);
 extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020c3d1c(void *);
 
@@ -61,7 +61,7 @@ extern int data_ov007_02104bac;
 extern int data_ov007_02104bb0;
 extern int data_ov007_02104bb4;
 extern int *data_ov007_02104bb8;
-extern int *data_ov007_02104bbc;
+extern NNSSndHandle *data_ov007_02104bbc;
 
 int func_ov007_020be098(int idx) {
     func_0204f94c(&data_ov007_02104bbc[idx]);
@@ -72,7 +72,7 @@ void MenuSound_Create(void) {
     int i;
     int j;
 
-    data_ov007_02104bbc = (int *)func_ov007_020c3df4(data_ov007_02103218, 0xe4);
+    data_ov007_02104bbc = (NNSSndHandle *)func_ov007_020c3df4(data_ov007_02103218, 0xe4);
     data_ov007_02104bb8 = (int *)func_ov007_020c3df4(data_ov007_02103220, 0x10);
 
     for (i = 0; i < 0x39; i++)
@@ -85,10 +85,10 @@ void MenuSound_Create(void) {
 void MenuSound_Destroy(void) {
     int i;
     for (i = 0; i < 0x39; i++) {
-        if (data_ov007_02104bbc[i] != 0) {
+        if (data_ov007_02104bbc[i].player != 0) {
             func_0204fa2c(&data_ov007_02104bbc[i], 5);
         }
-        func_0204f934((int **)&data_ov007_02104bbc[i]);
+        func_0204f934(&data_ov007_02104bbc[i]);
     }
     if (data_ov007_02104bb8 != 0) {
         func_ov007_020c3d1c(data_ov007_02104bb8);
@@ -107,7 +107,7 @@ int *MenuSound_UpdateLoops(void) {
     for (i = 0; i < 4; i++) {
         sound = i + 0x35;
         if (data_ov007_02104bb8[i] == 0) {
-            if (data_ov007_02104bbc[sound] != 0) {
+            if (data_ov007_02104bbc[sound].player != 0) {
                 func_0204fa2c(&data_ov007_02104bbc[sound], 1);
                 /* Never true (i is a loop index, 0..3): the reset of
                  * func_ov007_020bdbcc's smoothed input looks meant for
@@ -132,13 +132,13 @@ int func_ov007_020bdeb0(int idx) {
 }
 
 void func_ov007_020bde70(int idx, int arg) {
-    if (data_ov007_02104bbc[idx] == 0)
+    if (data_ov007_02104bbc[idx].player == 0)
         return;
     func_0204fa2c(&data_ov007_02104bbc[idx], arg);
 }
 
 void func_ov007_020bde2c(int idx) {
-    if (data_ov007_02104bbc[idx] == 0) {
+    if (data_ov007_02104bbc[idx].player == 0) {
         func_ov007_020be098(idx);
     }
     data_ov007_02104bb8[idx - 0x35] = 1;
@@ -156,7 +156,7 @@ void func_ov007_020bdbcc(int dx, int dy) {
     int speed;
     int loudness;
     int active;
-    int *handle;
+    NNSSndHandle *handle;
     int volume;
     int t;
 
@@ -174,7 +174,7 @@ void func_ov007_020bdbcc(int dx, int dy) {
         loudness = FX_Div(speed - 0x1388, 0x7d0);
     }
 
-    if (data_ov007_02104bbc[0x35] == 0) {
+    if (data_ov007_02104bbc[0x35].player == 0) {
         data_ov007_02104ba8 = 0;
         data_ov007_02104ba4 = 0;
     }
@@ -209,8 +209,8 @@ void func_ov007_020bdbcc(int dx, int dy) {
 
     handle = &data_ov007_02104bbc[0x35];
     func_ov007_020bde2c(0x35);
-    NNS_SndPlayerSetVolume((NNSSndHandle *)handle, volume);
-    NNS_SndPlayerSetTrackPitch((NNSSndHandle *)handle, 0xf, -(((0x1000 - t) * 0x300) >> 12));
+    NNS_SndPlayerSetVolume(handle, volume);
+    NNS_SndPlayerSetTrackPitch(handle, 0xf, -(((0x1000 - t) * 0x300) >> 12));
 
     data_ov007_02104bac = data_ov007_02104bac + 1;
 }
@@ -222,7 +222,7 @@ static inline int scale_div(int v, int range, int scale) {
 }
 
 void func_ov007_020bda8c(int frames, int fadingOut) {
-    NNSSndHandle *handle = (NNSSndHandle *)&data_ov007_02104bbc[0x36];
+    NNSSndHandle *handle = &data_ov007_02104bbc[0x36];
     int depth, speed;
 
     if (fadingOut == 0) {
@@ -242,7 +242,7 @@ void func_ov007_020bda8c(int frames, int fadingOut) {
 }
 
 void func_ov007_020bda38(int v) {
-    NNSSndHandle *handle = (NNSSndHandle *)&data_ov007_02104bbc[0x37];
+    NNSSndHandle *handle = &data_ov007_02104bbc[0x37];
     func_ov007_020bde2c(0x37);
     int shift = (v << 8) >> 12;
     NNS_SndPlayerSetTempoRatio(handle, shift + 0x100);
@@ -252,7 +252,7 @@ void func_ov007_020bda38(int v) {
 void func_ov007_020bd9e4(int arg) {
     int i;
     for (i = 0; i < 0x39; i++) {
-        if (data_ov007_02104bbc[i] != 0) {
+        if (data_ov007_02104bbc[i].player != 0) {
             func_0204fa2c(&data_ov007_02104bbc[i], arg);
         }
     }

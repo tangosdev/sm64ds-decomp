@@ -4,17 +4,16 @@
 extern int func_02065af0(int *thiz);
 
 /* NitroSDK WBT_GetBlockInfo: WBT_GetBlock's REQ_GET_BLOCK built as
- * REQ_GET_BLOCKINFO (6). Entry block_id of the peers' block list is fetched
- * into the per-aid buffers in recv_buf_table, each 0x28 bytes
+ * REQ_GET_BLOCKINFO. Entry index of the peers' block list is fetched
+ * into the per-aid buffers in recv_buf_table, each one WBTBlockInfo
  * (recv_data_size); only the receive-buffer table is filled. */
-void WBT_GetBlockInfo(u16 target_bmp, u32 block_id, const void *recv_buf_table,
-                      void (*callback)(void *)) {
+void WBT_GetBlockInfo(u16 target_bmp, int index, const void *recv_buf_table, WBTCallback callback) {
     WBTCommand cmd;
-    cmd.command = 6;
+    cmd.command = WBT_CMD_REQ_GET_BLOCKINFO;
     cmd.target_bmp = target_bmp;
-    cmd.callback = (void (*)(char *))callback;
-    cmd.u.get.block_id = block_id;
-    cmd.u.get.recv_data_size = 0x28;
-    MI_CpuCopy32(recv_buf_table, cmd.u.get.recv_buf_table, 0x40);
+    cmd.callback = callback;
+    cmd.u.get.block_id = index;
+    cmd.u.get.recv_data_size = sizeof(WBTBlockInfo);
+    MI_CpuCopy32(recv_buf_table, cmd.u.get.recv_buf_table, sizeof(cmd.u.get.recv_buf_table));
     func_02065af0((int *)&cmd);
 }

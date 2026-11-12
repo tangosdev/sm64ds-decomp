@@ -1,10 +1,12 @@
 //cpp
 #include "types.h"
 #include "Heap.h"
+#include "fBase_c.h"
 #include "nitro/spi/pm.h"
 #include "nitro/mb/mb.h"
 #include "nitro/pad/pad.h"
 #include "nitro/hw/registers.h"
+#include "nitro/os/reset.h"
 
 extern "C" {
 
@@ -12,11 +14,9 @@ extern u32 data_0209cde4;
 extern u8 data_0209cdcc;
 extern mHeap::Heap_t *data_020a0e9c;
 extern void *data_020a0ea0;
-extern mHeap::Heap_t *data_020a0eac;
 
 extern void InitCrashScreen(void);
 extern void ShowCrashScreen(void);
-extern void OS_ResetSystem(unsigned int a);
 
 void func_02013f4c(void)
 {

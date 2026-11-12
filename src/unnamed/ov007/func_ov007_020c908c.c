@@ -1,6 +1,6 @@
 #include "Ov007Tween.h"
+#include "Ov007MenuMem.h"
 
-extern void *MenuMem_AllocClear(const char *name, int sz);
 extern void func_ov007_020c90f8(Ov007Tween *tw);
 
 /* Allocates a scalar tween that drives *out and resets it (func_ov007_020c90f8). */

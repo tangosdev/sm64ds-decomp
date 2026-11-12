@@ -1,6 +1,5 @@
 #include "Ov007SpriteBank.h"
-
-extern void func_ov007_020c3d1c(void *p);
+#include "Ov007MenuMem.h"
 
 /* Frees a sprite-bank cell's OAM attribute list (func_ov007_020c121c's
  * per-cell free). */

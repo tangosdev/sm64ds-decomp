@@ -1,7 +1,6 @@
 #include "Ov007SpriteBank.h"
 #include "nitro/mi/memory.h"
-
-extern void *func_ov007_020c3df4(const char *name, int size);
+#include "Ov007MenuMem.h"
 
 /* Allocates a sprite bank for `cellCount` cells and `animCount`
  * animations, each table zeroed record by record. */

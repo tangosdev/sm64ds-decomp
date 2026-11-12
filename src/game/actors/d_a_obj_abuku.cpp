@@ -33,6 +33,7 @@
 #include "Sound.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
+#include "math/CalcLib.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "nitro/fx/fx_trig.h"
@@ -40,7 +41,6 @@
 /* arm9 C helpers with no shared header. */
 extern "C" {
 int SurfaceInfo_TestFlag0x20(int *p);
-unsigned short DecIfAbove0_Short(unsigned short *p);
 }
 
 /* -------------------------------------------------------------------------- */

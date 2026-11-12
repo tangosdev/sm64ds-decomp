@@ -12,38 +12,20 @@ void terminate();
 
 extern "C" {
 
-struct S6  { int v[6]; };
-struct S7  { int v[7]; };
-struct S21 { int v[21]; };
-
-/* selfArg: seven words, then the 21 words the walk copies whole. */
-struct ThrowFrame {
-    struct S7 head;
-    struct S21 rest;
-};
-
-struct S72d90 {
-    struct S6  p0;
-    struct S7  p1;
-    struct S21 p2;
-};
-
 extern unsigned char func_02072d90(struct ActionWalk *c);
 extern u8 *func_02071a50(u8 *p, int *out);
 extern u8 *ReadSignedVarInt(u8 *p, int *out);
-extern int __throw_catch_compare(u8 *a, u8 *b, int *out);
-extern int func_02071f88(void *a, void *list);
-extern void func_02071f1c(char *a, void *b, char *c, int d);
+extern int __throw_catch_compare(const u8 *throwtype, const u8 *catchtype, int *offset_result);
+extern int func_02071f88(void *a, ExSpecification *spec);
+extern void func_02071f1c(ThrowContext *context, ActionIterator *it, ExSpecification *spec,
+                          unsigned char *action);
 extern unsigned char func_020729f4(struct ActionWalk *c);
 
 struct Tmp {
     int val;
     int a;
     int b;
-    int c;
-    int d;
-    int e;
-    int f;
+    ExSpecification spec;
 };
 
 /* EH runtime: search the current frame's actions for a handler, walking
@@ -53,41 +35,26 @@ struct Tmp {
    specification: a thrown type it does not list (func_02071f88) goes to
    func_02071f1c. Actions 1 and 14, and any unknown action, call the
    terminate path (std::terminate). The other actions are skipped. */
-u8 *func_02071d3c(void *selfArg, void *srcArg, int *flag) {
-    int *self = (int *)selfArg;
-    struct S6 *src = (struct S6 *)srcArg;
+u8 *func_02071d3c(ThrowContext *self, struct ActionCursor *src, int *flag) {
     struct Tmp tmp;
-    struct S72d90 buf;
+    struct ActionWalk buf;
     int state;
 
-    buf.p0.v[0] = src->v[0];
-    buf.p0.v[1] = src->v[1];
-    buf.p0.v[2] = src->v[2];
-    buf.p0.v[3] = src->v[3];
-    buf.p0.v[4] = src->v[4];
-    buf.p0.v[5] = src->v[5];
+    buf.iterator = src->iterator;
+    buf.unknown_14 = src->unknown_14;
+    buf.mThrow = *self;
 
-    buf.p1.v[0] = self[0];
-    buf.p1.v[1] = self[1];
-    buf.p1.v[2] = self[2];
-    buf.p1.v[3] = self[3];
-    buf.p1.v[4] = self[4];
-    buf.p1.v[5] = self[5];
-    buf.p1.v[6] = self[6];
+    state = func_02072d90(&buf);
 
-    buf.p2 = ((struct ThrowFrame *)self)->rest;
-
-    state = func_02072d90((struct ActionWalk *)&buf);
-
-    for (;; state = func_020729f4((struct ActionWalk *)&buf)) {
+    for (;; state = func_020729f4(&buf)) {
         switch (state) {
         case 12:
         {
-            u8 *cur = (u8 *)buf.p0.v[2];
+            u8 *cur = (u8 *)buf.iterator.mAction;
             tmp.val = cur[1] | (cur[2] << 8) | (cur[3] << 16) | (cur[4] << 24);
             u8 *p = func_02071a50(cur + 5, &tmp.a);
             p = ReadSignedVarInt(p, &tmp.b);
-            if (__throw_catch_compare((u8 *)self[0], (u8 *)tmp.val, flag) == 0) {
+            if (__throw_catch_compare((u8 *)self->mThrowType, (u8 *)tmp.val, flag) == 0) {
                 continue;
             }
             break;
@@ -95,13 +62,13 @@ u8 *func_02071d3c(void *selfArg, void *srcArg, int *flag) {
 
         case 15:
         {
-            u8 *cur = (u8 *)buf.p0.v[2];
-            u8 *p = func_02071a50(cur + 1, &tmp.c);
-            p = func_02071a50(p, &tmp.d);
-            p = ReadSignedVarInt(p, &tmp.e);
-            tmp.f = (int)p;
-            if (func_02071f88((void *)self[0], &tmp.c) == 0) {
-                func_02071f1c((char *)self, (void *)src, (char *)&tmp.c, buf.p0.v[2]);
+            u8 *cur = (u8 *)buf.iterator.mAction;
+            u8 *p = func_02071a50(cur + 1, &tmp.spec.mSpecCount);
+            p = func_02071a50(p, &tmp.spec.mPCOffset);
+            p = ReadSignedVarInt(p, &tmp.spec.mCatchInfoRef);
+            tmp.spec.mSpecs = p;
+            if (func_02071f88((void *)self->mThrowType, &tmp.spec) == 0) {
+                func_02071f1c(self, &src->iterator, &tmp.spec, buf.iterator.mAction);
             }
             continue;
         }
@@ -133,6 +100,6 @@ u8 *func_02071d3c(void *selfArg, void *srcArg, int *flag) {
         break;
     }
 
-    return (u8 *)buf.p0.v[2];
+    return (u8 *)buf.iterator.mAction;
 }
 }

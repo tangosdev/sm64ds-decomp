@@ -1,41 +1,41 @@
 //cpp
 #include "types.h"
 #include "nitro/os/system.h"
-#include "private/wbt_block_info_list.h"
+#include "nitro/wbt.h"
 #include "nitro/mi/memory.h"
 
 extern "C" {
 
-extern struct WBTBlockInfoList *func_02065ae0(void);
-extern void func_02065ad0(struct WBTBlockInfoList *list);
+extern WBTBlockInfoList *func_02065ae0(void);
+extern void func_02065ad0(WBTBlockInfoList *list);
 
-int WBT_RegisterBlock(struct WBTBlockInfoList *node, int blockId, void *userId, int dataPtr,
-                      int dataSize, u16 permissionBmp) {
+int WBT_RegisterBlock(WBTBlockInfoList *block_info_list, u32 block_id, const void *user_id,
+                      const void *data_ptr, int data_size, u16 permission_bmp) {
     OSIntrMode irq = OS_DisableInterrupts();
     if (func_02065ae0() == 0) {
-        func_02065ad0(node);
+        func_02065ad0(block_info_list);
     } else {
-        struct WBTBlockInfoList *p = func_02065ae0();
-        struct WBTBlockInfoList *nx = p->next;
+        WBTBlockInfoList *p = func_02065ae0();
+        WBTBlockInfoList *nx = p->next;
         if (nx != 0) {
             do {
                 p = nx;
                 nx = nx->next;
             } while (nx != 0);
         }
-        p->next = node;
+        p->next = block_info_list;
     }
-    if (dataPtr == 0) {
-        node->block_type = 1;
+    if (data_ptr == 0) {
+        block_info_list->block_type = WBT_BLOCK_LIST_TYPE_USER;
     } else {
-        node->data_ptr = (char *)dataPtr;
-        node->block_type = 0;
+        block_info_list->data_ptr = (void *)data_ptr;
+        block_info_list->block_type = WBT_BLOCK_LIST_TYPE_COMMON;
     }
-    node->next = 0;
-    node->block_id = blockId;
-    node->block_size = dataSize;
-    node->permission_bmp = permissionBmp;
-    MI_CpuCopy8(userId, node->user_id, 0x20);
+    block_info_list->next = 0;
+    block_info_list->data_info.id = block_id;
+    block_info_list->data_info.block_size = data_size;
+    block_info_list->permission_bmp = permission_bmp;
+    MI_CpuCopy8(user_id, block_info_list->data_info.user_id, WBT_USER_ID_LEN);
     OS_RestoreInterrupts(irq);
     return 1;
 }

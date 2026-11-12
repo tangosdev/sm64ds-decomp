@@ -353,9 +353,9 @@ int daObjMarioCap_c::InitResources()
         break;
     }
 
-    if (mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(
-                              *(SharedFilePtr *)data_ov002_020ff0ac[mModelIndex]),
-                          1, -1) == 0)
+    if (mAnmModel.SetFile(
+            dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov002_020ff0ac[mModelIndex]), 1,
+            -1) == 0)
         return 0;
 
     mShadowModel.InitCylinder();
@@ -1051,9 +1051,8 @@ int daObjMarioCap_c::InitTaken()
     mCarryMatrix = 0;
     mTaken = 1;
 
-    /* (int)self + off is the MATCH form; mFlags &= / vulnFlags &= CSE. */
-    *(u32 *)((int)&mFlags) &= ~0x40000u;
-    *(u32 *)((int)&mdCcAc_c.vulnFlags) &= ~0x8000u;
+    mFlags &= ~0x40000u;
+    mdCcAc_c.vulnFlags &= ~0x8000u;
 
     if (mPlayer == 0) {
         mPlayer = ClosestPlayer();

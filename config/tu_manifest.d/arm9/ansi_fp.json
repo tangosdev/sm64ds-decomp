@@ -250,109 +250,109 @@
   "compiler_only_output": [],
   "defined_symbol_renames": [
     {
-      "from": "@409",
+      "from": "@408",
       "to": "data_0209a628",
-      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name"
+      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name | Re-keyed from @409: dropping __timesdec's laundered exponent pointer renumbers the literals -1 (measured)"
+    },
+    {
+      "from": "@409",
+      "to": "data_0209a658",
+      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name | Re-keyed from @410: dropping __timesdec's laundered exponent pointer renumbers the literals -1 (measured)"
     },
     {
       "from": "@410",
-      "to": "data_0209a658",
-      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name"
+      "to": "data_0209a680",
+      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name | Re-keyed from @411: dropping __timesdec's laundered exponent pointer renumbers the literals -1 (measured)"
     },
     {
       "from": "@411",
-      "to": "data_0209a680",
-      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name"
+      "to": "data_0209a698",
+      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name | Re-keyed from @412: dropping __timesdec's laundered exponent pointer renumbers the literals -1 (measured)"
     },
     {
       "from": "@412",
-      "to": "data_0209a698",
-      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name"
+      "to": "data_0209a6a8",
+      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name | Re-keyed from @413: dropping __timesdec's laundered exponent pointer renumbers the literals -1 (measured)"
     },
     {
       "from": "@413",
-      "to": "data_0209a6a8",
-      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name"
+      "to": "data_0209a6b0",
+      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name | Re-keyed from @414: dropping __timesdec's laundered exponent pointer renumbers the literals -1 (measured)"
     },
     {
       "from": "@414",
-      "to": "data_0209a6b0",
-      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name"
+      "to": "data_0209a6b8",
+      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name | Re-keyed from @415: dropping __timesdec's laundered exponent pointer renumbers the literals -1 (measured)"
     },
     {
       "from": "@415",
-      "to": "data_0209a6b8",
-      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name"
+      "to": "data_0209a6c0",
+      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name | Re-keyed from @416: dropping __timesdec's laundered exponent pointer renumbers the literals -1 (measured)"
     },
     {
       "from": "@416",
-      "to": "data_0209a6c0",
-      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name"
+      "to": "data_0209a6c8",
+      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name | Re-keyed from @417: dropping __timesdec's laundered exponent pointer renumbers the literals -1 (measured)"
     },
     {
       "from": "@417",
-      "to": "data_0209a6c8",
-      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name"
+      "to": "data_0209a6cc",
+      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name | Re-keyed from @418: dropping __timesdec's laundered exponent pointer renumbers the literals -1 (measured)"
     },
     {
       "from": "@418",
-      "to": "data_0209a6cc",
-      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name"
+      "to": "data_0209a6d0",
+      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name | Re-keyed from @419: dropping __timesdec's laundered exponent pointer renumbers the literals -1 (measured)"
     },
     {
       "from": "@419",
-      "to": "data_0209a6d0",
-      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name"
+      "to": "data_0209a6d4",
+      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name | Re-keyed from @420: dropping __timesdec's laundered exponent pointer renumbers the literals -1 (measured)"
     },
     {
       "from": "@420",
-      "to": "data_0209a6d4",
-      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name"
+      "to": "data_0209a6d8",
+      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name | Re-keyed from @421: dropping __timesdec's laundered exponent pointer renumbers the literals -1 (measured)"
     },
     {
       "from": "@421",
-      "to": "data_0209a6d8",
-      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name"
+      "to": "data_0209a6dc",
+      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name | Re-keyed from @422: dropping __timesdec's laundered exponent pointer renumbers the literals -1 (measured)"
     },
     {
       "from": "@422",
-      "to": "data_0209a6dc",
-      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name"
+      "to": "data_0209a6e0",
+      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name | Re-keyed from @423: dropping __timesdec's laundered exponent pointer renumbers the literals -1 (measured)"
     },
     {
       "from": "@423",
-      "to": "data_0209a6e0",
-      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name"
+      "to": "data_0209a6e4",
+      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name | Re-keyed from @424: dropping __timesdec's laundered exponent pointer renumbers the literals -1 (measured)"
     },
     {
       "from": "@424",
-      "to": "data_0209a6e4",
-      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name"
+      "to": "data_0209a6e8",
+      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name | Re-keyed from @425: dropping __timesdec's laundered exponent pointer renumbers the literals -1 (measured)"
     },
     {
       "from": "@425",
-      "to": "data_0209a6e8",
-      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name"
+      "to": "data_0209a6ec",
+      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name | Re-keyed from @426: dropping __timesdec's laundered exponent pointer renumbers the literals -1 (measured)"
     },
     {
       "from": "@426",
-      "to": "data_0209a6ec",
-      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name"
+      "to": "data_0209a6f0",
+      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name | Re-keyed from @427: dropping __timesdec's laundered exponent pointer renumbers the literals -1 (measured)"
     },
     {
       "from": "@427",
-      "to": "data_0209a6f0",
-      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name"
+      "to": "data_0209a6f4",
+      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name | Re-keyed from @428: dropping __timesdec's laundered exponent pointer renumbers the literals -1 (measured)"
     },
     {
       "from": "@428",
-      "to": "data_0209a6f4",
-      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name"
-    },
-    {
-      "from": "@429",
       "to": "data_0209a6f8",
-      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name"
+      "evidence": "compiler string literal: mwcc numbers __two_exp's literals @409..@429 in source order, and those numbers are already defined by overlay symbols.txt rows, so every literal keeps its configured address name | Re-keyed from @429: dropping __timesdec's laundered exponent pointer renumbers the literals -1 (measured)"
     }
   ],
   "notes": [

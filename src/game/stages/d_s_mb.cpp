@@ -18,8 +18,7 @@
 // leftovers: func_02034b1c initialises the global graph callback, retaining
 // the raw store to its unmodelled byte at +0x0f; it keeps its placeholder name
 // and its untyped parameters because include/decl_common.h declares it.
-// LoadMultiBootResources stays free (no receiver). The loader-job word
-// data_020a0c64 is an int that decl_common.h spells u8[].
+// LoadMultiBootResources stays free (no receiver).
 #include "dScMB_c.h"
 #include "nitro/hw/registers.h"
 #include "AsyncJob.h"
@@ -62,10 +61,9 @@ extern int data_0208ee44;
 /* Whether the loader job Behavior waits on has finished: InitResources seeds
    it from func_0201a244's return value (1 when the job ran synchronously) and
    Behavior's step 1 polls func_0201a1bc into it. It is this TU's .bss, sorted
-   between LoadMultiBootResources's static and sMBGraphCallback. The word is an
-   int, but include/decl_common.h spells it u8[], so the definition follows that
-   spelling (with C linkage from that declaration) until the header can change. */
-u8 data_020a0c64[4];
+   between LoadMultiBootResources's static and sMBGraphCallback. d_s_boot keeps
+   the same flag for its own job as sBootJobDone. */
+int sMBJobDone;
 
 /* The scene's graph callback. A global, not a member: InitResources points
    it at the scene and hands it to the graph hook. Its constructor is inline,
@@ -183,7 +181,7 @@ s32 dScMB_c::Behavior() {
 
     case 1: {
         int done = func_0201a1bc();
-        *(int *)data_020a0c64 = done;
+        sMBJobDone = done;
         if (done == 0)
             break;
     }
@@ -298,7 +296,7 @@ s32 dScMB_c::InitResources() {
 
     fader.color = 0x7fff;
     data_0208ee44 = 1;
-    *(int *)data_020a0c64 = func_0201a244(func_0201a2f8, 0, 0xf, 0, 0x1000);
+    sMBJobDone = func_0201a244(func_0201a2f8, 0, 0xf, 0, 0x1000);
 
     return 1;
 }

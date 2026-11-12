@@ -113,7 +113,7 @@ s32 daFRing_c::Behavior() {
 }
 
 s32 daFRing_c::InitResources() {
-    mAnmModel1.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov060_0211b208), 1, 0x13);
+    mAnmModel1.SetFile(dExtSimpleModel_c::LoadFile(data_ov060_0211b208), 1, 0x13);
     mAnmModel2.SetFile((BMD_File *)data_ov060_0211b208.filePtr, 1, 0x13);
 
     dExtFrameCtrl_c::LoadFile(data_ov060_0211b1f8);

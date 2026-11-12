@@ -299,12 +299,12 @@ int daObjBk_Botaosi_c::InitResources() {
     Vector3 a, b, c, d;
     int one;
 
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov015_0211497c), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov015_0211497c), 1, -1);
     mShadowModel.InitCuboid();
     UpdateModelMatrix();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile((KCL_File *)(dBgW_Kc::LoadFile(data_ov015_02114974)), mClsnMat, 0x1000,
-                          mAngleY, *(CLPS_Block *)(&data_ov015_02113574));
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov015_02114974), mClsnMat, 0x1000, mAngleY,
+                          *(CLPS_Block *)(&data_ov015_02113574));
 
     mAngleY += 0x8000;
     a.x = 0;

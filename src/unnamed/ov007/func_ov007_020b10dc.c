@@ -3,7 +3,7 @@
 
 extern int func_ov007_020bdeb0(int x);
 extern void RequestScreenFade(int kind, int flags, void (*onEnd)(void));
-extern void func_ov007_020b1fa4(int self);
+extern void func_ov007_020b1fa4(int preset);
 extern void FigureScene_SetScreenBlend(int x);
 extern void func_ov007_020b16f0(void);
 

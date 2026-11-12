@@ -1,7 +1,7 @@
 #include "Ov007Spring.h"
 #include "nitro/fx/fx_cp.h"
+#include "Ov007MenuMem.h"
 
-extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020c83fc(void *o);
 
 /* Builds a follower that moves the Q12 position at p, with mass q (Q12):

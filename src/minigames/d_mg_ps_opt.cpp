@@ -19,6 +19,7 @@
 #include "dMgPsOpt_c.h"
 #include "Sound.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "math/CalcLib.h"
 
 /* The blitter's 2x2 matrix. This panel always passes none. */
 struct M;
@@ -86,7 +87,6 @@ int GetSoundMode(void);
 void SetSoundMode(int mode);
 void TurnBacklightOn(void);
 void TurnBacklightOff(void);
-u8 DecIfAbove0_Byte(u8 *p);
 /* Sub BG enable bits. dScMgBase_c saves them in mSavedSubBgBits. */
 extern unsigned char gSubScreenLayers;
 /* 1 while the backlight is on. TurnBacklightOn / Off write it. */

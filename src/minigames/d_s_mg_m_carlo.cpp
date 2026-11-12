@@ -23,6 +23,7 @@ enum d_s_mg_m_carlo_AssetId { ASSET_D_2D_MG_CARD_NCL_BIN = 0x00bb };
 #include "PlayerInput.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "math/CalcLib.h"
 #include "LevelRng.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
@@ -49,7 +50,6 @@ extern dMgMCarloCardObj_c *sMCarloSecondPick; /* second pick */
 extern short sMCarloBoardDelay;
 extern int sMCarloCardTotal;
 extern int sMCarloDealProgress;
-extern int RandomIntInternal(int *seed);
 extern int sMCarloCardsMoving;
 extern int sMCarloCols;
 extern int sMCarloRows;

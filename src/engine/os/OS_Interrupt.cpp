@@ -27,12 +27,6 @@
 // mangles C++ data names. The tables are in nitro/os/interrupt.h.
 extern "C" {
 extern OSThreadQueue OSi_IrqThreadQueue; /* os_irqHandler.c, in DTCM */
-
-// local extern: the SDK's (u32, void (*)(void *), void *) parameters are not
-// adopted yet; their callers in MI_Dma, MI_DmaGXCommand, OS_Alarm and OS_Tick
-// still pass words.
-void OSi_EnterDmaCallback(u32 idx, u32 handler, u32 arg);
-void OSi_EnterTimerCallback(u32 idx, u32 handler, u32 arg);
 }
 
 #ifndef _MSC_VER
@@ -87,12 +81,12 @@ extern "C" OSIrqFunction OS_GetIrqFunction(OSIrqMask intrBit) {
 
 // Installs a DMA channel's completion callback and enables its interrupt.
 // The entry stays armed only if the channel's interrupt was already enabled.
-extern "C" void OSi_EnterDmaCallback(u32 idx, u32 handler, u32 arg) {
-    OSIrqMask imask = 1UL << (REG_OS_IE_D0_SHIFT + idx);
+extern "C" void OSi_EnterDmaCallback(u32 dmaNo, void (*callback)(void *), void *arg) {
+    OSIrqMask imask = 1UL << (REG_OS_IE_D0_SHIFT + dmaNo);
 
-    OSi_IrqCallbackInfo[idx].func = (void (*)(void *))handler;
-    OSi_IrqCallbackInfo[idx].arg = (void *)arg;
-    OSi_IrqCallbackInfo[idx].enable = OS_EnableIrqMask(imask) & imask;
+    OSi_IrqCallbackInfo[dmaNo].func = callback;
+    OSi_IrqCallbackInfo[dmaNo].arg = arg;
+    OSi_IrqCallbackInfo[dmaNo].enable = OS_EnableIrqMask(imask) & imask;
 }
 
 #ifndef _MSC_VER
@@ -101,14 +95,14 @@ extern "C" void OSi_EnterDmaCallback(u32 idx, u32 handler, u32 arg) {
 // indexes the entry as OSi_IrqCallbackInfo[timerNo + OSi_IRQCALLBACK_NO_TIMER0];
 // the ROM's three literals (table + 0x30 + field) are what this compiler
 // emits only when the offset is applied to the table before the index.
-extern "C" void OSi_EnterTimerCallback(u32 idx, u32 handler, u32 arg) {
-    OSIrqMask imask = 1UL << (REG_OS_IE_T0_SHIFT + idx);
+extern "C" void OSi_EnterTimerCallback(u32 timerNo, void (*callback)(void *), void *arg) {
+    OSIrqMask imask = 1UL << (REG_OS_IE_T0_SHIFT + timerNo);
 
-    (OSi_IrqCallbackInfo + OSi_IRQCALLBACK_NO_TIMER0)[idx].func = (void (*)(void *))handler;
-    (OSi_IrqCallbackInfo + OSi_IRQCALLBACK_NO_TIMER0)[idx].arg = (void *)arg;
+    (OSi_IrqCallbackInfo + OSi_IRQCALLBACK_NO_TIMER0)[timerNo].func = callback;
+    (OSi_IrqCallbackInfo + OSi_IRQCALLBACK_NO_TIMER0)[timerNo].arg = arg;
 
     OS_EnableIrqMask(imask);
-    (OSi_IrqCallbackInfo + OSi_IRQCALLBACK_NO_TIMER0)[idx].enable = 1;
+    (OSi_IrqCallbackInfo + OSi_IRQCALLBACK_NO_TIMER0)[timerNo].enable = 1;
 }
 
 extern "C" OSIrqMask OS_SetIrqMask(OSIrqMask mask) {

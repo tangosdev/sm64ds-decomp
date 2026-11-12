@@ -19,8 +19,6 @@
  * - dBgW::SetClipRadius: Behavior sets the collider range to 0x100000.
  * - data_ov029_0211432c / 02114324 are this TU's BMD/KCL file handles;
  *   data_ov029_0211304c the CLPS block stays unowned overlay data.
- * - Behavior case 1 keeps the unsigned short* increment pointer
- *   (`*p > 0x168` CSEs and size-DIFFs).
  * - S14: g_profile_WC_OBJ04 stays outside the licensed .text.
  * - common.h first via dBgActor_c.h (SetFile matrix argument).
  */
@@ -73,11 +71,11 @@ extern "C" daObjWc_Obj04_c *daObjWc_Obj04_c_classInit() {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 int daObjWc_Obj04_c::InitResources() {
-    mModel2.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov029_0211432c), 1, -1);
+    mModel2.SetFile(dExtSimpleModel_c::LoadFile(data_ov029_0211432c), 1, -1);
     UpdateModelMatrix();
     UpdateClsnMatrix();
     {
-        KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov029_02114324);
+        KCL_File *kcl = dBgW_Kc::LoadFile(data_ov029_02114324);
         mMeshCollider.SetFile(kcl, mClsnMat2, 0x199, mAngleY, data_ov029_0211304c);
     }
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
@@ -98,10 +96,7 @@ int daObjWc_Obj04_c::Behavior() {
         if (Event::GetBit(mEventID) == 0)
             break;
 
-        {
-            u8 *st_ptr = &mState;
-            *st_ptr = *st_ptr + 1;
-        }
+        mState++;
 
         mStateTimer = 0;
         mVisible = 1;
@@ -112,13 +107,10 @@ int daObjWc_Obj04_c::Behavior() {
         break;
 
     case 1: {
-        /* MATCH: `*p > 0x168` CSEs the timer load and size-DIFFs. The
-         * increment goes through the pointer; the tests reload the field. */
-        unsigned short *p = &mStateTimer;
         if (mStateTimer > 0x168) {
             mVisible = mStateTimer & 1;
         }
-        *p = *p + 1;
+        mStateTimer++;
         if (Event::GetBit(mEventID) != 0)
             break;
         mMeshCollider.Disable();

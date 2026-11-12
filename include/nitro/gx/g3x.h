@@ -113,4 +113,23 @@ static inline void G3X_EdgeMarking(bool enable) {
     }
 }
 
+/* G3X_AlphaTest and G3X_SetFogColor are static inlines in NitroSDK's g3x.h
+ * (ntrtwl/NitroSDK include/nitro/gx/g3x.h). They are spelled as macros here:
+ * a new inline body in this header would renumber every includer's @NNN. */
+#define G3X_AlphaTest(enable, ref)                                                     \
+    do {                                                                               \
+        if (enable) {                                                                  \
+            REG_DISP3DCNT = (u16)(REG_DISP3DCNT & ~(REG_G3X_DISP3DCNT_RO_MASK |         \
+                                                    REG_G3X_DISP3DCNT_GO_MASK) |        \
+                                  REG_G3X_DISP3DCNT_ATE_MASK);                          \
+            REG_ALPHA_TEST_REF = (u16)(ref);                                           \
+        } else {                                                                       \
+            REG_DISP3DCNT &= (u16) ~(REG_G3X_DISP3DCNT_ATE_MASK |                      \
+                                     REG_G3X_DISP3DCNT_RO_MASK |                       \
+                                     REG_G3X_DISP3DCNT_GO_MASK);                       \
+        }                                                                              \
+    } while (0)
+
+#define G3X_SetFogColor(rgb, alpha) (REG_FOG_COLOR = (u32)((rgb) | ((alpha) << 16)))
+
 #endif

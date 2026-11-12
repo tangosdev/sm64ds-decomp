@@ -93,12 +93,12 @@ void daObjFl_Block_c::OnStoodOn(dActor_c *other) {
 }
 
 s32 daObjFl_Block_c::InitResources() {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov022_02114558), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov022_02114558), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    char *kcl = dBgW_Kc::LoadFile(data_ov022_02114550);
-    mMeshCollider.SetFile((KCL_File *)(kcl), mClsnMat, 0x199, mAngleY, data_ov064_0211bb0c);
+    KCL_File *kcl = dBgW_Kc::LoadFile(data_ov022_02114550);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov064_0211bb0c);
 
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);

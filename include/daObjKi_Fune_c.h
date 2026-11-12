@@ -9,7 +9,7 @@ struct daObjKi_Fune_c : dBgActor_c {
        daObjKi_Fune_c methods prove. */
     u8 mModelIndex; /* 0x31e */
     u8 pad_31f[0x1];
-    u16 mBobAngle; /* 0x320 */
+    s16 mBobAngle; /* 0x320 */
     u8 pad_322[0x2];
     s32 mSoundHandle; /* 0x324 */
     u16 unk_328;      /* 0x328 */

@@ -32,7 +32,6 @@
  *
  * Known limits:
  *   func_0200fa04 is Behavior's impact dust; no named method in this TU.
- *   VEC_Add: no shared header declares it.
  *   data_ov023_02112088 / 02112080 are resource handles this TU's sinit
  *   owns; data_ov064_0211ba4c (CLPS) is overlay .data.
  *   No daPly_c.h / dCamera_c.h.
@@ -48,11 +47,10 @@ enum d_a_obj_fm_battan_AssetId { ASSET_FM_BATTAN_BMD = 0x0616, ASSET_FM_BATTAN_K
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 
-/* local extern: no shared header declares these. */
 extern CLPS_Block data_ov064_0211ba4c;
 extern "C" {
-extern void VEC_Add(Vector3 *, Vector3 *, Vector3 *);
 extern void *func_0200fa04(dActor_c *, Vector3 *, int);
 
 /* The 8-byte store into the mesh collider's +0x18 callback slot. */
@@ -91,12 +89,12 @@ extern "C" SpawnInfo<daObjFm_Battan_c> g_profile_FM_BATTAN = {
     daObjFm_Battan_c_classInit, 0x0054, 0x0124, 0x02000000, 0, 0x00500000, 0x01000000, 0x01000000};
 
 int daObjFm_Battan_c::InitResources() {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov023_02112088), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov023_02112088), 1, -1);
     mShadowModel.InitCuboid();
     UpdateModelTransform();
     UpdateClsnPosAndRot();
 
-    KCL_File *file = (KCL_File *)dBgW_Kc::LoadFile(data_ov023_02112080);
+    KCL_File *file = dBgW_Kc::LoadFile(data_ov023_02112080);
     mMeshCollider.SetFile(file, mClsnMat, 0x1000, mAngleY, data_ov064_0211ba4c);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.Enable(this);

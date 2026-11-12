@@ -1256,7 +1256,7 @@ int daObjBlockS_c::InitResources()
     mHomeAngleX = mAngleX;
     mHomeAngleY = mAngleY;
     mHomeAngleZ = mAngleZ;
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(**(SharedFilePtr **)(f)), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(**(SharedFilePtr **)(f)), 1, -1);
     mShadowModel.InitCuboid();
     mMeshCollider.SetFile((KCL_File *)((int)dBgW_Kc::LoadFile(**(SharedFilePtr **)(f + 4))),
                           mClsnMat, 0x199, mAngleY, *(CLPS_Block *)(*(int *)(f + 8)));
@@ -1301,7 +1301,7 @@ int daObjBlockS_c::OnYoshiTryEat()
 void daObjBlockS_c::OnTurnIntoEgg(daPly_c &player) {
     if (player.IsCollectingCap()) {
         if (mCoinsPaid != 1) {
-            ((dActor_c *)this)->GivePlayerCoins(player, 3, 0);
+            GivePlayerCoins(player, 3, 0);
             mCoinsPaid = 1;
         }
     } else {

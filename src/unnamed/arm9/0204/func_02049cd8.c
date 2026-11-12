@@ -1,7 +1,7 @@
 #include "CaptureEffect.h"
 #include "nitro/mi/memory.h"
+#include "nitro/snd/interface.h"
 
-extern void SNDi_SetSurroundDecay(int decay);
 extern int func_020507e0(void *buffer, unsigned int size, int format, int rate, int interval,
                          void *callback, void *arg);
 

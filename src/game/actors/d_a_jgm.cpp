@@ -189,9 +189,9 @@ void daJgm_c::OnTurnIntoEgg(daPly_c &player) {
 s32 daJgm_c::InitResources()
 {
     dExtSimpleModel_c::LoadFile(data_ov077_02127b38);
-    BMD_File *bodyFile = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov077_02127b50);
+    BMD_File *bodyFile = dExtSimpleModel_c::LoadFile(data_ov077_02127b50);
     mAnmModel.SetFile(bodyFile, 1, 1);
-    BMD_File *heldFile = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov077_02127b48);
+    BMD_File *heldFile = dExtSimpleModel_c::LoadFile(data_ov077_02127b48);
     mModel.SetFile(heldFile, 1, 1);
     for (int i = 0; i < 2; i++)
         dExtFrameCtrl_c::LoadFile(*data_ov077_02127238[i]);

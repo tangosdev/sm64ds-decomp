@@ -343,9 +343,8 @@ int daObjHatenaBlock_c::InitResources()
     switch (actorID - ACTOR_HATENA_BLOCK) {
     case 0:   /* HATENA_BLOCK */
         modelFile = dExtSimpleModel_c::LoadFile(data_ov102_0214e7e8);
-        mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov102_0214e808), 1, 0x19);
-        mAnmModel.SetAnim((BCA_File *)(dExtFrameCtrl_c::LoadFile(data_ov102_0214e7f8)), 0, 0x1000,
-                          0);
+        mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov102_0214e808), 1, 0x19);
+        mAnmModel.SetAnim(dExtFrameCtrl_c::LoadFile(data_ov102_0214e7f8), 0, 0x1000, 0);
         dExtSimpleModel_c::LoadFile(data_ov002_0210d9e0);
         break;
     case 1:   /* ITEM_BLOCK */
@@ -380,9 +379,8 @@ int daObjHatenaBlock_c::InitResources()
     UpdateMeshCollider();
     mShadowMat = mModel.mat4x3;
     {
-        void *kcl = dBgW_Kc::LoadFile(data_ov102_0214e7d0);
-        mMeshCollider.SetFile((KCL_File *)(kcl), mClsnMat, 0x199, mAngleY,
-                              *(CLPS_Block *)(&data_ov002_0210d954));
+        KCL_File *kcl = dBgW_Kc::LoadFile(data_ov102_0214e7d0);
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, *(CLPS_Block *)(&data_ov002_0210d954));
     }
     mHomePosY = mPosY;
     mContentType = (unsigned char)param1;

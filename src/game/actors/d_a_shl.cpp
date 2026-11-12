@@ -51,8 +51,6 @@
  *   relocations and pins).
  * - The unnamed struct type of `pos` in func_ov102_0214c84c also holds
  *   the count (an unnamed struct type takes one number, measured).
- * - *(u16 *)&mStateTimer stays: the ROM loads ldrh (unsigned), the s16
- *   member spelling loads ldrsh.
  * - daShl_c_classInit stays a free factory and the destructor stays
  *   inline (D1-then-D0 cartridge order).
  */
@@ -65,6 +63,7 @@
 #include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
 #include "nitro/fx/fx.h"
+#include "math/CalcLib.h"
 
 /* Two 8-byte pointers-to-member. The second word is the this-adjustment;
    retail stores 0 for every entry. */
@@ -99,8 +98,6 @@ extern SharedFilePtr *data_ov102_0214d70c[];
 int  func_ov002_020ad660(char *self, char *clsn, char *model, int kind);
 int  func_ov002_020cc16c(void *player, void *actor);
 void func_020105cc(void *self, u32 flags);
-u8   DecIfAbove0_Byte(u8 *counter);
-u16  DecIfAbove0_Short(u16 *counter);
 void Matrix4x3_FromRotationY(void *m, int angle);
 int  SurfaceInfo_TestFlag0x20(int *si);
 
@@ -136,7 +133,7 @@ s32 daShl_c::InitResources()
 {
     mModelIndex = param1 & 1;
     mVariant = (param1 >> 4) & 1;
-    BMD_File *bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov102_0214d70c[mModelIndex]);
+    BMD_File *bmd = dExtSimpleModel_c::LoadFile(*data_ov102_0214d70c[mModelIndex]);
     if (mModel.SetFile(bmd, 1, 1) == 0)
         return 0;
     if (mShadowModel.InitCylinder() == 0)
@@ -190,7 +187,7 @@ s32 daShl_c::Behavior()
         mDespawnTimer = 0;
     }
 
-    DecIfAbove0_Short((u16 *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
 
     {
         ShlState *st = mState;
@@ -345,13 +342,12 @@ int daShl_c::func_ov102_0214d044()
     {
         dActor_c *rider = mCarrier;
         s32 *riderPos = &rider->mPosX;
-        s16 *angle = &mAngleY;
         int x = riderPos[0];
         int ret = 1;
         mPosX = x;
         mPosY = riderPos[1];
         mPosZ = riderPos[2];
-        *angle = *angle + 0x1000;
+        mAngleY += 0x1000;
         return ret;
     }
 }
@@ -445,8 +441,7 @@ void daShl_c::func_ov102_0214cbec()
         if (!isPlayer)
             return;
     }
-    /* Unsigned read (ldrh): the s16 field spelling loads ldrsh. */
-    if (*(u16 *)&mStateTimer != 0)
+    if (mStateTimer != 0)
         return;
 
     hit = mdCc_c.hitFlags;

@@ -28,6 +28,7 @@
 #include "SaveData.h"
 #include "SpawnInfo.h"
 #include "private/mtx43.h"
+#include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "LevelRng.h"
 
@@ -40,15 +41,7 @@ int PlayLong(u32, u32, u32, const Vector3 &, s16);
 }
 
 extern "C" {
-s16 Vec3_HorzAngle(const Vector3 *, const Vector3 *);
-s32 Vec3_Dist(const Vector3 *, const Vector3 *);
-void VEC_Add(Vector3 *, Vector3 *, Vector3 *);
-u8 DecIfAbove0_Byte(u8 *);
-s32 RandomIntInternal(s32 *);
-void Vec3_Asr(Vector3 *, Vector3 *, int);
-void MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
 int *Vec3_LslInPlace(Vector3 *, int);
-int MTX_Inverse43(const Matrix4x3 *src, Matrix4x3 *dst);
 /* local extern: these five names hold the @NNN count. */
 void d_a_snm_bthPlayLongHold(int handle, unsigned int a, unsigned int b, void *pos, unsigned int c);
 extern u8 gGameMode;

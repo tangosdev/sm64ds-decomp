@@ -18,12 +18,12 @@ void func_ov007_020c6784(Ov007Picker *self, int count, const int *pointCounts, c
     for (i = 0; i < count; i++) {
         switch (mode) {
         case 0:
-            self->groups[i] = (Ov007StrokePath *)func_ov007_020c2b38(
-                pointCounts[i], ((const int *const *)xCoords)[i], ((const int *const *)yCoords)[i],
-                progressThresholds[i]);
+            self->groups[i] =
+                func_ov007_020c2b38(pointCounts[i], ((const int *const *)xCoords)[i],
+                                    ((const int *const *)yCoords)[i], progressThresholds[i]);
             break;
         case 1:
-            self->groups[i] = (Ov007StrokePath *)func_ov007_020c2acc(
+            self->groups[i] = func_ov007_020c2acc(
                 pointCounts[i], ((const unsigned char *const *)xCoords)[i],
                 ((const unsigned char *const *)yCoords)[i], progressThresholds[i]);
             break;

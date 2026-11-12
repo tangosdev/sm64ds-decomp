@@ -12,7 +12,7 @@
  * (std::terminate runs when none covers the PC) and func_02071864 reads the
  * frame header. LEB128 operands come via ReadSignedVarInt (signed) / func_02071a50
  * (unsigned); each destroy action ends in a 4-byte destructor address. Opcode bits:
- * 0x20/0x40 take the operand from c->mGPR[] instead of the frame at c->mFP, and
+ * 0x20/0x40 take the operand from c->mFrame.mGPR[] instead of the frame at c->mFP, and
  * 0x80 ends the list (s->mAction = 0); cases 0xc/0xf return when they reach `end`.
  *
  * EXTENT: the compiled object is 0x88c bytes and is byte-identical to the ROM over
@@ -60,17 +60,11 @@ typedef void (*F1)(int);
  * is its ACTIVECATCHBLOCK (hand a live catch object's destructor on to a
  * rethrow at the same location, else destroy it), and func_02071ccc fills the
  * CatchInfo the same way that runtime's catch setup does ('*' pointer types
- * get a copied pointer). Names follow those roles. ActionIterator is shared
- * (private/throw_context.h). */
-typedef struct CatchInfo {
-    int mLocation; /* 0x00 -- func_02071ccc: ThrowContext.mLocation */
-    int mTypeInfo; /* 0x04 -- func_02071ccc: ThrowContext.mThrowType */
-    int mDtor;     /* 0x08 -- func_02071ccc: ThrowContext.mDtor */
-} CatchInfo;
-
-extern void *func_02071910(char *c, void *s);
+ * get a copied pointer). Names follow those roles. ActionIterator and
+ * CatchInfo are shared (private/throw_context.h). */
+extern void *func_02071910(ThrowContext *c, void *s);
 extern void func_02072dac(int a, ActionIterator *s);
-extern void func_02071864(char *c, char *s);
+extern void func_02071864(ThrowContext *t, ActionIterator *it);
 extern unsigned char *ReadSignedVarInt(unsigned char *p, int *out);
 extern unsigned char *func_02071a50(unsigned char *p, int *out);
 
@@ -83,10 +77,10 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
     for (;;) {
         p = s->mAction;
         if (p == 0) {
-            func_02072dac((int)func_02071910((char *)c, (void *)s), s);
+            func_02072dac((int)func_02071910(c, s), s);
             if (s->mActionTable == 0)
                 std::terminate();
-            func_02071864((char *)c, (char *)s);
+            func_02071864(c, s);
             p = s->mAction;
             if (p == 0)
                 continue;
@@ -122,7 +116,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;
             if (fl != 0)
-                t = c->mGPR[v0] & 0xff;
+                t = c->mFrame.mGPR[v0] & 0xff;
             else
                 t = *(unsigned char *)(c->mFP + v0);
             if (t != 0)
@@ -142,7 +136,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;
             if (fl != 0)
-                a = c->mGPR[v0];
+                a = c->mFrame.mGPR[v0];
             else
                 a = *(int *)(c->mFP + v0);
             ((F2)fp)(a, neg1);
@@ -186,7 +180,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;
             if (fl != 0)
-                a = c->mGPR[v0];
+                a = c->mFrame.mGPR[v0];
             else
                 a = *(int *)(c->mFP + v0);
             ((F2)fp)(a + v1, saved);
@@ -206,7 +200,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;
             if (fl != 0)
-                a = c->mGPR[v0];
+                a = c->mFrame.mGPR[v0];
             else
                 a = *(int *)(c->mFP + v0);
             ((F2)fp)(a + v1, neg1);
@@ -229,12 +223,12 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;
             if ((op & 0x40) != 0)
-                t = (short)c->mGPR[v0];
+                t = (short)c->mFrame.mGPR[v0];
             else
                 t = *(short *)(c->mFP + v0);
             if (t != 0) {
                 if (fl != 0)
-                    a = c->mGPR[v1];
+                    a = c->mFrame.mGPR[v1];
                 else
                     a = *(int *)(c->mFP + v1);
                 ((F2)fp)(a + v2, neg1);
@@ -259,7 +253,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;
             if (fl != 0)
-                b = c->mGPR[v0] - (-v1);
+                b = c->mFrame.mGPR[v0] - (-v1);
             else
                 b = *(int *)(c->mFP + v0) - (-v1);
             n = v2;
@@ -285,7 +279,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;
             if (fl != 0)
-                a = c->mGPR[v0];
+                a = c->mFrame.mGPR[v0];
             else
                 a = *(int *)(c->mFP + v0);
             ((F1)fp)(a);
@@ -306,12 +300,12 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;
             if ((op & 0x40) != 0)
-                t = c->mGPR[v0] & 0xff;
+                t = c->mFrame.mGPR[v0] & 0xff;
             else
                 t = *(unsigned char *)(c->mFP + v0);
             if (t != 0) {
                 if (fl != 0)
-                    a = c->mGPR[v1];
+                    a = c->mFrame.mGPR[v1];
                 else
                     a = *(int *)(c->mFP + v1);
                 ((F1)fp)(a);
@@ -374,7 +368,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;
             if (fl != 0)
-                a = c->mGPR[v0];
+                a = c->mFrame.mGPR[v0];
             else
                 a = *(int *)(c->mFP + v0);
             ((F2)fp)(a + v1, k + v2);
@@ -400,11 +394,11 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;
             if (fl != 0)
-                a = c->mGPR[v0];
+                a = c->mFrame.mGPR[v0];
             else
                 a = *(int *)(c->mFP + v0);
             if (fl2 != 0)
-                b = c->mGPR[v1];
+                b = c->mFrame.mGPR[v1];
             else
                 b = *(int *)(c->mFP + v1);
             ((F2)fp)(a + v2, b + v3);
@@ -431,11 +425,11 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             {
                 int a;
                 if (fl != 0)
-                    a = c->mGPR[v0];
+                    a = c->mFrame.mGPR[v0];
                 else
                     a = *(int *)(c->mFP + v0);
                 if (fl2 != 0)
-                    b = c->mGPR[v1];
+                    b = c->mFrame.mGPR[v1];
                 else
                     b = *(int *)(c->mFP + v1);
                 a += b;

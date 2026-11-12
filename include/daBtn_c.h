@@ -48,7 +48,7 @@ struct daBtn_c : dEnemyBase_c {
     dExtShadowModel_c                  mShadowModel;          /* 0x344 */
     /* The drop shadow's matrix: func_ov079_02124188 builds it every frame
        and hands it to dActor_c::DropShadowScaleXYZ. */
-    s32                          mShadowMatrix[12];     /* 0x36c */
+    Matrix4x3 mShadowMatrix; /* 0x36c */
     /* InitResources zeroes all four and then refills as many as gNumPlayers
        says from gPlayers, the live player list. func_ov079_02123f34
        measures each one's distance and bearing. */
@@ -142,8 +142,8 @@ struct daBtn_c : dEnemyBase_c {
     u8  pad_415[0x3];
     dBgW_KcMbg           mMovingMeshCollider;   /* 0x418 */
     /* The collision mesh's matrix, rebuilt every frame by func_ov079_02124008
-       from the model's; the words at 9..11 are its translation. */
-    s32                          mMeshMatrix[12];       /* 0x5e0 */
+       from the model's, with the body position written into its translation. */
+    Matrix4x3 mMeshMatrix; /* 0x5e0 */
 
     /* --- vtable --- */
     /* Inline is load-bearing: out-of-line emits D0 before D1. */

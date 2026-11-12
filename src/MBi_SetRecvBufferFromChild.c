@@ -2,7 +2,6 @@
 #include "private/arm9_a9db8_mb_parent.h"
 #include "private/mb_comm_child_block_header.h"
 #include "nitro/mi/memory.h"
-extern char *data_020a9db8;
 
 /* NitroSDK MBi_SetRecvBufferFromChild: unpack a child's MP message into its
  * block header. Type 7 (file request) carries a piece number and one piece
@@ -22,12 +21,12 @@ u8 *MBi_SetRecvBufferFromChild(u8 *src, u8 *dst) {
         r4 = src + 2;
         hd->u.req_data.piece = src[1];
         {
-            char *g = data_020a9db8;
-            if (hd->u.req_data.piece > ((MbParentWork *)g)->mReqPieceCount) {
+            MB_CommPWork *g = pPwork;
+            if (hd->u.req_data.piece > g->common.req_data_piece_num) {
                 return 0;
             }
-            MI_CpuCopy8(r4, hd->u.req_data.data, ((MbParentWork *)g)->mReqPieceSize);
-            r4 = r4 + ((MbParentWork *)data_020a9db8)->mReqPieceSize;
+            MI_CpuCopy8(r4, hd->u.req_data.data, g->common.req_data_piece_size);
+            r4 = r4 + pPwork->common.req_data_piece_size;
         }
         break;
 
@@ -50,8 +49,8 @@ u8 *MBi_SetRecvBufferFromChild(u8 *src, u8 *dst) {
             r4 = src + 3;
             *p = (*p) | ((hi << 8) & 0xff00);
         }
-        MI_CpuCopy8(r4, hd->u.data.reserved, ((MbParentWork *)data_020a9db8)->mReqPieceSize);
-        r4 = r4 + ((MbParentWork *)data_020a9db8)->mReqPieceSize;
+        MI_CpuCopy8(r4, hd->u.data.reserved, pPwork->common.req_data_piece_size);
+        r4 = r4 + pPwork->common.req_data_piece_size;
     } break;
 
     default:

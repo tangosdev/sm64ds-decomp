@@ -1,13 +1,11 @@
 //cpp
 #include "types.h"
 #include "private/arm9_wbt.h"
-#include "private/wbt_block_info_list.h"
 #include "nitro/os/system.h"
 
 extern "C" {
 
 extern int data_020a94c0;
-extern void WBT_SetOwnAid(int x);
 extern void func_02065ad0(struct WBTBlockInfoList *list);
 extern WBTWork *func_02065b94(void);
 extern int func_02065af0(int *thiz);
@@ -22,8 +20,8 @@ extern void func_02065bb0(int v);
  * command counter, queue an empty command (func_02065af0 copies its 0x9c
  * bytes into queued_cmd), and set the two packet sizes less the 0xe-byte
  * header (func_02065ba0, func_02065bb0). func_02040c34 passes the file-share
- * packet sizes and func_020412f0, the file-share parent's callback. */
-void WBT_InitParent(int send_packet_size, int recv_packet_size, void (*callback)(char *)) {
+ * packet sizes and WFSi_OnParentSystemCallback, the file-share parent's callback. */
+void WBT_InitParent(int send_packet_size, int recv_packet_size, WBTCallback callback) {
     OSIntrMode saved = OS_DisableInterrupts();
     int i;
     WBTWork *work;
@@ -37,11 +35,11 @@ void WBT_InitParent(int send_packet_size, int recv_packet_size, void (*callback)
     WBT_SetOwnAid(0);
     func_02065ad0(0);
     work = func_02065b94();
-    work->cmd.command = 0;
+    work->cmd.command = WBT_CMD_REQ_NONE;
     work->cmd.target_bmp = 0;
     work->cmd.peer_bmp = 0;
     work->cmd.callback = 0;
-    work->system_cmd.command = 0;
+    work->system_cmd.command = WBT_CMD_REQ_NONE;
     work->system_cmd.target_bmp = 0;
     work->system_cmd.peer_bmp = 0;
     work->system_cmd.callback = callback;
@@ -50,7 +48,7 @@ void WBT_InitParent(int send_packet_size, int recv_packet_size, void (*callback)
         work->peer[i].last_cmd_counter = 0;
         i++;
     } while (i < 0x10);
-    cmd.command = 0;
+    cmd.command = WBT_CMD_REQ_NONE;
     func_02065af0((int *)&cmd);
     func_02065be0();
     func_02065ba0(send_packet_size - 0xe);

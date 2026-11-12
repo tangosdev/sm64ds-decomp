@@ -2,7 +2,7 @@
 #include "AsyncJob.h"
 #include "Memory.h"
 #include "Sound.h"
-#include "private/fs_views.h"
+#include "nitro/fs/archive.h"
 #include "nitro/mb/mb.h"
 
 extern "C" {
@@ -16,8 +16,6 @@ extern u32 FS_TryLoadTable(void *p_mem, u32 size);
 extern void LoadOverlay(int id);
 extern void InitializeAssetHandleTable(void);
 extern void UnloadOverlay(int id);
-extern FSArchive *FS_FindArchive(const char *name, int name_len);
-extern void *FS_UnloadArchiveTables(void *p_arc);
 extern void LoadFont(unsigned char id);
 
 extern int OVERLAY_0_ID;

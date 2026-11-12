@@ -118,8 +118,8 @@ void MBi_SendVolatBeacon(void);
 
 /* NitroSDK MBi_MakeGameInfo(gameInfo, mbGameList, parent): build the game
  * record a parent beacons from the game's registry entry. MB_RegisterFile
- * builds it into each registered file's slot of the data_020a9db8 work
- * block, with data_020a9db8 + 0x1300 as the parent's user record.
+ * builds it into each registered file's slot of the mbc work
+ * block, with mbc + 0x1300 as the parent's user record.
  * MBi_ReadIconInfo reads the icon's 0x20-byte palette and 0x200-byte
  * character data from the two path names. One argument differs from newer
  * SDKs, which copy the introduction as sizeof(gameIntroduction): here it

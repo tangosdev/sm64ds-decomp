@@ -1,7 +1,7 @@
 #include "Ov007SpriteBank.h"
+#include "Ov007MenuMem.h"
 
 extern void func_ov007_020c13f4(Ov007Cell *cell);
-extern void func_ov007_020c3d1c(void *p);
 extern void func_ov007_020c1384(Ov007CellAnim *anim);
 
 /* Frees a sprite bank: each cell's OAM list (func_ov007_020c13f4), each

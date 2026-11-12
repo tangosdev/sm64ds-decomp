@@ -19,6 +19,7 @@
 #include "nitro/mi/memory.h"
 #include "nitro/card/card_rom.h"
 #include "nitro/fs/file.h"
+#include "nitro/fs/archive.h"
 #include "private/rom_header_view.h"
 #include "private/mb_views.h"
 #include "private/arm9_a9db8_mb_parent.h"
@@ -57,24 +58,11 @@ typedef enum MbSegmentType {
     MB_SEG_ROMHEADER
 } MbSegmentType;
 
-/* The parent work (the SDK's pPwork), typed through a cast: the other
- * declarations of data_020a9db8 spell it as a byte pointer (MB_Parent.cpp's
- * MB_WORK). */
-extern char *data_020a9db8;
-#define MB_WORK ((MbParentWork *)data_020a9db8)
-
-/* The work pointer stepped a whole MbParentFile per index, so that
- * ->mFiles[0] is file record i: MB_RegisterFile's search loop builds its
- * address this way (MB_Parent.cpp's MB_FILE). &MB_WORK->mFiles[i] builds
- * the loop 4 bytes longer. */
-#define MB_STEP(i) ((MbParentWork *)(data_020a9db8 + (i) * (int)sizeof(MbParentFile)))
-
 /* The SDK's function-local `static u8 update` in MB_RegisterFile. It is
  * held outside this TU: one byte, then alignment before mb_gameinfo.c's
  * .bss, which the TU build cannot claim yet. */
 extern u8 data_020a9d28;
 
-extern FSArchive *FS_FindArchive(const char *name, int name_len);
 extern BOOL MBi_IsStarted(void);
 extern void MBi_MakeGameInfo(char *dst, MBGameRegistry *src, const void *parent);
 extern void MB_AddGameInfo(MBGameInfo *newGameInfo);
@@ -265,18 +253,17 @@ BOOL MB_RegisterFile(MBGameRegistry *game_reg, const void *buf) {
         return FALSE;
     }
 
-    if (MB_WORK->mFileCount + 1 > MB_MAX_FILE) {
+    if (pPwork->file_num + 1 > MB_MAX_FILE) {
         (void)OS_RestoreInterrupts(enabled);
         return FALSE;
     }
 
     for (i = 0; i < MB_MAX_FILE; i++) {
-        MbParentWork *slot = MB_STEP(i);
-        if (slot->mFiles[0].mGameRegistry == game_reg) {
+        if (pPwork->fileinfo[i].game_reg == game_reg) {
             (void)OS_RestoreInterrupts(enabled);
             return FALSE;
         }
-        if (slot->mFiles[0].mActive == 0) {
+        if (pPwork->fileinfo[i].active == 0) {
             fileID = i;
             break;
         }
@@ -287,27 +274,27 @@ BOOL MB_RegisterFile(MBGameRegistry *game_reg, const void *buf) {
         return FALSE;
     }
 
-    MB_WORK->mFiles[fileID].mGameRegistry = game_reg;
+    pPwork->fileinfo[fileID].game_reg = game_reg;
 
-    mdfi = &MB_WORK->mFiles[fileID].mDlFileInfo.header;
+    mdfi = &pPwork->fileinfo[fileID].dl_fileinfo.header;
 
     MBi_MakeDownloadFileInfo(mdfi, buf, auth_code);
 
-    if (FALSE == MBi_MakeBlockInfoTable(&MB_WORK->mFiles[fileID].mBlockTable, mdfi)) {
+    if (FALSE == MBi_MakeBlockInfoTable(&pPwork->fileinfo[fileID].blockinfo_table, mdfi)) {
         (void)OS_RestoreInterrupts(enabled);
         return FALSE;
     }
 
-    MBi_MakeGameInfo((char *)&MB_WORK->mFiles[fileID].mGameInfo, game_reg, &MB_WORK->mParentUser);
-    MB_WORK->mFiles[fileID].mGameInfo.fileNo = fileID;
+    MBi_MakeGameInfo((char *)&pPwork->fileinfo[fileID].game_info, game_reg, &mbc->user);
+    pPwork->fileinfo[fileID].game_info.fileNo = fileID;
 
-    MB_AddGameInfo(&MB_WORK->mFiles[fileID].mGameInfo);
-    MB_WORK->mFiles[fileID].mGameInfo.seqNoFixed = data_020a9d28++;
-    MB_WORK->mFiles[fileID].mEntryBitmap = MB_GAMEINFO_PARENT_FLAG;
-    MB_WORK->mFiles[fileID].mSrcAddr = (s32)buf;
+    MB_AddGameInfo(&pPwork->fileinfo[fileID].game_info);
+    pPwork->fileinfo[fileID].game_info.seqNoFixed = data_020a9d28++;
+    pPwork->fileinfo[fileID].gameinfo_child_bmp = MB_GAMEINFO_PARENT_FLAG;
+    pPwork->fileinfo[fileID].src_adr = (u32 *)buf;
 
-    MB_WORK->mFiles[fileID].mActive = 1;
-    MB_WORK->mFileCount++;
+    pPwork->fileinfo[fileID].active = 1;
+    pPwork->file_num++;
 
     (void)OS_RestoreInterrupts(enabled);
 
@@ -440,7 +427,7 @@ BOOL MBi_MakeBlockInfoTable(MB_BlockInfoTable *table, MbDownloadFileInfoHeader *
     for (i = 0; i < MB_DL_SEGMENT_NUM; ++i) {
         MbSegmentInfo *si = &mdfi->seg[i];
         u16 next_block_head =
-            (u16)(seg_headB[i] + (u16)((si->size + MB_WORK->mBlockSize - 1) / MB_WORK->mBlockSize));
+            (u16)(seg_headB[i] + (u16)((si->size + mbc->block_size_max - 1) / mbc->block_size_max));
 
         if (FALSE == IsAbleToLoad(i, si->load_addr, si->size)) {
             return FALSE;
@@ -456,16 +443,7 @@ BOOL MBi_MakeBlockInfoTable(MB_BlockInfoTable *table, MbDownloadFileInfoHeader *
     return TRUE;
 }
 
-/* MB_BlockInfo keeps MB_Parent.cpp's struct Out tag: its declaration of
- * this function names the parameter type that way. */
-struct Out {
-    u32 child_address;
-    u32 size;
-    u32 offset;
-    u8 segment_no;
-};
-
-BOOL MBi_get_blockinfo(struct Out *bi, MB_BlockInfoTable *table, u32 block,
+BOOL MBi_get_blockinfo(MB_BlockInfo *bi, MB_BlockInfoTable *table, u32 block,
                        MbDownloadFileInfoHeader *mdfi) {
     s8 i;
     u32 seg_block, block_adr_offset;
@@ -484,14 +462,14 @@ BOOL MBi_get_blockinfo(struct Out *bi, MB_BlockInfoTable *table, u32 block,
         return FALSE;
 
     seg_block = block - table->block_head[i];
-    block_adr_offset = seg_block * MB_WORK->mBlockSize;
+    block_adr_offset = seg_block * mbc->block_size_max;
 
     {
         MbSegmentInfo *si = &mdfi->seg[i];
         bi->size = si->size - block_adr_offset;
 
-        if (bi->size > MB_WORK->mBlockSize)
-            bi->size = (u32)MB_WORK->mBlockSize;
+        if (bi->size > mbc->block_size_max)
+            bi->size = (u32)mbc->block_size_max;
 
         bi->offset = (u32)(block_adr_offset + table->seg_head_offset[i]);
         bi->child_address = (u32)(block_adr_offset + (u32)(si->recv_addr));

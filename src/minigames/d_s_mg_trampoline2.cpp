@@ -57,6 +57,7 @@ enum d_s_mg_trampoline2_AssetId {
 #include "math/MtxStack.h"
 #include "LevelRng.h"
 #include "nitro/mi/memory.h"
+#include "math/CalcLib.h"
 
 /* local: the ROM re-reads the slot byte at each use here, so keep the read volatile. */
 #define ACTIVE_SLOT (*(volatile unsigned char *)&gActivePlayerSlot)
@@ -102,7 +103,6 @@ struct dExtSimpleModel_c { ~dExtSimpleModel_c(); };
 
 extern "C" {
 extern void Trmp2Spinner_UpdateMatrix(char *c);
-extern void VEC_Add(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 extern Trampoline2ModelFilePtr sTrmp2StarModelFile;
 extern int sTrmp2SpinnerCount;
 extern unsigned char *sTrmp2Spinners;
@@ -124,7 +124,6 @@ void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 unsigned int d_s_mg_trampoline2NewCleanParticleHold(unsigned int a, unsigned int b, int c, int d,
                                                     int e, const Vector3_16f *f);
 void Jump2Popup_UpdateAll(void);
-extern int RandomIntInternal(int *seed);
 extern const VecFx32 sTrmp2RandomSpawnPositions[];
 extern int Trmp2_ColumnForKind(int kind);
 extern unsigned short Trmp2_OccupancyBits(int column, int side);
@@ -277,7 +276,7 @@ s32 dScMgTrampoline2_c::InitResources() {
     gMainScreenLayers =
         DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ;
     G3X_SetFog(false, 0, 2, 0x1000);
-    *(u16 *)0x4000060 = (*(u16 *)0x4000060 & ~0x3000) | 8;
+    G3X_AlphaBlend(true);
     InitialiseVramGlobals();
     G2_SetBG0Priority(1);
     fov = FX_Div(0xc0000, (s32)data_02082414);
@@ -853,11 +852,11 @@ int dScMgTrampoline2_c::OnGraphCallback2() {
         if (mDrawSubScreen == 0) {
             gMainScreenLayers = gMainScreenLayers & ~DISPLAY_LAYER_BG3;
             SetBg2Offset(0, 0);
-            *(int *)0x4000018 = 0;
+            G2_SetBG2Offset(0, 0);
         } else {
             gMainScreenLayers = gMainScreenLayers | DISPLAY_LAYER_BG3;
             SetBg2Offset(0, 0xc0);
-            *(int *)0x4000018 = 0xc00000;
+            G2_SetBG2Offset(0, 0xc0);
         }
     }
     return 1;
@@ -1103,14 +1102,13 @@ void Trmp2Spinner_UpdateMatricesAll(void) {
 }
 
 extern "C" void Trmp2Spinner_SetModel(void *raw) {
-    BMD_File *file = (BMD_File *)dExtSimpleModel_c::LoadFile(sTrmp2StarModelFile);
+    BMD_File *file = dExtSimpleModel_c::LoadFile(sTrmp2StarModelFile);
     ((dExtModel_c *)raw)->SetFile(file, 1, -1);
 }
 
 extern "C" {
 extern struct Tbl sTrmp2SpinnerSpeeds;
 extern const u16 sTrmp2SpinnerColors[];
-extern int RandomIntInternal(int *seed);
 extern void func_020169f4(char *self, int kind);
 
 void Trmp2Spinner_Init(void *r0, int value) {

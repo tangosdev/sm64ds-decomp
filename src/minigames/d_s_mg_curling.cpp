@@ -38,6 +38,7 @@ enum dScMgCurling_c_AssetId {
 #include "nitro/fx/fx_trig.h"
 #include "nitro/gx/g2.h"
 #include "LevelRng.h"
+#include "math/CalcLib.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 
@@ -79,7 +80,6 @@ struct OamAttr;
 struct Matrix2x2;
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
-extern int RandomIntInternal(int *seed);
 extern int func_020126e8(int a);
 extern void func_020126ac(int a0, int a1, int a2, int a3, int s0);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
@@ -95,8 +95,6 @@ extern void DecompressLZ16(const void *src, void *dst);
 extern void *LoadFile(int handle);
 extern void Deallocate(void *ptr);
 extern void Ov004_Deallocate(void *p);
-extern void GX_LoadBG2Scr(const void *src, u32 offset, u32 count);
-extern void GXS_LoadBG2Scr(const void *src, u32 offset, u32 count);
 
 extern unsigned char sCurlingBitAStates[];
 extern unsigned char sCurlingBitBStates[];

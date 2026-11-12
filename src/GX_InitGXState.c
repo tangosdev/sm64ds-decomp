@@ -1,4 +1,5 @@
 #include "private/gx_state.h"
+#include "nitro/hw/registers.h"
 
 /* NitroSDK gx_state.c: no user holds a VRAM bank, and every bank is off. */
 void GX_InitGXState(void) {
@@ -16,9 +17,9 @@ void GX_InitGXState(void) {
     data_020a6088.sub_bgExtPltt = 0;
     data_020a6088.sub_objExtPltt = 0;
 
-    *(volatile unsigned int *)0x4000240 = 0;
-    *(volatile unsigned char *)0x4000244 = 0;
-    *(volatile unsigned char *)0x4000245 = 0;
-    *(volatile unsigned char *)0x4000246 = 0;
-    *(volatile unsigned short *)0x4000248 = 0;
+    REG_VRAMCNT = 0;
+    REG_VRAMCNT_E = 0;
+    REG_VRAMCNT_F = 0;
+    REG_VRAMCNT_G = 0;
+    REG_VRAM_HI_CNT = 0;
 }

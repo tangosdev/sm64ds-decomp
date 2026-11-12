@@ -61,7 +61,7 @@ extern "C" daObjC1Peach_c *daObjC1Peach_c_classInit()
 
 int daObjC1Peach_c::InitResources()
 {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(gC1PeachModelFile), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(gC1PeachModelFile), 1, -1);
     mOpacity = 0xff;
     UpdateModelTransform();
     return 1;

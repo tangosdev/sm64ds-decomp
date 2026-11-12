@@ -109,7 +109,7 @@ extern "C" daObjShell_c *daObjShell_c_classInit() {
 int daObjShell_c::InitResources() {
     dExtFrameCtrl_c::LoadFile(data_ov064_0211c9cc);
     dExtFrameCtrl_c::LoadFile(data_ov064_0211c9bc);
-    BMD_File *modelFile = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov064_0211c9c4);
+    BMD_File *modelFile = dExtSimpleModel_c::LoadFile(data_ov064_0211c9c4);
     mAnmModel.SetFile(modelFile, 1, -1);
     mAnmModel.SetAnim((BCA_File *)data_ov064_0211c9bc.filePtr, 0x40000000, 0x1000, 0);
     mdCcAc_c.Init(this, 0x64000, 0x64000, 0x200004, 0);

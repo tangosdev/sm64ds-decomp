@@ -1,75 +1,71 @@
 //cpp
 #include "common.h"
 #include "nitro/fx/fx_trig.h"
+#include "nitro/gx/g3imm_cmd.h"
+
+/* The VTX_XY geometry port: registers.h names the other vertex ports but not
+ * this one, and g3imm_cmd.h has no G3_VtxXY. */
+#define REG_VTX_XY (*(volatile u32 *)0x04000494)
 
 extern "C" {
 extern void MTX_RotZ33_(int *m, int s, int c);
 extern void G3_MultTransMtx33(int *a, int *v);
 
+/* Draws a ribbon `half` units either side of the point path `pts` as one
+ * quad strip: at each point it pushes a matrix, turns to the mean of the
+ * incoming and outgoing headings and translates there, then emits the pair
+ * (0, half) and (0, -half). The last point is placed `t` (Q12) of the way
+ * from the point before it, 0x1000 being the point itself. A one-point path
+ * draws a single square at that point. */
 void func_ov007_020c19cc(int count, Vector3 *pts, int half, int t) {
     int z;
     int nh;
-    u32 vy_pos;
-    u32 vy_neg;
+    u32 upperXY;
+    u32 lowerXY;
     int i;
     int ang;
     Vector3 *p;
     int prevAng;
     Vector3 *prev;
     int inv;
-    int push0;
-    int z0;
-    int pop1;
     Vector3 tmp;
     int mtx[9];
     Vector3 *pos;
 
-    z = half << 16;
-    z >>= 16;
+    z = (s16)half;
     nh = -z;
-    vy_pos = (u32)(u16)z << 16;
-    vy_neg = (u32)(u16)nh << 16;
+    upperXY = GX_FX16PAIR(0, z);
+    lowerXY = GX_FX16PAIR(0, nh);
     ang = 0;
 
     if (count < 2) {
         if (count == 1) {
             int n;
-            int nshl;
-            int tz, ty, tx;
-            *(vu32 *)0x4000500 = 3;
-            *(vu32 *)0x4000444 = ang;
+            G3_Begin(GX_BEGIN_QUAD_STRIP);
+            G3_PushMtx();
             n = (s16)nh;
-            nshl = n << 16;
-            tz = pts->z;
-            ty = pts->y;
-            tx = pts->x;
-            *(vu32 *)0x4000470 = tx;
-            *(vu32 *)0x4000470 = ty;
-            *(vu32 *)0x4000470 = tz;
-            *(vu32 *)0x400048C = vy_pos | (unsigned short)n;
-            *(vu32 *)0x400048C = ang;
-            *(vu32 *)0x4000494 = (unsigned short)n | ((unsigned)(unsigned short)n << 16);
-            *(vu32 *)0x400048C = (u16)z | vy_pos;
-            *(vu32 *)0x400048C = ang;
-            *(vu32 *)0x4000494 = (u16)z | ((unsigned)(unsigned short)n << 16);
-            *(vu32 *)0x4000448 = 1;
-            *(vu32 *)0x4000504 = ang;
+            G3_Translate(pts->x, pts->y, pts->z);
+            REG_VTX_16 = upperXY | (u16)n;
+            REG_VTX_16 = 0;
+            REG_VTX_XY = GX_FX16PAIR(n, n);
+            REG_VTX_16 = (u16)z | upperXY;
+            REG_VTX_16 = 0;
+            REG_VTX_XY = GX_FX16PAIR(z, n);
+            G3_PopMtx(1);
+            G3_End();
             return;
         }
     }
 
-    *(vu32 *)0x4000500 = 3;
+    G3_Begin(GX_BEGIN_QUAD_STRIP);
     i = 0;
     if (count > 0) {
         inv = 0x1000 - t;
         p = pts;
         prev = pts;
-        z0 = i;
-        pop1 = 1;
-        push0 = i;
         do {
             prevAng = ang;
-            *(vu32 *)0x4000444 = push0;
+            G3_PushMtx();
             pos = p;
             if (i < count - 1) {
                 int nx = pts[i + 1].x;
@@ -125,13 +121,13 @@ void func_ov007_020c19cc(int count, Vector3 *pts, int half, int t) {
             }
             prev++;
             i++;
-            *(vu32 *)0x400048C = vy_pos;
+            REG_VTX_16 = upperXY;
             p++;
-            *(vu32 *)0x400048C = z0;
-            *(vu32 *)0x4000494 = vy_neg;
-            *(vu32 *)0x4000448 = pop1;
+            REG_VTX_16 = 0;
+            REG_VTX_XY = lowerXY;
+            G3_PopMtx(1);
         } while (i < count);
     }
-    *(vu32 *)0x4000504 = 0;
+    G3_End();
 }
 }

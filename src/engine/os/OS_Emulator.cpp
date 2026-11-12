@@ -17,16 +17,7 @@
 #include "nitro/os/system.h"
 #include "nitro/hw/mmap_shared.h"
 #include "nitro/os/spinLock.h"
-
-#define OSi_CONSOLE_NOT_DETECT 0xffffffff
-
-#define OS_CONSOLE_ENSATA 0x10000000
-#define OS_CONSOLE_ISEMULATOR 0x20000000
-#define OS_CONSOLE_ISDEBUGGER 0x40000000
-#define OS_CONSOLE_NITRO 0x80000000
-
-#define OS_CONSOLE_DEV_CARTRIDGE 0x01000000
-#define OS_CONSOLE_DEV_CARD 0x02000000
+#include "nitro/os/emulator.h"
 
 extern "C" {
 
@@ -39,7 +30,7 @@ int OS_IsRunOnEmulator(void) {
     return 0;
 }
 
-int OS_GetConsoleType(void) {
+u32 OS_GetConsoleType(void) {
     if (data_0209a040 == (int)OSi_CONSOLE_NOT_DETECT) {
         int type = OSi_GetDeviceType();
 

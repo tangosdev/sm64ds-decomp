@@ -2,6 +2,7 @@
 #include "types.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/CalcLib.h"
 
 extern "C" {
 
@@ -13,7 +14,6 @@ typedef struct { int x, y, z; } Vec3;
 typedef struct { int x, y, z, w; } Quat;
 
 extern int NormalizeVec3IfNonZero(Vector3 *v);
-extern int VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 extern void func_0203cebc(Vector3 *out, Vector3 *p, Vector3 *q, Vector3 *r);
 extern Quat data_02075b04;
 

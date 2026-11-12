@@ -92,11 +92,11 @@ s32 daObjFl_Seesaw_c::Behavior() {
 
 /* Slot 0. */
 s32 daObjFl_Seesaw_c::InitResources() {
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov022_021145a8), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov022_021145a8), 1, -1);
     UpdateModelTransform();
     UpdateClsnPosAndRot();
-    char *kcl = dBgW_Kc::LoadFile(data_ov022_021145a0);
-    mMeshCollider.SetFile((KCL_File *)(kcl), mClsnMat, 0x1000, mAngleY, data_ov064_0211bacc);
+    KCL_File *kcl = dBgW_Kc::LoadFile(data_ov022_021145a0);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov064_0211bacc);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mSwingStep = -0x10;
     return 1;

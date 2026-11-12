@@ -951,39 +951,39 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@768",
+      "from": "@761",
       "to": "@792",
-      "evidence": "Measured input-only compiler temporary rename after native factory/local Vector3 reconstruction. The full descriptor/storage section, symbol attributes and typed edges equal the pinned baseline under this exact bijection; canonical name/address remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @841 to @772 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "Measured input-only compiler temporary rename after native factory/local Vector3 reconstruction. The full descriptor/storage section, symbol attributes and typed edges equal the pinned baseline under this exact bijection; canonical name/address remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @841 to @772 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @768 to @761 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+    },
+    {
+      "from": "@762",
+      "to": "@793",
+      "evidence": "Measured input-only compiler temporary rename after native factory/local Vector3 reconstruction. The full descriptor/storage section, symbol attributes and typed edges equal the pinned baseline under this exact bijection; canonical name/address remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @842 to @773 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @769 to @762 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+    },
+    {
+      "from": "@763",
+      "to": "@794",
+      "evidence": "Measured input-only compiler temporary rename after native factory/local Vector3 reconstruction. The full descriptor/storage section, symbol attributes and typed edges equal the pinned baseline under this exact bijection; canonical name/address remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @843 to @774 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @770 to @763 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+    },
+    {
+      "from": "@765",
+      "to": "@796",
+      "evidence": "Measured input-only compiler temporary rename after native factory/local Vector3 reconstruction. The full descriptor/storage section, symbol attributes and typed edges equal the pinned baseline under this exact bijection; canonical name/address remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @845 to @776 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @772 to @765 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+    },
+    {
+      "from": "@767",
+      "to": "@798",
+      "evidence": "Measured input-only compiler temporary rename after native factory/local Vector3 reconstruction. The full descriptor/storage section, symbol attributes and typed edges equal the pinned baseline under this exact bijection; canonical name/address remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @847 to @778 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @774 to @767 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
     },
     {
       "from": "@769",
-      "to": "@793",
-      "evidence": "Measured input-only compiler temporary rename after native factory/local Vector3 reconstruction. The full descriptor/storage section, symbol attributes and typed edges equal the pinned baseline under this exact bijection; canonical name/address remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @842 to @773 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@770",
-      "to": "@794",
-      "evidence": "Measured input-only compiler temporary rename after native factory/local Vector3 reconstruction. The full descriptor/storage section, symbol attributes and typed edges equal the pinned baseline under this exact bijection; canonical name/address remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @843 to @774 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@772",
-      "to": "@796",
-      "evidence": "Measured input-only compiler temporary rename after native factory/local Vector3 reconstruction. The full descriptor/storage section, symbol attributes and typed edges equal the pinned baseline under this exact bijection; canonical name/address remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @845 to @776 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@774",
-      "to": "@798",
-      "evidence": "Measured input-only compiler temporary rename after native factory/local Vector3 reconstruction. The full descriptor/storage section, symbol attributes and typed edges equal the pinned baseline under this exact bijection; canonical name/address remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @847 to @778 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@776",
       "to": "@800",
-      "evidence": "Measured input-only compiler temporary rename after native factory/local Vector3 reconstruction. The full descriptor/storage section, symbol attributes and typed edges equal the pinned baseline under this exact bijection; canonical name/address remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @849 to @780 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "Measured input-only compiler temporary rename after native factory/local Vector3 reconstruction. The full descriptor/storage section, symbol attributes and typed edges equal the pinned baseline under this exact bijection; canonical name/address remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @849 to @780 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @776 to @769 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
     },
     {
-      "from": "@778",
+      "from": "@771",
       "to": "@802",
-      "evidence": "Measured input-only compiler temporary rename after native factory/local Vector3 reconstruction. The full descriptor/storage section, symbol attributes and typed edges equal the pinned baseline under this exact bijection; canonical name/address remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @851 to @782 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "Measured input-only compiler temporary rename after native factory/local Vector3 reconstruction. The full descriptor/storage section, symbol attributes and typed edges equal the pinned baseline under this exact bijection; canonical name/address remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @851 to @782 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @778 to @771 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
     }
   ]
 }

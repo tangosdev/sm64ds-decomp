@@ -427,8 +427,8 @@ int daBasabasa_c::Behavior() {
 /* Both dExtAnmModel_c are loaded here, the other half of the evidence that 0x300
  * and 0x364 are two members. */
 int daBasabasa_c::InitResources() {
-    mAnmModel1.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov065_0211d698), 1, -1);
-    mAnmModel2.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov065_0211d6a8), 1, -1);
+    mAnmModel1.SetFile(dExtSimpleModel_c::LoadFile(data_ov065_0211d698), 1, -1);
+    mAnmModel2.SetFile(dExtSimpleModel_c::LoadFile(data_ov065_0211d6a8), 1, -1);
     mShadowModel.InitCylinder();
     dExtFrameCtrl_c::LoadFile(data_ov065_0211d690);
     dExtFrameCtrl_c::LoadFile(data_ov065_0211d6a0);

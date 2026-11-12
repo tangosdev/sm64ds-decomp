@@ -71,6 +71,8 @@ enum daHanachan_c_AssetId {
 #include "Particle__System.h"
 #include "LevelRng.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 /* The file-scope resource handles. The model five use the plain SharedFilePtr
  * pair (func_02017acc / func_02017ab4), the animation twenty-five use
@@ -93,23 +95,14 @@ extern daHanachan_c::State data_ov034_02114538[];
 
 extern "C" {
 extern void **data_ov034_02113888[];
-extern u8 DecIfAbove0_Byte(u8 *);
 extern void **data_ov034_0211389c[];
 extern void **data_ov034_02113860[];
 extern int Math_Function_0203b14c(void *base, int a, int b, int c, int d);
 extern int data_ov034_021138c4[];
-extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern short data_ov034_02113820[];
 extern void **data_ov034_021138b0[];
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int VEC_Mag(const Vector3 *v);
-extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-extern int RandomIntInternal(int *seed);
 extern int data_ov034_02114488[];
-extern Matrix4x3 data_020a0e68;
-extern void Matrix4x3_FromRotationY(void *m, int angle);
-/* local extern: no shared math header declares MTX_MultVec43. */
-extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 // local extern: no shared header declares Vec3_Add.
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int NormalizeVec3IfNonZero(Vector3 *v);

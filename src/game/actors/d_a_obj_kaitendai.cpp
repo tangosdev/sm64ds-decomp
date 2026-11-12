@@ -10,8 +10,6 @@
  * are pure virtual; the five leaves call these). Nothing in the ROM names
  * them.
  *
- * What stays: Behavior keeps `s16 *p = &mPrevAngleY` -- compound assignment
- *   recomputes the address and size-DIFFs (0x50 vs 0x54).
  * What stays: abstract class -- no factory, no g_profile row (S14).
  */
 
@@ -62,12 +60,9 @@ s32 daObjKaitendai_c::Render() {
     return 1;
 }
 
-/* ROM ordinal 4 -- vtable slot 6, ov002 0x020b6718.
- * s16 *p is load-bearing: mPrevAngleY += mPrevAngleZ recomputes the
- * address and comes out 0x50 against the ROM's 0x54. */
+/* ROM ordinal 4 -- vtable slot 6, ov002 0x020b6718. */
 s32 daObjKaitendai_c::Behavior() {
-    s16 *p = &mPrevAngleY;
-    *p = *p + mPrevAngleZ;
+    mPrevAngleY += mPrevAngleZ;
     mAngleY = mPrevAngleY;
     UpdateModelPosAndRotY();
     if (IsClsnInRangeOnScreen(0, 0))
@@ -82,11 +77,11 @@ s32 daObjKaitendai_c::Behavior() {
 int daObjKaitendai_c::InitResourcesFrom(ResourceDescriptor *descriptor, s16 angle) {
     s16 y;
 
-    mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*descriptor->model), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(*descriptor->model), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*descriptor->collision), mClsnMat, 0x199,
-                          mAngleY, *descriptor->clps);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*descriptor->collision), mClsnMat, 0x199, mAngleY,
+                          *descriptor->clps);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mPrevAngleZ = angle;
     y = mAngleZ;

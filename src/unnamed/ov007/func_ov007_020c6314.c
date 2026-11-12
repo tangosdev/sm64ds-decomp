@@ -1,7 +1,5 @@
 #include "Ov007Picker.h"
-
-extern void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
-extern int VEC_Mag(const Vector3 *v);
+#include "math/CalcLib.h"
 
 /* Re-measures group idx's links: from restPos to each rest point (flag 0),
  * between their own end points (flag 1), or from restPos to each live point

@@ -17,12 +17,10 @@
 #include "nitro/hw/registers.h"
 #include "nitro/os/spinLock.h"
 #include "nitro/mi/memory.h"
+#include "nitro/mi/swap.h"
 
 extern "C" {
 
-// local extern: no header declares these SDK helpers yet.
-extern void OS_SpinWait(u32 cycles);
-extern u32 MI_SwapWord(u32 setData, volatile u32 *destp);
 extern u32 data_020a6124; // OS_InitLock's isInitialized
 
 // Run once from OS_Init. Takes the init word as ID 0x7e and waits for the

@@ -2,7 +2,7 @@
 #include "types.h"
 #include "Ov007Camera.h"
 #include "nitro/fx/fx_cp.h"
-extern "C" void MTX_Identity43_(void *m);
+#include "math/MtxStack.h"
 extern "C" void MTX_Identity44_(void *p);
 
 /* Resets a camera: eye at z 1.0 looking at the origin, y up, a 30-degree

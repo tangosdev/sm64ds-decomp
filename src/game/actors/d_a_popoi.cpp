@@ -64,6 +64,7 @@ enum daPopoi_c_AssetId {
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "LevelRng.h"
+#include "math/MtxStack.h"
 
 /* Static-init ownership (was the handwritten __sinit_ov077_021275fc shard).
  * The file-scope objects at the end of this file construct the four
@@ -117,19 +118,9 @@ extern signed char gCurrentSublevel;    /* LEVEL_ID */
 extern Matrix4x3 data_020a0e68;         /* scratch Matrix4x3 */
 extern Vector3 data_ov077_02127a5c;     /* sensor offset (0, 0, 44 units) */
 
-/* Named local declarations preserve this TU's compiler-numbered @NNN symbols;
-   each signature matches math/CalcLib.h. */
-unsigned short DecIfAbove0_Short(unsigned short *p);      /* local extern: preserve @NNN names */
-int RandomIntInternal(int *s);                            /* local extern: preserve @NNN names */
-int Vec3_Dist(const Vector3 *a, const Vector3 *b);        /* local extern: preserve @NNN names */
-short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b); /* local extern: preserve @NNN names */
 extern s16 func_02010844(void *unused, Vector3 *v, s16 angle);
 extern int func_ov002_020db674(void *c, int a1, int a2, int a3);
 void func_02012694(unsigned int id, const Vector3 *pos);
-extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short angle);
-/* local extern: no shared math header declares MTX_MultVec43. */
-extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 }
 
 /* Actor ID daPopoi_ACTOR_PLAYER (0xbf) is the daPly_c. These int-returning
@@ -163,7 +154,7 @@ extern "C" int *daPopoi_c_classInit(void)
 int daPopoi_c::InitResources()
 {
     Vector3 v;
-    mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov077_02127c88), 1, -1);
+    mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov077_02127c88), 1, -1);
     dExtFrameCtrl_c::LoadFile(data_ov077_02127ca0);
     dExtFrameCtrl_c::LoadFile(data_ov077_02127c90);
     dExtFrameCtrl_c::LoadFile(data_ov077_02127c98);

@@ -40,11 +40,6 @@ struct Matrix2x2Words {
 namespace GX { void DisableAllBanks(); }
 
 extern "C" {
-/* local extern: nitro/gx/gx.h declares these two; the parameter names here
-   hold this TU's @NNN numbers. */
-extern int GX_HBlankIntr(int enable);
-extern int GX_VBlankIntr(int enable);
-
 extern Matrix2x2 data_02092668;
 
 extern void Initialise3dGraphics(int arg);

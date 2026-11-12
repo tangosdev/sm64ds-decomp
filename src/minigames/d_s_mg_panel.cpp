@@ -57,12 +57,12 @@ enum dScMgPanel_c_AssetId {
 #include "nitro/gx/g2.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/mi/memory.h"
+#include "math/CalcLib.h"
 
 /* Callees of the member helpers. Declared here, not in the bodies: a
    declaration inside a member body gets C++ linkage and names a symbol the ROM
    doesn't have. */
 extern "C" {
-int RandomIntInternal(int *seed);
 void SetBg2Offset(int x, int y);
 void SetSubBg2Offset(int x, int y);
 void SetSubBg0Offset(int a, int b);
@@ -1528,11 +1528,9 @@ extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 extern void FreeGfxSlotsById(int arg);
 extern void SetSubBg0Offset(int, int);
-extern void GXS_LoadBG3Scr(const void *, u32, u32);
+/* local extern: nitro/gx/gx_load.h leaves GX_LoadBG3Scr out until
+ * decl_common.h's non-const spelling of it goes. */
 extern void GX_LoadBG3Scr(void *, u32, u32);
-extern void GXS_LoadBG2Scr(const void *, u32, u32);
-extern void GX_LoadBG2Scr(const void *, u32, u32);
-extern void GXS_LoadBG0Scr(const void *, int, int);
 extern void Mg_SubmitScore(int);
 extern void Mg_SetTopScreenYOffset(int);
 extern void Mg_ShowBanner(int, int, int, int, int, s16);

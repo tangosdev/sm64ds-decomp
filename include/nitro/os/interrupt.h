@@ -82,6 +82,8 @@ OSIrqMask OS_SetIrqMask(OSIrqMask);
 OSIrqMask OS_EnableIrqMask(OSIrqMask);
 OSIrqMask OS_DisableIrqMask(OSIrqMask);
 OSIrqMask OS_ResetRequestIrqMask(OSIrqMask);
+void OSi_EnterDmaCallback(u32, void (*)(void *), void *);
+void OSi_EnterTimerCallback(u32, void (*)(void *), void *);
 
 /* os_irqTable.c */
 void OS_IrqDummy(void);

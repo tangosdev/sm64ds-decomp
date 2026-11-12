@@ -3379,10 +3379,10 @@ void dScMgBase_c::InitEngines() {
     sMgTopScreenYOffset = 0;
     mBrushOnMain = 0;
     mBrushLayer = -1;
-    *(vu32 *)0x4001000u |= 0x10000u;
+    GXS_DispOn();
     GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_2D);
     GXS_SetGraphicsMode(GX_BGMODE_0);
-    *(vu32 *)0x4001000u &= 0xffcfffefu;
+    GXS_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
     GX_SetDispSelect(GX_DISP_SELECT_MAIN_SUB);
     Mg_DisableAllBanks();
     Mg_ResetBgOffsets();

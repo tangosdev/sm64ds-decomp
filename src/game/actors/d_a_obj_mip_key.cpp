@@ -5,8 +5,8 @@
 // Notes:
 // - unk_190 and unk_19c stay the header's names. The loose update
 //   approaches through mSpeedX/mSpeedZ, and 19c selects the entry.
-// - CollectMinigameKey, StartMinigameMenu, Vec3_VertAngle, Vec3_Asr and
-//   MTX_MultVec43 are arm9 C helpers no header declares yet.
+// - CollectMinigameKey, StartMinigameMenu, Vec3_VertAngle and MTX_MultVec43
+//   are arm9 C helpers no header declares yet.
 // - The model handle data_ov085_021305d8 is constructed by daMip_c.
 //   g_profile stays with the registry.
 
@@ -25,7 +25,6 @@
 
 extern "C" {
 s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-void Vec3_Asr(Vector3 *dst, Vector3 *src, int sh);
 void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void CollectMinigameKey(int t, int x);
 void StartMinigameMenu(u8 a);
@@ -69,8 +68,7 @@ void daObj_Mip_Key_c::FinishConversation() {
 // Carried update: follow the player and advance the save conversation.
 
 int daObj_Mip_Key_c::StateCarried() {
-    daObj_Mip_Key_c *self = this;
-    daPly_c *other = self->mPlayer;
+    daPly_c *other = mPlayer;
     unsigned char mode;
     int *playerPos;
 
@@ -81,43 +79,43 @@ int daObj_Mip_Key_c::StateCarried() {
     Vector3 v;
     v = *(Vector3 *)playerPos;
     v.y += 0xc8000;
-    ApproachLinear(self->mPosY, v.y, 0xa000);
+    ApproachLinear(mPosY, v.y, 0xa000);
 
-    self->mPosX = v.x;
-    self->mPosZ = v.z;
+    mPosX = v.x;
+    mPosZ = v.z;
     mode = data_0209d684;
 
-    switch (self->mTalkState) {
+    switch (mTalkState) {
     case 0:
         if (!Sound::PlaySub(0x28, 0x12, 0x7f, 0x15ccc, 0))
             break;
-        self->mTalkState = 1;
+        mTalkState = 1;
     case 1:
         if (data_0209d660 == 0) {
             if (mode == 1) {
                 func_02012790(0x5e);
                 Message::DisplaySaving(0x295);
-                self->mTalkState = 2;
+                mTalkState = 2;
             } else if (mode == 2) {
                 func_02012790(0x5e);
                 Message::DisplaySaving(0x295);
-                self->mTalkState = 3;
+                mTalkState = 3;
             } else if (mode == 3) {
                 func_02012790(0x98);
-                if (self->mWaitForTalk) {
-                    self->mTalkState = 0xa;
+                if (mWaitForTalk) {
+                    mTalkState = 0xa;
                 } else {
-                    self->FinishConversation();
+                    FinishConversation();
                 }
             }
         }
         break;
     case 2:
         if (data_0209d660 == 0) {
-            if (self->mWaitForTalk) {
-                self->mTalkState = 0xa;
+            if (mWaitForTalk) {
+                mTalkState = 0xa;
             } else {
-                self->FinishConversation();
+                FinishConversation();
             }
         }
         break;
@@ -126,15 +124,15 @@ int daObj_Mip_Key_c::StateCarried() {
             Sound::PlaySub(0x28, 0x7f, 0, 0x7444, 0);
             StartMinigameMenu(1);
             Message::EndTalk();
-            self->MarkForDestruction();
+            MarkForDestruction();
         }
         break;
     case 4: {
         int shown;
-        shown = self->mPlayer->ShowMessage(*self, 0x18b, 0, 1, 0);
+        shown = mPlayer->ShowMessage(*this, 0x18b, 0, 1, 0);
         if (shown == 1) {
-            self->mWaitForTalk = 1;
-            self->mTalkState = 0;
+            mWaitForTalk = 1;
+            mTalkState = 0;
         }
     } break;
     case 6:
@@ -143,17 +141,17 @@ int daObj_Mip_Key_c::StateCarried() {
                 if (mode == 1) {
                     func_02012790(0x5e);
                     Message::DisplaySaving(0x295);
-                    self->mTalkState = 2;
+                    mTalkState = 2;
                 } else if (mode == 2) {
                     func_02012790(0x98);
-                    self->FinishConversation();
+                    FinishConversation();
                 }
             }
         }
         break;
     case 10:
-        if (self->mPlayer->HasFinishedTalking() == 1) {
-            self->FinishConversation();
+        if (mPlayer->HasFinishedTalking() == 1) {
+            FinishConversation();
         }
         break;
     }
@@ -163,27 +161,26 @@ int daObj_Mip_Key_c::StateCarried() {
 // Carried entry: stop moving and select the conversation.
 
 int daObj_Mip_Key_c::StateCarriedEnter() {
-    daObj_Mip_Key_c *c = this;
     int kind;
-    c->mSpeedX = 0;
-    c->mVertSpeed = 0;
-    c->mSpeedZ = 0;
-    c->mAngleX = 0;
-    kind = c->unk_19c;
+    mSpeedX = 0;
+    mVertSpeed = 0;
+    mSpeedZ = 0;
+    mAngleX = 0;
+    kind = unk_19c;
     if (kind != 0x4d) {
         if (kind != 7) {
-            CollectMinigameKey(kind, c->mPlayer->param1);
-            c->mPlayer->SetNoControlState(2, 0x189, 1);
-            c->mTalkState = 0;
+            CollectMinigameKey(kind, mPlayer->param1);
+            mPlayer->SetNoControlState(2, 0x189, 1);
+            mTalkState = 0;
         } else {
             data_0209caa0.file.flags1 |= 0x40;
-            c->mPlayer->SetNoControlState(2, 0x18c, 1);
-            c->mTalkState = 6;
+            mPlayer->SetNoControlState(2, 0x18c, 1);
+            mTalkState = 6;
         }
     } else {
         data_0209caa0.file.flags1 |= 0x80;
-        c->mPlayer->SetNoControlState(2, 0x149, 1);
-        c->mTalkState = 6;
+        mPlayer->SetNoControlState(2, 0x149, 1);
+        mTalkState = 6;
     }
     return 1;
 }
@@ -191,7 +188,6 @@ int daObj_Mip_Key_c::StateCarriedEnter() {
 // Loose update: turn toward the player and approach until caught.
 
 int daObj_Mip_Key_c::StateLoose() {
-    daObj_Mip_Key_c *c = this;
     Vector3 v;
     Vector3 out;
     Vector3 pp;
@@ -199,11 +195,11 @@ int daObj_Mip_Key_c::StateLoose() {
     int zero;
     Vector3 *ppos;
 
-    c->mAngleX += 0x1000;
-    if ((u16)c->mStateTimer != 0) {
+    mAngleX += 0x1000;
+    if (mStateTimer != 0) {
         return 1;
     }
-    player = c->ClosestPlayer();
+    player = ClosestPlayer();
     if (player == 0) {
         return 1;
     }
@@ -219,18 +215,18 @@ int daObj_Mip_Key_c::StateLoose() {
     pp.x = ppos->x;
     pp.y = ppos->y;
     pp.z = ppos->z;
-    c->mPrevAngleY = Vec3_HorzAngle(&c->mPos, &pp);
-    c->mPrevAngleX = Vec3_VertAngle(&c->mPos, &pp);
+    mPrevAngleY = Vec3_HorzAngle(&mPos, &pp);
+    mPrevAngleX = Vec3_VertAngle(&mPos, &pp);
     v.z = 0x14000;
-    Matrix4x3_FromRotationY(&data_020a0e68, c->mPrevAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, c->mPrevAngleX);
+    Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
     MTX_MultVec43(&v, &data_020a0e68, &out);
-    ApproachLinear(c->mSpeedX, out.x, 0x1000);
-    ApproachLinear(c->mVertSpeed, out.y, 0x1000);
-    ApproachLinear(c->mSpeedZ, out.z, 0x1000);
-    if (pp.y + 0x64000 > c->mPosY) {
-        c->mPlayer = player;
-        c->ChangeState(&data_ov085_0213072c);
+    ApproachLinear(mSpeedX, out.x, 0x1000);
+    ApproachLinear(mVertSpeed, out.y, 0x1000);
+    ApproachLinear(mSpeedZ, out.z, 0x1000);
+    if (pp.y + 0x64000 > mPosY) {
+        mPlayer = player;
+        ChangeState(&data_ov085_0213072c);
     }
     return 1;
 }
@@ -287,7 +283,7 @@ int daObj_Mip_Key_c::Render() {
 
 
 int daObj_Mip_Key_c::Behavior() {
-    DecIfAbove0_Short((u16 *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     if (mState->execute)
         (this->*mState->execute)();
     int nextSpeed = mVertSpeed + mVertAccel;
@@ -304,8 +300,8 @@ int daObj_Mip_Key_c::Behavior() {
 
 
 int daObj_Mip_Key_c::InitResources() {
-    void *f = dExtSimpleModel_c::LoadFile(data_ov085_021305d8);
-    if (mModel.SetFile((BMD_File *)f, 1, -1) == 0)
+    BMD_File *f = dExtSimpleModel_c::LoadFile(data_ov085_021305d8);
+    if (mModel.SetFile(f, 1, -1) == 0)
         return 0;
     mShadowModel.InitCylinder();
     unk_19c = param1 & 0xff;

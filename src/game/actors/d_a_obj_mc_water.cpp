@@ -101,7 +101,7 @@ int daObjMcWater_c::InitResources() {
         }
     }
     {
-        BMD_File *bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(gMcWaterModelFile);
+        BMD_File *bmd = dExtSimpleModel_c::LoadFile(gMcWaterModelFile);
         mModel.SetFile(bmd, 1, 0x14);
     }
     dExtAnmTexSRT_c::Prepare(*(BMD_File *)gMcWaterModelFile.filePtr, data_ov009_02112bc4);
@@ -109,7 +109,7 @@ int daObjMcWater_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     {
-        KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(gMcWaterCollisionFile);
+        KCL_File *kcl = dBgW_Kc::LoadFile(gMcWaterCollisionFile);
         mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov009_02112c38);
     }
     mMeshCollider.Enable(this);

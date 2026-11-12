@@ -30,33 +30,9 @@
 #include "nitro/os/thread.h"
 #include "nitro/mi/memory.h"
 #include "nitro/fs/file.h"
+#include "nitro/fs/archive.h"
 
 extern "C" {
-
-#define FS_ARCHIVE_FLAG_REGISTER 0x00000001
-#define FS_ARCHIVE_FLAG_LOADED 0x00000002
-#define FS_ARCHIVE_FLAG_TABLE_LOAD 0x00000004
-#define FS_ARCHIVE_FLAG_SUSPEND 0x00000008
-#define FS_ARCHIVE_FLAG_RUNNING 0x00000010
-#define FS_ARCHIVE_FLAG_CANCELING 0x00000020
-#define FS_ARCHIVE_FLAG_SUSPENDING 0x00000040
-#define FS_ARCHIVE_FLAG_UNLOADING 0x00000080
-#define FS_ARCHIVE_FLAG_IS_ASYNC 0x00000100
-#define FS_ARCHIVE_FLAG_IS_SYNC 0x00000200
-
-#define FS_ARCHIVE_PROC_SYNC 0x000001fc /* the commands a caller waits for */
-#define FS_ARCHIVE_PROC_ACTIVATE 0x00000200
-#define FS_ARCHIVE_PROC_IDLE 0x00000400
-
-#define FS_COMMAND_ACTIVATE 9
-#define FS_COMMAND_IDLE 10
-
-#define FS_RESULT_SUCCESS 0
-#define FS_RESULT_BUSY 2
-#define FS_RESULT_CANCELED 3
-#define FS_RESULT_PROC_ASYNC 6
-
-#define FS_ARCHIVE_NAME_LEN_MAX 3
 
 #define ALIGN_BYTE(n, a) (((u32)(n) + (a) - 1) & ~((a) - 1))
 
@@ -71,23 +47,10 @@ u32 FSi_GetPackedName(const char *name, int name_len);
 int FSi_ReadMemCallback(FSArchive *p_arc, void *dst, u32 pos, u32 size);
 int FSi_WriteMemCallback(FSArchive *p_arc, const void *src, u32 pos, u32 size);
 int FSi_ReadMemoryCore(FSArchive *p_arc, void *dst, u32 pos, u32 size);
-FSArchive *FS_FindArchive(const char *name, int name_len);
 FSFile *FSi_NextCommand(FSArchive *p_arc);
 void FSi_ExecuteAsyncCommand(FSFile *p_file);
 int FSi_ExecuteSyncCommand(FSFile *p_file);
 int FSi_SendCommand(FSFile *p_file, int command);
-void FS_NotifyArchiveAsyncEnd(FSArchive *p_arc, int ret);
-void FS_InitArchive(FSArchive *p_arc);
-int FS_RegisterArchiveName(FSArchive *p_arc, const char *name, int name_len);
-void FS_ReleaseArchiveName(FSArchive *p_arc);
-int FS_LoadArchive(FSArchive *p_arc, u32 base, u32 fat, u32 fat_size, u32 fnt, u32 fnt_size,
-                   FS_ARCHIVE_READ_FUNC read_func, FS_ARCHIVE_WRITE_FUNC write_func);
-int FS_UnloadArchive(FSArchive *p_arc);
-u32 FS_LoadArchiveTables(FSArchive *p_arc, void *p_mem, u32 max_size);
-void *FS_UnloadArchiveTables(FSArchive *p_arc);
-int FS_SuspendArchive(FSArchive *p_arc);
-int FS_ResumeArchive(FSArchive *p_arc);
-void FS_SetArchiveProc(FSArchive *p_arc, FS_ARCHIVE_PROC_FUNC proc, u32 flags);
 
 /* pret's FS_archive.h and FS_file.h predicates: each reads an archive's
    flag or a file's stat through a volatile pointer and comes back as a 0/1

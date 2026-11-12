@@ -1,33 +1,18 @@
-extern void *func_0201aad4(void *alarm);
+#include "private/watchdog_alarm.h"
 
-/* The watchdog alarm at data_0209d574 (constructed by __sinit_func_0201a96c.cpp,
- * which registers func_0201aaec to destroy it). It starts with a NitroSDK OSAlarm:
- * func_0201aad4 reaches OS_CreateAlarm, which clears the alarm's handler and
- * tag. Names follow the readers: func_0201a8b4, the
- * alarm handler, re-arms the alarm for what is left of limit since base,
- * and once it is used up enters the fatal-error spin (func_02013f28) unless
- * input bit 0x2000 is held; func_0201a9fc resets base to the
- * current tick; func_0201a96c sets suspended, cancelling the alarm while set
- * and re-arming it for limit when cleared. Nothing reads the word at 0x2c. */
-typedef struct WatchdogAlarm {
-    char alarm[0x2c]; /* 0x00 -- OSAlarm */
-    int unread_2c;    /* 0x2c -- zeroed here, never read */
-    unsigned long long limit; /* 0x30 */
-    unsigned long long base;  /* 0x38 */
-    unsigned char suspended;  /* 0x40 */
-} WatchdogAlarm;
-
+/* The watchdog's constructor (private/watchdog_alarm.h): create the alarm
+ * (func_0201aad4, which reaches OS_CreateAlarm and clears its handler and
+ * tag), start suspended with no limit, and answer the watchdog. */
 #ifndef SM64DS_PLATFORM_PC
 typedef char
     WatchdogAlarm_suspended_must_be_at_0x40[(int)&((WatchdogAlarm *)0)->suspended == 0x40 ? 1 : -1];
 #endif
 
-void *func_0201aa18(char *c) {
-    WatchdogAlarm *w = (WatchdogAlarm *)c;
-    func_0201aad4(c);
+WatchdogAlarm *func_0201aa18(WatchdogAlarm *w) {
+    func_0201aad4(&w->alarm);
     w->limit = 0;
     w->suspended = 1;
     w->unread_2c = 0;
     w->base = 0;
-    return c;
+    return w;
 }

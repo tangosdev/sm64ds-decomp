@@ -86,32 +86,31 @@ dScMgFlower_c::Petal::~Petal() {}
  * 0x4000, and go inactive once below the screen. mPetalsSettled stays 1 only if
  * no petal is still on the flower, held, or falling. */
 void dScMgFlower_c::UpdatePetals() {
-    dScMgFlower_c *self = this;
     int i;
 
-    self->mPetalsSettled = 1;
+    mPetalsSettled = 1;
     for (i = 0; i < 22; i++) {
-        if (self->mPetals[i].active == 0)
+        if (mPetals[i].active == 0)
             continue;
-        if (self->mPetals[i].held == 1) {
-            self->mPetalsSettled = 0;
-            continue;
-        }
-        if (self->mPetals[i].released == 0) {
-            self->mPetalsSettled = 0;
+        if (mPetals[i].held == 1) {
+            mPetalsSettled = 0;
             continue;
         }
-        if (i == self->mHeldPetal)
+        if (mPetals[i].released == 0) {
+            mPetalsSettled = 0;
             continue;
-        self->mPetals[i].fallSpeed += 0x100;
-        if (self->mPetals[i].fallSpeed >= 0x4000)
-            self->mPetals[i].fallSpeed = 0x4000;
-        self->mPetals[i].x += self->mPetals[i].driftX;
-        self->mPetals[i].y += self->mPetals[i].fallSpeed;
-        if (self->mPetals[i].y >= 0x100000)
-            self->mPetals[i].active = 0;
+        }
+        if (i == mHeldPetal)
+            continue;
+        mPetals[i].fallSpeed += 0x100;
+        if (mPetals[i].fallSpeed >= 0x4000)
+            mPetals[i].fallSpeed = 0x4000;
+        mPetals[i].x += mPetals[i].driftX;
+        mPetals[i].y += mPetals[i].fallSpeed;
+        if (mPetals[i].y >= 0x100000)
+            mPetals[i].active = 0;
         else
-            self->mPetalsSettled = 0;
+            mPetalsSettled = 0;
     }
 }
 
@@ -124,71 +123,70 @@ void dScMgFlower_c::UpdatePetals() {
  * with random partners, and the round state is reset. The rotation takes
  * the angle signed; the swap moves it as the stored u16. */
 void dScMgFlower_c::DealPetals() {
-    dScMgFlower_c *self = this;
     int shuffleIndex;
     int petalIndex;
     int clearIndex;
     int baseAngle;
 
-    self->mCursorX = 0;
-    self->mCursorY = 0;
-    self->mPrevCursorX = self->mCursorX;
-    self->mPrevCursorY = self->mCursorY;
+    mCursorX = 0;
+    mCursorY = 0;
+    mPrevCursorX = mCursorX;
+    mPrevCursorY = mCursorY;
     Mg_SetTopScreenYOffset(0x20);
     for (clearIndex = 0; clearIndex < 0x16; clearIndex++) {
-        self->mPetals[clearIndex].active = 0;
-        self->mPetals[clearIndex].held = 0;
-        self->mPetals[clearIndex].released = 0;
-        self->mPetals[clearIndex].counted = 0;
-        self->mPetals[clearIndex].x = 0;
-        self->mPetals[clearIndex].y = 0;
-        self->mPetals[clearIndex].touchStartX = 0;
-        self->mPetals[clearIndex].touchStartY = 0;
-        self->mPetals[clearIndex].driftX = 0;
-        self->mPetals[clearIndex].fallSpeed = 0;
+        mPetals[clearIndex].active = 0;
+        mPetals[clearIndex].held = 0;
+        mPetals[clearIndex].released = 0;
+        mPetals[clearIndex].counted = 0;
+        mPetals[clearIndex].x = 0;
+        mPetals[clearIndex].y = 0;
+        mPetals[clearIndex].touchStartX = 0;
+        mPetals[clearIndex].touchStartY = 0;
+        mPetals[clearIndex].driftX = 0;
+        mPetals[clearIndex].fallSpeed = 0;
     }
-    if (self->mHoldTimer == 0x14) {
-        self->mPetalsLeft = MG_RAND(2) + 1;
+    if (mHoldTimer == 0x14) {
+        mPetalsLeft = MG_RAND(2) + 1;
     } else if (MG_RAND(10) == 0) {
-        self->mPetalsLeft = MG_RAND(2) + 0x14;
+        mPetalsLeft = MG_RAND(2) + 0x14;
     } else {
-        self->mPetalsLeft = MG_RAND(8) + 8;
+        mPetalsLeft = MG_RAND(8) + 8;
     }
     baseAngle = MG_RAND(0x10000);
-    for (petalIndex = 0; petalIndex < self->mPetalsLeft; petalIndex++) {
-        self->mPetals[petalIndex].angle = baseAngle + petalIndex * 0x10000 / self->mPetalsLeft;
-        self->mPetals[petalIndex].x = 0;
-        self->mPetals[petalIndex].y = 0x30000;
-        func_0203d388(&self->mPetals[petalIndex].x, (s16)self->mPetals[petalIndex].angle);
-        self->mPetals[petalIndex].x += 0x80000;
-        self->mPetals[petalIndex].y += 0x60000;
-        self->mPetals[petalIndex].active = 1;
+    for (petalIndex = 0; petalIndex < mPetalsLeft; petalIndex++) {
+        mPetals[petalIndex].angle = baseAngle + petalIndex * 0x10000 / mPetalsLeft;
+        mPetals[petalIndex].x = 0;
+        mPetals[petalIndex].y = 0x30000;
+        func_0203d388(&mPetals[petalIndex].x, (s16)mPetals[petalIndex].angle);
+        mPetals[petalIndex].x += 0x80000;
+        mPetals[petalIndex].y += 0x60000;
+        mPetals[petalIndex].active = 1;
     }
-    for (shuffleIndex = 0; shuffleIndex < self->mPetalsLeft; shuffleIndex++) {
+    for (shuffleIndex = 0; shuffleIndex < mPetalsLeft; shuffleIndex++) {
         int swapIndex;
-        swapIndex = MG_RAND(self->mPetalsLeft);
+        swapIndex = MG_RAND(mPetalsLeft);
         if (swapIndex != shuffleIndex) {
             u16 savedAngle;
             dScMgFlower_c::Vec2 savedPosition;
-            savedAngle = self->mPetals[shuffleIndex].angle;
-            self->mPetals[shuffleIndex].angle = self->mPetals[swapIndex].angle;
-            self->mPetals[swapIndex].angle = savedAngle;
-            savedPosition.x = self->mPetals[shuffleIndex].x;
-            savedPosition.y = self->mPetals[shuffleIndex].y;
-            self->mPetals[shuffleIndex].x = self->mPetals[swapIndex].x;
-            self->mPetals[shuffleIndex].y = self->mPetals[swapIndex].y;
-            self->mPetals[swapIndex].x = savedPosition.x;
-            self->mPetals[swapIndex].y = savedPosition.y;
+            savedAngle = mPetals[shuffleIndex].angle;
+            mPetals[shuffleIndex].angle = mPetals[swapIndex].angle;
+            mPetals[swapIndex].angle = savedAngle;
+            savedPosition.x = mPetals[shuffleIndex].x;
+            savedPosition.y = mPetals[shuffleIndex].y;
+            mPetals[shuffleIndex].x = mPetals[swapIndex].x;
+            mPetals[shuffleIndex].y = mPetals[swapIndex].y;
+            mPetals[swapIndex].x = savedPosition.x;
+            mPetals[swapIndex].y = savedPosition.y;
         }
     }
-    self->mHeldPetal = -1;
-    self->mPetalToggle = 0;
-    self->mState = 0;
-    self->mHintTimer = 0;
-    self->mResultTimer = 0;
-    self->mFaceSprite = 2;
-    self->mPetalsSettled = 0;
-    self->mBgScrollPhase = 0;
+    mHeldPetal = -1;
+    mPetalToggle = 0;
+    mState = 0;
+    mHintTimer = 0;
+    mResultTimer = 0;
+    mFaceSprite = 2;
+    mPetalsSettled = 0;
+    mBgScrollPhase = 0;
     G2_BlendNone();
     G2S_SetBlendAlpha(4, 8, 6, 0xa);
 }

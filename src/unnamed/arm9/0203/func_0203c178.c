@@ -2,7 +2,9 @@
  * ldr ip, [pc]; bx ip; .word 0x20527e9 (Thumb bit set on the BX target; the
  * real symbol, config/arm9/symbols.txt, is MTX_Scale43_ thumb size 0x16)
  */
-extern void MTX_Scale43_(int *m, int sx, int sy, int sz);
+#include "math/Matrix.h"
+
+extern void MTX_Scale43_(Matrix4x3 *m, int sx, int sy, int sz);
 
 /* (m, sx, sy, sz) pass straight through in r0-r3 to the Thumb body, which
    builds the 4x3 scale matrix (NitroSDK's MTX_Scale43_ shape). */

@@ -1010,7 +1010,7 @@ void daYegg_c::UpdateShadow() {
  * matrix (mAnmModel.mat4x3). */
 void daYegg_c::UpdateModelMatrix() {
     int on = (mFlags & daYegg_FLAG_ATTACHED) != 0;
-    if (on && *(int *)&mPlayer) {
+    if (on && mPlayer) {
         Vector3 v(0, 0, 0);
         *(Mtx43 *)&data_020a0e68 = *(Mtx43 *)mPlayer->mCarryMatrix;
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0x3f, 9, 0xb);

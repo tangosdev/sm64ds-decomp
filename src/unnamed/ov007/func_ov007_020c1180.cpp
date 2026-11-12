@@ -1,9 +1,8 @@
 //cpp
 #include "Ov007OamNode.h"
+#include "Ov007MenuMem.h"
 
 extern "C" {
-
-extern void func_ov007_020c3d1c(void *p);
 
 /* Frees an OAM node and, when it has any, its animation table. */
 void func_ov007_020c1180(Ov007OamNode *node) {

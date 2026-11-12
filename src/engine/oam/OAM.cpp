@@ -41,6 +41,7 @@
 #include "OamAttr.h"
 #include "nitro/fx/fx_trig.h"
 #include "nitro/gx/gxcommon.h"
+#include "nitro/gx/gx.h"
 #include "OamAnimation.h"
 #include "nitro/os/cache.h"
 
@@ -705,14 +706,14 @@ void OAM::Load()
 {
     /* Push the assembled OAM buffers to the hardware. The single-buffer case
      * (data_0209e660 set) sends one buffer to the main engine and stops;
-     * otherwise the two buffers swap roles per frame, selected by bit 15 of
-     * DISPCAPCNT at 0x04000304, so the one being displayed is never the one
-     * being written. */
+     * otherwise the two buffers swap roles with the display select (POWCNT1
+     * bit 15: which engine drives the top screen), so each engine gets the
+     * buffer assembled for the screen it is currently on. */
     if (data_0209e660) {
         GX_LoadOAM(data_0209e674, 0, 0x400);
         return;
     }
-    if (((*(unsigned short *)0x4000304 & 0x8000) >> 15) == 1) {
+    if (GX_GetDispSelect() == GX_DISP_SELECT_MAIN_SUB) {
         GX_LoadOAM(data_0209e674, 0, 0x400);
         GXS_LoadOAM(data_0209ea74, 0, 0x400);
     } else {

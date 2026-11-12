@@ -33,6 +33,7 @@ enum d_s_mg_single3_d_base_AssetId {
 #include "nitro/gx/gx_load.h"
 #include "GX.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/g2.h"
 #include "nitro/gx/g3x.h"
 
 /* SDK calls this file makes. */
@@ -68,20 +69,20 @@ void dScMgSingle3DBase_c::InitEngines()
 {
     void *fileData;
 
-    REG_DISPCNT_SUB |= 0x10000u;
+    GXS_DispOn();
     sMgTopScreenYOffset = 0;
     Mg_ResetBgOffsets(); /* zero all eight BG scroll offsets */
     Mg_DisableAllBanks(); /* GX::DisableAllBanks */
     gMainScreenLayers = DISPLAY_LAYER_OBJ;
     gSubScreenLayers = 0x10;
-    REG_DISPCNT &= ~0x7000000u;
-    REG_DISPCNT &= ~0x38000000u;
+    GX_SetBGCharOffset(0);
+    GX_SetBGScrOffset(0);
     GX_SetBankForBG(GX_VRAM_BG_128_B);
     GX_SetBankForOBJ(GX_VRAM_OBJ_64_E);
     GX_SetBankForTex(GX_VRAM_TEX_0_A);
     GX_SetBankForTexPltt(GX_VRAM_TEXPLTT_0_F);
     GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_3D);
-    REG_DISPCNT &= ~0x300010u;
+    GX_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
     GX_SetBankForSubBG(GX_VRAM_SUB_BG_128_C);
     GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_128_D);
     fileData = Ov004_LoadFile(sSingle3DCommonNcgByLanguage[GetGameLanguage()]);
@@ -165,7 +166,7 @@ extern "C" void LoadCard2SubBg3(void *) {
     GXS_LoadBG3Scr(fileData, 0, 0x800);
     Deallocate(fileData);
     G2S_BG3Mosaic(false);
-    *(vu32 *)0x400101cu = 0;
+    G2S_SetBG3Offset(0, 0);
     G2S_SetBG3Priority(1);
 }
 

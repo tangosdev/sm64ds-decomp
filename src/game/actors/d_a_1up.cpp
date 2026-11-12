@@ -1112,7 +1112,7 @@ int da1up_c::InitResources()
             if (mModel.SetFile((BMD_File *)data_ov002_0210d9b8.filePtr, 1, 1) == 0)
                 return 0;
         } else {
-            f = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210d9d8);
+            f = dExtSimpleModel_c::LoadFile(data_ov002_0210d9d8);
             if (mModel.SetFile(f, 1, 1) == 0)
                 return 0;
         }
@@ -1121,7 +1121,7 @@ int da1up_c::InitResources()
             if (mModel.SetFile((BMD_File *)data_ov002_0210d9b8.filePtr, 1, 1) == 0)
                 return 0;
         } else {
-            f = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210da30);
+            f = dExtSimpleModel_c::LoadFile(data_ov002_0210da30);
             if (mModel.SetFile(f, 1, 1) == 0)
                 return 0;
         }
@@ -1131,16 +1131,16 @@ int da1up_c::InitResources()
         return 0;
 
     if (mMushroomType == 6 || mMushroomType == 8 || (unsigned int)(mMushroomType - 0xb) <= 1) {
-        mdCcAc_c.Init((dActor_c *)this, 0x64000, 0x40000, 0x100002, 0);
+        mdCcAc_c.Init(this, 0x64000, 0x40000, 0x100002, 0);
         if ((unsigned int)(mMushroomType - 0xb) <= 1) {
             mdCcAc_c.vulnFlags |= CC_VULN_YOSHI_TONGUE;
         }
     } else {
         isMega = (actorID == ACTOR_SCALEUP_KINOKO);
         if (isMega) {
-            mdCcAc_c.Init((dActor_c *)this, 0x41000, 0x41000, 0x100002, 0);
+            mdCcAc_c.Init(this, 0x41000, 0x41000, 0x100002, 0);
         } else {
-            mdCcAc_c.Init((dActor_c *)this, 0x32000, 0x32000, 0x100002, 0);
+            mdCcAc_c.Init(this, 0x32000, 0x32000, 0x100002, 0);
         }
     }
 
@@ -1163,7 +1163,7 @@ int da1up_c::InitResources()
     mSpawnPosZ = mPosZ;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x32000;
-    mWithMeshClsn.Init((dActor_c *)this, 0x32000, 0x32000, 0, 0);
+    mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
     mWithMeshClsn.SetLimMovFlag();
     mParticleID = 0;
 

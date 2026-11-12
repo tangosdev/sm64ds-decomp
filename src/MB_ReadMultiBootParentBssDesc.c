@@ -1,5 +1,6 @@
 #include "types.h"
 #include "nitro/mb/mb.h"
+#include "nitro/wm/wm.h"
 #include "private/wm_views.h"
 #include "nitro/mi/memory.h"
 
@@ -22,9 +23,9 @@ void MB_ReadMultiBootParentBssDesc(WMBssDesc *p_desc, u16 parent_max_size, u16 c
     p_desc->gameInfo.ggid[1] = p_desc->ssid[1];
     p_desc->gameInfo.tgid = p_desc->ssid[2];
     p_desc->gameInfo.userGameInfoLength = 0;
-    flags = (ks_flag ? 4 : 0) | (cs_flag ? 8 : 0); /* WM_ATTR_FLAG_KS, _CS */
+    flags = (ks_flag ? WM_ATTR_FLAG_KS : 0) | (cs_flag ? WM_ATTR_FLAG_CS : 0);
     p_desc->gameInfo.parentMaxSize = parent_max_size;
     p_desc->gameInfo.childMaxSize = child_max_size;
-    flags |= 1; /* WM_ATTR_FLAG_ENTRY */
+    flags |= WM_ATTR_FLAG_ENTRY;
     p_desc->gameInfo.attribute = (u8)flags;
 }

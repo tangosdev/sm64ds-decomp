@@ -66,8 +66,6 @@ typedef void (Heyho::*HeyhoMotion)();
 #define HEYHO_RAND(n) ((int)(((u32)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19) * (n)) >> 12)
 
 extern "C" {
-extern int VEC_Mag(const Vector3 *v);
-extern int VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
@@ -113,7 +111,7 @@ extern void *data_ov006_021402fc;
 extern const HeyhoPath sHeyhoLayoutFlyInPaths[][3];
 extern const HeyhoPath sHeyhoFlyInPaths[][4];
 extern const HeyhoPath sHeyhoSettlePaths[][5];
-extern void *sMgSubCamera;
+extern MgCamera *sMgSubCamera;
 }
 
 /* The Jump scene's three players, seen through the adapter base the Heyhos
@@ -142,8 +140,8 @@ Heyho::~Heyho() {
 
 /* ---- Heyho::LoadResources ---- */
 int Heyho::LoadResources() {
-    BMD_File *m = (BMD_File *)dExtSimpleModel_c::LoadFile(gMgPHeyhoMiniModelFile);
-    BCA_File *a = (BCA_File *)dExtFrameCtrl_c::LoadFile(gMgPHeyhoWaitAnimFile);
+    BMD_File *m = dExtSimpleModel_c::LoadFile(gMgPHeyhoMiniModelFile);
+    BCA_File *a = dExtFrameCtrl_c::LoadFile(gMgPHeyhoWaitAnimFile);
     if (mAnmModel.SetFile(m, 1, -1) == 0) {
         return 0;
     }

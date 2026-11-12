@@ -60,6 +60,7 @@
 #include "Ov007Item.h"
 #include "Ov007Pad.h"
 #include "nitro/fx/fx_cp.h"
+#include "nitro/gx/g3imm_cmd.h"
 #include "math/ProgressRatio.h"
 
 /* The 0xc-byte item rows at data_ov007_020d77d8, one per item id.
@@ -847,7 +848,7 @@ void func_ov007_020b413c(Ov007ItemView *view, int number) {
     int x;
     char digits[4];
 
-    *(volatile int *)0x4000444 = 0; /* MTX_PUSH */
+    G3_PushMtx();
     func_ov007_020c42f8(view->sprite);
     if (number >= 0) {
         char *d;
@@ -887,6 +888,6 @@ void func_ov007_020b413c(Ov007ItemView *view, int number) {
     } else {
         func_ov007_020c4128(view->sprite, WORK->numberSprites[1], WORK->cameras[1]);
     }
-    *(volatile int *)0x4000448 = 1; /* MTX_POP */
+    G3_PopMtx(1);
 }
 }

@@ -40,6 +40,7 @@ enum d_s_mg_jump2_AssetId {
 #include "Particle__System.h"
 #include "math/Approach.h"
 #include "private/mtx43.h"
+#include "math/MtxStack.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/g3x.h"
 #include "nitro/fx/fx_cp.h"
@@ -88,13 +89,11 @@ extern int sJump2PopupCount;
 extern struct Jump2Popup *sJump2Popups;
 extern void *sJump2BackFile;
 void Mg_CommitRecords(void);
-void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 int GetGameLanguage(void);
 struct OamAttr;
 struct Matrix2x2;
 void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
-extern Matrix4x3 data_020a0e68;
 void Jump2Popup_UpdateAll(void);
 extern int Jump3D_AllIdle(void);
 extern int Heyho_AllIdle(void);

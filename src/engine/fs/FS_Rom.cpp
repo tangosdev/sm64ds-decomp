@@ -24,34 +24,13 @@
 #include "nitro/os/spinLock.h"
 #include "private/fs_views.h"
 #include "private/fs_rom.h"
+#include "nitro/fs/archive.h"
 
 extern "C" {
-
-#define FS_COMMAND_WRITEFILE 1
-#define FS_COMMAND_ACTIVATE 9
-#define FS_COMMAND_IDLE 10
-
-#define FS_ARCHIVE_PROC_WRITEFILE (1 << FS_COMMAND_WRITEFILE)
-#define FS_ARCHIVE_PROC_ACTIVATE (1 << FS_COMMAND_ACTIVATE)
-#define FS_ARCHIVE_PROC_IDLE (1 << FS_COMMAND_IDLE)
-
-#define FS_RESULT_SUCCESS 0
-#define FS_RESULT_FAILURE 1
-#define FS_RESULT_UNSUPPORTED 4
-#define FS_RESULT_PROC_ASYNC 6
-#define FS_RESULT_PROC_UNKNOWN 8
 
 extern const char data_0209a048[];  /* "rom" */
 
 void CARD_Init(void);
-
-void FS_InitArchive(FSArchive *p_arc);
-int FS_RegisterArchiveName(FSArchive *p_arc, const char *name, int name_len);
-int FS_LoadArchive(FSArchive *p_arc, u32 base, u32 fat, u32 fat_size, u32 fnt, u32 fnt_size,
-                   FS_ARCHIVE_READ_FUNC read_func, FS_ARCHIVE_WRITE_FUNC write_func);
-u32 FS_LoadArchiveTables(FSArchive *p_arc, void *p_mem, u32 max_size);
-void FS_NotifyArchiveAsyncEnd(FSArchive *p_arc, int ret);
-void FS_SetArchiveProc(FSArchive *p_arc, FS_ARCHIVE_PROC_FUNC proc, u32 flags);
 
 void FSi_OnRomReadDone(void *p_arc);
 int FSi_ReadRomCallback(FSArchive *p_arc, void *dst, u32 src, u32 len);

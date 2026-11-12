@@ -45,27 +45,25 @@
 #include "private/Ov080Mat.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
+#include "nitro/gx/g3_util.h"
 #include "nitro/gx/g3imm.h"
 #include "nitro/gx/g3imm_cmd.h"
 #include "nitro/gx/g3imm_light.h"
 #include "nitro/hw/registers.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 #include "nitro/fx/fx_cp.h"
 
 #pragma defer_codegen off
 
 /* Locals take the type of the call that fills them: the CalcLib Vec3_* helpers
    write Vector3, the NitroSDK VEC_* and MTX_MultVec43 write VecFx32. The SDK
-   prototypes below still say Vector3 (tangosdev/sm64ds-decomp#5207), hence
-   the casts on the VecFx32 side. */
+   prototypes (math/CalcLib.h, math/MtxStack.h and the two below) still say
+   Vector3 (tangosdev/sm64ds-decomp#5207), hence the casts on the VecFx32
+   side. */
 extern "C" {
-void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-int MTX_Inverse43(const Matrix4x3 *src, Matrix4x3 *dst);
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
-void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *out);
 void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *out);
 void VEC_Normalize(const Vector3 *v, Vector3 *out);
-Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
 void G3_LoadMtx43(void *m);
 void  func_02012694(u32 id, void *pos);
 void *func_0201787c(SharedFilePtr *sfp);
@@ -477,7 +475,6 @@ void daPicGate_c::PlaceCorners() {
 
 extern "C" {
 extern void G3_MultMtx43(void *m);
-extern void G3_LoadTexMtxEnv(void *m);
 extern int data_ov080_0212771c[];
 }
 
