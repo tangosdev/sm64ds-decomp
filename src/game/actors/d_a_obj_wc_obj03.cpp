@@ -26,19 +26,6 @@
  *   and store.
  * - Class header first so dExtSimpleModel_c.h's structured Matrix4x3 (`.t`) wins;
  *   daObjWc_Mizu_c.h would otherwise pull common.h's flat `s32 m[12]`.
- *
- * Absorbed these legacy one-function sources (ROM address order), all deleted
- * by tools/tu_promote.py:
- *   [0] 0x02111728  src/_ZN15daObjWc_Obj03_cD1Ev.cpp
- *   [1] 0x02111760  src/_ZN15daObjWc_Obj03_cD0Ev.cpp
- *   [2] 0x021117ac  src/_ZN15daObjWc_Obj03_c19CheckClsnWithPlayerEv.cpp
- *   [3] 0x02111850  src/_ZN15daObjWc_Obj03_c10SetWaterIDEv.cpp
- *   [4] 0x021118c8  src/_ZN15daObjWc_Obj03_c20UpdateModelTransformEv.cpp
- *   [5] 0x02111908  src/_ZN15daObjWc_Obj03_c16CleanupResourcesEv.cpp
- *   [6] 0x0211192c  src/_ZN15daObjWc_Obj03_c6RenderEv.cpp
- *   [7] 0x02111954  src/_ZN15daObjWc_Obj03_c8BehaviorEv.cpp
- *   [8] 0x02111a04  src/_ZN15daObjWc_Obj03_c13InitResourcesEv.cpp
- *   [9] 0x02111a84  src/daObjWc_Obj03_c_classInit.c
  */
 
 /* Class header first: dExtSimpleModel_c.h pulls the structured Matrix4x3 (`.t`) that

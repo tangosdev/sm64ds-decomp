@@ -21,10 +21,17 @@
  * installs it from InitResources.
  *
  * What stays:
- * - State0 reads mAngleX/mAngleY through volatile u16 lvalues: the cartridge
- *   loads both with ldrh, x before y, and every plain spelling flips the
- *   order or sign-extends (measured). The playerPos and posp pointers stay
- *   for the same reason; the member spellings DIFF.
+ * - State0 copy-initializes the ring's spawn angle from mAngle: the
+ *   cartridge loads it with ldrh, and assigning it (or its fields) to an
+ *   already-declared Vector3_16 sign-extends instead (measured).
+ * - The playerPos and posp pointers stay: reading player->mPos / hit->mPos
+ *   field by field without them changes the function's size (measured).
+ * - vec, delta and the hit positions stay VecFx32 and are cast to Vector3
+ *   at the calls. As Vector3 locals they match State0's bytes, but the TU
+ *   then emits Vector3's D1 plus this class's D2, vtable and RTTI, which the
+ *   cartridge places elsewhere (measured).
+ * - The ring-spawn test reads mStateTimer as u16; the s16 test is one word
+ *   off.
  * - The state table is two plain copies of the ROM's pointer-to-member
  *   constants (HakPmfSlot), so InitResources casts it to State.
  * - The empty member at 0x0211987c keeps its address name: Behavior calls it
@@ -85,7 +92,6 @@ daWater_Hakidasi_c::~daWater_Hakidasi_c() {}
  * player passes, as reported in mPassedRing, in spawn order. At a count of 5 it
  * waits 0x1e frames, spawns a STAR (actor 0xb2) and sets mRingsPassed to 0xa. */
 int daWater_Hakidasi_c::State0() {
-    Vector3_16 rot;
     VecFx32 vec;
     VecFx32 delta;
     VecFx32 rewardPos;
@@ -97,9 +103,8 @@ int daWater_Hakidasi_c::State0() {
     int i;
     dActor_c *hit;
     int uid;
-    int *playerPos;
-    int *posp;
-    u16 ax, ay;
+    Vector3 *playerPos;
+    Vector3 *posp;
 
     player = ClosestPlayer();
     if (player != 0 && player->mIsMetal == 0) { /* daPly_c::mIsMetal */
@@ -115,10 +120,10 @@ int daWater_Hakidasi_c::State0() {
             Matrix4x3_FromRotationY(&data_020a0e68, (s16)(HorzAngleToCPlayer() + 0x8000));
             Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, -0x4000);
             MTX_MultVec43((Vector3 *)&vec, &data_020a0e68, (Vector3 *)&delta);
-            playerPos = &player->mPosX;
-            vec.x = playerPos[0];
-            vec.y = playerPos[1];
-            vec.z = playerPos[2];
+            playerPos = &player->mPos;
+            vec.x = playerPos->x;
+            vec.y = playerPos->y;
+            vec.z = playerPos->z;
             vec.x += delta.x;
             vec.y += delta.y;
             vec.z += delta.z;
@@ -138,11 +143,7 @@ int daWater_Hakidasi_c::State0() {
             Particle::System::New(mParticle, kPtclWaterSpoutRings, mPosX, mPosY, mPosZ, 0, 0);
         if (mRingsPassed < 5) {
             if (*(u16 *)&mStateTimer == 0) {
-                ax = *(volatile u16 *)&mAngleX;
-                ay = *(volatile u16 *)&mAngleY;
-                rot.x = ax;
-                rot.y = ay;
-                rot.z = *(u16 *)&mAngleZ;
+                Vector3_16 rot = mAngle;
                 rot.x += 0x4000;
                 /* Registry slot 0xf4 constructs daWater_Ring_c. */
                 ring = static_cast<daWater_Ring_c *>(
@@ -171,10 +172,10 @@ int daWater_Hakidasi_c::State0() {
                             mRingsPassed++;
                             func_02012790(0x25);
                             hit = mPassedRing;
-                            posp = &hit->mPosX;
-                            hitPos1.x = posp[0];
-                            hitPos1.y = posp[1];
-                            hitPos1.z = posp[2];
+                            posp = &hit->mPos;
+                            hitPos1.x = posp->x;
+                            hitPos1.y = posp->y;
+                            hitPos1.z = posp->z;
                             SpawnNumber(*(Vector3 *)&hitPos1, mRingsPassed, 0, 0, 0);
                             mPassedRing = 0;
                             return 1;
@@ -194,10 +195,10 @@ int daWater_Hakidasi_c::State0() {
                                 mRingsPassed++;
                                 func_02012790(0x25);
                                 hit = mPassedRing;
-                                posp = &hit->mPosX;
-                                hitPos2.x = posp[0];
-                                hitPos2.y = posp[1];
-                                hitPos2.z = posp[2];
+                                posp = &hit->mPos;
+                                hitPos2.x = posp->x;
+                                hitPos2.y = posp->y;
+                                hitPos2.z = posp->z;
                                 SpawnNumber(*(Vector3 *)&hitPos2, mRingsPassed, 0, 0, 0);
                                 mPassedRing = 0;
                                 return 1;

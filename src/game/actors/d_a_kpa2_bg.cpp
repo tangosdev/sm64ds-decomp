@@ -12,8 +12,7 @@
  *   inflates UpdateClsnMatrix and UpdateModelMatrix.
  * - Behavior rematerialises &mAngleX/Y/Z. Plain `mAngleX += mAngleXSpeed`
  *   is 0x54 against the ROM's 0x68.
- * - dBgW_KcMbg::SetFile stays mangled (Fix12<int> by value). dBgW::SetBeforeClsnCallback
- *   stores dBgW::UpdatePosAndAngs on the collider.
+ * - dBgW::SetBeforeClsnCallback stores dBgW::UpdatePosAndAngs on the collider.
  * - data_ov046_021115bc is the CLPS block SetFile takes. data_020a0e68 is
  *   the scratch matrix both matrix helpers write.
  * - Vec3_Asr writes int pos[4]. A Vector3 there would emit its destructor.
@@ -123,10 +122,8 @@ s32 daKpa2Bg_c::Behavior() {
 int daKpa2Bg_c::InitResources() {
     mModel2.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(daKpa2Bg_c_ModelFile), 1, -1);
     UpdateClsnMatrix();
-    ((dBgW_KcMbg *)(&mMovingMeshCollider2))
-        ->dBgW_KcMbg::SetFile((KCL_File *)((KCL_File *)dBgW_Kc::LoadFile(daKpa2Bg_c_ClsnFile)),
-                              *(const Matrix4x3 *)(&mClsnMat), 0x1000, mAngleY,
-                              *(CLPS_Block *)(&data_ov046_021115bc));
+    mMovingMeshCollider2.SetFile((KCL_File *)dBgW_Kc::LoadFile(daKpa2Bg_c_ClsnFile), mClsnMat,
+                                 0x1000, mAngleY, *(CLPS_Block *)(&data_ov046_021115bc));
     mMovingMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mMovingMeshCollider2.Enable(this);
     mAngleXSpeed = 0;

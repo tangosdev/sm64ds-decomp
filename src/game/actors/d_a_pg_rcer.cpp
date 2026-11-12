@@ -151,7 +151,7 @@ int daPgRcer_c::InitResources()
         mWithMeshClsn.Init(this, 0x82000, 0x82000, 0, 0);
     }
 
-    mStarSlot = (u8)TrackStar((u8)((param1 >> 8) & 0xf), 2);
+    mStarSlot = TrackStar((u8)((param1 >> 8) & 0xf), 2);
     SetState(0);
     mPath.FromID(param1 & 0xff);
     mPathNodeIndex = 0;
@@ -562,8 +562,8 @@ int daPgRcer_c::StateShowFinalText() {
     case 2:
         if (mTalkPlayer->GetTalkState() == 2) {
             if (mPenguinWon == 0) {
-                UntrackAndSpawnStar(*(s8 *)&mStarSlot,
-                                    (unsigned int)(unsigned char)((param1 >> 8) & 0xf), mPos, 4);
+                UntrackAndSpawnStar(mStarSlot, (unsigned int)(unsigned char)((param1 >> 8) & 0xf),
+                                    mPos, 4);
             }
             mTalkPlayer->HasFinishedTalking();
             mTextureSequence.SetFile(*(BTP_File *)gOV019PenguinWait1TextureSequenceFile.filePtr, 0,

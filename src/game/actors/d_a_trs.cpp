@@ -298,8 +298,8 @@ void daTrs_c::func_ov063_02116244() {
 
     if (this->mBooDefeatCount < 5) return;
     if (this->mSpawnedActorID != 0) return;
-    this->mFoundActor = (dActor_c *)dActor_c::Spawn(TRS_ID_ICON_TERESA, this->param1, this->mPos,
-                                                    (const Vector3_16 *)(0), this->mAreaIdx, -1);
+    this->mFoundActor = dActor_c::Spawn(TRS_ID_ICON_TERESA, this->param1, this->mPos,
+                                        (const Vector3_16 *)(0), this->mAreaIdx, -1);
     if (this->mFoundActor != 0) this->mSpawnedActorID = this->mFoundActor->uniqueID;
     this->mFoundActor = 0;
 }
@@ -1811,7 +1811,7 @@ void daTrs_c::func_ov063_02119074() {
 
             this->mHorzSpeed = 0x800;
             this->mState = 5;
-            r = (char *)dActor_c::FindWithActorID(TRS_ID_MERRYGOROUND, (dActor_c *)(0));
+            r = (char *)dActor_c::FindWithActorID(TRS_ID_MERRYGOROUND, 0);
 
             if (r != 0)
                 this->mPrevAngleY = Vec3_HorzAngle(&this->mPos, &((dActor_c *)r)->mPos);
@@ -1935,7 +1935,7 @@ void daTrs_c::func_ov063_0211934c() {
     case 1:
     {
         void *found;
-        this->mFoundActor = (dActor_c *)dActor_c::FindWithID(this->mBigBooID);
+        this->mFoundActor = dActor_c::FindWithID(this->mBigBooID);
         found = (void *)this->mFoundActor;
         if (found != 0) {
             s32 *cnt = &((daTrs_c *)found)->mBooDefeatCount;
@@ -1962,7 +1962,7 @@ void daTrs_c::func_ov063_0211934c() {
         func_0201267c(0xd5, &this->mCamSpacePos);
         if (this->mBigBooID != 0) {
             void *found;
-            this->mFoundActor = (dActor_c *)dActor_c::FindWithID(this->mBigBooID);
+            this->mFoundActor = dActor_c::FindWithID(this->mBigBooID);
             found = (void *)this->mFoundActor;
             if (found != 0 && ((daTrs_c *)found)->mBooDefeatCount == 5) {
                 ((daTrs_c *)found)->func_ov063_02116244();
@@ -2195,7 +2195,7 @@ void daTrs_c::func_ov063_02119c18(unsigned int id) {
 
     void* r = (void*)this->mCachedActorID;
     if (r != 0) return;
-    void* a = (void *)dActor_c::FindWithActorID(id, (dActor_c *)(0));
+    void *a = (void *)dActor_c::FindWithActorID(id, 0);
     this->mFoundActor = (dActor_c *)a;
     a = (void *)this->mFoundActor;
     if (a != 0) {
@@ -2211,7 +2211,7 @@ void daTrs_c::FindParentBigBoo() {
     id = TRS_ID_BOSS_TERESA;
     a = 0;
     for (;;) {
-        a = (dActor_c *)dActor_c::FindWithActorID(id, (dActor_c *)(a));
+        a = dActor_c::FindWithActorID(id, a);
         if (a == 0) return;
         unsigned char t = ((daTrs_c *)a)->mVariant;
         if (t == 0xe) break;
@@ -2502,7 +2502,7 @@ int daTrs_c::UpdateDuringDeath() {
     this->mChildDeaths = 2;
 
     if (this->mVariant != 0 && this->mBigBooID != 0) {
-        this->mFoundActor = (dActor_c *)dActor_c::FindWithID(this->mBigBooID);
+        this->mFoundActor = dActor_c::FindWithID(this->mBigBooID);
         if (this->mFoundActor != 0) {
             if (this->mVariant != 2) {
                 ((daTrs_c *)this->mFoundActor)->mBooDefeatCount += 1;

@@ -102,7 +102,7 @@ int daWater_Ring_c::StatePassed() {
     ApproachLinear(mScaleX, 0x3000, 0x199);
     mScaleZ = mScaleX;
     mScaleY = mScaleZ;
-    if ((u16)mStateTimer == 0 || mScaleX >= 0x2ffd)
+    if (mStateTimer == 0 || mScaleX >= 0x2ffd)
         MarkForDestruction();
     return 1;
 }
@@ -131,7 +131,7 @@ int daWater_Ring_c::InitStatePassed() {
 int daWater_Ring_c::StateActive() {
     int spd;
     CheckPlayerPass();
-    if ((u16)mStateTimer < 0x1e) {
+    if (mStateTimer < 0x1e) {
         if (mOpacity >= 2)
             mOpacity--;
     }
@@ -151,7 +151,7 @@ int daWater_Ring_c::StateActive() {
     }
     mScaleZ = mScaleX;
     mScaleY = mScaleZ;
-    if ((u16)mStateTimer == 0 || mOpacity <= 1)
+    if (mStateTimer == 0 || mOpacity <= 1)
         MarkForDestruction();
     return 1;
 }
@@ -195,7 +195,7 @@ int daWater_Ring_c::Render() {
 }
 
 int daWater_Ring_c::Behavior() {
-    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     if (mState->execute)
         (this->*mState->execute)();
     UpdatePos(&mdCcAcPos_c);

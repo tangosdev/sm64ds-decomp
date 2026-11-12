@@ -51,8 +51,6 @@
  *   relocations and pins).
  * - The unnamed struct type of `pos` in func_ov102_0214c84c also holds
  *   the count (an unnamed struct type takes one number, measured).
- * - *(u16 *)&mStateTimer stays: the ROM loads ldrh (unsigned), the s16
- *   member spelling loads ldrsh.
  * - daShl_c_classInit stays a free factory and the destructor stays
  *   inline (D1-then-D0 cartridge order).
  */
@@ -189,7 +187,7 @@ s32 daShl_c::Behavior()
         mDespawnTimer = 0;
     }
 
-    DecIfAbove0_Short((u16 *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
 
     {
         ShlState *st = mState;
@@ -444,8 +442,7 @@ void daShl_c::func_ov102_0214cbec()
         if (!isPlayer)
             return;
     }
-    /* Unsigned read (ldrh): the s16 field spelling loads ldrsh. */
-    if (*(u16 *)&mStateTimer != 0)
+    if (mStateTimer != 0)
         return;
 
     hit = mdCc_c.hitFlags;

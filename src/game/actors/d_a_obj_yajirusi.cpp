@@ -40,9 +40,7 @@
  *   stores six.
  * - mShadowMat stays 0x30 raw bytes at +0x348. A Matrix4x3 member
  *   would run Vector3's destructor from this class's D1.
- * - data_ov098_0213c380 / 0213c384 / 0213c388 are overlapping
- *   column views (model, KCL, CLPS, stride 0xc). One array would retarget
- *   those relocations. g_profile_YAJIRUSI_R/L live outside this TU.
+ * - g_profile_YAJIRUSI_R/L live outside this TU.
  * - _ZN7Vector3D1Ev is vague linkage, licensed as a deadstrip
  *   duplicate of arm9 0x020072c0. This TU does not rehome it.
  */
@@ -70,11 +68,11 @@ struct YajirusiCollisionFile : SharedFilePtr {
     ~YajirusiCollisionFile();
 };
 
-/* One column of the table at 0x0213c380. Stride 0xc covers the other two
- * words of the same row; only `value` is read. */
-struct ArrowSignFileColumn {
-    void *value;
-    void *pad[2];
+/* One row of the table at 0x0213c380, indexed by mVariant. */
+struct ArrowSignAssets {
+    SharedFilePtr *modelFile;
+    SharedFilePtr *clsnFile;
+    CLPS_Block *clps;
 };
 
 /* local extern: see the banner; the port builds this TU for the host. */
@@ -83,12 +81,8 @@ void Matrix4x3_FromRotationY(void *mtx, int angle);
 void func_02012694(unsigned int id, void *pos);
 }
 
-
-/* dExtSimpleModel_c, KCL and CLPS. Each column is its own symbol so the relocations
- * stay on 0x0213c380 / 0x0213c384 / 0x0213c388. */
-extern ArrowSignFileColumn data_ov098_0213c380[];
-extern ArrowSignFileColumn data_ov098_0213c384[];
-extern ArrowSignFileColumn data_ov098_0213c388[];
+/* The model, KCL and CLPS for each of the two variants. */
+extern ArrowSignAssets data_ov098_0213c380[];
 
 // 0x02138008 (0x38)
 /* Second registry factory for the same class (YAJIRUSI_L profile); body twin
@@ -116,8 +110,7 @@ int daObjYajirusi_c::InitResources() {
     }
 
     u32 modelIndex = mVariant;
-    void *model =
-        dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov098_0213c380[modelIndex].value);
+    void *model = dExtSimpleModel_c::LoadFile(*data_ov098_0213c380[modelIndex].modelFile);
     mModel.dExtModel_c::SetFile((BMD_File *)model, 1, -1);
     mShadowModel.InitCuboid();
     UpdateModelPosAndRotY();
@@ -125,9 +118,9 @@ int daObjYajirusi_c::InitResources() {
     UpdateShadowMatrix();
 
     u32 collisionIndex = mVariant;
-    void *kcl = dBgW_Kc::LoadFile(*(SharedFilePtr *)data_ov098_0213c384[collisionIndex].value);
+    void *kcl = dBgW_Kc::LoadFile(*data_ov098_0213c380[collisionIndex].clsnFile);
     mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat, 0x199, mAngleY,
-                          *(CLPS_Block *)data_ov098_0213c388[collisionIndex].value);
+                          *data_ov098_0213c380[collisionIndex].clps);
     return 1;
 }
 
@@ -152,8 +145,8 @@ int daObjYajirusi_c::Render() {
 int daObjYajirusi_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
-    ((SharedFilePtr *)data_ov098_0213c380[mVariant].value)->Release();
-    ((SharedFilePtr *)data_ov098_0213c384[mVariant].value)->Release();
+    data_ov098_0213c380[mVariant].modelFile->Release();
+    data_ov098_0213c380[mVariant].clsnFile->Release();
     return 1;
 }
 

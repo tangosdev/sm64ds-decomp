@@ -185,7 +185,7 @@ s32 daBakubaku_c::Behavior()
     if (UpdateKillByInvincibleChar(mWithMeshClsn, mAnmModel, 3) != 0)
         return 1;
 
-    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     DecIfAbove0_Short(&mChaseCooldown);
 
     State *state = mState;
@@ -305,7 +305,7 @@ int daBakubaku_c::ExecuteWander() {
         SetState(&data_ov032_02113aac);
         return 1;
     }
-    if (*(unsigned short *)&mStateTimer == 0) {
+    if (mStateTimer == 0) {
         unsigned int r = (unsigned int)RandomIntInternal(&data_0209e650.value);
         if (((r >> 8) & 3) == 0) {
             SetState(&data_ov032_02113a9c);
@@ -333,7 +333,7 @@ int daBakubaku_c::ExecutePause() {
         SetState(&data_ov032_02113aac);
         return 1;
     }
-    if (*(unsigned short *)&mStateTimer == 0)
+    if (mStateTimer == 0)
         SetState((State *)&data_ov032_02113a8c);
     return 1;
 }
@@ -349,7 +349,7 @@ int daBakubaku_c::EnterChase() {
 /* Chase: close on the stored player position, then surface or dive. */
 int daBakubaku_c::ExecuteChase() {
     /* Out of time, chase aborted, or no target: back to wandering. */
-    if (*(unsigned short *)&mStateTimer == 0 || ShouldReturnHome() == 1 || FindChaseTarget() == 0) {
+    if (mStateTimer == 0 || ShouldReturnHome() == 1 || FindChaseTarget() == 0) {
         mAnmModel.SetAnim((BCA_File *)data_ov032_02113a50.filePtr, 0, 0x1000, 0);
         mChaseCooldown = 0x64;
         SetState((State *)&data_ov032_02113a8c);
