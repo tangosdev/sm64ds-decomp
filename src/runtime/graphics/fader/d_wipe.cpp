@@ -28,6 +28,7 @@
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/g2.h"
 #include "nitro/hw/registers.h"
+#include "nitro/gx/gx.h"
 
 extern "C" {
 void MIi_CpuClear32(int val, int *dst, int len);
@@ -79,8 +80,8 @@ void dWipe_c::DisableWindows() {
     OS_SetIrqFunction(OS_IE_H_BLANK, 0);
     if (enabled)
         (void)OS_EnableIrq();
-    REG_DISPCNT &= ~0xe000;
-    REG_DISPCNT_SUB &= ~0xe000;
+    GX_SetVisibleWnd(GX_WNDMASK_NONE);
+    GXS_SetVisibleWnd(GX_WNDMASK_NONE);
     if (typePending == 1) {
         type = pendingType;
         typePending = 0;
@@ -118,14 +119,10 @@ int dWipe_c::SetBackwardTime(u32 frames, u32 extra) {
 
         wipeInterp = 0;
 
-        REG_WIN0H = 0x7f7f;
-        REG_WIN0V = 0xc0;
-        REG_DB_WIN0H = 0x7f7f;
-        REG_DB_WIN0V = 0xc0;
-        REG_WIN1H = 0x8080;
-        REG_WIN1V = 0xc0;
-        REG_DB_WIN1H = 0x8080;
-        REG_DB_WIN1V = 0xc0;
+        G2_SetWnd0Position(0x7f, 0, 0x7f, 0xc0);
+        G2S_SetWnd0Position(0x7f, 0, 0x7f, 0xc0);
+        G2_SetWnd1Position(0x80, 0, 0x80, 0xc0);
+        G2S_SetWnd1Position(0x80, 0, 0x80, 0xc0);
 
         state = 1;
         EnableWindows();
@@ -183,14 +180,10 @@ int dWipe_c::SetForwardTime(u32 frames, u32 extra) {
         }
 
         wipeInterp = 0x200000;
-        REG_WIN0H = 0x7f;
-        REG_WIN0V = 0xc0;
-        REG_DB_WIN0H = 0x7f;
-        REG_DB_WIN0V = 0xc0;
-        REG_WIN1H = 0x80ff;
-        REG_WIN1V = 0xc0;
-        REG_DB_WIN1H = 0x80ff;
-        REG_DB_WIN1V = 0xc0;
+        G2_SetWnd0Position(0, 0, 0x7f, 0xc0);
+        G2S_SetWnd0Position(0, 0, 0x7f, 0xc0);
+        G2_SetWnd1Position(0x80, 0, 0xff, 0xc0);
+        G2S_SetWnd1Position(0x80, 0, 0xff, 0xc0);
 
         state = 3;
         EnableWindows();
@@ -220,40 +213,28 @@ int dWipe_c::SetForwardTime(u32 frames, u32 extra) {
 void dWipe_c::EnableWindows() {
     unk_00e = 1;
 
-    {
-        u32 v = REG_WININ;
-        v = (v & ~0x3f) | 0x1f;
-        v = v | 0x20;
-        REG_WININ = v;
-    }
-    {
-        u32 v = REG_DB_WININ;
-        v = (v & ~0x3f) | 0x1f;
-        v = v | 0x20;
-        REG_DB_WININ = v;
-    }
-    {
-        u32 v = REG_WININ;
-        v = (v & ~0x3f00) | 0x1f00;
-        v = v | 0x2000;
-        REG_WININ = v;
-    }
-    {
-        u32 v = REG_DB_WININ;
-        v = (v & ~0x3f00) | 0x1f00;
-        v = v | 0x2000;
-        REG_DB_WININ = v;
-    }
+    G2_SetWnd0InsidePlane(GX_WND_PLANEMASK_BG0 | GX_WND_PLANEMASK_BG1 | GX_WND_PLANEMASK_BG2 |
+                              GX_WND_PLANEMASK_BG3 | GX_WND_PLANEMASK_OBJ,
+                          1);
+    G2S_SetWnd0InsidePlane(GX_WND_PLANEMASK_BG0 | GX_WND_PLANEMASK_BG1 | GX_WND_PLANEMASK_BG2 |
+                               GX_WND_PLANEMASK_BG3 | GX_WND_PLANEMASK_OBJ,
+                           1);
+    G2_SetWnd1InsidePlane(GX_WND_PLANEMASK_BG0 | GX_WND_PLANEMASK_BG1 | GX_WND_PLANEMASK_BG2 |
+                              GX_WND_PLANEMASK_BG3 | GX_WND_PLANEMASK_OBJ,
+                          1);
+    G2S_SetWnd1InsidePlane(GX_WND_PLANEMASK_BG0 | GX_WND_PLANEMASK_BG1 | GX_WND_PLANEMASK_BG2 |
+                               GX_WND_PLANEMASK_BG3 | GX_WND_PLANEMASK_OBJ,
+                           1);
 
-    REG_WINOUT &= ~0x3f;
-    REG_DB_WINOUT &= ~0x3f;
+    G2_SetWndOutsidePlane(GX_WND_PLANEMASK_NONE, 0);
+    G2S_SetWndOutsidePlane(GX_WND_PLANEMASK_NONE, 0);
 
-    REG_DISPCNT = (REG_DISPCNT & ~0xe000) | 0x6000;
+    GX_SetVisibleWnd(GX_WNDMASK_W0 | GX_WNDMASK_W1);
 
     if (data_0209f5f8 != 0) {
-        REG_DISPCNT_SUB &= ~0xe000;
+        GXS_SetVisibleWnd(GX_WNDMASK_NONE);
     } else {
-        REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~0xe000) | 0x6000;
+        GXS_SetVisibleWnd(GX_WNDMASK_W0 | GX_WNDMASK_W1);
     }
 
     data_0209f608 = 0;
@@ -266,9 +247,9 @@ void dWipe_c::EnableWindows() {
     BuildTable();
 
     if ((REG_BLDCNT & 0x80) == 0x80)
-        REG_BLDCNT = 0;
+        G2_BlendNone();
     if ((REG_DB_BLDCNT & 0x80) == 0x80)
-        REG_DB_BLDCNT = 0;
+        G2S_BlendNone();
 }
 
 /* Vtable slot 2. Type 1 is the plain colour fade and the base owns it.
@@ -305,8 +286,8 @@ void dWipe_c::AdvanceFade()
             wipeInterp = 0;
             needsCleanup = 0;
             b = (type == 0) ? 0x10 : -0x10;
-            G2x_SetBlendBrightness_((u16 *)0x4000050, 0x3f, b);
-            G2x_SetBlendBrightness_((u16 *)0x4001050, 0x3f, b);
+            G2_SetBlendBrightness(0x3f, b);
+            G2S_SetBlendBrightness(0x3f, b);
             DisableWindows();
             state = 4;
         }

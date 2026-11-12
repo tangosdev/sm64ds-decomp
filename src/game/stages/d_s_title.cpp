@@ -218,7 +218,7 @@ s32 dScTitle_c::InitResources() {
     GX_SetBankForOBJ(1);
     GX_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
     GX_SetGraphicsMode(1, 0, 0);
-    REG_DISPCNT_SUB |= 0x10000;
+    GXS_DispOn();
     func_020233f4();
     G2_SetBG0Priority(0);
     G2_SetBG0Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xf800,

@@ -253,7 +253,7 @@ s32 dScMB_c::InitResources() {
     volatile u16 fillSub;
 
     GX_DispOff();
-    REG_DISPCNT_SUB &= ~0x10000;
+    GXS_DispOff();
     func_02030aa4(2);
 
     REG_POWCNT1 = (REG_POWCNT1 & ~0x20e) | 0x20e;
@@ -288,7 +288,7 @@ s32 dScMB_c::InitResources() {
     GXS_SetVisiblePlane(0);
     GX_DispOn();
 
-    REG_DISPCNT_SUB |= 0x10000;
+    GXS_DispOn();
     func_02034b1c(&sMBGraphCallback, this);
 
     gGraphCallback = &sMBGraphCallback;

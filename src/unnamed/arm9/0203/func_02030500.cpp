@@ -51,8 +51,8 @@ void func_02030500(void) {
     REG_POWCNT1 |= 0x8000; /* bit 15: engine A on the top screen */
     G2_BlendNone();
     G2S_BlendNone();
-    GX_SetVisibleWnd(0);
-    GXS_SetVisibleWnd(0);
+    GX_SetVisibleWnd(GX_WNDMASK_NONE);
+    GXS_SetVisibleWnd(GX_WNDMASK_NONE);
     GX_SetGraphicsMode(1, 0, 0);
 
     GX_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);

@@ -47,8 +47,8 @@ int func_02030e4c(void);
    the link started or a link error up, the session check
    (func_02030e4c). */
 void func_020197b8(void) {
-    G2x_SetBlendBrightness_(&REG_BLDCNT, 0x3f, 0x1f);
-    G2x_SetBlendBrightness_(&REG_DB_BLDCNT, 0x3f, 0x1f);
+    G2_SetBlendBrightness(0x3f, 0x1f);
+    G2S_SetBlendBrightness(0x3f, 0x1f);
     do {
         unsigned short v;
         data_0209d50c = 0xb; func_02019ac4();

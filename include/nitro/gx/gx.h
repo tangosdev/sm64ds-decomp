@@ -55,7 +55,14 @@ void GXx_SetMasterBrightness_(volatile unsigned short *, int);
 #define GX_OBJVRAMMODE_BMP_1D_256K 0x400040
 #define GX_SetOBJVRamModeBmp(mode) (REG_DISPCNT = (u32)((REG_DISPCNT & ~0x400060) | (mode)))
 
-/* DISPCNT bits 13-15, the visible windows (WIN0, WIN1, OBJ window). */
+#define GXS_SetOBJVRamModeBmp(mode) (REG_DISPCNT_SUB = (u32)((REG_DISPCNT_SUB & ~0x400060) | (mode)))
+
+/* DISPCNT bits 13-15, the visible windows (WIN0, WIN1, OBJ window). The
+ * SDK's GXWndMask values. */
+#define GX_WNDMASK_NONE 0
+#define GX_WNDMASK_W0   1
+#define GX_WNDMASK_W1   2
+#define GX_WNDMASK_OW   4
 #define GX_SetVisibleWnd(window) (REG_DISPCNT = (u32)((REG_DISPCNT & ~0xe000) | ((window) << 13)))
 #define GXS_SetVisibleWnd(window) (REG_DISPCNT_SUB = (u32)((REG_DISPCNT_SUB & ~0xe000) | ((window) << 13)))
 
@@ -67,5 +74,11 @@ void GXx_SetMasterBrightness_(volatile unsigned short *, int);
 
 /* DISPCNT bit 23: OBJ processing during H-blank. */
 #define GX_HBlankOBJProc(proc) ((proc) ? (void)(REG_DISPCNT |= 0x800000) : (void)(REG_DISPCNT &= ~0x800000))
+#define GXS_HBlankOBJProc(proc) ((proc) ? (void)(REG_DISPCNT_SUB |= 0x800000) : (void)(REG_DISPCNT_SUB &= ~0x800000))
+
+/* Engine B's display on/off, DISPCNT bit 16. Engine A goes through the
+ * out-of-line GX_DispOn/GX_DispOff, which park the display mode. */
+#define GXS_DispOn() (REG_DISPCNT_SUB |= 0x10000)
+#define GXS_DispOff() (REG_DISPCNT_SUB &= ~0x10000)
 
 #endif

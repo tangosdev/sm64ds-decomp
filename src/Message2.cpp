@@ -119,6 +119,8 @@ void OamRender10_Message2(int a, void *b, int c, int d, int e, int f, int g, int
 struct OamAttr;
 #include "OAM.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/g2.h"
+#include "nitro/gx/gx.h"
 
 /* gGameMode (CURRENT_GAMEMODE) is 2 while the fall-in-front-of-castle
  * cutscene runs: ContinueKuppaScriptIfNecessary stores 2 only when the
@@ -689,15 +691,13 @@ int Message::UpdateWindow() {
                 data_0209d6bc = data_0209d6ac;
 
             if (data_0209d698 != 0) {
-                REG_DB_WIN0H = ((gMsgBoxWinLeft << 8) & 0xff00) |
-                               ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff);
-                REG_DB_WIN0V = ((gMsgBoxWinTop << 8) & 0xff00) |
-                               ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff);
+                G2S_SetWnd0Position(gMsgBoxWinLeft, gMsgBoxWinTop,
+                                    gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1,
+                                    gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1);
             } else {
-                REG_WIN0H = ((gMsgBoxWinLeft << 8) & 0xff00) |
-                            ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff);
-                REG_WIN0V = ((gMsgBoxWinTop << 8) & 0xff00) |
-                            ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff);
+                G2_SetWnd0Position(gMsgBoxWinLeft, gMsgBoxWinTop,
+                                   gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1,
+                                   gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1);
             }
             return 0;
         }
@@ -721,15 +721,13 @@ int Message::UpdateWindow() {
             gMsgBoxWinTop = gMsgBoxCenterY;
 
         if (data_0209d698 != 0) {
-            REG_DB_WIN0H = ((gMsgBoxWinLeft << 8) & 0xff00) |
-                           ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff);
-            REG_DB_WIN0V =
-                ((gMsgBoxWinTop << 8) & 0xff00) | ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff);
+            G2S_SetWnd0Position(gMsgBoxWinLeft, gMsgBoxWinTop,
+                                gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1,
+                                gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1);
         } else {
-            REG_WIN0H = ((gMsgBoxWinLeft << 8) & 0xff00) |
-                        ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff);
-            REG_WIN0V =
-                ((gMsgBoxWinTop << 8) & 0xff00) | ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff);
+            G2_SetWnd0Position(gMsgBoxWinLeft, gMsgBoxWinTop,
+                               gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1,
+                               gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1);
         }
         return 0;
     }
@@ -742,18 +740,18 @@ int Message::UpdateWindow() {
     data_0209d670 = 0;
     if (data_0209d698 != 0) {
         gSubScreenLayers &= ~2;
-        REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~0x1f00) | (gSubScreenLayers << 8);
-        REG_DB_BLDCNT = 0;
-        REG_DB_WININ &= ~0x3f;
-        REG_DB_WINOUT &= ~0x3f;
-        REG_DISPCNT_SUB &= ~0xe000;
+        GXS_SetVisiblePlane(gSubScreenLayers);
+        G2S_BlendNone();
+        G2S_SetWnd0InsidePlane(GX_WND_PLANEMASK_NONE, 0);
+        G2S_SetWndOutsidePlane(GX_WND_PLANEMASK_NONE, 0);
+        GXS_SetVisibleWnd(GX_WNDMASK_NONE);
     } else {
         gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
-        REG_DISPCNT = (REG_DISPCNT & ~0x1f00) | (gMainScreenLayers << 8);
-        REG_BLDCNT = 0;
-        REG_WININ &= ~0x3f;
-        REG_WINOUT &= ~0x3f;
-        REG_DISPCNT &= ~0xe000;
+        GX_SetVisiblePlane(gMainScreenLayers);
+        G2_BlendNone();
+        G2_SetWnd0InsidePlane(GX_WND_PLANEMASK_NONE, 0);
+        G2_SetWndOutsidePlane(GX_WND_PLANEMASK_NONE, 0);
+        GX_SetVisibleWnd(GX_WNDMASK_NONE);
     }
     return 0;
 }

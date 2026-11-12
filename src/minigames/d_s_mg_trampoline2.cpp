@@ -238,9 +238,10 @@ void dScMgTrampoline2_c::InitDisplay() {
     bgScr = LoadFile(ASSET_D_2D_MG_BG_TRAMPOLINE_HARD_NSC_BIN);
     bgPltt = LoadFile(ASSET_D_2D_MG_BG_TRAMPOLINE_HARD_NCL_BIN);
 
-    REG_BG2CNT = (REG_BG2CNT & ~3) | 2;
-    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x9110;
-    REG_BG2CNT &= ~0x40;
+    G2_SetBG2Priority(2);
+    G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x512, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x8800,
+                         GX_BG_CHARBASE_0x10000);
+    G2_BG2Mosaic(0);
 
     {
         char *dst = (char *)G2_GetBG2CharPtr();
@@ -251,9 +252,10 @@ void dScMgTrampoline2_c::InitDisplay() {
     DecompressLZ16(bgScr, G2_GetBG2ScrPtr());
     GX_LoadBGPltt(bgPltt, 0x1a0, 0x60);
 
-    REG_BG3CNT = (REG_BG3CNT & ~3) | 1;
-    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1318;
-    REG_BG3CNT &= ~0x40;
+    G2_SetBG3Priority(1);
+    G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9800,
+                         GX_BG_CHARBASE_0x18000);
+    G2_BG3Mosaic(0);
 
     DecompressLZ16(objChar, G2_GetOBJCharPtr());
     GX_LoadOBJPltt(objPltt, 0, 0x60);
@@ -278,7 +280,7 @@ s32 dScMgTrampoline2_c::InitResources() {
     G3X_SetFog(false, 0, 2, 0x1000);
     *(u16 *)0x4000060 = (*(u16 *)0x4000060 & ~0x3000) | 8;
     InitialiseVramGlobals();
-    *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 1;
+    G2_SetBG0Priority(1);
     fov = FX_Div(0xc0000, (s32)data_02082414);
     this->mCameras[0].mLookAt.x = 0;
     this->mCameras[0].mLookAt.y = -0x64000;
@@ -311,7 +313,7 @@ s32 dScMgTrampoline2_c::InitResources() {
 
 /* Vtable slot 18: reset the round. */
 void dScMgTrampoline2_c::StartRound(int /* arg */) {
-    G2x_SetBlendAlpha_((volatile u16 *)0x4000050, 1, 0x2e, 0x10, 0x10);
+    G2_SetBlendAlpha(1, 0x2e, 0x10, 0x10);
 
     mTouchStartX = data_020a0dbc[0];
     mTouchStartY = data_020a0dbc[1];

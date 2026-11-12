@@ -110,7 +110,7 @@ void dScene_c::ResetHardwareRegisters()
     GX_SetGraphicsMode(1, 0, 0);
 
     GX_SetVisiblePlane(0);
-    GX_SetVisibleWnd(0);
+    GX_SetVisibleWnd(GX_WNDMASK_NONE);
     GX_SetBGScrOffset(0);
     GX_SetBGCharOffset(0);
     GX_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
@@ -143,15 +143,13 @@ void dScene_c::ResetHardwareRegisters()
     G2_SetBG2Affine(&m, 0, 0, 0, 0);
     G2_SetBG3Affine(&m, 0, 0, 0, 0);
 
-    REG_WININ &= ~0x3f;
-    REG_WININ &= ~0x3f00;
-    REG_WINOUT &= ~0x3f;
-    REG_WINOUT &= ~0x3f00;
+    G2_SetWnd0InsidePlane(GX_WND_PLANEMASK_NONE, 0);
+    G2_SetWnd1InsidePlane(GX_WND_PLANEMASK_NONE, 0);
+    G2_SetWndOutsidePlane(GX_WND_PLANEMASK_NONE, 0);
+    G2_SetWndOBJInsidePlane(GX_WND_PLANEMASK_NONE, 0);
 
-    REG_WIN0H = 0;
-    REG_WIN0V = 0;
-    REG_WIN1H = 0;
-    REG_WIN1V = 0;
+    G2_SetWnd0Position(0, 0, 0, 0);
+    G2_SetWnd1Position(0, 0, 0, 0);
     REG_MOSAIC_BG = 0;
     REG_MOSAIC_OBJ = 0;
 
@@ -159,10 +157,10 @@ void dScene_c::ResetHardwareRegisters()
     GXS_SetGraphicsMode(0);
 
     GXS_SetVisiblePlane(0);
-    REG_DISPCNT_SUB &= ~0xe000;
+    GXS_SetVisibleWnd(GX_WNDMASK_NONE);
     GXS_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
-    REG_DISPCNT_SUB &= 0xffbfff9f;
-    REG_DISPCNT_SUB &= ~0x800000;
+    GXS_SetOBJVRamModeBmp(GX_OBJVRAMMODE_BMP_2D_W128);
+    GXS_HBlankOBJProc(0);
 
     G2S_SetBG0Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,
                       GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
@@ -189,15 +187,13 @@ void dScene_c::ResetHardwareRegisters()
     G2S_SetBG2Affine(&m, 0, 0, 0, 0);
     G2S_SetBG3Affine(&m, 0, 0, 0, 0);
 
-    REG_DB_WININ &= ~0x3f;
-    REG_DB_WININ &= ~0x3f00;
-    REG_DB_WINOUT &= ~0x3f;
-    REG_DB_WINOUT &= ~0x3f00;
+    G2S_SetWnd0InsidePlane(GX_WND_PLANEMASK_NONE, 0);
+    G2S_SetWnd1InsidePlane(GX_WND_PLANEMASK_NONE, 0);
+    G2S_SetWndOutsidePlane(GX_WND_PLANEMASK_NONE, 0);
+    G2S_SetWndOBJInsidePlane(GX_WND_PLANEMASK_NONE, 0);
 
-    REG_DB_WIN0H = 0;
-    REG_DB_WIN0V = 0;
-    REG_DB_WIN1H = 0;
-    REG_DB_WIN1V = 0;
+    G2S_SetWnd0Position(0, 0, 0, 0);
+    G2S_SetWnd1Position(0, 0, 0, 0);
     REG_DB_MOSAIC_BG = 0;
     REG_DB_MOSAIC_OBJ = 0;
 

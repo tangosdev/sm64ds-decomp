@@ -920,7 +920,7 @@ s32 dScStarSel_c::InitResources() {
     GX_SetBGScrOffset(1);
     REG_POWCNT1 = (REG_POWCNT1 & 0xFFFFFDF1) | 0x20E;
     GX_DispOn();
-    REG_DISPCNT_SUB |= 0x10000;
+    GXS_DispOn();
     G3X_SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
     models[0].LoadAndSetFile(0x8015, 1, -1);
