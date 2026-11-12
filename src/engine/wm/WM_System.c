@@ -30,8 +30,6 @@ typedef int BOOL;
 #define WM_FIFO_BUF_SIZE 0x100
 #define WM_SYSTEM_BUF_SIZE \
     (WM_ARM9WM_BUF_SIZE + WM_ARM7WM_BUF_SIZE + WM_STATUS_BUF_SIZE + WM_FIFO_BUF_SIZE + WM_FIFO_BUF_SIZE)
-#define WM_NUM_OF_CALLBACK 0x25
-#define WM_NUM_OF_PORT 16
 #define WM_SIZE_MACADDR 6
 #define MI_DMA_MAX_NUM 3
 
@@ -39,26 +37,7 @@ typedef int BOOL;
  * ARM7 sets when it delivers a callback from an exception. */
 #define WM_EXCEPTION_CB_MASK 0x0001
 
-/* The API ids ARM7 sends outside any request, and the state codes this file
- * tests. */
-#define WM_APIID_INDICATION 0x80
-#define WM_APIID_PORT_SEND 0x81
-#define WM_APIID_PORT_RECV 0x82
-#define WM_ERRCODE_FLASH_ERROR 0x13
-#define WM_STATECODE_CONNECTED 7
-#define WM_STATECODE_DISCONNECTED 9
-#define WM_STATECODE_MPEND_IND 11
-#define WM_STATECODE_MP_IND 12
-
-/* The results WmReceiveFifo reads past the WMCallback head. */
-typedef struct WMStartMPCallback {
-    u16 apiid;   /* 0x00 */
-    u16 errcode; /* 0x02 */
-    u16 state;   /* 0x04 */
-    u8 reserved[2];
-    void *recvBuf; /* 0x08 */
-} WMStartMPCallback;
-
+/* The result WmReceiveFifo reads past the WMCallback head of a port send. */
 typedef struct WMPortSendCallback {
     u16 apiid;   /* 0x00 */
     u16 errcode; /* 0x02 */

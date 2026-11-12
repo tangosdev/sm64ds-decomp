@@ -15423,9 +15423,6 @@
       ]
     },
     "MI_CpuFill8": {
-      "src/engine/mb/MB_Parent.cpp": [
-        "param:#2 int"
-      ],
       "src/engine/mb/MB_WmBase.cpp": [
         "param:#2 int"
       ],
@@ -16923,6 +16920,16 @@
     "PMi_SendLEDPatternCommandAsync": {
       "include/nitro/spi/pm.h": [
         "param:#2 void (*)(unsigned int, void *)"
+      ]
+    },
+    "MB_CommSetParentStateCallback": {
+      "include/nitro/mb/mb.h": [
+        "param:#1 void (*)(unsigned short, unsigned int, void *)"
+      ]
+    },
+    "func_0203f9d4": {
+      "include/private/arm9_a0f90_channel_measure.h": [
+        "param:#2 void (*)(ChannelMeasureReply *)"
       ]
     }
   },

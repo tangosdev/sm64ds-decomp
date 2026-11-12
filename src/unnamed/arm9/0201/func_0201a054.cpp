@@ -33,7 +33,6 @@ extern void func_0201fec8(void);
 extern void func_02042f68(int backupType, void *magic);
 extern void func_02018aa4(void);
 extern void func_0203ad84(void);
-extern void func_0201a9fc(void *c);
 extern void func_02019440(void);
 extern void func_020134c8(void);
 extern void func_0203b684(void);
@@ -42,7 +41,6 @@ extern void func_020196cc(void);
 extern void func_0201a5cc(void);
 
 extern char data_0208ee50[12]; /* save magic, zero padded */
-extern struct WatchdogAlarm data_0209d574;
 extern char ACTOR_SPAWN_TABLE[];
 extern void *data_020a4bb8;
 struct S0209ee90 {
@@ -85,9 +83,9 @@ void func_0201a054(void) {
         OS_DisableIrqMask(OS_IE_CARD_IREQ);
     if (!isChild)
         func_0203ad84();
-    func_0201a9fc((char *)&data_0209d574);
+    func_0201a9fc(&data_0209d574);
     mHeap::Heap_t::InitializeGameHeap(0x3b000, 0);
-    func_0201a9fc((char *)&data_0209d574);
+    func_0201a9fc(&data_0209d574);
     func_02019440();
     if (!isChild)
         func_020134c8();

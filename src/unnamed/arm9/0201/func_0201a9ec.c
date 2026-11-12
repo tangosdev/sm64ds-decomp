@@ -1,9 +1,6 @@
-#include "types.h"
-/* func_0201a9ec at 0x0201a9ec - thunk: func_0201a96c(self, 1) */
-struct WatchdogAlarm;
-extern u8 func_0201a96c(struct WatchdogAlarm *context, int suspended);
+#include "private/watchdog_alarm.h"
 
-u8 func_0201a9ec(void* self)
-{
-    return func_0201a96c(self, 1);
+/* Suspend the watchdog (func_0201a96c) and answer whether it already was. */
+u8 func_0201a9ec(WatchdogAlarm *w) {
+    return func_0201a96c(w, 1);
 }

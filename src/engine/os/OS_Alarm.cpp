@@ -26,17 +26,6 @@
 
 extern "C" {
 
-struct OSAlarm {
-    OSAlarmHandler handler; /* 0x00 */
-    void *arg;              /* 0x04 */
-    u32 tag;                /* 0x08 */
-    u64 fire;               /* 0x0c */
-    OSAlarm *prev;          /* 0x14 */
-    OSAlarm *next;          /* 0x18 */
-    u64 period;             /* 0x1c */
-    u64 start;              /* 0x24 */
-};
-
 typedef struct OSiAlarmQueue {
     OSAlarm *head;
     OSAlarm *tail;

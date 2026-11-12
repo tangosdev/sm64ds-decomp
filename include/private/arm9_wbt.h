@@ -1,57 +1,13 @@
 #ifndef ARM9_WBT_H
 #define ARM9_WBT_H
 
-/* Views of NitroSDK WBT (wireless block transfer), moved here from the five
- * files that each declared their own copy: the WBT library in the 0x0206
- * cluster (func_02063718, func_02063ea8, func_02064554) and the
- * file-sharing callbacks in the 0x0204 cluster (func_02040f30,
- * func_020412f0). Field names follow the SDK's. Plain C types:
- * func_020412f0 does not include types.h. */
+/* The WBT (wireless block transfer) library's own work area: the running,
+ * queued and system commands and one parse record per peer, as the library
+ * in the 0x0206 cluster (func_02063718 .. func_02065b94) lays them out in
+ * this SDK revision. The SDK's public types and API (WBTCommand,
+ * WBTCommandType, WBTCallback, WBT_*) are in nitro/wbt.h. */
 
-/* The prepare-send arm of a system callback (event 0xd PREPARE_SEND_DATA):
- * WBT asks the application for the bytes of one block packet. */
-typedef struct WBTPrepareSendDataCallback {
-    unsigned int block_id; /* 0x00 */
-    int block_seq_no;      /* 0x04 */
-    const void *data_ptr;  /* 0x08 */
-    short own_packet_size; /* 0x0c */
-} WBTPrepareSendDataCallback;
-
-/* One WBT command. command is 2 REQ_SYNC, 4 REQ_GET_BLOCK,
- * 6 REQ_GET_BLOCKINFO, 10 REQ_USER_DATA or 0xc SYSTEM_CALLBACK; a system
- * callback carries the peer's command type in event (func_02064554). */
-typedef struct WBTCommand {
-    int command;                    /* 0x00 */
-    int event;                      /* 0x04 */
-    unsigned short target_bmp;      /* 0x08 */
-    unsigned short peer_bmp;        /* 0x0a */
-    unsigned char my_cmd_counter;   /* 0x0c */
-    unsigned char peer_cmd_counter; /* 0x0d */
-    short result;                   /* 0x0e */
-    void (*callback)(char *);       /* 0x10 */
-    union {
-        struct {
-            short num_of_list;      /* 0x14 */
-            short peer_packet_size; /* 0x16 */
-            short my_packet_size;   /* 0x18 */
-        } sync;
-        /* The layout WBT_GetBlock (WBT_GetBlock) builds. */
-        struct {
-            unsigned int block_id;             /* 0x14 */
-            unsigned int recv_data_size;       /* 0x18 */
-            unsigned char *recv_buf_table[16]; /* 0x1c -- per aid */
-            unsigned int *pkt_bmp_table[16];   /* 0x5c -- per aid */
-        } get;
-        struct {
-            int block_id; /* 0x14 */
-        } blockdone;
-        struct {
-            unsigned char data[9]; /* 0x14 */
-            unsigned char size;    /* 0x1d */
-        } user_data;
-        WBTPrepareSendDataCallback prepare_send_data; /* 0x14 */
-    } u;
-} WBTCommand;
+#include "nitro/wbt.h"
 
 /* func_020647fc fills it: length, packet count, three cursors, then the
  * bitmap words and the receive buffer. */
@@ -104,28 +60,11 @@ typedef struct WBTWork {
     WBTPeerRecord peer[16]; /* 0x1d4 -- indexed by aid */
 } WBTWork;
 
-/* The WBT requests the file share makes. Each queues one WBTCommand
- * (func_02065af0) for the peers in target_bmp and calls callback with it
- * when it completes. */
-#ifdef __cplusplus
-extern "C" {
-#endif
-int WBT_AidbitmapToAid(int aid_bmp);
-void WBT_RequestSync(unsigned short target_bmp, void (*callback)(void *));
-void WBT_GetBlockInfo(unsigned short target_bmp, unsigned int block_id, const void *recv_buf_table,
-                      void (*callback)(void *));
-void WBT_GetBlock(unsigned short target_bmp, unsigned int block_id, const void *recv_buf_table,
-                  unsigned int recv_size, const void *pkt_bmp_table, void (*callback)(void *));
-int WBT_PutUserData(unsigned short target_bmp, const void *data, int size,
-                    void (*callback)(void *));
-#ifdef __cplusplus
-}
-#endif
-
 #ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm: a command is 0x9c bytes, a peer record steps
- * 0x68, and peer[] starts at 0x1d4. */
+/* ROM layout under mwccarm: a command is 0x9c bytes, a block list node
+ * 0x34, a peer record steps 0x68, and peer[] starts at 0x1d4. */
 typedef char WBTCommand_size_must_be_0x9c[sizeof(WBTCommand) == 0x9c ? 1 : -1];
+typedef char WBTBlockInfoList_size_must_be_0x34[sizeof(WBTBlockInfoList) == 0x34 ? 1 : -1];
 typedef char WBTPeerRecord_size_must_be_0x68[sizeof(WBTPeerRecord) == 0x68 ? 1 : -1];
 typedef char WBTWork_peer_must_be_at_0x1d4[(int)&((WBTWork *)0)->peer == 0x1d4 ? 1 : -1];
 #endif
