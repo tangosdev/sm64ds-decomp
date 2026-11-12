@@ -4,9 +4,27 @@
 /*
  * NitroSDK's key bits (nitro/pad/common/pad.h). The game's PadData words
  * (include/private/controller_input.h) carry them in the SDK's layout, so
- * a key test reads as the SDK names. Macros only: a macro costs no
- * compiler-numbered symbols in the files that include it.
+ * a key test reads as the SDK names.
+ *
+ * PAD_Read and PAD_DetectFold are the SDK's own inlines: the keys come from
+ * KEYINPUT for A..L and from the ARM7's copy of RCNT (button_XY in the
+ * system work) for X, Y, the debug button and the hinge.
  */
+
+#include "types.h"
+#include "nitro/hw/mmap_shared.h"
+
+/* nitro/hw/ARM9/ioreg_PAD.h */
+#define reg_PAD_KEYINPUT (*(vu16 *)0x04000130)
+
+#define PAD_PLUS_KEY_MASK 0x00f0
+#define PAD_BUTTON_MASK 0x2f0f
+#define PAD_DEBUG_BUTTON_MASK 0x2000
+#define PAD_ALL_MASK 0x2fff
+#define PAD_RCNTPORT_MASK 0x2c00
+#define PAD_KEYPORT_MASK 0x03ff
+
+#define PAD_DETECT_FOLD_MASK 0x8000
 
 #define PAD_BUTTON_A 0x0001
 #define PAD_BUTTON_B 0x0002
@@ -20,5 +38,17 @@
 #define PAD_BUTTON_L 0x0200
 #define PAD_BUTTON_X 0x0400
 #define PAD_BUTTON_Y 0x0800
+#define PAD_BUTTON_DEBUG 0x2000
+
+static inline u16 PAD_Read(void)
+{
+    return (u16)(((reg_PAD_KEYINPUT | *(vu16 *)HW_BUTTON_XY_BUF) ^ (PAD_PLUS_KEY_MASK | PAD_BUTTON_MASK)) &
+                 (PAD_PLUS_KEY_MASK | PAD_BUTTON_MASK));
+}
+
+static inline int PAD_DetectFold(void)
+{
+    return (int)((*(vu16 *)HW_BUTTON_XY_BUF & PAD_DETECT_FOLD_MASK) >> 15);
+}
 
 #endif /* NITRO_PAD_PAD_H */
