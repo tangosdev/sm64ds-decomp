@@ -193,7 +193,7 @@ void func_0204c584(ParticleSystem *sys, List *list) {
         if (p->offset.x == 0 && p->offset.y == 0 && p->offset.z == 0)
             SPLRandom_VecFx32(&nrm);
         else
-            VEC_Normalize((const struct Vector3 *)&p->offset, (struct Vector3 *)&nrm);
+            VEC_Normalize(&p->offset, &nrm);
         p->velocity.x = (nrm.x * mag1 + sys->direction[0] * mag2) >> 0xc;
         p->velocity.y = (nrm.y * mag1 + sys->direction[1] * mag2) >> 0xc;
         p->velocity.z = (nrm.z * mag1 + sys->direction[2] * mag2) >> 0xc;
