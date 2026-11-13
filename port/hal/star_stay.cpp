@@ -444,7 +444,9 @@ void knob_tick(char *me) {
     }
     for (int i = 0; i < K.ntc; ++i) {
         Knobs::Touch &t = K.tc[i];
-        if (t.done || t.lvl != lv || K.lvl_frames < t.fr || (K.lvl_frames - t.fr) % 60 != 0) continue;
+        if (t.done || t.lvl != lv || K.lvl_frames < t.fr) continue;
+        const int phase = (K.lvl_frames - t.fr) % 60;   // each try holds me on the star for 20 frames (water lifts a swimmer off it)
+        if (phase >= 20) continue;
         char *s = find_star(t.n);
         const unsigned st = s ? *(const unsigned *)(s + 0x440) : 0u;
         if (s && *(void *const *)(s + 0x438) == me && st >= 5) {
@@ -452,18 +454,18 @@ void knob_tick(char *me) {
             std::fprintf(stderr, "[staycourse] TOUCH knob: star %d is being got by me (state %u)\n", t.n, st);
             continue;
         }
-        if (t.tries >= kTouchTries) {
+        if (phase == 0 && t.tries >= kTouchTries) {
             t.done = true;
             std::fprintf(stderr, "[staycourse] TOUCH knob: star %d NOT got after %d tries (%s, state %u, bit1e=%d)\n", t.n, t.tries,
                          s ? "still here" : "gone", st, _ZN5Event6GetBitEj(0x1e) ? 1 : 0);
             continue;
         }
-        ++t.tries;
-        if (!s) { std::fprintf(stderr, "[staycourse] TOUCH knob: no star %d here (try %d)\n", t.n, t.tries); continue; }
+        if (phase == 0) ++t.tries;
+        if (!s) { if (phase == 0) std::fprintf(stderr, "[staycourse] TOUCH knob: no star %d here (try %d)\n", t.n, t.tries); continue; }
         int *mp = (int *)(me + 0x5c);
         const int *sp = (const int *)(s + 0x5c);
         mp[0] = sp[0]; mp[1] = sp[1] - 40 * 4096; mp[2] = sp[2];
-        std::fprintf(stderr, "[staycourse] TOUCH knob: me put on star %d (state %u) at %d,%d,%d, try %d\n", t.n, st, sp[0] >> 12,
+        if (phase == 0) std::fprintf(stderr, "[staycourse] TOUCH knob: me put on star %d (state %u) at %d,%d,%d, try %d\n", t.n, st, sp[0] >> 12,
                      sp[1] >> 12, sp[2] >> 12, t.tries);
     }
     if (K.fl_lvl == lv && !K.fl_done && K.lvl_frames >= K.fl_fr) {
