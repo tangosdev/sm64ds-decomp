@@ -260,12 +260,12 @@ int daPgRcer_c::StateShowInitText() {
             z = mPosZ;
             pos.z = z;
             pos.y = y + 0x190000;
-            eq = (int)(NumStars() == 0x96);
+            eq = (NumStars() == 0x96);
             if (eq != 0)
                 msg = 0xab;
             else
                 msg = 0xa7;
-            if (mTalkPlayer->ShowMessage(*this, (unsigned int)(short)msg, &pos, 1, 2) != 0) {
+            if (mTalkPlayer->ShowMessage(*this, (short)msg, &pos, 1, 2) != 0) {
                 ++mActionStep;
             }
         }
@@ -435,8 +435,8 @@ int daPgRcer_c::StateRace() {
             mPenguinFinished = 1;
         }
         mSlideSound = Sound::PlayLong(mSlideSound, 3, 0x185, mCamSpacePos, 0);
-        mDustParticle = (u32)Particle::System::New(mDustParticle, kPtclSlideDust, mPosX,
-                                                   mPosY + 0x32000, mPosZ, 0, 0);
+        mDustParticle = Particle::System::New(mDustParticle, kPtclSlideDust, mPosX, mPosY + 0x32000,
+                                              mPosZ, 0, 0);
         break;
 
     case 2:
@@ -562,8 +562,7 @@ int daPgRcer_c::StateShowFinalText() {
     case 2:
         if (mTalkPlayer->GetTalkState() == 2) {
             if (mPenguinWon == 0) {
-                UntrackAndSpawnStar(mStarSlot, (unsigned int)(unsigned char)((param1 >> 8) & 0xf),
-                                    mPos, 4);
+                UntrackAndSpawnStar(mStarSlot, (unsigned char)((param1 >> 8) & 0xf), mPos, 4);
             }
             mTalkPlayer->HasFinishedTalking();
             mTextureSequence.SetFile(*(BTP_File *)gOV019PenguinWait1TextureSequenceFile.filePtr, 0,
