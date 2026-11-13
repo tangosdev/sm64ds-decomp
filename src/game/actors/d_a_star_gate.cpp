@@ -210,7 +210,7 @@ daPly_c *daStarGate_c::CalculateRelativePlayerPos() {
     VecFx32 tmp;
     daPly_c *player = gPlayers[gLocalPlayerId];
     Vec3_Sub((Vector3 *)&tmp, &player->mPos, &mPos);
-    Vec3_RotateYAndTranslate(&mScale, &data_020a0ebc, (short)-mAngleY, (Vector3 *)&tmp);
+    Vec3_RotateYAndTranslate(&mScale, &data_020a0ebc, -mAngleY, (Vector3 *)&tmp);
     return player;
 }
 

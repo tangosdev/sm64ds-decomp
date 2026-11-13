@@ -249,7 +249,7 @@ int daBook_c::GetHitType() {
     if (found == 0)
         return HIT_NONE;
 
-    t = (int)(found->actorID == kPlayerActorId);
+    t = (found->actorID == kPlayerActorId);
     if (t == 0)
         return HIT_NONE;
 
@@ -258,7 +258,7 @@ int daBook_c::GetHitType() {
         return HIT_NONE;
 
     if (found->mIsVanish != 0) {
-        t = (int)(actorID == kShootBookActorId);
+        t = (actorID == kShootBookActorId);
         if (t != 0)
             return HIT_NONE;
     }
@@ -293,7 +293,7 @@ int daBook_c::GetHitType() {
         return HIT_METAL_PLAYER;
 
     if (found->mIsVanish != 0) {
-        t = (int)(actorID == kKillerBookActorId);
+        t = (actorID == kKillerBookActorId);
         if (t != 0)
             return HIT_NONE;
     }

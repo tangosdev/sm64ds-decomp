@@ -239,7 +239,7 @@ int daOts_c::InitResourcesCommon()
     tail().mHorzDecel = mFileTable->horzDecel;
     tail().mModelYOffset = mFileTable->modelYOffset;
     mStateTimer = 0;
-    mWithMeshClsn.Init((dActor_c *)this, mFileTable->eggAimHeight, mFileTable->eggAimHeight, 0, 0);
+    mWithMeshClsn.Init(this, mFileTable->eggAimHeight, mFileTable->eggAimHeight, 0, 0);
     tail().mShadowRadius = mFileTable->shadowRadius;
     mParticle1 = 0;
     mParticle0 = mParticle1;
@@ -666,7 +666,7 @@ void daOts_c::ActKnockback() {
         this->mPrevAngleY = this->mAngleY;
         {
             BCA_File *anim = (BCA_File *)mFileTable->files[kAnimWalk]->filePtr;
-            this->mAnmModel.SetAnim((BCA_File *)anim, 0, kAnimSpeedDouble, 0);
+            this->mAnmModel.SetAnim(anim, 0, kAnimSpeedDouble, 0);
         }
         return;
     }
@@ -695,7 +695,7 @@ void daOts_c::ActBackUp() {
     mPrevAngleY = mAngleY;
     tail().mState = STATE_RETURN_HOME;
     BCA_File *f = (BCA_File *)mFileTable->files[kAnimWalk]->filePtr;
-    mAnmModel.SetAnim((BCA_File *)f, 0, kAnimSpeedNormal, 0);
+    mAnmModel.SetAnim(f, 0, kAnimSpeedNormal, 0);
     return;
 }
 

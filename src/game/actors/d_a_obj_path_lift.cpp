@@ -106,7 +106,7 @@ int daObjPathLift_c::Behavior() {
     UpdateShadow();
     mMeshCollider.SetClipRadius(0x150000);
     mMeshCollider.SetClipOffsetY(0x1000);
-    int b = (int)(gGameMode == 1);
+    int b = (gGameMode == 1);
     if (b != 0) {
         if (mMeshCollider.IsEnabled() == 0) {
             mMeshCollider.Enable(this);

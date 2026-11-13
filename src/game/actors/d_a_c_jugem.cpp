@@ -537,7 +537,7 @@ int daC_Jugem_c::StateLeaveMain() {
         Vec3_ApproachHorz(&mPos, &mTarget, 0x1e000);
         ApproachLinear(mPosY, mTarget.y, 0x1e000);
     }
-    if (*(unsigned short *)&mStateTimer == 0) {
+    if (mStateTimer == 0) {
         if (Sound::PlaySub(0x4a, 0x7f, 0, 0x7222, 0) != 0) {
             if (mTalkPlayer->HasFinishedTalking() == 1) {
                 MarkForDestruction();
@@ -614,7 +614,7 @@ int daC_Jugem_c::StateFlyToPlayerMain()
     p->mStateTargetY = mPosY;
     p->mStateTargetZ = mPosZ;
 
-    if (*(unsigned short *)&mStateTimer == 0) {
+    if (mStateTimer == 0) {
         Sound::PlaySub(0x4a, 0x14, 0x7f, 0x15666, 0);
     }
 
@@ -628,7 +628,7 @@ int daC_Jugem_c::StateFlyToPlayerMain()
     out.z = 0;
     in.z = 0xc8000;
     Matrix4x3_FromRotationY(&data_020a0e68, 0);
-    MTX_MultVec43((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
+    MTX_MultVec43(&in, &data_020a0e68, &out);
     out.x += p->mPosX;
     out.y += p->mPosY + 0x70000;
     out.z += p->mPosZ;
@@ -812,7 +812,7 @@ void daC_Jugem_c::UpdateShadowPlayer()
         short ang = ::Vec3_HorzAngle(&pp, &p);
         Matrix4x3_FromRotationY(&data_020a0e68, ang);
     }
-    MTX_MultVec43((Vector3 *)&z1, &data_020a0e68, (Vector3 *)&off);
+    MTX_MultVec43(&z1, &data_020a0e68, &off);
 
     p.x = p.x + off.x;
     p.y = pp.y;
@@ -850,7 +850,7 @@ int daC_Jugem_c::Render()
 
 int daC_Jugem_c::Behavior()
 {
-    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     if (mState[1])
         (this->*mState[1])();
     UpdatePos(0);

@@ -903,11 +903,11 @@ void cMgSmartball_board_c::ClaimCell(int i) {
     v = i * 0x18000 + 0x10000;
     a[0] = v;
     a[1] = 0x78000;
-    mpManager->EmitScore((int *)a, 0x64, 0, 1);
+    mpManager->EmitScore(a, 0x64, 0, 1);
     mpManager->CountCell();
     b[0] = v;
     b[1] = 0x78000;
-    PaintCell(i, (int *)b);
+    PaintCell(i, b);
     Sound::PlayBank2_2D(0x173);
     count = 0;
     if (slot < 3) {
@@ -1035,7 +1035,7 @@ void cMgSmartball_board_c::ClaimCell(int i) {
         do {
             d[0] = mCurrent0;
             d[1] = mCurrent1;
-            mpManager->EmitScore((int *)d, (int)tmp, (int)0, (int)1);
+            mpManager->EmitScore(d, tmp, 0, 1);
             mpManager->CountLine(1);
             m++;
         } while (m < count);
@@ -1044,7 +1044,7 @@ void cMgSmartball_board_c::ClaimCell(int i) {
         return;
     e[0] = mCurrent0;
     e[1] = mCurrent1;
-    mpManager->EmitScore((int *)e, 0x2710, 0x3c, 1);
+    mpManager->EmitScore(e, 0x2710, 0x3c, 1);
     mpManager->CountBingo();
     mpManager->EndRound();
     Sound::PlayBank2_2D(0x174);
@@ -2006,10 +2006,10 @@ void cMgSmartball_ana_c::Swallow() {
     mHasBall = 1;
     tmp1[0] = mCurrent0;
     tmp1[1] = mCurrent1;
-    mpManager->EmitSparks((int *)tmp1, 0);
+    mpManager->EmitSparks(tmp1, 0);
     tmp2[0] = mCurrent0;
     tmp2[1] = mCurrent1;
-    mpManager->EmitScore((int *)tmp2, (int)0x7d0, (int)0, (int)1);
+    mpManager->EmitScore(tmp2, 0x7d0, 0, 1);
     mpManager->CountAna();
     func_02012718(0xe0, mCurrent0);
 }
@@ -2111,7 +2111,7 @@ void cMgSmartball_kinoko_c::SaveSnapshot() {
         if (mHitTimer == 0) {
             pair.x = mCurrent0;
             pair.y = mCurrent1;
-            mpManager->EmitScore(&pair.x, (int)0x12c, (int)0, (int)1);
+            mpManager->EmitScore(&pair.x, 0x12c, 0, 1);
             mpManager->CountKinoko();
             func_02012718(0x19f, mCurrent0);
         }
@@ -2133,7 +2133,7 @@ void cMgSmartball_kinoko_c::SaveSnapshot() {
                         int hit;
                         CopyObjectPos(&bufA, m);
                         Vec2_Sub(&bufB.x, &mCurrent0, &bufA.x);
-                        hit = Vec2_Len((const Vector2 *)(void *)&bufB) < 0x11000;
+                        hit = Vec2_Len((const Vector2 *)&bufB) < 0x11000;
                         if (hit != 0) {
                             mHitTimer = 4;
                             goto done;
@@ -2205,7 +2205,7 @@ void cMgSmartball_ball_c::PlayHitSound(int a1, int *vel) {
             int pos[2];
             pos[0] = mCurrent0;
             pos[1] = mCurrent1;
-            mpManager->SpawnDust((int *)pos);
+            mpManager->SpawnDust(pos);
         }
         break;
     }
@@ -2284,7 +2284,7 @@ void cMgSmartball_ball_c::Burst() {
     int v[2];
     v[0] = mCurrent0;
     v[1] = mCurrent1;
-    mpManager->EmitSparks((int *)v, 0);
+    mpManager->EmitSparks(v, 0);
 }
 
 void cMgSmartball_ball_c::PutInPlay() {
@@ -2404,8 +2404,7 @@ int cMgSmartball_ball_c::HitKinokos(int *pos) {
                     delta[0] = delta[0] - out[0];
                     delta[1] = delta[1] - out[1];
                     if (func_0203d5bc(delta) < r7) {
-                        void *e =
-                            i >= mpManager->mKinokoCount ? 0 : (void *)mpManager->mpKinokos[i];
+                        void *e = i >= mpManager->mKinokoCount ? 0 : mpManager->mpKinokos[i];
                         ((cMgSmartball_kinoko_c *)e)->mWasHit = 1;
                         return 1;
                     }
@@ -2769,8 +2768,8 @@ void cMgSmartball_ball_c::UpdatePhysics() {
 
     state.depth = 0;
     state.zero = 0;
-    state.null34 = (void *)0;
-    state.null38 = (void *)0;
+    state.null34 = 0;
+    state.null38 = 0;
     state.null3c = 0;
     state.angle40 = 0;
     state.index44 = 0;
@@ -3151,11 +3150,11 @@ outer_loop:
     if (mpManager->mAnaCount <= 0)
         return;
     do {
-        other = i >= mpManager->mAnaCount ? (void *)0 : mpManager->mpAnas[i];
+        other = i >= mpManager->mAnaCount ? 0 : mpManager->mpAnas[i];
         if (((cMgSmartball_ana_c *)other)->HasBall() == 0) {
             hazardDelta.x = mCurrent0;
             hazardDelta.z = mCurrent1;
-            other = i >= mpManager->mAnaCount ? (void *)0 : mpManager->mpAnas[i];
+            other = i >= mpManager->mAnaCount ? 0 : mpManager->mpAnas[i];
             CopyObjectPos(&hazardPos, other);
             hazardDelta.x -= hazardPos.x;
             hazardDelta.z -= hazardPos.z;
@@ -3163,11 +3162,11 @@ outer_loop:
             if (func_0203d5bc(&hazardDelta.x) < square) {
                 dot = mRadius + 0x10000 - Vec2_Len((const Vector2 *)&hazardDelta);
                 if (mRadius < dot) {
-                    other = i >= mpManager->mAnaCount ? (void *)0 : mpManager->mpAnas[i];
+                    other = i >= mpManager->mAnaCount ? 0 : mpManager->mpAnas[i];
                     CopyObjectPos(&hazardPos2, other);
                     mSwallowX = hazardPos2.x;
                     mSwallowZ = hazardPos2.z;
-                    other = i >= mpManager->mAnaCount ? (void *)0 : mpManager->mpAnas[i];
+                    other = i >= mpManager->mAnaCount ? 0 : mpManager->mpAnas[i];
                     ((cMgSmartball_ana_c *)other)->Swallow();
                     ArmExpire(0x80);
                     state3a = 1;
@@ -3578,7 +3577,7 @@ cMgSmartball_object_c *cMgSmartball_object_c_Construct(cMgSmartball_object_c *o,
 
 /* Slot 25: forwards the graph callback to the minigame base. */
 int dScMgSmartball_c::OnGraphCallback3() {
-    void *t = (void *)this;
+    void *t = this;
     return ((dScMgBase_c *)t)->dScMgBase_c::OnGraphCallback3() != 0;
 }
 
@@ -3893,7 +3892,7 @@ void dScMgSmartball_c::UpdateScores() {
                     int tmp[2];
                     tmp[0] = *posX;
                     tmp[1] = *posY;
-                    EmitScore((int *)tmp, *score, 0, *multiplier);
+                    EmitScore(tmp, *score, 0, *multiplier);
                     continue;
                 }
             }
@@ -4873,7 +4872,7 @@ s32 dScMgSmartball_c::Render() {
 
     if (mPhase == 1 && mResultSlideX <= 0) {
         xpos = 0x18;
-        slot[0] = (int *)0;
+        slot[0] = 0;
 
         /* Cells row. */
         if (mCellTally > 0) {

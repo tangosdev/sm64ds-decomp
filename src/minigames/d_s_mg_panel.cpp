@@ -196,8 +196,8 @@ void dScMgPanel_c::Scroll_Update() {
             y = ((r << 4) >> 15) + 0xb0;
             Particle_Spawn(x << 12, y << 12, 0);
 
-            r = (u32)RandomIntInternal(&data_0209d4b8.value);
-            r2 = (u32)RandomIntInternal(&data_0209d4b8.value);
+            r = RandomIntInternal(&data_0209d4b8.value);
+            r2 = RandomIntInternal(&data_0209d4b8.value);
             x = (((r >> 16 & 0x7fff) * 7) >> 15) * 5;
             y = ((((r2 >> 16) & 0x7fff) << 4) >> 15) + 0xb0;
             Particle_Spawn((0x100 - x) << 12, y << 12, 0);
@@ -1075,7 +1075,7 @@ void dScMgPanel_c::DealPuzzle() {
         }
         cnt2 = mFlips;
         for (j = 0; j < cnt2; j++) {
-            u32 rnd = (u32)RandomIntInternal(&data_0209d4b8.value);
+            u32 rnd = RandomIntInternal(&data_0209d4b8.value);
             u32 s = (rnd >> 16) & 0x7fff;
             v = (cnt1 * s) >> 15;
             FlipAt(v);
@@ -1113,7 +1113,7 @@ void dScMgPanel_c::ScramblePanels() {
     extern u8 sPanelScrambleFlipEnabledAlt[];
     extern u8 sPanelScrambleFlipsAlt[];
     extern u8 sPanelPuzzleSizes[];
-    int t = (int)mLevel;
+    int t = mLevel;
     if (IsAltVariant() != 0) {
         int nv;
         if (t >= 0xf) {
@@ -1668,7 +1668,7 @@ s32 dScMgPanel_c::InitResources() {
 
     {
         void *subFile = LoadFile(ASSET_D_2D_MG_BG_PAZZLE_PANEL_NCG_BIN);
-        DecompressLZ16(subFile, (void *)((char *)G2S_GetBG3CharPtr() + 0x4000));
+        DecompressLZ16(subFile, ((char *)G2S_GetBG3CharPtr() + 0x4000));
         Deallocate(subFile);
 
         subFile = LoadFile(ASSET_D_2D_MG_BG_PAZZLE_PANEL_NCL_BIN);

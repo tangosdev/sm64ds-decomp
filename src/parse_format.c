@@ -49,9 +49,9 @@ unsigned char *parse_format(unsigned char *format_string, char **arg, print_form
     f.field_width           = 0;
     f.precision             = 0;
 
-    s = (unsigned char *)(format_string + 1);
+    s = (format_string + 1);
     if ((c = *s) == '%') {
-        f.conversion_char = (unsigned char)c;
+        f.conversion_char = c;
         *format = f;
         return s + 1;
     }
@@ -159,7 +159,7 @@ unsigned char *parse_format(unsigned char *format_string, char **arg, print_form
     if (flag_found)
         c = *++s;
 
-    f.conversion_char = (unsigned char)c;
+    f.conversion_char = c;
 
     switch (c) {
     case 'd':
@@ -181,8 +181,7 @@ unsigned char *parse_format(unsigned char *format_string, char **arg, print_form
     case 'f':
     case 'F':
         if (f.argument_options == short_argument ||
-            (unsigned char)(f.argument_options + 0xFC) <=
-                (unsigned char)(long_long_argument - intmax_argument)) {
+            (unsigned char)(f.argument_options + 0xFC) <= (long_long_argument - intmax_argument)) {
             f.conversion_char = 0xFF;
             break;
         }

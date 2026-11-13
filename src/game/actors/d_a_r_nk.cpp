@@ -246,9 +246,9 @@ int daRNk_c::InitResources()
     mPrevPathPt.z = mPosZ;
     mPathPtr.GetNode(mPathTarget, mCurPathPt);
     mHasPlayerUsedCannon = (unsigned char)zero;
-    b = (unsigned char)((((unsigned int)param1 >> 4) + 1) & 0x3f);
+    b = (unsigned char)(((param1 >> 4) + 1) & 0x3f);
     mPathPtToJumpAt1 = b;
-    b = (unsigned char)((((unsigned int)param1 >> 10) + 1) & 0x3f);
+    b = (unsigned char)(((param1 >> 10) + 1) & 0x3f);
     mPathPtToJumpAt2 = b;
     if (mPathPtToJumpAt1 <= 1)
         mPathPtToJumpAt1 = 0xff;
@@ -827,7 +827,7 @@ int daRNk_c::func_ov062_02119af0() {
     dzc = targetZ - prevZ;
     p->mTargetAngleY = (short)cstd::atan2(dx, dz);
     int dot = (dxc >> 0xc) * (dx >> 0xc) + (dzc >> 0xc) * (dz >> 0xc);
-    if (dot <= 0 || Vec3_Dist(&p->mPos, (Vector3 *)&p->mPathTarget) < (p->mHorzSpeed >> 1)) {
+    if (dot <= 0 || Vec3_Dist(&p->mPos, &p->mPathTarget) < (p->mHorzSpeed >> 1)) {
         int v = p->mPathTarget.x;
         p->mPrevPathPt.x = v;
         p->mPrevPathPt.y = p->mPathTarget.y;

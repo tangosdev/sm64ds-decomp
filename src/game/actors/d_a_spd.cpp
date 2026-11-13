@@ -177,9 +177,9 @@ void daSpd_c::OnTurnIntoEgg(daPly_c &player) {
 
 int daSpd_c::InitResources() {
     BMD_File *mf = dExtSimpleModel_c::LoadFile(data_ov071_02122f80);
-    ((dExtModel_c *)(&mAnmModel))->SetFile(mf, 1, -1);
+    mAnmModel.SetFile(mf, 1, -1);
     dExtFrameCtrl_c::LoadFile(gSpiderWalkAnimationFile);
-    if (((dExtShadowModel_c *)(&mShadowModel))->InitCylinder() == 0)
+    if (mShadowModel.InitCylinder() == 0)
         return 0;
     mdCcAc_c.Init(this, 0x46000, 0x64000, 0x200000, 0x6eff0);
     mWithMeshClsn.Init(this, 0x50000, 0x50000, (Vector3_16 *)0, (Vector3_16 *)0);
@@ -348,11 +348,11 @@ int daSpd_c::func_ov071_0211fee4() {
         func_0201267c(0xf0, &mCamSpacePos);
     }
     func_ov071_0211f0b4();
-    UpdatePos((dCc_c *)(&mdCcAc_c));
+    UpdatePos(&mdCcAc_c);
     func_ov071_0211f148(&mWithMeshClsn);
     func_ov071_0211f29c();
-    ((dCc_c *)(&mdCcAc_c))->Clear();
-    ((dCc_c *)(&mdCcAc_c))->Update();
+    mdCcAc_c.Clear();
+    mdCcAc_c.Update();
     return 1;
 }
 
@@ -459,7 +459,7 @@ int daSpd_c::func_ov071_0211fb0c() {
 int daSpd_c::func_ov071_0211fa54() {
     int b0 = (int)((mFlags & 0x40000) != 0);
     if (b0 != 0) {
-        int *src = &((dActor_c *)mParent)->mPosX;
+        int *src = &mParent->mPosX;
         mPosX = src[0];
         mPosY = src[1];
         mPosZ = src[2];
@@ -523,7 +523,7 @@ int daSpd_c::func_ov071_0211f7d4() {
         mAngleZ = z;
         SetState(2);
     }
-    UpdatePos((dCc_c *)(&mdCcAc_c));
+    UpdatePos(&mdCcAc_c);
     func_ov071_0211f29c();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();

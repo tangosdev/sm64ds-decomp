@@ -44,7 +44,7 @@ void func_ov007_020c5948(Ov007Picker *s, Vector3 *src) {
         dst = &s->pos;
         min = &s->boundsMin;
         max = &s->boundsMax;
-        VEC_Add((Vector3 *)src, (Vector3 *)&s->hitOffset, (Vector3 *)dst);
+        VEC_Add(src, &s->hitOffset, dst);
         if (min->x > dst->x)
             dst->x = min->x;
         if (max->x < dst->x)

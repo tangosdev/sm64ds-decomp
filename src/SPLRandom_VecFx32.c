@@ -11,15 +11,15 @@ extern void VEC_Normalize(const struct Vector3 *src, struct Vector3 *dst);
  * (its spl_random.c, pret-coined). */
 void SPLRandom_VecFx32(struct Vector3 *out) {
     s32 s = PARTICLE_RNG_STATE;
-    s32 x = (s32)((unsigned int)s * 0x5eedf715u + 0x1b0cb173u);
+    s32 x = ((unsigned int)s * 0x5eedf715u + 0x1b0cb173u);
     PARTICLE_RNG_STATE = x;
     out->x = x >> 8;
     s = PARTICLE_RNG_STATE;
-    s32 y = (s32)((unsigned int)s * 0x5eedf715u + 0x1b0cb173u);
+    s32 y = ((unsigned int)s * 0x5eedf715u + 0x1b0cb173u);
     PARTICLE_RNG_STATE = y;
     out->y = y >> 8;
     s = PARTICLE_RNG_STATE;
-    s32 z = (s32)((unsigned int)s * 0x5eedf715u + 0x1b0cb173u);
+    s32 z = ((unsigned int)s * 0x5eedf715u + 0x1b0cb173u);
     PARTICLE_RNG_STATE = z;
     out->z = z >> 8;
     VEC_Normalize(out, out);

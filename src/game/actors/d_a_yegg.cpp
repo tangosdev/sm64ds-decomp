@@ -349,7 +349,7 @@ void daYegg_c::SpawnBlueCoins(void *b, int count, int sl, short arg5) {
                 rv = (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) << 27) >>
                      16;
             } while (rv == prev);
-            r = (unsigned int)RandomIntInternal(&data_0209e650.value);
+            r = RandomIntInternal(&data_0209e650.value);
             r = r >> 16;
             coin->mPrevAngleX = zero;
             sl = sl * ((r % 50) + 100) / 100;
@@ -468,7 +468,7 @@ void daYegg_c::SeekStraight() {
     if (id != 0)
         o = dActor_c::FindWithID(id);
     if (o != 0) {
-        b = (s32)((o->mFlags & 0x10000000) != 0);
+        b = ((o->mFlags & 0x10000000) != 0);
         if (b == 0) {
             PayOut();
             func_ov002_020ed63c(this, daYegg_STATE_SEEK);
@@ -477,13 +477,13 @@ void daYegg_c::SeekStraight() {
     }
     fb0 = mFlags;
     flag = 0;
-    b = (s32)((fb0 & daYegg_FLAG_ATTACHED) != 0);
+    b = ((fb0 & daYegg_FLAG_ATTACHED) != 0);
     if (b == 0) {
-        b = (s32)((fb0 & daYegg_FLAG_DROPPED) != 0);
+        b = ((fb0 & daYegg_FLAG_DROPPED) != 0);
         if (b != 0) {
             func_ov002_020ed63c(this, daYegg_STATE_DROP);
         } else {
-            b = (s32)((fb0 & daYegg_FLAG_FLYING) != 0);
+            b = ((fb0 & daYegg_FLAG_FLYING) != 0);
             if (b != 0) {
                 Vector3 pos(mPos.x, mPos.y + 0x28000, mPos.z);
                 rot.x = FX_SinIdx((u16)mAngleY >> 4);
@@ -542,7 +542,7 @@ void daYegg_c::SeekHoming() {
     if (mTargetId != 0)
         o = dActor_c::FindWithID(mTargetId);
     if (o != 0) {
-        b = (s32)((o->mFlags & 0x10000000) != 0);
+        b = ((o->mFlags & 0x10000000) != 0);
         if (b == 0) {
             func_ov002_020ed63c(this, daYegg_STATE_SEEK);
             return;
@@ -554,13 +554,13 @@ void daYegg_c::SeekHoming() {
     }
     fb0 = mFlags;
     flag = 0;
-    b = (s32)((fb0 & daYegg_FLAG_ATTACHED) != 0);
+    b = ((fb0 & daYegg_FLAG_ATTACHED) != 0);
     if (b == 0) {
-        b = (s32)((fb0 & daYegg_FLAG_DROPPED) != 0);
+        b = ((fb0 & daYegg_FLAG_DROPPED) != 0);
         if (b != 0) {
             func_ov002_020ed63c(this, daYegg_STATE_DROP);
         } else {
-            b = (s32)((fb0 & daYegg_FLAG_FLYING) != 0);
+            b = ((fb0 & daYegg_FLAG_FLYING) != 0);
             if (b != 0) {
                 if (mWithMeshClsn.GetResultFlag1() != 0) {
                     HandleWallHit((int)&mWithMeshClsn);
@@ -780,7 +780,7 @@ void daYegg_c::ExecuteFollowPlayer() {
         if (t > 0x1000) t = 0x1000;
         if (t < 0) t = 0;
         t = (t + 0x1000) >> 8;
-        unsigned char byteVal = (unsigned char)t;
+        unsigned char byteVal = t;
         int idx = byteVal & 0x3f;
         int speed = idx << 8;
         if (mPlayer->mIsAirborne != 0) speed = 0;
@@ -807,7 +807,7 @@ void daYegg_c::ExecuteFollowPlayer() {
         {
             int fd1 = FX_Div(a4, 0x20000);
             int r1 = FX_MUL(fd1, 0xe39);
-            short a4ang = (short)(-r1);
+            short a4ang = (-r1);
             ac = mSpeedZ;
             if (ac > 0x20000) {
                 ac = 0x20000;
@@ -818,7 +818,7 @@ void daYegg_c::ExecuteFollowPlayer() {
                 int fd2 = FX_Div(ac, 0x20000);
                 int r2 = FX_MUL(fd2, 0xe39);
                 mAngleX = a4ang;
-                mAngleZ = (short)r2;
+                mAngleZ = r2;
             }
         }
     } else {
@@ -923,10 +923,10 @@ void daYegg_c::UpdateTilt() {
     short e6 = 0;
     if (mWithMeshClsn.IsOnGround()) {
         struct Vector3 n;
-        dBgPi *fr = static_cast<dBgPi *>(mWithMeshClsn.GetFloorResult());
+        dBgPi *fr = mWithMeshClsn.GetFloorResult();
         fr->surface.CopyNormalTo(n);
         e4 = func_02010844(&n, mAngleY);
-        e6 = func_02010844(&n, (short)(mAngleY - 0x4000));
+        e6 = func_02010844(&n, (mAngleY - 0x4000));
     } else {
         if (mState == 0) {
             daPly_c *p = mPlayer;
@@ -1019,9 +1019,9 @@ void daYegg_c::UpdateModelMatrix() {
         mPosZ = v.z << 3;
         return;
     }
-    Matrix4x3_FromTranslation(&data_020a0e68, (int)((((long long)mPosX << 9) + 0x800) >> 12),
+    Matrix4x3_FromTranslation(&data_020a0e68, ((((long long)mPosX << 9) + 0x800) >> 12),
                               FX_MUL(mPosY + 0x14000, 0x200),
-                              (int)((((long long)mPosZ << 9) + 0x800) >> 12));
+                              ((((long long)mPosZ << 9) + 0x800) >> 12));
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68,
         mAngleX, mAngleY, mAngleZ);
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
@@ -1247,7 +1247,7 @@ int daYegg_c::Render()
        same way it is in daBakubaku_c::Render: `if (mFlags & 0x40000)` tests the
        masked word directly, while the ROM materialises the 0/1 first. Folding it
        changes the function's SIZE, which is what a `999 word(s) differ` says. */
-    int b = (int)((mFlags & 0x40000) != 0);
+    int b = ((mFlags & 0x40000) != 0);
     if (b) return 1;
 
     if (mPlayer->IsInsideOfCannon()) return 1;
@@ -1339,7 +1339,7 @@ int daYegg_c::InitResources()
     int idx;
     int i;
 
-    mParamHigh = (u8)(param1 >> 4);
+    mParamHigh = (param1 >> 4);
 
     idx = 0;
     if (func_ov002_020ec654() != 0)

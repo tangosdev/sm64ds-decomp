@@ -71,7 +71,7 @@ int func_02005110(dCamera_c *cam) {
             s32 fallDist = Vec3_Dist((Vector3 *)cam->mLookTarget, playerPos);
             s32 t = fallDist - 0x200000;
             if (t > 0) {
-                s16 scaled = (s16)(((((s64)t) << 2) + 0x800) >> 12);
+                s16 scaled = (((((s64)t) << 2) + 0x800) >> 12);
                 if (scaled > fall) {
                     scaled = fall;
                 }

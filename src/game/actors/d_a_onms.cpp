@@ -284,7 +284,7 @@ extern "C" void func_ov092_021313b0(void *t)
         self->mMoveDir = kDirWait;
         return;
     }
-    u16 a = (u16)Vec3_HorzAngle(&old, &self->mPathNode);
+    u16 a = Vec3_HorzAngle(&old, &self->mPathNode);
     if (a >= 0x2000 && a < 0x6000) self->mMoveDir = kDirRollPosX;
     else if (a >= 0x6000 && a < 0xa000) self->mMoveDir = kDirRollNegZ;
     else if (a >= 0xa000 && a < 0xe000) self->mMoveDir = kDirRollNegX;
@@ -365,7 +365,7 @@ void daOnms_c::Roll(s32 stepZ, s32 stepX, s32 pitch, s16 bank)
     s16 *ang;
 
     {
-        s16 t = (s16)((mStateTimer + 1) << 12);
+        s16 t = ((mStateTimer + 1) << 12);
         idx = (u16)t >> 4;
     }
     y = mRestPos.y + 0x3000;
@@ -393,11 +393,11 @@ void daOnms_c::Roll(s32 stepZ, s32 stepX, s32 pitch, s16 bank)
         u8 f = mOrientBits;
         s8 k = sBankAxis[f];
         if (k < 0) {
-            s16 *p = ang - ((int)k + 1);
-            *p = (s16)(*p - bank);
+            s16 *p = ang - (k + 1);
+            *p = (*p - bank);
         } else {
             s16 t = ang[k];
-            ang[k] = (s16)(t + bank);
+            ang[k] = (t + bank);
         }
     }
 
@@ -435,9 +435,9 @@ void daOnms_c::Launch(dActor_c *player, u32 how)
     else mPrevAngleY = Vec3_HorzAngle(ActorPos(player), ActorPos(this));
 
     unsigned n = ((u16)mPrevAngleY) >> 4;
-    mTumbleVelX = (s16)(FX_CosIdx(n) >> 2);
+    mTumbleVelX = (FX_CosIdx(n) >> 2);
     mTumbleVelY = 0;
-    mTumbleVelZ = (s16)((-(int)FX_SinIdx(n)) >> 2);
+    mTumbleVelZ = ((-FX_SinIdx(n)) >> 2);
     mFlags &= ~0x2000000;
     mdCcAcPos_c.radius = 0x1a9000;
 }
@@ -583,7 +583,7 @@ int daOnms_c::InitResources()
                           *(CLPS_Block *)(&data_ov092_02132220));
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
 
-    mOrientBits = (unsigned char)((mAngleX >> 0xe) & 3);
+    mOrientBits = ((mAngleX >> 0xe) & 3);
     mOrientBits |= (mAngleY >> 0xc) & 0xc;
     mOrientBits |= (mAngleZ >> 0xa) & 0x30;
 

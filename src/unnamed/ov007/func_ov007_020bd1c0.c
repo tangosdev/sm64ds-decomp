@@ -33,7 +33,7 @@ void func_ov007_020bd1c0(int n)
 
     h = func_ov007_020b3f20(0x16);
     for (i = 0; i < 11; i++) {
-        func_ov007_020b22e0((int *)WORK->textures[i], (int *)h, i);
+        func_ov007_020b22e0(WORK->textures[i], h, i);
     }
 
     {
@@ -42,8 +42,8 @@ void func_ov007_020bd1c0(int n)
             void* h2;
             res = t + 0x20;
             h2 = func_ov007_020b3f20(res);
-            func_ov007_020b22e0((int *)WORK->textures[2], (int *)h2, 0);
-            func_ov007_020b22e0((int *)WORK->textures[6], (int *)h2, 1);
+            func_ov007_020b22e0(WORK->textures[2], h2, 0);
+            func_ov007_020b22e0(WORK->textures[6], h2, 1);
         }
     }
 

@@ -97,7 +97,7 @@ WMErrCode WM_Init(void *wmSysBuf, u16 dmaNo) {
     DC_InvalidateRange(wmSysBuf, WM_SYSTEM_BUF_SIZE);
     MI_DmaClear32(dmaNo, wmSysBuf, WM_SYSTEM_BUF_SIZE);
 
-    wm9buf = (WMArm9Buf *)wmSysBuf;
+    wm9buf = wmSysBuf;
     wm9buf->WM7 = (void *)((u32)wm9buf + WM_ARM9WM_BUF_SIZE);
     wm9buf->status = (WMStatus *)((u32)(wm9buf->WM7) + WM_ARM7WM_BUF_SIZE);
     wm9buf->fifo9to7 = (void *)((u32)(wm9buf->status) + WM_STATUS_BUF_SIZE);
@@ -110,7 +110,7 @@ WMErrCode WM_Init(void *wmSysBuf, u16 dmaNo) {
     {
         s32 i;
         for (i = 0; i < WM_NUM_OF_PORT; i++)
-            (void)WM_SetPortCallback((u16)i, NULL, NULL);
+            (void)WM_SetPortCallback(i, NULL, NULL);
     }
 
     OS_InitMessageQueue(&bufMsgQ, bufMsg, WM_BUF_MSG_NUM);
@@ -251,21 +251,21 @@ static void WmReceiveFifo(PXIFifoTag tag, u32 fifo_buf_adr, BOOL err) {
             if (callback_p->errcode == WM_ERRCODE_FLASH_ERROR)
                 OS_Terminate();
             if (wm9buf->indCallback != NULL)
-                wm9buf->indCallback((void *)callback_p);
+                wm9buf->indCallback(callback_p);
         } else if (callback_p->apiid == WM_APIID_PORT_RECV) {
             WMPortRecvCallback *cb_Port = (WMPortRecvCallback *)callback_p;
 
             if (wm9buf->portCallbackTable[cb_Port->port] != NULL) {
                 cb_Port->arg = wm9buf->portCallbackArgument[cb_Port->port];
                 DC_InvalidateRange(cb_Port->recvBuf, wm9buf->status->mp_recvBufSize);
-                (wm9buf->portCallbackTable[cb_Port->port])((void *)cb_Port);
+                (wm9buf->portCallbackTable[cb_Port->port])(cb_Port);
             }
         } else if (callback_p->apiid == WM_APIID_PORT_SEND) {
             WMPortSendCallback *cb_Port = (WMPortSendCallback *)callback_p;
 
             callback_p->apiid = WM_APIID_SET_MP_DATA;
             if (cb_Port->callback != NULL)
-                (cb_Port->callback)((void *)cb_Port);
+                (cb_Port->callback)(cb_Port);
         }
     } else {
         if (callback_p->apiid == WM_APIID_START_MP) {
@@ -279,7 +279,7 @@ static void WmReceiveFifo(PXIFifoTag tag, u32 fifo_buf_adr, BOOL err) {
         }
 
         if (wm9buf->callbackTable[callback_p->apiid] != NULL)
-            (wm9buf->callbackTable[callback_p->apiid])((void *)callback_p);
+            (wm9buf->callbackTable[callback_p->apiid])(callback_p);
 
         if (callback_p->apiid == WM_APIID_START_PARENT ||
             callback_p->apiid == WM_APIID_START_CONNECT) {
@@ -317,7 +317,7 @@ static void WmReceiveFifo(PXIFifoTag tag, u32 fifo_buf_adr, BOOL err) {
                     cb_Port.port = iPort;
                     if (wm9buf->portCallbackTable[iPort] != NULL) {
                         cb_Port.arg = wm9buf->portCallbackArgument[iPort];
-                        (wm9buf->portCallbackTable[iPort])((void *)&cb_Port);
+                        (wm9buf->portCallbackTable[iPort])(&cb_Port);
                     }
                 }
             }

@@ -157,7 +157,7 @@ extern "C" void LoadCard2SubBg3(void *) {
     gSubScreenLayers |= 8;
     G2S_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x1000,
                           GX_BG_CHARBASE_0x14000);
-    DecompressLZ16(fileData, (void *)G2S_GetBG3CharPtr());
+    DecompressLZ16(fileData, G2S_GetBG3CharPtr());
     Ov004_Deallocate(fileData);
     fileData = LoadFile(ASSET_D_2D_MG_BG_CARD2_NCL_BIN);
     GXS_LoadBGPltt(fileData, 0xa0, 0x160);

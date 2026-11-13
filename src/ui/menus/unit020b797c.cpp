@@ -204,8 +204,8 @@ void MenuText_DrawGlyph(int plane, int glyph) {
 
     row = glyph >> 5;
     col = glyph - (row << 5);
-    tile = (u16)(col + (row << 6));
-    t = (u16)(data_ov007_02103458 + tile);
+    tile = (col + (row << 6));
+    t = (data_ov007_02103458 + tile);
 
     q = pos >> 3;
     rem = pos - (q << 3);
@@ -222,7 +222,7 @@ void MenuText_DrawGlyph(int plane, int glyph) {
         u32 s = *src++ & palmask;
         *dst = (*dst & mask) | (s << shift);
         if (rem != 0) {
-            u32 *d2 = (u32 *)(dst + 8);
+            u32 *d2 = (dst + 8);
             *d2 = (*d2 & ~mask) | (s >> rshift);
         }
         dst++;
@@ -283,7 +283,7 @@ void MenuText_DrawString(int plane, u8 *s, int mode) {
             flush = 1;
             break;
         default:
-            buf[n] = (u8)c;
+            buf[n] = c;
             n++;
             width += GlyphWidth(c);
             break;
@@ -338,7 +338,7 @@ void MenuText_DrawSlotHeading(int plane, int slot) {
 
     if (slot >= 0) {
         msg = MenuText_MessageIDToIndex(0x1f63);
-        msg = func_ov007_020c94a0(0, (unsigned int)msg);
+        msg = func_ov007_020c94a0(0, msg);
         MenuText_DrawString(plane, (u8 *)msg, 1);
 
         data_ov007_02103464 = data_ov007_02103464 + 4;
@@ -395,8 +395,8 @@ void MessageWindow_LayoutFrame(void) {
 
     data_ov007_0210346c->screenX = data_ov007_02103460->screenX;
     data_ov007_0210346c->screenY = data_ov007_02103460->screenY;
-    data_ov007_0210346c->width = (s16)(data_ov007_02103460->width - 2);
-    data_ov007_0210346c->height = (s16)(data_ov007_02103460->height - 2);
+    data_ov007_0210346c->width = (data_ov007_02103460->width - 2);
+    data_ov007_0210346c->height = (data_ov007_02103460->height - 2);
 
     func_ov007_020c43bc(data_ov007_0210346c, data_ov007_02103470);
     func_ov007_020c4388(data_ov007_0210346c, data_ov007_02103470);
@@ -413,7 +413,7 @@ void MessageWindow_Start(int kind, int state) {
     data_ov007_02102ddc.timer = 0;
     data_ov007_02102ddc.scale = 0;
     data_ov007_02102ddc.textDrawn = 0;
-    MI_CpuFillFast(data_ov007_02103478[0], (unsigned)z, data_ov007_020d7a5c[0]);
+    MI_CpuFillFast(data_ov007_02103478[0], z, data_ov007_020d7a5c[0]);
     func_ov007_020c1d8c(0);
 }
 
@@ -483,7 +483,7 @@ void MenuText_Init(void *unused, void *sheet, int baseTile, void *plane0, void *
                    void *bank) {
     func_ov007_020c951c(0, bank, data_ov007_02102ef8);
 
-    data_ov007_02103458 = (u16)baseTile;
+    data_ov007_02103458 = baseTile;
     data_ov007_0210345c = (u32 *)sheet;
     data_ov007_02103464 = 0;
     data_ov007_02103468 = 0;
@@ -591,27 +591,21 @@ void MenuText_DrawRecordBoard(int slot, char *records, int alt) {
         case 1:
             data_ov007_02103464 = s24;
             MenuText_DrawString(
-                t, (u8 *)func_ov007_020c94a0(s28, (unsigned int)MenuText_MessageIDToIndex(0x1f57)),
-                one);
+                t, (u8 *)func_ov007_020c94a0(s28, MenuText_MessageIDToIndex(0x1f57)), one);
             if (alt != 0) {
                 data_ov007_02103464 = c0;
                 MenuText_DrawString(
-                    t,
-                    (u8 *)func_ov007_020c94a0(s2c, (unsigned int)MenuText_MessageIDToIndex(0x1f62)),
-                    one);
+                    t, (u8 *)func_ov007_020c94a0(s2c, MenuText_MessageIDToIndex(0x1f62)), one);
             } else {
                 data_ov007_02103464 = c0;
                 MenuText_DrawString(
-                    t,
-                    (u8 *)func_ov007_020c94a0(s30, (unsigned int)MenuText_MessageIDToIndex(0x1f58)),
-                    one);
+                    t, (u8 *)func_ov007_020c94a0(s30, MenuText_MessageIDToIndex(0x1f58)), one);
             }
             break;
         case 0x11:
             data_ov007_02103464 = s34;
             MenuText_DrawString(
-                t, (u8 *)func_ov007_020c94a0(s38, (unsigned int)MenuText_MessageIDToIndex(0x13b0)),
-                one);
+                t, (u8 *)func_ov007_020c94a0(s38, MenuText_MessageIDToIndex(0x13b0)), one);
             data_ov007_02103464 = s3c;
             MenuText_DrawGlyph(t, f0);
             MenuText_DrawGlyph(t, ef);
@@ -626,7 +620,7 @@ void MenuText_DrawRecordBoard(int slot, char *records, int alt) {
             bc = m[0x3e];
             b10 = m[0x6b];
             data_ov007_02103464 = s40;
-            MenuText_DrawString(t, (u8 *)func_ov007_020c94a0(s44, (unsigned int)row), one);
+            MenuText_DrawString(t, (u8 *)func_ov007_020c94a0(s44, row), one);
             data_ov007_02103464 = s3c;
             MenuText_DrawGlyph(t, f0);
             MenuText_DrawGlyph(t, ef);
@@ -657,17 +651,17 @@ void MenuText_ScrollRecordBoard(int n) {
             b = 0x16;
         MI_CpuCopyFast(data_ov007_02103478[2], data_ov007_02103478[1] + n * 0x100, a * 0x400);
         z1 = 0;
-        MI_CpuFillFast(data_ov007_02103478[1], (unsigned)z1, n * 0x400);
+        MI_CpuFillFast(data_ov007_02103478[1], z1, n * 0x400);
         MI_CpuCopyFast(data_ov007_02103478[2] + a * 0x100, data_ov007_02103478[0] + 0x100,
                        b * 0x400);
         z2 = 0;
-        MI_CpuFillFast(data_ov007_02103478[0] + (b + 1) * 0x100, (unsigned)z2, (0x17 - b) * 0x400);
+        MI_CpuFillFast(data_ov007_02103478[0] + (b + 1) * 0x100, z2, (0x17 - b) * 0x400);
     } else {
         int a = n - 0x16;
         z4 = 0;
-        MI_CpuFillFast(data_ov007_02103478[1], (unsigned)z4, data_ov007_020d7a5c[1]);
+        MI_CpuFillFast(data_ov007_02103478[1], z4, data_ov007_020d7a5c[1]);
         z3 = 0;
-        MI_CpuFillFast(data_ov007_02103478[0], (unsigned)z3, a * 0x400);
+        MI_CpuFillFast(data_ov007_02103478[0], z3, a * 0x400);
         MI_CpuCopyFast(data_ov007_02103478[2], data_ov007_02103478[0] + a * 0x100,
                        (0x17 - a) * 0x400);
     }
@@ -682,13 +676,13 @@ void func_ov007_020b7eec(Ov007BootArgs *bootArgs) {
     func_ov007_020c0308(data_ov007_02104598, 0x18, 0xf);
     {
         volatile int z = 0;
-        MI_CpuFillFast(data_ov007_02103478[0], (unsigned)z, data_ov007_020d7a5c[0]);
+        MI_CpuFillFast(data_ov007_02103478[0], z, data_ov007_020d7a5c[0]);
     }
     data_ov007_02102dd8 = 0xb;
     data_ov007_02103464 = 0xac;
     data_ov007_02103468 = 4;
     r = MenuText_MessageIDToIndex(data_ov007_020d7a50[bootArgs->soundModeItem]);
-    r = func_ov007_020c94a0(0, (unsigned int)r);
+    r = func_ov007_020c94a0(0, r);
     MenuText_DrawString(0, (u8 *)r, 0);
     data_ov007_02103464 = 0x8c;
     data_ov007_02103468 = 0xa;
@@ -698,7 +692,7 @@ void func_ov007_020b7eec(Ov007BootArgs *bootArgs) {
         data_ov007_02102dd8 = 0xc;
     }
     r = MenuText_MessageIDToIndex(0x1f51);
-    r = func_ov007_020c94a0(0, (unsigned int)r);
+    r = func_ov007_020c94a0(0, r);
     MenuText_DrawString(0, (u8 *)r, 0);
     data_ov007_02103464 = 0xcc;
     data_ov007_02103468 = 0xa;
@@ -709,7 +703,7 @@ void func_ov007_020b7eec(Ov007BootArgs *bootArgs) {
         data_ov007_02102dd8 = 0xb;
     }
     r = MenuText_MessageIDToIndex(0x1f52);
-    r = func_ov007_020c94a0(0, (unsigned int)r);
+    r = func_ov007_020c94a0(0, r);
     MenuText_DrawString(0, (u8 *)r, 0);
 }
 
@@ -757,7 +751,7 @@ void func_ov007_020b7d94(int kind) {
 
 /* Q12 product, truncated. */
 static inline int MulFx(int a, int b) {
-    return (int)(((s64)a * b) >> 12);
+    return (((s64)a * b) >> 12);
 }
 
 /* Runs the window for one frame. Opening, it grows by 0x100 a frame and

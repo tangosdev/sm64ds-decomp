@@ -351,7 +351,7 @@ int daOwl_c::UpdateHover() {
         mStateTimer = 0x32;
         mWanderAngleY = Vec3_HorzAngle(&mPos, &mAnchor);
     } else if (OWL_TIMER(this) == 0) {
-        mWanderAngleY = (s16)(((u32)RandomIntInternal(&data_0209e650.value) >> 8) << 12);
+        mWanderAngleY = (((u32)RandomIntInternal(&data_0209e650.value) >> 8) << 12);
         mStateTimer = (s16)((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 0x32);
     }
 
@@ -377,7 +377,7 @@ int daOwl_c::UpdateHover() {
  * 50..113 frame wander timer. */
 int daOwl_c::EnterHover() {
     mAnmModel.SetAnim((BCA_File *)data_ov094_02136af0.filePtr, 0, 0x1000, 0);
-    mWanderAngleY = (short)(((u32)RandomIntInternal(&data_0209e650.value) >> 8) << 0xc);
+    mWanderAngleY = (((u32)RandomIntInternal(&data_0209e650.value) >> 8) << 0xc);
     mStateTimer = (short)((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 0x32);
     mAnimSpeed = 0x1000;
     return 1;

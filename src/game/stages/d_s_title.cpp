@@ -188,7 +188,7 @@ extern "C" void TitlePrintString(signed char *s, int row, int col) {
     if (*s == 0)
         return;
     do {
-        *p++ = (short)*s++;
+        *p++ = *s++;
     } while (*s != 0);
 }
 
@@ -339,7 +339,7 @@ void TitleScrollLevelList(void *) {
     int v = gTitleCursor;
     int nv = v - 0xa;
     gTitleListTop = nv;
-    unsigned int t = (unsigned int)(v + 0xb);
+    unsigned int t = (v + 0xb);
     if (t > 0x36) {
         gTitleListTop = nv - (t - 0x36);
     }

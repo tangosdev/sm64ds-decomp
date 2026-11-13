@@ -59,7 +59,7 @@ void SPLAnim_Alpha(struct ParticleAlphaView *ptcl, PtclDef *def, int lifeRate) {
     int range = anim->randomRange;
     u16 old = *visibility;
     *visibility =
-        (u16)((old & ~0x3e0) |
-              ((((u32)((value * (0xff - ((range * (int)(s >> 0x18)) >> 8))) << 8) >> 0x10) & 0x1f)
-               << 5));
+        ((old & ~0x3e0) |
+         ((((u32)((value * (0xff - ((range * (int)(s >> 0x18)) >> 8))) << 8) >> 0x10) & 0x1f)
+          << 5));
 }

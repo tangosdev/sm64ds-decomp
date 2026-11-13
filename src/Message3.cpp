@@ -301,7 +301,7 @@ extern "C" void func_0203128c(void) {
                 Message::AddCharVS(*pp);
                 n2++;
                 pp++;
-            } while (n2 < (int)data_0209fca0);
+            } while (n2 < data_0209fca0);
         }
         break;
     }
@@ -408,7 +408,7 @@ extern "C" void func_020316d8(int screen, int c, u32 x, void *buf) {
         MI_CpuCopy32((char *)buf + ((((c & 0xf) << 1) + ((c & 0xf0) << 2)) << 5), chr, 0x40);
         pitch = (data_0209fc88 + 7) / 8;
         MI_CpuCopy32((char *)buf + (((c & 0xf) + (((c & 0xf0) << 1) + 0x10)) << 6),
-                     (void *)(chr + pitch * 8), 0x40);
+                     (chr + pitch * 8), 0x40);
     } else {
         int lo;
         int hi;
@@ -427,9 +427,9 @@ extern "C" void func_020316d8(int screen, int c, u32 x, void *buf) {
         hi = c & 0xf0;
         src = (u32 *)((char *)buf + (((lo << 1) + (hi << 2)) << 5));
         src2 = src + 8;
-        n = (short)(int)data_0208f174[c];
+        n = (int)data_0208f174[c];
         i = 0;
-        stride = (((int)data_0209fc88 + 7) / 8) << 3;
+        stride = ((data_0209fc88 + 7) / 8) << 3;
         m = x & 7;
         sh = m << 2;
         k = 8 - m;
@@ -1107,11 +1107,11 @@ extern "C" void func_02032f9c(int a) {
         return;
     }
 
-    data_0209fc84 = (u8)a;
+    data_0209fc84 = a;
     func_02031cd4(0);
 
     w = 0x100 - data_0209fc88;
-    data_0209fc7c = (u8)((w >> 1) & 7);
+    data_0209fc7c = ((w >> 1) & 7);
     q = (u16 *)((char *)G2_GetBG3ScrPtr() + 0x40) + (u16)(w / 8 >> 1);
     c = data_0209fc7c;
     n = (data_0209fc88 + c + 7) >> 3;
@@ -1119,8 +1119,8 @@ extern "C" void func_02032f9c(int a) {
     if (n > 0) {
         v2 = n + 0x200;
         do {
-            q[i] = (u16)(i + 0x200);
-            (q + i)[0x20] = (u16)v2;
+            q[i] = (i + 0x200);
+            (q + i)[0x20] = v2;
             v2++;
             i++;
         } while (i < n);
@@ -1140,7 +1140,7 @@ extern "C" void func_02032f9c(int a) {
 
     data_0209fc94 = old94;
     data_0209fcd4 = 0;
-    data_0209fcdc = (u8)(((data_0209fc88 + 7) >> 3) << 1);
+    data_0209fcdc = (((data_0209fc88 + 7) >> 3) << 1);
 }
 
 extern "C" void func_020331fc(int a0, int a1, int a2) {
@@ -1211,14 +1211,14 @@ extern "C" void func_02033390(int sub) {
         int *dst = (int *)((int)G2_GetBG3CharPtr() + 0x4000);
         v = 0;
         MI_CpuFill32(dst, v, 0x2000);
-        MI_CpuFill16((char *)G2_GetBG3ScrPtr(), fill = 0x2ff, 0x800);
+        MI_CpuFill16(G2_GetBG3ScrPtr(), fill = 0x2ff, 0x800);
     } else {
         volatile u16 fill;
         volatile s32 v;
         int *dst = (int *)((int)G2S_GetBG0CharPtr() + 0x4000);
         v = 0;
         MI_CpuFill32(dst, v, 0x2000);
-        MI_CpuFill16((char *)G2S_GetBG0ScrPtr(), fill = 0x2ff, 0x800);
+        MI_CpuFill16(G2S_GetBG0ScrPtr(), fill = 0x2ff, 0x800);
     }
 }
 
@@ -1261,7 +1261,7 @@ extern "C" void func_02033464(int arg0, int arg1, int arg2) {
         if (arg1 < 0)
             return;
         func_02031028(0);
-        data_0209fc7c = (u8)((0x100 - data_0209fc88) >> 1);
+        data_0209fc7c = ((0x100 - data_0209fc88) >> 1);
         n = data_0209fca0;
         data_0209fccc = data_0209fc7c & 7;
         data_0209fc88 = 0;
@@ -1275,7 +1275,7 @@ extern "C" void func_02033464(int arg0, int arg1, int arg2) {
                 p++;
             } while (i < data_0209fca0);
         }
-        data_0209fc78 = (u8)(arg0 * 0x18 + data_0209fcdc);
+        data_0209fc78 = (arg0 * 0x18 + data_0209fcdc);
         {
             int cp = (u32)G2S_GetBG0CharPtr() + 0x4000;
             int *dst = (int *)(cp + (data_0209fc78 << 5));
@@ -1290,14 +1290,14 @@ extern "C" void func_02033464(int arg0, int arg1, int arg2) {
         }
         i = 0;
         do {
-            base[i] = (u16)x;
-            (base + i)[0x20] = (u16)v1;
+            base[i] = x;
+            (base + i)[0x20] = v1;
             i++;
             x++;
             v1++;
         } while (i < 0xc);
         data_0209fc7c &= 7;
-        data_0209fc78 = (u8)(data_0209fc78 >> 1);
+        data_0209fc78 = (data_0209fc78 >> 1);
         data_0209fcb0 = 1;
         func_020319fc(0xc);
     } else {
@@ -1320,7 +1320,7 @@ extern "C" void func_02033464(int arg0, int arg1, int arg2) {
                 p++;
             } while (i < data_0209fca0);
         }
-        data_0209fc78 = (u8)(arg1 * 0x18 + data_0209fcdc);
+        data_0209fc78 = (arg1 * 0x18 + data_0209fcdc);
         {
             int cp = (int)G2_GetBG3CharPtr() + 0x4000;
             int *dst = (int *)(cp + (data_0209fc78 << 5));
@@ -1335,14 +1335,14 @@ extern "C" void func_02033464(int arg0, int arg1, int arg2) {
         }
         i = 0;
         do {
-            base[i] = (u16)x;
-            (base + i)[0x20] = (u16)v1;
+            base[i] = x;
+            (base + i)[0x20] = v1;
             i++;
             x++;
             v1++;
         } while (i < 0xc);
         data_0209fc7c &= 7;
-        data_0209fc78 = (u8)(data_0209fc78 >> 1);
+        data_0209fc78 = (data_0209fc78 >> 1);
         data_0209fcb0 = 1;
         func_020319fc(0xc);
     }
@@ -1427,7 +1427,7 @@ void Message::DisplayVsExitText(unsigned short n) {
 }
 
 extern "C" void func_02033a80(int arg0) {
-    data_0209fce8 = (u16)arg0;
+    data_0209fce8 = arg0;
     data_0209fc9c = 0;
     func_02034504();
     data_0209fc94 = 1;
@@ -1468,7 +1468,7 @@ extern "C" void func_02033bb8(int param0) {
     int n, m, i;
     short *scr;
 
-    data_0209fce8 = (short)param0;
+    data_0209fce8 = param0;
     data_0209fc9c = 0;
     func_02034504();
 
@@ -1496,8 +1496,8 @@ extern "C" void func_02033bb8(int param0) {
     if (m > 0) {
         int v2 = m + 0x280;
         do {
-            scr[i] = (short)(i + 0x280);
-            (scr + i)[0x20] = (short)v2;
+            scr[i] = (i + 0x280);
+            (scr + i)[0x20] = v2;
             v2++;
             i++;
         } while (i < m);
@@ -1516,8 +1516,8 @@ extern "C" void func_02033bb8(int param0) {
         int v1 = d - mm * 2 + 0x280;
         int v2 = d - mm + 0x280;
         do {
-            scr[i] = (short)v1;
-            (scr + i)[0x20] = (short)v2;
+            scr[i] = v1;
+            (scr + i)[0x20] = v2;
             v1++;
             v2++;
             i++;
@@ -1537,8 +1537,8 @@ extern "C" void func_02033bb8(int param0) {
         int v1 = d - mm * 2 + 0x280;
         int v2 = d - mm + 0x280;
         do {
-            scr[i] = (short)v1;
-            (scr + i)[0x20] = (short)v2;
+            scr[i] = v1;
+            (scr + i)[0x20] = v2;
             v1++;
             v2++;
             i++;
@@ -1546,7 +1546,7 @@ extern "C" void func_02033bb8(int param0) {
     }
     func_02033e50(0x1e9, 0x70);
 
-    data_0209fc78 = (unsigned char)(data_0209fc78 << 1);
+    data_0209fc78 = (data_0209fc78 << 1);
     data_0209fce8++;
     Message_DrawCenteredLineVS(0x280, 0x20);
 }
@@ -1599,7 +1599,7 @@ extern "C" void func_02033e50(int p0, int p1) {
             p0 = (unsigned short)(p0 + 0x40);
         } else {
             volatile int li;
-            data_0209fc7c = (unsigned char)((p1 - data_0209fc88) >> 1);
+            data_0209fc7c = ((p1 - data_0209fc88) >> 1);
             {
                 int cp = (u32)G2S_GetBG0CharPtr() + 0x4000;
                 li = 0;
@@ -1759,7 +1759,7 @@ extern "C" void func_020345b0(int arg0) {
         return;
     }
 
-    data_0209fce8 = (s16)arg0;
+    data_0209fce8 = arg0;
     func_02034504();
 
     data_0209fc9c = 1;
@@ -1771,11 +1771,11 @@ extern "C" void func_020345b0(int arg0) {
         (u8 *)(data_0209fd14 + (sizeof(MessageBankHeader) + sizeof(MessageDataSection)) +
                ((MessageInfoSection *)data_0209fcf8)->sectionSize +
                ((MessageEntry *)((char *)data_0209fd08 + data_0209fce8 * 8))->textOffset);
-    data_0209fc78 = (u8)((((MessageEntry *)data_0209fd00)->width + 7) / 8);
+    data_0209fc78 = ((((MessageEntry *)data_0209fd00)->width + 7) / 8);
     data_0209fce4 = 0x7f;
-    data_0209fc6c = (u8)(((0x20 - (data_0209fc78 + 2)) / 2) * 8);
+    data_0209fc6c = (((0x20 - (data_0209fc78 + 2)) / 2) * 8);
     data_0209fcc0 = 0x63;
-    data_0209fce0 = (u8)(0x64 - (((((MessageEntry *)data_0209fd00)->lineCount * 2 + 1) * 8) / 2));
+    data_0209fce0 = (0x64 - (((((MessageEntry *)data_0209fd00)->lineCount * 2 + 1) * 8) / 2));
     data_0209fc8c = 0x7f;
     data_0209fc74 = 0x63;
     data_0209fcac = 0;
@@ -1785,30 +1785,30 @@ extern "C" void func_020345b0(int arg0) {
     {
         void *p = (char *)G2_GetBG3CharPtr() + 0x4000;
         li = 0;
-        MI_CpuFill32((void *)p, li, 0x3000);
+        MI_CpuFill32(p, li, 0x3000);
     }
 
     {
         void *s = G2_GetBG3ScrPtr();
         ls = 0x37f;
-        MI_CpuFill16((void *)s, ls, 0x800);
+        MI_CpuFill16(s, ls, 0x800);
     }
 
     scr = (u16 *)G2_GetBG3ScrPtr() + 0x21;
-    SetBg3Offset(-(int)data_0209fc6c, 4 - (int)data_0209fce0);
+    SetBg3Offset(-data_0209fc6c, 4 - data_0209fce0);
 
     i = 0;
     cols = data_0209fc78;
-    if ((s32)(cols * (((MessageEntry *)data_0209fd00)->lineCount) * 2) > 0) {
+    if ((cols * (((MessageEntry *)data_0209fd00)->lineCount) * 2) > 0) {
         last = cols - 1;
         do {
             s32 rem = i % cols;
-            scr[rem] = (u16)(i + 0x200);
+            scr[rem] = (i + 0x200);
             if (last == rem) {
                 scr += 0x20;
             }
             i++;
-        } while (i < (s32)(cols * (((MessageEntry *)data_0209fd00)->lineCount) * 2));
+        } while (i < (cols * (((MessageEntry *)data_0209fd00)->lineCount) * 2));
     }
 
     t = data_0209fcc8;
@@ -1840,7 +1840,7 @@ extern "C" void LoadFont3D(void) {
     void *r4;
 
     r5 = LoadFile(0x980e);
-    MI_CpuCopy32(r5, (int *)G2_GetBG3CharPtr(), 0x4000);
+    MI_CpuCopy32(r5, G2_GetBG3CharPtr(), 0x4000);
 
     r4 = LoadFile(0x980d);
     DecompressLZ16(r4, (u8 *)G2_GetBG3CharPtr() + 0x8000);

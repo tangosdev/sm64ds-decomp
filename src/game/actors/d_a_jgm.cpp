@@ -325,7 +325,7 @@ s32 daJgm_c::UpdateHoverState()
     }
     mdCcAcPos_c.Clear();
     mdCcAcPos_c.Update();
-    mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x182, *(Vector3 *)&mCamSpacePos, 0);
+    mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x182, mCamSpacePos, 0);
     return 1;
 }
 
@@ -367,7 +367,7 @@ s32 daJgm_c::UpdateThrowState()
     }
     mdCcAcPos_c.Clear();
     mdCcAcPos_c.Update();
-    mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x182, *(Vector3 *)&mCamSpacePos, 0);
+    mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x182, mCamSpacePos, 0);
     return 1;
 }
 

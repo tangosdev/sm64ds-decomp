@@ -288,7 +288,7 @@ void func_02044efc(BMD_File *self) {
         return;
     Matrix4x3 *matrices = ((struct Sub *)self->skin)->blk;
     MTX_Identity43_(matrices);
-    func_02044f74((void *)self, (struct Node *)self->bones);
+    func_02044f74(self, (struct Node *)self->bones);
     for (u32 i = 0; i < self->numBones; i++) {
         Matrix4x3 *mat = &((struct Sub *)self->skin)->blk[i];
         MTX_Inverse43(mat, mat);
@@ -448,7 +448,7 @@ void ModelComponents::func_0204488c(int index, Vector3 *scale) {
 
             check = bones[fp_index].scaled;
             if (check) {
-                func_020458a8((struct Matrix3x3_Vecs*)partMtx, (struct Matrix3x3_Vecs*)M);
+                func_020458a8(partMtx, (struct Matrix3x3_Vecs *)M);
                 G3_MultMtx33(M);
                 lastMat = M;
             } else {

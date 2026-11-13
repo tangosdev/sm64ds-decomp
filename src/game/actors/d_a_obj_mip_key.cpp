@@ -75,7 +75,7 @@ int daObj_Mip_Key_c::StateCarried() {
     if (other == 0)
         return 1;
 
-    playerPos = (int *)(&other->mPosX);
+    playerPos = (&other->mPosX);
     Vector3 v;
     v = *(Vector3 *)playerPos;
     v.y += 0xc8000;

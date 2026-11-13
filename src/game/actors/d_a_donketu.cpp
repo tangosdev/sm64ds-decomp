@@ -86,11 +86,11 @@ int daDonketu_c::Behavior() {
             pos.y = sum;
             pos.z = z;
             int roll = RandomIntInternal(&data_0209e650.value);
-            int yrot = mPrevAngleY + 0x8000 + (int)(((u32)roll >> 8) & 0x3ff);
+            int yrot = mPrevAngleY + 0x8000 + (((u32)roll >> 8) & 0x3ff);
             Vector3_16 rot;
             rot.x = 0;
             rot.z = 0;
-            rot.y = (s16)yrot;
+            rot.y = yrot;
 
             dActor_c *coin = dActor_c::Spawn(0x120, 2, pos, &rot, mAreaId, -1);
             if (coin) {
@@ -126,7 +126,7 @@ void daDonketu_c::UpdateDeathState() {
     pos.z = pz;
     int roll = RandomIntInternal(&data_0209e650.value);
     Vector3_16 rot;
-    s16 ang = (s16)(mPrevAngleY + 0x8000 + (((u32)roll >> 8) & 0x3ff));
+    s16 ang = (mPrevAngleY + 0x8000 + (((u32)roll >> 8) & 0x3ff));
     rot.x = 0;
     rot.z = 0;
     rot.y = ang;
@@ -151,12 +151,12 @@ void daDonketu_c::UpdateDeathState() {
  * conversions; the wind-up arm's u16* leaves the timer's address in r0, which
  * plain member access does not (5 words differ). */
 int daDonketu_c::UpdateRunState() {
-    if ((u16)mStateTimer < 0xa) {
+    if (mStateTimer < 0xa) {
         mHorzSpeed = 0;
         int result = func_ov064_02116110(0x700);
         if (result != 0)
             return result;
-        u16 *timer = (u16 *)&mStateTimer;
+        u16 *timer = &mStateTimer;
         if (*timer == 9)
             *timer = 0;
         return (int)timer;

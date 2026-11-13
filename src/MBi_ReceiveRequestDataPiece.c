@@ -16,7 +16,7 @@ int MBi_ReceiveRequestDataPiece(u8 *a0, int idx) {
     int new_var;
     int new_var2;
     MB_CommPWork *g = pPwork;
-    int r5 = (u8)a0[2];
+    int r5 = a0[2];
     int i = idx - 1;
     char *base;
     int cnt = g->common.req_data_piece_num;
@@ -36,7 +36,7 @@ int MBi_ReceiveRequestDataPiece(u8 *a0, int idx) {
     {
         /* Indexed through the decayed pointer: ->req_data_buf.data_bmp[i] |= ...
          * builds a different sequence. */
-        ((u32 *)g->req_data_buf.data_bmp)[i] |= 1u << r5;
+        (g->req_data_buf.data_bmp)[i] |= 1u << r5;
     }
     {
         int j;

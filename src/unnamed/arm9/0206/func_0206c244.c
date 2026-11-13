@@ -87,7 +87,7 @@ u64 func_0206c244(u64 d)
     for (i = 6; i >= 0; i--) {
         t = shr_n(mant, i << 3, &j);
         q = pad((char *)&out, i);
-        b = READ8(q) | ((int)t & 0xff);
+        b = READ8(q) | (t & 0xff);
         WRITE8(q, b);
     }
 

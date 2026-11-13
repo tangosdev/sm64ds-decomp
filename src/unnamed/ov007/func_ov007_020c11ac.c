@@ -14,7 +14,7 @@ Ov007OamNode *func_ov007_020c11ac(int n) {
         node->anims = func_ov007_020c3df4(0, n * sizeof(Ov007CellAnim *));
     }
     func_ov007_020c10ec(node);
-    node->animCount = (u8)n;
+    node->animCount = n;
     Sprite_SetAnimation(node, 0, 1, 0, 0);
     return node;
 }

@@ -24,7 +24,7 @@ void func_ov007_020b1224(void)
             p->requestedState = 9;
         } else {
             Ov007MenuState *p = func_ov007_020b2cdc();
-            p->requestedState = (short)val;
+            p->requestedState = val;
         }
     }
 }

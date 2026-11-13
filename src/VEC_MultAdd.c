@@ -23,11 +23,11 @@ void VEC_Fx16Normalize(s16 *in, s16 *out) {
     scale = divResult * (s64)sqrtResult;
 
     prod = scale * (s64)in[0];
-    out[0] = (s16)((prod + (1LL << 44)) >> 45);
+    out[0] = ((prod + (1LL << 44)) >> 45);
     prod = scale * (s64)in[1];
-    out[1] = (s16)((prod + (1LL << 44)) >> 45);
+    out[1] = ((prod + (1LL << 44)) >> 45);
     prod = scale * (s64)in[2];
-    out[2] = (s16)((prod + (1LL << 44)) >> 45);
+    out[2] = ((prod + (1LL << 44)) >> 45);
 }
 
 void VEC_MultAdd(int s, int *a, int *b, int *out) {

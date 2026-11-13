@@ -199,7 +199,7 @@ int daHolhei_c::Behavior()
     if (UpdateKillByInvincibleChar(mMeshClsn, mModel, 3))
         return 1;
 
-    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     DecIfAbove0_Short(&mTurnWait);
     DecIfAbove0_Short(&mChaseCooldown);
 
@@ -422,7 +422,7 @@ int daHolhei_c::func_ov062_02116a08() {
         return 1;
     }
 
-    if (*(unsigned short *)&mStateTimer == 0)
+    if (mStateTimer == 0)
         ::daHolhei_c_ChangeState(this, &data_ov062_0211dee0);
 
     return 1;
@@ -445,7 +445,7 @@ int daHolhei_c::func_ov062_02116980() {
 
 /* After the timer, either commit the turn into a walk or keep steering. */
 int daHolhei_c::func_ov062_02116894() {
-    if (*(unsigned short *)&mStateTimer != 0)
+    if (mStateTimer != 0)
         return 1;
     if (mHorzSpeed != 0) {
         if (ClassifyObstruction() != 0 || mEdgeStop == 1) {
@@ -481,7 +481,7 @@ int daHolhei_c::func_ov062_021167c0() {
         mHorzSpeed = 0xa000;
     else
         mStateTimer = 0x14;
-    if (*(unsigned short *)&mStateTimer == 0) {
+    if (mStateTimer == 0) {
         mChaseCooldown = 0x1e;
         ::daHolhei_c_ChangeState(this, &data_ov062_0211dee0);
     }
@@ -522,7 +522,7 @@ int daHolhei_c::func_ov062_021165e8()
     }
 
     if (mChargeStep == 0) {
-        mTargetAngY = (short)HorzAngleToCPlayer();
+        mTargetAngY = HorzAngleToCPlayer();
         ApproachAngle(&mPrevAngleY, mTargetAngY, 0x80, 0x200, 0x400);
         if (AngleDiff(mTargetAngY, mAngleY) < 0x200) {
             mHorzSpeed = 0x1e000;
@@ -638,7 +638,7 @@ int daHolhei_c::func_ov062_021162b8() {
 /* Spin, and leave once the timer reaches zero. */
 int daHolhei_c::func_ov062_02116274() {
     mPrevAngleY += 0x500;
-    if (*(unsigned short *)&mStateTimer == 0)
+    if (mStateTimer == 0)
         ::daHolhei_c_ChangeState(this, &data_ov062_0211deb0);
     return 1;
 }

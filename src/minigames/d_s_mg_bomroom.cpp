@@ -1812,7 +1812,7 @@ s32 dScMgBomroom_c::InitResources() {
 
     {
         void *f7 = LoadFile(ASSET_D_2D_MG_BG_BOMROOM_NCG_BIN);
-        DecompressLZ16(f7, (void *)((char *)G2S_GetBG3CharPtr() + 0x4000));
+        DecompressLZ16(f7, (char *)G2S_GetBG3CharPtr() + 0x4000);
         Deallocate(f7);
 
         f7 = LoadFile(ASSET_D_2D_MG_BG_BOMROOM_NCL_BIN);

@@ -852,7 +852,7 @@ extern "C" void Coin_MoveThenRise(Sprite *s) {
    sprite leaves play and resets. */
 extern "C" void Coin_Rise(Sprite* s){
   int g = sMgCoinRiseFrames;
-  int n = -(((short)s->mDelay - (g >> 1)) << 12);
+  int n = -((s->mDelay - (g >> 1)) << 12);
   s->mPos.y += FX_MUL(n / g - 0x600, 0x4000);
   if (ApproachLinear2(s->mDelay, 0, 1) == 0)
     return;
@@ -907,7 +907,7 @@ extern "C" void Coin_MoveThenRiseSpent(Sprite *s) {
 /* State: the same rise as Coin_Rise. */
 extern "C" void Coin_RiseSpent(Sprite* s){
   int g = sMgCoinRiseFrames;
-  int n = -(((short)s->mDelay - (g >> 1)) << 12);
+  int n = -((s->mDelay - (g >> 1)) << 12);
   s->mPos.y += FX_MUL(n / g - 0x600, 0x4000);
   if (ApproachLinear2(s->mDelay, 0, 1) == 0)
     return;

@@ -89,7 +89,7 @@ int CutsceneGrandStarFlyAppCvars(dCamera_c *cam) {
     ApproachLinear(cam->mScriptParam, 0x5a000, 0x2800);
     {
         dActor_c *o = reinterpret_cast<dActor_c *>(cam->mTargetPlayer);
-        short a = (short)(o->mAngleY + 0x8000);
+        short a = (o->mAngleY + 0x8000);
         const Vector3 *trans = &o->mPos;
         Vec3_RotateYAndTranslate(&va, trans, a, &cam->savedLookAt);
         Vec3_RotateYAndTranslate(&vb, trans, a, &cam->savedPos);

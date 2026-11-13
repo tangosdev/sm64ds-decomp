@@ -244,7 +244,7 @@ extern "C" int Jump3D_AllIdle(void)
 {
     int i;
     for (i = 0; i < sJump3DMarioCount; i++) {
-        int *v = (int *)(&((Jump3DEnt *)sJump3DMarioPool)[i].x);
+        int *v = (&((Jump3DEnt *)sJump3DMarioPool)[i].x);
         volatile int *q = (volatile int *)pmf_dMgJump3DMario_c_StateIdle;
         if (v[0] != pmf_dMgJump3DMario_c_StateIdle[0] ||
             (v[1] != q[1] && ((Jump3DEnt *)sJump3DMarioPool)[i].x != 0))
@@ -429,7 +429,7 @@ void dMgJump3DMario_c::Update()
     ApproachLinear(mVel.y, sJump3DFallSpeed, sJump3DGravityStep);
     VEC_Add((Vector3 *)&mPos, (Vector3 *)&mVel, (Vector3 *)&mPos);
     (this->*mState)();
-    Camera_ProjectToScreen16((MgCamera *)sMgMainCamera, &mPos, &mScreenX);
+    Camera_ProjectToScreen16(sMgMainCamera, &mPos, &mScreenX);
     UpdateModelMatrix();
     mAnmModel.dExtFrameCtrl_c::Advance();
 }
@@ -460,7 +460,7 @@ void dMgJump3DMario_c::EnterDamp()
         Sound::PlayBank2_2D(0x1ca);
     else
         Sound::PlayBank2_2D(0x1c9);
-    mAnmModel.SetAnim((BCA_File *)sJump3DAnimStruggle, 0, kAnimSpeed, 0);
+    mAnmModel.SetAnim(sJump3DAnimStruggle, 0, kAnimSpeed, 0);
     mTimer = 0x28;
     mState = pmf_dMgJump3DMario_c_StateDamp;
 }
@@ -543,7 +543,7 @@ void dMgJump3DMario_c::EnterHold()
         mVel.x = -mVel.x;
         mVel.y = -mVel.y;
     }
-    mAnmModel.SetAnim((BCA_File *)sJump3DAnimSdown, 0x40000000, kAnimSpeed, 0);
+    mAnmModel.SetAnim(sJump3DAnimSdown, 0x40000000, kAnimSpeed, 0);
     mAnmModel.dExtFrameCtrl_c::currFrame = 0;
     Sound_PlayBank1Panned(0, 6, mPos.x);
     mTimer = 0x20;
@@ -579,8 +579,8 @@ void dMgJump3DMario_c::StateMove()
 
         if (flag != 0) {
             s16 y = mScreenY;
-            int ax = (int)((u8(*)[4])gTouchX)[idx][0];
-            int az = (int)((u8(*)[4])gTouchY)[idx][0];
+            int ax = ((u8(*)[4])gTouchX)[idx][0];
+            int az = ((u8(*)[4])gTouchY)[idx][0];
             int dx = (int)mScreenX - ax;
             int ym = (int)y - 0x20;
             int t = dx < 0 ? -dx : dx;
@@ -605,8 +605,7 @@ void dMgJump3DMario_c::StateMove()
                         mAnimIdx = 0;
                     else
                         mAnimIdx = 1;
-                    mAnmModel.SetAnim((BCA_File *)(*sJump3DAnimTable[mAnimIdx]), 0x40000000,
-                                      kAnimSpeed, 0);
+                    mAnmModel.SetAnim((*sJump3DAnimTable[mAnimIdx]), 0x40000000, kAnimSpeed, 0);
                     mAnmModel.dExtFrameCtrl_c::currFrame = 0;
                     Particle::System::NewSimple(kPtclMgJump3DJumpA, mPos.x << 3, mPos.y << 3,
                                                 mPos.z << 3);
@@ -633,8 +632,7 @@ void dMgJump3DMario_c::StateMove()
             mVel.x = -FX_MUL(mVel.x, 0xd00);
             if (mVel.y > 0) {
                 mAnimIdx = 2;
-                mAnmModel.SetAnim((BCA_File *)(*sJump3DAnimTable[mAnimIdx]), 0x40000000, kAnimSpeed,
-                                  0);
+                mAnmModel.SetAnim((*sJump3DAnimTable[mAnimIdx]), 0x40000000, kAnimSpeed, 0);
                 mAnmModel.dExtFrameCtrl_c::currFrame = 0;
                 Sound_PlayBank1Panned(0, mAnimIdx, mPos.x);
             }
@@ -642,8 +640,7 @@ void dMgJump3DMario_c::StateMove()
             mVel.x = -FX_MUL(mVel.x, 0xd00);
             if (mVel.y > 0) {
                 mAnimIdx = 2;
-                mAnmModel.SetAnim((BCA_File *)(*sJump3DAnimTable[mAnimIdx]), 0x40000000, kAnimSpeed,
-                                  0);
+                mAnmModel.SetAnim((*sJump3DAnimTable[mAnimIdx]), 0x40000000, kAnimSpeed, 0);
                 mAnmModel.dExtFrameCtrl_c::currFrame = 0;
                 Sound_PlayBank1Panned(0, mAnimIdx, mPos.x);
             }
@@ -682,7 +679,7 @@ void dMgJump3DMario_c::StartFallOut()
         mVel.x = 0;
         mVel.y = 0x2000;
         Sound::PlayBank2_2D(0x1c9);
-        mAnmModel.SetAnim((BCA_File *)sJump3DAnimStruggle, 0, kAnimSpeed, 0);
+        mAnmModel.SetAnim(sJump3DAnimStruggle, 0, kAnimSpeed, 0);
         mAnmModel.dExtFrameCtrl_c::currFrame = 0;
         mState = pmf_dMgJump3DMario_c_StateFallOut;
     }
@@ -707,7 +704,7 @@ void dMgJump3DMario_c::StartRiseOut()
 {
     mVel.x = 0;
     mVel.y = sJump3DRiseVy;
-    mAnmModel.SetAnim((BCA_File *)sJump3DAnimRollJump, 0x40000000, kAnimSpeed, 0);
+    mAnmModel.SetAnim(sJump3DAnimRollJump, 0x40000000, kAnimSpeed, 0);
     mAnmModel.dExtFrameCtrl_c::currFrame = 0;
     Sound::PlayBank2_2D(0x10f);
     func_02012718(0x1b5, mScreenX << 12);
@@ -716,7 +713,7 @@ void dMgJump3DMario_c::StartRiseOut()
 
 void dMgJump3DMario_c::EnterHit()
 {
-    mAnmModel.SetAnim((BCA_File *)sJump3DAnimRollJump, 0x40000000, kAnimSpeed, 0);
+    mAnmModel.SetAnim(sJump3DAnimRollJump, 0x40000000, kAnimSpeed, 0);
     mAnmModel.dExtFrameCtrl_c::currFrame = 0;
     if (mState == pmf_dMgJump3DMario_c_StateWindUp_2) {
         func_02012718(0x110, mScreenX << 12);
@@ -746,7 +743,7 @@ void dMgJump3DMario_c::StateBounce()
         mVel.x = -FX_MUL(mVel.x, 0xd00);
         if (mVel.y > 0) {
             mAnimIdx = 2;
-            mAnmModel.SetAnim((BCA_File *)(*sJump3DAnimTable[mAnimIdx]), 0x40000000, kAnimSpeed, 0);
+            mAnmModel.SetAnim((*sJump3DAnimTable[mAnimIdx]), 0x40000000, kAnimSpeed, 0);
             mAnmModel.dExtFrameCtrl_c::currFrame = 0;
             Sound_PlayBank1Panned(0, mAnimIdx, mPos.x);
         }
@@ -754,7 +751,7 @@ void dMgJump3DMario_c::StateBounce()
         mVel.x = -FX_MUL(mVel.x, 0xd00);
         if (mVel.y > 0) {
             mAnimIdx = 2;
-            mAnmModel.SetAnim((BCA_File *)(*sJump3DAnimTable[mAnimIdx]), 0x40000000, kAnimSpeed, 0);
+            mAnmModel.SetAnim((*sJump3DAnimTable[mAnimIdx]), 0x40000000, kAnimSpeed, 0);
             mAnmModel.dExtFrameCtrl_c::currFrame = 0;
             Sound_PlayBank1Panned(0, mAnimIdx, mPos.x);
         }
@@ -803,7 +800,7 @@ void dMgJump3DMario_c::StateWindUp()
 
 void dMgJump3DMario_c::StartWindUp(int timer)
 {
-    mTimer = (s16)timer;
+    mTimer = timer;
     mState = pmf_dMgJump3DMario_c_StateWindUp;
 }
 
@@ -834,7 +831,7 @@ void dMgJump3DMario_c::StateRespawn()
         speed = sJump3DMoveSpeed;
         rnd = ((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13;
         mVel.x = FX_MUL((((int)rnd - 0x800) << 1), speed);
-        mAnmModel.SetAnim((BCA_File *)sJump3DAnimWallJump, 0x40000000, kAnimSpeed, 0);
+        mAnmModel.SetAnim(sJump3DAnimWallJump, 0x40000000, kAnimSpeed, 0);
         EnterMove();
         return;
     }
@@ -848,7 +845,7 @@ void dMgJump3DMario_c::EnterRespawn()
     mTimer = 0x3c;
     mPos.y = 0x100000;
     mVel.y = 0;
-    mAnmModel.SetAnim((BCA_File *)sJump3DAnimWallJump, 0x40000000, kAnimSpeed, 0);
+    mAnmModel.SetAnim(sJump3DAnimWallJump, 0x40000000, kAnimSpeed, 0);
     mState = pmf_dMgJump3DMario_c_StateRespawn;
 }
 
@@ -873,14 +870,14 @@ int dMgJump3DMario_c::LoadResources()
 
     mAnimIdx = 0;
     if (sMgMainCamera != 0)
-        Camera_ProjectToScreen16((MgCamera *)sMgMainCamera, &mPos, &mScreenX);
+        Camera_ProjectToScreen16(sMgMainCamera, &mPos, &mScreenX);
 
     t = gCurrentScene->actorID == 0x175;
     if (t != 0) {
         func_02016a14(&mAnmModel, 0x7fff);
         func_02016a04(&mAnmModel, 0x210);
     }
-    mAnmModel.SetAnim((BCA_File *)sJump3DAnimJump, 0x40000000, kAnimSpeed, 0);
+    mAnmModel.SetAnim(sJump3DAnimJump, 0x40000000, kAnimSpeed, 0);
 
     HideAndIdle();
     return 1;

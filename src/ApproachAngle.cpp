@@ -18,7 +18,7 @@ extern "C" int ApproachAngle(short *cur, short target, int divisor, int band, in
     int diff;
     short c;
     c = *cur;
-    diff = (int)(((long long)(short)(target - c)));
+    diff = (((long long)(short)(target - c)));
     if (c != target) {
         int step = (short)__aeabi_idiv(diff, divisor);
         if (step > maxStep || step < -maxStep) {
@@ -37,7 +37,7 @@ extern "C" int ApproachAngle(short *cur, short target, int divisor, int band, in
 }
 
 void UpdateAngle(short &angle, short target, int divisor, short maxStep) {
-    short step = (short)(__aeabi_idiv((short)(target - angle), divisor));
+    short step = (__aeabi_idiv((short)(target - angle), divisor));
     if (step > maxStep) {
         angle = angle + maxStep;
         return;
@@ -61,10 +61,10 @@ int ApproachLinear2(int &ref, int target, int step)
             step = (short)(-step);
         ip = (short)(cur + step);
         if (step * (ip - target) >= 0) {
-            *p = (unsigned char)target;
+            *p = target;
             return 1;
         }
-        *p = (unsigned char)ip;
+        *p = ip;
     } else if (*p == target) {
         return 1;
     }
@@ -105,10 +105,10 @@ int ApproachLinear(int &ref, int target, int step)
 bool ApproachLinear(short &x, short target, short step)
 {
     if (step != 0) {
-        short d = (short)(x - target);
+        short d = (x - target);
         if (d > 0) step = -step;
         x += step;
-        d = (short)(x - target);
+        d = (x - target);
         if (step * d >= 0) {
             x = target;
             return true;

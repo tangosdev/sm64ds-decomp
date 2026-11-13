@@ -468,7 +468,7 @@ void da1up_c::CollectOnTouch() {
    degrees): mVertSpeed = 30 units (0x1e) times the cosine of mPrevAngleX plus
    2 units (0x2000); mHorzSpeed = -30 units times its sine. */
 void da1up_c::UpdateLaunchArc() {
-    if ((u16)mStateTimer < 5) {
+    if (mStateTimer < 5) {
         mVertSpeed = 0x28000;
         return;
     }
@@ -624,7 +624,7 @@ void da1up_c::UpdateRiseThenPopOut() {
     mPosY = mSpawnPosY + 0x64000;
     mMushroomType = 0;
     mState = 0;
-    *(unsigned short*)&mStateTimer = 0xffff;
+    mStateTimer = 0xffff;
     mStateFrames = 0xffff;
 }
 
@@ -707,10 +707,10 @@ void da1up_c::UpdateHiddenChase() {
 
     case 3:
         UpdatePhysics();
-        if (*(unsigned short *)&mStateTimer > 0x11)
+        if (mStateTimer > 0x11)
             UpdateTrailEffect();
         UpdateLaunchArc();
-        if (*(unsigned short *)&mStateTimer != 0x25)
+        if (mStateTimer != 0x25)
             return;
 
         mdCcAc_c.flags &= ~CC_FLAGS_DISABLED;
@@ -775,11 +775,11 @@ void da1up_c::UpdateHiddenFlee() {
         return;
     case 3:
         UpdatePhysics();
-        if (*(u16 *)&mStateTimer > 0x11) {
+        if (mStateTimer > 0x11) {
             UpdateTrailEffect();
         }
         UpdateLaunchArc();
-        if (*(u16 *)&mStateTimer != 0x25)
+        if (mStateTimer != 0x25)
             return;
         mdCcAc_c.flags &= ~CC_FLAGS_DISABLED;
         mState = 1;
@@ -918,11 +918,11 @@ void da1up_c::UpdatePopOutFlee() {
     UpdatePhysics();
     switch (mState) {
     case 0:
-        if (*(unsigned short*)&mStateTimer == 0) {
+        if (mStateTimer == 0) {
             Sound::PlayBank3(SND3_LAUNCH, mCamSpacePos);
         }
         UpdateLaunchArc();
-        if (*(unsigned short*)&mStateTimer == 0x25) {
+        if (mStateTimer == 0x25) {
             mdCcAc_c.flags &= ~CC_FLAGS_DISABLED;
             mState = 1;
             mHorzSpeed = 0x8000;
@@ -952,17 +952,17 @@ void da1up_c::UpdatePopOutDrift() {
     UpdatePhysics();
     switch (mState) {
     case 0:
-        if (*(unsigned short *)&mStateTimer == 0)
+        if (mStateTimer == 0)
             Sound::PlayBank3(SND3_LAUNCH, mCamSpacePos);
         UpdateLaunchArc();
-        if (*(unsigned short *)&mStateTimer != 0x25)
+        if (mStateTimer != 0x25)
             break;
         mdCcAc_c.flags &= ~CC_FLAGS_DISABLED;
         mState = 1;
         mHorzSpeed = 0x2000;
         break;
     case 1:
-        if (*(unsigned short *)&mStateTimer > 0x12c)
+        if (mStateTimer > 0x12c)
             mState = 2;
         CollectOnTouch();
         break;
@@ -1059,11 +1059,11 @@ int da1up_c::Behavior()
     (this->*data_ov002_0210dc00[mMushroomType])();
     /* Named ++mStateTimer / mStateTimer = 0 size-DIFF vs this recovered
        unsigned-short launder; keep MATCH form. */
-    ++*(unsigned short*)&mStateTimer;
+    ++mStateTimer;
     ++mStateFrames;
     if(old != mState){
-      *(unsigned short*)&mStateTimer = 0;
-      mStateFrames = 0;
+        mStateTimer = 0;
+        mStateFrames = 0;
     }
   }
   mdCcAc_c.Clear();
@@ -1157,7 +1157,7 @@ int da1up_c::InitResources()
         mShown = 0;
     }
     mBlinkOn = 1;
-    mUnlockCount = ((unsigned int)param1 >> 4) & 0xf;
+    mUnlockCount = (param1 >> 4) & 0xf;
     mSpawnPosX = mPosX;
     mSpawnPosY = mPosY;
     mSpawnPosZ = mPosZ;

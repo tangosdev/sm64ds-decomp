@@ -345,7 +345,7 @@ int daKuriKing_c::SpawnVanishCopy() {
     basePos.x=spawnPos.x;
     basePos.y=spawnPos.y;
     basePos.z=spawnPos.z;
-    spawnAngle.y=(short)this->mAngleY;
+    spawnAngle.y = this->mAngleY;
     if(DecIfAbove0_Short(&this->mTimer)==0){
         u8 spawned=this->mSpawnedCount;
         if(spawned<=6){
@@ -1123,7 +1123,7 @@ void daKuriKing_c::HandleCylinderHits() {
         if (b != 0) {
             daPly_c *pl = (daPly_c *)player;
             if (this->mHurtTimer == 0) {
-                if (!(flags & 0x26fe0) && *(u8 *)&pl->mIsTakingDamage == 0) {
+                if (!(flags & 0x26fe0) && pl->mIsTakingDamage == 0) {
                     if (cur == &this->mdCc_cs[2]) {
                         if (this->mWalkSpeed != 0) {
                             pl->Unk_020c6a10(2);
@@ -1234,7 +1234,7 @@ extern "C" void func_ov074_02121270(Vector3 *out, daKuriKing_c *self, int bone) 
     v->y = 0;
     v->z = 0;
     data_020a0e68 = *(struct Matrix4x3 *)self->mBodyMatrix;
-    boneMat = (Matrix4x3 *)self->mAnmModel.data.transforms + bone;
+    boneMat = self->mAnmModel.data.transforms + bone;
     MTX_Concat43(boneMat, &data_020a0e68, &data_020a0e68);
     v->x = data_020a0e68.m[9];
     v->y = data_020a0e68.m[10];
@@ -1443,7 +1443,7 @@ void daKuriKing_c::PlayAnim(int idx) {
     int off = idx * 0xc;
     void* file1 = data_ov074_02122f34[idx].anim->filePtr;
     int arg2 = *(int*)(data_ov074_02122f3c + off);
-    ((dExtAnmModel_c *)&this->mAnmModel)->SetAnim((BCA_File *)file1, arg2, 0x1000, 0);
+    this->mAnmModel.SetAnim((BCA_File *)file1, arg2, 0x1000, 0);
     this->mTextureTransformer.SetFile(**(BTA_File **)(data_ov074_02122f38 + off), 0, 0x1000, 0);
 }
 
@@ -1632,8 +1632,7 @@ int daKuriKing_c::InitResources()
     mAnmModel.SetAnim((BCA_File *)data_ov074_02123030.filePtr, 0, 0x1000, 0);
     dExtAnmTexPat_c::Prepare(*(BMD_File *)gKurikingModelModelFile.filePtr,
                              *(BTP_File *)gKurikingAngerTextureSequenceFile.filePtr);
-    dExtAnmMaterial_c::Prepare(*(BMD_File *)gKurikingModelModelFile.filePtr,
-                               *(BMA_File *)&data_ov010_021123f4);
+    dExtAnmMaterial_c::Prepare(*(BMD_File *)gKurikingModelModelFile.filePtr, data_ov010_021123f4);
 
     i = 0;
     do {

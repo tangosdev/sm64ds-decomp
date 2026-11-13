@@ -11,12 +11,12 @@ int func_02063e08(WBTWork *work, int aid, void *buf, int size) {
 
     r = 0;
     peer = &work->peer[aid];
-    mask = (unsigned short)(1 << aid);
+    mask = (1 << aid);
     if (peer->state == 2 && peer->command == WBT_CMD_REQ_SYNC) {
         a = WBT_NumOfRegisteredBlock();
         b = func_02065bc0();
         c = func_02065bd0();
-        r = func_02064eac(buf, mask, peer->cmd_counter, (short)a, b, c);
+        r = func_02064eac(buf, mask, peer->cmd_counter, a, b, c);
         peer->state = 1;
     }
     return r;

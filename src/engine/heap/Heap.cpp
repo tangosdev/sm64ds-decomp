@@ -827,7 +827,7 @@ u32 ExpHeap_t::VSizeof(void* ptr)
 u32 SolidHeap_t::VSizeof(void* ptr)
 {
     OS_Terminate();
-    return (u32)-1;
+    return -1;
 }
 
 /* Heap::SetNodeID(u32) at 0x0203c408 -- plain forward to slot 13. The node id

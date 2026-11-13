@@ -597,7 +597,7 @@ extern "C" {
 void Mg_GainCredits(int c);
 inline long long inline_fn(int arg0)
 {
-  return (long long) arg0;
+    return arg0;
 }
 }
 }
@@ -1143,7 +1143,7 @@ extern "C" void Mg_DrawMenu(dScMgBase_c *scene)
 
             pos = tbl[i];
             do {
-                Mg_DrawSpriteListEntry((void *)cursor, (void *)(int)pos[0], (void *)(int)pos[1],
+                Mg_DrawSpriteListEntry(cursor, (void *)(int)pos[0], (void *)(int)pos[1],
                                        (void *)buf);
                 v = *(u16 *)(cursor + 6);
                 cursor += 8;
@@ -1392,8 +1392,8 @@ void dScMgBase_c::RestoreScreenFromMenu() {
         MI_CpuCopy32(save->subObjChars, (u8 *)G2S_GetOBJCharPtr() + 0x6000, 0x2000);
     }
 
-    gMainScreenLayers = (u8)mSavedMainBgBits;
-    gSubScreenLayers = (u8)mSavedSubBgBits;
+    gMainScreenLayers = mSavedMainBgBits;
+    gSubScreenLayers = mSavedSubBgBits;
 
     if (GetDisplayMode() == 2)
         return;
@@ -2559,7 +2559,7 @@ extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
                 RenderOamMainScreen(r8[9], 0xf0, r7, -1, -1);
                 {
                     unsigned e = (sl->mTimeLimit + 0x20) - sl->mTallyAnimTimer;
-                    r7 -= sdiv2((int)e);
+                    r7 -= sdiv2(e);
                 }
                 i += 1;
             } while (i < 5);
@@ -2608,7 +2608,7 @@ extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
                 i = 0;
                 do {
                     unsigned e = (sl->mTimeLimit + 0x20) - sl->mTallyAnimTimer;
-                    r7 -= sdiv2((int)e);
+                    r7 -= sdiv2(e);
                     RenderOamMainScreen(r8[9], 0xf0, r7, -1, -1);
                     i += 1;
                 } while (i < 5);
@@ -3111,7 +3111,7 @@ extern OamAttr *sMgDigitSprites[];
 static inline int FX_Mul(int v1, int v2)
 {
     s64 t = (s64)v1 * v2;
-    return (int)((t + 0x800) >> 12);
+    return ((t + 0x800) >> 12);
 }
 
 static inline void MTX_Rot22(struct M *p, int sinVal, int cosVal)

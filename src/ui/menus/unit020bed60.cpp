@@ -271,7 +271,7 @@ void func_ov007_020beeb0(void) {
             int t = FX_MUL(strength, speed);
             if (t >= 0x1000)
                 t = 0x1000;
-            strength = (int)(((s64)t * t) >> 12);
+            strength = (((s64)t * t) >> 12);
         }
         func_ov007_020bed60(WORK->touch->cur.x, WORK->touch->cur.y, strength);
     } else {

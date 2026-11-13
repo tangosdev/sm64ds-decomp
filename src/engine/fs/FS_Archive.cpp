@@ -441,12 +441,12 @@ u32 FS_LoadArchiveTables(FSArchive *p_arc, void *p_mem, u32 max_size) {
         u8 *p_cache = (u8 *)ALIGN_BYTE(p_mem, 32);
         FSFile tmp;
         FS_InitFile(&tmp);
-        FS_OpenFileDirect(&tmp, p_arc, p_arc->fat, p_arc->fat + p_arc->fat_size, (u32)~0);
+        FS_OpenFileDirect(&tmp, p_arc, p_arc->fat, p_arc->fat + p_arc->fat_size, ~0);
         FS_ReadFile(&tmp, p_cache, p_arc->fat_size);
         FS_CloseFile(&tmp);
         p_arc->fat = (u32)p_cache;
         p_cache += p_arc->fat_size;
-        FS_OpenFileDirect(&tmp, p_arc, p_arc->fnt, p_arc->fnt + p_arc->fnt_size, (u32)~0);
+        FS_OpenFileDirect(&tmp, p_arc, p_arc->fnt, p_arc->fnt + p_arc->fnt_size, ~0);
         FS_ReadFile(&tmp, p_cache, p_arc->fnt_size);
         FS_CloseFile(&tmp);
         p_arc->fnt = (u32)p_cache;

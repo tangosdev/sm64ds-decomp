@@ -267,8 +267,8 @@ void daTrs_c::func_ov063_021160d4() {
     this->mClsnOff.z = inline_fn(11);
     VEC_Subtract(&this->mClsnOff, &this->mPos, &this->mClsnOff);
     VEC_Subtract(&this->mClsnOff, &this->mClsnBase, &this->mClsnOff);
-    Vec3_MulScalarInPlace((Vector3 *)&this->mClsnOff.x, 0x6800);
-    p = (int *)&this->mClsnOff.z;
+    Vec3_MulScalarInPlace(&this->mClsnOff, 0x6800);
+    p = &this->mClsnOff.z;
     *p += this->mClsnZBias;
 }
 
@@ -297,8 +297,8 @@ void daTrs_c::func_ov063_02116244() {
 
     if (this->mBooDefeatCount < 5) return;
     if (this->mSpawnedActorID != 0) return;
-    this->mFoundActor = dActor_c::Spawn(TRS_ID_ICON_TERESA, this->param1, this->mPos,
-                                        (const Vector3_16 *)(0), this->mAreaIdx, -1);
+    this->mFoundActor =
+        dActor_c::Spawn(TRS_ID_ICON_TERESA, this->param1, this->mPos, (0), this->mAreaIdx, -1);
     if (this->mFoundActor != 0) this->mSpawnedActorID = this->mFoundActor->uniqueID;
     this->mFoundActor = 0;
 }
@@ -314,7 +314,7 @@ void daTrs_c::func_ov063_021162c8() {
         v.x = this->mCapPosX;
         v.y = this->mCapPosY;
         v.z = this->mCapPosZ;
-        ((dCapEnemy_c*)this)->ReleaseCap(*(Vector3*)&v);
+        (this)->ReleaseCap(v);
         if (this->mBooFlags.carrying) {
             unsigned int flags = 2;
             if (this->mCarriedID == TRS_ID_RED_COIN) flags |= 0x10;
@@ -406,7 +406,7 @@ void daTrs_c::func_ov063_0211640c() {
 
 void daTrs_c::func_ov063_021166ac() {
 
-    daTrs_c *t = (daTrs_c *)this;
+    daTrs_c *t = this;
     Vector3_16 rot;
     Vector3 t1;
     Vector3 t2;
@@ -420,10 +420,10 @@ void daTrs_c::func_ov063_021166ac() {
         return;
     if (t->mBooFlags.carrying) {
         if (this->mCarriedID != TRS_ID_T_BASKET) {
-            s16 *ap = (s16 *)&this->mCarriedAngleY;
+            s16 *ap = &this->mCarriedAngleY;
             *ap += 0xc00;
         }
-        Matrix4x3_FromRotationY((Matrix4x3 *)&this->mCarriedModel.mat4x3, this->mCarriedAngleY);
+        Matrix4x3_FromRotationY(&this->mCarriedModel.mat4x3, this->mCarriedAngleY);
         this->mCarriedModel.mat4x3.m[9] = this->mCarriedPosX >> 3;
         this->mCarriedModel.mat4x3.m[10] = this->mCarriedPosY >> 3;
         this->mCarriedModel.mat4x3.m[11] = this->mCarriedPosZ >> 3;
@@ -512,7 +512,7 @@ void daTrs_c::func_ov063_02116a1c() {
         }
         if (this->mBooFlags.canAppear) {
             unsigned short *fp = (unsigned short *)&this->mBooFlags;
-            unsigned char *st = (unsigned char *)&this->mState;
+            unsigned char *st = &this->mState;
             *fp |= TRS_FLAG_VISIBLE;
             this->mOpacity = 0xb4;
             scale = this->mClsnScale;
@@ -525,14 +525,14 @@ void daTrs_c::func_ov063_02116a1c() {
         }
     } else if (a == 1) {
         if (this->mDistToPlayer < 0x3e8000) {
-            unsigned char *st = (unsigned char *)&this->mState;
+            unsigned char *st = &this->mState;
             *st += 1;
             func_0201267c(0xf8, &this->mCamSpacePos);
         }
         this->mHorzSpeed = 0;
     } else {
         int t;
-        ApproachLinear(*(int *)&this->mHorzSpeed, 0x30000, 0x1800);
+        ApproachLinear(this->mHorzSpeed, 0x30000, 0x1800);
         t = 0x3e8000;
         v.x = -t;
         v.z = (int)0xfdcd8000;
@@ -540,7 +540,7 @@ void daTrs_c::func_ov063_02116a1c() {
             /* invert: laundered RMW as THEN, plain zero as ELSE
                -> movls/strbls + bls + unpredicated RMW */
             if (this->mOpacity > 0x14) {
-                unsigned char *p = (unsigned char *)&this->mOpacity;
+                unsigned char *p = &this->mOpacity;
                 *p = (unsigned char)(*p - 0x14);
             } else {
                 this->mOpacity = 0;
@@ -586,12 +586,12 @@ void daTrs_c::func_ov063_02116bf4() {
                         ((daTrs_c *)p)->mCachedActorID = this->mCachedActorID;
                     }
                     {
-                        unsigned char *q = (unsigned char *)&this->mSpawnCount;
+                        unsigned char *q = &this->mSpawnCount;
                         *q = *q + 1;
                     }
                 }
                 {
-                    unsigned char *q = (unsigned char *)&this->mState;
+                    unsigned char *q = &this->mState;
                     *q = *q + 1;
                 }
             }
@@ -599,7 +599,7 @@ void daTrs_c::func_ov063_02116bf4() {
                 this->mState = 2;
             break;
         case 1:
-            if (*(u16 *)&this->mStateTimer > 0x3c)
+            if (this->mStateTimer > 0x3c)
                 this->mState = 0;
             break;
         case 2:
@@ -669,7 +669,9 @@ void daTrs_c::func_ov063_02116e14() {
     }
     this->mState = 3;
     {
-        char* r = (char*)dActor_c::Spawn(this->mCarriedID, 0, *(const Vector3 *)((struct Vector3*)&this->mCarriedPosX), (const Vector3_16 *)(0), this->mAreaIdx, -1);
+        char *r = (char *)dActor_c::Spawn(this->mCarriedID, 0,
+                                          *(const Vector3 *)((struct Vector3 *)&this->mCarriedPosX),
+                                          (0), this->mAreaIdx, -1);
         if (r != 0) {
             ((dActor_c *)r)->mSpeedX = 0;
             ((dActor_c *)r)->mVertSpeed = 0x32000;
@@ -736,7 +738,7 @@ void daTrs_c::func_ov063_02116fac() {
         this->mHorzSpeed = 0;
         break;
     case 2:
-        ApproachLinear(*(int *)&this->mHorzSpeed, 0x3a000, 0x1800);
+        ApproachLinear(this->mHorzSpeed, 0x3a000, 0x1800);
         fr.v.x = -0x3e8000;
         fr.v.y = 0;
         fr.v.z = 0xfea84000;
@@ -746,7 +748,7 @@ void daTrs_c::func_ov063_02116fac() {
         }
         break;
     case 3:
-        ApproachLinear(*(int *)&this->mHorzSpeed, 0, 0x9000);
+        ApproachLinear(this->mHorzSpeed, 0, 0x9000);
         fr.v.x = -0x3e8000;
         fr.v.y = 0;
         fr.v.z = -0xfa0000;
@@ -758,7 +760,7 @@ void daTrs_c::func_ov063_02116fac() {
         }
         break;
     case 4:
-        if (*(u16 *)&this->mStateTimer == 6) {
+        if (this->mStateTimer == 6) {
             this->mVertSpeed = 0xf000;
             this->mVertAccel = -0x4000;
             this->mTerminalVelocity = -0xf000;
@@ -772,7 +774,7 @@ void daTrs_c::func_ov063_02116fac() {
         }
         break;
     case 5:
-        ApproachLinear(*(int *)&this->mHorzSpeed, 0x3a000, 0x1800);
+        ApproachLinear(this->mHorzSpeed, 0x3a000, 0x1800);
         fr.v.x = -0x3e8000;
         fr.v.y = 0;
         fr.v.z = 0xfea84000;
@@ -920,7 +922,7 @@ void daTrs_c::func_ov063_02117650() {
 void daTrs_c::func_ov063_0211776c() {
 
     Stop();
-    unsigned short v = *(u16 *)&this->mStateTimer;
+    unsigned short v = this->mStateTimer;
     if (v > 0xf)
         return;
     if (v != 0xf)
@@ -932,8 +934,8 @@ void daTrs_c::func_ov063_0211776c() {
 
 void daTrs_c::func_ov063_021177b0() {
 
-    if (*(u16 *)&this->mStateTimer == 0) {
-        unsigned char* p = (unsigned char*)&this->mHitPoints;
+    if (this->mStateTimer == 0) {
+        unsigned char *p = &this->mHitPoints;
         *p = (unsigned char)(*p - 1);
     }
 
@@ -1014,8 +1016,8 @@ void daTrs_c::func_ov063_021177b0() {
         return;
     }
 
-    if (*(u16 *)&this->mStateTimer == 0) {
-        int* p584 = (int*)&this->mClsnScale;
+    if (this->mStateTimer == 0) {
+        int *p584 = &this->mClsnScale;
         int dec = 0x255;
         *p584 = *p584 - dec;
     }
@@ -1039,19 +1041,19 @@ void daTrs_c::func_ov063_02117b0c() {
 
     switch (this->mSubState) {
     case 0:
-        this->mTalkPlayer = (daPly_c *)ClosestPlayer();
-        if (!this->mTalkPlayer->StartTalk(*(fBase_c *)(this), 1))
+        this->mTalkPlayer = ClosestPlayer();
+        if (!this->mTalkPlayer->StartTalk(*this, 1))
             return;
         {
-            u8 *st = (u8 *)&this->mSubState;
+            u8 *st = &this->mSubState;
             *st = *st + 1;
         }
         Sound::ChangeMusicVolume(0x14, 0x15666);
         break;
     case 1:
         {
-            u8 *st = (u8 *)&this->mSubState;
-            *st = *st + 1;
+        u8 *st = &this->mSubState;
+        *st = *st + 1;
         }
         break;
     case 2:
@@ -1068,13 +1070,13 @@ void daTrs_c::func_ov063_02117b0c() {
             v[2] = z;
         }
         {
-            void *pl = (void *)this->mTalkPlayer;
+            void *pl = this->mTalkPlayer;
             unsigned m = (unsigned)(int)data_ov063_0211e1c8[((daPly_c *)pl)->param1];
-            if (!this->mClosestPlayer->ShowMessage(*(fBase_c *)(this), m, (const Vector3 *)(v), 0, 2))
+            if (!this->mClosestPlayer->ShowMessage(*this, m, (const Vector3 *)(v), 0, 2))
                 return;
             func_0201277c(0x151);
             {
-                u8 *st = (u8 *)&this->mSubState;
+                u8 *st = &this->mSubState;
                 *st = *st + 1;
             }
         }
@@ -1108,7 +1110,7 @@ void daTrs_c::func_ov063_02117cdc() {
     cam = gCamera;
     switch (this->mSubState) {
     case 0:
-        this->mTalkPlayer = (daPly_c *)ClosestPlayer();
+        this->mTalkPlayer = ClosestPlayer();
         if (this->mTalkPlayer->mPosX <= -0x2bc000) {
             return;
         }
@@ -1118,10 +1120,10 @@ void daTrs_c::func_ov063_02117cdc() {
     case 1: {
         u8 *st;
         int n;
-        if (*(u16 *)&this->mStateTimer < 0x96) {
+        if (this->mStateTimer < 0x96) {
             return;
         }
-        st = (u8 *)&this->mSubState;
+        st = &this->mSubState;
         n = *st + 1;
         *st = n;
         return;
@@ -1140,15 +1142,15 @@ void daTrs_c::func_ov063_02117cdc() {
         if (VEC_Mag((const Vector3 *)w) >= 0x12c000) {
             return;
         }
-        if (this->mTalkPlayer->StartTalk(*(fBase_c *)(this), 1) == 0) {
+        if (this->mTalkPlayer->StartTalk(*this, 1) == 0) {
             return;
         }
         cam->SetFlag_3();
         this->mTalkCamPosX = w[0];
         this->mTalkCamPosY = w[1];
         this->mTalkCamPosZ = w[2];
-        d54c = (int *)&this->mTalkCamPosX;
-        d554 = (int *)&this->mTalkCamPosZ;
+        d54c = &this->mTalkCamPosX;
+        d554 = &this->mTalkCamPosZ;
         *d54c = *d54c - (0x3c000 - (w[0] / 8));
         this->mTalkCamPosY = 0x64000;
         *d554 = *d554 - (0x64000 - (w[0] / 6));
@@ -1158,7 +1160,7 @@ void daTrs_c::func_ov063_02117cdc() {
         this->mTalkCamLookX = 0;
         this->mTalkCamLookY = 0x64000;
         {
-            u8 *st = (u8 *)&this->mSubState;
+            u8 *st = &this->mSubState;
             int n = *st + 1;
             *st = n;
         }
@@ -1169,13 +1171,13 @@ void daTrs_c::func_ov063_02117cdc() {
         int b;
         int *src;
         s16 *q;
-        src = (int *)&this->mTalkPlayer->mPosX;
+        src = &this->mTalkPlayer->mPosX;
         w[0] = src[0];
         w[1] = src[1];
         w[2] = src[2];
         w[0] = 0;
         ang = Vec3_HorzAngle(&this->mTalkPlayer->mPos, (Vector3 *)w);
-        q = (s16 *)&this->mTalkPlayer->mAngleX;
+        q = &this->mTalkPlayer->mAngleX;
         v[0] = q[0];
         v[1] = q[1];
         v[2] = q[2];
@@ -1200,12 +1202,12 @@ void daTrs_c::func_ov063_02117cdc() {
         return;
     }
     case 4:
-        if (*(u16 *)&this->mStateTimer < 0x1e) {
+        if (this->mStateTimer < 0x1e) {
             return;
         }
         func_ov055_02111264();
         {
-            u8 *st = (u8 *)&this->mSubState;
+            u8 *st = &this->mSubState;
             int n = *st + 1;
             *st = n;
         }
@@ -1225,8 +1227,8 @@ void daTrs_c::func_ov063_02117cdc() {
                 return;
             }
         }
-        src = (int *)&this->mTalkPlayer->mPosX;
-        d560 = (int *)&this->mTalkCamLookZ;
+        src = &this->mTalkPlayer->mPosX;
+        d560 = &this->mTalkCamLookZ;
         w[0] = src[0];
         w[1] = src[1];
         w[2] = src[2];
@@ -1237,18 +1239,18 @@ void daTrs_c::func_ov063_02117cdc() {
         this->mTalkCamPosZ = w[2] - 0x32000;
         this->mStateTimer = 0;
         {
-            u8 *st2 = (u8 *)&this->mSubState;
+            u8 *st2 = &this->mSubState;
             int n = *st2 + 1;
             *st2 = n;
         }
         return;
     }
     case 6:
-        if (*(u16 *)&this->mStateTimer < 0x1e) {
+        if (this->mStateTimer < 0x1e) {
             return;
         }
         {
-            u8 *st = (u8 *)&this->mSubState;
+            u8 *st = &this->mSubState;
             int n = *st + 1;
             *st = n;
         }
@@ -1263,7 +1265,7 @@ void daTrs_c::func_ov063_02117cdc() {
         this->mOpacity = 0;
         this->mSubState += 1;
         neg = -1;
-        src = (int *)&this->mTalkPlayer->mPosX;
+        src = &this->mTalkPlayer->mPosX;
         w[0] = src[0];
         w[1] = src[1];
         w[2] = src[2];
@@ -1276,7 +1278,7 @@ void daTrs_c::func_ov063_02117cdc() {
     case 8:
         /* invert so ELSE (=0xff) is predicated and THEN (RMW) is branched (codegen 6c) */
         if (this->mOpacity + 5 < 0xff) {
-            u8 *p = (u8 *)&this->mOpacity;
+            u8 *p = &this->mOpacity;
             *p = (u8)(*p + 5);
         } else {
             this->mOpacity = 0xff;
@@ -1314,12 +1316,12 @@ void daTrs_c::func_ov063_02117cdc() {
             else
                 msg = data_ov063_0211e1dc[this->mTalkPlayer->param1];
         }
-        if (this->mClosestPlayer->ShowMessage(*(fBase_c *)(this), (u32)msg, (const Vector3 *)(w), 0, 2) == 0) {
+        if (this->mClosestPlayer->ShowMessage(*this, (u32)msg, (const Vector3 *)(w), 0, 2) == 0) {
             return;
         }
         Sound::LoadAndSetMusic_Layer3(0x2c);
         {
-            u8 *st = (u8 *)&this->mSubState;
+            u8 *st = &this->mSubState;
             int n = *st + 1;
             *st = n;
         }
@@ -1391,8 +1393,7 @@ void daTrs_c::func_ov063_02118458() {
             dActor_c *fb;
             this->mAngleX = 0x1000;
             func_02012694(0x156, &this->mCamSpacePos);
-            fb = SpawnFireball(*(const Vector3 *)&v, (const Vector3_16 *)&this->mAngleX, 0x14000,
-                               0x6999, 4);
+            fb = SpawnFireball(*(const Vector3 *)&v, &this->mAngle, 0x14000, 0x6999, 4);
             this->mAngleX = 0;
             if (this->mBooFlags.mirrored)
                 ((daFPknBallView *)fb)->mMirrored = 1;
@@ -1516,7 +1517,7 @@ void daTrs_c::func_ov063_021189f4() {
                     this->mSoundCount = 0;
             }
         } else {
-            int r = Sound::PlaySecretSound(this, (u16 *)((u16 *)&this->mSoundCount));
+            int r = Sound::PlaySecretSound(this, (&this->mSoundCount));
             if (r != 0)
                 this->mSoundCount = 0;
         }
@@ -1559,7 +1560,7 @@ void daTrs_c::func_ov063_02118b2c() {
         func_0201267c(0xc7, &mCamSpacePos);
         return;
     }
-    if ((u16)mStateTimer > 0x64)
+    if (mStateTimer > 0x64)
         mState = 1;
 }
 
@@ -1571,7 +1572,7 @@ void daTrs_c::func_ov063_02118b98() {
     this->mBooFlags.hitByParam3Player = 0;
     Stop();
 
-    v = *(u16 *)&this->mStateTimer;
+    v = this->mStateTimer;
     if (v > 0xf) goto bigblock;
     if (v != 0xf) return;
 
@@ -1600,7 +1601,8 @@ bigblock:
         for (;;) {
             r1 = dActor_c::FindWithActorID(TRS_ID_KAIDAN, r1);
             if (r1 == 0) goto after_strb;
-            if (((unsigned int)r1->param1 >> 8 & 3) == 0) break;
+            if ((r1->param1 >> 8 & 3) == 0)
+                break;
         }
         ((daTrsTrapView *)r1)->mTriggered = 1;
     }
@@ -1617,10 +1619,10 @@ special:
 
 void daTrs_c::func_ov063_02118cd8() {
 
-    if (*(u16 *)&this->mStateTimer == 0) {
+    if (this->mStateTimer == 0) {
         unsigned int v = *(unsigned short *)&this->mBooFlags;
         if ((v << 25 >> 31) == 0) {
-            unsigned char *p = (unsigned char *)&this->mHitPoints;
+            unsigned char *p = &this->mHitPoints;
             (*p)--;
         }
     }
@@ -1638,7 +1640,7 @@ void daTrs_c::func_ov063_02118cd8() {
         *p |= TRS_FLAG_DEFEATED;
         return;
     }
-    if (*(u16 *)&this->mStateTimer == 0) {
+    if (this->mStateTimer == 0) {
         this->mClsnScale -= 0x255;
     }
     if (UpdateDuringNonlethalHit(0x28) != 0) {
@@ -1658,7 +1660,7 @@ void daTrs_c::func_ov063_02118ddc() {
   int s = this->mPosX;
   if(s < 0) s = -s;
   v.x = s;
-  dActor_c::Spawn(TRS_ID_OBJ_KEY, 3, *(const Vector3 *)(&v), (const Vector3_16 *)(0), this->mAreaIdx, -1);
+  dActor_c::Spawn(TRS_ID_OBJ_KEY, 3, v, (0), this->mAreaIdx, -1);
   func_02012694(0xbb, &this->mCamSpacePos);
 }
 
@@ -1668,9 +1670,9 @@ void daTrs_c::func_ov063_02118e5c() {
     func_ov063_02118eac();
     unsigned int id = this->mCachedActorID;
     if (id == 0) return;
-    void *actor = (void *)dActor_c::FindWithID(id);
+    void *actor = dActor_c::FindWithID(id);
     this->mFoundActor = (dActor_c *)actor;
-    void *p = (void *)this->mFoundActor;
+    void *p = this->mFoundActor;
     if (p != 0) {
         ((daTrsTrapView *)p)->mState = 1;
     }
@@ -1699,7 +1701,7 @@ void daTrs_c::func_ov063_02118eac() {
         return;
     }
     id = this->mSpawnedActorID;
-    p = (void *)dActor_c::FindWithID(id);
+    p = dActor_c::FindWithID(id);
     this->mFoundActor = (dActor_c *)p;
     if (this->mFoundActor != 0) {
         func_ov063_02118f24(static_cast<daTrsIcon_c *>(this->mFoundActor), v);
@@ -1888,7 +1890,7 @@ void daTrs_c::func_ov063_0211934c() {
     void *r4;
     u8 st;
 
-    r4 = (void *)this->mTalkPlayer;
+    r4 = this->mTalkPlayer;
     if (r4 == 0 || this->mVariant != 2) {
         KillAndTrackInDeathTable();
         func_0201267c(0xd5, &this->mCamSpacePos);
@@ -1904,7 +1906,7 @@ void daTrs_c::func_ov063_0211934c() {
             this->mPrevAngleX = this->mHomeAngleX;
             this->mPrevAngleY = this->mHomeAngleY;
             this->mPrevAngleZ = this->mHomeAngleZ;
-            s16 *src = (s16 *)&this->mPrevAngleX;
+            s16 *src = &this->mPrevAngleX;
             this->mAngleX = src[0];
             this->mAngleY = src[1];
             this->mAngleZ = src[2];
@@ -1923,10 +1925,10 @@ void daTrs_c::func_ov063_0211934c() {
     st = this->mSubState;
     switch (st) {
     case 0:
-        if (((daPly_c *)r4)->StartTalk(*(fBase_c *)(this), 1) == 0)
+        if (((daPly_c *)r4)->StartTalk(*this, 1) == 0)
             return;
         {
-            u8 *q = (u8 *)&this->mSubState;
+            u8 *q = &this->mSubState;
             *q = *q + 1;
         }
         return;
@@ -1935,20 +1937,20 @@ void daTrs_c::func_ov063_0211934c() {
     {
         void *found;
         this->mFoundActor = dActor_c::FindWithID(this->mBigBooID);
-        found = (void *)this->mFoundActor;
+        found = this->mFoundActor;
         if (found != 0) {
             s32 *cnt = &((daTrs_c *)found)->mBooDefeatCount;
             *cnt = *cnt + 1;
         }
-        found = (void *)this->mFoundActor;
+        found = this->mFoundActor;
         if (found != 0 && ((daTrs_c *)found)->mBooDefeatCount == 5) {
-            ((daPly_c *)r4)->ShowMessage(*(fBase_c *)(this), 0xb5, &this->mPos, 0, 2);
+            ((daPly_c *)r4)->ShowMessage(*this, 0xb5, &this->mPos, 0, 2);
         } else {
-            ((daPly_c *)r4)->ShowMessage(*(fBase_c *)(this), 0xb4, &this->mPos, 0, 2);
+            ((daPly_c *)r4)->ShowMessage(*this, 0xb4, &this->mPos, 0, 2);
         }
         this->mFoundActor = 0;
         {
-            u8 *q = (u8 *)&this->mSubState;
+            u8 *q = &this->mSubState;
             *q = *q + 1;
         }
         func_0201267c(0xf8, &this->mCamSpacePos);
@@ -1962,24 +1964,24 @@ void daTrs_c::func_ov063_0211934c() {
         if (this->mBigBooID != 0) {
             void *found;
             this->mFoundActor = dActor_c::FindWithID(this->mBigBooID);
-            found = (void *)this->mFoundActor;
+            found = this->mFoundActor;
             if (found != 0 && ((daTrs_c *)found)->mBooDefeatCount == 5) {
                 ((daTrs_c *)found)->func_ov063_02116244();
                 {
-                    u16 *p = (u16 *)&this->mSoundCount;
+                    u16 *p = &this->mSoundCount;
                     *p = *p + 1;
                 }
             }
         }
         {
-            u8 *q = (u8 *)&this->mSubState;
+            u8 *q = &this->mSubState;
             *q = *q + 1;
         }
         return;
 
     case 3:
         if (this->mSoundCount != 0) {
-            if (Sound::PlaySecretSound(this, (u16 *)((u16 *)&this->mSoundCount)) == 0)
+            if (Sound::PlaySecretSound(this, (&this->mSoundCount)) == 0)
                 return;
             this->MarkForDestruction();
             if (((this->mCapId) & 0xf) >= 6)
@@ -1994,7 +1996,7 @@ void daTrs_c::func_ov063_0211934c() {
             this->mPrevAngleX = this->mHomeAngleX;
             this->mPrevAngleY = this->mHomeAngleY;
             this->mPrevAngleZ = this->mHomeAngleZ;
-            s16 *src = (s16 *)&this->mPrevAngleX;
+            s16 *src = &this->mPrevAngleX;
             this->mAngleX = src[0];
             this->mAngleY = src[1];
             this->mAngleZ = src[2];
@@ -2022,7 +2024,7 @@ void daTrs_c::func_ov063_0211934c() {
             this->mPrevAngleX = this->mHomeAngleX;
             this->mPrevAngleY = this->mHomeAngleY;
             this->mPrevAngleZ = this->mHomeAngleZ;
-            s16 *src = (s16 *)&this->mPrevAngleX;
+            s16 *src = &this->mPrevAngleX;
             this->mAngleX = src[0];
             this->mAngleY = src[1];
             this->mAngleZ = src[2];
@@ -2052,7 +2054,7 @@ void daTrs_c::UpdateDying() {
         this->mPrevAngleX = this->mHomeAngleX;
         this->mPrevAngleY = this->mHomeAngleY;
         this->mPrevAngleZ = this->mHomeAngleZ;
-        s16* src = (s16*)&this->mPrevAngleX;
+        s16 *src = &this->mPrevAngleX;
         this->mAngleX = src[0];
         this->mAngleY = src[1];
         this->mAngleZ = src[2];
@@ -2085,7 +2087,7 @@ void daTrs_c::UpdateBouncedOn() {
 void daTrs_c::func_ov063_02119894() {
 
     this->mBooFlags.hitByParam3Player = 0;
-    if (*(u16 *)&this->mStateTimer == 0) {
+    if (this->mStateTimer == 0) {
         unsigned r0 = (unsigned)RandomIntInternal(&data_0209e650.value);
         this->mSpeedJitter = (int)(((r0 >> 16) & 0xfff) * 5);
         r0 = (unsigned)RandomIntInternal(&data_0209e650.value);
@@ -2106,7 +2108,7 @@ void daTrs_c::UpdateChase() {
 
     unsigned short *p = (unsigned short *)M(&this->mBooFlags);
     *p &= ~TRS_FLAG_HIT_BY_PARAM3_PLAYER;
-    if (*(u16 *)&this->mStateTimer == 0) {
+    if (this->mStateTimer == 0) {
         int r0 = RandomIntInternal(&data_0209e650.value);
         this->mSpeedJitter = (((unsigned)r0 >> 16) & 0xfff) * 5;
         int ri = RandomIntInternal(&data_0209e650.value);
@@ -2130,7 +2132,7 @@ void daTrs_c::UpdateNonlethalHit() {
 void daTrs_c::UpdateEmerge() {
 
     this->mBooFlags.hitByParam3Player = 0;
-    if (*(u16 *)&this->mStateTimer >= 0x1e) {
+    if (this->mStateTimer >= 0x1e) {
         this->mState = 1;
     } else {
         this->mVertSpeed = 0;
@@ -2194,9 +2196,9 @@ void daTrs_c::func_ov063_02119c18(unsigned int id) {
 
     void* r = (void*)this->mCachedActorID;
     if (r != 0) return;
-    void *a = (void *)dActor_c::FindWithActorID(id, 0);
+    void *a = dActor_c::FindWithActorID(id, 0);
     this->mFoundActor = (dActor_c *)a;
-    a = (void *)this->mFoundActor;
+    a = this->mFoundActor;
     if (a != 0) {
         this->mCachedActorID = ((dActor_c *)a)->uniqueID;
     }
@@ -2232,7 +2234,7 @@ void daTrs_c::func_ov063_02119cc0(int unused, s16 a2, int a3) {
         this->mStateTimer = 0;
     } else {
         unsigned rnd = (unsigned)RandomIntInternal(&data_0209e650.value) >> 16 & 0x3f;
-        if (*(u16 *)&this->mStateTimer >= rnd + 0x5a) {
+        if (this->mStateTimer >= rnd + 0x5a) {
             int rnd2 =
                 (int)((unsigned)RandomIntInternal(&data_0209e650.value) >> 16 & 0x3fff) - 0x2000;
             this->mTargetAngleY = this->mPrevAngleY + rnd2;
@@ -2266,12 +2268,12 @@ void daTrs_c::ChaseMario(int a1, short a2, int a3) {
         if (this->mBooFlags.mirrored) {
         } else {
             if (this->mAttackTimer != 0) {
-                unsigned short *q = (unsigned short *)&this->mAttackTimer;
+                unsigned short *q = &this->mAttackTimer;
                 *q = *q - 1;
             }
         }
         if (this->mNextRelocateTimer != 0) {
-            unsigned short *q = (unsigned short *)&this->mNextRelocateTimer;
+            unsigned short *q = &this->mNextRelocateTimer;
             *q = *q - 1;
         }
 
@@ -2458,7 +2460,7 @@ int daTrs_c::UpdateDuringDeath() {
 
     VecFx32 v, w;
 
-    if (*(u16 *)&this->mStateTimer == 0) {
+    if (this->mStateTimer == 0) {
         this->mHorzSpeed = 0x28000;
         this->mPrevAngleY = this->mClosestPlayer->mAngleY;
         this->mChildDeaths = 1;
@@ -2466,10 +2468,10 @@ int daTrs_c::UpdateDuringDeath() {
         goto fall;
     }
 
-    if (*(u16 *)&this->mStateTimer == 5)
+    if (this->mStateTimer == 5)
         this->mTargetOpacity = 8;
 
-    if (*(u16 *)&this->mStateTimer <= 0x1e) {
+    if (this->mStateTimer <= 0x1e) {
         if (this->mWithMeshClsn.IsOnWall() == 0)
             goto fall;
     }
@@ -2512,10 +2514,10 @@ fall:
 
 int daTrs_c::UpdateDuringNonlethalHit(int arg1) {
     Stop();
-    if (*(u16 *)&mStateTimer == 0)
+    if (mStateTimer == 0)
         SetMoveYawForDuringHit(1);
     {
-        u16 t = *(u16 *)&mStateTimer;
+        u16 t = mStateTimer;
         if (t < 0x20) {
             MoveDuringHit(1, ((arg1 * data_ov063_0211e7e0[t]) << 12) / 5000);
             goto ret0;
@@ -2538,9 +2540,9 @@ int daTrs_c::UpdateAfterBouncedOn(int arg) {
     int rv;
 
     Stop();
-    if (*(u16 *)&mStateTimer == 0)
+    if (mStateTimer == 0)
         SetMoveYawForDuringHit(0);
-    t = *(u16 *)&mStateTimer;
+    t = mStateTimer;
     if (t < 0x20) {
         MoveDuringHit(0, ((arg * data_ov063_0211e7e0[t]) << 12) / 5000);
         rv = 0;
@@ -2561,11 +2563,11 @@ void daTrs_c::ResetAfterHit() {
 }
 
 void daTrs_c::ShakeAfterHit() {
-    mAngle.y += (FX_CosIdx((u16)(s16)((*(u16 *)&mStateTimer - 0x1f) << 13) >> 4) << 10) / 4096;
+    mAngle.y += (FX_CosIdx((u16)(s16)((mStateTimer - 0x1f) << 13) >> 4) << 10) / 4096;
 }
 
 void daTrs_c::MoveDuringHit(int cond, int val) {
-    s16 ang = (*(u16 *)&mStateTimer + 1) << 11;
+    s16 ang = (mStateTimer + 1) << 11;
 
     mHorzSpeed = val;
     mVertSpeed = FX_CosIdx((u16)ang >> 4);
@@ -2573,8 +2575,8 @@ void daTrs_c::MoveDuringHit(int cond, int val) {
     if (cond == 0)
         return;
 
-    mAngle.y += data_ov063_0211e7e0[*(u16 *)&mStateTimer];
-    mAngle.z += data_ov063_0211e7e0[*(u16 *)&mStateTimer];
+    mAngle.y += data_ov063_0211e7e0[mStateTimer];
+    mAngle.z += data_ov063_0211e7e0[mStateTimer];
 }
 
 void daTrs_c::SetMoveYawForDuringHit(int cond) {
@@ -2594,7 +2596,7 @@ void daTrs_c::SetMoveYawForDuringHit(int cond) {
 
 int daTrs_c::VanishOrAppear() {
 
-    dActor_c *a = (dActor_c*)this;
+    dActor_c *a = this;
     int r6 = a->GetSubtraction(this->mAngleToPlayer, this->mPrevAngleY);
     int r0 = a->GetSubtraction(this->mPrevAngleY,
                                this->mClosestPlayer->mAngleY);
@@ -2642,12 +2644,12 @@ void daTrs_c::ApproachTargetOpacityAndUpdateScale() {
             if (cur + 0x14 >= tgt) {
                 this->mOpacity = tgt;
             } else {
-                u8 *p = (u8*)&this->mOpacity;
+                u8 *p = &this->mOpacity;
                 *p += 0x14;
             }
         } else {
             if (cur - 0x14 > tgt) {
-                u8 *p = (u8*)&this->mOpacity;
+                u8 *p = &this->mOpacity;
                 *p -= 0x14;
             } else {
                 this->mOpacity = tgt;
@@ -2700,7 +2702,8 @@ void daTrs_c::SpawnCourtyardBooTriplet() {
         rot.y = this->mPrevAngleY;
         rot.z = this->mPrevAngleZ;
         rot.y = (u32)RandomIntInternal(&data_0209e650.value) >> 16;
-        dActor_c::Spawn(TRS_ID_TERESA, 0xfff6, *(const Vector3 *)(&pos), (const Vector3_16 *)(&rot), this->mAreaIdx, -1);
+        dActor_c::Spawn(TRS_ID_TERESA, 0xfff6, *(const Vector3 *)(&pos), (&rot), this->mAreaIdx,
+                        -1);
     }
     this->MarkForDestruction();
 }
@@ -2953,10 +2956,10 @@ int daTrs_c::Behavior()
         mVertAccel = -0x2000;
         UpdateCarriedItemPos();
         if (mEatenByYoshi != 0) {
-            u16 *p100 = (u16 *)&mStateTimer;
+            u16 *p100 = &mStateTimer;
             if (p100[2] == 0) {
                 mEatenByYoshi = 0;
-                ((u16 *)&mStateTimer)[2] = 0;
+                (&mStateTimer)[2] = 0;
                 mVertAccel = 0;
                 mVertSpeed = 0;
                 goto block_39;
@@ -2965,11 +2968,11 @@ int daTrs_c::Behavior()
         v = (((mFlags) & 0x40000) ? 1 : 0);
         if (v != 0) {
             u8 st = mTalkStep;
-            daPly_c *pl = (daPly_c *)mEatingPlayer;
+            daPly_c *pl = mEatingPlayer;
             switch (st) {
             case 0:
                 if (pl->ShowMessage(*this, 0x15a, 0, 0, 2) != 0) {
-                    bp = (u8 *)&this->mTalkStep;
+                    bp = &this->mTalkStep;
                     *bp = (*bp) + 1;
                     func_0201267c(0xf8, &mCamSpacePos);
                 }
@@ -2977,7 +2980,7 @@ int daTrs_c::Behavior()
             case 1:
                 if (pl->GetTalkState() == -1) {
                     pl->DropActor();
-                    bp = (u8 *)&this->mTalkStep;
+                    bp = &this->mTalkStep;
                     *bp = (*bp) + 1;
                 }
                 break;
@@ -3048,7 +3051,7 @@ block_39:
 
     if (mBooFlags.followHeading != 0)
         mAngleY = mPrevAngleY;
-    *(u16 *)&mStateTimer += 1;
+    mStateTimer += 1;
     DecIfAbove0_Short(&mChaseDelay);
     if (mPrevState != mState)
         mStateTimer = 0;

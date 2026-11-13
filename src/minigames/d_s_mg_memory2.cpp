@@ -468,7 +468,7 @@ void dScMgMemory2_c::CardSelect(int cardIndex) {
         return;
 
     mSelectedValues[selectionIndex] = mCards[cardIndex].value;
-    mSelectedCards[mSelectedCount] = (u8)cardIndex;
+    mSelectedCards[mSelectedCount] = cardIndex;
     mSelectedCount++;
     mCards[cardIndex].state = CARD_FLIP_UP;
     func_02012718(0x143, mCards[cardIndex].x);
@@ -955,7 +955,7 @@ void dScMgMemory2_c::ChoosePreviewCards() {
                 cardIndex = MG_RAND(cardCount);
             } while (1);
         }
-        mPreviewCards[previewIndex] = (unsigned char)cardIndex;
+        mPreviewCards[previewIndex] = cardIndex;
     }
 }
 
@@ -1082,7 +1082,7 @@ void dScMgMemory2_c::StartRound(int /* arg */) {
         missLimit = 5;
     MgCoins_Reset();
     gMgCoinsShowDelta = 1;
-    mMaxMisses = (unsigned char)missLimit;
+    mMaxMisses = missLimit;
 }
 
 /* Vtable slot 9: set the camera, then draw credits, coins, the message,

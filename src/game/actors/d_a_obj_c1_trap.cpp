@@ -114,7 +114,7 @@ void daObjC1_Trap_c::OnCollision(dActor_c &other) {
     spawner = (daObjC1_Trap_c *)dActor_c::FindWithID(spawnerID);
     if (!spawner)
         return;
-    isPlayer = (int)(other.actorID == 0xbf);
+    isPlayer = (other.actorID == 0xbf);
     if (!isPlayer)
         return;
 
@@ -127,7 +127,7 @@ void daObjC1_Trap_c::OnCollision(dActor_c &other) {
     spawnerPos.y = spawnerPosition->y;
     spawnerPos.z = spawnerPosition->z;
     angle = Vec3_HorzAngle((const Vector3 *)&spawnerPos, (const Vector3 *)&otherPos);
-    relativeAngle = (s16)(angle + spawner->mAngleY);
+    relativeAngle = (angle + spawner->mAngleY);
     distance = Vec3_HorzDist((const Vector3 *)&spawnerPos, (const Vector3 *)&otherPos);
     projection = FX_SinIdx((u16)relativeAngle >> 4);
     projectedDistance = FX_MUL(distance, projection);

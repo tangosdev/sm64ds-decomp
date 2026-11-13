@@ -95,7 +95,7 @@ extern ShlStateEnd data_ov102_0214ea78;
 extern SharedFilePtr *data_ov102_0214d70c[];
 
 /* -- other modules -- */
-int  func_ov002_020ad660(char *self, char *clsn, char *model, int kind);
+int func_ov002_020ad660(void *self, void *clsn, void *model, int kind);
 int  func_ov002_020cc16c(void *player, void *actor);
 void Matrix4x3_FromRotationY(void *m, int angle);
 int  SurfaceInfo_TestFlag0x20(int *si);
@@ -160,7 +160,7 @@ s32 daShl_c::InitResources()
  */
 s32 daShl_c::Behavior()
 {
-    if (func_ov002_020ad660((char *)this, (char *)&mMeshClsn, (char *)&mModel, 3) != 0)
+    if (func_ov002_020ad660(this, &mMeshClsn, &mModel, 3) != 0)
         return 1;
 
     if (UpdateYoshiEat(mMeshClsn) != 0) {

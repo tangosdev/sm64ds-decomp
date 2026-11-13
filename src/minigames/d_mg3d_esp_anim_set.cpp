@@ -284,8 +284,8 @@ void dMg3DEspModel_c::Behavior()
 
     if (mShowSparks == 0) return;
 
-    mParticleSys = (u32)Particle::System::New(mParticleSys, kPtclMg3DEspSparks, 0x48c000, 0x140000,
-                                              0x200000, 0, 0);
+    mParticleSys =
+        Particle::System::New(mParticleSys, kPtclMg3DEspSparks, 0x48c000, 0x140000, 0x200000, 0, 0);
 }
 
 void dMg3DEspModel_c::Hit()
@@ -369,7 +369,7 @@ void dMg3DEspModel_c::Reset()
 
 int dMg3DEspModel_c::InitResources()
 {
-    if (func_020179b4(&gEspCardModelFile, (char *)&mAnmModel, 1) == 0)
+    if (func_020179b4(&gEspCardModelFile, &mAnmModel, 1) == 0)
         return 0;
     dExtAnmTexPat_c::LoadFile(gEspCardTexSeqFile);
     dExtFrameCtrl_c::LoadFile(gEspCardStartAnimFile);

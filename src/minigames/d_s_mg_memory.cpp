@@ -125,7 +125,7 @@ void dScMgMemory_c::UpdateCursor() {
         return;
 
     {
-        unsigned short *timer = (unsigned short *)&mCursor.blinkTimer;
+        unsigned short *timer = &mCursor.blinkTimer;
         *timer = *timer + 1;
         if (*timer < 0x14)
             return;

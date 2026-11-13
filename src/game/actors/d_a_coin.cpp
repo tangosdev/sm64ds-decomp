@@ -155,7 +155,7 @@ void daCoin_c::ProbeFloor() {
     int offScreen;
     dActor_c* platform;
 
-    offScreen = (int)((mFlags & 8) != 0);
+    offScreen = ((mFlags & 8) != 0);
     if (offScreen) return;
 
     if (((CoinFlagBits*)&mCoinFlags)->floorState != FLOOR_UNPROBED) return;
@@ -304,7 +304,7 @@ void daCoin_c::UpdateModelMatrix() {
     mCommonModel1.mat4x3.m[10] = mPosY >> 3;
     mCommonModel1.mat4x3.m[11] = mPosZ >> 3;
     mCommonModel2.mat4x3 = mCommonModel1.mat4x3;
-    *(struct Matrix4x3*)&mShadowMat = *(struct Matrix4x3*)IDENTITY_MATRIX4X3;
+    mShadowMat = *(struct Matrix4x3 *)IDENTITY_MATRIX4X3;
     mShadowMat.m[9] = mPosX >> 3;
     mShadowMat.m[10] = mPosY >> 3;
     mShadowMat.m[11] = mPosZ >> 3;
@@ -628,7 +628,7 @@ void daCoin_c::StateBounce() {
 
     if (normal.x != 0 || normal.z != 0) {
         int slide = data_ov002_020ff078[floorClass];
-        int *velocity = (int *)&mSpeedX;
+        int *velocity = &mSpeedX;
         *velocity += normal.x * slide;
         mSpeedZ += normal.z * slide;
         mHorzSpeed = Vec3_HorzLen(velocity);
@@ -685,7 +685,7 @@ void daCoin_c::StateIdle() {
     if (Event::GetBit(mSpawnFilter) == 0) return;
     ((CoinFlagBits *)&mCoinFlags)->active = 1;
     mBehaviorType = BEHAVIOR_RESTING;
-    *(u32 *)&mdCc_c.flags &= ~1;
+    mdCc_c.flags &= ~1;
     found = dActor_c::FindWithActorID(0xa, 0);
     if (found) {
         mDisappearTimer = ((daObjBC_Switch_cView *)found)->mCoinTimerSeed;
@@ -718,7 +718,7 @@ s32 daCoin_c::CleanupResources()
     extern char *data_ov002_020ff060[];
 
     dActor_c *manager;
-    int isRed = (int)(actorID == 0x121);
+    int isRed = (actorID == 0x121);
     if (isRed != 0) ((SharedFilePtr *)&data_ov002_0210d9a8)->Release();
     if (mCoinType == COIN_BLUE) {
         ((SharedFilePtr *)data_ov002_020ff06c[mCoinType])->Release();
@@ -727,7 +727,7 @@ s32 daCoin_c::CleanupResources()
     UntrackStar(mTrackStarID);
     manager = dActor_c::FindWithID(mPuzzleManagerID);
     if (manager != 0) {
-        int isFlCoin = (int)(manager->actorID == 0x4f);
+        int isFlCoin = (manager->actorID == 0x4f);
         if (isFlCoin != 0) {
             if (((daObjFl_Coin_cView *)manager)->mLiveCoinCount != 0) {
                 unsigned char *count = &((daObjFl_Coin_cView *)manager)->mLiveCoinCount;
@@ -897,12 +897,12 @@ s32 daCoin_c::InitResources()
         isRed = id;
         isRed = (isRed == 0x121);
         if (isRed) {
-            mSpawnFilter = (u8)((param1 >> 4) & 7);
+            mSpawnFilter = ((param1 >> 4) & 7);
             dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov002_0210d9a8);
             mCoinType = COIN_RED;
             if (SublevelToLevel(gCurrentSublevel) == 0x13 || mSpawnFilter == gCurrentStarId) {
                 if (GetBitInDeathTable() == 0) {
-                    for (slot = 0; slot < 0xc; slot = (s8)(slot + 1)) {
+                    for (slot = 0; slot < 0xc; slot = (slot + 1)) {
                         if (STAR_MARKERS[slot] == 0) {
                             SetStarMarker(slot, this, 4);
                             mTrackStarID = slot;
@@ -916,7 +916,7 @@ s32 daCoin_c::InitResources()
             isBlue = id;
             isBlue = (isBlue == 0x122);
             if (isBlue) {
-                mSpawnFilter = (u8)((param1 >> 4) & 7);
+                mSpawnFilter = ((param1 >> 4) & 7);
                 mCoinType = COIN_BLUE;
             } else {
                 mCoinType = COIN_YELLOW;

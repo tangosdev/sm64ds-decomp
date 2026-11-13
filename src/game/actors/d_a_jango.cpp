@@ -341,7 +341,7 @@ int daJango_c::Behavior()
 {
     StateRecord *m;
 
-    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     DecIfAbove0_Short(&mTimer);
 
     m = (StateRecord *)mState;
@@ -633,7 +633,7 @@ int daJango_c::UpdateFlyPathState() {
         VEC_Subtract(&mPos, &scaled, &mPos);
         if (mRiseToFarNode == 1) {
             mPosY = zero[1];
-            if (*(u16 *)&mStateTimer == 0) {
+            if (mStateTimer == 0) {
                 mVertSpeed = 0;
                 mRiseToFarNode = 0;
             }
@@ -809,13 +809,13 @@ int daJango_c::UpdateCircleState() {
 
     if (mSilverStarFlag != 2 && gCurrentSublevel != 0x18 && gCurrentSublevel != 0x19 &&
         (mCarriedItem != CARRIES_NO_STAR || mHeldActorID != 0) && ChangeTarget() != 0 &&
-        *(u16 *)&mStateTimer != 0) {
+        mStateTimer != 0) {
         mStateTimer = 0;
     }
 
     UpdateCircleVelocity();
 
-    if (*(u16 *)&mStateTimer == 0 && mLeaveDelay == 0) {
+    if (mStateTimer == 0 && mLeaveDelay == 0) {
         PathPtr path;
         path.FromID(mPathId);
         path.GetNode(node, mPathNodeIndex);
@@ -910,8 +910,7 @@ int daJango_c::UpdateSwoopState() {
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
     MTX_MultVec43(&v, &data_020a0e68, (Vector3 *)&mSpeedX);
     HandleCylinderHit();
-    /* Retail reads the timer as unsigned here; the inherited field is s16. */
-    if ((u16)mStateTimer == 0 || mWithMeshClsn.IsOnWall() != 0) {
+    if (mStateTimer == 0 || mWithMeshClsn.IsOnWall() != 0) {
         mTimer = 0x1e;
         ChangeState(JANGO_STATE_CIRCLE);
     }

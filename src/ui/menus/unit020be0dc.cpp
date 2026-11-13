@@ -177,9 +177,9 @@ void func_ov007_020beb80(Ov007Figure *fig) {
     int speed;
     Vector3 *pos = &bone0->t;
     yaw = FX_Atan2(row[0], row[2]);
-    motion.x = (short)(pos->x - fig->prevPos.x);
-    motion.y = (short)(pos->y - fig->prevPos.y);
-    motion.z = (short)(pos->z - fig->prevPos.z);
+    motion.x = (pos->x - fig->prevPos.x);
+    motion.y = (pos->y - fig->prevPos.y);
+    motion.z = (pos->z - fig->prevPos.z);
     if (fig->model->animTick != 0) {
         fig->yaw = yaw;
         *(Vec3Words *)&fig->prevPos = *(Vec3Words *)pos;
@@ -210,7 +210,7 @@ void func_ov007_020beb80(Ov007Figure *fig) {
                 *(Vec3sWords *)&sys->direction = *(Vec3sWords *)&motion;
                 vel = (short)FX_MUL(speed, 0x460);
             }
-            sys->emitInterval = (u8)(((frames << 2) >> 12) + 1);
+            sys->emitInterval = (((frames << 2) >> 12) + 1);
             sys->callbackVelocity = vel;
             sys->callbackFlags &= ~2;
             *(Vec3Words *)&sys->position = *(Vec3Words *)pos;
@@ -373,8 +373,8 @@ void func_ov007_020be7a8(void *pos, unsigned short *outX, unsigned short *outY, 
         y = y + data_ov007_020d7c58[WORK->figureIndex];
     }
 
-    *outX = (unsigned short)x;
-    *outY = (unsigned short)y;
+    *outX = x;
+    *outY = y;
     *outScale = 0xfff;
 }
 
@@ -472,10 +472,10 @@ void func_ov007_020be3bc(void) {
     for (i = 0; i < 16; i++) {
         int *s = SPRITES->affine[i];
         GXOamAffine *d = (GXOamAffine *)(oam + i * 4);
-        d->PA = (short)(s[0] >> 4);
-        d->PB = (short)(s[1] >> 4);
-        d->PC = (short)(s[2] >> 4);
-        d->PD = (short)(s[3] >> 4);
+        d->PA = (s[0] >> 4);
+        d->PB = (s[1] >> 4);
+        d->PC = (s[2] >> 4);
+        d->PD = (s[3] >> 4);
     }
 }
 
@@ -547,7 +547,7 @@ int func_ov007_020be0dc(void) {
             if (scale >= 0x12)
                 scale = 0x11;
             if (node->animIndex == 0)
-                Sprite_SetAnimation(node, 0, 0, 0, (int)scale);
+                Sprite_SetAnimation(node, 0, 0, 0, scale);
         }
 
         if (node->animIndex == 0)

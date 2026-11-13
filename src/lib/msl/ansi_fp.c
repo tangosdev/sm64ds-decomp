@@ -58,12 +58,12 @@ int func_02071708(int w0, ...) {
             } while (c == 0);
         }
         c = ~c;
-        *p = (unsigned char)c;
+        *p = c;
         if ((*(volatile unsigned char *)p & 1) == 0)
             return count;
         do {
             count++;
-            *p = (unsigned char)((int)*(volatile unsigned char *)p >> 1);
+            *p = ((int)*(volatile unsigned char *)p >> 1);
         } while (*(volatile unsigned char *)p & 1);
         return count;
     }
@@ -137,7 +137,7 @@ void __ull2dec(Decimal *result, unsigned long long v) {
     result->sig.length = 0;
     if (v != 0) {
         do {
-            result->sig.text[result->sig.length++] = (unsigned char)(v % 10);
+            result->sig.text[result->sig.length++] = (v % 10);
             v /= 10;
         } while (v != 0);
     }
@@ -153,7 +153,7 @@ void __ull2dec(Decimal *result, unsigned long long v) {
             e--;
         }
     }
-    result->exp = (short)(result->sig.length - 1);
+    result->exp = (result->sig.length - 1);
 }
 
 void __timesdec(Decimal *result, const Decimal *x, const Decimal *y) {
@@ -191,21 +191,21 @@ void __timesdec(Decimal *result, const Decimal *x, const Decimal *y) {
             accumulator += *jp * *kp;
         }
 
-        *--ip = (unsigned char)(accumulator % 10);
+        *--ip = (accumulator % 10);
         accumulator /= 10;
     }
 
-    result->exp = (short)(x->exp + y->exp);
+    result->exp = (x->exp + y->exp);
 
     if (accumulator) {
-        *--ip = (unsigned char)accumulator;
+        *--ip = accumulator;
         result->exp++;
     }
 
     for (i = 0; i < 32 && ip < ep; i++, ip++) {
         result->sig.text[i] = *ip;
     }
-    result->sig.length = (unsigned char)i;
+    result->sig.length = i;
 
     if (ip < ep && *ip >= 5) {
         if (*ip == 5) {
@@ -231,9 +231,9 @@ void __str2dec(Decimal *result, const char *digits, short exp) {
     result->sign = 0;
     i = 0;
     while (i < 0x20 && digits[0] != 0) {
-        result->sig.text[i++] = (unsigned char)(*digits++ - 0x30);
+        result->sig.text[i++] = (*digits++ - 0x30);
     }
-    result->sig.length = (unsigned char)i;
+    result->sig.length = i;
     if (digits[0] == 0)
         return;
     if (digits[0] < 5)
@@ -423,7 +423,7 @@ void __num2dec_internal(char *out, double x) {
             nbits = func_02071708(mp[1] | 0x100000) + 0x20;
         k = 0x35 - nbits;
         __two_exp((Decimal *)big, e - k);
-        __ull2dec((Decimal *)dec, (unsigned long long)ldexp(m, k));
+        __ull2dec((Decimal *)dec, ldexp(m, k));
         __timesdec((Decimal *)out, (Decimal *)dec, (Decimal *)big);
         out[0] = neg;
     }

@@ -92,7 +92,7 @@ int dClipper::ClipSphere(Vector3 &viewPos, Fix12i radius, u8 *cachedPlane) {
                     if (planeIndex == firstPlane)
                         return depth;
                 }
-                *cachedPlane = (u8)planeIndex;
+                *cachedPlane = planeIndex;
             }
         }
         return 0x7FFFFFFF;
@@ -119,7 +119,7 @@ int dClipper::ClipSphere(Vector3 &viewPos, Fix12i radius, u8 *cachedPlane) {
 int dClipper::TransformAndClip(Matrix4x3 &worldToView, Vector3 &worldPos, Fix12i radius,
                                Vector3 &viewPos) {
     MTX_MultVec43(&worldPos, &worldToView, &viewPos);
-    return ClipSphere(viewPos, radius, (u8 *)0);
+    return ClipSphere(viewPos, radius, 0);
 }
 
 /* Rebuild the four view-frustum side planes from the current field of view
