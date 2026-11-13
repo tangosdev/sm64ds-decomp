@@ -919,9 +919,9 @@ void SlotLamp_Tick(void *o_) {
  * way: a timer and an on flag. This clears it, 0210c180 starts it and
  * 0210c1a8 ticks it. */
 extern "C" { /* .c-derived member: C linkage for the whole block */
-void SlotLamp_Clear(char *blink) {
-    ((SlotLamp *)blink)->mTimer = 0;
-    ((SlotLamp *)blink)->mOn = 0;
+void SlotLamp_Clear(SlotLamp *lamp) {
+    lamp->mTimer = 0;
+    lamp->mOn = 0;
 }
 }
 
@@ -960,9 +960,9 @@ void SlotBlink_Tick(void *o_) {
  * a timer and a visible flag. This clears one, 0210c218 starts one, 0210c278
  * ticks it and 0210c234 draws it. */
 extern "C" { /* .c-derived member: C linkage for the whole block */
-void SlotBlink_Clear(char *sprite) {
-    ((SlotBlink *)sprite)->mTimer = 0;
-    ((SlotBlink *)sprite)->mVisible = 0;
+void SlotBlink_Clear(SlotBlink *sprite) {
+    sprite->mTimer = 0;
+    sprite->mVisible = 0;
 }
 }
 
@@ -1111,10 +1111,9 @@ int dScMgSlot1_c::SlotReels_CheckStopped() {
 
 extern "C" { /* .c-derived member: C linkage for the whole block */
 void Slot1_InitHud(void *self) {
-    char *raw = (char *)self;
-    ((dScMgSlot1_c *)raw)->mPrevMatchedSymbol = -1;
-    *(u8 *)(raw + 0x4707) = 1;
     dScMgSlot1_c *scene = (dScMgSlot1_c *)self;
+    scene->mPrevMatchedSymbol = -1;
+    scene->pad_4707[0] = 1;
     scene->mSpeedTableOffset = 0;
     scene->mCredits = Mg_GetSavedRecord0();
     scene->mCreditsShown = scene->mCredits;
@@ -1536,9 +1535,9 @@ s32 dScMgSlot1_c::InitResources() {
 /* The constructor is inline, so the factory below holds it: the base
    constructor, mBetIcon, and the three marker clears. */
 inline dScMgSlot1_c::dScMgSlot1_c() {
-    SlotBlink_Clear((char *)&mMatchBlink);
-    SlotBlink_Clear((char *)&mWildBlink);
-    SlotLamp_Clear((char *)&mPayoutLamp);
+    SlotBlink_Clear(&mMatchBlink);
+    SlotBlink_Clear(&mWildBlink);
+    SlotLamp_Clear(&mPayoutLamp);
 }
 
 /* Reconstructed source-style name. Historical alias: func_ov006_0210d6b8. */
