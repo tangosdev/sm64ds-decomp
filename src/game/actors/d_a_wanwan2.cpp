@@ -410,7 +410,7 @@ extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
         cur.x = ax; cur.y = ay; cur.z = az;
         thisx->mLinkPos[0].x = ax;
         ay = cur.y;
-        p6a0 = (int *)&thisx->mChainTimer;
+        p6a0 = &thisx->mChainTimer;
         thisx->mLinkPos[0].y = ay;
         {
             int cz = cur.z;
@@ -592,15 +592,15 @@ int daWanwan2_c::Render()
    exists and is not vanished. */
 int daWanwan2_c::Behavior()
 {
-    DecIfAbove0_Short((unsigned short *)&mCoinTimer);
-    DecIfAbove0_Short((unsigned short *)&unk_6a8);
-    if (DecIfAbove0_Short((unsigned short *)&mHaltTimer) != 0) {
+    DecIfAbove0_Short(&mCoinTimer);
+    DecIfAbove0_Short(&unk_6a8);
+    if (DecIfAbove0_Short(&mHaltTimer) != 0) {
         ApproachLinear(mScaleX, 0x1000, 0x500);
         mScaleZ = mScaleX;
         mScaleY = mScaleZ;
         func_ov100_02143b68((char *)this);
         mHorzSpeed = 0;
-        UpdatePos((dCc_c *)&mdCcAcPos_c);
+        UpdatePos(&mdCcAcPos_c);
         if (func_ov100_02143370((char *)this) != 0) {
             mTerminalVelocity = 0;
         }
@@ -619,7 +619,7 @@ int daWanwan2_c::Behavior()
     }
 
     mHorzSpeed = 0x17000;
-    UpdatePos((dCc_c *)&mdCcAcPos_c);
+    UpdatePos(&mdCcAcPos_c);
 
     if (func_ov100_02143370((char *)this) != 0) {
         if (unk_6a8 == 0) {
