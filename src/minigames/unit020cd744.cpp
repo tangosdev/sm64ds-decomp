@@ -691,10 +691,7 @@ extern "C" int TrmpItem_HitTest2D(TrmpItem *item, TrampolineObjectCallbacks *jum
         previousSide = -1;
     else if (previousSide > 1)
         previousSide = 1;
-    if (currentSide * previousSide > 0)
-        goto done;
-    if (currentSide == 0 && previousSide == 0)
-        goto done;
+    if (currentSide * previousSide <= 0 && (currentSide != 0 || previousSide != 0)) {
 
     // Require an intersection strictly between the two line endpoints.
     Vec2_Sub((int *)&movementDirection, (int *)&currentProjection, (int *)&previousProjection);
@@ -715,7 +712,7 @@ extern "C" int TrmpItem_HitTest2D(TrmpItem *item, TrampolineObjectCallbacks *jum
         startSide = 1;
     if (endSide * startSide < 0 && (endSide != 0 || startSide != 0))
         result = 1;
-done:
+    }
     return result;
 }
 
