@@ -52,24 +52,23 @@
 #include "nitro/cp/sqrt.h"
 
 extern "C" {
-
-/* Shared collider helpers, defined in the arm9 TU (src/engine/collision/d_bg_w_kc.cpp).
+extern /* Shared collider helpers, defined in the arm9 TU (src/engine/collision/d_bg_w_kc.cpp).
    local extern: they are free functions of that TU and no header declares them. */
 s16 func_020396dc(dBgW_Kc *self, KCL_Tri *tri); /* prism -> triangle index */
 
-/* CLPS helpers (src/engine/collision/d_bg_ch_sph_crr_query.cpp): the entry
+extern /* CLPS helpers (src/engine/collision/d_bg_ch_sph_crr_query.cpp): the entry
    lookup and the SurfaceInfo write, which takes the entry by value into 0x0
    and the normal into 0x8.
    local extern: no header in include/ declares them. */
 void func_020381cc(void *block, int idx, void **out);
-void func_02037eb0(SurfaceInfo *info, CLPS clps, Vector3 *normal);
+extern void func_02037eb0(SurfaceInfo *info, CLPS clps, Vector3 *normal);
 
-/* local extern: no shared header declares it; match src/VEC_DotProduct.c. */
+extern /* local extern: no shared header declares it; match src/VEC_DotProduct.c. */
 Fix12i VEC_DotProduct(const Vector3 *a, const Vector3 *b);
-/* local extern: no header in include/ declares it. */
+extern /* local extern: no header in include/ declares it. */
 Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
-
 }
+
 
 /* The shared scratch dBgPc at 0x020a0cec, defined (and constructed) by
    d_bg_w_kc.cpp. GetSurfaceInfo fills its surface record, which

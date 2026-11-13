@@ -12495,7 +12495,7 @@
     },
     "itcm:0x01ffd9d4": {
       "author": "ruspecial",
-      "name": "OS_IrqHandler_ThreadSwitch"
+      "name": "_Z26OS_IrqHandler_ThreadSwitchv"
     },
     "itcm:0x01ffdb28": {
       "author": "ruspecial",
@@ -12515,7 +12515,7 @@
     },
     "itcm:0x01ffde00": {
       "author": "andrewboudreau",
-      "name": "MIi_DmaSetParams_wait"
+      "name": "_Z21MIi_DmaSetParams_waitjjjj"
     },
     "itcm:0x01ffde50": {
       "author": "andrewboudreau",

@@ -20,6 +20,7 @@
 #include "nitro/os/system.h"
 #include "nitro/os/interrupt.h"
 #include "nitro/mi/dma.h"
+void MIi_DmaSetParams_wait(u32, u32, u32, u32);
 
 #define MI_CNT_SRC_FIX DMA_CONTROL_SRC_FIXED
 #define MI_CNT_32BIT DMA_CONTROL_32_BIT
@@ -30,7 +31,6 @@ extern "C" {
 
 /* in ITCM */
 extern void MIi_DmaSetParams(u32 dmaNo, u32 src, u32 dest, u32 ctrl);
-extern void MIi_DmaSetParams_wait(u32 dmaNo, u32 src, u32 dest, u32 ctrl);
 
 void MI_DmaFill32(u32 dmaNo, void *dest, u32 data, u32 size) {
     vu32 *dmaCntp;
