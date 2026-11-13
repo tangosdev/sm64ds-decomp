@@ -60,7 +60,12 @@ void Deallocate(void *ptr);
    so a crash mid-load names the file. */
 extern "C" unsigned int data_0209d3bc;
 
-void func_02017e0c(void *self, unsigned int fileID);
+/* ROM symbol is _Z13func_02017e0cPvj. The host call is C. */
+#ifdef _MSC_VER
+extern "C"
+#endif
+    void
+    func_02017e0c(void *self, unsigned int fileID);
 extern "C" {
 
 unsigned int func_02018a24(unsigned int);

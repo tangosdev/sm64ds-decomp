@@ -66,11 +66,32 @@ extern "C" u32 ROOT_HEAP_ARENA_ID;
 extern "C" Heap *data_020a0e9c;
 /* the root heap; unnamed */
 
-unsigned int OS_GetArenaLo(s32 arena);
-unsigned int OS_GetArenaHi(s32 arena);
-void *OS_InitAlloc(s32 arena, void *lo, void *hi, int maxHeaps);
-void OS_SetArenaLo(s32 arena, unsigned int lo);
-void *OS_AllocFromArenaLo(s32 arena, unsigned int size, unsigned int align);
+/* ROM symbols are _Z13OS_GetArenaLoi and its siblings. The host stubs are C. */
+#ifdef _MSC_VER
+extern "C"
+#endif
+    unsigned int
+    OS_GetArenaLo(s32 arena);
+#ifdef _MSC_VER
+extern "C"
+#endif
+    unsigned int
+    OS_GetArenaHi(s32 arena);
+#ifdef _MSC_VER
+extern "C"
+#endif
+    void *
+    OS_InitAlloc(s32 arena, void *lo, void *hi, int maxHeaps);
+#ifdef _MSC_VER
+extern "C"
+#endif
+    void
+    OS_SetArenaLo(s32 arena, unsigned int lo);
+#ifdef _MSC_VER
+extern "C"
+#endif
+    void *
+    OS_AllocFromArenaLo(s32 arena, unsigned int size, unsigned int align);
 
 /* The global allocation entry points, highest addresses first: two bodies
    over the default heap, then the four global operators as three-word
