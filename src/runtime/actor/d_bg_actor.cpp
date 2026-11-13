@@ -82,7 +82,7 @@ extern "C" {
 /* dBgCh_Actr queries (src/engine/collision/d_bg_ch_actr.cpp), not yet
    declared in dBgCh_Actr.h. */
 int func_02035638(void *clsn); /* mSphereClsn.flags & 0x10: the ceiling bit */
-void *func_0203564c(void *clsn); /* mSphereClsn.GetUnderResult(): the ceiling hit */
+const dBgPi *func_0203564c(void *clsn); /* mSphereClsn.GetUnderResult(): the ceiling hit */
 /* d_a_ply_methods.cpp: sets 0x20 in daPly_c::mStateFlags. */
 void func_ov002_020d8838(void *player);
 }
@@ -280,7 +280,7 @@ extern "C" int func_ov002_020eea84(dBgCh_Actr *clsn, dActor_c *player) {
         return 0;
 
     if (func_02035638(clsn)) {
-        dBgPi hit(*(const dBgPi *)func_0203564c(clsn));
+        dBgPi hit(*func_0203564c(clsn));
         if (hit.GetClsnID() != -1) {
             owner = dActor_c::FindWithID(hit.GetClsnID());
             if (owner != 0 && IsActorID(owner, 0x3a)) {
