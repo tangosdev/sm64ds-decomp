@@ -94,7 +94,7 @@ s32 daKlr_c::Behavior() {
     func_0200f760(&mCylClsn);
     UpdatePos(0);
 
-    which = (u32)mState;
+    which = mState;
     (this->*data_ov079_021282e0[which])();
 
     id = mCylClsn.otherOwner;
