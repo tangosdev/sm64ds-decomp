@@ -210,18 +210,18 @@ void __timesdec(Decimal *result, const Decimal *x, const Decimal *y) {
     if (ip < ep && *ip >= 5) {
         if (*ip == 5) {
             unsigned char *jp = ip + 1;
-        for (; jp < ep; jp++) {
-            if (*jp != 0) {
-                // goto: dup-call+return 0x1c0, while(*jp==0) 0x1b0, do-while-break+jp test 0x1b4 still DIFF __timesdec
-                goto round;
+            for (; jp < ep; jp++) {
+                if (*jp != 0) {
+                    // goto: dup-call+return 0x1c0, while(*jp==0) 0x1b0, do-while-break+jp test 0x1b4 still DIFF __timesdec
+                    goto round;
+                }
+            }
+            if ((ip[-1] & 1) == 0) {
+                return;
             }
         }
-        if ((ip[-1] & 1) == 0) {
-            return;
-        }
-    }
-round:
-    __dorounddecup(result, result->sig.length);
+    round:
+        __dorounddecup(result, result->sig.length);
     }
 }
 
