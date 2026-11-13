@@ -81,7 +81,7 @@ void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 
 /* dBgCh_Actr queries (src/engine/collision/d_bg_ch_actr.cpp), not yet
    declared in dBgCh_Actr.h. */
-int func_02035638(void *clsn);
+int func_02035638(unsigned char *clsn);
 /* mSphereClsn.flags & 0x10: the ceiling bit */
 void *func_0203564c(void *clsn);
 extern "C" {
@@ -241,7 +241,7 @@ int func_ov002_020eedc0(dBgCh_Actr *clsn, dActor_c *other) {
 int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player) {
     dBgPi *hit;
     dActor_c *owner;
-    if (clsn->IsOnWall() || clsn->IsOnGround() || func_02035638(clsn)) {
+    if (clsn->IsOnWall() || clsn->IsOnGround() || func_02035638((unsigned char *)clsn)) {
         hit = clsn->GetSphereResult();
         if (hit->GetClsnID() != -1) {
             owner = dActor_c::FindWithID(hit->GetClsnID());
@@ -255,7 +255,7 @@ int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player) {
 }
 
 int func_ov002_020eeca8(dBgCh_Actr *clsn, dActor_c *other) {
-    if (func_02035638(clsn)) {
+    if (func_02035638((unsigned char *)clsn)) {
         dBgPi *hit = clsn->GetSphereResult();
         if (hit->GetClsnID() != -1) {
             dActor_c *owner = dActor_c::FindWithID(hit->GetClsnID());
@@ -282,7 +282,7 @@ int func_ov002_020eea84(dBgCh_Actr *clsn, dActor_c *player) {
     if (!IsActorID(player, 0xbf))
         return 0;
 
-    if (func_02035638(clsn)) {
+    if (func_02035638((unsigned char *)clsn)) {
         dBgPi hit(*(const dBgPi *)func_0203564c(clsn));
         if (hit.GetClsnID() != -1) {
             owner = dActor_c::FindWithID(hit.GetClsnID());

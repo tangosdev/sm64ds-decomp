@@ -66,9 +66,9 @@ extern u16 sObjToActorIdTable[];
 extern s16 sNextDeathTableID;
 }
 
-void func_0202af80(void *entries, s32 count);
-void func_0202b044(void *entries, s32 count);
-void func_0202b060(void *entries, s32 count);
+void func_0202af80(short *entries, int count);
+void func_0202b044(unsigned short *entries, int count);
+void func_0202b060(char *entries, int count);
 void func_0202b090(void *entries, s32 count);
 void func_0202b0c4(void *entries, s32 count);
 void func_0202b0e0(LVL_Overlay::StandardEntry *e, int count);
@@ -231,7 +231,7 @@ void LoadTeleportDestObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 par
 }
 
 void LoadFogObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
-    func_0202b060(table.entries, table.count);
+    func_0202b060((char *)table.entries, table.count);
 }
 
 /* One door actor per entry. The actor id and the high half of its parameter come
@@ -284,11 +284,11 @@ void LoadExitObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
 }
 
 void LoadMinimapTileObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
-    func_0202b044(table.entries, table.count);
+    func_0202b044((unsigned short *)table.entries, table.count);
 }
 
 void LoadMinimapScaleObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
-    func_0202af80(table.entries, table.count);
+    func_0202af80((short *)table.entries, table.count);
 }
 
 /* Stash the entry array's ADDRESS and do nothing with it. Not a mistake in the

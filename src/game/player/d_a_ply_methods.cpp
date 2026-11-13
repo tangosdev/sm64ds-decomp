@@ -226,19 +226,19 @@ extern int func_01ffa4bc(int a);
 
 extern void func_0201628c(int a, int b);
 extern void func_020162a4(int a, int b);
-extern void func_020167a4(void *p);
+extern void func_020167a4(struct dExtAnmModel_c *p);
 extern void func_0201fc88(s16);
 extern "C" {
 
 extern void func_02020388(int playerNo);
 }
 
-extern int func_02035638(void *);
+extern int func_02035638(unsigned char *);
 extern void *func_0203564c(void *);
-extern void func_02035798(void *, int);
-extern void func_020371fc(void *);
-extern void func_02037318(void *);
-extern int func_02037e20(void *);
+extern void func_02035798(dBgCh_Actr *, int);
+extern void func_020371fc(char *);
+extern void func_02037318(dBgCh_Actr *);
+extern int func_02037e20(int *);
 extern void func_0203db0c(int idx, unsigned short val);
 extern void func_ov002_020ed63c(daYegg_c *, int);
 extern int func_ov002_020eea84(dBgCh_Actr *, dActor_c *);
@@ -3516,11 +3516,11 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
     if (mMeshClsn.IsOnWall())
         mClsnFlags |= 2;
 
-    if (func_02035638(&mMeshClsn))
+    if (func_02035638((unsigned char *)&mMeshClsn))
         mClsnFlags |= 4;
 
     if (mIsUnderwater == 0)
-        func_020371fc(&mMeshClsn);
+        func_020371fc((char *)&mMeshClsn);
 
     if (mClsnFlags & 1) {
         fr = mMeshClsn.GetFloorResult();
@@ -3548,7 +3548,7 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
             mPeakY = mPosY;
         mIsAirborne = 1;
         mLandSoundPlayed = 0;
-        if (func_02035638(&mMeshClsn) && mVertSpeed > 0)
+        if (func_02035638((unsigned char *)&mMeshClsn) && mVertSpeed > 0)
             mVertSpeed = -0x1000;
         func_ov002_020cef84();
     }
@@ -20585,7 +20585,7 @@ void daPly_c::func_ov002_020e4768() {
 
     mid = GetBodyModelID(param1 & 0xff, 0);
     comp = mModels.mBodyModels[mid];
-    func_020167a4(comp);
+    func_020167a4((struct dExtAnmModel_c *)(void *)comp);
 
     func_ov002_020e640c();
 
