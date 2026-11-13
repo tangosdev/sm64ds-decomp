@@ -59,11 +59,11 @@ int func_02071708(int w0, ...) {
         }
         c = ~c;
         *p = c;
-        if ((*(volatile unsigned char *)p & 1) == 0)
+        if ((*p & 1) == 0)
             return count;
         do {
             count++;
-            *p = ((int)*(volatile unsigned char *)p >> 1);
+            *p = ((int)*p >> 1);
         } while (*(volatile unsigned char *)p & 1);
         return count;
     }
