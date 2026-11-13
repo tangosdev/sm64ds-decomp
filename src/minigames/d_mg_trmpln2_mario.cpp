@@ -307,8 +307,8 @@ void dMgTrmpln2Mario_c::Update() {
     Fix12i v = FX_MUL(mBounceVy, 0xb4b);
     if (mVel.y > v) {
         if (mAnmModel.file == sTrmpAnimBounce) {
-            mParticleId = (int)Particle::System::New(mParticleId, kPtclMgTrampolineTrail,
-                                                     mPos.x << 3, mPos.y << 3, mPos.z << 3, 0, 0);
+            mParticleId = Particle::System::New(mParticleId, kPtclMgTrampolineTrail, mPos.x << 3,
+                                                mPos.y << 3, mPos.z << 3, 0, 0);
         }
     }
     UpdateMatrix();
@@ -535,9 +535,8 @@ void dMgTrmpln2Mario_c::BounceOffLineA() {
                                   (mPos.z) << 3, (const Vector3_16f *)(&vec16), 0);
             Particle::System::New(0, kPtclMgTrampolineBounceB, (mPos.x) << 3, (mPos.y) << 3,
                                   (mPos.z) << 3, (const Vector3_16f *)(&vec16), 0);
-            mParticleId =
-                (int)Particle::System::New(mParticleId, kPtclMgTrampolineTrail, (mPos.x) << 3,
-                                           (mPos.y) << 3, (mPos.z) << 3, 0, 0);
+            mParticleId = Particle::System::New(mParticleId, kPtclMgTrampolineTrail, (mPos.x) << 3,
+                                                (mPos.y) << 3, (mPos.z) << 3, 0, 0);
         }
     }
 
@@ -740,7 +739,7 @@ void dMgTrmpln2Mario_c::EnterBounce() {
     D3D_PlaySeAtX(0x110, mPos.x);
     D3D_PlaySeAtX(0x1b5, mPos.x);
     pad_68 = 0;
-    *(W2 *)mState = *(W2 *)&pmf_Trmp2Mario_StateBounce;
+    *(W2 *)mState = pmf_Trmp2Mario_StateBounce;
     StateBounce();
 }
 
@@ -775,7 +774,7 @@ void dMgTrmpln2Mario_c::EnterRespawnWait() {
     mPrevPos.z = mPos.z;
     mVel.y = 0;
     mAnmModel.SetAnim(sTrmpAnimWallJump, 0x40000000, 0x800, 0);
-    *(W2 *)mState = *(W2 *)&pmf_Trmp2Mario_StateRespawnWait_2;
+    *(W2 *)mState = pmf_Trmp2Mario_StateRespawnWait_2;
 }
 
     /* `mTimer = mTimer - 1` comes out 4 bytes short; the decrement matches. */
@@ -911,7 +910,7 @@ L260: {
 }
 
 void dMgTrmpln2Mario_c::EnterFall() {
-    *(W2 *)mState = *(W2 *)&pmf_Trmp2Mario_StateFall;
+    *(W2 *)mState = pmf_Trmp2Mario_StateFall;
     StateFall();
 }
 
@@ -1268,8 +1267,8 @@ void dMgTrmpln3DMario_c::Update() {
     Fix12i v = FX_MUL(mBounceVy, 0xb4b);
     if (mVel.y > v) {
         if (mAnmModel.file == sTrmpAnimBounce) {
-            mParticleId = (int)Particle::System::New(mParticleId, kPtclMgTrampolineTrail,
-                                                     mPos.x << 3, mPos.y << 3, mPos.z << 3, 0, 0);
+            mParticleId = Particle::System::New(mParticleId, kPtclMgTrampolineTrail, mPos.x << 3,
+                                                mPos.y << 3, mPos.z << 3, 0, 0);
         }
     }
     UpdateMatrix();
@@ -1394,7 +1393,7 @@ void dMgTrmpln3DMario_c::EnterGoal() {
     Sound_PlayBank1Panned(0, 0x10, mPos.x);
     mAnmModel.SetAnim(sTrmpAnimRollJumpEnd, 0x40000000, 0x800, 0);
     sTrmpMariosOnLedges = sTrmpMariosOnLedges + 1;
-    *(W2 *)mState = *(W2 *)&pmf_Trmp3DMario_StateGoal;
+    *(W2 *)mState = pmf_Trmp3DMario_StateGoal;
     StateGoal();
 }
 
@@ -1469,7 +1468,7 @@ void dMgTrmpln3DMario_c::StateFallToLedge() {
 }
 
 void dMgTrmpln3DMario_c::EnterFallToLedge() {
-    *(W2 *)mState = *(W2 *)&pmf_Trmp3DMario_StateFallToLedge;
+    *(W2 *)mState = pmf_Trmp3DMario_StateFallToLedge;
     StateFallToLedge();
 }
 
@@ -1619,8 +1618,8 @@ void dMgTrmpln3DMario_c::BounceOffLineA() {
                               (const Vector3_16f *)(&v), 0);
     }
 
-    mParticleId = (int)Particle::System::New(mParticleId, kPtclMgTrampolineTrail, mPos.x << 3,
-                                             mPos.y << 3, mPos.z << 3, 0, 0);
+    mParticleId = Particle::System::New(mParticleId, kPtclMgTrampolineTrail, mPos.x << 3,
+                                        mPos.y << 3, mPos.z << 3, 0, 0);
 
     scale = FX_MUL(sTrmp3DHardBounceScale, fdivr);
     Vec3_MulScalar(&tmp4, &tmp, scale);
@@ -1993,7 +1992,7 @@ L180: {
 }
 
 void dMgTrmpln3DMario_c::EnterFall() {
-    *(W2 *)mState = *(W2 *)&pmf_Trmp3DMario_StateFall;
+    *(W2 *)mState = pmf_Trmp3DMario_StateFall;
     StateFall();
 }
 
@@ -2076,7 +2075,7 @@ void dMgTrmpln3DMario_c::EnterOnLedge() {
         int *ctr = &sTrmpMariosOnLedges;
         int c = *ctr;
         *ctr = c + 1;
-        *(W2 *)mState = *(W2 *)&pmf_Trmp3DMario_StateOnLedge;
+        *(W2 *)mState = pmf_Trmp3DMario_StateOnLedge;
     }
 }
 
@@ -2466,8 +2465,8 @@ int sTrmp3DJumpOffSpeed = data_ov006_0212dffc;
 int sTrmp3DBounceScale = data_ov006_0212e008;
 int sTrmp3DHardBounceScale = data_ov006_0212e004;
 
-TrmpGoal sTrmpGoalSlots((int)-0x50000, 0x100000, 0, 0);
-TrmpGoal data_ov006_02140784((int)-0x30000, 0x100000, 0);
+TrmpGoal sTrmpGoalSlots(-0x50000, 0x100000, 0, 0);
+TrmpGoal data_ov006_02140784(-0x30000, 0x100000, 0);
 TrmpGoal data_ov006_02140790(0x10000, 0x100000, 0);
 TrmpGoal data_ov006_0214079c(0x10000, 0x100000, 0);
 TrmpGoal data_ov006_021407a8(0x30000, 0x100000, 0);
@@ -2480,8 +2479,8 @@ int sTrmpSpeedScale = data_ov006_0212e014;
 int sTrmp2RiseSpeedMax = data_ov006_0212dff8;
 int sTrmp2DriftScale = data_ov006_0212e01c;
 
-TrmpGoal data_ov006_021407c0((int)-0x50000, 0x100000, 0, 0);
-TrmpGoal data_ov006_021407cc((int)-0x30000, 0x100000, 0);
+TrmpGoal data_ov006_021407c0(-0x50000, 0x100000, 0, 0);
+TrmpGoal data_ov006_021407cc(-0x30000, 0x100000, 0);
 TrmpGoal data_ov006_021407d8(0x10000, 0x100000, 0);
 TrmpGoal data_ov006_021407e4(0x10000, 0x100000, 0);
 TrmpGoal data_ov006_021407f0(0x30000, 0x100000, 0);
