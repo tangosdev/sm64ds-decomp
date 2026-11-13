@@ -88,19 +88,19 @@ extern CLPS_Block data_ov021_02113a60;
 extern CLPS_Block data_ov021_02113a80;
 
 extern "C" {
-void Matrix4x3_FromQuaternion(const struct Quaternion *q, struct Matrix4x3 *mF);
-void Vec3_Asr(void *d, void *s, int sh);
-int MTX_Inverse43(const struct Matrix4x3 *s, struct Matrix4x3 *d);
-void MTX_MultVec43(Vector3 *src, Matrix4x3 *mtx, Vector3 *dst);
-void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *dst);
-void Quaternion_FromVector3(void *q, Vector3 *axis, Vector3 *v);
-void Quaternion_Normalize(void *q);
-void Quaternion_SLerp(void *q0, void *q1, int t, void *out);
-s32 Vec3_Equal(const Vector3 *a, const Vector3 *b);
-u16 DecIfAbove0_Short(u16 *p);
-u8 DecIfAbove0_Byte(u8 *p);
-
+extern void Matrix4x3_FromQuaternion(const struct Quaternion *q, struct Matrix4x3 *mF);
+extern void Vec3_Asr(void *d, void *s, int sh);
+extern int MTX_Inverse43(const struct Matrix4x3 *s, struct Matrix4x3 *d);
+extern void MTX_MultVec43(Vector3 *src, Matrix4x3 *mtx, Vector3 *dst);
+extern void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *dst);
+extern void Quaternion_FromVector3(void *q, Vector3 *axis, Vector3 *v);
+extern void Quaternion_Normalize(void *q);
+extern void Quaternion_SLerp(void *q0, void *q1, int t, void *out);
+extern s32 Vec3_Equal(const Vector3 *a, const Vector3 *b);
+extern u16 DecIfAbove0_Short(u16 *p);
+extern u8 DecIfAbove0_Byte(u8 *p);
 }
+
 
 /* The identity quaternion. Its other readers still declare it int[4], so this
    TU copies it through a Quaternion view. */
@@ -110,9 +110,10 @@ extern const u16 sNewsLiftPlatformYaws[4] = {0, 0x8000, 0x4000, 0xc000};
 
 /* CV_NEWS_LIFT factory. classInit is the EAD shape; the cartridge's RTTI
  * names the class, not this function. */
-extern "C" daObjCvNewsLift_c *daObjCvNewsLift_c_classInit() {
+daObjCvNewsLift_c *daObjCvNewsLift_c_classInit() {
     return new daObjCvNewsLift_c();
 }
+
 
 /* One callback per collider. Only the player (actor 0xbf) is handled.
  * The comparison stays in an int; see the notes above. */
@@ -518,5 +519,6 @@ void daObjCvNewsLift_c::UpdateClsnTransforms() {
 }
 
 /* Typed registry descriptor; priorities, flags and clip ranges match retail. */
-extern "C" SpawnInfo<daObjCvNewsLift_c> g_profile_CV_NEWS_LIFT = {
+SpawnInfo<daObjCvNewsLift_c> g_profile_CV_NEWS_LIFT = {
     daObjCvNewsLift_c_classInit, 0x44, 0x8b, 6, 0, 0x2a8000, 0x1900000, 0x1900000};
+

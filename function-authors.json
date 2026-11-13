@@ -31743,7 +31743,7 @@
     },
     "ov021:0x02112168": {
       "author": "tangosdev",
-      "name": "daObjCvNewsLift_c_classInit"
+      "name": "_Z27daObjCvNewsLift_c_classInitv"
     },
     "ov021:0x021121e8": {
       "author": "tangosdev",
@@ -31795,7 +31795,7 @@
     },
     "ov021:0x02112d64": {
       "author": "tangosdev",
-      "name": "daGrock_c_classInit"
+      "name": "_Z19daGrock_c_classInitv"
     },
     "ov021:0x02112db4": {
       "author": "github-actions[bot]",
@@ -31819,7 +31819,7 @@
     },
     "ov021:0x02112ed4": {
       "author": "andrewboudreau",
-      "name": "daObjCvShutter_c_classInit"
+      "name": "_Z26daObjCvShutter_c_classInitv"
     },
     "ov021:0x02113500": {
       "author": "tangosdev",
@@ -32199,7 +32199,7 @@
     },
     "ov023:0x02111728": {
       "author": "github-actions[bot]",
-      "name": "daObjFm_Battan_c_classInit"
+      "name": "_Z26daObjFm_Battan_c_classInitv"
     },
     "ov023:0x02111aa8": {
       "author": "andrewboudreau",
@@ -34151,7 +34151,7 @@
     },
     "ov039:0x0211137c": {
       "author": "tangosdev",
-      "name": "daObjKumo_c_classInit"
+      "name": "_Z21daObjKumo_c_classInitv"
     },
     "ov039:0x021113b4": {
       "author": "tangosdev",
@@ -34719,7 +34719,7 @@
     },
     "ov056:0x02111594": {
       "author": "tangosdev",
-      "name": "daObjEwmIceBlock_c_classInit"
+      "name": "_Z28daObjEwmIceBlock_c_classInitv"
     },
     "ov056:0x02112b48": {
       "author": "tangosdev",
@@ -40815,7 +40815,7 @@
     },
     "ov078:0x021265fc": {
       "author": "tangosdev",
-      "name": "daBombking_c_classInit"
+      "name": "_Z22daBombking_c_classInitv"
     },
     "ov078:0x02126660": {
       "author": "lunavyqo",

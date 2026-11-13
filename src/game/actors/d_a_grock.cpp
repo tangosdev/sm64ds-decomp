@@ -81,6 +81,7 @@ extern "C" {
 extern void func_02012694(unsigned int id, void *pos);
 }
 
+
 extern GrockModelFilePtr data_ov021_02114a50;
 
 /* D1 stores this vtable, destroys the members in reverse declaration order,
@@ -389,9 +390,10 @@ int daGrock_c::InitResources() {
  * allocation size, vtable identity, and the GORO_ROCK registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: RollingRock_Spawn. */
-extern "C" daGrock_c *daGrock_c_classInit() {
+daGrock_c *daGrock_c_classInit() {
     return new daGrock_c();
 }
+
 
 /* File-scope model handle. __sinit_d_a_grock.cpp emits the construction
  * and registers the destructor; the registration node is a compiler

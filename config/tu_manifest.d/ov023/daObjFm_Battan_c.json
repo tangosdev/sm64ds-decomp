@@ -98,7 +98,7 @@
       "ordinal": 7
     },
     {
-      "symbol": "daObjFm_Battan_c_classInit",
+      "symbol": "_Z26daObjFm_Battan_c_classInitv",
       "address": "0x02111728",
       "size": "0x00000038",
       "legacy_source": "src/Squasher_Spawn.c",
@@ -381,7 +381,7 @@
       "source": "0x02111fc0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daObjFm_Battan_c_classInit",
+      "symbol": "_Z26daObjFm_Battan_c_classInitv",
       "addend": 0,
       "target_module": "ov023",
       "target_address": "0x02111728"
