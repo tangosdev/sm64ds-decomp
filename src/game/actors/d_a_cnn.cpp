@@ -201,13 +201,11 @@ int daCnn_c::CleanupResources() {
    heading. */
 void daCnn_c::PickNextAim() {
     int angleY;
-    mTargetPitch =
-        (short)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16 & 0xfff) + 0x1000);
+    mTargetPitch = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16 & 0xfff) + 0x1000);
     angleY = mAngleY;
     do {
-        mTargetAngleY =
-            (short)(mHomeAngleY + 0xe000 +
-                    ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16 & 0x3fff));
+        mTargetAngleY = (mHomeAngleY + 0xe000 +
+                         ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16 & 0x3fff));
     } while (AngleDiff(angleY, mTargetAngleY) < 0x800);
 }
 
@@ -291,7 +289,7 @@ void daCnn_c::StateFire() {
             ball->mSpeedZ = 0;
         }
 
-        elevation = (s16)(0x4000 - mPrevAngleX);
+        elevation = (0x4000 - mPrevAngleX);
         idx = (u16)elevation >> 4;
         ball->mHorzSpeed = sinCos[idx * 2 + 1] * speed;
 
@@ -327,8 +325,8 @@ void daCnn_c::StateFire() {
         rot.x = data_ov098_0213c63c[0];
         rot.y = data_ov098_0213c63c[1];
         rot.z = data_ov098_0213c63c[2];
-        rot.x = (u16)FX_SinIdx((u16)mPrevAngleY >> 4);
-        rot.z = (u16)FX_CosIdx((u16)mPrevAngleY >> 4);
+        rot.x = FX_SinIdx((u16)mPrevAngleY >> 4);
+        rot.z = FX_CosIdx((u16)mPrevAngleY >> 4);
 
         Particle::System::New(0, kPtclCannonShotA, mMuzzlePosX, mMuzzlePosY, mMuzzlePosZ,
                               (const Vector3_16f *)(&rot), 0);
