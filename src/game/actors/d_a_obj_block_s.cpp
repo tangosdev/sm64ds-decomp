@@ -644,11 +644,21 @@ int daObjBlockS_c::func_ov098_02138bfc()
     {
         Bool b;
         do {
-            b = (Bool)(type == ACTOR_ONIMASU); if (b) break;
-            b = (Bool)(type == ACTOR_DONKAKU); if (b) break;
-            b = (Bool)(type == ACTOR_DONGURU); if (b) break;
-            b = (Bool)(type == ACTOR_DOSUN); if (b) break;
-            b = (Bool)(type == ACTOR_BATAN); if (!b) return 0;
+            b = (Bool)(type == ACTOR_ONIMASU);
+            if (b)
+                break;
+            b = (Bool)(type == ACTOR_DONKAKU);
+            if (b)
+                break;
+            b = (Bool)(type == ACTOR_DONGURU);
+            if (b)
+                break;
+            b = (Bool)(type == ACTOR_DOSUN);
+            if (b)
+                break;
+            b = (Bool)(type == ACTOR_BATAN);
+            if (!b)
+                return 0;
         } while (0);
         return 1;
     }
@@ -1083,7 +1093,8 @@ void daObjBlockS_c::UpdateModelMatrix() {
             if (mHoldingPlayer->IsFrontSliding() != 0)
                 r5 = 1;
             if (mHoldingPlayer->LostGrabbedObject() != 0) {
-                if (((u32)*(int *)(r4 + 0x58) << 4) >> 0x10 < 0xe) r5 = 1;
+                if (((u32) * (int *)(r4 + 0x58) << 4) >> 0x10 < 0xe)
+                    r5 = 1;
             }
             if (mHoldingPlayer->param1 == 2) {
                 r5 = (r5 + 2) & 0xff;
