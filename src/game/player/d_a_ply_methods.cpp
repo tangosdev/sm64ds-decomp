@@ -17866,7 +17866,6 @@ int daPly_c::St_WindCarry_Init() {
 
 extern "C" {
 int daPly_c::func_ov002_020dec70() {
-    extern daPly_c::State data_ov002_02110244;
     int t = mPosY + 0x514000;
     if (t < (int)0xfdecc000) return 0;
     {
@@ -18199,7 +18198,6 @@ int daPly_c::St_Owl_Init() {
 
 extern "C" {
 int daPly_c::func_ov002_020df7ac() {
-    extern daPly_c::State data_ov002_02110244;
     if (this->IsState(data_ov002_02110244) == 0)
         return 0;
     this->St_Owl_Cleanup();
@@ -18210,7 +18208,6 @@ int daPly_c::func_ov002_020df7ac() {
 
 extern "C" {
 int func_ov002_020df7f4(daPly_c *player) {
-    extern daPly_c::State data_ov002_02110244;
     if (!player->IsState(data_ov002_02110244) || player->mHeldObj == 0)
         return -1;
     return player->mStateStep != 0;
@@ -18222,7 +18219,6 @@ int func_ov002_020df7f4(daPly_c *player) {
 extern "C" {
 int daPly_c::func_ov002_020df840(void *arg1, Vector3 *arg2) {
     extern u16 data_0209f49c[];
-    extern daPly_c::State data_ov002_02110244;
     if (this->mIsMega != 0 || this->mIsBalloon != 0)
         return 0;
     if ((data_0209f498[gActivePlayerSlot].held & 2) == 0)
