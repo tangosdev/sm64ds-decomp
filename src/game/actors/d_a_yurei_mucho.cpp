@@ -194,7 +194,7 @@ int daYurei_Mucho_c::Behavior()
         UpdateModelTransform();
         return 1;
     }
-    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     {
         State *q = mCurrentState;
         if (q->mMain != 0) {
