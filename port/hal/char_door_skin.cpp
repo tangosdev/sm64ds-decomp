@@ -1248,7 +1248,7 @@ void cdskin_panel_draw(uint32_t *px, int stride, int w, int h, const CpGeom *gp,
     /* the tab first: the panel lies over its right end, so the tab reads as the panel's own handle */
     {
         const int side = (g.px <= w - g.pw / 2) ? 1 : 0;      /* past half way out: the arrow points back to the edge */
-        const int ty = g.ty - (tab_lit ? K(1) : 0);
+        const int ty = g.ty;                                  /* CHARSEL2 fix2: lit changes the tab's colours only, never where it is */
         if (wood) {
             rrect(s, g.tx + K(1), ty + K(2), g.tw, g.th, 4.0f * k, 0x000000u, 60);
             const Piece *tp = hd && g_tab[0].ok() && g_tab[1].ok() ? tab_piece(side, g.tw, g.th) : 0;
@@ -1287,10 +1287,13 @@ void cdskin_panel_draw(uint32_t *px, int stride, int w, int h, const CpGeom *gp,
     }
     const int lit = focus >= 0 ? focus : hover;
     const int inset = (int)(2.5f * k + 0.5f);                    /* the head's box is the button less this on every side */
-    static int traced_w, traced_h, traced_n;
-    const bool tr_now = tr && g.px + g.pw <= w && (traced_w != w || traced_h != h || traced_n != n);
+    static int traced_w, traced_h, traced_n, traced_lit = -2, traced_cur = -2, traced_px;
+    int cur_i = -1;
+    for (int i = 0; i < n && i < g.n; ++i) if (it[i].current) cur_i = i;
+    const bool tr_now = tr && (traced_w != w || traced_h != h || traced_n != n || traced_lit != lit || traced_cur != cur_i || (g.px + g.pw > w && traced_px != g.px));
     if (tr_now) {
-        traced_w = w; traced_h = h; traced_n = n;
+        traced_w = w; traced_h = h; traced_n = n; traced_lit = lit; traced_cur = cur_i; traced_px = g.px;
+        fprintf(stderr, "[charpanel] state: lit slot %d (%s), chosen slot %d, %s\n", lit, focus >= 0 ? "pad focus" : (hover >= 0 ? "pointer" : "none"), cur_i, g.px + g.pw > w ? "sliding" : "fully out");
         fprintf(stderr, "[charpanel] geom %dx%d: panel x %d..%d y %d..%d (picture right edge %d), tab x %d..%d y %d..%d, look %d, plate scale %d\n", w, h,
                 g.px, g.px + g.pw, g.py, g.py + g.ph, w, g.tx, g.tx + g.tw, g.ty, g.ty + g.th, panel_look(), ps);
     }
@@ -1298,7 +1301,9 @@ void cdskin_panel_draw(uint32_t *px, int stride, int w, int h, const CpGeom *gp,
         const CdItem &m = it[i];
         const bool on = i == lit;
         const int x = g.sx0 + (i / 4) * g.pitch_x;
-        const int y = g.sy0 + (i % 4) * g.pitch_y - (on ? K(2) : 0);
+        /* CHARSEL2 fix2: a button under the cursor or the pointer used to rise 2 units, which made the gap under it wider than the others.
+           The lit state is the ring and the face colour only: every button stays on its pitch in every state */
+        const int y = g.sy0 + (i % 4) * g.pitch_y;
         if (x >= w) continue;
         if (wood) {
             /* one plank for every button (the chosen one used to get the cream key cap, whose inner box sat off centre): gold wash = chosen */
