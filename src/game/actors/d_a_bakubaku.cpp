@@ -144,11 +144,11 @@ s32 daBakubaku_c::InitResources()
     Vector3 headOffset;
     void *f;
 
-    f = dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&gBakubakuModelFile);
+    f = dExtSimpleModel_c::LoadFile(gBakubakuModelFile);
     mAnmModel.SetFile((BMD_File *)f, 1, -1);
     mShadowModel.InitCylinder();
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov032_02113a50);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov032_02113a48);
+    dExtFrameCtrl_c::LoadFile(data_ov032_02113a50);
+    dExtFrameCtrl_c::LoadFile(data_ov032_02113a48);
 
     bodyOffset.x = data_ov032_021137cc.x;
     bodyOffset.y = data_ov032_021137cc.y;
@@ -170,7 +170,7 @@ s32 daBakubaku_c::InitResources()
     mAnmModel.SetAnim((BCA_File *)data_ov032_02113a50.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x1000;
 
-    SetState((State *)&data_ov032_02113a8c);
+    SetState(&data_ov032_02113a8c);
     return 1;
 }
 
@@ -227,9 +227,9 @@ void daBakubaku_c::OnPendingDestroy()
 
 s32 daBakubaku_c::CleanupResources()
 {
-    ((SharedFilePtr *)&gBakubakuModelFile)->Release();
-    ((SharedFilePtr *)&data_ov032_02113a50)->Release();
-    ((SharedFilePtr *)&data_ov032_02113a48)->Release();
+    gBakubakuModelFile.Release();
+    data_ov032_02113a50.Release();
+    data_ov032_02113a48.Release();
     return 1;
 }
 
@@ -304,7 +304,7 @@ int daBakubaku_c::ExecuteWander() {
         if (((r >> 8) & 3) == 0) {
             SetState(&data_ov032_02113a9c);
         } else {
-            SetState((State *)&data_ov032_02113a8c);
+            SetState(&data_ov032_02113a8c);
         }
     }
     return 1;
@@ -328,7 +328,7 @@ int daBakubaku_c::ExecutePause() {
         return 1;
     }
     if (mStateTimer == 0)
-        SetState((State *)&data_ov032_02113a8c);
+        SetState(&data_ov032_02113a8c);
     return 1;
 }
 
@@ -346,7 +346,7 @@ int daBakubaku_c::ExecuteChase() {
     if (mStateTimer == 0 || ShouldReturnHome() == 1 || FindChaseTarget() == 0) {
         mAnmModel.SetAnim((BCA_File *)data_ov032_02113a50.filePtr, 0, 0x1000, 0);
         mChaseCooldown = 0x64;
-        SetState((State *)&data_ov032_02113a8c);
+        SetState(&data_ov032_02113a8c);
         return 1;
     }
 
@@ -464,7 +464,7 @@ int daBakubaku_c::ExecuteDive() {
                 mBodyClsn.flags &= ~kCcCharMove;
                 mHeadClsn.flags &= ~kCcCharMove;
                 mAnmModel.SetAnim((BCA_File *)data_ov032_02113a50.filePtr, 0, 0x1000, 0);
-                SetState((State *)&data_ov032_02113a8c);
+                SetState(&data_ov032_02113a8c);
                 return 1;
             }
         }
@@ -526,7 +526,7 @@ int daBakubaku_c::ExecuteSurface() {
             mAngTarget = mAngleY;
             mFlags = 3;
             mAnmModel.SetAnim((BCA_File *)data_ov032_02113a50.filePtr, 0, 0x1000, 0);
-            SetState((State *)&data_ov032_02113a8c);
+            SetState(&data_ov032_02113a8c);
         }
     } else {
         Vector3 vec;
