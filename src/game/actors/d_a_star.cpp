@@ -1332,7 +1332,6 @@ LA:
         }
         if (mStarID == 0 || func_ov002_020e9630() != 0) {
             st2 = 1;
-            // goto: or-chain, comma-assign, st2 flag, do/while, switch, duplicated body still DIFF _ZN8daStar_c16StateCollectTalkEv
             goto LA;
         }
         if (mHomeState == STATE_WAIT_MARKER || mStarID == 8)
