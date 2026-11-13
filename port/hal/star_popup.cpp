@@ -1114,6 +1114,8 @@ void star_popup_set_only_collector(int on) {
 
 #ifndef PORT_ROM_CLEAN
 extern "C" int port_adventure_ghost_seat(int slot);
+extern "C" int port_adventure_hub_body(int slot);
+extern "C" unsigned char data_0209f21c;
 // CREDITS1 proof knob SM64DS_CREDITS_WATCH=1 (dev only): one [crwatch] line whenever the level-clear flag (data_0209f20c), the
 // pause / save menu state (data_0209f2c4), my health or my state routine changes, with every live body's state routine, so a row
 // can tell which body started a course-clear and when my player was hurt or died.
@@ -1134,15 +1136,17 @@ static void credits_watch() {
     std::fprintf(stderr, "[crwatch] f%u level %d mode %u cut %08x: levelclear %u->%u menu %u->%u hp %d->%d my state %p->%p why %u hud %u |",
                  frame, lv, (unsigned)data_0209f2d8[0], rd32(data_0209fc48), last_lc, lc, last_ps, ps, last_hp, hp, last_st, st,
                  (unsigned)data_0209f2fc, (unsigned)data_ov002_02111178);
-    if (lc != last_lc || ps != last_ps)
+    if (lc != last_lc || ps != last_ps || lv != last_lv) {
+        std::fprintf(stderr, " nb %u", (unsigned)data_0209f21c);
         for (int i = 0; i < 32; ++i) {
             const char *a = (const char *)data_0209f394[i];
             if (!a) continue;
             const int *p = (const int *)(a + 0x5c);
-            std::fprintf(stderr, " b%d(seat %d st %p at %d,%d,%d)", i, i == me ? -1 : port_adventure_ghost_seat(i), *(void *const *)(a + 0x370),
-                         p[0] >> 12, p[1] >> 12, p[2] >> 12);
+            std::fprintf(stderr, " b%d(seat %d st %p at %d,%d,%d pf %x hb %d)", i, i == me ? -1 : port_adventure_ghost_seat(i), *(void *const *)(a + 0x370),
+                         p[0] >> 12, p[1] >> 12, p[2] >> 12, (unsigned)*(const unsigned char *)(a + 0x13), port_adventure_hub_body(i));
             if (i > 4) break;
         }
+    }
     if (b && st != last_st && data_0209f2d8[0] == 2) {    // a state change in the ending: what stands right under / around me
         const int *mp = (const int *)(b + 0x5c);
         std::fprintf(stderr, " me at %d,%d,%d near:", mp[0] >> 12, mp[1] >> 12, mp[2] >> 12);
