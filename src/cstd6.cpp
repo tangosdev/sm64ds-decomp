@@ -144,7 +144,6 @@ int strcmp(const char *a, const char *b) {
         t = (wa + 0xfefefeff) & 0x80808080;
         wb = *(unsigned int *)b;
         if (t != 0)
-            // goto: fused while (0x138), rotated do-while (0x13c), split break (0x13c) still DIFF strcmp
             goto scalar_reload;
         while (wa == wb) {
             wa = *(unsigned int *)(a += 4);
