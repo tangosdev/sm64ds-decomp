@@ -21,7 +21,7 @@ void dExtAnmTexPat_c::UpdateFileOffsets(BTP_File &file) {
     if (file.texRecords)
         file.texRecords = REBASE(BTPNameRecord, file.texRecords);
     {
-        BTPNameRecord *p = (BTPNameRecord *)file.texRecords;
+        BTPNameRecord *p = file.texRecords;
         while (i < (int)file.numTexRecords) {
             if (p->name)
                 p->name = REBASE(char, p->name);
@@ -32,7 +32,7 @@ void dExtAnmTexPat_c::UpdateFileOffsets(BTP_File &file) {
     if (file.palRecords)
         file.palRecords = REBASE(BTPNameRecord, file.palRecords);
     {
-        BTPNameRecord *q = (BTPNameRecord *)file.palRecords;
+        BTPNameRecord *q = file.palRecords;
         int j = 0;
         while (j < (int)file.numPalRecords) {
             if (q->name)
@@ -50,7 +50,7 @@ void dExtAnmTexPat_c::UpdateFileOffsets(BTP_File &file) {
     if (file.seqRecords)
         file.seqRecords = REBASE(BTPSeqRecord, file.seqRecords);
     {
-        BTPSeqRecord *r = (BTPSeqRecord *)file.seqRecords;
+        BTPSeqRecord *r = file.seqRecords;
         int k = 0;
         while (k < (int)file.numSeqRecords) {
             if (r->name)
