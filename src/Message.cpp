@@ -1075,7 +1075,7 @@ void Message::DisplaySaving(unsigned short n)
 {
     volatile int zero;
     volatile unsigned short blank;
-    u8 *map;
+    u16 *map;
     int i;
     int cols;
     int rem;
@@ -1124,15 +1124,15 @@ void Message::DisplaySaving(unsigned short n)
         MI_CpuFill16(scr, blank, 0x800);
     }
 
-    map = (u8 *)G2_GetBG3ScrPtr() + 0x42;
+    map = (u16 *)((u8 *)G2_GetBG3ScrPtr() + 0x42);
     SetBg3Offset(-gMsgBoxLeft, 4 - gMsgBoxTop);
 
     cols = data_0209d6a8;
     for (i = 0; i < cols * ((MessageEntry *)data_0209d6f0)->lineCount * 2; i++) {
         rem = i % cols;
-        *(u16 *)(map + rem * 2) = i + 0x200;
+        map[rem] = (u16)(i + 0x200);
         if (cols - 1 == rem)
-            map += 0x40;
+            map += 0x20;
     }
 
     while (data_0209d6bc < 4)
