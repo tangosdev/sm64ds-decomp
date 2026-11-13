@@ -5723,6 +5723,9 @@ extern "C" int port_host_key_script(int vk) { return host_key_script(vk); }   /*
    ahead of the menu and the button reads) and each change is logged:
      [chat] keytest f<frame> vk <vk> held=<0|1> game=<0|1> box=<0|1>
    game=1 is the game seeing the key down. Inert unless set. */
+/* BINDS1: the five mouse buttons by the VK the file stores (1 left, 2 right, 4 middle, 5 back, 6 forward) as MB1..MB5, 0 for any
+   other VK (3 is VK_CANCEL, a key) */
+static int ckt_mouse_vk(int vk) { return vk == 1 ? 1 : vk == 2 ? 2 : vk == 4 ? 3 : vk == 5 ? 4 : vk == 6 ? 5 : 0; }
 #ifndef PORT_ROM_CLEAN
 struct ChatKeyHold { int vk, f0, f1; };   /* vk -1 is box@, -2 rebind@ */
 static ChatKeyHold g_ckt_hold[16];
@@ -9937,12 +9940,25 @@ static void chat_key_test_frame(void)
         const ChatKeyHold &k = g_ckt_hold[i];
         if (k.vk <= 0) continue;
         const LPARAM scan = map ? (LPARAM)(map((UINT)k.vk, 0) & 0xff) << 16 : 0;
-        if (k.vk <= 2) {
+        if (ckt_mouse_vk(k.vk)) {
             /* MOUSEBIND1: a mouse button (1 left, 2 right) posts the mouse message a real press posts (WM_LBUTTONDOWN also sets
                g_mouse_left_down; the up message is posted on the last held frame, so the pump delivers it before the button reads up, as a real release does) and is not probed through key_live below, which would clear a stale latch a real click never clears */
+            /* BINDS1: all five buttons: 4 middle (WM_MBUTTON*), 5 back and 6 forward (WM_XBUTTON* with XBUTTON1 / XBUTTON2 in the
+               high word, as Windows sends them) */
             const LPARAM at = (LPARAM)(100 | (100 << 16));
-            if (f == k.f0 && post && g_present_hwnd) post(g_present_hwnd, k.vk == 1 ? WM_LBUTTONDOWN : WM_RBUTTONDOWN, k.vk == 1 ? MK_LBUTTON : MK_RBUTTON, at);
-            if (f == k.f1 && post && g_present_hwnd) post(g_present_hwnd, k.vk == 1 ? WM_LBUTTONUP : WM_RBUTTONUP, 0, at);
+            UINT dn, up;
+            WPARAM wdn, wup = 0;
+            switch (k.vk) {
+            case 1: dn = WM_LBUTTONDOWN; up = WM_LBUTTONUP; wdn = MK_LBUTTON; break;
+            case 2: dn = WM_RBUTTONDOWN; up = WM_RBUTTONUP; wdn = MK_RBUTTON; break;
+            case 4: dn = WM_MBUTTONDOWN; up = WM_MBUTTONUP; wdn = MK_MBUTTON; break;
+            case 5: dn = WM_XBUTTONDOWN; up = WM_XBUTTONUP; wdn = MAKEWPARAM(MK_XBUTTON1, XBUTTON1); wup = MAKEWPARAM(0, XBUTTON1); break;
+            default: dn = WM_XBUTTONDOWN; up = WM_XBUTTONUP; wdn = MAKEWPARAM(MK_XBUTTON2, XBUTTON2); wup = MAKEWPARAM(0, XBUTTON2); break;
+            }
+            if (f == k.f0 && post && g_present_hwnd) post(g_present_hwnd, dn, wdn, at);
+            if (f == k.f1 && post && g_present_hwnd) post(g_present_hwnd, up, wup, at);
+            if (f == k.f0 || f == k.f1)
+                fprintf(stderr, "[chat] keytest f%d mouse MB%d %s posted\n", f, ckt_mouse_vk(k.vk), f == k.f0 ? "down" : "up");
             continue;
         }
         if (f == k.f0 && post && g_present_hwnd) {
@@ -9956,7 +9972,7 @@ static void chat_key_test_frame(void)
     }
     for (int i = 0; i < g_ckt_holds; ++i) {
         const int vk = g_ckt_hold[i].vk;
-        if (vk <= 2) continue;     /* MOUSEBIND1: not the mouse buttons (see above) */
+        if (ckt_mouse_vk(vk)) continue;     /* MOUSEBIND1: not the mouse buttons (see above) */
         int first = 1;
         for (int j = 0; j < i; ++j) first &= g_ckt_hold[j].vk != vk;
         if (!first) continue;     /* one probe per key */
@@ -16056,7 +16072,7 @@ static void rebind_capture_frame(int *pad_live, const XPad *pad)
             if (sl_capture_offer_mouse(MVK2[i])) {
                 done = 1;
                 char msg[96];
-                snprintf(msg, sizeof msg, "%s is now mouse button %d", sl_info(id)->key, MVK2[i]);
+                snprintf(msg, sizeof msg, "%s is now MB%d", sl_info(id)->key, ckt_mouse_vk(MVK2[i]));   /* BINDS1: the page names the buttons MB1..MB5 */
                 ss_note(msg);
             }
         } else if (g_rebind_key) {
@@ -20245,6 +20261,30 @@ int main(void)
             if (sl && c && *(void **)(c + 0x370) != was) {
                 was = *(void **)(c + 0x370);
                 fprintf(stderr, "[clickst] f%d hk%d state %p\n", frame, g_host_key_frame, was);
+            }
+        }
+        {   /* BINDS1 proof knob, dev builds only: SM64DS_ACT_LOG=1 also prints, each time it changes, every game and camera action that
+               reads its mouse button down this frame (the same mouse_act the button reads use), and the ROM's pause flag
+               (data_0209f2c4), so a row sees MB1..MB5 fire each action and Start open and close the pause */
+            static int al = -1;
+            static unsigned mwas;
+            static int pwas = -1;
+            if (al < 0) { const char *e = getenv("SM64DS_ACT_LOG"); al = (e && *e && *e != '0') ? 1 : 0; }
+            if (al) {
+                static const char *const nm[HOST_MOUSE_COUNT] = { "hold", "camcenter", "camleft", "camright", "camup", "camdown",
+                    "zoomin", "zoomout", "cammode", "look", "jump", "attack", "crouch", "run", "start", "select", "invite", "leave" };
+                unsigned m = 0;
+                for (int a = HOST_MOUSE_CAM_CENTER; a <= HOST_MOUSE_SELECT; ++a)
+                    if (mouse_act(a)) m |= 1u << a;
+                if (m != mwas) {
+                    char b[200]; int n = 0; b[0] = 0;
+                    for (int a = 0; a < HOST_MOUSE_COUNT && n < (int)sizeof b - 16; ++a)
+                        if (m & (1u << a)) n += snprintf(b + n, sizeof b - n, " %s(MB%d)", nm[a], ckt_mouse_vk(host_setting_mouse(a)));
+                    fprintf(stderr, "[mact] f%d hk%d mouse actions down:%s\n", frame, g_host_key_frame, m ? b : " none");
+                    mwas = m;
+                }
+                const int pz = *(volatile unsigned char *)&data_0209f2c4[0] != 0;
+                if (pz != pwas) { fprintf(stderr, "[mact] f%d hk%d pause %s\n", frame, g_host_key_frame, pz ? "open" : "closed"); pwas = pz; }
             }
         }
 #endif
