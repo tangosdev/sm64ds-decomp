@@ -765,14 +765,14 @@ int dScMgBase_c::OnGraphCallback2()
 {
     int v2 = mMenuOpen;
     int v1 = mMenuScreenSaved;
-    if (v1 == v2) goto done;
-    if (v2 == 0) {
-        RestoreScreenFromMenu();
-    } else {
-        SaveScreenForMenu();
+    if (v1 != v2) {
+        if (v2 == 0) {
+            RestoreScreenFromMenu();
+        } else {
+            SaveScreenForMenu();
+        }
+        mMenuScreenSaved = mMenuOpen;
     }
-    mMenuScreenSaved = mMenuOpen;
-done:
     return 1;
 }
 
@@ -951,14 +951,14 @@ void dScMgBase_c::PaintSquare(int cx, int cy, int colour, int size) {
                 int sh;
 
                 if (xx < 0)
-                    goto inc;
+                    continue;
                 if (xx >= 0x100)
-                    goto inc;
+                    continue;
                 if (yrow < -0xc0 - sMgTopScreenYOffset)
-                    goto inc;
+                    continue;
                 if (yrow < -sMgTopScreenYOffset) {
                     if (mBrushOnMain == 0)
-                        goto inc;
+                        continue;
                     switch (mBrushLayer) {
                     case 0:
                         base = (int *)G2_GetBG0CharPtr();
@@ -977,9 +977,9 @@ void dScMgBase_c::PaintSquare(int cx, int cy, int colour, int size) {
                     yy += sMgTopScreenYOffset + 0xc0;
                 } else {
                     if (yrow < 0)
-                        goto inc;
+                        continue;
                     if (yrow >= 0xc0)
-                        goto inc;
+                        continue;
                     switch (mBrushLayer) {
                     case 0:
                         base = (int *)G2S_GetBG0CharPtr();
@@ -1241,46 +1241,48 @@ void dScMgBase_c::UpdateMenu() {
     if (gTouchHeld[idx * 4] != 0) {
         unlocked = (gTouchEdge[idx * 4] != 0);
     }
-    if (unlocked == 0) goto after;
-    if (mMenuCursor >= 0)
-        goto after;
-    tmp[0] = gTouchX[idx * 4];
-    tmp[1] = gTouchY[idx * 4];
-    func_0203b958(d0, tmp, &mMenuItem0X);
-    func_0203b958(d1, tmp, &mMenuItem1X);
-    func_0203b958(d2, tmp, &mMenuItem2X);
-    a = d0[0]; if (a < 0) a = -a;
-    if (a < 0x60) {
-        b = d0[1]; if (b < 0) b = -b;
-        if (b < 0x18) {
-            func_02012790(0x62);
-            mMenuCursor = 0;
-            /* 0x10 for item 0 and 0 for the others */
-            mMenuPickDelay = 0x10;
-            goto after;
+    do {
+        if (unlocked == 0)
+            break;
+        if (mMenuCursor >= 0)
+            break;
+        tmp[0] = gTouchX[idx * 4];
+        tmp[1] = gTouchY[idx * 4];
+        func_0203b958(d0, tmp, &mMenuItem0X);
+        func_0203b958(d1, tmp, &mMenuItem1X);
+        func_0203b958(d2, tmp, &mMenuItem2X);
+        a = d0[0]; if (a < 0) a = -a;
+        if (a < 0x60) {
+            b = d0[1]; if (b < 0) b = -b;
+            if (b < 0x18) {
+                func_02012790(0x62);
+                mMenuCursor = 0;
+                /* 0x10 for item 0 and 0 for the others */
+                mMenuPickDelay = 0x10;
+                break;
+            }
         }
-    }
-    a = d1[0]; if (a < 0) a = -a;
-    if (a < 0x40) {
-        b = d1[1]; if (b < 0) b = -b;
-        if (b < 0x13) {
-            func_02012790(0x63);
-            mMenuCursor = 1;
-            mMenuPickDelay = 0;
-            goto after;
+        a = d1[0]; if (a < 0) a = -a;
+        if (a < 0x40) {
+            b = d1[1]; if (b < 0) b = -b;
+            if (b < 0x13) {
+                func_02012790(0x63);
+                mMenuCursor = 1;
+                mMenuPickDelay = 0;
+                break;
+            }
         }
-    }
-    a = d2[0]; if (a < 0) a = -a;
-    if (a < 0x40) {
-        b = d2[1]; if (b < 0) b = -b;
-        if (b < 0x13) {
-            func_02012790(0x62);
-            mMenuCursor = 2;
-            mMenuPickDelay = 0;
+        a = d2[0]; if (a < 0) a = -a;
+        if (a < 0x40) {
+            b = d2[1]; if (b < 0) b = -b;
+            if (b < 0x13) {
+                func_02012790(0x62);
+                mMenuCursor = 2;
+                mMenuPickDelay = 0;
+            }
         }
-    }
+    } while (0);
 
-after:
     if (mMenuCursor < 0)
         return;
     if (ApproachLinear(mMenuCursorPhase, 0x10000, 0x1000) == 0)
@@ -2663,43 +2665,41 @@ void Mg_DrawRecordTable(dScMgBase_c *scene) {
         scene->mRecordRevealTimer = 0x64;
 
     n = Mg_GetLastRecordRank(scene, scene->mRankedScore);
-    if (n < 0)
-        goto neg;
+    if (n >= 0) {
+        i = 0;
+        if (n > 0)
+        {
+            do
+            {
+                if (scene->mRecordRevealTimer >= i * 0x14)
+                    Mg_DrawRecordRow(scene, 0xa8, a2, func_02013580(Mg_GetSaveTable(scene), i));
+                a2 += 0x18;
+                i++;
+            } while (i < n);
+        }
 
-    i = 0;
-    if (n > 0)
-    {
+        if (scene->mRecordRevealTimer >= n * 0x14)
+        {
+            if (scene->mRecordRevealTimer < 0x64 || scene->mRecordRevealTimer - 0x64 < 0x14)
+                Mg_DrawRecordRow(scene, 0xa8, a2, scene->mRankedScore);
+            else
+                Mg_DrawRecordRow(scene, 0xa8, a2, -1);
+        }
+
+        a2 += 0x18;
+        j = n + 1;
+        if (j >= 5)
+            return;
         do
         {
-            if (scene->mRecordRevealTimer >= i * 0x14)
-                Mg_DrawRecordRow(scene, 0xa8, a2, func_02013580(Mg_GetSaveTable(scene), i));
+            if (scene->mRecordRevealTimer >= j * 0x14)
+                Mg_DrawRecordRow(scene, 0xa8, a2, func_02013580(Mg_GetSaveTable(scene), j));
             a2 += 0x18;
-            i++;
-        } while (i < n);
-    }
-
-    if (scene->mRecordRevealTimer >= n * 0x14)
-    {
-        if (scene->mRecordRevealTimer < 0x64 || scene->mRecordRevealTimer - 0x64 < 0x14)
-            Mg_DrawRecordRow(scene, 0xa8, a2, scene->mRankedScore);
-        else
-            Mg_DrawRecordRow(scene, 0xa8, a2, -1);
-    }
-
-    a2 += 0x18;
-    j = n + 1;
-    if (j >= 5)
+            j++;
+        } while (j < 5);
         return;
-    do
-    {
-        if (scene->mRecordRevealTimer >= j * 0x14)
-            Mg_DrawRecordRow(scene, 0xa8, a2, func_02013580(Mg_GetSaveTable(scene), j));
-        a2 += 0x18;
-        j++;
-    } while (j < 5);
-    return;
+    }
 
-neg:
     k = 0;
     do
     {
