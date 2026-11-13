@@ -69,6 +69,7 @@ enum SlId {
     SL_MINIGAME_UPSCALE,        /* bool: MinigameUpscale, the pixel-art upscaler on the minigames' 2D (MGHIRES1); off by default */
     SL_RENDER_SCALE,            /* int: RenderScale 0..8, host rows per DS row (0 the default); not live, read at boot (RESSCALE1) */
     SL_STAY_AFTER_STAR,         /* bool: StayAfterStar, single player stays in the course after a star (STAYCOURSE1); off by default */
+    SL_EXIT_TO_PAINTING,        /* bool: ExitToPainting, single player's Exit Course lands at the course's painting (EXITPAINT1); off by default */
     SL_COUNT
 };
 

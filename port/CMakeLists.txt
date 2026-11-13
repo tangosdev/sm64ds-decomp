@@ -25684,6 +25684,13 @@ foreach(_tstaycourse1 walk_window walk_window_hires)
         "${CMAKE_CURRENT_SOURCE_DIR}/hal/star_stay.cpp")
 endforeach()
 
+# Run coopfix1 lane EXITPAINT1: the single player cheat ExitToPainting (the pause menu's Exit Course lands at the course's painting);
+# the pause side is the _MSC_VER hook in src/game/stages/d_s_stage_methods.cpp. Own block.
+foreach(_texitpaint1 walk_window walk_window_hires)
+    target_sources(${_texitpaint1} PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/hal/exit_paint.cpp")
+endforeach()
+
 # The same engine proved on the file alone (no ROM, no window): tests/smoke_settings_live.cpp.
 add_executable(smoke_settings_live tests/smoke_settings_live.cpp hal/host_settings.cpp
     hal/settings_live.cpp hal/pad_backend.cpp)
