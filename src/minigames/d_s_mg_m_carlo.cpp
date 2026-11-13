@@ -195,7 +195,7 @@ int dScMgMCarlo_c::CanEndState(int mode) {
         break;
     }
     case STATE_FLIP_CARDS: {
-        dScMgBase_c *active = (dScMgBase_c *)gMgScene;
+        dScMgBase_c *active = gMgScene;
         if ((active != 0 ? active->mCredits : 0) != 0)
             return 1;
         dScMgMCarlo_c::FlipDealtCards();
@@ -265,7 +265,7 @@ s32 dScMgMCarlo_c::Behavior() {
                             mDealer.mHand = 0;
                         } else if (mDealer.IsIdleAtRest() != 0) {
                             {
-                                dScMgBase_c *active = (dScMgBase_c *)gMgScene;
+                                dScMgBase_c *active = gMgScene;
                                 if (active != 0) {
                                     if (active->mHudScore > 0)
                                         active->mHudScore = active->mHudScore - 1;
@@ -275,7 +275,7 @@ s32 dScMgMCarlo_c::Behavior() {
                             Mg_SetSharedState(MG_STATE_LOSE);
                             {
                                 int dealt = sMCarloCardTotal;
-                                dScMgBase_c *active = (dScMgBase_c *)gMgScene;
+                                dScMgBase_c *active = gMgScene;
                                 int creditsLeft = ((active != 0) ? active->mCredits : 0) - dealt;
                                 int score = (active != 0) ? active->mHudScore : 0;
                                 Mg_SaveRecordPair(creditsLeft, score);
@@ -285,7 +285,7 @@ s32 dScMgMCarlo_c::Behavior() {
                         }
                     } else {
                         {
-                            dScMgBase_c *active = (dScMgBase_c *)gMgScene;
+                            dScMgBase_c *active = gMgScene;
                             if (active != 0) {
                                 if (active->mHudScore < 0x270f)
                                     active->mHudScore = active->mHudScore + 1;
@@ -297,7 +297,7 @@ s32 dScMgMCarlo_c::Behavior() {
                         mDealer.PlayWin();
                         Mg_SetSharedState(MG_STATE_WIN);
                         {
-                            dScMgBase_c *active = (dScMgBase_c *)gMgScene;
+                            dScMgBase_c *active = gMgScene;
                             int credits = (active != 0) ? active->mCredits : 0;
                             Mg_SaveRecordPair(sMCarloPayout + credits,
                                               (active != 0) ? active->mHudScore : 0);
@@ -631,7 +631,7 @@ void dScMgMCarlo_c::SetupBoard(dMgMCarloCardObj_c *cards) {
     dMgMCarloCardObj_c *linkTail;
     dMgMCarloCardObj_c *savedNext;
 
-    active = (dScMgBase_c *)gMgScene;
+    active = gMgScene;
     stars = (active != 0) ? active->mHudScore : 0;
 
     if (stars < 5) {
