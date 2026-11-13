@@ -195,7 +195,7 @@ int daObjSm_Lift_c::Behavior() {
                     mPauseTimer = 0x3c;
                     mMoving = 0;
                     mNodeStep = -1;
-                    int *pIdx3 = (int *)((unsigned)(int)&mNodeIndex);
+                    int *pIdx3 = &mNodeIndex;
                     *pIdx3 = *pIdx3 + (mNodeStep * 2);
                 }
             }
@@ -214,12 +214,11 @@ int daObjSm_Lift_c::Behavior() {
 }
 
 s32 daObjSm_Lift_c::InitResources() {
-    char *c = (char *)this;
-    mPathId = *(int *)(c + 8) & 0xff;
+    mPathId = param1 & 0xff;
     if (mPathId == 0xff)
         return 0;
     BMD_File *f = dExtSimpleModel_c::LoadFile(gSmLiftModelFile);
-    ((dExtModel_c *)&mModel)->SetFile(f, 1, -1);
+    mModel.SetFile(f, 1, -1);
     UpdateModelTransform();
     UpdateClsnPosAndRot();
     KCL_File *kf = dBgW_Kc::LoadFile(gSmLiftCollisionFile);
@@ -231,7 +230,7 @@ s32 daObjSm_Lift_c::InitResources() {
     mBasePosY = mPosY;
     mBasePosZ = mPosZ;
     {
-        short *ang = (short *)&mAngleY;
+        short *ang = &mAngleY;
         *ang = *ang - 0x4000;
     }
     PathPtr p;
@@ -239,7 +238,7 @@ s32 daObjSm_Lift_c::InitResources() {
     mNodeCount = p.NumNodes();
     mNodeStep = 1;
     {
-        int *ip = (int *)&mNodeIndex;
+        int *ip = &mNodeIndex;
         *ip = *ip + mNodeStep;
     }
     mTouchingPlayer = 0;
