@@ -5,7 +5,6 @@
 #include "Ov007MenuMem.h"
 extern Ov007ItemLayout data_ov007_020ccbc4[];
 extern u8 data_ov007_020ccb7d[];
-extern u8 data_ov007_020ccb7c[];
 
 extern Ov007Item *func_ov007_020aea6c(int id, Ov007ItemLayout *layout, Ov007HitBox *hitBox);
 extern Ov007OamNode *func_ov007_020c11ac(int n);
@@ -23,6 +22,8 @@ typedef struct Ov007NodeSprites {
 } Ov007NodeSprites;
 
 typedef char Ov007NodeSprites_size_must_be_0x8[sizeof(Ov007NodeSprites) == 0x8 ? 1 : -1];
+
+extern Ov007NodeSprites data_ov007_020ccb7c[];
 
 /* Builds item node `index` (func_ov007_020b6d40 builds nine): the item, with
  * its layout row from data_ov007_020ccbc4 and no hit box, and its OAM node
@@ -79,7 +80,7 @@ Ov007ItemNode *func_ov007_020ade58(int index) {
         int one = 1;
         do {
             u16 state = s->item->id;
-            Ov007NodeSprites *entry = (Ov007NodeSprites *)&data_ov007_020ccb7c[state * 8];
+            Ov007NodeSprites *entry = &data_ov007_020ccb7c[state];
             int r7 = entry->bank;
 
             if (state == 1 && sb >= 4) {
