@@ -180,13 +180,13 @@ int daBDonketu_c::UpdateRunState() {
         int result = func_ov064_02116110(0x700);
         if (result != 0)
             return result;
-        u16 *timer = (u16 *)&mStateTimer;
+        u16 *timer = &mStateTimer;
         if (*timer == 9)
             *timer = 0;
         return (int)timer;
     }
     mHorzSpeed = 0x14000;
-    u16 *timer = (u16 *)&mStateTimer;
+    u16 *timer = &mStateTimer;
     u32 value = *timer;
     if (value > 0x23) {
         value = 0;
