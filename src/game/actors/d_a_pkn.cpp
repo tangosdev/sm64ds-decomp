@@ -93,7 +93,6 @@ extern "C" {
 
 /* -- other modules -- */
 void  func_02012694(u32 id, void *pos);
-void  func_020105cc(void *thiz, u32 flags);
 
 
 /* -- shared tables -- */
@@ -632,7 +631,7 @@ int daPkn_c::CheckHits()
                         actor->IncMegaKillCount();
                         func_02012694(0x1d, &mCamSpacePosX);
                     }
-                    func_020105cc(this, flags);
+                    func_020105cc(flags);
                     Die();
                 } else if (JumpedOnByPlayer(mdCcAc_c1, *actor) != 0) {
                     actor->Bounce(0x28000);
@@ -675,7 +674,7 @@ int daPkn_c::CheckHits()
                         actor->IncMegaKillCount();
                         func_02012694(0x1d, &mCamSpacePosX);
                     }
-                    func_020105cc(this, flags);
+                    func_020105cc(flags);
                     Die();
                     return 1;
                 }

@@ -258,6 +258,8 @@ struct dActor_c : dBase_c {
     void UpdatePosWithHorzSpeedAndAng();
     int BumpedUnderneathByPlayer(daPly_c &);
     int  GetSubtraction(short a, short b);
+    /* The ground normal projected onto the heading, against its y. */
+    s16 func_02010844(Vector3 *, s16);
 
     /* Rebuilds the scratch matrix at 0x020a0e68 from the carrying player's hand
        transform, writes this actor's own position out of it, and returns it. */
@@ -276,6 +278,8 @@ struct dActor_c : dBase_c {
     dActor_c *FindExplosionActor(dCc_c &); /* hitFlags 0x4000 */
     void MakeVanishLuigiWork(dCc_c &);
     int JumpedOnByPlayer(dCc_c &, daPly_c &);
+    /* The landing thump's sound: 0xa for 0x380, 9 for 0x40. */
+    void func_020105cc(u32);
     void UpdatePos(dCc_c *);
     void UpdatePosWithOnlySpeed(dCc_c *);
     /* MakeVanishLuigiWork again, taking the cylinder by pointer; the ROM keeps
@@ -306,9 +310,15 @@ struct dActor_c : dBase_c {
     void HugeLandingDust(bool doRaycast);
     void HugeLandingDustAt(Vector3 &, bool doRaycast);     /* particle 0xb2 */
     void LandingDustAt(Vector3 &pos, bool doRaycast);      /* particle 0xb1 */
+    /* The boss landing-dust worker and its no-argument wrapper. */
+    void *func_0200fa04(Vector3 *, int);
+    void func_0200fa8c(int);
     /* func_0200fc44 (particle 0xb3) at this actor's position. The flag stays
        int: every caller passes a constant and the body forwards it unmasked. */
     int func_0200fccc(int);
+    /* The worker behind func_0200fccc; pos is moved onto the ground and raised
+       25.0. The flag stays int for the same reason. */
+    int func_0200fc44(Vector3 *, int);
 
     /* The death table: actors already killed, so they do not respawn. All three
        key off mDeathTableID. */

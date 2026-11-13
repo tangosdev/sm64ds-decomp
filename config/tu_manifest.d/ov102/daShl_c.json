@@ -209,11 +209,11 @@
   ],
   "data": [
     {
-      "symbol": "@774",
+      "symbol": "@675",
       "address": "0x0214e5d4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "anonymous held tick pointer-to-member; retail first word is 0x0214cfe4. mwcc numbers it @721, which ov063 already owns, so the row uses the unused same-length @774."
+      "evidence": "anonymous held tick pointer-to-member; retail first word is 0x0214cfe4. mwcc numbers it @721, which ov063 already owns, so the row uses the unused same-length @675."
     },
     {
       "symbol": "@768",
@@ -297,7 +297,8 @@
   ],
   "notes": [
     "Hand-assembled: tubuild create generated the 23 tu_map members (class members, D1/D0 and the fifteen state/helper routines); the zero-gap classInit factory was folded in by hand. The four state records are defined in this TU. mwcc emits __sinit_d_a_shl.cpp, the ctor word, and eight anonymous pointer-to-member descriptors. Class RTTI and the vtable stay externalized. The .rodata model-handle pair data_ov102_0214d70c stays unclaimed. The handwritten src/unnamed/ov102/__sinit_ov102_0214dfac.c is retired.",
-    "Folded __sinit_ov102_0214dfac into this TU. @707, @709, @711 and @713 already belong to ov060, @715, @719 and @721 already belong to ov063, and @717 already belongs to ov002. defined_symbol_renames maps them to the unused same-length @746, @750, @752, @754, @765, @768, @770 and @774.",
+    "Folded __sinit_ov102_0214dfac into this TU. @707, @709, @711 and @713 already belong to ov060, @715, @719 and @721 already belong to ov063, and @717 already belongs to ov002. defined_symbol_renames maps them to the unused same-length @746, @750, @752, @754, @765, @768, @770 and @675.",
+    "@NNN re-key 2026-11-12: dActor_c's new member declarations and the removed TU-local externs moved this TU's compiler-local numbering by -2, so defined_symbol_renames now maps @785, @781, @771, @783, @773, @779, @775 and @777. The 0x0214e5d4 descriptor is @675 rather than @774 so its configured name stays clear of the raw compiler names these renumberings pass through (ov102's daObjHatenaBlock_c also emits a raw @774).",
     "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded rom.sha256 is the fleet-canonical d1506e90...c478e8 that every intact entry shares.",
     "Collision property member calls replace local helper declarations. Reconciled 8 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (50 sections, 189 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
   ],
@@ -729,7 +730,7 @@
       "source": "0x0214e08c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@774",
+      "symbol": "@675",
       "addend": 0,
       "target_module": "ov102",
       "target_address": "0x0214e5d4"
@@ -879,7 +880,7 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "@774",
+      "symbol": "@675",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local held tick descriptor is a configured initializer relocation destination at 0x0214e5d4"
@@ -929,42 +930,42 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@787",
-      "to": "@774",
-      "evidence": "mwcc numbers this PMF descriptor @721. ov063 already defines @721, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @774. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @849 to @790 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @790 to @789 when the member-pointer locals were removed (measured from the compiled object). Re-keyed from @789 to @787 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
+      "from": "@785",
+      "to": "@675",
+      "evidence": "mwcc numbers this PMF descriptor @721. ov063 already defines @721, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @675. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @849 to @790 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @790 to @789 when the member-pointer locals were removed (measured from the compiled object). Re-keyed from @789 to @787 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
-      "from": "@783",
+      "from": "@781",
       "to": "@768",
       "evidence": "mwcc numbers this PMF descriptor @717. ov002 already defines @717, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @768. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @845 to @786 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @786 to @785 when the member-pointer locals were removed (measured from the compiled object). Re-keyed from @785 to @783 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
-      "from": "@773",
+      "from": "@771",
       "to": "@746",
       "evidence": "mwcc numbers this PMF descriptor @707. ov060 already defines @707, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @746. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @835 to @776 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @776 to @775 when the member-pointer locals were removed (measured from the compiled object). Re-keyed from @775 to @773 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
-      "from": "@785",
+      "from": "@783",
       "to": "@770",
       "evidence": "mwcc numbers this PMF descriptor @719. ov063 already defines @719, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @770. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @847 to @788 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @788 to @787 when the member-pointer locals were removed (measured from the compiled object). Re-keyed from @787 to @785 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
-      "from": "@775",
+      "from": "@773",
       "to": "@750",
       "evidence": "mwcc numbers this PMF descriptor @709. ov060 already defines @709, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @750. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @837 to @778 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @778 to @777 when the member-pointer locals were removed (measured from the compiled object). Re-keyed from @777 to @775 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
-      "from": "@781",
+      "from": "@779",
       "to": "@765",
       "evidence": "mwcc numbers this PMF descriptor @715. ov063 already defines @715, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @765. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @843 to @784 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @784 to @783 when the member-pointer locals were removed (measured from the compiled object). Re-keyed from @783 to @781 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
-      "from": "@777",
+      "from": "@775",
       "to": "@752",
       "evidence": "mwcc numbers this PMF descriptor @711. ov060 already defines @711, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @752. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @839 to @780 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @780 to @779 when the member-pointer locals were removed (measured from the compiled object). Re-keyed from @779 to @777 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     },
     {
-      "from": "@779",
+      "from": "@777",
       "to": "@754",
       "evidence": "mwcc numbers this PMF descriptor @713. ov060 already defines @713, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @754. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @841 to @782 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @782 to @781 when the member-pointer locals were removed (measured from the compiled object). Re-keyed from @781 to @779 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
     }

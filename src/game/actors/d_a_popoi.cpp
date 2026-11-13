@@ -110,15 +110,13 @@ extern PopoiPMF data_ov077_02127cd8[2];
 /* Member bodies have C++ linkage and mwccarm does not inherit C linkage into
  * their block-scope externs, so every external FUNCTION declaration lives in
  * this file-scope region (extern data names are unmangled either way; they are
- * kept here too so each call site reads identically). The _ZN spellings are
- * the Fix12-by-value signatures the real headers cannot express. */
+ * kept here too so each call site reads identically). */
 extern "C" {
 extern int data_0209f32c;               /* WATER_HEIGHT */
 extern signed char gCurrentSublevel;    /* LEVEL_ID */
 extern Matrix4x3 data_020a0e68;         /* scratch Matrix4x3 */
 extern Vector3 data_ov077_02127a5c;     /* sensor offset (0, 0, 44 units) */
 
-extern s16 func_02010844(void *unused, Vector3 *v, s16 angle);
 extern int func_ov002_020db674(void *c, int a1, int a2, int a3);
 void func_02012694(unsigned int id, const Vector3 *pos);
 }
@@ -224,7 +222,7 @@ int daPopoi_c::Behavior()
     if (mWithMeshClsn.IsOnGround()) {
         dBgPi *floorResult = mWithMeshClsn.GetFloorResult();
         floorResult->surface.CopyNormalTo(floorNormal);
-        slope = func_02010844(((char *)this), &floorNormal, mAngleY);
+        slope = func_02010844(&floorNormal, mAngleY);
     }
 
     /* Roll back to last frame's position if this step would walk off a ledge,

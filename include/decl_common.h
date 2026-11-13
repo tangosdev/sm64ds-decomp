@@ -763,7 +763,6 @@ extern void Vec3fGetDistAndAngle(const struct Vector3 *, const struct Vector3 *,
 extern void func_0200f13c(void);
 extern void func_0200f220(void);
 extern void func_0200f2cc(void);
-extern void func_0200fa8c(void*, int);
 extern void func_02011cfc(void);
 extern void func_02011d08(void);
 extern void func_02011d2c(void);
