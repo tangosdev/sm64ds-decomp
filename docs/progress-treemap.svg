@@ -21125,227 +21125,227 @@ matched: yes</title></rect><rect x="649.19" y="166.64" width="3.80" height="4.23
 module: ov006
 addr: 0x020cd72c
 size: 24 bytes
-matched: yes</title></rect><rect x="652.99" y="166.64" width="18.34" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_GrowScale
+matched: yes</title></rect><rect x="652.99" y="166.64" width="18.34" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem9GrowScaleEv
 module: ov006
 addr: 0x020cd744
 size: 116 bytes
-matched: yes</title></rect><rect x="671.33" y="166.64" width="27.20" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_ProjectToScreen
+matched: yes</title></rect><rect x="671.33" y="166.64" width="27.20" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem15ProjectToScreenEt
 module: ov006
 addr: 0x020cd7b8
 size: 172 bytes
-matched: yes</title></rect><rect x="698.53" y="166.64" width="46.81" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_MotionSpinHover
+matched: yes</title></rect><rect x="698.53" y="166.64" width="46.81" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem15MotionSpinHoverEv
 module: ov006
 addr: 0x020cd864
 size: 296 bytes
-matched: yes</title></rect><rect x="745.35" y="166.64" width="5.69" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_SetMotionSpinHover
+matched: yes</title></rect><rect x="745.35" y="166.64" width="5.69" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem18SetMotionSpinHoverEv
 module: ov006
 addr: 0x020cd98c
 size: 36 bytes
-matched: yes</title></rect><rect x="751.04" y="166.64" width="45.55" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_MotionSpinDrift
+matched: yes</title></rect><rect x="751.04" y="166.64" width="45.55" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem15MotionSpinDriftEv
 module: ov006
 addr: 0x020cd9b0
 size: 288 bytes
-matched: yes</title></rect><rect x="796.59" y="166.64" width="4.43" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_SetMotionSpinDrift
+matched: yes</title></rect><rect x="796.59" y="166.64" width="4.43" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem18SetMotionSpinDriftEv
 module: ov006
 addr: 0x020cdad0
 size: 28 bytes
-matched: yes</title></rect><rect x="801.01" y="166.64" width="46.81" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_MotionSpinSway
+matched: yes</title></rect><rect x="801.01" y="166.64" width="46.81" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem14MotionSpinSwayEv
 module: ov006
 addr: 0x020cdaec
 size: 296 bytes
-matched: yes</title></rect><rect x="847.82" y="166.64" width="5.69" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_SetMotionSpinSway
+matched: yes</title></rect><rect x="847.82" y="166.64" width="5.69" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem17SetMotionSpinSwayEv
 module: ov006
 addr: 0x020cdc14
 size: 36 bytes
-matched: yes</title></rect><rect x="853.52" y="166.64" width="7.59" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_MotionHover
+matched: yes</title></rect><rect x="853.52" y="166.64" width="7.59" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem11MotionHoverEv
 module: ov006
 addr: 0x020cdc38
 size: 48 bytes
-matched: yes</title></rect><rect x="861.11" y="166.64" width="5.69" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_SetMotionHover
+matched: yes</title></rect><rect x="861.11" y="166.64" width="5.69" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem14SetMotionHoverEv
 module: ov006
 addr: 0x020cdc68
 size: 36 bytes
-matched: yes</title></rect><rect x="866.80" y="166.64" width="13.92" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_MotionSway
+matched: yes</title></rect><rect x="866.80" y="166.64" width="13.92" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem10MotionSwayEv
 module: ov006
 addr: 0x020cdc8c
 size: 88 bytes
-matched: yes</title></rect><rect x="880.72" y="166.64" width="5.69" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_SetMotionSway
+matched: yes</title></rect><rect x="880.72" y="166.64" width="5.69" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem13SetMotionSwayEv
 module: ov006
 addr: 0x020cdce4
 size: 36 bytes
-matched: yes</title></rect><rect x="886.41" y="166.64" width="45.55" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_MotionSpin
+matched: yes</title></rect><rect x="886.41" y="166.64" width="45.55" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem10MotionSpinEv
 module: ov006
 addr: 0x020cdd08
 size: 288 bytes
-matched: yes</title></rect><rect x="931.96" y="166.64" width="5.69" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_SetMotionSpin
+matched: yes</title></rect><rect x="931.96" y="166.64" width="5.69" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem13SetMotionSpinEv
 module: ov006
 addr: 0x020cde28
 size: 36 bytes
-matched: yes</title></rect><rect x="937.65" y="166.64" width="7.59" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_MotionBob
+matched: yes</title></rect><rect x="937.65" y="166.64" width="7.59" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem9MotionBobEv
 module: ov006
 addr: 0x020cde4c
 size: 48 bytes
-matched: yes</title></rect><rect x="945.24" y="166.64" width="5.69" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_SetMotionBob
+matched: yes</title></rect><rect x="945.24" y="166.64" width="5.69" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem12SetMotionBobEv
 module: ov006
 addr: 0x020cde7c
 size: 36 bytes
-matched: yes</title></rect><rect x="950.94" y="166.64" width="12.02" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_MotionPatrol
+matched: yes</title></rect><rect x="950.94" y="166.64" width="12.02" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem12MotionPatrolEv
 module: ov006
 addr: 0x020cdea0
 size: 76 bytes
-matched: yes</title></rect><rect x="962.96" y="166.64" width="7.59" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_SetMotionPatrol
+matched: yes</title></rect><rect x="962.96" y="166.64" width="7.59" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem15SetMotionPatrolEv
 module: ov006
 addr: 0x020cdeec
 size: 48 bytes
-matched: yes</title></rect><rect x="970.55" y="166.64" width="0.63" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_MotionStill
+matched: yes</title></rect><rect x="970.55" y="166.64" width="0.63" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem11MotionStillEv
 module: ov006
 addr: 0x020cdf1c
 size: 4 bytes
-matched: yes</title></rect><rect x="971.18" y="166.64" width="4.43" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_SetMotionStill
+matched: yes</title></rect><rect x="971.18" y="166.64" width="4.43" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem14SetMotionStillEv
 module: ov006
 addr: 0x020cdf20
 size: 28 bytes
-matched: yes</title></rect><rect x="975.61" y="166.64" width="58.20" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_StateAppear
+matched: yes</title></rect><rect x="975.61" y="166.64" width="58.20" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem11StateAppearEv
 module: ov006
 addr: 0x020cdf3c
 size: 368 bytes
-matched: yes</title></rect><rect x="1033.81" y="166.64" width="14.55" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_StartAppear
+matched: yes</title></rect><rect x="1033.81" y="166.64" width="14.55" height="4.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem11StartAppearEv
 module: ov006
 addr: 0x020ce0ac
 size: 92 bytes
-matched: yes</title></rect><rect x="615.67" y="170.87" width="65.75" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_ReflectOffLine
+matched: yes</title></rect><rect x="615.67" y="170.87" width="65.75" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem14ReflectOffLineEP25TrampolineObjectCallbacks
 module: ov006
 addr: 0x020ce108
 size: 868 bytes
-matched: yes</title></rect><rect x="681.42" y="170.87" width="39.39" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_UpdateWithJumper
+matched: yes</title></rect><rect x="681.42" y="170.87" width="39.39" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem16UpdateWithJumperEP25TrampolineObjectCallbacksi
 module: ov006
 addr: 0x020ce46c
 size: 520 bytes
-matched: yes</title></rect><rect x="720.81" y="170.87" width="42.12" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_HitTest2D
+matched: yes</title></rect><rect x="720.81" y="170.87" width="42.12" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem9HitTest2DEP25TrampolineObjectCallbacksi
 module: ov006
 addr: 0x020ce674
 size: 556 bytes
-matched: yes</title></rect><rect x="762.93" y="170.87" width="17.57" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_ProjectOnLine
+matched: yes</title></rect><rect x="762.93" y="170.87" width="17.57" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem13ProjectOnLineEP25TrampolineObjectCallbacksP2V2S3_
 module: ov006
 addr: 0x020ce8a0
 size: 232 bytes
-matched: yes</title></rect><rect x="780.50" y="170.87" width="12.42" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_UpdateMatrix
+matched: yes</title></rect><rect x="780.50" y="170.87" width="12.42" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem12UpdateMatrixEv
 module: ov006
 addr: 0x020ce988
 size: 164 bytes
-matched: yes</title></rect><rect x="792.92" y="170.87" width="10.91" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_Update
+matched: yes</title></rect><rect x="792.92" y="170.87" width="10.91" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem6UpdateEv
 module: ov006
 addr: 0x020cea2c
 size: 144 bytes
-matched: yes</title></rect><rect x="803.83" y="170.87" width="38.18" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_Init
+matched: yes</title></rect><rect x="803.83" y="170.87" width="38.18" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem4InitEPiS0_is
 module: ov006
 addr: 0x020ceabc
 size: 504 bytes
-matched: yes</title></rect><rect x="842.01" y="170.87" width="0.91" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_Hide
+matched: yes</title></rect><rect x="842.01" y="170.87" width="0.91" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem4HideEv
 module: ov006
 addr: 0x020cecb4
 size: 12 bytes
-matched: yes</title></rect><rect x="842.92" y="170.87" width="14.85" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_Load
+matched: yes</title></rect><rect x="842.92" y="170.87" width="14.85" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem4LoadEv
 module: ov006
 addr: 0x020cecc0
 size: 196 bytes
-matched: yes</title></rect><rect x="857.77" y="170.87" width="8.18" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_UpdateMatricesAll
+matched: yes</title></rect><rect x="857.77" y="170.87" width="8.18" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem17UpdateMatricesAllEv
 module: ov006
 addr: 0x020ced84
 size: 108 bytes
-matched: yes</title></rect><rect x="865.95" y="170.87" width="8.18" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_UpdateAll
+matched: yes</title></rect><rect x="865.95" y="170.87" width="8.18" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem9UpdateAllEv
 module: ov006
 addr: 0x020cedf0
 size: 108 bytes
-matched: yes</title></rect><rect x="874.13" y="170.87" width="9.70" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_HideAll
+matched: yes</title></rect><rect x="874.13" y="170.87" width="9.70" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem7HideAllEj
 module: ov006
 addr: 0x020cee5c
 size: 128 bytes
-matched: yes</title></rect><rect x="883.82" y="170.87" width="4.24" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_ReleaseFiles
+matched: yes</title></rect><rect x="883.82" y="170.87" width="4.24" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem12ReleaseFilesEv
 module: ov006
 addr: 0x020ceedc
 size: 56 bytes
-matched: yes</title></rect><rect x="888.07" y="170.87" width="10.91" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_LoadAll
+matched: yes</title></rect><rect x="888.07" y="170.87" width="10.91" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem7LoadAllEPci
 module: ov006
 addr: 0x020cef14
 size: 144 bytes
-matched: yes</title></rect><rect x="898.97" y="170.87" width="11.82" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpItem_Spawn
+matched: yes</title></rect><rect x="898.97" y="170.87" width="11.82" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpItem5SpawnEiPiis
 module: ov006
 addr: 0x020cefa4
 size: 156 bytes
-matched: yes</title></rect><rect x="910.79" y="170.87" width="17.27" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpLine_PointDistance
+matched: yes</title></rect><rect x="910.79" y="170.87" width="17.27" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpLine13PointDistanceEP7Vector3PKS0_
 module: ov006
 addr: 0x020cf040
 size: 228 bytes
-matched: yes</title></rect><rect x="928.06" y="170.87" width="35.75" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpLine_ComputeNormals
+matched: yes</title></rect><rect x="928.06" y="170.87" width="35.75" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpLine14ComputeNormalsEv
 module: ov006
 addr: 0x020cf124
 size: 472 bytes
-matched: yes</title></rect><rect x="963.82" y="170.87" width="84.54" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpLine_Draw
+matched: yes</title></rect><rect x="963.82" y="170.87" width="84.54" height="8.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpLine4DrawEv
 module: ov006
 addr: 0x020cf2fc
 size: 1116 bytes
-matched: yes</title></rect><rect x="615.67" y="179.69" width="3.83" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpLine_Update
+matched: yes</title></rect><rect x="615.67" y="179.69" width="3.83" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpLine6UpdateEv
 module: ov006
 addr: 0x020cf758
 size: 56 bytes
-matched: yes</title></rect><rect x="619.50" y="179.69" width="7.94" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpLine_StateFade
+matched: yes</title></rect><rect x="619.50" y="179.69" width="7.94" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpLine9StateFadeEv
 module: ov006
 addr: 0x020cf790
 size: 116 bytes
-matched: yes</title></rect><rect x="627.44" y="179.69" width="1.92" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpLine_SetStateFade
+matched: yes</title></rect><rect x="627.44" y="179.69" width="1.92" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpLine12SetStateFadeEv
 module: ov006
 addr: 0x020cf804
 size: 28 bytes
-matched: yes</title></rect><rect x="629.36" y="179.69" width="35.60" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpLine_StateSettle
+matched: yes</title></rect><rect x="629.36" y="179.69" width="35.60" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpLine11StateSettleEv
 module: ov006
 addr: 0x020cf820
 size: 520 bytes
-matched: yes</title></rect><rect x="664.96" y="179.69" width="1.92" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpLine_SetStateSettle
+matched: yes</title></rect><rect x="664.96" y="179.69" width="1.92" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpLine14SetStateSettleEv
 module: ov006
 addr: 0x020cfa28
 size: 28 bytes
-matched: yes</title></rect><rect x="666.88" y="179.69" width="36.42" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpLine_StateFlex
+matched: yes</title></rect><rect x="666.88" y="179.69" width="36.42" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpLine9StateFlexEv
 module: ov006
 addr: 0x020cfa44
 size: 532 bytes
-matched: yes</title></rect><rect x="703.30" y="179.69" width="1.92" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpLine_SetStateFlex
+matched: yes</title></rect><rect x="703.30" y="179.69" width="1.92" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpLine12SetStateFlexEv
 module: ov006
 addr: 0x020cfc58
 size: 28 bytes
-matched: yes</title></rect><rect x="705.22" y="179.69" width="95.03" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpLine_PushJumper
+matched: yes</title></rect><rect x="705.22" y="179.69" width="95.03" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpLine10PushJumperEv
 module: ov006
 addr: 0x020cfc74
 size: 1388 bytes
-matched: yes</title></rect><rect x="800.24" y="179.69" width="140.21" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpLine_Build
+matched: yes</title></rect><rect x="800.24" y="179.69" width="140.21" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpLine5BuildEPsS0_
 module: ov006
 addr: 0x020d01e0
 size: 2048 bytes
-matched: yes</title></rect><rect x="940.46" y="179.69" width="15.34" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpLine_DrawAll
+matched: yes</title></rect><rect x="940.46" y="179.69" width="15.34" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpLine7DrawAllEv
 module: ov006
 addr: 0x020d09e0
 size: 224 bytes
-matched: yes</title></rect><rect x="955.79" y="179.69" width="4.66" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpLine_UpdateAll
+matched: yes</title></rect><rect x="955.79" y="179.69" width="4.66" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpLine9UpdateAllEv
 module: ov006
 addr: 0x020d0ac0
 size: 68 bytes
-matched: yes</title></rect><rect x="960.45" y="179.69" width="2.74" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpLine_ClearAll
+matched: yes</title></rect><rect x="960.45" y="179.69" width="2.74" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpLine8ClearAllEj
 module: ov006
 addr: 0x020d0b04
 size: 40 bytes
-matched: yes</title></rect><rect x="963.19" y="179.69" width="5.20" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpLine_LoadTextures
+matched: yes</title></rect><rect x="963.19" y="179.69" width="5.20" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpLine12LoadTexturesEv
 module: ov006
 addr: 0x020d0b2c
 size: 76 bytes
-matched: yes</title></rect><rect x="968.39" y="179.69" width="6.57" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpLine_CreateStartLineT2
+matched: yes</title></rect><rect x="968.39" y="179.69" width="6.57" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpLine17CreateStartLineT2Ev
 module: ov006
 addr: 0x020d0b78
 size: 96 bytes
-matched: yes</title></rect><rect x="974.96" y="179.69" width="6.57" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpLine_CreateStartLineT1
+matched: yes</title></rect><rect x="974.96" y="179.69" width="6.57" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpLine17CreateStartLineT1Ev
 module: ov006
 addr: 0x020d0bd8
 size: 96 bytes
-matched: yes</title></rect><rect x="981.53" y="179.69" width="64.36" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>TrmpLine_Create
+matched: yes</title></rect><rect x="981.53" y="179.69" width="64.36" height="9.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8TrmpLine6CreateEPsS0_
 module: ov006
 addr: 0x020d0c38
 size: 940 bytes
