@@ -68,6 +68,7 @@ enum SlId {
     SL_MINIGAME_HIRES,          /* bool: MinigameHiRes, the minigames' 2D at render scale (MGHIRES1); off by default */
     SL_MINIGAME_UPSCALE,        /* bool: MinigameUpscale, the pixel-art upscaler on the minigames' 2D (MGHIRES1); off by default */
     SL_RENDER_SCALE,            /* int: RenderScale 0..8, host rows per DS row (0 the default); not live, read at boot (RESSCALE1) */
+    SL_STAY_AFTER_STAR,         /* bool: StayAfterStar, single player stays in the course after a star (STAYCOURSE1); off by default */
     SL_COUNT
 };
 
@@ -96,6 +97,9 @@ int sl_set(int id, int value);
    stick's whatever the run mode is; RunThreshold only matters in analog run
    mode. */
 int sl_applicable(int id);
+/* STAYCOURSE1: set by hal/star_stay.cpp; nonzero while this console plays alone (no room, no VS). Null (a build without the game,
+   tests/smoke_settings_live.cpp) counts as alone. sl_applicable greys StayAfterStar when it says 0. */
+extern int (*sl_solo_hook)(void);
 
 /* Write anything still queued (mouse-up on a slider, closing the page). */
 int sl_flush(void);
