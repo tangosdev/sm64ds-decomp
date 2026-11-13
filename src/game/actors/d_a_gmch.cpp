@@ -760,11 +760,11 @@ void daGmch_c::SetState(int n)
 int daGmch_c::CleanupResources()
 {
     extern GmchModelFileHandle data_ov081_02128ed4;
-    extern void *data_ov081_021280d8[];
+    extern SharedFilePtr *data_ov081_021280d8[];
 
-    ((SharedFilePtr *)&data_ov081_02128ed4)->Release();
+    data_ov081_02128ed4.Release();
     for (int i = 0; i < 4; i++) {
-        ((SharedFilePtr *)data_ov081_021280d8[i])->Release();
+        data_ov081_021280d8[i]->Release();
     }
     return 1;
 }
@@ -811,17 +811,17 @@ int daGmch_c::Behavior()
 int daGmch_c::InitResources()
 {
     extern GmchModelFileHandle data_ov081_02128ed4;
-    extern void *data_ov081_021280d8[];
+    extern SharedFilePtr *data_ov081_021280d8[];
     extern SharedFilePtr data_ov002_0210d9b8;
     extern Matrix4x3 IDENTITY_MATRIX4X3;
 
     Vector3 pos;
-    BMD_File *modelFile = dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov081_02128ed4);
+    BMD_File *modelFile = dExtSimpleModel_c::LoadFile(data_ov081_02128ed4);
     mAnmModel.SetFile(modelFile, 1, 1);
     if (mModel.SetFile((BMD_File *)data_ov002_0210d9b8.filePtr, 1, 1) == 0)
         return 0;
     for (int i = 0; i < 4; i++)
-        dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov081_021280d8[i]);
+        dExtFrameCtrl_c::LoadFile(*data_ov081_021280d8[i]);
     if (mShadowModel.InitCylinder() == 0)
         return 0;
     mdCcAc_c.Init(this, 0x4b000, 0x73000, 0x200000, 0x6eff0);
