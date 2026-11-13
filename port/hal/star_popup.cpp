@@ -1143,6 +1143,19 @@ static void credits_watch() {
                          p[0] >> 12, p[1] >> 12, p[2] >> 12);
             if (i > 4) break;
         }
+    if (b && st != last_st && data_0209f2d8[0] == 2) {    // a state change in the ending: what stands right under / around me
+        const int *mp = (const int *)(b + 0x5c);
+        std::fprintf(stderr, " me at %d,%d,%d near:", mp[0] >> 12, mp[1] >> 12, mp[2] >> 12);
+        int n = 0;
+        for (const char *a = (const char *)_ZN8dActor_c4NextEPKS_(0); a && n < 12; a = (const char *)_ZN8dActor_c4NextEPKS_(a)) {
+            if (a == b) continue;
+            const int *p = (const int *)(a + 0x5c);
+            const int dx = (p[0] - mp[0]) >> 12, dy = (p[1] - mp[1]) >> 12, dz = (p[2] - mp[2]) >> 12;
+            if (dx > 600 || dx < -600 || dz > 600 || dz < -600 || dy > 600 || dy < -900) continue;
+            std::fprintf(stderr, " cls%u(%d,%d,%d)", (unsigned)*(const unsigned short *)(a + 0x0c), dx, dy, dz);
+            ++n;
+        }
+    }
     std::fprintf(stderr, " wall=%lld\n", wall_ms());
     last_lc = lc; last_ps = ps; last_hp = hp; last_st = st; last_lv = lv;
 }
