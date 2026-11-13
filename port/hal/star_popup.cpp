@@ -1146,6 +1146,18 @@ static void credits_watch() {
                          p[0] >> 12, p[1] >> 12, p[2] >> 12, (unsigned)*(const unsigned char *)(a + 0x13), port_adventure_hub_body(i));
             if (i > 4) break;
         }
+        int np = 0;   // every Player actor (class 0xbf) the seat table does not name
+        for (const char *a = (const char *)_ZN8dActor_c4NextEPKS_(0); a; a = (const char *)_ZN8dActor_c4NextEPKS_(a)) {
+            if (*(const unsigned short *)(a + 0x0c) != 0xbf) continue;
+            ++np;
+            bool seated = false;
+            for (int i = 0; i < 32; ++i) seated = seated || data_0209f394[i] == a;
+            if (seated) continue;
+            const int *p = (const int *)(a + 0x5c);
+            std::fprintf(stderr, " UNSEATED(%p p1 %x st %p at %d,%d,%d pf %x)", (const void *)a, *(const unsigned *)(a + 8),
+                         *(void *const *)(a + 0x370), p[0] >> 12, p[1] >> 12, p[2] >> 12, (unsigned)*(const unsigned char *)(a + 0x13));
+        }
+        std::fprintf(stderr, " players %d", np);
     }
     if (b && st != last_st && data_0209f2d8[0] == 2) {    // a state change in the ending: what stands right under / around me
         const int *mp = (const int *)(b + 0x5c);
