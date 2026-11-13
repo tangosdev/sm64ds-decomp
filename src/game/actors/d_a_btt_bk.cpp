@@ -219,35 +219,35 @@ int daBttBk_c::StateCarriedMain() {
                     break;
             }
             {
-            Vector3 vec;
-            Vector3 vec2;
-            int x = mPosX;
-            int z = mPosZ;
-            int y = mPosY + 0xb4000;
-            vec.x = x;
-            vec.y = y;
-            vec.z = z;
-            vec2.x = vec.x;
-            vec2.y = vec.y;
-            vec2.z = vec.z;
-            PoofDustAt(vec2);
-            Particle::System::NewSimple(kPtclBattaBlockBreak, vec.x, vec.y, vec.z);
+                Vector3 vec;
+                Vector3 vec2;
+                int x = mPosX;
+                int z = mPosZ;
+                int y = mPosY + 0xb4000;
+                vec.x = x;
+                vec.y = y;
+                vec.z = z;
+                vec2.x = vec.x;
+                vec2.y = vec.y;
+                vec2.z = vec.z;
+                PoofDustAt(vec2);
+                Particle::System::NewSimple(kPtclBattaBlockBreak, vec.x, vec.y, vec.z);
 
-            {
-                int ybase = mPosY;
-                int xx = vec.x;
-                int y2 = ybase + 0x64000;
-                int zz = vec.z;
-                Vector3 v3;
-                v3.x = xx;
-                v3.z = zz;
-                vec.y = y2;
-                v3.y = y2;
-                SpawnCoins(v3, 5, 0xf000, 0);
-            }
+                {
+                    int ybase = mPosY;
+                    int xx = vec.x;
+                    int y2 = ybase + 0x64000;
+                    int zz = vec.z;
+                    Vector3 v3;
+                    v3.x = xx;
+                    v3.z = zz;
+                    vec.y = y2;
+                    v3.y = y2;
+                    SpawnCoins(v3, 5, 0xf000, 0);
+                }
 
-            Sound::PlayBank3(0x41, mCamSpacePos);
-            MarkForDestruction();
+                Sound::PlayBank3(0x41, mCamSpacePos);
+                MarkForDestruction();
             }
         } while (0);
     }
