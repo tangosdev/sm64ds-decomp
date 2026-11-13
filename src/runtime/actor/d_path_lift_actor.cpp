@@ -258,7 +258,7 @@ void dPathLiftActor_c::StatePath()
 
     yawDiff = AngleDiff(mPrevPathAngle.y, targetYaw);
     pitchDiff = AngleDiff(mPrevPathAngle.x, targetPitch);
-    pitchStep = (short)(pitchDiff / segFrames);
+    pitchStep = (pitchDiff / segFrames);
     ApproachLinear(mAngleY, targetYaw, (short)(yawDiff / segFrames));
     if (HasNonzeroAngleZ() != 0) {
         ApproachLinear(mAngleX, targetPitch, pitchStep);
