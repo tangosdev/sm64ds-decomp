@@ -300,7 +300,7 @@ void Aea30C::func_ov002_020ae954(dActor_c* a, dBgCh_Actr*)
 extern "C" void func_ov002_020ae8b8(dEnemyBase_c *c, dActor_c *arg) {
     if (IsPlayerActor(arg)) {
         u16 t = data_ov002_020ff01c[(u16)arg->param1];
-        int scaled = (int)t << 3;
+        int scaled = t << 3;
         int ip = scaled << 12;
         int d1 = ip / 100;
         int d2 = scaled / 100;
@@ -448,8 +448,8 @@ int EnemyDeathC::func_ov002_020ae4cc(dBgCh_Actr &clsn) {
         return 1;
     }
     mDeathParticleID0 =
-        (u32)Particle::System::New(mDeathParticleID0, kPtclDeathA, *(int *)((char *)v + 0),
-                                   *(int *)((char *)v + 4), *(int *)((char *)v + 8), 0, 0);
+        Particle::System::New(mDeathParticleID0, kPtclDeathA, *(int *)((char *)v + 0),
+                              *(int *)((char *)v + 4), *(int *)((char *)v + 8), 0, 0);
     mDeathParticleID1 =
         Particle::System::NewCleanParticle(mDeathParticleID1, kPtclDeathB, *(int *)((char *)v + 0),
                                            *(int *)((char *)v + 4), *(int *)((char *)v + 8), 0);
