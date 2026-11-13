@@ -285,7 +285,7 @@ void daSnowman_c::CheckAttacks() {
             vv.x = -0x1200;
             vv.y = 0;
             vv.z = 0;
-            KillByInvincibleChar(vv, *(daPly_c *)found, 0);
+            KillByInvincibleChar(vv, *found, 0);
             func_02012694(0x1d, &this->mCamSpacePosX);
             hit = 1;
         }
@@ -902,7 +902,7 @@ int daSnowman_c::Behavior()
     mAngleX = mPrevAngleX;
     mAngleY = mPrevAngleY;
     mAngleZ = mPrevAngleZ;
-    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     if (mState->execute != 0)
         (this->*mState->execute)();
     UpdatePos(&mdCcAcPos_c);
