@@ -61,6 +61,27 @@ enum d_s_mg_trampoline2_AssetId {
 #include "nitro/mi/memory.h"
 #include "math/CalcLib.h"
 
+namespace ns_020ca7b8 {
+int Trmp2Mario_Hide();
+}
+using ns_020ca7b8::Trmp2Mario_Hide;
+namespace ns_020ca840 {
+void Trmp2Mario_EnterAll();
+}
+using ns_020ca840::Trmp2Mario_EnterAll;
+namespace ns_020ca8e0 {
+void Trmp2Mario_MoveToStart();
+}
+using ns_020ca8e0::Trmp2Mario_MoveToStart;
+namespace ns_020caa08 {
+void Trmp2Mario_PlaceAtStart();
+}
+using ns_020caa08::Trmp2Mario_PlaceAtStart;
+namespace ns_020cac30 {
+void Trmp2Mario_UpdateAll();
+}
+using ns_020cac30::Trmp2Mario_UpdateAll;
+
 /* local: the ROM re-reads the slot byte at each use here, so keep the read volatile. */
 #define ACTIVE_SLOT (*(volatile unsigned char *)&gActivePlayerSlot)
 /* local: these readers only reproduce through a 4-byte-record view of the lane. */
@@ -1123,8 +1144,8 @@ void Trmp2Spinner_Init(void *r0, int value) {
     int *p3 = &spinner->mVel.y;
     int adj4 = (((unsigned int)rnd4 & 0x7fffffff) >> 0x13);
     *p3 -= adj4 >> 1;
-    func_02016a14(spinner, 0);
-    func_02016a04(spinner, 0);
+    func_02016a14((char *)spinner, 0);
+    func_02016a04((char *)spinner, 0);
 }
 }
 

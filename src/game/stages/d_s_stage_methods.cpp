@@ -3634,7 +3634,7 @@ struct ObjTeleport {
     int a;
     int b;
 };
-extern "C" struct ObjTeleport *GetTeleportDestObj(int i) {
+struct ObjTeleport *GetTeleportDestObj(int i) {
     return (ObjTeleport *)sTeleportDestObjs + i;
 }
 
@@ -3647,7 +3647,7 @@ void func_0202b090(void *table, int count) {
 struct ViewObj {
     unsigned char d[0xe];
 };
-extern "C" struct ViewObj *GetViewObj(int idx) {
+struct ViewObj *GetViewObj(int idx) {
     return &((ViewObj *)sViewObjs)[idx];
 }
 

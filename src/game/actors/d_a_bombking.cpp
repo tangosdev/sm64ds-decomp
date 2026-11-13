@@ -472,7 +472,7 @@ int daBombking_c::TickKnockback() {
                     }
                     Sound::ChangeMusicVolume(0x14, 0x15666);
                     if (pl->ShowMessage(*this, msg, &mPos, 0, 0) != 0) {
-                        func_02012694(0x12a, &mCamSpacePosX);
+                        func_02012694(0x12a, (const Vector3 *)&mCamSpacePosX);
                         KingBobOmb_SetState(&data_ov078_0212705c);
                     }
                 }
@@ -808,7 +808,7 @@ int daBombking_c::TickThrown() {
     if (this->mWithMeshClsn.IsOnGround() == 0) goto done;
     this->mHorzSpeed = 0;
     if ((this->mArenaPos.y - 0x28000) > this->mPosY) {
-        func_02012694(0x128, &this->mCamSpacePosX);
+        func_02012694(0x128, (const Vector3 *)&this->mCamSpacePosX);
         KingBobOmb_SetState(&data_ov078_021270ac);
         goto done;
     }

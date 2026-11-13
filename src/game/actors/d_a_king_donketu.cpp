@@ -713,7 +713,7 @@ int daKing_Donketu_c::UpdateDefeatCutscene2() {
         if (c->mTalkPlayer->StartTalk(*c, 1)) {
             cam->SetFlag_3();
             if (c->mTalkPlayer->ShowMessage(*c, msg, &msgpos[1], 0, 2)) {
-                func_02012694(SND_TALK_DONE, &c->mCamSpacePosX);
+                func_02012694(SND_TALK_DONE, (const Vector3 *)(&c->mCamSpacePosX));
                 ChiefChilly_ChangeState((C *)(c), (PMF *)(&data_ov073_02123410));
             }
         }

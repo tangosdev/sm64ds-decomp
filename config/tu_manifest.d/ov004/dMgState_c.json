@@ -540,12 +540,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "sEnterTable$192",
+      "from": "sEnterTable$194",
       "to": "sEnterTable$170",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, and retiring the TU-local FaderCallView view freed its four named parameters, shifting it again from $191 to $187, and including dScMgBase_c.h in place of the TU-local Base view shifts it from $187 to $216; licensed under the existing pin Re-keyed from sEnterTable$216 to sEnterTable$209 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "_ZGVsEnterTable$192",
+      "from": "_ZGVsEnterTable$194",
       "to": "_ZGVsEnterTable$170",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, and retiring the TU-local FaderCallView view freed its four named parameters, shifting it again from $191 to $187, and including dScMgBase_c.h in place of the TU-local Base view shifts it from $187 to $216; licensed under the existing pin Re-keyed from _ZGVsEnterTable$216 to _ZGVsEnterTable$209 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }

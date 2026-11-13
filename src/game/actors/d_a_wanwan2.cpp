@@ -593,7 +593,7 @@ int daWanwan2_c::Behavior()
         func_ov100_02143b68();
         mHorzSpeed = 0;
         UpdatePos(&mdCcAcPos_c);
-        if (func_ov100_02143370((char *)this) != 0) {
+        if (func_ov100_02143370() != 0) {
             mTerminalVelocity = 0;
         }
         mdCcAcPos_c.Clear();

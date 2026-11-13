@@ -223,7 +223,6 @@ extern "C" void Puff_Spawn(int x, int y);
 extern "C" void Puff_DrawAll();
 extern "C" void Puff_UpdateAll();
 extern "C" void TrmpFx_Spawn(int y, int combo);
-extern "C" void func_0203cd80(VecFx32 *v, short angle);
 
 Vector3 *dMgTrmpln2Mario_c::GetVelocity() {
     return &mVel;
