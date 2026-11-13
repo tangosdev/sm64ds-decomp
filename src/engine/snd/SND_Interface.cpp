@@ -73,47 +73,47 @@ void SNDi_SetPlayerParam(s32 player, u32 offset, u32 data, s32 size);
 void SNDi_SetTrackParam(s32 player, u32 trackBitMask, u32 offset, u32 data, s32 size);
 
 void SND_StartSeq(s32 player, const void *seqBasePtr, u32 seqOffset, SNDBankData *bankData) {
-    PushCommand_impl(SND_CMD_START_SEQ, (u32)player, (u32)seqBasePtr, seqOffset, (u32)bankData);
+    PushCommand_impl(SND_CMD_START_SEQ, player, (u32)seqBasePtr, seqOffset, (u32)bankData);
 }
 
 void SND_StopSeq(s32 player) {
-    PushCommand_impl(SND_CMD_STOP_SEQ, (u32)player, 0, 0, 0);
+    PushCommand_impl(SND_CMD_STOP_SEQ, player, 0, 0, 0);
 }
 
 void SND_PauseSeq(s32 player, int flag) {
-    PushCommand_impl(SND_CMD_PAUSE_SEQ, (u32)player, (u32)flag, 0, 0);
+    PushCommand_impl(SND_CMD_PAUSE_SEQ, player, flag, 0, 0);
 }
 
 void SND_SetPlayerTempoRatio(s32 player, s32 ratio) {
-    SNDi_SetPlayerParam(player, SND_PLAYER_TEMPO_RATIO, (u32)ratio, 2);
+    SNDi_SetPlayerParam(player, SND_PLAYER_TEMPO_RATIO, ratio, 2);
 }
 
 void SND_SetPlayerVolume(s32 player, s32 volume) {
-    SNDi_SetPlayerParam(player, SND_PLAYER_EXT_FADER, (u32)volume, 2);
+    SNDi_SetPlayerParam(player, SND_PLAYER_EXT_FADER, volume, 2);
 }
 
 void SND_SetPlayerChannelPriority(s32 player, s32 prio) {
-    SNDi_SetPlayerParam(player, SND_PLAYER_PRIO, (u32)prio, 1);
+    SNDi_SetPlayerParam(player, SND_PLAYER_PRIO, prio, 1);
 }
 
 void SND_SetTrackVolume(s32 player, u32 trackBitMask, s32 volume) {
-    SNDi_SetTrackParam(player, trackBitMask, SND_TRACK_EXT_FADER, (u32)volume, 2);
+    SNDi_SetTrackParam(player, trackBitMask, SND_TRACK_EXT_FADER, volume, 2);
 }
 
 void SND_SetTrackPitch(s32 player, u32 trackBitMask, s32 pitch) {
-    SNDi_SetTrackParam(player, trackBitMask, SND_TRACK_EXT_PITCH, (u32)pitch, 2);
+    SNDi_SetTrackParam(player, trackBitMask, SND_TRACK_EXT_PITCH, pitch, 2);
 }
 
 void SND_SetTrackPan(s32 player, u32 trackBitMask, s32 pan) {
-    SNDi_SetTrackParam(player, trackBitMask, SND_TRACK_EXT_PAN, (u32)pan, 1);
+    SNDi_SetTrackParam(player, trackBitMask, SND_TRACK_EXT_PAN, pan, 1);
 }
 
 void SND_SetTrackModDepth(s32 player, u32 trackBitMask, s32 depth) {
-    SNDi_SetTrackParam(player, trackBitMask, SND_TRACK_MOD_DEPTH, (u32)depth, 1);
+    SNDi_SetTrackParam(player, trackBitMask, SND_TRACK_MOD_DEPTH, depth, 1);
 }
 
 void SND_SetTrackModSpeed(s32 player, u32 trackBitMask, s32 speed) {
-    SNDi_SetTrackParam(player, trackBitMask, SND_TRACK_MOD_SPEED, (u32)speed, 1);
+    SNDi_SetTrackParam(player, trackBitMask, SND_TRACK_MOD_SPEED, speed, 1);
 }
 
 void SND_StartTimer(u32 chnBitMask, u32 capBitMask, u32 alarmBitMask, u32 flags) {
@@ -126,7 +126,7 @@ void SND_StopTimer(u32 chnBitMask, u32 capBitMask, u32 alarmBitMask, u32 flags) 
 
     while (i < SND_ALARM_COUNT && tmpMask != 0) {
         if (tmpMask & 1)
-            SNDi_IncAlarmId((u32)i);
+            SNDi_IncAlarmId(i);
         i++;
         tmpMask >>= 1;
     }
@@ -142,12 +142,12 @@ void SND_SetupCapture(s32 capture, s32 format, void *bufferPtr, u32 length, int 
 }
 
 void SND_SetupAlarm(s32 alarm, u32 tick, u32 period, SNDAlarmCallback cb, void *userData) {
-    PushCommand_impl(SND_CMD_SETUP_ALARM, (u32)alarm, tick, period,
-                     SNDi_SetAlarmHandler((u32)alarm, cb, userData));
+    PushCommand_impl(SND_CMD_SETUP_ALARM, alarm, tick, period,
+                     SNDi_SetAlarmHandler(alarm, cb, userData));
 }
 
 void SND_SetTrackMute(s32 player, u32 trackBitMask, int flag) {
-    PushCommand_impl(SND_CMD_MUTE_TRACK, (u32)player, trackBitMask, (u32)flag, 0);
+    PushCommand_impl(SND_CMD_MUTE_TRACK, player, trackBitMask, flag, 0);
 }
 
 void SND_LockChannel(u32 chnBitMask, u32 flags) {
@@ -159,7 +159,7 @@ void SND_UnlockChannel(u32 chnBitMask, u32 flags) {
 }
 
 void SND_SetChannelVolume(u32 chnBitMask, s32 volume, s32 chnDataShift) {
-    PushCommand_impl(SND_CMD_CHANNEL_VOLUME, chnBitMask, (u32)volume, (u32)chnDataShift, 0);
+    PushCommand_impl(SND_CMD_CHANNEL_VOLUME, chnBitMask, volume, chnDataShift, 0);
 }
 
 void SND_SetupChannelPcm(s32 chn, s32 waveFormat, const void *dataAddr, s32 loopMode, s32 loopStart,
@@ -182,11 +182,11 @@ void SND_InvalidateWaveData(const void *start, const void *end) {
 }
 
 void SND_SetOutputSelector(s32 left, s32 right, s32 channel1, s32 channel3) {
-    PushCommand_impl(SND_CMD_OUTPUT_SELECTOR, (u32)left, (u32)right, (u32)channel1, (u32)channel3);
+    PushCommand_impl(SND_CMD_OUTPUT_SELECTOR, left, right, channel1, channel3);
 }
 
 void SNDi_SetPlayerParam(s32 player, u32 offset, u32 data, s32 size) {
-    PushCommand_impl(SND_CMD_PLAYER_PARAM, (u32)player, offset, data, (u32)size);
+    PushCommand_impl(SND_CMD_PLAYER_PARAM, player, offset, data, size);
 }
 
 void SNDi_SetTrackParam(s32 player, u32 trackBitMask, u32 offset, u32 data, s32 size) {
@@ -194,7 +194,7 @@ void SNDi_SetTrackParam(s32 player, u32 trackBitMask, u32 offset, u32 data, s32 
 }
 
 void SNDi_SetSurroundDecay(s32 decay) {
-    PushCommand_impl(SND_CMD_SURROUND_DECAY, (u32)decay, 0, 0, 0);
+    PushCommand_impl(SND_CMD_SURROUND_DECAY, decay, 0, 0, 0);
 }
 
 void PushCommand_impl(s32 id, u32 par1, u32 par2, u32 par3, u32 par4) {
