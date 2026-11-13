@@ -778,8 +778,7 @@ int daBook_c::InitResources()
         unsigned int match1 = (id == kShootBookActorId);
 
         do {
-            if (match1)
-            {
+            if (match1) {
                 mKind = KIND_FLYING_BOOK;
                 mState = STATE_SPAWNED;
                 mCoinType = 0;
@@ -788,8 +787,7 @@ int daBook_c::InitResources()
             }
             {
                 unsigned int match2 = (id == kKillerBookActorId);
-                if (match2)
-                {
+                if (match2) {
                     mKind = KIND_FLYING_BOOK;
                     mState = STATE_WAIT;
                     mCoinType = 3;
@@ -799,8 +797,7 @@ int daBook_c::InitResources()
             }
             {
                 unsigned int match3 = (id == kBookSwitchActorId);
-                if (match3)
-                {
+                if (match3) {
                     mKind = KIND_SWITCH_BOOK;
                     mState = STATE_SWITCH_WAIT;
                     mCoinType = 0;
