@@ -23,7 +23,7 @@ void func_ov007_020c4128(Ov007Sprite *parent, Ov007Sprite *child, struct Ov007Ca
     child->depth += parent->depth;
 
     func_ov007_020c4388(child, camera);
-    VEC_Subtract((Vector3 *)&child->pos, (Vector3 *)&parent->pos, (Vector3 *)&child->pos);
+    VEC_Subtract(&child->pos, &parent->pos, &child->pos);
     func_ov007_020c421c(child);
 
     child->screenX = savedX;
