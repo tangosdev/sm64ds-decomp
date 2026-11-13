@@ -262,9 +262,9 @@ void UnknownVsPlayer::MovePoseParticles() {
     MTX_MultVec43(&bone->t, &mModel.mat4x3, &pos);
     Vec3_MulScalarInPlace(&pos, 0x8000);
     pos.y += 0x28000;
-    mParticleHandle = Particle::System::New(mParticleHandle, 0x140, pos.x, pos.y, pos.z,
-                                            (const Vector3_16f *)((Vector3_16 *)0),
-                                            (dPa_c::level_c::callback_c *)((void *)0));
+    mParticleHandle =
+        Particle::System::New(mParticleHandle, 0x140, pos.x, pos.y, pos.z, (const Vector3_16f *)0,
+                              (dPa_c::level_c::callback_c *)0);
 }
 
 /* Movement state 8: frame 0x14 of the animation comes round twice; the
@@ -747,7 +747,7 @@ int dEntObj_c::GetStandingX(int playerNo) {
 void dEntObj_c::SetCamera() {
     Matrix4x3 view;
     G3i_PerspectiveW_(data_02082614[0xa], data_02082614[0xb], 0x1555, 0x1000, 0x1388000, 0x1000,
-                      true, (Matrix4x3 *)0);
+                      true, 0);
     G3i_LookAt_((Vector3 *)&mCamPosX, (Vector3 *)&data_ov075_0211c660, (Vector3 *)&mCamTargetX,
                 true, &view);
     CopyToViewMat(&view);
