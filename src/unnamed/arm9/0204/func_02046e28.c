@@ -32,35 +32,35 @@ void func_02046e28(struct Model *model, struct MatAnimData *anim, unsigned short
         mat = &model->materials[e->matIdx];
         mat->diffAmb = 0x8000;
 
-        c = (u32)anim->values[e->comp[0].base + sel[e->comp[0].which]];
+        c = anim->values[e->comp[0].base + sel[e->comp[0].which]];
         mat->diffAmb |= c;
-        c = (u32)anim->values[e->comp[1].base + sel[e->comp[1].which]];
+        c = anim->values[e->comp[1].base + sel[e->comp[1].which]];
         mat->diffAmb |= c << 5;
-        c = (u32)anim->values[e->comp[2].base + sel[e->comp[2].which]];
+        c = anim->values[e->comp[2].base + sel[e->comp[2].which]];
         mat->diffAmb |= c << 10;
-        c = (u32)anim->values[e->comp[3].base + sel[e->comp[3].which]];
+        c = anim->values[e->comp[3].base + sel[e->comp[3].which]];
         mat->diffAmb |= c << 16;
-        c = (u32)anim->values[e->comp[4].base + sel[e->comp[4].which]];
+        c = anim->values[e->comp[4].base + sel[e->comp[4].which]];
         mat->diffAmb |= c << 21;
-        c = (u32)anim->values[e->comp[5].base + sel[e->comp[5].which]];
+        c = anim->values[e->comp[5].base + sel[e->comp[5].which]];
         mat->diffAmb |= c << 26;
 
         mat->specEmi = 0;
-        c = (u32)anim->values[e->comp[6].base + sel[e->comp[6].which]];
+        c = anim->values[e->comp[6].base + sel[e->comp[6].which]];
         mat->specEmi |= c;
-        c = (u32)anim->values[e->comp[7].base + sel[e->comp[7].which]];
+        c = anim->values[e->comp[7].base + sel[e->comp[7].which]];
         mat->specEmi |= c << 5;
-        c = (u32)anim->values[e->comp[8].base + sel[e->comp[8].which]];
+        c = anim->values[e->comp[8].base + sel[e->comp[8].which]];
         mat->specEmi |= c << 10;
-        c = (u32)anim->values[e->comp[9].base + sel[e->comp[9].which]];
+        c = anim->values[e->comp[9].base + sel[e->comp[9].which]];
         mat->specEmi |= c << 16;
-        c = (u32)anim->values[e->comp[10].base + sel[e->comp[10].which]];
+        c = anim->values[e->comp[10].base + sel[e->comp[10].which]];
         mat->specEmi |= c << 21;
-        cb = (u32)anim->values[e->comp[11].base + sel[e->comp[11].which]];
+        cb = anim->values[e->comp[11].base + sel[e->comp[11].which]];
         mat->specEmi |= cb << 26;
 
         mat->polyAttr &= 0xffe0ffffU;
-        c = (u32)anim->values[e->comp[12].base + sel[e->comp[12].which]];
+        c = anim->values[e->comp[12].base + sel[e->comp[12].which]];
         mat->polyAttr |= c << 16;
     }
 }
