@@ -7022,6 +7022,15 @@ void func_ov002_020c72a4(void* thisptr)
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN6Player19func_ov002_020c7350Ev
 extern "C" {
+/* "#if defined", not "#ifdef": port/tools/hostgen.py MSC_ARMS_BOTH reads an "#ifdef _MSC_VER" as the start of a two-arm block. */
+#if defined(_MSC_VER)
+/* PC port, single player (lane EXITPAINT1): the painting jump-out (anims 0x85 / 0xa5) below raises the course clear screen
+   (data_0209f20c) when it ends. After the cheat ExitToPainting sent Exit Course to the painting (hal/exit_paint.cpp) the hook
+   answers 1 and the jump-out ends without it, as Exit Course shows none; the player then gets control as the state's own
+   wait allows. Null, or 0, is the cartridge. */
+extern "C" int (*port_level_clear_skip_hook)(void);
+extern "C" int (*port_level_clear_skip_hook)(void) = 0;
+#endif
 void Player::func_ov002_020c7350()
 {
     typedef unsigned char u8;
@@ -7072,6 +7081,9 @@ void Player::func_ov002_020c7350()
     anim = (char *)((int *)((char *)this + 0xdc))[id] + 0x50;
     if (_ZNK15dExtFrameCtrl_c12WillHitFrameEi(anim, 0x8e)) {
         if (this->IsAnim(0xa5)) {
+#if defined(_MSC_VER)
+            if (!port_level_clear_skip_hook || !port_level_clear_skip_hook())
+#endif
             data_0209f20c = 1;
         }
     }
@@ -7096,6 +7108,9 @@ void Player::func_ov002_020c7350()
     }
 
     if (this->IsAnim(0x85)) {
+#if defined(_MSC_VER)
+        if (!port_level_clear_skip_hook || !port_level_clear_skip_hook())
+#endif
         data_0209f20c = 1;
     }
 

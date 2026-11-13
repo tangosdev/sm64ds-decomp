@@ -53,16 +53,17 @@ extern unsigned char data_0209f200;          // its entrance
 extern unsigned char data_02075638[];        // SetNextLevel's table: sublevel, destination, entrance (8 rows of 3)
 int SublevelToLevel(int i);
 void LoadLevelNoReturn(unsigned level, unsigned entrance, unsigned star, unsigned unk);
-#ifndef PORT_ROM_CLEAN
+extern int (*port_level_clear_skip_hook)(void);   // src/game/player/Player.cpp
 extern void (*port_sdat_frame_hook)(void);   // hal/sdat/consumer.cpp: one call per game frame, chained
 extern void *data_0209f394[];
 extern unsigned char data_0209f250;          // my player index
 extern unsigned char data_02092110[];        // pending level change, < 0 = none
+extern unsigned char data_ov002_021104b4[];  // Player's level-entry state
+#ifndef PORT_ROM_CLEAN
 extern int data_0209f264[];                  // current entrance
 extern unsigned char data_0209f2fc;          // entry reason
 extern int data_0209f220[];                  // current act
 extern signed char data_0209f2f4[];          // lives
-extern unsigned char data_ov002_021104b4[];  // Player's level-entry state
 unsigned char NumStars(void);
 short NumCoins(void);
 void LoadLevel(unsigned level, unsigned entrance, unsigned star, unsigned unk, unsigned retEntrance);
@@ -108,6 +109,52 @@ bool life_lost_destination(int *level, int *entrance) {
 bool g_log;
 #endif
 
+// THE JUMP-OUT WITHOUT THE CLEAR SCREEN. A painting entrance's jump-out (Player steps 8 / 0xb, anim 0x85, 0xa5 without the cap)
+// raises the course clear screen when it ends (Player::func_ov002_020c7350), whatever the reason: that screen is the star exit's.
+// Exit Course shows none, so after an exit this file sent to a painting the jump-out ends without it. Armed by the exit, live from
+// the arrival in that sublevel until the player leaves the level-entry state (or any other level is loaded), then off again, so a
+// later star exit to the same painting gets its screen as on the cartridge.
+enum Arm { kOff, kLeaving, kArrived };
+Arm g_arm = kOff;
+int g_arm_level = -1;
+bool g_seen_entry;     // the player has been in the level-entry state since the arrival
+int g_arm_frames;      // frames since the arrival (a safety stop at 30 seconds)
+void (*g_prev)(void);
+
+char *my_body() {
+    const int me = (int)data_0209f250;
+    return (me >= 0 && me < 16) ? (char *)data_0209f394[me] : nullptr;
+}
+
+int level_clear_skip() {
+    const int skip = g_arm == kArrived && (int)data_0209f2f8 == g_arm_level;
+#ifndef PORT_ROM_CLEAN
+    if (g_log)
+        std::fprintf(stderr, "[exitpaint] jump-out ended in sublevel %d: %s\n", (int)data_0209f2f8,
+                     skip ? "no clear screen (Exit Course to the painting)" : "clear screen (cartridge)");
+#endif
+    return skip;
+}
+
+void arm_step() {
+    if (g_arm == kLeaving) {
+        if ((signed char)data_02092110[0] >= 0) return;                 // the change is still pending
+        g_arm = (int)data_0209f2f8 == g_arm_level ? kArrived : kOff;
+        g_seen_entry = false; g_arm_frames = 0;
+    } else if (g_arm == kArrived) {
+        const char *b = my_body();
+        const bool entering = b && *(void *const *)(b + 0x370) == (const void *)data_ov002_021104b4;
+        if (entering) g_seen_entry = true;
+        if ((int)data_0209f2f8 != g_arm_level || (signed char)data_02092110[0] >= 0 || (g_seen_entry && !entering) ||
+            ++g_arm_frames > 1800) {
+            g_arm = kOff;
+#ifndef PORT_ROM_CLEAN
+            if (g_log) std::fprintf(stderr, "[exitpaint] arrival over (sublevel %d), clear screens are the cartridge's again\n", (int)data_0209f2f8);
+#endif
+        }
+    }
+}
+
 int exit_course_hook() {
     if (!host_setting_exit_to_painting()) return 0;
     const int alone = solo();
@@ -122,26 +169,19 @@ int exit_course_hook() {
 #endif
     if (!have) return 0;
     LoadLevelNoReturn((unsigned)to, (unsigned)at, (unsigned)-1, 0);
+    g_arm = kLeaving; g_arm_level = to;
     return 1;
 }
 
 #ifndef PORT_ROM_CLEAN
 struct Knobs {
     int en_lvl = -1, en_fr = 0, en_act = 1; bool en_done = false;
-    int in_castle = 0;
     int last_lvl = -999, since = 0, watch = 0;
     const void *last_state = nullptr; int last_step = -1;
 };
 Knobs K;
-void (*g_prev)(void);
 
-char *my_body() {
-    const int me = (int)data_0209f250;
-    return (me >= 0 && me < 16) ? (char *)data_0209f394[me] : nullptr;
-}
-
-void frame() {
-    if (g_prev) g_prev();
+void knob_frame() {
     const int lv = (int)data_0209f2f8;
     if (lv != K.last_lvl) {
         K.last_lvl = lv; K.since = 0; K.watch = g_log ? 600 : 0; K.last_state = nullptr; K.last_step = -1;
@@ -180,6 +220,14 @@ void frame() {
 }
 #endif
 
+void frame() {
+    if (g_prev) g_prev();
+    arm_step();
+#ifndef PORT_ROM_CLEAN
+    if (g_log || K.en_lvl >= 0) knob_frame();
+#endif
+}
+
 struct Reg {
     Reg() {
         port_exit_course_hook = &exit_course_hook;
@@ -187,8 +235,10 @@ struct Reg {
         g_log = env_set("SM64DS_EXITPAINT_LOG");
         if (const char *e = std::getenv("SM64DS_EXITPAINT_ENTER"))
             if (std::sscanf(e, "%d:%d:%d", &K.en_lvl, &K.en_fr, &K.en_act) < 2) K.en_lvl = -1;
-        if (g_log || K.en_lvl >= 0) { g_prev = port_sdat_frame_hook; port_sdat_frame_hook = frame; }
 #endif
+        port_level_clear_skip_hook = &level_clear_skip;
+        g_prev = port_sdat_frame_hook;
+        port_sdat_frame_hook = frame;
     }
 } g_reg;
 
