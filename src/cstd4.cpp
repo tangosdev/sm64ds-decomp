@@ -726,7 +726,7 @@ int __pformatter(int (*WriteProc)(void *, const char *, size_t), void *WriteProc
                 if (!(buff_ptr = (unsigned char *)long2str(long_num, conv_buff + MAX_BUFF, format)))
                     goto invalid_conversion;
             }
-            n = (unsigned char *)&conv_buff[MAX_BUFF - 1] - buff_ptr;
+            n = &conv_buff[MAX_BUFF - 1] - (char *)buff_ptr;
             break;
 
         case 'o':
@@ -758,7 +758,7 @@ int __pformatter(int (*WriteProc)(void *, const char *, size_t), void *WriteProc
                 if (!(buff_ptr = (unsigned char *)long2str(long_num, conv_buff + MAX_BUFF, format)))
                     goto invalid_conversion;
             }
-            n = (unsigned char *)&conv_buff[MAX_BUFF - 1] - buff_ptr;
+            n = &conv_buff[MAX_BUFF - 1] - (char *)buff_ptr;
             break;
 
         case 'f':
@@ -773,7 +773,7 @@ int __pformatter(int (*WriteProc)(void *, const char *, size_t), void *WriteProc
                 long_double_num = *(double *)((arg += sizeof(double)) - sizeof(double));
             if (!(buff_ptr = (unsigned char *)float2str(long_double_num, conv_buff + MAX_BUFF, format)))
                 goto invalid_conversion;
-            n = (unsigned char *)&conv_buff[MAX_BUFF - 1] - buff_ptr;
+            n = &conv_buff[MAX_BUFF - 1] - (char *)buff_ptr;
             break;
 
         case 'a':
@@ -784,7 +784,7 @@ int __pformatter(int (*WriteProc)(void *, const char *, size_t), void *WriteProc
                 long_double_num = *(double *)((arg += sizeof(double)) - sizeof(double));
             if (!(buff_ptr = (unsigned char *)double2hex(long_double_num, conv_buff + MAX_BUFF, format)))
                 goto invalid_conversion;
-            n = (unsigned char *)&conv_buff[MAX_BUFF - 1] - buff_ptr;
+            n = &conv_buff[MAX_BUFF - 1] - (char *)buff_ptr;
             break;
 
         case 's':
