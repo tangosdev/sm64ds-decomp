@@ -37,6 +37,7 @@ void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *, short);
 void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short angle);
 void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *, short);
 void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *m, int x, int y, int z);
+void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *, int, int, int);
 void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationZXYExt(Matrix4x3 *, int, int, int);
 void Matrix4x3_FromRotationXYZExt(Matrix4x3 *, int, int, int);

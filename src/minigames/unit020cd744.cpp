@@ -24,8 +24,6 @@
  * - Vector3 locals emit an empty destructor, licensed as a deadstrip duplicate
  *   of arm9:0x020072c0. TrmpLine::Build's never-written stack slot is held by
  *   Spare4, whose empty destructor is deadstripped as compiler-only output.
- * - The vector helpers (Vec3_Sub, Vec2_Sub and the rest) are one-function C
- *   sources in src/ with no owning header, so they are declared here.
  */
 
 #include "types.h"
@@ -42,6 +40,8 @@
 #include "nitro/fx/fx_cp.h"
 #include "TrmpLine.h"
 #include "TrmpItem.h"
+#include "Trmp2Spinner.h"
+#include "Vector2Math.h"
 #include "dExtSimpleModel_c.h"
 #include "dExtAnmTexSRT_c.h"
 #include "math/Approach.h"
@@ -49,6 +49,7 @@
 #include "math/Quaternion.h"
 #include "math/MtxStack.h"
 #include "MgCamera.h"
+#include "dScMgD3DBase_c.h"
 
 /* The one raw-pointer walk left: TrmpLine::Create finds a free slot through
    byte offsets, so it reads each candidate through this cast. */
@@ -177,31 +178,6 @@ extern StateRecord pmf_TrmpItem_MotionStill;
 extern StateRecord pmf_TrmpLine_StateFade;
 extern StateRecord pmf_TrmpLine_StateSettle;
 extern StateRecord pmf_TrmpLine_StateFlex;
-
-/* Other units' functions (C linkage). */
-extern "C" {
-void Jump2Popup_Spawn(int, int, int);
-void D3D_PlaySePannedLoop(int, int, int);
-void Trmp2Spinner_InitAll(int);
-void func_0203b958(short *, short *, short *);
-int func_0203d524(V2 *, V2 *);
-void func_0203d704(int *, int *, int *);
-void func_0203cd80(int *, short);
-void Matrix4x3_FromQuaternion(const Quaternion *, Matrix4x3 *);
-void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *, int, int, int);
-unsigned int func_02045a50(const void *, unsigned int);
-
-/* Vec3/Vector2 helpers not declared by math/CalcLib.h: one-function C
-   sources in src/, no owning header. */
-void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
-void Vec3_Add(Vector3 *, const Vector3 *, const Vector3 *);
-void Vec3_MulScalar(Vector3 *, const Vector3 *, int);
-void Vec3_MulScalarInPlace(Vector3 *, int);
-void VEC_CrossProduct(const Vector3 *, const Vector3 *, Vector3 *);
-void VEC_Normalize(const Vector3 *, Vector3 *);
-int NormalizeVec3IfNonZero(Vector3 *);
-void Vec2_Sub(int *, int *, int *);
-}
 
 void TrmpItem::GrowScale() {
     ApproachLinear(mScale.x, 0x1200, 0x80);
@@ -1714,9 +1690,6 @@ void TrmpLine::CreateStartLineT1() {
     sTrmpLines[3].mBounceCount = 0;
     sTrmpLines[3].mSlotIndex = 3;
 }
-
-/* Preserve the earlier local-static uniquifiers in this ordered TU. */
-#include "Vector2Math.h"
 
 /*
  * Try to place a new line segment between two 16-bit points.

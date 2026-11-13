@@ -76,6 +76,14 @@
 #include "dScStage_c.h"
 #include "MgCamera.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+void D3D_PlaySePannedLoop(int, int, int);
+#ifdef __cplusplus
+}
+#endif
+
 struct dScMgD3DBase_c : dScMgBase_c {
     /* Declared first -- see include/dScene_c.h's KEY FUNCTION note. Overrides
        slots 16 (D1) and 17 (D0). DEFINED INLINE, see the file banner. */

@@ -30,9 +30,9 @@
  * bytes; both DIFF.
  * The bounce states still walk the line in gotos and raw offsets -- that is
  * the matched state machine, not decoration. Helper prototypes with no owning
- * header (Puff_*, Sound_PlayBank1Panned, TrmpFx_Spawn,
- * TrmpItem_UpdateWithJumper, func_0203cd80, Vec3_MulScalar) stay TU-local
- * until include/ owns them; VEC_Add/Subtract/DotProduct come from
+ * header (Puff_*, Sound_PlayBank1Panned, TrmpFx_Spawn, Vec3_MulScalar) stay
+ * TU-local until include/ owns them; TrmpItem::UpdateWithJumper and
+ * func_0203cd80 come from their headers, and VEC_Add/Subtract/DotProduct from
  * math/CalcLib.h.
  */
 
@@ -223,7 +223,6 @@ extern "C" void Puff_Spawn(int x, int y);
 extern "C" void Puff_DrawAll();
 extern "C" void Puff_UpdateAll();
 extern "C" void TrmpFx_Spawn(int y, int combo);
-extern "C" void func_0203cd80(VecFx32 *v, short angle);
 
 Vector3 *dMgTrmpln2Mario_c::GetVelocity() {
     return &mVel;
@@ -1110,13 +1109,13 @@ void Trmp2Mario_DrawAll(void) {
     v.x = 0;
     v.y = 0;
     v.z = -0xff8;
-    func_0203cd80(&v, -0x2000);
+    func_0203cd80((int *)&v, -0x2000);
     func_0203ccd4((Vector3 *)&v, -0x3000);
     G3_LightVector(GX_LIGHTID_0, v.x, v.y, v.z);
     w.x = 0;
     w.y = 0;
     w.z = -0xff8;
-    func_0203cd80(&w, -0x2000);
+    func_0203cd80((int *)&w, -0x2000);
     G3_LightVector(GX_LIGHTID_1, w.x, w.y, w.z);
     G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
     G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));
@@ -2300,14 +2299,14 @@ void Trmp3DMario_DrawAll(void) {
     v[0] = 0;
     v[1] = 0;
     v[2] = -0xff8;
-    func_0203cd80((VecFx32 *)v, 0x2000);
+    func_0203cd80((int *)v, 0x2000);
     func_0203ccd4((Vector3 *)v, 0);
     G3_LightVector(GX_LIGHTID_0, v[0], v[1], v[2]);
 
     w[0] = 0;
     w[1] = 0;
     w[2] = -0xff8;
-    func_0203cd80((VecFx32 *)w, -0x2000);
+    func_0203cd80((int *)w, -0x2000);
     G3_LightVector(GX_LIGHTID_1, w[0], w[1], w[2]);
 
     {
