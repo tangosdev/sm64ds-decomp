@@ -163,22 +163,15 @@ void dScEntry_c::icon_c::Render() {
     case 1:
     case 2:
         paletteBits = (mOn != 0) ? 0x6000 : 0x5000;
-        /* The ROM's case 0..2 block branches into case 8..11's fill loop.
-         * A shared inline helper (void or int-returning), one merged
-         * case, a do/while(0) that breaks out of a merged case, a fill
-         * tail after the switch and a fill duplicated into both cases
-         * all miss it: mwccarm merges no tails, and merging the cases
-         * adds an unk_01c compare. `if (0) { case 8: ... }' matches,
-         * but it is this jump spelled less plainly, so the jump stays. */
-
-        goto fill;
-
+        /* Cases 0..2 share the fill loop with cases 8..11. mwccarm will not
+         * merge the two tails, and folding the cases adds an unk_01c compare. */
+        if (0) {
     case 8:
     case 9:
     case 10:
     case 11:
-        paletteBits = (mOn != 0) ? 0x2000 : 0x1000;
-    fill:
+            paletteBits = (mOn != 0) ? 0x2000 : 0x1000;
+        }
         halfWidth = mHalfW;
         screenMap = (u16 *)G2S_GetBG2ScrPtr();
         x = mX;
