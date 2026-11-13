@@ -69,10 +69,9 @@ extern CLPS_Block *gLinelift2ClpsBlocks[];        /* CLPS, by mVariant */
 extern StateFunc gLinelift2StateFuncs[];          /* by mState */
 
 /* arm9 C helpers with no shared header. */
-extern "C" {
-void Vec3_Sub(Vector3 *res, const Vector3 *a, const Vector3 *b);
-void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *out);
-}
+
+extern "C" void Vec3_Sub(Vector3 *res, const Vector3 *a, const Vector3 *b);
+extern "C" void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *out);
 
 enum {
     kPlayerActorID = 0xbf,
@@ -84,11 +83,11 @@ enum {
 static const int cSinkDepth = 0x1e000;
 static const int cSinkRate = 0x5000;
 
-extern "C" daLinelift2_c *daLinelift2_c_classInit_KM3_LIFT() {
+ daLinelift2_c *daLinelift2_c_classInit_KM3_LIFT() {
     return new daLinelift2_c();
 }
 
-extern "C" daLinelift2_c *daLinelift2_c_classInit_KM2_SUSUMU() {
+ daLinelift2_c *daLinelift2_c_classInit_KM2_SUSUMU() {
     return new daLinelift2_c();
 }
 

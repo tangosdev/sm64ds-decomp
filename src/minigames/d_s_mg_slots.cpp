@@ -127,13 +127,19 @@ extern int data_0208ee44;
 extern void RenderOamMainScreen(OamAttr *, int, int, int, int);
 extern OamAttr sSlotsSlotBlinkSprites[];
 extern void Mg_LoseCredits(int c);
-extern void func_ov001_020ab3f0(void *c);
+}
+void func_ov001_020ab3f0(void *c);
+extern "C" {
 void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *m);
 extern void *data_ov006_0213e528[];
+}
 int TouchArea_Update(void *c, int x);
+extern "C" {
 void SlotBet_OnTouch(void *c);
 void Mg_GainCredits(int x);
-extern void func_ov001_020ab5b0(char *r0, int r1, short r2, short r3, short s4, short s5);
+}
+void func_ov001_020ab5b0(char *r0, int r1, short r2, short r3, short s4, short s5);
+extern "C" {
 extern int Mg_GetSavedRecord0(void);
 extern int sSlot1ReelPos[][2];
 extern void *sSlot1Sprites[];

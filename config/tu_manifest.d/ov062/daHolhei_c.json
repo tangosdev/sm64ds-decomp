@@ -207,7 +207,7 @@
       "ordinal": 23
     },
     {
-      "symbol": "daHolhei_c_ChangeState",
+      "symbol": "_Z22daHolhei_c_ChangeStateP10daHolhei_cP11HolheiState",
       "address": "0x02116cd8",
       "size": "0x00000050",
       "legacy_source": "src/daHolhei_c_ChangeState.cpp",
@@ -284,7 +284,7 @@
       "ordinal": 34
     },
     {
-      "symbol": "daHolhei_c_classInit",
+      "symbol": "_Z20daHolhei_c_classInitv",
       "address": "0x02117478",
       "size": "0x00000054",
       "legacy_source": "src/d_a_holhei.c",
@@ -2387,7 +2387,7 @@
       "source": "0x0211d9bc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daHolhei_c_classInit",
+      "symbol": "_Z20daHolhei_c_classInitv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x02117478"

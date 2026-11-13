@@ -107,7 +107,7 @@
       "ordinal": 9
     },
     {
-      "symbol": "daObjPile_c_classInit",
+      "symbol": "_Z21daObjPile_c_classInitv",
       "address": "0x02133938",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_pile.c",

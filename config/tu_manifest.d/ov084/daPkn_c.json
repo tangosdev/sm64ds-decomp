@@ -202,7 +202,7 @@
       "ordinal": 22
     },
     {
-      "symbol": "daPkn_c_classInit",
+      "symbol": "_Z17daPkn_c_classInitv",
       "address": "0x02130110",
       "size": "0x00000064",
       "legacy_source": "src/d_a_pkn.c",
@@ -1766,7 +1766,7 @@
       "source": "0x02130c04",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPkn_c_classInit",
+      "symbol": "_Z17daPkn_c_classInitv",
       "addend": 0,
       "target_module": "ov084",
       "target_address": "0x02130110"

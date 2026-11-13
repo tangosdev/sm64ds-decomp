@@ -22,9 +22,8 @@
 #include "daObjFlMaruta_c.h"
 #include "SharedFilePtr.h"
 
-extern "C" {
+
 extern int data_ov022_02112c98[];
-}
 
 #pragma defer_codegen off
 
@@ -51,7 +50,7 @@ int daObjFlMaruta_c::InitResources()
     return func_ov080_021274ac(this, data_ov022_02112c9c);
 }
 
-extern "C" int *daObjFlMaruta_c_classInit(void)
+ int *daObjFlMaruta_c_classInit(void)
 {
     return (int *)new daObjFlMaruta_c;
 }

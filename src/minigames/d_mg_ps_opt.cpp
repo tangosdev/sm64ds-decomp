@@ -77,11 +77,13 @@ extern void Mg_DrawSpriteListEntry(void *sprite, int x, int y, struct M *matrix)
 extern u16 sPsOptSoundPrevSprite[];
 extern u16 sPsOptSoundNextSprite[];
 extern int GetGameLanguage(void);
+}
 /* Writes the icon center, half extents, touch kind, and clears the blink. */
-extern void func_ov001_020ab5b0(char *icon, int kind, short x, short y, short halfW, short halfH);
+void func_ov001_020ab5b0(char *icon, int kind, short x, short y, short halfW, short halfH);
 int TouchArea_Update(void *icon, int touch);
 /* Toggles mOn, drops mReady, and reloads mPressTimer from mPressTime. */
 void func_ov001_020ab3f0(void *icon);
+extern "C" {
 /* Sound::Play2D(2, id). The ROM calls this thunk, not Play2D. */
 int GetSoundMode(void);
 void SetSoundMode(int mode);

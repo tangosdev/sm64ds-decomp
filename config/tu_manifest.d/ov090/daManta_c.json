@@ -127,7 +127,7 @@
       "ordinal": 11
     },
     {
-      "symbol": "daManta_c_classInit",
+      "symbol": "_Z19daManta_c_classInitv",
       "address": "0x02132fe8",
       "size": "0x0000004c",
       "legacy_source": "src/d_a_manta.c",

@@ -97,7 +97,7 @@
       "ordinal": 7
     },
     {
-      "symbol": "daObjRcCarpet_c_classInit",
+      "symbol": "_Z25daObjRcCarpet_c_classInitv",
       "address": "0x02112538",
       "size": "0x00000078",
       "legacy_source": "src/daObjRcCarpet_c_classInit.cpp",
@@ -519,7 +519,7 @@
       "source": "0x02113f78",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daObjRcCarpet_c_classInit",
+      "symbol": "_Z25daObjRcCarpet_c_classInitv",
       "addend": 0,
       "target_module": "ov036",
       "target_address": "0x02112538"
@@ -1449,7 +1449,7 @@
           },
           {
             "ordinal": 8,
-            "symbol": "daObjRcCarpet_c_classInit",
+            "symbol": "_Z25daObjRcCarpet_c_classInitv",
             "identical": true,
             "relocCount": 9,
             "differences": []
@@ -1614,7 +1614,7 @@
             "size": "0x000000ec"
           },
           {
-            "symbol": "daObjRcCarpet_c_classInit",
+            "symbol": "_Z25daObjRcCarpet_c_classInitv",
             "section": ".text",
             "size": "0x00000078"
           }
@@ -1985,7 +1985,7 @@
           },
           {
             "ordinal": 8,
-            "symbol": "daObjRcCarpet_c_classInit",
+            "symbol": "_Z25daObjRcCarpet_c_classInitv",
             "identical": true,
             "relocCount": 9,
             "differences": []
@@ -2150,7 +2150,7 @@
             "size": "0x000000ec"
           },
           {
-            "symbol": "daObjRcCarpet_c_classInit",
+            "symbol": "_Z25daObjRcCarpet_c_classInitv",
             "section": ".text",
             "size": "0x00000078"
           }

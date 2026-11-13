@@ -65,9 +65,8 @@ struct PileCollisionFilePtr : SharedFilePtr {
 };
 
 /* local extern: no shared header declares these. */
-extern "C" {
-extern void func_02012694(unsigned int a, void *b);
-}
+
+extern "C" void func_02012694(unsigned int a, void *b);
 
 /* This TU's two file handles: the pile model and its collision file.
  * InitResources loads both, CleanupResources releases them. Defined at the
@@ -226,7 +225,7 @@ s32 daObjPile_c::InitResources() {
     return 1;
 }
 
-extern "C" daObjPile_c *daObjPile_c_classInit() {
+ daObjPile_c *daObjPile_c_classInit() {
     return new daObjPile_c();
 }
 

@@ -63,7 +63,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "daObjFl_Koma_D_c_classInit",
+      "symbol": "_Z26daObjFl_Koma_D_c_classInitv",
       "address": "0x02111688",
       "size": "0x0000003c",
       "legacy_source": "src/d_a_obj_fl_koma_d.c",

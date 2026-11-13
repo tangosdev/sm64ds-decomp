@@ -84,7 +84,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "daObjFl_Seesaw_c_classInit",
+      "symbol": "_Z26daObjFl_Seesaw_c_classInitv",
       "address": "0x02111f3c",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_fl_seesaw.c",

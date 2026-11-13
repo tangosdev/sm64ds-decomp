@@ -87,9 +87,8 @@ typedef char RcHaneModelFilePtr_size_must_be_8[sizeof(RcHaneModelFilePtr) == 8 ?
 
 extern RcHaneModelFilePtr data_ov036_02114070; /* the wing's BMD */
 
-extern "C" {
-void Vec3_Asr(void *dst, void *src, int n);
-}
+
+extern "C" void Vec3_Asr(void *dst, void *src, int n);
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -102,7 +101,7 @@ void Vec3_Asr(void *dst, void *src, int n);
    sizeof is 0x11c; the implicit ctor calls dActor_c C2, stores this class's
    vptr, then dExtCommonModel_c C1 at 0xd4. The null check is the one `new` itself
    emits. */
-extern "C" daObjRc_Hane_c *daObjRc_Hane_c_classInit() {
+ daObjRc_Hane_c *daObjRc_Hane_c_classInit() {
     return new daObjRc_Hane_c();
 }
 

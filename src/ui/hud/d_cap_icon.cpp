@@ -38,13 +38,12 @@ typedef struct {
     unsigned char : 4;
 } CapIconFlags;
 
-extern "C" {
+
 
 extern int data_0209f3e8[];
 
-extern void CapIconMgr_SetMapIconShown(dCapIcon_c *icon, int shown);
-extern void CapIconMgr_ClearDispatched(int character);
-}
+void CapIconMgr_SetMapIconShown(dCapIcon_c *icon, int shown);
+void CapIconMgr_ClearDispatched(int character);
 
 void dCapIcon_c::Unlink()
 {
@@ -113,7 +112,7 @@ void dCapIcon_c::Link(char *owner, int character, int iconKind, unsigned char ba
  * absorbed helper below is defined first so reverse emission puts it
  * highest (0x020ab3f0). */
 
-extern "C" void func_ov001_020ab3f0(void *p) {
+ void func_ov001_020ab3f0(void *p) {
     /* The dThIcon_c press pulse (callers pass &mIcons[i]). */
     dThIcon_c *icon = (dThIcon_c *)p;
     if (icon->mOn != 0) {
@@ -137,7 +136,7 @@ dCapIcon_c::~dCapIcon_c()
     Unlink();
 }
 
-extern "C" void func_ov001_020ab2e4(void)
+ void func_ov001_020ab2e4(void)
 {
     int i;
     for (i = 0; i < 3; i++) {

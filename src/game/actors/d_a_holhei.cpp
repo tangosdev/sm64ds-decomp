@@ -51,27 +51,26 @@ struct HolheiState {
 };
 
 
-extern "C" {
-extern short func_02010844(void* unused, Vector3* v, short angle);
-extern void func_02012694(unsigned int a, void *p);
-extern int daHolhei_c_ChangeState(daHolhei_c *self, HolheiState *p);
-extern int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
-extern void func_ov002_020db54c(void *self, int a, int b, short c);
+
+extern "C" short func_02010844(void* unused, Vector3* v, short angle);
+extern "C" void func_02012694(unsigned int a, void *p);
+int daHolhei_c_ChangeState(daHolhei_c *self, HolheiState *p);
+extern "C" int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
+extern "C" void func_ov002_020db54c(void *self, int a, int b, short c);
 extern int data_02092138;
 extern dCamera_c *gCamera;
-int ApproachAngle(short *angle, short target, int a, int b,
+extern "C" int ApproachAngle(short *angle, short target, int a, int b,
                   int c); /* local extern: named parameters preserve @NNN */
-short Vec3_HorzAngle(const Vector3 *v0,
+extern "C" short Vec3_HorzAngle(const Vector3 *v0,
                      const Vector3 *v1); /* local extern: named parameters preserve @NNN */
-int Vec3_Dist(const Vector3 *a,
+extern "C" int Vec3_Dist(const Vector3 *a,
               const Vector3 *b); /* local extern: named parameters preserve @NNN */
 extern Matrix4x3 IDENTITY_MATRIX4X3;
-extern int Math_Function_0203b14c(void*, int, int, int, int);
-unsigned short
+extern "C" int Math_Function_0203b14c(void*, int, int, int, int);
+extern "C" unsigned short
 DecIfAbove0_Short(unsigned short *p); /* local extern: named parameters preserve @NNN */
 extern signed char gCurrentSublevel;
-extern int AngleDiff(int a, int b);
-}
+extern "C" int AngleDiff(int a, int b);
 
 /* Resource handles owned by this TU. The static initializer constructs the
    model (id 0x327) and five animations (ids 0x328..0x32c) and registers each
@@ -150,7 +149,7 @@ static inline int IsFlagSet(dActor_c *actor, u32 bit) {
 
 /* The cartridge's body is the one `new`: 0x438 into fBase_c::operator new,
    dEnemyBase_c's C2, this TU's vtable, then the member C1s. */
-extern "C" daHolhei_c *daHolhei_c_classInit(void)
+ daHolhei_c *daHolhei_c_classInit(void)
 {
     return new daHolhei_c();
 }
@@ -340,7 +339,7 @@ void daHolhei_c::UpdateHeldShadow() {
 
 /* Coined name. Switches to state p and runs its enter function, if any;
    Behavior runs the record's update from then on. */
-extern "C" int daHolhei_c_ChangeState(daHolhei_c *self, HolheiState *p)
+ int daHolhei_c_ChangeState(daHolhei_c *self, HolheiState *p)
 {
     self->mState = p;
     HolheiState *q = self->mState;

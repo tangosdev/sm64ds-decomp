@@ -69,7 +69,7 @@ extern CLPS_Block data_ov032_02112fb8;
  * inline operator new; dBgActor_c's C2, the derived vptr store, and
  * dExtAnmTexSRT_c at 0x320 are the implicit constructor. The null check
  * is the one `new` itself emits. */
-extern "C" daObjTdWater_c *daObjTdWater_c_classInit(void) {
+ daObjTdWater_c *daObjTdWater_c_classInit(void) {
     return new daObjTdWater_c();
 }
 

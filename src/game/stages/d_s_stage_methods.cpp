@@ -3979,7 +3979,9 @@ void dScStage_c::OnPendingDestroy() {
 extern "C" {
 void func_020391f0(void);
 void func_0203083c(void);
+}
 void func_ov001_020aaf40(void);
+extern "C" {
 void func_0203db3c(int i, int v);
 }
 
@@ -4590,8 +4592,8 @@ int func_0203da9c(void);
 int func_0203da3c(void);
 u32 func_0203dad4(void);
 void func_0203b9b4(int *p, int v);
-void func_ov001_020ab2e4(void);
 }
+void func_ov001_020ab2e4(void);
 
 int dScStage_c::InitResources() {
     dScStage_c *scene = this;

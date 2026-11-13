@@ -74,9 +74,9 @@ extern daObjFl_Ring_c_Files data_ov022_02113cc8;
 extern RingModelFilePtr gFlRingModelFile;
 extern RingCollisionFilePtr gFlRingCollisionFile;
 
-extern "C" {
+
 /* local extern: d_bg_w.cpp defines these and no header declares them. */
-}
+
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
  * off screen. This int-returning predicate is what makes the ROM
@@ -93,7 +93,7 @@ static inline int IsOffScreen(dActor_c *actor) {
  * `new daObjFl_Ring_c` is the whole sequence the loose factory spelled by
  * hand: fBase_c::operator new(0x328), dBgActor_c's base constructor, then the
  * vptr store. */
-extern "C" daObjFl_Ring_c *daObjFl_Ring_c_classInit(void) {
+ daObjFl_Ring_c *daObjFl_Ring_c_classInit(void) {
     return new daObjFl_Ring_c;
 }
 

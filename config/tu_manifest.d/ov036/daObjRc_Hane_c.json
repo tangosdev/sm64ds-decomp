@@ -85,7 +85,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "daObjRc_Hane_c_classInit",
+      "symbol": "_Z24daObjRc_Hane_c_classInitv",
       "address": "0x02111904",
       "size": "0x00000038",
       "legacy_source": "src/daObjRc_Hane_c_classInit.c",

@@ -469,7 +469,7 @@
       "ordinal": 63
     },
     {
-      "symbol": "dScEntry_c_classInit_RESULT",
+      "symbol": "_Z27dScEntry_c_classInit_RESULTv",
       "address": "0x0211a740",
       "size": "0x000000f4",
       "legacy_source": "src/game/stages/d_s_entry_result.cpp",

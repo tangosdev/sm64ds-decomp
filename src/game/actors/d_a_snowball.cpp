@@ -58,9 +58,8 @@ extern SharedFilePtr data_ov081_02128d90;
 extern daSnowball_StateRec data_ov081_02128eb4;
 
 /* local extern: no shared header declares these. */
-extern "C" {
-void func_02012694(unsigned int a0, void *a1);
-}
+
+extern "C" void func_02012694(unsigned int a0, void *a1);
 
 /* The key function. D1 stores the vtable, destroys the members in reverse
  * declaration order, then runs dEnemyBase_c::~dEnemyBase_c; D0 does the
@@ -298,7 +297,7 @@ int daSnowball_c::InitResources() {
     return 1;
 }
 
-extern "C" daSnowball_c *daSnowball_c_classInit() {
+ daSnowball_c *daSnowball_c_classInit() {
     return new daSnowball_c();
 }
 

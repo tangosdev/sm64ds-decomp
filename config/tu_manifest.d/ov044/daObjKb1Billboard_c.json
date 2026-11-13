@@ -83,7 +83,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "daObjKb1Billboard_c_classInit",
+      "symbol": "_Z29daObjKb1Billboard_c_classInitv",
       "address": "0x021112dc",
       "size": "0x00000038",
       "legacy_source": "src/OrangeBallBillboard_Spawn.c",
@@ -295,7 +295,7 @@
       "source": "0x021115e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daObjKb1Billboard_c_classInit",
+      "symbol": "_Z29daObjKb1Billboard_c_classInitv",
       "addend": 0,
       "target_module": "ov044",
       "target_address": "0x021112dc"
@@ -969,7 +969,7 @@
           },
           {
             "ordinal": 6,
-            "symbol": "daObjKb1Billboard_c_classInit",
+            "symbol": "_Z29daObjKb1Billboard_c_classInitv",
             "identical": true,
             "relocCount": 4,
             "differences": [],
@@ -1209,7 +1209,7 @@
             "size": "0x0000003c"
           },
           {
-            "symbol": "daObjKb1Billboard_c_classInit",
+            "symbol": "_Z29daObjKb1Billboard_c_classInitv",
             "section": ".text",
             "size": "0x00000038"
           }
@@ -1669,7 +1669,7 @@
           },
           {
             "ordinal": 6,
-            "symbol": "daObjKb1Billboard_c_classInit",
+            "symbol": "_Z29daObjKb1Billboard_c_classInitv",
             "identical": true,
             "relocCount": 4,
             "differences": [],
@@ -1909,7 +1909,7 @@
             "size": "0x0000003c"
           },
           {
-            "symbol": "daObjKb1Billboard_c_classInit",
+            "symbol": "_Z29daObjKb1Billboard_c_classInitv",
             "section": ".text",
             "size": "0x00000038"
           }

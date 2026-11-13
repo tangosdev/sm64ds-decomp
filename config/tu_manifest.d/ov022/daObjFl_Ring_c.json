@@ -95,7 +95,7 @@
       "ordinal": 7
     },
     {
-      "symbol": "daObjFl_Ring_c_classInit",
+      "symbol": "_Z24daObjFl_Ring_c_classInitv",
       "address": "0x02111578",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_fl_ring.c",

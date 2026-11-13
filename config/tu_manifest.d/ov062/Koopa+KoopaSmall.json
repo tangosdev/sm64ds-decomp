@@ -295,14 +295,14 @@
       "ordinal": 36
     },
     {
-      "symbol": "daNknk_c_classInit_NOKONOKO_S",
+      "symbol": "_Z29daNknk_c_classInit_NOKONOKO_Sv",
       "address": "0x021196bc",
       "size": "0x00000050",
       "legacy_source": "src/d_a_nknk_nokonoko_s.c",
       "ordinal": 37
     },
     {
-      "symbol": "daNknk_c_classInit_NOKONOKO",
+      "symbol": "_Z27daNknk_c_classInit_NOKONOKOv",
       "address": "0x0211970c",
       "size": "0x00000050",
       "legacy_source": "src/d_a_nknk_nokonoko.c",

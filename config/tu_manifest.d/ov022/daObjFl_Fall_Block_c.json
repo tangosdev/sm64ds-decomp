@@ -63,7 +63,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "daObjFl_Fall_Block_c_classInit",
+      "symbol": "_Z30daObjFl_Fall_Block_c_classInitv",
       "address": "0x0211245c",
       "size": "0x0000003c",
       "legacy_source": "src/d_a_obj_fl_fall_block.c",

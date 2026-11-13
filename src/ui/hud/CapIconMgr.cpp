@@ -36,7 +36,7 @@
 #include "daPly_c.h"
 #include "Sound.h"
 
-extern "C" {
+
 
 /* Per cap slot: dMap_c::Render draws the slot's cap icon while it is set. */
 extern unsigned char gMapCapIconShown[];
@@ -52,11 +52,11 @@ extern signed char gCurrentSublevel;
 
 /* local extern: func_0202a8e0's first parameter is an address the callers
  * pass as object pointers; the definition spells it int. */
-extern int func_0202a8e0(int a, u8 b);
-extern int func_02029600(int x);
-extern int SublevelToLevel(int i);
+extern "C" int func_0202a8e0(int a, u8 b);
+extern "C" int func_02029600(int x);
+extern "C" int SublevelToLevel(int i);
 
-void CapIconMgr_DispatchVs(void);
+extern "C" void CapIconMgr_DispatchVs(void);
 void CapIconMgr_SetMapIconShown(dCapIcon_c *icon, int shown);
 void CapIconMgr_ClearDispatched(int character);
 void CapIconMgr_Commit(int character, unsigned iconKind, dCapIcon_c *icon);
@@ -400,7 +400,7 @@ void CapIconMgr_SetMapIconShown(dCapIcon_c *icon, int shown) {
     }
 }
 
-void CapIconMgr_DispatchVs(void) {
+extern "C" void CapIconMgr_DispatchVs(void) {
     daPly_c *player;
     dCapIcon_c *best;
     int bankSeen;
@@ -498,13 +498,10 @@ void CapIconMgr_DispatchVs(void) {
     }
 }
 
-}
 
-extern "C" {
 u8 gCapIconFlashTimer;
 u8 gCapIconDispatchLocked;
 u8 gCapIconRequestFlags[3];
 u8 gCapIconDispatchFlags[3];
 u8 gCapIconCounts[4];
 dCapIcon_c *gCapIconListHeads[3];
-}

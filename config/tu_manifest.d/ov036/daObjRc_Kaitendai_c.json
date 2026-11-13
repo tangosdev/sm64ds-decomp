@@ -68,7 +68,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "daObjRc_Kaitendai_c_classInit",
+      "symbol": "_Z29daObjRc_Kaitendai_c_classInitv",
       "address": "0x02111544",
       "size": "0x0000003c",
       "legacy_source": "src/daObjRc_Kaitendai_c_classInit.c",

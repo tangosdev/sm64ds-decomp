@@ -78,49 +78,49 @@
       "ordinal": 5
     },
     {
-      "symbol": "daObjSimpleLift_c_classInit_BK_TRANSBAR",
+      "symbol": "_Z39daObjSimpleLift_c_classInit_BK_TRANSBARv",
       "address": "0x021327e8",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_simple_lift_bk_transbar.c",
       "ordinal": 6
     },
     {
-      "symbol": "daObjSimpleLift_c_classInit_KM2_RIFUT02",
+      "symbol": "_Z39daObjSimpleLift_c_classInit_KM2_RIFUT02v",
       "address": "0x02132818",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_simple_lift_km2_rifut02.c",
       "ordinal": 7
     },
     {
-      "symbol": "daObjSimpleLift_c_classInit_KM2_RIFUT01",
+      "symbol": "_Z39daObjSimpleLift_c_classInit_KM2_RIFUT01v",
       "address": "0x02132848",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_simple_lift_km2_rifut01.c",
       "ordinal": 8
     },
     {
-      "symbol": "daObjSimpleLift_c_classInit_RC_RIFT01",
+      "symbol": "_Z37daObjSimpleLift_c_classInit_RC_RIFT01v",
       "address": "0x02132878",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_simple_lift_rc_rift01.c",
       "ordinal": 9
     },
     {
-      "symbol": "daObjSimpleLift_c_classInit_KM3_DERU02",
+      "symbol": "_Z38daObjSimpleLift_c_classInit_KM3_DERU02v",
       "address": "0x021328a8",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_simple_lift_km3_deru02.c",
       "ordinal": 10
     },
     {
-      "symbol": "daObjSimpleLift_c_classInit_KM3_DERU01",
+      "symbol": "_Z38daObjSimpleLift_c_classInit_KM3_DERU01v",
       "address": "0x021328d8",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_simple_lift_km3_deru01.c",
       "ordinal": 11
     },
     {
-      "symbol": "daObjSimpleLift_c_classInit_KM1_DERU",
+      "symbol": "_Z36daObjSimpleLift_c_classInit_KM1_DERUv",
       "address": "0x02132908",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_simple_lift_km1_deru.c",

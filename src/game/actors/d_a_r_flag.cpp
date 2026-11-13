@@ -115,7 +115,7 @@ int daRFlag_c::InitResources() {
     return 1;
 }
 
-extern "C" daRFlag_c *daRFlag_c_classInit(void) {
+ daRFlag_c *daRFlag_c_classInit(void) {
     return new daRFlag_c();
 }
 

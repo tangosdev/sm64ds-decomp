@@ -193,7 +193,7 @@
       "ordinal": 21
     },
     {
-      "symbol": "daRedBombhei_c_classInit",
+      "symbol": "_Z24daRedBombhei_c_classInitv",
       "address": "0x0212d200",
       "size": "0x00000048",
       "legacy_source": "src/d_a_red_bombhei.c",
@@ -1029,7 +1029,7 @@
       "source": "0x02130a14",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daRedBombhei_c_classInit",
+      "symbol": "_Z24daRedBombhei_c_classInitv",
       "addend": 0,
       "target_module": "ov084",
       "target_address": "0x0212d200"

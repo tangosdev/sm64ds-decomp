@@ -79,11 +79,10 @@ struct DsnCycle {
  * DecIfAbove0_Byte is spelled from its definition at src/DecIfAbove0_Byte.c:
  * unsigned char in, unsigned char out. RandomIntInternal's sites pass the RNG
  * state. */
-extern "C" {
-extern u8 DecIfAbove0_Byte(u8 *);
-extern int RandomIntInternal(int *);
-extern int Vec3_Dist(const Vector3 *, const Vector3 *);
-}
+
+extern "C" u8 DecIfAbove0_Byte(u8 *);
+extern "C" int RandomIntInternal(int *);
+extern "C" int Vec3_Dist(const Vector3 *, const Vector3 *);
 
 
 /* ROM ordinals 0 and 1 -- ov091 0x02132d04 (D0, 0x68) and 0x02132d6c (D1,

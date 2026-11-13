@@ -56,7 +56,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov090_02130f94",
+      "symbol": "_Z19func_ov090_02130f94P9daMenbo_c",
       "address": "0x02130f94",
       "size": "0x00000120",
       "legacy_source": "src/func_ov090_02130f94.c",
@@ -210,7 +210,7 @@
       "ordinal": 23
     },
     {
-      "symbol": "daMenbo_c_classInit",
+      "symbol": "_Z19daMenbo_c_classInitv",
       "address": "0x02132654",
       "size": "0x00000048",
       "legacy_source": "src/d_a_menbo.c",
