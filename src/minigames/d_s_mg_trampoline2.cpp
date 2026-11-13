@@ -124,14 +124,20 @@ struct Trampoline2WaveDef {
 struct dExtSimpleModel_c { ~dExtSimpleModel_c(); };
 */
 
+void Trmp2Spinner_Update(char *obj);
+void Trmp2Spinner_Init(void *obj, int hitCount);
+void Trmp2Spinner_SetModel(void *self);
+int Trmp2_ColumnForKind(int kind);
+unsigned short Trmp2_OccupancyBits(int column, int side);
+int Trmp2_PickFaceA(int kind);
+int Trmp2_PickFaceB(int kind);
+dScMgTrampoline2_c *dScMgTrampoline2_c_classInit(void);
+
 extern "C" {
 extern void Trmp2Spinner_UpdateMatrix(char *c);
 extern Trampoline2ModelFilePtr sTrmp2StarModelFile;
 extern int sTrmp2SpinnerCount;
 extern unsigned char *sTrmp2Spinners;
-extern void Trmp2Spinner_Update(char *obj);
-extern void Trmp2Spinner_Init(void *obj, int hitCount);
-extern void Trmp2Spinner_SetModel(void *self);
 extern int sTrmp2BrushWord[];
 extern const u16 sTrmp2BrushPltt[];
 extern dFdBrightness_c *gSceneFader;
@@ -147,10 +153,6 @@ unsigned int d_s_mg_trampoline2NewCleanParticleHold(unsigned int a, unsigned int
                                                     int e, const Vector3_16f *f);
 void Jump2Popup_UpdateAll(void);
 extern const VecFx32 sTrmp2RandomSpawnPositions[];
-extern int Trmp2_ColumnForKind(int kind);
-extern unsigned short Trmp2_OccupancyBits(int column, int side);
-extern int Trmp2_PickFaceA(int kind);
-extern int Trmp2_PickFaceB(int kind);
 extern void func_0203cc28(int *vector, int angle);
 extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
@@ -184,8 +186,6 @@ extern OamAttr *sMgTextSpritesItalian[];
 /* Both callers use the existing ov006 helpers' void(void) contracts. The
  * unrelated daPly_c::St_Null_Init at the same RAM address belongs to ov002. */
 
-dScMgTrampoline2_c *dScMgTrampoline2_c_classInit(void);
-
 /* Data owned by this production TU; the original TU grouping is inferred. */
 int sTrmp2TouchBlocked = 1;
 BaseSpawnInfo<dScMgTrampoline2_c> g_profile_MG_TRAMPOLINE2 = {
@@ -211,7 +211,7 @@ TrmpItem::TrmpItem() {}
    constructor (dScMgBase_c's C2, its vtable, mDrawSubScreen, the empty loop
    over the two cameras, mParticle), then this class's vtable and the six
    element arrays. Historical alias: MgTrampolineTerror_Spawn. */
-extern "C" dScMgTrampoline2_c *dScMgTrampoline2_c_classInit(void) {
+dScMgTrampoline2_c *dScMgTrampoline2_c_classInit(void) {
     return new dScMgTrampoline2_c;
 }
 
@@ -575,7 +575,6 @@ void dScMgTrampoline2_c::UpdateTouchInput() {
     }
 }
 
-extern "C" {
 int Trmp2_ColumnForKind(int x) {
     switch (x) {
     case 0:
@@ -597,9 +596,7 @@ int Trmp2_ColumnForKind(int x) {
     }
     return 0;
 }
-}
 
-extern "C" {
 unsigned short Trmp2_OccupancyBits(int sel, int b) {
     unsigned short r = 0;
     switch (sel) {
@@ -630,9 +627,7 @@ unsigned short Trmp2_OccupancyBits(int sel, int b) {
     }
     return r;
 }
-}
 
-extern "C" {
 int Trmp2_PickFaceA(int x) {
     int r;
     if (x < 5) {
@@ -642,9 +637,7 @@ int Trmp2_PickFaceA(int x) {
     r = (((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
     return r < 0xc00 ? 6 : 7;
 }
-}
 
-extern "C" {
 int Trmp2_PickFaceB(int a) {
     int r;
     if (a < 5) {
@@ -661,7 +654,6 @@ int Trmp2_PickFaceB(int a) {
     if (r < 0xe00)
         return 8;
     return 7;
-}
 }
 
 void dScMgTrampoline2_c::SpawnWave() {
@@ -1091,7 +1083,7 @@ void Trmp2Spinner_UpdateMatricesAll(void) {
 }
 }
 
-extern "C" void Trmp2Spinner_SetModel(void *raw) {
+void Trmp2Spinner_SetModel(void *raw) {
     BMD_File *file = dExtSimpleModel_c::LoadFile(sTrmp2StarModelFile);
     ((dExtModel_c *)raw)->SetFile(file, 1, -1);
 }
@@ -1100,6 +1092,7 @@ extern "C" {
 extern struct Tbl sTrmp2SpinnerSpeeds;
 extern const u16 sTrmp2SpinnerColors[];
 extern void func_020169f4(char *self, int kind);
+}
 
 void Trmp2Spinner_Init(void *r0, int value) {
     Trmp2Spinner *spinner = (Trmp2Spinner *)r0;
@@ -1147,15 +1140,12 @@ void Trmp2Spinner_Init(void *r0, int value) {
     func_02016a14((char *)spinner, 0);
     func_02016a04((char *)spinner, 0);
 }
-}
 
-extern "C" {
 void Trmp2Spinner_Update(char *raw) {
     ApproachLinear2(SPINNER(raw)->mLifeTimer, 0, 1);
     short *p = &SPINNER(raw)->mAngleZ;
     *p = *p + 0x400;
     VEC_Add(&SPINNER(raw)->mPos, &SPINNER(raw)->mVel, &SPINNER(raw)->mPos);
-}
 }
 
 extern "C" void Trmp2Spinner_UpdateMatrix(char *raw) {
