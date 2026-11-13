@@ -38,6 +38,8 @@
 // not shown twice. The pause menu's Exit Course arrives without that test (the cartridge never needed it: no star was got
 // in that visit), so there the port opens the held line itself, the same way the test does, once the player stands in the
 // castle with control and no box or pause up. Held lines live for the session (not in the save file).
+// The 100-coin star's own talk (message 0x186, "You've collected 100 coins!") is the cartridge's, already shown in the course;
+// it keeps its own star-count line as the cartridge does, and lines held from earlier stars keep waiting for the castle.
 //
 // The act of the course does not change mid-visit (the DS loads a course for one act): objects of other acts stay as they are
 // until the player leaves and comes back.
@@ -50,7 +52,7 @@
 //   SM64DS_STAYCOURSE_TOUCH=<level>:<frame>:<n>[;..]      <frame> frames into <level>, my body is put on PowerStar <n>
 //                                                 (a real touch), retried every 60 frames, 6 tries.
 //   SM64DS_STAYCOURSE_EXIT=<level>:<frame>        <frame> frames into <level>: ExitLevel(), the pause menu's Exit Course.
-//   (TOUCH with <n> = 0 takes any Power Star that is waiting to be picked up, so a star the game raised itself can be got.)
+//   (TOUCH with <n> = 0 takes a Power Star waiting to be picked up that the level did not place itself: one the game raised.)
 //   SM64DS_STAYCOURSE_FLIP=<level>:<frame>:<0|1>   <frame> frames into <level>, the setting is switched (the GAME tab's own setter).
 //   SM64DS_STAYCOURSE_COINS=<level>:<frame>:<n>   <frame> frames into <level>, GiveCoins(me, <n>) (the ROM's own writer).
 //   SM64DS_STAYCOURSE_VISIT=<level>:<frame>:<class>:<count>:<every>   from <frame>, every <every> frames my body is put on
@@ -251,6 +253,7 @@ int count_hook(int new_star) {
         return -1;
     }
     if (g_nheld == 0) return -2;
+    if (course_of((int)data_0209f2f8) != 29) return -2;   // a talk the cartridge itself runs in a course (the 100-coin star): its own line, held ones wait
     const int own = new_star ? count_index(NumStars()) : -1;
     int out;
     if (own >= 0) {
@@ -313,6 +316,7 @@ struct Knobs {
     int fl_lvl, fl_fr, fl_v; bool fl_done;
     int vi_lvl, vi_fr, vi_cls, vi_count, vi_every, vi_done;
     int l_msg_open, l_msg_id, l_coins, l_red, census_lvl;
+    unsigned census_mask;               // the stars the level placed itself (TOUCH 0 skips them)
     int global;                         // frames since the first one (the picture knobs count these)
     int l_level, l_stars, l_b1e, l_b1d, l_noctl;
 };
@@ -325,7 +329,8 @@ char *my_body() {
 char *find_star(int n) {
     for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a))
         if (*(const unsigned short *)(a + kOffCls) == kClsPowerStar && *(const unsigned char *)(a + 0x0f) == 0) {
-            if (n == 0 ? *(const int *)(a + kOffState) == 4 : (*(const unsigned char *)(a + kOffStarId) & 0xf) == (unsigned)n) return a;
+            const unsigned id = *(const unsigned char *)(a + kOffStarId) & 0xf;
+            if (n == 0 ? (*(const int *)(a + kOffState) == 4 && !(K.census_mask & (1u << id))) : id == (unsigned)n) return a;
         }
     return nullptr;
 }
@@ -402,8 +407,10 @@ void log_tick(char *me) {
     }
     if (K.census_lvl != lv && K.lvl_frames >= 120) {
         K.census_lvl = lv;
+        K.census_mask = 0;
         for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a))
             if (*(const unsigned short *)(a + kOffCls) == kClsPowerStar) {
+                K.census_mask |= 1u << (*(const unsigned char *)(a + kOffStarId) & 0xf);
                 const int *ap = (const int *)(a + 0x5c);
                 std::fprintf(stderr, "[staycourse] census level %d: PowerStar %d state %d home %d at %d,%d,%d (water surface %d)\n", lv,
                              (int)*(const unsigned char *)(a + kOffStarId), *(const int *)(a + kOffState), *(const int *)(a + kOffHome),
