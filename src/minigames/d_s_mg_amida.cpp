@@ -184,8 +184,8 @@ extern AmidaRenderPeriods sAmidaRenderPeriods;
 /* Launder helpers for Behavior's piece walk: AT makes the compiler
    materialise each address on its own instead of folding it into a
    neighbouring add, which is what the ROM does there. */
-#define AT(p, off) ((void*)(int)((char*)(p)+(off)))
-#define IP(p, o) (*(int*)((char*)(p)+(o)))
+#define AT(p, off) (((p)+(off)))
+#define IP(p, o) (*(int*)((p)+(o)))
 #define IAP(p, o) (*(int*)AT(p,(o)))
 
 #pragma defer_codegen off
@@ -215,7 +215,7 @@ int dScMgAmida_c::IsAltVariant() {
    so this picks that variant. IsAltVariant above is the == 1 test (the
    base's own asks only for nonzero). */
 int dScMgAmida_c::IsVariant2() {
-    return (((int)param1) & 0xff) == 2;
+    return ((param1) & 0xff) == 2;
 }
 
 /* Slot 31: the sub screen's BG1 set up for this game. Same shape as the
@@ -287,7 +287,7 @@ void dScMgAmida_c::ShuffleGoals(int arg1) {
                 for (i = 0; i < 4; i++) {
                     t = RandomIntInternal(&data_0209d4b8.value);
                     pi = (int *)((char *)this + (i << 2) + off);
-                    j = ((u32)(((u32)t >> 16) & 0x7fff) * 4) >> 15;
+                    j = ((((u32)t >> 16) & 0x7fff) * 4) >> 15;
                     t = *pi;
                     {
                         int *pjx = (int *)((char *)this + (j << 2) + off);
@@ -316,7 +316,7 @@ void dScMgAmida_c::ShuffleGoals(int arg1) {
             for (i = 0; i < 4; i++) {
                 t = RandomIntInternal(&data_0209d4b8.value);
                 pi = (int *)((char *)this + (i << 2) + off);
-                j = ((u32)(((u32)t >> 16) & 0x7fff) * 4) >> 15;
+                j = ((((u32)t >> 16) & 0x7fff) * 4) >> 15;
                 t = *pi;
                 {
                     int *pjx = (int *)((char *)this + (j << 2) + off);
@@ -872,7 +872,7 @@ int dScMgAmida_c::StepWalker(int walker, int dir) {
     }
 
     if (lineMark >= 2) {
-        u8 nextMark = *(u8 *)(mInkGrid + gridX * 0x158 + gridY);
+        u8 nextMark = *(mInkGrid + gridX * 0x158 + gridY);
         if (nextMark != lineMark)
             return 0;
 
@@ -883,11 +883,11 @@ int dScMgAmida_c::StepWalker(int walker, int dir) {
     } else {
         int progress500, soundPosition;
 
-        if (*(u8 *)(mInkGrid + gridX * 0x158 + gridY) < 2)
+        if (*(mInkGrid + gridX * 0x158 + gridY) < 2)
             return 0;
 
         mWalkerDir[walker] = dir;
-        *walkerMark = *(u8 *)(mInkGrid + gridX * 0x158 + gridY);
+        *walkerMark = *(mInkGrid + gridX * 0x158 + gridY);
         mWalkerCell[walker].x = gridX;
         mWalkerCell[walker].y = gridY - 0xc0;
 
@@ -919,7 +919,7 @@ void dScMgAmida_c::StepWalkers() {
     s32 walkerCount;
 
     for (delayIndex = 0; delayIndex < (walkerCount = mWalkerCount);) {
-        s32 *delaySlot = &((dScMgAmida_c *)((int)sceneBytes + delayIndex * 4))->mWalkerDelay[0];
+        s32 *delaySlot = &((dScMgAmida_c *)(sceneBytes + delayIndex * 4))->mWalkerDelay[0];
         s32 delay = *delaySlot;
         delayIndex++;
         if (delay > 0) {
@@ -952,33 +952,33 @@ void dScMgAmida_c::StepWalkers() {
                     s32 x;
 
                     if (IsVariant2() != 0) {
-                        u32 wantedGoal = (u32)mLaneWants[walker];
+                        u32 wantedGoal = mLaneWants[walker];
                         walkerX = &((dScMgAmida_c *)(sceneBytes + walker * 8))->mWalkerCell[0].x;
                         x = *walkerX;
                         switch (x) {
                         case 0x20:
-                            if (mLaneResult[0] == (s32)wantedGoal) {
+                            if (mLaneResult[0] == wantedGoal) {
                                 reachedGoal = 1;
                             } else {
                                 mLaneFlashFlag[0] = 1;
                             }
                             break;
                         case 0x60:
-                            if (mLaneResult[1] == (s32)wantedGoal) {
+                            if (mLaneResult[1] == wantedGoal) {
                                 reachedGoal = 1;
                             } else {
                                 mLaneFlashFlag[1] = 1;
                             }
                             break;
                         case 0xa0:
-                            if (mLaneResult[2] == (s32)wantedGoal) {
+                            if (mLaneResult[2] == wantedGoal) {
                                 reachedGoal = 1;
                             } else {
                                 mLaneFlashFlag[2] = 1;
                             }
                             break;
                         case 0xe0:
-                            if (mLaneResult[3] == (s32)wantedGoal) {
+                            if (mLaneResult[3] == wantedGoal) {
                                 reachedGoal = 1;
                             } else {
                                 mLaneFlashFlag[3] = 1;
@@ -1024,7 +1024,7 @@ void dScMgAmida_c::StepWalkers() {
                         if (IsVariant2() != 0) {
                             if (mRoundFailed == 0) {
                                 func_02012718(0xe0, *walkerX << 0xc);
-                                u32 wantedGoal = (u32)mLaneWants[walker];
+                                u32 wantedGoal = mLaneWants[walker];
                                 switch (wantedGoal) {
                                 default:
                                     break;
@@ -1131,7 +1131,7 @@ void dScMgAmida_c::StepWalkers() {
                 *walkerY += 1;
             } else {
                 u8 *walkerMark = (u8 *)&((dScMgAmida_c *)(sceneBytes + walker))->mWalkerMark[0];
-                if ((u32)*walkerMark <= 1) {
+                if (*walkerMark <= 1) {
                     *walkerY = y + 1;
                     if (StepWalker(walker, 3) == 0) {
                         StepWalker(walker, 4);
@@ -1290,7 +1290,7 @@ extern "C" void Amida_RestoreBgChars(void *) {
 /* The scene pointer its caller passes is never read. */
 extern "C" void Amida_SaveBgChars(void *) {
     char *mainChars = (char *)G2_GetBG0CharPtr() + 0xc000;
-    MI_CpuCopy16((char *)G2_GetBG0CharPtr(), mainChars, 0x6000);
+    MI_CpuCopy16(G2_GetBG0CharPtr(), mainChars, 0x6000);
     char *subChars = (char *)G2S_GetBG0CharPtr() + 0x6000;
     MI_CpuCopy16(G2S_GetBG0CharPtr(), subChars, 0x6000);
 }
@@ -1451,7 +1451,7 @@ void dScMgAmida_c::SetupRound() {
 
     level = mLevel;
     if (IsVariant2() != 0) {
-        if ((u32)mLevel >= 7) {
+        if (mLevel >= 7) {
             level = 7;
             shuffle = 1;
         }
@@ -2114,14 +2114,14 @@ s32 dScMgAmida_c::InitResources() {
     G2_SetBG3Priority(3);
 
     if (IsVariant2() != 0) {
-        LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA_FACE_UP_NCG_BIN, (void *)G2_GetBG3CharPtr());
+        LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA_FACE_UP_NCG_BIN, G2_GetBG3CharPtr());
         file = LoadFile(ASSET_D_2D_MG_BG_AMIDA_FACE_UP_NCL_BIN);
         DC_FlushRange(file, 0x1a0);
         GX_LoadBGPltt(file, 0x60, 0x1a0);
         Deallocate(file);
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA_FACE_UP_NSC_BIN, G2_GetBG3ScrPtr());
     } else {
-        LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA1_NCG_BIN, (void *)G2_GetBG3CharPtr());
+        LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA1_NCG_BIN, G2_GetBG3CharPtr());
         file = LoadFile(ASSET_D_2D_MG_BG_AMIDA1_NCL_BIN);
         DC_FlushRange(file, 0x1a0);
         GX_LoadBGPltt(file, 0x60, 0x1a0);
