@@ -53,7 +53,6 @@
 #include "dScMgBase_c.h"
 #include "MWCPlusLib.h"
 
-extern "C" void __cxa_vec_cleanup(void *, unsigned int, unsigned int, void (*)(void *));
 extern "C" void NullDestructor_0203d47c(void);
 extern "C" void SmartballObj_ElemDtor(void);
 
