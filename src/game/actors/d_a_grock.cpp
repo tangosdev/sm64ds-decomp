@@ -258,7 +258,7 @@ int daGrock_c::Behavior() {
             s16 *roll;
 
             ApplyGravityAndMove();
-            roll = (s16 *)&mAngleX;
+            roll = &mAngleX;
             *roll = (s16)(*roll + (mHorzSpeed >> 12) * 0x43);
             mAngleY = mPrevAngleY;
             HandleMeshCollision();
@@ -324,7 +324,7 @@ int daGrock_c::Behavior() {
             }
         }
         {
-            u16 *timer = (u16 *)&mStateTimer;
+            u16 *timer = &mStateTimer;
             *timer = (u16)(*timer + 1);
         }
     }
