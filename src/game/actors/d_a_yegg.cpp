@@ -261,13 +261,12 @@ void daYegg_c::HandleWallHit(int arg) {
     }
     {
         int t = (int)(type == ACTOR_BATAN);
-        if (t != 0) goto docall;
+        if (t == 0) {
+            t = (int)(type == ACTOR_BATANKING);
+            if (t == 0)
+                return;
+        }
     }
-    {
-        int t = (int)(type == ACTOR_BATANKING);
-        if (t == 0) return;
-    }
-docall:
     ((daBtn_c *)actor)->func_ov079_02123804(this);
 }
 
@@ -900,14 +899,12 @@ int daYegg_c::IsStalled() {
     mLastPosX = mPosX;
     mLastPosY = mPosY;
     mLastPosZ = mPosZ;
-    if (d >= 0x32000)
-        goto fail;
-    if (DecIfAbove0_Byte(&mStallTimer))
-        goto ret0;
-    return 1;
-fail:
-    mStallTimer = 0xf;
-ret0:
+    if (d < 0x32000) {
+        if (DecIfAbove0_Byte(&mStallTimer) == 0)
+            return 1;
+    } else {
+        mStallTimer = 0xf;
+    }
     return 0;
 }
 
@@ -1059,37 +1056,36 @@ int daYegg_c::FindTarget(int a1, int best) {
     }
 
     found = 0;
-    actor = dActor_c::Next(0);
-    if (actor == 0) goto end;
-
-loop:
-    if (actor == this) goto next;
-    if (actor == (dActor_c *)mPlayer) goto next;
-    b = (actor->mFlags & 0x10000000) != 0;
-    if (!b) goto next;
-    b = (actor->mFlags & 8) != 0;
-    if (b) goto next;
-    matched = 0;
-    for (int i = 0; i < 5; i++) {
-        int bv = mTargetedIds[i];
-        if (bv == actor->uniqueID) matched = 1;
-    }
-    if (matched != 0) goto next;
-    if (func_ov002_020ec654() != 0) {
-        if (actor->Virtual50() == 0) goto next;
-    }
-    {
-        int d = Vec3_Dist(&mPos, &actor->mPos);
-        if (d < best) {
-            best = d;
-            found = actor;
+    for (actor = dActor_c::Next(0); actor != 0; actor = dActor_c::Next(actor)) {
+        if (actor == this)
+            continue;
+        if (actor == (dActor_c *)mPlayer)
+            continue;
+        b = (actor->mFlags & 0x10000000) != 0;
+        if (!b)
+            continue;
+        b = (actor->mFlags & 8) != 0;
+        if (b)
+            continue;
+        matched = 0;
+        for (int i = 0; i < 5; i++) {
+            int bv = mTargetedIds[i];
+            if (bv == actor->uniqueID) matched = 1;
+        }
+        if (matched != 0)
+            continue;
+        if (func_ov002_020ec654() != 0) {
+            if (actor->Virtual50() == 0)
+                continue;
+        }
+        {
+            int d = Vec3_Dist(&mPos, &actor->mPos);
+            if (d < best) {
+                best = d;
+                found = actor;
+            }
         }
     }
-next:
-    actor = dActor_c::Next(actor);
-    if (actor != 0) goto loop;
-
-end:
     if (found != 0) {
         int idx = mTargetedCount;
         mTargetedIds[idx] = found->uniqueID;
@@ -1180,55 +1176,51 @@ int daYegg_c::HandleCylinderHit() {
     u16 type;
 
     id = mdCcAc_c.otherOwner;
-    if (id == 0) goto fail;
+    if (id != 0) {
+        actor = static_cast<daPly_c *>(dActor_c::FindWithID(id));
+        if (actor != 0 && actor != (struct dActor_c*)mPlayer) {
+            {
+                int t = (int)(actor->actorID == ACTOR_PLAYER);
+                if (t != 0) {
+                    flags = mdCcAc_c.hitFlags;
+                    if (flags & 0x8000) {
+                        func_ov002_020ed63c(this, daYegg_STATE_DROP);
+                        return 1;
+                    }
+                    if (!(flags & 0x26fe0)) {
+                        struct Vector3 pos;
+                        pos.x = mPosX;
+                        pos.y = mPosY;
+                        pos.z = mPosZ;
+                        actor->Hurt(pos, 1, 0xc000, 1, 0, 1);
+                    }
+                }
+            }
 
-    actor = static_cast<daPly_c *>(dActor_c::FindWithID(id));
-    if (actor == 0) goto fail;
-
-    if (actor == (struct dActor_c*)mPlayer) goto fail;
-
-    {
-        int t = (int)(actor->actorID == ACTOR_PLAYER);
-        if (t != 0) {
-            flags = mdCcAc_c.hitFlags;
-            if (flags & 0x8000) {
-                func_ov002_020ed63c(this, daYegg_STATE_DROP);
+            type = actor->actorID;
+            switch (type) {
+            case ACTOR_BOMBKING:
+            case ACTOR_HOLHEI:
+            case ACTOR_KURIKING:
+            case ACTOR_KURIBO_L:
+            case ACTOR_WANWAN:
+            case ACTOR_WANWAN2:
+                func_ov002_020edca4(this);
                 return 1;
             }
-            if (!(flags & 0x26fe0)) {
-                struct Vector3 pos;
-                pos.x = mPosX;
-                pos.y = mPosY;
-                pos.z = mPosZ;
-                actor->Hurt(pos, 1, 0xc000, 1, 0, 1);
+
+            other = 0;
+            id = mTargetId;
+            if (id != 0) {
+                other = dActor_c::FindWithID(id);
+            }
+            if (other == actor) {
+                PayOut();
+                func_ov002_020ed63c(this, daYegg_STATE_SEEK);
+                return 1;
             }
         }
     }
-
-    type = actor->actorID;
-    switch (type) {
-    case ACTOR_BOMBKING:
-    case ACTOR_HOLHEI:
-    case ACTOR_KURIKING:
-    case ACTOR_KURIBO_L:
-    case ACTOR_WANWAN:
-    case ACTOR_WANWAN2:
-        func_ov002_020edca4(this);
-        return 1;
-    }
-
-    other = 0;
-    id = mTargetId;
-    if (id != 0) {
-        other = dActor_c::FindWithID(id);
-    }
-    if (other != actor) goto fail;
-
-    PayOut();
-    func_ov002_020ed63c(this, daYegg_STATE_SEEK);
-    return 1;
-
-fail:
     return 0;
 }
 
