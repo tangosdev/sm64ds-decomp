@@ -132,7 +132,12 @@ enum {
 
 extern "C" {
 extern u32 gNextActorUpdateMask;
-extern int data_ov098_0213c4c8[];
+struct BlockSFiles {
+    SharedFilePtr *model;
+    SharedFilePtr *collision;
+    CLPS_Block *clps;
+};
+extern BlockSFiles data_ov098_0213c4c8;
 extern int Vec3_HorzDist(const struct Vector3 *a, const struct Vector3 *b);
 extern u8 DecIfAbove0_Byte(u8 *p);
 extern void *d_a_obj_block_sNewHold(u32 a, u32 b, int c, int d, int e, const void *v, void *cb);
@@ -226,8 +231,8 @@ void daObjBlockS_c::UpdateBroken() {
     mdCcAcPos_c2.Clear();
     UpdateModelMatrix();
     UpdateMeshCollider();
-    if (((dBgW *)&mMeshCollider)->IsEnabled())
-        ((dBgW *)&mMeshCollider)->Disable();
+    if (mMeshCollider.IsEnabled())
+        mMeshCollider.Disable();
 }
 
 /* STATE_BROKEN, enter. Disables the collider, resets the crate to its home
@@ -235,8 +240,8 @@ void daObjBlockS_c::UpdateBroken() {
  * 0x20000 / 0x40000 / 0x80000 (the two yoshi-mouth bits and 0x80000, which
  * STATE_IN_MOUTH treats as "spit it out"). */
 void daObjBlockS_c::EnterBroken() {
-    if (((dBgW *)&mMeshCollider)->IsEnabled())
-        ((dBgW *)&mMeshCollider)->Disable();
+    if (mMeshCollider.IsEnabled())
+        mMeshCollider.Disable();
     ResetToHome();
     UpdateModelMatrix();
     UpdateMeshCollider();
@@ -278,7 +283,7 @@ void daObjBlockS_c::UpdateInMouth() {
         if (t4 == 0) {
             daPly_c *p = BLOCKS_EATING_PLAYER(this);
             if (p != 0) {
-                int *src = (int *)&p->mPosX;
+                int *src = &p->mPosX;
                 mPosX = src[0];
                 mPosY = src[1];
                 mPosZ = src[2];
@@ -288,8 +293,9 @@ void daObjBlockS_c::UpdateInMouth() {
 
     mdCcAcPos_c1.Clear();
     UpdateModelMatrix();
-    if (!((dBgW *)&mMeshCollider)->IsEnabled()) return;
-    ((dBgW *)&mMeshCollider)->Disable();
+    if (!mMeshCollider.IsEnabled())
+        return;
+    mMeshCollider.Disable();
 }
 
 /* STATE_IN_MOUTH, enter. Drops the sink offset and its target to 0, stops
@@ -382,8 +388,8 @@ void daObjBlockS_c::UpdateSpitOut() {
     if (!mWithMeshClsn.IsOnGround()) {
         UpdateDropShadow();
     }
-    if (((dBgW *)&mMeshCollider)->IsEnabled()) {
-        ((dBgW *)&mMeshCollider)->Disable();
+    if (mMeshCollider.IsEnabled()) {
+        mMeshCollider.Disable();
     }
 }
 
@@ -409,7 +415,7 @@ void daObjBlockS_c::EnterSpitOut() {
 
     obj = BLOCKS_EATING_PLAYER(this);
     {
-        int *osrc = (int *)&obj->mPosX;
+        int *osrc = &obj->mPosX;
         mPosX = osrc[0];
         mPosY = osrc[1];
         mPosZ = osrc[2];
@@ -455,8 +461,8 @@ void daObjBlockS_c::UpdateThrown() {
     if (!mWithMeshClsn.IsOnGround()) {
         UpdateDropShadow();
     }
-    if (((dBgW *)&mMeshCollider)->IsEnabled()) {
-        ((dBgW *)&mMeshCollider)->Disable();
+    if (mMeshCollider.IsEnabled()) {
+        mMeshCollider.Disable();
     }
 }
 
@@ -538,8 +544,8 @@ void daObjBlockS_c::UpdateCarried() {
     mdCcAcPos_c1.Clear();
     UpdateModelMatrix();
     UpdateDropShadow();
-    if (((dBgW *)&mMeshCollider)->IsEnabled()) {
-        ((dBgW *)&mMeshCollider)->Disable();
+    if (mMeshCollider.IsEnabled()) {
+        mMeshCollider.Disable();
     }
 }
 
@@ -823,9 +829,9 @@ void daObjBlockS_c::Kill()
     vec.y = y;
     vec.z = z;
     Particle::System::NewSimple(0xe, vec.x, vec.y, vec.z);
-    ((int *)&vec2)[0] = ((int *)&vec)[0];
-    ((int *)&vec2)[1] = ((int *)&vec)[1];
-    ((int *)&vec2)[2] = ((int *)&vec)[2];
+    vec2.x = vec.x;
+    vec2.y = vec.y;
+    vec2.z = vec.z;
     DisappearPoofDustAt(vec2);
     Sound::PlayBank3(0x41, mCamSpacePos);
     Crate_SetState(this, STATE_BROKEN);
@@ -1105,8 +1111,8 @@ void daObjBlockS_c::UpdateModelMatrix() {
             Math_Function_0203b14c(&mCarryOffsetZ, *(int *)((char *)data_ov098_0213bf68 + r5 * 0xc),
                                    0x800, 0x3e8000, 4);
             {
-                char *res = (char *)UpdateCarry(*mHoldingPlayer, *(Vector3 *)&mCarryOffsetX);
-                mModel.mat4x3 = *(struct Matrix4x3 *)res;
+                Matrix4x3 *res = UpdateCarry(*mHoldingPlayer, *(Vector3 *)&mCarryOffsetX);
+                mModel.mat4x3 = *res;
             }
             mFlags |= 0x4000000;
             return;
@@ -1132,15 +1138,15 @@ void daObjBlockS_c::UpdateModelMatrix() {
  * (data_ov098_0213c4c8[0] / [1]) when the actor is BLOCK_S. Always returns 1. */
 int daObjBlockS_c::CleanupResources()
 {
-    int *f;
-    if (((dBgW *)((char *)&mMeshCollider))->IsEnabled())
-        ((dBgW *)((char *)&mMeshCollider))->Disable();
+    BlockSFiles *f;
+    if (mMeshCollider.IsEnabled())
+        mMeshCollider.Disable();
     f = 0;
     if (actorID == ACTOR_BLOCK_S)
-        f = data_ov098_0213c4c8;
+        f = &data_ov098_0213c4c8;
     if (f) {
-        ((SharedFilePtr *)((void *)f[0]))->Release();
-        ((SharedFilePtr *)((void *)f[1]))->Release();
+        f->model->Release();
+        f->collision->Release();
     }
     return 1;
 }
@@ -1200,9 +1206,9 @@ int daObjBlockS_c::Behavior()
         x = mPosX;
         z = mPosZ;
         y = mPosY + 0x50000;
-        ((int *)&v)[0] = x;
-        ((int *)&v)[1] = y;
-        ((int *)&v)[2] = z;
+        v.x = x;
+        v.y = y;
+        v.z = z;
         if (DecIfAbove0_Byte(&mBreakTimer)) {
             mParticleHandle1 =
                 (u32)Particle::System::New(mParticleHandle1, kPtclDeathA, v.x, v.y, v.z, 0, 0);
@@ -1216,19 +1222,19 @@ int daObjBlockS_c::Behavior()
             vec.x = x;
             vec.y = y;
             vec.z = z;
-            ((int *)&vec2)[0] = ((int *)&vec)[0];
-            ((int *)&vec2)[1] = ((int *)&vec)[1];
-            ((int *)&vec2)[2] = ((int *)&vec)[2];
+            vec2.x = vec.x;
+            vec2.y = vec.y;
+            vec2.z = vec.z;
             DisappearPoofDustAt(vec2);
             Crate_SetState(this, STATE_BROKEN);
             return 1;
         }
     }
 
-    ((int *)&t)[0] = mPosX;
-    ((int *)&t)[1] = mPosY;
-    ((int *)&t)[2] = mPosZ;
-    ((int *)&t)[1] = t.y - mClsnYOffset;
+    t.x = mPosX;
+    t.y = mPosY;
+    t.z = mPosZ;
+    t.y = t.y - mClsnYOffset;
     mdCcAcPos_c1.pos.x = t.x;
     mdCcAcPos_c1.pos.y = t.y;
     mdCcAcPos_c1.pos.z = t.z;
@@ -1250,9 +1256,9 @@ int daObjBlockS_c::Behavior()
  * to its home condition. Returns 1. */
 int daObjBlockS_c::InitResources()
 {
-    char *f = 0;
+    BlockSFiles *f = 0;
     if (actorID == ACTOR_BLOCK_S)
-        f = (char *)data_ov098_0213c4c8;
+        f = &data_ov098_0213c4c8;
     if (f == 0)
         return 0;
     mHomePosX = mPosX;
@@ -1261,10 +1267,10 @@ int daObjBlockS_c::InitResources()
     mHomeAngleX = mAngleX;
     mHomeAngleY = mAngleY;
     mHomeAngleZ = mAngleZ;
-    mModel.SetFile(dExtSimpleModel_c::LoadFile(**(SharedFilePtr **)(f)), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(*f->model), 1, -1);
     mShadowModel.InitCuboid();
-    mMeshCollider.SetFile((KCL_File *)((int)dBgW_Kc::LoadFile(**(SharedFilePtr **)(f + 4))),
-                          mClsnMat, 0x199, mAngleY, *(CLPS_Block *)(*(int *)(f + 8)));
+    mMeshCollider.SetFile((KCL_File *)((int)dBgW_Kc::LoadFile(*f->collision)), mClsnMat, 0x199,
+                          mAngleY, *f->clps);
     mWithMeshClsn.Init((dActor_c *)((char *)this), 0x28000, 0x28000, 0, 0);
     mWithMeshClsn.StartDetectingWater();
     mVertAccel = -0x2000;
