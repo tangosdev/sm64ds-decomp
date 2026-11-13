@@ -9,7 +9,7 @@
     "launder_or_forced": 20,
     "launder_sites": 32,
     "pragma_by_name": {
-      "opt_common_subs": 26,
+      "opt_common_subs": 25,
       "opt_dead_assignments": 1,
       "opt_foldconstants": 1,
       "opt_lifetimes": 2,
@@ -20,7 +20,7 @@
       "optimize_for_size": 13
     },
     "pragma_files": 48,
-    "pragma_overrides": 90,
+    "pragma_overrides": 89,
     "pragma_resets": 0,
     "pragma_resets_by_name": {}
   },
@@ -56,14 +56,14 @@
       },
       "method": {
         "draft": 0,
-        "migrated": 6524,
+        "migrated": 6610,
         "unmigrated": 0
       }
     },
     "cpp_still_handspelled": 0,
     "mangled_c": 0,
-    "mangled_cpp": 7477,
-    "mangled_total": 7477,
+    "mangled_cpp": 7563,
+    "mangled_total": 7563,
     "nonmatching_drafts": 0,
     "unmigrated_total": 0
   },
