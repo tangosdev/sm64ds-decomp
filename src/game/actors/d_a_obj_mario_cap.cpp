@@ -191,9 +191,7 @@ struct Flags3eb {
     u8 real : 1;
 };
 
-/* dEnemyBase_c declares mStateTimer as an s16, but the helpers below read and
- * write it as an unsigned halfword (ldrh/strh); a signed read is ldrsh. */
-#define CAP_TIMER(cap) (*(u16 *)&(cap)->mStateTimer)
+#define CAP_TIMER(cap) ((cap)->mStateTimer)
 
 /* mCarryMatrix: the actor carrying the cap sets it (daMky_c stores its
  * mCapMtx there for the cap it spawns); this file only tests it and clears
@@ -352,9 +350,8 @@ int daObjMarioCap_c::InitResources()
         break;
     }
 
-    if (mAnmModel.SetFile(
-            dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov002_020ff0ac[mModelIndex]), 1,
-            -1) == 0)
+    SharedFilePtr *modelFile = (SharedFilePtr *)data_ov002_020ff0ac[mModelIndex];
+    if (mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(*modelFile), 1, -1) == 0)
         return 0;
 
     mShadowModel.InitCylinder();
@@ -385,7 +382,7 @@ int daObjMarioCap_c::InitResources()
     default:
         break;
     case 0:
-        *(s32 *)((char *)&mdCcAc_c.vulnFlags) |= 0x8000;
+        mdCcAc_c.vulnFlags |= 0x8000;
         mIconKind = 4;
         EnterState(&data_ov002_0210df64);
         break;
@@ -394,7 +391,7 @@ int daObjMarioCap_c::InitResources()
         EnterState(&data_ov002_0210df84);
         break;
     case 2:
-        *(s32 *)((char *)&mdCcAc_c.vulnFlags) |= 0x8000;
+        mdCcAc_c.vulnFlags |= 0x8000;
         mIconKind = 4;
         EnterState(&data_ov002_0210df04);
         break;
