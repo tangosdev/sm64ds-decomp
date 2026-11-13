@@ -2,22 +2,28 @@
  * Studio labels (port/tools/bro_groups.json) and the extracted ROM (ARCHIVE/arc0.narc,
  * the nine bro BMDs). DO NOT EDIT BY HAND.
  *
- * The bros' category -> palette-entry membership: hat + undershirt (his Hat and
- * Undershirt labels, one pick), overalls (Overalls), shoes (Shoes). Gloves and
- * buttons keep their slots for SM64DS_VS_CHAR_COLORS's grammar and are empty.
+ * The bros' category -> palette-entry membership: hat (his Hat label), undershirt
+ * (Undershirt), overalls (Overalls), shoes (Shoes). Gloves and buttons keep their
+ * slots for SM64DS_VS_CHAR_COLORS's grammar and are empty. The undershirt is the
+ * last category (it was one pick with the hat until 11-13), so the grammar's old
+ * five fields keep their places.
  * Each record is one labelled family's entries in one named palette; `main` is
  * the entry the most texels read (where a pick lands). kBroCart is each bro's
- * cartridge colour per category (the body file's main tone). kVscKeepCart lists
+ * cartridge colour per category (the body file's main tone; the hat, which has no
+ * body entries, takes the undershirt's). kVscKeepCart lists
  * the entries held back from every row (port/tools/bro_groups_keep.json).
  *
  * COVERAGE (label palette entries / texels drawn with them):
- *   mario  hat_undershirt  Hat mario_head_pl 100/654, Hat mario_head_n_pl 5/16, Undershirt mario_body_pl 97/1188
+ *   mario  hat             Hat mario_head_pl 100/654, Hat mario_head_n_pl 5/16
+ *   mario  undershirt      Undershirt mario_body_pl 97/1188
  *   mario  overalls        Overalls mario_body_pl 95/1577
  *   mario  shoes           Shoes mario_body_pl 21/213
- *   luigi  hat_undershirt  Hat luigi_head_1_pl 64/925, Hat luigi_head_2_pl 56/319, Hat luigi_head_n_pl 10/172, Undershirt luigi_body_1_pl 96/1113, Undershirt luigi_body_2_pl 93/391
+ *   luigi  hat             Hat luigi_head_1_pl 64/925, Hat luigi_head_2_pl 56/319, Hat luigi_head_n_pl 10/172
+ *   luigi  undershirt      Undershirt luigi_body_1_pl 96/1113, Undershirt luigi_body_2_pl 93/391
  *   luigi  overalls        Overalls luigi_body_1_pl 81/1750, Overalls luigi_body_2_pl 79/642
  *   luigi  shoes           Shoes luigi_body_1_pl 33/437, Shoes luigi_body_2_pl 35/154
- *   wario  hat_undershirt  Hat wario_head_pl 117/733, Undershirt wario_body_pl 65/1088
+ *   wario  hat             Hat wario_head_pl 117/733
+ *   wario  undershirt      Undershirt wario_body_pl 65/1088
  *   wario  overalls        Overalls wario_body_pl 56/1246
  *   wario  shoes           Shoes wario_body_pl 24/532
  */
@@ -26,12 +32,12 @@
 
 namespace vscg {
 
-enum { CAT_HAT_UNDERSHIRT = 0, CAT_OVERALLS = 1, CAT_GLOVES = 2,
-       CAT_BUTTONS = 3, CAT_SHOES = 4, CAT_COUNT = 5 };
+enum { CAT_HAT = 0, CAT_OVERALLS = 1, CAT_GLOVES = 2,
+       CAT_BUTTONS = 3, CAT_SHOES = 4, CAT_UNDERSHIRT = 5, CAT_COUNT = 6 };
 
 struct Group {
     int         chr;    /* 0 Mario, 1 Luigi, 2 Wario */
-    int         cat;    /* 0..4, the category above */
+    int         cat;    /* 0..5, the category above */
     const char *file;   /* served BMD path, e.g. data/player/mario_model.bmd */
     const char *pal;    /* palette name inside that BMD, e.g. mario_body_pl */
     int         count;  /* number of entries */
@@ -160,20 +166,20 @@ static const int kIdx_17[24] = {
 static const Group kVscGroups[] = {
     { 0, 0, "data/player/mario_head_cap.bmd", "mario_head_pl", 100, kIdx_0, 4, "Hat" },
     { 0, 0, "data/player/mario_head_nocap.bmd", "mario_head_n_pl", 5, kIdx_1, 148, "Hat" },
-    { 0, 0, "data/player/mario_model.bmd", "mario_body_pl", 97, kIdx_2, 52, "Undershirt" },
+    { 0, 5, "data/player/mario_model.bmd", "mario_body_pl", 97, kIdx_2, 52, "Undershirt" },
     { 0, 1, "data/player/mario_model.bmd", "mario_body_pl", 95, kIdx_3, 136, "Overalls" },
     { 0, 4, "data/player/mario_model.bmd", "mario_body_pl", 21, kIdx_4, 238, "Shoes" },
     { 1, 0, "data/player/luigi_head_cap.bmd", "luigi_head_1_pl", 64, kIdx_5, 0, "Hat" },
     { 1, 0, "data/player/luigi_head_cap.bmd", "luigi_head_2_pl", 56, kIdx_6, 0, "Hat" },
     { 1, 0, "data/player/luigi_head_nocap.bmd", "luigi_head_n_pl", 10, kIdx_7, 59, "Hat" },
-    { 1, 0, "data/player/luigi_model.bmd", "luigi_body_1_pl", 96, kIdx_8, 266, "Undershirt" },
-    { 1, 0, "data/player/luigi_model.bmd", "luigi_body_2_pl", 93, kIdx_9, 256, "Undershirt" },
+    { 1, 5, "data/player/luigi_model.bmd", "luigi_body_1_pl", 96, kIdx_8, 266, "Undershirt" },
+    { 1, 5, "data/player/luigi_model.bmd", "luigi_body_2_pl", 93, kIdx_9, 256, "Undershirt" },
     { 1, 1, "data/player/luigi_model.bmd", "luigi_body_1_pl", 81, kIdx_10, 128, "Overalls" },
     { 1, 1, "data/player/luigi_model.bmd", "luigi_body_2_pl", 79, kIdx_11, 120, "Overalls" },
     { 1, 4, "data/player/luigi_model.bmd", "luigi_body_1_pl", 33, kIdx_12, 174, "Shoes" },
     { 1, 4, "data/player/luigi_model.bmd", "luigi_body_2_pl", 35, kIdx_13, 164, "Shoes" },
     { 2, 0, "data/player/wario_head_cap.bmd", "wario_head_pl", 117, kIdx_14, 0, "Hat" },
-    { 2, 0, "data/player/wario_model.bmd", "wario_body_pl", 65, kIdx_15, 112, "Undershirt" },
+    { 2, 5, "data/player/wario_model.bmd", "wario_body_pl", 65, kIdx_15, 112, "Undershirt" },
     { 2, 1, "data/player/wario_model.bmd", "wario_body_pl", 56, kIdx_16, 150, "Overalls" },
     { 2, 4, "data/player/wario_model.bmd", "wario_body_pl", 24, kIdx_17, 203, "Shoes" },
 };
@@ -194,9 +200,9 @@ static const int kVscKeepCartCount = 0;
 
 /* 0xRRGGBB, [chr][cat]; 0 = no such category on that bro */
 static const unsigned kBroCart[3][CAT_COUNT] = {
-    { 0xDE0000u, 0x0841ACu, 0x000000u, 0x000000u, 0xB46229u },
-    { 0x299410u, 0x29315Au, 0x000000u, 0x000000u, 0x624120u },
-    { 0xFFC500u, 0x942983u, 0x000000u, 0x000000u, 0x087300u },
+    { 0xDE0000u, 0x0841ACu, 0x000000u, 0x000000u, 0xB46229u, 0xDE0000u },
+    { 0x299410u, 0x29315Au, 0x000000u, 0x000000u, 0x624120u, 0x299410u },
+    { 0xFFC500u, 0x942983u, 0x000000u, 0x000000u, 0x087300u, 0xFFC500u },
 };
 
 } /* namespace vscg */

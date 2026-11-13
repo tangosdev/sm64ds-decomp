@@ -31,7 +31,7 @@ namespace {
 const unsigned kPltt = 0x06880000u;
 const unsigned kWinBase = 0x30000u, kWinEnd = 0x80000u;
 const int kRegions = 512;
-const int kCatOfRow[kRows] = { vscg::CAT_HAT_UNDERSHIRT, vscg::CAT_OVERALLS, vscg::CAT_SHOES };
+const int kCatOfRow[kRows] = { vscg::CAT_HAT, vscg::CAT_OVERALLS, vscg::CAT_SHOES, vscg::CAT_UNDERSHIRT };
 
 struct Region {
     unsigned src_off, size;     // the palette span copied (bytes from kPltt)
@@ -64,9 +64,11 @@ unsigned fnv(unsigned h, const void *p, unsigned n)
 
 unsigned q555(unsigned rgb) { return rgb & 0xF8F8F8u; }
 
-// the row's pick for chr, or -1 when it is no pick (unset, or the cartridge's own colour)
+// the row's pick for chr, or -1 when it is no pick (unset, or the cartridge's own colour). PALSPLIT1: an undershirt
+// with no pick of its own wears the hat's (the two were one row; the hat's cartridge colour is the undershirt's).
 long pick_of(const Picks &p, int chr, int row)
 {
+    if (chr >= 0 && chr <= 2 && row == kRowUndershirt && !p.set[chr][row]) row = kRowHat;
     if (chr < 0 || chr > 2 || !p.set[chr][row]) return -1;
     const unsigned v = p.rgb[chr][row] & 0xFFFFFFu;
     if (q555(v) == q555(vscg::kBroCart[chr][kCatOfRow[row]])) return -1;
@@ -256,7 +258,7 @@ void unstamp(Stamp &st)
 
 // ---- BROSCOLOR1 (run coopfix1): the room's colour choices, the character-palettes mod's list. See bro_colors.h. ----
 extern "C" int host_setting_online_bro(int chr, int cat, unsigned *rgb);                       /* hal/host_settings.h */
-extern "C" int host_setting_set_online_bros(const unsigned rgb[3][3], const unsigned char set[3][3]);
+extern "C" int host_setting_set_online_bros(const unsigned rgb[3][4], const unsigned char set[3][4]);
 extern "C" int host_setting_online_colours(unsigned *body, unsigned *shoes);
 extern "C" int host_setting_set_online_profile(const char *name, unsigned body, unsigned shoes);
 extern "C" const char *host_setting_online_name(void);
@@ -313,11 +315,12 @@ bool not_cart(int chr, const unsigned rows[kRows])
     return false;
 }
 
-// write one bro's three rows (all set, or all unset), keeping the other two bros' rows as they are
+// write one bro's rows (all set, or all unset), keeping the other two bros' rows as they are. All set writes the
+// undershirt too, so a Custom that started from a joined hat keeps the shirt it showed when the hat moves (PALSPLIT1).
 void write_bro(int chr, const unsigned rows[kRows], bool set)
 {
-    unsigned rgb[3][3];
-    unsigned char st[3][3];
+    unsigned rgb[3][kRows];
+    unsigned char st[3][kRows];
     for (int c = 0; c < 3; ++c)
         for (int r = 0; r < kRows; ++r) {
             unsigned v = 0;
@@ -372,6 +375,7 @@ extern "C" int port_bro_my_row(int chr, int row, unsigned *rgb)
 {
     if (chr < 0 || chr > 2 || row < 0 || row >= kRows) return 0;
     if (host_setting_online_bro(chr, row, rgb)) return 1;
+    if (row == kRowUndershirt && host_setting_online_bro(chr, kRowHat, rgb)) return 1;   /* PALSPLIT1: a joined pick */
     if (online_any(chr) || g_orig_explicit[chr]) return 0;
     return port_fs_mods_bro_custom(chr, row, rgb);
 }

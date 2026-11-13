@@ -766,7 +766,7 @@ enum : int {
     kGwIdentColours = 0x01,
     /* BROCOLOR1: bit 1: after the name (zero padded to a multiple of 4) come
        20 bytes of bro colours: a little-endian u16 mask (bit chr * 3 + row:
-       chr 0 Mario, 1 Luigi, 2 Wario; row 0 hat and undershirt, 1 overalls,
+       chr 0 Mario, 1 Luigi, 2 Wario; row 0 hat (and undershirt, PALSPLIT1 below), 1 overalls,
        2 shoes) and nine little-endian BGR555 words in that order. The longest
        identity is 20 + 24 + 20 = 64 bytes, the most the relay and every
        reader take. An older reader takes the name by name_len, never reads
@@ -775,6 +775,21 @@ enum : int {
        colours. A reader of this build that gets no bit 1 does the same. */
     kGwIdentBros = 0x02,
     kGwBroBlock = 20,
+    /* PALSPLIT1 (run coopfix1, 11-13): THE UNDERSHIRT, its own pick since the
+       hat and the undershirt were split. Mask bits 9, 10 and 11 (Mario, Luigi,
+       Wario; bits 1.0.5 and older drop with the & 0x1ff below) say that bro's
+       undershirt differs from what his hat row gives, and after the bro block
+       come those undershirts as little-endian BGR555 words, in chr order, zero
+       padded to a multiple of 4 (4 bytes for one or two, 8 for three). The hat
+       word at row 0 stays where it was, so an older reader draws the cap and
+       the undershirt both in the hat's colour, as it always did. An undershirt
+       equal to the hat is not sent (the reader's unset undershirt wears the
+       hat), so a player with no split sends the identity byte for byte as
+       1.0.5 did. The tail is sent only inside the 64 bytes every reader takes:
+       a name of 16 bytes or less (the profile popup's limit) always leaves
+       room for all three; a longer one (a launcher name, up to 24) sends what
+       fits, the bro he plays first, and logs the rest once. */
+    kGwBroUnderShift = 9,
     /* GHOSTID1: bit 2, "send me yours": set on the identity a console sends
        because its roster moved (a seat joined or left). Every reader of this
        build that gets it sends its own identity again, once, no sooner than
@@ -894,8 +909,9 @@ struct GwSeat {
     char      name[kHubIdentNameMax + 1];
     unsigned char character, body[3], shoes[3];
     bool      colours;       // GHOSTLOOK1: body / shoes are the player's pick
-    unsigned short bro_mask;     // BROCOLOR1: the bro rows picked (kGwIdentBros), bit chr * 3 + row
-    unsigned short bro_bgr[9];   // ...and their colours, BGR555
+    unsigned short bro_mask;     // BROCOLOR1: the bro rows picked (kGwIdentBros), bit chr * 3 + row; PALSPLIT1: bit 9 + chr,
+                                 // an undershirt that is not the hat's
+    unsigned short bro_bgr[12];  // ...and their colours, BGR555 (9 + chr: the undershirts)
     unsigned short pal_src[16];  // GHOSTLOOK1: the row 0 the colours were
     unsigned short pal_out[16];  // made from, and the row made from it with
     unsigned char  pal_body[3], pal_shoes[3];   // these colours
@@ -1201,7 +1217,7 @@ void gw_reset_seat(GwSeat &z, bool keep_ident) {
     std::memcpy(shoes, z.shoes, 3);
     const unsigned bid = z.build_id;
     const unsigned short bmask = z.bro_mask;
-    unsigned short bbgr[9];
+    unsigned short bbgr[12];
     std::memcpy(bbgr, z.bro_bgr, sizeof bbgr);
     const bool he = z.have_epoch;
     const unsigned ep = z.epoch;
@@ -1477,15 +1493,30 @@ void gw_on_ident(const unsigned char *buf, int n, int seat) {
     {
         const int at = (20 + (int)h.name_len + 3) & ~3;
         if ((h.flags & kGwIdentBros) && at + kGwBroBlock <= n) {
-            z.bro_mask = (unsigned short)((buf[at] | (buf[at + 1] << 8)) & 0x1ff);
+            const unsigned wire = (unsigned)(buf[at] | (buf[at + 1] << 8));
+            z.bro_mask = (unsigned short)(wire & 0x1ff);
             for (int i = 0; i < 9; ++i)
                 z.bro_bgr[i] = (unsigned short)(buf[at + 2 + 2 * i] | (buf[at + 3 + 2 * i] << 8));
+            /* PALSPLIT1: the undershirts after the block, when the bits say so and they are all there */
+            const unsigned under = (wire >> kGwBroUnderShift) & 7u;
+            const int nu = (int)((under & 1u) + ((under >> 1) & 1u) + ((under >> 2) & 1u));
+            int ut = at + kGwBroBlock;
+            for (int c = 0; c < 3; ++c) z.bro_bgr[9 + c] = 0;
+            if (under && ut + ((2 * nu + 3) & ~3) <= n) {
+                for (int c = 0; c < 3; ++c) {
+                    if (!((under >> c) & 1u)) continue;
+                    z.bro_bgr[9 + c] = (unsigned short)(buf[ut] | (buf[ut + 1] << 8));
+                    ut += 2;
+                }
+                z.bro_mask = (unsigned short)(z.bro_mask | (under << kGwBroUnderShift));
+            }
             static unsigned short said[kHubMaxSeats];
             if (said[seat] != (unsigned short)(z.bro_mask | 0x8000u)) {
                 said[seat] = (unsigned short)(z.bro_mask | 0x8000u);
                 std::fprintf(stderr, "[ghost] seat %d identity (%d bytes) carries bro colours: mask %03x, Mario %04x %04x %04x, "
-                             "Luigi %04x %04x %04x, Wario %04x %04x %04x\n", seat, n, z.bro_mask, z.bro_bgr[0], z.bro_bgr[1],
-                             z.bro_bgr[2], z.bro_bgr[3], z.bro_bgr[4], z.bro_bgr[5], z.bro_bgr[6], z.bro_bgr[7], z.bro_bgr[8]);
+                             "Luigi %04x %04x %04x, Wario %04x %04x %04x; undershirts %04x %04x %04x\n", seat, n, z.bro_mask,
+                             z.bro_bgr[0], z.bro_bgr[1], z.bro_bgr[2], z.bro_bgr[3], z.bro_bgr[4], z.bro_bgr[5], z.bro_bgr[6],
+                             z.bro_bgr[7], z.bro_bgr[8], z.bro_bgr[9], z.bro_bgr[10], z.bro_bgr[11]);
             }
         }
     }
@@ -2158,7 +2189,8 @@ unsigned gw_rgb_of555(unsigned short w) {
 }
 #ifndef PORT_ROM_CLEAN
 // BROSCOLOR1 proof knob (dev builds only): SM64DS_BRO_CHOICE=<chr>:<i>[/...] picks choice i for chr through the lobby's own
-// calls (hal/bro_colors.h port_bro_choice_set), or <chr>:c:RRGGBB,RRGGBB[,RRGGBB] sets the Custom parts (port_bro_custom_set),
+// calls (hal/bro_colors.h port_bro_choice_set), or <chr>:c:RRGGBB,RRGGBB[,RRGGBB[,RRGGBB]] sets the Custom parts (port_bro_custom_set:
+// hat, overalls, shoes, undershirt),
 // once, before the first identity reads the picks. chr 0 Mario 1 Luigi 2 Wario 3 Yoshi. The picks last this session only: the
 // knob turns settings.json writes off first (host_settings_session_only), so a row never leaves them in a console's settings.
 static void gw_bro_choice_knob() {
@@ -2177,7 +2209,7 @@ static void gw_bro_choice_knob() {
         ++a;
         if (*a == 'c' && a[1] == ':') {
             const char *p = a + 2;
-            for (int part = 0; part < 3 && *p; ++part) {
+            for (int part = 0; part < 4 && *p; ++part) {   /* PALSPLIT1: a fourth part is the undershirt */
                 const unsigned v = (unsigned)std::strtoul(p, 0, 16);
                 port_bro_custom_set(chr, part, v);
                 p = std::strchr(p, ',');
@@ -2193,7 +2225,7 @@ static void gw_bro_choice_knob() {
     }
 }
 #endif
-void gw_my_bros(unsigned short *mask, unsigned short bgr[9]) {
+void gw_my_bros(unsigned short *mask, unsigned short bgr[12]) {
 #ifndef PORT_ROM_CLEAN
     gw_bro_choice_knob();
 #endif
@@ -2207,6 +2239,17 @@ void gw_my_bros(unsigned short *mask, unsigned short bgr[9]) {
                 bgr[c * 3 + r] = gw_bgr555(v);
             }
         }
+    /* PALSPLIT1: an undershirt that is not what the hat row gives (the hat's word, or the cartridge when the hat is unset) */
+    for (int c = 0; c < 3; ++c) {
+        unsigned v = 0;
+        bgr[9 + c] = 0;
+        if (!port_bro_my_row(c, port::bro::kRowUndershirt, &v)) continue;
+        const unsigned short w = gw_bgr555(v);
+        const bool hat = (*mask >> (c * 3)) & 1u;
+        if (hat && w == bgr[c * 3]) continue;
+        bgr[9 + c] = w;
+        *mask = (unsigned short)(*mask | (1u << (kGwBroUnderShift + c)));
+    }
 }
 
 void gw_send_ident(unsigned now, bool ask) {
@@ -2233,8 +2276,31 @@ void gw_send_ident(unsigned now, bool ask) {
     int len = (20 + g_gw_me.name_len + 3) & ~3;
     /* BROCOLOR1: the bro block, only when a bro row is picked (no pick sends the identity as before, byte for byte) */
     {
-        unsigned short mask = 0, bgr[9];
+        unsigned short mask = 0, bgr[12];
         gw_my_bros(&mask, bgr);
+        /* PALSPLIT1: the undershirt tail, as many as fit, the bro he plays first (kGwBroUnderShift) */
+        if (mask >> kGwBroUnderShift) {
+            const int room = (int)sizeof buf - (len + kGwBroBlock);
+            unsigned keep = 0;
+            const int first = h.character < 3 ? (int)h.character : 0;
+            for (int k = 0; k < 3; ++k) {
+                const int c = (first + k) % 3;
+                if (!((mask >> (kGwBroUnderShift + c)) & 1u)) continue;
+                const unsigned t = keep | (1u << c);
+                const int nt = (int)((t & 1u) + ((t >> 1) & 1u) + ((t >> 2) & 1u));
+                if (((2 * nt + 3) & ~3) <= room) keep = t;
+            }
+            const unsigned want = (unsigned)(mask >> kGwBroUnderShift) & 7u;
+            if (keep != want) {
+                static unsigned said_cut;
+                if (said_cut != (want | (keep << 4) | 0x100u)) {
+                    said_cut = want | (keep << 4) | 0x100u;
+                    std::fprintf(stderr, "[ghost] my identity has room for undershirts %x of %x (a %d-byte name): the rest wear the hat's "
+                                 "colour on the other consoles\n", keep, want, g_gw_me.name_len);
+                }
+            }
+            mask = (unsigned short)((mask & 0x1ff) | (keep << kGwBroUnderShift));
+        }
         if (mask && len + kGwBroBlock <= (int)sizeof buf) {
             buf[18] = (unsigned char)(buf[18] | kGwIdentBros);   /* HubIdentHead::flags */
             buf[len] = (unsigned char)(mask & 0xff);
@@ -2244,6 +2310,13 @@ void gw_send_ident(unsigned now, bool ask) {
                 buf[len + 3 + 2 * i] = (unsigned char)(bgr[i] >> 8);
             }
             len += kGwBroBlock;
+            for (int c = 0; c < 3; ++c) {          /* PALSPLIT1: the undershirt tail */
+                if (!((mask >> (kGwBroUnderShift + c)) & 1u)) continue;
+                buf[len] = (unsigned char)(bgr[9 + c] & 0xff);
+                buf[len + 1] = (unsigned char)(bgr[9 + c] >> 8);
+                len += 2;
+            }
+            len = (len + 3) & ~3;
             static unsigned short said;
             if (said != (unsigned short)(mask | 0x8000u)) {
                 said = (unsigned short)(mask | 0x8000u);
@@ -4689,7 +4762,7 @@ void gw_body_probe() {
 extern "C" int port_bro_picks_for_body(void *body, port::bro::Picks *out) {
     if (!body || !out) return 0;
     const int me = (int)data_0209f250;
-    unsigned short mask = 0, bgr[9];
+    unsigned short mask = 0, bgr[12];
     if (me >= 0 && me < kPortBodySlots && data_0209f394[me] == body) {
         bool on = g_hub;
 #ifndef PORT_ROM_CLEAN
@@ -4710,12 +4783,17 @@ extern "C" int port_bro_picks_for_body(void *body, port::bro::Picks *out) {
         std::memcpy(bgr, g_gw[s].bro_bgr, sizeof bgr);
     }
     if (!mask) return 0;
-    for (int c = 0; c < 3; ++c)
+    for (int c = 0; c < 3; ++c) {
         for (int r = 0; r < 3; ++r) {
             const bool on = (mask >> (c * 3 + r)) & 1;
             out->set[c][r] = on ? 1 : 0;
             out->rgb[c][r] = on ? gw_rgb_of555(bgr[c * 3 + r]) : 0;
         }
+        /* PALSPLIT1: the undershirt; unset, it wears the hat (hal/bro_colors.cpp pick_of) */
+        const bool u = (mask >> (kGwBroUnderShift + c)) & 1;
+        out->set[c][port::bro::kRowUndershirt] = u ? 1 : 0;
+        out->rgb[c][port::bro::kRowUndershirt] = u ? gw_rgb_of555(bgr[9 + c]) : 0;
+    }
     return 1;
 }
 

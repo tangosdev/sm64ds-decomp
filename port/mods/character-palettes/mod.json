@@ -1,0 +1,16 @@
+{
+  "id": "character-palettes",
+  "name": "Character palettes",
+  "version": "1.2",
+  "kind": "files",
+  "authors": [
+    "Tango"
+  ],
+  "credits": [],
+  "summary": "Pick the colours Mario, Luigi, Wario and Yoshi wear, or mix your own.",
+  "onlineCompatible": true,
+  "requiresFeatures": [
+    "modpalettes"
+  ],
+  "minGameVersion": "0.9.3.9"
+}

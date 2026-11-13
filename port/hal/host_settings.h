@@ -536,11 +536,12 @@ int host_setting_online_colours(unsigned *body, unsigned *shoes);
 int host_setting_set_online_profile(const char *name, unsigned body, unsigned shoes);
 int host_online_rgb_parse(const char *s);
 /* BROCOLOR1: the player's online colours for the bros, picked in the same popup (a character row above the grid). settings.json
-   OnlineMarioHat / OnlineMarioOveralls / OnlineMarioShoes, the same for Luigi and Wario: six hex digits each, absent or "" = the cartridge's
-   colour. chr 0 Mario, 1 Luigi, 2 Wario; cat 0 HAT (cap and undershirt), 1 OVERALLS, 2 SHOES. The get answers 1 when that one is set. The set
-   writes all nine at once (a 0 in set[][] writes "") and flushes. These are NOT the offline .pal mod keys (PaletteMario ...). */
+   OnlineMarioHat / OnlineMarioOveralls / OnlineMarioShoes / OnlineMarioUndershirt, the same for Luigi and Wario: six hex digits each, absent
+   or "" = the cartridge's colour. chr 0 Mario, 1 Luigi, 2 Wario; cat 0 HAT (the cap), 1 OVERALLS, 2 SHOES, 3 UNDERSHIRT (PALSPLIT1: its own
+   key since 11-13; absent, the undershirt wears the hat as it did when the two were one row). The get answers 1 when that one is set. The set
+   writes all twelve at once (a 0 in set[][] writes "") and flushes. These are NOT the offline .pal mod keys (PaletteMario ...). */
 int host_setting_online_bro(int chr, int cat, unsigned *rgb);
-int host_setting_set_online_bros(const unsigned rgb[3][3], const unsigned char set[3][3]);
+int host_setting_set_online_bros(const unsigned rgb[3][4], const unsigned char set[3][4]);
 /* coopfix1, lane LOBBYUI1: settings.json LobbyColorPicked, bool, 0 by default. 1 once the player has changed the colours from the lobby page's
    paint bucket: the arrow at the bucket shows only while it is 0 (and the colours are still the default ones). The set flushes. */
 int host_setting_lobby_color_picked(void);

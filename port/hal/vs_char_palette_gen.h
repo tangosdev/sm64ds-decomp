@@ -4,7 +4,7 @@
  * hardcoded index groups -- body {0,1,2,3} and shoes {7,8} -- of one 16-colour
  * row. The bros (Mario, Luigi, Wario) need the SAME arithmetic driven over
  * ARBITRARY index sets in arbitrary-sized palettes, one per Tango category
- * (hat+undershirt tied, overalls, gloves, buttons, shoes). The membership comes
+ * (hat, overalls, gloves, buttons, shoes, undershirt). The membership comes
  * from vs_char_groups.h (generated from the Studio's groups.json); this header
  * is the thin runtime generator that spends the verified family transform on it.
  *

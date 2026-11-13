@@ -1,0 +1,189 @@
+[
+  {
+    "key": "mario",
+    "label": "Mario",
+    "type": "choice",
+    "choices": [
+      "Original",
+      "Custom"
+    ],
+    "default": "Original"
+  },
+  {
+    "key": "luigi",
+    "label": "Luigi",
+    "type": "choice",
+    "choices": [
+      "Original",
+      "Custom"
+    ],
+    "default": "Original"
+  },
+  {
+    "key": "wario",
+    "label": "Wario",
+    "type": "choice",
+    "choices": [
+      "Original",
+      "Custom"
+    ],
+    "default": "Original"
+  },
+  {
+    "key": "yoshi",
+    "label": "Yoshi",
+    "type": "choice",
+    "choices": [
+      "Original",
+      "Green",
+      "Red",
+      "Blue",
+      "Yellow",
+      "Custom"
+    ],
+    "default": "Original"
+  },
+  {
+    "key": "mario_hat",
+    "label": "Hat",
+    "type": "color",
+    "default": "DE0000",
+    "showWhen": {
+      "key": "mario",
+      "equals": "Custom"
+    }
+  },
+  {
+    "key": "mario_undershirt",
+    "label": "Undershirt",
+    "type": "color",
+    "default": "DE0000",
+    "defaultFrom": "mario_hat",
+    "showWhen": {
+      "key": "mario",
+      "equals": "Custom"
+    }
+  },
+  {
+    "key": "mario_overalls",
+    "label": "Overalls",
+    "type": "color",
+    "default": "0841AC",
+    "showWhen": {
+      "key": "mario",
+      "equals": "Custom"
+    }
+  },
+  {
+    "key": "mario_shoes",
+    "label": "Shoes",
+    "type": "color",
+    "default": "B46229",
+    "showWhen": {
+      "key": "mario",
+      "equals": "Custom"
+    }
+  },
+  {
+    "key": "luigi_hat",
+    "label": "Hat",
+    "type": "color",
+    "default": "299410",
+    "showWhen": {
+      "key": "luigi",
+      "equals": "Custom"
+    }
+  },
+  {
+    "key": "luigi_undershirt",
+    "label": "Undershirt",
+    "type": "color",
+    "default": "299410",
+    "defaultFrom": "luigi_hat",
+    "showWhen": {
+      "key": "luigi",
+      "equals": "Custom"
+    }
+  },
+  {
+    "key": "luigi_overalls",
+    "label": "Overalls",
+    "type": "color",
+    "default": "29315A",
+    "showWhen": {
+      "key": "luigi",
+      "equals": "Custom"
+    }
+  },
+  {
+    "key": "luigi_shoes",
+    "label": "Shoes",
+    "type": "color",
+    "default": "624120",
+    "showWhen": {
+      "key": "luigi",
+      "equals": "Custom"
+    }
+  },
+  {
+    "key": "wario_hat",
+    "label": "Hat",
+    "type": "color",
+    "default": "FFC500",
+    "showWhen": {
+      "key": "wario",
+      "equals": "Custom"
+    }
+  },
+  {
+    "key": "wario_undershirt",
+    "label": "Undershirt",
+    "type": "color",
+    "default": "FFC500",
+    "defaultFrom": "wario_hat",
+    "showWhen": {
+      "key": "wario",
+      "equals": "Custom"
+    }
+  },
+  {
+    "key": "wario_overalls",
+    "label": "Overalls",
+    "type": "color",
+    "default": "942983",
+    "showWhen": {
+      "key": "wario",
+      "equals": "Custom"
+    }
+  },
+  {
+    "key": "wario_shoes",
+    "label": "Shoes",
+    "type": "color",
+    "default": "087300",
+    "showWhen": {
+      "key": "wario",
+      "equals": "Custom"
+    }
+  },
+  {
+    "key": "yoshi_body",
+    "label": "Body",
+    "type": "color",
+    "default": "31A431",
+    "showWhen": {
+      "key": "yoshi",
+      "equals": "Custom"
+    }
+  },
+  {
+    "key": "yoshi_shoes",
+    "label": "Shoes",
+    "type": "color",
+    "default": "E66218",
+    "showWhen": {
+      "key": "yoshi",
+      "equals": "Custom"
+    }
+  }
+]
