@@ -184,7 +184,7 @@ int daBasabasa_c::ExecuteReturn() {
     if (dist > 0x1f4000 || mWithMeshClsn.IsOnWall() != 0) {
         mTargetAngleY = Vec3_HorzAngle(&mPos, (Vector3 *)&mHomePosX);
         /* The states read mStateTimer unsigned (ldrh). */
-        if ((u16)mStateTimer < 0x14)
+        if (mStateTimer < 0x14)
             mStateTimer = 0x14;
     }
     if (dist < 0x1f4000 && (mFlags & 8)) {
@@ -210,7 +210,7 @@ int daBasabasa_c::ExecuteReturn() {
     v.z = 0xa000;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     MTX_MultVec43(&v, &data_020a0e68, (Vector3 *)&mSpeedX);
-    if ((u16)mStateTimer == 0) {
+    if (mStateTimer == 0) {
         SetState(&data_ov065_0211d6f0);
     }
     return 1;
@@ -240,7 +240,7 @@ int daBasabasa_c::ExecuteChase() {
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
     MTX_MultVec43(&v, &data_020a0e68, (Vector3 *)&mSpeedX);
-    if (Vec3_Dist(&mPos, (Vector3 *)&mHomePosX) > 0x5dc000 || (u16)mStateTimer == 0) {
+    if (Vec3_Dist(&mPos, (Vector3 *)&mHomePosX) > 0x5dc000 || mStateTimer == 0) {
         mPerchTimer = 0;
         SetState(&data_ov065_0211d6f0);
     }
@@ -268,7 +268,7 @@ int daBasabasa_c::ExecuteDrop() {
     if (p != 0) {
         floorY = p->mGroundY + 0x50000;
     }
-    if ((u16)mStateTimer == 0 || floorY > posY) {
+    if (mStateTimer == 0 || floorY > posY) {
         SetState(&data_ov065_0211d6e0);
     }
     return 1;
@@ -379,7 +379,7 @@ int daBasabasa_c::Behavior() {
         UpdateModelTransform();
         return 1;
     }
-    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     if (mCurrentState->execute != 0)
         (this->*mCurrentState->execute)();
     if (mCurrentState == &data_ov065_0211d6e0 || mCurrentState == &data_ov065_0211d6f0) {
