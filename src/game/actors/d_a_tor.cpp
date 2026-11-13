@@ -136,7 +136,6 @@ void daTor_c::State1()
     mHorzSpeed = 0x14000;
 
     daPly_c *player = ClosestPlayer();
-    // goto: early return, else-at-end, switch still DIFF State1
     if (player == 0)
         goto null_player;
 
