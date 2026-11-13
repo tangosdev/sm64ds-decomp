@@ -117,7 +117,7 @@ u32 MB_GetSegmentLength(FSFile *file) {
             p = (const RomHeaderView *)rom;
         }
 
-        (void)FS_SeekFile(file, (int)bak_pos, FS_SEEK_SET);
+        FS_SeekFile(file, (int)bak_pos, FS_SEEK_SET);
     } else {
         p = (const RomHeaderView *)HW_ROM_HEADER_BUF;
     }
@@ -154,8 +154,8 @@ BOOL MB_ReadSegment(FSFile *file, void *buf, u32 len) {
                 mem_rom->own_size = 16 * 1024 * 1024;
 
             FS_InitFile(own_bin);
-            (void)FS_OpenFileDirect(own_bin, FS_FindArchive("rom", 3), 0,
-                                    (u32)(mem_rom->own_size + MB_AUTHCODE_SIZE), (u32)~0);
+            FS_OpenFileDirect(own_bin, FS_FindArchive("rom", 3), 0,
+                              (u32)(mem_rom->own_size + MB_AUTHCODE_SIZE), (u32)~0);
             file = own_bin;
             bak_pos = FS_GetPosition(file);
 
@@ -166,25 +166,25 @@ BOOL MB_ReadSegment(FSFile *file, void *buf, u32 len) {
 
         if (rest >= ROM_HEADER_SIZE_FULL + p_rom->main.size + p_rom->sub.size) {
             dst += ROM_HEADER_SIZE_FULL, rest -= ROM_HEADER_SIZE_FULL;
-            (void)FS_SeekFile(file, (int)(bak_pos + p_rom->main_rom_offset), FS_SEEK_SET);
-            (void)FS_ReadFile(file, dst, (int)p_rom->main.size);
+            FS_SeekFile(file, (int)(bak_pos + p_rom->main_rom_offset), FS_SEEK_SET);
+            FS_ReadFile(file, dst, (int)p_rom->main.size);
             dst += p_rom->main.size, rest -= p_rom->main.size;
 
-            (void)FS_SeekFile(file, (int)(bak_pos + p_rom->sub_rom_offset), FS_SEEK_SET);
-            (void)FS_ReadFile(file, dst, (int)p_rom->sub.size);
+            FS_SeekFile(file, (int)(bak_pos + p_rom->sub_rom_offset), FS_SEEK_SET);
+            FS_ReadFile(file, dst, (int)p_rom->sub.size);
             dst += p_rom->sub.size, rest -= p_rom->sub.size;
         }
 
         if (rest >= MB_AUTHCODE_SIZE) {
-            (void)FS_SeekFile(file, (int)(bak_pos + p_rom->own_size), FS_SEEK_SET);
-            (void)FS_ReadFile(file, dst, MB_AUTHCODE_SIZE);
+            FS_SeekFile(file, (int)(bak_pos + p_rom->own_size), FS_SEEK_SET);
+            FS_ReadFile(file, dst, MB_AUTHCODE_SIZE);
             ret = TRUE;
         }
 
-        (void)FS_SeekFile(file, (int)bak_pos, FS_SEEK_SET);
+        FS_SeekFile(file, (int)bak_pos, FS_SEEK_SET);
 
         if (is_own_binary) {
-            (void)FS_CloseFile(own_bin);
+            FS_CloseFile(own_bin);
 
             if (ret) {
                 const CARDRomRegion *p_header;
@@ -249,18 +249,18 @@ BOOL MB_RegisterFile(MBGameRegistry *game_reg, const void *buf) {
     enabled = OS_DisableInterrupts();
 
     if (!MBi_IsStarted()) {
-        (void)OS_RestoreInterrupts(enabled);
+        OS_RestoreInterrupts(enabled);
         return FALSE;
     }
 
     if (pPwork->file_num + 1 > MB_MAX_FILE) {
-        (void)OS_RestoreInterrupts(enabled);
+        OS_RestoreInterrupts(enabled);
         return FALSE;
     }
 
     for (i = 0; i < MB_MAX_FILE; i++) {
         if (pPwork->fileinfo[i].game_reg == game_reg) {
-            (void)OS_RestoreInterrupts(enabled);
+            OS_RestoreInterrupts(enabled);
             return FALSE;
         }
         if (pPwork->fileinfo[i].active == 0) {
@@ -270,7 +270,7 @@ BOOL MB_RegisterFile(MBGameRegistry *game_reg, const void *buf) {
     }
 
     if (i == MB_MAX_FILE) {
-        (void)OS_RestoreInterrupts(enabled);
+        OS_RestoreInterrupts(enabled);
         return FALSE;
     }
 
@@ -281,7 +281,7 @@ BOOL MB_RegisterFile(MBGameRegistry *game_reg, const void *buf) {
     MBi_MakeDownloadFileInfo(mdfi, buf, auth_code);
 
     if (FALSE == MBi_MakeBlockInfoTable(&pPwork->fileinfo[fileID].blockinfo_table, mdfi)) {
-        (void)OS_RestoreInterrupts(enabled);
+        OS_RestoreInterrupts(enabled);
         return FALSE;
     }
 
@@ -296,7 +296,7 @@ BOOL MB_RegisterFile(MBGameRegistry *game_reg, const void *buf) {
     pPwork->fileinfo[fileID].active = 1;
     pPwork->file_num++;
 
-    (void)OS_RestoreInterrupts(enabled);
+    OS_RestoreInterrupts(enabled);
 
     return TRUE;
 }
@@ -472,7 +472,7 @@ BOOL MBi_get_blockinfo(MB_BlockInfo *bi, MB_BlockInfoTable *table, u32 block,
             bi->size = (u32)mbc->block_size_max;
 
         bi->offset = (u32)(block_adr_offset + table->seg_head_offset[i]);
-        bi->child_address = (u32)(block_adr_offset + (u32)(si->recv_addr));
+        bi->child_address = (u32)(block_adr_offset + (si->recv_addr));
         bi->segment_no = (u8)i;
     }
 
