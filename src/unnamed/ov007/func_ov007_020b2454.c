@@ -34,7 +34,7 @@ void func_ov007_020b2454(Vector3 *out, Vector3 *r1) {
         r1->x = r1->x - 0xa000;
         break;
     }
-    VEC_Add((Vector3 *)base, (Vector3 *)&a, (Vector3 *)&b);
+    VEC_Add(base, &a, &b);
     out->x = base->x;
-    out->y = (int)(((long long)(0x1000 - w) * b.y + (long long)w * base->y) >> 12);
+    out->y = (((long long)(0x1000 - w) * b.y + (long long)w * base->y) >> 12);
 }
