@@ -45,7 +45,8 @@ u8 func_020729f4(ActionWalk *c) {
         if (c->iterator.mAction == 0) {
             continue;
         }
-        goto tail; /* kept: dispatching inside the loop instead re-lays the switch */
+        // goto: decode flag (0x3ac), reused m (0x3ac), switch inside the loop (139 words) still DIFF func_020729f4
+        goto tail;
     }
 
     switch (op & 0x1f) {
