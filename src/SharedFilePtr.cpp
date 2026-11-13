@@ -360,11 +360,11 @@ extern "C" int func_020178b4(int self) {
 /* A BMD LoadFile that rebases the file but, unlike dExtSimpleModel_c::LoadFile, neither
    registers it in the common model data array nor trims its allocation. */
 extern "C" void *func_0201787c(SharedFilePtr *ptr) {
-    void *filePtr;
+    BMD_File *filePtr;
     ptr->LoadFile();
-    filePtr = ptr->filePtr;
+    filePtr = (BMD_File *)ptr->filePtr;
     if (ptr->numRefs == 1 && filePtr != 0) {
-        dExtSimpleModel_c::UpdateFileOffsets(*(BMD_File *)filePtr);
+        dExtSimpleModel_c::UpdateFileOffsets(*filePtr);
     }
     return filePtr;
 }
