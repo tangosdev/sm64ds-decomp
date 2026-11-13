@@ -92,7 +92,7 @@ void daFPknBall_c::TryDropCoin() {
  * random unlocked character 0..2 and marks actor 279's byte at +0x42b. If none
  * of that happens, a roll below 4 spawns a coin as TryDropCoin does. */
 void daFPknBall_c::TryDropItem() {
-    u8 roll = (u8)(((u32)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10);
+    u8 roll = (((u32)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10);
     if (roll >= 4) {
         if (ClosestWithActorID(ACTOR_FPAKUN_BALL) != 0)
             return;
@@ -224,7 +224,7 @@ int daFPknBall_c::Behavior() {
     hitByID = mdCcAc_c.otherOwner;
     if (hitByID != 0) {
         if ((mdCcAc_c.hitFlags & 0x8000) == 0) {
-            hitActor = dActor_c::FindWithID((u32)hitByID);
+            hitActor = dActor_c::FindWithID(hitByID);
             if (hitActor != 0) {
                 if (mdCcAc_c.hitFlags & HIT_MEGA_CHARACTER) {
                     /* Knocked away from the hitter: a short hop into death state 8. */
