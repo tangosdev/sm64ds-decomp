@@ -643,12 +643,23 @@ int daObjBlockS_c::func_ov098_02138bfc()
     type = ((dActor_c *)a)->actorID;
     {
         Bool b;
-        b = (Bool)(type == ACTOR_ONIMASU); if (b) goto out;
-        b = (Bool)(type == ACTOR_DONKAKU); if (b) goto out;
-        b = (Bool)(type == ACTOR_DONGURU); if (b) goto out;
-        b = (Bool)(type == ACTOR_DOSUN); if (b) goto out;
-        b = (Bool)(type == ACTOR_BATAN); if (!b) return 0;
-    out:
+        do {
+            b = (Bool)(type == ACTOR_ONIMASU);
+            if (b)
+                break;
+            b = (Bool)(type == ACTOR_DONKAKU);
+            if (b)
+                break;
+            b = (Bool)(type == ACTOR_DONGURU);
+            if (b)
+                break;
+            b = (Bool)(type == ACTOR_DOSUN);
+            if (b)
+                break;
+            b = (Bool)(type == ACTOR_BATAN);
+            if (!b)
+                return 0;
+        } while (0);
         return 1;
     }
 }
@@ -1074,51 +1085,48 @@ void daObjBlockS_c::UpdateModelMatrix() {
     daPly_c *obj = mHoldingPlayer;
     int b;
 
-    if (obj == 0) goto other;
-    b = (int)((mFlags & 0x4000) != 0);
-    if (b == 0) goto other;
-    if (obj->mCarryMatrix == 0)
-        goto other;
-
+    if (obj != 0) {
+        b = (int)((mFlags & 0x4000) != 0);
+        if (b != 0 && obj->mCarryMatrix != 0) {
+            char *r4 = (char *)func_ov002_020e496c(obj);
+            int r5 = 0;
+            if (mHoldingPlayer->IsFrontSliding() != 0)
+                r5 = 1;
+            if (mHoldingPlayer->LostGrabbedObject() != 0) {
+                if (((u32) * (int *)(r4 + 0x58) << 4) >> 0x10 < 0xe)
+                    r5 = 1;
+            }
+            if (mHoldingPlayer->param1 == 2) {
+                r5 = (r5 + 2) & 0xff;
+            }
+            Math_Function_0203b14c(&mCarryOffsetX, *(int *)((char *)data_ov098_0213bf60 + r5 * 0xc),
+                                   0x800, 0x3e8000, 4);
+            Math_Function_0203b14c(&mCarryOffsetY, *(int *)((char *)data_ov098_0213bf64 + r5 * 0xc),
+                                   0x800, 0x3e8000, 4);
+            Math_Function_0203b14c(&mCarryOffsetZ, *(int *)((char *)data_ov098_0213bf68 + r5 * 0xc),
+                                   0x800, 0x3e8000, 4);
+            {
+                char *res = (char *)UpdateCarry(*mHoldingPlayer, *(Vector3 *)&mCarryOffsetX);
+                mModel.mat4x3 = *(struct Matrix4x3 *)res;
+            }
+            mFlags |= 0x4000000;
+            return;
+        }
+    }
     {
-        char *r4 = (char *)func_ov002_020e496c(obj);
-        int r5 = 0;
-        if (mHoldingPlayer->IsFrontSliding() != 0)
-            r5 = 1;
-        if (mHoldingPlayer->LostGrabbedObject() != 0) {
-            if (((u32)*(int *)(r4 + 0x58) << 4) >> 0x10 < 0xe) r5 = 1;
+        Vector3 pos = mPos;
+        pos.y -= mClsnYOffset;
+        Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+        mModel.mat4x3.m[9] = pos.x >> 3;
+        mModel.mat4x3.m[10] = pos.y >> 3;
+        mModel.mat4x3.m[11] = pos.z >> 3;
+        mCarryOffsetX = 0;
+        mCarryOffsetY = 0;
+        mCarryOffsetZ = 0;
+        if (mWithMeshClsn.IsOnGround() != 0) {
+            mFlags &= ~0x4000000;
         }
-        if (mHoldingPlayer->param1 == 2) {
-            r5 = (r5 + 2) & 0xff;
-        }
-        Math_Function_0203b14c(&mCarryOffsetX, *(int *)((char *)data_ov098_0213bf60 + r5 * 0xc),
-                               0x800, 0x3e8000, 4);
-        Math_Function_0203b14c(&mCarryOffsetY, *(int *)((char *)data_ov098_0213bf64 + r5 * 0xc),
-                               0x800, 0x3e8000, 4);
-        Math_Function_0203b14c(&mCarryOffsetZ, *(int *)((char *)data_ov098_0213bf68 + r5 * 0xc),
-                               0x800, 0x3e8000, 4);
-        {
-            char *res = (char *)UpdateCarry(*mHoldingPlayer, *(Vector3 *)&mCarryOffsetX);
-            mModel.mat4x3 = *(struct Matrix4x3 *)res;
-        }
-        mFlags |= 0x4000000;
     }
-    return;
-
-other: {
-    Vector3 pos = mPos;
-    pos.y -= mClsnYOffset;
-    Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.m[9] = pos.x >> 3;
-    mModel.mat4x3.m[10] = pos.y >> 3;
-    mModel.mat4x3.m[11] = pos.z >> 3;
-    mCarryOffsetX = 0;
-    mCarryOffsetY = 0;
-    mCarryOffsetZ = 0;
-    if (mWithMeshClsn.IsOnGround() != 0) {
-        mFlags &= ~0x4000000;
-    }
-}
 }
 
 /* Disables the collider, then releases the model and collision files
@@ -1201,24 +1209,23 @@ int daObjBlockS_c::Behavior()
                 (u32)Particle::System::New(mParticleHandle1, kPtclDeathA, v.x, v.y, v.z, 0, 0);
             mParticleHandle2 =
                 Particle::System::NewCleanParticle(mParticleHandle2, kPtclDeathB, v.x, v.y, v.z, 0);
-            goto done;
+        } else {
+            SpawnBreakCoins();
+            x = mPosX;
+            z = mPosZ;
+            y = mPosY + 0x28000;
+            vec.x = x;
+            vec.y = y;
+            vec.z = z;
+            ((int *)&vec2)[0] = ((int *)&vec)[0];
+            ((int *)&vec2)[1] = ((int *)&vec)[1];
+            ((int *)&vec2)[2] = ((int *)&vec)[2];
+            DisappearPoofDustAt(vec2);
+            Crate_SetState(this, STATE_BROKEN);
+            return 1;
         }
-        SpawnBreakCoins();
-        x = mPosX;
-        z = mPosZ;
-        y = mPosY + 0x28000;
-        vec.x = x;
-        vec.y = y;
-        vec.z = z;
-        ((int *)&vec2)[0] = ((int *)&vec)[0];
-        ((int *)&vec2)[1] = ((int *)&vec)[1];
-        ((int *)&vec2)[2] = ((int *)&vec)[2];
-        DisappearPoofDustAt(vec2);
-        Crate_SetState(this, STATE_BROKEN);
-        return 1;
     }
 
-done:
     ((int *)&t)[0] = mPosX;
     ((int *)&t)[1] = mPosY;
     ((int *)&t)[2] = mPosZ;

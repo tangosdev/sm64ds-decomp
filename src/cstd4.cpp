@@ -847,8 +847,6 @@ int __pformatter(int (*WriteProc)(void *, const char *, size_t), void *WriteProc
 
         case 0xFF:
         default:
-        /* invalid_conversion gotos kept, as in MSL's __pformatter: a failed-conversion
-           test after the switch instead grows it (0x848) */
         invalid_conversion:
             num_chars += (n = strlen((const char *)curr_format));
             if (n && !(*WriteProc)(WriteProcArg, (const char *)curr_format, n))
