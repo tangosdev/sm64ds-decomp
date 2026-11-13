@@ -99,7 +99,7 @@ int func_ov002_020ef228(dBgCh_Actr *clsn, dActor_c *other);
 int func_ov002_020e496c(daPly_c *c);
 int Math_Function_0203b14c(int *out, int a1, int a2, int a3, int a4);
 void Vec3_Lsl(Vector3 *d, const Vector3 *s, int sh);
-int *Vec3_LslInPlace(int *v, int sh);
+int *Vec3_LslInPlace(Vector3 *v, int sh);
 /* Real definition: func_0201267c (arm9). The methods call through it so the
    name stays unmangled. */
 
@@ -463,15 +463,16 @@ void daBmb_c::func_ov102_0214beb4() {
 void daBmb_c::State1() {
     if (mChasePlayer == 0) {
         mAnmModel.speed = 0x800;
-        ApproachLinear(mPrevAngleY, *(short *)&mTargetAngY, 0x400);
+        ApproachLinear(mPrevAngleY, (short)mTargetAngY, 0x400);
     } else {
         mAnmModel.speed = 0x1000;
-        ApproachLinear(mPrevAngleY, *(short *)&mTargetAngY, 0x800);
+        ApproachLinear(mPrevAngleY, (short)mTargetAngY, 0x800);
     }
     mAngleY = mPrevAngleY;
     mAnmModel.dExtFrameCtrl_c::Advance();
     if (mState == 2) return;
-    if (mPrevAngleY != *(short *)&mTargetAngY) return;
+    if (mPrevAngleY != (short)mTargetAngY)
+        return;
     func_ov102_0214c0b8();
 }
 
@@ -777,7 +778,7 @@ void daBmb_c::func_ov102_0214b53c() {
                     p.x = data_020a0e68.m[9];
                     p.y = data_020a0e68.m[10];
                     p.z = data_020a0e68.m[11];
-                    Vec3_LslInPlace((int *)&p, 3);
+                    Vec3_LslInPlace(&p, 3);
                     daPly_c *eater = mEatingPlayer;
                     u16 a8c = *((volatile u16 *)&eater->mAngleX); /* pin angle loads */
                     u16 a8e = *((volatile u16 *)&eater->mAngleY);
