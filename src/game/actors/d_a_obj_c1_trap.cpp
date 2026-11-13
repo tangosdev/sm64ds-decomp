@@ -200,7 +200,7 @@ int daObjC1_Trap_c::Behavior() {
         return 1;
     }
 
-    TrapState *states = (TrapState *)&data_ov010_02112d28;
+    TrapState *states = &data_ov010_02112d28.state0;
     (this->*states[mState])();
     UpdateModelTransform();
     UpdateCollisionTransform();
