@@ -304,7 +304,7 @@ void daObjFl_Puzzle_c::ShakeThenSlide(int dx, int dz, int slideTicks) {
         Sound::PlayBank3(0xe7, mCamSpacePos);
     }
 
-    if ((int)mStepTimer >= slideTicks + 0x14) {
+    if (mStepTimer >= slideTicks + 0x14) {
         mState = PIECE_STATE_WAIT;
         mStepActive = 0;
         return;
