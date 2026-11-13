@@ -241,7 +241,7 @@ void dScMgTrampoline2_c::InitDisplay() {
         sp0 = 0;
         MI_CpuFill16(dst, sp0, 0x4000);
     }
-    DecompressLZ16(bgChar, (void *)((char *)G2_GetBG2CharPtr() + 0x4000));
+    DecompressLZ16(bgChar, ((char *)G2_GetBG2CharPtr() + 0x4000));
     DecompressLZ16(bgScr, G2_GetBG2ScrPtr());
     GX_LoadBGPltt(bgPltt, 0x1a0, 0x60);
 
@@ -274,7 +274,7 @@ s32 dScMgTrampoline2_c::InitResources() {
     G3X_AlphaBlend(true);
     InitialiseVramGlobals();
     G2_SetBG0Priority(1);
-    fov = FX_Div(0xc0000, (s32)data_02082414);
+    fov = FX_Div(0xc0000, data_02082414);
     this->mCameras[0].mLookAt.x = 0;
     this->mCameras[0].mLookAt.y = -0x64000;
     this->mCameras[0].mLookAt.z = 0;
@@ -395,7 +395,7 @@ void dScMgTrampoline2_c::StateIntro() {
         volatile s16 old9c = mTouchX;
         volatile s16 old9e = mTouchY;
         int mixRaw = sTrmp2IntroToX * t + sTrmp2IntroFromX * (0x1000 - t);
-        mTouchX = (s16)(mixRaw >> 12);
+        mTouchX = (mixRaw >> 12);
         mTouchY = sTrmpStartTouchY;
 
         mTouchY +=
@@ -573,7 +573,7 @@ void dScMgTrampoline2_c::UpdateTouchInput() {
         mDragSoundHandle =
             func_02012468(mDragSoundHandle, 2, 0x1b0, 2, 0, func_020126e8(mTouchX << 12), 0, 0);
     } else {
-        b = (int)(TOUCH_REC(gTouchHeld)[i][0] == 0 && TOUCH_REC(gTouchEdge)[i][0] != 0);
+        b = (TOUCH_REC(gTouchHeld)[i][0] == 0 && TOUCH_REC(gTouchEdge)[i][0] != 0);
         if (b != 0) {
             mTouchReleased = 1;
         }
@@ -641,10 +641,10 @@ extern "C" {
 int Trmp2_PickFaceA(int x) {
     int r;
     if (x < 5) {
-        r = (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
+        r = (((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
         return r < 0xc00 ? 4 : 5;
     }
-    r = (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
+    r = (((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
     return r < 0xc00 ? 6 : 7;
 }
 }
@@ -653,14 +653,14 @@ extern "C" {
 int Trmp2_PickFaceB(int a) {
     int r;
     if (a < 5) {
-        r = (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
+        r = (((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
         if (r < 0xc00)
             return 4;
         if (r < 0xe00)
             return 5;
         return 8;
     }
-    r = (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
+    r = (((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
     if (r < 0xc00)
         return 6;
     if (r < 0xe00)
@@ -727,11 +727,11 @@ void dScMgTrampoline2_c::SpawnWave() {
                     occupancy |= Trmp2_OccupancyBits(column, 1);
                 } else if ((savedOccupancy & leftBit) != 0) {
                     kinds[i] = kind;
-                    faces[i] = (short)Trmp2_PickFaceA(kind);
+                    faces[i] = Trmp2_PickFaceA(kind);
                     occupancy |= Trmp2_OccupancyBits(column, 0);
                 } else {
                     kinds[i] = kind;
-                    faces[i] = (short)Trmp2_PickFaceB(kind);
+                    faces[i] = Trmp2_PickFaceB(kind);
                     switch (faces[i]) {
                     case 4:
                     case 5:
@@ -958,7 +958,7 @@ void dScMgTrampoline2_c::InitBrush(int layer) {
  * into the current touch-screen layer. The same body as dScMgTrampoline_c's,
  * with its own scratch buffer. */
 void dScMgTrampoline2_c::PaintSquare(int x_base, int y, int val, int n) {
-    void *obj = (void *)this;
+    void *obj = this;
 
     int half;
     int x0;
@@ -993,7 +993,7 @@ void dScMgTrampoline2_c::PaintSquare(int x_base, int y, int val, int n) {
                             ret = (char *)G2_GetBG2CharPtr();
                             break;
                         case 3:
-                            ret = (void *)G2_GetBG3CharPtr();
+                            ret = G2_GetBG3CharPtr();
                             break;
                         default:
                             return;
@@ -1031,7 +1031,7 @@ void Trmp2Spinner_LoadAll(int x, int count) {
     sTrmp2Spinners = (unsigned char *)x;
     sTrmp2SpinnerCount = count;
     for (i = 0; i < sTrmp2SpinnerCount; i++) {
-        Trmp2Spinner_SetModel((void *)(sTrmp2Spinners + i * 0x78));
+        Trmp2Spinner_SetModel((sTrmp2Spinners + i * 0x78));
     }
 }
 }
@@ -1137,17 +1137,17 @@ void Trmp2Spinner_Init(void *r0, int value) {
     spinner->mVel.x = drop;
     spinner->mVel.y = drop;
     spinner->mVel.z = 0;
-    unsigned int rnd2 = (unsigned int)RandomIntInternal(&data_0209e650.value);
+    unsigned int rnd2 = RandomIntInternal(&data_0209e650.value);
     int *p1 = &spinner->mPos.x;
     int v1 = *p1 + ((((rnd2 & 0x7fffffff) >> 0x13) - 0x800) * 0x40);
     *p1 = v1;
     int rnd3 = RandomIntInternal(&data_0209e650.value);
     int *p2 = &spinner->mVel.x;
-    int adj3 = (int)(((unsigned int)rnd3 & 0x7fffffff) >> 0x13);
+    int adj3 = (((unsigned int)rnd3 & 0x7fffffff) >> 0x13);
     *p2 -= adj3 >> 1;
     int rnd4 = RandomIntInternal(&data_0209e650.value);
     int *p3 = &spinner->mVel.y;
-    int adj4 = (int)(((unsigned int)rnd4 & 0x7fffffff) >> 0x13);
+    int adj4 = (((unsigned int)rnd4 & 0x7fffffff) >> 0x13);
     *p3 -= adj4 >> 1;
     func_02016a14(spinner, 0);
     func_02016a04(spinner, 0);
