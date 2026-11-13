@@ -384,7 +384,7 @@ s32 dScMgSound_c::InitResources() {
     Deallocate(objPltt);
 
     Camera_InitPresenterView(&mCamera);
-    if (Presenter_Load(&mTable) == 0)
+    if (mTable.Load() == 0)
         return 0;
 
     mTable.mQuiet = 1;
@@ -434,7 +434,7 @@ s32 dScMgSound_c::Behavior() {
             if (mResultTimer == 0) {
                 if (mTries != 0) {
                     mTable.mQuiet = 0;
-                    Presenter_PlayCheer(&mTable);
+                    mTable.PlayCheer();
                     if (mTries == 3)
                         Mg_SetPerfectBanner();
                     Mg_SetSharedState(MG_STATE_ROUND_CLEAR);
@@ -469,7 +469,7 @@ s32 dScMgSound_c::Behavior() {
             mResultTimer--;
             if ((s16)mResultTimer <= 0) {
                 mTable.mQuiet = 0;
-                Presenter_PlayLose((char *)&mTable);
+                mTable.PlayLose();
                 Mg_SetSharedState(MG_STATE_GAME_OVER);
                 mPromptEnabled = 0;
                 mResultTimer = 0;
@@ -478,7 +478,7 @@ s32 dScMgSound_c::Behavior() {
         break;
     }
 
-    Presenter_Update((char *)&mTable);
+    mTable.Update();
     return 1;
 }
 
@@ -490,7 +490,7 @@ s32 dScMgSound_c::Render() {
     DrawTries();
     DrawWinSpriteB();
     DrawWinSpriteA();
-    Presenter_Draw(&mTable);
+    mTable.Draw();
     return 1;
 }
 
@@ -537,7 +537,7 @@ void dScMgSound_c::StartRound(int mode) {
 
 /* Slot 20, OnNewRecord: plays the table model's win animation. */
 void dScMgSound_c::OnNewRecord() {
-    Presenter_PlayCheer(&mTable);
+    mTable.PlayCheer();
 }
 
 void dScMgSound_c::ResetRound() {
@@ -597,7 +597,7 @@ void dScMgSound_c::ResetRound() {
     mTouchCount = 0;
     mResultTimer = 0;
 
-    Presenter_ResetPose(&mTable);
+    mTable.ResetPose();
 }
 
 /* Choose distinct pitches, make one pair of each, then deal the pairs
@@ -804,7 +804,7 @@ void dScMgSound_c::Note_StateOpening(int idx) {
     }
 
     if (mTouchCount == 1)
-        Presenter_PlayCheerLoop(&mTable);
+        mTable.PlayCheerLoop();
 }
 
 void dScMgSound_c::Note_StateOpen(int slot) {
@@ -921,14 +921,14 @@ void dScMgSound_c::CheckPair() {
         mNotes[mQueue[0] >> 8].alive = 0;
         mNotes[mQueue[1] >> 8].alive = 0;
         func_02012790(0x26);
-        Presenter_PlayMatch(&mTable);
+        mTable.PlayMatch();
     } else {
         mNotes[mQueue[0] >> 8].state = 3;
         mNotes[mQueue[1] >> 8].state = 3;
         func_02012790(0xe);
         mTries--;
         func_02012790(0x12f);
-        Presenter_PlayMiss(&mTable);
+        mTable.PlayMiss();
     }
     mQueue[1] = 0;
     mQueue[0] = mQueue[1];

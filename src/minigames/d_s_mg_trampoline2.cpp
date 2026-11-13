@@ -52,6 +52,7 @@ enum d_s_mg_trampoline2_AssetId {
 #include "TrmpItem.h"
 #include "Trmp2Spinner.h"
 #include "decl_common.h"
+#include "dMgTrmplnShared.h"
 #include "PlayerInput.h"
 #include "Sound.h"
 #include "math/MtxStack.h"

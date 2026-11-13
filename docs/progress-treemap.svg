@@ -881,11 +881,11 @@ matched: yes</title></rect><rect x="208.86" y="112.25" width="2.30" height="4.67
 module: arm9
 addr: 0x0200f9f4
 size: 16 bytes
-matched: yes</title></rect><rect x="211.16" y="112.25" width="19.52" height="4.67" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0200fa04
+matched: yes</title></rect><rect x="211.16" y="112.25" width="19.52" height="4.67" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8dActor_c13func_0200fa04EP7Vector3i
 module: arm9
 addr: 0x0200fa04
 size: 136 bytes
-matched: yes</title></rect><rect x="230.69" y="112.25" width="8.04" height="4.67" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0200fa8c
+matched: yes</title></rect><rect x="230.69" y="112.25" width="8.04" height="4.67" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8dActor_c13func_0200fa8cEi
 module: arm9
 addr: 0x0200fa8c
 size: 56 bytes
@@ -905,7 +905,7 @@ matched: yes</title></rect><rect x="285.81" y="112.25" width="8.04" height="4.67
 module: arm9
 addr: 0x0200fc0c
 size: 56 bytes
-matched: yes</title></rect><rect x="293.85" y="112.25" width="19.52" height="4.67" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0200fc44
+matched: yes</title></rect><rect x="293.85" y="112.25" width="19.52" height="4.67" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8dActor_c13func_0200fc44EP7Vector3i
 module: arm9
 addr: 0x0200fc44
 size: 136 bytes
@@ -1069,7 +1069,7 @@ matched: yes</title></rect><rect x="213.29" y="118.31" width="18.21" height="4.7
 module: arm9
 addr: 0x0201054c
 size: 128 bytes
-matched: yes</title></rect><rect x="231.50" y="118.31" width="11.38" height="4.71" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020105cc
+matched: yes</title></rect><rect x="231.50" y="118.31" width="11.38" height="4.71" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8dActor_c13func_020105ccEj
 module: arm9
 addr: 0x020105cc
 size: 80 bytes
@@ -1081,7 +1081,7 @@ matched: yes</title></rect><rect x="278.17" y="118.31" width="43.25" height="4.7
 module: arm9
 addr: 0x02010714
 size: 304 bytes
-matched: yes</title></rect><rect x="5.00" y="123.03" width="20.92" height="4.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02010844
+matched: yes</title></rect><rect x="5.00" y="123.03" width="20.92" height="4.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8dActor_c13func_02010844EP7Vector3s
 module: arm9
 addr: 0x02010844
 size: 128 bytes
@@ -2165,7 +2165,7 @@ matched: yes</title></rect><rect x="27.17" y="171.33" width="9.24" height="5.81"
 module: arm9
 addr: 0x02016204
 size: 80 bytes
-matched: yes</title></rect><rect x="36.41" y="171.33" width="6.47" height="5.81" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15dExtAnm2Model_c4CopyERKS_Pcj
+matched: yes</title></rect><rect x="36.41" y="171.33" width="6.47" height="5.81" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15dExtAnm2Model_c4CopyERKS_PcP8BCA_File
 module: arm9
 addr: 0x02016254
 size: 56 bytes
@@ -2177,7 +2177,7 @@ matched: yes</title></rect><rect x="45.65" y="171.33" width="3.70" height="5.81"
 module: arm9
 addr: 0x020162a4
 size: 32 bytes
-matched: yes</title></rect><rect x="49.34" y="171.33" width="10.62" height="5.81" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15dExtAnm2Model_c13Func_020162C4Ejiit
+matched: yes</title></rect><rect x="49.34" y="171.33" width="10.62" height="5.81" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15dExtAnm2Model_c13Func_020162C4EP8BCA_Fileiit
 module: arm9
 addr: 0x020162c4
 size: 92 bytes
@@ -15769,7 +15769,7 @@ matched: yes</title></rect><rect x="387.75" y="467.50" width="3.50" height="11.4
 module: ov002
 addr: 0x020d62f8
 size: 60 bytes
-matched: yes</title></rect><rect x="391.26" y="467.50" width="3.04" height="11.40" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daPly_c19func_ov002_020d6334Ei
+matched: yes</title></rect><rect x="391.26" y="467.50" width="3.04" height="11.40" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daPly_c19func_ov002_020d6334EP8dActor_c
 module: ov002
 addr: 0x020d6334
 size: 52 bytes
@@ -16725,7 +16725,7 @@ matched: yes</title></rect><rect x="417.36" y="649.87" width="15.69" height="5.6
 module: ov002
 addr: 0x020e700c
 size: 132 bytes
-matched: yes</title></rect><rect x="433.06" y="649.87" width="13.79" height="5.60" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daStar_c13CollectNoPoseEi
+matched: yes</title></rect><rect x="433.06" y="649.87" width="13.79" height="5.60" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daStar_c13CollectNoPoseEP7daPly_c
 module: ov002
 addr: 0x020e7090
 size: 116 bytes
@@ -20009,47 +20009,47 @@ matched: yes</title></rect><rect x="1593.80" y="27.00" width="1.20" height="22.3
 module: ov005
 addr: 0x020c21ec
 size: 100 bytes
-matched: yes</title></rect><rect x="615.67" y="81.37" width="27.75" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Camera_ProjectToScreen16
+matched: yes</title></rect><rect x="615.67" y="81.37" width="27.75" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z24Camera_ProjectToScreen16P8MgCameraPvPs
 module: ov006
 addr: 0x020bfec0
 size: 312 bytes
-matched: yes</title></rect><rect x="643.42" y="81.37" width="28.11" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Camera_ProjectToScreen
+matched: yes</title></rect><rect x="643.42" y="81.37" width="28.11" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z22Camera_ProjectToScreenP8MgCameraPvPiS2_
 module: ov006
 addr: 0x020bfff8
 size: 316 bytes
-matched: yes</title></rect><rect x="671.53" y="81.37" width="27.04" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Camera_UpdateMatrices
+matched: yes</title></rect><rect x="671.53" y="81.37" width="27.04" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z21Camera_UpdateMatricesP8MgCamera
 module: ov006
 addr: 0x020c0134
 size: 304 bytes
-matched: yes</title></rect><rect x="698.57" y="81.37" width="14.23" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>MascotWalker_StatePause
+matched: yes</title></rect><rect x="698.57" y="81.37" width="14.23" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12MascotWalker10StatePauseEv
 module: ov006
 addr: 0x020c0264
 size: 160 bytes
-matched: yes</title></rect><rect x="712.81" y="81.37" width="8.54" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>MascotWalker_StartPause
+matched: yes</title></rect><rect x="712.81" y="81.37" width="8.54" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12MascotWalker10StartPauseEv
 module: ov006
 addr: 0x020c0304
 size: 96 bytes
-matched: yes</title></rect><rect x="721.35" y="81.37" width="47.68" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>MascotWalker_StateWalk
+matched: yes</title></rect><rect x="721.35" y="81.37" width="47.68" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12MascotWalker9StateWalkEv
 module: ov006
 addr: 0x020c0364
 size: 536 bytes
-matched: yes</title></rect><rect x="769.03" y="81.37" width="31.31" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>MascotWalker_StartNextPath
+matched: yes</title></rect><rect x="769.03" y="81.37" width="31.31" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12MascotWalker13StartNextPathEv
 module: ov006
 addr: 0x020c057c
 size: 352 bytes
-matched: yes</title></rect><rect x="800.34" y="81.37" width="17.44" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>MascotWalker_UpdateMatrix
+matched: yes</title></rect><rect x="800.34" y="81.37" width="17.44" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12MascotWalker12UpdateMatrixEv
 module: ov006
 addr: 0x020c06dc
 size: 196 bytes
-matched: yes</title></rect><rect x="817.78" y="81.37" width="6.40" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>MascotWalker_Draw
+matched: yes</title></rect><rect x="817.78" y="81.37" width="6.40" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12MascotWalker4DrawEv
 module: ov006
 addr: 0x020c07a0
 size: 72 bytes
-matched: yes</title></rect><rect x="824.18" y="81.37" width="28.82" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>MascotWalker_Update
+matched: yes</title></rect><rect x="824.18" y="81.37" width="28.82" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12MascotWalker6UpdateEv
 module: ov006
 addr: 0x020c07e8
 size: 324 bytes
-matched: yes</title></rect><rect x="853.00" y="81.37" width="18.15" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>MascotWalker_Load
+matched: yes</title></rect><rect x="853.00" y="81.37" width="18.15" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12MascotWalker4LoadEv
 module: ov006
 addr: 0x020c092c
 size: 204 bytes
@@ -20061,95 +20061,95 @@ matched: yes</title></rect><rect x="878.27" y="81.37" width="8.54" height="7.51"
 module: ov006
 addr: 0x020c0a48
 size: 96 bytes
-matched: yes</title></rect><rect x="886.81" y="81.37" width="7.12" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Camera_InitDealerView
+matched: yes</title></rect><rect x="886.81" y="81.37" width="7.12" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z21Camera_InitDealerViewP8MgCamera
 module: ov006
 addr: 0x020c0aa8
 size: 80 bytes
-matched: yes</title></rect><rect x="893.92" y="81.37" width="11.03" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Dealer_ResetMatrices
+matched: yes</title></rect><rect x="893.92" y="81.37" width="11.03" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Dealer13ResetMatricesEv
 module: ov006
 addr: 0x020c0af8
 size: 124 bytes
-matched: yes</title></rect><rect x="904.96" y="81.37" width="23.84" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Dealer_StateWin
+matched: yes</title></rect><rect x="904.96" y="81.37" width="23.84" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Dealer8StateWinEv
 module: ov006
 addr: 0x020c0b74
 size: 268 bytes
-matched: yes</title></rect><rect x="928.80" y="81.37" width="9.25" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Dealer_PlayWin
+matched: yes</title></rect><rect x="928.80" y="81.37" width="9.25" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Dealer7PlayWinEv
 module: ov006
 addr: 0x020c0c80
 size: 104 bytes
-matched: yes</title></rect><rect x="938.05" y="81.37" width="11.39" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Dealer_StateLose
+matched: yes</title></rect><rect x="938.05" y="81.37" width="11.39" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Dealer9StateLoseEv
 module: ov006
 addr: 0x020c0ce8
 size: 128 bytes
-matched: yes</title></rect><rect x="949.43" y="81.37" width="12.10" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Dealer_PlayLose
+matched: yes</title></rect><rect x="949.43" y="81.37" width="12.10" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Dealer8PlayLoseEv
 module: ov006
 addr: 0x020c0d68
 size: 136 bytes
-matched: yes</title></rect><rect x="961.53" y="81.37" width="13.88" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Dealer_StateSwap
+matched: yes</title></rect><rect x="961.53" y="81.37" width="13.88" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Dealer9StateSwapEv
 module: ov006
 addr: 0x020c0df0
 size: 156 bytes
-matched: yes</title></rect><rect x="975.41" y="81.37" width="9.96" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Dealer_StartSwap
+matched: yes</title></rect><rect x="975.41" y="81.37" width="9.96" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Dealer9StartSwapEv
 module: ov006
 addr: 0x020c0e8c
 size: 112 bytes
-matched: yes</title></rect><rect x="985.37" y="81.37" width="1.42" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Dealer_IsAnimDone
+matched: yes</title></rect><rect x="985.37" y="81.37" width="1.42" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Dealer10IsAnimDoneEv
 module: ov006
 addr: 0x020c0efc
 size: 16 bytes
-matched: yes</title></rect><rect x="986.80" y="81.37" width="12.81" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Dealer_IsBusy
+matched: yes</title></rect><rect x="986.80" y="81.37" width="12.81" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Dealer6IsBusyEv
 module: ov006
 addr: 0x020c0f0c
 size: 144 bytes
-matched: yes</title></rect><rect x="999.61" y="81.37" width="40.56" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Dealer_StateReveal
+matched: yes</title></rect><rect x="999.61" y="81.37" width="40.56" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Dealer11StateRevealEv
 module: ov006
 addr: 0x020c0f9c
 size: 456 bytes
-matched: yes</title></rect><rect x="1040.17" y="81.37" width="8.18" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Dealer_StartReveal
+matched: yes</title></rect><rect x="1040.17" y="81.37" width="8.18" height="7.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Dealer11StartRevealEiPs
 module: ov006
 addr: 0x020c1164
 size: 92 bytes
-matched: yes</title></rect><rect x="615.67" y="88.89" width="71.57" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Dealer_StateDeal
+matched: yes</title></rect><rect x="615.67" y="88.89" width="71.57" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Dealer9StateDealEv
 module: ov006
 addr: 0x020c11c0
 size: 608 bytes
-matched: yes</title></rect><rect x="687.23" y="88.89" width="18.36" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Dealer_StartDeal
+matched: yes</title></rect><rect x="687.23" y="88.89" width="18.36" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Dealer9StartDealEsPs
 module: ov006
 addr: 0x020c1420
 size: 156 bytes
-matched: yes</title></rect><rect x="705.59" y="88.89" width="38.61" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Dealer_StateShuffle
+matched: yes</title></rect><rect x="705.59" y="88.89" width="38.61" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Dealer12StateShuffleEv
 module: ov006
 addr: 0x020c14bc
 size: 328 bytes
-matched: yes</title></rect><rect x="744.20" y="88.89" width="20.72" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Dealer_StartShuffle
+matched: yes</title></rect><rect x="744.20" y="88.89" width="20.72" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Dealer12StartShuffleEisPs
 module: ov006
 addr: 0x020c1604
 size: 176 bytes
-matched: yes</title></rect><rect x="764.92" y="88.89" width="11.77" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Dealer_IsIdleAtRest
+matched: yes</title></rect><rect x="764.92" y="88.89" width="11.77" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Dealer12IsIdleAtRestEv
 module: ov006
 addr: 0x020c16b4
 size: 100 bytes
-matched: yes</title></rect><rect x="776.69" y="88.89" width="8.47" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Dealer_IsIdle
+matched: yes</title></rect><rect x="776.69" y="88.89" width="8.47" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Dealer6IsIdleEv
 module: ov006
 addr: 0x020c1718
 size: 72 bytes
-matched: yes</title></rect><rect x="785.16" y="88.89" width="0.47" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Dealer_StateIdle
+matched: yes</title></rect><rect x="785.16" y="88.89" width="0.47" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Dealer9StateIdleEv
 module: ov006
 addr: 0x020c1760
 size: 4 bytes
-matched: yes</title></rect><rect x="785.63" y="88.89" width="18.83" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Dealer_PlayIdle
+matched: yes</title></rect><rect x="785.63" y="88.89" width="18.83" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Dealer8PlayIdleEv
 module: ov006
 addr: 0x020c1764
 size: 160 bytes
-matched: yes</title></rect><rect x="804.47" y="88.89" width="54.14" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Dealer_Draw
+matched: yes</title></rect><rect x="804.47" y="88.89" width="54.14" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Dealer4DrawEv
 module: ov006
 addr: 0x020c1804
 size: 460 bytes
-matched: yes</title></rect><rect x="858.61" y="88.89" width="21.66" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Dealer_Update
+matched: yes</title></rect><rect x="858.61" y="88.89" width="21.66" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Dealer6UpdateEv
 module: ov006
 addr: 0x020c19d0
 size: 184 bytes
-matched: yes</title></rect><rect x="880.27" y="88.89" width="56.03" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Dealer_Load
+matched: yes</title></rect><rect x="880.27" y="88.89" width="56.03" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Dealer4LoadEv
 module: ov006
 addr: 0x020c1a88
 size: 476 bytes
@@ -20161,31 +20161,31 @@ matched: yes</title></rect><rect x="969.73" y="88.89" width="36.25" height="5.68
 module: ov006
 addr: 0x020c1d80
 size: 308 bytes
-matched: yes</title></rect><rect x="1005.98" y="88.89" width="8.00" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Camera_InitSlotsView
+matched: yes</title></rect><rect x="1005.98" y="88.89" width="8.00" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z20Camera_InitSlotsViewP8MgCamera
 module: ov006
 addr: 0x020c1eb4
 size: 68 bytes
-matched: yes</title></rect><rect x="1013.98" y="88.89" width="1.41" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Mascot_StopLooking
+matched: yes</title></rect><rect x="1013.98" y="88.89" width="1.41" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Mascot11StopLookingEv
 module: ov006
 addr: 0x020c1ef8
 size: 12 bytes
-matched: yes</title></rect><rect x="1015.40" y="88.89" width="8.47" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Mascot_LookAt
+matched: yes</title></rect><rect x="1015.40" y="88.89" width="8.47" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Mascot6LookAtEPi
 module: ov006
 addr: 0x020c1f04
 size: 72 bytes
-matched: yes</title></rect><rect x="1023.87" y="88.89" width="24.48" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Mascot_UpdateMatrix
+matched: yes</title></rect><rect x="1023.87" y="88.89" width="24.48" height="5.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Mascot12UpdateMatrixEv
 module: ov006
 addr: 0x020c1f4c
 size: 208 bytes
-matched: yes</title></rect><rect x="615.67" y="94.57" width="51.31" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Mascot_Draw
+matched: yes</title></rect><rect x="615.67" y="94.57" width="51.31" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Mascot4DrawEv
 module: ov006
 addr: 0x020c201c
 size: 296 bytes
-matched: yes</title></rect><rect x="666.98" y="94.57" width="2.77" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Mascot_Update
+matched: yes</title></rect><rect x="666.98" y="94.57" width="2.77" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Mascot6UpdateEv
 module: ov006
 addr: 0x020c2144
 size: 16 bytes
-matched: yes</title></rect><rect x="669.75" y="94.57" width="24.96" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Mascot_Load
+matched: yes</title></rect><rect x="669.75" y="94.57" width="24.96" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Mascot4LoadEv
 module: ov006
 addr: 0x020c2154
 size: 144 bytes
@@ -20197,87 +20197,87 @@ matched: yes</title></rect><rect x="704.42" y="94.57" width="11.09" height="3.86
 module: ov006
 addr: 0x020c221c
 size: 64 bytes
-matched: yes</title></rect><rect x="715.52" y="94.57" width="9.01" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Camera_InitPresenterView
+matched: yes</title></rect><rect x="715.52" y="94.57" width="9.01" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z24Camera_InitPresenterViewP8MgCamera
 module: ov006
 addr: 0x020c225c
 size: 52 bytes
-matched: yes</title></rect><rect x="724.53" y="94.57" width="12.48" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Presenter_UpdateMatrix
+matched: yes</title></rect><rect x="724.53" y="94.57" width="12.48" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9Presenter12UpdateMatrixEv
 module: ov006
 addr: 0x020c2290
 size: 72 bytes
-matched: yes</title></rect><rect x="737.01" y="94.57" width="6.93" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Presenter_StateSurprisedThenIdle
+matched: yes</title></rect><rect x="737.01" y="94.57" width="6.93" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9Presenter22StateSurprisedThenIdleEv
 module: ov006
 addr: 0x020c22d8
 size: 40 bytes
-matched: yes</title></rect><rect x="743.95" y="94.57" width="29.12" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Presenter_PlayCheerLoop
+matched: yes</title></rect><rect x="743.95" y="94.57" width="29.12" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9Presenter13PlayCheerLoopEv
 module: ov006
 addr: 0x020c2300
 size: 168 bytes
-matched: yes</title></rect><rect x="773.07" y="94.57" width="26.35" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Presenter_StateLoseStart
+matched: yes</title></rect><rect x="773.07" y="94.57" width="26.35" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9Presenter14StateLoseStartEv
 module: ov006
 addr: 0x020c23a8
 size: 152 bytes
-matched: yes</title></rect><rect x="799.42" y="94.57" width="28.43" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Presenter_PlayLose
+matched: yes</title></rect><rect x="799.42" y="94.57" width="28.43" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9Presenter8PlayLoseEv
 module: ov006
 addr: 0x020c2440
 size: 164 bytes
-matched: yes</title></rect><rect x="827.85" y="94.57" width="30.51" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Presenter_StateSurprisedThenSmile
+matched: yes</title></rect><rect x="827.85" y="94.57" width="30.51" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9Presenter23StateSurprisedThenSmileEv
 module: ov006
 addr: 0x020c24e4
 size: 176 bytes
-matched: yes</title></rect><rect x="858.36" y="94.57" width="29.12" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Presenter_PlayCheer
+matched: yes</title></rect><rect x="858.36" y="94.57" width="29.12" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9Presenter9PlayCheerEv
 module: ov006
 addr: 0x020c2594
 size: 168 bytes
-matched: yes</title></rect><rect x="887.48" y="94.57" width="6.93" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Presenter_StateMistake
+matched: yes</title></rect><rect x="887.48" y="94.57" width="6.93" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9Presenter12StateMistakeEv
 module: ov006
 addr: 0x020c263c
 size: 40 bytes
-matched: yes</title></rect><rect x="894.42" y="94.57" width="24.96" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Presenter_PlayMiss
+matched: yes</title></rect><rect x="894.42" y="94.57" width="24.96" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9Presenter8PlayMissEv
 module: ov006
 addr: 0x020c2664
 size: 144 bytes
-matched: yes</title></rect><rect x="919.38" y="94.57" width="6.93" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Presenter_StateWin
+matched: yes</title></rect><rect x="919.38" y="94.57" width="6.93" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9Presenter8StateWinEv
 module: ov006
 addr: 0x020c26f4
 size: 40 bytes
-matched: yes</title></rect><rect x="926.31" y="94.57" width="29.12" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Presenter_PlayMatch
+matched: yes</title></rect><rect x="926.31" y="94.57" width="29.12" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9Presenter9PlayMatchEv
 module: ov006
 addr: 0x020c271c
 size: 168 bytes
-matched: yes</title></rect><rect x="955.44" y="94.57" width="22.88" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Presenter_StateIdle
+matched: yes</title></rect><rect x="955.44" y="94.57" width="22.88" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9Presenter9StateIdleEv
 module: ov006
 addr: 0x020c27c4
 size: 132 bytes
-matched: yes</title></rect><rect x="978.32" y="94.57" width="38.14" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Presenter_PlayIdle
+matched: yes</title></rect><rect x="978.32" y="94.57" width="38.14" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9Presenter8PlayIdleEv
 module: ov006
 addr: 0x020c2848
 size: 220 bytes
-matched: yes</title></rect><rect x="1016.46" y="94.57" width="16.64" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Presenter_ResetPose
+matched: yes</title></rect><rect x="1016.46" y="94.57" width="16.64" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9Presenter9ResetPoseEv
 module: ov006
 addr: 0x020c2924
 size: 96 bytes
-matched: yes</title></rect><rect x="1033.10" y="94.57" width="2.77" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Presenter_IsAnimDone
+matched: yes</title></rect><rect x="1033.10" y="94.57" width="2.77" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9Presenter10IsAnimDoneEv
 module: ov006
 addr: 0x020c2984
 size: 16 bytes
-matched: yes</title></rect><rect x="1035.87" y="94.57" width="12.48" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Presenter_IsIdle
+matched: yes</title></rect><rect x="1035.87" y="94.57" width="12.48" height="3.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9Presenter6IsIdleEv
 module: ov006
 addr: 0x020c2994
 size: 72 bytes
-matched: yes</title></rect><rect x="615.67" y="98.42" width="42.99" height="6.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Presenter_Draw
+matched: yes</title></rect><rect x="615.67" y="98.42" width="42.99" height="6.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9Presenter4DrawEv
 module: ov006
 addr: 0x020c29dc
 size: 432 bytes
-matched: yes</title></rect><rect x="658.66" y="98.42" width="9.16" height="6.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Presenter_Update
+matched: yes</title></rect><rect x="658.66" y="98.42" width="9.16" height="6.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9Presenter6UpdateEv
 module: ov006
 addr: 0x020c2b8c
 size: 92 bytes
-matched: yes</title></rect><rect x="667.81" y="98.42" width="112.25" height="6.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Presenter_TrackStylus
+matched: yes</title></rect><rect x="667.81" y="98.42" width="112.25" height="6.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9Presenter11TrackStylusEv
 module: ov006
 addr: 0x020c2be8
 size: 1128 bytes
-matched: yes</title></rect><rect x="780.06" y="98.42" width="56.52" height="6.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Presenter_Load
+matched: yes</title></rect><rect x="780.06" y="98.42" width="56.52" height="6.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9Presenter4LoadEv
 module: ov006
 addr: 0x020c3050
 size: 568 bytes
@@ -20289,71 +20289,71 @@ matched: yes</title></rect><rect x="870.42" y="98.42" width="33.04" height="6.72
 module: ov006
 addr: 0x020c33dc
 size: 332 bytes
-matched: yes</title></rect><rect x="903.46" y="98.42" width="12.74" height="6.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FallingPetal_UpdateMatrix
+matched: yes</title></rect><rect x="903.46" y="98.42" width="12.74" height="6.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12FallingPetal12UpdateMatrixEv
 module: ov006
 addr: 0x020c3528
 size: 128 bytes
-matched: yes</title></rect><rect x="916.20" y="98.42" width="6.37" height="6.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FallingPetal_Draw
+matched: yes</title></rect><rect x="916.20" y="98.42" width="6.37" height="6.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12FallingPetal4DrawEv
 module: ov006
 addr: 0x020c35a8
 size: 64 bytes
-matched: yes</title></rect><rect x="922.57" y="98.42" width="36.22" height="6.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FallingPetal_Update
+matched: yes</title></rect><rect x="922.57" y="98.42" width="36.22" height="6.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12FallingPetal6UpdateEv
 module: ov006
 addr: 0x020c35e8
 size: 364 bytes
-matched: yes</title></rect><rect x="958.79" y="98.42" width="30.25" height="6.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FallingPetal_Spawn
+matched: yes</title></rect><rect x="958.79" y="98.42" width="30.25" height="6.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12FallingPetal5SpawnEPK7VecFx32S2_
 module: ov006
 addr: 0x020c3754
 size: 304 bytes
-matched: yes</title></rect><rect x="989.04" y="98.42" width="3.98" height="6.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FallingPetal_SetModel
+matched: yes</title></rect><rect x="989.04" y="98.42" width="3.98" height="6.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12FallingPetal8SetModelEP8BMD_File
 module: ov006
 addr: 0x020c3884
 size: 40 bytes
-matched: yes</title></rect><rect x="993.42" y="98.42" width="8.36" height="6.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FlowerFace_PlayHate
+matched: yes</title></rect><rect x="993.42" y="98.42" width="8.36" height="6.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10FlowerFace8PlayHateEv
 module: ov006
 addr: 0x020c38b0
 size: 84 bytes
-matched: yes</title></rect><rect x="1002.18" y="98.42" width="8.36" height="6.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FlowerFace_PlayLike
+matched: yes</title></rect><rect x="1002.18" y="98.42" width="8.36" height="6.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10FlowerFace8PlayLikeEv
 module: ov006
 addr: 0x020c3908
 size: 84 bytes
-matched: yes</title></rect><rect x="1010.54" y="98.42" width="5.17" height="6.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FlowerFace_StatePick
+matched: yes</title></rect><rect x="1010.54" y="98.42" width="5.17" height="6.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10FlowerFace9StatePickEv
 module: ov006
 addr: 0x020c395c
 size: 52 bytes
-matched: yes</title></rect><rect x="1015.71" y="98.42" width="32.64" height="6.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FlowerFace_PlayPetalPulled
+matched: yes</title></rect><rect x="1015.71" y="98.42" width="32.64" height="6.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10FlowerFace15PlayPetalPulledEv
 module: ov006
 addr: 0x020c3990
 size: 328 bytes
-matched: yes</title></rect><rect x="615.67" y="105.14" width="0.86" height="3.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FlowerFace_StateIdle
+matched: yes</title></rect><rect x="615.67" y="105.14" width="0.86" height="3.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10FlowerFace9StateIdleEv
 module: ov006
 addr: 0x020c3ad8
 size: 4 bytes
-matched: yes</title></rect><rect x="616.52" y="105.14" width="17.14" height="3.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FlowerFace_PlayIdle
+matched: yes</title></rect><rect x="616.52" y="105.14" width="17.14" height="3.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10FlowerFace8PlayIdleEv
 module: ov006
 addr: 0x020c3adc
 size: 80 bytes
-matched: yes</title></rect><rect x="633.66" y="105.14" width="17.99" height="3.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Camera_InitFlowerView
+matched: yes</title></rect><rect x="633.66" y="105.14" width="17.99" height="3.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z21Camera_InitFlowerViewP8MgCamera
 module: ov006
 addr: 0x020c3b2c
 size: 84 bytes
-matched: yes</title></rect><rect x="651.65" y="105.14" width="15.42" height="3.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FlowerFace_IsIdle
+matched: yes</title></rect><rect x="651.65" y="105.14" width="15.42" height="3.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10FlowerFace6IsIdleEv
 module: ov006
 addr: 0x020c3b80
 size: 72 bytes
-matched: yes</title></rect><rect x="667.07" y="105.14" width="9.42" height="3.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FlowerFace_Reset
+matched: yes</title></rect><rect x="667.07" y="105.14" width="9.42" height="3.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10FlowerFace5ResetEv
 module: ov006
 addr: 0x020c3bc8
 size: 44 bytes
-matched: yes</title></rect><rect x="676.50" y="105.14" width="62.55" height="3.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FlowerFace_Draw
+matched: yes</title></rect><rect x="676.50" y="105.14" width="62.55" height="3.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10FlowerFace4DrawEv
 module: ov006
 addr: 0x020c3bf4
 size: 292 bytes
-matched: yes</title></rect><rect x="739.05" y="105.14" width="23.99" height="3.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FlowerFace_Update
+matched: yes</title></rect><rect x="739.05" y="105.14" width="23.99" height="3.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10FlowerFace6UpdateEv
 module: ov006
 addr: 0x020c3d18
 size: 112 bytes
-matched: yes</title></rect><rect x="763.04" y="105.14" width="43.70" height="3.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FlowerFace_Load
+matched: yes</title></rect><rect x="763.04" y="105.14" width="43.70" height="3.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10FlowerFace4LoadEv
 module: ov006
 addr: 0x020c3d88
 size: 204 bytes
@@ -20789,91 +20789,91 @@ matched: yes</title></rect><rect x="635.92" y="137.95" width="0.86" height="6.20
 module: ov006
 addr: 0x020c8e88
 size: 8 bytes
-matched: yes</title></rect><rect x="636.78" y="137.95" width="6.46" height="6.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp2Mario_Render
+matched: yes</title></rect><rect x="636.78" y="137.95" width="6.46" height="6.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17dMgTrmpln2Mario_c6RenderEv
 module: ov006
 addr: 0x020c8e90
 size: 60 bytes
-matched: yes</title></rect><rect x="643.25" y="137.95" width="9.05" height="6.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp2Mario_UpdateMatrix
+matched: yes</title></rect><rect x="643.25" y="137.95" width="9.05" height="6.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17dMgTrmpln2Mario_c12UpdateMatrixEv
 module: ov006
 addr: 0x020c8ecc
 size: 84 bytes
-matched: yes</title></rect><rect x="652.30" y="137.95" width="28.01" height="6.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp2Mario_Update
+matched: yes</title></rect><rect x="652.30" y="137.95" width="28.01" height="6.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17dMgTrmpln2Mario_c6UpdateEv
 module: ov006
 addr: 0x020c8f20
 size: 260 bytes
-matched: yes</title></rect><rect x="680.31" y="137.95" width="6.03" height="6.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp2Mario_ApplyGravity
+matched: yes</title></rect><rect x="680.31" y="137.95" width="6.03" height="6.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17dMgTrmpln2Mario_c12ApplyGravityEv
 module: ov006
 addr: 0x020c9024
 size: 56 bytes
-matched: yes</title></rect><rect x="686.34" y="137.95" width="6.46" height="6.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp2Mario_StateKnockedOut
+matched: yes</title></rect><rect x="686.34" y="137.95" width="6.46" height="6.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17dMgTrmpln2Mario_c15StateKnockedOutEv
 module: ov006
 addr: 0x020c905c
 size: 60 bytes
-matched: yes</title></rect><rect x="692.81" y="137.95" width="29.74" height="6.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp2Mario_EnterByKind
+matched: yes</title></rect><rect x="692.81" y="137.95" width="29.74" height="6.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17dMgTrmpln2Mario_c11EnterByKindEv
 module: ov006
 addr: 0x020c9098
 size: 276 bytes
-matched: yes</title></rect><rect x="722.55" y="137.95" width="88.35" height="6.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp2Mario_StateBounce
+matched: yes</title></rect><rect x="722.55" y="137.95" width="88.35" height="6.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17dMgTrmpln2Mario_c11StateBounceEv
 module: ov006
 addr: 0x020c91ac
 size: 820 bytes
-matched: yes</title></rect><rect x="810.89" y="137.95" width="78.87" height="6.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp2Mario_BounceOffLineA
+matched: yes</title></rect><rect x="810.89" y="137.95" width="78.87" height="6.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17dMgTrmpln2Mario_c14BounceOffLineAEv
 module: ov006
 addr: 0x020c94e0
 size: 732 bytes
-matched: yes</title></rect><rect x="889.76" y="137.95" width="79.73" height="6.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp2Mario_StateWallBounce
+matched: yes</title></rect><rect x="889.76" y="137.95" width="79.73" height="6.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17dMgTrmpln2Mario_c15StateWallBounceEv
 module: ov006
 addr: 0x020c97bc
 size: 740 bytes
-matched: yes</title></rect><rect x="969.49" y="137.95" width="53.01" height="6.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp2Mario_BounceOffLineB
+matched: yes</title></rect><rect x="969.49" y="137.95" width="53.01" height="6.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17dMgTrmpln2Mario_c14BounceOffLineBEv
 module: ov006
 addr: 0x020c9aa0
 size: 492 bytes
-matched: yes</title></rect><rect x="1022.50" y="137.95" width="25.86" height="6.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp2Mario_EnterBounce
+matched: yes</title></rect><rect x="1022.50" y="137.95" width="25.86" height="6.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17dMgTrmpln2Mario_c11EnterBounceEv
 module: ov006
 addr: 0x020c9c8c
 size: 240 bytes
-matched: yes</title></rect><rect x="615.67" y="144.15" width="24.33" height="7.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp2Mario_StateRespawnWait
+matched: yes</title></rect><rect x="615.67" y="144.15" width="24.33" height="7.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17dMgTrmpln2Mario_c16StateRespawnWaitEv
 module: ov006
 addr: 0x020c9d7c
 size: 256 bytes
-matched: yes</title></rect><rect x="640.00" y="144.15" width="12.17" height="7.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp2Mario_EnterRespawnWait
+matched: yes</title></rect><rect x="640.00" y="144.15" width="12.17" height="7.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17dMgTrmpln2Mario_c16EnterRespawnWaitEv
 module: ov006
 addr: 0x020c9e7c
 size: 128 bytes
-matched: yes</title></rect><rect x="652.17" y="144.15" width="22.05" height="7.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp2Mario_StateMissed
+matched: yes</title></rect><rect x="652.17" y="144.15" width="22.05" height="7.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17dMgTrmpln2Mario_c11StateMissedEv
 module: ov006
 addr: 0x020c9efc
 size: 232 bytes
-matched: yes</title></rect><rect x="674.22" y="144.15" width="13.31" height="7.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp2Mario_EnterMissed
+matched: yes</title></rect><rect x="674.22" y="144.15" width="13.31" height="7.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17dMgTrmpln2Mario_c11EnterMissedEv
 module: ov006
 addr: 0x020c9fe4
 size: 140 bytes
-matched: yes</title></rect><rect x="687.53" y="144.15" width="60.45" height="7.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp2Mario_StateFall
+matched: yes</title></rect><rect x="687.53" y="144.15" width="60.45" height="7.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17dMgTrmpln2Mario_c9StateFallEv
 module: ov006
 addr: 0x020ca070
 size: 636 bytes
-matched: yes</title></rect><rect x="747.98" y="144.15" width="3.42" height="7.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp2Mario_EnterFall
+matched: yes</title></rect><rect x="747.98" y="144.15" width="3.42" height="7.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17dMgTrmpln2Mario_c9EnterFallEv
 module: ov006
 addr: 0x020ca2ec
 size: 36 bytes
-matched: yes</title></rect><rect x="751.40" y="144.15" width="9.51" height="7.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp2Mario_StateAppearWait
+matched: yes</title></rect><rect x="751.40" y="144.15" width="9.51" height="7.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17dMgTrmpln2Mario_c15StateAppearWaitEv
 module: ov006
 addr: 0x020ca310
 size: 100 bytes
-matched: yes</title></rect><rect x="760.91" y="144.15" width="3.80" height="7.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp2Mario_EnterAppearWait
+matched: yes</title></rect><rect x="760.91" y="144.15" width="3.80" height="7.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17dMgTrmpln2Mario_c15EnterAppearWaitEs
 module: ov006
 addr: 0x020ca374
 size: 40 bytes
-matched: yes</title></rect><rect x="764.71" y="144.15" width="1.14" height="7.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp2Mario_StateHidden
+matched: yes</title></rect><rect x="764.71" y="144.15" width="1.14" height="7.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17dMgTrmpln2Mario_c11StateHiddenEv
 module: ov006
 addr: 0x020ca39c
 size: 12 bytes
-matched: yes</title></rect><rect x="765.85" y="144.15" width="12.93" height="7.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp2Mario_EnterHidden
+matched: yes</title></rect><rect x="765.85" y="144.15" width="12.93" height="7.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17dMgTrmpln2Mario_c11EnterHiddenEv
 module: ov006
 addr: 0x020ca3a8
 size: 136 bytes
-matched: yes</title></rect><rect x="778.78" y="144.15" width="44.49" height="7.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp2Mario_Load
+matched: yes</title></rect><rect x="778.78" y="144.15" width="44.49" height="7.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17dMgTrmpln2Mario_c4LoadEv
 module: ov006
 addr: 0x020ca430
 size: 468 bytes
@@ -20937,107 +20937,107 @@ matched: yes</title></rect><rect x="625.26" y="151.18" width="0.74" height="7.25
 module: ov006
 addr: 0x020cafac
 size: 8 bytes
-matched: yes</title></rect><rect x="625.99" y="151.18" width="3.69" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_Render
+matched: yes</title></rect><rect x="625.99" y="151.18" width="3.69" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c6RenderEv
 module: ov006
 addr: 0x020cafb4
 size: 40 bytes
-matched: yes</title></rect><rect x="629.68" y="151.18" width="7.75" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_UpdateMatrix
+matched: yes</title></rect><rect x="629.68" y="151.18" width="7.75" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c12UpdateMatrixEv
 module: ov006
 addr: 0x020cafdc
 size: 84 bytes
-matched: yes</title></rect><rect x="637.43" y="151.18" width="23.98" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_Update
+matched: yes</title></rect><rect x="637.43" y="151.18" width="23.98" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c6UpdateEv
 module: ov006
 addr: 0x020cb030
 size: 260 bytes
-matched: yes</title></rect><rect x="661.41" y="151.18" width="5.16" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_ApplyGravity
+matched: yes</title></rect><rect x="661.41" y="151.18" width="5.16" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c12ApplyGravityEv
 module: ov006
 addr: 0x020cb134
 size: 56 bytes
-matched: yes</title></rect><rect x="666.57" y="151.18" width="5.53" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_StateKnockedOut
+matched: yes</title></rect><rect x="666.57" y="151.18" width="5.53" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c15StateKnockedOutEv
 module: ov006
 addr: 0x020cb16c
 size: 60 bytes
-matched: yes</title></rect><rect x="672.10" y="151.18" width="24.71" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_EnterByKind
+matched: yes</title></rect><rect x="672.10" y="151.18" width="24.71" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c11EnterByKindEv
 module: ov006
 addr: 0x020cb1a8
 size: 268 bytes
-matched: yes</title></rect><rect x="696.82" y="151.18" width="57.91" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_StateGoal
+matched: yes</title></rect><rect x="696.82" y="151.18" width="57.91" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c9StateGoalEv
 module: ov006
 addr: 0x020cb2b4
 size: 628 bytes
-matched: yes</title></rect><rect x="754.73" y="151.18" width="14.39" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_EnterGoal
+matched: yes</title></rect><rect x="754.73" y="151.18" width="14.39" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c9EnterGoalEv
 module: ov006
 addr: 0x020cb528
 size: 156 bytes
-matched: yes</title></rect><rect x="769.12" y="151.18" width="18.81" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_StateLand
+matched: yes</title></rect><rect x="769.12" y="151.18" width="18.81" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c9StateLandEv
 module: ov006
 addr: 0x020cb5c4
 size: 204 bytes
-matched: yes</title></rect><rect x="787.93" y="151.18" width="14.39" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_EnterLand
+matched: yes</title></rect><rect x="787.93" y="151.18" width="14.39" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c9EnterLandEv
 module: ov006
 addr: 0x020cb690
 size: 156 bytes
-matched: yes</title></rect><rect x="802.32" y="151.18" width="21.39" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_StateFallToLedge
+matched: yes</title></rect><rect x="802.32" y="151.18" width="21.39" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c16StateFallToLedgeEv
 module: ov006
 addr: 0x020cb72c
 size: 232 bytes
-matched: yes</title></rect><rect x="823.71" y="151.18" width="3.32" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_EnterFallToLedge
+matched: yes</title></rect><rect x="823.71" y="151.18" width="3.32" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c16EnterFallToLedgeEv
 module: ov006
 addr: 0x020cb814
 size: 36 bytes
-matched: yes</title></rect><rect x="827.03" y="151.18" width="63.82" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_StateHardBounce
+matched: yes</title></rect><rect x="827.03" y="151.18" width="63.82" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c15StateHardBounceEv
 module: ov006
 addr: 0x020cb838
 size: 692 bytes
-matched: yes</title></rect><rect x="890.85" y="151.18" width="60.50" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_BounceOffLineA
+matched: yes</title></rect><rect x="890.85" y="151.18" width="60.50" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c14BounceOffLineAEv
 module: ov006
 addr: 0x020cbaec
 size: 656 bytes
-matched: yes</title></rect><rect x="951.34" y="151.18" width="55.70" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_StateBounce
+matched: yes</title></rect><rect x="951.34" y="151.18" width="55.70" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c11StateBounceEv
 module: ov006
 addr: 0x020cbd7c
 size: 604 bytes
-matched: yes</title></rect><rect x="1007.04" y="151.18" width="41.31" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_BounceOffLineB
+matched: yes</title></rect><rect x="1007.04" y="151.18" width="41.31" height="7.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c14BounceOffLineBEv
 module: ov006
 addr: 0x020cbfd8
 size: 448 bytes
-matched: yes</title></rect><rect x="615.67" y="158.43" width="22.48" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_JumpOff
+matched: yes</title></rect><rect x="615.67" y="158.43" width="22.48" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c7JumpOffEv
 module: ov006
 addr: 0x020cc198
 size: 276 bytes
-matched: yes</title></rect><rect x="638.15" y="158.43" width="16.94" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_StateMissed
+matched: yes</title></rect><rect x="638.15" y="158.43" width="16.94" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c11StateMissedEv
 module: ov006
 addr: 0x020cc2ac
 size: 208 bytes
-matched: yes</title></rect><rect x="655.09" y="158.43" width="11.40" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_EnterMissed
+matched: yes</title></rect><rect x="655.09" y="158.43" width="11.40" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c11EnterMissedEv
 module: ov006
 addr: 0x020cc37c
 size: 140 bytes
-matched: yes</title></rect><rect x="666.49" y="158.43" width="43.01" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_StateFall
+matched: yes</title></rect><rect x="666.49" y="158.43" width="43.01" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c9StateFallEv
 module: ov006
 addr: 0x020cc408
 size: 528 bytes
-matched: yes</title></rect><rect x="709.50" y="158.43" width="2.93" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_EnterFall
+matched: yes</title></rect><rect x="709.50" y="158.43" width="2.93" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c9EnterFallEv
 module: ov006
 addr: 0x020cc618
 size: 36 bytes
-matched: yes</title></rect><rect x="712.43" y="158.43" width="7.49" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_StateWalkBack
+matched: yes</title></rect><rect x="712.43" y="158.43" width="7.49" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c13StateWalkBackEv
 module: ov006
 addr: 0x020cc63c
 size: 92 bytes
-matched: yes</title></rect><rect x="719.93" y="158.43" width="11.40" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_EnterWalkBack
+matched: yes</title></rect><rect x="719.93" y="158.43" width="11.40" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c13EnterWalkBackEv
 module: ov006
 addr: 0x020cc698
 size: 140 bytes
-matched: yes</title></rect><rect x="731.33" y="158.43" width="34.21" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_StateOnLedge
+matched: yes</title></rect><rect x="731.33" y="158.43" width="34.21" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c12StateOnLedgeEv
 module: ov006
 addr: 0x020cc724
 size: 420 bytes
-matched: yes</title></rect><rect x="765.54" y="158.43" width="19.55" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_EnterOnLedge
+matched: yes</title></rect><rect x="765.54" y="158.43" width="19.55" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c12EnterOnLedgeEv
 module: ov006
 addr: 0x020cc8c8
 size: 240 bytes
-matched: yes</title></rect><rect x="785.09" y="158.43" width="5.54" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_StateWalkIn
+matched: yes</title></rect><rect x="785.09" y="158.43" width="5.54" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c11StateWalkInEv
 module: ov006
 addr: 0x020cc9b8
 size: 68 bytes
@@ -21045,11 +21045,11 @@ matched: yes</title></rect><rect x="790.63" y="158.43" width="18.57" height="8.2
 module: ov006
 addr: 0x020cc9fc
 size: 228 bytes
-matched: yes</title></rect><rect x="809.20" y="158.43" width="34.86" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_StateOnGround
+matched: yes</title></rect><rect x="809.20" y="158.43" width="34.86" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c13StateOnGroundEv
 module: ov006
 addr: 0x020ccae0
 size: 428 bytes
-matched: yes</title></rect><rect x="844.07" y="158.43" width="9.77" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_EnterOnGround
+matched: yes</title></rect><rect x="844.07" y="158.43" width="9.77" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c13EnterOnGroundEv
 module: ov006
 addr: 0x020ccc8c
 size: 120 bytes
@@ -21057,15 +21057,15 @@ matched: yes</title></rect><rect x="853.84" y="158.43" width="7.82" height="8.21
 module: ov006
 addr: 0x020ccd04
 size: 96 bytes
-matched: yes</title></rect><rect x="861.66" y="158.43" width="1.63" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_StateOffstage
+matched: yes</title></rect><rect x="861.66" y="158.43" width="1.63" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c13StateOffstageEv
 module: ov006
 addr: 0x020ccd64
 size: 20 bytes
-matched: yes</title></rect><rect x="863.29" y="158.43" width="12.06" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_EnterOffstage
+matched: yes</title></rect><rect x="863.29" y="158.43" width="12.06" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c13EnterOffstageEv
 module: ov006
 addr: 0x020ccd78
 size: 148 bytes
-matched: yes</title></rect><rect x="875.34" y="158.43" width="36.17" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Trmp3DMario_Load
+matched: yes</title></rect><rect x="875.34" y="158.43" width="36.17" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18dMgTrmpln3DMario_c4LoadEv
 module: ov006
 addr: 0x020cce0c
 size: 444 bytes

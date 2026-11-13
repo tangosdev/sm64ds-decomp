@@ -316,17 +316,8 @@ dActor_c *dActor_c::Next(const dActor_c *after)
     return 0;
 }
 
-
-extern s16 *data_0209b460;
-          /* spawn position, or null to leave it at 0 */
-extern s16 *data_0209b45c;
-          /* spawn rotation, or null */
-extern s16 data_0208e378;
-           /* spawn death-table id */
-
 /* Stages Spawn's arguments for the constructor to pick up. */
-void func_02010e78(const Vector3 *pos, const Vector3_16 *rot, s8 areaID,
-                              s16 deathTableID) {
+void func_02010e78(const Vector3 *pos, const Vector3_16 *rot, s8 areaID, s16 deathTableID) {
     data_0209b460 = (s16 *)pos;
     data_0209b45c = (s16 *)rot;
     data_0209b44c = areaID;
@@ -560,8 +551,8 @@ dActor_c *dActor_c::ClosestWithActorID(u32 actorID)
 }
 
 /* atan2 of v's horizontal length, projected onto heading `angle`, against
-   v->y. The leading actor argument is unused. */
-s16 func_02010844(void *actor, Vector3 *v, s16 angle) {
+   v->y. The actor is only the member receiver. */
+s16 dActor_c::func_02010844(Vector3 *v, s16 angle) {
     s32 dir;
     s32 horzLen;
 
@@ -664,13 +655,14 @@ void dActor_c::GivePlayerCoins(daPly_c &player, u8 count, u32 coinKind) {
         coin->mFollowTarget = &player;
 }
 
-void func_020105cc(dActor_c *actor, u32 flags) {
+/* The landing thump's sound: 0xa for 0x380, 9 for 0x40. */
+void dActor_c::func_020105cc(u32 flags) {
     if (flags & 0x380) {
-        Sound::PlayBank0(0xa, actor->mCamSpacePos);
+        Sound::PlayBank0(0xa, mCamSpacePos);
         return;
     }
     if (flags & 0x40) {
-        Sound::PlayBank0(9, actor->mCamSpacePos);
+        Sound::PlayBank0(9, mCamSpacePos);
         return;
     }
 }
@@ -1055,20 +1047,18 @@ void dActor_c::DisappearPoofDustAt(const Vector3 &pos)
 }
 
 
-extern int func_0200fc44(dActor_c *actor, Vector3 *pos, int doRaycast);
-
 /* func_0200fc44 at this actor's position. */
 int dActor_c::func_0200fccc(int doRaycast) {
     Vector3 pos;
     pos.x = mPosX;
     pos.y = mPosY;
     pos.z = mPosZ;
-    return func_0200fc44(this, &pos, doRaycast);
+    return func_0200fc44(&pos, doRaycast);
 }
 
 /* Particle 0xb3 25.0 above pos, optionally first dropping pos onto the
-   ground below it; pos is moved. The leading actor argument is unused. */
-int func_0200fc44(dActor_c *actor, Vector3 *pos, int doRaycast) {
+   ground below it; pos is moved. The actor is only the member receiver. */
+int dActor_c::func_0200fc44(Vector3 *pos, int doRaycast) {
     if (doRaycast) {
         dBgCh_Gnd rc;
         pos->y += 0x32000;
@@ -1127,21 +1117,17 @@ void dActor_c::LandingDustAt(Vector3 &pos, bool doRaycast) {
     Particle::System::NewSimple(kPtclHugeLandingDust, pos.x, pos.y, pos.z);
 }
 
-
-extern void *func_0200fa04(dActor_c *actor, Vector3 *pos, int doRaycast);
-
 /* func_0200fa04 at this actor's position; its void * result is ignored here. */
-void func_0200fa8c(void *actorp, int doRaycast) {
-    dActor_c *actor = (dActor_c *)actorp;
+void dActor_c::func_0200fa8c(int doRaycast) {
     Vector3 pos;
-    pos.x = actor->mPosX;
-    pos.y = actor->mPosY;
-    pos.z = actor->mPosZ;
-    func_0200fa04(actor, &pos, doRaycast);
+    pos.x = mPosX;
+    pos.y = mPosY;
+    pos.z = mPosZ;
+    func_0200fa04(&pos, doRaycast);
 }
 
 /* As func_0200fc44, with particle 0x1b raised 120.0 instead of 25.0. */
-void *func_0200fa04(dActor_c *actor, Vector3 *pos, int doRaycast) {
+void *dActor_c::func_0200fa04(Vector3 *pos, int doRaycast) {
     if (doRaycast) {
         dBgCh_Gnd rc;
         pos->y += 0x32000;

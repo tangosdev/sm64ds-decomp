@@ -57,6 +57,7 @@ enum dScMgSnowball_c_AssetId {
 #include "nitro/gx/gx_load.h"
 #include "cstd.h"
 #include "decl_common.h"
+#include "math/Quaternion.h"
 #include "LevelRng.h"
 #include "common.h"
 #include "Sound.h"

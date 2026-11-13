@@ -14,8 +14,8 @@
  * - MEMORY2_OFF names the offsets CardFlyAway adds.
  * - Camera_InitDealerView sets mCamera and tail-calls
  *   Camera_UpdateMatrices. Render and InitResources call that wrapper.
- * - Mg_DrawScoreTally, Mg_SaveRecordPair and Dealer_Load
- *   stay the linker names. Their bodies are not in this file.
+ * - Mg_DrawScoreTally and Mg_SaveRecordPair stay the linker names. Their
+ *   bodies are not in this file.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -695,7 +695,7 @@ void dScMgMemory2_c::ResultWait() {
                 scoreView->bestHudScore = scoreView->hudScore;
         }
         Mg_SubmitScore(gMgScene != 0 ? gMgScene->mHudScore : 0);
-        Dealer_PlayWin(&mDealer);
+        mDealer.PlayWin();
         return;
     }
 
@@ -705,7 +705,7 @@ void dScMgMemory2_c::ResultWait() {
         if (scoreView->hudScore > 0)
             scoreView->hudScore -= 1;
     }
-    Dealer_PlayLose(&mDealer);
+    mDealer.PlayLose();
     return;
 
 zero:
@@ -904,9 +904,9 @@ void dScMgMemory2_c::RoundStart() {
     mDealSignals = 0;
     mCardsDealt = 0;
     if (mDifficulty == 1)
-        Dealer_StartShuffle(&mDealer, 4, 3, &mDealSignals);
+        mDealer.StartShuffle(4, 3, &mDealSignals);
     else
-        Dealer_StartShuffle(&mDealer, 4, 4, &mDealSignals);
+        mDealer.StartShuffle(4, 4, &mDealSignals);
     mDealer.mReserved = 1;
     mSubstate = ROUND_DEAL_EASY;
     if (mPromptBlinkCount == 0) {
@@ -1100,7 +1100,7 @@ void dScMgMemory2_c::StateSetup() {
     SetupDifficulty();
     ShuffleCards();
     FreeGfxSlotsById(0x1d);
-    Dealer_PlayIdle((char *)&mDealer);
+    mDealer.PlayIdle();
     mState = STATE_PLAY;
 }
 
@@ -1125,7 +1125,7 @@ void dScMgMemory2_c::OnDealDone() {
 
 int dScMgMemory2_c::CanEndState(int /* mode */) {
     if (mState == STATE_RESULT && mSubstate == RESULT_WAIT) {
-        if (Dealer_IsIdle(&mDealer) == 0)
+        if (mDealer.IsIdle() == 0)
             return 0;
         mSubstate = RESULT_REWARD;
         FreeGfxSlotsById(0x1d);
@@ -1159,7 +1159,7 @@ s32 dScMgMemory2_c::Render() {
     DrawMessage();
     DrawCursor();
     DrawCards();
-    Dealer_Draw(&mDealer);
+    mDealer.Draw();
     return 1;
 }
 
@@ -1169,7 +1169,7 @@ s32 dScMgMemory2_c::Render() {
 s32 dScMgMemory2_c::Behavior() {
     (this->*sMemory2StateTable[mState])();
     MgCoins_Update();
-    Dealer_Update(&mDealer);
+    mDealer.Update();
     return 1;
 }
 
@@ -1195,7 +1195,7 @@ s32 dScMgMemory2_c::InitResources() {
     ResetGame();
     /* 0x4660..0x471c is dScMgSingle3DBase_c's minigame camera. */
     Camera_InitDealerView(&mCamera);
-    if (Dealer_Load(&mDealer) == 0)
+    if (mDealer.Load() == 0)
         return 0;
     mCredits = Mg_GetSavedRecord0();
     mCreditsShown = mCredits;

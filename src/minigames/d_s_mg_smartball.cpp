@@ -249,10 +249,6 @@ extern s16 atan2_hold_d_s_mg_smartball_1(int y, int x);
 
 extern void DecompressLZ16(void *src, void *dst);
 
-
-
-extern void __cxa_vec_ctor(void *, unsigned int, unsigned int, ctor_t, dtor_t);
-
 extern void SetSubBg0Offset(int x, int y);
 
 extern void func_0203d738(void);}

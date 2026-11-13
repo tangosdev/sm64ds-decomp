@@ -17,8 +17,6 @@
  *   value.
  * - data_0209fc78 is a volatile macro in func_02033464 only. decl_common.h
  *   spells that byte plain, and the other functions in this file read it plain.
- * - data_0209f4a4 is s16[] in decl_common.h. func_020326ac indexes it with a
- *   byte stride, so the cast stays at that use.
  * - LayoutLineVS keeps the char-cast handler call: data_02092830[idx - 1]()
  *   subtracts first, a 6-word DIFF.
  * - func_020319fc writes the spill-over store as (&dst[wordIdx])[8] and keeps
@@ -34,6 +32,7 @@
 #include "nitro/hw/registers.h"
 #include "decl_common.h"
 #include "PlayerInput.h"
+#include "private/controller_input.h"
 #include "SaveData.h"
 #include "Message.h"
 #include "MessageBank.h"
@@ -101,7 +100,6 @@ extern s32 data_0208ee44;
 extern u32 gNextActorUpdateMask;
 extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
-extern s16 data_0209f4a2[];
 extern u16 data_020a0e5a[];
 extern s32 data_020a0db0;
 extern u8 data_ov002_0210c390;
@@ -137,6 +135,9 @@ extern void OamRender10_Message3(int sub, struct OamAttr *attr_, int xOff, int y
 
 #include "OAM.h"
 #include "nitro/mi/memory.h"
+
+/* Slot 0's nx/ny are data_0209f4a2/data_0209f4a4. The record stride is 0x18. */
+extern ControllerInput data_0209f498[];
 
 void func_02031cd4(void *arg);
 int func_020321fc(void);
@@ -886,7 +887,7 @@ void func_020326ac(void) {
             data_0209fcb8 = 1;
             return;
         }
-        t = *(s16 *)((u8 *)data_0209f4a2 + gActivePlayerSlot * 0x18);
+        t = data_0209f498[gActivePlayerSlot].nx;
         if (t > 0x80) {
             data_0209fcd0 = 1;
         } else if (t < -0x80) {
@@ -915,7 +916,7 @@ void func_020326ac(void) {
             data_0209fcb8 = 1;
             return;
         }
-        t = *(s16 *)((u8 *)data_0209f4a4 + gActivePlayerSlot * 0x18);
+        t = data_0209f498[gActivePlayerSlot].ny;
         if (t > 0x80) {
             data_0209fcd0 = 1;
         } else if (t < -0x80) {

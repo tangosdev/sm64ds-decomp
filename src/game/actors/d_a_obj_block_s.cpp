@@ -150,7 +150,6 @@ int SurfaceInfo_TestFlag0x20(int *p);
 int func_ov002_020ef228(dBgCh_Actr *c, dActor_c *other);
 int func_ov002_020f030c(int x);
 extern "C" int func_ov002_020e496c(daPly_c *c);
-s16 func_02010844(void *unused, Vector3 *v, s16 angle);
 
 
 extern "C" void d_a_obj_block_sPlayLongHold(u32 a, u32 b, u32 c, const Vector3 *pos, u32 e);
@@ -995,8 +994,8 @@ int daObjBlockS_c::UpdateFloorContact() {
     }
 
     {
-        s16 r5 = func_02010844(this, (Vector3 *)&mFloorNormalX, mAngleY);
-        s16 r4 = func_02010844(this, (Vector3 *)&mFloorNormalX, (s16)(mAngleY - 0x4000));
+        s16 r5 = func_02010844((Vector3 *)&mFloorNormalX, mAngleY);
+        s16 r4 = func_02010844((Vector3 *)&mFloorNormalX, (s16)(mAngleY - 0x4000));
         UpdateAngle(mAngleX, r5, 4, 0x1000);
         UpdateAngle(mAngleZ, r4, 4, 0x1000);
     }

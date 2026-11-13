@@ -100,7 +100,6 @@ void func_ov079_02123d4c(Vector3 *out, daBtn_c *self);
 
 void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other);
 int IsStarCollectedInCurLevel(int a);
-void *func_0200fa04(void *c, void *v, int b);
 void func_02011cfc(void);
 void func_02011d38(void);
 void func_02012694(unsigned int a, const Vector3 *p);
@@ -885,7 +884,7 @@ void daBtn_c::func_ov079_02125240(){
     mMovingMeshCollider.SetStoodOnCallback(func_ov079_0212522c);
     if (mIsKing != 0) {
         func_ov079_02123d4c(&a, this);
-        func_0200fa04(this, &a, 0);
+        func_0200fa04(&a, 0);
     } else {
         func_ov079_02123d4c(&b, this);
         LandingDustAt(b, false);

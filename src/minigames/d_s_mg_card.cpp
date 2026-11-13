@@ -216,7 +216,7 @@ s32 dScMgCard_c::InitResources()
     G2_SetBG0Priority(1);
 
     Camera_InitDealerView(&mCamera);
-    if (Dealer_Load((char *)&mDealer) == 0)
+    if (mDealer.Load() == 0)
         return 0;
 
     {
@@ -260,7 +260,7 @@ void dScMgCard_c::StartRound(int mode)
     mPlayerHandFace2 = 6;
     mDealerHandFace = 6;
     mDealerHandFace2 = 6;
-    Dealer_StartShuffle(&mDealer, 4, 5, &mDealCount);
+    mDealer.StartShuffle(4, 5, &mDealCount);
 
     mDealer.mReserved = 1;
     mDealer.mHand = 2;
@@ -300,7 +300,7 @@ int dScMgCard_c::CanEndState(int mode)
         break;
     }
     case 0xf:
-        if (Dealer_IsIdle(&mDealer) != 0) {
+        if (mDealer.IsIdle() != 0) {
             int r = dScMgCard_c::CompareHands(mArray1, mArray2);
             if (r == -1) {
                 MgCoins_StartLose();
@@ -411,11 +411,11 @@ void dScMgCard_c::UpdateState()
             mPromptBlinkCount = 1;
             mPromptBlinkTimer = 0;
         }
-        if (Dealer_IsBusy(&mDealer) != 0)
+        if (mDealer.IsBusy() != 0)
             mState++;
         break;
     case 2:
-        if (Dealer_IsIdle(&mDealer) != 0) {
+        if (mDealer.IsIdle() != 0) {
             mStateTimer = 0x10;
             mState++;
         } else {
@@ -501,14 +501,14 @@ void dScMgCard_c::UpdateState()
         break;
     case 5:
         if (sCardSelectLocked != 0 && dScMgCard_c::AllInState(mArray1, 2) != 0 &&
-            Dealer_IsIdle(&mDealer) != 0) {
+            mDealer.IsIdle() != 0) {
             mState++;
-        } else if (Dealer_IsIdle(&mDealer) != 0) {
+        } else if (mDealer.IsIdle() != 0) {
             r = dScMgCard_c::CountInState(mArray1, 6);
             if (r != 0) {
                 mDealCount = 0;
                 mDealer.mReserved = 0;
-                Dealer_StartDeal(&mDealer, (s16)r, &mDealCount);
+                mDealer.StartDeal((s16)r, &mDealCount);
             }
         } else {
             r = dScMgCard_c::FindInState(mArray1, 6);
@@ -523,7 +523,7 @@ void dScMgCard_c::UpdateState()
         mState++;
         break;
     case 7:
-        if (dScMgCard_c::AllInState(mArray2, 1) != 0 && Dealer_IsIdle(&mDealer) != 0) {
+        if (dScMgCard_c::AllInState(mArray2, 1) != 0 && mDealer.IsIdle() != 0) {
             sCardDrawsLeft--;
             if (sCardDrawsLeft == 0) {
                 mState++;
@@ -533,12 +533,12 @@ void dScMgCard_c::UpdateState()
                 sCardSelectLocked = 0;
                 data_ov006_02141770 = 0;
             }
-        } else if (Dealer_IsIdle(&mDealer) != 0) {
+        } else if (mDealer.IsIdle() != 0) {
             r = dScMgCard_c::CountInState(mArray2, 6);
             if (r != 0) {
                 mDealCount = 0;
                 mDealer.mReserved = 0;
-                Dealer_StartDeal(&mDealer, (s16)r, &mDealCount);
+                mDealer.StartDeal((s16)r, &mDealCount);
             }
         } else {
             r = dScMgCard_c::FindInState(mArray2, 6);
@@ -637,7 +637,7 @@ void dScMgCard_c::UpdateState()
         if (mStateTimer == 0) {
             r = dScMgCard_c::CompareHands(mArray1, mArray2);
             if (r == -1) {
-                Dealer_PlayLose(&mDealer);
+                mDealer.PlayLose();
                 g = gMgScene;
                 if (g != 0) {
                     if (g->mHudScore > 0) {
@@ -646,7 +646,7 @@ void dScMgCard_c::UpdateState()
                 }
                 Mg_SetSharedState(MG_STATE_LOSE);
             } else if (r == 1) {
-                Dealer_PlayWin(&mDealer);
+                mDealer.PlayWin();
                 g = gMgScene;
                 if (g != 0) {
                     if (g->mHudScore < 0x270f) {
@@ -678,11 +678,11 @@ void dScMgCard_c::UpdateState()
 }
 
 /* Slot 6. mDealer is the 0x270-byte table this family of scenes shares;
- * Dealer_Update steps it. */
+ * Dealer::Update steps it. */
 s32 dScMgCard_c::Behavior()
 {
     mFrameCounter += 1;
-    Dealer_Update(&mDealer);
+    mDealer.Update();
     UpdateState();
     MgCoins_Update();
     return 1;
@@ -764,7 +764,7 @@ s32 dScMgCard_c::Render()
         }
     }
 
-    Dealer_Draw(&mDealer);
+    mDealer.Draw();
     return 1;
 }
 

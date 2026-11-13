@@ -676,61 +676,56 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
     if (func_ov100_021452e4(b)) {
         entry = &data_ov100_02148204[param1];
         if (entry->starsNeeded >= 0) {
-            if (data_0209caa0.file.flags1 & (DOOR_SAVE_STAR_UNLOCKED << entry->flagShift))
-                goto L240;
-            if (NumStars() < entry->starsNeeded) {
-                if (func_ov100_02144f84() == 0)
+            if ((data_0209caa0.file.flags1 & (DOOR_SAVE_STAR_UNLOCKED << entry->flagShift)) == 0) {
+                if (NumStars() < entry->starsNeeded) {
+                    if (func_ov100_02144f84() == 0)
+                        return 1;
+                    if (b->ShowMessage(*this, entry->msg, (Vector3 *)&mSpeedX, 0, 2) != 0) {
+                        func_ov100_021453d8(&data_ov100_021488c4, (int)b);
+                        return 1;
+                    }
+                } else if (b->TryTalkToDoor(0) != 0) {
+                    func_ov100_021453d8(&data_ov100_021488d4, (int)b);
                     return 1;
-                if (b->ShowMessage(*this, entry->msg, (Vector3 *)&mSpeedX, 0, 2) == 0)
-                    goto L240;
-                func_ov100_021453d8(&data_ov100_021488c4, (int)b);
-                return 1;
-            } else {
-                if (b->TryTalkToDoor(0) == 0)
-                    goto L240;
-                func_ov100_021453d8(&data_ov100_021488d4, (int)b);
-                return 1;
+                }
             }
         } else {
             int e9 = entry->keyIndex;
-            int val;
-            if (e9 < 0)
-                goto L240;
-            val = data_0209caa0.file.flags1;
-            if (val & (DOOR_SAVE_KEY_UNLOCKED << entry->flagShift))
-                goto L240;
-            if (val & (DOOR_SAVE_HAVE_KEY << e9))
-                goto L210;
-            if (func_ov100_02144f84() == 0)
-                return 1;
-            {
-                int msg;
-                if (entry->keyIndex == 6) {
-                    msg = SaveData::NumGlowingRabbitsFound() ? 0x28 : 0x23;
-                } else {
-                    int idx2 = param1;
-                    int sel = 1;
-                    int inRange = (unsigned)idx2 >= DOOR_FIRST_KEY_MODEL && (unsigned)idx2 <= 0xb;
-                    if (!inRange) {
-                        if (!(data_0209caa0.file.flags1 & 0xbe))
-                            sel = 0;
+            if (e9 >= 0) {
+                int val = data_0209caa0.file.flags1;
+                if ((val & (DOOR_SAVE_KEY_UNLOCKED << entry->flagShift)) == 0) {
+                    if ((val & (DOOR_SAVE_HAVE_KEY << e9)) == 0) {
+                        if (func_ov100_02144f84() == 0)
+                            return 1;
+                        {
+                            int msg;
+                            if (entry->keyIndex == 6) {
+                                msg = SaveData::NumGlowingRabbitsFound() ? 0x28 : 0x23;
+                            } else {
+                                int idx2 = param1;
+                                int sel = 1;
+                                int inRange =
+                                    (unsigned)idx2 >= DOOR_FIRST_KEY_MODEL && (unsigned)idx2 <= 0xb;
+                                if (!inRange) {
+                                    if (!(data_0209caa0.file.flags1 & 0xbe))
+                                        sel = 0;
+                                }
+                                msg = sel ? entry->msg : 0x17;
+                            }
+                            if (b->ShowMessage(*this, (short)msg, (Vector3 *)&mSpeedX, 0, 2) != 0) {
+                                func_ov100_021453d8(&data_ov100_021488c4, (int)b);
+                                if (entry->keyIndex == 5)
+                                    data_0209caa0.file.flags2 |= 0x10000;
+                                return 1;
+                            }
+                        }
+                    } else if (b->TryTalkToKeyDoor() != 0) {
+                        func_ov100_021453d8(&data_ov100_021488e4, (int)b);
+                        return 1;
                     }
-                    msg = sel ? entry->msg : 0x17;
                 }
-                if (b->ShowMessage(*this, (short)msg, (Vector3 *)&mSpeedX, 0, 2) == 0)
-                    goto L240;
             }
-            func_ov100_021453d8(&data_ov100_021488c4, (int)b);
-            if (entry->keyIndex == 5)
-                data_0209caa0.file.flags2 |= 0x10000;
-            return 1;
-        L210:
-            if (b->TryTalkToKeyDoor() == 0)
-                goto L240;
-            func_ov100_021453d8(&data_ov100_021488e4, (int)b);
-            return 1;
         }
-    L240:
         func_ov100_021451c4(
             (mKeyModelIdx != 0) ? (void *)&data_ov100_02148904 : (void *)&data_ov100_021488f4, b);
     }
@@ -804,25 +799,20 @@ void func_ov100_02145070(int v) {
 int daDoor_c::func_ov100_02145080(daPly_c *arg1) {
     if (param1 != DOOR_LAST_KEY_MODEL) {
         if (mTimer == 0) {
-            if (func_ov002_020ca78c(arg1) == 0)
-                goto ret1;
-            Sound::PlaySub(0x2b, 0, 0x7f, 0x15666, 0);
-            mTimer = 0x78;
-            goto ret1;
+            if (func_ov002_020ca78c(arg1) != 0) {
+                Sound::PlaySub(0x2b, 0, 0x7f, 0x15666, 0);
+                mTimer = 0x78;
+            }
+        } else if (DecIfAbove0_Byte(&mTimer) == 0) {
+            Sound::PlaySub(0x2b, 0x7f, 0, 0x7222, 0);
+            mTimer += 1;
+            return 0;
         }
-        if (DecIfAbove0_Byte(&mTimer) != 0)
-            goto ret1;
-        Sound::PlaySub(0x2b, 0x7f, 0, 0x7222, 0);
-        mTimer += 1;
+    } else if (mTimer == 0) {
+        mTimer = arg1->TryExitWhiteDoorWithStar();
+    } else {
         return 0;
     }
-    if (mTimer != 0)
-        goto ret0;
-    mTimer = arg1->TryExitWhiteDoorWithStar();
-    goto ret1;
-ret0:
-    return 0;
-ret1:
     return 1;
 }
 
@@ -883,25 +873,24 @@ int daDoor_c::func_ov100_021452e4(daPly_c *r1) {
     v = mScaleX;
     if (v < 0)
         v = -v;
-    if (v > 0x4b000)
-        goto fail;
-    v = mScaleY;
-    if (v < 0)
-        v = -v;
-    if (v > 0x32000)
-        goto fail;
-    z = mScaleZ;
-    v = (z < 0) ? -z : z;
-    if (v > 0x6e000)
-        goto fail;
-    if (z < 0)
-        a = mAngleY;
-    else
-        a = mAngleY + 0x8000;
-    a = (short)a;
-    if (AngleDiff(a, r1->mAngleY) < 0x2000)
-        return 1;
-fail:
+    if (v <= 0x4b000) {
+        v = mScaleY;
+        if (v < 0)
+            v = -v;
+        if (v <= 0x32000) {
+            z = mScaleZ;
+            v = (z < 0) ? -z : z;
+            if (v <= 0x6e000) {
+                if (z < 0)
+                    a = mAngleY;
+                else
+                    a = mAngleY + 0x8000;
+                a = (short)a;
+                if (AngleDiff(a, r1->mAngleY) < 0x2000)
+                    return 1;
+            }
+        }
+    }
     return 0;
 }
 
@@ -976,11 +965,7 @@ void daDoor_c::OnPendingDestroy() {}
  * The two virtual calls are dExtSimpleModel_c's slot 4 Virtual10(Matrix4x3&) and slot
  * 5 Render(const Vector3*), exactly what the ROM dispatches. */
 s32 daDoor_c::Render() {
-    if (IsAreaShowing((char)mAngleX) == 0) {
-        if (IsAreaShowing((char)mAngleZ) == 0)
-            goto done;
-    }
-    {
+    if (IsAreaShowing((char)mAngleX) != 0 || IsAreaShowing((char)mAngleZ) != 0) {
         /* &mModel is taken HERE and not at the top of the function: hoisting
            it costs a callee-saved register and a stack adjust the ROM does
            not have. The ROM computes it lazily, so this does too. */
@@ -988,12 +973,11 @@ s32 daDoor_c::Render() {
         dExtSimpleModel_c *key;
         body->Render(0);
         key = mKeyModel;
-        if (key == 0)
-            goto done;
-        key->Virtual10(*mModel.data.transforms);
-        mKeyModel->Render(0);
+        if (key != 0) {
+            key->Virtual10(*mModel.data.transforms);
+            mKeyModel->Render(0);
+        }
     }
-done:
     return 1;
 }
 
@@ -1127,22 +1111,20 @@ s32 daDoor_c::InitResources() {
     v = mScaleX;
     if (v < 0)
         v = -v;
-    if (v > 0x4b000) /* 75 units */
-        goto big;
-    v = mScaleY;
-    if (v < 0)
-        v = -v;
-    if (v > 0x32000) /* 50 */
-        goto big;
-    v = mScaleZ;
-    if (v < 0)
-        v = -v;
-    if (v > 0x1f4000) /* 500 */
-        goto big;
-
-    func_ov100_021453d8(&data_ov100_02148914, r4);
-    goto done;
-big:
+    if (v <= 0x4b000) { /* 75 units */
+        v = mScaleY;
+        if (v < 0)
+            v = -v;
+        if (v <= 0x32000) { /* 50 */
+            v = mScaleZ;
+            if (v < 0)
+                v = -v;
+            if (v <= 0x1f4000) { /* 500 */
+                func_ov100_021453d8(&data_ov100_02148914, r4);
+                goto done;
+            }
+        }
+    }
     func_ov100_021453d8(&data_ov100_021488b4, r4);
 done:
     return 1;

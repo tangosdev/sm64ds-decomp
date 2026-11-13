@@ -43,6 +43,7 @@ enum d_s_mg_trampoline_AssetId {
 #include "nitro/fx/fx.h"
 #include "LevelRng.h"
 #include "decl_common.h"
+#include "dMgTrmplnShared.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/mi/memory.h"

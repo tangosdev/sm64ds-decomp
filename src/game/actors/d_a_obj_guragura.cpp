@@ -37,19 +37,9 @@ extern int data_02092768[4];
  * header that agrees with these spellings. */
 
 int MTX_Inverse43(const Matrix4x3 *s, Matrix4x3 *d);
-extern "C" {
 
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
-}
-
+/* local extern: mTilt is s32[4], and Quaternion.h spells FromVector3 as Quat *. */
 void Quaternion_FromVector3(int *q, Vector3 *from, Vector3 *to);
-extern "C" {
-
-void Quaternion_Normalize(int *q);
-void Quaternion_SLerp(int *q0, int *q1, int t, int *out);
-void Matrix4x3_FromQuaternion(const Quaternion *q, Matrix4x3 *m);
-void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-}
 
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is

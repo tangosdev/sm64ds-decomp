@@ -43,6 +43,7 @@
 #include "common.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
+#include "MgCamera.h"
 #include "dMgJump3DMario_c.h"
 #include "SharedFilePtr.h"
 #include "OAM.h"
@@ -70,8 +71,7 @@ void Sound_PlayBank1Panned(int a0, int a1, int a2);
 extern "C" {
 
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-
-int NormalizeVec3IfNonZero(VecFx32 *v);}
+}
 
 void func_02012718(int a, int b);
 
@@ -79,9 +79,7 @@ void func_02016a14(char *self, int a);
 
 void func_02016a04(char *self, int a);
 
-int func_020179b4(SharedFilePtr *f, dExtModel_c *m, int extra);extern "C" {
-
-void Camera_ProjectToScreen16(void *cam, VecFx32 *pos, short *out);}
+int func_020179b4(SharedFilePtr *f, dExtModel_c *m, int extra);
 int D3D_PlaySeAtX(int a, int b);
 void Puff_Spawn(int x, int y);
 extern "C" {
@@ -466,7 +464,7 @@ void dMgJump3DMario_c::Draw()
         return;
 
     if (data_ov006_02140400 != 0) {
-        Camera_ProjectToScreen16(sMgCurCamera, &mPos, screen);
+        Camera_ProjectToScreen16((MgCamera *)sMgCurCamera, &mPos, screen);
 
         wave = FX_SinIdx(sJump3DSpinAngle >> 4);
         screen[1] = screen[1] - (((wave << 2) + 0x30000) >> 12);
@@ -492,7 +490,7 @@ void dMgJump3DMario_c::Update()
     ApproachLinear(mVel.y, sJump3DFallSpeed, sJump3DGravityStep);
     VEC_Add((Vector3 *)&mPos, (Vector3 *)&mVel, (Vector3 *)&mPos);
     (this->*mState)();
-    Camera_ProjectToScreen16(sMgMainCamera, &mPos, &mScreenX);
+    Camera_ProjectToScreen16((MgCamera *)sMgMainCamera, &mPos, &mScreenX);
     UpdateModelMatrix();
     mAnmModel.dExtFrameCtrl_c::Advance();
 }
@@ -598,7 +596,7 @@ void dMgJump3DMario_c::EnterHold()
     VecFx32 v;
 
     Vec3_Sub((Vector3 *)&v, (const Vector3 *)&mPos, (const Vector3 *)&mAnchor);
-    if (NormalizeVec3IfNonZero(&v) != 0) {
+    if (NormalizeVec3IfNonZero((Vector3 *)&v) != 0) {
         mVel.x = v.x;
         mVel.y = v.y;
         mVel.z = v.z;
@@ -936,7 +934,7 @@ int dMgJump3DMario_c::LoadResources()
 
     mAnimIdx = 0;
     if (sMgMainCamera != 0)
-        Camera_ProjectToScreen16(sMgMainCamera, &mPos, &mScreenX);
+        Camera_ProjectToScreen16((MgCamera *)sMgMainCamera, &mPos, &mScreenX);
 
     t = gCurrentScene->actorID == 0x175;
     if (t != 0) {

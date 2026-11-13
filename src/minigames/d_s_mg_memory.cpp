@@ -654,13 +654,13 @@ void dScMgMemory_c::ResultWait() {
                 if (mHudScore > mBestHudScore)
                     mBestHudScore = mHudScore;
                 Mg_SubmitScore(gMgScene ? gMgScene->mHudScore : 0);
-                Dealer_PlayWin(&mDealer);
+                mDealer.PlayWin();
             } else {
                 Mg_SetSharedState(MG_STATE_LOSE);
                 if (mHudScore > 0) {
                     mHudScore--;
                 }
-                Dealer_PlayLose(&mDealer);
+                mDealer.PlayLose();
             }
         }
     } else {
@@ -772,9 +772,9 @@ void dScMgMemory_c::RoundStart() {
     mDealSignals = 0;
     mCardsDealt = 0;
     if (mDifficulty >= 2)
-        Dealer_StartShuffle(&mDealer, 4, 3, &mDealSignals);
+        mDealer.StartShuffle(4, 3, &mDealSignals);
     else
-        Dealer_StartShuffle(&mDealer, 4, 2, &mDealSignals);
+        mDealer.StartShuffle(4, 2, &mDealSignals);
     mDealer.mReserved = 1;
     mSubstate = ROUND_DEAL_EASY;
     if (mPromptBlinkCount == 0) {
@@ -954,7 +954,7 @@ void dScMgMemory_c::StateSetup() {
     SetupDifficulty();
     ShuffleCards();
     FreeGfxSlotsById(0x1d);
-    Dealer_PlayIdle((char *)&mDealer);
+    mDealer.PlayIdle();
     mState = STATE_PLAY;
 }
 
@@ -979,7 +979,7 @@ void dScMgMemory_c::OnDealDone() {
 
 int dScMgMemory_c::CanEndState(int /* mode */) {
     if (mState == STATE_RESULT && mSubstate == RESULT_WAIT) {
-        if (Dealer_IsIdle(&mDealer) == 0)
+        if (mDealer.IsIdle() == 0)
             return 0;
         mSubstate = RESULT_REWARD;
         FreeGfxSlotsById(0x1d);
@@ -1013,7 +1013,7 @@ s32 dScMgMemory_c::Render() {
     DrawMessage();
     DrawCursor();
     DrawCards();
-    Dealer_Draw((char *)&mDealer);
+    mDealer.Draw();
     return 1;
 }
 
@@ -1021,7 +1021,7 @@ s32 dScMgMemory_c::Render() {
 s32 dScMgMemory_c::Behavior() {
     (this->*sMemoryStateTable[mState])();
     MgCoins_Update();
-    Dealer_Update(&mDealer);
+    mDealer.Update();
     return 1;
 }
 
@@ -1043,7 +1043,7 @@ s32 dScMgMemory_c::InitResources() {
     gSubScreenLayers = 0x18;
     ResetGame();
     Camera_InitDealerView(&mCamera);
-    if (Dealer_Load(&mDealer) == 0)
+    if (mDealer.Load() == 0)
         return 0;
     mCredits = Mg_GetSavedRecord0();
     mCreditsShown = mCredits;
@@ -1129,4 +1129,3 @@ int sMemoryCardNcgByLanguage[5] = {ASSET_D_2D_MG_CARD_NCG_BIN, ASSET_D_2D_MG_CAR
 /* Seven card values, five flip frames each, indexed by value*5+frame. */
 u16 sMemoryCardFrameSprites[35] = {0, 0, 0, 0, 0, 0,  1, 2, 4, 3, 0,  1,  2, 6, 5, 0,  1, 2,
                                    8, 7, 0, 1, 2, 10, 9, 0, 1, 2, 12, 11, 0, 1, 2, 14, 13};
-

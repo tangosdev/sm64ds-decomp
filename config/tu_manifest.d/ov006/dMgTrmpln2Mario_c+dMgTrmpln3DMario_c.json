@@ -62,154 +62,154 @@
       "ordinal": 3
     },
     {
-      "symbol": "_ZN11ns_020c8e9017Trmp2Mario_RenderEPc",
+      "symbol": "_ZN17dMgTrmpln2Mario_c6RenderEv",
       "address": "0x020c8e90",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov006_020c8e90.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN11ns_020c8ecc23Trmp2Mario_UpdateMatrixEPc",
+      "symbol": "_ZN17dMgTrmpln2Mario_c12UpdateMatrixEv",
       "address": "0x020c8ecc",
       "size": "0x00000054",
       "legacy_source": "src/func_ov006_020c8ecc.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "Trmp2Mario_Update",
+      "symbol": "_ZN17dMgTrmpln2Mario_c6UpdateEv",
       "address": "0x020c8f20",
       "size": "0x00000104",
       "legacy_source": "src/func_ov006_020c8f20.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN11ns_020c902423Trmp2Mario_ApplyGravityEPc",
+      "symbol": "_ZN17dMgTrmpln2Mario_c12ApplyGravityEv",
       "address": "0x020c9024",
       "size": "0x00000038",
       "legacy_source": "src/func_ov006_020c9024.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN11ns_020c905c26Trmp2Mario_StateKnockedOutEPc",
+      "symbol": "_ZN17dMgTrmpln2Mario_c15StateKnockedOutEv",
       "address": "0x020c905c",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov006_020c905c.c",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN11ns_020c909822Trmp2Mario_EnterByKindEPc",
+      "symbol": "_ZN17dMgTrmpln2Mario_c11EnterByKindEv",
       "address": "0x020c9098",
       "size": "0x00000114",
       "legacy_source": "src/func_ov006_020c9098.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN11ns_020c91ac22Trmp2Mario_StateBounceEPc",
+      "symbol": "_ZN17dMgTrmpln2Mario_c11StateBounceEv",
       "address": "0x020c91ac",
       "size": "0x00000334",
       "legacy_source": "src/func_ov006_020c91ac.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN11ns_020c94e025Trmp2Mario_BounceOffLineAEPc",
+      "symbol": "_ZN17dMgTrmpln2Mario_c14BounceOffLineAEv",
       "address": "0x020c94e0",
       "size": "0x000002dc",
       "legacy_source": "src/func_ov006_020c94e0.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN11ns_020c97bc26Trmp2Mario_StateWallBounceEPc",
+      "symbol": "_ZN17dMgTrmpln2Mario_c15StateWallBounceEv",
       "address": "0x020c97bc",
       "size": "0x000002e4",
       "legacy_source": "src/func_ov006_020c97bc.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN11ns_020c9aa025Trmp2Mario_BounceOffLineBEPc",
+      "symbol": "_ZN17dMgTrmpln2Mario_c14BounceOffLineBEv",
       "address": "0x020c9aa0",
       "size": "0x000001ec",
       "legacy_source": "src/func_ov006_020c9aa0.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN11ns_020c9c8c22Trmp2Mario_EnterBounceEPc",
+      "symbol": "_ZN17dMgTrmpln2Mario_c11EnterBounceEv",
       "address": "0x020c9c8c",
       "size": "0x000000f0",
       "legacy_source": "src/func_ov006_020c9c8c.cpp",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN11ns_020c9d7c27Trmp2Mario_StateRespawnWaitEPc",
+      "symbol": "_ZN17dMgTrmpln2Mario_c16StateRespawnWaitEv",
       "address": "0x020c9d7c",
       "size": "0x00000100",
       "legacy_source": "src/func_ov006_020c9d7c.c",
       "ordinal": 15
     },
     {
-      "symbol": "Trmp2Mario_EnterRespawnWait",
+      "symbol": "_ZN17dMgTrmpln2Mario_c16EnterRespawnWaitEv",
       "address": "0x020c9e7c",
       "size": "0x00000080",
       "legacy_source": "src/func_ov006_020c9e7c.c",
       "ordinal": 16
     },
     {
-      "symbol": "_ZN11ns_020c9efc22Trmp2Mario_StateMissedEPc",
+      "symbol": "_ZN17dMgTrmpln2Mario_c11StateMissedEv",
       "address": "0x020c9efc",
       "size": "0x000000e8",
       "legacy_source": "src/func_ov006_020c9efc.cpp",
       "ordinal": 17
     },
     {
-      "symbol": "_ZN11ns_020c9fe422Trmp2Mario_EnterMissedEPc",
+      "symbol": "_ZN17dMgTrmpln2Mario_c11EnterMissedEv",
       "address": "0x020c9fe4",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov006_020c9fe4.cpp",
       "ordinal": 18
     },
     {
-      "symbol": "Trmp2Mario_StateFall",
+      "symbol": "_ZN17dMgTrmpln2Mario_c9StateFallEv",
       "address": "0x020ca070",
       "size": "0x0000027c",
       "legacy_source": "src/func_ov006_020ca070.cpp",
       "ordinal": 19
     },
     {
-      "symbol": "_ZN11ns_020ca2ec20Trmp2Mario_EnterFallEPv",
+      "symbol": "_ZN17dMgTrmpln2Mario_c9EnterFallEv",
       "address": "0x020ca2ec",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_020ca2ec.c",
       "ordinal": 20
     },
     {
-      "symbol": "_ZN11ns_020ca31026Trmp2Mario_StateAppearWaitEPc",
+      "symbol": "_ZN17dMgTrmpln2Mario_c15StateAppearWaitEv",
       "address": "0x020ca310",
       "size": "0x00000064",
       "legacy_source": "src/func_ov006_020ca310.cpp",
       "ordinal": 21
     },
     {
-      "symbol": "_ZN11ns_020ca37426Trmp2Mario_EnterAppearWaitEPcs",
+      "symbol": "_ZN17dMgTrmpln2Mario_c15EnterAppearWaitEs",
       "address": "0x020ca374",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_020ca374.c",
       "ordinal": 22
     },
     {
-      "symbol": "_ZN11ns_020ca39c22Trmp2Mario_StateHiddenEPi",
+      "symbol": "_ZN17dMgTrmpln2Mario_c11StateHiddenEv",
       "address": "0x020ca39c",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov006_020ca39c.c",
       "ordinal": 23
     },
     {
-      "symbol": "_ZN11ns_020ca3a822Trmp2Mario_EnterHiddenEPc",
+      "symbol": "_ZN17dMgTrmpln2Mario_c11EnterHiddenEv",
       "address": "0x020ca3a8",
       "size": "0x00000088",
       "legacy_source": "src/func_ov006_020ca3a8.cpp",
       "ordinal": 24
     },
     {
-      "symbol": "_ZN11ns_020ca43015Trmp2Mario_LoadEPc",
+      "symbol": "_ZN17dMgTrmpln2Mario_c4LoadEv",
       "address": "0x020ca430",
       "size": "0x000001d4",
       "legacy_source": "src/func_ov006_020ca430.c",
@@ -321,182 +321,182 @@
       "ordinal": 40
     },
     {
-      "symbol": "_ZN11ns_020cafb418Trmp3DMario_RenderEPc",
+      "symbol": "_ZN18dMgTrmpln3DMario_c6RenderEv",
       "address": "0x020cafb4",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_020cafb4.cpp",
       "ordinal": 41
     },
     {
-      "symbol": "_ZN11ns_020cafdc24Trmp3DMario_UpdateMatrixEPc",
+      "symbol": "_ZN18dMgTrmpln3DMario_c12UpdateMatrixEv",
       "address": "0x020cafdc",
       "size": "0x00000054",
       "legacy_source": "src/func_ov006_020cafdc.cpp",
       "ordinal": 42
     },
     {
-      "symbol": "_ZN11ns_020cb03018Trmp3DMario_UpdateEPc",
+      "symbol": "_ZN18dMgTrmpln3DMario_c6UpdateEv",
       "address": "0x020cb030",
       "size": "0x00000104",
       "legacy_source": "src/func_ov006_020cb030.cpp",
       "ordinal": 43
     },
     {
-      "symbol": "_ZN11ns_020cb13424Trmp3DMario_ApplyGravityEPc",
+      "symbol": "_ZN18dMgTrmpln3DMario_c12ApplyGravityEv",
       "address": "0x020cb134",
       "size": "0x00000038",
       "legacy_source": "src/func_ov006_020cb134.cpp",
       "ordinal": 44
     },
     {
-      "symbol": "_ZN11ns_020cb16c27Trmp3DMario_StateKnockedOutEPi",
+      "symbol": "_ZN18dMgTrmpln3DMario_c15StateKnockedOutEv",
       "address": "0x020cb16c",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov006_020cb16c.c",
       "ordinal": 45
     },
     {
-      "symbol": "Trmp3DMario_EnterByKind",
+      "symbol": "_ZN18dMgTrmpln3DMario_c11EnterByKindEv",
       "address": "0x020cb1a8",
       "size": "0x0000010c",
       "legacy_source": "src/func_ov006_020cb1a8.cpp",
       "ordinal": 46
     },
     {
-      "symbol": "Trmp3DMario_StateGoal",
+      "symbol": "_ZN18dMgTrmpln3DMario_c9StateGoalEv",
       "address": "0x020cb2b4",
       "size": "0x00000274",
       "legacy_source": "src/func_ov006_020cb2b4.c",
       "ordinal": 47
     },
     {
-      "symbol": "_ZN11ns_020cb52821Trmp3DMario_EnterGoalEPc",
+      "symbol": "_ZN18dMgTrmpln3DMario_c9EnterGoalEv",
       "address": "0x020cb528",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov006_020cb528.cpp",
       "ordinal": 48
     },
     {
-      "symbol": "_ZN11ns_020cb5c421Trmp3DMario_StateLandEPc",
+      "symbol": "_ZN18dMgTrmpln3DMario_c9StateLandEv",
       "address": "0x020cb5c4",
       "size": "0x000000cc",
       "legacy_source": "src/func_ov006_020cb5c4.c",
       "ordinal": 49
     },
     {
-      "symbol": "Trmp3DMario_EnterLand",
+      "symbol": "_ZN18dMgTrmpln3DMario_c9EnterLandEv",
       "address": "0x020cb690",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov006_020cb690.cpp",
       "ordinal": 50
     },
     {
-      "symbol": "_ZN11ns_020cb72c28Trmp3DMario_StateFallToLedgeEPc",
+      "symbol": "_ZN18dMgTrmpln3DMario_c16StateFallToLedgeEv",
       "address": "0x020cb72c",
       "size": "0x000000e8",
       "legacy_source": "src/func_ov006_020cb72c.c",
       "ordinal": 51
     },
     {
-      "symbol": "Trmp3DMario_EnterFallToLedge",
+      "symbol": "_ZN18dMgTrmpln3DMario_c16EnterFallToLedgeEv",
       "address": "0x020cb814",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_020cb814.c",
       "ordinal": 52
     },
     {
-      "symbol": "_ZN11ns_020cb83827Trmp3DMario_StateHardBounceEPc",
+      "symbol": "_ZN18dMgTrmpln3DMario_c15StateHardBounceEv",
       "address": "0x020cb838",
       "size": "0x000002b4",
       "legacy_source": "src/func_ov006_020cb838.cpp",
       "ordinal": 53
     },
     {
-      "symbol": "Trmp3DMario_BounceOffLineA",
+      "symbol": "_ZN18dMgTrmpln3DMario_c14BounceOffLineAEv",
       "address": "0x020cbaec",
       "size": "0x00000290",
       "legacy_source": "src/func_ov006_020cbaec.cpp",
       "ordinal": 54
     },
     {
-      "symbol": "_ZN11ns_020cbd7c23Trmp3DMario_StateBounceEPc",
+      "symbol": "_ZN18dMgTrmpln3DMario_c11StateBounceEv",
       "address": "0x020cbd7c",
       "size": "0x0000025c",
       "legacy_source": "src/func_ov006_020cbd7c.cpp",
       "ordinal": 55
     },
     {
-      "symbol": "Trmp3DMario_BounceOffLineB",
+      "symbol": "_ZN18dMgTrmpln3DMario_c14BounceOffLineBEv",
       "address": "0x020cbfd8",
       "size": "0x000001c0",
       "legacy_source": "src/func_ov006_020cbfd8.cpp",
       "ordinal": 56
     },
     {
-      "symbol": "_ZN11ns_020cc19819Trmp3DMario_JumpOffEPc",
+      "symbol": "_ZN18dMgTrmpln3DMario_c7JumpOffEv",
       "address": "0x020cc198",
       "size": "0x00000114",
       "legacy_source": "src/func_ov006_020cc198.cpp",
       "ordinal": 57
     },
     {
-      "symbol": "_ZN11ns_020cc2ac23Trmp3DMario_StateMissedEPc",
+      "symbol": "_ZN18dMgTrmpln3DMario_c11StateMissedEv",
       "address": "0x020cc2ac",
       "size": "0x000000d0",
       "legacy_source": "src/func_ov006_020cc2ac.c",
       "ordinal": 58
     },
     {
-      "symbol": "Trmp3DMario_EnterMissed",
+      "symbol": "_ZN18dMgTrmpln3DMario_c11EnterMissedEv",
       "address": "0x020cc37c",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov006_020cc37c.cpp",
       "ordinal": 59
     },
     {
-      "symbol": "Trmp3DMario_StateFall",
+      "symbol": "_ZN18dMgTrmpln3DMario_c9StateFallEv",
       "address": "0x020cc408",
       "size": "0x00000210",
       "legacy_source": "src/func_ov006_020cc408.cpp",
       "ordinal": 60
     },
     {
-      "symbol": "_ZN11ns_020cc61821Trmp3DMario_EnterFallEPv",
+      "symbol": "_ZN18dMgTrmpln3DMario_c9EnterFallEv",
       "address": "0x020cc618",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_020cc618.c",
       "ordinal": 61
     },
     {
-      "symbol": "_ZN11ns_020cc63c25Trmp3DMario_StateWalkBackEPc",
+      "symbol": "_ZN18dMgTrmpln3DMario_c13StateWalkBackEv",
       "address": "0x020cc63c",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov006_020cc63c.c",
       "ordinal": 62
     },
     {
-      "symbol": "_ZN11ns_020cc69825Trmp3DMario_EnterWalkBackEPc",
+      "symbol": "_ZN18dMgTrmpln3DMario_c13EnterWalkBackEv",
       "address": "0x020cc698",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov006_020cc698.cpp",
       "ordinal": 63
     },
     {
-      "symbol": "_ZN11ns_020cc72424Trmp3DMario_StateOnLedgeEPc",
+      "symbol": "_ZN18dMgTrmpln3DMario_c12StateOnLedgeEv",
       "address": "0x020cc724",
       "size": "0x000001a4",
       "legacy_source": "src/func_ov006_020cc724.c",
       "ordinal": 64
     },
     {
-      "symbol": "_ZN11ns_020cc8c824Trmp3DMario_EnterOnLedgeEPc",
+      "symbol": "_ZN18dMgTrmpln3DMario_c12EnterOnLedgeEv",
       "address": "0x020cc8c8",
       "size": "0x000000f0",
       "legacy_source": "src/func_ov006_020cc8c8.c",
       "ordinal": 65
     },
     {
-      "symbol": "_ZN11ns_020cc9b823Trmp3DMario_StateWalkInEPc",
+      "symbol": "_ZN18dMgTrmpln3DMario_c11StateWalkInEv",
       "address": "0x020cc9b8",
       "size": "0x00000044",
       "legacy_source": "src/func_ov006_020cc9b8.c",
@@ -510,14 +510,14 @@
       "ordinal": 67
     },
     {
-      "symbol": "_ZN11ns_020ccae025Trmp3DMario_StateOnGroundEPc",
+      "symbol": "_ZN18dMgTrmpln3DMario_c13StateOnGroundEv",
       "address": "0x020ccae0",
       "size": "0x000001ac",
       "legacy_source": "src/func_ov006_020ccae0.c",
       "ordinal": 68
     },
     {
-      "symbol": "_ZN11ns_020ccc8c25Trmp3DMario_EnterOnGroundEPc",
+      "symbol": "_ZN18dMgTrmpln3DMario_c13EnterOnGroundEv",
       "address": "0x020ccc8c",
       "size": "0x00000078",
       "legacy_source": "src/func_ov006_020ccc8c.cpp",
@@ -531,21 +531,21 @@
       "ordinal": 70
     },
     {
-      "symbol": "_ZN11ns_020ccd6425Trmp3DMario_StateOffstageEPc",
+      "symbol": "_ZN18dMgTrmpln3DMario_c13StateOffstageEv",
       "address": "0x020ccd64",
       "size": "0x00000014",
       "legacy_source": "src/func_ov006_020ccd64.c",
       "ordinal": 71
     },
     {
-      "symbol": "Trmp3DMario_EnterOffstage",
+      "symbol": "_ZN18dMgTrmpln3DMario_c13EnterOffstageEv",
       "address": "0x020ccd78",
       "size": "0x00000094",
       "legacy_source": "src/func_ov006_020ccd78.cpp",
       "ordinal": 72
     },
     {
-      "symbol": "Trmp3DMario_Load",
+      "symbol": "_ZN18dMgTrmpln3DMario_c4LoadEv",
       "address": "0x020cce0c",
       "size": "0x000001bc",
       "legacy_source": "src/func_ov006_020cce0c.c",
@@ -1277,6 +1277,10 @@
     }
   ],
   "notes": [
+    "Re-keyed 2026-11-13: merging origin/main ab553f3e7d (math/CalcLib.h owning VEC_DotProduct, so this TU drops its local copy) renumbered the BSS registration nodes from @2006..@2031 to @2004..@2029 (object measured, paired by symtab index); every non-strtab section is byte-identical.",
+    "Re-keyed 2026-11-11: the pool entry points moved to dMgTrmplnShared.h (included here and by both trampoline scenes) and Camera_ProjectToScreen comes from MgCamera.h, renumbering the BSS registration nodes from @2010..@2035 to @2006..@2031 (object measured; paired by symtab index, every non-strtab section byte-identical).",
+    "Re-keyed 2026-11-11: the extern \"C\" declaration block became one statement per C symbol and the data wrappers dropped, renumbering the BSS registration nodes from @2015..@2040 to @2010..@2035 (object measured; paired by symtab index, every non-strtab section byte-identical).",
+    "Re-keyed 2026-11-11: the per-function `namespace ns_<addr>` shards became one declaration block for the unit, which renumbered the BSS registration nodes from @2183..@2208 to @2015..@2040 (object measured; paired by symtab index, every non-strtab section byte-identical).",
     "Text-only fold of 88 one-function shards (0x020c8dd4 dMgTrmpln2Mario_c::GetVelocity .. 0x020cd72c dMgTrmpObjAdapter_c C2). Both Marios' slot overrides (GetPos, GetPrevPos, GetVelocity, IsActive) are real methods, so GetPos is each class's key function and this TU emits both Mario vtables and typeinfos; they are discarded against the cartridge's copies (compiler_only_output deadstrip-data).",
     "Folded __sinit_ov006_0212f6b4 into this TU. mwcc emits __sinit_d_mg_trmpln2_mario.cpp. @2155-@2166 clash with ov002 and are renamed to unused same-length names. The goal slots are TrmpGoal, not Vector3(x, y, z): ten of them store through an unsigned int*, and the cartridge does not. ~TrmpGoal is aliased to ~Vector3 after the unreferenced vague ~Vector3 import is parked on func_02017a9c.",
     "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded fleet rom.sha256 stays d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8."
@@ -1457,19 +1461,19 @@
           {
             "section": ".init",
             "original": [
-              294
+              304
             ],
             "desired": [
-              294
+              304
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              292
+              302
             ],
             "desired": [
-              292
+              302
             ]
           },
           {
@@ -3362,7 +3366,7 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@2179",
+      "from": "@2004",
       "to": "@2141",
       "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2197 to @2196 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2196) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2197) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2192 to @2161 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2161 to @2159 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2161 to @2146 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2144 to @2183 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed -4 when the merge gave func_02012718, func_02016a04 and func_02016a14 C++ linkage; paired by symtab index, every non-strtab section byte-identical."
     },
@@ -3387,107 +3391,127 @@
       "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2201 to @2200 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2200) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2201) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2196 to @2165 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2165 to @2163 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2165 to @2150 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2148 to @2187 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed -4 when the merge gave func_02012718, func_02016a04 and func_02016a14 C++ linkage; paired by symtab index, every non-strtab section byte-identical."
     },
     {
-      "from": "@2184",
+      "from": "@2005",
+      "to": "@2142",
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2198 to @2197 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2197) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2198) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2193 to @2162 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2162 to @2160 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2162 to @2147 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2145 to @2184 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object)."
+    },
+    {
+      "from": "@2006",
+      "to": "@2143",
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2199 to @2198 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2198) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2199) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2194 to @2163 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2163 to @2161 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2163 to @2148 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2146 to @2185 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object)."
+    },
+    {
+      "from": "@2007",
+      "to": "@2144",
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2200 to @2199 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2199) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2200) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2195 to @2164 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2164 to @2162 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2164 to @2149 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2147 to @2186 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object)."
+    },
+    {
+      "from": "@2008",
+      "to": "@2145",
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2201 to @2200 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2200) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2201) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2196 to @2165 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2165 to @2163 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2165 to @2150 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2148 to @2187 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object)."
+    },
+    {
+      "from": "@2009",
       "to": "@2146",
-      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2202 to @2201 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2201) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2202) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2197 to @2166 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2166 to @2164 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2166 to @2151 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2149 to @2188 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed -4 when the merge gave func_02012718, func_02016a04 and func_02016a14 C++ linkage; paired by symtab index, every non-strtab section byte-identical."
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2202 to @2201 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2201) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2202) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2197 to @2166 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2166 to @2164 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2166 to @2151 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2149 to @2188 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object)."
     },
     {
-      "from": "@2185",
+      "from": "@2010",
       "to": "@2147",
-      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2203 to @2202 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2202) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2203) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2198 to @2167 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2167 to @2165 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2167 to @2152 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2150 to @2189 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed -4 when the merge gave func_02012718, func_02016a04 and func_02016a14 C++ linkage; paired by symtab index, every non-strtab section byte-identical."
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2203 to @2202 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2202) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2203) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2198 to @2167 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2167 to @2165 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2167 to @2152 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2150 to @2189 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object)."
     },
     {
-      "from": "@2186",
+      "from": "@2011",
       "to": "@2148",
-      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2204 to @2203 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2203) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2204) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2199 to @2168 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2168 to @2166 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2168 to @2153 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2151 to @2190 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed -4 when the merge gave func_02012718, func_02016a04 and func_02016a14 C++ linkage; paired by symtab index, every non-strtab section byte-identical."
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2204 to @2203 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2203) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2204) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2199 to @2168 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2168 to @2166 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2168 to @2153 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2151 to @2190 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object)."
     },
     {
-      "from": "@2187",
+      "from": "@2012",
       "to": "@2149",
-      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2205 to @2204 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2204) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2205) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2200 to @2169 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2169 to @2167 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2169 to @2154 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2152 to @2191 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed -4 when the merge gave func_02012718, func_02016a04 and func_02016a14 C++ linkage; paired by symtab index, every non-strtab section byte-identical."
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2205 to @2204 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2204) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2205) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2200 to @2169 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2169 to @2167 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2169 to @2154 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2152 to @2191 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object)."
     },
     {
-      "from": "@2188",
+      "from": "@2013",
       "to": "@2150",
-      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2206 to @2205 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2205) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2206) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2201 to @2170 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2170 to @2168 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2170 to @2155 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2153 to @2192 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed -4 when the merge gave func_02012718, func_02016a04 and func_02016a14 C++ linkage; paired by symtab index, every non-strtab section byte-identical."
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2206 to @2205 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2205) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2206) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2201 to @2170 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2170 to @2168 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2170 to @2155 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2153 to @2192 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object)."
     },
     {
-      "from": "@2189",
+      "from": "@2014",
       "to": "@2151",
-      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2207 to @2206 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2206) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2207) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2202 to @2171 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2171 to @2169 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2171 to @2156 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2154 to @2193 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed -4 when the merge gave func_02012718, func_02016a04 and func_02016a14 C++ linkage; paired by symtab index, every non-strtab section byte-identical."
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2207 to @2206 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2206) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2207) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2202 to @2171 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2171 to @2169 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2171 to @2156 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2154 to @2193 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object)."
     },
     {
-      "from": "@2190",
+      "from": "@2015",
       "to": "@2152",
-      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2208 to @2207 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2207) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2208) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2203 to @2172 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2172 to @2170 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2172 to @2157 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2155 to @2194 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed -4 when the merge gave func_02012718, func_02016a04 and func_02016a14 C++ linkage; paired by symtab index, every non-strtab section byte-identical."
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2208 to @2207 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2207) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2208) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2203 to @2172 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2172 to @2170 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2172 to @2157 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2155 to @2194 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object)."
     },
     {
-      "from": "@2191",
+      "from": "@2016",
       "to": "@2153",
-      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2209 to @2208 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2208) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2209) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2204 to @2173 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2173 to @2171 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2173 to @2158 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2156 to @2195 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed -4 when the merge gave func_02012718, func_02016a04 and func_02016a14 C++ linkage; paired by symtab index, every non-strtab section byte-identical."
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2209 to @2208 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2208) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2209) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2204 to @2173 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2173 to @2171 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2173 to @2158 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2156 to @2195 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object)."
     },
     {
-      "from": "@2192",
+      "from": "@2017",
       "to": "@2154",
-      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2210 to @2209 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2209) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2210) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2205 to @2174 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2174 to @2172 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2174 to @2159 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2157 to @2196 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed -4 when the merge gave func_02012718, func_02016a04 and func_02016a14 C++ linkage; paired by symtab index, every non-strtab section byte-identical."
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2210 to @2209 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2209) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2210) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2205 to @2174 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2174 to @2172 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2174 to @2159 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2157 to @2196 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object)."
     },
     {
-      "from": "@2193",
+      "from": "@2018",
       "to": "@1094",
-      "evidence": "mwcc emits @2211; that name is already used in ov002, so it is renamed to the unused same-length @1094. Re-keyed from @2211 to @2210 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2210) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2211) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2206 to @2175 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2175 to @2173 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2175 to @2160 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2158 to @2197 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed -4 when the merge gave func_02012718, func_02016a04 and func_02016a14 C++ linkage; paired by symtab index, every non-strtab section byte-identical."
+      "evidence": "mwcc emits @2211; that name is already used in ov002, so it is renamed to the unused same-length @1094. Re-keyed from @2211 to @2210 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2210) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2211) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2206 to @2175 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2175 to @2173 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2175 to @2160 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2158 to @2197 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object)."
     },
     {
-      "from": "@2194",
+      "from": "@2019",
       "to": "@1096",
-      "evidence": "mwcc emits @2212; that name is already used in ov002, so it is renamed to the unused same-length @1096. Re-keyed from @2212 to @2211 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2211) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2212) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2207 to @2176 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2176 to @2174 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2176 to @2161 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2159 to @2198 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed -4 when the merge gave func_02012718, func_02016a04 and func_02016a14 C++ linkage; paired by symtab index, every non-strtab section byte-identical."
+      "evidence": "mwcc emits @2212; that name is already used in ov002, so it is renamed to the unused same-length @1096. Re-keyed from @2212 to @2211 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2211) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2212) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2207 to @2176 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2176 to @2174 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2176 to @2161 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2159 to @2198 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object)."
     },
     {
-      "from": "@2195",
+      "from": "@2020",
       "to": "@1106",
-      "evidence": "mwcc emits @2213; that name is already used in ov002, so it is renamed to the unused same-length @1106. Re-keyed from @2213 to @2212 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2212) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2213) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2208 to @2177 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2177 to @2175 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2177 to @2162 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2160 to @2199 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed -4 when the merge gave func_02012718, func_02016a04 and func_02016a14 C++ linkage; paired by symtab index, every non-strtab section byte-identical."
+      "evidence": "mwcc emits @2213; that name is already used in ov002, so it is renamed to the unused same-length @1106. Re-keyed from @2213 to @2212 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2212) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2213) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2208 to @2177 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2177 to @2175 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2177 to @2162 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2160 to @2199 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object)."
     },
     {
-      "from": "@2196",
+      "from": "@2021",
       "to": "@1108",
-      "evidence": "mwcc emits @2214; that name is already used in ov002, so it is renamed to the unused same-length @1108. Re-keyed from @2214 to @2213 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2213) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2214) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2209 to @2178 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2178 to @2176 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2178 to @2163 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2161 to @2200 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed -4 when the merge gave func_02012718, func_02016a04 and func_02016a14 C++ linkage; paired by symtab index, every non-strtab section byte-identical."
+      "evidence": "mwcc emits @2214; that name is already used in ov002, so it is renamed to the unused same-length @1108. Re-keyed from @2214 to @2213 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2213) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2214) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2209 to @2178 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2178 to @2176 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2178 to @2163 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2161 to @2200 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object)."
     },
     {
-      "from": "@2197",
+      "from": "@2022",
       "to": "@1112",
-      "evidence": "mwcc emits @2215; that name is already used in ov002, so it is renamed to the unused same-length @1112. Re-keyed from @2215 to @2214 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2214) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2215) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2210 to @2179 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2179 to @2177 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2179 to @2164 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2162 to @2201 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed -4 when the merge gave func_02012718, func_02016a04 and func_02016a14 C++ linkage; paired by symtab index, every non-strtab section byte-identical."
+      "evidence": "mwcc emits @2215; that name is already used in ov002, so it is renamed to the unused same-length @1112. Re-keyed from @2215 to @2214 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2214) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2215) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2210 to @2179 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2179 to @2177 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2179 to @2164 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2162 to @2201 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object)."
     },
     {
-      "from": "@2198",
+      "from": "@2023",
       "to": "@1114",
-      "evidence": "mwcc emits @2216; that name is already used in ov002, so it is renamed to the unused same-length @1114. Re-keyed from @2216 to @2215 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2215) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2216) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2211 to @2180 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2180 to @2178 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2180 to @2165 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2163 to @2202 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed -4 when the merge gave func_02012718, func_02016a04 and func_02016a14 C++ linkage; paired by symtab index, every non-strtab section byte-identical."
+      "evidence": "mwcc emits @2216; that name is already used in ov002, so it is renamed to the unused same-length @1114. Re-keyed from @2216 to @2215 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2215) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2216) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2211 to @2180 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2180 to @2178 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2180 to @2165 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2163 to @2202 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object)."
     },
     {
-      "from": "@2199",
+      "from": "@2024",
       "to": "@1130",
-      "evidence": "mwcc emits @2217; that name is already used in ov002, so it is renamed to the unused same-length @1130. Re-keyed from @2217 to @2216 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2216) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2217) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2212 to @2181 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2181 to @2179 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2181 to @2166 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2164 to @2203 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed -4 when the merge gave func_02012718, func_02016a04 and func_02016a14 C++ linkage; paired by symtab index, every non-strtab section byte-identical."
+      "evidence": "mwcc emits @2217; that name is already used in ov002, so it is renamed to the unused same-length @1130. Re-keyed from @2217 to @2216 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2216) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2217) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2212 to @2181 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2181 to @2179 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2181 to @2166 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2164 to @2203 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object)."
     },
     {
-      "from": "@2200",
+      "from": "@2025",
       "to": "@1132",
-      "evidence": "mwcc emits @2218; that name is already used in ov002, so it is renamed to the unused same-length @1132. Re-keyed from @2218 to @2217 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2217) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2218) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2213 to @2182 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2182 to @2180 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2182 to @2167 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2165 to @2204 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed -4 when the merge gave func_02012718, func_02016a04 and func_02016a14 C++ linkage; paired by symtab index, every non-strtab section byte-identical."
+      "evidence": "mwcc emits @2218; that name is already used in ov002, so it is renamed to the unused same-length @1132. Re-keyed from @2218 to @2217 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2217) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2218) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2213 to @2182 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2182 to @2180 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2182 to @2167 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2165 to @2204 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object)."
     },
     {
-      "from": "@2201",
+      "from": "@2026",
       "to": "@1134",
-      "evidence": "mwcc emits @2219; that name is already used in ov002, so it is renamed to the unused same-length @1134. Re-keyed from @2219 to @2218 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2218) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2219) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2214 to @2183 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2183 to @2181 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2183 to @2168 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2166 to @2205 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed -4 when the merge gave func_02012718, func_02016a04 and func_02016a14 C++ linkage; paired by symtab index, every non-strtab section byte-identical."
+      "evidence": "mwcc emits @2219; that name is already used in ov002, so it is renamed to the unused same-length @1134. Re-keyed from @2219 to @2218 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2218) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2219) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2214 to @2183 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2183 to @2181 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2183 to @2168 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2166 to @2205 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object)."
     },
     {
-      "from": "@2202",
+      "from": "@2027",
       "to": "@1135",
-      "evidence": "mwcc emits @2220; that name is already used in ov002, so it is renamed to the unused same-length @1135. Re-keyed from @2220 to @2219 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2219) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2220) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2215 to @2184 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2184 to @2182 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2184 to @2169 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2167 to @2206 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed -4 when the merge gave func_02012718, func_02016a04 and func_02016a14 C++ linkage; paired by symtab index, every non-strtab section byte-identical."
+      "evidence": "mwcc emits @2220; that name is already used in ov002, so it is renamed to the unused same-length @1135. Re-keyed from @2220 to @2219 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2219) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2220) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2215 to @2184 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2184 to @2182 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2184 to @2169 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2167 to @2206 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object)."
     },
     {
-      "from": "@2203",
+      "from": "@2028",
       "to": "@1136",
-      "evidence": "mwcc emits @2221; that name is already used in ov002, so it is renamed to the unused same-length @1136. Re-keyed from @2221 to @2220 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2220) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2221) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2216 to @2185 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2185 to @2183 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2185 to @2170 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2168 to @2207 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed -4 when the merge gave func_02012718, func_02016a04 and func_02016a14 C++ linkage; paired by symtab index, every non-strtab section byte-identical."
+      "evidence": "mwcc emits @2221; that name is already used in ov002, so it is renamed to the unused same-length @1136. Re-keyed from @2221 to @2220 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2220) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2221) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2216 to @2185 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2185 to @2183 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2185 to @2170 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2168 to @2207 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object)."
     },
     {
-      "from": "@2204",
+      "from": "@2029",
       "to": "@1142",
       "evidence": "mwcc emits @2222; that name is already used in ov002, so it is renamed to the unused same-length @1142. Re-keyed from @2222 to @2221 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2221) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2222) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2217 to @2186 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2186 to @2184 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2186 to @2171 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2169 to @2208 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed -4 when the merge gave func_02012718, func_02016a04 and func_02016a14 C++ linkage; paired by symtab index, every non-strtab section byte-identical."
     }

@@ -249,7 +249,7 @@ int daC_Jugem_c::StateApproachMain()
     cam->SetFlag_3();
     mSfxHandle = Sound::PlayLong(mSfxHandle, 3, 0x182, mCamSpacePos, 0);
     ApproachLinear(mAngleY, ::Vec3_HorzAngle(&mPos, (const Vector3 *)&data_ov085_0213084c), 0x200);
-    ApproachLinear(mAngleX, Vec3_VertAngle(&mPos, &data_ov085_0213084c), 0x200);
+    ApproachLinear(mAngleX, Vec3_VertAngle(&mPos, (const Vector3 *)&data_ov085_0213084c), 0x200);
     ApproachLinear(mHorzSpeed, 0x28000, 0x2000);
     ApproachLinear(mPrevAngleY, ::Vec3_HorzAngle(&mPos, (const Vector3 *)&data_ov085_0213084c),
                    (s16)mAuxCounter);

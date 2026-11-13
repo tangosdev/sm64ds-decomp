@@ -145,7 +145,7 @@ s32 dScMgBSC_c::InitResources() {
     GXS_LoadOBJPltt(paletteData, 0, 0x100);
     Deallocate(paletteData);
     Camera_InitDealerView(&mCamera);
-    if (Dealer_Load(&mDealer) == 0)
+    if (mDealer.Load() == 0)
         return 0;
     Mg_SetTopScreenYOffset(0x20);
     Mg_PlaceBannersOnTopScreen();
@@ -160,7 +160,7 @@ s32 dScMgBSC_c::InitResources() {
 s32 dScMgBSC_c::Behavior() {
     (this->*sBSCStateTable[mState])();
     MgCoins_Update();
-    Dealer_Update(&mDealer);
+    mDealer.Update();
     return 1;
 }
 
@@ -184,7 +184,7 @@ s32 dScMgBSC_c::Render() {
     MgCoins_Draw();
     Mg_DrawCredits((char *)this, 0xc, 0xc, 0);
     Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
-    Dealer_Draw(&mDealer);
+    mDealer.Draw();
     return 1;
 }
 
@@ -209,7 +209,7 @@ s32 dScMgBSC_c::CanEndState(int mode) {
     int state;
     short coinStatus;
     if (mState == STATE_WAIT_RESULT) {
-        if (Dealer_IsIdle(&mDealer) != 0) {
+        if (mDealer.IsIdle() != 0) {
             if (mode == 4) {
                 FreeGfxSlotsById(0x1d);
                 mState = STATE_WAIT_WIN;
@@ -277,7 +277,7 @@ void dScMgBSC_c::StateDealCards() {
     mOtherCard = 0;
     mChosenCard = 1;
     mCardsDealt = 0;
-    Dealer_StartShuffle(&mDealer, 3, 2, &mCardsDealt);
+    mDealer.StartShuffle(3, 2, &mCardsDealt);
 
     if (mPromptBlinkCount == 0) {
         mPromptEnabled = 1;
@@ -424,7 +424,7 @@ void dScMgBSC_c::StateJudgeCards() {
             mBestHudScore = mHudScore;
         Mg_SubmitScore(mHudScore);
         Mg_SetSharedState(MG_STATE_WIN);
-        Dealer_PlayWin(&mDealer);
+        mDealer.PlayWin();
         mState = STATE_WAIT_RESULT;
     } else {
         if (mHudScore > 0) {
@@ -432,7 +432,7 @@ void dScMgBSC_c::StateJudgeCards() {
             *score = *score - 1;
         }
         Mg_SetSharedState(MG_STATE_LOSE);
-        Dealer_PlayLose(&mDealer);
+        mDealer.PlayLose();
         mState = STATE_WAIT_RESULT;
     }
 }
@@ -441,10 +441,10 @@ void dScMgBSC_c::StateJudgeCards() {
  * file sets state 7 or 8; StateJudgeCards does the same work inline. */
 void dScMgBSC_c::StateTableReaction() {
     if (mState == STATE_WIN_REACTION) {
-        Dealer_PlayWin(&mDealer);
+        mDealer.PlayWin();
         mState = STATE_WAIT_WIN;
     } else {
-        Dealer_PlayLose(&mDealer);
+        mDealer.PlayLose();
         mState = STATE_WAIT_LOSE;
     }
 }
@@ -452,7 +452,7 @@ void dScMgBSC_c::StateTableReaction() {
 /* States 9 and 10: wait for the table's reaction to finish, then pay out
  * a win (state 12) or play the loss sting and gather the cards (state 11). */
 void dScMgBSC_c::StateWaitTable() {
-    if (Dealer_IsIdle(&mDealer) == 0)
+    if (mDealer.IsIdle() == 0)
         return;
     if (mState == STATE_WAIT_WIN) {
         MgCoins_StartPayout(gMgCoinsInPlay << 1);

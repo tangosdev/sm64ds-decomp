@@ -186,7 +186,6 @@ extern int Math_Function_0203b14c(void *ptr, int target, int rate, int limit, in
 }
 
 extern "C" int ApproachAngle(short *cur, short target, int divisor, int band, int maxStep);
-extern short func_02010844(void *unused, void *v, short angle);
 extern "C" {
 
 extern void Matrix4x3_FromRotationY(void *m, int angle);
@@ -949,8 +948,8 @@ void daYegg_c::UpdateTilt() {
         struct Vector3 n;
         dBgPi *fr = static_cast<dBgPi *>(mWithMeshClsn.GetFloorResult());
         fr->surface.CopyNormalTo(n);
-        e4 = func_02010844(this, &n, mAngleY);
-        e6 = func_02010844(this, &n, (short)(mAngleY - 0x4000));
+        e4 = func_02010844(&n, mAngleY);
+        e6 = func_02010844(&n, (short)(mAngleY - 0x4000));
     } else {
         if (mState == 0) {
             daPly_c *p = mPlayer;

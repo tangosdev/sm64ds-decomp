@@ -96,7 +96,6 @@ extern SharedFilePtr *data_ov102_0214d70c[];
 /* -- other modules -- */
 int func_ov002_020ad660(void *self, void *clsn, void *model, int kind);
 extern "C" int  func_ov002_020cc16c(void *player, void *actor);
-void func_020105cc(dActor_c *self, u32 flags);
 extern "C" void Matrix4x3_FromRotationY(void *m, int angle);
 int  SurfaceInfo_TestFlag0x20(int *si);
 
@@ -467,7 +466,7 @@ void daShl_c::func_ov102_0214cbec()
     if (mModelIndex != 0) {
         s32 attack = hit & 0x3c0;
         if (attack) {
-            func_020105cc(this, attack);
+            func_020105cc(attack);
             func_ov102_0214cf4c(player);
             return;
         }

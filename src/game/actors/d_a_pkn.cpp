@@ -92,8 +92,7 @@ PknStatePMF data_ov084_02130e80[9] = {
 
 
 /* -- other modules -- */
-void  func_02012694(u32 id, const Vector3 *pos);
-void  func_020105cc(void *thiz, u32 flags);
+extern "C" void func_02012694(u32 id, const Vector3 *pos);
 
 
 /* -- shared tables -- */
@@ -631,7 +630,7 @@ int daPkn_c::CheckHits()
                         actor->IncMegaKillCount();
                         func_02012694(0x1d,(const Vector3 *)(&mCamSpacePosX));
                     }
-                    func_020105cc(this, flags);
+                    func_020105cc(flags);
                     Die();
                 } else if (JumpedOnByPlayer(mdCcAc_c1, *actor) != 0) {
                     actor->Bounce(0x28000);
@@ -674,7 +673,7 @@ int daPkn_c::CheckHits()
                         actor->IncMegaKillCount();
                         func_02012694(0x1d,(const Vector3 *)(&mCamSpacePosX));
                     }
-                    func_020105cc(this, flags);
+                    func_020105cc(flags);
                     Die();
                     return 1;
                 }

@@ -224,7 +224,6 @@ extern int func_01ff99a4(int a, int b);
 extern int func_01ffa4bc(int a);
 }
 
-extern void func_020105cc(void *thiz, unsigned int flags);
 extern void func_0201628c(int a, int b);
 extern void func_020162a4(int a, int b);
 extern void func_020167a4(void *p);
@@ -390,7 +389,6 @@ extern SharedFilePtr data_ov002_0210eca8;
 extern SharedFilePtr data_ov002_0210ecb8;
 }
 
-extern s16 func_02010844(void *actor, Vector3 *v, s16 angle);
 extern int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player);
 extern int func_ov002_020f030c(int sel);
 extern "C" {
@@ -3194,8 +3192,8 @@ void daPly_c::func_ov002_020c18b0(int p1) {
         v.x = f554;
         v.y = sinv;
         v.z = f55c;
-        mAngleX = (short)func_02010844(this, &v, mAngleY);
-        mAngleZ = (short)func_02010844(this, &v, (short)(mAngleY - 0x4000));
+        mAngleX = (short)func_02010844(&v, mAngleY);
+        mAngleZ = (short)func_02010844(&v, (short)(mAngleY - 0x4000));
     }
     if (p1 == 0) return;
     {
@@ -14533,7 +14531,7 @@ int daPly_c::func_ov002_020d8360(daPly_c *other, unsigned int flags) {
             cp.z = out.z;
             func_ov002_020d8d10(&cp);
         }
-        func_020105cc(this, flags);
+        func_020105cc(flags);
         {
             unsigned char b6f9 = mIsMetal;
             unsigned short idx = (unsigned short)(param1 + (other->param1 << 2));

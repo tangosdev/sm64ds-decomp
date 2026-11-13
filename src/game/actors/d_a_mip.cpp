@@ -84,7 +84,6 @@ int   SurfaceInfo_TestFlag0x20(void *);
 
 /* maths and the still-unnamed helpers */
 extern "C" void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
-extern "C" void  Vec3_MulScalar(void *, const void *, int);
 extern "C" int VEC_Mag(const Vector3 *);
 extern "C" int   AngleDiff(int, int);
 extern "C" void  Matrix4x3_FromTranslation(void *, int, int, int);
@@ -808,7 +807,7 @@ int daMip_c::StateFleeMain() {
             ysave = mPosY;
             {
                 int s = FX_Div(lim, len);
-                Vec3_MulScalar(&scaled, &delta, s);
+                Vec3_MulScalar((Vector3 *)&scaled, (const Vector3 *)&delta, s);
                 VEC_Subtract((::Vector3 *)&mPos, (::Vector3 *)&scaled, (::Vector3 *)&mPos);
             }
             if (mVertSpeed > 0) {

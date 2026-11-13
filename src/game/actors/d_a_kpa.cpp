@@ -296,15 +296,12 @@ extern KpaAnimationFileHandle data_ov060_0211ac60;
 int Vec3_HorzLen(const Vector3* v);
 extern "C" int RandomIntInternal(int* seed);
 extern KpaAnimationFileHandle data_ov060_0211abe0;
-/* Spawns the boss landing dust particle at a position (d_actor.cpp). */
-void *func_0200fa04(void *c, void *v, int a);
 extern KpaAnimationFileHandle data_ov060_0211acd8;
 extern KpaAnimationFileHandle data_ov060_0211acf0;
 extern KpaAnimationFileHandle data_ov060_0211ac20;
 extern KpaAnimationFileHandle data_ov060_0211ac68;
 extern KpaAnimationFileHandle data_ov060_0211ac70;
 extern s16 data_ov060_0211a4e0[];
-s16 func_02010844(void *unused, void *v, s16 angle);
 /* local extern: the Vector3 spelling math/CalcLib.h declares. */
 extern "C" void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern "C" int *Vec3_LslInPlace(void *v, int sh);
@@ -830,8 +827,8 @@ void daKpa_c::UpdateModelMatrix() {
         goto skip_angles;
     if (this->mHoldState != BOWSER_HOLD_NONE)
         goto skip_angles;
-    this->mAngleX = func_02010844(this, &this->mGroundNormalX, this->mAngleY);
-    this->mAngleZ = func_02010844(this, &this->mGroundNormalX, (s16)(this->mAngleY - 0x4000));
+    this->mAngleX = func_02010844((Vector3 *)&this->mGroundNormalX, this->mAngleY);
+    this->mAngleZ = func_02010844((Vector3 *)&this->mGroundNormalX, (s16)(this->mAngleY - 0x4000));
 skip_angles:
     Vec3_Asr(&v, &this->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
@@ -1569,7 +1566,7 @@ int daKpa_c::BowserLand() {
         v.x = this->mPosX;
         v.y = this->mPosY;
         v.z = this->mPosZ;
-        func_0200fa04(this, &v, 0);
+        func_0200fa04(&v, 0);
         InitAnimation(0xc, 0x40000000);
         func_02012694(BOWSER_SND_LAND, &mCamSpacePos);
         if(this->mVariantID == 0){
@@ -1641,7 +1638,7 @@ void daKpa_c::ActBigJump() {
             vec[0] = this->mPosX;
             vec[1] = this->mPosY;
             vec[2] = this->mPosZ;
-            func_0200fa04(this, vec, 0);
+            func_0200fa04((Vector3 *)vec, 0);
             InitAnimation(0xc, 0x40000000);
         }
         this->mCondFlags &= ~BOWSER_COND_RECOVERING;

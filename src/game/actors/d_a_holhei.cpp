@@ -52,8 +52,7 @@ struct HolheiState {
 
 
 
-short func_02010844(void* unused, Vector3* v, short angle);
-void func_02012694(unsigned int a, const Vector3 *p);
+extern "C" void func_02012694(unsigned int a, const Vector3 *p);
 int daHolhei_c_ChangeState(daHolhei_c *self, HolheiState *p);
 extern "C" int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
 extern "C" void func_ov002_020db54c(void *self, int a, int b, short c);
@@ -723,7 +722,7 @@ int daHolhei_c::ClassifyObstruction() {
     if (mMeshClsn.IsOnGround()) {
         dBgPi *floor = mMeshClsn.GetFloorResult();
         floor->surface.CopyNormalTo(v);
-        slope = func_02010844(this, &v, mAngleY);
+        slope = func_02010844(&v, mAngleY);
     }
     if (mMeshClsn.IsOnWall())
         return 1;

@@ -407,16 +407,15 @@ void daKuriKing_c::UpdateDefeat() {
             if (state != 0) {
                 if (state == 1)
                     return;
-                if (state == 2)
-                    goto nextSubState;
+                if (state != 2)
+                    return;
+            } else {
+                if (player->ShowMessage(*this, (s16)msgId, &vmsg, 1, 2) == 0)
+                    return;
+                func_0201277c(0x15a);
                 return;
             }
-            if (player->ShowMessage(*this, (s16)msgId, &vmsg, 1, 2) == 0)
-                return;
-            func_0201277c(0x15a);
         }
-        return;
-    nextSubState:
         this->mSubState += 1;
         return;
     case 1:
@@ -584,26 +583,25 @@ void daKuriKing_c::func_ov074_0211fc34()
 }
 
 void daKuriKing_c::UpdateKnockback() {
-    if (ApproachAngle(&this->mWalkSpeed, 0, 0xa, 0x100, 1) != 0) goto reset;
-    if (this->mAnmModel.Finished() == 0)
-        return;
-    if (this->mSizeIndex != 0) goto detox;
-    {
-        daPly_c *player = this->ClosestPlayer();
-        if (player->StartTalk(*this, 1) == 0) return;
-        Message::PrepareTalk();
-        if (IsAnimPlaying(1) != 0 || IsAnimPlaying(2) != 0) {
-            PlayAnim(0xc);
+    if (ApproachAngle(&this->mWalkSpeed, 0, 0xa, 0x100, 1) == 0) {
+        if (this->mAnmModel.Finished() == 0)
+            return;
+        if (this->mSizeIndex == 0) {
+            daPly_c *player = this->ClosestPlayer();
+            if (player->StartTalk(*this, 1) == 0)
+                return;
+            Message::PrepareTalk();
+            if (IsAnimPlaying(1) != 0 || IsAnimPlaying(2) != 0) {
+                PlayAnim(0xc);
+                return;
+            }
+            ChangeState(7);
+            this->mTalkPlayer = player;
             return;
         }
-        ChangeState(7);
-        this->mTalkPlayer = player;
+        ChangeState(6);
         return;
     }
-detox:
-    ChangeState(6);
-    return;
-reset:
     WalkAlongRing();
 }
 
@@ -623,16 +621,14 @@ void daKuriKing_c::UpdateSummonGoombas() {
             return;
         PlayAnim(0xb);
         return;
-    } else {
-        if (IsAnimPlaying(0xb) != 0)
-            goto L90;
+    }
+    if (IsAnimPlaying(0xb) == 0) {
         if (StopWalking() == 0)
             return;
         PlayAnim(0xb);
         return;
     }
 
-L90:;
     int spawnTarget = data_ov074_02122d80[this->mSizeIndex];
     daPly_c *pl = this->ClosestPlayer();
     if (this->mSizeIndex == 1 && (int)pl->param1 != 3) spawnTarget = spawnTarget + 1;
@@ -757,15 +753,6 @@ void daKuriKing_c::UpdateIntroTalkEnd() {
  * and daPly_c::ShowMessage each gate the rest of the tick, so a refused talk
  * simply retries next frame; on success the music layer flips once (guarded
  * by mMusicStarted) and the state advances to 1.
- *
- * Shape notes: the angle temp is an Ang16 STRUCT COPY, not three field
- * assignments -- mwccarm scalarizes the field form away and drops the
- * memory home the ROM keeps at sp+8. msgpos[0] is filled through a base
- * pointer (the ov073 idiom) while msgpos[1] uses direct offsets; that
- * difference is in the ROM, not an accident. msgpos[0] is dead, kept alive
- * only because &msgpos[1] homes the whole array.
- *
- * Matched byte-for-byte with mwccarm 2004/b56 (ov074); linkcheck VERIFIED.
  */
 void daKuriKing_c::UpdateIntroTalk() {
     struct Ang16 { short v[3]; };
@@ -867,19 +854,6 @@ int daKuriKing_c::AdvanceMaterialChanger() {
  * mScalePhase, which advances 0x1230 per frame. In state 6, each finished
  * step except the last also spits particle 0xb1 at 400.0 * mCurrentScale
  * above the boss.
- *
- * The float arithmetic compiles to the ITCM soft-float helpers (_fsub, _ffix,
- * _fflt, _fadd), as written.
- *
- * Shape notes: the particle position temp must stay MEMORY-HOMED -- reading
- * its words back through the address (the ((int *)&v)[n] form) is what keeps
- * the three dead stores the ROM emits; plain member reads scalarize the
- * struct away and cost four instructions. The wobble reads the table by
- * element index k computed BEFORE d: written as FX_SinIdx/FX_CosIdx (with
- * k first, d first, k block-scoped, u32 or masked) the index web and the
- * mCurrentScale web swap r2 and r3, ten words off the ROM.
- *
- * Matched byte-for-byte with mwccarm 2004/b56 (ov074); linkcheck VERIFIED.
  */
 int daKuriKing_c::StepScaleTransition() {
     struct Vector3 v;
@@ -922,23 +896,17 @@ int daKuriKing_c::StopWalking() {
             if ((unsigned short)(this->mAnmModel.currFrame >> 12) == 0) {
                 PlayAnim(9);
             }
-            goto ret0;
+        } else {
+            WalkAlongRing();
         }
-        WalkAlongRing();
-        goto ret0;
-    }
-    if (IsAnimPlaying(0xa) != 0) {
+    } else if (IsAnimPlaying(0xa) != 0) {
         PlayAnim(9);
-        goto ret0;
-    }
-    if (IsAnimPlaying(9) != 0) {
-        if (this->mAnmModel.Finished() != 0) {
+    } else if (IsAnimPlaying(9) != 0) {
+        if (this->mAnmModel.Finished() != 0)
             return 1;
-        }
-        goto ret0;
+    } else {
+        return 1;
     }
-    return 1;
-ret0:
     return 0;
 }
 
@@ -1300,7 +1268,6 @@ void daKuriKing_c::UpdateCylindersAndFootsteps() {
     int i;
     int h0, r0, y0;
     int d, a, b;
-    char* q;
     int tx, ty, tz;
 
     y0 = FX_MUL(this->mScaleY, 0x40000);
@@ -1315,25 +1282,20 @@ void daKuriKing_c::UpdateCylindersAndFootsteps() {
     yoff[0] = FX_MUL(this->mScaleY, 0x14000);
     rad[0] = FX_MUL(this->mScaleX, 0xb4000);
     hgt[0] = FX_MUL(this->mScaleY, 0x104000);
-    /* q is this shifted by i mCylClsnPos entries, read back through the
-     * class so each load keeps the member offset -- the same walk
-     * UpdateShadows keeps. */
-    q = (char*)this;
     for (i = 0; i < 3; i++) {
         int ax, ay, az;
         func_ov074_02121270(&v[2], this, bone.v[i]);
-        ((daKuriKing_c *)q)->mCylClsnPos[0].x = v[2].x;
-        ((daKuriKing_c *)q)->mCylClsnPos[0].y = v[2].y;
-        ((daKuriKing_c *)q)->mCylClsnPos[0].z = v[2].z;
-        ax = ((daKuriKing_c *)q)->mCylClsnPos[0].x;
-        az = ((daKuriKing_c *)q)->mCylClsnPos[0].z;
-        ay = ((daKuriKing_c *)q)->mCylClsnPos[0].y + yoff[i];
+        this->mCylClsnPos[i].x = v[2].x;
+        this->mCylClsnPos[i].y = v[2].y;
+        this->mCylClsnPos[i].z = v[2].z;
+        ax = this->mCylClsnPos[i].x;
+        az = this->mCylClsnPos[i].z;
+        ay = this->mCylClsnPos[i].y + yoff[i];
         this->mdCc_cs[i + 1].radius = rad[i];
         this->mdCc_cs[i + 1].height = hgt[i];
         this->mdCc_cs[i + 1].pos.x = ax;
         this->mdCc_cs[i + 1].pos.y = ay;
         this->mdCc_cs[i + 1].pos.z = az;
-        q += 0xc;
     }
 
     tx = this->mPosX;

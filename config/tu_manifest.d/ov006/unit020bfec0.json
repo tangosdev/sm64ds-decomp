@@ -29,14 +29,14 @@
   ],
   "functions": [
     {
-      "symbol": "Camera_ProjectToScreen16",
+      "symbol": "_Z24Camera_ProjectToScreen16P8MgCameraPvPs",
       "address": "0x020bfec0",
       "size": "0x00000138",
       "legacy_source": "src/func_ov006_020bfec0.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "Camera_ProjectToScreen",
+      "symbol": "_Z22Camera_ProjectToScreenP8MgCameraPvPiS2_",
       "address": "0x020bfff8",
       "size": "0x0000013c",
       "legacy_source": "src/func_ov006_020bfff8.cpp",
@@ -50,56 +50,56 @@
       "ordinal": 2
     },
     {
-      "symbol": "_Z23MascotWalker_StatePausePc",
+      "symbol": "_ZN12MascotWalker10StatePauseEv",
       "address": "0x020c0264",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov006_020c0264.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "_Z23MascotWalker_StartPausePi",
+      "symbol": "_ZN12MascotWalker10StartPauseEv",
       "address": "0x020c0304",
       "size": "0x00000060",
       "legacy_source": "src/func_ov006_020c0304.c",
       "ordinal": 4
     },
     {
-      "symbol": "_Z22MascotWalker_StateWalkPc",
+      "symbol": "_ZN12MascotWalker9StateWalkEv",
       "address": "0x020c0364",
       "size": "0x00000218",
       "legacy_source": "src/func_ov006_020c0364.c",
       "ordinal": 5
     },
     {
-      "symbol": "MascotWalker_StartNextPath",
+      "symbol": "_ZN12MascotWalker13StartNextPathEv",
       "address": "0x020c057c",
       "size": "0x00000160",
       "legacy_source": "src/func_ov006_020c057c.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "_Z25MascotWalker_UpdateMatrixP12MascotWalker",
+      "symbol": "_ZN12MascotWalker12UpdateMatrixEv",
       "address": "0x020c06dc",
       "size": "0x000000c4",
       "legacy_source": "src/func_ov006_020c06dc.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_Z17MascotWalker_DrawPc",
+      "symbol": "_ZN12MascotWalker4DrawEv",
       "address": "0x020c07a0",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_020c07a0.c",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN9s020c07e819MascotWalker_UpdateEP12MascotWalker",
+      "symbol": "_ZN12MascotWalker6UpdateEv",
       "address": "0x020c07e8",
       "size": "0x00000144",
       "legacy_source": "src/func_ov006_020c07e8.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "_Z17MascotWalker_LoadP12MascotWalker",
+      "symbol": "_ZN12MascotWalker4LoadEv",
       "address": "0x020c092c",
       "size": "0x000000cc",
       "legacy_source": "src/func_ov006_020c092c.cpp",
@@ -127,154 +127,154 @@
       "ordinal": 13
     },
     {
-      "symbol": "_Z20Dealer_ResetMatricesPc",
+      "symbol": "_ZN6Dealer13ResetMatricesEv",
       "address": "0x020c0af8",
       "size": "0x0000007c",
       "legacy_source": "src/func_ov006_020c0af8.c",
       "ordinal": 14
     },
     {
-      "symbol": "_Z15Dealer_StateWinPc",
+      "symbol": "_ZN6Dealer8StateWinEv",
       "address": "0x020c0b74",
       "size": "0x0000010c",
       "legacy_source": "src/func_ov006_020c0b74.c",
       "ordinal": 15
     },
     {
-      "symbol": "_Z14Dealer_PlayWinPv",
+      "symbol": "_ZN6Dealer7PlayWinEv",
       "address": "0x020c0c80",
       "size": "0x00000068",
       "legacy_source": "src/func_ov006_020c0c80.cpp",
       "ordinal": 16
     },
     {
-      "symbol": "_Z16Dealer_StateLosePc",
+      "symbol": "_ZN6Dealer9StateLoseEv",
       "address": "0x020c0ce8",
       "size": "0x00000080",
       "legacy_source": "src/func_ov006_020c0ce8.c",
       "ordinal": 17
     },
     {
-      "symbol": "Dealer_PlayLose",
+      "symbol": "_ZN6Dealer8PlayLoseEv",
       "address": "0x020c0d68",
       "size": "0x00000088",
       "legacy_source": "src/func_ov006_020c0d68.cpp",
       "ordinal": 18
     },
     {
-      "symbol": "_Z16Dealer_StateSwapPc",
+      "symbol": "_ZN6Dealer9StateSwapEv",
       "address": "0x020c0df0",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov006_020c0df0.cpp",
       "ordinal": 19
     },
     {
-      "symbol": "_Z16Dealer_StartSwapPi",
+      "symbol": "_ZN6Dealer9StartSwapEv",
       "address": "0x020c0e8c",
       "size": "0x00000070",
       "legacy_source": "src/func_ov006_020c0e8c.c",
       "ordinal": 20
     },
     {
-      "symbol": "_Z17Dealer_IsAnimDonePv",
+      "symbol": "_ZN6Dealer10IsAnimDoneEv",
       "address": "0x020c0efc",
       "size": "0x00000010",
       "legacy_source": "src/func_ov006_020c0efc.c",
       "ordinal": 21
     },
     {
-      "symbol": "Dealer_IsBusy",
+      "symbol": "_ZN6Dealer6IsBusyEv",
       "address": "0x020c0f0c",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_020c0f0c.c",
       "ordinal": 22
     },
     {
-      "symbol": "_Z18Dealer_StateRevealPv",
+      "symbol": "_ZN6Dealer11StateRevealEv",
       "address": "0x020c0f9c",
       "size": "0x000001c8",
       "legacy_source": "src/func_ov006_020c0f9c.cpp",
       "ordinal": 23
     },
     {
-      "symbol": "Dealer_StartReveal",
+      "symbol": "_ZN6Dealer11StartRevealEiPs",
       "address": "0x020c1164",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov006_020c1164.c",
       "ordinal": 24
     },
     {
-      "symbol": "_Z16Dealer_StateDealPc",
+      "symbol": "_ZN6Dealer9StateDealEv",
       "address": "0x020c11c0",
       "size": "0x00000260",
       "legacy_source": "src/func_ov006_020c11c0.cpp",
       "ordinal": 25
     },
     {
-      "symbol": "Dealer_StartDeal",
+      "symbol": "_ZN6Dealer9StartDealEsPs",
       "address": "0x020c1420",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov006_020c1420.cpp",
       "ordinal": 26
     },
     {
-      "symbol": "_Z19Dealer_StateShufflePc",
+      "symbol": "_ZN6Dealer12StateShuffleEv",
       "address": "0x020c14bc",
       "size": "0x00000148",
       "legacy_source": "src/func_ov006_020c14bc.cpp",
       "ordinal": 27
     },
     {
-      "symbol": "_Z19Dealer_StartShuffleP6DealerisPs",
+      "symbol": "_ZN6Dealer12StartShuffleEisPs",
       "address": "0x020c1604",
       "size": "0x000000b0",
       "legacy_source": "src/func_ov006_020c1604.c",
       "ordinal": 28
     },
     {
-      "symbol": "Dealer_IsIdleAtRest",
+      "symbol": "_ZN6Dealer12IsIdleAtRestEv",
       "address": "0x020c16b4",
       "size": "0x00000064",
       "legacy_source": "src/func_ov006_020c16b4.c",
       "ordinal": 29
     },
     {
-      "symbol": "_Z13Dealer_IsIdleP6Dealer",
+      "symbol": "_ZN6Dealer6IsIdleEv",
       "address": "0x020c1718",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_020c1718.c",
       "ordinal": 30
     },
     {
-      "symbol": "_Z16Dealer_StateIdlev",
+      "symbol": "_ZN6Dealer9StateIdleEv",
       "address": "0x020c1760",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020c1760.c",
       "ordinal": 31
     },
     {
-      "symbol": "_Z15Dealer_PlayIdlePc",
+      "symbol": "_ZN6Dealer8PlayIdleEv",
       "address": "0x020c1764",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov006_020c1764.cpp",
       "ordinal": 32
     },
     {
-      "symbol": "Dealer_Draw",
+      "symbol": "_ZN6Dealer4DrawEv",
       "address": "0x020c1804",
       "size": "0x000001cc",
       "legacy_source": "src/func_ov006_020c1804.cpp",
       "ordinal": 33
     },
     {
-      "symbol": "_ZN9s020c19d013Dealer_UpdateEP6Dealer",
+      "symbol": "_ZN6Dealer6UpdateEv",
       "address": "0x020c19d0",
       "size": "0x000000b8",
       "legacy_source": "src/func_ov006_020c19d0.cpp",
       "ordinal": 34
     },
     {
-      "symbol": "Dealer_Load",
+      "symbol": "_ZN6Dealer4LoadEv",
       "address": "0x020c1a88",
       "size": "0x000001dc",
       "legacy_source": "src/func_ov006_020c1a88.c",
@@ -295,49 +295,49 @@
       "ordinal": 37
     },
     {
-      "symbol": "Camera_InitSlotsView",
+      "symbol": "_Z20Camera_InitSlotsViewP8MgCamera",
       "address": "0x020c1eb4",
       "size": "0x00000044",
       "legacy_source": "src/func_ov006_020c1eb4.c",
       "ordinal": 38
     },
     {
-      "symbol": "_Z18Mascot_StopLookingPi",
+      "symbol": "_ZN6Mascot11StopLookingEv",
       "address": "0x020c1ef8",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov006_020c1ef8.c",
       "ordinal": 39
     },
     {
-      "symbol": "_Z13Mascot_LookAtPcPi",
+      "symbol": "_ZN6Mascot6LookAtEPi",
       "address": "0x020c1f04",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_020c1f04.c",
       "ordinal": 40
     },
     {
-      "symbol": "_Z19Mascot_UpdateMatrixPc",
+      "symbol": "_ZN6Mascot12UpdateMatrixEv",
       "address": "0x020c1f4c",
       "size": "0x000000d0",
       "legacy_source": "src/func_ov006_020c1f4c.cpp",
       "ordinal": 41
     },
     {
-      "symbol": "Mascot_Draw",
+      "symbol": "_ZN6Mascot4DrawEv",
       "address": "0x020c201c",
       "size": "0x00000128",
       "legacy_source": "src/func_ov006_020c201c.cpp",
       "ordinal": 42
     },
     {
-      "symbol": "_Z13Mascot_UpdatePv",
+      "symbol": "_ZN6Mascot6UpdateEv",
       "address": "0x020c2144",
       "size": "0x00000010",
       "legacy_source": "src/func_ov006_020c2144.c",
       "ordinal": 43
     },
     {
-      "symbol": "_Z11Mascot_LoadPc",
+      "symbol": "_ZN6Mascot4LoadEv",
       "address": "0x020c2154",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_020c2154.c",
@@ -365,140 +365,140 @@
       "ordinal": 47
     },
     {
-      "symbol": "_Z22Presenter_UpdateMatrixPc",
+      "symbol": "_ZN9Presenter12UpdateMatrixEv",
       "address": "0x020c2290",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_020c2290.c",
       "ordinal": 48
     },
     {
-      "symbol": "_Z32Presenter_StateSurprisedThenIdlePc",
+      "symbol": "_ZN9Presenter22StateSurprisedThenIdleEv",
       "address": "0x020c22d8",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_020c22d8.c",
       "ordinal": 49
     },
     {
-      "symbol": "_Z23Presenter_PlayCheerLoopPv",
+      "symbol": "_ZN9Presenter13PlayCheerLoopEv",
       "address": "0x020c2300",
       "size": "0x000000a8",
       "legacy_source": "src/func_ov006_020c2300.c",
       "ordinal": 50
     },
     {
-      "symbol": "_Z24Presenter_StateLoseStartPv",
+      "symbol": "_ZN9Presenter14StateLoseStartEv",
       "address": "0x020c23a8",
       "size": "0x00000098",
       "legacy_source": "src/func_ov006_020c23a8.cpp",
       "ordinal": 51
     },
     {
-      "symbol": "_Z18Presenter_PlayLosePc",
+      "symbol": "_ZN9Presenter8PlayLoseEv",
       "address": "0x020c2440",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov006_020c2440.cpp",
       "ordinal": 52
     },
     {
-      "symbol": "_Z33Presenter_StateSurprisedThenSmilePv",
+      "symbol": "_ZN9Presenter23StateSurprisedThenSmileEv",
       "address": "0x020c24e4",
       "size": "0x000000b0",
       "legacy_source": "src/func_ov006_020c24e4.cpp",
       "ordinal": 53
     },
     {
-      "symbol": "_Z19Presenter_PlayCheerPv",
+      "symbol": "_ZN9Presenter9PlayCheerEv",
       "address": "0x020c2594",
       "size": "0x000000a8",
       "legacy_source": "src/func_ov006_020c2594.c",
       "ordinal": 54
     },
     {
-      "symbol": "_Z22Presenter_StateMistakePc",
+      "symbol": "_ZN9Presenter12StateMistakeEv",
       "address": "0x020c263c",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_020c263c.c",
       "ordinal": 55
     },
     {
-      "symbol": "Presenter_PlayMiss",
+      "symbol": "_ZN9Presenter8PlayMissEv",
       "address": "0x020c2664",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_020c2664.c",
       "ordinal": 56
     },
     {
-      "symbol": "_Z18Presenter_StateWinPc",
+      "symbol": "_ZN9Presenter8StateWinEv",
       "address": "0x020c26f4",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_020c26f4.c",
       "ordinal": 57
     },
     {
-      "symbol": "_Z19Presenter_PlayMatchPv",
+      "symbol": "_ZN9Presenter9PlayMatchEv",
       "address": "0x020c271c",
       "size": "0x000000a8",
       "legacy_source": "src/func_ov006_020c271c.c",
       "ordinal": 58
     },
     {
-      "symbol": "_Z19Presenter_StateIdlePc",
+      "symbol": "_ZN9Presenter9StateIdleEv",
       "address": "0x020c27c4",
       "size": "0x00000084",
       "legacy_source": "src/func_ov006_020c27c4.cpp",
       "ordinal": 59
     },
     {
-      "symbol": "_Z18Presenter_PlayIdlePc",
+      "symbol": "_ZN9Presenter8PlayIdleEv",
       "address": "0x020c2848",
       "size": "0x000000dc",
       "legacy_source": "src/func_ov006_020c2848.cpp",
       "ordinal": 60
     },
     {
-      "symbol": "Presenter_ResetPose",
+      "symbol": "_ZN9Presenter9ResetPoseEv",
       "address": "0x020c2924",
       "size": "0x00000060",
       "legacy_source": "src/func_ov006_020c2924.cpp",
       "ordinal": 61
     },
     {
-      "symbol": "_Z20Presenter_IsAnimDonePv",
+      "symbol": "_ZN9Presenter10IsAnimDoneEv",
       "address": "0x020c2984",
       "size": "0x00000010",
       "legacy_source": "src/func_ov006_020c2984.c",
       "ordinal": 62
     },
     {
-      "symbol": "Presenter_IsIdle",
+      "symbol": "_ZN9Presenter6IsIdleEv",
       "address": "0x020c2994",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_020c2994.c",
       "ordinal": 63
     },
     {
-      "symbol": "Presenter_Draw",
+      "symbol": "_ZN9Presenter4DrawEv",
       "address": "0x020c29dc",
       "size": "0x000001b0",
       "legacy_source": "src/func_ov006_020c29dc.cpp",
       "ordinal": 64
     },
     {
-      "symbol": "Presenter_Update",
+      "symbol": "_ZN9Presenter6UpdateEv",
       "address": "0x020c2b8c",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov006_020c2b8c.cpp",
       "ordinal": 65
     },
     {
-      "symbol": "_Z21Presenter_TrackStylusPc",
+      "symbol": "_ZN9Presenter11TrackStylusEv",
       "address": "0x020c2be8",
       "size": "0x00000468",
       "legacy_source": "src/func_ov006_020c2be8.c",
       "ordinal": 66
     },
     {
-      "symbol": "Presenter_Load",
+      "symbol": "_ZN9Presenter4LoadEv",
       "address": "0x020c3050",
       "size": "0x00000238",
       "legacy_source": "src/func_ov006_020c3050.c",
@@ -519,133 +519,133 @@
       "ordinal": 69
     },
     {
-      "symbol": "_Z25FallingPetal_UpdateMatrixPc",
+      "symbol": "_ZN12FallingPetal12UpdateMatrixEv",
       "address": "0x020c3528",
       "size": "0x00000080",
       "legacy_source": "src/func_ov006_020c3528.cpp",
       "ordinal": 70
     },
     {
-      "symbol": "_Z17FallingPetal_DrawPc",
+      "symbol": "_ZN12FallingPetal4DrawEv",
       "address": "0x020c35a8",
       "size": "0x00000040",
       "legacy_source": "src/func_ov006_020c35a8.cpp",
       "ordinal": 71
     },
     {
-      "symbol": "_Z19FallingPetal_UpdatePc",
+      "symbol": "_ZN12FallingPetal6UpdateEv",
       "address": "0x020c35e8",
       "size": "0x0000016c",
       "legacy_source": "src/func_ov006_020c35e8.c",
       "ordinal": 72
     },
     {
-      "symbol": "_Z18FallingPetal_SpawnP12FallingPetalPK7VecFx32S3_",
+      "symbol": "_ZN12FallingPetal5SpawnEPK7VecFx32S2_",
       "address": "0x020c3754",
       "size": "0x00000130",
       "legacy_source": "src/func_ov006_020c3754.c",
       "ordinal": 73
     },
     {
-      "symbol": "_Z21FallingPetal_SetModelPci",
+      "symbol": "_ZN12FallingPetal8SetModelEP8BMD_File",
       "address": "0x020c3884",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_020c3884.c",
       "ordinal": 74
     },
     {
-      "symbol": "_Z20FlowerFace_StateHatev",
+      "symbol": "_ZN10FlowerFace9StateHateEv",
       "address": "0x020c38ac",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020c38ac.c",
       "ordinal": 75
     },
     {
-      "symbol": "_ZN9s020c38b019FlowerFace_PlayHateEPc",
+      "symbol": "_ZN10FlowerFace8PlayHateEv",
       "address": "0x020c38b0",
       "size": "0x00000054",
       "legacy_source": "src/func_ov006_020c38b0.c",
       "ordinal": 76
     },
     {
-      "symbol": "_Z20FlowerFace_StateLikev",
+      "symbol": "_ZN10FlowerFace9StateLikeEv",
       "address": "0x020c3904",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020c3904.c",
       "ordinal": 77
     },
     {
-      "symbol": "_ZN9s020c390819FlowerFace_PlayLikeEPc",
+      "symbol": "_ZN10FlowerFace8PlayLikeEv",
       "address": "0x020c3908",
       "size": "0x00000054",
       "legacy_source": "src/func_ov006_020c3908.c",
       "ordinal": 78
     },
     {
-      "symbol": "_Z20FlowerFace_StatePickPi",
+      "symbol": "_ZN10FlowerFace9StatePickEv",
       "address": "0x020c395c",
       "size": "0x00000034",
       "legacy_source": "src/func_ov006_020c395c.c",
       "ordinal": 79
     },
     {
-      "symbol": "_Z26FlowerFace_PlayPetalPulledPc",
+      "symbol": "_ZN10FlowerFace15PlayPetalPulledEv",
       "address": "0x020c3990",
       "size": "0x00000148",
       "legacy_source": "src/func_ov006_020c3990.c",
       "ordinal": 80
     },
     {
-      "symbol": "_Z20FlowerFace_StateIdlev",
+      "symbol": "_ZN10FlowerFace9StateIdleEv",
       "address": "0x020c3ad8",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020c3ad8.c",
       "ordinal": 81
     },
     {
-      "symbol": "_ZN9s020c3adc19FlowerFace_PlayIdleEPc",
+      "symbol": "_ZN10FlowerFace8PlayIdleEv",
       "address": "0x020c3adc",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_020c3adc.c",
       "ordinal": 82
     },
     {
-      "symbol": "Camera_InitFlowerView",
+      "symbol": "_Z21Camera_InitFlowerViewP8MgCamera",
       "address": "0x020c3b2c",
       "size": "0x00000054",
       "legacy_source": "src/func_ov006_020c3b2c.c",
       "ordinal": 83
     },
     {
-      "symbol": "FlowerFace_IsIdle",
+      "symbol": "_ZN10FlowerFace6IsIdleEv",
       "address": "0x020c3b80",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_020c3b80.c",
       "ordinal": 84
     },
     {
-      "symbol": "_Z16FlowerFace_ResetPv",
+      "symbol": "_ZN10FlowerFace5ResetEv",
       "address": "0x020c3bc8",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov006_020c3bc8.c",
       "ordinal": 85
     },
     {
-      "symbol": "_Z15FlowerFace_DrawPv",
+      "symbol": "_ZN10FlowerFace4DrawEv",
       "address": "0x020c3bf4",
       "size": "0x00000124",
       "legacy_source": "src/func_ov006_020c3bf4.cpp",
       "ordinal": 86
     },
     {
-      "symbol": "_ZN9s020c3d1817FlowerFace_UpdateEPc",
+      "symbol": "_ZN10FlowerFace6UpdateEv",
       "address": "0x020c3d18",
       "size": "0x00000070",
       "legacy_source": "src/func_ov006_020c3d18.cpp",
       "ordinal": 87
     },
     {
-      "symbol": "_Z15FlowerFace_LoadPc",
+      "symbol": "_ZN10FlowerFace4LoadEv",
       "address": "0x020c3d88",
       "size": "0x000000cc",
       "legacy_source": "src/func_ov006_020c3d88.cpp",
@@ -1033,19 +1033,19 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "sAxis$635",
+      "from": "sAxis$629",
       "to": "sAxis$543",
-      "evidence": "compiler-local numbering; including dScMgBase_c.h (for gMgScene's real type, replacing the TU-local vtable-slot view V) advances this TU's per-TU uniquifier by 115; same section, size and FallingPetal_Spawn relocation, licensed under the existing pin. Re-keyed from sAxis$658 to sAxis$657 when two namespace-local anonymous POD vector typedefs were retired for VecFx32 (#4570). Re-keyed from sAxis$657 to sAxis$649 (same symtab index 194, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from sAxis$649 to sAxis$657 when the camera and petal code read the angle table through nitro/fx/fx_trig.h (#821). Re-keyed from sAxis$657 to sAxis$653 when FlowerFace_Update's hand-decoded member-pointer call became a real ->* call, MascotWalker_Update's padded offset view gave way to MascotWalker and its walk-path byte offsets to a WalkPath view, and unused local typedefs were dropped (#821 batch 52); paired by symtab index 194, whose section, offset, size, type and binding agree with the base object. Re-keyed from sAxis$653 to sAxis$656 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from sAxis$653 to sAxis$648 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from sAxis$653 to sAxis$621 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sAxis$619 to sAxis$622 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object). Re-keyed from sAxis$622 to sAxis$635 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object)."
+      "evidence": "compiler-local numbering; including dScMgBase_c.h (for gMgScene's real type, replacing the TU-local vtable-slot view V) advances this TU's per-TU uniquifier by 115; same section, size and FallingPetal_Spawn relocation, licensed under the existing pin. Re-keyed from sAxis$658 to sAxis$657 when two namespace-local anonymous POD vector typedefs were retired for VecFx32 (#4570). Re-keyed from sAxis$657 to sAxis$649 (same symtab index 194, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from sAxis$649 to sAxis$657 when the camera and petal code read the angle table through nitro/fx/fx_trig.h (#821). Re-keyed from sAxis$657 to sAxis$653 when FlowerFace_Update's hand-decoded member-pointer call became a real ->* call, MascotWalker_Update's padded offset view gave way to MascotWalker and its walk-path byte offsets to a WalkPath view, and unused local typedefs were dropped (#821 batch 52); paired by symtab index 194, whose section, offset, size, type and binding agree with the base object. Re-keyed from sAxis$653 to sAxis$656 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from sAxis$653 to sAxis$648 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from sAxis$653 to sAxis$621 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sAxis$619 to sAxis$622 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object). Re-keyed from sAxis$622 to sAxis$635 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed onto the batch-4 cleanup after the merge with main: the per-function namespaces are gone, the state records are typed, the record parameters are retyped, and the TU takes NitroSDK G3_LightVector/G3_LightColor and math/CalcLib.h + math/MtxStack.h (measured from the compiled object). Re-keyed from sAxis$701 / _ZGVsAxis$701 / @704 to sAxis$629 / _ZGVsAxis$629 / @632 when the six record classes stopped being free functions and became real methods: the method declarations in the class headers move this TU's file-local type numbering."
     },
     {
-      "from": "_ZGVsAxis$635",
+      "from": "_ZGVsAxis$629",
       "to": "_ZGVsAxis$543",
-      "evidence": "compiler-local numbering; including dScMgBase_c.h (for gMgScene's real type, replacing the TU-local vtable-slot view V) advances this TU's per-TU uniquifier by 115; same section, size and FallingPetal_Spawn relocation, licensed under the existing pin. Re-keyed from _ZGVsAxis$658 to _ZGVsAxis$657 when two namespace-local anonymous POD vector typedefs were retired for VecFx32 (#4570). Re-keyed from _ZGVsAxis$657 to _ZGVsAxis$649 (same symtab index 192, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from _ZGVsAxis$649 to _ZGVsAxis$657 when the camera and petal code read the angle table through nitro/fx/fx_trig.h (#821). Re-keyed from _ZGVsAxis$657 to _ZGVsAxis$653 when FlowerFace_Update's hand-decoded member-pointer call became a real ->* call, MascotWalker_Update's padded offset view gave way to MascotWalker and its walk-path byte offsets to a WalkPath view, and unused local typedefs were dropped (#821 batch 52); paired by symtab index 192, whose section, offset, size, type and binding agree with the base object. Re-keyed from _ZGVsAxis$653 to _ZGVsAxis$656 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from _ZGVsAxis$653 to _ZGVsAxis$648 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from _ZGVsAxis$653 to _ZGVsAxis$621 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsAxis$619 to _ZGVsAxis$622 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object). Re-keyed from _ZGVsAxis$622 to _ZGVsAxis$635 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object)."
+      "evidence": "compiler-local numbering; including dScMgBase_c.h (for gMgScene's real type, replacing the TU-local vtable-slot view V) advances this TU's per-TU uniquifier by 115; same section, size and FallingPetal_Spawn relocation, licensed under the existing pin. Re-keyed from _ZGVsAxis$658 to _ZGVsAxis$657 when two namespace-local anonymous POD vector typedefs were retired for VecFx32 (#4570). Re-keyed from _ZGVsAxis$657 to _ZGVsAxis$649 (same symtab index 192, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from _ZGVsAxis$649 to _ZGVsAxis$657 when the camera and petal code read the angle table through nitro/fx/fx_trig.h (#821). Re-keyed from _ZGVsAxis$657 to _ZGVsAxis$653 when FlowerFace_Update's hand-decoded member-pointer call became a real ->* call, MascotWalker_Update's padded offset view gave way to MascotWalker and its walk-path byte offsets to a WalkPath view, and unused local typedefs were dropped (#821 batch 52); paired by symtab index 192, whose section, offset, size, type and binding agree with the base object. Re-keyed from _ZGVsAxis$653 to _ZGVsAxis$656 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from _ZGVsAxis$653 to _ZGVsAxis$648 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from _ZGVsAxis$653 to _ZGVsAxis$621 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsAxis$619 to _ZGVsAxis$622 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object). Re-keyed from _ZGVsAxis$622 to _ZGVsAxis$635 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed onto the batch-4 cleanup after the merge with main: the per-function namespaces are gone, the state records are typed, the record parameters are retyped, and the TU takes NitroSDK G3_LightVector/G3_LightColor and math/CalcLib.h + math/MtxStack.h (measured from the compiled object). Re-keyed from sAxis$701 / _ZGVsAxis$701 / @704 to sAxis$629 / _ZGVsAxis$629 / @632 when the six record classes stopped being free functions and became real methods: the method declarations in the class headers move this TU's file-local type numbering."
     },
     {
-      "from": "@638",
+      "from": "@632",
       "to": "@546",
-      "evidence": "compiler-local numbering; including dScMgBase_c.h (for gMgScene's real type, replacing the TU-local vtable-slot view V) advances this TU's per-TU uniquifier by 115; same section, size and FallingPetal_Spawn relocation, licensed under the existing pin. Re-keyed from @661 to @660 when two namespace-local anonymous POD vector typedefs were retired for VecFx32 (#4570). Re-keyed from @660 to @652 (same symtab index 193, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @652 to @660 when the camera and petal code read the angle table through nitro/fx/fx_trig.h (#821). Re-keyed from @660 to @656 when FlowerFace_Update's hand-decoded member-pointer call became a real ->* call, MascotWalker_Update's padded offset view gave way to MascotWalker and its walk-path byte offsets to a WalkPath view, and unused local typedefs were dropped (#821 batch 52); paired by symtab index 193, whose section, offset, size, type and binding agree with the base object. Re-keyed from @656 to @659 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @656 to @651 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from @656 to @624 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @622 to @625 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object). Re-keyed from @625 to @638 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object)."
+      "evidence": "compiler-local numbering; including dScMgBase_c.h (for gMgScene's real type, replacing the TU-local vtable-slot view V) advances this TU's per-TU uniquifier by 115; same section, size and FallingPetal_Spawn relocation, licensed under the existing pin. Re-keyed from @661 to @660 when two namespace-local anonymous POD vector typedefs were retired for VecFx32 (#4570). Re-keyed from @660 to @652 (same symtab index 193, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @652 to @660 when the camera and petal code read the angle table through nitro/fx/fx_trig.h (#821). Re-keyed from @660 to @656 when FlowerFace_Update's hand-decoded member-pointer call became a real ->* call, MascotWalker_Update's padded offset view gave way to MascotWalker and its walk-path byte offsets to a WalkPath view, and unused local typedefs were dropped (#821 batch 52); paired by symtab index 193, whose section, offset, size, type and binding agree with the base object. Re-keyed from @656 to @659 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @656 to @651 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from @656 to @624 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @622 to @625 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object). Re-keyed from @625 to @638 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed onto the batch-4 cleanup after the merge with main: the per-function namespaces are gone, the state records are typed, the record parameters are retyped, and the TU takes NitroSDK G3_LightVector/G3_LightColor and math/CalcLib.h + math/MtxStack.h (measured from the compiled object). Re-keyed from sAxis$701 / _ZGVsAxis$701 / @704 to sAxis$629 / _ZGVsAxis$629 / @632 when the six record classes stopped being free functions and became real methods: the method declarations in the class headers move this TU's file-local type numbering."
     }
   ]
 }

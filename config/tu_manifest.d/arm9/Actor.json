@@ -123,14 +123,14 @@
       "ordinal": 11
     },
     {
-      "symbol": "_Z13func_0200fa04P8dActor_cP7Vector3i",
+      "symbol": "_ZN8dActor_c13func_0200fa04EP7Vector3i",
       "address": "0x0200fa04",
       "size": "0x00000088",
       "legacy_source": "src/func_0200fa04.c",
       "ordinal": 12
     },
     {
-      "symbol": "_Z13func_0200fa8cPvi",
+      "symbol": "_ZN8dActor_c13func_0200fa8cEi",
       "address": "0x0200fa8c",
       "size": "0x00000038",
       "legacy_source": "src/func_0200fa8c.c",
@@ -165,7 +165,7 @@
       "ordinal": 17
     },
     {
-      "symbol": "_Z13func_0200fc44P8dActor_cP7Vector3i",
+      "symbol": "_ZN8dActor_c13func_0200fc44EP7Vector3i",
       "address": "0x0200fc44",
       "size": "0x00000088",
       "legacy_source": "src/func_0200fc44.c",
@@ -452,7 +452,7 @@
       "ordinal": 58
     },
     {
-      "symbol": "_Z13func_020105ccP8dActor_cj",
+      "symbol": "_ZN8dActor_c13func_020105ccEj",
       "address": "0x020105cc",
       "size": "0x00000050",
       "legacy_source": "src/func_020105cc.c",
@@ -473,7 +473,7 @@
       "ordinal": 61
     },
     {
-      "symbol": "_Z13func_02010844PvP7Vector3s",
+      "symbol": "_ZN8dActor_c13func_02010844EP7Vector3s",
       "address": "0x02010844",
       "size": "0x00000080",
       "legacy_source": "src/func_02010844.c",

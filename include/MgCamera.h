@@ -1,6 +1,6 @@
 /* MgCamera: the 0xbc-byte camera the minigame scenes embed. The name is
  * COINED. The ROM has no typeinfo, vtable or out-of-line member for it,
- * and its routines are the extern "C" Camera_* functions at the head of ov006
+ * and its routines are the Camera_* functions at the head of ov006
  * (src/minigames/unit020bfec0.cpp). It is NOT dCamera_c, the stage camera.
  *
  * dScMgSingle3DBase_c holds one at 0x4660 and dScMgD3DBase_c holds two at
@@ -47,27 +47,15 @@ typedef char MtxFx43_size_must_be_0x30[sizeof(MtxFx43) == 0x30 ? 1 : -1];
 typedef char MgCamera_size_must_be_0xbc[sizeof(MgCamera) == 0xbc ? 1 : -1];
 #endif
 
-/* Camera_ProjectToScreen16, Camera_InitSlotsView and Camera_InitFlowerView
-   are declared in decl_common.h with void * and char * cameras. mwcc rejects
-   a second extern "C" declaration with a different parameter type as illegal
-   overloading, so they are not declared here until decl_common.h drops its
-   copies. */
-#ifdef __cplusplus
-extern "C" {
-#endif
-
+/* The scene camera presets and the two world-to-screen projections. They are
+   free functions, not members: every minigame scene calls them on its own
+   MgCamera at a fixed offset. */
 void Camera_ProjectToScreen(MgCamera *, void *, int *, int *);
-#ifdef __cplusplus
-}
-#endif
-#ifdef __cplusplus
+void Camera_ProjectToScreen16(MgCamera *, void *, short *);
 void Camera_UpdateMatrices(MgCamera *);
 void Camera_InitDealerView(MgCamera *);
 void Camera_InitPresenterView(MgCamera *);
-#else
-extern void Camera_UpdateMatrices(MgCamera *);
-extern void Camera_InitDealerView(MgCamera *);
-extern void Camera_InitPresenterView(MgCamera *);
-#endif
+void Camera_InitSlotsView(MgCamera *);
+void Camera_InitFlowerView(MgCamera *);
 
 #endif

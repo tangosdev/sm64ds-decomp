@@ -1219,18 +1219,6 @@ extern "C"
 #endif
 extern void MIi_CpuCopy32(const void *, void *, unsigned int);
 extern void OpenCannonInCurLevel(void);
-extern void Quaternion_FromVector3(struct Quat *, struct Vector3 *, struct Vector3 *);
-#ifdef __cplusplus
-extern "C"
-#endif
-extern void Quaternion_Normalize(int*);
-#ifdef __cplusplus
-extern "C"
-#endif
-extern void Quaternion_SLerp(void*, void*, int, void*);
-#ifdef __cplusplus
-extern "C"
-#endif
 extern void SetBg0Offset(int, int);
 #ifdef __cplusplus
 extern "C"
@@ -1309,7 +1297,6 @@ extern void Vec3fGetDistAndAngle(const struct Vector3 *, const struct Vector3 *,
 extern void func_0200f13c(void);
 extern void func_0200f220(void);
 extern void func_0200f2cc(void);
-extern void func_0200fa8c(void*, int);
 extern void func_02011cfc(void);
 extern void func_02011d08(void);
 extern void func_02011d2c(void);
@@ -1564,13 +1551,9 @@ extern "C"
 extern void func_ov003_020b0730(void*, int);
 extern void MiniGm_LoadGroupIcons(void*);
 #ifdef __cplusplus
-extern "C"
+struct MgCamera;
+void Camera_ProjectToScreen16(MgCamera *, void *, short *);
 #endif
-extern void Camera_ProjectToScreen16(void*, char*, short*);
-#ifdef __cplusplus
-extern "C"
-#endif
-extern void MascotWalker_StartNextPath(void*);extern void MascotWalker_Draw(char*);
 extern void MascotWalker_Load(struct MascotWalker *);
 extern void Dealer_ResetMatrices(char*);
 extern void Dealer_PlayWin(void*);
