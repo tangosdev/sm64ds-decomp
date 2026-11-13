@@ -350,7 +350,7 @@ extern int Vec3_Dist(const void *a, const void *b);
 extern void Vec3_Asr(void *d, void *s, int sh);
 extern int Vec3_HorzDist(const void *a, const void *b);
 // local extern: CalcLib.h conflicts with this TU's opaque Vec3_Dist, Vec3_Asr, and Vec3_HorzDist prototypes.
-extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+extern s16 Vec3_HorzAngle(const Vector3 *a, const s32 *b);
 extern int func_020092c4(void *cam, void *out, void *target);
 extern void func_02011cfc(void);
 extern void func_02011d2c(void);
@@ -860,7 +860,7 @@ int daIwante_c::HandPattern9Execute() {
                 out.z = 0;
                 in.z = 0x3e8000;
 
-                ang = Vec3_HorzAngle(&mPos, (const Vector3 *)&mTargetPosX);
+                ang = Vec3_HorzAngle(&mPos, &mTargetPosX);
                 Matrix4x3_FromRotationY(&data_020a0e68, ang);
                 MTX_MultVec43((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
 
@@ -876,7 +876,7 @@ int daIwante_c::HandPattern9Execute() {
                 func_02012694(SE_START_MOVING, &mCamSpacePosX);
             }
 
-            ang = Vec3_HorzAngle(&mPos, (const Vector3 *)&mTargetPosX);
+            ang = Vec3_HorzAngle(&mPos, &mTargetPosX);
             ApproachAngle(&mAngleY, ang, 2, 0x400, 0x200);
         }
 
@@ -2191,7 +2191,7 @@ int daIwante_c::BodyDormantEnter() {
  * is called on the object unless that first word is null. */
 int daIwante_c::SetState(void *pv) {
     mState = (EyerokState *)pv;
-    if (*(int *)&mState->enter == 0)
+    if (mState->enter == 0)
         return 1;
     return (this->*mState->enter)();
 }
