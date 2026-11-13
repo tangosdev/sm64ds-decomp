@@ -1794,10 +1794,8 @@ void dScMgPachinko_c::BobOmb_StateAim(int i) {
             *py = 0x8000;
 
         {
-            s32 nx =
-                (*(s32 *)(c + SHOT_OFF(x) + off) >> 12) - ((u8(*)[4])gTouchX)[gActivePlayerSlot][0];
-            s32 ny =
-                (*(s32 *)(c + SHOT_OFF(y) + off) >> 12) - ((u8(*)[4])gTouchY)[gActivePlayerSlot][0];
+            s32 nx = (*(s32 *)(c + SHOT_OFF(x) + off) >> 12) - gTouchX[gActivePlayerSlot * 4];
+            s32 ny = (*(s32 *)(c + SHOT_OFF(y) + off) >> 12) - gTouchY[gActivePlayerSlot * 4];
 
             *(s32 *)(c + SHOT_OFF(offX) + off) = nx << 12;
             *(s32 *)(c + SHOT_OFF(offY) + off) = ny << 12;
