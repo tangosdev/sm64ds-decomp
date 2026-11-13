@@ -166,10 +166,10 @@ void dScEntry_c::icon_c::Render() {
         /* Cases 0..2 share the fill loop with cases 8..11. mwccarm will not
          * merge the two tails, and folding the cases adds an unk_01c compare. */
         if (0) {
-    case 8:
-    case 9:
-    case 10:
-    case 11:
+        case 8:
+        case 9:
+        case 10:
+        case 11:
             paletteBits = (mOn != 0) ? 0x2000 : 0x1000;
         }
         halfWidth = mHalfW;
