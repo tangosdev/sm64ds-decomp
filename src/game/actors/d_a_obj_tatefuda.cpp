@@ -793,7 +793,6 @@ int daObjTatefuda_c::TryStartTalk() {
             goto fail;
         {
             int b = (int)(other->actorID == ACTOR_PLAYER);
-            // goto: early returns (0xfc), nested success, do-while break still DIFF TryStartTalk
             if (b != false)
                 goto success;
         }
