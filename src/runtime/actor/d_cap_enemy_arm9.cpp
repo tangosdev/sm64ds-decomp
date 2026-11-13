@@ -263,7 +263,7 @@ int dCapEnemy_c::func_02005e28()
     int b;
     int i;
     int n;
-    b = (int)(gGameMode == 1);
+    b = (gGameMode == 1);
     if (b != 0) {
         n = data_0208a0e0;
         for (i = 0; i < n; i++) {

@@ -259,7 +259,7 @@ int daBtn_c::InitResources()
 
     idx = mIsKing;
     kcl = dBgW_Kc::LoadFile(*(SharedFilePtr *)data_ov079_02127bf0[idx]);
-    (void)kcl;
+    kcl;
 
     if (mShadowModel.InitCuboid() == 0) {
         return 0;
@@ -273,7 +273,7 @@ int daBtn_c::InitResources()
         mTextureSequence.SetFlags(0x40000000);
         mTextureSequence.speed = 0x1000;
         mTextureSequence.currFrame = 0;
-        mStarID = (u8)(param1 & 0xf);
+        mStarID = (param1 & 0xf);
         mTrackStarID = TrackStar(mStarID, 2);
     } else {
         mHitPoints = 1;
@@ -284,15 +284,13 @@ int daBtn_c::InitResources()
 
     idx = mIsKing;
     if (idx == 0) {
-        ((dBgW_KcMbg *)(&mMovingMeshCollider))
-            ->dBgW_KcMbg::SetFile(
-                (KCL_File *)(((SharedFilePtr *)data_ov079_02127bf0[idx])->filePtr), mMeshMatrix,
-                0x199, mAngleY, *(CLPS_Block *)(&data_ov079_02127ba0));
+        mMovingMeshCollider.dBgW_KcMbg::SetFile(
+            (KCL_File *)(((SharedFilePtr *)data_ov079_02127bf0[idx])->filePtr), mMeshMatrix, 0x199,
+            mAngleY, data_ov079_02127ba0);
     } else {
-        ((dBgW_KcMbg *)(&mMovingMeshCollider))
-            ->dBgW_KcMbg::SetFile(
-                (KCL_File *)(((SharedFilePtr *)data_ov079_02127bf0[idx])->filePtr), mMeshMatrix,
-                0x1000, mAngleY, *(CLPS_Block *)(&data_ov015_021135d4));
+        mMovingMeshCollider.dBgW_KcMbg::SetFile(
+            (KCL_File *)(((SharedFilePtr *)data_ov079_02127bf0[idx])->filePtr), mMeshMatrix, 0x1000,
+            mAngleY, data_ov015_021135d4);
     }
 
     mMovingMeshCollider.SetShallowOnly();
@@ -394,7 +392,7 @@ int daBtn_c::Behavior()
     UpdatePos(0);
 
     if (mHorzSpeed != 0) {
-        if (IsGoingOffCliff(mWithMeshClsn, 0x3c000, (short)0x2888, false, false, 0x32000)) {
+        if (IsGoingOffCliff(mWithMeshClsn, 0x3c000, 0x2888, false, false, 0x32000)) {
             /* The step would leave the ledge: rewind to last frame's position. */
             mPosX = mSafePosX;
             mPosY = mSafePosY;
@@ -455,14 +453,14 @@ int daBtn_c::CleanupResources()
     mMovingMeshCollider.Disable();
   ((SharedFilePtr *)(data_ov079_02127bf0[mIsKing]))->Release();
   if(mIsKing){
-    ((SharedFilePtr *)&data_ov079_02128168)->Release();
-    for(i=0;i<6;i++)
-      ((SharedFilePtr *)(data_ov079_02127600[i]))->Release();
-    ((SharedFilePtr *)&data_ov079_02128178)->Release();
+      data_ov079_02128168.Release();
+      for (i = 0; i < 6; i++)
+          ((SharedFilePtr *)(data_ov079_02127600[i]))->Release();
+      data_ov079_02128178.Release();
   } else {
-    ((SharedFilePtr *)&data_ov079_02128170)->Release();
-    for(i=0;i<5;i++)
-      ((SharedFilePtr *)(data_ov079_021275ec[i]))->Release();
+      data_ov079_02128170.Release();
+      for (i = 0; i < 5; i++)
+          ((SharedFilePtr *)(data_ov079_021275ec[i]))->Release();
   }
   return 1;
 }
@@ -518,8 +516,8 @@ void daBtn_c::func_ov079_02125b44()
                 }
                 ang = ::Vec3_HorzAngle(&pos, &mPos);
                 y = pos.y + 0x96000;
-                pos.x = FX_SinIdx((u16)ang >> 4) * 0xd7 + pos.x;
-                pos.z = FX_CosIdx((u16)ang >> 4) * 0xd7 + pos.z;
+                pos.x = FX_SinIdx(ang >> 4) * 0xd7 + pos.x;
+                pos.z = FX_CosIdx(ang >> 4) * 0xd7 + pos.z;
                 pos.y = y;
                 if (mPlayers[mNearestPlayer]->ShowMessage(*this, 0xa4, &pos, 0, 0) != 0) {
                     mSubState++;
@@ -726,7 +724,7 @@ void daBtn_c::func_ov079_021256d4()
         mTextureSequence.currFrame = 0;
         mHorzSpeed = 0;
         anim = ((SharedFilePtr *)tab[mIsKing * five + 3])->filePtr;
-        ((dExtAnmModel_c *)ma)->SetAnim((BCA_File *)anim, 0, 0x1000, 0);
+        (ma)->SetAnim((BCA_File *)anim, 0, 0x1000, 0);
     }
 }
 
@@ -749,7 +747,7 @@ void daBtn_c::func_ov079_02125504()
         void *want;
         i = mIsKing;
         q = mAnmModel.currFrame;
-        e = (SharedFilePtr *)data_ov079_021275ec[(int)i * 5 + 3];
+        e = (SharedFilePtr *)data_ov079_021275ec[i * 5 + 3];
         cur = mAnmModel.file;
         want = e->filePtr;
         frame = (unsigned short)(q >> 12);
@@ -778,7 +776,7 @@ void daBtn_c::func_ov079_02125504()
             px = mPosX;
             v[0].x = px;
             py = mPosY;
-            t = (s16)(a0 + a1 + 0x4000);
+            t = (a0 + a1 + 0x4000);
             v[0].y = py;
             pz = mPosZ;
             v[0].z = pz;
@@ -840,11 +838,11 @@ void daBtn_c::func_ov079_0212538c()
         func_0201267c(0xc6, &mCamSpacePos);
     }
     if (mIsKing) {
-        mTipLift = (s16)mAngleX * (s16)0x15;
+        mTipLift = mAngleX * 0x15;
         if (mTipLift >= 0x53000)
             mTipLift = 0x53000;
     } else {
-        mTipLift = (s16)mAngleX * (s16)0xa;
+        mTipLift = mAngleX * 0xa;
         if (mTipLift >= 0x25000)
             mTipLift = 0x25000;
     }
@@ -906,7 +904,7 @@ void daBtn_c::func_ov079_02125058(dActor_c *other)
        SpawnCoins. All four are stored, as in the ROM. */
     Vector3 v1, v2;
     Vector3 w1, w2;
-    int eq = (int)(other->actorID == 0xbf);
+    int eq = (other->actorID == 0xbf);
     if (!eq) return;
     mTouched = 1;
     if (func_ov002_020dd8b8(other) != 0) {
@@ -977,7 +975,7 @@ void daBtn_c::func_ov079_02124ed4()
         mSubTimer++;
         v = mSubTimer;
         if (v <= 10) {
-            if ((int)v % 2) {
+            if (v % 2) {
                 mPosY += 0x10000;
             } else {
                 mPosY -= 0x10000;
@@ -1053,7 +1051,7 @@ void daBtn_c::func_ov079_02124b08()
         {
             int lim = mIsKing * 0x14 + 0x64;
             u16 cur = mStateTimer;
-            if ((int)cur <= lim) {
+            if (cur <= lim) {
                 if (unk_407 != 1)
                     return;
                 if (cur <= 0x1e)
@@ -1126,7 +1124,7 @@ void daBtn_c::func_ov079_02124b08()
         v = mIsKing;
         q = mAnmModel.currFrame;
         m = v * 0x30;
-        mTipLift = data_ov079_02127cfc[m + (int)((unsigned short)(q >> 12))];
+        mTipLift = data_ov079_02127cfc[m + ((unsigned short)(q >> 12))];
     }
 }
 
@@ -1197,7 +1195,7 @@ void daBtn_c::func_ov079_021246dc()
                 pos.y += 0x32000;
                 pos.x = FX_SinIdx(ang >> 4) * mag + pos.x;
                 pos.z = FX_CosIdx(ang >> 4) * mag + pos.z;
-                if (mPounder->ShowMessage(*this, 0xa5, (Vector3 *)&pos, 0, 0) == 0)
+                if (mPounder->ShowMessage(*this, 0xa5, &pos, 0, 0) == 0)
                     return;
                 mSubState++;
                 func_0201267c(0x133, &mCamSpacePos);
@@ -1222,10 +1220,10 @@ void daBtn_c::func_ov079_021246dc()
             dp.x = v.x;
             dp.y = v.y;
             dp.z = v.z;
-            TriplePoofDustAt(*(Vector3 *)&dp);
+            TriplePoofDustAt(dp);
             Particle::System::NewSimple(kPtclWhompKingDefeat, v.x, v.y, v.z);
             mShouldRender = 0;
-            UntrackAndSpawnStar(mTrackStarID, mStarID, *(Vector3 *)&starPos, 4);
+            UntrackAndSpawnStar(mTrackStarID, mStarID, starPos, 4);
             if (mMovingMeshCollider.IsEnabled() != 0)
                 mMovingMeshCollider.Disable();
             MarkForDestruction();
@@ -1238,7 +1236,7 @@ void daBtn_c::func_ov079_021246dc()
         dp2.x = v2.x;
         dp2.y = v2.y;
         dp2.z = v2.z;
-        PoofDustAt(*(Vector3 *)&dp2);
+        PoofDustAt(dp2);
         Particle::System::NewSimple(kPtclWhompDefeat, v2.x, v2.y, v2.z);
         MarkForDestruction();
     }
@@ -1261,9 +1259,9 @@ void daBtn_c::func_ov079_02124638()
             return;
         }
         {
-            s32 amp = (s32)((t - 0x50) << 6);
-            u16 ang = (u16)(s16)(t << 13);
-            mAngleX = (s16)FX_MUL(amp, FX_SinIdx(ang >> 4));
+            s32 amp = ((t - 0x50) << 6);
+            u16 ang = (s16)(t << 13);
+            mAngleX = FX_MUL(amp, FX_SinIdx(ang >> 4));
         }
         return;
     }
@@ -1292,11 +1290,11 @@ void daBtn_c::func_ov079_02124530()
             func_0201267c(0xc6, &mCamSpacePos);
         }
         if (mIsKing) {
-            mTipLift = (s16)mAngleX * (s16)0x15;
+            mTipLift = mAngleX * 0x15;
             if (mTipLift >= 0x53000)
                 mTipLift = 0x53000;
         } else {
-            mTipLift = (s16)mAngleX * (s16)0xa;
+            mTipLift = mAngleX * 0xa;
             if (mTipLift >= 0x25000)
                 mTipLift = 0x25000;
         }
@@ -1375,9 +1373,9 @@ void daBtn_c::func_ov079_02124188()
     pos.y = mPosY;
     pos.z = mPosZ;
 
-    mBodyPitch = (short)-*(unsigned short *)(bone + 0x1c);
+    mBodyPitch = -*(unsigned short *)(bone + 0x1c);
     mBodyYaw = *(unsigned short *)(bone + 0x1a);
-    mBodyRoll = (short)(*(unsigned short *)(bone + 0x1e) - 0x4000);
+    mBodyRoll = (*(unsigned short *)(bone + 0x1e) - 0x4000);
 
     if (mIsKing != 0) {
         tiltSin = FX_SinIdx((unsigned short)mAngleX >> 4);
@@ -1394,8 +1392,7 @@ void daBtn_c::func_ov079_02124188()
 
     ::Vec3_Asr((::Vector3 *)&asr, (::Vector3 *)&pos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68,
-        (short)(mAngleY + mBodyYaw));
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, (mAngleY + mBodyYaw));
 
     *(Mtx43 *)&mShadowMatrix = *(Mtx43 *)&data_020a0e68;
 
@@ -1416,7 +1413,7 @@ void daBtn_c::func_ov079_02124188()
    actor, raised by mTipLift and lowered again by the squash. */
 void daBtn_c::func_ov079_02124008()
 {
-    s16 a = (s16)(mAngleX + mBodyPitch);
+    s16 a = (mAngleX + mBodyPitch);
     int s;
     u8 n = mIsKing;
     int off;
@@ -1438,7 +1435,7 @@ void daBtn_c::func_ov079_02124008()
     Matrix4x3_ApplyInPlaceToRotationY(&mMeshMatrix, mBodyYaw);
     if (mState != 1 && mState != 7) {
         Matrix4x3_ApplyInPlaceToRotationX(&mMeshMatrix, mBodyPitch);
-        Matrix4x3_ApplyInPlaceToRotationZ(&mMeshMatrix, (s16)(mBodyRoll >> 1));
+        Matrix4x3_ApplyInPlaceToRotationZ(&mMeshMatrix, (mBodyRoll >> 1));
     }
     Matrix4x3_ApplyInPlaceToScale(&mMeshMatrix, 0x1000, s, 0x1000);
 
@@ -1526,9 +1523,9 @@ extern "C" void func_ov079_02123d4c(Vector3 *out, daBtn_c *self) {
         int m;
         int d;
         if (self->mIsKing) {
-            m = (s16)FX_SinIdx((unsigned short)self->mAngleX >> 4) * (s16)0x190;
+            m = FX_SinIdx((unsigned short)self->mAngleX >> 4) * 0x190;
         } else {
-            m = (s16)FX_SinIdx((unsigned short)self->mAngleX >> 4) * (s16)0xc8;
+            m = FX_SinIdx((unsigned short)self->mAngleX >> 4) * 0xc8;
         }
         out->x = out->x + FX_MUL(m, FX_SinIdx((unsigned short)self->mAngleY >> 4));
         d = self->OnAimedAtWithEgg();
@@ -1571,8 +1568,8 @@ int daBtn_c::func_ov079_02123bcc() {
             sin2 = FX_SinIdx((u16)rangle >> 4);
             cos2 = FX_CosIdx((u16)rangle >> 4);
             vx = v[0]; vy = v[1]; vz = v[2];
-            nx = (s16)sin2 * 5 + vx;
-            nz = (s16)cos2 * 5 + vz;
+            nx = sin2 * 5 + vx;
+            nz = cos2 * 5 + vz;
             i = mNearestPlayer;
             player = mPlayers[i];
             player->mPosX = nx;
@@ -1587,10 +1584,10 @@ int daBtn_c::func_ov079_02123bcc() {
 s32 daBtn_c::OnAimedAtWithEgg() {
     int idx;
     if(mIsKing!=0){
-        idx = ((int)(unsigned short)mAngleX >> 4);
+        idx = ((unsigned short)mAngleX >> 4);
         return FX_CosIdx(idx) * 0x11d + 0x4b000;
     }
-    idx = ((int)(unsigned short)mAngleX >> 4);
+    idx = ((unsigned short)mAngleX >> 4);
     return FX_CosIdx(idx) * 0x90 + 0x24000;
 }
 
@@ -1647,7 +1644,7 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
     }
 
     sinv = FX_SinIdx((u16)other->mPrevAngleY >> 4);
-    cosv = FX_CosIdx((u16)other->mPrevAngleY >> 4);
+    cosv = FX_CosIdx(other->mPrevAngleY >> 4);
     v.x = v.x - sinv * 0x50;
     v.z = v.z - cosv * 0x50;
 

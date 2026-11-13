@@ -216,7 +216,7 @@ void func_ov077_02124d08(daTgz_c *self, dBgCh_Actr *clsn) {
                       0x8000);
             }
             self->mAngleX = self->func_02010844(&normal, self->mAngleY);
-            self->mAngleZ = self->func_02010844(&normal, (s16)(self->mAngleY - 0x4000));
+            self->mAngleZ = self->func_02010844(&normal, (self->mAngleY - 0x4000));
         }
     }
     if (clsn->IsOnWall()) {
@@ -252,11 +252,11 @@ void func_ov077_02124eb0(daTgz_c *self) {
     if (player == 0)
         return;
 
-    b = (int)(player->actorID == 0xbf);
+    b = (player->actorID == 0xbf);
     if (b == 0)
         return;
 
-    b = (int)((self->mFlags & 0x20000) != 0);
+    b = ((self->mFlags & 0x20000) != 0);
     if (b != 0) {
         func_ov077_02125e94(self, 3);
         return;
@@ -302,10 +302,10 @@ void func_ov077_021250a8(daTgz_c *self) {
     daPly_c *player = (daPly_c *)dActor_c::FindWithID(id);
     if (player == 0)
         return;
-    int b1 = (int)(player->actorID == 0xbf);
+    int b1 = (player->actorID == 0xbf);
     if (b1 == 0)
         return;
-    int b2 = (int)((self->mFlags & 0x20000) != 0);
+    int b2 = ((self->mFlags & 0x20000) != 0);
     if (b2 != 0) {
         func_ov077_02125e94(self, 3);
         return;
@@ -360,7 +360,7 @@ void func_ov077_02125290(daTgz_c *self) {
 }
 
 void func_ov077_02125304(daTgz_c *self) {
-    int b = (int)((self->mFlags & 0x40000) != 0);
+    int b = ((self->mFlags & 0x40000) != 0);
     if (b != 0)
         return;
     if (self->mState == 5)
@@ -485,7 +485,7 @@ int daTgz_c::func_ov077_021256b4() {
 
     carrier = mCarrier;
     one = 1;
-    int *src = (int *)&carrier->mPosX;
+    int *src = &carrier->mPosX;
     mPosX = src[0];
     mPosY = src[1];
     mPosZ = src[2];
@@ -522,7 +522,7 @@ int daTgz_c::func_ov077_02125830() {
         dActor_c *carrier = mCarrier;
         /* Address of the triple, then [0]/[4]/[8]. Three field loads fold the
            0x5c into the ldr and drop the add the ROM kept. */
-        int *src = (int *)&carrier->mPosX;
+        int *src = &carrier->mPosX;
         mPosX = src[0];
         mPosY = src[1];
         mPosZ = src[2];
@@ -585,7 +585,7 @@ int daTgz_c::func_ov077_02125908() {
 int daTgz_c::func_ov077_02125a0c() {
     mHorzSpeed = 0x5000;
     mVertSpeed = 0xd000;
-    short ang = (short)Vec3_HorzAngle(&mChasePlayer->mPos, &mPos);
+    short ang = Vec3_HorzAngle(&mChasePlayer->mPos, &mPos);
     mPrevAngleY = ang;
     mWithMeshClsn.SetLimMovFlag();
     mState = 2;
@@ -659,7 +659,7 @@ int daTgz_c::func_ov077_02125bb4() {
         mTerminalVelocity = -0x3c000;
         mHorzSpeed = 0x4000;
     }
-    mInWater = (unsigned char)underwater;
+    mInWater = underwater;
 
     if (mWithMeshClsn.JustHitGround()) {
         mVertSpeed = (mVertSpeed * -0x3c) / 100;

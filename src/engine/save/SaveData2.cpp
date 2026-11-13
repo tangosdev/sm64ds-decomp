@@ -100,7 +100,7 @@ int SaveData::SaveDataToCart(char* data, u32 size, u32 fileID)
         do {
             u8 c = *t;
             i++;
-            acc = (u16)(acc + c);
+            acc = (acc + c);
             t++;
         } while (i < 8);
         sum = acc;
@@ -109,8 +109,8 @@ int SaveData::SaveDataToCart(char* data, u32 size, u32 fileID)
     {
         u32 i;
         for (i = 0; i < size; i++) {
-            sum = (u16)(((sum << 1) & 0xfffe) | ((sum >> 15) & 1));
-            sum = (u16)(sum ^ (((u8)data[i]) & 0xff));
+            sum = (((sum << 1) & 0xfffe) | ((sum >> 15) & 1));
+            sum = (sum ^ (((u8)data[i]) & 0xff));
         }
     }
 
@@ -118,7 +118,7 @@ int SaveData::SaveDataToCart(char* data, u32 size, u32 fileID)
     if (lockID == -3)
         return 1;
 
-    CARD_LockBackup((u16)lockID);
+    CARD_LockBackup(lockID);
 
     retry = 0;
     hdrOff = need + 2;
@@ -128,14 +128,14 @@ int SaveData::SaveDataToCart(char* data, u32 size, u32 fileID)
            func_02060484(dataOff, data, size, 0, 0, 0) != 1) {
         retry++;
         if (retry > 0) {
-            CARD_UnlockBackup((u16)lockID);
-            OS_ReleaseLockID((u16)lockID);
+            CARD_UnlockBackup(lockID);
+            OS_ReleaseLockID(lockID);
             return 1;
         }
     }
 
-    CARD_UnlockBackup((u16)lockID);
-    CARD_LockBackup((u16)lockID);
+    CARD_UnlockBackup(lockID);
+    CARD_LockBackup(lockID);
 
     retry2 = 0;
     newBase = freeVal + need;
@@ -146,14 +146,14 @@ int SaveData::SaveDataToCart(char* data, u32 size, u32 fileID)
            func_02060484(dataOff2, data, size, 0, 0, 0) != 1) {
         retry2++;
         if (retry2 > 0) {
-            CARD_UnlockBackup((u16)lockID);
-            OS_ReleaseLockID((u16)lockID);
+            CARD_UnlockBackup(lockID);
+            OS_ReleaseLockID(lockID);
             return 1;
         }
     }
 
-    CARD_UnlockBackup((u16)lockID);
-    OS_ReleaseLockID((u16)lockID);
+    CARD_UnlockBackup(lockID);
+    OS_ReleaseLockID(lockID);
     return 0;
 }
 
@@ -197,7 +197,7 @@ int SaveData::ReadDataFromCart(char* buf, u32 len, u32 slot)
     lock = OS_GetLockID();
     if (lock == -3)
         return 1;
-    CARD_LockBackup((u16)lock);
+    CARD_LockBackup(lock);
     retry = 0;
     a2 = off + 2;
     a10 = off + 10;
@@ -207,7 +207,7 @@ int SaveData::ReadDataFromCart(char* buf, u32 len, u32 slot)
         if (retry > 0)
             break;
     }
-    CARD_UnlockBackup((u16)lock);
+    CARD_UnlockBackup(lock);
     if (retry <= 0) {
         ok = 1;
         pd = data_020a4b40;
@@ -229,12 +229,12 @@ int SaveData::ReadDataFromCart(char* buf, u32 len, u32 slot)
                       ((u8)buf[j] & 0xFF);
             }
             if (sum == crc) {
-                OS_ReleaseLockID((u16)lock);
+                OS_ReleaseLockID(lock);
                 return 0;
             }
         }
     }
-    CARD_LockBackup((u16)lock);
+    CARD_LockBackup(lock);
     retry2 = 0;
     off2 = half + off;
     b2 = off2 + 2;
@@ -244,13 +244,13 @@ int SaveData::ReadDataFromCart(char* buf, u32 len, u32 slot)
            func_02060558(b10, buf, len, 0, 0, 0) != 1) {
         retry2++;
         if (retry2 > 0) {
-            CARD_UnlockBackup((u16)lock);
-            OS_ReleaseLockID((u16)lock);
+            CARD_UnlockBackup(lock);
+            OS_ReleaseLockID(lock);
             return 1;
         }
     }
-    CARD_UnlockBackup((u16)lock);
-    OS_ReleaseLockID((u16)lock);
+    CARD_UnlockBackup(lock);
+    OS_ReleaseLockID(lock);
     pd = data_020a4b40;
     pm = magic;
     for (i = 0; i < 8; i++, pd++, pm++) {

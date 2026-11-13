@@ -24,8 +24,6 @@
  *   spelled them through pointer locals and a (long long)(int)& launder
  *   because the expanded `x = x | y` form changes the size; the compound form
  *   reproduces (#821).
- * - StateIdleMain still reads mStateTimer as `*(u16 *)&`: the ROM loads it
- *   with ldrh, and dEnemyBase_c declares it s16.
  */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daMip_c_AssetId {
@@ -347,7 +345,7 @@ int daMip_c::StateTalkMain()
     unsigned int id;
 
     player = mSaveTalkPlayer;
-    pq = (int *)&player->mPosX;
+    pq = &player->mPosX;
     pos.x = mPosX;
     pos.y = mPosY;
     pos.z = mPosZ;
@@ -441,7 +439,7 @@ int daMip_c::StateReleasedMain()
         if (o != 0) {
             if (IsPlayerActor(o)) {
                 mSaveTalkPlayer = o;
-                o = static_cast<daPly_c *>(mSaveTalkPlayer);
+                o = mSaveTalkPlayer;
                 if (o->StartTalk(*this, 0) != 0) {
                     SetState(&data_ov085_021306dc);
                 }
@@ -495,7 +493,7 @@ int daMip_c::StateCaughtMain()
 
     if (mActionStep == 0) {
         {
-            int *ps = (int *)&pl->mPosX;
+            int *ps = &pl->mPosX;
             pv.x = ps[0];
             pv.y = ps[1];
             pv.z = ps[2];
@@ -965,7 +963,7 @@ int daMip_c::StateIdleMain()
         }
     }
 
-    if (mActionStep == 0 && *(u16 *)&mStateTimer == 0) {
+    if (mActionStep == 0 && mStateTimer == 0) {
         mTargetAngY = Vec3_HorzAngle(&mPos, (const Vector3 *)&mIdlePosX);
         mTargetAngY += 0x1800 - ((r & 3) << 12);
         mAnmModel.SetAnim((BCA_File *)data_ov085_021305c8.filePtr, 0x40000000, 0x1000, 0);
@@ -1326,8 +1324,8 @@ int daMip_c::Behavior()
 
     if (mCatchState != 0) {
         void* p = *(void**)&mState;
-        if (p != (void*)&data_ov085_021306ac && p != (void*)&data_ov085_0213068c &&
-            p != (void*)&data_ov085_021306bc && p != (void*)&data_ov085_021306dc) {
+        if (p != &data_ov085_021306ac && p != &data_ov085_0213068c && p != &data_ov085_021306bc &&
+            p != &data_ov085_021306dc) {
             SetState(&data_ov085_021306ac);
             mAnmModel.SetAnim((BCA_File *)(*(void **)((char *)&data_ov085_021305c0 + 4)), 0, 0x1000,
                               0);
@@ -1335,7 +1333,7 @@ int daMip_c::Behavior()
         mHorzSpeed = 0;
     }
 
-    DecIfAbove0_Short((u16 *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
 
     {
         daMip_cSelf *self = (daMip_cSelf *)c;
@@ -1355,17 +1353,17 @@ int daMip_c::Behavior()
         UpdateMirrorShadow();
 
     if (!IsFlagSet(this, 0x4000)) {
-        if (*(void **)&mState != (void *)&data_ov085_021306ac || mCatchState != 0)
+        if (*(void **)&mState != &data_ov085_021306ac || mCatchState != 0)
             UpdatePos(&mdCcAc_c);
         mAngleX = mPrevAngleX;
         mAngleY = mPrevAngleY;
         mAngleZ = mPrevAngleZ;
         UpdateWMClsn(mWithMeshClsn, 0);
-        if (*(void **)&mState != (void *)&data_ov085_021306ac)
+        if (*(void **)&mState != &data_ov085_021306ac)
             UpdateGrab();
     }
 
-    if (*(void**)&mState != (void*)&data_ov085_021306ac) {
+    if (*(void **)&mState != &data_ov085_021306ac) {
         mdCcAc_c.Clear();
         mdCcAc_c.Update();
     }

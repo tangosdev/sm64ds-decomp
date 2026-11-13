@@ -611,10 +611,10 @@ void daIwante_c::SetLoweredPose() {
 
     if (mPartIdx == PART_HAND_1) {
         mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae34.filePtr), mClsnMat2, 0x199, mAngleY,
-                               *(CLPS_Block *)(&data_ov025_02112cc8));
+                               data_ov025_02112cc8);
     } else {
         mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae1c.filePtr), mClsnMat2, 0x199, mAngleY,
-                               *(CLPS_Block *)(&data_ov025_02112c88));
+                               data_ov025_02112c88);
     }
 
     mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
@@ -697,7 +697,7 @@ int daIwante_c::GetPlayerDepthBand() {
     int dist = playerPos.z;
     int lo = (int)0xff3ae000;
     if (dist < lo) return lo;
-    int lo2 = -(int)0xb50000;
+    int lo2 = -0xb50000;
     if (dist < lo2) return lo2;
     int hi = (int)0xff598000;
     if (dist >= hi) return 0;
@@ -897,10 +897,10 @@ int daIwante_c::HandPattern9Execute() {
                 mMeshCollider2.Disable();
             if (mPartIdx == PART_HAND_1)
                 mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae14.filePtr), mClsnMat2, 0x199,
-                                       mAngleY, *(CLPS_Block *)(&data_ov025_02112c08));
+                                       mAngleY, data_ov025_02112c08);
             else
                 mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211aeac.filePtr), mClsnMat2, 0x199,
-                                       mAngleY, *(CLPS_Block *)(&data_ov025_02112d48));
+                                       mAngleY, data_ov025_02112d48);
             mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
             mMeshCollider2.SetStoodOnCallback(&StoodOnCallback);
             mMeshCollider2.SetFilterByMoveDir();
@@ -1254,10 +1254,10 @@ int daIwante_c::HandPattern7Execute() {
                 mMeshCollider2.Disable();
             if (mPartIdx == PART_HAND_1)
                 mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae14.filePtr), mClsnMat2, 0x199,
-                                       mAngleY, *(CLPS_Block *)(&data_ov025_02112c08));
+                                       mAngleY, data_ov025_02112c08);
             else
                 mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211aeac.filePtr), mClsnMat2, 0x199,
-                                       mAngleY, *(CLPS_Block *)(&data_ov025_02112d48));
+                                       mAngleY, data_ov025_02112d48);
             mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
             mMeshCollider2.SetStoodOnCallback(&StoodOnCallback);
             mMeshCollider2.SetFilterByMoveDir();
@@ -1430,10 +1430,10 @@ int daIwante_c::HandPattern6Execute() {
                 mMeshCollider2.Disable();
             if (mPartIdx == PART_HAND_1)
                 mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae14.filePtr), mClsnMat2, 0x199,
-                                       mAngleY, *(CLPS_Block *)(&data_ov025_02112c08));
+                                       mAngleY, data_ov025_02112c08);
             else
                 mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211aeac.filePtr), mClsnMat2, 0x199,
-                                       mAngleY, *(CLPS_Block *)(&data_ov025_02112d48));
+                                       mAngleY, data_ov025_02112d48);
             mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
             mMeshCollider2.SetStoodOnCallback(&StoodOnCallback);
             mMeshCollider2.SetFilterByMoveDir();
@@ -1568,10 +1568,10 @@ int daIwante_c::HandPattern5Execute() {
 
         if (mPartIdx == PART_HAND_1) {
             mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae14.filePtr), mClsnMat2, 0x199,
-                                   mAngleY, *(CLPS_Block *)(&data_ov025_02112c08));
+                                   mAngleY, data_ov025_02112c08);
         } else {
             mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211aeac.filePtr), mClsnMat2, 0x199,
-                                   mAngleY, *(CLPS_Block *)(&data_ov025_02112d48));
+                                   mAngleY, data_ov025_02112d48);
         }
 
         mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
@@ -2088,7 +2088,7 @@ int daIwante_c::BodyTalkExecute() {
             in.z = -0x32000;
 
             Matrix4x3_FromRotationY(&data_020a0e68, 0);
-            MTX_MultVec43((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
+            MTX_MultVec43(&in, &data_020a0e68, &out);
 
             out.x += mPosX;
             out.y += mPosY;
@@ -2428,7 +2428,7 @@ int daIwante_c::Behavior() {
  * mHitPoints = 3; data_ov066_0211ae00 = 0; it enters the rise state
  * (data_ov066_0211b05c). */
 int daIwante_c::InitResources() {
-    char *c = (char *)((void *)this);
+    char *c = (char *)(this);
     Vector3 v;
     Vector3 w;
 
@@ -2526,7 +2526,7 @@ int daIwante_c::InitResources() {
         data_ov066_0211ae04 = PHASE_DORMANT;
         data_ov066_0211abe0 = HANDS_BOTH;
         mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae24.filePtr), mClsnMat2, 0x199, mAngleY,
-                               *(CLPS_Block *)(&data_ov025_02112ca8));
+                               data_ov025_02112ca8);
         mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
         mMeshCollider2.SetStoodOnCallback(&StoodOnCallback);
         mMeshCollider2.Enable(this);
@@ -2541,11 +2541,11 @@ int daIwante_c::InitResources() {
         mSpawnPosZ = mPosZ;
         if (mPartIdx == PART_HAND_1) {
             mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae14.filePtr), mClsnMat2, 0x199,
-                                   mAngleY, *(CLPS_Block *)(&data_ov025_02112c08));
+                                   mAngleY, data_ov025_02112c08);
             mRestPosX -= 0x31F000;
         } else {
             mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211aeac.filePtr), mClsnMat2, 0x199,
-                                   mAngleY, *(CLPS_Block *)(&data_ov025_02112d48));
+                                   mAngleY, data_ov025_02112d48);
             mRestPosX += 0x31F000;
         }
         mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);

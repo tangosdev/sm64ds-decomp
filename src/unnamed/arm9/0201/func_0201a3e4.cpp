@@ -11,7 +11,7 @@ extern mHeap::Heap_t *data_0209d520;
 void *func_0201a3e4(void) {
     int size;
     if (func_0203d974()) {
-        data_0209d520 = mHeap::Heap_t::CreateRootHeap(func_02011e94(&size), (unsigned int)size);
+        data_0209d520 = mHeap::Heap_t::CreateRootHeap(func_02011e94(&size), size);
     }
     return data_0209d520;
 }

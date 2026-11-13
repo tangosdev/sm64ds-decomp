@@ -70,5 +70,5 @@ void dCcPos_c::Init(const Vector3 &pos, Fix12i radius, Fix12i height, u32 flags,
  * sites; only the definition moves. Body as recovered. */
 
 void func_020147bc(unsigned short *dst, int glyph) {
-    *dst = (unsigned short)(data_0208e500 + glyph);
+    *dst = (data_0208e500 + glyph);
 }

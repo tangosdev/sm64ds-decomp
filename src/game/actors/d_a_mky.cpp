@@ -153,7 +153,7 @@ void daMky_c::ReturnToPerch() {
     rc.SetObjAndLine(a, b, this);
 
     if (this->mPerchPosY - this->mPosY > 0x96000 || rc.DetectClsn()) {
-        Vec3_Asr((Vector3 *)&asr, (Vector3 *)&this->mPerchPosX, 3);
+        Vec3_Asr(&asr, (Vector3 *)&this->mPerchPosX, 3);
 
         if (data_0209f43c.TransformAndClip(data_0209b3ec, asr, 0x1f400, out) > 0xc350000) {
             this->mPosX = this->mPerchPosX;
@@ -205,11 +205,10 @@ int daMky_c::CycleIdleAnimation() {
     extern int gMonkeyWait4AnimationFile[];
     extern void** data_ov030_02115bc8[];
     PlayIdleSounds();
-    if (static_cast<dExtFrameCtrl_c &>(this->mAnmModel).WillHitFrame(0) != 0 ||
-        (!IsPlayingAnim(this, data_ov030_02115cf0) &&
-         !IsPlayingAnim(this, gMonkeyWait2AnimationFile) &&
-         !IsPlayingAnim(this, gMonkeyWait3AnimationFile) &&
-         !IsPlayingAnim(this, gMonkeyWait4AnimationFile))) {
+    if (this->mAnmModel.WillHitFrame(0) != 0 || (!IsPlayingAnim(this, data_ov030_02115cf0) &&
+                                                 !IsPlayingAnim(this, gMonkeyWait2AnimationFile) &&
+                                                 !IsPlayingAnim(this, gMonkeyWait3AnimationFile) &&
+                                                 !IsPlayingAnim(this, gMonkeyWait4AnimationFile))) {
         this->mAnmModel.SetAnim((BCA_File *)(data_ov030_02115bc8[this->mAnimIdx][1]), 0, 0x1000, 0);
         {
             unsigned char *p = &this->mAnimIdx;
@@ -352,7 +351,7 @@ void daMky_c::UpdateFloorAndWalls(dBgCh_Actr *w) {
         dBgCh_Actr_UpdateContinuous_Veneer(&this->mWithMeshClsn);
     if (w->IsOnGround() != 0) {
         Vector3 n;
-        static_cast<const dBgPi *>(w->GetFloorResult())->surface.CopyNormalTo(n);
+        w->GetFloorResult()->surface.CopyNormalTo(n);
         if (n.y != 0) {
             int s = FX_MUL(n.x, this->mSpeedX) + FX_MUL(n.z, this->mSpeedZ);
             this->mVertSpeed = -(FX_Div(s, n.y) + 0x8000);
@@ -360,7 +359,7 @@ void daMky_c::UpdateFloorAndWalls(dBgCh_Actr *w) {
     }
     if (w->IsOnWall() != 0) {
         Vector3 wn;
-        static_cast<const dBgPi *>(w->GetWallResult())->surface.CopyNormalTo(wn);
+        w->GetWallResult()->surface.CopyNormalTo(wn);
     }
 }
 void daMky_c::UpdateModelAndCap() {
@@ -427,14 +426,14 @@ int daMky_c::func_ov030_021122b0()
     this->mPrevAngleY = this->mAngleY;
     if (DecIfAbove0_Byte(&this->mActionTimer) == 0)
         ChangeState(0);
-    static_cast<dExtFrameCtrl_c &>(this->mAnmModel).Advance();
+    this->mAnmModel.Advance();
     if (IsUkikiThief(this)) {
-        this->UpdatePos((dCc_c*)(&this->mdCcAc_c));
+        this->UpdatePos(&this->mdCcAc_c);
         UpdateSafePos();
         UpdateFloorAndWalls(&this->mWithMeshClsn);
         HandleContact();
     } else {
-        this->UpdatePos((dCc_c*)(&this->mdCcAc_c));
+        this->UpdatePos(&this->mdCcAc_c);
         UpdateFloorAndWalls(&this->mWithMeshClsn);
         HandleContact();
         RevertOffLedge();
@@ -458,9 +457,9 @@ int daMky_c::EnterState10(){
 int daMky_c::func_ov030_02112400()
 {
     CycleIdleAnimation();
-    static_cast<dExtFrameCtrl_c &>(this->mAnmModel).Advance();
+    this->mAnmModel.Advance();
     this->UpdatePos(&this->mdCcAc_c);
-    UpdateFloorAndWalls((dBgCh_Actr *)(&this->mWithMeshClsn));
+    UpdateFloorAndWalls(&this->mWithMeshClsn);
     HandleContact();
     this->mdCcAc_c.Clear();
     this->mdCcAc_c.Update();
@@ -536,7 +535,7 @@ int daMky_c::func_ov030_02112578()
         sp[1] += 0x50000;
         if (player->ShowMessage(*this, 0xbd, (const Vector3 *)sp, 1, 0) != 0) {
             this->mAnmModel.SetAnim((BCA_File *)gMonkeyWait3AnimationFile[1], 0, 0x1000, 0);
-            static_cast<dExtFrameCtrl_c &>(this->mAnmModel).SetFlags(0);
+            this->mAnmModel.SetFlags(0);
             func_0201267c(0xd1, &this->mCamSpacePos);
             {
                 u8 *p = &this->mSubState;
@@ -581,7 +580,7 @@ int daMky_c::func_ov030_02112578()
         }
         break;
     case 6:
-        if (static_cast<dExtFrameCtrl_c &>(this->mAnmModel).Finished() != 0) {
+        if (this->mAnmModel.Finished() != 0) {
             this->mAnmModel.SetAnim((BCA_File *)gMonkeyWait2AnimationFile[1], 0, 0x1000, 0);
             this->mAnmModel.speed = 0x1000;
             cage->mHorzSpeed = 0x400;
@@ -631,7 +630,7 @@ int daMky_c::func_ov030_02112578()
         break;
     }
 
-    static_cast<dExtFrameCtrl_c &>(this->mAnmModel).Advance();
+    this->mAnmModel.Advance();
     UpdatePos(&this->mdCcAc_c);
     UpdateFloorAndWalls(&this->mWithMeshClsn);
     this->mdCcAc_c.Clear();
@@ -671,7 +670,7 @@ int daMky_c::func_ov030_02112a84()
         }
     }
 
-    static_cast<dExtFrameCtrl_c &>(this->mAnmModel).Advance();
+    this->mAnmModel.Advance();
     this->UpdatePos(&this->mdCcAc_c);
     HandleContact();
     this->mdCcAc_c.Clear();
@@ -877,7 +876,7 @@ int daMky_c::func_ov030_02113094()
                 {
                     u32 z = 0;
                     this->mCapUniqueID = z;
-                    this->mHasSpawnedCap = (u8)z;
+                    this->mHasSpawnedCap = z;
                     this->mPrevState = 0xa;
                 }
             }
@@ -985,7 +984,7 @@ int daMky_c::func_ov030_02113324()
         break;
     }
 
-    static_cast<dExtFrameCtrl_c &>(this->mAnmModel).Advance();
+    this->mAnmModel.Advance();
     this->mdCcAc_c.Clear();
     return 1;
 }
@@ -1075,7 +1074,7 @@ int daMky_c::func_ov030_021136b0()
         MtxStack::YrotM(ang);
         MtxStack::transM(0, 0, -0x64000);
         {
-            int msgArg = ((int)msg << 16) >> 16;
+            int msgArg = (msg << 16) >> 16;
             int my = MtxStack::get().m[10];
             int mx = MtxStack::get().m[9];
             int mz = MtxStack::get().m[11];
@@ -1157,7 +1156,7 @@ int daMky_c::func_ov030_021136b0()
         break;
     }
 
-    static_cast<dExtFrameCtrl_c &>(this->mAnmModel).Advance();
+    this->mAnmModel.Advance();
     this->mdCcAc_c.Clear();
     return 1;
 }
@@ -1193,7 +1192,7 @@ int daMky_c::func_ov030_02113b38()
 {
     typedef int Fix12i;
     extern int gMonkeyRunAnimationFile[];
-    static_cast<dExtFrameCtrl_c &>(this->mAnmModel).Advance();
+    this->mAnmModel.Advance();
     this->UpdatePos(&this->mdCcAc_c);
     UpdateFloorAndWalls(&this->mWithMeshClsn);
     if (this->mWithMeshClsn.JustHitGround() != 0) {
@@ -1296,7 +1295,7 @@ int daMky_c::func_ov030_02113d20()
     else
         CycleIdleAnimation();
 
-    static_cast<dExtFrameCtrl_c &>(this->mAnmModel).Advance();
+    this->mAnmModel.Advance();
 
     if (IsUkikiThief(this)) {
         UpdatePos(&this->mdCcAc_c);
@@ -1345,7 +1344,7 @@ int daMky_c::func_ov030_02113ff0()
     ApproachLinear(this->mAngleY, this->HorzAngleToCPlayer(), 0x514);
     this->mPrevAngleY = this->mAngleY;
     this->mAnmModel.speed = 0x1000;
-    static_cast<dExtFrameCtrl_c &>(this->mAnmModel).Advance();
+    this->mAnmModel.Advance();
     if (IsUkikiThief(this)) {
         this->UpdatePos(&this->mdCcAc_c);
         UpdateSafePos();
@@ -1606,9 +1605,9 @@ struct MkyOff {
     }
     MkyOff(int px, int py, int pz) {
         unsigned int *p = (unsigned int *)this;
-        p[0] = (unsigned int)px;
-        p[1] = (unsigned int)py;
-        p[2] = (unsigned int)pz;
+        p[0] = px;
+        p[1] = py;
+        p[2] = pz;
     }
     ~MkyOff();
 };

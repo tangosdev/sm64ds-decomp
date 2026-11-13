@@ -333,11 +333,11 @@ s32 dScMgMCarlo2_c::CleanupResources()
 }
 
 void dMgMCarlo2CardObj_c::Init(int slot){
-    mSlot = (short)slot;
+    mSlot = slot;
     if (slot >= 0x14) {
         mDealDelay = 1;
     } else {
-        mDealDelay = (short)(((slot % 5) << 1) + 1);
+        mDealDelay = (((slot % 5) << 1) + 1);
     }
     mLift = 0;
     if (slot == 0x13)
@@ -346,7 +346,7 @@ void dMgMCarlo2CardObj_c::Init(int slot){
     mXStep = 0;
     mYStep = 0;
     mState = 0;
-    mFace = (unsigned char)dScMgMCarlo2_c::DrawCardValue();
+    mFace = dScMgMCarlo2_c::DrawCardValue();
     mNext = 0;
     mPrev = mNext;
 }
@@ -375,7 +375,7 @@ void dMgMCarlo2CardObj_c::DealIn(int slot)
 
     mTargetX = ((slot % 5) * 32 + 0x30) << 12;
     mTargetY = ((slot / 5) * 0x30) << 12;
-    mSlot = (short)slot;
+    mSlot = slot;
 
     Vec2_Sub(delta, &mTargetX, &mX);
 
@@ -390,7 +390,7 @@ void dMgMCarlo2CardObj_c::DealIn(int slot)
 }
 
 void dMgMCarlo2CardObj_c::FlipAway(int order) {
-    mDealDelay = (short)((4 - order % 5) * 2);
+    mDealDelay = ((4 - order % 5) * 2);
     mState = 5;
 }
 
@@ -447,8 +447,8 @@ void dMgMCarlo2CardObj_c::Update(int slot)
     case 0:
         {
             short *p = &mDealDelay;
-            short v = *(short *)p;
-            *(short *)p = (short)(v - 1);
+            short v = *p;
+            *p = (v - 1);
         }
         if (mDealDelay != 0)
             return;
@@ -635,12 +635,12 @@ int dScMgMCarlo2_c::DrawCardValue(){
     int roll;
     for (i = 0; i < 0xa; i++)
         total += sMCarlo2FaceCounts[i];
-    roll = (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
+    roll = (((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
     total = (total * roll) >> 0xc;
     for(i=0;i<0xa;i++){
         total -= sMCarlo2FaceCounts[i];
         if(total < 0){
-            pick = (unsigned char)i;
+            pick = i;
             sMCarlo2FaceCounts[i]--;
             break;
         }

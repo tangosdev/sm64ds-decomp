@@ -789,8 +789,7 @@ int daObjMarioCap_c::InitWait()
 int daObjMarioCap_c::Wait() {
     if (mCarryMatrix == 0 && !SaveData::HasPlayerLostCap()) {
         if (CAP_TIMER(this) == 0 && mWithMeshClsn.IsOnGround()) {
-            if (dActor_c::Spawn(kActorMarioCap, param1 | 0x12, mPos, (const Vector3_16 *)0, mAreaId,
-                                -1)) {
+            if (dActor_c::Spawn(kActorMarioCap, param1 | 0x12, mPos, 0, mAreaId, -1)) {
                 CAP_TIMER(this) = 3;
             }
         }
@@ -822,11 +821,8 @@ int daObjMarioCap_c::InitTimedWait()
  * Returns 1. */
 int daObjMarioCap_c::TimedWait()
 {
-    if (data_02092138 > mPosY
-        || mWithMeshClsn.IsOnGround()
-        || !DecIfAbove0_Short((unsigned short*)&mStateTimer)
-        || (mFlags & 8))
-    {
+    if (data_02092138 > mPosY || mWithMeshClsn.IsOnGround() || !DecIfAbove0_Short(&mStateTimer) ||
+        (mFlags & 8)) {
         MarkForDestruction();
         return 1;
     }
@@ -859,11 +855,8 @@ int daObjMarioCap_c::InitTimedWait2()
  * TimedWait. Returns 1. */
 int daObjMarioCap_c::TimedWait2()
 {
-    if (data_02092138 > mPosY
-        || mWithMeshClsn.IsOnGround()
-        || !DecIfAbove0_Short((unsigned short*)&mStateTimer)
-        || (mFlags & 8))
-    {
+    if (data_02092138 > mPosY || mWithMeshClsn.IsOnGround() || !DecIfAbove0_Short(&mStateTimer) ||
+        (mFlags & 8)) {
         MarkForDestruction();
         return 1;
     }
@@ -973,7 +966,7 @@ int daObjMarioCap_c::Slide()
         CheckTouch();
         return 1;
     }
-    if (DecIfAbove0_Short((unsigned short *)&mStateTimer) == 0)
+    if (DecIfAbove0_Short(&mStateTimer) == 0)
         return 1;
     if (CAP_TIMER(this) == 1) {
         b = (int)((mFlags & 0x60000) != 0);
@@ -1071,7 +1064,7 @@ int daObjMarioCap_c::InitTaken()
                     v.y = mPosY;
                     v.z = mPosZ;
                     v.y += 0x64000;
-                    dActor_c::Spawn(kActor1UpLogo, 8, v, (Vector3_16 *)0, mAreaId, -1);
+                    dActor_c::Spawn(kActor1UpLogo, 8, v, 0, mAreaId, -1);
                 }
             }
         }
@@ -1094,7 +1087,7 @@ int daObjMarioCap_c::InitTaken()
  * daPly_c::Unk_020c9e5c(8) says 1, and when it has finished removes the cap,
  * first spawning a new OBJ_MARIO_CAP at mHomePos if mType is 4. Returns 1. */
 int daObjMarioCap_c::Taken() {
-    if (DecIfAbove0_Short((unsigned short *)&mStateTimer) == 0) {
+    if (DecIfAbove0_Short(&mStateTimer) == 0) {
         MarkForDestruction();
         return 1;
     }
@@ -1153,7 +1146,8 @@ int daObjMarioCap_c::Taken() {
     if (mAnimStarted == 1) {
         if (mAnmModel.Finished() != 0) {
             if (mType == 4) {
-                dActor_c::Spawn(kActorMarioCap, param1, *(const Vector3 *)&mHomePosX, (const Vector3_16 *)0, mAreaId, -1);
+                dActor_c::Spawn(kActorMarioCap, param1, *(const Vector3 *)&mHomePosX, 0, mAreaId,
+                                -1);
             }
             MarkForDestruction();
         }
@@ -1356,8 +1350,8 @@ void daObjMarioCap_c::CheckTouch()
         v.x = a;
         v.y = b;
         v.z = *(u16*)&found->mAngleZ;
-        mPrevAngleX = *(s16*)&v.x;
-        mPrevAngleY = *(s16*)&v.y;
+        mPrevAngleX = v.x;
+        mPrevAngleY = v.y;
         mPrevAngleZ = *(s16*)&v.z;
         mAngleX = mPrevAngleX;
         mAngleY = mPrevAngleY;

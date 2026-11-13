@@ -620,11 +620,11 @@ void func_0205212c(Obj_205212c *self) {
         FS_CloseFile(&self->file);
     }
     OSIntrMode irq = OS_DisableInterrupts();
-    HeapAllocator_205212c *node = (HeapAllocator_205212c *)((
-        HeapAllocator_205212c *)(NNS_FndGetNextListObject(&data_020a5bc8, 0)));
+    HeapAllocator_205212c *node =
+        (HeapAllocator_205212c *)NNS_FndGetNextListObject(&data_020a5bc8, 0);
     while (node != 0) {
-        HeapAllocator_205212c *next = (HeapAllocator_205212c *)((
-            HeapAllocator_205212c *)(NNS_FndGetNextListObject(&data_020a5bc8, node)));
+        HeapAllocator_205212c *next =
+            (HeapAllocator_205212c *)NNS_FndGetNextListObject(&data_020a5bc8, node);
         if (node->owner_8 == self) {
             NNS_FndRemoveListObject(&data_020a5bc8, node);
             func_020520a4(node);
@@ -703,7 +703,7 @@ int func_02051f1c(void *handle, u32 seqArcNo, int index) {
     if (seq == 0)
         return 0;
     return func_02051a98((NNSSndHandle *)handle, seq->playerNumber, seq->bankId,
-                         seq->playerPriority, seq, arc, (int)seqArcNo, index);
+                         seq->playerPriority, seq, arc, seqArcNo, index);
 }
 
 int func_02051e60(NNSSndHandle *handle, int playerNo, int bankNo, int playerPrio,
@@ -1547,8 +1547,8 @@ int func_020503a4(int a, int b, int c, int d, int p5, int p6, int p7, int p8, in
         chunk = chunk * blocks;
     }
     {
-        fmt1 = (int)(stereo != 0 ? FMT_A : FMT_B);
-        fmt2 = (int)(stereo != 0 ? FMT_B : FMT_A);
+        fmt1 = stereo != 0 ? FMT_A : FMT_B;
+        fmt2 = stereo != 0 ? FMT_B : FMT_A;
         if (a != 2) mode = 0xa;
         if (p14 != 0) {
             handle = func_0204f0d8();

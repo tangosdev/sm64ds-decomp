@@ -211,7 +211,7 @@ void MBi_ParentCallback(void *arg) {
                             WM_APIID_START_MP,
                             WM_StartMPEx(MBi_ParentCallback, (u16 *)WM_WORK->recvBuf,
                                          WM_WORK->recvBufSize, (u16 *)WM_WORK->sendBuf,
-                                         WM_WORK->sendBufSize, (u16)mpFreq, 0, 0, 0, 1, 1));
+                                         WM_WORK->sendBufSize, mpFreq, 0, 0, 0, 1, 1));
                         return;
                     }
                 }
@@ -498,8 +498,7 @@ void MBi_ChildCallback(void *arg) {
                 MBi_CheckWmErrcode(WM_APIID_START_MP,
                                    WM_StartMPEx(MBi_ChildCallback, (u16 *)w->recvBuf,
                                                 w->recvBufSize, (u16 *)w->sendBuf, w->sendBufSize,
-                                                (u16)(w->mpContinuous == 0 ? 1 : 0), 0, 0, 0, 1,
-                                                1));
+                                                (w->mpContinuous == 0 ? 1 : 0), 0, 0, 0, 1, 1));
                 return;
             case WM_STATECODE_DISCONNECTED:
                 w->userCallback(0xa, arg);
@@ -569,7 +568,7 @@ int MBi_GetBeaconPeriodDispersion(void) {
     for (i = 0, sum = 0; i < 6; i++) {
         sum += mac[i];
     }
-    return (int)((sum + OS_GetVBlankCount()) * 7 % 20);
+    return ((sum + OS_GetVBlankCount()) * 7 % 20);
 }
 
 /* MB_Init: carve the WmWork and mbc out of the caller's buffer (each 32-byte
@@ -597,7 +596,7 @@ int MB_Init(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, 
     mb = (MB_CommPWork *)MATH_ROUNDUP((int)wm + sizeof(WmWork), 32);
     irq = OS_DisableInterrupts();
     fill_i = 0;
-    data_020a9db0 = (u16)dma;
+    data_020a9db0 = dma;
     data_020a9db4 = (char *)wm;
     mbc = &mb->common;
     MI_CpuFill32(wm, fill_i, sizeof(WmWork));
@@ -644,12 +643,12 @@ int MB_Init(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, 
         WMParentParam *hdr = &wm->parentParam;
         hdr->CS_Flag = 1;
         hdr->KS_Flag = 0;
-        hdr->ggid[0] = (short)ggid0;
-        hdr->ggid[1] = (short)ggid1;
-        hdr->tgid = (short)tgid;
+        hdr->ggid[0] = ggid0;
+        hdr->ggid[1] = ggid1;
+        hdr->tgid = tgid;
         hdr->entryFlag = 1;
         hdr->multiBootFlag = 0;
-        hdr->beaconPeriod = (u16)(MBi_GetBeaconPeriodDispersion() + 0xc8);
+        hdr->beaconPeriod = (MBi_GetBeaconPeriodDispersion() + 0xc8);
         hdr->maxEntry = 0xf;
     }
     wm->mpSending = 0;
@@ -812,8 +811,8 @@ int MBi_SetMPData(WMCallbackFunc callback, const u16 *sendData, u16 sendDataSize
  * data_0209a088 (6). */
 int MBi_SendMP(const void *buf, int len, int pollbmp) {
     WmWork *hdr = WM_WORK;
-    u16 size = (u16)len;
-    u16 pollbitmap = (u16)pollbmp;
+    u16 size = len;
+    u16 pollbitmap = pollbmp;
     int ret;
     int wait;
     if ((hdr->mpStarted == 0) || (hdr->resetting == 1)) {
@@ -822,14 +821,14 @@ int MBi_SendMP(const void *buf, int len, int pollbmp) {
     switch (hdr->mode) {
     case 1:
         if (size < data_0209a088) {
-            size = (u16)data_0209a088;
+            size = data_0209a088;
         }
         if (hdr->mpContinuous == 0) {
             wait = 1000;
         } else {
             wait = 0;
         }
-        ret = MBi_SetMPData(hdr->stateCallback, (const u16 *)buf, size, (u16)wait, pollbitmap);
+        ret = MBi_SetMPData(hdr->stateCallback, (const u16 *)buf, size, wait, pollbitmap);
         /* Two tests of OPERATING, as shipped: one if for both costs a word. */
         if (ret == 2) {
             WM_WORK->mpSending = 1;
@@ -874,10 +873,10 @@ u16 MBi_GetTgid(void) {
  * 2, KS_Flag 4, CS_Flag 8 (the SDK's WM_ATTR_FLAG_* bits). The beacon senders
  * OR in WM_ATTR_FLAG_MB again. */
 u8 MBi_GetAttribute(void) {
-    return ((u8)(((WM_WORK->parentParam.entryFlag) ? WM_ATTR_FLAG_ENTRY : 0) |
-                 ((WM_WORK->parentParam.multiBootFlag) ? WM_ATTR_FLAG_MB : 0) |
-                 ((WM_WORK->parentParam.KS_Flag) ? WM_ATTR_FLAG_KS : 0) |
-                 ((WM_WORK->parentParam.CS_Flag) ? WM_ATTR_FLAG_CS : 0)));
+    return ((((WM_WORK->parentParam.entryFlag) ? WM_ATTR_FLAG_ENTRY : 0) |
+             ((WM_WORK->parentParam.multiBootFlag) ? WM_ATTR_FLAG_MB : 0) |
+             ((WM_WORK->parentParam.KS_Flag) ? WM_ATTR_FLAG_KS : 0) |
+             ((WM_WORK->parentParam.CS_Flag) ? WM_ATTR_FLAG_CS : 0)));
 }
 
 void MBi_SetMaxScanTime(u16 time) {
@@ -909,7 +908,7 @@ void MBi_CheckWmErrcode(int apiid, int errcode) {
         return;
     if (errcode == 0)
         return;
-    p.apiid = (s16)apiid;
-    p.errcode = (s16)errcode;
+    p.apiid = apiid;
+    p.errcode = errcode;
     WM_WORK->userCallback(0xff, &p);
 }

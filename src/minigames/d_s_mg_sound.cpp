@@ -369,7 +369,7 @@ s32 dScMgSound_c::InitResources() {
     file = LoadFile(ASSET_D_2D_MG_BG_SOUND2_NCG_BIN);
     G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x1000,
                           GX_BG_CHARBASE_0x14000);
-    DecompressLZ16(file, (void *)G2S_GetBG2CharPtr());
+    DecompressLZ16(file, G2S_GetBG2CharPtr());
     Deallocate(file);
 
     file = LoadFile(ASSET_D_2D_MG_BG_SOUND2_NCL_BIN);

@@ -118,9 +118,8 @@ s32 daObjBk_Dossunbar_c::InitResources() {
 
     int j = mVariant * 0xc;
     KCL_File *kclFile = dBgW_Kc::LoadFile(**(SharedFilePtr **)((char *)&data_ov015_02114538 + j));
-    ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile((KCL_File *)((int)kclFile), *(const Matrix4x3 *)(&mClsnMat), 0x1000,
-                              mAngleY,
+    (&mMeshCollider)
+        ->dBgW_KcMbg::SetFile((kclFile), *(&mClsnMat), 0x1000, mAngleY,
                               *(CLPS_Block *)(*(void **)((char *)&data_ov015_0211453c + j)));
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
 
@@ -164,7 +163,7 @@ s32 daObjBk_Dossunbar_c::CleanupResources() {
 void daObjBk_Dossunbar_c::ChangeState(int idx) {
     VtEntry *e = (VtEntry *)((char *)data_ov015_02114a24 + (idx << 3));
     int f1 = e->field1;
-    void *obj = (void *)((char *)this + (f1 >> 1));
+    void *obj = ((char *)this + (f1 >> 1));
     FnPtr fn;
     if (f1 & 1)
         fn = (FnPtr) * (int *)((char *)*(int **)obj + e->field0);
@@ -273,7 +272,7 @@ void daObjBk_Dossunbar_c::EnterTravelOut() {
 /* State 6 body: travel until X is 0x1ea000 below home, then wait-out. */
 void daObjBk_Dossunbar_c::ExecuteTravelOut() {
     UpdatePosWithOnlySpeed(0);
-    int v = mHomePosX + (int)0xffe16000;
+    int v = mHomePosX + 0xffe16000;
     if (mPosX > v)
         return;
     mPosX = v;

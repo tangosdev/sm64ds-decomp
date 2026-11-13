@@ -202,11 +202,11 @@ int _ISDbgLib_RegistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 lma, u32 size) {
     }
 
     pInfo->m_header.flags |= 2;
-    addr64 = (u32)nVMA;
-    if (addr64 + (u32)size > 0x100000000ULL) {
+    addr64 = nVMA;
+    if (addr64 + size > 0x100000000ULL) {
         size = (u32)(0x100000000ULL - addr64);
     }
-    end = addr64 + (u32)size;
+    end = addr64 + size;
 
     found = 0;
     i = 0;
@@ -222,8 +222,7 @@ int _ISDbgLib_RegistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 lma, u32 size) {
             pInfo->m_info[i].unused = 0;
             j = i + 1;
             while (i + 1 < pInfo->m_header.m_nInfoCount) {
-                if ((unsigned long long)pInfo->m_info[j].m_VMA + (u32)pInfo->m_info[j].m_SIZE <=
-                    end) {
+                if ((unsigned long long)pInfo->m_info[j].m_VMA + pInfo->m_info[j].m_SIZE <= end) {
                     func_0206d8c4(pInfo, i + 1);
                     continue;
                 }
@@ -247,12 +246,11 @@ int _ISDbgLib_RegistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 lma, u32 size) {
                 }
             }
         } else if (ea <= nVMA) {
-            if (vma64 < (unsigned long long)(u32)ea + (u32)pInfo->m_info[i].m_SIZE) {
+            if (vma64 < (unsigned long long)(u32)ea + pInfo->m_info[i].m_SIZE) {
                 if (!(ea <= nVMA)) {
                     cstd::__assert(&data_020868fc, 0x12e, &data_0208690c, 1);
                 }
-                if (!((unsigned long long)(u32)pInfo->m_info[i].m_VMA +
-                          (u32)pInfo->m_info[i].m_SIZE >
+                if (!((unsigned long long)(u32)pInfo->m_info[i].m_VMA + pInfo->m_info[i].m_SIZE >
                       vma64)) {
                     cstd::__assert(&data_020868fc, 0x12f, &data_0208692c, 1);
                 }
@@ -282,7 +280,7 @@ int _ISDbgLib_RegistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 lma, u32 size) {
                     while (i + 1 < pInfo->m_header.m_nInfoCount) {
                         u32 wc = pInfo->m_info[k].m_SIZE;
                         u32 wa = pInfo->m_info[k].m_VMA;
-                        if ((unsigned long long)wa + (u32)wc <= end) {
+                        if ((unsigned long long)wa + wc <= end) {
                             func_0206d8c4(pInfo, i + 1);
                             continue;
                         }
@@ -351,24 +349,24 @@ int _ISDbgLib_UnregistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 size) {
     }
 
     pInfo->m_header.flags |= 2;
-    addr64 = (u32)nVMA;
-    if (addr64 + (u32)size > 0x100000000ULL) {
+    addr64 = nVMA;
+    if (addr64 + size > 0x100000000ULL) {
         size = (u32)(0x100000000ULL - addr64);
     }
-    end = addr64 + (u32)size;
+    end = addr64 + size;
 
     found = 0;
     for (i = 0; i < pInfo->m_header.m_nInfoCount && !found; i++) {
         u32 ea = pInfo->m_info[i].m_VMA;
         if (ea > nVMA) {
-            if ((unsigned long long)(u32)ea + (u32)pInfo->m_info[i].m_SIZE <= end) {
+            if ((unsigned long long)(u32)ea + pInfo->m_info[i].m_SIZE <= end) {
                 size -= ea - nVMA;
                 nVMA = ea;
                 found = 1;
             }
         }
         if (ea <= nVMA) {
-            if (nVMA < (unsigned long long)(u32)ea + (u32)pInfo->m_info[i].m_SIZE) {
+            if (nVMA < (unsigned long long)(u32)ea + pInfo->m_info[i].m_SIZE) {
                 found = 1;
             }
         }
@@ -378,8 +376,7 @@ int _ISDbgLib_UnregistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 size) {
         if (!(ea <= nVMA)) {
             cstd::__assert(&data_020868fc, 0x1a9, &data_0208690c, 1);
         }
-        if (!((unsigned long long)(u32)pInfo->m_info[i].m_VMA + (u32)pInfo->m_info[i].m_SIZE >
-              nVMA)) {
+        if (!((unsigned long long)(u32)pInfo->m_info[i].m_VMA + pInfo->m_info[i].m_SIZE > nVMA)) {
             cstd::__assert(&data_020868fc, 0x1aa, &data_0208692c, 1);
         }
 
@@ -408,7 +405,7 @@ int _ISDbgLib_UnregistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 size) {
             while (i < pInfo->m_header.m_nInfoCount) {
                 u32 wc = pInfo->m_info[i].m_SIZE;
                 u32 wa = pInfo->m_info[i].m_VMA;
-                if ((unsigned long long)(u32)wa + (u32)wc <= end) {
+                if ((unsigned long long)(u32)wa + wc <= end) {
                     func_0206d8c4(pInfo, i);
                     continue;
                 }

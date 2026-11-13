@@ -211,7 +211,7 @@ s32 dScMgCard_c::InitResources()
              * The extra instruction moves the literal pool and shifts every
              * pc-relative load in the function. */
             u16 bits = entry->attr2;
-            entry->attr2 = (u16)(bits & ~0xf000);
+            entry->attr2 = (bits & ~0xf000);
             last = entry->attr3;
             entry++;
         } while (last != 0xffff);
@@ -554,7 +554,7 @@ void dScMgCard_c::UpdateState()
         break;
     case 8:
         j = 0;
-        mPromptEnabled = (unsigned char)j;
+        mPromptEnabled = j;
         do {
             mArray2[j].mState = 2;
             j++;
@@ -1028,9 +1028,9 @@ int dScMgCard_c::EvaluateHand(const dMgCardObj_c *hand, s16 *out)
 
     if (out != 0) {
         if (bestCount > 1)
-            out[0] = (s16)bestFace;
+            out[0] = bestFace;
         if (nextCount > 1)
-            out[1] = (s16)nextFace;
+            out[1] = nextFace;
     }
     return result;
 }
@@ -1233,7 +1233,7 @@ void dMgCardObj_c::DealIn(const s32 *src)
     if (mXStep < 0) mXStep = -mXStep;
     mLift = 0;
     mLiftFlag = 0;
-    mValue = (unsigned char)dScMgCard_c::DrawCardValue();
+    mValue = dScMgCard_c::DrawCardValue();
 }
 
 /* dMgCardObj_c::Redeal -- re-fly the card from its own target: the same
@@ -1258,7 +1258,7 @@ void dMgCardObj_c::Redeal()
     mLiftFlag = 0;
     mFlyDelay = 0;
     mComboFlag = 0;
-    mValue = (unsigned char)dScMgCard_c::DrawCardValue();
+    mValue = dScMgCard_c::DrawCardValue();
 }
 
 /* dMgCardObj_c::Update -- vtable slot 1, the player's card motion state
@@ -1316,7 +1316,7 @@ void dMgCardObj_c::Update()
             if (ApproachLinear(mY, result, 0x8000) != 0) {
                 mX = 0x80000;
                 mState = 6;
-                mValue = (unsigned char)dScMgCard_c::DrawCardValue();
+                mValue = dScMgCard_c::DrawCardValue();
             }
         } else if (state == 7) {
             if (ApproachLinear(mX, mHomeX, 0x6000) != 0)
@@ -1458,7 +1458,7 @@ void dMgCardObj_c::FlyOff(){
   mHomeY = mY;
   int t = mX;
   unsigned ip = 0x80000 - t;
-  mFlyDelay = (s16)((int)ip / 0x10000);
+  mFlyDelay = ((int)ip / 0x10000);
   mXStep = 0x10000;
   mYStep = 0;
   mState = 0xa;

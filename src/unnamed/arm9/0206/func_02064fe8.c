@@ -10,9 +10,9 @@ int func_02064fe8(void *dst, unsigned short b, char c) {
     unsigned char one = 1;
     unsigned short s = b;
     MI_CpuCopy8(&one, dst, 1);
-    p = (char *)dst + 1;
+    p = dst + 1;
     MI_CpuCopy8(&s, p, 2);
     q = p + 2;
     MI_CpuCopy8(&c, q, 1);
-    return q + 1 - (char *)dst;
+    return q + 1 - dst;
 }

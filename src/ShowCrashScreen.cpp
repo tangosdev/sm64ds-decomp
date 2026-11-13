@@ -73,8 +73,7 @@ void ShowCrashScreen(void)
     if (rr != 0 && rr < 6)
         nds_printf(scr + 0x180, data_0208e58c, rr, func_020441bc(rr));
 
-    hp = (data_020a4b68 != 0) ? ((fLiNdBaPr_c *)data_020a4b68)->owner->actorID
-                              : *(u16 *)&data_020a4b50;
+    hp = (data_020a4b68 != 0) ? ((fLiNdBaPr_c *)data_020a4b68)->owner->actorID : *&data_020a4b50;
     if (hp != 0xffff) {
         int bb = data_020a4b4c;
         nds_printf(scr + 0x1c0, data_0208e59c, hp, bb, GetActorDebugName(hp));
@@ -108,7 +107,7 @@ void ShowCrashScreen(void)
 
     if (data_0209cde0 != 0) {
         nds_printf(scr + 0x3c0, data_0208e608, data_0209cde0, data_0209cdd8);
-        nds_print(scr + 0x400, (const void *)data_0209cdd4);
+        nds_print(scr + 0x400, data_0209cdd4);
     }
 
     if (data_020a0e9c->Intact()) {

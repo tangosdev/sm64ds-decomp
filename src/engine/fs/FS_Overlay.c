@@ -109,9 +109,9 @@ BOOL FSi_LoadOverlayInfoCore(FSOverlayInfo *p_ovi, MIProcessor target, FSOverlay
     } else {
         FSFile file[1];
         FS_InitFile(file);
-        (void)FS_OpenFileDirect(file, p_arc, pr->offset + pos, pr->offset + pr->length, (u32)~0);
-        (void)FS_ReadFile(file, p_ovi, sizeof(FSOverlayInfoHeader));
-        (void)FS_CloseFile(file);
+        FS_OpenFileDirect(file, p_arc, pr->offset + pos, pr->offset + pr->length, (u32)~0);
+        FS_ReadFile(file, p_ovi, sizeof(FSOverlayInfoHeader));
+        FS_CloseFile(file);
         p_ovi->target = target;
     }
 
@@ -251,7 +251,7 @@ void FS_EndOverlay(FSOverlayInfo *p_ovi) {
                 }
                 p = next;
             }
-            (void)OS_RestoreInterrupts(bak_psr);
+            OS_RestoreInterrupts(bak_psr);
         }
 
         if (!head) {
@@ -267,7 +267,7 @@ void FS_EndOverlay(FSOverlayInfo *p_ovi) {
         } while (head);
     }
 
-    (void)_Z29_ISDbgLib_UnregistOverlayInfo11OVERLAYPROCjj(
+    _Z29_ISDbgLib_UnregistOverlayInfo11OVERLAYPROCjj(
         (p_ovi->target == MI_PROCESSOR_ARM9) ? OVERLAYPROC_ARM9 : OVERLAYPROC_ARM7,
         (u32)FS_GetOverlayAddress(p_ovi), FS_GetOverlayImageSize(p_ovi));
 }
@@ -300,7 +300,7 @@ void FS_AttachOverlayTable(MIProcessor target, const void *ptr, u32 len) {
         if (!FSi_CompareDigest((const u8 *)SDK_OVERLAYTABLE_DIGEST, (void *)ptr, (int)len)) {
             _Z12OS_Terminatev();
         }
-        (void)DGT_SetOverlayTableMode(bak_ovt_mode);
+        DGT_SetOverlayTableMode(bak_ovt_mode);
     }
 
     {
@@ -309,6 +309,6 @@ void FS_AttachOverlayTable(MIProcessor target, const void *ptr, u32 len) {
         pr->offset = (u32)ptr;
         pr->length = len;
 
-        (void)OS_RestoreInterrupts(bak_psr);
+        OS_RestoreInterrupts(bak_psr);
     }
 }

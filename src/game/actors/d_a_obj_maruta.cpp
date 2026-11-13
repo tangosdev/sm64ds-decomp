@@ -125,7 +125,7 @@ int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist) {
     s16 v;
     int horz;
 
-    if (self->UpdateKillByMegaChar((s16)-0x1500, 0, 0, 0) != 0)
+    if (self->UpdateKillByMegaChar(-0x1500, 0, 0, 0) != 0)
         return 1;
     if ((int)((self->mFlags & 8) != 0) != 0)
         return 1;
@@ -138,7 +138,7 @@ int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist) {
                 self->mRollAngVel += 0x10;
             }
             v = self->mRollAngVel;
-            if (v <= 0x10 && v >= (s16)-0x10)
+            if (v <= 0x10 && v >= -0x10)
                 self->mRollAngVel = 0;
         } else {
             v = self->mRollAngVel;
@@ -169,9 +169,9 @@ int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist) {
             int lim = 0x200;
             int nlim = -lim;
             if (v < nlim)
-                v = (s16)nlim;
+                v = nlim;
             else if (v > lim)
-                v = (s16)lim;
+                v = lim;
         }
         self->mRollAngVel = v;
     }
@@ -214,7 +214,7 @@ int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist) {
     }
     self->UpdateModelTransform();
     {
-        int is66 = (int)(self->actorID == 0x66);
+        int is66 = (self->actorID == 0x66);
         if (is66 != 0) {
             if (self->IsClsnInRangeOnScreen(0, 0) != 0)
                 self->UpdateClsnPosAndRot();

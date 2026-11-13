@@ -77,7 +77,7 @@ void dWipe_c::DisableWindows() {
     GX_HBlankIntr(0);
     OS_SetIrqFunction(OS_IE_H_BLANK, 0);
     if (enabled)
-        (void)OS_EnableIrq();
+        OS_EnableIrq();
     GX_SetVisibleWnd(GX_WNDMASK_NONE);
     GXS_SetVisibleWnd(GX_WNDMASK_NONE);
     if (typePending == 1) {
@@ -131,7 +131,7 @@ int dWipe_c::SetBackwardTime(u32 frames, u32 extra) {
             OS_EnableIrqMask(OS_IE_H_BLANK);
             GX_HBlankIntr(1);
             if (enabled)
-                (void)OS_EnableIrq();
+                OS_EnableIrq();
         }
 
         needsCleanup = 1;
@@ -191,7 +191,7 @@ int dWipe_c::SetForwardTime(u32 frames, u32 extra) {
         OS_EnableIrqMask(OS_IE_H_BLANK);
         GX_HBlankIntr(1);
         if (enabled)
-            (void)OS_EnableIrq();
+            OS_EnableIrq();
 
         needsCleanup = 1;
         return 0;

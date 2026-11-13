@@ -721,7 +721,7 @@ void daBmb_c::func_ov102_0214b53c() {
                 idx = 1;
             }
             if (mCarrier->param1 == 2) {
-                idx = (u8)(idx + 2);
+                idx = (idx + 2);
             }
             Math_Function_0203b14c(mCarryOff, gBmbCarryOffsets[idx].x, 0x800, 0x3e8000, 4);
             Math_Function_0203b14c(&mCarryOff[1], gBmbCarryOffsets[idx].y, 0x800, 0x3e8000, 4);

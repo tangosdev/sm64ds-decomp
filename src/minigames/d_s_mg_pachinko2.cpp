@@ -655,7 +655,7 @@ void dScMgPachinko2_c::Popup_Spawn(int ballX, int ballY, int value) {
             mScorePops[i].y = ballY + 0x48000;
             mScorePops[i].unk_0c = 0;
             mScorePops[i].vy = 0;
-            mScorePops[i].score = (u8)value;
+            mScorePops[i].score = value;
             mScorePops[i].settled = 0;
             mScorePops[i].life = 0x40;
             return;
@@ -2352,7 +2352,7 @@ s32 dScMgPachinko2_c::InitResources() {
                          GX_BG_CHARBASE_0x10000);
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_UP_NCG_BIN);
-    DecompressLZ16(f, (void *)G2_GetBG3CharPtr());
+    DecompressLZ16(f, G2_GetBG3CharPtr());
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_UP_NCL_BIN);
@@ -2398,7 +2398,7 @@ s32 dScMgPachinko2_c::InitResources() {
                           GX_BG_CHARBASE_0x08000);
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_DOWN_NCG_BIN);
-    DecompressLZ16(f, (void *)G2S_GetBG3CharPtr());
+    DecompressLZ16(f, G2S_GetBG3CharPtr());
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_DOWN_NCL_BIN);

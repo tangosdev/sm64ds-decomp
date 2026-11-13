@@ -255,7 +255,7 @@ void daKinopio_c::St_Talk_Init()
 {
     u32 flags = 0;
     BCA_File *file = (BCA_File *)gKinopioTalkAnimFile.filePtr;
-    mAnmModel.SetAnim((BCA_File *)file, 0, 0x1000, flags);
+    mAnmModel.SetAnim(file, 0, 0x1000, flags);
 }
 
 void daKinopio_c::St_Idle_Main()

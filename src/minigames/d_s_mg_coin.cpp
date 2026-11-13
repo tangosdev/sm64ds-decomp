@@ -1436,7 +1436,7 @@ int dScMgCoin_c::InitResources() {
                           GX_BG_CHARBASE_0x10000);
 
     d = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_NCG_BIN);
-    DecompressLZ16(d, (void *)((char *)G2S_GetBG3CharPtr() + 0x4000));
+    DecompressLZ16(d, ((char *)G2S_GetBG3CharPtr() + 0x4000));
     Deallocate(d);
 
     d = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_NCL_BIN);

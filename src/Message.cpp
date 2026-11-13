@@ -230,7 +230,7 @@ void func_0201cd08(int arg) {
     s = (u32)G2S_GetBG0ScrPtr();
     ls = 0x2ff;
     MI_CpuFill16((void *)s, ls, 0x800);
-    data_0209d6d4 = (s16)arg;
+    data_0209d6d4 = arg;
     func_0201d418(data_0209d6d4 == 0x29a ? 0x105 : 0xc5, 0xb0);
     data_0209d6d4 = 0x293;
     data_0209d6a8 = data_0209d6a8 << 1;
@@ -291,7 +291,7 @@ void Message::DisplayLevelClearText(u16 msgID, u8 course) {
 }
 
 void func_0201cfb8(int arg0) {
-    data_0209d6d4 = (u16)arg0;
+    data_0209d6d4 = arg0;
     data_0209d660 = 0;
     func_0201eaac();
     data_0209d668 = 1;
@@ -330,7 +330,7 @@ void LoadControllerModeText(int param0) {
     int n, m, i;
     short *scr;
 
-    data_0209d6d4 = (short)param0;
+    data_0209d6d4 = param0;
     data_0209d660 = 0;
     func_0201eaac();
 
@@ -349,8 +349,8 @@ void LoadControllerModeText(int param0) {
     if (m > 0) {
         int v2 = m + 0x280;
         do {
-            scr[i] = (short)(i + 0x280);
-            (scr + i)[0x20] = (short)v2;
+            scr[i] = (i + 0x280);
+            (scr + i)[0x20] = v2;
             v2++;
             i++;
         } while (i < m);
@@ -371,8 +371,8 @@ void LoadControllerModeText(int param0) {
         int v1 = d - mm * 2 + 0x280;
         int v2 = d - mm + 0x280;
         do {
-            scr[i] = (short)v1;
-            (scr + i)[0x20] = (short)v2;
+            scr[i] = v1;
+            (scr + i)[0x20] = v2;
             v1++;
             v2++;
             i++;
@@ -394,8 +394,8 @@ void LoadControllerModeText(int param0) {
         int v1 = d - mm * 2 + 0x280;
         int v2 = d - mm + 0x280;
         do {
-            scr[i] = (short)v1;
-            (scr + i)[0x20] = (short)v2;
+            scr[i] = v1;
+            (scr + i)[0x20] = v2;
             v1++;
             v2++;
             i++;
@@ -514,7 +514,7 @@ void Message_DrawCenteredLine(int mapPos, int width) {
     p = (u8 *)G2S_GetBG0CharPtr() + 0x4000 + (data_0209d6a8 << 5);
     col = width - (old + 7) / 8;
     zero = 0;
-    MI_CpuFill32((void *)p, zero, bytes);
+    MI_CpuFill32(p, zero, bytes);
     map = (u16 *)G2S_GetBG0ScrPtr() + mapPos + (u16)(col >> 1);
     for (i = 0; i < (data_0209d6b0 + 7) / 8; i++) {
         map[i] = data_0209d6a8 + 0x200 + i;
@@ -583,8 +583,8 @@ void func_0201d850(u32 course) {
         n = data_0209d6a8;
         p = (u16 *)G2_GetBG3ScrPtr() + (mapPos + ((0x20 - n) >> 1));
         for (i = 0; i < n; i++) {
-            p[i] = (u16)(tile + i);
-            (p + i)[0x20] = (u16)(n + (tile + i));
+            p[i] = (tile + i);
+            (p + i)[0x20] = (n + (tile + i));
         }
         mapPos += 0x40;
         tile += (u16)(n * 2);
@@ -621,8 +621,8 @@ void func_0201d850(u32 course) {
         if (i < n) {
             t = tile;
             do {
-                p[i] = (u16)t;
-                (p + i)[0x20] = (u16)(n + t);
+                p[i] = t;
+                (p + i)[0x20] = (n + t);
                 t++;
                 i++;
             } while (i < n);
@@ -681,8 +681,8 @@ void func_0201d850(u32 course) {
         if (i < n) {
             t = tile;
             do {
-                p[i] = (u16)t;
-                (p + i)[0x20] = (u16)(n + t);
+                p[i] = t;
+                (p + i)[0x20] = (n + t);
                 t++;
                 i++;
             } while (i < n);
@@ -713,8 +713,8 @@ void func_0201d850(u32 course) {
         func_0201b388(n);
         p = (u16 *)G2_GetBG3ScrPtr() + (mapPos + ((0x20 - n) >> 1));
         for (i = 0; i < n; i++) {
-            p[i] = (u16)(tile + i);
-            (p + i)[0x20] = (u16)(n + (tile + i));
+            p[i] = (tile + i);
+            (p + i)[0x20] = (n + (tile + i));
         }
         data_0209d6a8 += n;
         data_0209d6c0 = 1;
@@ -741,8 +741,8 @@ void func_0201d850(u32 course) {
         func_0201b388(n);
         p = (u16 *)G2_GetBG3ScrPtr() + ((u16)(mapPos + 0x40) + ((0x20 - n) >> 1));
         for (i = 0; i < n; i++) {
-            p[i] = (u16)(tile + i);
-            (p + i)[0x20] = (u16)(n + (tile + i));
+            p[i] = (tile + i);
+            (p + i)[0x20] = (n + (tile + i));
         }
     }
 }
@@ -840,7 +840,7 @@ void Message::DisplayText(int t) {
     int cnt, mapPos;
     int base;
 
-    data_0209d6d4 = (short)t;
+    data_0209d6d4 = t;
     data_0209d660 = 0;
     func_0201eaac();
 
@@ -864,13 +864,13 @@ void Message::DisplayText(int t) {
 
     if (t != 0x1b3) {
         func_0201b6f8(0);
-        data_0209d6a8 = (u8)((data_0209d6b0 + 7) / 8);
+        data_0209d6a8 = ((data_0209d6b0 + 7) / 8);
         data_0209d65c = 0;
         mapPos = 0x107;
     } else {
         data_0209d6f4 += 3;
         func_0201b6f8(0);
-        data_0209d65c = (u8)((0xb0 - data_0209d6b0) >> 1);
+        data_0209d65c = ((0xb0 - data_0209d6b0) >> 1);
         data_0209d6a8 = 0x16;
         data_0209d678 = data_0209d65c & 7;
         mapPos = 0x105;
@@ -880,8 +880,8 @@ void Message::DisplayText(int t) {
     cnt = data_0209d6a8;
     for (i = 0; i < cnt; i++) {
         u16 *lower = map + 0x20;
-        map[i] = (u16)(i + 0x200);
-        lower[i] = (u16)(i + 0x200 + cnt);
+        map[i] = (i + 0x200);
+        lower[i] = (i + 0x200 + cnt);
     }
 
     LayoutLine();
@@ -931,7 +931,7 @@ void Message::DisplayStarNameForStarSelect(unsigned int msg)
     u16* q;
     int i;
 
-    data_0209d6d4 = (short)(msg + (SublevelToLevel(gNextSublevel) * 7 + 0x1b4));
+    data_0209d6d4 = (msg + (SublevelToLevel(gNextSublevel) * 7 + 0x1b4));
     data_0209d660 = 0;
     func_0201eaac();
 
@@ -952,7 +952,7 @@ void Message::DisplayStarNameForStarSelect(unsigned int msg)
 
     q = (u16 *)((char *)G2_GetBG3ScrPtr() + 0x180);
     for (i = 0; i < 0x40; i++) {
-        q[i] = (u16)(i + 0x280);
+        q[i] = (i + 0x280);
     }
 
     LayoutLine();
@@ -974,7 +974,7 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
     int i;
     int j;
 
-    data_0209d6d4 = (short)(base + 0x196);
+    data_0209d6d4 = (base + 0x196);
     data_0209d660 = 0;
     func_0201eaac();
 
@@ -986,7 +986,7 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
     data_0209d6f4 = sum + 3;
     func_0201b6f8(0);
 
-    data_0209d65c = (u8)((0x100 - data_0209d6b0) / 2);
+    data_0209d65c = ((0x100 - data_0209d6b0) / 2);
     data_0209d6a8 = 0x20;
 
     {
@@ -1028,7 +1028,7 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
     }
     func_0201b6f8(0);
 
-    data_0209d65c = (u8)((0xd2 - data_0209d6b0) / 2);
+    data_0209d65c = ((0xd2 - data_0209d6b0) / 2);
     data_0209d6a8 = 0x20;
 
     {
@@ -1078,7 +1078,7 @@ void Message::DisplaySaving(unsigned short n)
     MessageEntry *base;
     MessageEntry *entry;
 
-    data_0209d6d4 = (s16)n;
+    data_0209d6d4 = n;
     func_0201eaac();
 
     data_0209d67c = 0x3c;
@@ -1097,11 +1097,11 @@ void Message::DisplaySaving(unsigned short n)
                     ((MessageEntry *)((char *)base + idx * 8))->textOffset;
 
     tiles = entry->width / 8;
-    data_0209d6a8 = (u8)((int)(tiles * 9 + 7) / 8); /* an eighth wider than the text */
-    gMsgBoxLeft = (u8)((0x20 - (data_0209d6a8 + 2)) / 2 * 8);
+    data_0209d6a8 = ((int)(tiles * 9 + 7) / 8); /* an eighth wider than the text */
+    gMsgBoxLeft = ((0x20 - (data_0209d6a8 + 2)) / 2 * 8);
     gMsgBoxCenterX = 0x7f;
     gMsgBoxCenterY = 0x43;
-    gMsgBoxTop = (u8)(0x44 - (entry->lineCount * 2 + 1) * 8 / 2);
+    gMsgBoxTop = (0x44 - (entry->lineCount * 2 + 1) * 8 / 2);
     gMsgBoxWinLeft = 0x7f;
     gMsgBoxWinTop = 0x43;
     data_0209d680 = 0;
@@ -1180,7 +1180,7 @@ void func_0201ef50(int arg) {
     if (arg < 0)
         return;
 
-    data_0209d6d4 = (s16)(arg + 0x24e);
+    data_0209d6d4 = (arg + 0x24e);
     idx = data_0209d6d4;
     data_0209d6f0 = (u8 *)((char *)data_0209d708 + idx * 8);
     data_0209d6f4 = data_0209d6fc + 0x28 + data_0209d70c[1] +
@@ -1191,7 +1191,7 @@ void func_0201ef50(int arg) {
     lines = ((MessageEntry *)((char *)data_0209d708 + idx * 8))->lineCount;
     top = 0xc - lines;
     charOffset = (u16)(top << 10);
-    data_0209d6e0 = (s16)(top << 5);
+    data_0209d6e0 = (top << 5);
     while (data_0209d6bc != 8) {
         func_0201b6f8(0);
         data_0209d65c = (0x100 - data_0209d6b0) >> 1;
@@ -1209,7 +1209,7 @@ void func_0201f108(void) {
     u16 *scr = (u16 *)G2S_GetBG0ScrPtr();
     int i = 0;
     do {
-        scr[i] = (u16)i;
+        scr[i] = i;
         i++;
     } while (i < 0x400);
 }
@@ -1235,7 +1235,7 @@ void func_0201f138(void) {
     data_0209d6f4 = data_0209d6fc + 0x28 + data_0209d70c[1] +
                     ((MessageEntry *)((char *)data_0209d708 + idx * 8))->textOffset;
 
-    data_0209d6a8 = (u8)((((((MessageEntry *)data_0209d6f0)->width / 8) * 9) + 7) / 8);
+    data_0209d6a8 = ((((((MessageEntry *)data_0209d6f0)->width / 8) * 9) + 7) / 8);
     data_0209d680 = 0;
     data_0209d65c = 0;
 
@@ -1252,7 +1252,7 @@ void func_0201f138(void) {
     cnt = div * ((MessageEntry *)data_0209d6f0)->lineCount * 2;
     for (i = 0; i < cnt; i++) {
         rem = i % div;
-        q[rem] = (u16)(i + 0x200);
+        q[rem] = (i + 0x200);
         if (div - 1 == rem) {
             q += 0x20;
         }
@@ -1322,28 +1322,28 @@ void func_0201f32c(int arg0) {
         s32 sum = data_0209d6fc + 0x28 + data_0209d70c[1];
         data_0209d6f4 = sum + ev;
     }
-    data_0209d6a8 = (u8)((entry->width + 7) / 8);
+    data_0209d6a8 = ((entry->width + 7) / 8);
 
     if (IsGameMode(0) && !(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) &&
         !IsKuppaScriptRunning()) {
         gMsgBoxLeft = 0x10;
         gMsgBoxTop = 0x64;
-        gMsgBoxCenterX = (u8)((((data_0209d6a8 + 2) / 2) * 8) + 0xf);
-        gMsgBoxCenterY = (u8)((((entry->lineCount * 2 + 1) * 8) / 2) + 0x63);
+        gMsgBoxCenterX = ((((data_0209d6a8 + 2) / 2) * 8) + 0xf);
+        gMsgBoxCenterY = ((((entry->lineCount * 2 + 1) * 8) / 2) + 0x63);
         gMsgBoxWinLeft = gMsgBoxCenterX;
         gMsgBoxWinTop = gMsgBoxCenterY;
     } else if (IsGameMode(2)) {
-        gMsgBoxLeft = (u8)(((0x20 - (data_0209d6a8 + 2)) / 2) * 8);
+        gMsgBoxLeft = (((0x20 - (data_0209d6a8 + 2)) / 2) * 8);
         gMsgBoxCenterX = 0x7f;
         gMsgBoxTop = 0xa0;
-        gMsgBoxCenterY = (u8)((((entry->lineCount) * 16) / 2) + 0x9f);
+        gMsgBoxCenterY = ((((entry->lineCount) * 16) / 2) + 0x9f);
         gMsgBoxWinLeft = 0x7f;
         gMsgBoxWinTop = gMsgBoxCenterY;
     } else {
-        gMsgBoxLeft = (u8)(((0x20 - (data_0209d6a8 + 2)) / 2) * 8);
+        gMsgBoxLeft = (((0x20 - (data_0209d6a8 + 2)) / 2) * 8);
         gMsgBoxCenterX = 0x7f;
         gMsgBoxCenterY = 0x63;
-        gMsgBoxTop = (u8)(0x64 - (((entry->lineCount * 2 + 2) * 8) / 2));
+        gMsgBoxTop = (0x64 - (((entry->lineCount * 2 + 2) * 8) / 2));
         gMsgBoxWinLeft = 0x7f;
         gMsgBoxWinTop = 0x63;
         if (func_0201fb4c() != 0)
@@ -1374,7 +1374,7 @@ void func_0201f32c(int arg0) {
             MI_CpuFill32(pa, subZero, 0x2000);
         }
         {
-            void *pb = (void *)G2S_GetBG1ScrPtr();
+            void *pb = G2S_GetBG1ScrPtr();
             subBlank = 0x22ff;
             MI_CpuFill16(pb, subBlank, 0x800);
         }
@@ -1403,7 +1403,7 @@ void func_0201f32c(int arg0) {
     divisor = data_0209d6a8;
     for (i = 0; i < (s32)(divisor * ((MessageEntry *)data_0209d6f0)->lineCount * 2); i++) {
         s32 rem = i % divisor;
-        map[rem] = (u16)tile;
+        map[rem] = tile;
         if (divisor - 1 == rem)
             map += 0x20;
         tile++;
@@ -1494,7 +1494,7 @@ int ObjectMessageIDToActualMessageID(s16 id) {
 }
 
 void func_0201fc88(s16 objectMsgID) {
-    s16 id = (s16)ObjectMessageIDToActualMessageID(objectMsgID);
+    s16 id = ObjectMessageIDToActualMessageID(objectMsgID);
     func_0201f32c(id);
 }
 

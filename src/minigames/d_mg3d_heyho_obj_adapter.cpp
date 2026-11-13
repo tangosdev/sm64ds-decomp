@@ -1127,10 +1127,10 @@ void Heyho::Settle() {
 
     if (sHeyhoScorePopups != 0) {
         if (mPos.y > 0) {
-            Camera_ProjectToScreen((MgCamera *)sMgSubCamera, &mPos, &v0, &v1);
+            Camera_ProjectToScreen(sMgSubCamera, &mPos, &v0, &v1);
             v1 = v1 - (Mg_GetTopScreenYOffset() + 0xc0);
         } else {
-            Camera_ProjectToScreen((MgCamera *)sMgMainCamera, &mPos, &v0, &v1);
+            Camera_ProjectToScreen(sMgMainCamera, &mPos, &v0, &v1);
         }
         v1 = v1 - 0x20;
         Jump2Popup_Spawn(v0 << 0xc, v1 << 0xc, (short)sJumpComboCount);

@@ -243,9 +243,9 @@ void daObjKey_c::func_ov089_02130fb4(Vector3 *target, int height)
     if (dy < 0)
         dy = -dy;
     {
-        int s0 = cstd::sqrt((long long)height);
+        int s0 = cstd::sqrt(height);
         int s1 = cstd::sqrt(height + dy);
-        int s2 = cstd::sqrt((long long)height);
+        int s2 = cstd::sqrt(height);
         dy = (s0 * JUMP_FRAMES) / (s1 + s2);
     }
     {
@@ -342,23 +342,23 @@ void daObjKey_c::StateFlyToCenter()
 
     case 1:
         {
-            u16 *timer = (u16 *)&mStateTimer;
-            *timer = *timer + 1;
-            if (*timer < 70)
-                break;
-            mStep++;
-            *timer = 0;
-            Sound::PlayBank3(SND_FLY, mCamSpacePos);
-            center1.x = 0;
-            center1.y = 0;
-            center1.z = 0;
-            mVertSpeed = FLY_VY;
-            mHorzSpeed = Vec3_HorzDist(&mPos, &center1) / 80;
-            mPrevAngleY = Vec3_HorzAngle(&mPos, &center1);
-            mBounceCount = 0;
-            mVertAccel = GRAVITY;
-            Message::EndTalk();
+        u16 *timer = &mStateTimer;
+        *timer = *timer + 1;
+        if (*timer < 70)
             break;
+        mStep++;
+        *timer = 0;
+        Sound::PlayBank3(SND_FLY, mCamSpacePos);
+        center1.x = 0;
+        center1.y = 0;
+        center1.z = 0;
+        mVertSpeed = FLY_VY;
+        mHorzSpeed = Vec3_HorzDist(&mPos, &center1) / 80;
+        mPrevAngleY = Vec3_HorzAngle(&mPos, &center1);
+        mBounceCount = 0;
+        mVertAccel = GRAVITY;
+        Message::EndTalk();
+        break;
         }
 
     case 2:
@@ -427,9 +427,9 @@ void daObjKey_c::StateFlyToCenter()
     Vec3_LslInPlace(&v, 3);
     VEC_Add(&v, &mPos, &v);
     v.y = mScaleX * 13 + v.y;
-    mParticleID[0] = (u32)Particle::System::New(mParticleID[0], FX_TRAIL_A, v.x, v.y, v.z, 0, 0);
-    mParticleID[1] = (u32)Particle::System::New(mParticleID[1], FX_TRAIL_B, v.x, v.y, v.z, 0, 0);
-    mParticleID[2] = (u32)Particle::System::New(mParticleID[2], FX_TRAIL_C, v.x, v.y, v.z, 0, 0);
+    mParticleID[0] = Particle::System::New(mParticleID[0], FX_TRAIL_A, v.x, v.y, v.z, 0, 0);
+    mParticleID[1] = Particle::System::New(mParticleID[1], FX_TRAIL_B, v.x, v.y, v.z, 0, 0);
+    mParticleID[2] = Particle::System::New(mParticleID[2], FX_TRAIL_C, v.x, v.y, v.z, 0, 0);
 }
 
 /* Kind 7, the power star. Take the camera, jump to a spot beside the nearest
@@ -446,7 +446,7 @@ void daObjKey_c::StateStarJump()
         v.y = mPosY;
         v.z = mPosZ;
         v.y = v.y + Y_SPARK;
-        mParticleID[0] = (u32)Particle::System::New(mParticleID[0], FX_FALL, v.x, v.y, v.z, 0, 0);
+        mParticleID[0] = Particle::System::New(mParticleID[0], FX_FALL, v.x, v.y, v.z, 0, 0);
     }
     if (mStep >= 2)
         dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
@@ -540,17 +540,17 @@ void daObjKey_c::StateStarJump()
 
     case 3:
         {
-            u16 *timer = (u16 *)&mStateTimer;
-            *timer = *timer + 1;
-            if (*timer < 30)
-                return;
-            cam->SetLookAt(mSavedCamLookAt);
-            cam->SetPos(mSavedCamPos);
-            cam->mFlags &= ~8;
-            mFlags &= ~FLAG_CAM_TAKEOVER;
-            gNextActorUpdateMask &= ~FLAG_CAM_TAKEOVER;
-            mStep++;
+        u16 *timer = &mStateTimer;
+        *timer = *timer + 1;
+        if (*timer < 30)
             return;
+        cam->SetLookAt(mSavedCamLookAt);
+        cam->SetPos(mSavedCamPos);
+        cam->mFlags &= ~8;
+        mFlags &= ~FLAG_CAM_TAKEOVER;
+        gNextActorUpdateMask &= ~FLAG_CAM_TAKEOVER;
+        mStep++;
+        return;
         }
 
     case 4:
@@ -626,7 +626,7 @@ void daObjKey_c::StateDrop()
         v.y = mPosY;
         v.z = mPosZ;
         v.y = v.y + Y_SPARK;
-        mParticleID[0] = (u32)Particle::System::New(mParticleID[0], FX_FALL, v.x, v.y, v.z, 0, 0);
+        mParticleID[0] = Particle::System::New(mParticleID[0], FX_FALL, v.x, v.y, v.z, 0, 0);
         if (mWithMeshClsn.JustHitGround()) {
             mVertSpeed = -mVertSpeed >> 1;
             func_02012694(SND_LAND, &mCamSpacePos);
@@ -732,19 +732,19 @@ void daObjKey_c::UpdateModelTransform()
     mShadowMatrix.m[10] = mPosY >> 3;
     mShadowMatrix.m[11] = mPosZ >> 3;
     /* Shadow only while the idle anim (file 0x801b) is showing. */
-    if (mAnmModel.file == (BCA_File *)data_ov002_02110964.filePtr)
+    if (mAnmModel.file == data_ov002_02110964.filePtr)
         DropShadowRadHeight(mShadowModel, mShadowMatrix, SHADOW_R, SHADOW_DEPTH, SHADOW_OPACITY);
 }
 
 int daObjKey_c::CleanupResources()
 {
     UnloadKeyModels(mState);
-    ((SharedFilePtr *)&data_ov002_02110964)->Release();
+    (&data_ov002_02110964)->Release();
     if (mState != KEY_KIND_STAR) {
-        ((SharedFilePtr *)&data_ov089_02132c60)->Release();
-        ((SharedFilePtr *)&data_ov089_02132c40)->Release();
-        ((SharedFilePtr *)&data_ov089_02132c70)->Release();
-        ((SharedFilePtr *)&data_ov089_02132c48)->Release();
+        (&data_ov089_02132c60)->Release();
+        (&data_ov089_02132c40)->Release();
+        (&data_ov089_02132c70)->Release();
+        (&data_ov089_02132c48)->Release();
     }
     Event::ClearBit(EVENT_KEY);
     return 1;
@@ -797,10 +797,10 @@ int daObjKey_c::Behavior()
                 /* First bone, word at +0xc. BMD_Bone has no field there. */
                 vec.y = *(int *)((char *)mAnmModel.data.bones + 0xc) * BONE_Y_MUL + vec.y;
                 vec.y = vec.y - Y_BONE;
-                mParticleID[0] = (u32)Particle::System::New(mParticleID[0], FX_BURST_A, vec.x,
-                                                            vec.y, vec.z, 0, 0);
-                mParticleID[1] = (u32)Particle::System::New(mParticleID[1], FX_BURST_B, vec.x,
-                                                            vec.y, vec.z, 0, 0);
+                mParticleID[0] =
+                    Particle::System::New(mParticleID[0], FX_BURST_A, vec.x, vec.y, vec.z, 0, 0);
+                mParticleID[1] =
+                    Particle::System::New(mParticleID[1], FX_BURST_B, vec.x, vec.y, vec.z, 0, 0);
             }
         }
 
@@ -811,7 +811,7 @@ int daObjKey_c::Behavior()
             int isKey = (actorID == ACTOR_OBJ_KEY);
             if (isKey != 0) {
                 /* Anim 3's file (data_ov089_02132c40, id 0x44f) stays; the others die. */
-                if (mAnmModel.file != (BCA_File *)data_ov089_02132c40.filePtr)
+                if (mAnmModel.file != data_ov089_02132c40.filePtr)
                     MarkForDestruction();
             }
         }
@@ -855,7 +855,7 @@ int daObjKey_c::InitResources()
     int kind = param1 & 7;
     mState = kind;
     LoadKeyModels(mState);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov002_02110964);
+    dExtFrameCtrl_c::LoadFile(*&data_ov002_02110964);
 
     if (mState == KEY_KIND_STAR) {
         if (mAnmModel.SetFile((BMD_File *)((ObjKeyFile *)&data_ov002_0211094c)->filePtr, 1, 1) == 0)
@@ -873,10 +873,10 @@ int daObjKey_c::InitResources()
         mVertAccel = 0;
         Sound::PlayBank3(SND_APPEAR, mCamSpacePos);
     } else {
-        dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov089_02132c60);
-        dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov089_02132c40);
-        dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov089_02132c70);
-        dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov089_02132c48);
+        dExtFrameCtrl_c::LoadFile(*&data_ov089_02132c60);
+        dExtFrameCtrl_c::LoadFile(*&data_ov089_02132c40);
+        dExtFrameCtrl_c::LoadFile(*&data_ov089_02132c70);
+        dExtFrameCtrl_c::LoadFile(*&data_ov089_02132c48);
         if (mAnmModel.SetFile((BMD_File *)((ObjKeyFile *)data_ov089_02132894[mState])->filePtr, 1,
                               1) == 0)
             return 0;

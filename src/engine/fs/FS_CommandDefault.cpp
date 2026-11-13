@@ -123,7 +123,7 @@ void FSi_SeekDirDirect(FSFile *p_dir, u32 id) {
     p_dir->arg.seekdir.pos.arc = p_dir->arc;
     p_dir->arg.seekdir.pos.pos = 0;
     p_dir->arg.seekdir.pos.index = 0;
-    p_dir->arg.seekdir.pos.own_id = (u16)id;
+    p_dir->arg.seekdir.pos.own_id = id;
     FSi_TranslateCommand(p_dir, FS_COMMAND_SEEKDIR);
 }
 

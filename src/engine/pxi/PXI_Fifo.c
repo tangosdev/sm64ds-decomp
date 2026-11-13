@@ -63,7 +63,7 @@ void PXI_InitFifo(void) {
         }
 
         _Z17OS_SetIrqFunctionjPFvvE(OS_IE_SPFIFO_RECV, PXIi_HandlerRecvFifoNotEmpty);
-        (void)_Z16OS_EnableIrqMaskj(OS_IE_SPFIFO_RECV);
+        _Z16OS_EnableIrqMaskj(OS_IE_SPFIFO_RECV);
 
         reg_PXI_FIFO_CNT = (REG_PXI_FIFO_CNT_SEND_CL_MASK | REG_PXI_FIFO_CNT_RECV_RI_MASK |
                             REG_PXI_FIFO_CNT_E_MASK | REG_PXI_FIFO_CNT_ERR_MASK);
@@ -74,7 +74,7 @@ void PXI_InitFifo(void) {
 
             for (i = 0;; i++) {
                 c = reg_PXI_INTF & 15;
-                reg_PXI_INTF = (u16)(c << 8);
+                reg_PXI_INTF = (c << 8);
 
                 if (c == 0 && i > 4) {
                     break;
@@ -89,7 +89,7 @@ void PXI_InitFifo(void) {
             }
         }
     }
-    (void)OS_RestoreInterrupts(enabled);
+    OS_RestoreInterrupts(enabled);
 }
 
 void PXI_SetFifoRecvCallback(int fifotag, PXIFifoCallback callback) {
@@ -104,7 +104,7 @@ void PXI_SetFifoRecvCallback(int fifotag, PXIFifoCallback callback) {
     } else {
         p->pxiHandleChecker[PXI_PROC_ARM] &= ~(1UL << fifotag);
     }
-    (void)OS_RestoreInterrupts(enabled);
+    OS_RestoreInterrupts(enabled);
 }
 
 BOOL PXI_IsCallbackReady(int fifotag, PXIProc proc) {
@@ -115,8 +115,8 @@ BOOL PXI_IsCallbackReady(int fifotag, PXIProc proc) {
 int PXI_SendWordByFifo(int fifotag, u32 data, BOOL err) {
     PXIFifoMessage fifomsg;
 
-    fifomsg.e.tag = (PXIFifoTag)fifotag;
-    fifomsg.e.err = (u32)err;
+    fifomsg.e.tag = fifotag;
+    fifomsg.e.err = err;
     fifomsg.e.data = data;
 
     return PXIi_SetToFifo(fifomsg.raw);
@@ -132,12 +132,12 @@ static inline PXIFifoStatus PXIi_SetToFifo(u32 data) {
 
     enabled = OS_DisableInterrupts();
     if (reg_PXI_FIFO_CNT & REG_PXI_FIFO_CNT_SEND_FULL_MASK) {
-        (void)OS_RestoreInterrupts(enabled);
+        OS_RestoreInterrupts(enabled);
         return PXI_FIFO_FAIL_SEND_FULL;
     }
 
     reg_PXI_SEND_FIFO = data;
-    (void)OS_RestoreInterrupts(enabled);
+    OS_RestoreInterrupts(enabled);
     return PXI_FIFO_SUCCESS;
 }
 
@@ -151,12 +151,12 @@ static inline PXIFifoStatus PXIi_GetFromFifo(u32 *data_buf) {
 
     enabled = OS_DisableInterrupts();
     if (reg_PXI_FIFO_CNT & REG_PXI_FIFO_CNT_RECV_EMP_MASK) {
-        (void)OS_RestoreInterrupts(enabled);
+        OS_RestoreInterrupts(enabled);
         return PXI_FIFO_FAIL_RECV_EMPTY;
     }
 
     *data_buf = reg_PXI_RECV_FIFO;
-    (void)OS_RestoreInterrupts(enabled);
+    OS_RestoreInterrupts(enabled);
 
     return PXI_FIFO_SUCCESS;
 }
@@ -175,16 +175,16 @@ void PXIi_HandlerRecvFifoNotEmpty(void) {
         if (ret_code == PXI_FIFO_FAIL_RECV_ERR)
             continue;
 
-        tag = (PXIFifoTag)fifomsg.e.tag;
+        tag = fifomsg.e.tag;
 
         if (tag) {
             if (FifoRecvCallbackTable[tag]) {
-                (FifoRecvCallbackTable[tag])(tag, fifomsg.e.data, (BOOL)fifomsg.e.err);
+                (FifoRecvCallbackTable[tag])(tag, fifomsg.e.data, fifomsg.e.err);
             } else {
                 if (fifomsg.e.err) {
                 } else {
                     fifomsg.e.err = TRUE;
-                    (void)PXIi_SetToFifo(fifomsg.raw);
+                    PXIi_SetToFifo(fifomsg.raw);
                 }
             }
         }

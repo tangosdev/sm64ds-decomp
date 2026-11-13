@@ -101,13 +101,13 @@ dActor_c::dActor_c() : mActorListNode(this) {
         }
     }
     {
-        short *spawnRot = (short *)data_0209b45c;
+        short *spawnRot = data_0209b45c;
         if (spawnRot) {
             mAngleX = spawnRot[0];
             mAngleY = spawnRot[1];
             mAngleZ = spawnRot[2];
             /* The ROM reloads the global. Folding the two reads drops an ldr. */
-            spawnRot = (short *)data_0209b45c;
+            spawnRot = data_0209b45c;
             mPrevAngleX = spawnRot[0];
             mPrevAngleY = spawnRot[1];
             mPrevAngleZ = spawnRot[2];
@@ -137,7 +137,7 @@ dActor_c::dActor_c() : mActorListNode(this) {
        cleanup itself: both variants stay 0x148. */
     if (0) {
         Vector3s tmp[2];
-        (void)tmp;
+        tmp;
     }
 }
 
@@ -668,7 +668,7 @@ int dActor_c::JumpedOnByPlayer(dCc_c &clsn, daPly_c &player) {
     volatile s32 pad[4];
     s32 vel = player.mVertSpeed;
 
-    (void)&pad;
+    &pad;
     if (clsn.flags & 6) {
         if (vel < 0 && player.mIsAirborne != 0
             && mPosY < player.mPosY - 0xa000)

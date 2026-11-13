@@ -110,9 +110,9 @@ void G3i_PerspectiveW_(Fix12i fovySin, Fix12i fovyCos, Fix12i aspect, Fix12i n, 
     invNearMinusFar = FX_GetDivResultFx64c();
     if (scaleW != FX32_ONE)
         invNearMinusFar = invNearMinusFar * scaleW / FX32_ONE;
-    zScale = (fx32)(((f + n) * invNearMinusFar + 0x80000000LL) >> 32);
+    zScale = (((f + n) * invNearMinusFar + 0x80000000LL) >> 32);
     nearFar2 = FX_MUL(n << 1, f);
-    wScale = (fx32)((invNearMinusFar * nearFar2 + 0x80000000LL) >> 32);
+    wScale = ((invNearMinusFar * nearFar2 + 0x80000000LL) >> 32);
     if (draw) {
         *port = zScale;
         *port = -scaleW;

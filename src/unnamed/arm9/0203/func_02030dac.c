@@ -14,11 +14,11 @@ void func_02030dac(void)
     int j;
     for (i = 0; i < n; i++) {
         data_0209fc5c[i] = 1;
-        data_0209fc64[i] = (s8)i;
+        data_0209fc64[i] = i;
     }
     for (j = n; j < 4; j++) {
         data_0209fc5c[j] = 0;
         data_0209fc64[j] = -1;
     }
-    data_0209fc50 = (u8)n;
+    data_0209fc50 = n;
 }

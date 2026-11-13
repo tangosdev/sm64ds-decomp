@@ -125,7 +125,7 @@ void func_ov007_020bfbdc(void *self) {
     Matrix4x3 mat;
 
     func_ov007_020bc47c(model);
-    model->rotX = (short)FX_DivS32(0x5a0000, 0x168);
+    model->rotX = FX_DivS32(0x5a0000, 0x168);
     model->visible = 0;
 
     vec.y = 0;

@@ -207,7 +207,7 @@ int daPopoi_c::Behavior()
         return 1;
     }
 
-    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     DecIfAbove0_Short(&mCooldown);
 
     state = mState;
@@ -229,7 +229,7 @@ int daPopoi_c::Behavior()
      * IsGoingOffCliff gets a downward probe of 60 units (0x3c000), a steepest
      * acceptable slope of 0x2888 (57 degrees), detectWater 0, skipPipeCheck 1 and an
      * upward probe of 50 units (0x32000). */
-    goingOffCliff = IsGoingOffCliff(mWithMeshClsn, 0x3c000, (s16)0x2888, 0, 1, 0x32000);
+    goingOffCliff = IsGoingOffCliff(mWithMeshClsn, 0x3c000, 0x2888, 0, 1, 0x32000);
     if (goingOffCliff != 0 || (slope < 0 ? (s16)-slope : slope) > 0x100) {
         mPosX = mSavedPosX;
         mPosY = mSavedPosY;
@@ -326,14 +326,12 @@ int daPopoi_c::ChangeState(daPopoi_StateRecord *next) {
  * speed and plays file 0x40f's animation (data_ov077_02127c90), and starts walking
  * at 8 units/frame (0x8000). Always returns 1. */
 int daPopoi_c::EnterWanderState() {
-    mTargetAngleY =
-        (short)((((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) << 0xc);
-    mStateTimer =
-        (short)((((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 0xaa);
+    mTargetAngleY = ((((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) << 0xc);
+    mStateTimer = ((((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 0xaa);
     mAnmModel.speed = 0x1000;
     mHorzSpeed = 0x8000;
     unk_41c = 0;
-    mAnmModel.SetAnim((BCA_File *)((void *)((int *)&data_ov077_02127c90)[1]), 0, 0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)(((int *)&data_ov077_02127c90)[1]), 0, 0x1000, 0);
     return 1;
 }
 
@@ -376,16 +374,16 @@ int daPopoi_c::UpdateWanderState() {
 
     if (dist > 0x1f4000) {
         mTargetAngleY = Vec3_HorzAngle(&mPos, reinterpret_cast<const Vector3 *>(&mHomePosX));
-        if ((unsigned short)mStateTimer < 0x14)
+        if (mStateTimer < 0x14)
             mStateTimer = 0x14;
         ApproachLinear(mPrevAngleY, mTargetAngleY, 0x400);
     }
     ApproachLinear(mPrevAngleY, mTargetAngleY, 0x100);
 
-    if ((unsigned short)mStateTimer < 0x64)
-        mAnmModel.speed = 0x1000 / (0x64 - (unsigned short)mStateTimer);
+    if (mStateTimer < 0x64)
+        mAnmModel.speed = 0x1000 / (0x64 - mStateTimer);
 
-    if ((unsigned short)mStateTimer == 0) {
+    if (mStateTimer == 0) {
         ChangeState((daPopoi_StateRecord *)data_ov077_02127cf8); /* Pause */
         return 1;
     }
@@ -415,7 +413,7 @@ int daPopoi_c::EnterPauseState() {
     mHorzSpeed = 0;
     mStateTimer = 0x46;
     mAnmModel.speed = 0x1000;
-    mAnmModel.SetAnim((BCA_File *)((void *)((void **)&data_ov077_02127c98)[1]), 0, 0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)(((void **)&data_ov077_02127c98)[1]), 0, 0x1000, 0);
     return 1;
 }
 
@@ -448,7 +446,7 @@ int daPopoi_c::UpdateTurnAwayState() {
        C linkage and the short call-site typing, which is byte-load-bearing. */
     short tgt = mTargetAngleY;
     ApproachLinear(mPrevAngleY, tgt, 0x500);
-    int diff = ((int (*)(short, short))AngleDiff)(mPrevAngleY, mTargetAngleY);
+    int diff = (AngleDiff)(mPrevAngleY, mTargetAngleY);
     if (diff < 0x100) {
         mCooldown = 0x1e;
         ChangeState((daPopoi_StateRecord *)&data_ov077_02127ce8); /* Wander */
@@ -462,13 +460,12 @@ int daPopoi_c::UpdateTurnAwayState() {
  * mAnmModel.speed is overwritten by SetAnim's speed argument 0x1000, so the
  * animation ends up at speed 1.0. Returns 1. */
 int daPopoi_c::EnterChaseState() {
-    mStateTimer =
-        (short)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8 & 0x3f) + 0xaa);
+    mStateTimer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8 & 0x3f) + 0xaa);
     mHorzSpeed = 0x6000;
     mTurnRate = 0;
     unk_41c = 0;
     mAnmModel.speed = 0x2000;
-    mAnmModel.SetAnim((BCA_File *)((void *)((int *)&data_ov077_02127c90)[1]), 0, 0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)(((int *)&data_ov077_02127c90)[1]), 0, 0x1000, 0);
     return 1;
 }
 
@@ -525,7 +522,7 @@ int daPopoi_c::UpdateChaseState() {
         mAnmModel.speed = 0x1000 / (5 - spd / 20);
     }
 
-    if (dist > 0x5dc000 || (unsigned short)mStateTimer == 0 || IsBlockedAhead() != 0)
+    if (dist > 0x5dc000 || mStateTimer == 0 || IsBlockedAhead() != 0)
         ChangeState((daPopoi_StateRecord *)data_ov077_02127cf8); /* Pause */
 
     return 1;
@@ -574,7 +571,7 @@ int daPopoi_c::UpdateGrabState() {
                             if (!IsNoControl(a)) {
                                 if (a->GetHurtState() < 0) {
                                     if (func_ov002_020db674(a, 0x28000, 0x70000,
-                                            (int)(short)(mAngleY + 0x8000)) != 0) {
+                                                            (short)(mAngleY + 0x8000)) != 0) {
                                         mCaughtPlayer = 0;
                                         func_02012694(daPopoi_SND_THROW_PLAYER, &mCamSpacePos);
                                     }

@@ -171,7 +171,7 @@ int daPgBby_c::StateKeepDistanceUpdate() {
     dist = Vec3_Dist(&mPos, &player->mPos);
     switch (mSubState) {
     case 0:
-        angle = (short)(Vec3_HorzAngle(&mPos, &player->mPos) + 0x8000);
+        angle = (Vec3_HorzAngle(&mPos, &player->mPos) + 0x8000);
         ApproachLinear(mAngleY, angle, 0x514);
         mPrevAngleY = mAngleY;
         mHorzSpeed = 0x5000;
@@ -217,7 +217,7 @@ int daPgBby_c::StateKeepDistanceUpdate() {
     mCylClsn.Clear();
     mCylClsn.Update();
     if (mAnmModel.file == (BCA_File *)gPenguinBabyWalkAnimationFile.filePtr) {
-        frame = (int)(((u32)mAnmModel.currFrame << 4) >> 16);
+        frame = (((u32)mAnmModel.currFrame << 4) >> 16);
         if (frame == 9 || frame == 0x15) {
             func_0201267c(0xf3, &mCamSpacePos);
         }
@@ -333,7 +333,7 @@ int daPgBby_c::StateWalkToMotherUpdate() {
     if (dist > 0xdc000) {
         tgt = Vec3_HorzAngle(&mPos, &mMother->mPos);
     } else if (dist < 0xc8000) {
-        tgt = (short)(Vec3_HorzAngle(&mPos, &mMother->mPos) + 0x8000);
+        tgt = (Vec3_HorzAngle(&mPos, &mMother->mPos) + 0x8000);
     }
     ApproachLinear(mAngleY, tgt, 0x2bc);
     mPrevAngleY = mAngleY;
@@ -345,7 +345,7 @@ int daPgBby_c::StateWalkToMotherUpdate() {
     mCylClsn.Clear();
     mCylClsn.Update();
     {
-        int frame = (int)((unsigned)(mAnmModel.currFrame << 4) >> 16);
+        int frame = ((unsigned)(mAnmModel.currFrame << 4) >> 16);
         if (frame == 9 || frame == 0x15) {
             func_0201267c(0xf3, &mCamSpacePos);
         }
@@ -561,7 +561,7 @@ void daPgBby_c::UpdateModelAndShadow() {
 void daPgBby_c::UpdateFloorAndWalls(dBgCh_Actr *clsn) {
     Vector3 floorNormal;
     Vector3 wallNormal;
-    int b = (int)((mFlags & 0x4000) != 0);
+    int b = ((mFlags & 0x4000) != 0);
     if (b != 0) return;
     dBgCh_Actr_UpdateContinuous_Veneer(clsn);
     if (clsn->IsOnGround()) {

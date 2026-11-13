@@ -270,7 +270,7 @@ int FlowerFace::Load() {
     dExtFrameCtrl_c::LoadFile(mLikeAnim);
     dExtFrameCtrl_c::LoadFile(mHateAnim);
     PlayIdle();
-    BMD_File *petalFile = (BMD_File *)dExtSimpleModel_c::LoadFile(mPetalFile);
+    BMD_File *petalFile = dExtSimpleModel_c::LoadFile(mPetalFile);
     for (int i = 0; i < 22; i++) {
         mPetals[i].SetModel(petalFile);
         mPetals[i].mActive = 0;
@@ -447,7 +447,7 @@ void FallingPetal::Spawn(const VecFx32 *pos, const VecFx32 *vel) {
     mAxis.x = sAxis.x;
     mAxis.y = sAxis.y;
     mAxis.z = sAxis.z;
-    func_0203cd80(&mAxis, (short)RandomIntInternal(&data_0209e650.value));
+    func_0203cd80(&mAxis, RandomIntInternal(&data_0209e650.value));
     mRot[0] = data_02092768.w[0];
     mRot[1] = data_02092768.w[1];
     mRot[2] = data_02092768.w[2];
@@ -753,10 +753,10 @@ void Presenter::ResetPose() {
 }
 
 void Presenter::PlayIdle() {
-    if (mFace.file != (BCA_File *)mWaitAnim.filePtr) {
+    if (mFace.file != mWaitAnim.filePtr) {
         int blendFrames = 0;
         if (gSceneFader->IsAtEnd() == 0) {
-            if (mFace.Finished() == 0 || mFace.file == (BCA_File *)mSurprisedAnim.filePtr) {
+            if (mFace.Finished() == 0 || mFace.file == mSurprisedAnim.filePtr) {
                 blendFrames = 8;
             }
         }
@@ -835,7 +835,7 @@ void Presenter::PlayCheer() {
 void Presenter::StateSurprisedThenSmile() {
     if (!IsAnimDone())
         return;
-    if (mFace.file != (BCA_File *)mSurprisedAnim.filePtr)
+    if (mFace.file != mSurprisedAnim.filePtr)
         return;
     if (mQuiet == 0)
         Sound::PlayBank2_2D(0x1d1);
@@ -856,7 +856,7 @@ void Presenter::PlayLose() {
 void Presenter::StateLoseStart() {
     if (!IsAnimDone())
         return;
-    if (mFace.file != (BCA_File *)mLoseStartAnim.filePtr)
+    if (mFace.file != mLoseStartAnim.filePtr)
         return;
     mFace.SetAnim(*(BCA_File *)mLoseAnim.filePtr, 0, 0, 0x800, 0);
     mTexSeq.SetFile(*(BTP_File *)mLoseTexSeq.filePtr, 0, 0x800, 0);
@@ -947,7 +947,7 @@ void Mascot::Draw() {
         s16 horzAngle = Vec3_HorzAngle(&mPos, &mLookTarget);
         s16 vertAngle = Vec3_VertAngle(&mPos, &mLookTarget);
         /* Turn the body toward the target, the head toward the body. */
-        s16 deltaYaw = (s16)(horzAngle - mRot[1]);
+        s16 deltaYaw = (horzAngle - mRot[1]);
         if (deltaYaw < -0x2800)
             deltaYaw = -0x2800;
         else if (deltaYaw > 0x2800)
@@ -958,7 +958,7 @@ void Mascot::Draw() {
             vertAngle = 0x1000;
         UpdateAngle(mHeadYaw, deltaYaw, 8, 0x200);
         UpdateAngle(mHeadPitch, vertAngle, 8, 0x200);
-        deltaYaw = (s16)(horzAngle - deltaYaw);
+        deltaYaw = (horzAngle - deltaYaw);
         UpdateAngle(mRot[1], deltaYaw, 8, 0x200);
     } else {
         UpdateAngle(mHeadPitch, 0, 8, 0x200);
@@ -1199,7 +1199,7 @@ int Dealer::IsIdleAtRest() {
     int differs = 1;
     if (fn == idle[0] && (mState[1] == idle[1] || fn == 0))
         differs = 0;
-    if (differs == 0 && mModel.file == (BCA_File *)mWaitAnim.filePtr)
+    if (differs == 0 && mModel.file == mWaitAnim.filePtr)
         atRest = 1;
     return atRest;
 }
@@ -1228,7 +1228,7 @@ void Dealer::StateShuffle() {
         mShuffleSoundPlayed = 1;
     }
 
-    if (mModel.file == (BCA_File *)mShuffleStartAnim.filePtr) {
+    if (mModel.file == mShuffleStartAnim.filePtr) {
         if (mModel.Finished())
             mModel.SetAnim(*(BCA_File *)mShuffleAnim.filePtr, 0, 0, 0x800, 0);
         return;
@@ -1255,7 +1255,7 @@ void Dealer::StateShuffle() {
 void Dealer::StartDeal(short count, s16 *counter) {
     mDealLeft = count;
     mDealCounter = counter;
-    if (IsIdle() && mModel.file != (BCA_File *)mDealWaitAnim.filePtr) {
+    if (IsIdle() && mModel.file != mDealWaitAnim.filePtr) {
         mModel.SetAnim(*(BCA_File *)mShuffleStartAnim.filePtr, 0, 0x40000000, 0x800, 0);
     } else {
         mModel.SetAnim(*(BCA_File *)mDealStartAnim.filePtr, 0, 0x40000000, 0x800, 0);
@@ -1330,7 +1330,7 @@ void Dealer::StartReveal(int count, s16 *counter) {
 }
 
 void Dealer::StateReveal() {
-    if (mModel.file != (BCA_File *)mDealAnim.filePtr)
+    if (mModel.file != mDealAnim.filePtr)
         goto other;
 
     if (mModel.WillHitFrame(0)) {
@@ -1368,8 +1368,7 @@ void Dealer::StateReveal() {
     return;
 
 other:
-    if (mModel.file == (BCA_File *)mDealEndAnim.filePtr ||
-        mModel.file == (BCA_File *)mDealEnd2Anim.filePtr) {
+    if (mModel.file == (BCA_File *)mDealEndAnim.filePtr || mModel.file == mDealEnd2Anim.filePtr) {
         if (mModel.Finished())
             PlayIdle();
     }
@@ -1438,7 +1437,7 @@ void Dealer::PlayLose() {
 void Dealer::StateLose() {
     if (!mModel.Finished())
         return;
-    if (mModel.file == (BCA_File *)mLoseAnim.filePtr) {
+    if (mModel.file == mLoseAnim.filePtr) {
         PlayIdle();
         return;
     }
@@ -1547,7 +1546,7 @@ void MascotWalker::Update() {
         short turn;
         int angle;
         angle = Vec3_HorzAngle(&mPos, &target);
-        turn = (short)(angle - mAngleY);
+        turn = (angle - mAngleY);
         if (turn < -0x3000)
             turn = -0x3000;
         else if (turn > 0x3000)
@@ -1564,7 +1563,7 @@ void MascotWalker::Update() {
                     return;
             }
         }
-        turn = (short)(angle - turn);
+        turn = (angle - turn);
         UpdateAngle(mAngleY, turn, 8, 0x200);
     } else {
         UpdateAngle(mHeadAngle, 0, 8, 0x200);
@@ -1622,7 +1621,7 @@ void MascotWalker::StartNextPath() {
         target.y = point->y;
         target.z = point->z;
     }
-    mTargetAngle = (short)Vec3_HorzAngle(&mPos, &target);
+    mTargetAngle = Vec3_HorzAngle(&mPos, &target);
     {
         int fn = pmf_MascotWalker_StateWalk[0];
         int adj = pmf_MascotWalker_StateWalk[1];
@@ -1711,8 +1710,8 @@ void MascotWalker::StatePause() {
     mModel.SetAnim(*(BCA_File *)mWalkAnimFile.filePtr, 0, 0, 0x800, 0);
     /* Walk for 0x258..0x4af frames: a random 0..0xfff scaled into 0x258. */
     int roll = RandomIntInternal(&data_0209e650.value);
-    int frac = (int)((unsigned int)(roll & 0x7fffffff) >> 0x13);
-    mStateTimer = (short)(((frac * 0x258) >> 12) + 0x258);
+    int frac = ((unsigned int)(roll & 0x7fffffff) >> 0x13);
+    mStateTimer = (((frac * 0x258) >> 12) + 0x258);
     mPaused = 0;
     *(StateSlot *)mState = pmf_MascotWalker_StateWalk_3;
 }

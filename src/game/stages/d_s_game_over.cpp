@@ -248,7 +248,7 @@ s32 dScGameOver_c::InitResources() {
     } else {
         f = LoadFile(0xa00d);
     }
-    DecompressLZ16(f, (void *)G2S_GetBG1CharPtr());
+    DecompressLZ16(f, G2S_GetBG1CharPtr());
     Deallocate(f);
 
     f = LoadFile(0x9807);
@@ -322,10 +322,10 @@ s32 dScGameOver_c::Behavior() {
                  (unsigned char)(gTouchY[idx * 4] - 0x38) < 0x20) ||
                 (mSelection == 0 && IsButtonInputValid())) {
                 if (mSelection == 0)
-                    mFlashTimer = (unsigned char)(data_0208ee44 << 3);
+                    mFlashTimer = (data_0208ee44 << 3);
                 mSelection = 0;
                 UpdateButtonPalettes(0);
-                mCommitTimer = (unsigned char)(data_0208ee44 << 4);
+                mCommitTimer = (data_0208ee44 << 4);
                 func_02012790(0x9a);
                 mCursorState = 1;
                 break;
@@ -335,10 +335,10 @@ s32 dScGameOver_c::Behavior() {
                  (unsigned char)(gTouchY[idx * 4] - 0x68) < 0x20) ||
                 (mSelection == 1 && IsButtonInputValid())) {
                 if (mSelection == 1)
-                    mFlashTimer = (unsigned char)(data_0208ee44 << 3);
+                    mFlashTimer = (data_0208ee44 << 3);
                 mSelection = 1;
                 UpdateButtonPalettes(0);
-                mCommitTimer = (unsigned char)(data_0208ee44 << 4);
+                mCommitTimer = (data_0208ee44 << 4);
                 func_02012790(0x9b);
                 mCursorState = 1;
             }

@@ -777,7 +777,7 @@ int PickerScene_UpdateIntro(int t) {
         }
     }
 
-    if (((Ov007Picker *)s)->groupCount == 0 || SCENE->totalPoints == 0) {
+    if (s->groupCount == 0 || SCENE->totalPoints == 0) {
         int ratio;
         ratio = ProgressRatio(t, 0x1e);
         SPRITES->sprites[1]->alpha = ratio * 0x1f;
@@ -788,10 +788,8 @@ int PickerScene_UpdateIntro(int t) {
     switch (state) {
     case 0:
     case 3: {
-        int *p1 =
-            (state == 0) ? &((Ov007Picker *)s)->boundsMin.x : &((Ov007Picker *)s)->boundsMin.y;
-        int *p2 =
-            (state == 0) ? &((Ov007Picker *)s)->boundsMax.x : &((Ov007Picker *)s)->boundsMax.y;
+        int *p1 = (state == 0) ? &s->boundsMin.x : &s->boundsMin.y;
+        int *p2 = (state == 0) ? &s->boundsMax.x : &s->boundsMax.y;
         int d, ratio, ease, v1, v2;
         v1 = *p1;
         v2 = *p2;

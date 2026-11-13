@@ -315,7 +315,7 @@ void daObjPowerUpItem_c::CheckPickup() {
     if (player->IsCollectingCap() != 0) return;
 
     {
-        dActor_c* held = (dActor_c*)player->mHeldObj;
+        dActor_c *held = player->mHeldObj;
         int t = (int)(held != 0);
         if (t != 0) {
             int b = (int)(held->actorID == ACTOR_MONKEY_THIEF);
@@ -350,8 +350,8 @@ void daObjPowerUpItem_c::CheckPickup() {
         MarkForDestruction();
         return;
     case CHARACTER_YOSHI:
-        if ((dActor_c*)player->mObjInMouth != 0) {
-            dActor_c* inMouth = (dActor_c*)player->mObjInMouth;
+        if (player->mObjInMouth != 0) {
+            dActor_c *inMouth = player->mObjInMouth;
             if (inMouth->actorID == ACTOR_MONKEY_STAR) return;
         }
         player->InitFireYoshi();

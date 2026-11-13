@@ -286,7 +286,7 @@ void daGmch_c::CheckPlayerContact()
 
     if (mdCcAc_c.hitFlags & HIT_MEGA_CHARACTER) {
         mPrevAngleY = Vec3_HorzAngle(&player->mPos, &mPos);
-        mAngleY = (short)(mPrevAngleY + 0x8000);
+        mAngleY = (mPrevAngleY + 0x8000);
         player->IncMegaKillCount();
         SetState(8);
         return;
@@ -387,7 +387,7 @@ int daGmch_c::UpdateState8()
     mAnmModel.Advance();
     UpdatePos(&mdCcAc_c);
     func_02038414(&mWithMeshClsn);
-    if (mWithMeshClsn.JustHitGround() != 0 || DecIfAbove0_Byte((unsigned char *)&mTimer) == 0) {
+    if (mWithMeshClsn.JustHitGround() != 0 || DecIfAbove0_Byte(&mTimer) == 0) {
         SpawnCoinsAndDie();
     }
     return 1;
@@ -660,7 +660,7 @@ int daGmch_c::UpdateState1()
     ApplySlopeToVertSpeed(&mWithMeshClsn);
     CheckPlayerContact();
     mAnmModel.Advance();
-    if (DecIfAbove0_Byte((unsigned char *)&mTimer) == 0) {
+    if (DecIfAbove0_Byte(&mTimer) == 0) {
         ChooseNextState();
     }
     mdCcAc_c.Clear();

@@ -445,7 +445,7 @@ void daFPkn_c::StateSpit()
         mAnmModel.SetAnim((BCA_File *)(((SharedFilePtr *)data_ov084_02130e1c)->filePtr), 0, 0x1000,
                           0);
     } else {
-        if ((u16)mStateTimer < 0x3a) {
+        if (mStateTimer < 0x3a) {
             targetAngle = mAngleY;
             player = ClosestPlayer();
             if (player != 0)
@@ -566,7 +566,7 @@ void daFPkn_c::StateWait()
         if (leader == 0)
             return;
     }
-    if ((u16)mStateTimer <= 0x64)
+    if (mStateTimer <= 0x64)
         return;
     if (dist <= 0x64000)
         return;
@@ -692,7 +692,7 @@ int daFPkn_c::Behavior()
     }
     /* mStateTimer is s16; the ROM counts it unsigned, and `(u16)mStateTimer + 1` DIFFs. */
     {
-        unsigned short *timer = (unsigned short *)&mStateTimer;
+        unsigned short *timer = &mStateTimer;
         *timer = *timer + 1;
         if (prevState != mState)
             *timer = 0;

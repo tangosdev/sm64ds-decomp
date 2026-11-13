@@ -8,7 +8,7 @@ Fix12i Vec2_Len(const Vector2 *v) {
     const Fix12i *xy = (const Fix12i *)v;
     long long sq = (long long)xy[0] * xy[0];
     sq += (long long)xy[1] * xy[1];
-    return cstd::sqrt((u64)sq);
+    return cstd::sqrt(sq);
 }
 
 /* Zero 2D origin. Retail __sinit_020750ec stores both words and registers

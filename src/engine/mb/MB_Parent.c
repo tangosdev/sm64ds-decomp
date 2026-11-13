@@ -96,7 +96,7 @@ void MB_CommSetParentStateCallback(MBCommPStateCallback callback) {
     enabled = OS_DisableInterrupts();
     pPwork->parent_callback = callback;
 
-    (void)OS_RestoreInterrupts(enabled);
+    OS_RestoreInterrupts(enabled);
 }
 
 int MB_CommGetParentState(u16 child_aid) {
@@ -112,11 +112,11 @@ const MBUserInfo *MB_CommGetChildUser(u16 child_aid) {
 
     if (pPwork && IsChildAidValid(child_aid)) {
         MI_CpuCopy8(&pPwork->childUser[child_aid - 1], &pPwork->childUserBuf, sizeof(MBUserInfo));
-        (void)OS_RestoreInterrupts(enabled);
+        OS_RestoreInterrupts(enabled);
         return &pPwork->childUserBuf;
     }
 
-    (void)OS_RestoreInterrupts(enabled);
+    OS_RestoreInterrupts(enabled);
     return NULL;
 }
 
@@ -163,19 +163,19 @@ BOOL MB_CommResponseRequest(u16 child_aid, MBCommResponseRequestType ack) {
         req = MB_COMM_USER_REQ_BOOT;
         break;
     default:
-        (void)OS_RestoreInterrupts(enabled);
+        OS_RestoreInterrupts(enabled);
         return FALSE;
     }
 
     if (pPwork && IsChildAidValid(child_aid)) {
         if (pPwork->p_comm_state[child_aid - 1] == state) {
             pPwork->req2child[child_aid - 1] = req;
-            (void)OS_RestoreInterrupts(enabled);
+            OS_RestoreInterrupts(enabled);
             return TRUE;
         }
     }
 
-    (void)OS_RestoreInterrupts(enabled);
+    OS_RestoreInterrupts(enabled);
     return FALSE;
 }
 
@@ -189,7 +189,7 @@ static void MBi_CommChangeParentState(u16 child, int state, void *arg) {
 
 static void MBi_CommChangeParentStateCallbackOnly(u16 child, int state, void *arg) {
     if (pPwork->parent_callback) {
-        (*pPwork->parent_callback)(child, (u32)state, arg);
+        (*pPwork->parent_callback)(child, state, arg);
     }
 }
 
@@ -202,7 +202,7 @@ void MBi_CommParentCallback(u16 type, void *arg) {
         MBi_CommChangeParentState(0, MB_COMM_PSTATE_END, NULL);
         break;
     case MB_CALLBACK_CHILD_CONNECTED: {
-        WmStartParentCallback *sparg = (WmStartParentCallback *)arg;
+        WmStartParentCallback *sparg = arg;
 
         if (sparg->aid == 0)
             break;
@@ -214,7 +214,7 @@ void MBi_CommParentCallback(u16 type, void *arg) {
         MBi_CommChangeParentState(sparg->aid, MB_COMM_PSTATE_CONNECTED, arg);
     } break;
     case MB_CALLBACK_CHILD_DISCONNECTED: {
-        WmStartParentCallback *sparg = (WmStartParentCallback *)arg;
+        WmStartParentCallback *sparg = arg;
 
         if (sparg->aid == 0)
             break;
@@ -234,7 +234,7 @@ void MBi_CommParentCallback(u16 type, void *arg) {
         pPwork->req_data_buf.data_bmp[sparg->aid - 1] = 0;
 
         if (pPwork->fileid_of_child[sparg->aid - 1] != -1) {
-            u8 fileID = (u8)pPwork->fileid_of_child[sparg->aid - 1];
+            u8 fileID = pPwork->fileid_of_child[sparg->aid - 1];
             u16 child = sparg->aid;
 
             pPwork->fileinfo[fileID].gameinfo_child_bmp &= ~(MB_GAMEINFO_CHILD_FLAG(child));
@@ -259,7 +259,7 @@ void MBi_CommParentCallback(u16 type, void *arg) {
         MBi_CommParentRecvData(arg);
         break;
     case MB_CALLBACK_MP_SEND_ENABLE:
-        (void)MBi_CommParentSendData();
+        MBi_CommParentSendData();
         break;
     case MB_CALLBACK_BEACON_SENT: {
         u8 i;
@@ -309,7 +309,7 @@ void MBi_CommParentCallback(u16 type, void *arg) {
         }
     } break;
     case MB_CALLBACK_ERROR: {
-        WMCallback *pWmcb = (WMCallback *)arg;
+        WMCallback *pWmcb = arg;
         switch (pWmcb->apiid) {
         case WM_APIID_INITIALIZE:
         case WM_APIID_SET_LIFETIME:
@@ -404,7 +404,7 @@ static void MBi_CommParentRecvDataPerChild(void *arg, u16 child) {
                 if (0 == (pPwork->child_entry_bmp & (0x0001 << (child)))) {
                     pPwork->child_num++;
                     pPwork->child_entry_bmp |= (0x0001 << (child));
-                    pPwork->fileid_of_child[child - 1] = (s8)fileid;
+                    pPwork->fileid_of_child[child - 1] = fileid;
 
                     pPwork->fileinfo[fileid].gameinfo_child_bmp |= MB_GAMEINFO_CHILD_FLAG(child);
                     pPwork->fileinfo[fileid].gameinfo_changed_bmp |= MB_GAMEINFO_CHILD_FLAG(child);
@@ -425,7 +425,7 @@ static void MBi_CommParentRecvDataPerChild(void *arg, u16 child) {
             MBi_CommChangeParentState(child, MB_COMM_PSTATE_WAIT_TO_SEND, NULL);
         } else if (state == MB_COMM_PSTATE_WAIT_TO_SEND) {
             if (pPwork->req2child[child - 1] == MB_COMM_USER_REQ_SEND_START) {
-                u8 fid = (u8)pPwork->fileid_of_child[child - 1];
+                u8 fid = pPwork->fileid_of_child[child - 1];
                 pPwork->fileinfo[fid].pollbmp |= (0x0001 << (child));
                 pPwork->fileinfo[fid].currentb = 0;
                 pPwork->req2child[child - 1] = MB_COMM_USER_REQ_NONE;
@@ -435,7 +435,7 @@ static void MBi_CommParentRecvDataPerChild(void *arg, u16 child) {
         break;
     case MB_COMM_TYPE_CHILD_CONTINUE:
         if (state == MB_COMM_PSTATE_SEND_PROCEED) {
-            u8 fileid = (u8)pPwork->fileid_of_child[child - 1];
+            u8 fileid = pPwork->fileid_of_child[child - 1];
 
             if (fileid == (u8)-1)
                 break;
@@ -446,7 +446,7 @@ static void MBi_CommParentRecvDataPerChild(void *arg, u16 child) {
         break;
     case MB_COMM_TYPE_CHILD_STOPREQ:
         if (state == MB_COMM_PSTATE_SEND_PROCEED) {
-            u8 fileid = (u8)pPwork->fileid_of_child[child - 1];
+            u8 fileid = pPwork->fileid_of_child[child - 1];
 
             if (fileid == (u8)-1)
                 break;
@@ -475,7 +475,7 @@ static void MBi_CommParentRecvDataPerChild(void *arg, u16 child) {
 /* An MP receive: clear each registered file's requested block, then pass
  * every child's nonempty packet on. */
 static void MBi_CommParentRecvData(void *arg) {
-    WMMpRecvHeader *mpHeader = (WMMpRecvHeader *)arg;
+    WMMpRecvHeader *mpHeader = arg;
     u16 i;
     WMMpRecvData *datap;
 
@@ -485,7 +485,7 @@ static void MBi_CommParentRecvData(void *arg) {
     }
 
     for (i = 1; i <= WM_NUM_MAX_CHILD; ++i) {
-        datap = WM_ReadMPData(mpHeader, (u16)i);
+        datap = WM_ReadMPData(mpHeader, i);
 
         if (datap != NULL) {
             if (datap->length == 0xffff) {
@@ -501,7 +501,7 @@ static int MBi_CommParentSendMsg(u8 type, u16 pollbmp) {
 
     hd.type = type;
 
-    (void)MBi_MakeParentSendBuffer(&hd, (u8 *)pPwork->common.sendbuf);
+    MBi_MakeParentSendBuffer(&hd, (u8 *)pPwork->common.sendbuf);
     return MBi_BlockHeaderEnd(MB_COMM_PARENT_HEADER_SIZE, pollbmp, pPwork->common.sendbuf);
 }
 
@@ -533,13 +533,13 @@ static int MBi_CommParentSendDLFileInfo(void) {
         }
     }
 
-    fid = (u8)data_0209a078;
+    fid = data_0209a078;
 
     for (i = 0; i < MB_MAX_FILE; i++) {
-        fid = (u8)((fid + 1) % MB_MAX_FILE);
+        fid = ((fid + 1) % MB_MAX_FILE);
 
         if (pPwork->fileinfo[fid].active && file_req_num[fid] > 0) {
-            send_candidate_fid = (s8)fid;
+            send_candidate_fid = fid;
             break;
         }
     }
@@ -581,7 +581,7 @@ static int MBi_CommParentSendBlock(void) {
         return MB_SENDFUNC_STATE_ERR;
 
     for (i = 0; i < MB_MAX_FILE; i++) {
-        pPwork->cur_fileid = (u8)((pPwork->cur_fileid + 1) % MB_MAX_FILE);
+        pPwork->cur_fileid = ((pPwork->cur_fileid + 1) % MB_MAX_FILE);
         if (pPwork->fileinfo[pPwork->cur_fileid].active &&
             pPwork->fileinfo[pPwork->cur_fileid].pollbmp) {
             break;
@@ -609,7 +609,7 @@ static int MBi_CommParentSendBlock(void) {
     databuf = MBi_MakeParentSendBuffer(&hd, (u8 *)pPwork->common.sendbuf);
     MI_CpuCopy8((void *)bi.offset, databuf, bi.size);
 
-    return MBi_BlockHeaderEnd((int)(bi.size + MB_COMM_PARENT_HEADER_SIZE),
+    return MBi_BlockHeaderEnd((bi.size + MB_COMM_PARENT_HEADER_SIZE),
                               pPwork->fileinfo[pPwork->cur_fileid].pollbmp, pPwork->common.sendbuf);
 }
 

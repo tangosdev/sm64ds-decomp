@@ -258,7 +258,7 @@ int daPropeller_Heyho_c::Behavior()
     }
 
     if (mCurrentState != &data_ov070_021235cc) {
-        DecIfAbove0_Short((unsigned short *)&mStateTimer);
+        DecIfAbove0_Short(&mStateTimer);
     }
     DecIfAbove0_Short(&mCooldown);
 
@@ -427,7 +427,7 @@ int func_ov070_0211fd98(daPropeller_Heyho_c *c)
 
     if (Vec3_Dist(&c->mPos, &c->mHomePos) > kWanderTurnBackDist || c->mWithMeshClsn.IsOnWall()) {
         c->mTargetAngY = Vec3_HorzAngle(&c->mPos, &c->mHomePos);
-        if ((u16)c->mStateTimer < 0x14)
+        if (c->mStateTimer < 0x14)
             c->mStateTimer = 0x14;
     }
     ApproachAngle(&c->mPrevAngleY, c->mTargetAngY, 0xa, 0x200, 0x100);
@@ -447,7 +447,7 @@ int func_ov070_0211fd98(daPropeller_Heyho_c *c)
     ApproachLinear(c->mVertSpeed, out[1], 0x800);
     ApproachLinear(c->mSpeedZ, out[2], 0x1000);
 
-    if ((u16)c->mStateTimer == 0) {
+    if (c->mStateTimer == 0) {
         FlyGuy_ChangeState(c, &data_ov070_0212359c);
         return 1;
     }
@@ -456,7 +456,8 @@ int func_ov070_0211fd98(daPropeller_Heyho_c *c)
     if (Vec3_Dist(&c->mPos, &c->mHomePos) < kHomeLeashDist) {
         p = c->ClosestNonVanishPlayer();
         if (p) {
-            int *pos = (int *)&p->mPosX; /* int view is load-bearing: plain p->mPosX reads change this function's size */
+            int *pos =
+                &p->mPosX; /* int view is load-bearing: plain p->mPosX reads change this function's size */
             t.x = pos[0];
             t.y = pos[1];
             t.z = pos[2];
@@ -528,10 +529,12 @@ int func_ov070_0211fae4(daPropeller_Heyho_c *c)
     vin.z = 0;
 
     {
-    int *q = (int *)&player->mPosX; /* int view is load-bearing: plain player->mPosX reads change this function's size */
-    vb.x = q[0];
-    vb.y = q[1];
-    vb.z = q[2];
+        int *q =
+            &player
+                 ->mPosX; /* int view is load-bearing: plain player->mPosX reads change this function's size */
+        vb.x = q[0];
+        vb.y = q[1];
+        vb.z = q[2];
     }
     vb.y += kAimAbovePlayer;
     vc.x = vb.x;
@@ -659,7 +662,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
         }
     }
 
-    if ((u16)mStateTimer == 0 || mWithMeshClsn.IsOnWall()) {
+    if (mStateTimer == 0 || mWithMeshClsn.IsOnWall()) {
         if (gCurrentSublevel != kLevel0x16) {
             mHomePosX = mPosX;
             mHomePosY = mPosY;
@@ -724,7 +727,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
     if (mPosY <= tmp.y + 0x5000 ||
         mPosY <= player->mPosY + 0x5000 ||
         Vec3_Dist(&mPos, &mHomePos) > kHomeLeashDist) {
-        DecIfAbove0_Short((u16*)&mStateTimer);
+        DecIfAbove0_Short(&mStateTimer);
         v.z = 0x9000;
     }
 
@@ -782,7 +785,7 @@ struct BCA_File;
 int func_ov070_0211f5f0(daPropeller_Heyho_c *c) {
     unsigned int flags = 0;
     BCA_File *file = (BCA_File *)data_ov070_02123500.filePtr;
-    c->mAnmModel.SetAnim((BCA_File *)file, 0x40000000, 0x1000, flags);
+    c->mAnmModel.SetAnim(file, 0x40000000, 0x1000, flags);
     return 1;
 }
 
@@ -889,7 +892,7 @@ int func_ov070_0211f368(daPropeller_Heyho_c *c) {
     }
     ApproachAngle(&c->mAngleX, -0x4000, 0xa, 0x200, 0x100);
     ApproachLinear(c->mAngleX, -0x4000, 0x200);
-    if ((u16)c->mStateTimer == 0)
+    if (c->mStateTimer == 0)
         func_ov070_0211f0a4(c);
     return 1;
 }
@@ -1011,7 +1014,7 @@ int func_ov070_0211f0a4(daPropeller_Heyho_c *c) {
     pos.x = c->mPosX;
     pos.y = c->mPosY;
     pos.z = c->mPosZ;
-    unsigned int coins = (unsigned char)c->mExtraCoinCount + 1;
+    unsigned int coins = c->mExtraCoinCount + 1;
     c->SpawnCoins(pos, coins, 0xa000, 0);
     c->KillAndTrackInDeathTable();
 }

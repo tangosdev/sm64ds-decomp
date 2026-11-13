@@ -1216,7 +1216,7 @@ void dScMgSnowball_c::BuildCourse() {
             if (mTileMap[col][propRow] == 1) {
                 roll = MgRandom(16);
                 if (roll < 4) {
-                    mTileMap[col][propRow] = (u16)(roll + 0x1d);
+                    mTileMap[col][propRow] = (roll + 0x1d);
                 } else if (roll == 4) {
                     if (slot < 0x80) {
                         mArray2[slot].x = (col * 16 + 8) << 12;
@@ -1604,8 +1604,7 @@ s32 dScMgSnowball_c::Behavior() {
             q = v * 0x2710 / mBallSize;
             mRollAngle += (u16)q;
             m = cstd::atan2(mVelX, mVelY);
-            ApproachLinear(mHeadingAngle, (short)m,
-                           (short)(Vec2_Len((const Vector2 *)&mVelX) / 16));
+            ApproachLinear(mHeadingAngle, m, (Vec2_Len((const Vector2 *)&mVelX) / 16));
         }
 
         if (mAllWater == 1 || mTimeLeft <= 0) {
@@ -2190,7 +2189,7 @@ void dScMgSnowball_c::Bit_InitAll() {
 
     for (j = 0; j < 0x32; j++) {
         mBits[j].x = MgRandom(32) << 15;
-        r = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
+        r = RandomIntInternal(&data_0209d4b8.value);
         q = (((r >> 16) & 0x7fff) * 0x18) >> 15;
         mBits[j].y = mScrollY - 0x8000 + (q << 15);
         mBits[j].active = 1;
@@ -2198,7 +2197,7 @@ void dScMgSnowball_c::Bit_InitAll() {
         mBits[j].kind = 0;
         mBits[j].driftState = 0;
         mBits[j].spriteA = MgRandom(5);
-        r = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
+        r = RandomIntInternal(&data_0209d4b8.value);
         v = mBits[j].spriteA + ((((r >> 16) & 0x7fff) * 4) >> 15) + 1;
         v = v & 0xff;
         if (v >= 5)

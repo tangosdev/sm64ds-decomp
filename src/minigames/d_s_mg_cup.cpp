@@ -171,8 +171,8 @@ void func_0203d738(void);
    compiler destroys as a member. The tracker and the base chain are the
    inlined dScMgSingle3DBase_c destructor. */
 dScMgCup_c::~dScMgCup_c() {
-    __cxa_vec_cleanup(mCup, 3, 8, (dtor_t)(void *)NullDestructor_0203d47c);
-    __cxa_vec_cleanup(mFx, 0x20, 0x18, (dtor_t)(void *)CupFx_ElemDtor);
+    __cxa_vec_cleanup(mCup, 3, 8, (dtor_t)NullDestructor_0203d47c);
+    __cxa_vec_cleanup(mFx, 0x20, 0x18, (dtor_t)CupFx_ElemDtor);
 }
 
 void CupFx_ElemDtor(void) {}
@@ -863,13 +863,12 @@ s32 dScMgCup_c::InitResources() {
 
     gSubScreenLayers |= 4;
 
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP_NCG_BIN,
-                         (void *)((char *)G2S_GetBG2CharPtr() + 0x4000));
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP_NCG_BIN, (char *)G2S_GetBG2CharPtr() + 0x4000);
     file = LoadFile(ASSET_D_2D_MG_BG_CUP_NCL_BIN);
     GXS_LoadBGPltt(file, 0x60, 0x1a0);
     Deallocate(file);
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP2_2_NSC_BIN, (void *)G2S_GetBG0ScrPtr());
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP2_1_NSC_BIN, (void *)G2S_GetBG2ScrPtr());
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP2_2_NSC_BIN, G2S_GetBG0ScrPtr());
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP2_1_NSC_BIN, G2S_GetBG2ScrPtr());
     LoadCompressedFileAt(ASSET_D_2D_MG_CUP_NCG_BIN, G2S_GetOBJCharPtr());
     file = LoadFile(ASSET_D_2D_MG_CUP_NCL_BIN);
     GXS_LoadOBJPltt(file, 0, 0xa0);
@@ -903,9 +902,8 @@ s32 dScMgCup_c::InitResources() {
    constructors, mParticle and mModel are the compiler's, then the two
    arrays of element records. */
 inline dScMgCup_c::dScMgCup_c() {
-    __cxa_vec_ctor(mFx, 0x20, 0x18, (ctor_t)(void *)Cup_Nothing, (dtor_t)(void *)CupFx_ElemDtor);
-    __cxa_vec_ctor(mCup, 3, 8, (ctor_t)(void *)func_0203d738,
-                   (dtor_t)(void *)NullDestructor_0203d47c);
+    __cxa_vec_ctor(mFx, 0x20, 0x18, (ctor_t)Cup_Nothing, (dtor_t)CupFx_ElemDtor);
+    __cxa_vec_ctor(mCup, 3, 8, (ctor_t)func_0203d738, (dtor_t)NullDestructor_0203d47c);
 }
 
 void *dScMgCup_c_classInit() {

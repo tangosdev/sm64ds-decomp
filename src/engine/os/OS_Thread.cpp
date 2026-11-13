@@ -147,9 +147,9 @@ void OS_InitThread(void) {
     if ((s32)SDK_SYS_STACKSIZE == 0) {
         stackLo = 0x23c0020 - (s32)SDK_SYS_STACKSIZE;
     } else {
-        stackLo = (u32)HW_DTCM_SVC_STACK_END - (s32)SDK_IRQ_STACKSIZE - (s32)SDK_SYS_STACKSIZE;
+        stackLo = HW_DTCM_SVC_STACK_END - (s32)SDK_IRQ_STACKSIZE - (s32)SDK_SYS_STACKSIZE;
     }
-    stackHi = (u32)HW_DTCM_SVC_STACK_END - (s32)SDK_IRQ_STACKSIZE;
+    stackHi = HW_DTCM_SVC_STACK_END - (s32)SDK_IRQ_STACKSIZE;
 
     OSi_LauncherThread.stackBottom = stackHi;
     OSi_LauncherThread.stackTop = stackLo;

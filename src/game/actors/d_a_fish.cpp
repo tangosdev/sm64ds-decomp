@@ -306,8 +306,7 @@ void daFish_c::StateIdle() {
         s16 ang = Vec3_HorzAngle(&this->mPos, &p->mPos);
         if (ApproachLinear(this->mPrevAngleY, ang, 0x400) != 0) {
             if (this->mModelIndex == 0) {
-                this->mAnmModel.SetAnim((BCA_File *)(LoadedBCA(&data_ov100_021489cc)), 0, 0x1000,
-                                        0);
+                this->mAnmModel.SetAnim((LoadedBCA(&data_ov100_021489cc)), 0, 0x1000, 0);
             }
         }
         Vec3_Sub(&d, &this->mPos, &p->mPos);
@@ -315,13 +314,11 @@ void daFish_c::StateIdle() {
             return;
         this->mStateTimer = -1;
         this->mState = 4;
-        this->mAnmModel.SetAnim((BCA_File *)(LoadedBCA(data_ov100_021473b0[this->mModelIndex])), 0,
-                                0x1000, 0);
+        this->mAnmModel.SetAnim((LoadedBCA(data_ov100_021473b0[this->mModelIndex])), 0, 0x1000, 0);
     } else {
         this->mStateTimer = -1;
         this->mState = 4;
-        this->mAnmModel.SetAnim((BCA_File *)(LoadedBCA(data_ov100_021473b0[this->mModelIndex])), 0,
-                                0x1000, 0);
+        this->mAnmModel.SetAnim((LoadedBCA(data_ov100_021473b0[this->mModelIndex])), 0, 0x1000, 0);
     }
 }
 
@@ -383,7 +380,7 @@ void daFish_c::StateTurnAbout() {
         (((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x1fff) + 0x2000;
     this->mAnmModel.speed = 0x1000;
     this->mWanderTimer =
-        (unsigned char)((((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x7f) + 0x3c);
+        ((((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x7f) + 0x3c);
     this->mState = 5;
 }
 
@@ -398,7 +395,7 @@ void daFish_c::InitFromSpawner(u32 spawnerID) {
     this->mTerminalVelocity = -0x1e000;
     unsigned int r = RandomIntInternal(&data_0209e650.value);
     int fc = this->mAnmModel.GetFrameCount();
-    this->mAnmModel.currFrame = (unsigned short)(r % (unsigned)fc) << 12;
+    this->mAnmModel.currFrame = (unsigned short)(r % fc) << 12;
     this->mIsSpawner = 0;
     this->mSpawnerID = spawnerID;
     if (this->mVariant != 0) {
@@ -415,8 +412,7 @@ void daFish_c::InitFromSpawner(u32 spawnerID) {
         this->mHorzSpeed =
             (((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x1fff) + 0x2000;
         this->mWanderTimer =
-            (unsigned char)((((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x7f) +
-                            0x3c);
+            ((((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x7f) + 0x3c);
         this->mState = 5;
     } else {
         this->mState = 3;

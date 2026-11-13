@@ -39,8 +39,8 @@ void MIi_DmaSetParams_wait(u32 channel, u32 src, u32 dst, u32 cnt) {
     reg->dst = dst;
     reg->cnt = cnt;
 
-    (void)REG_DMA_BASE[0];
-    (void)REG_DMA_BASE[0];
+    REG_DMA_BASE[0];
+    REG_DMA_BASE[0];
 
     OS_RestoreInterrupts(savedState);
 }

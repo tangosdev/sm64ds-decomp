@@ -27,11 +27,11 @@ int func_02018b64(FSOverlayInfo *p_ovi) {
     }
 
     FS_ClearOverlayImage(p_ovi);
-    (void)myFS_ReadFile(p_file, FS_GetOverlayAddress(p_ovi), (int)FS_GetLength(p_file));
-    (void)_Z27_ISDbgLib_RegistOverlayInfo11OVERLAYPROCjjj(
+    myFS_ReadFile(p_file, FS_GetOverlayAddress(p_ovi), FS_GetLength(p_file));
+    _Z27_ISDbgLib_RegistOverlayInfo11OVERLAYPROCjjj(
         (p_ovi->target == MI_PROCESSOR_ARM9) ? OVERLAYPROC_ARM9 : OVERLAYPROC_ARM7,
         (u32)FS_GetOverlayAddress(p_ovi), FS_GetFileImageTop(p_file),
         FS_GetOverlayImageSize(p_ovi));
-    (void)FS_CloseFile(p_file);
+    FS_CloseFile(p_file);
     return 1;
 }

@@ -78,9 +78,9 @@ void dFdBrightness_c::AdvanceFade()
    `extra` is not read. Callers still pass it (always 0). */
 int dFdBrightness_c::SetBackwardTime(u32 frames, u32 extra) {
     if (frames == 0) {
-        speed = -(Fix12i)0x1000;
+        speed = -0x1000;
     } else {
-        speed = FX_Div(-(Fix12i)0x1000, (Fix12i)(frames << 12));
+        speed = FX_Div(-0x1000, (frames << 12));
     }
     return IsAtStart();
 }
@@ -88,9 +88,9 @@ int dFdBrightness_c::SetBackwardTime(u32 frames, u32 extra) {
 /* Fade in over `frames` frames: speed = 1.0 / frames. 0 means "instant". */
 int dFdBrightness_c::SetForwardTime(u32 frames, u32 extra) {
     if (frames == 0) {
-        speed = (Fix12i)0x1000;
+        speed = 0x1000;
     } else {
-        speed = FX_Div(0x1000, (Fix12i)(frames << 12));
+        speed = FX_Div(0x1000, (frames << 12));
     }
     return IsAtEnd();
 }

@@ -229,7 +229,7 @@ void daSnowman_c::RotateTowardPlayer(int idx) {
         lim = -0x2000;
         this->mInitAngleY -= 0x100;
         if (this->mInitAngleY < lim) {
-            this->mInitAngleY = (s16)lim;
+            this->mInitAngleY = lim;
             this->mTimer++;
             if (this->mTimer > 0x28) {
                 this->mStep = this->mAngleY - ang;
@@ -264,7 +264,7 @@ void daSnowman_c::CheckAttacks() {
     if (flags & 0x2000) {
         this->mDeathState = 2;
         func_ov002_020aea30(this, found, 0);
-        this->mPrevAngleY = (u16)(this->HorzAngleToCPlayer() + 0x8000);
+        this->mPrevAngleY = (this->HorzAngleToCPlayer() + 0x8000);
         hit = 1;
     }
     if (flags & 0x40000) {
@@ -277,12 +277,12 @@ void daSnowman_c::CheckAttacks() {
         if (found->mIsMetal == 1) {
             this->mDeathState = 2;
             func_ov002_020aea30(this, found, 0);
-            this->mPrevAngleY = (u16)(this->HorzAngleToCPlayer() + 0x8000);
+            this->mPrevAngleY = (this->HorzAngleToCPlayer() + 0x8000);
             hit = 1;
         }
         if (flags & 0x10) {
             Vector3_16 vv;
-            vv.x = (s16)-0x1200;
+            vv.x = -0x1200;
             vv.y = 0;
             vv.z = 0;
             KillByInvincibleChar(vv, *(daPly_c *)found, 0);
@@ -293,7 +293,7 @@ void daSnowman_c::CheckAttacks() {
             this->mDeathState = 2;
             func_ov002_020aea30(this, found, 0);
             this->mDeathSound = 2;
-            this->mPrevAngleY = (u16)(this->HorzAngleToCPlayer() + 0x8000);
+            this->mPrevAngleY = (this->HorzAngleToCPlayer() + 0x8000);
             hit = 1;
         }
         if (hit == 0) {
@@ -506,8 +506,8 @@ int daSnowman_c::StateThrowSnowballExecute() {
                     v[0].z = v[1].z - this->mHandPos.z;
                     angle = cstd::atan2(v[0].x, v[0].z);
                     Matrix4x3_FromRotationY(&data_020a0e68, angle);
-                    Matrix4x3_ApplyInPlaceToRotationX(
-                        &data_020a0e68, (short)(-cstd::atan2(v[0].y, Vec3_HorzLen(&v[0]))));
+                    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68,
+                                                      (-cstd::atan2(v[0].y, Vec3_HorzLen(&v[0]))));
                     MTX_MultVec43(&in, &data_020a0e68, &out);
                 }
                 out.y += 0x14000;

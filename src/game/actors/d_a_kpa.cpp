@@ -462,7 +462,7 @@ int daKpa_c::InitResources()
 
     this->mState = BOWSER_STATE_IDLE;
     this->mVariantID = (char)(this->param1 & 3);
-    this->mChooseJumpOnly = (char)(((unsigned int)this->param1 >> 2) & 1);
+    this->mChooseJumpOnly = (char)((this->param1 >> 2) & 1);
     this->mTimer = 0;
     this->mStep = 0;
     this->mDropsShadow = 1;
@@ -614,7 +614,7 @@ int daKpa_c::CleanupResources()
     for (i = 0; i < 6; i++)
         data_ov060_0211927c[i]->Release();
     ((SharedFilePtr *)(&data_ov060_0211b208))->Release();
-    ((SharedFilePtr *)(&data_ov089_02132c50))->Release();
+    data_ov089_02132c50.Release();
     func_02011cfc();
     return 1;
 }
@@ -696,7 +696,7 @@ void daKpaTail_c::func_ov060_02115c1c(){
         this->mState = BOWSER_TAIL_FREE;
     }
 
-    cond = (int)((this->mFlags & BOWSER_TAIL_RELEASED) != 0);
+    cond = ((this->mFlags & BOWSER_TAIL_RELEASED) != 0);
     if (cond != 0) {
         this->mState = BOWSER_TAIL_COOLDOWN;
         this->mHeldPlayer = 0;
@@ -708,7 +708,7 @@ void daKpaTail_c::func_ov060_02115c1c(){
     held = this->mHeldPlayer;
     if (held == 0) goto tail;
 
-    cond = (int)(held->mHeldObj != 0);
+    cond = (held->mHeldObj != 0);
     if (cond == 0) goto do_drop;
 
     if (held->mAngleYSpeed != 0)
@@ -975,7 +975,7 @@ void daKpa_c::RunIntroTalk() {
                 sz = FX_CosIdx(ang >> 4);
                 pos[1] = y2;
                 pos[2] = sz * scale + z;
-                msg = (s16) msgs[this->mVariantID];
+                msg = msgs[this->mVariantID];
                 if (this->mTargetPlayer->ShowMessage(
                         *this, msg, reinterpret_cast<const Vector3 *>(pos), zero, zero) == 0) {
                     return;
@@ -1979,7 +1979,7 @@ void daKpa_c::SetGoalInvisible() {
         zero.x = 0;
         zero.y = 0;
         zero.z = 0;
-        a = (int)(unsigned short)Vec3_HorzAngle(&zero, &mPos) >> 4;
+        a = (unsigned short)Vec3_HorzAngle(&zero, &mPos) >> 4;
         this->mPosX = (short)FX_SinIdx(a) * (short)0xed8;
         this->mPosZ = (short)FX_CosIdx(a) * (short)0xed8;
     }
@@ -2236,7 +2236,7 @@ int daKpa_c::DeadTwirlUp() {
     Vector3 pos = mPos;
     pos.y += 0x32000;
 
-    mParticleHandle = (int)Particle::System::New(mParticleHandle, 0x99, pos.x, pos.y, pos.z, 0, 0);
+    mParticleHandle = Particle::System::New(mParticleHandle, 0x99, pos.x, pos.y, pos.z, 0, 0);
 
     if (this->mScaleX < 0xccc) {
         this->mSpinSpeed += 0x80;
@@ -2401,7 +2401,7 @@ int daKpa_c::DeadFinalStageEnding() {
             pos = mPos;
             pos.y += 0x32000;
             mParticleHandle =
-                (int)Particle::System::New(mParticleHandle, 0x99, pos.x, pos.y, pos.z, 0, 0);
+                Particle::System::New(mParticleHandle, 0x99, pos.x, pos.y, pos.z, 0, 0);
         } else {
             DeadHide();
             ret = 1;

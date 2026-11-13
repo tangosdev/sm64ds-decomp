@@ -157,7 +157,7 @@ void daObjRotateUpdownLift_c::func_ov091_02130fac()
     mPosX = mBasePosX;
     mPosY = mBasePosY;
     mPosZ = mBasePosZ;
-    mWaypointIndex = (u8)(param1 & 0xf);
+    mWaypointIndex = (param1 & 0xf);
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     MTX_MultVec43((Vector3 *)&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68,
                   (Vector3 *)&tmp[0]);
@@ -383,7 +383,7 @@ int daObjRotateUpdownLift_c::Behavior()
     span = VEC_Mag(&edge);
     dist = VEC_Mag(&remain);
     along = FX_Div(span - dist, span);
-    mAngleX = (s16)(mPitchBase + (s16)FX_MUL(mPitchStep, along));
+    mAngleX = (mPitchBase + (s16)FX_MUL(mPitchStep, along));
 
     if (dist == 0 || dist <= stepLen) {
         Vec3_Add(&snapped, (const Vector3 *)&mBasePosX, &cur);
@@ -397,7 +397,7 @@ int daObjRotateUpdownLift_c::Behavior()
             s16 *pitch = &mPitchBase;
             s16 *stepAt = (s16 *)((char *)this + 0x300);
             arrived = 1;
-            *pitch = (s16)(*pitch + *(s16 *)((char *)stepAt + 0xa4));
+            *pitch = (*pitch + *(s16 *)((char *)stepAt + 0xa4));
         }
     } else {
         Vec3_MulScalar(&stepVec, &remain, FX_Div(stepLen, dist));
@@ -406,10 +406,10 @@ int daObjRotateUpdownLift_c::Behavior()
 
     if (arrived != 0) {
         u8 *waypoint = &mWaypointIndex;
-        *waypoint = (u8)(*waypoint + 1);
-        if ((u32)mWaypointIndex >= 0xa)
+        *waypoint = (*waypoint + 1);
+        if (mWaypointIndex >= 0xa)
             mWaypointIndex = 0;
-        if ((u32)mWaypointIndex > 3 && (u32)mWaypointIndex < 8)
+        if (mWaypointIndex > 3 && mWaypointIndex < 8)
             mPitchStep = 0x2000;
         else
             mPitchStep = 0;
@@ -467,7 +467,7 @@ int daObjRotateUpdownLift_c::InitResources()
             mVariant = 1;
     }
 
-    mWaypointIndex = (u8)(param1 & 0xf);
+    mWaypointIndex = (param1 & 0xf);
 
     if (mWaypointIndex == 2) {
         Vec3_Add(&spawnAt, (const Vector3 *)&mBasePosX,

@@ -97,7 +97,7 @@ int dScStarSel_c::GetCharacterSlot(unsigned int chr) {
         int slot = 0;
         int other;
         for (other = 0; other < 3; other++) {
-            if (SaveData::IsCharacterUnlocked((unsigned int)other) != 0) {
+            if (SaveData::IsCharacterUnlocked(other) != 0) {
                 if ((unsigned int)other == chr) {
                     return slot;
                 }
@@ -120,7 +120,7 @@ int dScStarSel_c::GetCursorCharacter() {
         int slot = 0;
         int chr = 0;
         for (; chr < 3; chr++) {
-            if (SaveData::IsCharacterUnlocked((unsigned int)chr) != 0) {
+            if (SaveData::IsCharacterUnlocked(chr) != 0) {
                 if (slot == mCharCursor) {
                     return chr;
                 }
@@ -268,7 +268,7 @@ void dScStarSel_c::UpdateCharacterSelect() {
             (((unsigned char)((((u8(*)[4])gTouchY)[idx][0] - mFaceY) + 0x28)) < 0x50)) {
             mCursorTarget = 2;
             mPickedChar = 3;
-            mPickPressTimer = (unsigned char)(data_0208ee44 * 6);
+            mPickPressTimer = (data_0208ee44 * 6);
             mAnimMode = 1;
             mExitDelay = 0x10;
             func_02012790(data_0209caa0.file.mCharacter + 0x3c);
@@ -288,11 +288,11 @@ void dScStarSel_c::UpdateCharacterSelect() {
                     if (((unsigned short)((((u8(*)[4])gTouchHeld)[ri][3] - mCharY[i]) + 0x18)) <
                         0x2b) {
                         mCursorTarget = 1;
-                        mCharCursor = (unsigned char)GetCharacterSlot(i);
-                        data_02092128[0] = (unsigned char)i;
-                        data_02092114 = (unsigned char)i;
-                        mPickedChar = (unsigned char)i;
-                        mPickPressTimer = (unsigned char)(data_0208ee44 * 3);
+                        mCharCursor = GetCharacterSlot(i);
+                        data_02092128[0] = i;
+                        data_02092114 = i;
+                        mPickedChar = i;
+                        mPickPressTimer = (data_0208ee44 * 3);
                         mAnimMode = 2;
                         mExitDelay = 0x10;
                         func_02012790(data_0209caa0.file.mCharacter + 0x3c);
@@ -402,7 +402,7 @@ s32 dScStarSel_c::Render() {
         for (i = 1; i <= mPlateCount; i++) {
             Matrix4x3_FromTranslation(&data_020a0e68, x, 0x28000, 0);
             if (i - 1 == mSelectedPlate) {
-                Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, (s16)(data_020a0db0 * 0x300));
+                Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, (data_020a0db0 * 0x300));
                 Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, 0x1400, 0x1400, 0x1400);
             }
             idx = (IsStarCollectedInLevel(gNextSublevel, i) == 0) ? 1 : 0;
@@ -1061,14 +1061,14 @@ s32 dScStarSel_c::InitResources() {
         break;
     }
 
-    level = (u8)SublevelToLevel(gNextSublevel);
+    level = SublevelToLevel(gNextSublevel);
     if ((u32)level <= 0xE) {
         collected = 0;
         anyMissing = 0;
         plate = 0;
         totalStars = CountStarsCollectedInLevelToDisplay(level);
         if (IsStarCollected(level, 0) != 0) {
-            totalStars = (u32)(u8)(totalStars - 1);
+            totalStars = (u8)(totalStars - 1);
         }
         mSelectedPlate = 0xFF;
         mPlateMask = 0;
@@ -1113,7 +1113,7 @@ s32 dScStarSel_c::InitResources() {
     }
 
     if (SublevelToLevel(gNextSublevel) <= 0x14) {
-        Message::DisplayCourseNameForStarSelect((u32)(s16)SublevelToLevel(gNextSublevel));
+        Message::DisplayCourseNameForStarSelect((s16)SublevelToLevel(gNextSublevel));
         if (SublevelToLevel(gNextSublevel) <= 0xE) {
             Message::DisplayStarNameForStarSelect(mSelectedPlate);
         }
@@ -1156,9 +1156,9 @@ s32 dScStarSel_c::InitResources() {
                         mCharY[nextChr] = charY;
                         mCharSprite[nextChr] = charSprite;
                         placed += 1;
-                        charX = (u8)(charX + sStarSelectCharXStep[stepIdx]);
-                        charY = (u8)(charY + *yStep);
-                        charSprite = (u8)(charSprite + 1);
+                        charX = (charX + sStarSelectCharXStep[stepIdx]);
+                        charY = (charY + *yStep);
+                        charSprite = (charSprite + 1);
                         yStep += 1;
                         stepIdx += 1;
                     }

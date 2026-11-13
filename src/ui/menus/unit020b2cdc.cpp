@@ -154,7 +154,7 @@ void Cursor_SetSpriteMode(Ov007Sprite *sprite, int idx) {
     if (idx == 1)
         sprite->depth = -0x10c0;
     else
-        sprite->depth = (int)0xffffef38;
+        sprite->depth = 0xffffef38;
     func_ov007_020c43bc(sprite, WORK->cameras[1]);
 }
 
@@ -658,7 +658,7 @@ void func_ov007_020b30b0(void) {
     sprite->texColor0 = 1;
     sprite->drawFlags |= 4;
     sprite->shadowAlphaDrop = 0x14;
-    sprite->depth = (int)0xffffef01;
+    sprite->depth = 0xffffef01;
 }
 
 /* Frees the cursor's state machine, its sprite and the cursor. */

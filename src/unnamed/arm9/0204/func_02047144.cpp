@@ -14,7 +14,7 @@ int func_02047144(const BMD_File *tbl, const char *name) {
         BMD_Palette *entries = tbl->palettes;
         do {
             if (strcmp(entries[i].name, name) == 0)
-                return (int)i;
+                return i;
             i++;
         } while (i < tbl->numPalettes);
     }

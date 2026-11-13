@@ -60,7 +60,7 @@ s32 daChScene_c::InitResources() {
             return 0;
     }
 
-    if ((unsigned char)((unsigned int)param1 >> 24) == 0x12) {
+    if ((unsigned char)(param1 >> 24) == 0x12) {
         if (IsStarCollectedInLevel(0x12, 1) != 0) {
             mPosX += 0x802000;
         }
@@ -74,7 +74,7 @@ s32 daChScene_c::InitResources() {
         mScaleY = 0x3e80000;
     } else {
         mScaleX = (unsigned int)(((param1 & 0xf) + 1) * 0x64000) >> 1;
-        mScaleY = ((((unsigned int)param1 >> 4) & 0xf) + 1) * 0x64000;
+        mScaleY = (((param1 >> 4) & 0xf) + 1) * 0x64000;
     }
 
     if (mAngleX == 0) {
@@ -159,7 +159,7 @@ s32 daChScene_c::Behavior() {
                                             func_02012790(0x19);
                                         }
                                     } else {
-                                        int t = (signed char)(int)(((unsigned int)param1 >> 0x18));
+                                        int t = (signed char)(int)((param1 >> 0x18));
                                         if (t == 0x1b || t == 0x12) {
                                             LoadDestinationLevel();
                                             dScene_c::SetAndStopColorFader();

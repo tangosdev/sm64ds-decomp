@@ -3,7 +3,7 @@ extern void _Z13func_02011d5ci(int mode);
 
 void SetSoundMode(int mode)
 {
-    data_0209d4b4 = (unsigned char)mode;
+    data_0209d4b4 = mode;
     switch (mode) {
     case 0:
         _Z13func_02011d5ci(1);

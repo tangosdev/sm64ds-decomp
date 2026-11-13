@@ -83,7 +83,7 @@ void func_0201a054(void) {
     ClearSaveBlock();
     func_0201a4e4();
     OS_EnableIrqMask(OS_IE_V_BLANK);
-    (void)OS_EnableIrq();
+    OS_EnableIrq();
     OS_EnableInterrupts();
     GX_VBlankIntr(1);
     func_0203bbc0();

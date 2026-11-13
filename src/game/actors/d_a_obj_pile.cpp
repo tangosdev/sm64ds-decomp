@@ -183,7 +183,7 @@ s32 daObjPile_c::Behavior() {
             /* Farther than 400 units away. */
             mAngleDelta = 0;
         } else {
-            s16 diff = (s16)(angle - mPrevAngle);
+            s16 diff = (angle - mPrevAngle);
             int val = mAngleDelta;
             int *p;
             /* A single-frame angle change of more than 100 against the running
@@ -209,7 +209,7 @@ s32 daObjPile_c::Behavior() {
         }
         mPrevAngle = angle;
     }
-    DecIfAbove0_Byte((unsigned char *)&mAttackCooldown);
+    DecIfAbove0_Byte(&mAttackCooldown);
     IsClsnInRangeOnScreen(0, 0);
     return 1;
 }

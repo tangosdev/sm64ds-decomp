@@ -260,7 +260,7 @@ int daLinelift2_c::StepAlongPath() {
                 result = -1;
             }
         }
-        mPathPtr.GetNode(*(Vector3 *)&mTargetPosX, (unsigned int)mNodeIndex);
+        mPathPtr.GetNode(*(Vector3 *)&mTargetPosX, mNodeIndex);
         {
             Vector3 target, base;
             target.x = mTargetPosX;

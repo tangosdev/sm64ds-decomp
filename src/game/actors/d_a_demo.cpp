@@ -763,8 +763,7 @@ void StaffRoll::func_ov002_020f2a88(int i) {
 }
 
 void StaffRoll::func_ov002_020f2aec(int idx) {
-    char *c = (char *)this;
-    StaffRoll *s = (StaffRoll *)c;
+    StaffRoll *s = this;
 
     if (s->credit[idx].timer == 0) {
         gSubScreenLayers |= 1;
@@ -788,8 +787,7 @@ void StaffRoll::func_ov002_020f2aec(int idx) {
 }
 
 void StaffRoll::func_ov002_020f2bf4(int idx) {
-    char *c = (char *)this;
-    StaffRoll *s = (StaffRoll *)c;
+    StaffRoll *s = this;
 
     s->credit[idx].timer++;
     s->credit[idx].blendTimer++;
@@ -1187,8 +1185,7 @@ void func_ov002_020f39ec(char *self, int idx) {
 }
 
 void StaffRoll::func_ov002_020f3ae8(int idx) {
-    char *base = (char *)this;
-    StaffRoll::Star *arr = (StaffRoll::Star *)base;
+    StaffRoll::Star *arr = this->stars;
     int a;
     int b;
     a = FX_SinCosTable_[((arr[idx].heading >> 4) * 2) + 1];
@@ -1706,7 +1703,7 @@ void StaffRoll::func_ov002_020f4a2c(int i) {
         {
             int raw = cstd::atan2(dy, dx);
             ang = this->stars[i].heading;
-            target = (unsigned short)raw;
+            target = raw;
         }
         if (target > ang) {
             unsigned short nv;
@@ -1905,7 +1902,7 @@ void StaffRoll::func_ov002_020f5010(int i) {
         {
             int raw = cstd::atan2(dy, dx);
             ang = this->stars[i].heading;
-            target = (unsigned short)raw;
+            target = raw;
         }
         if (target > ang) {
             unsigned short nv;
@@ -2058,8 +2055,7 @@ void StaffRoll::func_ov002_020f562c(int idx) {
 }
 
 void StaffRoll::func_ov002_020f5678(int i) {
-    char *base = (char *)this;
-    StaffRoll::Star *e = (StaffRoll::Star *)base + i;
+    StaffRoll::Star *e = this->stars + i;
     e->kiraDefParam = 0xccc;
     e->kiraSysParam = 0x155;
 }
@@ -2615,7 +2611,7 @@ void daDemo_c::anmModel_c::func_ov002_020f6514(void *tbl, unsigned char arg)
         dExtAnmTexPat_c *ts = mTexSeq;
         s8 idx;
         if (ts == 0) return;
-        idx = (s8)e[1];
+        idx = e[1];
         if (idx < 0) return;
         ts->SetFile(*(BTP_File *)mTexSeqFiles[idx]->filePtr, v, 0x1000, 0);
     }
@@ -3089,9 +3085,9 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
     Vec3_LslInPlace(&this->mPosX, 3);
     if (ApproachLinear(this->mMagnitude, a, b) != 0 && a == 0 && b != 0)
         func_0201ef38();
-    *(char *)(&this->mOpacity) = *(int *)(&this->mMagnitude) >> 12;
+    *(char *)(&this->mOpacity) = *(&this->mMagnitude) >> 12;
     {
-        unsigned char r = *(unsigned char *)(&this->mOpacity);
+        unsigned char r = *(&this->mOpacity);
         if (r != 0 || a != 0) {
             t = (r * 0xa00) >> 12;
             if (t > 0x10) t = 0x10;
@@ -3183,7 +3179,7 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
             {
                 short ang = ((dActor_c *)gPlayers[idx])->mAngleY;
 
-                Vec3_RotateYAndTranslate(&this->mPosX, (int *)&cam->pos, (short)(ang + 0x8000), v);
+                Vec3_RotateYAndTranslate(&this->mPosX, (int *)&cam->pos, (ang + 0x8000), v);
             }
         }
 
@@ -3334,7 +3330,7 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
     this->mOpacity = 0x1f;
     cam = (dCamera_c *)gCamera;
 
-    VEC_Add((Vector3 *)&v0, &cam->pos, (Vector3 *)&v0);
+    VEC_Add(&v0, &cam->pos, &v0);
     dist = Vec3_Dist(&v0, &cam->pos);
 
     {

@@ -62,7 +62,7 @@ s32 daObjKinokoTag_c::InitResources() {
 
 s32 daObjKinokoTag_c::Behavior() {
     dActor_c *other;
-    s32 isKinokoTag = (s32)(actorID == 0x140);
+    s32 isKinokoTag = (actorID == 0x140);
     if (isKinokoTag) {
         if (!mSearchedForPile) {
             other = FindWithActorID(0x1b, 0);
@@ -90,7 +90,7 @@ s32 daObjKinokoTag_c::Behavior() {
             MarkForDestruction();
     }
 
-    isKinokoTag = (s32)(actorID == 0x140);
+    isKinokoTag = (actorID == 0x140);
     if (isKinokoTag) {
         if (mHasLinkedPile == 1) {
             if (mLinkedPileGone)

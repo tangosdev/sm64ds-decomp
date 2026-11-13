@@ -128,7 +128,7 @@ int daObjC1Hikari_c::Behavior() {
         if (mCylinder.hitFlags & 0x8000000) {
             dActor_c *o = dActor_c::FindWithID(mCylinder.otherOwner);
             if (o) {
-                int b = (int)(o->actorID == 0xbf);
+                int b = (o->actorID == 0xbf);
                 if (b) {
                     Vector3 *op = &o->mPos;
                     hv = *op;

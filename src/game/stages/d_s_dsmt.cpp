@@ -108,7 +108,7 @@ void DSMT_MenuFree(void *ptr) {
 }
 
 void DSMT_MenuMaxAllocSize(void) {
-    (void)((Heap *)data_020a0ea0)->MaxAllocationUnitSize();
+    ((Heap *)data_020a0ea0)->MaxAllocationUnitSize();
 }
 
 /* File-op veneers: `#pragma long_calls` emits the pooled absolute tail call. */
@@ -326,7 +326,7 @@ void DSMT_UpdateBootArgs(u32 saveSlot) {
     highestUnlockedPlusOne = 3;
     character = 2;
     do {
-        if (SaveData::IsCharacterUnlocked((u32)character))
+        if (SaveData::IsCharacterUnlocked(character))
             break;
         highestUnlockedPlusOne--;
         character--;
@@ -336,7 +336,7 @@ void DSMT_UpdateBootArgs(u32 saveSlot) {
         sBootArgs.firstStar[saveSlot][course] = IsStarCollected(course, 0) != 0;
         sBootArgs.otherStars[saveSlot][course] =
             CountStarsCollectedInLevelToDisplay(course) - sBootArgs.firstStar[saveSlot][course];
-        sBootArgs.coinRecords[saveSlot][course] = SaveData::GetCoinRecord((u32)course);
+        sBootArgs.coinRecords[saveSlot][course] = SaveData::GetCoinRecord(course);
     }
 
     data_0209b3d8[saveSlot] = CountStarsCollectedInLevelToDisplay(0x1d);
@@ -348,7 +348,7 @@ int DSMT_SetPendingMusic(int musicId, unsigned int delayFrames) {
         return 0;
     }
     data_ov007_02103260 = musicId;
-    data_ov007_02104c28 = (unsigned short)delayFrames;
+    data_ov007_02104c28 = delayFrames;
     Sound::StopLoadedMusic_Layer1(delayFrames);
     return 1;
 }

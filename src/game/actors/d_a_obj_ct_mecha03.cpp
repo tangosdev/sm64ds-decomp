@@ -126,7 +126,7 @@ int daObjCtMecha03_c::Behavior() {
                     short spd = mSwingAccel;
                     short pos = mSwingDir;
                     short accel = *accelP;
-                    *accelP = (short)(spd * pos + accel);
+                    *accelP = (spd * pos + accel);
                 }
             }
             if (data_0209f2c0 == 2 && mSwingSpeed == 0) {

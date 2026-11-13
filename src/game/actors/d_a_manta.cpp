@@ -357,7 +357,7 @@ int daManta_c::InitResources() {
         }
     }
 
-    ChangeState((MantaState *)&data_ov090_0213454c);
+    ChangeState(&data_ov090_0213454c);
     return 1;
 }
 

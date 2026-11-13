@@ -28,12 +28,12 @@ WMErrCode WM_SetIndCallback(WMCallbackFunc callback) {
 
     result = WMi_CheckInitialized();
     if (result != WM_ERRCODE_SUCCESS) {
-        (void)OS_RestoreInterrupts(e);
+        OS_RestoreInterrupts(e);
         return result;
     }
 
     WM_GetSystemWork()->indCallback = callback;
-    (void)OS_RestoreInterrupts(e);
+    OS_RestoreInterrupts(e);
 
     return WM_ERRCODE_SUCCESS;
 }
@@ -47,7 +47,7 @@ WMErrCode WM_SetPortCallback(u16 port, WMCallbackFunc callback, void *arg) {
 
     result = WMi_CheckInitialized();
     if (result != WM_ERRCODE_SUCCESS) {
-        (void)OS_RestoreInterrupts(e);
+        OS_RestoreInterrupts(e);
         return result;
     }
 
@@ -58,7 +58,7 @@ WMErrCode WM_SetPortCallback(u16 port, WMCallbackFunc callback, void *arg) {
         p->portCallbackArgument[port] = arg;
     }
 
-    (void)OS_RestoreInterrupts(e);
+    OS_RestoreInterrupts(e);
 
     return WM_ERRCODE_SUCCESS;
 }

@@ -1569,7 +1569,7 @@ s32 dScMgCurling_c::InitResources() {
         G2S_SetBG2Priority(2);
         G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x4000,
                               GX_BG_CHARBASE_0x14000);
-        DecompressLZ16(b, (void *)G2S_GetBG2CharPtr());
+        DecompressLZ16(b, G2S_GetBG2CharPtr());
 
         f = LoadFile(ASSET_D_2D_MG_BG_CURLING2_NCL_BIN);
         GXS_LoadBGPltt(f, 0x60, 0x1a0);

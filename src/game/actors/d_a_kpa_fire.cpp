@@ -169,7 +169,7 @@ int daKpaFire_c::InitResources()
     else
         this->mDropsShadow = 1;
     this->mLanded = 0;
-    this->mSubVariant = ((unsigned int)this->param1 >> 4) & 3;
+    this->mSubVariant = (this->param1 >> 4) & 3;
     /* flags bit 0 set = this cylinder is disabled (dCc_c::flags). */
     if (this->mVariant == VARIANT_MOUTH)
         this->mdCcAc_c.flags |= 1;

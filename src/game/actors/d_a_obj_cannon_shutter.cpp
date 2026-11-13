@@ -179,7 +179,7 @@ int daObjCannonShutter_c::Behavior() {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 int daObjCannonShutter_c::Render() {
-    if (gCurrentSublevel == 6 && gCurrentStarId == 1 && (int)(param1 & 0xff) == 1)
+    if (gCurrentSublevel == 6 && gCurrentStarId == 1 && (param1 & 0xff) == 1)
         return 1;
     if (mCannonOpen != 0)
         return 1;

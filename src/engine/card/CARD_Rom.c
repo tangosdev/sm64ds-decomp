@@ -49,8 +49,8 @@
 /* the last DMA channel, as nitro/mi/dma.h names it in the SDK */
 #define MI_DMA_MAX_NUM 3
 
-#define CARD_ALIGN_HI_BIT(n) (((u32)(n)) & ~(CARD_ROM_PAGE_SIZE - 1))
-#define CARD_ALIGN_LO_BIT(n) (((u32)(n)) & (CARD_ROM_PAGE_SIZE - 1))
+#define CARD_ALIGN_HI_BIT(n) (((n)) & ~(CARD_ROM_PAGE_SIZE - 1))
+#define CARD_ALIGN_LO_BIT(n) (((n)) & (CARD_ROM_PAGE_SIZE - 1))
 
 /* The ITCM's start address, relocated: the ROM points it at 0x01ff8000,
  * where the symbol table names the first function autoloaded there. */
@@ -71,13 +71,12 @@ static inline int CARDi_IsInTcm(u32 buf, u32 len) {
  * header, with the command bits replaced. */
 static inline u32 CARDi_GetRomFlag(u32 flag) {
     const u32 rom_ctrl = *(vu32 *)(HW_ROM_HEADER_BUF + 0x60);
-    return (u32)((rom_ctrl & ~CARD_COMMAND_MASK) | flag | CARD_READ_MODE | CARD_START |
-                 CARD_RESET_HI);
+    return ((rom_ctrl & ~CARD_COMMAND_MASK) | flag | CARD_READ_MODE | CARD_START | CARD_RESET_HI);
 }
 
 static inline int CARDi_OnReadPageDirect(CARDRomStat *arg) {
     CARDiCommon *p = &cardi_common;
-    (void)arg;
+    arg;
 
     p->src += CARD_ROM_PAGE_SIZE;
     p->dst += CARD_ROM_PAGE_SIZE;
@@ -126,7 +125,7 @@ static void CARDi_ReadEnd(void) {
     if ((p->flag & CARD_STAT_RECV) != 0) {
         _Z21OS_WakeupThreadDirectP8OSThread(&p->thread);
     }
-    (void)OS_RestoreInterrupts(bak_psr);
+    OS_RestoreInterrupts(bak_psr);
     if (func) {
         (*func)(arg);
     }
@@ -139,20 +138,20 @@ static void CARDi_SetRomOp(u32 cmd1, u32 cmd2) {
 
     *(vu8 *)REG_CARD_MASTER_CNT = CARDMST_SEL_ROM | CARDMST_ENABLE | CARDMST_IF_ENABLE;
     {
-        vu8 *const p_cmd = (vu8 *)REG_CARD_CMD;
-        p_cmd[0] = (u8)(cmd1 >> (8 * 3));
-        p_cmd[1] = (u8)(cmd1 >> (8 * 2));
-        p_cmd[2] = (u8)(cmd1 >> (8 * 1));
-        p_cmd[3] = (u8)(cmd1 >> (8 * 0));
-        p_cmd[4] = (u8)(cmd2 >> (8 * 3));
-        p_cmd[5] = (u8)(cmd2 >> (8 * 2));
-        p_cmd[6] = (u8)(cmd2 >> (8 * 1));
-        p_cmd[7] = (u8)(cmd2 >> (8 * 0));
+        vu8 *const p_cmd = REG_CARD_CMD;
+        p_cmd[0] = (cmd1 >> (8 * 3));
+        p_cmd[1] = (cmd1 >> (8 * 2));
+        p_cmd[2] = (cmd1 >> (8 * 1));
+        p_cmd[3] = (cmd1 >> (8 * 0));
+        p_cmd[4] = (cmd2 >> (8 * 3));
+        p_cmd[5] = (cmd2 >> (8 * 2));
+        p_cmd[6] = (cmd2 >> (8 * 1));
+        p_cmd[7] = (cmd2 >> (8 * 0));
     }
 }
 
 static inline void CARDi_SetRomOpReadPage1(u32 src) {
-    CARDi_SetRomOp((u32)(MROMOP_G_READ_PAGE | (src >> 8)), (u32)(src << 24));
+    CARDi_SetRomOp((MROMOP_G_READ_PAGE | (src >> 8)), (src << 24));
 }
 
 /* One DMA channel's registers at 0x040000b0 + n * 12: source, destination,
@@ -185,8 +184,8 @@ static void CARDi_OnReadCard(void) {
 
     if (!CARDi_OnReadPageDirect(p)) {
         _Z10MI_StopDmaj(cardi_common.dma);
-        (void)_Z17OS_DisableIrqMaskj(OS_IE_CARD_DATA);
-        (void)_Z22OS_ResetRequestIrqMaskj(OS_IE_CARD_DATA);
+        _Z17OS_DisableIrqMaskj(OS_IE_CARD_DATA);
+        _Z22OS_ResetRequestIrqMaskj(OS_IE_CARD_DATA);
         CARDi_ReadEnd();
     } else {
         CARDi_SetCardDma();
@@ -222,11 +221,11 @@ int CARDi_TryReadCardDma(CARDRomStat *p) {
         OSIntrMode bak_psr = OS_DisableInterrupts();
         DC_FlushRange((void *)c->dst, c->len);
         IC_InvalidateRange((void *)c->dst, c->len);
-        (void)_Z17OS_SetIrqFunctionjPFvvE(OS_IE_CARD_DATA, CARDi_OnReadCard);
-        (void)_Z22OS_ResetRequestIrqMaskj(OS_IE_CARD_DATA);
-        (void)_Z16OS_EnableIrqMaskj(OS_IE_CARD_DATA);
+        _Z17OS_SetIrqFunctionjPFvvE(OS_IE_CARD_DATA, CARDi_OnReadCard);
+        _Z22OS_ResetRequestIrqMaskj(OS_IE_CARD_DATA);
+        _Z16OS_EnableIrqMaskj(OS_IE_CARD_DATA);
         DC_WaitWriteBufferEmpty();
-        (void)OS_RestoreInterrupts(bak_psr);
+        OS_RestoreInterrupts(bak_psr);
         CARDi_SetCardDma();
     }
     return is_async;
@@ -276,7 +275,7 @@ void CARDi_ReadCard(CARDRomStat *p) {
 // @symbol CARDi_ReadRomSyncCore
 static void CARDi_ReadRomSyncCore(CARDiCommon *c) {
     CARDRomStat *const p = &rom_stat;
-    (void)c;
+    c;
 
     if (CARDi_ReadFromCache(p)) {
         (*p->read_func)(p);
@@ -295,13 +294,13 @@ void CARDi_ReadRom(u32 dma, const void *src, void *dst, u32 len, MIDmaCallback c
         while ((c->flag & CARD_STAT_BUSY) != 0)
             _Z14OS_SleepThreadPt(&c->busy_q);
         c->flag |= CARD_STAT_BUSY;
-        (void)OS_RestoreInterrupts(bak_psr);
+        OS_RestoreInterrupts(bak_psr);
     }
 
     c->dma = dma;
     c->src = (u32)src;
     c->dst = (u32)dst;
-    c->len = (u32)len;
+    c->len = len;
     c->callback = callback;
     c->callback_arg = arg;
 
@@ -331,7 +330,7 @@ void CARD_Init(void) {
     if (!p->flag) {
         p->flag = CARD_STAT_INIT;
         p->src = p->dst = p->len = 0;
-        p->dma = (u32)~0;
+        p->dma = ~0;
         p->callback = 0;
         p->callback_arg = 0;
 

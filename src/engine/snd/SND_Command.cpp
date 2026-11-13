@@ -289,7 +289,7 @@ s32 SND_CountWaitingCommand(void) {
 
 void PxiFifoCallback(PXIFifoTag tag, u32 data, BOOL err) {
     OSIntrMode saved = OS_DisableInterrupts();
-    SNDi_CallAlarmHandler((s32)data);
+    SNDi_CallAlarmHandler(data);
     OS_RestoreInterrupts(saved);
 }
 

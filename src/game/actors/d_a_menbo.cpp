@@ -340,7 +340,7 @@ int daMenbo_c::func_ov090_02131584()
 {
     unsigned int v;
     mHorzSpeed = 0;
-    v = ((unsigned int)static_cast<dExtFrameCtrl_c &>(mAnmModel).currFrame << 4) >> 0x10;
+    v = ((unsigned int)mAnmModel.currFrame << 4) >> 0x10;
     if (v >= 0x3b)
         mAnimLoops += 1;
     if (mAnimLoops > 2 || func_ov090_021314a0(this) == 1)
@@ -380,8 +380,7 @@ int daMenbo_c::func_ov090_02131648()
     rnd = (u32)RandomIntInternal(&data_0209e650.value) >> 8;
     dist = Vec3_Dist(&self->mPos, (Vector3 *)&self->mAnchorPosX);
 
-    if (((((u32) static_cast<dExtFrameCtrl_c &>(self->mAnmModel).currFrame) << 4) >> 0x10 & 0xf) ==
-        0) {
+    if (((((u32)self->mAnmModel.currFrame) << 4) >> 0x10 & 0xf) == 0) {
         func_02012694(0xfc, &self->mCamSpacePos);
     }
 
@@ -490,8 +489,7 @@ int daMenbo_c::func_ov090_02131648()
         }
     }
 
-    if (((u32)(((u32) static_cast<dExtFrameCtrl_c &>(self->mAnmModel).currFrame) << 4) >> 0x10) >=
-        0x10) {
+    if (((u32)(((u32)self->mAnmModel.currFrame) << 4) >> 0x10) >= 0x10) {
         p390 = &self->mAnimLoops;
         *p390 = *p390 + 1;
     }
@@ -547,10 +545,10 @@ int daMenbo_c::func_ov090_02131b94()
     short *s;
     r = (unsigned)RandomIntInternal(&data_0209e650.value);
     s = (short *)&mTargetAngleY;
-    *s = (short)(*s + ((int)(((r >> 8) & 3) << 0x1e) >> 16));
+    *s = (*s + ((int)(((r >> 8) & 3) << 0x1e) >> 16));
     r = (unsigned)RandomIntInternal(&data_0209e650.value);
     s = (short *)&mTargetAngleY;
-    *s = (short)(*s + ((int)(((r >> 8) & 7) << 0x1d) >> 16));
+    *s = (*s + ((int)(((r >> 8) & 7) << 0x1d) >> 16));
     r = (unsigned)RandomIntInternal(&data_0209e650.value);
     mStateTimer = (short)(((r >> 8) & 0x1f) + 0x96);
     mAnimSpeed = 0x1000;
@@ -563,10 +561,10 @@ int daMenbo_c::func_ov090_02131b94()
  * enough, go back to water rest. Off the water, drop the anchor and idle. */
 int daMenbo_c::func_ov090_02131c48()
 {
-    if ((((unsigned)static_cast<dExtFrameCtrl_c &>(mAnmModel).currFrame) << 4) >> 16 >= 4)
+    if ((((unsigned)mAnmModel.currFrame) << 4) >> 16 >= 4)
         mHorzSpeed = 0x19000;
 
-    if ((((unsigned)static_cast<dExtFrameCtrl_c &>(mAnmModel).currFrame) << 4) >> 16 == 4)
+    if ((((unsigned)mAnmModel.currFrame) << 4) >> 16 == 4)
         func_02012694(0xfd, &mCamSpacePos);
 
     if (mTurnTimer == 0 && mWithMeshClsn.IsOnWall() &&
@@ -579,7 +577,7 @@ int daMenbo_c::func_ov090_02131c48()
     if (mTurnTimer != 0) {
         ApproachAngle(&mPrevAngleY, mTargetAngleY, 1, 0x1000, 0x1000);
     } else {
-        if (static_cast<dExtFrameCtrl_c &>(mAnmModel).Finished()) {
+        if (mAnmModel.Finished()) {
             s32 *q = &mAnimLoops;
             *q = *q + 1;
             if (mAnimLoops > 0x14)
@@ -728,7 +726,7 @@ int daMenbo_c::Behavior()
 
     UpdatePos(&mdCcAcPos_c);
     func_ov090_02131378();
-    DecIfAbove0_Short((u16 *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     DecIfAbove0_Short(&mTurnTimer);
     DecIfAbove0_Short(&mSpeedHoldTimer);
     DecIfAbove0_Short(&mWanderTimer);
@@ -751,8 +749,8 @@ int daMenbo_c::Behavior()
             (this->*n[1])();
     }
     mAngleY = mPrevAngleY;
-    static_cast<dExtFrameCtrl_c &>(mAnmModel).speed = mAnimSpeed;
-    static_cast<dExtFrameCtrl_c &>(mAnmModel).Advance();
+    mAnmModel.speed = mAnimSpeed;
+    mAnmModel.Advance();
     func_ov090_02131e50();
     func_ov090_021310b4();
     mdCcAcPos_c.Clear();
@@ -864,7 +862,7 @@ s32 daMenbo_c::OnAimedAtWithEgg()
 }
 
 void daMenbo_c::OnTurnIntoEgg(daPly_c &player) {
-    GivePlayerCoins(player, (unsigned char)(mExtraCoinCount + 1), 0);
+    GivePlayerCoins(player, (mExtraCoinCount + 1), 0);
     KillAndTrackInDeathTable();
 }
 

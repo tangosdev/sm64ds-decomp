@@ -202,28 +202,28 @@ void daChair_c::State1() {
     target = dActor_c::FindWithID(mTargetID);
     if (target != 0) {
         /* The three words are loaded before either Vec3 call. */
-        av = (int *)&target->mPosX;
+        av = &target->mPosX;
         targetPos[0] = *av;
         targetPos[1] = av[1];
         targetPos[2] = av[2];
         if (Vec3_Dist(&mPos, (const Vector3 *)targetPos) >= 0xfa000)
             return;
-        delta = (short)(Vec3_HorzAngle(&mPos, (const Vector3 *)targetPos) - mAngleY + 0x2000);
+        delta = (Vec3_HorzAngle(&mPos, (const Vector3 *)targetPos) - mAngleY + 0x2000);
         if (delta & 0x4000) {
             mTrackedAngle = &mAngleZ;
             if (delta > 0)
                 mTargetAngle = 0x4000;
             else
-                mTargetAngle = (short)-0x4000;
+                mTargetAngle = -0x4000;
         } else {
             mTrackedAngle = &mAngleX;
             if (delta < 0)
                 mTargetAngle = 0x5800;
             else
-                mTargetAngle = (short)-0x4000;
+                mTargetAngle = -0x4000;
         }
         if (mTargetAngle < 0)
-            mStateValue0 = (short)0xfa24;
+            mStateValue0 = 0xfa24;
         else
             mStateValue0 = 0x5dc;
         mState = 3;
@@ -250,7 +250,7 @@ void daChair_c::State1() {
         }
         mPosX -= wobble << 12;
         mPosZ -= wobble << 12;
-        mAngleZ = (short)(wobble * 0x32);
+        mAngleZ = (wobble * 0x32);
         mAngleX = mAngleZ;
     } else {
         mAngleZ = 0;
@@ -337,7 +337,7 @@ void daChair_c::State2() {
         if (actor == 0)
             return;
         /* Direct comparison drops the ROM's store-then-load. */
-        isPlayer = (int)(actor->actorID == kPlayerActorId);
+        isPlayer = (actor->actorID == kPlayerActorId);
         if (isPlayer == 0)
             return;
         isPlayer = ((daPly_c *)actor)->mIsVanish;
@@ -365,7 +365,7 @@ void daChair_c::State3() {
     angle = AngleDiff(*mTrackedAngle, 0);
     ip = mTrackedAngle;
     sample = FX_SinIdx((u16)*ip >> 4);
-    wrapped = (s16)angle;
+    wrapped = angle;
     offset = (s16)sample * (s16)0x50;
     if (ip != &mAngleX) {
         mClsnOffset.x = -offset;
@@ -377,7 +377,7 @@ void daChair_c::State3() {
         mClsnOffset.z = offset;
     }
     if (wrapped >= 0x4000) {
-        s16 past = (s16)(wrapped - 0x4000);
+        s16 past = (wrapped - 0x4000);
         s16 tip = FX_SinIdx((u16)past >> 4);
         mPosY = (s16)tip * (s16)0x28 + (mHomePos.y + 0x28000);
     } else {

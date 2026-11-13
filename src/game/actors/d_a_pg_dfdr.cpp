@@ -137,7 +137,7 @@ s32 daPgDfdr_c::InitResources() {
                              *(BTP_File *)data_ov027_02113c94.filePtr);
     mTextureSequence.SetFile(*(BTP_File *)data_ov027_02113c94.filePtr, 0, 0x1000, 0);
 
-    mAngleY = (short)0xdd30;
+    mAngleY = 0xdd30;
     mPrevAngleY = mAngleY;
     mPosX = 0x6c4000;
     mPosY = 0xcb2000;

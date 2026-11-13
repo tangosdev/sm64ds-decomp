@@ -134,7 +134,7 @@ int daPukupuku_c::Behavior() {
         return 1;
     }
 
-    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     UpdatePos(&mdCcAcPos_c);
     {
         PukuMainView *q = (PukuMainView *)mState;
@@ -210,7 +210,7 @@ int daPukupuku_c::StateSwim() {
         mTargetAngleY = Vec3_HorzAngle(&mPos, &mHomePos);
     }
     ApproachAngle(&mPrevAngleY, mTargetAngleY, 1, 0x100, 0x200);
-    if ((unsigned short)mStateTimer == 0)
+    if (mStateTimer == 0)
         SetState((PukuStatePMF *)&data_ov090_02134584);
     return 1;
 }
@@ -225,7 +225,7 @@ int daPukupuku_c::InitStatePause() {
 
 /* Pause main: swim again when the timer runs out. */
 int daPukupuku_c::StatePause() {
-    if ((unsigned short)mStateTimer == 0) {
+    if (mStateTimer == 0) {
         SetState((PukuStatePMF *)&data_ov090_02134594);
     }
     return 1;
@@ -245,7 +245,7 @@ void daPukupuku_c::CheckPlayerHit() {
             return;
         {
             daPly_c *a = (daPly_c *)dActor_c::FindWithID(id);
-            int b = (int)(a->actorID == 0xbf);
+            int b = (a->actorID == 0xbf);
             if (b == 0)
                 return;
             if (a->mIsVanish != 0)

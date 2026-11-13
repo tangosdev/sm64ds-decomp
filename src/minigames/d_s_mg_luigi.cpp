@@ -1700,7 +1700,7 @@ s32 dScMgLuigi_c::InitResources() {
                          GX_BG_CHARBASE_0x10000);
 
     fileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NCG_BIN);
-    DecompressLZ16(fileData, (void *)((char *)G2_GetBG2CharPtr() + 0x4000));
+    DecompressLZ16(fileData, ((char *)G2_GetBG2CharPtr() + 0x4000));
     Deallocate(fileData);
 
     fileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NCL_BIN);

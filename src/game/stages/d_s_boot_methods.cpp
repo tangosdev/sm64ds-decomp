@@ -131,10 +131,10 @@ s32 dScBoot_c::InitResources() {
                           GX_BG_CHARBASE_0x10000);
     SetSubBg2Offset(0, 0);
 
-    DecompressLZ16(&data_020918c4, (void *)G2S_GetBG2CharPtr());
+    DecompressLZ16(&data_020918c4, G2S_GetBG2CharPtr());
     GXS_LoadBGPltt(&data_020914e0, 0, 2);
     GXS_LoadBGPltt(&data_020914e0, 0x1c0, 0x40);
-    DecompressLZ16(&data_02091570, (void *)G2S_GetBG2ScrPtr());
+    DecompressLZ16(&data_02091570, G2S_GetBG2ScrPtr());
 
     gMainScreenLayers = DISPLAY_LAYER_BG0;
     gSubScreenLayers = 4;
@@ -216,12 +216,12 @@ s32 dScBoot_c::Behavior() {
                     } else {
                         langFileID = 0xa00d;
                     }
-                    LoadCompressedFileAt(langFileID, (void *)G2S_GetBG1CharPtr());
+                    LoadCompressedFileAt(langFileID, G2S_GetBG1CharPtr());
                     palette = LoadFile(0x9807);
                     GXS_LoadBGPltt(palette, 0, 0x1c0);
                     Deallocate(palette);
                     LoadCompressedFileAt(ASSET_D_2D_FRAMEWORK_INITIALIZE_NSC_BIN,
-                                         (void *)G2S_GetBG1ScrPtr());
+                                         G2S_GetBG1ScrPtr());
                     LoadCompressedFileAt(0x9803, (char *)G2S_GetBG1ScrPtr() + 0x800);
                     func_0201cd08(0x29a);
                     mSelectedButton = 1;

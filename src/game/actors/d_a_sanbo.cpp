@@ -291,7 +291,7 @@ int daSanbo_c::UpdateStackedBody() {
         next = mNextSegment;
         mAngleY = next->mAngleY;
         next = mNextSegment;
-        s16 segAng = (s16)(next->mSegAngY + 0x13000);
+        s16 segAng = (next->mSegAngY + 0x13000);
         mSegAngY = segAng;
         ang = (u16)mSegAngY;
         sine = FX_SinIdx(ang >> 4);
@@ -337,7 +337,7 @@ int daSanbo_c::UpdateLeader() {
     mScaleX = copied;
     mScaleY = copied;
     mScaleZ = copied;
-    mSegAngY = (s16)(mSegAngY + 0x500);
+    mSegAngY = (mSegAngY + 0x500);
     mOffsetX = 0;
     mOffsetY = 0;
     mOffsetZ = 0;
@@ -461,7 +461,7 @@ int daSanbo_c::UpdateStackedOnGrowingBody() {
         next = mNextSegment;
         mAngleY = next->mAngleY;
         next = mNextSegment;
-        s16 segAng = (s16)(next->mSegAngY + 0x13000);
+        s16 segAng = (next->mSegAngY + 0x13000);
         mSegAngY = segAng;
         ang = (u16)mSegAngY;
         sine = FX_SinIdx(ang >> 4);
@@ -490,8 +490,8 @@ int daSanbo_c::EnterMegaKill() {
     UnlinkSegment();
     mPrevAngleY = Vec3_HorzAngle(&mHitActor->mPos, &mPos);
     rnd = RandomIntInternal(&data_0209e650.value);
-    mPrevAngleY = (s16)(mPrevAngleY + ((rnd & 0x7fff) - 0x4000));
-    mAngleY = (s16)(mPrevAngleY + 0x8000);
+    mPrevAngleY = (mPrevAngleY + ((rnd & 0x7fff) - 0x4000));
+    mAngleY = (mPrevAngleY + 0x8000);
     mVertSpeed = 0x28000;
     mHorzSpeed = 0xa000;
     mTimer = 0x2d;
@@ -505,7 +505,7 @@ int daSanbo_c::UpdateMegaKill() {
     int head = (actorID == SANBO_HEAD) ? 1 : 0;
 
     if (head != 0)
-        mAngleX = (s16)(mAngleX - 0x1000);
+        mAngleX = (mAngleX - 0x1000);
     UpdatePos(&mdCcAc_c);
     func_02038414(&mWithMeshClsn);
     if (mWithMeshClsn.JustHitGround() || !DecIfAbove0_Byte(&mTimer))
@@ -738,7 +738,7 @@ void daSanbo_c::UpdateWanderYaw() {
     ang = Vec3_HorzAngle(&mPos, target);
     ApproachLinear(mAngleY, ang, (short)0x320);
     turn = CalcShyAwayAngle(dist);
-    mPrevAngleY = (short)(mAngleY + turn);
+    mPrevAngleY = (mAngleY + turn);
 }
 
 int daSanbo_c::CalcShyAwayAngle(int x) {

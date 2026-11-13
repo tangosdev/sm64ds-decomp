@@ -1398,9 +1398,9 @@ void TrmpLine::Build(short *startPoint, short *endPoint) {
     mEnd[0] = endPoint[0];
     mEnd[1] = endPoint[1];
 
-    startPoint[0] = (s16)(startPoint[0] - 0x80);
+    startPoint[0] = (startPoint[0] - 0x80);
     startPoint[1] = (s16)(0 - startPoint[1]);
-    endPoint[0] = (s16)(endPoint[0] - 0x80);
+    endPoint[0] = (endPoint[0] - 0x80);
     endPoint[1] = (s16)(0 - endPoint[1]);
 
     if (*(const s16 *)startPoint > *(const s16 *)endPoint) {
@@ -1594,14 +1594,14 @@ void TrmpLine::Build(short *startPoint, short *endPoint) {
         if (offsetTimesHalfLength < 0x400000) {
             ((TrampolineContactView *)bestObj)->contactState = 2;
             D3D_PlaySePannedLoop(0x1B1, mCenter.x,
-                                 (s32)(sTrmpLineWeakPitchEnd * edgeRatio +
-                                       sTrmpLineWeakPitchMid * (0x1000 - edgeRatio)) >>
+                                 (sTrmpLineWeakPitchEnd * edgeRatio +
+                                  sTrmpLineWeakPitchMid * (0x1000 - edgeRatio)) >>
                                      0xC);
         } else {
             ((TrampolineContactView *)bestObj)->contactState = 1;
             D3D_PlaySePannedLoop(0x1AE, mCenter.x,
-                                 (s32)(sTrmpLineStrongPitchEnd * edgeRatio +
-                                       sTrmpLineStrongPitchMid * (0x1000 - edgeRatio)) >>
+                                 (sTrmpLineStrongPitchEnd * edgeRatio +
+                                  sTrmpLineStrongPitchMid * (0x1000 - edgeRatio)) >>
                                      0xC);
         }
         ((TrampolineContactView *)bestObj)->lineNormal.x = mNormal.x;
@@ -1752,10 +1752,10 @@ int TrmpLine::Create(s16 *startPoint, s16 *endPoint) {
     direction[1] = ((int)deltaY >> 1) << 12;
 
     {
-        int ay = (s16)startPoint[1];
-        int by = (s16)endPoint[1];
-        int ax = (s16)startPoint[0];
-        int bx = (s16)endPoint[0];
+        int ay = startPoint[1];
+        int by = endPoint[1];
+        int ax = startPoint[0];
+        int bx = endPoint[0];
         int y = (ay + by) >> 1;
         int x = (ax + bx) >> 1;
         int x12 = x << 12;

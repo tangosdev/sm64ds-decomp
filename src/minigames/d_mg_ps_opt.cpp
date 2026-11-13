@@ -378,22 +378,22 @@ void dMgPsOpt_c::TouchIcon_c::Render() {
     switch (mStyle) {
     case kStyleSoundPrev:
         if (mOn != 0)
-            xy[0] = (s16)(xy[0] - 2);
+            xy[0] = (xy[0] - 2);
         sprites = sPsOptSoundPrevSprite;
         break;
 
     case kStyleSoundNext:
         if (mOn != 0)
-            xy[0] = (s16)(xy[0] + 2);
+            xy[0] = (xy[0] + 2);
         sprites = sPsOptSoundNextSprite;
         break;
 
     case kStyleSoundMode:
         scr = (u16 *)((char *)G2S_GetBG1ScrPtr() + 0x19e);
-        tile = (u16)((mVariant << 6) + 0x13);
+        tile = ((mVariant << 6) + 0x13);
         for (i = 0; i < 13; i++) {
             scr[0] = tile;
-            scr[0x20] = (u16)(tile + 0x20);
+            scr[0x20] = (tile + 0x20);
             scr++;
             tile++;
         }
@@ -414,7 +414,7 @@ void dMgPsOpt_c::TouchIcon_c::Render() {
         scr += (y >> 3) << 5;
         for (row = 0; row < mHalfH >> 2; row++) {
             for (col = 0; col < w >> 2; col++) {
-                scr[col] = (u16)(mask | (scr[col] & 0xfff));
+                scr[col] = (mask | (scr[col] & 0xfff));
                 w = mHalfW;
             }
             scr += 0x20;

@@ -151,7 +151,7 @@ void daDsnBase_c::StateRest() {
     self->state = 4;
     unsigned int roll = RandomIntInternal(&data_0209e650.value);
     unsigned int rollHigh = roll >> 16;
-    self->timer = (char)(rollHigh % 10 + 0x14);
+    self->timer = (rollHigh % 10 + 0x14);
 }
 
 /* State 2, the slam. Integrates the fall at 0x4000 a frame; on reaching the
@@ -206,8 +206,7 @@ void daDsnBase_c::StateRise() {
         return;
     self->posY = self->riseY;
     self->state = 1;
-    self->timer =
-        (u8)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) % 0x1e + 0xa);
+    self->timer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) % 0x1e + 0xa);
 }
 
 /* The per-frame shadow refresh both Behaviors run after the state step.

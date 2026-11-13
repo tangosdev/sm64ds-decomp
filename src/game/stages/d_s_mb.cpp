@@ -273,9 +273,9 @@ s32 dScMB_c::InitResources() {
 
     /* From OBJ tile 0x94 onwards; a 4bpp tile is 0x20 bytes. */
     DecompressLZ16(&data_0209446c, (u8 *)G2_GetOBJCharPtr() + 0x94 * 0x20);
-    GX_LoadOBJPltt((const void *)&data_0209444c, 0, 0x20);
-    GX_LoadOBJPltt((const void *)&data_020945d0, 0xa0, 0x20);
-    GXS_LoadOBJPltt((const void *)&data_0209444c, 0, 0x20);
+    GX_LoadOBJPltt(&data_0209444c, 0, 0x20);
+    GX_LoadOBJPltt(&data_020945d0, 0xa0, 0x20);
+    GXS_LoadOBJPltt(&data_0209444c, 0, 0x20);
 
     G2_SetBG1Priority(0);
     G2S_SetBG1Priority(0);

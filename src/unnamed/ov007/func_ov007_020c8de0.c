@@ -58,7 +58,7 @@ int func_ov007_020c8de0(Ov007VecTween *o) {
             Vector3 *dst = o->out;
             int step = o->step;
             int ok; /* stays a flag: setting state inside the arm shrinks it (0x170) */
-            VEC_Subtract((Vector3 *)&o->to, (Vector3 *)dst, (Vector3 *)&tmp);
+            VEC_Subtract(&o->to, dst, &tmp);
             if (VEC_Mag(&tmp) <= step) {
                 *dst = o->to;
                 ok = 1;

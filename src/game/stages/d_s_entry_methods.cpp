@@ -394,7 +394,7 @@ s32 dScEntry_c::InitResultResources() {
         id1 = 0x8411;
     }
     LoadCompressedFileAt(id0, G2_GetBG1ScrPtr());
-    LoadCompressedFileAt(id1, (void *)G2_GetBG2ScrPtr());
+    LoadCompressedFileAt(id1, G2_GetBG2ScrPtr());
 
     i = 0;
     if (n > 0) {
@@ -446,7 +446,7 @@ s32 dScEntry_c::InitResultResources() {
         step = (4 - n) * 0x20 + 0xa0;
         base = (4 - n) * 0x40 + 0xa5;
         do {
-            unsigned char ch = (unsigned char)func_02030958(k);
+            unsigned char ch = func_02030958(k);
             func_02033464((unsigned short)(base + acc), (signed char)ch, 1);
             k = k + 1;
             acc = acc + step;
@@ -671,7 +671,7 @@ void dScEntry_c::UpdateSoundSettings() {
                     func_ov001_020ab3f0(&mIcons[0]);
                 }
                 SetSoundMode(newmode);
-                Message::DisplayOptionsMenuTextVS((s16)(GetSoundMode() + 9));
+                Message::DisplayOptionsMenuTextVS((GetSoundMode() + 9));
                 mIcons[2].Select();
                 func_02012790(100);
             }
@@ -723,15 +723,15 @@ void dScEntry_c::UpdateSoundSettings() {
 void dScEntry_c::EnterSoundSettings() {
     ENTRY_GRAPH_CALLBACK->QueueBg2Screen(LoadFile(data_ov075_0211ca08[GetLanguageIndex()]));
 
-    Message::DisplayOptionsMenuTextVS((s16)(GetSoundMode() + 9));
+    Message::DisplayOptionsMenuTextVS((GetSoundMode() + 9));
 
     gSubScreenLayers |= 5;
     G2_SetBlendBrightness(0xb, ~5);
 
     mSelectedIcon = 0;
 
-    mIcons[6].Place(5, 0, (s16)(SH(data_ov075_0211d72c, GetLanguageIndex()) + 8), 0x38);
-    mIcons[7].Place(6, 0, (s16)(SH(data_ov075_0211d740, GetLanguageIndex()) + 8), 0x68);
+    mIcons[6].Place(5, 0, (SH(data_ov075_0211d72c, GetLanguageIndex()) + 8), 0x38);
+    mIcons[7].Place(6, 0, (SH(data_ov075_0211d740, GetLanguageIndex()) + 8), 0x68);
     mIcons[8].Place(0xc, 0, 0x56, 0xa8);
     mIcons[2].Place(1, 0, 0xac, 0x38);
     mIcons[0].Place(3, 0, 0x64, 0x38);
@@ -864,7 +864,7 @@ void dScEntry_c::EnterControlSettings() {
     mSelectedIcon = data_0209f498[gActivePlayerSlot].mode;
 
     for (; i <= 2; i++) {
-        icon->Place(0, 0, 0x80, (s16)y);
+        icon->Place(0, 0, 0x80, y);
         y += 0x28;
         icon++;
     }
@@ -1068,7 +1068,7 @@ void dScEntry_c::RenderWinCounts() {
                 p = (int *)OAM::Render(zT, (OamAttr *)data_ov075_0211c8b0, xTens, yBase + yOff,
                                        eight, minus1, sz, zT);
                 if (p != 0) {
-                    int *q = (int *)(p + 1);
+                    int *q = (p + 1);
                     int val = *q;
                     *q = (val & ~0x3ff) | ((tens + ((u32)(val << 22) >> 22)) & 0x3ff);
                 }
@@ -1076,7 +1076,7 @@ void dScEntry_c::RenderWinCounts() {
             p = (int *)OAM::Render(zO, (OamAttr *)data_ov075_0211c8b0, xOnes, yBase + yOff, eight,
                                    minus1, sz, zO);
             if (p != 0) {
-                int *q = (int *)(p + 1);
+                int *q = (p + 1);
                 int val = *q;
                 *q = (val & ~0x3ff) | ((((u32)(val << 22) >> 22) + n % 10) & 0x3ff);
             }
@@ -1364,7 +1364,7 @@ void dScEntry_c::LoadCourseResources(int course) {
     int selectedArchive = course + 2;
     unsigned int archive;
     for (archive = 2; archive <= 5; ++archive) {
-        if (archive == (unsigned int)selectedArchive)
+        if (archive == selectedArchive)
             continue;
         UnloadArchive(archive);
     }
@@ -1478,7 +1478,7 @@ void dScEntry_c::EnterCourseSelect() {
     index = 0;
     x = 0x20;
     for (; index < 4; index++) {
-        icon->Place(7, index, (short)x, 0x48);
+        icon->Place(7, index, x, 0x48);
         mIcons[index].mOn = 1;
         mIcons[index].mPressTime = 8;
         x += 0x40;
@@ -1672,7 +1672,7 @@ void dScEntry_c::UpdateSessionStart() {
     mSoundHandle = Sound_PlayIfNotActive(mSoundHandle, 2, 0x11d, 0);
     if (mStepPhase == 0) {
         mEntObj->func_ov075_02115134();
-        mStepPhase = (unsigned char)mEntObj->func_ov075_02115098(func_0203da9c());
+        mStepPhase = mEntObj->func_ov075_02115098(func_0203da9c());
     }
     if (func_0203da3c() != 0)
         return;
@@ -1993,9 +1993,9 @@ void dScEntry_c::SetSteps(const StepSet *steps) {
  * model-data array. */
 s32 dScEntry_c::CleanupResources() {
     func_020308b4();
-    if (data_0209b2e8 != (void *)0) {
+    if (data_0209b2e8 != 0) {
         Deallocate(data_0209b2e8);
-        data_0209b2e8 = (void *)0;
+        data_0209b2e8 = 0;
     }
     gGraphCallback = 0;
     Sound::UnsetPlayerVoiceGroup();

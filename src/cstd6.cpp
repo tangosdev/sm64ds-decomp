@@ -102,9 +102,9 @@ int strcmp(const char *a, const char *b) {
     int diff;
     unsigned char c3, cb, ca;
 
-    ca = (unsigned char)*a;
-    cb = (unsigned char)*b;
-    diff = (int)ca - (int)cb;
+    ca = *a;
+    cb = *b;
+    diff = ca - cb;
     if (diff != 0)
         return diff;
 
@@ -115,9 +115,9 @@ int strcmp(const char *a, const char *b) {
             if (ca == 0)
                 return 0;
             for (cnt = 3 - align_a; cnt != 0; cnt--) {
-                c3 = *(unsigned char *)(++a);
-                cb = *(unsigned char *)(++b);
-                diff = (int)c3 - (int)cb;
+                c3 = *(++a);
+                cb = *(++b);
+                diff = c3 - cb;
                 if (diff != 0)
                     return diff;
                 if (c3 == 0)
@@ -142,19 +142,18 @@ int strcmp(const char *a, const char *b) {
         return (wa > wb) ? 1 : -1;
 
     scalar_reload:
-
-        ca = *(unsigned char *)a;
-        cb = *(unsigned char *)b;
-        diff = (int)ca - (int)cb;
+        ca = *a;
+        cb = *b;
+        diff = ca - cb;
         if (diff != 0)
             return diff;
     }
     if (ca == 0)
         return 0;
     for (;;) {
-        c3 = *(unsigned char *)(++a);
-        cb = *(unsigned char *)(++b);
-        diff = (int)c3 - (int)cb;
+        c3 = *(++a);
+        cb = *(++b);
+        diff = c3 - cb;
         if (diff != 0)
             return diff;
         if (c3 == 0)
@@ -163,13 +162,13 @@ int strcmp(const char *a, const char *b) {
 }
 
 char *strchr(const char *s, int ch_in) {
-    unsigned char ch = (unsigned char)ch_in;
-    unsigned char c = *(const unsigned char *)s;
+    unsigned char ch = ch_in;
+    unsigned char c = *s;
     const char *p = s + 1;
     if (c != 0) {
         do {
             if (c == ch) return (char *)(p - 1);
-            c = *(const unsigned char *)p++;
+            c = *p++;
         } while (c != 0);
     }
     if (ch != 0) return 0;

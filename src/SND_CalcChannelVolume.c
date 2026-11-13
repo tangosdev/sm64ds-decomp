@@ -21,5 +21,5 @@ u16 SND_CalcChannelVolume(s32 x) {
         resultHi = 1;
     else
         resultHi = 0;
-    return (u16)(resultLo | (resultHi << 8));
+    return (resultLo | (resultHi << 8));
 }

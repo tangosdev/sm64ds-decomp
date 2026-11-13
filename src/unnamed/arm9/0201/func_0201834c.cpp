@@ -28,9 +28,9 @@ void *func_0201834c(FSFile *self, int flag) {
         if (r != len)
             return result;
         if (func_02018568(buf) != 0) {
-            len = func_02018ac4((void *)((char *)buf + 4));
+            len = func_02018ac4(((char *)buf + 4));
             result = Memory::Allocate(len);
-            DecompressLZ16((void *)((char *)buf + 4), result);
+            DecompressLZ16(((char *)buf + 4), result);
         } else {
             result = Memory::Allocate(len);
             MI_CpuCopy8(buf, result, len);

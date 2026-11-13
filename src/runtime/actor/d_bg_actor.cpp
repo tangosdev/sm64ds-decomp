@@ -350,7 +350,7 @@ int dBgActor_c::IsClsnInRangeOnScreen(Fix12i radius, Fix12i yOffset) {
         else
             center.y += yOffset;
         daPly_c *player = ClosestPlayer();
-        int dist = Vec3_Dist(&center, &((dActor_c *)player)->mPos);
+        int dist = Vec3_Dist(&center, &player->mPos);
         if (dist > radius) {
             if (mMeshCollider.IsEnabled())
                 mMeshCollider.Disable();
@@ -377,7 +377,7 @@ int dBgActor_c::IsClsnInRange(Fix12i radius, Fix12i yOffset) {
     else
         center.y += yOffset;
     daPly_c *player = ClosestPlayer();
-    int dist = Vec3_Dist(&center, &((dActor_c *)player)->mPos);
+    int dist = Vec3_Dist(&center, &player->mPos);
     if (dist > radius) {
         if (mMeshCollider.IsEnabled())
             mMeshCollider.Disable();
@@ -499,7 +499,7 @@ void dBgActor_c::KillByMegaChar(daPly_c &player) {
     mTerminalVelocity = -0x3c000;
     mHorzSpeed = 0x14000;
     mVertSpeed = 0x1e000;
-    mPrevAngleY = Vec3_HorzAngle(&((dActor_c *)&player)->mPos, &mPos);
+    mPrevAngleY = Vec3_HorzAngle(&player.mPos, &mPos);
     mMegaKnockbackTimer = 0x1e;
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();

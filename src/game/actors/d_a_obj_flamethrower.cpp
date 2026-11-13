@@ -189,7 +189,7 @@ int daObjFlamethrower_c::Behavior() {
         if (mActiveFlames != 0) {
             /* Through its address. mActiveFlames-- is ldrb [this, #0x465]. */
             active = &mActiveFlames;
-            *active = (u8)(*active - 1);
+            *active = (*active - 1);
         }
         if (DecIfAbove0_Short(&mTimer) == 0) {
             mState = 1;
@@ -199,7 +199,7 @@ int daObjFlamethrower_c::Behavior() {
     case 1:
         if ((int)mActiveFlames < (count - 1)) {
             active = &mActiveFlames;
-            *active = (u8)(*active + 1);
+            *active = (*active + 1);
         }
         if (DecIfAbove0_Short(&mTimer) == 0) {
             mState = 0;

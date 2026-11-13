@@ -114,7 +114,7 @@ void daKpa3Bg_c::OnStoodOn(dActor_c *other) {
 
 s32 daKpa3Bg_c::InitResources()
 {
-    mVariant = (u8)(param1 & 0xf);
+    mVariant = (param1 & 0xf);
     data_0208e738 = 0;
     /* bmd is named for the @NNN count (see the banner). */
     BMD_File *bmd = dExtSimpleModel_c::LoadFile(*data_ov060_02119514[mVariant]);
