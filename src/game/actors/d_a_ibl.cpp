@@ -769,8 +769,8 @@ int daIbl_c::InitResources()
         }
         AdvancePath();
         mPrevAngleY = mHeadingToNode;
-        mKillY = *(int *)&data_02092138;
-        d = *(signed char *)&gCurrentSublevel;
+        mKillY = data_02092138;
+        d = gCurrentSublevel;
         /* Sublevel 0x19 is the half-size ball: speed 10 units/frame, scale
            0.5 (0x800), collider radius and height 30 units. */
         if (d == 0x19) {
@@ -820,7 +820,7 @@ int daIbl_c::InitResources()
            Sublevel 0x19: 512 to 6000. Otherwise the minimum is 1024 and the
            maximum 7000 in sublevels 0x18 and 0x16, 4600 in 6, 6500
            elsewhere. */
-        d = *(signed char *)&gCurrentSublevel;
+        d = gCurrentSublevel;
         if (d == 0x19) {
             mMinSpawnDist = 0x200000;
             mMaxSpawnDist = 0x1770000;
