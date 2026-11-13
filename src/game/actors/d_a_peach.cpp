@@ -172,11 +172,12 @@ int daPeach_c::IsTouchingPlayer() {
         alive = 0;
     /* Both paths return alive. The cartridge still compares it with zero
      * first; a single return lets the compiler delete that compare. */
-    if (alive == 0)
-        goto done;
-    return alive;
-done:
-    return alive;
+    switch (alive) {
+    case 0:
+        return alive;
+    default:
+        return alive;
+    }
 }
 
 /* The model matrix is rebuilt from the body angle and the position, then
