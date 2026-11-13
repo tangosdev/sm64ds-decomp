@@ -303,7 +303,7 @@ s32 daObjFallBlock_c::Behavior() {
             Sound::PlayBank3(0x2d, mCamSpacePos);
             mStateTimer = 0x5a;
         } else {
-            sinv = FX_SinIdx(*(u16 *)&mBobPhase >> 4);
+            sinv = FX_SinIdx((u16)mBobPhase >> 4);
             /* (long long) is load-bearing: a plain int mul changes the code
                size. */
             mPosY = mRestPos.y + FX_MUL(sinv, 0x19000);
