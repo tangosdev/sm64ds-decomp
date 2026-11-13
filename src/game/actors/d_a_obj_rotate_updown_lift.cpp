@@ -30,9 +30,7 @@
  *   (0x8c -> 0xb0). The scalar extern passes the three positions in r1-r3.
  * - func_ov091_02131160: a Matrix4x3 * local for mShadowMat is +4
  *   (0x1e0 -> 0x1e4); the translation row is stored through `this`.
- * - Behavior: one this+0x3a2 halfword for the arrived pitch is
- *   -0xc (0x488 -> 0x47c); &mPitchBase is a pool add of 0x3a2 and the
- *   step stays this+0x300+0xa4.
+ * - Behavior: &mPitchBase is a pool add of 0x3a2.
  * - InitResources: paths[variant].node[index] swaps the mla registers (3 words, same
  *   size); the char* stride multiply stays.
  */
@@ -392,13 +390,11 @@ int daObjRotateUpdownLift_c::Behavior()
         mPosY = snapped.y;
         mPosZ = snapped.z;
         /* &mPitchBase is offsetof 0x3a2, which is not an ARM immediate, so this
-           is a pool add. The step is the halfword at this+0x300+0xa4. One
-           base for both grows the function. */
+           is a pool add. */
         {
             s16 *pitch = &mPitchBase;
-            s16 *stepAt = (s16 *)((char *)this + 0x300);
             arrived = 1;
-            *pitch = (*pitch + *(s16 *)((char *)stepAt + 0xa4));
+            *pitch = (*pitch + mPitchStep);
         }
     } else {
         Vec3_MulScalar(&stepVec, &remain, FX_Div(stepLen, dist));
