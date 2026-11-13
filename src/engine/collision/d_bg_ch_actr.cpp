@@ -1005,9 +1005,8 @@ dBgPi *dBgCh_Actr::GetWallResult() const {
     return const_cast<dBgCh_SphCrr &>(mSphereClsn).GetWallResult();
 }
 
-extern "C" int func_0203564c(int p)
-{
-    return (int)((dBgCh_Actr *)p)->mSphereClsn.GetUnderResult();
+extern "C" void *func_0203564c(void *p) {
+    return ((dBgCh_Actr *)p)->mSphereClsn.GetUnderResult();
 }
 
 extern "C" void func_02035644(int *p, int v)

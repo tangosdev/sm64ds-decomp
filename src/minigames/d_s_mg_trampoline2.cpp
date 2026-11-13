@@ -53,6 +53,7 @@ enum d_s_mg_trampoline2_AssetId {
 #include "TrmpLine.h"
 #include "Trmp2Spinner.h"
 #include "decl_common.h"
+#include "dMgTrmplnShared.h"
 #include "PlayerInput.h"
 #include "Sound.h"
 #include "math/MtxStack.h"
@@ -132,8 +133,6 @@ extern int Trmp2_PickFaceB(int kind);
 extern void func_0203cc28(int *vector, int angle);
 extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
-extern int Trmp2Mario_Hide(void);
-extern void Trmp2Mario_EnterAll(void);
 extern int sTrmpItemsHit;
 extern int sTrmp2Lives;
 extern int sTrmp2Score;
@@ -141,10 +140,6 @@ extern int sTrmp2MarioCount;
 extern int sTrmpItemsActive;
 extern int sTrmp2ScoreGates[];
 extern const Trampoline2WaveDef sTrmp2SpawnDefs[];
-extern void Trmp2Mario_UpdateAll(void);
-extern void Trmp2Mario_SetTuning(int a);
-extern void Trmp2Mario_MoveToStart(void);
-extern void Trmp2Mario_PlaceAtStart(void);
 extern s16 sTrmp2IntroFromX;
 extern s16 sTrmp2IntroToX;
 extern s16 sTrmpStartTouchY;
@@ -470,8 +465,7 @@ void dScMgTrampoline2_c::StatePlay() {
             vecA.y = 0x1000;
             vecA.z = 0;
             func_0203cc28((int *)&vecA, d->angles[i]);
-            TrmpItem::Spawn((int)&d->positions[i], (int *)&vecA, d->itemTypes[i],
-                            d->motionTypes[i]);
+            TrmpItem::Spawn((int)&d->positions[i], (int *)&vecA, d->itemTypes[i], d->motionTypes[i]);
         }
         if (ApproachLinear(mPattern, 6, 1)) {
             mScriptDone = 1;
@@ -489,7 +483,7 @@ void dScMgTrampoline2_c::StatePlay() {
                 vecB.z = 0;
                 func_0203cc28((int *)&vecB, d->angles[i]);
                 TrmpItem::Spawn((int)&d->positions[i], (int *)&vecB, d->itemTypes[i],
-                                d->motionTypes[i]);
+                               d->motionTypes[i]);
             }
             mWaveStep = 0;
         } else {

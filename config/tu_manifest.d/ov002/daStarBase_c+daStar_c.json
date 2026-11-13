@@ -103,7 +103,7 @@
       "ordinal": 8
     },
     {
-      "symbol": "_ZN8daStar_c13CollectNoPoseEi",
+      "symbol": "_ZN8daStar_c13CollectNoPoseEP7daPly_c",
       "address": "0x020e7090",
       "size": "0x00000074",
       "legacy_source": "src/CollectNoPose.cpp",

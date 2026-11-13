@@ -41,6 +41,7 @@ struct Vector3_16f;
    any function body in a header this widely consumed renumbers every
    consumer's compiler temporaries. mBodyModels only needs the name. */
 struct dExtAnm2Model_c;
+struct daShl_c;
 
 struct daPly_c : dActor_c {
     /* 0x000..0x0cf is dActor_c's, inherited rather than duplicated. It used to be
@@ -109,7 +110,7 @@ struct daPly_c : dActor_c {
         int (daPly_c::*mCleanup)(); /* 0x10 */
     };
 
-    s32 mEatingPlayer;            /* 0x0d0 */
+    daPly_c *mEatingPlayer; /* 0x0d0 */
     u8  pad_0d4[0x8];
     /* 0x0dc..0x2ac: the models and the texture/material animations drawn on
        them, grouped as one embedded sub-object. The grouping is what the
@@ -183,9 +184,10 @@ struct daPly_c : dActor_c {
            numMaterials words and copies each runtime material's +0x1c
            (TEXIMAGE_PARAM) into them. func_ov002_020e6b74 writes them back
            (TurnOffToonShading, cap-change phases 3/4) after func_ov002_020e6b3c
-           zeroed them for the untextured flash. Element type kept as stored. */
-        s32 mBodyTexParams[4]; /* 0x27c */
-        s32 mHeadTexParams[8]; /* 0x28c */
+           zeroed them for the untextured flash. Each entry holds the int array
+           func_ov002_020e6bb0 returns for that material. */
+        int *mBodyTexParams[4]; /* 0x27c */
+        int *mHeadTexParams[8]; /* 0x28c */
     } mModels;                 /* 0x0dc */
     /* ~daPly_c calls _ZN17dExtShadowModel_cD1Ev on this, and dExtShadowModel_c asserts
        0x28 -- which closes exactly at mdCcAcPos_c. */
@@ -202,11 +204,11 @@ struct daPly_c : dActor_c {
     /* ~daPly_c calls _ZN10dCcAcPos_cD1Ev on this, and that
        type asserts 0x40 -- which closes exactly at mRidingShell. */
     dCcAcPos_c mAttackClsn;            /* 0x314 */
-    s32 mRidingShell;            /* 0x354 */
-    s32 mHeldObj;            /* 0x358 */
-    s32 mGrabbedByActor;            /* 0x35c */
-    s32 mObjInMouth;            /* 0x360 */
-    s32 mAttachedActor;            /* 0x364 */
+    daShl_c *mRidingShell;             /* 0x354 */
+    dActor_c *mHeldObj;                /* 0x358 */
+    dActor_c *mGrabbedByActor;         /* 0x35c */
+    dActor_c *mObjInMouth;             /* 0x360 */
+    dActor_c *mAttachedActor;          /* 0x364 */
     /* An actor pointer, not a byte: StartTalk stores its fBase_c& argument
        here, St_Talk_Cleanup clears a bit in the pointee's +0xb0 (dActor_c's
        mFlags), and every access in the ROM is a full word. */
@@ -286,7 +288,7 @@ struct daPly_c : dActor_c {
        back from the player eating the bomb. Every access is an unsigned halfword. */
     u16 mHeadBoneRot[3]; /* 0x580 */
     u8 pad_586[0x2];
-    s32 mHeldObjQueue; /* 0x588 */
+    dActor_c **mHeldObjQueue; /* 0x588 */
     /* Where a held object rides: func_ov002_020e4768 stores body matrix times
        bone 14's transform here while mHeldObj is set, and points mCarryMatrix
        at it. */
@@ -1323,7 +1325,7 @@ struct daPly_c : dActor_c {
     void func_ov002_020d45c0();
     int func_ov002_020d4d88(const int, const int);
     int func_ov002_020d5c6c();
-    int func_ov002_020d6334(const int);
+    int func_ov002_020d6334(dActor_c *);
     void func_ov002_020d6368();
     int func_ov002_020d674c();
     int func_ov002_020d6790();

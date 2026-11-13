@@ -44,6 +44,7 @@ enum d_s_mg_trampoline_AssetId {
 #include "nitro/fx/fx.h"
 #include "LevelRng.h"
 #include "decl_common.h"
+#include "dMgTrmplnShared.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/mi/memory.h"
@@ -86,18 +87,11 @@ extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern short sTrmpGoalRow;
 
-extern void Trmp3DMario_UpdateAll(void);
-extern int Trmp3DMario_CountFinished(void);
 extern void Mg_SetSharedState(int);
-extern void Trmp3DMario_StartAll(void);
 extern int sTrmpComboCount;
 extern int sTrmp3DLives;
 extern int sTrmpMariosInPlay;
 extern int sTrmpAnyOnLedge;
-extern int Trmp3DMario_IsOffstage(int *r0);
-extern void Trmp3DMario_EnterWalkIn(char *c);
-extern void Trmp3DMario_SetSpawnHeight(int n);
-extern void Trmp3DMario_SetTuning(int a);
 extern s16 sTrmpIntroFromX;
 extern s16 sTrmpStartTouchX;
 extern s16 sTrmpStartTouchY;
@@ -107,10 +101,8 @@ extern void Deallocate(void *ptr);
 extern int sTrmpNcgByLanguage[];
 extern void InitialiseVramGlobals(void);
 extern s16 data_02082414;
-extern int Trmp3DMario_InitPool(unsigned char *, int);
 extern void TrmpFx_InitPool(void *, int);
 extern void Mg_SetTopScreenYOffset(int);
-extern void Trmp3DMario_ResetAll(unsigned int, int);
 extern void TrmpFx_ClearAll(void);
 extern int sTrmpPuffXByLanguage[];
 extern void Puff_ClearAll(int, int);
@@ -121,7 +113,6 @@ extern void TrmpFx_DrawAll(void);
 extern void Mg_DrawTopRightCounter(int, int);
 extern void *sTrmpDoorSignSprites[];
 extern void *sTrmpArrowSprite;
-extern void Trmp3DMario_DrawAll(void);
 
 dScMgTrampoline_c *dScMgTrampoline_c_classInit(void);
 extern int sTrmpPuffEnglish[];
