@@ -37,49 +37,49 @@
   ],
   "functions": [
     {
-      "symbol": "Puff_DrawAll",
+      "symbol": "_Z12Puff_DrawAllv",
       "address": "0x020c8a30",
       "size": "0x00000034",
       "legacy_source": "src/func_ov006_020c8a30.c",
       "ordinal": 0
     },
     {
-      "symbol": "Puff_UpdateAll",
+      "symbol": "_Z14Puff_UpdateAllv",
       "address": "0x020c8a64",
       "size": "0x00000038",
       "legacy_source": "src/func_ov006_020c8a64.c",
       "ordinal": 1
     },
     {
-      "symbol": "Puff_ClearAll",
+      "symbol": "_Z13Puff_ClearAllii",
       "address": "0x020c8a9c",
       "size": "0x00000058",
       "legacy_source": "src/func_ov006_020c8a9c.c",
       "ordinal": 2
     },
     {
-      "symbol": "Puff_Draw",
+      "symbol": "_Z9Puff_DrawP4Puff",
       "address": "0x020c8af4",
       "size": "0x000000b4",
       "legacy_source": "src/func_ov006_020c8af4.c",
       "ordinal": 3
     },
     {
-      "symbol": "Puff_Update",
+      "symbol": "_Z11Puff_UpdateP4Puff",
       "address": "0x020c8ba8",
       "size": "0x000000c4",
       "legacy_source": "src/func_ov006_020c8ba8.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "Puff_Clear",
+      "symbol": "_Z10Puff_ClearP4Puff",
       "address": "0x020c8c6c",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov006_020c8c6c.c",
       "ordinal": 5
     },
     {
-      "symbol": "Puff_Spawn",
+      "symbol": "_Z10Puff_Spawnii",
       "address": "0x020c8c78",
       "size": "0x00000130",
       "legacy_source": "src/func_ov006_020c8c78.c",

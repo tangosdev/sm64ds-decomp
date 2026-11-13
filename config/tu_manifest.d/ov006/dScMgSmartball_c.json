@@ -33,7 +33,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "SmartballObj_ElemDtor",
+      "symbol": "_Z21SmartballObj_ElemDtorv",
       "address": "0x0210d894",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_0210d894.c",
@@ -89,7 +89,7 @@
       "ordinal": 9
     },
     {
-      "symbol": "cMgSmartball_wing_c_Construct",
+      "symbol": "_Z29cMgSmartball_wing_c_ConstructP19cMgSmartball_wing_cP16dScMgSmartball_ciP2V2",
       "address": "0x0210e0d0",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_0210e0d0.c",
@@ -131,7 +131,7 @@
       "ordinal": 15
     },
     {
-      "symbol": "cMgSmartball_pushswitch_c_Construct",
+      "symbol": "_Z35cMgSmartball_pushswitch_c_ConstructP25cMgSmartball_pushswitch_cP16dScMgSmartball_ciP2V2",
       "address": "0x0210e480",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_0210e480.c",
@@ -187,7 +187,7 @@
       "ordinal": 23
     },
     {
-      "symbol": "cMgSmartball_board_c_Construct",
+      "symbol": "_Z30cMgSmartball_board_c_ConstructP20cMgSmartball_board_cP16dScMgSmartball_ciP2V2",
       "address": "0x0210f9f8",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_0210f9f8.c",
@@ -243,7 +243,7 @@
       "ordinal": 31
     },
     {
-      "symbol": "cMgSmartball_slot_c_Construct",
+      "symbol": "_Z29cMgSmartball_slot_c_ConstructP19cMgSmartball_slot_cP16dScMgSmartball_ciP2V2",
       "address": "0x021101bc",
       "size": "0x00000088",
       "legacy_source": "src/func_ov006_021101bc.cpp",
@@ -278,7 +278,7 @@
       "ordinal": 36
     },
     {
-      "symbol": "cMgSmartball_pakkun_c_Construct",
+      "symbol": "_Z31cMgSmartball_pakkun_c_ConstructP21cMgSmartball_pakkun_cP16dScMgSmartball_ciP2V2",
       "address": "0x02110874",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_02110874.c",
@@ -313,7 +313,7 @@
       "ordinal": 41
     },
     {
-      "symbol": "cMgSmartball_dokan_c_Construct",
+      "symbol": "_Z30cMgSmartball_dokan_c_ConstructP20cMgSmartball_dokan_cP16dScMgSmartball_ciP2V2",
       "address": "0x02110bc0",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_02110bc0.c",
@@ -355,7 +355,7 @@
       "ordinal": 47
     },
     {
-      "symbol": "cMgSmartball_propeller_c_Construct",
+      "symbol": "_Z34cMgSmartball_propeller_c_ConstructP24cMgSmartball_propeller_cP16dScMgSmartball_ciP2V2",
       "address": "0x02111220",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_02111220.c",
@@ -383,7 +383,7 @@
       "ordinal": 51
     },
     {
-      "symbol": "cMgSmartball_spring_c_Construct",
+      "symbol": "_Z31cMgSmartball_spring_c_ConstructP21cMgSmartball_spring_cP16dScMgSmartball_ciP2V2",
       "address": "0x0211157c",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_0211157c.c",
@@ -425,7 +425,7 @@
       "ordinal": 57
     },
     {
-      "symbol": "cMgSmartball_ana_c_Construct",
+      "symbol": "_Z28cMgSmartball_ana_c_ConstructP18cMgSmartball_ana_cP16dScMgSmartball_ciP2V2",
       "address": "0x02111774",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_02111774.c",
@@ -453,7 +453,7 @@
       "ordinal": 61
     },
     {
-      "symbol": "cMgSmartball_kinoko_c_Construct",
+      "symbol": "_Z31cMgSmartball_kinoko_c_ConstructP21cMgSmartball_kinoko_cP16dScMgSmartball_ciP2V2",
       "address": "0x02111b40",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_02111b40.c",
@@ -628,7 +628,7 @@
       "ordinal": 86
     },
     {
-      "symbol": "cMgSmartball_ball_c_Construct",
+      "symbol": "_Z29cMgSmartball_ball_c_ConstructP19cMgSmartball_ball_cP16dScMgSmartball_ciP2V2",
       "address": "0x02114548",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_02114548.c",
@@ -656,21 +656,21 @@
       "ordinal": 90
     },
     {
-      "symbol": "CopyObjectVel",
+      "symbol": "_Z13CopyObjectVelPvS_",
       "address": "0x021146e0",
       "size": "0x00000014",
       "legacy_source": "src/func_ov006_021146e0.c",
       "ordinal": 91
     },
     {
-      "symbol": "GetObjectDelta",
+      "symbol": "_Z14GetObjectDeltaPvP21cMgSmartball_object_c",
       "address": "0x021146f4",
       "size": "0x00000018",
       "legacy_source": "src/func_ov006_021146f4.c",
       "ordinal": 92
     },
     {
-      "symbol": "CopyObjectPos",
+      "symbol": "_Z13CopyObjectPosPvS_",
       "address": "0x0211470c",
       "size": "0x00000014",
       "legacy_source": "src/func_ov006_0211470c.c",
@@ -698,7 +698,7 @@
       "ordinal": 96
     },
     {
-      "symbol": "cMgSmartball_object_c_Construct",
+      "symbol": "_Z31cMgSmartball_object_c_ConstructP21cMgSmartball_object_cP16dScMgSmartball_ciPi",
       "address": "0x0211474c",
       "size": "0x00000060",
       "legacy_source": "src/func_ov006_0211474c.c",
@@ -929,14 +929,14 @@
       "ordinal": 129
     },
     {
-      "symbol": "dScMgSmartball_c_classInit",
+      "symbol": "_Z26dScMgSmartball_c_classInitv",
       "address": "0x02119824",
       "size": "0x000000dc",
       "legacy_source": "src/minigames/d_s_mg_smartball.cpp",
       "ordinal": 130
     },
     {
-      "symbol": "SmartballObj_ElemCtor",
+      "symbol": "_Z21SmartballObj_ElemCtorv",
       "address": "0x02119900",
       "size": "0x00000004",
       "legacy_source": "src/minigames/d_s_mg_smartball.cpp",

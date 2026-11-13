@@ -84,26 +84,40 @@ struct IrisScanline {
 
 /* C-linkage engine calls and the remaining local helpers. */
 extern "C" {
+
 /* Functions the members call need C linkage at file scope. Data names do
    not mangle, so the data_* declarations stay next to their users. */
 extern int RandomIntInternal(int *seed);
+
 extern s32 GetGameLanguage(void);
+
 extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *matrix);
+
 extern char *Mg_RenderMainSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
                                        unsigned short a6);
-struct Matrix2x2;
-extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
-extern void Mg_DrawNumberRotated(int a, int b, int c, int d, int e, int f, u16 g);
-extern void func_020127a4(int a0, int a1, int a2, int a3);
-extern void Hud_RenderSprite(void *sprite, int b, int c, int d, int e);
-extern int Sound_PlayIfNotActive(int a, int b, int c, short d);
-extern void FreeGfxSlotsById(int arg);
-extern void Mg_SetSharedState(int c);
-
-extern void Luigi_PrepareScanlines(void);
-extern void Luigi_PushScanlineRecord(void);
-extern dScMgLuigi_c *dScMgLuigi_c_classInit(void);
 }
+
+struct Matrix2x2;
+extern "C" {
+
+extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
+
+extern void Mg_DrawNumberRotated(int a, int b, int c, int d, int e, int f, u16 g);
+
+extern void func_020127a4(int a0, int a1, int a2, int a3);
+
+extern void Hud_RenderSprite(void *sprite, int b, int c, int d, int e);
+
+extern int Sound_PlayIfNotActive(int a, int b, int c, short d);
+
+extern void FreeGfxSlotsById(int arg);
+
+extern void Mg_SetSharedState(int c);
+}
+void Luigi_PrepareScanlines(void);
+void Luigi_PushScanlineRecord(void);
+dScMgLuigi_c *dScMgLuigi_c_classInit(void);
+
 #include "nitro/os/cache.h"
 #include "nitro/mi/memory.h"
 
@@ -132,7 +146,7 @@ void dScMgLuigi_c::AfterCleanupResources(u32 vfSuccess) {
 
 /* The HBlank handler (OS_IE_H_BLANK) StartIris installs as a void(*)() callback.
  * It accesses shared scanline state and remains a free function. */
-extern "C" {
+
 void Luigi_PrepareScanlines(void) {
     extern int data_0209f608;
     extern int data_0209f648[][192];
@@ -147,9 +161,9 @@ void Luigi_PrepareScanlines(void) {
         }
     }
 }
-}
 
-extern "C" {
+
+
 /* Latches the pending table index and copies its first four-byte scanline
    entry to 0x04000040. The record type retains the table stride. */
 void Luigi_PushScanlineRecord(void) {
@@ -159,7 +173,7 @@ void Luigi_PushScanlineRecord(void) {
     data_0209f608 = data_0209f60c;
     MI_CpuCopy32((int *)&data_0209f648[data_0209f608], (int *)0x04000040, 4);
 }
-}
+
 
 void dScMgLuigi_c::BuildIrisTable(int irisIndex) {
     extern int data_0209f608;
@@ -203,9 +217,9 @@ void dScMgLuigi_c::BuildIrisTable(int irisIndex) {
     data_0209f60c = writeBuffer;
 }
 
-extern "C" {
+
 extern unsigned char gSubScreenLayers;
-}
+
 void dScMgLuigi_c::IrisStop(int idx) {
     int enabled;
     mIris[idx].active = 0;
@@ -220,9 +234,9 @@ void dScMgLuigi_c::IrisStop(int idx) {
     gSubScreenLayers |= DISPLAY_LAYER_BG2;
 }
 
-extern "C" {
+
 extern unsigned char gMainScreenLayers;
-}
+
 
 void dScMgLuigi_c::IrisGrow(int idx) {
     mIris[idx].radius += 0x2000;
@@ -297,8 +311,10 @@ void dScMgLuigi_c::DrawReward() {
 }
 
 extern "C" {
+
 extern void Mg_SubmitScore(int self);
 }
+
 
 void dScMgLuigi_c::UpdateReward() {
     if (mReward.active == 0)
@@ -1531,29 +1547,52 @@ void dScMgLuigi_c::StateSetup() {
 /* Engine calls used by scene setup and rendering. */
 
 extern "C" {
+
 /* dScMgLuigi_c::StartRound */
 extern void FreeGfxSlotsById(int arg);
+
 extern void Mg_SubmitScore(int);
+
 extern void Mg_ShowBanner(int, int, int, int, int, short);
+}
+
 extern unsigned char gMainScreenLayers;
+
 extern unsigned char gSubScreenLayers;
+extern "C" {
+
 /* dScMgLuigi_c::Render */
 extern void Mg_DrawScoreTally(void *c, int a, int b, int d);
+}
+
 /* dScMgLuigi_c::Behavior */
 extern LuigiStateHandler sLuigiStateTable[];
+
 /* dScMgLuigi_c::InitResources */
 extern void *sLuigiBg1NcgPath;
+extern "C" {
+
 extern void *Ov004_LoadFileByPath(const char *path);
+
 extern void DecompressLZ16(void *src, void *dst);
+
 extern void *LoadFile(int handle);
+
 extern void Ov004_Deallocate(void *ptr);
+
 extern void GX_LoadBG3Scr(void *, u32, u32);
+
 extern void GXS_LoadBG2Scr(const void *, u32, u32);
+
 extern void Deallocate(void *);
+
 extern void Mg_SetTopScreenYOffset(int);
-extern int sMgResultsBannerX;
-extern int sMgResultsBannerY;
 }
+
+extern int sMgResultsBannerX;
+
+extern int sMgResultsBannerY;
+
 
 /* Same signature as dScMgBase_c::StartRound, or this stops overriding it. */
 void dScMgLuigi_c::StartRound(int mode) {
@@ -1710,12 +1749,12 @@ s32 dScMgLuigi_c::InitResources() {
     return 1;
 }
 
-extern "C" {
+
 /* Allocates the scene. The ROM has no spelling for this factory. */
 dScMgLuigi_c *dScMgLuigi_c_classInit(void) {
     return new dScMgLuigi_c;
 }
-}
+
 
 /* The state tables, in the order the static initializer fills them. Each
    entry's {function, 0} record is a compiler temporary in .data. */

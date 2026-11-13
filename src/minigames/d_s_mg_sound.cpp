@@ -99,87 +99,158 @@ extern Pmf pmf_dScMgSound_c_Pop12_Fly;
 extern Pmf pmf_dScMgSound_c_Pop12_Finish;
 
 extern "C" {
+
 extern void Hud_RenderSprite(void *a, int b, int c, int d, int e);
+}
+
 extern void *sSoundWinSpriteBSprites[];
+
 /* WinSpriteB reads indices 0 through 2; the fourth stored value is unused here. */
 extern const u16 sSoundWinSpriteBTimes[4] = {50, 3, 3, 50};
+
 extern void *sSoundWinSpriteASprites[];
+
 /* Stored timing suffixes are retained; WinSpriteA reads only indices 0 and 1. */
 extern const u16 sSoundWinSpriteATimes[4] = {50, 4, 50, 0};
+extern "C" {
+
 extern void Mg_DrawStockCounter(int a, int b);
+}
+
 extern u8 data_ov006_0213f54c[];
+
 extern u8 data_ov006_0213f544[];
+
 extern u8 data_ov006_0213f65c[];
+
 void *sSoundPopsSprites[3] = {data_ov006_0213f54c, data_ov006_0213f544, data_ov006_0213f65c};
+
 extern const int sSoundPop12XOffsets[3] = {0, 32768, -32768};
+
 extern const int sSoundPop12VX[3] = {0, 2560, -2560};
+
 extern const int sSoundPop11XOffsets[3] = {0, 32768, -32768};
+
 extern const int sSoundPop11VX[3] = {0, 3072, -3072};
+
 extern const int sSoundPop10XOffsets[3] = {0, 32768, -32768};
+
 extern const int sSoundPop10VX[3] = {0, 3584, -3584};
+
 extern const int sSoundPop09XOffsets[3] = {0, 32768, -32768};
+
 extern const int sSoundPop09VX[3] = {0, 4096, -4096};
+
 extern const int sSoundPop08XOffsets[3] = {0, 65536, -65536};
+
 extern const int sSoundPop07XOffsets[3] = {0, 65536, -65536};
+
 extern const u32 sSoundPop06VX[3] = {0x0, 0x1000, 0xfffff000};
+
 extern const int sSoundPop05XOffsets[3] = {0, 65536, -65536};
+
 extern const int sSoundPop04VX[3] = {0, 3072, -3072};
+
 extern const int sSoundPop03XOffsets[3] = {0, 32768, -32768};
+
 extern const int sSoundPop03VX[3] = {0, 2048, -2048};
+
 extern const int sSoundPop02XOffsets[3] = {0, 32768, -32768};
+
 extern const int sSoundPop02VX[3] = {0, 2560, -2560};
+
 extern const int sSoundPop01XOffsets[3] = {0, 32768, -32768};
+
 extern const int sSoundPop01VX[3] = {0, 1536, -1536};
+
 extern const int sSoundPop00XOffsets[3] = {0, 32768, -32768};
+
 extern const int sSoundPop00VX[3] = {4096, 8192, -8192};
+
 extern const u8 sSoundPop00Dirs[3] = {0, 0, 1};
+
 /* SpawnPops consumes the first three selectors. The other two stored values
  * are retained; their original grouping is unknown. */
 extern const u8 sSoundPopSpawnKinds[5] = {0, 1, 2, 2, 1};
-extern void Presenter_PlayMatch(void *c);
+void Presenter_PlayMatch(void *c);
+extern "C" {
+
 extern void Presenter_PlayMiss(void *c);
+}
+
 extern int sSoundRowLengthAlt[];
+
 extern int sSoundRowLength[];
+
 extern int sSoundScrollRowLengthAlt[];
+
 extern int sSoundScrollRowLength[];
+
 /* Note frames use indices 0 through 6. The final stored timing value in each
  * array is retained without asserting its original purpose or declared bound. */
 extern const u16 sSoundNoteClosingTimes[8] = {2, 2, 3, 4, 4, 4, 4, 4};
-void Presenter_PlayCheerLoop(void *p);
+void Presenter_PlayCheerLoop(void *c);
+extern "C" {
+
 unsigned int func_02012174(u32 bank, u32 id);
+}
+
 extern const u16 sSoundNoteOpeningTimes[8] = {2, 2, 3, 4, 4, 4, 6, 4};
+
 /* Parallel playback selectors and sound IDs retain all 42 stored entries.
  * Some entries are not exercised by the current deal logic. */
 u16 sSoundNotePlaybackKinds[42] = {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2,
                                    2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+
 u16 sSoundNoteSfx[42] = {70,  71,  72,  73,  74,  75,  76,  77,  78,  79,  56,  57,  58,  59,
                          169, 170, 171, 172, 173, 174, 176, 177, 178, 266, 267, 268, 56,  120,
                          184, 248, 57,  121, 185, 249, 58,  122, 186, 250, 59,  123, 187, 251};
+
 extern const u8 sSoundPitchCounts[5] = {10, 4, 10, 4, 14};
+
 extern const u8 sSoundDealCounts[5] = {6, 6, 8, 6, 8};
+
 extern const u8 sSoundNoteLayoutByPattern[5] = {0, 0, 1, 0, 1};
+
 extern const int sSoundPairNoteOffsets[5] = {0, 10, 0, 14, 0};
+
 /* The level selector uses indices 0 through 3; the fifth stored bank is retained. */
 extern const int sSoundBankByLevel[5] = {3, 0, 1, 2, 3};
+
 /* Interleaved x/y pairs for the six-, eight- and ten-note layouts.
  * The pointer table retains the ten-note layout although current dealing
  * selects only the first two. These descriptive names are reconstructed. */
 u16 sSoundNotePositions6[12] = {64, 32, 128, 32, 192, 32, 64, 112, 128, 112, 192, 112};
+
 u16 sSoundNotePositions8[16] = {32, 32,  96, 32,  160, 32,  224, 32,
                                 32, 112, 96, 112, 160, 112, 224, 112};
+
 u16 sSoundNotePositions10[20] = {32, 32,  80, 32,  128, 32,  176, 32,  224, 32,
                                  32, 112, 80, 112, 128, 112, 176, 112, 224, 112};
+
 u16 *sSoundNotePositions[3] = {sSoundNotePositions6, sSoundNotePositions8, sSoundNotePositions10};
+extern "C" {
+
 extern void Presenter_ResetPose(void *c);
-extern void Presenter_PlayCheer(void *c);
-extern void Mg_DrawScoreTally(void *c, int a, int b, int d);
-void FreeGfxSlotsById(int id);
-void *LoadFile(int handle);
-void DecompressLZ16(void *src, void *dst);
-int Presenter_Load(void *p);
-extern u8 gMainScreenLayers;
-extern u8 gSubScreenLayers;
 }
+void Presenter_PlayCheer(void *c);
+extern "C" {
+
+extern void Mg_DrawScoreTally(void *c, int a, int b, int d);
+
+void FreeGfxSlotsById(int id);
+
+void *LoadFile(int handle);
+
+void DecompressLZ16(void *src, void *dst);
+
+int Presenter_Load(void *p);
+}
+
+extern u8 gMainScreenLayers;
+
+extern u8 gSubScreenLayers;
+
 
 /* The note and pop dispatch tables belong to this scene. Declaration
  * order preserves the cartridge static-initialization sequence. */
@@ -272,7 +343,7 @@ inline dScMgSound_c::dScMgSound_c() {}
 
 /* The MG_SOUND registry factory. It sits directly after InitResources and
    installs this class's vtable, so it was compiled with the class. */
-extern "C" void *dScMgSound_c_classInit(void) {
+ void *dScMgSound_c_classInit(void) {
     return new dScMgSound_c;
 }
 
@@ -1433,9 +1504,8 @@ void dScMgSound_c::Pop12_Finish(int slot) {
         mPops[slot].active = 0;
         mPops[slot].visible = 0;
     }
-}
+}extern "C" void Mg_RenderSpriteBothPalMtx(void *a0, int a1, int a2, int a3, void *a4);
 
-extern "C" void Mg_RenderSpriteBothPalMtx(void *a0, int a1, int a2, int a3, void *a4);
 
 void dScMgSound_c::DrawPops() {
     int slot;

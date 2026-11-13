@@ -32,48 +32,85 @@
  * last one on the board, where the draw passes start. */
 
 /* Globals that decl_common.h does not already declare with these types. */
-extern "C" {
+
 extern dMgMCarlo2CardObj_c *sMCarlo2CardTail;
+
 extern dMgMCarlo2CardObj_c *sMCarlo2CardHead;
+
 extern dMgMCarlo2CardObj_c *sMCarlo2FirstPick;
+
 extern dMgMCarlo2CardObj_c *sMCarlo2SecondPick;
+
 extern dMgMCarlo2CardObj_c *sMCarlo2CardsTail;
+
 extern dMgMCarlo2CardObj_c *sMCarlo2Cards;
-extern s16 sMCarlo2BoardDelay;   /* frames left before the pair resolves  */
-extern s16 sMCarlo2CardsMoving;  /* pieces still animating                */
-extern s16 sMCarlo2BoardStep;    /* difficulty row into sMCarlo2BoardRows */
-extern int sMCarlo2FaceCounts[]; /* per-face weights the picker draws from  */
+
+extern s16 sMCarlo2BoardDelay;
+   /* frames left before the pair resolves  */
+extern s16 sMCarlo2CardsMoving;
+  /* pieces still animating                */
+extern s16 sMCarlo2BoardStep;
+    /* difficulty row into sMCarlo2BoardRows */
+extern int sMCarlo2FaceCounts[];
+ /* per-face weights the picker draws from  */
 /* Twenty-three sprite words. The static initializer copies them out of
  * sMgCardSprites in this order; an in-order copy does not. */
 struct Carlo2SpriteWords {
     int a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12,a13,a14,a15,a16,a17,a18,a19,a20,a21,a22;
 };
+
 extern int sMgCardSprites[];
+
 extern Carlo2SpriteWords sMCarlo2CardSprites;
+
 extern unsigned short sMCarlo2CardFrameSprites[];
-extern int sMCarlo2StartFaceCounts[]; /* the starting weights                     */
-extern int sMCarlo2BoardRows[][10];   /* per-difficulty weight top-ups          */
+
+extern int sMCarlo2StartFaceCounts[];
+ /* the starting weights                     */
+extern int sMCarlo2BoardRows[][10];
+   /* per-difficulty weight top-ups          */
 extern int data_020a0db0;
+
 extern unsigned char gSubScreenLayers;
+
 extern unsigned char gMainScreenLayers;
+extern "C" {
+
 
 void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
+
 void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
+
 int  GetGameLanguage(void);
+
 void *LoadFile(int handle);
+
 void DecompressLZ16(void *src, void *dst);
+
 void Vec2_Sub(int* out, int* a, int* b);
+
 int  func_0203d5dc(void* a, void* b);
+
 void Mg_CommitRecords(void);
+
 void Mg_SubmitScore(int score);
+}
 void LoadCard2SubBg3(void *);
 void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
 int Dealer_IsIdle(Dealer *dealer);
-void Dealer_Draw(void* t);
-void Dealer_Update(Dealer *t);
-int  Dealer_Load(void* t);
+extern "C" {
 
+void Dealer_Draw(void* t);
 }
+namespace s020c19d0 {
+void Dealer_Update(Dealer *dealer);
+}
+using s020c19d0::Dealer_Update;
+extern "C" {
+
+int  Dealer_Load(void* t);
+}
+
 
 /* C++ linkage: the reference parameters are part of the ROM names. */
 
@@ -84,7 +121,7 @@ dMgMCarlo2CardObj_c::dMgMCarlo2CardObj_c()
 
 /* `new` inlines the implicit constructor: the base chain, this class's
    vptr, then mDealer and the card array in declaration order. */
-extern "C" void* dScMgMCarlo2_c_classInit()
+ void* dScMgMCarlo2_c_classInit()
 {
     return new dScMgMCarlo2_c;
 }

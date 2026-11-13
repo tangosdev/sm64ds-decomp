@@ -541,7 +541,7 @@
       "ordinal": 70
     },
     {
-      "symbol": "dScMgPanel_c_classInit",
+      "symbol": "_Z22dScMgPanel_c_classInitv",
       "address": "0x02107858",
       "size": "0x00000034",
       "legacy_source": "src/d_s_mg_panel.cpp",
@@ -2101,7 +2101,7 @@
       "source": "0x0213dc64",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "dScMgPanel_c_classInit",
+      "symbol": "_Z22dScMgPanel_c_classInitv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02107858"

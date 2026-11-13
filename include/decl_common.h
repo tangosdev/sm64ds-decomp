@@ -26,6 +26,168 @@ struct Ov007MenuState;
 struct fLiNdBa_c;
 
 #ifdef __cplusplus
+void Bomroom_DrawScore();
+int D3D_PlaySeAtX(int, int);
+int RouletteResults_Tick(void);
+int RouletteBoard_LoadModels(char*);
+unsigned char StarPopup_Clear(void);
+void Heyho_DrawAll(void);
+void Heyho_SpawnAll(void *, int);
+void TrmpItem_MotionHover(void *);
+void TrmpItem_MotionSway(void *);
+void TrmpItem_UpdateMatricesAll(void);
+void TrmpItem_HideAll(u32);
+void TrmpItem_ReleaseFiles(void);
+void TrmpItem_LoadAll(char*, int);
+void TrmpLine_DrawAll(void);
+void TrmpLine_LoadTextures(void);
+void CupFx_ElemDtor();
+void D3D_ReleaseSubBg1(void*);
+void D3D_CaptureToSub(void);
+void D3D_CaptureToMain(void);
+void StarPopup_Draw(void);
+void StarPopup_Update(char*);
+void HanaPopup_DrawAll(void);
+void HanaPopup_UpdateAll();
+void HanaPopup_ClearAll(void);
+void Hana_LoadBackground(void);
+void Jump2Popup_DrawAll(void);
+void Jump2Popup_UpdateAll(void);
+void Jump2Popup_ClearAll(void);
+void Jump2Popup_InitPool(int, int);
+void Jump2_SetLights(void);
+void RouletteStrip_ResetAll(void);
+void RouletteStrip_LinkAll(char*);
+void RouletteBoard_Draw(char*);
+void RouletteBoard_StartSpin(char*);
+void RouletteRacer_Draw(char*);
+void RouletteRacer_PlaceAtStart(int*);
+void Roulette_DrawResultsThunk(char*);
+void SlotBlink_Draw(unsigned char*);
+void SlotBet_Reset(void*);
+void SlotBet_Place(char*);
+void Slot1_InitHud(void*);
+void SmartballObj_ElemDtor(void);
+void TrmpFx_DrawAll(void);
+void TrmpFx_UpdateAll(void);
+void TrmpFx_ClearAll(void);
+void TrmpFx_InitPool(void*, int);
+void Trmp2Spinner_UpdateMatrix(char*);
+void Trmp2Spinner_UpdateMatricesAll(void);
+void Trmp2Spinner_UpdateAll(void);
+void Trmp2Spinner_HideAll(void);
+void Trmp2Spinner_LoadAll(int, int);
+void Dealer_PlayWin(void*);
+void Dealer_StartSwap(int*);
+void Dealer_PlayIdle(char*);
+void Mascot_Update(void*);
+void Mascot_Load(char*);
+void Presenter_PlayLose(char*);
+void FlowerFace_PlayPetalPulled(char*);
+void FlowerFace_Reset(void*);
+void FlowerFace_Draw(void*);
+int FlowerFace_Load(char*);
+void Jump3D_DrawAll(void);
+void Jump3D_DisableInput(void);
+void Jump3D_RestoreCount(void);
+void Puff_ClearAll(int, int);
+#else
+extern void Bomroom_DrawScore();
+extern int D3D_PlaySeAtX(int, int);
+extern int RouletteResults_Tick(void);
+extern int RouletteBoard_LoadModels(char*);
+extern unsigned char StarPopup_Clear(void);
+extern void Heyho_DrawAll(void);
+extern void Heyho_SpawnAll(void *, int);
+extern void TrmpItem_MotionHover(void *);
+extern void TrmpItem_MotionSway(void *);
+extern void TrmpItem_UpdateMatricesAll(void);
+extern void TrmpItem_HideAll(u32);
+extern void TrmpItem_ReleaseFiles(void);
+extern void TrmpItem_LoadAll(char*, int);
+extern void TrmpLine_DrawAll(void);
+extern void TrmpLine_LoadTextures(void);
+extern void CupFx_ElemDtor();
+extern void D3D_ReleaseSubBg1(void*);
+extern void D3D_CaptureToSub(void);
+extern void D3D_CaptureToMain(void);
+extern void StarPopup_Draw(void);
+extern void StarPopup_Update(char*);
+extern void HanaPopup_DrawAll(void);
+extern void HanaPopup_UpdateAll();
+extern void HanaPopup_ClearAll(void);
+extern void Hana_LoadBackground(void);
+extern void Jump2Popup_DrawAll(void);
+extern void Jump2Popup_UpdateAll(void);
+extern void Jump2Popup_ClearAll(void);
+extern void Jump2Popup_InitPool(int, int);
+extern void Jump2_SetLights(void);
+extern void RouletteStrip_ResetAll(void);
+extern void RouletteStrip_LinkAll(char*);
+extern void RouletteBoard_Draw(char*);
+extern void RouletteBoard_StartSpin(char*);
+extern void RouletteRacer_Draw(char*);
+extern void RouletteRacer_PlaceAtStart(int*);
+extern void Roulette_DrawResultsThunk(char*);
+extern void SlotBlink_Draw(unsigned char*);
+extern void SlotBet_Reset(void*);
+extern void SlotBet_Place(char*);
+extern void Slot1_InitHud(void*);
+extern void SmartballObj_ElemDtor(void);
+extern void TrmpFx_DrawAll(void);
+extern void TrmpFx_UpdateAll(void);
+extern void TrmpFx_ClearAll(void);
+extern void TrmpFx_InitPool(void*, int);
+extern void Trmp2Spinner_UpdateMatrix(char*);
+extern void Trmp2Spinner_UpdateMatricesAll(void);
+extern void Trmp2Spinner_UpdateAll(void);
+extern void Trmp2Spinner_HideAll(void);
+extern void Trmp2Spinner_LoadAll(int, int);
+extern void Dealer_PlayWin(void*);
+extern void Dealer_StartSwap(int*);
+extern void Dealer_PlayIdle(char*);
+extern void Mascot_Update(void*);
+extern void Mascot_Load(char*);
+extern void Presenter_PlayLose(char*);
+extern void FlowerFace_PlayPetalPulled(char*);
+extern void FlowerFace_Reset(void*);
+extern void FlowerFace_Draw(void*);
+extern int FlowerFace_Load(char*);
+extern void Jump3D_DrawAll(void);
+extern void Jump3D_DisableInput(void);
+extern void Jump3D_RestoreCount(void);
+extern void Puff_ClearAll(int, int);
+#endif
+#ifdef __cplusplus
+namespace ns_020cd658 {
+int Trmp3DMario_InitPool(unsigned char*, int);
+}
+namespace s020c38b0 {
+void FlowerFace_PlayHate(char *);
+}
+namespace s020c3908 {
+void FlowerFace_PlayLike(char *);
+}
+namespace s020c3d18 {
+void FlowerFace_Update(char*);
+}
+namespace ns_020caadc {
+void Trmp2Mario_DrawAll(void);
+}
+namespace ns_020cac9c {
+void Trmp2Mario_ResetAll(u32);
+}
+namespace ns_020cad3c {
+void Trmp2Mario_SetTuning(int);
+}
+namespace ns_020cd270 {
+void Trmp3DMario_DrawAll(void);
+}
+namespace ns_020cd424 {
+void Trmp3DMario_ResetAll(unsigned int, int);
+}
+#endif
+#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -494,14 +656,9 @@ extern int Mascot_Destruct(char*);
 extern int Presenter_Destruct(char*);
 extern int FlowerFace_IsIdle(char*);
 extern int Trmp2Mario_InitPool(void*, int);
-extern int Trmp3DMario_InitPool(unsigned char*, int);
-extern void Bomroom_DrawScore();
-extern int D3D_PlaySeAtX(int, int);
 /* The former func_ov006_020f9000..020f9f40 range is owned by the real
    dScMgMCarlo2_c / dMgMCarlo2CardObj_c classes. Every caller is in that
    original TU, so none of those private members belongs in this header. */
-extern int RouletteResults_Tick(void);
-extern int RouletteBoard_LoadModels(char*);
 extern int func_ov007_020b6f4c(void);
 extern int func_ov007_020c3ba8(int);
 /* ov007's allocator: (name, size). The parameters stay unnamed here on
@@ -692,7 +849,6 @@ extern unsigned char sSlotReelSymbolsAlt[];
 extern unsigned char data_ov034_0211433c[];
 extern unsigned char data_ov073_02123420[];
 extern unsigned char data_ov073_02123424[];
-extern unsigned char StarPopup_Clear(void);
 extern unsigned int VTable_dBgPi_dBgCh_GndThunk[];
 extern unsigned int gNextSceneParam;
 extern unsigned int data_020a4be4;
@@ -907,93 +1063,25 @@ extern void MascotWalker_StartNextPath(void*);
 extern void MascotWalker_Draw(char*);
 extern void MascotWalker_Load(struct MascotWalker *);
 extern void Dealer_ResetMatrices(char*);
-extern void Dealer_PlayWin(void*);
 extern void Dealer_PlayLose(void*);
-extern void Dealer_StartSwap(int*);
 extern void Dealer_StartReveal(void*, int, void*);
-extern void Dealer_PlayIdle(char*);
 extern void Camera_InitSlotsView(char*);
 extern void Mascot_Draw(char*);
-extern void Mascot_Update(void*);
-extern void Mascot_Load(char*);
 extern void Presenter_UpdateMatrix(char*);
-extern void Presenter_PlayLose(char *);
 extern void Presenter_PlayIdle(char*);
 extern void Presenter_Draw(void*);
 extern void Presenter_Update(char*);
 extern void FallingPetal_UpdateMatrix(char*);
 extern void FallingPetal_Draw(char*);
-extern void FlowerFace_PlayHate(char *);
-extern void FlowerFace_PlayLike(char *);
-extern void FlowerFace_PlayPetalPulled(char*);
 extern void Camera_InitFlowerView(void*);
-extern void FlowerFace_Reset(void*);
-extern void FlowerFace_Draw(void*);
-extern void FlowerFace_Update(char*);
-extern int FlowerFace_Load(char*);
 extern void*FlowerFace_Destruct(char*);
-extern void Heyho_DrawAll(void);
-extern void Heyho_SpawnAll(void *, int);
-extern void Jump3D_DrawAll(void);
 extern void Jump3D_Arrange(int, int);
-extern void Jump3D_DisableInput(void);
-extern void Jump3D_RestoreCount(void);
-extern void Puff_ClearAll(int, int);
-extern void Trmp2Mario_DrawAll(void);
-extern void Trmp2Mario_ResetAll(u32);
-extern void Trmp2Mario_SetTuning(int);
-extern void Trmp3DMario_DrawAll(void);
-extern void Trmp3DMario_ResetAll(unsigned int, int);
-extern void TrmpItem_MotionHover(void *);
-extern void TrmpItem_MotionSway(void *);
-extern void TrmpItem_UpdateMatricesAll(void);
-extern void TrmpItem_HideAll(u32);
-extern void TrmpItem_ReleaseFiles(void);
-extern void TrmpItem_LoadAll(char*, int);
-extern void TrmpLine_DrawAll(void);
-extern void TrmpLine_LoadTextures(void);
-extern void CupFx_ElemDtor();
-extern void D3D_ReleaseSubBg1(void*);
-extern void D3D_CaptureToSub(void);
-extern void D3D_CaptureToMain(void);
-extern void StarPopup_Draw(void);
-extern void StarPopup_Update(char*);
-extern void HanaPopup_DrawAll(void);
-extern void HanaPopup_UpdateAll();
-extern void HanaPopup_ClearAll(void);
-extern void Hana_LoadBackground(void);
-extern void Jump2Popup_DrawAll(void);
-extern void Jump2Popup_UpdateAll(void);
-extern void Jump2Popup_ClearAll(void);
-extern void Jump2Popup_InitPool(int, int);
-extern void Jump2_SetLights(void);
 extern void Luigi_PrepareScanlines(void);
-extern void RouletteStrip_ResetAll(void);
-extern void RouletteStrip_LinkAll(char*);
-extern void RouletteBoard_Draw(char*);
-extern void RouletteBoard_StartSpin(char*);
 /* RouletteBoard_FreeModels is deliberately NOT declared here. Its recorded return
    type was void; the cartridge's own bytes at 0x0210858c end `mov r0, #1`,
    so it returns int. Nothing outside src/minigames/d_s_mg_roulette_methods.cpp, which
    now defines it, references the symbol, so the wrong declaration is
    dropped rather than corrected. */
-extern void RouletteRacer_Draw(char*);
-extern void RouletteRacer_PlaceAtStart(int*);
-extern void Roulette_DrawResultsThunk(char*);
-extern void SlotBlink_Draw(unsigned char*);
-extern void SlotBet_Reset(void*);
-extern void SlotBet_Place(char*);
-extern void Slot1_InitHud(void*);
-extern void SmartballObj_ElemDtor(void);
-extern void TrmpFx_DrawAll(void);
-extern void TrmpFx_UpdateAll(void);
-extern void TrmpFx_ClearAll(void);
-extern void TrmpFx_InitPool(void*, int);
-extern void Trmp2Spinner_UpdateMatrix(char*);
-extern void Trmp2Spinner_UpdateMatricesAll(void);
-extern void Trmp2Spinner_UpdateAll(void);
-extern void Trmp2Spinner_HideAll(void);
-extern void Trmp2Spinner_LoadAll(int, int);
 extern void Petal_ElemDtor();
 extern int func_ov007_020b7040(void*);
 extern int func_ov007_020b7138(void*, void*);

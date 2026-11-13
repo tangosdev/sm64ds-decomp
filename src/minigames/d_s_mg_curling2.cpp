@@ -60,95 +60,174 @@ typedef void (C::*PMF1)(int);
  * Keep it above the first function. */
 extern "C" {
 
+
 extern int Mg_GetSubmittedScore(void);
+
 extern void Mg_SubmitScore(int self);
+
 extern int Mg_IsNewRecord(void);
+
 extern int Mg_GetTopRecord(void);
+
 extern void *Ov004_LoadFileByPath(const char *p);
+
 extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *matrix);
+
 extern void Mg_SetTopScreenYOffset(int a);
+
 extern void Mg_SetSharedState(s32 state);
+
 extern void Mg_DrawTopLeftCounter(int self);
+
 extern void Mg_DrawTopRightCounter(int a, int b);
+
 extern void Mg_DrawNumber(int a, int b, int c, int d, int e, int f, int g);
+
 extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
+
 extern void Mg_RenderSpriteBoth(void *a, int b, int c, int d, int e);
+
 extern void func_02012718(int id, int v);
+
 extern int func_020126e8(int a);
+
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, s16 h);
+
 extern void func_020126ac(int a0, int a1, int a2, int a3, int s0);
+}
+
 struct OamAttr;
+
 struct Matrix2x2;
+extern "C" {
+
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
+
 extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
+
 extern int GetGameLanguage(void);
+
 extern void SetBg2Offset(int a, int b);
+
 extern void SetBg0Offset(int a, int b);
+
 extern void DecompressLZ16(const void *src, void *dst);
+
 extern void *LoadFile(int handle);
+
 extern void Deallocate(void *p);
+
 extern void Ov004_Deallocate(void *p);
+
 /* local extern: nitro/gx/gx_load.h leaves GX_LoadBG3Scr out until
  * decl_common.h's non-const spelling of it goes. */
 extern void GX_LoadBG3Scr(void *a, u32 b, u32 c);
+}
+
 
 extern u8 gMainScreenLayers;
+
 extern u8 gSubScreenLayers;
+
 extern unsigned char sCurling2StepXPicks[];
+
 extern unsigned char sCurling2StepXFastPicks[];
+
 extern int sCurling2StepModes[];
+
 extern int data_ov006_0212e504[];
+
 extern int data_ov006_0212e51c[];
+
 extern int sCurling2ScrollX[];
+
 extern int sCurling2ScrollY[];
+
 extern OamAttr *sCurlingBitSprites[];
+
 extern int sCurling2StoneSprite;
+
 extern int sCurling2TargetStoneSprite;
+
 extern int sCurling2StonesSprites;
+
 extern OamAttr **sCurling2CounterSprites[];
+
 extern int sCurling2CursorSprites[];
+
 extern char sCurling2BgJokyuNcgPath;
+
 
 /* The seven pointer-to-member state tables this file's functions dispatch
  * through. __sinit_ov006_02130758 fills them from the 8-byte {code
  * pointer, zero adjustment} records in ov006 .data; their definitions are
  * the tail of this file. */
 extern PMF0 sCurling2DragTable[];
+
 extern PMF sCurling2StepModeTable[];
+
 extern PMF sCurling2StepYTable[];
+
 extern PMF sCurling2StepXFastTable[];
+
 extern PMF1 sCurling2StoneTable[];
+
 extern PMF sCurling2StepXTable[];
+
 extern PMF0 sCurling2BehaviorTable[];
+
 /* The ROM PMF constants all seven state tables copy from (unlicensed
  * .data), grouped by destination table in retail copy order. */
 extern PMF0 pmf_dScMgCurling2_c_BeginRound;
-extern PMF0 pmf_dScMgCurling2_c_Play;
-extern PMF0 pmf_dScMgCurling2_c_NextThrow;
-extern PMF0 pmf_dScMgCurling2_c_EndRound;
-extern PMF0 pmf_dScMgCurling2_c_Idle;
-extern PMF1 pmf_dScMgCurling2_c_StoneWait;
-extern PMF1 pmf_dScMgCurling2_c_StoneSlide;
-extern PMF1 pmf_dScMgCurling2_c_StoneRest;
-extern PMF1 pmf_dScMgCurling2_c_StoneSteer;
-extern PMF0 pmf_dScMgCurling2_c_DragBegin;
-extern PMF0 pmf_dScMgCurling2_c_DragUpdate;
-extern PMF pmf_dScMgCurling2_c_PickStepMode;
-extern PMF pmf_dScMgCurling2_c_StepXOnly;
-extern PMF pmf_dScMgCurling2_c_StepXAndY;
-extern PMF pmf_dScMgCurling2_c_StepXPickFast;
-extern PMF pmf_dScMgCurling2_c_StepXPushPosFast;
-extern PMF pmf_dScMgCurling2_c_StepXPushNegFast;
-extern PMF pmf_dScMgCurling2_c_StepXSettleFast;
-extern PMF pmf_dScMgCurling2_c_StepXPick;
-extern PMF pmf_dScMgCurling2_c_StepXPushPos;
-extern PMF pmf_dScMgCurling2_c_StepXPushNeg;
-extern PMF pmf_dScMgCurling2_c_StepXSettle;
-extern PMF pmf_dScMgCurling2_c_StepYRestart;
-extern PMF pmf_dScMgCurling2_c_StepYRampUp;
-extern PMF pmf_dScMgCurling2_c_StepYRampDown;
 
-} /* extern "C" */
+extern PMF0 pmf_dScMgCurling2_c_Play;
+
+extern PMF0 pmf_dScMgCurling2_c_NextThrow;
+
+extern PMF0 pmf_dScMgCurling2_c_EndRound;
+
+extern PMF0 pmf_dScMgCurling2_c_Idle;
+
+extern PMF1 pmf_dScMgCurling2_c_StoneWait;
+
+extern PMF1 pmf_dScMgCurling2_c_StoneSlide;
+
+extern PMF1 pmf_dScMgCurling2_c_StoneRest;
+
+extern PMF1 pmf_dScMgCurling2_c_StoneSteer;
+
+extern PMF0 pmf_dScMgCurling2_c_DragBegin;
+
+extern PMF0 pmf_dScMgCurling2_c_DragUpdate;
+
+extern PMF pmf_dScMgCurling2_c_PickStepMode;
+
+extern PMF pmf_dScMgCurling2_c_StepXOnly;
+
+extern PMF pmf_dScMgCurling2_c_StepXAndY;
+
+extern PMF pmf_dScMgCurling2_c_StepXPickFast;
+
+extern PMF pmf_dScMgCurling2_c_StepXPushPosFast;
+
+extern PMF pmf_dScMgCurling2_c_StepXPushNegFast;
+
+extern PMF pmf_dScMgCurling2_c_StepXSettleFast;
+
+extern PMF pmf_dScMgCurling2_c_StepXPick;
+
+extern PMF pmf_dScMgCurling2_c_StepXPushPos;
+
+extern PMF pmf_dScMgCurling2_c_StepXPushNeg;
+
+extern PMF pmf_dScMgCurling2_c_StepXSettle;
+
+extern PMF pmf_dScMgCurling2_c_StepYRestart;
+
+extern PMF pmf_dScMgCurling2_c_StepYRampUp;
+
+extern PMF pmf_dScMgCurling2_c_StepYRampDown;
+ /* extern "C" */
 
 namespace cstd {
 s16 atan2(s32, s32);
@@ -1634,7 +1713,7 @@ s32 dScMgCurling2_c::InitResources() {
  * allocation size, and vtable identity; later EAD lineage supplies the
  * classInit spelling prior. Exact original SM64DS spelling is not preserved.
  * Historical project alias: func_ov006_020e6bf4. */
-extern "C" void *dScMgCurling2_c_classInit() {
+ void *dScMgCurling2_c_classInit() {
     return new dScMgCurling2_c;
 }
 

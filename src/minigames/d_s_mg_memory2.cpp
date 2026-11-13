@@ -45,8 +45,8 @@ s16 atan2(s32, s32);
  * calculations; they are not original class layouts. */
 
 typedef void (dScMgMemory2_c::*dScMgMemory2_cState)();
-typedef void (dScMgMemory2_c::*dScMgMemory2_cCardState)(int);
-extern "C" dScMgMemory2_cCardState sMemory2CardTable[];
+typedef void (dScMgMemory2_c::*dScMgMemory2_cCardState)(int);extern dScMgMemory2_cCardState sMemory2CardTable[];
+
 
 typedef struct FlyAwayCardView {
     /* 0x00 */ s32 x;
@@ -90,61 +90,119 @@ typedef struct {
     u16 targetPairs;   /* 0x53ea */
     char _pad3[0x1e];
     u8 difficulty; /* 0x540a */
-} DealSceneView;
+} DealSceneView;extern dScMgMemory2_cState sMemory2ResultTable[];
+extern dScMgMemory2_cState sMemory2StateTable[];
+extern dScMgMemory2_cState sMemory2RoundTable[];
 
-extern "C" dScMgMemory2_cState sMemory2ResultTable[];
-extern "C" dScMgMemory2_cState sMemory2StateTable[];
-extern "C" dScMgMemory2_cState sMemory2RoundTable[];
 
 extern "C" {
+
 extern void Mg_DrawScoreTally(void *thiz, int a, int b, int c);
+
 extern void Mg_DrawBlinkSprite(void *c, int arg1, int arg2);
+
 extern s16 atan2_hold_d_s_mg_memory2_1(int y, int x);
+
 extern void MgCoins_StartLoseOneMore(void);
+
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
-extern u16 sMemory2CardFrameSprites[];
-extern void *sMemory2CardSprites[];
-extern s32 sMemory2FlyAwayLimitPerMode[];
-extern unsigned short sMemory2FlipFrameTimes[];
-extern void Mg_SaveRecordPair(int a, int b);
-extern u16 *sMemory2CardPositionsPerDifficulty[];
-extern int sMemory2ResultRowsPerDifficulty[];
-extern int sMemory2ResultColsPerDifficulty[];
-extern void MgCoins_StartPayout(int count);
-extern short gMgCoinsStatus;
-extern void Mg_SetPerfectBanner(void);
-extern void Mg_SetSharedState(int);
-extern void Mg_SubmitScore(int self);
-extern void Dealer_PlayWin(void *c);
-extern void Dealer_PlayLose(void *c);
-extern void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
-extern int sMemory2FourthDealsPerDifficulty[];
-extern int sMemory2HardDealsPerMode[];
-extern int sMemory2NormalDealsPerDifficulty[];
-extern int sMemory2EasyDealsPerDifficulty[];
-extern int sMemory2PreviewCountPerDifficulty[];
-extern int sMemory2PreviewTimePerDifficulty[];
-extern void FreeGfxSlotsById(int x);
-extern void Dealer_PlayIdle(char *p);
-extern int Dealer_IsIdle(Dealer *dealer);
-extern void MgCoins_Reset(void);
-void Mg_DrawCredits(void *, int, int, int);
-void Dealer_Draw(void *);
-extern void MgCoins_Update(void);
-extern void Dealer_Update(Dealer *p);
-void LoadCard2SubBg3(void *);
-s32 GetGameLanguage(void);
-void *LoadFile(int handle);
-void DecompressLZ16(void *src, void *dst);
-void Deallocate(void *ptr);
-int Dealer_Load(void *c);
-int Mg_GetSavedRecord0(void);
-int Mg_GetSavedRecord1(void);
-void Mg_SetTopScreenYOffset(int v);
-void Mg_PlaceBannersOnTopScreen(void);
-extern u8 gMainScreenLayers;
-extern u8 gSubScreenLayers;
 }
+
+extern u16 sMemory2CardFrameSprites[];
+
+extern void *sMemory2CardSprites[];
+
+extern s32 sMemory2FlyAwayLimitPerMode[];
+
+extern unsigned short sMemory2FlipFrameTimes[];
+extern "C" {
+
+extern void Mg_SaveRecordPair(int a, int b);
+}
+
+extern u16 *sMemory2CardPositionsPerDifficulty[];
+
+extern int sMemory2ResultRowsPerDifficulty[];
+
+extern int sMemory2ResultColsPerDifficulty[];
+extern "C" {
+
+extern void MgCoins_StartPayout(int count);
+}
+
+extern short gMgCoinsStatus;
+extern "C" {
+
+extern void Mg_SetPerfectBanner(void);
+
+extern void Mg_SetSharedState(int);
+
+extern void Mg_SubmitScore(int self);
+}
+void Dealer_PlayWin(void *c);
+extern "C" {
+
+extern void Dealer_PlayLose(void *c);
+}
+void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
+
+extern int sMemory2FourthDealsPerDifficulty[];
+
+extern int sMemory2HardDealsPerMode[];
+
+extern int sMemory2NormalDealsPerDifficulty[];
+
+extern int sMemory2EasyDealsPerDifficulty[];
+
+extern int sMemory2PreviewCountPerDifficulty[];
+
+extern int sMemory2PreviewTimePerDifficulty[];
+extern "C" {
+
+extern void FreeGfxSlotsById(int x);
+}
+void Dealer_PlayIdle(char *c);
+int Dealer_IsIdle(Dealer *dealer);
+extern "C" {
+
+extern void MgCoins_Reset(void);
+
+void Mg_DrawCredits(void *, int, int, int);
+
+void Dealer_Draw(void *);
+
+extern void MgCoins_Update(void);
+}
+namespace s020c19d0 {
+void Dealer_Update(Dealer *dealer);
+}
+using s020c19d0::Dealer_Update;
+void LoadCard2SubBg3(void *);
+extern "C" {
+
+s32 GetGameLanguage(void);
+
+void *LoadFile(int handle);
+
+void DecompressLZ16(void *src, void *dst);
+
+void Deallocate(void *ptr);
+
+int Dealer_Load(void *c);
+
+int Mg_GetSavedRecord0(void);
+
+int Mg_GetSavedRecord1(void);
+
+void Mg_SetTopScreenYOffset(int v);
+
+void Mg_PlaceBannersOnTopScreen(void);
+}
+
+extern u8 gMainScreenLayers;
+
+extern u8 gSubScreenLayers;
+
 
 /* The scene seen through a pointer stepped one card at a time, for the
  * DrawCards walk. */
@@ -1151,7 +1209,7 @@ s32 dScMgMemory2_c::InitResources() {
     return 1;
 }
 
-extern "C" void *dScMgMemory2_c_classInit() {
+ void *dScMgMemory2_c_classInit() {
     return new dScMgMemory2_c;
 }
 
@@ -1163,9 +1221,8 @@ extern "C" void *dScMgMemory2_c_classInit() {
  * pointers emit the 29 eight-byte descriptor constants the initializer copies.
  * The manifest binds those compiler-local constants to the configured pmf_ names. */
 /* The non-actor profile is interleaved with the member-pointer constants. */
-extern "C" BaseSpawnInfo<void> g_profile_MG_MEMORY_J = {dScMgMemory2_c_classInit, 0x016b, 0x016b};
+BaseSpawnInfo<void> g_profile_MG_MEMORY_J = {dScMgMemory2_c_classInit, 0x016b, 0x016b};extern int sMgCardSprites[];
 
-extern "C" int sMgCardSprites[];
 
 void *sMemory2CardSprites[23] = {
     (void *)sMgCardSprites[0],  (void *)sMgCardSprites[1],  (void *)sMgCardSprites[2],

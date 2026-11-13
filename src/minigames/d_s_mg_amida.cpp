@@ -100,34 +100,54 @@ enum dScMgAmida_c_AssetId {
 #include "nitro/mi/memory.h"
 
 extern "C" {
+
 /* --- shared ov004 and main helpers --- */
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
-extern void Mg_DrawScoreTally(void *a0, int a1, int a2, int a3);
-extern void FreeGfxSlotsById(int a);
-extern u32 LoadCompressedFileAt(int fileID, void *target);
-extern void *LoadFile(int handle);
-extern void SetSubBg2Offset(int a, int b);
-extern void func_02012dbc(int a);
-extern int func_020126e8(int a);
-extern void func_020126ac(int a0, int a1, int a2, int a3, int a4);
-extern int func_02012468(int handle, int a, int sfx, int b, int c, int d, int pan, short e);
-extern int GetGameLanguage(void);
 
-/* --- the class's own functions defined below --- */
-extern void Amida_RestoreBgChars(void *);
-extern void Amida_SaveBgChars(void *sb);
-extern void *dScMgAmida_c_classInit(void);
+extern void Mg_DrawScoreTally(void *a0, int a1, int a2, int a3);
+
+extern void FreeGfxSlotsById(int a);
+
+extern u32 LoadCompressedFileAt(int fileID, void *target);
+
+extern void *LoadFile(int handle);
+
+extern void SetSubBg2Offset(int a, int b);
+
+extern void func_02012dbc(int a);
+
+extern int func_020126e8(int a);
+
+extern void func_020126ac(int a0, int a1, int a2, int a3, int a4);
+
+extern int func_02012468(int handle, int a, int sfx, int b, int c, int d, int pan, short e);
+
+extern int GetGameLanguage(void);
+}
+void Amida_RestoreBgChars(void *);
+void Amida_SaveBgChars(void *);
+void *dScMgAmida_c_classInit(void);
+
 
 /* --- data --- */
 extern u8 gMainScreenLayers;
+
 extern u8 gSubScreenLayers;
+
 extern int sAmidaPatternSpeedUp[];
+
 extern s32 data_0208ee44;
+
 extern char sAmidaPatterns[];
+
 extern char sAmidaPatternGoalShuffle[];
+
 extern char sAmidaPatternSpeeds[];
+
 extern char sAmidaPatternRungSkip[];
+
 extern char sAmidaPatternExtraRungs[];
+
 
 /* File-local view of one 0x1c-byte pattern record, indexed by
    mPatternIndex. Each field but walkerStagger has its own symbol above
@@ -144,19 +164,31 @@ struct AmidaPattern {
     s32 walkerStagger; /* 0x14 */
     s32 speedUp;       /* 0x18 sAmidaPatternSpeedUp */
 };
+
 typedef char AmidaPattern_size_must_be_0x1c[sizeof(AmidaPattern) == 0x1c ? 1 : -1];
+
 extern void *sAmidaWalkerSprite;
+
 extern void *sAmidaSideSprite;
+
 extern void *sAmidaHurryButtonSprite;
+
 extern void *sAmidaBoardAnimSprites[];
+
 extern void *sAmidaLaneAnimSprites[];
+
 extern void *sAmidaPieceSprites[];
+
 extern int sAmidaLaneResultSprites[];
+
 extern int sAmidaLaneWantSprites[];
+
 extern int sAmidaBoardAnimationFrames[13];
+
 extern s32 sAmidaLaneTargets[];
+
 extern s32 sAmidaLaneSaved[];
-}
+
 
 namespace Memory {
 void *Allocate(unsigned int size);
@@ -1280,7 +1312,7 @@ void dScMgAmida_c::StepWalkers() {
 }
 #pragma pop
 
-extern "C" void Amida_RestoreBgChars(void *) {
+ void Amida_RestoreBgChars(void *) {
     char *mainChars = (char *)G2_GetBG0CharPtr();
     MI_CpuCopy16((char *)G2_GetBG0CharPtr() + 0xc000, mainChars, 0x6000);
     char *subChars = (char *)G2S_GetBG0CharPtr();
@@ -1288,7 +1320,7 @@ extern "C" void Amida_RestoreBgChars(void *) {
 }
 
 /* The scene pointer its caller passes is never read. */
-extern "C" void Amida_SaveBgChars(void *) {
+ void Amida_SaveBgChars(void *) {
     char *mainChars = (char *)G2_GetBG0CharPtr() + 0xc000;
     MI_CpuCopy16((char *)G2_GetBG0CharPtr(), mainChars, 0x6000);
     char *subChars = (char *)G2S_GetBG0CharPtr() + 0x6000;
@@ -2210,7 +2242,7 @@ void dScMgAmida_c::AfterCleanupResources(u32 vfSuccess) {
    vptr, then the four member arrays in declaration order through
    __cxa_vec_ctor -- the cells, lane positions and lane velocities with
    Vector2's structors, the pieces with dScMgAmida_c_Piece's. */
-extern "C" void *dScMgAmida_c_classInit(void) {
+ void *dScMgAmida_c_classInit(void) {
     return new dScMgAmida_c;
 }
 
@@ -2240,6 +2272,6 @@ AmidaRungPosition sAmidaInitialRungPositions[11] = {
 
 /* Match the existing void* factory declaration; its original return type
  * remains a separate source-reconstruction question. */
-extern "C" {
+
 BaseSpawnInfo<void> g_profile_MG_AMIDA = {dScMgAmida_c_classInit, 371, 371};
-}
+

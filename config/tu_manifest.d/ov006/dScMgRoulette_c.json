@@ -60,210 +60,210 @@
       "ordinal": 2
     },
     {
-      "symbol": "RouletteResults_Draw",
+      "symbol": "_Z20RouletteResults_Drawv",
       "address": "0x021079cc",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov006_021079cc.c",
       "ordinal": 3
     },
     {
-      "symbol": "RouletteResults_Tick",
+      "symbol": "_Z20RouletteResults_Tickv",
       "address": "0x02107a6c",
       "size": "0x000000a8",
       "legacy_source": "src/func_ov006_02107a6c.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "RouletteStrip_ResetAll",
+      "symbol": "_Z22RouletteStrip_ResetAllv",
       "address": "0x02107b14",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov006_02107b14.c",
       "ordinal": 5
     },
     {
-      "symbol": "RouletteStrip_LinkAll",
+      "symbol": "_Z21RouletteStrip_LinkAllPc",
       "address": "0x02107b70",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_02107b70.c",
       "ordinal": 6
     },
     {
-      "symbol": "RouletteStrip_DrawRacers",
+      "symbol": "_Z24RouletteStrip_DrawRacersP13RouletteStrip",
       "address": "0x02107b94",
       "size": "0x000000bc",
       "legacy_source": "src/func_ov006_02107b94.c",
       "ordinal": 7
     },
     {
-      "symbol": "RouletteStrip_Draw",
+      "symbol": "_Z18RouletteStrip_DrawP13RouletteStripi",
       "address": "0x02107c50",
       "size": "0x000000d0",
       "legacy_source": "src/func_ov006_02107c50.c",
       "ordinal": 8
     },
     {
-      "symbol": "RouletteStrip_AddRacer",
+      "symbol": "_Z22RouletteStrip_AddRacerP13RouletteStripP13RouletteRacer",
       "address": "0x02107d20",
       "size": "0x00000038",
       "legacy_source": "src/func_ov006_02107d20.c",
       "ordinal": 9
     },
     {
-      "symbol": "RouletteStrip_Reset",
+      "symbol": "_Z19RouletteStrip_ResetP13RouletteStrip",
       "address": "0x02107d58",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_02107d58.c",
       "ordinal": 10
     },
     {
-      "symbol": "RouletteBoard_Draw",
+      "symbol": "_Z18RouletteBoard_DrawPc",
       "address": "0x02107d80",
       "size": "0x00000038",
       "legacy_source": "src/func_ov006_02107d80.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "RouletteBoard_Update",
+      "symbol": "_Z20RouletteBoard_UpdateP13RouletteBoard",
       "address": "0x02107db8",
       "size": "0x000000f0",
       "legacy_source": "src/func_ov006_02107db8.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "RouletteBoard_StateSlow",
+      "symbol": "_Z23RouletteBoard_StateSlowP13RouletteBoard",
       "address": "0x02107ea8",
       "size": "0x0000041c",
       "legacy_source": "src/func_ov006_02107ea8.c",
       "ordinal": 13
     },
     {
-      "symbol": "RouletteBoard_StartSlowdown",
+      "symbol": "_Z27RouletteBoard_StartSlowdownP13RouletteBoard",
       "address": "0x021082c4",
       "size": "0x00000038",
       "legacy_source": "src/func_ov006_021082c4.c",
       "ordinal": 14
     },
     {
-      "symbol": "RouletteBoard_StateSpin",
+      "symbol": "_Z23RouletteBoard_StateSpinP13RouletteBoard",
       "address": "0x021082fc",
       "size": "0x0000020c",
       "legacy_source": "src/func_ov006_021082fc.c",
       "ordinal": 15
     },
     {
-      "symbol": "RouletteBoard_SetStateSpin",
+      "symbol": "_Z26RouletteBoard_SetStateSpinP13RouletteBoard",
       "address": "0x02108508",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov006_02108508.c",
       "ordinal": 16
     },
     {
-      "symbol": "RouletteBoard_StartSpin",
+      "symbol": "_Z23RouletteBoard_StartSpinPc",
       "address": "0x02108524",
       "size": "0x00000068",
       "legacy_source": "src/func_ov006_02108524.c",
       "ordinal": 17
     },
     {
-      "symbol": "RouletteBoard_FreeModels",
+      "symbol": "_Z24RouletteBoard_FreeModelsP13RouletteBoard",
       "address": "0x0210858c",
       "size": "0x00000034",
       "legacy_source": "src/func_ov006_0210858c.c",
       "ordinal": 18
     },
     {
-      "symbol": "RouletteBoard_LoadModels",
+      "symbol": "_Z24RouletteBoard_LoadModelsPc",
       "address": "0x021085c0",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_021085c0.c",
       "ordinal": 19
     },
     {
-      "symbol": "Roulette_TileAt",
+      "symbol": "_Z15Roulette_TileAtii",
       "address": "0x02108650",
       "size": "0x00000540",
       "legacy_source": "src/func_ov006_02108650.c",
       "ordinal": 20
     },
     {
-      "symbol": "RouletteRacer_GetPayout",
+      "symbol": "_Z23RouletteRacer_GetPayoutP13RouletteRaceri",
       "address": "0x02108b90",
       "size": "0x00000130",
       "legacy_source": "src/func_ov006_02108b90.c",
       "ordinal": 21
     },
     {
-      "symbol": "RouletteRacer_Draw",
+      "symbol": "_Z18RouletteRacer_DrawPc",
       "address": "0x02108cc0",
       "size": "0x00000068",
       "legacy_source": "src/func_ov006_02108cc0.c",
       "ordinal": 22
     },
     {
-      "symbol": "RouletteRacer_CheckLandingB",
+      "symbol": "_Z27RouletteRacer_CheckLandingBP13RouletteRacer",
       "address": "0x02108d28",
       "size": "0x000000fc",
       "legacy_source": "src/func_ov006_02108d28.c",
       "ordinal": 23
     },
     {
-      "symbol": "RouletteRacer_CheckLandingA",
+      "symbol": "_Z27RouletteRacer_CheckLandingAP13RouletteRacer",
       "address": "0x02108e24",
       "size": "0x00000108",
       "legacy_source": "src/func_ov006_02108e24.c",
       "ordinal": 24
     },
     {
-      "symbol": "RouletteRacer_Update",
+      "symbol": "_Z20RouletteRacer_UpdateP13RouletteRacer",
       "address": "0x02108f2c",
       "size": "0x00000350",
       "legacy_source": "src/func_ov006_02108f2c.c",
       "ordinal": 25
     },
     {
-      "symbol": "RouletteRacer_Release",
+      "symbol": "_Z21RouletteRacer_ReleaseP13RouletteRacer",
       "address": "0x0210927c",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_0210927c.c",
       "ordinal": 26
     },
     {
-      "symbol": "RouletteRacer_PlaceAtStart",
+      "symbol": "_Z26RouletteRacer_PlaceAtStartPi",
       "address": "0x021092a0",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_021092a0.c",
       "ordinal": 27
     },
     {
-      "symbol": "RouletteRacer_Init",
+      "symbol": "_Z18RouletteRacer_InitP13RouletteRacer",
       "address": "0x021092e8",
       "size": "0x00000074",
       "legacy_source": "src/func_ov006_021092e8.c",
       "ordinal": 28
     },
     {
-      "symbol": "RouletteRacer_MoveToTile",
+      "symbol": "_Z24RouletteRacer_MoveToTileP13RouletteRaceri",
       "address": "0x0210935c",
       "size": "0x00000150",
       "legacy_source": "src/func_ov006_0210935c.c",
       "ordinal": 29
     },
     {
-      "symbol": "RouletteRacer_SetTarget",
+      "symbol": "_Z23RouletteRacer_SetTargetP13RouletteRacerPi",
       "address": "0x021094ac",
       "size": "0x00000084",
       "legacy_source": "src/func_ov006_021094ac.c",
       "ordinal": 30
     },
     {
-      "symbol": "RouletteRacer_SetVelocityToward",
+      "symbol": "_Z31RouletteRacer_SetVelocityTowardP13RouletteRacerPii",
       "address": "0x02109530",
       "size": "0x0000007c",
       "legacy_source": "src/func_ov006_02109530.c",
       "ordinal": 31
     },
     {
-      "symbol": "RouletteRacer_AimAt",
+      "symbol": "_Z19RouletteRacer_AimAtP13RouletteRacerPi",
       "address": "0x021095ac",
       "size": "0x00000020",
       "legacy_source": "src/func_ov006_021095ac.c",
@@ -298,7 +298,7 @@
       "ordinal": 36
     },
     {
-      "symbol": "Roulette_DrawResultsThunk",
+      "symbol": "_Z25Roulette_DrawResultsThunkPc",
       "address": "0x02109aa0",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov006_02109aa0.c",

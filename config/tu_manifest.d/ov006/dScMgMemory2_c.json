@@ -397,7 +397,7 @@
       "ordinal": 50
     },
     {
-      "symbol": "dScMgMemory2_c_classInit",
+      "symbol": "_Z24dScMgMemory2_c_classInitv",
       "address": "0x020f75d4",
       "size": "0x00000060",
       "legacy_source": "src/dScMgMemory2_c_classInit.c",
@@ -1844,7 +1844,7 @@
       "source": "0x0213d288",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "dScMgMemory2_c_classInit",
+      "symbol": "_Z24dScMgMemory2_c_classInitv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x020f75d4"

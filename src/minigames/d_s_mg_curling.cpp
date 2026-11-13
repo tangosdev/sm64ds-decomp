@@ -70,89 +70,166 @@ struct B4 {
  * `extern "C"` block, so the C-linkage names are collected here in one. */
 extern "C" {
 
+
 extern int Mg_GetSubmittedScore(void);
+
 extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *matrix);
+
 extern void Mg_RenderSpriteBoth(void *a, int b, int c, int d, int e);
+
 extern void Mg_DrawNumberRotated(int a1, int a2, int a3, int a4, int a5, int a6, u16 a7);
+
 extern void Mg_DrawBigNumber(int a1, int a2, int num, int a4, int a5, int sel, int idx);
+
 extern void func_02012718(int a, int b);
+}
+
 struct OamAttr;
+
 struct Matrix2x2;
+extern "C" {
+
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
+
 extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
+
 extern int func_020126e8(int a);
+
 extern void func_020126ac(int a0, int a1, int a2, int a3, int s0);
+
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
+
 extern int Mg_IsNewRecord(void);
+
 extern void Mg_SetSharedState(int state);
+
 extern void Mg_SubmitScore(int score);
+
 extern int Mg_GetTopRecord(void);
+
 extern void Mg_DrawTopLeftCounter(int self);
+
 extern void *Ov004_LoadFileByPath(const char *path);
+
 extern void Mg_SetTopScreenYOffset(int a);
 
+
 extern void DecompressLZ16(const void *src, void *dst);
+
 extern void *LoadFile(int handle);
+
 extern void Deallocate(void *ptr);
+
 extern void Ov004_Deallocate(void *p);
+}
+
 
 extern unsigned char sCurlingBitAStates[];
+
 extern unsigned char sCurlingBitBStates[];
+
 extern u8 sCurlingScoreDelays[];
+
 extern int sCurlingBitKinds[];
+
 extern int sCurlingStonesLeftX[];
+
 extern OamAttr *sCurlingBitSprites[];
+
 extern int sCurlingStoneLeftSprite;
+
 extern int sCurlingStoneLeftShadowSprite;
+
 extern int sCurlingAimMarkerSprites[];
+
 extern unsigned char gMainScreenLayers;
+
 extern unsigned char gSubScreenLayers;
+
 extern char sCurlingMgDirPath;
+
 extern char sCurlingBgCurling2NcgPath;
+
 extern int sCurlingSlideZoneEdges[];
+
 extern int sCurlingSlideShiftLeft[];
+
 extern int sCurlingSlideShiftRight[];
+
 extern int sCurlingSlideMinLeft[];
+
 extern int sCurlingSlideMinRight[];
+
 extern int sCurlingHouseSpots[];
+
 
 /* The six state tables, filled at startup by the ov006 static init. */
 extern PMF0 sCurlingAimTable[];
+
 extern PMF sCurlingBitKindTable[];
+
 extern PMF sCurlingBitStateTable[];
+
 extern Entry sCurlingBitBStateTable[];
+
 extern PMF sCurlingStoneTable[];
+
 extern PMF sCurlingBitAStateTable[];
+
 extern PMF0 sCurlingSceneTable[];
+
 /* The ROM PMF constants the seven state tables copy from (unlicensed
  * .data), grouped by destination table in retail copy order. */
 extern PMF0 pmf_dScMgCurling_c_Scene_StartRound;
-extern PMF0 pmf_dScMgCurling_c_Scene_Play;
-extern PMF0 pmf_dScMgCurling_c_Scene_Score;
-extern PMF0 pmf_dScMgCurling_c_Scene_End;
-extern PMF0 pmf_dScMgCurling_c_Scene_Idle;
-extern PMF pmf_dScMgCurling_c_Stone_WaitRelease;
-extern PMF pmf_dScMgCurling_c_Stone_Slide;
-extern PMF pmf_dScMgCurling_c_Stone_Collide;
-extern PMF pmf_dScMgCurling_c_Stone_Drag;
-extern PMF0 pmf_dScMgCurling_c_Aim_WaitTouch;
-extern PMF0 pmf_dScMgCurling_c_Aim_Swing;
-extern PMF pmf_dScMgCurling_c_Bit_PickKind;
-extern PMF pmf_dScMgCurling_c_Bit_RunKindB;
-extern PMF pmf_dScMgCurling_c_Bit_RunKindA;
-extern PMF pmf_dScMgCurling_c_BitB_StatePause;
-extern PMF pmf_dScMgCurling_c_BitB_StateDriftRight;
-extern PMF pmf_dScMgCurling_c_BitB_StateDriftLeft;
-extern PMF pmf_dScMgCurling_c_BitB_StateDriftStop;
-extern PMF pmf_dScMgCurling_c_BitA_StatePause;
-extern PMF pmf_dScMgCurling_c_BitA_StateDriftRight;
-extern PMF pmf_dScMgCurling_c_BitA_StateDriftLeft;
-extern PMF pmf_dScMgCurling_c_BitA_StateDriftStop;
-extern PMF pmf_dScMgCurling_c_Bit_StateFallStart;
-extern PMF pmf_dScMgCurling_c_Bit_StateFallSpeedUp;
-extern PMF pmf_dScMgCurling_c_Bit_StateFallSlowDown;
 
-} /* extern "C" */
+extern PMF0 pmf_dScMgCurling_c_Scene_Play;
+
+extern PMF0 pmf_dScMgCurling_c_Scene_Score;
+
+extern PMF0 pmf_dScMgCurling_c_Scene_End;
+
+extern PMF0 pmf_dScMgCurling_c_Scene_Idle;
+
+extern PMF pmf_dScMgCurling_c_Stone_WaitRelease;
+
+extern PMF pmf_dScMgCurling_c_Stone_Slide;
+
+extern PMF pmf_dScMgCurling_c_Stone_Collide;
+
+extern PMF pmf_dScMgCurling_c_Stone_Drag;
+
+extern PMF0 pmf_dScMgCurling_c_Aim_WaitTouch;
+
+extern PMF0 pmf_dScMgCurling_c_Aim_Swing;
+
+extern PMF pmf_dScMgCurling_c_Bit_PickKind;
+
+extern PMF pmf_dScMgCurling_c_Bit_RunKindB;
+
+extern PMF pmf_dScMgCurling_c_Bit_RunKindA;
+
+extern PMF pmf_dScMgCurling_c_BitB_StatePause;
+
+extern PMF pmf_dScMgCurling_c_BitB_StateDriftRight;
+
+extern PMF pmf_dScMgCurling_c_BitB_StateDriftLeft;
+
+extern PMF pmf_dScMgCurling_c_BitB_StateDriftStop;
+
+extern PMF pmf_dScMgCurling_c_BitA_StatePause;
+
+extern PMF pmf_dScMgCurling_c_BitA_StateDriftRight;
+
+extern PMF pmf_dScMgCurling_c_BitA_StateDriftLeft;
+
+extern PMF pmf_dScMgCurling_c_BitA_StateDriftStop;
+
+extern PMF pmf_dScMgCurling_c_Bit_StateFallStart;
+
+extern PMF pmf_dScMgCurling_c_Bit_StateFallSpeedUp;
+
+extern PMF pmf_dScMgCurling_c_Bit_StateFallSlowDown;
+ /* extern "C" */
 
 namespace cstd {
 s16 atan2(s32, s32);
@@ -1509,7 +1586,7 @@ s32 dScMgCurling_c::InitResources() {
  * allocation size, and vtable identity; later EAD lineage supplies the
  * classInit spelling prior. Exact original SM64DS spelling is not preserved.
  * Historical project alias: MgShuffleShell_Spawn. */
-extern "C" void *dScMgCurling_c_classInit() {
+ void *dScMgCurling_c_classInit() {
     return new dScMgCurling_c;
 }
 

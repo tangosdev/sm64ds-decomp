@@ -66,53 +66,94 @@ typedef void (Heyho::*HeyhoMotion)();
 #define HEYHO_RAND(n) ((int)(((u32)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19) * (n)) >> 12)
 
 extern "C" {
+
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
+
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
+
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
+
 extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
+
 extern int NormalizeVec3IfNonZero(Vector3 *v);
-/* local extern: MgCamera.h declares it on MgCamera *, but the two cameras are void * here. */
-extern void Camera_ProjectToScreen(void *camera, void *pos, int *x, int *y);
-extern void Jump2Popup_Spawn(int a, int b, int c);
+}
+extern "C" void Camera_ProjectToScreen(MgCamera *camera, void *pos, int *screenX, int *screenY);
+void Jump2Popup_Spawn(int x, int y, int number);
+
 
 extern HeyhoMotion pmf_Heyho_MotionPatrolBob;
+
 extern HeyhoMotion pmf_Heyho_MotionBounceNear;
+
 extern HeyhoMotion pmf_Heyho_MotionChase;
+
 extern HeyhoMotion pmf_Heyho_MotionCircleUpper;
+
 extern HeyhoMotion pmf_Heyho_MotionFlyIn;
+
 extern HeyhoMotion pmf_Heyho_MotionDiagonal;
+
 extern HeyhoMotion pmf_Heyho_MotionCircleLower;
+
 extern HeyhoMotion pmf_Heyho_MotionDiagonalMirror;
+
 extern HeyhoMotion pmf_Heyho_MotionBounceInRange;
+
 extern HeyhoMotion pmf_Heyho_MotionRegroup;
+
 extern HeyhoMotion pmf_Heyho_MotionVShape;
+
 extern HeyhoMotion pmf_Heyho_StateIdle;
+
 extern HeyhoMotion pmf_Heyho_MotionBobVertical;
+
 extern HeyhoMotion pmf_Heyho_MotionHitSpin;
+
 extern HeyhoMotion pmf_Heyho_MotionHover;
+
 extern HeyhoMotion pmf_Heyho_StateIdle_2;
+
 extern HeyhoMotion pmf_Heyho_StateIdle_3;
+
 extern HeyhoMotion pmf_Heyho_MotionLeave;
+
 extern HeyhoMotion pmf_Heyho_StateIdle_4;
+
 extern HeyhoMotion pmf_Heyho_MotionChase_2;
+
 extern HeyhoMotion pmf_Heyho_MotionLeave_2;
+
 extern HeyhoMotion pmf_Heyho_MotionHitSpin_2;
+
 extern HeyhoMotion data_ov006_0213afc8;
 
+
 extern int sHeyhoUnsettledCount;
+
 extern int sJumpComboCount;
+
 extern int sHeyhoScorePopups;
+
 extern int sHeyhoLayout;
+
 extern Heyho *sHeyhos;
+
 extern int sHeyhoCount;
+
 extern int data_ov006_021403b8[];
+
 extern char *sJumpAdapters[];
+
 extern void *data_ov006_021402fc;
+
 extern const HeyhoPath sHeyhoLayoutFlyInPaths[][3];
+
 extern const HeyhoPath sHeyhoFlyInPaths[][4];
+
 extern const HeyhoPath sHeyhoSettlePaths[][5];
+
 extern MgCamera *sMgSubCamera;
-}
+
 
 /* The Jump scene's three players, seen through the adapter base the Heyhos
    test against. */
@@ -1251,7 +1292,7 @@ int Heyho::IsChasing() {
     return mMotion != pmf_Heyho_MotionLeave && (mMotion != pmf_Heyho_MotionChase_2 || mLean == 0);
 }
 
-extern "C" {
+
 
 /* ---- Heyho_InitPool ---- */
 int Heyho_InitPool(void *heyhos, int count) {
@@ -1266,6 +1307,7 @@ int Heyho_InitPool(void *heyhos, int count) {
     }
     return 1;
 }
+
 
 /* ---- Heyho_SpawnAll ---- */
 void Heyho_SpawnAll(void *arg0, int layout) {
@@ -1296,6 +1338,7 @@ void Heyho_SpawnAll(void *arg0, int layout) {
         }
     }
 }
+
 
 /* ---- Heyho_SeparateAll ---- */
 void Heyho_SeparateAll(void) {
@@ -1342,12 +1385,14 @@ void Heyho_SeparateAll(void) {
     }
 }
 
+
 /* ---- Heyho_DrawAll ---- */
 void Heyho_DrawAll(void) {
     int i;
     for (i = 0; i < sHeyhoCount; i++)
         sHeyhos[i].Draw();
 }
+
 
 /* ---- Heyho_SettleAll ---- */
 void Heyho_SettleAll(void) {
@@ -1361,12 +1406,14 @@ void Heyho_SettleAll(void) {
     }
 }
 
+
 /* ---- Heyho_ReactAll ---- */
 void Heyho_ReactAll(void) {
     int i;
     for (i = 0; i < sHeyhoCount; i++)
         sHeyhos[i].React();
 }
+
 
 /* ---- Heyho_AllIdle ---- */
 int Heyho_AllIdle(void) {
@@ -1377,7 +1424,7 @@ int Heyho_AllIdle(void) {
     }
     return 1;
 }
-}
+
 
 dMg3DHeyhoObjAdapter_c::dMg3DHeyhoObjAdapter_c() : mCommand(0)
 {
@@ -1387,16 +1434,23 @@ dMg3DHeyhoObjAdapter_c::dMg3DHeyhoObjAdapter_c() : mCommand(0)
  * a function into the reverse-emitted .text run. Construction order is
  * the model handle, then the animation handle. The plain counters have
  * no initializer: one would grow the sinit. */
-extern "C" {
+
 int sHeyhoUnsettledCount;
+
 int sJumpComboCount;
+
 int sHeyhoScorePopups;
+
 int sHeyhoLayout;
+
 Heyho *sHeyhos;
+
 int sHeyhoCount;
+
 int data_ov006_021403b8[3];
+
 char *sJumpAdapters[3];
-}
+
 
 HeyhoAdapterModelFilePtr gMgPHeyhoMiniModelFile(0x217);
 HeyhoAdapterAnimationFileHandle gMgPHeyhoWaitAnimFile(0x218);

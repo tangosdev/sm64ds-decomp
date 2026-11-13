@@ -96,59 +96,122 @@ enum {
     kTileStep = 0x20
 };
 
-extern "C" {
+
 extern const int sCoinBagRowTopY[];
+
 extern const int sCoinBagRowHeight[];
+
 extern const int sCoinBagHopVX[];
+
 extern OamAttr *sCoinCaptionSprites[];
+
 extern const unsigned char sCoinCaptionLoopTimes[];
+
 extern const unsigned char sCoinCaptionLoopSprites[];
+
 extern const unsigned char sCoinCaptionBlinkTimes[];
+
 extern const unsigned char sCoinCaptionBlinkSprites[];
+
 extern const u16 sCoinCaptionCountInTimes[];
+
 extern const u8 sCoinCaptionCountInSprites[];
+extern "C" {
+
 extern void Mg_DrawBlinkSprite(void *c, int arg1, int arg2);
+
 extern void Mg_DrawBigNumber(int a1, int a2, int num, int a4, int a5, int sel, int idx);
+}
+
 extern const int sCoinSparkleSpawnOffsets[];
+
 extern const u16 sCoinSparkleAngles[];
+
 extern int sCoinPopupSprites;
+
 extern const int sCoinPopupY[];
+
 extern OamAttr **sCoinScorePlayerSprites[];
+extern "C" {
+
 extern int GetGameLanguage(void);
+
 extern void Mg_DrawCreditsIcon(int r0, int r1, int r2, int r3);
+}
+
 struct OamAttr;
+
 struct Matrix2x2;
+extern "C" {
+
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
+
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
+}
+
 extern void *sCoinValuesSprites[];
+
 extern void *sCoinSparkleSprites[];
+
 extern void *sCoinBagSprites[];
+extern "C" {
+
 extern void Mg_RenderSpriteBothPalMtx(void *obj, int x, int y, int w, int *vec);
+
 extern void func_020127a4(int a, int b, int c, int d);
+}
+
 extern const int sCoinRowY[];
+extern "C" {
+
 extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
+
 extern void RenderOamMainScreen(OamAttr *a, int b, int c, int d, int e);
+}
+
 extern const u16 sCoinBlockFrameSprites[];
+
 extern void *sCoinBlocksSprites[];
+
 extern const int sCoinBlockFallRowY[];
+
 extern const int sCoinBlockDropRowY[];
+
 extern const int sCoinBlockWanderRowY[];
+
 extern const int sCoinBlockWanderRowHeight[];
+
 extern const int sCoinBlockHopRowY[];
+
 extern const int sCoinBlockHopRowHeight[];
+
 extern const int sCoinBlockHopVX[];
+
 extern const u16 sCoinBlockFrameTimes[];
+extern "C" {
+
 extern void FreeGfxSlotsById(int n);
+
 extern void Mg_PlayJingle(void *c);
+
 extern int Mg_GetTopRecord(void);
+
 extern void *LoadFile(int handle);
+
 extern void DecompressLZ16(void *src, void *dst);
+}
+
 
 extern u8 gMainScreenLayers;
+
 extern u8 gSubScreenLayers;
+
 extern int data_0208ee44;
+extern "C" {
+
 extern void func_0203b9b4(int *p, int v);
 }
+
 
 /* The per-state handler tables: {pmf, delta} records indexed by the
    record's own state byte. Static initialisation fills each one from the
@@ -163,47 +226,56 @@ typedef void (dScMgCoin_c::*PMF_Behavior)();
 struct Entry_Behavior {
     PMF_Behavior pmf;
 };
-extern "C" {
+
 extern const Entry_Behavior pmf_dScMgCoin_c_Phase_StateIdle, pmf_dScMgCoin_c_Phase_StateIntro,
     pmf_dScMgCoin_c_Phase_StatePlay, pmf_dScMgCoin_c_Phase_StateSettle,
     pmf_dScMgCoin_c_Phase_StateScoreDelay, pmf_dScMgCoin_c_Phase_StateResult;
+
 extern const CoinPmfEntry pmf_dScMgCoin_c_Block_StateWaiting, pmf_dScMgCoin_c_Block_StateHopDown,
     pmf_dScMgCoin_c_Block_StateWander, pmf_dScMgCoin_c_Block_StateDropOnCoin,
     pmf_dScMgCoin_c_Block_StateResting, pmf_dScMgCoin_c_Block_StateFallIn;
+
 extern const CoinPmfEntry pmf_dScMgCoin_c_Coin_StateWaitTouch, pmf_dScMgCoin_c_Coin_StateHop,
     pmf_dScMgCoin_c_Coin_StateSettled;
+
 extern const CoinPmfEntry pmf_dScMgCoin_c_Caption_StateDelay, pmf_dScMgCoin_c_Caption_StateCountIn,
     pmf_dScMgCoin_c_Caption_StateBlink, pmf_dScMgCoin_c_Caption_StateHidden,
     pmf_dScMgCoin_c_Caption_StateLoop;
+
 extern const CoinPmfEntry pmf_dScMgCoin_c_Bag_StateIdle, pmf_dScMgCoin_c_Bag_StateRise,
     pmf_dScMgCoin_c_Bag_StateParked, pmf_dScMgCoin_c_Bag_StateBounceDown;
+
 
 /* the phases (Behavior) */
 Entry_Behavior sCoinPhaseStateTable[6] = {
     {pmf_dScMgCoin_c_Phase_StateIdle},       {pmf_dScMgCoin_c_Phase_StateIntro},
     {pmf_dScMgCoin_c_Phase_StatePlay},       {pmf_dScMgCoin_c_Phase_StateSettle},
     {pmf_dScMgCoin_c_Phase_StateScoreDelay}, {pmf_dScMgCoin_c_Phase_StateResult}};
+
 /* the blocks */
 CoinPmfEntry sCoinBlockStateTable[6] = {
     {pmf_dScMgCoin_c_Block_StateWaiting}, {pmf_dScMgCoin_c_Block_StateHopDown},
     {pmf_dScMgCoin_c_Block_StateWander},  {pmf_dScMgCoin_c_Block_StateDropOnCoin},
     {pmf_dScMgCoin_c_Block_StateResting}, {pmf_dScMgCoin_c_Block_StateFallIn}};
+
 /* the coins */
 CoinPmfEntry sCoinCoinStateTable[3] = {{pmf_dScMgCoin_c_Coin_StateWaitTouch},
                                        {pmf_dScMgCoin_c_Coin_StateHop},
                                        {pmf_dScMgCoin_c_Coin_StateSettled}};
+
 /* the caption */
 CoinPmfEntry sCoinCaptionStateTable[5] = {{pmf_dScMgCoin_c_Caption_StateDelay},
                                           {pmf_dScMgCoin_c_Caption_StateCountIn},
                                           {pmf_dScMgCoin_c_Caption_StateBlink},
                                           {pmf_dScMgCoin_c_Caption_StateHidden},
                                           {pmf_dScMgCoin_c_Caption_StateLoop}};
+
 /* the moneybag */
 CoinPmfEntry sCoinBagStateTable[4] = {{pmf_dScMgCoin_c_Bag_StateIdle},
                                       {pmf_dScMgCoin_c_Bag_StateRise},
                                       {pmf_dScMgCoin_c_Bag_StateParked},
                                       {pmf_dScMgCoin_c_Bag_StateBounceDown}};
-}
+
 
 /* Nothing to destroy by hand: D1 stores the vptr and calls dScMgBase_c's
    D2, and D0 adds the delete. */
@@ -817,9 +889,9 @@ void dScMgCoin_c::DrawBlocks() {
 struct Pair_dd658 {
     int a;
     int b;
-};
-extern "C" void Mg_SpawnFx(int a, int b, struct Pair_dd658 *p2, struct Pair_dd658 *p3,
+};extern "C" void Mg_SpawnFx(int a, int b, struct Pair_dd658 *p2, struct Pair_dd658 *p3,
                            struct Pair_dd658 *p4);
+
 
 void dScMgCoin_c::Block_StateFallIn(int i) {
     int oldVy;
@@ -1397,7 +1469,7 @@ inline dScMgCoin_c::dScMgCoin_c() {
  * allocation size, vtable identity, and the MG_COIN registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: MgCoincentration_Spawn. */
-extern "C" void *dScMgCoin_c_classInit() {
+ void *dScMgCoin_c_classInit() {
     return new dScMgCoin_c;
 }
 
@@ -1407,27 +1479,48 @@ extern "C" void *dScMgCoin_c_classInit() {
  * Row positions and heights are pixels; hop velocities are Q12.
  * The final flat table holds four XY pixel offsets for Sparkle_Burst.
  * Names describe the existing consumers, not recovered original identifiers. */
-extern "C" {
+
 extern const unsigned char sCoinCaptionBlinkTimes[2] = {7, 9};
+
 extern const unsigned char sCoinCaptionBlinkSprites[2] = {2, 1};
+
 extern const u8 sCoinCaptionCountInSprites[4] = {3, 4, 5, 6};
+
 extern const u16 sCoinBlockFrameSprites[4] = {0, 1, 2, 1};
+
 extern const unsigned char sCoinCaptionLoopSprites[8] = {7, 8, 9, 8, 9, 8, 9, 8};
+
 extern const unsigned char sCoinCaptionLoopTimes[8] = {10, 60, 7, 45, 6, 7, 6, 3};
+
 extern const u16 sCoinBlockFrameTimes[4] = {10, 8, 6, 8};
+
 extern const u16 sCoinSparkleAngles[4] = {0xb000, 0xd000, 0x9000, 0xf000};
+
 extern const u16 sCoinCaptionCountInTimes[4] = {30, 3, 10, 60};
+
 extern const int sCoinBagHopVX[2] = {0xc00, -0xc00};
+
 extern const int sCoinBlockHopVX[3] = {0, 0xc00, -0xc00};
+
 extern const int sCoinRowY[3] = {48, 112, 176};
+
 extern const int sCoinPopupY[3] = {-168, -108, -48};
+
 extern const int sCoinBagRowTopY[6] = {-168, -108, -48, 48, 112, 176};
+
 extern const int sCoinBagRowHeight[6] = {18, 18, 18, 26, 26, 26};
+
 extern const int sCoinBlockHopRowY[6] = {-168, -108, -48, 48, 112, 176};
+
 extern const int sCoinBlockHopRowHeight[6] = {16, 16, 16, 24, 24, 24};
+
 extern const int sCoinBlockWanderRowY[6] = {-168, -108, -48, 48, 112, 176};
+
 extern const int sCoinBlockWanderRowHeight[6] = {16, 16, 16, 24, 24, 24};
+
 extern const int sCoinBlockDropRowY[6] = {-168, -108, -48, 48, 112, 176};
+
 extern const int sCoinBlockFallRowY[6] = {-168, -108, -48, 48, 112, 176};
+
 extern const int sCoinSparkleSpawnOffsets[8] = {-4, -4, 4, -4, -4, 4, 4, 4};
-}
+

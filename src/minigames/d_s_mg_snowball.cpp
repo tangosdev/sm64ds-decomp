@@ -90,53 +90,97 @@ typedef struct Pair {
 
 
 extern "C" {
+
 extern void RenderOamBothScreens(void *a, int b, int c, int d, int e, void *f);
+}
+
 extern OamAttr *sSnowballBitSprites[];
+extern "C" {
+
 extern void func_0203d388(int *p, int angle);
+
 extern int func_0203d434(int *p);
+
 extern void func_0203d630(int *p, int m);
+
 extern u32 d_s_mg_snowballNewHold(u32 uniqueID, u32 effectID, int x, int y, int z, const void *dir,
                                   void *callback);
+
 extern void func_02012718(int a, int b);
+
 extern int atan2_hold_d_s_mg_snowball_1(int y, int x);
+
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
+
 extern void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short ang);
+
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
+
 extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, short ang);
+}
+
 extern struct Matrix4x3 data_020a0e68;
+
 extern u16 sSnowballCourseTiles[][4];
+
 extern unsigned char data_ov006_0212f3b0[];
+
 extern unsigned char data_ov006_0212f3ac[];
+
 extern int data_ov006_0212f3b4[];
+
 
 /* A random integer in [0, n): the generator's top 15 bits, scaled. */
 static inline u32 MgRandom(u32 n) {
     return (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * n >> 15;
 }
+extern "C" {
+
 extern void DrawOamSprite(OamAttr *attr, int x, int y, struct Matrix2x2 *mtx);
+
 extern void Mg_SetTopScreenYOffset(int);
+
 extern void SetBg2Offset(int, int);
+
 extern void SetBg3Offset(int, int);
+
 extern void SetSubBg2Offset(int, int);
+
 extern void SetSubBg3Offset(int, int);
+
 extern void Quaternion_Normalize(s32 *);
-extern s32 data_02092768[4];
-void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
-void func_0203cd80(int *m, short angle);
-void Mg_DrawNumberRotated(int a1, int a2, int a3, int a4, int a5, int a6, u16 a7);
-s32 GetGameLanguage(void);
-void FreeGfxSlotsById(int arg);
-void Vec2_Sub(int *o, int *a, int *b);
-extern void Ov004_Deallocate(void *p);
-u32 LoadCompressedFileAt(int fileID, void *target);
-void *Ov004_LoadFileByPath(void *p);
-void DecompressLZ16(void *src, void *dst);
-extern int data_0208ee44;
-extern u8 gMainScreenLayers;
-extern u8 gSubScreenLayers;
-/* Where two recovered declarations disagreed, the more precise one is
-  * kept. */
 }
+
+extern s32 data_02092768[4];
+extern "C" {
+
+void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
+
+void func_0203cd80(int *m, short angle);
+
+void Mg_DrawNumberRotated(int a1, int a2, int a3, int a4, int a5, int a6, u16 a7);
+
+s32 GetGameLanguage(void);
+
+void FreeGfxSlotsById(int arg);
+
+void Vec2_Sub(int *o, int *a, int *b);
+
+extern void Ov004_Deallocate(void *p);
+
+u32 LoadCompressedFileAt(int fileID, void *target);
+
+void *Ov004_LoadFileByPath(void *p);
+
+void DecompressLZ16(void *src, void *dst);
+}
+
+extern int data_0208ee44;
+
+extern u8 gMainScreenLayers;
+
+extern u8 gSubScreenLayers;
+
 
 /* Empty: every call in the ROM's body is compiler-generated. The members go
    in reverse declaration order -- __cxa_vec_cleanup on mSprays (with
@@ -2068,8 +2112,8 @@ void dScMgSnowball_c::BitB_StatePause(int idx) {
     mBits[idx].driftTimer = (u8)(MgRandom(0x30) + 0x30);
 }
 
-typedef void (dScMgSnowball_c::*PMF_0212a224)(int);
-extern "C" PMF_0212a224 sSnowballBitBStateTable[];
+typedef void (dScMgSnowball_c::*PMF_0212a224)(int);extern PMF_0212a224 sSnowballBitBStateTable[];
+
 
 void dScMgSnowball_c::Bit_RunKindB(int idx) {
     (this->*sSnowballBitBStateTable[mBits[idx].driftState])(idx);
@@ -2084,9 +2128,8 @@ void dScMgSnowball_c::Bit_PickKind(int idx) {
     mBits[idx].driftState = 0;
 }
 
-typedef void (dScMgSnowball_c::*PMF_0212a2e0)(int);
+typedef void (dScMgSnowball_c::*PMF_0212a2e0)(int);extern PMF_0212a2e0 sSnowballBitKindTable[];
 
-extern "C" PMF_0212a2e0 sSnowballBitKindTable[];
 
 void dScMgSnowball_c::Bit_UpdateAll() {
     int i;
@@ -2148,11 +2191,8 @@ void dScMgSnowball_c::Bit_InitAll() {
         mBits[j].spriteB = v;
         mBits[j].holdTimer = 0;
     }
-}
+}dScMgSnowball_c *dScMgSnowball_c_classInit(void);
 
-/* MG_SNOWBALL's base profile, between the PMF descriptors: classInit, then
- * the same priority (0x179, the registry id) in both halfwords. */
-extern "C" dScMgSnowball_c *dScMgSnowball_c_classInit(void);
 BaseSpawnInfo<dScMgSnowball_c> g_profile_MG_SNOWBALL = {
     dScMgSnowball_c_classInit,
     0x179,
@@ -2161,12 +2201,12 @@ BaseSpawnInfo<dScMgSnowball_c> g_profile_MG_SNOWBALL = {
 
 /* Source order is copy order. Each entry is a {function, 0} descriptor;
  * __sinit_d_s_mg_snowball.cpp copies them into the tables. */
-extern "C" PMF_0212a2e0 sSnowballBitKindTable[3] = {
+PMF_0212a2e0 sSnowballBitKindTable[3] = {
     &dScMgSnowball_c::Bit_PickKind,
     &dScMgSnowball_c::Bit_RunKindB,
     &dScMgSnowball_c::Bit_RunKindA,
 };
-extern "C" PMF_0212a224 sSnowballBitBStateTable[4] = {
+PMF_0212a224 sSnowballBitBStateTable[4] = {
     &dScMgSnowball_c::BitB_StatePause,
     &dScMgSnowball_c::BitB_StateDriftRight,
     &dScMgSnowball_c::BitB_StateDriftLeft,
@@ -2192,6 +2232,6 @@ Entry_02129d94 sSnowballBitStateTable[3] = {
  * preserved. Historical alias: MgSnowballSlalom_Spawn.
  * `new` goes through fBase_c's operator new for the 0xc59c bytes and runs
  * the real constructor above on them. */
-extern "C" dScMgSnowball_c *dScMgSnowball_c_classInit(void) {
+ dScMgSnowball_c *dScMgSnowball_c_classInit(void) {
     return new dScMgSnowball_c;
 }

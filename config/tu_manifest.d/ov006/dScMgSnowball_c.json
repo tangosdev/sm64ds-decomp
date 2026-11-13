@@ -336,7 +336,7 @@
       "ordinal": 41
     },
     {
-      "symbol": "dScMgSnowball_c_classInit",
+      "symbol": "_Z25dScMgSnowball_c_classInitv",
       "address": "0x0212a520",
       "size": "0x00000034",
       "legacy_source": "src/d_s_mg_snowball.cpp",
@@ -1560,7 +1560,7 @@
       "source": "0x0213ffb8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "dScMgSnowball_c_classInit",
+      "symbol": "_Z25dScMgSnowball_c_classInitv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0212a520"

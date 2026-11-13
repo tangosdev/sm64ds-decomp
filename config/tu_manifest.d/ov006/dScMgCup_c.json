@@ -54,49 +54,49 @@
       "ordinal": 1
     },
     {
-      "symbol": "CupFx_ElemDtor",
+      "symbol": "_Z14CupFx_ElemDtorv",
       "address": "0x020deac4",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020deac4.c",
       "ordinal": 2
     },
     {
-      "symbol": "CupFx_FindFree",
+      "symbol": "_Z14CupFx_FindFreeP5CupFxiii",
       "address": "0x020deac8",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_020deac8.c",
       "ordinal": 3
     },
     {
-      "symbol": "CupFx_MoveForCup",
+      "symbol": "_Z16CupFx_MoveForCupP5CupFxiii",
       "address": "0x020deaf0",
       "size": "0x00000058",
       "legacy_source": "src/func_ov006_020deaf0.c",
       "ordinal": 4
     },
     {
-      "symbol": "CupFx_Spawn",
+      "symbol": "_Z11CupFx_SpawnP5CupFxiiia",
       "address": "0x020deb48",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov006_020deb48.c",
       "ordinal": 5
     },
     {
-      "symbol": "CupFx_DrawForCup",
+      "symbol": "_Z16CupFx_DrawForCupP5CupFxi",
       "address": "0x020debb4",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_020debb4.c",
       "ordinal": 6
     },
     {
-      "symbol": "CupFx_UpdateAll",
+      "symbol": "_Z15CupFx_UpdateAllP5CupFx",
       "address": "0x020debfc",
       "size": "0x00000040",
       "legacy_source": "src/func_ov006_020debfc.c",
       "ordinal": 7
     },
     {
-      "symbol": "CupFx_ClearAll",
+      "symbol": "_Z14CupFx_ClearAllP5CupFx",
       "address": "0x020dec3c",
       "size": "0x00000020",
       "legacy_source": "src/func_ov006_020dec3c.c",
@@ -250,14 +250,14 @@
       "ordinal": 29
     },
     {
-      "symbol": "dScMgCup_c_classInit",
+      "symbol": "_Z20dScMgCup_c_classInitv",
       "address": "0x020e0574",
       "size": "0x000000c0",
       "legacy_source": "src/d_s_mg_cup.cpp",
       "ordinal": 30
     },
     {
-      "symbol": "Cup_Nothing",
+      "symbol": "_Z11Cup_Nothingv",
       "address": "0x020e0634",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020e0634.c",
@@ -1610,7 +1610,7 @@
       "source": "0x0213c020",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "dScMgCup_c_classInit",
+      "symbol": "_Z20dScMgCup_c_classInitv",
       "addend": 0,
       "target_module": "overlay(6)",
       "target_address": "0x020e0574"

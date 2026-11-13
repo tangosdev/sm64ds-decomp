@@ -91,35 +91,35 @@
       "ordinal": 7
     },
     {
-      "symbol": "Jump2Popup_DrawAll",
+      "symbol": "_Z18Jump2Popup_DrawAllv",
       "address": "0x020eef58",
       "size": "0x00000038",
       "legacy_source": "src/func_ov006_020eef58.c",
       "ordinal": 8
     },
     {
-      "symbol": "Jump2Popup_UpdateAll",
+      "symbol": "_Z20Jump2Popup_UpdateAllv",
       "address": "0x020eef90",
       "size": "0x00000060",
       "legacy_source": "src/func_ov006_020eef90.c",
       "ordinal": 9
     },
     {
-      "symbol": "Jump2Popup_ClearAll",
+      "symbol": "_Z19Jump2Popup_ClearAllv",
       "address": "0x020eeff0",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov006_020eeff0.c",
       "ordinal": 10
     },
     {
-      "symbol": "Jump2Popup_Spawn",
+      "symbol": "_Z16Jump2Popup_Spawniii",
       "address": "0x020ef05c",
       "size": "0x00000078",
       "legacy_source": "src/func_ov006_020ef05c.c",
       "ordinal": 11
     },
     {
-      "symbol": "Jump2Popup_InitPool",
+      "symbol": "_Z19Jump2Popup_InitPoolii",
       "address": "0x020ef0d4",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov006_020ef0d4.c",
@@ -140,7 +140,7 @@
       "ordinal": 14
     },
     {
-      "symbol": "Jump2_SetLights",
+      "symbol": "_Z15Jump2_SetLightsv",
       "address": "0x020ef2b8",
       "size": "0x00000128",
       "legacy_source": "src/func_ov006_020ef2b8.c",
@@ -231,7 +231,7 @@
       "ordinal": 27
     },
     {
-      "symbol": "dScMgJump2_c_classInit",
+      "symbol": "_Z22dScMgJump2_c_classInitv",
       "address": "0x020efaf0",
       "size": "0x00000118",
       "legacy_source": "src/dScMgJump2_c_Spawn.c",

@@ -61,46 +61,77 @@ extern MgJumpModelFilePtr gJumpBack01ModelFile;
  * first function: tools/tiers.py charges text between two functions to the
  * earlier one. */
 extern "C" {
-void Mg_CommitRecords(void);
-void Mg_DrawScoreTally(void *a, int b, int c, int d);
-int  GetGameLanguage(void);
-struct OamAttr;
-struct Matrix2x2;
-void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
-void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
-void func_0203cd80(int *m, short angle);
-void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-void FreeGfxSlotsById(int arg);
-void *LoadFile(int handle);
-void DecompressLZ16(void *src, void *dst);
 
+void Mg_CommitRecords(void);
+
+void Mg_DrawScoreTally(void *a, int b, int c, int d);
+
+int  GetGameLanguage(void);
+}
+
+struct OamAttr;
+
+struct Matrix2x2;
+extern "C" {
+
+void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
+
+void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
+
+void func_0203cd80(int *m, short angle);
+
+void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
+
+void FreeGfxSlotsById(int arg);
+
+void *LoadFile(int handle);
+
+void DecompressLZ16(void *src, void *dst);
+}
 void Heyho_ReactAll(void);
 void Heyho_SeparateAll(void);
 void Jump3D_UpdateAll(void);
 void Jump3D_SetLowGravity(void);
 void Jump3D_StopGravity(void);
 void Jump3D_StartRoundLayout(void);
-int  Jump3D_AllIdle(void);
-int  Heyho_AllIdle(void);
-int Heyho_InitPool(void *ptr, int n);
+int Jump3D_AllIdle(void);
+int Heyho_AllIdle(void);
+int Heyho_InitPool(void *heyhos, int count);
+extern "C" {
+
 int Jump3D_InitPool(void *base, int count);
+}
 void Jump3D_EnableInput(void);
 
+
 extern Matrix4x3 data_020a0e68;
+
 extern int sJumpLastPick;
+
 extern u8 gMainScreenLayers;
+
 extern s16  data_02082614;
+
 extern int sJump3DMarioCount;
+
 extern int sHeyhoUnsettledCount;
+
 extern int sJump3DRisenOutCount;
+
 extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Result;
+
 extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Intro;
+
 extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_End;
+
 extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Final;
+
 extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Idle;
+
 extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Idle_2;
+
 extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Play;
-}
+
 
 
 /* Slot 18. 0 is an eat (one more egg, capped like the HUD score), 0x12 a

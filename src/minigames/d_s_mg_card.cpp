@@ -39,62 +39,124 @@ typedef struct OamAttrTmpl {
     u16 attr3; /* 0x6 */
 } OamAttrTmpl;
 
-extern "C" {
+
 extern int pmf_Dealer_StateDeal_2[2];
+
 extern int pmf_Dealer_StateReveal[2];
+
 extern unsigned short sCardFaceSprites[];
+
 extern void *sCardObjSprites[];
+
 extern int sMgCardSprites[];
+extern "C" {
+
 extern void Hud_RenderSprite(void *sprite, int x, int y, int a3, int a4);
+}
+
 extern void **sCardPayoutHighlightSprites[];
+
 extern void *sCardHudSprites[];
+
 extern int sCardSelectLocked;
+
 extern int sCardSwapRequested;
+
 extern int data_ov006_02141770;
+extern "C" {
+
 extern void Vec2_Sub(int *o, int *a, int *b);
+
 extern void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
+}
+
 extern const Five sCardHandOrder;
+
 extern int sCardFaceWeights[];
+extern "C" {
+
 extern void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
+
 extern void Mg_DrawCredits(char *a0, int a1, int a2, int a3);
+
 extern void Mg_DrawScoreTally(void *a0, int a1, int a2, int a3);
+
 extern void Dealer_Draw(void *c);
+}
+
 extern OamAttr *data_ov006_02134028;
-void Dealer_Update(Dealer *table);
+namespace s020c19d0 {
+void Dealer_Update(Dealer *dealer);
+}
+using s020c19d0::Dealer_Update;
+extern "C" {
+
 void MgCoins_Update(void);
+
 extern int Dealer_IsBusy(void *p);
-extern int Dealer_IsIdle(Dealer *dealer);
+}
+int Dealer_IsIdle(Dealer *dealer);
+extern "C" {
+
 extern void Dealer_StartDeal(void *c, s16 arg1, s16 *arg2);
+
 extern void Dealer_PlayLose(void *c);
-extern void Dealer_PlayWin(void *c);
+}
+void Dealer_PlayWin(void *c);
+extern "C" {
+
 extern void Mg_SaveRecordPair(int a0, int a1);
+
 extern void Mg_ShowBanner(int a0, int a1, int a2, int a3, int a4, s16 a5);
+
 extern void Mg_SubmitScore(int v);
+
 extern void Mg_SetSharedState(int v);
+}
+
 extern int sMgCoinsBetPlaced;
+
 extern int sCardDrawsLeft;
+
 extern int gMgCoinsInPlay;
+
 extern int sCardHandPayouts[];
+extern "C" {
+
 extern void FreeGfxSlotsById(int arg);
+
 extern void MgCoins_StartPayout(int a);
+}
+
 extern s16 gMgCoinsStatus;
-extern void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
+void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
+extern "C" {
+
 extern void MgCoins_Reset(void);
+}
+
 extern u8 gMainScreenLayers;
+
 extern u8 gSubScreenLayers;
-extern void LoadCard2SubBg3(void *);
+void LoadCard2SubBg3(void *);
+extern "C" {
+
 extern void *LoadFile(int);
+
 extern int GetGameLanguage(void);
+
 extern void DecompressLZ16(void *, void *);
+
 extern int Dealer_Load(char *);
 }
+
 
 /* `new` inlines the implicit constructor: the base chain, this class's
    vptr, mDealer, then the two hands through __cxa_vec_ctor. The two card
    classes' implicit constructors are generated here, as the ROM's
    _ZN12dMgCardObj_cC1Ev (0x020dbe30) and _ZN17dMgDilarCardObj_cC1Ev
    (0x020dbe14), the last two functions of the run. */
-extern "C" void* dScMgCard_c_classInit()
+ void* dScMgCard_c_classInit()
 {
     return new dScMgCard_c;
 }
