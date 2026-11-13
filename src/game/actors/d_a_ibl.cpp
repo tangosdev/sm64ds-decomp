@@ -622,7 +622,7 @@ void daIbl_c::FreeRollBehavior() {
    mDispenser, and mLiveBalls counts it. */
 void daIbl_c::SpawnerBehavior() {
     Vector3 pos;
-    u16 *timer = (u16 *)&mStateTimer;
+    u16 *timer = &mStateTimer;
     daPly_c *pl;
     int r1;
 
@@ -714,7 +714,7 @@ int daIbl_c::Behavior()
     unsigned char idx = mVariant;
     struct VtEntry *e = (struct VtEntry *)((char *)gIblKindHandlers + ((int)idx << 3));
     int f1 = e->field1;
-    void *obj = (void *)((char *)((void *)this) + (f1 >> 1));
+    void *obj = ((char *)(this) + (f1 >> 1));
     FnPtr fn;
     if (f1 & 1) {
         fn = (FnPtr)*(int *)((char *)*(int **)obj + e->field0);
