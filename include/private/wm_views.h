@@ -114,55 +114,59 @@ typedef char WMDataSharingInfo_size_must_be_0x420[sizeof(WMDataSharingInfo) == 0
 #ifdef __cplusplus
 extern "C"
 #endif
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
     extern "C" {
 #endif
-WMArm9Buf *WM_GetSystemWork(void);
-#ifdef __cplusplus
-extern "C"
 #endif
-    WMErrCode
-    WM_CheckStateEx(int paramNum, ...);
+    WMArm9Buf *WM_GetSystemWork(void);
 #ifdef __cplusplus
-extern "C"
+    extern "C"
 #endif
-    WMErrCode
-    WM_SendCommand(WMApiid id, unsigned short paramNum, ...);
+        WMErrCode
+        WM_CheckStateEx(int paramNum, ...);
 #ifdef __cplusplus
-extern "C"
+    extern "C"
 #endif
-    void
-    WM_SetCallbackTable(WMApiid id, WMCallbackFunc callback);
+        WMErrCode
+        WM_SendCommand(WMApiid id, unsigned short paramNum, ...);
 #ifdef __cplusplus
-extern "C"
+    extern "C"
 #endif
-    WMErrCode
-    WMi_CheckIdle(void);
+        void
+        WM_SetCallbackTable(WMApiid id, WMCallbackFunc callback);
 #ifdef __cplusplus
-extern "C"
+    extern "C"
 #endif
-    WMErrCode
-    WMi_CheckInitialized(void);
+        WMErrCode
+        WMi_CheckIdle(void);
+#ifdef __cplusplus
+    extern "C"
+#endif
+        WMErrCode
+        WMi_CheckInitialized(void);
 
 #ifdef __cplusplus
-extern "C"
+    extern "C"
 #endif
-    /* NitroSDK wm_ds.c (WM_Ds.c): data sharing. This SDK build takes the
+        /* NitroSDK wm_ds.c (WM_Ds.c): data sharing. This SDK build takes the
  * bitmap, length and mode as ints. */
-    WMErrCode
-    WM_StartDataSharing(WMDataSharingInfo *, unsigned short, int, int, int);
+        WMErrCode
+        WM_StartDataSharing(WMDataSharingInfo *, unsigned short, int, int, int);
 #ifdef __cplusplus
-extern "C"
+    extern "C"
 #endif
-    WMErrCode
-    WM_StepDataSharing(WMDataSharingInfo *, const void *, WMDataSet *);
+        WMErrCode
+        WM_StepDataSharing(WMDataSharingInfo *, const void *, WMDataSet *);
 #ifdef __cplusplus
-extern "C"
+    extern "C"
 #endif
-    unsigned short *
-    WM_GetSharedDataAddress(WMDataSharingInfo *, WMDataSet *, int);
-#if defined(_MSC_VER) && defined(__cplusplus)
+        unsigned short *
+        WM_GetSharedDataAddress(WMDataSharingInfo *, WMDataSet *, int);
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif

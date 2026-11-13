@@ -27,8 +27,10 @@
  * types: some consumers do not include types.h.
  */
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 
 typedef enum WMApiid {
@@ -369,8 +371,10 @@ typedef struct WMStatus {
 
 typedef char WMStatus_size_must_be_0x930[sizeof(WMStatus) == 0x930 ? 1 : -1];
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif

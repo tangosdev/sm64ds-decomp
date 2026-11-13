@@ -179,8 +179,8 @@ extern void *data_ov074_02122e5c[];
    overlay; ov074's image has no copy, so these bind cross-module. */
 extern BMA_File data_ov010_021123f4;
 extern BTA_File data_ov010_021124ac;
-extern "C" void Vec3_Asr(Vector3* d, Vector3* s, int sh);
-extern "C" void Matrix4x3_ApplyInPlaceToScale(void* m, int x, int y, int z);
+extern "C" void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
+extern "C" void Matrix4x3_ApplyInPlaceToScale(void *m, int x, int y, int z);
 extern "C" int func_02037e20(int *p);
 extern "C" unsigned int func_0201277c(unsigned int a);
 extern "C" u8 data_ov074_02122d80[];

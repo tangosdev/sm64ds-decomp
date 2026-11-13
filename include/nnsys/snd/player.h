@@ -26,8 +26,10 @@
 #include "nnsys/fnd.h"
 #include "nnsys/snd/fader.h"
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 
 typedef struct NNSSndSeqPlayer {
@@ -74,8 +76,10 @@ void NNS_SndPlayerSetTrackModDepth(NNSSndHandle *handle, int trackBitMask, int d
 void NNS_SndPlayerSetTrackModSpeed(NNSSndHandle *handle, int trackBitMask, int speed);
 void NNS_SndPlayerSetTempoRatio(NNSSndHandle *handle, int ratio);
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif

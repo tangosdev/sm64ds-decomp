@@ -32,8 +32,10 @@
 #include "nitro/os/thread.h"
 #include "nitro/pxi/fifo.h"
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 /* NitroSDK MIDmaCallback: run with its argument when a transfer ends. */
 typedef void (*MIDmaCallback)(void *);
@@ -132,8 +134,10 @@ int CARDi_Request(CARDiCommon *, s32, s32);
 /* pret's CARDi_EndTask(p, TRUE), out of line in this SDK: clear the busy
  * and task bits, wake the waiters, then run the callback. */
 void CARDi_EndTask(CARDiCommon *);
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif /* NITRO_CARD_COMMON_H */

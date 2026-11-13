@@ -18,8 +18,10 @@
 #include "nitro/mi/exMemory.h"
 #include "private/fs_views.h"
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 typedef u32 FSOverlayID;
 
@@ -116,8 +118,10 @@ extern "C"
    Parameters unnamed: a named parameter here renumbers every C++
    includer's @NNN. */
     int FS_LoadOverlay(MIProcessor, FSOverlayID);
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif

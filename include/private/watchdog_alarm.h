@@ -41,8 +41,10 @@ typedef struct WatchdogAlarm {
 #endif
 } WatchdogAlarm;
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 extern WatchdogAlarm data_0209d574;
 
@@ -98,8 +100,10 @@ extern "C"
 #endif
     OSAlarm *
     func_0201aad4(OSAlarm *);
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif

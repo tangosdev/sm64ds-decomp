@@ -16,16 +16,20 @@
 #ifdef __cplusplus
 extern "C"
 #endif
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
     extern "C" {
 #endif
-void OS_InitReset(void);
-#ifdef __cplusplus
-extern "C"
 #endif
-    void OS_ResetSystem(u32);
-#if defined(_MSC_VER) && defined(__cplusplus)
+    void OS_InitReset(void);
+#ifdef __cplusplus
+    extern "C"
+#endif
+        void OS_ResetSystem(u32);
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif

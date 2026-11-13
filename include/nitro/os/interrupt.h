@@ -41,9 +41,10 @@
 
 #include "types.h"
 
-
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 typedef u32 OSIrqMask;
 
@@ -123,9 +124,10 @@ extern "C"
 #endif
 /* os_irqHandler.c */
 void OS_IrqHandler(void);
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
 #endif
-
+#endif
 
 #endif /* NITRO_OS_INTERRUPT_H */

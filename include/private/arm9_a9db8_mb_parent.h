@@ -203,8 +203,10 @@ typedef struct MB_CommPWork {
 /* NitroSDK mb_private.h: the work MB_Init is given, and the parent's view
  * of it. */
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 extern MB_CommCommonWork *mbc;
 
@@ -222,8 +224,10 @@ extern "C"
     /* mb_parent.h: the parent's WM callback, which MB_StartParent installs. */
     void
     MBi_CommParentCallback(u16, void *);
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #define pPwork ((MB_CommPWork *)mbc)

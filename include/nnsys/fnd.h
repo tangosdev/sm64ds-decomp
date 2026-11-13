@@ -42,8 +42,10 @@
  * NNS_FND_expheap.c) spell them.
  */
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 
 typedef struct NNSFndLink {
@@ -174,8 +176,10 @@ int NNS_FndFreeByStateToFrmHeap(NNSFndHeapHandle heap, u32 tagName);
 u32 NNS_FndAdjustFrmHeap(NNSFndHeapHandle heap);
 u32 NNS_FndResizeForMBlockFrmHeap(NNSFndHeapHandle heap, void *memBlock, u32 newSize);
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif

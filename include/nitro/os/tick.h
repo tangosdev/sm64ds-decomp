@@ -18,15 +18,19 @@
 
 #include "types.h"
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 
 void OS_InitTick(void);
 s64 OS_GetTick(void);
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif /* NITRO_OS_TICK_H */

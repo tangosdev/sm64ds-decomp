@@ -31,8 +31,10 @@
 #include "types.h"
 #include "private/fs_views.h"
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 
 #define FS_ARCHIVE_NAME_LEN_MAX 3
@@ -107,8 +109,10 @@ int FS_SuspendArchive(FSArchive *);
 int FS_ResumeArchive(FSArchive *);
 void FS_SetArchiveProc(FSArchive *, FS_ARCHIVE_PROC_FUNC, u32);
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif /* NITRO_FS_ARCHIVE_H */

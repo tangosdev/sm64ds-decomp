@@ -21,23 +21,27 @@ struct Matrix4x3;
 #ifdef __cplusplus
 extern "C"
 #endif
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
     extern "C" {
 #endif
-void G3i_PerspectiveW_(Fix12i, Fix12i, Fix12i, Fix12i, Fix12i, Fix12i, int, struct Matrix4x3 *);
-#ifdef __cplusplus
-extern "C"
 #endif
-    void
-    G3i_LookAt_(const struct Vector3 *, const struct Vector3 *, const struct Vector3 *, bool,
-                struct Matrix4x3 *);
+    void G3i_PerspectiveW_(Fix12i, Fix12i, Fix12i, Fix12i, Fix12i, Fix12i, int, struct Matrix4x3 *);
+#ifdef __cplusplus
+    extern "C"
+#endif
+        void
+        G3i_LookAt_(const struct Vector3 *, const struct Vector3 *, const struct Vector3 *, bool,
+                    struct Matrix4x3 *);
 
-/* Loads the environment-mapping texture matrix: the SDK's MtxFx44, spelled
+    /* Loads the environment-mapping texture matrix: the SDK's MtxFx44, spelled
  * int * as its definition in src/engine/gx/G3i.cpp and decl_common.h spell
  * it (ntrtwl/NitroSDK nitro/gx/g3_util.h). */
-void G3_LoadTexMtxEnv(int *);
-#if defined(_MSC_VER) && defined(__cplusplus)
+    void G3_LoadTexMtxEnv(int *);
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif

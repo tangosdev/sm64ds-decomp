@@ -20,8 +20,10 @@
 
 #include "types.h"
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 
 typedef int OSHeapHandle;
@@ -29,8 +31,10 @@ typedef int OSHeapHandle;
 void *OS_AllocFromHeap(int, OSHeapHandle, u32);
 void OS_FreeToHeap(int, OSHeapHandle, void *);
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif /* NITRO_OS_ALLOC_H */

@@ -8,8 +8,10 @@
  * current value, then target, frame and a zero counter.
  */
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 
 typedef struct NNSSndFader {
@@ -19,8 +21,10 @@ typedef struct NNSSndFader {
     int frame;
 } NNSSndFader;
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif

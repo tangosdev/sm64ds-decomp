@@ -40,8 +40,10 @@ typedef struct SoundSlot {
     int dist;
 } SoundSlot;
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 
 /* Store the owner, clear the voice slots and select range mode 0. */
@@ -76,8 +78,10 @@ int func_02048a18(int, int);
 /* Pick a free (or the weakest) voice slot for the sound (kind, id), or 0. */
 SoundSlot *func_02048720(const Vector3 *, int, int);
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif

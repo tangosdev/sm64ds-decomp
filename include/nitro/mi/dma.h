@@ -18,8 +18,10 @@
  * in a declaration costs every C++ includer an @NNN number), and the sizes
  * and channel numbers are spelled unsigned int, the SDK's u32. */
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 typedef void (*MIDmaCallback)(void *);
 
@@ -51,8 +53,10 @@ extern "C"
  * ITCM, src/MIi_DmaSetParams.cpp. */
     void
     MIi_DmaSetParams(unsigned int, unsigned int, unsigned int, unsigned int);
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif

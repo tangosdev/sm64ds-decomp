@@ -42,8 +42,10 @@ typedef struct CaptureEffect {
 typedef char CaptureEffect_size_must_be_0xcc[sizeof(CaptureEffect) == 0xcc ? 1 : -1];
 #endif
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 extern CaptureEffect data_020a4c64;
 /* data_020a4c64.work: the ROM addresses it by its own symbol. */
@@ -56,8 +58,10 @@ extern "C"
     func_02049ba8(void *, void *, unsigned int, int, CaptureEffect *);
 void func_020499bc(short *, short *, unsigned int, CaptureEffect *);
 void func_020497a0(short *, short *, unsigned int, CaptureEffect *);
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif

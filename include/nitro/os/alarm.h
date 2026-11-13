@@ -26,8 +26,10 @@
 
 #include "types.h"
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 
 /* Called with the alarm's arg when the alarm fires. */
@@ -52,8 +54,10 @@ void OS_CreateAlarm(OSAlarm *);
 void OS_SetAlarm(OSAlarm *, long long, OSAlarmHandler, void *);
 void OS_CancelAlarm(OSAlarm *);
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif /* NITRO_OS_ALARM_H */

@@ -26,8 +26,10 @@
 #include "nitro/hw/mmap_global.h"
 #include "nitro/hw/mmap_shared.h"
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 
 /* NitroSDK CTRDGHeader: the GBA cartridge header at HW_CTRDG_ROM (0x08000000). */
@@ -82,8 +84,10 @@ void CTRDGi_LockByProcessor(u16, int *);
 void CTRDGi_UnlockByProcessor(u16, int *);
 void CTRDGi_SendtoPxi(u32);
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif /* NITRO_CTRDG_COMMON_H */

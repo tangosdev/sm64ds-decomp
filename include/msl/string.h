@@ -25,8 +25,10 @@
  * Parameters stay unnamed: a named parameter in a declaration takes a
  * compiler @NNN number in every includer. */
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 
 void *memcpy(void *, const void *, unsigned int);
@@ -40,8 +42,10 @@ char *strncpy(char *, const char *, unsigned int);
 int strcmp(const char *, const char *);
 char *strchr(const char *, int);
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif /* MSL_STRING_H */

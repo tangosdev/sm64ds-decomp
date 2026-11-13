@@ -23,8 +23,10 @@
 
 #include "types.h"
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 /* A command's completion callback, and the system callback WBT_InitParent and
  * WBT_InitChild install; the argument is the WBTCommand. */
@@ -205,8 +207,10 @@ extern "C"
 #endif
     int
     WBT_PutUserData(u16, const void *, int, WBTCallback);
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif

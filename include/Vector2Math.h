@@ -9,15 +9,19 @@
 struct Vector2;
 struct V2;
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 Fix12i Vec2_Len(const Vector2 *v);
 int func_0203d524(struct V2 *, struct V2 *);
 void func_0203d704(int *, int *, int *);
 void Vec2_Sub(int *, int *, int *);
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif

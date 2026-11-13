@@ -13,9 +13,10 @@
 
 #include "types.h"
 
-
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 typedef struct CPContext {
     u64 div_numer; /* 0x00 -- 0x04000290 */
@@ -33,10 +34,11 @@ void CP_SaveContext(CPContext *);
 extern "C"
 #endif
 void CPi_RestoreContext(const CPContext *);
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
 #endif
-
+#endif
 
 #ifndef SM64DS_PLATFORM_PC
 typedef char CPContext_size_must_be_0x1c[sizeof(CPContext) == 0x1c ? 1 : -1];

@@ -19,16 +19,20 @@ typedef struct ChannelMeasureReply {
 
 typedef void (*ChannelMeasureCallback)(ChannelMeasureReply *);
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 
 extern ChannelMeasureCallback data_020a0f90;
 
 void func_0203f9d4(void *, ChannelMeasureCallback);
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif

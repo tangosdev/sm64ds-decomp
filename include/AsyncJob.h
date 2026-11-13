@@ -5,8 +5,10 @@
 #define func_0201a244 _Z13func_0201a244PFviEiiPvi
 #endif
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 typedef void (*AsyncJobCallback)(int argument);
 
@@ -23,8 +25,10 @@ extern "C"
 #endif
     void
     LoadMultiBootResources(int unused);
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif

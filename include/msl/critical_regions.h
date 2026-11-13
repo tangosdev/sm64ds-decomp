@@ -25,16 +25,20 @@ enum critical_regions {
     num_critical_regions = 9
 };
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 
 extern int __cs_id[num_critical_regions];
 extern int __cs_ref[num_critical_regions];
 extern OSMutex __cs[num_critical_regions];
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif /* MSL_CRITICAL_REGIONS_H */

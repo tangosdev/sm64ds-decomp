@@ -233,17 +233,9 @@ void Mg_ResetRecordBannerPos(void);
 void Mg_SetPerfectBanner(void);
 void Mg_SetNextBanner(int);
 #endif
-/* C linkage. These declare ROM symbols by their exact final names, so a C++
-   translation unit including this header must not mangle them -- a bare
-   `void Foo(int);` seen from C++ emits _Z3Fooi, which exists nowhere. The file
-   still byte-matches, because match.py compares relocated words as wildcards, so
-   nothing catches it until the ROM link -- and eligible.py refuses to enroll a
-   file with unresolvable references, so the link never sees it either.
-
-   Verified safe: of the 1,644 function names declared across the decl_*.h
-   headers, 1,572 are themselves the ROM symbol and 0 exist ONLY in a mangled
-   form, so no declaration here relies on C++ mangling. The remaining 72 resolve
-   to neither spelling and are unresolvable with or without this guard. */
+/* C++ names on the ROM. The same names are declared again below, and that
+   second copy is what the host compiles as C. A second copy here contradicts
+   it. These three, and the trampoline free names, are not repeated below. */
 struct daPly_c;
 struct daDossyCap_c;
 struct OamAttr;
@@ -252,13 +244,9 @@ struct Ov007MenuState;
 struct fLiNdBa_c;
 
 #ifdef __cplusplus
-void Bomroom_DrawScore();
-int D3D_PlaySeAtX(int, int);
 int RouletteResults_Tick(void);
 int RouletteBoard_LoadModels(char *);
 unsigned char StarPopup_Clear(void);
-void Heyho_DrawAll(void);
-void Heyho_SpawnAll(void *, int);
 void TrmpItem_MotionHover(void *);
 void TrmpItem_MotionSway(void *);
 void TrmpItem_UpdateMatricesAll(void);
@@ -267,64 +255,10 @@ void TrmpItem_ReleaseFiles(void);
 void TrmpItem_LoadAll(char *, int);
 void TrmpLine_DrawAll(void);
 void TrmpLine_LoadTextures(void);
-void CupFx_ElemDtor();
-void D3D_ReleaseSubBg1(void *);
-void D3D_CaptureToSub(void);
-void D3D_CaptureToMain(void);
-void StarPopup_Draw(void);
-void StarPopup_Update(char *);
-void HanaPopup_DrawAll(void);
-void HanaPopup_UpdateAll();
-void HanaPopup_ClearAll(void);
-void Hana_LoadBackground(void);
-void Jump2Popup_DrawAll(void);
-void Jump2Popup_UpdateAll(void);
-void Jump2Popup_ClearAll(void);
-void Jump2Popup_InitPool(int, int);
-void Jump2_SetLights(void);
-void RouletteStrip_ResetAll(void);
-void RouletteStrip_LinkAll(char *);
-void RouletteBoard_Draw(char *);
-void RouletteBoard_StartSpin(char *);
-void RouletteRacer_Draw(char *);
-void RouletteRacer_PlaceAtStart(int *);
-void Roulette_DrawResultsThunk(char *);
-void SlotBlink_Draw(unsigned char *);
-void SlotBet_Reset(void *);
-void SlotBet_Place(char *);
-void Slot1_InitHud(void *);
-void SmartballObj_ElemDtor(void);
-void TrmpFx_DrawAll(void);
-void TrmpFx_UpdateAll(void);
-void TrmpFx_ClearAll(void);
-void TrmpFx_InitPool(void *, int);
-void Trmp2Spinner_UpdateMatrix(char *);
-void Trmp2Spinner_UpdateMatricesAll(void);
-void Trmp2Spinner_UpdateAll(void);
-void Trmp2Spinner_HideAll(void);
-void Trmp2Spinner_LoadAll(int, int);
-void Dealer_PlayWin(void *);
-void Dealer_StartSwap(int *);
-void Dealer_PlayIdle(char *);
-void Mascot_Update(void *);
-void Mascot_Load(char *);
-void Presenter_PlayLose(char *);
-void FlowerFace_PlayPetalPulled(char *);
-void FlowerFace_Reset(void *);
-void FlowerFace_Draw(void *);
-int FlowerFace_Load(char *);
-void Jump3D_DrawAll(void);
-void Jump3D_DisableInput(void);
-void Jump3D_RestoreCount(void);
-void Puff_ClearAll(int, int);
 #else
-extern void Bomroom_DrawScore();
-extern int D3D_PlaySeAtX(int, int);
 extern int RouletteResults_Tick(void);
 extern int RouletteBoard_LoadModels(char *);
 extern unsigned char StarPopup_Clear(void);
-extern void Heyho_DrawAll(void);
-extern void Heyho_SpawnAll(void *, int);
 extern void TrmpItem_MotionHover(void *);
 extern void TrmpItem_MotionSway(void *);
 extern void TrmpItem_UpdateMatricesAll(void);
@@ -333,56 +267,6 @@ extern void TrmpItem_ReleaseFiles(void);
 extern void TrmpItem_LoadAll(char *, int);
 extern void TrmpLine_DrawAll(void);
 extern void TrmpLine_LoadTextures(void);
-extern void CupFx_ElemDtor();
-extern void D3D_ReleaseSubBg1(void *);
-extern void D3D_CaptureToSub(void);
-extern void D3D_CaptureToMain(void);
-extern void StarPopup_Draw(void);
-extern void StarPopup_Update(char *);
-extern void HanaPopup_DrawAll(void);
-extern void HanaPopup_UpdateAll();
-extern void HanaPopup_ClearAll(void);
-extern void Hana_LoadBackground(void);
-extern void Jump2Popup_DrawAll(void);
-extern void Jump2Popup_UpdateAll(void);
-extern void Jump2Popup_ClearAll(void);
-extern void Jump2Popup_InitPool(int, int);
-extern void Jump2_SetLights(void);
-extern void RouletteStrip_ResetAll(void);
-extern void RouletteStrip_LinkAll(char *);
-extern void RouletteBoard_Draw(char *);
-extern void RouletteBoard_StartSpin(char *);
-extern void RouletteRacer_Draw(char *);
-extern void RouletteRacer_PlaceAtStart(int *);
-extern void Roulette_DrawResultsThunk(char *);
-extern void SlotBlink_Draw(unsigned char *);
-extern void SlotBet_Reset(void *);
-extern void SlotBet_Place(char *);
-extern void Slot1_InitHud(void *);
-extern void SmartballObj_ElemDtor(void);
-extern void TrmpFx_DrawAll(void);
-extern void TrmpFx_UpdateAll(void);
-extern void TrmpFx_ClearAll(void);
-extern void TrmpFx_InitPool(void *, int);
-extern void Trmp2Spinner_UpdateMatrix(char *);
-extern void Trmp2Spinner_UpdateMatricesAll(void);
-extern void Trmp2Spinner_UpdateAll(void);
-extern void Trmp2Spinner_HideAll(void);
-extern void Trmp2Spinner_LoadAll(int, int);
-extern void Dealer_PlayWin(void *);
-extern void Dealer_StartSwap(int *);
-extern void Dealer_PlayIdle(char *);
-extern void Mascot_Update(void *);
-extern void Mascot_Load(char *);
-extern void Presenter_PlayLose(char *);
-extern void FlowerFace_PlayPetalPulled(char *);
-extern void FlowerFace_Reset(void *);
-extern void FlowerFace_Draw(void *);
-extern int FlowerFace_Load(char *);
-extern void Jump3D_DrawAll(void);
-extern void Jump3D_DisableInput(void);
-extern void Jump3D_RestoreCount(void);
-extern void Puff_ClearAll(int, int);
 #endif
 #ifdef __cplusplus
 namespace ns_020cd658 {
@@ -423,8 +307,10 @@ void Trmp3DMario_ResetAll(unsigned int, int);
 using ns_020cd424::Trmp3DMario_ResetAll;
 #endif
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 extern Matrix4x3 data_ov021_02113a60, data_ov021_02113a80;
 extern s32 data_ov002_0210af00[3];
@@ -1860,8 +1746,7 @@ extern void func_ov025_021112e0(char*);
 extern void func_ov030_02111734(char*);
 /* No longer defined (now daObjRc_Tikuwa_c::StoodOnCallback); kept because its
    three named parameters hold @NNN numbers in every includer. */
-    extern void
-    func_ov036_02111cc4(void *dBgW, void *self, void *clsn);
+extern void func_ov036_02111cc4(void *dBgW, void *self, void *clsn);
 #ifdef __cplusplus
 extern "C"
 #endif
@@ -2055,8 +1940,10 @@ extern "C"
 extern volatile struct Matrix4x3 sDealerIdentityMtx;
 extern volatile unsigned short data_ov002_0210c208[];
 extern vu32 *sHanaBackgroundParts[];
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif

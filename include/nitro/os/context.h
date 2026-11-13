@@ -35,9 +35,10 @@
 #define OS_CONTEXT_SP_SVC OS_CONTEXT_R13_SVC
 #define OS_CONTEXT_CP_CONTEXT 72
 
-
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 typedef struct OSContext {
     u32 cpsr;             /* 0x00 */
@@ -62,9 +63,10 @@ extern "C"
 #endif
 /* the SDK's BOOL */
 void OS_LoadContext(OSContext *);
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
 #endif
-
+#endif
 
 #endif /* NITRO_OS_CONTEXT_H */

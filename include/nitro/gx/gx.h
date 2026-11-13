@@ -50,8 +50,10 @@
 #define GX_BG0_AS_2D 0
 #define GX_BG0_AS_3D 1
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 
 void GX_Init(void);
@@ -63,8 +65,10 @@ void GX_SetGraphicsMode(int, int, int);
 void GXS_SetGraphicsMode(int);
 void GXx_SetMasterBrightness_(volatile unsigned short *, int);
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 /* The SDK's public wrappers over GXx_SetMasterBrightness_, one per engine.

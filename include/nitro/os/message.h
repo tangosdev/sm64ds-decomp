@@ -16,8 +16,10 @@
 
 #include "types.h"
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 
 #define OS_MESSAGE_NOBLOCK 0
@@ -42,8 +44,10 @@ void OS_InitMessageQueue(OSMessageQueue *, OSMessage *, s32);
 int OS_SendMessage(OSMessageQueue *, OSMessage, s32);
 int OS_ReceiveMessage(OSMessageQueue *, OSMessage *, s32);
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif

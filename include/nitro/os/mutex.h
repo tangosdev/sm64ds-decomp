@@ -22,8 +22,10 @@
 
 #include "nitro/os/thread.h"
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 
 void OS_InitMutex(OSMutex *);
@@ -32,8 +34,10 @@ void OS_UnlockMutex(OSMutex *);
 int OS_TryLockMutex(OSMutex *);
 void OSi_UnlockAllMutex(OSThread *);
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif /* NITRO_OS_MUTEX_H */

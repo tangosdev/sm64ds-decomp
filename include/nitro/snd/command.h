@@ -24,14 +24,18 @@ typedef struct SNDCommand {
     u32 arg[4];              /* 0x08 */
 } SNDCommand;
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 
 void SND_CommandInit(void);
 
-#if defined(_MSC_VER) && defined(__cplusplus)
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif /* NITRO_SND_COMMAND_H */
