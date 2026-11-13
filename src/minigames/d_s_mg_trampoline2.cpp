@@ -465,7 +465,8 @@ void dScMgTrampoline2_c::StatePlay() {
             vecA.y = 0x1000;
             vecA.z = 0;
             func_0203cc28((int *)&vecA, d->angles[i]);
-            TrmpItem::Spawn((int)&d->positions[i], (int *)&vecA, d->itemTypes[i], d->motionTypes[i]);
+            TrmpItem::Spawn((int)&d->positions[i], (int *)&vecA, d->itemTypes[i],
+                            d->motionTypes[i]);
         }
         if (ApproachLinear(mPattern, 6, 1)) {
             mScriptDone = 1;
@@ -483,7 +484,7 @@ void dScMgTrampoline2_c::StatePlay() {
                 vecB.z = 0;
                 func_0203cc28((int *)&vecB, d->angles[i]);
                 TrmpItem::Spawn((int)&d->positions[i], (int *)&vecB, d->itemTypes[i],
-                               d->motionTypes[i]);
+                                d->motionTypes[i]);
             }
             mWaveStep = 0;
         } else {
