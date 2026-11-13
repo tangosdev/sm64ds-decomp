@@ -135,6 +135,13 @@ extern char sAmidaPatternExtraRungs[];
    readers keep those symbols. walkerStagger (+0x14) has none: the round
    setup multiplies it by 0x3c and the walker index into mWalkerDelay, so
    it is the seconds between walkers. */
+/* First word of one 0x1c-stride pattern table (speeds, shuffle, rung skip, extra rungs). */
+struct AmidaTableWord {
+    s32 word;
+    char pad[0x18];
+};
+typedef char AmidaTableWord_size_must_be_0x1c[sizeof(AmidaTableWord) == 0x1c ? 1 : -1];
+
 struct AmidaPattern {
     s32 walkerCount;   /* 0x00 sAmidaPatterns */
     s32 goalShuffle;   /* 0x04 sAmidaPatternGoalShuffle */
@@ -1467,7 +1474,7 @@ void dScMgAmida_c::SetupRound() {
         mWalkerCount = ((AmidaPattern *)sAmidaPatterns)[mPatternIndex].walkerCount;
     }
 
-    mScrollSpeed = ((*(int *)(sAmidaPatternSpeeds + mPatternIndex * 0x1c) - 1) * 5) + 0xb;
+    mScrollSpeed = ((((AmidaTableWord *)sAmidaPatternSpeeds)[mPatternIndex].word - 1) * 5) + 0xb;
 
     {
         u32 stage = mLevel;
@@ -1515,7 +1522,7 @@ void dScMgAmida_c::SetupRound() {
 
     mRoundCount = 0;
     InitWalkers();
-    ShuffleGoals(*(int *)(sAmidaPatternGoalShuffle + mPatternIndex * 0x1c));
+    ShuffleGoals(((AmidaTableWord *)sAmidaPatternGoalShuffle)[mPatternIndex].word);
     Mg_SetTopScreenYOffset(0x20);
 
     mSetupInk = 1;
@@ -1570,7 +1577,7 @@ void dScMgAmida_c::SetupRound() {
                 }
             } while (remaining > 0);
         } else {
-            int sel = *(int *)(sAmidaPatternRungSkip + mPatternIndex * 0x1c);
+            int sel = ((AmidaTableWord *)sAmidaPatternRungSkip)[mPatternIndex].word;
             switch (sel) {
             case 0:
                 break;
@@ -1612,7 +1619,7 @@ void dScMgAmida_c::SetupRound() {
                 break;
             }
         } else {
-            sel2 = *(int *)(sAmidaPatternRungSkip + mPatternIndex * 0x1c);
+            sel2 = ((AmidaTableWord *)sAmidaPatternRungSkip)[mPatternIndex].word;
         }
 
         switch (sel2) {
@@ -1648,7 +1655,7 @@ void dScMgAmida_c::SetupRound() {
 
     mLineCount++;
     if (IsVariant2() == 0) {
-        int v = *(int *)(sAmidaPatternExtraRungs + mPatternIndex * 0x1c);
+        int v = ((AmidaTableWord *)sAmidaPatternExtraRungs)[mPatternIndex].word;
         if (v != 0 && v == 1) {
             Mg_DrawLine(0x60, 0x2d, 0xa0, 0x2d, mLineColor, 1);
             Mg_DrawLine(0x20, 0x5a, 0x60, 0x5a, mLineColor, 1);
