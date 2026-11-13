@@ -142,6 +142,7 @@ extern unsigned char data_0209caa0[];
 // it shares this console's level; the presence gate compares a received level
 // against it. signed char in the ROM (levels 0..51); read as int here.
 extern signed char data_0209f2f8;
+extern unsigned char data_0209f2d8;     // stage mode: 2 = the ending script's no-pause mode (ending, credits)
 // GHOSTDOOR1: the area shown inside that level (-1 none): ChangeArea writes it
 extern signed char data_02092120;
 
@@ -4305,6 +4306,7 @@ extern "C" void port_adventure_ghost_park(void *body) { gw_park_body(body); }
 // Runs from the hold (hal/player_bridges.cpp), before the walk, so a repaired
 // body is skipped and parked before its first Behavior tick. Hub only.
 static void port_adventure_hub_opening_tick();   // the opening's hand-over, below
+static void port_adventure_ending_state();        // the ending's session state, below
 // CREDITS1: THE CUTSCENE CAST IS NUMBERED AS A ONE-PLAYER BOOT NUMBERS IT.
 // A cutscene script spawns its cast (Luigi, Wario and Yoshi at the castle in the
 // ending, the runners of the credits) as Player actors through func_0200e5fc,
@@ -4345,6 +4347,7 @@ extern "C" void port_adventure_kuppa_cast() {
 extern "C" void port_adventure_hub_seat() {
     if (!(adventure_ghost_mode() && comms_hub_active())) return;
     port_adventure_hub_opening_tick();
+    port_adventure_ending_state();
     port_adventure_kuppa_cast();
     const int count = (int)data_0209f21c;
     if (count <= 1 || count > kPortBodySlots) return;
@@ -4425,6 +4428,37 @@ static bool g_hub_opening = false;        // step 1 until the closing load
 static bool g_hub_opening_spawn = false;  // step 2, until that load spawns
 static bool g_hub_handover = false;       // step 3, until the bit
 static int g_hub_handover_level = -1;
+
+// CREDITS1: THE ENDING AND THE CREDITS PLAY ON THE ROM'S ONE-PLAYER SESSION STATE, as the new-file opening does.
+// The hub's session state data_0209fc68 = 1 is the ROM's wireless arm, and the actor layer reads it as "every actor
+// thinks, near or far, seen or not": Actor::BeforeBehavior runs a frozen actor anyway (src/runtime/actor/d_actor.cpp:514),
+// an actor out of the camera keeps thinking (:454) and IsTooFarAwayFromPlayer never answers yes (:1961). The ending and
+// every credits course are scripted shots built for the one-player answer (0), where the actors away from the shot stand
+// still. With 1 they did not: in the credits course of level 21 a Flame Chomp the shot never shows kept running, its fire
+// reached the scripted Mario at f9564 and took a wedge (every Adventure Online and plain coop row, never solo), which on
+// 1.0.5 came on top of the ending's fall. So while the ending script's no-pause mode is up (data_0209f2d8 == 2, set by
+// ContinueKuppaScriptIfNecessary when the ending script starts, src/ContinueKuppaScriptIfNecessary.c:18) the state is the
+// one-player 0, and it goes back to the hub's 1 the first frame that mode is gone with the hub still up (the credits end
+// on the title, where leaving the session clears it anyway). Not during the new-file opening, which owns the word itself.
+static bool g_ending_state = false;   // this console set the session state to 0 for the ending
+static void port_adventure_ending_state() {
+    if (g_hub_opening || g_hub_opening_spawn || g_hub_handover) return;
+    if (data_0209f2d8 == 2) {
+        if (data_0209fc68[0] == 1) {
+            data_0209fc68[0] = 0;
+            g_ending_state = true;
+            std::fprintf(stderr, "[ghost] hub: the ending (mode 2) plays on the one-player session state; 1 -> 0 at "
+                         "level %d
+", (int)data_0209f2f8);
+        }
+    } else if (g_ending_state) {
+        g_ending_state = false;
+        if (data_0209fc68[0] == 0) data_0209fc68[0] = 1;
+        std::fprintf(stderr, "[ghost] hub: the ending's mode is over; the session state is the hub's %d again at "
+                     "level %d
+", data_0209fc68[0], (int)data_0209f2f8);
+    }
+}
 
 extern "C" int port_adventure_hub_opening_begin() {
     if (!(adventure_ghost_mode() && comms_hub_active())) return 0;
