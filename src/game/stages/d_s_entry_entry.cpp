@@ -113,7 +113,7 @@ int EntryMesh::LoadTexture(BMD_File *file) {
     if (sz <= 8)
         mMaterial.pltAddr = func_02045ad8(pal->data, sz);
     else
-        mMaterial.pltAddr = func_02045a50(pal->data, (unsigned int)sz);
+        mMaterial.pltAddr = func_02045a50(pal->data, sz);
     /* d is the first BMD_Material. */
     mMaterial.difAmb = ((BMDMaterialColors *)d)->difAmb;
     mMaterial.speEmi = ((BMDMaterialColors *)d)->speEmi;
@@ -236,7 +236,7 @@ int EntryMesh::RippleAmplitude(int age) {
 short EntryMesh::RipplePhase(int dist) {
     int t = FX_Div(0xffff, 0x16c000);
     int v = FX_MUL(dist, t);
-    return (short)(v - mRipplePhase);
+    return (v - mRipplePhase);
 }
 
 /* An array-member twin of EntryMeshVec. Copying through it keeps C's
