@@ -41,7 +41,7 @@ void SPLAnim_Color(ParticleElement *ptcl, PtclDef *data, int age) {
         int blueHi = blueHiRaw & 0x1f;
         int blueLoRaw = loColor >> 10;
         int blueLo = blueLoRaw & 0x1f;
-        int lerp = (int)(((unsigned int)(flags << 29)) >> 31);
+        int lerp = (((unsigned int)(flags << 29)) >> 31);
         int num = age - stop1;
         int denom = stop2 - stop1;
         if (lerp == 0)
@@ -58,7 +58,7 @@ void SPLAnim_Color(ParticleElement *ptcl, PtclDef *data, int age) {
         int green = greenLo + greenStep;
         int red = redLo + redStep;
         int blue = blueLo + blueStep;
-        ptcl->color = (u16)(red | (green << 5) | (blue << 10));
+        ptcl->color = (red | (green << 5) | (blue << 10));
         return;
     }
     if (age < stop3) {
@@ -75,7 +75,7 @@ void SPLAnim_Color(ParticleElement *ptcl, PtclDef *data, int age) {
         int blueLo = blueLoRaw & 0x1f;
         int blueHiRaw = hiColor >> 10;
         int blueHi = blueHiRaw & 0x1f;
-        int lerp = (int)(((unsigned int)(flags << 29)) >> 31);
+        int lerp = (((unsigned int)(flags << 29)) >> 31);
         int num = age - stop2;
         int denom = stop3 - stop2;
         if (lerp == 0)
@@ -92,7 +92,7 @@ void SPLAnim_Color(ParticleElement *ptcl, PtclDef *data, int age) {
         int green = greenLo + greenStep;
         int red = redLo + redStep;
         int blue = blueLo + blueStep;
-        ptcl->color = (u16)(red | (green << 5) | (blue << 10));
+        ptcl->color = (red | (green << 5) | (blue << 10));
         return;
     }
     ptcl->color = ramp->endColor;
