@@ -191,12 +191,12 @@ s32 dScMiniGm_c::InitResources()
         flag = 0;
         if (tbl2->scoreCap != 0) {
             if (tbl2->ownRecords == 1) {
-                if ((u32)MiniGm_GetRecord((char *)this, i2, 0) > (u32)tbl2->scoreCap) {
+                if ((u32)MiniGm_GetRecord(this, i2, 0) > (u32)tbl2->scoreCap) {
                     flag = 1;
                 }
             } else {
                 for (j2 = 0; j2 < 5; j2++) {
-                    if ((u32)MiniGm_GetRecord((char *)this, i2, j2) > (u32)tbl2->scoreCap) {
+                    if ((u32)MiniGm_GetRecord(this, i2, j2) > (u32)tbl2->scoreCap) {
                         flag = 1;
                     }
                 }
@@ -323,7 +323,7 @@ s32 dScMiniGm_c::InitResources()
     sp2 = 0x1f;
     MI_CpuFill16(dst, sp2, 0x1000);
 
-    MiniGm_LoadGroupIcons((char *)this);
+    MiniGm_LoadGroupIcons(this);
 
     if (GetOwnerLanguage() == 5) {
         f = LoadFile(0xda);
