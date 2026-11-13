@@ -14,12 +14,16 @@
 #include "char_door_skin.h"
 #include "mods.h"
 #include "ui_text.h"
+#include "menu_starsel_plate_art.h"
 #include "../third_party/stb/stb_image.h"
 #include "../tests/overlay_font.h"
 
 extern "C" {
 /* the HUD's life icons: one OamAttr list per character (src/_ZN3HUD15RenderLifeCountEv.cpp indexes it by the Player's character) */
 extern void *_ZN3OAM10LIFE_ICONSE[];
+/* the HUD's power star, one OamAttr list (the star of the star select's own star total, d_s_star_sel_methods.cpp) */
+extern unsigned short _ZN3OAM10POWER_STARE[];
+const char *port_fs_catalog_path(unsigned file_id);    /* hal/fs.cpp */
 }
 
 namespace {
@@ -298,10 +302,9 @@ inline uint8_t rd8(uint32_t a) { return *reinterpret_cast<volatile uint8_t *>(a)
 
 /* the HUD's life icon of character c: the OamAttr list's sprites drawn from engine A's OBJ memory (tiles at 0x06400000, palette at 0x05000200),
    the way ntr/ppu.cpp's sprite scan reads them. 16 colour and 256 colour sprites, 1D and 2D tile maps, no rotation. */
-void read_rom_icon(int c, Img *out)
+void read_oam_list(const unsigned short *a, Img *out, const char *what, int c)
 {
     *out = Img();
-    const unsigned short *a = (const unsigned short *)_ZN3OAM10LIFE_ICONSE[c];
     if (!a) return;
     static const int kSizes[3][4][2] = { { {8, 8}, {16, 16}, {32, 32}, {64, 64} }, { {16, 8}, {32, 8}, {32, 16}, {64, 32} }, { {8, 16}, {8, 32}, {16, 32}, {32, 64} } };
     const uint32_t dispcnt = rd32(0x04000000u);
@@ -364,12 +367,124 @@ void read_rom_icon(int c, Img *out)
     }
     int lit = 0;
     for (size_t i = 0; i < out->px.size(); ++i) if (out->px[i]) ++lit;
-    fprintf(stderr, "[charmenu] head icon %d: %dx%d, %d sprite(s), %d lit pixels\n", c, W, H, n, lit);
+    fprintf(stderr, "[charmenu] %s %d: %dx%d, %d sprite(s), %d lit pixels\n", what, c, W, H, n, lit);
     if (lit == 0) *out = Img();
 }
 
+void read_rom_icon(int c, Img *out) { read_oam_list((const unsigned short *)_ZN3OAM10LIFE_ICONSE[c], out, "head icon", c); }
+
+/* CHARSEL2: a picture cut down to the box of its visible pixels, so a fit centres what is seen and not the empty margin of its cell */
+void crop_visible(const Img &I, Img *out)
+{
+    *out = Img();
+    if (!I.ok()) return;
+    int x0 = I.w, y0 = I.h, x1 = -1, y1 = -1;
+    for (int y = 0; y < I.h; ++y)
+        for (int x = 0; x < I.w; ++x)
+            if ((I.px[(size_t)y * I.w + x] >> 24) > 24) {
+                if (x < x0) x0 = x;
+                if (x > x1) x1 = x;
+                if (y < y0) y0 = y;
+                if (y > y1) y1 = y;
+            }
+    if (x1 < x0 || y1 < y0) return;
+    out->w = x1 - x0 + 1;
+    out->h = y1 - y0 + 1;
+    out->px.resize((size_t)out->w * out->h);
+    for (int y = 0; y < out->h; ++y)
+        memcpy(&out->px[(size_t)y * out->w], &I.px[(size_t)(y0 + y) * I.w + x0], (size_t)out->w * 4);
+}
+
+/* CHARSEL2: THE PANEL'S HEADS are the cartridge's own character select portraits (the star select's "TOUCH ME" busts):
+   data/2D_cad/d_2d_player_select_<name>_8bit_ncg (file ids 150 Mario, 148 Luigi, 152 Wario, 154 Yoshi; the _ncl palette is the next id). Each
+   _ncg is one LZ10 stream of 16384 bytes, a 128 x 128 sheet of 8 x 8 8-bit tiles, 16 a row, index 0 transparent, the bust in the top-left
+   80 x 80 (a lattice lies beyond it): the read hal/head_icons.cpp and the profile page make. Nothing is stored: the player's own files are read
+   once; a file that cannot be read leaves the HUD's small head for that character. Kept cut to the visible bust. */
+Img g_bust[4];
+int g_bust_state[4];        /* 0 not tried, 1 ok, -1 failed */
+
+bool bust_file(unsigned id, std::vector<unsigned char> *out)
+{
+    const char *rel = port_fs_catalog_path(id);
+    if (!rel || !*rel) return false;
+    char full[700];
+    const char *root = getenv("SM64DS_ASSET_ROOT");
+    if (root && *root) snprintf(full, sizeof full, "%s/extracted/dsd/files/%s", root, rel);
+    else snprintf(full, sizeof full, "%s", rel);
+    FILE *f = fopen(full, "rb");
+    if (!f) return false;
+    fseek(f, 0, SEEK_END);
+    const long n = ftell(f);
+    fseek(f, 0, SEEK_SET);
+    if (n < 8 || n > (1L << 20)) { fclose(f); return false; }
+    out->resize((size_t)n);
+    const bool ok = fread(&(*out)[0], 1, (size_t)n, f) == (size_t)n;
+    fclose(f);
+    return ok;
+}
+
+bool bust_lz10(const std::vector<unsigned char> &s, std::vector<unsigned char> *dst, long want)
+{
+    const long n = (long)s.size();
+    if (n < 4 || s[0] != 0x10) return false;
+    const long size = s[1] | (s[2] << 8) | (s[3] << 16);
+    if (size != want) return false;
+    dst->assign((size_t)size, 0);
+    long o = 4, d = 0;
+    while (d < size) {
+        if (o >= n) return false;
+        const unsigned flags = s[o++];
+        for (int k = 0; k < 8 && d < size; ++k) {
+            if (flags & (0x80u >> k)) {
+                if (o + 2 > n) return false;
+                const unsigned x = ((unsigned)s[o] << 8) | s[o + 1];
+                o += 2;
+                const long len = (long)(x >> 12) + 3, disp = (long)(x & 0xfff) + 1;
+                if (disp > d) return false;
+                for (long i = 0; i < len && d < size; ++i, ++d) (*dst)[d] = (*dst)[d - disp];
+            } else {
+                if (o >= n) return false;
+                (*dst)[d++] = s[o++];
+            }
+        }
+    }
+    return true;
+}
+
+const Img *bust_img(int c)
+{
+    c &= 3;
+    if (!g_bust_state[c]) {
+        static const unsigned kNcg[4] = { 150, 148, 152, 154 };
+        g_bust_state[c] = -1;
+        std::vector<unsigned char> g, l, tiles;
+        if (bust_file(kNcg[c], &g) && bust_file(kNcg[c] + 1, &l) && l.size() >= 512 && bust_lz10(g, &tiles, 16384)) {
+            const int B = 80;
+            Img full;
+            full.w = B; full.h = B;
+            full.px.assign((size_t)B * B, 0);
+            for (int y = 0; y < B; ++y)
+                for (int x = 0; x < B; ++x) {
+                    const unsigned idx = tiles[(size_t)((y >> 3) * 16 + (x >> 3)) * 64 + (y & 7) * 8 + (x & 7)];
+                    if (!idx) continue;
+                    const unsigned v = l[idx * 2] | ((unsigned)l[idx * 2 + 1] << 8);
+                    const unsigned r = v & 31, gg = (v >> 5) & 31, b = (v >> 10) & 31;
+                    full.px[(size_t)y * B + x] = 0xFF000000u | ((r << 3 | r >> 2) << 16) | ((gg << 3 | gg >> 2) << 8) | (b << 3 | b >> 2);
+                }
+            crop_visible(full, &g_bust[c]);
+            if (g_bust[c].ok()) g_bust_state[c] = 1;
+        }
+        if (g_bust_state[c] > 0) fprintf(stderr, "[charpanel] art: head %d: the cartridge's portrait, %dx%d visible\n", c, g_bust[c].w, g_bust[c].h);
+        else fprintf(stderr, "[charpanel] art: head %d: portrait not readable, the HUD head is used\n", c);
+    }
+    return g_bust_state[c] > 0 ? &g_bust[c] : 0;
+}
+
+Img g_rom_crop[4];          /* the HUD heads cut to their visible pixels (the fallback when a portrait file cannot be read) */
+Img g_star_icon;            /* the HUD's power star, cut to its visible pixels */
+
 /* the pictures of the mod characters of this open, read once per open */
-struct CustomArt { Img icon, preview; int tried = 0; };
+struct CustomArt { Img icon, preview, crop; int tried = 0, cropped = 0; };
 CustomArt g_cust[16];
 
 CustomArt &cust(int id)
@@ -399,6 +514,23 @@ const Img *preview_for(const CdItem &it)
     }
     return g_rom_icon[it.base & 3].ok() ? &g_rom_icon[it.base & 3] : 0;
 }
+/* CHARSEL2: the picture the star select's panel shows for an entry, cut to what is visible: a mod character's own icon (or its preview), else
+   the cartridge's portrait of the character it plays as, else the HUD head. *id is a cache key for pieces made from it. */
+const Img *panel_icon_for(const CdItem &it, int *id)
+{
+    if (it.custom) {
+        CustomArt &c = cust(it.id);
+        if (!c.tried) { c.tried = 1; load_file(it.icon, &c.icon); load_file(it.preview, &c.preview); }
+        if (!c.cropped) { c.cropped = 1; crop_visible(c.icon.ok() ? c.icon : c.preview, &c.crop); }
+        if (c.crop.ok()) { *id = 100 + (it.id & 15); return &c.crop; }
+    }
+    const int b = it.base & 3;
+    *id = b;
+    if (const Img *I = bust_img(b)) return I;
+    *id = 10 + b;
+    return g_rom_crop[b].ok() ? &g_rom_crop[b] : 0;
+}
+
 int image_id(const CdItem &it, const Img *I)
 {
     if (!I) return 0;
@@ -592,7 +724,12 @@ int cdskin_hd(void)
 void cdskin_begin(void)
 {
     decide_skin();
-    for (int i = 0; i < 4; ++i) read_rom_icon(i, &g_rom_icon[i]);
+    for (int i = 0; i < 4; ++i) { read_rom_icon(i, &g_rom_icon[i]); crop_visible(g_rom_icon[i], &g_rom_crop[i]); }
+    {
+        Img st;
+        read_oam_list(_ZN3OAM10POWER_STARE, &st, "power star", 0);
+        crop_visible(st, &g_star_icon);
+    }
 
     for (int i = 0; i < 16; ++i) g_cust[i] = CustomArt();
     g_pieces.clear();
@@ -930,6 +1067,104 @@ void plain_tab(const Surf &s, int x, int y, int w, int h, int right, float k)
             s.px[(size_t)yy * s.stride + xx] = over(s.px[(size_t)yy * s.stride + xx], ((col >> 16) & 255) * a / 255, ((col >> 8) & 255) * a / 255, (col & 255) * a / 255, a);
         }
 }
+/* CHARSEL2: THE DS PLATE. The panel is built from the star select's own art: the speech bubble the cartridge holds each cap in on this very
+   screen (hal/menu_starsel_plate_art.h, the bubble's body: a cream face 48 x 28 with an olive edge and two rows of drop shadow under it).
+   It is nine-sliced to any size at a whole number of picture pixels per art pixel, so its pixels stay square as the caps row's plates do:
+   corners 11 / 13 wide and 10 / 14 high, the middle column 11 and row 10 repeated. w x h is the whole piece, shadow rows included.
+   Variants recolour the six art colours: the plain bubble, the chosen character's (gold), the one under the cursor or the pointer (white with
+   a red edge), both, and the tray the buttons sit in (tan). */
+enum { PV_PLAIN, PV_CHOSEN, PV_LIT, PV_CHOSEN_LIT, PV_TRAY, PV_COUNT };
+
+uint32_t plate_colour(uint32_t rgb, int v)
+{
+    static const uint32_t src[6] = { 0xFFFFEEu, 0xE6E6B4u, 0xC5C57Bu, 0x838310u, 0x626208u, 0x4A4A08u };   /* face, two shades, edge, dark edge, shadow */
+    static const uint32_t map[PV_COUNT][6] = {
+        { 0xFFFFEEu, 0xE6E6B4u, 0xC5C57Bu, 0x838310u, 0x626208u, 0x4A4A08u },
+        { 0xFFE680u, 0xF2CC58u, 0xD9A83Au, 0x9A6410u, 0x74480Au, 0x4A4A08u },
+        { 0xFFFFFFu, 0xF2F2D2u, 0xD6D69Au, 0xE85A10u, 0xB83C08u, 0x4A4A08u },
+        { 0xFFF0A0u, 0xF2CC58u, 0xD9A83Au, 0xE85A10u, 0xB83C08u, 0x4A4A08u },
+        { 0xEBC67Au, 0xD8AE5Eu, 0xC09246u, 0x8A5A18u, 0x6A4210u, 0x4A3208u },
+    };
+    for (int i = 0; i < 6; ++i) if (rgb == src[i]) return map[v][i];
+    return rgb;
+}
+
+const Piece *plate_piece(int v, int w, int h, int s)
+{
+    if (w < 2 || h < 2 || v < 0 || v >= PV_COUNT) return 0;
+    if (s < 1) s = 1;
+    const int key = v | (s << 8);
+    if (Piece *p = find_piece(7, key, w, h)) return p;
+    Piece *p = new_piece(7, key, w, h);
+    p->px.assign((size_t)w * h, 0);
+    const int IL = 11, IR = 13, IT = 10, IB = 14;
+    const bool fx = (IL + IR) * s <= w, fy = (IT + IB) * s <= h;      /* too small for its corners: the whole art squeezed instead */
+    for (int y = 0; y < h; ++y) {
+        const int ay = !fy ? y * kCapPlateH / h : (y < IT * s ? y / s : (y >= h - IB * s ? kCapPlateH - 1 - (h - 1 - y) / s : IT));
+        for (int x = 0; x < w; ++x) {
+            const int ax = !fx ? x * kCapPlateW / w : (x < IL * s ? x / s : (x >= w - IR * s ? kCapPlateW - 1 - (w - 1 - x) / s : IL));
+            const uint32_t c = kCapPlateArt[ay * kCapPlateW + ax];
+            if (!(c >> 24)) continue;
+            p->px[(size_t)y * w + x] = 0xFF000000u | plate_colour(c & 0xFFFFFFu, v);
+        }
+    }
+    return p;
+}
+
+/* a picture scaled to fit inside bw x bh and centred EXACTLY: the piece's size is given the box's parity, so the space left over splits
+   evenly on both sides at every picture size (CHARSEL2: the heads sat off centre) */
+const Piece *fit_box(int id, const Img &I, int bw, int bh, int *ox, int *oy)
+{
+    if (!I.ok() || bw < 1 || bh < 1) return 0;
+    const double k = (double)bw / I.w < (double)bh / I.h ? (double)bw / I.w : (double)bh / I.h;
+    int dw = (int)(I.w * k + 0.5), dh = (int)(I.h * k + 0.5);
+    if (dw > bw) dw = bw;
+    if (dh > bh) dh = bh;
+    if (dw < 1) dw = 1;
+    if (dh < 1) dh = 1;
+    if (((bw - dw) & 1) && dw > 1) --dw;
+    if (((bh - dh) & 1) && dh > 1) --dh;
+    *ox = (bw - dw) / 2;
+    *oy = (bh - dh) / 2;
+    if (Piece *p = find_piece(8, id, dw, dh)) return p;
+    Piece *p = new_piece(8, id, dw, dh);
+    scale_rect(I, 0, 0, I.w, I.h, dw, dh, &p->px, dw >= 2 * I.w);
+    return p;
+}
+
+/* the DS menus' blue arrow: a triangle centred on (cx, cy), ww wide and 2 * hh high; right = it points right */
+void blue_arrow(const Surf &s, float cx, float cy, float hh, float ww, int right, float k)
+{
+    for (int yy = (int)floorf(cy - hh) - 1; yy <= (int)ceilf(cy + hh) + 1; ++yy)
+        for (int xx = (int)floorf(cx - ww * 0.5f); xx <= (int)ceilf(cx + ww * 0.5f); ++xx) {
+            const float t = ((xx + 0.5f) - (cx - ww * 0.5f)) / ww;      /* 0 left, 1 right */
+            if (t < 0 || t > 1) continue;
+            const float tip = right ? 1.0f - t : t;                     /* 0 at the point, 1 at the base */
+            const float half = hh * tip;
+            const float d = fabsf((yy + 0.5f) - cy);
+            if (d > half + 0.5f) continue;
+            const int a = d > half - 0.5f ? (int)((half + 0.5f - d) * 255) : 255;
+            if (xx < 0 || yy < 0 || xx >= s.w || yy >= s.h || a <= 0) continue;
+            const bool rim = d > half - 1.2f * k || tip > 0.85f;
+            const uint32_t col = rim ? 0x10207Au : 0x2F6BF0u;
+            s.px[(size_t)yy * s.stride + xx] = over(s.px[(size_t)yy * s.stride + xx], ((col >> 16) & 255) * a / 255, ((col >> 8) & 255) * a / 255, (col & 255) * a / 255, a);
+        }
+}
+
+/* which look the panel is drawn in. 1 (shipped): the DS bubble plates in a tan tray. Dev builds only, for comparison pictures:
+   SM64DS_CHARPANEL_LOOK=2 the plates alone (no tray), 3 the HD UI mod's wooden sheet and planks (the pre-CHARSEL2 materials). */
+int panel_look(void)
+{
+    static int look = -1;
+    if (look < 0) {
+        look = 1;
+#ifndef PORT_ROM_CLEAN
+        const char *e = getenv("SM64DS_CHARPANEL_LOOK");
+        if (e && *e >= '1' && *e <= '3') look = *e - '0';
+#endif
+    }
+    return look;
+}
 }  // namespace
 
 void cdskin_panel_geom(int w, int h, int n, float open, CpGeom *g)
@@ -944,14 +1179,17 @@ void cdskin_panel_geom(int w, int h, int n, float open, CpGeom *g)
     g->rows = n < 4 ? (n > 0 ? n : 1) : 4;
     g->cols = n > 0 ? (n + 3) / 4 : 1;
     /* REVSTARSEL2 fix: compact enough that at 4:3 with two columns out the panel and its tab stay right of the coin score (its last digit
-       ends near DS x 193) and above the star total (row 171): two columns are 51 units wide (x 205 at 4:3), four rows run 47..144 */
-    g->sw = K(20); g->sh = K(19);
+       ends near DS x 193) and above the star total (row 171).
+       CHARSEL2: the buttons are true squares (20 x 20 units) and the WHOLE panel is on the picture: fully out, its right side stands 2 units
+       inside the picture's edge (it used to run 10 units past it, cut). The inner margin went from 4 units to 3 to pay for that, so two
+       columns are still 51 units from the edge (x 205 at 4:3). */
+    g->sw = K(20); g->sh = g->sw;
     g->pitch_x = K(23); g->pitch_y = K(22);
-    const int pad = K(4);
+    const int pad = K(3), mr = K(2);
     g->pw = 2 * pad + (g->cols - 1) * g->pitch_x + g->sw;
     g->ph = 2 * pad + (g->rows - 1) * g->pitch_y + g->sh;
     g->py = (h - g->ph) / 2;
-    g->px = w - (int)(g->pw * open + 0.5f);
+    g->px = w - (int)((g->pw + mr) * open + 0.5f);
     g->sx0 = g->px + pad;
     g->sy0 = g->py + pad;
     g->tw = K(16); g->th = K(36);
@@ -983,12 +1221,12 @@ int cdskin_piece_count(void) { return (int)g_pieces.size(); }
 void cdskin_panel_draw(uint32_t *px, int stride, int w, int h, const CpGeom *gp, const CdItem *it, int n, int focus, int hover, int tab_lit)
 {
     decide_skin();
+    static const bool tr = getenv("SM64DS_CHARPANEL_TRACE") != 0;
     {   /* REVSTARSEL2: every cached piece is keyed by its pixel size, so a picture that changes size (a window being dragged) would leave the
            old sizes behind until the 80-piece reset. A new picture size drops them; the door's picker is shut while the star select is up. */
         static int last_w, last_h;
         if (w != last_w || h != last_h) {
             if (last_w) {
-                static const bool tr = getenv("SM64DS_CHARPANEL_TRACE") != 0;
                 if (tr) fprintf(stderr, "[charpanel] picture %dx%d -> %dx%d: %d cached piece(s) dropped\n", last_w, last_h, w, h, (int)g_pieces.size());
                 g_pieces.clear();
             }
@@ -998,77 +1236,118 @@ void cdskin_panel_draw(uint32_t *px, int stride, int w, int h, const CpGeom *gp,
     const CpGeom &g = *gp;
     const Surf s = { px, stride, w, h };
     const bool hd = g_hd != 0;
-    if (hd) load_tabs();
+    const bool wood = panel_look() == 3, tray = panel_look() == 1;
+    if (wood && hd) load_tabs();
     Font f;
     f.hd = hd;
     f.u = g.k * 0.5f;
     const float k = g.k;
     auto K = [&](float v) { return (int)(v * k + 0.5f); };
+    const int ps = k * 0.75f < 1 ? 1 : (int)(k * 0.75f);         /* picture pixels per plate art pixel */
     const bool out = g.px < w;
     /* the tab first: the panel lies over its right end, so the tab reads as the panel's own handle */
     {
         const int side = (g.px <= w - g.pw / 2) ? 1 : 0;      /* past half way out: the arrow points back to the edge */
         const int ty = g.ty - (tab_lit ? K(1) : 0);
-        rrect(s, g.tx + K(1), ty + K(2), g.tw, g.th, 4.0f * k, 0x000000u, 60);
-        const Piece *tp = hd && g_tab[0].ok() && g_tab[1].ok() ? tab_piece(side, g.tw, g.th) : 0;
-        if (tp) blit(s, g.tx, ty, *tp);
-        else plain_tab(s, g.tx, ty, g.tw, g.th, side, k);
-        if (tab_lit) rrect(s, g.tx + K(1), ty + K(1), g.tw - K(2), g.th - K(2), 3.5f * k, 0xFFFFFFu, 45);
-    }
-    if (!out) return;
-    /* the panel: the picker's parchment sheet with its brown edge, its right side past the picture's edge */
-    {
-        const int ext = K(10), pw = g.pw + ext;
-        const float r = 7.0f * k;
-        const int edge = k * 1.5f < 2 ? 2 : (int)(k * 1.5f);
-        rrect(s, g.px + K(1), g.py + K(3), pw, g.ph, r, 0x000000u, 60);
-        if (hd) {
-            Piece *p = find_piece(6, 0, pw - 2 * edge, g.ph - 2 * edge);
-            if (!p) {
-                p = new_piece(6, 0, pw - 2 * edge, g.ph - 2 * edge);
-                const Img &I = g_art[A_PARCH];
-                const double ar = (double)(pw - 2 * edge) / (g.ph - 2 * edge);
-                double cw = I.w, ch = I.w / ar;
-                if (ch > I.h) { ch = I.h; cw = I.h * ar; }
-                scale_rect(I, (I.w - cw) / 2, (I.h - ch) / 2, cw, ch, pw - 2 * edge, g.ph - 2 * edge, &p->px);
-            }
-            rrect(s, g.px, g.py, pw, g.ph, r, C_EDGE, 255);
-            rrect(s, g.px + edge, g.py + edge, pw - 2 * edge, g.ph - 2 * edge, r - edge, 0, 255, p);
+        if (wood) {
+            rrect(s, g.tx + K(1), ty + K(2), g.tw, g.th, 4.0f * k, 0x000000u, 60);
+            const Piece *tp = hd && g_tab[0].ok() && g_tab[1].ok() ? tab_piece(side, g.tw, g.th) : 0;
+            if (tp) blit(s, g.tx, ty, *tp);
+            else plain_tab(s, g.tx, ty, g.tw, g.th, side, k);
+            if (tab_lit) rrect(s, g.tx + K(1), ty + K(1), g.tw - K(2), g.th - K(2), 3.5f * k, 0xFFFFFFu, 45);
         } else {
-            framed(s, g.px, g.py, pw, g.ph, r, edge, C_SHEET, C_EDGE);
+            /* a bubble plate 8 units wider than the tab: its right end is under the panel (or past the picture's edge while the panel is in) */
+            if (const Piece *tp = plate_piece(tab_lit ? PV_LIT : PV_PLAIN, g.tw + K(8), g.th + 2 * ps, ps)) blit(s, g.tx, ty, *tp);
+            blue_arrow(s, g.tx + (g.tw - K(4)) * 0.5f + 0.5f * k, ty + g.th * 0.5f, 5.0f * k, 6.0f * k, side, k);
         }
     }
+    if (!out) return;
+    if (wood) {
+        /* the picker's parchment sheet with its brown edge */
+        const float r = 7.0f * k;
+        const int edge = k * 1.5f < 2 ? 2 : (int)(k * 1.5f);
+        rrect(s, g.px + K(1), g.py + K(3), g.pw, g.ph, r, 0x000000u, 60);
+        if (hd) {
+            Piece *p = find_piece(6, 0, g.pw - 2 * edge, g.ph - 2 * edge);
+            if (!p) {
+                p = new_piece(6, 0, g.pw - 2 * edge, g.ph - 2 * edge);
+                const Img &I = g_art[A_PARCH];
+                const double ar = (double)(g.pw - 2 * edge) / (g.ph - 2 * edge);
+                double cw = I.w, ch = I.w / ar;
+                if (ch > I.h) { ch = I.h; cw = I.h * ar; }
+                scale_rect(I, (I.w - cw) / 2, (I.h - ch) / 2, cw, ch, g.pw - 2 * edge, g.ph - 2 * edge, &p->px);
+            }
+            rrect(s, g.px, g.py, g.pw, g.ph, r, C_EDGE, 255);
+            rrect(s, g.px + edge, g.py + edge, g.pw - 2 * edge, g.ph - 2 * edge, r - edge, 0, 255, p);
+        } else {
+            framed(s, g.px, g.py, g.pw, g.ph, r, edge, C_SHEET, C_EDGE);
+        }
+    } else if (tray) {
+        if (const Piece *p = plate_piece(PV_TRAY, g.pw, g.ph + 2 * ps, ps)) blit(s, g.px, g.py, *p);
+    }
     const int lit = focus >= 0 ? focus : hover;
+    const int inset = (int)(2.5f * k + 0.5f);                    /* the head's box is the button less this on every side */
+    static int traced_w, traced_h, traced_n;
+    const bool tr_now = tr && g.px + g.pw <= w && (traced_w != w || traced_h != h || traced_n != n);
+    if (tr_now) {
+        traced_w = w; traced_h = h; traced_n = n;
+        fprintf(stderr, "[charpanel] geom %dx%d: panel x %d..%d y %d..%d (picture right edge %d), tab x %d..%d y %d..%d, look %d, plate scale %d\n", w, h,
+                g.px, g.px + g.pw, g.py, g.py + g.ph, w, g.tx, g.tx + g.tw, g.ty, g.ty + g.th, panel_look(), ps);
+    }
     for (int i = 0; i < n && i < g.n; ++i) {
         const CdItem &m = it[i];
         const bool on = i == lit;
         const int x = g.sx0 + (i / 4) * g.pitch_x;
         const int y = g.sy0 + (i % 4) * g.pitch_y - (on ? K(2) : 0);
         if (x >= w) continue;
-        rrect(s, x + K(1), y + K(2), g.sw, g.sh, g.sh * 0.32f, 0x000000u, 70);
-        draw_plank(s, f, hd, x, y, g.sw, g.sh, m.current ? 1 : 0, 1.0f);
-        if (on) {
+        if (wood) {
+            /* one plank for every button (the chosen one used to get the cream key cap, whose inner box sat off centre): gold wash = chosen */
+            rrect(s, x + K(1), y + K(2), g.sw, g.sh, g.sh * 0.32f, 0x000000u, 70);
+            draw_plank(s, f, hd, x, y, g.sw, g.sh, 0, 1.0f);
             const int e = k < 1 ? 1 : (int)k;
-            rrect(s, x + e, y + e, g.sw - 2 * e, g.sh - 2 * e, g.sh * 0.3f, 0xFFFFFFu, 95);
+            if (m.current) rrect(s, x + e, y + e, g.sw - 2 * e, g.sh - 2 * e, g.sh * 0.3f, 0xFFF3B0u, 120);
+            if (on) rrect(s, x + e, y + e, g.sw - 2 * e, g.sh - 2 * e, g.sh * 0.3f, 0xFFFFFFu, 95);
+        } else {
+            const int v = m.current ? (on ? PV_CHOSEN_LIT : PV_CHOSEN) : (on ? PV_LIT : PV_PLAIN);
+            if (const Piece *p = plate_piece(v, g.sw, g.sh + 2 * ps, ps)) blit(s, x, y, *p);
         }
-        const int isz = g.sh - K(5);
-        if (const Img *I = icon_for(m)) {
+        /* the head: every one fitted to the same box and centred in the button, both ways */
+        int id = 0;
+        if (const Img *I = panel_icon_for(m, &id)) {
             int ox = 0, oy = 0;
-            if (const Piece *p = fitted(image_id(m, I) + 400, *I, isz, isz, &ox, &oy)) blit(s, x + (g.sw - isz) / 2 + ox, y + (g.sh - isz) / 2 + oy, *p);
+            const int bw = g.sw - 2 * inset, bh = g.sh - 2 * inset;
+            if (const Piece *p = fit_box(id, *I, bw, bh, &ox, &oy)) {
+                blit(s, x + inset + ox, y + inset + oy, *p);
+                if (tr_now) fprintf(stderr, "[charpanel] geom slot %d (%s): button x %d..%d y %d..%d, head x %d..%d y %d..%d, margins L %d R %d T %d B %d\n", i, m.label,
+                                    x, x + g.sw, y, y + g.sh, x + inset + ox, x + inset + ox + p->w, y + inset + oy, y + inset + oy + p->h,
+                                    inset + ox, g.sw - inset - ox - p->w, inset + oy, g.sh - inset - oy - p->h);
+            }
         }
-        if (m.current) star(s, (float)(x + g.sw - K(3)), (float)(y + K(3)), 4.2f * k, 0xFFD23Cu, 0x8A4B08u);
+        /* the chosen mark: the HUD's own power star on the button's top right corner, over the edge; it never moves the head */
+        if (m.current) {
+            const int ss = K(9);
+            int ox = 0, oy = 0;
+            const Piece *sp = g_star_icon.ok() ? fit_box(50, g_star_icon, ss, ss, &ox, &oy) : 0;
+            if (sp) blit(s, x + g.sw - ss + K(3) + ox, y - K(3) + oy, *sp);
+            else star(s, (float)(x + g.sw - K(3)), (float)(y + K(3)), 4.2f * k, 0xFFD23Cu, 0x8A4B08u);
+        }
     }
-    /* the name of the slot the cursor or the pointer is on, on a cream plaque to the left of the panel, level with the slot */
+    /* the name of the slot the cursor or the pointer is on, on a cream plaque under the panel */
     if (lit >= 0 && lit < n && lit < g.n) {
         const CdItem &m = it[lit];
         const float em = 15.0f;
         const float tw = f.width(m.label, em);
         const int pw = (int)tw + K(12), ph = K(15);
-        /* under the panel, flush with the picture's right edge (REVSTARSEL2: beside the panel it lay over the coin score at 4:3) */
-        int px0 = w - K(3) - pw;
+        /* under the panel, in line with its right side (REVSTARSEL2: beside the panel it lay over the coin score at 4:3) */
+        int px0 = w - K(2) - pw;
         if (px0 < K(2)) px0 = K(2);
-        const int py0 = g.py + g.ph + K(3);
-        draw_plank(s, f, hd, px0, py0, pw, ph, 1, 1.0f);
+        const int py0 = g.py + g.ph + K(4);
+        if (wood) {
+            draw_plank(s, f, hd, px0, py0, pw, ph, 1, 1.0f);
+        } else {
+            const int s2 = k * 0.5f < 1 ? 1 : (int)(k * 0.5f);
+            if (const Piece *p = plate_piece(PV_PLAIN, pw, ph + 2 * s2, s2)) blit(s, px0, py0, *p);
+        }
         f.draw(s, (float)(px0 + (pw - tw) / 2), py0 + (ph - f.cap(em)) / 2, m.label, em, C_TEXT);
     }
 }
