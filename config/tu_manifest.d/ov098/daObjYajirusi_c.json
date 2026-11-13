@@ -105,14 +105,14 @@
       "ordinal": 9
     },
     {
-      "symbol": "daObjYajirusi_c_classInit_YAJIRUSI_R",
+      "symbol": "_Z36daObjYajirusi_c_classInit_YAJIRUSI_Rv",
       "address": "0x02137fd0",
       "size": "0x00000038",
       "legacy_source": "src/d_a_obj_yajirusi_yajirusi_r.c",
       "ordinal": 10
     },
     {
-      "symbol": "daObjYajirusi_c_classInit_YAJIRUSI_L",
+      "symbol": "_Z36daObjYajirusi_c_classInit_YAJIRUSI_Lv",
       "address": "0x02138008",
       "size": "0x00000038",
       "legacy_source": "src/d_a_obj_yajirusi_yajirusi_l.c",

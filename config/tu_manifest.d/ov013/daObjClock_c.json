@@ -89,14 +89,14 @@
       "ordinal": 6
     },
     {
-      "symbol": "daObjClock_c_classInit_CLOCK_SHORT",
+      "symbol": "_Z34daObjClock_c_classInit_CLOCK_SHORTv",
       "address": "0x0211163c",
       "size": "0x00000038",
       "legacy_source": "src/d_a_obj_clock_clock_short.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "daObjClock_c_classInit_CLOCK_LONG",
+      "symbol": "_Z33daObjClock_c_classInit_CLOCK_LONGv",
       "address": "0x02111674",
       "size": "0x00000038",
       "legacy_source": "src/d_a_obj_clock_clock_long.c",
@@ -274,7 +274,7 @@
       "source": "0x021121c0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daObjClock_c_classInit_CLOCK_LONG",
+      "symbol": "_Z33daObjClock_c_classInit_CLOCK_LONGv",
       "addend": 0,
       "target_module": "ov013",
       "target_address": "0x02111674"
@@ -284,7 +284,7 @@
       "source": "0x021121dc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daObjClock_c_classInit_CLOCK_SHORT",
+      "symbol": "_Z34daObjClock_c_classInit_CLOCK_SHORTv",
       "addend": 0,
       "target_module": "ov013",
       "target_address": "0x0211163c"

@@ -68,7 +68,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "daObjBk_Ukisima_c_classInit",
+      "symbol": "_Z27daObjBk_Ukisima_c_classInitv",
       "address": "0x02112cb8",
       "size": "0x0000003c",
       "legacy_source": "src/daObjBk_Ukisima_c_classInit.c",

@@ -77,7 +77,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "daObjKsWater_c_classInit",
+      "symbol": "_Z24daObjKsWater_c_classInitv",
       "address": "0x02111480",
       "size": "0x00000038",
       "legacy_source": "src/daObjKsWater_c_classInit.c",

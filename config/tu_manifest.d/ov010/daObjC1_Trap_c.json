@@ -145,14 +145,14 @@
       "ordinal": 14
     },
     {
-      "symbol": "func_ov010_02111984",
+      "symbol": "_Z19func_ov010_02111984P4dBgWP8dActor_cS2_",
       "address": "0x02111984",
       "size": "0x00000014",
       "legacy_source": "src/func_ov010_02111984.c",
       "ordinal": 15
     },
     {
-      "symbol": "daObjC1_Trap_c_classInit",
+      "symbol": "_Z24daObjC1_Trap_c_classInitv",
       "address": "0x02111998",
       "size": "0x00000038",
       "legacy_source": "src/Trap_Spawn.c",

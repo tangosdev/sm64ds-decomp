@@ -280,7 +280,7 @@
       "ordinal": 33
     },
     {
-      "symbol": "daHanachan_c_classInit",
+      "symbol": "_Z22daHanachan_c_classInitv",
       "address": "0x021136a4",
       "size": "0x0000017c",
       "legacy_source": "src/d_a_hanachan.c",

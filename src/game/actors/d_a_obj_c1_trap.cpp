@@ -20,7 +20,7 @@
  *   data_ov010_02112d28 is the state record the compiler copies into .bss;
  *   data_ov010_021122f8 is CLPS
  * - common.h first via dBgActor_c.h (Matrix4x3 copies in UpdateModel/Collision)
- * - func_ov010_02111984 three-argument C ABI collider adapter
+ * - func_ov010_02111984 three-argument collider adapter
  * - VecFx32 POD locals stay trivial; math/CalcLib.h's vector helpers operate
  *   on the same three-word buffers through their Vector3 pointer interface
  */
@@ -76,16 +76,16 @@ extern TrapStateRec data_ov010_02112d28;
  * Every instruction the cartridge has here falls out of the one `new`.
  * The header's inline operator new keeps the allocation on fBase_c::operator
  * new; without it the call relocates to the unavailable global `_Znwm`. */
-extern "C" daObjC1_Trap_c *daObjC1_Trap_c_classInit() {
+daObjC1_Trap_c *daObjC1_Trap_c_classInit() {
     return new daObjC1_Trap_c();
 }
 
-extern "C" SpawnInfo<daObjC1_Trap_c> g_profile_C1_TRAP = {
+extern SpawnInfo<daObjC1_Trap_c> g_profile_C1_TRAP = {
     daObjC1_Trap_c_classInit, 0x0024, 0x0143, 0, 0, 0x001f4000, 0, 0};
 
 /*
  * registered directly in InitResources. */
-extern "C" void func_ov010_02111984(dBgW *collider, dActor_c *owner, dActor_c *other) {
+void func_ov010_02111984(dBgW *collider, dActor_c *owner, dActor_c *other) {
     static_cast<daObjC1_Trap_c *>(owner)->OnCollision(*other);
 }
 

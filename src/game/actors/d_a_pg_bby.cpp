@@ -41,13 +41,10 @@ struct PgBbyAnimationFile : SharedFilePtr {
 typedef char PgBbyModelFile_size_must_be_0x08[sizeof(PgBbyModelFile) == 0x08 ? 1 : -1];
 typedef char PgBbyAnimationFile_size_must_be_0x08[sizeof(PgBbyAnimationFile) == 0x08 ? 1 : -1];
 
-
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *thiz, void *actor, int r, int h, void *v, int b);
-extern "C" {
 
-
-void Matrix4x3_FromRotationY(void *m, int angle);
+extern "C" void Matrix4x3_FromRotationY(void *m, int angle);
 
 extern dClipper data_0209f43c;
 extern Matrix4x3 data_0209b3ec;
@@ -61,10 +58,8 @@ extern PgBbyAnimationFile gPenguinBabyWalkAnimationFile;
 extern SharedFilePtr *const gPenguinBabyAnimationFiles[5];
 extern Vector3 gPenguinBabyCarryOffsets[4];
 extern daPgBby_c::State gPenguinBabyStates[6];
-}
 
-
-extern "C" daPgBby_c *daPgBby_c_classInit()
+daPgBby_c *daPgBby_c_classInit()
 {
     return new daPgBby_c();
 }
@@ -720,9 +715,6 @@ Vector3 gPenguinBabyCarryOffsets[4] = {
 };
 
 /* The registry's typed factory and the actor profile consumed by dActor_c. */
-extern "C" {
-
 SpawnInfo<daPgBby_c> g_profile_PENGUIN_BABY = {
     daPgBby_c_classInit, 0x0100, 0x0072, 0x00808282, 0x00028000, 0x00028000, 0x01000000, 0x01000000,
 };
-}

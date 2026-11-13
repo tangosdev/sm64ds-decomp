@@ -43,9 +43,7 @@ struct WcObj02CollisionFilePtr : SharedFilePtr {
 };
 
 /* local extern: no shared header declares these. */
-
-void func_02012694(unsigned int a, void *p);
-
+void func_02012694(unsigned int a, const Vector3 *p);
 
 extern WcObj02ModelFilePtr data_ov029_02114250;
 extern WcObj02CollisionFilePtr data_ov029_02114248;
@@ -56,7 +54,7 @@ extern CLPS_Block data_ov029_0211302c;
 /* Reconstructed source-style name; exact original SM64DS spelling is not
  * preserved. Historical alias: ArrowLift_Spawn. Attribution stays on
  * daObjWc_Obj02_c_classInit. */
-extern "C" daObjWc_Obj02_c *daObjWc_Obj02_c_classInit() {
+daObjWc_Obj02_c *daObjWc_Obj02_c_classInit() {
     return new daObjWc_Obj02_c();
 }
 
@@ -112,7 +110,7 @@ int daObjWc_Obj02_c::Behavior() {
     switch (mState) {
     case 0:
         if (mTriggered != 0) {
-            func_02012694(0x17b, &mCamSpacePosX);
+            func_02012694(0x17b, (const Vector3 *)&mCamSpacePosX);
             mState++;
         }
         mHorzSpeed = 0xa000;
@@ -135,7 +133,7 @@ int daObjWc_Obj02_c::Behavior() {
                 mState = 0;
             } else {
                 mState++;
-                func_02012694(0x17b, &mCamSpacePosX);
+                func_02012694(0x17b, (const Vector3 *)&mCamSpacePosX);
             }
             mStateTimer = 0;
         } else {

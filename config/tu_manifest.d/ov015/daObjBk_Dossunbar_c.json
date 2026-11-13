@@ -196,14 +196,14 @@
       "ordinal": 22
     },
     {
-      "symbol": "daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_L",
+      "symbol": "_Z44daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_Lv",
       "address": "0x02112230",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_bk_dossunbar_bk_dossunbar_l.c",
       "ordinal": 23
     },
     {
-      "symbol": "daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_S",
+      "symbol": "_Z44daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_Sv",
       "address": "0x02112260",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_bk_dossunbar_bk_dossunbar_s.c",

@@ -64,7 +64,7 @@ extern CLPS_Block data_ov017_02111a94;
  * at 0x320. The null check is the one `new` itself emits. The implicit
  * constructor is what keeps the intervening construction inlined; declaring
  * a constructor of our own would emit a `bl` the factory does not have. */
-extern "C" daObjKsWater_c *daObjKsWater_c_classInit() {
+daObjKsWater_c *daObjKsWater_c_classInit() {
     return new daObjKsWater_c();
 }
 

@@ -85,14 +85,14 @@
       "ordinal": 6
     },
     {
-      "symbol": "daObjSlIceBlock_c_classInit_SL_ICEBLOCK_SHOT",
+      "symbol": "_Z44daObjSlIceBlock_c_classInit_SL_ICEBLOCK_SHOTv",
       "address": "0x02111564",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_sl_ice_block_sl_iceblock_shot.c",
       "ordinal": 7
     },
     {
-      "symbol": "daObjSlIceBlock_c_classInit_SL_ICEBLOCK",
+      "symbol": "_Z39daObjSlIceBlock_c_classInit_SL_ICEBLOCKv",
       "address": "0x02111594",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_sl_ice_block_sl_iceblock.c",

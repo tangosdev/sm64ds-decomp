@@ -40,9 +40,7 @@ struct ClockModelFilePtr : SharedFilePtr {
     ~ClockModelFilePtr();
 };
 
-
 u8 IsAreaShowing(int areaId);
-
 
 extern s8 gNextSublevel; /* hands advance while it is not positive */
 extern u8 data_0209f2c0; /* clock setting: 0 slow, 1 fast, 2 random, 3 stopped */
@@ -64,17 +62,17 @@ enum {
  * same 0x128 allocation. They cannot share one C name: the EAD spelling
  * would be daObjClock_c_classInit for both. CLOCK_SHORT at 0x02090230 and
  * CLOCK_LONG at 0x0208ffa8 are the ROM debug strings. */
-extern "C" daObjClock_c *daObjClock_c_classInit_CLOCK_LONG() {
+daObjClock_c *daObjClock_c_classInit_CLOCK_LONG() {
     return new daObjClock_c();
 }
 
-extern "C" daObjClock_c *daObjClock_c_classInit_CLOCK_SHORT() {
+daObjClock_c *daObjClock_c_classInit_CLOCK_SHORT() {
     return new daObjClock_c();
 }
 
 /* The two actor profiles. Source order is CLOCK_LONG (0x021121c0) then
  * CLOCK_SHORT (0x021121dc). */
-extern "C" SpawnInfo<daObjClock_c> g_profile_CLOCK_LONG = {
+extern SpawnInfo<daObjClock_c> g_profile_CLOCK_LONG = {
     daObjClock_c_classInit_CLOCK_LONG,
     ACTOR_CLOCK_LONG,
     0x00a3,
@@ -85,7 +83,7 @@ extern "C" SpawnInfo<daObjClock_c> g_profile_CLOCK_LONG = {
     0x00640000,
 };
 
-extern "C" SpawnInfo<daObjClock_c> g_profile_CLOCK_SHORT = {
+extern SpawnInfo<daObjClock_c> g_profile_CLOCK_SHORT = {
     daObjClock_c_classInit_CLOCK_SHORT,
     ACTOR_CLOCK_SHORT,
     0x00a2,

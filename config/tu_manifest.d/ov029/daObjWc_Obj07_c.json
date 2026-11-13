@@ -62,7 +62,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "daObjWc_Obj07_c_classInit",
+      "symbol": "_Z25daObjWc_Obj07_c_classInitv",
       "address": "0x02112168",
       "size": "0x0000003c",
       "legacy_source": "src/daObjWc_Obj07_c_Spawn.c",

@@ -76,7 +76,7 @@ extern int data_0209f32c;
 /* -------------------------------------------------------------------------- */
 /* Reconstructed source-style name; exact original SM64DS spelling is not
  * preserved. Historical alias: WDW_Water_Spawn. */
-extern "C" daObjWc_Mizu_c *daObjWc_Mizu_c_classInit() {
+daObjWc_Mizu_c *daObjWc_Mizu_c_classInit() {
     return new daObjWc_Mizu_c();
 }
 

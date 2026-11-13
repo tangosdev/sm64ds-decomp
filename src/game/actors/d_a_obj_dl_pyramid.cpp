@@ -252,12 +252,12 @@ s32 daObjDlPyramidDummy_c::InitResources() {
    allocator the cartridge's own factories call. Spelled by hand they read as a four-step C
    transcription; this is the original shape. */
 /* -------------------------------------------------------------------------- */
-extern "C" daObjDlPyramidDummy_c *daObjDlPyramidDummy_c_classInit() {
+daObjDlPyramidDummy_c *daObjDlPyramidDummy_c_classInit() {
     return new daObjDlPyramidDummy_c;
 }
 
 /* -------------------------------------------------------------------------- */
-extern "C" daObjDlPyramid_c *daObjDlPyramid_c_classInit() {
+daObjDlPyramid_c *daObjDlPyramid_c_classInit() {
     return new daObjDlPyramid_c;
 }
 

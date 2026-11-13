@@ -119,7 +119,7 @@
       "ordinal": 11
     },
     {
-      "symbol": "daObjBk_Botaosi_c_classInit",
+      "symbol": "_Z27daObjBk_Botaosi_c_classInitv",
       "address": "0x02111b68",
       "size": "0x00000038",
       "legacy_source": "src/d_a_obj_bk_botaosi.c",

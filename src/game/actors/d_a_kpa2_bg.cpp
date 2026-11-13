@@ -50,13 +50,8 @@ extern Kpa2BgCollisionFilePtr daKpa2Bg_c_ClsnFile;
 extern CLPS_Block data_ov046_021115bc;
 
 /* local extern: arm9 C helpers with no shared header yet. */
-
 int Sound_PlayIfNotActive(int handle, int a, int b, short c);
-extern "C" {
-
-void Vec3_Asr(void *dst, void *src, int shift);
-}
-
+extern "C" void Vec3_Asr(void *dst, void *src, int shift);
 
 daKpa2Bg_c::~daKpa2Bg_c() {}
 
@@ -139,7 +134,7 @@ int daKpa2Bg_c::InitResources() {
 /* `new daKpa2Bg_c` is the whole sequence the loose factory spelled by hand:
  * fBase_c::operator new(0x570), dBgActor_c's base constructor, the vptr store,
  * then the dExtSimpleModel_c and dBgW_KcMbg member constructors. */
-extern "C" daKpa2Bg_c *daKpa2Bg_c_classInit(void) {
+daKpa2Bg_c *daKpa2Bg_c_classInit(void) {
     return new daKpa2Bg_c;
 }
 

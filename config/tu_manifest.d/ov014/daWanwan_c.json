@@ -238,7 +238,7 @@
       "ordinal": 27
     },
     {
-      "symbol": "daWanwan_c_classInit",
+      "symbol": "_Z20daWanwan_c_classInitv",
       "address": "0x02112d1c",
       "size": "0x000000f0",
       "legacy_source": "src/daWanwan_c_classInit.cpp",

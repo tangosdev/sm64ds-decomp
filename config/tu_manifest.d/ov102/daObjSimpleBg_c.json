@@ -78,42 +78,42 @@
       "ordinal": 5
     },
     {
-      "symbol": "daObjSimpleBg_c_classInit_MC_HAZAD",
+      "symbol": "_Z34daObjSimpleBg_c_classInit_MC_HAZADv",
       "address": "0x02148e9c",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_simple_bg_mc_hazad.c",
       "ordinal": 6
     },
     {
-      "symbol": "daObjSimpleBg_c_classInit_MC_DODAI",
+      "symbol": "_Z34daObjSimpleBg_c_classInit_MC_DODAIv",
       "address": "0x02148ecc",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_simple_bg_mc_dodai.c",
       "ordinal": 7
     },
     {
-      "symbol": "daObjSimpleBg_c_classInit_DOKAN",
+      "symbol": "_Z31daObjSimpleBg_c_classInit_DOKANv",
       "address": "0x02148efc",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_simple_bg_dokan.c",
       "ordinal": 8
     },
     {
-      "symbol": "daObjSimpleBg_c_classInit_BK_TOWER",
+      "symbol": "_Z34daObjSimpleBg_c_classInit_BK_TOWERv",
       "address": "0x02148f2c",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_simple_bg_bk_tower.c",
       "ordinal": 9
     },
     {
-      "symbol": "daObjSimpleBg_c_classInit_KI_HASIRA_DAI",
+      "symbol": "_Z39daObjSimpleBg_c_classInit_KI_HASIRA_DAIv",
       "address": "0x02148f5c",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_simple_bg_ki_hasira_dai.c",
       "ordinal": 10
     },
     {
-      "symbol": "daObjSimpleBg_c_classInit_KI_IWA",
+      "symbol": "_Z32daObjSimpleBg_c_classInit_KI_IWAv",
       "address": "0x02148f8c",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_simple_bg_ki_iwa.c",

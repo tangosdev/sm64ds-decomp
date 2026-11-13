@@ -112,7 +112,7 @@
       "ordinal": 10
     },
     {
-      "symbol": "daObjBk_Lift_c_classInit",
+      "symbol": "_Z24daObjBk_Lift_c_classInitv",
       "address": "0x0211290c",
       "size": "0x00000038",
       "legacy_source": "src/d_a_obj_bk_lift.c",

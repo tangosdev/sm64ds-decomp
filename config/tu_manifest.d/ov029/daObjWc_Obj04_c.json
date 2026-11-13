@@ -91,7 +91,7 @@
       "ordinal": 7
     },
     {
-      "symbol": "daObjWc_Obj04_c_classInit",
+      "symbol": "_Z25daObjWc_Obj04_c_classInitv",
       "address": "0x02112964",
       "size": "0x00000038",
       "legacy_source": "src/daObjWc_Obj04_c_classInit.c",

@@ -93,37 +93,32 @@ struct HanachanTextureSeqFileHandle : SharedFilePtr {
 };
 extern daHanachan_c::State data_ov034_02114538[];
 
-extern "C" {
-
 extern void **data_ov034_02113888[];
 extern void **data_ov034_0211389c[];
 extern void **data_ov034_02113860[];
-extern int Math_Function_0203b14c(void *base, int a, int b, int c, int d);
+extern "C" int Math_Function_0203b14c(void *base, int a, int b, int c, int d);
 extern int data_ov034_021138c4[];
 extern short data_ov034_02113820[];
 extern void **data_ov034_021138b0[];
-extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
+extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int data_ov034_02114488[];
 // local extern: no shared header declares Vec3_Add.
-extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int NormalizeVec3IfNonZero(Vector3 *v);
-extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
+extern "C" void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
+extern "C" int NormalizeVec3IfNonZero(Vector3 *v);
+extern "C" void Vec3_MulScalarInPlace(Vector3 *v, int s);
 extern SharedFilePtr *data_ov034_02113838[];
 extern SharedFilePtr *data_ov034_0211384c[];
 extern void **data_ov034_02113874[];
-extern void d_a_hanachanRunningSlidingDustAtHold(s32 x, s32 y, s32 z);
-extern void *d_a_hanachanNewHold(u32 a, u32 b, s32 x, s32 y, s32 z, const void *v, void *cb);
-extern int func_ov002_020c51d0(void *, void *);
+extern "C" void d_a_hanachanRunningSlidingDustAtHold(s32 x, s32 y, s32 z);
+extern "C" void *d_a_hanachanNewHold(u32 a, u32 b, s32 x, s32 y, s32 z, const void *v, void *cb);
+extern "C" int func_ov002_020c51d0(void *, void *);
 extern unsigned char data_ov034_0211433c[];
 extern s32 data_ov034_021138d8[];
-extern int func_020092c4(void *arg0, void *out, void *target);
+extern "C" int func_020092c4(void *arg0, void *out, void *target);
 extern u32 data_ov034_02113828[];
 extern dCamera_c *gCamera;
-}
-
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int fix1, int fix2, void *v, int t);
-
 
 /* Destroys the eight per-segment arrays in reverse declaration order, then
  * the dEnemyBase_c base. D0 frees through the inherited operator delete. */
@@ -1172,7 +1167,7 @@ int daHanachan_c::InitResources()
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: Wiggler_Spawn.
  */
-extern "C" daHanachan_c *daHanachan_c_classInit()
+daHanachan_c *daHanachan_c_classInit()
 {
     return new daHanachan_c;
 }
@@ -1217,41 +1212,41 @@ typedef void (daHanachan_c::*HanachanStatePmf)();
 
 /* The 8-byte PMF descriptors the static initializer copies into the state
  * table rows, in table order. ROM-supplied .data, referenced by address. */
-extern "C" HanachanStatePmf data_ov034_02114370;   /* StateDemoWaitInit */
-extern "C" HanachanStatePmf data_ov034_021143b0;   /* StateDemoWaitMain */
-extern "C" HanachanStatePmf data_ov034_021143c0;   /* StateDemoCallInit */
-extern "C" HanachanStatePmf data_ov034_02114360;   /* StateDemoCallMain */
-extern "C" HanachanStatePmf data_ov034_02114378;   /* StateMoveStopInit */
-extern "C" HanachanStatePmf data_ov034_021143d8;   /* StateMoveStopMain */
-extern "C" HanachanStatePmf data_ov034_021143e8;   /* StateMoveStartInit */
-extern "C" HanachanStatePmf data_ov034_02114380;   /* StateMoveStartMain */
-extern "C" HanachanStatePmf data_ov034_02114390;   /* StateMoveInit */
-extern "C" HanachanStatePmf data_ov034_02114368;   /* StateMoveMain */
-extern "C" HanachanStatePmf data_ov034_02114388;   /* StateDamageInit */
-extern "C" HanachanStatePmf data_ov034_02114400;   /* StateDamageMain */
-extern "C" HanachanStatePmf data_ov034_021143f8;   /* StateDamageTalkInit */
-extern "C" HanachanStatePmf data_ov034_021143f0;   /* StateDamageTalkMain */
-extern "C" HanachanStatePmf data_ov034_021143e0;   /* StateDeadInit */
-extern "C" HanachanStatePmf data_ov034_021143b8;   /* StateDeadMain */
-extern "C" HanachanStatePmf data_ov034_021143c8;   /* StateDamageStopInit */
-extern "C" HanachanStatePmf data_ov034_021143a8;   /* StateDamageStopMain */
-extern "C" HanachanStatePmf data_ov034_02114358;   /* StateDamageWaitInit */
-extern "C" HanachanStatePmf data_ov034_021143d0;   /* StateDamageWaitMain */
-extern "C" HanachanStatePmf data_ov034_021143a0;   /* StateDamageStartInit */
-extern "C" HanachanStatePmf data_ov034_02114398;   /* StateDamageStartMain */
+extern HanachanStatePmf data_ov034_02114370;   /* StateDemoWaitInit */
+extern HanachanStatePmf data_ov034_021143b0;   /* StateDemoWaitMain */
+extern HanachanStatePmf data_ov034_021143c0;   /* StateDemoCallInit */
+extern HanachanStatePmf data_ov034_02114360;   /* StateDemoCallMain */
+extern HanachanStatePmf data_ov034_02114378;   /* StateMoveStopInit */
+extern HanachanStatePmf data_ov034_021143d8;   /* StateMoveStopMain */
+extern HanachanStatePmf data_ov034_021143e8;   /* StateMoveStartInit */
+extern HanachanStatePmf data_ov034_02114380;   /* StateMoveStartMain */
+extern HanachanStatePmf data_ov034_02114390;   /* StateMoveInit */
+extern HanachanStatePmf data_ov034_02114368;   /* StateMoveMain */
+extern HanachanStatePmf data_ov034_02114388;   /* StateDamageInit */
+extern HanachanStatePmf data_ov034_02114400;   /* StateDamageMain */
+extern HanachanStatePmf data_ov034_021143f8;   /* StateDamageTalkInit */
+extern HanachanStatePmf data_ov034_021143f0;   /* StateDamageTalkMain */
+extern HanachanStatePmf data_ov034_021143e0;   /* StateDeadInit */
+extern HanachanStatePmf data_ov034_021143b8;   /* StateDeadMain */
+extern HanachanStatePmf data_ov034_021143c8;   /* StateDamageStopInit */
+extern HanachanStatePmf data_ov034_021143a8;   /* StateDamageStopMain */
+extern HanachanStatePmf data_ov034_02114358;   /* StateDamageWaitInit */
+extern HanachanStatePmf data_ov034_021143d0;   /* StateDamageWaitMain */
+extern HanachanStatePmf data_ov034_021143a0;   /* StateDamageStartInit */
+extern HanachanStatePmf data_ov034_02114398;   /* StateDamageStartMain */
 
 /* The state-name strings the table's name pointers reference. */
-extern "C" char data_ov034_02114408[];   /* "DEMOWAIT" */
-extern "C" char data_ov034_02114414[];   /* "DEMOCALL" */
-extern "C" char data_ov034_02114420[];   /* "MOVE_STOP" */
-extern "C" char data_ov034_02114438[];   /* "MOVE_START" */
-extern "C" char data_ov034_02114348[];   /* "MOVE" */
-extern "C" char data_ov034_02114350[];   /* "DAMAGE" */
-extern "C" char data_ov034_0211442c[];   /* "DAMAGETALK" */
-extern "C" char data_ov034_02114340[];   /* "DEAD" */
-extern "C" char data_ov034_02114444[];   /* "DAMAGE_STOP" */
-extern "C" char data_ov034_02114450[];   /* "DAMAGE_WAIT" */
-extern "C" char data_ov034_02114468[];   /* "DAMAGE_START" */
+extern char data_ov034_02114408[];   /* "DEMOWAIT" */
+extern char data_ov034_02114414[];   /* "DEMOCALL" */
+extern char data_ov034_02114420[];   /* "MOVE_STOP" */
+extern char data_ov034_02114438[];   /* "MOVE_START" */
+extern char data_ov034_02114348[];   /* "MOVE" */
+extern char data_ov034_02114350[];   /* "DAMAGE" */
+extern char data_ov034_0211442c[];   /* "DAMAGETALK" */
+extern char data_ov034_02114340[];   /* "DEAD" */
+extern char data_ov034_02114444[];   /* "DAMAGE_STOP" */
+extern char data_ov034_02114450[];   /* "DAMAGE_WAIT" */
+extern char data_ov034_02114468[];   /* "DAMAGE_START" */
 
 daHanachan_c::State data_ov034_02114538[11] = {
     { data_ov034_02114370, data_ov034_021143b0, data_ov034_02114408 },   /* DEMOWAIT */

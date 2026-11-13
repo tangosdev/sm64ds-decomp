@@ -77,28 +77,28 @@
       "ordinal": 5
     },
     {
-      "symbol": "daObjHsBillboard_c_classInit_HS_B_STAR",
+      "symbol": "_Z38daObjHsBillboard_c_classInit_HS_B_STARv",
       "address": "0x02111344",
       "size": "0x00000038",
       "legacy_source": "src/d_a_obj_hs_billboard_hs_b_star.c",
       "ordinal": 6
     },
     {
-      "symbol": "daObjHsBillboard_c_classInit_HS_Y_STAR",
+      "symbol": "_Z38daObjHsBillboard_c_classInit_HS_Y_STARv",
       "address": "0x0211137c",
       "size": "0x00000038",
       "legacy_source": "src/d_a_obj_hs_billboard_hs_y_star.c",
       "ordinal": 7
     },
     {
-      "symbol": "daObjHsBillboard_c_classInit_HS_STAR",
+      "symbol": "_Z36daObjHsBillboard_c_classInit_HS_STARv",
       "address": "0x021113b4",
       "size": "0x00000038",
       "legacy_source": "src/d_a_obj_hs_billboard_hs_star.c",
       "ordinal": 8
     },
     {
-      "symbol": "daObjHsBillboard_c_classInit_HS_MOON",
+      "symbol": "_Z36daObjHsBillboard_c_classInit_HS_MOONv",
       "address": "0x021113ec",
       "size": "0x00000038",
       "legacy_source": "src/d_a_obj_hs_billboard_hs_moon.c",

@@ -217,7 +217,7 @@
       "ordinal": 25
     },
     {
-      "symbol": "daKpaFire_c_classInit",
+      "symbol": "_Z21daKpaFire_c_classInitv",
       "address": "0x02117938",
       "size": "0x00000048",
       "legacy_source": "src/d_a_kpa_fire.c",
