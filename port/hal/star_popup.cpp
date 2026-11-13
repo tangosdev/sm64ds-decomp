@@ -1127,6 +1127,18 @@ static void credits_watch() {
     static unsigned last_lc = 0, last_ps = 0, frame = 0; static int last_hp = -1, last_lv = -1; static const void *last_st = nullptr;
     ++frame;
     const int me = (int)data_0209f250;
+    {   // SM64DS_CREDITS_HP=frame:wedges (dev only): set my health once at that watch frame (a low-health ending row)
+        static int hp_at = -2, hp_to = 0;
+        if (hp_at == -2) {
+            const char *e = std::getenv("SM64DS_CREDITS_HP");
+            hp_at = -1;
+            if (e && std::sscanf(e, "%d:%d", &hp_at, &hp_to) != 2) hp_at = -1;
+        }
+        if (hp_at >= 0 && (int)frame == hp_at && me >= 0 && me < 32) {
+            data_02092144[me] = (short)((data_02092144[me] & 0xff) | ((hp_to & 0xff) << 8));
+            std::fprintf(stderr, "[crwatch] f%u health set to %d (SM64DS_CREDITS_HP)\n", frame, hp_to);
+        }
+    }
     const char *b = (me >= 0 && me < 32) ? (const char *)data_0209f394[me] : nullptr;
     const unsigned lc = data_0209f20c[0], ps = data_0209f2c4[0];
     const int hp = (me >= 0 && me < 32) ? (int)((data_02092144[me] >> 8) & 0xff) : -1;
