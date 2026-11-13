@@ -724,8 +724,7 @@ void daPkn_c::UpdatePose()
     ang[1] = 0;
     ang[2] = 0;
     for (lr = 0; lr < 5; lr++) {
-        ang[1] = (ang[1] +
-                  *(s16 *)((char *)mAnmModel.data.bones + data_ov084_021302ec[lr] * 0x34 + 0x1c));
+        ang[1] = (ang[1] + (s16)mAnmModel.data.bones[data_ov084_021302ec[lr]].rotY);
     }
 
     mHeadClsnOffset.x = 0;
@@ -736,7 +735,7 @@ void daPkn_c::UpdatePose()
     mHeadClsnOffset.x = data_020a0e68.m[9];
     mHeadClsnOffset.y = data_020a0e68.m[10];
     mHeadClsnOffset.z = data_020a0e68.m[11];
-    Vec3_LslInPlace((int *)&mHeadClsnOffset, 3);
+    Vec3_LslInPlace(&mHeadClsnOffset.x, 3);
     VEC_Subtract(&mHeadClsnOffset, &mPos, &mHeadClsnOffset);
 
     /* Still a hand-indexed FX_SinIdx: through the inline the table base loads
