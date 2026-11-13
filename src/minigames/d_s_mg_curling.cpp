@@ -626,16 +626,11 @@ void dScMgCurling_c::Aim_Swing() {
         mSwingAng = cstd::atan2(dy, dx);
         {
             u16 a = mSwingAng;
-            if (a <= 0x8000) {
-                if (a >= 0x4000) {
-                    mSwingAng = 0x8000;
-                    goto ang_done;
-                }
-            }
-            if (a <= 0x4000)
+            if (a <= 0x8000 && a >= 0x4000)
+                mSwingAng = 0x8000;
+            else if (a <= 0x4000)
                 mSwingAng = 0;
         }
-    ang_done:;
 
         {
             int mag;
