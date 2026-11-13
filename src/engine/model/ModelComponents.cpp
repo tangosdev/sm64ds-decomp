@@ -139,7 +139,7 @@ void func_02047218(void *a, void *b, void *out, fx32 c);
 void func_02047910(int *m0, int *m1, int *dst, int t);
 void func_0204547c(int *a, int b, int c, void *elem);
 void MTX_Scale43_(Mtx43 *m, int x, int y, int z);
-void VEC_Normalize(const Vector3 *a, Vector3 *b);
+void VEC_Normalize(const Mtx43Row *a, Mtx43Row *b);
 void func_020458a8(void *src, void *dst);
 void G3_MultMtx33(void *m);
 extern VecFx32 data_02099f88;
@@ -148,7 +148,7 @@ extern u32 data_020a4bd4;
 extern const int data_02082190[12];
 extern void *data_020a4bd0;
 extern u8 data_020a4bbc;
-extern u16 data_02099f94[8];
+extern struct Buf8 data_02099f94;
 extern s16 data_020a4bc0;
 extern s16 data_020a4bc4;
 void G3_LoadMtx43(void *m);
@@ -200,7 +200,7 @@ void func_0204531c(char *self, int arg)
     mc->transforms = save;
 
     for (i = 0; i < mc->modelFile->numBones; i++)
-        func_02047910((int *)&mc->transforms[i], (int *)&blend[i], (int *)&mc->transforms[i], arg);
+        func_02047910(&mc->transforms[i].r.m[0], &blend[i].r.m[0], &mc->transforms[i].r.m[0], arg);
 }
 }
 
@@ -270,7 +270,7 @@ void func_02044f74(void *g, struct Node *n)
                   (u16)((unsigned)n->f1e << 4), (u16)((unsigned)n->f20 << 4), n->f24, n->f28,
                   n->f2c);
     {
-        int *base = *(int **)((char *)g + 0x34);
+        int *base = (int *)((BMD_File *)g)->skin;
         int t = base[3];
         MTX_Concat43((Matrix4x3 *)m, (const Matrix4x3 *)((a + n->f8) * 0x30 + t),
                      (Matrix4x3 *)((s16)a * 0x30 + t));
@@ -392,12 +392,12 @@ void ModelComponents::func_02044b30(int idx) {
            from data_02099f94, since the ROM's load at +0x284 relocates
            against the table itself (an init-list's anonymous .rodata would
            be a WRONG-DEST). */
-        s16 halfSizes[8];
-        *(struct Buf8 *)halfSizes = *(const struct Buf8 *)data_02099f94;
+        struct Buf8 halfSizes;
+        halfSizes = data_02099f94;
         int sizeS = (texImageParam >> 20) & 7;
         int sizeT = (texImageParam >> 23) & 7;
-        data_020a4bc0 = halfSizes[sizeS];
-        data_020a4bc4 = -halfSizes[sizeT];
+        data_020a4bc0 = halfSizes.v[sizeS];
+        data_020a4bc4 = -halfSizes.v[sizeT];
         G3_TexCoord(mat.texTransS, mat.texTransT);
         break;
     }
@@ -542,7 +542,7 @@ void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
                     m.r[1].x = mp->r[1].x;
                     m.r[1].y = mp->r[1].y;
                     m.r[1].z = 0;
-                    VEC_Normalize((const Vector3 *)&m.r[1], (Vector3 *)&m.r[1]);
+                    VEC_Normalize(&m.r[1], &m.r[1]);
                     t = FX_MUL(m.r[1].x, dir->x);
                     m.r[1].x = t;
                     {
@@ -558,7 +558,7 @@ void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
                     m.r[0].x = mp->r[0].x;
                     m.r[0].y = mp->r[0].y;
                     m.r[0].z = 0;
-                    VEC_Normalize((const Vector3 *)&m.r[0], (Vector3 *)&m.r[0]);
+                    VEC_Normalize(&m.r[0], &m.r[0]);
                     m.r[0].x = FX_MUL(m.r[0].x, dir->x);
                     t = FX_MUL(m.r[0].y, dir->y);
                     m.r[1].y = m.r[0].x;
