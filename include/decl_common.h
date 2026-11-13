@@ -431,7 +431,7 @@ extern void func_02034504();
 extern int func_0203553c(void*);
 extern int func_020355a0(void*);
 extern int func_02035638(u8*);
-extern int func_0203564c(int);
+extern void *func_0203564c(void *);
 extern void func_02035800();
 extern int func_02037e20(int*);
 extern int func_0203d024(struct Vector3*, struct Vector3*);
