@@ -235,8 +235,7 @@ int daNknk_c::Behavior()
     MakeVanishLuigiWork(mdCc_c);
 
     if (UpdateYoshiEat(mWithMeshClsn) != 0) {
-        int *pb0 = (int *)&mFlags;
-        *pb0 = *pb0 & ~0x10000000;
+        mFlags = mFlags & ~0x10000000;
         if (SpawnParticlesIfHitOtherObj(mdCc_c) != 0) {
             PoofDust();
             SpawnBlueCoin();
@@ -265,10 +264,9 @@ int daNknk_c::Behavior()
             return 1;
 
         {
-            int *pb0 = (int *)&mFlags;
             if (mLandingDustTimer != 0)
                 mLandingDustTimer -= 1;
-            *pb0 = *pb0 | 0x10000000;
+            mFlags = mFlags | 0x10000000;
         }
         UpdateClosestPlayer(0x3e8000);
 
@@ -291,7 +289,7 @@ int daNknk_c::Behavior()
             int ang = mPrevAngleY;
             mAngleY = (s16)ang;
             {
-                u16 *p100 = (u16 *)&mStateTimer;
+                u16 *p100 = &mStateTimer;
                 *p100 = (*p100 + 1);
             }
         }
