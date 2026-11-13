@@ -812,7 +812,7 @@ int daCoin_c::Behavior()
 }
 
 extern int SublevelToLevel(int i);
-extern void SetStarMarker(int i, void* actor, int v2);
+extern void SetStarMarker(int i, dActor_c *actor, int v2);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *thiz, void *actor, s32 f1, s32 f2, void *v, s32 f3);
 

@@ -223,7 +223,7 @@ extern "C" void UnloadOverlay(int id);
 extern "C" void func_02020190(void);
 extern "C" void func_02030994(void);
 extern "C" void func_020201c0(void);
-void func_0202048c(void *dst, int a, int b);
+void func_0202048c(OamAnimation *dst, int a, int b);
 extern "C" void func_02020768(char *thiz);
 void func_02020820(OamAnimation *anim, int *src, int screen, int loops, u8 enabled, u8 affine);
 void func_020331fc(int a, int b, int c);

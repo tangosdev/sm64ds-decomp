@@ -1211,7 +1211,11 @@ extern "C"
     extern void
     MIi_CpuCopy32(const void *, void *, unsigned int);
 extern void OpenCannonInCurLevel(void);
-extern void SetBg0Offset(int, int);
+#ifdef __cplusplus
+extern "C"
+#endif
+    extern void
+    SetBg0Offset(int, int);
 #ifdef __cplusplus
 extern "C"
 #endif
