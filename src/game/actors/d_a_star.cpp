@@ -2936,8 +2936,8 @@ void daStar_c::SetSwitchState(int r1) {
 /* Collects the star for player arg without the pose: starts the cutscene bits,
  * spawns the sound object, stops the star, records the star as collected and
  * plays sound 0x2d. */
-void daStar_c::CollectNoPose(int arg) {
-    mPlayer = (daPly_c *)arg;
+void daStar_c::CollectNoPose(daPly_c *arg) {
+    mPlayer = arg;
     mPlayer->mFlags |= CUTSCENE_FLAG;
     mFlags |= CUTSCENE_FLAG;
     gNextActorUpdateMask |= CUTSCENE_FLAG;

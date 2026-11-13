@@ -101,7 +101,7 @@ s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 typedef void BgchInitAt_(dBgCh_Actr *self, dActor_c *actor, int radius, int height, void *a,
                          void *b);
 /* Sets daPly_c::mStateStep to 6 and stores this fish in mAttachedActor. */
-int func_ov002_020c5cd8(void *a, void *self);
+int func_ov002_020c5cd8(daPly_c *a, dActor_c *self);
 /* Sound::Play with bank 3. */
 void func_02012694(unsigned int a, void *p);
 }

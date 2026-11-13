@@ -393,10 +393,9 @@ extern "C" void func_02045e44(void *self, unsigned int value, int index)
     *flags |= value << 30;
 }
 
-extern "C" void func_02045e2c(int obj, int i, int a, short b)
-{
+extern "C" void func_02045e2c(int obj, int i, BCA_File *a, short b) {
     ModelBone *e = &((ModelComponents *)obj)->bones[i];
-    e->anim = (BCA_File *)a;
+    e->anim = a;
     e->animFrame = b;
 }
 
