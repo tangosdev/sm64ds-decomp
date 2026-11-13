@@ -1853,189 +1853,189 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@2002",
+      "from": "@2001",
       "to": "@1144",
-      "evidence": "mwcc emits @2061; that name is already used in another module, so it is renamed to the unused same-length @1144 Re-keyed from @2061 to @1992 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1992 to @2002 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "mwcc emits @2061; that name is already used in another module, so it is renamed to the unused same-length @1144 Re-keyed from @2061 to @1992 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1992 to @2002 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2002 to @2001 when a redundant pun was removed (same section, offset, size, type and binding)."
+    },
+    {
+      "from": "@2002",
+      "to": "@1146",
+      "evidence": "mwcc emits @2062; that name is already used in another module, so it is renamed to the unused same-length @1146 Re-keyed from @2062 to @1993 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1993 to @2003 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2003 to @2002 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
       "from": "@2003",
-      "to": "@1146",
-      "evidence": "mwcc emits @2062; that name is already used in another module, so it is renamed to the unused same-length @1146 Re-keyed from @2062 to @1993 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1993 to @2003 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "to": "@1148",
+      "evidence": "mwcc emits @2063; that name is already used in another module, so it is renamed to the unused same-length @1148 Re-keyed from @2063 to @1994 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1994 to @2004 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2004 to @2003 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
       "from": "@2004",
-      "to": "@1148",
-      "evidence": "mwcc emits @2063; that name is already used in another module, so it is renamed to the unused same-length @1148 Re-keyed from @2063 to @1994 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1994 to @2004 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "to": "@1150",
+      "evidence": "mwcc emits @2064; that name is already used in another module, so it is renamed to the unused same-length @1150 Re-keyed from @2064 to @1995 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1995 to @2005 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2005 to @2004 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
       "from": "@2005",
-      "to": "@1150",
-      "evidence": "mwcc emits @2064; that name is already used in another module, so it is renamed to the unused same-length @1150 Re-keyed from @2064 to @1995 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1995 to @2005 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "to": "@1152",
+      "evidence": "mwcc emits @2065; that name is already used in another module, so it is renamed to the unused same-length @1152 Re-keyed from @2065 to @1996 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1996 to @2006 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2006 to @2005 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
       "from": "@2006",
-      "to": "@1152",
-      "evidence": "mwcc emits @2065; that name is already used in another module, so it is renamed to the unused same-length @1152 Re-keyed from @2065 to @1996 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1996 to @2006 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "to": "@1154",
+      "evidence": "mwcc emits @2066; that name is already used in another module, so it is renamed to the unused same-length @1154 Re-keyed from @2066 to @1997 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1997 to @2007 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2007 to @2006 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
       "from": "@2007",
-      "to": "@1154",
-      "evidence": "mwcc emits @2066; that name is already used in another module, so it is renamed to the unused same-length @1154 Re-keyed from @2066 to @1997 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1997 to @2007 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
-    },
-    {
-      "from": "@2008",
       "to": "@1159",
-      "evidence": "mwcc emits @2067; that name is already used in another module, so it is renamed to the unused same-length @1159 Re-keyed from @2067 to @1998 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1998 to @2008 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "mwcc emits @2067; that name is already used in another module, so it is renamed to the unused same-length @1159 Re-keyed from @2067 to @1998 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1998 to @2008 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2008 to @2007 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@2010",
+      "from": "@2009",
       "to": "@1161",
-      "evidence": "mwcc emits @2069; that name is already used in another module, so it is renamed to the unused same-length @1161 Re-keyed from @2069 to @2000 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2000 to @2010 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "mwcc emits @2069; that name is already used in another module, so it is renamed to the unused same-length @1161 Re-keyed from @2069 to @2000 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2000 to @2010 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2010 to @2009 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@2012",
+      "from": "@2011",
       "to": "@1163",
-      "evidence": "mwcc emits @2071; that name is already used in another module, so it is renamed to the unused same-length @1163 Re-keyed from @2071 to @2002 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2002 to @2012 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "mwcc emits @2071; that name is already used in another module, so it is renamed to the unused same-length @1163 Re-keyed from @2071 to @2002 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2002 to @2012 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2012 to @2011 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@2014",
+      "from": "@2013",
       "to": "@1169",
-      "evidence": "mwcc emits @2073; that name is already used in another module, so it is renamed to the unused same-length @1169 Re-keyed from @2073 to @2004 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2004 to @2014 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "mwcc emits @2073; that name is already used in another module, so it is renamed to the unused same-length @1169 Re-keyed from @2073 to @2004 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2004 to @2014 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2014 to @2013 when a redundant pun was removed (same section, offset, size, type and binding)."
+    },
+    {
+      "from": "@1997",
+      "to": "@2057",
+      "evidence": "the compiler emitted @2057 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @1988, so the pin keeps @2057 (measured from the compiled object). Re-keyed from @1988 to @1998 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1998 to @1997 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
       "from": "@1998",
-      "to": "@2057",
-      "evidence": "the compiler emitted @2057 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @1988, so the pin keeps @2057 (measured from the compiled object). Re-keyed from @1988 to @1998 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "to": "@2058",
+      "evidence": "the compiler emitted @2058 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @1989, so the pin keeps @2058 (measured from the compiled object). Re-keyed from @1989 to @1999 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1999 to @1998 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
       "from": "@1999",
-      "to": "@2058",
-      "evidence": "the compiler emitted @2058 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @1989, so the pin keeps @2058 (measured from the compiled object). Re-keyed from @1989 to @1999 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "to": "@2059",
+      "evidence": "the compiler emitted @2059 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @1990, so the pin keeps @2059 (measured from the compiled object). Re-keyed from @1990 to @2000 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2000 to @1999 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
       "from": "@2000",
-      "to": "@2059",
-      "evidence": "the compiler emitted @2059 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @1990, so the pin keeps @2059 (measured from the compiled object). Re-keyed from @1990 to @2000 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
-    },
-    {
-      "from": "@2001",
       "to": "@2060",
-      "evidence": "the compiler emitted @2060 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @1991, so the pin keeps @2060 (measured from the compiled object). Re-keyed from @1991 to @2001 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "the compiler emitted @2060 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @1991, so the pin keeps @2060 (measured from the compiled object). Re-keyed from @1991 to @2001 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2001 to @2000 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@2016",
+      "from": "@2015",
       "to": "@2075",
-      "evidence": "the compiler emitted @2075 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2006, so the pin keeps @2075 (measured from the compiled object). Re-keyed from @2006 to @2016 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "the compiler emitted @2075 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2006, so the pin keeps @2075 (measured from the compiled object). Re-keyed from @2006 to @2016 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2016 to @2015 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@2018",
+      "from": "@2017",
       "to": "@2077",
-      "evidence": "the compiler emitted @2077 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2008, so the pin keeps @2077 (measured from the compiled object). Re-keyed from @2008 to @2018 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "the compiler emitted @2077 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2008, so the pin keeps @2077 (measured from the compiled object). Re-keyed from @2008 to @2018 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2018 to @2017 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@2020",
+      "from": "@2019",
       "to": "@2079",
-      "evidence": "the compiler emitted @2079 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2010, so the pin keeps @2079 (measured from the compiled object). Re-keyed from @2010 to @2020 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "the compiler emitted @2079 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2010, so the pin keeps @2079 (measured from the compiled object). Re-keyed from @2010 to @2020 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2020 to @2019 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@2022",
+      "from": "@2021",
       "to": "@2081",
-      "evidence": "the compiler emitted @2081 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2012, so the pin keeps @2081 (measured from the compiled object). Re-keyed from @2012 to @2022 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "the compiler emitted @2081 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2012, so the pin keeps @2081 (measured from the compiled object). Re-keyed from @2012 to @2022 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2022 to @2021 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@2024",
+      "from": "@2023",
       "to": "@2083",
-      "evidence": "the compiler emitted @2083 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2014, so the pin keeps @2083 (measured from the compiled object). Re-keyed from @2014 to @2024 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "the compiler emitted @2083 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2014, so the pin keeps @2083 (measured from the compiled object). Re-keyed from @2014 to @2024 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2024 to @2023 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@2026",
+      "from": "@2025",
       "to": "@2085",
-      "evidence": "the compiler emitted @2085 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2016, so the pin keeps @2085 (measured from the compiled object). Re-keyed from @2016 to @2026 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "the compiler emitted @2085 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2016, so the pin keeps @2085 (measured from the compiled object). Re-keyed from @2016 to @2026 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2026 to @2025 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@2028",
+      "from": "@2027",
       "to": "@2087",
-      "evidence": "the compiler emitted @2087 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2018, so the pin keeps @2087 (measured from the compiled object). Re-keyed from @2018 to @2028 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "the compiler emitted @2087 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2018, so the pin keeps @2087 (measured from the compiled object). Re-keyed from @2018 to @2028 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2028 to @2027 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@2030",
+      "from": "@2029",
       "to": "@2089",
-      "evidence": "the compiler emitted @2089 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2020, so the pin keeps @2089 (measured from the compiled object). Re-keyed from @2020 to @2030 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "the compiler emitted @2089 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2020, so the pin keeps @2089 (measured from the compiled object). Re-keyed from @2020 to @2030 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2030 to @2029 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@2032",
+      "from": "@2031",
       "to": "@2091",
-      "evidence": "the compiler emitted @2091 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2022, so the pin keeps @2091 (measured from the compiled object). Re-keyed from @2022 to @2032 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "the compiler emitted @2091 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2022, so the pin keeps @2091 (measured from the compiled object). Re-keyed from @2022 to @2032 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2032 to @2031 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@2034",
+      "from": "@2033",
       "to": "@2093",
-      "evidence": "the compiler emitted @2093 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2024, so the pin keeps @2093 (measured from the compiled object). Re-keyed from @2024 to @2034 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "the compiler emitted @2093 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2024, so the pin keeps @2093 (measured from the compiled object). Re-keyed from @2024 to @2034 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2034 to @2033 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@2036",
+      "from": "@2035",
       "to": "@2095",
-      "evidence": "the compiler emitted @2095 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2026, so the pin keeps @2095 (measured from the compiled object). Re-keyed from @2026 to @2036 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "the compiler emitted @2095 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2026, so the pin keeps @2095 (measured from the compiled object). Re-keyed from @2026 to @2036 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2036 to @2035 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@2038",
+      "from": "@2037",
       "to": "@2097",
-      "evidence": "the compiler emitted @2097 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2028, so the pin keeps @2097 (measured from the compiled object). Re-keyed from @2028 to @2038 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "the compiler emitted @2097 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2028, so the pin keeps @2097 (measured from the compiled object). Re-keyed from @2028 to @2038 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2038 to @2037 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@2040",
+      "from": "@2039",
       "to": "@2099",
-      "evidence": "the compiler emitted @2099 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2030, so the pin keeps @2099 (measured from the compiled object). Re-keyed from @2030 to @2040 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "the compiler emitted @2099 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2030, so the pin keeps @2099 (measured from the compiled object). Re-keyed from @2030 to @2040 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2040 to @2039 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@2042",
+      "from": "@2041",
       "to": "@2101",
-      "evidence": "the compiler emitted @2101 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2032, so the pin keeps @2101 (measured from the compiled object). Re-keyed from @2032 to @2042 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "the compiler emitted @2101 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2032, so the pin keeps @2101 (measured from the compiled object). Re-keyed from @2032 to @2042 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2042 to @2041 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@2044",
+      "from": "@2043",
       "to": "@2103",
-      "evidence": "the compiler emitted @2103 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2034, so the pin keeps @2103 (measured from the compiled object). Re-keyed from @2034 to @2044 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "the compiler emitted @2103 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2034, so the pin keeps @2103 (measured from the compiled object). Re-keyed from @2034 to @2044 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2044 to @2043 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@2046",
+      "from": "@2045",
       "to": "@2105",
-      "evidence": "the compiler emitted @2105 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2036, so the pin keeps @2105 (measured from the compiled object). Re-keyed from @2036 to @2046 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "the compiler emitted @2105 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2036, so the pin keeps @2105 (measured from the compiled object). Re-keyed from @2036 to @2046 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2046 to @2045 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@2048",
+      "from": "@2047",
       "to": "@2107",
-      "evidence": "the compiler emitted @2107 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2038, so the pin keeps @2107 (measured from the compiled object). Re-keyed from @2038 to @2048 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "the compiler emitted @2107 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2038, so the pin keeps @2107 (measured from the compiled object). Re-keyed from @2038 to @2048 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2048 to @2047 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@2050",
+      "from": "@2049",
       "to": "@2109",
-      "evidence": "the compiler emitted @2109 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2040, so the pin keeps @2109 (measured from the compiled object). Re-keyed from @2040 to @2050 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "the compiler emitted @2109 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2040, so the pin keeps @2109 (measured from the compiled object). Re-keyed from @2040 to @2050 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2050 to @2049 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@2052",
+      "from": "@2051",
       "to": "@2111",
-      "evidence": "the compiler emitted @2111 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2042, so the pin keeps @2111 (measured from the compiled object). Re-keyed from @2042 to @2052 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "the compiler emitted @2111 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2042, so the pin keeps @2111 (measured from the compiled object). Re-keyed from @2042 to @2052 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2052 to @2051 when a redundant pun was removed (same section, offset, size, type and binding)."
+    },
+    {
+      "from": "@2074",
+      "to": "@2134",
+      "evidence": "the compiler emitted @2134 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2065, so the pin keeps @2134 (measured from the compiled object). Re-keyed from @2065 to @2075 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2075 to @2074 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
       "from": "@2075",
-      "to": "@2134",
-      "evidence": "the compiler emitted @2134 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2065, so the pin keeps @2134 (measured from the compiled object). Re-keyed from @2065 to @2075 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "to": "@2135",
+      "evidence": "the compiler emitted @2135 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2066, so the pin keeps @2135 (measured from the compiled object). Re-keyed from @2066 to @2076 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2076 to @2075 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
       "from": "@2076",
-      "to": "@2135",
-      "evidence": "the compiler emitted @2135 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2066, so the pin keeps @2135 (measured from the compiled object). Re-keyed from @2066 to @2076 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "to": "@2136",
+      "evidence": "the compiler emitted @2136 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2067, so the pin keeps @2136 (measured from the compiled object). Re-keyed from @2067 to @2077 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2077 to @2076 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
       "from": "@2077",
-      "to": "@2136",
-      "evidence": "the compiler emitted @2136 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2067, so the pin keeps @2136 (measured from the compiled object). Re-keyed from @2067 to @2077 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
-    },
-    {
-      "from": "@2078",
       "to": "@2137",
-      "evidence": "the compiler emitted @2137 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2068, so the pin keeps @2137 (measured from the compiled object). Re-keyed from @2068 to @2078 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "the compiler emitted @2137 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @2068, so the pin keeps @2137 (measured from the compiled object). Re-keyed from @2068 to @2078 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @2078 to @2077 when a redundant pun was removed (same section, offset, size, type and binding)."
     }
   ],
   "symbol_binding_rewrites": [
