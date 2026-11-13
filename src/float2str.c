@@ -128,7 +128,6 @@ char *float2str(double x, char *buff_end, print_format format) {
             else
                 code = 'E';
 
-            // goto: re-switch continue (0x69c), if/else (0x638), g-if plus switch (49 words) still DIFF float2str
             goto e_format;
         }
 
