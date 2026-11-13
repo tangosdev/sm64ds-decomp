@@ -78,7 +78,13 @@ void medium(int online)
     g.med_online = online ? 1 : 0;
     ntr::backup::select_online(online ? 1 : -1);      /* off = what the environment says (a launcher started Adventure Online keeps its own save) */
     /* the title read the three files once, at the scene's start (the log of SM64DS_SAVE_TRACE shows the 0x0000 / 0x0080 / 0x0100 reads long before the
-       main page): the ROM's own command 20 reads them again, from the medium that is selected now, and rebuilds the plates' data from them */
+       main page): the ROM's own command 20 reads them again, from the medium that is selected now, and rebuilds the plates' data from them.
+       CREDITS1: the shared minigame record first (command 21, ReadMinigameData into data_0209caa0 + 0x44), from the same medium.
+       SaveData::ReadFileData ANDs every file's rabbit key word with that record's unlock word (src/engine/save/SaveData.cpp:103,
+       `*(buf + 0xc) &= *(data_0209caa0 + 0x48)`), so with the other medium's record still in memory an online file's keys were cut
+       down to the keys the single player save had (and the solo file's to the online save's on the way back), and the first save
+       wrote the cut keys and that record to the medium for good. The title's own boot reads the record before the files. */
+    func_ov007_020cc600(21);
     func_ov007_020cc600(20);
 }
 
