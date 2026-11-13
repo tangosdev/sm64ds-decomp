@@ -132,16 +132,18 @@ int main(void)
         ok("gloves and buttons have no records", buttons == 0);
         int all = 1;
         for (int c = 0; c < 3; ++c)
-            all &= have[c][vscg::CAT_HAT_UNDERSHIRT] & have[c][vscg::CAT_OVERALLS] & have[c][vscg::CAT_SHOES];
-        ok("every bro has hat, overalls and shoes records", all == 1);
+            all &= have[c][vscg::CAT_HAT] & have[c][vscg::CAT_UNDERSHIRT] & have[c][vscg::CAT_OVERALLS] & have[c][vscg::CAT_SHOES];
+        ok("every bro has hat, undershirt, overalls and shoes records", all == 1);
         /* BROGROUPS1: every record is one of Tango's Studio labels, on the row
-           that label belongs to (HAT = Hat + Undershirt, OVERALLS = Overalls,
-           SHOES = Shoes); nothing else he labelled is recoloured. */
+           that label belongs to (HAT = Hat, UNDERSHIRT = Undershirt since
+           PALSPLIT1, OVERALLS = Overalls, SHOES = Shoes); nothing else he
+           labelled is recoloured. */
         int lab_bad = 0;
         for (int i = 0; i < vscg::kVscGroupCount; ++i) {
             const vscg::Group *g = &vscg::kVscGroups[i];
             const char *l = g->label ? g->label : "";
-            const int want = (!strcmp(l, "Hat") || !strcmp(l, "Undershirt")) ? vscg::CAT_HAT_UNDERSHIRT
+            const int want = !strcmp(l, "Hat") ? vscg::CAT_HAT
+                           : !strcmp(l, "Undershirt") ? vscg::CAT_UNDERSHIRT
                            : !strcmp(l, "Overalls") ? vscg::CAT_OVERALLS
                            : !strcmp(l, "Shoes") ? vscg::CAT_SHOES : -1;
             if (want != g->cat) ++lab_bad;

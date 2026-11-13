@@ -335,10 +335,10 @@ enum Ctl {
     C_BAN0 = 110,                         /* a seat's ban button (host) */
     C_PAINT = 130,                        /* coopfix1 LOBBYUI1: the paint bucket on the player's own seat (not ready only) */
     C_PK_CHAR0 = 131,                     /* the colour picker: the four characters (Yoshi, Mario, Luigi, Wario) */
-    C_PK_ROW0 = 135,                      /* its rows (Yoshi: Body, Shoes; a bro: Hat, Overalls, Shoes) */
-    C_PK_OK = 138, C_PK_BACK = 139,
-    C_PK_CELL0 = 140,                     /* its grid, PROF_COLS x PROF_ROWS cells (C_PK_CELL0 + row * PROF_COLS + col) */
-    C_JOIN = 196,                         /* coopfix1 REJOIN1: JOIN GAME, in READY's place while the room's coop game runs without me */
+    C_PK_ROW0 = 135,                      /* its rows (Yoshi: Body, Shoes; a bro: Hat, Shirt, Overalls, Shoes, PALSPLIT1) */
+    C_PK_OK = 139, C_PK_BACK = 140,
+    C_PK_CELL0 = 141,                     /* its grid, PROF_COLS x PROF_ROWS cells (C_PK_CELL0 + row * PROF_COLS + col) */
+    C_JOIN = 197,                         /* coopfix1 REJOIN1: JOIN GAME, in READY's place while the room's coop game runs without me */
     C_COUNT = 200
 };
 /* the small buttons on a seat's plate: mute, kick, ban, and the paint bucket on the player's own */
@@ -383,9 +383,10 @@ struct Page {
        here and saved to the settings only on OK (host_settings.h OnlineBodyColor / OnlineShoeColor, OnlineMarioHat ...). */
     int picker;
     int pk_chr;            /* 0 Yoshi, 1 Mario, 2 Luigi, 3 Wario */
-    int pk_row;            /* Yoshi 0 BODY 1 SHOES; a bro 0 HAT 1 OVERALLS 2 SHOES */
+    int pk_row;            /* Yoshi 0 BODY 1 SHOES; a bro the shown row, 0 HAT 1 SHIRT 2 OVERALLS 3 SHOES (profile_bro_row: the stored row) */
     unsigned pk_yoshi[2];  /* body, shoes */
-    unsigned pk_bro[3][3]; /* [bro][row], 0xRRGGBB (a row with no pick holds its cartridge colour) */
+    unsigned pk_bro[3][4]; /* [bro][stored row: HAT OVERALLS SHOES UNDERSHIRT], 0xRRGGBB (a row with no pick holds what he wears: the
+                              cartridge's colour, an undershirt the hat's) */
 } P = { 0 };
 
 void log_line(const char *what) { fprintf(stderr, "[lobbypage] %s\n", what); }
@@ -482,7 +483,7 @@ void make_geom(Geom *g, int w, int h, const LobbyState *s)
         g->panel = R(px, py, pw, ph);
         const float tw = 68, tg = 6, t0 = W * 0.5f - (4 * tw + 3 * tg) * 0.5f;
         for (int k = 0; k < 4; ++k) g->r[C_PK_CHAR0 + k] = R(t0 + k * (tw + tg), py + 42, tw, 26);
-        const int nrows = P.pk_chr == 0 ? 2 : 3;
+        const int nrows = P.pk_chr == 0 ? 2 : PROF_BRO_ROWS;
         const float rg = 6, rw = (gw - (nrows - 1) * rg) / nrows;
         for (int k = 0; k < nrows; ++k) g->r[C_PK_ROW0 + k] = R(px + 20 + k * (rw + rg), py + 76, rw, 24);
         for (int row = 0; row < PROF_ROWS; ++row)
@@ -523,7 +524,7 @@ bool live(const LobbyState *s, int c)
     if (s->phase == LOBBY_FAILED) return c == C_FAIL_BACK;
     if (!in_room(s)) return false;
     if (P.picker) {
-        if (c >= C_PK_ROW0 && c < C_PK_ROW0 + 3) return c - C_PK_ROW0 < (P.pk_chr == 0 ? 2 : 3);
+        if (c >= C_PK_ROW0 && c < C_PK_ROW0 + PROF_BRO_ROWS) return c - C_PK_ROW0 < (P.pk_chr == 0 ? 2 : PROF_BRO_ROWS);
         return picker_ctl(c);
     }
     if (P.panel) {
@@ -618,15 +619,15 @@ void open_panel(int on)
    colour the popup can show and the comms identity already carries. */
 const char *const kPkChar[4] = { "Yoshi", "Mario", "Luigi", "Wario" };
 const char *const kPkRowYoshi[2] = { "Body", "Shoes" };
-const char *const kPkRowBro[3] = { "Hat", "Overalls", "Shoes" };
+const char *const kPkRowBro[PROF_BRO_ROWS] = { "Hat", "Shirt", "Overalls", "Shoes" };     /* PALSPLIT1: as shown */
 const uint32_t kYoshiBody = 0x31A431u, kYoshiShoes = 0xE66218u;       /* the cartridge green Yoshi (kOnlineYoshiColors[0]) */
 
 uint32_t pk_cell_colour(int col, int row)
 {
     if (P.pk_chr == 0) return profile_cell_colour(P.pk_row, col, row);
-    return profile_bro_cell(P.pk_chr - 1, P.pk_row, col, row);
+    return profile_bro_cell(P.pk_chr - 1, profile_bro_row(P.pk_row), col, row);
 }
-unsigned *pk_slot(int chr, int row) { return chr == 0 ? &P.pk_yoshi[row & 1] : &P.pk_bro[chr - 1][row]; }
+unsigned *pk_slot(int chr, int row) { return chr == 0 ? &P.pk_yoshi[row & 1] : &P.pk_bro[chr - 1][profile_bro_row(row)]; }
 int pk_current_cell(void)
 {
     const unsigned cur = *pk_slot(P.pk_chr, P.pk_row) & 0xFFFFFFu;
@@ -636,24 +637,24 @@ int pk_current_cell(void)
     return C_PK_CELL0;
 }
 
-/* the saved colours (or the cartridge's where none are saved) */
-void saved_colours(unsigned yoshi[2], unsigned bro[3][3])
+/* the saved colours (or the cartridge's where none are saved; an undershirt with none of its own, the hat's: PALSPLIT1) */
+void saved_colours(unsigned yoshi[2], unsigned bro[3][4])
 {
     if (!host_setting_online_colours(&yoshi[0], &yoshi[1])) { yoshi[0] = kYoshiBody; yoshi[1] = kYoshiShoes; }
     for (int c = 0; c < 3; ++c)
-        for (int k = 0; k < 3; ++k)
-            if (!host_setting_online_bro(c, k, &bro[c][k])) bro[c][k] = profile_bro_cart(c, k);
+        for (int k = 0; k < 4; ++k)
+            if (!host_setting_online_bro(c, k, &bro[c][k])) bro[c][k] = k == 3 ? bro[c][0] : profile_bro_cart(c, k);
 }
 
 /* the arrow at the bucket: the player has never confirmed colours from the bucket and still wears the cartridge's */
 int colours_default(void)
 {
     if (host_setting_lobby_color_picked()) return 0;
-    unsigned y[2], b[3][3];
+    unsigned y[2], b[3][4];
     saved_colours(y, b);
     if ((y[0] & 0xFFFFFFu) != kYoshiBody || (y[1] & 0xFFFFFFu) != kYoshiShoes) return 0;
     for (int c = 0; c < 3; ++c)
-        for (int k = 0; k < 3; ++k)
+        for (int k = 0; k < 4; ++k)
             if ((b[c][k] & 0xFFFFFFu) != (profile_bro_cart(c, k) & 0xFFFFFFu)) return 0;
     return 1;
 }
@@ -673,23 +674,28 @@ void close_picker(int ok)
 {
     char b[256];
     if (ok) {
-        unsigned y[2], br[3][3];
+        unsigned y[2], br[3][4];
         saved_colours(y, br);
         const int yoshi_moved = (y[0] & 0xFFFFFFu) != (P.pk_yoshi[0] & 0xFFFFFFu) || (y[1] & 0xFFFFFFu) != (P.pk_yoshi[1] & 0xFFFFFFu);
         int bro_moved = 0;
-        for (int c = 0; c < 3; ++c) for (int k = 0; k < 3; ++k) bro_moved |= (br[c][k] & 0xFFFFFFu) != (P.pk_bro[c][k] & 0xFFFFFFu);
+        for (int c = 0; c < 3; ++c) for (int k = 0; k < 4; ++k) bro_moved |= (br[c][k] & 0xFFFFFFu) != (P.pk_bro[c][k] & 0xFFFFFFu);
         if (yoshi_moved) host_setting_set_online_profile(host_setting_online_name(), P.pk_yoshi[0], P.pk_yoshi[1]);
         if (bro_moved) {
-            unsigned char set[3][3];
-            for (int c = 0; c < 3; ++c)
+            unsigned char set[3][4];
+            for (int c = 0; c < 3; ++c) {
                 for (int k = 0; k < 3; ++k) set[c][k] = (P.pk_bro[c][k] & 0xFFFFFFu) != (profile_bro_cart(c, k) & 0xFFFFFFu);
+                /* PALSPLIT1: the undershirt is kept apart from the hat whenever the two differ (even on the cartridge's colour) */
+                set[c][3] = (P.pk_bro[c][3] & 0xFFFFFFu) != (P.pk_bro[c][0] & 0xFFFFFFu);
+            }
             host_setting_set_online_bros(P.pk_bro, set);
         }
         host_setting_set_lobby_color_picked(1);      /* the arrow never shows again */
         if (yoshi_moved) C_colors();
-        snprintf(b, sizeof b, "colours saved: yoshi %06X/%06X mario %06X/%06X/%06X luigi %06X/%06X/%06X wario %06X/%06X/%06X (yoshi %s, bros %s)",
-                 P.pk_yoshi[0], P.pk_yoshi[1], P.pk_bro[0][0], P.pk_bro[0][1], P.pk_bro[0][2], P.pk_bro[1][0], P.pk_bro[1][1], P.pk_bro[1][2],
-                 P.pk_bro[2][0], P.pk_bro[2][1], P.pk_bro[2][2], yoshi_moved ? "changed, sent to the room" : "same", bro_moved ? "changed" : "same");
+        snprintf(b, sizeof b, "colours saved: yoshi %06X/%06X mario %06X/%06X/%06X/%06X luigi %06X/%06X/%06X/%06X wario %06X/%06X/%06X/%06X "
+                 "(hat/overalls/shoes/shirt; yoshi %s, bros %s)",
+                 P.pk_yoshi[0], P.pk_yoshi[1], P.pk_bro[0][0], P.pk_bro[0][1], P.pk_bro[0][2], P.pk_bro[0][3], P.pk_bro[1][0], P.pk_bro[1][1],
+                 P.pk_bro[1][2], P.pk_bro[1][3], P.pk_bro[2][0], P.pk_bro[2][1], P.pk_bro[2][2], P.pk_bro[2][3],
+                 yoshi_moved ? "changed, sent to the room" : "same", bro_moved ? "changed" : "same");
         log_line(b);
     } else log_line("colour picker closed (Back)");
     P.picker = 0;
@@ -733,7 +739,7 @@ void press(const LobbyState *s, int c)
         log_line(b);
         return;
     }
-    if (c >= C_PK_ROW0 && c < C_PK_ROW0 + 3) {
+    if (c >= C_PK_ROW0 && c < C_PK_ROW0 + PROF_BRO_ROWS) {
         P.pk_row = c - C_PK_ROW0;
         snprintf(b, sizeof b, "picker: %s %s", kPkChar[P.pk_chr], P.pk_chr == 0 ? kPkRowYoshi[P.pk_row & 1] : kPkRowBro[P.pk_row]);
         log_line(b);
@@ -2260,7 +2266,7 @@ void draw_room(const Surf &s, const Font &f, bool hd, const Geom &g, const Lobby
             draw_box(s, f, hd, r, 0, lit(C_PK_CHAR0 + k), P.pk_chr != k);
             f.centred(s, r, kPkChar[k], 13.0f, ink_on(hd, 0), P.pk_chr == k ? 255 : 170);
         }
-        const int nrows = P.pk_chr == 0 ? 2 : 3;
+        const int nrows = P.pk_chr == 0 ? 2 : PROF_BRO_ROWS;
         for (int k = 0; k < nrows; ++k) {
             const Rect &r = g.r[C_PK_ROW0 + k];
             const int on = P.pk_row == k;

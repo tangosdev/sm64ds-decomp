@@ -40,23 +40,27 @@ enum { PROF_F_NAME = 0, PROF_F_CHAR = 1, PROF_F_ROW = 2, PROF_F_GRID = 3, PROF_F
 #define PROF_ROWS 4
 uint32_t profile_cell_colour(int which, int col, int row);      /* 0xRRGGBB of a grid cell; which 0 = BODY, 1 = SHOES */
 /* BROCOLOR1: the character row. The popup picks colours for four characters, in this order (Yoshi first, so it opens where it always did):
-   0 Yoshi (BODY, SHOES), 1 Mario, 2 Luigi, 3 Wario (HAT = cap and undershirt, OVERALLS, SHOES). LB / RB on the pad, Q / E on the keyboard (not
+   0 Yoshi (BODY, SHOES), 1 Mario, 2 Luigi, 3 Wario (HAT = the cap, SHIRT = the undershirt since PALSPLIT1, OVERALLS, SHOES). LB / RB on the pad,
+   Q / E on the keyboard (not
    while the name field has the focus: there they are letters) and a click on a head change it. A bro row's grid is the same grid; its column 0
    is the cartridge Mario, Luigi and Wario colour of that row and the cartridge green Yoshi's (hal/vs_char_groups.h kBroCart). */
 #define PROF_CHARS 4
-uint32_t profile_bro_cell(int bro, int cat, int col, int row);  /* bro 0 Mario 1 Luigi 2 Wario; cat 0 HAT 1 OVERALLS 2 SHOES */
-uint32_t profile_bro_cart(int bro, int cat);                   /* that bro's cartridge colour for the row */
+uint32_t profile_bro_cell(int bro, int cat, int col, int row);  /* bro 0 Mario 1 Luigi 2 Wario; cat 0 HAT 1 OVERALLS 2 SHOES 3 UNDERSHIRT */
+uint32_t profile_bro_cart(int bro, int cat);                   /* that bro's cartridge colour for the row (the undershirt's is the hat's) */
+/* PALSPLIT1: a bro's rows as the pickers show them, HAT, SHIRT, OVERALLS, SHOES; profile_bro_row(k) is shown row k's stored row (cat above) */
+#define PROF_BRO_ROWS 4
+int profile_bro_row(int k);
 
 /* what the draw side needs (copied into OnlFacts by menu_online_facts) */
 struct ProfFacts {               /* 36 bytes: OnlFacts is exactly full at 160 (menu_online.h), so no word members */
     unsigned char focus;          /* PROF_F_* */
-    unsigned char which;          /* the row being picked: Yoshi 0 BODY 1 SHOES; a bro 0 HAT 1 OVERALLS 2 SHOES */
+    unsigned char which;          /* the row being picked: Yoshi 0 BODY 1 SHOES; a bro the shown row, 0 HAT 1 SHIRT 2 OVERALLS 3 SHOES */
     unsigned char cx, cy;         /* the grid cell cursor */
     unsigned char caret;          /* blink phase, 0 / 1 */
-    unsigned char chr;            /* BROCOLOR1: 0 Yoshi, 1 Mario, 2 Luigi, 3 Wario (Yoshi has two rows, a bro three) */
+    unsigned char chr;            /* BROCOLOR1: 0 Yoshi, 1 Mario, 2 Luigi, 3 Wario (Yoshi has two rows, a bro four) */
     signed char pending;          /* the file waiting for the OK (0..2) or -1 */
-    char name[20];
-    unsigned char row[3][3];      /* the live colour of each row, R G B (a bro row with no pick = its cartridge colour) */
+    char name[17];                /* the name is 16 bytes at most (PALSPLIT1: 3 bytes went to the fourth row) */
+    unsigned char row[4][3];      /* the live colour of each shown row, R G B (a bro row with no pick = its cartridge colour) */
 };
 
 /* the DS boxes of the popup (the hook and the pieces agree on them; a click maps proportionally into a piece's box) */
@@ -81,8 +85,9 @@ struct ProfFacts {               /* 36 bytes: OnlFacts is exactly full at 160 (m
 #define PROF_TAB0_X 28
 #define PROF_TAB1_X 130
 #define PROF_TAB_W 98
-#define PROF_TAB3_W 64         /* three labels: at PROF_TAB0_X + k * PROF_TAB3_STEP */
-#define PROF_TAB3_STEP 68
+#define PROF_TAB4_W 47         /* PALSPLIT1: a bro's four labels: at PROF_TAB0_X + k * PROF_TAB4_STEP, across the same span */
+#define PROF_TAB4_STEP 51
+#define PROF_TAB4_SW 10        /* ...and the swatch in each */
 #define PROF_GRID_X 24
 #define PROF_GRID_Y 87
 #define PROF_CELL_W 14

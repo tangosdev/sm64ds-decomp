@@ -40,9 +40,9 @@ struct Prof {
     unsigned tick;
     unsigned char prev[256];
     int chr;                    /* BROCOLOR1: 0 Yoshi, 1 Mario, 2 Luigi, 3 Wario */
-    unsigned bro[3][3];         /* the bros' picks, [bro][HAT OVERALLS SHOES] */
-    unsigned char broset[3][3]; /* ...which are set (unset = the cartridge's colour) */
-    int bro_dirty;              /* a bro pick changed since the popup opened (only then are the nine keys written) */
+    unsigned bro[3][4];         /* the bros' picks, [bro][HAT OVERALLS SHOES UNDERSHIRT] (the stored order, hal/bro_colors.h) */
+    unsigned char broset[3][4]; /* ...which are set (unset = the cartridge's colour; an unset undershirt wears the hat) */
+    int bro_dirty;              /* a bro pick changed since the popup opened (only then are the twelve keys written) */
 } P;
 unsigned g_bumper_prev;         /* the shoulder keys last frame (edges only) */
 
@@ -67,26 +67,38 @@ int key_down(int vk)
     return p_GetAsyncKeyState && hal_window_focused() && (p_GetAsyncKeyState(vk) & 0x8000) ? 1 : 0;
 }
 
-/* BROCOLOR1: the rows of the character on show. Yoshi: BODY, SHOES (P.col); a bro: HAT, OVERALLS, SHOES (P.bro, the cartridge's colour when unset). */
+/* BROCOLOR1: the rows of the character on show. Yoshi: BODY, SHOES (P.col); a bro: HAT, SHIRT, OVERALLS, SHOES (P.bro, the cartridge's colour
+   when unset). PALSPLIT1: k is the row as shown; profile_bro_row maps it to the stored row (the undershirt is stored last). */
 const char *const kCharName[PROF_CHARS] = { "Yoshi", "Mario", "Luigi", "Wario" };
-int nrows() { return P.chr ? 3 : 2; }
+int nrows() { return P.chr ? PROF_BRO_ROWS : 2; }
 const char *row_name(int k)
 {
-    static const char *const kY[2] = { "BODY", "SHOES" }, *const kB[3] = { "HAT", "OVERALLS", "SHOES" };
-    return P.chr ? kB[k < 0 ? 0 : k > 2 ? 2 : k] : kY[k ? 1 : 0];
+    static const char *const kY[2] = { "BODY", "SHOES" }, *const kB[PROF_BRO_ROWS] = { "HAT", "SHIRT", "OVERALLS", "SHOES" };
+    return P.chr ? kB[k < 0 ? 0 : k > PROF_BRO_ROWS - 1 ? PROF_BRO_ROWS - 1 : k] : kY[k ? 1 : 0];
+}
+/* a bro's stored row r as he wears it: his pick, an unset undershirt the hat's, else the cartridge's */
+uint32_t bro_wears(int b, int r)
+{
+    if (P.broset[b][r]) return P.bro[b][r];
+    if (r == 3) return bro_wears(b, 0);
+    return profile_bro_cart(b, r);
 }
 uint32_t row_colour(int k)
 {
     if (!P.chr) return P.col[k ? 1 : 0];
-    const int b = P.chr - 1;
-    return P.broset[b][k] ? P.bro[b][k] : profile_bro_cart(b, k);
+    return bro_wears(P.chr - 1, profile_bro_row(k));
 }
-uint32_t cell_of(int k, int x, int y) { return P.chr ? profile_bro_cell(P.chr - 1, k, x, y) : profile_cell_colour(k, x, y); }
+uint32_t cell_of(int k, int x, int y) { return P.chr ? profile_bro_cell(P.chr - 1, profile_bro_row(k), x, y) : profile_cell_colour(k, x, y); }
 void set_row(int k, uint32_t c)
 {
     if (!P.chr) { P.col[k ? 1 : 0] = c; return; }
-    P.bro[P.chr - 1][k] = c;
-    P.broset[P.chr - 1][k] = 1;
+    const int b = P.chr - 1, r = profile_bro_row(k);
+    if (r == 0 && !P.broset[b][3]) {        /* PALSPLIT1: the hat moves alone; the undershirt keeps what it showed */
+        P.bro[b][3] = bro_wears(b, 3);
+        P.broset[b][3] = 1;
+    }
+    P.bro[b][r] = c;
+    P.broset[b][r] = 1;
     P.bro_dirty = 1;
 }
 
@@ -99,7 +111,7 @@ void log_bros(const char *why)
     fprintf(stderr, "[profile] %s bros:", why);
     for (int b = 0; b < 3; ++b) {
         fprintf(stderr, " %s", kCharName[b + 1]);
-        for (int k = 0; k < 3; ++k) {
+        for (int k = 0; k < 4; ++k) {
             if (P.broset[b][k]) fprintf(stderr, " %06X", P.bro[b][k]);
             else fprintf(stderr, " -");
         }
@@ -172,7 +184,7 @@ void finish(int ok)
         host_setting_set_online_profile(clean, P.col[0], P.col[1]);
         snprintf(P.name, sizeof P.name, "%s", clean);
         log_name("saved");
-        if (P.bro_dirty) {      /* BROCOLOR1: the nine bro keys, only when a bro pick changed */
+        if (P.bro_dirty) {      /* BROCOLOR1: the bro keys, only when a bro pick changed */
             host_setting_set_online_bros(P.bro, P.broset);
             log_bros("saved");
         }
@@ -200,7 +212,7 @@ void profile_open(int pending_slot)
     if (host_setting_online_colours(&body, &shoes)) { P.col[0] = body; P.col[1] = shoes; }
     else { P.col[0] = 0x31A431; P.col[1] = 0xE66218; }            /* nothing picked yet: the ROM's green Yoshi */
     for (int b = 0; b < 3; ++b)                                     /* BROCOLOR1: the bros' saved picks */
-        for (int k = 0; k < 3; ++k) {
+        for (int k = 0; k < 4; ++k) {
             unsigned v = 0;
             P.broset[b][k] = (unsigned char)host_setting_online_bro(b, k, &v);
             P.bro[b][k] = P.broset[b][k] ? v : 0;
@@ -231,9 +243,14 @@ uint32_t profile_cell_colour(int which, int col, int row)
    HAT and OVERALLS, boot orange for SHOES); the rest of the grid is the Yoshi grid's. */
 uint32_t profile_bro_cart(int bro, int cat)
 {
-    static const int kCat[3] = { vscg::CAT_HAT_UNDERSHIRT, vscg::CAT_OVERALLS, vscg::CAT_SHOES };
-    if (bro < 0 || bro > 2 || cat < 0 || cat > 2) return 0;
+    static const int kCat[4] = { vscg::CAT_HAT, vscg::CAT_OVERALLS, vscg::CAT_SHOES, vscg::CAT_UNDERSHIRT };
+    if (bro < 0 || bro > 2 || cat < 0 || cat > 3) return 0;
     return vscg::kBroCart[bro][kCat[cat]];
+}
+int profile_bro_row(int k)
+{
+    static const int kRow[PROF_BRO_ROWS] = { 0, 3, 1, 2 };     /* HAT, SHIRT, OVERALLS, SHOES as shown */
+    return kRow[k < 0 ? 0 : k > PROF_BRO_ROWS - 1 ? PROF_BRO_ROWS - 1 : k];
 }
 uint32_t profile_bro_cell(int bro, int cat, int col, int row)
 {
@@ -378,8 +395,8 @@ int profile_touch(int sx, int sy, int edge)
         if (in(PROF_TAB0_X, PROF_TAB_Y, PROF_TAB_W, PROF_TAB_H)) { P.focus = PROF_F_ROW; goto_pick(0); return 1; }
         if (in(PROF_TAB1_X, PROF_TAB_Y, PROF_TAB_W, PROF_TAB_H)) { P.focus = PROF_F_ROW; goto_pick(1); return 1; }
     } else {
-        for (int k = 0; k < 3; ++k)
-            if (in(PROF_TAB0_X + k * PROF_TAB3_STEP, PROF_TAB_Y, PROF_TAB3_W, PROF_TAB_H)) { P.focus = PROF_F_ROW; goto_pick(k); return 1; }
+        for (int k = 0; k < PROF_BRO_ROWS; ++k)
+            if (in(PROF_TAB0_X + k * PROF_TAB4_STEP, PROF_TAB_Y, PROF_TAB4_W, PROF_TAB_H)) { P.focus = PROF_F_ROW; goto_pick(k); return 1; }
     }
     if (in(PROF_GRID_X, PROF_GRID_Y, PROF_GRID_W, PROF_GRID_H)) {
         const int x = (sx - PROF_GRID_X) / PROF_CELL_STEPX, y = (sy - PROF_GRID_Y) / PROF_CELL_STEPY;
@@ -655,24 +672,25 @@ void menu_online_profile_draw(const MenuLayout *L, const OnlFacts *of, uint32_t 
             frame(dst, stride, w, h, bx0, by0, bx1, by1, clampi(S(sel ? 2 : 1), 1, 6), sel ? (f.focus == PROF_F_CHAR ? 0xD2641E : 0x4A2208) : 0x8A5A2A);
         }
     }
-    /* the row labels, each with its live swatch: two for Yoshi, three for a bro; the picked row has the frame (orange while the labels have the focus) */
-    const int nrow = f.chr ? 3 : 2;
-    static const char *const kLabY[2] = { "BODY", "SHOES" }, *const kLabB[3] = { "HAT", "OVERALLS", "SHOES" };
+    /* the row labels, each with its live swatch: two for Yoshi, four for a bro (PALSPLIT1: HAT, SHIRT, OVERALLS, SHOES); the picked row has the
+       frame (orange while the labels have the focus) */
+    const int nrow = f.chr ? PROF_BRO_ROWS : 2;
+    static const char *const kLabY[2] = { "BODY", "SHOES" }, *const kLabB[PROF_BRO_ROWS] = { "HAT", "SHIRT", "OVERALLS", "SHOES" };
     for (int k = 0; k < nrow; ++k) {
-        const int tx0 = f.chr ? X(PROF_TAB0_X + k * PROF_TAB3_STEP) : X(k ? PROF_TAB1_X : PROF_TAB0_X);
-        const int ty0 = Y(PROF_TAB_Y), tx1 = tx0 + S(f.chr ? PROF_TAB3_W : PROF_TAB_W), ty1 = Y(PROF_TAB_Y + PROF_TAB_H);
+        const int tx0 = f.chr ? X(PROF_TAB0_X + k * PROF_TAB4_STEP) : X(k ? PROF_TAB1_X : PROF_TAB0_X);
+        const int ty0 = Y(PROF_TAB_Y), tx1 = tx0 + S(f.chr ? PROF_TAB4_W : PROF_TAB_W), ty1 = Y(PROF_TAB_Y + PROF_TAB_H);
         const int sel = f.which == k;
         fill(dst, stride, w, h, tx0, ty0, tx1, ty1, sel ? 0xFFF1CC : 0xEBD7A6);
         frame(dst, stride, w, h, tx0, ty0, tx1, ty1, clampi(S(sel ? 2 : 1), 1, 6), sel ? (f.focus == PROF_F_ROW ? 0xD2641E : 0x4A2208) : 0x8A5A2A);
         const char *lab = f.chr ? kLabB[k] : kLabY[k];
         float lem = (f.chr ? 8.f : 10.f) * (float)un / (float)ud;
         {   /* the label always ends before its swatch, whatever the font measures */
-            const float room = (float)(S(f.chr ? PROF_TAB3_W - 4 - 3 - 13 - 3 : PROF_TAB_W - 6 - 5 - 34 - 4));
+            const float room = (float)(S(f.chr ? PROF_TAB4_W - 3 - 2 - PROF_TAB4_SW - 2 : PROF_TAB_W - 6 - 5 - 34 - 4));
             const float tw = ui_text_width(lab, lem);
             if (tw > room && tw > 0.f) lem *= room / tw;
         }
-        ui_text_draw(&sf, (float)(tx0 + S(f.chr ? 4 : 6)), (float)(ty0 + ty1) * 0.5f + ui_text_cap_height(lem) * 0.5f, lab, lem, sel ? 0x4A2208 : 0x8A6A3A, 255, 0);
-        const int sx1 = tx1 - S(f.chr ? 3 : 5), sx0 = sx1 - S(f.chr ? 13 : 34);
+        ui_text_draw(&sf, (float)(tx0 + S(f.chr ? 3 : 6)), (float)(ty0 + ty1) * 0.5f + ui_text_cap_height(lem) * 0.5f, lab, lem, sel ? 0x4A2208 : 0x8A6A3A, 255, 0);
+        const int sx1 = tx1 - S(f.chr ? 2 : 5), sx0 = sx1 - S(f.chr ? PROF_TAB4_SW : 34);
         fill(dst, stride, w, h, sx0, ty0 + S(3), sx1, ty1 - S(3), rgb_of(f.row[k]));
         frame(dst, stride, w, h, sx0, ty0 + S(3), sx1, ty1 - S(3), 1, 0x4A2208);
     }
@@ -681,10 +699,10 @@ void menu_online_profile_draw(const MenuLayout *L, const OnlFacts *of, uint32_t 
         for (int y = 0; y < PROF_ROWS; ++y) {
             const int x0 = X(PROF_GRID_X + x * PROF_CELL_STEPX), y0 = Y(PROF_GRID_Y + y * PROF_CELL_STEPY);
             const int x1 = X(PROF_GRID_X + x * PROF_CELL_STEPX + PROF_CELL_W), y1 = Y(PROF_GRID_Y + y * PROF_CELL_STEPY + PROF_CELL_H);
-            const uint32_t c = f.chr ? profile_bro_cell(f.chr - 1, f.which, x, y) : profile_cell_colour(f.which, x, y);
+            const uint32_t c = f.chr ? profile_bro_cell(f.chr - 1, profile_bro_row(f.which), x, y) : profile_cell_colour(f.which, x, y);
             fill(dst, stride, w, h, x0, y0, x1, y1, c);
             frame(dst, stride, w, h, x0, y0, x1, y1, 1, 0x4A2208);
-            if (c == rgb_of(f.row[f.which < 3 ? f.which : 0])) {     /* the cell that is the row's current pick: a light inner mark with a dark edge */
+            if (c == rgb_of(f.row[f.which < PROF_BRO_ROWS ? f.which : 0])) {     /* the cell that is the row's current pick: a light inner mark with a dark edge */
                 frame(dst, stride, w, h, x0 + S(2), y0 + S(2), x1 - S(2), y1 - S(2), clampi(S(1), 1, 3), 0xFFFFFF);
                 frame(dst, stride, w, h, x0 + S(1), y0 + S(1), x1 - S(1), y1 - S(1), 1, 0x000000);
             }
@@ -695,8 +713,9 @@ void menu_online_profile_draw(const MenuLayout *L, const OnlFacts *of, uint32_t 
         frame(dst, stride, w, h, x0 - S(2), y0 - S(2), x1 + S(2), y1 + S(2), clampi(S(2), 1, 5), 0xD2641E);
     }
     {
-        char hexs[64];
-        if (f.chr) snprintf(hexs, sizeof hexs, "HAT %06X   OVERALLS %06X   SHOES %06X", rgb_of(f.row[0]), rgb_of(f.row[1]), rgb_of(f.row[2]));
+        char hexs[80];
+        if (f.chr) snprintf(hexs, sizeof hexs, "HAT %06X   SHIRT %06X   OVERALLS %06X   SHOES %06X", rgb_of(f.row[0]), rgb_of(f.row[1]),
+                            rgb_of(f.row[2]), rgb_of(f.row[3]));
         else snprintf(hexs, sizeof hexs, "BODY %06X   SHOES %06X", rgb_of(f.row[0]), rgb_of(f.row[1]));
         float cem = (f.chr ? 7.5f : 8.5f) * (float)un / (float)ud;
         {
@@ -753,7 +772,7 @@ void menu_online_profile_modal(MenuLayout *L, const OnlFacts *f)
     menu_add_piece(L, p);
     touch_box(L, PROF_FIELD_X, PROF_FIELD_Y, PROF_FIELD_W, PROF_FIELD_H);
     touch_box(L, PROF_LB_X, PROF_CHAR_Y, PROF_RB_X + PROF_HINT_W - PROF_LB_X, PROF_CHAR_S);     /* BROCOLOR1: LB, the heads, RB */
-    touch_box(L, PROF_TAB0_X, PROF_TAB_Y, PROF_TAB1_X + PROF_TAB_W - PROF_TAB0_X, PROF_TAB_H);  /* the row labels (two or three across the same span) */
+    touch_box(L, PROF_TAB0_X, PROF_TAB_Y, PROF_TAB1_X + PROF_TAB_W - PROF_TAB0_X, PROF_TAB_H);  /* the row labels (two or four across the same span) */
     touch_box(L, PROF_GRID_X, PROF_GRID_Y, PROF_GRID_W, PROF_GRID_H);
     const int un = L->unum, ud = L->uden;
     const int kinds[2] = { ONL_K_OK, ONL_K_BACK };

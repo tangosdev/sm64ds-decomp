@@ -20,7 +20,8 @@ dumped by running the editor's load_all + rebuild_families on the cartridge
 with his groups file, so it holds every entry's label as the Studio shows it.
 The earlier hue-window classifier (lane BROCOLOR1) is gone.
 
-THE ROWS. HAT = his Hat + Undershirt (one pick, as he asked on 10-13),
+THE ROWS. HAT = his Hat, UNDERSHIRT = his Undershirt (two picks since 11-13:
+the two were one pick from 10-13 until Tango asked for them apart),
 OVERALLS = Overalls, SHOES = Shoes. Everything else he labelled (Gloves,
 Buttons, Eye color, white, Wario's jh4, Wario's Hat Blue and Hat white, which
 are the W badge on his cap and its white edge, kept like Mario's M) and every
@@ -39,7 +40,10 @@ THE MAIN TONE. For each category in each palette the entry the most texels
 read is written as `main`: the pick lands exactly there and the rest of the
 category follows as a ramp (vs_char_palette_gen.h). kBroCart is the cartridge
 colour of each bro's category, the main tone in the BODY file: the popup's
-classic cells, and a pick equal to it leaves the palette untouched.
+classic cells, and a pick equal to it leaves the palette untouched. The hat
+has no entries in the body file, so its cartridge colour is the undershirt's
+(the joined row's colour before the split), and both rows keep the classic
+cell and the "no pick" test they had as one row.
 
 Run from the worktree root:
     python port/tools/gen_vs_char_groups.py [--files extracted/dsd/files]
@@ -56,11 +60,15 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import lovesme_compose as lc  # noqa: E402
 
 CHARS = ["mario", "luigi", "wario"]          # engine order: 0 Mario, 1 Luigi, 2 Wario
-CAT_HAT, CAT_OVERALLS, CAT_GLOVES, CAT_BUTTONS, CAT_SHOES = 0, 1, 2, 3, 4
-CAT_NAMES = ["hat_undershirt", "overalls", "gloves", "buttons", "shoes"]
+CAT_HAT, CAT_OVERALLS, CAT_GLOVES, CAT_BUTTONS, CAT_SHOES, CAT_UNDERSHIRT = 0, 1, 2, 3, 4, 5
+CAT_COUNT = 6
+CAT_NAMES = ["hat", "overalls", "gloves", "buttons", "shoes", "undershirt"]
+# the table's order: the undershirt sorts with the hat, where it sat as one row, so every record keeps its place and kIdx_ number
+CAT_RANK = {CAT_HAT: 0, CAT_UNDERSHIRT: 0, CAT_OVERALLS: 1, CAT_GLOVES: 2, CAT_BUTTONS: 3, CAT_SHOES: 4}
+PICKED = (CAT_HAT, CAT_UNDERSHIRT, CAT_OVERALLS, CAT_SHOES)
 
 # Tango's Studio label -> the picker row that recolours it; any other label keeps the cartridge colour
-CAT_OF_LABEL = {"Hat": CAT_HAT, "Undershirt": CAT_HAT, "Overalls": CAT_OVERALLS, "Shoes": CAT_SHOES}
+CAT_OF_LABEL = {"Hat": CAT_HAT, "Undershirt": CAT_UNDERSHIRT, "Overalls": CAT_OVERALLS, "Shoes": CAT_SHOES}
 
 # arc0.narc member index, file path served to the game, is it the body file
 FILES = {
@@ -228,8 +236,8 @@ def collect(files_root, labels_path, keep_path):
     keep = load_keep(keep_path)
     kept = []
     records, dump = [], {}
-    cart = [[0] * 5 for _ in CHARS]
-    cart_drawn = [[-1.0] * 5 for _ in CHARS]
+    cart = [[0] * CAT_COUNT for _ in CHARS]
+    cart_drawn = [[-1.0] * CAT_COUNT for _ in CHARS]
     for ci, chr_name in enumerate(CHARS):
         for idx, path, body in FILES[chr_name]:
             m = lc.parse_bmd(lc.narc_member(arc, idx))
@@ -275,7 +283,10 @@ def collect(files_root, labels_path, keep_path):
                     if body and pal["name"] not in twins and drawn > cart_drawn[ci][c]:
                         cart_drawn[ci][c] = drawn
                         cart[ci][c] = rgb8(words[main])
-    records.sort(key=lambda r: (r["chr"], r["cat"], r["file"], r["pal"], r["label"]))
+    records.sort(key=lambda r: (r["chr"], CAT_RANK[r["cat"]], r["file"], r["pal"], r["label"]))
+    for ci in range(len(CHARS)):
+        if not cart[ci][CAT_HAT]:
+            cart[ci][CAT_HAT] = cart[ci][CAT_UNDERSHIRT]
     for ci, chr_name in enumerate(CHARS):
         for (path, pname), held in keep.get(chr_name, {}).items():
             if not any(k[0] == ci and k[1] == path and k[2] == pname for k in kept):
@@ -290,17 +301,20 @@ def emit(records, cart, kept):
     w(" * Studio labels (port/tools/bro_groups.json) and the extracted ROM (ARCHIVE/arc0.narc,")
     w(" * the nine bro BMDs). DO NOT EDIT BY HAND.")
     w(" *")
-    w(" * The bros' category -> palette-entry membership: hat + undershirt (his Hat and")
-    w(" * Undershirt labels, one pick), overalls (Overalls), shoes (Shoes). Gloves and")
-    w(" * buttons keep their slots for SM64DS_VS_CHAR_COLORS's grammar and are empty.")
+    w(" * The bros' category -> palette-entry membership: hat (his Hat label), undershirt")
+    w(" * (Undershirt), overalls (Overalls), shoes (Shoes). Gloves and buttons keep their")
+    w(" * slots for SM64DS_VS_CHAR_COLORS's grammar and are empty. The undershirt is the")
+    w(" * last category (it was one pick with the hat until 11-13), so the grammar's old")
+    w(" * five fields keep their places.")
     w(" * Each record is one labelled family's entries in one named palette; `main` is")
     w(" * the entry the most texels read (where a pick lands). kBroCart is each bro's")
-    w(" * cartridge colour per category (the body file's main tone). kVscKeepCart lists")
+    w(" * cartridge colour per category (the body file's main tone; the hat, which has no")
+    w(" * body entries, takes the undershirt's). kVscKeepCart lists")
     w(" * the entries held back from every row (port/tools/bro_groups_keep.json).")
     w(" *")
     w(" * COVERAGE (label palette entries / texels drawn with them):")
     for ci, chr_name in enumerate(CHARS):
-        for c in (CAT_HAT, CAT_OVERALLS, CAT_SHOES):
+        for c in PICKED:
             rs = [r for r in records if r["chr"] == ci and r["cat"] == c]
             w(" *   %-6s %-15s %s" % (chr_name, CAT_NAMES[c], ", ".join(
                 "%s %s %d/%d" % (r["label"], r["pal"], len(r["idx"]), int(r["drawn"] + 0.5)) for r in rs) or "-"))
@@ -310,12 +324,12 @@ def emit(records, cart, kept):
     w("")
     w("namespace vscg {")
     w("")
-    w("enum { CAT_HAT_UNDERSHIRT = 0, CAT_OVERALLS = 1, CAT_GLOVES = 2,")
-    w("       CAT_BUTTONS = 3, CAT_SHOES = 4, CAT_COUNT = 5 };")
+    w("enum { CAT_HAT = 0, CAT_OVERALLS = 1, CAT_GLOVES = 2,")
+    w("       CAT_BUTTONS = 3, CAT_SHOES = 4, CAT_UNDERSHIRT = 5, CAT_COUNT = 6 };")
     w("")
     w("struct Group {")
     w("    int         chr;    /* 0 Mario, 1 Luigi, 2 Wario */")
-    w("    int         cat;    /* 0..4, the category above */")
+    w("    int         cat;    /* 0..5, the category above */")
     w("    const char *file;   /* served BMD path, e.g. data/player/mario_model.bmd */")
     w("    const char *pal;    /* palette name inside that BMD, e.g. mario_body_pl */")
     w("    int         count;  /* number of entries */")
@@ -382,7 +396,7 @@ def main():
             CHARS[r["chr"]], CAT_NAMES[r["cat"]], r["label"], r["pal"], len(r["idx"]), r["seams"], r["main"],
             r["drawn"]), file=sys.stderr)
     for ci, chr_name in enumerate(CHARS):
-        for c in (CAT_HAT, CAT_OVERALLS, CAT_SHOES):
+        for c in PICKED:
             if not cart[ci][c]:
                 raise SystemExit("%s has no %s label in its body file" % (chr_name, CAT_NAMES[c]))
     with open(a.out, "w", encoding="ascii", newline="\n") as f:

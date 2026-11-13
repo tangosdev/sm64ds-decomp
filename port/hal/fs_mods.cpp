@@ -2041,7 +2041,11 @@ int g_pc_state;             /* 0 not tried, 1 loaded */
    first, through palette_open_named), or "Custom".
 
    CUSTOM is the player's own colours, `<who>_hat` `<who>_overalls`
-   `<who>_shoes` for the bros and `yoshi_body` `yoshi_shoes`, "RRGGBB". They land on
+   `<who>_shoes` `<who>_undershirt` for the bros and `yoshi_body` `yoshi_shoes`,
+   "RRGGBB". PALSPLIT1 (11-13): the undershirt is its own key from package 1.2;
+   until the player has a value of his own for it (an older package has no
+   such key, and a 1.2 package's spec default is not his), the undershirt
+   wears the hat's colour, as it did when the two were one pick. They land on
    exactly the palette entries an online pick lands on, with the same
    arithmetic: the bros through the category table hal/vs_char_groups.h and
    vspal::char_recolor_palette, group by group in the table's order, as
@@ -2064,17 +2068,17 @@ struct CpMod {
     int state;              /* 0 not read, 1 read */
     int on;                 /* the mod is in the list */
     char choice[PC_COUNT][96];
-    long rgb[PC_COUNT][3];  /* Custom colours, 0xRRGGBB; -1 = unset */
+    long rgb[PC_COUNT][4];  /* Custom colours, 0xRRGGBB; -1 = unset (part 3, the undershirt: unset wears the hat) */
 };
 struct CpMod g_cpm;
 int g_pc_any = -1;
 
 const char *const CP_CHOICE_KEY[PC_COUNT] = { "mario", "luigi", "wario", "yoshi" };
-const char *const CP_PART_KEY[PC_COUNT][3] = {
-    { "mario_hat", "mario_overalls", "mario_shoes" },
-    { "luigi_hat", "luigi_overalls", "luigi_shoes" },
-    { "wario_hat", "wario_overalls", "wario_shoes" },
-    { "yoshi_body", "yoshi_shoes", 0 },
+const char *const CP_PART_KEY[PC_COUNT][4] = {
+    { "mario_hat", "mario_overalls", "mario_shoes", "mario_undershirt" },
+    { "luigi_hat", "luigi_overalls", "luigi_shoes", "luigi_undershirt" },
+    { "wario_hat", "wario_overalls", "wario_shoes", "wario_undershirt" },
+    { "yoshi_body", "yoshi_shoes", 0, 0 },
 };
 
 void cp_mod_read(void)
@@ -2085,7 +2089,7 @@ void cp_mod_read(void)
         return;
     g_cpm.state = 1;
     for (int c = 0; c < PC_COUNT; ++c)
-        for (int k = 0; k < 3; ++k)
+        for (int k = 0; k < 4; ++k)
             g_cpm.rgb[c][k] = -1;
     i = cm_index(CM_PALETTES);
     if (i < 0)
@@ -2096,11 +2100,15 @@ void cp_mod_read(void)
     for (int c = 0; c < PC_COUNT; ++c) {
         modval::value(spec, vals, CP_CHOICE_KEY[c], g_cpm.choice[c],
                       sizeof g_cpm.choice[c]);
-        for (int k = 0; k < 3; ++k) {
+        for (int k = 0; k < 4; ++k) {
             char hex[16];
+            int got;
             if (!CP_PART_KEY[c][k])
                 continue;
-            if (modval::value(spec, vals, CP_PART_KEY[c][k], hex, sizeof hex))
+            got = modval::value(spec, vals, CP_PART_KEY[c][k], hex, sizeof hex);
+            if (k == 3 && got != 2)
+                continue;               /* PALSPLIT1: not his own undershirt yet: it wears the hat */
+            if (got)
                 g_cpm.rgb[c][k] = modval::hex6(hex);
             if (g_cpm.rgb[c][k] < 0 && hex[0])
                 fprintf(stderr, "[mods] %s: %s \"%s\" is not RRGGBB; that "
@@ -2290,14 +2298,24 @@ unsigned long cp_wire555(unsigned long rgb)
            ((unsigned long)((g << 3) | (g >> 2)) << 8) | ((b << 3) | (b >> 2));
 }
 
-/* The picker row (0 hat + undershirt, 1 overalls, 2 shoes) a category of
+/* The picker row (0 hat, 1 overalls, 2 shoes, 3 undershirt) a category of
    hal/vs_char_groups.h answers to, or -1 (gloves, buttons: never picked). */
 int cp_row_of_cat(int cat)
 {
-    if (cat == vscg::CAT_HAT_UNDERSHIRT) return 0;
+    if (cat == vscg::CAT_HAT) return 0;
     if (cat == vscg::CAT_OVERALLS) return 1;
     if (cat == vscg::CAT_SHOES) return 2;
+    if (cat == vscg::CAT_UNDERSHIRT) return 3;
     return -1;
+}
+
+/* A bro's Custom colour for picker row r, the undershirt wearing the hat while
+   it has none of its own (PALSPLIT1); -1 = unset. */
+long cp_bro_rgb(int c, int r)
+{
+    if (r == 3 && g_cpm.rgb[c][3] < 0)
+        r = 0;
+    return g_cpm.rgb[c][r];
 }
 
 /* Custom for a bro: one record per (file, palette) the category table names
@@ -2321,7 +2339,7 @@ int pc_build_bro(int c, const char **why)
         pick[g] = -1;
         if (r < 0)
             continue;
-        v = g_cpm.rgb[c][r];
+        v = cp_bro_rgb(c, r);
         if (v < 0 || cp_q555((unsigned long)v) ==
                          cp_q555(vscg::kBroCart[c][G->cat]))
             continue;
@@ -2430,10 +2448,13 @@ void pc_custom(int c)
                     g_pc[c].npatch);
         } else
             fprintf(stderr, "[mods] %s Custom: hat %06lX overalls %06lX "
-                            "shoes %06lX, %u record(s)\n", CP_LOG_KEY[c],
+                            "shoes %06lX undershirt %06lX%s, %u record(s)\n",
+                    CP_LOG_KEY[c],
                     (unsigned long)(g_cpm.rgb[c][0] & 0xFFFFFF),
                     (unsigned long)(g_cpm.rgb[c][1] & 0xFFFFFF),
                     (unsigned long)(g_cpm.rgb[c][2] & 0xFFFFFF),
+                    (unsigned long)(cp_bro_rgb(c, 3) & 0xFFFFFF),
+                    g_cpm.rgb[c][3] < 0 ? " (the hat's)" : "",
                     g_pc[c].npatch);
     } else if (got == 2) {
         fprintf(stderr, "[mods] %s Custom: %s; %s keeps the ROM's colors\n",
@@ -2959,19 +2980,22 @@ u32 vs_colors_filter(unsigned fileID, u8 **data, u32 size)
    Wario) in VS by category. It mirrors SM64DS_VS_COLORS / SM64DS_VS_CHARS: comma
    separated fields in SLOT order, EXACTLY 3 commas (four fields) OR 15 (sixteen).
    Each field is either empty (that slot's character keeps its ROM colours) or a
-   run of FIVE colon-separated categories, in Tango's order:
+   run of FIVE or SIX colon-separated categories, in Tango's order:
 
-       hat_undershirt : overalls : gloves : buttons : shoes
+       hat : overalls : gloves : buttons : shoes [ : undershirt ]
 
-   so exactly four colons per non-empty field. Each category is empty (leave that
+   so four or five colons per non-empty field. Five is the grammar from before
+   PALSPLIT1 (11-13), when the hat and the undershirt were one category: the hat
+   field then recolours both, as it did. With six, the undershirt is its own. Each category is empty (leave that
    part on the ROM) or six hex digits (recolour it toward that colour). Example,
    a Mario slot recolouring only overalls green and gloves red:
        ":00ff00:ff0000::"
    A whole field ":", i.e. all five empty, is legal and recolours nothing.
 
-   HAT + UNDERSHIRT ARE ONE CATEGORY (Tango's tie). The hat lives in the head
-   BMD and the undershirt in the body BMD, so one picked colour drives a family
-   transform in each file, each shaded from its own main tone. The membership
+   HAT AND UNDERSHIRT ARE TWO CATEGORIES since PALSPLIT1 (they were one, Tango's
+   tie of 10-13, until he asked for them apart on 11-13). The hat lives in the
+   head BMD and the undershirt in the body BMD; each picked colour drives a
+   family transform in its own file, shaded from that file's main tone. The membership
    is vs_char_groups.h, generated from the cartridge files themselves
    (port/tools/gen_vs_char_groups.py: every entry of every bro palette
    classified by colour and by where its texels sit; run after093 BROCOLOR1).
@@ -3048,8 +3072,9 @@ void vcc_parse_chars(void)
 }
 
 /* Parse one SM64DS_VS_CHAR_COLORS field into a VccSpec. "" is a slot with no
-   recolour and is not an error. Otherwise exactly five colon-separated
-   categories, each "" or six hex digits. 0 means the WHOLE variable is bad. */
+   recolour and is not an error. Otherwise five or six colon-separated
+   categories, each "" or six hex digits; five gives the undershirt the hat's
+   (the grammar from before the split). 0 means the WHOLE variable is bad. */
 int vcc_field(const char *f, unsigned n, VccSpec *out)
 {
     for (int c = 0; c < vscg::CAT_COUNT; ++c) out->set[c] = 0;
@@ -3075,6 +3100,13 @@ int vcc_field(const char *f, unsigned n, VccSpec *out)
             start = i + 1;
         }
     }
+    if (part == (unsigned)vscg::CAT_COUNT - 1) {
+        /* PALSPLIT1: the five-field grammar: the hat field is the undershirt too */
+        out->set[vscg::CAT_UNDERSHIRT] = out->set[vscg::CAT_HAT];
+        for (int k = 0; k < 3; ++k)
+            out->col[vscg::CAT_UNDERSHIRT][k] = out->col[vscg::CAT_HAT][k];
+        return 1;
+    }
     if (part != (unsigned)vscg::CAT_COUNT)
         return 0;                            /* too few colons */
     return 1;
@@ -3083,7 +3115,7 @@ int vcc_field(const char *f, unsigned n, VccSpec *out)
 void vcc_parse(void)
 {
     static const char *const kCat[vscg::CAT_COUNT] = {
-        "hat+undershirt", "overalls", "gloves", "buttons", "shoes"
+        "hat", "overalls", "gloves", "buttons", "shoes", "undershirt"
     };
     static const char *const kName[3] = { "Mario", "Luigi", "Wario" };
     const char *e = getenv("SM64DS_VS_CHAR_COLORS");
@@ -3094,9 +3126,9 @@ void vcc_parse(void)
     if (!e)
         return;                              /* absent: common case, silent */
     len = (unsigned)strlen(e);
-    /* widest field is 5*6 + 4 colons = 34; sixteen of them plus 15 commas is
-       559. narrow is 4*34 + 3 = 139. the comma count decides which. */
-    if (len < 1 || len > 559) {
+    /* widest field is 6*6 + 5 colons = 41; sixteen of them plus 15 commas is
+       671. narrow is 4*41 + 3 = 167. the comma count decides which. */
+    if (len < 1 || len > 671) {
         fprintf(stderr, "[mods] SM64DS_VS_CHAR_COLORS ignored: %u bytes, out of "
                         "the contract's range\n", len);
         return;
@@ -3131,9 +3163,9 @@ void vcc_parse(void)
             VccSpec s;
             if (!vcc_field(e + start, i - start, &s)) {
                 fprintf(stderr, "[mods] SM64DS_VS_CHAR_COLORS ignored: field %u "
-                                "is neither empty nor five colon-separated "
-                                "categories (hat:overalls:gloves:buttons:shoes)"
-                                "\n", slot);
+                                "is neither empty nor five or six colon-separated "
+                                "categories (hat:overalls:gloves:buttons:shoes"
+                                "[:undershirt])\n", slot);
                 for (int k = 0; k < kPortMaxPlayers; ++k) g_vcc[k].any = 0;
                 return;
             }
@@ -3278,7 +3310,7 @@ u32 vs_char_colors_filter(unsigned fileID, u8 **data, u32 size)
             continue;
         static const char *const kName[3] = { "Mario", "Luigi", "Wario" };
         static const char *const kCat[vscg::CAT_COUNT] = {
-            "hat+undershirt", "overalls", "gloves", "buttons", "shoes"
+            "hat", "overalls", "gloves", "buttons", "shoes", "undershirt"
         };
         if (why)
             fprintf(stderr, "[mods] SM64DS_VS_CHAR_COLORS: %s %s '%s' REFUSED: "
@@ -3608,21 +3640,24 @@ extern "C" void port_fs_mods_relatch_reset(void)
 }
 
 /* BROSCOLOR1 (run coopfix1): the character-palettes mod's Custom colour for one bro part (chr 0 Mario 1 Luigi 2 Wario; part 0 HAT
-   1 OVERALLS 2 SHOES), when the mod is on and that bro's choice is Custom; 0 otherwise. Asked whatever the session is: in a
+   1 OVERALLS 2 SHOES 3 UNDERSHIRT, which wears the hat while it has no value of its own: PALSPLIT1), when the mod is on and that
+   bro's choice is Custom; 0 otherwise. Asked whatever the session is: in a
    multiplayer run Custom stands down here (it would recolour every body wearing the file), and the room's picks
    (hal/bro_colors.cpp port_bro_my_row) start from this answer when the player has no online pick of his own for that bro, so the
    colours he chose in the mod are the ones he wears in a coop room by default. */
 extern "C" int port_fs_mods_bro_custom(int chr, int part, unsigned *rgb)
 {
     int row = 0;
-    if (chr < 0 || chr > 2 || part < 0 || part > 2)
+    long v;
+    if (chr < 0 || chr > 2 || part < 0 || part > 3)
         return 0;
     cp_mod_read();
     if (!g_cpm.on || modval::choice_kind(g_cpm.choice[chr], 0, &row) != modval::CP_CUSTOM)
         return 0;
-    if (g_cpm.rgb[chr][part] < 0)
+    v = cp_bro_rgb(chr, part);
+    if (v < 0)
         return 0;
     if (rgb)
-        *rgb = (unsigned)g_cpm.rgb[chr][part] & 0xFFFFFFu;
+        *rgb = (unsigned)v & 0xFFFFFFu;
     return 1;
 }
