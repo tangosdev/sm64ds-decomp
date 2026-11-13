@@ -196,14 +196,14 @@ void daGrock_c::HandleMeshCollision() {
             Particle::System::NewSimple(kPtclBigSteelieBounce, pos.x, pos.y, pos.z);
             func_0201267c(0x48, &mCamSpacePos);
         } else {
-            mDustParticleID = (int)Particle::System::New(mDustParticleID, kPtclBigSteelieRollDust,
-                                                         pos.x, pos.y, pos.z, 0, 0);
+            mDustParticleID = Particle::System::New(mDustParticleID, kPtclBigSteelieRollDust, pos.x,
+                                                    pos.y, pos.z, 0, 0);
             mRollSoundID = Sound::PlayLong(mRollSoundID, 3, 0x8a, mCamSpacePos, 0);
         }
         mSpeedX += normal.x * 5;
         mSpeedZ += normal.z * 5;
         mHorzSpeed = Vec3_HorzLen(reinterpret_cast<const Vector3 *>(&mSpeedX));
-        mPrevAngleY = (s16)cstd::atan2(mSpeedX, mSpeedZ);
+        mPrevAngleY = cstd::atan2(mSpeedX, mSpeedZ);
         if (mHorzSpeed >= 0x22000) {
             mHorzSpeed = 0x22000;
             mSpeedX = FX_SinIdx((u16)mPrevAngleY >> 4) * 0x22;
