@@ -34,7 +34,7 @@ typedef struct TexAnim {
 extern Vector3s data_02099fc4;
 extern void VEC_Fx16Normalize(void *a, Vector3s *b);
 extern Node *func_0204d958(List *list);
-extern void func_0204d9a0(List *list, Node *node);
+extern void func_0204d9a0(ParticleList *list, Node *node);
 extern void SPLRandom_VecFx32(Vector3 *out);
 extern void SPLRandom_VecFx32_XY(Vector3 *out);
 struct Vector3;
@@ -77,27 +77,27 @@ void func_0204cebc(ParticleSystem *sys) {
     sys->basisV.z = (s16)(FX_MUL(vecB.x, sys->basisU.y) - FX_MUL(vecB.y, sys->basisU.x));
 }
 
-void func_0204cd5c(int *out, int *in, int sel, ParticleSystem *sys) {
+void func_0204cd5c(Vector3 *out, Vector3 *in, int sel, ParticleSystem *sys) {
     switch (sel) {
     case 2:
-        out[0] = 0;
-        out[1] = in[0];
-        out[2] = in[1];
+        out->x = 0;
+        out->y = in->x;
+        out->z = in->y;
         break;
     case 1:
-        out[0] = in[1];
-        out[1] = 0;
-        out[2] = in[0];
+        out->x = in->y;
+        out->y = 0;
+        out->z = in->x;
         break;
     case 0:
-        out[0] = in[0];
-        out[1] = in[1];
-        out[2] = 0;
+        out->x = in->x;
+        out->y = in->y;
+        out->z = 0;
         break;
     case 3:
-        out[0] = FX_MUL(in[0], sys->basisU.x) + FX_MUL(in[1], sys->basisV.x);
-        out[1] = FX_MUL(in[0], sys->basisU.y) + FX_MUL(in[1], sys->basisV.y);
-        out[2] = FX_MUL(in[0], sys->basisU.z) + FX_MUL(in[1], sys->basisV.z);
+        out->x = FX_MUL(in->x, sys->basisU.x) + FX_MUL(in->y, sys->basisV.x);
+        out->y = FX_MUL(in->x, sys->basisU.y) + FX_MUL(in->y, sys->basisV.y);
+        out->z = FX_MUL(in->x, sys->basisU.z) + FX_MUL(in->y, sys->basisV.z);
         break;
     }
 }
@@ -136,7 +136,7 @@ void func_0204c584(ParticleSystem *sys, List *list) {
         p = (ParticleElement *)func_0204d958(list);
         if (p == 0)
             return;
-        func_0204d9a0((List *)&sys->particles, (Node *)p);
+        func_0204d9a0(&sys->particles, (Node *)p);
         switch (def->emissionType) {
         case 0:
             p->offset.x = p->offset.y = p->offset.z = 0;
@@ -151,7 +151,7 @@ void func_0204c584(ParticleSystem *sys, List *list) {
             SPLRandom_VecFx32_XY(&vecB);
             vecB.x = FX_MUL(vecB.x, sys->emitRadius);
             vecB.y = FX_MUL(vecB.y, sys->emitRadius);
-            func_0204cd5c((int *)&p->offset, (int *)&vecB, def->circleAxis, sys);
+            func_0204cd5c(&p->offset, &vecB, def->circleAxis, sys);
             break;
         case 3: {
             int q = ringAngle / count;
@@ -162,7 +162,7 @@ void func_0204c584(ParticleSystem *sys, List *list) {
             vecC.x = FMul(s, sys->emitRadius);
             vecC.y = FMul(c, sys->emitRadius);
             vecC.z = 0;
-            func_0204cd5c((int *)&p->offset, (int *)&vecC, def->circleAxis, sys);
+            func_0204cd5c(&p->offset, &vecC, def->circleAxis, sys);
             break;
         }
         case 4:
@@ -175,7 +175,7 @@ void func_0204c584(ParticleSystem *sys, List *list) {
             SPLRandom_VecFx32_XY(&vecE);
             vecE.x = FMul(FMul(vecE.x, sys->emitRadius), RandScale());
             vecE.y = FMul(FMul(vecE.y, sys->emitRadius), RandScale());
-            func_0204cd5c((int *)&p->offset, (int *)&vecE, def->circleAxis, sys);
+            func_0204cd5c(&p->offset, &vecE, def->circleAxis, sys);
             break;
         }
         {
