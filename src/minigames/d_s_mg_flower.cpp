@@ -222,7 +222,8 @@ s32 dScMgFlower_c::Render() {
 
     for (i = 0; i < 0x16; i++) {
         if (mPetals[i].active != 0) {
-            struct SpriteAttr attr = *(struct SpriteAttr *)data_ov006_0213abe0;
+            SpriteAttr *spriteTemplate = (SpriteAttr *)data_ov006_0213abe0;
+            struct SpriteAttr attr = *spriteTemplate;
             int palette = 1;
             attr.a = (attr.a & 0xc1fffcff) | 0x100;
             if (mHeldPetal == i)
