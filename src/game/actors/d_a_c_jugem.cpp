@@ -103,10 +103,9 @@ struct JugemVec3 {
     }
     JugemVec3(int a, int b, long c)
     {
-        volatile int *p = (volatile int *)&x;
-        p[0] = a;
-        p[1] = b;
-        p[2] = (int)c;
+        x = a;
+        y = b;
+        z = (int)c;
     }
     ~JugemVec3();
 };
@@ -211,7 +210,7 @@ int daC_Jugem_c::StateIntroMain() {
     mTimer++;
     if (mTimer > 0x64) {
         if (Sound::PlaySub(0x4b, 0x7f, 0, 0x7222, false) != 0) {
-            *(int *)&cam->mFlags &= ~8;
+            cam->mFlags &= ~8;
             mHorzSpeed = 0;
             mTimer = 0;
             mAuxCounter = 0;
