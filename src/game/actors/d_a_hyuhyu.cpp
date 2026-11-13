@@ -184,7 +184,7 @@ int daHyuhyu_c::Behavior() {
         return 1;
     }
 
-    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     {
         daHyuhyu_c_State *state = mState;
         if (state->execute != 0)
