@@ -169,7 +169,7 @@ int daObjSwitch_c::InitResources()
     idx = mResourceIdx;
     f = dBgW_Kc::LoadFile(*data_ov002_021098e8[idx].collision);
     mMeshCollider.SetFile((KCL_File *)(f), mClsnMat, 0x199, mAngleY,
-                          *(CLPS_Block *)(data_ov002_021098e8[idx].clps));
+                          *data_ov002_021098e8[idx].clps);
 
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
 
