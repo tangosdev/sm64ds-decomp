@@ -136,6 +136,7 @@ void daTor_c::State1()
     mHorzSpeed = 0x14000;
 
     daPly_c *player = ClosestPlayer();
+    // goto: early return, else-at-end, switch still DIFF State1
     if (player == 0)
         goto null_player;
 
@@ -160,12 +161,11 @@ void daTor_c::State1()
         if (Vec3_HorzDist(&mHomePos, &mPos) < 0xc8000)
             mState = 2;
     }
-    goto cont;
 
+    goto cont;
 null_player:
     mState = 2;
     return;
-
 cont:
     if (Vec3_Dist(&mPos, &playerPos) > 0xbb8000 || mChaseTimer >= 0x384)
         mState = 2;
