@@ -66,6 +66,15 @@ struct TouchInfo {
 };
 
 extern "C" {
+/* "#if defined", not "#ifdef": port/tools/hostgen.py MSC_ARMS_BOTH reads an "#ifdef _MSC_VER" as the start of a two-arm block. */
+#if defined(_MSC_VER)
+/* PC port, single player (lane EXITPAINT1): EXIT COURSE LEAVES THROUGH THE PAINTING. PS_Update case 0x13 below is the pause
+   menu's Exit Course, which the cartridge always sends to the castle's first floor, entrance 0 (the star rug). When the player
+   asked for it (setting ExitToPainting, hal/exit_paint.cpp) the hook makes the same no-return load to the place a death in
+   this course returns to, so the player jumps out of the course's painting, and answers 1. Null, or 0, is the cartridge. */
+extern "C" int (*port_exit_course_hook)(void);
+extern "C" int (*port_exit_course_hook)(void) = 0;
+#endif
 int IsButtonInputValid(void);
 int SublevelToLevel(int lv);
 int GetOwnerLanguage(void);
@@ -2468,6 +2477,9 @@ void dScStage_c::PS_Update()
             data_0209b464 = data_0209b454;
             return;
         }
+#if defined(_MSC_VER)
+        if (!port_exit_course_hook || !port_exit_course_hook())
+#endif
         LoadLevelNoReturn(2, 0, -1, 0);
         data_0209b454 |= 0x40000000;
         data_0209b464 = data_0209b454;

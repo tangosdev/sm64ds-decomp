@@ -1209,6 +1209,10 @@ int host_setting_set_skip_opening(int on);
    out (talk and save prompt, then play on). Live. */
 int host_setting_stay_after_star(void);
 int host_setting_set_stay_after_star(int on);
+/* EXITPAINT1: ExitToPainting, bool, OFF by default: in single player the pause menu's Exit Course lands at the course's painting
+   (where a lost life lands, the plain jump-out) instead of the star rug. Live. */
+int host_setting_exit_to_painting(void);
+int host_setting_set_exit_to_painting(int on);
 
 #ifdef __cplusplus
 }

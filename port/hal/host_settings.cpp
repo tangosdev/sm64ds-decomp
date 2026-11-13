@@ -972,6 +972,9 @@ int g_skip_opening = 0;
 /* STAYCOURSE1: StayAfterStar, 1 keeps a single player in the course after a power star (the star's talk and save prompt, as the
    castle's stars do, then play on; hal/star_stay.cpp says where); 0 (the default) is the DS. Single player only. Read live. */
 int g_stay_after_star = 0;
+/* EXITPAINT1: ExitToPainting, 1 sends a single player's Exit Course to the course's painting (where a lost life lands, the plain
+   jump-out; hal/exit_paint.cpp says where); 0 (the default) is the DS, the star rug. Single player only. Read live. */
+int g_exit_to_painting = 0;
 char g_online_name[20];      /* PROFILE1: OnlineName, "" until the player set one */
 int g_online_have = 0;       /* PROFILE1: 1 once the player has picked colours (OnlineBodyColor / OnlineShoeColor, or the old OnlineYoshiColor index mapped) */
 /* BROCOLOR1: OnlineMarioHat ... OnlineWarioShoes, 0xRRGGBB; PALSPLIT1 adds the undershirt as a fourth key per bro
@@ -1674,6 +1677,7 @@ void load_once(void)
     g_keep_lives = 0;
     g_skip_opening = 0;
     g_stay_after_star = 0;
+    g_exit_to_painting = 0;
     g_online_name[0] = '\0';
     g_online_have = 0;
     g_online_migrate = 0;
@@ -1898,6 +1902,7 @@ void load_once(void)
         g_keep_lives = json_bool(text, "KeepLives", 0);
         g_skip_opening = json_bool(text, "SkipOpening", 0);
         g_stay_after_star = json_bool(text, "StayAfterStar", 0);
+        g_exit_to_painting = json_bool(text, "ExitToPainting", 0);
         /* PROFILE1: the player's Adventure Online name and Yoshi colour. The name is cleaned the way the popup writes it. */
         {
             char nm[40];
@@ -2696,6 +2701,14 @@ int reload_live(const char *text)
             g_stay_after_star = sa;
             changed = 1;
             fprintf(stderr, "[settings] live re-read: StayAfterStar %s\n", sa ? "ON" : "off");
+        }
+    }
+    {
+        const int ep = json_bool(text, "ExitToPainting", g_exit_to_painting);
+        if (ep != g_exit_to_painting) {
+            g_exit_to_painting = ep;
+            changed = 1;
+            fprintf(stderr, "[settings] live re-read: ExitToPainting %s\n", ep ? "ON" : "off");
         }
     }
     {
@@ -4980,5 +4993,22 @@ extern "C" int host_setting_set_stay_after_star(int on)
     g_stay_after_star = on;
     g_poll_flag = 1;
     queue_bool("StayAfterStar", on);
+    return 1;
+}
+
+/* EXITPAINT1: ExitToPainting. Read by hal/exit_paint.cpp (single player only). */
+extern "C" int host_setting_exit_to_painting(void)
+{
+    load_once();
+    return g_exit_to_painting;
+}
+
+extern "C" int host_setting_set_exit_to_painting(int on)
+{
+    load_once();
+    on = on ? 1 : 0;
+    g_exit_to_painting = on;
+    g_poll_flag = 1;
+    queue_bool("ExitToPainting", on);
     return 1;
 }

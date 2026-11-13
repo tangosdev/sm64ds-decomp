@@ -718,6 +718,7 @@ const Row ROWS_CHEATS[] = {
     { R_CHECK, "Debug menu", SL_DEBUG_MENU, -1, 0, 0, 0 },
     { R_CHECK, "Custom characters from the start", SL_CHARS_FROM_START, -1, 0, 0, 0 },
     { R_CHECK, "Character select on star select", SL_CHARACTER_STRIP, -1, 0, 0, 0 },
+    { R_CHECK, "Exit Course from the painting", SL_EXIT_TO_PAINTING, -1, 0, 0, 0 },   /* EXITPAINT1: single player only */
     { R_NOTE, "These change how the game plays. Off is the DS.", -1, -1, 0, 0, 0 },
 };
 const Row ROWS_SOUND[] = {
