@@ -9,7 +9,7 @@ extern "C" {
  * pull the eye to distance 0x80000 (ApproachDist). */
 int func_02005098(dCamera_c *cam) {
     daPly_c *player = (daPly_c *)cam->mTargetPlayer;
-    cam->func_0200bec4((int *)&player->mPos, player->mGroundY, (char *)cam->mMode, 0x20000);
+    cam->func_0200bec4(&player->mPos.x, player->mGroundY, (char *)cam->mMode, 0x20000);
     cam->ApproachDist(0x80000);
     return 1;
 }
