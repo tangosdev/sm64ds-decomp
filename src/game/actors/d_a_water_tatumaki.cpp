@@ -294,7 +294,7 @@ int daWater_Tatumaki_c::Render() {
 }
 
 int daWater_Tatumaki_c::Behavior() {
-    DecIfAbove0_Short((u16 *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     if (mState->execute != 0) {
         (this->*mState->execute)();
     }
@@ -320,7 +320,8 @@ int daWater_Tatumaki_c::InitResources() {
 
     dExtFrameCtrl_c::LoadFile(gWaterTatumakiAnimationFile);
 
-    dExtAnmTexSRT_c::Prepare(*(BMD_File *)gWaterTatumakiModelFile.filePtr, WHIRLPOOL_BTA);
+    BMD_File *loadedModel = (BMD_File *)gWaterTatumakiModelFile.filePtr;
+    dExtAnmTexSRT_c::Prepare(*loadedModel, WHIRLPOOL_BTA);
     mTextureTransformer.SetFile(WHIRLPOOL_BTA, 0, kAnimSpeed, 0);
 
     mTextureTransformer.speed = kAnimSpeed;
