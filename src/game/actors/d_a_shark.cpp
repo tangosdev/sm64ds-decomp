@@ -150,7 +150,7 @@ int daShark_c::StateSwim(daShark_c *self) {
     if (frame == 0)
         func_02012694(9, &self->mCamSpacePosX);
     self->mAnmModel.speed = 0x1000;
-    static_cast<dExtFrameCtrl_c &>(self->mAnmModel).Advance();
+    self->mAnmModel.Advance();
     self->CheckPlayerHit();
     return 1;
 }
@@ -198,7 +198,7 @@ int daShark_c::Render() {
 }
 
 int daShark_c::Behavior() {
-    DecIfAbove0_Short((u16 *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     {
         SharkState *state = (SharkState *)mState;
         if (state->update != 0)
