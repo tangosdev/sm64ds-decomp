@@ -1243,7 +1243,9 @@ void cdskin_panel_draw(uint32_t *px, int stride, int w, int h, const CpGeom *gp,
     f.u = g.k * 0.5f;
     const float k = g.k;
     auto K = [&](float v) { return (int)(v * k + 0.5f); };
-    const int ps = k * 0.75f < 1 ? 1 : (int)(k * 0.75f);         /* picture pixels per plate art pixel */
+    /* picture pixels per plate art pixel: half a unit, whole pixels (1 at 384 rows, 2 at 768, 3 at 1152), so the plate's edge keeps the
+       weight it has on the 384 row picture at every size (CHARSEL2 fix3; it was three quarters of a unit, heavier on big pictures) */
+    const int ps = k * 0.5f < 1 ? 1 : (int)(k * 0.5f);
     const bool out = g.px < w;
     /* the tab first: the panel lies over its right end, so the tab reads as the panel's own handle */
     {
@@ -1286,7 +1288,14 @@ void cdskin_panel_draw(uint32_t *px, int stride, int w, int h, const CpGeom *gp,
         if (const Piece *p = plate_piece(PV_TRAY, g.pw, g.ph + 2 * ps, ps)) blit(s, g.px, g.py, *p);
     }
     const int lit = focus >= 0 ? focus : hover;
-    const int inset = (int)(2.5f * k + 0.5f);                    /* the head's box is the button less this on every side */
+    /* CHARSEL2 fix3: THE HEAD'S BOX. The plate's face is not even all round: inside its olive edge the art has an inset shadow along the top
+       (2 edge rows, 2 dark, 2 + 1 shaded: the clean cream starts at art row 7) and the left (cream from column 5), and only the edge on the
+       right (3 columns) and the bottom (2 rows). The heads were centred on the button's outline, so they sat over the top shading with spare
+       cream under them: too high, and a little left. They are now fitted to the CLEAN CREAM (the button less those borders) less an even
+       gap, so the cream left over is the same above and below, and left and right. The wooden look keeps the button less 2.5 units. */
+    const int gap = ps;                                          /* half a unit of cream between the head's box and the borders */
+    const int in_l = wood ? (int)(2.5f * k + 0.5f) : 5 * ps + gap, in_r = wood ? in_l : 3 * ps + gap;
+    const int in_t = wood ? in_l : 7 * ps + gap, in_b = wood ? in_l : 2 * ps + gap;
     static int traced_w, traced_h, traced_n, traced_lit = -2, traced_cur = -2, traced_px;
     int cur_i = -1;
     for (int i = 0; i < n && i < g.n; ++i) if (it[i].current) cur_i = i;
@@ -1320,12 +1329,12 @@ void cdskin_panel_draw(uint32_t *px, int stride, int w, int h, const CpGeom *gp,
         int id = 0;
         if (const Img *I = panel_icon_for(m, &id)) {
             int ox = 0, oy = 0;
-            const int bw = g.sw - 2 * inset, bh = g.sh - 2 * inset;
+            const int bw = g.sw - in_l - in_r, bh = g.sh - in_t - in_b;
             if (const Piece *p = fit_box(id, *I, bw, bh, &ox, &oy)) {
-                blit(s, x + inset + ox, y + inset + oy, *p);
-                if (tr_now) fprintf(stderr, "[charpanel] geom slot %d (%s): button x %d..%d y %d..%d, head x %d..%d y %d..%d, margins L %d R %d T %d B %d\n", i, m.label,
-                                    x, x + g.sw, y, y + g.sh, x + inset + ox, x + inset + ox + p->w, y + inset + oy, y + inset + oy + p->h,
-                                    inset + ox, g.sw - inset - ox - p->w, inset + oy, g.sh - inset - oy - p->h);
+                blit(s, x + in_l + ox, y + in_t + oy, *p);
+                if (tr_now) fprintf(stderr, "[charpanel] geom slot %d (%s): button x %d..%d y %d..%d, head x %d..%d y %d..%d, clean cream left over L %d R %d T %d B %d\n", i, m.label,
+                                    x, x + g.sw, y, y + g.sh, x + in_l + ox, x + in_l + ox + p->w, y + in_t + oy, y + in_t + oy + p->h,
+                                    gap + ox, gap + bw - ox - p->w, gap + oy, gap + bh - oy - p->h);
             }
         }
         /* the chosen mark: the HUD's own power star on the button's top right corner, over the edge; it never moves the head */
