@@ -1009,7 +1009,10 @@ void compute_layout(int w, int h)
         if (top < S.scroll) S.scroll = top;
         if (bot > S.scroll + vis) S.scroll = bot - vis;
         S.ensure_vis = 0;
-    } else if (S.ensure_vis) S.ensure_vis = 0;
+    } else if (S.ensure_vis) {   /* STAYCOURSE1: the Reset plank: the list's end, so a closing note under the last row shows too */
+        S.scroll = L.scroll_max;
+        S.ensure_vis = 0;
+    }
     if (S.scroll > L.scroll_max) S.scroll = L.scroll_max;
     if (S.scroll < 0) S.scroll = 0;
     for (int i = 0; i < n && i < MAXR; ++i) { L.r[i].y = L.body[1] + i * L.rowh - S.scroll; L.r[i].h = L.rowh; }
