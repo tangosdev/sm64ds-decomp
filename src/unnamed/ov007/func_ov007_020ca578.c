@@ -20,7 +20,7 @@ void func_ov007_020ca578(Ov007Mesh *mesh, int i, int j, int t) {
     } else if (t <= 0) {
         val = lo;
     } else {
-        val = (int)(((s64)(0x1000 - t) * lo + (s64)t * hi) >> 0xc);
+        val = (((s64)(0x1000 - t) * lo + (s64)t * hi) >> 0xc);
     }
 
     lr->force.z += val;
