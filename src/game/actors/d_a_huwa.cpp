@@ -163,7 +163,7 @@ void daHuwa_c::HandleCylinderHit() {
     flags = mdCcAc_c.hitFlags;
     if ((flags & kHitMega) != 0) {
         int height;
-        knock.x = (short)-0x2000;
+        knock.x = -0x2000;
         knock.y = 0;
         knock.z = 0;
         height = OnAimedAtWithEgg();
@@ -292,8 +292,8 @@ int daHuwa_c::Behavior() {
         break;
     }
     case kStateRecoil:
-        *(unsigned short *)&mStateTimer += 1;
-        if (*(unsigned short *)&mStateTimer >= kRecoilFrames)
+        mStateTimer += 1;
+        if (mStateTimer >= kRecoilFrames)
             mState = kStateChase;
         break;
     }
