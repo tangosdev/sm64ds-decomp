@@ -212,8 +212,6 @@ void __timesdec(Decimal *result, const Decimal *x, const Decimal *y) {
             unsigned char *jp = ip + 1;
             for (; jp < ep; jp++) {
                 if (*jp != 0) {
-                    /* kept, as in MSL's timesdec: break + a jp test (0x1b4) or an
-                       inline predicate (0x1bc) both grow it */
                     goto round;
                 }
             }
@@ -244,9 +242,6 @@ void __str2dec(Decimal *result, const char *digits, short exp) {
         c = digits[1];
         digits++;
         while (c != 0) {
-            /* Kept goto: break plus a `c == 0` guard (+8), while (c == '0') (+4),
-               for (;;) with the return inside (-4), a duplicated call (+20) and
-               an inline must-round predicate (+12..+20) all change the object. */
             if (c != 0x30)
                 goto docall;
             c = *++digits;

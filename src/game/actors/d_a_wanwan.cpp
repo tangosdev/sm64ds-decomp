@@ -583,14 +583,11 @@ void daWanwan_c::PlayLandingEffects() {
  * accepts the no-control lock. */
 int daWanwan_c::TryStartReleaseCutscene() {
     daObjPile_c *stump = (daObjPile_c *)dActor_c::FindWithID((unsigned)mStumpUniqueID);
-    if (stump->mStepsLeft != 0)
-        goto fail;
-    if (ClosestPlayer()->SetNoControlState(4, -1, 0) == 0)
-        goto fail;
-    SetState(3);
-    mChainBroken = 1;
-    return 1;
-fail:
+    if (stump->mStepsLeft == 0 && ClosestPlayer()->SetNoControlState(4, -1, 0) != 0) {
+        SetState(3);
+        mChainBroken = 1;
+        return 1;
+    }
     return 0;
 }
 
@@ -744,12 +741,9 @@ int daWanwan_c::StateAttackMain() {
     int r = TryStartReleaseCutscene();
     if (r)
         return r;
-    if (Math_Function_0203b14c(&mChainExtension, kChainMax, 0x800, 0x10000, 0x800))
-        goto adv;
-    if (DecIfAbove0_Short(&mActionTimer))
-        goto adv;
-    SetState(1);
-adv:
+    if (!Math_Function_0203b14c(&mChainExtension, kChainMax, 0x800, 0x10000, 0x800) &&
+        !DecIfAbove0_Short(&mActionTimer))
+        SetState(1);
     static_cast<dExtFrameCtrl_c &>(mAnmModel).Advance();
 }
 

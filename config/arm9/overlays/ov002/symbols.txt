@@ -3605,7 +3605,6 @@ data_ov002_02110101 kind:bss addr:0x02110101
 data_ov002_0211010c kind:bss addr:0x0211010c
 data_ov002_02110124 kind:bss addr:0x02110124
 data_ov002_0211013c kind:bss addr:0x0211013c
-data_ov002_02110154 kind:bss addr:0x02110154
 _ZN7daPly_c7ST_WAITE kind:bss addr:0x02110154
 data_ov002_0211016c kind:bss addr:0x0211016c
 data_ov002_02110184 kind:bss addr:0x02110184
@@ -3617,7 +3616,6 @@ data_ov002_021101fc kind:bss addr:0x021101fc
 data_ov002_02110210 kind:bss addr:0x02110210
 data_ov002_02110214 kind:bss addr:0x02110214
 data_ov002_0211022c kind:bss addr:0x0211022c
-data_ov002_02110244 kind:bss addr:0x02110244
 _ZN7daPly_c6ST_OWLE kind:bss addr:0x02110244
 data_ov002_0211025c kind:bss addr:0x0211025c
 data_ov002_02110274 kind:bss addr:0x02110274

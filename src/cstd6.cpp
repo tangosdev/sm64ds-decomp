@@ -143,8 +143,6 @@ int strcmp(const char *a, const char *b) {
         wa = *(unsigned int *)a;
         t = (wa + 0xfefefeff) & 0x80808080;
         wb = *(unsigned int *)b;
-        /* scalar_reload gotos kept, as in MSL's strcmp: a while (t == 0) loop shrinks it
-           (0x12c) and break + retest grows it (0x13c) */
         if (t != 0)
             goto scalar_reload;
         while (wa == wb) {
@@ -157,6 +155,7 @@ int strcmp(const char *a, const char *b) {
         return (wa > wb) ? 1 : -1;
 
     scalar_reload:
+
         ca = *(unsigned char *)a;
         cb = *(unsigned char *)b;
         diff = (int)ca - (int)cb;

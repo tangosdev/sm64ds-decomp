@@ -604,7 +604,7 @@ void Ov007ItemView::ItemView_HandleTouch(void *arg1) {
     Ov007Touch *tp = (Ov007Touch *)arg1;
     int held = 0;
 
-    {
+    do {
         if (elem_selectable(elem) && func_ov007_020c1da0(0) == 0) {
             int armed = 0;
             int fresh = 0;
@@ -650,10 +650,9 @@ void Ov007ItemView::ItemView_HandleTouch(void *arg1) {
                         }
                     }
                 }
-                goto done; /* kept: an !armed test on HOLD (0x4a0) or an inline press helper re-lays it */
+                break;
             }
         }
-    }
 
     if (WORK->states[0]->currentState == 3) {
         /* Through arg0, not elem: reading it through elem lets the compiler
@@ -683,8 +682,8 @@ void Ov007ItemView::ItemView_HandleTouch(void *arg1) {
             }
         }
     }
+    } while (0);
 
-done:
     if (held == 0)
         elem->item->state->stateWork = 0;
     {

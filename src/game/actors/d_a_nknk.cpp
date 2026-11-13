@@ -24,10 +24,7 @@
 // - Vec3 / V3 below are local three-int aggregates. inline_fn() returns
 //   MATRIX_SCRATCH_PAPER; deleting its definition shifts the same @NNN
 //   temps by three (code bytes otherwise identical).
-// Inline definitions in Koopa.h, emitted here by the two factories:
-// - the `goto tail` chain in func_ov062_02117c98 keeps one shared tail call
-//   (func_ov002_020aea30 with &mWithMeshClsn) plus the conditional yaw flip;
-//   a structured duplicate of the tail was not verified byte-identical.
+// Inline definitions in Koopa.h, emitted here by the two factories.
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_a_nknk_AssetId {
     ASSET_NOKONOKO_BMD = 0x03ba,

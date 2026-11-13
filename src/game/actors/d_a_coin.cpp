@@ -866,40 +866,29 @@ s32 daCoin_c::InitResources()
         mVertAccel = -0x4000;
         mTerminalVelocity = -0x37000;
         *(u8 *)((int)&mCoinFlags) = (*(u8 *)((int)&mCoinFlags) & ~0xe0) | (FLOOR_NO_SHADOW << 5);
-        goto common;
-    }
-    if (behavior == 1 || behavior == 7) {
-        goto unprobedFloor;
-    }
-    if (behavior == 5) {
-        goto facing;
-    }
-    /* default */
-    mVertSpeed = 0x24000;
-    mCoinFlags |= 2;
-    goto gravity;
-facing:
-    {
-        u32 flags = param1;
-        if (flags & 8) {
-            mPrevAngleY = (s16)(((flags & 0x70) << 8) + 0x8000);
+    } else if (behavior != 1 && behavior != 7) {
+        if (behavior != 5) {
+            mVertSpeed = 0x24000;
+            mCoinFlags |= 2;
         } else {
-            mPrevAngleY = (s16)((flags & 0x70) << 8);
+            u32 flags = param1;
+            if (flags & 8) {
+                mPrevAngleY = (s16)(((flags & 0x70) << 8) + 0x8000);
+            } else {
+                mPrevAngleY = (s16)((flags & 0x70) << 8);
+            }
+        }
+        mVertAccel = -0x4000;
+        mTerminalVelocity = -0x37000;
+        mCoinFlags &= ~0xe0;
+    } else {
+        *(u8 *)((int)&mCoinFlags) = (*(u8 *)((int)&mCoinFlags) & ~0xe0) | (FLOOR_UNPROBED << 5);
+        mFloorPosY = mPosY - 0x1f4000;
+        if (mBehaviorType == 7) {
+            ccRadius = 0x32000;
+            ccHeight = 0x28000;
         }
     }
-gravity:
-    mVertAccel = -0x4000;
-    mTerminalVelocity = -0x37000;
-    mCoinFlags &= ~0xe0;
-    goto common;
-unprobedFloor:
-    *(u8 *)((int)&mCoinFlags) = (*(u8 *)((int)&mCoinFlags) & ~0xe0) | (FLOOR_UNPROBED << 5);
-    mFloorPosY = mPosY - 0x1f4000;
-    if (mBehaviorType == 7) {
-        ccRadius = 0x32000;
-        ccHeight = 0x28000;
-    }
-common:;
 
     mShadowMat = IDENTITY_MATRIX4X3;
 
@@ -969,10 +958,12 @@ common:;
     mWithMeshClsn.StartDetectingWater();
 
     behavior = mBehaviorType;
-    if (behavior == 8) {
-        mDisappearTimer = 0x2d;
-        mdCc_c.flags |= 1;
-    } else {
+    do {
+        if (behavior == 8) {
+            mDisappearTimer = 0x2d;
+            mdCc_c.flags |= 1;
+            break;
+        }
         if (behavior == 6) {
             int inMode1;
             inMode1 = gGameMode;
@@ -980,32 +971,28 @@ common:;
             if (inMode1 == 0) {
                 mDisappearTimer = 0xffffu;
                 mdCc_c.flags |= 1;
-                goto timerSet;
+                break;
             }
         }
         mDisappearTimer = 0xd2;
-    timerSet:;
-    }
+    } while (0);
 
     *(u8 *)((int)&mCoinFlags) = (*(u8 *)((int)&mCoinFlags) & ~1) | 1;
 
     behavior = mBehaviorType;
-    if (behavior == 1 || behavior == 7) {
-        goto floorBound;
-    }
-    if (behavior == 5) {
-        mNoClsnTimer = 0;
+    if (behavior != 1 && behavior != 7) {
+        if (behavior == 5) {
+            mNoClsnTimer = 0;
+        } else {
+            mNoClsnTimer = 0xf;
+        }
     } else {
-        mNoClsnTimer = 0xf;
+        mNoClsnTimer = 0;
+        if (mCoinType == COIN_BLUE && (u32)mSpawnFilter < 8) {
+            mCoinFlags &= ~1;
+            mdCc_c.flags |= 1;
+        }
     }
-    goto flagsDone;
-floorBound:
-    mNoClsnTimer = 0;
-    if (mCoinType == COIN_BLUE && (u32)mSpawnFilter < 8) {
-        mCoinFlags &= ~1;
-        mdCc_c.flags |= 1;
-    }
-flagsDone:;
 
     mCoinFlags &= ~0x1c;
     mPuzzleManagerID = 0;

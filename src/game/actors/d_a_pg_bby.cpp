@@ -597,7 +597,8 @@ int daPgBby_c::GuardStepHeight() {
         if (ground.DetectClsn() != 0) {
             int d = ground.clsnY - mPosY;
             if (d < 0) d = -d;
-            if (d <= 0x1900) goto bail;
+            if (d <= 0x1900)
+                goto bail;
         }
         mPosX = mPrevPosX;
         mPosY = mPrevPosY;

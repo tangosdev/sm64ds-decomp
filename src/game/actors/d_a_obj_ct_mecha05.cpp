@@ -137,7 +137,7 @@ int daObjCtMecha05_c::Behavior() {
     switch (mState) {
     case 0:
         if (DecIfAbove0_Short((u16 *)&mStateTimer) != 0)
-            goto Lend;
+            break;
         if (data_0209f2c0 == 2) {
             int v = (u16)((unsigned)RandomIntInternal(&data_0209e650.value) >> 16);
             if (v % 2 == 0) {
@@ -146,39 +146,31 @@ int daObjCtMecha05_c::Behavior() {
         }
         mState++;
         mHorzSpeed = -0x8000;
-        goto Lend;
+        break;
 
     case 1:
         mHorzSpeed += 0xbae;
         if (mHorzSpeed > 0) {
             if (DecIfAbove0_Short((u16 *)&mStateTimer) != 0) {
                 mHorzSpeed = 0;
-                goto Lend;
+                break;
             }
             mState++;
             mHorzSpeed = 0x1d000;
         }
-        goto Lend;
+        break;
 
     case 2: {
         int d = mTravel;
-        if (d != 0xfa000) {
-            int val = FX_MUL((0xfa000 - d), (0xfa000 - mPrevTravel));
-            if (val >= 0)
-                goto L280;
-        }
-        {
+        if (d == 0xfa000 || FX_MUL((0xfa000 - d), (0xfa000 - mPrevTravel)) < 0) {
             int sp = mHorzSpeed;
-            if (sp <= -0x8000)
-                goto L280;
-            if (sp >= 0x8000)
-                goto L280;
-            mState++;
-            mHorzSpeed = 0;
-            mStateTimer = 0x1e;
-            goto Lend;
+            if (sp > -0x8000 && sp < 0x8000) {
+                mState++;
+                mHorzSpeed = 0;
+                mStateTimer = 0x1e;
+                break;
+            }
         }
-    L280: {
         int m = (mTravel < 0xfa000) ? 0x6666 : -0x6666;
         int sp = mHorzSpeed;
         int delta;
@@ -188,26 +180,24 @@ int daObjCtMecha05_c::Behavior() {
             delta = FX_MUL(m, 0x2599);
         mHorzSpeed += delta;
         if (data_0209f2c0 != 2)
-            goto Lend;
-    }
+            break;
         if (FX_MUL(mTravel, mPrevTravel) >= 0)
-            goto Lend;
+            break;
         if ((RandomIntInternal(&data_0209e650.value) & 3) != 0)
-            goto Lend;
+            break;
         ResetToHome();
-        goto Lend;
+        break;
     }
 
     case 3:
         if (DecIfAbove0_Short((u16 *)&mStateTimer) != 0)
-            goto Lend;
+            break;
         mHorzSpeed = -0x5000;
         if (mTravel < 0)
             ResetToHome();
-        goto Lend;
+        break;
     }
 
-Lend:
     UpdatePos(0);
     UpdateModelPosAndRotY();
     UpdateShadow();

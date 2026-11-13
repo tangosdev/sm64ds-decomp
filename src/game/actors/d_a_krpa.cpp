@@ -268,13 +268,10 @@ int daKrpa_c::ExecuteKnockedAway() {
     this->mAnmModel.Advance();
     this->UpdatePos(&this->mdCcAcPos_c);
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&this->mWithMeshClsn);
-    if (!this->mWithMeshClsn.JustHitGround()) {
-        if (DecIfAbove0_Byte(&this->mStateTimer) != 0)
-            goto end;
+    if (this->mWithMeshClsn.JustHitGround() || DecIfAbove0_Byte(&this->mStateTimer) == 0) {
+        this->PoofDust();
+        this->MarkForDestruction();
     }
-    this->PoofDust();
-    this->MarkForDestruction();
-end:
     return 1;
 }
 void daKrpa_c::UpdateModelAndShadow() {
