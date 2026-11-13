@@ -30,9 +30,8 @@
  * - Sound::PlayLong is the Sound.h call. d_a_jgmPlayLongHold keeps the five
  *   named parameters that hold the @NNN count. Unnaming them gives -5.
  * - The manifest pins eight @NNN statics, so every named local, named
- *   parameter and goto label ahead of __sinit counts (each advances the
- *   counter by one, measured). UpdateFlight's for(;;) break sits two above
- *   the old goto label, so d_a_jgmNewSimpleHold leaves y and z unnamed. Names
+ *   parameter ahead of __sinit counts (each advances the
+ *   counter by one, measured). Names
  *   that also hold that count: bodyFile /
  *   heldFile and the loop counters in InitResources / CleanupResources,
  *   `frame` in UpdateThrowState, the `offset` references in the hover and
@@ -159,7 +158,6 @@ typedef int BgchInitAt_(dBgCh_Actr *collision, dActor_c *actor, Fix12i radius, F
  * the @NNN count. Sound.h's PlayLong emits the same bytes. */
 extern void d_a_jgmPlayLongHold(unsigned int handle, unsigned int a, unsigned int id,
                                 const Vector3 *pos, unsigned int e);
-/* y and z stay unnamed so UpdateFlight's loop keeps this TU's @NNN. */
 extern void d_a_jgmNewSimpleHold(unsigned int n, int x, int, int);
 }
 
