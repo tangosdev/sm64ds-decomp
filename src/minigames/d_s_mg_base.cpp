@@ -1251,9 +1251,13 @@ void dScMgBase_c::UpdateMenu() {
         func_0203b958(d0, tmp, &mMenuItem0X);
         func_0203b958(d1, tmp, &mMenuItem1X);
         func_0203b958(d2, tmp, &mMenuItem2X);
-        a = d0[0]; if (a < 0) a = -a;
+        a = d0[0];
+        if (a < 0)
+            a = -a;
         if (a < 0x60) {
-            b = d0[1]; if (b < 0) b = -b;
+            b = d0[1];
+            if (b < 0)
+                b = -b;
             if (b < 0x18) {
                 func_02012790(0x62);
                 mMenuCursor = 0;
@@ -1262,9 +1266,13 @@ void dScMgBase_c::UpdateMenu() {
                 break;
             }
         }
-        a = d1[0]; if (a < 0) a = -a;
+        a = d1[0];
+        if (a < 0)
+            a = -a;
         if (a < 0x40) {
-            b = d1[1]; if (b < 0) b = -b;
+            b = d1[1];
+            if (b < 0)
+                b = -b;
             if (b < 0x13) {
                 func_02012790(0x63);
                 mMenuCursor = 1;
@@ -1272,9 +1280,13 @@ void dScMgBase_c::UpdateMenu() {
                 break;
             }
         }
-        a = d2[0]; if (a < 0) a = -a;
+        a = d2[0];
+        if (a < 0)
+            a = -a;
         if (a < 0x40) {
-            b = d2[1]; if (b < 0) b = -b;
+            b = d2[1];
+            if (b < 0)
+                b = -b;
             if (b < 0x13) {
                 func_02012790(0x62);
                 mMenuCursor = 2;
@@ -2667,10 +2679,8 @@ void Mg_DrawRecordTable(dScMgBase_c *scene) {
     n = Mg_GetLastRecordRank(scene, scene->mRankedScore);
     if (n >= 0) {
         i = 0;
-        if (n > 0)
-        {
-            do
-            {
+        if (n > 0) {
+            do {
                 if (scene->mRecordRevealTimer >= i * 0x14)
                     Mg_DrawRecordRow(scene, 0xa8, a2, func_02013580(Mg_GetSaveTable(scene), i));
                 a2 += 0x18;
@@ -2678,8 +2688,7 @@ void Mg_DrawRecordTable(dScMgBase_c *scene) {
             } while (i < n);
         }
 
-        if (scene->mRecordRevealTimer >= n * 0x14)
-        {
+        if (scene->mRecordRevealTimer >= n * 0x14) {
             if (scene->mRecordRevealTimer < 0x64 || scene->mRecordRevealTimer - 0x64 < 0x14)
                 Mg_DrawRecordRow(scene, 0xa8, a2, scene->mRankedScore);
             else
