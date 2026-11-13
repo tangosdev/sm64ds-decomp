@@ -342,7 +342,7 @@ int daObjBk_Botaosi_c::InitResources() {
     mFrontPosY = d.y;
     mFrontPosZ = d.z;
     mOriginalPosY = mPosY;
-    mKnockDir = (s8)one;
+    mKnockDir = one;
 
     if (gCurrentSublevel == 7 && (gCurrentStarId == 1 || IsStarCollectedInCurLevel(one) == 0) &&
         mPosY >= 0xdac000) {
