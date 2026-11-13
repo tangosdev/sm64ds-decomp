@@ -203,7 +203,7 @@ int daPeach_c::InitState0() {
 
 int daPeach_c::State0() {
     mAnmModel.SetAnim((BCA_File *)gPeachJumpAnimationFile.filePtr, 0, 0x1000, 0);
-    ((dExtFrameCtrl_c *)&mAnmModel)->SetFlags(0x40000000);
+    mAnmModel.SetFlags(0x40000000);
     mHorzSpeed = 0x4000;
     mVertSpeed = 0xa000;
     mStateValue = 4;
@@ -267,8 +267,8 @@ int daPeach_c::State3() {
 
 int daPeach_c::InitState1() {
     mAnmModel.SetAnim((BCA_File *)gPeachWaitAnimationFile.filePtr, 0, 0x1000, 0);
-    ((dExtFrameCtrl_c *)&mAnmModel)->currFrame = 0;
-    ((dExtFrameCtrl_c *)&mAnmModel)->Advance();
+    mAnmModel.currFrame = 0;
+    mAnmModel.Advance();
     mTalkState = 1;
     mStateValue = 1;
     return 1;
