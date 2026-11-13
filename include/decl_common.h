@@ -461,8 +461,14 @@ extern int sMgWinBannerX;
 extern int sMgLoseBannerY;
 extern int sMgMainBannerX;
 extern int func_ov080_021270dc(void*, void*);
-extern int func_ov002_020ad660(char*, char*, char*, int);
-extern void func_ov002_020ae968(void *, void *);
+}
+extern int func_ov002_020ad660(void *, void *, void *, int);
+
+struct dActor_c;
+struct dEnemyBase_c;
+extern void func_ov002_020ae968(dEnemyBase_c *, dActor_c *);
+extern "C" {
+
 extern int func_ov002_020baa98;
 extern int func_ov002_020bd250(char*, unsigned char*);
 extern int func_ov002_020c51d0(void*, void*);
@@ -475,8 +481,12 @@ extern int func_ov002_020de328(void*);
 extern int func_ov002_020de33c(struct daPly_c *, void *);
 extern int func_ov002_020df300(char*);
 extern int func_ov002_020e10a8(void*);
+}
 extern int func_ov002_020f02c8(int);
+
 extern int func_ov002_020f035c(u32, int);
+extern "C" {
+
 extern int Mg_GetSavedRecord1(void);
 extern int Mg_GetSavedRecord0(void);
 extern void Mg_DrawMenu(void*);
@@ -724,7 +734,10 @@ extern void LoadDebugFont(void);
 extern void LoadFont(u8);
 extern void LoadLevelNoReturn(int, u32, u32, u32);
 extern void LoadOverlay(int);
+}
 extern void LoadSilverStarAndNumber(void);
+extern "C" {
+
 extern void LoadTextNarcs(void);
 extern void MarkForDestruction(char*);
 extern void Math_Function_0203b0fc(int*, int, int, int);
@@ -751,7 +764,10 @@ extern void StartFile(s8, u8);
 extern void UnloadArchive(int);
 extern void UnloadArchives(void);
 extern void UnloadKeyModels(int);
+}
 extern void UnloadSilverStarAndNumber(void);
+extern "C" {
+
 extern int Vec3_ApproachHorz(void*, void*, int);
 extern int *Vec3_AsrInPlace(void *, int);
 extern void WarpPlayer(int, int);
@@ -867,9 +883,14 @@ extern void func_ov002_020e6330(void*);
 extern void func_ov002_020e69c0(void*);
 extern void func_ov002_020e6a78(char*, int);
 extern void func_ov002_020e6b3c(void*);
+}
 extern int func_ov002_020eee3c(char*, char*);
+
 extern int func_ov002_020eeeb8(void*, char*);
+
 extern int func_ov002_020ef070(void*, char*);
+extern "C" {
+
 extern void func_ov003_020b060c(void*);
 extern void func_ov003_020b0730(void*, int);
 extern void Mg_SaveRecordPair(int, int);

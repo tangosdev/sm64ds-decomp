@@ -17,7 +17,6 @@
 #include "math/CalcLib.h"
 #include "nitro/fx/fx_cp.h"
 
-extern "C" {
 
 /* One coordinate's share: p * w, rounded from fx16 back to fx12. */
 #define TERM(p, w) ((FX_MUL(p, w) + 8) >> 4)
@@ -117,4 +116,4 @@ void func_ov002_020effb8(Vector3 *out, s32 t, Vector3 *p0, Vector3 *p1, Vector3 
     out->y = TERM(p0->y, w0) + TERM(p1->y, w1) + TERM(p2->y, w2) + TERM(p3->y, w3);
     out->z = TERM(p0->z, w0) + TERM(p1->z, w1) + TERM(p2->z, w2) + TERM(p3->z, w3);
 }
-}
+

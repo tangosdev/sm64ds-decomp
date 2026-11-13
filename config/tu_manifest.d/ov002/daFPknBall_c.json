@@ -83,8 +83,8 @@
       "ordinal": 8
     },
     {
-      "symbol": "daFPknBall_c_classInit",
-      "address": "0x020f9304",
+      "symbol": "_Z22daFPknBall_c_classInitv",
+      "address": "",
       "size": "0x00000048",
       "legacy_source": "src/d_a_f_pkn_ball.c",
       "ordinal": 9

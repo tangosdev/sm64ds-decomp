@@ -68,8 +68,10 @@ extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 extern void func_02012694(unsigned int id, void *v);
 
 /* ov002 -- unnamed particle helper. */
-extern void func_ov002_020aea30(void *self, void *actor, void *collision);
 }
+struct Aea30C;
+extern void func_ov002_020aea30(Aea30C *self, dActor_c *actor, dBgCh_Actr *collision);
+
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
 enum daYurei_Mucho_c_AssetId {
@@ -556,19 +558,19 @@ void daYurei_Mucho_c::HandleCollision() {
 
     if (flags & 0x40000) {
         mDeathState = 4;
-        func_ov002_020aea30(this, p, 0);
+        func_ov002_020aea30((Aea30C *)this, p, 0);
         func_02012694(0x11e, &mCamSpacePosX);
         return;
     }
     if (flags & 0x2400) {
         mDeathState = 2;
-        func_ov002_020aea30(this, p, 0);
+        func_ov002_020aea30((Aea30C *)this, p, 0);
         func_02012694(0x11e, &mCamSpacePosX);
         return;
     }
     if (flags & 0x4380) {
         mDeathState = 3;
-        func_ov002_020aea30(this, p, 0);
+        func_ov002_020aea30((Aea30C *)this, p, 0);
         func_02012694(0x11e, &mCamSpacePosX);
         return;
     }
@@ -587,13 +589,13 @@ void daYurei_Mucho_c::HandleCollision() {
     }
     if (flags & 0x40) {
         mDeathState = 2;
-        func_ov002_020aea30(this, p, 0);
+        func_ov002_020aea30((Aea30C *)this, p, 0);
         func_02012694(0x11e, &mCamSpacePosX);
         return;
     }
     if (flags & 0x20) {
         mDeathState = 1;
-        func_ov002_020aea30(this, p, 0);
+        func_ov002_020aea30((Aea30C *)this, p, 0);
         func_02012694(0x11e, &mCamSpacePosX);
         return;
     }
@@ -608,7 +610,7 @@ void daYurei_Mucho_c::HandleCollision() {
     if (JumpedOnByPlayer(mdCcAc_c, *p)) {
         p->Bounce(0x28000);
         mDeathState = 1;
-        func_ov002_020aea30(this, p, 0);
+        func_ov002_020aea30((Aea30C *)this, p, 0);
         func_02012694(0x11e, &mCamSpacePosX);
         return;
     }

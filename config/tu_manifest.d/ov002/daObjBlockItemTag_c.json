@@ -111,29 +111,29 @@
       "ordinal": 9
     },
     {
-      "symbol": "daObjBlockItemTag_c_classInit_BLK_SLVSTAR_TAG",
-      "address": "0x020b45e0",
+      "symbol": "_Z45daObjBlockItemTag_c_classInit_BLK_SLVSTAR_TAGv",
+      "address": "",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_block_item_tag_blk_slvstar_tag.c",
       "ordinal": 10
     },
     {
-      "symbol": "daObjBlockItemTag_c_classInit_BLK_GNSHELL_TAG",
-      "address": "0x020b4610",
+      "symbol": "_Z45daObjBlockItemTag_c_classInit_BLK_GNSHELL_TAGv",
+      "address": "",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_block_item_tag_blk_gnshell_tag.c",
       "ordinal": 11
     },
     {
-      "symbol": "daObjBlockItemTag_c_classInit_BLK_SKINOKO_TAG",
-      "address": "0x020b4640",
+      "symbol": "_Z45daObjBlockItemTag_c_classInit_BLK_SKINOKO_TAGv",
+      "address": "",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_block_item_tag_blk_skinoko_tag.c",
       "ordinal": 12
     },
     {
-      "symbol": "daObjBlockItemTag_c_classInit_BLK_OKINOKO_TAG",
-      "address": "0x020b4670",
+      "symbol": "_Z45daObjBlockItemTag_c_classInit_BLK_OKINOKO_TAGv",
+      "address": "",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_block_item_tag_blk_okinoko_tag.c",
       "ordinal": 13

@@ -150,8 +150,12 @@ typedef void BgchInitAt_(char *thiz, char *actor, int b, int d, void *v, int f);
 
 
 extern int SurfaceInfo_TestFlag0x20(int *p);
-extern int func_ov002_020ef228(void *c, dActor_c *other);
+}
+extern int func_ov002_020ef228(dBgCh_Actr *c, dActor_c *other);
+
 extern int func_ov002_020f030c(int x);
+extern "C" {
+
 extern int func_ov002_020e496c(daPly_c *c);
 extern s16 func_02010844(void *unused, Vector3 *v, s16 angle);
 

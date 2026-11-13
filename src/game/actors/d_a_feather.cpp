@@ -66,12 +66,11 @@ extern dCamera_c *gCamera;
  * Historical alias: daFeather_c_Spawn.
  * ======================================================================== */
 
-extern "C" {
 
 daFeather_c *daFeather_c_classInit(void) {
     return new daFeather_c();
 }
-}
+
 
 /* ==========================================================================
  * Vtable slot 0.

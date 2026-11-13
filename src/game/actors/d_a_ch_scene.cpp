@@ -50,7 +50,7 @@ extern dFdColor_c gSceneColorFader;
  * preserved. Historical alias: daChScene_c_Spawn.
  *
  * Every instruction the cartridge has here falls out of the one `new`. */
-extern "C" daChScene_c *daChScene_c_classInit() {
+daChScene_c *daChScene_c_classInit() {
     return new daChScene_c();
 }
 

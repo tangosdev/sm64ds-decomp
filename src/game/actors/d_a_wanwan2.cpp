@@ -173,8 +173,12 @@ int VEC_Mag(const Vector3 *v);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 int ApproachAngle(short *cur, short target, int step, int a, int b);
 int atan2_hold_d_a_wanwan2_1(int y, int x);
+}
 void LoadSilverStarAndNumber();
+
 void UnloadSilverStarAndNumber();
+extern "C" {
+
 
 extern SharedFilePtr data_ov002_0211092c;
 extern s32 data_ov100_02148008[3];

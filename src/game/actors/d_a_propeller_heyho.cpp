@@ -930,7 +930,11 @@ extern daPropeller_Heyho_c::State data_ov070_021235cc;
 
 extern "C" {
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);
-extern void func_ov002_020aea30(void *self, void *actor, void *collision);
+}
+struct Aea30C;
+extern void func_ov002_020aea30(Aea30C *self, dActor_c *actor, dBgCh_Actr *collision);
+extern "C" {
+
 extern void func_02012694(unsigned int a, void *b);
 }
 
@@ -966,7 +970,7 @@ extern "C" void func_ov070_0211f100(daPropeller_Heyho_c* c)
     }
     if (hitFlags & kHitSpinPound) {
         c->mDeathState = 1;
-        func_ov002_020aea30(c, hitPlayer, 0);
+        func_ov002_020aea30((Aea30C *)c, hitPlayer, 0);
         return;
     }
     if (hitFlags & kHitAttackMask) {
@@ -983,7 +987,7 @@ extern "C" void func_ov070_0211f100(daPropeller_Heyho_c* c)
     if (c->JumpedOnByPlayer(c->mdCcAc_c, *hitPlayer)) {
         hitPlayer->SpinBounce(0x28000);
         c->mDeathState = 1;
-        func_ov002_020aea30(c, hitPlayer, 0);
+        func_ov002_020aea30((Aea30C *)c, hitPlayer, 0);
         return;
     }
 

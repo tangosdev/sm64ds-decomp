@@ -27,7 +27,7 @@
 
 #include "daCamTag_c.h"
 
-extern "C" daCamTag_c *daCamTag_c_classInit() {
+daCamTag_c *daCamTag_c_classInit() {
     return new daCamTag_c();
 }
 

@@ -33,11 +33,11 @@ enum {
     kWaterfallMistCourse21 = 0xeb
 };
 
-extern "C" daObjWaterfall_c *daObjWaterfall_c_classInit() {
+daObjWaterfall_c *daObjWaterfall_c_classInit() {
     return new daObjWaterfall_c();
 }
 
-extern "C" SpawnInfo<daObjWaterfall_c> g_profile_WATERFALL = {
+SpawnInfo<daObjWaterfall_c> g_profile_WATERFALL = {
     daObjWaterfall_c_classInit,
     0x00c5, /* WATERFALL registry id 197 */
     0x0015,

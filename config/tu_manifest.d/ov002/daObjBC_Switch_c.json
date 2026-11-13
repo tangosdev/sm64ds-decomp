@@ -90,8 +90,8 @@
       "ordinal": 7
     },
     {
-      "symbol": "daObjBC_Switch_c_classInit",
-      "address": "0x020f15cc",
+      "symbol": "_Z26daObjBC_Switch_c_classInitv",
+      "address": "",
       "size": "0x00000030",
       "legacy_source": "src/daObjBC_Switch_c_classInit.c",
       "ordinal": 8

@@ -236,8 +236,8 @@
       "ordinal": 27
     },
     {
-      "symbol": "daObjTatefuda_c_classInit",
-      "address": "0x020bc3c8",
+      "symbol": "_Z25daObjTatefuda_c_classInitv",
+      "address": "",
       "size": "0x0000004c",
       "legacy_source": "src/d_a_obj_tatefuda.c",
       "ordinal": 28

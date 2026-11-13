@@ -458,31 +458,31 @@ int daObjBlockL_c::InitResources() {
  * supplies classInit. Exact original spellings are not preserved.
  * Historical aliases: FortressTowerWall_Spawn, BlackBrickBlock_Spawn,
  * BrickBlockSwitchActivated_Spawn, BigBrickBlock_Spawn, BrickBlock_Spawn. */
-extern "C" daObjBlockL_c *daObjBlockL_c_classInit_BK_FUTA() {
+daObjBlockL_c *daObjBlockL_c_classInit_BK_FUTA() {
     return new daObjBlockL_c();
 }
 
-extern "C" daObjBlockL_c *daObjBlockL_c_classInit_BLOCK_LL() {
+daObjBlockL_c *daObjBlockL_c_classInit_BLOCK_LL() {
     return new daObjBlockL_c();
 }
 
-extern "C" daObjBlockL_c *daObjBlockL_c_classInit_SW_BLOCK_L() {
+daObjBlockL_c *daObjBlockL_c_classInit_SW_BLOCK_L() {
     return new daObjBlockL_c();
 }
 
-extern "C" daObjBlockL_c *daObjBlockL_c_classInit_DP_BLOCK_L() {
+daObjBlockL_c *daObjBlockL_c_classInit_DP_BLOCK_L() {
     return new daObjBlockL_c();
 }
 
-extern "C" daObjBlockL_c *daObjBlockL_c_classInit_BLOCK_L() {
+daObjBlockL_c *daObjBlockL_c_classInit_BLOCK_L() {
     return new daObjBlockL_c();
 }
 
 /* Retail initializer order. The handles themselves land in address order
  * because their names sort that way; these definitions are the call order. */
-extern "C" BlockModelFile data_ov002_0210dcc0(1108);
-extern "C" daObjBlockLClsnFile data_ov002_0210dcb8(1109);
-extern "C" BlockModelFile data_ov002_0210dce0(1110);
-extern "C" daObjBlockLClsnFile data_ov002_0210dcc8(1111);
-extern "C" BlockModelFile data_ov002_0210dcd0(1425);
-extern "C" daObjBlockLClsnFile data_ov002_0210dcd8(1426);
+BlockModelFile data_ov002_0210dcc0(1108);
+daObjBlockLClsnFile data_ov002_0210dcb8(1109);
+BlockModelFile data_ov002_0210dce0(1110);
+daObjBlockLClsnFile data_ov002_0210dcc8(1111);
+BlockModelFile data_ov002_0210dcd0(1425);
+daObjBlockLClsnFile data_ov002_0210dcd8(1426);

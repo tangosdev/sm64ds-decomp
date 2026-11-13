@@ -125,8 +125,8 @@
       "ordinal": 11
     },
     {
-      "symbol": "daObjHatenaSwitch_c_classInit",
-      "address": "0x020b56d8",
+      "symbol": "_Z29daObjHatenaSwitch_c_classInitv",
+      "address": "",
       "size": "0x0000005c",
       "legacy_source": "src/QuestionSwitch_Spawn.c",
       "ordinal": 12

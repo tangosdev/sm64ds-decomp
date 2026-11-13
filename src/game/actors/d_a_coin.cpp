@@ -411,13 +411,12 @@ void daCoin_c::CollectYellowCoin(daPly_c *player) {
  * below 0xf and the player's coin total has reached 100, spawns a STAR (0xb2,
  * param 0x20) 300 units above the player, sets the event bit and gives the
  * star a marker. */
-extern "C" {
+extern signed char gCurrentSublevel;
+extern short gNumCoins[];
+extern "C" int SublevelToLevel(int);
+
 void func_ov002_020b18f0(char* self)
 {
-    extern signed char gCurrentSublevel;
-    extern short gNumCoins[];
-    extern int SublevelToLevel(int);
-
     daPly_c *player = (daPly_c *)self;
     daStar_c* star;
     struct Vector3 spawnPos;
@@ -439,7 +438,6 @@ void func_ov002_020b18f0(char* self)
     if (star == 0) return;
     Event::SetBit(0x1f);
     star->AddStarMarker();
-}
 }
 
 /* Collection by the player: if the coin was hit by a player (hitFlags 0x400000)
@@ -1027,23 +1025,23 @@ s32 daCoin_c::OnYoshiTryEat()
 }
 
 /* Blue, red and yellow coin factories, in ROM order. */
-extern "C" daCoin_c *daCoin_c_classInit_BLUE_COIN()
+daCoin_c *daCoin_c_classInit_BLUE_COIN()
 {
     return new daCoin_c();
 }
 
-extern "C" daCoin_c *daCoin_c_classInit_RED_COIN()
+daCoin_c *daCoin_c_classInit_RED_COIN()
 {
     return new daCoin_c();
 }
 
-extern "C" daCoin_c *daCoin_c_classInit_COIN()
+daCoin_c *daCoin_c_classInit_COIN()
 {
     return new daCoin_c();
 }
 
 /* The three coin actor profiles. */
-extern "C" SpawnInfo<daCoin_c> g_profile_COIN = {
+SpawnInfo<daCoin_c> g_profile_COIN = {
     daCoin_c_classInit_COIN,
     0x0120,
     0x009a,
@@ -1054,7 +1052,7 @@ extern "C" SpawnInfo<daCoin_c> g_profile_COIN = {
     0x00bb8000,
 };
 
-extern "C" SpawnInfo<daCoin_c> g_profile_RED_COIN = {
+SpawnInfo<daCoin_c> g_profile_RED_COIN = {
     daCoin_c_classInit_RED_COIN,
     0x0121,
     0x009b,
@@ -1065,7 +1063,7 @@ extern "C" SpawnInfo<daCoin_c> g_profile_RED_COIN = {
     0x00bb8000,
 };
 
-extern "C" SpawnInfo<daCoin_c> g_profile_BLUE_COIN = {
+SpawnInfo<daCoin_c> g_profile_BLUE_COIN = {
     daCoin_c_classInit_BLUE_COIN,
     0x0122,
     0x009c,

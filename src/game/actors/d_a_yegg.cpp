@@ -125,8 +125,12 @@ int PlayLong(u32, u32, u32, const Vector3 &, s16);
 
 extern "C" {
 /* Defined below. */
+}
 void func_ov002_020ed63c(daYegg_c *c, int i);
+
 void func_ov002_020edca4(daYegg_c *self);
+extern "C" {
+
 
 /* Data. 0x0210e6b0 and 0x0210eb78 are the two shared animation file
    handles; d_a_ply_methods.cpp's static initializer constructs both. */
@@ -874,7 +878,7 @@ void daYegg_c::EnterFollowPlayer() {
 /* -------------------------------------------------------------------------- */
 /* Switches to state `i` and runs that state's enter handler. daPly_c's
  * St_YoshiPower_Init calls it with state 1 on the egg it holds. */
-extern "C" void func_ov002_020ed63c(daYegg_c *c, int i) { c->mState = i; int j = c->mState; (c->*data_ov002_02110a5c[j].pmf[0])(); }
+void func_ov002_020ed63c(daYegg_c *c, int i) { c->mState = i; int j = c->mState; (c->*data_ov002_02110a5c[j].pmf[0])(); }
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 20 -- RunState, 0x020ed684, size 0x48 */
@@ -1113,7 +1117,6 @@ end:
  * for destruction, plays Sound::PlayCharVoice id 0x103 at its camera-space
  * position and sets mBurstDone. Stays a free function: d_a_ply_methods.cpp calls it
  * on its held object, and daPly_c is not deslopped here. */
-extern "C" {
 void func_ov002_020edca4(daYegg_c* self)
 {
     struct Vector3 pos;
@@ -1150,7 +1153,7 @@ void func_ov002_020edca4(daYegg_c* self)
 
     self->mBurstDone = 1;
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 27 -- HandleCylinderHit, 0x020eddc4, size 0x190 */
@@ -1428,7 +1431,7 @@ int daYegg_c::InitResources()
  * `new daYegg_c` is the whole sequence the loose factory spelled by hand:
  * fBase_c::operator new(0x42c), dEnemyBase_c's base constructor, the vptr
  * store, then the four member constructors in declaration order. */
-extern "C" daYegg_c *daYegg_c_classInit(void)
+daYegg_c *daYegg_c_classInit(void)
 {
     return new daYegg_c;
 }

@@ -94,13 +94,13 @@ extern u8 data_0209d660;
  * Every instruction the cartridge has here falls out of the one `new`.
  * Reconstructed spelling from ROM RTTI plus later EAD lineage; historical
  * alias QuestionSwitch_Spawn. */
-extern "C" daObjHatenaSwitch_c *daObjHatenaSwitch_c_classInit() {
+daObjHatenaSwitch_c *daObjHatenaSwitch_c_classInit() {
     return new daObjHatenaSwitch_c();
 }
 
 /* HATENA_SWITCH is the literal ROM registry ID. The g_profile spelling is a
  * lineage-supported reconstruction; historical alias QuestionSwitch_SpawnInfo. */
-extern "C" SpawnInfo<daObjHatenaSwitch_c> g_profile_HATENA_SWITCH = {
+SpawnInfo<daObjHatenaSwitch_c> g_profile_HATENA_SWITCH = {
     daObjHatenaSwitch_c_classInit,
     0x001a,
     0x0126,

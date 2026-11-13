@@ -162,8 +162,8 @@
       "ordinal": 17
     },
     {
-      "symbol": "daObjPowerUpItem_c_classInit",
-      "address": "0x020b9e0c",
+      "symbol": "_Z28daObjPowerUpItem_c_classInitv",
+      "address": "",
       "size": "0x00000058",
       "legacy_source": "src/d_a_obj_power_up_item.c",
       "ordinal": 18

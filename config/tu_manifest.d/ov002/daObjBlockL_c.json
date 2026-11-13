@@ -134,36 +134,36 @@
       "ordinal": 13
     },
     {
-      "symbol": "daObjBlockL_c_classInit_BK_FUTA",
-      "address": "0x020b406c",
+      "symbol": "_Z31daObjBlockL_c_classInit_BK_FUTAv",
+      "address": "",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_block_l_bk_futa.c",
       "ordinal": 14
     },
     {
-      "symbol": "daObjBlockL_c_classInit_BLOCK_LL",
-      "address": "0x020b409c",
+      "symbol": "_Z32daObjBlockL_c_classInit_BLOCK_LLv",
+      "address": "",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_block_l_block_ll.c",
       "ordinal": 15
     },
     {
-      "symbol": "daObjBlockL_c_classInit_SW_BLOCK_L",
-      "address": "0x020b40cc",
+      "symbol": "_Z34daObjBlockL_c_classInit_SW_BLOCK_Lv",
+      "address": "",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_block_l_sw_block_l.c",
       "ordinal": 16
     },
     {
-      "symbol": "daObjBlockL_c_classInit_DP_BLOCK_L",
-      "address": "0x020b40fc",
+      "symbol": "_Z34daObjBlockL_c_classInit_DP_BLOCK_Lv",
+      "address": "",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_block_l_dp_block_l.c",
       "ordinal": 17
     },
     {
-      "symbol": "daObjBlockL_c_classInit_BLOCK_L",
-      "address": "0x020b412c",
+      "symbol": "_Z31daObjBlockL_c_classInit_BLOCK_Lv",
+      "address": "",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_block_l_block_l.c",
       "ordinal": 18

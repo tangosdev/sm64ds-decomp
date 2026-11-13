@@ -68,8 +68,8 @@
       "ordinal": 6
     },
     {
-      "symbol": "daObjNumber_c_classInit",
-      "address": "0x020f0d90",
+      "symbol": "_Z23daObjNumber_c_classInitv",
+      "address": "",
       "size": "0x00000040",
       "legacy_source": "src/d_a_obj_number.c",
       "ordinal": 7

@@ -54,15 +54,15 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov002_020f93a8",
-      "address": "0x020f93a8",
+      "symbol": "_Z19func_ov002_020f93a8P12daSoundObj_cPt",
+      "address": "",
       "size": "0x000000c0",
       "legacy_source": "src/func_ov002_020f93a8.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov002_020f9468",
-      "address": "0x020f9468",
+      "symbol": "_Z19func_ov002_020f9468P12daSoundObj_cPt",
+      "address": "",
       "size": "0x00000094",
       "legacy_source": "src/func_ov002_020f9468.c",
       "ordinal": 3
@@ -82,8 +82,8 @@
       "ordinal": 5
     },
     {
-      "symbol": "daSoundObj_c_classInit",
-      "address": "0x020f972c",
+      "symbol": "_Z22daSoundObj_c_classInitv",
+      "address": "",
       "size": "0x00000030",
       "legacy_source": "src/daSoundObj_c_Spawn.c",
       "ordinal": 6

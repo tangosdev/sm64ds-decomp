@@ -80,8 +80,8 @@
       "ordinal": 7
     },
     {
-      "symbol": "daSCoin_c_classInit",
-      "address": "0x020f085c",
+      "symbol": "_Z19daSCoin_c_classInitv",
+      "address": "",
       "size": "0x00000038",
       "legacy_source": "src/d_a_s_coin.c",
       "ordinal": 8

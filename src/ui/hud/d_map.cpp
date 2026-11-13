@@ -1074,7 +1074,7 @@ void dMap_c::GetPosOnMinimap(Vector3 *pos, Vector3 *center, Fix12i scale, short 
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: Minimap_Spawn. It was once labelled
  * the dMap_c constructor, but it takes no `this`: it is the registry factory. */
-extern "C" dMap_c *dMap_c_classInit()
+dMap_c *dMap_c_classInit()
 {
     return new dMap_c();
 }

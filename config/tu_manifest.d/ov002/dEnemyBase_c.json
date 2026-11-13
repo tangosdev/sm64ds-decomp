@@ -104,8 +104,8 @@
       "ordinal": 9
     },
     {
-      "symbol": "func_ov002_020ae5c8",
-      "address": "0x020ae5c8",
+      "symbol": "_Z19func_ov002_020ae5c8P12dEnemyBase_ci",
+      "address": "",
       "size": "0x00000040",
       "legacy_source": "src/func_ov002_020ae5c8.c",
       "ordinal": 10
@@ -167,8 +167,8 @@
       "ordinal": 18
     },
     {
-      "symbol": "func_ov002_020ae8b8",
-      "address": "0x020ae8b8",
+      "symbol": "_Z19func_ov002_020ae8b8P12dEnemyBase_cP8dActor_c",
+      "address": "",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov002_020ae8b8.c",
       "ordinal": 19
@@ -181,8 +181,8 @@
       "ordinal": 20
     },
     {
-      "symbol": "func_ov002_020ae968",
-      "address": "0x020ae968",
+      "symbol": "_Z19func_ov002_020ae968P12dEnemyBase_cP8dActor_c",
+      "address": "",
       "size": "0x00000090",
       "legacy_source": "src/func_ov002_020ae968.c",
       "ordinal": 21
@@ -209,8 +209,8 @@
       "ordinal": 24
     },
     {
-      "symbol": "func_ov002_020aea30",
-      "address": "0x020aea30",
+      "symbol": "_Z19func_ov002_020aea30P6Aea30CP8dActor_cP10dBgCh_Actr",
+      "address": "",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov002_020aea30.cpp",
       "ordinal": 25

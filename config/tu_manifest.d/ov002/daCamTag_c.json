@@ -68,8 +68,8 @@
       "ordinal": 6
     },
     {
-      "symbol": "daCamTag_c_classInit",
-      "address": "0x020b07c8",
+      "symbol": "_Z20daCamTag_c_classInitv",
+      "address": "",
       "size": "0x00000030",
       "legacy_source": "src/daCamTag_c_Spawn.c",
       "ordinal": 7

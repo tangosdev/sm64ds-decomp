@@ -128,7 +128,10 @@ extern char data_02082714[];
 extern int func_0203d024(struct Vector3*, struct Vector3*);
 extern void DeathTable_ClearBit(int);
 extern void FUN_0202a130(void);
+}
 extern void UnloadSilverStarAndNumber(void);
+extern "C" {
+
 extern StarAnimationFileHandle data_ov002_02110934;
 extern unsigned int gNextActorUpdateMask;
 extern int data_ov002_0210da28[];
@@ -139,7 +142,10 @@ extern void func_02035860(void* o, void* src);
 extern dCamera_c *gCamera;
 extern unsigned char IsAreaShowing(int idx);
 extern void func_02012694(unsigned int a, void *p);
+}
 extern void func_ov002_020e8244(void *out, daStar_c *b);
+extern "C" {
+
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void* mF, s16 angY);
 /* local extern: math/MtxStack.h takes Matrix4x3 pointers, and
@@ -197,7 +203,10 @@ extern s32 data_02092138;
 extern StarModelFilePtr data_ov002_0211094c;
 extern StarModelFilePtr data_ov002_02110954;
 extern StarModelFilePtr data_ov002_0211095c;
+}
 extern void LoadSilverStarAndNumber(void);
+extern "C" {
+
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, s32 a, s32 b, void *p1, void *p2);
 extern s32 IsStarCollected(s32 level, s32 idx);
@@ -2300,7 +2309,7 @@ void daStar_c::DrawShadow() {
  * the cache each frame). Otherwise it multiplies the first bone's matrix with
  * a translation and Y rotation of the star, scales the result about the star's
  * position (<< 3) and raises Y by 13 times a word of the bone data at +0xc. */
-extern "C" {  /* C linkage: the ROM symbol is a bare name, not a mangled member */
+  /* C linkage: the ROM symbol is a bare name, not a mangled member */
 void func_ov002_020e8244(void *out, daStar_c *b)
 {
     Mtx43 local;
@@ -2332,7 +2341,7 @@ void func_ov002_020e8244(void *out, daStar_c *b)
     ((int *)out)[1] = b->mCenterY;
     ((int *)out)[2] = b->mCenterZ;
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 32 -- UpdateTrailEffect, 0x020e81e0, size 0x64 */
@@ -2891,25 +2900,25 @@ void daStarBase_c::LinkSilverStarAndStarMarker(char* b) {
 /* ROM ordinal 12 -- LoadSilverStarAndNumber, 0x020e71a8, size 0x2c */
 /* -------------------------------------------------------------------------- */
 /* Loads the silver star and score-number model files. */
-extern "C" {  /* C linkage: the ROM symbol is a bare name, not a mangled member */
+  /* C linkage: the ROM symbol is a bare name, not a mangled member */
 void LoadSilverStarAndNumber(void)
 {
     dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov002_0210da28);
     dExtSimpleModel_c::LoadFile(data_ov002_02110954);
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 11 -- UnloadSilverStarAndNumber, 0x020e717c, size 0x2c */
 /* -------------------------------------------------------------------------- */
 /* Releases the silver star and score-number model files. */
-extern "C" {  /* C linkage: the ROM symbol is a bare name, not a mangled member */
+  /* C linkage: the ROM symbol is a bare name, not a mangled member */
 void UnloadSilverStarAndNumber(void)
 {
     ((SharedFilePtr *)data_ov002_0210da28)->Release();
     data_ov002_02110954.Release();
 }
-}
+
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 10 -- SetSwitchState, 0x020e7104, size 0x78 */

@@ -1180,14 +1180,14 @@ int da1up_c::InitResources()
 /* MEGA_MUSHROOM (277 / SCALEUP_KINOKO). `new` calls the inherited
    fBase_c::operator new; the implicit constructor inlines the dEnemyBase_c
    base step, vptr store, and the four member constructors. */
-extern "C" da1up_c *da1up_c_classInit_SCALEUP_KINOKO()
+da1up_c *da1up_c_classInit_SCALEUP_KINOKO()
 {
     return new da1up_c();
 }
 
 /* -------------------------------------------------------------------------- */
 /* ONE_UP_MUSHROOM (276 / ONEUPKINOKO). Same class, second profile. */
-extern "C" da1up_c *da1up_c_classInit_ONEUPKINOKO()
+da1up_c *da1up_c_classInit_ONEUPKINOKO()
 {
     return new da1up_c();
 }

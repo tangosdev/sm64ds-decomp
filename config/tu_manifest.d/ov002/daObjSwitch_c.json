@@ -196,15 +196,15 @@
       "ordinal": 21
     },
     {
-      "symbol": "daObjSwitch_c_classInit_STAR_SWITCH",
-      "address": "0x020baaac",
+      "symbol": "_Z35daObjSwitch_c_classInit_STAR_SWITCHv",
+      "address": "",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_switch_star_switch.c",
       "ordinal": 22
     },
     {
-      "symbol": "daObjSwitch_c_classInit_HANSWITCH",
-      "address": "0x020baadc",
+      "symbol": "_Z33daObjSwitch_c_classInit_HANSWITCHv",
+      "address": "",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_switch_hanswitch.c",
       "ordinal": 23

@@ -47,8 +47,8 @@
       "ordinal": 3
     },
     {
-      "symbol": "daObjWaterfall_c_classInit",
-      "address": "0x020b6ee8",
+      "symbol": "_Z26daObjWaterfall_c_classInitv",
+      "address": "",
       "size": "0x00000030",
       "legacy_source": "src/WaterfallMist_Spawn.cpp",
       "ordinal": 4

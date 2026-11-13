@@ -184,7 +184,11 @@ extern int SurfaceInfo_TestFlag0x20(int* p);
 extern u8 data_0209f208[];
 extern u8 *data_0209f344;
 /* Three-register reconstructed interface; death-state stores also use r3. */
-extern void func_ov002_020aea30(void *self, void *actor, void *collision);
+}
+struct Aea30C;
+extern void func_ov002_020aea30(Aea30C *self, dActor_c *actor, dBgCh_Actr *collision);
+extern "C" {
+
 extern int *data_ov084_0213088c;
 extern int data_ov084_02130248[];
 extern u8 data_ov084_02130204[];
@@ -194,7 +198,10 @@ extern int data_ov084_02130268[];
 extern void func_ov074_0212087c(Vector3 *out, void *player, u8 flag);
 extern int Math_Function_0203b14c(int *v, int target, int a, int b, int c);
 extern s8 gCurrentSublevel;
+}
 void LoadSilverStarAndNumber(void);
+extern "C" {
+
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *a, Fix12i b, Fix12i cc, void *d, Fix12i e);
 extern SharedFilePtr *const sKuriboAnimationFiles[7];
@@ -625,7 +632,7 @@ int daKrb_c::func_ov084_02129a00() {
     if (goomba->SpawnParticlesIfHitOtherObj(*(dCc_c *)&goomba->mdCcAc_c) != 0) {
         void *actor = dActor_c::FindWithID(goomba->mdCcAc_c.otherOwner);
         goomba->mDeathState = daKrb_c::DEATH_HIT_20000;
-        func_ov002_020aea30(goomba, actor, &goomba->mWithMeshClsn);
+        func_ov002_020aea30((Aea30C *)goomba, (dActor_c *)actor, &goomba->mWithMeshClsn);
         goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce0.filePtr, 0x40000000, 0x1000, 0);
         *(int *)((int)&goomba->mdCcAc_c.flags) |= 1;
         return 1;
@@ -984,7 +991,7 @@ block_68:
         capReleaseOnExit.x = 0; capReleaseOnExit.y = 0x6c000; capReleaseOnExit.z = 0;     /* 108.0 */
         goomba->ReleaseCap(capReleaseOnExit);
     }
-    func_ov002_020aea30(goomba, other, &goomba->mWithMeshClsn);
+    func_ov002_020aea30((Aea30C *)goomba, other, &goomba->mWithMeshClsn);
     if (turnAround != 0) {
         goomba->mAngleY = (s16)(goomba->mPrevAngleY + 0x8000);     /* half a turn */
     }
@@ -1154,7 +1161,7 @@ void daKrb_c::ActTumble() {
     if (goomba->SpawnParticlesIfHitOtherObj(*(dCc_c *)&goomba->mdCcAc_c) != 0) {
         void *a = dActor_c::FindWithID(goomba->mdCcAc_c.otherOwner);
         goomba->mDeathState = daKrb_c::DEATH_HIT_20000;
-        func_ov002_020aea30(goomba, a, &goomba->mWithMeshClsn);
+        func_ov002_020aea30((Aea30C *)goomba, (dActor_c *)a, &goomba->mWithMeshClsn);
         goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce0.filePtr, 0x40000000, 0x1000, 0);
         goomba->mdCcAc_c.flags |= 1;
     }

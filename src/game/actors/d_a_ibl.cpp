@@ -109,7 +109,10 @@ void func_02012694(unsigned int a, void *p);
 void d_a_iblPlayLongHold(u32 a, u32 b, u32 c, void *v, u32 d);
 void func_02038414(void *p);
 int atan2_hold_d_a_ibl_1(int y, int x);
+}
 int func_ov002_020ad660(void *a, void *b, void *d, int e);
+extern "C" {
+
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 }

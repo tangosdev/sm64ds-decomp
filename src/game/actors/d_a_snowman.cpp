@@ -86,7 +86,11 @@ extern s16 data_ov081_021289a4;
 extern s16 data_ov081_021289a6;
 extern s16 data_ov081_021289a8;
 extern int AngleDiff(int a, int b);
-extern void func_ov002_020aea30(void *self, void *actor, void *collision);
+}
+struct Aea30C;
+extern void func_ov002_020aea30(Aea30C *self, dActor_c *actor, dBgCh_Actr *collision);
+extern "C" {
+
 /* Sound::Play(3, id, pos) — PlayBank3. This TU calls the wrapper. */
 extern void func_02012694(unsigned int a, void *p);
 extern Vector3 data_ov081_02128998; /* cylinder offset (0, 0x1e000, 0) */
@@ -263,7 +267,7 @@ void daSnowman_c::CheckAttacks() {
 
     if (flags & 0x2000) {
         this->mDeathState = 2;
-        func_ov002_020aea30(this, found, 0);
+        func_ov002_020aea30((Aea30C *)this, found, 0);
         this->mPrevAngleY = (u16)(this->HorzAngleToCPlayer() + 0x8000);
         hit = 1;
     }
@@ -276,7 +280,7 @@ void daSnowman_c::CheckAttacks() {
         if (found->mIsVanish != 0) return;
         if (found->mIsMetal == 1) {
             this->mDeathState = 2;
-            func_ov002_020aea30(this, found, 0);
+            func_ov002_020aea30((Aea30C *)this, found, 0);
             this->mPrevAngleY = (u16)(this->HorzAngleToCPlayer() + 0x8000);
             hit = 1;
         }
@@ -291,7 +295,7 @@ void daSnowman_c::CheckAttacks() {
         }
         if ((flags & 0x40) && (s32)found->param1 == 2) {
             this->mDeathState = 2;
-            func_ov002_020aea30(this, found, 0);
+            func_ov002_020aea30((Aea30C *)this, found, 0);
             this->mDeathSound = 2;
             this->mPrevAngleY = (u16)(this->HorzAngleToCPlayer() + 0x8000);
             hit = 1;

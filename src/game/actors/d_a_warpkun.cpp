@@ -27,13 +27,12 @@ static inline int IsPlayerActor(dActor_c *actor) {
     return actor->actorID == kPlayerActorID;
 }
 
-extern "C" {
 
 /* ROM ordinal 7 -- actor-table C ABI factory. */
 daWarpkun_c *daWarpkun_c_classInit() {
     return new daWarpkun_c();
 }
-}
+
 
 /* ROM ordinal 6 -- key function: sizes the clip volume and the trigger
    cylinder from the spawn param's low two nibbles. Init's flags are 2

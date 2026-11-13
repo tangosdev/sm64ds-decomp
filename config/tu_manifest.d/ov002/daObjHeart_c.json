@@ -84,8 +84,8 @@
       "ordinal": 6
     },
     {
-      "symbol": "daObjHeart_c_classInit",
-      "address": "0x020bc8b4",
+      "symbol": "_Z22daObjHeart_c_classInitv",
+      "address": "",
       "size": "0x00000040",
       "legacy_source": "src/d_a_obj_heart.c",
       "ordinal": 7

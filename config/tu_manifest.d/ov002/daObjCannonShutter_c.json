@@ -84,8 +84,8 @@
       "ordinal": 6
     },
     {
-      "symbol": "daObjCannonShutter_c_classInit",
-      "address": "0x020bcccc",
+      "symbol": "_Z30daObjCannonShutter_c_classInitv",
+      "address": "",
       "size": "0x00000030",
       "legacy_source": "src/daObjCannonShutter_c_Spawn.c",
       "ordinal": 7

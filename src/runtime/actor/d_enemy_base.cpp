@@ -224,7 +224,7 @@ struct Aea30C : dEnemyBase_c {
     void func_ov002_020ae73c(dActor_c *, dBgCh_Actr *);
     void func_ov002_020aea2c(dActor_c *, dBgCh_Actr *);
 };
-extern "C" void func_ov002_020aea30(Aea30C* c, dActor_c* a, dBgCh_Actr* b) {
+void func_ov002_020aea30(Aea30C* c, dActor_c* a, dBgCh_Actr* b) {
     if (c->mDeathState == 0)
         return;
     c->mFlags &= ~0x10000000;
@@ -279,7 +279,7 @@ static inline int IsPlayerActor(dActor_c *actor) {
     return actor->actorID == 0xbf;
 }
 
-extern "C" void func_ov002_020ae968(dEnemyBase_c *c, dActor_c *arg) {
+void func_ov002_020ae968(dEnemyBase_c *c, dActor_c *arg) {
     c->mVertSpeed = 0x14000;
     if (IsPlayerActor(arg)) {
         u16 t = data_ov002_020ff01c[(u16)arg->param1];
@@ -297,7 +297,7 @@ void Aea30C::func_ov002_020ae954(dActor_c* a, dBgCh_Actr*)
     func_ov002_020ae968(this, a);
 }
 
-extern "C" void func_ov002_020ae8b8(dEnemyBase_c *c, dActor_c *arg) {
+void func_ov002_020ae8b8(dEnemyBase_c *c, dActor_c *arg) {
     if (IsPlayerActor(arg)) {
         u16 t = data_ov002_020ff01c[(u16)arg->param1];
         int scaled = (int)t << 3;
@@ -382,7 +382,7 @@ int dEnemyBase_c::UpdateDeath(dBgCh_Actr &clsn) {
    survive the body in a callee-saved register. So both observations are true at
    once: the caller passes it, the callee ignores it, and the definition below
    carries the parameter unused. */
-extern "C" int func_ov002_020ae5c8(dEnemyBase_c *c, int x);
+int func_ov002_020ae5c8(dEnemyBase_c *c, int x);
 
 int EnemyDeathC::func_ov002_020ae64c(dBgCh_Actr &clsn) {
     int x = (int)&clsn;
@@ -407,7 +407,7 @@ int EnemyDeathC::func_ov002_020ae608(dBgCh_Actr &clsn) {
 }
 
 /* `x` is unused on purpose -- see the note on func_ov002_020ae64c, which passes it. */
-extern "C" int func_ov002_020ae5c8(dEnemyBase_c *c, int x) {
+int func_ov002_020ae5c8(dEnemyBase_c *c, int x) {
     if (c->mDeathTimer != 0)
         return 0;
     c->SpawnCoin();

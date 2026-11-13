@@ -227,11 +227,22 @@ extern void func_020371fc(void *);
 extern void func_02037318(void *);
 extern int func_02037e20(void *);
 extern void func_0203db0c(int idx, unsigned short val);
-extern void func_ov002_020ed63c(void *, int);
-extern int func_ov002_020eea84(void *, void *);
+}
+extern void func_ov002_020ed63c(daYegg_c *, int);
+
+extern int func_ov002_020eea84(dBgCh_Actr *, dActor_c *);
+extern int func_ov002_020eeca8(dBgCh_Actr *, dActor_c *);
+extern int func_ov002_020eee3c(char *, char *);
+extern int func_ov002_020ef2a4(dBgCh_Actr *, dActor_c *);
+extern void UnloadSilverStarAndNumber(void);
+
 extern int func_ov002_020eeeb8(void *, char *);
+
 extern int func_ov002_020ef070(void *, char *);
+
 extern int func_ov002_020f035c(unsigned int sel, int r1);
+extern "C" {
+
 extern int func_ov100_02144fcc(void);
 extern int func_ov100_02145014(void);
 extern void func_ov100_02145070(int);
@@ -243,7 +254,10 @@ extern void HitDeathPlane(int arg);
 extern unsigned char IsPlayerWarping(int a0);
 extern void KillPlayer(void);
 extern void LoadKeyModels(int idx);
+}
 extern void LoadSilverStarAndNumber(void);
+extern "C" {
+
 extern int Math_Function_0203b14c(void *, int a, int b, int c, int d);
 extern int PlayerChangeMusicVolumeHold(u32 vol, int t);
 extern void PlayerChangeMusicVolumeHold2(int, int);
@@ -363,8 +377,12 @@ extern void func_ov002_020d7430(daPly_c &player);
 extern int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
 extern void func_ov002_020e6b74(void *model, int *saved);
 extern int *func_ov002_020e6bb0(void *model);
+}
 extern int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player);
+
 extern int func_ov002_020f030c(int sel);
+extern "C" {
+
 extern short GetAngleToCamera(int i);
 extern struct ObjTeleport *GetTeleportDestObj(int i);
 extern u8 gShowTouchScreenArrows;
@@ -382,7 +400,10 @@ extern void func_ov002_020dc09c(char *c);
 extern void func_ov002_020e69c0(void *unused);
 extern void func_ov002_020e6a78(void *ramp, int blend);
 extern void func_ov002_020e6b3c(void *model);
+}
 extern int func_ov002_020f02c8(int sel);
+extern "C" {
+
 extern u32 PlayerNewHold(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                          void *callback);
 extern u32 PlayerNewHold3(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
@@ -395,8 +416,12 @@ extern signed char data_02092114;
 extern unsigned char data_0209f2bc[];
 extern int data_0209f32c;
 extern void func_02035860(void *, void *);
-extern int func_ov002_020edca4(void *);
-extern void func_ov002_020eedc0(void *, void *);
+}
+extern int func_ov002_020edca4(daYegg_c *);
+
+extern void func_ov002_020eedc0(dBgCh_Actr *, dActor_c *);
+extern "C" {
+
 extern u8 gMeterShownHealth;
 extern unsigned char gShowRaceTimer[];
 extern u32 PlayerNewHold5(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
@@ -1319,7 +1344,7 @@ void daPly_c::func_ov002_020bdc18() {
     for (i = 0; i < 5; i++) {
         dActor_c **a = mHeldObjQueue;
         if (a[i] != 0) {
-            func_ov002_020edca4(a[i]);
+            func_ov002_020edca4((daYegg_c *)a[i]);
             a = mHeldObjQueue;
             a[i] = 0;
         }
@@ -3302,7 +3327,7 @@ int daPly_c::func_ov002_020c200c(int arg) {
             return 0;
 
         if (this->IsBeingShotOutOfCannon())
-            func_ov002_020eedc0(&mMeshClsn, self);
+            func_ov002_020eedc0(&mMeshClsn, (dActor_c *)self);
     } else {
         return 0;
     }
@@ -3706,7 +3731,7 @@ void daPly_c::func_ov002_020c2db8() {
     ((daPly_c *)(c))->func_ov002_020c0fb4();
     ((daPly_c *)(c))->func_ov002_020c5d60();
     ((daPly_c *)(c))->func_ov002_020c61ac();
-    func_ov002_020eea84(&mMeshClsn, c);
+    func_ov002_020eea84(&mMeshClsn, (dActor_c *)c);
     ((daPly_c *)(c))->func_ov002_020c2b08();
     ((daPly_c *)(c))->func_ov002_020c29d4();
 }
@@ -8460,7 +8485,6 @@ int daPly_c::St_Shell_Cleanup() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_Shell_Main() {
-    extern int func_ov002_020eeca8(dBgCh_Actr *, dActor_c *);
     extern ControllerInput data_0209f498[];
     int flag = 0;
     dBgPi *res;
@@ -8679,7 +8703,6 @@ int daPly_c::St_HurtWater_Init() {
  */
 extern "C" {
 int daPly_c::St_MetalWaterWater_Main() {
-    extern int func_ov002_020eeca8(dBgCh_Actr *, dActor_c *);
     extern struct S18b2 data_0209f4a0[];
     u32 f;
     int v;
@@ -9896,7 +9919,6 @@ int func_ov002_020cf700(daPly_c *player) {
 extern "C" {
 int daPly_c::St_OnWall_Main() {
     extern ControllerInput data_0209f498[];
-    extern void func_ov002_020eee3c(void*, void*);
     u16 f = mStateFlags;
     u16 b0 = f & 1;
     if (b0 != 0) {
@@ -9939,7 +9961,7 @@ int daPly_c::St_OnWall_Main() {
         ApproachLinear(mAngleY, (s16)a, 0x800);
         mPrevAngleY = a;
         mHorzSpeed = func_ov002_020bf224(0xa000, 0x2000);
-        func_ov002_020eee3c(&mMeshClsn, ((char *)this));
+        func_ov002_020eee3c((char *)&mMeshClsn, ((char *)this));
     } else {
         if (data_0209f498[gActivePlayerSlot].mag != 0) {
             int ang = cstd::atan2(mWallNormalX, mWallNormalZ);
@@ -14205,7 +14227,7 @@ int daPly_c::St_YoshiPower_Init() {
         mStateStep = 6;
         mHeldObj = mHeldObjQueue[0];
         mHeldObj->mFlags |= 0x100;
-        func_ov002_020ed63c((void *)mHeldObj, 1);
+        func_ov002_020ed63c((daYegg_c *)mHeldObj, 1);
         mHeldObjQueue[0] = 0;
         for (i = 1; i < 5; i++) {
             dActor_c **p = mHeldObjQueue;
@@ -17322,7 +17344,6 @@ int daPly_c::St_GroundPound_Cleanup() {
  */
 extern "C" {
 int daPly_c::St_GroundPound_Main() {
-    void func_ov002_020ef2a4(void* c, void* arg);
     void PlayerNewSimpleHold14(unsigned int id, int x, int y, int z);
     extern dCamera_c *gCamera;
     extern char data_0209f4a0[];
@@ -19082,7 +19103,7 @@ int daPly_c::St_LongJump_Init() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_SideFlip_Main() {
-    extern int func_ov002_020eeca8(dBgCh_Actr * a, dActor_c * b);
+
     extern u16 data_0209f49e[];
     extern u16 data_0209f49c[];
     func_ov002_020eeca8(&mMeshClsn, this);
@@ -19180,7 +19201,6 @@ int daPly_c::St_HeadstandJump_Init() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_WallJump_Main() {
-    extern int func_ov002_020eeca8(dBgCh_Actr *, dActor_c *);
     extern unsigned short data_0209f49e[];
     extern void (daPly_c::*data_ov002_0211073c[])();
     func_ov002_020eeca8(&mMeshClsn, this);
@@ -19471,7 +19491,6 @@ void func_ov002_020e200c(char* c){
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_Jump_Main() {
-    extern int func_ov002_020eeca8(dBgCh_Actr *, dActor_c *);
     extern u16 data_0209f49e[];
     extern void (daPly_c::*data_ov002_0211073c[])();
     func_ov002_020eeca8(&mMeshClsn, this);
@@ -20106,7 +20125,6 @@ extern "C" {
 int daPly_c::CleanupResources() {
     enum { false_, true_ };
     struct VB { virtual void v0(); virtual void v1(); };
-    void UnloadSilverStarAndNumber(void);
     void UnloadKeyModels(int n);
     extern u8 gGameMode;
     extern SharedFilePtr data_ov002_0210e3d8;
@@ -21150,7 +21168,6 @@ s32 daPly_c::InitResources() {
     int SublevelToLevel(int s);
     void *__cxa_vec_new(int a, int b, int c, void *d, void *e);
     void func_02035644(void* p, int a);
-    void LoadSilverStarAndNumber(void);
     void func_02013a00(void);
     int StartWithFarCamera(void);
     /* local extern: `new Vector3[50]` elides both structor args to 0 because
