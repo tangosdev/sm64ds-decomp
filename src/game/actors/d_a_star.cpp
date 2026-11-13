@@ -87,8 +87,6 @@ enum daStar_c_AssetId {
  * a local or a struct copy of either one adds cleanup code the cartridge does
  * not have; NitroSDK VecFx32 and these same-layout PODs keep the bytes
  * identical. Whole matrices are copied through Mtx43. */
-struct Vec1 { s32 a; };                /* one word, copied component by component */
-
 /* A state handler: data_ov002_021109d8 holds one pointer-to-member per
    daStar_c::State. */
 typedef void (daStar_c::*StateHandler)();
@@ -818,9 +816,9 @@ void daStar_c::StateLaunch() {
         } else {
             mState = STATE_FLY_TO_MARKER;
             op = &other->mPos;
-            *(struct Vec1 *)&v0.x = *(struct Vec1 *)&op->x;
-            *(struct Vec1 *)&v0.y = *(struct Vec1 *)&op->y;
-            *(struct Vec1 *)&v0.z = *(struct Vec1 *)&op->z;
+            v0.x = op->x;
+            v0.y = op->y;
+            v0.z = op->z;
             v0.y = v0.y + 0xc8000;
             area = gCurrentSublevel;
             if (area == 0x11) {
@@ -2334,10 +2332,10 @@ void daStar_c::SpawnCollectEffects() {
     vc.y = FX_MUL(vc.y, mScaleY);
     vc.z = FX_MUL(vc.z, mScaleZ);
     VEC_Add(&vc, &mPos, &vc);
-    *(void **)&mParticle[0] =
-        (void *)Particle::System::New(mParticle[0], kPtclStarCollectA, vc.x, vc.y, vc.z, 0, 0);
-    *(void **)&mParticle[1] =
-        (void *)Particle::System::New(mParticle[1], kPtclStarCollectB, vc.x, vc.y, vc.z, 0, 0);
+    mParticle[0] =
+        (u32)Particle::System::New(mParticle[0], kPtclStarCollectA, vc.x, vc.y, vc.z, 0, 0);
+    mParticle[1] =
+        (u32)Particle::System::New(mParticle[1], kPtclStarCollectB, vc.x, vc.y, vc.z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2552,14 +2550,14 @@ void daStar_c::PlaceCameraOnRing(void *cam) {
             short ang = Vec3_HorzAngle(&vec[0], (Vector3*)&mCamPosX);
             vec[0].x = FX_SinIdx((u16)(s16)(ang + ((r6 & 3) << 14)) >> 4) * 1000 + vec[0].x;
             vec[0].z = FX_CosIdx((u16)(s16)(ang + ((r6 & 3) << 14)) >> 4) * 1000 + vec[0].z;
-            ((dCamera_c *)cam)->SetPos(*(const Vector3 *)&vec[0]);
+            ((dCamera_c *)cam)->SetPos(vec[0]);
         } else {
             if (!IsAreaShowing(mAreaId))
                 return;
             short ang = Vec3_HorzAngle(&vec[0], (Vector3*)&mCamPosX);
             vec[0].x += FX_MUL(dist, FX_SinIdx((u16)(s16)(ang + ((r6 & 3) << 14)) >> 4));
             vec[0].z += FX_MUL(dist, FX_CosIdx((u16)(s16)(ang + ((r6 & 3) << 14)) >> 4));
-            ((dCamera_c *)cam)->SetPos(*(const Vector3 *)&vec[0]);
+            ((dCamera_c *)cam)->SetPos(vec[0]);
         }
 
         if (!IsAreaShowing(mAreaId))
