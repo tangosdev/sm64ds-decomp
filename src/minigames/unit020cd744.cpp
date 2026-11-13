@@ -625,8 +625,7 @@ int TrmpItem::HitTest2D(TrampolineObjectCallbacks *jumper, int) {
         if ((stateWord == appearState->w[0] &&
              (mState[1] == appearState->w[1] || stateWord == 0)) ||
             (growState = &pmf_TrmpItem_GrowScale_2,
-             stateWord == growState->w[0] &&
-                 (mState[1] == growState->w[1] || stateWord == 0)))
+             stateWord == growState->w[0] && (mState[1] == growState->w[1] || stateWord == 0)))
             return 0;
     }
 
@@ -711,10 +710,8 @@ void TrmpItem::ProjectOnLine(TrampolineObjectCallbacks *jumper, V2 *currentProje
 
 void TrmpItem::UpdateMatrix() {
     Matrix4x3 rotation;
-    Matrix4x3_FromQuaternion(reinterpret_cast<const Quaternion *>(mRotation),
-                             &rotation);
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y,
-                              mPos.z);
+    Matrix4x3_FromQuaternion(reinterpret_cast<const Quaternion *>(mRotation), &rotation);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
     MTX_Concat43(&rotation, &data_020a0e68, &data_020a0e68);
     mModel->mat4x3 = data_020a0e68;
     mTexAnim.Update(mModel->data);
@@ -869,8 +866,8 @@ TrmpItem *TrmpItem::Spawn(int position, int *normal, int itemType, short motionT
         do {
             if (((TrmpItem *)base)->mActive == 0) {
                 itemOffset = itemIndex * 0x1d0;
-                ((TrmpItem *)(sTrmpItems + itemOffset))->Init((int *)position, normal,
-                                                             itemType, motionType);
+                ((TrmpItem *)(sTrmpItems + itemOffset))
+                    ->Init((int *)position, normal, itemType, motionType);
                 return (TrmpItem *)(sTrmpItems + itemOffset);
             }
             itemIndex++;
@@ -975,11 +972,9 @@ void TrmpLine::Draw() {
     int i;
     Matrix4x3 m2;
     Matrix4x3 m1;
-    Matrix4x3_FromTranslation(&data_020a0e68, mCenter.x, mCenter.y,
-                              mCenter.z);
+    Matrix4x3_FromTranslation(&data_020a0e68, mCenter.x, mCenter.y, mCenter.z);
     MTX_Concat43(&data_020a0e68, &data_0209b3ec, &m1);
-    Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, mScale.x, mScale.y,
-                                  mScale.z);
+    Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, mScale.x, mScale.y, mScale.z);
     MTX_Concat43(&data_020a0e68, &data_0209b3ec, &m2);
     G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
     G3_LoadMtx43(m1.m);
@@ -1309,8 +1304,7 @@ int TrmpLine::PushJumper() {
             mContactMotion.y = movementDelta.y;
             mContactMotion.z = movementDelta.z;
 
-            edgeRatio = FX_Div((currentAlong < 0) ? -currentAlong : currentAlong,
-                                   mHalfWidth);
+            edgeRatio = FX_Div((currentAlong < 0) ? -currentAlong : currentAlong, mHalfWidth);
             {
                 int halfLength = mHalfWidth;
                 int absoluteAlong = (currentAlong < 0) ? -currentAlong : currentAlong;
@@ -1339,8 +1333,7 @@ int TrmpLine::PushJumper() {
                 jumpers[jumperIndex]->alongLine = currentAlong;
                 jumpers[jumperIndex]->lineHalfLength = mHalfWidth;
                 mWobblePhase = 0;
-                PointDistance(&mContactPoint,
-                                       &mContactMotion);
+                PointDistance(&mContactPoint, &mContactMotion);
 
                 mBouncesLeft -= 1;
                 if (mBouncesLeft == 0) {
