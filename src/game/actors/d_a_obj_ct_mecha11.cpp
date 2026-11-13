@@ -117,20 +117,20 @@ int daObjCtMecha11_c::Behavior() {
     unsigned char idx = data_0209f2c0;
     mPrevAngleX = data_ov035_02112b80[idx];
     if (idx == 2) {
-        if (DecIfAbove0_Short((unsigned short *)&mRandTimer) == 0) {
+        if (DecIfAbove0_Short(&mRandTimer) == 0) {
             int r = (unsigned short)((unsigned)RandomIntInternal(&data_0209e650.value) >> 16);
             if ((unsigned)r >= 0x7fff)
                 mRandDirection = 1;
             else
                 mRandDirection = -1;
-            mRandTimer = (short)((r % 4 + 1) * 0x1e);
+            mRandTimer = ((r % 4 + 1) * 0x1e);
             mRandFrames = mRandTimer;
         } else {
-            if ((int)mRandTimer < (int)mRandFrames - 5) {
+            if (mRandTimer < mRandFrames - 5) {
                 /* The temporary keeps the 0x92 address in its own register
                  * beside the this+0x300 base the timer already computed. */
                 short *angleStep = &mPrevAngleX;
-                *angleStep = (short)(*angleStep * mRandDirection);
+                *angleStep = (*angleStep * mRandDirection);
             } else {
                 mPrevAngleX = 0;
             }
@@ -139,7 +139,7 @@ int daObjCtMecha11_c::Behavior() {
     mMeshCollider.SetClipRadius(0x180000);
     mMeshCollider.SetClipOffsetY(0x1000);
     short *angle = &mAngleX;
-    *angle = (short)(*angle + mPrevAngleX);
+    *angle = (*angle + mPrevAngleX);
     UpdateModel();
     UpdateShadow();
     if (IsClsnInRange(0x180000, 0x1000))
@@ -163,7 +163,7 @@ int daObjCtMecha11_c::InitResources() {
     v.z = mPosZ;
     v.y = v.y - 0xa000;
     dBgCh_Gnd rg;
-    rg.SetObjAndPos(v, (dActor_c *)0);
+    rg.SetObjAndPos(v, 0);
     mFloorPosY = v.y;
     if (rg.DetectClsn() != 0)
         mFloorPosY = rg.clsnY;
