@@ -380,7 +380,7 @@ int daObjHatenaBlock_c::InitResources()
     mShadowMat = mModel.mat4x3;
     {
         KCL_File *kcl = dBgW_Kc::LoadFile(data_ov102_0214e7d0);
-        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, *(CLPS_Block *)(&data_ov002_0210d954));
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov002_0210d954);
     }
     mHomePosY = mPosY;
     mContentType = (unsigned char)param1;
@@ -630,7 +630,7 @@ void daObjHatenaBlock_c::UpdateDropShadow() {
     int b0, b1;
 
     b0 = (mFlags & 8) ? 1 : 0;
-    if (b0 == 0 || ((b1 = (*(volatile unsigned char *)&gGameMode == 1) ? 1 : 0) != 0))
+    if (b0 == 0 || ((b1 = (gGameMode == 1) ? 1 : 0) != 0))
         mFloorY = GetFloorY();
     height = mPosY - mFloorY;
     if (height <= 0x1000) height = 0x1000;
@@ -1049,7 +1049,7 @@ void daObjHatenaBlock_c::SpawnPrizeFeather() {
     rot.x = *(u16 *)(data_020a0edc);
     rot.y = *(u16 *)(data_020a0edc + 2);
     rot.z = *(u16 *)(data_020a0edc + 4);
-    if ((int)(*(unsigned char *)(&gGameMode) == 1) != 0) {
+    if ((int)(gGameMode == 1) != 0) {
         rot.y = mAngleY;
     } else {
         rot.y = gCamera->mAngleY + 0x4000;
