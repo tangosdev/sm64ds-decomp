@@ -721,6 +721,7 @@ int __pformatter(int (*WriteProc)(void *, const char *, size_t), void *WriteProc
 
             if (format.argument_options == long_long_argument) {
                 if (!(buff_ptr = (unsigned char *)longlong2str(long_long_num, conv_buff + MAX_BUFF, format)))
+                    // goto: duplicated returns 0xa18, break+null check 0x854, reject_format helper 0x8f8 still DIFF __pformatter
                     goto invalid_conversion;
             } else {
                 if (!(buff_ptr = (unsigned char *)long2str(long_num, conv_buff + MAX_BUFF, format)))
@@ -847,8 +848,6 @@ int __pformatter(int (*WriteProc)(void *, const char *, size_t), void *WriteProc
 
         case 0xFF:
         default:
-        /* invalid_conversion gotos kept, as in MSL's __pformatter: a failed-conversion
-           test after the switch instead grows it (0x848) */
         invalid_conversion:
             num_chars += (n = strlen((const char *)curr_format));
             if (n && !(*WriteProc)(WriteProcArg, (const char *)curr_format, n))
