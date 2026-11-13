@@ -1419,7 +1419,7 @@ void func_02040c34(int isParent, int port, void (*stateCallback)(int),
                 node = saved;
                 next = node + 1;
                 end = ((int)next & 1) ? nodes->mNodes + 3 : nodes->mNodes + 3;
-                *(FileShareNode **)((base + 0x2000) + 0x700) = saved;
+                nodes->mFreeList = saved;
                 if (next < end) {
                     do {
                         node->mNext = node + 1;
