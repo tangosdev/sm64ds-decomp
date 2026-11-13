@@ -137,7 +137,7 @@
       "ordinal": 16
     },
     {
-      "symbol": "_ZN12Elem_204f27813func_0204f278Ev",
+      "symbol": "func_0204f278",
       "address": "0x0204f278",
       "legacy_source": "src/func_0204f278.cpp",
       "size": "0x0000005c",
@@ -452,7 +452,7 @@
       "ordinal": 61
     },
     {
-      "symbol": "_ZN1T13func_020500a4Ev",
+      "symbol": "func_020500a4",
       "address": "0x020500a4",
       "legacy_source": "src/func_020500a4.c",
       "size": "0x00000114",
