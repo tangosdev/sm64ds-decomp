@@ -70,7 +70,7 @@ extern "C" void func_ov007_020bce70(short n, int frames);
 extern "C" void func_ov007_020bfe4c(Ov007Camera *camera, int x, int y, int z, void *out);
 extern int func_ov007_020c1da0(int i);
 extern int func_ov007_020c30ac(Vector3 *arr, int count, Vector3 *target, int arg4, int *out);
-extern "C" unsigned short func_ov007_020c3be0(int t, int a, int b);
+unsigned short func_ov007_020c3be0(int t, int a, int b);
 extern void func_ov007_020c9a84(Ov007Swing *swing, Vector3 *offset, u16 *rotX, u16 *rotY);
 extern void func_ov007_020c9c24(Ov007Swing *swing, int shift);
 extern void func_ov007_020c9d90(Ov007Swing *swing, Ov007Mesh *mesh);

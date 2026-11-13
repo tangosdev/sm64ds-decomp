@@ -2,6 +2,7 @@
 
 extern void func_ov007_020cb7c0(Vector3_16 *out, int w, int h, int *pts, s16 a5, s16 a6);
 extern void func_ov007_020cb4b0(s16 *p, s16 *nrm, int w1, int h1, int x, int y);
+#define func_ov007_020c368c _Z19func_ov007_020c368cP10Vector3_16ii
 extern void func_ov007_020c368c(Vector3_16 *v, int count, int clamp);
 
 /* Recomputes the mesh's normals: the face normals of every cell

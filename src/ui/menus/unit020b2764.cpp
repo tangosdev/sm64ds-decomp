@@ -86,7 +86,7 @@ extern "C" void func_ov007_020bc6b4(Ov007Model *model, void *files, int count);
 extern "C" Ov007Model *func_ov007_020bc6d4(void *bmd, int flags);
 extern void func_ov007_020bea44(Ov007Figure *fig);
 extern Ov007Figure *func_ov007_020beaa0(int index, int figureIndex);
-extern "C" unsigned short func_ov007_020c3be0(int t, int a, int b);
+unsigned short func_ov007_020c3be0(int t, int a, int b);
 
 extern "C" void func_ov007_020b283c(void);
 

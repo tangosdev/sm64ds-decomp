@@ -99,7 +99,7 @@ extern "C" int func_ov007_020bdeb0(int a);
 extern "C" void func_ov007_020bfe4c(Ov007Camera *cam, int x, int y, int z, void *out);
 extern int func_ov007_020c1da0(int i);
 extern "C" int func_ov007_020c3ba8(int);
-extern "C" unsigned short func_ov007_020c3be0(int t, int a, int b);
+unsigned short func_ov007_020c3be0(int t, int a, int b);
 extern "C" void func_ov007_020c3d1c(void *);
 extern "C" void *func_ov007_020c3df4(const char *name, int size);
 extern "C" void func_ov007_020c4f50(void *c, int a1, int a2, int a3, int a4);

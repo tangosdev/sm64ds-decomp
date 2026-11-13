@@ -107,7 +107,6 @@ extern "C" {
 
 /* ---- arm9 / ov002 ---- */
 int AngleDiff(int, int);
-void Matrix4x3_ApplyInPlaceToScale(void *m, int x, int y, int z);
 int func_ov002_020dd8b8(void *c);
 }
 

@@ -4,6 +4,7 @@
 #include "nitro/fx/fx.h"
 extern void func_ov007_020c1448(Ov007Texture *self, u32 texGen, u32 repeat, u32 flip, u32 color0);
 extern void Texture_BindPalette(Ov007Texture *tex);
+#define func_ov007_020c49bc _Z19func_ov007_020c49bciiiiiiPti
 extern void func_ov007_020c49bc(int width, int height, fx32 s0, fx32 t0, int repeatU, int repeatV,
                                 u16 *tilemap, int texWidth);
 extern int data_ov007_0210325c;

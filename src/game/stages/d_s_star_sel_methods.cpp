@@ -51,7 +51,6 @@ extern PadData data_020a0e58[];
 int IsStarCollectedInLevel(s8 levelID, s32 starID);
 extern "C" void OamRender10_d_s_star_sel_methods(int, void *, int, int, int, int, int, int, int,
                                                  int);
-extern "C" void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *, s32, s32, s32);
 extern s8 gNextSublevel;
 extern s32 data_020a0db0;
 extern u8 data_02092128[];

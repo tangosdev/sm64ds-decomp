@@ -1438,7 +1438,7 @@ extern "C"
 extern "C"
 #endif
     extern void
-    func_0203cd80(int *, int);
+    func_0203cd80(int *, short);
 extern void func_0203d930(void);
 extern void func_0203dafc(int);
 /* 0x020440e8 is NOT `func_020440e8`. config/arm9/symbols.txt:1842 exports it as
