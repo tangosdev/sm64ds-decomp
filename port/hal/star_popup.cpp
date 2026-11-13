@@ -35,6 +35,9 @@ extern unsigned char data_0209f22c[];     // hold timer
 extern unsigned char data_0209f228;       // the star number the clear screen names
 extern short data_02092144[];             // per-player health word (wedges in bits 8..15)
 extern unsigned char data_0209fc68[];     // (s32) Bowser / ending hold (6 = the ending)
+extern unsigned char data_0209f2fc;       // the entry reason of this level (1 exit course, 2 death)
+extern unsigned char data_ov002_02111178; // the HUD's life / star slide state (2..5 = the course-clear banner)
+extern unsigned char data_0209f248;       // the state PS_Update is in
 void *_ZN8dActor_c4NextEPKS_(const void *prev);
 void _ZN8dActor_c24KillAndTrackInDeathTableEv(void *self);
 int _ZN8daStar_c19func_ov002_020e73acEv(char *star);      // the ROM's star classifier
@@ -893,8 +896,9 @@ void census() {
                  (unsigned)data_02092128[*(const unsigned char *)(me + 0x6d8) & 0x3f], (int)(signed char)data_02092110[0], rd32(data_0209fc48),
                  (unsigned)data_0209f2d8[0]);
     // CREDITS1: my health (wedges), my body's state routine and the Bowser / ending hold word, to see a hurt or a death in the ending
-    std::fprintf(stderr, " hp=%d st=%p fc68=%u", (int)((data_02092144[(int)data_0209f250] >> 8) & 0xff), *(void *const *)(me + 0x370),
-                 rd32(data_0209fc68));
+    std::fprintf(stderr, " hp=%d st=%p fc68=%u why=%u hud=%u ps=%u/%u lc=%u", (int)((data_02092144[(int)data_0209f250] >> 8) & 0xff),
+                 *(void *const *)(me + 0x370), rd32(data_0209fc68), (unsigned)data_0209f2fc, (unsigned)data_ov002_02111178,
+                 (unsigned)data_0209f2c4[0], (unsigned)data_0209f248, (unsigned)data_0209f20c[0]);
     for (const char *a = (const char *)_ZN8dActor_c4NextEPKS_(0); a; a = (const char *)_ZN8dActor_c4NextEPKS_(a)) {
         if (*(const unsigned short *)(a + 0x0c) != 178) continue;
         const int *p = (const int *)(a + 0x5c);
