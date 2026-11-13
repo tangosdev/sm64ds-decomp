@@ -110,8 +110,7 @@ extern PopoiPMF data_ov077_02127cd8[2];
 /* Member bodies have C++ linkage and mwccarm does not inherit C linkage into
  * their block-scope externs, so every external FUNCTION declaration lives in
  * this file-scope region (extern data names are unmangled either way; they are
- * kept here too so each call site reads identically). The _ZN spellings are
- * the Fix12-by-value signatures the real headers cannot express. */
+ * kept here too so each call site reads identically). */
 extern "C" {
 extern int data_0209f32c;               /* WATER_HEIGHT */
 extern signed char gCurrentSublevel;    /* LEVEL_ID */

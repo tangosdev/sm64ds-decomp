@@ -31,7 +31,6 @@
  *   translation stays m[9]/m[10]/m[11].
  *
  * Known limits:
- *   func_0200fa04 is Behavior's impact dust; no named method in this TU.
  *   data_ov023_02112088 / 02112080 are resource handles this TU's sinit
  *   owns; data_ov064_0211ba4c (CLPS) is overlay .data.
  *   No daPly_c.h / dCamera_c.h.
@@ -50,10 +49,6 @@ enum d_a_obj_fm_battan_AssetId { ASSET_FM_BATTAN_BMD = 0x0616, ASSET_FM_BATTAN_K
 #include "math/CalcLib.h"
 
 extern CLPS_Block data_ov064_0211ba4c;
-extern "C" {
-
-/* The 8-byte store into the mesh collider's +0x18 callback slot. */
-}
 
 /* The retail static initializer constructs these two 8-byte resource handles
  * in source order and lets the C++ runtime register their destructors.  The
