@@ -80,7 +80,7 @@ void func_02020820(OamAnimation *anim, int *src, int screen, int loops, u8 enabl
     anim->scaleX = 0x1000;
     anim->scaleY = 0x1000;
     anim->rotation = 0;
-    anim->loops = (u8)loops;
+    anim->loops = loops;
     anim->enabled = enabled;
     anim->affine = affine;
     anim->screen = screen;
@@ -222,7 +222,7 @@ void OAM::Render(bool sub, struct OamAttr *attr_, int xOff, int yOff, int palett
             if (t >= 0x100)
                 t -= 0x200;
             x = t;
-            u = (s8)attr->y;
+            u = attr->y;
             w = GetObjWidth(attr->shape, attr->size);
             {
                 int h;
@@ -351,7 +351,7 @@ void OAM::Render(bool sub, struct OamAttr *attr_, int xOff, int yOff, int palett
                 int color;
                 tile = a23 << 22;
                 tile = tile >> 22;
-                color = (int)((a01 << 18) >> 31);
+                color = ((a01 << 18) >> 31);
                 maskbits = a01 & 0xc000c000;
                 mosaic = (a01 << 19) >> 31;
                 if (ipVal == 0x100 || ipVal == 0x300) {
