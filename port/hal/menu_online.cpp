@@ -40,6 +40,7 @@ extern "C" int hal_window_focused(void);           /* hal/sub_screen.cpp */
 extern "C" int port_host_key_script(int vk);       /* tests/walk_window.cpp: SM64DS_HOST_KEY, 0 when unset */
 
 extern "C" {
+extern unsigned char data_0209caa0[];      /* the current file record; + 0x44 the minigame record, + 0x48 its unlock word */
 unsigned char func_ov007_020cc600(int arg);   /* src/game/stages/d_s_dsmt.cpp: the title's client command dispatcher; 20 = read the three files again (allocates a fresh 0xcc byte block) */
 int port_title_elem_boxes(int *slot, int *id, int *x0, int *y0, int *x1, int *y1, int max);
 void func_ov007_020bdeb0(int idx);   /* the title scene's own sound call (overlay 7) */
@@ -78,8 +79,21 @@ void medium(int online)
     g.med_online = online ? 1 : 0;
     ntr::backup::select_online(online ? 1 : -1);      /* off = what the environment says (a launcher started Adventure Online keeps its own save) */
     /* the title read the three files once, at the scene's start (the log of SM64DS_SAVE_TRACE shows the 0x0000 / 0x0080 / 0x0100 reads long before the
-       main page): the ROM's own command 20 reads them again, from the medium that is selected now, and rebuilds the plates' data from them */
+       main page): the ROM's own command 20 reads them again, from the medium that is selected now, and rebuilds the plates' data from them.
+       CREDITS1: the shared minigame record first (command 21, ReadMinigameData into data_0209caa0 + 0x44), from the same medium.
+       SaveData::ReadFileData ANDs every file's rabbit key word with that record's unlock word (src/engine/save/SaveData.cpp:103,
+       `*(buf + 0xc) &= *(data_0209caa0 + 0x48)`), so with the other medium's record still in memory an online file's keys were cut
+       down to the keys the single player save had (and the solo file's to the online save's on the way back), and the first save
+       wrote the cut keys and that record to the medium for good. The title's own boot reads the record before the files. */
+    func_ov007_020cc600(21);
     func_ov007_020cc600(20);
+    {
+        unsigned w = 0, k = 0;
+        memcpy(&w, data_0209caa0 + 0x48, 4);
+        memcpy(&k, data_0209caa0 + 0x0c, 4);   /* command 20 leaves the last file read (file C) in the record */
+        fprintf(stderr, "[online] save medium -> %s: the minigame record, then the three files, read from it (unlock word %08x, "
+                "file C rabbit keys %08x)\n", online ? "the online save" : "the single player save", w, k);
+    }
 }
 
 int elem_box(int id, int *x0, int *y0, int *x1, int *y1)

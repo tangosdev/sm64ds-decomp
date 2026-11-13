@@ -33,6 +33,11 @@ extern unsigned char data_0209fc48[];     // cutscene
 extern unsigned char data_02092110[];     // pending level change, <0 = none
 extern unsigned char data_0209f22c[];     // hold timer
 extern unsigned char data_0209f228;       // the star number the clear screen names
+extern short data_02092144[];             // per-player health word (wedges in bits 8..15)
+extern unsigned char data_0209fc68[];     // (s32) Bowser / ending hold (6 = the ending)
+extern unsigned char data_0209f2fc;       // the entry reason of this level (1 exit course, 2 death)
+extern unsigned char data_ov002_02111178; // the HUD's life / star slide state (2..5 = the course-clear banner)
+extern unsigned char data_0209f248;       // the state PS_Update is in
 void *_ZN8dActor_c4NextEPKS_(const void *prev);
 void _ZN8dActor_c24KillAndTrackInDeathTableEv(void *self);
 int _ZN8daStar_c19func_ov002_020e73acEv(char *star);      // the ROM's star classifier
@@ -890,6 +895,10 @@ void census() {
     std::fprintf(stderr, " chr body=%u save=%u tbl=%u lc=%d cut=%08x mode=%u", *(const unsigned *)(me + 8) & 0xffu, (unsigned)data_0209cad2[0x0f],
                  (unsigned)data_02092128[*(const unsigned char *)(me + 0x6d8) & 0x3f], (int)(signed char)data_02092110[0], rd32(data_0209fc48),
                  (unsigned)data_0209f2d8[0]);
+    // CREDITS1: my health (wedges), my body's state routine and the Bowser / ending hold word, to see a hurt or a death in the ending
+    std::fprintf(stderr, " hp=%d st=%p fc68=%u why=%u hud=%u ps=%u/%u lc=%u", (int)((data_02092144[(int)data_0209f250] >> 8) & 0xff),
+                 *(void *const *)(me + 0x370), rd32(data_0209fc68), (unsigned)data_0209f2fc, (unsigned)data_ov002_02111178,
+                 (unsigned)data_0209f2c4[0], (unsigned)data_0209f248, (unsigned)data_0209f20c[0]);
     for (const char *a = (const char *)_ZN8dActor_c4NextEPKS_(0); a; a = (const char *)_ZN8dActor_c4NextEPKS_(a)) {
         if (*(const unsigned short *)(a + 0x0c) != 178) continue;
         const int *p = (const int *)(a + 0x5c);
@@ -1103,8 +1112,88 @@ void star_popup_set_only_collector(int on) {
 
 }  // namespace port
 
+#ifndef PORT_ROM_CLEAN
+extern "C" int port_adventure_ghost_seat(int slot);
+extern "C" int port_adventure_hub_body(int slot);
+extern "C" unsigned char data_0209f21c;
+// CREDITS1 proof knob SM64DS_CREDITS_WATCH=1 (dev only): one [crwatch] line whenever the level-clear flag (data_0209f20c), the
+// pause / save menu state (data_0209f2c4), my health or my state routine changes, with every live body's state routine, so a row
+// can tell which body started a course-clear and when my player was hurt or died.
+static void credits_watch() {
+    using namespace port;
+    static int on = -1;
+    if (on < 0) { const char *e = std::getenv("SM64DS_CREDITS_WATCH"); on = (e && *e && *e != '0') ? 1 : 0; }
+    if (!on) return;
+    static unsigned last_lc = 0, last_ps = 0, frame = 0; static int last_hp = -1, last_lv = -1; static const void *last_st = nullptr;
+    ++frame;
+    const int me = (int)data_0209f250;
+    {   // SM64DS_CREDITS_HP=frame:wedges (dev only): set my health once at that watch frame (a low-health ending row)
+        static int hp_at = -2, hp_to = 0;
+        if (hp_at == -2) {
+            const char *e = std::getenv("SM64DS_CREDITS_HP");
+            hp_at = -1;
+            if (e && std::sscanf(e, "%d:%d", &hp_at, &hp_to) != 2) hp_at = -1;
+        }
+        if (hp_at >= 0 && (int)frame == hp_at && me >= 0 && me < 32) {
+            data_02092144[me] = (short)((data_02092144[me] & 0xff) | ((hp_to & 0xff) << 8));
+            std::fprintf(stderr, "[crwatch] f%u health set to %d (SM64DS_CREDITS_HP)\n", frame, hp_to);
+        }
+    }
+    const char *b = (me >= 0 && me < 32) ? (const char *)data_0209f394[me] : nullptr;
+    const unsigned lc = data_0209f20c[0], ps = data_0209f2c4[0];
+    const int hp = (me >= 0 && me < 32) ? (int)((data_02092144[me] >> 8) & 0xff) : -1;
+    const void *st = b ? *(void *const *)(b + 0x370) : nullptr;
+    const int lv = (int)data_0209f2f8;
+    if (lc == last_lc && ps == last_ps && hp == last_hp && st == last_st && lv == last_lv) return;
+    std::fprintf(stderr, "[crwatch] f%u level %d mode %u cut %08x: levelclear %u->%u menu %u->%u hp %d->%d my state %p->%p why %u hud %u |",
+                 frame, lv, (unsigned)data_0209f2d8[0], rd32(data_0209fc48), last_lc, lc, last_ps, ps, last_hp, hp, last_st, st,
+                 (unsigned)data_0209f2fc, (unsigned)data_ov002_02111178);
+    if (lc != last_lc || ps != last_ps || lv != last_lv) {
+        std::fprintf(stderr, " nb %u", (unsigned)data_0209f21c);
+        for (int i = 0; i < 32; ++i) {
+            const char *a = (const char *)data_0209f394[i];
+            if (!a) continue;
+            const int *p = (const int *)(a + 0x5c);
+            std::fprintf(stderr, " b%d(seat %d st %p at %d,%d,%d pf %x hb %d)", i, i == me ? -1 : port_adventure_ghost_seat(i), *(void *const *)(a + 0x370),
+                         p[0] >> 12, p[1] >> 12, p[2] >> 12, (unsigned)*(const unsigned char *)(a + 0x13), port_adventure_hub_body(i));
+            if (i > 4) break;
+        }
+        int np = 0;   // every Player actor (class 0xbf) the seat table does not name
+        for (const char *a = (const char *)_ZN8dActor_c4NextEPKS_(0); a; a = (const char *)_ZN8dActor_c4NextEPKS_(a)) {
+            if (*(const unsigned short *)(a + 0x0c) != 0xbf) continue;
+            ++np;
+            bool seated = false;
+            for (int i = 0; i < 32; ++i) seated = seated || data_0209f394[i] == a;
+            if (seated) continue;
+            const int *p = (const int *)(a + 0x5c);
+            std::fprintf(stderr, " UNSEATED(%p p1 %x st %p at %d,%d,%d pf %x)", (const void *)a, *(const unsigned *)(a + 8),
+                         *(void *const *)(a + 0x370), p[0] >> 12, p[1] >> 12, p[2] >> 12, (unsigned)*(const unsigned char *)(a + 0x13));
+        }
+        std::fprintf(stderr, " players %d", np);
+    }
+    if (b && st != last_st && data_0209f2d8[0] == 2) {    // a state change in the ending: what stands right under / around me
+        const int *mp = (const int *)(b + 0x5c);
+        std::fprintf(stderr, " me at %d,%d,%d near:", mp[0] >> 12, mp[1] >> 12, mp[2] >> 12);
+        int n = 0;
+        for (const char *a = (const char *)_ZN8dActor_c4NextEPKS_(0); a && n < 12; a = (const char *)_ZN8dActor_c4NextEPKS_(a)) {
+            if (a == b) continue;
+            const int *p = (const int *)(a + 0x5c);
+            const int dx = (p[0] - mp[0]) >> 12, dy = (p[1] - mp[1]) >> 12, dz = (p[2] - mp[2]) >> 12;
+            if (dx > 600 || dx < -600 || dz > 600 || dz < -600 || dy > 600 || dy < -900) continue;
+            std::fprintf(stderr, " cls%u(%d,%d,%d)", (unsigned)*(const unsigned short *)(a + 0x0c), dx, dy, dz);
+            ++n;
+        }
+    }
+    std::fprintf(stderr, " wall=%lld\n", wall_ms());
+    last_lc = lc; last_ps = ps; last_hp = hp; last_st = st; last_lv = lv;
+}
+#endif
+
 extern "C" void port_star_popup_frame(void) {
     using namespace port;
+#ifndef PORT_ROM_CLEAN
+    credits_watch();
+#endif
     census();          // proof knobs, solo too
     keep_tick();       // STAREXIT3: the saved character through the ending, before every return (the ending is no popup, and a
                        // lost room must neither freeze nor leave it armed)
