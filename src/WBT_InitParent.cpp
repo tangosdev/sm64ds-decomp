@@ -20,7 +20,7 @@ extern void func_02065bb0(int v);
  * command counter, queue an empty command (func_02065af0 copies its 0x9c
  * bytes into queued_cmd), and set the two packet sizes less the 0xe-byte
  * header (func_02065ba0, func_02065bb0). func_02040c34 passes the file-share
- * packet sizes and func_020412f0, the file-share parent's callback. */
+ * packet sizes and WFSi_OnParentSystemCallback, the file-share parent's callback. */
 void WBT_InitParent(int send_packet_size, int recv_packet_size, WBTCallback callback) {
     OSIntrMode saved = OS_DisableInterrupts();
     int i;

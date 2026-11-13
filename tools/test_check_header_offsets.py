@@ -978,6 +978,27 @@ class InlineMethodBodyTests(unittest.TestCase):
         self.assertEqual(rc, 1, out)
         self.assertIn("2 commented fields, 1 mismatched, 0 unparsed", out)
 
+    def test_a_wrapped_method_before_fields_is_not_a_field(self):
+        self._assert_checked(
+            "struct Widget {\n"
+            "    void ProjectOnLine(TrampolineObjectCallbacks *jumper, V2 *currentProjection,\n"
+            "                       V2 *previousProjection);\n"
+            "    u32 first; /* 0x000 */\n"
+            "    u32 second; /* 0x004 */\n"
+            "};\n",
+            2, "0x8")
+
+    def test_a_wrong_offset_after_a_wrapped_method_still_fails(self):
+        rc, out = self._run(
+            "struct Widget {\n"
+            "    void ProjectOnLine(TrampolineObjectCallbacks *jumper, V2 *currentProjection,\n"
+            "                       V2 *previousProjection);\n"
+            "    u32 first; /* 0x004 */\n"
+            "};\n")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("MISMATCH", out)
+        self.assertNotIn("UNPARSED", out)
+
 
 # ------------------------- nested enums and anonymous unions are not fields
 

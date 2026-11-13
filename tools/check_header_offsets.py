@@ -946,7 +946,16 @@ def main(argv, repo=None):
             method_code, _ = _code_without_comments_or_strings(line)
             allocation_method = ALLOCATION_METHOD.match(method_code)
             inline_method = INLINE_METHOD.match(method_code)
-            if allocation_method or inline_method or re.match(r"^\s*(virtual\b|~\w+\s*\([^;]*\)\s*;|[A-Za-z_][\w:<>, &*]*\([^;]*\)\s*(const)?\s*;)", line):
+            # A method declared before any field may wrap after a comma
+            # (`void ProjectOnLine(TrampolineObjectCallbacks *jumper, V2 *currentProjection,`
+            # / `V2 *previousProjection);`). The one-line pattern needs `);` on
+            # this line, so both lines were UNPARSED and the walk's offsets after
+            # them were no longer trusted. An unclosed `(` at end of line is that
+            # wrap; a later method still ends the field list.
+            open_signature = n == 0 and re.match(
+                r"^\s*~?[A-Za-z_][\w:<>, &]*\([^);]*$", method_code)
+            if (allocation_method or inline_method or open_signature
+                    or re.match(r"^\s*(virtual\b|~\w+\s*\([^;]*\)\s*;|[A-Za-z_][\w:<>, &*]*\([^;]*\)\s*(const)?\s*;)", line)):
                 # ...unless we started from a base whose size is asserted. A derived
                 # class places no vptr of its own -- it inherits the base's, and the
                 # base's asserted size already counts it. The running offset is sound,
