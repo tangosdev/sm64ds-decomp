@@ -88,10 +88,11 @@ void medium(int online)
     func_ov007_020cc600(21);
     func_ov007_020cc600(20);
     {
-        unsigned w = 0;
+        unsigned w = 0, k = 0;
         memcpy(&w, data_0209caa0 + 0x48, 4);
-        fprintf(stderr, "[online] save medium -> %s: the minigame record, then the three files, read from it (unlock word %08x)\n",
-                online ? "the online save" : "the single player save", w);
+        memcpy(&k, data_0209caa0 + 0x0c, 4);   /* command 20 leaves the last file read (file C) in the record */
+        fprintf(stderr, "[online] save medium -> %s: the minigame record, then the three files, read from it (unlock word %08x, "
+                "file C rabbit keys %08x)\n", online ? "the online save" : "the single player save", w, k);
     }
 }
 
