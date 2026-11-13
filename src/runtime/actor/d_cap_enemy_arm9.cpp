@@ -87,7 +87,7 @@ int dCapEnemy_c::AddCap(unsigned int param)
         return;
     }
 
-    *(int *)(&mFlags) &= ~1;
+    mFlags &= ~1;
     mCapIcon.Link((char *)this, mCapId, mHadBank1Cap, mCapBank != 0);
 
     int result = func_02005e28();
@@ -211,7 +211,7 @@ int dCapEnemy_c::GetCapState() {
         return 2;
     }
 
-    unsigned char val = *(unsigned char *)&gGameMode;
+    unsigned char val = gGameMode;
     int check = (val == 1) ? 1 : 0;
     if (check == 0) {
         daPly_c *p = ClosestPlayer();
