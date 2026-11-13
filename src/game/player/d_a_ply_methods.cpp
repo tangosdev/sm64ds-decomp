@@ -180,10 +180,11 @@ extern unsigned short data_ov002_020ff29c[];
 extern int data_ov002_020ff2c0[];
 extern SharedFilePtr *data_ov002_020ff2f0[];
 extern void *data_ov002_020ff790[];
-extern u8 data_ov002_02109db8[];
-extern u16 data_ov002_02109dbc[];
-extern u8 data_ov002_02109dc4[];
-extern u8 data_ov002_02109dcc[];
+/* Frame windows ahead of the handler PMF band. */
+u8 data_ov002_02109db8[] = {46, 20, 0, 0};
+u16 data_ov002_02109dbc[] = {6, 9, 15, 0};
+u8 data_ov002_02109dc4[] = {24, 24, 9, 10, 46, 18, 0, 0};
+u8 data_ov002_02109dcc[] = {9, 10, 0, 0, 0, 0, 0, 0};
 extern int data_ov002_02109fe4[];
 extern u32 data_ov002_0210a07c[];
 int data_ov002_0210a560[3] = {116, 124, 120};
@@ -690,7 +691,6 @@ AnimScriptStep data_ov002_0210a4bc[] = {{191, 0}};
 /* Player animation scripts, frame windows, hurt tables, and body-model
  * pointer tables. All values and pointer targets are read by the state
  * handlers below; the three SharedFilePtr* arrays feed func_ov002_020e5948. */
-extern u32 data_ov002_0210a7e8[];
 extern SharedFilePtr data_ov002_0210ec50;
 extern SharedFilePtr data_ov002_0210ebb8;
 extern SharedFilePtr data_ov002_0210ec60;
@@ -815,6 +815,13 @@ AnimScriptStep *data_ov002_0210a7a0[] = {
     data_ov002_0210e7b8, data_ov002_0210a67c, data_ov002_0210a4bc, data_ov002_0210a434,
     data_ov002_0210a3dc, data_ov002_0210a5ec, data_ov002_0210a5fc, data_ov002_0210a62c,
     data_ov002_0210a6bc, data_ov002_0210a65c,
+};
+
+/* Level-enter SetAnim ids, indexed by mStateStep. St_LevelEnter_Init
+ * rewrites 133 to 165 when the cap is lost. The vtable storage begins
+ * at the next word. */
+u32 data_ov002_0210a7e8[] = {
+    71, 168, 74, 86, 84, 16, 84, 84, 133, 16, 86, 133, 16, 83, 83, 133, 133, 83, 133,
 };
 
 void func_ov002_020bcdf0(char *self)
@@ -24504,3 +24511,12 @@ void __sinit_ov002_021019d0(void) {
 }
 }
 
+#pragma section initsec end
+
+/* Retail constructor-table word .p__sinit_ov002_021019d0 at 0x02108110.
+ * pinit is the section mwcc names .ctor. The initializer above is a C
+ * function, so the compiler does not emit its own .p__sinit_ word for
+ * this file. This pointer is that word. */
+#pragma section pinit begin
+static void (*p__sinit_ov002_021019d0)(void) = __sinit_ov002_021019d0;
+#pragma section pinit end
