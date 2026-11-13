@@ -874,11 +874,11 @@ const char *id_name(int id, char *buf, int cap)
     if (id >= SL_MOUSE_BASE) {
         switch (sl_get(id)) {      /* CAMPACK1: the mouse buttons, by the Win32 VK the file stores */
         case 0: return "NONE";
-        case 1: return "LEFT";      /* MOUSELOCK1 */
-        case 2: return "RIGHT";
-        case 4: return "MIDDLE";
-        case 5: return "BACK";
-        case 6: return "FORWARD";
+        case 1: return "MB1";       /* MOUSELOCK1; BINDS1: MB1..MB5, so the left button never reads like the Left arrow key */
+        case 2: return "MB2";
+        case 4: return "MB3";
+        case 5: return "MB4";
+        case 6: return "MB5";
         default: snprintf(buf, cap, "MOUSE %d", sl_get(id)); return buf;
         }
     }

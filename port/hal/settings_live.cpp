@@ -394,7 +394,7 @@ int sl_capture_offer_mouse(int vk)
     if (!sl_capture_wants_mouse()) return 0;
     if (!(vk == 1 || vk == 2 || (vk >= 4 && vk <= 6))) return 0;
     if (vk == 1 && g_cap_id == SL_MOUSE_BASE + HOST_MOUSE_CAM_HOLD) {     /* MOUSELOCK1: left cannot be the look button */
-        snprintf(g_cap_refused, sizeof g_cap_refused, "Left click cannot be the look button");
+        snprintf(g_cap_refused, sizeof g_cap_refused, "MB1 cannot be the look button");
         return 0;
     }
     host_setting_set_mouse(g_cap_id - SL_MOUSE_BASE, vk);
