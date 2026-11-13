@@ -485,7 +485,7 @@ extern "C" {
 /* (data_ov070_02123520: SharedFilePtr view declared earlier in this TU) */
 /* Chase init: plays the file-02123520 animation (the wander one) at speed 1.0. */
 int func_ov070_0211fd60(daPropeller_Heyho_c *p) {
-    p->mAnmModel.SetAnim((BCA_File *)(((void **)&data_ov070_02123520)[1]), 0, 0x1000, 0);
+    p->mAnmModel.SetAnim((BCA_File *)data_ov070_02123520.filePtr, 0, 0x1000, 0);
     return 1;
 }
 }
@@ -904,9 +904,9 @@ extern "C" int func_ov070_0211f368(daPropeller_Heyho_c* c)
         x = c->mPosX;
         z = c->mPosZ;
         y = c->mPosY + 0x50000;
-        ((int*)&v)[0] = x;
-        ((int*)&v)[1] = y;
-        ((int*)&v)[2] = z;
+        v.x = x;
+        v.y = y;
+        v.z = z;
         c->mParticle0 = Particle::System::New(c->mParticle0, kPtclDeathA, v.x, v.y, v.z, 0, 0);
         c->mParticle1 =
             Particle::System::NewCleanParticle(c->mParticle1, kPtclDeathB, v.x, v.y, v.z, 0);
