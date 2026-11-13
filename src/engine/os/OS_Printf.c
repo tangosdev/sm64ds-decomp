@@ -233,26 +233,29 @@ int OS_VSNPrintf(char *buffer, int bufsz, const char *fmt, int *args) {
                 }
                 {
                     s8 cc = *fmt;
-                    /* num/xhex/dflt gotos kept: they are the shared integer, hex and
-                       invalid-spec tails, and the case bodies sit in ROM order */
                     switch (cc) {
                     case 0x6f:
                         pf[1] = eight;
                         flags |= 0x1000;
+                        // goto: o-into-u 0x8d0, p-into-x 0x8d4, dflt-copy 0x8f8 still DIFF OS_VSNPrintf
                         goto num;
                     case 0x75:
                         flags |= 0x1000;
+                        // goto: o-into-u 0x8d0, p-into-x 0x8d4, dflt-copy 0x8f8 still DIFF OS_VSNPrintf
                         goto num;
                     case 0x58:
                         pf[2] = uca;
+                        // goto: o-into-u 0x8d0, p-into-x 0x8d4, dflt-copy 0x8f8 still DIFF OS_VSNPrintf
                         goto xhex;
                     case 0x70:
                         flags |= 4;
                         prec = eight;
+                        // goto: o-into-u 0x8d0, p-into-x 0x8d4, dflt-copy 0x8f8 still DIFF OS_VSNPrintf
                         goto xhex;
                     case 0x63: {
                         int ch;
                         if (prec >= 0)
+                            // goto: c-else-copy 0x8e8, both-dflt-copies 0x8f8, o-into-u 0x8d0 still DIFF OS_VSNPrintf
                             goto dflt;
                         args++;
                         ch = args[-1];
@@ -309,11 +312,11 @@ int OS_VSNPrintf(char *buffer, int bufsz, const char *fmt, int *args) {
                         break;
                     }
                     case 0x25:
-                        if (pct + 1 != fmt)
-                            goto dflt;
-                        fmt++;
-                        string_put_char(&str, cc);
-                        break;
+                        if (pct + 1 == fmt) {
+                            fmt++;
+                            string_put_char(&str, cc);
+                            break;
+                        }
                     default:
                     dflt:
                         string_put_string(&str, pct, fmt - pct);
