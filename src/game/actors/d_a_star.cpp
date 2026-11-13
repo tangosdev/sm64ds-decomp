@@ -1916,8 +1916,7 @@ void daStar_c::AddStarMarker()
             if (mMarkerType == 2) {
                 int f43c;
                 if (mBits.collectedModel ||
-                    (((f43c = mKind) == 5 || f43c == 7) &&
-                     IsStarCollectedInCurLevel(mStarID) != 0))
+                    (((f43c = mKind) == 5 || f43c == 7) && IsStarCollectedInCurLevel(mStarID) != 0))
                     mMarkerType = 3;
             }
             SetStarMarker((int)i, this, mMarkerType);
