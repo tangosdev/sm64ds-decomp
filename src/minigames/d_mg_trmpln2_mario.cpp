@@ -357,7 +357,7 @@ body:
     D3D_PlaySeAtX(0x1c9, mPos.x);
     mAnmModel.SetAnim(sTrmpAnimStruggle, 0, 0x800, 0);
     mAnmModel.currFrame = 0;
-    *(W2 *)mState = *(W2 *)&pmf_Trmp2Mario_StateKnockedOut;
+    mState = pmf_Trmp2Mario_StateKnockedOut;
 }
 
 void dMgTrmpln2Mario_c::StateBounce() {
@@ -547,7 +547,7 @@ void dMgTrmpln2Mario_c::BounceOffLineA() {
     Sound_PlayBank1Panned(0, 4, mPos.x);
     D3D_PlaySeAtX(0x1b5, mPos.x);
     pad_68 = 0;
-    *(W2 *)mState = *(W2 *)&pmf_Trmp2Mario_StateBounce_2;
+    mState = pmf_Trmp2Mario_StateBounce_2;
     StateBounce();
 }
 
@@ -722,7 +722,7 @@ void dMgTrmpln2Mario_c::BounceOffLineB() {
     mAnmModel.currFrame = 0;
     Sound_PlayBank1Panned(0, mAnim, mPos.x);
 
-    *(W2 *)mState = *(W2 *)&pmf_Trmp2Mario_StateWallBounce_2;
+    mState = pmf_Trmp2Mario_StateWallBounce_2;
     StateWallBounce();
 }
 
@@ -1108,13 +1108,13 @@ void Trmp2Mario_DrawAll(void) {
     v.x = 0;
     v.y = 0;
     v.z = -0xff8;
-    func_0203cd80((int *)&v, -0x2000);
+    func_0203cd80(&v.x, -0x2000);
     func_0203ccd4((Vector3 *)&v, -0x3000);
     G3_LightVector(GX_LIGHTID_0, v.x, v.y, v.z);
     w.x = 0;
     w.y = 0;
     w.z = -0xff8;
-    func_0203cd80((int *)&w, -0x2000);
+    func_0203cd80(&w.x, -0x2000);
     G3_LightVector(GX_LIGHTID_1, w.x, w.y, w.z);
     G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
     G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));
@@ -1316,7 +1316,7 @@ body:
     Sound::PlayBank2_2D(0x1c9);
     mAnmModel.SetAnim(sTrmpAnimStruggle, 0, 0x800, 0);
     mAnmModel.currFrame = 0;
-    *(W2 *)mState = *(W2 *)&pmf_Trmp3DMario_StateKnockedOut;
+    mState = pmf_Trmp3DMario_StateKnockedOut;
 }
 
 void dMgTrmpln3DMario_c::StateGoal() {
@@ -1658,7 +1658,7 @@ void dMgTrmpln3DMario_c::BounceOffLineA() {
     D3D_PlaySeAtX(0x1b5, mPos.x);
 
     pad_5c = 0;
-    *(W2 *)mState = *(W2 *)&pmf_Trmp3DMario_StateHardBounce;
+    mState = pmf_Trmp3DMario_StateHardBounce;
     StateHardBounce();
 }
 
@@ -1823,7 +1823,7 @@ void dMgTrmpln3DMario_c::BounceOffLineB() {
     mAnmModel.currFrame = 0;
     Sound_PlayBank1Panned(0, mAnim, mPos.x);
 
-    *(W2 *)mState = *(W2 *)&pmf_Trmp3DMario_StateBounce;
+    mState = pmf_Trmp3DMario_StateBounce;
 
     StateBounce();
 }
@@ -1852,7 +1852,7 @@ void dMgTrmpln3DMario_c::JumpOff() {
     mAnmModel.currFrame = 0;
     Sound_PlayBank1Panned(0, mAnim, mPos.x);
 
-    *(W2 *)mState = *(W2 *)&pmf_Trmp3DMario_StateBounce_2;
+    mState = pmf_Trmp3DMario_StateBounce_2;
 
     StateBounce();
 }
