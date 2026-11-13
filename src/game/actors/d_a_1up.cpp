@@ -271,7 +271,7 @@ void da1up_c::UpdatePhysics() {
             if (mHorzSpeed >= 0xf000) mHorzSpeed = 0xf000;
         }
     }
-    UpdatePosWithOnlySpeed((dCc_c*)&mdCcAc_c);
+    UpdatePosWithOnlySpeed(&mdCcAc_c);
     UpdateWMClsn(mWithMeshClsn, 0);
     if (!mWithMeshClsn.IsOnWall()) return;
     mPrevAngleY = ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
