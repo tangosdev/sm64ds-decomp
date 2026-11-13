@@ -100,16 +100,15 @@ extern KaitendaiResources data_ov065_0211d35c[];
 /* local extern: RandomIntInternal has no shared header, and its named parameter preserves
  * this TU's @NNN static-initializer aliases. */
 extern "C" {
-
 extern int RandomIntInternal(int *seed);
 }
 
 
-extern "C" daObjCtKaitendai_c *daObjCtKaitendai_c_classInit_CT_MECHA06() {
+daObjCtKaitendai_c *daObjCtKaitendai_c_classInit_CT_MECHA06() {
     return new daObjCtKaitendai_c();
 }
 
-extern "C" daObjCtKaitendai_c *daObjCtKaitendai_c_classInit_CT_MECHA07() {
+daObjCtKaitendai_c *daObjCtKaitendai_c_classInit_CT_MECHA07() {
     return new daObjCtKaitendai_c();
 }
 

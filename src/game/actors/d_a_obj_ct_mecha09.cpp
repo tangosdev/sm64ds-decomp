@@ -53,6 +53,7 @@ extern u16 DecIfAbove0_Short(u16 *p);
 extern int RandomIntInternal(int *seed);
 }
 
+
 extern Mecha09ClsnFilePtr data_ov065_0211d9cc;
 extern Mecha09ModelFilePtr data_ov065_0211d9d4;
 extern u8 data_0209f2c0;
@@ -179,7 +180,7 @@ int daObjCtMecha09_c::InitResources() {
  * RTTI, allocation size, vtable identity, and the CT_MECHA09 registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical aliases: TTC_MovingBeam, TTC_MovingBeam_Spawn. */
-extern "C" daObjCtMecha09_c *daObjCtMecha09_c_classInit() {
+daObjCtMecha09_c *daObjCtMecha09_c_classInit() {
     return new daObjCtMecha09_c();
 }
 

@@ -20,7 +20,7 @@
  *
  * What stays, and why:
  * - func_02012694 and Vec3_Add have no shared header, so
- *   they keep a local extern "C" block. data_ov079_02128300 / 021282f0 are
+ *   they keep a local extern block. data_ov079_02128300 / 021282f0 are
  *   the model handles, in overlay data this TU does not own.
  * - Mtx43 keeps the one 0x30-byte mat4x3 block copy; Matrix4x3's
  *   own memberwise assignment comes out 0x18 bytes longer.
@@ -62,7 +62,7 @@ enum {
     kSmokeParticle = 0x90,
 };
 
-extern "C" daKlr_c *daKlr_c_classInit() {
+daKlr_c *daKlr_c_classInit() {
     return new daKlr_c();
 }
 

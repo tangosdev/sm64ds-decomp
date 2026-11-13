@@ -49,7 +49,7 @@ typedef char DonketuAnimFileHandle_size_must_be_8[sizeof(DonketuAnimFileHandle) 
 extern BullyResourceConfig data_ov064_0211b93c;
 
 /* Factory for the BOSS_DONKETU profile. Written first so it emits last. */
-extern "C" daBDonketu_c *daBDonketu_c_classInit() {
+daBDonketu_c *daBDonketu_c_classInit() {
     return new daBDonketu_c();
 }
 

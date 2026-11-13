@@ -101,8 +101,8 @@ struct TatumakiAnimFileHandle : SharedFilePtr {
     ~TatumakiAnimFileHandle();
 };
 
-extern "C" TatumakiModelFilePtr gWaterTatumakiModelFile;       /* water_tatumaki.bmd, 0x4a9 */
-extern "C" TatumakiAnimFileHandle gWaterTatumakiAnimationFile; /* water_tatumaki.bca, 0x4a8 */
+extern TatumakiModelFilePtr gWaterTatumakiModelFile;       /* water_tatumaki.bmd, 0x4a9 */
+extern TatumakiAnimFileHandle gWaterTatumakiAnimationFile; /* water_tatumaki.bca, 0x4a8 */
 extern daWater_Tatumaki_c::State data_ov026_02113f2c;          /* spin, waiting to catch */
 extern daWater_Tatumaki_c::State data_ov026_02113f3c;          /* drag the player down */
 extern BTA_File data_ov026_02112f40;
@@ -114,6 +114,7 @@ extern BTA_File data_ov026_02112f40;
 /* local extern: no shared header declares these. */
 
 extern void KillPlayer(void);
+
 
 
 daWater_Tatumaki_c::~daWater_Tatumaki_c() {}
@@ -341,7 +342,7 @@ int daWater_Tatumaki_c::InitResources() {
  * RTTI, allocation size, vtable identity, and the WATER_TATUMAKI registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: Whirlpool_Spawn. */
-extern "C" daWater_Tatumaki_c *daWater_Tatumaki_c_classInit() {
+daWater_Tatumaki_c *daWater_Tatumaki_c_classInit() {
     return new daWater_Tatumaki_c();
 }
 

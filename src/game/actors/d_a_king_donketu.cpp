@@ -222,21 +222,26 @@ namespace Sound {
 int PlayLong(u32, u32, u32, const Vector3 &, s16);
 }
 
-extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-extern Fix12i Vec3_HorzLen(const Vector3 *v);
-extern void func_02012694(unsigned int a, const Vector3 *b);
-extern "C" {
+
 
 int ChiefChilly_ChangeState(C *c, PMF *p);
 
 extern struct BCA_File *data_ov002_0210da30[2];
+extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+extern "C" {
 extern void Matrix4x3_FromRotationY(void* m, short ang);
 extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern void MTX_Concat43(void *dst, void *a, void *b);
 extern void Vec3_Lsl(void *d, void *s, int sh);
 extern void d_a_king_donketuNewSimpleHold(unsigned int id, int x, int y, int z);
+}
+
 extern dCamera_c *gCamera;
 extern struct Matrix4x3 data_020a0e68;
+extern Fix12i Vec3_HorzLen(const Vector3 *v);
+extern void func_02012694(unsigned int a, const Vector3 *b);
+extern "C" {
+
 /* Vec3_Sub is not declared by math/CalcLib.h. */
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int atan2_hold_d_a_king_donketu_1(Fix12i y, Fix12i x);
@@ -246,8 +251,8 @@ extern u16 DecIfAbove0_Short(void* p);
 extern int RandomIntInternal(int *seed);
 }
 
-extern void UnloadKeyModels(int i);
 extern s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
+extern void UnloadKeyModels(int i);
 extern "C" {
 extern void d_a_king_donketuPlayLongHold(unsigned int a, unsigned int b, unsigned int c,
                                          struct Vector3 *v, unsigned int d);
@@ -259,6 +264,7 @@ extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern void Matrix4x3_FromTranslation(struct Matrix4x3 *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
 }
+
 
 daKing_Donketu_c::~daKing_Donketu_c()
 {
@@ -1603,7 +1609,7 @@ int daKing_Donketu_c::EnterIntroTalk() {
 /* Stores the state record in mState (the shadow struct's pp, at +0x37c) and
    calls the enter member held in the record's first pointer-to-member; returns
    1 without calling if that pointer is null. */
-extern "C" int ChiefChilly_ChangeState(C *c, PMF *p) { c->pp = p; PMF *q = c->pp; if (*q == 0) return 1; return (c->**q)(); }
+int ChiefChilly_ChangeState(C *c, PMF *p) { c->pp = p; PMF *q = c->pp; if (*q == 0) return 1; return (c->**q)(); }
 
 /* Called at the end of every Behavior. Builds the model matrix (mPos >> 3,
    rotated by mAngleX/Y/Z) into mBlendAnmModel.mat4x3, then sets mFootPos[0..1]
@@ -1838,12 +1844,12 @@ int daKing_Donketu_c::Behavior()
     return 1;
 }
 
-
 extern void LoadKeyModels(int idx);
 extern "C" {
+}
+
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, dActor_c *a, Fix12i r, Fix12i h, Vector3_16 *p, Vector3_16 *q);
-}
 
 #pragma pop
 
@@ -1902,7 +1908,7 @@ s32 daKing_Donketu_c::OnAimedAtWithEgg()
 }
 
 /* Construct the KING_DONKETU actor and its members in declaration order. */
-extern "C" daKing_Donketu_c *daKing_Donketu_c_classInit()
+daKing_Donketu_c *daKing_Donketu_c_classInit()
 {
     return new daKing_Donketu_c;
 }

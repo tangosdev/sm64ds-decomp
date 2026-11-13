@@ -334,6 +334,6 @@ void daObjFl_Amilift_c::StoodOnCallback(dBgW *collider, daObjFl_Amilift_c *self,
  * `new daObjFl_Amilift_c` is the whole sequence the loose factory spelled by
  * hand: fBase_c::operator new(0x368), dBgActor_c's base constructor, the vptr
  * store, then mPathPtr's constructor. */
-extern "C" daObjFl_Amilift_c *daObjFl_Amilift_c_classInit(void) {
+daObjFl_Amilift_c *daObjFl_Amilift_c_classInit(void) {
     return new daObjFl_Amilift_c;
 }

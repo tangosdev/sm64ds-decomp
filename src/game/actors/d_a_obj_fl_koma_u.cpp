@@ -163,7 +163,7 @@ s32 daObjFl_KomaU_c::InitResources() {
  * RTTI, allocation size, vtable identity, and the FL_KOMA_U registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: RotatingFirebar_Spawn. */
-extern "C" daObjFl_KomaU_c *daObjFl_KomaU_c_classInit() {
+daObjFl_KomaU_c *daObjFl_KomaU_c_classInit() {
     return new daObjFl_KomaU_c();
 }
 

@@ -129,21 +129,21 @@
       "ordinal": 12
     },
     {
-      "symbol": "daUdlift_c_classInit_RC_RIFT02",
+      "symbol": "_Z30daUdlift_c_classInit_RC_RIFT02v",
       "address": "0x0213679c",
       "size": "0x00000030",
       "legacy_source": "src/d_a_udlift_rc_rift02.c",
       "ordinal": 13
     },
     {
-      "symbol": "daUdlift_c_classInit_UDLIFT",
+      "symbol": "_Z27daUdlift_c_classInit_UDLIFTv",
       "address": "0x021367cc",
       "size": "0x00000030",
       "legacy_source": "src/d_a_udlift_udlift.c",
       "ordinal": 14
     },
     {
-      "symbol": "daUdlift_c_classInit_UDLIFT_TERESA",
+      "symbol": "_Z34daUdlift_c_classInit_UDLIFT_TERESAv",
       "address": "0x021367fc",
       "size": "0x00000030",
       "legacy_source": "src/d_a_udlift_udlift_teresa.c",

@@ -98,14 +98,14 @@
       "ordinal": 8
     },
     {
-      "symbol": "daObjCtMecha04_c_classInit_CT_MECHA04L",
+      "symbol": "_Z38daObjCtMecha04_c_classInit_CT_MECHA04Lv",
       "address": "0x0211aae0",
       "size": "0x00000040",
       "legacy_source": "src/d_a_obj_ct_mecha04_ct_mecha04l.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "daObjCtMecha04_c_classInit_CT_MECHA04S",
+      "symbol": "_Z38daObjCtMecha04_c_classInit_CT_MECHA04Sv",
       "address": "0x0211ab20",
       "size": "0x00000040",
       "legacy_source": "src/d_a_obj_ct_mecha04_ct_mecha04s.cpp",

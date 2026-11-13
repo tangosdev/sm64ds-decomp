@@ -76,6 +76,7 @@ extern void func_ov002_020aea30(Aea30C *self, dActor_c *actor, dBgCh_Actr *colli
 
 
 
+
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
 enum daYurei_Mucho_c_AssetId {
     ASSET_YUREI_MUCHO_BMD = 0x042d,
@@ -116,7 +117,7 @@ extern daYurei_Mucho_c::State data_ov065_0211d660;
    daYurei_Mucho_c()` MATCHES (size 0x50); the synthesized ctor stores
    `_ZTV15daYurei_Mucho_c + 2`. classInit is a reconstructed source-style
    name, not a preserved identifier. */
-extern "C" daYurei_Mucho_c *daYurei_Mucho_c_classInit(void)
+daYurei_Mucho_c *daYurei_Mucho_c_classInit(void)
 {
     return new daYurei_Mucho_c();
 }

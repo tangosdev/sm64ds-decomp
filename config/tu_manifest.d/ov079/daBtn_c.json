@@ -189,7 +189,7 @@
       "ordinal": 21
     },
     {
-      "symbol": "func_ov079_0212522c",
+      "symbol": "_Z19func_ov079_0212522cP4dBgWP8dActor_cS2_",
       "address": "0x0212522c",
       "size": "0x00000014",
       "legacy_source": "src/func_ov079_0212522c.c",
@@ -273,14 +273,14 @@
       "ordinal": 33
     },
     {
-      "symbol": "daBtn_c_classInit_BATANKING",
+      "symbol": "_Z27daBtn_c_classInit_BATANKINGv",
       "address": "0x02126588",
       "size": "0x00000060",
       "legacy_source": "src/d_a_btn_batanking.c",
       "ordinal": 34
     },
     {
-      "symbol": "daBtn_c_classInit_BATAN",
+      "symbol": "_Z23daBtn_c_classInit_BATANv",
       "address": "0x021265e8",
       "size": "0x00000060",
       "legacy_source": "src/d_a_btn_batan.c",

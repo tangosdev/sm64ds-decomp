@@ -57,7 +57,7 @@
       "ordinal": 2
     },
     {
-      "symbol": "daObjKi_Ita_c_classInit",
+      "symbol": "_Z23daObjKi_Ita_c_classInitv",
       "address": "0x02112fbc",
       "size": "0x0000003c",
       "legacy_source": "src/daObjKi_Ita_c_classInit.c",

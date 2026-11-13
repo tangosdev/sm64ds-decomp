@@ -180,7 +180,7 @@
       "ordinal": 19
     },
     {
-      "symbol": "daMoray_c_classInit",
+      "symbol": "_Z19daMoray_c_classInitv",
       "address": "0x02112588",
       "size": "0x00000084",
       "legacy_source": "src/d_a_moray.c",

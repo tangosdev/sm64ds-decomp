@@ -86,7 +86,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "daObjShell_c_classInit",
+      "symbol": "_Z22daObjShell_c_classInitv",
       "address": "0x0211ad70",
       "size": "0x00000040",
       "legacy_source": "src/d_a_obj_shell.cpp",

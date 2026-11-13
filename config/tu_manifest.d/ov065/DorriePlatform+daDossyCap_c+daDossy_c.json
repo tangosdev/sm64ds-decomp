@@ -63,7 +63,7 @@
       "ordinal": 4
     },
     {
-      "symbol": "func_ov065_021180d4",
+      "symbol": "_Z19func_ov065_021180d4P12daDossyCap_c",
       "address": "0x021180d4",
       "size": "0x00000174",
       "legacy_source": "src/func_ov065_021180d4.c",
@@ -105,7 +105,7 @@
       "ordinal": 10
     },
     {
-      "symbol": "func_ov065_02118c4c",
+      "symbol": "_Z19func_ov065_02118c4cP12daDossyCap_c",
       "address": "0x02118c4c",
       "size": "0x00000078",
       "legacy_source": "src/func_ov065_02118c4c.c",
@@ -154,7 +154,7 @@
       "ordinal": 17
     },
     {
-      "symbol": "func_ov065_02119210",
+      "symbol": "_Z19func_ov065_02119210P12daDossyCap_c",
       "address": "0x02119210",
       "size": "0x00000018",
       "legacy_source": "src/func_ov065_02119210.c",
@@ -189,14 +189,14 @@
       "ordinal": 22
     },
     {
-      "symbol": "func_ov065_021195bc",
+      "symbol": "_Z19func_ov065_021195bcP4dBgWP8dActor_cS2_",
       "address": "0x021195bc",
       "size": "0x00000014",
       "legacy_source": "src/func_ov065_021195bc.c",
       "ordinal": 23
     },
     {
-      "symbol": "func_ov065_021195d0",
+      "symbol": "_Z19func_ov065_021195d0P4dBgWP8dActor_cS2_",
       "address": "0x021195d0",
       "size": "0x00000014",
       "legacy_source": "src/func_ov065_021195d0.c",
@@ -210,14 +210,14 @@
       "ordinal": 25
     },
     {
-      "symbol": "daDossyCap_c_classInit",
+      "symbol": "_Z22daDossyCap_c_classInitv",
       "address": "0x021195ec",
       "size": "0x00000048",
       "legacy_source": "src/d_a_dossy_cap.c",
       "ordinal": 26
     },
     {
-      "symbol": "daDossy_c_classInit",
+      "symbol": "_Z19daDossy_c_classInitv",
       "address": "0x02119634",
       "size": "0x00000088",
       "legacy_source": "src/d_a_dossy.c",

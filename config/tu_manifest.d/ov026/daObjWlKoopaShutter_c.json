@@ -78,7 +78,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "daObjWlKoopaShutter_c_classInit",
+      "symbol": "_Z31daObjWlKoopaShutter_c_classInitv",
       "address": "0x02111888",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_wl_koopa_shutter.c",

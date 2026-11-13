@@ -111,7 +111,7 @@
       "ordinal": 9
     },
     {
-      "symbol": "daObjSm_Lift_c_classInit",
+      "symbol": "_Z24daObjSm_Lift_c_classInitv",
       "address": "0x02111818",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_sm_lift.c",

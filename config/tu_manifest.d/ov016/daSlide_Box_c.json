@@ -86,7 +86,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "daSlide_Box_c_classInit",
+      "symbol": "_Z23daSlide_Box_c_classInitv",
       "address": "0x02113510",
       "size": "0x0000003c",
       "legacy_source": "src/d_a_slide_box.c",

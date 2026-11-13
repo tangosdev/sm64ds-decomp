@@ -118,7 +118,7 @@ int daObjKm2_Nobiru_c::InitResources() {
  * RTTI, allocation size, vtable identity, and the KM2_NOBIRU registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: ExtendingPlatform_Spawn. */
-extern "C" daObjKm2_Nobiru_c *daObjKm2_Nobiru_c_classInit() {
+daObjKm2_Nobiru_c *daObjKm2_Nobiru_c_classInit() {
     return new daObjKm2_Nobiru_c();
 }
 

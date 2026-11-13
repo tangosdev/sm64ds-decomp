@@ -37,7 +37,7 @@ extern BblPmfPair data_ov064_0211c7c8[2];
  * fBase_c::operator new call, the base C2, the vptr store and the two member
  * constructors inline -- a declared constructor would emit a `bl` the
  * factory does not have. */
-extern "C" daBbl_c *daBbl_c_classInit() {
+daBbl_c *daBbl_c_classInit() {
     return new daBbl_c();
 }
 

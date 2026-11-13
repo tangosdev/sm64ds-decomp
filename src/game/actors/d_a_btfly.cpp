@@ -89,22 +89,17 @@ struct BtflyAnimationFilePtr : SharedFilePtr {
  * the int cast keeps the pool-offset add the ROM has. */
 #define L(p) ((int)(p))
 
-
 s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
-// local extern: CalcLib.h also conflicts with this TU's retained Vec3_Asr and Vec3_HorzLen prototypes.
 s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-extern "C" {
-
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-}
-
 int Vec3_HorzLen(const Vector3 *v);
 extern "C" {
-
+void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Asr(void *d, void *s, int sh);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 ang);
 int RandomIntInternal(int *seed);
+}
+
 extern Matrix4x3 data_020a0e68; /* scratch matrix */
 /* Init LoadFile: ov002 BMD shared with the other small fauna, this overlay's
  * BCA, the still-model BMD, and the animated-model BMD. Cleanup Release. */
@@ -113,14 +108,11 @@ extern BtflyAnimationFilePtr gButterflyFlyAnimationFile;
 extern SharedFilePtr data_ov100_02148668;
 extern BtflyModelFilePtr gButterflyModelFile;
 extern ButterflyState data_ov100_02148628[];
-}
-
 
 /* Fix12<int> by value. The header method form homes those arguments on the
  * stack; these scalar entries are the ROM calls. */
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *w, void *actor, int radius, int height, void *a, void *b);
-
 
 /* One ~daBtfly_c() emits both D1 and D0. */
 daBtfly_c::~daBtfly_c()
@@ -539,7 +531,7 @@ int daBtfly_c::InitResources()
     return 1;
 }
 
-extern "C" daBtfly_c *daBtfly_c_classInit()
+daBtfly_c *daBtfly_c_classInit()
 {
     return new daBtfly_c();
 }

@@ -197,14 +197,14 @@
       "ordinal": 22
     },
     {
-      "symbol": "daObjFl_Coin_c_classInit",
+      "symbol": "_Z24daObjFl_Coin_c_classInitv",
       "address": "0x021192d0",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_fl_coin.c",
       "ordinal": 23
     },
     {
-      "symbol": "daObjFl_Puzzle_c_classInit",
+      "symbol": "_Z26daObjFl_Puzzle_c_classInitv",
       "address": "0x02119300",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_fl_puzzle.c",

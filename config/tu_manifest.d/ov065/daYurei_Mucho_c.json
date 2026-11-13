@@ -195,7 +195,7 @@
       "ordinal": 21
     },
     {
-      "symbol": "daYurei_Mucho_c_classInit",
+      "symbol": "_Z25daYurei_Mucho_c_classInitv",
       "address": "0x02116f48",
       "size": "0x00000050",
       "legacy_source": "src/d_a_yurei_mucho.c",
@@ -1324,7 +1324,7 @@
       "source": "0x0211cb80",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daYurei_Mucho_c_classInit",
+      "symbol": "_Z25daYurei_Mucho_c_classInitv",
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x02116f48"

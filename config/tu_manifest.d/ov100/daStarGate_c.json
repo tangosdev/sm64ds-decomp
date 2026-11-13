@@ -175,7 +175,7 @@
       "ordinal": 18
     },
     {
-      "symbol": "daStarGate_c_classInit",
+      "symbol": "_Z22daStarGate_c_classInitv",
       "address": "0x021461d4",
       "size": "0x00000038",
       "legacy_source": "src/d_a_star_gate.c",
@@ -553,7 +553,7 @@
       "source": "0x021483a8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daStarGate_c_classInit",
+      "symbol": "_Z22daStarGate_c_classInitv",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x021461d4"
@@ -1707,7 +1707,7 @@
           },
           {
             "ordinal": 19,
-            "symbol": "daStarGate_c_classInit",
+            "symbol": "_Z22daStarGate_c_classInitv",
             "identical": true,
             "relocCount": 4,
             "differences": [],
@@ -2222,7 +2222,7 @@
             "size": "0x000000a8"
           },
           {
-            "symbol": "daStarGate_c_classInit",
+            "symbol": "_Z22daStarGate_c_classInitv",
             "section": ".text",
             "size": "0x00000038"
           }
@@ -2963,7 +2963,7 @@
           },
           {
             "ordinal": 19,
-            "symbol": "daStarGate_c_classInit",
+            "symbol": "_Z22daStarGate_c_classInitv",
             "identical": true,
             "relocCount": 4,
             "differences": [],
@@ -3478,7 +3478,7 @@
             "size": "0x000000a8"
           },
           {
-            "symbol": "daStarGate_c_classInit",
+            "symbol": "_Z22daStarGate_c_classInitv",
             "section": ".text",
             "size": "0x00000038"
           }

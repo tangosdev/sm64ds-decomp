@@ -40,12 +40,10 @@ struct TboxAnimationFileHandle : SharedFilePtr {
     ~TboxAnimationFileHandle();
 };
 
+void func_02012694(u32 code, const Vector3 *pos);
 extern "C" {
-
 s32 AngleDiff(s32 a, s32 b);
 }
-
-void func_02012694(u32 code, const Vector3 *pos);
 
 
 /* The overlay's three {init, behavior} pointer-to-member pairs, filled by the
@@ -57,7 +55,7 @@ extern SharedFilePtr data_ov002_0210d9a8;
 extern SharedFilePtr data_ov002_0210da38;
 
 /* TREASURE_BOX factory. */
-extern "C" daObjTbox_c *daObjTbox_c_classInit() {
+daObjTbox_c *daObjTbox_c_classInit() {
     return new daObjTbox_c();
 }
 

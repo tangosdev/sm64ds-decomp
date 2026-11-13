@@ -121,7 +121,6 @@ struct JgmVector3 {
     ~JgmVector3();
 };
 
-extern "C" {
 
 extern DaJgmModelFile data_ov077_02127b50;
 extern DaJgmModelFile data_ov077_02127b48;
@@ -145,14 +144,12 @@ extern DaJgmStateHandler data_ov077_02127808;
 extern DaJgmStateHandler data_ov077_02127810;
 extern DaJgmStateHandler data_ov077_021277f8;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
-
-extern unsigned char DecIfAbove0_Byte(unsigned char *p);
-}
-
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern "C" {
 
+
+extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 
 extern int *Vec3_LslInPlace(void *v, int sh);
 extern void Vec3_Asr(void *d, void *s, int sh);
@@ -172,12 +169,12 @@ extern void d_a_jgmNewSimpleHold(unsigned int n, int x, int y, int z);
 }
 
 
-extern "C" daJgm_c *daJgm_c_classInit()
+daJgm_c *daJgm_c_classInit()
 {
     return new daJgm_c();
 }
 
-extern "C" SpawnInfo<daJgm_c> g_profile_JUGEM = {
+SpawnInfo<daJgm_c> g_profile_JUGEM = {
     daJgm_c_classInit,
     0x0109,
     0x007c,

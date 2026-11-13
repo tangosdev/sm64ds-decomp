@@ -193,7 +193,7 @@
       "ordinal": 21
     },
     {
-      "symbol": "daPgMthr_c_classInit",
+      "symbol": "_Z20daPgMthr_c_classInitv",
       "address": "0x0211267c",
       "size": "0x00000058",
       "legacy_source": "src/MotherPenguin_Spawn.c",

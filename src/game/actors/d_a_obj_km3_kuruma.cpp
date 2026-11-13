@@ -66,11 +66,11 @@ daObjKuruma_c::Resources gKm3KurumaResources = {
 #include "daObjKm3_Kuruma_c.h"
 #include "SpawnInfo.h"
 
-extern "C" daObjKm3_Kuruma_c *daObjKm3_Kuruma_c_classInit() {
+daObjKm3_Kuruma_c *daObjKm3_Kuruma_c_classInit() {
     return new daObjKm3_Kuruma_c();
 }
 
-extern "C" SpawnInfo<daObjKm3_Kuruma_c> g_profile_KM3_KURUMA = {
+SpawnInfo<daObjKm3_Kuruma_c> g_profile_KM3_KURUMA = {
     daObjKm3_Kuruma_c_classInit,
     0x0097, /* KM3_KURUMA registry id 151 */
     0x00de,

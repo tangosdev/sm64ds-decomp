@@ -466,7 +466,7 @@ s32 daBasabasa_c::OnYoshiTryEat() {
     return 4;
 }
 
-extern "C" daBasabasa_c *daBasabasa_c_classInit() {
+daBasabasa_c *daBasabasa_c_classInit() {
     return new daBasabasa_c();
 }
 

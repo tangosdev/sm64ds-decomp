@@ -85,7 +85,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "daObjKm2_Ami_Bou_c_classInit",
+      "symbol": "_Z28daObjKm2_Ami_Bou_c_classInitv",
       "address": "0x02111808",
       "size": "0x00000038",
       "legacy_source": "src/d_a_obj_km2_ami_bou.c",
@@ -742,7 +742,7 @@
       "source": "0x02112d98",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daObjKm2_Ami_Bou_c_classInit",
+      "symbol": "_Z28daObjKm2_Ami_Bou_c_classInitv",
       "addend": 0,
       "target_module": "ov045",
       "target_address": "0x02111808"

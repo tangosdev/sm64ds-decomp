@@ -145,7 +145,7 @@
       "ordinal": 14
     },
     {
-      "symbol": "daIbl_c_classInit",
+      "symbol": "_Z17daIbl_c_classInitv",
       "address": "0x0214316c",
       "size": "0x00000058",
       "legacy_source": "src/d_a_ibl.c",
@@ -840,7 +840,7 @@
       "source": "0x02147f58",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daIbl_c_classInit",
+      "symbol": "_Z17daIbl_c_classInitv",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214316c"

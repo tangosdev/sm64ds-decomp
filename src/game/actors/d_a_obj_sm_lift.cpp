@@ -271,7 +271,7 @@ void daObjSm_Lift_c::StoodOnCallback(dBgW *collider, dActor_c *self, dActor_c *o
  * `new daObjSm_Lift_c` is the whole sequence the loose factory spelled by
  * hand: fBase_c::operator new(0x354), dBgActor_c's base constructor and the
  * vptr store (the class adds no member with a constructor). */
-extern "C" daObjSm_Lift_c *daObjSm_Lift_c_classInit(void) {
+daObjSm_Lift_c *daObjSm_Lift_c_classInit(void) {
     return new daObjSm_Lift_c;
 }
 

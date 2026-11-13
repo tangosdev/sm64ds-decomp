@@ -44,13 +44,11 @@
 #include "nitro/fx/fx_trig.h"
 
 /* arm9 C helpers with no shared header. */
+short Vec3_HorzAngle(const Vector3 *from, const Vector3 *to);
 extern "C" {
-
 unsigned char DecIfAbove0_Byte(unsigned char *p);
 void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
 }
-
-short Vec3_HorzAngle(const Vector3 *from, const Vector3 *to);
 
 extern signed char gCurrentSublevel;
 
@@ -100,11 +98,11 @@ static inline int IsPlayerActor(dActor_c *actor) {
     return actor->actorID == 0xbf;
 }
 
-extern "C" daBrq_c *daBrq_c_classInit() {
+daBrq_c *daBrq_c_classInit() {
     return new daBrq_c();
 }
 
-extern "C" SpawnInfo<daBrq_c> g_profile_BIRIKYU = {
+SpawnInfo<daBrq_c> g_profile_BIRIKYU = {
     daBrq_c_classInit, 0x010a, 0x007d, 0x00000003, 0, 0x00028000, 0x01000000, 0x00a28000};
 
 extern SharedFilePtr *data_ov070_021222e0[2];

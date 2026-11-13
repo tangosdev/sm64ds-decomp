@@ -85,14 +85,14 @@
       "ordinal": 6
     },
     {
-      "symbol": "daObjKi_Fune_c_classInit_KI_FUNE_UP",
+      "symbol": "_Z35daObjKi_Fune_c_classInit_KI_FUNE_UPv",
       "address": "0x021129a0",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_ki_fune_ki_fune_up.c",
       "ordinal": 7
     },
     {
-      "symbol": "daObjKi_Fune_c_classInit_KI_FUNE",
+      "symbol": "_Z32daObjKi_Fune_c_classInit_KI_FUNEv",
       "address": "0x021129d0",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_ki_fune_ki_fune.c",

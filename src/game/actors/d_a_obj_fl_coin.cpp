@@ -109,7 +109,7 @@ extern int data_ov064_0211c198[];
  * `new daObjFl_Puzzle_c` is the whole sequence the loose factory spelled by
  * hand: fBase_c::operator new(0x33c), dBgActor_c's base constructor, then the
  * vptr store. */
-extern "C" daObjFl_Puzzle_c *daObjFl_Puzzle_c_classInit(void) {
+daObjFl_Puzzle_c *daObjFl_Puzzle_c_classInit(void) {
     return new daObjFl_Puzzle_c;
 }
 
@@ -122,7 +122,7 @@ extern "C" daObjFl_Puzzle_c *daObjFl_Puzzle_c_classInit(void) {
  * `new daObjFl_Coin_c` is the whole sequence the loose factory spelled by
  * hand: fBase_c::operator new(0xd8), dActor_c's base constructor, then the
  * vptr store. */
-extern "C" daObjFl_Coin_c *daObjFl_Coin_c_classInit(void) {
+daObjFl_Coin_c *daObjFl_Coin_c_classInit(void) {
     return new daObjFl_Coin_c;
 }
 
@@ -426,7 +426,6 @@ FlCoinModelFilePtr gFl1412ModelFile(ASSET_FL_14_12_BMD);
 FlCoinModelFilePtr gFl1413ModelFile(ASSET_FL_14_13_BMD);
 FlCoinCollisionFilePtr data_ov064_0211c800(ASSET_FL_14_00_KCL);
 
-extern "C" {
 
 extern Entry data_ov064_0211bf68;
 extern Entry data_ov064_0211bf70;
@@ -434,8 +433,6 @@ extern Entry data_ov064_0211bf78;
 extern Entry data_ov064_0211bf80;
 extern Entry data_ov064_0211bf88;
 extern Entry data_ov064_0211bf90;
-}
-
 Entry data_ov064_0211c904[6] = {
     data_ov064_0211bf80, data_ov064_0211bf68, data_ov064_0211bf90,
     data_ov064_0211bf70, data_ov064_0211bf88, data_ov064_0211bf78,

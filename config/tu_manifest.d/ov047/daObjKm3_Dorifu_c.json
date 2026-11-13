@@ -63,7 +63,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "daObjKm3_Dorifu_c_classInit",
+      "symbol": "_Z27daObjKm3_Dorifu_c_classInitv",
       "address": "0x0211164c",
       "size": "0x00000090",
       "legacy_source": "src/StairsBs_Spawn.cpp",

@@ -74,7 +74,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "daObjKm3_Kaitendai_c_classInit",
+      "symbol": "_Z30daObjKm3_Kaitendai_c_classInitv",
       "address": "0x021113bc",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov047_021113bc.c",
@@ -231,7 +231,7 @@
       "source": "0x02112358",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daObjKm3_Kaitendai_c_classInit",
+      "symbol": "_Z30daObjKm3_Kaitendai_c_classInitv",
       "addend": 0,
       "target_module": "ov047",
       "target_address": "0x021113bc"
@@ -1286,7 +1286,7 @@
           },
           {
             "ordinal": 4,
-            "symbol": "daObjKm3_Kaitendai_c_classInit",
+            "symbol": "_Z30daObjKm3_Kaitendai_c_classInitv",
             "identical": true,
             "relocCount": 4,
             "differences": []
@@ -1387,7 +1387,7 @@
             "size": "0x00000038"
           },
           {
-            "symbol": "daObjKm3_Kaitendai_c_classInit",
+            "symbol": "_Z30daObjKm3_Kaitendai_c_classInitv",
             "section": ".text",
             "size": "0x0000003c"
           }
@@ -1648,7 +1648,7 @@
           },
           {
             "ordinal": 4,
-            "symbol": "daObjKm3_Kaitendai_c_classInit",
+            "symbol": "_Z30daObjKm3_Kaitendai_c_classInitv",
             "identical": true,
             "relocCount": 4,
             "differences": []
@@ -1749,7 +1749,7 @@
             "size": "0x00000038"
           },
           {
-            "symbol": "daObjKm3_Kaitendai_c_classInit",
+            "symbol": "_Z30daObjKm3_Kaitendai_c_classInitv",
             "section": ".text",
             "size": "0x0000003c"
           }

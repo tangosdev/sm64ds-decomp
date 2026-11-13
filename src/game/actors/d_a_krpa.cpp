@@ -58,7 +58,7 @@ extern int data_0209f32c;
 /* `return new daKrpa_c()` emits 0x50, calling the inherited
  * fBase_c::operator new (`_ZN7fBase_cnwEm`). Historical aliases:
  * daKrpa_c_Spawn and FlameChomp_Spawn. */
-extern "C" daKrpa_c *daKrpa_c_classInit() {
+daKrpa_c *daKrpa_c_classInit() {
     return new daKrpa_c();
 }
 
@@ -67,7 +67,7 @@ extern "C" daKrpa_c *daKrpa_c_classInit() {
  * later EAD lineage supplies the spelling prior. Exact original SM64DS
  * spellings are not preserved. Historical aliases: daKrpa_c_Spawn and
  * daKrpa_c_SpawnInfo. The descriptor is at ov070:0x0212334c. */
-extern "C" SpawnInfo<daKrpa_c> g_profile_KERONPA = {
+SpawnInfo<daKrpa_c> g_profile_KERONPA = {
     daKrpa_c_classInit, 0x010e, 0x0081, 0x00000003, 0x00000000, 0x0002d000, 0x01000000, 0x00ed8000};
 void daKrpaFrameController::SetFrames(u32 *frames, u32 count, u32 mode) {
     this->frames = frames;
