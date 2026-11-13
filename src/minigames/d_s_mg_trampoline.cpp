@@ -173,7 +173,7 @@ void dScMgTrampoline_c::InitDisplay() {
         fill = 0;
         MIi_CpuClear16(fill, dst, 0x4000);
     }
-    DecompressLZ16(bgChar, (void *)((char *)G2_GetBG2CharPtr() + 0x4000));
+    DecompressLZ16(bgChar, ((char *)G2_GetBG2CharPtr() + 0x4000));
     DecompressLZ16(bgScr, (void *)G2_GetBG2ScrPtr());
     GX_LoadBGPltt(bgPltt, 0x1a0, 0x60);
 
