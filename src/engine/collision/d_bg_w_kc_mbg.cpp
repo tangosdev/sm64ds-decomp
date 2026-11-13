@@ -229,7 +229,7 @@ int dBgW_KcMbg::DetectClsn(dBgCh_Gnd &ray) {
     int hit = dBgW_Kc::DetectClsn(data_020a0d0c);
     if (hit != 0) {
         LocalToWorldPosition(data_020a0d0c.lineEnd, worldPos);
-        (dBgPi &)ray = static_cast<dBgPi &>(data_020a0d0c);
+        (dBgPi &)ray = (data_020a0d0c);
         ray.clsnY = worldPos.y;
         ray.hasClsn = 1;
     }
@@ -263,7 +263,7 @@ int dBgW_KcMbg::DetectClsn(dBgCh_SphCrr &sphere) {
         bounds.scaledMax.z = FX_MUL(bounds.localMax.z, scale);
         sphere.ExpandPushOutBounds(bounds.scaledMin.x, bounds.scaledMin.y, bounds.scaledMin.z,
                                    bounds.scaledMax.x, bounds.scaledMax.y, bounds.scaledMax.z);
-        (dBgPi &)sphere = (dBgPi &)localSphere;
+        (dBgPi &)sphere = localSphere;
         sphere.flags |= 1;
         if (localSphere.flags & 4) {
             if (sphere.flags & 4) {
