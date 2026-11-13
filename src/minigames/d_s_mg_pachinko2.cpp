@@ -73,108 +73,173 @@ extern "C" {
 
 
 /* --- shared ov004, main and library helpers --- */
-extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
+extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);}
+
 struct OamAttr;
+extern "C" {
+
 extern int Mg_RenderSpriteBothScaled(OamAttr *a, int b, int c, int d, int e, int f, int g);
+
 extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
+
 extern int Mg_GetSubmittedScore(void);
+
 extern int Mg_IsNewRecord(void);
+
 extern int Mg_GetTopRecord(void);
+
 extern void Mg_DrawTopLeftCounter(int score);
+
 extern void Mg_DrawTopRightCounter(int, int);
+
 extern void Mg_DrawTopCenterCounter(int a0);
+
 extern void Mg_SubmitScore(int self);
+
 extern void Mg_InitBrush(char *, char, int, int);
+
 extern void Mg_SetTopScreenYOffset(int);
+
 extern void Mg_SetSharedState(int);
-extern void FreeGfxSlotsById(int n);
-}
+
+extern void FreeGfxSlotsById(int n);}
 
 extern int Sound_PlayIfNotActive(int a, int b, int c, short d);
+
 extern int func_020126e8(int a);
+
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
-extern void func_02012718(int, int);
-extern "C" {
 
-extern void *LoadFile(int handle);
-}
+extern void func_02012718(int, int);extern "C" {
 
-extern void Deallocate(void *);
-extern "C" {
+extern void *LoadFile(int handle);}
 
-extern void DecompressLZ16(void *src, void *dst);
-}
+extern void Deallocate(void *);extern "C" {
+
+extern void DecompressLZ16(void *src, void *dst);}
 
 /* local extern: nitro/gx/gx_load.h leaves GX_LoadBG3Scr out until
  * decl_common.h's non-const spelling of it goes. */
-extern void GX_LoadBG3Scr(void *, u32, u32);
-extern "C" {
+extern void GX_LoadBG3Scr(const void *, u32, u32);
 
 
 /* --- ROM data this TU reads --- */
 extern u8 gMainScreenLayers;
+
 extern u8 gSubScreenLayers;
+
 extern int sPachinkoPipeSprites[];
+
 extern OamAttr *sPachinko2SparkSprites[];
+
 extern OamAttr *sPachinko2PaddleSprite;
+
 extern OamAttr *sPachinko2BallSprite;
+
 extern OamAttr *sPachinko2BallCountSprites[];
+
 extern u8 sPachinko2CupHopRightStartFrames[];
+
 extern u8 sPachinko2CupHopLeftStartFrames[];
+
 extern unsigned char sPachinko2BallWalkOffSprites[];
+
 extern unsigned char sPachinko2PaddleCountPerLanes[];
+
 extern u8 sPachinko2CupHopLeftFrames[];
+
 extern u8 sPachinko2CupHopRightFrames[];
+
 extern unsigned char sPachinko2CupWaitFrames[];
+
 extern unsigned char sPachinko2CupWaitTimes[];
+
 extern int sPachinko2CupX[];
+
 extern int sPachinko2CrossRowY[];
+
 extern int sPachinko2PaddleFlyAwayVX[];
+
 extern unsigned short sPachinko2CupWaitTimesAlt[];
+
 extern s32 sPachinko2CupRightStops[];
+
 extern s32 sPachinko2CupLeftStops[];
+
 extern unsigned short *sPachinko2CupWaitFramesPerCup[];
+
 extern int *sPachinko2PaddleDescendLimits[];
+
 extern int *sPachinko2PaddleSweepLimits[];
+
 extern int *sPachinko2PaddleGatherTargets[];
+
 
 /* The three pointer-to-member tables the helpers dispatch through. */
 extern Entry sPachinko2CupStateTable[];
+
 extern Entry sPachinko2BallStateTable[];
+
 extern PMF sPachinko2PaddleStateTable[];
+
 
 /* The ROM {code pointer, adjustment} records the three tables copy from
    (unlicensed .data), grouped by destination table in retail copy order. */
 extern PMF pmf_dScMgPachinko2_c_Ball_StateWaitGrab;
-extern PMF pmf_dScMgPachinko2_c_Ball_StateAim;
-extern PMF pmf_dScMgPachinko2_c_Ball_StateFlying;
-extern PMF pmf_dScMgPachinko2_c_Ball_StateTumble;
-extern PMF pmf_dScMgPachinko2_c_Ball_StateHop;
-extern PMF pmf_dScMgPachinko2_c_Ball_StateWalkOff;
-extern PMF pmf_dScMgPachinko2_c_Ball_StateRemove;
-extern PMF pmf_dScMgPachinko2_c_Ball_StateScored;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StateSpawn;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StateDescend;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StateSweep;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StateBoxLoop;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StateOrbit;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StateWeave;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StateCross;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StatePause;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StateKnockedDown;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StateFallToGround;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StateSwing;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StateRiseHome;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StateGather;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StateDropBalls;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StateFlyAway;
-extern PMF pmf_dScMgPachinko2_c_Cup_StateInit;
-extern PMF pmf_dScMgPachinko2_c_Cup_StateWait;
-extern PMF pmf_dScMgPachinko2_c_Cup_StateHopLeft;
-extern PMF pmf_dScMgPachinko2_c_Cup_StateHopRight;
-extern PMF pmf_dScMgPachinko2_c_Cup_StateDecide;
 
-}
+extern PMF pmf_dScMgPachinko2_c_Ball_StateAim;
+
+extern PMF pmf_dScMgPachinko2_c_Ball_StateFlying;
+
+extern PMF pmf_dScMgPachinko2_c_Ball_StateTumble;
+
+extern PMF pmf_dScMgPachinko2_c_Ball_StateHop;
+
+extern PMF pmf_dScMgPachinko2_c_Ball_StateWalkOff;
+
+extern PMF pmf_dScMgPachinko2_c_Ball_StateRemove;
+
+extern PMF pmf_dScMgPachinko2_c_Ball_StateScored;
+
+extern PMF pmf_dScMgPachinko2_c_Paddle_StateSpawn;
+
+extern PMF pmf_dScMgPachinko2_c_Paddle_StateDescend;
+
+extern PMF pmf_dScMgPachinko2_c_Paddle_StateSweep;
+
+extern PMF pmf_dScMgPachinko2_c_Paddle_StateBoxLoop;
+
+extern PMF pmf_dScMgPachinko2_c_Paddle_StateOrbit;
+
+extern PMF pmf_dScMgPachinko2_c_Paddle_StateWeave;
+
+extern PMF pmf_dScMgPachinko2_c_Paddle_StateCross;
+
+extern PMF pmf_dScMgPachinko2_c_Paddle_StatePause;
+
+extern PMF pmf_dScMgPachinko2_c_Paddle_StateKnockedDown;
+
+extern PMF pmf_dScMgPachinko2_c_Paddle_StateFallToGround;
+
+extern PMF pmf_dScMgPachinko2_c_Paddle_StateSwing;
+
+extern PMF pmf_dScMgPachinko2_c_Paddle_StateRiseHome;
+
+extern PMF pmf_dScMgPachinko2_c_Paddle_StateGather;
+
+extern PMF pmf_dScMgPachinko2_c_Paddle_StateDropBalls;
+
+extern PMF pmf_dScMgPachinko2_c_Paddle_StateFlyAway;
+
+extern PMF pmf_dScMgPachinko2_c_Cup_StateInit;
+
+extern PMF pmf_dScMgPachinko2_c_Cup_StateWait;
+
+extern PMF pmf_dScMgPachinko2_c_Cup_StateHopLeft;
+
+extern PMF pmf_dScMgPachinko2_c_Cup_StateHopRight;
+
+extern PMF pmf_dScMgPachinko2_c_Cup_StateDecide;
  /* extern "C" */
 
 /* Both variants come from this one definition: D1 stores this class's
@@ -2344,7 +2409,7 @@ s32 dScMgPachinko2_c::InitResources() {
    bytes, dScMgBase_c's C2, then this class's vtable. The classInit
    spelling follows later EAD lineage; the historical alias is
    MgLakituLaunch_Spawn. */
-extern "C" dScMgPachinko2_c *dScMgPachinko2_c_classInit(void) {
+ dScMgPachinko2_c *dScMgPachinko2_c_classInit(void) {
     return new dScMgPachinko2_c;
 }
 

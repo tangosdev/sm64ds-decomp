@@ -94,22 +94,26 @@ extern "C" {
 
 /* --- shared ov004, main and library helpers --- */
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
+
 extern void Mg_DrawBigNumber(int x, int y, int h, int a, int b, int c, int d);
+
 extern int  Mg_GetSubmittedScore(void);
+
 extern void Mg_DrawTopRightCounter(int a, int b);
+
 extern int  Mg_GetTopRecord(void);
+
 extern void Mg_DrawTopLeftCounter(int score);
-extern void Mg_SubmitScore(int self);
-}
+
+extern void Mg_SubmitScore(int self);}
 
 extern int  func_020126e8(int a);
-extern int  func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
-extern "C" {
 
-extern void SetBg2Offset(int a, int b);
+extern int  func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);extern "C" {
+
+extern void SetBg2Offset(int a, int b);}
+
 struct OamAttr;
-}
-
 #include "OAM.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/g2.h"
@@ -117,96 +121,155 @@ struct OamAttr;
 #include "nitro/mi/memory.h"
 extern "C" {
 extern void Mg_RenderSpriteBothPalMtx(void *sprite, int x, int y, int a3, void *m);
+
 extern int  Mg_RenderSpriteBothScaled(OamAttr *a, int b, int c, int d, int e, int f, int g);
+
 extern void Mg_SetSharedState(int a);
+
 extern void Mg_SetTopScreenYOffset(int a);
-extern void Mg_InitBrush(char *a, char b, int c, int d);
-}
+
+extern void Mg_InitBrush(char *a, char b, int c, int d);}
 
 extern void func_020126ac(int a0, int a1, int a2, int a3, int s0);
+
 extern void func_02012718(int a, int b);
-extern int Sound_PlayIfNotActive(int handle, int player, int id, short unused);
-extern "C" {
+
+extern int Sound_PlayIfNotActive(int handle, int player, int id, short unused);extern "C" {
 
 extern s16 atan2_hold_d_s_mg_pachinko_1(int y, int x);
+
 extern void FreeGfxSlotsById(int arg);
+
 extern void *LoadFile(int handle);
-extern void DecompressLZ16(void *src, void *dst);
-}
+
+extern void DecompressLZ16(void *src, void *dst);}
 
 extern void Deallocate(void *p);
+
 /* local extern: nitro/gx/gx_load.h leaves GX_LoadBG3Scr out until
  * decl_common.h's non-const spelling of it goes. */
-extern void GX_LoadBG3Scr(void *dst, u32 offset, u32 len);
-extern "C" {
+extern void GX_LoadBG3Scr(const void *dst, u32 offset, u32 len);
 
 
 /* --- ROM data this TU reads --- */
 extern unsigned char gMainScreenLayers;
+
 extern u8 gSubScreenLayers;
 
+
 extern void *sPachinkoDecoSprite;
+
 extern unsigned char sPachinkoPipeRiseStartFrames[];
+
 extern unsigned char sPachinkoPipeSinkStartFrames[];
+
 extern unsigned char sPachinkoPipeRiseFrames[];
+
 extern unsigned char sPachinkoPipeSinkFrames[];
+
 extern int   data_ov006_0212eb24[];
+
 extern int sPachinkoPipeKinds[];
+
 extern u8 sPachinkoPipeIdleFrames[];
+
 extern u8 sPachinkoPipeIdleTimes[];
+
 extern s32   data_ov006_0212eb44[];
+
 extern int sPachinkoPipeRiseStops[];
+
 extern s32 sPachinkoPipeSinkStops[];
+
 extern int sPachinkoTargetX[];
+
 extern int sPachinkoFxSpritesA[];
+
 extern int sPachinkoFxSpritesB[];
+
 extern int sPachinkoPipeSprites[];
+
 extern int sPachinkoTargetSprites[];
+
 extern int sPachinkoFlyerSprites[];
+
 extern int sPachinkoWaveColumnX[];
+
 extern int sPachinkoPopSfx[];
+
 extern int sPachinkoBallSprites[];
+
 extern int sPachinkoBobOmbSprites;
+
 extern u16 sPachinkoPopScores[];
+
 extern u8 sPachinkoWaveSlots[];
+
 
 /* The five state tables. Static initialisers fill them from the {code
    pointer, adjustment} records in ov006 .data. */
 extern Entry sPachinkoBgStateTable[];
+
 extern Entry sPachinkoPipeStateTable[];
+
 extern Entry sPachinkoBobOmbStateTable[];
+
 extern PMF sPachinkoFlyerStateTable[];
+
 extern Entry sPachinkoBallStateTable[];
+
 
 /* The ROM {code pointer, adjustment} records the five tables copy from
    (unlicensed .data), grouped by destination table in retail copy order. */
 extern PMF pmf_dScMgPachinko_c_BobOmb_StateWaitGrab;
-extern PMF pmf_dScMgPachinko_c_BobOmb_StateAim;
-extern PMF pmf_dScMgPachinko_c_BobOmb_StateFlying;
-extern PMF pmf_dScMgPachinko_c_BobOmb_StateFallAway;
-extern PMF pmf_dScMgPachinko_c_BobOmb_StateRemove;
-extern PMF pmf_dScMgPachinko_c_Ball_StateWaiting;
-extern PMF pmf_dScMgPachinko_c_Ball_StateFall;
-extern PMF pmf_dScMgPachinko_c_Ball_StateDrift;
-extern PMF pmf_dScMgPachinko_c_Ball_StateDive;
-extern PMF pmf_dScMgPachinko_c_Ball_StateGlide;
-extern PMF pmf_dScMgPachinko_c_Ball_StateSpinAway;
-extern PMF pmf_dScMgPachinko_c_Ball_StatePop;
-extern PMF pmf_dScMgPachinko_c_Pipe_StatePick;
-extern PMF pmf_dScMgPachinko_c_Pipe_StateRise;
-extern PMF pmf_dScMgPachinko_c_Pipe_StateSink;
-extern PMF pmf_dScMgPachinko_c_Pipe_StateIdle;
-extern PMF pmf_dScMgPachinko_c_Flyer_StateWaiting;
-extern PMF pmf_dScMgPachinko_c_Flyer_StateDescend;
-extern PMF pmf_dScMgPachinko_c_Flyer_StateCross;
-extern PMF pmf_dScMgPachinko_c_Flyer_StatePause;
-extern PMF pmf_dScMgPachinko_c_Flyer_StateLeave;
-extern PMF pmf_dScMgPachinko_c_Bg_StateWaiting;
-extern PMF pmf_dScMgPachinko_c_Bg_StateRiseIn;
-extern PMF pmf_dScMgPachinko_c_Bg_StateScroll;
-extern PMF pmf_dScMgPachinko_c_Bg_StateSinkOut;
 
-}
+extern PMF pmf_dScMgPachinko_c_BobOmb_StateAim;
+
+extern PMF pmf_dScMgPachinko_c_BobOmb_StateFlying;
+
+extern PMF pmf_dScMgPachinko_c_BobOmb_StateFallAway;
+
+extern PMF pmf_dScMgPachinko_c_BobOmb_StateRemove;
+
+extern PMF pmf_dScMgPachinko_c_Ball_StateWaiting;
+
+extern PMF pmf_dScMgPachinko_c_Ball_StateFall;
+
+extern PMF pmf_dScMgPachinko_c_Ball_StateDrift;
+
+extern PMF pmf_dScMgPachinko_c_Ball_StateDive;
+
+extern PMF pmf_dScMgPachinko_c_Ball_StateGlide;
+
+extern PMF pmf_dScMgPachinko_c_Ball_StateSpinAway;
+
+extern PMF pmf_dScMgPachinko_c_Ball_StatePop;
+
+extern PMF pmf_dScMgPachinko_c_Pipe_StatePick;
+
+extern PMF pmf_dScMgPachinko_c_Pipe_StateRise;
+
+extern PMF pmf_dScMgPachinko_c_Pipe_StateSink;
+
+extern PMF pmf_dScMgPachinko_c_Pipe_StateIdle;
+
+extern PMF pmf_dScMgPachinko_c_Flyer_StateWaiting;
+
+extern PMF pmf_dScMgPachinko_c_Flyer_StateDescend;
+
+extern PMF pmf_dScMgPachinko_c_Flyer_StateCross;
+
+extern PMF pmf_dScMgPachinko_c_Flyer_StatePause;
+
+extern PMF pmf_dScMgPachinko_c_Flyer_StateLeave;
+
+extern PMF pmf_dScMgPachinko_c_Bg_StateWaiting;
+
+extern PMF pmf_dScMgPachinko_c_Bg_StateRiseIn;
+
+extern PMF pmf_dScMgPachinko_c_Bg_StateScroll;
+
+extern PMF pmf_dScMgPachinko_c_Bg_StateSinkOut;
   /* extern "C" */
 
 /* Both D1 and D0 come from this one definition. */
@@ -2290,7 +2353,7 @@ s32 dScMgPachinko_c::InitResources()
  * allocation size, vtable identity, and the MG_PACHINKO registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: MgBobOmbSquad_Spawn. */
-extern "C" void *dScMgPachinko_c_classInit()
+ void *dScMgPachinko_c_classInit()
 {
     return new dScMgPachinko_c;
 }

@@ -72,94 +72,155 @@ extern "C" {
 
 
 extern void  RenderOamMainScreen(void*, int, int, int, int);
+
 extern void *LoadFile(int handle);
+
 extern void DecompressLZ16(const void *src, void *dst);
+
 extern void  FreeGfxSlotsById(int arg);
-extern int   GetGameLanguage(void);
+
+extern int   GetGameLanguage(void);}
+
 struct Matrix2x2;
+extern "C" {
+
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
+
 extern void  Hud_RenderSprite(void *fn, int a, int b, int c, int d);
+
 extern void Mg_DrawNumberRotated(int, int, int, int, int, int, u16);
+
 extern void  Mg_DrawScoreTally(void *, int, int, int);
-extern int   Mg_IsNewRecord(void);
-}
+
+extern int   Mg_IsNewRecord(void);}
 
 extern int   func_020126e8(int a);
+
 extern int   func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 #include "OAM.h"
 #include "nitro/mi/memory.h"
 extern "C" {
 extern void OamRender10_d_s_mg_teresa(int sub, struct OamAttr *data, s32 x, s32 y, s32 palette,
-                                      s32 priority, s32 scaleX, s32 scaleY, s32 rotation, s32 mode);
+                                      s32 priority, s32 scaleX, s32 scaleY, s32 rotation, s32 mode);}
+
 
 extern unsigned char gSubScreenLayers;
+
 extern unsigned char gMainScreenLayers;
+
 extern int sTeresaBigBooSprites[];
+
 extern unsigned char sTeresaBigBooHoverPicks[];
+
 extern unsigned short sTeresaBigBooFrameTimes[];
+
 extern unsigned char sTeresaRevealSlideFrames[];
+
 extern unsigned char sTeresaRevealAnimFrames[];
+
 extern unsigned short sTeresaBg3FlashTimes[];
+
 extern void *sTeresaExclaimSprites;
+
 extern void *sTeresaVanishPuffSprites[];
+
 extern int sTeresaBigBooHoverSprites[];
+
 extern OamAttr *sMgDigitSprites[];
+
 extern void *sTeresaMarkerSprites;
+
 extern struct OamAttr *sTeresaRevealSprites[];
+
 extern OamAttr **sTeresaCountdownSprites[];
+
 extern void *sTeresaBooFrameSprites[];
+
 extern int sTeresaBooTouchOffsets[];
+
 extern int sTeresaSpawnCounts[];
+
 extern int sTeresaSpawnKinds[];
+
 extern int sTeresaSpawnBurst[];
+
 extern int sTeresaPaintMask[];
+
 extern int            sMgTopScreenYOffset;
-}
 
 
 /* The four pointer-to-member state tables. Pmf handlers take the Boo/slot
    index; the scene table in sTeresaSceneStateTable takes none. */
 typedef void (dScMgTeresa_c::*Pmf)(int);
+
 typedef void (dScMgTeresa_c::*Pmf0)();
+
 struct PmfEntry { Pmf0 pmf; };
-extern "C" {
 
 
-extern Pmf sTeresaBigBooStateTable[];     /* big Boo flight states, by BigBoo::state */
-extern Pmf sTeresaRevealStateTable[];     /* reveal states, by mReveal[0].state */
-extern Pmf sTeresaBooStateTable[];        /* per-Boo states, one call per live row */
-extern PmfEntry sTeresaSceneStateTable[]; /* scene states, by mSceneState */
+extern Pmf sTeresaBigBooStateTable[];
+     /* big Boo flight states, by BigBoo::state */
+extern Pmf sTeresaRevealStateTable[];
+     /* reveal states, by mReveal[0].state */
+extern Pmf sTeresaBooStateTable[];
+        /* per-Boo states, one call per live row */
+extern PmfEntry sTeresaSceneStateTable[];
+ /* scene states, by mSceneState */
 /* The ROM PMF constants the four state tables copy from (unlicensed .data),
  * grouped by destination table in retail copy order. */
 extern Pmf0 pmf_dScMgTeresa_c_Scene_StateInit;
-extern Pmf0 pmf_dScMgTeresa_c_Scene_StateReveal;
-extern Pmf0 pmf_dScMgTeresa_c_Scene_StatePlay;
-extern Pmf0 pmf_dScMgTeresa_c_Scene_StateRoundEnd;
-extern Pmf0 pmf_dScMgTeresa_c_Scene_StateResult;
-extern Pmf pmf_dScMgTeresa_c_Boo_StateAppear;
-extern Pmf pmf_dScMgTeresa_c_Boo_StateFly;
-extern Pmf pmf_dScMgTeresa_c_Boo_StateFadeOut;
-extern Pmf pmf_dScMgTeresa_c_Boo_StateHidden;
-extern Pmf pmf_dScMgTeresa_c_Boo_StateHiddenTimed;
-extern Pmf pmf_dScMgTeresa_c_Boo_StateFound;
-extern Pmf pmf_dScMgTeresa_c_Boo_StateFadeIn;
-extern Pmf pmf_dScMgTeresa_c_Boo_StateFadeAway;
-extern Pmf pmf_dScMgTeresa_c_Reveal_StateStart;
-extern Pmf pmf_dScMgTeresa_c_Reveal_StateSlideIn;
-extern Pmf pmf_dScMgTeresa_c_Reveal_StateAnimate;
-extern Pmf pmf_dScMgTeresa_c_Reveal_StateDipAndRise;
-extern Pmf pmf_dScMgTeresa_c_Reveal_StateFinish;
-extern Pmf pmf_dScMgTeresa_c_BigBoo_StateDropIn;
-extern Pmf pmf_dScMgTeresa_c_BigBoo_StateHover;
-extern Pmf pmf_dScMgTeresa_c_BigBoo_StateFlyLeft;
-extern Pmf pmf_dScMgTeresa_c_BigBoo_StateFlyRight;
-extern Pmf pmf_dScMgTeresa_c_BigBoo_StateOffscreen;
-extern Pmf pmf_dScMgTeresa_c_BigBoo_StateExit;
-extern Pmf pmf_dScMgTeresa_c_BigBoo_StateRemove;
-extern Pmf pmf_dScMgTeresa_c_BigBoo_StateGone;
-extern Pmf pmf_dScMgTeresa_c_BigBoo_StateResult;
 
-}
+extern Pmf0 pmf_dScMgTeresa_c_Scene_StateReveal;
+
+extern Pmf0 pmf_dScMgTeresa_c_Scene_StatePlay;
+
+extern Pmf0 pmf_dScMgTeresa_c_Scene_StateRoundEnd;
+
+extern Pmf0 pmf_dScMgTeresa_c_Scene_StateResult;
+
+extern Pmf pmf_dScMgTeresa_c_Boo_StateAppear;
+
+extern Pmf pmf_dScMgTeresa_c_Boo_StateFly;
+
+extern Pmf pmf_dScMgTeresa_c_Boo_StateFadeOut;
+
+extern Pmf pmf_dScMgTeresa_c_Boo_StateHidden;
+
+extern Pmf pmf_dScMgTeresa_c_Boo_StateHiddenTimed;
+
+extern Pmf pmf_dScMgTeresa_c_Boo_StateFound;
+
+extern Pmf pmf_dScMgTeresa_c_Boo_StateFadeIn;
+
+extern Pmf pmf_dScMgTeresa_c_Boo_StateFadeAway;
+
+extern Pmf pmf_dScMgTeresa_c_Reveal_StateStart;
+
+extern Pmf pmf_dScMgTeresa_c_Reveal_StateSlideIn;
+
+extern Pmf pmf_dScMgTeresa_c_Reveal_StateAnimate;
+
+extern Pmf pmf_dScMgTeresa_c_Reveal_StateDipAndRise;
+
+extern Pmf pmf_dScMgTeresa_c_Reveal_StateFinish;
+
+extern Pmf pmf_dScMgTeresa_c_BigBoo_StateDropIn;
+
+extern Pmf pmf_dScMgTeresa_c_BigBoo_StateHover;
+
+extern Pmf pmf_dScMgTeresa_c_BigBoo_StateFlyLeft;
+
+extern Pmf pmf_dScMgTeresa_c_BigBoo_StateFlyRight;
+
+extern Pmf pmf_dScMgTeresa_c_BigBoo_StateOffscreen;
+
+extern Pmf pmf_dScMgTeresa_c_BigBoo_StateExit;
+
+extern Pmf pmf_dScMgTeresa_c_BigBoo_StateRemove;
+
+extern Pmf pmf_dScMgTeresa_c_BigBoo_StateGone;
+
+extern Pmf pmf_dScMgTeresa_c_BigBoo_StateResult;
   /* extern "C" */
 
 namespace Sound { void PlayBank2_2D(unsigned int id); }
@@ -1819,7 +1880,7 @@ s32 dScMgTeresa_c::InitResources()
  * allocation size, vtable identity, and the MG_TERESA registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: MgHideAndBooSeek_Spawn. */
-extern "C" void *dScMgTeresa_c_classInit()
+ void *dScMgTeresa_c_classInit()
 {
     return new dScMgTeresa_c;
 }

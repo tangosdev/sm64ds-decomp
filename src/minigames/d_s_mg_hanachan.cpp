@@ -12,9 +12,10 @@
 
 #include "dScMgHanachan_c.h"
 
-extern "C" void *dScMgHanachan_c_classInit(void);
+void *dScMgHanachan_c_classInit(void);
 
-extern "C" void *dScMgHanachan_c_classInit(void) {
+
+ void *dScMgHanachan_c_classInit(void) {
     return new dScMgHanachan_c;
 }
 

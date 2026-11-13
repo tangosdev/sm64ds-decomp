@@ -54,9 +54,15 @@ typedef char MgCamera_size_must_be_0xbc[sizeof(MgCamera) == 0xbc ? 1 : -1];
    copies. */
 extern "C" {
 void Camera_ProjectToScreen(MgCamera *, void *, int *, int *);
+}
+#ifdef __cplusplus
 void Camera_UpdateMatrices(MgCamera *);
 void Camera_InitDealerView(MgCamera *);
 void Camera_InitPresenterView(MgCamera *);
-}
+#else
+extern void Camera_UpdateMatrices(MgCamera *);
+extern void Camera_InitDealerView(MgCamera *);
+extern void Camera_InitPresenterView(MgCamera *);
+#endif
 
 #endif

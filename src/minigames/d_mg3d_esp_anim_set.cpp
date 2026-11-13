@@ -78,64 +78,90 @@ struct EspAnimSetTexSequenceFilePtr : SharedFilePtr {
     ~EspAnimSetTexSequenceFilePtr();
 };
 
-extern "C" {
 
 /* The file handles: word 1 of a SharedFilePtr is its loaded file. */
 extern EspAnimSetModelFilePtr gEspCardModelFile;
+
 extern EspAnimSetAnimationFileHandle gEspCardStartAnimFile;
+
 extern EspAnimSetTexSequenceFilePtr gEspCardTexSeqFile;
+
 extern EspAnimSetAnimationFileHandle gEspHamonAnimFile;
+
 extern EspAnimSetModelFilePtr gIrieBackModelFile;
+
 extern EspAnimSetAnimationFileHandle gEspCardWaitAnimFile;
+
 extern EspAnimSetAnimationFileHandle gEspCardOpenWaitAnimFile;
+
 extern EspAnimSetAnimationFileHandle gEspCardOpenAnimFile;
+
 extern EspAnimSetModelFilePtr gEspHamonModelFile;
+
 extern EspAnimSetModelFilePtr gEspIrieModelFile;
 
-extern Matrix4x3 data_020a0e68;
-void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
-}
 
-void func_02046208(char *a, unsigned int b, int c);
-int func_020179b4(void *r0, void *r1, int r2);
+extern Matrix4x3 data_020a0e68;
 extern "C" {
+
+void Matrix4x3_FromTranslation(void* m, int x, int y, int z);}
+
+void func_02046208(void *a, unsigned int b, int c);
+
+int func_020179b4(SharedFilePtr *r0, dExtModel_c *r1, int r2);extern "C" {
 
 void FreeGfxSlotsById(int a);
+
 int Mg_RenderSubSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5, u16 a6);
+
 void Mg_RenderSubSpriteMtx(void* a, int b, int c, void* m);
+
 void Mg_DrawScoreTally(void *c, int a, int b, int d);
+
 void Mg_SubmitScore(int);
+
 void Mg_SetNextBanner(int);
+
 void Mg_SetSharedState(int);
+
 void Mg_ShowBanner(int, int, int, int, int, short);
-void Mg_SetTopScreenYOffset(int);
-}
+
+void Mg_SetTopScreenYOffset(int);}
 
 void InitialiseVramGlobals(void);
-void Deallocate(void*);
-extern "C" {
+
+void Deallocate(void*);extern "C" {
 
 void *LoadFile(int handle);
-void DecompressLZ16(void *src, void *dst);
-}
+
+void DecompressLZ16(void *src, void *dst);}
 
 void GXS_LoadBG2Scr(const void *, u32, u32);
-extern "C" {
 
 
 extern int sEsp3DMaterialAnim;
+
 extern int pmf_dMg3DEspModel_c_Idle_2[];
+
 extern dMg3DEspModel_c::State pmf_dMg3DEspModel_c_Idle;
+
 extern dMg3DEspModel_c::State pmf_dMg3DEspModel_c_Hit;
+
 extern dMg3DEspModel_c::State pmf_dMg3DEspModel_c_Intro;
+
 extern dMg3DEspModel_c::State pmf_dMg3DEspModel_c_Wait;
+
 extern dMg3DEspModel_c::State pmf_dMg3DEspModel_c_Idle_3;
+
 extern void *sEsp3DTextureAnim;
+
 extern unsigned char gMainScreenLayers;
+
 extern unsigned char gSubScreenLayers;
+
 extern int sMgClearBannerX;
+
 extern int sMgClearBannerY;
-}
 
 
 extern Matrix4x3 data_ov006_0213c85c;
@@ -383,7 +409,7 @@ void dMg3DEspModel_c::Reset()
 
 int dMg3DEspModel_c::InitResources()
 {
-    if (func_020179b4(&gEspCardModelFile, (char *)&mAnmModel, 1) == 0)
+    if (func_020179b4(&gEspCardModelFile, (dExtModel_c *)&mAnmModel, 1) == 0)
         return 0;
     dExtAnmTexPat_c::LoadFile(gEspCardTexSeqFile);
     dExtFrameCtrl_c::LoadFile(gEspCardStartAnimFile);
@@ -428,39 +454,38 @@ dMg3DEspModel_c::dMg3DEspModel_c()
    Behavior, four play phases for Play, five card states, three row states,
    two slot states, four slot type handlers and three flash modes. */
 typedef void (dScMg3DEsp_c::*dScMg3DEsp_cState)();
-typedef void (dScMg3DEsp_c::*dScMg3DEsp_cObjState)(int);
-extern "C" dScMg3DEsp_cState s3DEspRoundTable[];
-extern "C" dScMg3DEsp_cState s3DEspPhaseTable[];
-extern "C" dScMg3DEsp_cState s3DEspFlashTable[];
-extern "C" dScMg3DEsp_cObjState s3DEspSlotFallTable[];
-extern "C" dScMg3DEsp_cObjState s3DEspCardTable[];
-extern "C" dScMg3DEsp_cObjState s3DEspRowTable[];
-extern "C" dScMg3DEsp_cObjState s3DEspSlotRiseTable[];
-
-/* The ROM PMF constants the seven state tables copy from (unlicensed
+typedef void (dScMg3DEsp_c::*dScMg3DEsp_cObjState)(int);extern dScMg3DEsp_cState s3DEspRoundTable[];
+extern dScMg3DEsp_cState s3DEspPhaseTable[];
+extern dScMg3DEsp_cState s3DEspFlashTable[];
+extern dScMg3DEsp_cObjState s3DEspSlotFallTable[];
+extern dScMg3DEsp_cObjState s3DEspCardTable[];
+extern dScMg3DEsp_cObjState s3DEspRowTable[];
+extern dScMg3DEsp_cObjState s3DEspSlotRiseTable[];
+extern /* The ROM PMF constants the seven state tables copy from (unlicensed
  * .data), grouped by destination table in retail copy order. */
-extern "C" dScMg3DEsp_cState pmf_dScMg3DEsp_c_Wait;
-extern "C" dScMg3DEsp_cState pmf_dScMg3DEsp_c_Play;
-extern "C" dScMg3DEsp_cState pmf_dScMg3DEsp_c_Results;
-extern "C" dScMg3DEsp_cState pmf_dScMg3DEsp_c_Deal;
-extern "C" dScMg3DEsp_cState pmf_dScMg3DEsp_c_Fade;
-extern "C" dScMg3DEsp_cState pmf_dScMg3DEsp_c_Await;
-extern "C" dScMg3DEsp_cState pmf_dScMg3DEsp_c_Resolve;
-extern "C" dScMg3DEsp_cObjState pmf_dScMg3DEsp_c_CardExit;
-extern "C" dScMg3DEsp_cObjState pmf_dScMg3DEsp_c_CardTouch;
-extern "C" dScMg3DEsp_cObjState pmf_dScMg3DEsp_c_CardSeek;
-extern "C" dScMg3DEsp_cObjState pmf_dScMg3DEsp_c_RowWait;
-extern "C" dScMg3DEsp_cObjState pmf_dScMg3DEsp_c_RowDecay;
-extern "C" dScMg3DEsp_cObjState pmf_dScMg3DEsp_c_RowFade;
-extern "C" dScMg3DEsp_cObjState pmf_dScMg3DEsp_c_SlotWait;
-extern "C" dScMg3DEsp_cObjState pmf_dScMg3DEsp_c_SlotFall;
-extern "C" dScMg3DEsp_cObjState pmf_dScMg3DEsp_c_SlotSetup;
-extern "C" dScMg3DEsp_cObjState pmf_dScMg3DEsp_c_SlotRise;
-extern "C" dScMg3DEsp_cObjState pmf_dScMg3DEsp_c_SlotKick;
-extern "C" dScMg3DEsp_cObjState pmf_dScMg3DEsp_c_SlotDampen;
-extern "C" dScMg3DEsp_cState pmf_dScMg3DEsp_c_FlashOnce;
-extern "C" dScMg3DEsp_cState pmf_dScMg3DEsp_c_FlashSync;
-extern "C" dScMg3DEsp_cState pmf_dScMg3DEsp_c_FlashQuick;
+ dScMg3DEsp_cState pmf_dScMg3DEsp_c_Wait;
+extern dScMg3DEsp_cState pmf_dScMg3DEsp_c_Play;
+extern dScMg3DEsp_cState pmf_dScMg3DEsp_c_Results;
+extern dScMg3DEsp_cState pmf_dScMg3DEsp_c_Deal;
+extern dScMg3DEsp_cState pmf_dScMg3DEsp_c_Fade;
+extern dScMg3DEsp_cState pmf_dScMg3DEsp_c_Await;
+extern dScMg3DEsp_cState pmf_dScMg3DEsp_c_Resolve;
+extern dScMg3DEsp_cObjState pmf_dScMg3DEsp_c_CardExit;
+extern dScMg3DEsp_cObjState pmf_dScMg3DEsp_c_CardTouch;
+extern dScMg3DEsp_cObjState pmf_dScMg3DEsp_c_CardSeek;
+extern dScMg3DEsp_cObjState pmf_dScMg3DEsp_c_RowWait;
+extern dScMg3DEsp_cObjState pmf_dScMg3DEsp_c_RowDecay;
+extern dScMg3DEsp_cObjState pmf_dScMg3DEsp_c_RowFade;
+extern dScMg3DEsp_cObjState pmf_dScMg3DEsp_c_SlotWait;
+extern dScMg3DEsp_cObjState pmf_dScMg3DEsp_c_SlotFall;
+extern dScMg3DEsp_cObjState pmf_dScMg3DEsp_c_SlotSetup;
+extern dScMg3DEsp_cObjState pmf_dScMg3DEsp_c_SlotRise;
+extern dScMg3DEsp_cObjState pmf_dScMg3DEsp_c_SlotKick;
+extern dScMg3DEsp_cObjState pmf_dScMg3DEsp_c_SlotDampen;
+extern dScMg3DEsp_cState pmf_dScMg3DEsp_c_FlashOnce;
+extern dScMg3DEsp_cState pmf_dScMg3DEsp_c_FlashSync;
+extern dScMg3DEsp_cState pmf_dScMg3DEsp_c_FlashQuick;
+
 
 void dScMg3DEsp_c::DrawBanner()
 {
@@ -1067,9 +1092,8 @@ void dScMg3DEsp_c::ResetRound() {
     mIdleTimer = 0;
     mFlashBeats = 0;
     mDone = 1;
-}
+}extern unsigned int sEsp3DResultSfx[];
 
-extern "C" unsigned int sEsp3DResultSfx[];
 
 void dScMg3DEsp_c::Results() {
     UpdateRows();
@@ -1338,7 +1362,7 @@ s32 dScMg3DEsp_c::InitResources()
  * allocation size, vtable identity, and the MG_3DESP registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: MgPsycheOut_Spawn. */
-extern "C" dScMg3DEsp_c *dScMg3DEsp_c_classInit(void) {
+ dScMg3DEsp_c *dScMg3DEsp_c_classInit(void) {
     return new dScMg3DEsp_c;
 }
 

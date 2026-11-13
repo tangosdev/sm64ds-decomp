@@ -36,21 +36,21 @@
   ],
   "functions": [
     {
-      "symbol": "Jump3D_SetTuning",
+      "symbol": "_Z16Jump3D_SetTuningi",
       "address": "0x020c6f8c",
       "size": "0x00000144",
       "legacy_source": "src/func_ov006_020c6f8c.c",
       "ordinal": 0
     },
     {
-      "symbol": "Jump3D_DrawAll",
+      "symbol": "_Z14Jump3D_DrawAllv",
       "address": "0x020c70d0",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov006_020c70d0.c",
       "ordinal": 1
     },
     {
-      "symbol": "Jump3D_UpdateAll",
+      "symbol": "_Z16Jump3D_UpdateAllv",
       "address": "0x020c712c",
       "size": "0x00000070",
       "legacy_source": "src/func_ov006_020c712c.c",
@@ -64,49 +64,49 @@
       "ordinal": 3
     },
     {
-      "symbol": "Jump3D_DisableInput",
+      "symbol": "_Z19Jump3D_DisableInputv",
       "address": "0x020c72b4",
       "size": "0x00000014",
       "legacy_source": "src/func_ov006_020c72b4.c",
       "ordinal": 4
     },
     {
-      "symbol": "Jump3D_EnableInput",
+      "symbol": "_Z18Jump3D_EnableInputv",
       "address": "0x020c72c8",
       "size": "0x00000014",
       "legacy_source": "src/func_ov006_020c72c8.c",
       "ordinal": 5
     },
     {
-      "symbol": "Jump3D_RestoreCount",
+      "symbol": "_Z19Jump3D_RestoreCountv",
       "address": "0x020c72dc",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_020c72dc.c",
       "ordinal": 6
     },
     {
-      "symbol": "Jump3D_AllIdle",
+      "symbol": "_Z14Jump3D_AllIdlev",
       "address": "0x020c7300",
       "size": "0x00000088",
       "legacy_source": "src/func_ov006_020c7300.c",
       "ordinal": 7
     },
     {
-      "symbol": "Jump3D_SetLowGravity",
+      "symbol": "_Z20Jump3D_SetLowGravityv",
       "address": "0x020c7388",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_020c7388.c",
       "ordinal": 8
     },
     {
-      "symbol": "Jump3D_StopGravity",
+      "symbol": "_Z18Jump3D_StopGravityv",
       "address": "0x020c7418",
       "size": "0x00000078",
       "legacy_source": "src/func_ov006_020c7418.c",
       "ordinal": 9
     },
     {
-      "symbol": "Jump3D_StartRoundLayout",
+      "symbol": "_Z23Jump3D_StartRoundLayoutv",
       "address": "0x020c7490",
       "size": "0x000000e4",
       "legacy_source": "src/func_ov006_020c7490.c",

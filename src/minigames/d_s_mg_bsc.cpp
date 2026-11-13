@@ -42,41 +42,71 @@ extern StateHandler pmf_dScMgBSC_c_StateReturnCards;
 extern StateHandler pmf_dScMgBSC_c_StateDone;
 extern StateHandler pmf_dScMgBSC_c_StateDone_2;
 
-extern "C" {
 
 extern short gMgCoinsStatus;
+extern "C" {
+
 extern int Math_Function_0203b14c(int *ptr, int target, int rate, int limit, int step);
-extern void Mg_ResumeSharedState(void);
-extern int Dealer_IsIdle(Dealer *dealer);
+
+extern void Mg_ResumeSharedState(void);}
+int Dealer_IsIdle(Dealer *dealer);
+extern "C" {
+
 extern void MgCoins_StartPayout(int x);
-extern void MgCoins_StartLose(void);
+
+extern void MgCoins_StartLose(void);}
+
 extern int gMgCoinsInPlay;
-extern void Dealer_PlayWin(void *c);
+void Dealer_PlayWin(void *c);
+extern "C" {
+
 /* decl_common.h already declares this with a void pointer, so the
  * definition's char pointer cannot be repeated here. */
 extern void Dealer_PlayLose(void *c);
+
 extern void Mg_SubmitScore(int self);
+
 extern void Mg_SetSharedState(int v);
-extern void Mg_SaveRecordPair(int a, int b);
+
+extern void Mg_SaveRecordPair(int a, int b);}
+
 extern int sBscLaneX[];
+
 extern int sMgCoinsBetPlaced;
-extern void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
+void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
+extern "C" {
+
 extern void FreeGfxSlotsById(int arg);
+
 extern void MgCoins_Reset(void);
+
 void Hud_RenderSprite(void *sprite, int x, int y, int a3, int a4);
+
 void Mg_DrawCredits(void *scene, int a1, int a2, int a3);
+
 void Mg_DrawScoreTally(void *scene, int a1, int a2, int a3);
+
 void Dealer_Draw(void *table);
-void MgCoins_Update(void);
-void Dealer_Update(Dealer *c);
-extern unsigned char gMainScreenLayers;
-extern int data_0208ee44;
-extern void LoadCard2SubBg3(void *);
-extern s32 GetGameLanguage(void);
-extern u32 LoadCompressedFileAt(int fileID, void *target);
-extern void *LoadFile(int handle);
-extern int Dealer_Load(void *c);
+
+void MgCoins_Update(void);}
+namespace s020c19d0 {
+void Dealer_Update(Dealer *dealer);
 }
+using s020c19d0::Dealer_Update;
+
+extern unsigned char gMainScreenLayers;
+
+extern int data_0208ee44;
+void LoadCard2SubBg3(void *);
+extern "C" {
+
+extern s32 GetGameLanguage(void);
+
+extern u32 LoadCompressedFileAt(int fileID, void *target);
+
+extern void *LoadFile(int handle);
+
+extern int Dealer_Load(void *c);}
 
 
 /* Real C++ declarations for the engine calls below; the namespaces and the
@@ -89,7 +119,7 @@ void PlayBank2_2D(u32 id);
 
 /* `new` inlines the implicit constructor: the base chain, this class's
    vptr, then mDealer and mCardPos in declaration order. */
-extern "C" void *dScMgBSC_c_classInit() {
+ void *dScMgBSC_c_classInit() {
     return new dScMgBSC_c;
 }
 

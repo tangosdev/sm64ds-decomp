@@ -36,10 +36,13 @@ struct Puff {
 };
 
 extern "C" {
+
 /* local extern: arm9 C helpers with no shared header. */
 int GetGameLanguage(void);
+
 void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 }
+
 
 extern void **sPuffSprites[];
 
@@ -47,7 +50,7 @@ int sPuffNextIndex;
 void **sPuffXTable;
 Puff sPuffs[3];
 
-extern "C" {
+
 
 void Puff_Spawn(int x, int y) {
     int i;
@@ -82,9 +85,11 @@ void Puff_Spawn(int x, int y) {
     }
 }
 
+
 void Puff_Clear(Puff *p) {
     p->mActive = 0;
 }
+
 
 void Puff_Update(Puff *entry) {
     if (entry->mActive == 0)
@@ -101,6 +106,7 @@ void Puff_Update(Puff *entry) {
         entry->y += entry->mVelY;
     }
 }
+
 
 void Puff_Draw(Puff *entry) {
     void *sprite;
@@ -121,6 +127,7 @@ void Puff_Draw(Puff *entry) {
     Hud_RenderSprite(sprite, drawX >> 12, entry->y >> 12, -1, -1);
 }
 
+
 void Puff_ClearAll(int a0, int a1) {
     int i;
     for (i = 0; i < 3; i++) {
@@ -130,6 +137,7 @@ void Puff_ClearAll(int a0, int a1) {
     sPuffXTable = (void **)a1;
 }
 
+
 void Puff_UpdateAll(void) {
     int i;
     for (i = 0; i < 3; i++) {
@@ -137,13 +145,14 @@ void Puff_UpdateAll(void) {
     }
 }
 
+
 void Puff_DrawAll(void) {
     int i;
     for (i = 2; i >= 0; i--) {
         Puff_Draw(&sPuffs[i]);
     }
 }
-}
+
 
 inline Puff::~Puff() {}
 

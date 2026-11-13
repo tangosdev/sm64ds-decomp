@@ -371,7 +371,7 @@
       "ordinal": 45
     },
     {
-      "symbol": "dScMgMemory_c_classInit",
+      "symbol": "_Z23dScMgMemory_c_classInitv",
       "address": "0x020f5504",
       "size": "0x00000060",
       "legacy_source": "src/MgMemoryMatch_Spawn.c",
@@ -1587,7 +1587,7 @@
       "source": "0x0213cfd8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "dScMgMemory_c_classInit",
+      "symbol": "_Z23dScMgMemory_c_classInitv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x020f5504"

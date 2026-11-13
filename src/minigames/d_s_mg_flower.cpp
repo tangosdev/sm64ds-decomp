@@ -44,6 +44,9 @@
 #include "nitro/os/cache.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/fx/fx_trig.h"
+using s020c38b0::FlowerFace_PlayHate;
+using s020c3908::FlowerFace_PlayLike;
+using s020c3d18::FlowerFace_Update;
 
 #pragma defer_codegen off
 
@@ -55,27 +58,36 @@ struct SpriteAttr {
 extern "C" {
 
 extern void func_0203d388(int *p, int angle);
+
 extern void Mg_SetTopScreenYOffset(int n);
+
 void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
-int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5, u16 a6);
-}
+
+int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5, u16 a6);}
 
 /* The dragged petal's two adjacent fixed-point coordinates. */
 typedef struct V2 {
     int x;
     int y;
 }
-extern "C" {
  V2;
+extern "C" {
+
 void Vec2_Sub(int *out, int *a, int *b);
+
 void FreeGfxSlotsById(int a);
+
 void *Ov004_LoadFileByPath(void *arg);
+
 void DecompressLZ16(void *src, void *dst);
-void Ov004_Deallocate(void *ptr);
+
+void Ov004_Deallocate(void *ptr);}
+
 extern int data_0208ee44;
+
 extern u8 gMainScreenLayers;
+
 extern u8 gSubScreenLayers;
-}
 
 
 /* Written first so D1 and D0 are emitted first, as in the cartridge. The
@@ -562,7 +574,7 @@ inline dScMgFlower_c::dScMgFlower_c() {}
  * allocation size, vtable identity, and the MG_FLOWER registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: func_ov006_0212b7f8. */
-extern "C" void *dScMgFlower_c_classInit() {
+ void *dScMgFlower_c_classInit() {
     return new dScMgFlower_c;
 }
 

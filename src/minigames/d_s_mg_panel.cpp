@@ -65,19 +65,31 @@ enum dScMgPanel_c_AssetId {
 extern "C" {
 
 void SetBg2Offset(int x, int y);
+
 void SetSubBg2Offset(int x, int y);
+
 void SetSubBg0Offset(int a, int b);
-void FreeGfxSlotsById(int arg);
+
+void FreeGfxSlotsById(int arg);}
+
 struct Matrix2x2;
+extern "C" {
+
 void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
+
 void Hud_RenderSprite(void *a, int b, int c, int d, int e);
+
 void Mg_SubmitScore(int a);
+
 void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *d);
+
 void Mg_RenderSpriteBoth(void *a, int b, int c, int d, int e);
+
 void Mg_SetSharedState(int a);
+
 void Mg_RenderSubSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, void *a5);
-void Mg_DrawBigNumber(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
-}
+
+void Mg_DrawBigNumber(int a0, int a1, int a2, int a3, int a4, int a5, int a6);}
 
 
 /* The state tables are arrays of member-function pointers, defined at the end
@@ -292,8 +304,7 @@ void dScMgPanel_c::Shake_StateLoseTry(int index) {
 
 extern "C" {
 
-void SetSubBg0Offset(int a, int b);
-}
+void SetSubBg0Offset(int a, int b);}
 
 void dScMgPanel_c::Shake_StateShake(int index) {
     extern int sPanelShakeOffsets[];
@@ -695,9 +706,7 @@ typedef struct WarpEntry_730 {
     u8 c;
     u8 d;
 }
-extern "C" {
  WarpEntry_730;
-}
 
 void dScMgPanel_c::Answer_StateWaitButton() {
     // local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
@@ -1529,27 +1538,30 @@ void dScMgPanel_c::Scene_StateInit() {
  * mangled, so those stay in the bodies. */
 
 
+
 extern void Deallocate(void *);
-extern int GetOwnerLanguage(void);
-extern "C" {
+
+extern int GetOwnerLanguage(void);extern "C" {
 
 extern void *LoadFile(int handle);
+
 extern void DecompressLZ16(void *src, void *dst);
+
 extern void FreeGfxSlotsById(int arg);
-extern void SetSubBg0Offset(int, int);
-}
+
+extern void SetSubBg0Offset(int, int);}
 
 /* local extern: nitro/gx/gx_load.h leaves GX_LoadBG3Scr out until
  * decl_common.h's non-const spelling of it goes. */
-extern void GX_LoadBG3Scr(void *, u32, u32);
-extern "C" {
+extern void GX_LoadBG3Scr(const void *, u32, u32);extern "C" {
 
 extern void Mg_SubmitScore(int);
-extern void Mg_SetTopScreenYOffset(int);
-extern void Mg_ShowBanner(int, int, int, int, int, s16);
-extern void Mg_DrawScoreTally(void *a, int b, int c, int d);
 
-}
+extern void Mg_SetTopScreenYOffset(int);
+
+extern void Mg_ShowBanner(int, int, int, int, int, s16);
+
+extern void Mg_DrawScoreTally(void *a, int b, int c, int d);}
  /* extern "C" */
 
 /* Vtable slot 18, an override of dScMgBase_c::StartRound(int).  The
@@ -1749,16 +1761,15 @@ s32 dScMgPanel_c::InitResources() {
  * allocation size, vtable identity, and the MG_PANEL registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: MgPuzzlePanelPuzzlePanic_Spawn. */
-extern "C" dScMgPanel_c *dScMgPanel_c_classInit() {
+ dScMgPanel_c *dScMgPanel_c_classInit() {
     return new dScMgPanel_c;
-}
-
-/* The state tables, in the order the static initializer fills them. Each
+}extern /* The state tables, in the order the static initializer fills them. Each
    entry's {function, 0} record is a compiler temporary in .data. The two
    sprite triples (OamAttr lists) are copied whole from data_ov006_02136cf0 and
    data_ov006_02136d1c. */
-extern "C" OamAttr *data_ov006_02136cf0[3];
-extern "C" OamAttr *data_ov006_02136d1c[3];
+ OamAttr *data_ov006_02136cf0[3];
+extern OamAttr *data_ov006_02136d1c[3];
+
 
 OamAttr *sPanelSprites[6] = {
     data_ov006_02136cf0[0], data_ov006_02136cf0[1], data_ov006_02136cf0[2],

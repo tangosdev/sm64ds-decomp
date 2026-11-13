@@ -43,49 +43,49 @@
       "ordinal": 0
     },
     {
-      "symbol": "Heyho_AllIdle",
+      "symbol": "_Z13Heyho_AllIdlev",
       "address": "0x020c4060",
       "size": "0x00000088",
       "legacy_source": "src/func_ov006_020c4060.c",
       "ordinal": 1
     },
     {
-      "symbol": "Heyho_ReactAll",
+      "symbol": "_Z14Heyho_ReactAllv",
       "address": "0x020c40e8",
       "size": "0x00000060",
       "legacy_source": "src/func_ov006_020c40e8.c",
       "ordinal": 2
     },
     {
-      "symbol": "Heyho_SettleAll",
+      "symbol": "_Z15Heyho_SettleAllv",
       "address": "0x020c4148",
       "size": "0x00000114",
       "legacy_source": "src/func_ov006_020c4148.c",
       "ordinal": 3
     },
     {
-      "symbol": "Heyho_DrawAll",
+      "symbol": "_Z13Heyho_DrawAllv",
       "address": "0x020c425c",
       "size": "0x00000060",
       "legacy_source": "src/func_ov006_020c425c.c",
       "ordinal": 4
     },
     {
-      "symbol": "Heyho_SeparateAll",
+      "symbol": "_Z17Heyho_SeparateAllv",
       "address": "0x020c42bc",
       "size": "0x000001f8",
       "legacy_source": "src/func_ov006_020c42bc.c",
       "ordinal": 5
     },
     {
-      "symbol": "Heyho_SpawnAll",
+      "symbol": "_Z14Heyho_SpawnAllPvi",
       "address": "0x020c44b4",
       "size": "0x000001d0",
       "legacy_source": "src/func_ov006_020c44b4.c",
       "ordinal": 6
     },
     {
-      "symbol": "Heyho_InitPool",
+      "symbol": "_Z14Heyho_InitPoolPvi",
       "address": "0x020c4684",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov006_020c4684.c",

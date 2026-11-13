@@ -69,56 +69,56 @@
       "ordinal": 2
     },
     {
-      "symbol": "StarPopup_Draw",
+      "symbol": "_Z14StarPopup_Drawv",
       "address": "0x020ea350",
       "size": "0x00000080",
       "legacy_source": "src/func_ov006_020ea350.c",
       "ordinal": 3
     },
     {
-      "symbol": "StarPopup_Update",
+      "symbol": "_Z16StarPopup_UpdatePc",
       "address": "0x020ea3d0",
       "size": "0x00000220",
       "legacy_source": "src/func_ov006_020ea3d0.c",
       "ordinal": 4
     },
     {
-      "symbol": "StarPopup_Start",
+      "symbol": "_Z15StarPopup_Startii",
       "address": "0x020ea5f0",
       "size": "0x00000068",
       "legacy_source": "src/func_ov006_020ea5f0.c",
       "ordinal": 5
     },
     {
-      "symbol": "StarPopup_Clear",
+      "symbol": "_Z15StarPopup_Clearv",
       "address": "0x020ea658",
       "size": "0x00000018",
       "legacy_source": "src/func_ov006_020ea658.c",
       "ordinal": 6
     },
     {
-      "symbol": "HanaPopup_DrawAll",
+      "symbol": "_Z17HanaPopup_DrawAllv",
       "address": "0x020ea670",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov006_020ea670.c",
       "ordinal": 7
     },
     {
-      "symbol": "HanaPopup_UpdateAll",
+      "symbol": "_Z19HanaPopup_UpdateAllv",
       "address": "0x020ea71c",
       "size": "0x00000100",
       "legacy_source": "src/func_ov006_020ea71c.c",
       "ordinal": 8
     },
     {
-      "symbol": "HanaPopup_Spawn",
+      "symbol": "_Z15HanaPopup_Spawnii",
       "address": "0x020ea81c",
       "size": "0x000000c4",
       "legacy_source": "src/func_ov006_020ea81c.c",
       "ordinal": 9
     },
     {
-      "symbol": "HanaPopup_ClearAll",
+      "symbol": "_Z18HanaPopup_ClearAllv",
       "address": "0x020ea8e0",
       "size": "0x00000034",
       "legacy_source": "src/func_ov006_020ea8e0.c",
@@ -244,21 +244,21 @@
       "ordinal": 27
     },
     {
-      "symbol": "Hana_PickUnused",
+      "symbol": "_Z15Hana_PickUnusedii",
       "address": "0x020ebc7c",
       "size": "0x00000100",
       "legacy_source": "src/func_ov006_020ebc7c.c",
       "ordinal": 28
     },
     {
-      "symbol": "Hana_ChooseStarWiggler",
+      "symbol": "_Z22Hana_ChooseStarWiggleri",
       "address": "0x020ebd7c",
       "size": "0x000000f0",
       "legacy_source": "src/func_ov006_020ebd7c.c",
       "ordinal": 29
     },
     {
-      "symbol": "Hana_PickMoveKind",
+      "symbol": "_Z17Hana_PickMoveKindv",
       "address": "0x020ebe6c",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_020ebe6c.c",
@@ -468,7 +468,7 @@
       "ordinal": 59
     },
     {
-      "symbol": "Hana_LoadBackground",
+      "symbol": "_Z19Hana_LoadBackgroundv",
       "address": "0x020edcb0",
       "size": "0x00000168",
       "legacy_source": "src/func_ov006_020edcb0.c",
@@ -1136,7 +1136,7 @@
       "source": "0x213c98c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "dScMgHanachan_c_classInit",
+      "symbol": "_Z25dScMgHanachan_c_classInitv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x20ede18"

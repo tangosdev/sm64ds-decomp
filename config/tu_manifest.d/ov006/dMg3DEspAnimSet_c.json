@@ -505,7 +505,7 @@
       "ordinal": 66
     },
     {
-      "symbol": "dScMg3DEsp_c_classInit",
+      "symbol": "_Z22dScMg3DEsp_c_classInitv",
       "address": "0x020ea1f0",
       "size": "0x00000090",
       "legacy_source": "src/d_s_mg3_d_esp.cpp",

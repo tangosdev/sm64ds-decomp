@@ -43,28 +43,28 @@
       "ordinal": 1
     },
     {
-      "symbol": "Camera_UpdateMatrices",
+      "symbol": "_Z21Camera_UpdateMatricesP8MgCamera",
       "address": "0x020c0134",
       "size": "0x00000130",
       "legacy_source": "src/Camera_UpdateMatrices.c",
       "ordinal": 2
     },
     {
-      "symbol": "MascotWalker_StatePause",
+      "symbol": "_Z23MascotWalker_StatePausePc",
       "address": "0x020c0264",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov006_020c0264.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "MascotWalker_StartPause",
+      "symbol": "_Z23MascotWalker_StartPausePi",
       "address": "0x020c0304",
       "size": "0x00000060",
       "legacy_source": "src/func_ov006_020c0304.c",
       "ordinal": 4
     },
     {
-      "symbol": "MascotWalker_StateWalk",
+      "symbol": "_Z22MascotWalker_StateWalkPc",
       "address": "0x020c0364",
       "size": "0x00000218",
       "legacy_source": "src/func_ov006_020c0364.c",
@@ -78,28 +78,28 @@
       "ordinal": 6
     },
     {
-      "symbol": "MascotWalker_UpdateMatrix",
+      "symbol": "_Z25MascotWalker_UpdateMatrixP12MascotWalker",
       "address": "0x020c06dc",
       "size": "0x000000c4",
       "legacy_source": "src/func_ov006_020c06dc.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "MascotWalker_Draw",
+      "symbol": "_Z17MascotWalker_DrawPc",
       "address": "0x020c07a0",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_020c07a0.c",
       "ordinal": 8
     },
     {
-      "symbol": "MascotWalker_Update",
+      "symbol": "_ZN9s020c07e819MascotWalker_UpdateEP12MascotWalker",
       "address": "0x020c07e8",
       "size": "0x00000144",
       "legacy_source": "src/func_ov006_020c07e8.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "MascotWalker_Load",
+      "symbol": "_Z17MascotWalker_LoadP12MascotWalker",
       "address": "0x020c092c",
       "size": "0x000000cc",
       "legacy_source": "src/func_ov006_020c092c.cpp",
@@ -120,35 +120,35 @@
       "ordinal": 12
     },
     {
-      "symbol": "Camera_InitDealerView",
+      "symbol": "_Z21Camera_InitDealerViewP8MgCamera",
       "address": "0x020c0aa8",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_020c0aa8.c",
       "ordinal": 13
     },
     {
-      "symbol": "Dealer_ResetMatrices",
+      "symbol": "_Z20Dealer_ResetMatricesPc",
       "address": "0x020c0af8",
       "size": "0x0000007c",
       "legacy_source": "src/func_ov006_020c0af8.c",
       "ordinal": 14
     },
     {
-      "symbol": "Dealer_StateWin",
+      "symbol": "_Z15Dealer_StateWinPc",
       "address": "0x020c0b74",
       "size": "0x0000010c",
       "legacy_source": "src/func_ov006_020c0b74.c",
       "ordinal": 15
     },
     {
-      "symbol": "Dealer_PlayWin",
+      "symbol": "_Z14Dealer_PlayWinPv",
       "address": "0x020c0c80",
       "size": "0x00000068",
       "legacy_source": "src/func_ov006_020c0c80.cpp",
       "ordinal": 16
     },
     {
-      "symbol": "Dealer_StateLose",
+      "symbol": "_Z16Dealer_StateLosePc",
       "address": "0x020c0ce8",
       "size": "0x00000080",
       "legacy_source": "src/func_ov006_020c0ce8.c",
@@ -162,21 +162,21 @@
       "ordinal": 18
     },
     {
-      "symbol": "Dealer_StateSwap",
+      "symbol": "_Z16Dealer_StateSwapPc",
       "address": "0x020c0df0",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov006_020c0df0.cpp",
       "ordinal": 19
     },
     {
-      "symbol": "Dealer_StartSwap",
+      "symbol": "_Z16Dealer_StartSwapPi",
       "address": "0x020c0e8c",
       "size": "0x00000070",
       "legacy_source": "src/func_ov006_020c0e8c.c",
       "ordinal": 20
     },
     {
-      "symbol": "Dealer_IsAnimDone",
+      "symbol": "_Z17Dealer_IsAnimDonePv",
       "address": "0x020c0efc",
       "size": "0x00000010",
       "legacy_source": "src/func_ov006_020c0efc.c",
@@ -190,7 +190,7 @@
       "ordinal": 22
     },
     {
-      "symbol": "Dealer_StateReveal",
+      "symbol": "_Z18Dealer_StateRevealPv",
       "address": "0x020c0f9c",
       "size": "0x000001c8",
       "legacy_source": "src/func_ov006_020c0f9c.cpp",
@@ -204,7 +204,7 @@
       "ordinal": 24
     },
     {
-      "symbol": "Dealer_StateDeal",
+      "symbol": "_Z16Dealer_StateDealPc",
       "address": "0x020c11c0",
       "size": "0x00000260",
       "legacy_source": "src/func_ov006_020c11c0.cpp",
@@ -218,14 +218,14 @@
       "ordinal": 26
     },
     {
-      "symbol": "Dealer_StateShuffle",
+      "symbol": "_Z19Dealer_StateShufflePc",
       "address": "0x020c14bc",
       "size": "0x00000148",
       "legacy_source": "src/func_ov006_020c14bc.cpp",
       "ordinal": 27
     },
     {
-      "symbol": "Dealer_StartShuffle",
+      "symbol": "_Z19Dealer_StartShuffleP6DealerisPs",
       "address": "0x020c1604",
       "size": "0x000000b0",
       "legacy_source": "src/func_ov006_020c1604.c",
@@ -239,21 +239,21 @@
       "ordinal": 29
     },
     {
-      "symbol": "Dealer_IsIdle",
+      "symbol": "_Z13Dealer_IsIdleP6Dealer",
       "address": "0x020c1718",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_020c1718.c",
       "ordinal": 30
     },
     {
-      "symbol": "Dealer_StateIdle",
+      "symbol": "_Z16Dealer_StateIdlev",
       "address": "0x020c1760",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020c1760.c",
       "ordinal": 31
     },
     {
-      "symbol": "Dealer_PlayIdle",
+      "symbol": "_Z15Dealer_PlayIdlePc",
       "address": "0x020c1764",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov006_020c1764.cpp",
@@ -267,7 +267,7 @@
       "ordinal": 33
     },
     {
-      "symbol": "Dealer_Update",
+      "symbol": "_ZN9s020c19d013Dealer_UpdateEP6Dealer",
       "address": "0x020c19d0",
       "size": "0x000000b8",
       "legacy_source": "src/func_ov006_020c19d0.cpp",
@@ -302,21 +302,21 @@
       "ordinal": 38
     },
     {
-      "symbol": "Mascot_StopLooking",
+      "symbol": "_Z18Mascot_StopLookingPi",
       "address": "0x020c1ef8",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov006_020c1ef8.c",
       "ordinal": 39
     },
     {
-      "symbol": "Mascot_LookAt",
+      "symbol": "_Z13Mascot_LookAtPcPi",
       "address": "0x020c1f04",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_020c1f04.c",
       "ordinal": 40
     },
     {
-      "symbol": "Mascot_UpdateMatrix",
+      "symbol": "_Z19Mascot_UpdateMatrixPc",
       "address": "0x020c1f4c",
       "size": "0x000000d0",
       "legacy_source": "src/func_ov006_020c1f4c.cpp",
@@ -330,14 +330,14 @@
       "ordinal": 42
     },
     {
-      "symbol": "Mascot_Update",
+      "symbol": "_Z13Mascot_UpdatePv",
       "address": "0x020c2144",
       "size": "0x00000010",
       "legacy_source": "src/func_ov006_020c2144.c",
       "ordinal": 43
     },
     {
-      "symbol": "Mascot_Load",
+      "symbol": "_Z11Mascot_LoadPc",
       "address": "0x020c2154",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_020c2154.c",
@@ -358,63 +358,63 @@
       "ordinal": 46
     },
     {
-      "symbol": "Camera_InitPresenterView",
+      "symbol": "_Z24Camera_InitPresenterViewP8MgCamera",
       "address": "0x020c225c",
       "size": "0x00000034",
       "legacy_source": "src/func_ov006_020c225c.c",
       "ordinal": 47
     },
     {
-      "symbol": "Presenter_UpdateMatrix",
+      "symbol": "_Z22Presenter_UpdateMatrixPc",
       "address": "0x020c2290",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_020c2290.c",
       "ordinal": 48
     },
     {
-      "symbol": "Presenter_StateSurprisedThenIdle",
+      "symbol": "_Z32Presenter_StateSurprisedThenIdlePc",
       "address": "0x020c22d8",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_020c22d8.c",
       "ordinal": 49
     },
     {
-      "symbol": "Presenter_PlayCheerLoop",
+      "symbol": "_Z23Presenter_PlayCheerLoopPv",
       "address": "0x020c2300",
       "size": "0x000000a8",
       "legacy_source": "src/func_ov006_020c2300.c",
       "ordinal": 50
     },
     {
-      "symbol": "Presenter_StateLoseStart",
+      "symbol": "_Z24Presenter_StateLoseStartPv",
       "address": "0x020c23a8",
       "size": "0x00000098",
       "legacy_source": "src/func_ov006_020c23a8.cpp",
       "ordinal": 51
     },
     {
-      "symbol": "Presenter_PlayLose",
+      "symbol": "_Z18Presenter_PlayLosePc",
       "address": "0x020c2440",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov006_020c2440.cpp",
       "ordinal": 52
     },
     {
-      "symbol": "Presenter_StateSurprisedThenSmile",
+      "symbol": "_Z33Presenter_StateSurprisedThenSmilePv",
       "address": "0x020c24e4",
       "size": "0x000000b0",
       "legacy_source": "src/func_ov006_020c24e4.cpp",
       "ordinal": 53
     },
     {
-      "symbol": "Presenter_PlayCheer",
+      "symbol": "_Z19Presenter_PlayCheerPv",
       "address": "0x020c2594",
       "size": "0x000000a8",
       "legacy_source": "src/func_ov006_020c2594.c",
       "ordinal": 54
     },
     {
-      "symbol": "Presenter_StateMistake",
+      "symbol": "_Z22Presenter_StateMistakePc",
       "address": "0x020c263c",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_020c263c.c",
@@ -428,28 +428,28 @@
       "ordinal": 56
     },
     {
-      "symbol": "Presenter_StateWin",
+      "symbol": "_Z18Presenter_StateWinPc",
       "address": "0x020c26f4",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_020c26f4.c",
       "ordinal": 57
     },
     {
-      "symbol": "Presenter_PlayMatch",
+      "symbol": "_Z19Presenter_PlayMatchPv",
       "address": "0x020c271c",
       "size": "0x000000a8",
       "legacy_source": "src/func_ov006_020c271c.c",
       "ordinal": 58
     },
     {
-      "symbol": "Presenter_StateIdle",
+      "symbol": "_Z19Presenter_StateIdlePc",
       "address": "0x020c27c4",
       "size": "0x00000084",
       "legacy_source": "src/func_ov006_020c27c4.cpp",
       "ordinal": 59
     },
     {
-      "symbol": "Presenter_PlayIdle",
+      "symbol": "_Z18Presenter_PlayIdlePc",
       "address": "0x020c2848",
       "size": "0x000000dc",
       "legacy_source": "src/func_ov006_020c2848.cpp",
@@ -463,7 +463,7 @@
       "ordinal": 61
     },
     {
-      "symbol": "Presenter_IsAnimDone",
+      "symbol": "_Z20Presenter_IsAnimDonePv",
       "address": "0x020c2984",
       "size": "0x00000010",
       "legacy_source": "src/func_ov006_020c2984.c",
@@ -491,7 +491,7 @@
       "ordinal": 65
     },
     {
-      "symbol": "Presenter_TrackStylus",
+      "symbol": "_Z21Presenter_TrackStylusPc",
       "address": "0x020c2be8",
       "size": "0x00000468",
       "legacy_source": "src/func_ov006_020c2be8.c",
@@ -519,91 +519,91 @@
       "ordinal": 69
     },
     {
-      "symbol": "FallingPetal_UpdateMatrix",
+      "symbol": "_Z25FallingPetal_UpdateMatrixPc",
       "address": "0x020c3528",
       "size": "0x00000080",
       "legacy_source": "src/func_ov006_020c3528.cpp",
       "ordinal": 70
     },
     {
-      "symbol": "FallingPetal_Draw",
+      "symbol": "_Z17FallingPetal_DrawPc",
       "address": "0x020c35a8",
       "size": "0x00000040",
       "legacy_source": "src/func_ov006_020c35a8.cpp",
       "ordinal": 71
     },
     {
-      "symbol": "FallingPetal_Update",
+      "symbol": "_Z19FallingPetal_UpdatePc",
       "address": "0x020c35e8",
       "size": "0x0000016c",
       "legacy_source": "src/func_ov006_020c35e8.c",
       "ordinal": 72
     },
     {
-      "symbol": "FallingPetal_Spawn",
+      "symbol": "_Z18FallingPetal_SpawnP12FallingPetalPK7VecFx32S3_",
       "address": "0x020c3754",
       "size": "0x00000130",
       "legacy_source": "src/func_ov006_020c3754.c",
       "ordinal": 73
     },
     {
-      "symbol": "FallingPetal_SetModel",
+      "symbol": "_Z21FallingPetal_SetModelPci",
       "address": "0x020c3884",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_020c3884.c",
       "ordinal": 74
     },
     {
-      "symbol": "FlowerFace_StateHate",
+      "symbol": "_Z20FlowerFace_StateHatev",
       "address": "0x020c38ac",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020c38ac.c",
       "ordinal": 75
     },
     {
-      "symbol": "FlowerFace_PlayHate",
+      "symbol": "_ZN9s020c38b019FlowerFace_PlayHateEPc",
       "address": "0x020c38b0",
       "size": "0x00000054",
       "legacy_source": "src/func_ov006_020c38b0.c",
       "ordinal": 76
     },
     {
-      "symbol": "FlowerFace_StateLike",
+      "symbol": "_Z20FlowerFace_StateLikev",
       "address": "0x020c3904",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020c3904.c",
       "ordinal": 77
     },
     {
-      "symbol": "FlowerFace_PlayLike",
+      "symbol": "_ZN9s020c390819FlowerFace_PlayLikeEPc",
       "address": "0x020c3908",
       "size": "0x00000054",
       "legacy_source": "src/func_ov006_020c3908.c",
       "ordinal": 78
     },
     {
-      "symbol": "FlowerFace_StatePick",
+      "symbol": "_Z20FlowerFace_StatePickPi",
       "address": "0x020c395c",
       "size": "0x00000034",
       "legacy_source": "src/func_ov006_020c395c.c",
       "ordinal": 79
     },
     {
-      "symbol": "FlowerFace_PlayPetalPulled",
+      "symbol": "_Z26FlowerFace_PlayPetalPulledPc",
       "address": "0x020c3990",
       "size": "0x00000148",
       "legacy_source": "src/func_ov006_020c3990.c",
       "ordinal": 80
     },
     {
-      "symbol": "FlowerFace_StateIdle",
+      "symbol": "_Z20FlowerFace_StateIdlev",
       "address": "0x020c3ad8",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020c3ad8.c",
       "ordinal": 81
     },
     {
-      "symbol": "FlowerFace_PlayIdle",
+      "symbol": "_ZN9s020c3adc19FlowerFace_PlayIdleEPc",
       "address": "0x020c3adc",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_020c3adc.c",
@@ -624,28 +624,28 @@
       "ordinal": 84
     },
     {
-      "symbol": "FlowerFace_Reset",
+      "symbol": "_Z16FlowerFace_ResetPv",
       "address": "0x020c3bc8",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov006_020c3bc8.c",
       "ordinal": 85
     },
     {
-      "symbol": "FlowerFace_Draw",
+      "symbol": "_Z15FlowerFace_DrawPv",
       "address": "0x020c3bf4",
       "size": "0x00000124",
       "legacy_source": "src/func_ov006_020c3bf4.cpp",
       "ordinal": 86
     },
     {
-      "symbol": "FlowerFace_Update",
+      "symbol": "_ZN9s020c3d1817FlowerFace_UpdateEPc",
       "address": "0x020c3d18",
       "size": "0x00000070",
       "legacy_source": "src/func_ov006_020c3d18.cpp",
       "ordinal": 87
     },
     {
-      "symbol": "FlowerFace_Load",
+      "symbol": "_Z15FlowerFace_LoadPc",
       "address": "0x020c3d88",
       "size": "0x000000cc",
       "legacy_source": "src/func_ov006_020c3d88.cpp",

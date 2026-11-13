@@ -103,49 +103,49 @@
       "ordinal": 10
     },
     {
-      "symbol": "TrmpFx_Unlink",
+      "symbol": "_Z13TrmpFx_UnlinkP14TrmpScorePopup",
       "address": "0x02120b7c",
       "size": "0x0000004c",
       "legacy_source": "src/actors/d_sc_mg_trampoline.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "TrmpFx_Link",
+      "symbol": "_Z11TrmpFx_LinkP14TrmpScorePopup",
       "address": "0x02120bc8",
       "size": "0x00000040",
       "legacy_source": "src/actors/d_sc_mg_trampoline.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "TrmpFx_DrawAll",
+      "symbol": "_Z14TrmpFx_DrawAllv",
       "address": "0x02120c08",
       "size": "0x00000038",
       "legacy_source": "src/actors/d_sc_mg_trampoline.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "TrmpFx_UpdateAll",
+      "symbol": "_Z16TrmpFx_UpdateAllv",
       "address": "0x02120c40",
       "size": "0x00000060",
       "legacy_source": "src/actors/d_sc_mg_trampoline.cpp",
       "ordinal": 14
     },
     {
-      "symbol": "TrmpFx_ClearAll",
+      "symbol": "_Z15TrmpFx_ClearAllv",
       "address": "0x02120ca0",
       "size": "0x0000006c",
       "legacy_source": "src/actors/d_sc_mg_trampoline.cpp",
       "ordinal": 15
     },
     {
-      "symbol": "TrmpFx_Spawn",
+      "symbol": "_Z12TrmpFx_Spawnii",
       "address": "0x02120d0c",
       "size": "0x00000080",
       "legacy_source": "src/actors/d_sc_mg_trampoline.cpp",
       "ordinal": 16
     },
     {
-      "symbol": "TrmpFx_InitPool",
+      "symbol": "_Z15TrmpFx_InitPoolPvi",
       "address": "0x02120d8c",
       "size": "0x0000001c",
       "legacy_source": "src/actors/d_sc_mg_trampoline.cpp",
@@ -320,7 +320,7 @@
       "ordinal": 41
     },
     {
-      "symbol": "dScMgTrampoline_c_classInit",
+      "symbol": "_Z27dScMgTrampoline_c_classInitv",
       "address": "0x02122490",
       "size": "0x00000118",
       "legacy_source": "src/MgTrampolineTime_Spawn.cpp",
@@ -446,7 +446,7 @@
       "source": "0x0213fab8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "dScMgTrampoline_c_classInit",
+      "symbol": "_Z27dScMgTrampoline_c_classInitv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02122490"
