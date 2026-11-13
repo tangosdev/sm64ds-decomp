@@ -13,7 +13,7 @@ struct V2;
  * ASSET_RINGA/B/C_BMD, sTrmpItemRing*ModelFile): the 0x1d0-byte record whose
  * methods in src/minigames/unit020cd744.cpp spawn, move and draw it (the scene
  * builds ten). The name is coined. mMotionKind picks the motion (MotionStill ..
- * SetMotionSpinDrift); unnamed regions are written in one place only, or sit
+ * MotionSpinDrift); unnamed regions are written in one place only, or sit
  * inside an embedded object. */
 struct TrmpItem {
     TrmpItem();
@@ -46,8 +46,7 @@ struct TrmpItem {
     /* Per-frame work on one ring. */
     void ReflectOffLine(TrampolineObjectCallbacks *jumper);
     int HitTest2D(TrampolineObjectCallbacks *jumper, int arg);
-    void ProjectOnLine(TrampolineObjectCallbacks *jumper, V2 *currentProjection,
-                       V2 *previousProjection);
+    void ProjectOnLine(TrampolineObjectCallbacks *jumper, V2 *current, V2 *previous);
     void UpdateMatrix();
     void Update();
     void Init(int *position, int *normal, int itemType, short motionType);
