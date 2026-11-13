@@ -131,7 +131,7 @@ s32 daYurei_Mucho_c::OnYoshiTryEat()
  * reference and a pointer generate identical ARM for this body, so the bytes
  * cannot distinguish them. */
 void daYurei_Mucho_c::OnTurnIntoEgg(daPly_c &player) {
-    GivePlayerCoins(player, (unsigned char)(mExtraCoinCount + 1), 0);
+    GivePlayerCoins(player, (mExtraCoinCount + 1), 0);
     KillAndTrackInDeathTable();
 }
 
@@ -333,8 +333,8 @@ int daYurei_Mucho_c::ChangeState(State *s) {
    the SharedFilePtr's filePtr -- the ROM does `ldr r1,[r0,#4]` off the
    literal at 0x02116918, not a call, so the field read is what reproduces. */
 int daYurei_Mucho_c::EnterIdle() {
-    mTargetAngle = (short)(((u32)RandomIntInternal(&data_0209e650.value) >> 8) << 0xc);
-    mStateTimer = (short)((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x1f) + 0x32);
+    mTargetAngle = (((u32)RandomIntInternal(&data_0209e650.value) >> 8) << 0xc);
+    mStateTimer = ((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x1f) + 0x32);
     mAnmModel.SetAnim((BCA_File *)gYureiMuchoWaitAnimFile.filePtr, 0, 0x1000, 0);
     return 1;
 }
@@ -552,7 +552,7 @@ void daYurei_Mucho_c::HandleCollision() {
     if (id == 0) return;
     p = (daPly_c *)dActor_c::FindWithID(id);
     if (p == 0) return;
-    flags = (int)mdCcAc_c.hitFlags;
+    flags = mdCcAc_c.hitFlags;
 
     if (flags & 0x40000) {
         mDeathState = 4;
@@ -598,7 +598,7 @@ void daYurei_Mucho_c::HandleCollision() {
         return;
     }
     {
-        int b = (int)(p->actorID == 0xbf);
+        int b = (p->actorID == 0xbf);
         if (b == 0) return;
     }
     if (p->mIsMetal == 1 || p->IsOnShell() == 1) {
