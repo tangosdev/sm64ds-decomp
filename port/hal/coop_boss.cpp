@@ -2563,7 +2563,7 @@ void on_frame(unsigned now) {
         }
     }
     pump_dead(now);
-    if (g_on && g_bf2 && g_caps_send && (!g_caps_tx_t || (unsigned)(now - g_caps_tx_t) >= kCapsEveryMs)) {   // bossfix4: my boss caps
+    if (g_on && g_bf2 && g_caps_send && (!g_caps_tx_t || coop_age_ms(now, g_caps_tx_t) >= kCapsEveryMs)) {   // bossfix4: my boss caps
         g_caps_tx_t = now | 1u;
         BossCaps c; std::memset(&c, 0, sizeof c);
         c.key = wire_key(); c.ver = kBossCapsVer; c.caps = kBossCapOwnerRule;
