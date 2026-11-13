@@ -64,7 +64,7 @@ long long OS_GetTick(void) {
     if ((REG_IF & OS_IE_TIMER0) && !(countL & 0x8000))
         countH = countH + 1;
     OS_RestoreInterrupts(saved);
-    return ((long long)countH << 16) | (int)countL;
+    return (countH << 16) | countL;
 }
 
 int OS_GetTickLo(void) {
