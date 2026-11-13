@@ -20,7 +20,11 @@
 #include "nitro/os/system.h"
 #include "nitro/os/interrupt.h"
 #include "nitro/mi/dma.h"
-void MIi_DmaSetParams_wait(u32, u32, u32, u32);
+/* The ITCM body is C++ (_Z21MIi_DmaSetParams_waitjjjj). The host stub is C. */
+#if defined(_MSC_VER)
+extern "C"
+#endif
+    void MIi_DmaSetParams_wait(u32, u32, u32, u32);
 
 #define MI_CNT_SRC_FIX DMA_CONTROL_SRC_FIXED
 #define MI_CNT_32BIT DMA_CONTROL_32_BIT

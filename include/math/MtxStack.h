@@ -120,7 +120,8 @@ extern "C"
 #endif
     /* dst = v * m (rotation and translation). */
     void
-    MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);#ifdef __cplusplus
+    MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
+#ifdef __cplusplus
 extern "C"
 #endif
     void

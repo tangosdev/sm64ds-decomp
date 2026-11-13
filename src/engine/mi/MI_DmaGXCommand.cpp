@@ -45,9 +45,12 @@ static inline void MIi_CallCallback(MIDmaCallback callback, void *arg) {
         callback(arg);
 }
 
-extern MIiGXDmaParams MIi_GXDmaParams;
+/* BSS word. mwcc leaves the name unmangled. The host stub is C. */
+#if defined(_MSC_VER)
+extern "C"
+#endif
+    extern MIiGXDmaParams MIi_GXDmaParams;
 extern "C" {
-
 
 /* in ITCM */
 extern void MIi_DmaSetParams(u32 dmaNo, u32 src, u32 dest, u32 ctrl);
