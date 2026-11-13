@@ -238,7 +238,7 @@ int daPgMthr_c::StateStandUpdate() {
     if (toucher != 0) {
         /* Yoshi's baby is in his mouth; this path does not count it. */
         if (toucher->param1 != CHAR_YOSHI)
-            held = (dActor_c *)toucher->mHeldObj;
+            held = toucher->mHeldObj;
         BeginTalk(toucher, (char *)held);
     }
     near = ClosestPlayer();
