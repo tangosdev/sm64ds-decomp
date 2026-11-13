@@ -33,6 +33,8 @@ extern unsigned char data_0209fc48[];     // cutscene
 extern unsigned char data_02092110[];     // pending level change, <0 = none
 extern unsigned char data_0209f22c[];     // hold timer
 extern unsigned char data_0209f228;       // the star number the clear screen names
+extern short data_02092144[];             // per-player health word (wedges in bits 8..15)
+extern unsigned char data_0209fc68[];     // (s32) Bowser / ending hold (6 = the ending)
 void *_ZN8dActor_c4NextEPKS_(const void *prev);
 void _ZN8dActor_c24KillAndTrackInDeathTableEv(void *self);
 int _ZN8daStar_c19func_ov002_020e73acEv(char *star);      // the ROM's star classifier
@@ -890,6 +892,9 @@ void census() {
     std::fprintf(stderr, " chr body=%u save=%u tbl=%u lc=%d cut=%08x mode=%u", *(const unsigned *)(me + 8) & 0xffu, (unsigned)data_0209cad2[0x0f],
                  (unsigned)data_02092128[*(const unsigned char *)(me + 0x6d8) & 0x3f], (int)(signed char)data_02092110[0], rd32(data_0209fc48),
                  (unsigned)data_0209f2d8[0]);
+    // CREDITS1: my health (wedges), my body's state routine and the Bowser / ending hold word, to see a hurt or a death in the ending
+    std::fprintf(stderr, " hp=%d st=%p fc68=%u", (int)((data_02092144[(int)data_0209f250] >> 8) & 0xff), *(void *const *)(me + 0x370),
+                 rd32(data_0209fc68));
     for (const char *a = (const char *)_ZN8dActor_c4NextEPKS_(0); a; a = (const char *)_ZN8dActor_c4NextEPKS_(a)) {
         if (*(const unsigned short *)(a + 0x0c) != 178) continue;
         const int *p = (const int *)(a + 0x5c);
