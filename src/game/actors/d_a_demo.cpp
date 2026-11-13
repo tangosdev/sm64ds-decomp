@@ -333,7 +333,7 @@ extern int data_ov002_0210b964[3];
 extern Matrix4x3 data_020a0e68;
 extern Matrix4x3 data_0209b41c;
 extern unsigned char gGameMode;
-extern char data_ov002_0211094c;
+extern SharedFilePtr data_ov002_0211094c;
 extern JugemModelFile data_ov085_0213074c;
 extern SharedFilePtr *data_ov002_0210b600[1];
 extern SharedFilePtr *data_ov002_0210b604[1];
@@ -623,9 +623,9 @@ void func_ov002_020f2790(char* c, int p1, int p2, int p3, s16 p4)
 {
     ((StaffRoll *)c)->kira.unk308 = p3;
     ((StaffRoll *)c)->kira.unk30c = p4;
-    ((StaffRoll *)c)->kiraParticle = Particle::System::New(
-        ((StaffRoll *)c)->kiraParticle, kPtclEndingStarSparkle, p1 << 12, p2 << 12, 0, 0,
-        (dPa_c::level_c::callback_c *)((struct ParticleCallback *)&((StaffRoll *)c)->kira));
+    ((StaffRoll *)c)->kiraParticle =
+        Particle::System::New(((StaffRoll *)c)->kiraParticle, kPtclEndingStarSparkle, p1 << 12,
+                              p2 << 12, 0, 0, &((StaffRoll *)c)->kira);
 }
 }
 
@@ -2881,7 +2881,7 @@ int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
   }
   else
   {
-      MTX_MultVec43((Vector3 *)&data_ov002_0210b958, (Matrix4x3 *)&data_0209b41c, (Vector3 *)&v);
+      MTX_MultVec43((Vector3 *)&data_ov002_0210b958, &data_0209b41c, (Vector3 *)&v);
       Vec3_LslInPlace((int *)&v, 3);
       func_ov002_020f6f48((Vector3 *)&v, 8);
   }
@@ -3030,24 +3030,21 @@ int daDemo_c::func_ov002_020f71c4(int a, int arg)
 
 int daDemo_c::func_ov002_020f72bc()
 {
-    *((u32*)&this->mScaleX) = 0x3000;
-    *((u32*)&this->mScaleY) = 0x3000;
-    *((u32*)&this->mScaleZ) = 0x3000;
+    this->mScaleX = 0x3000;
+    this->mScaleY = 0x3000;
+    this->mScaleZ = 0x3000;
     {
         s16* p = &this->mAngleY;
         *p = *p + 0x400;
     }
     this->mOpacity = 0x1f;
 
-    mParticleID[0] =
-        Particle::System::New(mParticleID[0], kPtclDemoSpinA, *((Fix12i *)&this->mPosX),
-                              *((Fix12i *)&this->mPosY), *((Fix12i *)&this->mPosZ), 0, 0);
-    mParticleID[1] =
-        Particle::System::New(mParticleID[1], kPtclDemoSpinB, *(Fix12i *)(&this->mPosX),
-                              *(Fix12i *)(&this->mPosY), *(Fix12i *)(&this->mPosZ), 0, 0);
-    mParticleID[2] =
-        Particle::System::New(mParticleID[2], kPtclDemoSpinC, *(Fix12i *)(&this->mPosX),
-                              *(Fix12i *)(&this->mPosY), *((Fix12i *)&this->mPosZ), 0, 0);
+    mParticleID[0] = Particle::System::New(mParticleID[0], kPtclDemoSpinA, this->mPosX, this->mPosY,
+                                           this->mPosZ, 0, 0);
+    mParticleID[1] = Particle::System::New(mParticleID[1], kPtclDemoSpinB, this->mPosX, this->mPosY,
+                                           this->mPosZ, 0, 0);
+    mParticleID[2] = Particle::System::New(mParticleID[2], kPtclDemoSpinC, this->mPosX, this->mPosY,
+                                           this->mPosZ, 0, 0);
     return 1;
 }
 
@@ -3091,12 +3088,12 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
         this->mAngleZ = 0;
         func_0201f138();
     }
-    MTX_MultVec43(((param_c &)*(simpleModel_c *)this->mModel).mScale, (Matrix4x3 *)&data_0209b41c,
+    MTX_MultVec43(((param_c &)*(simpleModel_c *)this->mModel).mScale, &data_0209b41c,
                   (&this->mPos));
     Vec3_LslInPlace(&this->mPosX, 3);
     if (ApproachLinear(this->mMagnitude, a, b) != 0 && a == 0 && b != 0)
         func_0201ef38();
-    *(char *)(&this->mOpacity) = *(&this->mMagnitude) >> 12;
+    this->mOpacity = this->mMagnitude >> 12;
     {
         unsigned char r = *(&this->mOpacity);
         if (r != 0 || a != 0) {
@@ -3122,7 +3119,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
     int b = arg1[1];
     int f1 = a << 0xc;
     int f2 = b << 8;
-    int *base;
+    const Vector3 *base;
     int scale;
     VecFx32 tmp, diff, scaled, sum;
 
@@ -3139,20 +3136,20 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
     static Vector3 sViewIdle(0x4c00, -0xf200, -0xff00);
 
     if (f1 != 0) {
-        base = (int *)&sViewStart;
+        base = &sViewStart;
         scale = 0x1000;
     } else {
-        base = (int *)&sViewIdle;
+        base = &sViewIdle;
         scale = 0;
     }
 
     Math_Function_0203b0fc(&this->mRate, scale, 0x40, 0x100);
-    Vec3_Sub((Vector3 *)&diff, (const Vector3 *)&sViewEnd, (const Vector3 *)base);
+    Vec3_Sub((Vector3 *)&diff, &sViewEnd, base);
     tmp.x = diff.x;
     tmp.y = diff.y;
     tmp.z = diff.z;
     Vec3_MulScalar((Vector3 *)&scaled, (const Vector3 *)&tmp, this->mRate);
-    Vec3_Add((Vector3 *)&sum, (const Vector3 *)base, (const Vector3 *)&scaled);
+    Vec3_Add((Vector3 *)&sum, base, (const Vector3 *)&scaled);
 
     {
         Vector3 *dp = ((param_c &)*(anmModel_c *)this->mAnmModel).mScale;
@@ -3160,9 +3157,8 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
         dp->y = sum.y;
         dp->z = sum.z;
     }
-    MTX_MultVec43(((param_c &)*(anmModel_c *)this->mAnmModel).mScale, (Matrix4x3 *)&data_0209b41c,
-                  &this->mPos);
-    Vec3_LslInPlace((int *)(&this->mPosX), 3);
+    MTX_MultVec43(((param_c &)*(anmModel_c *)this->mAnmModel).mScale, &data_0209b41c, &this->mPos);
+    Vec3_LslInPlace(&this->mPosX, 3);
     ApproachLinear(this->mMagnitude, f1, f2);
     this->mOpacity = this->mMagnitude >> 0xc;
     return 1;
@@ -3186,11 +3182,11 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
             v[1] = data_ov002_0210b970[1];
             v[2] = data_ov002_0210b970[2];
 
-            idx = *(volatile unsigned char *)&gLocalPlayerId;
+            idx = gLocalPlayerId;
             {
                 short ang = ((dActor_c *)gPlayers[idx])->mAngleY;
 
-                Vec3_RotateYAndTranslate(&this->mPosX, (int *)&cam->pos, (ang + 0x8000), v);
+                Vec3_RotateYAndTranslate(&this->mPosX, &cam->pos, (ang + 0x8000), v);
             }
         }
 
@@ -3224,20 +3220,20 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
 
             state = *&this->mPhase;
             if (state < 0xa9) {
-                UpdateAngle(*(short *)&this->mPrevAngleY, 0x1800, 0x1e, 0x4000);
+                UpdateAngle(this->mPrevAngleY, 0x1800, 0x1e, 0x4000);
             }
             ApproachLinear(this->mPrevAngleX, -0x3000, 0x70);
         }
     }
 
     {
-        unsigned short a = *((unsigned short *)&this->mPrevAngleX);
+        unsigned short a = this->mPrevAngleX;
         int t = this->mMagnitude;
         short s0 = FX_SinCosTable_[((a >> 4) << 1) + 1];
         this->mHorzSpeed = FX_MUL(t, s0);
     }
     {
-        unsigned short a = *(unsigned short *)(&this->mPrevAngleX);
+        unsigned short a = this->mPrevAngleX;
         int t = this->mMagnitude;
         int s1 = -FX_SinCosTable_[(a >> 4) << 1];
         this->mVertSpeed = FX_MUL(t, s1);
@@ -3292,7 +3288,7 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
         h = (unsigned short)this->mPhase;
         t = FX_SinCosTable_[(h >> 4) * 2 + 1];
         {
-            int *p60 = (int *)(&this->mPosY);
+            int *p60 = &this->mPosY;
             *p60 = *p60 + FX_MUL(t, 0x96000);
         }
 
@@ -3359,7 +3355,7 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
     src[1] = FX_MUL(dist, FX_SinCosTable_[(((u16)vertAngle) >> 4) * 2]);
     src[2] = FX_MUL(dist, FX_SinCosTable_[(((u16)vertAngle) >> 4) * 2 + 1]);
 
-    Vec3_RotateYAndTranslate((int *)(&this->mPosX), (int *)&cam->pos, heading, src);
+    Vec3_RotateYAndTranslate(&this->mPosX, &cam->pos, heading, src);
 
     this->mAngleX = cstd::atan2(v1.y, Vec3_HorzLen(&v1));
     this->mAngleY = cstd::atan2(v1.x, v1.z);
@@ -3538,14 +3534,14 @@ int daDemo_c::InitResources()
         if (this->mAnmModel == 0)
             return 0;
         if (((anmModel_c *)this->mAnmModel)
-                ->func_ov002_020f6618((SharedFilePtr *)&data_ov085_0213074c, 1, data_ov002_0210b60c,
-                                      1, 1, data_ov002_0210b608, -1) == 0)
+                ->func_ov002_020f6618(&data_ov085_0213074c, 1, data_ov002_0210b60c, 1, 1,
+                                      data_ov002_0210b608, -1) == 0)
             return 0;
     } else if (param1 == 0x13) {
         this->mAnmModel = new anmModel_c;
         if (this->mAnmModel == 0)
             return 0;
-        t = (*(volatile unsigned char *)&gGameMode == 2);
+        t = (gGameMode == 2);
         if (t == 0) {
             if (((anmModel_c *)this->mAnmModel)
                     ->func_ov002_020f6618((SharedFilePtr *)&data_ov002_02110b98, 1,
@@ -3570,7 +3566,8 @@ int daDemo_c::InitResources()
     } else if (param1 == 0x18) {
         this->mModel = new simpleModel_c;
         if (this->mModel == 0) return 0;
-        if (((simpleModel_c*)this->mModel)->func_ov002_020f6960((SharedFilePtr*)&data_ov002_0211094c, -1) == 0) return 0;
+        if (((simpleModel_c *)this->mModel)->func_ov002_020f6960(&data_ov002_0211094c, -1) == 0)
+            return 0;
     } else if (param1 == 0x19) {
         this->mModel = new simpleModel_c;
         if (this->mModel == 0) return 0;
