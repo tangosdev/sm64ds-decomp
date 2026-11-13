@@ -299,18 +299,16 @@ int daBombking_c::EnterWalkHome() {
 int daBombking_c::TickThrowPlayer() {
     if (CheckKnockbackHit() == 1) {
         DetonateSpawnedBombs();
-        int v = *(int*)&this->mHeldActor;
-        if (v != 0) {
-            func_ov002_020db54c((char*)v, 0, 0x50000, this->mAngleY);
+        if (this->mHeldActor != 0) {
+            func_ov002_020db54c(this->mHeldActor, 0, 0x50000, this->mAngleY);
             this->mTalkingPlayer = this->mHeldActor;
             this->mHeldActor = 0;
         }
         return 1;
     }
     if ((&this->mBlendAnmModel)->WillHitFrame(0x14)) {
-        int v = *(int*)&this->mHeldActor;
-        if (v != 0) {
-            func_ov002_020db54c((char*)v, 0x28000, 0x50000, this->mAngleY);
+        if (this->mHeldActor != 0) {
+            func_ov002_020db54c(this->mHeldActor, 0x28000, 0x50000, this->mAngleY);
             this->mTalkingPlayer = this->mHeldActor;
             this->mHeldActor = 0;
             func_02012694(0x131, &this->mCamSpacePosX);
