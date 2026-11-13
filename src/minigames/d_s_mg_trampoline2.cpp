@@ -50,6 +50,7 @@ enum d_s_mg_trampoline2_AssetId {
 #include "SharedFilePtr.h"
 #include "Particle__System.h"
 #include "TrmpItem.h"
+#include "TrmpLine.h"
 #include "Trmp2Spinner.h"
 #include "decl_common.h"
 #include "dMgTrmplnShared.h"
@@ -114,7 +115,6 @@ extern int sTrmp2BrushWord[];
 extern const u16 sTrmp2BrushPltt[];
 extern dFdBrightness_c *gSceneFader;
 extern int sTrmp2TouchBlocked;
-int TrmpLine_Create(s16 *a, s16 *b);
 extern void Mg_CommitRecords(void);
 void func_0203cd80(int *m, short angle);
 int GetGameLanguage(void);
@@ -131,10 +131,8 @@ extern unsigned short Trmp2_OccupancyBits(int column, int side);
 extern int Trmp2_PickFaceA(int kind);
 extern int Trmp2_PickFaceB(int kind);
 extern void func_0203cc28(int *vector, int angle);
-extern char *TrmpItem_Spawn(int resource, int *up, int variant, int face);
 extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
-extern void TrmpItem_UpdateAll(void);
 extern int sTrmpItemsHit;
 extern int sTrmp2Lives;
 extern int sTrmp2Score;
@@ -142,13 +140,10 @@ extern int sTrmp2MarioCount;
 extern int sTrmpItemsActive;
 extern int sTrmp2ScoreGates[];
 extern const Trampoline2WaveDef sTrmp2SpawnDefs[];
-extern void TrmpLine_UpdateAll(void);
-extern void TrmpLine_CreateStartLineT2(void);
 extern s16 sTrmp2IntroFromX;
 extern s16 sTrmp2IntroToX;
 extern s16 sTrmpStartTouchY;
 extern short sTrmpStartTouchX;
-extern void TrmpLine_ClearAll(u32 a);
 extern volatile s16 data_020a0dbc[];
 extern u8 gMainScreenLayers;
 extern void *LoadFile(int handle);
@@ -294,8 +289,8 @@ s32 dScMgTrampoline2_c::InitResources() {
     if (Trmp2Mario_InitPool(mMarios, 5) == 0)
         return 0;
     TrmpFx_InitPool(mScorePopups, 5);
-    TrmpLine_LoadTextures();
-    TrmpItem_LoadAll((char *)mItems, 10);
+    TrmpLine::LoadTextures();
+    TrmpItem::LoadAll((char *)mItems, 10);
     Jump2Popup_InitPool((int)mPopups, 10);
     data_ov006_021421b4 = 0;
     Trmp2Spinner_LoadAll((int)mSpinners, 0x14);
@@ -320,8 +315,8 @@ void dScMgTrampoline2_c::StartRound(int /* arg */) {
     Trmp2Mario_SetTuning(0x1000);
     Trmp2Mario_ResetAll(mLevel);
     sTrmp2MarioCount = 1;
-    TrmpLine_ClearAll(mLevel);
-    TrmpItem_HideAll(mLevel);
+    TrmpLine::ClearAll(mLevel);
+    TrmpItem::HideAll(mLevel);
     Jump2Popup_ClearAll();
     Trmp2Spinner_HideAll();
     TrmpFx_ClearAll();
@@ -367,7 +362,7 @@ void dScMgTrampoline2_c::BeginIntro() {
 void dScMgTrampoline2_c::StateIntro() {
     int counter;
 
-    TrmpLine_UpdateAll();
+    TrmpLine::UpdateAll();
     mTimer -= 1;
     counter = mTimer;
 
@@ -384,7 +379,7 @@ void dScMgTrampoline2_c::StateIntro() {
             MI_CpuFill16((void *)dst, tmp, 0x6000);
         }
 
-        TrmpLine_CreateStartLineT2();
+        TrmpLine::CreateStartLineT2();
         func_02012718(0x1af, 0x8000);
         BeginPlay();
         return;
@@ -424,8 +419,8 @@ void dScMgTrampoline2_c::StatePlay() {
     int old;
 
     old = sTrmpItemsHit;
-    TrmpLine_UpdateAll();
-    TrmpItem_UpdateAll();
+    TrmpLine::UpdateAll();
+    TrmpItem::UpdateAll();
     Trmp2Mario_UpdateAll();
     if (old < sTrmpItemsHit) {
         int n = sTrmpItemsHit - old;
@@ -470,7 +465,8 @@ void dScMgTrampoline2_c::StatePlay() {
             vecA.y = 0x1000;
             vecA.z = 0;
             func_0203cc28((int *)&vecA, d->angles[i]);
-            TrmpItem_Spawn((int)&d->positions[i], (int *)&vecA, d->itemTypes[i], d->motionTypes[i]);
+            TrmpItem::Spawn((int)&d->positions[i], (int *)&vecA, d->itemTypes[i],
+                            d->motionTypes[i]);
         }
         if (ApproachLinear(mPattern, 6, 1)) {
             mScriptDone = 1;
@@ -487,8 +483,8 @@ void dScMgTrampoline2_c::StatePlay() {
                 vecB.y = 0x1000;
                 vecB.z = 0;
                 func_0203cc28((int *)&vecB, d->angles[i]);
-                TrmpItem_Spawn((int)&d->positions[i], (int *)&vecB, d->itemTypes[i],
-                               d->motionTypes[i]);
+                TrmpItem::Spawn((int)&d->positions[i], (int *)&vecB, d->itemTypes[i],
+                                d->motionTypes[i]);
             }
             mWaveStep = 0;
         } else {
@@ -505,7 +501,7 @@ void dScMgTrampoline2_c::BeginResults() {
 }
 
 void dScMgTrampoline2_c::StateResults() {
-    TrmpItem_UpdateAll();
+    TrmpItem::UpdateAll();
     Trmp2Mario_UpdateAll();
     if (ApproachLinear(mTimer, 0, 1) == 0)
         return;
@@ -758,7 +754,7 @@ void dScMgTrampoline2_c::SpawnWave() {
         variant = 1;
         if (faces[i] == 6)
             variant = 2;
-        TrmpItem_Spawn((int)&sTrmp2RandomSpawnPositions[kinds[i]], (int *)&up, variant, faces[i]);
+        TrmpItem::Spawn((int)&sTrmp2RandomSpawnPositions[kinds[i]], (int *)&up, variant, faces[i]);
     }
 }
 
@@ -825,8 +821,8 @@ s32 dScMgTrampoline2_c::Render() {
 
     if (mRoundOver == 0) {
         Trmp2Mario_DrawAll();
-        TrmpLine_DrawAll();
-        TrmpItem_UpdateMatricesAll();
+        TrmpLine::DrawAll();
+        TrmpItem::UpdateMatricesAll();
     }
     Trmp2Spinner_UpdateMatricesAll();
     return 1;
@@ -834,7 +830,7 @@ s32 dScMgTrampoline2_c::Render() {
 
 /* Vtable slot 3: two teardown calls. */
 s32 dScMgTrampoline2_c::CleanupResources() {
-    TrmpItem_ReleaseFiles();
+    TrmpItem::ReleaseFiles();
     Mg_CommitRecords();
     return 1;
 }
@@ -892,7 +888,7 @@ int dScMgTrampoline2_c::OnGraphCallback0() {
             buf[2] = mTouchStartY;
             buf[3] = mTouchX;
             buf[4] = mTouchY;
-            if (TrmpLine_Create((s16 *)&buf[1], (s16 *)&buf[3])) {
+            if (TrmpLine::Create((s16 *)&buf[1], (s16 *)&buf[3])) {
                 func_02012718(0x1af, (mTouchStartX + mTouchX) << 11);
             } else {
                 func_02012790(0xe);

@@ -101,7 +101,6 @@ void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other);
 /* ---- arm9 / ov002 ---- */
 int AngleDiff(int, int);
 int IsStarCollectedInCurLevel(int a);
-void Matrix4x3_ApplyInPlaceToScale(void *m, int x, int y, int z);
 void func_02011cfc(void);
 void func_02011d38(void);
 void func_02012694(unsigned int a, void *p);
