@@ -180,7 +180,6 @@ extern "C" void *data_ov074_02122e5c[];
 extern BMA_File data_ov010_021123f4;
 extern BTA_File data_ov010_021124ac;
 extern "C" void Vec3_Asr(Vector3* d, Vector3* s, int sh);
-extern "C" void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *m, int x, int y, int z);
 extern "C" int func_02037e20(int *p);
 extern "C" unsigned int func_0201277c(unsigned int a);
 extern "C" u8 data_ov074_02122d80[];
@@ -1243,7 +1242,6 @@ extern "C" void func_ov074_02121270(Vector3 *out, daKuriKing_c *self, int bone) 
     Vec3_LslInPlace(v, 3);
 }
 
-extern "C" void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *m, int x, int y, int z);
 extern "C" struct Matrix4x3 data_020a0e68;
 void daKuriKing_c::UpdateBodyMatrix() {
     struct Vector3 v;

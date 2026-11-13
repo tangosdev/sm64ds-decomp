@@ -40,7 +40,6 @@
 #include "nitro/fx/fx_cp.h"
 #include "TrmpLine.h"
 #include "TrmpItem.h"
-#include "Trmp2Spinner.h"
 #include "Vector2Math.h"
 #include "dExtSimpleModel_c.h"
 #include "dExtAnmTexSRT_c.h"
@@ -49,7 +48,6 @@
 #include "math/Quaternion.h"
 #include "math/MtxStack.h"
 #include "MgCamera.h"
-#include "dScMgD3DBase_c.h"
 
 /* The one raw-pointer walk left: TrmpLine::Create finds a free slot through
    byte offsets, so it reads each candidate through this cast. */

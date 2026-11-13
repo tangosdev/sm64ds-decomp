@@ -4,14 +4,6 @@
 #include "types.h"
 #include "dExtSimpleModel_c.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-void Trmp2Spinner_InitAll(int);
-#ifdef __cplusplus
-}
-#endif
-
 /* Trmp2Spinner, one of the 0x14 stars dScMgTrampoline2_c::mSpinners holds
  * (0x78 bytes; the name is coined, no RTTI names it). The constructor and
  * destructor are the class's own, out of line in

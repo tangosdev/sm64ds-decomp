@@ -496,6 +496,7 @@ extern int Trmp2Mario_InitPool(void*, int);
 extern int Trmp3DMario_InitPool(unsigned char*, int);
 extern void Bomroom_DrawScore();
 extern int D3D_PlaySeAtX(int, int);
+extern void D3D_PlaySePannedLoop(int, int, int);
 /* The former func_ov006_020f9000..020f9f40 range is owned by the real
    dScMgMCarlo2_c / dMgMCarlo2CardObj_c classes. Every caller is in that
    original TU, so none of those private members belongs in this header. */
@@ -984,6 +985,7 @@ extern void Trmp2Spinner_UpdateMatricesAll(void);
 extern void Trmp2Spinner_UpdateAll(void);
 extern void Trmp2Spinner_HideAll(void);
 extern void Trmp2Spinner_LoadAll(int, int);
+extern void Trmp2Spinner_InitAll(int);
 extern void Petal_ElemDtor();
 extern int func_ov007_020b7040(void*);
 extern int func_ov007_020b7138(void*, void*);
