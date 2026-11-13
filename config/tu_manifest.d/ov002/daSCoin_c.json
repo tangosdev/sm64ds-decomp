@@ -81,7 +81,7 @@
     },
     {
       "symbol": "_Z19daSCoin_c_classInitv",
-      "address": "",
+      "address": "0x020f085c",
       "size": "0x00000038",
       "legacy_source": "src/d_a_s_coin.c",
       "ordinal": 8
@@ -208,7 +208,7 @@
       "source": "0x0210b00c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daSCoin_c_classInit",
+      "symbol": "_Z19daSCoin_c_classInitv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f085c"

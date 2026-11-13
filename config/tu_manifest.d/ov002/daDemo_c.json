@@ -132,35 +132,35 @@
     },
     {
       "symbol": "_Z19func_ov002_020f2790Pciiis",
-      "address": "",
+      "address": "0x020f2790",
       "size": "0x00000058",
       "legacy_source": "src/func_ov002_020f2790.c",
       "ordinal": 13
     },
     {
       "symbol": "_Z19func_ov002_020f27e8Pc",
-      "address": "",
+      "address": "0x020f27e8",
       "size": "0x00000170",
       "legacy_source": "src/func_ov002_020f27e8.c",
       "ordinal": 14
     },
     {
       "symbol": "_Z19func_ov002_020f2958Pc",
-      "address": "",
+      "address": "0x020f2958",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov002_020f2958.c",
       "ordinal": 15
     },
     {
       "symbol": "_Z19func_ov002_020f2984Pc",
-      "address": "",
+      "address": "0x020f2984",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov002_020f2984.c",
       "ordinal": 16
     },
     {
       "symbol": "_Z19func_ov002_020f2990Pc",
-      "address": "",
+      "address": "0x020f2990",
       "size": "0x000000b8",
       "legacy_source": "src/func_ov002_020f2990.c",
       "ordinal": 17
@@ -174,7 +174,7 @@
     },
     {
       "symbol": "_Z19func_ov002_020f2a68Pc",
-      "address": "",
+      "address": "0x020f2a68",
       "size": "0x00000010",
       "legacy_source": "src/func_ov002_020f2a68.c",
       "ordinal": 19
@@ -237,21 +237,21 @@
     },
     {
       "symbol": "_Z19func_ov002_020f2ea0Pc",
-      "address": "",
+      "address": "0x020f2ea0",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov002_020f2ea0.c",
       "ordinal": 28
     },
     {
       "symbol": "_Z19func_ov002_020f2eacPv",
-      "address": "",
+      "address": "0x020f2eac",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov002_020f2eac.c",
       "ordinal": 29
     },
     {
       "symbol": "_Z19func_ov002_020f2f18Pcii",
-      "address": "",
+      "address": "0x020f2f18",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov002_020f2f18.c",
       "ordinal": 30
@@ -265,14 +265,14 @@
     },
     {
       "symbol": "_Z19func_ov002_020f2f9cPvi",
-      "address": "",
+      "address": "0x020f2f9c",
       "size": "0x00000138",
       "legacy_source": "src/func_ov002_020f2f9c.c",
       "ordinal": 32
     },
     {
       "symbol": "_Z19func_ov002_020f30d4Pc",
-      "address": "",
+      "address": "0x020f30d4",
       "size": "0x00000024",
       "legacy_source": "src/func_ov002_020f30d4.c",
       "ordinal": 33
@@ -349,42 +349,42 @@
     },
     {
       "symbol": "_Z19func_ov002_020f37fcPc",
-      "address": "",
+      "address": "0x020f37fc",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov002_020f37fc.c",
       "ordinal": 44
     },
     {
       "symbol": "_Z19func_ov002_020f3828Pi",
-      "address": "",
+      "address": "0x020f3828",
       "size": "0x0000012c",
       "legacy_source": "src/func_ov002_020f3828.c",
       "ordinal": 45
     },
     {
       "symbol": "_Z19func_ov002_020f3954Pc",
-      "address": "",
+      "address": "0x020f3954",
       "size": "0x00000018",
       "legacy_source": "src/func_ov002_020f3954.c",
       "ordinal": 46
     },
     {
       "symbol": "_Z19func_ov002_020f396cPc",
-      "address": "",
+      "address": "0x020f396c",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov002_020f396c.c",
       "ordinal": 47
     },
     {
       "symbol": "_Z19func_ov002_020f3978Pc",
-      "address": "",
+      "address": "0x020f3978",
       "size": "0x00000074",
       "legacy_source": "src/func_ov002_020f3978.cpp",
       "ordinal": 48
     },
     {
       "symbol": "_Z19func_ov002_020f39ecPci",
-      "address": "",
+      "address": "0x020f39ec",
       "size": "0x000000fc",
       "legacy_source": "src/func_ov002_020f39ec.c",
       "ordinal": 49
@@ -531,21 +531,21 @@
     },
     {
       "symbol": "_Z19func_ov002_020f5a6cPc",
-      "address": "",
+      "address": "0x020f5a6c",
       "size": "0x00000028",
       "legacy_source": "src/func_ov002_020f5a6c.c",
       "ordinal": 70
     },
     {
       "symbol": "_Z19func_ov002_020f5a94Pv",
-      "address": "",
+      "address": "0x020f5a94",
       "size": "0x00000040",
       "legacy_source": "src/func_ov002_020f5a94.c",
       "ordinal": 71
     },
     {
       "symbol": "_Z19func_ov002_020f5ad4Pc",
-      "address": "",
+      "address": "0x020f5ad4",
       "size": "0x00000050",
       "legacy_source": "src/func_ov002_020f5ad4.c",
       "ordinal": 72
@@ -727,28 +727,28 @@
     },
     {
       "symbol": "_Z19func_ov002_020f5f60Pc",
-      "address": "",
+      "address": "0x020f5f60",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov002_020f5f60.c",
       "ordinal": 98
     },
     {
       "symbol": "_Z19func_ov002_020f5f8cPv",
-      "address": "",
+      "address": "0x020f5f8c",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov002_020f5f8c.c",
       "ordinal": 99
     },
     {
       "symbol": "_Z19func_ov002_020f5fb8Pv",
-      "address": "",
+      "address": "0x020f5fb8",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov002_020f5fb8.c",
       "ordinal": 100
     },
     {
       "symbol": "_Z19func_ov002_020f5fe4Pc",
-      "address": "",
+      "address": "0x020f5fe4",
       "size": "0x000003bc",
       "legacy_source": "src/func_ov002_020f5fe4.c",
       "ordinal": 101
@@ -1056,7 +1056,7 @@
     },
     {
       "symbol": "_Z18daDemo_c_classInitv",
-      "address": "",
+      "address": "0x020f8808",
       "size": "0x00000030",
       "legacy_source": "src/d_a_demo.c",
       "ordinal": 145
@@ -4151,14 +4151,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN13DemoModelFileC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "model file-handle constructor; the initializer's PC24 relocation is retail func_02017acc"
     },
     {
       "symbol": "_ZN13DemoModelFileD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "model file-handle destructor registered by the initializer; retail target func_02017ab4"
@@ -5059,7 +5059,7 @@
       "source": "0x02107380",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -5079,7 +5079,7 @@
       "source": "0x0210739c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -5099,7 +5099,7 @@
       "source": "0x021073b8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -5699,7 +5699,7 @@
       "source": "0x02107700",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -5719,7 +5719,7 @@
       "source": "0x0210771c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -5749,7 +5749,7 @@
       "source": "0x02107cd0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"

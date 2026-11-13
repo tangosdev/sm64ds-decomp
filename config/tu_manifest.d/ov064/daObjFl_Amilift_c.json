@@ -565,28 +565,28 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN19AmiliftModelFilePtrC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail model-handle construction destination and the SharedFilePtr model family identity"
     },
     {
       "symbol": "_ZN19AmiliftModelFilePtrD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail model-handle destruction destination"
     },
     {
       "symbol": "_ZN18AmiliftClsnFilePtrC1Ej",
-      "canonical_symbol": "func_02017b4c",
+      "canonical_symbol": "_Z13func_02017b4cPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b4c",
       "evidence": "retail collision-handle construction destination"
     },
     {
       "symbol": "_ZN18AmiliftClsnFilePtrD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_Clsn",
+      "canonical_symbol": "_Z27SharedFilePtr_Destruct_Clsni",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b34",
       "evidence": "retail collision-handle destruction destination"
@@ -669,7 +669,7 @@
       "source": "0x0211afd0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -689,7 +689,7 @@
       "source": "0x0211afec",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017b4c",
+      "symbol": "_Z13func_02017b4cPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -719,7 +719,7 @@
       "source": "0x0211b054",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -749,7 +749,7 @@
       "source": "0x0211b060",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_Clsn",
+      "symbol": "_Z27SharedFilePtr_Destruct_Clsni",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017b34"

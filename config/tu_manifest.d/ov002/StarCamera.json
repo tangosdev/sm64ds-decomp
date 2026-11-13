@@ -20,7 +20,7 @@
   "functions": [
     {
       "symbol": "_Z16StarCamera_Spawnv",
-      "address": "",
+      "address": "0x020ebe5c",
       "size": "0x00000030",
       "legacy_source": "src/StarCamera_Spawn.cpp",
       "ordinal": 0

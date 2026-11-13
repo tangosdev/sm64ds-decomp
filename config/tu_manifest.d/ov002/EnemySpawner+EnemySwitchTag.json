@@ -90,14 +90,14 @@
     },
     {
       "symbol": "_Z21daECreate_c_classInitv",
-      "address": "",
+      "address": "0x020f1924",
       "size": "0x00000030",
       "legacy_source": "src/d_a_e_create.c",
       "ordinal": 10
     },
     {
       "symbol": "_Z21daESwitch_c_classInitv",
-      "address": "",
+      "address": "0x020f1954",
       "size": "0x00000038",
       "legacy_source": "src/d_a_e_switch.c",
       "ordinal": 11

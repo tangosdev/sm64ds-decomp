@@ -254,14 +254,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN16EntryMeshTextureC1Ej",
-      "canonical_symbol": "func_020178cc",
+      "canonical_symbol": "_Z13func_020178ccPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x020178cc",
       "evidence": "retail bl at 0x0211c528 constructs the mesh texture handle through func_020178cc."
     },
     {
       "symbol": "_ZN16EntryMeshTextureD1Ev",
-      "canonical_symbol": "func_020178b4",
+      "canonical_symbol": "_Z13func_020178b4i",
       "canonical_module": "arm9",
       "canonical_address": "0x020178b4",
       "evidence": "retail pool word at 0x0211c58c registers func_020178b4 as the handle destructor."
@@ -333,7 +333,7 @@
       "source": "0x0211c528",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_020178cc",
+      "symbol": "_Z13func_020178ccPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x020178cc"
@@ -363,7 +363,7 @@
       "source": "0x0211c58c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_020178b4",
+      "symbol": "_Z13func_020178b4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020178b4"

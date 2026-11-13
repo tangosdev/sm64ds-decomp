@@ -115,7 +115,7 @@
     },
     {
       "symbol": "_Z16dMap_c_classInitv",
-      "address": "",
+      "address": "0x020fb8bc",
       "size": "0x0000003c",
       "legacy_source": "src/d_map.cpp",
       "ordinal": 11

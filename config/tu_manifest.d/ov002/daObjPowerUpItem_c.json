@@ -163,7 +163,7 @@
     },
     {
       "symbol": "_Z28daObjPowerUpItem_c_classInitv",
-      "address": "",
+      "address": "0x020b9e0c",
       "size": "0x00000058",
       "legacy_source": "src/d_a_obj_power_up_item.c",
       "ordinal": 18
@@ -444,7 +444,7 @@
       "source": "0x021097a0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daObjPowerUpItem_c_classInit",
+      "symbol": "_Z28daObjPowerUpItem_c_classInitv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020b9e0c"

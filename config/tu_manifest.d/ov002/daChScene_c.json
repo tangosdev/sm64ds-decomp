@@ -76,7 +76,7 @@
     },
     {
       "symbol": "_Z21daChScene_c_classInitv",
-      "address": "",
+      "address": "0x020b0f24",
       "size": "0x00000030",
       "legacy_source": "src/daChScene_c_Spawn.c",
       "ordinal": 8

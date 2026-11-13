@@ -318,7 +318,7 @@
       "source": "0x02074dec",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_0201964c",
+      "symbol": "_Z13func_0201964cP5Timer",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201964c"

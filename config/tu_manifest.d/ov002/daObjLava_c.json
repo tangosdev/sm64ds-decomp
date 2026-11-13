@@ -55,7 +55,7 @@
     },
     {
       "symbol": "_Z21daObjLava_c_classInitv",
-      "address": "",
+      "address": "0x020b6dd8",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_lava.c",
       "ordinal": 4
@@ -174,7 +174,7 @@
       "source": "0x021093bc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daObjLava_c_classInit",
+      "symbol": "_Z21daObjLava_c_classInitv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020b6dd8"

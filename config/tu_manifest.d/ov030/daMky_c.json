@@ -761,7 +761,7 @@
       "source": "0x02114934",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1031,7 +1031,7 @@
       "source": "0x02114cd8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -1810,14 +1810,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN15MkyModelFilePtrC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "model handle construction in the retail initializer is func_02017acc"
     },
     {
       "symbol": "_ZN15MkyModelFilePtrD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "model handle destruction registered by the retail initializer is func_02017ab4"
@@ -1838,7 +1838,7 @@
     },
     {
       "symbol": "_ZN7Vector3D1Ev",
-      "canonical_symbol": "func_02017a9c",
+      "canonical_symbol": "_Z13func_02017a9ci",
       "canonical_module": "arm9",
       "canonical_address": "0x02017a9c",
       "evidence": "deadstrip externalises this TU's unreferenced vague ~Vector3, and the leftover import still occupies the name. Nothing references it. Parking that import on func_02017a9c, which this object does not already import, frees _ZN7Vector3D1Ev for the carry-offset registration."

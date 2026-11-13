@@ -98,63 +98,63 @@
     },
     {
       "symbol": "_Z19func_ov002_020eea84P10dBgCh_ActrP8dActor_c",
-      "address": "",
+      "address": "0x020eea84",
       "size": "0x00000224",
       "legacy_source": "src/unnamed/ov002/func_ov002_020eea84.c",
       "ordinal": 11
     },
     {
       "symbol": "_Z19func_ov002_020eeca8P10dBgCh_ActrP8dActor_c",
-      "address": "",
+      "address": "0x020eeca8",
       "size": "0x0000007c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020eeca8.cpp",
       "ordinal": 12
     },
     {
       "symbol": "_Z19func_ov002_020eed24P10dBgCh_ActrP7daPly_c",
-      "address": "",
+      "address": "0x020eed24",
       "size": "0x0000009c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020eed24.cpp",
       "ordinal": 13
     },
     {
       "symbol": "_Z19func_ov002_020eedc0P10dBgCh_ActrP8dActor_c",
-      "address": "",
+      "address": "0x020eedc0",
       "size": "0x0000007c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020eedc0.cpp",
       "ordinal": 14
     },
     {
       "symbol": "_Z19func_ov002_020eee3cPcS_",
-      "address": "",
+      "address": "0x020eee3c",
       "size": "0x0000007c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020eee3c.cpp",
       "ordinal": 15
     },
     {
       "symbol": "_Z19func_ov002_020eeeb8PvPc",
-      "address": "",
+      "address": "0x020eeeb8",
       "size": "0x000001b8",
       "legacy_source": "src/unnamed/ov002/func_ov002_020eeeb8.cpp",
       "ordinal": 16
     },
     {
       "symbol": "_Z19func_ov002_020ef070PvPc",
-      "address": "",
+      "address": "0x020ef070",
       "size": "0x000001b8",
       "legacy_source": "src/unnamed/ov002/func_ov002_020ef070.cpp",
       "ordinal": 17
     },
     {
       "symbol": "_Z19func_ov002_020ef228P10dBgCh_ActrP8dActor_c",
-      "address": "",
+      "address": "0x020ef228",
       "size": "0x0000007c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020ef228.cpp",
       "ordinal": 18
     },
     {
       "symbol": "_Z19func_ov002_020ef2a4P10dBgCh_ActrP8dActor_c",
-      "address": "",
+      "address": "0x020ef2a4",
       "size": "0x0000007c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020ef2a4.cpp",
       "ordinal": 19

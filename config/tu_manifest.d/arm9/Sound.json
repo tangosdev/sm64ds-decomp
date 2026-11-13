@@ -1372,7 +1372,7 @@
       "source": "0x02074db4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02011a5c",
+      "symbol": "_Z13func_02011a5cPv",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02011a5c"

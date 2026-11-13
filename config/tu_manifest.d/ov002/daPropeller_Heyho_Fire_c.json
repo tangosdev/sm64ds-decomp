@@ -121,7 +121,7 @@
     },
     {
       "symbol": "_Z34daPropeller_Heyho_Fire_c_classInitv",
-      "address": "",
+      "address": "0x020fefcc",
       "size": "0x00000048",
       "legacy_source": "src/d_a_propeller_heyho_fire.c",
       "ordinal": 12

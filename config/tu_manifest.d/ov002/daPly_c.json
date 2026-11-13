@@ -21196,7 +21196,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "target_module": "arm9",
       "target_address": "0x02017acc"
     },
@@ -21216,7 +21216,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "target_module": "arm9",
       "target_address": "0x02017acc"
     },
@@ -21236,7 +21236,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "target_module": "arm9",
       "target_address": "0x02017acc"
     },
@@ -21256,7 +21256,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "target_module": "arm9",
       "target_address": "0x02017acc"
     },
@@ -21276,7 +21276,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "target_module": "arm9",
       "target_address": "0x02017acc"
     },
@@ -21296,7 +21296,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "target_module": "arm9",
       "target_address": "0x02017acc"
     },
@@ -21316,7 +21316,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "target_module": "arm9",
       "target_address": "0x02017acc"
     },
@@ -21336,7 +21336,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "target_module": "arm9",
       "target_address": "0x02017acc"
     },
@@ -21356,7 +21356,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "target_module": "arm9",
       "target_address": "0x02017acc"
     },
@@ -21376,7 +21376,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "target_module": "arm9",
       "target_address": "0x02017acc"
     },
@@ -21396,7 +21396,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "target_module": "arm9",
       "target_address": "0x02017acc"
     },
@@ -21416,7 +21416,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "target_module": "arm9",
       "target_address": "0x02017acc"
     },
@@ -21436,7 +21436,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "target_module": "arm9",
       "target_address": "0x02017acc"
     },
@@ -21456,7 +21456,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "target_module": "arm9",
       "target_address": "0x02017acc"
     },
@@ -21476,7 +21476,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "target_module": "arm9",
       "target_address": "0x02017acc"
     },
@@ -21496,7 +21496,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "target_module": "arm9",
       "target_address": "0x02017acc"
     },
@@ -21516,7 +21516,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "target_module": "arm9",
       "target_address": "0x02017acc"
     },
@@ -21536,7 +21536,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "target_module": "arm9",
       "target_address": "0x02017acc"
     },
@@ -21556,7 +21556,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "target_module": "arm9",
       "target_address": "0x02017acc"
     },
@@ -24136,7 +24136,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "target_module": "arm9",
       "target_address": "0x02017ab4"
     },

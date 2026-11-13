@@ -70,7 +70,7 @@
     },
     {
       "symbol": "_Z19daSetSE_c_classInitv",
-      "address": "",
+      "address": "0x020f1b94",
       "size": "0x00000030",
       "legacy_source": "src/daSetSE_c_Spawn.c",
       "ordinal": 7

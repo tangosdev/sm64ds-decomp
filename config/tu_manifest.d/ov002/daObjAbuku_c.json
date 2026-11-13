@@ -62,7 +62,7 @@
     },
     {
       "symbol": "_Z22daObjAbuku_c_classInitv",
-      "address": "",
+      "address": "0x020b3568",
       "size": "0x00000038",
       "legacy_source": "src/daObjAbuku_c_Spawn.c",
       "ordinal": 6

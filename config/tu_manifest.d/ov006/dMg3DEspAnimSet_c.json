@@ -1202,14 +1202,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN22EspAnimSetModelFilePtrC1Ej",
-      "canonical_symbol": "func_02017a24",
+      "canonical_symbol": "_Z13func_02017a24Pvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017a24",
       "evidence": "retail initializer call destination and the model wrapper constructor's PC24 relocation"
     },
     {
       "symbol": "_ZN22EspAnimSetModelFilePtrD1Ev",
-      "canonical_symbol": "func_02017a0c",
+      "canonical_symbol": "_Z13func_02017a0ci",
       "canonical_module": "arm9",
       "canonical_address": "0x02017a0c",
       "evidence": "retail destructor registration destination and the model wrapper destructor's ABS32 relocation"
@@ -1323,7 +1323,7 @@
       "source": "0x02130a18",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017a24",
+      "symbol": "_Z13func_02017a24Pvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017a24"
@@ -1343,7 +1343,7 @@
       "source": "0x02130a34",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017a24",
+      "symbol": "_Z13func_02017a24Pvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017a24"
@@ -1363,7 +1363,7 @@
       "source": "0x02130a50",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017a24",
+      "symbol": "_Z13func_02017a24Pvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017a24"
@@ -1383,7 +1383,7 @@
       "source": "0x02130a6c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017a24",
+      "symbol": "_Z13func_02017a24Pvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017a24"
@@ -1533,7 +1533,7 @@
       "source": "0x02130d10",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017a0c",
+      "symbol": "_Z13func_02017a0ci",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017a0c"

@@ -69,7 +69,7 @@
     },
     {
       "symbol": "_Z21daWarpkun_c_classInitv",
-      "address": "",
+      "address": "0x020ec534",
       "size": "0x00000038",
       "legacy_source": "src/daWarpkun_c_Spawn.c",
       "ordinal": 7

@@ -55,14 +55,14 @@
     },
     {
       "symbol": "_Z19func_ov002_020f93a8P12daSoundObj_cPt",
-      "address": "",
+      "address": "0x020f93a8",
       "size": "0x000000c0",
       "legacy_source": "src/func_ov002_020f93a8.cpp",
       "ordinal": 2
     },
     {
       "symbol": "_Z19func_ov002_020f9468P12daSoundObj_cPt",
-      "address": "",
+      "address": "0x020f9468",
       "size": "0x00000094",
       "legacy_source": "src/func_ov002_020f9468.c",
       "ordinal": 3
@@ -83,7 +83,7 @@
     },
     {
       "symbol": "_Z22daSoundObj_c_classInitv",
-      "address": "",
+      "address": "0x020f972c",
       "size": "0x00000030",
       "legacy_source": "src/daSoundObj_c_Spawn.c",
       "ordinal": 6
@@ -197,7 +197,7 @@
       "source": "0x0210c018",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f9468",
+      "symbol": "_Z19func_ov002_020f9468P12daSoundObj_cPt",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f9468"
@@ -207,7 +207,7 @@
       "source": "0x0210c020",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_0200f7f0",
+      "symbol": "_Z13func_0200f7f0P8dActor_cPt",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0200f7f0"
@@ -217,7 +217,7 @@
       "source": "0x0210c028",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f9468",
+      "symbol": "_Z19func_ov002_020f9468P12daSoundObj_cPt",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f9468"
@@ -227,7 +227,7 @@
       "source": "0x0210c030",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f93a8",
+      "symbol": "_Z19func_ov002_020f93a8P12daSoundObj_cPt",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f93a8"
@@ -237,7 +237,7 @@
       "source": "0x0210c038",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f9468",
+      "symbol": "_Z19func_ov002_020f9468P12daSoundObj_cPt",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f9468"

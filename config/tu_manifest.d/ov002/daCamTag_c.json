@@ -69,7 +69,7 @@
     },
     {
       "symbol": "_Z20daCamTag_c_classInitv",
-      "address": "",
+      "address": "0x020b07c8",
       "size": "0x00000030",
       "legacy_source": "src/daCamTag_c_Spawn.c",
       "ordinal": 7

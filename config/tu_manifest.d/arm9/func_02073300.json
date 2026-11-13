@@ -69,7 +69,7 @@
       "source": "0x02073994",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02073300",
+      "symbol": "_Z13func_02073300PvjjPFvS_E",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02073300"

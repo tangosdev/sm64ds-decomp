@@ -69,14 +69,14 @@
     },
     {
       "symbol": "_Z44daObjKinokoTag_c_classInit_KINOKO_CREATE_TAGv",
-      "address": "",
+      "address": "0x020b4a00",
       "size": "0x00000038",
       "legacy_source": "src/daObjKinokoTag_c_Spawn.c",
       "ordinal": 7
     },
     {
       "symbol": "_Z37daObjKinokoTag_c_classInit_KINOKO_TAGv",
-      "address": "",
+      "address": "0x020b4a38",
       "size": "0x00000038",
       "legacy_source": "src/MegaMushroomTag_Spawn.c",
       "ordinal": 8

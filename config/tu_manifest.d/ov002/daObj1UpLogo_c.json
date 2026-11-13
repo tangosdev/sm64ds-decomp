@@ -85,7 +85,7 @@
     },
     {
       "symbol": "_Z24daObj1UpLogo_c_classInitv",
-      "address": "",
+      "address": "0x020f1170",
       "size": "0x00000040",
       "legacy_source": "src/d_a_obj1_up_logo.c",
       "ordinal": 7
@@ -481,14 +481,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN18OneUpLogoModelFileC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor exact PC24 relocation"
     },
     {
       "symbol": "_ZN18OneUpLogoModelFileD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the model wrapper destructor exact ABS32 relocation"
@@ -550,7 +550,7 @@
       "source": "0x021072a8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -600,7 +600,7 @@
       "source": "0x021072ec",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"

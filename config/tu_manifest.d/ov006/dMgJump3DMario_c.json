@@ -821,14 +821,14 @@
     },
     {
       "symbol": "_ZN18Jump3DModelFilePtrC1Ej",
-      "canonical_symbol": "func_02017a24",
+      "canonical_symbol": "_Z13func_02017a24Pvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017a24",
       "evidence": "retail initializer calls func_02017a24 to construct the model handle"
     },
     {
       "symbol": "_ZN18Jump3DModelFilePtrD1Ev",
-      "canonical_symbol": "func_02017a0c",
+      "canonical_symbol": "_Z13func_02017a0ci",
       "canonical_module": "arm9",
       "canonical_address": "0x02017a0c",
       "evidence": "retail registration of the model handle names func_02017a0c as its destructor"
@@ -1016,7 +1016,7 @@
       "source": "0x0212f5e4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017a24",
+      "symbol": "_Z13func_02017a24Pvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017a24"
@@ -1176,7 +1176,7 @@
       "source": "0x0212f658",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017a0c",
+      "symbol": "_Z13func_02017a0ci",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017a0c"

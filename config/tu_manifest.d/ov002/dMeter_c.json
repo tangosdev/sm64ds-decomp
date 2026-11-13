@@ -154,7 +154,7 @@
     },
     {
       "symbol": "_Z18dMeter_c_classInitv",
-      "address": "",
+      "address": "0x020fe154",
       "size": "0x0000003c",
       "legacy_source": "src/d_meter.cpp",
       "ordinal": 19

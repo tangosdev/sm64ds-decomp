@@ -102,7 +102,7 @@
     },
     {
       "symbol": "_Z26daObjPushblock_c_classInitv",
-      "address": "",
+      "address": "0x020b910c",
       "size": "0x0000003c",
       "legacy_source": "src/d_a_obj_pushblock.cpp",
       "ordinal": 9
@@ -190,7 +190,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "target_module": "arm9",
       "target_address": "0x02017acc"
     },
@@ -210,7 +210,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "func_02017b4c",
+      "symbol": "_Z13func_02017b4cPvj",
       "target_module": "arm9",
       "target_address": "0x02017b4c"
     },
@@ -240,7 +240,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "target_module": "arm9",
       "target_address": "0x02017ab4"
     },
@@ -270,7 +270,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "SharedFilePtr_Destruct_Clsn",
+      "symbol": "_Z27SharedFilePtr_Destruct_Clsni",
       "target_module": "arm9",
       "target_address": "0x02017b34"
     },
@@ -298,28 +298,28 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN21PushblockModelFilePtrC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN21PushblockModelFilePtrD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the wrapper destructor's exact ABS32 relocation"
     },
     {
       "symbol": "_ZN20PushblockClsnFilePtrC1Ej",
-      "canonical_symbol": "func_02017b4c",
+      "canonical_symbol": "_Z13func_02017b4cPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b4c",
       "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN20PushblockClsnFilePtrD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_Clsn",
+      "canonical_symbol": "_Z27SharedFilePtr_Destruct_Clsni",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b34",
       "evidence": "retail destructor registration destination and the mesh-collision SharedFilePtr family identity"
