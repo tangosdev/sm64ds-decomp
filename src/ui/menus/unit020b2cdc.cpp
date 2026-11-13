@@ -34,7 +34,7 @@
  * the reverse of source order, so the highest-address function is written
  * first here and the functions come out in ROM order.
  *
- * The functions keep C linkage. The Cursor_ names are coined from the
+ * The Cursor_ names are coined from the
  * bodies, after this file's Ov007Cursor; the five functions other units
  * call (func_ov007_020b2cdc, 020b2cf0, 020b2e64, 020b3050 and 020b30b0)
  * keep their address names for now.
@@ -50,7 +50,7 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
 
-extern "C" {
+
 
 /* data_ov007_02103360: the 0x1c-byte cursor func_ov007_020b30b0 allocates. */
 typedef struct Ov007Cursor {
@@ -89,15 +89,15 @@ extern unsigned char data_ov007_020d7ddd[];
 extern short data_ov007_020d7de8[];
 extern short data_ov007_020d7dea[];
 
-extern int func_ov007_020b79e4(void);
-extern int func_ov007_020bdeb0(int a);
+extern "C" int func_ov007_020b79e4(void);
+extern "C" int func_ov007_020bdeb0(int a);
 extern int func_ov007_020c1da0(int i);
-extern void func_ov007_020c2090(Ov007Pad *pad);
-extern void func_ov007_020c3d1c(void *self);
-extern void *func_ov007_020c3df4(const char *name, int size);
-extern void func_ov007_020c92d0(Ov007MenuState *state);
-extern void func_ov007_020c937c(void *state);
-extern void *func_ov007_020c9388(int initialState);
+extern "C" void func_ov007_020c2090(Ov007Pad *pad);
+extern "C" void func_ov007_020c3d1c(void *self);
+extern "C" void *func_ov007_020c3df4(const char *name, int size);
+extern "C" void func_ov007_020c92d0(Ov007MenuState *state);
+extern "C" void func_ov007_020c937c(void *state);
+extern "C" void *func_ov007_020c9388(int initialState);
 
 /* The menu cursor (data_ov007_02103360). */
 #define CURSOR data_ov007_02103360
@@ -778,4 +778,4 @@ void func_ov007_020b2cf0(void) {
 Ov007MenuState *func_ov007_020b2cdc(void) {
     return data_ov007_02103360->state;
 }
-}
+

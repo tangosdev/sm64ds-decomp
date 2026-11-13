@@ -245,6 +245,8 @@ extern void func_02012694(unsigned int a, void *b);
 /* local extern: CalcLib.h conflicts with DecIfAbove0_Short(void *). */
 extern int RandomIntInternal(int *seed);
 }
+
+extern void UnloadKeyModels(int i);
 extern "C" {
 extern void d_a_king_donketuPlayLongHold(unsigned int a, unsigned int b, unsigned int c,
                                          struct Vector3 *v, unsigned int d);
@@ -256,7 +258,6 @@ extern void d_a_king_donketuRunningSlidingDustAtHold(int a, int b, int c);
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern void Matrix4x3_FromTranslation(struct Matrix4x3 *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
-extern void UnloadKeyModels(int i);
 }
 
 daKing_Donketu_c::~daKing_Donketu_c()
@@ -1837,8 +1838,9 @@ int daKing_Donketu_c::Behavior()
     return 1;
 }
 
-extern "C" {
+
 extern void LoadKeyModels(int idx);
+extern "C" {
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, dActor_c *a, Fix12i r, Fix12i h, Vector3_16 *p, Vector3_16 *q);
 }

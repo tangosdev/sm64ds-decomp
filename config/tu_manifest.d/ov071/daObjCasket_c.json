@@ -133,7 +133,7 @@
       "ordinal": 12
     },
     {
-      "symbol": "daObjCasket_c_classInit",
+      "symbol": "_Z23daObjCasket_c_classInitv",
       "address": "0x02122670",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_casket.c",

@@ -52,7 +52,7 @@
 #include "math/CalcLib.h"
 #include "Ov007Settings.h"
 
-extern "C" {
+
 extern FileSaveData *data_0209b33c;
 extern u8 data_0209b34b[];
 extern u8 data_0209b34e[];
@@ -79,20 +79,20 @@ int DSMT_SetPendingMusic(int musicId, unsigned int delayFrames);
 void DSMT_UpdateBootArgs(u32 saveSlot);
 int func_ov007_020b7090(u16 a0, u16 a1, u16 a2, u16 a3, int arg4);
 int func_ov007_020b6eb4(void);
-void Enable3dEngines();
-int GetSoundMode(void);
-int IsStarCollected(int course, int star);
-void StartMinigameMenu(u8 returnToRecRoom);
-void SetSoundMode(int mode);
-void TurnBacklightOn(void);
-void TurnBacklightOff(void);
-}
+extern "C" void Enable3dEngines();
+extern "C" int GetSoundMode(void);
+extern "C" int IsStarCollected(int course, int star);
+extern "C" void StartMinigameMenu(u8 returnToRecRoom);
+extern "C" void SetSoundMode(int mode);
+extern "C" void TurnBacklightOn(void);
+extern "C" void TurnBacklightOff(void);
+
 
 /* data_0209b340 (decl_common.h's int[]) is the download-play table. */
 #define sBootArgs (*(Ov007BootArgs *)data_0209b340)
 
 /* Factory: the registry's spawn entry point. */
-extern "C" dScDSMT_c *dScDSMT_c_classInit(void) {
+dScDSMT_c *dScDSMT_c_classInit(void) {
     return new dScDSMT_c;
 }
 
@@ -101,31 +101,31 @@ extern "C" dScDSMT_c *dScDSMT_c_classInit(void) {
  * free, query, fileLoad, fileRelease, callback.
  *
  * Heap thunks onto the game heap; `bx ip` sibcalls. */
-extern "C" void *DSMT_MenuAlloc(u32 size) {
+void *DSMT_MenuAlloc(u32 size) {
     return ((Heap *)data_020a0ea0)->Allocate(size);
 }
 
-extern "C" void DSMT_MenuFree(void *ptr) {
+void DSMT_MenuFree(void *ptr) {
     ((Heap *)data_020a0ea0)->_Deallocate(ptr);
 }
 
-extern "C" void DSMT_MenuMaxAllocSize(void) {
+void DSMT_MenuMaxAllocSize(void) {
     (void)((Heap *)data_020a0ea0)->MaxAllocationUnitSize();
 }
 
 /* File-op veneers: `#pragma long_calls` emits the pooled absolute tail call. */
 #pragma long_calls on
 extern "C" void *LoadFile(int);
-extern "C" void *DSMT_MenuLoadFile(int fileId) {
+void *DSMT_MenuLoadFile(int fileId) {
     return LoadFile(fileId);
 }
-extern "C" void DSMT_MenuReleaseFile(void *file) {
+void DSMT_MenuReleaseFile(void *file) {
     Deallocate(file);
 }
 #pragma long_calls off
 
 /* The menu's command callback: sound/backlight/save-file/minigame codes. */
-extern "C" u8 DSMT_MenuCallback(s32 command) {
+u8 DSMT_MenuCallback(s32 command) {
     u8 failed = 0;
 
     if (command == 1) {
@@ -309,7 +309,7 @@ void dScDSMT_c::OnPendingDestroy() {}
 
 /* Refresh the boot-args table: the sound mode and backlight, then save file
  * `saveSlot`'s summary (in use, characters, stars and coin records). */
-extern "C" void DSMT_UpdateBootArgs(u32 saveSlot) {
+void DSMT_UpdateBootArgs(u32 saveSlot) {
     int highestUnlockedPlusOne;
     int character;
     int course;
@@ -345,7 +345,7 @@ extern "C" void DSMT_UpdateBootArgs(u32 saveSlot) {
 }
 
 /* Arm the deferred music change Behavior commits. Declines if one is pending. */
-extern "C" int DSMT_SetPendingMusic(int musicId, unsigned int delayFrames) {
+int DSMT_SetPendingMusic(int musicId, unsigned int delayFrames) {
     if (data_ov007_02103260 >= 0) {
         return 0;
     }
@@ -367,18 +367,18 @@ int dScDSMT_c::graphCallback_c::GraphCallback2() {
 }
 
 /* Install the three save-file buffers the callback reads and writes. */
-extern "C" void DSMT_SetFileBuffers(FileSaveData *files) {
+void DSMT_SetFileBuffers(FileSaveData *files) {
     data_0209b33c = files;
 }
 
 /* Address of save file `slot`'s buffer (0x44 stride is in the ROM's mla). */
-extern "C" FileSaveData *DSMT_GetFileBuffer(int slot) {
+FileSaveData *DSMT_GetFileBuffer(int slot) {
     return &data_0209b33c[slot];
 }
 
-extern "C" {
+
 /* Behavior consumes a nonnegative pending music ID after the delay; -1 is idle.
  * Keep the configured identity while its shared declaration is reserved. */
 int data_ov007_02103260 = -1;
 BaseSpawnInfo<dScDSMT_c> g_profile_DSMT = {dScDSMT_c_classInit, 1, 3};
-}
+

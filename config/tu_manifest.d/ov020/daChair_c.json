@@ -127,7 +127,7 @@
       "ordinal": 12
     },
     {
-      "symbol": "daChair_c_classInit",
+      "symbol": "_Z19daChair_c_classInitv",
       "address": "0x02113494",
       "size": "0x00000050",
       "legacy_source": "src/d_a_chair.c",

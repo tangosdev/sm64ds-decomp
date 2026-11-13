@@ -196,6 +196,10 @@ int func_ov100_02144fcc(void);
 int func_ov100_02145014(void);
 void func_ov100_02145070(int v);
 }
+
+void LoadKeyModels(int idx);
+
+void UnloadKeyModels(int idx);
 extern "C" {
 /* func_0201277c(id) plays a sound id with no position, as func_02012790
    does (Sound.h); func_02012694(id, pos) plays it at a position. */
@@ -213,8 +217,6 @@ void ChangeArea(int areaID);
 void ShowArea(int idx);
 unsigned char IsAreaShowing(int idx);
 void SetTouchScreenDelay(void);
-void LoadKeyModels(int idx);
-void UnloadKeyModels(int idx);
 
 extern DoorEntry data_ov100_02148204[];
 /* Indexed by mKeyModelIdx - 1: the character func_ov100_02144528 switches the

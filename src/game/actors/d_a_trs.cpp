@@ -113,10 +113,12 @@ typedef char TrsBone_size_must_be_0x34[sizeof(TrsBone) == 0x34 ? 1 : -1];
 #endif
 
 
-extern "C" {
+
 /* shared engine entry points without a header declaration */
 void LoadKeyModels(int n);
+
 void UnloadKeyModels(int n);
+extern "C" {
 unsigned char NumStars(void);
 int IsStarCollectedInCurLevel(int n);
 u8 IsAreaShowing(int idx);
@@ -165,6 +167,11 @@ extern SharedFilePtr data_ov002_0210d9b8;
 
 /* File-local helpers and engine entry points, with the C-linkage spellings
  * these bodies were matched against. */
+
+/* The call at 0x02118004 relocates to overlays(27,55). r0 still holds the
+   state timer there, so the callee takes no object: ov055's free function at
+   0x02111264, not ov027's daObjSlIceBlock_c::CleanupResources. */
+extern void func_ov055_02111264(void);
 extern "C" {
 int d_a_trsPlaySubHold(unsigned int a, unsigned int b, unsigned int c, s32 d, int e);
 int func_020092c4(void *cam, void *out, void *target);
@@ -178,10 +185,6 @@ extern void func_020167a4(dExtAnmModel_c *model);
 extern void d_a_trsChangeMusicVolumeHold(unsigned a, int fx);
 extern void func_02011cfc(void);
 extern s16 data_ov063_0211e1c8[];
-/* The call at 0x02118004 relocates to overlays(27,55). r0 still holds the
-   state timer there, so the callee takes no object: ov055's free function at
-   0x02111264, not ov027's daObjSlIceBlock_c::CleanupResources. */
-extern void func_ov055_02111264(void);
 extern int func_ov002_020c51d0(void *c, int *st);
 extern u16 func_02011d14(void);
 extern int data_ov008_02111b6c;

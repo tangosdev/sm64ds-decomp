@@ -10,11 +10,11 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
 
-extern "C" {
 
-extern unsigned short func_ov007_020c3be0(int t, int a, int b);
-extern void func_ov007_020b5f64(Ov007ItemView *view);
-extern int func_ov007_020c8f98(struct Ov007Tween *tw);
+
+extern "C" unsigned short func_ov007_020c3be0(int t, int a, int b);
+extern "C" void func_ov007_020b5f64(Ov007ItemView *view);
+extern "C" int func_ov007_020c8f98(struct Ov007Tween *tw);
 
 /* One frame of a menu item's look. Kind 0 items wiggle: rotZ follows a
  * sine at 72 degrees per frame, decaying over wiggleFrames, 4 degrees deep
@@ -143,4 +143,4 @@ void func_ov007_020b5bf0(Ov007ItemView *view) {
     }
     func_ov007_020c8f98(view->slideTween);
 }
-}
+

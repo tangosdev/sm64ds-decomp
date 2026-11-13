@@ -88,20 +88,20 @@ extern ChoropuStateRow data_ov080_02128438[6];
 
 #define LAUND(p) ((void*)(p))
 
-extern "C" {
-unsigned int d_a_choropuNewHold(unsigned int a, unsigned int b, int x, int y, int z, void *vel,
+
+extern "C" unsigned int d_a_choropuNewHold(unsigned int a, unsigned int b, int x, int y, int z, void *vel,
                                 void *cb);
 /* Parameter names keep this TU's @NNN. */
 typedef int BgchInitAt_(void *self, void *actor, int radius, int height, Vector3_16 *a,
                         Vector3_16 *b);
-int   RandomIntInternal(int *seed);
-short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-int   Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-void  Matrix4x3_FromRotationY(void *m, int ang);
-void func_02012694(unsigned int a, void *p);
+extern "C" int   RandomIntInternal(int *seed);
+extern "C" short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+extern "C" int   Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
+extern "C" void  Matrix4x3_FromRotationY(void *m, int ang);
+extern "C" void func_02012694(unsigned int a, void *p);
 
 void  func_ov080_02124418(daChoro_Rock_c *t);
-}
+
 
 extern int data_ov080_0212767c[];
 extern SharedFilePtr data_ov002_0210d9d8;
@@ -621,7 +621,7 @@ void daChoropu_c::func_ov080_021243d8()
 }
 
 /* Same as func_ov080_021243d8, for the rock's model (mModel.mat4x3). */
-extern "C" void func_ov080_02124418(daChoro_Rock_c *t)
+void func_ov080_02124418(daChoro_Rock_c *t)
 {
     Matrix4x3_FromRotationY(&t->mModel.mat4x3, t->mAngleY);
     t->mModel.mat4x3.m[9] = t->mPosX >> 3;
@@ -815,13 +815,13 @@ s32 daChoro_Rock_c::InitResources()
 }
 
 /* Registry factory for the CHORO_ROCK profile. */
-extern "C" daChoro_Rock_c *daChoro_Rock_c_classInit()
+daChoro_Rock_c *daChoro_Rock_c_classInit()
 {
     return new daChoro_Rock_c();
 }
 
 /* Registry factory for the CHOROPU profile. */
-extern "C" daChoropu_c *daChoropu_c_classInit()
+daChoropu_c *daChoropu_c_classInit()
 {
     return new daChoropu_c();
 }

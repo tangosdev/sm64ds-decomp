@@ -4,7 +4,7 @@
 #include "nitro/hw/registers.h"
 #include "Ov007Transition.h"
 
-extern "C" {
+
 
 /* Starts the transition: state 1 from t = 0, with the request cleared, and
  * sets up its effect's registers on each of its screens. Mosaic (1) sets or
@@ -87,4 +87,4 @@ void func_ov007_020c86c4(Ov007Transition *tr) {
         return;
     }
 }
-}
+

@@ -172,8 +172,8 @@ extern "C" void d_a_kuri_kingEarthquakeHold(void *thiz, void *v, int f);
 extern "C" int data_ov074_02122e24[];
 extern "C" char data_ov074_02122f3c[];
 extern "C" char data_ov074_02122f38[];
-extern "C" void UnloadKeyModels(int i);
-extern "C" void LoadKeyModels(int idx);
+void UnloadKeyModels(int i);
+void LoadKeyModels(int idx);
 extern "C" void *data_ov074_02122e5c[];
 /* Boss-overlay resource blobs, linked into the co-resident 0x0211xxxx
    overlay; ov074's image has no copy, so these bind cross-module. */

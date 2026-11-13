@@ -4,7 +4,7 @@
 #include "Ov007Camera.h"
 #include "nitro/fx/fx_trig.h"
 
-extern "C" {
+
 
 /* func_ov007_020c0078 at 0x020c0078 (ov007)
  *
@@ -25,4 +25,4 @@ void func_ov007_020c0078(Ov007Camera *cam) {
 
     G3_StoreMtx(0);
 }
-}
+

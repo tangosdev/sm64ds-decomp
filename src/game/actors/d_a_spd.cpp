@@ -63,18 +63,18 @@ typedef struct { PMF enter, run; } ScuttlebugStateRow;
  * plain words / pointers on purpose -- the true types are passed differently
  * and break the register convention.
  * ------------------------------------------------------------------------ */
-extern "C" {
 
-int AngleDiff(int a, int b);
-unsigned short DecIfAbove0_Short(void *p);
-int   Vec3_Dist(const Vector3 *a, const Vector3 *b);
-short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 
-void  Matrix4x3_FromRotationY(void *m, int angle);
-void  Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
-void  Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
+extern "C" int AngleDiff(int a, int b);
+extern "C" unsigned short DecIfAbove0_Short(void *p);
+extern "C" int   Vec3_Dist(const Vector3 *a, const Vector3 *b);
+extern "C" short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 
-void func_02012694(unsigned int id, void *pos);
+extern "C" void  Matrix4x3_FromRotationY(void *m, int angle);
+extern "C" void  Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
+extern "C" void  Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
+
+extern "C" void func_02012694(unsigned int id, void *pos);
 
 /* dBgCh_Actr::Init's last two parameters are Vector3_16* (the S5_
  * back-references the pointer type). */
@@ -88,7 +88,7 @@ extern Matrix4x3 data_020a0e68;           /* scratch matrix        */
 /* Intra-TU forward declarations.  mwccarm lays .text down in reverse source
  * order, so this file is written ROM-descending and nearly every intra-TU call
  * is a forward reference. */
-}
+
 
 /* The bug's file-scope SharedFilePtr objects, spelled through the same
    wrapper idiom the landed folds use: the handles' code is the veneer pair
@@ -147,7 +147,7 @@ PMF data_ov071_02122fa8[18] = {
     data_ov071_02122ba8, data_ov071_02122ba0, data_ov071_02122b98,
 };
 
-extern "C" daSpd_c *daSpd_c_classInit(void) {
+daSpd_c *daSpd_c_classInit(void) {
     return new daSpd_c();
 }
 

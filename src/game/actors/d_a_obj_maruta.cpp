@@ -44,15 +44,15 @@
 #include "ResourceDescriptor.h"
 #include "math/MtxStack.h"
 
-extern "C" {
-void func_02012694(unsigned int a, void *b);
-int AngleDiff(int a, int b);
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 
-int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg);
-int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist);
-int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg);
-}
+extern "C" void func_02012694(unsigned int a, void *b);
+extern "C" int AngleDiff(int a, int b);
+extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
+
+extern "C" int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg);
+extern "C" int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist);
+extern "C" int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg);
+
 
 /* -------------------------------------------------------------------------- */
 /* ROM 0x02126fbc (D0, size 0x58) and 0x02127014 (D1, size 0x44)              */
@@ -101,7 +101,7 @@ void daObjMaruta_c::UpdateModelTransform() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- func_ov080_021270dc, 0x021270dc, size 0x48 */
 /* -------------------------------------------------------------------------- */
-extern "C" int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg) {
+int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg) {
     if (self->mMeshCollider.IsEnabled())
         self->mMeshCollider.Disable();
     arg->model->Release();
@@ -120,7 +120,7 @@ s32 daObjMaruta_c::Render() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- func_ov080_0212714c, 0x0212714c, size 0x360 */
 /* -------------------------------------------------------------------------- */
-extern "C" int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist) {
+int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist) {
     Vector3 tmp;
     int len;
     int ang;
@@ -232,7 +232,7 @@ extern "C" int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 5 -- func_ov080_021274ac, 0x021274ac, size 0xe0 */
 /* -------------------------------------------------------------------------- */
-extern "C" int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg) {
+int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg) {
     struct Vector3 d;
     self->mModel.SetFile(dExtSimpleModel_c::LoadFile(*arg->model), 1, -1);
     self->UpdateModelTransform();

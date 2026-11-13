@@ -3,7 +3,7 @@
 #include "nitro/cp/sqrt.h"
 #include "math/CalcLib.h"
 
-extern "C" {
+
 /* recovered: shared common types */
 int func_ov007_020c30ac(struct Vector3 *arr, int count, struct Vector3 *target, int arg4,
                         int *out) {
@@ -30,4 +30,4 @@ int func_ov007_020c30ac(struct Vector3 *arr, int count, struct Vector3 *target, 
     }
     return -1;
 }
-}
+

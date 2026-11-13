@@ -20,11 +20,10 @@
  * the reverse of source order, so the highest-address function is written
  * first here and the functions come out in ROM order.
  *
- * The functions keep their ROM names under C linkage.
  */
 #include "types.h"
 
-extern "C" {
+
 
 /* The bank's file header; only the section count is read. */
 typedef struct MessageBank {
@@ -103,4 +102,4 @@ int func_ov007_020c94a0(int unused, unsigned int messageIndex) {
     unsigned int entryBitOffset = (unsigned int)(entryStrideBits * (messageIndex & 0xffff));
     return (int)(data_ov007_02104c24 + *(int *)(data_ov007_02104c18 + (entryBitOffset >> 3)));
 }
-}
+

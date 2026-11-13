@@ -35,7 +35,7 @@
  * first here and the functions come out in ROM order.
  *
  * The MenuMem_* names are coined from the bodies and their callers; ov007
- * records no names. All keep C linkage. func_ov007_020c3df4 (alloc) and
+ * records no names. func_ov007_020c3df4 (alloc) and
  * func_ov007_020c3d1c (free) keep address names while files another
  * branch holds call them. The third hook is word 2 of dScDSMT_c's hook
  * table data_ov007_02103290 (0x020cca80 in the ROM image), whose body is
@@ -45,7 +45,7 @@
 #include "nitro/mi/memory.h"
 #include "nitro/os/alloc.h"
 
-extern "C" {
+
 
 typedef int (*Ov007QueryHook)(void);
 typedef void (*Ov007FreeHook)(void *);
@@ -121,4 +121,4 @@ int MenuMem_GetMaxAllocSize(void) {
         return 0;
     return data_ov007_02104c14();
 }
-}
+

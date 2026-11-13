@@ -41,7 +41,7 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_ov007_020b2bd4",
+      "symbol": "_Z19func_ov007_020b2bd4ii",
       "address": "0x020b2bd4",
       "size": "0x00000108",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b2bd4.c",

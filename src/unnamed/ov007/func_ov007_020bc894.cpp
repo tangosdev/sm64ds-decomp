@@ -2,10 +2,10 @@
 #include "dExtModel_c.h"
 #include "Ov007Model.h"
 
-extern "C" {
-extern void func_ov007_020c9110(void *);
-extern void func_02046bbc(void *, void *, unsigned int);
-extern void func_020469e8(void *, void *, int);
+
+extern "C" void func_ov007_020c9110(void *);
+extern "C" void func_02046bbc(void *, void *, unsigned int);
+extern "C" void func_020469e8(void *, void *, int);
 
 /* Ticks the model's bone, texture-sequence and texture-SRT players and
  * applies each one's current frame of its animation. */
@@ -41,4 +41,4 @@ void func_ov007_020bc894(Ov007Model *m) {
         }
     }
 }
-}
+

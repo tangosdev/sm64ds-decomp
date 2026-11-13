@@ -85,7 +85,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "daObjTtFuta_c_classInit",
+      "symbol": "_Z23daObjTtFuta_c_classInitv",
       "address": "0x021113a4",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_tt_futa.c",

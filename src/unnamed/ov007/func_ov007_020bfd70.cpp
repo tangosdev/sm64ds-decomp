@@ -29,7 +29,7 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/MtxStack.h"
 
-extern "C" {
+
 
 void func_ov007_020bfd70(Ov007Camera *cam, void *pos, int *outX, int *outY) {
     int out[3];
@@ -47,4 +47,4 @@ void func_ov007_020bfd70(Ov007Camera *cam, void *pos, int *outX, int *outY) {
     outX[0] = ((b * 0x60) >> 0xc) + 0x80;
     outY[0] = ((-a * 0x60) >> 0xc) + 0x60;
 }
-}
+

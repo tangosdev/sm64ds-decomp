@@ -145,7 +145,7 @@
       "ordinal": 14
     },
     {
-      "symbol": "func_ov080_02124418",
+      "symbol": "_Z19func_ov080_02124418P14daChoro_Rock_c",
       "address": "0x02124418",
       "size": "0x00000040",
       "legacy_source": "src/func_ov080_02124418.c",
@@ -208,14 +208,14 @@
       "ordinal": 23
     },
     {
-      "symbol": "daChoro_Rock_c_classInit",
+      "symbol": "_Z24daChoro_Rock_c_classInitv",
       "address": "0x02124998",
       "size": "0x00000048",
       "legacy_source": "src/d_a_choro_rock.c",
       "ordinal": 24
     },
     {
-      "symbol": "daChoropu_c_classInit",
+      "symbol": "_Z21daChoropu_c_classInitv",
       "address": "0x021249e0",
       "size": "0x00000040",
       "legacy_source": "src/d_a_choropu.c",

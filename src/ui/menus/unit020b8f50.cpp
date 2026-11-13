@@ -41,7 +41,7 @@
  * the reverse of source order, so the highest-address function is written
  * first here and the functions come out in ROM order.
  *
- * The functions keep C linkage. The PickerScene_ names are coined from the
+ * The PickerScene_ names are coined from the
  * bodies, after the in-tree Ov007PickerScene.
  */
 #include "types.h"
@@ -61,7 +61,7 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
 
-extern "C" {
+
 
 /* data_ov007_02104b9c: the 0x14-byte sprite record. */
 typedef struct Ov007PickerSprites {
@@ -91,40 +91,38 @@ extern u16 data_ov007_020d7b54[];
 extern int data_ov007_020d7b60;
 extern char data_ov007_020d7b80[];
 
-extern void MTX_Rot22_(int *p, int a, int b);
-extern void func_ov007_020bbe60(int idx);
+extern "C" void MTX_Rot22_(int *p, int a, int b);
+extern "C" void func_ov007_020bbe60(int idx);
 extern void func_ov007_020bda38(int v);
 extern void func_ov007_020bda8c(int a, int b);
 extern void func_ov007_020bdbcc(int a0, int a1);
 extern void func_ov007_020bde2c(int idx);
-extern int func_ov007_020bdeb0(int a);
-extern void func_ov007_020bfe4c(Ov007Camera *cam, int x, int y, int z, void *out);
+extern "C" int func_ov007_020bdeb0(int a);
+extern "C" void func_ov007_020bfe4c(Ov007Camera *cam, int x, int y, int z, void *out);
 extern int func_ov007_020c1da0(int i);
-extern int func_ov007_020c3ba8(int);
-extern unsigned short func_ov007_020c3be0(int t, int a, int b);
-extern void func_ov007_020c3d1c(void *);
-extern void *func_ov007_020c3df4(const char *name, int size);
-extern void func_ov007_020c4f50(void *c, int a1, int a2, int a3, int a4);
-extern int func_ov007_020c5014(void *, int);
-extern void func_ov007_020c510c(void *c);
-extern void func_ov007_020c4e98(Ov007Picker *c, int a1, int a2, int a3, int a4, unsigned short a5,
+extern "C" int func_ov007_020c3ba8(int);
+extern "C" unsigned short func_ov007_020c3be0(int t, int a, int b);
+extern "C" void func_ov007_020c3d1c(void *);
+extern "C" void *func_ov007_020c3df4(const char *name, int size);
+extern "C" void func_ov007_020c4f50(void *c, int a1, int a2, int a3, int a4);
+extern "C" void func_ov007_020c4e98(Ov007Picker *c, int a1, int a2, int a3, int a4, unsigned short a5,
                                 int a6);
-extern void func_ov007_020c5188(void *, int);
-extern void func_ov007_020c5490(void *obj, int *m);
-extern void func_ov007_020c55bc(Ov007Picker *self, int m1, int m2);
-extern void func_ov007_020c56bc(void *c, int a, int b, int d, int e, int f);
-extern void func_ov007_020c5a6c(void *, int *, int);
-extern void func_ov007_020c5c14(void *o, void *p);
-extern int func_ov007_020c5d5c(void *o);
-extern int func_ov007_020c5db0(void *p);
-extern void func_ov007_020c5dec(void *c);
-extern void func_ov007_020c5ef0(void *o);
-extern int func_ov007_020c8f98(void *p);
-extern void func_ov007_020c9080(void *);
-extern Ov007Tween *func_ov007_020c908c(s32 *out);
-extern void func_ov007_020c92d0(Ov007MenuState *state);
-extern void func_ov007_020c937c(void *state);
-extern void *func_ov007_020c9388(int a);
+extern "C" void func_ov007_020c5188(void *, int);
+extern "C" void func_ov007_020c5490(void *obj, int *m);
+extern "C" void func_ov007_020c55bc(Ov007Picker *self, int m1, int m2);
+extern "C" void func_ov007_020c56bc(void *c, int a, int b, int d, int e, int f);
+extern void func_ov007_020c5a6c(Ov007Picker *, void *, int);
+extern "C" void func_ov007_020c5c14(void *o, void *p);
+extern "C" int func_ov007_020c5d5c(void *o);
+extern "C" int func_ov007_020c5db0(void *p);
+extern void func_ov007_020c5dec(Ov007Picker *c);
+extern "C" void func_ov007_020c5ef0(void *o);
+extern "C" int func_ov007_020c8f98(void *p);
+extern "C" void func_ov007_020c9080(void *);
+extern "C" Ov007Tween *func_ov007_020c908c(s32 *out);
+extern "C" void func_ov007_020c92d0(Ov007MenuState *state);
+extern "C" void func_ov007_020c937c(void *state);
+extern "C" void *func_ov007_020c9388(int a);
 
 /* Replays the drawing one frame: strokeTime advances so that it covers
  * totalStrokeTime in replayFrames frames (param 0) or 0x168 frames, by at
@@ -146,7 +144,7 @@ int PickerScene_UpdateReplay(int param) {
     if (r4 < 0x1000)
         r4 = 0x1000;
 
-    r5 = func_ov007_020c5014(SCENE->picker, SCENE->strokeTime >> 0xc);
+    r5 = SCENE->picker->func_ov007_020c5014(SCENE->strokeTime >> 0xc);
     if (r5 == 1) {
         SCENE->strokeTime = 0;
     } else if (r5 == 0) {
@@ -1066,7 +1064,7 @@ void PickerScene_BeginEdit(void) {
     }
     func_ov007_020c5c14(SCENE->picker, &SCENE->picker->pos);
     func_ov007_020c5ef0(SCENE->picker);
-    func_ov007_020c510c(SCENE->picker);
+    SCENE->picker->func_ov007_020c510c();
 
     SCENE->idleFrames = 0;
     SCENE->states[2]->requestedState = 0;
@@ -1554,4 +1552,4 @@ Ov007MenuState *PickerScene_GetScaleAnimState(void) {
 Ov007MenuState *PickerScene_GetMoveAnimState(void) {
     return SCENE->states[3];
 }
-}
+

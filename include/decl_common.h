@@ -26,6 +26,20 @@ struct Ov007MenuState;
 struct fLiNdBa_c;
 
 #ifdef __cplusplus
+
+extern void MiniGm_SaveIfDirty(char*);
+
+extern int MiniGm_GetRecord(void*, int, int);
+
+extern int MiniGm_IsNew(void*, int);
+
+extern int MiniGm_IsUnlocked(void*, int);
+
+extern int MiniGm_HasSecondPage(void*);
+
+extern int func_ov007_020b6f4c(void);
+
+extern void UnloadKeyModels(int);
 extern "C" {
 #endif
 
@@ -484,11 +498,6 @@ extern void Mg_DrawSpriteListEntry(void *, void *, void *, void *);
 extern int Mg_GetTopScreenYOffset(void);
 extern void MgCoins_RaiseBet(int);
 extern void MgCoins_PlaceBet(int);
-extern void MiniGm_SaveIfDirty(char*);
-extern int MiniGm_GetRecord(void*, int, int);
-extern int MiniGm_IsNew(void*, int);
-extern int MiniGm_IsUnlocked(void*, int);
-extern int MiniGm_HasSecondPage(void*);
 extern int Dealer_IsIdleAtRest(void*);
 extern int Mascot_Destruct(char*);
 extern int Presenter_Destruct(char*);
@@ -502,7 +511,6 @@ extern int D3D_PlaySeAtX(int, int);
    original TU, so none of those private members belongs in this header. */
 extern int RouletteResults_Tick(void);
 extern int RouletteBoard_LoadModels(char*);
-extern int func_ov007_020b6f4c(void);
 extern int func_ov007_020c3ba8(int);
 /* ov007's allocator: (name, size). The parameters stay unnamed here on
    purpose: named, they renumbered compiler @NNN labels in this header's C++
@@ -750,7 +758,6 @@ extern void StartExitFaderWipe(int);
 extern void StartFile(s8, u8);
 extern void UnloadArchive(int);
 extern void UnloadArchives(void);
-extern void UnloadKeyModels(int);
 extern void UnloadSilverStarAndNumber(void);
 extern int Vec3_ApproachHorz(void*, void*, int);
 extern int *Vec3_AsrInPlace(void *, int);
@@ -901,7 +908,6 @@ extern void Mg_SetPerfectBanner(void);
 extern void Mg_ResetRecordBannerPos(void);
 extern void Mg_PlaceBannersOnTopScreen(void);
 extern void Mg_ResetBannerLayout(char*);
-extern void MiniGm_LoadGroupIcons(void*);
 extern void Camera_ProjectToScreen16(void*, char*, short*);
 extern void MascotWalker_StartNextPath(void*);
 extern void MascotWalker_Draw(char*);
@@ -1030,8 +1036,6 @@ extern void func_ov070_02121c8c(void*);
 extern void func_ov070_02121e14(char*);
 extern void func_ov070_02121fd0(char*);
 extern void func_ov070_02122044(void*, int);
-extern void func_ov092_021313b0(void*);
-extern void func_ov092_02131a88(char*);
 extern void func_ov096_0213585c(void*);
 extern void func_ov096_02135efc(void*);
 extern void func_ov096_021368b4(void*);

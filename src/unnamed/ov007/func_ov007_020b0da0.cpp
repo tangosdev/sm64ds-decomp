@@ -7,7 +7,7 @@
 #include "Ov007Model.h"
 #include "nitro/fx/fx_cp.h"
 
-extern "C" {
+
 
 #include "decl_common.h"
 #include "common.h"
@@ -118,4 +118,4 @@ void func_ov007_020b0da0(Ov007Figure *figure) {
         *(Vec3Words *)&mat->t = *(Vec3Words *)&out;
     }
 }
-}
+

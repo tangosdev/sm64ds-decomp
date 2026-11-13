@@ -207,14 +207,14 @@
       "ordinal": 22
     },
     {
-      "symbol": "daEykn_c_classInit_EYEKUN_BOSS",
+      "symbol": "_Z30daEykn_c_classInit_EYEKUN_BOSSv",
       "address": "0x021219cc",
       "size": "0x00000050",
       "legacy_source": "src/d_a_eykn_eyekun_boss.c",
       "ordinal": 23
     },
     {
-      "symbol": "daEykn_c_classInit_EYEKUN",
+      "symbol": "_Z25daEykn_c_classInit_EYEKUNv",
       "address": "0x02121a1c",
       "size": "0x00000050",
       "legacy_source": "src/d_a_eykn_eyekun.c",
@@ -1295,7 +1295,7 @@
       "source": "0x02122cf0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daEykn_c_classInit_EYEKUN",
+      "symbol": "_Z25daEykn_c_classInit_EYEKUNv",
       "addend": 0,
       "target_module": "ov071",
       "target_address": "0x02121a1c"
@@ -1305,7 +1305,7 @@
       "source": "0x02122d0c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daEykn_c_classInit_EYEKUN_BOSS",
+      "symbol": "_Z30daEykn_c_classInit_EYEKUN_BOSSv",
       "addend": 0,
       "target_module": "ov071",
       "target_address": "0x021219cc"

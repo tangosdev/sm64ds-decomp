@@ -3,7 +3,7 @@
 #include "nitro/cp/divider.h"
 #include "nitro/cp/sqrt.h"
 
-extern "C" {
+
 /* Normalises a run of Vector3_16s to unit length using the DS hardware divider
    and square-root units, pipelined: the length of vector n+1 is queued into the
    square-root unit while the reciprocal for vector n is still in flight, so the
@@ -70,4 +70,4 @@ void func_ov007_020c368c(Vector3_16 *v, int count, int clamp) {
             v->z = 0xfff;
     }
 }
-}
+

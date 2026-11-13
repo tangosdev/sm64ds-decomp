@@ -51,11 +51,11 @@ extern struct CLPS_Block data_ov043_02111bc0;
 /* KM1_KURUMA: the cart this axle drives. InitResourcesFrom spawns four. */
 enum { kCartActorId = 0x88 };
 
-extern "C" daObjKm1_Kurumajiku_c *daObjKm1_Kurumajiku_c_classInit() {
+daObjKm1_Kurumajiku_c *daObjKm1_Kurumajiku_c_classInit() {
     return new daObjKm1_Kurumajiku_c();
 }
 
-extern "C" SpawnInfo<daObjKm1_Kurumajiku_c> g_profile_KM1_KURUMAJIKU = {
+SpawnInfo<daObjKm1_Kurumajiku_c> g_profile_KM1_KURUMAJIKU = {
     daObjKm1_Kurumajiku_c_classInit,
     0x0089, /* KM1_KURUMAJIKU registry id 137 */
     0x00b2,

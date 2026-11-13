@@ -50,14 +50,14 @@
       "ordinal": 1
     },
     {
-      "symbol": "DSMT_GetFileBuffer",
+      "symbol": "_Z18DSMT_GetFileBufferi",
       "address": "0x020cc0cc",
       "size": "0x00000018",
       "legacy_source": "src/func_ov007_020cc0cc.c",
       "ordinal": 2
     },
     {
-      "symbol": "DSMT_SetFileBuffers",
+      "symbol": "_Z19DSMT_SetFileBuffersP12FileSaveData",
       "address": "0x020cc0e4",
       "size": "0x00000010",
       "legacy_source": "src/func_ov007_020cc0e4.c",
@@ -78,14 +78,14 @@
       "ordinal": 5
     },
     {
-      "symbol": "DSMT_SetPendingMusic",
+      "symbol": "_Z20DSMT_SetPendingMusicij",
       "address": "0x020cc118",
       "size": "0x00000050",
       "legacy_source": "src/func_ov007_020cc118.c",
       "ordinal": 6
     },
     {
-      "symbol": "DSMT_UpdateBootArgs",
+      "symbol": "_Z19DSMT_UpdateBootArgsj",
       "address": "0x020cc168",
       "size": "0x00000144",
       "legacy_source": "src/func_ov007_020cc168.c",
@@ -127,49 +127,49 @@
       "ordinal": 12
     },
     {
-      "symbol": "DSMT_MenuCallback",
+      "symbol": "_Z17DSMT_MenuCallbacki",
       "address": "0x020cc600",
       "size": "0x00000468",
       "legacy_source": "src/func_ov007_020cc600.c",
       "ordinal": 13
     },
     {
-      "symbol": "DSMT_MenuReleaseFile",
+      "symbol": "_Z20DSMT_MenuReleaseFilePv",
       "address": "0x020cca68",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov007_020cca68.c",
       "ordinal": 14
     },
     {
-      "symbol": "DSMT_MenuLoadFile",
+      "symbol": "_Z17DSMT_MenuLoadFilei",
       "address": "0x020cca74",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov007_020cca74.c",
       "ordinal": 15
     },
     {
-      "symbol": "DSMT_MenuMaxAllocSize",
+      "symbol": "_Z21DSMT_MenuMaxAllocSizev",
       "address": "0x020cca80",
       "size": "0x00000018",
       "legacy_source": "src/func_ov007_020cca80.c",
       "ordinal": 16
     },
     {
-      "symbol": "DSMT_MenuFree",
+      "symbol": "_Z13DSMT_MenuFreePv",
       "address": "0x020cca98",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov007_020cca98.c",
       "ordinal": 17
     },
     {
-      "symbol": "DSMT_MenuAlloc",
+      "symbol": "_Z14DSMT_MenuAllocj",
       "address": "0x020ccab4",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov007_020ccab4.c",
       "ordinal": 18
     },
     {
-      "symbol": "dScDSMT_c_classInit",
+      "symbol": "_Z19dScDSMT_c_classInitv",
       "address": "0x020ccad0",
       "size": "0x00000084",
       "legacy_source": "src/d_s_dsmt.c",
@@ -505,7 +505,7 @@
       "source": "0x02103264",
       "section": ".data.dsmtMeta0",
       "kind": "load",
-      "symbol": "dScDSMT_c_classInit",
+      "symbol": "_Z19dScDSMT_c_classInitv",
       "type": "R_ARM_ABS32",
       "addend": 0,
       "target_address": "0x020ccad0",

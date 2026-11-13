@@ -33,7 +33,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "MiniGm_SaveIfDirty",
+      "symbol": "_Z18MiniGm_SaveIfDirtyPc",
       "address": "0x020bff4c",
       "size": "0x0000007c",
       "legacy_source": "src/func_ov005_020bff4c.cpp",
@@ -47,14 +47,14 @@
       "ordinal": 3
     },
     {
-      "symbol": "MiniGm_GetRecord",
+      "symbol": "_Z16MiniGm_GetRecordPvii",
       "address": "0x020bfff4",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov005_020bfff4.c",
       "ordinal": 4
     },
     {
-      "symbol": "MiniGm_GetSaveTable",
+      "symbol": "_Z19MiniGm_GetSaveTablePvi",
       "address": "0x020c0010",
       "size": "0x00000020",
       "legacy_source": "src/func_ov005_020c0010.c",
@@ -68,21 +68,21 @@
       "ordinal": 6
     },
     {
-      "symbol": "MiniGm_IsNew",
+      "symbol": "_Z12MiniGm_IsNewPvi",
       "address": "0x020c007c",
       "size": "0x00000038",
       "legacy_source": "src/func_ov005_020c007c.c",
       "ordinal": 7
     },
     {
-      "symbol": "MiniGm_IsUnlocked",
+      "symbol": "_Z17MiniGm_IsUnlockedPvi",
       "address": "0x020c00b4",
       "size": "0x00000030",
       "legacy_source": "src/func_ov005_020c00b4.c",
       "ordinal": 8
     },
     {
-      "symbol": "MiniGm_HasSecondPage",
+      "symbol": "_Z20MiniGm_HasSecondPagePv",
       "address": "0x020c00e4",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov005_020c00e4.c",
@@ -145,7 +145,7 @@
       "ordinal": 17
     },
     {
-      "symbol": "MiniGm_DrawNumber",
+      "symbol": "_Z17MiniGm_DrawNumberPviii",
       "address": "0x020c1030",
       "size": "0x00000100",
       "legacy_source": "src/func_ov005_020c1030.cpp",
@@ -180,7 +180,7 @@
       "ordinal": 22
     },
     {
-      "symbol": "MiniGm_LoadGroupIcons",
+      "symbol": "_ZN11dScMiniGm_c21MiniGm_LoadGroupIconsEv",
       "address": "0x020c16e4",
       "size": "0x0000033c",
       "legacy_source": "src/func_ov005_020c16e4.c",
@@ -194,7 +194,7 @@
       "ordinal": 24
     },
     {
-      "symbol": "dScMiniGm_c_classInit",
+      "symbol": "_Z21dScMiniGm_c_classInitv",
       "address": "0x020c21ec",
       "size": "0x00000064",
       "legacy_source": "src/d_s_mini_gm.c",

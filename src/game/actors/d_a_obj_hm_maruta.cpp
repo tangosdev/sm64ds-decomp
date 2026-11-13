@@ -68,16 +68,16 @@ typedef char MarutaClsnFileHandle_size_must_be_8[sizeof(MarutaClsnFileHandle) ==
 extern ResourceDescriptor data_ov030_02115a04;
 extern struct CLPS_Block data_ov030_02114f24;
 
-extern "C" {
+
 /* The helpers live in ov080, out of branch range of this overlay, so the ROM
  * reaches them with the pooled `ldr ip,[pc]; bx ip` tail call. long_calls is
  * positional and binds at the declaration; closed again straight after. */
 #pragma long_calls on
-int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg);
-int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist);
-int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg);
+extern "C" int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg);
+extern "C" int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist);
+extern "C" int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg);
 #pragma long_calls off
-}
+
 
 extern int data_ov030_021159f4;
 
@@ -91,7 +91,7 @@ extern int data_ov030_021159f4;
  * is the highest ROM address (0x0211164c), so it must be first here for the
  * three explicitly-written functions below to keep coming out in their
  * documented ROM order. */
-extern "C" daObjHmMaruta_c *daObjHmMaruta_c_classInit() {
+daObjHmMaruta_c *daObjHmMaruta_c_classInit() {
     return new daObjHmMaruta_c();
 }
 

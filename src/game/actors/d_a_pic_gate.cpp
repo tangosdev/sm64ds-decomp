@@ -61,15 +61,15 @@
    prototypes (math/CalcLib.h, math/MtxStack.h and the two below) still say
    Vector3 (tangosdev/sm64ds-decomp#5207), hence the casts on the VecFx32
    side. */
-extern "C" {
-void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *out);
-void VEC_Normalize(const Vector3 *v, Vector3 *out);
-void G3_LoadMtx43(void *m);
-void  func_02012694(u32 id, void *pos);
-void *func_0201787c(SharedFilePtr *sfp);
-u32   func_02045ad8(const void *src, u32 size);
-unsigned int func_02045a50(const void *src, unsigned int size);
-}
+
+extern "C" void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *out);
+extern "C" void VEC_Normalize(const Vector3 *v, Vector3 *out);
+extern "C" void G3_LoadMtx43(void *m);
+extern "C" void  func_02012694(u32 id, void *pos);
+extern "C" void *func_0201787c(SharedFilePtr *sfp);
+extern "C" u32   func_02045ad8(const void *src, u32 size);
+extern "C" unsigned int func_02045a50(const void *src, unsigned int size);
+
 
 extern Matrix4x3 data_0209b3ec;
 extern char data_ov080_021277a8[];
@@ -473,10 +473,10 @@ void daPicGate_c::PlaceCorners() {
     mCorners[3].texCoord = GX_ST(0, 0);
 }
 
-extern "C" {
-extern void G3_MultMtx43(void *m);
+
+extern "C" void G3_MultMtx43(void *m);
 extern int data_ov080_0212771c[];
-}
+
 
 /* DrawWave. The texture binds with normal-based texture coordinates
  * (GX_TEXGEN_NORMAL) and no repeat or flip, so each vertex sends only

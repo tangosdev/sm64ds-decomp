@@ -2,7 +2,7 @@
 #include "dExtModel_c.h"
 #include "Ov007Model.h"
 
-extern "C" {
+
 
 /* Renders the model with its matrix and scale while it is visible. */
 void func_ov007_020bbff0(Ov007Model *m) {
@@ -10,4 +10,4 @@ void func_ov007_020bbff0(Ov007Model *m) {
         return;
     m->model->Render(&m->matrix, &m->scale);
 }
-}
+

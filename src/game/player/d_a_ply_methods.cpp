@@ -102,6 +102,9 @@ extern "C" daPly_c *daPly_c_classInit();
 /* Engine and overlay symbols used here that no header declares yet. Each
  * used to be repeated inside every body that needed it; C linkage keeps
  * the names unmangled, as those body-local copies had it. */
+
+extern void LoadKeyModels(int idx);
+extern void UnloadKeyModels(int n);
 extern "C" {
 extern ControllerInput data_0209f498[];
 extern PadData data_020a0e58[];
@@ -242,7 +245,6 @@ extern s32 gRunningKuppaScript;
 extern void HitDeathPlane(int arg);
 extern unsigned char IsPlayerWarping(int a0);
 extern void KillPlayer(void);
-extern void LoadKeyModels(int idx);
 extern void LoadSilverStarAndNumber(void);
 extern int Math_Function_0203b14c(void *, int a, int b, int c, int d);
 extern int PlayerChangeMusicVolumeHold(u32 vol, int t);
@@ -20107,7 +20109,6 @@ int daPly_c::CleanupResources() {
     enum { false_, true_ };
     struct VB { virtual void v0(); virtual void v1(); };
     void UnloadSilverStarAndNumber(void);
-    void UnloadKeyModels(int n);
     extern u8 gGameMode;
     extern SharedFilePtr data_ov002_0210e3d8;
     extern SharedFilePtr data_ov002_0210e750;

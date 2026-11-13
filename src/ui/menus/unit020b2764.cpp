@@ -46,7 +46,7 @@
  *
  * The callees' declarations keep their definitions' spellings (most are
  * still one-function files taking ints and char *), so the typed values
- * are cast where they are handed over. The functions keep C linkage.
+ * are cast where they are handed over.
  * FigureScene_SetScreenBlend's name is coined from its body (the file has
  * no struct of its own; FigureScene_ is coined from this banner); the
  * other three keep their address names for now.
@@ -58,7 +58,7 @@
 #include "dExtModel_c.h"
 #include "Ov007Figure.h"
 
-extern "C" {
+
 
 /* One sprite's corner-colour pair (BGR555): `outer` feeds cornerColors[0]
  * and [3], `inner` cornerColors[1] and [2]. */
@@ -76,21 +76,21 @@ extern void *data_ov007_020d7ee8[3][3];        /* [set]: animation data in the o
 extern void *data_ov007_02103348[3];           /* data_ov007_020ccc80[set], loaded */
 extern void *data_ov007_02103354[3];           /* data_ov007_020ccc68[figureIndex], loaded */
 
-extern void func_02044efc(void *bmd);
-extern void func_ov007_020b3edc(int idx);
-extern void *func_ov007_020b3f20(int idx);
+extern "C" void func_02044efc(void *bmd);
+extern "C" void func_ov007_020b3edc(int idx);
+extern "C" void *func_ov007_020b3f20(int idx);
 extern void func_ov007_020b7708(int idx, void *pos);
-extern void func_ov007_020bbf98(void *model, unsigned int lights);
+extern "C" void func_ov007_020bbf98(void *model, unsigned int lights);
 extern void func_ov007_020bc53c(Ov007Model *model);
-extern void func_ov007_020bc5fc(Ov007Model *model, void *files, int count);
-extern void func_ov007_020bc658(Ov007Model *model, void *files, int count);
-extern void func_ov007_020bc6b4(Ov007Model *model, void *files, int count);
-extern Ov007Model *func_ov007_020bc6d4(void *bmd, int flags);
+extern "C" void func_ov007_020bc5fc(Ov007Model *model, void *files, int count);
+extern "C" void func_ov007_020bc658(Ov007Model *model, void *files, int count);
+extern "C" void func_ov007_020bc6b4(Ov007Model *model, void *files, int count);
+extern "C" Ov007Model *func_ov007_020bc6d4(void *bmd, int flags);
 extern void func_ov007_020bea44(Ov007Figure *fig);
 extern Ov007Figure *func_ov007_020beaa0(int index, int figureIndex);
-extern unsigned short func_ov007_020c3be0(int t, int a, int b);
+extern "C" unsigned short func_ov007_020c3be0(int t, int a, int b);
 
-void func_ov007_020b283c(void);
+extern "C" void func_ov007_020b283c(void);
 
 /* Loads figure figureIndex's model at the given stroke stage and returns
  * its model record: the model file, the two sets of three animation files
@@ -255,4 +255,4 @@ void FigureScene_SetScreenBlend(int t) {
         }
     }
 }
-}
+

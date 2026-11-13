@@ -4,15 +4,15 @@
 #include "Ov007Camera.h"
 #include "Ov007Model.h"
 #include "Ov007Figure.h"
-extern "C" {
-void func_ov007_020bc02c(void* a, void* b);
-void func_ov007_020be9ac(void* a, void* b, void* c);
-void func_ov007_020bbff0(void* c);
-}
+
+void func_ov007_020bc02c(Ov007Model *a, void *b);
+void func_ov007_020be9ac(Ov007Figure *a, Ov007Model *b, void *c);
+void func_ov007_020bbff0(Ov007Model *c);
+
 
 /* Poses the manager model and both figures against camera 0's view matrix,
  * scales the model by modelGrowth, then renders all three. */
-extern "C" void func_ov007_020b2370(void) {
+void func_ov007_020b2370(void) {
     Ov007Work *g = WORK;
     Ov007Model *model = g->model;
     Ov007Figure **figures = &g->figure; /* figure, altFigure */

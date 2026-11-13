@@ -10,7 +10,7 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
 
-extern "C" {
+
 
 /* Vector3 declares a constructor and destructor under C++, which makes its
  * assignment copy word by word. The ROM copies these with C's ldm/stm block
@@ -35,12 +35,12 @@ typedef struct Vec3Words {
  * movge first and rotates the block's coloring.
  */
 
-extern int func_ov007_020bdeb0(int a);
-extern void func_ov007_020b257c(void);
-extern void func_ov007_020b2454(void *a, void *b);
-extern void func_ov007_020bce70(short n, int frames);
-extern unsigned short func_ov007_020c3be0(int t, int a, int b);
-extern void FigureScene_SetScreenBlend(int a);
+extern "C" int func_ov007_020bdeb0(int a);
+extern "C" void func_ov007_020b257c(void);
+extern "C" void func_ov007_020b2454(void *a, void *b);
+extern "C" void func_ov007_020bce70(short n, int frames);
+extern "C" unsigned short func_ov007_020c3be0(int t, int a, int b);
+extern "C" void FigureScene_SetScreenBlend(int a);
 
 void func_ov007_020b1718(void) {
     Ov007Model *F = WORK->model;
@@ -166,4 +166,4 @@ void func_ov007_020b1718(void) {
         FigureScene_SetScreenBlend(0x1000 - qq2);
     }
 }
-}
+

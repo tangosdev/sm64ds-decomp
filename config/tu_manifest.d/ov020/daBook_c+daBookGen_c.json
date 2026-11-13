@@ -226,28 +226,28 @@
       "ordinal": 26
     },
     {
-      "symbol": "daBook_c_classInit_BOOK_SWITCH",
+      "symbol": "_Z30daBook_c_classInit_BOOK_SWITCHv",
       "address": "0x021127f4",
       "size": "0x0000005c",
       "legacy_source": "src/d_a_book_book_switch.c",
       "ordinal": 27
     },
     {
-      "symbol": "daBookGen_c_classInit",
+      "symbol": "_Z21daBookGen_c_classInitv",
       "address": "0x02112850",
       "size": "0x00000030",
       "legacy_source": "src/d_a_book_gen.c",
       "ordinal": 28
     },
     {
-      "symbol": "daBook_c_classInit_KILLER_BOOK",
+      "symbol": "_Z30daBook_c_classInit_KILLER_BOOKv",
       "address": "0x02112880",
       "size": "0x0000005c",
       "legacy_source": "src/d_a_book_killer_book.c",
       "ordinal": 29
     },
     {
-      "symbol": "daBook_c_classInit_SHOOT_BOOK",
+      "symbol": "_Z29daBook_c_classInit_SHOOT_BOOKv",
       "address": "0x021128dc",
       "size": "0x0000005c",
       "legacy_source": "src/d_a_book_shoot_book.c",

@@ -3,7 +3,7 @@
 #include "nitro/gx/g3x.h"
 #include "nitro/gx/g3imm_cmd.h"
 
-extern "C" {
+
 void func_ov007_020b6c54(void) {
     G3X_AntiAlias(true);
     G3X_AlphaBlend(true);
@@ -11,4 +11,4 @@ void func_ov007_020b6c54(void) {
     G3_SwapBuffers(GX_SORTMODE_AUTO, GX_BUFFERMODE_W);
     G3X_SetClearColor(0, 0, 0x7fff, 0x3f, 0);
 }
-}
+
