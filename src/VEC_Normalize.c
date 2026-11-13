@@ -15,19 +15,19 @@ void VEC_Normalize(const Vector3 *v, Vector3 *out) {
     sq += (s64)v->y * v->y;
     sq += (s64)v->z * v->z;
 
-    CP_SetDiv64_64((u64)0x1000000 << 32, (u64)sq);
+    CP_SetDiv64_64((u64)0x1000000 << 32, sq);
     sq <<= 2;
-    CP_SetSqrt64((u64)sq);
+    CP_SetSqrt64(sq);
 
     len = CP_GetSqrtResult32();
     recip = CP_GetDivResult64();
 
-    scale = recip * (s64)len;
+    scale = recip * len;
 
-    prod = scale * (s64)v->x;
-    out->x = (int)((prod + (1LL << 44)) >> 45);
-    prod = scale * (s64)v->y;
-    out->y = (int)((prod + (1LL << 44)) >> 45);
-    prod = scale * (s64)v->z;
-    out->z = (int)((prod + (1LL << 44)) >> 45);
+    prod = scale * v->x;
+    out->x = ((prod + (1LL << 44)) >> 45);
+    prod = scale * v->y;
+    out->y = ((prod + (1LL << 44)) >> 45);
+    prod = scale * v->z;
+    out->z = ((prod + (1LL << 44)) >> 45);
 }
