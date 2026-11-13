@@ -4769,7 +4769,10 @@ int daPly_c::StartTalk(fBase_c &actor_, bool b_) {
         return 0;
     }
 
-    if (!(IsState(data_ov002_0211013c) || IsState(daPly_c::ST_WAIT) || IsState(data_ov002_021104e4) || IsState(data_ov002_02110514) || IsState(data_ov002_02110364) || IsState(data_ov002_02110424) || IsState(data_ov002_021105a4) || IsState(data_ov002_0211043c)))
+    if (!(IsState(data_ov002_0211013c) || IsState(daPly_c::ST_WAIT) ||
+          IsState(data_ov002_021104e4) || IsState(data_ov002_02110514) ||
+          IsState(data_ov002_02110364) || IsState(data_ov002_02110424) ||
+          IsState(data_ov002_021105a4) || IsState(data_ov002_0211043c)))
         return 0;
 
     if (b_ == 0) {
@@ -4777,7 +4780,8 @@ int daPly_c::StartTalk(fBase_c &actor_, bool b_) {
         if (!(*(u16 *)(data_0209f49e + (u8)gActivePlayerSlot * 0x18) & 3))
             goto ret0;
 
-        if (!((IsState(data_ov002_0211013c) && mHorzSpeed < 0x8000) || IsState(data_ov002_0211043c) || IsState(daPly_c::ST_WAIT)))
+        if (!((IsState(data_ov002_0211013c) && mHorzSpeed < 0x8000) ||
+              IsState(data_ov002_0211043c) || IsState(daPly_c::ST_WAIT)))
             goto ret0;
 
         mStateStep = 0;
@@ -7541,8 +7545,8 @@ int daPly_c::CanEnterDoor(unsigned char door) {
         if (!(mStateStep == 0x13 && mIsOpeningBigDoor != 0))
             return 0;
     }
-    if (IsState(data_ov002_0211013c) || IsState(daPly_c::ST_WAIT) ||
-        IsState(data_ov002_0211022c) || IsState(data_ov002_0211043c)) {
+    if (IsState(data_ov002_0211013c) || IsState(daPly_c::ST_WAIT) || IsState(data_ov002_0211022c) ||
+        IsState(data_ov002_0211043c)) {
         /* Yoshi with something in his mouth cannot take a door. If its
            OnYoshiTryEat() code is 6 (enemies such as daKrb_c and daSpd_c,
            and the small crate daObjBlockS_c) or 1 (daBttBk_c, or another
@@ -17875,8 +17879,8 @@ int daPly_c::func_ov002_020dec70() {
     }
     mSurfaceSoundHandle =
         Sound::PlayLong((u32)mSurfaceSoundHandle, 3, 0x90, *(Vector3 *)&mCamSpacePos, 0);
-    if (IsState(data_ov002_02110274) || IsState(data_ov002_021102d4) ||
-        IsState(daPly_c::ST_OWL) || mIsMetal || mIsMega || mIsNoControl || mIsAirborne == 0)
+    if (IsState(data_ov002_02110274) || IsState(data_ov002_021102d4) || IsState(daPly_c::ST_OWL) ||
+        mIsMetal || mIsMega || mIsNoControl || mIsAirborne == 0)
         return 0;
     if (func_ov002_020e0478() != 0 || mIsBalloon != 0) {
         if (t < 0x898000)
