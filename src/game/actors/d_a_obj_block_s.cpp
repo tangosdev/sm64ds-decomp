@@ -217,7 +217,7 @@ daObjBlockS_c::~daObjBlockS_c()
  * STATE_IDLE. Returns before touching the cylinders in that case. */
 void daObjBlockS_c::UpdateBroken() {
     ResetToHome();
-    unsigned b = (unsigned)((mFlags & ACTOR_FLAG_OFF_SCREEN) != 0);
+    unsigned b = ((mFlags & ACTOR_FLAG_OFF_SCREEN) != 0);
     if (b != 0 && DistToCPlayer() > 0x7d0000) {
         Crate_SetState(this, daObjBlockS_c::STATE_IDLE);
         return;
@@ -734,11 +734,11 @@ void daObjBlockS_c::HandleHits() {
 
     fl = mFlags;
     {
-        int b1 = (int)((fl & ACTOR_FLAG_YOSHI_MOUTH_A) != 0);
+        int b1 = ((fl & ACTOR_FLAG_YOSHI_MOUTH_A) != 0);
         if (b1 != 0) {
             Crate_SetState(this, daObjBlockS_c::STATE_IN_MOUTH);
         } else {
-            int b2 = (int)((fl & ACTOR_FLAG_YOSHI_MOUTH_B) != 0);
+            int b2 = ((fl & ACTOR_FLAG_YOSHI_MOUTH_B) != 0);
             if (b2 != 0) {
                 Crate_SetState(this, daObjBlockS_c::STATE_IN_MOUTH);
             }
@@ -993,8 +993,7 @@ int daObjBlockS_c::UpdateFloorContact() {
     if (ApproachLinear(mHorzSpeed, 0, 0x800) == 0 && mClsnYOffsetTarget != 0xa0 &&
         mHorzSpeed > 0xa000) {
         Particle::RunningSlidingDustAt(mPosX, mPosY, mPosZ);
-        mSlideSoundHandle =
-            Sound::PlayLong(mSlideSoundHandle, 3, 0x93, *(Vector3 *)&mCamSpacePos, 0);
+        mSlideSoundHandle = Sound::PlayLong(mSlideSoundHandle, 3, 0x93, mCamSpacePos, 0);
     }
 
     {
@@ -1075,7 +1074,7 @@ void daObjBlockS_c::UpdateModelMatrix() {
     int b;
 
     if (obj == 0) goto other;
-    b = (int)((mFlags & 0x4000) != 0);
+    b = ((mFlags & 0x4000) != 0);
     if (b == 0) goto other;
     if (obj->mCarryMatrix == 0)
         goto other;
@@ -1145,7 +1144,7 @@ int daObjBlockS_c::Render()
     if (mState == STATE_BROKEN)
         return 1;
     {
-        int b = (int)((mFlags & ACTOR_FLAG_YOSHI_MOUTH_B) != 0);
+        int b = ((mFlags & ACTOR_FLAG_YOSHI_MOUTH_B) != 0);
         if (b)
             return 1;
     }
@@ -1198,7 +1197,7 @@ int daObjBlockS_c::Behavior()
         ((int *)&v)[2] = z;
         if (DecIfAbove0_Byte(&mBreakTimer)) {
             mParticleHandle1 =
-                (u32)Particle::System::New(mParticleHandle1, kPtclDeathA, v.x, v.y, v.z, 0, 0);
+                Particle::System::New(mParticleHandle1, kPtclDeathA, v.x, v.y, v.z, 0, 0);
             mParticleHandle2 =
                 Particle::System::NewCleanParticle(mParticleHandle2, kPtclDeathB, v.x, v.y, v.z, 0);
             goto done;
