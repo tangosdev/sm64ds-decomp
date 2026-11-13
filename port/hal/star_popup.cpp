@@ -1112,8 +1112,47 @@ void star_popup_set_only_collector(int on) {
 
 }  // namespace port
 
+#ifndef PORT_ROM_CLEAN
+extern "C" int port_adventure_ghost_seat(int slot);
+// CREDITS1 proof knob SM64DS_CREDITS_WATCH=1 (dev only): one [crwatch] line whenever the level-clear flag (data_0209f20c), the
+// pause / save menu state (data_0209f2c4), my health or my state routine changes, with every live body's state routine, so a row
+// can tell which body started a course-clear and when my player was hurt or died.
+static void credits_watch() {
+    using namespace port;
+    static int on = -1;
+    if (on < 0) { const char *e = std::getenv("SM64DS_CREDITS_WATCH"); on = (e && *e && *e != '0') ? 1 : 0; }
+    if (!on) return;
+    static unsigned last_lc = 0, last_ps = 0, frame = 0; static int last_hp = -1, last_lv = -1; static const void *last_st = nullptr;
+    ++frame;
+    const int me = (int)data_0209f250;
+    const char *b = (me >= 0 && me < 32) ? (const char *)data_0209f394[me] : nullptr;
+    const unsigned lc = data_0209f20c[0], ps = data_0209f2c4[0];
+    const int hp = (me >= 0 && me < 32) ? (int)((data_02092144[me] >> 8) & 0xff) : -1;
+    const void *st = b ? *(void *const *)(b + 0x370) : nullptr;
+    const int lv = (int)data_0209f2f8;
+    if (lc == last_lc && ps == last_ps && hp == last_hp && st == last_st && lv == last_lv) return;
+    std::fprintf(stderr, "[crwatch] f%u level %d mode %u cut %08x: levelclear %u->%u menu %u->%u hp %d->%d my state %p->%p why %u hud %u |",
+                 frame, lv, (unsigned)data_0209f2d8[0], rd32(data_0209fc48), last_lc, lc, last_ps, ps, last_hp, hp, last_st, st,
+                 (unsigned)data_0209f2fc, (unsigned)data_ov002_02111178);
+    if (lc != last_lc || ps != last_ps)
+        for (int i = 0; i < 32; ++i) {
+            const char *a = (const char *)data_0209f394[i];
+            if (!a) continue;
+            const int *p = (const int *)(a + 0x5c);
+            std::fprintf(stderr, " b%d(seat %d st %p at %d,%d,%d)", i, i == me ? -1 : port_adventure_ghost_seat(i), *(void *const *)(a + 0x370),
+                         p[0] >> 12, p[1] >> 12, p[2] >> 12);
+            if (i > 4) break;
+        }
+    std::fprintf(stderr, " wall=%lld\n", wall_ms());
+    last_lc = lc; last_ps = ps; last_hp = hp; last_st = st; last_lv = lv;
+}
+#endif
+
 extern "C" void port_star_popup_frame(void) {
     using namespace port;
+#ifndef PORT_ROM_CLEAN
+    credits_watch();
+#endif
     census();          // proof knobs, solo too
     keep_tick();       // STAREXIT3: the saved character through the ending, before every return (the ending is no popup, and a
                        // lost room must neither freeze nor leave it armed)
