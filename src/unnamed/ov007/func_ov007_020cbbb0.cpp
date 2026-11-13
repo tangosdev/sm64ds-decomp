@@ -12,15 +12,13 @@
 struct MeshParamsWords {
     int w[6];
 };
-extern "C" {
 
-
-extern void *func_ov007_020c3df4(const char *name, int size);
-extern Ov007Grid *func_ov007_020c73f0(int springMode, int columns, int rows, int pointMass);
-extern Ov007Link *func_ov007_020c80a4(void);
-extern void func_ov007_020c72d0(Ov007Grid *grid);
-extern void func_ov007_020c8010(Ov007Link *link, Ov007Follower *from, Ov007Follower *to);
-extern void func_ov007_020cb3dc(Ov007Mesh *mesh);
+extern "C" void *func_ov007_020c3df4(const char *name, int size);
+extern "C" Ov007Grid *func_ov007_020c73f0(int springMode, int columns, int rows, int pointMass);
+extern "C" Ov007Link *func_ov007_020c80a4(void);
+extern "C" void func_ov007_020c72d0(Ov007Grid *grid);
+extern "C" void func_ov007_020c8010(Ov007Link *link, Ov007Follower *from, Ov007Follower *to);
+extern "C" void func_ov007_020cb3dc(Ov007Mesh *mesh);
 
 /* Builds a columns x rows mesh `width` wide, centred on the origin, every
  * point at the template's rest z. Rows are cellHeight apart (width *
@@ -116,4 +114,4 @@ Ov007Mesh *func_ov007_020cbbb0(int columns, int rows, int width, Ov007MeshParams
     func_ov007_020cb3dc(mesh);
     return mesh;
 }
-}
+

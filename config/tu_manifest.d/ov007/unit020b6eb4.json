@@ -20,14 +20,14 @@
   ],
   "functions": [
     {
-      "symbol": "func_ov007_020b6eb4",
+      "symbol": "_Z19func_ov007_020b6eb4v",
       "address": "0x020b6eb4",
       "size": "0x00000098",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b6eb4.c",
       "ordinal": 0
     },
     {
-      "symbol": "func_ov007_020b6f4c",
+      "symbol": "_Z19func_ov007_020b6f4cv",
       "address": "0x020b6f4c",
       "size": "0x000000f4",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b6f4c.cpp",
@@ -41,7 +41,7 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_ov007_020b7090",
+      "symbol": "_Z19func_ov007_020b7090tttti",
       "address": "0x020b7090",
       "size": "0x000000a8",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b7090.c",

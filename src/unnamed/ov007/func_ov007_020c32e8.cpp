@@ -2,7 +2,7 @@
 #include "nitro/gx/gx_load.h"
 #include "Ov007Display.h"
 
-extern "C" {
+
 
 
 /* Loads a palette record's colours into palette RAM at 0x20-byte row
@@ -27,4 +27,4 @@ void func_ov007_020c32e8(Ov007Palette *pal, int target, unsigned int row, int sk
         break;
     }
 }
-}
+

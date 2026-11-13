@@ -56,7 +56,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov055_02111264",
+      "symbol": "_Z19func_ov055_02111264v",
       "address": "0x02111264",
       "size": "0x00000024",
       "legacy_source": "src/func_ov055_02111264.c",
@@ -119,7 +119,7 @@
       "ordinal": 10
     },
     {
-      "symbol": "daLuigi_c_classInit",
+      "symbol": "_Z19daLuigi_c_classInitv",
       "address": "0x02111860",
       "size": "0x00000074",
       "legacy_source": "src/d_a_luigi.cpp",

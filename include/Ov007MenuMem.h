@@ -9,6 +9,12 @@
  * are coined; ov007 records none. */
 
 #ifdef __cplusplus
+
+void MenuMem_SetAllocHook(int);
+
+void MenuMem_SetFreeHook(int);
+
+void MenuMem_SetMaxAllocSizeHook(int);
 extern "C" {
 #endif
 
@@ -16,9 +22,6 @@ void *func_ov007_020c3df4(const char *, int);
 void *MenuMem_AllocClear(const char *, int);
 void func_ov007_020c3d1c(void *);
 int MenuMem_GetMaxAllocSize(void);
-void MenuMem_SetAllocHook(int);
-void MenuMem_SetFreeHook(int);
-void MenuMem_SetMaxAllocSizeHook(int);
 
 #ifdef __cplusplus
 }

@@ -5,7 +5,7 @@
 #include "nitro/gx/g2.h"
 #include "nitro/gx/gx_bgcnt.h"
 
-extern "C" {
+
 
 
 void MenuGfx_SetBgMode(int mode) {
@@ -83,4 +83,4 @@ void MenuGfx_SetBgMode(int mode) {
         break;
     }
 }
-}
+

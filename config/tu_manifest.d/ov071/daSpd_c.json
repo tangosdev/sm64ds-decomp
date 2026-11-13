@@ -290,7 +290,7 @@
       "ordinal": 35
     },
     {
-      "symbol": "daSpd_c_classInit",
+      "symbol": "_Z17daSpd_c_classInitv",
       "address": "0x02120618",
       "size": "0x00000050",
       "legacy_source": "src/d_a_spd.c",

@@ -1,6 +1,6 @@
 //cpp
 
-extern "C" {
+
 #define BLEND(out, t, a, b, mask, shift) \
   do { \
     if ((t) >= 0x1000) (out) = ((b) & (mask)) >> (shift); \
@@ -19,4 +19,4 @@ unsigned short func_ov007_020c3be0(int t, int a, int b) {
     BLEND(bb, t, a, b, 0x7c00, 0xa);
     return (unsigned short)(rr | (gg << 5) | (bb << 0xa));
 }
-}
+

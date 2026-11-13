@@ -85,7 +85,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "daObjC0_Switch_c_classInit",
+      "symbol": "_Z26daObjC0_Switch_c_classInitv",
       "address": "0x02111420",
       "size": "0x00000030",
       "legacy_source": "src/daObjC0_Switch_c_Spawn.c",

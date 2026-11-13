@@ -23,7 +23,6 @@
  * the reverse of source order, so the highest-address function is written
  * first here and the functions come out in ROM order.
  *
- * The functions keep their ROM names under C linkage.
  */
 #include "types.h"
 #include "nitro/fx/fx.h"
@@ -34,25 +33,22 @@
 #include "math/ProgressRatio.h"
 #include "Ov007MenuMem.h"
 
-extern "C" {
 
 
 extern int func_ov007_020c30ac(Vector3 *points, int count, Vector3 *target, int maxDist,
                                int *outDist);
-extern void func_ov007_020c7504(Ov007PointList *list, int damping, int shift);
-extern void func_ov007_020c7560(Ov007PointList *list, int stiffness, int damping);
-extern void func_ov007_020c7804(Ov007PointList *list);
-extern void func_ov007_020c78dc(void *p);
-extern Ov007PointList *func_ov007_020c798c(int springMode, int count, int pointMass, int flags);
-extern void func_ov007_020c7a84(Ov007Link *link, int stiffness, int damping);
-extern void func_ov007_020c8010(Ov007Link *link, Ov007Follower *from, Ov007Follower *to);
-extern void func_ov007_020c8098(void *p);
-extern Ov007Link *func_ov007_020c80a4(void);
-extern void func_ov007_020c80c8(Ov007Follower *f, int damping, int shift);
-extern void func_ov007_020c8440(void *p);
-extern Ov007Follower *func_ov007_020c844c(Vector3 *p, int q);
-}
-
+extern "C" void func_ov007_020c7504(Ov007PointList *list, int damping, int shift);
+extern "C" void func_ov007_020c7560(Ov007PointList *list, int stiffness, int damping);
+extern "C" void func_ov007_020c7804(Ov007PointList *list);
+extern "C" void func_ov007_020c78dc(void *p);
+extern "C" Ov007PointList *func_ov007_020c798c(int springMode, int count, int pointMass, int flags);
+extern "C" void func_ov007_020c7a84(Ov007Link *link, int stiffness, int damping);
+extern "C" void func_ov007_020c8010(Ov007Link *link, Ov007Follower *from, Ov007Follower *to);
+extern "C" void func_ov007_020c8098(void *p);
+extern "C" Ov007Link *func_ov007_020c80a4(void);
+extern "C" void func_ov007_020c80c8(Ov007Follower *f, int damping, int shift);
+extern "C" void func_ov007_020c8440(void *p);
+extern "C" Ov007Follower *func_ov007_020c844c(Vector3 *p, int q);
 
 /* The ROM copies a Vector3 here as a block move (ldm/stm). The C++ front end
    copies Vector3, and any struct of three named ints, member by member; a
@@ -61,15 +57,11 @@ extern Ov007Follower *func_ov007_020c844c(Vector3 *p, int q);
 struct Vector3Bits {
     int w[3];
 };
-extern "C" {
-
 
 /* *dst = *src, as the block move. */
 static inline void CopyVec3(Vector3 *dst, const Vector3 *src) {
     *(Vector3Bits *)dst = *(const Vector3Bits *)src;
 }
-}
-
 
 /* The locals below are VecFx32. A real Vector3 local emits the vague-linkage
    ~Vector3 into this text-only unit, and with Vector3's user-declared
@@ -84,8 +76,6 @@ struct SwingSideRows {
     Vector3Bits x[2];
     Vector3Bits y[2];
 };
-extern "C" {
-
 
 /* Builds a swing from params: a chain of chainLength points laid along z
  * with x/y springs (mode 2) and its first point pinned, and two pairs of
@@ -288,4 +278,4 @@ void func_ov007_020c9a84(Ov007Swing *self, Vector3 *offset, u16 *rotX, u16 *rotY
     *rotX = (self->params->maxRotX * (easeX * Sign(tiltX))) >> 12;
     *rotY = (self->params->maxRotY * (easeY * Sign(tiltY))) >> 12;
 }
-}
+

@@ -35,7 +35,6 @@
  * the reverse of source order, so the highest-address function is written
  * first here and the functions come out in ROM order.
  *
- * The functions keep their ROM names under C linkage.
  */
 #include "types.h"
 #include "nitro/fx/fx.h"
@@ -45,14 +44,12 @@
 
 
 
-extern void func_0204f934(NNSSndHandle *);
-extern void func_0204f94c(NNSSndHandle *);
-extern int func_0204fa2c(NNSSndHandle *, int);
-extern int func_02051f1c(void *, unsigned int, int);
-extern "C" {
-
-extern void *func_ov007_020c3df4(const char *name, int size);
-extern void func_ov007_020c3d1c(void *);
+void func_0204f934(NNSSndHandle *);
+void func_0204f94c(NNSSndHandle *);
+int func_0204fa2c(NNSSndHandle *, int);
+int func_02051f1c(void *, unsigned int, int);
+extern "C" void *func_ov007_020c3df4(const char *name, int size);
+extern "C" void func_ov007_020c3d1c(void *);
 
 extern int data_ov007_02103134[];
 extern char data_ov007_02103218[]; /* "sound" */
@@ -259,4 +256,4 @@ void func_ov007_020bd9e4(int arg) {
         }
     }
 }
-}
+

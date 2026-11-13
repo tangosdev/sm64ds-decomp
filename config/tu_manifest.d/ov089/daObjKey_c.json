@@ -59,14 +59,14 @@
       "ordinal": 2
     },
     {
-      "symbol": "UnloadKeyModels",
+      "symbol": "_Z15UnloadKeyModelsi",
       "address": "0x021310cc",
       "size": "0x00000048",
       "legacy_source": "src/UnloadKeyModels.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "LoadKeyModels",
+      "symbol": "_Z13LoadKeyModelsi",
       "address": "0x02131114",
       "size": "0x00000048",
       "legacy_source": "src/LoadKeyModels.cpp",
@@ -164,14 +164,14 @@
       "ordinal": 17
     },
     {
-      "symbol": "daObjKey_c_classInit_LAST_STAR",
+      "symbol": "_Z30daObjKey_c_classInit_LAST_STARv",
       "address": "0x021327d0",
       "size": "0x00000058",
       "legacy_source": "src/d_a_obj_key_last_star.c",
       "ordinal": 18
     },
     {
-      "symbol": "daObjKey_c_classInit_OBJ_KEY",
+      "symbol": "_Z28daObjKey_c_classInit_OBJ_KEYv",
       "address": "0x02132828",
       "size": "0x00000058",
       "legacy_source": "src/d_a_obj_key_obj_key.c",

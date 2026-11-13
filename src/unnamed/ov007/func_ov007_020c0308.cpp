@@ -1,7 +1,7 @@
 //cpp
 #include "types.h"
 
-extern "C" {
+
 /* Fills rows 32-entry rows of a BG screen with the tile numbers 0, 1, 2...
  * in palette (palette & 0xf). */
 void func_ov007_020c0308(u16 *screen, int rows, int palette) {
@@ -18,4 +18,4 @@ void func_ov007_020c0308(u16 *screen, int rows, int palette) {
         i++;
     } while (i < n);
 }
-}
+

@@ -6,12 +6,11 @@
 
 #include "nitro/os/cache.h"
 
-extern "C" {
 
 extern void func_ov007_020c32e8(Ov007Palette *pal, int target, unsigned int row, int skip);
 
-extern void RequestScreenFade(int kind, int flags, void (*onEnd)(void));
-extern void func_ov007_020adb84(void);
+extern "C" void RequestScreenFade(int kind, int flags, void (*onEnd)(void));
+extern "C" void func_ov007_020adb84(void);
 
 /* For palette states 4..7, loads palette 2..5 into the sub BG palette, then
  * copies row 0xc..0xf (0xc by default) of palette 1 into sub OBJ palette
@@ -43,4 +42,4 @@ void func_ov007_020ada70(void) {
     GXS_LoadOBJPltt(dst, 0x180, 0x20);
     RequestScreenFade(9, 2, func_ov007_020adb84);
 }
-}
+

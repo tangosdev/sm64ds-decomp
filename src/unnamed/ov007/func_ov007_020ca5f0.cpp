@@ -10,11 +10,10 @@
 /* The NitroSDK immediate-mode commands evaluate their arguments right to
  * left, which is the z, y, x load order the ROM shows for the translate. */
 
-extern "C" {
 
 
-extern void func_ov007_020c1448(Ov007Texture *self, u32 texGen, u32 repeat, u32 flip, u32 color0);
-extern void Texture_BindPalette(Ov007Texture *tex);
+extern "C" void func_ov007_020c1448(Ov007Texture *self, u32 texGen, u32 repeat, u32 flip, u32 color0);
+extern "C" void Texture_BindPalette(Ov007Texture *tex);
 extern void func_ov007_020caeac(Vector3 *vtx, Vector3_16 *nrm, s32 *tu, s32 *tv, s32 w, s32 h,
                                 s32 u0, s32 v0, s32 du, s32 dv, s32 su, s32 sv, s32 shift);
 extern void func_ov007_020ca86c(Vector3 *vtx, Vector3_16 *nrm, s32 w, s32 h, s32 shift);
@@ -72,4 +71,4 @@ void func_ov007_020ca5f0(Ov007Mesh *mesh, Ov007MeshMaterial *mat, int *pos, int 
     }
     G3_PopMtx(2);
 }
-}
+

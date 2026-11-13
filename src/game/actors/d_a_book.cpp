@@ -82,13 +82,10 @@ enum {
 /* How fast a launched book travels: 50 units a frame. */
 enum { kFlightSpeed = 0x32000 };
 
-extern "C" {
 
-short atan2_hold_d_a_book_1(int, int);
-void Vec3_Sub(Vector3 *d, const Vector3 *a, const Vector3 *b);
-void func_ov063_0211cae8(void *found, int mask);
-}
-
+extern "C" short atan2_hold_d_a_book_1(int, int);
+extern "C" void Vec3_Sub(Vector3 *d, const Vector3 *a, const Vector3 *b);
+extern "C" void func_ov063_0211cae8(void *found, int mask);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(dBgCh_Actr *self, dActor_c *actor, int radius, int height,
                          Vector3_16 *first, Vector3_16 *second);
@@ -117,10 +114,10 @@ struct BookAnimationFileHandle : SharedFilePtr {
  *   ab8  the model mModel starts with
  *   aa8  the animation that plays during STATE_WIND_UP
  *   ab0  the animation that plays in flight */
-extern "C" BookModelFilePtr data_ov020_02114aa0;
-extern "C" BookModelFilePtr data_ov020_02114ab8;
-extern "C" BookAnimationFileHandle data_ov020_02114aa8;
-extern "C" BookAnimationFileHandle data_ov020_02114ab0;
+extern BookModelFilePtr data_ov020_02114aa0;
+extern BookModelFilePtr data_ov020_02114ab8;
+extern BookAnimationFileHandle data_ov020_02114aa8;
+extern BookAnimationFileHandle data_ov020_02114ab0;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 #pragma defer_codegen off
@@ -844,22 +841,22 @@ s32 daBook_c::OnYoshiTryEat()
     unsigned int b = actorID==kKillerBookActorId; return b ? 2 : 0;
 }
 
-extern "C" daBook_c *daBook_c_classInit_BOOK_SWITCH()
+daBook_c *daBook_c_classInit_BOOK_SWITCH()
 {
     return new daBook_c;
 }
 
-extern "C" daBookGen_c *daBookGen_c_classInit()
+daBookGen_c *daBookGen_c_classInit()
 {
     return new daBookGen_c;
 }
 
-extern "C" daBook_c *daBook_c_classInit_KILLER_BOOK()
+daBook_c *daBook_c_classInit_KILLER_BOOK()
 {
     return new daBook_c;
 }
 
-extern "C" daBook_c *daBook_c_classInit_SHOOT_BOOK()
+daBook_c *daBook_c_classInit_SHOOT_BOOK()
 {
     return new daBook_c;
 }

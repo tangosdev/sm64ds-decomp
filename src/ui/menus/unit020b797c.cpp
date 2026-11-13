@@ -50,7 +50,7 @@
  * the reverse of source order, so the highest-address function is written
  * first here and the functions come out in ROM order.
  *
- * The functions keep C linkage. The MenuText_ and MessageWindow_ names are
+ * The MenuText_ and MessageWindow_ names are
  * coined from the bodies (MessageWindow after the in-tree
  * Ov007MessageWindow); the ones still called from files in open PRs keep
  * their ROM names.
@@ -83,11 +83,7 @@ typedef struct Ov007MessageWindow {
     s32 textDrawn; /* 0x10: the message is on plane 0 */
     s32 pad_14;    /* 0x14: cleared by MenuText_ClearMainPlane; no reader found */
     s32 textLine;  /* 0x18: the tile row the message starts on */
-}
-extern "C" {
- Ov007MessageWindow;
-}
-
+} Ov007MessageWindow;
 
 typedef char Ov007MessageWindow_size_must_be_0x1c[sizeof(Ov007MessageWindow) == 0x1c ? 1 : -1];
 
@@ -96,9 +92,7 @@ typedef char Ov007MessageWindow_size_must_be_0x1c[sizeof(Ov007MessageWindow) == 
 typedef struct Ov007MessageRange {
     u16 firstId;
     u16 firstIndex;
-}
-extern "C" {
- Ov007MessageRange;
+} Ov007MessageRange;
 
 extern Ov007MessageRange data_0208eeec[];
 
@@ -131,18 +125,19 @@ extern u32 data_ov007_020d7aa0[];   /* keep-masks per pixel offset in a tile */
 extern u32 data_ov007_020d7ac4[];   /* colour masks per text colour */
 extern u8 data_ov007_020d7b04[][6]; /* first text line per kind and language */
 
-extern int func_ov007_020bdeb0(int sound);
+extern "C" int func_ov007_020bdeb0(int sound);
 extern void func_ov007_020c0308(unsigned short *dst, int b, int c);
-extern void func_ov007_020c1d78(int i);
-extern void func_ov007_020c1d8c(int i);
+extern "C" void func_ov007_020c1d78(int i);
+extern "C" void func_ov007_020c1d8c(int i);
 extern int func_ov007_020c3598(int value, int count, char *digits, int base);
 extern int func_ov007_020c94a0(int unused, unsigned int messageIndex);
 extern void func_ov007_020c94e4(void);
 /* local extern: the definition (unit020c94a0.cpp) takes two parameters;
  * this call passes the bank's name as a third, which retail never reads. */
-extern void func_ov007_020c951c(int unused, void *bank, const char *name);
+struct MessageBank;
+extern void func_ov007_020c951c(int unused, struct MessageBank *bank, const char *name);
 
-void MessageWindow_Close(void);
+extern "C" void MessageWindow_Close(void);
 void MenuText_ClearMainPlane(void);
 
 /* Glyph `glyph`'s advance in pixels; 0x4d is the 4-pixel space. */
@@ -487,7 +482,7 @@ void func_ov007_020b8690(void) {
  * argument. */
 void MenuText_Init(void *unused, void *sheet, int baseTile, void *plane0, void *plane1, int plane2,
                    void *bank) {
-    func_ov007_020c951c(0, bank, data_ov007_02102ef8);
+    func_ov007_020c951c(0, (struct MessageBank *)bank, data_ov007_02102ef8);
 
     data_ov007_02103458 = (u16)baseTile;
     data_ov007_0210345c = (u32 *)sheet;
@@ -893,4 +888,4 @@ void MenuText_ClearMainPlane(void) {
     MI_CpuFillFast(data_ov007_02103478[0], x, data_ov007_020d7a5c[0]);
     data_ov007_02102ddc.pad_14 = 0;
 }
-}
+

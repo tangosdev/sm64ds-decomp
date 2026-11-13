@@ -11,9 +11,7 @@
  * move, which C++ keeps for a struct with an array member. */
 typedef struct Vec3Words {
     Fix12i w[3];
-}
-extern "C" {
- Vec3Words;
+} Vec3Words;
 
 
 /* Pulls follower f toward target. Within snapRadius it snaps onto target,
@@ -50,4 +48,4 @@ int func_ov007_020c704c(Ov007Follower *f, Vector3 *target, int pull, int reach, 
     }
     return 0;
 }
-}
+

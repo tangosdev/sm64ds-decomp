@@ -5,14 +5,13 @@
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 
-extern "C" {
 
 
-extern void *func_ov007_020b3f20(int n);
+extern "C" void *func_ov007_020b3f20(int n);
 extern void MenuText_Init(void *unused, void *sheet, int baseTile, void *plane0, void *plane1,
                           int plane2, void *bank);
 extern void func_ov007_020c32e8(Ov007Palette *pal, int target, unsigned int row, int skip);
-extern void func_ov007_020b3edc(int r0);
+extern "C" void func_ov007_020b3edc(int r0);
 extern void func_ov007_020bcdb8(int idx);
 extern void func_ov007_020c33d0(Ov007CharRecord *rec, int target, unsigned int offset);
 extern void MenuText_LoadFontPalette(void);
@@ -73,4 +72,4 @@ void func_ov007_020bcba8(int idx) {
         break;
     }
 }
-}
+

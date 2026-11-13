@@ -825,11 +825,11 @@ extern "C" extern int func_ov002_020df300(char*);
 extern "C" extern int func_ov002_020e10a8(void*);
 extern int func_ov002_020f02c8(int);
 extern int func_ov002_020f035c(u32, int);
-extern "C" extern void MiniGm_SaveIfDirty(char*);
-extern "C" extern int MiniGm_GetRecord(void*, int, int);
-extern "C" extern int MiniGm_IsNew(void*, int);
-extern "C" extern int MiniGm_IsUnlocked(void*, int);
-extern "C" extern int MiniGm_HasSecondPage(void*);
+extern void MiniGm_SaveIfDirty(char*);
+extern int MiniGm_GetRecord(void*, int, int);
+extern int MiniGm_IsNew(void*, int);
+extern int MiniGm_IsUnlocked(void*, int);
+extern int MiniGm_HasSecondPage(void*);
 extern "C" extern int Dealer_IsIdleAtRest(void*);
 extern "C" extern int Mascot_Destruct(char*);
 extern "C" extern int Presenter_Destruct(char*);
@@ -840,7 +840,7 @@ extern int D3D_PlaySeAtX(int, int);
 /* The former func_ov006_020f9000..020f9f40 range is owned by the real
    dScMgMCarlo2_c / dMgMCarlo2CardObj_c classes. Every caller is in that
    original TU, so none of those private members belongs in this header. */
-extern "C" extern int func_ov007_020b6f4c(void);
+extern int func_ov007_020b6f4c(void);
 extern "C" extern int func_ov007_020c3ba8(int);
 extern "C" /* ov007's allocator: (name, size). The parameters stay unnamed here on
    purpose: named, they renumbered compiler @NNN labels in this header's C++
@@ -1087,7 +1087,7 @@ extern void StartExitFaderWipe(int);
 extern void StartFile(s8, u8);
 extern "C" extern void UnloadArchive(int);
 extern "C" extern void UnloadArchives(void);
-extern "C" extern void UnloadKeyModels(int);
+extern void UnloadKeyModels(int);
 extern void UnloadSilverStarAndNumber(void);
 extern int Vec3_ApproachHorz(void*, void*, int);
 extern "C" extern int *Vec3_AsrInPlace(void *, int);
@@ -1209,7 +1209,7 @@ extern int func_ov002_020eeeb8(void*, char*);
 extern int func_ov002_020ef070(void*, char*);
 extern "C" extern void func_ov003_020b060c(void*);
 extern "C" extern void func_ov003_020b0730(void*, int);
-extern "C" extern void MiniGm_LoadGroupIcons(void*);
+extern void MiniGm_LoadGroupIcons(void*);
 extern "C" extern void Camera_ProjectToScreen16(void*, char*, short*);
 extern "C" extern void MascotWalker_StartNextPath(void*);extern void MascotWalker_Draw(char*);
 extern void MascotWalker_Load(struct MascotWalker *);
@@ -1308,12 +1308,12 @@ extern "C" extern void func_ov065_021195bc(void *, void *, void *);
 extern "C" extern void func_ov065_021195d0(void *, void *, void *);
 extern "C" extern void func_ov070_0211f100(char*);
 
-extern "C" extern void func_ov070_02121c8c(void*);
-extern "C" extern void func_ov070_02121e14(char*);
-extern "C" extern void func_ov070_02121fd0(char*);
-extern "C" extern void func_ov070_02122044(void*, int);
-extern "C" extern void func_ov092_021313b0(void*);
-extern "C" extern void func_ov092_02131a88(char*);
+extern void func_ov070_02121c8c(void*);
+extern void func_ov070_02121e14(char*);
+extern void func_ov070_02121fd0(char*);
+extern void func_ov070_02122044(void*, int);
+extern void func_ov092_021313b0(void*);
+extern void func_ov092_02131a88(char*);
 extern "C" extern void func_ov096_0213585c(void*);
 extern "C" extern void func_ov096_02135efc(void*);
 extern "C" extern void func_ov096_021368b4(void*);

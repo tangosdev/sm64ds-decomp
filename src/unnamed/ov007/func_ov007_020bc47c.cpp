@@ -2,7 +2,10 @@
 #include "dExtSimpleModel_c.h"
 #include "Ov007Model.h"
 
-void func_020462d0(void *a, void *b, void *c);
+struct Dst;
+struct Desc;
+struct ElemA;
+void func_020462d0(Dst *a, Desc *b, ElemA *c);
 void func_020462b4(int *p, int v);
 extern "C" void func_ov007_020bc434(Ov007Model *m);
 
@@ -10,13 +13,13 @@ extern "C" void func_ov007_020bc434(Ov007Model *m);
    resets the placement, snapshots each BMD material's +0x1c word (no name in
    BMD_File.h's pad) into materialTexParams, and shows the model with no
    cross-fade running. */
-extern "C" void func_ov007_020bc47c(Ov007Model *self) {
+void func_ov007_020bc47c(Ov007Model *self) {
     ModelComponents *m = self->model;
 
     if ((self->flags & 8) == 0) {
         dExtSimpleModel_c::LoadTexAndPal(*m->modelFile);
     }
-    func_020462d0(m, m->modelFile, self->transforms);
+    func_020462d0((Dst *)m, (Desc *)m->modelFile, (ElemA *)self->transforms);
     if ((self->flags & 4) != 0) {
         func_020462b4((int *)m, (int)self->blendBuffer);
     }

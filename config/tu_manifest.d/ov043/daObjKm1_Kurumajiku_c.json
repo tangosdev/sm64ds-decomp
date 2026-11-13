@@ -70,7 +70,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "daObjKm1_Kurumajiku_c_classInit",
+      "symbol": "_Z31daObjKm1_Kurumajiku_c_classInitv",
       "address": "0x021114dc",
       "size": "0x0000003c",
       "legacy_source": "src/d_a_obj_km1_kurumajiku.c",

@@ -33,7 +33,6 @@
  * the reverse of source order, so the highest-address function is written
  * first here and the functions come out in ROM order.
  *
- * The functions keep their ROM names under C linkage.
  *
  * Retired one-function sources (ROM address order):
  *   0x020b4aa4  Coin_FlyToCounter

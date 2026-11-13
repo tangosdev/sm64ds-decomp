@@ -21,56 +21,56 @@
   ],
   "functions": [
     {
-      "symbol": "func_ov007_020be0dc",
+      "symbol": "_Z19func_ov007_020be0dcv",
       "address": "0x020be0dc",
       "size": "0x000002e0",
       "legacy_source": "src/unnamed/ov007/func_ov007_020be0dc.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "func_ov007_020be3bc",
+      "symbol": "_Z19func_ov007_020be3bcv",
       "address": "0x020be3bc",
       "size": "0x000000c0",
       "legacy_source": "src/unnamed/ov007/func_ov007_020be3bc.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "func_ov007_020be47c",
+      "symbol": "_Z19func_ov007_020be47cv",
       "address": "0x020be47c",
       "size": "0x00000090",
       "legacy_source": "src/unnamed/ov007/func_ov007_020be47c.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov007_020be50c",
+      "symbol": "_Z19func_ov007_020be50cv",
       "address": "0x020be50c",
       "size": "0x00000178",
       "legacy_source": "src/unnamed/ov007/func_ov007_020be50c.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov007_020be684",
+      "symbol": "_Z19func_ov007_020be684PvP16Ov007SpriteGroup",
       "address": "0x020be684",
       "size": "0x00000124",
       "legacy_source": "src/unnamed/ov007/func_ov007_020be684.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov007_020be7a8",
+      "symbol": "_Z19func_ov007_020be7a8PvPtS0_Pi",
       "address": "0x020be7a8",
       "size": "0x000000a8",
       "legacy_source": "src/unnamed/ov007/func_ov007_020be7a8.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov007_020be850",
+      "symbol": "_Z19func_ov007_020be850v",
       "address": "0x020be850",
       "size": "0x00000068",
       "legacy_source": "src/unnamed/ov007/func_ov007_020be850.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov007_020be8b8",
+      "symbol": "_Z19func_ov007_020be8b8v",
       "address": "0x020be8b8",
       "size": "0x000000ac",
       "legacy_source": "src/unnamed/ov007/func_ov007_020be8b8.cpp",
@@ -91,28 +91,28 @@
       "ordinal": 9
     },
     {
-      "symbol": "func_ov007_020be9ac",
+      "symbol": "_Z19func_ov007_020be9acP11Ov007FigureP10Ov007ModelPv",
       "address": "0x020be9ac",
       "size": "0x00000098",
       "legacy_source": "src/unnamed/ov007/func_ov007_020be9ac.c",
       "ordinal": 10
     },
     {
-      "symbol": "func_ov007_020bea44",
+      "symbol": "_Z19func_ov007_020bea44P11Ov007Figure",
       "address": "0x020bea44",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020bea44.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "func_ov007_020beaa0",
+      "symbol": "_Z19func_ov007_020beaa0ii",
       "address": "0x020beaa0",
       "size": "0x000000e0",
       "legacy_source": "src/unnamed/ov007/func_ov007_020beaa0.c",
       "ordinal": 12
     },
     {
-      "symbol": "func_ov007_020beb80",
+      "symbol": "_Z19func_ov007_020beb80P11Ov007Figure",
       "address": "0x020beb80",
       "size": "0x000001e0",
       "legacy_source": "src/unnamed/ov007/func_ov007_020beb80.cpp",

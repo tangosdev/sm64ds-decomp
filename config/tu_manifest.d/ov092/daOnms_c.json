@@ -76,7 +76,7 @@
       "ordinal": 4
     },
     {
-      "symbol": "func_ov092_021313b0",
+      "symbol": "_ZN8daOnms_c19func_ov092_021313b0Ev",
       "address": "0x021313b0",
       "size": "0x00000120",
       "legacy_source": "src/func_ov092_021313b0.cpp",
@@ -153,7 +153,7 @@
       "ordinal": 15
     },
     {
-      "symbol": "func_ov092_02131a88",
+      "symbol": "_ZN8daOnms_c19func_ov092_02131a88Ev",
       "address": "0x02131a88",
       "size": "0x00000064",
       "legacy_source": "src/func_ov092_02131a88.cpp",
@@ -195,7 +195,7 @@
       "ordinal": 21
     },
     {
-      "symbol": "daOnms_c_classInit",
+      "symbol": "_Z18daOnms_c_classInitv",
       "address": "0x02132018",
       "size": "0x0000005c",
       "legacy_source": "src/d_a_onms.cpp",

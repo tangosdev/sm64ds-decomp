@@ -45,7 +45,6 @@
  * the reverse of source order, so the highest-address function is written
  * first here and the functions come out in ROM order.
  *
- * The functions keep their ROM names under C linkage.
  */
 #include "Ov007MenuState.h"
 #include "Ov007Work.h"
@@ -70,20 +69,12 @@
  * move, which C++ keeps for a struct with an array member. */
 typedef struct Vec3Words {
     Fix12i w[3];
-}
-extern "C" {
- Vec3Words;
-}
-
+} Vec3Words;
 
 /* The same for Vector3s's six-byte halfword copy. */
 typedef struct Vec3sWords {
     s16 w[3];
-}
-extern "C" {
- Vec3sWords;
-}
-
+} Vec3sWords;
 
 /* One 0xc-byte particle tracking record of the kind func_0204dab4 fills (as
  * dPa_c's edStarKiraCallback_c::trackingRecords). func_0204dab4 claims a free
@@ -119,11 +110,7 @@ typedef struct GXOamAffine {
     short PC;
     unsigned short _3[3];
     short PD;
-}
-extern "C" {
- GXOamAffine;
-}
-
+} GXOamAffine;
 
 typedef char GXOamAffine_size_must_be_0x20[sizeof(GXOamAffine) == 0x20 ? 1 : -1];
 
@@ -135,55 +122,42 @@ typedef struct Ov007ParticleSprites {
     /* 0x08: sixteen OBJ affine matrices (PA, PB, PC, PD in Q12);
    * func_ov007_020be8b8 fills each with a uniform scale */
     int affine[16][4];
-}
-extern "C" {
- Ov007ParticleSprites;
-}
-
+} Ov007ParticleSprites;
 
 typedef char
     Ov007ParticleSprites_size_must_be_0x108[sizeof(Ov007ParticleSprites) == 0x108 ? 1 : -1];
-extern "C" {
-
 
 extern Ov007ParticleSprites *data_ov007_02104bc0;
 extern int data_ov007_02103230;
 extern char data_ov007_02103234[]; /* "2DEffect" */
 extern int data_ov007_020d7c6c;
 extern u16 data_ov007_020d7c58[];
-}
 
-
-extern void func_0204dab4(void *sys, TrackingRecord *buf, int count, unsigned int mask, void *cb);
-extern "C" {
-
-extern void func_0204dc84(char *self);
-extern void Sprite_SetAnimation(Ov007OamNode *node, int animIndex, int mode, int rev, int frame);
+void func_0204dab4(void *sys, TrackingRecord *buf, int count, unsigned int mask, void *cb);
+extern "C" void func_0204dc84(char *self);
+extern "C" void Sprite_SetAnimation(Ov007OamNode *node, int animIndex, int mode, int rev, int frame);
 extern void *func_ov007_020b7690(int i);
 extern void func_ov007_020bfd70(struct Ov007Camera *cam, void *pos, int *outX, int *outY);
 extern void func_ov007_020c3e7c(Ov007SpriteGroup *grp);
-extern void func_ov007_020c3ee8(Ov007SpriteGroup *grp, Ov007OamList *list);
-extern Ov007SpriteGroup *func_ov007_020c3f00(int *layout, int extraAnims);
-extern void func_ov007_020c3fe4(Ov007SpriteItem *item);
+extern "C" void func_ov007_020c3ee8(Ov007SpriteGroup *grp, Ov007OamList *list);
+extern "C" Ov007SpriteGroup *func_ov007_020c3f00(int *layout, int extraAnims);
+extern "C" void func_ov007_020c3fe4(Ov007SpriteItem *item);
 
 /* the figure and its files */
 extern int data_ov007_020d7c5c[2][2]; /* [figureIndex][index]: animation file */
 extern void *data_ov007_02104bc4[2][2];
-extern int VEC_Fx16Mag(s16 *v);
-extern void VEC_Fx16Normalize(s16 *in, s16 *out);
-extern void func_ov007_020b3edc(int idx);
-extern void *func_ov007_020b3f20(int idx);
-extern int func_ov007_020aebac(void);
+extern "C" int VEC_Fx16Mag(s16 *v);
+extern "C" void VEC_Fx16Normalize(s16 *in, s16 *out);
+extern "C" void func_ov007_020b3edc(int idx);
+extern "C" void *func_ov007_020b3f20(int idx);
+extern "C" int func_ov007_020aebac(void);
 extern void func_ov007_020bc02c(Ov007Model *model, void *viewMatrix);
-extern void func_ov007_020bc3dc(void *model, int anim, int a2);
+extern "C" void func_ov007_020bc3dc(void *model, int anim, int a2);
 extern void func_ov007_020bc53c(Ov007Model *model);
-extern void func_ov007_020bc6b4(Ov007Model *model, void *files, int count);
-extern Ov007Model *func_ov007_020bc6d4(void *file, int flags);
-}
-
+extern "C" void func_ov007_020bc6b4(Ov007Model *model, void *files, int count);
+extern "C" Ov007Model *func_ov007_020bc6d4(void *file, int flags);
 
 #define SPRITES data_ov007_02104bc0
-extern "C" {
 
 /* Points the figure's particle system along bone 0's motion: on the frames
  * the model steps, refreshes the figure's yaw and remembered position; while
@@ -614,4 +588,4 @@ int func_ov007_020be0dc(void) {
     node->visible = shown;
     return shown;
 }
-}
+

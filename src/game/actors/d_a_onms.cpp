@@ -12,8 +12,6 @@
  * constructor, so the inherited dBgActor_c ctor plus the vtable store plus
  * the member subobjects in field order (dBgCh_Actr, dCcAcPos_c, PathPtr)
  * come from the implicit default constructor with zero mangled calls.
- * func_ov092_021313b0 and func_ov092_02131a88 stay
- * extern "C": include/decl_common.h declares them under those names.
  * func_ov092_02131578 is the wait state, a daOnms_c member: the .data
  * member-pointer record at 0x02132280 reaches it by address, so the free
  * spelling cannot supply that descriptor.
@@ -97,16 +95,13 @@ struct OnmsCollisionFilePtr : SharedFilePtr {
 };
 
 /* BMD (dExtSimpleModel_c::LoadFile) and KCL (dBgW_Kc::LoadFile). Cleanup releases both. */
-extern "C" OnmsModelFilePtr gOnimasuModelFile;
-extern "C" OnmsCollisionFilePtr gOnimasuCollisionFile;
-extern "C" daOnms_cStateEntry data_ov092_02132568[9];
+extern OnmsModelFilePtr gOnimasuModelFile;
+extern OnmsCollisionFilePtr gOnimasuCollisionFile;
+extern daOnms_cStateEntry data_ov092_02132568[9];
 
-extern "C" {
 
-int func_ov002_020de328(void *player);
-void d_a_onmsEarthquakeHold(void *v, int f);
-}
-
+extern "C" int func_ov002_020de328(void *player);
+extern "C" void d_a_onmsEarthquakeHold(void *v, int f);
 /* Sound::Play(3, id, pos). The overlay calls this wrapper, not Sound::Play. */
 void func_02012694(unsigned int id, const Vector3 *v);
 /* Stores mRadius: p[6] = value, the word at dBgCh_Actr + 0x18. */
@@ -114,13 +109,11 @@ s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(dBgCh_Actr *self, int a1, int a2, int a3, int sp0, int sp1);
-extern "C" {
-
-void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToRotationX(void *m, short angX);
-void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short angZ);
-void Matrix4x3_ApplyInPlaceToRotationY(void *m, short angY);
-extern void hold_d_a_onms(dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat, int scale,
+extern "C" void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
+extern "C" void Matrix4x3_ApplyInPlaceToRotationX(void *m, short angX);
+extern "C" void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short angZ);
+extern "C" void Matrix4x3_ApplyInPlaceToRotationY(void *m, short angY);
+extern "C" void hold_d_a_onms(dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat, int scale,
                           short angY, void *clps);
 /* Stores beforeClsnCallback: p[6] = value, the word at dBgW + 0x18. */
 /* CLPS block ("CLPS" magic) handed to SetFile. */
@@ -128,7 +121,6 @@ extern char data_ov092_02132220;
 /* Three s32* move scripts, indexed by param1 & 3. A path (kind 3) ignores it. */
 extern char data_ov092_02132294;
 extern struct Matrix4x3 data_020a0e68;
-}
 
 
 /* D1 tears down dCcAcPos_c, dBgCh_Actr and the inline dBgActor_c base.
@@ -276,9 +268,9 @@ void daOnms_c::StateKnocked()
 }
 
 /* Path mode: step to the next path node and pick the roll that heads for it. */
-extern "C" void func_ov092_021313b0(void *t)
+void daOnms_c::func_ov092_021313b0()
 {
-    daOnms_c *self = (daOnms_c *)t;
+    daOnms_c *self = this;
     Vector3 old;
 
     old = self->mPathNode;
@@ -300,7 +292,7 @@ extern "C" void func_ov092_021313b0(void *t)
 void daOnms_c::NextMove()
 {
     if (mMoveKind == kMoveAlongPath) {
-        func_ov092_021313b0(this);
+        func_ov092_021313b0();
     } else {
         mMoveSeqIndex++;
         s32 *seq = mMoveSeq;
@@ -472,9 +464,9 @@ void daOnms_c::CheckPlayerHit()
 
 /* Copy the model matrix over the collider and put the actor position in
    the translation row (flat Matrix4x3 words 9..11), then Transform. */
-extern "C" void func_ov092_02131a88(char *c)
+void daOnms_c::func_ov092_02131a88()
 {
-    daOnms_c *self = (daOnms_c *)c;
+    daOnms_c *self = this;
 
     self->mClsnMat = self->mModel.mat4x3;
     self->mClsnMat.m[9] = self->mPosX;
@@ -527,7 +519,7 @@ int daOnms_c::Behavior()
 
     UpdateModelMtx();
     if (IsClsnInRange(0, 0) != 0)
-        func_ov092_02131a88((char *)this);
+        func_ov092_02131a88();
 
     if (mRollDone == 1) {
         if (mAngleX != 0 || mAngleY != 0 || mAngleZ != 0) {
@@ -569,7 +561,7 @@ int daOnms_c::InitResources()
         mPathNodeCount = mPathPtr.NumNodes();
         mPathNodeIndex = 0;
         mPathPtr.GetNode(mPathNode, mPathNodeIndex);
-        func_ov092_021313b0(this);
+        func_ov092_021313b0();
     }
 
     mPosY += 0xfa000;
@@ -582,7 +574,7 @@ int daOnms_c::InitResources()
     mModel.mat4x3 = data_020a0e68;
     mBaseMtx = mModel.mat4x3;
 
-    func_ov092_02131a88((char *)this);
+    func_ov092_02131a88();
 
     f = dBgW_Kc::LoadFile(gOnimasuCollisionFile);
     mMeshCollider.SetFile((KCL_File *)f, mClsnMat, 0x1000, mAngleY,
@@ -605,7 +597,7 @@ int daOnms_c::InitResources()
     return 1;
 }
 
-extern "C" daOnms_c *daOnms_c_classInit()
+daOnms_c *daOnms_c_classInit()
 {
     return new daOnms_c();
 }

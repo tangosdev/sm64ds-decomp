@@ -86,11 +86,11 @@ extern DorifuModelFilePtr data_ov043_02112690;
 extern DorifuCollisionFilePtr data_ov043_02112660;
 extern Km1DorifuClpsBlock sKm1Dorifu4Clps;
 
-extern "C" daObjKm1_Dorifu_c *daObjKm1_Dorifu_c_classInit() {
+daObjKm1_Dorifu_c *daObjKm1_Dorifu_c_classInit() {
     return new daObjKm1_Dorifu_c();
 }
 
-extern "C" SpawnInfo<daObjKm1_Dorifu_c> g_profile_KM1_DORIFU = {
+SpawnInfo<daObjKm1_Dorifu_c> g_profile_KM1_DORIFU = {
     daObjKm1_Dorifu_c_classInit,
     0x0086, /* KM1_DORIFU registry id 134 */
     0x00af,

@@ -56,12 +56,12 @@ struct Mecha11ClsnFilePtr : SharedFilePtr {
     ~Mecha11ClsnFilePtr();
 };
 
-extern "C" {
+
 /* local extern: these matching CalcLib signatures keep their names to avoid
  * renumbering this TU's compiler-generated static-initializer aliases. */
-extern unsigned short DecIfAbove0_Short(unsigned short *p);
-extern int RandomIntInternal(int *p);
-}
+extern "C" unsigned short DecIfAbove0_Short(unsigned short *p);
+extern "C" int RandomIntInternal(int *p);
+
 
 extern Mecha11ClsnFilePtr RotatingClockHand_ClsnFile;
 extern Mecha11ModelFilePtr RotatingClockHand_ModelFile;
@@ -174,7 +174,7 @@ int daObjCtMecha11_c::InitResources() {
  * RTTI, allocation size, vtable identity, and the CT_MECHA11 registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: SpinningPlatform_Spawn. */
-extern "C" daObjCtMecha11_c *daObjCtMecha11_c_classInit() {
+daObjCtMecha11_c *daObjCtMecha11_c_classInit() {
     return new daObjCtMecha11_c();
 }
 

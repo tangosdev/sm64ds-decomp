@@ -2,7 +2,7 @@
 #include "nitro/gx/gx_vramcnt.h"
 #include "nitro/mi/memory.h"
 
-extern "C" {
+
 
 
 void MenuGfx_ResetVram(void) {
@@ -29,4 +29,4 @@ void MenuGfx_ResetVram(void) {
     c = 0;
     MI_CpuFill32((int *)0x5000000, c, 0x400);
 }
-}
+

@@ -1,6 +1,6 @@
 //cpp
 
-extern "C" {
+
 void func_ov007_020c3054(int *arr, int n, int *pmin, int *pmax) {
     int i;
     int maxv = (int)0x80000000;
@@ -17,4 +17,4 @@ void func_ov007_020c3054(int *arr, int n, int *pmin, int *pmax) {
         }
     }
 }
-}
+

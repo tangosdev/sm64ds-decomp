@@ -35,7 +35,7 @@
  * the reverse of source order, so the highest-address function is written
  * first here and the functions come out in ROM order.
  *
- * The functions keep C linkage. The Texture_ names are coined from the
+ * The Texture_ names are coined from the
  * bodies, after the in-tree Ov007Texture (include/Ov007Texture.h); the
  * other six keep their address names for now.
  */
@@ -47,7 +47,6 @@
 #include "nitro/os/system.h"
 #include "Ov007MenuMem.h"
 
-extern "C" {
 
 
 extern u32 data_ov007_02104bdc; /* next free texture slot */
@@ -200,21 +199,15 @@ Ov007Texture *Texture_Create(int fmt, int texSrc, int sizeS, int sizeT, int pltt
     Texture_GetSizes(fmt, width, height, plttColorCount, &tex->texSize, &tex->plttSize);
     return tex;
 }
-}
-
 
 /* Frees a texture record. Built with long_calls, so the tail call is the
  * pooled `ldr ip,[pc]; bx ip` form; bracketed because the pragma is
  * positional. */
 #pragma long_calls on
-extern "C" {
 void func_ov007_020c1620(void *tex) {
     func_ov007_020c3d1c(tex);
 }
-}
-
 #pragma long_calls off
-extern "C" {
 
 /* Clears a texture record. */
 void func_ov007_020c15ec(Ov007Texture *tex) {
@@ -297,5 +290,4 @@ void Texture_BindPalette(Ov007Texture *tex) {
     }
 }
 
-}
- // extern "C"
+

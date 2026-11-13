@@ -137,7 +137,7 @@ extern "C" dCamera_c *gCamera;
 extern "C" int RandomIntInternal(int *seed);
 extern "C" u16 DecIfAbove0_Short(u16* p);
 s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
-void func_02012694(u32 a, void* b);
+void func_02012694(u32 a, const Vector3 *b);
 
 /* local extern: include/Sound.h does not declare the layer-3 pair yet. */
 namespace Sound {
@@ -172,8 +172,8 @@ extern "C" void d_a_kuri_kingEarthquakeHold(void *thiz, void *v, int f);
 extern "C" int data_ov074_02122e24[];
 extern "C" char data_ov074_02122f3c[];
 extern "C" char data_ov074_02122f38[];
-extern "C" void UnloadKeyModels(int i);
-extern "C" void LoadKeyModels(int idx);
+void UnloadKeyModels(int i);
+void LoadKeyModels(int idx);
 extern "C" void *data_ov074_02122e5c[];
 /* Boss-overlay resource blobs, linked into the co-resident 0x0211xxxx
    overlay; ov074's image has no copy, so these bind cross-module. */
@@ -458,7 +458,7 @@ void daKuriKing_c::UpdateDefeat() {
         }
         if (this->mSpawnedCount != 0)
             return;
-        func_02012694(0x15c, &this->mCamSpacePosX);
+        func_02012694(0x15c,(const Vector3 *)(&this->mCamSpacePosX));
         this->mSubState += 1;
         this->mSpawnedCount = 0;
         return;
@@ -486,7 +486,7 @@ void daKuriKing_c::UpdateDefeat() {
         vzero.y = vzero.y + 0x190000;
         Particle::System::NewSimple(kPtclGoombossVanishA, vzero.x, vzero.y, vzero.z);
         Particle::System::NewSimple(kPtclGoombossVanishB, vzero.x, vzero.y, vzero.z);
-        func_02012694(0x15f, &this->mCamSpacePosX);
+        func_02012694(0x15f,(const Vector3 *)(&this->mCamSpacePosX));
         SetOtherCopiesShouldRender(1);
         LaunchVanishCopies();
         cam->mFlags &= ~8;
@@ -504,7 +504,7 @@ void daKuriKing_c::UpdateDefeat() {
         vzero.z = this->mPosZ;
         vzero.y = vzero.y + 0x12c000;
         dActor_c::Spawn(0x11a, 2, vzero, 0, this->mAreaId, -1);
-        func_02012694(0xbb, &this->mCamSpacePosX);
+        func_02012694(0xbb,(const Vector3 *)(&this->mCamSpacePosX));
         this->fBase_c::MarkForDestruction();
         return;
     default:
@@ -539,7 +539,7 @@ void daKuriKing_c::UpdateScaleChange() {
             p = (unsigned char*)(((int)&this->mSubState));
             *p = *p + 1;
             PlayAnim(0);
-            func_02012694(0x15c, &this->mCamSpacePosX);
+            func_02012694(0x15c,(const Vector3 *)(&this->mCamSpacePosX));
             return;
         }
         {
@@ -547,7 +547,7 @@ void daKuriKing_c::UpdateScaleChange() {
             *p = *p + 1;
         }
         PlayAnim(0);
-        func_02012694(0x15c, &this->mCamSpacePosX);
+        func_02012694(0x15c,(const Vector3 *)(&this->mCamSpacePosX));
         return;
     case 1:
         {
@@ -822,7 +822,7 @@ void daKuriKing_c::UpdateIntroTalk() {
     }
     msg = (unsigned short)((int)player->param1 + 0xd3);
     if (player->ShowMessage(*this, msg, &msgpos[1], 0, 2) == 0) return;
-    func_02012694(0x15a, &this->mCamSpacePosX);
+    func_02012694(0x15a,(const Vector3 *)(&this->mCamSpacePosX));
     ChangeState(1);
 }
 
@@ -1196,7 +1196,7 @@ void daKuriKing_c::HandleCylinderHits() {
                         PlayAnim(7);
                         ChangeState(8);
                         SpawnHitParticles(pl, cur, 0);
-                        func_02012694(0x15a, &this->mCamSpacePosX);
+                        func_02012694(0x15a,(const Vector3 *)(&this->mCamSpacePosX));
                         this->mWalkSpeed = dir * (this->mDirection * -0xc8);
                     }
                 } else {
@@ -1241,7 +1241,7 @@ void daKuriKing_c::HandleCylinderHits() {
     }
     if (hit == 0)
         return;
-    func_02012694(0x15b, &this->mCamSpacePosX);
+    func_02012694(0x15b,(const Vector3 *)(&this->mCamSpacePosX));
     {
         int ang2 = Vec3_HorzAngle(&this->mPos, &player->mPos);
         dir2 = 1;
@@ -1455,7 +1455,7 @@ void daKuriKing_c::UpdateAnimation() {
         mAnmModel.speed = CalcWalkAnimSpeed();
     } else if (IsAnimPlaying(0xb)) {
         if ((((unsigned int)mAnmModel.currFrame << 4) >> 0x10) == 8) {
-            func_02012694(0x15d, &mCamSpacePosX);
+            func_02012694(0x15d,(const Vector3 *)(&mCamSpacePosX));
         }
     } else {
         mAnmModel.speed = 0x1000;
@@ -1573,7 +1573,7 @@ int daKuriKing_c::Behavior()
                 v.z = mCylClsnPos[2].z;
                 LandingDustAt(v, 1);
             }
-            func_02012694(0x15e, &mCamSpacePosX);
+            func_02012694(0x15e,(const Vector3 *)(&mCamSpacePosX));
             {
                 Vector3 v;
                 v.x = mCylClsnPos[2].x;
@@ -1597,7 +1597,7 @@ int daKuriKing_c::Behavior()
                 v.z = mCylClsnPos[1].z;
                 LandingDustAt(v, 1);
             }
-            func_02012694(0x15e, &mCamSpacePosX);
+            func_02012694(0x15e,(const Vector3 *)(&mCamSpacePosX));
             {
                 Vector3 v;
                 v.x = mCylClsnPos[1].x;
@@ -1784,9 +1784,9 @@ int daKuriKing_c::BehaviorVanish() {
         int b = ((this->mFlags & 8) != 0) ? 1 : 0;
         if (b == 0) {
             if (this->mSubState == 0) {
-                func_02012694(0x13a, &this->mCamSpacePosX);
+                func_02012694(0x13a,(const Vector3 *)(&this->mCamSpacePosX));
             } else {
-                func_02012694(0x13b, &this->mCamSpacePosX);
+                func_02012694(0x13b,(const Vector3 *)(&this->mCamSpacePosX));
             }
         }
         this->mSubState++;

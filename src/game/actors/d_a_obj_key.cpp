@@ -24,8 +24,8 @@
  *   called by name.
  * - func_ov089_02131df4: one control arm (mState != 7) size 0x110 -> 0xe8
  *   (-0x28). The ROM has both copies.
- * - LoadKeyModels / UnloadKeyModels are C by necessity: daDoor_c, daPly_c and the
- *   bosses call them by name.
+ * - LoadKeyModels / UnloadKeyModels are called by daDoor_c, daPly_c and the
+ *   bosses.
  * - StateFlyToCenter / StateStarJump: the Fix12<int> calls (Particle::System::New,
  *   ApproachLinear, Sound::ChangeMusicVolume) go by symbol for the same reason
  *   as StateDrop's. mStateTimer is counted through a u16 pointer; the ROM
@@ -41,8 +41,8 @@
  * - func_ov089_02130fb4, func_ov089_0213115c, func_ov089_02131dcc and
  *   func_ov089_02131df4 are members under those addresses; the cartridge
  *   records no names for them.
- * - LoadKeyModels and UnloadKeyModels stay C. The first parameter is the
- *   kind, and daDoor_c, daPly_c and the bosses call them by name.
+ * - LoadKeyModels and UnloadKeyModels take the key kind. daDoor_c, daPly_c
+ *   and the bosses call them.
  * - func_ov002_020c3dbc stays a call into ov002.
  * - The Fix12<int>-by-value calls, the UpdateContinuous veneer, both
  *   control arms in func_ov089_02131df4, the u16* state timer, the s32*
@@ -192,17 +192,12 @@ extern ObjKeyStateTable data_ov089_02132cec;
  * dExtAnmModel_c::SetAnim take Fix12<int> by value; the scalar call does not compile and the Fix12
  * temporary size-DIFFs (see the file comment). The ROM calls the
  * UpdateContinuous veneer, not the method. */
-extern "C" {
 
 extern dCamera_c *gCamera;
 extern u32 gNextActorUpdateMask;
-extern void *d_a_obj_keyNewHold(u32 a, u32 b, int c, int d, int e, void *f, void *g);
-}
-
-extern void func_02012694(unsigned int id, const Vector3 *pos);
-extern "C" {
-
-extern void func_ov002_020c3dbc(void *player);
+extern "C" void *d_a_obj_keyNewHold(u32 a, u32 b, int c, int d, int e, void *f, void *g);
+void func_02012694(unsigned int id, const Vector3 *pos);
+extern "C" void func_ov002_020c3dbc(void *player);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void *data_ov089_021328b4[];
 extern ObjKeyFile data_ov002_02110964;
@@ -216,14 +211,10 @@ extern ObjKeyModelFile gMarioKeyModelFile;
 extern ObjKeyModelFile gWarioKeyModelFile;
 extern Vector3 data_ov089_02132b40;
 extern VecFx32 data_ov089_02132ca4;
-extern int *Vec3_LslInPlace(void *v, int sh);
+extern "C" int *Vec3_LslInPlace(void *v, int sh);
 extern void LoadKeyModels(int idx);
-}
-
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *thiz, void *actor, int a, int b, void *v, void *w);
-extern "C" {
-
 /* An ObjKeyFile in layout, but daDemo_c::InitResources declares it `char`;
    keep that spelling so the declarations of this symbol stay in agreement. */
 extern char data_ov002_0211094c;
@@ -231,12 +222,11 @@ extern int data_0209cef0;
 /* The collect animations, by mAnimID. */
 extern ObjKeyFile *data_ov089_02132880[];
 /* Names stay on this unused prototype so this file's @NNN numbers do not move. */
-extern int d_a_obj_keyChangeMusicVolumeHold(unsigned int id, int vol);
+extern "C" int d_a_obj_keyChangeMusicVolumeHold(unsigned int id, int vol);
 /* Level-overlay BSS: ov089 relocs record the store as claimed by fourteen
    overlays, and ov055 is the one that names 0x02111b68 unambiguous kind:bss
    (the func_ov002_020e3e00 precedent for its neighbours 0x02111b64/6c). */
 extern int data_ov055_02111b68;
-}
 
 
 /* The key function, defined first. Under defer_codegen off it emits D1, D0 and
@@ -283,7 +273,7 @@ void daObjKey_c::func_ov089_02130fb4(Vector3 *target, int height)
 
 /* UnloadKeyModels, 0x021310cc */
 /* daDoor_c, daPly_c and the bosses that drop a key call these two by name. */
-extern "C" void UnloadKeyModels(int kind)
+void UnloadKeyModels(int kind)
 {
     if (kind >= 8)
         return;
@@ -294,7 +284,7 @@ extern "C" void UnloadKeyModels(int kind)
 }
 
 /* LoadKeyModels, 0x02131114 */
-extern "C" void LoadKeyModels(int kind)
+void LoadKeyModels(int kind)
 {
     SharedFilePtr *extra;
     if (kind >= 8)
@@ -935,12 +925,12 @@ int daObjKey_c::InitResources()
 /* Both profiles build the same class. fBase_c's inline operator new forwards to
  * _ZN7fBase_cnwEm; the implicit constructor inlines dEnemyBase_c's base step,
  * the vptr store and the five member constructors. */
-extern "C" daObjKey_c *daObjKey_c_classInit_LAST_STAR()
+daObjKey_c *daObjKey_c_classInit_LAST_STAR()
 {
     return new daObjKey_c();
 }
 
-extern "C" daObjKey_c *daObjKey_c_classInit_OBJ_KEY()
+daObjKey_c *daObjKey_c_classInit_OBJ_KEY()
 {
     return new daObjKey_c();
 }

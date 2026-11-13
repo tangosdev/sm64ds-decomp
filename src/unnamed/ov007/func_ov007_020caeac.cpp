@@ -3,7 +3,7 @@
 #include "nitro/fx/fx.h"
 #include "nitro/gx/g3imm_cmd.h"
 
-extern "C" {
+
 
 #define SEND_VTX(p) G3_Vtx((s16)((p)->x >> shift), (s16)((p)->y >> shift), (s16)((p)->z >> shift))
 #define SEND_NRM(q) G3_Normal((q)->x, (q)->y, (q)->z)
@@ -103,4 +103,4 @@ void func_ov007_020caeac(Vector3 *vtx, Vector3_16 *nrm, s32 *tu, s32 *tv, s32 w,
         } while (i < h);
     }
 }
-}
+

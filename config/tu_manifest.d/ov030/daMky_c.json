@@ -348,14 +348,14 @@
       "ordinal": 43
     },
     {
-      "symbol": "daMky_c_classInit_MONKEY_STAR",
+      "symbol": "_Z29daMky_c_classInit_MONKEY_STARv",
       "address": "0x021145e0",
       "size": "0x00000058",
       "legacy_source": "src/d_a_mky_monkey_star.c",
       "ordinal": 44
     },
     {
-      "symbol": "daMky_c_classInit_MONKEY_THIEF",
+      "symbol": "_Z30daMky_c_classInit_MONKEY_THIEFv",
       "address": "0x02114638",
       "size": "0x00000058",
       "legacy_source": "src/d_a_mky_monkey_thief.c",

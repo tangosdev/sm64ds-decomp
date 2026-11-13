@@ -65,7 +65,7 @@ extern CLPS_Block data_ov043_02111c00;              /* the CLPS block SetFile is
    Every instruction the cartridge has here falls out of the one `new`.
    0x320 is the whole object: dBgActor_c's own size, this class's one byte
    living in its tail padding at 0x31e. */
-extern "C" daObjKm1_Ukishima_c *daObjKm1_Ukishima_c_classInit() {
+daObjKm1_Ukishima_c *daObjKm1_Ukishima_c_classInit() {
     return new daObjKm1_Ukishima_c();
 }
 

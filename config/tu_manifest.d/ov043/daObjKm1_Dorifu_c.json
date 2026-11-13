@@ -98,7 +98,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "daObjKm1_Dorifu_c_classInit",
+      "symbol": "_Z27daObjKm1_Dorifu_c_classInitv",
       "address": "0x0211176c",
       "size": "0x00000090",
       "legacy_source": "src/StairsBdw_Spawn.cpp",
@@ -347,7 +347,7 @@
       "source": "0x021124fc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daObjKm1_Dorifu_c_classInit",
+      "symbol": "_Z27daObjKm1_Dorifu_c_classInitv",
       "addend": 0,
       "target_module": "ov043",
       "target_address": "0x0211176c"
@@ -1949,7 +1949,7 @@
           },
           {
             "ordinal": 4,
-            "symbol": "daObjKm1_Dorifu_c_classInit",
+            "symbol": "_Z27daObjKm1_Dorifu_c_classInitv",
             "identical": true,
             "relocCount": 10,
             "differences": []
@@ -2070,7 +2070,7 @@
             "size": "0x00000014"
           },
           {
-            "symbol": "daObjKm1_Dorifu_c_classInit",
+            "symbol": "_Z27daObjKm1_Dorifu_c_classInitv",
             "section": ".text",
             "size": "0x00000090"
           }
@@ -2337,7 +2337,7 @@
           },
           {
             "ordinal": 4,
-            "symbol": "daObjKm1_Dorifu_c_classInit",
+            "symbol": "_Z27daObjKm1_Dorifu_c_classInitv",
             "identical": true,
             "relocCount": 10,
             "differences": []
@@ -2458,7 +2458,7 @@
             "size": "0x00000014"
           },
           {
-            "symbol": "daObjKm1_Dorifu_c_classInit",
+            "symbol": "_Z27daObjKm1_Dorifu_c_classInitv",
             "section": ".text",
             "size": "0x00000090"
           }

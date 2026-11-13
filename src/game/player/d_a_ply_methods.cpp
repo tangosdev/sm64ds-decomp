@@ -272,10 +272,9 @@ extern unsigned char IsPlayerWarping(int a0);
 }
 
 extern void KillPlayer(void);
-extern "C" {
-
 extern void LoadKeyModels(int idx);
 extern void LoadSilverStarAndNumber(void);
+extern "C" {
 extern int Math_Function_0203b14c(void *, int a, int b, int c, int d);
 extern int PlayerChangeMusicVolumeHold(u32 vol, int t);
 extern void PlayerChangeMusicVolumeHold2(int, int);
@@ -397,14 +396,14 @@ extern SharedFilePtr data_ov002_0210ecb8;
 }
 
 extern s16 func_02010844(void *actor, Vector3 *v, s16 angle);
+extern int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player);
+extern int func_ov002_020f030c(int sel);
 extern "C" {
 
 extern void func_ov002_020d7430(daPly_c &player);
 extern int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
 extern void func_ov002_020e6b74(void *model, int *saved);
 extern int *func_ov002_020e6bb0(void *model);
-extern int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player);
-extern int func_ov002_020f030c(int sel);
 }
 
 extern short GetAngleToCamera(int i);
@@ -425,6 +424,7 @@ extern void PlayerNewSimpleHold8(unsigned int id, Fix12i a, Fix12i b, Fix12i c);
 }
 
 extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
+extern int func_ov002_020f02c8(int sel);
 extern "C" {
 
 extern int AngleDiff(int a, int b);
@@ -434,7 +434,6 @@ extern void func_ov002_020dc09c(char *c);
 extern void func_ov002_020e69c0(void *unused);
 extern void func_ov002_020e6a78(void *ramp, int blend);
 extern void func_ov002_020e6b3c(void *model);
-extern int func_ov002_020f02c8(int sel);
 extern u32 PlayerNewHold(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                          void *callback);
 extern u32 PlayerNewHold3(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,

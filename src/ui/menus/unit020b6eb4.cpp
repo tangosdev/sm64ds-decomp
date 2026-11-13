@@ -58,30 +58,24 @@ typedef struct Ov007MenuHooks {
     int fileLoad;            /* 0x0c: func_ov007_020b4100 */
     int fileRelease;         /* 0x10: func_ov007_020b4100 */
     int (*callback)(int id); /* 0x14: becomes the work block's callback */
-}
-extern "C" {
- Ov007MenuHooks;
+} Ov007MenuHooks;
 
 /* set once the bring-up or a frame's drawing is done; cleared as the
  * bring-up, the frame's logic and the teardown start */
 extern int sFrameReady;
-}
 
-
-extern void func_02045d9c(void);
-extern "C" {
-
+void func_02045d9c(void);
 extern void func_ov007_020aed98(void);
 extern void func_ov007_020b2e64(TPData *sample);
 extern void func_ov007_020b3050(void);
 extern void func_ov007_020b30b0(void);
 extern void func_ov007_020b40c0(void);
 extern void func_ov007_020b4100(int a, int b);
-extern void func_ov007_020b6544(void);
-extern void func_ov007_020b65e0(void);
-extern void Work_Create(void);
+extern "C" void func_ov007_020b6544(void);
+extern "C" void func_ov007_020b65e0(void);
+extern "C" void Work_Create(void);
 extern void func_ov007_020b6c54(void);
-extern void Display_Upload(void);
+extern "C" void Display_Upload(void);
 extern void func_ov007_020b7764(void);
 extern void func_ov007_020b782c(void);
 extern void func_ov007_020b8690(void);
@@ -101,8 +95,8 @@ extern void func_ov007_020be50c(void);
 extern void ScreenFade_Update(void);
 extern void ScreenFade_Destroy(void);
 extern void ScreenFade_Create(void);
-extern void func_ov007_020c1db0(Ov007Touch *touch, TPData *sample);
-extern void Pad_Update(struct Ov007Pad *pad, void *src);
+extern "C" void func_ov007_020c1db0(Ov007Touch *touch, TPData *sample);
+extern "C" void Pad_Update(struct Ov007Pad *pad, void *src);
 extern void func_ov007_020c3bc8(void);
 
 int func_ov007_020b7138(Ov007MenuHooks *hooks, Ov007BootArgs *bootArgs) {
@@ -215,4 +209,4 @@ int func_ov007_020b6eb4(void) {
     }
     return 1;
 }
-}
+

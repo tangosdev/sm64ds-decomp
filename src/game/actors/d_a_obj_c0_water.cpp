@@ -72,7 +72,7 @@ extern int data_0209f32c;
  * dExtAnmTexSRT_c C1 on the member at 0x320 are the implicit
  * constructor. The null check is the one `new` itself emits. Declaring a
  * constructor of our own would emit a `bl` the factory does not have. */
-extern "C" daObjC0Water_c *daObjC0Water_c_classInit() {
+daObjC0Water_c *daObjC0Water_c_classInit() {
     return new daObjC0Water_c();
 }
 

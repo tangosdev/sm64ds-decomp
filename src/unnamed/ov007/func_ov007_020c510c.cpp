@@ -2,13 +2,13 @@
 #include "Ov007Picker.h"
 #include "Ov007Camera.h"
 
-extern "C" {
-extern void func_ov007_020bfe4c(Ov007Camera *o, int x, int y, int z, void *out);
+
+extern "C" void func_ov007_020bfe4c(Ov007Camera *o, int x, int y, int z, void *out);
 
 /* Unprojects the camera's screen rectangle at the camera distance into the
    picker's clamp rectangle; screen y runs down, so the two y bounds swap. */
-void func_ov007_020c510c(char *c) {
-    Ov007Picker *p = (Ov007Picker *)c;
+void Ov007Picker::func_ov007_020c510c() {
+    Ov007Picker *p = this;
     int neg;
     Ov007Camera *o = p->camera;
     neg = -o->distance;
@@ -20,4 +20,4 @@ void func_ov007_020c510c(char *c) {
         p->boundsMax.y = t;
     }
 }
-}
+

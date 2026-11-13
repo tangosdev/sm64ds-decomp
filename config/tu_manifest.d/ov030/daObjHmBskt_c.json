@@ -89,7 +89,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "daObjHmBskt_c_classInit",
+      "symbol": "_Z23daObjHmBskt_c_classInitv",
       "address": "0x02111524",
       "size": "0x00000038",
       "legacy_source": "src/d_a_obj_hm_bskt.c",

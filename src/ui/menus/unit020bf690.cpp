@@ -32,7 +32,7 @@
  * first here and the functions come out in ROM order.
  *
  * The ScreenFade_* names are coined from the bodies, after the module's
- * RequestScreenFade entry; ov007 records no names. All keep C linkage.
+ * RequestScreenFade entry; ov007 records no names.
  * func_ov007_020bfbdc keeps its address name while a file another branch
  * holds calls it.
  */
@@ -60,38 +60,28 @@ typedef struct Ov007Fade {
     /* 0x10: RequestScreenFade's first, the fade kind; ScreenFade_Update
      * starts it and clears it */
     int request;
-}
-extern "C" {
- Ov007Fade;
-}
-
+} Ov007Fade;
 
 typedef char Ov007Fade_size_must_be_0x14[sizeof(Ov007Fade) == 0x14 ? 1 : -1];
-extern "C" {
-
 
 extern Ov007Fade *sScreenFade;
-}
 
-
-extern void InitialiseVramGlobals(void);
-extern "C" {
-
-extern void func_ov007_020b3edc(int size);
-extern void *func_ov007_020b3f20(int idx);
-extern void func_ov007_020bbff0(void *c);
-extern void func_ov007_020bc02c(void *a, void *b);
-extern void func_ov007_020bc47c(void *thiz);
-extern void func_ov007_020bc53c(void *p);
-extern Ov007Model *func_ov007_020bc6d4(void *file, int flags);
-extern int func_ov007_020bdeb0(int a);
-extern void func_ov007_020c3d1c(void *self);
-extern void *func_ov007_020c3df4(const char *name, int size);
-extern void Transition_Update(Ov007Transition *tr);
-extern void Transition_StartBackward(Ov007Transition *tr, int v);
-extern void Transition_StartForward(Ov007Transition *tr, int v);
-extern void Transition_Destroy(void *p);
-extern Ov007Transition *Transition_Create(void);
+void InitialiseVramGlobals(void);
+extern "C" void func_ov007_020b3edc(int size);
+extern "C" void *func_ov007_020b3f20(int idx);
+extern void func_ov007_020bbff0(Ov007Model *c);
+extern void func_ov007_020bc02c(Ov007Model *a, void *b);
+extern "C" void func_ov007_020bc47c(void *thiz);
+extern void func_ov007_020bc53c(Ov007Model *p);
+extern "C" Ov007Model *func_ov007_020bc6d4(void *file, int flags);
+extern "C" int func_ov007_020bdeb0(int a);
+extern "C" void func_ov007_020c3d1c(void *self);
+extern "C" void *func_ov007_020c3df4(const char *name, int size);
+extern "C" void Transition_Update(Ov007Transition *tr);
+extern "C" void Transition_StartBackward(Ov007Transition *tr, int v);
+extern "C" void Transition_StartForward(Ov007Transition *tr, int v);
+extern "C" void Transition_Destroy(void *p);
+extern "C" Ov007Transition *Transition_Create(void);
 
 void ScreenFade_Create(void) {
     void *file;
@@ -350,4 +340,4 @@ void ScreenFade_Update(void) {
         return;
     G2_SetBlendBrightness(0x3f, -0x10);
 }
-}
+

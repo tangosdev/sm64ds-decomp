@@ -23,18 +23,13 @@
  * move, which C++ keeps for a struct with an array member. */
 typedef struct Vec3Words {
     Fix12i w[3];
-}
-extern "C" {
- Vec3Words;
-}
-
+} Vec3Words;
 
 
 /* stateWork bits, by what this file does with them; medium confidence */
 #define OV007_FIGURE_SWAY 1    /* rock the model and bob it (periods 160 and 40 ticks) */
 #define OV007_FIGURE_TOUCHED 2 /* a touch landed in the box below; stop at the next rest */
 #define OV007_FIGURE_RISE 4    /* lift it 30 units over the 80 ticks after data_ov007_02103344 */
-extern "C" {
 
 /* The figure's update hook (func_ov007_020b0a20 installs it): on the first
  * tick shows the model and starts it swaying; a touch inside (0x60..0xa0,
@@ -123,4 +118,4 @@ void func_ov007_020b0da0(Ov007Figure *figure) {
         *(Vec3Words *)&mat->t = *(Vec3Words *)&out;
     }
 }
-}
+
