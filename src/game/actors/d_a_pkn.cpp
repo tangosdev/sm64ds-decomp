@@ -259,7 +259,7 @@ int daPkn_c::Render()
     if (mScaleX == 0)
         return 1;
     mAnmModel.Render(&mScale);
-    if ((int)mAnmModel.file == (int)data_ov084_02130df4.filePtr)
+    if (mAnmModel.file == data_ov084_02130df4.filePtr)
         mModel.Render(&mBubbleScale);
     return 1;
 }
@@ -365,7 +365,7 @@ void daPkn_c::StateBite()
         actor = dActor_c::FindWithID(mdCcAc_c1.otherOwner);
         if (actor != 0) {
             type = actor->actorID;
-            isPlayer = (int)(type == 0xbf);
+            isPlayer = (type == 0xbf);
             if (isPlayer != 0) {
                 flags = mdCcAc_c1.hitFlags;
                 if (flags & 0x10) {
@@ -391,7 +391,7 @@ void daPkn_c::StateBite()
                 return;
             }
             if ((mdCcAc_c1.hitFlags & 0x2000) != 0) {
-                isNine = (int)(type == 9);
+                isNine = (type == 9);
                 if (isNine != 0) {
                     Die();
                     return;
@@ -405,7 +405,7 @@ void daPkn_c::StateBite()
         actor = dActor_c::FindWithID(mdCcAc_c2.otherOwner);
         if (actor != 0) {
             type = actor->actorID;
-            isPlayer = (int)(type == 0xbf);
+            isPlayer = (type == 0xbf);
             if (isPlayer != 0) {
                 if ((mdCcAc_c1.hitFlags & 0x10) != 0) {
                     ((daPly_c *)actor)->IncMegaKillCount();
@@ -423,7 +423,7 @@ void daPkn_c::StateBite()
                 return;
             }
             if ((mdCcAc_c2.hitFlags & 0x2000) != 0) {
-                isNine = (int)(type == 9);
+                isNine = (type == 9);
                 if (isNine != 0) {
                     Die();
                     return;
@@ -439,7 +439,7 @@ void daPkn_c::StateBite()
     if (actor == 0)
         return;
     type = actor->actorID;
-    isPlayer = (int)(type == 0xbf);
+    isPlayer = (type == 0xbf);
     if (isPlayer == 0)
         return;
     if ((mdCcAcPos_c.hitFlags & 0x10) != 0) {
@@ -501,8 +501,8 @@ void daPkn_c::StateDie()
         pos.x += data_ov084_0213030c[mStateTimer] * FX_SinIdx((u16)mAngleY >> 4);
         pos.z += data_ov084_0213030c[mStateTimer] * FX_CosIdx((u16)mAngleY >> 4);
         pos.y += data_ov084_02130334[mStateTimer] << 12;
-        mParticleHandle = (s32)Particle::System::New(mParticleHandle, kPtclPiranhaDeathBurst, pos.x,
-                                                     pos.y, pos.z, 0, 0);
+        mParticleHandle = Particle::System::New(mParticleHandle, kPtclPiranhaDeathBurst, pos.x,
+                                                pos.y, pos.z, 0, 0);
     }
     if (mAnmModel.Finished() == 0)
         return;
@@ -523,10 +523,10 @@ void daPkn_c::StateShrink()
         scale = 0x1000;
     }
 
-    mParticleHandle = (s32)Particle::System::New(mParticleHandle, kPtclPiranhaDeathSmokeA, mPosX,
-                                                 mPosY + 0x1e000, mPosZ, 0, 0);
-    mParticleHandle2 = (s32)Particle::System::New(mParticleHandle2, kPtclPiranhaDeathSmokeB, mPosX,
-                                                  mPosY + 0x1e000, mPosZ, 0, 0);
+    mParticleHandle = Particle::System::New(mParticleHandle, kPtclPiranhaDeathSmokeA, mPosX,
+                                            mPosY + 0x1e000, mPosZ, 0, 0);
+    mParticleHandle2 = Particle::System::New(mParticleHandle2, kPtclPiranhaDeathSmokeB, mPosX,
+                                             mPosY + 0x1e000, mPosZ, 0, 0);
 
     if (scale > 0) {
         scale = scale - 0xa3;
@@ -623,7 +623,7 @@ int daPkn_c::CheckHits()
         actor = static_cast<daPly_c *>(dActor_c::FindWithID(id));
         if (actor != 0) {
             type = actor->actorID;
-            int t = (int)(type == 0xbf);
+            int t = (type == 0xbf);
             if (t != 0) {
                 flags = mdCcAc_c1.hitFlags & 0x26ff0;
                 if (flags != 0) {
@@ -652,7 +652,7 @@ int daPkn_c::CheckHits()
                 }
                 return 1;
             } else if (mdCcAc_c1.hitFlags & 0x2000) {
-                int u = (int)(type == 9);
+                int u = (type == 9);
                 if (u != 0) {
                     Die();
                     return 1;
@@ -666,7 +666,7 @@ int daPkn_c::CheckHits()
         actor = static_cast<daPly_c *>(dActor_c::FindWithID(id));
         if (actor != 0) {
             type = actor->actorID;
-            int t = (int)(type == 0xbf);
+            int t = (type == 0xbf);
             if (t != 0) {
                 flags = mdCcAc_c2.hitFlags & 0x26ff0;
                 if (flags != 0) {
@@ -688,7 +688,7 @@ int daPkn_c::CheckHits()
                     return 1;
                 }
             } else if (mdCcAc_c2.hitFlags & 0x2000) {
-                int u = (int)(type == 9);
+                int u = (type == 9);
                 if (u != 0) {
                     Die();
                     return 1;
@@ -724,8 +724,8 @@ void daPkn_c::UpdatePose()
     ang[1] = 0;
     ang[2] = 0;
     for (lr = 0; lr < 5; lr++) {
-        ang[1] = (s16)(ang[1] + *(s16 *)((char *)mAnmModel.data.bones +
-                                         data_ov084_021302ec[lr] * 0x34 + 0x1c));
+        ang[1] = (ang[1] +
+                  *(s16 *)((char *)mAnmModel.data.bones + data_ov084_021302ec[lr] * 0x34 + 0x1c));
     }
 
     mHeadClsnOffset.x = 0;
@@ -742,7 +742,7 @@ void daPkn_c::UpdatePose()
     /* Still a hand-indexed FX_SinIdx: through the inline the table base loads
        before mHeadClsnOffset.y and ang[0], and no spelling tried (local, index
        local, y read first, split subtraction) gets the ROM's order back. */
-    mHeadClsnOffset.y -= FX_SinCosTable_[((u16)ang[0] >> 4) << 1] * (s16)0x14 + 0x32000;
+    mHeadClsnOffset.y -= FX_SinCosTable_[((u16)ang[0] >> 4) << 1] * 0x14 + 0x32000;
     mHeadClsnOffset.z += 0x32000;
 
     L.tv.x = mPosX;
@@ -750,7 +750,7 @@ void daPkn_c::UpdatePose()
     L.tv.z = mPosZ;
 
     {
-        int rr = (int)((u32)(mAnmModel.currFrame << 4) >> 0x10);
+        int rr = ((u32)(mAnmModel.currFrame << 4) >> 0x10);
         int d = rr - 0x28;
         if (d < 0)
             d = -d;
@@ -762,9 +762,9 @@ void daPkn_c::UpdatePose()
         mBubbleScale.z = scale;
     }
 
-    L.tv.x = FX_SinIdx((u16)mAngleY >> 4) * (s16)0xe0 + L.tv.x;
+    L.tv.x = FX_SinIdx((u16)mAngleY >> 4) * 0xe0 + L.tv.x;
     scale = scale - 0xc00;
-    L.tv.z = FX_CosIdx((u16)mAngleY >> 4) * (s16)0xe0 + L.tv.z;
+    L.tv.z = FX_CosIdx((u16)mAngleY >> 4) * 0xe0 + L.tv.z;
     L.tv.y = L.tv.y + (scale * 0x18 + 0x38000);
 
     mBubblePos.x = L.tv.x;
