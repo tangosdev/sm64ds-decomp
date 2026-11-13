@@ -201,7 +201,7 @@ void daTrsTrap_c::UpdateMerryGoRound() {
     }
     mAngVelY = 0x80;
     t = &mAngleY;
-    *t = (short)(*t + mAngVelY);
+    *t = (*t + mAngVelY);
     UpdateOccupiedFlag();
     mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x8f, mCamSpacePos, 0);
 }
@@ -506,10 +506,10 @@ int daTrsTrap_c::InitResources()
         int m = mIndex;
         if (m == 3) {
             mMovingMeshCollider.SetFile((KCL_File *)(data_ov063_0211e28c[m]->filePtr), mClsnMat,
-                                        0x1000, mAngleY, *(CLPS_Block *)(data_ov063_0211e9e8[m]));
+                                        0x1000, mAngleY, *(data_ov063_0211e9e8[m]));
         } else {
             mMovingMeshCollider.SetFile((KCL_File *)(data_ov063_0211e28c[m]->filePtr), mClsnMat,
-                                        0x199, mAngleY, *(CLPS_Block *)(data_ov063_0211e9e8[m]));
+                                        0x199, mAngleY, *(data_ov063_0211e9e8[m]));
         }
     }
 
