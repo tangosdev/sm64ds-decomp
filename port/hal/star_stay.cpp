@@ -26,20 +26,14 @@
 // picks the talk state and decides between the exit and the talk) and kept for that star until it is gone, so flipping the
 // setting during the dance cannot send one star down half of each path.
 //
-// WHAT THE PLAYER READS. The castle's talk (message 0x187) opens with the castle's own line ("You're getting stronger from
-// the power of the castle"), which reads wrong in a painting world, and the cartridge has no course version of it. For a
-// staying star the port shows the same message from its question on: "Do you want to save?" and its two answers. It is done
-// by pointing that one message's text entry at its own question line for the length of the talk (every language: the line
-// before the first answer), and putting it back as soon as the talk is over or the player leaves; nothing else reads it.
-// The star-count line (func_ov002_020c6e14: 1, 3, 8, 12, 30, 50, 80 stars, the doors they open) would show at the end of the
-// talk, in the course. The cartridge shows it on the castle arrival after the star's exit, and only when the count is
-// exactly the milestone. So a staying star's line is held (port_star_count_msg_hook in src/game/player/Player.cpp) and
-// shown on the next castle arrival instead, one per arrival, oldest first; a milestone the arrival shows on its own is
-// not shown twice. The pause menu's Exit Course arrives without that test (the cartridge never needed it: no star was got
-// in that visit), so there the port opens the held line itself, the same way the test does, once the player stands in the
-// castle with control and no box or pause up. Held lines live for the session (not in the save file).
-// The 100-coin star's own talk (message 0x186, "You've collected 100 coins!") is the cartridge's, already shown in the course;
-// it keeps its own star-count line as the cartridge does, and lines held from earlier stars keep waiting for the castle.
+// WHAT THE PLAYER READS (Tango, 11-13: "make the WOW ANOTHER POWER STAR! dialogue show up and allow the player to save").
+// The castle's talk (message 0x187) is "Wow! Another Power Star!", then a line about the power of the castle, then "Do you
+// want to save?" and its two answers. The cartridge has no course version of it, and the castle line reads wrong in a painting
+// world, so for a staying star the port shows the same message without that line: its first sentence (up to the last "!" of
+// its first two lines, which is where the star's sentence ends in all five languages), then its own question and answers.
+// The text is built once per talk from the message the bank holds (whatever the language) into a buffer of this file, and
+// the message's entry points at it only for the length of the talk; nothing else reads it. The star-count line the
+// cartridge shows after the talk (func_ov002_020c6e14: 1, 3, 8, 12, 30, 50, 80 stars) is left as the cartridge runs it.
 //
 // The act of the course does not change mid-visit (the DS loads a course for one act): objects of other acts stay as they are
 // until the player leaves and comes back.
@@ -69,7 +63,6 @@
 
 extern "C" {
 extern int (*port_star_stay_hook)(const void *star, int course);   // src/game/actors/d_a_star.cpp
-int (*port_star_count_msg_hook)(int new_star) = 0;                   // src/game/player/Player.cpp, func_ov002_020c6e14
 extern void (*port_sdat_frame_hook)(void);                           // hal/sdat/consumer.cpp: one call per game frame
 extern unsigned char data_0209f2d8[];      // stage mode, 1 = VS
 extern signed char data_0209f2f8;          // current level
@@ -79,16 +72,10 @@ extern int data_0209d708[];                // its entry table
 extern int data_0209d70c[];                // its info section
 int NumStars(void);
 void *_ZN8dActor_c4NextEPKS_(const void *prev);
+#ifndef PORT_ROM_CLEAN
 extern void *data_0209f394[];              // the players' bodies
 extern unsigned char data_0209f250;        // my player index
 extern unsigned char data_0209d660[];      // a message box is open
-extern unsigned char data_0209f2c4[];      // the pause screen, 0 = playing
-extern void *data_0209f318;                // the camera
-extern short data_ov002_020ff1a0[];        // the star-count lines, one per milestone (func_ov002_020c6e14)
-int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *thiz, void *actor, unsigned msg, const void *pos, unsigned char d,
-                                                   unsigned char e);
-void _ZN9dCamera_c9SetFlag_3Ev(void *cam);
-#ifndef PORT_ROM_CLEAN
 extern unsigned char data_0209cab4[];      // the live save block's star bytes, one per course
 extern unsigned char data_02092110[];      // pending level change, < 0 = none
 extern short data_0209d6d4;                // the open box's message id
@@ -142,9 +129,10 @@ bool star_alive(const void *star) {
     return false;
 }
 
-// ---- the castle talk's text, from its question on -------------------------------------------------------------------
+// ---- the castle talk's text, without the castle line ----------------------------------------------------------------
 struct MsgPatch { bool on; unsigned *entry; unsigned old_off; };
 MsgPatch g_msg;
+unsigned char g_text[1024];
 
 void msg_restore() {
     if (!g_msg.on) return;
@@ -152,8 +140,9 @@ void msg_restore() {
     g_msg.on = false;
 }
 
-// Points message 0x187 at its own question line: the line before the first answer (0xfe, the choice command), whatever
-// the language. Lines end in 0xfd, the text in 0xff.
+// Builds message 0x187 without its castle line into g_text and points the message's entry at it. Lines end in 0xfd, the
+// text in 0xff, 0xfe starts a command (the first one is the answer choice), 0x27 is "!". Kept: the text up to the last "!"
+// of the first two lines, then the line breaks that stood before the question, then the question line and all after it.
 void msg_patch() {
     if (g_msg.on) return;
     const char *info = (const char *)(size_t)data_0209d70c[0];
@@ -162,24 +151,43 @@ void msg_patch() {
     if (!info || !base || !entries) return;
     if (*(const unsigned short *)(info + 8) <= kMsgCastleStar) return;
     unsigned *entry = (unsigned *)(entries + kMsgCastleStar * 8);
-    const unsigned char *t = (const unsigned char *)(base + 0x28 + *(const unsigned *)(info + 4) + *entry);
-    int choice = -1;
-    for (int i = 0; i < 1024 && t[i] != 0xff; ++i)
-        if (t[i] == 0xfe) { choice = i; break; }
-    if (choice <= 0) return;
+    const unsigned char *text0 = (const unsigned char *)(base + 0x28 + *(const unsigned *)(info + 4));
+    const unsigned char *t = text0 + *entry;
+    int end = -1, choice = -1, lines = 0, bang = -1;
+    for (int i = 0; i < 1024; ++i) {
+        if (t[i] == 0xff) { end = i; break; }
+        if (t[i] == 0xfe) {                                   // a command: 0xfe, its length, then the rest of it
+            if (choice < 0) choice = i;
+            if (t[i + 1] < 2) return;
+            i += t[i + 1] - 1;
+            continue;
+        }
+        if (choice < 0 && lines < 2) {
+            if (t[i] == 0xfd) ++lines;
+            else if (t[i] == 0x27) bang = i;
+        }
+    }
+    if (end < 0 || choice <= 0 || bang < 0) return;
     int q = choice;
-    while (q > 0 && t[q - 1] == 0xfd) --q;             // the end of the question line
+    while (q > 0 && t[q - 1] == 0xfd) --q;                    // the end of the question line
     int start = q;
-    while (start > 0 && t[start - 1] != 0xfd) --start;  // its start
-    if (start <= 0 || start >= q) return;
+    while (start > 0 && t[start - 1] != 0xfd) --start;        // its start
+    int sep = start;
+    while (sep > 0 && t[sep - 1] == 0xfd) --sep;              // the line breaks before it
+    if (start <= 0 || sep <= bang) return;
+    const int len = (bang + 1) + (end + 1 - sep);
+    if (len > (int)sizeof g_text) return;
+    std::memcpy(g_text, t, (size_t)bang + 1);
+    std::memcpy(g_text + bang + 1, t + sep, (size_t)(end + 1 - sep));
     g_msg.entry = entry; g_msg.old_off = *entry; g_msg.on = true;
-    *entry = g_msg.old_off + (unsigned)start;
+    *entry = (unsigned)((size_t)g_text - (size_t)text0);      // the bank adds the offset to its text start, 32 bits
 }
 
 // ---- one answer per star, taken at the touch ---------------------------------------------------------------------------
 struct Latch { const void *star; int ans; int level; };
 Latch g_latch[4];
 const void *g_stay_star; int g_stay_level = -1;   // the staying star whose talk is on, and where
+bool g_talk_seen;                                 // its talk has opened
 
 int decide(const void *star, int course) {
     if (!(host_setting_stay_after_star() && solo() && course >= 0 && course <= 14 && star)) return 0;
@@ -211,7 +219,7 @@ int stay_hook(const void *star, int course) {
     if (ans < 0) {
         ans = decide(star, course);
         if (star) latch_put(star, ans, lv);
-        if (ans) { g_stay_star = star; g_stay_level = lv; msg_patch(); }
+        if (ans) { g_stay_star = star; g_stay_level = lv; g_talk_seen = false; msg_patch(); }
     }
 #ifndef PORT_ROM_CLEAN
     if (g_log && (star != g_last_star || ans != g_last_ans)) {
@@ -223,82 +231,15 @@ int stay_hook(const void *star, int course) {
     return ans;
 }
 
-// ---- the star-count line --------------------------------------------------------------------------------------------
-int g_held[8]; int g_nheld;
-
-int count_index(int stars) {
-    switch (stars) {
-    case 1: return 0; case 3: return 1; case 8: return 2; case 12: return 3; case 30: return 4; case 50: return 5; case 80: return 6;
-    }
-    return -1;
-}
-
-bool stay_talk_on() {
-    return g_stay_star && g_stay_level == (int)data_0209f2f8 && star_alive(g_stay_star) &&
-           *(const int *)((const char *)g_stay_star + kOffState) == kStateSaveMessage;
-}
-
-int count_hook(int new_star) {
-    if (stay_talk_on()) {
-        msg_restore();                      // the talk is over by the time it asks
-        const int idx = new_star ? count_index(NumStars()) : -1;
-        if (idx >= 0 && g_nheld < 8) {
-            bool dup = false;
-            for (int i = 0; i < g_nheld; ++i) dup |= g_held[i] == idx;
-            if (!dup) g_held[g_nheld++] = idx;
-        }
-#ifndef PORT_ROM_CLEAN
-        if (g_log) std::fprintf(stderr, "[staycourse] star-count line %d held for the castle (stars %d, held %d)\n", idx, NumStars(), g_nheld);
-#endif
-        return -1;
-    }
-    if (g_nheld == 0) return -2;
-    if (course_of((int)data_0209f2f8) != 29) return -2;   // a talk the cartridge itself runs in a course (the 100-coin star): its own line, held ones wait
-    const int own = new_star ? count_index(NumStars()) : -1;
-    int out;
-    if (own >= 0) {
-        out = -2;
-        for (int i = 0; i < g_nheld; ++i)
-            if (g_held[i] == own) { for (int j = i; j + 1 < g_nheld; ++j) g_held[j] = g_held[j + 1]; --g_nheld; break; }
-    } else {
-        out = g_held[0];
-        for (int j = 0; j + 1 < g_nheld; ++j) g_held[j] = g_held[j + 1];
-        --g_nheld;
-    }
-#ifndef PORT_ROM_CLEAN
-    if (g_log) std::fprintf(stderr, "[staycourse] castle arrival: star-count line %d (%s), %d still held\n", out >= 0 ? out : own,
-                            out >= 0 ? "a held one" : "the cartridge's own", g_nheld);
-#endif
-    return out;
-}
-
-// A held star-count line, opened in the castle once the player can take it (see the head of the file).
-int g_tick_lv = -999, g_tick_frames;
-void held_line_tick() {
-    if (g_nheld == 0 || course_of((int)data_0209f2f8) != 29 || g_tick_frames < 90 || g_tick_frames % 30 != 0) return;
-    if (data_0209d660[0] || data_0209f2c4[0]) return;
-    const int me = (int)data_0209f250;
-    char *body = (me >= 0 && me < 16) ? (char *)data_0209f394[me] : nullptr;
-    if (!body || *(const unsigned char *)(body + 0x709) != 0) return;   // Player::mIsNoControl
-    const int idx = g_held[0];
-    if (!_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(body, body, (unsigned)(unsigned short)data_ov002_020ff1a0[idx], nullptr, 0, 2))
-        return;   // not now (in the air, say): the next try
-    _ZN9dCamera_c9SetFlag_3Ev(data_0209f318);
-    for (int j = 0; j + 1 < g_nheld; ++j) g_held[j] = g_held[j + 1];
-    --g_nheld;
-#ifndef PORT_ROM_CLEAN
-    if (g_log) std::fprintf(stderr, "[staycourse] castle: held star-count line %d opened (message 0x%x), %d still held\n", idx,
-                            (unsigned)(unsigned short)data_ov002_020ff1a0[idx], g_nheld);
-#endif
-}
-
 // Once a frame: the text patch and the latches never outlive their star or their level.
 void stay_tick() {
     const int lv = (int)data_0209f2f8;
-    if (lv != g_tick_lv) { g_tick_lv = lv; g_tick_frames = 0; }
-    ++g_tick_frames;
-    held_line_tick();
-    if (g_stay_star && (g_stay_level != lv || !star_alive(g_stay_star))) { g_stay_star = nullptr; g_stay_level = -1; }
+    if (g_stay_star) {
+        const bool alive = g_stay_level == lv && star_alive(g_stay_star);
+        const int st = alive ? *(const int *)((const char *)g_stay_star + kOffState) : -1;
+        if (st == kStateSaveMessage) g_talk_seen = true;
+        if (!alive || (g_talk_seen && st != kStateSaveMessage)) { g_stay_star = nullptr; g_stay_level = -1; g_talk_seen = false; }
+    }
     if (g_msg.on && !g_stay_star) msg_restore();
     for (Latch &l : g_latch)
         if (l.star && l.level != lv) l = Latch{};
@@ -395,9 +336,9 @@ void log_tick(char *me) {
     const int mo = data_0209d660[0] ? 1 : 0, mid = mo ? (int)data_0209d6d4 : -1;
     if (mo != K.l_msg_open || mid != K.l_msg_id) {
         K.l_msg_open = mo; K.l_msg_id = mid;
-        std::fprintf(stderr, "[staycourse] message %s 0x%x (level %d, frame %d, global %d, new_star=%d last_star=%d clear=%d entry=%d stars=%d held=%d)\n",
+        std::fprintf(stderr, "[staycourse] message %s 0x%x (level %d, frame %d, global %d, new_star=%d last_star=%d clear=%d entry=%d stars=%d)\n",
                      mo ? "OPEN" : "closed", mid & 0xffff, lv, K.lvl_frames, K.global, (int)data_0209f2ac, (int)data_0209f228, (int)data_0209f20c,
-                     (int)data_0209f2fc, NumStars(), g_nheld);
+                     (int)data_0209f2fc, NumStars());
     }
     const int me_i = (int)data_0209f250;
     const int coins = data_0209f358[me_i], red = data_0209f30c[me_i];
@@ -520,7 +461,6 @@ struct Install {
 #endif
         g_prev = port_sdat_frame_hook; port_sdat_frame_hook = frame;
         port_star_stay_hook = &stay_hook;
-        port_star_count_msg_hook = &count_hook;
         sl_solo_hook = &solo;
     }
 } g_install;

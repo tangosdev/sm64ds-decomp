@@ -6792,27 +6792,6 @@ int func_ov002_020c6e14(void* actor)
     extern void _ZN9dCamera_c9SetFlag_3Ev(void*);
     int idx;
 
-#if defined(_MSC_VER)
-    /* PC port, single player (lane STAYCOURSE1, setting StayAfterStar): a star got while staying in a course would show
-       its star-count line (the doors it opens) there and then, and a second star in the same visit would step past the
-       exact count the castle tests for. The hook holds the line while a staying star talks and hands it back on the next
-       castle arrival (hal/star_stay.cpp). -2 is the cartridge's own test below, -1 shows nothing, else the line to show. */
-    {
-        extern int (*port_star_count_msg_hook)(int new_star);
-        if (port_star_count_msg_hook) {
-            idx = port_star_count_msg_hook(data_0209f2ac != 0);
-            if (idx == -1)
-                return 0;
-            if (idx >= 0) {
-                if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(actor, actor, data_ov002_020ff1a0[idx], 0, 0, 2)) {
-                    _ZN9dCamera_c9SetFlag_3Ev(data_0209f318[0]);
-                    return 1;
-                }
-                return 0;
-            }
-        }
-    }
-#endif
     if (data_0209f2ac != 0) {
         idx = -1;
         switch (NumStars()) {
