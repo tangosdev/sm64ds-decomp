@@ -784,7 +784,7 @@ int daMip_c::StateFleeMain() {
     {
         s32 y = mPosY;
         node.y = y;
-        Vec3_Sub((::Vector3 *)&delta, (const ::Vector3 *)&mPos, (const ::Vector3 *)&node);
+        Vec3_Sub((::Vector3 *)&delta, &mPos, (const ::Vector3 *)&node);
         len = VEC_Mag((const Vector3 *)&delta);
     }
     if ((len == 0) || (len <= lim)) {
@@ -808,7 +808,7 @@ int daMip_c::StateFleeMain() {
             {
                 int s = FX_Div(lim, len);
                 Vec3_MulScalar((Vector3 *)&scaled, (const Vector3 *)&delta, s);
-                VEC_Subtract((::Vector3 *)&mPos, (::Vector3 *)&scaled, (::Vector3 *)&mPos);
+                VEC_Subtract(&mPos, (::Vector3 *)&scaled, &mPos);
             }
             if (mVertSpeed > 0) {
                 mPosY = ysave;
@@ -982,7 +982,7 @@ int daMip_c::StateIdleInit()
 {
     extern DaMipAnimationFilePtr data_ov085_021305c0;
 
-    mAnmModel.SetAnim((BCA_File *)(*(void **)((char *)&data_ov085_021305c0 + 4)), 0, 0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)data_ov085_021305c0.filePtr, 0, 0x1000, 0);
     mIdlePosX = mPosX;
     mIdlePosY = mPosY;
     mIdlePosZ = mPosZ;
@@ -1108,13 +1108,13 @@ int daMip_c::CleanupResources()
     extern DaMipAnimationFilePtr data_ov085_021305c0;
     extern DaMipModelFile data_ov085_021305e0;
 
-    ((SharedFilePtr *)(&data_ov085_021305d8))->Release();
-    ((SharedFilePtr *)(&data_ov085_021305b8))->Release();
-    ((SharedFilePtr *)(&gMipRunAnimationFile))->Release();
-    ((SharedFilePtr *)(&data_ov085_021305b0))->Release();
-    ((SharedFilePtr *)(&data_ov085_021305c8))->Release();
-    ((SharedFilePtr *)(&data_ov085_021305c0))->Release();
-    ((SharedFilePtr *)(&data_ov085_021305e0))->Release();
+    data_ov085_021305d8.Release();
+    data_ov085_021305b8.Release();
+    gMipRunAnimationFile.Release();
+    data_ov085_021305b0.Release();
+    data_ov085_021305c8.Release();
+    data_ov085_021305c0.Release();
+    data_ov085_021305e0.Release();
     return 1;
 }
 
@@ -1288,7 +1288,7 @@ int daMip_c::Behavior()
                             messageId = 0x13b; soundId = 0x160;
                         }
                         pos.y += 0x64000;
-                        if (talker->ShowMessage(*(fBase_c *)c, messageId, 0, 0, 0) == 1) {
+                        if (talker->ShowMessage(*this, messageId, 0, 0, 0) == 1) {
                             func_02012694(soundId, &mCamSpacePos);
                             mTalkState = 1;
                         }
@@ -1320,19 +1320,18 @@ int daMip_c::Behavior()
         UpdateMatrixAndShadow();
         mCatchState = 2;
         SetState(&data_ov085_021306ac);
-        mAnmModel.SetAnim((BCA_File *)(*(void **)((char *)&data_ov085_021305c0 + 4)), 0, 0x1000, 0);
-        if (*(void**)&mTalkingPlayer == 0)
-            *(void**)&mTalkingPlayer = ClosestPlayer();
+        mAnmModel.SetAnim((BCA_File *)data_ov085_021305c0.filePtr, 0, 0x1000, 0);
+        if (mTalkingPlayer == 0)
+            mTalkingPlayer = ClosestPlayer();
         return 1;
     }
 
     if (mCatchState != 0) {
-        void* p = *(void**)&mState;
+        void *p = (void *)mState;
         if (p != &data_ov085_021306ac && p != &data_ov085_0213068c && p != &data_ov085_021306bc &&
             p != &data_ov085_021306dc) {
             SetState(&data_ov085_021306ac);
-            mAnmModel.SetAnim((BCA_File *)(*(void **)((char *)&data_ov085_021305c0 + 4)), 0, 0x1000,
-                              0);
+            mAnmModel.SetAnim((BCA_File *)data_ov085_021305c0.filePtr, 0, 0x1000, 0);
         }
         mHorzSpeed = 0;
     }
@@ -1341,7 +1340,7 @@ int daMip_c::Behavior()
 
     {
         daMip_cSelf *self = (daMip_cSelf *)c;
-        MipStatePair *state = *(MipStatePair **)&mState;
+        MipStatePair *state = (MipStatePair *)mState;
         if (state->b != 0)
             (self->*(state->b))();
     }
@@ -1357,17 +1356,17 @@ int daMip_c::Behavior()
         UpdateMirrorShadow();
 
     if (!IsFlagSet(this, 0x4000)) {
-        if (*(void **)&mState != &data_ov085_021306ac || mCatchState != 0)
+        if ((void *)mState != &data_ov085_021306ac || mCatchState != 0)
             UpdatePos(&mdCcAc_c);
         mAngleX = mPrevAngleX;
         mAngleY = mPrevAngleY;
         mAngleZ = mPrevAngleZ;
         UpdateWMClsn(mWithMeshClsn, 0);
-        if (*(void **)&mState != &data_ov085_021306ac)
+        if ((void *)mState != &data_ov085_021306ac)
             UpdateGrab();
     }
 
-    if (*(void **)&mState != &data_ov085_021306ac) {
+    if ((void *)mState != &data_ov085_021306ac) {
         mdCcAc_c.Clear();
         mdCcAc_c.Update();
     }
@@ -1392,13 +1391,13 @@ int daMip_c::InitResources()
     void* closest;
     int rabbitId;
 
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov085_021305b8);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&gMipRunAnimationFile);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov085_021305b0);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov085_021305c8);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov085_021305c0);
-    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov085_021305d8);
-    mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov085_021305e0), 1, -1);
+    dExtFrameCtrl_c::LoadFile(data_ov085_021305b8);
+    dExtFrameCtrl_c::LoadFile(gMipRunAnimationFile);
+    dExtFrameCtrl_c::LoadFile(data_ov085_021305b0);
+    dExtFrameCtrl_c::LoadFile(data_ov085_021305c8);
+    dExtFrameCtrl_c::LoadFile(data_ov085_021305c0);
+    dExtSimpleModel_c::LoadFile(data_ov085_021305d8);
+    mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov085_021305e0), 1, -1);
     mShadowModel1.InitCylinder();
     mShadowModel2.InitCylinder();
 
