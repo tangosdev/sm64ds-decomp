@@ -52,6 +52,7 @@ enum d_s_mg_trampoline2_AssetId {
 #include "TrmpItem.h"
 #include "Trmp2Spinner.h"
 #include "decl_common.h"
+#include "dMgTrmplnShared.h"
 #include "PlayerInput.h"
 #include "Sound.h"
 #include "math/MtxStack.h"
@@ -134,8 +135,6 @@ extern char *TrmpItem_Spawn(int resource, int *up, int variant, int face);
 extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern void TrmpItem_UpdateAll(void);
-extern int Trmp2Mario_Hide(void);
-extern void Trmp2Mario_EnterAll(void);
 extern int sTrmpItemsHit;
 extern int sTrmp2Lives;
 extern int sTrmp2Score;
@@ -144,10 +143,6 @@ extern int sTrmpItemsActive;
 extern int sTrmp2ScoreGates[];
 extern const Trampoline2WaveDef sTrmp2SpawnDefs[];
 extern void TrmpLine_UpdateAll(void);
-extern void Trmp2Mario_UpdateAll(void);
-extern void Trmp2Mario_SetTuning(int a);
-extern void Trmp2Mario_MoveToStart(void);
-extern void Trmp2Mario_PlaceAtStart(void);
 extern void TrmpLine_CreateStartLineT2(void);
 extern s16 sTrmp2IntroFromX;
 extern s16 sTrmp2IntroToX;

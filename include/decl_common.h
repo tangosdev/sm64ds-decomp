@@ -901,7 +901,7 @@ extern void Mg_ResetRecordBannerPos(void);
 extern void Mg_PlaceBannersOnTopScreen(void);
 extern void Mg_ResetBannerLayout(char*);
 extern void MiniGm_LoadGroupIcons(void*);
-extern void Camera_ProjectToScreen16(void*, char*, short*);
+extern void Camera_ProjectToScreen16(void *, void *, short *);
 extern void MascotWalker_StartNextPath(void*);
 extern void MascotWalker_Draw(char*);
 extern void MascotWalker_Load(struct MascotWalker *);
