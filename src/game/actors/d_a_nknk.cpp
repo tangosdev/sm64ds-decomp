@@ -865,7 +865,7 @@ void daNknk_c::func_ov062_02117c98()
                 }
             } else {
                 {
-                    s32* s = &player->mPosX;
+                    s32 *s = &player->mPosX;
                     L.sv.x = s[0];
                     L.sv.y = s[1];
                     L.sv.z = s[2];
@@ -886,7 +886,8 @@ void daNknk_c::func_ov062_02117c98()
                     }
                     ((daPly_c *)found)->Bounce(0x28000);
                     return;
-                } else if (player->mIsVanish == 0 && (mdCc_c.hitFlags & 0x400000) != 0 && mState != 0) {
+                } else if (player->mIsVanish == 0 && (mdCc_c.hitFlags & 0x400000) != 0 &&
+                           mState != 0) {
                     s32 pw;
                     L.hv.x = mPosX;
                     L.hv.y = mPosY;
