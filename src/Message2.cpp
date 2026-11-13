@@ -23,6 +23,7 @@
 
 #pragma defer_codegen off
 #include "types.h"
+#include "MessageBank.h"
 #include "nitro/hw/registers.h"
 #include "Message.h"
 #include "PlayerInput.h"
@@ -99,10 +100,11 @@ extern s16 data_0209f4a2[];
 extern s16 data_0209f4a4[];
 extern u16 data_020a0e5a[];
 extern s32 data_020a0db0;
-extern u8 data_ov002_0210c390;
-extern u8 data_ov002_0210c398;
-extern u8 data_ov002_0210c3a0;
-extern u8 data_ov002_0210c3a8;
+struct OamAttr;
+extern OamAttr data_ov002_0210c390;
+extern OamAttr data_ov002_0210c398;
+extern OamAttr data_ov002_0210c3a0;
+extern OamAttr data_ov002_0210c3a8;
 extern void (*MSG_GEN_TEXT_FUNCS[])(void);
 
 extern int IsButtonInputValid(void);
@@ -298,7 +300,7 @@ void func_0201adfc(void) {
                 u8 bit = pos & 7;
                 int word = (u32)pos >> 3;
                 u32 *q = &p[word << 3];
-                u32 *mask = (u32 *)&data_0208eeac[bit];
+                int *mask = &data_0208eeac[bit];
 
                 p[word << 3] |= *mask & ((u32 *)data_0209d74c)[base];
                 q[1] |= *mask & ((u32 *)data_0209d74c)[base + 1];
@@ -306,7 +308,7 @@ void func_0201adfc(void) {
                 q[3] |= *mask & ((u32 *)data_0209d74c)[base + 3];
 
                 if (bit != 0) {
-                    u32 *omask = (u32 *)&data_0208ee8c[bit];
+                    int *omask = &data_0208ee8c[bit];
 
                     q[8] = ((u32 *)data_0209d74c)[base] & *omask;
                     q[9] = ((u32 *)data_0209d74c)[base + 1] & *omask;
@@ -762,7 +764,7 @@ void Message::Update() {
             data_0209d65c = 0;
         } else {
             func_0201b6f8(0);
-            data_0209d65c = (u8)((*(u16 *)(data_0209d6f0 + 4) - data_0209d6b0) >> 1);
+            data_0209d65c = (u8)((((MessageEntry *)data_0209d6f0)->width - data_0209d6b0) >> 1);
         }
         LayoutLine();
         return;
@@ -811,11 +813,9 @@ void Message::Update() {
             int r5 = gMsgChoicePositions[gMsgChoiceIndex] + gMsgBoxLeft + 0xC;
             int r4 = gMsgBoxTop + (gMsgChoiceLine * 0x10) + 0xE;
             if (data_020a0db0 & (0x10 / data_0208ee44)) {
-                OAM::Render(0, (OamAttr *)&data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0,
-                            -1);
+                OAM::Render(0, &data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             } else {
-                OAM::Render(0, (OamAttr *)&data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000, 0x1000, 0,
-                            -1);
+                OAM::Render(0, &data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             }
             return;
         }
@@ -847,11 +847,9 @@ void Message::Update() {
             int r5 = gMsgBoxLeft + 0xC;
             int r4 = gMsgBoxTop + (gMsgChoicePositions[gMsgChoiceIndex] * 0x10) + 0xE;
             if (data_020a0db0 & (0x10 / data_0208ee44)) {
-                OAM::Render(0, (OamAttr *)&data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0,
-                            -1);
+                OAM::Render(0, &data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             } else {
-                OAM::Render(0, (OamAttr *)&data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000, 0x1000, 0,
-                            -1);
+                OAM::Render(0, &data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             }
             return;
         }
@@ -929,11 +927,9 @@ void Message::Update() {
             int r5 = gMsgBoxLeft + 0xC;
             int r4 = gMsgBoxTop + (gMsgChoicePositions[gMsgChoiceIndex] * 0x10) + 0xE;
             if (data_020a0db0 & (0x10 / data_0208ee44)) {
-                OAM::Render(0, (OamAttr *)&data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0,
-                            -1);
+                OAM::Render(0, &data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             } else {
-                OAM::Render(0, (OamAttr *)&data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000, 0x1000, 0,
-                            -1);
+                OAM::Render(0, &data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             }
             return;
         }
@@ -959,11 +955,9 @@ void Message::Update() {
                 return;
             }
             if (gMsgBoxStyle != 0) {
-                OAM::Render(0, (OamAttr *)&data_ov002_0210c390, r5, r4, -1, -1, 0x1000, 0x1000, 0,
-                            -1);
+                OAM::Render(0, &data_ov002_0210c390, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             } else {
-                OAM::Render(0, (OamAttr *)&data_ov002_0210c398, r5, r4, -1, -1, 0x1000, 0x1000, 0,
-                            -1);
+                OAM::Render(0, &data_ov002_0210c398, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             }
             return;
         }
