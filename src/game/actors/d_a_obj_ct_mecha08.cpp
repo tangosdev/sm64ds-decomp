@@ -82,11 +82,11 @@ static inline s32 Clamp(s32 v, s32 lo, s32 hi) {
     return v < lo ? lo : (v > hi ? hi : v);
 }
 
-extern "C" daObjCtMecha08_c *daObjCtMecha08_c_classInit_CT_MECHA08A() {
+daObjCtMecha08_c *daObjCtMecha08_c_classInit_CT_MECHA08A() {
     return new daObjCtMecha08_c();
 }
 
-extern "C" daObjCtMecha08_c *daObjCtMecha08_c_classInit_CT_MECHA08B() {
+daObjCtMecha08_c *daObjCtMecha08_c_classInit_CT_MECHA08B() {
     return new daObjCtMecha08_c();
 }
 

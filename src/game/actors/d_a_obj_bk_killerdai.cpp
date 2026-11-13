@@ -89,6 +89,7 @@ extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 }
 
+
 #pragma defer_codegen off
 
 daObjBkKillerdai_c::~daObjBkKillerdai_c() {}
@@ -190,6 +191,6 @@ s32 daObjBkKillerdai_c::InitResources() {
     return 1;
 }
 
-extern "C" daObjBkKillerdai_c *daObjBkKillerdai_c_classInit() {
+daObjBkKillerdai_c *daObjBkKillerdai_c_classInit() {
     return new daObjBkKillerdai_c();
 }

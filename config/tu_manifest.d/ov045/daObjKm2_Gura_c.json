@@ -68,7 +68,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "daObjKm2_Gura_c_classInit",
+      "symbol": "_Z25daObjKm2_Gura_c_classInitv",
       "address": "0x02111d0c",
       "size": "0x0000003c",
       "legacy_source": "src/daObjKm2_Gura_c_classInit.c",
@@ -267,7 +267,7 @@
       "source": "0x02112ffc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daObjKm2_Gura_c_classInit",
+      "symbol": "_Z25daObjKm2_Gura_c_classInitv",
       "addend": 0,
       "target_module": "ov045",
       "target_address": "0x02111d0c"
@@ -1169,7 +1169,7 @@
           },
           {
             "ordinal": 4,
-            "symbol": "daObjKm2_Gura_c_classInit",
+            "symbol": "_Z25daObjKm2_Gura_c_classInitv",
             "identical": true,
             "relocCount": 4,
             "differences": [],
@@ -1297,7 +1297,7 @@
             "size": "0x00000014"
           },
           {
-            "symbol": "daObjKm2_Gura_c_classInit",
+            "symbol": "_Z25daObjKm2_Gura_c_classInitv",
             "section": ".text",
             "size": "0x0000003c"
           }
@@ -1605,7 +1605,7 @@
           },
           {
             "ordinal": 4,
-            "symbol": "daObjKm2_Gura_c_classInit",
+            "symbol": "_Z25daObjKm2_Gura_c_classInitv",
             "identical": true,
             "relocCount": 4,
             "differences": [],
@@ -1733,7 +1733,7 @@
             "size": "0x00000014"
           },
           {
-            "symbol": "daObjKm2_Gura_c_classInit",
+            "symbol": "_Z25daObjKm2_Gura_c_classInitv",
             "section": ".text",
             "size": "0x0000003c"
           }

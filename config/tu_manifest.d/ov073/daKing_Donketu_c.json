@@ -308,7 +308,7 @@
       "ordinal": 37
     },
     {
-      "symbol": "ChiefChilly_ChangeState",
+      "symbol": "_Z23ChiefChilly_ChangeStateP1CPMS_FivE",
       "address": "0x0212157c",
       "size": "0x00000050",
       "legacy_source": "src/ChiefChilly_ChangeState.cpp",
@@ -364,7 +364,7 @@
       "ordinal": 45
     },
     {
-      "symbol": "daKing_Donketu_c_classInit",
+      "symbol": "_Z26daKing_Donketu_c_classInitv",
       "address": "0x02121ec8",
       "size": "0x000000c8",
       "legacy_source": "src/d_a_king_donketu.cpp",

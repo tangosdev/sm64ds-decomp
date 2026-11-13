@@ -70,13 +70,13 @@ extern CLPS_Block data_ov035_02112258;
 
 /* CT_MECHA05 is the literal ROM registry ID. The g_profile spelling is a
  * lineage-supported reconstruction. The descriptor is at ov065:0x0211d290. */
-extern "C" daObjCtMecha05_c *daObjCtMecha05_c_classInit();
-extern "C" SpawnInfo<daObjCtMecha05_c> g_profile_CT_MECHA05 = {
+daObjCtMecha05_c *daObjCtMecha05_c_classInit();
+SpawnInfo<daObjCtMecha05_c> g_profile_CT_MECHA05 = {
     daObjCtMecha05_c_classInit, 0x0071, 0x00ec, 0x00000002, 0, 0x00600000, 0x01000000, 0x02000000};
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-extern "C" daObjCtMecha05_c *daObjCtMecha05_c_classInit() {
+daObjCtMecha05_c *daObjCtMecha05_c_classInit() {
     return new daObjCtMecha05_c();
 }
 

@@ -113,36 +113,39 @@ extern DossyCollisionFileHandle gDossyNeckCollisionFile;
 extern DossyCollisionFileHandle gDossyBodyCollisionFile;
 extern DossyCollisionFileHandle gDossyHeadCollisionFile;
 
-extern "C" {
+
 extern u8 data_ov065_0211c078[];
 extern void *data_ov065_0211cd68[];
 extern SharedFilePtr data_ov002_0210d9c0;
 extern SharedFilePtr *data_ov065_0211c080[];
 extern SharedFilePtr *data_ov065_0211c08c[];
+extern "C" {
+
 
 int *Vec3_LslInPlace(Vector3 *v, s32 sh);
 extern int AngleDiff(int a, int b);
+}
+
 
 int func_ov065_021180d4(daDossyCap_c *cap);
 void func_ov065_02118c4c(daDossyCap_c *cap);
 int func_ov065_02119210(daDossyCap_c *cap);
 void func_ov065_021195bc(dBgW *collider, dActor_c *owner, dActor_c *other);
 void func_ov065_021195d0(dBgW *collider, dActor_c *owner, dActor_c *other);
-}
 
 typedef void (daDossy_c::*StateFunc)();
-extern "C" StateFunc data_ov065_0211d7fc[];
+extern StateFunc data_ov065_0211d7fc[];
 
 DorriePlatform::DorriePlatform()
 {
 }
 
-extern "C" daDossy_c *daDossy_c_classInit(void)
+daDossy_c *daDossy_c_classInit(void)
 {
     return new daDossy_c();
 }
 
-extern "C" daDossyCap_c *daDossyCap_c_classInit(void)
+daDossyCap_c *daDossyCap_c_classInit(void)
 {
     return new daDossyCap_c();
 }
@@ -153,13 +156,13 @@ int daDossyCap_c::OnYoshiTryEat()
 }
 
 #pragma long_calls on
-extern "C" void func_ov065_021195d0(dBgW *collider, dActor_c *owner, dActor_c *other) {
+void func_ov065_021195d0(dBgW *collider, dActor_c *owner, dActor_c *other) {
     static_cast<daDossy_c *>(owner)->func_ov065_02119594(other);
 }
 #pragma long_calls off
 
 #pragma long_calls on
-extern "C" void func_ov065_021195bc(dBgW *collider, dActor_c *owner, dActor_c *other) {
+void func_ov065_021195bc(dBgW *collider, dActor_c *owner, dActor_c *other) {
     static_cast<daDossy_c *>(owner)->func_ov065_0211956c(other);
 }
 #pragma long_calls off
@@ -254,7 +257,7 @@ int daDossy_c::InitResources()
     return 1;
 }
 
-extern "C" int func_ov065_02119210(daDossyCap_c *cap) {
+int func_ov065_02119210(daDossyCap_c *cap) {
     int flags = cap->mCapIcon.mFlags << 30;
     return ((unsigned)flags >> 31) != 0;
 }
@@ -388,7 +391,7 @@ void daDossy_c::func_ov065_02118cc4()
     mAnmModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
-extern "C" void func_ov065_02118c4c(daDossyCap_c *cap) {
+void func_ov065_02118c4c(daDossyCap_c *cap) {
     Vector3 pos;
     Vec3_Asr(&pos, &cap->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
@@ -601,7 +604,7 @@ int daDossy_c::func_ov065_02118248()
     return 0;
 }
 
-extern "C" int func_ov065_021180d4(daDossyCap_c *cap) {
+int func_ov065_021180d4(daDossyCap_c *cap) {
     daPly_c *player;
     u32 id;
 
@@ -658,7 +661,7 @@ DossyCollisionFileHandle gDossyHeadCollisionFile(ASSET_DOSSY_HEAD_KCL);
 /* The state table Behavior dispatches through: three pointer-to-member
    records. Retail stores the records as compiler temporaries in .data
    (0x0211cd2c, 0x0211cd1c, 0x0211cd24) and the live table in .bss. */
-extern "C" StateFunc data_ov065_0211d7fc[3] = {
+StateFunc data_ov065_0211d7fc[3] = {
     &daDossy_c::func_ov065_02118634,
     &daDossy_c::func_ov065_021183c8,
     &daDossy_c::func_ov065_021182e4,

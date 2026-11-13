@@ -71,7 +71,7 @@
       "ordinal": 4
     },
     {
-      "symbol": "daObjWlSubmarine_c_classInit",
+      "symbol": "_Z28daObjWlSubmarine_c_classInitv",
       "address": "0x02111a70",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_wl_submarine.c",

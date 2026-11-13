@@ -207,7 +207,7 @@
       "ordinal": 23
     },
     {
-      "symbol": "daKrpa_c_classInit",
+      "symbol": "_Z18daKrpa_c_classInitv",
       "address": "0x02121af8",
       "size": "0x00000050",
       "legacy_source": "src/daKrpa_c_Spawn.c",

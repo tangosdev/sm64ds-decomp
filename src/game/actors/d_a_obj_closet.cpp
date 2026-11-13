@@ -69,6 +69,7 @@ int AngleDiff(int a, int b);
 void StartMinigameMenu(unsigned char returnToRecRoom);
 }
 
+
 extern u8 data_0209d684;
 extern u8 data_0209d660;
 
@@ -204,6 +205,6 @@ s32 daObjCloset_c::InitResources() {
     return 1;
 }
 
-extern "C" daObjCloset_c *daObjCloset_c_classInit() {
+daObjCloset_c *daObjCloset_c_classInit() {
     return new daObjCloset_c();
 }

@@ -46,8 +46,8 @@ extern "C" {
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *trans, short angle, const Vector3 *v);
 u8 NumStars(void);
-int func_ov100_02144f84(void);
 }
+int func_ov100_02144f84(void);
 /* -------------------------------------------------------------------------- */
 /* Factory: `return new` inherits fBase_c::operator new. */
 /* -------------------------------------------------------------------------- */

@@ -99,14 +99,14 @@
       "ordinal": 8
     },
     {
-      "symbol": "daObjCtRotateBlock_c_classInit_CT_MECHA02",
+      "symbol": "_Z41daObjCtRotateBlock_c_classInit_CT_MECHA02v",
       "address": "0x02119ebc",
       "size": "0x00000040",
       "legacy_source": "src/d_a_obj_ct_rotate_block_ct_mecha02.c",
       "ordinal": 9
     },
     {
-      "symbol": "daObjCtRotateBlock_c_classInit_CT_MECHA01",
+      "symbol": "_Z41daObjCtRotateBlock_c_classInit_CT_MECHA01v",
       "address": "0x02119efc",
       "size": "0x00000040",
       "legacy_source": "src/d_a_obj_ct_rotate_block_ct_mecha01.c",

@@ -78,7 +78,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "daObjFl_KomaU_c_classInit",
+      "symbol": "_Z25daObjFl_KomaU_c_classInitv",
       "address": "0x02118564",
       "size": "0x0000005c",
       "legacy_source": "src/d_a_obj_fl_koma_u.cpp",

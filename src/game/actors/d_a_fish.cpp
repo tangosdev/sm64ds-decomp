@@ -36,7 +36,7 @@
  * - Mtx43 / RawVector3_16 are POD views whose aggregate copies keep the
  *   ROM's ldm/stm / halfword-move shapes.
  * - func_0203b9b4, Vec3_Sub and Vec3_Asr have no shared header, so they
- *   keep a local extern "C" block.
+ *   keep a local block.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -107,6 +107,7 @@ void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
 }
 
+
 enum {
     kFishActorID = 0x158,
     kFleeSound = 0xc2,
@@ -131,7 +132,7 @@ inline daFish_c::daFish_c() {
     func_0203b9b4(&mSeed, 1);
 }
 
-extern "C" daFish_c *daFish_c_classInit() {
+daFish_c *daFish_c_classInit() {
     return new daFish_c();
 }
 

@@ -92,10 +92,12 @@ extern daMoray_c::State data_ov016_02114dbc;
 /* The zero cylinder offset has three signed components and no registered
  * lifetime work in the retail initializer: a VecFx32, not a Vector3. Its
  * components are copied into the collision API's Vector3 locals below. */
-extern "C" {
+
 extern VecFx32 data_ov016_02114d4c; /* cylinder offset, bss */
 
-extern unsigned char gCurrentStarId;        /* the selected star */
+extern unsigned char gCurrentStarId;
+extern "C" {
+        /* the selected star */
 
 int AngleDiff(int a, int b);
 int SublevelToLevel(int sub);
@@ -114,6 +116,7 @@ void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 }
 
+
 /* Render's per-segment bend table, one 0xc record per body bone.
  * The six ROM records are {0, 0, scale} with scales 1,1,1,1,-1,0.
  * This loop reads only angleScale. */
@@ -124,7 +127,7 @@ struct MorayRenderStep {
 };
 
 
-extern "C" MorayRenderStep data_ov016_02114908[];
+extern MorayRenderStep data_ov016_02114908[];
 
 /* Out of line, and FIRST in this ROM-ascending file: that puts D1 and D0 at
  * 0x021111a0 / 0x02111208, the two lowest addresses in the unit.
@@ -803,7 +806,7 @@ s32 daMoray_c::InitResources()
  * The implicit constructor builds the base, collision cylinders, background
  * checker, model animation, and seven segment positions in declaration order.
  * Vector3's empty default constructor is the array callback at 0x0203d384. */
-extern "C" daMoray_c *daMoray_c_classInit()
+daMoray_c *daMoray_c_classInit()
 {
     return new daMoray_c;
 }

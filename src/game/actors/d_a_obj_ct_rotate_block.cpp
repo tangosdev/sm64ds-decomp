@@ -274,11 +274,11 @@ int daObjCtRotateBlock_c::InitResources() {
     return 1;
 }
 
-extern "C" daObjCtRotateBlock_c *daObjCtRotateBlock_c_classInit_CT_MECHA02() {
+daObjCtRotateBlock_c *daObjCtRotateBlock_c_classInit_CT_MECHA02() {
     return new daObjCtRotateBlock_c();
 }
 
-extern "C" daObjCtRotateBlock_c *daObjCtRotateBlock_c_classInit_CT_MECHA01() {
+daObjCtRotateBlock_c *daObjCtRotateBlock_c_classInit_CT_MECHA01() {
     return new daObjCtRotateBlock_c();
 }
 

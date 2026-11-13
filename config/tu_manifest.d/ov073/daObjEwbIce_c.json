@@ -162,21 +162,21 @@
       "ordinal": 17
     },
     {
-      "symbol": "daObjEwbIce_c_classInit_EWB_ICE_C",
+      "symbol": "_Z33daObjEwbIce_c_classInit_EWB_ICE_Cv",
       "address": "0x021227e4",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_ewb_ice_ewb_ice_c.c",
       "ordinal": 18
     },
     {
-      "symbol": "daObjEwbIce_c_classInit_EWB_ICE_B",
+      "symbol": "_Z33daObjEwbIce_c_classInit_EWB_ICE_Bv",
       "address": "0x02122814",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_ewb_ice_ewb_ice_b.c",
       "ordinal": 19
     },
     {
-      "symbol": "daObjEwbIce_c_classInit_EWB_ICE_A",
+      "symbol": "_Z33daObjEwbIce_c_classInit_EWB_ICE_Av",
       "address": "0x02122844",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_ewb_ice_ewb_ice_a.c",

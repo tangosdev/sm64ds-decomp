@@ -95,7 +95,7 @@
       "ordinal": 7
     },
     {
-      "symbol": "daObjKm2_Agaru_c_classInit",
+      "symbol": "_Z26daObjKm2_Agaru_c_classInitv",
       "address": "0x021114dc",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_km2_agaru.c",

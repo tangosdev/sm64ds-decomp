@@ -79,11 +79,11 @@ ResourceDescriptor data_ov047_02112334 = {
 s16 gKm3KaitendaiRotationIncrement = 312;
 s16 gKm3KaitendaiAlternateRotationIncrement = 624;
 
-extern "C" daObjKm3_Kaitendai_c *daObjKm3_Kaitendai_c_classInit() {
+daObjKm3_Kaitendai_c *daObjKm3_Kaitendai_c_classInit() {
     return new daObjKm3_Kaitendai_c();
 }
 
-extern "C" SpawnInfo<daObjKm3_Kaitendai_c> g_profile_KM3_KAITENDAI = {
+SpawnInfo<daObjKm3_Kaitendai_c> g_profile_KM3_KAITENDAI = {
     daObjKm3_Kaitendai_c_classInit,
     0x009c, /* KM3_KAITENDAI registry id 156 */
     0x00e3,

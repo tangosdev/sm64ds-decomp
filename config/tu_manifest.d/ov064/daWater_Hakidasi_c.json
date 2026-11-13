@@ -113,7 +113,7 @@
       "ordinal": 10
     },
     {
-      "symbol": "daWater_Hakidasi_c_classInit",
+      "symbol": "_Z28daWater_Hakidasi_c_classInitv",
       "address": "0x02119a18",
       "size": "0x00000040",
       "legacy_source": "src/d_a_water_hakidasi.c",

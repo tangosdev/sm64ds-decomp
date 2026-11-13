@@ -45,21 +45,22 @@ enum d_a_star_gate_AssetId {
 #include "math/CalcLib.h"
 
 extern "C" {
-int func_ov100_02144fcc(...);
 void func_02012694(int soundID, void *position, ...);
 void Vec3_RotateYAndTranslate(Vector3 *out, void *m, short angle, const Vector3 *in);
 void ChangeArea(int areaID);
 void ShowArea(int areaID);
-int func_ov100_02145014(void);
-void func_ov100_02145070(int value);
 unsigned char NumStars(void);
-int func_ov100_02144f84(void);
 void SetTouchScreenDelay(void);
 int AngleDiff(int a, int b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 u8 IsAreaShowing(int areaID);
 void Matrix4x3_FromRotationY(Matrix4x3 *matrix, int angle);
 }
+int func_ov100_02144fcc(void);
+int func_ov100_02145014(void);
+void func_ov100_02145070(int value);
+int func_ov100_02144f84(void);
+
 
 extern u8 gLocalPlayerId;
 extern dCamera_c *gCamera;
@@ -71,10 +72,10 @@ struct StarGateModelFilePtr : SharedFilePtr {
     ~StarGateModelFilePtr();
 };
 
-extern "C" StarGateModelFilePtr gObjStargateModelFile;
+extern StarGateModelFilePtr gObjStargateModelFile;
 StarGateModelFilePtr gObjStargateModelFile(ASSET_OBJ_STARGATE_BMD);
 
-extern "C" VecFx32 data_ov100_02148948;
+extern VecFx32 data_ov100_02148948;
 VecFx32 data_ov100_02148948;
 
 /* The declaration order in daStarGate_c fixes the BSS layout.  Definition
@@ -101,16 +102,16 @@ daStarGate_c::State daStarGate_c::ST_STAY_CLOSED = {
     &daStarGate_c::St_StayClosed_Main
 };
 
-extern "C" daStarGateInfo data_ov100_02148390[] = {
+daStarGateInfo data_ov100_02148390[] = {
     { 12, 5, 28, 37 },
     { 30, 6, 29, 38 },
     { 50, 7, 30, 39 },
     { 80, 8, 31, 36 }
 };
 
-extern "C" daStarGate_c *daStarGate_c_classInit();
+daStarGate_c *daStarGate_c_classInit();
 
-extern "C" SpawnInfo<daStarGate_c> g_profile_STAR_GATE = {
+SpawnInfo<daStarGate_c> g_profile_STAR_GATE = {
     daStarGate_c_classInit,
     0x0162,
     0x0162,
@@ -126,7 +127,7 @@ static inline int Abs(int v) {
     return v < 0 ? -v : v;
 }
 
-extern "C" daStarGate_c *daStarGate_c_classInit()
+daStarGate_c *daStarGate_c_classInit()
 {
     return new daStarGate_c();
 }
@@ -391,7 +392,7 @@ bool daStarGate_c::St_OpenClose_Main(daPly_c *player) {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 bool daStarGate_c::St_StayClosed_Main(daPly_c *player) {
-    if (func_ov100_02144fcc(this, player))
+    if (func_ov100_02144fcc())
         ChangeState(&ST_WAIT, player);
     return true;
 }

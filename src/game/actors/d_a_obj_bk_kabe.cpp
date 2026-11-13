@@ -166,11 +166,11 @@ int daObjBk_Kabe_c::InitResources() {
     return 1;
 }
 
-extern "C" daObjBk_Kabe_c *daObjBk_Kabe_c_classInit_BK_KABE01() {
+daObjBk_Kabe_c *daObjBk_Kabe_c_classInit_BK_KABE01() {
     return new daObjBk_Kabe_c();
 }
 
-extern "C" daObjBk_Kabe_c *daObjBk_Kabe_c_classInit_BK_KABE00() {
+daObjBk_Kabe_c *daObjBk_Kabe_c_classInit_BK_KABE00() {
     return new daObjBk_Kabe_c();
 }
 

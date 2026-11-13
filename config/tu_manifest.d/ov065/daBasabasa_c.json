@@ -187,7 +187,7 @@
       "ordinal": 20
     },
     {
-      "symbol": "daBasabasa_c_classInit",
+      "symbol": "_Z22daBasabasa_c_classInitv",
       "address": "0x02117ee8",
       "size": "0x00000058",
       "legacy_source": "src/d_a_basabasa.c",

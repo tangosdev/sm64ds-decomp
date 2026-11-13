@@ -99,7 +99,7 @@
       "ordinal": 8
     },
     {
-      "symbol": "daObjKm2_Nobiru_c_classInit",
+      "symbol": "_Z27daObjKm2_Nobiru_c_classInitv",
       "address": "0x02111ad4",
       "size": "0x00000040",
       "legacy_source": "src/d_a_obj_km2_nobiru.c",

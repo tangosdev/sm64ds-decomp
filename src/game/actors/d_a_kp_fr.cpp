@@ -42,7 +42,7 @@
 /* The registry factory behind the KERONPA_FIRE profile.
  * `return new daKpFr_c()` emits 0x48 with the synthesized ctor storing
  * `_ZTV8daKpFr_c + 2`. Historical aliases: daKpFr_c_Spawn, FlameChompFire_Spawn. */
-extern "C" daKpFr_c *daKpFr_c_classInit(void)
+daKpFr_c *daKpFr_c_classInit(void)
 {
     return new daKpFr_c();
 }
@@ -52,7 +52,7 @@ extern "C" daKpFr_c *daKpFr_c_classInit(void)
  * later EAD lineage supplies the spelling prior. Exact original SM64DS
  * spellings are not preserved. Historical aliases: daKpFr_c_Spawn and
  * daKpFr_c_SpawnInfo. The descriptor is at ov070:0x02123424. */
-extern "C" SpawnInfo<daKpFr_c> g_profile_KERONPA_FIRE = {
+SpawnInfo<daKpFr_c> g_profile_KERONPA_FIRE = {
     daKpFr_c_classInit,
     0x010f,
     0x0082,
@@ -66,9 +66,8 @@ extern "C" SpawnInfo<daKpFr_c> g_profile_KERONPA_FIRE = {
 #include "decl_common.h"
 #include "dBgCh_Actr.h"
 #include "private/mtx43.h"
-extern "C" {
+
 extern Matrix4x3 IDENTITY_MATRIX4X3;
-}
 
 int daKpFr_c::InitResources()
 {
@@ -118,13 +117,13 @@ int daKpFr_c::CleanupResources()
     return 1;
 }
 
-extern "C" daKpFrState data_ov070_021236ec[];
+extern daKpFrState data_ov070_021236ec[];
 /* The ROM PMF constants the state table copies from (unlicensed .data):
  * the init/behavior halves of the two states, in retail copy order. */
-extern "C" daKpFrStateMethod data_ov070_021233ec;
-extern "C" daKpFrStateMethod data_ov070_021233fc;
-extern "C" daKpFrStateMethod data_ov070_021233f4;
-extern "C" daKpFrStateMethod data_ov070_02123404;
+extern daKpFrStateMethod data_ov070_021233ec;
+extern daKpFrStateMethod data_ov070_021233fc;
+extern daKpFrStateMethod data_ov070_021233f4;
+extern daKpFrStateMethod data_ov070_02123404;
 
 void daKpFr_c::func_ov070_02122044(int idx)
 {

@@ -131,7 +131,7 @@
       "ordinal": 12
     },
     {
-      "symbol": "daObjFl_Amilift_c_classInit",
+      "symbol": "_Z27daObjFl_Amilift_c_classInitv",
       "address": "0x02117fe8",
       "size": "0x00000038",
       "legacy_source": "src/d_a_obj_fl_amilift.c",

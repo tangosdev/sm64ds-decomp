@@ -84,14 +84,14 @@
       "ordinal": 6
     },
     {
-      "symbol": "daObjCtKaitendai_c_classInit_CT_MECHA07",
+      "symbol": "_Z39daObjCtKaitendai_c_classInit_CT_MECHA07v",
       "address": "0x0211b780",
       "size": "0x00000038",
       "legacy_source": "src/d_a_obj_ct_kaitendai_ct_mecha07.c",
       "ordinal": 7
     },
     {
-      "symbol": "daObjCtKaitendai_c_classInit_CT_MECHA06",
+      "symbol": "_Z39daObjCtKaitendai_c_classInit_CT_MECHA06v",
       "address": "0x0211b7b8",
       "size": "0x00000038",
       "legacy_source": "src/d_a_obj_ct_kaitendai_ct_mecha06.c",

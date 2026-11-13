@@ -520,9 +520,6 @@ extern int func_ov070_0211f0a4(void*);
 extern int func_ov080_0212714c(void*, void*);
 extern int func_ov080_021274ac(void*, void*);
 extern int func_ov100_02143370(char*);
-extern int func_ov100_02144f84(void);
-extern int func_ov100_02144fcc(void);
-extern int func_ov100_02145014(void);
 extern int*data_0209d70c;
 extern int *sFlowerFaceSprites[];
 extern int*data_ov006_0213abe0;
@@ -1040,7 +1037,6 @@ extern void func_ov100_0214344c(void*);
 extern void func_ov100_021435e8(void*);
 extern void func_ov100_021437d4(void*);
 extern void func_ov100_02143b68(char*);
-extern void func_ov100_02145070(int);
 /* Returns int -- the tree's own definition (in src/game/actors/d_a_door.cpp)
    defines it `extern "C" int`, and its early-out is `return 1`. */
 extern void*FindWithActorID(unsigned int, void*);

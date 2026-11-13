@@ -251,7 +251,7 @@
       "ordinal": 30
     },
     {
-      "symbol": "daJgm_c_classInit",
+      "symbol": "_Z17daJgm_c_classInitv",
       "address": "0x02124b04",
       "size": "0x00000060",
       "legacy_source": "src/d_a_jgm.c",

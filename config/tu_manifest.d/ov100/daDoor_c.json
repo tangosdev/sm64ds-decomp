@@ -147,28 +147,28 @@
       "ordinal": 15
     },
     {
-      "symbol": "func_ov100_02144f84",
+      "symbol": "_Z19func_ov100_02144f84v",
       "address": "0x02144f84",
       "size": "0x00000048",
       "legacy_source": "src/func_ov100_02144f84.c",
       "ordinal": 16
     },
     {
-      "symbol": "func_ov100_02144fcc",
+      "symbol": "_Z19func_ov100_02144fccv",
       "address": "0x02144fcc",
       "size": "0x00000048",
       "legacy_source": "src/func_ov100_02144fcc.cpp",
       "ordinal": 17
     },
     {
-      "symbol": "func_ov100_02145014",
+      "symbol": "_Z19func_ov100_02145014v",
       "address": "0x02145014",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov100_02145014.c",
       "ordinal": 18
     },
     {
-      "symbol": "func_ov100_02145070",
+      "symbol": "_Z19func_ov100_02145070i",
       "address": "0x02145070",
       "size": "0x00000010",
       "legacy_source": "src/func_ov100_02145070.c",
@@ -252,7 +252,7 @@
       "ordinal": 30
     },
     {
-      "symbol": "daDoor_c_classInit",
+      "symbol": "_Z18daDoor_c_classInitv",
       "address": "0x0214589c",
       "size": "0x00000038",
       "legacy_source": "src/d_a_door.c",

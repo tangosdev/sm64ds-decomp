@@ -56,7 +56,7 @@ struct PathLiftCollisionFilePtr : SharedFilePtr {
 extern PathLiftModelFile data_ov100_02148a54;
 extern PathLiftCollisionFilePtr data_ov100_02148a5c;
 
-extern "C" daObjPathLift_c *daObjPathLift_c_classInit() {
+daObjPathLift_c *daObjPathLift_c_classInit() {
     return new daObjPathLift_c();
 }
 

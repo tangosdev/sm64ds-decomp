@@ -232,9 +232,11 @@ extern int func_ov002_020eea84(void *, void *);
 extern int func_ov002_020eeeb8(void *, char *);
 extern int func_ov002_020ef070(void *, char *);
 extern int func_ov002_020f035c(unsigned int sel, int r1);
-extern int func_ov100_02144fcc(void);
-extern int func_ov100_02145014(void);
-extern void func_ov100_02145070(int);
+}
+int func_ov100_02144fcc(void);
+int func_ov100_02145014(void);
+void func_ov100_02145070(int);
+extern "C" {
 extern int GiveHealth(int, int);
 extern void GiveLives(int);
 extern u16 gKuppaScriptFrame;

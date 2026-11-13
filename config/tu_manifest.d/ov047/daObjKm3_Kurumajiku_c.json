@@ -75,7 +75,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "daObjKm3_Kurumajiku_c_classInit",
+      "symbol": "_Z31daObjKm3_Kurumajiku_c_classInitv",
       "address": "0x02111280",
       "size": "0x0000003c",
       "legacy_source": "src/RickshawBs_Spawn.c",
@@ -191,7 +191,7 @@
       "source": "0x0211227c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daObjKm3_Kurumajiku_c_classInit",
+      "symbol": "_Z31daObjKm3_Kurumajiku_c_classInitv",
       "addend": 0,
       "target_module": "ov047",
       "target_address": "0x02111280"

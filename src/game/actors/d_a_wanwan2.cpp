@@ -175,6 +175,8 @@ int ApproachAngle(short *cur, short target, int step, int a, int b);
 int atan2_hold_d_a_wanwan2_1(int y, int x);
 void LoadSilverStarAndNumber();
 void UnloadSilverStarAndNumber();
+}
+
 
 extern SharedFilePtr data_ov002_0211092c;
 extern s32 data_ov100_02148008[3];
@@ -184,7 +186,6 @@ extern ChompPmf data_ov100_02148000;
 extern ChompPmf data_ov100_02147ff8;
 extern unsigned char gGameMode;
 extern Matrix4x3 data_020a0e68;
-}
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
@@ -205,9 +206,9 @@ daWanwan2_c::~daWanwan2_c()
 /* -------------------------------------------------------------------------- */
 /* The floor probe: a vertical line from 10 units above the chomp (0xa000) to
    184 units below it (0xb8000). Returns 1 on a hit. */
-extern "C" int func_ov100_02143370(char *self)
+int daWanwan2_c::func_ov100_02143370()
 {
-    daWanwan2_c *c = (daWanwan2_c *)self;
+    daWanwan2_c *c = this;
     Vector3 va;
     Vector3 vb;
     int ya, yb;
@@ -243,7 +244,7 @@ extern "C" int func_ov100_02143370(char *self)
    source; its `enum Bool` comparison temporaries are kept. */
 enum Bool { FALSE, TRUE };
 
-extern "C" void func_ov100_0214344c(daWanwan2_c *self)
+void func_ov100_0214344c(daWanwan2_c *self)
 {
     Vector3 v;
     daPly_c *other;
@@ -309,7 +310,7 @@ extern "C" void func_ov100_0214344c(daWanwan2_c *self)
    frame until it is gone or its +0x440 word (daStar_c's unk_440) reads 5;
    either latches mChainEndDone, clears mChainEndActorID and stops the
    updates. */
-extern "C" void func_ov100_021435e8(daWanwan2_c *c)
+void func_ov100_021435e8(daWanwan2_c *c)
 {
     if (c->mChainEndDone != 0) return;
 
@@ -382,7 +383,7 @@ extern "C" void func_ov100_021435e8(daWanwan2_c *c)
    bound ended up more than 200 units above it. Was a C source; the
    materialised mChainTimer address and the `added` copy are the shapes the ROM
    carries. */
-extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
+void func_ov100_021437d4(daWanwan2_c *thisx)
 {
     VecFx32 in, out, cur, delta, added, v48, v54, v60;
     VecFx32 *pos, *vel, *src;
@@ -467,7 +468,7 @@ extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
    recovered as "RollingIronBall_Kill" / "daIbl_c::Kill, from vtable slot
    identity": the pointer-to-member constant that holds it follows daIbl_c's
    vtable directly, and that is the whole of the old claim. Was a C source. */
-extern "C" int func_ov100_02143aa4(daWanwan2_c *c)
+int func_ov100_02143aa4(daWanwan2_c *c)
 {
     c->mAnmModel.speed = 4096; /* 1.0 */
     c->mAnmModel.Advance();
@@ -480,7 +481,7 @@ extern "C" int func_ov100_02143aa4(daWanwan2_c *c)
 /* -------------------------------------------------------------------------- */
 /* The walking state's enter member (data_ov100_02148000): start the walk
    animation from data_ov100_021486ac. Was a C source. */
-extern "C" int func_ov100_02143ae0(daWanwan2_c *c)
+int func_ov100_02143ae0(daWanwan2_c *c)
 {
     c->mAnmModel.SetAnim((BCA_File *)data_ov100_021486ac.filePtr, 0, 0x1000, 0);
     return 1;
@@ -489,7 +490,7 @@ extern "C" int func_ov100_02143ae0(daWanwan2_c *c)
 /* -------------------------------------------------------------------------- */
 /* Enter a state: store the pair in mStatePair (+0x668) and call its enter
    member, if it has one. */
-extern "C" int func_ov100_02143b18(ChompPmfSelf *c, ChompState *p)
+int func_ov100_02143b18(ChompPmfSelf *c, ChompState *p)
 {
     c->state = p;
     ChompState *q = c->state;
@@ -503,9 +504,9 @@ extern "C" int func_ov100_02143b18(ChompPmfSelf *c, ChompState *p)
    opacity 0xf), then for each of the six links an identity matrix at the
    link's position (mLinkPos >> 3) and a smaller drop shadow (radius 120
    units, depth 500 units). */
-extern "C" void func_ov100_02143b68(char *self)
+void daWanwan2_c::func_ov100_02143b68()
 {
-    daWanwan2_c *c = (daWanwan2_c *)self;
+    daWanwan2_c *c = this;
     Mtx43 tmp;
     int i;
     dExtSimpleModel_c *mdst;
@@ -598,10 +599,10 @@ int daWanwan2_c::Behavior()
         ApproachLinear(mScaleX, 0x1000, 0x500);
         mScaleZ = mScaleX;
         mScaleY = mScaleZ;
-        func_ov100_02143b68((char *)this);
+        func_ov100_02143b68();
         mHorzSpeed = 0;
         UpdatePos((dCc_c *)&mdCcAcPos_c);
-        if (func_ov100_02143370((char *)this) != 0) {
+        if (func_ov100_02143370() != 0) {
             mTerminalVelocity = 0;
         }
         mdCcAcPos_c.Clear();
@@ -621,7 +622,7 @@ int daWanwan2_c::Behavior()
     mHorzSpeed = 0x17000;
     UpdatePos((dCc_c *)&mdCcAcPos_c);
 
-    if (func_ov100_02143370((char *)this) != 0) {
+    if (func_ov100_02143370() != 0) {
         if (unk_6a8 == 0) {
             func_02012694(daWanwan2_SND_FLOOR_HIT, &mCamSpacePosX);
         }
@@ -680,7 +681,7 @@ int daWanwan2_c::Behavior()
 
         mAngleY = mPrevAngleY;
 
-        func_ov100_02143b68((char *)this);
+        func_ov100_02143b68();
         mdCcAcPos_c.Clear();
 
         daPly_c *p = ClosestPlayer();
@@ -817,7 +818,7 @@ s32 daWanwan2_c::OnAimedAtWithEgg()
  * retail constructor and destructor callback pairs through the manifest's
  * canonical constructor records. Vector3s.h supplies the real short-vector
  * default constructor. The compiler emits the vptr store and array calls. */
-extern "C" daWanwan2_c *daWanwan2_c_classInit()
+daWanwan2_c *daWanwan2_c_classInit()
 {
     return new daWanwan2_c();
 }

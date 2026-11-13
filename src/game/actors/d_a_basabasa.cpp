@@ -64,6 +64,7 @@ void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 }
 
 
+
 extern BasabasaAnimationFileHandle data_ov065_0211d690; /* flying animation */
 extern BasabasaModelFilePtr data_ov065_0211d698;        /* flying model */
 extern BasabasaAnimationFileHandle data_ov065_0211d6a0; /* hanging animation */
@@ -462,7 +463,7 @@ s32 daBasabasa_c::OnYoshiTryEat() {
     return 4;
 }
 
-extern "C" daBasabasa_c *daBasabasa_c_classInit() {
+daBasabasa_c *daBasabasa_c_classInit() {
     return new daBasabasa_c();
 }
 

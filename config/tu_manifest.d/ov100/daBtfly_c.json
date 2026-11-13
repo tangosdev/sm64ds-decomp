@@ -145,7 +145,7 @@
       "ordinal": 14
     },
     {
-      "symbol": "daBtfly_c_classInit",
+      "symbol": "_Z19daBtfly_c_classInitv",
       "address": "0x02141ea4",
       "size": "0x00000060",
       "legacy_source": "src/d_a_btfly.c",

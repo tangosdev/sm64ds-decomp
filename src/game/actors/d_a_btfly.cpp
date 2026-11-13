@@ -99,6 +99,8 @@ void Vec3_Asr(void *d, void *s, int sh);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 ang);
 int RandomIntInternal(int *seed);
+}
+
 extern Matrix4x3 data_020a0e68; /* scratch matrix */
 /* Init LoadFile: ov002 BMD shared with the other small fauna, this overlay's
  * BCA, the still-model BMD, and the animated-model BMD. Cleanup Release. */
@@ -112,7 +114,6 @@ extern ButterflyState data_ov100_02148628[];
  * stack; these scalar entries are the ROM calls. */
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *w, void *actor, int radius, int height, void *a, void *b);
-}
 
 /* One ~daBtfly_c() emits both D1 and D0. */
 daBtfly_c::~daBtfly_c()
@@ -531,7 +532,7 @@ int daBtfly_c::InitResources()
     return 1;
 }
 
-extern "C" daBtfly_c *daBtfly_c_classInit()
+daBtfly_c *daBtfly_c_classInit()
 {
     return new daBtfly_c();
 }

@@ -151,9 +151,11 @@ namespace Sound {
 int PlayLong(u32, u32, u32, const Vector3 &, s16);
 }
 
-extern "C" {
+
 extern signed char gCurrentSublevel;
 extern unsigned char gCurrentStarId;
+extern "C" {
+
 
 void d_a_owlPlayLongHold(unsigned int a, unsigned int b, unsigned int cc, void *pos,
                          unsigned int d);
@@ -163,6 +165,7 @@ short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int IsStarCollectedInCurLevel(int);
 }
+
 
 /* Actor ID 0xbf is PLAYER. This int-returning predicate is what makes the
  * ROM materialize 0/1 before testing it. */
@@ -630,7 +633,7 @@ int daOwl_c::InitResources()
     return 1;
 }
 
-extern "C" daOwl_c *daOwl_c_classInit()
+daOwl_c *daOwl_c_classInit()
 {
     return new daOwl_c();
 }

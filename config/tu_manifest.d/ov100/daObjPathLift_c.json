@@ -91,7 +91,7 @@
       "ordinal": 7
     },
     {
-      "symbol": "daObjPathLift_c_classInit",
+      "symbol": "_Z25daObjPathLift_c_classInitv",
       "address": "0x02147328",
       "size": "0x0000007c",
       "legacy_source": "src/d_a_obj_path_lift.cpp",

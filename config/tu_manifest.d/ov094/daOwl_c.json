@@ -187,7 +187,7 @@
       "ordinal": 20
     },
     {
-      "symbol": "daOwl_c_classInit",
+      "symbol": "_Z17daOwl_c_classInitv",
       "address": "0x02136798",
       "size": "0x00000050",
       "legacy_source": "src/d_a_owl.c",

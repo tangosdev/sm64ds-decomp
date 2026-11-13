@@ -86,11 +86,11 @@ static inline int IsLargeBelt(dActor_c *actor) {
     return actor->actorID == ACTOR_CT_MECHA04L;
 }
 
-extern "C" daObjCtMecha04_c *daObjCtMecha04_c_classInit_CT_MECHA04S() {
+daObjCtMecha04_c *daObjCtMecha04_c_classInit_CT_MECHA04S() {
     return new daObjCtMecha04_c();
 }
 
-extern "C" daObjCtMecha04_c *daObjCtMecha04_c_classInit_CT_MECHA04L() {
+daObjCtMecha04_c *daObjCtMecha04_c_classInit_CT_MECHA04L() {
     return new daObjCtMecha04_c();
 }
 
