@@ -8,6 +8,6 @@ extern "C" {
 Fix12i Vec3_HorzLen(const Vector3 *v) {
     long long sq = (long long)v->x * v->x;
     sq += (long long)v->z * v->z;
-    return cstd::sqrt((u64)sq);
+    return cstd::sqrt(sq);
 }
 }
