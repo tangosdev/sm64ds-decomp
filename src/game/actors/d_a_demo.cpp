@@ -318,7 +318,7 @@ extern void func_0201f138(void);
 extern void func_0201ef38(void);
 extern void Math_Function_0203b0fc(int* p, int target, int scale, int max);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern void Vec3_MulScalar(VecFx32 *out, const VecFx32 *in, int scale);
+extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 
 /* local extern dropped: decl_common.h declares data_0209b41c */
@@ -3155,7 +3155,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
     tmp.x = diff.x;
     tmp.y = diff.y;
     tmp.z = diff.z;
-    Vec3_MulScalar(&scaled, &tmp, this->mRate);
+    Vec3_MulScalar((Vector3 *)&scaled, (const Vector3 *)&tmp, this->mRate);
     Vec3_Add((Vector3 *)&sum, (const Vector3 *)base, (const Vector3 *)&scaled);
 
     {

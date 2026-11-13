@@ -33,6 +33,7 @@
 #include "nitro/gx/g3imm_cmd.h"
 #include "nitro/gx/g3imm_light.h"
 #include "nitro/hw/registers.h"
+#include "MgCamera.h"
 #include "decl_common.h"
 #include "common.h"
 #include "SharedFilePtr.h"
@@ -250,10 +251,10 @@ extern "C" void TrmpItem_GrowScale(TrmpItem *c) {
 extern "C" void TrmpItem_ProjectToScreen(TrmpItem *c, unsigned short scoreValue) {
     int screenX, screenY;
     if (c->mPos.y > 0) {
-        Camera_ProjectToScreen(sMgSubCamera, &c->mPos, &screenX, &screenY);
+        Camera_ProjectToScreen((MgCamera *)sMgSubCamera, &c->mPos, &screenX, &screenY);
         screenY = screenY - (Mg_GetTopScreenYOffset() + 0xc0);
     } else {
-        Camera_ProjectToScreen(sMgMainCamera, &c->mPos, &screenX, &screenY);
+        Camera_ProjectToScreen((MgCamera *)sMgMainCamera, &c->mPos, &screenX, &screenY);
     }
     Jump2Popup_Spawn(screenX << 0xc, screenY << 0xc, (short)scoreValue);
     *(StateRecord *)c = pmf_TrmpItem_GrowScale;

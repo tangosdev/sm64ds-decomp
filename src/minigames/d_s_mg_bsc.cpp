@@ -46,35 +46,26 @@ extern "C" {
 extern short gMgCoinsStatus;
 extern int Math_Function_0203b14c(int *ptr, int target, int rate, int limit, int step);
 extern void Mg_ResumeSharedState(void);
-extern int Dealer_IsIdle(Dealer *dealer);
 extern void MgCoins_StartPayout(int x);
 extern void MgCoins_StartLose(void);
 extern int gMgCoinsInPlay;
-extern void Dealer_PlayWin(void *c);
-/* decl_common.h already declares this with a void pointer, so the
- * definition's char pointer cannot be repeated here. */
-extern void Dealer_PlayLose(void *c);
 extern void Mg_SubmitScore(int self);
 extern void Mg_SetSharedState(int v);
 extern void Mg_SaveRecordPair(int a, int b);
 extern int sBscLaneX[];
 extern int sMgCoinsBetPlaced;
-extern void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
 extern void FreeGfxSlotsById(int arg);
 extern void MgCoins_Reset(void);
 void Hud_RenderSprite(void *sprite, int x, int y, int a3, int a4);
 void Mg_DrawCredits(void *scene, int a1, int a2, int a3);
 void Mg_DrawScoreTally(void *scene, int a1, int a2, int a3);
-void Dealer_Draw(void *table);
 void MgCoins_Update(void);
-void Dealer_Update(Dealer *c);
 extern unsigned char gMainScreenLayers;
 extern int data_0208ee44;
 extern void LoadCard2SubBg3(void *);
 extern s32 GetGameLanguage(void);
 extern u32 LoadCompressedFileAt(int fileID, void *target);
 extern void *LoadFile(int handle);
-extern int Dealer_Load(void *c);
 }
 
 /* Real C++ declarations for the engine calls below; the namespaces and the
@@ -104,7 +95,7 @@ s32 dScMgBSC_c::InitResources() {
     GXS_LoadOBJPltt(paletteData, 0, 0x100);
     Deallocate(paletteData);
     Camera_InitDealerView(&mCamera);
-    if (Dealer_Load(&mDealer) == 0)
+    if (mDealer.Load() == 0)
         return 0;
     Mg_SetTopScreenYOffset(0x20);
     Mg_PlaceBannersOnTopScreen();
@@ -119,7 +110,7 @@ s32 dScMgBSC_c::InitResources() {
 s32 dScMgBSC_c::Behavior() {
     (this->*sBSCStateTable[mState])();
     MgCoins_Update();
-    Dealer_Update(&mDealer);
+    mDealer.Update();
     return 1;
 }
 
@@ -143,7 +134,7 @@ s32 dScMgBSC_c::Render() {
     MgCoins_Draw();
     Mg_DrawCredits(this, 0xc, 0xc, 0);
     Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
-    Dealer_Draw(&mDealer);
+    mDealer.Draw();
     return 1;
 }
 
@@ -168,7 +159,7 @@ s32 dScMgBSC_c::CanEndState(int mode) {
     int state;
     short coinStatus;
     if (mState == STATE_WAIT_RESULT) {
-        if (Dealer_IsIdle(&mDealer) != 0) {
+        if (mDealer.IsIdle() != 0) {
             if (mode == 4) {
                 FreeGfxSlotsById(0x1d);
                 mState = STATE_WAIT_WIN;
@@ -236,7 +227,7 @@ void dScMgBSC_c::StateDealCards() {
     mOtherCard = 0;
     mChosenCard = 1;
     mCardsDealt = 0;
-    Dealer_StartShuffle(&mDealer, 3, 2, &mCardsDealt);
+    mDealer.StartShuffle(3, 2, &mCardsDealt);
 
     if (mPromptBlinkCount == 0) {
         mPromptEnabled = 1;
@@ -383,7 +374,7 @@ void dScMgBSC_c::StateJudgeCards() {
             mBestHudScore = mHudScore;
         Mg_SubmitScore(mHudScore);
         Mg_SetSharedState(MG_STATE_WIN);
-        Dealer_PlayWin(&mDealer);
+        mDealer.PlayWin();
         mState = STATE_WAIT_RESULT;
     } else {
         if (mHudScore > 0) {
@@ -391,7 +382,7 @@ void dScMgBSC_c::StateJudgeCards() {
             *score = *score - 1;
         }
         Mg_SetSharedState(MG_STATE_LOSE);
-        Dealer_PlayLose(&mDealer);
+        mDealer.PlayLose();
         mState = STATE_WAIT_RESULT;
     }
 }
@@ -400,10 +391,10 @@ void dScMgBSC_c::StateJudgeCards() {
  * file sets state 7 or 8; StateJudgeCards does the same work inline. */
 void dScMgBSC_c::StateTableReaction() {
     if (mState == STATE_WIN_REACTION) {
-        Dealer_PlayWin(&mDealer);
+        mDealer.PlayWin();
         mState = STATE_WAIT_WIN;
     } else {
-        Dealer_PlayLose(&mDealer);
+        mDealer.PlayLose();
         mState = STATE_WAIT_LOSE;
     }
 }
@@ -411,7 +402,7 @@ void dScMgBSC_c::StateTableReaction() {
 /* States 9 and 10: wait for the table's reaction to finish, then pay out
  * a win (state 12) or play the loss sting and gather the cards (state 11). */
 void dScMgBSC_c::StateWaitTable() {
-    if (Dealer_IsIdle(&mDealer) == 0)
+    if (mDealer.IsIdle() == 0)
         return;
     if (mState == STATE_WAIT_WIN) {
         MgCoins_StartPayout(gMgCoinsInPlay << 1);

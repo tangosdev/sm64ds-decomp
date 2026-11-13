@@ -81,23 +81,17 @@ extern short gMgCoinsStatus;
 extern void Mg_SetPerfectBanner(void);
 extern void Mg_SetSharedState(int c);
 extern void Mg_SubmitScore(int self);
-extern void Dealer_PlayWin(void *c);
-extern void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
 extern void FreeGfxSlotsById(int x);
 void Mg_DrawCredits(char *c, int a, int b, int d);
-void Dealer_Draw(char *p);
 void MgCoins_Update(void);
-void Dealer_Update(Dealer *p);
 void LoadCard2SubBg3(void *);
 s32 GetGameLanguage(void);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 void Deallocate(void *ptr);
-int Dealer_Load(void *c);
 int Mg_GetSavedRecord0(void);
 int Mg_GetSavedRecord1(void);
 void MgCoins_Reset(void);
-int Dealer_IsIdle(Dealer *dealer);
 void Mg_SetTopScreenYOffset(int v);
 void Mg_PlaceBannersOnTopScreen(void);
 extern u8 gMainScreenLayers;
@@ -607,13 +601,13 @@ void dScMgMemory_c::ResultWait() {
                 if (mHudScore > mBestHudScore)
                     mBestHudScore = mHudScore;
                 Mg_SubmitScore(gMgScene ? gMgScene->mHudScore : 0);
-                Dealer_PlayWin(&mDealer);
+                mDealer.PlayWin();
             } else {
                 Mg_SetSharedState(MG_STATE_LOSE);
                 if (mHudScore > 0) {
                     mHudScore--;
                 }
-                Dealer_PlayLose(&mDealer);
+                mDealer.PlayLose();
             }
         }
     } else {
@@ -725,9 +719,9 @@ void dScMgMemory_c::RoundStart() {
     mDealSignals = 0;
     mCardsDealt = 0;
     if (mDifficulty >= 2)
-        Dealer_StartShuffle(&mDealer, 4, 3, &mDealSignals);
+        mDealer.StartShuffle(4, 3, &mDealSignals);
     else
-        Dealer_StartShuffle(&mDealer, 4, 2, &mDealSignals);
+        mDealer.StartShuffle(4, 2, &mDealSignals);
     mDealer.mReserved = 1;
     mSubstate = ROUND_DEAL_EASY;
     if (mPromptBlinkCount == 0) {
@@ -907,7 +901,7 @@ void dScMgMemory_c::StateSetup() {
     SetupDifficulty();
     ShuffleCards();
     FreeGfxSlotsById(0x1d);
-    Dealer_PlayIdle((char *)&mDealer);
+    mDealer.PlayIdle();
     mState = STATE_PLAY;
 }
 
@@ -932,7 +926,7 @@ void dScMgMemory_c::OnDealDone() {
 
 int dScMgMemory_c::CanEndState(int /* mode */) {
     if (mState == STATE_RESULT && mSubstate == RESULT_WAIT) {
-        if (Dealer_IsIdle(&mDealer) == 0)
+        if (mDealer.IsIdle() == 0)
             return 0;
         mSubstate = RESULT_REWARD;
         FreeGfxSlotsById(0x1d);
@@ -966,7 +960,7 @@ s32 dScMgMemory_c::Render() {
     DrawMessage();
     DrawCursor();
     DrawCards();
-    Dealer_Draw((char *)&mDealer);
+    mDealer.Draw();
     return 1;
 }
 
@@ -974,7 +968,7 @@ s32 dScMgMemory_c::Render() {
 s32 dScMgMemory_c::Behavior() {
     (this->*sMemoryStateTable[mState])();
     MgCoins_Update();
-    Dealer_Update(&mDealer);
+    mDealer.Update();
     return 1;
 }
 
@@ -996,7 +990,7 @@ s32 dScMgMemory_c::InitResources() {
     gSubScreenLayers = 0x18;
     ResetGame();
     Camera_InitDealerView(&mCamera);
-    if (Dealer_Load(&mDealer) == 0)
+    if (mDealer.Load() == 0)
         return 0;
     mCredits = Mg_GetSavedRecord0();
     mCreditsShown = mCredits;

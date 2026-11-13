@@ -6,19 +6,24 @@
 #include "dExtAnmModel_c.h"
 
 /* FlowerFace, Yoshi in the "loves me, loves me not" flower game, and the 22
- * petals that fall off the flower, animated by the FlowerFace_* /
- * FallingPetal_* helpers in src/minigames/unit020bfec0.cpp. Both names are
+ * petals that fall off the flower, animated by the two classes' methods in
+ * src/minigames/unit020bfec0.cpp. Both names are
  * coined. The files resolve (tools/asset_catalog.py) to MG/yoshi_model.bmd,
  * the petal MG/f_parts.bmd, and MG/yoshi_wait, yoshi_pick, yoshi_like and
  * yoshi_hate.bca. The constructors and destructors are the classes' own
  * (FlowerFace: ov006 0x020c3f54 and 0x020c3e70; FallingPetal: 0x020c402c and
  * 0x020c3e54), so the flower scene holds a typed FlowerFace member and the
- * compiler builds the petal array. The other helpers are free functions
- * over char* records and read them through their FLOWERFACE() and PETAL()
- * casts. */
+ * compiler builds the petal array. Their methods are defined in
+ * src/minigames/unit020bfec0.cpp. */
 struct FallingPetal {
     FallingPetal();
     ~FallingPetal();
+
+    void SetModel(BMD_File *model);
+    void Spawn(const VecFx32 *pos, const VecFx32 *vel);
+    void Update();
+    void Draw();
+    void UpdateMatrix();
 
     Vector3 mPos;    /* 0x00 */
     Vector3 mVel;    /* 0x0c -- mPos += mVel each frame */
@@ -50,6 +55,20 @@ struct FlowerFaceAnimationFileHandle : SharedFilePtr {
 struct FlowerFace {
     FlowerFace();
     ~FlowerFace();
+
+    int Load();
+    void Update();
+    void Draw();
+    void Reset();
+    int IsIdle();
+    void PlayIdle();
+    void PlayPetalPulled();
+    void StatePick();
+    void PlayLike();
+    void PlayHate();
+    void StateIdle();
+    void StateLike();
+    void StateHate();
 
     s32 mState[2];             /* 0x000 -- the current state's member-pointer record */
     FallingPetal mPetals[22];  /* 0x008 */

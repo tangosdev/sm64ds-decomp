@@ -12,9 +12,9 @@
  * MASCOT at 0x4f38: Toad at the table, a typed Mascot member
  * (include/Mascot.h). Mascot's own constructor and destructor (ov006
  * 0x020c221c and 0x020c21e4) build and tear it down as part of this class's,
- * and this class's Load, Behavior and Render hand its address to
- * Mascot_Load, Mascot_Update and Mascot_Draw. Its size is bounded by what
- * follows it, and that bound is 0xac, not the 0xb8 the first draft of this
+ * and this class's Load, Behavior and Render call its Load, Update and
+ * Draw. Its size is bounded by what follows it, and that bound is 0xac, not
+ * the 0xb8 the first draft of this
  * header claimed: a THREE-ELEMENT s32 array sits at 0x4fe4, indexed by
  * five of this class's methods (the legacy Render's local
  * `struct T4fe4 { char pad[0x4fe4]; int vals[3]; }` names it outright, and

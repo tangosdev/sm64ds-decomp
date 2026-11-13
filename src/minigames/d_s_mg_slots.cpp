@@ -451,15 +451,13 @@ void Slot3_StateSpin(char *c) {
 }
 
 extern "C" { /* .c-derived member: C linkage for the whole block */
-void Mascot_LookAt(char *c, int *src);
 void Mg_ShowBanner(int c, int a1, int a2, int a3, int arg5, short arg6);
-void Mascot_StopLooking(int *p);
 void FreeGfxSlotsById(int arg);
 
 void Slot3_StateIntro(char *p) {
     dScMgSlot3_c *scene = (dScMgSlot3_c *)p;
     if (scene->mReelDrawY == 0x50) {
-        Mascot_LookAt((char *)&scene->mMascot, 0);
+        scene->mMascot.LookAt(0);
         Mg_ShowBanner(0xd, 0x80, 0xa8, 1, -1, 0xd);
     }
 
@@ -468,7 +466,7 @@ void Slot3_StateIntro(char *p) {
         if (scene->mReelDrawY != 0)
             return;
         scene->mWinSymbol = scene->mNextWinSymbol;
-        Mascot_StopLooking((int *)&scene->mMascot);
+        scene->mMascot.StopLooking();
         return;
     }
 
@@ -619,8 +617,8 @@ s32 dScMgSlot3_c::Render() {
     char *c = (char *)this;
     int i;
 
-    Camera_InitSlotsView((char *)&mCamera);
-    Mascot_Draw((char *)&mMascot);
+    Camera_InitSlotsView(&mCamera);
+    mMascot.Draw();
 
     if (mReelDrawY > 0) {
         for (i = 0; i < 3; i++) {
@@ -765,7 +763,7 @@ s32 dScMgSlot3_c::Behavior() {
     (this->*sSlot3StateTable[mState])();
 
     mFrameCounter++;
-    Mascot_Update(&mMascot);
+    mMascot.Update();
 
     for (i = 0; i < 3; i++) {
         if (mState == 1) {
@@ -845,8 +843,8 @@ s32 dScMgSlot3_c::InitResources() {
     gSubScreenLayers = 0x14;
     G2_SetBlendAlpha(0, 0xc, 0xc, 4);
 
-    Mascot_Load((char *)&mMascot);
-    Camera_InitSlotsView((char *)&mCamera);
+    mMascot.Load();
+    Camera_InitSlotsView(&mCamera);
 
     mReelDifficulty = (int)mLevel;
 
