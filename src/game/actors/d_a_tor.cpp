@@ -43,7 +43,7 @@ enum daTor_c_AssetId {
  * the level overlay, not here. ov096 relocs.txt lists the load at 0x021376b0
  * as ambiguous between ten level overlays; tools/overlay_residency.py settles
  * it to ov024, the only level whose tables load ov096. */
-extern int data_ov024_02112968[];
+extern BTA_File data_ov024_02112968;
 
 /* The tornado's file-scope SharedFilePtr objects, spelled through the same
    wrapper idiom the landed folds use: the handles' code is the veneer pair
@@ -268,9 +268,8 @@ int daTor_c::InitResources()
     dExtFrameCtrl_c::LoadFile(gSandTornadoAnimationFile);
     func_02016aac(&mAnmModel, 0x16, 1);
     mAnmModel.SetAnim((BCA_File *)((void *)gSandTornadoAnimationFile.filePtr), 0, 0x1000, 0);
-    dExtAnmTexSRT_c::Prepare(*(BMD_File *)gSandTornadoModelFile.filePtr,
-                             *(BTA_File *)data_ov024_02112968);
-    mTextureTransformer.SetFile(*(BTA_File *)data_ov024_02112968, 0, 0x1000, 0);
+    dExtAnmTexSRT_c::Prepare(*(BMD_File *)gSandTornadoModelFile.filePtr, data_ov024_02112968);
+    mTextureTransformer.SetFile(data_ov024_02112968, 0, 0x1000, 0);
     mdCcAc_c.Init(this, 0, 0, 0x200002, 0);
     mWithMeshClsn.Init(this, 0x50000, 0x50000, 0, 0);
 
