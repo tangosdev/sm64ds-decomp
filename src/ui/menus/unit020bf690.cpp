@@ -69,7 +69,7 @@ extern "C" void func_ov007_020b3edc(int size);
 void *func_ov007_020b3f20(int idx);
 extern void func_ov007_020bbff0(Ov007Model *c);
 extern void func_ov007_020bc02c(Ov007Model *a, void *b);
-void func_ov007_020bc47c(void *thiz);
+void func_ov007_020bc47c(Ov007Model *thiz);
 extern void func_ov007_020bc53c(Ov007Model *p);
 extern "C" Ov007Model *func_ov007_020bc6d4(void *file, int flags);
 int func_ov007_020bdeb0(int a);

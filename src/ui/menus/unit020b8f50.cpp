@@ -96,7 +96,7 @@ extern void func_ov007_020bda8c(int a, int b);
 extern void func_ov007_020bdbcc(int a0, int a1);
 extern void func_ov007_020bde2c(int idx);
 int func_ov007_020bdeb0(int a);
-void func_ov007_020bfe4c(Ov007Camera *cam, int x, int y, int z, void *out);
+void func_ov007_020bfe4c(Ov007Camera *cam, int x, int y, int z, Vector3 *out);
 extern int func_ov007_020c1da0(int i);
 int func_ov007_020c3ba8(int);
 unsigned short func_ov007_020c3be0(int t, int a, int b);
@@ -832,7 +832,7 @@ int PickerScene_UpdateIntro(int t) {
         }
         {
             Ov007Camera *o = WORK->cameras[0];
-            func_ov007_020bfe4c(o, 0xe8000, 0xa8000, -o->distance, local);
+            func_ov007_020bfe4c(o, 0xe8000, 0xa8000, -o->distance, (Vector3 *)local);
         }
         PickerScene_UpdatePicker();
         v = RangeRatio(t, 0xc8, 0x258);
@@ -1080,7 +1080,8 @@ void PickerScene_UpdateEdit(void) {
         Ov007Camera *camera;
         SCENE->springSet = 0;
         camera = WORK->cameras[0];
-        func_ov007_020bfe4c(camera, r4->cur.x << 12, r4->cur.y << 12, -camera->distance, v);
+        func_ov007_020bfe4c(camera, r4->cur.x << 12, r4->cur.y << 12, -camera->distance,
+                            (Vector3 *)v);
         if (r4->heldFrames == 1) {
             int s;
             func_ov007_020c5a6c(r5, v, 0);

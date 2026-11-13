@@ -191,7 +191,7 @@ extern u8 data_ov084_02130204[];
 extern char data_ov084_0213089c;
 extern int data_ov084_02130228[];
 extern int data_ov084_02130268[];
-void func_ov074_0212087c(Vector3 *out, void *player, u8 flag);
+void func_ov074_0212087c(int *out, daKuriKing_c *player, int flag);
 extern "C" int Math_Function_0203b14c(int *v, int target, int a, int b, int c);
 extern s8 gCurrentSublevel;
 void LoadSilverStarAndNumber(void);
@@ -1361,7 +1361,7 @@ void daKrb_c::func_ov084_0212af74() {
         goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce8.filePtr, 0, 0x1000, 0);
     }
 
-    func_ov074_0212087c(&targetPos, king, goomba->mMinionIndex);
+    func_ov074_0212087c((int *)&targetPos, king, goomba->mMinionIndex);
 
     if (ApproachAngle(&goomba->mPrevAngleY, goomba->mInitAngleY, 4, 0x1000, 0x400) == 0 &&
         goomba->mWithMeshClsn.IsOnGround() != 0)

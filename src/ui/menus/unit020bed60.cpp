@@ -67,7 +67,7 @@ extern Ov007MeshMaterial data_ov007_020d7cf8[2];
 Ov007MenuState *func_ov007_020b2cdc(void);
 extern Ov007Sprite *NumberSprite_Create(int index);
 void func_ov007_020bce70(short n, int frames);
-void func_ov007_020bfe4c(Ov007Camera *camera, int x, int y, int z, void *out);
+void func_ov007_020bfe4c(Ov007Camera *camera, int x, int y, int z, Vector3 *out);
 extern int func_ov007_020c1da0(int i);
 extern int func_ov007_020c30ac(Vector3 *arr, int count, Vector3 *target, int arg4, int *out);
 unsigned short func_ov007_020c3be0(int t, int a, int b);

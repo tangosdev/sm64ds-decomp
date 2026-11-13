@@ -9885,7 +9885,7 @@ int func_ov002_020cf700(daPly_c *player) {
 
 int daPly_c::St_OnWall_Main() {
     extern ControllerInput data_0209f498[];
-    extern void func_ov002_020eee3c(void*, void*);
+    extern void func_ov002_020eee3c(char *, char *);
     u16 f = mStateFlags;
     u16 b0 = f & 1;
     if (b0 != 0) {
@@ -9928,7 +9928,7 @@ int daPly_c::St_OnWall_Main() {
         ApproachLinear(mAngleY, (s16)a, 0x800);
         mPrevAngleY = a;
         mHorzSpeed = func_ov002_020bf224(0xa000, 0x2000);
-        func_ov002_020eee3c(&mMeshClsn, (this));
+        func_ov002_020eee3c((char *)&mMeshClsn, (char *)this);
     } else {
         if (data_0209f498[gActivePlayerSlot].mag != 0) {
             int ang = cstd::atan2(mWallNormalX, mWallNormalZ);
@@ -17232,7 +17232,7 @@ int daPly_c::St_GroundPound_Cleanup() {
  */
 
 int daPly_c::St_GroundPound_Main() {
-    void func_ov002_020ef2a4(void* c, void* arg);
+    void func_ov002_020ef2a4(dBgCh_Actr * c, dActor_c * arg);
     void PlayerNewSimpleHold14(unsigned int id, int x, int y, int z);
     extern dCamera_c *gCamera;
     extern char data_0209f4a0[];
