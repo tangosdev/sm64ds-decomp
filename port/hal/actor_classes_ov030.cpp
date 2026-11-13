@@ -117,7 +117,7 @@
 // six-cell shape (hal/actor_classes_ov072.cpp) with ELEVEN cells:
 //
 //   data_ov030_02115e0c[11], .bss, 16 bytes a cell, declared by
-//   src/__sinit_ov030_02114924.c's own `S16 { S8 lo, hi; }`;
+//   src/unnamed/ov030/__sinit_ov030_02114924.c's own `S16 { S8 lo, hi; }`;
 //   src/game/actors/d_a_mky.cpp installs `&data_ov030_02115e0c[idx]` at +0x3a4;
 //   func_ov030_02114170 dispatches pp+0 (the enter half, the sinit's `.lo`) and
 //   func_ov030_02114134 dispatches pp+1 (the tick half, the `.hi`).
@@ -255,7 +255,7 @@ int _ZTV15daObjHmMaruta_c[32];    /* vtspan: data_ov030_02115a48, config name fo
 int _ZTV7daMky_c[31];           /* vtspan: data_ov030_02115bfc, config name for it */
 }
 
-/* ONE STORAGE, TWO NAMES, for 0x02115a48. src/d_a_obj_hm_maruta.c stores that
+/* ONE STORAGE, TWO NAMES, for 0x02115a48. src/game/actors/d_a_obj_hm_maruta.cpp stores that
    table SECOND (its pool is 0x02111680 -> 0x02128338 then 0x02111684 ->
    0x02115a48) and spells the second store `VT1`, a placeholder, while spelling
    the FIRST store `_ZTV15daObjHmMaruta_c` -- the right name on the wrong store.
@@ -291,7 +291,7 @@ int _ZTV7daMky_c[31];           /* vtspan: data_ov030_02115bfc, config name for 
        _ZTV13RollingLogTtm". They do not: src/d_a_mky_monkey_star.c:22 and
        src/d_a_mky_monkey_thief.c:22 both store _ZTV7daMky_c, agreeing with the
        cartridge, and the only file in src/ that spells _ZTV13RollingLogTtm is
-       src/d_a_obj_hm_maruta.c, the rolling log. */
+       src/game/actors/d_a_obj_hm_maruta.cpp, the rolling log. */
 /* THE TWO TABLES, read out of config rather than derived one name at a time.
    config/arm9/overlays/ov030/symbols.txt:
 
@@ -312,7 +312,7 @@ int _ZTV7daMky_c[31];           /* vtspan: data_ov030_02115bfc, config name for 
    differ in ten of their thirty-one slots.
 
    So the join __ZTV7daMky_c=__ZTV13RollingLogTtm was false, and its effect was
-   that src/d_a_obj_hm_maruta.c, which stamps _ZTV13RollingLogTtm, spawned every
+   that src/game/actors/d_a_obj_hm_maruta.cpp, which stamps _ZTV13RollingLogTtm, spawned every
    rolling log holding the MONKEY's methods -- including a Render that reads a
    ModelAnim at +0xd4 the log's own constructor never builds -- while the array
    this file fills with the log's methods was installed on nothing at all. Both

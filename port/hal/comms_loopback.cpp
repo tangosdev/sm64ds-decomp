@@ -24,7 +24,7 @@
 //      that must not block means holding parse state across frames.
 //
 //   3. "when the wait bound runs out the ROM drops the session back to solo by
-//      itself" (src/func_0203ea5c.c:487, bounds at :142-146). The ROM ALREADY
+//      itself" (src/unnamed/arm9/0203/func_0203ea5c.c:487, bounds at :142-146). The ROM ALREADY
 //      HANDLES LOSS. A reliable stream would fight that: TCP head-of-line
 //      blocking stalls a round the ROM is prepared to abandon, and the only
 //      retry lockstep wants is "send this frame's block again", which is one
@@ -166,7 +166,7 @@ extern "C" unsigned char data_020a0f04[];   /* the ROLE byte (hal/stage_slot0.cp
 extern "C" unsigned char data_02099e1c[];   /* the "open the radio" one-shot (hal/comms_conductor.cpp) */
 
 extern "C" int host_setting_net_mode(void);   /* hal/host_settings.cpp */
-// The DS's multiplayer error word. src/func_0203ea5c.c (and the wide host copy,
+// The DS's multiplayer error word. src/unnamed/arm9/0203/func_0203ea5c.c (and the wide host copy,
 // hal/comms_conductor_wide.cpp) set bit 0 at the same statement that drops the
 // session to solo when the wait bound runs out; read only by lb_close below, to
 // tell the game ENDING a match that went silent from the port's own shutdown.
@@ -982,7 +982,7 @@ PipeRound g_pipe[kPipeDepth];
 // slot and the aggregates go out again. Every console then finds its served
 // live mask for D disagreeing with the declared one, rolls back to D, and
 // re-runs with the slot absent, which the ROM's own unpack loop turns into a
-// zeroed record (src/func_0203ea5c.c:290, func_0205a588 on a null block).
+// zeroed record (src/unnamed/arm9/0203/func_0203ea5c.c:290, func_0205a588 on a null block).
 // That is the state the ROM's own records take when a DS peer stops sending.
 // ===========================================================================
 bool g_rollback = false;
@@ -1079,7 +1079,7 @@ void rb_note_block(int k, unsigned r, const unsigned char *b) {
 // carried forward at its last per-round delta (the remote camera's yaw
 // moves smoothly while it turns; a flat repeat mispredicts every frame of a
 // turn), and the frame counter at +2 overwritten with THIS console's so the
-// ROM's clock check at src/func_0203ea5c.c:418 agrees.
+// ROM's clock check at src/unnamed/arm9/0203/func_0203ea5c.c:418 agrees.
 void rb_predict(int k, unsigned r, const unsigned char *mine,
                 unsigned char *out) {
     const RbSlotPred &p = g_rb_pred[k];
@@ -1129,7 +1129,7 @@ enum : unsigned { kStarveLogMs = 1000 };
 // by then is SUBSTITUTED: its last real block, the camera heading carried
 // forward at its last per-round rate (the rb_predict rule) and the frame
 // counter at +2..+5 set to the parent's own for R (the ROM compares it,
-// src/func_0203ea5c.c:418). The aggregate is authoritative for every slot on
+// src/unnamed/arm9/0203/func_0203ea5c.c:418). The aggregate is authoritative for every slot on
 // every console, the late one included, so every console simulates the same
 // substituted block: deterministic, no rollback. The holes that closes:
 //
@@ -1252,7 +1252,7 @@ unsigned lg_wait_window_ms() {
 }
 const unsigned char kRetireTag[4] = { 'L', 'G', 'R', 'T' };
 // THE HOST'S GOODBYE AT A MATCH'S NORMAL END. When the game itself ends the
-// session without an error (the VS match is over, src/func_0203df40.c closes
+// session without an error (the VS match is over, src/unnamed/arm9/0203/func_0203df40.c closes
 // the radio with bit 0 of the DS error word clear), the host tags its Bye
 // 'DONE'. A joiner that gets it knows the match ended rather than its host
 // vanishing, so the wait bound that runs out afterwards (nobody is sending any
@@ -1387,7 +1387,7 @@ bool match_underway() { return g_match_full || g_frames_produced; }   // see g_m
 // A VS MATCH THIS CONSOLE HAS LOST ENDS HERE, OUT LOUD (multiplayer 1.0, lane
 // LAGGARD1; REVMPPROOF1's latejoin4 finding). What used to happen: the other
 // consoles went quiet for the ROM's whole wait bound (a host stalled ~2 s on a
-// busy PC), src/func_0203ea5c.c:487 dropped every console to SOLO, and each of
+// busy PC), src/unnamed/arm9/0203/func_0203ea5c.c:487 dropped every console to SOLO, and each of
 // the four kept playing its own game to the end with exit code 0 -- one match
 // quietly split into four, nobody told. A console now leaves the match the
 // moment it knows the match is lost to it, with one line saying why and exit
@@ -3169,7 +3169,7 @@ void on_parent_packet(const Packet &p, const sockaddr_in &from, int k) {
         // reading got wrong: what lags is not the frame index, it is only the
         // wall time, and the ROM indexes by frame.
         //
-        // THE ROM AGREES AND SAYS SO. src/func_0203ea5c.c:418 walks the four
+        // THE ROM AGREES AND SAYS SO. src/unnamed/arm9/0203/func_0203ea5c.c:418 walks the four
         // player records and compares each live one's frame counter against
         // the local player's (`var_r1->unk0 != data_020a1154[..].unk0`),
         // setting error bit 2 in data_020a0f1c when they differ. That compare
@@ -4330,7 +4330,7 @@ void drain() {
 // sentence at its word would have received nothing, ever.
 //
 // Run mg16 lane MP3 closed it by fix (a): the seam grows the pump, because
-// linking src/func_0203ea5c.c showed the ROM's wait SLEEPS rather than spins
+// linking src/unnamed/arm9/0203/func_0203ea5c.c showed the ROM's wait SLEEPS rather than spins
 // and hal/os_thread.h's hook was written for that exact call chain. poll() is
 // now called once per turn of the ROM's own wait. See the frozen contract at
 // the top of comms_seam.h.
@@ -4783,8 +4783,8 @@ void lb_close() {
     if (!g_open) return;             // double close is legal and silent
     const int my_slot = g_slot;      // for the aux line, which prints after the reset
     // THE GAME ENDING THE MATCH BECAUSE IT WENT SILENT (see match_lost). When
-    // the wait bound runs out, src/func_0203ea5c.c sets bit 0 of the DS error
-    // word and drops the role to solo, and src/func_0203df40.c then closes the
+    // the wait bound runs out, src/unnamed/arm9/0203/func_0203ea5c.c sets bit 0 of the DS error
+    // word and drops the role to solo, and src/unnamed/arm9/0203/func_0203df40.c then closes the
     // radio -- this call -- and plays on alone. The port's own shutdown closes
     // through here too (the atexit hook at install), so only a close that is
     // not the shutdown, mid-match, with the error bit newly set, is the loss.
@@ -5193,7 +5193,7 @@ int lb_exchange(const void *my_block, uint16_t *status) {
     //
     // RETURNING 0 IS NOT A NEW STATE. It is what exchange() already returns on
     // an incomplete round, the ROM's own wait loop is built to spin on it
-    // (src/func_0203ea5c.c, 1200 turns), and nothing has committed: no frame
+    // (src/unnamed/arm9/0203/func_0203ea5c.c, 1200 turns), and nothing has committed: no frame
     // has been produced and no aggregate has gone out, so there is no history
     // for a later number to be inconsistent with.
     //
@@ -5351,7 +5351,7 @@ int lb_exchange(const void *my_block, uint16_t *status) {
         // instead of nothing. Handing back an EMPTY round would be worse than
         // slow: the ROM's own record loop clears each slot and only fills the
         // ones it got, so an empty round tells the game that no player -- not
-        // even this console -- is live, and src/func_0203ea5c.c takes a very
+        // even this console -- is live, and src/unnamed/arm9/0203/func_0203ea5c.c takes a very
         // different branch on that. Repeating round 0 for N frames is a held
         // first frame, which is what the start of a session already looks
         // like.
@@ -5518,7 +5518,7 @@ void lb_poll() { service(); }
 
 // THE GAME WALKED AWAY FROM THE OPEN ROUND. Run mg16 lane MP3; HOLE 5's entry.
 //
-// src/func_0203ea5c.c:487 drops the session back to solo when the ROM's wait
+// src/unnamed/arm9/0203/func_0203ea5c.c:487 drops the session back to solo when the ROM's wait
 // bound runs out, and until this entry existed that was invisible here: the
 // carrier kept holding a round nobody would ever complete, and its round
 // counter stayed permanently one ahead of the peer's. The write-up at the
@@ -5807,7 +5807,7 @@ const CommsTransport kLoopback = {
 // THE SESSION'S WIDTH, exported. Run vs16, hosted-conductor follow-up.
 //
 // One caller: hal/comms_conductor_wide.cpp's dispatcher, which decides whether
-// src/func_0203ea5c.c (the DS-faithful four-record conductor) or the wide host
+// src/unnamed/arm9/0203/func_0203ea5c.c (the DS-faithful four-record conductor) or the wide host
 // copy runs this session. It gates on the SAME g_want_players that picks the
 // wire above, so the record bounds and the datagram layout cannot disagree --
 // there is no second opinion to get out of step. 0 means no setter ran, which
@@ -6277,7 +6277,7 @@ bool comms_loopback_install_from_env() {
     // deleted because it is the exact wrong idea that nearly shipped a silent
     // desync. A MISMATCH IS A DESYNC. Both consoles do consume the same round
     // SEQUENCE, but not at the same FRAME INDEX, and the ROM indexes by frame;
-    // the derivation and the ROM's own compare at src/func_0203ea5c.c:418 are
+    // the derivation and the ROM's own compare at src/unnamed/arm9/0203/func_0203ea5c.c:418 are
     // written out over the ACCEPT's delay field. Measured on the public relay:
     // 5-against-0, 0-against-5, 5-against-6 and 5-against-4 all diverge from
     // about frame 65, positions widening, no constant shift explaining them,
@@ -6628,7 +6628,7 @@ bool comms_loopback_install_from_env() {
     // SAY GOODBYE ON THE WAY OUT.
     //
     // On the DS the seam's close() face has exactly one caller,
-    // src/func_0203df40.c:70, on the tick after the role byte drops to 0. That
+    // src/unnamed/arm9/0203/func_0203df40.c:70, on the tick after the role byte drops to 0. That
     // TU is in no slice, so in this port NOTHING calls func_02040724 and a
     // process that simply exits leaves its peers holding it in their live mask
     // until their own wait bound expires -- every remaining peer stalls for a
@@ -6642,7 +6642,7 @@ bool comms_loopback_install_from_env() {
     // This is also what makes the departed-player path reachable at all: the
     // Bye is what clears the leaver out of the parent's live mask, which lets
     // the parent complete another round, which is when the ROM's per-record
-    // clear at src/func_0203ea5c.c:275 wipes the leaver's stale live bit.
+    // clear at src/unnamed/arm9/0203/func_0203ea5c.c:275 wipes the leaver's stale live bit.
     std::atexit([]() { g_exiting = true; func_02040724(); });
     std::fprintf(stderr, "[comms:loopback] installed as %s, port base %d\n",
                  g_role == kRoleParent ? "parent" : "child", g_port_base);
@@ -6839,7 +6839,7 @@ bool comms_loopback_leave_reset(const char *why) {
 // ###########################################################################
 // #  HISTORICAL. EVERY PROPOSAL BELOW HAS BEEN DECIDED.                     #
 // #                                                                         #
-// #  The contract froze in run mg16 lane MP3, once src/func_0203ea5c.c was  #
+// #  The contract froze in run mg16 lane MP3, once src/unnamed/arm9/0203/func_0203ea5c.c was  #
 // #  linked and the ROM's own caller drove the seam. THE AUTHORITY IS THE   #
 // #  BANNER AT THE TOP OF hal/comms_seam.h -- read that, not this. What     #
 // #  follows is kept because it is the measurement each decision rests on,  #
@@ -6964,7 +6964,7 @@ bool comms_loopback_leave_reset(const char *why) {
 // HOLE 5 (NEW, and the one with teeth). NOTHING TELLS A TRANSPORT THE SESSION
 // WAS ABANDONED.
 //
-//   src/func_0203ea5c.c:487 drops the session back to solo when the wait bound
+//   src/unnamed/arm9/0203/func_0203ea5c.c:487 drops the session back to solo when the wait bound
 //   at :142-146 runs out. From the transport's side that is invisible: no
 //   close(), no state change requested, no notification. The carrier is still
 //   holding an open round the game has walked away from, and its round counter

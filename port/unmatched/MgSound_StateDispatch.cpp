@@ -32,7 +32,7 @@
 //
 // ---- THE FIFTY-SEVEN PAIRS, AND HOW THE SLOT NUMBERS WERE GOT -------------
 //
-// From src/__sinit_ov006_02132970.c ONE ASSIGNMENT AT A TIME, which is the
+// From src/unnamed/ov006/__sinit_ov006_02132970.c ONE ASSIGNMENT AT A TIME, which is the
 // only ground truth for a slot number: an overlay constructor does NOT copy
 // its pairs in address order, and this one interleaves fifteen destinations.
 // A sweep of the source span would also have manufactured phantoms --
@@ -532,7 +532,7 @@ static void __fastcall snd1f_state1_0211bc8c(void *self, void *dead_edx, int i)
 
    THE EIGHTEEN PAIRS, RE-READ FOR THIS LANE out of
    extracted/overlays/overlay_0006.bin at the addresses
-   src/__sinit_ov006_02132970.c assigns from, not out of prose
+   src/unnamed/ov006/__sinit_ov006_02132970.c assigns from, not out of prose
    (runs/link100/out/PMFB2/rom_pairs.txt):
      02142df8 <- 0213f594 0213f694 0213f6a4 0213f634 0213f64c
      02142e20 <- 0213f6c4 0213f5b4 0213f63c 0213f5c4 0213f5a4 0213f5ac
@@ -613,7 +613,7 @@ extern "C" void port_mg_sound_states_seat(void)
        The thirty-nine slots the thirteen sub-dispatchers read. Every row below
        carries the code word this lane read out of
        extracted/overlays/overlay_0006.bin at the address
-       src/__sinit_ov006_02132970.c assigns that slot from -- not out of prose,
+       src/unnamed/ov006/__sinit_ov006_02132970.c assigns that slot from -- not out of prose,
        and not out of the call-time switch this block replaced. All thirty-nine
        adjustment words read ZERO, all thirty-nine code words are DISTINCT, and
        every one lands inside this class's own code block

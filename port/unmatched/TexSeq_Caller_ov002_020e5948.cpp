@@ -8,7 +8,7 @@
  * THE CALLING-CONVENTION SEAM:
  *
  * TextureSequence::Prepare's ROM body is a 0xc tail-call veneer into
- * func_02046d50, whose real definition (src/func_02046d50.c) is
+ * func_02046d50, whose real definition (src/unnamed/arm9/0204/func_02046d50.c) is
  *     void func_02046d50(void* arg, struct Tbl* t)
  * -- TWO arguments: a name-resolution context and a table it dereferences. At
  * every Prepare call the ROM sets exactly r0 and r1 (proven by disasm; e.g.

@@ -3046,7 +3046,7 @@ int data_020a6490[4], data_020a649c[4], data_020a64a0[4], data_020a64a4[4];
 
    data_020a6760 IS NOT HERE ANY MORE (run link100, lane SND1, rung R1). It was
    `int data_020a6760[256 * 0x18 / sizeof(int)]` -- the right 0x1800 extent, but
-   as a lone object. src/func_0205b358.c, the ROM's own SND_Init, addresses the
+   as a lone object. src/unnamed/arm9/0205/func_0205b358.c, the ROM's own SND_Init, addresses the
    same 0x1800 bytes under THREE dsd names (data_020a6760, data_020a7760 + 0x7e8
    for the last node's link, and data_020a7f48 for the tail pointer), so hosting
    only the first of them left the other two nowhere and the body unrunnable.

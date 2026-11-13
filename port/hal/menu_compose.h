@@ -81,7 +81,7 @@ struct MenuPiece {
   /* ASSET1 (appended): THE 3D LAYER AS ONE ELEMENT AND A FILL.
      keycover: an SRC_TOP_PIC piece draws only the pixels the 3D engine wrote (MenuSources.pic_cover), so a sprite
      object the ROM submitted as 3D quads (the title's plates, wrench, head, stars) arrives with its own
-     transparency and drags no background along. The ROM's draw filter (src/func_ov007_020c421c.c port arm) is what
+     transparency and drags no background along. The ROM's draw filter (src/unnamed/ov007/func_ov007_020c421c.c port arm) is what
      keeps the objects that should not be in the picture (the wallpaper) out of it.
      xfill: an SRC_SUB piece whose dest is fill_w canvas units wide (not s.w) and repeats source column s.x across
      it, rows mapped normally: the sky gradient's edge carried out to the edge of a wide picture, nothing stretched

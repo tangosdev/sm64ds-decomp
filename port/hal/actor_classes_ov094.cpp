@@ -83,7 +83,7 @@ int _ZTV7daOwl_c[31];                          /* == _ZTV7daOwl_c, host array */
 int _ZN7daOwl_c13InitResourcesEv(void *self);
 }
 
-/* D0 (src/_ZN10HootTheOwlD0Ev.cpp) stores its own table under the RTTI-alias
+/* D0 (port/unmatched/hostarm/_ZN10HootTheOwlD0Ev.cpp) stores its own table under the RTTI-alias
    spelling _ZTV7daOwl_c (include/decl_common.h's own `extern int
    _ZTV7daOwl_c[];`), the SAME address as _ZTV10HootTheOwl under two names --
    the SkiLift/MotherPenguin (_ZTV7SkiLift == _ZTV10daPgMthr_c) one-speller

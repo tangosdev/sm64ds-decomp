@@ -8,19 +8,19 @@
 //
 // WHAT IT ANSWERS, and the ROM bodies that say so:
 //
-//   THE HANDSHAKE.  src/func_0205bad8.c runs a nine-round exchange over
+//   THE HANDSHAKE.  src/unnamed/arm9/0205/func_0205bad8.c runs a nine-round exchange over
 //   IPCSYNC. ntr/ipc.cpp owns that, off the ARM7's own loop read out of
 //   extracted/arm7.bin (see ntr/ipc.h).
 //
-//   THE READINESS WORD.  src/func_0205ba3c.c reads word 1 of the array at
+//   THE READINESS WORD.  src/unnamed/arm9/0205/func_0205ba3c.c reads word 1 of the array at
 //   0x027FFC00+0x388 and four matched initialisers spin on it:
-//       src/func_0205f270.c   channel 6    registers func_0205f300
-//       src/func_0205fde8.c   channel 8    registers func_0205fcfc
-//       src/func_02059e48.c   channel 0xc  registers func_02059e04
-//       src/func_0206a88c.c   channel 0xd  registers func_0206a694/func_0206a634
-//   plus src/func_0205ae64.c on channel 7 (the sound command channel, whose
+//       src/unnamed/arm9/0205/func_0205f270.c   channel 6    registers func_0205f300
+//       src/unnamed/arm9/0205/func_0205fde8.c   channel 8    registers func_0205fcfc
+//       src/unnamed/arm9/0205/func_02059e48.c   channel 0xc  registers func_02059e04
+//       src/unnamed/arm9/0206/func_0206a88c.c   channel 0xd  registers func_0206a694/func_0206a634
+//   plus src/unnamed/arm9/0205/func_0205ae64.c on channel 7 (the sound command channel, whose
 //   ARM9 half is already linked out of port/slice_gate10.txt) and
-//   src/func_020616e8.c on channel 0xa (wireless). The ARM7 claims all six at
+//   src/unnamed/arm9/0206/func_020616e8.c on channel 0xa (wireless). The ARM7 claims all six at
 //   power-on, which is what the DS's ARM7 has done before the ARM9's code
 //   runs at all.
 //
@@ -44,7 +44,7 @@
 //   channel NOBODY holds is reported loudly and refused the same way.
 //
 // THE ONE SEAM. link_up() below runs the ROM's own PXI bring-up. On the DS
-// that is src/func_02058c84.c -- its 2nd, 10th and 13th calls -- and on a
+// that is src/unnamed/arm9/0205/func_02058c84.cpp -- its 2nd, 10th and 13th calls -- and on a
 // build with a pre-main spine it should come from there and nowhere else.
 // This build has no such spine (lane BOOT of run link100 is bringing one in),
 // so the calls are made from the moment the hardware model comes up, in the
@@ -78,12 +78,12 @@ extern "C" {
 DSSTATE_BEGIN
 
 // 0x020a6458 .. 0x020a6460. func_02059e48's "already initialised" halfword and
-// the soft-reset acknowledge flag src/func_02059e04.c sets.
+// the soft-reset acknowledge flag src/unnamed/arm9/0205/func_02059e04.c sets.
 unsigned char data_020a6458[4];
 unsigned char data_020a645c[4];
 
 // 0x020a7fc4 .. 0x020a8048. The PXI layer's own state: the init guard and the
-// 32-entry receive-callback table src/func_0205ba64.c writes and
+// 32-entry receive-callback table src/unnamed/arm9/0205/func_0205ba64.c writes and
 // src/_ZN3IRQ24IPCRxFifoNotEmptyHandlerEv.cpp indexes. 0x80 bytes is exactly the
 // 0x20 entries func_0205bad8 zeroes.
 unsigned short data_020a7fc4;
@@ -91,8 +91,8 @@ void          *data_020a7fc8[0x20];
 
 // 0x020a8104 .. 0x020a8160. The channel-8 driver's state. data_020a8114 is
 // NOT here: hal/player_bridges.cpp already hosts it as int[4], which is its
-// 0x10 ROM span exactly, and every field src/func_0205fcfc.c and
-// src/func_0205feac.c reach (+0, +4, +8, +0xc) is inside it.
+// 0x10 ROM span exactly, and every field src/unnamed/arm9/0205/func_0205fcfc.c and
+// src/unnamed/arm9/0205/func_0205feac.c reach (+0, +4, +8, +0xc) is inside it.
 unsigned short data_020a8104;
 int            data_020a8108;
 int            data_020a810c;
@@ -101,8 +101,8 @@ unsigned char  data_020a8124[0x14];
 
 // 0x020a8138 and 0x020a813c ARE ONE TABLE ON THE DS: four 8-byte entries from
 // 0x020a8138, with 0x020a8138 naming each entry's flag halfword and 0x020a813c
-// naming its pointer, four bytes on. src/func_0205fde8.c strides the first by
-// 8 (`(char *)&data_020a8138 + (i << 3)`) and src/func_0205fcfc.c strides the
+// naming its pointer, four bytes on. src/unnamed/arm9/0205/func_0205fde8.c strides the first by
+// 8 (`(char *)&data_020a8138 + (i << 3)`) and src/unnamed/arm9/0205/func_0205fcfc.c strides the
 // second by 8, and NEITHER takes the distance between the two names -- so two
 // parallel 0x20-byte arrays are indistinguishable here from the interleaved
 // table, and are what this hosts. If a future body ever computes one name from
@@ -113,7 +113,7 @@ unsigned char data_020a813c[0x20];
 DSSTATE_END
 
 // Rung W1's mode word, hosted at the foot of hal/comms_seam.cpp. Declared as
-// its ROM span; src/func_020408b0.c writes its low halfword.
+// its ROM span; src/unnamed/arm9/0204/func_020408b0.c writes its low halfword.
 extern unsigned char data_020a0f14[];
 // THE TOUCH-PANEL WORK STRUCT, hosted by hal/scene_boot.cpp. ONE 0x38 ROM
 // object under two dsd names, laid out there as an ordered .dsstate$tp run;
@@ -122,13 +122,13 @@ extern unsigned char data_020a0f14[];
 extern unsigned char data_020a80cc[];
 extern unsigned char data_020a80e4[];
 // THE HOSTED TOUCH/SPI DRIVER, hal/tsc_arm7.cpp. Run link100, lane R2D2, rung
-// R2d: src/func_0203bbc0.c and the eight TUs behind it are linked now, and two
+// R2d: src/unnamed/arm9/0203/func_0203bbc0.c and the eight TUs behind it are linked now, and two
 // of them SEND on channel 6, so the channel stops being observed-only. The
 // command is handed over from arm7_recv and the completion is posted from a
 // TURN, never from there -- the same law hal/wm_arm7.cpp opens with, and on
-// this channel it is fatal rather than survivable: src/func_0205edd8.cpp sets
+// this channel it is fatal rather than survivable: src/unnamed/arm9/0205/func_0205edd8.cpp sets
 // its +0x36 bit AFTER its two sends, so a completion delivered inline would
-// clear a bit that is not set yet and src/func_0205ea10.c would spin on it
+// clear a bit that is not set yet and src/unnamed/arm9/0205/func_0205ea10.c would spin on it
 // forever. hal/tsc_arm7.cpp's section 2 is that derivation in full.
 void port_tsc_arm7_power_on(void);
 void port_tsc_arm7_command(unsigned int word);
@@ -150,10 +150,10 @@ void port_wm_arm7_census(void);
 int  port_wm_arm7_saw_traffic(void);
 
 // THE WIRELESS WORKER THREAD, hal/wm_thread.cpp. Run link100, lane WM5, rung
-// W6: src/func_02040c34.c is linked now, so a session creates the cartridge's
+// W6: src/unnamed/arm9/0204/func_02040c34.c is linked now, so a session creates the cartridge's
 // SECOND OS thread through the ROM's own func_02058200 and parks it in the
 // ROM's own sleep. The census is a one-shot -- it returns immediately until
-// src/func_02042200.c has written the entry pc into the record -- and the host
+// src/unnamed/arm9/0204/func_02042200.c has written the entry pc into the record -- and the host
 // ARM7's turn is where it is driven from, because that is the first owned code
 // that runs after the ROM's reschedule has entered the thread.
 void port_wm5_worker_census(void);
@@ -180,16 +180,16 @@ struct Channel {
 };
 
 const Channel kChannels[] = {
-    // Rung R2d (run link100, lane R2D2) linked src/func_0203bbc0.c and the
-    // eight TUs behind it, and two of them SEND: src/func_0205edd8.cpp's pair
-    // 0x02000303 / 0x0101001e and src/func_0205eeac.cpp's 0x02000104 /
+    // Rung R2d (run link100, lane R2D2) linked src/unnamed/arm9/0203/func_0203bbc0.c and the
+    // eight TUs behind it, and two of them SEND: src/unnamed/arm9/0205/func_0205edd8.cpp's pair
+    // 0x02000303 / 0x0101001e and src/unnamed/arm9/0205/func_0205eeac.cpp's 0x02000104 /
     // 0x01010000. So this row is answer=true now and hal/tsc_arm7.cpp is what
     // makes it true. It answers on EVERY boot, solo or not, because the touch
     // panel is not a multiplayer device: the per-tag census must read four
     // words on tag 6 in any run that reaches the a054 seam.
     { 0x6, "touch/SPI      (src/func_0205f270.c -> func_0205f300; answered "
            "by hal/tsc_arm7.cpp)",                                   true  },
-    // Run link100, lane SND1, rung R1: src/func_0205ae64.c is LINKED now
+    // Run link100, lane SND1, rung R1: src/unnamed/arm9/0205/func_0205ae64.c is LINKED now
     // (port/slice_snd1.txt), so the ROM's own body registers this channel --
     // and it registers it by TESTING THIS CLAIM. func_0205ae64 does
     // `if (func_0205ba3c(7, 1)) return;` and the claim below is what makes that
@@ -202,14 +202,14 @@ const Channel kChannels[] = {
     { 0x8, "channel 8      (src/func_0205fde8.c -> func_0205fcfc)",  true  },
     { 0xa, "wireless       (src/func_020616e8.c, WM_SendCommand; "
            "answered by hal/wm_arm7.cpp)",                           true  },
-    // Rung W1 (run link100, lane WM2) linked src/func_020616e8.c, so WM_Init
+    // Rung W1 (run link100, lane WM2) linked src/unnamed/arm9/0206/func_020616e8.c, so WM_Init
     // really runs -- but it SENDS NOTHING, and this row was answer=false and
-    // honestly so. Rung W4 (lane WM3) linked src/func_02040820.c and
-    // src/func_02040790.c, the ROM's own become-parent and become-child state
+    // honestly so. Rung W4 (lane WM3) linked src/unnamed/arm9/0204/func_02040820.c and
+    // src/unnamed/arm9/0204/func_02040790.c, the ROM's own become-parent and become-child state
     // machines, and THEY send: apiids 01 03 04 05 06 07 08 0c 0d 0e. So the row
     // is answer=true now and hal/wm_arm7.cpp is what makes it true. A solo boot
     // still sends nothing at all -- the role byte never leaves 0, so
-    // src/func_0203df40.c takes its solo arm and neither body is ever called --
+    // src/unnamed/arm9/0203/func_0203df40.c takes its solo arm and neither body is ever called --
     // and the per-tag census must still read ZERO on tag 10 there.
     { 0xc, "channel 0xc    (src/func_02059e48.c -> func_02059e04)",  true  },
     { 0xd, "GBA slot       (src/func_0206a88c.c -> func_0206a694)",  false },
@@ -274,7 +274,7 @@ void arm7_power_on() {
                      (unsigned)(data_020a80e4 - data_020a80cc));
     // THE ARM7'S OWN BOOT, which on hardware has already happened before the
     // ARM9's code runs: the console's user settings, including the touch
-    // calibration src/func_0205f1e4.c reads at 0x027ffc80+0x58, are in the
+    // calibration src/unnamed/arm9/0205/func_0205f1e4.c reads at 0x027ffc80+0x58, are in the
     // shared block by now. hal/tsc_arm7.cpp section 3 is why that matters and
     // why a zeroed block is not a neutral default here.
     port_tsc_arm7_power_on();
@@ -387,9 +387,9 @@ void arm7_recv(uint32_t word) {
 // THE WIRELESS ARM: where the transport is opened.  Run link100, lane WM2,
 // rung W1.
 //
-// WHAT CHANGED ON THE ARM9 SIDE. src/func_020408b0.c and eleven TUs behind it
+// WHAT CHANGED ON THE ARM9 SIDE. src/unnamed/arm9/0204/func_020408b0.c and eleven TUs behind it
 // are LINKED (port/slice_wm2.txt), so the ROM's own WM bring-up runs: it takes
-// eight buffers off the game heap and calls src/func_020616e8.c (WM_Init),
+// eight buffers off the game heap and calls src/unnamed/arm9/0206/func_020616e8.c (WM_Init),
 // which checks that the ARM7 holds channel 0xa, DMA-clears the 0x1300 work
 // buffer, lays out the command area, the 0xa00 status block and the reply
 // message, and finishes by registering the ARM9's own channel-0xa callback --
@@ -410,7 +410,7 @@ void arm7_recv(uint32_t word) {
 // request in flight, and after it the ROM proceeds straight to asking for a
 // role.
 //
-// THE MODE WORD IS THE ROM'S OWN. src/func_020408b0.c:25 is
+// THE MODE WORD IS THE ROM'S OWN. src/unnamed/arm9/0204/func_020408b0.c:25 is
 // `data_020a0f14 = arg` -- the FIRST statement of the body, before a single
 // allocation and long before WM_Init -- so by the time the registration is
 // visible the word already holds exactly what the ROM was opened with. The
@@ -419,7 +419,7 @@ void arm7_recv(uint32_t word) {
 // trigger" branch does not arise. The seam used to pass its face's argument
 // through; this reads the same value out of the ROM's own storage instead.
 //
-// HOW THE CLAIM IS SEEN. src/func_0205ba64.c sets bit N of the word at
+// HOW THE CLAIM IS SEEN. src/unnamed/arm9/0205/func_0205ba64.c sets bit N of the word at
 // 0x027FFC00+0x388 when the ARM9 installs a receive callback for channel N --
 // ntr/ipc.h calls that word PXI_FLAGS_ARM9 and ntr::ipc_arm9_flags() reads it.
 // It is a plain store into the shared block, not an I/O access, so nothing
@@ -444,7 +444,7 @@ void wireless_tick()
     if ((ntr::ipc_arm9_flags() & (1u << 0xa)) == 0) return;
     g_wm_claim_seen = true;
 
-    // The pair layout src/func_02061188.c's synthesised message depends on.
+    // The pair layout src/unnamed/arm9/0206/func_02061188.c's synthesised message depends on.
     // Checked here because this is the first host code that runs after WM_Init
     // laid the buffer out, and because a layout trick that stops working has to
     // fail loudly rather than quietly write past an object.
@@ -471,7 +471,7 @@ void wireless_tick()
 }
 
 // ---------------------------------------------------------------------------
-// THE 0xB RECIPE: what enrolling src/func_02060f60.cpp actually needs
+// THE 0xB RECIPE: what enrolling src/unnamed/arm9/0206/func_02060f60.cpp actually needs
 //
 // Run link100 lane IPCSEND was asked whether the ROM's own card-backup body
 // could run over the FIFO now that the ARM9 can send. It CAN in principle and
@@ -481,7 +481,7 @@ void wireless_tick()
 //   1. CHANNEL 0xB IS THE ONE TAG WHOSE PROTOCOL USES BIT 5 AS PART OF THE
 //      REQUEST, and arm7_recv above would swallow every word of it. The ROM
 //      sends `IPCSend(0xb, v, 1)` -- the third argument is the flag, and it is
-//      SET -- and its own receive callback src/func_02060310.c only acts on
+//      SET -- and its own receive callback src/unnamed/arm9/0206/func_02060310.c only acts on
 //      `if (a == 0xb && c != 0)`, c being that same bit off the reply. So both
 //      directions carry it, and the general reading up there ("the flag means
 //      the far side had no handler") is wrong for this tag alone. A 0xb route
@@ -501,7 +501,7 @@ void wireless_tick()
 //      func_02060310 clears data_020a8180 + 0x34 bit 0x20 and then calls
 //      func_02058048(*(void **)(data_020a8180 + 0xd0)). That word is not
 //      written by func_0206002c; it is parked by the CARD THREAD ITSELF --
-//      src/func_020602bc.cpp does `*(void **)(base + 0xd0) = base + 0x3c;`
+//      src/unnamed/arm9/0206/func_020602bc.cpp does `*(void **)(base + 0xd0) = base + 0x3c;`
 //      immediately before each OS_SleepThread(0). Gate 223 creates and enters
 //      that thread and port/tools/thread_create_proof.py measures it going
 //      back to sleep, so +0xd0 holds &data_020a81bc rather than a null. THE
@@ -520,7 +520,7 @@ void wireless_tick()
 //   WHAT IS LEFT is the work this lane did not do: ntr/backup.cpp's
 //   func_02060f60 face becomes the FIFO-facing half (the same switch, driven
 //   by the stored block instead of by the caller's `self`), the face's C name
-//   is freed so src/func_02060f60.cpp can take it, a slice carries that TU,
+//   is freed so src/unnamed/arm9/0206/func_02060f60.cpp can take it, a slice carries that TU,
 //   and port/tools/save_proof.py has to come back 27/27 with the 8192-byte
 //   image byte-identical -- which is the real cost, because it is a second
 //   full build and a save run, not a route.
@@ -537,7 +537,7 @@ void wireless_tick()
 //      no-handler arm: it ors 0x20 into the word and posts it to IPCFIFOSEND.
 //      Seeing that word arrive back at arm7_recv proves the receive read, the
 //      table lookup and the send path.
-//   2. tag 8, data 0x100. The handler finds src/func_0205fcfc.c in the table
+//   2. tag 8, data 0x100. The handler finds src/unnamed/arm9/0205/func_0205fcfc.c in the table
 //      and calls it with (8, 0x100, 0). Inside func_0205fcfc that is
 //      cmd = (0x100 & 0x7f00) >> 8 = 1 -- none of the commands it handles
 //      (0x60, 0x62, 0x67, 0x70..0x73) -- and val = 0, so it falls straight
@@ -622,21 +622,21 @@ void exit_report()
 // THE SEAM: the ROM's own PXI bring-up
 // ---------------------------------------------------------------------------
 //
-// DELETE THIS WHOLE FUNCTION when a pre-main spine lands. src/func_02058c84.c
+// DELETE THIS WHOLE FUNCTION when a pre-main spine lands. src/unnamed/arm9/0205/func_02058c84.cpp
 // makes exactly these calls, in this order, as its 2nd, 10th and 13th steps;
-// src/func_0203bbc0.c makes the fourth as its first. Every one of them is the
+// src/unnamed/arm9/0203/func_0203bbc0.c makes the fourth as its first. Every one of them is the
 // ROM's own body doing its own work -- the only thing this function supplies
 // is the moment.
 //
 // TWO OF THE SIX CHANNELS ARE CLAIMED BUT NOT BROUGHT UP, and both for a
 // reason outside this file:
 //
-//   channel 0xd, src/func_0206a88c.c (func_02058c84's 11th call). The model
+//   channel 0xd, src/unnamed/arm9/0206/func_0206a88c.c (func_02058c84's 11th call). The model
 //   unblocks its spin the same way it unblocks the other two, but linking it
-//   pulls src/func_0206a6d0.c and with it the GBA-slot chain and the OS lock
+//   pulls src/unnamed/arm9/0206/func_0206a6d0.c and with it the GBA-slot chain and the OS lock
 //   family under func_020570b8/func_02057158. A different lane's work.
 //
-//   channel 6, src/func_0205f270.c (func_0203bbc0's first call). THE HOST BUG
+//   channel 6, src/unnamed/arm9/0205/func_0205f270.c (func_0203bbc0's first call). THE HOST BUG
 //   THIS PARAGRAPH USED TO NAME IS FIXED (run link100, lane R2D2, gate 1):
 //   hal/scene_boot.cpp hosted data_020a80cc as `int[6]`, 24 bytes, while
 //   func_0205f270's own stores reach +0x36, and it now hosts the ROM's whole

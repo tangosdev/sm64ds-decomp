@@ -1,7 +1,7 @@
 // THE WIDE FAN-OUT. 0.3.2, the sixteen-player release; reshaped by run link100
 // (lane R3C's ruling 2) from REPLACE to ALWAYS-THEN-EXTEND.
 //
-// src/func_0203bb60.c and src/func_0203bc7c.c are steps 0x16 and 0x17 of the
+// src/unnamed/arm9/0203/func_0203bb60.c and src/unnamed/arm9/0203/func_0203bc7c.c are steps 0x16 and 0x17 of the
 // ROM's main loop: every frame they copy the per-slot comms records into the
 // per-player TouchInfo and PadData arrays that the rest of the game reads its
 // input from. Both loop `i < 4`, hard -- the 4 is a bare immediate in the loop
@@ -103,7 +103,7 @@ void func_0203bc7c_narrow(void);
 
 namespace {
 
-// THE TAIL of src/func_0203bb60.c: its loop body verbatim, over slots
+// THE TAIL of src/unnamed/arm9/0203/func_0203bb60.c: its loop body verbatim, over slots
 // kPortNarrowPlayers..kPortMaxPlayers-1. The ROM's own body has already run
 // slots 0..3 and left p where the DS left it, so this picks up at record 4.
 void touch_fanout_tail(void)
@@ -120,7 +120,7 @@ void touch_fanout_tail(void)
     }
 }
 
-// THE TAIL of src/func_0203bc7c.c: its loop body verbatim, over slots
+// THE TAIL of src/unnamed/arm9/0203/func_0203bc7c.c: its loop body verbatim, over slots
 // kPortNarrowPlayers..kPortMaxPlayers-1, and WITHOUT the `data_020a0e44 = 0;`
 // that stands at the head of the ROM's body. That one line is the whole reason
 // this is a tail and not a second wide loop: the ROM zeroes the word once and

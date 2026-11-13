@@ -119,7 +119,7 @@ void rom_main(void);              /* src/main.c, renamed at compile time */
 static int g_a054_hits;
 static int g_loop_hits;
 
-/* main's fifth call. The ROM body is src/func_0201a054.c and it is still not
+/* main's fifth call. The ROM body is src/unnamed/arm9/0201/func_0201a054.c and it is still not
    run WHOLE as ROM code: tests/walk_window.cpp runs its two transcribed spans
    at their own point, for the four reasons in the header block, and rung R2f
    of lane BOOTSCOUT's staged plan is where the real body goes.
@@ -144,7 +144,7 @@ void port_rom_a054_seam(void)
 /* hal/boot_os.cpp: the boot worker's ov000 step (run linkfull, lane S4OV0). */
 void port_boot_rom_worker(void);
 
-/* main's last call, src/func_020197b8.c: the ROM's own game loop, a
+/* main's last call, src/unnamed/arm9/0201/func_020197b8.c: the ROM's own game loop, a
    do { ... } while (1) that never returns. Returning here is the staged
    path's hand-back -- main runs to its loop and the host frame loop takes the
    frame from there. Rung R3d of the staged plan is where this seam goes.

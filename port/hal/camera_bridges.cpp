@@ -295,7 +295,7 @@ COMM(".dsstate$camcomm0007", data_020a1052, 0x12);
    asserts is exactly where it was. The cartridge's own extent stays what the
    comment above says it is; bytes 0x90..0x240 are the port's, zeroed at
    session-open by the seam (hal/comms_seam.cpp, func_020408b0) the same way
-   src/func_0203db64.c:64 zeroes the first 0x90 at session start. */
+   src/unnamed/arm9/0203/func_0203db64.c:64 zeroes the first 0x90 at session start. */
 COMM(".dsstate$camrec0000", data_020a1154, 0xc);
 COMM(".dsstate$camrec0001", data_020a1160, 2);
 COMM(".dsstate$camrec0002", data_020a1162, 2);

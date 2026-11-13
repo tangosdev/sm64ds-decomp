@@ -327,7 +327,7 @@ enum { NODES = 256, RING = 9 };
 // THE STATUS BLOCK, AND WHO NAMES IT. This used to be a host array beside the
 // queue, published into unconditionally, with a note saying the 0x19 handshake
 // "is a no-op rather than a fake" because the consumer owned the block. Rung R1
-// inverts that: src/func_0205b358.c runs, and its last act is to send command
+// inverts that: src/unnamed/arm9/0205/func_0205b358.c runs, and its last act is to send command
 // 0x19 carrying the address of the block IT allocated (data_020a64e0, hosted at
 // its ROM span in hal/snd_globals.cpp). This pointer is what that command hands
 // over, and it stays null until the command is executed -- which is the DS's
@@ -508,7 +508,7 @@ void exec(const Node *n)
     }
     case 0x19:
         // SET_STATUS_BLOCK, and it is the ONE command in this switch the ARM9
-        // sends before it sends anything else. src/func_0205b358.c takes a node
+        // sends before it sends anything else. src/unnamed/arm9/0205/func_0205b358.c takes a node
         // off the free list it has just built, writes 0x19 into the opcode word
         // and data_020a7fc0 -- its own SNDSharedWork -- into the first
         // argument, and flushes. Everything this consumer publishes goes there
@@ -665,7 +665,7 @@ void publish_player_status(void)
 //                        here -- func_0204f1e8, func_02050950, func_0204fc40 --
 //                        and they are calls two and three and four of this
 //                        body. Call ONE is func_0205a82c, which is the command
-//                        pool: it was skipped because src/func_0205b358.c
+//                        pool: it was skipped because src/unnamed/arm9/0205/func_0205b358.c
 //                        needs three DS symbols to be one object, and
 //                        hal/snd_globals.cpp now makes them one. So the guard,
 //                        the pool, the status block, the channel-7
@@ -798,7 +798,7 @@ extern "C" void sd_sound_level_reap(void)
  * THE HAND-SEEDED POOL IS RETIRED (run link100, lane SND1, rung R1). What used
  * to be here was twenty lines chaining 256 nodes, seating head and tail, zeroing
  * seven cursors and pointing data_020a7fc0 at a host array -- with a note saying
- * src/func_0205b358.c "is unusable on the host because it depends on three
+ * src/unnamed/arm9/0205/func_0205b358.c "is unusable on the host because it depends on three
  * symbols being ADJACENT in DS memory ... Host symbols are separate objects, so
  * running it would write past two of them." The three symbols are now ONE object
  * with the three names at their ROM offsets (hal/snd_globals.cpp), so the ROM's
@@ -875,7 +875,7 @@ void sd_consumer_tick(void)
 //                the host has no second core, so this file pumps it instead.
 //
 // IT RETURNS THE ROM'S OWN WORD (run link100, lane SND1, rung R1). It used to
-// return g_status[0], a host array this file owned; src/func_0205b5d4.c returns
+// return g_status[0], a host array this file owned; src/unnamed/arm9/0205/func_0205b5d4.c returns
 // data_020a7fc0[0], and after rung R1 that pointer is seated by the cartridge's
 // own SND_Init and points at data_020a64e0. So the only difference between this
 // body and the matched one is the pump, which is the ruling.

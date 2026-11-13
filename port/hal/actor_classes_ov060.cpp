@@ -565,7 +565,7 @@ extern "C" void hal_fill_bowser_fire_sea_arena_vtable(void)
 //
 // THE LABEL SHIFT, re-confirmed on this tree rather than inherited: the table
 // dsd names _ZTV9SpikeBomb / _ZTV9daKirai_c is the one daKirai_c_classInit
-// stores (src/d_a_kirai.c, `p[0] = (int)_ZTV9SpikeBomb`), and
+// stores (src/game/actors/d_a_kirai.cpp, `p[0] = (int)_ZTV9SpikeBomb`), and
 // its slot bodies carry the shifted _ZN17BowserSkyPlatform* spellings.
 // daKpa3Bg_c_classInit stores the UNNAMED _ZTV17BowserSkyPlatform instead.
 // The semantics settle it a fourth way: this class's InitResources ends in

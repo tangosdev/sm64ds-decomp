@@ -1,14 +1,14 @@
 // The game card's ROM read path: ROMCTRL, the command latch and the data port.
 //
 // Run linkfull, lane S4CARD: the first stage-4 hardware model. The ROM's own
-// card driver (src/func_02060918.c and the fifteen TUs behind it, listed in
+// card driver (src/unnamed/arm9/0206/func_02060918.c and the fifteen TUs behind it, listed in
 // port/slice_w28_card.txt) reads the cartridge by talking to three registers,
 // and this file is the cartridge on the other end of them. Register semantics
 // are from GBATEK ("DS Cartridge I/O Ports", "DS Cartridge Protocol"); no SDK
 // source is reproduced.
 //
 //   0x040001A0  AUXSPICNT  16-bit. Bit 15 slot enable, bit 14 "transfer ready
-//                          IRQ", bit 13 0 = ROM mode. src/func_02060d98.c
+//                          IRQ", bit 13 0 = ROM mode. src/unnamed/arm9/0206/func_02060d98.c
 //                          writes its high byte as 0xC0 before every command.
 //   0x040001A4  ROMCTRL    32-bit. Bit 31 = start (write) / busy (read), bits
 //                          24-26 the block size (1 = 0x200 bytes), bit 23 =
@@ -21,7 +21,7 @@
 // THE ONE COMMAND THIS GAME SENDS is B7h, "get data": bytes 1..4 are the ROM
 // address, big-endian, and the cartridge answers with a block from there.
 // GBATEK: an address below 0x8000 (the secure area and the header) is answered
-// from 0x8000 + (addr & 0x1FF) instead. src/func_02060a64.c is the whole
+// from 0x8000 + (addr & 0x1FF) instead. src/unnamed/arm9/0206/func_02060a64.c is the whole
 // protocol on the ARM9 side:
 //
 //     func_02060d98((page >> 8) | 0xB7000000, page << 24);   // the command

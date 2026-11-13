@@ -1,7 +1,7 @@
 /* THE PER-ACTOR NET UNDER THE ROM'S OWN LIST WALKS, and the five faces that
  * carry it.
  *
- * src/func_02043fdc.cpp (the four processing lists) and src/func_020441cc.cpp
+ * src/func_02043fdc.cpp (the four processing lists) and src/unnamed/arm9/0204/func_020441cc.cpp
  * (the scene tree) are the matched walks and they run as the ROM does (run
  * linkfull, lane PMF3): each calls its list head's callback through a real
  * pointer-to-member, `(node->obj->*thiz->callback)()`, which /vmg /vmm makes

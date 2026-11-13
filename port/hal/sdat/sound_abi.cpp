@@ -24,7 +24,7 @@ extern "C" {
 
 int  Sound_PlayIfNotActive(int a, int b, int c, int d);
 
-// src/func_02009e70.cpp declares Sound_PlayIfNotActive with three
+// src/unnamed/arm9/0200/func_02009e70.cpp declares Sound_PlayIfNotActive with three
 // parameters and calls it with three; the definition takes four and
 // stores the fourth as the effect's stop fade (func_0201186c ->
 // func_02011b38 a5 -> entry+4 -> func_0204f5a0's arg1, where 0 stops

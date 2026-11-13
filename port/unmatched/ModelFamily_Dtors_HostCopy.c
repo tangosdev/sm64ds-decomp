@@ -59,7 +59,7 @@
  *
  * AND SHADOWMODEL'S D0 (run linkfull wave 27, lane V3B). Item 6 is answered
  * for that class the same way: include/ShadowModel.h carries the pair, and
- * src/_ZN11ShadowModelD0Ev.cpp's _MSC_VER arm now defines the flat D0 as the
+ * port/unmatched/hostarm/_ZN11ShadowModelD0Ev.cpp's _MSC_VER arm now defines the flat D0 as the
  * one host destructor src/_ZN11ShadowModelD1Ev.cpp defines (the unlink, then
  * ~ModelBase) followed by ModelBase's inline operator delete,
  * Memory::operator_delete2 -- the ROM body's own steps (0x02015f80);
@@ -155,7 +155,7 @@ struct MdlBase *_ZN9ModelBaseD1Ev(struct MdlBase *thiz)
 
 /* ---- Model, 0x02016ca8 (D2), 0x02016d20 (D1), 0x02016ce0 (D0) ------------ */
 
-/* _ZN5ModelD2Ev RETIRED (W23-1): src/_ZN5ModelD2Ev.cpp's _MSC_VER arm provides it now. */
+/* _ZN5ModelD2Ev RETIRED (W23-1): port/unmatched/hostarm/_ZN5ModelD2Ev.cpp's _MSC_VER arm provides it now. */
 
 struct Mdl *_ZN5ModelD1Ev(struct Mdl *thiz)
 {
@@ -166,7 +166,7 @@ struct Mdl *_ZN5ModelD1Ev(struct Mdl *thiz)
     return thiz;
 }
 
-/* _ZN5ModelD0Ev RETIRED (W23-1): src/_ZN5ModelD0Ev.cpp's _MSC_VER arm provides it now. */
+/* _ZN5ModelD0Ev RETIRED (W23-1): port/unmatched/hostarm/_ZN5ModelD0Ev.cpp's _MSC_VER arm provides it now. */
 
 /* ---- ModelAnim2 (D1, D0) ------------------------------------------------ */
 
@@ -190,7 +190,7 @@ struct CommonMdl *_ZN17dExtCommonModel_cD1Ev(struct CommonMdl *thiz)
     return thiz;
 }
 
-/* _ZN11CommonModelD0Ev RETIRED (W23-1): src/_ZN11CommonModelD0Ev.cpp's _MSC_VER arm provides it now. */
+/* _ZN11CommonModelD0Ev RETIRED (W23-1): port/unmatched/hostarm/_ZN11CommonModelD0Ev.cpp's _MSC_VER arm provides it now. */
 
 /* ---- BlendModelAnim, 0x02016690 (D1), 0x02016644 (D0) ------------------- */
 
@@ -234,4 +234,4 @@ struct ShadowMdl *_ZN17dExtShadowModel_cD1Ev(struct ShadowMdl *thiz)
     return thiz;
 }
 
-/* _ZN11ShadowModelD0Ev RETIRED (V3B, wave 27): src/_ZN11ShadowModelD0Ev.cpp's _MSC_VER arm provides it now. */
+/* _ZN11ShadowModelD0Ev RETIRED (V3B, wave 27): port/unmatched/hostarm/_ZN11ShadowModelD0Ev.cpp's _MSC_VER arm provides it now. */

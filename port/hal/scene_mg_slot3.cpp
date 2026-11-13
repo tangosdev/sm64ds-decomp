@@ -679,7 +679,7 @@ extern "C" void port_scene_slot3_hits(void)
  * ?_ZTV12dScMgSlot3_c@@3PAXA. src/_ZN12dScMgSlot3_cD1Ev.cpp (slot 16, the D2)
  * declares `extern void* _ZTV12dScMgSlot3_c;` outside its extern "C" block
  * and stores its ADDRESS into the object's first word. Its D0 sibling
- * src/_ZN12dScMgSlot3_cD0Ev.cpp declares the same table inside extern "C" and
+ * port/unmatched/hostarm/_ZN12dScMgSlot3_cD0Ev.cpp declares the same table inside extern "C" and
  * needs no row, which is the two spellings of one table sitting three lines
  * apart in the same class. The right-hand side is the ov006 mount's own
  * definition of the vtable this seat fills.

@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SM64DS naming lab</title>
+<style>
+:root{--bg:#14161a;--pane:#1c1f25;--line:#2c313a;--fg:#d8dce3;--dim:#8a93a2;--acc:#5aa9ff;--hit:#ffb347;--bad:#ff6b6b;--ok:#62d17a;--own:#5aa9ff;--base:#9aa3b2;--other:#e8a33d}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:12px/1.35 ui-monospace,Consolas,monospace;height:100vh;display:flex;flex-direction:column}
+header{display:flex;gap:10px;align-items:center;padding:6px 10px;border-bottom:1px solid var(--line);background:var(--pane);flex-wrap:wrap}
+header b{color:var(--acc)} .dot{width:9px;height:9px;border-radius:50%;background:var(--bad);display:inline-block}
+.dot.on{background:var(--ok)} .stat{color:var(--dim)} .stat span{color:var(--fg)}
+button{background:#2a3040;color:var(--fg);border:1px solid #3a4152;border-radius:3px;padding:2px 8px;font:inherit;cursor:pointer}
+button:hover{border-color:var(--acc)} button.on{background:#27486e}
+input,textarea,select{background:#11141a;color:var(--fg);border:1px solid #3a4152;border-radius:3px;font:inherit;padding:2px 4px}
+main{flex:1;display:grid;grid-template-columns:330px 1fr 380px;min-height:0}
+section{border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+h2{margin:0;padding:5px 8px;font-size:12px;background:#222630;border-bottom:1px solid var(--line);display:flex;gap:6px;align-items:center}
+h2 .sp{flex:1}
+.scroll{overflow:auto;min-height:0}
+table{border-collapse:collapse;width:100%}
+td,th{padding:1px 5px;white-space:nowrap;text-align:left;border-bottom:1px solid #20242c}
+th{position:sticky;top:0;background:#20242c;color:var(--dim);font-weight:normal;cursor:pointer}
+tr.sel td{background:#26364d} tbody tr:hover td{background:#232a35}
+.num{text-align:right} .dim{color:var(--dim)} .own{color:var(--own)} .base{color:var(--base)} .other{color:var(--other)}
+.chg td{background:#4a3a14 !important;transition:background 0s}
+.fade td{transition:background 1.2s}
+td.val{cursor:text} td.unk{color:#6f7787}
+#tl{display:block;width:100%}
+.tabs{display:flex;gap:2px;padding:4px 6px;background:#1a1d23;border-bottom:1px solid var(--line)}
+.tabs button.on{background:#27486e}
+.panel{display:none;min-height:0;flex:1;flex-direction:column} .panel.on{display:flex}
+#fninfo{padding:6px 8px;border-top:1px solid var(--line);background:#191c22;min-height:70px}
+#tip{position:fixed;pointer-events:none;background:#000d;border:1px solid #444;padding:4px 6px;display:none;z-index:9;max-width:520px;white-space:pre-wrap}
+.tex{display:inline-block;margin:4px;text-align:center;vertical-align:top}
+.tex img{image-rendering:pixelated;background:repeating-conic-gradient(#333 0 25%,#222 0 50%) 0 0/12px 12px;border:1px solid #333}
+#src{position:fixed;inset:5% 8%;background:#0f1115;border:1px solid #444;display:none;flex-direction:column;z-index:8}
+#src pre{margin:0;overflow:auto;flex:1;padding:6px;counter-reset:l}
+#src .ln{color:#555;display:inline-block;width:46px;text-align:right;margin-right:8px;user-select:none}
+#src .hl{background:#2c3b18}
+form.prop{display:grid;grid-template-columns:90px 1fr;gap:3px 6px;padding:6px 8px;border-bottom:1px solid var(--line)}
+form.prop textarea{height:48px}
+.note{padding:6px 8px;color:var(--dim)}
+.small{font-size:11px}
+.named{color:#8fd18f;font-style:italic}
+.pill{border:1px solid #3a4152;border-radius:8px;padding:0 5px;margin-left:4px;color:var(--dim)}
+</style>
+</head>
+<body>
+<header>
+  <b>SM64DS naming lab</b>
+  <span><span id="link" class="dot"></span> <span id="linktxt" class="stat">no game</span></span>
+  <span class="stat">tick <span id="tick">-</span></span>
+  <span class="stat">level <span id="level">-</span></span>
+  <span class="stat">area <span id="area">-</span></span>
+  <span class="stat">actors <span id="nact">-</span></span>
+  <span class="stat">calls/frame <span id="calls">-</span></span>
+  <span class="stat">release <span id="rel">-</span></span>
+  <span style="flex:1"></span>
+  <button id="bpause" title="freeze the game loop (window stays responsive)">pause</button>
+  <button id="bstep" title="run one frame while paused">step 1</button>
+  <button id="bstep10">step 10</button>
+  <button id="btrace" title="lab trace on/off (calls per actor, timeline)">trace</button>
+  <span class="stat small" title="Everything shown here comes from the PC port, which runs this repository's own source. It suggests names; only the ROM / melonDS confirms them.">port = candidates only</span>
+</header>
+<main>
+<section>
+  <h2>Actors <span class="sp"></span><input id="afilter" placeholder="filter class / id" size="14"></h2>
+  <div class="scroll" style="flex:1"><table id="atab"><thead><tr>
+    <th data-k="cls">class</th><th data-k="dist" class="num">dist</th><th data-k="calls" class="num" title="calls with this actor as this/self, last frame">calls</th><th data-k="area" class="num">ar</th><th data-k="aid" class="num">id</th><th></th>
+  </tr></thead><tbody></tbody></table></div>
+</section>
+<section>
+  <h2><span id="ftitle">Inspector: click an actor</span><span class="sp"></span>
+    <label class="small" title="port-only helpers (no ROM address) on the timeline"><input type="checkbox" id="tlport"> port code</label>
+    <button id="bverify" title="queue this class for confirmation on the real cartridge (melonDS)">queue for ROM verify</button>
+    <button id="bunfocus">clear</button></h2>
+  <div id="tlwrap" style="position:relative;border-bottom:1px solid var(--line)">
+    <canvas id="tl" height="200"></canvas>
+  </div>
+  <div id="fninfo" class="dim">The timeline shows every function that ran with the focused actor as <i>this</i> (thiscall) or as its first argument (the extern "C" self functions), one column per frame, newest at the right. Click a row for its ROM address, signature and source.</div>
+  <h2>Fields <span class="pill" id="hdr"></span><span class="sp"></span>
+    <label class="small"><input type="checkbox" id="onlychg"> changing only</label>
+    <label class="small"><input type="checkbox" id="showunk" checked> gaps</label></h2>
+  <div class="scroll" style="flex:1"><table id="ftab"><thead><tr>
+    <th>off</th><th>owner</th><th>type</th><th>name</th><th>value</th><th class="num" title="frames this field changed in the last 300">chg</th><th title="arm a hardware write breakpoint on this field for one second and list every function that wrote it">writes</th>
+  </tr></thead><tbody></tbody></table></div>
+</section>
+<section style="border-right:0">
+  <div class="tabs">
+    <button data-p="hot" class="on">Hot</button><button data-p="assets">Assets</button><button data-p="names">Names</button><button data-p="methods">Class</button>
+  </div>
+  <div class="panel on" id="p-hot">
+    <div class="note small">Most-called functions across the whole game, per frame. <label><input type="checkbox" id="hotgame" checked> game functions only</label> (hides the port's renderer and host code, which have no ROM address)</div>
+    <div class="scroll" style="flex:1"><table id="htab"><thead><tr><th class="num">/frame</th><th>function</th><th>ROM</th></tr></thead><tbody></tbody></table></div>
+  </div>
+  <div class="panel" id="p-assets">
+    <h2>Files the game loaded <span class="sp"></span><input id="afilter" placeholder="filter file / class" size="14"> <button id="bassets">refresh</button></h2>
+    <div class="scroll" style="flex:1">
+      <table id="astab"><thead><tr><th>file</th><th>owner</th><th>asked for by</th></tr></thead><tbody></tbody></table>
+    </div>
+    <div id="texs" class="scroll" style="max-height:45%"></div>
+  </div>
+  <div class="panel" id="p-names">
+    <form class="prop" id="pform">
+      <span>subject</span><input name="subject" placeholder="Class::method, Class+0x123, file id">
+      <span>ROM</span><input name="rom" placeholder="ROM address / symbol (filled from a selection)">
+      <span>current</span><input name="current">
+      <span>proposed</span><input name="proposed" placeholder="the name you'd give it">
+      <span>evidence</span><textarea name="evidence" placeholder="what you saw: when it runs, what it changes"></textarea>
+      <span></span><button>save proposal</button>
+    </form>
+    <div class="note small" id="ndir"></div>
+    <div class="scroll" style="flex:1"><table id="ptab"><thead><tr><th>subject</th><th>proposed</th><th>evidence</th></tr></thead><tbody></tbody></table></div>
+  </div>
+  <div class="panel" id="p-methods">
+    <div class="note small">Every function the port defines for the focused class (the ROM order), with how often it ran on this instance while focused.</div>
+    <div class="scroll" style="flex:1"><table id="mtab"><thead><tr><th>ROM</th><th>method</th><th class="num">seen</th></tr></thead><tbody></tbody></table></div>
+  </div>
+</section>
+</main>
+<div id="tip"></div>
+<div id="src"><h2><span id="srcname"></span><span class="sp"></span><button id="srcclose">close</button></h2><pre id="srcpre"></pre></div>
+<script>
+'use strict';
+const TOKEN = new URLSearchParams(location.hash.slice(1)).get('token') || '';
+const $ = s => document.querySelector(s);
+const hex = (n, w) => (n >>> 0).toString(16).padStart(w || 0, '0');
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+async function api(path, body) {
+  const o = {headers: {'X-Lab-Token': TOKEN}};
+  if (body !== undefined) { o.method = 'POST'; o.headers['Content-Type'] = 'application/json'; o.body = JSON.stringify(body); }
+  const r = await fetch(path, o);
+  if (!r.ok) throw new Error(path + ': ' + r.status);
+  return r.json();
+}
+const cmd = (c, reply) => api('/api/cmd', {cmd: c, reply});
+
+// ------------------------------------------------------------------ state
+const S = {actors: [], player: 0, fns: [], focus: null, layout: null, cls: null, sel: null,
+           frames: new Map(), lastSnap: null, prev: {}, chg: {}, flash: {}, paused: false, trace: false, sortK: 'dist', sortD: 1};
+const NFRAMES = 300;
+
+// ------------------------------------------------------------------ events
+function connect() {
+  const es = new EventSource('/events?token=' + encodeURIComponent(TOKEN));
+  es.onmessage = e => { const m = JSON.parse(e.data); (H[m.t] || (() => {}))(m); };
+  es.onerror = () => { setLink(false); };
+}
+function setLink(on) { $('#link').classList.toggle('on', !!on); $('#linktxt').textContent = on ? 'game connected' : 'waiting for the game'; }
+const H = {
+  hello(m) { (m.fns || []).forEach(f => S.fns[f.id] = f); setLink(m.link); if (m.hello) $('#rel').textContent = m.hello.release || '-'; if (m.status) H.status({s: m.status, link: m.link}); },
+  status(m) {
+    setLink(m.link); if (!m.s) return; const s = m.s;
+    $('#tick').textContent = s.tick; $('#level').textContent = s.level; $('#area').textContent = s.area;
+    $('#nact').textContent = s.actors; $('#calls').textContent = s.calls;
+    S.paused = s.paused === '1'; $('#bpause').textContent = S.paused ? 'resume' : 'pause'; $('#bpause').classList.toggle('on', S.paused);
+    S.trace = s.trace === '1'; $('#btrace').classList.toggle('on', S.trace); $('#btrace').textContent = 'trace ' + (S.trace ? 'on' : 'off');
+  },
+  actors(m) { S.actors = m.list; S.player = m.player; drawActors(); },
+  fn(m) { S.fns[m.fn.id] = m.fn; },
+  hits(m) {
+    let f = S.frames.get(m.tick); if (!f) { f = new Map(); S.frames.set(m.tick, f); }
+    for (const [id, n] of m.fns) f.set(id, (f.get(id) || 0) + n);
+    while (S.frames.size > NFRAMES) S.frames.delete(S.frames.keys().next().value);
+    S.tlDirty = true;
+  },
+  snap(m) {
+    // change tracking on every snapshot (60 a second); drawing happens at 15 Hz
+    if (S.layout) for (const f of fieldRows()) {
+      const k = f.offset, raw = m.hex.substr(k * 2, Math.max(1, f.size) * 2);
+      if (S.prev[k] !== undefined && S.prev[k] !== raw) { (S.chg[k] = S.chg[k] || []).push(m.tick); S.flash[k] = m.tick; }
+      S.prev[k] = raw;
+    }
+    S.lastSnap = m; S.fieldsDirty = true;
+  },
+  hot(m) { drawHot(m.list); },
+  level(m) { clearFocus(); },
+};
+
+// ------------------------------------------------------------------ actors
+function playerPos() { const p = S.actors.find(a => a.ptr === S.player); return p ? [p.x, p.y, p.z] : null; }
+function drawActors() {
+  const pp = playerPos(); const f = $('#afilter').value.toLowerCase();
+  const rows = S.actors.filter(a => !f || a.cls.toLowerCase().includes(f) || String(a.aid) === f || hex(a.ptr).includes(f));
+  for (const a of rows) a.dist = pp ? Math.round(Math.hypot(a.x - pp[0], a.y - pp[1], a.z - pp[2])) : 0;
+  const k = S.sortK, d = S.sortD;
+  rows.sort((a, b) => (a[k] < b[k] ? -d : a[k] > b[k] ? d : 0));
+  const tb = $('#atab tbody');
+  tb.innerHTML = rows.map(a => `<tr data-p="${a.ptr}" class="${S.focus && S.focus.ptr === a.ptr ? 'sel' : ''}">
+    <td title="${esc(hex(a.ptr, 8) + ' vtable ' + hex(a.vt, 8) + ' (' + (a.clsHow || 'no vtable symbol') + ')  uid ' + a.uid)}">${esc(a.cls)}${a.ptr === S.player ? ' <span class="pill">you</span>' : ''}</td>
+    <td class="num">${a.dist}</td><td class="num">${a.calls}</td><td class="num">${a.area}</td><td class="num">${a.aid}</td>
+    <td><button class="small tp" title="teleport Mario next to it">tp</button></td></tr>`).join('');
+}
+$('#atab tbody').addEventListener('click', e => {
+  const tr = e.target.closest('tr'); if (!tr) return; const ptr = +tr.dataset.p;
+  if (e.target.classList.contains('tp')) { const a = S.actors.find(x => x.ptr === ptr); if (a) cmd(`tp ${a.x + 120} ${a.y + 150} ${a.z}`, 'tp'); return; }
+  focusActor(ptr);
+});
+$('#atab thead').addEventListener('click', e => { const k = e.target.dataset.k; if (!k) return; S.sortD = S.sortK === k ? -S.sortD : (k === 'cls' ? 1 : (k === 'dist' ? 1 : -1)); S.sortK = k; drawActors(); });
+$('#afilter').addEventListener('input', drawActors);
+
+// ------------------------------------------------------------------ focus
+async function focusActor(ptr) {
+  const r = await api('/api/focus', {ptr});
+  if (r.error) { $('#fninfo').textContent = r.error; return; }
+  S.focus = r.focus; S.layout = r.layout; S.cls = r.class; S.frames.clear(); S.prev = {}; S.chg = {}; S.flash = {}; S.lastSnap = null; S.sel = null;
+  $('#ftitle').innerHTML = `<span class="own">${esc(r.focus.cls)}</span> <span class="dim">@${hex(ptr, 8)} uid ${r.focus.uid}</span>`;
+  $('#hdr').textContent = (r.layout.header || 'no header') + (r.layout.size ? ' · 0x' + hex(r.layout.size) + ' bytes' : '');
+  $('#hdr').title = 'base chain: ' + r.layout.chain.join(' : ');
+  drawActors(); drawMethods();
+  if (!S.trace) cmd('trace 1', 'status');
+}
+function clearFocus() { S.focus = null; S.layout = null; S.frames.clear(); api('/api/unfocus', {}); $('#ftitle').textContent = 'Inspector: click an actor'; $('#ftab tbody').innerHTML = ''; drawActors(); }
+$('#bunfocus').onclick = clearFocus;
+
+// ------------------------------------------------------------------ timeline
+const tl = $('#tl'), tip = $('#tip');
+function fnClass(f) {
+  if (!S.focus || !f) return 'other';
+  if (f.cls === S.focus.cls) return 'own';
+  return (S.layout && S.layout.chain.includes(f.cls)) ? 'base' : 'other';
+}
+function tlRows() {
+  const seen = new Map();
+  for (const fr of S.frames.values()) for (const [id, n] of fr) seen.set(id, (seen.get(id) || 0) + n);
+  const ids = [...seen.keys()].filter(id => $('#tlport').checked || (S.fns[id] && S.fns[id].rom));
+  const order = {own: 0, base: 1, other: 2};
+  ids.sort((a, b) => order[fnClass(S.fns[a])] - order[fnClass(S.fns[b])] || ((S.fns[a] && S.fns[a].rom ? S.fns[a].rom.addr : 1e12) - (S.fns[b] && S.fns[b].rom ? S.fns[b].rom.addr : 1e12)));
+  return {ids, seen};
+}
+const LABELW = 250, RH = 13;
+function drawTimeline() {
+  const {ids} = tlRows();
+  const W = tl.parentElement.clientWidth; const Hh = Math.max(60, Math.min(520, ids.length * RH + 16));
+  if (tl.width !== W || tl.height !== Hh) { tl.width = W; tl.height = Hh; }
+  const g = tl.getContext('2d'); g.fillStyle = '#121418'; g.fillRect(0, 0, W, Hh);
+  const ticks = [...S.frames.keys()]; const last = ticks.length ? ticks[ticks.length - 1] : 0;
+  const cw = (W - LABELW) / NFRAMES;
+  g.font = '11px Consolas, monospace'; g.textBaseline = 'middle';
+  const col = {own: '#5aa9ff', base: '#9aa3b2', other: '#e8a33d'};
+  ids.forEach((id, r) => {
+    const f = S.fns[id] || {method: '#' + id}; const y = 14 + r * RH; const c = fnClass(f);
+    if (S.sel === id) { g.fillStyle = '#26364d'; g.fillRect(0, y - 1, W, RH); }
+    g.fillStyle = col[c];
+    const label = (c === 'own' ? '' : (f.cls ? f.cls + '::' : '')) + (f.method || f.key);
+    g.fillText(label.length > 36 ? label.slice(0, 35) + '…' : label, 4, y + RH / 2 - 1);
+    for (const [t, fr] of S.frames) {
+      const n = fr.get(id); if (!n) continue;
+      const x = LABELW + (NFRAMES - 1 - (last - t)) * cw; if (x < LABELW) continue;
+      g.globalAlpha = Math.min(1, 0.45 + 0.15 * n); g.fillRect(x, y, Math.max(1, cw - 0.3), RH - 2); g.globalAlpha = 1;
+    }
+  });
+  g.fillStyle = '#8a93a2'; g.fillText(ids.length ? `${ids.length} functions · ${S.frames.size} frames · newest at right (tick ${last})` : (S.focus ? 'waiting for calls (is the trace on? is the actor in a shown area?)' : ''), LABELW, 7);
+  tl._ids = ids; tl._last = last; tl._cw = cw;
+}
+function tlHit(e) {
+  const r = tl.getBoundingClientRect(); const x = e.clientX - r.left, y = e.clientY - r.top;
+  const row = Math.floor((y - 14) / RH); const id = (tl._ids || [])[row];
+  const t = x > LABELW ? tl._last - (NFRAMES - 1 - Math.floor((x - LABELW) / tl._cw)) : null;
+  return {id, t};
+}
+tl.addEventListener('mousemove', e => {
+  const {id, t} = tlHit(e); const f = S.fns[id];
+  if (!f) { tip.style.display = 'none'; return; }
+  const n = t !== null && S.frames.get(t) ? (S.frames.get(t).get(id) || 0) : null;
+  tip.textContent = f.sig || f.key; if (f.rom) tip.textContent += `\nROM ${f.rom.module} 0x${hex(f.rom.addr, 8)} ${f.rom.name}`;
+  if (n !== null) tip.textContent += `\ntick ${t}: ${n} call${n === 1 ? '' : 's'}`;
+  tip.style.display = 'block'; tip.style.left = (e.clientX + 14) + 'px'; tip.style.top = (e.clientY + 10) + 'px';
+});
+tl.addEventListener('mouseleave', () => tip.style.display = 'none');
+tl.addEventListener('click', e => { const {id} = tlHit(e); if (id === undefined) return; S.sel = id; showFn(S.fns[id]); S.tlDirty = true; });
+function romTxt(r) { return r ? `${r.module} 0x${hex(r.addr, 8)}${r.size ? ' (0x' + hex(r.size) + ' bytes)' : ''}` : 'no ROM address'; }
+function showFn(f) {
+  if (!f) return;
+  const {seen} = tlRows(); const id = f.id;
+  $('#fninfo').innerHTML = `<div><b class="${fnClass(f)}">${esc(f.key)}</b> <span class="dim">${seen.get(id) || 0} calls in view</span></div>
+   <div class="dim small">${esc(f.sig)}</div>
+   <div class="small">ROM: ${esc(romTxt(f.rom))} ${f.rom ? '· <span class="dim">' + esc(f.rom.name) + '</span>' : ''}</div>
+   <div class="small dim">port: ${f.addrs.map(a => '0x' + hex(a, 8)).join(', ')} · ${esc(f.obj)}</div>
+   <div style="margin-top:3px">${f.rom ? '<button id="bsrc">source</button> ' : ''}<button id="bprop">propose a name</button>
+     <button id="bpatch" title="Copies the command that writes a hot-patch skeleton for this function. Patches are compiled and applied from your terminal (patch.py), never from this page.">copy patch cmd</button></div>`;
+  if (f.rom) $('#bsrc').onclick = () => openSource(f.rom.name);
+  $('#bpatch').onclick = () => {
+    // the qualified name lets patch.py pick the thiscall body over its extern "C" shim
+    const t = f.key.includes('::') ? `"${f.key}"` : '0x' + hex(f.addrs[0], 8);
+    const file = (f.method || 'fn').replace(/\W/g, '_') + '_patch.c';
+    const c = `python port/mods_api/naming_lab/patch.py new ${t} -o ${file}`;
+    if (!$('#fninfo code')) $('#fninfo').insertAdjacentHTML('beforeend', `<div class="small"><code>${esc(c)}</code></div>`);
+    if (navigator.clipboard) navigator.clipboard.writeText(c).then(() => { $('#bpatch').textContent = 'copied'; }, () => {});
+  };
+  $('#bprop').onclick = () => fillProposal(f.key, f.rom ? `${f.rom.module} 0x${hex(f.rom.addr, 8)} ${f.rom.name}` : '', f.method,
+     `Runs on ${S.focus ? S.focus.cls : '?'} in ${countFramesWith(id)} of the last ${S.frames.size} frames (level ${$('#level').textContent}).`);
+}
+function countFramesWith(id) { let n = 0; for (const fr of S.frames.values()) if (fr.get(id)) n++; return n; }
+
+// ------------------------------------------------------------------ fields
+const DEC = {
+  u8: [1, (v, o) => v.getUint8(o)], s8: [1, (v, o) => v.getInt8(o)], bool: [1, (v, o) => v.getUint8(o)], char: [1, (v, o) => v.getInt8(o)],
+  u16: [2, (v, o) => v.getUint16(o, true)], s16: [2, (v, o) => v.getInt16(o, true)], short: [2, (v, o) => v.getInt16(o, true)],
+  u32: [4, (v, o) => v.getUint32(o, true)], unsigned: [4, (v, o) => v.getUint32(o, true)], s32: [4, (v, o) => v.getInt32(o, true)], int: [4, (v, o) => v.getInt32(o, true)],
+  float: [4, (v, o) => +v.getFloat32(o, true).toFixed(4)],
+  Fix12i: [4, (v, o) => fx(v.getInt32(o, true))], 'Fix12<int>': [4, (v, o) => fx(v.getInt32(o, true))], 'Fix12<s32>': [4, (v, o) => fx(v.getInt32(o, true))],
+};
+DEC['unsigned int'] = DEC.u32; DEC['unsigned char'] = DEC.u8; DEC['unsigned short'] = DEC.u16; DEC['signed char'] = DEC.s8; DEC.long = DEC.s32;
+function fx(i) { return Math.abs(i) >= 0x40000000 ? '0x' + hex(i, 8) : +(i / 4096).toFixed(3) + (i % 4096 ? '' : '') ; }
+function bytesOf(o, n) { const b = S.snapBytes; let s = ''; for (let i = 0; i < n && o + i < b.length; i++) s += hex(b[o + i], 2); return s; }
+function decodeField(f, view) {
+  const t = f.type.replace(/^const\s+/, '').trim(); const o = f.offset;
+  if (o + Math.max(1, f.size) > view.byteLength) return {txt: '…', raw: ''};
+  const raw = bytesOf(o, f.size);
+  if (t.includes('*')) { const p = view.getUint32(o, true); return {txt: p ? '0x' + hex(p, 8) + ptrName(p) : 'null', raw, edit: 'u32'}; }
+  if (t === 'Vector3' || t === 'VecFx32') return {txt: [0, 4, 8].map(k => fx(view.getInt32(o + k, true))).join(', '), raw};
+  if (t === 'Vector3_16') return {txt: [0, 2, 4].map(k => view.getInt16(o + k, true)).join(', '), raw};
+  const d = DEC[t];
+  if (d && !f.array) { const v = d[1](view, o); return {txt: t === 'bool' ? (v ? 'true' : 'false') : String(v) + (t.startsWith('u') && d[0] > 1 && typeof v === 'number' && v > 9 ? '  0x' + hex(v) : ''), raw, edit: t}; }
+  return {txt: raw.length > 48 ? raw.slice(0, 48) + '…' : raw, raw, edit: 'hex'};
+}
+function ptrName(p) {
+  const a = S.actors.find(x => x.ptr === p); if (a) return ' → ' + a.cls;
+  return '';
+}
+function fieldRows() {
+  const L = S.layout; if (!L) return [];
+  const out = []; let end = 0; const size = S.focus.size;
+  const add = (o, n) => { for (let p = o; p < o + n; p += 4) { const l = Math.min(4, o + n - p); out.push({offset: p, size: l, type: l === 4 ? 'u32' : 'u8[' + l + ']', name: 'unk_' + hex(p), owner: '', gap: true, array: l === 4 ? '' : '[' + l + ']'}); } };
+  for (const f of L.fields) {
+    if (f.offset >= size) break;
+    if ($('#showunk').checked && f.offset > end) add(end, Math.min(f.offset - end, 0x80));
+    out.push(f); end = Math.max(end, f.offset + Math.max(1, f.size));
+  }
+  if ($('#showunk').checked && end < size) add(end, Math.min(size - end, 0x80));
+  return out;
+}
+function drawFields() {
+  if (!S.lastSnap || !S.layout) return;
+  const hx = S.lastSnap.hex; const b = new Uint8Array(hx.length / 2);
+  for (let i = 0; i < b.length; i++) b[i] = parseInt(hx.substr(i * 2, 2), 16);
+  S.snapBytes = b; const view = new DataView(b.buffer);
+  const tick = S.lastSnap.tick; const rows = fieldRows(); const only = $('#onlychg').checked;
+  const html = [];
+  for (const f of rows) {
+    const d = decodeField(f, view); const k = f.offset;
+    const changed = S.flash[k] !== undefined && S.flash[k] > tick - 8;
+    const hist = (S.chg[k] || []).filter(t => t > tick - NFRAMES); S.chg[k] = hist;
+    if (only && !hist.length) continue;
+    const doc = (f.doc || '') + (f.note ? '\n' + f.note : '');
+    html.push(`<tr class="${changed ? 'chg' : 'fade'}" data-o="${k}"><td class="dim">0x${hex(k, 3)}</td><td class="${f.owner === S.focus.cls ? 'own' : 'base'} small">${esc(f.owner || '')}</td>
+      <td class="dim">${esc(f.type)}${esc(f.array || '')}</td>${f.named
+        ? `<td class="named" title="${esc(`named on ${f.named.rev} as ${f.named.owner}::${f.named.name} (${f.named.type}); this build still calls it ${f.name}` + (f.named.doc ? '\n' + f.named.doc : ''))}">${esc(f.named.name)}</td>`
+        : `<td class="${f.gap ? 'unk' : ''}" title="${esc(doc)}">${esc(f.name)}</td>`}
+      <td class="val" data-e="${d.edit || ''}" title="double-click to write a new value into the running game">${esc(d.txt)}</td><td class="num dim">${hist.length || ''}</td><td><button class="small ww" title="who writes this field? (hardware data breakpoint, 1 s of game time)">who?</button></td></tr>`);
+  }
+  $('#ftab tbody').innerHTML = html.join('');
+}
+$('#ftab tbody').addEventListener('dblclick', e => {
+  const td = e.target.closest('td.val'); if (!td || !S.focus) return;
+  const o = +td.parentElement.dataset.o; const kind = td.dataset.e; if (!kind) return;
+  const f = fieldRows().find(x => x.offset === o);
+  const inp = document.createElement('input'); inp.value = td.textContent.split('  ')[0].split(' → ')[0]; inp.size = 24;
+  td.textContent = ''; td.appendChild(inp); inp.focus(); inp.select(); S.editing = true;
+  const done = async ok => {
+    S.editing = false; if (!ok) { S.fieldsDirty = true; return; }
+    const h = encodeVal(kind, inp.value, f.size); if (!h) { inp.style.borderColor = 'red'; S.editing = true; return; }
+    const r = await cmd(`poke ${hex(S.focus.ptr + o)} ${h}`, 'poked');
+    $('#fninfo').textContent = `wrote ${h} at ${S.focus.cls}+0x${hex(o)}: ${r.reply && r.reply[0] ? r.reply[0].trim() : 'no reply'}`;
+    S.fieldsDirty = true;
+  };
+  inp.addEventListener('keydown', ev => { if (ev.key === 'Enter') done(true); if (ev.key === 'Escape') done(false); });
+  inp.addEventListener('blur', () => S.editing && done(false));
+});
+function le(v, n) { let s = ''; for (let i = 0; i < n; i++) { s += hex(Number((BigInt.asUintN(64, BigInt(v)) >> BigInt(8 * i)) & 0xffn), 2); } return s; }
+function encodeVal(kind, txt, size) {
+  txt = txt.trim();
+  if (kind === 'hex') { const h = txt.replace(/\s+/g, ''); return /^([0-9a-f]{2})+$/i.test(h) ? h : null; }
+  const n = DEC[kind] ? DEC[kind][0] : 4;
+  if (/^Fix12/.test(kind)) { const f = parseFloat(txt); return isNaN(f) ? null : le(Math.round(f * 4096), 4); }
+  if (kind === 'float') { const b = new DataView(new ArrayBuffer(4)); b.setFloat32(0, parseFloat(txt), true); return [0, 1, 2, 3].map(i => hex(b.getUint8(i), 2)).join(''); }
+  if (kind === 'bool') return txt === 'true' || txt === '1' ? '01' : '00';
+  const v = txt.startsWith('0x') ? parseInt(txt, 16) : parseInt(txt, 10); if (isNaN(v)) return null;
+  return le(v, n);
+}
+$('#hotgame').onchange = () => drawHot(S.hot || []); $('#tlport').onchange = () => S.tlDirty = true;
+$('#onlychg').onchange = () => S.fieldsDirty = true; $('#showunk').onchange = () => S.fieldsDirty = true;
+$('#ftab tbody').addEventListener('click', e => {
+  const tr = e.target.closest('tr'); if (!tr || e.target.closest('td.val') || !S.focus) return;
+  if (e.target.closest('button.ww')) { whoWrites(+tr.dataset.o); return; }
+  const o = +tr.dataset.o; const f = fieldRows().find(x => x.offset === o); if (!f) return;
+  const hist = (S.chg[o] || []);
+  fillProposal(`${S.focus.cls}+0x${hex(o)}`, '', f.name, `${f.type}${f.array || ''} at 0x${hex(o)}; changed in ${hist.length} of the last ${NFRAMES} frames; value now ${tr.children[4].textContent}.`);
+});
+
+// who writes a field: the server arms a CPU data breakpoint (DR0-3) on the
+// field for one second of game time, then names each writing instruction's
+// function and the two callers above it.
+async function whoWrites(o) {
+  const f = fieldRows().find(x => x.offset === o); if (!f) return;
+  const len = f.size >= 4 ? 4 : f.size >= 2 ? 2 : 1; const where = `${S.focus.cls}+0x${hex(o)} (${f.named ? f.named.name : f.name})`;
+  $('#fninfo').textContent = `watching writes to ${where} for 1 s...`;
+  let r; try { r = await api('/api/whowrites', {addr: S.focus.ptr + o, len, secs: 1.0}); } catch (err) { r = {error: String(err)}; }
+  if (r.error) { $('#fninfo').textContent = r.error; return; }
+  const fn = x => x ? `<span class="${x.cls === S.focus.cls ? 'own' : 'other'}">${esc(x.qual)}</span><span class="dim">+0x${hex(x.off)}${x.rom ? ' · ROM ' + hex(x.rom.addr, 8) : ''}</span>` : '<span class="dim">?</span>';
+  const rows = r.hits.map(h => `<tr><td class="num">${h.n}</td><td>${fn(h.writer)}</td><td class="small">${fn(h.caller)}</td><td class="small">${fn(h.caller2)}</td></tr>`).join('');
+  $('#fninfo').innerHTML = `<div><b>writes to ${esc(where)}</b> <span class="dim">${len} byte(s), ${r.frames ?? '?'} frames${r.lost ? ', ' + r.lost + ' not recorded' : ''}</span></div>` +
+    (rows ? `<table class="small"><tr><th class="num">n</th><th>writer</th><th>called from</th><th>and from</th></tr>${rows}</table>` : '<div class="dim">nothing wrote it in that second</div>') +
+    '<div class="small dim">port behaviour: a candidate until the ROM agrees</div>';
+}
+
+// ------------------------------------------------------------------ class methods
+function drawMethods() {
+  if (!S.cls) return; const {seen} = tlRows(); const byKey = {}; for (const id of seen.keys()) if (S.fns[id]) byKey[S.fns[id].key] = seen.get(id);
+  $('#mtab tbody').innerHTML = S.cls.methods.map(m => `<tr data-r="${esc(m.rom ? m.rom.name : '')}"><td class="dim">${m.rom ? hex(m.rom.addr, 8) : '-'}</td>
+    <td title="${esc(m.sig)}">${esc(m.method)}</td><td class="num">${byKey[m.key] || ''}</td></tr>`).join('');
+}
+$('#mtab tbody').addEventListener('click', e => { const tr = e.target.closest('tr'); if (tr && tr.dataset.r) openSource(tr.dataset.r); });
+
+// ------------------------------------------------------------------ hot
+function drawHot(list) {
+  S.hot = list; if ($('#hotgame').checked) list = list.filter(h => h.rom);
+  $('#htab tbody').innerHTML = list.slice(0, 120).map(h => `<tr><td class="num">${h.perFrame}</td><td title="${esc(h.obj || '')}">${esc(h.key)}</td><td class="dim">${h.rom ? hex(h.rom.addr, 8) : ''}</td></tr>`).join('');
+}
+
+// ------------------------------------------------------------------ assets
+let assetRows = [];
+$('#bassets').onclick = async () => {
+  assetRows = await api('/api/assets');
+  assetRows.sort((a, b) => a.path < b.path ? -1 : 1);
+  drawAssets();
+};
+$('#afilter').addEventListener('input', () => drawAssets());
+function drawAssets() {
+  const q = $('#afilter').value.toLowerCase();
+  const rows = q ? assetRows.filter(r => (r.path + ' ' + r.cls + ' ' + r.actorCls + ' ' + r.caller).toLowerCase().includes(q)) : assetRows;
+  $('#astab tbody').innerHTML = rows.map(r => `<tr data-f="${r.file}" data-k="${esc(r.kind)}" title="${esc('caller ' + r.caller + (r.callerRom ? ' (ROM 0x' + hex(r.callerRom.addr, 8) + ')' : '') + '\ngame file id 0x' + hex(r.file, 4) + ' (' + r.how + '), ' + r.size + ' bytes, first at tick ' + r.tick + ', loaded ' + r.count + 'x' + (r.actorCls && r.actorCls !== r.cls ? '\nactor running at the time: ' + r.actorCls + (r.cls ? ' (it spawned or set up ' + r.cls + ')' : '') : ''))}">
+    <td data-p="${esc(r.path)}">${esc(r.path.replace(/^data\//, ''))}</td><td class="${r.cls || r.actorCls ? 'own' : 'dim'}">${esc(r.cls || r.actorCls)}</td><td class="dim small">${esc(r.caller)}${r.count > 1 ? ' ×' + r.count : ''}</td></tr>`).join('') ||
+    `<tr><td colspan=3 class="dim">${assetRows.length ? 'no match' : 'nothing loaded since the lab started; change level or area'}</td></tr>`;
+}
+$('#astab tbody').addEventListener('click', async e => {
+  const tr = e.target.closest('tr'); if (!tr || !tr.dataset.f) return;
+  $('#texs').innerHTML = '<div class="note">decoding…</div>';
+  const t = await api('/api/textures?file=' + tr.dataset.f);
+  $('#texs').innerHTML = t.length ? `<div class="note small">${esc(tr.children[0].dataset.p)}: ${t.length} texture(s). Texture names are strings the ROM carries.</div>` + t.map(x => `<div class="tex">${x.png ? `<img src="data:image/png;base64,${x.png}" width="${x.width * 2}" height="${x.height * 2}">` : '<div class="dim">(no pixels)</div>'}<div>${esc(x.name)}</div><div class="dim small">${x.width}×${x.height} ${esc(x.format)}${x.palette ? ' · ' + esc(x.palette) : ''}</div></div>`).join('')
+    : '<div class="note">not a model file (or no textures)</div>';
+});
+
+// ------------------------------------------------------------------ names
+function fillProposal(subject, rom, current, evidence) {
+  tab('names'); const f = $('#pform');
+  f.subject.value = subject; f.rom.value = rom; f.current.value = current; f.evidence.value = evidence; f.proposed.focus();
+}
+$('#pform').addEventListener('submit', async e => {
+  e.preventDefault(); const f = e.target;
+  const rec = {subject: f.subject.value, rom: f.rom.value, current: f.current.value, proposed: f.proposed.value, evidence: f.evidence.value,
+               level: $('#level').textContent, cls: S.focus ? S.focus.cls : null};
+  if (!rec.proposed) { f.proposed.focus(); return; }
+  await api('/api/propose', rec); f.proposed.value = ''; loadNotes();
+});
+async function loadNotes() {
+  const n = await api('/api/notes'); $('#ndir').textContent = `saved to ${n.dir} (outside the repo) · ${n.proposals.length} proposals · ${n.verify.length} queued for ROM verify`;
+  $('#ptab tbody').innerHTML = n.proposals.slice().reverse().map(p => `<tr title="${esc(p.time + ' · ' + p.evidence_source + (p.rom ? '\nROM ' + p.rom : ''))}"><td>${esc(p.subject)}</td><td class="own">${esc(p.proposed)}</td><td class="dim small">${esc((p.evidence || '').slice(0, 80))}</td></tr>`).join('');
+}
+$('#bverify').onclick = async () => {
+  if (!S.focus) return; const {seen} = tlRows();
+  const fns = [...seen].map(([id, n]) => ({key: S.fns[id].key, calls: n, frames: countFramesWith(id), rom: S.fns[id].rom})).filter(f => f.rom);
+  const a = S.actors.find(x => x.ptr === S.focus.ptr) || {};
+  await api('/api/verify', {cls: S.focus.cls, actorID: a.aid, level: $('#level').textContent, area: a.area, pos: [a.x, a.y, a.z], functions: fns});
+  $('#fninfo').textContent = `queued ${S.focus.cls}: ${fns.length} functions with ROM addresses, for the melonDS recorder`; loadNotes();
+};
+
+// ------------------------------------------------------------------ source
+async function openSource(rom) {
+  const s = await api('/api/source?rom=' + encodeURIComponent(rom));
+  if (s.error) { $('#fninfo').insertAdjacentHTML('beforeend', `<div class="bad">${esc(s.error)}</div>`); return; }
+  $('#srcname').textContent = `${s.path}:${s.line}`;
+  $('#srcpre').innerHTML = s.text.split('\n').map((l, i) => `<div class="${i + 1 >= s.line && i + 1 < s.line + 1 ? 'hl' : ''}"><span class="ln">${i + 1}</span>${esc(l)}</div>`).join('');
+  $('#src').style.display = 'flex';
+  const el = $('#srcpre').children[Math.max(0, s.line - 4)]; if (el) el.scrollIntoView();
+}
+$('#srcclose').onclick = () => $('#src').style.display = 'none';
+
+// ------------------------------------------------------------------ controls
+$('#bpause').onclick = () => cmd(S.paused ? 'resume' : 'pause').then(() => cmd('status', 'status'));
+$('#bstep').onclick = () => cmd('step 1');
+$('#bstep10').onclick = () => cmd('step 10');
+$('#btrace').onclick = () => cmd('trace ' + (S.trace ? 0 : 1), 'status');
+function tab(p) { document.querySelectorAll('.tabs button').forEach(b => b.classList.toggle('on', b.dataset.p === p)); document.querySelectorAll('.panel').forEach(x => x.classList.toggle('on', x.id === 'p-' + p)); if (p === 'methods') drawMethods(); }
+document.querySelector('.tabs').addEventListener('click', e => { if (e.target.dataset.p) tab(e.target.dataset.p); });
+
+// redraw at most ~15 times a second, whatever the event rate
+setInterval(() => {
+  if (S.tlDirty) { S.tlDirty = false; drawTimeline(); if (S.sel !== null && S.sel !== undefined && $('#p-methods').classList.contains('on')) drawMethods(); }
+  if (S.fieldsDirty && !S.editing) { S.fieldsDirty = false; drawFields(); }
+}, 66);
+if (!TOKEN) document.body.insertAdjacentHTML('afterbegin', '<div style="background:#600;padding:6px">No access token: open the URL lab_server.py printed (it ends in #token=…).</div>');
+connect(); loadNotes().catch(() => {});
+// whole-game call counts every 30 frames, for the Hot panel
+setTimeout(() => cmd('hot 30').catch(() => {}), 500);
+</script>
+</body>
+</html>

@@ -14,7 +14,7 @@
  * Slot 16 is not reached by any of them. Its one and only dispatcher in the
  * whole image is MATCHED SOURCE:
  *
- *     src/_ZN7fBase_c21AfterCleanupResourcesEj.cpp   ...   this->~fBase_c();
+ *     port/unmatched/hostarm/_ZN7fBase_c21AfterCleanupResourcesEj.cpp   ...   this->~fBase_c();
  *
  * and MSVC compiles a virtual destructor call through its own single
  * destructor slot (the scalar deleting destructor, ??_G), which is __thiscall

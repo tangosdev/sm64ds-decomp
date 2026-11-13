@@ -27,7 +27,7 @@
 // as the pre-boot default. Arm 1 of R2c is still a host body. What the seat
 // changes is WHO decides, on the ROM's own object, at the ROM's own point.
 //
-// THE ORDER IS THE ROM'S, not a convenience. src/func_0201a054.c's head runs
+// THE ORDER IS THE ROM'S, not a convenience. src/unnamed/arm9/0201/func_0201a054.c's head runs
 //
 //     func_020427f8(); func_02042784(); func_02053a8c(); func_02053c40();
 //     func_0205b858(); func_0203d740(); func_02013e64(); func_0201a4e4();
@@ -71,7 +71,7 @@
 // one has moved the arm REFUSES and names it rather than memsetting anyway.
 //
 // R2c. One word of the card driver's storage was hosted nowhere:
-// data_020a8764, the halfword src/func_02060364.c copies out of the device
+// data_020a8764, the halfword src/unnamed/arm9/0206/func_02060364.c copies out of the device
 // row. hal/globals_link100.cpp measured its boundary and left it. It is hosted
 // below at its ROM SPAN -- 0x020a8764 to data_020a8780, 28 bytes -- not at the
 // four bytes func_02060364's own `unsigned int` declaration writes: that width
@@ -90,7 +90,7 @@
 // hal/card_globals.cpp's, func_02060a64 is the card's CPU ROM read (the page
 // reader, not the FLASH path an older note here called it), func_020610fc is
 // plain C -- so the rename and the host body are retired and func_02042f68 calls
-// src/func_02060890.c itself. port/slice_w28_card.txt carries it and the read
+// src/unnamed/arm9/0206/func_02060890.c itself. port/slice_w28_card.txt carries it and the read
 // path behind it.
 //
 // THE ORDER IS WHY IT HAS TO RUN HERE. The ROM's card reads finish on the card
@@ -108,8 +108,8 @@
 // firmware's language field out of the shared block, picks the matching
 // game-info record and hands it plus the WM parent parameters to
 // func_0203db64, which clears the comms bands and copies both records into DS
-// state. FOUR matched TUs come with it: src/func_0201fec8.c, src/func_0203db64.c,
-// src/func_02059f2c.c and src/func_0203daac.c.
+// state. FOUR matched TUs come with it: src/unnamed/arm9/0201/func_0201fec8.c, src/unnamed/arm9/0203/func_0203db64.c,
+// src/unnamed/arm9/0205/func_02059f2c.c and src/func_0203daac.c.
 //
 // BLOCKER 1 MOVED WHILE R2ABC WAS WRITING IT DOWN, and its proposed remedy is
 // wrong today. R2ABC asked for `MP3_BSS(".dsstate$ymp3b9990", data_020a0fa0, 6)`
@@ -154,7 +154,7 @@
 // word still holds the DS address config/arm9/relocs.txt says it should.
 //
 // AND ONE REGRESSION THIS ARM CAUSED, FOUND BY net_proof RUNG N1 AND FIXED.
-// src/func_0203db64.c:70 clears the session ROLE BYTE data_020a0f04, because on
+// src/unnamed/arm9/0203/func_0203db64.c:70 clears the session ROLE BYTE data_020a0f04, because on
 // the cartridge this body runs at boot and the multiplayer menu seats that byte
 // long afterwards. This port has no such menu on the loopback path:
 // hal/comms_loopback.cpp:4533 seats it when a transport is installed, and that
@@ -168,7 +168,7 @@
 //
 // AND WHERE "AFTER" ENDS: BELOW R2c, NOT BETWEEN R2b AND R2c. The re-seat
 // first sat right after func_0201fec8, which put the child role (2) in the
-// byte when R2c's func_02042f68 read it. src/func_02042f68.c:11-12 returns
+// byte when R2c's func_02042f68 read it. src/unnamed/arm9/0204/func_02042f68.c:11-12 returns
 // before the card bring-up when func_0203da3c() reads 2 -- a Download Play
 // child has no cartridge -- so a joining console booted with no card thread
 // and its first file read never returned (the child stopped at "[pad] none",
@@ -177,7 +177,7 @@
 // 0 and the menu seats the role long after. So the re-seat now runs once
 // R2c is done: R2c reads the 0 the ROM's own clear left, exactly as the
 // cartridge does, and every reader of the role below main's a054 call (the
-// conductor's open, its session wait, src/func_0203df40.c) still finds it.
+// conductor's open, its session wait, src/unnamed/arm9/0203/func_0203df40.c) still finds it.
 // ---------------------------------------------------------------------------
 
 #include <cstdio>
@@ -208,7 +208,7 @@ extern unsigned char data_0209caf4[];
 void func_02013e64(void);
 
 // ---- R2d: the ROM's own touch-panel bring-up ------------------------------
-// src/func_0203bbc0.c, nine calls, two of which wait on PXI channel 6.
+// src/unnamed/arm9/0203/func_0203bbc0.c, nine calls, two of which wait on PXI channel 6.
 // hal/tsc_arm7.cpp is the ARM7 behind that channel and prints this arm's own
 // report; all this file supplies is the moment, in the ROM's order.
 void func_0203bbc0(void);
@@ -251,7 +251,7 @@ int port_r2a_saveblock_layout(void)
 
 // ---- R2c: the card driver's storage the identify needs --------------------
 //
-// data_020a8764 is the one word src/func_02060364.c writes that nothing in
+// data_020a8764 is the one word src/unnamed/arm9/0206/func_02060364.c writes that nothing in
 // this port hosted. The storage-check block above says why it is 28 bytes and
 // not the four its own declaration writes.
 DSSTATE_BEGIN
@@ -280,7 +280,7 @@ extern int data_port_backup_device[10];
 
 void func_02042f68(int a0, unsigned char *src);   // the ROM's own arm
 extern unsigned char data_020a8780[];  // hal/card_globals.cpp, the page reader
-void func_02060a64(void);          // src/func_02060a64.c (hostgen copy)
+void func_02060a64(void);          // src/unnamed/arm9/0206/func_02060a64.c (hostgen copy)
 void port_nitrofs_probe_after_boot(void);   // hal/fs_names.cpp
 
 // ===========================================================================
@@ -291,7 +291,7 @@ void port_nitrofs_probe_after_boot(void);   // hal/fs_names.cpp
 // at their ROM SPANS from config/arm9/symbols.txt rather than at the width
 // their own declarations write:
 //
-//   data_0209e64c  4      the body's own once-guard. src/func_0201fec8.c
+//   data_0209e64c  4      the body's own once-guard. src/unnamed/arm9/0201/func_0201fec8.c
 //                         declares it `unsigned char`; the span to
 //                         data_0209e650 is four.
 //   data_020a0fec  0x34   func_0203db64:58 copies 0x1c of the chosen game-info
@@ -332,7 +332,7 @@ extern unsigned char data_020a1154[];    // camera_bridges camrec           0xc
 extern unsigned char data_020a11c4[];    // camrec, +0x70 into the run
 extern unsigned char data_020a1064[];    // hal/comms_seam.cpp ywmc11      64
 
-// THE ROLE BYTE src/func_0203db64.c:70 CLEARS. Read before the call and put
+// THE ROLE BYTE src/unnamed/arm9/0203/func_0203db64.c:70 CLEARS. Read before the call and put
 // back after it; the block beside the arm says why that is the DS's order and
 // not a workaround.
 extern unsigned char data_020a0f04[];
@@ -355,7 +355,7 @@ extern unsigned char data_0208f278[];    // UTF-16 "Super Mario 64 DS"
 extern unsigned char data_0208f29c[];    // the icon graphics path
 extern unsigned char data_0208f2d0[];    // the icon palette path
 
-// src/func_0201fec8.c -- the ROM's own body.
+// src/unnamed/arm9/0201/func_0201fec8.c -- the ROM's own body.
 void func_0201fec8(void);
 
 // THE POINTER BIND. config/arm9/relocs.txt says exactly which word of which
@@ -441,7 +441,7 @@ static int port_r2b_bind_mbinfo(void)
 }
 
 // THE LAYOUT GATE. Six memset lengths and two copy lengths in
-// src/func_0203db64.c, each one an adjacency in the host image. The rows below
+// src/unnamed/arm9/0203/func_0203db64.c, each one an adjacency in the host image. The rows below
 // are the ones this port has to prove; where a run belongs to another file,
 // the row checks the LANDMARK that file's own guard also checks, so a break
 // shows up here as well as there.
@@ -483,7 +483,7 @@ static int port_r2b_storage_layout(void)
 }
 
 // ---- ARM 1 of func_02042f68: port_rom_card_bringup RETIRED ----------------
-// (run linkfull, lane S4CARD). func_02042f68 calls src/func_02060890.c itself;
+// (run linkfull, lane S4CARD). func_02042f68 calls src/unnamed/arm9/0206/func_02060890.c itself;
 // the header block says why it can and why here. The R2c arm below reports
 // what the ROM's body left behind.
 
@@ -511,7 +511,7 @@ void port_rom_a054_arms(void)
 
     /* ARM R2d. func_0203bbc0() -- the ROM's own touch-panel bring-up.
 
-       THE ROM'S ORDER PUTS IT HERE, between R2a and R2b. src/func_0201a054.c
+       THE ROM'S ORDER PUTS IT HERE, between R2a and R2b. src/unnamed/arm9/0201/func_0201a054.c
        runs func_02053be0(1); func_0203bbc0(); func_0203bb5c(); if (!r4)
        func_0201fec8(); func_02042f68(0xd01, data_0208ee50), so the touch
        bring-up is two calls ahead of the download-play advertisement and this
@@ -521,11 +521,11 @@ void port_rom_a054_arms(void)
        words on PXI channel 6 and then spin on a status bit until the other
        processor answers. hal/tsc_arm7.cpp is that processor's half: it queues
        each completion and posts it from a turn taken INSIDE the ROM's own wait
-       (port/CMakeLists.txt compiles src/func_0203bbc0.c with
+       (port/CMakeLists.txt compiles src/unnamed/arm9/0203/func_0203bbc0.c with
        func_0205ea10=port_tsc_wait, and why a completion cannot be posted from
        arm7_recv is section 2 of that file). hal/scene_boot.cpp's 0x38
        .dsstate$tp run and hal/boot2_ipc.cpp's read-back of it are gate 1 of the
-       same rung and the reason the body may run at all -- src/func_0205f270.c
+       same rung and the reason the body may run at all -- src/unnamed/arm9/0205/func_0205f270.c
        stores at +0x30..+0x36 on its first line.
 
        NO GUARD OF ITS OWN, and that is deliberate rather than an omission. The
@@ -533,14 +533,14 @@ void port_rom_a054_arms(void)
        fatal there: hal/boot2_ipc.cpp hard-faults at power-on if the work struct
        is not the ROM's 0x38 run, and hal/tsc_arm7.cpp hard-faults on any
        channel-6 word it does not know rather than swallowing it. A second call
-       is harmless by the ROM's own hand: src/func_0205f270.c returns early
+       is harmless by the ROM's own hand: src/unnamed/arm9/0205/func_0205f270.c returns early
        unless data_020a80c8 reads zero. */
     func_0203bbc0();
     port_tsc_report();
 
     /* ARM R2b. func_0201fec8() -- the download-play advertisement.
 
-       THE GUARD IS THE ROM'S OWN. src/func_0201a054.c reads r4 as
+       THE GUARD IS THE ROM'S OWN. src/unnamed/arm9/0201/func_0201a054.c reads r4 as
        `*(u16 *)0x027ffc40 == 2` and calls this body only when r4 is clear;
        hal/boot_os.cpp:578 records the same derivation and records that
        ntr/io.cpp writes 0 to that word at io_init, so the port takes the arm.
@@ -575,7 +575,7 @@ void port_rom_a054_arms(void)
                 /* THE ONE ORDERING REPAIR, and it is a real regression this
                    arm caused before it was written down.
 
-                   src/func_0203db64.c:70 sets data_020a0f04 -- the session
+                   src/unnamed/arm9/0203/func_0203db64.c:70 sets data_020a0f04 -- the session
                    ROLE BYTE -- to 0, because on the cartridge this body runs
                    at boot and the multiplayer menu seats that byte much later.
                    This port has no such menu on this path:
@@ -584,7 +584,7 @@ void port_rom_a054_arms(void)
                    installed, and that install happens BEFORE the ROM's own
                    main reaches this seam. So the ROM's boot-time clear landed
                    on top of the host's menu stand-in, the role read 0 for the
-                   rest of the run, and src/func_0203df40.c took its solo arm
+                   rest of the run, and src/unnamed/arm9/0203/func_0203df40.c took its solo arm
                    forever: net_proof rung N1 measured it as "LOOPBACK SESSION
                    STILL FORMS | live masks 0x0/0x0", both ends opening their
                    sockets and neither ever joining.
@@ -600,7 +600,7 @@ void port_rom_a054_arms(void)
 
                    THE RE-SEAT ITSELF RUNS BELOW R2c, NOT HERE. The menu seats
                    the role long after boot, and one reader sits between this
-                   call and the conductor: R2c's src/func_02042f68.c:11-12,
+                   call and the conductor: R2c's src/unnamed/arm9/0204/func_02042f68.c:11-12,
                    which skips the card bring-up when the role reads 2 (a
                    Download Play child has no cartridge). Seated here, a
                    joining console booted with no card thread and hung on its
@@ -701,10 +701,10 @@ void port_rom_a054_arms(void)
            AND IT NAMES THE OBJECT ONLY, NEVER THE LOOKUP. Every branch below
            reports what data_020a8760 holds after the call and stops there,
            because no reading of that pointer tells you which lookup ran.
-           src/func_02042f68.c:11-12 returns before everything else when
+           src/unnamed/arm9/0204/func_02042f68.c:11-12 returns before everything else when
            func_0203da3c() reads 2, so on that path the card bring-up does not
            run, func_020603c8 is never called, the device search in
-           src/func_02060398.c never walks data_020867bc and the tag loop never
+           src/unnamed/arm9/0206/func_02060398.c never walks data_020867bc and the tag loop never
            writes data_020a4b40: the pointer simply keeps whatever static init
            left in it. A null reading is therefore consistent with the early
            return and with a search that found no 0xd01, and a table row is
@@ -745,7 +745,7 @@ void port_rom_a054_arms(void)
         }
 
         /* OBSERVED, AND NO MORE THAN OBSERVED. An unchanged pointer does not
-           prove the identify never reached src/func_02060364.c: that body
+           prove the identify never reached src/unnamed/arm9/0206/func_02060364.c: that body
            writes data_020a8760 and data_020a8764 and nothing else, so
            re-selecting the same row writes the same two words and leaves
            exactly this reading. Measuring the call itself would need a counter

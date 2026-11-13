@@ -365,7 +365,7 @@ static void slot9_seam(const char *what, const char *why)
  * on first exercise, and it is why every row in the block generated for this
  * gate was checked for its convention rather than only for its name.
  *
- * Player::CanPause. src/func_02029408.c calls `func_020bd828(data_0209f394
+ * Player::CanPause. src/unnamed/arm9/0202/func_02029408.cpp calls `func_020bd828(data_0209f394
  * [data_0209f250])` -- one __cdecl argument, the local player. 0x020bd828 is
  * _ZN6Player8CanPauseEv in config/arm9/overlays/ov002/symbols.txt line 435,
  * and src/game/player/Player.cpp compiles it as a real C++ method against
@@ -635,7 +635,7 @@ extern "C" int port_level_interlude_live(void);   /* hal/level_change.cpp */
  * 16 started at about frame 61.
  *
  * WHY. The VS 3-2-1 freeze is two ROM statements. The player's own level-enter
- * step (func_ov002_020c71e0, src/actors/Player.cpp) sets +0x711 ("I have
+ * step (func_ov002_020c71e0, src/game/player/Player.cpp) sets +0x711 ("I have
  * landed") and then holds the body while data_0209f2bc != 0. Stage::Behavior's
  * VS arm (src/_ZN5Stage8BehaviorEv.cpp:141-171) counts the landed players and
  * only ticks data_0209f2bc down once that count reaches data_0209fc50, the

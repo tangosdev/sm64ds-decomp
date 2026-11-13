@@ -48,7 +48,7 @@ extern "C" void __fastcall actorport_dtor_slot_trap(void *self, void *unused)
  * THROUGH THAT COMPILER TABLE. It does. Level 20's 1-Up mushroom is a real C++
  * class in src/game/actors/d_a_1up.cpp and its objects carry MSVC's own
  * ??_7da1up_c@@6B@ from construction, so the one slot-16 dispatcher in the
- * image -- src/_ZN7fBase_c21AfterCleanupResourcesEj.cpp's this->~fBase_c() --
+ * image -- port/unmatched/hostarm/_ZN7fBase_c21AfterCleanupResourcesEj.cpp's this->~fBase_c() --
  * reads that table. Measured under cdb on the shipped artifact, at the
  * first-chance fault:
  *
@@ -1217,7 +1217,7 @@ ACTORPORT_D16(fBase_c)
 #pragma comment(linker, "/alternatename:?Destructor0@daDossyCap_c@@UAEXXZ=@actorport_dtor_slot_trap@8")
 /* daDsnBase_c: slot 16's target is the ROM's flat D1 now, not an alias onto
    whichever TU's inline COMDAT ??1daDsnBase_c the linker keeps (run linkfull
-   wave 27, lane V3B). src/_ZN11daDsnBase_cD1Ev.cpp's _MSC_VER arm defines
+   wave 27, lane V3B). port/unmatched/hostarm/_ZN11daDsnBase_cD1Ev.cpp's _MSC_VER arm defines
    _ZN11daDsnBase_cD1Ev as the qualified call to that same inline destructor,
    so the body run is the one the alias named, one call deeper. A cdecl name
    cannot stand behind this __fastcall alias, so the thunk is spelled out.

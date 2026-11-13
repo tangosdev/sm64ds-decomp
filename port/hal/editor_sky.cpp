@@ -157,7 +157,7 @@ void _ZN5Model14LoadAndSetFileEtii(void *self, unsigned short fileID,
                                    int a, int b);
 int _ZN10dScStage_c11GetSkyboxIDEv(void);
 
-/* Model::~Model, the DELETING variant (src/_ZN5ModelD0Ev.cpp). Frees the owned
+/* Model::~Model, the DELETING variant (port/unmatched/hostarm/_ZN5ModelD0Ev.cpp). Frees the owned
    block at +0x4c, runs ModelBase::~ModelBase -- which Deallocates the BMD
    image at +0x04 -- and then frees the Model itself. It is the ROM's own full
    teardown, and it is used ONLY on a model this file built, never on the one

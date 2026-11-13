@@ -12,7 +12,7 @@
 //   27  C++-LINKAGE SPELLINGS of C-named data the mounts already define
 //    1  a BARE NAME that exists in no config (func_020beb74)
 //    3  C++ METHOD spellings of Itanium-named bodies already in the build
-//    3  ordinary slice lines (src/func_02053ea0.c, _02053eb0.c, _02054748.c)
+//    3  ordinary slice lines (src/unnamed/arm9/0205/func_02053ea0.c, _02053eb0.c, _02054748.c)
 //    1  an arm9 .data table nothing had referenced before (data_02082614) --
 //       NOT a face either: it is a romdata.py NAMED entry, see section 4
 //
@@ -186,7 +186,7 @@ int ModelAnimFace::SetAnim(BCA_File *animFile, int flags, int speed,
 //
 // FOUR of the 35 are not faces and are not in this file.
 //
-//   src/func_02053ea0.c, src/func_02053eb0.c and src/func_02054748.c are
+//   src/unnamed/arm9/0205/func_02053ea0.c, src/unnamed/arm9/0205/func_02053eb0.c and src/unnamed/arm9/0205/func_02054748.c are
 //   ordinary matched arm9 TUs that simply had no caller in the build before
 //   this seat.  They are lines in port/slice_bnt.txt.
 //

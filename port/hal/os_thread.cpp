@@ -8,7 +8,7 @@
 // have no host body" -- stopped being true when hal/boot2_thread.cpp gave those
 // two hand-asm primitives a fiber-backed body, which is what
 // port/ntr/include/ntr/rt.h:11-14 said the fiber mechanism was for. So
-// src/OS_SleepThread.c, src/OS_WakeupThread.c and src/func_02057f54.c link and
+// src/OS_SleepThread.c, src/OS_WakeupThread.c and src/unnamed/arm9/0205/func_02057f54.c link and
 // run as written, on port/slice_gate2thr.txt, and the two host bodies below
 // compile ONLY under PORT_OS_THREAD_HOST_PAIR -- which port/CMakeLists.txt
 // defines for mp_sleepwake and mp_comms_seam and for nothing else. They are

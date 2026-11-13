@@ -331,7 +331,7 @@ DSSTATE_END
    one-argument binding this line used to carry was the level-change heap fault.
 
    THE CALLER THAT ACTUALLY LINKS, named precisely. `Memory_Deallocate` is the
-   placeholder src/_ZN7fBase_c21AfterCleanupResourcesEj.cpp spells for the last
+   placeholder port/unmatched/hostarm/_ZN7fBase_c21AfterCleanupResourcesEj.cpp spells for the last
    statement of the actor teardown, but that src TU is not what the binary
    compiles. What links is hostgen's --extern-data rewrite of it, generated
    from GATE9_SYMS in port/CMakeLists.txt into

@@ -133,8 +133,8 @@ extern unsigned short data_02092664;    /* the pending scene id            */
 
 /* ---- THE VTABLE, a host array under the ROM'S OWN DATA NAME ---------------
  * Same shape and same reasoning as hal/scene_link100_boot.cpp's: the factory
- * (src/d_s_mb.c) and both destructor bodies (src/_ZN7dScMB_cD1Ev.cpp,
- * src/_ZN7dScMB_cD0Ev.cpp) spell this name, arm9 .data is not mounted, so the
+ * (src/game/stages/d_s_mb.cpp) and both destructor bodies (src/_ZN7dScMB_cD1Ev.cpp,
+ * port/unmatched/hostarm/_ZN7dScMB_cD0Ev.cpp) spell this name, arm9 .data is not mounted, so the
  * table is a fresh host array seeded with the ROM's eighteen words and then
  * rewritten by the keyed fill. The seed is what makes the fill self-checking:
  * it has to leave exactly SEVEN raw words and this file writes exactly seven.
@@ -219,7 +219,7 @@ extern "C" void port_scene_fill_mb(void)
     }
 }
 
-/* the registry's factory column; /OPT:REF follows it to src/d_s_mb.c */
+/* the registry's factory column; /OPT:REF follows it to src/game/stages/d_s_mb.cpp */
 extern "C" void *port_mb_scene_spawn(void) { return dScMB_c_classInit(); }
 
 extern "C" void port_scene_mb_report(void)

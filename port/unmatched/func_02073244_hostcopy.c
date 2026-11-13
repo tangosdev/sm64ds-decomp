@@ -16,9 +16,9 @@
  *   func_02073300 THREE arguments and lets the fourth (the element destructor)
  *   ride through in r3", and that "func_02073300 itself is an asm hatch ... so
  *   there is no C to compile for it either". BOTH HALVES ARE STALE at
- *   8ddff3187. src/func_02073244.c now declares
+ *   8ddff3187. src/unnamed/arm9/0207/func_02073244.c now declares
  *   `func_02073300(int a, int b, int c, int dtor)` and passes all four; and
- *   src/func_02073300.cpp exists -- the MSL array-destroy-with-rethrow helper,
+ *   src/unnamed/arm9/0207/func_02073300.cpp exists -- the MSL array-destroy-with-rethrow helper,
  *   recovered with its two nested catch contexts under `#pragma exceptions on`,
  *   which is what the cartridge's .exceptix record at 0x02073994 is for.
  *   Its own callee func_020731fc is src/func_020731fc.c. All three are on
@@ -39,7 +39,7 @@
  * Stage::CleanupResources, which the port does not run.
  */
 
-/* THE ONE DS GLOBAL THE RETIREMENT NEEDS. src/func_020731fc.c is
+/* THE ONE DS GLOBAL THE RETIREMENT NEEDS. src/unnamed/arm9/0207/func_020731fc.c is
  * `data_0209a6fc()` -- MSL's terminate hook, the thing a second throw out of
  * an array-destroy cleanup lands on. config/arm9/symbols.txt:4485 has it at
  * 0x0209a6fc and the next symbol is _ZTISt9type_info at 0x0209a700, so the ROM

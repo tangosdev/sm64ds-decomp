@@ -275,7 +275,7 @@ extern PortEyerokCell data_ov066_0211b0ec;
 }
 
 /* ---- MSVC-typed spellings of mounted C storage and of the vtable ----------
-   src/d_a_iwante.cpp declares `extern void *_ZTV6Eyerok[];` OUTSIDE
+   src/game/actors/d_a_iwante.cpp declares `extern void *_ZTV6Eyerok[];` OUTSIDE
    extern "C" -- the ov063 MadPiano shape -- so MSVC decorates the reference
    while this file defines the one real C symbol. The LHS is a decorated
    spelling NOTHING in this link defines, which is what keeps

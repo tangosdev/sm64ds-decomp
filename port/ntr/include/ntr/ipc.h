@@ -6,18 +6,18 @@
 // chain out of the link. Five matched bodies stop dead without a second CPU
 // on the other end of these registers:
 //
-//   src/func_0205bad8.c   PXI bring-up. Writes IPCFIFOCNT 0xc408 (enable |
+//   src/unnamed/arm9/0205/func_0205bad8.c   PXI bring-up. Writes IPCFIFOCNT 0xc408 (enable |
 //                         error-ack | recv-not-empty IRQ | send-fifo clear),
 //                         then runs a nine-round handshake against the ARM7
 //                         over IPCSYNC 0x04000180. Reached through the tail
 //                         veneer src/func_0205b858.c.
-//   src/func_02059e48.c   spins `while (func_0205ba3c(0xc, 1) == 0)`
-//   src/func_0205fde8.c   the same spin on channel 8
-//   src/func_0206a88c.c   the same spin on channel 0xd
-//   src/func_0205f270.c   the same spin on channel 6
+//   src/unnamed/arm9/0205/func_02059e48.c   spins `while (func_0205ba3c(0xc, 1) == 0)`
+//   src/unnamed/arm9/0205/func_0205fde8.c   the same spin on channel 8
+//   src/unnamed/arm9/0206/func_0206a88c.c   the same spin on channel 0xd
+//   src/unnamed/arm9/0205/func_0205f270.c   the same spin on channel 6
 //
 // func_0205ba3c(bit, word) reads word `word` of the array at 0x027FFC00+0x388.
-// Word 0 is the ARM9's own registered-channel mask -- src/func_0205ba64.c is
+// Word 0 is the ARM9's own registered-channel mask -- src/unnamed/arm9/0205/func_0205ba64.c is
 // its only writer, setting bit N when the ARM9 installs a receive callback for
 // channel N. Word 1 is the ARM7's, and the four spins above are each waiting
 // for the ARM7 to claim their channel. Nothing in the port ever wrote it, so
@@ -25,7 +25,7 @@
 //
 // THE HANDSHAKE IS NOT GUESSED. The ARM7's half of it is in the ROM:
 // extracted/arm7.bin at file offset 0x31a4..0x31e0 (ARM7 RAM 0x023831a4),
-// which is the mirror of src/func_0205bad8.c's loop:
+// which is the mirror of src/unnamed/arm9/0205/func_0205bad8.c's loop:
 //
 //      r4 = 8; r6 = 8; r8 = 0x04000180; r7 = 0x3e8
 //   L: *(u16 *)r8 = r4 << 8          // publish our nibble
@@ -61,7 +61,7 @@ constexpr uint32_t REG_IPCFIFOCNT  = 0x04000184u;
 constexpr uint32_t REG_IPCFIFOSEND = 0x04000188u;
 constexpr uint32_t REG_IPCFIFORECV = 0x04100000u;
 
-// The two registration words, as src/func_0205ba3c.c and src/func_0205ba64.c
+// The two registration words, as src/unnamed/arm9/0205/func_0205ba3c.c and src/unnamed/arm9/0205/func_0205ba64.c
 // address them: a 0x388-byte pad from 0x027FFC00, then word 0 (ARM9) and
 // word 1 (ARM7). Inside SHARED_BASE, so both are backed memory already.
 constexpr uint32_t PXI_FLAGS_ARM9 = 0x027FFC00u + 0x388u;

@@ -515,7 +515,7 @@ static int __fastcall bbud_render(void *s, void *)
    is a REAL C++ DESTRUCTOR -- `BobOmbBuddy::~BobOmbBuddy() {}` over a shadow
    class with three members -- so MSVC emits ??1BobOmbBuddy@@UAE@XZ and calls
    ??1ModelAnim@@QAE@XZ and two more that exist nowhere in this build. The body
-   below is src/_ZN11BobOmbBuddyD0Ev.cpp minus its final Memory::Deallocate,
+   below is port/unmatched/hostarm/_ZN11BobOmbBuddyD0Ev.cpp minus its final Memory::Deallocate,
    which ActorBase::AfterCleanupResources performs itself after the dispatch
    returns -- the Bird's treatment. */
 /* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
@@ -704,7 +704,7 @@ DSSTATE_END
 /* daObjPile_c_classInit spells the table by the address config left unnamed. */
 
 /* CONFIG DID NOT LEAVE 0x021352bc UNNAMED: symbols.txt:157 calls it _ZTV5Stump,
-   and src/d_a_obj_pile.c:13 stamps exactly that name. Until now _ZTV5Stump was
+   and src/game/actors/d_a_obj_pile.cpp:13 stamps exactly that name. Until now _ZTV5Stump was
    the label on a DIFFERENT array -- hal/actor_classes_ov091.cpp's 0x021353ac,
    Fwoosh's table -- so every stump spawned holding Fwoosh's methods while this
    array, filled with the stump's own, was installed on nothing at all. The
@@ -968,7 +968,7 @@ static int __fastcall kfl_render(void *s, void *)
    the second time: src/_ZN9KoopaFlagD1Ev.cpp is a REAL C++ DESTRUCTOR over a
    shadow class with two members, so MSVC emits ??1KoopaFlag@@UAE@XZ and calls
    two member dtors that exist nowhere in this build. The body below is
-   src/_ZN9KoopaFlagD0Ev.cpp minus its final Memory::Deallocate, which
+   port/unmatched/hostarm/_ZN9KoopaFlagD0Ev.cpp minus its final Memory::Deallocate, which
    ActorBase::AfterCleanupResources performs itself after the dispatch. */
 /* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
    the transcribed thunk that stood here (kfl_d1) spelled the same chain by hand. */

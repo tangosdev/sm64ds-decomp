@@ -91,6 +91,8 @@ __declspec(naked) void __cdecl _penter(void)
         push    eax
         push    ecx
         push    edx
+        cmp     dword ptr [ntr_fn_trace_on], 2
+        je      SHORT fnt_lab
         mov     ecx, dword ptr [ntr_fn_trace_head]
         lea     eax, [ecx+3]
         cmp     eax, dword ptr [ntr_fn_trace_cap]
@@ -110,6 +112,31 @@ fnt_full:
         pop     eax
 fnt_off:
         ret
+fnt_lab:
+        // LAB MODE (ntr_fn_trace_on == 2, set only by the naming-lab plugin,
+        // port/mods_api/naming_lab): four words a record -- callee+5, the call
+        // site, ecx (`this` for a thiscall method: the callee's prologue has
+        // not run, so ecx is still what the caller loaded) and the first stack
+        // argument (`self` for the extern "C" functions that take the object
+        // first). The plugin owns the buffer and drains it every frame; this
+        // file never writes it to disk. ntr_fn_trace_frame leaves mode 2 alone
+        // unless SM64DS_FN_TRACE is also set, which the lab never does.
+        mov     edx, dword ptr [ntr_fn_trace_head]
+        lea     eax, [edx+4]
+        cmp     eax, dword ptr [ntr_fn_trace_cap]
+        ja      SHORT fnt_full
+        mov     eax, dword ptr [ntr_fn_trace_buf]
+        lea     eax, [eax+edx*4]
+        mov     dword ptr [eax+8], ecx
+        mov     ecx, dword ptr [esp+12]
+        mov     dword ptr [eax], ecx
+        mov     ecx, dword ptr [esp+16]
+        mov     dword ptr [eax+4], ecx
+        mov     ecx, dword ptr [esp+20]
+        mov     dword ptr [eax+12], ecx
+        add     edx, 4
+        mov     dword ptr [ntr_fn_trace_head], edx
+        jmp     SHORT fnt_full
     }
 }
 

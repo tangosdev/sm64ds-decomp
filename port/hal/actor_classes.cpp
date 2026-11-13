@@ -1375,7 +1375,7 @@ static int __fastcall bird_d0(void *s, void *)
 /* SLOT 16 IS LIVE: a woken bird's state 0 spawns its flock, state 3 climbs,
    and past y 3000 func_ov009_02111234 marks every member -- the turn walk
    died right here while this slot was a trap. The body is
-   src/_ZN4BirdD0Ev.cpp minus its final Memory::Deallocate, which
+   port/unmatched/hostarm/_ZN4BirdD0Ev.cpp minus its final Memory::Deallocate, which
    AfterCleanupResources performs itself after the dispatch returns. */
 /* slot 16: the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP). */
 
@@ -2035,7 +2035,7 @@ static int __fastcall bf_pdes(void *, void *)
 /* SLOT 16 IS LIVE, the bird's discovery applied here before it fires: three
    of the eight states (0, 3 and 7) call MarkForDestruction, so a woken
    swarm despawns through AfterCleanupResources -> D1. The body is
-   src/_ZN9ButterflyD0Ev.cpp minus its final Memory::Deallocate; the six
+   port/unmatched/hostarm/_ZN9ButterflyD0Ev.cpp minus its final Memory::Deallocate; the six
    members in the ROM's own reverse order, not MSVC's. */
 /* slot 16: the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP). */
 
@@ -2108,7 +2108,7 @@ static int __fastcall fs_render(void *s, void *)
 static int __fastcall fs_pdes(void *, void *)
 { _ZN8daFish_c16OnPendingDestroyEv(); return 0; }
 /* SLOT 16 IS LIVE, the class's own comment above already said so: the owner
-   test can MarkForDestruction any frame. src/_ZN4FishD0Ev.cpp minus the
+   test can MarkForDestruction any frame. port/unmatched/hostarm/_ZN4FishD0Ev.cpp minus the
    Deallocate -- one ModelAnim, then Actor's D2. */
 /* slot 16: the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP). */
 
@@ -2242,7 +2242,7 @@ extern "C" void hal_fill_unchained_chomp_vtable(void)
 // CRASH12). It said config had swapped the two doors' names and that config's
 // `_ZTV4Door` was really the star door's table, so this array was hosted under
 // the name _ZTV8daDoor_c and the name _ZTV4Door was given to gate 40's array
-// instead. src/d_a_door.c stores _ZTV4Door into every plain door, so every
+// instead. src/game/actors/d_a_door.cpp stores _ZTV4Door into every plain door, so every
 // plain door in the castle grounds came up wearing the STAR door's methods and
 // died the first time one was drawn. The cartridge settles it, three ways:
 //
@@ -2386,7 +2386,7 @@ void *_ZTV12daStarGate_c[31];   /* ov100 0x021483cc, RTTI 12daStarGate_c */
    typeinfo at 0x02148158 names 8daDoor_c. Proving a name for one table is not
    proving two tables are one; the alias has to be an address match, and this
    one never was. The array is now declared under its own name, so
-   src/d_a_door.c's store of _ZTV4Door reaches gate 22's table instead of this
+   src/game/actors/d_a_door.cpp's store of _ZTV4Door reaches gate 22's table instead of this
    one. */
 
 static int __fastcall sd_init(void *s, void *)
@@ -2524,7 +2524,7 @@ static int __fastcall tr_render(void *s, void *)
    at +0x124, then Actor's D2 -- so we can only run that chain when the object
    really is a LIGHT_BEAM. Discriminate on the actor id at +0xc.
    THE LIGHT_BEAM BRANCH IS THE ROM'S OWN D1 NOW (run linkfull wave 27, lane
-   V3B): src/_ZN9LightBeamD1Ev.cpp's _MSC_VER arm defines _ZN9LightBeamD1Ev as
+   V3B): port/unmatched/hostarm/_ZN9LightBeamD1Ev.cpp's _MSC_VER arm defines _ZN9LightBeamD1Ev as
    the qualified call to the class's inline destructor, which tears down the
    same three things this branch spelled by hand -- the dCcAcPos_c at +0x124,
    the Model at +0xd4, then dActor_c -- through the same bodies (measured,

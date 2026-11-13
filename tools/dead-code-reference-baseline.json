@@ -26,6 +26,9 @@
   "include/FaderColor.h": [
    "src/_ZN8dScene_c14StartSceneFadeEjjt"
   ],
+  "include/Particle__SysTracker.h": [
+   "src/func_02022864.c"
+  ],
   "include/RotatingUpDownPlatformUtm.h": [
    "src/RotatingUpDownPlatformUtm_Spawn.c"
   ],
@@ -44,6 +47,9 @@
   ],
   "include/dBgW_KcMbg.h": [
    "src/_ZN10dBgW_KcMbgC2Ev.c"
+  ],
+  "include/dPa_c.h": [
+   "src/func_02022864.c"
   ],
   "include/dScBoot_c.h": [
    "tools/deepen_rtti.py"
@@ -298,7 +304,10 @@
    "tools/decl_headers.py"
   ],
   "include/decl_common.h": [
+   "src/_ZN9dScDSMT_c8BehaviorEv.cpp",
    "src/actors/d_a_pg_mthr.cpp",
+   "src/func_0203dabc.c",
+   "src/func_0203dae4.c",
    "tools/decl_headers.py"
   ],
   "include/decl_dBgCh_Actr.h": [
@@ -331,8 +340,1810 @@
   "include/nitro/hw/registers.h": [
    "notes/phantom-references.md"
   ],
+  "port/hal/actor_base_tables_ov002.cpp": [
+   "port/unmatched/Jrb_Renders.cpp"
+  ],
+  "port/hal/actor_class_faces.cpp": [
+   "include/WithMeshClsn.h",
+   "src/_ZN11ShadowModel10InitCuboidEv.cpp",
+   "src/_ZN8dActor_c17TrackInDeathTableEv.cpp",
+   "src/_ZN9ModelBase12ApplyOpacityEj.cpp",
+   "src/_ZNK10dBgCh_Actr12TouchesWaterEv.cpp"
+  ],
+  "port/hal/actor_classes.cpp": [
+   "include/MovingCylinderClsn.h",
+   "include/Tree.h",
+   "port/unmatched/RabbitKey_StateSeat.cpp",
+   "port/unmatched/StarMarker_D1.cpp",
+   "src/_ZN12dBgCh_SphCrrD1Ev.cpp",
+   "src/_ZN13QuestionBlock13InitResourcesEv.cpp",
+   "src/_ZN13QuestionBlock6RenderEv.cpp",
+   "src/_ZN14UnchainedChompD1Ev.cpp",
+   "src/_ZN6CannonD1Ev.cpp",
+   "src/_ZN8dActor_c21AfterCleanupResourcesEj.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/func_ov002_020eeca8.cpp"
+  ],
+  "port/hal/actor_classes_bbh.cpp": [
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_bob_enemy.cpp": [
+   "port/unmatched/KingBobOmb_States.cpp",
+   "src/_ZN11BobOmbBuddyD1Ev.cpp",
+   "src/_ZN5StumpD0Ev",
+   "src/_ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/_ZN9KoopaFlagD1Ev.cpp"
+  ],
+  "port/hal/actor_classes_bob_world.cpp": [
+   "include/ArrowSignRight.h",
+   "include/CannonHatch.h",
+   "include/CommonModel.h",
+   "include/SeesawBob.h",
+   "include/ShutterBob.h",
+   "port/unmatched/ModelAnim_Renders.cpp",
+   "port/unmatched/WaterBomb_State0.cpp",
+   "port/unmatched/WaterBomb_StateDispatch.cpp",
+   "src/_ZN13BigBrickBlock17NotifyLinkedActorEv.cpp",
+   "src/_ZN13BigBrickBlock4KillEv.cpp",
+   "src/_ZN4CoinD1Ev.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_bowserpuzzle.cpp": [
+   "include/BowserPuzzleManager.h",
+   "port/unmatched/BowserPuzzle_Render.cpp",
+   "src/_ZN19BowserPuzzleManagerD1Ev.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/d_a_obj_fl_puzzle.c"
+  ],
+  "port/hal/actor_classes_bullet.cpp": [
+   "include/Bullet.h"
+  ],
+  "port/hal/actor_classes_ccm.cpp": [
+   "include/SkiLift.h",
+   "port/unmatched/MotherPenguin_InitResources.cpp",
+   "src/_ZN7SkiLift",
+   "src/_ZN7SkiLift13InitResourcesEv.cpp",
+   "src/_ZN7fBase_c13InitResourcesEv.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/_ZN9OneUpLogoD1Ev.cpp"
+  ],
+  "port/hal/actor_classes_enemy_spawner.cpp": [
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_flame.cpp": [
+   "src/_ZN6Player4BurnEv.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_flamethrower.cpp": [
+   "include/Flamethrower.h",
+   "port/unmatched/Flamethrower_Behavior.c",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_hmc.cpp": [
+   "include/Actor.h",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_intro.cpp": [
+   "include/CutsceneObject.h",
+   "src/_ZN14CutsceneObject16CleanupResourcesEv.cpp",
+   "src/_ZN14CutsceneObjectD0Ev.cpp",
+   "src/_ZN14CutsceneObjectD1Ev.cpp",
+   "src/_ZN3OAM9RenderSubEP7Oam",
+   "src/_ZN7fBase_cnwEj.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/_ZN8daDemo_c10anmModel_cD1Ev.cpp",
+   "src/_ZN8daDemo_c13simpleModel_cD1Ev.cpp",
+   "src/func_ov002_020f2340.cpp"
+  ],
+  "port/hal/actor_classes_jrb.cpp": [
+   "port/unmatched/Jrb_Renders.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_koopa_chuckya.cpp": [
+   "include/Klepto.h",
+   "port/unmatched/Koopa_Render.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/func_ov062_02117acc.c"
+  ],
+  "port/hal/actor_classes_l7.cpp": [
+   "port/unmatched/PiranhaPlant_",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_montymole.cpp": [
+   "include/MontyMole.h",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_montymolerock.cpp": [
+   "include/MontyMoleRock.h",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov002_w15.cpp": [
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov002_w17.cpp": [
+   "port/unmatched/ModelAnim_Renders.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov002g200.cpp": [
+   "port/unmatched/ModelAnim_Renders.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov010.cpp": [
+   "src/__sinit_ov010_0211203c.c"
+  ],
+  "port/hal/actor_classes_ov012.cpp": [
+   "port/unmatched/ModelAnim_Renders.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov013.cpp": [
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov017.cpp": [
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov019_w3e.cpp": [
+   "port/unmatched/RacingPenguin_Render.cpp",
+   "src/_ZN13RacingPenguin6RenderEv.cpp",
+   "src/_ZN13RacingPenguin8BehaviorEv.cpp",
+   "src/_ZN13RacingPenguinD1Ev.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov022.cpp": [
+   "src/_ZN21FloatingFloorLllSmall13InitResourcesEv.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/_ZN9LavaPlank16CleanupResourcesEv.cpp"
+  ],
+  "port/hal/actor_classes_ov022_w16.cpp": [
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov022_w3e.cpp": [
+   "src/_ZN11VolcanoRing8BehaviorEv.cpp",
+   "src/_ZN21daObj_volcanoCannon_c11ChangeStateEPNS_5StateE.cpp",
+   "src/_ZN21daObj_volcanoCannon_c8BehaviorEv.cpp",
+   "src/_ZN21daObj_volcanoCannon_cD1Ev.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov023.cpp": [
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov024.cpp": [
+   "src/_ZN10PyramidTagD1Ev.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov025.cpp": [
+   "src/_ZN11PyramidLift13InitResourcesEv",
+   "src/_ZN11PyramidLift16CleanupResourcesEv.cpp",
+   "src/_ZN11PyramidStep16CleanupResourcesEv.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov025_w3e.cpp": [
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov026.cpp": [
+   "include/Actor.h",
+   "src/_ZN12WaterSuction8BehaviorEv.cpp",
+   "src/_ZN17daObjWlPolelift_c13InitResourcesEv.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/_ZN9Whirlpool13InitResourcesEv.cpp",
+   "src/_ZN9Whirlpool8BehaviorEv.cpp",
+   "src/__sinit_ov026_02112d68.c",
+   "src/func_ov026_02111d4c.cpp",
+   "src/func_ov026_021122b0.c"
+  ],
+  "port/hal/actor_classes_ov027.cpp": [
+   "include/Bully.h",
+   "port/unmatched/DaPgDfdr_Render.cpp",
+   "src/_ZN10SlidingIce13InitResourcesEv.cpp",
+   "src/_ZN10SlidingIce15OnHitByMegaCharER6Player.cpp",
+   "src/_ZN10SlidingIce16CleanupResourcesEv.cpp",
+   "src/_ZN13SnowmanBreath16CleanupResourcesEv.cpp",
+   "src/_ZN13SnowmanBreath16OnPendingDestroyEv.cpp",
+   "src/_ZN13SnowmanBreath8BehaviorEv.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov029.cpp": [
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov030.cpp": [
+   "include/RollingLogTtm.h",
+   "port/l7-pmfsweep2",
+   "src/_ZN13daObjHmBskt_c6RenderEv.cpp",
+   "src/_ZN13daObjHmBskt_cD1Ev.cpp",
+   "src/_ZN13daObjMaruta_c15OnHitByMegaCharER6Player.cpp",
+   "src/_ZN13daObjMaruta_c6RenderEv.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/__sinit_ov029_",
+   "src/d_a_mky_monkey_star.c",
+   "src/d_a_mky_monkey_thief.c"
+  ],
+  "port/hal/actor_classes_ov031_w10.cpp": [
+   "include/SlideDecorationSilverStar.h",
+   "src/_ZN13RacingPenguin8BehaviorEv.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov032.cpp": [
+   "include/HugeCover.h",
+   "port/unmatched/Bubba_",
+   "port/unmatched/Bubba_Render.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov033.cpp": [
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov034.cpp": [
+   "include/Wiggler.h",
+   "port/unmatched/Wiggler_Render.cpp",
+   "port/unmatched/Wiggler_State",
+   "src/_ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj.cpp",
+   "src/_ZN7Wiggler8BehaviorEv.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/_ZN8dActor_c9UpdatePosEP5dCc_c.cpp",
+   "src/_ZNK10dBgCh_Actr10IsOnGroundEv.cpp",
+   "src/_ZNK10dBgCh_Actr13JustHitGroundEv.cpp"
+  ],
+  "port/hal/actor_classes_ov035.cpp": [
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov036.cpp": [
+   "include/CommonModel.h",
+   "port/unmatched/FlyingCarpet_Render.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov043.cpp": [
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/func_ov002_020b6c54.c"
+  ],
+  "port/hal/actor_classes_ov044.cpp": [
+   "include/OrangeBallBillboard.h",
+   "src/..Render..cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov045.cpp": [
+   "src/_ZN17ExtendingPlatform16CleanupResourcesEv",
+   "src/_ZN17ExtendingPlatformD1Ev.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/__sinit_ov045_02112280.c"
+  ],
+  "port/hal/actor_classes_ov047.cpp": [
+   "include/RickshawPlatformBs.h",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov052.cpp": [
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov055.cpp": [
+   "include/MirrorLuigi.h",
+   "src/_ZN10PyramidTagD1Ev.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/func_ov055_021112c4.cpp"
+  ],
+  "port/hal/actor_classes_ov056.cpp": [
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov058.cpp": [
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov060.cpp": [
+   "include/SpikeBomb.h",
+   "port/unmatched/Ov060_Renders.cpp",
+   "src/_ZN10daKpa2Bg_c16CleanupResourcesEv.cpp",
+   "src/_ZN6Bowser13InitResourcesEv.cpp",
+   "src/_ZN6BowserD1Ev.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/_ZN9SpikeBomb",
+   "src/_ZN9SpikeBombD1Ev.cpp",
+   "src/func_ov060_02111c68.c",
+   "src/func_ov060_02112350.c"
+  ],
+  "port/hal/actor_classes_ov063.cpp": [
+   "include/CapEnemy.h",
+   "include/MadPiano.h",
+   "port/unmatched/Bbh_PmfDispatch.c",
+   "port/unmatched/MansionSteps_InitResources.c",
+   "src/BookSwitch_Spawn.c",
+   "src/_ZN15BookShotSpawnerD1Ev.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/game/actors/daPiano_c",
+   "src/game/actors/daPiano_c/_ZN8MadPiano16CleanupResourcesEv.cpp",
+   "src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_c8BehaviorEv.cpp",
+   "src/unnamed/ov063/func_ov063_0211ddac.cpp"
+  ],
+  "port/hal/actor_classes_ov064.cpp": [
+   "include/Bully.h",
+   "port/unmatched/ModelAnim_Renders.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov064_gate178.cpp": [
+   "include/LavaBubble.h",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov064_w12.cpp": [
+   "port/unmatched/Ov064_Clam.cpp",
+   "src/_ZN4Clam13InitResourcesEv.cpp",
+   "src/_ZN4ClamD1Ev.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov064_w3c.cpp": [
+   "port/unmatched/Ov064_Clam.cpp",
+   "src/_ZN13TreasureChestD1Ev.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/_ZN9WaterRingD1Ev.cpp"
+  ],
+  "port/hal/actor_classes_ov064_w9.cpp": [
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov065.cpp": [
+   "include/TTC_MovingBar.h",
+   "port/unmatched/Dorrie_Behavior.cpp",
+   "src/_ZN13TTC_MovingBar8BehaviorEv.cpp",
+   "src/_ZN14TTC_MovingBeam13InitResourcesEv.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/func_ov075_0211478c.c"
+  ],
+  "port/hal/actor_classes_ov066.cpp": [
+   "port/unmatched/Eyerok_Behavior.cpp",
+   "port/unmatched/Eyerok_Render.cpp",
+   "port/unmatched/Eyerok_StateEnter.cpp",
+   "src/_ZN6Eyerok13InitResourcesEv.cpp",
+   "src/_ZN6Eyerok16OnAimedAtWithEggEv.cpp",
+   "src/_ZN6EyerokD1Ev.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/func_ov066_021166c8.cpp",
+   "src/func_ov066_02116d14.cpp"
+  ],
+  "port/hal/actor_classes_ov070.cpp": [
+   "port/unmatched/ModelAnim_Renders.cpp",
+   "src/_ZN8dActor_c15GivePlayerCoinsER6Playerhj.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov071.cpp": [
+   "include/MrI.h",
+   "include/MrI_Projectile.h",
+   "port/unmatched/MrI_Render.cpp",
+   "port/unmatched/MrI_StateMains.cpp",
+   "src/_ZN3MrI13InitResourcesEv.cpp",
+   "src/_ZN3MrI8BehaviorEv.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/__sinit_ov074_02122978.c",
+   "src/func_ov071_021209c8.cpp",
+   "src/func_ov071_02120d30.c"
+  ],
+  "port/hal/actor_classes_ov072.cpp": [
+   "port/unmatched/ModelAnim_Renders.cpp",
+   "port/unmatched/Snowman_StateDispatch.cpp",
+   "src/_ZN11SnowmanHead6State0Ev.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/func_ov002_020eeca8.cpp"
+  ],
+  "port/hal/actor_classes_ov073.cpp": [
+   "src/_ZN5Sound13Func_02048ec4Ev.cpp",
+   "src/_ZN5Stage13InitResourcesEv.cpp",
+   "src/_ZN6Player12GetHurtStateEv.cpp",
+   "src/_ZN8CccArena13InitResourcesEv.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/func_ov073_02120ed0.c",
+   "src/func_ov077_02126640.cpp"
+  ],
+  "port/hal/actor_classes_ov074.cpp": [
+   "include/Goomboss.h",
+   "port/unmatched/Actor_ClosestPlayerWrappers.cpp",
+   "port/unmatched/Goomboss_StateDispatch.cpp",
+   "port/unmatched/Ov085_Behaviors.cpp",
+   "src/_ZN5Sound13Func_02048ee4Ev.cpp",
+   "src/_ZN8GoombossD1Ev.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/__sinit_ov074_02122978.c",
+   "src/actors/Goomboss.cpp",
+   "src/d_a_kuri_king_kuriking.cpp",
+   "src/d_a_kuri_king_kuriking_vanish.cpp",
+   "src/func_02011d20.c",
+   "src/func_ov074_02121380.c",
+   "src/func_ov074_02121a4c.cpp",
+   "src/func_ov074_02122634.cpp"
+  ],
+  "port/hal/actor_classes_ov077.cpp": [
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov081.cpp": [
+   "port/unmatched/ModelAnim_Renders.cpp",
+   "port/unmatched/MrBlizzard_Behavior.cpp",
+   "src/_ZN10MrBlizzard8BehaviorEv.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/__sinit_ov081_021284f0.c",
+   "src/func_ov081_02123910.cpp",
+   "src/func_ov081_02124e64.c",
+   "src/func_ov081_02125488.cpp"
+  ],
+  "port/hal/actor_classes_ov085.cpp": [
+   "port/unmatched/Ov085_Behaviors.cpp",
+   "port/unmatched/Ov085_PrincessPeach_Behavior.cpp",
+   "port/unmatched/Ov085_PrincessPeach_States.cpp",
+   "src/_ZN13PrincessPeach6RenderEv.cpp",
+   "src/_ZN4Toad8BehaviorEv.cpp",
+   "src/_ZN4ToadD1Ev.cpp",
+   "src/_ZN8WallSign6RenderEv.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov089.cpp": [
+   "port/unmatched/Ov089_Renders.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/d_a_obj_key_last_star.c",
+   "src/d_a_obj_key_obj_key.c"
+  ],
+  "port/hal/actor_classes_ov090.cpp": [
+   "include/CheepCheep.h",
+   "src/_ZN7Skeeter13OnTurnIntoEggER6Player.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov091.cpp": [
+   "port/unmatched/Ov091_HostSites.cpp",
+   "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp",
+   "src/_ZN22RotatingUpDownPlatform8BehaviorEv.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov092.cpp": [
+   "port/unmatched/ToxBox_HostSites.cpp",
+   "src/_ZN6ToxBox13InitResourcesEv.cpp",
+   "src/_ZN6ToxBox8BehaviorEv.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov094.cpp": [
+   "port/unmatched/ModelAnim_Renders.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov096.cpp": [
+   "src/_ZN7Tornado16CleanupResourcesEv.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_ov100pl.cpp": [
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/func_ov002_020eff90.cpp"
+  ],
+  "port/hal/actor_classes_ov_link100.cpp": [
+   "config/arm9/overlays/ov",
+   "src/_Z15LoadDoorObjectsRN11LVL_Overlay11ObjSub"
+  ],
+  "port/hal/actor_classes_painting.cpp": [
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_question_switch.cpp": [
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_runtime_spawns.cpp": [
+   "port/unmatched/Enemy_UpdateDeath",
+   "src/_ZN5Actor13SpawnFireball",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_scuttlebug.cpp": [
+   "port/ov073_syms",
+   "port/unmatched/Scuttlebug_StateDispatch.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_star.cpp": [
+   "include/Actor.h",
+   "include/ActorBase.h",
+   "include/PowerStar.h",
+   "port/unmatched/ModelAnim_Renders.cpp",
+   "port/unmatched/PowerStar_States",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/_ZN9PowerStar6RenderEv.cpp"
+  ],
+  "port/hal/actor_classes_updownlift.cpp": [
+   "include/UpDownLiftBbh.h",
+   "port/unmatched/ModelAnim_Renders.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_vspopup.cpp": [
+   "src/_ZN6Number6RenderEv.cpp",
+   "src/_ZN6NumberD1Ev.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/game/actors/WingFeather/_ZN11WingFeather6RenderEv.cpp"
+  ],
+  "port/hal/actor_classes_wf.cpp": [
+   "include/KnockDownPlank.h",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_classes_wf_enemy.cpp": [
+   "port/unmatched/BulletBill_Behavior",
+   "port/unmatched/Enemy_UpdateDeath",
+   "port/unmatched/ModelAnim_Renders.cpp",
+   "port/unmatched/Whomp_Behavior",
+   "src/_ZN12FortressWall8BehaviorEv.cpp",
+   "src/_ZN5Whomp6RenderEv.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/actor_faces_bob.cpp": [
+   "port/unmatched/Player_ChangeState.cpp",
+   "src/_ZN5Model6RenderEPK7Vector3",
+   "src/func_02014f5c.c"
+  ],
+  "port/hal/actor_overlays.cpp": [
+   "port/unmatched/KingBobOmb_States.cpp",
+   "port/unmatched/Ov085_PrincessPeach_States.cpp",
+   "port/unmatched/Ov085_Toad_StateSeat.cpp",
+   "port/unmatched/Painting_StateRender_021261f4.cpp",
+   "port/unmatched/Scuttlebug_StateDispatch.cpp",
+   "src/_ZN4Toad8RunStateEv.cpp",
+   "src/_ZN4Toad8SetStateEi.cpp",
+   "src/_ZN8Painting13InitResourcesEv.cpp"
+  ],
+  "port/hal/actor_registry.cpp": [
+   "include/Actor.h",
+   "port/rollback",
+   "port/unmatched/Painting_Dispatch.cpp",
+   "src/_ZN5Model17UpdateFileOffsetsER8BMD_File.cpp",
+   "src/_ZN5Stage13InitResourcesEv.cpp",
+   "src/_ZN5Stage16CleanupResourcesEv.cpp",
+   "src/_ZN5Stage8BehaviorEv.cpp",
+   "src/_ZN5Stage9LoadModelEv.cpp",
+   "src/_ZN8dActor_c14BeforeBehaviorEv.cpp",
+   "src/_ZN9SpikeBomb13InitResourcesEv.cpp",
+   "src/func_02043fdc.cpp"
+  ],
+  "port/hal/actor_slot30_seat.cpp": [
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/func_ov002_020ecd18.cpp"
+  ],
+  "port/hal/actor_vtables.cpp": [
+   "port/unmatched/Enemy_UpdateYoshiEat.cpp",
+   "src/_ZN11ShadowModel12InitCylinderEv.cpp",
+   "src/func_0203b438.c"
+  ],
+  "port/hal/actorport_dtor_bridge.cpp": [
+   "src/_ZN"
+  ],
+  "port/hal/arm9_tables_link100.cpp": [
+   "src/_ZN3OAM5ResetEv.cpp",
+   "src/_ZN7dScMB_c15graphCallback_c14GraphCallback3Ev.cpp",
+   "src/_ZNSt9type_infoD1Ev.cpp"
+  ],
+  "port/hal/auto_bss.cpp": [
+   "include/FaderBrightness.h",
+   "port/unmatched/Player_InitResources.cpp",
+   "src/MiniGm_SaveIfDirty.cpp",
+   "src/_ZN11dScMiniGm_c13InitResourcesEv.cpp",
+   "src/_ZN5Sound21UnsetPlayerVoiceGroupEv.cpp",
+   "src/_ZN5Stage10CheckInputEv.cpp",
+   "src/_ZN8dScene_c14BeforeBehaviorEv.cpp",
+   "src/_ZN8dScene_c19ResetFadersAndSoundEv.cpp",
+   "src/_ZN9BootScene8BehaviorEv.cpp",
+   "src/func_0202ed14.c",
+   "src/func_0202fb30.c",
+   "src/func_02031e00.c",
+   "src/func_02033464.c"
+  ],
+  "port/hal/blend_vtable.cpp": [
+   "port/unmatched/ModelAnim_Renders.cpp"
+  ],
+  "port/hal/bob_enemy_bridges.cpp": [
+   "include/Camera.h",
+   "include/CapEnemy.h",
+   "include/WithMeshClsn.h",
+   "port/unmatched/Goomboss_InitResources.cpp",
+   "src/_ZN12WorkElevator16CleanupResourcesEv.cpp",
+   "src/_ZN14BlendModelAnim7SetAnimER8BCA_Fileii",
+   "src/_ZN19FloatOnLavaPlatform16CleanupResourcesEv.cpp"
+  ],
+  "port/hal/bob_enemy_header_faces.cpp": [
+   "src/_ZN10MrBlizzard6RenderEv.cpp"
+  ],
+  "port/hal/bob_enemy_shadow_faces.cpp": [
+   "include/Actor.h",
+   "include/Camera.h",
+   "include/CapEnemy.h"
+  ],
+  "port/hal/boot2_ipc.cpp": [
+   "src/func_0205bad8.c"
+  ],
+  "port/hal/boot2_thread.cpp": [
+   "src/_ZN3IRQ13VBlankHandlerEv.cpp",
+   "src/func_02058308.c"
+  ],
+  "port/hal/boot_arms.cpp": [
+   "src/func_02013e64.c",
+   "src/func_0203daac.c"
+  ],
+  "port/hal/boot_hw.cpp": [
+   "src/_ZN3IRQ10DisableAllEv.cpp",
+   "src/_ZN3IRQ10RestoreAllEj.cpp",
+   "src/_ZN4cstd14__builtin_trapEv.cpp"
+  ],
+  "port/hal/boot_os.cpp": [
+   "src/_ZN3IRQ21GameCardIREQMCHandlerEv",
+   "src/dst/len/cbfn/cbarg"
+  ],
+  "port/hal/camera_bridges.cpp": [
+   "include/View.h",
+   "src/_ZN4View6RenderEv.cpp"
+  ],
+  "port/hal/char_door.h": [
+   "src/func_ov100_02145080.c"
+  ],
+  "port/hal/char_door_skin.cpp": [
+   "src/_ZN3HUD15RenderLifeCountEv.cpp"
+  ],
+  "port/hal/char_strip.h": [
+   "src/actors/dScStarSel_c.cpp"
+  ],
+  "port/hal/clsn_vtable.cpp": [
+   "port/unmatched/MeshCollider_DetectClsn_Sphere.cpp",
+   "src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp",
+   "src/_ZN7dBgW_Kc10DetectClsnER9dBgCh_Gnd.cpp"
+  ],
+  "port/hal/comms_conductor.cpp": [
+   "port/rollback",
+   "src/_ZN6Player13InitResourcesEv.cpp",
+   "src/func_02013f28.c",
+   "src/func_ov002_020e5948.c"
+  ],
+  "port/hal/comms_conductor_wide.cpp": [
+   "src/func_0203ea5c.c"
+  ],
+  "port/hal/comms_loopback.cpp": [
+   "port/rollback"
+  ],
+  "port/hal/comms_loopback.h": [
+   "port/rollback"
+  ],
+  "port/hal/comms_seam.cpp": [
+   "port/rollback",
+   "src/func_020197b8.c"
+  ],
+  "port/hal/comms_sync.cpp": [
+   "include/Actor.h",
+   "port/rollback",
+   "src/_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij",
+   "src/_ZN3HUD15RenderStarCountEv.cpp",
+   "src/_ZN5Stage10CheckInputEv.cpp",
+   "src/_ZN6Player11St_Fly_InitEv.cpp",
+   "src/_ZN6Player6RenderEv.cpp",
+   "src/_ZN8dActor_c13ClosestPlayerEv.cpp",
+   "src/_ZN8dActor_c14BeforeBehaviorEv",
+   "src/_ZN8dActor_c14BeforeBehaviorEv.cpp",
+   "src/_ZN8dActor_c4NextEPKS_.cpp",
+   "src/_ZN9Animation12SetAnimationEti5Fix12IiEt.cpp",
+   "src/func_ov002_020e444c.c",
+   "src/func_ov002_020e4768.cpp",
+   "src/func_ov002_020e4bb8.c"
+  ],
+  "port/hal/coop_boss.cpp": [
+   "include/ChiefChilly.h",
+   "include/Goomboss.h",
+   "include/Whomp.h",
+   "port/l7-coopmove1",
+   "src/_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h.cpp",
+   "src/actors/Eyerok.cpp",
+   "src/actors/Goomboss.cpp",
+   "src/actors/daOts_c.cpp",
+   "src/func_ov060_",
+   "src/func_ov066_0211603c.c",
+   "src/func_ov073_02120910.c",
+   "src/func_ov079_02124b08.c",
+   "src/unnamed/ov063/func_ov063_021177b0.c"
+  ],
+  "port/hal/coop_minimap.h": [
+   "port/unmatched/Minimap_"
+  ],
+  "port/hal/coop_save_wire.h": [
+   "src/func_02013c84.c"
+  ],
+  "port/hal/coop_spawn.cpp": [
+   "src/_ZN3Key13InitResourcesEv.cpp",
+   "src/actors/Goomboss.cpp"
+  ],
+  "port/hal/coop_target.cpp": [
+   "src/func_ov079_02123f34.c"
+  ],
+  "port/hal/coop_target.h": [
+   "src/_ZN8dActor_c13ClosestPlayerEv.cpp"
+  ],
+  "port/hal/cross_level_seat.cpp": [
+   "src/_Z26LoadOrUnloadObjectOverlaysPFviEi"
+  ],
   "port/hal/cstd_div.c": [
-   "src/_ZN4cstd4fdivEii.c"
+   "src/_ZN4cstd4fdivEii.c",
+   "src/_ZN4cstd4fdivEii.cpp",
+   "src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp"
+  ],
+  "port/hal/ctor_runner.cpp": [
+   "src/_ZN7ClipperC1Ev.cpp",
+   "src/_ZN7ClipperD1Ev.cpp"
+  ],
+  "port/hal/cutscene_states_link100.cpp": [
+   "port/unmatched/func_ov002_020f3de4.c",
+   "src/func_ov002_020f2a78.c",
+   "src/func_ov002_020f2a88.c",
+   "src/func_ov002_020f2aec.c",
+   "src/func_ov002_020f2bf4.c",
+   "src/func_ov002_020f2d0c.c",
+   "src/func_ov002_020f2d70.c",
+   "src/func_ov002_020f30f8.c",
+   "src/func_ov002_020f32e4.c",
+   "src/func_ov002_020f3310.cpp",
+   "src/func_ov002_020f335c.c",
+   "src/func_ov002_020f340c.c",
+   "src/func_ov002_020f34bc.c",
+   "src/func_ov002_020f35e4.c",
+   "src/func_ov002_020f3740.cpp",
+   "src/func_ov002_020f378c.c",
+   "src/func_ov002_020f3ae8.c",
+   "src/func_ov002_020f3ba0.c",
+   "src/func_ov002_020f3d38.c",
+   "src/func_ov002_020f3d98.cpp",
+   "src/func_ov002_020f40fc.c",
+   "src/func_ov002_020f43cc.c",
+   "src/func_ov002_020f4710.c",
+   "src/func_ov002_020f4a2c.c",
+   "src/func_ov002_020f4d70.c",
+   "src/func_ov002_020f5010.c",
+   "src/func_ov002_020f5328.c",
+   "src/func_ov002_020f55b4.c",
+   "src/func_ov002_020f562c.cpp",
+   "src/func_ov002_020f5678.c",
+   "src/func_ov002_020f569c.c",
+   "src/func_ov002_020f57c0.c",
+   "src/func_ov002_020f5848.cpp",
+   "src/func_ov002_020f5894.c",
+   "src/func_ov002_020f5b24.c",
+   "src/func_ov002_020f5b7c.c",
+   "src/func_ov002_020f5b80.c",
+   "src/func_ov002_020f5b84.c",
+   "src/func_ov002_020f5b88.c",
+   "src/func_ov002_020f5b8c.c",
+   "src/func_ov002_020f5b98.c",
+   "src/func_ov002_020f5bcc.c",
+   "src/func_ov002_020f5bf4.c",
+   "src/func_ov002_020f5c40.c",
+   "src/func_ov002_020f5c88.c",
+   "src/func_ov002_020f5cd0.c",
+   "src/func_ov002_020f5d34.c",
+   "src/func_ov002_020f5e18.c",
+   "src/func_ov002_020f5e38.c",
+   "src/func_ov002_020f5e58.c",
+   "src/func_ov002_020f5e78.c",
+   "src/func_ov002_020f5e98.c",
+   "src/func_ov002_020f5eb8.c",
+   "src/func_ov002_020f5ed8.c",
+   "src/func_ov002_020f5ee4.c",
+   "src/func_ov002_020f5ef0.c",
+   "src/func_ov002_020f5efc.c"
+  ],
+  "port/hal/cxx_aliases.cpp": [
+   "include/Animation.h",
+   "include/Platform.h",
+   "port/ovNNN_syms.txt",
+   "port/unmatched/Coffin_InitResources.cpp",
+   "port/unmatched/Goomboss_InitResources.cpp",
+   "src/Matrix4x3_FromRotationX/Y/Z.c",
+   "src/Scene_Play.cpp",
+   "src/State10_Update.c",
+   "src/_ZN10HootTheOwl13",
+   "src/_ZN10RockPillar16CleanupResourcesEv.cpp",
+   "src/_ZN11dCapEnemy_c12UpdateCapPosERK7Vector3RK10Vector3_16.cpp",
+   "src/_ZN11dScMgCoin_cD0Ev.cpp",
+   "src/_ZN12dEnemyBase_cC2Ev.cpp",
+   "src/_ZN14UnchainedChompD1Ev.cpp",
+   "src/_ZN15BookShotSpawner13InitResourcesEv.cpp",
+   "src/_ZN15BookShotSpawnerD0Ev.cpp",
+   "src/_ZN19cMgSmartball_slot_c14RestoreInitialEv.cpp",
+   "src/_ZN3MrI13InitResourcesEv.cpp",
+   "src/_ZN5Model27LoadCompressedTextureToVramEPcjS0_.cpp",
+   "src/_ZN5Model6RenderEPK7Vector3.cpp",
+   "src/_ZN5Sound10PauseMusicEv.cpp",
+   "src/_ZN5Sound8EndMusicEjj.cpp",
+   "src/_ZN5Stage9PS_UpdateEv.cpp",
+   "src/_ZN6Camera10LookAtExitER8dActor_c.cpp",
+   "src/_ZN6Coffin16CleanupResourcesEv.cpp",
+   "src/_ZN6Player7TryGrabER8dActor_c.cpp",
+   "src/_ZN7dCcAc_cD1Ev.cpp",
+   "src/_ZN8Particle10SysTrackerC1Ev.c",
+   "src/_ZN8SaveData16ReadDataFromCartEPcjj.cpp",
+   "src/_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h.cpp",
+   "src/__sinit_ov045_02112280.c",
+   "src/d_a_kuri_king_kuriking.cpp",
+   "src/d_a_kuri_king_kuriking_vanish.cpp",
+   "src/engine/fader/_ZN15FaderBrightness11AdvanceFadeEv.cpp",
+   "src/func_0201fc88.c",
+   "src/func_0204df54.cpp",
+   "src/func_0205283c.c",
+   "src/func_ov002_020bd480.cpp",
+   "src/func_ov002_020dc560.c",
+   "src/func_ov002_020f2f9c.c",
+   "src/func_ov071_02120d30.c",
+   "src/func_ov074_021222e0.cpp",
+   "src/func_ov080_02125630.cpp",
+   "src/func_ov094_021359d8.cpp",
+   "src/game/actors/daBrq_c.cpp"
+  ],
+  "port/hal/cxxname_bridge.cpp": [
+   "include/Fader.h",
+   "port/unmatched/ActorBase_AfterCleanupResources.cpp",
+   "src/_ZN11ShadowModel10InitCuboidEv.cpp",
+   "src/_ZN5Actor18DropShadowScaleXYZER11ShadowModel",
+   "src/func_0206e2f8.c",
+   "src/func_ov002_020f6618.cpp"
+  ],
+  "port/hal/dispatch_seat6.cpp": [
+   "include/RabbitKey.h",
+   "port/unmatched/MantaRay_HostSites.cpp",
+   "src/_ZN9RabbitKey6RenderEv.cpp"
+  ],
+  "port/hal/door_ring_faces.cpp": [
+   "include/Camera.h",
+   "src/_ZN6Camera10LookAtExitER8dActor_c.cpp"
+  ],
+  "port/hal/dtor_faces_cpp.cpp": [
+   "include/ShadowModel.h",
+   "src/_ZN4CoinD1Ev.cpp",
+   "src/_ZN7TornadoD1Ev.cpp"
+  ],
+  "port/hal/editor_channel.cpp": [
+   "include/Actor.h",
+   "include/ActorBase.h",
+   "src/_Z17LoadSimpleObjectsRN11LVL_Overlay11ObjSubTableEij",
+   "src/_ZN6Player13InitResourcesEv.cpp",
+   "src/_ZN7daKrb_c13InitResourcesEv.cpp",
+   "src/_ZN7fBase_c18MarkForDestructionEv.cpp",
+   "src/_ZN8dActor_c4NextEPKS_.cpp",
+   "src/_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as.cpp",
+   "src/func_02010e78.c"
+  ],
+  "port/hal/editor_sky.cpp": [
+   "src/InitialiseVramGlobals.c",
+   "src/_ZN5ModelC1Ev.cpp",
+   "src/_ZN5Stage10LoadSkyboxEv.cpp",
+   "src/_ZN5Stage6RenderEv.cpp"
+  ],
+  "port/hal/except_faces.cpp": [
+   "src/_ZN15TextureSequence6UpdateER15ModelComponents.cpp",
+   "src/_ZN7HeaveHo6RenderEv.cpp",
+   "src/_ZN7Tornado6RenderEv.cpp"
+  ],
+  "port/hal/faces4_rows.cpp": [
+   "port/unmatched/Particle_RideThroughs.cpp",
+   "src/MascotWalker_Load.cpp",
+   "src/_ZN8Particle10SysTrackerC1Ev.cpp"
+  ],
+  "port/hal/fader_wipes.cpp": [
+   "include/Fader.h",
+   "include/FaderBrightness.h",
+   "src/MgCoins_Draw.c",
+   "src/TrmpLine_StateSettle.c",
+   "src/_Z14ApproachLinearRiii.cpp",
+   "src/_ZN10FaderColorD2Ev.cpp",
+   "src/_ZN12dScStarSel_c6RenderEv.cpp",
+   "src/_ZN3HUD15RenderStarCountEv.cpp",
+   "src/_ZN4cstd4fdivEii.cpp",
+   "src/_ZN5Model13LoadTexAndPalER8BMD_File.cpp",
+   "src/_ZN5ModelD1Ev.cpp",
+   "src/_ZN5Stage13InitResourcesEv.cpp",
+   "src/_ZN5Stage16CleanupResourcesEv.cpp",
+   "src/_ZN5Stage20RenderBouncingArrowsEv.cpp",
+   "src/_ZN5Stage9LC_UpdateEv.cpp",
+   "src/_ZN7Minimap6RenderEv.cpp",
+   "src/_ZN8dScene_c14BeforeBehaviorEv.cpp",
+   "src/_ZN8dScene_c9SetFadersEP15FaderBrightness.cpp",
+   "src/engine/fader",
+   "src/engine/fader/_ZN10FaderColor11AdvanceFadeEv.cpp",
+   "src/engine/fader/_ZN9FaderWipe11AdvanceFadeEv.cpp",
+   "src/engine/fader/_ZN9FaderWipe14LoadAndSetFileEt.cpp",
+   "src/engine/fader/_ZN9FaderWipeD0Ev.c",
+   "src/func_020326ac.c",
+   "src/func_ov002_020f20f4.c",
+   "src/func_ov002_020f23f0.c"
+  ],
+  "port/hal/fdr_arm9_fader_seat.cpp": [
+   "src/UpdateRetryPrompt.cpp",
+   "src/_ZN7dWipe_c11AdvanceFadeEv.cpp",
+   "src/_ZN7dWipe_c15SetBackwardTimeEj.c",
+   "src/_ZN7dWipe_c8SetToEndEv.c",
+   "src/_ZN7dWipe_c8SetToEndEv.cpp",
+   "src/_ZN8dScene_c14BeforeBehaviorEv.cpp",
+   "src/engine/fader",
+   "src/engine/fader/_ZN10FaderColor11AdvanceFadeEv.cpp"
+  ],
+  "port/hal/fold2_faces.cpp": [
+   "src/func_ov002_020e4bb8.c"
+  ],
+  "port/hal/fs_mods.cpp": [
+   "src/_ZN5Model13LoadTexAndPalER8BMD_File.cpp",
+   "src/_ZN6Player6RenderEv.cpp",
+   "src/func_020462d0.c",
+   "src/func_ov002_020e5948.c"
+  ],
+  "port/hal/fwd_forwarders.cpp": [
+   "include/BowserPuzzleManager.h",
+   "include/Dorrie.h",
+   "port/unmatched/MgTrampolineTerror_",
+   "port/unmatched/Ov091_HostSites.cpp",
+   "src/_ZN22RotatingUpDownPlatform8BehaviorEv.cpp",
+   "src/_ZN6Dorrie8BehaviorEv.cpp",
+   "src/_ZN9JetStream8BehaviorEv.cpp"
+  ],
+  "port/hal/gap_art.cpp": [
+   "include/ActorBase.h",
+   "src/_ZN11dScMgBase_cC2Ev.cpp"
+  ],
+  "port/hal/gap_continuity.cpp": [
+   "src/Mg_RenderSpriteBothScaled.cpp",
+   "src/PachinkoBobOmb_DrawAll.c"
+  ],
+  "port/hal/ghost_tongue.h": [
+   "src/_ZN6Player6RenderEv.cpp",
+   "src/_ZN6Player8BehaviorEv.cpp"
+  ],
+  "port/hal/gx_upload_bridge.cpp": [
+   "src/_ZN5Model27LoadCompressedTextureToVramEPcjS0_.cpp",
+   "src/func_ov080_02125630.cpp"
+  ],
+  "port/hal/heap_vtable.cpp": [
+   "src/_ZN22ExpandingHeapAllocator10ReallocateEPvj.cpp",
+   "src/_ZN22ExpandingHeapAllocator9SetNodeIDEj.cpp",
+   "src/_ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE.cpp",
+   "src/_ZN6Memory8AllocateEjiPN5mHeap6Heap_tE.cpp"
+  ],
+  "port/hal/host_settings.cpp": [
+   "port/rollback"
+  ],
+  "port/hal/hud_load.cpp": [
+   "port/unmatched/HUD_InitResources.cpp",
+   "src/_ZN3HUD13InitResourcesEv.cpp"
+  ],
+  "port/hal/input_probe.cpp": [
+   "include/Animation.h",
+   "src/_Z14ApproachLinearRsss.cpp",
+   "src/_ZN3HUD13RenderVsTimerEv.cpp",
+   "src/_ZN3HUD15RenderStarCountEv.cpp",
+   "src/_ZN6Player17St_HoldLight_MainEv.cpp",
+   "src/_ZNK9Animation12WillHitFrameEi.cpp",
+   "src/func_ov002_020e8ef0.cpp"
+  ],
+  "port/hal/int4_rows.cpp": [
+   "include/ArrowSignRight.h",
+   "src/Curling2_ResolveStoneCollision.c",
+   "src/_ZN5ModelC1Ev.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+   "src/_ZN9dBgCh_Lin10GetClsnPosEv.cpp"
+  ],
+  "port/hal/intro_kuppa_dispatch.cpp": [
+   "src/func_ov002_020bd664.cpp",
+   "src/func_ov002_020f2dd4.cpp",
+   "src/func_ov002_020f37a0.cpp",
+   "src/func_ov002_020f5990.cpp",
+   "src/func_ov002_020f7d74.cpp"
+  ],
+  "port/hal/intro_ov002_seat.cpp": [
+   "src/func_ov002_020f6618.cpp"
+  ],
+  "port/hal/intro_script_records.cpp": [
+   "src/engine/fader/_ZN10FaderColorD1Ev.cpp"
+  ],
+  "port/hal/koopa_chuckya_faces.cpp": [
+   "include/WithMeshClsn.h"
+  ],
+  "port/hal/level_boot.cpp": [
+   "include/Actor.h",
+   "include/Stage.h",
+   "port/ov067_syms.txt",
+   "port/unmatched/Flamethrower_Behavior.c",
+   "port/unmatched/HUD_InitResources.cpp",
+   "port/unmatched/MeshCollider_DetectClsn_Sphere.cpp",
+   "port/unmatched/Player_InitResources.cpp",
+   "src/ExpandingHeapAllocator",
+   "src/IsStarCollected.c",
+   "src/_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij.cpp",
+   "src/_ZN18TextureTransformerD0Ev",
+   "src/_ZN3HUD17UpdateHealthMeterEv.cpp",
+   "src/_ZN3OAM4LoadEv.cpp",
+   "src/_ZN5Stage10CheckInputEv.cpp",
+   "src/_ZN5Stage13InitResourcesEv.cpp",
+   "src/_ZN5Stage16CleanupResourcesEv.cpp",
+   "src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc.cpp",
+   "src/_ZN5Stage19BeforeInitResourcesEv.cpp",
+   "src/_ZN5Stage9LC_UpdateEv.cpp",
+   "src/_ZN6Player13InitResourcesEv.cpp",
+   "src/_ZN6Player6RenderEv.cpp",
+   "src/_ZN6Player8BehaviorEv.cpp",
+   "src/_ZN7SkiLift",
+   "src/_ZN8Particle10SysTracker10InitialiseEv.cpp",
+   "src/_ZN8Particle10SysTrackerD1Ev.cpp",
+   "src/_ZN8SaveData19IsCharacterUnlockedEj.cpp",
+   "src/_ZN8dActor_c14BeforeBehaviorEv.cpp",
+   "src/_ZN8dActor_c19BeforeInitResourcesEv.cpp",
+   "src/_ZN8dScene_c20Initialise3dGraphicsEv.cpp",
+   "src/_ZN8dScene_c22ResetHardwareRegistersEv.cpp",
+   "src/_ZN9OneUpLogo13InitResourcesEv.cpp",
+   "src/_ZN9SpikeBomb13InitResourcesEv.cpp",
+   "src/func_ov001_020ab2e4.c",
+   "src/func_ov002_020bd600.c",
+   "src/func_ov002_020e5948.c",
+   "src/func_ov002_020e8ef0.cpp",
+   "src/func_ov002_020e9d18.c",
+   "src/func_ov007_020cc600.c",
+   "src/func_ov085_0212d5dc.cpp"
+  ],
+  "port/hal/level_change.cpp": [
+   "port/unmatched/ActorBase_AfterCleanupResources",
+   "src/_Z19LoadStandardObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+   "src/_ZN5Stage13InitResourcesEv.cpp",
+   "src/_ZN5Stage16CleanupResourcesEv.cpp",
+   "src/_ZN5Stage8BehaviorEv.cpp",
+   "src/_ZN5Stage9LC_UpdateEv.cpp",
+   "src/_ZN8dActor_c19BeforeInitResourcesEv.cpp",
+   "src/_ZN8dScene_c14BeforeBehaviorEv.cpp",
+   "src/_ZN8dScene_c15SetSceneToSpawnEjj.cpp",
+   "src/_ZN8dScene_c16SpawnIfNecessaryEv.cpp",
+   "src/engine/fader/_ZN15FaderBrightness7IsAtEndEv.cpp",
+   "src/func_0203b3c0.c",
+   "src/func_0203b438.c"
+  ],
+  "port/hal/link21_rows.cpp": [
+   "src/_ZN11MirrorLuigi8BehaviorEv.cpp",
+   "src/_ZN11dScMgBase_c11PaintSquareEiiii.cpp",
+   "src/_ZN11dScMgBase_cC2Ev.cpp",
+   "src/_ZN5Sound12PlayBank2_2DEj.cpp",
+   "src/_ZN6Player21St_WaitQuicksand_MainEv.cpp",
+   "src/_ZN7fBase_c9Virtual34Ejj.cpp",
+   "src/_ZN7fBase_cD1Ev.cpp",
+   "src/_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as.cpp",
+   "src/unnamed/ov063/func_ov063_02117cdc.c"
+  ],
+  "port/hal/lk4_eh_dtor_seat.cpp": [
+   "src/_ZN22ExpandingHeapAllocator13DeallocateAllEPFvPvPS_jEj.cpp"
+  ],
+  "port/hal/lk4_solidheap_seat.cpp": [
+   "src/_ZN18SolidHeapAllocator10ReallocateEPvj.cpp",
+   "src/_ZN5Stage13InitResourcesEv.cpp",
+   "src/_ZN6Memory8AllocateEjiPN5mHeap6Heap_tE.cpp",
+   "src/_ZN7fBase_c9Virtual34Ejj.cpp",
+   "src/_ZN7fBase_c9Virtual38Ejj.cpp",
+   "src/func_02034fbc.c"
+  ],
+  "port/hal/menu_bigmap.cpp": [
+   "src/_ZN5Stage8BehaviorEv.cpp"
+  ],
+  "port/hal/menu_recipe_lc.cpp": [
+   "src/_ZN5Stage6RenderEv.cpp",
+   "src/_ZN5Stage8BehaviorEv.cpp",
+   "src/_ZN5Stage9LC_UpdateEv.cpp",
+   "tools/prepare_lc_art.py"
+  ],
+  "port/hal/menu_recipe_recroom.cpp": [
+   "src/MiniGm_UpdateExitButton.cpp",
+   "src/MiniGm_UpdateGroupTabs.cpp",
+   "src/MiniGm_UpdatePageArrows.c",
+   "src/UpdateGameSelect.cpp",
+   "src/_ZN11dScMiniGm_c6RenderEv.cpp"
+  ],
+  "port/hal/menu_recipe_starsel.cpp": [
+   "src/_ZN12dScStarSel_c6RenderEv.cpp"
+  ],
+  "port/hal/menu_recipe_title.cpp": [
+   "src/func_ov007_020b0548"
+  ],
+  "port/hal/meshcollider_dtor_seat.cpp": [
+   "src/_ZN7dBgW_KcD1Ev.cpp"
+  ],
+  "port/hal/meshcolliderbase_vtable.cpp": [
+   "include/MeshColliderBase.h"
+  ],
+  "port/hal/message_compositor.cpp": [
+   "src/_ZN3HUD15RenderStarCountEv.cpp",
+   "src/_ZN3HUD15RenderTimeTimerEv.cpp",
+   "src/_ZN3HUD17UpdateHealthMeterEv.cpp",
+   "src/engine/fader/_ZN9FaderWipe11AdvanceFadeEv.cpp",
+   "src/func_0201f32c.c",
+   "src/func_0202ee94.c",
+   "src/func_020326ac.c"
+  ],
+  "port/hal/message_pump.cpp": [
+   "src/_ZN5Stage13UpdateMessageEv.cpp"
+  ],
+  "port/hal/method_faces.cpp": [
+   "include/Actor.h",
+   "include/Bird.h",
+   "include/Camera.h",
+   "include/Flag.h",
+   "include/PoppingLavaBubbles.h",
+   "port/unmatched/Cannon_Render.cpp",
+   "port/unmatched/ModelAnim_Renders.cpp",
+   "port/unmatched/RabbitKey_StateSeat.cpp",
+   "port/unmatched/TexSeq_Caller_LakituBro.cpp",
+   "src/_Z14ApproachLinearRsss.cpp",
+   "src/_ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_",
+   "src/_ZN4Bird6RenderEv.cpp",
+   "src/_ZN5Sound7PlaySubEjjj5Fix12IiEb.cpp",
+   "src/_ZN6Player14St_Owl_CleanupEv.cpp",
+   "src/_ZN8dActor_c11AfterRenderEj.cpp",
+   "src/_ZN8dActor_c13AfterBehaviorEj.cpp",
+   "src/_ZN8dScene_c11AfterRenderEj.cpp",
+   "src/_ZN8dScene_c13AfterBehaviorEj.cpp",
+   "src/_ZN8dScene_c14BeforeBehaviorEv.cpp",
+   "src/_ZN8dScene_c22BeforeCleanupResourcesEv.cpp",
+   "src/engine/fader",
+   "src/func_ov072_02121d50.c",
+   "src/func_ov080_0212513c.c",
+   "src/include"
+  ],
+  "port/hal/model_dtor_seat.cpp": [
+   "port/unmatched/Ov002_ModelAnimD0_020f6778.cpp",
+   "src/_ZN5Stage16CleanupResourcesEv.cpp"
+  ],
+  "port/hal/oam_lists.cpp": [
+   "config/arm9/overlays/ovNNN"
+  ],
+  "port/hal/os_thread.h": [
+   "src/_ZN3IRQ13VBlankHandlerEv.cpp"
+  ],
+  "port/hal/ov009_boot.cpp": [
+   "src/_ZN4Bird8BehaviorEv.cpp"
+  ],
+  "port/hal/ov070_shadow_faces.cpp": [
+   "include/Actor.h"
+  ],
+  "port/hal/particle_bridges.cpp": [
+   "port/unmatched/Particle_RideThroughs.cpp",
+   "src/_ZN4cstd3divEii.cpp",
+   "src/_ZN5dPa_c7level_c20checkYoganCallback_c14SpawnParticlesERN8Particle6SystemE.cpp",
+   "src/_ZN5dPa_c7level_c26checkWaterRippleCallback_c8OnUpdateERN8Particle6SystemEb.cpp",
+   "src/_ZN6Memory8AllocateEj.cpp"
+  ],
+  "port/hal/particle_vtable.cpp": [
+   "port/unmatched/Particle_RideThroughs.cpp",
+   "src/_ZN5dPa_c7level_c16simpleCallback_c14SpawnParticlesERN8Particle6SystemE"
+  ],
+  "port/hal/party_cyl.cpp": [
+   "src/_ZN5dCc_c6UnlinkEv.cpp",
+   "src/_ZN5dCc_c7ProcessEv.cpp",
+   "src/func_ov002_020e63a4.c"
+  ],
+  "port/hal/player_bridges.cpp": [
+   "port/rollback",
+   "port/unmatched/Player_ChangeState.cpp",
+   "port/unmatched/TexSeq_Caller_ov002_",
+   "src/_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+   "src/_ZN11ShadowModel12InitCylinderEv.cpp",
+   "src/_ZN11ShadowModel9DoSetFileEPcii.cpp",
+   "src/_ZN5Model6RenderEPK7Vector3.cpp",
+   "src/_ZN6Player18St_YoshiPower_MainEv.cpp",
+   "src/_ZN6Player6RenderEv.cpp",
+   "src/_ZN7fBase_c14BeforeBehaviorEv.cpp",
+   "src/_ZN9ModelAnim6RenderEPK7Vector3.cpp",
+   "src/_ZN9ModelAnim9Virtual18EjPK7Vector3.cpp",
+   "src/_ZN9ModelBase12ApplyOpacityEj.cpp",
+   "src/func_0204488c.c",
+   "src/func_02044b30.c",
+   "src/func_ov002_020d225c.c",
+   "src/func_ov002_020e3e00.cpp",
+   "src/func_ov002_020e444c.c",
+   "src/func_ov002_020e5948.c",
+   "src/func_ov002_020e6330.c",
+   "src/func_ov002_020e6350.c",
+   "src/func_ov085_0212df84.cpp"
+  ],
+  "port/hal/player_fields.h": [
+   "port/unmatched/Player_Behavior.cpp",
+   "src/_ZN6Player12St_Wait_InitEv.cpp",
+   "src/_ZN6Player13InitResourcesEv.cpp",
+   "src/_ZN6Player6RenderEv.cpp",
+   "src/func_ov002_020e3f90.c"
+  ],
+  "port/hal/pmf3_cells.cpp": [
+   "src/_ZN7fBase_c7ProcessEMS_FivEMS_FbvEMS_FvjE.cpp"
+  ],
+  "port/hal/pmf3_player_states.cpp": [
+   "src/_ZN6Player11ChangeStateERNS_5StateE.cpp",
+   "src/_ZN6Player8BehaviorEv.cpp"
+  ],
+  "port/hal/pmf_dispatch.h": [
+   "port/unmatched/Mg"
+  ],
+  "port/hal/pmf_seat4.cpp": [
+   "port/unmatched/Mg",
+   "src/Phase_State2.cpp"
+  ],
+  "port/hal/pmf_seat5.cpp": [
+   "src/_ZN5Unagi8BehaviorEv.cpp",
+   "src/func_ov102_021498e0.cpp"
+  ],
+  "port/hal/ptr_tables.cpp": [
+   "src/_ZN5Stage13InitResourcesEv.cpp"
+  ],
+  "port/hal/reverse_bridges.cpp": [
+   "include/Actor.h",
+   "src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii.c",
+   "src/_ZN4cstd4fdivEii.cpp",
+   "src/_ZN8dActor_c10FindWithIDEj.cpp",
+   "src/_ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3.cpp",
+   "src/_ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c.cpp.obj",
+   "src/_ZN9dBgCh_Lin10DetectClsnEv.cpp.obj",
+   "src/_ZNK5dBgPi9GetClsnIDEv.cpp",
+   "src/func_ov002_020bd250.cpp",
+   "src/func_ov002_020e2ea0.cpp"
+  ],
+  "port/hal/rollback.cpp": [
+   "port/rollback",
+   "src/func_02058940"
+  ],
+  "port/hal/rollback_probe.cpp": [
+   "port/rollback-spike"
+  ],
+  "port/hal/s4ov0_ov0table.cpp": [
+   "src/_ZN6Memory8AllocateEjiPN5mHeap6Heap_tE.cpp"
+  ],
+  "port/hal/scene_actor_faces.cpp": [
+   "include/ActorBase.h",
+   "src/_ZN5Scene",
+   "src/_ZN7fBase_c13InitResourcesEv.cpp"
+  ],
+  "port/hal/scene_boot.cpp": [
+   "include/ActorBase.h",
+   "include/Fader.h",
+   "include/FaderBrightness.h",
+   "port/slice_",
+   "port/tools/inferred_stub_guard",
+   "port/tools/t3_resolve.py",
+   "port/unmatched/Ov007_CellQuad_020c4684.cpp",
+   "port/unmatched/Ov007_OamCellBank_020c9688.cpp",
+   "port/unmatched/Scene_AfterCleanupResources",
+   "src/_ZN10dFdDummy_c11AdvanceFadeEv.cpp",
+   "src/_ZN10dFdDummy_c14SetForwardTimeEj.cpp",
+   "src/_ZN10dFdDummy_c15SetBackwardTimeEj.cpp",
+   "src/_ZN10dFdDummy_cD1Ev.cpp",
+   "src/_ZN10dScTitle_cD1Ev.cpp",
+   "src/_ZN11dScMiniGm_cD1Ev.cpp",
+   "src/_ZN12dScStarSel_c6RenderEv.cpp",
+   "src/_ZN3IRQ13VBlankHandlerEv.cpp",
+   "src/_ZN3OAM5ResetEv.cpp",
+   "src/_ZN7dWipe_c8SetToEndEv.cpp",
+   "src/_ZN7fBase_c13OnHeapCreatedEv.cpp",
+   "src/_ZN7fBase_c9Virtual34Ejj.cpp",
+   "src/_ZN8SaveData12ReadFileDataEjP12FileSaveData.cpp",
+   "src/_ZN8SaveData14SaveDataToCartEPcjj.cpp",
+   "src/_ZN8SaveData16ReadDataFromCartEPcjj.cpp",
+   "src/_ZN8SaveData16SetDefaultValuesEP12FileSaveData.cpp",
+   "src/_ZN8dScene_c14BeforeBehaviorEv.cpp",
+   "src/_ZN8dScene_c16SpawnIfNecessaryEv.cpp",
+   "src/_ZN8dScene_c18PrepareToSpawnBootEv.cpp",
+   "src/_ZN8dScene_c21AfterCleanupResourcesEj.cpp",
+   "src/_ZN9dScDSMT_c13InitResourcesEv.cpp",
+   "src/_ZN9dScDSMT_cD1Ev.cpp",
+   "src/__sinit_ov006_021304ac.c",
+   "src/actors",
+   "src/engine/fader/_ZN10FaderColor11AdvanceFadeEv.cpp",
+   "src/engine/fader/_ZN15FaderBrightness20IsBetweenStartAndEndEv.cpp",
+   "src/engine/fader/_ZN9FaderWipe11AdvanceFadeEv.cpp",
+   "src/func_ov007_020afc44.c",
+   "src/func_ov007_020b7090.c",
+   "src/func_ov007_020b9640.c",
+   "src/func_ov007_020c20b8.c",
+   "src/func_ov007_020c6e68.c",
+   "src/func_ov007_020c9688"
+  ],
+  "port/hal/scene_link100_base_faces.cpp": [
+   "include/ActorBase.h",
+   "src/_ZN7fBase_c16OnPendingDestroyEv.cpp",
+   "src/_ZN7fBase_c6RenderEv.cpp"
+  ],
+  "port/hal/scene_link100_boot.cpp": [
+   "port/ovNNN_syms.txt",
+   "src/_ZN7dScMB_c13InitResourcesEv.cpp",
+   "src/_ZN9BootScene13InitResourcesEv.cpp",
+   "src/_ZN9BootScene8BehaviorEv.cpp",
+   "src/_ZN9BootSceneD1Ev.cpp",
+   "src/dScBoot_c_classInit.c",
+   "src/func_0201a614.c",
+   "src/func_02034fbc.c"
+  ],
+  "port/hal/scene_link100_mb.cpp": [
+   "src/_ZN7dScMB_c8BehaviorEv.cpp",
+   "src/_ZN7dScMB_cD1Ev.cpp",
+   "src/_ZN8dScene_c14StartSceneFadeEjjt.cpp",
+   "src/_ZN8dScene_c18PrepareToSpawnBootEv.cpp"
+  ],
+  "port/hal/scene_mg.cpp": [
+   "port/tools/inferred_stub_guard",
+   "port/unmatched/MgSmartball_Slot18.cpp",
+   "src/BringOutNextStone.c",
+   "src/Coin_State0.c",
+   "src/Mg_RenderSpriteBothScaled.cpp",
+   "src/PachinkoBobOmb_State0.c",
+   "src/PachinkoBobOmb_State1.cpp",
+   "src/PachinkoFx_UpdateAll.c",
+   "src/PachinkoPopup_SpawnScore.c",
+   "src/Stone_Slide.c",
+   "src/Stone_WaitRelease.c",
+   "src/_ZN11dScMgBase_c11PaintSquareEiiii.cpp",
+   "src/_ZN11dScMgBase_c12IsAltVariantEv.cpp",
+   "src/_ZN13dScMgFlower_c8BehaviorEv.cpp",
+   "src/_ZN15dScMgPachinko_c10StartRoundEi.cpp",
+   "src/_ZN16dScMgPachinko2_c10StartRoundEi.cpp",
+   "src/_ZN16dScMgSmartball_c10StartRoundEi.cpp",
+   "src/_ZN16dScMgSmartball_c8BehaviorEv.cpp",
+   "src/_ZN19cMgSmartball_slot_c14RestoreInitialEv.cpp",
+   "src/_ZN20cMgSmartball_dokan_c14RestoreInitialEv.cpp",
+   "src/_ZN24cMgSmartball_propeller_c12SaveSnapshotEv.cpp",
+   "src/_ZN8dScene_c14BeforeBehaviorEv.cpp",
+   "src/__sinit_ov006_02131cd0.c",
+   "src/__sinit_ov006_02131fa4.c",
+   "src/func_ov006_02115b0c.c"
+  ],
+  "port/hal/scene_mg_amida.cpp": [
+   "src/Amida_RestoreBgChars.cpp",
+   "src/_ZN11dScMgBase_c11PaintSquareEiiii.cpp",
+   "src/_ZN12dScMgAmida_c6RenderEv.cpp",
+   "src/func_ov006_020d1958.cpp",
+   "src/func_ov006_020d3ba0.cpp"
+  ],
+  "port/hal/scene_mg_bomroom.cpp": [
+   "src/Round_SubState1.cpp"
+  ],
+  "port/hal/scene_mg_boombox.cpp": [
+   "port/tools/inferred_stub_adjudicated",
+   "src/Mg_GetSaveTable.c",
+   "src/_ZN12dScMgSound_cD1Ev"
+  ],
+  "port/hal/scene_mg_booseek.cpp": [
+   "src/Boo_State7.c",
+   "src/DrawBoos",
+   "src/DrawBoos.c",
+   "src/_ZN13dScMgTeresa_c10StartRoundEi.cpp",
+   "src/_ZN13dScMgTeresa_c11PaintSquareEiiii.cpp",
+   "src/_ZN13dScMgTeresa_c6RenderEv.cpp",
+   "src/_ZN13dScMgTeresa_c8BehaviorEv.cpp"
+  ],
+  "port/hal/scene_mg_card.cpp": [
+   "port/unmatched/MgCard_Traps.cpp",
+   "src/Dealer_IsBusy.c",
+   "src/Mg_GetSaveTable.c",
+   "src/__sinit_ov006_0213014c.c"
+  ],
+  "port/hal/scene_mg_cup.cpp": [
+   "port/unmatched/MgCup_Factory.cpp",
+   "src/Mg_GetSaveTable.c",
+   "src/Presenter_Update.cpp",
+   "src/_ZN11dScMgBase_c17SaveScreenForMenuEv.cpp",
+   "src/__sinit_ov006_021304ac.c"
+  ],
+  "port/hal/scene_mg_curling2.cpp": [
+   "src/_ZN14dScMgCurling_c13InitResourcesEv.cpp",
+   "src/_ZN15dScMgCurling2_c13InitResourcesEv.cpp",
+   "src/func_ov006_020e5b70.c"
+  ],
+  "port/hal/scene_mg_faces.cpp": [
+   "port/tools/inferred_stub_guard",
+   "port/unmatched/MgCurling_State_020e1854.cpp",
+   "port/unmatched/Player_ChangeState.cpp",
+   "src/Aim_Swing.c",
+   "src/Banner_Init.cpp",
+   "src/Mg_DrawLine.cpp",
+   "src/Mg_DrawMenu.cpp",
+   "src/Mg_DrawRecordRow.c",
+   "src/Mg_DrawRecordTable.c",
+   "src/Mg_UpdateMenu.cpp",
+   "src/SeparateStones.cpp",
+   "src/State05_Update.cpp",
+   "src/Stone_Slide.c",
+   "src/Stone_WaitRelease.c",
+   "src/UpdateRetryPrompt.cpp",
+   "src/_ZN10dMgPsOpt_c6UpdateEv.cpp",
+   "src/_ZN10dMgState_c8SetStateEi.cpp",
+   "src/_ZN14dScMgCurling_c13InitResourcesEv.cpp",
+   "src/_ZN14dScMgCurling_c8BehaviorEv.cpp",
+   "src/_ZN6Memory8AllocateEji.cpp",
+   "src/_ZN8dScene_c18AfterInitResourcesEj.cpp",
+   "src/func_02018770.c"
+  ],
+  "port/hal/scene_mg_flower.cpp": [
+   "port/unmatched/MgFlower_InitScore.cpp",
+   "src/DealPetals.cpp",
+   "src/FlowerFace_Construct.cpp",
+   "src/FlowerFace_Destruct.cpp",
+   "src/FlowerFace_Reset.c",
+   "src/_ZN13dScMgFlower_c13InitResourcesEv.cpp",
+   "src/_ZN13dScMgFlower_c8BehaviorEv.cpp",
+   "src/_ZN14dScMgCurling_c13InitResourcesEv.c",
+   "src/_ZN5Sound12PlayBank2_2DEj.cpp"
+  ],
+  "port/hal/scene_mg_jump.cpp": [
+   "src/Heyho_LoadResources.cpp",
+   "src/_ZN11dScMgJump_c11CanEndStateEi.cpp",
+   "src/_ZN11dScMgJump_c13InitResourcesEv.cpp",
+   "src/_ZN11dScMgJump_c16CleanupResourcesEv.cpp",
+   "src/_ZN11dScMgJump_cD1Ev.cpp",
+   "src/_ZN17MgBounceAndPounce19BeforeInitResourc"
+  ],
+  "port/hal/scene_mg_jump2.cpp": [
+   "src/Mg_GetSaveTable.c"
+  ],
+  "port/hal/scene_mg_luckystars.cpp": [
+   "src/Mg_GetSaveTable.c",
+   "src/__sinit_ov006_021333e0.c"
+  ],
+  "port/hal/scene_mg_mcarlo.cpp": [
+   "src/MgCoins_StepSpend.cpp",
+   "src/Mg_GetSaveTable.c"
+  ],
+  "port/hal/scene_mg_mcarlo2.cpp": [
+   "src/Mg_GetSaveTable.c"
+  ],
+  "port/hal/scene_mg_memory1.cpp": [
+   "src/Mg_GetSaveTable.c",
+   "src/__sinit_ov006_021314e4.c"
+  ],
+  "port/hal/scene_mg_memory2.cpp": [
+   "src/Mg_GetSaveTable.c"
+  ],
+  "port/hal/scene_mg_menu.cpp": [
+   "src/MiniGm_SaveIfDirty.cpp",
+   "src/UpdateGameSelect.cpp",
+   "src/_ZN8SaveData13SaveMinigamesEP16",
+   "src/_ZN8dScene_c14StartSceneFadeEjjt.cpp"
+  ],
+  "port/hal/scene_mg_psycheout.cpp": [
+   "port/unmatched/MgFlower_Slot2",
+   "src/Mg_GetSaveTable.c",
+   "src/_ZN12dScMg3DEsp_c10StartRoundEi.cpp",
+   "src/_ZN12dScMg3DEsp_c13InitResourcesEv",
+   "src/_ZN12dScMg3DEsp_c6RenderEv.cpp",
+   "src/_ZN12dScMg3DEsp_cD1Ev.cpp",
+   "src/d_s_mg3_d_esp.cpp"
+  ],
+  "port/hal/scene_mg_roulette.cpp": [
+   "port/unmatched/MgRoulette_Factory.cpp",
+   "src/Mg_GetSaveTable.c"
+  ],
+  "port/hal/scene_mg_slot1.cpp": [
+   "src/_ZN12dScMgSlot1_c10StartRoundEi.cpp",
+   "src/_ZN12dScMgSlot1_c9betIcon_c8BehaviorEv.cpp",
+   "src/d_s_mg_slot1.cpp"
+  ],
+  "port/hal/scene_mg_slot3.cpp": [
+   "src/Mg_GetSaveTable.c",
+   "src/Slot3_State2.c",
+   "src/_ZN12dScMgSlot3_c16InitMainScreenBgEv.cpp",
+   "src/_ZN12dScMgSlot3_c8BehaviorEv.cpp",
+   "src/_ZN12dScMgSlot3_cD1Ev.cpp"
+  ],
+  "port/hal/scene_mg_snowball.cpp": [
+   "src/../dScMgSnowball_c.h",
+   "src/Mg_GetSaveTable.c",
+   "src/_ZN15dScMgSnowball_c13InitResourcesEv"
+  ],
+  "port/hal/scene_mg_sound.cpp": [
+   "src/UpdateGameSelect.cpp",
+   "src/_ZN11dScMgBase_c17SaveScreenForMenuEv.cpp",
+   "src/_ZN11dScMgBase_cC2Ev.cpp"
+  ],
+  "port/hal/scene_mg_trampoline.cpp": [
+   "src/Mg_GetSaveTable.c"
+  ],
+  "port/hal/scene_mg_trampoline2.cpp": [
+   "src/Mg_GetSaveTable.c",
+   "src/_ZN6Player29TryExitCharacterDoorWithIntroEv.cpp"
+  ],
+  "port/hal/scene_mg_wiggler.cpp": [
+   "src/State19_Update.c",
+   "src/Wiggler_DrawPassA.c",
+   "src/Wiggler_StartPathA.c"
+  ],
+  "port/hal/scene_vs_menu.cpp": [
+   "include/ShadowModel.h",
+   "port/tools/inferred_stub_guard",
+   "src/_ZN10dScEntry_c15graphCallback_c14GraphCallback2Ev.cpp",
+   "src/_ZN10dScEntry_c6icon_c6RenderEv.cpp",
+   "src/_ZN10dScEntry_c6icon_c8BehaviorEv.cpp",
+   "src/func_ov075_021143e4.cpp",
+   "src/func_ov075_0211478c.c",
+   "src/func_ov075_021160dc.cpp",
+   "src/func_ov075_02116128",
+   "src/func_ov075_02116ad4.c"
+  ],
+  "port/hal/screen_gap.cpp": [
+   "port/slice_"
+  ],
+  "port/hal/screen_gap.h": [
+   "src/_ZN15dScMgPachinko_c13InitResourcesEv.cpp"
+  ],
+  "port/hal/sdat/consumer.cpp": [
+   "src/_ZN10StarMarker8BehaviorEv.cpp",
+   "src/_ZN6Memory8AllocateEjiPN5mHeap6Heap_tE.c",
+   "src/_ZN8dActor_c15GivePlayerCoinsER6Playerhj.cpp",
+   "src/func_020132d8.cpp",
+   "src/func_0204f03c.c",
+   "src/func_02051a98.c",
+   "src/func_02051bd0.c",
+   "src/func_ov002_020b16c4.c"
+  ],
+  "port/hal/sdat/mixer.cpp": [
+   "port/rollback"
+  ],
+  "port/hal/sdat/sdat.cpp": [
+   "src/func_0204f63c.cpp",
+   "src/func_02050f34.c",
+   "src/func_02051a98.c"
+  ],
+  "port/hal/sdat/sound_abi.cpp": [
+   "src/_ZN5Sound4PlayEjjRK7Vector3.cpp"
+  ],
+  "port/hal/sdat/sseq.cpp": [
+   "src/func_0204f82c.c",
+   "src/func_0204fafc.c"
+  ],
+  "port/hal/settings_live.h": [
+   "src/func_ov002_020d4748.cpp"
+  ],
+  "port/hal/settings_page_hooks.cpp": [
+   "src/_ZN5Stage9PS_UpdateEv.cpp"
+  ],
+  "port/hal/shims.cpp": [
+   "include/Fader.h",
+   "src/_Z14ApproachLinearRiii.cpp",
+   "src/engine/fader/_ZN5Fader13AdvanceInterpEv.cpp"
+  ],
+  "port/hal/slot9_oam_face.cpp": [
+   "src/_ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2.cpp",
+   "src/_ZN5Stage12RenderNumberEhiibi.cpp",
+   "src/_ZN5Stage6RenderEv.cpp"
+  ],
+  "port/hal/smoke_aliases_actor.cpp": [
+   "src/_ZN7fBase_c9Virtual34Ejj.cpp"
+  ],
+  "port/hal/smoke_aliases_anim.cpp": [
+   "src/_ZN4cstd3absEi.cpp",
+   "src/_ZN5ModelC1Ev.cpp"
+  ],
+  "port/hal/smoke_aliases_clsn.cpp": [
+   "src/_ZN4cstd3absEi.cpp",
+   "src/_ZN5ModelC1Ev.cpp"
+  ],
+  "port/hal/smoke_aliases_frames.cpp": [
+   "src/_ZN4cstd3absEi.cpp",
+   "src/_ZN5ModelC1Ev.cpp"
+  ],
+  "port/hal/smoke_aliases_fs.cpp": [
+   "src/_ZN4cstd3absEi.cpp"
+  ],
+  "port/hal/smoke_aliases_heap.cpp": [
+   "src/_ZN22ExpandingHeapAllocator10UnlinkNodeEP10MemoryNodeS1_.cpp",
+   "src/func_0204df54.cpp"
+  ],
+  "port/hal/smoke_aliases_model.cpp": [
+   "src/_ZN4cstd3absEi.cpp",
+   "src/_ZN5ModelC1Ev.cpp"
+  ],
+  "port/hal/smoke_aliases_modelanim.cpp": [
+   "src/_ZN4cstd3absEi.cpp",
+   "src/_ZN5ModelC1Ev.cpp"
+  ],
+  "port/hal/smoke_aliases_oam.cpp": [
+   "src/_ZN4cstd3absEi.cpp",
+   "src/_ZN5ModelC1Ev.cpp"
+  ],
+  "port/hal/smoke_aliases_persist.cpp": [
+   "src/_ZN7fBase_c9Virtual34Ejj.cpp"
+  ],
+  "port/hal/smoke_aliases_roots.cpp": [
+   "src/_ZN4cstd3absEi.cpp"
+  ],
+  "port/hal/smoke_aliases_savestate.cpp": [
+   "src/_ZN7fBase_c9Virtual34Ejj.cpp"
+  ],
+  "port/hal/smoke_aliases_soak.cpp": [
+   "src/_ZN4cstd3absEi.cpp",
+   "src/_ZN5ModelC1Ev.cpp"
+  ],
+  "port/hal/smoke_aliases_soak_anim.cpp": [
+   "src/_ZN4cstd3absEi.cpp",
+   "src/_ZN5ModelC1Ev.cpp"
+  ],
+  "port/hal/smoke_dtor_slots_actor.cpp": [
+   "src/_ZN11ShadowModelC1Ev",
+   "src/_ZN5ModelC1Ev.cpp",
+   "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp"
+  ],
+  "port/hal/smoke_dtor_slots_model.cpp": [
+   "src/_ZN5ModelC1Ev.cpp"
+  ],
+  "port/hal/smoke_dtor_slots_modelanim.cpp": [
+   "src/_ZN14BlendModelAnimC1Ev",
+   "src/_ZN5ModelC1Ev.cpp"
+  ],
+  "port/hal/smoke_fbase_ctor_actor.cpp": [
+   "src/_ZN11dScMgBase_cC2Ev.cpp"
+  ],
+  "port/hal/smoke_heap_seam_actor.cpp": [
+   "src/_ZN13HeapAllocator6RemoveEv.cpp",
+   "src/_ZN18NestedHeapIterator10FindNestedEPv.cpp",
+   "src/_ZN6Memory8AllocateEjiPN5mHeap6Heap_tE.cpp"
+  ],
+  "port/hal/smoke_host_globals_actor.cpp": [
+   "src/_ZN5Sound4PlayEjjRK7Vector3.cpp"
+  ],
+  "port/hal/smoke_player_oam_bridge.cpp": [
+   "src/_ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2.cpp"
+  ],
+  "port/hal/snd_globals.cpp": [
+   "src/func_020132d8.cpp",
+   "src/func_0204f278.cpp",
+   "src/func_0204fda4.cpp",
+   "src/func_0205212c.cpp"
+  ],
+  "port/hal/stage_bridges.cpp": [
+   "include/Stage.h",
+   "src/_ZN5Stage10LoadSkyboxEv.cpp",
+   "src/_ZN5Stage13InitResourcesEv.cpp",
+   "src/_ZN5Stage16CleanupResourcesEv.cpp",
+   "src/_ZN5Stage16OnPendingDestroyEv.cpp",
+   "src/_ZN5Stage19BeforeInitResourcesEv.cpp",
+   "src/_ZN5Stage6RenderEv.cpp",
+   "src/_ZN5Stage8BehaviorEv.cpp",
+   "src/_ZN7fBase_c9Virtual34Ejj.cpp",
+   "src/_ZN8Particle10SysTrackerC1Ev.cpp",
+   "src/_ZN8dScene_c14BeforeBehaviorEv.cpp",
+   "src/engine/fader/_ZN9FaderWipeD1Ev.cpp"
+  ],
+  "port/hal/stage_frame.cpp": [
+   "include/Stage.h",
+   "src/_ZN3G3X11SetFogTableEPv.cpp",
+   "src/_ZN5Stage12RenderNumberEhiibi.cpp",
+   "src/_ZN5Stage13UpdateMessageEv.cpp",
+   "src/_ZN5Stage6RenderEv.cpp",
+   "src/_ZN5Stage7PS_InitEv.cpp",
+   "src/_ZN5Stage8BehaviorEv.cpp",
+   "src/_ZN5Stage9LC_RenderEv.cpp",
+   "src/_ZN5Stage9PS_RenderEv.cpp",
+   "src/_ZN5Stage9PS_UpdateEv.cpp",
+   "src/_ZN6Player8BehaviorEv.cpp",
+   "src/_ZN7Message7Display",
+   "src/_ZN8Particle10SysTracker6UpdateEv.cpp",
+   "src/_ZN8dScene_c15SetSceneToSpawnEjj.cpp",
+   "src/func_ov002_020bd3a0.c"
+  ],
+  "port/hal/stage_geom.cpp": [
+   "include/MeshCollider.h",
+   "src/_ZN5Model17UpdateFileOffsetsER8BMD_File.cpp",
+   "src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc.cpp",
+   "src/_ZN5Stage9LoadModelEv.cpp",
+   "src/_ZN7dBgW_Kc10DetectClsnER9dBgCh_Gnd.cpp"
+  ],
+  "port/hal/stage_globals.cpp": [
+   "port/status/undersized-globals",
+   "src/_ZN9Butterfly13InitResourcesEv.cpp",
+   "src/func_0204fce8.c",
+   "src/func_ov075_021143e4.cpp"
+  ],
+  "port/hal/stage_mods.cpp": [
+   "src/_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij.cpp",
+   "src/_Z19LoadStandardObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+   "src/_ZN5Stage10LoadSkyboxEv.cpp",
+   "src/_ZN5Stage11GetSkyboxIDEv.cpp",
+   "src/_ZN5Stage13InitResourcesEv.cpp",
+   "src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc.cpp"
+  ],
+  "port/hal/stage_slot0.cpp": [
+   "include/ShadowModel.h",
+   "include/Stage.h",
+   "src/_ZN5Stage13InitResourcesEv.cpp",
+   "src/_ZN5Stage14LoadGraphics2DEbi.cpp",
+   "src/engine/fader/_ZN9FaderWipeC1Ev.cpp"
+  ],
+  "port/hal/star_flow.cpp": [
+   "src/_ZN5Sound22StopLoadedMusic_Layer1Ej.cpp",
+   "src/_ZN5Stage13InitResourcesEv.cpp",
+   "src/_ZN5Stage8BehaviorEv.cpp",
+   "src/_ZN6Player6RenderEv.cpp",
+   "src/_ZN6Player8BehaviorEv.cpp",
+   "src/_ZN9BootScene13InitResourcesEv.cpp",
+   "src/func_ov002_020e7554.c"
+  ],
+  "port/hal/sub_actors.cpp": [
+   "include/HUD.h",
+   "include/Minimap.h",
+   "src/_ZN3HUD14RenderRedCoinsEv.cpp",
+   "src/_ZN3HUD15CalculateDigitsEt.cpp",
+   "src/_ZN3HUD15RenderCoinCountEv.cpp",
+   "src/_ZN3HUD15RenderLifeCountEv.cpp",
+   "src/_ZN3HUD15RenderStarCountEv.cpp",
+   "src/_ZN3HUD15RenderTimeTimerEv.cpp",
+   "src/_ZN3HUD17RenderSilverStarsEv.cpp",
+   "src/_ZN5Stage20RenderBouncingArrowsEv.cpp",
+   "src/actors/dMap_c.cpp"
+  ],
+  "port/hal/sub_screen.cpp": [
+   "src/Hud_RenderSprite.cpp",
+   "src/LoadControllerModeText.c",
+   "src/LoadFont3D.c",
+   "src/Mg_GetWorkBuffer.c",
+   "src/PachinkoBobOmb_State0.c",
+   "src/PachinkoBobOmb_State1.cpp",
+   "src/RenderOamBothScreens.cpp",
+   "src/RenderOamMainScreen.cpp",
+   "src/_ZN3HUD19RenderCameraButtonsEv.cpp",
+   "src/_ZN3OAM12EnableSubOAMEv.cpp",
+   "src/_ZN3OAM5FlushEv.cpp",
+   "src/_ZN5Stage16CheckCameraInputEv.cpp",
+   "src/_ZN5Stage8BehaviorEv.cpp",
+   "src/func_0201d590.cpp",
+   "src/func_0203bb60.c",
+   "src/func_ov006_020d1ba0.cpp"
+  ],
+  "port/hal/thread_create.cpp": [
+   "src/func_020602bc.cpp"
+  ],
+  "port/hal/title_entry.cpp": [
+   "src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc.cpp",
+   "src/func_ov007_-"
+  ],
+  "port/hal/title_vtable_seat14d.cpp": [
+   "src/_ZN10dScTitle_c13InitResourcesEv.cpp",
+   "src/_ZN10dScTitle_c16CleanupResourcesEv.cpp",
+   "src/_ZN10dScTitle_c16OnPendingDestroyEv.cpp",
+   "src/_ZN10dScTitle_c6RenderEv.cpp",
+   "src/_ZN10dScTitle_c8BehaviorEv.cpp",
+   "src/_ZN10dScTitle_cD1Ev.cpp",
+   "src/func_ov003_020ad6ec.c"
+  ],
+  "port/hal/trampoline_records.cpp": [
+   "src/TrmpLine_Build.cpp",
+   "src/TrmpLine_Create.c",
+   "src/TrmpLine_CreateStartLineT2.c",
+   "src/TrmpLine_DrawAll.c",
+   "src/TrmpLine_UpdateAll.c"
+  ],
+  "port/hal/unmatch_aliases.cpp": [
+   "src/_ZN8Painting13InitResourcesEv.cpp"
+  ],
+  "port/hal/vs_arena.cpp": [
+   "src/_ZN5Sound13PlayCharVoiceEjjRK7Vector3.cpp",
+   "src/_ZN5Sound4PlayEjjRK7Vector3.cpp",
+   "src/_ZN5dCc_c6UnlinkEv.cpp",
+   "src/_ZN5dCc_c6UpdateEv.cpp",
+   "src/_ZN6Player18St_YoshiPower_MainEv.cpp",
+   "src/_ZN7fBase_c14BeforeBehaviorEv.cpp",
+   "src/actors/daObjMarioCap_c.cpp"
+  ],
+  "port/hal/vs_arena_grab.h": [
+   "src/func_ov002_020d869c.cpp"
+  ],
+  "port/hal/vtables_seat2.cpp": [
+   "src/_ZN11ShadowModelD0Ev.c",
+   "src/_ZN7ClipperD0Ev.c"
+  ],
+  "port/hal/w2_dtor_heads.cpp": [
+   "src/_ZN14CutsceneObject13InitResourcesEv.cpp",
+   "src/_ZN3G3X13SetClearColorEtiiib.cpp",
+   "src/_ZN8dScene_c18AfterInitResourcesEj.cpp",
+   "src/_ZN8dScene_c21AfterCleanupResourcesEj.cpp"
+  ],
+  "port/hal/w2_emc_seat.cpp": [
+   "src/_ZN14dBgW_KcMbgSclYC1Ev.cpp"
+  ],
+  "port/hal/w8a_stage_faces.cpp": [
+   "src/_ZN5Stage",
+   "src/_ZN5Stage10CheckInputEv.cpp",
+   "src/_ZN5Stage12RenderNumberEhiibi.cpp",
+   "src/_ZN5Stage16OnPendingDestroyEv.cpp"
+  ],
+  "port/hal/w8a_stage_storage.cpp": [
+   "src/_ZN5Stage",
+   "src/_ZN5Stage20PS_UpdateOptionsMenuEv.cpp",
+   "src/_ZN5Stage25PS_UpdateOkAndBackButtonsEb.cpp",
+   "src/_ZN5Stage7PS_InitEv.cpp"
+  ],
+  "port/hal/wm_arm7.cpp": [
+   "src/func_020417d0.c"
+  ],
+  "port/hal/wm_thread.cpp": [
+   "src/func_020423c8.c"
+  ],
+  "port/hal/wm_thread_face.cpp": [
+   "src/func_0203f604.c"
+  ],
+  "port/ntr/backup.cpp": [
+   "src/_ZN8SaveData14SaveDataToCartEPcjj.cpp",
+   "src/_ZN8SaveData16ReadDataFromCartEPcjj.cpp"
   ],
   "port/ntr/include/ntr/fs.h": [
    "tools/extract_rom.py"
@@ -340,15 +2151,1663 @@
   "port/ntr/include/ntr/gx.h": [
    "notes/assessment.md"
   ],
+  "port/ntr/include/ntr/ipc.h": [
+   "src/func_0205b858.c"
+  ],
   "port/ntr/include/ntr/mmio.h": [
    "notes/assessment.md",
-   "port/io.cpp"
+   "port/io.cpp",
+   "src/func_020555a4.c"
   ],
   "port/ntr/include/ntr/ppu.h": [
-   "notes/assessment.md"
+   "notes/assessment.md",
+   "src/Mg_RenderSpriteBothScaled.cpp"
+  ],
+  "port/ntr/include/ntr/smooth.h": [
+   "docs/SMOOTHING.md"
+  ],
+  "port/ntr/io.cpp": [
+   "port/rollback",
+   "src/_ZN4cstd10fdiv_asyncE",
+   "src/_ZN4cstd4ldivEii",
+   "src/_ZN8dScene_c22ResetHardwareRegistersEv.cpp"
   ],
   "port/ntr/lz77.cpp": [
    "src/dst"
+  ],
+  "port/ntr/ppu.cpp": [
+   "src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi.c"
+  ],
+  "port/ntr/ppu_audit.cpp": [
+   "src/_ZN2GX23SetBankForSubOBJ",
+   "src/_ZN3GXS14LoadOBJExtPlttEPKvjj.cpp",
+   "src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi.c"
+  ],
+  "port/ntr/ppu_sub.cpp": [
+   "src/Mg_RenderSpriteBothScaled.cpp",
+   "src/_ZN3GXS14LoadOBJExtPlttEPKvjj.cpp",
+   "src/_ZN3OAM5ResetEv.cpp"
+  ],
+  "port/ntr/rt.cpp": [
+   "src/_ZN3HUD15RenderTimeTimerEv.cpp"
+  ],
+  "port/ntr/runtime.cpp": [
+   "src/_ZN3IRQ13VBlankHandlerEv.cpp",
+   "src/_ZN3IRQ6EnableEv.cpp",
+   "src/_ZN4CP1526InvalidateInstructionCacheEjj.cpp",
+   "src/func_0201a4e4.c"
+  ],
+  "port/ntr/smooth.cpp": [
+   "docs/SMOOTHING.md"
+  ],
+  "port/tests/mp_sleepwake.cpp": [
+   "src/_ZN3IRQ13VBlankHandlerEv.cpp",
+   "src/func_0201a4e4.c"
+  ],
+  "port/tests/nametag.h": [
+   "src/LoadFont3D.c",
+   "src/_ZN5Stage14LoadGraphics2DEbi.cpp",
+   "src/_ZN6Player6RenderEv.cpp"
+  ],
+  "port/tests/smoke_actor.cpp": [
+   "src/_ZN14ArrowSignRight13InitResourcesEv.cpp"
+  ],
+  "port/tests/smoke_clsn.cpp": [
+   "port/unmatched/MeshCollider_DetectClsn_Sphere.cpp"
+  ],
+  "port/tests/smoke_heap.cpp": [
+   "src/_ZN22ExpandingHeapAllocator10DeallocateEPv.cpp",
+   "src/_ZN22ExpandingHeapAllocator8AllocateEji.cpp"
+  ],
+  "port/tests/smoke_player.cpp": [
+   "src/func_ov002_020bd664.cpp"
+  ],
+  "port/tests/walk_window.cpp": [
+   "include/FaderBrightness.h",
+   "include/RaycastGround.h",
+   "include/ShadowModel.h",
+   "port/hal/clsn_vtable",
+   "port/rollback",
+   "port/unmatched/LoadEntranceObjects.cpp",
+   "port/unmatched/MeshCollider_DetectClsn_Sphere.cpp",
+   "port/unmatched/Player_Behavior.cpp",
+   "src/_ZN10dScEntry_c15graphCallback_c14GraphCallback2Ev.cpp",
+   "src/_ZN10dScTitle_c8BehaviorEv.cpp",
+   "src/_ZN11CastleWater13Init",
+   "src/_ZN11ShadowModel8CleanAllEv.cpp",
+   "src/_ZN11dScMgCoin_c13InitResourcesEv.cpp",
+   "src/_ZN11dScMiniGm_c8BehaviorEv.cpp",
+   "src/_ZN16dScMgSmartball_c13InitResourcesEv.cpp",
+   "src/_ZN3IRQ13VBlankHandlerEv.cpp",
+   "src/_ZN5Stage10CheckInputEv.cpp",
+   "src/_ZN5Stage13InitResourcesEv.cpp",
+   "src/_ZN5Stage13UpdateMessageEv.cpp",
+   "src/_ZN5Stage8BehaviorEv.cpp",
+   "src/_ZN5Stage9LC_UpdateEv.cpp",
+   "src/_ZN5Stage9PS_UpdateEv.cpp",
+   "src/_ZN6Player8BehaviorEv.cpp",
+   "src/_ZN8daCoin_c19func_ov002_020b16c4EP6Player.c",
+   "src/actors/Goomboss.cpp",
+   "src/func_0201a4e4.c",
+   "src/func_ov001_020aaf40.c",
+   "src/func_ov002_020bd664.cpp",
+   "src/func_ov002_020f7780.c",
+   "src/func_ov073_021200e0.c",
+   "src/func_ov075_021160dc.cpp",
+   "src/func_ov085_0212d5dc",
+   "src/func_ov085_0212d5dc.cpp"
+  ],
+  "port/third_party/SDL3/include/SDL3/SDL_main.h": [
+   "docs/README-android.md",
+   "docs/README-main-functions.md",
+   "src/video/uikit/SDL_uikitappdelegate.m"
+  ],
+  "port/third_party/SDL3/include/SDL3/SDL_stdinc.h": [
+   "include/SDL_stdinc.h"
+  ],
+  "port/third_party/SDL3/include/SDL3/SDL_video.h": [
+   "docs/README-wayland.md"
+  ],
+  "port/third_party/SDL3/include/build_config/SDL_build_config_minimal.h": [
+   "src/filesystem/dummy",
+   "src/joystick/dummy",
+   "src/loadso/dummy",
+   "src/sensor/dummy"
+  ],
+  "port/third_party/SDL3/src/joystick/SDL_gamepad_db.h": [
+   "config/config.vdf"
+  ],
+  "port/third_party/SDL3/src/video/SDL_yuv.c": [
+   "src/src_format"
+  ],
+  "port/unmatched/ActorDerived_Spawn.cpp": [
+   "src/_ZN7dBase_c5SpawnEjP7fBase_cii.cpp"
+  ],
+  "port/unmatched/Actor_ClosestPlayer_OverlayReaders.cpp": [
+   "port/slice_gate",
+   "src/_ZN8dActor_c23HorzAngleToCPlayerOrAngEv.cpp",
+   "src/func_ov020_02111fc4.cpp",
+   "src/func_ov060_02111f08.c",
+   "src/func_ov084_02129cf4.c",
+   "src/func_ov094_02136024.cpp",
+   "src/func_ov102_02149078.c",
+   "src/game/actors/daTrs_c/_ZN7daTrs_c13InitResourcesEv.cpp",
+   "src/unnamed/ov063/func_ov063_02117650.c"
+  ],
+  "port/unmatched/Actor_HorzAngleToCPlayerOrAng.cpp": [
+   "src/_ZN8dActor_c23HorzAngleToCPlayerOrAngEv.cpp"
+  ],
+  "port/unmatched/Actor_OnAttacked2Dispatch.cpp": [
+   "src/func_ov002_020ef070.cpp"
+  ],
+  "port/unmatched/Actor_OnKickedDispatch.cpp": [
+   "src/func_ov002_020eeeb8.cpp"
+  ],
+  "port/unmatched/ArrowSign_OnAttacked1.cpp": [
+   "src/_ZN14ArrowSignRight11OnAttacked1ER8dActor_c.cpp"
+  ],
+  "port/unmatched/BobOmbBuddy_States.cpp": [
+   "src/func_ov084_0212c960.cpp",
+   "src/func_ov084_0212c9a8.cpp"
+  ],
+  "port/unmatched/BowserPuzzle_StateDispatch.cpp": [
+   "src/_ZN9JetStream8BehaviorEv.cpp",
+   "src/func_ov064_0211982c.cpp"
+  ],
+  "port/unmatched/Bubba_ChaseGate.cpp": [
+   "port/tools/closestplayer_guard",
+   "src/func_ov032_02111350.c"
+  ],
+  "port/unmatched/BulletBill_Behavior.cpp": [
+   "src/_ZN10BulletBill8BehaviorEv.cpp",
+   "src/__sinit_ov079_021279d4.c"
+  ],
+  "port/unmatched/Bullet_StateDispatch.cpp": [
+   "src/_ZN6Bullet8BehaviorEv.cpp",
+   "src/func_ov002_020fed2c.cpp"
+  ],
+  "port/unmatched/Bully_AfterClsn.cpp": [
+   "include/Bully.h",
+   "src/_ZN5Bully16UpdateDeathStateEv.cpp"
+  ],
+  "port/unmatched/Cap_StateDispatch.cpp": [
+   "src/_Z11UpdateAngleRssis.cpp"
+  ],
+  "port/unmatched/Coin_Behavior.cpp": [
+   "src/_ZN4Coin8BehaviorEv.cpp"
+  ],
+  "port/unmatched/Crate_StateDispatch.cpp": [
+   "src/Crate_SetState.cpp",
+   "src/func_ov098_02138b70.cpp"
+  ],
+  "port/unmatched/CylinderClsn_Process.cpp": [
+   "include/CylinderClsn.h",
+   "src/_ZN5dCc_c7ProcessEv.cpp"
+  ],
+  "port/unmatched/DaPgDfdr_StateDispatch.cpp": [
+   "src/__sinit_ov027_02112df8.cpp"
+  ],
+  "port/unmatched/Door_Behavior.cpp": [
+   "src/func_ov100_021453d8.cpp"
+  ],
+  "port/unmatched/Enemy_UpdateDeath.cpp": [
+   "src/_ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr.cpp",
+   "src/func_ov002_020aea30.cpp"
+  ],
+  "port/unmatched/ExclamationSwitch_StateDispatch.cpp": [
+   "src/func_ov002_020ba4d8.cpp",
+   "src/func_ov002_020ba520.cpp"
+  ],
+  "port/unmatched/FaderColor_TailPad_HostAbi.h": [
+   "include/FaderColor.h"
+  ],
+  "port/unmatched/Fader_HostAbi.h": [
+   "include/Fader.h",
+   "include/FaderBrightness.h",
+   "src/_ZN8dScene_c14BeforeBehaviorEv.cpp",
+   "src/_ZN8dScene_c9SetFadersEP15FaderBrightness.cpp"
+  ],
+  "port/unmatched/Fish_Behavior.cpp": [
+   "src/_ZN4Fish8BehaviorEv.cpp"
+  ],
+  "port/unmatched/Goomboss_HostSites.cpp": [
+   "port/unmatched/ModelAnim_Renders.cpp",
+   "src/_ZN3Amp16Cleanup-",
+   "src/_ZN8Goomboss6RenderEv.cpp",
+   "src/func_ov074_021222e0.cpp"
+  ],
+  "port/unmatched/HootTheOwl_StateDispatch.cpp": [
+   "include/HootTheOwl.h",
+   "src/_ZN10HootTheOwl8BehaviorEv.cpp",
+   "src/func_ov094_02136188.cpp"
+  ],
+  "port/unmatched/HostGen4_CxxNameBridges.cpp": [
+   "src/Boo_State3.c",
+   "src/CountRubbedTiles.c",
+   "src/Scene_State2.c",
+   "src/Scene_State3.c",
+   "src/UpdateRubbing.c",
+   "src/_ZN8Goomboss8BehaviorEv.cpp",
+   "src/func_ov074_02121800.c"
+  ],
+  "port/unmatched/Klepto_PathPtrFaces.cpp": [
+   "src/_ZN7PathPtr6FromIDEj.cpp",
+   "src/_ZN7PathPtrC1Ev.cpp",
+   "src/func_ov062_0211c2f4.cpp"
+  ],
+  "port/unmatched/Klepto_StateDispatch.cpp": [
+   "src/_ZN6Klepto8BehaviorEv.cpp",
+   "src/func_ov062_0211c658.cpp"
+  ],
+  "port/unmatched/KoopaChuckya_StateDispatch.cpp": [
+   "port/unmatched/Koopa_Render.cpp",
+   "src/Chuckya_ChangeState.cpp",
+   "src/_ZN7Chuckya8BehaviorEv.cpp",
+   "src/func_ov062_02117724.c"
+  ],
+  "port/unmatched/LakituBro_Behavior.cpp": [
+   "src/_ZN9LakituBro8BehaviorEv.cpp"
+  ],
+  "port/unmatched/Lakitu_HostSites.cpp": [
+   "src/_ZN6Lakitu13InitResourcesEv.cpp",
+   "src/_ZN6Lakitu6RenderEv.cpp",
+   "src/_ZN6LakituD0Ev.c",
+   "src/_ZN6LakituD1Ev.cpp",
+   "src/func_ov077_02124718.cpp",
+   "src/func_ov077_02124754.cpp"
+  ],
+  "port/unmatched/Lakitu_ShadowFaces.cpp": [
+   "src/_ZN5Spiny13InitResourcesEv.cpp",
+   "src/_ZN5dBgCh18StopDetectingWaterEv.cpp",
+   "src/func_ov077_02123c6c.cpp",
+   "src/func_ov077_021244d4.cpp",
+   "src/func_ov077_02124c28.cpp"
+  ],
+  "port/unmatched/LuigiInfection_Hit.cpp": [
+   "src/func_ov002_020d869c.cpp"
+  ],
+  "port/unmatched/Mg3DEsp_Faces.cpp": [
+   "src/Trmp2Mario_Destruct.cpp",
+   "src/Trmp3DMario_Destruct.cpp",
+   "src/_ZN10StarMarkerD1Ev.cpp",
+   "src/_ZN12dScMg3DEsp_c13InitResourcesEv.cpp",
+   "src/_ZN12dScMg3DEsp_cD1Ev.cpp",
+   "src/_ZN15TextureSequenceD1Ev.cpp",
+   "src/_ZN15dMg3DEspModel_c13InitResourcesEv.cpp",
+   "src/_ZN15dMg3DEspModel_cD1Ev.cpp",
+   "src/_ZN18TextureTransformerD1Ev.cpp",
+   "src/_ZN8Particle10SysTrackerD1Ev.cpp",
+   "src/func_ov006_020e7f5c.cpp",
+   "src/func_ov006_020e8e10.cpp"
+  ],
+  "port/unmatched/Mg3DEsp_FieldPmf.cpp": [
+   "src/_ZN15dMg3DEspModel_c6RenderEv.cpp",
+   "src/_ZN15dMg3DEspModel_c8BehaviorEv.cpp"
+  ],
+  "port/unmatched/Mg3DEsp_StateDispatch.cpp": [
+   "src/_ZN12dScMg3DEsp_c8BehaviorEv.cpp",
+   "src/__sinit_ov006_02130a08.c",
+   "src/func_ov006_020e82fc.cpp",
+   "src/func_ov006_020e8830.c",
+   "src/func_ov006_020e8a44",
+   "src/func_ov006_020e8d08.cpp",
+   "src/func_ov006_020e9374.cpp",
+   "src/func_ov006_020e9b70"
+  ],
+  "port/unmatched/MgAmida_Faces.cpp": [
+   "src/Amida_SaveBgChars.cpp",
+   "src/Mg_DrawLine",
+   "src/_ZN11dScMgBase_c11PaintSquareEiiii.cpp",
+   "src/_ZN12dScMgAmida_c8BehaviorEv.cpp",
+   "src/func_ov002_020f5b98.c",
+   "src/func_ov006_020d1ba0.cpp",
+   "src/func_ov006_020d25fc.c",
+   "src/func_ov006_020d36a4",
+   "src/func_ov006_020d36a4.cpp",
+   "src/func_ov006_020d3ba0.cpp",
+   "src/func_ov00X_020d27dc",
+   "src/func_ov00X_020d36a4"
+  ],
+  "port/unmatched/MgBSC_Faces.cpp": [
+   "src/MgCoins_RaiseBet.c",
+   "src/MgCoins_StepLose.cpp"
+  ],
+  "port/unmatched/MgBSC_StateDispatch.cpp": [
+   "src/__sinit_ov006_0213326c.c",
+   "src/__sinit_ov006_021333e0.c"
+  ],
+  "port/unmatched/MgBase_ShadowSlot19.cpp": [
+   "src/State18_Update.c",
+   "src/State19_Update.c"
+  ],
+  "port/unmatched/MgBase_Slot1.cpp": [
+   "port/unmatched/MgBase_DeclConflict.cpp"
+  ],
+  "port/unmatched/MgBase_Slot7.cpp": [
+   "port/unmatched/MgBase_DeclConflict.cpp",
+   "src/_ZN8dScene_c14BeforeBehaviorEv.cpp"
+  ],
+  "port/unmatched/MgBase_StateDispatch.cpp": [
+   "port/tools/inferred_stub_guard",
+   "port/unmatched/MgBase_StateSetter",
+   "src/Banner_Draw.cpp",
+   "src/Banner_DrawLevelNumber.c",
+   "src/Banner_Init.cpp",
+   "src/Banner_SetupNone.c",
+   "src/Banner_Update.cpp",
+   "src/Mg_DrawFx.cpp",
+   "src/Mg_GetLevel.c",
+   "src/Mg_UpdateFx.cpp",
+   "src/State05_Update.cpp",
+   "src/UpdateRetryPrompt.cpp",
+   "src/__sinit_ov004_020b948c.c",
+   "src/__sinit_ov004_020b955c.c"
+  ],
+  "port/unmatched/MgBase_StateSetter.cpp": [
+   "config/arm9/overlays/ov004/relocs",
+   "src/Banner_IsPressFinished.c",
+   "src/Mg_CallStartRound.cpp",
+   "src/Mg_SetSharedState.cpp",
+   "src/State12_Enter.c",
+   "src/State16_Update.c",
+   "src/State17_Update.c",
+   "src/_ZN10dMgState_c8SetStateEi.cpp"
+  ],
+  "port/unmatched/MgBomroom_StateDispatch.cpp": [
+   "src/Bomb_State5.cpp",
+   "src/Bomb_State6",
+   "src/FlowerFace_Update.cpp",
+   "src/Round_State3.cpp",
+   "src/UpdateBombs.cpp",
+   "src/_ZN14dScMgBomroom_c8BehaviorEv.cpp"
+  ],
+  "port/unmatched/MgBounceAndPounce_StateDispatch.cpp": [
+   "src/BeginIntro.c",
+   "src/_ZN11dScMgJump_c13InitResourcesEv",
+   "src/_ZN11dScMgJump_c8BehaviorEv.cpp"
+  ],
+  "port/unmatched/MgCoin_Faces.cpp": [
+   "port/tools/inferred_stub_guard",
+   "src/Bag_Draw.c",
+   "src/Block_State2.cpp",
+   "src/Phase_State3.cpp",
+   "src/Phase_State4.c",
+   "src/_ZN11dScMgBase_cC2Ev.cpp",
+   "src/_ZN14dScMgCurling_c13InitResourcesEv.cpp",
+   "src/func_020127a4.c"
+  ],
+  "port/unmatched/MgCoin_StateDispatch.cpp": [
+   "src/Bag_Update",
+   "src/Block_UpdateAll.cpp",
+   "src/Caption_Update",
+   "src/Coin_State0.c",
+   "src/Phase_State1.c",
+   "src/Phase_State2",
+   "src/Phase_State3.cpp",
+   "src/Phase_State4.c",
+   "src/_ZN14dScMgCurling_c13InitResourcesEv.cpp",
+   "src/__sinit_ov006_0213014c.c"
+  ],
+  "port/unmatched/MgCup_StateDispatch.cpp": [
+   "src/__sinit_ov006_021303d0.c"
+  ],
+  "port/unmatched/MgCurling2_StateDispatch.cpp": [
+   "port/tools/inferred_stub_guard",
+   "src/_ZN15dScMgCurling2_c8BehaviorEv",
+   "src/_ZN15dScMgCurling2_c9StepXAndYEi",
+   "src/_ZN15dScMgCurling2_c9StepXOnlyEi",
+   "src/__sinit_ov006_02130758.c",
+   "src/func_ov006_020e5b70.c",
+   "src/func_ov006_020e6354.cpp"
+  ],
+  "port/unmatched/MgCurling_StateDispatch.cpp": [
+   "port/tools/inferred_stub_guard",
+   "port/unmatched/MgCurling_Collide_020e20bc.cpp",
+   "src/Bit_RunKindA.cpp",
+   "src/Bit_RunKindB.cpp",
+   "src/Bit_UpdateAll",
+   "src/Scene_Play.cpp",
+   "src/Stone_Collide.c",
+   "src/_ZN14dScMgCurling_c8BehaviorEv.cpp",
+   "src/__sinit_ov006_021304ac.c"
+  ],
+  "port/unmatched/MgD3DBase_ObjStateDispatch.cpp": [
+   "port/unmatched/MgJump2_SubDispatch.cpp",
+   "src/Heyho_Update.cpp",
+   "src/_ZN10dMgState_c8SetStateEi.cpp",
+   "src/_ZN12dScMgJump2_c8BehaviorEv.cpp"
+  ],
+  "port/unmatched/MgFlower_SubDispatch.cpp": [
+   "port/tools/inferred_stub_guard",
+   "src/FlowerFace_IsIdle.c",
+   "src/FlowerFace_PlayIdle.c",
+   "src/FlowerFace_PlayPetalPulled.c",
+   "src/FlowerFace_PlayReactA.c",
+   "src/FlowerFace_PlayReactB.c",
+   "src/FlowerFace_Update.cpp",
+   "src/_ZN13dScMgFlower_c8BehaviorEv.cpp"
+  ],
+  "port/unmatched/MgJump2_Faces.cpp": [
+   "src/Heyho_LoadResources.cpp",
+   "src/Mg_DrawMenu.cpp",
+   "src/_ZN14dScMgCurling_c13InitResourcesEv.cpp",
+   "src/_ZN8dScene_c11AfterRenderEj.cpp",
+   "src/_ZN9Animation8LoadFileER13SharedFilePtr.cpp",
+   "src/_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj.c"
+  ],
+  "port/unmatched/MgLuigi_Faces.cpp": [
+   "include/private/ov004_obj_vtbl.h",
+   "src/Mg_DrawScoreTally.c",
+   "src/Mg_DrawTally.cpp",
+   "src/_ZN12dScMgLuigi_c12UpdateRewardEv.c"
+  ],
+  "port/unmatched/MgLuigi_StateDispatch.cpp": [
+   "src/_ZN12dScMgLuigi_c10UpdateIrisEv",
+   "src/_ZN12dScMgLuigi_c13CurtainUpdateEi",
+   "src/__sinit_ov006_02130f64.c",
+   "src/func_ov002_020f2790.c"
+  ],
+  "port/unmatched/MgMemory1_Faces.cpp": [
+   "src/func_ovNNN_020f3e68"
+  ],
+  "port/unmatched/MgMemory1_StateDispatch.cpp": [
+   "src/_ZN13dScMgMemory_c11StateResultEv",
+   "src/_ZN13dScMgMemory_c9StatePlayEv",
+   "src/__sinit_ov006_021311c8.c"
+  ],
+  "port/unmatched/MgMemory2_Faces.cpp": [
+   "include/ShadowModel.h",
+   "src/Dealer_Draw.cpp",
+   "src/Dealer_PlayIdle.cpp",
+   "src/Dealer_StartCollect.cpp",
+   "src/Dealer_StateDeal.cpp",
+   "src/MascotWalker_Load.cpp",
+   "src/MascotWalker_StatePause.cpp",
+   "src/MgCoins_AddBetCoin.cpp",
+   "src/_ZN11ShadowModel9-",
+   "src/_ZN11dScMgBase_cC2Ev.cpp",
+   "src/_ZN14BlendModelAnim7SetAnimER8BCA_-",
+   "src/_ZN14dScMgCurling_c13InitResourcesEv.cpp",
+   "src/_ZN3GXS10LoadBGPlttEPKvjj.cpp",
+   "src/func_02045ec4.c",
+   "src/func_ov002_020f5b98.c"
+  ],
+  "port/unmatched/MgMemory2_FieldPmf.cpp": [
+   "src/Coin_Launch.c",
+   "src/Coin_MoveThenBank.c",
+   "src/Coin_MoveThenRise.c",
+   "src/Coin_MoveThenRiseSpent.c",
+   "src/Coin_PlacePayout.c",
+   "src/Coin_Reset.c",
+   "src/Coin_Return.c",
+   "src/Coin_SendOff.c",
+   "src/Coin_Spend.c",
+   "src/Coin_Update.cpp",
+   "src/Dealer_IsBusy.c",
+   "src/Dealer_IsIdle.c",
+   "src/Dealer_IsIdleAtRest.c",
+   "src/Dealer_Update.cpp",
+   "src/FlowerFace_IsIdle.c",
+   "src/MascotWalker_StartNextPath.cpp",
+   "src/MascotWalker_StartPause.c",
+   "src/MascotWalker_StatePause.cpp",
+   "src/MascotWalker_Update.cpp"
+  ],
+  "port/unmatched/MgMemory2_StateDispatch.cpp": [
+   "src/_ZN14dScMgMemory2_c11StateResultEv",
+   "src/_ZN14dScMgMemory2_c9StatePlayEv",
+   "src/__sinit_ov006_021314e4.c"
+  ],
+  "port/unmatched/MgPachinko2_Dtor.cpp": [
+   "src/_ZN11dScMgBase_cD2Ev.cpp",
+   "src/_ZN16dScMgPachinko2_cD1Ev.cpp"
+  ],
+  "port/unmatched/MgPachinko2_Faces.cpp": [
+   "src/Pachinko_CheckTargetsLeft.c"
+  ],
+  "port/unmatched/MgPachinko2_StateDispatch.cpp": [
+   "src/Paddle_CheckBallHits.c",
+   "src/Paddle_UpdateAll.cpp",
+   "src/UpdateRoundEnd.c",
+   "src/__sinit_ov006_02131cd0.c"
+  ],
+  "port/unmatched/MgPachinko_Dtor.cpp": [
+   "src/_ZN15dScMgPachinko_cD1Ev.cpp"
+  ],
+  "port/unmatched/MgPachinko_Faces.cpp": [
+   "src/Pachinko_CheckTargetsLeft.c",
+   "src/_ZN14dScMgCurling_c13InitResourcesEv.cpp",
+   "src/_ZN15dScMgPachinko_c13InitResourcesEv.cpp"
+  ],
+  "port/unmatched/MgPachinko_StateDispatch.cpp": [
+   "port/tools/inferred_stub_guard",
+   "src/PachinkoBg_Update.cpp",
+   "src/PachinkoPipe_State0.c",
+   "src/__sinit_ov006_02131a38.c"
+  ],
+  "port/unmatched/MgPachinko_Traps.cpp": [
+   "port/tools/inferred_stub_guard",
+   "src/PachinkoBall_State3.c",
+   "src/PachinkoBall_State4.c",
+   "src/PachinkoFlyer_State1.c",
+   "src/_ZN15dScMgPachinko_c6RenderEv.cpp",
+   "src/_ZN15dScMgPachinko_c8BehaviorEv.cpp"
+  ],
+  "port/unmatched/MgPanel_Faces.cpp": [
+   "src/DealPuzzle.cpp"
+  ],
+  "port/unmatched/MgPanel_StateDispatch.cpp": [
+   "src/Scene_State6.c",
+   "src/__sinit_ov006_02131fa4.c"
+  ],
+  "port/unmatched/MgRoulette_WheelDispatch.cpp": [
+   "port/unmatched/MgMemory2_ShadowSlot_020c06dc.cpp"
+  ],
+  "port/unmatched/MgShared4f38_ShadowFader_020c2924.cpp": [
+   "port/unmatched/MgShared4f38_ModelRender_020c29dc.cpp",
+   "src/Presenter_PlayIdle.cpp",
+   "src/Presenter_ResetPose.cpp"
+  ],
+  "port/unmatched/MgShared4f38_SubDispatch.cpp": [
+   "src/Presenter_IsIdle.c",
+   "src/Presenter_StateAnim1.c",
+   "src/Presenter_StateAnim2.c",
+   "src/Presenter_StateAnim4.cpp",
+   "src/Presenter_StateAnim7.cpp",
+   "src/Presenter_StateAnim7Loop.c",
+   "src/Presenter_StateIdle.cpp",
+   "src/Presenter_TrackStylus.c",
+   "src/Presenter_Update.cpp",
+   "src/Presenter_UpdateMatrix.c"
+  ],
+  "port/unmatched/MgSlot3_StateDispatch.cpp": [
+   "src/Slot3_State0.c",
+   "src/Slot3_State1.c",
+   "src/Slot3_State2.c",
+   "src/Slot3_State3and4.cpp",
+   "src/Slot3_State6.c",
+   "src/_ZN12dScMgSlot3_c8BehaviorEv.cpp",
+   "src/__sinit_ov006_02132894.c"
+  ],
+  "port/unmatched/MgSmartball_Faces.cpp": [
+   "src/_ZN14dScMgCurling_c13InitResourcesEv.cpp",
+   "src/_ZN14dScMgCurling_cD0Ev",
+   "src/_ZN16dScMgSmartball_c13InitResourcesEv.cpp",
+   "src/_ZN16dScMgSmartball_c6RenderEv.cpp",
+   "src/_ZN16dScMgSmartball_c8BehaviorEv.cpp"
+  ],
+  "port/unmatched/MgSmartball_HostAbi.h": [
+   "src/_ZN16dScMgSmartball_c6RenderEv.cpp",
+   "src/_ZN16dScMgSmartball_c8BehaviorEv.cpp"
+  ],
+  "port/unmatched/MgSmartball_Traps.cpp": [
+   "port/tools/inferred_stub_guard",
+   "src/_ZN16dScMgSmartball_c15InitSubScreenBgEv.cpp",
+   "src/_ZN16dScMgSmartball_c21AfterCleanupResourcesEj.cpp",
+   "src/_ZN16dScMgSmartball_c6RenderEv.cpp",
+   "src/_ZN16dScMgSmartball_c8BehaviorEv.cpp",
+   "src/func_ov006_021115cc.c",
+   "src/func_ov006_02111b90.c",
+   "src/func_ov006_02111e48.c",
+   "src/func_ov006_02115150.c",
+   "src/func_ov006_02115248.cpp",
+   "src/func_ov006_02115480.c",
+   "src/func_ov006_02115b0c.c"
+  ],
+  "port/unmatched/MgSnowball_Faces.cpp": [
+   "src/BuildCourse.cpp",
+   "src/DrawCourseColumn.c",
+   "src/UpdateSnowball.cpp",
+   "src/dScMgSnowball_c_Construct.cpp"
+  ],
+  "port/unmatched/MgSnowball_StateDispatch.cpp": [
+   "src/Bit_RunKindA",
+   "src/Bit_RunKindA.cpp",
+   "src/Bit_RunKindB",
+   "src/Bit_RunKindB.cpp",
+   "src/Bit_UpdateAll.cpp",
+   "src/__sinit_ov006_021333e0.c"
+  ],
+  "port/unmatched/MgSound_StateDispatch.cpp": [
+   "src/Note_StateOpening.cpp",
+   "src/Presenter_PlayAnim7Loop.c"
+  ],
+  "port/unmatched/MgTeresa_StateDispatch.cpp": [
+   "src/Boo_State7.c",
+   "src/DrawBoos.c",
+   "src/UpdateBoos.cpp",
+   "src/_ZN13dScMgTeresa_c8BehaviorEv.cpp",
+   "src/__sinit_ov006_02132f68.c"
+  ],
+  "port/unmatched/MgTrampolineTerror_Faces.cpp": [
+   "port/unmatched/Ov085_Behaviors.cpp",
+   "src/Trmp2Mario_BounceOffLineA.cpp",
+   "src/Trmp2Mario_EnterState1.cpp",
+   "src/Trmp2Mario_Update.cpp",
+   "src/Trmp2Mario_UpdateAll.cpp",
+   "src/Trmp3DMario_PickIdleAnim.cpp",
+   "src/TrmpItem_GrowScale.c",
+   "src/TrmpItem_Load.cpp",
+   "src/TrmpLine_CreateStartLineT2.c",
+   "src/TrmpLine_DrawAll.c",
+   "src/TrmpLine_LoadTextures.cpp",
+   "src/TrmpLine_PushJumper.c",
+   "src/TrmpLine_StateFlex.c",
+   "src/_Z15ApproachLinear2Riii.cpp",
+   "src/_ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj.c",
+   "src/_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE.c",
+   "src/_ZN8dScene_c11AfterRenderEj.cpp"
+  ],
+  "port/unmatched/MgTrampolineTerror_MarioDispatch.cpp": [
+   "src/Trmp2Mario_BounceOffLineA.cpp",
+   "src/Trmp2Mario_Update.cpp",
+   "src/TrmpItem_HitTest2D.c",
+   "src/TrmpItem_ProjectToScreen.c",
+   "src/TrmpItem_ReflectOffLine.cpp",
+   "src/TrmpItem_SetMotion0.c",
+   "src/TrmpItem_SetMotion1.c",
+   "src/TrmpItem_SetMotion2.c",
+   "src/TrmpItem_SetMotion3.c",
+   "src/TrmpItem_SetMotion4.c",
+   "src/TrmpItem_SetMotion5.c",
+   "src/TrmpItem_SetMotion6.c",
+   "src/TrmpItem_SetMotion7.c",
+   "src/TrmpItem_SetMotion8.c",
+   "src/TrmpItem_StartAppear.cpp",
+   "src/TrmpItem_Update.cpp",
+   "src/TrmpLine_SetStateFade.c",
+   "src/TrmpLine_SetStateFlex.c",
+   "src/TrmpLine_SetStateSettle.c",
+   "src/TrmpLine_Update.cpp"
+  ],
+  "port/unmatched/MgTrampolineTerror_SubDispatch.cpp": [
+   "src/Trmp2Mario_BounceOffLineA.cpp",
+   "src/Trmp2Mario_EnterByKind.cpp",
+   "src/Trmp2Mario_EnterState1.cpp",
+   "src/Trmp2Mario_EnterState3.c",
+   "src/Trmp2Mario_EnterState5.c",
+   "src/Trmp2Mario_EnterState6.c",
+   "src/Trmp2Mario_Update.cpp"
+  ],
+  "port/unmatched/MgTrampolineTime_Brush.cpp": [
+   "src/Mg_DrawLine.cpp",
+   "src/_ZN11dScMgBase_c11PaintSquareEiiii.cpp"
+  ],
+  "port/unmatched/MgTrampolineTime_Faces.cpp": [
+   "src/Trmp3DMario_Construct.c",
+   "src/Trmp3DMario_Destruct.cpp",
+   "src/Trmp3DMario_EnterState1.cpp",
+   "src/TrmpLine_LoadTextures.cpp",
+   "src/_ZN5Model17LoadTextureToVramEPcj.cpp",
+   "src/_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj.c"
+  ],
+  "port/unmatched/MgTrmpln3DMario_StateDispatch.cpp": [
+   "src/Trmp2Mario_BounceOffLineA.cpp",
+   "src/Trmp2Mario_Update.cpp",
+   "src/Trmp3DMario_Update.cpp"
+  ],
+  "port/unmatched/MgWiggler_Faces.cpp": [
+   "src/Wiggler_DrawPassA.c",
+   "src/Wiggler_StartPathA.c",
+   "src/_Z14ApproachLinearRsss.cpp"
+  ],
+  "port/unmatched/MgWiggler_StateDispatch.cpp": [
+   "src/FlowerFace_IsIdle.c",
+   "src/Wiggler_StateHold.cpp",
+   "src/Wiggler_StateWait.cpp",
+   "src/Wiggler_Update.cpp",
+   "src/_Z14ApproachLinearRiii.cpp"
+  ],
+  "port/unmatched/Minimap_Behavior.cpp": [
+   "src/_ZN7Minimap8BehaviorEv.cpp"
+  ],
+  "port/unmatched/Minimap_Render.cpp": [
+   "src/_ZN7Minimap6RenderEv.cpp",
+   "src/actors/dMap_c.cpp"
+  ],
+  "port/unmatched/Minimap_wide.h": [
+   "include/Minimap.h"
+  ],
+  "port/unmatched/MirrorLuigi_Behavior.cpp": [
+   "src/_ZN11MirrorLuigi8BehaviorEv.cpp",
+   "src/func_ov055_021112c4.cpp"
+  ],
+  "port/unmatched/ModelComponents_Render.cpp": [
+   "src/_ZN15ModelComponents6RenderEP9Matrix4x3P7Vector3.cpp",
+   "src/func_02044b30.c"
+  ],
+  "port/unmatched/ModelFamily_Dtors_HostCopy.c": [
+   "include/ShadowModel.h",
+   "port/l4-merge",
+   "src/_ZN11ShadowModelD1Ev.cpp"
+  ],
+  "port/unmatched/MontyMole_StateDispatch.cpp": [
+   "src/_ZN9MontyMole8BehaviorEv.cpp"
+  ],
+  "port/unmatched/MotherPenguin_Behavior.cpp": [
+   "include/SkiLift.h",
+   "src/_ZN7SkiLift8BehaviorEv.cpp"
+  ],
+  "port/unmatched/MrI_StateDispatch.cpp": [
+   "port/unmatched/Scuttlebug_StateDispatch.cpp",
+   "src/func_ov071_021215c0.cpp",
+   "src/func_ov071_021215fc.cpp",
+   "src/func_ov071_02121634.c"
+  ],
+  "port/unmatched/OneUpMushroom_Behavior.cpp": [
+   "src/_ZN7da1up_c8BehaviorEv.cpp"
+  ],
+  "port/unmatched/Ov029_MethodFaces.cpp": [
+   "src/_ZN8dActor_c17GetWaterHeightWDWEv.cpp"
+  ],
+  "port/unmatched/Ov060_StateDispatch.cpp": [
+   "include/BowserFire.h",
+   "src/_ZN10BowserFire8BehaviorEv.cpp",
+   "src/_ZN6Bowser8BehaviorEv.cpp",
+   "src/__sinit_ov060_021195dc.c",
+   "src/__sinit_ov060_0211a000.c",
+   "src/func_ov060_02112434.cpp",
+   "src/func_ov060_021128c0.cpp",
+   "src/func_ov060_02113d8c.cpp",
+   "src/func_ov060_02113fcc.c",
+   "src/func_ov060_021140c0.c",
+   "src/func_ov060_021150d0.cpp",
+   "src/func_ov060_021151d4.c",
+   "src/func_ov060_02116d78.c"
+  ],
+  "port/unmatched/Ov064Gate178_States.cpp": [
+   "src/_ZN10LavaBubble8BehaviorEv.cpp",
+   "src/_ZN12MetalNetLift6RenderEv.cpp",
+   "src/_ZN12MetalNetLift8BehaviorEv.cpp",
+   "src/func_ov002_020aea30.cpp",
+   "src/func_ov064_021187ec.cpp"
+  ],
+  "port/unmatched/Ov064_TreasureChest.cpp": [
+   "include/Actor.h",
+   "include/TreasureChest.h",
+   "src/_ZN13TreasureChest10InitState0Ev.cpp",
+   "src/_ZN13TreasureChest10InitState1Ev.cpp",
+   "src/_ZN13TreasureChest17CallStateBehaviorEv.cpp",
+   "src/_ZN13TreasureChest6State0Ev.cpp",
+   "src/_ZN13TreasureChest6State2Ev.cpp",
+   "src/_ZN13TreasureChest8SetStateEi.cpp",
+   "src/_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h.cpp"
+  ],
+  "port/unmatched/Ov064_WaterRing.cpp": [
+   "src/_ZN9WaterRing6RenderEv.cpp",
+   "src/_ZN9WaterRing8BehaviorEv.cpp",
+   "src/func_ov064_02119afc.cpp",
+   "src/func_ov064_02119ecc.cpp"
+  ],
+  "port/unmatched/Ov065_StateDispatch.cpp": [
+   "port/unmatched/Dorrie_Behavior.cpp",
+   "src/_ZN5Swoop8BehaviorEv.cpp",
+   "src/_ZN6Dorrie8BehaviorEv.cpp",
+   "src/func_ov065_02117944.cpp"
+  ],
+  "port/unmatched/Ov070_PmfDispatch.cpp": [
+   "port/unmatched/ModelAnim_Renders.cpp",
+   "src/game/actors/daBrq_c.cpp"
+  ],
+  "port/unmatched/Ov072_MethodFaces.cpp": [
+   "src/_ZN11SnowmanHead6State0Ev.cpp"
+  ],
+  "port/unmatched/Ov073_State.cpp": [
+   "port/unmatched/Ov073_Render.cpp",
+   "src/ChiefChilly_ChangeState.cpp",
+   "src/_ZN11ChiefChilly8BehaviorEv.cpp",
+   "src/func_ov073_021223a4.cpp"
+  ],
+  "port/unmatched/Ov085_Rabbit_b8dc.cpp": [
+   "port/slice_gate",
+   "port/slice_w1l"
+  ],
+  "port/unmatched/Ov085_Renders.cpp": [
+   "src/_ZN9LakituBro6RenderEv.cpp",
+   "src/_ZN9RabbitKey6RenderEv.cpp"
+  ],
+  "port/unmatched/Ov089_StateDispatch.cpp": [
+   "src/_ZN3Key8BehaviorEv.cpp"
+  ],
+  "port/unmatched/PathLift_StateDispatch.cpp": [
+   "src/_ZN16dPathLiftActor_c12BaseBehaviorEv.cpp",
+   "src/func_ov002_020efa54.cpp"
+  ],
+  "port/unmatched/PathPtr_FromID.cpp": [
+   "src/_ZN7PathPtr6FromIDEj.cpp"
+  ],
+  "port/unmatched/Player_CleanupResources.cpp": [
+   "src/_ZN6Player16CleanupResourcesEv.cpp"
+  ],
+  "port/unmatched/Player_HeadBonk.cpp": [
+   "src/func_ov002_020cef84.cpp",
+   "src/func_ov002_020eeca8.cpp"
+  ],
+  "port/unmatched/Pokey_HostSites.cpp": [
+   "src/__sinit_ov096_0213770c.c"
+  ],
+  "port/unmatched/PowerStar_KingGuards.cpp": [
+   "src/func_ov002_020e96a0.c"
+  ],
+  "port/unmatched/PowerStar_States.cpp": [
+   "src/_ZN9PowerStar8BehaviorEv.cpp"
+  ],
+  "port/unmatched/PushBlock_StateDispatch.cpp": [
+   "src/func_ov002_020b9704.cpp",
+   "src/func_ov002_020b9750.cpp"
+  ],
+  "port/unmatched/QuestionBlock_HostAbi.h": [
+   "include/QuestionBlock.h",
+   "port/CMakeLists",
+   "src/_ZN13QuestionBlock",
+   "src/d_a_obj_hatena_block_hatena_block.c"
+  ],
+  "port/unmatched/RacingPenguin_ShadowFaces.cpp": [
+   "src/_ZN13RacingPenguin13InitResourcesEv.cpp",
+   "src/_ZN13RacingPenguin8BehaviorEv.cpp",
+   "src/_ZNK7PathPtr7GetNodeER7Vector3j.cpp",
+   "src/func_ov019_0211127c.cpp"
+  ],
+  "port/unmatched/RecRoomCupboard_ActorDtorSeam.cpp": [
+   "include/Actor.h",
+   "src/_ZN15RecRoomCupboardD1Ev.cpp"
+  ],
+  "port/unmatched/Seats2_NameBridges.cpp": [
+   "include/BowserPuzzleManager.h",
+   "include/Dorrie.h",
+   "src/_ZN14TTC_MovingBeam8BehaviorEv.cpp"
+  ],
+  "port/unmatched/SignPost_StateDispatch.cpp": [
+   "src/func_ov002_020bb614.c",
+   "src/func_ov002_020bbd5c.cpp",
+   "src/func_ov002_020bbda4.cpp"
+  ],
+  "port/unmatched/Snowman_InitResources.cpp": [
+   "src/_ZN11daBgSnwmn_c13InitResourcesEv.c"
+  ],
+  "port/unmatched/TexSeq_Caller_ov002_020e5948.cpp": [
+   "src/func_ov002_020e5948.c"
+  ],
+  "port/unmatched/Tornado_HostSites.cpp": [
+   "src/_ZN7Tornado13InitResourcesEv.cpp",
+   "src/_ZN7Tornado6RenderEv.cpp",
+   "src/_ZN7Tornado6State1Ev.cpp",
+   "src/_ZN7Tornado8BehaviorEv.cpp",
+   "src/_ZN7TornadoD1Ev.cpp"
+  ],
+  "port/unmatched/ToxBox_ShadowFaces.cpp": [
+   "src/_ZNK7PathPtr7GetNodeER7Vector3j.cpp",
+   "src/func_ov092_021313b0.cpp"
+  ],
+  "port/unmatched/Ukiki_Behavior.cpp": [
+   "port/unmatched/MgMemory2_ShadowSlot_",
+   "src/__sinit_ov029_02112c10.c"
+  ],
+  "port/unmatched/Unagi_StateDispatch.cpp": [
+   "src/BookSwitch_Spawn.c",
+   "src/_ZN5Unagi8BehaviorEv.cpp",
+   "src/func_ov016_02111bf0.cpp"
+  ],
+  "port/unmatched/UnchainedChomp_Behavior.cpp": [
+   "src/_ZN14UnchainedChomp13InitResourcesEv.cpp",
+   "src/_ZN14UnchainedChomp8BehaviorEv.cpp",
+   "src/func_ov100_02143b18.cpp"
+  ],
+  "port/unmatched/UpDownLiftBbh_Behavior.cpp": [
+   "src/_ZN13UpDownLiftBbh8BehaviorEv.cpp"
+  ],
+  "port/unmatched/Whomp_Behavior.cpp": [
+   "src/_ZN5Whomp8BehaviorEv.cpp"
+  ],
+  "port/unmatched/YoshiEgg_StateDispatch.cpp": [
+   "src/func_ov002_020ed684.cpp"
+  ],
+  "port/unmatched/dBase_c_SpawnHostAbi.h": [
+   "src/_ZN7dBase_c5SpawnEjP7fBase_cii.cpp"
+  ],
+  "port/unmatched/dBgW_HostAbi.h": [
+   "src/_ZN4dBgWC2Ev.cpp",
+   "src/_ZN9dBgCh_Gnd10DetectClsnEv.cpp"
+  ],
+  "port/unmatched/func_02043fdc_hostcopy.cpp": [
+   "port/l7-models3",
+   "src/func_02043fdc.cpp"
+  ],
+  "port/unmatched/func_02073244_hostcopy.c": [
+   "src/func_020731fc.c"
+  ],
+  "port/unmatched/hostarm/_ZN10BowserFireD0Ev.cpp": [
+   "src/_ZN10BowserFireD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN10BrickBlockD0Ev.cpp": [
+   "src/_ZN10BrickBlockD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN10BulletBillD0Ev.cpp": [
+   "src/_ZN10BulletBillD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN10CheepCheepD0Ev.cpp": [
+   "src/_ZN10CheepCheepD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN10DonutBlockD0Ev.cpp": [
+   "src/_ZN10DonutBlockD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN10FaderColorD0Ev.cpp": [
+   "src/engine/fader/_ZN10FaderColorD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN10HootTheOwlD0Ev.cpp": [
+   "src/_ZN10HootTheOwlD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN10KoopaShellD0Ev.cpp": [
+   "src/_ZN10KoopaShellD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN10LavaBubbleD0Ev.cpp": [
+   "src/_ZN10LavaBubbleD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN10LavaSeesawD0Ev.cpp": [
+   "src/_ZN10LavaSeesawD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN10MrBlizzardD0Ev.cpp": [
+   "src/_ZN10MrBlizzardD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN10PyramidTagD0Ev.cpp": [
+   "src/_ZN10PyramidTagD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN10PyramidTopD0Ev.cpp": [
+   "src/_ZN10PyramidTopD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN10RockPillarD0Ev.cpp": [
+   "src/_ZN10RockPillarD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN10SlidingBoxD0Ev.cpp": [
+   "src/_ZN10SlidingBoxD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN10SlidingIceD0Ev.cpp": [
+   "src/_ZN10SlidingIceD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN10StarMarkerD0Ev.cpp": [
+   "src/_ZN10StarMarkerD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN10StarSwitchD0Ev.cpp": [
+   "src/_ZN10StarSwitchD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN10dBgCh_ActrD0Ev.cpp": [
+   "src/_ZN10dBgCh_ActrD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN10dBgW_KcMbgD0Ev.cpp": [
+   "src/_ZN10dBgW_KcMbgD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN10dFdDummy_cD0Ev.cpp": [
+   "src/_ZN10dFdDummy_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN10dScTitle_cD0Ev.cpp": [
+   "src/_ZN10dScTitle_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN10daKpa2Bg_cD0Ev.cpp": [
+   "src/_ZN10daKpa2Bg_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN11BabyPenguinD0Ev.cpp": [
+   "src/_ZN11BabyPenguinD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN11BillBlasterD0Ev.cpp": [
+   "src/_ZN11BillBlasterD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN11BobOmbBuddyD0Ev.cpp": [
+   "src/_ZN11BobOmbBuddyD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN11ChiefChillyD0Ev.cpp": [
+   "src/_ZN11ChiefChillyD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN11CommonModelD0Ev.cpp": [
+   "src/_ZN11CommonModelD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN11CrazedCrateD0Ev.cpp": [
+   "src/_ZN11CrazedCrateD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN11MirrorLuigiD1Ev.cpp": [
+   "src/_ZN11MirrorLuigiD1Ev.cpp",
+   "src/_ZN9daLuigi_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN11PowerFlowerD0Ev.cpp": [
+   "src/_ZN11PowerFlowerD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN11PyramidLiftD0Ev.cpp": [
+   "src/_ZN11PyramidLiftD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN11PyramidStepD0Ev.cpp": [
+   "src/_ZN11PyramidStepD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN11RollingRockD0Ev.cpp": [
+   "src/_ZN11RollingRockD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN11ShadowModelD0Ev.cpp": [
+   "src/_ZN11ShadowModelD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN11SnowmanHeadD0Ev.cpp": [
+   "src/_ZN11SnowmanHeadD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN11VolcanoRingD0Ev.cpp": [
+   "src/_ZN11VolcanoRingD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN11WingFeatherD0Ev.cpp": [
+   "src/game/actors/WingFeather/_ZN11WingFeatherD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN11dScMgJump_cD0Ev.cpp": [
+   "src/_ZN11dScMgJump_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN11dScMiniGm_cD0Ev.cpp": [
+   "src/_ZN11dScMiniGm_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN11daDsnBase_cD1Ev.cpp": [
+   "src/_ZN11daDsnBase_cD1Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN11daTBasket_cD0Ev.cpp": [
+   "src/game/actors/daTBasket_c/_ZN11daTBasket_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN11daTrsIcon_cD1Ev.cpp": [
+   "src/game/actors/daTrsIcon_c/_ZN11daTrsIcon_cD1Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN11daTrsTrap_cD1Ev.cpp": [
+   "src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_cD1Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN12EnemySpawnerD0Ev.cpp": [
+   "src/_ZN12EnemySpawnerD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN12FallBlockBbhD0Ev.cpp": [
+   "src/game/actors/daObjTh_Fall_Block_c/_ZN12FallBlockBbhD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN12FlamethrowerD0Ev.cpp": [
+   "src/_ZN12FlamethrowerD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN12FortressWallD0Ev.cpp": [
+   "src/_ZN12FortressWallD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN12HauntedChairD0Ev.cpp": [
+   "src/_ZN12HauntedChairD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN12HealingHeartD0Ev.cpp": [
+   "src/_ZN12HealingHeartD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN12MetalNetLiftD1Ev.cpp": [
+   "src/_ZN12MetalNetLiftD1Ev.cpp",
+   "src/_ZN17daObjFl_Amilift_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN12WaterSuctionD0Ev.cpp": [
+   "src/_ZN12WaterSuctionD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN12WorkElevator8BehaviorEv.cpp": [
+   "src/_ZN12WorkElevator8BehaviorEv.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN12WorkElevatorD0Ev.cpp": [
+   "src/_ZN12WorkElevatorD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN12dBgCh_SphCrrD0Ev.cpp": [
+   "src/_ZN12dBgCh_SphCrrD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN12dEnemyBase_cD0Ev.cpp": [
+   "src/_ZN12dEnemyBase_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN12dScMg3DEsp_cD0Ev.cpp": [
+   "src/_ZN12dScMg3DEsp_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN12dScMgSlot1_cD0Ev.cpp": [
+   "src/_ZN12dScMgSlot1_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN12dScMgSlot3_cD0Ev.cpp": [
+   "src/_ZN12dScMgSlot3_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN12dScStarSel_cD0Ev.cpp": [
+   "src/_ZN12dScStarSel_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN12daDossyCap_cD0Ev.cpp": [
+   "src/_ZN12daDossyCap_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN13BasementWaterD0Ev.cpp": [
+   "src/_ZN13BasementWaterD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN13BigBrickBlock11OnAttacked1ER8dActor_c.cpp": [
+   "src/_ZN13BigBrickBlock11OnAttacked1ER8dActor_c.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN13BigBrickBlock11OnAttacked2ER8dActor_c.cpp": [
+   "src/_ZN13BigBrickBlock11OnAttacked2ER8dActor_c.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN13BigBrickBlockD0Ev.cpp": [
+   "src/_ZN13BigBrickBlockD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN13BowserShutterD0Ev.cpp": [
+   "src/_ZN13BowserShutterD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN13FortressTowerD0Ev.cpp": [
+   "src/_ZN13FortressTowerD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN13KoopaTheQuickD0Ev.cpp": [
+   "src/_ZN13KoopaTheQuickD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN13MontyMoleRockD0Ev.cpp": [
+   "src/_ZN13MontyMoleRockD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN13PeachPaintingD0Ev.cpp": [
+   "src/_ZN13PeachPaintingD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN13PrincessPeachD0Ev.cpp": [
+   "src/_ZN13PrincessPeachD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN13QuestionBlockD0Ev.cpp": [
+   "src/_ZN13QuestionBlockD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN13RacingPenguinD0Ev.cpp": [
+   "src/_ZN13RacingPenguinD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN13RollingLogLllD0Ev.cpp": [
+   "src/_ZN13RollingLogLllD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN13RollingLogTtmD0Ev.cpp": [
+   "src/_ZN13RollingLogTtmD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN13SnowmanBreathD0Ev.cpp": [
+   "src/_ZN13SnowmanBreathD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN13TTC_MovingBarD0Ev.cpp": [
+   "src/_ZN13TTC_MovingBarD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN13TreasureChestD0Ev.cpp": [
+   "src/_ZN13TreasureChestD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN13UpDownLiftBbhD0Ev.cpp": [
+   "src/_ZN13UpDownLiftBbhD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN13dScMgFlower_cD0Ev.cpp": [
+   "src/_ZN13dScMgFlower_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN13daObjDorifu_cD0Ev.cpp": [
+   "src/_ZN10dBgActor_cD0Ev.cpp",
+   "src/_ZN13daObjDorifu_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN13daObjHmBskt_cD0Ev.cpp": [
+   "src/_ZN13daObjHmBskt_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN13daObjKuruma_cD0Ev.cpp": [
+   "src/_ZN10dBgActor_cD0Ev.cpp",
+   "src/_ZN13daObjKuruma_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN13daObjMaruta_cD0Ev.cpp": [
+   "src/_ZN13daObjMaruta_c15OnHitByMegaCharER6Player.cpp",
+   "src/_ZN13daObjMaruta_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN13daObjMaruta_cD1Ev.cpp": [
+   "src/_ZN13daObjMaruta_cD1Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN13daObjSwdoor_cD1Ev.cpp": [
+   "src/_ZN13daObjSwdoor_cD1Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN14ArrowSignRightD0Ev.cpp": [
+   "src/_ZN14ArrowSignRightD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN14EnemySwitchTagD0Ev.cpp": [
+   "src/_ZN14EnemySwitchTagD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN14KnockDownPlankD0Ev.cpp": [
+   "src/_ZN14KnockDownPlankD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN14SquarePathLiftD0Ev.cpp": [
+   "src/_ZN14SquarePathLiftD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN14TTC_MovingBeamD0Ev.cpp": [
+   "src/_ZN14TTC_MovingBeamD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN14dBgW_KcMbgSclYD0Ev.cpp": [
+   "src/_ZN14dBgW_KcMbgSclYD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN14dScMgBomroom_cD0Ev.cpp": [
+   "src/_ZN14dScMgBomroom_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN14dScMgCurling_cD0Ev.cpp": [
+   "src/_ZN14dScMgCurling_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN14daObjUkiyuka_cD0Ev.cpp": [
+   "src/_ZN10dBgActor_cD0Ev.cpp",
+   "src/_ZN14daObjUkiyuka_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN15FaderBrightnessD0Ev.cpp": [
+   "src/engine/fader/_ZN15FaderBrightnessD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN15FireSeaElevatorD0Ev.cpp": [
+   "src/_ZN15FireSeaElevatorD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN15MaterialChangerD0Ev.cpp": [
+   "src/_ZN15MaterialChangerD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN15RecRoomCupboardD0Ev.cpp": [
+   "src/_ZN15RecRoomCupboardD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN15RotatingFirebarD0Ev.cpp": [
+   "src/_ZN15RotatingFirebarD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN15TextureSequenceD0Ev.cpp": [
+   "src/_ZN15TextureSequenceD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN15TtcRotatingCubeD0Ev.cpp": [
+   "src/_ZN15TtcRotatingCubeD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN15TtcRotatingGearD0Ev.cpp": [
+   "src/_ZN15TtcRotatingGearD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN15dScMgPachinko_cD0Ev.cpp": [
+   "src/_ZN15dScMgPachinko_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN15dScMgSnowball_cD0Ev.cpp": [
+   "src/_ZN15dScMgSnowball_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN15daObjGuragura_cD0Ev.cpp": [
+   "src/_ZN15daObjGuragura_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN16BowserShockwavesD0Ev.cpp": [
+   "src/_ZN16BowserShockwavesD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN16RotatingCogSmallD0Ev.cpp": [
+   "src/_ZN16RotatingCogSmallD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN16SpinningPlatformD0Ev.cpp": [
+   "src/_ZN16SpinningPlatformD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN16dScMgPachinko2_cD0Ev.cpp": [
+   "src/_ZN16dScMgPachinko2_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN16dScMgSmartball_cD0Ev.cpp": [
+   "src/_ZN16dScMgSmartball_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN16daObjFallBlock_cD0Ev.cpp": [
+   "src/_ZN16daObjFallBlock_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN16daObjFallBlock_cD1Ev.cpp": [
+   "src/_ZN16daObjFallBlock_cD1Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN16daObjKaitendai_cD0Ev.cpp": [
+   "src/_ZN16daObjKaitendai_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN17BigMovingIceBlockD0Ev.cpp": [
+   "src/_ZN17BigMovingIceBlockD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN17BigMovingIceBlockD1Ev.cpp": [
+   "src/_ZN17BigMovingIceBlockD1Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN17BowserPuzzlePieceD1Ev.cpp": [
+   "src/_ZN17BowserPuzzlePieceD1Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN17BowserSkyPlatformD0Ev.cpp": [
+   "src/_ZN17BowserSkyPlatformD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN17ExtendingPlatformD0Ev.cpp": [
+   "src/_ZN17ExtendingPlatformD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN17SlidingPlatformWfD0Ev.cpp": [
+   "src/_ZN17SlidingPlatformWfD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN17daObjFloatBoard_cD0Ev.cpp": [
+   "src/_ZN17daObjFloatBoard_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN17daObjKurumajiku_cD0Ev.cpp": [
+   "src/_ZN17daObjKurumajiku_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN17daObjWlPolelift_cD0Ev.cpp": [
+   "src/_ZN17daObjWlPolelift_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN18TextureTransformerD0Ev.cpp": [
+   "src/_ZN18TextureTransformerD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN19BowserPuzzleManagerD0Ev.cpp": [
+   "src/_ZN19BowserPuzzleManagerD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN19FirePiranhaPlantBigD0Ev.cpp": [
+   "src/_ZN19FirePiranhaPlantBigD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN19FloatOnLavaPlatformD0Ev.cpp": [
+   "src/_ZN19FloatOnLavaPlatformD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN21FloatingFloorLllSmallD0Ev.cpp": [
+   "src/_ZN21FloatingFloorLllSmallD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN21daObj_volcanoCannon_cD0Ev.cpp": [
+   "src/_ZN21daObj_volcanoCannon_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN22RotatingUpDownPlatformD0Ev.cpp": [
+   "src/_ZN22RotatingUpDownPlatformD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN3HUDD0Ev.cpp": [
+   "src/_ZN3HUDD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN3KeyD0Ev.cpp": [
+   "src/_ZN3KeyD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN3MrID0Ev.cpp": [
+   "src/_ZN3MrID0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN4BirdD0Ev.cpp": [
+   "src/_ZN4BirdD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN4ClamD0Ev.cpp": [
+   "src/_ZN4ClamD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN4CoinD0Ev.cpp": [
+   "src/_ZN4CoinD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN4FishD0Ev.cpp": [
+   "src/_ZN4FishD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN4ToadD0Ev.cpp": [
+   "src/_ZN4ToadD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN4ViewD0Ev.cpp": [
+   "src/_ZN4ViewD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN4dBgWD0Ev.cpp": [
+   "src/_ZN4dBgWD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN5BullyD0Ev.cpp": [
+   "src/_ZN5BullyD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN5CrateD0Ev.cpp": [
+   "src/_ZN5CrateD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN5FaderD0Ev.cpp": [
+   "src/engine/fader/_ZN5FaderD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN5KoopaD0Ev.cpp": [
+   "src/_ZN5KoopaD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN5ModelC2Ev.cpp": [
+   "src/_ZN5ModelC2Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN5ModelD0Ev.cpp": [
+   "src/_ZN5ModelD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN5ModelD2Ev.cpp": [
+   "src/_ZN5ModelD2Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN5SharkD0Ev.cpp": [
+   "src/_ZN5SharkD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN5SpinyD0Ev.cpp": [
+   "src/_ZN5SpinyD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN5StageD0Ev.cpp": [
+   "src/_ZN5StageD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN5Stump8BehaviorEv.cpp": [
+   "src/_ZN5Stump8BehaviorEv.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN5StumpD0Ev.cpp": [
+   "src/_ZN5StumpD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN5SwoopD0Ev.cpp": [
+   "src/_ZN5SwoopD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN5UnagiD0Ev.cpp": [
+   "src/_ZN5UnagiD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN5WhompD0Ev.cpp": [
+   "src/_ZN5WhompD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN5dBgChD0Ev.cpp": [
+   "src/_ZN5dBgChD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN5dBgPiD0Ev.cpp": [
+   "src/_ZN5dBgPiD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN5dCc_cD0Ev.cpp": [
+   "src/_ZN5dCc_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN6Camera14GoBehindPlayerEj.cpp": [
+   "src/_ZN6Camera14GoBehindPlayerEj.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN6CannonD0Ev.cpp": [
+   "src/_ZN6CannonD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN6CoffinD0Ev.cpp": [
+   "src/_ZN6CoffinD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN6CoffinD1Ev.cpp": [
+   "src/_ZN6CoffinD1Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN6DorrieD0Ev.cpp": [
+   "src/_ZN6DorrieD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN6EyerokD0Ev.cpp": [
+   "src/_ZN6EyerokD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN6FwooshD0Ev.cpp": [
+   "src/_ZN6FwooshD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN6KleptoD0Ev.cpp": [
+   "src/_ZN6KleptoD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN6LakituD0Ev.cpp": [
+   "src/_ZN6LakituD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN6NumberD0Ev.cpp": [
+   "src/_ZN6NumberD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN6ShipUpD0Ev.cpp": [
+   "src/_ZN6ShipUpD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN6ThwompD0Ev.cpp": [
+   "src/_ZN6ThwompD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN6ToxBoxD0Ev.cpp": [
+   "src/_ZN6ToxBoxD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN7ChuckyaD0Ev.cpp": [
+   "src/_ZN7ChuckyaD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN7ClipperD0Ev.cpp": [
+   "src/_ZN7ClipperD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN7HeaveHoD0Ev.cpp": [
+   "src/_ZN7HeaveHoD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN7MinimapD0Ev.cpp": [
+   "src/_ZN7MinimapD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN7SkeeterD0Ev.cpp": [
+   "src/_ZN7SkeeterD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN7SkiLiftD0Ev.cpp": [
+   "src/_ZN7SkiLiftD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN7TornadoD0Ev.cpp": [
+   "src/_ZN7TornadoD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN7WigglerD0Ev.cpp": [
+   "src/_ZN7WigglerD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN7dBgW_KcD0Ev.cpp": [
+   "src/_ZN7dBgW_KcD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN7dCcAc_cD0Ev.cpp": [
+   "src/_ZN7dCcAc_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN7dScMB_cD0Ev.cpp": [
+   "src/_ZN7dScMB_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN7dWipe_cD0Ev.cpp": [
+   "src/_ZN7dWipe_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN7daKrb_cD0Ev.cpp": [
+   "src/_ZN7daKrb_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN7daTrs_cD0Ev.cpp": [
+   "src/game/actors/daTrs_c/_ZN7daTrs_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN7fBase_c21AfterCleanupResourcesEj.cpp": [
+   "src/_ZN7fBase_c21AfterCleanupResourcesEj.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN7fBase_cC2Ev.cpp": [
+   "src/_ZN7fBase_cC2Ev.cpp",
+   "symbols/classes"
+  ],
+  "port/unmatched/hostarm/_ZN8BigBullyD0Ev.cpp": [
+   "src/_ZN8BigBullyD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN8CccArenaD0Ev.cpp": [
+   "src/_ZN8CccArenaD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN8FireballD0Ev.cpp": [
+   "src/_ZN8FireballD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN8GoombossD0Ev.cpp": [
+   "src/_ZN8GoombossD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN8IceBlockD0Ev.cpp": [
+   "src/_ZN8IceBlockD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN8MadPianoD0Ev.cpp": [
+   "src/game/actors/daPiano_c/_ZN8MadPianoD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN8MantaRayD0Ev.cpp": [
+   "src/_ZN8MantaRayD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN8MugenBgmD0Ev.cpp": [
+   "src/_ZN8MugenBgmD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN8PaintingD0Ev.cpp": [
+   "src/_ZN8PaintingD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN8PoleLiftD0Ev.cpp": [
+   "src/_ZN8PoleLiftD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN8SaveData8SaveFileEjP12FileSaveData.cpp": [
+   "src/_ZN8SaveData8SaveFileEjP12FileSaveData.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN8SignPostD0Ev.cpp": [
+   "src/_ZN8SignPostD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN8SnowballD0Ev.cpp": [
+   "src/_ZN8SnowballD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN8WallSignD0Ev.cpp": [
+   "src/_ZN8WallSignD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE.cpp": [
+   "src/_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN8dCcPos_cD0Ev.cpp": [
+   "src/_ZN8dCcPos_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN8dM3dGSphD0Ev.cpp": [
+   "src/_ZN8dM3dGSphD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN8dScene_cD0Ev.cpp": [
+   "src/_ZN8dScene_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN8daDemo_c10anmModel_cD0Ev.cpp": [
+   "src/_ZN8daDemo_c10anmModel_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN8daDemo_c13simpleModel_cD0Ev.cpp": [
+   "src/_ZN8daDemo_c13simpleModel_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN9BootSceneD0Ev.cpp": [
+   "src/_ZN9BootSceneD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN9ButterflyD0Ev.cpp": [
+   "src/_ZN9ButterflyD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN9FaderWipeD0Ev.cpp": [
+   "src/engine/fader/_ZN9FaderWipeD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN9JetStreamD0Ev.cpp": [
+   "src/_ZN9JetStreamD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN9KoopaFlagD0Ev.cpp": [
+   "src/_ZN9KoopaFlagD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN9LakituBroD0Ev.cpp": [
+   "src/_ZN9LakituBroD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN9LavaPlankD0Ev.cpp": [
+   "src/_ZN9LavaPlankD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN9LightBeamD1Ev.cpp": [
+   "src/_ZN9LightBeamD1Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN9MontyMoleD0Ev.cpp": [
+   "src/_ZN9MontyMoleD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN9OneUpLogoD0Ev.cpp": [
+   "src/_ZN9OneUpLogoD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN9RabbitKeyD0Ev.cpp": [
+   "src/_ZN9RabbitKeyD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN9SeesawBobD0Ev.cpp": [
+   "src/_ZN9SeesawBobD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN9SpikeBombD0Ev.cpp": [
+   "src/_ZN9SpikeBombD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN9SpindriftD0Ev.cpp": [
+   "src/_ZN9SpindriftD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN9SubmarineD0Ev.cpp": [
+   "src/_ZN9SubmarineD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN9TinyCoverD0Ev.cpp": [
+   "src/_ZN9TinyCoverD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN9TinyWaterD0Ev.cpp": [
+   "src/_ZN9TinyWaterD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN9TowerStepD0Ev.cpp": [
+   "src/_ZN9TowerStepD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN9WaterBombD0Ev.cpp": [
+   "src/_ZN9WaterBombD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN9WaterRingD0Ev.cpp": [
+   "src/_ZN9WaterRingD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN9WhirlpoolD0Ev.cpp": [
+   "src/_ZN9WhirlpoolD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN9dBgCh_GndD0Ev.cpp": [
+   "src/_ZN9dBgCh_GndD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN9dBgCh_LinD0Ev.cpp": [
+   "src/_ZN9dBgCh_LinD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN9dScDSMT_c8BehaviorEv.cpp": [
+   "src/_ZN9dScDSMT_c8BehaviorEv.cpp"
+  ],
+  "port/unmatched/hostarm/_ZN9dScDSMT_cD0Ev.cpp": [
+   "src/_ZN9dScDSMT_cD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZThn16_N12dBgCh_SphCrrD0Ev.cpp": [
+   "src/_ZThn16_N12dBgCh_SphCrrD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZThn16_N12dBgCh_SphCrrD1Ev.cpp": [
+   "src/_ZThn16_N12dBgCh_SphCrrD1Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZThn16_N9dBgCh_GndD0Ev.cpp": [
+   "src/_ZThn16_N9dBgCh_GndD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZThn16_N9dBgCh_GndD1Ev.cpp": [
+   "src/_ZThn16_N9dBgCh_GndD1Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZThn16_N9dBgCh_LinD0Ev.cpp": [
+   "src/_ZThn16_N9dBgCh_LinD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZThn16_N9dBgCh_LinD1Ev.cpp": [
+   "src/_ZThn16_N9dBgCh_LinD1Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZThn56_N12dBgCh_SphCrrD0Ev.cpp": [
+   "src/_ZThn56_N12dBgCh_SphCrrD0Ev.cpp"
+  ],
+  "port/unmatched/hostarm/_ZThn56_N12dBgCh_SphCrrD1Ev.cpp": [
+   "src/_ZThn56_N12dBgCh_SphCrrD1Ev.cpp"
+  ],
+  "port/unmatched/hostarm/func_ov006_020ce988.cpp": [
+   "src/TrmpItem_UpdateMatrix.cpp"
+  ],
+  "port/unmatched/hostarm/func_ov006_021004c0.cpp": [
+   "src/DrawTopRecord.c"
   ],
   "src/CpuCopy8.c": [
    "src/dst"
@@ -443,8 +3902,66 @@
   "src/func_ov004_020ae5c4.cpp": [
    "src/actors/d_sc_mg_trampoline.cpp"
   ],
+  "src/func_ov006_020d27dc.c": [
+   "src/Mg_DrawLine",
+   "src/func_ov006_020d36a4.c",
+   "src/func_ov006_020d3ba0.c",
+   "tools/reloc_audit.check_destinations"
+  ],
+  "src/func_ov006_020e513c.c": [
+   "src/func_ov006_020e59b0.c",
+   "src/func_ov006_020e5e3c.c"
+  ],
+  "src/func_ov006_020e5450.c": [
+   "src/func_ov006_020e5b70.c",
+   "src/func_ov006_020e5b7c.c"
+  ],
+  "src/func_ov006_020ea914.c": [
+   "src/Wiggler_DrawPassB.c"
+  ],
+  "src/func_ov006_020ec4dc.c": [
+   "src/Hana_SpawnWigglers.c",
+   "src/Phase_SetupRound.c"
+  ],
+  "src/func_ov006_020ee994.c": [
+   "src/Heyho_SpawnAll.c",
+   "src/func_ov006_020ee690.cpp"
+  ],
+  "src/func_ov006_020f3e68.c": [
+   "src/func_ov006_020f3f10.c",
+   "src/func_ov006_020f411c.c",
+   "src/func_ov006_020f41b0.c",
+   "src/func_ov006_020f43c4.c",
+   "src/func_ov006_020f4cd8.c",
+   "src/func_ov006_020f4f94.c",
+   "src/func_ov006_020f5324.c",
+   "tools/reloc_audit.check_destinations"
+  ],
+  "src/func_ov006_020f5b98.c": [
+   "src/func_ov006_020f5de0.c",
+   "src/func_ov006_020f6088.c",
+   "src/func_ov006_020f6904.c",
+   "src/func_ov006_020f6c90.c",
+   "src/func_ov006_020f73f4.c"
+  ],
   "src/func_ov006_020fcb4c.c": [
    "notes/pret-idioms.md"
+  ],
+  "src/func_ov006_0210c9e0.cpp": [
+   "src/func_ov006_0210d1fc.cpp"
+  ],
+  "src/func_ov006_0211bc8c.cpp": [
+   "src/Note_StateWait.c",
+   "src/RevealUnmatched.cpp"
+  ],
+  "src/func_ov006_0211e72c.c": [
+   "src/Boo_State7.c",
+   "src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii.cpp",
+   "src/_ZN3OAM9RenderSubEP7OamAttrii.c",
+   "src/func_ov006_02120348.c"
+  ],
+  "src/func_ov006_02123428.c": [
+   "src/MgTrampolineTerror_Spawn.c"
   ],
   "src/game/actors/d_a_cam_tag.cpp": [
    "src/_ZN10daCamTag_c13InitResourcesEv.cpp",
@@ -1985,8 +5502,25 @@
    "src/actors/dScMgSingle3DBase_c.cpp",
    "src/func_ov002_020ee5d0.c"
   ],
+  "src/unnamed/arm9/0203/func_0203df40.c": [
+   "src/func_0203ea5c.c"
+  ],
+  "src/unnamed/arm9/0203/func_0203ea5c.c": [
+   "src/func_0203f604.c",
+   "src/func_02040a5c.c",
+   "src/func_ov007_020cc2cc.c"
+  ],
+  "src/unnamed/arm9/0205/func_02059834.c": [
+   "src/func_02059a60.c"
+  ],
+  "src/unnamed/arm9/0205/func_02059c18.c": [
+   "src/func_02059a60.c"
+  ],
   "src/unnamed/arm9/0205/func_02059d8c.c": [
    "notes/func_02059d8c-asm-origin.md"
+  ],
+  "src/unnamed/ov007/func_ov007_020c798c.c": [
+   "src/func_ov007_020c78b0.c"
   ],
   "tools/probes/discriminate.c": [
    "tools/probe_"

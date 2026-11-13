@@ -18,7 +18,7 @@
 //
 // ---- 2. TWO NAME-SPELLING FACES, NEITHER A STAND-IN FOR A BODY -------------
 //
-// _ZTV14dScMgCurling_c. src/d_s_mg_curling.c writes the class vtable
+// _ZTV14dScMgCurling_c. src/minigames/d_s_mg_curling.cpp writes the class vtable
 // through this spelling, and no config holds that name. IT IS NOT A GUESS
 // THOUGH, and that is worth separating from the ov007 lane's VT0/VT1/VT2 case:
 // the ROM's own RTTI string at 0x0213c2d0 reads "14dScMgCurling_c", so the
@@ -204,7 +204,7 @@ unsigned char data_ov000_020ad494[24] =
 
 /* arm9 .data, EIGHT bytes by span -- the next symbol is data_0208ee00. Read at
    (0x0208edf8 - 0x02004000): "LZ77" and four NULs, the compression magic the
-   archive loader compares a header against. Named by src/func_02018568.c, one
+   archive loader compares a header against. Named by src/unnamed/arm9/0201/func_02018568.c, one
    of the sixth wave's five. */
 unsigned char data_0208edf8[8] = "LZ77\0\0\0";
 
@@ -220,7 +220,7 @@ unsigned char data_0208eb54[4] = { 0xff, 0x00, 0x00, 0x00 };
    out of extracted/arm9_dec.bin: "myFS_OpenFileFast" plus three NULs, a
    sibling of data_0208ecd8 below and the same kind of thing, a NitroFS
    entry-point name the card loader hands its own resolver. Reached through
-   src/func_02018dc4.c, one of the archive-loader TUs the two SharedFilePtr
+   src/unnamed/arm9/0201/func_02018dc4.c, one of the archive-loader TUs the two SharedFilePtr
    constructors pull in. Named by review's converged link as the sixth wave's
    one hosted word and measured here; nothing in the port's fs seam consumes
    it, and the ROM's bytes are transcribed rather than zeroed for the reason
@@ -337,7 +337,7 @@ DSSTATE_END
 
 /* ---- 2d. ONE MORE, FROM THE SEVENTH WAVE --------------------------------
  *
- * src/func_0201834c.c calls the archive allocator by its ITANIUM name at C
+ * src/unnamed/arm9/0201/func_0201834c.c calls the archive allocator by its ITANIUM name at C
  * linkage, and the matched body src/_ZN6Memory8AllocateEji.cpp is a real C++
  * definition that MSVC mangles its own way. Confirmed off the compiled object
  * rather than derived from the source:
@@ -371,7 +371,7 @@ DSSTATE_END
  * below stands as this lane's evidence, and the caller-arity paragraph at the
  * bottom is recorded nowhere else, so the block stays.
  *
- * PORT_HOST_ABI. The eighth wave's src/func_02018770.c calls UnloadArchive,
+ * PORT_HOST_ABI. The eighth wave's src/unnamed/arm9/0201/func_02018770.c calls UnloadArchive,
  * and taking the matched body would have meant taking the thing
  * hal/scene_boot.cpp's LoadArchive face already refused once. That file's
  * reasoning is this file's, and it is repeated rather than re-derived:
@@ -400,7 +400,7 @@ DSSTATE_END
  * out-parameter, and its only effect is to zero two words the port's own mount
  * does not use. So the face is empty, and empty is the whole of it.
  *
- * AND ITS ONE CALLER DROPS THE ARGUMENT. src/func_02018770.c:9 declares
+ * AND ITS ONE CALLER DROPS THE ARGUMENT. src/unnamed/arm9/0201/func_02018770.c:9 declares
  * `extern void UnloadArchive(void);` and calls it with none, while the real
  * definition takes `int i` -- the same ARM ride-through family as the two
  * defects port/mg_fanout_costs.txt section 6 records for slots 5 and 7, where

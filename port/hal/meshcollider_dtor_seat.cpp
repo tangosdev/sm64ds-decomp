@@ -104,9 +104,9 @@ static void *const g_keep_mc_d1 = (void *)&_ZN7dBgW_KcD1Ev;
 // dsd never recovered a class name for either, so all six bodies are still
 // func_0203xxxx. They belong here anyway, and the family identifies them:
 // 0x020354d0 is the base-subobject teardown WithMeshClsn's own deleting
-// destructor calls (src/_ZN10dBgCh_ActrD0Ev.cpp names it that way), and 0x0203ac50 is
+// destructor calls (port/unmatched/hostarm/_ZN10dBgCh_ActrD0Ev.cpp names it that way), and 0x0203ac50 is
 // the subobject teardown RaycastLine's deleting destructor runs on this+0x64
-// (src/_ZN9dBgCh_LinD0Ev.cpp). Their D1 bodies do what every D1 in this band does --
+// (port/unmatched/hostarm/_ZN9dBgCh_LinD0Ev.cpp). Their D1 bodies do what every D1 in this band does --
 // write the vptr back and stop short of the free -- and their D0 bodies add the
 // Memory::operator_delete2 call. _ZN8dM3dGSphD1Ev was already linked (RaycastLine's
 // D0 names it); the other five were not.

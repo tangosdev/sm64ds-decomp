@@ -1,5 +1,5 @@
 // THE GAME LOOP'S INPUT RING (run linkfull, lane B5INPUT). Phase 0x17 of the
-// ROM's frame loop, src/func_020197b8.c:41-46:
+// ROM's frame loop, src/unnamed/arm9/0201/func_020197b8.c:41-46:
 //
 //     data_0209d50c = 0x17; func_0203bc7c();
 //     v = *(unsigned short*)((char*)data_020a0e58 + (data_020a0e40 << 2));
@@ -35,7 +35,7 @@
 //                                          with the latch and dropped only once
 //                                          data_020a0e44 reads 0 again, so a
 //                                          held L+R+START+SELECT cannot re-arm
-//                                          the reset (src/func_02023498.c:18-22)
+//                                          the reset (src/unnamed/arm9/0202/func_02023498.c:18-22)
 //
 // Its two neighbours were already hosted in hal/auto_bss.cpp: data_0209f1d8
 // (the minigame menu's hold on the reset, raised by dScMiniGm_c::InitResources)

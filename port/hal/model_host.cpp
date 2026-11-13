@@ -182,7 +182,7 @@ void func_02052514(int *a, int *b)
  * the host forwards to the pump that gate 4a already proved byte-exact.
  * ONLY FOR THE NARROW HARNESSES since run linkfull wave 27 (lane P1, the
  * STAGE4P DMA checkpoint 1). The three hosting targets compile this file with
- * SM64DS_DMA_GXFIFO_ROM and link src/func_01ffde98.c, the ROM's own body: its
+ * SM64DS_DMA_GXFIFO_ROM and link src/unnamed/arm9/01ff/func_01ffde98.c, the ROM's own body: its
  * bit-31 polls read a DMA3CNT latch the host DMAStartTransfer never sets, and
  * each chunk it starts reaches gx_write_fifo through that host body, so the
  * words reach the geometry FIFO in the same order without the pump. The

@@ -115,7 +115,7 @@
 //
 // ---- 6. THE TWO ALIAS ROWS ------------------------------------------------
 //
-// ROW 1, THE VTABLE UNDER ITS C++ SPELLING. src/d_s_mg_teresa.c
+// ROW 1, THE VTABLE UNDER ITS C++ SPELLING. src/minigames/d_s_mg_teresa.cpp
 // writes `p[0] = (int)_ZTV13dScMgTeresa_c` and the ov006 mount defines that
 // storage as the plain C symbol data_ov006_0213fa0c. The ADDRESS is what the
 // code uses and it is the same address either spelling names, so an alias is
@@ -398,7 +398,7 @@ extern "C" void port_scene_fill_booseek(void)
    column.
 
    THIS FACTORY NEEDS NO DISPLACEMENT RULING, which is worth recording because
-   0x169's did. src/d_s_mg_teresa.c calls _ZN11dScMgBase_cC2Ev(p) WITH
+   0x169's did. src/minigames/d_s_mg_teresa.cpp calls _ZN11dScMgBase_cC2Ev(p) WITH
    its argument, where src/minigames/d_s_mg_cup.cpp calls the same base
    constructor with none and rides r0 through. That callee dereferences on its
    first statement and then writes a vtable word through the pointer, so the

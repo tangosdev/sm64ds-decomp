@@ -8,7 +8,7 @@
 // own loop (rungs R3b to R3d, worth +72) by changing ONE function here instead
 // of twenty-one readers and two hundred traces in tests/walk_window.cpp.
 //
-// THE ROM'S FRAME STATE IS TWO WORDS, and src/func_020197b8.c -- the ROM's game
+// THE ROM'S FRAME STATE IS TWO WORDS, and src/unnamed/arm9/0201/func_020197b8.c -- the ROM's game
 // loop, arm9 0x020197b8 -- is what writes both:
 //
 //     data_0209d50c = 5; func_02019404();     phase 5
@@ -195,7 +195,7 @@ void port_rom_frame_begin(const char *loop)
                  g_loop, crosscheck_on() ? "ON" : "OFF");
 }
 
-/* THE ROM'S PHASE 5 (run linkfull, lane K2RENDER). src/func_020197b8.c:48:
+/* THE ROM'S PHASE 5 (run linkfull, lane K2RENDER). src/unnamed/arm9/0201/func_020197b8.c:48:
 
        data_0209d50c = 5; func_02019404();
 

@@ -7,7 +7,7 @@
  * directions. Player::St_LevelEnter_Main is ov002 0x020c6f3c and config
  * names it _ZN6Player18St_LevelEnter_MainEv (ov002/symbols.txt, size
  * 0xa8). The name func_ov002_020c6f3c appears in NO symbols.txt and there
- * is no src/func_ov002_020c6f3c.cpp; it is this port's own C-linkage name
+ * is no port/unmatched/func_ov002_020c6f3c.cpp; it is this port's own C-linkage name
  * for the host copy below, which the earlier header cited as if it were
  * the source. The symbol that names another overlay's bytes at this
  * address is ov006's Heyho_Destruct (size 0x34), a different

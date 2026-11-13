@@ -30,7 +30,7 @@
  *    src/, and eleven port/hal files already call it under that name. Nothing
  *    is being converted: an alias here changes a name and not a convention.
  *
- *    WHY THE SYMBOL APPEARS AT ALL. src/_ZN16dScMgSmartball_cD0Ev.cpp is one of the
+ *    WHY THE SYMBOL APPEARS AT ALL. port/unmatched/hostarm/_ZN16dScMgSmartball_cD0Ev.cpp is one of the
  *    ".cpp with a recovered header" bodies and it declares the callee as real
  *    C++ -- `namespace Memory { void Deallocate(void*, Heap*); }` -- so MSVC
  *    emits the namespace-qualified mangle where every C-spelled caller emits

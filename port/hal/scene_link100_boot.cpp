@@ -133,8 +133,8 @@ void port_scene_boot_report(void);
 /* ---- THE VTABLE, a host array under the ROM'S OWN DATA NAME ---------------
  *
  * data_02091528 is what the factory writes into the object's +0 word
- * (src/d_s_boot.c) and what both destructor bodies write back on the way
- * down (src/_ZN9BootSceneD1Ev.cpp, src/_ZN9BootSceneD0Ev.cpp), so the spelling has to
+ * (src/game/stages/d_s_boot.cpp) and what both destructor bodies write back on the way
+ * down (src/_ZN9BootSceneD1Ev.cpp, port/unmatched/hostarm/_ZN9BootSceneD0Ev.cpp), so the spelling has to
  * be exactly this and at C linkage. arm9 .data is NOT mounted -- there is no
  * arm9 equivalent of port/ovNNN_syms.txt -- so this is a FRESH HOST ARRAY, the
  * shape hal/actor_vtables.cpp's data_0208e4b8 and hal/scene_boot.cpp's
@@ -214,12 +214,12 @@ DSSTATE_END
  * port's hosted DS bss.
  *
  *   data_0209d4e0  "the id-6 wireless overlay is resident" latch, written by
- *                  src/func_0201a694.c and cleared by src/func_0201a614.c.
+ *                  src/unnamed/arm9/0201/func_0201a694.c and cleared by src/func_0201a614.c.
  *   data_0209d520  the root heap Heap::CreateRootHeap returns
- *                  (src/func_0201a3e4.c); zero means "not created yet",
+ *                  (src/unnamed/arm9/0201/func_0201a3e4.c); zero means "not created yet",
  *                  which is what the DS boots with.
  *   data_0209d674  the message renderer's BG2 character-row base
- *                  (src/func_0201b100.c).
+ *                  (src/unnamed/arm9/0201/func_0201b100.c).
  *   data_020a0c5c  the heap Heap::SetDefault displaced, saved and restored by
  *                  src/func_02034fbc.c.
  *   data_020a0c60  that body's own once-only bit-0 gate.
@@ -249,11 +249,11 @@ DSSTATE_END
  * rather than papered over, exactly as it is there.
  *
  * It costs nothing here for the same reason it costs nothing there. The two
- * consumers this closure brings in are src/func_0201a754.c and
- * src/func_0201a798.c (unload and load), and both bottom out in the port's
+ * consumers this closure brings in are src/unnamed/arm9/0201/func_0201a754.c and
+ * src/unnamed/arm9/0201/func_0201a798.c (unload and load), and both bottom out in the port's
  * faced LoadOverlay / UnloadOverlay -- every overlay the port hosts is a
  * static build-time mount, so there is no loader for a correct id to reach.
- * The seven are here so src/GetSceneOverlayID.c and src/func_0201a694.c
+ * The seven are here so src/GetSceneOverlayID.c and src/unnamed/arm9/0201/func_0201a694.c
  * resolve; the day an overlay loader exists they become its customers. */
 extern int overlay_2, overlay_3, overlay_4, overlay_5, overlay_6, overlay_7,
     overlay_75;   /* hosted by hal/boot_hw.cpp (lane BOOT), one definition */
@@ -275,7 +275,7 @@ extern int overlay_2, overlay_3, overlay_4, overlay_5, overlay_6, overlay_7,
  *
  * WHY IT IS NOT LINKED, in the order the evidence lands:
  *
- *   1. IT NEVER RUNS. func_0201a244 (src/func_0201a244.c) either calls the
+ *   1. IT NEVER RUNS. func_0201a244 (src/unnamed/arm9/0201/func_0201a244.c) either calls the
  *      entry inline -- only when data_0209d4f8 is already non-zero, and that
  *      byte is bss and zero at boot -- or creates a DS thread through
  *      func_02058200. The port runs no DS threads: func_02058200 is faced to

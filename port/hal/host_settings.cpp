@@ -1054,7 +1054,7 @@ int g_vs_luigi_seconds = 0;
 
    The radii are in the game's own world units -- the integer part of the
    Fix12 positions at Actor+0x5c -- and the defaults are measured rather than
-   guessed; port/status/VOICE.md carries the arena span they came from. */
+   guessed; status/VOICE.md carries the arena span they came from. */
 int  g_voice_enabled;                /* default 0, and 0 opens no device */
 int  g_voice_volume = 80;
 char g_voice_mic[96];                /* "" = auto-pick, see above */

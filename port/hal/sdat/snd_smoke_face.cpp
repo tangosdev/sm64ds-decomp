@@ -1,6 +1,6 @@
 // smoke_player's copy of ONE ARM primitive, so it can carry rung R1's slice.
 //
-// Run link100, lane SND1. port/slice_snd1.txt seats src/func_0205ae64.c, the
+// Run link100, lane SND1. port/slice_snd1.txt seats src/unnamed/arm9/0205/func_0205ae64.c, the
 // ROM's channel-7 registration. Its retry arm is
 //
 //     do { func_02059d8c(0x64); } while (!func_0205ba3c(7, 1));

@@ -671,7 +671,7 @@ void *_ZTV18TextureTransformer[4];
 
    THE ROM AGREES: arm9_dec.bin 0x0201587c is e59fc000 / e12fff1c / .word
    0x02046b64, a 0xc long-call veneer that passes its registers straight into
-   func_02046b64, whose own matched TU (src/func_02046b64.c) takes exactly two.
+   func_02046b64, whose own matched TU (src/unnamed/arm9/0204/func_02046b64.c) takes exactly two.
    No receiver anywhere in the chain.
 
    THIS USED TO BE A HOST COPY of that one line -- it called func_02046b64
@@ -975,7 +975,7 @@ int _ZN18daObjHatenaBlock_c16CleanupResourcesEv(void *self)
    data_0209f5d0 a real vptr first", because the only receiver that reaches
    SetForwardTime here is &data_0209f5d0 and its host storage was zeroed BSS --
    the port did not link the ROM's static initialiser for it. It links it now:
-   src/__sinit_02074edc.c is on port/slice_ctor.txt and the ROM's own .ctor
+   src/unnamed/arm9/0207/__sinit_02074edc.c is on port/slice_ctor.txt and the ROM's own .ctor
    walk runs it at Entry, so the object is constructed the way the DS
    constructs it and its vptr is data_0208eacc, _ZTV15FaderBrightness. That
    table's dtor pair is seated in hal/scene_boot.cpp and every slot from +0x08
@@ -997,7 +997,7 @@ int _ZN18daObjHatenaBlock_c16CleanupResourcesEv(void *self)
    THE BRANCH IS REACHABLE NOW, AND FOR ONE FRAME EACH (run linkfull, lane
    LOOPIN2). Every call site of these two faces on &data_0209f5d0 is
    dScene_c::BeforeBehavior's soft-reset branch, behind `data_0209f1e0 != 0`,
-   and src/func_02023498.c -- the only TU that writes that byte non-zero -- is
+   and src/unnamed/arm9/0202/func_02023498.c -- the only TU that writes that byte non-zero -- is
    in the link and runs every frame at phase 0x17 (tests/walk_window.cpp's
    level loop, hal/scene_boot.cpp's port_scene_tick). So L+R+START+SELECT on a
    level raises the latch; that frame's BeforeBehavior calls SetForwardTime
@@ -1172,7 +1172,7 @@ void port_texseq_prepare_r1(void *self, void *bmd)
  * heap shrink-to-fit (Heap::_Sizeof, func_020469e0, Heap::Reallocate on
  * Memory::gameHeapPtr). The port's other model path gates the same callee
  * behind port_model_shrink_enabled (hal/level_boot.cpp, applied to
- * src/func_02016ff4.cpp by hostgen), so with this seat the two paths no longer
+ * src/unnamed/arm9/0201/func_02016ff4.cpp by hostgen), so with this seat the two paths no longer
  * agree: Model::LoadFile's numRefs==1 branch now performs the ROM's shrink and
  * Model::LoadAndSetFile's tail still declines it by default. That is the
  * direction the port is supposed to move -- the ROM's own body doing the ROM's

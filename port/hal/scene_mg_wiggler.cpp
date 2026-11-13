@@ -208,7 +208,7 @@
 //
 // THE NESTED ARRAY IS CLEAN TOO, because the check has to follow the helpers.
 // The element constructor builds five 8-byte elements at element+0x18 with
-// func_0203d738 as THEIR constructor, and src/func_0203d738.c is an empty body
+// func_0203d738 as THEIR constructor, and src/unnamed/arm9/0203/func_0203d738.c is an empty body
 // (4 bytes in the ROM, `bx lr`); the destructor side is
 // NullDestructor_0203d47c, also 4 bytes. Neither writes a word 0.
 //

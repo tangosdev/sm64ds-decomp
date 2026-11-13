@@ -120,7 +120,7 @@ DSSTATE_END
  * way to read the quotient AND the remainder out of the r0/r1 pair. Every
  * caller of the NAME __aeabi_uidiv in this tree declares it
  * `unsigned int (unsigned int, unsigned int)` -- src/func_0204fce8.c,
- * src/func_02041224.c, src/_ZN9Butterfly13InitResourcesEv.cpp -- and reads
+ * src/unnamed/arm9/0204/func_02041224.c, src/_ZN9Butterfly13InitResourcesEv.cpp -- and reads
  * the quotient only. Two spellings, two declared shapes, both correct for
  * their own callers. */
 unsigned int __aeabi_uidiv(unsigned int n, unsigned int d)

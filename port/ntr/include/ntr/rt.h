@@ -81,8 +81,8 @@ bool rt_hblank_armed();
 void rt_hblank_dispatch();
 
 // DS TIMER 0 (run hunt2, lane HUD2). The ROM programs it once at boot
-// (src/func_02059788.c: TM0CNT_L = 0, TM0CNT_H = 0xc1 = run, IRQ on overflow,
-// prescaler F/64) and reads it as the OS tick (src/func_02059650.c: the
+// (src/unnamed/arm9/0205/func_02059788.c: TM0CNT_L = 0, TM0CNT_H = 0xc1 = run, IRQ on overflow,
+// prescaler F/64) and reads it as the OS tick (src/unnamed/arm9/0205/func_02059650.c: the
 // counter at 0x04000100 plus the overflow count its mask-8 handler keeps).
 // rt_timer0_advance moves it across `vblanks` DS frames of 560190 bus cycles
 // (263 lines x 2130) and raises the overflow interrupt the way the DS does.
@@ -117,7 +117,7 @@ bool wipe_suppressed();
 bool wipe_cut_picture(uint32_t *dst, int w, int h, int stride);
 
 // The DS's power-on interrupt state (IME set, IE carrying VBlank). It stands
-// in for src/func_0201a054.c, the game's own IRQ init, which is in no slice.
+// in for src/unnamed/arm9/0201/func_0201a054.c, the game's own IRQ init, which is in no slice.
 // Idempotent. rt_run calls it; a frame loop that does not run on the fiber
 // must call it before the first tick, because the ROM's arming code SAVES AND
 // RESTORES IME and therefore cannot set it.

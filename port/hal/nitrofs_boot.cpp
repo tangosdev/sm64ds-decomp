@@ -3,7 +3,7 @@
 //
 // ---- WHY THIS FILE EXISTS --------------------------------------------------
 //
-// src/func_0205d96c.c is NitroSDK's FS_Init. It reads four words out of the
+// src/unnamed/arm9/0205/func_0205d96c.c is NitroSDK's FS_Init. It reads four words out of the
 // cartridge header's mirror in main RAM:
 //
 //     *(int *)0x027FFE40   FNT offset      cartridge header +0x40
@@ -52,11 +52,11 @@
 //     *(int *)0x027FFE58   ARM7 overlay table offset   cartridge header +0x58
 //     *(int *)0x027FFE5C   ARM7 overlay table size     cartridge header +0x5c
 //
-// Five matched TUs read that pair of pairs: src/func_02018c00.c and
-// src/func_0205df40.c (the game's and the SDK's FS_LoadOverlayInfo, which fall
+// Five matched TUs read that pair of pairs: src/unnamed/arm9/0201/func_02018c00.c and
+// src/unnamed/arm9/0205/func_0205df40.c (the game's and the SDK's FS_LoadOverlayInfo, which fall
 // back to the mirror when the overlay table has not been cached into RAM by
-// src/func_020423dc.c -- which, outside Download Play, it never is), their two
-// tails src/func_02018cbc.c and src/func_0205dffc.c, and src/func_020424c0.c
+// src/unnamed/arm9/0204/func_020423dc.c -- which, outside Download Play, it never is), their two
+// tails src/unnamed/arm9/0201/func_02018cbc.c and src/unnamed/arm9/0205/func_0205dffc.c, and src/unnamed/arm9/0204/func_020424c0.c
 // (the Download Play path's "read all four tables into one buffer", whose
 // caller func_02040c34 is WM1's gate). Until this file wrote them the mirror
 // read 0 + 0, so every one of those readers took its `off >= hi` arm and
@@ -74,7 +74,7 @@
 // the FAT span, and a FAT entry (a file). The overlay table is none of those --
 // it sits ahead of the FNT and no FAT entry covers it, checked against the
 // cartridge itself -- so the read prints "in no FAT entry and in neither table
-// span" and returns 1, which src/func_02018cbc.c does not test. The honest
+// span" and returns 1, which src/unnamed/arm9/0201/func_02018cbc.c does not test. The honest
 // close is one more span test in port_nitrofs_read beside the two it already
 // has, served out of build/assets/nitrofs_ovt9.bin, which tools/
 // asset_catalog.py now copies out of the cartridge for exactly that.
@@ -91,16 +91,16 @@
 // new SHADOW row in port/tools/linkage.py's replacement queue -- work invented
 // by this change rather than work it did.
 //
-//   func_02060890  -> port_nitrofs_card_bringup      (in src/func_0205d96c.c)
+//   func_02060890  -> port_nitrofs_card_bringup      (in src/unnamed/arm9/0205/func_0205d96c.c)
 //
 // The READ face that stood beside it (func_0205db2c -> port_nitrofs_read) is
 // RETIRED (run linkfull, lane S4CARD): FS_Init registers the ROM's own read
 // function, whose card driver reads the cartridge through ntr/card.cpp.
 //
 // The two EXMEMCNT renames that stood here are RETIRED (run link100 wave 7,
-// lane SEAT1): src/func_020570c0.c and src/func_020570d8.c now spell the
-// register instead of the placeholder `G`, so src/func_020570f0.c and
-// src/func_0205710c.c call the ROM's own bodies under their own names. See the
+// lane SEAT1): src/unnamed/arm9/0205/func_020570c0.c and src/unnamed/arm9/0205/func_020570d8.c now spell the
+// register instead of the placeholder `G`, so src/unnamed/arm9/0205/func_020570f0.c and
+// src/unnamed/arm9/0205/func_0205710c.c call the ROM's own bodies under their own names. See the
 // retired faces further down this file and port/slice_seat1.txt rows 2 and 3.
 //
 // ---------------------------------------------------------------------------
@@ -190,7 +190,7 @@ OverlayWords read_overlay_words(void)
 }
 
 // ---- THE ROMCTRL WORD (header +0x60), run linkfull, lane S4CARD -------------
-// src/func_02060b64.c builds every card command's ROMCTRL value as
+// src/unnamed/arm9/0206/func_02060b64.c builds every card command's ROMCTRL value as
 // (*(u32 *)0x027FFE60 & ~0x07000000) | 0xA1000000: the cartridge header's "port
 // 40001A4h setting for normal commands" with the block size forced to 0x200 and
 // the start bit set. The port's catalog does not carry that word, so it is read
@@ -231,7 +231,7 @@ unsigned read_romctrl_word(void)
 extern "C" {
 
 // ---- THE SEED --------------------------------------------------------------
-// EIGHT stores now: the four addresses src/func_0205d96c.c reads and the four
+// EIGHT stores now: the four addresses src/unnamed/arm9/0205/func_0205d96c.c reads and the four
 // the overlay readers read, from the eight values tools/asset_catalog.py took
 // out of the cartridge header -- and a NINTH, the ROMCTRL word at 0x027ffe60
 // the card driver reads (read_romctrl_word above says where it comes from).
@@ -291,7 +291,7 @@ void port_nitrofs_header_mirror_seed(void)
 
 // ---- THE READ-BACK ---------------------------------------------------------
 // FS_Init hands the four words to func_0205cb68, which lays them into the
-// archive record data_020a8074 (src/func_0205cb68.c: +0x20 and +0x30 the FAT
+// archive record data_020a8074 (src/unnamed/arm9/0205/func_0205cb68.c: +0x20 and +0x30 the FAT
 // offset, +0x24 the FAT size, +0x28 and +0x34 the FNT offset, +0x2c the FNT
 // size, +0x3c and +0x44 the read function, +0x40 the write function). Reading
 // them back out of the record is how this port proves the ROM's own body read
@@ -329,7 +329,7 @@ void port_nitrofs_boot_report(void)
 }
 
 // ---- FACE: the card driver's own init, as FS_Init reaches it ---------------
-// PORT_HOST_ABI: src/func_0205d96c.c's fifth statement is func_02060890(), the
+// PORT_HOST_ABI: src/unnamed/arm9/0205/func_0205d96c.c's fifth statement is func_02060890(), the
 // card driver bring-up. The port does NOT run it from here, and the reason is
 // ordering rather than hardware:
 //
@@ -342,9 +342,9 @@ void port_nitrofs_boot_report(void)
 //     +0x34 clear, and run the whole ROM body -- including func_0206002c(),
 //     which CREATES THE CARD THREAD -- before main and before the seeder.
 //   * The bring-up the ROM's boot order actually wants runs inside main:
-//     func_02042f68's arm 1, which is src/func_02060890.c itself since run
+//     func_02042f68's arm 1, which is src/unnamed/arm9/0206/func_02060890.c itself since run
 //     linkfull lane S4CARD (hal/boot_arms.cpp's R2c arm prints what it did).
-//     On the DS FS_Init runs AFTER it (src/func_0201a054.c) and the guard
+//     On the DS FS_Init runs AFTER it (src/unnamed/arm9/0201/func_0201a054.c) and the guard
 //     returns; this no-op is that return, for an FS_Init that runs first.
 //   * (The two statements an older note here called unlinkable --
 //     `data_020a8780 = func_02060a64`, the card's CPU ROM read and not a FLASH
@@ -361,7 +361,7 @@ void port_nitrofs_card_bringup(void)
 // ---- RETIRED: the EXMEMCNT bit-11 faces -----------------------------------
 // port_rom_exmemcnt_card_grant and port_rom_exmemcnt_card_release stood here
 // until run link100 wave 7, lane SEAT1. They existed because
-// src/func_020570c0.c and src/func_020570d8.c spelled their absolute address as
+// src/unnamed/arm9/0205/func_020570c0.c and src/unnamed/arm9/0205/func_020570d8.c spelled their absolute address as
 // the decomp's GENERIC PLACEHOLDER `G`, which resolves in this binary to
 // hal/heap_vtable.cpp's default-heap word -- so the ROM's own bodies, linked as
 // they stood, would have ORed and ANDed bit 11 of a heap pointer four times a
@@ -369,7 +369,7 @@ void port_nitrofs_card_bringup(void)
 // day the decomp spells REG_EXMEMCNT instead of `G` both faces retire into two
 // real TUs". That day is this gate.
 //
-// src/ now spells it, the way src/func_02057128.c and src/func_02057140.c
+// src/ now spells it, the way src/unnamed/arm9/0205/func_02057128.c and src/unnamed/arm9/0205/func_02057140.c
 // already spelled the same register one page down and one bit over:
 //
 //     func_020570c0:  *(volatile unsigned short *)0x4000204 |= 0x800;
@@ -385,8 +385,8 @@ void port_nitrofs_card_bringup(void)
 //
 // EXMEMCNT bit 11 is the NDS slot's access right: clear gives the cartridge to
 // the ARM9, set gives it back to the ARM7, which is what the two callers use
-// them for -- src/func_0205710c.c takes the cartridge as the lock is taken,
-// src/func_020570f0.c gives it back on the unlock. ntr maps 0x04000000 + 0x2000
+// them for -- src/unnamed/arm9/0205/func_0205710c.c takes the cartridge as the lock is taken,
+// src/unnamed/arm9/0205/func_020570f0.c gives it back on the unlock. ntr maps 0x04000000 + 0x2000
 // (ntr/io.cpp kRegions, fatal), so the store lands in held memory, and nothing
 // on the host reads bit 11 back -- there is no ARM7 arbitrating a cartridge
 // slot -- which is why running the ROM's own lock arm is safe here.

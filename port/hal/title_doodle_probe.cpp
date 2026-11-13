@@ -4,8 +4,8 @@
  *
  * The doodle (the DS lets you draw on the bottom screen with the stylus at the
  * title) is a SEPARATE spawned actor whose handle the ROM parks in
- * data_ov007_02104ba0, allocated 0x4c bytes by src/func_ov007_020b9880.c when the
- * title switches to the draw screen (src/func_ov007_020b0358.c case 2 calls
+ * data_ov007_02104ba0, allocated 0x4c bytes by src/unnamed/ov007/func_ov007_020b9880.c when the
+ * title switches to the draw screen (src/unnamed/ov007/func_ov007_020b0358.c case 2 calls
  * func_ov007_020bd1c0(1) which reaches the constructor). Until that construction
  * runs the handle is null, so this probe's first job is to say whether the actor
  * EXISTS at all on a given run.
@@ -48,8 +48,8 @@ extern "C" void port_title_doodle_probe(int frame, const char* when)
     }
 
     /* THE STROKE STORAGE IS ON THE VIEW OBJECT AT d[0] (field +0x0), NOT on the
-       0x4c-byte actor.  src/func_ov007_020b91b4.c reads r6 = *(char**)02104ba0 and
-       then a0[0xac]/a0[0xb0]; src/func_ov007_020c4dfc.c reads c+0xac (stroke
+       0x4c-byte actor.  src/unnamed/ov007/func_ov007_020b91b4.c reads r6 = *(char**)02104ba0 and
+       then a0[0xac]/a0[0xb0]; src/unnamed/ov007/func_ov007_020c4dfc.c reads c+0xac (stroke
        count), c+8 (capacity), c+0x28 (point array), c+0x38 (per-stroke header
        array) with c = *(02104ba0).  So the counters live one indirection down. */
     const int* view = (const int*)d[0];                   /* +0x00 view object */

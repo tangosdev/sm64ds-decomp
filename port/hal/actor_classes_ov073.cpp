@@ -67,7 +67,7 @@
 // literal (0x504 the size, 8/8/2 the array counts, 0xc the stride,
 // func_0203d384 the element constructor in r3, _ZN7Vector3D1Ev the destructor on
 // the stack) is read from the disassembly of 0x02121ec8 and its literal pool.
-// src/d_a_king_donketu.cpp stays OUT of this lane's slice.
+// src/game/actors/d_a_king_donketu.cpp stays OUT of this lane's slice.
 // The three Ccc Spawns do NOT have this problem -- their
 // `_ZN10dBgActor_cC2Ev(p)` names the receiver -- so they are registered directly.
 //

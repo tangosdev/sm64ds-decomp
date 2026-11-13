@@ -41,7 +41,7 @@
 // ============================ WHERE THIS SITS ==============================
 //
 // OUTSIDE THE ROM-FAITHFUL PATH, entirely. Nothing in src/ knows this exists.
-// The DS input-lockstep -- src/func_0203df40.c, src/func_0203ea5c.c and the
+// The DS input-lockstep -- src/unnamed/arm9/0203/func_0203df40.c, src/unnamed/arm9/0203/func_0203ea5c.c and the
 // seam under them -- runs exactly as it does today whether this is on or off,
 // and remains the SHIPPED DEFAULT. This layer only ever corrects where a REMOTE
 // body ended up, after the ROM has already decided it.
@@ -128,7 +128,7 @@ void SetNumPlayers(int n);
 // data_020a0e40 at its own slot (hal/level_boot.cpp's a2 seat: 1 when more
 // than one body is seated, 0 for one), for the hub's opening hold.
 extern int data_0209fc68[];
-// SEAMJOIN1: my comms slot (src/func_0203da9c.c: return data_020a0f10), for the a2 seat's bring-up made again in place
+// SEAMJOIN1: my comms slot (src/unnamed/arm9/0203/func_0203da9c.c: return data_020a0f10), for the a2 seat's bring-up made again in place
 int func_0203da9c(void);
 // The file's save block (FileSaveData); byte 8 bit 7 is the opening-seen bit,
 // for the end of the hub opening's hand-over.
@@ -167,7 +167,7 @@ void func_ov002_020e444c(char *self);
 // The ROM's live-actor walk (src/_ZN8dActor_c4NextEPKS_.cpp), for the
 // targeting probe.
 void *_ZN8dActor_c4NextEPKS_(const void *prev);
-// GHOSTLOOK1: the head pick Player::Render makes (src/actors/Player.cpp,
+// GHOSTLOOK1: the head pick Player::Render makes (src/game/player/Player.cpp,
 // func_ov002_020becf4: the character, then with arg2 = 1 the render latches),
 // for the look probe.
 unsigned _ZN6Player19func_ov002_020becf4Eii(char *self, unsigned v, int arg2);
@@ -3632,7 +3632,7 @@ void gw_follow() {
         }
         /* THE CURSOR. Player::SetAnim only lands its start frame when the
            animation CHANGES: that arm clears the ModelAnim's file word (+0x60,
-           src/actors/Player.cpp, "*(int *)(modelPtr + 0x60) = 0") so
+           src/game/player/Player.cpp, "*(int *)(modelPtr + 0x60) = 0") so
            ModelAnim::SetAnim takes its slow path; with the same id it keeps
            the file and ignores the start frame, so the ghost's own Behavior
            ran the cycle at its own pace -- measured: a paused source's frozen
@@ -3701,7 +3701,7 @@ void gw_follow() {
            (+0x644) is the ghost's own feet whenever its player is grounded. */
         /* FULLY OPAQUE to the ROM's own gates: mOpacity (+0x6f5, 0..0x1f)
            starts at 0 at a level entrance and only the body's own entry state
-           raises it (src/actors/Player.cpp), which a ghost never runs; at 0
+           raises it (src/game/player/Player.cpp), which a ghost never runs; at 0
            the draw gate (port_player_render_hidden) and the shadow skip it.
            The see-through look is the render's ghost alpha, not this. */
         *((unsigned char *)a + 0x6f5) = 0x1f;

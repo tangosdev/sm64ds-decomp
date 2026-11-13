@@ -109,8 +109,8 @@ static void arena_init(void)
 #ifdef SM64DS_OS_ARENA_ROM
 /* The ROM's OS arena table in the shared system block (NitroSDK OSArenaInfo,
    OS_ARENA_MAX = 9 ids): lo[id] at 0x027ffda0, hi[id] at 0x027ffdc4. The
-   addresses are the ROM's own: src/func_02058ea0.c, src/func_02058eb4.c and
-   src/func_02058d58.c spell them, and the cartridge's bodies at 0x02058ea0 /
+   addresses are the ROM's own: src/unnamed/arm9/0205/func_02058ea0.c, src/unnamed/arm9/0205/func_02058eb4.c and
+   src/unnamed/arm9/0205/func_02058d58.cpp spell them, and the cartridge's bodies at 0x02058ea0 /
    0x02058eb4 / 0x02058d58 compute 0x027ff000 + 0xda0 / 0xdc4 + id * 4. */
 typedef unsigned int os_word;
 static os_word *const os_arena_lo_word = (os_word *)(size_t)0x027ffda0u;
@@ -325,7 +325,7 @@ void port_os_arena_seed(void)
 }
 
 /* OS_InitAlloc RUNS AS THE ROM'S (run linkfull wave 27, lane SMALLS1).
-   src/func_02059040.c (arm9 0x02059040, 0xbc) is NitroSDK OS_InitAlloc.
+   src/unnamed/arm9/0205/func_02059040.c (arm9 0x02059040, 0xbc) is NitroSDK OS_InitAlloc.
    Heap::SetupRootHeap calls it as (id, lo, hi, 4); it stores lo into
    OSiHeapInfo[id] (data_020a637c, hosted in hal/scene_boot.cpp), builds the
    heap-info header plus four 0xc-byte descriptors at lo, and returns
@@ -350,7 +350,7 @@ int func_02058ea0(void *) { arena_init(); return (int)(size_t)g_lo; }   /* arena
 int func_02058eb4(void *) { arena_init(); return (int)(size_t)g_hi; }   /* arena hi */
 
 /* the round-up SetupRootHeap's OS_InitAlloc call returns here; the hosting
-   targets run the ROM body instead (src/func_02059040.c), which starts the
+   targets run the ROM body instead (src/unnamed/arm9/0205/func_02059040.c), which starts the
    root heap 0x60 in */
 int func_02059040(void *, int lo, int hi, int align)
 {

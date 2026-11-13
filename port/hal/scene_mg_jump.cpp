@@ -80,7 +80,7 @@
 // instruction for instruction -- writes the BASE table into the object's first
 // word (0x020eeb20), builds the sub-objects, and only then writes this class's
 // own table (0x020eeb60). Both destructors run the same sequence in reverse:
-// src/_ZN11dScMgJump_cD1Ev.cpp (slot 16) and src/_ZN11dScMgJump_cD0Ev.cpp (slot
+// src/_ZN11dScMgJump_cD1Ev.cpp (slot 16) and port/unmatched/hostarm/_ZN11dScMgJump_cD0Ev.cpp (slot
 // 17) each write _ZTV11dScMgJump_c, destroy the arrays, then write
 // _ZTV14dScMgD3DBase_c (0x0213c62c) before calling the base destructor. So
 // the object genuinely dispatches through the BASE table during construction

@@ -3,7 +3,7 @@
 //
 // ---- WHY THIS IS A HOST COPY AND NOT A SLICE LINE -------------------------
 //
-// src/_ZN15dScMgPachinko_cD0Ev.cpp is a matched TU and reads, in full:
+// port/unmatched/hostarm/_ZN15dScMgPachinko_cD0Ev.cpp is a matched TU and reads, in full:
 //
 //     #include "decl_common.h"
 //     int *_ZN15dScMgPachinko_cD0Ev(int *t)
@@ -56,7 +56,7 @@
 // and is routed rather than taken.
 //
 // THE SAME DEFECT IS LIVE ON CURLING'S SEAT TODAY and this lane did not fix it,
-// because it is another lane's file. src/_ZN14dScMgCurling_cD0Ev.cpp is
+// because it is another lane's file. port/unmatched/hostarm/_ZN14dScMgCurling_cD0Ev.cpp is
 // dScMgCurling_c's slot 17, is byte-for-byte the same four statements, IS in
 // port/slice_mg1.txt line 151, and has no per-source -D in port/CMakeLists.txt.
 // Its own ROM pool holds 0x0213c304 (curling's table). So on a scene 374 boot
@@ -83,7 +83,7 @@
 // ---- RETIRED AS A HOST COPY (run linkfull wave 27, lane V3B) --------------
 //
 // Everything above is the history of the copy that stood here, and its first
-// premise no longer holds: src/_ZN15dScMgPachinko_cD0Ev.cpp is not the
+// premise no longer holds: port/unmatched/hostarm/_ZN15dScMgPachinko_cD0Ev.cpp is not the
 // decl_common.h text quoted above any more. It is a real C++ destructor,
 // `dScMgPachinko_c::~dScMgPachinko_c() {}`, which spells neither VT nor HEAP,
 // and under _MSC_VER it now defines the ROM's flat D0 name itself: the D1 body
@@ -101,7 +101,7 @@
 
 extern "C" {
 
-/* the ROM's own D0, src/_ZN15dScMgPachinko_cD0Ev.cpp's _MSC_VER arm */
+/* the ROM's own D0, port/unmatched/hostarm/_ZN15dScMgPachinko_cD0Ev.cpp's _MSC_VER arm */
 void *_ZN15dScMgPachinko_cD0Ev(void *self);
 
 void *port_mg_pachinko_d0(void *self)

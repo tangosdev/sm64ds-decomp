@@ -1433,8 +1433,8 @@ extern "C" void port_coop_leave_begin(int frame) {
 // with exit code 8 (the contract), so a fresh process takes the room.
 extern "C" {
 extern char *data_ov007_0210342c;                             /* dScDSMT_c's scene global (hal/title_entry.cpp reads it the same way) */
-void func_ov007_020aec94(int choice);                         /* src/func_ov007_020aec94.c: the main menu's choice */
-void func_ov007_020b6134(int slot);                           /* src/func_ov007_020b6134.cpp: the file select's A / B / C handler */
+void func_ov007_020aec94(int choice);                         /* src/unnamed/ov007/func_ov007_020aec94.c: the main menu's choice */
+void func_ov007_020b6134(int slot);                           /* src/unnamed/ov007/func_ov007_020b6134.cpp: the file select's A / B / C handler */
 unsigned char func_ov007_020cc600(int arg);                   /* src/game/stages/d_s_dsmt.cpp: 20 = read the three files again */
 void port_touch_force_press(int x, int y, int frames);        /* hal/sub_screen.cpp */
 void port_join_plate_raise_in_place(int server);              /* hal/menu_join_plate.cpp */

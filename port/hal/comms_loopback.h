@@ -119,7 +119,7 @@
 //                                   that is not tidiness -- THE TWO ENDS
 //                                   RUNNING DIFFERENT DEPTHS IS A DESYNC (the
 //                                   derivation, and the ROM's own compare at
-//                                   src/func_0203ea5c.c:418, are over the
+//                                   src/unnamed/arm9/0203/func_0203ea5c.c:418, are over the
 //                                   ACCEPT's delay field in the .cpp), and it
 //                                   is a desync that reads HEALTHY in both
 //                                   logs. The wire carries the number so this

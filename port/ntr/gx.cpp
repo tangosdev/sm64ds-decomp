@@ -797,7 +797,7 @@ GxVertex clip_lerp(const GxVertex &a, const GxVertex &b, float t) {
 }
 
 /* W-BUFFERED DEPTH (the DS's own, SWAP_BUFFERS bit 1). The game writes 3 to
-   0x04000540 every frame (src/func_020190b8.c, src/Initialise3dGraphics.cpp),
+   0x04000540 every frame (src/unnamed/arm9/0201/func_020190b8.c, src/Initialise3dGraphics.cpp),
    so its depth buffer holds W, not the post-divide Z. The raster below used
    Z, which in float sits within a few units of 1.0 across the whole far half
    of a perspective scene: the eyes of a star-select star (flush with the
@@ -2430,10 +2430,10 @@ uint32_t g_resets;          // gx_reset calls since the last take
 // a frame's geometry submission and the engine performs the swap AT THE
 // NEXT VBLANK, not at the store -- which is why the ROM issues it from
 // func_020190b8 at phase 6, one statement before the loop sleeps on the
-// VBlank at phase 7 (src/func_020197b8.c:51-55). Modelling it as an
+// VBlank at phase 7 (src/unnamed/arm9/0201/func_020197b8.c:51-55). Modelling it as an
 // immediate is what run link100 lane R3CFIX measured going wrong: its arm
 // ran the whole host frame reset inside the store, and
-// src/func_ov007_020b6c54.c -- the VS menu, battery scene 6 -- writes
+// src/unnamed/ov007/func_ov007_020b6c54.c -- the VS menu, battery scene 6 -- writes
 // SWAP_BUFFERS from INSIDE a scene body, so that scene's own swap wiped the
 // geometry state mid-frame (worklist.md, R3CFIX CLOSED RED).
 //

@@ -38,7 +38,7 @@
 //   writes _ZTV19dScMgSingle3DBase_c into o[0], constructs the Particle::SysTracker
 //   at +0x471c, then writes _ZTV12dScMg3DEsp_c over it.
 //
-//   THE DESTRUCTORS.  src/_ZN12dScMg3DEsp_cD0Ev.cpp (slot 17, D0) unwinds in the
+//   THE DESTRUCTORS.  port/unmatched/hostarm/_ZN12dScMg3DEsp_cD0Ev.cpp (slot 17, D0) unwinds in the
 //   opposite order -- 0x0213c8c4, the four sub-objects, 0x0213e448,
 //   ~SysTracker, _ZN11dScMgBase_cD2Ev, Memory::Deallocate -- and
 //   src/_ZN12dScMg3DEsp_cD1Ev.cpp (slot 16, D2) does the same without the

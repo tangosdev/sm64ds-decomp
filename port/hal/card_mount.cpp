@@ -38,7 +38,7 @@
 // the castle grounds, one VS archive for a VS map), the scenes' own
 // InitResources, and func_020185c0 on a read of an archive member whose archive
 // is not resident -- it mounts, notes the index in data_0208eb54, and the
-// reader's tail (src/func_02018770.c) unmounts it again after the read. The
+// reader's tail (src/unnamed/arm9/0201/func_02018770.c) unmounts it again after the read. The
 // title and the DS theatre unmount everything (UnloadArchives).
 //
 // ---- WHAT THIS FILE HOLDS NOW ---------------------------------------------
@@ -59,13 +59,13 @@
 //
 // ---- WHAT THE PUBLISH'S BANNER SAID BLOCKED THE MOUNT, AND THE ANSWERS -----
 //
-//   THE ARITIES. src/func_02018d98.c took no parameters and passed none on,
+//   THE ARITIES. src/unnamed/arm9/0201/func_02018d98.c took no parameters and passed none on,
 //     and Heap::_Allocate's veneer was a void() calling a void(). Both are
 //     re-spelled in src/ now: func_02018d98(void *file, const char *path)
 //     passes both to func_0205d518, and src/engine/heap/Heap.cpp forwards
 //     (size, align) to Heap::Allocate and returns its block, reached from the C
 //     name through a port/faces_sync.txt R row onto the real member. The last
-//     ride-through on this path, src/func_02018770.c calling UnloadArchive()
+//     ride-through on this path, src/unnamed/arm9/0201/func_02018770.c calling UnloadArchive()
 //     with nothing where the ARM leaves the index in r0, is re-spelled on main
 //     (PR #3130) and synced here.
 //   THE MEMORY MODEL. The publish was eager and permanent, and running the
@@ -124,8 +124,8 @@ struct PortCardMount {
 };
 PortCardMount data_0208ecf4[13];
 
-/* 0x0209d3b4, one bss word: the archive src/func_02018598.c pairs with a file
-   id to make the FSFileID that opens a loose file; src/func_020189f0.c writes
+/* 0x0209d3b4, one bss word: the archive src/unnamed/arm9/0201/func_02018598.c pairs with a file
+   id to make the FSFileID that opens a loose file; src/unnamed/arm9/0201/func_020189f0.c writes
    it while ov000's entry builds the handle table. Four bytes by the delta to
    data_0209d3b8, and its ROM value is zero because it is bss. */
 int data_0209d3b4;
@@ -135,7 +135,7 @@ DSSTATE_END
 
 /* NitroSDK's archive list head and current directory (hal/scene_boot.cpp),
    read by the audit only. An FSArchive's first word is its packed name and its
-   second the next archive (src/func_0205cc80.c). */
+   second the next archive (src/unnamed/arm9/0205/func_0205cc80.c). */
 extern "C" void *data_020a8048;
 extern "C" void *data_020a804c[3];
 

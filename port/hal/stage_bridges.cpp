@@ -788,7 +788,7 @@ static int st_skybox_vtable_fixup(void *self)
  * the class table (it is MSVC's), and nothing reads these objects' vptrs after
  * this dispatch -- they are deleted inside it. So each transformer gets a
  * private two-word copy whose slot 1 is the ROM's own deleting destructor,
- * src/_ZN18TextureTransformerD0Ev.cpp (its _MSC_VER arm runs the D1 body and
+ * port/unmatched/hostarm/_ZN18TextureTransformerD0Ev.cpp (its _MSC_VER arm runs the D1 body and
  * the class's operator delete, Memory::operator_delete2 -- the heap
  * LoadTextureTransformers' _Znwj allocated from). Slot 0 keeps the class's own
  * word. A transformer whose vptr is not the class's is left alone and named. */
@@ -849,7 +849,7 @@ static int st_texxfm_vtable_fixup(void *self)
  *      host copy already linked in -- confirmed against walk_window.map)
  *      reads the element count from base[-1] and frees the whole block with
  *      `_ZdlPv(base - 8)`, exactly mirroring the ROM's own func_02073244
- *      (src/func_02073244.c: `func_0203cbc0(a - c)`). Base[-1] on a plain
+ *      (src/unnamed/arm9/0207/func_02073244.c: `func_0203cbc0(a - c)`). Base[-1] on a plain
  *      static array is whatever four bytes the linker put before it -- which
  *      is where texxfm_d0's own address came from -- and freeing static
  *      storage through _ZdlPv would be its own crash even with a real count.

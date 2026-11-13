@@ -62,7 +62,7 @@ constexpr uint32_t SQRTCNT = 0x40002B0, SQRT_RESULT = 0x40002B4, SQRT_PARAM = 0x
 //
 //     while (*(volatile unsigned int *)0x4000600 & 0x8000000) ;  // bit 27 busy
 //     ...
-//     *(volatile unsigned int *)0x4000600 = 0;      // src/func_0205583c.c
+//     *(volatile unsigned int *)0x4000600 = 0;      // src/unnamed/arm9/0205/func_0205583c.c
 //     ...
 //     *(volatile unsigned int *)0x4000600 |= 0x8000;
 //     *(volatile unsigned int *)0x4000600 = (... & ~0xc0000000) | 0x80000000;
@@ -574,8 +574,8 @@ bool io_init() {
     /* POWCNT1 (0x04000304), a plain latch -- nothing in the io_write dispatch
        chain below names this address, so its only wrong answer is coming up
        whatever a freshly zeroed page holds. Run link100 lane GREG2:
-       src/func_0205f650.c reads bit 0 (LCDs enabled) as the fast-exit test for
-       the wait loop src/func_02019a58.c, and on the ROM this bit is not a
+       src/unnamed/arm9/0205/func_0205f650.c reads bit 0 (LCDs enabled) as the fast-exit test for
+       the wait loop src/unnamed/arm9/0201/func_02019a58.c, and on the ROM this bit is not a
        boot-time mystery -- main() -> func_0201a054 -> func_02053c40 writes it
        before even Heap::InitializeGameHeap runs:
 
@@ -600,9 +600,9 @@ bool io_init() {
 
        0x027FFC40 is the halfword the DS firmware leaves in the shared system
        block. 2 means "this console was DOWNLOAD-PLAYED", and the ROM does not
-       treat that as trivia: src/func_0203db64.c:72 turns it into
+       treat that as trivia: src/unnamed/arm9/0203/func_0203db64.c:72 turns it into
        data_020a0f04 = 2, an automatic wireless CHILD that never sees a menu,
-       and src/func_020408b0.c:33 picks its wireless init branch on it. The
+       and src/unnamed/arm9/0204/func_020408b0.c:33 picks its wireless init branch on it. The
        day the radio seam is wired -- it is now, hal/comms_seam.cpp -- a 2 here
        would mean every copy of the port boots believing it was download-played
        and tries to become somebody's guest. Nobody could host.
@@ -621,7 +621,7 @@ bool io_init() {
                         skipped, for the port's own reason and at the seam
                         where the question is asked.
          func_0203d7d4  (slice_gate14) now answers 0 for arg 0 instead of 1.
-                        Its one linked arg-0 caller is src/func_02018e68.c,
+                        Its one linked arg-0 caller is src/unnamed/arm9/0201/func_02018e68.c,
                         which RETURNS EARLY on 0, where on 1 it fell through
                         to OS_SleepThread(0). Against the ROM body of
                         OS_SleepThread that fall-through FAULTED -- run mg15's

@@ -724,7 +724,7 @@ bool in_sound_queue(const char *p)
 // THE RADIO'S COMMAND QUEUE, AND WHY IT IS EXCLUDED (run link100, lane DET).
 //
 // data_020a89b0 is src/func_02058940's twenty-byte queue struct and
-// data_020a89c4 is its ten-slot ring; src/func_020616e8.c:76-84 builds them and
+// data_020a89c4 is its ten-slot ring; src/unnamed/arm9/0206/func_020616e8.c:76-84 builds them and
 // hands the ring the ten 0x100 command buffers at data_020a8a40. WM_SendCommand
 // takes one buffer off the ring, fills it, sends it down PXI channel 0xa and
 // puts it back, so the struct's read cursor at +0xc steps once per command the

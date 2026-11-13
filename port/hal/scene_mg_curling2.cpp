@@ -422,7 +422,7 @@ extern "C" void port_scene_curling2_hits(void)
  * as `struct MgC2Pair { int code; int adj; }` at C linkage on purpose, so no
  * alias is involved in any of the seven and none could be.
  *
- * ROW 1 -- THE VTABLE UNDER ITS C++ SPELLING. src/d_s_mg_curling2.c is the
+ * ROW 1 -- THE VTABLE UNDER ITS C++ SPELLING. src/minigames/d_s_mg_curling2.cpp is the
  * factory and its recovered header names the table _ZTV15dScMgCurling2_c, which
  * the ov006 mount defines as the plain C symbol data_ov006_0213c510. The
  * ADDRESS is what the code uses -- `p[0] = (int)_ZTV15dScMgCurling2_c` -- and

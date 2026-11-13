@@ -15,8 +15,8 @@
 //
 // A VS boot with SM64DS_VS_PLAYERS=n and no transport already seats n Yoshi
 // bodies in one world and runs the match (VSSYNC1 M4). The ROM's comms read,
-// src/func_0203df40.c, takes its solo arm (role byte 0) and
-// src/func_0203e0ac.c copies the local key word into all four per-slot
+// src/unnamed/arm9/0203/func_0203df40.c, takes its solo arm (role byte 0) and
+// src/unnamed/arm9/0203/func_0203e0ac.c copies the local key word into all four per-slot
 // records, so every body walks to the one pad. Arena mode changes two things
 // about that world and nothing else:
 //
@@ -28,7 +28,7 @@
 //      camera, the HUD's "me" and the pad all follow body <seat>.
 //   2. MY PAD REACHES MY SLOT ONLY. vs_arena_route_pads clears the other
 //      slots' key words after the ROM's solo copy and before the ROM's own
-//      PadData builder (src/func_0203bc7c.c) turns them into PadData, so the
+//      PadData builder (src/unnamed/arm9/0203/func_0203bc7c.c) turns them into PadData, so the
 //      held / pressed / released words of every other slot are a plain zero
 //      pad, built by the ROM's own code.
 //
@@ -72,20 +72,20 @@ extern unsigned char data_0209f250[];
 extern unsigned char data_0209f21c;
 // The game mode: 1 = VS.
 extern unsigned char data_0209f2d8;
-// The per-slot live bytes and the ROM's "seats lost" bits (src/func_02030b58.c
+// The per-slot live bytes and the ROM's "seats lost" bits (src/unnamed/arm9/0203/func_02030b58.c
 // writes both when a player's link goes; hal/star_flow.cpp vs_remove_body is
 // the port's lockstep copy of the same two writes).
 extern unsigned char data_0209fc5c[];
 extern unsigned char data_0209fc58;
-// MY COMMS SLOT (hosted by hal/actor_vtables.cpp; read by src/func_0203da9c.c).
+// MY COMMS SLOT (hosted by hal/actor_vtables.cpp; read by src/unnamed/arm9/0203/func_0203da9c.c).
 extern unsigned char data_020a0f10[];
 // The local comms record (key word at +0x0e, written from KEYINPUT by the
 // ROM's comms read) and the per-slot records, 0x24 apiece (key word at +0x0e:
-// src/func_0203dae4.c reads it for slot i at data_020a1162 + i*0x24).
+// src/unnamed/arm9/0203/func_0203dae4.c reads it for slot i at data_020a1162 + i*0x24).
 extern unsigned char data_020a1040[];
 extern unsigned char data_020a1154[];
 // The 78 Player::State objects, ov002 bss order (hal/pmf3_player_states.cpp
-// seats their cells; the order is src/__sinit_ov002_021019d0.c's).
+// seats their cells; the order is src/unnamed/ov002/__sinit_ov002_021019d0.c's).
 extern unsigned char data_ov002_0210ffec[], data_ov002_02110004[], data_ov002_0211001c[];
 extern unsigned char data_ov002_02110034[], data_ov002_0211004c[], data_ov002_02110064[];
 extern unsigned char data_ov002_0211007c[], data_ov002_02110094[], data_ov002_021100ac[];
@@ -524,7 +524,7 @@ void drain() {
 
 // ---------------------------------------------------------------------------
 // BODIES OF ABSENT SEATS (vs_arena.h). The two writes the cartridge makes
-// for a lost player (src/func_02030b58.c: its "lost" bit for seats 0..3 and
+// for a lost player (src/unnamed/arm9/0203/func_02030b58.c: its "lost" bit for seats 0..3 and
 // the live byte), plus DROPOUT1's parking spot so the body is nobody's
 // nearest player and off the bottom-screen map.
 // ---------------------------------------------------------------------------
@@ -1180,7 +1180,7 @@ void pup_drive(int seat, char *a, const PupDraw &d0, Pup &pp) {
         // when its animation ends, src/actors/daObjMarioCap_c.cpp func_ov002_020b7330
         // and func_ov002_020b7200). The swap above is the body half; this is the
         // cap half, spawned the way the ROM spawns it for a hat swap
-        // (src/actors/Player.cpp, the data_02092114 branch). Not the cap object on
+        // (src/game/player/Player.cpp, the data_02092114 branch). Not the cap object on
         // the ground: who gets that cap is the referee's.
         if (pup_puton_fix() && have_look == 3u && want_look <= 2u &&
             pp.n_driven >= (unsigned)kPupPutOnMinDriven) {
@@ -1212,7 +1212,7 @@ void pup_drive(int seat, char *a, const PupDraw &d0, Pup &pp) {
     // GRABPOSE1 THE CHEEKS. A Yoshi with a player in its mouth wears the puffed-cheek
     // body model: the ROM sets Player+0x714 (mUseAltBodyModel) at frame 0xc of the swallow
     // (src/_ZN6Player18St_YoshiPower_MainEv.cpp case 1) and Player::GetBodyModelID answers
-    // model 3 + 4 for a Yoshi while it is set (src/actors/Player.cpp:1241); only a
+    // model 3 + 4 for a Yoshi while it is set (src/game/player/Player.cpp:1241); only a
     // spit / hurt / escape clears it. A puppet runs no states, so nothing set it: the eater
     // looked as if it held nothing. The eater's own stream says whose mouth it holds
     // (held = seat + 1, sampled from mObjInMouth), the one clock every console shares. On the

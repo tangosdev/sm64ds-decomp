@@ -10,7 +10,7 @@
  * from its __sinit, which is long after the boot worker has built the ov0
  * handle table they look their handles up in. MSVC instead registers them with
  * the CRT, which runs them BEFORE main -- before the heap, the card thread or
- * the table exist -- so with the ROM's own src/func_02018a24.c answering, each
+ * the table exist -- so with the ROM's own src/unnamed/arm9/0201/func_02018a24.c answering, each
  * one reads data_0209d3b8 while it is still null (measured, run linkfull lane
  * S4OV0: four pre-main lookups, 0x622 / 0x617 / 0x616 / 0x4a1, and those four
  * only). That construction is also a duplicate on this port: the ROM's own

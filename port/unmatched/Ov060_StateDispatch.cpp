@@ -314,7 +314,7 @@ void func_ov060_02117624(char *c);
  *        ((u32)RandomIntInternal(&data_0209e650) >> 0x10) % 10
  *            -- src/func_ov060_021150d0.cpp, src/func_ov060_021151d4.c
  *        data_02082214[(*(u16 *)p >> 4) * 2] / [... * 2 + 1]
- *            -- src/func_ov060_021128c0.cpp, src/func_0203cc28.c
+ *            -- src/func_ov060_021128c0.cpp, src/unnamed/arm9/0203/func_0203cc28.c
  *            (table re-read from arm9_dec.bin: entry[2i]=sin, [2i+1]=cos,
  *             scale 0x1000, 4096 entries -- checked at i=0/512/1024)
  *        *(u16 *)((c + 0x300) + 0xfc)  for the +0x3fc / +0x374 counters

@@ -1171,7 +1171,15 @@
   },
   {
    "file": "port/docs/mmio-inventory.md",
+   "ref": "src/_ZN4cstd11fdiv_resultEv.cpp"
+  },
+  {
+   "file": "port/docs/mmio-inventory.md",
    "ref": "src/_ZN4cstd11ldiv_resultEv.c"
+  },
+  {
+   "file": "port/docs/mmio-inventory.md",
+   "ref": "src/_ZN4cstd11ldiv_resultEv.cpp"
   },
   {
    "file": "port/docs/mmio-inventory.md",
@@ -1179,7 +1187,15 @@
   },
   {
    "file": "port/docs/mmio-inventory.md",
+   "ref": "src/_ZN4cstd3divEii.cpp"
+  },
+  {
+   "file": "port/docs/mmio-inventory.md",
    "ref": "src/_ZN4cstd3modEii.c"
+  },
+  {
+   "file": "port/docs/mmio-inventory.md",
+   "ref": "src/_ZN4cstd3modEii.cpp"
   },
   {
    "file": "port/docs/mmio-inventory.md",
@@ -1187,7 +1203,15 @@
   },
   {
    "file": "port/docs/mmio-inventory.md",
+   "ref": "src/_ZN4cstd4ldivEii.cpp"
+  },
+  {
+   "file": "port/docs/mmio-inventory.md",
    "ref": "src/_ZN4cstd4sqrtEy.c"
+  },
+  {
+   "file": "port/docs/mmio-inventory.md",
+   "ref": "tools/mmio_inventory.py"
   },
   {
    "file": "port/docs/opie-assessment.md",

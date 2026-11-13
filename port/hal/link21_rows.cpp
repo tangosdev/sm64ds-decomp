@@ -105,7 +105,7 @@
 //
 // The seat emits ?SetIRQs@IRQ@@YAII@Z, because the owning TU spells
 // `namespace IRQ`, and the wall asks for ?SetIRQs@IRQ@@SAII@Z, because the
-// referrer src/func_0205f77c.cpp:2-7 declares its own `struct IRQ` with static
+// referrer src/unnamed/arm9/0205/func_0205f77c.cpp:2-7 declares its own `struct IRQ` with static
 // members. Y against S is a free function against a static member and neither
 // has a receiver: both are plain cdecl with one unsigned int argument and an
 // unsigned int return. That is the pair faces4_rows.cpp:100-101 already ships
@@ -120,7 +120,7 @@
 // src/_ZN11dScMgBase_cC2Ev.cpp, both real C++ constructors, which is why they
 // call the base constructor by its decorated name.
 //
-// THE SEAT WAS TRIED FIRST AND IT COSTS FOUR ROWS. src/_ZN7fBase_cC2Ev.cpp is a
+// THE SEAT WAS TRIED FIRST AND IT COSTS FOUR ROWS. port/unmatched/hostarm/_ZN7fBase_cC2Ev.cpp is a
 // real C++ constructor of a polymorphic class, so compiling it makes MSVC emit
 // ??_7fBase_c@@6B@ and ??_GfBase_c@@UAEPAXI@Z, and a vftable references every
 // slot of the class. Compiled standalone with this build's own flags and read
@@ -336,7 +336,7 @@ void __sinit_ov100_02147a70(void)
 // 7. _data_ov062_0211d9c0, the root heap arena start: NOT MOUNTED
 // =========================================================================
 //
-// One referrer, src/func_0201a458.c, and it is a base and limit pair rather than
+// One referrer, src/unnamed/arm9/0201/func_0201a458.c, and it is a base and limit pair rather than
 // an object:
 //
 //     _ZN5mHeap6Heap_t14CreateRootHeapEPvj(&data_ov062_0211d9c0,
@@ -424,14 +424,14 @@ int data_ov062_0211d9c0(void)
 //   * the state is sticky: once the pulled-out bit is set every later call
 //     returns 0 through the second early exit.
 //
-// The one caller, src/func_0205f77c.cpp:36, does exactly one thing with it:
+// The one caller, src/unnamed/arm9/0205/func_0205f77c.cpp:36, does exactly one thing with it:
 // `if (func_0206a4a0() == 0) mode &= ~0x10;`, dropping the cartridge wake
 // trigger from the sleep mask. Zero is the correct instruction for a host with
 // no Slot-2 hardware, and the only path in the tree that reaches that caller,
-// src/func_02019ed0.c:6, passes mode 0xc, which never sets bit 0x10 at all.
+// src/unnamed/arm9/0201/func_02019ed0.c:6, passes mode 0xc, which never sets bit 0x10 at all.
 //
 // A host body rather than a seat, for the reason port/slice_hostgen4.txt:130
-// gives: seating src/func_0206a4a0.c brings five more names with it
+// gives: seating src/unnamed/arm9/0206/func_0206a4a0.c brings five more names with it
 // (data_020a9de0 and the four lock and EXMEMCNT helpers), closes nothing else,
 // and opens a fresh closure into the OS boot path. This is logged as a behaviour
 // decision. The cartridge window is never mapped.

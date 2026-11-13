@@ -8,7 +8,7 @@
 // This probe answers it, in the order the map asked for:
 //
 //   1. THE ROM BODIES. Build target mp_sleepwake_rom links src/OS_SleepThread.c,
-//      src/OS_WakeupThread.c and src/func_02057f54.c -- the three TUs
+//      src/OS_WakeupThread.c and src/unnamed/arm9/0205/func_02057f54.c -- the three TUs
 //      port/slice_gate10.txt already puts in every shipped binary -- and calls
 //      the sleep through the SAME VENEER the wireless code uses, under a
 //      structured-exception guard. port/nfs_names_map.txt:402 asserts these
@@ -18,13 +18,13 @@
 //      instead and runs the identical probe.
 //
 //   3. THE LOOP. The ROM's wireless lockstep, transcribed from
-//      src/func_0203ea5c.c lines 141-422 (the control skeleton verbatim, the
+//      src/unnamed/arm9/0203/func_0203ea5c.c lines 141-422 (the control skeleton verbatim, the
 //      packet staging elided), against three transports:
 //        answers immediately / answers after N turns / never answers.
 //      The third is the one that decides the plan: it MUST fall back to solo
 //      inside the ROM's own bound, not hang.
 //
-// THE VENEER IS REAL IN BOTH ARMS. src/func_02042778.c and src/func_0201a4d0.c
+// THE VENEER IS REAL IN BOTH ARMS. src/unnamed/arm9/0204/func_02042778.c and src/unnamed/arm9/0201/func_0201a4d0.c
 // are linked as themselves, so the call actually goes
 //     func_02042778 -> func_0201a4d0 -> OS_SleepThread(data_0209d4fc)
 // and the wake actually goes through the ROM's own expression from
@@ -48,10 +48,10 @@
 #endif
 
 extern "C" {
-// The veneer, real: src/func_02042778.c tail-calls src/func_0201a4d0.c, which
+// The veneer, real: src/unnamed/arm9/0204/func_02042778.c tail-calls src/unnamed/arm9/0201/func_0201a4d0.c, which
 // is OS_SleepThread(data_0209d4fc).
 void func_02042778(void);
-// The per-VBlank wake queue. src/func_0201a4d0.c takes its address;
+// The per-VBlank wake queue. src/unnamed/arm9/0201/func_0201a4d0.c takes its address;
 // src/_ZN3IRQ13VBlankHandlerEv.cpp:22 hands the same address to OS_WakeupThread.
 extern unsigned short data_0209d4fc;
 void OS_SleepThread(unsigned short *q);
@@ -133,7 +133,7 @@ static bool probe_pump(unsigned spin) {
 // ===========================================================================
 // PART 3: the ROM's wireless lockstep, control skeleton verbatim.
 //
-// src/func_0203ea5c.c, lines 142-146 (the bound), 157 (the while), 190-232
+// src/unnamed/arm9/0203/func_0203ea5c.c, lines 142-146 (the bound), 157 (the while), 190-232
 // (the link-state switch), 413-421 (the sleep), 423-424 (the give-up).
 // The packet staging (lines 158-189) and the unpack (lines 234-411) are
 // elided: they touch no host runtime and cannot change the loop's shape.

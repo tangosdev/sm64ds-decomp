@@ -374,7 +374,7 @@ int _ZN8daStar_c16CleanupResourcesEv(void *self)
 // GATE 90: STAR_CAMERA (actor 177), the BASE Actor vtable _ZTV5Actor
 // ============================================================================
 //
-// StarCamera_Spawn (src/StarCamera_Spawn.cpp) is `new(0xd4) Actor` then
+// StarCamera_Spawn (src/game/actors/StarCamera_Spawn.cpp) is `new(0xd4) Actor` then
 // _ZN8dActor_cC1Ev -- it installs NO vtable of its own, so a spawned STAR_CAMERA
 // dispatches every virtual through the base Actor vtable, _ZTV5Actor at arm9
 // 0x0208e3a4 (aliased data_0208e3a4, 31 slots). The port kept that symbol as

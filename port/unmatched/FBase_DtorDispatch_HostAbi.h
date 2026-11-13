@@ -1,5 +1,5 @@
 /* PORT_HOST_ABI. fBase_c, force-included ahead of
- * src/_ZN7fBase_c21AfterCleanupResourcesEj.cpp so that translation unit
+ * port/unmatched/hostarm/_ZN7fBase_c21AfterCleanupResourcesEj.cpp so that translation unit
  * DISPATCHES the actor's own destructor through ROM vtable slot 16 instead of
  * calling fBase_c's own destructor body directly. Nothing in src/ or include/
  * changes. Run link100, lane DTORCALL.

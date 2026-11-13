@@ -150,7 +150,7 @@
 // THE SAME MINIGAME. The peer screening picked actor id 0x176 by the symbol
 // dScMgCurling_c_classInit; the ROM's own RTTI string at 0x0213c2d0 reads
 // "14dScMgCurling_c", and InitResources loads /MG/d_2d_mg_bg_curling1_ncg.bin
-// and .../curling2_ncg.bin by name. So src/d_s_mg_curling.c's
+// and .../curling2_ncg.bin by name. So src/minigames/d_s_mg_curling.cpp's
 // `_ZTV14dScMgCurling_c` is NOT a per-TU placeholder guess of the ov007 VT0
 // kind -- it is the right class name that happens not to be a config symbol
 // name. The address it means is settled by the ROM anyway:
@@ -923,7 +923,7 @@ static unsigned mg_raw_left(void **vt, unsigned n)
  * this build and on a from-scratch build of the lane's base commit, 26 are
  * BYTE-IDENTICAL and the six that move are 372, 373, 377, 384, 385 -- the five
  * above -- and scene 1, which is not a minigame at all and moves for part 2's
- * reason rather than this one (src/func_ov007_020b7138.c clears POWCNT1 bit 15
+ * reason rather than this one (src/unnamed/ov007/func_ov007_020b7138.c clears POWCNT1 bit 15
  * itself, so the title screen has been presented with its halves exchanged and
  * now is not).
  */
@@ -945,7 +945,7 @@ extern "C" int _ZN11dScMgBase_c15graphCallback_c14GraphCallback3Ev(char *c);
  *
  * IT IS NOT THE PORT THAT DISPATCHES THIS TABLE ANY MORE. Under
  * SM64DS_ROM_LOOP the frame ends in IRQ::VBlankHandler, and the ROM's own
- * src/func_02019144.c and src/func_02019100.c are what call slots 2 and 3 --
+ * src/unnamed/arm9/0201/func_02019144.c and src/unnamed/arm9/0201/func_02019100.c are what call slots 2 and 3 --
  * as `p->vt->func8(p)` and `o->vt[3](o)`, both ordinary cdecl function
  * pointers. A __fastcall face in those slots is entered by a cdecl call, which
  * worked only because MSVC happened to leave the receiver in ecx across the
@@ -1149,13 +1149,13 @@ extern "C" void port_scene_mg_prepare(int id)
  *
  *        *seed = *seed * 0x19660d + 0x3c6ef35f
  *
- *    and its seeder src/func_0203b9b4.c is a one-line store. Both arm9 states
+ *    and its seeder src/unnamed/arm9/0203/func_0203b9b4.c is a one-line store. Both arm9 states
  *    are set to CONSTANTS and never to anything else:
  *
  *        __sinit_02074dc4    func_0203b9b4(&data_0209d4b8, 1)
  *        func_020196cc       func_0203b9b4(data_0209d4b8, 0x4d2)
  *                            <- the boot value, called once from
- *                               src/func_0201a054.c after PrepareToSpawnBoot
+ *                               src/unnamed/arm9/0201/func_0201a054.c after PrepareToSpawnBoot
  *        __sinit_02074e44    func_0203b9b4(&data_0209e650, 1)
  *
  * 2. SO THE ENTROPY IS NOT IN THE SEED, IT IS IN THE DRAW COUNT. The function
@@ -1445,7 +1445,7 @@ extern "C" void port_scene_fill_curling(void)
        grandbase two levels up. It stays the right name for the
        Scene::SetFaders parameter, which is why the call spelling above is
        untouched, and the wrong one for the object.)
-       src/__sinit_02074f80.c is the ROM's static initialiser for it --
+       src/unnamed/arm9/0207/__sinit_02074f80.c is the ROM's static initialiser for it --
        `func_0202fc40(data_0209f61c)` then a
        func_020731dc destructor registration -- and NOTHING IN THE PORT RUNS
        IT. func_0202fc40 is not even in the link.
@@ -1559,7 +1559,7 @@ extern "C" void port_scene_fill_curling(void)
        SEAT8. It printed "MINIGAME FADE MOTION MISSING" while slot 0x08 was a
        named trap, keyed on port_fdr_motion_slots_unseated() so it could not
        rot into a hardcoded 1. Slot 0x08 is _ZN7dWipe_c11AdvanceFadeEv now, dispatched
-       every frame by the ROM's own src/func_02018efc.c off data_0209d4ac, so
+       every frame by the ROM's own src/unnamed/arm9/0201/func_02018efc.c off data_0209d4ac, so
        the predicate had nothing left to ask and both it and this print are
        gone rather than left answering over a seated slot. The seat, the
        driver and the acceptance measurement are in port/fader_boot_map.txt
@@ -2011,7 +2011,7 @@ void  _ZN15dScMgPachinko_c10StartRoundEi(void *self, int n); /* slot 18 state re
 /* the factory. IT NEEDS NO DISPLACEMENT RULING, and that was checked rather
    than assumed: port/mg_fanout_costs.txt section 12 found 0x169's factory
    calling the base constructor with NO argument where ARM rides r0 through,
-   and granted a host copy for it. src/d_s_mg_pachinko.c does NOT have that
+   and granted a host copy for it. src/minigames/d_s_mg_pachinko.cpp does NOT have that
    defect -- it reads `_ZN11dScMgBase_cC2Ev(p);`, with the argument -- so the
    matched TU is sliced and called directly. */
 int  *dScMgPachinko_c_classInit(void);
@@ -3203,7 +3203,7 @@ extern "C" void *port_mg_coin_spawn(void)
 }
 
 /* THE FACTORY NEEDS NO DISPLACEMENT RULING, and that is worth recording
-   because 0x169's did. src/d_s_mg_coin.cpp calls
+   because 0x169's did. src/minigames/d_s_mg_coin.cpp calls
    _ZN11dScMgBase_cC2Ev(o) WITH its argument, where src/minigames/d_s_mg_cup.cpp
    (0x169's factory) calls the same base constructor with none and rides r0
    through. That callee dereferences on its first statement and then writes
@@ -3329,7 +3329,7 @@ extern "C" void port_scene_mg_coin_hits(void)
 //   RTTI       0x0213db58  "16dScMgPachinko2_c", 0x64 bytes before the table,
 //              which is the same RTTI-then-vtable adjacency the sibling has at
 //              0x0213d960 / 0x0213d9cc
-//   class      dScMgPachinko2_c, and src/d_s_mg_pachinko2.c's own
+//   class      dScMgPachinko2_c, and src/minigames/d_s_mg_pachinko2.cpp's own
 //              `p[0] = (int)_ZTV16dScMgPachinko2_c;` agrees with the ROM's
 //              string. That name is bound to the address by the one
 //              /alternatename row in unmatched/MgPachinko2_Faces.cpp
@@ -3426,7 +3426,7 @@ void  _ZN16dScMgPachinko2_c10StartRoundEi(void *self, int n); /* slot 18 state r
 /* the factory. IT NEEDS NO DISPLACEMENT RULING, and that was checked rather
    than assumed: port/mg_fanout_costs.txt section 12 found 0x169's factory
    calling the base constructor with NO argument where ARM rides r0 through,
-   and granted a host copy for it. src/d_s_mg_pachinko2.c does NOT have
+   and granted a host copy for it. src/minigames/d_s_mg_pachinko2.cpp does NOT have
    that defect -- it reads `_ZN11dScMgBase_cC2Ev(p);`, with the argument -- so
    the matched TU is sliced and called directly. Confirmed against the ROM at
    0x02104258 (0x34 bytes): arm_call to 0x020b2adc at 0x0210426c with r0
@@ -3615,7 +3615,7 @@ extern "C" void port_scene_mg_pachinko2_hits(void)
 // 0x0213dd84, which reads "12dScMgPanel_c" in the shipped image. The class is
 // dScMgPanel_c and the two player-facing titles the spawn symbol carries are
 // localised names, exactly the MgShuffleShell / dScMgCurling_c and MgWanted /
-// dScMgLuigi_c shape. src/d_s_mg_panel.c spelling
+// dScMgLuigi_c shape. src/minigames/d_s_mg_panel.cpp spelling
 // _ZTV12dScMgPanel_c agrees, and is the weaker of the two witnesses.
 //
 // ONE ACTOR ID, TWO PLAYER TITLES, AND THE SELECTOR IS INSIDE THE CLASS. A
@@ -3768,7 +3768,7 @@ static char *g_mg_panel_self;
 
 /* The registry's factory column is void *(*)(void) and the matched factory
    returns int *. One typed forwarder, the shape port_mg_curling_spawn has.
-   NO DISPLACEMENT RULING IS NEEDED: src/d_s_mg_panel.c calls
+   NO DISPLACEMENT RULING IS NEEDED: src/minigames/d_s_mg_panel.cpp calls
    _ZN11dScMgBase_cC2Ev(p) WITH the object pointer, where dScMgCup_c's factory
    calls the same base constructor with none and rides r0 through. Confirmed
    against the ROM at 0x0210786c (arm_call to 0x020b2adc) with r0 = p live. */

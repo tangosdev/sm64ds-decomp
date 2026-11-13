@@ -94,7 +94,7 @@ extern int _ZTV12daMugenBGM_c[];                        /* ov002 mount, 31 slots
 int *_ZN12daMugenBGM_cD0Ev(int *self);                  /* slot 17, matched, gate 207 */
 
 /* D1/D0 teardown members, all hosted seams. PushBlock's chain is read out
-   of its OWN matched D0 body (src/_ZN11PowerFlowerD0Ev.cpp): WithMeshClsn
+   of its OWN matched D0 body (port/unmatched/hostarm/_ZN11PowerFlowerD0Ev.cpp): WithMeshClsn
    +0x200, MovingCylinderClsn +0x1cc, ShadowModel +0x174, Model +0x124,
    Model +0xd4, then Actor's D2 -- high-address member first, exactly the
    order Spawn constructs in reverse. MugenBgm (212 bytes, no members past
@@ -242,7 +242,7 @@ static int __fastcall pb_yoshi(void *s, void *)
 /* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
    the transcribed thunk that stood here (pb_d1) spelled the same chain by hand. */
 /* GATE 204: slot 17 runs the ROM's own body now, not the chain above typed out
-   a second time. src/_ZN11PowerFlowerD0Ev.cpp is flat C, carries no inferred-stub
+   a second time. port/unmatched/hostarm/_ZN11PowerFlowerD0Ev.cpp is flat C, carries no inferred-stub
    marker, and is the block this thunk was transcribed from -- same six member
    D1s in the same order, same Deallocate, and it spells the table by the RTTI
    name the pragma above already aliases onto _ZTV9PushBlock. It is on

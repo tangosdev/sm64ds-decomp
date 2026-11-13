@@ -152,7 +152,7 @@ int _ZN14daObjFl_Coin_c8BehaviorEv(void *self);   /* slot 6, the range gate */
    host thunks below storing the HOST shell table as the mid-teardown vptr (the
    gate-178 Amilift treatment; the mounted words are DS addresses and must never
    be dispatched). Both reach the matched TUs now: slot 16 through port_bpm_d1,
-   slot 17 through the flat D0 that src/_ZN19BowserPuzzleManagerD0Ev.cpp's
+   slot 17 through the flat D0 that port/unmatched/hostarm/_ZN19BowserPuzzleManagerD0Ev.cpp's
    _MSC_VER arm defines (run linkfull wave 27, lane V3B; see shl_d0). */
 void *_ZN14daObjFl_Coin_cD0Ev(void *self);
 extern unsigned char _ZTV14daObjFl_Coin_c[];  /* the mounted shell table (0x84) */
@@ -417,7 +417,7 @@ static int __fastcall shl_d1(void *s, void *)
 /* SLOT 17 IS THE MATCHED TU TOO (run linkfull wave 27, lane V3B). What stood
    here was the same hand-written teardown slot 16 retired -- store the host
    shell table, then _ZN8dActor_cD2Ev, then Memory::Deallocate with the game
-   heap -- written while src/_ZN19BowserPuzzleManagerD0Ev.cpp spelled the shared
+   heap -- written while port/unmatched/hostarm/_ZN19BowserPuzzleManagerD0Ev.cpp spelled the shared
    VT/HEAP placeholders. That TU is a real C++ destructor now and its _MSC_VER
    arm defines the ROM's flat D0 (ov064 0x02118c10): the same ??1 slot 16
    reaches, then dActor_c's inline operator delete, which is that same

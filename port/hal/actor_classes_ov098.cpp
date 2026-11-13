@@ -86,8 +86,8 @@ int _ZN16daObjFallBlock_c8BehaviorEv(char *self);                  /* slot 6  */
 int _ZN16daObjFallBlock_c6RenderEv(char *self);                    /* slot 9  */
 void _ZN16daObjFallBlock_c15OnHitByMegaCharER6Player(char *self);  /* slot 27 */
 void _ZN16daObjFallBlock_c4KillEv(char *self);                     /* slot 31 */
-/* slots 16 and 17: the #ifdef _MSC_VER arms of src/_ZN16daObjFallBlock_cD1Ev.cpp
-   and src/_ZN16daObjFallBlock_cD0Ev.cpp, the ROM's own two bodies spelled
+/* slots 16 and 17: the #ifdef _MSC_VER arms of port/unmatched/hostarm/_ZN16daObjFallBlock_cD1Ev.cpp
+   and port/unmatched/hostarm/_ZN16daObjFallBlock_cD0Ev.cpp, the ROM's own two bodies spelled
    step for step */
 void *_ZN16daObjFallBlock_cD1Ev(void *self);
 void *_ZN16daObjFallBlock_cD0Ev(void *self);

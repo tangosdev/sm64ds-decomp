@@ -459,7 +459,7 @@ extern void *_ZTV8dScene_c[];                       /* 0x02092680 */
    scene 8 and run link100 wave 14 lane SEAT14D seats scene 2, and each class's
    factory names its own table by the ROM's own spelling
    (dScGameOver_c_classInit and both its dtor bodies; dScTitle_c_classInit's
-   third vptr store, src/d_s_title.cpp). They are host arrays for
+   third vptr store, src/game/stages/d_s_title.cpp). They are host arrays for
    dScStarSel_c's reason, and they are inside the .dsstate bracket for
    dScStarSel_c's reason -- a hosted DS data symbol the save state has to
    capture, which is what port/tools/dsstate_guard.py enforces. ALL THREE OF
@@ -543,7 +543,7 @@ void port_scene_mg_seed_rng(int id, int windowed);
  *
  * THE DEFECT THIS CLOSES, derived off the ROM's own sources and then measured.
  *
- * src/func_02019144.c is the ROM's once-per-frame display sync, called from
+ * src/unnamed/arm9/0201/func_02019144.c is the ROM's once-per-frame display sync, called from
  * IRQ::VBlankHandler. It OPENS with the current graphics block's vtable slot 2
  * and RETURNS WITHOUT DOING ANYTHING ELSE when that slot answers 0:
  *
@@ -841,7 +841,7 @@ static void port_l2_pack_check(void)
 // ---- 1b. THREE HAND-ASM PRIMITIVES, HOSTED ---------------------------------
 //
 // PORT_HOST_ABI: all three TUs are `asm void` blocks, which MSVC cannot parse.
-// src/Matrix3x3_LoadIdentity.c, src/MultiStore32Bytes.c and src/func_02052ec8.c
+// src/Matrix3x3_LoadIdentity.c, src/MultiStore32Bytes.c and src/unnamed/arm9/0205/func_02052ec8.c
 // carry the tree's HAND-ASM PRIMITIVE banner -- they were assembly in the
 // original and there is no C to decompile them to -- so they are transcribed
 // here instead of being compiled, they are NOT in the slice, and none of the
@@ -862,7 +862,7 @@ static void port_l2_pack_check(void)
 //                               / stmia r0!,{r1,r3}
 //     which lays down 0x1000,0,0, 0,0x1000,0, 0,0,0x1000 -- a 3x3 identity in
 //     the game's 1.12 fixed point, with [8] written FIRST and the other eight
-//     in four pairs. Its one caller, src/func_ov007_020c42f8.c, declares it
+//     in four pairs. Its one caller, src/unnamed/ov007/func_ov007_020c42f8.c, declares it
 //     `void Matrix3x3_LoadIdentity(Mat3 *m)`, which is the shape used here.
 //
 //   MultiStore32Bytes(val,dst,len)  fills len BYTES from dst with the 4-byte
@@ -908,7 +908,7 @@ extern "C" void MultiStore32Bytes(unsigned val, int *dst, int len)
 //                      which is also what the ROM does when the overlay is not
 //                      resident. THAT PARAGRAPH IS NOW THE ARGUMENT FOR THE
 //                      SEAT rather than for the face: run link100's lane LOADOV
-//                      linked src/func_02017e94.c on port/slice_loadov.txt, so
+//                      linked src/unnamed/arm9/0201/func_02017e94.c on port/slice_loadov.txt, so
 //                      the early return is the ROM's own line and not a host
 //                      body agreeing with it.
 //   LoadOverlay(id)    load, reached only from Behavior's result == 6 branch,
@@ -986,7 +986,7 @@ extern "C" { int overlay_60, overlay_98; }
    the ROM asks for it through exactly one path: func_0201a694 (src/
    func_0201a694.c, the pre-spawn hook func_0201a5cc seats in data_020a4b58)
    -> GetSceneOverlayID(id) == &overlay_6 for 0x169..0x186 -> func_0201a798
-   (src/func_0201a798.c), which loads ov004 and then ov006. The port's mounts
+   (src/unnamed/arm9/0201/func_0201a798.c), which loads ov004 and then ov006. The port's mounts
    are static arrays, so the only part of that load with anything to do is the
    thirty-five constructors, and those are hal/scene_mg.cpp's
    port_scene_mg_overlay_load (once per process, in the ROM's ov004-then-ov006
@@ -1040,11 +1040,11 @@ extern "C" void LoadOverlay(int id)
 }
 /* func_02017e94's face MOVED (run link100, lane LOADOV) and did not retire: it
    is hal/nitrofs_face.cpp's now, on smoke_player alone, and the two window
-   targets link the ROM's own src/func_02017e94.c through
+   targets link the ROM's own src/unnamed/arm9/0201/func_02017e94.c through
    port/slice_loadov.txt. The row above kept its trade and this one did not,
    and the difference is one word in two otherwise identical bodies: where
    src/UnloadOverlay.c and src/LoadOverlay.c crash or read on a lookup that
-   fails, src/func_02017e94.c returns. That early return is the arm this host
+   fails, src/unnamed/arm9/0201/func_02017e94.c returns. That early return is the arm this host
    takes on every call, because the id is a host address (the block above) and
    data_0209d3c4 is never filled, so the ROM's own body does exactly what this
    empty face did -- for the ROM's own reason instead of by assertion. The
@@ -1182,7 +1182,7 @@ extern "C" unsigned _ZN4CP1510EnableDTCMEv(void) { return 0x10000u; }
 // driver fills at runtime, so a framed image would have to GUESS a magic and a
 // size the host never has."
 //
-// NEITHER WAS A GUESS. src/func_0201a054.c, the game's own boot spine, calls
+// NEITHER WAS A GUESS. src/unnamed/arm9/0201/func_0201a054.c, the game's own boot spine, calls
 // func_02042f68(0xd01, data_0208ee50): 0xd01 is the card driver's device-table
 // row for a 64 Kbit EEPROM (8192 bytes) and data_0208ee50 is the eight bytes
 // "ds mario". The medium moved down to where the ARM7 would answer for it --
@@ -1422,11 +1422,11 @@ int data_020a637c[9];                              /* bss, 36 by ROM span */
    object on the DS. Two of the ROM's own bodies prove it independently, and
    neither of them takes the distance between the names on trust:
 
-     src/func_0205f0e0.c declares data_020a80cc with a 0x18 pad and then
+     src/unnamed/arm9/0205/func_0205f0e0.c declares data_020a80cc with a 0x18 pad and then
        field_18 .. field_2c and a halfword field_30, i.e. it writes SIX words
        starting at +0x18 -- which is data_020a80e4[0..5] -- and a halfword at
        +0x30, which is data_020a80e4 + 0x18.
-     src/func_0205ea28.c reads data_020a80cc[0x18] as a halfword (byte +0x30)
+     src/unnamed/arm9/0205/func_0205ea28.c reads data_020a80cc[0x18] as a halfword (byte +0x30)
        to decide whether the calibration is live, and then reads p[0..5] off
        data_020a80e4. The same six words and the same halfword, addressed
        through the OTHER name. They can only both be right if the two names
@@ -1434,9 +1434,9 @@ int data_020a637c[9];                              /* bss, 36 by ROM span */
 
    Hosted as two disjoint arrays -- `int data_020a80e4[8]` several hundred
    lines up and `int data_020a80cc[6]` here -- every one of those accesses
-   landed outside its object, and src/func_0205ea28.c is LINKED and on the
+   landed outside its object, and src/unnamed/arm9/0205/func_0205ea28.c is LINKED and on the
    live per-frame stylus path, so this was a real out-of-bounds read in the
-   shipped binary and not a latent one. src/func_0205f270.c stores at +0x30,
+   shipped binary and not a latent one. src/unnamed/arm9/0205/func_0205f270.c stores at +0x30,
    +0x32, +0x34 and +0x36, which is 22 bytes past the end of a 24-byte host
    object, and that is what kept hal/boot2_ipc.cpp's channel 6 claimed and
    quiet (its note at the arm9_bring_up seam) and what refused rung R2d.
@@ -1513,7 +1513,7 @@ DSSTATE_END
    an installed fader (they dispatch data_0209f5bc / data_0209d4ac, so the
    audit is about the POINTER and applies to this table unchanged):
 
-     +0x08  ONE site, shape C: src/func_02018efc.c's
+     +0x08  ONE site, shape C: src/unnamed/arm9/0201/func_02018efc.c's
             `((void(*)(void*))vt[2])(o)`. The receiver is a cdecl ARGUMENT
             there, not a `this`, so this slot is __cdecl and reads it off the
             stack -- correct by the language instead of by what the codegen
@@ -1530,7 +1530,7 @@ DSSTATE_END
    compiled into every target that compiles this file (walk_window,
    smoke_player, walk_window_hires): src/_ZN10dFdDummy_cD1Ev.cpp rides slice_ov007.txt,
    the five FaderBrightness methods ride slice_w1l3.txt and slice_fdr.txt, and
-   Fader::AdvanceInterp rides slice_w1l3.txt. The tenth, src/_ZN10dFdDummy_cD0Ev.cpp,
+   Fader::AdvanceInterp rides slice_w1l3.txt. The tenth, port/unmatched/hostarm/_ZN10dFdDummy_cD0Ev.cpp,
    rides port/slice_gate225.txt as of gate 225 and is seated at +0x04. The
    remaining exceptions are named at their slots: +0x08, +0x0c and +0x10, whose
    src TUs are the three guess-marked bodies port/tools/inferred_stub_guard.py
@@ -1547,7 +1547,7 @@ extern "C" {
      _ZN15FaderBrightness20IsBetweenStartAndEndEv  hal/fdr_arm9_fader_seat.cpp
      _ZN15FaderBrightness7IsAtEndEv             hal/method_faces.cpp
    and one that is added to the link BY this gate:
-     _ZN10dFdDummy_cD0Ev                              src/_ZN10dFdDummy_cD0Ev.cpp, on
+     _ZN10dFdDummy_cD0Ev                              port/unmatched/hostarm/_ZN10dFdDummy_cD0Ev.cpp, on
                                                 port/slice_gate225.txt        */
 void *_ZN10dFdDummy_cD1Ev(void *self);
 void *_ZN10dFdDummy_cD0Ev(void *self);
@@ -1606,7 +1606,7 @@ static void *__fastcall l2_ea6c_s00(void *s, void *)
 
 /* +0x04. D0, AND IT IS SEATED NOW -- run link100 lane ARM9T, gate 225.
    The paragraph that stood here said "the reason is a slice line, not a
-   missing body: src/_ZN10dFdDummy_cD0Ev.cpp is matched and is the same three writes as
+   missing body: port/unmatched/hostarm/_ZN10dFdDummy_cD0Ev.cpp is matched and is the same three writes as
    D1 plus Memory::operator_delete2, and it is on NO slice ... Putting it on
    one is a port/slice_*.txt edit, which is outside this change's one-file
    scope." port/slice_gate225.txt is that slice line, and this is the slot it
@@ -1617,7 +1617,7 @@ static void *__fastcall l2_ea6c_s00(void *s, void *)
    IT IS THE ROM'S OWN WORD, NOT A TRANSCRIPTION, which is the distinction the
    retired paragraph turned on: it refused to hand-write a deleting destructor
    here "on this file's authority", and this does not -- config/arm9/relocs.txt
-   from:0x0208ea70 to:0x02017228 is the word, and src/_ZN10dFdDummy_cD0Ev.cpp is the
+   from:0x0208ea70 to:0x02017228 is the word, and port/unmatched/hostarm/_ZN10dFdDummy_cD0Ev.cpp is the
    matched body at that address, carrying no "recovered from vtable slot
    identity" marker. So the object is freed by the ROM's own code on the ROM's
    own slot instead of being leaked by a trap.
@@ -1950,7 +1950,7 @@ static int l2_eb2c_run_setter(void *s, unsigned frames, int backward)
 
 /* +0x08. FaderColor::AdvanceFade, and the one slot here that is not
    __fastcall, for l2_ea6c_s08's reason exactly: its single dispatch site,
-   src/func_02018efc.c's `((void(*)(void*))vt[2])(o)`, passes the receiver as a
+   src/unnamed/arm9/0201/func_02018efc.c's `((void(*)(void*))vt[2])(o)`, passes the receiver as a
    CDECL ARGUMENT. Read out of this lane's binary at _func_ov002_020f23f0+0x29
    for the neighbouring slot, ecx there holds the VPTR and not the object, so a
    __fastcall veneer would run on the vtable. The matched body makes no virtual
@@ -1968,7 +1968,7 @@ extern "C" void __cdecl l2_eb2c_s08_body(void *s)
     _ZN10dFdColor_c11AdvanceFadeEv(s);
 }
 
-/* PORTSYNC3: AdvanceFade has two kinds of caller now. src/func_02018efc.c reaches it through a
+/* PORTSYNC3: AdvanceFade has two kinds of caller now. src/unnamed/arm9/0201/func_02018efc.c reaches it through a
    plain function pointer (`vt[2](o)`, cdecl, the receiver on the stack, ECX = the vtable), and
    main's ProcessKuppaScript calls it as a virtual of its local fader view (thiscall, the
    receiver in ECX, nothing on the stack). A thiscall caller leaves a FADER in ECX (its first
@@ -2348,7 +2348,7 @@ static void l2_ea6c_selftest(void)
    THE SHAPE IS SLOT +0x00's ABOVE, unchanged: __fastcall with a dummy second
    parameter, receiver in ECX, no stack arguments to clean. The bodies are the
    ROM's own, on port/slice_gate225.txt, and two of them need a
-   COMPILE_DEFINITIONS row because src/engine/fader/_ZN5FaderD0Ev.cpp spells its
+   COMPILE_DEFINITIONS row because port/unmatched/hostarm/_ZN5FaderD0Ev.cpp spells its
    two ROM addresses with PLACEHOLDER names -- `vtbl_Fader` (declared in
    include/decl_common.h and defined nowhere) and `base_dtor_Fader`. Read off
    that body's own literal pool rather than off the names:
@@ -2583,7 +2583,7 @@ static void l2_fill_0208ea6c(void)
 //
 // Each was re-verified here against extracted/overlays/overlay_0007.bin rather
 // than taken on main's word; the dsd export is stale for this overlay and a
-// control run on src/func_ov007_020ba2e0.c, matched on both refs, proves it.
+// control run on src/unnamed/ov007/func_ov007_020ba2e0.c, matched on both refs, proves it.
 // PC2 re-ran that control rather than quoting it: NOMATCH against
 // extracted/dsd/arm9_overlays/ov007.bin and MATCH against the raw image, in
 // this worktree, on the day it wired its own TU.
@@ -2614,7 +2614,7 @@ static void l2_fill_0208ea6c(void)
 // LANE SC1 MADE IT FALSE, which is the good direction: giving 0x020c9688 a
 // body is what lets the scene run far enough to reach the others at all. A
 // 300-frame scene-1 run today enters func_ov007_020b46b0 twenty-four times
-// (the 0x18 loop in src/func_ov007_020aed98.cpp), then func_ov007_020c20b8,
+// (the 0x18 loop in src/unnamed/ov007/func_ov007_020aed98.cpp), then func_ov007_020c20b8,
 // func_02054c80 and one data_0208ea6c slot once each. THE CENSUS LOST A NAME
 // THIS PASS: func_ov007_020b2998 used to be in that list and it was the only
 // blocker in it. Lane CK1 matched it, lane PC2 brought the TU across, and the
@@ -2625,9 +2625,9 @@ static void l2_fill_0208ea6c(void)
 // LANE TITLE3 PROVED IT FALSE. A trap that returns 0 and lets the run carry on
 // is not the same thing as a trap that costs nothing, and func_ov007_020ae834
 // was the counter-example: it is the state-machine ADVANCE for BOTH of the
-// title's 2D element families, and src/func_ov007_020aed98.cpp drives both --
-// the twenty-four at scene+0x114 through src/func_ov007_020b44ec.c and the
-// nine at scene+0xa4 through src/func_ov007_020add3c.c, one call per element
+// title's 2D element families, and src/unnamed/ov007/func_ov007_020aed98.cpp drives both --
+// the twenty-four at scene+0x114 through src/unnamed/ov007/func_ov007_020b44ec.c and the
+// nine at scene+0xa4 through src/unnamed/ov007/func_ov007_020add3c.c, one call per element
 // per pass. With it trapped NONE of those thirty-three objects ever changed
 // state. That is what held the touch-to-start gate shut. A 900-frame scene-1
 // run entered it 59,400 times, which is (24 + 9) x 2 passes x 900 frames
@@ -2680,12 +2680,12 @@ extern "C" unsigned port_l2_trap_hits(void) { return g_l2_trap_hits; }
     extern "C" int sym(void) { l2_trap(#sym); return 0; }
 /* func_ov007_020ae834 WAS HERE AND ITS TRAP WAS THE TITLE'S TOUCH-TO-START
    BLOCK. Run mg15 lane TITLE3 matched it byte-identical at 2004/b56 with
-   strict relocs and src/func_ov007_020ae834.c is in slice_ov007.txt now, so a
+   strict relocs and src/unnamed/ov007/func_ov007_020ae834.c is in slice_ov007.txt now, so a
    trap here would be an LNK2005 against the body. See the census note above:
    this is the name that made "none of the four left is a blocker" false. */
 /* func_ov007_020b1718 WAS HERE. mg15 run STATE4 matched it byte for byte at
    2004/b56 (0 of 269 words differ, strict relocs, linkcheck VERIFIED) and
-   src/func_ov007_020b1718.c carries the body, so a trap here would be an
+   src/unnamed/ov007/func_ov007_020b1718.c carries the body, so a trap here would be an
    LNK2005 against it -- measured, not assumed: a merge that keeps both this
    line and the seated TU fails the link loudly rather than shadowing it.
    This is the title element state machine's state 4, the start sequence.
@@ -2696,7 +2696,7 @@ extern "C" unsigned port_l2_trap_hits(void) { return g_l2_trap_hits; }
    frames 1200-1260, the trap entered 1199 times and still being entered on
    the last frame of the run.
    It is on the artwork path too, but NOT by hiding elements. The draw gate
-   is element+0x20, checked at the tail of src/func_ov007_020b44ec.c, and
+   is element+0x20, checked at the tail of src/unnamed/ov007/func_ov007_020b44ec.c, and
    its only writer on that path is func_ov007_020ae834's case 1. Elements
    sit hidden because the phase machine at data_ov007_0210342c+0xc never
    leaves state 0 on the attract path, and the element requesters only ask
@@ -2712,7 +2712,7 @@ extern "C" unsigned port_l2_trap_hits(void) { return g_l2_trap_hits; }
 /* func_ov007_020b46b0 WAS HERE, AND IT WAS THE MENU'S HANDLE. Run mg16 lane
    CRACK matched it byte for byte at 2004/b56 (299 words, 284 exact, 15 reloc
    wildcards, 0 mismatches) with linkcheck VERIFIED at 0 blind slots, and
-   src/func_ov007_020b46b0.c carries the body, so a trap here would be an
+   src/unnamed/ov007/func_ov007_020b46b0.c carries the body, so a trap here would be an
    LNK2005 against it. Re-verified in this lane before seating, against the
    known-matched neighbour func_ov007_020b63e4 as the alignment control.
 
@@ -2726,13 +2726,13 @@ extern "C" unsigned port_l2_trap_hits(void) { return g_l2_trap_hits; }
    single frame. */
 /* func_ov007_020b8188 WAS HERE AND ITS TRAP IS RETIRED. It is the minigame results /
    record-board text layout, eighteen rows, matched on main by 5a52e6f5b (PR #2301), and
-   src/func_ov007_020b8188.c is on slice_ov007.txt now, so a trap here would be an
+   src/unnamed/ov007/func_ov007_020b8188.c is on slice_ov007.txt now, so a trap here would be an
    LNK2005 against it. Called from src/func_ov007_020afc44.c. No MMIO and no geometry
    command port, so it compiles plain.
    Run link100 wave 12, card out/FILESEL1/card_ov7traps.md. */
 /* func_ov007_020ba05c WAS HERE AND ITS TRAP IS RETIRED. It is the ov007 manager's
    proximity and heading gate against the last path node, matched on main by b66831c7e
-   (PR #2365), and src/func_ov007_020ba05c.c is on slice_ov007.txt now, so a trap here
+   (PR #2365), and src/unnamed/ov007/func_ov007_020ba05c.c is on slice_ov007.txt now, so a trap here
    would be an LNK2005 against it. Called from src/func_ov007_020b9640.c. Plain C, no
    MMIO, no hostgen row.
    Run link100 wave 12, card out/FILESEL1/card_ov7traps.md. */
@@ -2761,7 +2761,7 @@ extern "C" unsigned port_l2_trap_hits(void) { return g_l2_trap_hits; }
    and nothing at all is hidden behind a wildcard. linkcheck VERIFIED, 0 blind.
    A trap here would now be an LNK2005 against src/func_ov007_020c20b8.c.
 
-   Its ONE caller is the verdict producer src/func_ov007_020b7090.c, which calls
+   Its ONE caller is the verdict producer src/unnamed/ov007/func_ov007_020b7090.c, which calls
    it before reading the verdict words, so it sits directly on the menu path.
    The body maintains an Ov007Input record (0x6e bytes): held/prev at +0/+2, a
    12-entry heldFrames array at +4, a 12-entry releasedFrames array at +0x34, a
@@ -2773,7 +2773,7 @@ extern "C" unsigned port_l2_trap_hits(void) { return g_l2_trap_hits; }
    access violation at frame 1299, quarantined and frozen like the last one. */
 /* func_ov007_020c368c WAS HERE AND ITS TRAP IS RETIRED. It is the hardware
    divider/square-root vector normalise, matched on main by 7dba86b5d (PR #2361), and
-   src/func_ov007_020c368c.c is on slice_ov007.txt now (through PORT_HOSTGEN_TU, so the
+   src/unnamed/ov007/func_ov007_020c368c.c is on slice_ov007.txt now (through PORT_HOSTGEN_TU, so the
    MMIO goes to ntr/io.cpp), so a trap here would be an LNK2005 against it. On the FILE
    SELECT the cartridge calls it twice a frame -- func_ov007_020cb7c0+0x2a8 over 0x16c
    vectors and func_ov007_020cb3dc+0xc4 over the 0xd2 grid normals the textured emitter
@@ -2806,7 +2806,7 @@ extern "C" unsigned port_l2_trap_hits(void) { return g_l2_trap_hits; }
 
    THIS BODY ALLOCATES THE MENU'S GEOMETRY. It fills the per-index arrays at
    self+0x28, +0x2c, +0x34, +0x3c, +0x40 and +0x44, and the +0x28 one is the
-   Vec3 array src/func_ov007_020c2f14.c walks to build a bounding box. Trapped,
+   Vec3 array src/unnamed/ov007/func_ov007_020c2f14.c walks to build a bounding box. Trapped,
    it returned 0 without allocating, so that array stayed null and
    func_ov007_020c2f14's very first statement -- `tmp = points[0]` -- read
    through it.
@@ -2833,7 +2833,7 @@ extern "C" unsigned port_l2_trap_hits(void) { return g_l2_trap_hits; }
    SESSION found: he reached the file select, the port printed this trap's line back at
    him, and the screen was missing its water. It is the TEXTURED strip emitter for the
    ov007 water grid, matched on main by 726f28f24 (PR #2308), and
-   src/func_ov007_020caeac.c is on slice_ov007.txt now (and on TITEX_GX_SYMS, so its
+   src/unnamed/ov007/func_ov007_020caeac.c is on slice_ov007.txt now (and on TITEX_GX_SYMS, so its
    geometry ports reach the engine), so a trap here would be an LNK2005 against it. Called
    twice a frame from func_ov007_020ca5f0+0x1b8; trapped, it emitted no geometry at all.
    Run link100 wave 12, card out/FILESEL1/card_filesel.md. */
@@ -2843,8 +2843,8 @@ extern "C" unsigned port_l2_trap_hits(void) { return g_l2_trap_hits; }
    by address. Re-verified in the port tree rather than taken on main's word,
    against extracted/overlays/overlay_0007.bin at the config base: tools/
    match.py MATCH at 2004/b56 with strict relocs, tools/linkcheck.py VERIFIED
-   with 0 blind slots, for each. src/func_ov007_020cb4b0.c and
-   src/func_ov007_020cb7c0.c are in slice_ov007.txt now, so a trap here would
+   with 0 blind slots, for each. src/unnamed/ov007/func_ov007_020cb4b0.c and
+   src/unnamed/ov007/func_ov007_020cb7c0.c are in slice_ov007.txt now, so a trap here would
    be an LNK2005 against them. */
 /* 020b8fd4 surfaced only in the SECOND link, because its one caller spells it
    untagged as func_020b8fd4 (face (a) below) and the untagged name resolved
@@ -2853,7 +2853,7 @@ extern "C" unsigned port_l2_trap_hits(void) { return g_l2_trap_hits; }
 
    run push0829 lane TITLE-DOODLE: IT IS THE TITLE'S DOODLE CANVAS, and its trap
    is retired. This is the paper/canvas renderer the title's render dispatcher
-   src/func_ov007_020bcf90.c calls in outer states 1..4 (the draw screen) right
+   src/unnamed/ov007/func_ov007_020bcf90.c calls in outer states 1..4 (the draw screen) right
    before the seated stroke hub func_ov007_020b91b4. Trapped it returned 0, so
    the canvas fields were never sized and the two paper billboards were never
    positioned -- the drawing surface never came up and the strokes the seated hub
@@ -2866,7 +2866,7 @@ extern "C" unsigned port_l2_trap_hits(void) { return g_l2_trap_hits; }
    here would now be an LNK2005 against that body.
 
    THAT DAY CAME. run rel0215 lane prop15 propagated the byte-match from main
-   (PR #1477) by address: src/func_ov007_020b8fd4.c is in slice_ov007.txt, and
+   (PR #1477) by address: src/unnamed/ov007/func_ov007_020b8fd4.c is in slice_ov007.txt, and
    the DOODLE_INTERIM guard read it and dropped the interim out of the build
    without a hand edit, exactly as its author said it would. The interim file
    stays on disk as the record of what was there; nothing links it. */
@@ -2875,7 +2875,7 @@ extern "C" unsigned port_l2_trap_hits(void) { return g_l2_trap_hits; }
 /* THE SEVENTEENTH ov007 FUNCTION WITHOUT A BODY HERE GETS NO TRAP, AND THE
    REASON CHANGED. func_ov007_020c49bc (0x020c49bc, 0x440 bytes) IS matched now
    -- it landed on the decomp's main as 02e53421e on 2026-08-06 and the
-   port-catchup lane brought it across -- so src/func_ov007_020c49bc.c is in
+   port-catchup lane brought it across -- so src/unnamed/ov007/func_ov007_020c49bc.c is in
    slice_ov007.txt and the tree has real C for it. It still gets no trap and
    still contributes nothing to the link, because NOTHING in the slice
    references it: the linker never asks for the symbol and /OPT:REF drops the
@@ -2886,7 +2886,7 @@ extern "C" unsigned port_l2_trap_hits(void) { return g_l2_trap_hits; }
 
    That leaves func_ov007_020ba05c as the one ov007 address where main has a
    src file this branch cannot take, and the reason is that main does not have
-   it either in the sense that matters. src/func_ov007_020ba05c.c IS on main,
+   it either in the sense that matters. src/unnamed/ov007/func_ov007_020ba05c.c IS on main,
    but its delink block carries no `complete`, so it is not enrolled: dsd
    supplies that range from ROM bytes, main's ROM build never compiles the
    file and no byte gate has ever run on it (tools/delaunder.py: "a
@@ -2905,7 +2905,7 @@ extern "C" unsigned port_l2_trap_hits(void) { return g_l2_trap_hits; }
    FOUR MORE UNMATCHED BODIES, NOT ov007's, that the arm9 closure pulled in.
    Same treatment and the same counter, listed apart because they are a
    different debt: three are arm9/itcm functions with no C anywhere in the
-   tree, and two are cross-overlay calls out of src/func_0201a458.c into
+   tree, and two are cross-overlay calls out of src/unnamed/arm9/0201/func_0201a458.c into
    overlays this build does not host. Naming them here is what makes them
    visible; guessing bodies for them would not be.
      func_01ffaa34  RETIRED (0.9.2 respin): it is _ll_sdiv, the signed 64-bit
@@ -3006,7 +3006,7 @@ L2_UNMATCHED(func_0211d9c0)
 //     about in its section 1 and which this slice is the first build to hit.
 //     0x020c3d1c is an ov007 function and the community label on it is a
 //     Player state name; ov007 is the title scene and has no Player. The
-//     matched TU is src/func_ov007_020c3d1c.cpp, it is in this
+//     matched TU is src/unnamed/ov007/func_ov007_020c3d1c.cpp, it is in this
 //     slice, and it defines the flat Itanium name. Its callers USED TO spell
 //     the same body FOUR ways between them -- once by address and three times
 //     as a C++ method, with three different MSVC manglings because the three
@@ -3036,8 +3036,8 @@ L2_UNMATCHED(func_0211d9c0)
 //     On ARM r0 rides through the `bx`; on the host the ride survives only
 //     because MSVC compiles each one as a jmp, and SIX of the sixteen are
 //     entered with a real pushed argument, not a bare call --
-//     src/func_ov007_020cbb04.cpp:18 into _020c8098, and
-//     src/func_ov007_020b9770.cpp into _020c937c four times and _020c9080
+//     src/unnamed/ov007/func_ov007_020cbb04.cpp:18 into _020c8098, and
+//     src/unnamed/ov007/func_ov007_020b9770.cpp into _020c937c four times and _020c9080
 //     twice. NOTHING IN THE SUITE CAN SEE ANY OF IT: both sides of this
 //     directive are flat cdecl so aliascheck's rule R is right to stay quiet,
 //     and nothing defines func_020c3d1c so aritycheck has no census row to
@@ -3110,7 +3110,7 @@ void Scene::SetFaders(dFdBrightness_c *)
 //
 //         /alternatename:__ZN15ModelComponents6RenderEP9Matrix4x3P7Vector3=?Render@ModelComponents@@QAEXPAUMatrix4x3@@PAUVector3@@@Z
 //
-//     and QAE is __thiscall. src/func_ov007_020bbff0.c declares the flat name
+//     and QAE is __thiscall. src/unnamed/ov007/func_ov007_020bbff0.c declares the flat name
 //     as three void * and calls it
 //
 //         _ZN15...RenderE...(*(void**)c, (char*)c+0x54, (char*)c+0x40)
@@ -3141,7 +3141,7 @@ void Scene::SetFaders(dFdBrightness_c *)
 //     states.
 //
 //     WHERE IT LIVES, AND WHEN TO MOVE IT. This file and the only compiled
-//     flat-name caller, src/func_ov007_020bbff0.c, are in exactly the same
+//     flat-name caller, src/unnamed/ov007/func_ov007_020bbff0.c, are in exactly the same
 //     three targets (smoke_player, walk_window, walk_window_hires), so the
 //     face resolves the name wherever the name is referenced and nowhere else.
 //     There is a SECOND flat-name caller in the tree that no lane had named,
@@ -3304,7 +3304,7 @@ struct ActorBase {
    its one argument); ov002 has a different function at the same address.
 
    WHY THEY WENT. Main has since respelled every ov007 caller to call
-   func_ov007_020c3d1c by its flat name (src/func_ov007_020b7764.cpp,
+   func_ov007_020c3d1c by its flat name (src/unnamed/ov007/func_ov007_020b7764.cpp,
    _020b9770.cpp, _020cbb04.cpp and the rest), so no ov007 site reached
    either face any more. The void member kept ONE referrer, and it was the
    wrong one: the port/faces_sync.txt row for __ZN6Player17St_EndingFly_MainEv,
@@ -3930,9 +3930,9 @@ static void ti_ridethrough_notice(void)
  * reason: ti_init is still the last port-owned frame on the path.
  *
  * The blocker moved one frame deeper and stayed in its family. It is an
- * IMPLICIT r0 ARGUMENT: src/func_ov007_020add3c.c declares its callee
+ * IMPLICIT r0 ARGUMENT: src/unnamed/ov007/func_ov007_020add3c.c declares its callee
  * `extern int func_ov007_020ae558(void)` and calls it with nothing, while
- * src/func_ov007_020ae558.c defines it as `(char *self)`. The ROM's caller
+ * src/unnamed/ov007/func_ov007_020ae558.c defines it as `(char *self)`. The ROM's caller
  * never writes r0 between its prologue and the branch, so its own incoming
  * argument is still there to be read. Both TUs are matched. On the host the
  * callee reads the caller's saved esi instead.
@@ -3972,10 +3972,10 @@ static int  __fastcall ti_clean(void *, void *)
  *
  * Every route to VS on the title menu -- a tap on the VS button, or the
  * d-pad cursor on it and Start -- ends in the verdict setter
- * src/func_ov007_020aec94.c storing 6 in the title context's +0x10. The
- * fade-out runs (top-state 6, src/func_ov007_020b155c.c; its callback
- * src/func_ov007_020b1604.c then requests top-state 7, which arms +0x14),
- * and src/_ZN9dScDSMT_c8BehaviorEv.cpp takes verdict 6 into
+ * src/unnamed/ov007/func_ov007_020aec94.c storing 6 in the title context's +0x10. The
+ * fade-out runs (top-state 6, src/unnamed/ov007/func_ov007_020b155c.c; its callback
+ * src/unnamed/ov007/func_ov007_020b1604.c then requests top-state 7, which arms +0x14),
+ * and port/unmatched/hostarm/_ZN9dScDSMT_c8BehaviorEv.cpp takes verdict 6 into
  * func_0201a458, which builds a heap over the ov062 arena. The host does not
  * mount that arena (hal/link21_rows.cpp), so the heap header write faults
  * and the title freezes.
@@ -4037,7 +4037,7 @@ static int  __fastcall ti_beh(void *s, void *)
  * -- but the window it covers is a slot, not a scene.
  *
  * THE BLOCKER IS A CALLING CONVENTION AND NOT AN ARITY, which makes it a new
- * class for this scene. src/func_ov007_020bbff0.c declares the flat Itanium
+ * class for this scene. src/unnamed/ov007/func_ov007_020bbff0.c declares the flat Itanium
  * name _ZN15ModelComponents6RenderEP9Matrix4x3P7Vector3 as three void* and
  * calls it with three cdecl pushes; the definition it reaches through this
  * file's own /alternatename is a real C++ member that MSVC emits __thiscall,
@@ -4099,9 +4099,9 @@ static void *__fastcall ti_d0(void *s, void *) { return _ZN9dScDSMT_cD0Ev((int *
  * is not a preference: the graphics-block table has FOUR DISPATCH SITES IN THE
  * ROM'S OWN C, and under SM64DS_ROM_LOOP the ROM's are the ones that run.
  *
- *     src/func_02019144.c   UnkVt::func8   `p->vt->func8(p)`     slot 2
- *     src/func_02019100.c   VFN vt[3]      `o->vt[3](o)`         slot 3
- *     src/func_02019390.c / src/func_02019404.c   slots 0 and 1
+ *     src/unnamed/arm9/0201/func_02019144.c   UnkVt::func8   `p->vt->func8(p)`     slot 2
+ *     src/unnamed/arm9/0201/func_02019100.c   VFN vt[3]      `o->vt[3](o)`         slot 3
+ *     src/unnamed/arm9/0201/func_02019390.c / src/unnamed/arm9/0201/func_02019404.c   slots 0 and 1
  *
  * All four declare the word as an ORDINARY FUNCTION POINTER taking the block --
  * `int (*)(UnkObj *)`, `void (*)(struct Obj *)` -- which on this host is cdecl.
@@ -4275,7 +4275,7 @@ extern "C" int port_graph_block_beat(void)
  * and the other five are plain stores that clear or set the pointer
  * (func_02019440, _ZN7dScMB_c16CleanupResourcesEv, _ZN7dScMB_c13InitResourcesEv and two in the 0x0202Cxxx pair).
  *
- * WHERE WORD 0 IS CALLED FROM: src/func_020197b8.c, the ROM's frame loop, at
+ * WHERE WORD 0 IS CALLED FROM: src/unnamed/arm9/0201/func_020197b8.c, the ROM's frame loop, at
  * PHASE 2 -- `data_0209d50c = 2; func_02019390();`. This file used to dispatch
  * it itself (port_graph_block_word0, a registry-checked beat whose answer was
  * discarded), beside hal/fader_wipes.cpp's stand-in for the phase's fade
@@ -4839,7 +4839,7 @@ void port_scene_fill_jump2(void);
 
    THIS IS THE ONE ROW port/mg_fanout_costs.txt SECTION 3 LEFT BLANK.  Its
    vtable resolves through no load relocation in its own factory, because
-   src/d_s_mg_snowball.cpp writes no vtable at all: it allocates 0xc59c
+   src/minigames/d_s_mg_snowball.cpp writes no vtable at all: it allocates 0xc59c
    and calls dScMgSnowball_c_Construct, which writes _ZTV19dScMgSingle3DBase_c and then
    _ZTV15dScMgSnowball_c.  port/slice_snw.txt is the hand derivation, including
    the five width checks, the ruling-out of the two alternative signature
@@ -4959,7 +4959,7 @@ void port_scene_fill_mgm(void);
 /* VS wiring lane: dScEntry_c, scene id 6 -- the VS / wireless entry menu
    (ov075). The id is the spawn table's own: relocs.txt from:0x0209087c ->
    0x0211c880, index (0x0209087c - 0x02090864)/4 = 6, and the loader's id-6
-   special case (src/func_0201a694.c) is what puts ov075 behind it. RTTI at
+   special case (src/unnamed/arm9/0201/func_0201a694.c) is what puts ov075 behind it. RTTI at
    0x0211c8f8 names the class; a DIRECT Scene subclass, 18 slots, the
    dScMiniGm_c shape. port/slice_vs.txt is the derivation;
    hal/scene_vs_menu.cpp is the seat. reads_sublevel is 0: the menu WRITES
@@ -6305,14 +6305,14 @@ int func_ov007_020c1da0(int i);
  *       mouse, and that is the record the LEVEL path runs on.
  *   the LOCAL COMMS RECORD at data_020a1040  {..., u16 x, u16 y, u16 touch,
  *       u16 validity, u16 flags, u16 keys}
- *       filled on the DS by src/func_0203df40.c and broadcast by
- *       src/func_0203e0ac.c into the four per-player records at
+ *       filled on the DS by src/unnamed/arm9/0203/func_0203df40.c and broadcast by
+ *       src/unnamed/arm9/0203/func_0203e0ac.c into the four per-player records at
  *       data_020a1154 (slot 3 first, then cascaded 3 -> 2 -> 1 -> 0).
  *
- * dScDSMT_c reads the SECOND one and nothing else. src/_ZN9dScDSMT_c8BehaviorEv.cpp
+ * dScDSMT_c reads the SECOND one and nothing else. port/unmatched/hostarm/_ZN9dScDSMT_c8BehaviorEv.cpp
  * lines 28-35 are its only input read in the whole scene: func_0203da9c() for
  * the slot index, func_0203dabc() for the stylus quad and func_0203dae4() for
- * the keys. The touch-to-start gate itself is src/func_ov007_020b1cf0.c lines
+ * the keys. The touch-to-start gate itself is src/unnamed/ov007/func_ov007_020b1cf0.c lines
  * 52-60, a touch-DOWN EDGE on that record -- touched now, not touched last
  * frame, released for at least one frame -- and every frame of it is matched,
  * linked ROM code that has been running correctly over an all-zero record.
@@ -6329,10 +6329,10 @@ int func_ov007_020c1da0(int i);
  * keeps its own single func_0203e0ac() call and gains no new writer, so the
  * 46-level battery cannot move: nothing here executes on it.
  *
- * THE QUAD'S ENCODING IS THE ROM'S, read off src/func_0203b9bc.c rather than
+ * THE QUAD'S ENCODING IS THE ROM'S, read off src/unnamed/arm9/0203/func_0203b9bc.c rather than
  * guessed. Its idle branch writes c = 0, a = b = 0xff, d = 0, and its accept
  * branches copy a ring entry whose d is zero. d is a VALIDITY MASK and
- * src/func_ov007_020c1db0.c lines 46-57 is what reads it: bit 0 means "x is
+ * src/unnamed/ov007/func_ov007_020c1db0.c lines 46-57 is what reads it: bit 0 means "x is
  * out of range, substitute the previous one", bit 1 the same for y, and with
  * no previous touch either bit CANCELS the touch outright. So a live touch
  * must publish d = 0 or the title drops it.
@@ -6448,7 +6448,7 @@ static void port_scene_comms_publish(void)
        causes -- the record never arrives, it arrives and the tracker rejects
        it, or the tracker accepts it and the state machine is somewhere that
        does not care -- and a capture separates none of them. The tracker
-       fields are the ones src/func_ov007_020b1cf0.c:52-60 tests. */
+       fields are the ones src/unnamed/ov007/func_ov007_020b1cf0.c:52-60 tests. */
     static int trace = -1;
     if (trace < 0) trace = std::getenv("SM64DS_SCENE_TOUCH_TRACE") ? 1 : 0;
     if (trace) {
@@ -6475,7 +6475,7 @@ static void port_scene_comms_publish(void)
                          *(const int *)(g + 0x20));
             /* THE TWO GATES IN FRONT OF THE TOUCH BRANCH, and they are what
                decides whether the edge is even looked at.
-               src/func_ov007_020b1cf0.c reads
+               src/unnamed/ov007/func_ov007_020b1cf0.c reads
                    *(int *)(**(char ***)(g + 0x130) + 0x10) == 0x1000
                 && func_ov007_020c1da0(0) == 0
                before it tests the tracker at all, and func_ov007_020b0548
@@ -6492,7 +6492,7 @@ static void port_scene_comms_publish(void)
                          p130o ? *(const int *)(p130o + 0x10) : -999,
                          func_ov007_020c1da0(0));
             /* STATE 11 IS THE ATTRACT/OPENING STATE and it leaves on its own
-               animation. src/func_ov007_020b0a20.c reads e = g->unk100->unk4
+               animation. src/unnamed/ov007/func_ov007_020b0a20.c reads e = g->unk100->unk4
                and then e->unk18->{unkC, unk10, unk12}: unkC == -1 is "no
                animation bound", and both the natural end (unk10 == unk12 - 6)
                and the touch/button SKIP (unk10 <= unk12 - 0x1f, with unkC
@@ -6538,7 +6538,7 @@ static void port_scene_comms_publish(void)
  *       low bit is the free witness: 020c9110 CLEARS it on the first tick it
  *       makes on this object, so f8 even means the stepper has run and f8 odd
  *       means it has not.
- *   the SKIP is blocked -- src/func_ov007_020b0a20.c's attract skip needs
+ *   the SKIP is blocked -- src/unnamed/ov007/func_ov007_020b0a20.c's attract skip needs
  *       (keyEdge || touchDownEdge) && mode >= 4 && func_ov007_020aebac() == 0
  *       && anim fc != -1 && anim f10 <= f12 - 0x1F. Every term is printed, so
  *       the failing one is read off the line rather than inferred.
@@ -6586,7 +6586,7 @@ static void port_title_attract_probe(int frame, const char *when)
 
     const int pA = s4 ? (int)*(const short *)s4 : -999;
     const int pB = s8 ? (int)*(const short *)s8 : -999;
-    /* src/func_ov007_020bcf90.c's own expression, transcribed. */
+    /* src/unnamed/ov007/func_ov007_020bcf90.c's own expression, transcribed. */
     const int r4 = !((pA != 0) && ((pA != 1) || (pB != 0)));
 
     const int mode = s8 ? *(const int *)(s8 + 0xc) : -999;
@@ -6596,7 +6596,7 @@ static void port_title_attract_probe(int frame, const char *when)
                  s8 ? (int)*(const short *)(s8 + 2) : -999,
                  s8 ? *(const int *)(s8 + 4) : -999,
                  mode, r4);
-    /* src/func_ov007_020b0da0.c's own var_r4, recomputed here through the same
+    /* src/unnamed/ov007/func_ov007_020b0da0.c's own var_r4, recomputed here through the same
        two hosted DS-divider entry points the ROM body uses, because the whole
        question is whether the fp-clear branch
        `(st4 & 2) && (var_r4 == 0 || var_r4 == 0x800)` can ever be true. */
@@ -6655,7 +6655,7 @@ static void port_title_attract_probe(int frame, const char *when)
     else
         std::fprintf(stderr, "  aebac=UNREACHABLE");
     /* THE STATE-0 TOUCH-TO-START GATE, both halves.
-       src/func_ov007_020b1cf0.c:51 is
+       src/unnamed/ov007/func_ov007_020b1cf0.c:51 is
            *(int *)(**(char ***)(g + 0x130) + 0x10) == 0x1000
         && func_ov007_020c1da0(0) == 0
        and only then does it look at the tracker. a130 is the first half. */
@@ -7031,8 +7031,8 @@ static void title_alloc_report(void)
                  (void *)c, (void *)p4, (void *)p5,
                  (void *)o44, (void *)o48, (void *)o4c);
     /* EVERY POINTER SLOT THE TITLE'S OWN INITIALISER FILLS, not just the three
-       palette objects: src/func_ov007_020b6d40.c parks nine objects at +0xa4
-       and eight more at +0xc8, and src/func_ov007_020b69c4.c parks one at
+       palette objects: src/unnamed/ov007/func_ov007_020b6d40.c parks nine objects at +0xa4
+       and eight more at +0xc8, and src/unnamed/ov007/func_ov007_020b69c4.c parks one at
        +0x40 and the three at +0x44/+0x48/+0x4c. Any of them landing inside a
        shadow buffer is the answer, and checking three of twenty-one and
        calling it "no overlap" is exactly the shape of a vacuous clean. */
@@ -7279,7 +7279,7 @@ extern "C" void port_sqrt_selftest(void)
  * originals {_ZN7dScMB_c15graphCallback_c14GraphCallback0Ev, Scene::GraphCallback1, _ZN7dScMB_c15graphCallback_c14GraphCallback2Ev,
  * _ZN7dScMB_c15graphCallback_c14GraphCallback3Ev}; slots 0 and 2 are `mov r0,#0 / bx lr`, so the port's beat
  * now answers 0 on this block and SKIPS the display tail -- which is exactly
- * what src/func_02019144.c does with the same answer (`if (p->vt->func8(p) ==
+ * what src/unnamed/arm9/0201/func_02019144.c does with the same answer (`if (p->vt->func8(p) ==
  * 0) return;`). Before this the port refused the block, answered 1 and
  * published over the top of it while the ROM's own dispatcher, under
  * SM64DS_ROM_LOOP with the VBlank handler registered, did not.
@@ -7390,7 +7390,7 @@ extern "C" int port_scene_begin(void *hwnd, int zoom)
        with IME at zero comes out of the bracket with IME STILL ZERO and the
        interrupt it just armed can never be delivered. Only ntr::rt_run used
        to seat it, and no walk_window path runs on that fiber. What it stands
-       in for is src/func_0201a054.c, the game's own IRQ init, which is in no
+       in for is src/unnamed/arm9/0201/func_0201a054.c, the game's own IRQ init, which is in no
        slice. See port/irq2_map.txt section 2. */
     ntr::rt_irq_boot_state();
 
@@ -7633,13 +7633,13 @@ extern "C" int port_scene_begin(void *hwnd, int zoom)
  *
  * The words are the ROM's own, read at the offsets its own matched TUs read
  * them at, so this reports the game's state rather than the port's opinion of
- * it. src/func_ov007_020b0548.c dispatches on *(short*)(*(char**)(g + 8)) and
- * src/func_ov007_020b166c.c reads both records:
+ * it. src/unnamed/ov007/func_ov007_020b0548.c dispatches on *(short*)(*(char**)(g + 8)) and
+ * src/unnamed/ov007/func_ov007_020b166c.c reads both records:
  *
  *     g + 8  -> the TOP-LEVEL state record   +0 current, +2 requested
  *     g + 4  -> the ELEMENT/animation record +0 current, +2 requested
  *     g + 0x1c                                the phase word the keystone
- *                                             (src/func_ov007_020b1718.c)
+ *                                             (src/unnamed/ov007/func_ov007_020b1718.c)
  *                                             writes 2 into on completion
  *
  * ON CHANGE ONLY, which is what makes it affordable on a 2400-frame run: the
@@ -7655,7 +7655,7 @@ extern "C" char *data_ov007_0210342c;
 /* THE DIALOG/MESSAGE STATE WORD, run mg16 lane TITLE.
  *
  * Top-state 9 is the Start confirmation prompt, and it is where every run of
- * this lane wedges. Its handler src/func_ov007_020b0834.c opens with
+ * this lane wedges. Its handler src/unnamed/ov007/func_ov007_020b0834.c opens with
  * `if (func_ov007_020b79c8() == 0) return;` and that predicate is exactly
  * `data_ov007_02102ddc[1] == 2`; the sibling func_ov007_020b79e4 is
  * `data_ov007_02102ddc[1] != 4`. So the prompt needs this word to reach 2 and
@@ -7686,11 +7686,11 @@ static void port_title_state_trace(int frame)
     const int ereq  = *(short *)(ep + 2);
     const int phase = *(int *)(g + 0x1c);
     /* THE VERDICT SIDE, and it is the half the state words cannot show.
-     * src/func_ov007_020b7090.c returns the context's +0x10 gated on +0x14
+     * src/unnamed/ov007/func_ov007_020b7090.c returns the context's +0x10 gated on +0x14
      * (`if (ip->f14 != 0 || ip->f10 == 1) ret = ip->f10;`) and
-     * src/_ZN9dScDSMT_c8BehaviorEv.cpp switches on that return: 3/4/5 are the three
+     * port/unmatched/hostarm/_ZN9dScDSMT_c8BehaviorEv.cpp switches on that return: 3/4/5 are the three
      * save files, 6 is VS, 7 is the Rec Room, 2 restarts the title. +0x180 is
-     * where src/func_ov007_020b63e4.c parks the id of the element the stylus
+     * where src/unnamed/ov007/func_ov007_020b63e4.c parks the id of the element the stylus
      * actually hit. So these three say, in order, "was anything picked", "is
      * the verdict armed" and "what did the router see".
      *
@@ -7722,7 +7722,7 @@ static void port_title_state_trace(int frame)
     const int pend  = (int)data_02092664;
     /* THE STATE-9 GATE, read through the ROM's OWN seated accessors rather
      * than through a declaration of mine for the mounted symbol. Two
-     * reasons: it measures exactly what src/func_ov007_020b0834.c measures,
+     * reasons: it measures exactly what src/unnamed/ov007/func_ov007_020b0834.c measures,
      * and a direct `extern int data_ov007_02102ddc[]` read here faulted the
      * process at scene bring-up (exit 0xC0000005, before frame 0, only with
      * the trace enabled) even though the symbol resolves to real hosted
@@ -7771,7 +7771,7 @@ static void port_title_state_trace(int frame)
 }
 
 /* ---- PHASE 0x17's LAST CALL, ON THIS LOOP TOO (run linkfull, lane LOOPIN2) --
-   src/func_020197b8.c:47 is func_02023498(), the ROM's soft-reset latch, at the
+   src/unnamed/arm9/0201/func_020197b8.c:47 is func_02023498(), the ROM's soft-reset latch, at the
    end of phase 0x17 and before phase 3. port_scene_tick calls it at that point
    (after phase 2, before the scene-request carrier and the actor phases), on
    every frame the game ticks, as tests/walk_window.cpp's level loop does.
@@ -7862,7 +7862,7 @@ extern "C" void port_scene_tick(int frame, int tick_game)
         /* PHASE 2, THE FRAME'S RESET (run linkfull, lane RESET2): the ROM's
            func_02019390 at the ROM's point -- after the input read above and
            before phase 3 (the carrier below) and phase 4 (port_actor_tick), as
-           src/func_020197b8.c orders them. tests/walk_window.cpp's level loop
+           src/unnamed/arm9/0201/func_020197b8.c orders them. tests/walk_window.cpp's level loop
            calls it at the same point; hal/fader_wipes.cpp's port_frame_phase2
            carries the argument. It retires this function's late pair (the
            word-0 beat and the fade step after the tick) and
@@ -7955,7 +7955,7 @@ extern "C" void port_scene_tick(int frame, int tick_game)
                 port_loadfile_reset_scene();   /* PROOF-OF-FIX temp */
                 const int spawned = _ZN8dScene_c16SpawnIfNecessaryEv();
                 /* WHICH REFUSAL, not merely that there was one.
-                   src/func_02043098.c steps data_020a4b4c through 2, 3, 4, 5 as
+                   src/unnamed/arm9/0204/func_02043098.c steps data_020a4b4c through 2, 3, 4, 5 as
                    it goes, and its TWO failure exits leave it in DIFFERENT
                    states: the early guard (func_02043060(idx) == 3) returns with
                    the byte still 2, while the factory-returned-null path RESETS
@@ -7996,7 +7996,7 @@ extern "C" void port_scene_tick(int frame, int tick_game)
         if (tick_game) {
             if (k1_rom) {
                 { HITCH_SCOPE(HK_TP_TICK); port_actor_frame(0); }
-                /* PHASE 5 (run linkfull, lane K2RENDER): src/func_020197b8.c:48,
+                /* PHASE 5 (run linkfull, lane K2RENDER): src/unnamed/arm9/0201/func_020197b8.c:48,
                    `data_0209d50c = 5; func_02019404();`, the graphics block's
                    word 1, right after the render walk it follows on the DS.
                    Every scene block's word 1 is a `return 1` body
@@ -8506,7 +8506,7 @@ int  port_rom_frame(void);
    run. That is what makes the fallback an exact fallback. */
 extern "C" int port_rom_loop_enabled(void);
 /* func_0201a4bc's whole body is one statement, OS_SleepThread(data_0209d500),
-   and src/func_02057e34.c -- the idle thread it reschedules onto -- is
+   and src/unnamed/arm9/0205/func_02057e34.c -- the idle thread it reschedules onto -- is
    `IRQ::Enable(); for(;;) CP15::WaitForInterrupt();`. The declarations are
    tests/walk_window.cpp's own, verbatim, so the two loops cannot drift on a
    spelling. */

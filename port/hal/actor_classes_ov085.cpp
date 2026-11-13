@@ -500,7 +500,7 @@ void *_ZTV9daPeach_c[31];
 DSSTATE_END
 }
 /* The LHS is declared extern by include/decl_common.h:835 and DEFINED nowhere
-   in this link -- src/_ZN13PrincessPeachD0Ev.cpp is the one reader, and it only
+   in this link -- port/unmatched/hostarm/_ZN13PrincessPeachD0Ev.cpp is the one reader, and it only
    stores it -- which is what port/tools/alternatename_guard.py requires.
    port/ov085_syms.txt leaves every _ZTV* out of the mount on purpose, so
    nothing else can define either name. */

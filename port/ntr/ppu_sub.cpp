@@ -5186,7 +5186,7 @@ unsigned g_seam_frame;
 /* ---- THE TWO SCREENS ARE ONE FRAME APART IN THIS PORT ----------------------
  *
  * MEASURED HERE, and this pass cannot be written correctly without it. The
- * ROM's display sync (src/func_02019144.c) is `OAM::Flush(); OAM::Load();` at
+ * ROM's display sync (src/unnamed/arm9/0201/func_02019144.c) is `OAM::Flush(); OAM::Load();` at
  * VBlank, so on hardware both engines scan out the same uploaded OAM. The port
  * reproduces that tail inside hal/sub_screen.cpp's hal_sub_screen_present, and
  * BOTH frame loops -- port/tests/walk_window.cpp's and hal/scene_boot.cpp's

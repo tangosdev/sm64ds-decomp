@@ -566,7 +566,7 @@ extern "C" void port_scene_fill_bomroom(void)
    column.
 
    THE FACTORY ITSELF NEEDS NO DISPLACEMENT RULING, which is worth recording
-   because 0x169's did. src/d_s_mg_bomroom.c calls
+   because 0x169's did. src/minigames/d_s_mg_bomroom.cpp calls
    _ZN11dScMgBase_cC2Ev(p) WITH its argument, where src/minigames/d_s_mg_cup.cpp
    calls the same base constructor with none and rides r0 through. That callee
    dereferences on its first statement and then writes three vtable words

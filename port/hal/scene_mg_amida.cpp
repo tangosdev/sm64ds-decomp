@@ -434,7 +434,7 @@ extern "C" void port_scene_fill_amida(void)
     /* The constructors, gated on the requested id, exactly as every other
        minigame fill does it. Idempotent behind scene_mg.cpp's own
        once-per-process guard. THIS CLASS NEEDS IT FOR ITS FILE HANDLES rather
-       than for a state table: src/__sinit_ov006_0212fc7c.c registers the three
+       than for a state table: src/unnamed/ov006/__sinit_ov006_0212fc7c.c registers the three
        SharedFilePtr ids 0x21a, 0x21b and 0x21c that slot 0's asset loads
        resolve through. */
     port_scene_mg_prepare(port_scene_env_want());
@@ -459,7 +459,7 @@ extern "C" void port_scene_fill_amida(void)
    calling _ZN11dScMgBase_cC2Ev with NO argument, which on the host reads
    whatever is at [esp+4] and then writes three vtable words through it. This
    factory does `movs r4,r0` and then `bl 0x020b2adc` with the object still in
-   r0 at 0x020d598c, and src/d_s_mg_amida.cpp spells the argument. */
+   r0 at 0x020d598c, and src/minigames/d_s_mg_amida.cpp spells the argument. */
 static void *g_am_self;
 
 extern "C" void *port_mg_amida_spawn(void)

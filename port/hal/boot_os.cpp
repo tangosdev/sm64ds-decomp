@@ -14,10 +14,10 @@
 // This file is the next slice of that same transcription. Each block below is
 // one span of a ROM function, in the ROM's order, calling the ROM's own bodies:
 //
-//   port_boot_rom_pre_main()        src/func_02019780.c, before the root heap
+//   port_boot_rom_pre_main()        src/unnamed/arm9/0201/func_02019780.c, before the root heap
 //   port_boot_rom_main_head()       src/main.c, its first three calls
-//   port_boot_rom_game_init_head()  src/func_0201a054.c, before the game heap
-//   port_boot_rom_game_init_tail()  src/func_0201a054.c, after the game heap
+//   port_boot_rom_game_init_head()  src/unnamed/arm9/0201/func_0201a054.c, before the game heap
+//   port_boot_rom_game_init_tail()  src/unnamed/arm9/0201/func_0201a054.c, after the game heap
 //   port_boot_rom_worker()          src/func_0201a2f8.c, the boot worker's
 //                                   ov000 step, at main's loop seam
 //
@@ -41,7 +41,7 @@
 //
 //   func_02019ebc
 //       RE-DERIVED AGAIN, by run link100's lane THREAD, and THREAD CREATION IS
-//       NO LONGER ON THE LIST. That lane linked src/func_02058200.c and the
+//       NO LONGER ON THE LIST. That lane linked src/unnamed/arm9/0205/func_02058200.c and the
 //       card driver's own use of it, so "func_02019ebc's whole purpose is to
 //       create a THIRD thread" stopped being a blocker; what stopped it being
 //       one is the same fiber seam this paragraph used to ask for. FOUR things
@@ -49,11 +49,11 @@
 //       extracted/arm9_dec.bin (flat, load base 0x02004000) rather than
 //       inherited.
 //
-//       (1) func_02061128 IS NOT A SYMBOL AND HAS NO TU. src/func_02019ebc.c is
+//       (1) func_02061128 IS NOT A SYMBOL AND HAS NO TU. src/unnamed/arm9/0201/func_02019ebc.c is
 //       one line, `func_02061128(func_02019f10)`, and config/arm9/symbols.txt
 //       has no entry at 0x02061128 at all. It is INSIDE func_020610fc, whose
 //       row reads size=0x3c (0x020610fc..0x02061138) -- and
-//       src/func_020610fc.c's own banner already names the overlap: "The
+//       src/unnamed/arm9/0206/func_020610fc.c's own banner already names the overlap: "The
 //       symbol's span also contains an unreachable epilogue-less tail that
 //       stores r0 into data_020a89a4". That tail IS func_02061128, and it is
 //       three instructions:
@@ -80,7 +80,7 @@
 //       card bring-up below calls func_0206002c rather than func_02060890.
 //
 //       (3) THE WM THREAD'S RECORD AND STACK LIVE INSIDE THE TRIG TABLE,
-//       AND THE PORT MUST NEVER HOST ANYTHING THERE. src/func_02019f10.c is
+//       AND THE PORT MUST NEVER HOST ANYTHING THERE. src/unnamed/arm9/0201/func_02019f10.c is
 //       the entry func_02061128 registers, and its own literal pool builds a
 //       thread out of thin air:
 //
@@ -117,7 +117,7 @@
 //
 //       AND THE RULING IS STRONGER THAN 'HOST NOTHING THERE': NEVER EMULATE
 //       THAT PATH'S SIDE EFFECTS. func_02058200 does not merely record the
-//       stack bounds. Read src/func_02058200.c: it plants the SDK canaries
+//       stack bounds. Read src/unnamed/arm9/0205/func_02058200.c: it plants the SDK canaries
 //       (*(stackBottom-4) = 0xfddb597d at line 33, *(stackTop) = 0x7bf9dd5b at
 //       line 34) and then MultiStore_Int(0, base+4, size-8) ZERO-FILLS the
 //       stack. With end 0x02086180 and size 0x3f6c that fill covers
@@ -301,7 +301,7 @@
 //       and hal/auto_bss.cpp's separate data_020a6148 were the bug, and the
 //       second of those was the quiet half -- func_02058538 scanned one array
 //       while func_02058200 wrote another). What still refuses the call is an
-//       ADDRESS, not a size. src/func_02058308.c reads two absolute linker
+//       ADDRESS, not a size. src/unnamed/arm9/0205/func_02058308.c reads two absolute linker
 //       symbols:
 //
 //           ovr = (s32)func_00000000;                 the DS's SYS stack size
@@ -370,17 +370,17 @@ DSSTATE_END
 
 extern "C" {
 
-// --- src/func_02058c84.c, the runnable arms ---------------------------------
+// --- src/unnamed/arm9/0205/func_02058c84.cpp, the runnable arms ---------------------------------
 void func_02057000(void);          // DTCM word 0 = 0
 void func_02059cb4(void);          // the DMA-channel bookkeeping + DisableIRQs(4)
-// --- src/func_02019780.c ----------------------------------------------------
+// --- src/unnamed/arm9/0201/func_02019780.c ----------------------------------------------------
 void func_0201a490(void);          // data_0209a03c(data_0208ee60)
 // --- src/main.c -------------------------------------------------------------
 void func_02059788(void);          // OS_InitTick: timer 0 + its IRQ handler
 void func_02059bc0(void);          // the alarm system
 void func_02059578(int a, int b);  // the main thread record
 void func_0201a03c(void);          // main()'s thread entry, passed by address
-// --- src/func_0201a054.c, in its own order ----------------------------------
+// --- src/unnamed/arm9/0201/func_0201a054.c, in its own order ----------------------------------
 void func_020427f8(void);                     // veneer -> func_02059788
 unsigned long long func_02042784(void);       // the boot timestamp
 void func_02053a8c(void);
@@ -389,7 +389,7 @@ int  func_02053be0(int enable);               // DISPSTAT VBlank-IRQ enable
 void func_0203d740(void);
 void func_0201a4e4(void);                     // install IRQ::VBlankHandler
 void func_0203bb5c(void);
-/* func_02042f68's FIRST ARM, the card driver's bring-up (src/func_02060890.c).
+/* func_02042f68's FIRST ARM, the card driver's bring-up (src/unnamed/arm9/0206/func_02060890.c).
    The transcription note at its point in the boot below says why it is
    called there and why it does nothing on a default boot. */
 void func_02060890(void);
@@ -424,7 +424,7 @@ static void say(const char *what) {
 }
 
 // ---------------------------------------------------------------------------
-// src/func_02019780.c, the step Entry runs before main.
+// src/unnamed/arm9/0201/func_02019780.c, the step Entry runs before main.
 //
 //     func_02058c84();   <- transcribed below, four PXI arms skipped
 //     func_0201a490();
@@ -450,7 +450,7 @@ void port_boot_rom_pre_main(void)
        linked ROM reader asks for, written from the port's arena block by
        hal/os_arena.cpp (hi then lo, the ROM's order), here at the arm's own
        point: after ntr::io_init holds the shared block the table lives in,
-       before the ROM's own OS_GetArenaLo (src/func_02058ea0.c) reads it at the
+       before the ROM's own OS_GetArenaLo (src/unnamed/arm9/0205/func_02058ea0.c) reads it at the
        top of Heap::SetupRootHeap. Run linkfull wave 27, lane SMALLS1. */
     port_os_arena_seed();
     func_0205b858();   /* call 2: PXI init (func_0205bad8); the ARM7 half is
@@ -470,7 +470,7 @@ void port_boot_rom_pre_main(void)
        0x04000204 (EXMEMCNT) -- so running this arm wrote the default heap
        pointer; and (2) the unmapped GBA slot at 0x08000000.
        BLOCKER (1) IS GONE. Run link100 rung R3F spelled the register in
-       src/func_02057140.c (and in func_02057128 and func_02055454), all three
+       src/unnamed/arm9/0205/func_02057140.c (and in func_02057128 and func_02055454), all three
        still byte-verify against the ROM, and the three TUs are hostgen-ROUTED
        so the store reaches EXMEMCNT instead. Taking the lock no longer touches
        the heap pointer. What is left is blocker (2) ALONE: no ntr::kRegions
@@ -503,7 +503,7 @@ void port_boot_rom_pre_main(void)
        IPCSEND re-derived the whole list rather than inheriting it, because the
        obvious question after that lane is "did the send unblock this too".
        IT DID NOT, AND IT NEVER COULD HAVE. The only IPCSend in this chain is
-       src/func_0206a318.c, and func_0206a6d0 is the only thing that calls it --
+       src/unnamed/arm9/0206/func_0206a318.c, and func_0206a6d0 is the only thing that calls it --
        past func_0206a6d0's own guard, `if ((*(volatile u16 *)0x4000300 & 1) ==
        0) return;`. That is REG_POSTFLG, nothing in this port writes it (the
        only mention of the address in the whole tree is that read), so the
@@ -540,7 +540,7 @@ void port_boot_rom_pre_main(void)
              OBSERVED ONLY, and if the guard ever opened, func_0206a318's word
              would get no answer -- so func_0206a6d0's `while (data_020a9de0 !=
              1) WaitByLoop(1)` would never turn, and any answer whose
-             (data & 0x3f) is not 1 makes src/func_0206a694.c call Crash().
+             (data & 0x3f) is not 1 makes src/unnamed/arm9/0206/func_0206a694.c call Crash().
        Every C TU in the closure exists and compiles (func_0206a5c0, 694, 634,
        600, 6d0, 3a4, 458, 424, 37c, 318 and IRQ::SetIRQs are all plain C; its
        three hand-asm leaves MultiCopy_Int, CP15::FlushAndInvalidateDataCache
@@ -586,7 +586,7 @@ void port_boot_rom_main_head(void)
 }
 
 // ---------------------------------------------------------------------------
-// src/func_0201a054.c, the span BEFORE Heap::InitializeGameHeap(0x3b000, 0).
+// src/unnamed/arm9/0201/func_0201a054.c, the span BEFORE Heap::InitializeGameHeap(0x3b000, 0).
 // The ROM's order, with the skips named in the header block:
 //
 //     func_020427f8(); func_02042784(); func_02053a8c(); func_02053c40();
@@ -638,7 +638,7 @@ void port_boot_rom_game_init_head(void)
     func_02053c40();
     /* func_0205b858() -- the ROM calls the PXI init a SECOND time here. Not
        repeated: port_boot_rom_pre_main() above already made func_02058c84's
-       call 2, and src/func_0205bad8.c is guarded on `data_020a7fc4 == 0`, so
+       call 2, and src/unnamed/arm9/0205/func_0205bad8.c is guarded on `data_020a7fc4 == 0`, so
        the ROM's own second call takes and releases the IRQ mask and returns.
        Left out to keep the surface this lane verified minimal; putting it back
        would be equally faithful and would change nothing. */
@@ -680,7 +680,7 @@ void port_boot_rom_game_init_head(void)
     /* func_0201fec8() -- the user settings block. Still refused; the blocker
        is func_0203db64's eight-name wireless run and not data_0209d574, which
        is sized now. The count is in the header block. */
-    /* func_02042f68(0xd01, data_0208ee50) -- ARM 1 IS src/func_02060890.c
+    /* func_02042f68(0xd01, data_0208ee50) -- ARM 1 IS src/unnamed/arm9/0206/func_02060890.c
        NOW (run linkfull, lane S4CARD), and the line below is the ROM's
        bring-up itself, not its func_0206002c two levels down.
 
@@ -700,12 +700,12 @@ void port_boot_rom_game_init_head(void)
        kept for the storage and scheduler evidence.
 
        THE CHAIN, and where this line sits in it:
-           src/func_0201a054.c    func_02042f68(0xd01, data_0208ee50)
-             src/func_02042f68.c  arm 1: func_02060890()      <-- transcribed
+           src/unnamed/arm9/0201/func_0201a054.c    func_02042f68(0xd01, data_0208ee50)
+             src/unnamed/arm9/0204/func_02042f68.c  arm 1: func_02060890()      <-- transcribed
                                   arm 2: func_020603c8(0xd01) <-- skipped
                                   arm 3: the eight-byte tag copy into
                                          data_020a4b40        <-- skipped
-               src/func_02060890.c  func_0206002c()           <-- CALLED HERE
+               src/unnamed/arm9/0206/func_02060890.c  func_0206002c()           <-- CALLED HERE
                                     func_02061138()           <-- skipped
                                     data_020a8780 = func_02060a64  <-- skipped
 
@@ -719,16 +719,16 @@ void port_boot_rom_game_init_head(void)
          the scheduler  run link2's lane THR. "A port that runs the game on ONE
                         fiber" has not been true since hal/boot2_thread.cpp;
                         func_02058048 -> func_02057f54 is a real switch.
-         the creation   THIS LANE. src/func_02058200.c, src/func_02058538.c and
-                        src/func_020581a8.cpp are linked, and
+         the creation   THIS LANE. src/unnamed/arm9/0205/func_02058200.c, src/unnamed/arm9/0205/func_02058538.c and
+                        src/unnamed/arm9/0205/func_020581a8.cpp are linked, and
                         hal/boot2_thread.cpp adopts the record they build.
          PXI 0xb        run link100's lane IPC. hal/boot2_ipc.cpp claims the
-                        channel at power-on and src/func_0205ba64.c is on
+                        channel at power-on and src/unnamed/arm9/0205/func_0205ba64.c is on
                         port/slice_gate2ipc.txt, so func_0206002c's
                         registration is a real store into data_020a7fc8[0xb].
                         Nothing posts on 0xb in this build -- ntr/backup.cpp
                         faces func_02060f60 and answers the card commands
-                        without the FIFO -- so src/func_02060310.c is linked
+                        without the FIFO -- so src/unnamed/arm9/0206/func_02060310.c is linked
                         (its address is taken) and never called.
 
        WHY func_0206002c AND NOT func_02060890, which is the arm the ROM
@@ -784,7 +784,7 @@ void port_boot_rom_game_init_head(void)
 }
 
 // ---------------------------------------------------------------------------
-// src/func_0201a054.c, the span AFTER Heap::InitializeGameHeap(0x3b000, 0):
+// src/unnamed/arm9/0201/func_0201a054.c, the span AFTER Heap::InitializeGameHeap(0x3b000, 0):
 //
 //     func_0201a9fc(data_0209d574);
 //     func_02019440();
@@ -900,7 +900,7 @@ void port_boot_rom_game_init_tail(void)
 // WHAT THE ENTRY DOES. It allocates the game's ov0 handle table (0x80a u16s,
 // 4116 bytes, off the default heap) and fills it with the file id of each of
 // ov000's 2058 path strings, through the ROM's own FS_ConvertPathToFileID.
-// src/func_02018a24.c reads that table for every file the game asks for by
+// src/unnamed/arm9/0201/func_02018a24.c reads that table for every file the game asks for by
 // handle. Until this lane the port answered those lookups from
 // build/assets/handles.tsv in a host face (hal/fs.cpp) and never built the
 // table at all; the face is retired on the game targets.

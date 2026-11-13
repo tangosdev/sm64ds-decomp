@@ -8,7 +8,7 @@
 //      symbols being ADJACENT in DS memory ... Host symbols are separate
 //      objects, so running it would write past two of them."
 //
-// That was true of the storage, not of the function. src/func_0205b358.c is
+// That was true of the storage, not of the function. src/unnamed/arm9/0205/func_0205b358.c is
 // SND_Init and the three adjacencies it uses are the ROM's own object split
 // three ways by dsd, exactly like the card driver's CARDiCommon in
 // hal/globals_link100.cpp. Host them as ONE run with the three names at their
@@ -24,7 +24,7 @@
 //                                    `(&data_020a6760, 0x1800)`, which is the
 //                                    ROM saying in one line that the object is
 //                                    0x1800 bytes and starts here.
-//   +0x1000  data_020a7760  0x07e8   the rest of the pool. src/func_0205b358.c
+//   +0x1000  data_020a7760  0x07e8   the rest of the pool. src/unnamed/arm9/0205/func_0205b358.c
 //                                    writes `*(int *)(data_020a7760 + 0x7e8) = 0`
 //                                    -- pool[255].next -- and 0x1000 + 0x7e8 is
 //                                    0x17e8 = 255 * 0x18 exactly.

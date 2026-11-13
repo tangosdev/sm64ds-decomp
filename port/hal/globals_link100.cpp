@@ -3,7 +3,7 @@
 // object the ROM has instead of the three dsd calls it a name apiece.
 //
 // WHY THIS FILE EXISTS. hal/boot_os.cpp refuses func_02042f68, the game-card
-// bring-up src/func_0201a054.c calls, and the refusal it wrote down is the
+// bring-up src/unnamed/arm9/0201/func_0201a054.c calls, and the refusal it wrote down is the
 // right bug with the wrong boundary:
 //
 //     "symbols.txt gives data_020a81bc a span of 1444 bytes ending exactly at

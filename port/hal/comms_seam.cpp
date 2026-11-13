@@ -25,7 +25,7 @@ extern unsigned char data_020a0de8[];   // TouchInfo[4], hal/auto_bss.cpp
 extern int data_020a0e58[];             // PadData[4], hal/auto_bss.cpp
 
 // THE TWO WORDS RUNG W0 GAVE BACK TO THE ROM (run link100, lane WM1).
-// src/func_02040714.c reads the first and src/func_02040704.c reads the second,
+// src/unnamed/arm9/0204/func_02040714.c reads the first and src/unnamed/arm9/0204/func_02040704.c reads the second,
 // and both are LINKED now. data_020a0f94 is hosted by hal/comms_conductor.cpp
 // (".dsstate$ymp3s0007"); data_020a0f24 is hosted at the foot of THIS file,
 // which is why it is declared here and defined there.
@@ -43,7 +43,7 @@ void func_0203bc7c(void);
 #ifndef PORT_COMMS_SEAM_PROBE_FACE_020408B0
 void port_arm7_wireless_tick(void);
 // RUNG W2. hal/wm_arm7.cpp publishes the round the carrier just completed into
-// the ROM's own MP receive buffer, in the layout src/func_02062778.c unpacks.
+// the ROM's own MP receive buffer, in the layout src/unnamed/arm9/0206/func_02062778.c unpacks.
 // Same guard and the same reason: the seam probe links this file without the
 // host ARM7.
 void port_wm_publish_mp_recv(void);
@@ -96,20 +96,20 @@ uint64_t comms_wire_activity() { return g_wire_activity; }
 // ===========================================================================
 // THE TWO WORDS. Run link100, lane WM1 rung W0, NARROWED BY LANE WM3 RUNG W4.
 //
-// WHAT RUNG W0 BUILT. src/func_02040714.c (`return data_020a0f94`) and
-// src/func_02040704.c (`return data_020a0f24`) became linked bodies, so the
+// WHAT RUNG W0 BUILT. src/unnamed/arm9/0204/func_02040714.c (`return data_020a0f94`) and
+// src/unnamed/arm9/0204/func_02040704.c (`return data_020a0f24`) became linked bodies, so the
 // game reads those two words instead of asking the transport, and something
 // had to keep them fresh. This function was that something: it wrote
 // t->state() into data_020a0f94 and t->slot() into data_020a0f24 from every
 // seam face, from the exchange face once per wait turn, and from a pump chained
-// onto hal/os_thread.h's hook to cover src/func_0203ea5c.c's case 2, which
+// onto hal/os_thread.h's hook to cover src/unnamed/arm9/0203/func_0203ea5c.c's case 2, which
 // calls nothing at all.
 //
 // WHAT RUNG W4 TOOK BACK, AND WHY THE MIRROR HAD TO GO. The ROM's own WM
 // callbacks are linked now, and THEY WRITE BOTH WORDS. data_020a0f94 is written
-// by src/func_0203fdac.c (`data_020a0f94 = data_020a0f5c`, the 3 or 4 that a
-// formed session means), by src/func_02040820.c and src/func_02040790.c
-// themselves (`= 2`, connecting), by src/func_02040504.c (`= 0`) and by five
+// by src/unnamed/arm9/0203/func_0203fdac.c (`data_020a0f94 = data_020a0f5c`, the 3 or 4 that a
+// formed session means), by src/unnamed/arm9/0204/func_02040820.c and src/unnamed/arm9/0204/func_02040790.c
+// themselves (`= 2`, connecting), by src/unnamed/arm9/0204/func_02040504.c (`= 0`) and by five
 // callbacks on their failure arms (`= 1`). A mirror that kept writing
 // t->state() into that word would FIGHT every one of them -- and worse than
 // fight: the ROM's own state machine SWITCHES on it, so a mirror write of 4
@@ -119,7 +119,7 @@ uint64_t comms_wire_activity() { return g_wire_activity; }
 // connecting now, which is what case 2 was always waiting for on hardware.
 //
 // AND ONE WRITE STAYS, NARROWED TO THE ONE PLACE THE ROM CANNOT HAVE REACHED
-// YET. data_020a0f24, the aid. The ROM writes it too -- src/func_0203fec4.c:25
+// YET. data_020a0f24, the aid. The ROM writes it too -- src/unnamed/arm9/0203/func_0203fec4.c:25
 // takes it out of the connect reply -- but that reply is posted only once the
 // transport reports the child connected, and hal/comms_conductor.cpp's
 // comms_wait_for_session ends its wait on the SAME transport signal and then
@@ -134,18 +134,18 @@ uint64_t comms_wire_activity() { return g_wire_activity; }
 //
 // SOLO IS UNTOUCHED, more so than before: with no transport this now writes
 // nothing at all, where it used to write a zero over a zero. In a solo boot the
-// role byte never leaves 0, so src/func_0203df40.c takes its solo arm, no seam
+// role byte never leaves 0, so src/unnamed/arm9/0203/func_0203df40.c takes its solo arm, no seam
 // face is called and no WM command is ever sent.
 // ===========================================================================
 // ===========================================================================
 // THE HOST ARM7 GETS A TURN WHENEVER THE ARM9 TOUCHES THE RADIO.
 //
-// Run link100, lane WM2, rung W1. src/func_020408b0.c is the ROM's own body
+// Run link100, lane WM2, rung W1. src/unnamed/arm9/0204/func_020408b0.c is the ROM's own body
 // now, and the port's only t->open(mode) call went with the face it lived in.
 // Its home is hal/boot2_ipc.cpp, the host ARM7, which opens the transport when
 // it sees the ROM claim channel 0xa. Something has to give that model a moment
 // to look, because the claim is a plain store into the shared block
-// (src/func_0205ba64.c writes 0x027FFC00+0x388) and not an I/O access anything
+// (src/unnamed/arm9/0205/func_0205ba64.c writes 0x027FFC00+0x388) and not an I/O access anything
 // traps.
 //
 // THE RULE, stated rather than implied: the host ARM7 runs at the points the
@@ -163,7 +163,7 @@ uint64_t comms_wire_activity() { return g_wire_activity; }
 // SOLO IS UNTOUCHED. With no transport installed there is nothing to open, the
 // ARM7 arm returns after one mask test, and none of these faces is called at
 // all in a solo boot anyway (the role byte never leaves 0, so
-// src/func_0203df40.c takes its solo arm).
+// src/unnamed/arm9/0203/func_0203df40.c takes its solo arm).
 //
 // NOT IN THE PROBE. tests/mp_comms_seam.cpp links hal/comms_seam.cpp without
 // hal/boot2_ipc.cpp, so the symbol would not resolve there; the probe keeps the
@@ -183,8 +183,8 @@ void publish_now() {
     const CommsTransport *t = g_transport;
     if (!t) return;              // solo: neither word has a publisher, or needs one
     // data_020a0f24 is the low halfword of its own 4-byte ROM span (every ROM
-    // writer -- src/func_020408b0.c:27, src/func_02040014.c, src/func_020402a0.c,
-    // src/func_0203fec4.c:23 -- writes it as u16).
+    // writer -- src/unnamed/arm9/0204/func_020408b0.c:27, src/unnamed/arm9/0204/func_02040014.c, src/unnamed/arm9/0204/func_020402a0.c,
+    // src/unnamed/arm9/0203/func_0203fec4.c:23 -- writes it as u16).
     //
     // AND data_020a0f94 IS NOT WRITTEN HERE ANY MORE. See the banner.
     *reinterpret_cast<volatile unsigned short *>(data_020a0f24) =
@@ -200,7 +200,7 @@ void comms_publish_link_words() {
 void comms_set_boot_indicator(uint16_t value) {
     g_boot_indicator = value;
     // The DS firmware leaves this halfword in the shared system block, and
-    // src/func_0203db64.c and src/func_020408b0.c read it from there rather
+    // src/unnamed/arm9/0203/func_0203db64.c and src/unnamed/arm9/0204/func_020408b0.c read it from there rather
     // than through any accessor. ntr maps 0x027ff000 (io.cpp's kRegions), so
     // the write lands where the ROM will look.
     *reinterpret_cast<volatile uint16_t *>(0x027FFC40u) = value;
@@ -282,7 +282,7 @@ void comms_report(const char *tag) {
 
 extern "C" {
 
-// src/func_020408b0.c IS LINKED NOW. Run link100, lane WM2, rung W1.
+// src/unnamed/arm9/0204/func_020408b0.c IS LINKED NOW. Run link100, lane WM2, rung W1.
 //
 // The face that stood here allocated nothing, read no boot indicator and
 // started no SDK: it called t->open(mode) and published. The ROM's own body
@@ -296,7 +296,7 @@ extern "C" {
 // t->open(mode) call, and its honest home is the host ARM7: hal/boot2_ipc.cpp
 // opens the installed transport when it sees the ROM claim channel 0xa, with
 // data_020a0f14 as the mode word. The ROM's own body writes that word FIRST
-// (src/func_020408b0.c:25, `data_020a0f14 = arg`) and registers the channel
+// (src/unnamed/arm9/0204/func_020408b0.c:25, `data_020a0f14 = arg`) and registers the channel
 // LAST (func_020616e8's closing func_0205ba64(0xa, func_02061188)), so the mode
 // is already there when the claim becomes visible. port_arm7_wireless_tick()
 // below is where the ARM7 is given its turn to look.
@@ -331,8 +331,8 @@ void func_020408b0(unsigned short mode) {
 // ===========================================================================
 // RUNGS W4 AND W5: BECOME PARENT, BECOME CHILD AND LEAVE ARE THE ROM'S AGAIN.
 //
-// Run link100, lane WM3. src/func_02040820.c, src/func_02040790.c and
-// src/func_02040724.c are linked bodies now, and 128 more TUs came with them:
+// Run link100, lane WM3. src/unnamed/arm9/0204/func_02040820.c, src/unnamed/arm9/0204/func_02040790.c and
+// src/unnamed/arm9/0204/func_02040724.c are linked bodies now, and 128 more TUs came with them:
 // the NITRO WM command layer, the game's own wireless framework and the
 // 0x02065xxx work-queue band. port/slice_wm3.txt carries the list, the measured
 // closure and the argument.
@@ -360,7 +360,7 @@ void func_020408b0(unsigned short mode) {
 // ===========================================================================
 #ifdef PORT_COMMS_SEAM_PROBE_FACES_W4
 
-// src/func_02040820.c: the ROM's become-parent state machine over
+// src/unnamed/arm9/0204/func_02040820.c: the ROM's become-parent state machine over
 // data_020a0f94/data_020a0f5c, with Wireless_Reset on a role flip.
 void func_02040820(void) {
     port::comms_arm7_turn();
@@ -368,12 +368,12 @@ void func_02040820(void) {
     if (t) { t->become_parent(); port::comms_publish_link_words(); return; }
     // No radio: the request is recorded and refused the way an unanswered
     // radio refuses it -- the state never leaves idle, so the ROM's own wait
-    // bound expires and src/func_0203ea5c.c:487 drops the session to solo.
+    // bound expires and src/unnamed/arm9/0203/func_0203ea5c.c:487 drops the session to solo.
     port::g_solo_state = port::kCommsIdle;
     port::comms_publish_link_words();
 }
 
-// src/func_02040790.c, the child half of the same machine.
+// src/unnamed/arm9/0204/func_02040790.c, the child half of the same machine.
 void func_02040790(void) {
     port::comms_arm7_turn();
     const port::CommsTransport *t = port::comms_transport();
@@ -382,7 +382,7 @@ void func_02040790(void) {
     port::comms_publish_link_words();
 }
 
-// src/func_02040724.c: leave.
+// src/unnamed/arm9/0204/func_02040724.c: leave.
 void func_02040724(void) {
     const port::CommsTransport *t = port::comms_transport();
     if (t) { t->close(); port::comms_publish_link_words(); return; }
@@ -399,7 +399,7 @@ void func_02040724(void) {
 // Run link100, lane WM1. The note below is lane DF40's, kept because it is the
 // argument this rung was taken on and because it named the one cost that had to
 // be paid -- and the answer to that cost is in comms_publish_link_words above.
-// Both host bodies are GONE. src/func_02040714.c and src/func_02040704.c are
+// Both host bodies are GONE. src/unnamed/arm9/0204/func_02040714.c and src/unnamed/arm9/0204/func_02040704.c are
 // linked by port/slice_wm1.txt, data_020a0f24 is hosted at the foot of this
 // file, and the two words are published by the seam at every point a transport
 // can have changed its mind. DF40's ruling that "the decision belongs to the
@@ -429,12 +429,12 @@ void func_02040724(void) {
 //   * comms_seam.h's CommsLinkState enum IS the ROM's data_020a0f94 encoding
 //     and says so -- kCommsIdle 0, kCommsConnecting 2, kCommsParentConnected
 //     3, kCommsChildConnected 4, which are exactly the cases
-//     src/func_02040724.c switches on. So `data_020a0f94 = t->state()` would
+//     src/unnamed/arm9/0204/func_02040724.c switches on. So `data_020a0f94 = t->state()` would
 //     be an identity, not an approximation.
 //   * data_020a0f94 is ALREADY hosted (hal/comms_conductor.cpp's MP3_BSS row,
 //     ".dsstate$ymp3s0007"), and a linked matched TU already writes it:
-//     src/func_0203fd64.c sets it to 1 on its refusal path.
-//   * src/func_0203ea5c.c calls func_02040714 exactly once per invocation
+//     src/unnamed/arm9/0203/func_0203fd64.c sets it to 1 on its refusal path.
+//   * src/unnamed/arm9/0203/func_0203ea5c.c calls func_02040714 exactly once per invocation
 //     (:204) and func_02040704 exactly once (:252). Neither sits in a tight
 //     loop, so a word refreshed at poll time cannot be spun on.
 //
@@ -450,8 +450,8 @@ void func_02040724(void) {
 // ---- end of DF40's note ---------------------------------------------------
 //
 // AND THE ARGUMENT MISMATCH IS SAFE, which is the other half of the seat.
-// src/func_02040704.c is `int func_02040704(void)`. Two callers pass it one
-// argument anyway -- src/func_0203ea5c.c:252 (`func_02040704(temp_r0_5)`, a
+// src/unnamed/arm9/0204/func_02040704.c is `int func_02040704(void)`. Two callers pass it one
+// argument anyway -- src/unnamed/arm9/0203/func_0203ea5c.c:252 (`func_02040704(temp_r0_5)`, a
 // dead r0 write the DS callee overwrites) and hal/comms_conductor.cpp:1176
 // (`func_02040704(0)`, written against the retired host face). This binary is
 // 32-bit x86 (PE32, machine 0x014c) and both are extern "C" __cdecl: the map
@@ -465,7 +465,7 @@ void func_02040724(void) {
 // than a silent leak. So no call site had to change.
 // ===========================================================================
 
-// src/func_020406b4.c: hands the staged block to func_02062df0 (the WM send)
+// src/unnamed/arm9/0204/func_020406b4.c: hands the staged block to func_02062df0 (the WM send)
 // and reports back through data_020a0f80. Returns 1 when the round is in.
 // PORT_HOST_ABI: hosted WM/radio seam face; the ROM body hands the staged block to the NITRO WM send over arm7.bin, which this repo does not decompile.
 int func_020406b4(const void *block, unsigned short *status) {
@@ -482,7 +482,7 @@ int func_020406b4(const void *block, unsigned short *status) {
         // RUNG W2. The round is in, so the ROM's own MP receive buffer is
         // filled from it BEFORE the caller asks for a peer's block: this face
         // and func_0204068c are called back to back by the ROM's own wait
-        // (src/func_0203ea5c.c:223 then :255/:289), and as of this rung that
+        // (src/unnamed/arm9/0203/func_0203ea5c.c:223 then :255/:289), and as of this rung that
         // second call is the cartridge's own unpacker reading what the line
         // below wrote. hal/wm_arm7.cpp's own banner carries the layout and the
         // src lines that fix every field of it.
@@ -491,7 +491,7 @@ int func_020406b4(const void *block, unsigned short *status) {
 #endif
     }
     // W0. This is the one seam face the ROM calls on EVERY turn of its own wait
-    // loop while the link is up (src/func_0203ea5c.c:223 and :236), so it is
+    // loop while the link is up (src/unnamed/arm9/0203/func_0203ea5c.c:223 and :236), so it is
     // what keeps data_020a0f94 and data_020a0f24 from going stale during a live
     // session -- and :223 runs before :252, so the slot the ROM seats into
     // data_020a0f10 was published in the same invocation that read it.
@@ -517,11 +517,11 @@ extern "C" void port_comms_counters_set(unsigned long long exchanges,
 }
 
 // ===========================================================================
-// RETIRED BY RUNG W2 (run link100, lane WM4). src/func_0204068c.c is linked by
+// RETIRED BY RUNG W2 (run link100, lane WM4). src/unnamed/arm9/0204/func_0204068c.c is linked by
 // port/slice_wm4.txt and it is the ROM's own two-line body: it hands
-// data_020a0f74 and data_020a0f80 to src/func_02062778.c, which refuses an aid
+// data_020a0f74 and data_020a0f80 to src/unnamed/arm9/0206/func_02062778.c, which refuses an aid
 // whose bit is clear in the receive buffer's liveness mask and otherwise steps
-// src/func_02062734.c's packed offset into it. hal/wm_arm7.cpp fills that
+// src/unnamed/arm9/0206/func_02062734.c's packed offset into it. hal/wm_arm7.cpp fills that
 // buffer from the carrier's completed round, in exactly that layout, from the
 // call added to func_020406b4 above.
 //
@@ -541,7 +541,7 @@ extern "C" void port_comms_counters_set(unsigned long long exchanges,
 // PORT_COMMS_SEAM_PROBE_FACES_W4 (rung W4) above it.
 // ===========================================================================
 #ifdef PORT_COMMS_SEAM_PROBE_FACE_0204068C
-// src/func_0204068c.c: player `aid`'s received block, or 0.
+// src/unnamed/arm9/0204/func_0204068c.c: player `aid`'s received block, or 0.
 // PORT_HOST_ABI: hosted WM/radio seam face; returns a peer's received block out of the NITRO WM buffers over arm7.bin, which this repo does not decompile.
 const void *func_0204068c(unsigned short aid) {
     const port::CommsTransport *t = port::comms_transport();
@@ -552,24 +552,24 @@ const void *func_0204068c(unsigned short aid) {
 #endif  // PORT_COMMS_SEAM_PROBE_FACE_0204068C
 
 // ===========================================================================
-// RUNG W6 RETIRES src/func_02040c34.c: THE CARTRIDGE STARTS ITS OWN THREAD.
+// RUNG W6 RETIRES src/unnamed/arm9/0204/func_02040c34.c: THE CARTRIDGE STARTS ITS OWN THREAD.
 // Run link100, lane WM5.
 //
 // The stand-in below said "a host transport has no thread to start". That was
 // true when it was written and it is not now. hal/boot2_thread.cpp adopts any
-// record src/func_02058200.c creates onto a Windows fiber (gate 223, run
+// record src/unnamed/arm9/0205/func_02058200.c creates onto a Windows fiber (gate 223, run
 // link100, lane THREAD), and lanes NITROFS and LOADOV wrote the eight
-// cartridge-header words at 0x027FFE40..0x027FFE5C that src/func_020424c0.c
+// cartridge-header words at 0x027FFE40..0x027FFE5C that src/unnamed/arm9/0204/func_020424c0.c
 // reads. So the ROM's own body runs: it fills the 0x440 control block at
 // data_020a1fc0, registers the WM port callback through func_02061c88, calls
 // func_0205d89c for the header mirror, carves three 0xcc0-byte work nodes with
-// FS_InitFile on each, and on the parent arm hands src/func_02042254.c to
-// src/func_02058200.c as the SECOND created thread, which enters and parks in
+// FS_InitFile on each, and on the parent arm hands src/unnamed/arm9/0204/func_02042254.c to
+// src/unnamed/arm9/0205/func_02058200.c as the SECOND created thread, which enters and parks in
 // the ROM's own OS_SleepThread. hal/wm_thread.cpp carries the storage, the
 // four faces into the band that rung refuses, and the census that measures it.
 //
 // THE CALLBACKS ARE STILL NOT INVOKED FROM HERE, and now they are not invoked
-// from here BY THE CARTRIDGE: src/func_02040c34.c stores them at
+// from here BY THE CARTRIDGE: src/unnamed/arm9/0204/func_02040c34.c stores them at
 // data_020a1fc0 + 0x10 and + 0x14 and the wireless thread is what would run
 // them. The old note's reasoning ("calling them from here would double-apply
 // it") is therefore retired rather than contradicted.
@@ -577,8 +577,8 @@ const void *func_0204068c(unsigned short aid) {
 // TWO TARGETS KEEP THE STAND-IN, and they get it from a file of their own
 // rather than from a define here. tests/mp_comms_seam.cpp links this file
 // without the WM command layer, without a heap and without the host ARM7. AND
-// SO DOES smoke_player, for a reason that is not a choice: src/func_02042254.c
-// and src/func_020424c0.c both call func_0205d5e8, which is on
+// SO DOES smoke_player, for a reason that is not a choice: src/unnamed/arm9/0204/func_02042254.c
+// and src/unnamed/arm9/0204/func_020424c0.c both call func_0205d5e8, which is on
 // port/slice_gate214.txt, and that slice goes to walk_window and
 // walk_window_hires only -- smoke_player has never carried the boot spine. So
 // rung W6 goes to those two targets and the other two link
@@ -597,7 +597,7 @@ const void *func_0204068c(unsigned short aid) {
 
 // THE STATUS-WORD PAIR IS RETIRED (run link100, lane DF40).
 //
-// src/func_02040a5c.c / src/func_02040a84.c stood here as two host bodies over
+// src/unnamed/arm9/0204/func_02040a5c.c / src/unnamed/arm9/0204/func_02040a84.c stood here as two host bodies over
 // a file-static `g_wm_status`, on the stated ground that "there is no WM work
 // buffer here". The ground was wrong, and measuring it is what retired them.
 //
@@ -610,7 +610,7 @@ const void *func_0204068c(unsigned short aid) {
 // it is hosting 0xB80 bytes of DS BSS that two accessors own outright, which
 // is what this port does with DS BSS everywhere else.
 //
-// AND THE OBSERVABLE IS PROVABLY UNCHANGED. src/func_0203ea5c.c:386 (and the
+// AND THE OBSERVABLE IS PROVABLY UNCHANGED. src/unnamed/arm9/0203/func_0203ea5c.c:386 (and the
 // wide copy's :475) is `func_02040a5c(func_02040a84())` -- read it, clear
 // bit 0, write it back. Storage starts zero; a84 answers 0; a5c writes
 // 0 & ~1 == 0. That was the loop invariant under g_wm_status and it is the
@@ -619,8 +619,8 @@ const void *func_0204068c(unsigned short aid) {
 // ROM's own two bodies, over the ROM's own word, instead of a stand-in.
 //
 // A DECOMP DISCREPANCY THE MOVE SURFACED, recorded rather than papered over:
-// src/func_02040a5c.c writes offset 0xB50 (its struct is `char pad[0xb50];
-// u32 field_b50`) while src/func_02040a84.c reads `data_020a3fc0[726]`, which
+// src/unnamed/arm9/0204/func_02040a5c.c writes offset 0xB50 (its struct is `char pad[0xb50];
+// u32 field_b50`) while src/unnamed/arm9/0204/func_02040a84.c reads `data_020a3fc0[726]`, which
 // is offset 0xB58. Two words, not one, for what the call site plainly means as
 // one. Both TUs are byte-matched individually, so the disagreement is in the
 // recovered C types and not in the ROM; it is invisible here because nothing
@@ -641,7 +641,7 @@ const void *func_0204068c(unsigned short aid) {
 //
 // AND THE STORAGE MOVED IN RUNG W6 (run link100, lane WM5), because the sweep
 // above is correct and its conclusion was not. A relocation sweep cannot see
-// POINTER ARITHMETIC, and src/func_02040c34.c reaches these bytes with it:
+// POINTER ARITHMETIC, and src/unnamed/arm9/0204/func_02040c34.c reaches these bytes with it:
 // 0x02040CF8 is `add fp, sl, #0x440` off data_020a1fc0, and the third of the
 // three 0xcc0-byte work nodes it carves runs from data_020a1fc0 + 0x1e80 to
 // + 0x2b40 -- straight through this object. So data_020a3fc0 is the tail of a
@@ -653,15 +653,15 @@ const void *func_0204068c(unsigned short aid) {
 // The two targets that do not link rung W6 keep the standalone definition for
 // the same reason they keep the face: neither links hal/wm_thread.cpp, where
 // the band is, and mp_comms_seam does not link hal/comms_conductor.cpp either,
-// so the band's head is not there to sit behind. src/func_02040a5c.c and
-// src/func_02040a84.c are on port/slice_gate221.txt, which all three real
+// so the band's head is not there to sit behind. src/unnamed/arm9/0204/func_02040a5c.c and
+// src/unnamed/arm9/0204/func_02040a84.c are on port/slice_gate221.txt, which all three real
 // targets carry, so the definition has to exist in both shapes.
 // (The standalone definition moved to hal/wm_thread_face.cpp with the face
 // above, for the same one-shared-object reason.)
 
 // THE LINK STATE, rung W0's first global. Run link100, lane WM1.
 //
-// src/func_02040714.c is `return data_020a0f94` and it is LINKED now. The word
+// src/unnamed/arm9/0204/func_02040714.c is `return data_020a0f94` and it is LINKED now. The word
 // lived in hal/comms_conductor.cpp's MP3_BSS run until this rung. It moved here
 // because this file is what publishes it, and because the mp_comms_seam probe
 // links this file WITHOUT linking the conductor -- a word the seam now
@@ -680,7 +680,7 @@ unsigned char data_020a0f94[4] = {0};
 
 // MY SLOT (the aid), rung W0's other global. Run link100, lane WM1.
 //
-// src/func_02040704.c is `return data_020a0f24` and it is LINKED now, so the
+// src/unnamed/arm9/0204/func_02040704.c is `return data_020a0f24` and it is LINKED now, so the
 // word needs a home. It is DS BSS like everything else in this bracket, and it
 // gets its OWN suffix for the same reason data_020a3fc0 above got one: ".dsstate$ywmb"
 // sorts after "$ywm" (fourth character, "" < "b") and before the "$zzz" high
@@ -692,9 +692,9 @@ unsigned char data_020a0f94[4] = {0};
 //
 // SIZED BY ROM SPAN, four bytes: config/arm9/symbols.txt puts data_020a0f24 at
 // 0x020a0f24 and the next symbol, data_020a0f28, at 0x020a0f28. Every ROM
-// writer touches only the low halfword (src/func_020408b0.c:27,
-// src/func_02040014.c, src/func_020402a0.c, src/func_0203fec4.c:23) and
-// src/func_02040704.c reads it as one -- but the span is what gets hosted, not
+// writer touches only the low halfword (src/unnamed/arm9/0204/func_020408b0.c:27,
+// src/unnamed/arm9/0204/func_02040014.c, src/unnamed/arm9/0204/func_020402a0.c, src/unnamed/arm9/0203/func_0203fec4.c:23) and
+// src/unnamed/arm9/0204/func_02040704.c reads it as one -- but the span is what gets hosted, not
 // the width of the first field that reads it. That is the undersized-global
 // trap this file's data_020a3fc0 note and hal/auto_bss.cpp's data_0209d3c4 note
 // both name.
@@ -705,8 +705,8 @@ unsigned char data_020a0f24[4] = {0};
 // ===========================================================================
 // RUNG W1'S STORAGE: NINETEEN DS GLOBALS THE WM CHAIN NAMES AND NOTHING HOSTED.
 //
-// Run link100, lane WM2. src/func_020408b0.c, src/func_020616e8.c (WM_Init),
-// src/func_02061188.c (the channel-0xa reply dispatcher) and the nine TUs behind
+// Run link100, lane WM2. src/unnamed/arm9/0204/func_020408b0.c, src/unnamed/arm9/0206/func_020616e8.c (WM_Init),
+// src/unnamed/arm9/0206/func_02061188.c (the channel-0xa reply dispatcher) and the nine TUs behind
 // them are LINKED now, and between them they name twenty-three DS bss symbols.
 // Four were already hosted -- data_020a0f28 and data_020a0f2c in
 // hal/comms_conductor.cpp's MP3_BSS run, data_020a0f94 and data_020a0f24 at the
@@ -714,7 +714,7 @@ unsigned char data_020a0f24[4] = {0};
 // other nineteen are here.
 //
 // NINETEEN, NOT SIXTEEN. The rung's brief named sixteen. The closure names
-// three more, and they are not optional: src/func_02061188.c reaches
+// three more, and they are not optional: src/unnamed/arm9/0206/func_02061188.c reaches
 // data_020a89c4 (the ten-entry command-buffer ring func_02058894 indexes),
 // data_020a89ec (the synthesised 0x82 port-recv message) and data_020a8a00
 // (that message's own +0x14 field, see the pair note below). Measured with
@@ -728,7 +728,7 @@ unsigned char data_020a0f24[4] = {0};
 // data_020a8138 note names the interior-address half of it.
 //
 //   data_020a0f14  4     the wireless MODE the ROM was opened with; :25 of
-//                        src/func_020408b0.c writes it FIRST, which is what
+//                        src/unnamed/arm9/0204/func_020408b0.c writes it FIRST, which is what
 //                        lets hal/boot2_ipc.cpp read it at the claim
 //   data_020a0f44  4     0x40 scratch, Memory::Allocate
 //   data_020a0f48  4     0x20 scratch
@@ -750,7 +750,7 @@ unsigned char data_020a0f24[4] = {0};
 //   data_020a8a40  2560  the ten 0x100 command buffers WM_Init enqueues
 //
 // THE ONE PAIR THAT MUST COME OUT IN ROM ORDER: data_020a89ec and
-// data_020a8a00. src/func_02061188.c declares the message as a 0x20-byte struct
+// data_020a8a00. src/unnamed/arm9/0206/func_02061188.c declares the message as a 0x20-byte struct
 // at data_020a89ec and writes its +0x1a and +0x1c fields, while the SAME
 // function copies six halfwords to &data_020a8a00 -- and 0x020a8a00 is
 // 0x020a89ec + 0x14. So on the DS these are ONE object with two names, exactly
@@ -810,18 +810,18 @@ WMBSS(".dsstate$ywmc18", data_020a8a40, 2560, 4);
 
 // Reads the pair's layout back, the way port_gxbank_layout_check does for the
 // GX band. Nonzero when data_020a8a00 came out at data_020a89ec + 0x14, which
-// is the precondition for src/func_02061188.c's synthesised message being one
+// is the precondition for src/unnamed/arm9/0206/func_02061188.c's synthesised message being one
 // object rather than two. Called from comms_arm7_turn's first turn.
 extern "C" int port_wm_message_layout_check(void)
 {
     return (int)(data_020a8a00 - data_020a89ec) == 0x14;
 }
 
-// src/func_0203e20c.c: DS DOWNLOAD PLAY, an eight-state multiboot server that
+// src/unnamed/arm9/0203/func_0203e20c.c: DS DOWNLOAD PLAY, an eight-state multiboot server that
 // feeds the game to three other consoles over the radio. A PC port with a
 // socket transport does not need it and cannot honestly provide it -- there is
 // no cartridge to send. REFUSED, and the refusal is the ROM's own shape: role
-// 3 is cleared back to solo, exactly what src/func_0203e20c.c does when its
+// 3 is cleared back to solo, exactly what src/unnamed/arm9/0203/func_0203e20c.c does when its
 // distribution ends.
 // PORT_HOST_ABI: hosted WM/radio seam face; DS Download Play multiboot server over the radio, which a PC port with a socket transport cannot honestly provide (no cartridge to distribute).
 void func_0203e20c(void) {
@@ -837,10 +837,10 @@ void func_0203e20c(void) {
 }  // extern "C"
 
 // ===========================================================================
-// THE PAD BLOCK src/func_0203bc7c.c OWNS.
+// THE PAD BLOCK src/unnamed/arm9/0203/func_0203bc7c.c OWNS.
 //
 // data_020a0e44/48/50 are ROM bss the port never hosted, because nothing was
-// linked that touched them. src/func_0203bc7c.c is, now. Sized by ROM SPAN
+// linked that touched them. src/unnamed/arm9/0203/func_0203bc7c.c is, now. Sized by ROM SPAN
 // off config/arm9/symbols.txt (0x020a0e44 -> 0x020a0e48 -> 0x020a0e50 ->
 // 0x020a0e58) and not by the width of the first field that reads them, which
 // is the undersized-host-global trap this tree has been bitten by before.
@@ -871,7 +871,7 @@ void func_0203e20c(void) {
 // RETIREMENT CONDITION: if these ever have to be ROM-SPACED against
 // data_020a0e58 (they are its immediate ROM neighbours), they move into that
 // band and every BMP baseline taken against this layout has to be retaken.
-// Nothing needs that today -- src/func_0203bc7c.c indexes each array within
+// Nothing needs that today -- src/unnamed/arm9/0203/func_0203bc7c.c indexes each array within
 // its own bounds and never reaches one as an interior address of another,
 // which is the only thing the gxband rule is about.
 //

@@ -27,7 +27,7 @@
  *
  * THE FIX (MotherPenguin's own empirically-derived shape, re-applied):
  * self=model, bmd=animFile, btp=animFile -- func_02046d50's own matched
- * body (src/func_02046d50.c) only reads r0(arg)/r1(t), and its `struct
+ * body (src/unnamed/arm9/0204/func_02046d50.c) only reads r0(arg)/r1(t), and its `struct
  * Tbl` layout matches BTP_File's, not BMD_File's; the model's own name
  * table is what gets searched (arg=model) using names walked out of the
  * animation file's table (t=animFile). This host copy is the matched src
