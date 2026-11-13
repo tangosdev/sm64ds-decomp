@@ -68,8 +68,8 @@
       "ordinal": 6
     },
     {
-      "symbol": "daFeather_c_classInit",
-      "address": "0x020b3248",
+      "symbol": "_Z21daFeather_c_classInitv",
+      "address": "",
       "size": "0x00000050",
       "legacy_source": "src/game/actors/WingFeather/d_a_feather.c",
       "ordinal": 7

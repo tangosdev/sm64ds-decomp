@@ -221,7 +221,7 @@ int daPropeller_Heyho_Fire_c::InitResources() {
 }
 
 /* PROPELLER_HEYHO_FIRE factory. */
-extern "C" daPropeller_Heyho_Fire_c *daPropeller_Heyho_Fire_c_classInit(void) {
+daPropeller_Heyho_Fire_c *daPropeller_Heyho_Fire_c_classInit(void) {
     return new daPropeller_Heyho_Fire_c;
 }
 

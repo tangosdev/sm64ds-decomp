@@ -35,8 +35,8 @@
   ],
   "functions": [
     {
-      "symbol": "func_ov002_020ad660",
-      "address": "0x020ad660",
+      "symbol": "_Z19func_ov002_020ad660PvS_S_i",
+      "address": "",
       "size": "0x1d8",
       "legacy_source": "src/ov002_handles.cpp",
       "ordinal": 0

@@ -131,8 +131,8 @@
       "ordinal": 12
     },
     {
-      "symbol": "func_ov002_020b18f0",
-      "address": "0x020b18f0",
+      "symbol": "_Z19func_ov002_020b18f0Pc",
+      "address": "",
       "size": "0x000000ec",
       "legacy_source": "src/func_ov002_020b18f0.c",
       "ordinal": 13
@@ -236,22 +236,22 @@
       "ordinal": 27
     },
     {
-      "symbol": "daCoin_c_classInit_BLUE_COIN",
-      "address": "0x020b2a98",
+      "symbol": "_Z28daCoin_c_classInit_BLUE_COINv",
+      "address": "",
       "size": "0x00000058",
       "legacy_source": "src/d_a_coin_blue_coin.c",
       "ordinal": 28
     },
     {
-      "symbol": "daCoin_c_classInit_RED_COIN",
-      "address": "0x020b2af0",
+      "symbol": "_Z27daCoin_c_classInit_RED_COINv",
+      "address": "",
       "size": "0x00000058",
       "legacy_source": "src/d_a_coin_red_coin.c",
       "ordinal": 29
     },
     {
-      "symbol": "daCoin_c_classInit_COIN",
-      "address": "0x020b2b48",
+      "symbol": "_Z23daCoin_c_classInit_COINv",
+      "address": "",
       "size": "0x00000058",
       "legacy_source": "src/d_a_coin_coin.c",
       "ordinal": 30

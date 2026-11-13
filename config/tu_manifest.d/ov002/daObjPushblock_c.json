@@ -101,8 +101,8 @@
       "ordinal": 8
     },
     {
-      "symbol": "daObjPushblock_c_classInit",
-      "address": "0x020b910c",
+      "symbol": "_Z26daObjPushblock_c_classInitv",
+      "address": "",
       "size": "0x0000003c",
       "legacy_source": "src/d_a_obj_pushblock.cpp",
       "ordinal": 9

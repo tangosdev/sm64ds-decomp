@@ -74,8 +74,8 @@
       "ordinal": 6
     },
     {
-      "symbol": "daChRoom_c_classInit",
-      "address": "0x020b0980",
+      "symbol": "_Z20daChRoom_c_classInitv",
+      "address": "",
       "size": "0x00000030",
       "legacy_source": "src/daChRoom_c_Spawn.c",
       "ordinal": 7

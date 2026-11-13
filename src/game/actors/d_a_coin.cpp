@@ -417,8 +417,6 @@ void daCoin_c::CollectYellowCoin(daPly_c *player) {
  * below 0xf and the player's coin total has reached 100, spawns a STAR (0xb2,
  * param 0x20) 300 units above the player, sets the event bit and gives the
  * star a marker. */
-extern "C" {
-
 void func_ov002_020b18f0(char* self)
 {
     extern signed char gCurrentSublevel;
@@ -446,7 +444,6 @@ void func_ov002_020b18f0(char* self)
     if (star == 0) return;
     Event::SetBit(0x1f);
     star->AddStarMarker();
-}
 }
 
 
@@ -1035,17 +1032,17 @@ s32 daCoin_c::OnYoshiTryEat()
 }
 
 /* Blue, red and yellow coin factories, in ROM order. */
-extern "C" daCoin_c *daCoin_c_classInit_BLUE_COIN()
+daCoin_c *daCoin_c_classInit_BLUE_COIN()
 {
     return new daCoin_c();
 }
 
-extern "C" daCoin_c *daCoin_c_classInit_RED_COIN()
+daCoin_c *daCoin_c_classInit_RED_COIN()
 {
     return new daCoin_c();
 }
 
-extern "C" daCoin_c *daCoin_c_classInit_COIN()
+daCoin_c *daCoin_c_classInit_COIN()
 {
     return new daCoin_c();
 }

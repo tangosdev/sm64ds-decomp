@@ -54,8 +54,8 @@
       "ordinal": 3
     },
     {
-      "symbol": "daObjLava_c_classInit",
-      "address": "0x020b6dd8",
+      "symbol": "_Z21daObjLava_c_classInitv",
+      "address": "",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_lava.c",
       "ordinal": 4

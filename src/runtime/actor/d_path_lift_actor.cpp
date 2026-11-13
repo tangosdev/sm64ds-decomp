@@ -83,8 +83,9 @@ extern "C" {
 
 /* Defined last: the ROM-ascending order puts the collider callback after
    BaseInitResources, which stores its address. */
-void func_ov002_020eff90(dBgW *collider, dActor_c *lift, dActor_c *rider);
 }
+void func_ov002_020eff90(dBgW *collider, dActor_c *lift, dActor_c *rider);
+
 
 
 extern PathLiftState data_ov002_0210af2c[];
@@ -499,7 +500,7 @@ void dPathLiftActor_c::AfterClsn(int)
 // 0x020eff90 (0x28)
 /* The mesh collider's stoodOnCallback: the actor that landed on the lift
    arrives as AfterClsn's word argument. */
-extern "C" void func_ov002_020eff90(dBgW *collider, dActor_c *lift, dActor_c *rider) {
+void func_ov002_020eff90(dBgW *collider, dActor_c *lift, dActor_c *rider) {
     static_cast<dPathLiftActor_c *>(lift)->AfterClsn((int)rider);
 }
 

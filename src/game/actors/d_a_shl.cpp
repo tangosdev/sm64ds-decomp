@@ -96,7 +96,10 @@ extern ShlStateEnd data_ov102_0214ea78;
 extern SharedFilePtr *data_ov102_0214d70c[];
 
 /* -- other modules -- */
-int  func_ov002_020ad660(char *self, char *clsn, char *model, int kind);
+}
+int func_ov002_020ad660(void *self, void *clsn, void *model, int kind);
+extern "C" {
+
 int  func_ov002_020cc16c(void *player, void *actor);
 }
 

@@ -117,15 +117,15 @@
       "ordinal": 10
     },
     {
-      "symbol": "UnloadSilverStarAndNumber",
-      "address": "0x020e717c",
+      "symbol": "_Z25UnloadSilverStarAndNumberv",
+      "address": "",
       "size": "0x0000002c",
       "legacy_source": "src/UnloadSilverStarAndNumber.c",
       "ordinal": 11
     },
     {
-      "symbol": "LoadSilverStarAndNumber",
-      "address": "0x020e71a8",
+      "symbol": "_Z23LoadSilverStarAndNumberv",
+      "address": "",
       "size": "0x0000002c",
       "legacy_source": "src/LoadSilverStarAndNumber.c",
       "ordinal": 12
@@ -271,8 +271,8 @@
       "ordinal": 32
     },
     {
-      "symbol": "func_ov002_020e8244",
-      "address": "0x020e8244",
+      "symbol": "_Z19func_ov002_020e8244PvP8daStar_c",
+      "address": "",
       "size": "0x00000154",
       "legacy_source": "src/func_ov002_020e8244.c",
       "ordinal": 33

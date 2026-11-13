@@ -183,7 +183,7 @@ static inline int StarCountVisible(void) {
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: HUD_Spawn. It was once labelled
  * the dMeter_c constructor, but it takes no `this`: it is the registry factory. */
-extern "C" dMeter_c *dMeter_c_classInit() {
+dMeter_c *dMeter_c_classInit() {
     return new dMeter_c();
 }
 

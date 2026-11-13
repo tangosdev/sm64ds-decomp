@@ -186,8 +186,12 @@ extern "C" int ApproachAngle(short *cur, short target, int step, int a, int b);
 extern "C" {
 
 int atan2_hold_d_a_wanwan2_1(int y, int x);
+}
 void LoadSilverStarAndNumber();
+
 void UnloadSilverStarAndNumber();
+extern "C" {
+
 
 extern SharedFilePtr data_ov002_0211092c;
 extern s32 data_ov100_02148008[3];

@@ -70,7 +70,7 @@ extern PushblockClsnFilePtr data_ov002_0210df94;
  * A natural `new daObjPushblock_c` calls the inherited fBase_c::operator new
  * (_ZN7fBase_cnwEm) and emits the retail allocation/base/member seam
  * (dBgActor_c C2, vptr, dBgCh_Actr C1). */
-extern "C" daObjPushblock_c *daObjPushblock_c_classInit() {
+daObjPushblock_c *daObjPushblock_c_classInit() {
     return new daObjPushblock_c();
 }
 

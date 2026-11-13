@@ -151,7 +151,7 @@ static inline int IsPlayerActor(dActor_c *actor) {
  * inline operator new; 0x020f15e0 calls dBgActor_c's C2 and the store at
  * 0x020f15ec lays down this class's vptr. The null check is the one `new`
  * itself emits. */
-extern "C" daObjBC_Switch_c *daObjBC_Switch_c_classInit(void) {
+daObjBC_Switch_c *daObjBC_Switch_c_classInit(void) {
     return new daObjBC_Switch_c();
 }
 

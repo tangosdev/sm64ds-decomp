@@ -597,10 +597,7 @@ void OpenCannonInLevel(s8 levelID);
 int IsCannonOpenInLevel(s8 levelID);
 void CollectStarInLevel(s8 levelID, s32 starID);
 int IsStarCollectedInLevel(s8 levelID, s32 starID);
-extern "C" {
-
-void func_ov002_020b18f0(int a);
-}
+void func_ov002_020b18f0(char *a);
 
 void UnloadLevelOverlays(int levelID);
 void LoadLevelOverlays(int level);
@@ -3338,7 +3335,7 @@ void GiveCoins(int idx, int amount) {
     } else if (v < 0) {
         p[idx] = 0;
     }
-    func_ov002_020b18f0((int)gPlayers[idx]);
+    func_ov002_020b18f0((char *)gPlayers[idx]);
 }
 
 /* Returns the clamped health, which daPly_c::GiveHealth hands straight back. */

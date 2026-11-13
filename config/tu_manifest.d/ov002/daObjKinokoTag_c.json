@@ -68,15 +68,15 @@
       "ordinal": 6
     },
     {
-      "symbol": "daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG",
-      "address": "0x020b4a00",
+      "symbol": "_Z44daObjKinokoTag_c_classInit_KINOKO_CREATE_TAGv",
+      "address": "",
       "size": "0x00000038",
       "legacy_source": "src/daObjKinokoTag_c_Spawn.c",
       "ordinal": 7
     },
     {
-      "symbol": "daObjKinokoTag_c_classInit_KINOKO_TAG",
-      "address": "0x020b4a38",
+      "symbol": "_Z37daObjKinokoTag_c_classInit_KINOKO_TAGv",
+      "address": "",
       "size": "0x00000038",
       "legacy_source": "src/MegaMushroomTag_Spawn.c",
       "ordinal": 8

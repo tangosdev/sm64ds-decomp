@@ -66,15 +66,15 @@
       "ordinal": 5
     },
     {
-      "symbol": "daObjFire_c_classInit_OBJ_BLUE_FIRE",
-      "address": "0x020b59a8",
+      "symbol": "_Z35daObjFire_c_classInit_OBJ_BLUE_FIREv",
+      "address": "",
       "size": "0x00000038",
       "legacy_source": "src/d_a_obj_fire_obj_blue_fire.c",
       "ordinal": 6
     },
     {
-      "symbol": "daObjFire_c_classInit_OBJ_RED_FIRE",
-      "address": "0x020b59e0",
+      "symbol": "_Z34daObjFire_c_classInit_OBJ_RED_FIREv",
+      "address": "",
       "size": "0x00000038",
       "legacy_source": "src/d_a_obj_fire_obj_red_fire.c",
       "ordinal": 7

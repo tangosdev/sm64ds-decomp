@@ -57,7 +57,7 @@ int func_ov100_02144f84(void);
 /* -------------------------------------------------------------------------- */
 /* Factory: `return new` inherits fBase_c::operator new. */
 /* -------------------------------------------------------------------------- */
-extern "C" daMugenBGM_c *daMugenBGM_c_classInit(void) {
+daMugenBGM_c *daMugenBGM_c_classInit(void) {
     return new daMugenBGM_c;
 }
 

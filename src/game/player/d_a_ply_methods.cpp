@@ -245,13 +245,13 @@ extern void func_020371fc(void *);
 extern void func_02037318(void *);
 extern int func_02037e20(void *);
 extern void func_0203db0c(int idx, unsigned short val);
-extern "C" {
-
-extern void func_ov002_020ed63c(void *, int);
-extern int func_ov002_020eea84(void *, void *);
+extern void func_ov002_020ed63c(daYegg_c *, int);
+extern int func_ov002_020eea84(dBgCh_Actr *, dActor_c *);
 extern int func_ov002_020eeeb8(void *, char *);
 extern int func_ov002_020ef070(void *, char *);
 extern int func_ov002_020f035c(unsigned int sel, int r1);
+extern "C" {
+
 extern int func_ov100_02144fcc(void);
 extern int func_ov100_02145014(void);
 extern void func_ov100_02145070(int);
@@ -449,10 +449,10 @@ extern int data_0209f32c;
 }
 
 extern void func_02035860(void *, void *);
+extern int func_ov002_020edca4(daYegg_c *);
+extern void func_ov002_020eedc0(dBgCh_Actr *, dActor_c *);
 extern "C" {
 
-extern int func_ov002_020edca4(void *);
-extern void func_ov002_020eedc0(void *, void *);
 extern u8 gMeterShownHealth;
 extern unsigned char gShowRaceTimer[];
 extern u32 PlayerNewHold5(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
@@ -1404,7 +1404,7 @@ void daPly_c::func_ov002_020bdc18() {
     for (i = 0; i < 5; i++) {
         dActor_c **a = mHeldObjQueue;
         if (a[i] != 0) {
-            func_ov002_020edca4(a[i]);
+            func_ov002_020edca4((daYegg_c *)a[i]);
             a = mHeldObjQueue;
             a[i] = 0;
         }
@@ -3393,7 +3393,7 @@ int daPly_c::func_ov002_020c200c(int arg) {
             return 0;
 
         if (this->IsBeingShotOutOfCannon())
-            func_ov002_020eedc0(&mMeshClsn, self);
+            func_ov002_020eedc0(&mMeshClsn, (dActor_c *)self);
     } else {
         return 0;
     }
@@ -3797,7 +3797,7 @@ void daPly_c::func_ov002_020c2db8() {
     ((daPly_c *)(c))->func_ov002_020c0fb4();
     ((daPly_c *)(c))->func_ov002_020c5d60();
     ((daPly_c *)(c))->func_ov002_020c61ac();
-    func_ov002_020eea84(&mMeshClsn, c);
+    func_ov002_020eea84(&mMeshClsn, (dActor_c *)c);
     ((daPly_c *)(c))->func_ov002_020c2b08();
     ((daPly_c *)(c))->func_ov002_020c29d4();
 }
@@ -14369,7 +14369,7 @@ int daPly_c::St_YoshiPower_Init() {
         mStateStep = 6;
         mHeldObj = mHeldObjQueue[0];
         mHeldObj->mFlags |= 0x100;
-        func_ov002_020ed63c((void *)mHeldObj, 1);
+        func_ov002_020ed63c((daYegg_c *)mHeldObj, 1);
         mHeldObjQueue[0] = 0;
         for (i = 1; i < 5; i++) {
             dActor_c **p = mHeldObjQueue;

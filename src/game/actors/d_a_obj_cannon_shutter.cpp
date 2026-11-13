@@ -82,7 +82,7 @@ extern CannonShutterClsnFilePtr data_ov002_0210e124;  /* the KCL collision mesh 
  * A natural `new daObjCannonShutter_c` calls the inherited fBase_c::operator
  * new (_ZN7fBase_cnwEm) and emits the retail allocation/base/vptr seam
  * (dBgActor_c C2, vptr). */
-extern "C" daObjCannonShutter_c *daObjCannonShutter_c_classInit() {
+daObjCannonShutter_c *daObjCannonShutter_c_classInit() {
     return new daObjCannonShutter_c();
 }
 
@@ -92,7 +92,7 @@ extern "C" daObjCannonShutter_c *daObjCannonShutter_c_classInit() {
  * Exact original SM64DS spellings are not preserved. Historical project
  * aliases: daObjCannonShutter_c_Spawn and daObjCannonShutter_c_SpawnInfo.
  * The descriptor is at ov002:0x02109d14. */
-extern "C" SpawnInfo<daObjCannonShutter_c> g_profile_CANNON_SHUTTER = {
+SpawnInfo<daObjCannonShutter_c> g_profile_CANNON_SHUTTER = {
     daObjCannonShutter_c_classInit,
     0x000e,
     0x009e,

@@ -84,8 +84,8 @@
       "ordinal": 6
     },
     {
-      "symbol": "daObj1UpLogo_c_classInit",
-      "address": "0x020f1170",
+      "symbol": "_Z24daObj1UpLogo_c_classInitv",
+      "address": "",
       "size": "0x00000040",
       "legacy_source": "src/d_a_obj1_up_logo.c",
       "ordinal": 7

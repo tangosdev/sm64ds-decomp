@@ -115,7 +115,10 @@ void func_02038414(void *p);
 extern "C" {
 
 int atan2_hold_d_a_ibl_1(int y, int x);
+}
 int func_ov002_020ad660(void *a, void *b, void *d, int e);
+extern "C" {
+
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 }

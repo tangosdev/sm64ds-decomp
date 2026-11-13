@@ -173,8 +173,8 @@
       "ordinal": 18
     },
     {
-      "symbol": "func_ov002_020ed63c",
-      "address": "0x020ed63c",
+      "symbol": "_Z19func_ov002_020ed63cP8daYegg_ci",
+      "address": "",
       "size": "0x00000048",
       "legacy_source": "src/func_ov002_020ed63c.cpp",
       "ordinal": 19
@@ -222,8 +222,8 @@
       "ordinal": 25
     },
     {
-      "symbol": "func_ov002_020edca4",
-      "address": "0x020edca4",
+      "symbol": "_Z19func_ov002_020edca4P8daYegg_c",
+      "address": "",
       "size": "0x00000120",
       "legacy_source": "src/func_ov002_020edca4.c",
       "ordinal": 26
@@ -264,8 +264,8 @@
       "ordinal": 31
     },
     {
-      "symbol": "daYegg_c_classInit",
-      "address": "0x020ee3d8",
+      "symbol": "_Z18daYegg_c_classInitv",
+      "address": "",
       "size": "0x00000054",
       "legacy_source": "src/d_a_yegg.c",
       "ordinal": 32

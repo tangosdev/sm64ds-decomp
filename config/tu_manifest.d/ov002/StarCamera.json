@@ -19,8 +19,8 @@
   ],
   "functions": [
     {
-      "symbol": "StarCamera_Spawn",
-      "address": "0x020ebe5c",
+      "symbol": "_Z16StarCamera_Spawnv",
+      "address": "",
       "size": "0x00000030",
       "legacy_source": "src/StarCamera_Spawn.cpp",
       "ordinal": 0

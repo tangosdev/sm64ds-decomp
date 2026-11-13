@@ -99,7 +99,7 @@ static inline int IsActorID(const dActor_c *actor, int id) {
     return actor->actorID == id;
 }
 
-extern "C" int func_ov002_020ef2a4(dBgCh_Actr *clsn, dActor_c *other) {
+int func_ov002_020ef2a4(dBgCh_Actr *clsn, dActor_c *other) {
     if (clsn->IsOnGround()) {
         dBgPi *hit = clsn->GetFloorResult();
         if (hit->GetClsnID() != -1) {
@@ -113,7 +113,7 @@ extern "C" int func_ov002_020ef2a4(dBgCh_Actr *clsn, dActor_c *other) {
     return 0;
 }
 
-extern "C" int func_ov002_020ef228(dBgCh_Actr *clsn, dActor_c *other) {
+int func_ov002_020ef228(dBgCh_Actr *clsn, dActor_c *other) {
     if (clsn->IsOnWall()) {
         dBgPi *hit = clsn->GetWallResult();
         if (hit->GetClsnID() != -1) {
@@ -127,7 +127,7 @@ extern "C" int func_ov002_020ef228(dBgCh_Actr *clsn, dActor_c *other) {
     return 0;
 }
 
-extern "C" int func_ov002_020ef070(void *unused, char *moverArg) {
+int func_ov002_020ef070(void *unused, char *moverArg) {
     Vector3 start, end;
 
     dBgCh_Lin line;
@@ -167,7 +167,7 @@ extern "C" int func_ov002_020ef070(void *unused, char *moverArg) {
     return 0;
 }
 
-extern "C" int func_ov002_020eeeb8(void *unused, char *moverArg) {
+int func_ov002_020eeeb8(void *unused, char *moverArg) {
     Vector3 start, end;
 
     dBgCh_Lin line;
@@ -211,7 +211,7 @@ extern "C" int func_ov002_020eeeb8(void *unused, char *moverArg) {
     return 0;
 }
 
-extern "C" int func_ov002_020eee3c(char *clsnArg, char *otherArg) {
+int func_ov002_020eee3c(char *clsnArg, char *otherArg) {
     dBgCh_Actr *clsn = (dBgCh_Actr *)clsnArg;
     dActor_c *other = (dActor_c *)otherArg;
     if (clsn->IsOnWall()) {
@@ -227,7 +227,7 @@ extern "C" int func_ov002_020eee3c(char *clsnArg, char *otherArg) {
     return 0;
 }
 
-extern "C" int func_ov002_020eedc0(dBgCh_Actr *clsn, dActor_c *other) {
+int func_ov002_020eedc0(dBgCh_Actr *clsn, dActor_c *other) {
     if (clsn->IsOnWall()) {
         dBgPi *hit = clsn->GetWallResult();
         if (hit->GetClsnID() != -1) {
@@ -241,7 +241,7 @@ extern "C" int func_ov002_020eedc0(dBgCh_Actr *clsn, dActor_c *other) {
     return 0;
 }
 
-extern "C" int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player) {
+int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player) {
     dBgPi *hit;
     dActor_c *owner;
     if (clsn->IsOnWall() || clsn->IsOnGround() || func_02035638(clsn)) {
@@ -257,7 +257,7 @@ extern "C" int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player) {
     return 0;
 }
 
-extern "C" int func_ov002_020eeca8(dBgCh_Actr *clsn, dActor_c *other) {
+int func_ov002_020eeca8(dBgCh_Actr *clsn, dActor_c *other) {
     if (func_02035638(clsn)) {
         dBgPi *hit = clsn->GetSphereResult();
         if (hit->GetClsnID() != -1) {
@@ -279,7 +279,7 @@ extern "C" int func_ov002_020eeca8(dBgCh_Actr *clsn, dActor_c *other) {
  * Vector3 scoped to its own branch. The scalar Hurt ABI remains a measured
  * reconstruction boundary. */
 
-extern "C" int func_ov002_020eea84(dBgCh_Actr *clsn, dActor_c *player) {
+int func_ov002_020eea84(dBgCh_Actr *clsn, dActor_c *player) {
     dActor_c *owner;
 
     if (!IsActorID(player, 0xbf))

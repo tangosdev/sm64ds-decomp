@@ -61,8 +61,8 @@
       "ordinal": 5
     },
     {
-      "symbol": "daObjAbuku_c_classInit",
-      "address": "0x020b3568",
+      "symbol": "_Z22daObjAbuku_c_classInitv",
+      "address": "",
       "size": "0x00000038",
       "legacy_source": "src/daObjAbuku_c_Spawn.c",
       "ordinal": 6
