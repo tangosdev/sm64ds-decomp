@@ -18,7 +18,6 @@ extern void do_autoload(void);
 extern void _fp_init(void);
 extern void NitroStartUp(void);
 extern void __call_static_initializers(void);
-#ifndef SM64DS_PLATFORM_PC
 asm void _start(void) {
     mov     ip, #0x4000000
     str     ip, [ip, #0x208]
@@ -67,6 +66,3 @@ asm void _start(void) {
     ldr     lr, =0xffff0000
     bx      r1
 }
-#else
-void _start(void);
-#endif

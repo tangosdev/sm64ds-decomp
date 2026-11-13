@@ -16,12 +16,7 @@
 #define REBASE(type, p) ((type *)((char *)(p) + base))
 
 void dExtAnmTexPat_c::UpdateFileOffsets(BTP_File &file) {
-#ifndef SM64DS_HOST_64
-    int base = (int)&file;
-#else
-    /* The sum is stored back into a 4-byte slot, so the file has to sit in the low 4GB. */
-    uintptr_t base = (uintptr_t)&file;
-#endif
+    intptr_t base = (intptr_t)&file;
     int i = 0;
     if (file.texRecords)
         file.texRecords = REBASE(BTPNameRecord, file.texRecords);

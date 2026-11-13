@@ -35,7 +35,6 @@
 #include "ExpandingHeap.h"
 #include "nnsys/fnd.h"
 #include "Memory.h"
-#include "ds_width.h"
 
 /* Placement new, as <new> declares it. The factories construct each heap
    in a block they have already carved out, and the null test the ROM
@@ -151,7 +150,6 @@ namespace mHeap {
  * them (src/engine/os/OS_Alloc.cpp). */
 Heap_t* Heap_t::SetupRootHeap()
 {
-#ifndef SM64DS_HOST_64
     int lo = OS_GetArenaLo(ROOT_HEAP_ARENA_ID);
     int hi = OS_GetArenaHi(ROOT_HEAP_ARENA_ID);
 
@@ -162,18 +160,6 @@ Heap_t* Heap_t::SetupRootHeap()
     int sz = top - ((lo + 0x1f) & ~0x1f);
 
     void *mem = OS_AllocFromArenaLo(ROOT_HEAP_ARENA_ID, sz, 0x20);
-#else
-    uintptr_t lo = OS_GetArenaLo(ROOT_HEAP_ARENA_ID);
-    uintptr_t hi = OS_GetArenaHi(ROOT_HEAP_ARENA_ID);
-
-    lo = (uintptr_t)OS_InitAlloc(ROOT_HEAP_ARENA_ID, (void *)lo, (void *)hi, 4);
-    OS_SetArenaLo(ROOT_HEAP_ARENA_ID, lo);
-
-    uintptr_t top = OS_GetArenaHi(ROOT_HEAP_ARENA_ID);
-    unsigned int sz = (unsigned int)(top - ((lo + 0x1f) & ~(uintptr_t)0x1f));
-
-    void *mem = OS_AllocFromArenaLo(ROOT_HEAP_ARENA_ID, sz, 0x20);
-#endif
     /* The failure return stays last. The ROM branches (`beq') to a tail block
        holding its own `mov r0,#0 / pop / bx'; an early `if (mem == 0) return 0;'
        is predicated in place instead (`moveq/popeq/bxeq'), four bytes short. */
@@ -255,18 +241,10 @@ Heap_t* Heap_t::CreateRootHeap(void* mem, u32 size)
     ExpandingHeap* heap = (ExpandingHeap*)mem;
 
     heap->heapStart = heap + 1;
-#ifndef SM64DS_HOST_64
     heap->allocator = NNS_FndCreateExpHeapEx(heap->heapStart, size - 0x18, 3);
-#else
-    heap->allocator = NNS_FndCreateExpHeapEx(heap->heapStart, size - (u32)sizeof(ExpandingHeap), 3);
-#endif
     if (heap->allocator != 0)
     {
-#ifndef SM64DS_HOST_64
         heap->heapSize = size - 0x18;
-#else
-        heap->heapSize = size - (u32)sizeof(ExpandingHeap);
-#endif
         new (heap) ExpHeap_t(heap->heapStart, heap->heapSize, 0, heap->allocator);
         return heap;
     }
@@ -289,11 +267,7 @@ Heap_t* Heap_t::CreateExpandingHeap(u32 size, Heap_t* root, int align)
     if (root == 0)
         parent = Memory::defaultHeapPtr;
 
-#ifndef SM64DS_HOST_64
     ExpandingHeap* heap = (ExpandingHeap*)parent->Allocate(size + 0x18, align);
-#else
-    ExpandingHeap* heap = (ExpandingHeap*)parent->Allocate(size + (u32)sizeof(ExpandingHeap), align);
-#endif
     if (heap != 0)
     {
         heap->heapStart = heap + 1;
@@ -341,11 +315,7 @@ Heap_t* Heap_t::CreateSolidHeap(u32 size, Heap_t* root, int align)
     if (root == 0)
         parent = Memory::defaultHeapPtr;
 
-#ifndef SM64DS_HOST_64
     SolidHeap* heap = (SolidHeap*)parent->Allocate(size + 0x18, align);
-#else
-    SolidHeap* heap = (SolidHeap*)parent->Allocate(size + (u32)sizeof(SolidHeap), align);
-#endif
     if (heap != 0)
     {
         heap->heapStart = heap + 1;
@@ -992,11 +962,7 @@ u32 SolidHeap_t::VResizeToFit()
     if (!used)
         return 0;
 
-#ifndef SM64DS_HOST_64
     u32 total = used + 0x18;
-#else
-    u32 total = used + (u32)sizeof(SolidHeap);
-#endif
     if (!parentHeap->Reallocate(this, total))
         return 0;
 

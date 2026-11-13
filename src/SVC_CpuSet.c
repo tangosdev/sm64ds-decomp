@@ -5,11 +5,7 @@
 // LEFTOVER (unenrolled): 2-byte-aligned Thumb stub (addr % 4 == 2). Carving it as its own .text object pads to 4-byte section alignment and shifts the arm9 module: the SVC_Div trial linked 618528 bytes vs retail 618496 (+32) with 4624 mismatching functions. Per-function linkcheck VERIFIED; enroll when dsd supports 2-byte section starts.
 #pragma thumb on
 /* SVC_CpuSet(src, dst, ctrl): the BIOS block fill/copy, SWI 0x0b. */
-#ifndef SM64DS_PLATFORM_PC
 asm void SVC_CpuSet(void *src, void *dst, unsigned int ctrl) {
     swi 0x0b
     bx lr
 }
-#else
-void SVC_CpuSet(void *src, void *dst, unsigned int ctrl);
-#endif

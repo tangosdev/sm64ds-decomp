@@ -6,7 +6,6 @@
 // context back through CPi_RestoreContext, then switches to SVC mode with interrupts off,
 // loads the saved CPSR into the SPSR, the SVC stack pointer and the user registers, and
 // returns into the context with the exception return.
-#ifndef SM64DS_PLATFORM_PC
 asm void OS_LoadContext(register OSContext *context)
 {
     stmdb sp!, {r0, lr}
@@ -26,6 +25,3 @@ asm void OS_LoadContext(register OSContext *context)
     nop
     subs pc, lr, #4
 }
-#else
-void OS_LoadContext(register OSContext *context);
-#endif

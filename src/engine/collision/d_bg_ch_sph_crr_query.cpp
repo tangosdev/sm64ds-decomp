@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 /* Collision middle run, arm9 0x02037dc4..0x02039140.
  * func_02037dc4 opens it and dBgCh_Gnd::DetectClsn closes it.
  * dBgW::Disable at 0x02039140 starts the next file.
@@ -26,7 +27,6 @@
 #include "dActor_c.h"
 #include "SurfaceInfo.h"
 #include "math/CalcLib.h"
-#include "ds_width.h"
 
 extern "C" {
 int dBgS_ChkPolySafe(void *arg);
@@ -70,7 +70,7 @@ int dBgCh_Gnd::DetectClsn()
             } else {
                 ownerPos.y = ownerPos.y + obj->GetClipOffsetY();
             }
-            Vector3 *selfpos = (Vector3 *)(DS_IADDR(&this->pos));
+            Vector3 *selfpos = (Vector3 *)((intptr_t)(&this->pos));
             if (selfpos->y < ownerPos.y - clipDist)
                 continue;
             if (Vec3_HorzDist(selfpos, &ownerPos) > clipDist)
@@ -219,7 +219,7 @@ int dBgCh_SphCrr::DetectClsnExceptSlot0() {
         if (owner != 0 && ((owner->mFlags & 2) ? one : zero)) {
             /* The address local must stay declared int -- a pointer local
                diffs. Its value is the dM3dGSph base's centre. */
-            int pos = DS_IADDR(&((dM3dGSph &)*this).centre);
+            int pos = (intptr_t)(&((dM3dGSph &)*this).centre);
             Vector3 ownerPos;
             Vector3 *src = &owner->mPos;
             int clipDist;

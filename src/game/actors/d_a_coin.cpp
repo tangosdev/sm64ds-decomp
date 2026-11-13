@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 /* daCoin_c -- the coin actor: yellow, red (actor 0x121) and blue (0x122).
  *
  * ROM evidence: _ZTS8daCoin_c at ov002:0x02108778, _ZTI8daCoin_c at 0x02108784,
@@ -45,7 +46,6 @@
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "nitro/fx/fx_cp.h"
-#include "ds_width.h"
 
 /* Views of daObjBC_Switch_c.h and daObjFl_Coin_c.h, same member names and
    offsets: including either header renumbers this TU's @NNN labels. */
@@ -861,7 +861,7 @@ s32 daCoin_c::InitResources()
         mVertSpeed = 0x14000;
         mVertAccel = -0x4000;
         mTerminalVelocity = -0x37000;
-        *(u8 *)(DS_IADDR(&mCoinFlags)) = (*(u8 *)(DS_IADDR(&mCoinFlags)) & ~0xe0) | (FLOOR_NO_SHADOW << 5);
+        *(u8 *)((intptr_t)(&mCoinFlags)) = (*(u8 *)((intptr_t)(&mCoinFlags)) & ~0xe0) | (FLOOR_NO_SHADOW << 5);
         goto common;
     }
     if (behavior == 1 || behavior == 7) {
@@ -889,7 +889,7 @@ gravity:
     mCoinFlags &= ~0xe0;
     goto common;
 unprobedFloor:
-    *(u8 *)(DS_IADDR(&mCoinFlags)) = (*(u8 *)(DS_IADDR(&mCoinFlags)) & ~0xe0) | (FLOOR_UNPROBED << 5);
+    *(u8 *)((intptr_t)(&mCoinFlags)) = (*(u8 *)((intptr_t)(&mCoinFlags)) & ~0xe0) | (FLOOR_UNPROBED << 5);
     mFloorPosY = mPosY - 0x1f4000;
     if (mBehaviorType == 7) {
         ccRadius = 0x32000;
@@ -983,7 +983,7 @@ common:;
     timerSet:;
     }
 
-    *(u8 *)(DS_IADDR(&mCoinFlags)) = (*(u8 *)(DS_IADDR(&mCoinFlags)) & ~1) | 1;
+    *(u8 *)((intptr_t)(&mCoinFlags)) = (*(u8 *)((intptr_t)(&mCoinFlags)) & ~1) | 1;
 
     behavior = mBehaviorType;
     if (behavior == 1 || behavior == 7) {

@@ -5,7 +5,6 @@
 // MTX_RotZ33_ @ 0x02052588 (arm9, Thumb): build 3x3 fx32 Z-rotation
 // matrix from (sin, cos): {c, s, 0, -s, c, 0, 0, 0, 1} with 4096 = 1.0.
 #pragma thumb on
-#ifndef SM64DS_PLATFORM_PC
 asm void MTX_RotZ33_(int *m, int s, int c) {
     stmia r0!, {r2}
     mov r3, #0
@@ -20,17 +19,3 @@ asm void MTX_RotZ33_(int *m, int s, int c) {
     str r1, [r0, #12]
     bx lr
 }
-#else
-void MTX_RotZ33_(int *m, int s, int c)
-{
-    m[0] = c;
-    m[1] = s;
-    m[2] = 0;
-    m[3] = -s;
-    m[4] = c;
-    m[5] = 0;
-    m[6] = 0;
-    m[7] = 0;
-    m[8] = 0x1000;
-}
-#endif

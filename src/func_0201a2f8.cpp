@@ -1,10 +1,10 @@
 //cpp
+#include "types.h"
 #include "AsyncJob.h"
 #include "Memory.h"
 #include "Sound.h"
 #include "nitro/fs/archive.h"
 #include "nitro/mb/mb.h"
-#include "ds_width.h"
 
 extern "C" {
 
@@ -46,14 +46,14 @@ void func_0201a2f8(int unused) {
         ptr = Memory::Allocate(size);
         FS_TryLoadTable(ptr, size);
     }
-    LoadOverlay(DS_IADDR(&OVERLAY_0_ID));
+    LoadOverlay((intptr_t)(&OVERLAY_0_ID));
     InitializeAssetHandleTable();
-    UnloadOverlay(DS_IADDR(&OVERLAY_0_ID));
+    UnloadOverlay((intptr_t)(&OVERLAY_0_ID));
     if (ptr != 0) {
         FS_UnloadArchiveTables(FS_FindArchive(data_0208ee5c, 3));
         Memory::Deallocate(ptr);
     }
-    LoadOverlay(DS_IADDR(&OVERLAY_1_ID));
+    LoadOverlay((intptr_t)(&OVERLAY_1_ID));
     if (isChild) {
         Sound::LoadGroupAndSetBank(0x2f, 0x36);
     } else {

@@ -4,7 +4,6 @@
 #include "types.h"
 #include "math/Matrix.h"
 #include "Ov007Tween.h"
-#include "ds_width.h"
 
 /* Reconstructed layout and name, not recovered class identity. The 0xd8-byte
  * camera func_ov007_020c023c allocates (one per screen, Ov007Work::cameras)
@@ -55,8 +54,8 @@ typedef struct Ov007Camera {
 
 #ifndef SM64DS_PLATFORM_PC
 /* aspect at 0xbc relies on long long taking 4-byte alignment here. */
-typedef char Ov007Camera_aspect_must_be_at_0xbc[DS_IADDR(&((Ov007Camera *)0)->aspect) == 0xbc ? 1 : -1];
-typedef char Ov007Camera_fovy_must_be_at_0xd4[DS_IADDR(&((Ov007Camera *)0)->fovy) == 0xd4 ? 1 : -1];
+typedef char Ov007Camera_aspect_must_be_at_0xbc[(int)&((Ov007Camera *)0)->aspect == 0xbc ? 1 : -1];
+typedef char Ov007Camera_fovy_must_be_at_0xd4[(int)&((Ov007Camera *)0)->fovy == 0xd4 ? 1 : -1];
 typedef char Ov007Camera_size_must_be_0xd8[sizeof(Ov007Camera) == 0xd8 ? 1 : -1];
 #endif
 

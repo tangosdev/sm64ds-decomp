@@ -60,7 +60,6 @@
 #include "private/ov007_picker_scene.h"
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
-#include "ds_width.h"
 
 extern "C" {
 
@@ -151,7 +150,7 @@ int PickerScene_UpdateReplay(int param) {
     if (r5 == 1) {
         SCENE->strokeTime = 0;
     } else if (r5 == 0) {
-        int *fp = (int *)((DS_IADDR(&SCENE->strokeTime)));
+        int *fp = (int *)(((intptr_t)(&SCENE->strokeTime)));
         *fp += r4;
     }
 
@@ -159,7 +158,7 @@ int PickerScene_UpdateReplay(int param) {
 
     switch (param) {
     case 0: {
-        int *q = (int *)((DS_IADDR(&SPRITES->sprites[0]->alpha)));
+        int *q = (int *)(((intptr_t)(&SPRITES->sprites[0]->alpha)));
         int v = *q;
         if (v <= 0x5000) {
             *q = v + 0x7d0;

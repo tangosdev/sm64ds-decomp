@@ -40,7 +40,6 @@ enum daHuwa_c_AssetId { ASSET_HUWAHUWA_MODEL_BMD = 0x032d, ASSET_HUWAHUWA_MOVE_B
 #include "math/MtxStack.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
-#include "ds_width.h"
 
 /* The resource handles as the ROM lays them out: {id, loaded file}. The
    model handle constructs through func_02017acc and destroys through
@@ -276,7 +275,6 @@ int daHuwa_c::Behavior() {
         ApproachLinear(mHorzSpeed, 0x4000, 0x1000);
         player = ClosestPlayer();
         if (player != 0) {
-#ifndef SM64DS_HOST_64
             int *src = (int *)((int)player + 0x5c);
             int playerPos[3];
             playerPos[0] = src[0];
@@ -286,12 +284,6 @@ int daHuwa_c::Behavior() {
                 mTargetAngY = Vec3_HorzAngle(&mPos, (const Vector3 *)&mHomePosX);
             else if (Vec3_HorzDist(&mPos, (const Vector3 *)playerPos) > 0x12c000)
                 mTargetAngY = Vec3_HorzAngle(&mPos, (const Vector3 *)playerPos);
-#else
-            if (Vec3_HorzDist((const Vector3 *)&mHomePosX, &player->mPos) > 0x3e8000)
-                mTargetAngY = Vec3_HorzAngle(&mPos, (const Vector3 *)&mHomePosX);
-            else if (Vec3_HorzDist(&mPos, &player->mPos) > 0x12c000)
-                mTargetAngY = Vec3_HorzAngle(&mPos, &player->mPos);
-#endif
         } else {
             mTargetAngY = Vec3_HorzAngle(&mPos, (const Vector3 *)&mHomePosX);
         }

@@ -1763,7 +1763,6 @@ extern "C" void TrmpLine_CreateStartLineT1(void) {
 
 /* Preserve the earlier local-static uniquifiers in this ordered TU. */
 #include "Vector2Math.h"
-#include "ds_width.h"
 
 /*
  * Try to place a new line segment between two 16-bit points.
@@ -1939,9 +1938,9 @@ extern "C" int TrmpLine_Create(s16 *startPoint, s16 *endPoint) {
             /* Load-bearing: the ROM adds slotOffset as an integer to each field's
                own address constant. sTrmpLines[slotIndex].field (999 words) and
                char * arithmetic (7 words) both differ. */
-            *(s16 *)(DS_IADDR(&sTrmpLines[0].mBouncesLeft) + slotOffset) = 1;
-            *(u16 *)(DS_IADDR(&sTrmpLines[0].mBounceCount) + slotOffset) = 0;
-            *(s16 *)(DS_IADDR(&sTrmpLines[0].mSlotIndex) + slotOffset) = (s16)slotIndex;
+            *(s16 *)((intptr_t)(&sTrmpLines[0].mBouncesLeft) + slotOffset) = 1;
+            *(u16 *)((intptr_t)(&sTrmpLines[0].mBounceCount) + slotOffset) = 0;
+            *(s16 *)((intptr_t)(&sTrmpLines[0].mSlotIndex) + slotOffset) = (s16)slotIndex;
             return (int)newLine;
         }
         slotIndex++;

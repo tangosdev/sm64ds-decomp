@@ -30,7 +30,6 @@ extern double func_0206dd7c(double a, int op);
 extern double func_0206dcd4(double a, double b, int op);
 extern void _dadd_core(void);
 
-#ifndef SM64DS_PLATFORM_PC
 asm double _dsub(double a, double b)
 {
     stmdb sp!, {r0, r1, r2, r3, r4, lr}
@@ -408,6 +407,3 @@ _L548:
     ldmia sp!, {r4, lr}
     bx lr
 }
-#else
-double _dsub(double a, double b);
-#endif

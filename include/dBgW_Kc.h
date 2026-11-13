@@ -2,7 +2,6 @@
 #define DBGW_KC_H
 
 #include "types.h"
-#include "ds_width.h"
 #include "dBgW.h"
 #include "CLPS_BlockRef.h"
 
@@ -47,10 +46,10 @@ struct KCL_Tri {
 };
 
 struct KCL_File {
-    s32 (* DS_P32 positions)[3]; /* 0x00 - file-relative, fixed up on load */
-    s16 (* DS_P32 normals)[3];   /* 0x04 */
-    KCL_Tri * DS_P32 tris;       /* 0x08 */
-    char * DS_P32 octree;        /* 0x0c - indexed below */
+    s32 (*positions)[3];   /* 0x00 - file-relative, fixed up on load */
+    s16 (*normals)[3];     /* 0x04 */
+    KCL_Tri *tris;         /* 0x08 */
+    char *octree;          /* 0x0c - indexed below */
 
     /* Octree geometry. UpdateFileOffsets relocates only 0x00..0x0c, so nothing
        from here on is a pointer. Positions and this origin are stored at 1/64 of

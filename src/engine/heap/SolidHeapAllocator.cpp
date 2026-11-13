@@ -29,7 +29,6 @@
 #include "nnsys/fnd.h"
 #include "msl/stdlib.h"
 #include "nitro/mi/memory.h"
-#include "ds_width.h"
 
 #define MIN_ALIGNMENT 4
 
@@ -40,15 +39,9 @@
 
 #define NNSi_FndGetBitValue(data, st, bits) (((data) >> (st)) & ((1 << (bits)) - 1))
 
-#ifndef SM64DS_HOST_64
 static inline u32 NNSiGetUIntPtr(const void *ptr) {
     return (u32)ptr;
 }
-#else
-static inline uintptr_t NNSiGetUIntPtr(const void *ptr) {
-    return (uintptr_t)ptr;
-}
-#endif
 
 static inline u32 GetOffsetFromPtr(const void *start, const void *end) {
     return NNSiGetUIntPtr(end) - NNSiGetUIntPtr(start);

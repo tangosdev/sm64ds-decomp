@@ -58,7 +58,6 @@ enum daGmch_c_AssetId {
 #include "ParticleIds.h"
 #include "math/CalcLib.h"
 #include "nitro/fx/fx_trig.h"
-#include "ds_width.h"
 
 /* Actor ids are from symbols/actor_debug_names.tsv. */
 enum {
@@ -752,7 +751,7 @@ void daGmch_c::SetState(int n)
 {
     extern StatePair data_ov081_02128f40[9];
 
-    mStatePmfPair = (void *)(DS_IADDR(&data_ov081_02128f40) + (n << 4));
+    mStatePmfPair = (void *)((intptr_t)(&data_ov081_02128f40) + (n << 4));
     CallStateEnter();
 }
 

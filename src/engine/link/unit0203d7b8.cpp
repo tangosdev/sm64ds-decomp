@@ -1,6 +1,5 @@
 //cpp
 #include "types.h"
-#include "ds_width.h"
 #include "private/mb_views.h"
 #include "nitro/mi/memory.h"
 #include "private/player_input_record.h"
@@ -98,12 +97,10 @@ typedef struct {
     s16 hc;
 } RawMsg;
 typedef char
-    FileShareParentArea_mNodes_must_be_0xc0[DS_IADDR(&((FileShareParentArea *)0)->mNodes) == 0xc0 ? 1
+    FileShareParentArea_mNodes_must_be_0xc0[(intptr_t)(&((FileShareParentArea *)0)->mNodes) == 0xc0 ? 1
                                                                                              : -1];
-#ifndef SM64DS_HOST_64
 typedef char FileShareChildArea_mRecvWork_must_be_0xc70
-    [DS_IADDR(&((FileShareChildArea *)0)->mRecvWork) == 0xc70 ? 1 : -1];
-#endif
+    [(intptr_t)(&((FileShareChildArea *)0)->mRecvWork) == 0xc70 ? 1 : -1];
 typedef struct {
     char pad[0xb50];
     u32 field_b50;

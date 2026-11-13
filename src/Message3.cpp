@@ -129,7 +129,6 @@ extern void OamRender10_Message3(int sub, struct OamAttr *attr_, int xOff, int y
                                  int priority, int scaleX, int scaleY, int rotation, int mode);
 #include "OAM.h"
 #include "nitro/mi/memory.h"
-#include "ds_width.h"
 
 void func_02031cd4(void *arg);
 int func_020321fc(void);
@@ -1861,15 +1860,15 @@ extern "C" void LoadFont3D(void) {
  * everything else falls back to 0x02092d3c. */
 void Message::LoadTextVS() {
     if (GetOwnerLanguage() == 5) {
-        data_0209fd14 = DS_IADDR(&data_020937bc);
+        data_0209fd14 = (intptr_t)(&data_020937bc);
     } else if (GetOwnerLanguage() == 4) {
-        data_0209fd14 = DS_IADDR(&data_0209325c);
+        data_0209fd14 = (intptr_t)(&data_0209325c);
     } else if (GetOwnerLanguage() == 3) {
-        data_0209fd14 = DS_IADDR(&data_02093d7c);
+        data_0209fd14 = (intptr_t)(&data_02093d7c);
     } else if (GetOwnerLanguage() == 2) {
-        data_0209fd14 = DS_IADDR(&data_0209289c);
+        data_0209fd14 = (intptr_t)(&data_0209289c);
     } else {
-        data_0209fd14 = DS_IADDR(&data_02092d3c);
+        data_0209fd14 = (intptr_t)(&data_02092d3c);
     }
     Message::SetTextGlobalsVS();
 }

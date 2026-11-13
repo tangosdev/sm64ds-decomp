@@ -17,20 +17,9 @@
  *     target, but they land in different value-numbering classes.
  *
  * See notes/matching-style.md, "RMW base materialization".
- *
- * On a 64-bit host the (int) cast drops the top half of the address. The host
- * spelling reloads through the full pointer and does not try to reproduce the
- * ARM addressing shape.
  */
-#if defined(SM64DS_PLATFORM_PC) && (defined(_WIN64) || defined(__LP64__) || defined(_LP64))
-#include <stdint.h>
-#define LAUNDER_A(a) (*(int *)((uintptr_t)(a)))
-#define LAUNDER_B(a) (*(int *)((uintptr_t)(a)))
-#define LAUNDER_C(a) (*(int *)((uintptr_t)(a)))
-#else
 #define LAUNDER_A(a) (*(int *)(((long long)(int)(a))      & 0xFFFFFFFFFFFFFFFFLL))
 #define LAUNDER_B(a) (*(int *)(((long long)(unsigned)(a)) & 0xFFFFFFFFFFFFFFFFLL))
 #define LAUNDER_C(a) (*(int *)(((long long)(long)(a))     & 0xFFFFFFFFFFFFFFFFLL))
-#endif
 
 #endif /* LAUNDER_H */

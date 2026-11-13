@@ -81,7 +81,7 @@ void string_put_string(printfStr *dest, const char *src, int count) {
 /* The variable arguments start on the stack word after format, which is
  * how pret's file spells va_start. */
 int OS_SPrintf(char *buffer, const char *format, ...) {
-    void *args = (void *)((u32 *)((u32)&format & ~3) + 1);
+    void *args = (void *)((u32 *)((uintptr_t)&format & ~3) + 1);
     return OS_VSPrintf(buffer, format, args);
 }
 

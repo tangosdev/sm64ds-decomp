@@ -16,7 +16,6 @@
  * first). Its thread queues are 16-bit masks of thread ids.
  */
 #include "types.h"
-#include "ds_width.h"
 #include "nitro/fs/file.h"
 #include "nitro/fs/archive.h"
 #include "nitro/os/thread.h"
@@ -55,9 +54,7 @@ typedef struct FSDirEntry {
     u8 name[128];     /* 0x14 -- FS_FILE_NAME_MAX */
 } FSDirEntry;
 
-#ifndef SM64DS_HOST_64
 typedef char FSDirEntry_size_must_be_0x94[sizeof(FSDirEntry) == 0x94 ? 1 : -1];
-#endif
 
 /* An FAT entry: the file's image range. */
 typedef struct FSArchiveFAT {

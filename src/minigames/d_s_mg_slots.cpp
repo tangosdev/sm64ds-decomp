@@ -66,7 +66,6 @@ enum dScMgSlots_AssetId {
 #include "LevelRng.h"
 #include "nitro/mi/memory.h"
 #include "math/CalcLib.h"
-#include "ds_width.h"
 
 #pragma defer_codegen off
 /* Codegen is deferred by default in mwccarm 2004/b56, which is why its
@@ -80,7 +79,7 @@ typedef void (dScMgSlot3_c::*SlotState)();
 /* A dScMgSlot3_c field's byte offset, for the sites that add it to an
    integer or stepped base the way the ROM does; the member spellings
    change those functions' code. */
-#define SLOT3_OFF(member) (DS_IADDR(&((dScMgSlot3_c *)0)->member))
+#define SLOT3_OFF(member) ((intptr_t)(&((dScMgSlot3_c *)0)->member))
 
 /* One player's 4-byte touch record (PlayerInput.h): Slot1 Behavior reads
  * x/y through this view so the compiler, not the source, hoists them. */

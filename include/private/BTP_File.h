@@ -2,20 +2,19 @@
 #define PRIVATE_BTP_FILE_H
 
 #include "types.h"
-#include "ds_width.h"
 
 /* Texture and palette entries are resolved by name to BMD resource indices. */
 typedef struct BTPNameRecord {
     u16 resourceId;
     u16 pad_02;
-    char * DS_P32 name;
+    char *name;
 } BTPNameRecord;
 
 /* A sequence is resolved by name to a BMD material and selects a key range. */
 typedef struct BTPSeqRecord {
     u16 materialId;
     u16 pad_02;
-    char * DS_P32 name;
+    char *name;
     u16 numKeys;
     u16 firstKey;
 } BTPSeqRecord;
@@ -25,16 +24,16 @@ typedef struct BTPSeqRecord {
 typedef struct BTP_File {
     u16 numFrames;
     u16 numTexRecords;
-    BTPNameRecord * DS_P32 texRecords;
+    BTPNameRecord *texRecords;
     u16 numPalRecords;
     u16 pad_0a;
-    BTPNameRecord * DS_P32 palRecords;
-    u16 * DS_P32 keyFrames;
-    u16 * DS_P32 keyTexIndices;
-    u16 * DS_P32 keyPalIndices;
+    BTPNameRecord *palRecords;
+    u16 *keyFrames;
+    u16 *keyTexIndices;
+    u16 *keyPalIndices;
     u16 numSeqRecords;
     u16 pad_1e;
-    BTPSeqRecord * DS_P32 seqRecords;
+    BTPSeqRecord *seqRecords;
 } BTP_File;
 
 #ifndef SM64DS_PLATFORM_PC

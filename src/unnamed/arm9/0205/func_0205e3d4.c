@@ -1,3 +1,4 @@
+#include "types.h"
 /* SHA-1 block transform (RFC 3174 SHA1ProcessMessageBlock), plus the
    SDK's overlay-table mode: while DGT_SetOverlayTableMode's flag
    (data_020a80c4) is set, words 6 and 14 of the block (bytes 0x18 and 0x38)
@@ -20,7 +21,6 @@
      hoist their K into the preheader on their own. */
 
 #include "SHA1Context.h"
-#include "ds_width.h"
 
 typedef struct
 {
@@ -114,10 +114,10 @@ void func_0205e3d4(void *ctx)
     }
 
     context->Intermediate_Hash[0] += A;
-    *(unsigned int *)((DS_IADDR(&context->Intermediate_Hash[1])) & ~0ULL) += B;
-    *(unsigned int *)((DS_IADDR(&context->Intermediate_Hash[2])) & ~0ULL) += C;
-    *(unsigned int *)((DS_IADDR(&context->Intermediate_Hash[3])) & ~0ULL) += D;
-    *(unsigned int *)((DS_IADDR(&context->Intermediate_Hash[4])) & ~0ULL) += E;
+    *(unsigned int *)(((intptr_t)(&context->Intermediate_Hash[1])) & ~0ULL) += B;
+    *(unsigned int *)(((intptr_t)(&context->Intermediate_Hash[2])) & ~0ULL) += C;
+    *(unsigned int *)(((intptr_t)(&context->Intermediate_Hash[3])) & ~0ULL) += D;
+    *(unsigned int *)(((intptr_t)(&context->Intermediate_Hash[4])) & ~0ULL) += E;
     context->Message_Block_Index = 0;
 
     if (data_020a80c4 != 0)

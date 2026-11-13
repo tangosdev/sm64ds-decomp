@@ -13,7 +13,6 @@
 #include "nitro/hw/armArch.h"
 #include "nitro/hw/mmap_tcm.h"
 
-#ifndef SM64DS_PLATFORM_PC
 asm void OS_InitContext(register OSContext *context, register u32 newpc, register u32 newsp)
 {
     add newpc, newpc, #4
@@ -42,6 +41,3 @@ asm void OS_InitContext(register OSContext *context, register u32 newpc, registe
     str r1, [context, #OS_CONTEXT_LR]
     bx lr
 }
-#else
-void OS_InitContext(register OSContext *context, register u32 newpc, register u32 newsp);
-#endif

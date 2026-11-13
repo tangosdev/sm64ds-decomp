@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 /**
  * daWanwan_c -- Bob-omb Battlefield Chain Chomp. Seven links, the stump it
  * spawns (STUMP 0x1b, daObjPile_c) and the fence it finds
@@ -31,7 +32,6 @@
 #include "math/CalcLib.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
-#include "ds_width.h"
 
 enum {
     kYoshiEggId = 9,
@@ -438,7 +438,7 @@ void daWanwan_c::CapChainToPivot() {
     rotated.y = 0;
     rotated.z = 0;
 
-    cursor = DS_UADDR(&mLinkPos[6]);
+    cursor = (uintptr_t)(&mLinkPos[6]);
     i = 6;
     do {
         cur = (Vector3 *)cursor;

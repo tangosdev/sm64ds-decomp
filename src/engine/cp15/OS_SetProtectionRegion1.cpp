@@ -13,9 +13,5 @@
 
 void OS_SetProtectionRegion1(u32 x)
 {
-    #ifndef SM64DS_PLATFORM_PC
     asm { mcr p15,0,x,c6,c1,0 }
-    #else
-    (void)x;
-    #endif
 }

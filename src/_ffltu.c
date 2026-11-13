@@ -35,7 +35,6 @@
 
 extern unsigned int *func_0207322c(void);
 
-#ifndef SM64DS_PLATFORM_PC
 asm float _ffltu(unsigned int value)
 {
     cmp r0, #0
@@ -71,6 +70,3 @@ _L01c:
     addne r0, r0, #1
     bx lr
 }
-#else
-float _ffltu(unsigned int value);
-#endif

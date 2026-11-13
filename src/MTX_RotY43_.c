@@ -7,7 +7,6 @@
 struct Matrix4x3;
 
 #pragma thumb on
-#ifndef SM64DS_PLATFORM_PC
 asm void MTX_RotY43_(struct Matrix4x3 *m, int s, int c) {
     str r1, [r0, #24]
     mov r3, #0
@@ -23,6 +22,3 @@ asm void MTX_RotY43_(struct Matrix4x3 *m, int s, int c) {
     stmia r0!, {r1, r3}
     bx lr
 }
-#else
-void MTX_RotY43_(struct Matrix4x3 *m, int s, int c);
-#endif

@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 /* Bob-omb Buddy (RED_BOMBHEI), ov084 .text 0x0212c10c..0x0212d248,
  * twenty-three functions.
  *
@@ -43,7 +44,6 @@
 #include "private/mtx43.h"
 #include "nitro/fx/fx_cp.h"
 #include "math/CalcLib.h"
-#include "ds_width.h"
 
 struct BCA_File;
 
@@ -465,7 +465,7 @@ void daRedBombhei_c::UpdateTalk() {
     if (param != 0xffff)
         msgID = (u16)param;
     {
-        int *p = (int *)DS_UADDR(&player->mPosX);
+        int *p = (int *)(uintptr_t)(&player->mPosX);
         int a = p[0];
         playerPos.x = a;
         int b = p[1];

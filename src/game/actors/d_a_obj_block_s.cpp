@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 /* daObjBlockS_c -- small breakable crate (BLOCK_S, ov098).
  * 37 functions, .text 0x02138040..0x02139f70, ending with classInit.
  * (registry profile BLOCK_S): it sits where it is placed, can be picked up
@@ -93,7 +94,6 @@ enum daObjBlockS_c_AssetId {
 #include "ParticleIds.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_cp.h"
-#include "ds_width.h"
 
 /* Actor profile IDs this file compares against (symbols/actor_debug_names.tsv). */
 enum {
@@ -684,9 +684,9 @@ void daObjBlockS_c::ResetToHome() {
     mVertSpeed = 0;
     mSpeedZ = 0;
 
-    ((struct Vector3 *)(((long long)DS_IADDR(&zero))))->x = 0;
-    ((struct Vector3 *)(((long long)DS_IADDR(&zero))))->y = 0;
-    ((struct Vector3 *)(((long long)DS_IADDR(&zero))))->z = 0;
+    ((struct Vector3 *)(((long long)(intptr_t)(&zero))))->x = 0;
+    ((struct Vector3 *)(((long long)(intptr_t)(&zero))))->y = 0;
+    ((struct Vector3 *)(((long long)(intptr_t)(&zero))))->z = 0;
 
     a1.x = zero.x;
     a1.y = zero.y;

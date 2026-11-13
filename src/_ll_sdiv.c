@@ -14,7 +14,6 @@
 
 extern int _s32_div_f(int num, int den);
 
-#ifndef SM64DS_PLATFORM_PC
 asm long long _ll_sdiv(long long num, long long den)
 {
     stmdb sp!, {r4, r5, r6, r7, r11, r12, lr}
@@ -143,6 +142,3 @@ _L19c:
     ldmia sp!, {r4, r5, r6, r7, r11, r12, lr}
     bx lr
 }
-#else
-long long _ll_sdiv(long long num, long long den);
-#endif

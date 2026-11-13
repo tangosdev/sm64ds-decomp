@@ -17,7 +17,6 @@
 
 #include "nitro/os/system.h"
 
-#ifndef SM64DS_PLATFORM_PC
 asm OSIntrMode OS_EnableInterrupts(void)
 {
     mrs r0, cpsr
@@ -26,9 +25,7 @@ asm OSIntrMode OS_EnableInterrupts(void)
     and r0, r0, #0x80
     bx lr
 }
-#endif
 
-#ifndef SM64DS_PLATFORM_PC
 asm OSIntrMode OS_DisableInterrupts(void)
 {
     mrs r0, cpsr
@@ -37,9 +34,7 @@ asm OSIntrMode OS_DisableInterrupts(void)
     and r0, r0, #0x80
     bx lr
 }
-#endif
 
-#ifndef SM64DS_PLATFORM_PC
 asm OSIntrMode OS_RestoreInterrupts(OSIntrMode state)
 {
     mrs r1, cpsr
@@ -49,9 +44,7 @@ asm OSIntrMode OS_RestoreInterrupts(OSIntrMode state)
     and r0, r1, #0x80
     bx lr
 }
-#endif
 
-#ifndef SM64DS_PLATFORM_PC
 asm OSIntrMode OS_DisableInterrupts_IrqAndFiq(void)
 {
     mrs r0, cpsr
@@ -60,9 +53,7 @@ asm OSIntrMode OS_DisableInterrupts_IrqAndFiq(void)
     and r0, r0, #0xc0
     bx lr
 }
-#endif
 
-#ifndef SM64DS_PLATFORM_PC
 asm OSIntrMode OS_RestoreInterrupts_IrqAndFiq(OSIntrMode state)
 {
     mrs r1, cpsr
@@ -72,22 +63,17 @@ asm OSIntrMode OS_RestoreInterrupts_IrqAndFiq(OSIntrMode state)
     and r0, r1, #0xc0
     bx lr
 }
-#endif
 
-#ifndef SM64DS_PLATFORM_PC
 asm OSProcMode OS_GetProcMode(void)
 {
     mrs r0, cpsr
     and r0, r0, #0x1f
     bx lr
 }
-#endif
 
-#ifndef SM64DS_PLATFORM_PC
 asm void OS_Halt(void)
 {
     mov r0, #0
     mcr p15, 0, r0, c7, c0, 4
     bx lr
 }
-#endif

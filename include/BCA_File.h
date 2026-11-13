@@ -2,7 +2,6 @@
 #define BCA_FILE_H
 
 #include "types.h"
-#include "ds_width.h"
 
 /* The BCA0 bone-animation file, as the game reads it in place.
  *
@@ -53,10 +52,10 @@ struct BCA_File {
     u16 numFrames; /* 0x02 */
     u8 looping;    /* 0x04 - zero plays once, nonzero wraps */
     u8 pad_05[3];
-    s32 * DS_P32 scaleValues;                 /* 0x08 - file-relative, fixed up on load */
-    s16 * DS_P32 rotationValues;              /* 0x0c - file-relative, fixed up on load */
-    s32 * DS_P32 translationValues;           /* 0x10 - file-relative, fixed up on load */
-    struct BCA_BoneTrack * DS_P32 boneTracks; /* 0x14 - file-relative, fixed up on load */
+    s32 *scaleValues;                 /* 0x08 - file-relative, fixed up on load */
+    s16 *rotationValues;              /* 0x0c - file-relative, fixed up on load */
+    s32 *translationValues;           /* 0x10 - file-relative, fixed up on load */
+    struct BCA_BoneTrack *boneTracks; /* 0x14 - file-relative, fixed up on load */
 };
 
 #endif

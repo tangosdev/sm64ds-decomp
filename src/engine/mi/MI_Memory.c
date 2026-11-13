@@ -14,7 +14,6 @@
 #include "nitro/mi/memory.h"
 
 /* Fills size bytes with the halfword data. */
-#ifndef SM64DS_PLATFORM_PC
 asm void MIi_CpuClear16(u16 data, void *destp, u32 size) {
     mov r3, #0
 loop:
@@ -24,12 +23,8 @@ loop:
     blt loop
     bx lr
 }
-#else
-void MIi_CpuClear16(u16 data, void *destp, u32 size);
-#endif
 
 /* Copies size bytes one halfword at a time. */
-#ifndef SM64DS_PLATFORM_PC
 asm void MIi_CpuCopy16(const void *srcp, void *destp, u32 size) {
     mov ip, #0
 loop:
@@ -40,12 +35,8 @@ loop:
     blt loop
     bx lr
 }
-#else
-void MIi_CpuCopy16(const void *srcp, void *destp, u32 size);
-#endif
 
 /* Fills size bytes (a multiple of 4) with the word data. */
-#ifndef SM64DS_PLATFORM_PC
 asm void MIi_CpuClear32(u32 data, void *destp, u32 size) {
     add ip, r1, r2
 loop:
@@ -54,12 +45,8 @@ loop:
     blt loop
     bx lr
 }
-#else
-void MIi_CpuClear32(u32 data, void *destp, u32 size);
-#endif
 
 /* Copies size bytes (a multiple of 4) one word at a time. */
-#ifndef SM64DS_PLATFORM_PC
 asm void MIi_CpuCopy32(const void *srcp, void *destp, u32 size) {
     add ip, r1, r2
 loop:
@@ -69,12 +56,8 @@ loop:
     blt loop
     bx lr
 }
-#else
-void MIi_CpuCopy32(const void *srcp, void *destp, u32 size);
-#endif
 
 /* Fills size bytes with the word data: 32 bytes per stm, then a word tail. */
-#ifndef SM64DS_PLATFORM_PC
 asm void MIi_CpuClearFast(u32 data, void *destp, u32 size) {
     stmdb sp!, {r4, r5, r6, r7, r8, r9}
     add r9, r1, r2
@@ -98,12 +81,8 @@ loop4:
     ldmia sp!, {r4, r5, r6, r7, r8, r9}
     bx lr
 }
-#else
-void MIi_CpuClearFast(u32 data, void *destp, u32 size);
-#endif
 
 /* Copies size bytes: 32 bytes per ldm/stm, then a word tail. */
-#ifndef SM64DS_PLATFORM_PC
 asm void MIi_CpuCopyFast(const void *srcp, void *destp, u32 size) {
     stmdb sp!, {r4, r5, r6, r7, r8, r9, r10}
     add r10, r1, r2
@@ -122,12 +101,8 @@ loop4:
     ldmia sp!, {r4, r5, r6, r7, r8, r9, r10}
     bx lr
 }
-#else
-void MIi_CpuCopyFast(const void *srcp, void *destp, u32 size);
-#endif
 
 /* Copies 32 bytes, three words per ldm/stm. */
-#ifndef SM64DS_PLATFORM_PC
 asm void MI_Copy32B(const void *pSrc, void *pDest) {
     ldmia r0!, {r2, r3, ip}
     stmia r1!, {r2, r3, ip}
@@ -137,12 +112,8 @@ asm void MI_Copy32B(const void *pSrc, void *pDest) {
     stmia r1!, {r2, r3}
     bx lr
 }
-#else
-void MI_Copy32B(const void *pSrc, void *pDest);
-#endif
 
 /* Copies 36 bytes, three words per ldm/stm. */
-#ifndef SM64DS_PLATFORM_PC
 asm void MI_Copy36B(const void *pSrc, void *pDest) {
     ldmia r0!, {r2, r3, ip}
     stmia r1!, {r2, r3, ip}
@@ -152,12 +123,8 @@ asm void MI_Copy36B(const void *pSrc, void *pDest) {
     stmia r1!, {r2, r3, ip}
     bx lr
 }
-#else
-void MI_Copy36B(const void *pSrc, void *pDest);
-#endif
 
 /* Copies 48 bytes, three words per ldm/stm. */
-#ifndef SM64DS_PLATFORM_PC
 asm void MI_Copy48B(const void *pSrc, void *pDest) {
     ldmia r0!, {r2, r3, ip}
     stmia r1!, {r2, r3, ip}
@@ -169,15 +136,11 @@ asm void MI_Copy48B(const void *pSrc, void *pDest) {
     stmia r1!, {r2, r3, ip}
     bx lr
 }
-#else
-void MI_Copy48B(const void *pSrc, void *pDest);
-#endif
 
 /* The byte fill that pairs with MI_CpuCopy8. It aligns to a
  * halfword and then a word with read-modify-write at the unaligned head and
  * tail (so the adjacent byte survives), replicates the fill byte across the
  * word, and runs a str-writeback word loop. */
-#ifndef SM64DS_PLATFORM_PC
 asm void MI_CpuFill8(void *dstp, u8 data, u32 size) {
     cmp r2, #0
     bxeq lr
@@ -222,16 +185,12 @@ L74:
     strh r1, [r0]
     bx lr
 }
-#else
-void MI_CpuFill8(void *dstp, u8 data, u32 size);
-#endif
 
 /* An unaligned byte copy that never issues an 8-bit store. The
  * destination is aligned to a halfword with an edge-preserving read-modify-
  * write, then the copy runs as a halfword shift (when source and destination
  * parity differ) or a word+halfword bulk loop, closing with the same edge RMW
  * tail. */
-#ifndef SM64DS_PLATFORM_PC
 asm void MI_CpuCopy8(const void *srcp, void *dstp, u32 size) {
     cmp r2, #0
     bxeq lr
@@ -320,6 +279,3 @@ L10c:
     strh r0, [r1]
     bx lr
 }
-#else
-void MI_CpuCopy8(const void *srcp, void *dstp, u32 size);
-#endif

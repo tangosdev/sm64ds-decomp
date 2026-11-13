@@ -1,5 +1,4 @@
 #include "types.h"
-#include "ds_width.h"
 
 /* opt_common_subs stays off: the cartridge recomputes the double's address for
    each of the two byte reads, and CSE shares it (0x54 against 0x58). Spelling
@@ -11,13 +10,13 @@ int func_0206c8b4(u64 x) {
     int hi, lo;
     int p;
 
-    p = DS_IADDR(&x) + 7;
+    p = (intptr_t)(&x) + 7;
     if (p & 1)
         hi = (*(unsigned short *)(p - 1) & 0xff00) >> 8;
     else
         hi = *(unsigned short *)p & 0xff;
 
-    p = DS_IADDR(&x) + 6;
+    p = (intptr_t)(&x) + 6;
     if (p & 1)
         lo = (*(unsigned short *)(p - 1) & 0xff00) >> 8;
     else

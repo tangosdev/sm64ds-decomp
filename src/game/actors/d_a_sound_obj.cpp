@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 /**
  * The positional sound emitter (SOUND_OBJ), actor 0x167.
  *
@@ -44,7 +45,6 @@
  */
 
 #include "daSoundObj_c.h"
-#include "ds_width.h"
 
 /* One row of the 0xc-stride sound table: the four members InitResources
  * loads, in table order. */
@@ -91,13 +91,13 @@ struct SoundObjStarter {
     int thisAdjust;
 };
 
-SoundObjStarter data_ov002_0210c010 = {DS_IADDR(&Sound::PlaySmallSecretSound), 0};
-SoundObjStarter data_ov002_0210c018 = {DS_IADDR(&func_ov002_020f9468), 0};
-SoundObjStarter data_ov002_0210c020 = {DS_IADDR(&func_0200f7f0), 0};
-SoundObjStarter data_ov002_0210c028 = {DS_IADDR(&func_ov002_020f9468), 0};
-SoundObjStarter data_ov002_0210c030 = {DS_IADDR(&func_ov002_020f93a8), 0};
-SoundObjStarter data_ov002_0210c038 = {DS_IADDR(&func_ov002_020f9468), 0};
-SoundObjStarter data_ov002_0210c040 = {DS_IADDR(&Sound::PlaySecretSound), 0};
+SoundObjStarter data_ov002_0210c010 = {(intptr_t)(&Sound::PlaySmallSecretSound), 0};
+SoundObjStarter data_ov002_0210c018 = {(intptr_t)(&func_ov002_020f9468), 0};
+SoundObjStarter data_ov002_0210c020 = {(intptr_t)(&func_0200f7f0), 0};
+SoundObjStarter data_ov002_0210c028 = {(intptr_t)(&func_ov002_020f9468), 0};
+SoundObjStarter data_ov002_0210c030 = {(intptr_t)(&func_ov002_020f93a8), 0};
+SoundObjStarter data_ov002_0210c038 = {(intptr_t)(&func_ov002_020f9468), 0};
+SoundObjStarter data_ov002_0210c040 = {(intptr_t)(&Sound::PlaySecretSound), 0};
 
 SoundObjectCallback data_ov002_0211110c[7] = {
     *(SoundObjectCallback *)&data_ov002_0210c040, *(SoundObjectCallback *)&data_ov002_0210c010,

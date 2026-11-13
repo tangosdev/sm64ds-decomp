@@ -1,6 +1,5 @@
 #include "types.h"
 #include "private/throw_context.h"
-#include "ds_width.h"
 
 /* CodeWarrior exception runtime: fill the handler's CatchInfo from the throw
  * context (both private/throw_context.h). A '*' type string marks a pointer
@@ -15,6 +14,6 @@ void func_02071ccc(ThrowContext *s, int off, int add) {
         info->mSublocation = s->mLocation + add;
         return;
     }
-    info->mSublocation = DS_IADDR(&info->mPointerCopy);
+    info->mSublocation = (intptr_t)(&info->mPointerCopy);
     info->mPointerCopy = *(int *)s->mLocation + add;
 }

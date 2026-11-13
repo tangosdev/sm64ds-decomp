@@ -13,7 +13,6 @@
 
 #include "nitro/os/cache.h"
 
-#ifndef SM64DS_PLATFORM_PC
 asm void DC_StoreAll(void)
 {
     mov r1, #0
@@ -30,12 +29,10 @@ seg:
     bne outer
     bx lr
 }
-#endif
 
 /* Clean and invalidate the whole data cache by set and way (c7,c14,2). Same
  * traversal as DC_StoreAll: r1 walks the four ways in the top two bits, r0
  * walks the 32 lines of each set; the outer loop ends when r1 wraps to zero. */
-#ifndef SM64DS_PLATFORM_PC
 asm void DC_FlushAll(void)
 {
     mov r1, #0
@@ -52,9 +49,7 @@ seg:
     bne outer
     bx lr
 }
-#endif
 
-#ifndef SM64DS_PLATFORM_PC
 asm void DC_InvalidateRange(void *addr, u32 size)
 {
     add r1, r1, r0
@@ -66,9 +61,7 @@ loop:
     blt loop
     bx lr
 }
-#endif
 
-#ifndef SM64DS_PLATFORM_PC
 asm void DC_StoreRange(void *addr, u32 size)
 {
     add r1, r1, r0
@@ -80,9 +73,7 @@ loop:
     blt loop
     bx lr
 }
-#endif
 
-#ifndef SM64DS_PLATFORM_PC
 asm void DC_FlushRange(const void *addr, u32 size)
 {
     add r1, r1, r0
@@ -94,18 +85,14 @@ loop:
     blt loop
     bx lr
 }
-#endif
 
-#ifndef SM64DS_PLATFORM_PC
 asm void DC_WaitWriteBufferEmpty(void)
 {
     mov r0, #0
     mcr p15, 0, r0, c7, c10, 4
     bx lr
 }
-#endif
 
-#ifndef SM64DS_PLATFORM_PC
 asm void IC_InvalidateRange(void *addr, u32 size)
 {
     add r1, r1, r0
@@ -117,4 +104,3 @@ loop:
     blt loop
     bx lr
 }
-#endif

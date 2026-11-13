@@ -35,7 +35,6 @@ enum dScMgMemory2_c_AssetId { ASSET_D_2D_MG_CARD_NCL_BIN = 0x00bb };
 #include "PlayerInput.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
-#include "ds_width.h"
 
 namespace cstd {
 s16 atan2(s32, s32);
@@ -152,7 +151,7 @@ extern u8 gSubScreenLayers;
 #define MEMORY2(p) ((dScMgMemory2_c *)(p))
 /* A field's byte offset in the scene, for the CardFlyAway sites that add it
    to a stepped pointer, as the ROM does. */
-#define MEMORY2_OFF(member) (DS_IADDR(&((dScMgMemory2_c *)0)->member))
+#define MEMORY2_OFF(member) ((intptr_t)(&((dScMgMemory2_c *)0)->member))
 
 #pragma defer_codegen off
 

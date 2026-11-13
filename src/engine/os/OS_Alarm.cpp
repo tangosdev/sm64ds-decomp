@@ -162,16 +162,12 @@ void OS_CancelAlarm(OSAlarm *alarm) {
 
 /* The timer 1 IRQ entry. It pushes lr alone and calls out with no stack pad,
  * which mwccarm never emits for C: the SDK writes this one as asm. */
-#ifndef SM64DS_PLATFORM_PC
 asm void OSi_AlarmHandler(void *arg) {
     stmdb sp!, {lr}
     bl OSi_ArrangeTimer
     ldmia sp!, {lr}
     bx lr
 }
-#else
-void OSi_AlarmHandler(void *arg);
-#endif
 
 void OSi_ArrangeTimer(void) {
     OSAlarm *alarm;

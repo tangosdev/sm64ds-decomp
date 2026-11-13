@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 /* Production translation unit for ov018/daObjSm_Lift_c.
  * 11 function(s), .text 0x021111a0..0x02111848. Cool, Cool Mountain's ski lift
  * (SM_LIFT): it follows a path and turns when a mega mushroom hits it.
@@ -36,7 +37,6 @@ enum daObjSm_Lift_c_AssetId { ASSET_SM_LIFT_BMD = 0x06b3, ASSET_SM_LIFT_KCL = 0x
 #include "Sound.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
-#include "ds_width.h"
 
 /* Two CLPS blocks the lift hands to its colliders, back to back. */
 int data_ov018_02112f48[4] = {0x53504c43, 0x00020008, 0x00000fc5, 0x000000ff};
@@ -196,7 +196,7 @@ int daObjSm_Lift_c::Behavior() {
                     mPauseTimer = 0x3c;
                     mMoving = 0;
                     mNodeStep = -1;
-                    int *pIdx3 = (int *)((unsigned)DS_IADDR(&mNodeIndex));
+                    int *pIdx3 = (int *)((unsigned)(intptr_t)(&mNodeIndex));
                     *pIdx3 = *pIdx3 + (mNodeStep * 2);
                 }
             }

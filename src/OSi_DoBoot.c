@@ -42,7 +42,6 @@
 
 extern void func_02059d98(void *p, unsigned int n);
 
-#ifndef SM64DS_PLATFORM_PC
 asm void OSi_DoBoot(void)
 {
     mov ip, #0x4000000
@@ -86,6 +85,3 @@ _wait_release:
     mov r11, #0
     bx ip
 }
-#else
-void OSi_DoBoot(void);
-#endif

@@ -37,7 +37,6 @@ enum dScMgRoulette_c_AssetId {
 #include "common.h"
 #include "nitro/hw/registers.h"
 #include "types.h"
-#include "ds_width.h"
 #include "Vector2.h"
 #include "dScMgRoulette_c.h"
 #include "dExtSimpleModel_c.h"
@@ -80,9 +79,7 @@ struct RouletteStrip {
                          gives strip i index i */
     s16 count;        /* 0x16, racers added this round */
 };
-#ifndef SM64DS_HOST_64
 typedef char RouletteStrip_size_must_be_0x18[sizeof(RouletteStrip) == 0x18 ? 1 : -1];
-#endif
 
 /* The active minigame scene's mCredits, or 0 with no scene. */
 #define SCENE_BONUS ((gMgScene != 0) \

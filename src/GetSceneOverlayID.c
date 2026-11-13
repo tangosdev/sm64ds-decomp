@@ -1,4 +1,4 @@
-#include "ds_width.h"
+#include "types.h"
 
 extern int IsMinigameActorID(unsigned int id);
 
@@ -11,21 +11,21 @@ extern int OVERLAY_7_ID;
 int GetSceneOverlayID(int id)
 {
     if (IsMinigameActorID(id))
-        return DS_IADDR(&OVERLAY_6_ID);
+        return (intptr_t)(&OVERLAY_6_ID);
 
     switch (id) {
     case 3:
     case 6:
     case 7:
-        return DS_IADDR(&OVERLAY_2_ID);
+        return (intptr_t)(&OVERLAY_2_ID);
     case 5:
-        return DS_IADDR(&OVERLAY_5_ID);
+        return (intptr_t)(&OVERLAY_5_ID);
     case 1:
-        return DS_IADDR(&OVERLAY_7_ID);
+        return (intptr_t)(&OVERLAY_7_ID);
     case 2:
     case 4:
     case 8:
-        return DS_IADDR(&OVERLAY_3_ID);
+        return (intptr_t)(&OVERLAY_3_ID);
     case 0x168:
         break;
     }

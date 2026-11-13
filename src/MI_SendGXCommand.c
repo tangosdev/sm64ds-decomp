@@ -1,3 +1,4 @@
+#include "types.h"
 /* MI_SendGXCommand at 0x01ffde98 (ITCM) -- NitroSDK. Synchronous 32-bit DMA of a
  * geometry command list into the command FIFO (REG_GXFIFO, 0x04000400), split into
  * transfers of at most 118 words (the SDK's MIi_GX_LENGTH_ONCE, 0x1d8 bytes). It waits
@@ -10,7 +11,6 @@
 
 #include "nitro/hw/registers.h"
 #include "nitro/mi/dma.h"
-#include "ds_width.h"
 
 #define DMA_CONTROL_DEST_FIXED (2u << 21)
 #define GXFIFO_DMA_CONTROL (DMA_CONTROL_ENABLE | DMA_CONTROL_32_BIT | DMA_CONTROL_DEST_FIXED)
@@ -31,7 +31,7 @@ void MI_SendGXCommand(u32 dmaNo, const void *src, u32 commandLength) {
     currentSrc = (u32)src;
     while (commandLength != 0) {
         chunk = commandLength > 0x1d8 ? 0x1d8 : commandLength;
-        MIi_DmaSetParams(dmaNo, currentSrc, DS_UADDR(&REG_GXFIFO), GXFIFO_DMA_CONTROL | (chunk >> 2));
+        MIi_DmaSetParams(dmaNo, currentSrc, (uintptr_t)(&REG_GXFIFO), GXFIFO_DMA_CONTROL | (chunk >> 2));
         commandLength -= chunk;
         currentSrc += chunk;
     }

@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 /* daObjMarioCap_c -- the lost Mario cap, ov002 (overlay_actors CAP(269);
  * RTTI ov002:0x021095ac names 15daObjMarioCap_c; profile
  * g_profile_OBJ_MARIO_CAP). ov002 is mixed (Yoshi egg, switches, stars, push
@@ -140,7 +141,6 @@ enum daObjMarioCap_c_AssetId {
 #include "math/Approach.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
-#include "ds_width.h"
 
 /* --------------------------------------------------------------------------
  * Local shapes the merged members need.
@@ -594,7 +594,7 @@ int daObjMarioCap_c::Render()
 
     int t = mType;
     if (t == 4 || t == 17 || t == 5 || t == 18 || t == 16 || t == 11 || (unsigned)(t - 6) <= 3) {
-        if (!(mBlinkHidden & 1) || mStateEntry == DS_IADDR(&data_ov002_0210df54)) {
+        if (!(mBlinkHidden & 1) || mStateEntry == (intptr_t)(&data_ov002_0210df54)) {
             mAnmModel.dExtSimpleModel_c::Render(&mScale);
         }
     } else {

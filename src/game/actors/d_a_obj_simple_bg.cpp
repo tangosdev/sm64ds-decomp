@@ -74,10 +74,7 @@ struct SimpleBgAssets {
     SharedFilePtr *clsnFile;
     CLPS_Block *clps;
 };
-#include "ds_width.h"
-#ifndef SM64DS_HOST_64
 typedef char SimpleBgAssets_size_must_be_0xc[sizeof(SimpleBgAssets) == 0xc ? 1 : -1];
-#endif
 
 /* The model, KCL and CLPS for each variant. */
 extern SimpleBgAssets data_ov102_0214e188[];

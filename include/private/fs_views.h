@@ -50,10 +50,7 @@ typedef struct FSArchive {
     unsigned int proc_flag;           /* 0x4c -- which commands go to proc */
 } FSArchive;
 
-#include "ds_width.h"
-#ifndef SM64DS_HOST_64
 typedef char FSArchive_size_must_be_0x50[sizeof(FSArchive) == 0x50 ? 1 : -1];
-#endif
 
 typedef struct FSDirPos {
     FSArchive *arc;        /* 0x00 */
@@ -98,9 +95,7 @@ typedef struct FSFindPathInfo {
     } result;
 } FSFindPathInfo;
 
-#ifndef SM64DS_HOST_64
 typedef char FSFindPathInfo_size_must_be_0x18[sizeof(FSFindPathInfo) == 0x18 ? 1 : -1];
-#endif
 
 typedef struct FSGetPathInfo {
     unsigned char *buf;       /* 0x00 */
@@ -153,8 +148,6 @@ typedef struct FSFile {
 /* FS_SeekFile's origin. */
 typedef enum FSSeekFileMode { FS_SEEK_SET, FS_SEEK_CUR, FS_SEEK_END } FSSeekFileMode;
 
-#ifndef SM64DS_HOST_64
 typedef char FSFile_size_must_be_0x44[sizeof(struct FSFile) == 0x44 ? 1 : -1];
-#endif
 
 #endif

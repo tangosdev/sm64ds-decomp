@@ -23,7 +23,6 @@
 #include "GX.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/os/cache.h"
-#include "ds_width.h"
 
 /* An OAM entry, with attributes 0 and 1 stored as one word the way this
  * code writes them. */
@@ -229,7 +228,7 @@ void dScMgD3DBase_c::InitEngines()
     GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_3D);
     GXS_SetGraphicsMode(GX_BGMODE_5);
     *(vu32 *)0x4000000u &= 0xffcfffefu;
-    sMgCurCamera = DS_IADDR(&mCameras[0]);
+    sMgCurCamera = (intptr_t)(&mCameras[0]);
     sMgMainCamera = &mCameras[0];
     sMgSubCamera = &mCameras[1];
     sMgGraphCallback.mScene = this;

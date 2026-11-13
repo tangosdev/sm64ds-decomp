@@ -36,11 +36,8 @@ struct FlyingCarpetResources {
     CLPS_Block *clps;
 };
 
-#include "ds_width.h"
-#ifndef SM64DS_HOST_64
 typedef char
     FlyingCarpetResources_size_must_be_0x0c[sizeof(FlyingCarpetResources) == 0x0c ? 1 : -1];
-#endif
 
 /* Retail constructs these 8-byte handles in this order and registers
  * their destructors. The wrapper names are local; the ctor/dtor

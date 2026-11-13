@@ -8,7 +8,6 @@
 
 #include "nitro/os/protectionUnit.h"
 
-#ifndef SM64DS_PLATFORM_PC
 asm void OS_EnableProtectionUnit(void)
 {
     mrc p15, 0, r0, c1, c0, 0
@@ -16,9 +15,7 @@ asm void OS_EnableProtectionUnit(void)
     mcr p15, 0, r0, c1, c0, 0
     bx lr
 }
-#endif
 
-#ifndef SM64DS_PLATFORM_PC
 asm void OS_DisableProtectionUnit(void)
 {
     mrc p15, 0, r0, c1, c0, 0
@@ -26,4 +23,3 @@ asm void OS_DisableProtectionUnit(void)
     mcr p15, 0, r0, c1, c0, 0
     bx lr
 }
-#endif

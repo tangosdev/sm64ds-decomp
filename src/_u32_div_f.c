@@ -16,7 +16,6 @@
 // bit at a time by an unrolled 4-bit block that runs `r2 >> 2` times. The `.L_01ffadf8`
 // label in config/arm9/itcm/symbols.txt is the second entry point, used by __aeabi_ulmod
 // two functions up, which is what makes this and its neighbours one assembly file.
-#ifndef SM64DS_PLATFORM_PC
 asm unsigned int _u32_div_f(unsigned int num, unsigned int den)
 {
     cmp r1, #0
@@ -141,6 +140,3 @@ asm unsigned int _u32_div_f(unsigned int num, unsigned int den)
     mov r1, r3
     bx lr
 }
-#else
-unsigned int _u32_div_f(unsigned int num, unsigned int den);
-#endif

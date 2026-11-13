@@ -70,12 +70,12 @@ struct OamAttr;
  * field's whole-scene offset, then add the pre-scaled index i * 0x38;
  * mBall[i].f folds the field into the index instead and does not match
  * there. SHOT/BALL view one record already stepped by i * 0x38. */
-#define SHOT_BASE (DS_IADDR(&((dScMgPachinko_c *)0)->mShot))
-#define BALL_BASE (DS_IADDR(&((dScMgPachinko_c *)0)->mBall))
+#define SHOT_BASE ((intptr_t)(&((dScMgPachinko_c *)0)->mShot))
+#define BALL_BASE ((intptr_t)(&((dScMgPachinko_c *)0)->mBall))
 #define SHOT(p) ((dScMgPachinko_shot *)((p) + SHOT_BASE))
 #define BALL(p) ((dScMgPachinko_ball *)((p) + BALL_BASE))
-#define SHOT_OFF(member) (SHOT_BASE + DS_IADDR(&((dScMgPachinko_shot *)0)->member))
-#define BALL_OFF(member) (BALL_BASE + DS_IADDR(&((dScMgPachinko_ball *)0)->member))
+#define SHOT_OFF(member) (SHOT_BASE + (intptr_t)(&((dScMgPachinko_shot *)0)->member))
+#define BALL_OFF(member) (BALL_BASE + (intptr_t)(&((dScMgPachinko_ball *)0)->member))
 
 /* A random integer in [0, n): the top 15 bits of the shared generator, scaled. */
 #define PACHINKO_RAND(n) (((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * (n)) >> 15)
@@ -108,7 +108,6 @@ struct OamAttr;
 #include "nitro/gx/g2.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/mi/memory.h"
-#include "ds_width.h"
 extern void Mg_RenderSpriteBothPalMtx(void *sprite, int x, int y, int a3, void *m);
 extern int  Mg_RenderSpriteBothScaled(OamAttr *a, int b, int c, int d, int e, int f, int g);
 extern void Mg_SetSharedState(int a);

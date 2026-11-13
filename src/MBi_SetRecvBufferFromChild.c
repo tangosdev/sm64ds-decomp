@@ -2,7 +2,6 @@
 #include "private/arm9_a9db8_mb_parent.h"
 #include "private/mb_comm_child_block_header.h"
 #include "nitro/mi/memory.h"
-#include "ds_width.h"
 
 /* NitroSDK MBi_SetRecvBufferFromChild: unpack a child's MP message into its
  * block header. Type 7 (file request) carries a piece number and one piece
@@ -35,10 +34,10 @@ u8 *MBi_SetRecvBufferFromChild(u8 *src, u8 *dst) {
         int lo = src[1];
         /* the (int) round trips on p and on the second store are
          * load-bearing: plain &hd->u.data.req and *p swap r2 and r3 */
-        u16 *p = (u16 *)(DS_IADDR(&hd->u.data.req));
+        u16 *p = (u16 *)((intptr_t)(&hd->u.data.req));
         r4 = src + 3;
         hd->u.data.req = lo & 0xff;
-        *((u16 *)(DS_IADDR(&hd->u.data.req))) = (*p) | ((src[2] << 8) & 0xff00);
+        *((u16 *)((intptr_t)(&hd->u.data.req))) = (*p) | ((src[2] << 8) & 0xff00);
     } break;
 
     case 9: {

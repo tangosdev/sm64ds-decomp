@@ -25,13 +25,8 @@ struct TrackingRecord {
     ParticleElement *particle; /* 0x08 -- the tracked particle, 0 = free */
 };
 
-#include "ds_width.h"
-#ifndef SM64DS_HOST_64
 typedef char ParticleElement_size_must_be_0x44[sizeof(ParticleElement) == 0x44 ? 1 : -1];
-#endif
-#ifndef SM64DS_HOST_64
 typedef char TrackingRecord_size_must_be_0xc[sizeof(TrackingRecord) == 0xc ? 1 : -1];
-#endif
 
 extern void func_0204dcc0(int *src, short *o1, short *o2, int *o3);
 

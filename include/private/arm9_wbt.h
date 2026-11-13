@@ -8,7 +8,6 @@
  * WBTCommandType, WBTCallback, WBT_*) are in nitro/wbt.h. */
 
 #include "nitro/wbt.h"
-#include "ds_width.h"
 
 /* func_020647fc fills it: length, packet count, three cursors, then the
  * bitmap words and the receive buffer. */
@@ -94,7 +93,7 @@ int func_02063718(WBTWork *, void *, int);
 typedef char WBTCommand_size_must_be_0x9c[sizeof(WBTCommand) == 0x9c ? 1 : -1];
 typedef char WBTBlockInfoList_size_must_be_0x34[sizeof(WBTBlockInfoList) == 0x34 ? 1 : -1];
 typedef char WBTPeerRecord_size_must_be_0x68[sizeof(WBTPeerRecord) == 0x68 ? 1 : -1];
-typedef char WBTWork_peer_must_be_at_0x1d4[DS_IADDR(&((WBTWork *)0)->peer) == 0x1d4 ? 1 : -1];
+typedef char WBTWork_peer_must_be_at_0x1d4[(int)&((WBTWork *)0)->peer == 0x1d4 ? 1 : -1];
 #endif
 
 #endif

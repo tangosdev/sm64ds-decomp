@@ -1,4 +1,4 @@
-#include "ds_width.h"
+#include "types.h"
 extern unsigned char data_0209d4e0;
 extern int data_0208ee4c;
 extern void func_0201a798(int id);
@@ -18,7 +18,7 @@ int func_0201a694(int id) {
     int old;
 
     if ((id == 6) && (data_0209d4e0 == 0)) {
-        func_0201a798(DS_IADDR(&OVERLAY_75_ID));
+        func_0201a798((intptr_t)(&OVERLAY_75_ID));
         if (func_0203d7b8()) {
             return 3;
         }
@@ -49,7 +49,7 @@ int func_0201a694(int id) {
    also unloads overlay 75. */
 void func_0201a614(int id) {
     if (id == 1 && data_0209d4e0 != 0) {
-        func_0201a754(DS_IADDR(&OVERLAY_75_ID));
+        func_0201a754((intptr_t)(&OVERLAY_75_ID));
         data_0209d4e0 = 0;
     }
     id = GetSceneOverlayID(id);

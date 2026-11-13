@@ -69,7 +69,6 @@ enum d_a_nknk_AssetId {
 #include "private/mtx43.h"
 #include "math/MtxStack.h"
 #include "LevelRng.h"
-#include "ds_width.h"
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
  * veneer pairs (func_02017acc / func_02017ab4 for the two models,
@@ -548,10 +547,10 @@ void daNknk_c::func_ov062_02118718()
                 } else {
                     /* (int)& forces the pool add. mTargetAngle -= folds to mAnmModel+0xc2. */
                     if (((unsigned)RandomIntInternal(&data_0209e650.value) >> 16) & 0x8000)
-                        *(s16 *)(DS_IADDR(&mTargetAngle)) -=
+                        *(s16 *)((intptr_t)(&mTargetAngle)) -=
                             ((unsigned)RandomIntInternal(&data_0209e650.value) >> 16) & 0x1fff;
                     else
-                        *(s16 *)(DS_IADDR(&mTargetAngle)) +=
+                        *(s16 *)((intptr_t)(&mTargetAngle)) +=
                             ((unsigned)RandomIntInternal(&data_0209e650.value) >> 16) & 0x1fff;
                     mTurnTimer = 0x14;
                 }

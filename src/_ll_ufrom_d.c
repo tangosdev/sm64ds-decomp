@@ -20,7 +20,6 @@
 extern unsigned int *func_0207322c(void);
 extern double func_0206dd7c(double a, int op);
 
-#ifndef SM64DS_PLATFORM_PC
 asm long long _ll_ufrom_d(double x)
 {
     tst r1, #0x80000000
@@ -118,6 +117,3 @@ _L14c:
     ldmia sp!, {lr}
     bx lr
 }
-#else
-long long _ll_ufrom_d(double x);
-#endif

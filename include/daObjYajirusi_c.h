@@ -2,7 +2,6 @@
 #define DAOBJYAJIRUSI_C_H
 
 #include "types.h"
-#include "ds_width.h"
 #include "dBgW_KcMbg.h"
 
 struct daPly_c;
@@ -85,7 +84,6 @@ struct daObjYajirusi_c {
     void UpdateShadowMatrix();
 };
 
-#ifndef SM64DS_HOST_64
 static_assert(offsetof(daObjYajirusi_c, actorID) == 0x00c, "daObjYajirusi_c actorID");
 static_assert(offsetof(daObjYajirusi_c, mPosX) == 0x05c, "daObjYajirusi_c mPosX");
 static_assert(offsetof(daObjYajirusi_c, mCamSpacePosX) == 0x074, "daObjYajirusi_c mCamSpacePosX");
@@ -97,7 +95,6 @@ static_assert(offsetof(daObjYajirusi_c, mShadowModel) == 0x320, "daObjYajirusi_c
 static_assert(offsetof(daObjYajirusi_c, mShadowMat) == 0x348, "daObjYajirusi_c +0x348");
 static_assert(offsetof(daObjYajirusi_c, mVariant) == 0x37c, "daObjYajirusi_c +0x37c");
 static_assert(sizeof(daObjYajirusi_c) == 0x380, "daObjYajirusi_c host size");
-#endif
 
 #else
 

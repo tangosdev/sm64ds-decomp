@@ -1,3 +1,4 @@
+#include "types.h"
 /* Card ROM reads (the Nitro SDK's card_rom.c), arm9 .text
  * 0x02060890..0x02060f60.
  *
@@ -25,7 +26,6 @@
 #include "nitro/os/tcm.h"
 #include "nitro/mi/dma.h"
 #include "nitro/mi/memory.h"
-#include "ds_width.h"
 
 /* The card registers and ROMCTRL bits, as the SDK's private card_rom.h
  * names them. */
@@ -64,7 +64,7 @@ extern void func_02061138(void);
  * DTCM. */
 static inline int CARDi_IsInTcm(u32 buf, u32 len) {
     const u32 d = OS_GetDTCMAddress();
-    return (buf + len > DS_UADDR(&func_01ff8000) && buf < 0x2000000) ||
+    return (buf + len > (uintptr_t)(&func_01ff8000) && buf < 0x2000000) ||
            (d < buf + len && d + HW_DTCM_SIZE > buf);
 }
 

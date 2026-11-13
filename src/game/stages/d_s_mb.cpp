@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 /* dScMB_c -- the multi-boot download scene, arm9.
  *
  * .text 0x02034a78..0x02035354. Twelve class functions plus the factory
@@ -32,7 +33,6 @@
 #include "nitro/gx/gx_load.h"
 #include "nitro/fx/fx_trig.h"
 #include "nitro/mi/memory.h"
-#include "ds_width.h"
 
 extern "C" {
 void DecompressLZ16(void *src, void *dst);
@@ -240,8 +240,8 @@ void LoadMultiBootResources(int unused) {
     LoadArchive(1);
     sPrevHeap->SetDefault();
     func_0201a5f8(6);
-    LoadOverlay(DS_IADDR(&OVERLAY_100_ID));
-    LoadOverlay(DS_IADDR(&OVERLAY_102_ID));
+    LoadOverlay((intptr_t)(&OVERLAY_100_ID));
+    LoadOverlay((intptr_t)(&OVERLAY_102_ID));
     sPrevHeap = ((mHeap::Heap_t *)func_0201a3e4())->SetDefault();
     LoadArchive(7);
     sPrevHeap->SetDefault();

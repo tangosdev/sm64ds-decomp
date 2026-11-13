@@ -14,7 +14,6 @@
 // Self-contained: no pool words and no branches outside its own 0x20c bytes. _ll_sdiv
 // two functions up tail-calls into it for the 32-bit-operands fast path.
 
-#ifndef SM64DS_PLATFORM_PC
 asm int _s32_div_f(int num, int den)
 {
     eor r12, r0, r1
@@ -150,6 +149,3 @@ _L1f8:
     rsbne r1, r1, #0
     bx lr
 }
-#else
-int _s32_div_f(int num, int den);
-#endif

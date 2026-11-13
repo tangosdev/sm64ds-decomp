@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 /* The blue-coin switch -- ov002/daObjBC_Switch_c.
  *
  * A GENUINE TRANSLATION UNIT, ENROLLED AND CANONICAL. It is the whole of the
@@ -106,7 +107,6 @@ enum d_a_obj_bc_switch_AssetId {
 #include "decl_common.h"
 #include "Event.h"
 #include "Sound.h"
-#include "ds_width.h"
 
 /* File 1084 / 1085 resource handles. The static initializer registers
  * their destructors; the spellings are this TU's, mapped onto
@@ -238,7 +238,7 @@ int daObjBC_Switch_c::InitResources() {
         p = (unsigned short *)(c + 0x300);
         p[0x15] = 0xfa;
     } else {
-        *(unsigned short *)(DS_IADDR(&mCoinTimerSeed)) = *(unsigned short *)(DS_IADDR(&mCoinTimerSeed)) * 0xa;
+        *(unsigned short *)((intptr_t)(&mCoinTimerSeed)) = *(unsigned short *)((intptr_t)(&mCoinTimerSeed)) * 0xa;
     }
     return 1;
 }

@@ -30,10 +30,7 @@ typedef struct ArchiveTableEntry {
 
 enum { ARCHIVE_TABLE_COUNT = 13 };
 
-#include "ds_width.h"
-#ifndef SM64DS_HOST_64
 typedef char ArchiveTableEntry_size_must_be_0x14[sizeof(ArchiveTableEntry) == 0x14 ? 1 : -1];
-#endif
 
 extern ArchiveTableEntry data_0208ecf4[];
 

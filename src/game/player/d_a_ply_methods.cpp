@@ -96,7 +96,6 @@
 #include "cstd.h"
 #include "math/Approach.h"
 #include "nitro/fx/fx_cp.h"
-#include "ds_width.h"
 
 extern "C" daPly_c *daPly_c_classInit();
 
@@ -8385,8 +8384,8 @@ int daPly_c::func_ov002_020cc01c() {
 void daPly_c::func_ov002_020cc05c(unsigned short) {
     int idx = gActivePlayerSlot * 0x18;
     /* Through (int): plain player->mAngleYSpeed reschedules the 0x69c add and moves bytes. */
-    s16 curval = *(s16 *)(DS_IADDR(&mAngleYSpeed));
-    *(s16 *)(DS_IADDR(&mAngleYSpeed)) =
+    s16 curval = *(s16 *)((intptr_t)(&mAngleYSpeed));
+    *(s16 *)((intptr_t)(&mAngleYSpeed)) =
         curval + (s16)FX_MUL(*(s16 *)((char *)data_0209f4a2 + idx), 0x80);
     {
         s16 tv2 = *(s16*)((char*)data_0209f4a2 + idx);
@@ -15208,7 +15207,7 @@ int daPly_c::St_Hurt_Init() {
     this->SetAnim(data_ov002_0210a6d4[mStateStep & 7], 0x40000000, 0x1000, 0);
     mid = this->GetBodyModelID(param1 & 0xff, 0);
     m = (char *)mModels.mBodyModels[mid];
-    m = (char *)(DS_UADDR(&(dExtFrameCtrl_c &)*(dExtAnmModel_c *)m) & 0xFFFFFFFFU);
+    m = (char *)((uintptr_t)(&(dExtFrameCtrl_c &)*(dExtAnmModel_c *)m) & 0xFFFFFFFFU);
     ((dExtFrameCtrl_c *)m)->currFrame = 0;
     mStatePhase = 0;
     old = mStateWork;
@@ -16083,7 +16082,7 @@ extern "C" void func_ov002_020db54c(void *self, int a, int b, short c) {
     if (node != 0) {
         int bb = (int)(((dActor_c *)node)->actorID == 0xbf);
         if (bb != 0) {
-            Vector3 *src = (Vector3 *)(DS_IADDR(&((dActor_c *)node)->mPos));
+            Vector3 *src = (Vector3 *)((intptr_t)(&((dActor_c *)node)->mPos));
             Vector3 v;
             int ty;
             v.x = src->x;
@@ -18721,21 +18720,21 @@ int daPly_c::St_Land_Init() {
     }
 
     int r1;
-    if (r4 == DS_IADDR(&data_ov002_0211019c)) {
+    if (r4 == (intptr_t)(&data_ov002_0211019c)) {
         r1 = func_ov002_020e0a64();
-    } else if (r4 == DS_IADDR(&data_ov002_021101b4)) {
+    } else if (r4 == (intptr_t)(&data_ov002_021101b4)) {
         r1 = 0x55;
-    } else if (r4 == DS_IADDR(&data_ov002_021101e4)) {
+    } else if (r4 == (intptr_t)(&data_ov002_021101e4)) {
         r1 = 0x4e;
-    } else if (r4 == DS_IADDR(&data_ov002_0211052c)) {
+    } else if (r4 == (intptr_t)(&data_ov002_0211052c)) {
         mPrevAngleY = mAngleY;
         mHorzSpeed = 0;
         r1 = 0x2b;
-    } else if (r4 == DS_IADDR(&data_ov002_02110724) || r4 == DS_IADDR(&data_ov002_0211007c)) {
+    } else if (r4 == (intptr_t)(&data_ov002_02110724) || r4 == (intptr_t)(&data_ov002_0211007c)) {
         r1 = 0x51;
-    } else if (r4 == DS_IADDR(&data_ov002_0211055c)) {
+    } else if (r4 == (intptr_t)(&data_ov002_0211055c)) {
         r1 = 0x1b;
-    } else if (r4 == DS_IADDR(&data_ov002_02110454)) {
+    } else if (r4 == (intptr_t)(&data_ov002_02110454)) {
         r1 = 0x60;
     } else {
         r1 = 0x52;
@@ -18749,7 +18748,7 @@ int daPly_c::St_Land_Init() {
         func_ov002_020e25d4(c);
     }
     mStateStep = 0;
-    if (r4 == DS_IADDR(&data_ov002_0211019c) && mJumpComboStage == 2) {
+    if (r4 == (intptr_t)(&data_ov002_0211019c) && mJumpComboStage == 2) {
         mStateStep = 1;
     }
 
@@ -20360,7 +20359,7 @@ int daPly_c::Render() {
                 int t2 = (gGameMode == 1);
                 if (t2 != false) {
                     if (param1 == 3) {
-                        int *p = (int *)DS_IADDR(&bodyMdl->data);
+                        int *p = (int *)(intptr_t)(&bodyMdl->data);
                         BMD_File *hdr = (BMD_File *)p[0];
                         BMD_Material *rec = (BMD_Material *)p[1];
                         u32 i2;
@@ -20402,7 +20401,7 @@ int daPly_c::Render() {
                     int t3 = (gGameMode == 1);
                     if (t3 != false) {
                         if (param1 == 3) {
-                            int *p = (int *)DS_IADDR(&mModels.mHeadModels[i]->data);
+                            int *p = (int *)(intptr_t)(&mModels.mHeadModels[i]->data);
                             BMD_File *hdr = (BMD_File *)p[0];
                             BMD_Material *rec = (BMD_Material *)p[1];
                             u32 i2;
@@ -20743,7 +20742,7 @@ void daPly_c::func_ov002_020e4768() {
 
     if (idx == 3) {
         unsigned int m2 = GetBodyModelID(param1 & 0xff, 0);
-        int a1 = DS_IADDR(&mModels.mBodyModels[m2]->data.transforms[15]);
+        int a1 = (intptr_t)(&mModels.mBodyModels[m2]->data.transforms[15]);
         a1 = idx ? a1 : a1;
         ((VTable4 **)mModels.mHeadModels)[idx]->DoThing(a1);
     }
@@ -21059,7 +21058,7 @@ after_player_slot:
     func_ov002_020bf13c();
 
     {
-        s32 *p = (s32 *)LAU(DS_IADDR(&v0));
+        s32 *p = (s32 *)LAU((intptr_t)(&v0));
         s32 z = 0;
         p[0] = z;
         p[1] = z;
@@ -21641,7 +21640,7 @@ void daPly_c::func_ov002_020e640c() {
 
     id = GetBodyModelID(param1 & 0xff, 0);
     {
-        int *p = (int *)DS_IADDR(&mModels.mBodyModels[id]->data);
+        int *p = (int *)(intptr_t)(&mModels.mBodyModels[id]->data);
         md = (char *)p[2];
         mp = (char *)p[0];
     }
@@ -21901,11 +21900,7 @@ int *func_ov002_020e6bb0(void *model) {
     ModelMaterial *src;
     unsigned int i;
 
-#ifndef SM64DS_HOST_64
     pp = (void **)((long long)(int)((char *)model + 8));
-#else
-    pp = (void **)((uintptr_t)((char *)model + 8));
-#endif
     res = (ModelMaterialRes *)pp[0];
     count = res->numMaterials;
     out = (int *)::operator new[](count << 2);

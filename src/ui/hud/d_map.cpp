@@ -48,7 +48,6 @@
 #include "nitro/hw/registers.h"
 #include "nitro/fx/fx_cp.h"
 #include "math/CalcLib.h"
-#include "ds_width.h"
 
 #pragma defer_codegen off
 /* Codegen is deferred by default in mwccarm 2004/b56, which makes its
@@ -780,7 +779,7 @@ L738:
         daPly_c *o = gPlayers[i];
         if (o != 0) {
             /* the (int) launder keeps the ROM's precomputed copy source */
-            playerPos = *(Vector3 *)(DS_IADDR(&o->mPos));
+            playerPos = *(Vector3 *)((intptr_t)(&o->mPos));
             FixTHIPaintingRoomPos(playerPos);
             GetPosOnMinimap(&playerPos, (Vector3 *)&this->mMapCenterWorldX, this->mCurrentScale,
                             this->mAngle, &miniPos);

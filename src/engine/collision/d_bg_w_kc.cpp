@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 /* The ITCM query code uses the static divisor and wall-normal predicates.
  * The prism-index and slope-classification helpers retain their existing
  * free-function interfaces. The constructor precedes the destructor to
@@ -49,10 +50,10 @@ int dBgW_Kc::ClassifyNormalY(int normalY) {
 /* The four header words of a fresh KCL file are file-relative offsets;
    rebase them into pointers. */
 void dBgW_Kc::UpdateFileOffsets(KCL_File &file) {
-    file.positions = (s32(*)[3])((char *)&file + DS_IADDR(file.positions));
-    file.normals = (s16(*)[3])((char *)&file + DS_IADDR(file.normals));
-    file.tris = (KCL_Tri *)((char *)&file + DS_IADDR(file.tris));
-    file.octree = (char *)&file + DS_IADDR(file.octree);
+    file.positions = (s32(*)[3])((char *)&file + (intptr_t)(file.positions));
+    file.normals = (s16(*)[3])((char *)&file + (intptr_t)(file.normals));
+    file.tris = (KCL_Tri *)((char *)&file + (intptr_t)(file.tris));
+    file.octree = (char *)&file + (intptr_t)(file.octree);
 }
 
 void dBgW_Kc::SetFile(KCL_File *file, CLPS_Block &clpsBlock) {

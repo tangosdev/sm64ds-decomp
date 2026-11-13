@@ -9,7 +9,6 @@
 #include "math/Matrix.h"
 
 #pragma thumb on
-#ifndef SM64DS_PLATFORM_PC
 asm void MTX_RotY33_(Matrix3x3 *m, int s, int c) {
     str r2, [r0, #0]
     str r2, [r0, #32]
@@ -26,17 +25,3 @@ asm void MTX_RotY33_(Matrix3x3 *m, int s, int c) {
     str r3, [r0, #16]
     bx lr
 }
-#else
-void MTX_RotY33_(Matrix3x3 *m, int s, int c)
-{
-    m->m[0] = c;
-    m->m[1] = 0;
-    m->m[2] = -s;
-    m->m[3] = 0;
-    m->m[4] = 0x1000;
-    m->m[5] = 0;
-    m->m[6] = s;
-    m->m[7] = 0;
-    m->m[8] = c;
-}
-#endif

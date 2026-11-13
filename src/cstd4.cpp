@@ -23,11 +23,7 @@ extern "C" {
 // HAND-ASM PRIMITIVE: `swp` atomic swap has no C equivalent under mwccarm, so asm is the source.
 // Store value to *lock and return the word it held. The isdoverlay table
 // edits (_ISDbgLib_UnregistOverlayInfo, _ISDbgLib_RegistOverlayInfo) spin on it with 0x80 to take a lock.
-#ifndef SM64DS_PLATFORM_PC
 asm u32 func_0206dab4(u32 value, void *lock) { swp r0, r0, [r1]; bx lr }
-#else
-u32 func_0206dab4(u32 value, void *lock);
-#endif
 }
 
 #pragma push
@@ -37,11 +33,7 @@ namespace cstd {
 
 void __builtin_trap(void)
 {
-  #ifndef SM64DS_PLATFORM_PC
   asm { dcd 0xe7ffffff }
-  #else
-  /* host: no bkpt */
-  #endif
 }
 
 }
@@ -138,7 +130,7 @@ typedef union Pair {
     float f;
     struct { int x, y; } w;
 } Pair;
-void func_0206de14(int a0, Pair p1, Pair p2, unsigned int flags);
+void func_0206de14(intptr_t a0, Pair p1, Pair p2, unsigned int flags);
 
 #pragma push
 #pragma defer_codegen off
@@ -146,7 +138,7 @@ float func_0206dc7c(double a, double b, int op) {
     Pair u1, u2, out;
     u1.d = a;
     u2.d = b;
-    func_0206de14((int)&out, u1, u2, op);
+    func_0206de14((intptr_t)&out, u1, u2, op);
     return out.f;
 }
 #pragma pop
@@ -157,7 +149,7 @@ double func_0206dcd4(double a, double b, int op) {
     Pair u1, u2, out;
     u1.d = a;
     u2.d = b;
-    func_0206de14((int)&out, u1, u2, op);
+    func_0206de14((intptr_t)&out, u1, u2, op);
     return out.d;
 }
 #pragma pop
@@ -168,7 +160,7 @@ float func_0206dd30(float a, float b, int op) {
     Pair u1, u2, out;
     u1.f = a;
     u2.f = b;
-    func_0206de14((int)&out, u1, u2, op);
+    func_0206de14((intptr_t)&out, u1, u2, op);
     return out.f;
 }
 #pragma pop
@@ -178,7 +170,7 @@ float func_0206dd30(float a, float b, int op) {
 double func_0206dd7c(double a, int op) {
     Pair u1, out;
     u1.d = a;
-    func_0206de14((int)&out, u1, u1, op);
+    func_0206de14((intptr_t)&out, u1, u1, op);
     return out.d;
 }
 #pragma pop
@@ -188,7 +180,7 @@ double func_0206dd7c(double a, int op) {
 float func_0206ddcc(float a, int op) {
     Pair u1, out;
     u1.f = a;
-    func_0206de14((int)&out, u1, u1, op);
+    func_0206de14((intptr_t)&out, u1, u1, op);
     return out.f;
 }
 #pragma pop
@@ -222,7 +214,7 @@ typedef struct FpHandlerTable {
 } FpHandlerTable;
 extern void *func_02073238(void);
 
-void func_0206de14(int a0, Pair p1, Pair p2, unsigned int flags)
+void func_0206de14(intptr_t a0, Pair p1, Pair p2, unsigned int flags)
 {
   FpHandlerTable *table = (FpHandlerTable *) func_02073238();
   DispatchFn fn;

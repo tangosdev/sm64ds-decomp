@@ -242,10 +242,7 @@ typedef struct WMParentParam {
     unsigned short rsv2[5];            /* 0x36 */
 } WMParentParam;
 
-#include "ds_width.h"
-#ifndef SM64DS_HOST_64
 typedef char WMParentParam_size_must_be_0x40[sizeof(WMParentParam) == 0x40 ? 1 : -1];
-#endif
 
 /* NitroSDK WMScanParam, WM_StartScan's argument (WM_StartScan flushes 0x20
  * bytes of it). This SDK build copies bssid as three halfwords; the public
@@ -258,9 +255,7 @@ typedef struct WMScanParam {
     unsigned char pad_0e[0x20 - 0xe];
 } WMScanParam;
 
-#ifndef SM64DS_HOST_64
 typedef char WMScanParam_size_must_be_0x20[sizeof(WMScanParam) == 0x20 ? 1 : -1];
-#endif
 
 /* NitroSDK WMMpRecvBuf, the frame a child receives from its parent. */
 typedef struct WMMpRecvBuf {
@@ -372,9 +367,7 @@ typedef struct WMStatus {
     char pad_1f4[0x930 - 0x1f4];
 } WMStatus;
 
-#ifndef SM64DS_HOST_64
 typedef char WMStatus_size_must_be_0x930[sizeof(WMStatus) == 0x930 ? 1 : -1];
-#endif
 
 #ifdef __cplusplus
 }

@@ -12,7 +12,6 @@
 // m arrives in r0. "stmia r0!, {r2, r3}" stores r2 and r3 into the next
 // two entries of m and moves r0 past them, so m is written in pairs.
 // Nine entries don't split into pairs, so the last 1 (m[8]) goes first.
-#ifndef SM64DS_PLATFORM_PC
 asm void MTX_Identity33_(Matrix3x3 *m)
 {
     mov r2, #0x1000
@@ -25,12 +24,3 @@ asm void MTX_Identity33_(Matrix3x3 *m)
     stmia r0!, {r1, r3}
     bx lr
 }
-#else
-void MTX_Identity33_(Matrix3x3 *m)
-{
-    int i;
-    for (i = 0; i < 9; i++)
-        m->m[i] = 0;
-    m->m[0] = m->m[4] = m->m[8] = 0x1000;
-}
-#endif

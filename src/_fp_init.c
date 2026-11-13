@@ -30,7 +30,6 @@
 extern unsigned int *func_0207322c(void);
 extern void *func_02073238(void);
 
-#ifndef SM64DS_PLATFORM_PC
 asm void _fp_init(void)
 {
     stmdb sp!, {lr}
@@ -47,6 +46,3 @@ asm void _fp_init(void)
     ldmia sp!, {lr}
     bx lr
 }
-#else
-void _fp_init(void);
-#endif

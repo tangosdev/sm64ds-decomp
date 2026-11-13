@@ -2,7 +2,6 @@
 // in the original (SDK/runtime primitive: block copy, matrix/math, CP15, context
 // switch, etc.), so there is no C to decompile it to -- the asm block is the
 // faithful source. Counts as matched (asm-primitive policy), not a C transcription.
-#ifndef SM64DS_PLATFORM_PC
 asm void GX_SendFifo48B(const void *src, void *dst) {
     ldmia r0!, {r2, r3, ip}
     stmia r1, {r2, r3, ip}
@@ -14,6 +13,3 @@ asm void GX_SendFifo48B(const void *src, void *dst) {
     stmia r1, {r2, r3, ip}
     bx lr
 }
-#else
-void GX_SendFifo48B(const void *src, void *dst);
-#endif

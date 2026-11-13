@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 /* dExtFrameCtrl_c::UpdateFileOffsets -- the BCA load-time fixup, arm9
  * 0x020469ac..0x020469e0. The four offsets in a freshly loaded BCA file
  * are file-relative; rebase them into pointers.
@@ -11,8 +12,8 @@
 
 void dExtFrameCtrl_c::UpdateFileOffsets(BCA_File &file)
 {
-    file.scaleValues = (s32 *)((char *)&file + DS_IADDR(file.scaleValues));
-    file.rotationValues = (s16 *)((char *)&file + DS_IADDR(file.rotationValues));
-    file.translationValues = (s32 *)((char *)&file + DS_IADDR(file.translationValues));
-    file.boneTracks = (BCA_BoneTrack *)((char *)&file + DS_IADDR(file.boneTracks));
+    file.scaleValues = (s32 *)((char *)&file + (intptr_t)(file.scaleValues));
+    file.rotationValues = (s16 *)((char *)&file + (intptr_t)(file.rotationValues));
+    file.translationValues = (s32 *)((char *)&file + (intptr_t)(file.translationValues));
+    file.boneTracks = (BCA_BoneTrack *)((char *)&file + (intptr_t)(file.boneTracks));
 }

@@ -60,7 +60,6 @@ enum daObjRotateUpdownLift_c_AssetId {
 #include "ParticleIds.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_cp.h"
-#include "ds_width.h"
 
 /* Plain 12-byte point. Vector3's destructor is empty but the type is not
    POD, and the copies below are three-word ldm/stm with no cleanup. */
@@ -397,14 +396,9 @@ int daObjRotateUpdownLift_c::Behavior()
            base for both grows the function. */
         {
             s16 *pitch = &mPitchBase;
-#ifndef SM64DS_HOST_64
             s16 *stepAt = (s16 *)((char *)this + 0x300);
             arrived = 1;
             *pitch = (s16)(*pitch + *(s16 *)((char *)stepAt + 0xa4));
-#else
-            arrived = 1;
-            *pitch = (s16)(*pitch + mPitchStep);
-#endif
         }
     } else {
         Vec3_MulScalar(&stepVec, &remain, FX_Div(stepLen, dist));

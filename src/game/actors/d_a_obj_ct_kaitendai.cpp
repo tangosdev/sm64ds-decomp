@@ -69,10 +69,7 @@ struct KaitendaiResources {
     CLPS_Block *clps;
 };
 
-#include "ds_width.h"
-#ifndef SM64DS_HOST_64
 typedef char KaitendaiResources_size_must_be_0x0c[sizeof(KaitendaiResources) == 0x0c ? 1 : -1];
-#endif
 
 /* File-scope objects at the end of this file construct the four resource
  * handles (model files 0x5c4/0x5c6, collision files 0x5c5/0x5c7). mwcc

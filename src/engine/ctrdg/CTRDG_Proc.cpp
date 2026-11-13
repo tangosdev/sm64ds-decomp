@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 /* The cartridge library's ARM7 handshake (the Nitro SDK's ctrdg_proc.c),
  * arm9 .text 0x0206a600..0x0206a928.
  *
@@ -33,7 +34,6 @@
 #include "nitro/os/system.h"
 #include "nitro/hw/registers.h"
 #include "nitro/mi/dma.h"
-#include "ds_width.h"
 
 /* NitroSDK's inline IME helpers (os/common/interrupt.h): each returns the
  * previous master enable. File-local because an inline body in a shared
@@ -126,7 +126,7 @@ void CTRDGi_InitModuleInfo(void) {
     }
     MI_CpuCopy32((int *)0xffff0020, data_020a9e00.nintendoLogo, 0x9c);
     DC_FlushAll();
-    data = ((DS_UADDR(&data_020a9e00) + 0xfe000000) >> 5) << 6 | 1;
+    data = (((uintptr_t)(&data_020a9e00) + 0xfe000000) >> 5) << 6 | 1;
     CTRDGi_SendtoPxi(data);
     if (CTRDGi_Work.subpState != 1) {
         do {

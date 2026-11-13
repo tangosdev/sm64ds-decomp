@@ -27,15 +27,17 @@ typedef signed long long   s64;
 typedef unsigned long size_t;
 #endif
 
-/* Pointer-sized signed integer: an address kept in an integer. The DS build is
-   32-bit only, so mwccarm spells an address `int`; a 64-bit host needs the
-   wider type, which the host's own header owns. Casts through it are byte-free
-   on the DS build (`intptr_t` and `int` are then the same type) and stay
-   correct wherever a pointer no longer fits an `int`. */
+/* Pointer-sized integers: an address kept in an integer. The DS build is
+   32-bit only, so mwccarm spells an address `int` or `unsigned int`; a
+   64-bit host needs the wider type, which the host's own header owns.
+   Casts through these are byte-free on the DS build (they are the same
+   type as `int` / `unsigned int` there) and keep the high half wherever
+   a pointer no longer fits in 32 bits. */
 #ifdef _MSC_VER
 #include <stdint.h>
 #else
 typedef signed int intptr_t;
+typedef unsigned int uintptr_t;
 #endif
 
 /* 20.12 fixed-point scalar, as used by the SDK/game maths.

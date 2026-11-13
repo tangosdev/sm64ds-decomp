@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 /* Model4 -- VRAM upload for a BMD model, 0x020458e0..0x020468a0.
  *
  * Not part of src/engine/model/d_ext_model.cpp: func_020458a8 sits between that TU
@@ -33,13 +34,7 @@ extern u32 data_020a4be8;
 void dExtSimpleModel_c::UpdateFileOffsets(BMD_File &file) {
     u32 i;
     int k;
-#ifndef SM64DS_HOST_64
-    int base = (int)&file;
-#else
-    uintptr_t base = (uintptr_t)&file;
-    if (base > 0xffffffffu)
-        OS_Terminate();
-#endif
+    intptr_t base = (intptr_t)&file;
 
     if (file.bones) file.bones = (BMD_Bone *)REBASE(file.bones);
     for (i = 0; i < file.numBones; i++) {
@@ -54,11 +49,11 @@ void dExtSimpleModel_c::UpdateFileOffsets(BMD_File &file) {
         file.displayListGroups = (BMD_DisplayListGroup *)REBASE(file.displayListGroups);
     for (i = 0; i < file.numDisplayListGroups; i++) {
         BMD_DisplayListGroup *g = file.displayListGroups + i;
-        if (g->lists) g->lists = (BMD_DisplayList *)(DS_IADDR(g->lists) + base);
+        if (g->lists) g->lists = (BMD_DisplayList *)((intptr_t)(g->lists) + base);
         for (k = 0; k < (int)g->numLists; k++) {
             BMD_DisplayList *d = g->lists + k;
-            if (d->unk_04) d->unk_04 = (void *)(DS_IADDR(d->unk_04) + base);
-            if (d->data) d->data = (void *)(DS_IADDR(d->data) + base);
+            if (d->unk_04) d->unk_04 = (void *)((intptr_t)(d->unk_04) + base);
+            if (d->data) d->data = (void *)((intptr_t)(d->data) + base);
         }
     }
 
@@ -89,19 +84,11 @@ void dExtSimpleModel_c::UpdateFileOffsets(BMD_File &file) {
     if (file.skin)
         file.skin = REBASE(file.skin);
     {
-#ifndef SM64DS_HOST_64
         void **e = (void **)file.skin;
         if (e[0]) e[0] = REBASE(e[0]);
         if (e[1]) e[1] = REBASE(e[1]);
         if (e[2]) e[2] = REBASE(e[2]);
         if (e[3]) e[3] = REBASE(e[3]);
-#else
-        void * DS_P32 *e = (void * DS_P32 *)file.skin;
-        if (e[0]) e[0] = REBASE(e[0]);
-        if (e[1]) e[1] = REBASE(e[1]);
-        if (e[2]) e[2] = REBASE(e[2]);
-        if (e[3]) e[3] = REBASE(e[3]);
-#endif
     }
 }
 #undef REBASE

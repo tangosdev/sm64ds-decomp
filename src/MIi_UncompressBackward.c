@@ -11,7 +11,6 @@
 // The name and the instruction list are pret/pokediamond's crt0.c, where this is an
 // `asm` function too. r4-r7 are pushed by hand and the backward `ldmdb` header read has
 // no C spelling. Per asm policy.
-#ifndef SM64DS_PLATFORM_PC
 asm void MIi_UncompressBackward(void *bottom)
 {
     cmp     r0, #0
@@ -64,6 +63,3 @@ L_cache:
 L_end:
     bx      lr
 }
-#else
-void MIi_UncompressBackward(void *bottom);
-#endif

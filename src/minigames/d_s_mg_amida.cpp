@@ -98,7 +98,6 @@ enum dScMgAmida_c_AssetId {
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/g2.h"
 #include "nitro/mi/memory.h"
-#include "ds_width.h"
 
 extern "C" {
 /* --- shared ov004 and main helpers --- */
@@ -179,7 +178,7 @@ extern AmidaRenderPeriods sAmidaRenderPeriods;
    whole pieces; PIECE_OFF names one field's offset from the scene. Both
    keep the cast arithmetic: the member form `&((dScMgAmida_c *)p)->mPieces[0]`
    grows Behavior by 0xc (measured 2026-10-20). */
-#define PIECE_OFF(m) (DS_IADDR(&((dScMgAmida_c *)0)->mPieces[0].m))
+#define PIECE_OFF(m) ((intptr_t)(&((dScMgAmida_c *)0)->mPieces[0].m))
 #define PIECE_AT(p) ((dScMgAmida_c_Piece *)((p) + PIECE_OFF(posX)))
 
 /* Launder helpers for Behavior's piece walk: AT makes the compiler
@@ -282,7 +281,7 @@ void dScMgAmida_c::ShuffleGoals(int arg1) {
             /* The swap addresses are built as this + i*4 + offset: the
                plain &mLaneResult[i] form shrinks ShuffleGoals by 0x18
                (measured 2026-10-20). */
-            int off = DS_IADDR(&((dScMgAmida_c *)0)->mLaneResult);
+            int off = (intptr_t)(&((dScMgAmida_c *)0)->mLaneResult);
             arg1 = 1;
             do {
                 for (i = 0; i < 4; i++) {
@@ -313,7 +312,7 @@ void dScMgAmida_c::ShuffleGoals(int arg1) {
         for (; arg1 < 4; arg1++)
             mLaneResult[arg1] = 0;
         {
-            int off = DS_IADDR(&((dScMgAmida_c *)0)->mLaneResult);
+            int off = (intptr_t)(&((dScMgAmida_c *)0)->mLaneResult);
             for (i = 0; i < 4; i++) {
                 t = RandomIntInternal(&data_0209d4b8.value);
                 pi = (int *)((char *)this + (i << 2) + off);

@@ -19,7 +19,6 @@ extern unsigned int *func_0207322c(void);
 extern double func_0206dd7c(double a, int op);
 extern double func_0206dcd4(double a, double b, int op);
 
-#ifndef SM64DS_PLATFORM_PC
 asm double _dmul(double a, double b)
 {
     stmdb sp!, {r0, r1, r2, r3, r4, r5, r6, r7, lr}
@@ -511,6 +510,3 @@ _pool40000093:
     eor r2, r0, r2
     eor r0, r0, r2
 }
-#else
-double _dmul(double a, double b);
-#endif

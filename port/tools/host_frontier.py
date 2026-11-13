@@ -112,36 +112,6 @@ def check_batch(files, env):
     return results
 
 
-def unguarded_asm(text):
-    """True when an `asm` definition sits outside `#ifndef SM64DS_PLATFORM_PC`.
-
-    A wrapped hatch keeps the mwccarm body in that guard and a host
-    declaration or C body in the #else, so the TU syntax-checks. Asm lines
-    are ignored while the guard is open, from the #ifndef through its
-    matching #endif (the #else arm included). Nested #if / #ifdef / #ifndef
-    inside the guard are counted so an inner #endif cannot close it early.
-    """
-    asm_re = re.compile(r"^\s*asm\s+\w")
-    ifndef_plat = re.compile(r"^\s*#\s*ifndef\s+SM64DS_PLATFORM_PC\b")
-    if_re = re.compile(r"^\s*#\s*if")
-    endif_re = re.compile(r"^\s*#\s*endif\b")
-    depth = 0
-    for line in text.splitlines():
-        if depth == 0:
-            if ifndef_plat.match(line):
-                depth = 1
-                continue
-            if asm_re.match(line):
-                return True
-        else:
-            # `#ifndef` matches `#if` as a prefix; only reached while open.
-            if if_re.match(line):
-                depth += 1
-            elif endif_re.match(line):
-                depth -= 1
-    return False
-
-
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--jobs", type=int, default=8)
@@ -153,20 +123,21 @@ def main():
     files = sorted(p for p in SRC.rglob("*") if p.suffix in (".c", ".cpp"))
     print(f"host frontier: {len(files)} source files, cl /Zs, 32-bit")
 
-    # asm-hatch TUs are HAL-owned only while an `asm` definition is still
-    # outside `#ifndef SM64DS_PLATFORM_PC`. Wrapped hatches (CP15, block
-    # copy, context switch, BIOS swi) syntax-check with the rest of src/;
-    # the host side is a declaration or a C body, and the symbol stays in
-    # port/ when the HAL already provides it.
+    # asm-hatch TUs (`asm void f(...) { ... }`, mwccarm syntax) can never
+    # compile on a host and SHOULD not: they are DS hardware operations --
+    # CP15 cache management (host no-op), block copy/fill (memcpy), context
+    # switch (threads seam). Classify them as HAL-owned up front instead of
+    # letting them read as 98 syntax defects; they are the HAL backlog.
     hal_owned = []
     rest = []
+    asm_re = re.compile(r"^\s*asm\s+\w", re.M)
     for f in files:
         try:
             head = f.read_text(errors="replace")
         except OSError:
             rest.append(f)
             continue
-        (hal_owned if unguarded_asm(head) else rest).append(f)
+        (hal_owned if asm_re.search(head) else rest).append(f)
     files = rest
     env = vc_env()
 

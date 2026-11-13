@@ -58,7 +58,6 @@
 #include "SaveData.h"
 #include "Sound.h"
 #include "CutsceneSpline.h"
-#include "ds_width.h"
 
 struct dCamera_c;
 
@@ -121,7 +120,7 @@ extern int data_ov002_02110aec;        /* WATERFALL_SOUNDS_DISABLED */
  * byte. A pointer argument cannot be a constant byte, so each KS_PTR becomes a
  * store in this file's static initializer. */
 #define KS_S16(v) (u8)(v), (u8)((v) >> 8)
-#define KS_PTR(p) DS_UADDR(& (p)) & 0xff, (DS_UADDR(& (p)) >> 8) & 0xff, (DS_UADDR(& (p)) >> 16) & 0xff, (DS_UADDR(& (p)) >> 24) & 0xff
+#define KS_PTR(p) (uintptr_t)(& (p)) & 0xff, ((uintptr_t)(& (p)) >> 8) & 0xff, ((uintptr_t)(& (p)) >> 16) & 0xff, ((uintptr_t)(& (p)) >> 24) & 0xff
 
 /* The camera paths below are CutsceneSpline objects (CutsceneSpline.h).
  * They are ports of Super Mario 64's cutscene splines and keep their names:

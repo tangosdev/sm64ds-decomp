@@ -66,21 +66,14 @@ struct EwbIceClpsSlot {
     CLPS_Block *clps;
     u8 pad[8];
 };
-#include "ds_width.h"
-#ifndef SM64DS_HOST_64
 typedef char EwbIceFileSlot_must_be_0xc[sizeof(EwbIceFileSlot) == 0xc ? 1 : -1];
-#endif
-#ifndef SM64DS_HOST_64
 typedef char EwbIceClpsSlot_must_be_0xc[sizeof(EwbIceClpsSlot) == 0xc ? 1 : -1];
-#endif
 
 struct daObjEwbIce_State {
     int (daObjEwbIce_c::*enter)();
     int (daObjEwbIce_c::*update)();
 };
-#ifndef SM64DS_HOST_64
 typedef char daObjEwbIce_State_must_be_0x10[sizeof(daObjEwbIce_State) == 0x10 ? 1 : -1];
-#endif
 
 /* The six file handles __sinit_d_a_obj_ewb_ice.cpp constructs below, one model
  * and one collision per EWB_ICE variant. The models'

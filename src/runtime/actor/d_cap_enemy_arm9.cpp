@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 /* dCapEnemy_c, the arm9 half (0x02005d94..0x02006588): the cap attach,
  * release, respawn and state helpers, then D1 and C2.
  * src/runtime/actor/d_cap_enemy.cpp is the ov002 half and already owns that
@@ -31,7 +32,6 @@
 #include "private/mtx43.h"
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
-#include "ds_width.h"
 
 extern "C" {
 extern SharedFilePtr *data_ov002_020ff028[];
@@ -232,7 +232,7 @@ int dCapEnemy_c::GetCapState() {
     }
 
     mIsDormant = 0;
-    mFlags = *(int *)((long long)DS_IADDR(&mDormantFlags));
+    mFlags = *(int *)((long long)(intptr_t)(&mDormantFlags));
     mCapId &= 7;
     return 1;
 }

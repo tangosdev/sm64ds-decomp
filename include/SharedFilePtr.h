@@ -2,7 +2,6 @@
 #define SHAREDFILEPTR_H
 
 #include "types.h"
-#include "ds_width.h"
 
 /* A handle to a file shared between actors: callers hold one, ask it to load, and
  * release it when the actor is cleaned up.
@@ -24,7 +23,7 @@
 struct SharedFilePtr {
     u16 fileID;    /* 0x00: FAT file ID, resolved from the overlay-0 ID */
     u8 numRefs;    /* 0x02: holders that have loaded the file */
-    void * DS_P32 filePtr; /* 0x04: the loaded file, or null */
+    void *filePtr; /* 0x04: the loaded file, or null */
 
     /* RETURN TYPES ARE MEASURED, not chosen: both of these set r0 on the way out
        and the C forms that defined them returned a value, so declaring them void

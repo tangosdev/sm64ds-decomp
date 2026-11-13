@@ -49,7 +49,6 @@
 #ifndef LVL_OVERLAY_H
 #define LVL_OVERLAY_H
 #include "types.h"
-#include "ds_width.h"
 
 struct CLPS_Block;
 
@@ -61,7 +60,7 @@ struct LVL_Overlay {
     struct ObjTable {
         u16   count;            /* 0x00 -- 16-bit; see the banner */
         u8    pad_002[2];
-        void * DS_P32 entries;  /* 0x04 */
+        void* entries;          /* 0x04 */
     };
 
     struct ObjSubTable {
@@ -70,7 +69,7 @@ struct LVL_Overlay {
         u8 categoryAndStar;
         u8    count;            /* 0x01 -- 8-bit; see the banner */
         u8    pad_002[2];
-        void * DS_P32 entries;  /* 0x04 */
+        void* entries;          /* 0x04 */
     };
 
     /* ==== PER-CATEGORY RECORD TYPES ====
