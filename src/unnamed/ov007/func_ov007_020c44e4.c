@@ -7,7 +7,7 @@ Ov007Sprite *func_ov007_020c44e4(int count) {
     int i;
 
     p->frame = 0;
-    p->frameCount = (s16)count;
+    p->frameCount = count;
     p->frames = func_ov007_020c3df4(0, count << 2);
     for (i = 0; i < count; i++) {
         p->frames[i] = 0;
