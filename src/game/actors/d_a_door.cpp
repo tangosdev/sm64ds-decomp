@@ -414,7 +414,7 @@ int daDoor_c::func_ov100_02144528(daPly_c *pl) {
                           &mCamSpacePosX);
         }
         if (DecIfAbove0_Byte(&mTimer) == 0) {
-            void *r1 = data_ov100_02148704 != 0 ? 0 : (void *)&data_ov100_021488f4;
+            void *r1 = data_ov100_02148704 != 0 ? 0 : &data_ov100_021488f4;
             if (func_ov100_021451c4(r1, pl) != 0) {
                 if (data_ov100_02148704 != 0)
                     pl->OpenBigDoor();
@@ -510,7 +510,7 @@ int daDoor_c::func_ov100_02144730(daPly_c *arg1) {
    Was a C source. */
 int daDoor_c::func_ov100_0214491c() {
     int n = mModel.GetFrameCount();
-    int f = (int)((unsigned short)(n - 0x18)) << 12;
+    int f = ((unsigned short)(n - 0x18)) << 12;
     mModel.currFrame = f;
     mTimer = 0;
     return 1;
@@ -584,8 +584,7 @@ int daDoor_c::func_ov100_02144a38(daPly_c *p) {
     Vec3_RotateYAndTranslate(&pos, &p->mPos, p->mAngleY, &sKeyOff);
 
     {
-        void *actor =
-            dActor_c::Spawn(ACTOR_OBJ_KEY, (u32)e->keyIndex, pos, &p->mAngle, p->mAreaId, -1);
+        void *actor = dActor_c::Spawn(ACTOR_OBJ_KEY, e->keyIndex, pos, &p->mAngle, p->mAreaId, -1);
         if (actor != 0) {
             ((daObjKey_c *)actor)->func_ov089_0213115c(2);
         }
@@ -730,8 +729,7 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
                 }
             }
         }
-        func_ov100_021451c4(
-            (mKeyModelIdx != 0) ? (void *)&data_ov100_02148904 : (void *)&data_ov100_021488f4, b);
+        func_ov100_021451c4((mKeyModelIdx != 0) ? &data_ov100_02148904 : &data_ov100_021488f4, b);
     }
     return 1;
 }
@@ -909,7 +907,7 @@ daPly_c *daDoor_c::func_ov100_02145370() {
     Vector3 v;
     daPly_c *r5 = gPlayers[gLocalPlayerId];
     Vec3_Sub(&v, &r5->mPos, &mPos);
-    Vec3_RotateYAndTranslate(&mScale, &data_020a0ebc, (short)(-mAngleY), &v);
+    Vec3_RotateYAndTranslate(&mScale, &data_020a0ebc, (-mAngleY), &v);
     return r5;
 }
 
@@ -919,7 +917,7 @@ daPly_c *daDoor_c::func_ov100_02145370() {
 /* Enter a state: store the address of the state table at +0x140 (mState) and
    call its enter member with the player, if it has one. */
 int daDoor_c::func_ov100_021453d8(void *p, int a2) {
-    mState = (daDoor_StateRecord *)p;
+    mState = p;
     daDoor_StateRecord *q = (daDoor_StateRecord *)mState;
     if (*(int *)q == 0)
         return 1;
@@ -996,7 +994,7 @@ s32 daDoor_c::Render() {
 s32 daDoor_c::Behavior() {
     int res = (int)func_ov100_02145370();
     daDoor_StateRecord *node = (daDoor_StateRecord *)mState;
-    if (*(int *)&node->execute != 0) {
+    if (*&node->execute != 0) {
         (this->*(node->execute))(res);
     }
     return 1;
@@ -1067,7 +1065,7 @@ s32 daDoor_c::InitResources() {
         } else if (e->keyIndex >= 0) {
             unsigned int t = param1;
             if (t >= DOOR_FIRST_KEY_MODEL && t <= DOOR_LAST_KEY_MODEL) {
-                mKeyModelIdx = (signed char)(t - 8);
+                mKeyModelIdx = (t - 8);
                 LoadKeyModels(mKeyModelIdx + 1);
                 mKeyFile = data_ov089_02132894[mKeyModelIdx + 1];
                 if (param1 == 0xc)
