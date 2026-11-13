@@ -98,10 +98,10 @@ extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
 extern u16 data_020a0e5a[];
 extern s32 data_020a0db0;
-extern u8 data_ov002_0210c390;
-extern u8 data_ov002_0210c398;
-extern u8 data_ov002_0210c3a0;
-extern u8 data_ov002_0210c3a8;
+extern struct OamAttr data_ov002_0210c390;
+extern struct OamAttr data_ov002_0210c398;
+extern struct OamAttr data_ov002_0210c3a0;
+extern struct OamAttr data_ov002_0210c3a8;
 extern int data_0209289c[296];
 extern int data_02092d3c;
 extern int data_0209325c;
@@ -892,11 +892,9 @@ extern "C" void func_020326ac(void) {
             int r5 = data_0209fcf4[data_0209fcd0] * 9 + data_0209fc6c + 0xC;
             int r4 = data_0209fce0 + (data_0209fc80 * 0x10) + 0xE;
             if (data_020a0db0 & (0x10 / data_0208ee44)) {
-                OAM::Render(0, (struct OamAttr *)&data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000,
-                            0x1000, 0, -1);
+                OAM::Render(0, &data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             } else {
-                OAM::Render(0, (struct OamAttr *)&data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000,
-                            0x1000, 0, -1);
+                OAM::Render(0, &data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             }
             return;
         }
@@ -921,11 +919,9 @@ extern "C" void func_020326ac(void) {
             int r5 = data_0209fc6c + 0xC;
             int r4 = data_0209fce0 + (data_0209fcf4[data_0209fcd0] * 0x10) + 0xE;
             if (data_020a0db0 & (0x10 / data_0208ee44)) {
-                OAM::Render(0, (struct OamAttr *)&data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000,
-                            0x1000, 0, -1);
+                OAM::Render(0, &data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             } else {
-                OAM::Render(0, (struct OamAttr *)&data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000,
-                            0x1000, 0, -1);
+                OAM::Render(0, &data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             }
             return;
         }
@@ -998,11 +994,9 @@ extern "C" void func_020326ac(void) {
             int r5 = data_0209fc6c + 0xC;
             int r4 = data_0209fce0 + (data_0209fcf4[data_0209fcd0] * 0x10) + 0xE;
             if (data_020a0db0 & (0x10 / data_0208ee44)) {
-                OAM::Render(0, (struct OamAttr *)&data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000,
-                            0x1000, 0, -1);
+                OAM::Render(0, &data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             } else {
-                OAM::Render(0, (struct OamAttr *)&data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000,
-                            0x1000, 0, -1);
+                OAM::Render(0, &data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             }
             return;
         }
@@ -1024,11 +1018,9 @@ extern "C" void func_020326ac(void) {
                 return;
             }
             if (data_0209fcd4 != 0) {
-                OAM::Render(0, (struct OamAttr *)&data_ov002_0210c390, r5, r4, -1, -1, 0x1000,
-                            0x1000, 0, -1);
+                OAM::Render(0, &data_ov002_0210c390, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             } else {
-                OAM::Render(0, (struct OamAttr *)&data_ov002_0210c398, r5, r4, -1, -1, 0x1000,
-                            0x1000, 0, -1);
+                OAM::Render(0, &data_ov002_0210c398, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             }
             return;
         }
