@@ -1,7 +1,7 @@
 //cpp
 #include "nitro/fx/fx_cp.h"
 
-extern "C" int func_ov007_020c3ba8(int r4);
+int func_ov007_020c3ba8(int r4);
 void func_ov007_020af260(int r0, int r1, int *r5, int *r4) {
     int r6 = r1;
     int x = FX_ModS32(r0, 8);

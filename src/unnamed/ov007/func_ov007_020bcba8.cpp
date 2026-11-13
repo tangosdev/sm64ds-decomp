@@ -5,7 +5,7 @@
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 
-extern "C" void *func_ov007_020b3f20(int n);
+void *func_ov007_020b3f20(int n);
 extern void MenuText_Init(void *unused, void *sheet, int baseTile, void *plane0, void *plane1,
                           int plane2, void *bank);
 extern void func_ov007_020c32e8(Ov007Palette *pal, int target, unsigned int row, int skip);

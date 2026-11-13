@@ -9,7 +9,7 @@
 /* 32-colour palettes, 0x40 bytes each */
 extern char data_ov007_02102f28[];
 
-extern "C" void func_ov007_020c92d0(Ov007MenuState *state);
+void func_ov007_020c92d0(Ov007MenuState *state);
 extern "C" void func_ov007_020c940c(Ov007PaletteBuf *buf);
 extern "C" void func_ov007_020c93c4(int t, Ov007PaletteBuf *from, Ov007PaletteBuf *to,
                                     Ov007PaletteBuf *out);

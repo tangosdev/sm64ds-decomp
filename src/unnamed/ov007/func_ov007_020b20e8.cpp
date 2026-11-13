@@ -4,7 +4,7 @@
 #include "nitro/gx/g3_util.h"
 #include "Ov007Camera.h"
 
-extern "C" void func_ov007_020c0128(Ov007Camera *cam);
+void func_ov007_020c0128(Ov007Camera *cam);
 extern "C" void func_ov007_020bffb8(Ov007Camera *cam);
 extern void func_ov007_020c0078(Ov007Camera *cam);
 

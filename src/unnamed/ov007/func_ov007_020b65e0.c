@@ -9,6 +9,8 @@ extern void func_ov007_020c2410(void *p);
 extern void func_ov007_020c2018(void *p);
 extern void func_ov007_020c22f8(void *p);
 extern void func_ov007_020c9080(void *p);
+#define func_ov007_020c1620 _Z19func_ov007_020c1620Pv
+#define func_ov007_020bf304 _Z19func_ov007_020bf304v
 extern void func_ov007_020c1620(void *tex);
 extern void func_ov007_020b3edc(int a);
 extern void func_ov007_020c9460(void *p);

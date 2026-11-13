@@ -3,7 +3,7 @@
 #include "Ov007MenuMem.h"
 
 extern void func_ov007_020c40b4(Ov007SpriteItem *item);
-extern "C" void func_ov007_020c1180(Ov007OamNode *node);
+void func_ov007_020c1180(Ov007OamNode *node);
 
 /* Frees a sprite group: each item record and their table, the root node,
  * the extra record and the group itself. */

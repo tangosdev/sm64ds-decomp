@@ -87,15 +87,15 @@ extern unsigned char data_ov007_020d7ddd[];
 extern short data_ov007_020d7de8[];
 extern short data_ov007_020d7dea[];
 
-extern "C" int func_ov007_020b79e4(void);
-extern "C" int func_ov007_020bdeb0(int a);
+int func_ov007_020b79e4(void);
+int func_ov007_020bdeb0(int a);
 extern int func_ov007_020c1da0(int i);
 extern "C" void func_ov007_020c2090(Ov007Pad *pad);
 extern "C" void func_ov007_020c3d1c(void *self);
 extern "C" void *func_ov007_020c3df4(const char *name, int size);
-extern "C" void func_ov007_020c92d0(Ov007MenuState *state);
+void func_ov007_020c92d0(Ov007MenuState *state);
 extern "C" void func_ov007_020c937c(void *state);
-extern "C" void *func_ov007_020c9388(int initialState);
+void *func_ov007_020c9388(int initialState);
 
 /* The menu cursor (data_ov007_02103360). */
 #define CURSOR data_ov007_02103360

@@ -123,10 +123,10 @@ extern u32 data_ov007_020d7aa0[];   /* keep-masks per pixel offset in a tile */
 extern u32 data_ov007_020d7ac4[];   /* colour masks per text colour */
 extern u8 data_ov007_020d7b04[][6]; /* first text line per kind and language */
 
-extern "C" int func_ov007_020bdeb0(int sound);
+int func_ov007_020bdeb0(int sound);
 extern void func_ov007_020c0308(unsigned short *dst, int b, int c);
-extern "C" void func_ov007_020c1d78(int i);
-extern "C" void func_ov007_020c1d8c(int i);
+void func_ov007_020c1d78(int i);
+void func_ov007_020c1d8c(int i);
 extern int func_ov007_020c3598(int value, int count, char *digits, int base);
 extern int func_ov007_020c94a0(int unused, unsigned int messageIndex);
 extern void func_ov007_020c94e4(void);

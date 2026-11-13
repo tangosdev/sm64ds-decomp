@@ -20,6 +20,8 @@
 
 extern int func_ov007_020c249c(Ov007StrokePath *path);
 extern Ov007Link *func_ov007_020c80a4(void);
+#define func_ov007_020c8010 _Z19func_ov007_020c8010P9Ov007LinkP13Ov007FollowerS2_
+#define func_ov007_020bfe4c _Z19func_ov007_020bfe4cP11Ov007CameraiiiP7Vector3
 extern void func_ov007_020c8010(Ov007Link *link, Ov007Follower *from, Ov007Follower *to);
 extern void func_ov007_020bfe4c(Ov007Camera *cam, int a, int b, int c, Vector3 *out);
 

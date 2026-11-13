@@ -95,10 +95,10 @@ extern void func_ov007_020bda38(int v);
 extern void func_ov007_020bda8c(int a, int b);
 extern void func_ov007_020bdbcc(int a0, int a1);
 extern void func_ov007_020bde2c(int idx);
-extern "C" int func_ov007_020bdeb0(int a);
-extern "C" void func_ov007_020bfe4c(Ov007Camera *cam, int x, int y, int z, void *out);
+int func_ov007_020bdeb0(int a);
+void func_ov007_020bfe4c(Ov007Camera *cam, int x, int y, int z, void *out);
 extern int func_ov007_020c1da0(int i);
-extern "C" int func_ov007_020c3ba8(int);
+int func_ov007_020c3ba8(int);
 unsigned short func_ov007_020c3be0(int t, int a, int b);
 extern "C" void func_ov007_020c3d1c(void *);
 extern "C" void *func_ov007_020c3df4(const char *name, int size);
@@ -118,9 +118,9 @@ extern "C" void func_ov007_020c5ef0(void *o);
 extern "C" int func_ov007_020c8f98(void *p);
 extern "C" void func_ov007_020c9080(void *);
 extern "C" Ov007Tween *func_ov007_020c908c(s32 *out);
-extern "C" void func_ov007_020c92d0(Ov007MenuState *state);
+void func_ov007_020c92d0(Ov007MenuState *state);
 extern "C" void func_ov007_020c937c(void *state);
-extern "C" void *func_ov007_020c9388(int a);
+void *func_ov007_020c9388(int a);
 
 /* Replays the drawing one frame: strokeTime advances so that it covers
  * totalStrokeTime in replayFrames frames (param 0) or 0x168 frames, by at

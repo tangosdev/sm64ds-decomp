@@ -7,10 +7,10 @@
 #include "nitro/fx/fx_cp.h"
 #include "Ov007MenuMem.h"
 
-extern "C" int func_ov007_020c3ba8(int);
-extern "C" void *func_ov007_020c9388(int initialState);
+int func_ov007_020c3ba8(int);
+void *func_ov007_020c9388(int initialState);
 extern "C" void func_ov007_020c937c(void *state);
-extern "C" void func_ov007_020c92d0(Ov007MenuState *state);
+void func_ov007_020c92d0(Ov007MenuState *state);
 
 /* Steps wave i over the mesh: while it holds a line and keepChance wins it
  * adds a travelling sine to the z force of every point on that line;

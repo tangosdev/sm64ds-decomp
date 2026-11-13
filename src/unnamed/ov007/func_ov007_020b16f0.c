@@ -1,6 +1,7 @@
 #include "Ov007MenuState.h"
 #include "Ov007Work.h"
 
+#define func_ov007_020c1d78 _Z19func_ov007_020c1d78i
 extern void func_ov007_020c1d78(int i);
 
 /* The screen-fade callback func_ov007_020b10dc installs: sends states[1] to

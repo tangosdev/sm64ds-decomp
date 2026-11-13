@@ -76,7 +76,7 @@ extern void *data_ov007_02103354[3];           /* data_ov007_020ccc68[figureInde
 
 void func_02044efc(struct BMD_File *bmd);
 extern "C" void func_ov007_020b3edc(int idx);
-extern "C" void *func_ov007_020b3f20(int idx);
+void *func_ov007_020b3f20(int idx);
 extern void func_ov007_020b7708(int idx, void *pos);
 extern "C" void func_ov007_020bbf98(void *model, unsigned int lights);
 extern void func_ov007_020bc53c(Ov007Model *model);

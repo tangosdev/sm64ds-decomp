@@ -8,9 +8,13 @@
 #define RequestScreenFade _Z17RequestScreenFadeiiPFvvE
 
 extern int func_ov007_020c8f98(void *p);
+#define func_ov007_020c1d78 _Z19func_ov007_020c1d78i
+#define func_ov007_020b7d94 _Z19func_ov007_020b7d94i
+#define func_ov007_020c1d8c _Z19func_ov007_020c1d8ci
 extern void func_ov007_020c1d78(int i);
 extern void func_ov007_020b0244(void);
 extern void func_ov007_020b7d94(int kind);
+#define func_ov007_020b79e4 _Z19func_ov007_020b79e4v
 extern int func_ov007_020b79e4(void);
 extern void func_ov007_020c1d8c(int i);
 extern void RequestScreenFade(int kind, int flags, void (*onEnd)(void));

@@ -2,6 +2,7 @@
 #include "Ov007Sprite.h"
 #include "Ov007Texture.h"
 #include "nitro/fx/fx.h"
+#define func_ov007_020c1448 _Z19func_ov007_020c1448P12Ov007Texturejjjj
 extern void func_ov007_020c1448(Ov007Texture *self, u32 texGen, u32 repeat, u32 flip, u32 color0);
 extern void Texture_BindPalette(Ov007Texture *tex);
 #define func_ov007_020c49bc _Z19func_ov007_020c49bciiiiiiPti

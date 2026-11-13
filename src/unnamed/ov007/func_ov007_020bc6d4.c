@@ -6,6 +6,7 @@ extern int _Z13func_02046564Pv(void *p);
 extern int func_020462bc(void *p);
 #define func_020462bc _Z13func_020462bcPi
 extern void *func_ov007_020c92ac(void);
+#define func_ov007_020bc47c _Z19func_ov007_020bc47cP10Ov007Model
 extern void func_ov007_020bc47c(Ov007Model *self);
 
 /* Allocates a model record for the BMD file: its ModelComponents, one

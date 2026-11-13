@@ -148,7 +148,7 @@ extern void *data_ov007_02104bc4[2][2];
 extern "C" int VEC_Fx16Mag(s16 *v);
 extern "C" void VEC_Fx16Normalize(s16 *in, s16 *out);
 extern "C" void func_ov007_020b3edc(int idx);
-extern "C" void *func_ov007_020b3f20(int idx);
+void *func_ov007_020b3f20(int idx);
 extern "C" int func_ov007_020aebac(void);
 extern void func_ov007_020bc02c(Ov007Model *model, void *viewMatrix);
 extern "C" void func_ov007_020bc3dc(void *model, int anim, int a2);

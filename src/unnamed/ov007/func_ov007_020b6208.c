@@ -6,6 +6,7 @@
 #include "Ov007Work.h"
 #include "Ov007Settings.h"
 
+#define func_ov007_020bdeb0 _Z19func_ov007_020bdeb0i
 extern int func_ov007_020bdeb0(int a);
 
 int func_ov007_020b6208(int code)

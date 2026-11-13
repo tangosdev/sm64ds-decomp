@@ -1,5 +1,6 @@
 #include "Ov007StrokePath.h"
 
+#define func_ov007_020c3054 _Z19func_ov007_020c3054PiiS_S_
 extern void func_ov007_020c3054(int *arr, int n, int *pmin, int *pmax);
 
 /* Recomputes the stroke path's extrema: clears both index triples, then for a

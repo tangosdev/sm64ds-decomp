@@ -2,6 +2,7 @@
 
 extern int func_ov007_020c2e90(Ov007StrokePath *path, int *a, int *b, int minLen, int maxLen);
 extern void func_ov007_020c2d44(Ov007StrokePath *path, int n);
+#define func_ov007_020c2dfc _Z19func_ov007_020c2dfcP15Ov007StrokePathii
 extern int func_ov007_020c2dfc(Ov007StrokePath *path, int idx, int angle);
 extern void func_ov007_020c24d0(Ov007StrokePath *path, int idx);
 

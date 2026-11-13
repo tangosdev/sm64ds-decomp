@@ -1,5 +1,6 @@
 #include "Ov007Picker.h"
 
+#define func_ov007_020c3ba8 _Z19func_ov007_020c3ba8i
 extern int func_ov007_020c3ba8(int n);
 
 /* Jitters the rest offsets (dir x/y) of the groups' per-point links. Each

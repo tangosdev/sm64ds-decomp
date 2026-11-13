@@ -1,6 +1,8 @@
 #include "Ov007Work.h"
 #define ItemView_ResetSprite _Z20ItemView_ResetSpriteP13Ov007ItemViewP11Ov007Camera
 
+#define func_ov007_020c1d8c _Z19func_ov007_020c1d8ci
+#define func_ov007_020b20e8 _Z19func_ov007_020b20e8v
 extern void func_ov007_020c1d8c(int i);
 extern void func_ov007_020b20e8(void);
 extern void ItemView_ResetSprite(struct Ov007ItemView *view, struct Ov007Camera *camera);

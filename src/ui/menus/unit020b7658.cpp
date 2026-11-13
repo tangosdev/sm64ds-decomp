@@ -51,7 +51,7 @@ extern int func_ov007_020c17f4(void);
 extern "C" void *func_ov007_020c3df4(const char *name, int size);
 extern "C" void func_ov007_020c3d1c(void *);
 extern "C" void func_ov007_020b3edc(int);
-extern "C" void *func_ov007_020b3f20(int);
+void *func_ov007_020b3f20(int);
 
 extern char data_ov007_02102dd0[];
 extern int data_ov007_02103434;

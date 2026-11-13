@@ -33,10 +33,10 @@ typedef struct Vec3Words {
  * movge first and rotates the block's coloring.
  */
 
-extern "C" int func_ov007_020bdeb0(int a);
+int func_ov007_020bdeb0(int a);
 extern "C" void func_ov007_020b257c(void);
 extern "C" void func_ov007_020b2454(void *a, void *b);
-extern "C" void func_ov007_020bce70(short n, int frames);
+void func_ov007_020bce70(short n, int frames);
 unsigned short func_ov007_020c3be0(int t, int a, int b);
 void FigureScene_SetScreenBlend(int a);
 

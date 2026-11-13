@@ -2,7 +2,7 @@
 #include "Ov007Picker.h"
 #include "Ov007Camera.h"
 
-extern "C" void func_ov007_020bfe4c(Ov007Camera *o, int x, int y, int z, void *out);
+void func_ov007_020bfe4c(Ov007Camera *o, int x, int y, int z, void *out);
 
 /* Vector3 declares a constructor and destructor under C++, which makes its
    assignment copy word by word. The ROM copies these with one ldm/stm, which
