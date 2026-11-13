@@ -151,7 +151,7 @@ typedef char Sprite_size_must_be_0x24[sizeof(Sprite) == 0x24 ? 1 : -1];
 
 extern "C" {
 
-extern void Vec2_Sub(void* o, void* a, void* b);
+extern "C" void Vec2_Sub(void *o, void *a, void *b);
 extern void func_0203d680(void* out, void* in, int scale);
 }
 

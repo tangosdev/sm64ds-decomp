@@ -38,9 +38,6 @@ extern int data_02092768[4];
 
 int MTX_Inverse43(const Matrix4x3 *s, Matrix4x3 *d);
 
-/* local extern: mTilt is s32[4], and Quaternion.h spells FromVector3 as Quat *. */
-void Quaternion_FromVector3(int *q, Vector3 *from, Vector3 *to);
-
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
  * off screen. This int-returning predicate is what makes the ROM
  * materialize 0/1 before testing it. */
@@ -155,7 +152,7 @@ void daObjGuragura_c::TiltToward(unsigned char *arg) {
     axis.x = 0;
     axis.z = 0;
     axis.y = 0x1000;
-    Quaternion_FromVector3(mTiltTarget, &axis, &v);
+    Quaternion_FromVector3((Quat *)mTiltTarget, &axis, &v);
     Quaternion_Normalize(mTiltTarget);
     mSettleDelay = 0xa;
 }

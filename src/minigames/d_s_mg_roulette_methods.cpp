@@ -149,7 +149,7 @@ Vector2 sRouletteTiles[37] = {
 
 extern "C" {
 
-void Vec2_Sub(int *out, int *a, int *b);
+extern "C" void Vec2_Sub(int *out, int *a, int *b);
 }
 
 int Sound_PlayIfNotActive(int a, int b, int c, short d);

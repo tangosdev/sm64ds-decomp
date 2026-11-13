@@ -88,7 +88,7 @@ extern int sCardSwapRequested;
 extern int data_ov006_02141770;
 extern "C" {
 
-extern void Vec2_Sub(int *o, int *a, int *b);
+extern "C" void Vec2_Sub(int *o, int *a, int *b);
 
 extern void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
 }

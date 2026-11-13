@@ -38,6 +38,9 @@
 #define GX_LoadBG2Scr _Z13GX_LoadBG2ScrPKvjj
 #define GXS_LoadBG0Scr _Z14GXS_LoadBG0ScrPKvii
 #define GX_DispOff _Z10GX_DispOffv
+#define func_ov007_020b7040 _Z19func_ov007_020b7040v
+#define func_ov007_020b7138 _Z19func_ov007_020b7138P14Ov007MenuHooksP13Ov007BootArgs
+#define func_ov007_020c39f8 _Z19func_ov007_020c39f8P9Matrix4x3iii
 #define GX_HBlankIntr _Z13GX_HBlankIntri
 #define func_0203d7b8 _Z13func_0203d7b8v
 #define GetOwnerLanguage _Z16GetOwnerLanguagev
@@ -1729,16 +1732,42 @@ extern void Trmp2Spinner_HideAll(void);
 extern void Trmp2Spinner_LoadAll(int, int);
 extern void Trmp2Spinner_InitAll(int);
 extern void Petal_ElemDtor();
-extern int func_ov007_020b7040(void*);
-extern int func_ov007_020b7138(void*, void*);
+extern int func_ov007_020b7040(void);
+struct Ov007MenuHooks;
+struct Ov007BootArgs;
+extern int func_ov007_020b7138(struct Ov007MenuHooks *, struct Ov007BootArgs *);
 extern int func_ov007_020bdeb0(int);
-extern void func_ov007_020c39f8(void*, int, int, int);
-extern void func_ov007_020c7560(void*, int, int);
-extern void func_ov007_020c7694(struct Vector3*, struct Vector3*);
-extern void func_ov007_020c775c(struct Vector3*);
-extern void func_ov007_020c7b2c(int, int, int);
-extern void func_ov007_020c81a0(void*, int, int);
-extern void func_ov007_020c831c(void*, int, int);
+extern void func_ov007_020c39f8(struct Matrix4x3 *, int, int, int);
+#ifdef __cplusplus
+extern "C"
+#endif
+    extern void
+    func_ov007_020c7560(void *, int, int);
+#ifdef __cplusplus
+extern "C"
+#endif
+    extern void
+    func_ov007_020c7694(struct Vector3 *, struct Vector3 *);
+#ifdef __cplusplus
+extern "C"
+#endif
+    extern void
+    func_ov007_020c775c(struct Vector3 *);
+#ifdef __cplusplus
+extern "C"
+#endif
+    extern void
+    func_ov007_020c7b2c(int, int, int);
+#ifdef __cplusplus
+extern "C"
+#endif
+    extern void
+    func_ov007_020c81a0(void *, int, int);
+#ifdef __cplusplus
+extern "C"
+#endif
+    extern void
+    func_ov007_020c831c(void *, int, int);
 extern void func_ov007_020c92d0(struct Ov007MenuState *);
 extern void func_ov014_02111ebc(void*, int);
 extern void func_ov018_021123d0(char*, int);

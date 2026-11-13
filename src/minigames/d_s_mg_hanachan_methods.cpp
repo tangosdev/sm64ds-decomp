@@ -219,7 +219,7 @@ extern "C" {
 
 extern void func_0203d704(int *o, int *a, int *b);
 
-extern void Vec2_Sub(int *o, int *a, int *b);
+extern "C" void Vec2_Sub(int *o, int *a, int *b);
 
 extern void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
 }

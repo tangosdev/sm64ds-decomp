@@ -182,7 +182,7 @@ extern "C" {
 
 void func_0203cd80(int *m, short angle);
 
-void Vec2_Sub(int *o, int *a, int *b);
+extern "C" void Vec2_Sub(int *o, int *a, int *b);
 
 u32 LoadCompressedFileAt(int fileID, void *target);
 

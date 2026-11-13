@@ -101,7 +101,7 @@ extern int sMgCardSprites[];
 extern int sMCarloCardSprites[];
 extern "C" {
 
-extern void Vec2_Sub(int *o, int *a, int *b);
+extern "C" void Vec2_Sub(int *o, int *a, int *b);
 
 extern void func_0203d630(int *p, int m);
 }

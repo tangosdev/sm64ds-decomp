@@ -87,7 +87,7 @@ typedef struct V2 {
 } V2;
 extern "C" {
 
-void Vec2_Sub(int *out, int *a, int *b);
+extern "C" void Vec2_Sub(int *out, int *a, int *b);
 
 void *Ov004_LoadFileByPath(void *arg);
 

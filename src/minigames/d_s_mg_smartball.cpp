@@ -242,7 +242,7 @@ extern void *sSmartballSlotReelLowerSprite;
 extern void *sSmartballSlotReelUpperSprite;
 extern "C" {
 
-extern void Vec2_Sub(int *o, int *a, int *b);
+extern "C" void Vec2_Sub(int *o, int *a, int *b);
 }
 
 extern OamAttr *sSmartballDokanSprites[];
