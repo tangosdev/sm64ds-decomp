@@ -117,7 +117,6 @@ void func_ov077_02125304(daTgz_c *self);
 
 int SurfaceInfo_TestFlag0x20(int *p);
 void func_02012694(unsigned int id, const Vector3 *pos);
-s16 func_02010844(void *unused, Vector3 *v, s16 angle);
 unsigned int d_a_tgzNewHold(unsigned int uniqueID, unsigned int effectID, int x, int y, int z,
                             const void *dir, void *callback);
 extern int data_0209f32c;
@@ -218,8 +217,8 @@ extern "C" void func_ov077_02124d08(daTgz_c *self, dBgCh_Actr *clsn)
                              normal.y) +
                       0x8000);
             }
-            self->mAngleX = func_02010844(self, &normal, self->mAngleY);
-            self->mAngleZ = func_02010844(self, &normal, (s16)(self->mAngleY - 0x4000));
+            self->mAngleX = self->func_02010844(&normal, self->mAngleY);
+            self->mAngleZ = self->func_02010844(&normal, (s16)(self->mAngleY - 0x4000));
         }
     }
     if (clsn->IsOnWall()) {

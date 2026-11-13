@@ -733,9 +733,6 @@ extern void Matrix4x3_FromRotationZXYExt(Matrix4x3 *, int, int, int);
 extern void MTX_Concat33(void *, void *, void *);
 extern void MIi_CpuCopy32(const void *, void *, unsigned int);
 extern void OpenCannonInCurLevel(void);
-extern void Quaternion_FromVector3(int*, struct Vector3*, struct Vector3*);
-extern void Quaternion_Normalize(int*);
-extern void Quaternion_SLerp(void*, void*, int, void*);
 extern void SetBg0Offset(int, int);
 extern void SetBg1Offset(int, int);
 extern void SetBg2Offset(int, int);
@@ -766,7 +763,6 @@ extern void Vec3fGetDistAndAngle(const struct Vector3 *, const struct Vector3 *,
 extern void func_0200f13c(void);
 extern void func_0200f220(void);
 extern void func_0200f2cc(void);
-extern void func_0200fa8c(void*, int);
 extern void func_02011cfc(void);
 extern void func_02011d08(void);
 extern void func_02011d2c(void);

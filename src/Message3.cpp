@@ -17,8 +17,6 @@
  *   value.
  * - data_0209fc78 is a volatile macro in func_02033464 only. decl_common.h
  *   spells that byte plain, and the other functions in this file read it plain.
- * - data_0209f4a4 is s16[] in decl_common.h. func_020326ac indexes it with a
- *   byte stride, so the cast stays at that use.
  * - LayoutLineVS keeps the char-cast handler call: data_02092830[idx - 1]()
  *   subtracts first, a 6-word DIFF.
  * - func_020319fc writes the spill-over store as (&dst[wordIdx])[8] and keeps
@@ -34,6 +32,7 @@
 #include "nitro/hw/registers.h"
 #include "decl_common.h"
 #include "PlayerInput.h"
+#include "private/controller_input.h"
 #include "SaveData.h"
 #include "Message.h"
 #include "MessageBank.h"
@@ -97,7 +96,6 @@ extern s32 data_0208ee44;
 extern u32 gNextActorUpdateMask;
 extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
-extern s16 data_0209f4a2[];
 extern u16 data_020a0e5a[];
 extern s32 data_020a0db0;
 extern u8 data_ov002_0210c390;
@@ -129,6 +127,9 @@ extern void OamRender10_Message3(int sub, struct OamAttr *attr_, int xOff, int y
                                  int priority, int scaleX, int scaleY, int rotation, int mode);
 #include "OAM.h"
 #include "nitro/mi/memory.h"
+
+/* Slot 0's nx/ny are data_0209f4a2/data_0209f4a4. The record stride is 0x18. */
+extern ControllerInput data_0209f498[];
 
 void func_02031cd4(void *arg);
 int func_020321fc(void);
@@ -878,7 +879,7 @@ extern "C" void func_020326ac(void) {
             data_0209fcb8 = 1;
             return;
         }
-        t = *(s16 *)((u8 *)data_0209f4a2 + gActivePlayerSlot * 0x18);
+        t = data_0209f498[gActivePlayerSlot].nx;
         if (t > 0x80) {
             data_0209fcd0 = 1;
         } else if (t < -0x80) {
@@ -907,7 +908,7 @@ extern "C" void func_020326ac(void) {
             data_0209fcb8 = 1;
             return;
         }
-        t = *(s16 *)((u8 *)data_0209f4a4 + gActivePlayerSlot * 0x18);
+        t = data_0209f498[gActivePlayerSlot].ny;
         if (t > 0x80) {
             data_0209fcd0 = 1;
         } else if (t < -0x80) {
@@ -1224,7 +1225,7 @@ extern "C" void func_02033390(int sub) {
 /* byte-forced: this function accesses data_0209fc78 volatile (reload per use);
    decl_common.h spells it plain. The macro expands each use to a volatile deref
    of the global -- the inner name paints blue and resolves to the extern. */
-#define data_0209fc78 (*(volatile u8 *)&data_0209fc78)
+#define data_0209fc78 (*(u8 *)&data_0209fc78)
 extern "C" void func_02033464(int arg0, int arg1, int arg2) {
     volatile unsigned short sv0;
     volatile unsigned short sv2;

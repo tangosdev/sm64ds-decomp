@@ -35,6 +35,7 @@
 #include "nitro/gx/g3imm_cmd.h"
 #include "nitro/gx/g3imm_light.h"
 #include "nitro/hw/registers.h"
+#include "MgCamera.h"
 #include "decl_common.h"
 #include "common.h"
 #include "SharedFilePtr.h"

@@ -2,6 +2,7 @@
 #define SM64DS_MATH_MTXSTACK_H
 
 #include "common.h"
+#include "math/Matrix.h"
 
 /* The arm9 matrix library (0x0203bd28..0x0203c1b4; MTX_Concat43 sits apart
  * at 0x02052914, beside MTX_MultVec43 and MTX_Inverse43) and the scratch matrix
@@ -48,6 +49,8 @@ void MTX_RotY43_(Matrix4x3 *, int, int);
 void MTX_RotZ43_(Matrix4x3 *, int, int);
 /* dst = v * m (rotation and translation). */
 void MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
+/* out = in * m (rotation only). */
+void MTX_MultVec33(const Vector3 *, const Matrix3x3 *, Vector3 *);
 /* dst = inverse of src; -1 (dst untouched) when src is singular, else 0. */
 int MTX_Inverse43(const Matrix4x3 *, Matrix4x3 *);
 

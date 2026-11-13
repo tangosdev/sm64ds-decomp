@@ -1035,7 +1035,6 @@ void dScStage_c::LC_Update() {
         return;
     }
 }
-// kept: the ROM reads data_0209f498[i] by mla beside the cam cursor; strength reduction merges them (0x450)
 #pragma opt_strength_reduction off
 void dScStage_c::CheckCameraInput() {
     ControllerInput *cam = data_0209f498;
@@ -1512,21 +1511,11 @@ void dScStage_c::PS_Cleanup() {
     data_0209f280 = 0;
     gGamePaused = 0;
 }
-// Pen-down edge on a held touch. An int-returning inline because the ROM
-// materializes this 0/1 before testing it (the controller-mode rows, case 8).
+// Pen-down edge on a held touch.
 static inline int IsTouchPressed(u8 held, u8 slot) {
     return held != 0 && gTouchEdge[slot * 4] != 0;
 }
-/* Pause-screen update. Four spellings below are load-bearing for the
- * emitted code: case 3's first row stores gGamePaused (not sNextPauseState);
- * the backlight-on guard reuses the stale tmpv left by the sound-mode
- * hit-test chain (tmpv = tx - 0x6e, assigned inside that chain's condition,
- * as are ty2 and t6: with opt_common_subs off, hoisting them reorders the
- * code and reloading gTouchY adds four instructions); the first gTouchY check
- * indexes with a fresh gActivePlayerSlot load; and the f238 store sits in the unconditional scope
- * after the displayed-level normalization so the case-1 literal loads keep
- * ROM order. */
-// kept: with CSE on the function builds 0x3094, 0x18 bytes short of the ROM
+/* Pause-screen update. */
 #pragma opt_common_subs off
 void dScStage_c::PS_Update() {
     u8 var_sl;
@@ -2727,7 +2716,6 @@ void dScStage_c::PS_Update() {
         return;
     }
 }
-#pragma opt_common_subs on
 
 /* Can the current player pause? Forwards to daPly_c::CanPause on the active
  * entry of the live player list (gPlayers, indexed by gLocalPlayerId).
@@ -4067,7 +4055,6 @@ static inline u32 MaskOff(u32 x, u32 m) {
     return x & ~m;
 }
 
-// kept: the ROM reloads data_0209f304 after testing it; with CSE on the function is 0x6e8
 #pragma opt_common_subs off
 
 int dScStage_c::Behavior() {
@@ -4180,9 +4167,8 @@ int dScStage_c::Behavior() {
         PS_Update();
     } else {
         u32 pi = gActivePlayerSlot;
-        u16 h1 = *(u16 *)((char *)data_020a0e58 + pi * 4);
-        if ((((h1 & 0x200) == 0 && (h1 & 0x100) == 0) ||
-             (*(u16 *)((char *)data_020a0e5a + pi * 4) & 8) == 0) &&
+        u16 h1 = data_020a0e58[pi].held;
+        if ((((h1 & 0x200) == 0 && (h1 & 0x100) == 0) || (data_020a0e58[pi].pressed & 8) == 0) &&
             data_0209d660 == 0 && data_0209d4b0 == 0 && CanPause() != 0 && IsPauseDisabled() == 0 &&
             (u8)(gVsExitScreenActive | (gGamePaused | data_0209f20c)) == 0 &&
             MaskOff(gNextActorUpdateMask, 0) == 0) {
@@ -4196,9 +4182,9 @@ int dScStage_c::Behavior() {
                     if (b3 == 0) {
                         if (sPauseInputLockout == 0) {
                             u32 pj = gActivePlayerSlot;
-                            u16 h2 = *(u16 *)((char *)data_020a0e5a + pj * 4);
+                            u16 h2 = data_020a0e58[pj].pressed;
                             int t8 = h2 & 8;
-                            if ((t8 != 0 && (*(u16 *)((char *)data_020a0e58 + pj * 4) & 4) == 0) ||
+                            if ((t8 != 0 && (data_020a0e58[pj].held & 4) == 0) ||
                                 (b1 == 0 && t8 == 0 && (h2 & 4) != 0)) {
                                 gGamePaused = 1;
                                 func_02012790(2);
@@ -4206,7 +4192,7 @@ int dScStage_c::Behavior() {
                                     gRaceTimer.StopTimer();
                                     data_0209f2a0 = 1;
                                 }
-                                if (*(u16 *)((char *)data_020a0e58 + gActivePlayerSlot * 4) & 4)
+                                if (data_020a0e58[gActivePlayerSlot].held & 4)
                                     sPausedWithSelect = 1;
                                 else
                                     sPausedWithSelect = 0;
@@ -4410,7 +4396,7 @@ void Fog::Init(unsigned short color, Fix12i nearv, Fix12i farv) {
         dist = 0x7ffff;
     step = (0x100000 - (farv << 4) - dist) >> 5;
     i = 0;
-    p = ((char *)this);
+    p = (char *)this->mDensity;
     while (i < 0x20) {
         if (dist <= 0) {
             *p = 0;

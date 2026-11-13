@@ -24,6 +24,7 @@
 #include "common.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
+#include "MgCamera.h"
 #include "decl_common.h"
 #include "types.h"
 #include "nitro/fx/fx.h"
@@ -71,8 +72,6 @@ extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
 extern int NormalizeVec3IfNonZero(Vector3 *v);
-/* local extern: MgCamera.h declares it on MgCamera *, but the two cameras are void * here. */
-extern void Camera_ProjectToScreen(void *camera, void *pos, int *x, int *y);
 extern void Jump2Popup_Spawn(int a, int b, int c);
 
 extern HeyhoMotion pmf_Heyho_MotionPatrolBob;
@@ -1089,10 +1088,10 @@ void Heyho::Settle() {
 
     if (sHeyhoScorePopups != 0) {
         if (mPos.y > 0) {
-            Camera_ProjectToScreen(sMgSubCamera, &mPos, &v0, &v1);
+            Camera_ProjectToScreen((MgCamera *)sMgSubCamera, &mPos, &v0, &v1);
             v1 = v1 - (Mg_GetTopScreenYOffset() + 0xc0);
         } else {
-            Camera_ProjectToScreen(sMgMainCamera, &mPos, &v0, &v1);
+            Camera_ProjectToScreen((MgCamera *)sMgMainCamera, &mPos, &v0, &v1);
         }
         v1 = v1 - 0x20;
         Jump2Popup_Spawn(v0 << 0xc, v1 << 0xc, (short)sJumpComboCount);

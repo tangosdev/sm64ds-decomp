@@ -141,7 +141,7 @@ int daBDonketu_c::Behavior() {
         mPosY = mPosY + mVertSpeed;
         UpdateWMClsn(mWithMeshClsn, 0);
         if (mWithMeshClsn.IsOnGround() != 0) {
-            func_0200fa8c(this, 0);
+            func_0200fa8c(0);
             /* Kept as the ROM-matching spelling: a pointer increment. */
             u8 *count = &mNumBulliesKilled;
             *count = *count + 1;

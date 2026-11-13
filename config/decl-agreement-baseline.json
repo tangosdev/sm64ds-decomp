@@ -6854,7 +6854,17 @@
     },
     "data_02092768": {
       "src/minigames/unit020bfec0.cpp": [
-        "return:Quat"
+        "return:QuaternionBlock"
+      ]
+    },
+    "data_ov006_0213aee8": {
+      "src/minigames/unit020bfec0.cpp": [
+        "return:Matrix4x3"
+      ]
+    },
+    "sDealerIdentityMtx": {
+      "src/minigames/unit020bfec0.cpp": [
+        "return:Matrix4x3"
       ]
     },
     "data_02099368": {

@@ -69,11 +69,7 @@ extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 void Mg_DrawCredits(char *a0, int a1, int a2, int a3);
 void MgCoins_Draw(void);
 void Mg_DrawScoreTally(void *a0, int a1, int a2, int a3);
-void Dealer_Draw(void *p);
-int Dealer_IsIdle(Dealer *dealer);
 void MgCoins_Update(void);
-void Dealer_Update(Dealer *c);
-void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
 void MgCoins_Reset(void);
 void FreeGfxSlotsById(int arg);
 void MgCoins_StartPayout(int count);
@@ -82,7 +78,6 @@ extern void LoadCard2SubBg3(void *);
 extern int GetGameLanguage(void);
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
-extern int Dealer_Load(char *p);
 extern unsigned char gMainScreenLayers;
 extern unsigned char gSubScreenLayers;
 }
@@ -117,7 +112,7 @@ s32 dScMgMCarlo_c::InitResources() {
     G2_SetBG0Priority(1);
     G2S_SetBG1Priority(0);
     Camera_InitDealerView(&mCamera);
-    if (Dealer_Load((char *)&mDealer) == 0)
+    if (mDealer.Load() == 0)
         return 0;
 
     Mg_PlaceBannersOnTopScreen();
@@ -141,7 +136,7 @@ void dScMgMCarlo_c::StartRound(int arg) {
     sMCarloPickAllowed = 0;
     mRoundProgress = 0;
     mDealer.mReserved = 1;
-    Dealer_StartShuffle(&mDealer, 4, 4, &mRoundProgress);
+    mDealer.StartShuffle(4, 4, &mRoundProgress);
     mDealer.mHand = 1;
     mRoundTimer = 0;
     mRoundState = STATE_START_PROMPT;
@@ -162,7 +157,7 @@ int dScMgMCarlo_c::CanEndState(int mode) {
         mRoundState += 1;
         break;
     case STATE_WAIT_DEALER:
-        if (Dealer_IsIdle(&mDealer) != 0) {
+        if (mDealer.IsIdle() != 0) {
             int dealt = sMCarloCardTotal;
             if (dealt != 0) {
                 MgCoins_StartSpend(dealt);
@@ -246,10 +241,10 @@ s32 dScMgMCarlo_c::Behavior() {
                 sMCarloPickAllowed = 0;
             visibleCards = sMCarloDealProgress >> 12;
             if (sMCarloDeckSize != 0 && visibleCards > 10 && visibleCards <= 18 &&
-                Dealer_IsIdle(&mDealer) != 0) {
+                mDealer.IsIdle() != 0) {
                 mRoundProgress = 0;
                 mDealer.mReserved = 0;
-                Dealer_StartReveal(&mDealer, 2, &mRoundProgress);
+                mDealer.StartReveal(2, &mRoundProgress);
                 if (sMCarloDeckSize == 2)
                     mDealer.mHand = 0;
             } else {
@@ -268,7 +263,7 @@ s32 dScMgMCarlo_c::Behavior() {
                     if (sMCarloCardTotal != 0) {
                         if (mDealer.mHand == 1) {
                             mDealer.mHand = 0;
-                        } else if (Dealer_IsIdleAtRest(&mDealer) != 0) {
+                        } else if (mDealer.IsIdleAtRest() != 0) {
                             {
                                 dScMgBase_c *active = (dScMgBase_c *)gMgScene;
                                 if (active != 0) {
@@ -276,7 +271,7 @@ s32 dScMgMCarlo_c::Behavior() {
                                         active->mHudScore = active->mHudScore - 1;
                                 }
                             }
-                            Dealer_PlayLose(&mDealer);
+                            mDealer.PlayLose();
                             Mg_SetSharedState(MG_STATE_LOSE);
                             {
                                 int dealt = sMCarloCardTotal;
@@ -299,7 +294,7 @@ s32 dScMgMCarlo_c::Behavior() {
                             }
                         }
                         Mg_SubmitScore(mHudScore);
-                        Dealer_PlayWin(&mDealer);
+                        mDealer.PlayWin();
                         Mg_SetSharedState(MG_STATE_WIN);
                         {
                             dScMgBase_c *active = (dScMgBase_c *)gMgScene;
@@ -318,7 +313,7 @@ s32 dScMgMCarlo_c::Behavior() {
     }
 
     MgCoins_Update();
-    Dealer_Update(&mDealer);
+    mDealer.Update();
     dScMgMCarlo_c::UpdateBoard();
     return 1;
 }
@@ -361,7 +356,7 @@ s32 dScMgMCarlo_c::Render() {
         }
     }
     RenderHud();
-    Dealer_Draw(&mDealer);
+    mDealer.Draw();
     return 1;
 }
 
