@@ -104,7 +104,7 @@ s32 daObjCloset_c::Behavior() {
         switch (target->GetTalkState()) {
         case 0: {
             /* Face the cupboard: half a turn off its yaw, stepped by 0x800. */
-            short facing = (short)(mAngleY + kHalfTurn);
+            short facing = (mAngleY + kHalfTurn);
             if (ApproachLinear(target->mAngleY, facing, kTurnStep) != 0) {
                 mMessageID = kMenuMessage;
                 Message::PrepareTalk();
