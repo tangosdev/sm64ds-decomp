@@ -212,7 +212,6 @@ void __timesdec(Decimal *result, const Decimal *x, const Decimal *y) {
             unsigned char *jp = ip + 1;
             for (; jp < ep; jp++) {
                 if (*jp != 0) {
-                    // goto: dup-call+return 0x1c0, while(*jp==0) 0x1b0, do-while-break+jp test 0x1b4 still DIFF __timesdec
                     goto round;
                 }
             }
@@ -243,7 +242,6 @@ void __str2dec(Decimal *result, const char *digits, short exp) {
         c = digits[1];
         digits++;
         while (c != 0) {
-            // goto: do-while-return 0xc0, peeled-while 0xd4, for(c=='0') same size 6 words, for-break 0xcc still DIFF __str2dec
             if (c != 0x30)
                 goto docall;
             c = *++digits;
