@@ -58,7 +58,7 @@ struct MascotWalker {
     dExtBlendAnmModel_c mModel; /* 0x18 */
     /* InitCylinder'd by Load and InitModel'd on mModel.mat4x3 by Draw. */
     dExtShadowModel_c mShadow; /* 0x88 */
-    WalkPath *mPath;   /* 0xb0 -- the path walked: a point count, then the points */
+    WalkPath *mPath;           /* 0xb0 -- the path walked: a point count, then the points */
     s32 mState[2];    /* 0xb4 -- the current state's member-pointer record */
     /* Load sets all three to 0x1000 (1.0), beside mPos and the angles; nothing
        in this file reads it back. */

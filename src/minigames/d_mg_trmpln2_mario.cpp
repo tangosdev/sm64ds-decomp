@@ -1104,7 +1104,8 @@ int Trmp2Mario_Load(char *c) {
     ret = MARIO2(c)->mAnmModel.SetFile(f, 1, -1);
     MARIO2(c)->mAnim = 0;
     if (sMgMainCamera != 0)
-        Camera_ProjectToScreen16((MgCamera *)sMgMainCamera, &MARIO2(c)->mPos, MARIO2(c)->mScreenPos);
+        Camera_ProjectToScreen16((MgCamera *)sMgMainCamera, &MARIO2(c)->mPos,
+                                 MARIO2(c)->mScreenPos);
     MARIO2(c)->mGravityStep = 0;
     func_02016a14(&MARIO2(c)->mAnmModel, 0x73ff);
     func_02016a04(&MARIO2(c)->mAnmModel, 0x3e52);
@@ -2830,7 +2831,8 @@ int Trmp3DMario_Load(char *c) {
     ret = MARIO3D(c)->mAnmModel.SetFile(f, 1, -1);
     MARIO3D(c)->mAnim = 0;
     if (sMgMainCamera != 0)
-        Camera_ProjectToScreen16((MgCamera *)sMgMainCamera, &MARIO3D(c)->mPos, MARIO3D(c)->mScreenPos);
+        Camera_ProjectToScreen16((MgCamera *)sMgMainCamera, &MARIO3D(c)->mPos,
+                                 MARIO3D(c)->mScreenPos);
     MARIO3D(c)->mGravityStep = 0;
     func_02016a14(&MARIO3D(c)->mAnmModel, 0x6bff);
     func_02016a04(&MARIO3D(c)->mAnmModel, 0x21d);
