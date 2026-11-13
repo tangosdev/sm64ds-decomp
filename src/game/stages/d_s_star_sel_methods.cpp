@@ -56,12 +56,12 @@ extern s8 gNextSublevel;
 extern s32 data_020a0db0;
 extern u8 data_02092128[];
 extern signed char gNumLives;
-extern u8 data_ov001_020ab938;
-extern u8 data_ov001_020ab940;
+extern OamAttr data_ov001_020ab938;
+extern OamAttr data_ov001_020ab940;
 extern void *data_ov001_020abb18[];
 extern void *data_ov001_020abcb4[];
-extern u8 data_ov001_020abbb4;
-extern u8 data_ov001_020abbf4;
+extern OamAttr data_ov001_020abbb4;
+extern OamAttr data_ov001_020abbf4;
 /* SaveData::IsCharacterUnlocked was declared three ways across the legacy
  * shards -- `int (unsigned int)`, the same with the parameter named, and
  * `u32 (u32)`. u32 IS unsigned int here, so the parameter type never
@@ -417,9 +417,9 @@ s32 dScStarSel_c::Render() {
         for (i = 0; i < mPlateCount; i++) {
             if ((mPlateMask >> i) & 1) {
                 if (i == mSelectedPlate) {
-                    OAM::RenderSub((OamAttr *)&data_ov001_020ab938, mPlateX[i], 0x18);
+                    OAM::RenderSub(&data_ov001_020ab938, mPlateX[i], 0x18);
                 } else {
-                    OAM::RenderSub((OamAttr *)&data_ov001_020ab940, mPlateX[i], 0x18);
+                    OAM::RenderSub(&data_ov001_020ab940, mPlateX[i], 0x18);
                 }
             }
             OAM::Render(0, (OamAttr *)data_ov001_020abb18[i], mPlateX[i], 8, -1, -1, 0);
@@ -539,9 +539,9 @@ s32 dScStarSel_c::Render() {
 
         if (mStripMode <= 1 || data_0209caa0.file.mCharacter != 3) {
             if (SublevelToLevel(gNextSublevel) <= 0xe) {
-                OAM::RenderSub((OamAttr *)&data_ov001_020abbb4, 0x80, (mPromptYOffset >> 8) + 0xa0);
+                OAM::RenderSub(&data_ov001_020abbb4, 0x80, (mPromptYOffset >> 8) + 0xa0);
             } else {
-                OAM::RenderSub((OamAttr *)&data_ov001_020abbf4, 0x80, (mPromptYOffset >> 8) + 0xa0);
+                OAM::RenderSub(&data_ov001_020abbf4, 0x80, (mPromptYOffset >> 8) + 0xa0);
             }
         }
     }
