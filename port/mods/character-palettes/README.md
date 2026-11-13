@@ -6,8 +6,8 @@ Pick the colours Mario, Luigi, Wario and Yoshi wear.
 - Green, Red, Blue, Yellow (Yoshi): the four colours from the game's own multiplayer.
 - Custom: your own colours. Choose Custom and colour boxes appear beside the
   character: Hat, Undershirt, Overalls and Shoes for Mario, Luigi and Wario, Body
-  and Shoes for Yoshi. Custom is single player only: online, everyone sees the
-  colours picked in the room.
+  and Shoes for Yoshi. Online, the others see your Custom colours too, unless
+  you picked other colours in the room.
 
 Restart the game after changing a colour.
 
