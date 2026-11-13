@@ -22,8 +22,14 @@ typedef struct CPContext {
     u16 sqrt_mode; /* 0x1a -- 0x040002b0 (low bit) */
 } CPContext;
 
-extern "C" void CP_SaveContext(CPContext *);
-extern "C" void CPi_RestoreContext(const CPContext *);
+#ifdef __cplusplus
+extern "C"
+#endif
+void CP_SaveContext(CPContext *);
+#ifdef __cplusplus
+extern "C"
+#endif
+void CPi_RestoreContext(const CPContext *);
 
 
 #ifndef SM64DS_PLATFORM_PC

@@ -71,15 +71,42 @@ typedef struct WBTWork {
  * size, as the SDK's later WBTi_TryCreateResponse and WBTi_CheckRequest do
  * (wbt_context.c); this revision's builders do not read the size, but their
  * callers pass it. Parameters unnamed. */
-extern "C" int func_02065538(void *, int);
-extern "C" int func_020653cc(void *, int);
-extern "C" int func_02063d3c(WBTWork *, int, void *, int);
-extern "C" int func_02063e08(WBTWork *, int, void *, int);
-extern "C" int func_02063ae4(WBTWork *, int, void *, int);
-extern "C" int func_02063da0(WBTWork *, int, void *, int);
-extern "C" int func_02063bc4(WBTWork *, int, void *, int);
-extern "C" int func_02063980(WBTWork *, void *, int);
-extern "C" int func_02063718(WBTWork *, void *, int);
+#ifdef __cplusplus
+extern "C"
+#endif
+int func_02065538(void *, int);
+#ifdef __cplusplus
+extern "C"
+#endif
+int func_020653cc(void *, int);
+#ifdef __cplusplus
+extern "C"
+#endif
+int func_02063d3c(WBTWork *, int, void *, int);
+#ifdef __cplusplus
+extern "C"
+#endif
+int func_02063e08(WBTWork *, int, void *, int);
+#ifdef __cplusplus
+extern "C"
+#endif
+int func_02063ae4(WBTWork *, int, void *, int);
+#ifdef __cplusplus
+extern "C"
+#endif
+int func_02063da0(WBTWork *, int, void *, int);
+#ifdef __cplusplus
+extern "C"
+#endif
+int func_02063bc4(WBTWork *, int, void *, int);
+#ifdef __cplusplus
+extern "C"
+#endif
+int func_02063980(WBTWork *, void *, int);
+#ifdef __cplusplus
+extern "C"
+#endif
+int func_02063718(WBTWork *, void *, int);
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm: a command is 0x9c bytes, a block list node

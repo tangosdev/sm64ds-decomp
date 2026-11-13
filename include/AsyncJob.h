@@ -16,6 +16,9 @@ int func_0201a244(AsyncJobCallback callback, int argument, int priority, void *s
 
 /* These jobs ignore the worker argument. */
 void func_0201a2f8(int unused);
-extern "C" void LoadMultiBootResources(int unused);
+#ifdef __cplusplus
+extern "C"
+#endif
+void LoadMultiBootResources(int unused);
 
 #endif

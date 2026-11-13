@@ -22,6 +22,7 @@
 #define GXS_LoadBG0Char _Z15GXS_LoadBG0CharPKvjj
 #define GX_LoadBG0Char _Z14GX_LoadBG0CharPKvjj
 #define GXS_LoadBG3Scr _Z14GXS_LoadBG3ScrPKvjj
+#define GX_LoadBG3Scr _Z13GX_LoadBG3ScrPKvjj
 #define GXS_LoadBG2Scr _Z14GXS_LoadBG2ScrPKvjj
 #define GX_LoadBG2Scr _Z13GX_LoadBG2ScrPKvjj
 #define GXS_LoadBG1Scr _Z14GXS_LoadBG1ScrPKvii

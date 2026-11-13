@@ -3,7 +3,8 @@
 #include "Ov007Model.h"
 #include "Ov007MenuMem.h"
 extern int _Z13func_02046564Pv(void *p);
-extern void *_Z13func_020462bcPi(int *p);
+extern int func_020462bc(void *p);
+#define func_020462bc _Z13func_020462bcPi
 extern void *func_ov007_020c92ac(void);
 extern void func_ov007_020bc47c(Ov007Model *self);
 
@@ -36,7 +37,7 @@ Ov007Model *func_ov007_020bc6d4(struct BMD_File *file, int flags) {
     else
         m->nextTransforms = 0;
     if (m->flags & 4) {
-        m->blendBuffer = func_ov007_020c3df4(0, _Z13func_020462bcPi(file));
+        m->blendBuffer = func_ov007_020c3df4(0, func_020462bc(file));
         m->blendAnim = func_ov007_020c92ac();
     } else {
         m->blendBuffer = 0;

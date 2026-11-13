@@ -54,23 +54,53 @@ static inline void *FS_GetOverlayAddress(const FSOverlayInfo *p_ovi) {
     return p_ovi->header.ram_address;
 }
 
-extern "C" /* fs_overlay.c (src/engine/fs/FS_Overlay.c). The SDK's BOOL returns are
+#ifdef __cplusplus
+extern "C"
+#endif
+/* fs_overlay.c (src/engine/fs/FS_Overlay.c). The SDK's BOOL returns are
    spelled int: no shared header here defines BOOL. */
 FSFileID FS_GetOverlayFileID(const FSOverlayInfo *p_ovi);
-extern "C" int FS_LoadOverlayInfo(FSOverlayInfo *p_ovi, MIProcessor target, FSOverlayID id);
-extern "C" void FS_ClearOverlayImage(FSOverlayInfo *p_ovi);
-extern "C" void FS_StartOverlay(FSOverlayInfo *p_ovi);
-extern "C" void FS_EndOverlay(FSOverlayInfo *p_ovi);
-extern "C" int FS_UnloadOverlayImage(FSOverlayInfo *p_ovi);
-extern "C" int FS_UnloadOverlay(MIProcessor target, FSOverlayID id);
-extern "C" void FS_AttachOverlayTable(MIProcessor target, const void *ptr, u32 len);
+#ifdef __cplusplus
+extern "C"
+#endif
+int FS_LoadOverlayInfo(FSOverlayInfo *p_ovi, MIProcessor target, FSOverlayID id);
+#ifdef __cplusplus
+extern "C"
+#endif
+void FS_ClearOverlayImage(FSOverlayInfo *p_ovi);
+#ifdef __cplusplus
+extern "C"
+#endif
+void FS_StartOverlay(FSOverlayInfo *p_ovi);
+#ifdef __cplusplus
+extern "C"
+#endif
+void FS_EndOverlay(FSOverlayInfo *p_ovi);
+#ifdef __cplusplus
+extern "C"
+#endif
+int FS_UnloadOverlayImage(FSOverlayInfo *p_ovi);
+#ifdef __cplusplus
+extern "C"
+#endif
+int FS_UnloadOverlay(MIProcessor target, FSOverlayID id);
+#ifdef __cplusplus
+extern "C"
+#endif
+void FS_AttachOverlayTable(MIProcessor target, const void *ptr, u32 len);
 
-extern "C" /* The game's copy of FS_LoadOverlayInfo: fill info with overlay id's table
+#ifdef __cplusplus
+extern "C"
+#endif
+/* The game's copy of FS_LoadOverlayInfo: fill info with overlay id's table
    entry for target (0 ARM9, 1 ARM7); 0 if id is past the table. */
 int func_02018c00(FSOverlayInfo *info, int target, int id);
 /* Poison an unloaded overlay's code and bss with an undefined instruction. */
 void func_02017fd0(FSOverlayInfo *info);
-extern "C" /* The game's copy of FS_LoadOverlay (src/FS_LoadOverlay.c): load overlay
+#ifdef __cplusplus
+extern "C"
+#endif
+/* The game's copy of FS_LoadOverlay (src/FS_LoadOverlay.c): load overlay
    id for target and start it; 0 if its entry or image could not be read.
    Parameters unnamed: a named parameter here renumbers every C++
    includer's @NNN. */

@@ -44,18 +44,48 @@ typedef struct WatchdogAlarm {
 
 extern WatchdogAlarm data_0209d574;
 
-extern "C" void func_0201a8b4(void *);
+#ifdef __cplusplus
+extern "C"
+#endif
+void func_0201a8b4(void *);
 u8 func_0201a96c(WatchdogAlarm *, int);
-extern "C" u8 func_0201a9ec(WatchdogAlarm *);
-extern "C" void func_0201a9fc(WatchdogAlarm *);
-extern "C" WatchdogAlarm *func_0201aa18(WatchdogAlarm *);
-extern "C" WatchdogAlarm *func_0201aaec(WatchdogAlarm *);
+#ifdef __cplusplus
+extern "C"
+#endif
+u8 func_0201a9ec(WatchdogAlarm *);
+#ifdef __cplusplus
+extern "C"
+#endif
+void func_0201a9fc(WatchdogAlarm *);
+#ifdef __cplusplus
+extern "C"
+#endif
+WatchdogAlarm *func_0201aa18(WatchdogAlarm *);
+#ifdef __cplusplus
+extern "C"
+#endif
+WatchdogAlarm *func_0201aaec(WatchdogAlarm *);
 
-extern "C" void func_0201aa50(OSAlarm *, long long, OSAlarmHandler, void *);
-extern "C" void func_0201aaa4(OSAlarm *);
-extern "C" OSAlarm *func_0201aab0(OSAlarm *);
-extern "C" void func_0201aac8(OSAlarm *);
-extern "C" OSAlarm *func_0201aad4(OSAlarm *);
+#ifdef __cplusplus
+extern "C"
+#endif
+void func_0201aa50(OSAlarm *, long long, OSAlarmHandler, void *);
+#ifdef __cplusplus
+extern "C"
+#endif
+void func_0201aaa4(OSAlarm *);
+#ifdef __cplusplus
+extern "C"
+#endif
+OSAlarm *func_0201aab0(OSAlarm *);
+#ifdef __cplusplus
+extern "C"
+#endif
+void func_0201aac8(OSAlarm *);
+#ifdef __cplusplus
+extern "C"
+#endif
+OSAlarm *func_0201aad4(OSAlarm *);
 
 
 #endif

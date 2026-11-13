@@ -46,15 +46,39 @@ typedef enum OSIntrMode {
     OS_INTRMODE_ENABLE = 0
 } OSIntrMode;
 
-extern "C" OSIntrMode OS_EnableInterrupts(void);
-extern "C" OSIntrMode OS_DisableInterrupts(void);
-extern "C" OSIntrMode OS_RestoreInterrupts(OSIntrMode);
-extern "C" OSIntrMode OS_DisableInterrupts_IrqAndFiq(void);
-extern "C" OSIntrMode OS_RestoreInterrupts_IrqAndFiq(OSIntrMode);
-extern "C" OSProcMode OS_GetProcMode(void);
-extern "C" void OS_Halt(void);
+#ifdef __cplusplus
+extern "C"
+#endif
+OSIntrMode OS_EnableInterrupts(void);
+#ifdef __cplusplus
+extern "C"
+#endif
+OSIntrMode OS_DisableInterrupts(void);
+#ifdef __cplusplus
+extern "C"
+#endif
+OSIntrMode OS_RestoreInterrupts(OSIntrMode);
+#ifdef __cplusplus
+extern "C"
+#endif
+OSIntrMode OS_DisableInterrupts_IrqAndFiq(void);
+#ifdef __cplusplus
+extern "C"
+#endif
+OSIntrMode OS_RestoreInterrupts_IrqAndFiq(OSIntrMode);
+#ifdef __cplusplus
+extern "C"
+#endif
+OSProcMode OS_GetProcMode(void);
+#ifdef __cplusplus
+extern "C"
+#endif
+void OS_Halt(void);
 
-extern "C" /* Burns about the given number of CPU cycles, four per loop pass. The
+#ifdef __cplusplus
+extern "C"
+#endif
+/* Burns about the given number of CPU cycles, four per loop pass. The
  * body is hand-written asm, in src/OS_SpinWait.c. */
 void OS_SpinWait(u32);
 

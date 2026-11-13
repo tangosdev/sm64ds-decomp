@@ -46,8 +46,18 @@ typedef struct OSContext {
     CPContext cp_context; /* 0x48 */
 } OSContext;
 
-extern "C" void OS_InitContext(OSContext *, u32, u32);
-extern "C" int OS_SaveContext(OSContext *); extern "C" /* the SDK's BOOL */
+#ifdef __cplusplus
+extern "C"
+#endif
+void OS_InitContext(OSContext *, u32, u32);
+#ifdef __cplusplus
+extern "C"
+#endif
+int OS_SaveContext(OSContext *);
+#ifdef __cplusplus
+extern "C"
+#endif
+/* the SDK's BOOL */
 void OS_LoadContext(OSContext *);
 
 

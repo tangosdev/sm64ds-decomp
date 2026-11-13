@@ -115,7 +115,10 @@ void OSi_IrqTimer1(void);
 void OSi_IrqTimer2(void);
 void OSi_IrqTimer3(void);
 
-extern "C" /* os_irqHandler.c */
+#ifdef __cplusplus
+extern "C"
+#endif
+/* os_irqHandler.c */
 void OS_IrqHandler(void);
 
 

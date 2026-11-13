@@ -34,10 +34,16 @@ void MI_StopDma(unsigned int);
 #define MI_DmaClear32Async(dmaNo, dest, size, callback, arg) \
     MI_DmaFill32Async((dmaNo), (dest), 0, (size), (callback), (arg))
 
-extern "C" void MI_SendGXCommand(unsigned int, const void *, unsigned int);
+#ifdef __cplusplus
+extern "C"
+#endif
+void MI_SendGXCommand(unsigned int, const void *, unsigned int);
 void MI_SendGXCommandAsync(unsigned int, const void *, unsigned int, MIDmaCallback, void *);
 
-extern "C" /* Arms one channel: source, destination, then the control word that starts
+#ifdef __cplusplus
+extern "C"
+#endif
+/* Arms one channel: source, destination, then the control word that starts
  * it, with interrupts masked (pret/pokediamond MI_dma.h). The body is in
  * ITCM, src/MIi_DmaSetParams.cpp. */
 void MIi_DmaSetParams(unsigned int, unsigned int, unsigned int, unsigned int);

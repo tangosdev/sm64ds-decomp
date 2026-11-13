@@ -142,21 +142,57 @@ typedef struct WBTCommand {
 void WBT_InitParent(int, int, WBTCallback);
 void WBT_InitChild(WBTCallback);
 void WBT_End(void);
-extern "C" int WBT_AidbitmapToAid(u16);
-extern "C" int WBT_GetOwnAid(void);
-extern "C" void WBT_SetOwnAid(int);
-extern "C" int WBT_CalcPacketbitmapSize(int);
-extern "C" int WBT_NumOfRegisteredBlock(void);
+#ifdef __cplusplus
+extern "C"
+#endif
+int WBT_AidbitmapToAid(u16);
+#ifdef __cplusplus
+extern "C"
+#endif
+int WBT_GetOwnAid(void);
+#ifdef __cplusplus
+extern "C"
+#endif
+void WBT_SetOwnAid(int);
+#ifdef __cplusplus
+extern "C"
+#endif
+int WBT_CalcPacketbitmapSize(int);
+#ifdef __cplusplus
+extern "C"
+#endif
+int WBT_NumOfRegisteredBlock(void);
 int WBT_RegisterBlock(WBTBlockInfoList *, u32, const void *, const void *, int, u16);
 WBTBlockInfoList *WBT_UnregisterBlock(u32);
-extern "C" int WBT_SetPacketSize(int, int);
-extern "C" int WBT_MpParentSendHook(void *, int);
-extern "C" int WBT_MpChildSendHook(void *, int);
+#ifdef __cplusplus
+extern "C"
+#endif
+int WBT_SetPacketSize(int, int);
+#ifdef __cplusplus
+extern "C"
+#endif
+int WBT_MpParentSendHook(void *, int);
+#ifdef __cplusplus
+extern "C"
+#endif
+int WBT_MpChildSendHook(void *, int);
 
-extern "C" void WBT_RequestSync(u16, WBTCallback);
-extern "C" void WBT_GetBlockInfo(u16, int, const void *, WBTCallback);
-extern "C" void WBT_GetBlock(u16, u32, const void *, u32, const void *, WBTCallback);
-extern "C" int WBT_PutUserData(u16, const void *, int, WBTCallback);
+#ifdef __cplusplus
+extern "C"
+#endif
+void WBT_RequestSync(u16, WBTCallback);
+#ifdef __cplusplus
+extern "C"
+#endif
+void WBT_GetBlockInfo(u16, int, const void *, WBTCallback);
+#ifdef __cplusplus
+extern "C"
+#endif
+void WBT_GetBlock(u16, u32, const void *, u32, const void *, WBTCallback);
+#ifdef __cplusplus
+extern "C"
+#endif
+int WBT_PutUserData(u16, const void *, int, WBTCallback);
 
 
 #endif

@@ -46,7 +46,10 @@ extern CaptureEffect data_020a4c64;
 /* data_020a4c64.work: the ROM addresses it by its own symbol. */
 extern CaptureEffectWork data_020a4c70;
 
-extern "C" void func_02049ba8(void *, void *, unsigned int, int, CaptureEffect *);
+#ifdef __cplusplus
+extern "C"
+#endif
+void func_02049ba8(void *, void *, unsigned int, int, CaptureEffect *);
 void func_020499bc(short *, short *, unsigned int, CaptureEffect *);
 void func_020497a0(short *, short *, unsigned int, CaptureEffect *);
 

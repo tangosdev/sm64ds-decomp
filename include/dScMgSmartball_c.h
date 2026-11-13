@@ -53,8 +53,14 @@
 #include "dScMgBase_c.h"
 #include "MWCPlusLib.h"
 
-extern "C" void __cxa_vec_cleanup(void *, unsigned int, unsigned int, dtor_t);
-extern "C" void NullDestructor_0203d47c(void);
+#ifdef __cplusplus
+extern "C"
+#endif
+void __cxa_vec_cleanup(void *, unsigned int, unsigned int, dtor_t);
+#ifdef __cplusplus
+extern "C"
+#endif
+void NullDestructor_0203d47c(void);
 void SmartballObj_ElemDtor(void);
 
 struct cMgSmartball_spring_c;

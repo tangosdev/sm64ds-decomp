@@ -205,11 +205,17 @@ typedef struct MB_CommPWork {
 
 extern MB_CommCommonWork *mbc;
 
-extern "C" /* mb_fileinfo.h: MB_FileInfo.c's block lookup, MBi_CommParentSendBlock's
+#ifdef __cplusplus
+extern "C"
+#endif
+/* mb_fileinfo.h: MB_FileInfo.c's block lookup, MBi_CommParentSendBlock's
  * source of each block's place. */
 int MBi_get_blockinfo(MB_BlockInfo *, MB_BlockInfoTable *, u32, MbDownloadFileInfoHeader *);
 
-extern "C" /* mb_parent.h: the parent's WM callback, which MB_StartParent installs. */
+#ifdef __cplusplus
+extern "C"
+#endif
+/* mb_parent.h: the parent's WM callback, which MB_StartParent installs. */
 void MBi_CommParentCallback(u16, void *);
 
 #define pPwork ((MB_CommPWork *)mbc)

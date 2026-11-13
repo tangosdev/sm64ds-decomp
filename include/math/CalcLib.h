@@ -29,37 +29,70 @@
 
 #endif
 
-extern "C" /* Decrement *p unless it is already 0; return the new value. */
+#ifdef __cplusplus
+extern "C"
+#endif
+/* Decrement *p unless it is already 0; return the new value. */
 unsigned short DecIfAbove0_Short(unsigned short *);
-extern "C" unsigned char DecIfAbove0_Byte(unsigned char *);
+#ifdef __cplusplus
+extern "C"
+#endif
+unsigned char DecIfAbove0_Byte(unsigned char *);
 
 /* Step *cur a 1/divisor share toward target; return what is left.
    C linkage: d_camera.cpp's call sites pass the target as int, and a short
    parameter there no longer reproduces (ApproachLookAtAndAngles, func_02009e70). */
-extern "C" int ApproachAngle(short *, short, int, int, int);
+#ifdef __cplusplus
+extern "C"
+#endif
+int ApproachAngle(short *, short, int, int, int);
 
-extern "C" /* Advance the LCG seed and return it. */
+#ifdef __cplusplus
+extern "C"
+#endif
+/* Advance the LCG seed and return it. */
 int RandomIntInternal(int *);
 
-extern "C" /* Shift a vector right per axis. Reads all three components before writing
+#ifdef __cplusplus
+extern "C"
+#endif
+/* Shift a vector right per axis. Reads all three components before writing
    any, so d == s is allowed. */
 void Vec3_Asr(Vector3 *, Vector3 *, int);
-extern "C" /* ...and left; d may alias s. */
+#ifdef __cplusplus
+extern "C"
+#endif
+/* ...and left; d may alias s. */
 void Vec3_Lsl(Vector3 *, const Vector3 *, int);
 
-extern "C" /* NitroSDK fx_vec (0x02053274..0x020538b8). */
+#ifdef __cplusplus
+extern "C"
+#endif
+/* NitroSDK fx_vec (0x02053274..0x020538b8). */
 /* out = a + b and a - b, per axis; out may alias either operand. */
 void VEC_Add(Vector3 *, Vector3 *, Vector3 *);
-extern "C" void VEC_Subtract(Vector3 *, Vector3 *, Vector3 *);
-extern "C" /* Length of v. */
+#ifdef __cplusplus
+extern "C"
+#endif
+void VEC_Subtract(Vector3 *, Vector3 *, Vector3 *);
+#ifdef __cplusplus
+extern "C"
+#endif
+/* Length of v. */
 int VEC_Mag(const Vector3 *);
-extern "C" /* a . b, in fx32. */
+#ifdef __cplusplus
+extern "C"
+#endif
+/* a . b, in fx32. */
 Fix12i VEC_DotProduct(const Vector3 *, const Vector3 *);
 
 short Vec3_HorzAngle(const Vector3 *, const Vector3 *);
 Fix12i Vec3_HorzLen(const Vector3 *);
 int Vec3_Dist(const Vector3 *, const Vector3 *);
-extern "C" int Vec3_Equal(const Vector3 *, const Vector3 *);
+#ifdef __cplusplus
+extern "C"
+#endif
+int Vec3_Equal(const Vector3 *, const Vector3 *);
 int Vec3_HorzDist(const Vector3 *, const Vector3 *);
 
 #endif

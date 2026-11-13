@@ -14,8 +14,14 @@
 #include "types.h"
 
 
-extern "C" void OS_InitReset(void);
-extern "C" void OS_ResetSystem(u32);
+#ifdef __cplusplus
+extern "C"
+#endif
+void OS_InitReset(void);
+#ifdef __cplusplus
+extern "C"
+#endif
+void OS_ResetSystem(u32);
 
 
 #endif

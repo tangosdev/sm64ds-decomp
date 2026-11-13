@@ -52,9 +52,14 @@ typedef char MgCamera_size_must_be_0xbc[sizeof(MgCamera) == 0xbc ? 1 : -1];
    a second extern "C" declaration with a different parameter type as illegal
    overloading, so they are not declared here until decl_common.h drops its
    copies. */
+#ifdef __cplusplus
 extern "C" {
+#endif
+
 void Camera_ProjectToScreen(MgCamera *, void *, int *, int *);
+#ifdef __cplusplus
 }
+#endif
 #ifdef __cplusplus
 void Camera_UpdateMatrices(MgCamera *);
 void Camera_InitDealerView(MgCamera *);
