@@ -38,6 +38,20 @@ enum d_s_mg_single3_d_base_AssetId {
 
 /* SDK calls this file makes. */
 #include "nitro/os/cache.h"
+namespace s20b290c { void Mg_ResetBgOffsets(void); }
+using s20b290c::Mg_ResetBgOffsets;
+namespace s20b2980 { void Mg_DisableAllBanks(void); }
+using s20b2980::Mg_DisableAllBanks;
+namespace s20b0d30 { void Mg_ResetOverlays(void); }
+using s20b0d30::Mg_ResetOverlays;
+namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+using s20b0aa0::FreeGfxSlotsById;
+namespace s20adc68 { void *Ov004_LoadFile(int); }
+using s20adc68::Ov004_LoadFile;
+namespace s20adc5c { void Ov004_Deallocate(void *ptr); }
+using s20adc5c::Ov004_Deallocate;
+namespace s20ad674 { s32 GetGameLanguage(void); }
+using s20ad674::GetGameLanguage;
 
 extern "C" {
 
@@ -45,21 +59,15 @@ void *LoadFile(int fileId);
 
 void DecompressLZ16(void *src, void *dst);
 
-void Ov004_Deallocate(void *p);
 
-void Mg_ResetBgOffsets(void);
 
-void Mg_DisableAllBanks(void);
 
-s32 GetGameLanguage(void);
 
 /* Forwards to LoadFile. Its own definition is still declared without the
  * argument and result, so this file keeps a local declaration. */
-void *Ov004_LoadFile(int fileId);
 
-void Mg_ResetOverlays(void);
 
-void FreeGfxSlotsById(int id);}
+}
 
 extern u8 gSubScreenLayers;
 

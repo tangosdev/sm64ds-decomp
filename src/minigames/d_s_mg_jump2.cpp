@@ -45,6 +45,14 @@ enum d_s_mg_jump2_AssetId {
 #include "nitro/gx/g3x.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/gx/gx_bgcnt.h"
+namespace s20afcf8 { void DrawOamSprite(OamAttr *attr, int, int, Matrix2x2 *mtx); }
+using s20afcf8::DrawOamSprite;
+namespace s20afa20 { void RenderOamMainScreen(OamAttr *oam, int, int, int, int); }
+using s20afa20::RenderOamMainScreen;
+namespace s20ad90c { void Mg_CommitRecords(void); }
+using s20ad90c::Mg_CommitRecords;
+namespace s20ad674 { s32 GetGameLanguage(void); }
+using s20ad674::GetGameLanguage;
 
 /* The list link at the head of each Jump2Popup. Its two methods link `this` into
  * and back out of the live list at sJump2PopupList. */
@@ -95,26 +103,23 @@ extern struct Jump2Popup *sJump2Popups;
 extern void *sJump2BackFile;
 extern "C" {
 
-void Mg_CommitRecords(void);
 
-int GetGameLanguage(void);}
+}
 
 struct OamAttr;
 
 struct Matrix2x2;
 extern "C" {
 
-void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 
-void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);}
+}
 void Jump2Popup_UpdateAll(void);
 int Jump3D_AllIdle(void);
 int Heyho_AllIdle(void);
 extern "C" {
 
-extern void Mg_SubmitScore(int);
 
-extern void Mg_SetSharedState(int);}
+}
 void Heyho_SeparateAll(void);
 void Jump3D_UpdateAll(void);
 
@@ -147,7 +152,7 @@ void Jump3D_SetLowGravity(void);
 void Heyho_ReactAll(void);
 extern "C" {
 
-extern int Mg_GetTopScreenYOffset(void);}
+}
 int Heyho_InitPool(void *heyhos, int count);
 extern "C" {
 

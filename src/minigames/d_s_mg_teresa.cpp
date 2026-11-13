@@ -68,31 +68,30 @@
 struct ScoreView { unsigned char pad[0xb4]; int b4; int b8; };
 
 /* Everything this file calls or reads that decl_common.h does not declare. */
+namespace s20afa20 { void RenderOamMainScreen(OamAttr *, int, int, int, int); }
+using s20afa20::RenderOamMainScreen;
+namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+using s20b0aa0::FreeGfxSlotsById;
+namespace s20ad674 { int GetGameLanguage(void); }
+using s20ad674::GetGameLanguage;
 extern "C" {
-
-
-extern void  RenderOamMainScreen(void*, int, int, int, int);
 
 extern void *LoadFile(int handle);
 
 extern void DecompressLZ16(const void *src, void *dst);
-
-extern void  FreeGfxSlotsById(int arg);
-
-extern int   GetGameLanguage(void);}
+}
 
 struct Matrix2x2;
-extern "C" {
-
-extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
-
-extern void  Hud_RenderSprite(void *fn, int a, int b, int c, int d);
-
-extern void Mg_DrawNumberRotated(int, int, int, int, int, int, u16);
-
-extern void  Mg_DrawScoreTally(void *, int, int, int);
-
-extern int   Mg_IsNewRecord(void);}
+namespace s20afcf8 { void DrawOamSprite(OamAttr *, int, int, Matrix2x2 *); }
+using s20afcf8::DrawOamSprite;
+namespace s20af68c { void Hud_RenderSprite(void *, int, int, int, int); }
+using s20af68c::Hud_RenderSprite;
+namespace s20b2220 { void Mg_DrawNumberRotated(int, int, int, int, int, int, unsigned short); }
+using s20b2220::Mg_DrawNumberRotated;
+namespace s20b1e34 { void Mg_DrawScoreTally(void *, int, int, int); }
+using s20b1e34::Mg_DrawScoreTally;
+namespace s20adbe0 { int Mg_IsNewRecord(void); }
+using s20adbe0::Mg_IsNewRecord;
 
 extern int   func_020126e8(int a);
 
@@ -267,7 +266,7 @@ void dScMgTeresa_c::BigBoo_Draw() {
         v = sTeresaBigBooHoverSprites[idx];
     else
         v = sTeresaBigBooSprites[idx];
-    RenderOamMainScreen((void *)v, p, q, -1, -1);
+    RenderOamMainScreen((OamAttr *)v, p, q, -1, -1);
 }
 
 void dScMgTeresa_c::BigBoo_StateResult(int idx) {
@@ -540,7 +539,7 @@ void dScMgTeresa_c::StepBg3Scroll() {
 void dScMgTeresa_c::Marker_Draw()
 {
   if(mMarker.visible==0) return;
-  RenderOamMainScreen(sTeresaMarkerSprites, mMarker.x >> 0xc, mMarker.y >> 0xc, -1, -1);
+  RenderOamMainScreen((OamAttr *)sTeresaMarkerSprites, mMarker.x >> 0xc, mMarker.y >> 0xc, -1, -1);
 }
 
 /* Empty. Scene_StateReveal calls it with the object. */

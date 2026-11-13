@@ -85,7 +85,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "daObjKumo_c_classInit",
+      "symbol": "_Z21daObjKumo_c_classInitv",
       "address": "0x0211137c",
       "size": "0x00000038",
       "legacy_source": "src/Cloud_Spawn.c",

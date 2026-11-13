@@ -25,6 +25,21 @@
 #include "nitro/gx/g2.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "math/CalcLib.h"
+namespace s20b1e34 { void Mg_DrawScoreTally(void*, int, int, int); }
+using s20b1e34::Mg_DrawScoreTally;
+namespace s20b1bc8 { void Mg_DrawCredits(char *a0, int, int, int); }
+using s20b1bc8::Mg_DrawCredits;
+namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+using s20b0aa0::FreeGfxSlotsById;
+namespace s20afa20 { void RenderOamMainScreen(OamAttr *oam, int, int, int, int); }
+using s20afa20::RenderOamMainScreen;
+namespace s20af68c { void Hud_RenderSprite(void *attr, int, int, int, int); }
+using s20af68c::Hud_RenderSprite;
+namespace s20ad674 { s32 GetGameLanguage(void); }
+using s20ad674::GetGameLanguage;
+void MgCoins_Reset(void);
+void MgCoins_Update(void);
+void MgCoins_StartPayout(int);
 
 /* By-value five-card ordering table. */
 typedef struct 
@@ -51,7 +66,7 @@ extern void *sCardObjSprites[];
 extern int sMgCardSprites[];
 extern "C" {
 
-extern void Hud_RenderSprite(void *sprite, int x, int y, int a3, int a4);}
+}
 
 extern void **sCardPayoutHighlightSprites[];
 
@@ -73,11 +88,8 @@ extern const Five sCardHandOrder;
 extern int sCardFaceWeights[];
 extern "C" {
 
-extern void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 
-extern void Mg_DrawCredits(char *a0, int a1, int a2, int a3);
 
-extern void Mg_DrawScoreTally(void *a0, int a1, int a2, int a3);
 
 extern void Dealer_Draw(void *c);}
 
@@ -100,13 +112,10 @@ extern void Dealer_PlayLose(void *c);}
 void Dealer_PlayWin(void *c);
 extern "C" {
 
-extern void Mg_SaveRecordPair(int a0, int a1);
 
-extern void Mg_ShowBanner(int a0, int a1, int a2, int a3, int a4, s16 a5);
 
-extern void Mg_SubmitScore(int v);
 
-extern void Mg_SetSharedState(int v);}
+}
 
 extern int sMgCoinsBetPlaced;
 
@@ -117,7 +126,6 @@ extern int gMgCoinsInPlay;
 extern int sCardHandPayouts[];
 extern "C" {
 
-extern void FreeGfxSlotsById(int arg);
 
 extern void MgCoins_StartPayout(int a);}
 
@@ -135,7 +143,6 @@ extern "C" {
 
 extern void *LoadFile(int);
 
-extern int GetGameLanguage(void);
 
 extern void DecompressLZ16(void *, void *);
 

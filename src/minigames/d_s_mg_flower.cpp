@@ -55,15 +55,22 @@ struct SpriteAttr {
     int a, b;
 };
 
+namespace s20adc74 { void *Ov004_LoadFileByPath(const char *); }
+using s20adc74::Ov004_LoadFileByPath;
+namespace s20afdd0 { void Mg_RenderSpriteBoth(void *, int, int, int, int); }
+using s20afdd0::Mg_RenderSpriteBoth;
+namespace s20af770 { int Mg_RenderSubSpriteScaled(void *, int, int, int, int, int, unsigned short); }
+using s20af770::Mg_RenderSubSpriteScaled;
+namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+using s20b0aa0::FreeGfxSlotsById;
+namespace s20adc5c { void Ov004_Deallocate(void *); }
+using s20adc5c::Ov004_Deallocate;
 extern "C" {
 
 extern void func_0203d388(int *p, int angle);
 
-extern void Mg_SetTopScreenYOffset(int n);
 
-void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
-
-int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5, u16 a6);}
+}
 
 /* The dragged petal's two adjacent fixed-point coordinates. */
 typedef struct V2 {
@@ -75,13 +82,13 @@ extern "C" {
 
 void Vec2_Sub(int *out, int *a, int *b);
 
-void FreeGfxSlotsById(int a);
+
 
 void *Ov004_LoadFileByPath(void *arg);
 
 void DecompressLZ16(void *src, void *dst);
 
-void Ov004_Deallocate(void *ptr);}
+}
 
 extern int data_0208ee44;
 
@@ -498,29 +505,29 @@ s32 dScMgFlower_c::InitResources() {
     G2S_SetBG3Offset(0, 0); /* DB_BG3OFS */
     G2S_SetBG3Priority(3);
 
-    fileData = Ov004_LoadFileByPath(&sFlowerBgUpNcgPath);
+    fileData = Ov004_LoadFileByPath((const char *)&sFlowerBgUpNcgPath);
     DecompressLZ16(fileData, G2_GetBG2CharPtr());
     Ov004_Deallocate(fileData);
 
-    fileData = Ov004_LoadFileByPath(&sFlowerBgDownNcgPath);
+    fileData = Ov004_LoadFileByPath((const char *)&sFlowerBgDownNcgPath);
     DecompressLZ16(fileData, G2S_GetBG2CharPtr());
     Ov004_Deallocate(fileData);
 
-    fileData = Ov004_LoadFileByPath(&sFlowerBgUpNscPath);
+    fileData = Ov004_LoadFileByPath((const char *)&sFlowerBgUpNscPath);
     DecompressLZ16(fileData, G2_GetBG2ScrPtr());
     Ov004_Deallocate(fileData);
 
-    fileData = Ov004_LoadFileByPath(&sFlowerBgDownNscPath);
+    fileData = Ov004_LoadFileByPath((const char *)&sFlowerBgDownNscPath);
     DecompressLZ16(fileData, G2S_GetBG2ScrPtr());
     DecompressLZ16(fileData, G2S_GetBG3ScrPtr());
     Ov004_Deallocate(fileData);
 
-    fileData = Ov004_LoadFileByPath(&sFlowerBgUpNclPath);
+    fileData = Ov004_LoadFileByPath((const char *)&sFlowerBgUpNclPath);
     DC_FlushRange(fileData, 0x1a0);
     GX_LoadBGPltt(fileData, 0x60, 0x1a0);
     Ov004_Deallocate(fileData);
 
-    fileData = Ov004_LoadFileByPath(&sFlowerBgDownNclPath);
+    fileData = Ov004_LoadFileByPath((const char *)&sFlowerBgDownNclPath);
     DC_FlushRange(fileData, 0x1a0);
     GXS_LoadBGPltt(fileData, 0x60, 0x1a0);
     Ov004_Deallocate(fileData);
@@ -531,12 +538,12 @@ s32 dScMgFlower_c::InitResources() {
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
     gSubScreenLayers |= 0xc;
 
-    fileData = Ov004_LoadFileByPath(&sFlowerNcgPath);
+    fileData = Ov004_LoadFileByPath((const char *)&sFlowerNcgPath);
     DecompressLZ16(fileData, G2_GetOBJCharPtr());
     DecompressLZ16(fileData, G2S_GetOBJCharPtr());
     Ov004_Deallocate(fileData);
 
-    fileData = Ov004_LoadFileByPath(&sFlowerNclPath);
+    fileData = Ov004_LoadFileByPath((const char *)&sFlowerNclPath);
     DC_FlushRange(fileData, 0x100);
     GX_LoadOBJPltt(fileData, 0, 0x100);
     GXS_LoadOBJPltt(fileData, 0, 0x100);

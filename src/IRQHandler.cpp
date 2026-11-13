@@ -27,11 +27,9 @@
 #include "nitro/os/thread.h" /* OSi_ThreadInfo, the thread scheduler head */
 #include "nitro/hw/armArch.h"
 
-extern "C" {
 
 extern OSThreadQueue OSi_IrqThreadQueue; /* in DTCM: threads waiting on an interrupt */
 void OS_IrqHandler_ThreadSwitch(void);
-}
 
 
 // Dispatch the lowest pending interrupt.
@@ -60,7 +58,6 @@ _loop:
     bx r0
 }
 
-extern "C" {
 
 
 // OS_IrqHandler_ThreadSwitch: wake waiters, then switch threads if asked.
@@ -158,4 +155,4 @@ _switch:
     ldmia sp!, {pc}
 }
 
-}
+

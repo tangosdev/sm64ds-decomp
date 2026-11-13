@@ -220,7 +220,6 @@ namespace ns_020c9024 {
 void Trmp2Mario_ApplyGravity(char *o);
 }
 namespace ns_020c8ecc {
-void Trmp2Mario_UpdateMatrix(char *self);
 }
 namespace ns_020c8f20 {
 
@@ -485,7 +484,6 @@ L260: {
 void Sound_PlayBank1Panned(int a0, int a1, int a2);
 int D3D_PlaySeAtX(int a, int b);
 namespace ns_020c91ac {
-void Trmp2Mario_StateBounce(char *c);
 }
 namespace ns_020c94e0 {
 extern "C" {
@@ -723,7 +721,6 @@ L260: {
 // ---- Trmp2Mario_BounceOffLineB
 void Sound_PlayBank1Panned(int a0, int a1, int a2);
 namespace ns_020c97bc {
-void Trmp2Mario_StateWallBounce(char *c);
 }
 namespace ns_020c9aa0 {
 extern "C" {
@@ -940,7 +937,6 @@ extern void Trmp2Mario_EnterRespawnWait(void *p);
 // ---- Trmp2Mario_EnterMissed
 int D3D_PlaySeAtX(int a, int b);
 namespace ns_020c9fe4 {
-void Trmp2Mario_EnterMissed(char *c);
 }
 namespace ns_020c9fe4 {
 extern "C" {
@@ -962,10 +958,8 @@ void Trmp2Mario_EnterMissed(char *c) {
 
 // ---- Trmp2Mario_StateFall
 namespace ns_020c9aa0 {
-void Trmp2Mario_BounceOffLineB(char *c);
 }
 namespace ns_020c94e0 {
-void Trmp2Mario_BounceOffLineA(char *c);
 }
 void Sound_PlayBank1Panned(int a0, int a1, int a2);
 namespace ns_020ca070 {
@@ -1110,7 +1104,6 @@ void Trmp2Mario_EnterFall(void *self) {
 
 // ---- Trmp2Mario_StateAppearWait
 namespace ns_020c9c8c {
-void Trmp2Mario_EnterBounce(char *c);
 }
 namespace ns_020ca310 {
 using ns_020c9c8c::Trmp2Mario_EnterBounce;
@@ -1316,7 +1309,6 @@ int Trmp2Mario_Hide(void) {
 
 // ---- Trmp2Mario_EnterAll
 namespace ns_020c9098 {
-void Trmp2Mario_EnterByKind(char *c);
 }
 namespace ns_020ca840 {
 using ns_020c9098::Trmp2Mario_EnterByKind;
@@ -1357,7 +1349,6 @@ void Trmp2Mario_EnterAll(void) {
 
 // ---- Trmp2Mario_MoveToStart
 namespace ns_020ca374 {
-void Trmp2Mario_EnterAppearWait(char *o, short v);
 }
 namespace ns_020ca8e0 {
 extern "C" {
@@ -1443,7 +1434,6 @@ void Trmp2Mario_PlaceAtStart(void) {
 
 // ---- Trmp2Mario_DrawAll
 namespace ns_020c8e90 {
-void Trmp2Mario_Render(char *self);
 }
 void Puff_DrawAll(void);
 namespace ns_020caadc {
@@ -1596,7 +1586,6 @@ void Trmp2Mario_SetTuning(int a) {
 
 // ---- Trmp2Mario_InitPool
 namespace ns_020ca430 {
-int Trmp2Mario_Load(char *c);
 }
 namespace ns_020cae9c {
 using ns_020ca430::Trmp2Mario_Load;
@@ -1708,7 +1697,6 @@ namespace ns_020cb134 {
 void Trmp3DMario_ApplyGravity(char *o);
 }
 namespace ns_020cafdc {
-void Trmp3DMario_UpdateMatrix(char *self);
 }
 namespace ns_020cb030 {
 
@@ -1858,7 +1846,6 @@ extern "C" {
 
 extern void Camera_ProjectToScreen(void *, void *, int *, int *);
 
-extern int Mg_GetTopScreenYOffset(void);
 
 extern void Trmp3DMario_EnterOffstage(char *);}
 extern "C" void Trmp3DMario_StateGoal(void *self) {
@@ -1958,7 +1945,6 @@ extern int sTrmpMariosOnLedges;}
 
 // ---- Trmp3DMario_StateLand
 namespace ns_020cb528 {
-void Trmp3DMario_EnterGoal(char *c);
 }
 namespace ns_020cc8c8 {
 void Trmp3DMario_EnterOnLedge(char *p);
@@ -1995,7 +1981,6 @@ void Trmp3DMario_StateLand(char *c) {
 // ---- Trmp3DMario_EnterLand
 void Sound_PlayBank1Panned(int a0, int a1, int a2);
 namespace ns_020cb5c4 {
-void Trmp3DMario_StateLand(char *c);
 }
 namespace ns_020cb690 {
 using ns_020cb5c4::Trmp3DMario_StateLand;
@@ -2088,7 +2073,6 @@ void Trmp3DMario_StateFallToLedge(char *c) {
 
 // ---- Trmp3DMario_EnterFallToLedge
 namespace ns_020cb72c {
-void Trmp3DMario_StateFallToLedge(char *c);
 }
 namespace ns_020cb814 {
 
@@ -2239,7 +2223,6 @@ L1dc: {
 void Sound_PlayBank1Panned(int a0, int a1, int a2);
 int D3D_PlaySeAtX(int a, int b);
 namespace ns_020cb838 {
-void Trmp3DMario_StateHardBounce(char *c);
 }
 namespace ns_020cbaec {
 
@@ -2475,7 +2458,6 @@ L1dc: {
 // ---- Trmp3DMario_BounceOffLineB
 void Sound_PlayBank1Panned(int a0, int a1, int a2);
 namespace ns_020cbd7c {
-void Trmp3DMario_StateBounce(char *c);
 }
 namespace ns_020cbfd8 {
 extern "C" {
@@ -2814,7 +2796,6 @@ void Trmp3DMario_EnterFall(void *self) {
 
 // ---- Trmp3DMario_StateWalkBack
 namespace ns_020cc198 {
-void Trmp3DMario_JumpOff(char *c);
 }
 namespace ns_020cc63c {
 extern "C" {
@@ -2836,7 +2817,6 @@ void Trmp3DMario_StateWalkBack(char *c) {
 
 // ---- Trmp3DMario_EnterWalkBack
 namespace ns_020cc698 {
-void Trmp3DMario_EnterWalkBack(char *c);
 }
 namespace ns_020cc698 {
 extern "C" {
@@ -3008,7 +2988,6 @@ extern "C" {
 #pragma pop
 // ---- Trmp3DMario_StateOnGround
 namespace ns_020cc9fc {
-void Trmp3DMario_EnterWalkIn(char *c);
 }
 namespace ns_020ccae0 {
 using ns_020cc9fc::Trmp3DMario_EnterWalkIn;
@@ -3292,7 +3271,6 @@ void Trmp3DMario_StartAll(void) {
 #pragma push
 // ---- Trmp3DMario_DrawAll
 namespace ns_020cafb4 {
-void Trmp3DMario_Render(char *self);
 }
 void Puff_DrawAll(void);
 namespace ns_020cd270 {
@@ -3339,7 +3317,6 @@ void Trmp3DMario_DrawAll(void) {
 #pragma pop
 // ---- Trmp3DMario_UpdateAll
 namespace ns_020cb030 {
-void Trmp3DMario_Update(char *o);
 }
 void Puff_UpdateAll(void);
 namespace ns_020cd39c {

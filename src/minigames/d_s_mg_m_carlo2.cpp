@@ -24,6 +24,14 @@
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "math/CalcLib.h"
+namespace s20afa20 { void RenderOamMainScreen(OamAttr *oam, int, int, int, int); }
+using s20afa20::RenderOamMainScreen;
+namespace s20af68c { void Hud_RenderSprite(void *attr, int, int, int, int); }
+using s20af68c::Hud_RenderSprite;
+namespace s20ad90c { void Mg_CommitRecords(void); }
+using s20ad90c::Mg_CommitRecords;
+namespace s20ad674 { s32 GetGameLanguage(void); }
+using s20ad674::GetGameLanguage;
 
 /* sMCarlo2Cards is the head of the live card list and _02142568 its
  * tail (SetupBoard builds it); _0214256c heads the list of cleared cards,
@@ -77,11 +85,8 @@ extern unsigned char gMainScreenLayers;
 extern "C" {
 
 
-void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 
-void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
 
-int  GetGameLanguage(void);
 
 void *LoadFile(int handle);
 
@@ -91,9 +96,8 @@ void Vec2_Sub(int* out, int* a, int* b);}
 
 int  func_0203d5dc(const int *a, const int *b);extern "C" {
 
-void Mg_CommitRecords(void);
 
-void Mg_SubmitScore(int score);}
+}
 void LoadCard2SubBg3(void *);
 void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
 int Dealer_IsIdle(Dealer *dealer);

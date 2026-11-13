@@ -75,6 +75,22 @@ enum dScMgSnowball_c_AssetId {
 #include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
 #include "nitro/mi/memory.h"
+namespace s20b2220 { void Mg_DrawNumberRotated(int, int, int, int, int, int, u16); }
+using s20b2220::Mg_DrawNumberRotated;
+namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+using s20b0aa0::FreeGfxSlotsById;
+namespace s20b0104 { void RenderOamBothScreens(void *attr, int, int, int, int, void *mtx); }
+using s20b0104::RenderOamBothScreens;
+namespace s20afdd0 { void Mg_RenderSpriteBoth(void *a0, int, int, int, int); }
+using s20afdd0::Mg_RenderSpriteBoth;
+namespace s20afcf8 { void DrawOamSprite(OamAttr *attr, int, int, Matrix2x2 *mtx); }
+using s20afcf8::DrawOamSprite;
+namespace s20adc74 { void *Ov004_LoadFileByPath(const char *path); }
+using s20adc74::Ov004_LoadFileByPath;
+namespace s20adc5c { void Ov004_Deallocate(void *ptr); }
+using s20adc5c::Ov004_Deallocate;
+namespace s20ad674 { s32 GetGameLanguage(void); }
+using s20ad674::GetGameLanguage;
 
 /* Declarations the recovered sources need that no project header supplies.
  * Each one was checked against include/*.h first; these are the residue. */
@@ -91,7 +107,7 @@ typedef struct Pair {
 
 extern "C" {
 
-extern void RenderOamBothScreens(void *a, int b, int c, int d, int e, void *f);}
+}
 
 extern OamAttr *sSnowballBitSprites[];
 extern "C" {
@@ -134,9 +150,7 @@ static inline u32 MgRandom(u32 n) {
 }
 extern "C" {
 
-extern void DrawOamSprite(OamAttr *attr, int x, int y, struct Matrix2x2 *mtx);
 
-extern void Mg_SetTopScreenYOffset(int);
 
 extern void SetBg2Offset(int, int);
 
@@ -151,19 +165,14 @@ extern void Quaternion_Normalize(s32 *);}
 extern s32 data_02092768[4];
 extern "C" {
 
-void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 
 void func_0203cd80(int *m, short angle);
 
-void Mg_DrawNumberRotated(int a1, int a2, int a3, int a4, int a5, int a6, u16 a7);
 
-s32 GetGameLanguage(void);
 
-void FreeGfxSlotsById(int arg);
 
 void Vec2_Sub(int *o, int *a, int *b);
 
-extern void Ov004_Deallocate(void *p);
 
 u32 LoadCompressedFileAt(int fileID, void *target);
 

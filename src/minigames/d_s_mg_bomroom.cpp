@@ -37,10 +37,18 @@
 #include "nitro/gx/gx_bgcnt.h"
 #include "PlayerInput.h"
 #include "nitro/mi/memory.h"
+namespace s20afdd0 { void Mg_RenderSpriteBoth(void *a0, int, int, int, int); }
+using s20afdd0::Mg_RenderSpriteBoth;
+namespace s20afa20 { void RenderOamMainScreen(OamAttr *oam, int, int, int, int); }
+using s20afa20::RenderOamMainScreen;
+namespace s20af68c { void Hud_RenderSprite(void *attr, int, int, int, int); }
+using s20af68c::Hud_RenderSprite;
+namespace s20adbc0 { int Mg_GetSubmittedScore(void); }
+using s20adbc0::Mg_GetSubmittedScore;
 
 extern "C" {
 
-extern void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);}
+}
 
 extern OamAttr *sBomroomPenGateSprites[];
 
@@ -66,7 +74,7 @@ extern unsigned char *sBomroomBombFrameTimes[];
 extern unsigned char sBomroomBombFrameCounts[];
 extern "C" {
 
-extern void Mg_RenderSpriteBoth(void* a0, int a1, int a2, int a3, int a4);}
+}
 
 extern unsigned char *sBomroomBombSprites[];
 
@@ -75,7 +83,7 @@ extern unsigned char *sBomroomBombLitSprites[];
 extern void *sBomroomBombsSprites[];
 extern "C" {
 
-extern void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);}
+}
 
 extern OamAttr *sBomroomRoundOverSprites;
 
@@ -86,7 +94,7 @@ extern void *sBomroomMarkerLitSprites[];
 extern int sBomroomMarkerY[];
 extern "C" {
 
-extern int Mg_GetSubmittedScore(void);}
+}
 
 extern u16 sBomroomSpawnDelays[];
 extern "C" {

@@ -53,6 +53,34 @@ enum dScMgPachinko2_c_AssetId {
 #include "LevelRng.h"
 #include "math/CalcLib.h"
 #include "nitro/mi/memory.h"
+namespace s20b2444 { void Mg_DrawBigNumber(int, int, int, int, int, int, int); }
+using s20b2444::Mg_DrawBigNumber;
+namespace s20b1e44 { void Mg_DrawTopCenterCounter(int); }
+using s20b1e44::Mg_DrawTopCenterCounter;
+namespace s20b1a5c { void Mg_DrawTopRightCounter(int, int); }
+using s20b1a5c::Mg_DrawTopRightCounter;
+namespace s20b19f0 { void Mg_DrawTopLeftCounter(int); }
+using s20b19f0::Mg_DrawTopLeftCounter;
+namespace s20b0a54 { void Mg_SetSharedState(s32); }
+using s20b0a54::Mg_SetSharedState;
+namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+using s20b0aa0::FreeGfxSlotsById;
+namespace s20b04d0 { void Mg_SetTopScreenYOffset(int); }
+using s20b04d0::Mg_SetTopScreenYOffset;
+namespace s20aff38 { int Mg_RenderSpriteBothScaled(struct OamAttr *a0, int, int, int, int, Fix12i, int); }
+using s20aff38::Mg_RenderSpriteBothScaled;
+namespace s20afdd0 { void Mg_RenderSpriteBoth(void *a0, int, int, int, int); }
+using s20afdd0::Mg_RenderSpriteBoth;
+namespace s20af2f8 { void Mg_InitBrush(char*, char, int, int); }
+using s20af2f8::Mg_InitBrush;
+namespace s20adbe0 { int Mg_IsNewRecord(void); }
+using s20adbe0::Mg_IsNewRecord;
+namespace s20adb1c { void Mg_SubmitScore(int); }
+using s20adb1c::Mg_SubmitScore;
+namespace s20adc1c { int Mg_GetTopRecord(void); }
+using s20adc1c::Mg_GetTopRecord;
+namespace s20adbc0 { int Mg_GetSubmittedScore(void); }
+using s20adbc0::Mg_GetSubmittedScore;
 
 namespace Sound {
 void PlayBank2_2D(unsigned int id);
@@ -73,36 +101,24 @@ extern "C" {
 
 
 /* --- shared ov004, main and library helpers --- */
-extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);}
+}
 
 struct OamAttr;
 extern "C" {
 
-extern int Mg_RenderSpriteBothScaled(OamAttr *a, int b, int c, int d, int e, int f, int g);
 
-extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
 
-extern int Mg_GetSubmittedScore(void);
 
-extern int Mg_IsNewRecord(void);
 
-extern int Mg_GetTopRecord(void);
 
-extern void Mg_DrawTopLeftCounter(int score);
 
-extern void Mg_DrawTopRightCounter(int, int);
 
-extern void Mg_DrawTopCenterCounter(int a0);
 
-extern void Mg_SubmitScore(int self);
 
-extern void Mg_InitBrush(char *, char, int, int);
 
-extern void Mg_SetTopScreenYOffset(int);
 
-extern void Mg_SetSharedState(int);
 
-extern void FreeGfxSlotsById(int n);}
+}
 
 extern int Sound_PlayIfNotActive(int a, int b, int c, short d);
 
@@ -1800,7 +1816,7 @@ void dScMgPachinko2_c::Ball_DrawAll() {
             if (t != 0) {
                 Mg_RenderSpriteBoth(sPachinko2BallCountSprites[t - 1], x, y, -1, -1);
             } else {
-                Mg_RenderSpriteBothScaled(sPachinko2BallSprite, x, y, -1, -1, 0x1000,
+                Mg_RenderSpriteBothScaled((s20aff38::OamAttr *)sPachinko2BallSprite, x, y, -1, -1, 0x1000,
                                           mBalls[i].rotation);
             }
         }

@@ -122,8 +122,81 @@
 #define func_0204dab4 _Z13func_0204dab4PvP14TrackingRecordijS_
 #endif
 #include "common.h"
+#ifdef __cplusplus
+struct MgFx;
+struct MgBanner;
+struct dScMgBase_c;
+namespace s20aea78 { struct S; struct M; }
+namespace s20b2444 { void Mg_DrawBigNumber(int, int, int, int, int, int, int); }
+using s20b2444::Mg_DrawBigNumber;
+namespace s20b1ea4 { void Mg_DrawNumber(int, int, int, int, int, int, int); }
+using s20b1ea4::Mg_DrawNumber;
+namespace s20b1a5c { void Mg_DrawTopRightCounter(int, int); }
+using s20b1a5c::Mg_DrawTopRightCounter;
+namespace s20b0d8c { void Mg_DrawBlinkSprite(void *, int, int); }
+using s20b0d8c::Mg_DrawBlinkSprite;
+namespace s20b0cac { void Mg_ShowBanner(int, int, int, int, int, short); }
+using s20b0cac::Mg_ShowBanner;
+namespace s20b0a54 { void Mg_SetSharedState(int); }
+using s20b0a54::Mg_SetSharedState;
+namespace s20b04d0 { void Mg_SetTopScreenYOffset(int); }
+using s20b04d0::Mg_SetTopScreenYOffset;
+namespace s20b04c0 { int Mg_GetTopScreenYOffset(void); }
+using s20b04c0::Mg_GetTopScreenYOffset;
+namespace s20b0380 { void Mg_RenderSpriteBothMtx(void *, int, int, void *); }
+using s20b0380::Mg_RenderSpriteBothMtx;
+namespace s20afb20 { int Mg_RenderMainSpriteScaled(int, int, int, int, int, int, unsigned short); }
+using s20afb20::Mg_RenderMainSpriteScaled;
+namespace s20af948 { void Mg_RenderSubSpriteMtx(void *, int, int, void *); }
+using s20af948::Mg_RenderSubSpriteMtx;
+namespace s20af868 { void Mg_RenderSubSpritePalMtx(void *, int, int, int, int, void *); }
+using s20af868::Mg_RenderSubSpritePalMtx;
+namespace s20af2f8 { void Mg_InitBrush(char *, char, int, int); }
+using s20af2f8::Mg_InitBrush;
+namespace s20aea78 { void Mg_DrawSpriteListEntry(S *, int, int, M *); }
+using s20aea78::Mg_DrawSpriteListEntry;
+namespace s20ae858 { void Mg_DrawMenu(dScMgBase_c *); }
+using s20ae858::Mg_DrawMenu;
+namespace s20ae20c { void Mg_RestoreMusic(void); }
+using s20ae20c::Mg_RestoreMusic;
+namespace s20add88 { void Mg_DrawFx(MgFx *); }
+using s20add88::Mg_DrawFx;
+namespace s20adc00 { void Mg_SetTopRecord(int); }
+using s20adc00::Mg_SetTopRecord;
+namespace s20adb1c { void Mg_SubmitScore(int); }
+using s20adb1c::Mg_SubmitScore;
+namespace s20ad8b8 { int Mg_GetSavedRecord0(void); }
+using s20ad8b8::Mg_GetSavedRecord0;
+namespace s20ad878 { int Mg_GetSavedRecord1(void); }
+using s20ad878::Mg_GetSavedRecord1;
+namespace s20ad79c { void Mg_SaveRecordPair(int, int); }
+using s20ad79c::Mg_SaveRecordPair;
+void MgCoins_Draw(void);
+void MgCoins_PlaceBet(int);
+void MgCoins_RaiseBet(int);
+void MgCoins_StartLose(void);
+void MgCoins_StartSpend(int);
+void MgCoins_StartRefund(void);
+void Banner_Draw(MgBanner *);
+void Mg_LoadBannerFiles(void);
+void Mg_FreeBannerFiles(void);
+void Mg_ResetBannerLayout(void);
+void Mg_PlaceBannersOnTopScreen(void);
+void Mg_ResetRecordBannerPos(void);
+void Mg_SetPerfectBanner(void);
+void Mg_SetNextBanner(int);
+#endif
+/* C linkage. These declare ROM symbols by their exact final names, so a C++
+   translation unit including this header must not mangle them -- a bare
+   `void Foo(int);` seen from C++ emits _Z3Fooi, which exists nowhere. The file
+   still byte-matches, because match.py compares relocated words as wildcards, so
+   nothing catches it until the ROM link -- and eligible.py refuses to enroll a
+   file with unresolvable references, so the link never sees it either.
 
-struct daPly_c;
+   Verified safe: of the 1,644 function names declared across the decl_*.h
+   headers, 1,572 are themselves the ROM symbol and 0 exist ONLY in a mangled
+   form, so no declaration here relies on C++ mangling. The remaining 72 resolve
+   to neither spelling and are unresolvable with or without this guard. */struct daPly_c;
 struct daDossyCap_c;
 struct OamAttr;
 struct MascotWalker;
@@ -267,30 +340,39 @@ extern void Puff_ClearAll(int, int);
 namespace ns_020cd658 {
 int Trmp3DMario_InitPool(unsigned char*, int);
 }
+using ns_020cd658::Trmp3DMario_InitPool;
 namespace s020c38b0 {
 void FlowerFace_PlayHate(char *);
 }
+using s020c38b0::FlowerFace_PlayHate;
 namespace s020c3908 {
 void FlowerFace_PlayLike(char *);
 }
+using s020c3908::FlowerFace_PlayLike;
 namespace s020c3d18 {
 void FlowerFace_Update(char*);
 }
+using s020c3d18::FlowerFace_Update;
 namespace ns_020caadc {
 void Trmp2Mario_DrawAll(void);
 }
+using ns_020caadc::Trmp2Mario_DrawAll;
 namespace ns_020cac9c {
 void Trmp2Mario_ResetAll(u32);
 }
+using ns_020cac9c::Trmp2Mario_ResetAll;
 namespace ns_020cad3c {
 void Trmp2Mario_SetTuning(int);
 }
+using ns_020cad3c::Trmp2Mario_SetTuning;
 namespace ns_020cd270 {
 void Trmp3DMario_DrawAll(void);
 }
+using ns_020cd270::Trmp3DMario_DrawAll;
 namespace ns_020cd424 {
 void Trmp3DMario_ResetAll(unsigned int, int);
 }
+using ns_020cd424::Trmp3DMario_ResetAll;
 #endif
 
 extern Matrix4x3 data_ov021_02113a60, data_ov021_02113a80;
@@ -743,13 +825,6 @@ extern "C" extern int func_ov002_020df300(char*);
 extern "C" extern int func_ov002_020e10a8(void*);
 extern int func_ov002_020f02c8(int);
 extern int func_ov002_020f035c(u32, int);
-extern "C" extern int Mg_GetSavedRecord1(void);
-extern "C" extern int Mg_GetSavedRecord0(void);
-extern "C" extern void Mg_DrawMenu(void*);
-extern "C" extern void Mg_DrawSpriteListEntry(void *, void *, void *, void *);
-extern "C" extern int Mg_GetTopScreenYOffset(void);
-extern "C" extern void MgCoins_RaiseBet(int);
-extern "C" extern void MgCoins_PlaceBet(int);
 extern "C" extern void MiniGm_SaveIfDirty(char*);
 extern "C" extern int MiniGm_GetRecord(void*, int, int);
 extern "C" extern int MiniGm_IsNew(void*, int);
@@ -760,7 +835,6 @@ extern "C" extern int Mascot_Destruct(char*);
 extern "C" extern int Presenter_Destruct(char*);
 extern "C" extern int FlowerFace_IsIdle(char*);
 extern "C" extern int Trmp2Mario_InitPool(void*, int);
-extern "C" extern int Trmp3DMario_InitPool(unsigned char*, int);
 extern void Bomroom_DrawScore();
 extern int D3D_PlaySeAtX(int, int);
 /* The former func_ov006_020f9000..020f9f40 range is owned by the real
@@ -1135,39 +1209,9 @@ extern int func_ov002_020eeeb8(void*, char*);
 extern int func_ov002_020ef070(void*, char*);
 extern "C" extern void func_ov003_020b060c(void*);
 extern "C" extern void func_ov003_020b0730(void*, int);
-extern "C" extern void Mg_SaveRecordPair(int, int);
-extern "C" extern void Mg_SubmitScore(int);
-extern "C" extern void Mg_SetTopRecord(int);
-extern "C" extern void Mg_DrawFx(void*);
-extern "C" extern void Mg_RestoreMusic(void);
-extern "C" extern void Mg_InitBrush(char*, int, int, int);
-extern "C" extern void Mg_RenderSubSpritePalMtx(void*, int, int, int, int, void*);
-extern "C" extern void Mg_RenderSubSpriteMtx(void*, int, int, void*);
-extern "C" extern int Mg_RenderMainSpriteScaled(void*, int, int, int, int, int, u16);
-extern "C" extern void Mg_RenderSpriteBothMtx(void*, int, int, void*);
-extern "C" extern void Mg_SetTopScreenYOffset(int);
-extern "C" extern void Mg_SetSharedState(int);
-extern "C" extern void Mg_ShowBanner(int, int, int, int, int, short);
-extern "C" extern void Mg_DrawBlinkSprite(void*, int, int);
-extern "C" extern void Mg_DrawTopRightCounter(int, int);
-extern "C" extern void Mg_DrawNumber(int, int, int, int, int, int, int);
-extern "C" extern void Mg_DrawBigNumber(int, int, int, int, int, int, int);
-extern "C" extern void Mg_FreeBannerFiles(void);
-extern "C" extern void Mg_LoadBannerFiles(void);
-extern "C" extern void Banner_Draw(void*);
-extern "C" extern void MgCoins_StartRefund(void);
-extern "C" extern void MgCoins_StartSpend(int);
-extern "C" extern void MgCoins_StartLose(void);
-extern "C" extern void MgCoins_Draw(void);
-extern "C" extern void Mg_SetNextBanner(int);
-extern "C" extern void Mg_SetPerfectBanner(void);
-extern "C" extern void Mg_ResetRecordBannerPos(void);
-extern "C" extern void Mg_PlaceBannersOnTopScreen(void);
-extern "C" extern void Mg_ResetBannerLayout(char*);
 extern "C" extern void MiniGm_LoadGroupIcons(void*);
 extern "C" extern void Camera_ProjectToScreen16(void*, char*, short*);
-extern "C" extern void MascotWalker_StartNextPath(void*);
-extern void MascotWalker_Draw(char*);
+extern "C" extern void MascotWalker_StartNextPath(void*);extern void MascotWalker_Draw(char*);
 extern void MascotWalker_Load(struct MascotWalker *);
 extern void Dealer_ResetMatrices(char*);
 extern void Dealer_PlayWin(void*);
@@ -1186,13 +1230,10 @@ extern "C" extern void Presenter_Draw(void*);
 extern "C" extern void Presenter_Update(char*);
 extern void FallingPetal_UpdateMatrix(char*);
 extern void FallingPetal_Draw(char*);
-extern "C" extern void FlowerFace_PlayHate(char *);
-extern "C" extern void FlowerFace_PlayLike(char *);
 extern void FlowerFace_PlayPetalPulled(char*);
 extern "C" extern void Camera_InitFlowerView(void*);
 extern void FlowerFace_Reset(void*);
 extern void FlowerFace_Draw(void*);
-extern "C" extern void FlowerFace_Update(char*);
 extern int FlowerFace_Load(char*);
 extern "C" extern void*FlowerFace_Destruct(char*);
 extern void Heyho_DrawAll(void);
@@ -1202,11 +1243,6 @@ extern "C" extern void Jump3D_Arrange(int, int);
 extern void Jump3D_DisableInput(void);
 extern void Jump3D_RestoreCount(void);
 extern void Puff_ClearAll(int, int);
-extern "C" extern void Trmp2Mario_DrawAll(void);
-extern "C" extern void Trmp2Mario_ResetAll(u32);
-extern "C" extern void Trmp2Mario_SetTuning(int);
-extern "C" extern void Trmp3DMario_DrawAll(void);
-extern "C" extern void Trmp3DMario_ResetAll(unsigned int, int);
 extern void TrmpItem_MotionHover(void *);
 extern void TrmpItem_MotionSway(void *);
 extern void TrmpItem_UpdateMatricesAll(void);

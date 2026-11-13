@@ -28,9 +28,8 @@ typedef struct DMAChannelRegs {
     u32 src;
     u32 dst;
     u32 cnt;
-}
-extern "C" {
- DMAChannelRegs;
+} DMAChannelRegs;
+
 
 void MIi_DmaSetParams_wait(u32 channel, u32 src, u32 dst, u32 cnt) {
     volatile DMAChannelRegs *reg;
@@ -48,4 +47,4 @@ void MIi_DmaSetParams_wait(u32 channel, u32 src, u32 dst, u32 cnt) {
 
     OS_RestoreInterrupts(savedState);
 }
-}
+

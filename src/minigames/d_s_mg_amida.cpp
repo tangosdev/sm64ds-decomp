@@ -98,15 +98,20 @@ enum dScMgAmida_c_AssetId {
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/g2.h"
 #include "nitro/mi/memory.h"
+namespace s20b1e34 { void Mg_DrawScoreTally(void*, int, int, int); }
+using s20b1e34::Mg_DrawScoreTally;
+namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+using s20b0aa0::FreeGfxSlotsById;
+namespace s20afdd0 { void Mg_RenderSpriteBoth(void *a0, int, int, int, int); }
+using s20afdd0::Mg_RenderSpriteBoth;
+namespace s20ad674 { s32 GetGameLanguage(void); }
+using s20ad674::GetGameLanguage;
 
 extern "C" {
 
 /* --- shared ov004 and main helpers --- */
-extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 
-extern void Mg_DrawScoreTally(void *a0, int a1, int a2, int a3);
 
-extern void FreeGfxSlotsById(int a);
 
 extern u32 LoadCompressedFileAt(int fileID, void *target);
 
@@ -122,7 +127,7 @@ extern void func_020126ac(int a0, int a1, int a2, int a3, int a4);
 
 extern int func_02012468(int handle, int a, int sfx, int b, int c, int d, int pan, short e);extern "C" {
 
-extern int GetGameLanguage(void);}
+}
 void Amida_RestoreBgChars(void *);
 void Amida_SaveBgChars(void *);
 void *dScMgAmida_c_classInit(void);

@@ -100,7 +100,8 @@ void MTX_MultVec43(Vector3 *src, Matrix4x3 *mtx, Vector3 *dst);
 void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *dst);
 }
 
-void Quaternion_FromVector3(void *q, Vector3 *axis, Vector3 *v);
+struct Quat;
+void Quaternion_FromVector3(Quat *q, Vector3 *axis, Vector3 *v);
 extern "C" {
 
 void Quaternion_Normalize(void *q);
@@ -120,9 +121,10 @@ extern const u16 sNewsLiftPlatformYaws[4] = {0, 0x8000, 0x4000, 0xc000};
 
 /* CV_NEWS_LIFT factory. classInit is the EAD shape; the cartridge's RTTI
  * names the class, not this function. */
-extern "C" daObjCvNewsLift_c *daObjCvNewsLift_c_classInit() {
+daObjCvNewsLift_c *daObjCvNewsLift_c_classInit() {
     return new daObjCvNewsLift_c();
 }
+
 
 /* One callback per collider. Only the player (actor 0xbf) is handled.
  * The comparison stays in an int; see the notes above. */
@@ -149,7 +151,7 @@ void daObjCvNewsLift_c::OnMainMeshRide(dActor_c *player) {
         axis.x = 0;
         axis.y = 0x1000;
         axis.z = 0;
-        Quaternion_FromVector3(&mTargetRotation, &axis, &inFrame);
+        Quaternion_FromVector3((Quat *)&mTargetRotation, &axis, &inFrame);
         Quaternion_Normalize(&mTargetRotation);
         mTiltHoldTimer = 10;
     }
@@ -528,5 +530,6 @@ void daObjCvNewsLift_c::UpdateClsnTransforms() {
 }
 
 /* Typed registry descriptor; priorities, flags and clip ranges match retail. */
-extern "C" SpawnInfo<daObjCvNewsLift_c> g_profile_CV_NEWS_LIFT = {
+SpawnInfo<daObjCvNewsLift_c> g_profile_CV_NEWS_LIFT = {
     daObjCvNewsLift_c_classInit, 0x44, 0x8b, 6, 0, 0x2a8000, 0x1900000, 0x1900000};
+

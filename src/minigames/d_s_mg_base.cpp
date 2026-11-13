@@ -51,6 +51,12 @@
 #include "nitro/hw/registers.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/mi/memory.h"
+void Banner_Press(MgBanner *e);
+int Banner_IsPressFinished(MgBanner *e);
+extern "C" void Banner_Init(struct MgBanner *e, int c, int a1, int a2, int a3, int s1, short s2);
+void Banner_Update(MgBanner *e);
+void Banner_Free(MgBanner *e);
+void Mg_ResetBannerLayout(void);
 
 #pragma defer_codegen off
 
@@ -83,58 +89,78 @@ struct MgFx {
 
 typedef void (MgFx::*EntPMF)();
 
-extern "C" {
 
 /* Static minigame base state: the graphCallback_c registry instance, the
    MgFx record pool, and the two PMF state tables the dispatchers call
    through. Declaration order is the ROM's __sinit order. */
 dScMgBase_c::graphCallback_c sMgGraphCallback;
+
 MgFx sMgFxPool[0x40];
+
 EntPMF sMgFxUpdateTable[2] = {&MgFx::UpdateDrift, &MgFx::UpdateFlyTo};
+
 EntPMF sMgFxDrawTable[2] = {&MgFx::DrawSparkle, &MgFx::DrawFlyTo};
+
 OamAttr *sMgSparkleSprites[16];
-}
 
 
-extern "C" {
 
 extern void *sMgWorkBuffer;
+
 extern dGraph_c::callback_c *gGraphCallback;
-void Banner_Update(MgBanner *e);
+namespace s20adf2c {
 void Mg_UpdateFx(MgFx *c);
+}
+
+using s20adf2c::Mg_UpdateFx;
+
 extern dFdBrightness_c *gSceneFader; /* the installed screen fader */
 extern unsigned short data_020a0e5a[];
+
 extern int data_0208ee44;
-extern void Mg_CommitRecords(void);
-extern void FreeGfxSlotsById(int arg);
+namespace s20ad90c {
+void Mg_CommitRecords(void);
 }
 
-extern void func_02012e1c(void);
-extern "C" {
+using s20ad90c::Mg_CommitRecords;
+namespace s20b0aa0 {
+void FreeGfxSlotsById(int arg);
+}
 
+using s20b0aa0::FreeGfxSlotsById;
+void func_02012e1c(void);
+namespace s20ae330 {
 void Mg_InitMusic();
-extern void Enable3dEngines(void);
-extern MgEntry gMgMenuRow;
-extern dWipe_c data_0209f61c;
-extern unsigned char data_0209d460;
-extern unsigned char data_0209d458;
 }
 
+using s20ae330::Mg_InitMusic;
+extern "C" {
+extern void Enable3dEngines(void);
+}
 
+extern MgEntry gMgMenuRow;
+
+extern dWipe_c data_0209f61c;
+
+extern unsigned char data_0209d460;
+
+extern unsigned char data_0209d458;
 /* The scene's five saved records: func_02013580(table, i) reads record i of
    save table `table`, func_02013568(table, i, v) writes it, and
    Mg_GetSaveTable(scene) picks the table from byte 1 of param1. */
 int func_02013580(int table, int index);
 void func_02013568(int table, int index, int value);
-extern "C" {
-
+namespace s20adc3c {
 int Mg_GetSaveTable(void *scene);
+}
+
+using s20adc3c::Mg_GetSaveTable;
+
 
 /* One table of OAM sprite lists per language, indexed by
    GetGameLanguage(); the helpers below hand its lists to the OAM
    wrappers. */
 extern OamAttr **sMgSpriteTables[];
-}
 
 
 /* dScMgBase_c::IsAltVariant - slot 35, the LAST slot of dScMgBase_c's own
@@ -171,7 +197,6 @@ int dScMgBase_c::IsAltVariant()
 }
 
 namespace s20ad674 {
-extern "C" {
 
 s32 GetGameLanguage(void)
 {
@@ -189,26 +214,26 @@ s32 GetGameLanguage(void)
         return 0;
     }
 }
-}
+
 }
 
 namespace s20ad6f4 {
-extern "C" {
 
 /* Returns mLastRecordRank: the index (0..4) at which Mg_RankSessionBest last
    inserted a score into the five saved records, or -1 if it placed nowhere
    (the constructor also seeds -1). */
-int Mg_GetLastRecordRank(dScMgBase_c *scene)
+int Mg_GetLastRecordRank(dScMgBase_c *scene, int)
 {
     return scene->mLastRecordRank;
 }
-}
+
 }
 
 namespace s20ad6fc {
 extern "C" {
-
 extern MgEntry gMgMenuRow;
+}
+
 /* Returns the index (0..4) at which `value` would enter the scene's five
    saved records, or -1. Scoring mode 5 (gMgMenuRow.scoringMode) is
    lower-is-better and never places a value <= 0; every other mode is
@@ -228,14 +253,15 @@ int Mg_FindRecordRank(void *scene, int value)
     }
     return -1;
 }
-}
+
 }
 
 namespace s20ad79c {
 extern "C" {
-
 extern MgEntry gMgMenuRow;
 extern unsigned char gMgSaveDirty;
+}
+
 
 /* Saves a two-value result into saved records 0 and 1 of the current scene.
    A first value <= 0 replaces both with the menu row's record defaults 0
@@ -263,11 +289,10 @@ void Mg_SaveRecordPair(int first, int second) {
     func_02013568(Mg_GetSaveTable(gMgScene), 1, v1);
     gMgSaveDirty = 1;
 }
-}
+
 }
 
 namespace s20ad878 {
-extern "C" {
 
 /* Saved record 1 of the current scene, or 0 with no scene. */
 int Mg_GetSavedRecord1(void) {
@@ -275,13 +300,14 @@ int Mg_GetSavedRecord1(void) {
     if (scene == 0) return 0;
     return func_02013580(Mg_GetSaveTable(scene), 1);
 }
-}
+
 }
 
 namespace s20ad8b8 {
 extern "C" {
-
 extern MgEntry gMgMenuRow;
+}
+
 /* Saved record 0 of the current scene; an empty record reads as the menu
    row's record default 0. 0 with no scene. */
 int Mg_GetSavedRecord0(void) {
@@ -293,31 +319,51 @@ int Mg_GetSavedRecord0(void) {
     }
     return 0;
 }
+
 }
+
+namespace s20ad940 {
+void Mg_RankSessionBest(dScMgBase_c *scene);
 }
 
 namespace s20ad90c {
-extern "C" {
+using s20ad940::Mg_RankSessionBest;
 
-extern void Mg_RankSessionBest(dScMgBase_c *scene);
 
 void Mg_CommitRecords(void) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0) return;
     Mg_RankSessionBest(scene);
 }
+
 }
+
+namespace s20adafc {
+int Mg_GetSessionBest(void);
+}
+
+namespace s20ada20 {
+void Mg_ClearNewRecordFlag(void);
+}
+
+namespace s20ada40 {
+void Mg_SetSessionBest(int score);
+}
+
+namespace s20adbc0 {
+int Mg_GetSubmittedScore(void);
 }
 
 namespace s20ad940 {
+using s20adafc::Mg_GetSessionBest;
+using s20ad6fc::Mg_FindRecordRank;
+using s20ada20::Mg_ClearNewRecordFlag;
+using s20ada40::Mg_SetSessionBest;
+using s20adbc0::Mg_GetSubmittedScore;
 extern "C" {
-
-int Mg_GetSessionBest(void);
-int Mg_FindRecordRank(void *scene, int value);
-void Mg_ClearNewRecordFlag(void);
-void Mg_SetSessionBest(int score);
-int Mg_GetSubmittedScore(void);
 extern unsigned char gMgSaveDirty;
+}
+
 
 /* Ranks the session best (mSessionBest, from Mg_GetSessionBest) among the
    five saved records with Mg_FindRecordRank and keeps that rank in
@@ -351,11 +397,10 @@ void Mg_RankSessionBest(dScMgBase_c *scene)
     scene->mRankedScore = Mg_GetSessionBest();
     Mg_SetSessionBest(0);
 }
-}
+
 }
 
 namespace s20ada20 {
-extern "C" {
 
 /* Clears the new-record flag mNewRecord. */
 void Mg_ClearNewRecordFlag(void) {
@@ -364,14 +409,19 @@ void Mg_ClearNewRecordFlag(void) {
         scene->mNewRecord = 0;
     }
 }
+
 }
+
+namespace s20adc1c {
+int Mg_GetTopRecord(void);
 }
 
 namespace s20ada40 {
 extern "C" {
-
 extern MgEntry gMgMenuRow;
-extern int Mg_GetTopRecord(void);
+}
+using s20adc1c::Mg_GetTopRecord;
+
 
 /* Stores `score` as the session best (mSessionBest). If it beats the saved
    top record (mTopRecord), it becomes the new record and mNewRecord is set.
@@ -395,11 +445,10 @@ void Mg_SetSessionBest(int score)
     Mg_SetTopRecord(score);
     gMgScene->mNewRecord = 1;
 }
-}
+
 }
 
 namespace s20adafc {
-extern "C" {
 
 /* The session best, mSessionBest; 0 with no scene. */
 int Mg_GetSessionBest(void) {
@@ -409,15 +458,16 @@ int Mg_GetSessionBest(void) {
     }
     return 0;
 }
-}
+
 }
 
 namespace s20adb1c {
+using s20adafc::Mg_GetSessionBest;
+using s20ada40::Mg_SetSessionBest;
 extern "C" {
-
-extern int Mg_GetSessionBest(void);
-extern void Mg_SetSessionBest(int);
 extern MgEntry gMgMenuRow;
+}
+
 /* Submits a score: stores it in mSubmittedScore (outside scoring mode 5, capped
    at the menu row's scoreCap when that is nonzero) and passes it to
    Mg_SetSessionBest when it beats the session best. */
@@ -440,11 +490,10 @@ void Mg_SubmitScore(int score) {
         Mg_SetSessionBest(score);
     }
 }
-}
+
 }
 
 namespace s20adbc0 {
-extern "C" {
 
 /* The submitted score, mSubmittedScore; 0 with no scene. */
 int Mg_GetSubmittedScore(void) {
@@ -454,11 +503,10 @@ int Mg_GetSubmittedScore(void) {
     }
     return 0;
 }
-}
+
 }
 
 namespace s20adbe0 {
-extern "C" {
 
 /* The new-record flag, mNewRecord; 0 with no scene. */
 int Mg_IsNewRecord(void) {
@@ -468,11 +516,10 @@ int Mg_IsNewRecord(void) {
     }
     return 0;
 }
-}
+
 }
 
 namespace s20adc00 {
-extern "C" {
 
 /* Sets the saved top record (mTopRecord); no-op with no scene. */
 void Mg_SetTopRecord(int v) {
@@ -481,11 +528,10 @@ void Mg_SetTopRecord(int v) {
         scene->mTopRecord = v;
     }
 }
-}
+
 }
 
 namespace s20adc1c {
-extern "C" {
 
 /* The saved top record (mTopRecord); 0 with no scene. */
 int Mg_GetTopRecord(void) {
@@ -495,65 +541,68 @@ int Mg_GetTopRecord(void) {
     }
     return 0;
 }
-}
+
 }
 
 namespace s20adc3c {
-extern "C" {
 
 /* The scene's save-table id: byte 1 of param1. */
 int Mg_GetSaveTable(void *scene) {
     return (((dScMgBase_c *)scene)->param1 & 0xff00) >> 8;
 }
-}
+
 }
 
 namespace s20adc4c {
 extern "C" {
-
 extern int sMgWorkBuffer[];
-int Mg_GetWorkBuffer(void) { return sMgWorkBuffer[0]; }
 }
+
+int Mg_GetWorkBuffer(void) { return sMgWorkBuffer[0]; }
+
 }
 
 namespace s20adc5c {
-extern "C" {
 
 void Ov004_Deallocate(void *ptr)
 {
     Deallocate(ptr);
 }
-}
+
 }
 
 namespace s20adc68 {
 extern "C" {
-
 extern void *LoadFile(int handle);
+}
+
 void *Ov004_LoadFile(int id) {
     return LoadFile(id);
 }
-}
+
 }
 
 namespace s20adc74 {
 extern "C" {
-
 extern void *func_020182bc(const char *path);
+}
+
 
 void *Ov004_LoadFileByPath(const char *path)
 {
     return func_020182bc(path);
 }
+
 }
+
+namespace s20b1d60 {
+void Mg_RenderSpriteOnNoMtx(void *, int, int, int, int);
 }
 
 namespace s20adc80 {
-extern "C" {
+using s20ad674::GetGameLanguage;
+using s20b1d60::Mg_RenderSpriteOnNoMtx;
 
-extern int GetGameLanguage(void);
-extern void Mg_RenderSpriteOnNoMtx(void *, int, int, int, int);
-}
 }
 /* State 1's draw: word 2 of the current language's entry in
    sMgSpriteTables, at mPos >> 12. */
@@ -564,13 +613,13 @@ void MgFx::DrawFlyTo() {
 }
 
 namespace s20adcc8 {
+using s20b1d60::Mg_RenderSpriteOnNoMtx;
 extern "C" {
-
-extern void Mg_RenderSpriteOnNoMtx(void *a0, int a1, int a2, int a3, int a4);
 extern int sMgSparkleSpritesGuard;
 extern OamAttr *data_ov004_020bea14[];
 extern OamAttr *sMgSparkleSprites[];
 }
+
 }
 /* State 0's draw. The first call builds the 16-entry frame table
    sMgSparkleSprites from five words at data_ov004_020bea14 (bit 0 of
@@ -608,25 +657,28 @@ void MgFx::DrawSparkle() {
 
 namespace s20add88 {
 extern "C" {
-
 extern EntPMF sMgFxDrawTable[];
 }
 
 /* Draws one record through its state's handler. */
-extern "C" void Mg_DrawFx(MgFx *c) {
+void Mg_DrawFx(MgFx *c) {
     (c->*sMgFxDrawTable[c->mState])();
 }
+
+}
+
+namespace s20b1b40 {
+void Mg_GainCredits(int c);
 }
 
 namespace s20addcc {
-extern "C" {
+using s20b1b40::Mg_GainCredits;
 
-void Mg_GainCredits(int c);
 inline long long inline_fn(int arg0)
 {
   return (long long) arg0;
 }
-}
+
 }
 /* State 1's update. Counts mTimer down, calling Mg_GainCredits(1) on
    the frame it reaches 0, then places mPos between the two vectors by the
@@ -668,22 +720,21 @@ void MgFx::UpdateDrift() {
 
 namespace s20adf2c {
 extern "C" {
-
 extern EntPMF sMgFxUpdateTable[];
 }
 
 /* Updates one record through its state's handler. */
-extern "C" void Mg_UpdateFx(MgFx *c) {
+void Mg_UpdateFx(MgFx *c) {
     (c->*sMgFxUpdateTable[c->mState])();
 }
+
 }
 
 namespace s20adf70 {
-extern "C" {
 
 /* Fills record `c`. mDuration starts equal to mTimer; either vector may
    be omitted with a null pointer. */
-void Mg_InitFx(MgFx *e, short state, short timer, int *pos, int *vecA, int *vecB) {
+extern "C" void Mg_InitFx(MgFx *e, short state, short timer, int *pos, int *vecA, int *vecB) {
     e->mState = state;
     e->mTimer = timer;
     e->mDuration = e->mTimer;
@@ -698,20 +749,19 @@ void Mg_InitFx(MgFx *e, short state, short timer, int *pos, int *vecA, int *vecB
         e->mVecB[1] = vecB[1];
     }
 }
-}
+
 }
 
 namespace s20adfc4 {
-extern "C" {
+extern "C" void Mg_InitFx(void *rec, char *state, short timer, short pos, int *vecA, int *vecB);
 
-extern void Mg_InitFx(void *rec, char *state, short timer, short pos, int *vecA, int *vecB);
 /* Fills the first free record of the 0x40 at sMgFxPool (see
    Mg_InitFx); does nothing without a position or a free record.
    The parameter types are not the callers': `state` arrives as an int and
    `pos` is the position pointer, tested whole (movs r4, r2). They are left
    as they are because retyping them adds new disagreements with the
    callers' differing declarations in the declaration-agreement gate. */
-void Mg_SpawnFx(char *state, short timer, short pos, int *vecA, int *vecB, int *unused){
+extern "C" void Mg_SpawnFx(char *state, short timer, short pos, int *vecA, int *vecB, int *unused){
   if(pos==0) return;
   int i;
   for(i=0;i<0x40;i++){
@@ -721,7 +771,7 @@ void Mg_SpawnFx(char *state, short timer, short pos, int *vecA, int *vecB, int *
     }
   }
 }
-}
+
 }
 
 /* dScMgBase_c::graphCallback_c::GraphCallback3 -- slot 3: calls the
@@ -822,8 +872,9 @@ int dScMgBase_c::OnGraphCallback0()
 
 namespace s20ae1a8 {
 extern "C" {
-
 extern MgEntry gMgMenuRow;
+}
+
 /* The menu row's scoring mode, or -1 with no scene. */
 int Mg_GetScoringMode(void) {
     if (gMgScene != 0) {
@@ -831,13 +882,14 @@ int Mg_GetScoringMode(void) {
     }
     return -1;
 }
-}
+
 }
 
 namespace s20ae1cc {
 extern "C" {
-
 extern MgEntry gMgMenuRow;
+}
+
 
 /* The menu row's music mode, or 0 with no scene. The
    music helpers below treat 0 as "stop the music" and 1 as "play
@@ -848,11 +900,10 @@ int Mg_GetMusicMode(void) {
     }
     return 0;
 }
-}
+
 }
 
 namespace s20ae1f0 {
-extern "C" {
 
 /* The scene's music track, mMusicTrack; 5 with no scene. */
 int Mg_GetMusicTrack(void) {
@@ -860,15 +911,16 @@ int Mg_GetMusicTrack(void) {
     if (scene != 0) return scene->mMusicTrack;
     return 5;
 }
-}
+
 }
 
 namespace s20ae20c {
 extern "C" {
-
 extern void d_s_mg_basePlaySubHold(unsigned int a, unsigned int b, unsigned int c, int d, int e);
-extern int Mg_GetMusicMode(void);
-extern int Mg_GetMusicTrack(void);
+}
+using s20ae1cc::Mg_GetMusicMode;
+using s20ae1f0::Mg_GetMusicTrack;
+
 /* Sound::PlaySub with third argument 0 and its flag set starts nothing:
    it only sets the music volume target (sMusicVolumeTarget, which
    ChangeMusicVolume and PauseMusic also write) back to 0x7f, with step
@@ -881,13 +933,12 @@ void Mg_RestoreMusic(void)
     if (Mg_GetMusicMode() != 1) return;
     Sound::LoadAndSetMusic_Layer1(Mg_GetMusicTrack());
 }
-}
+
 }
 
 namespace s20ae274 {
-extern "C" {
+using s20ae1cc::Mg_GetMusicMode;
 
-extern int Mg_GetMusicMode(void);
 
 /* While a scene exists, starts sequence `id` on Sound::PlaySub's own
    player (sSubHandle) unless it is already the current one, and sets
@@ -898,14 +949,13 @@ void Mg_PlayJingle(void* id) {
     Mg_GetMusicMode();
     Sound::PlaySub((unsigned int)id, 0x40, 0x7f, 0x7f000, 1);
 }
-}
+
 }
 
 namespace s20ae2c8 {
-extern "C" {
+using s20ae1cc::Mg_GetMusicMode;
+using s20ae1f0::Mg_GetMusicTrack;
 
-int Mg_GetMusicMode(void);
-int Mg_GetMusicTrack(void);
 /* Music mode 0 stops the music; mode 1 plays the scene's track. */
 void Mg_StartMusic(void) {
     if (gMgScene == 0) return;
@@ -917,15 +967,16 @@ void Mg_StartMusic(void) {
     if (r != 1) return;
     Sound::LoadAndSetMusic_Layer1(Mg_GetMusicTrack());
 }
-}
+
 }
 
 namespace s20ae330 {
+using s20ae1cc::Mg_GetMusicMode;
+using s20ae1f0::Mg_GetMusicTrack;
 extern "C" {
-
-extern int Mg_GetMusicMode(void);
-extern int Mg_GetMusicTrack(void);
 extern MgEntry gMgMenuRow;
+}
+
 
 /* Music mode 0 stops the music, and replays the scene's track only when
    the menu row's scene ID is 0x16f; any nonzero mode plays the
@@ -942,12 +993,11 @@ void Mg_InitMusic(void) {
     }
     Sound::LoadAndSetMusic_Layer1(Mg_GetMusicTrack());
 }
-}
+
 }
 
 namespace s20ae3b4 {
 extern "C" {
-
 /* dScMgBase_c::PaintSquare - slot 34.  THE BRUSH.
 
    Walks a `size` x `size` square centred on (cx, cy) and paints every cell
@@ -978,6 +1028,7 @@ extern "C" {
 extern int sMgPaintWord;
 extern int sMgTopScreenYOffset;
 }
+
 }
 
 void dScMgBase_c::PaintSquare(int cx, int cy, int colour, int size) {
@@ -1155,16 +1206,14 @@ void dScMgBase_c::Mg_DrawLine(int x0, int y0, int x1, int y1, int colour, int si
     }
 }
 
-namespace s20ae858 {
-
-extern "C" {
-
-int GetGameLanguage(void);
-void Mg_DrawSpriteList(void *self, int a1, int a2, void *a3);
+namespace s20aea30 {
+void Mg_DrawSpriteList(void *self, void *actor, void *c2, void *c3);
 }
+
+namespace s20ae858 {
+using s20ad674::GetGameLanguage;
+using s20aea30::Mg_DrawSpriteList;
 extern "C" {
-
-
 extern int *sMgMenuItem0SpritesByLanguage[];
 extern int *sMgMenuItem1SpritesByLanguage[];
 extern int *sMgMenuItem2SpritesByLanguage[];
@@ -1178,7 +1227,7 @@ extern OamAttr *data_ov006_021346bc;
    is FX_Inv of a pulse that mMenuCursorPhase drives through
    FX_SinIdx. Nothing is drawn while mTouchOptions.Draw() returns
    nonzero. */
-extern "C" void Mg_DrawMenu(dScMgBase_c *scene)
+void Mg_DrawMenu(dScMgBase_c *scene)
 {
     int extra[3];
     s16 *tbl[3];
@@ -1217,27 +1266,28 @@ extern "C" void Mg_DrawMenu(dScMgBase_c *scene)
 
             pos = tbl[i];
             do {
-                Mg_DrawSpriteListEntry((void *)cursor, (void *)(int)pos[0], (void *)(int)pos[1],
-                                       (void *)buf);
+                Mg_DrawSpriteListEntry((s20aea78::S *)cursor, pos[0], pos[1],
+                                       (s20aea78::M *)buf);
                 v = *(u16 *)(cursor + 6);
                 cursor += 8;
             } while (v != 0xffff);
 
-            Mg_DrawSpriteList(data_ov006_021346bc, tbl[i][0], tbl[i][1], 0);
+            Mg_DrawSpriteList(data_ov006_021346bc, (void *)(int)tbl[i][0], (void *)(int)tbl[i][1], 0);
         } else {
             s16 *pos = tbl[i];
-            Mg_DrawSpriteList((void *)extra[i], pos[0], pos[1], 0);
-            Mg_DrawSpriteList(data_ov006_021346bc, pos[0], pos[1], 0);
+            Mg_DrawSpriteList((void *)extra[i], (void *)(int)pos[0], (void *)(int)pos[1], 0);
+            Mg_DrawSpriteList(data_ov006_021346bc, (void *)(int)pos[0], (void *)(int)pos[1], 0);
         }
     }
 }
+
 }
 
 namespace s20aea30 {
 
 /* Draws an OAM sprite list: calls Mg_DrawSpriteListEntry on each 8-byte
    entry from `self`, up to and including the one whose attr3 is 0xffff. */
-extern "C" void Mg_DrawSpriteList(void *self, void *actor, void *c2, void *c3)
+void Mg_DrawSpriteList(void *self, void *actor, void *c2, void *c3)
 {
     void *r8 = self;
     void *r7 = actor;
@@ -1245,30 +1295,30 @@ extern "C" void Mg_DrawSpriteList(void *self, void *actor, void *c2, void *c3)
     void *r5 = c3;
     u16 sentinel = 0xffff;
     do {
-        Mg_DrawSpriteListEntry(r8, r7, r6, r5);
+        Mg_DrawSpriteListEntry((s20aea78::S *)r8, (int)r7, (int)r6, (s20aea78::M *)r5);
         u16 v = *(u16*)((char*)r8 + 6);
         r8 = (char*)r8 + 8;
         if (v == sentinel) break;
     } while (1);
 }
+
 }
 
 namespace s20aea78 {
 
 struct M { int _00, _01, _10, _11; };
-extern "C" {
-
-extern void Mg_RenderSpriteOnMtx(void* a0, int a1, int a2, int a3, int a4, struct M* a5);
-}
+extern "C" void Mg_RenderSpriteOnMtx(void* a0, int a1, int a2, int a3, int a4, struct M* a5);
 
 
 struct BF { unsigned int lo:10; unsigned int hi:22; };
+
 struct S { int x; BF y; };
+
 
 /* Draws one sprite-list entry at (a1, a2) through Mg_RenderSpriteOnMtx.
    When the scene's GetDisplayMode (slot 26) returns 2, the copy
    drawn has 0x200 subtracted from its tile number (attr2 bits 0..9). */
-extern "C" void Mg_DrawSpriteListEntry(S* self, int a1, int a2, struct M* a3)
+void Mg_DrawSpriteListEntry(S* self, int a1, int a2, struct M* a3)
 {
     S v = *self;
     if (gMgScene->GetDisplayMode() == 2) {
@@ -1276,14 +1326,13 @@ extern "C" void Mg_DrawSpriteListEntry(S* self, int a1, int a2, struct M* a3)
     }
     Mg_RenderSpriteOnMtx(&v, a1, a2, 0, -1, a3);
 }
+
 }
 
 extern "C" {
-
 extern void func_0203b958(short* o, short* a, short* b);
 }
-
-extern void func_02012dd0(int a);
+void func_02012dd0(void *a);
 
 
 /* The overlay menu's frame while it is open: slides the items in and, on
@@ -1376,7 +1425,7 @@ after:
         dScene_c::StartSceneFade(5, 0, 0);
         if (mQuitFadeStarted != 0)
             return;
-        func_02012dd0(0x3c);
+        func_02012dd0((void *)0x3c);
         mQuitFadeStarted = 1;
         return;
     case 2:
@@ -1404,7 +1453,6 @@ struct MgMenuSaveArea {
 
 namespace s20aeed8 {
 extern "C" {
-
 /* dScMgBase_c::RestoreScreenFromMenu - slot 30.
 
    WHAT IT DOES, because the name says the opposite of both halves.  This is
@@ -1424,8 +1472,6 @@ extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 extern u8 data_0209d460;
 extern u8 data_0209d458;
-}
-
 
 /* RETURN TYPE, MEASURED -- and it corrects the header's earlier `int`, which
    that slot's own evidence block called "a HINT".  Declaring this member `int`
@@ -1440,6 +1486,8 @@ extern u8 data_0209d458;
 
    Spelled `void` it is byte-exact.  Both overrides and decl_common.h:2321
    already said void; the retail source did too. */
+}
+
 }
 
 void dScMgBase_c::RestoreScreenFromMenu() {
@@ -1481,7 +1529,7 @@ void dScMgBase_c::RestoreScreenFromMenu() {
 }
 
 namespace s20af04c {
-
+extern "C" {
 /* dScMgBase_c::CloseMenu - slot 28.
 
    A hit from underneath closes the three-item overlay menu
@@ -1489,12 +1537,7 @@ namespace s20af04c {
    re-enables the 3D engines only if the class's own GetDisplayMode
    says so. */
 
-extern void func_02012e1c(void);
-extern "C" {
-
 extern void Enable3dEngines();
-}
-
 
 /* THE EARLY EXITS ARE SPELT AS NESTED IFS, NOT `return;`. mwccarm accepts a
    valueless `return` in a non-void function; C++ does not, and no host option
@@ -1506,8 +1549,10 @@ extern void Enable3dEngines();
    unchanged. */
 }
 
+}
+
 int dScMgBase_c::CloseMenu()
-{ using s20af04c::Enable3dEngines; using s20af04c::func_02012e1c;
+{ using s20af04c::Enable3dEngines;
     func_02012e1c();
     mMenuOpen = 0;
     mTouchOptions.Close();
@@ -1516,7 +1561,7 @@ int dScMgBase_c::CloseMenu()
 }
 
 namespace s20af094 {
-
+extern "C" {
 /* dScMgBase_c::SaveScreenForMenu - slot 29.
 
    The two buffers at +0x2228 and +0x4228 sit inside the header's pad_228;
@@ -1534,16 +1579,13 @@ namespace s20af094 {
    this module is dScMgBase_c::OnGraphCallback2, which reaches it only on a rising edge
    of mMenuOpen.  That is the three-item overlay menu going up, not a Yoshi egg.
    See the slot 29 block in include/dScMgBase_c.h for why the name is kept. */
-extern void func_0201f32c(int arg0);
+}
+using s20ad674::GetGameLanguage;
 extern "C" {
-
-extern int GetGameLanguage(void);
 extern void DecompressLZ16(void *src, void *dst);
 
 extern unsigned char gMainScreenLayers;
 extern unsigned char gSubScreenLayers;
-}
-
 
 /* THE EARLY EXITS ARE SPELT AS NESTED IFS, NOT `return;`. mwccarm accepts a
    valueless `return` in a non-void function; C++ does not, and no host option
@@ -1555,12 +1597,16 @@ extern unsigned char gSubScreenLayers;
    unchanged. */
 }
 
+}
+
+void func_0201f32c(int arg0);
+
 int dScMgBase_c::SaveScreenForMenu() {
     using s20af094::DecompressLZ16;
     using s20af094::GetGameLanguage;
     using s20af094::gSubScreenLayers;
     using s20af094::gMainScreenLayers;
-    using s20af094::func_0201f32c;
+
     MgMenuSaveArea *save = (MgMenuSaveArea *)this;
 
     if (GetDisplayMode() != 0)
@@ -1635,9 +1681,9 @@ void dScMgBase_c::OpenMenu()
 
 namespace s20af2f8 {
 extern "C" {
-
-
 extern char sMgBrushPalette;
+}
+
 
 /* Sets up the brush that PaintSquare paints with. `sb` is the scene: stores
    `en` in mBrushOnMain and the layer `mode` (0..3) in mBrushLayer, fills
@@ -1750,7 +1796,7 @@ void Mg_InitBrush(char* sb, char en, int mode, int base)
     GX_LoadBGPltt(&sMgBrushPalette, base << 5, 0x20);
     GXS_LoadBGPltt(&sMgBrushPalette, base << 5, 0x20);
 }
-}
+
 }
 
 namespace s20af5e0 {
@@ -1764,15 +1810,14 @@ typedef struct Item {
     u32 priority : 2;
     u32 cParam : 4;
     u32 attr3 : 16;
-}
-extern "C" {
- Item;
+} Item;
+
 
 /* Copies an OAM sprite list (8-byte entries, ending at the one whose
    attr3 is 0xffff) from `src` to `dst`, adding `add` to each tile number
    (the low ten bits of attr2). At most 0x20 entries: the 32nd is given the
    0xffff terminator. Returns the number of entries written. */
-int Mg_CopySpriteList(Item* src, Item* dst, int add)
+extern "C" int Mg_CopySpriteList(Item* src, Item* dst, int add)
 {
     int n = 1;
     int i;
@@ -1790,7 +1835,7 @@ int Mg_CopySpriteList(Item* src, Item* dst, int add)
     }
     return n;
 }
-}
+
 }
 
 /* OAM::Render is a C++-linkage member of the global OAM namespace, so its
@@ -1823,10 +1868,10 @@ struct D3DBaseView : dScMgBase_c {
  * mangled (see include/OAM.h). */
 
 namespace s20af68c {
-
 extern "C" {
+extern void OamRender10_d_s_mg_base_a(int, OamAttr *, s32, s32, int, int, int, int, int, int);
+}
 
-void OamRender10_d_s_mg_base_a(int, OamAttr *, s32, s32, int, int, int, int, int, int);
 void Hud_RenderSprite(void *attr, int x, int y, int palette, int priority) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
@@ -1841,25 +1886,21 @@ void Hud_RenderSprite(void *attr, int x, int y, int palette, int priority) {
     }
     OAM::RenderSub((OamAttr *)attr, x, y, palette, priority);
 }
-}
+
 }
 
 namespace s20af770 {
 
-extern "C" {
-
 struct OamAttr;
-}
 
 typedef int Fix12i;
 extern "C" {
-
 extern int OamRender8_d_s_mg_base(int show, struct OamAttr *attr, int a, int b, int c, int d,
                                   Fix12i e, int f);
 }
 
 
-extern "C" int Mg_RenderSubSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
+int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5,
                                         unsigned short a6) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
@@ -1873,10 +1914,10 @@ extern "C" int Mg_RenderSubSpriteScaled(int a0, int a1, int a2, int a3, int a4, 
     }
     return OAM::Render(1, (::OamAttr *)a0, a1, a2, a3, a4, a5, a6);
 }
+
 }
 
 namespace s20af868 {
-extern "C" {
 
 void Mg_RenderSubSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, void *a5) {
     dScMgBase_c *scene = gMgScene;
@@ -1892,11 +1933,10 @@ void Mg_RenderSubSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, void *a5
     }
     OAM::Render(1, (OamAttr *)a0, a1, a2, a3, a4, (Matrix2x2 *)a5);
 }
-}
+
 }
 
 namespace s20af948 {
-extern "C" {
 
 void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *m) {
     dScMgBase_c *scene = gMgScene;
@@ -1912,18 +1952,16 @@ void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *m) {
     }
     OAM::Render(true, (OamAttr *)a, b, c, -1, -1, (Matrix2x2 *)m);
 }
-}
+
 }
 
 namespace s20afa20 {
-
 extern "C" {
-
-void OamRender10_d_s_mg_base_a(int, OamAttr *, s32, s32, int, int, int, int, int, int);
+extern void OamRender10_d_s_mg_base_a(int, OamAttr *, s32, s32, int, int, int, int, int, int);
 }
 
 
-extern "C" void RenderOamMainScreen(OamAttr *oam, int x, int y, int palette, int priority) {
+void RenderOamMainScreen(OamAttr *oam, int x, int y, int palette, int priority) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
         return;
@@ -1937,24 +1975,21 @@ extern "C" void RenderOamMainScreen(OamAttr *oam, int x, int y, int palette, int
     }
     OAM::Render(0, oam, x, y, palette, priority, 0x1000, 0x1000, 0, -1);
 }
+
 }
 
 namespace s20afb20 {
 
-extern "C" {
-
 struct OamAttr;
-}
 
 typedef int Fix12i;
 extern "C" {
-
 extern int OamRender8_d_s_mg_base(int show, struct OamAttr *attr, int a, int b, int c, int d,
                                   Fix12i e, int f);
 }
 
 
-extern "C" int Mg_RenderMainSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
+int Mg_RenderMainSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
                                          unsigned short a6) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
@@ -1968,10 +2003,10 @@ extern "C" int Mg_RenderMainSpriteScaled(int a0, int a1, int a2, int a3, int a4,
     }
     return OAM::Render(0, (::OamAttr *)a0, a1, a2, a3, a4, a5, a6);
 }
+
 }
 
 namespace s20afc18 {
-extern "C" {
 
 void Mg_RenderMainSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, void *a5) {
     dScMgBase_c *scene = gMgScene;
@@ -1987,12 +2022,12 @@ void Mg_RenderMainSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, void *a
     }
     OAM::Render(0, (OamAttr *)a0, a1, a2, a3, a4, (Matrix2x2 *)a5);
 }
-}
+
 }
 
 namespace s20afcf8 {
 
-extern "C" void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx) {
+void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
         return;
@@ -2004,14 +2039,15 @@ extern "C" void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx) {
     }
     OAM::Render(false, attr, x, y, -1, -1, mtx);
 }
+
 }
 
 namespace s20afdd0 {
-
 extern "C" {
-
 extern int sMgTopScreenYOffset;
-int OamRender10_d_s_mg_base_b(int, void *, int, int, int, int, int, int, int, int);
+extern int OamRender10_d_s_mg_base_b(int, void *, int, int, int, int, int, int, int, int);
+}
+
 void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
@@ -2031,26 +2067,24 @@ void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4) {
                 -1);
     OAM::RenderSub((OamAttr *)a0, a1, a2, a3, a4);
 }
-}
+
 }
 
 namespace s20aff38 {
 
-extern "C" {
-
 struct OamAttr;
+extern "C" {
 extern int sMgTopScreenYOffset;
 }
 
 typedef int Fix12i;
 extern "C" {
-
 extern int OamRender8_d_s_mg_base(int show, struct OamAttr *attr, int a, int b, int c, int d,
                                   Fix12i e, int f);
 }
 
 
-extern "C" int Mg_RenderSpriteBothScaled(struct OamAttr *a0, int a1, int a2, int a3, int a4,
+int Mg_RenderSpriteBothScaled(struct OamAttr *a0, int a1, int a2, int a3, int a4,
                                          Fix12i a5, int a6) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
@@ -2076,12 +2110,14 @@ extern "C" int Mg_RenderSpriteBothScaled(struct OamAttr *a0, int a1, int a2, int
     }
     return 0;
 }
+
 }
 
 namespace s20b0104 {
 extern "C" {
-
 extern int sMgTopScreenYOffset;
+}
+
 void RenderOamBothScreens(void *attr, int x, int y, int palette, int priority, void *mtx) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
@@ -2101,13 +2137,14 @@ void RenderOamBothScreens(void *attr, int x, int y, int palette, int priority, v
                 (Matrix2x2 *)mtx);
     OAM::Render(true, (OamAttr *)attr, x, y, palette, priority, (Matrix2x2 *)mtx);
 }
-}
+
 }
 
 namespace s20b023c {
 extern "C" {
-
 extern int sMgTopScreenYOffset;
+}
+
 void Mg_RenderSpriteBothPalMtx(void *a0, int a1, int a2, int a3, void *a4) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
@@ -2126,13 +2163,14 @@ void Mg_RenderSpriteBothPalMtx(void *a0, int a1, int a2, int a3, void *a4) {
     OAM::Render(0, (OamAttr *)a0, a1, a2 + 0xc0 + sMgTopScreenYOffset, a3, -1, (Matrix2x2 *)a4);
     OAM::Render(1, (OamAttr *)a0, a1, a2, a3, -1, (Matrix2x2 *)a4);
 }
-}
+
 }
 
 namespace s20b0380 {
 extern "C" {
-
 extern int sMgTopScreenYOffset;
+}
+
 void Mg_RenderSpriteBothMtx(void *a0, int a1, int a2, void *a3) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
@@ -2151,29 +2189,31 @@ void Mg_RenderSpriteBothMtx(void *a0, int a1, int a2, void *a3) {
     OAM::Render(0, (OamAttr *)a0, a1, a2 + 0xc0 + sMgTopScreenYOffset, -1, -1, (Matrix2x2 *)a3);
     OAM::Render(1, (OamAttr *)a0, a1, a2, -1, -1, (Matrix2x2 *)a3);
 }
-}
+
 }
 
 namespace s20b04c0 {
 extern "C" {
-
 extern int sMgTopScreenYOffset;
+}
+
 /* Get and set sMgTopScreenYOffset: the offset PaintSquare and the sprite
    wrappers above add, with 0xc0, to y on their upper-screen path. */
 int Mg_GetTopScreenYOffset(void) {
     return sMgTopScreenYOffset;
 }
-}
+
 }
 
 namespace s20b04d0 {
 extern "C" {
-
 extern int sMgTopScreenYOffset;
+}
+
 void Mg_SetTopScreenYOffset(int v) {
     sMgTopScreenYOffset = v;
 }
-}
+
 }
 
 /* dScMgBase_c::GetDisplayMode - slot 26: which display layout the scene
@@ -2352,17 +2392,8 @@ void dScMgBase_c::AfterInitResources(u32 vfSuccess)
     dScene_c::AfterInitResources(vfSuccess);
 }
 
-namespace s20b0930 {
-extern "C" {
-
-/* local extern: decl_common.h declares this `(char *)`, but the definition
-   in src/minigames/d_mg_state.cpp takes no parameter and only resets the
-   sMg*Banner position globals. The `add r0, r4, #0x4000` the cartridge has
-   just before the call is the base of the mNewRecord store
-   (`strb r1, [r0, #0x65c]`), left in r0, not an argument. */
-void Mg_ResetBannerLayout(void);
-}
-}
+/* Mg_ResetBannerLayout takes no parameter. The `add r0, r4, #0x4000` just
+   before the call is the base of the mNewRecord store, left in r0. */
 
 /* Sets up the scene and both displays. Slots 26, 31 and 33 must stay
  * virtual calls so derived scenes can override them. */
@@ -2384,7 +2415,7 @@ bool dScMgBase_c::BeforeInitResources()
     mHudScore = 0;
     mBestHudScore = 0;
     mNewRecord = 0;
-    s20b0930::Mg_ResetBannerLayout();
+    Mg_ResetBannerLayout();
     InitEngines();
     Mg_LoadBannerFiles();
     dScene_c::SetFaders(&data_0209f61c);
@@ -2396,7 +2427,6 @@ bool dScMgBase_c::BeforeInitResources()
 }
 
 namespace s20b0a38 {
-extern "C" {
 
 /* Clears mStateController.mSuspended, so BeforeBehavior and BeforeRender
    step and draw the UI state controller again. */
@@ -2406,14 +2436,14 @@ void Mg_ResumeSharedState(void)
     if (scene == 0) return;
     scene->mStateController.mSuspended = 0;
 }
-}
+
 }
 
 namespace s20b0a54 {
 
 /* Sets the UI state controller's state and clears mRecordRevealTimer. The singleton
    is read again after SetState, as the ROM does. */
-extern "C" void Mg_SetSharedState(s32 state)
+void Mg_SetSharedState(s32 state)
 {
     dScMgBase_c *scene = gMgScene;
     if (!scene)
@@ -2421,13 +2451,14 @@ extern "C" void Mg_SetSharedState(s32 state)
     scene->mStateController.SetState(state);
     gMgScene->mRecordRevealTimer = 0;
 }
+
 }
 
 namespace s20b0aa0 {
 extern "C" {
-
-extern void Banner_Free(void *c);
 extern MgBanner gMgBanners[];
+}
+
 /* Calls Banner_Free on each of the three 0x134-byte records at
    gMgBanners whose word at +0x20 equals `arg` -- or, for 0x1d,
    on each whose word is not 0x1d. */
@@ -2461,7 +2492,7 @@ void FreeGfxSlotsById(int arg)
 
   }
 }
-}
+
 }
 
 namespace s20b0b1c {
@@ -2472,19 +2503,14 @@ struct Vec2 {
     short y;
 };
 extern "C" {
-
-
 extern MgBanner gMgBanners[3];
 extern int sMgBannerButtonsArmed;
 
-extern void Banner_Press(MgBanner *e);
-extern int Banner_IsPressFinished(MgBanner *e);
 }
 
 
 // The ROM scales idx into the addressing mode here, which only the 4-byte-record view of the lane reproduces.
 #define TOUCH_REC(lane) ((unsigned char (*)[4])(lane))
-extern "C" {
 int Mg_CheckBannerButton(int arg) {
     int idx = gActivePlayerSlot;
     int flag = 0;
@@ -2536,14 +2562,14 @@ int Mg_CheckBannerButton(int arg) {
     }
     return 0;
 }
-}
+
 }
 
 namespace s20b0cac {
 extern "C" {
-
 extern struct MgBanner gMgBanners[];
-extern void Banner_Init(struct MgBanner *e, int c, int a1, int a2, int a3, int s1, short s2);
+}
+
 /* Hands its arguments to Banner_Init for the first of the three
    records at gMgBanners whose mFileIndex is 0x1d (free); does nothing
    when none is. */
@@ -2556,13 +2582,14 @@ void Mg_ShowBanner(int c, int a1, int a2, int a3, int arg5, short arg6) {
         }
     }
 }
-}
+
 }
 
 namespace s20b0d30 {
 extern "C" {
-
 extern char sMgBannerGfxSlotUsed[];
+}
+
 
 void Mg_ResetOverlays(void) {
     FreeGfxSlotsById(0x1d);
@@ -2578,14 +2605,13 @@ void Mg_ResetOverlays(void) {
         *p++ = 0;
     } while (j < 3);
 }
-}
+
 }
 
 namespace s20b0d8c {
-extern "C" {
+using s20ad674::GetGameLanguage;
+using s20af68c::Hud_RenderSprite;
 
-extern s32 GetGameLanguage(void);
-extern void Hud_RenderSprite(void *fn, s32 a, s32 b, s32 r3arg, s32 stack_arg);
 /* Draws per-language sprite word 0x11 or 0x12 at (arg1, arg2): word 0x11
    for the first 20 frames of the scene's 40-frame mFrameCounter cycle,
    word 0x12 for the rest. */
@@ -2597,15 +2623,13 @@ void Mg_DrawBlinkSprite(void *c, s32 arg1, s32 arg2)
     OamAttr **table = sMgSpriteTables[idx2];
     Hud_RenderSprite(table[r4], arg1, arg2, -1, -1);
 }
-}
+
 }
 
 namespace s20b0de0 {
-extern "C" {
+using s20ad674::GetGameLanguage;
+using s20afa20::RenderOamMainScreen;
 
-s32 GetGameLanguage(void);
-void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
-}
 }
 
 /* Draws the per-language prompt sprite at (0xc0, 0xb0) while mPromptEnabled
@@ -2631,19 +2655,18 @@ void dScMgBase_c::DrawPrompt() {
 }
 
 namespace s20b0e84 {
-extern "C" {
+using s20ad674::GetGameLanguage;
+using s20afa20::RenderOamMainScreen;
 
-extern int GetGameLanguage(void);
-extern void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 
 static inline int sdiv4(int d) {
     int t = d + (int)((unsigned)(d >> 1) >> 0x1e);
     return t >> 2;
 }
 
+
 static inline int sdiv2(int e) {
     return (e + (int)((unsigned)e >> 31)) >> 1;
-}
 }
 
 
@@ -2657,7 +2680,7 @@ static inline int sdiv2(int e) {
    stops it. When the tally reaches a multiple of
    five, the icons close up as mTallyAnimTimer runs from mTimeLimit to
    mTimeLimit + 0x20, with sound 0x1ba as they start. */
-extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
+void Mg_DrawTally(dScMgBase_c *sl, int sb) {
     OamAttr **r8;
     int r7;
     int i;
@@ -2819,18 +2842,18 @@ extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
         }
     }
 }
+
+}
+
+namespace s20b1710 {
+void Mg_DrawRecordRow(dScMgBase_c *scene, int x, int y, int val);
 }
 
 namespace s20b14f0 {
-extern "C" {
+using s20ad6f4::Mg_GetLastRecordRank;
 
-extern int Mg_GetLastRecordRank(void* self, int a);
-}
+using s20b1710::Mg_DrawRecordRow;
 
-extern int func_02013580(int a, int b);
-extern "C" {
-
-extern void Mg_DrawRecordRow(dScMgBase_c *scene, int x, int y, int val);
 
 /* Draws the five saved records in rows 0x18 apart from (0xa8, 0x28),
    revealing one more row every 0x14 frames as mRecordRevealTimer counts up. mRecordRevealTimer
@@ -2839,7 +2862,7 @@ extern void Mg_DrawRecordRow(dScMgBase_c *scene, int x, int y, int val);
    through Mg_GetLastRecordRank), or in a row below the five when it placed
    nowhere. Mg_GetLastRecordRank takes only the scene; the second argument
    passed here is unused. */
-void Mg_DrawRecordTable(dScMgBase_c *scene) {
+extern "C" void Mg_DrawRecordTable(dScMgBase_c *scene) {
     int a2 = 0x28;
     int n;
     int i;
@@ -2905,16 +2928,16 @@ neg:
     else
         Mg_DrawRecordRow(scene, 0xa8, a2 + 0x10, -1);
 }
-}
+
 }
 
 namespace s20b1710 {
+using s20ad674::GetGameLanguage;
+using s20af68c::Hud_RenderSprite;
 extern "C" {
-
-extern int GetGameLanguage(void);
-extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
-
 extern MgEntry gMgMenuRow;
+}
+
 
 /* Draws one record row at y. In scoring mode 5 (gMgMenuRow.scoringMode)
    `val` is a time in frames, drawn as seconds, sprite word 7, tenths and
@@ -2979,14 +3002,13 @@ void Mg_DrawRecordRow(dScMgBase_c *scene, int x, int y, int val) {
     else
         Mg_DrawBigNumber(x, y, val, 0, -1, 1, 0);
 }
-}
+
 }
 
 namespace s20b19f0 {
-extern "C" {
+using s20ad674::GetGameLanguage;
+using s20afa20::RenderOamMainScreen;
 
-s32 GetGameLanguage(void);
-void RenderOamMainScreen(OamAttr *a, int b, int c, int d, int e);
 /* Draws sprite word 8 at (0x20, 0xc) and `value`, starting at x
    0x48, through Mg_DrawNumber. */
 void Mg_DrawTopLeftCounter(int value) {
@@ -2994,15 +3016,16 @@ void Mg_DrawTopLeftCounter(int value) {
     RenderOamMainScreen(sMgSpriteTables[i][8], 0x20, 0xc, -1, -1);
     Mg_DrawNumber(0x48, 0xc, value, 1, -1, 2, 0xa);
 }
-}
+
 }
 
 namespace s20b1a5c {
+using s20ad674::GetGameLanguage;
+using s20afa20::RenderOamMainScreen;
 extern "C" {
-
-s32 GetGameLanguage(void);
-void RenderOamMainScreen(OamAttr *a, int b, int c, int d, int e);
 extern int sMgCounterMaxByDigits[];
+}
+
 /* Draws a0, capped at sMgCounterMaxByDigits[a1], right-aligned at (0xf4,
    0xc), and sprite word 4 to its left at an x that a1 sets. */
 void Mg_DrawTopRightCounter(int a0, int a1){
@@ -3017,11 +3040,10 @@ void Mg_DrawTopRightCounter(int a0, int a1){
     i = GetGameLanguage();
     RenderOamMainScreen(sMgSpriteTables[i][4], r4, 0xc, -1, -1);
 }
-}
+
 }
 
 namespace s20b1aec {
-extern "C" {
 
 /* The scene's mLevel; 0 with no scene. */
 int Mg_GetLevel(void) {
@@ -3029,37 +3051,42 @@ int Mg_GetLevel(void) {
     if (scene != 0) return scene->mLevel;
     return 0;
 }
+
 }
+
+namespace s20b1b78 {
+void Mg_SubCredits(void *c, int val);
 }
 
 namespace s20b1b08 {
-extern "C" {
+using s20b1b78::Mg_SubCredits;
 
-extern void Mg_SubCredits(void *c, int val);
 /* Subtracts `amount` from the scene's mCredits (Mg_SubCredits). */
 void Mg_LoseCredits(int amount) {
     void *v = gMgScene;
     if (v == 0) return;
     Mg_SubCredits(v, amount);
 }
+
 }
+
+namespace s20b1ba0 {
+void Mg_AddCredits(void *c, s32 delta);
 }
 
 namespace s20b1b40 {
-extern "C" {
+using s20b1ba0::Mg_AddCredits;
 
-extern void Mg_AddCredits(void *c, s32 delta);
 /* Adds `amount` to the scene's mCredits (Mg_AddCredits). */
 void Mg_GainCredits(int amount) {
     void *v = gMgScene;
     if (v == 0) return;
     Mg_AddCredits(v, amount);
 }
-}
+
 }
 
 namespace s20b1b78 {
-extern "C" {
 
 /* mCredits -= val, clamped to 0..9999. */
 void Mg_SubCredits(void* c, int val) {
@@ -3070,11 +3097,10 @@ void Mg_SubCredits(void* c, int val) {
     else if (r2 > 0x270f) r2 = 0x270f;
     scene->mCredits = r2;
 }
-}
+
 }
 
 namespace s20b1ba0 {
-extern "C" {
 
 /* mCredits += delta, clamped to 0..9999. */
 void Mg_AddCredits(void *c, s32 delta)
@@ -3085,13 +3111,16 @@ void Mg_AddCredits(void *c, s32 delta)
     else if (v > 0x270f) v = 0x270f;
     scene->mCredits = v;
 }
+
 }
+
+namespace s20b1de8 {
+void Mg_DrawCreditsIcon(int r0, int r1, int r2, int r3);
 }
 
 namespace s20b1bc8 {
-extern "C" {
+using s20b1de8::Mg_DrawCreditsIcon;
 
-extern void Mg_DrawCreditsIcon(int r0, int r1, int r2, int r3);
 /* Draws sprite word 2 at (a1, a2) on wrapper a3 (Mg_DrawCreditsIcon),
    then the scene's mCreditsShown beside it: below 100 through
    Mg_DrawBigNumber, otherwise through Mg_DrawNumber. */
@@ -3105,19 +3134,18 @@ void Mg_DrawCredits(char *a0, int a1, int a2, int a3)
         Mg_DrawNumber(a1+0xc, a2, v, a3, -1, 2, 0x32);
     }
 }
-}
+
 }
 
 namespace s20b1c68 {
 
 struct M { int _00, _01, _10, _11; };
-extern "C" {
+using s20b0104::RenderOamBothScreens;
+using s20afc18::Mg_RenderMainSpritePalMtx;
 
-extern void RenderOamBothScreens(void* a0, int a1, int a2, int a3, int a4, void* a5);
-extern void Mg_RenderMainSpritePalMtx(void* a0, int a1, int a2, int a3, int a4, void* a5);
 /* a3 picks the wrapper: -1 RenderOamBothScreens, 0 Mg_RenderSubSpritePalMtx,
    anything else Mg_RenderMainSpritePalMtx; each is passed -1 in its place. */
-void Mg_RenderSpriteOnMtx(void* a0, int a1, int a2, int a3, int a4, struct M* a5){
+extern "C" void Mg_RenderSpriteOnMtx(void* a0, int a1, int a2, int a3, int a4, struct M* a5){
   if(a3==-1){
     RenderOamBothScreens(a0, a1, a2, -1, a4, a5);
     return;
@@ -3128,15 +3156,14 @@ void Mg_RenderSpriteOnMtx(void* a0, int a1, int a2, int a3, int a4, struct M* a5
   }
   Mg_RenderMainSpritePalMtx(a0, a1, a2, -1, a4, a5);
 }
-}
+
 }
 
 namespace s20b1cf0 {
-extern "C" {
+using s20afdd0::Mg_RenderSpriteBoth;
+using s20af68c::Hud_RenderSprite;
+using s20afa20::RenderOamMainScreen;
 
-void Mg_RenderSpriteBoth(void *a, int b, int c, int d, int e);
-void Hud_RenderSprite(void *a, int b, int c, int d, int e);
-void RenderOamMainScreen(OamAttr *a, int b, int c, int d, int e);
 /* `sel` picks the wrapper: -1 Mg_RenderSpriteBoth, 0 Hud_RenderSprite,
    anything else RenderOamMainScreen; each is passed -1 in its place. */
 void Mg_RenderSpriteOn(OamAttr *a, int b, int c, int sel, int e) {
@@ -3150,14 +3177,13 @@ void Mg_RenderSpriteOn(OamAttr *a, int b, int c, int sel, int e) {
     }
     RenderOamMainScreen(a, b, c, -1, e);
 }
-}
+
 }
 
 namespace s20b1d60 {
-extern "C" {
+using s20b0104::RenderOamBothScreens;
+using s20afc18::Mg_RenderMainSpritePalMtx;
 
-extern void RenderOamBothScreens(void* a0, int a1, int a2, int a3, int a4, void* a5);
-extern void Mg_RenderMainSpritePalMtx(void* a0, int a1, int a2, int a3, int a4, void* a5);
 /* Mg_RenderSpriteOnMtx without a matrix: the wrappers get 0. */
 void Mg_RenderSpriteOnNoMtx(void* a0, int a1, int a2, int a3, int a4){
   if(a3==-1){
@@ -3170,14 +3196,13 @@ void Mg_RenderSpriteOnNoMtx(void* a0, int a1, int a2, int a3, int a4){
   }
   Mg_RenderMainSpritePalMtx(a0, a1, a2, -1, a4, 0);
 }
-}
+
 }
 
 namespace s20b1de8 {
-extern "C" {
+using s20ad674::GetGameLanguage;
+using s20b1d60::Mg_RenderSpriteOnNoMtx;
 
-extern int GetGameLanguage(void);
-extern void Mg_RenderSpriteOnNoMtx(void *, int, int, int, int);
 
 /* Draws sprite word 2 at (r0, r1) through Mg_RenderSpriteOnNoMtx. */
 void Mg_DrawCreditsIcon(int r0, int r1, int r2, int r3) {
@@ -3185,26 +3210,24 @@ void Mg_DrawCreditsIcon(int r0, int r1, int r2, int r3) {
     OamAttr **t = sMgSpriteTables[idx];
     Mg_RenderSpriteOnNoMtx(t[2], r0, r1, r2, r3);
 }
-}
+
 }
 
 namespace s20b1e34 {
-extern "C" {
+using s20b0e84::Mg_DrawTally;
 
-extern void Mg_DrawTally(dScMgBase_c *sl, int sb);
 
 /* Draws the mHudScore tally through Mg_DrawTally (a tail call). */
 void Mg_DrawScoreTally(void* a, int unused1, int unused2, int unused3) {
     Mg_DrawTally((dScMgBase_c *)a, ((dScMgBase_c *)a)->mHudScore);
 }
-}
+
 }
 
 namespace s20b1e44 {
-extern "C" {
+using s20ad674::GetGameLanguage;
+using s20afcf8::DrawOamSprite;
 
-extern int GetGameLanguage(void);
-extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 /* Draws `arg` centred at (0x80, 0xc) and sprite word 3 at (0x60, 0xc). */
 void Mg_DrawTopCenterCounter(int arg) {
     int r;
@@ -3212,14 +3235,15 @@ void Mg_DrawTopCenterCounter(int arg) {
     r = GetGameLanguage();
     DrawOamSprite(sMgSpriteTables[r][3], 0x60, 0xc, 0);
 }
-}
+
 }
 
 namespace s20b1ea4 {
 extern "C" {
-
 extern OamAttr *sMgDigitSprites[];
-extern void Mg_RenderSpriteOnNoMtx(void *glyph, int x, int a2, int a3, int a4);
+}
+using s20b1d60::Mg_RenderSpriteOnNoMtx;
+
 
 /* Draws `val`, capped at 999999, in digits 8 px apart: glyph
    sMgDigitSprites[fb + digit], where fb 0 means 0xa and 0x14 means
@@ -3293,7 +3317,7 @@ void Mg_DrawNumber(int x, int a1, int val, int a3, int a4, int mode, int fb) {
     }
     Mg_RenderSpriteOnNoMtx(sMgDigitSprites[d[0] + fb], x, a1, a3, a4);
 }
-}
+
 }
 
 // Kept: without it the thousands counter moves from r0 to r3 (register colour only).
@@ -3310,16 +3334,18 @@ namespace s20b2220 {
    allocator keeps the thousands counter in r0 as the cartridge does; with
    the products written out in the body it lands in ip or r3. */
 struct M { int _00, _01, _10, _11; };
+extern "C" void Mg_RenderSpriteOnMtx(void* a0, int a1, int a2, int a3, int a4, struct M* a5);
 extern "C" {
-
-extern void Mg_RenderSpriteOnMtx(void* a0, int a1, int a2, int a3, int a4, struct M* a5);
 extern OamAttr *sMgDigitSprites[];
+}
+
 
 static inline int FX_Mul(int v1, int v2)
 {
     s64 t = (s64)v1 * v2;
     return (int)((t + 0x800) >> 12);
 }
+
 
 static inline void MTX_Rot22(struct M *p, int sinVal, int cosVal)
 {
@@ -3328,6 +3354,7 @@ static inline void MTX_Rot22(struct M *p, int sinVal, int cosVal)
     p->_10 = -sinVal;
     p->_11 = cosVal;
 }
+
 
 void Mg_DrawNumberRotated(int x, int y, int value, int a3, int a4, int scale, u16 angle)
 {
@@ -3359,15 +3386,16 @@ void Mg_DrawNumberRotated(int x, int y, int value, int a3, int a4, int scale, u1
     }
     Mg_RenderSpriteOnMtx(sMgDigitSprites[value], x, y, a3, a4, &m);
 }
-}
+
 }
 #pragma pop
 
 namespace s20b2444 {
 extern "C" {
-
 extern OamAttr *sMgDigitSprites[];
-extern void Mg_RenderSpriteOnNoMtx(void *a0, int a1, int a2, int a3, int a4);
+}
+using s20b1d60::Mg_RenderSpriteOnNoMtx;
+
 
 /* Draws `num` in digits 16 px apart, glyph sMgDigitSprites[idx +
    digit]. The units digit sits at a1 for sel 1 (or any value but 0 and
@@ -3408,14 +3436,13 @@ void Mg_DrawBigNumber(int a1, int a2, int num, int a4, int a5, int sel, int idx)
         off -= 0x10;
     } while (num > 0);
 }
-}
+
 }
 
 namespace s20b2574 {
-extern "C" {
+using s20ad674::GetGameLanguage;
+using s20afcf8::DrawOamSprite;
 
-extern int GetGameLanguage(void);
-extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 
 /* Unless arg1 is 1, draws sprite words 0 and 1 at (12, 12) and (30, 12)
    and arg0 from x 0x30. With arg1 1, draws sprite word 0 arg0 times,
@@ -3437,52 +3464,29 @@ void Mg_DrawStockCounter(int arg0, int arg1)
         }
     }
 }
+
 }
+
+namespace s20b2980 {
+void Mg_DisableAllBanks(void);
+}
+
+namespace s20b290c {
+void Mg_ResetBgOffsets(void);
 }
 
 namespace s20b265c {
+using s20b2980::Mg_DisableAllBanks;
+using s20b290c::Mg_ResetBgOffsets;
+using s20ad674::GetGameLanguage;
+using s20adc68::Ov004_LoadFile;
 extern "C" {
-
-/* dScMgBase_c::InitEngines - slot 33.  The ROM names nothing here: InitEngines
-   is the repo's no-name spelling after the +0x84 vtable offset, as fBase_c
-   uses for Virtual34 and Virtual38.  See the slot-33 block in
-   include/dScMgBase_c.h.
-
-   ENGINE BRING-UP.  Graphics modes for both engines (GX mode 1/0/0, GXS mode
-   0), VRAM banks assigned to BG and OBJ on both screens, and BOTH BG-enable
-   shadows -- gMainScreenLayers for the main engine, gSubScreenLayers for the sub --
-   initialised to 0x10, which is the value slots 30 and 31 later save, clear
-   bits out of and restore.  A language-indexed character file (indexed by
-   GetGameLanguage into sMgStockCounterFiles) is decompressed into BOTH engines'
-   BG char VRAM at 0x06404000 and 0x06604000, OBJ palette file 0xc3 is loaded
-   into both, and the scene object is published into the global registry --
-   sMgGraphCallback.mScene = this, then gGraphCallback points at that registry.
-   The object fields it touches are its own: +0x68 cleared and +0x6c set to -1.
-
-   WHEN IT RUNS.  First out of dScMgBase_c::BeforeInitResources
-   (ov004:0x020b0930): the +0x84 dispatch at 0x020b09d0 is near the top and
-   slot 31's +0x7c dispatch at 0x020b0a0c is the last thing before the
-   function returns 1.  Slot 32 runs out of AfterInitResources.  So the
-   sequence is: bring the engines up (33), dress the sub screen (31), then
-   dress the main screen (32).
-
-   arity: no explicit parameters, MEASURED.  Scanning arm9 and all 103 overlays
-   for the dispatch pair -- `ldr rD,[rN,#0x84]` with Rn != pc, followed within
-   three instructions by `blx rD`/`bx rD` -- finds exactly two sites image-wide,
-   of which one is in ov004 or ov006: the 0x020b09d0 call above.  It reads
-   `mov r0,r4; ldr r1,[r0]; ldr r1,[r1,#0x84]; blx r1`, so r1 is the loaded
-   pointer and cannot also be a second argument.  The scanner was validated by
-   re-running it at +0x80 and reproducing slot 32's known call site.
-   return type: void, which is what all three bodies do -- none assigns a
-   result and the one caller ignores whatever falls out. */
-extern void Mg_DisableAllBanks(void);
-extern void Mg_ResetBgOffsets(void);
-extern s32 GetGameLanguage(void);
-extern void *Ov004_LoadFile(int id);
 extern void DecompressLZ16(void *src, void *dst);
-extern void Ov004_Deallocate(void *p);
-extern void Mg_ResetOverlays(void);
-extern void FreeGfxSlotsById(int arg);
+}
+using s20adc5c::Ov004_Deallocate;
+using s20b0d30::Mg_ResetOverlays;
+using s20b0aa0::FreeGfxSlotsById;
+extern "C" {
 extern int sMgTopScreenYOffset;
 extern u8 gMainScreenLayers;
 extern int sMgStockCounterFiles[];
@@ -3490,6 +3494,7 @@ extern u8 gSubScreenLayers;
 extern dGraph_c::callback_c *gGraphCallback;
 extern int data_0208ee44;
 }
+
 }
 
 void dScMgBase_c::InitEngines() {
@@ -3544,31 +3549,12 @@ void dScMgBase_c::InitEngines() {
 }
 
 namespace s20b27f4 {
+using s20ad674::GetGameLanguage;
 extern "C" {
-
-// recovered name: dScMgBase_c_AfterClsn  -- WRONG, see below
-/* dScMgBase_c::InitMainScreenBg - slot 32.
-
-   The `recovered name:` line above is kept visible because it is wrong.  This
-   time the borrowed name is a REAL ROM name -- _ZN16dPathLiftActor_c9AfterClsnEi,
-   declared at include/PathLift.h:58 -- which makes it the more misleading of the
-   two.  dPathLiftActor_c derives from dBgActor_c, which derives from dActor_c;
-   dScMgBase_c is a dScene_c.  The chains share only dBase_c, which adds no
-   virtual, so the two slot 32s have fBase_c's first eighteen entries in common
-   and nothing else.  That AfterClsn also takes an int.  See the slot-32 block in
-   include/dScMgBase_c.h.
-
-   It touches no collision.  It is slot 31 with the other display engine: three
-   read-modify-writes leave the MAIN BG1CNT at 0x0400000a holding exactly 0x1000,
-   the layer's scroll is reset, BG1's bit is cleared from gMainScreenLayers -- the
-   MAIN BG-enable shadow slot 30 restores the main DISPCNT from, where 31 cleared
-   the sub's gSubScreenLayers -- and a language-indexed character file plus the
-   shared screen map (file 0x67 here, 0x5b there) are installed.  It builds this
-   minigame's TOP-screen background, from AfterInitResources. */
-extern int GetGameLanguage(void);
 extern unsigned int LoadCompressedFileAt(int fileID, void *target);
 extern unsigned char gMainScreenLayers;
 }
+
 }
 
 void dScMgBase_c::InitMainScreenBg() {
@@ -3588,29 +3574,12 @@ void dScMgBase_c::InitMainScreenBg() {
 }
 
 namespace s20b2880 {
+using s20ad674::GetGameLanguage;
 extern "C" {
-
-// recovered name: dScMgBase_c_Kill  -- WRONG, see below
-/* dScMgBase_c::InitSubScreenBg - slot 31.
-
-   The `recovered name:` line above is kept visible because it is wrong.  The
-   ROM names nothing here: dScMgBase_c is a SCENE (fBase_c -> dBase_c ->
-   dScene_c -> dScMgBase_c), not an actor, and dActor_c -- whose names slots
-   18-30 borrowed by index -- has no slot 31 at all.  `Kill` was carried across
-   from dBgActor_c, dActor_c's own child, where _ZN10dBgActor_c4KillEv
-   (ov002:0x020ee55c) is that class's new slot 31.  Different branch, same
-   index, no relationship.  See the slot-31 block in include/dScMgBase_c.h.
-
-   It also does not kill anything.  Three read-modify-writes leave the sub
-   engine's BG1CNT holding exactly 0x10 -- priority 0, no mosaic -- then the
-   layer's scroll is reset, BG1's bit is cleared from the sub BG-enable shadow
-   that slot 30 restores the sub DISPCNT from, and a language-indexed character
-   file plus the shared screen map (file 0x5b) are installed.  It builds this
-   minigame's touch-screen background, from BeforeInitResources. */
-extern int GetGameLanguage(void);
 extern unsigned int LoadCompressedFileAt(int fileID, void *target);
 extern unsigned char gSubScreenLayers;
 }
+
 }
 
 int dScMgBase_c::InitSubScreenBg() {
@@ -3630,7 +3599,6 @@ int dScMgBase_c::InitSubScreenBg() {
 }
 
 namespace s20b290c {
-extern "C" {
 
 /* Resets the scroll of all eight BG layers, main and sub, to (0, 0). */
 void Mg_ResetBgOffsets(void) {
@@ -3643,16 +3611,15 @@ void Mg_ResetBgOffsets(void) {
     SetSubBg2Offset(0, 0);
     SetSubBg3Offset(0, 0);
 }
-}
+
 }
 
 namespace s20b2980 {
-extern "C" {
 
 void Mg_DisableAllBanks(void) {
     GX::DisableAllBanks();
 }
-}
+
 }
 
 /* dScMgBase_c::OnDealDone - slot 21. */
@@ -3694,6 +3661,7 @@ extern "C" void Mg_CallStartRound(dScMgBase_c *scene, void *state)
 {
     scene->StartRound((int)state);
 }
+
 }
 
 /* The constructor and destructor are the end of the unit, and the one place
@@ -3707,9 +3675,9 @@ extern "C" void Mg_CallStartRound(dScMgBase_c *scene, void *state)
 
 namespace s20b2adc {
 extern "C" {
-
 extern short sMgSceneKindByGame[];
 }
+
 }
 
 dScMgBase_c::dScMgBase_c() : mRunDuringFade(0), unk_0c2(1) {

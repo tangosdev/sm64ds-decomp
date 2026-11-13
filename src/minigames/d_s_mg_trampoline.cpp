@@ -46,6 +46,16 @@ enum d_s_mg_trampoline_AssetId {
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/mi/memory.h"
+namespace s20afdd0 { void Mg_RenderSpriteBoth(void *a0, int, int, int, int); }
+using s20afdd0::Mg_RenderSpriteBoth;
+namespace s20afcf8 { void DrawOamSprite(OamAttr *attr, int, int, Matrix2x2 *mtx); }
+using s20afcf8::DrawOamSprite;
+namespace s20afa20 { void RenderOamMainScreen(OamAttr *oam, int, int, int, int); }
+using s20afa20::RenderOamMainScreen;
+namespace s20ad90c { void Mg_CommitRecords(void); }
+using s20ad90c::Mg_CommitRecords;
+namespace s20ad674 { s32 GetGameLanguage(void); }
+using s20ad674::GetGameLanguage;
 
 /* local: UpdateTouchInput only reproduces through a 4-byte-record view of
    each lane; the flat `gTouchHeld[slot * 4]` and TouchInfo forms DIFF there
@@ -59,14 +69,14 @@ typedef struct Vec2s {
 
 extern "C" {
 
-extern void Mg_RenderSpriteBoth(void *a, int b, int c, int d, int e);}
+}
 
 extern int sTrmpRowScreenY[];
 
 extern int sTrmpRowMarkerSprite;
 extern "C" {
 
-extern void Mg_DrawBigNumber(int, int, int, int, int, int, int);}
+}
 void TrmpFx_Link(TrmpScorePopup *entry);
 
 extern TrmpScorePopup *sTrmpFxList;
@@ -89,23 +99,21 @@ extern "C" {
 
 void SetBg2Offset(int a, int b);
 
-int Mg_GetTopScreenYOffset(void);}
+}
 
 extern unsigned char gMainScreenLayers;
 extern "C" {
 
-extern void Mg_CommitRecords(void);
 
-int GetGameLanguage(void);}
+}
 
 struct OamAttr;
 
 struct Matrix2x2;
 extern "C" {
 
-void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 
-void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);}
+}
 
 extern int func_020126e8(int a);
 
@@ -122,7 +130,7 @@ int Trmp3DMario_CountFinished(void);
 using ns_020cd158::Trmp3DMario_CountFinished;
 extern "C" {
 
-extern void Mg_SetSharedState(int);}
+}
 namespace ns_020cd1e0 {
 void Trmp3DMario_StartAll(void);
 }
@@ -181,7 +189,7 @@ void TrmpFx_InitPool(void *records, int count);
 void TrmpLine_LoadTextures(void);
 extern "C" {
 
-extern void Mg_SetTopScreenYOffset(int);}
+}
 namespace ns_020cd424 {
 void Trmp3DMario_ResetAll(unsigned int n, int arg1);
 }
@@ -196,11 +204,11 @@ extern void func_02012718(int, int);
 void TrmpFx_UpdateAll(void);
 extern "C" {
 
-extern void Mg_SubmitScore(int);}
+}
 void TrmpFx_DrawAll(void);
 extern "C" {
 
-extern void Mg_DrawTopRightCounter(int, int);}
+}
 
 extern void *sTrmpDoorSignSprites[];
 

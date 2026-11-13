@@ -52,6 +52,23 @@
 #include "math/Approach.h"
 #include "LevelRng.h"
 #include "math/CalcLib.h"
+namespace s20b1e34 { void Mg_DrawScoreTally(void*, int, int, int); }
+using s20b1e34::Mg_DrawScoreTally;
+namespace s20b0cac { void Mg_ShowBanner(int, int, int, int, int, short); }
+using s20b0cac::Mg_ShowBanner;
+namespace s20b0a54 { void Mg_SetSharedState(s32); }
+using s20b0a54::Mg_SetSharedState;
+namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+using s20b0aa0::FreeGfxSlotsById;
+namespace s20b04d0 { void Mg_SetTopScreenYOffset(int); }
+using s20b04d0::Mg_SetTopScreenYOffset;
+namespace s20af948 { void Mg_RenderSubSpriteMtx(void *a, int, int, void *m); }
+using s20af948::Mg_RenderSubSpriteMtx;
+namespace s20af770 { int Mg_RenderSubSpriteScaled(void *, int, int, int, int, int, unsigned short); }
+using s20af770::Mg_RenderSubSpriteScaled;
+namespace s20adb1c { void Mg_SubmitScore(int); }
+using s20adb1c::Mg_SubmitScore;
+void Mg_SetNextBanner(int);
 
 struct BMD_File;
 struct BTP_File;
@@ -110,23 +127,16 @@ void func_02046208(void *a, unsigned int b, int c);
 
 int func_020179b4(SharedFilePtr *r0, dExtModel_c *r1, int r2);extern "C" {
 
-void FreeGfxSlotsById(int a);
 
-int Mg_RenderSubSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5, u16 a6);
 
-void Mg_RenderSubSpriteMtx(void* a, int b, int c, void* m);
 
-void Mg_DrawScoreTally(void *c, int a, int b, int d);
 
-void Mg_SubmitScore(int);
 
 void Mg_SetNextBanner(int);
 
-void Mg_SetSharedState(int);
 
-void Mg_ShowBanner(int, int, int, int, int, short);
 
-void Mg_SetTopScreenYOffset(int);}
+}
 
 void InitialiseVramGlobals(void);
 
@@ -711,7 +721,7 @@ void dScMg3DEsp_c::RenderRows()
             int y = mRows[i].mY >> 12;
             int priority = mRows[i].mPriority;
             int scale = mRows[i].mScale;
-            GXOamAttr *oam = (GXOamAttr *)Mg_RenderSubSpriteScaled(sEsp3DAnimSetRowsSprites, x, y,
+            GXOamAttr *oam = (GXOamAttr *)Mg_RenderSubSpriteScaled((void *)sEsp3DAnimSetRowsSprites, x, y,
                                                                    -1, priority, scale, 0);
             if (mRows[i].mState == 2) {
                 G2_SetOBJMode(oam, GX_OAM_MODE_XLU, oam->cParam);
@@ -799,7 +809,7 @@ void dScMg3DEsp_c::RenderCards() {
             Ent_8e10 *r7 = data_ov006_02133f24[mCards[i].mFace];
             for (;;) {
                 GXOamAttr *oam =
-                    (GXOamAttr *)Mg_RenderSubSpriteScaled((int)r7, x, y, -1, priority, 0x1000, 0);
+                    (GXOamAttr *)Mg_RenderSubSpriteScaled(r7, x, y, -1, priority, 0x1000, 0);
                 if (mFade && !mCards[i].mState) {
                     G2_SetOBJMode(oam, GX_OAM_MODE_XLU, oam->cParam);
                 }

@@ -69,7 +69,7 @@
       "ordinal": 4
     },
     {
-      "symbol": "daObjCvShutter_c_classInit",
+      "symbol": "_Z26daObjCvShutter_c_classInitv",
       "address": "0x02112ed4",
       "size": "0x0000003c",
       "legacy_source": "src/daObjCvShutter_c_classInit.c",

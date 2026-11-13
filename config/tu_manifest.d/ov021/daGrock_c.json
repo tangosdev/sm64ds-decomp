@@ -121,7 +121,7 @@
       "ordinal": 11
     },
     {
-      "symbol": "daGrock_c_classInit",
+      "symbol": "_Z19daGrock_c_classInitv",
       "address": "0x02112d64",
       "size": "0x00000050",
       "legacy_source": "src/d_a_grock.c",

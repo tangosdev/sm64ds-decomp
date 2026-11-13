@@ -35,6 +35,22 @@ enum dScMgMemory2_c_AssetId { ASSET_D_2D_MG_CARD_NCL_BIN = 0x00bb };
 #include "PlayerInput.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
+namespace s20b1e34 { void Mg_DrawScoreTally(void*, int, int, int); }
+using s20b1e34::Mg_DrawScoreTally;
+namespace s20b1bc8 { void Mg_DrawCredits(char *a0, int, int, int); }
+using s20b1bc8::Mg_DrawCredits;
+namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+using s20b0aa0::FreeGfxSlotsById;
+namespace s20af68c { void Hud_RenderSprite(void *attr, int, int, int, int); }
+using s20af68c::Hud_RenderSprite;
+namespace s20ad674 { s32 GetGameLanguage(void); }
+using s20ad674::GetGameLanguage;
+void MgCoins_Reset(void);
+void MgCoins_Update(void);
+void MgCoins_StartLoseOneMore(void);
+void MgCoins_StartPayout(int);
+void Mg_PlaceBannersOnTopScreen(void);
+void Mg_SetPerfectBanner(void);
 
 namespace cstd {
 s16 atan2(s32, s32);
@@ -97,15 +113,13 @@ extern dScMgMemory2_cState sMemory2RoundTable[];
 
 extern "C" {
 
-extern void Mg_DrawScoreTally(void *thiz, int a, int b, int c);
 
-extern void Mg_DrawBlinkSprite(void *c, int arg1, int arg2);
 
 extern s16 atan2_hold_d_s_mg_memory2_1(int y, int x);
 
 extern void MgCoins_StartLoseOneMore(void);
 
-extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);}
+}
 
 extern u16 sMemory2CardFrameSprites[];
 
@@ -116,7 +130,7 @@ extern s32 sMemory2FlyAwayLimitPerMode[];
 extern unsigned short sMemory2FlipFrameTimes[];
 extern "C" {
 
-extern void Mg_SaveRecordPair(int a, int b);}
+}
 
 extern u16 *sMemory2CardPositionsPerDifficulty[];
 
@@ -132,9 +146,8 @@ extern "C" {
 
 extern void Mg_SetPerfectBanner(void);
 
-extern void Mg_SetSharedState(int);
 
-extern void Mg_SubmitScore(int self);}
+}
 void Dealer_PlayWin(void *c);
 extern "C" {
 
@@ -154,14 +167,13 @@ extern int sMemory2PreviewCountPerDifficulty[];
 extern int sMemory2PreviewTimePerDifficulty[];
 extern "C" {
 
-extern void FreeGfxSlotsById(int x);}
+}
 void Dealer_PlayIdle(char *c);
 int Dealer_IsIdle(Dealer *dealer);
 extern "C" {
 
 extern void MgCoins_Reset(void);
 
-void Mg_DrawCredits(void *, int, int, int);
 
 void Dealer_Draw(void *);
 
@@ -173,7 +185,6 @@ using s020c19d0::Dealer_Update;
 void LoadCard2SubBg3(void *);
 extern "C" {
 
-s32 GetGameLanguage(void);
 
 void *LoadFile(int handle);
 
@@ -183,11 +194,8 @@ void Deallocate(void *ptr);extern "C" {
 
 int Dealer_Load(void *c);
 
-int Mg_GetSavedRecord0(void);
 
-int Mg_GetSavedRecord1(void);
 
-void Mg_SetTopScreenYOffset(int v);
 
 void Mg_PlaceBannersOnTopScreen(void);}
 
@@ -323,7 +331,6 @@ void dScMgMemory2_c::InitPlayers() {
 }
 
 /* inline_fn stays: reading mCredits and mHudScore directly changes the code. */
-void Mg_SaveRecordPair(int r0arg, int r1arg);
 inline int *inline_fn(char *arg0) {
     return (int *)arg0;
 }
@@ -1147,7 +1154,7 @@ void dScMgMemory2_c::StartRound(int /* arg */) {
  * cursor, cards and dealer. */
 s32 dScMgMemory2_c::Render() {
     Camera_InitDealerView(&mCamera);
-    Mg_DrawCredits(this, 0xc, 0xc, 0);
+    Mg_DrawCredits((char *)this, 0xc, 0xc, 0);
     MgCoins_Draw();
     DrawMessage();
     DrawCursor();

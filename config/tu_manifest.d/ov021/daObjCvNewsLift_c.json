@@ -171,7 +171,7 @@
       "ordinal": 17
     },
     {
-      "symbol": "daObjCvNewsLift_c_classInit",
+      "symbol": "_Z27daObjCvNewsLift_c_classInitv",
       "address": "0x02112168",
       "size": "0x00000080",
       "legacy_source": "src/d_a_obj_cv_news_lift.cpp",
@@ -708,7 +708,7 @@
       "source": "0x02114768",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daObjCvNewsLift_c_classInit",
+      "symbol": "_Z27daObjCvNewsLift_c_classInitv",
       "addend": 0,
       "target_module": "ov021",
       "target_address": "0x02112168"
