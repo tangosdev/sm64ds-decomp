@@ -35,9 +35,9 @@ Ov007Mesh *func_ov007_020cbbb0(int columns, int rows, int width, Ov007MeshParams
 
     mesh = (Ov007Mesh *)func_ov007_020c3df4(0, sizeof(Ov007Mesh));
     cellColumns = columns - 1;
-    cellWidth = (int)FX_DivS32(width, cellColumns);
+    cellWidth = FX_DivS32(width, cellColumns);
     t = FX_MUL(width, 0x16a1);
-    cellHeight = (int)FX_DivS32(t / 2, cellColumns);
+    cellHeight = FX_DivS32(t / 2, cellColumns);
     {
         int n = columns - 1;
         cellColumns = n;
@@ -50,8 +50,8 @@ Ov007Mesh *func_ov007_020cbbb0(int columns, int rows, int width, Ov007MeshParams
     mesh->vertexNormals = (Vector3_16 *)func_ov007_020c3df4(0, columns * 6 * rows);
     mesh->texOffsetS = (int *)func_ov007_020c3df4(0, columns * 4);
     mesh->texOffsetT = (int *)func_ov007_020c3df4(0, columns * 4);
-    mesh->cellWidth = (s16)cellWidth;
-    mesh->cellHeight = (s16)cellHeight;
+    mesh->cellWidth = cellWidth;
+    mesh->cellHeight = cellHeight;
     mesh->cellLinks =
         (Ov007Link **)func_ov007_020c3df4(0, cellColumns * sizeof(Ov007Link) * cellRows);
     mesh->grid = func_ov007_020c73f0(3, columns, rows, params->pointMass);
