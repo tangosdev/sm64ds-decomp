@@ -388,7 +388,7 @@ extern "C" void func_02045e44(void *self, unsigned int value, int index)
     struct Obj { void *pad0; struct Element *arr; };
     struct Obj *obj = (struct Obj *)self;
     struct Element *e = &obj->arr[index];
-    unsigned int *flags = (unsigned int *)(&e->flags);
+    unsigned int *flags = &e->flags;
     *flags &= ~0xc0000000;
     *flags |= value << 30;
 }
