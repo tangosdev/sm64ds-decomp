@@ -482,6 +482,7 @@ void daPgMthr_c::BeginTalk(void *found, char *heldRaw) {
         if (baby != 0) {
             if (held->param1 == BABY_OWN) {
                 mMessageId = MSG_OWN_BABY;
+                // goto: ownBaby flag (0xec), duplicated else (0x104), folded && (0xd4) still DIFF BeginTalk
                 goto talk;
             }
         }
