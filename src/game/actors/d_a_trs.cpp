@@ -2356,7 +2356,7 @@ int daTrs_c::GetAttackStatus() {
     id = this->mdCcAcPos_c.otherOwner;
     if (id != 0) {
         if (this->mdCcAcPos_c.hitFlags & 0x207e0) {
-            void* found;
+            void *found;
 
             this->mdCcAcPos_c.flags |= 1;
             found = (void *)dActor_c::FindWithID(this->mdCcAcPos_c.otherOwner);
@@ -2367,7 +2367,7 @@ int daTrs_c::GetAttackStatus() {
                     int isBf = (int)(((dActor_c *)found)->actorID == TRS_ID_PLAYER);
                     if (isBf) {
                         if (((dActor_c *)found)->param1 == 3) {
-                            u16* p = (u16*)&this->mBooFlags;
+                            u16 *p = (u16 *)&this->mBooFlags;
                             *p |= TRS_FLAG_HIT_BY_PARAM3_PLAYER;
                         }
                     }
@@ -2385,7 +2385,8 @@ int daTrs_c::GetAttackStatus() {
 
                 if (player->mIsMetal != 0) {
                     this->mdCcAcPos_c.flags |= 1;
-                    this->mTalkPlayer = (daPly_c *)dActor_c::FindWithID(this->mdCcAcPos_c.otherOwner);
+                    this->mTalkPlayer =
+                        (daPly_c *)dActor_c::FindWithID(this->mdCcAcPos_c.otherOwner);
                     return 1;
                 }
 
@@ -2417,13 +2418,14 @@ int daTrs_c::GetAttackStatus() {
                     if ((this->mdCcAcPos_c.hitFlags & 0x10) != 0) {
                         u8 kind = this->mVariant;
                         if (kind < 2 || kind >= 6 || kind <= 9) {
-                            void* found2;
+                            void *found2;
                             s16 v[3];
 
                             this->mdCcAcPos_c.flags |= 1;
                             found2 = (void *)dActor_c::FindWithID(this->mdCcAcPos_c.otherOwner);
                             if (found2) {
-                                this->mTalkPlayer = (daPly_c *)dActor_c::FindWithID(this->mdCcAcPos_c.otherOwner);
+                                this->mTalkPlayer =
+                                    (daPly_c *)dActor_c::FindWithID(this->mdCcAcPos_c.otherOwner);
 
                                 v[0] = -0x2000;
                                 v[1] = 0;
@@ -2431,7 +2433,7 @@ int daTrs_c::GetAttackStatus() {
                                 KillByInvincibleChar(*(Vector3_16 *)v, *(daPly_c *)found2, 0);
 
                                 {
-                                    s16* ap = (s16*)&this->mAngleY;
+                                    s16 *ap = (s16 *)&this->mAngleY;
                                     *ap = (s16)(*ap + 0x8000);
                                 }
                                 return 1;
