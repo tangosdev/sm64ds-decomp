@@ -2278,7 +2278,10 @@ void draw_room(const Surf &s, const Font &f, bool hd, const Geom &g, const Lobby
             framed(s, sw.x, sw.y, sw.w, sw.h, 3 * u, (int)u > 1 ? (int)u : 1, col, 0x1A0C02u);
             const char *lab = P.pk_chr == 0 ? kPkRowYoshi[k] : kPkRowBro[k];
             const Rect lr = { r.x, r.y, r.w - sq - (int)(4 * u), r.h };
-            f.centred(s, lr, lab, 13.0f, C_INK, on ? 255 : 170);
+            float em = 13.0f;     /* the label always ends before its swatch, whatever the font measures (four bro rows) */
+            const float tw = f.width(lab, em), room = (float)lr.w - 6 * u;
+            if (tw > room && tw > 0.f) em *= room / tw;
+            f.centred(s, lr, lab, em, C_INK, on ? 255 : 170);
         }
         const unsigned cur = *pk_slot(P.pk_chr, P.pk_row) & 0xFFFFFFu;
         for (int row = 0; row < PROF_ROWS; ++row)
