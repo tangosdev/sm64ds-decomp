@@ -200,7 +200,7 @@ WMErrCode WM_StepDataSharing(WMDataSharingInfo *dsInfo, const void *sendData,
             WMErrCode cr;
             dsInfo->state = WM_DS_STATE_START;
             n = (u16)((dsInfo->writeIndex + WM_DS_DATASET_NUM - 1) % WM_DS_DATASET_NUM);
-            cr = WM_SetMPDataToPort(WmDataSharingSetDataCallback, (u16 *)&dsInfo->ds[n],
+            cr = WM_SetMPDataToPort(WmDataSharingSetDataCallback, &dsInfo->ds[n].aidHeader,
                                     dsInfo->dataSetLength, (u16)(dsInfo->aidBitmap & childMask),
                                     dsInfo->port, WM_PRIORITY_HIGH);
             if (cr == WM_ERRCODE_NO_CHILD) {
@@ -256,10 +256,10 @@ WMErrCode WM_StepDataSharing(WMDataSharingInfo *dsInfo, const void *sendData,
 
         if (changed != 0) {
             /* the child stages its own data 0x20 bytes into the set it sends */
-            u8 *addr = (u8 *)&dsInfo->ds[dsInfo->sendIndex] + 0x20;
+            u16 *addr = &dsInfo->ds[dsInfo->sendIndex].data[14];
             WMErrCode cr;
             MI_CpuCopy16(sendData, addr, dsInfo->dataLength);
-            cr = WM_SetMPDataToPort(WmDataSharingSetDataCallback, (u16 *)addr, dsInfo->dataLength,
+            cr = WM_SetMPDataToPort(WmDataSharingSetDataCallback, addr, dsInfo->dataLength,
                                     dsInfo->aidBitmap, dsInfo->port, WM_PRIORITY_HIGH);
             dsInfo->sendIndex = (u16)((dsInfo->sendIndex + 1) % WM_DS_DATASET_NUM);
             if (cr != WM_ERRCODE_OPERATING && cr != WM_ERRCODE_SUCCESS) {
@@ -457,7 +457,7 @@ void WmDataSharingSendDataSet(WMDataSharingInfo *dsInfo, int excludeParent) {
 
         OS_RestoreInterrupts(saved);
 
-        ret = WM_SetMPDataToPort(WmDataSharingSetDataCallback, (u16 *)&dsInfo->ds[prevSlot],
+        ret = WM_SetMPDataToPort(WmDataSharingSetDataCallback, &dsInfo->ds[prevSlot].aidHeader,
                                  dsInfo->dataSetLength, (u16)(dsInfo->aidBitmap & mask),
                                  dsInfo->port, WM_PRIORITY_HIGH);
 
