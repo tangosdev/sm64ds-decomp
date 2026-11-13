@@ -11979,11 +11979,11 @@
       "evidence": "daPly_c::State zero-filled in .bss; PlayerInitStates writes the three handler slots. No dynamic initializer."
     },
     {
-      "symbol": "data_ov002_02110154",
+      "symbol": "_ZN7daPly_c7ST_WAITE",
       "address": "0x02110154",
       "size": "0x18",
       "binding": "STB_GLOBAL",
-      "evidence": "daPly_c::State for St_Wait, zero-filled in .bss. PlayerInitStates writes the three handler slots through daPly_c::ST_WAIT. _ZN7daPly_c7ST_WAITE is the other symbols.txt name of this object; the link assigns it here and this TU does not emit a second object."
+      "evidence": "daPly_c::ST_WAIT, zero-filled in .bss. PlayerInitStates writes the three handler slots. The definition is the static member, so the object exports _ZN7daPly_c7ST_WAITE."
     },
     {
       "symbol": "data_ov002_0211016c",
@@ -12049,11 +12049,11 @@
       "evidence": "daPly_c::State zero-filled in .bss; PlayerInitStates writes the three handler slots. No dynamic initializer."
     },
     {
-      "symbol": "data_ov002_02110244",
+      "symbol": "_ZN7daPly_c6ST_OWLE",
       "address": "0x02110244",
       "size": "0x18",
       "binding": "STB_GLOBAL",
-      "evidence": "daPly_c::State for St_Owl, zero-filled in .bss. PlayerInitStates writes the three handler slots through daPly_c::ST_OWL. _ZN7daPly_c6ST_OWLE is the other symbols.txt name of this object; the link assigns it here and this TU does not emit a second object."
+      "evidence": "daPly_c::ST_OWL, zero-filled in .bss. PlayerInitStates writes the three handler slots. The definition is the static member, so the object exports _ZN7daPly_c6ST_OWLE."
     },
     {
       "symbol": "data_ov002_0211025c",
@@ -18539,7 +18539,7 @@
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
-        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "sha256": "ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40",
         "matchesStockRom": true
       },
       "linkerOutput": null

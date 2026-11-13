@@ -745,11 +745,9 @@ struct daPly_c : dActor_c {
        pointer-to-member constant pool -- which is a State being constructed,
        member by member, in front of you.
 
-       They are DECLARED and never defined here: the objects are the ROM's,
-       carved out into the gap, so a definition in any translation unit would
-       be a duplicate. Referencing them emits the undefined symbol the gap
-       supplies, which is what the four daPly_c methods below already did by
-       hand. */
+       Defined in src/game/player/d_a_ply_methods.cpp, outside extern "C",
+       so each object is the mangled static member and not a second BSS
+       symbol. */
     static State ST_WAIT;
     static State ST_OWL;
 

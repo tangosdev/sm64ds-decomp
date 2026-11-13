@@ -528,9 +528,9 @@ class SourceBssInteriorTests(unittest.TestCase):
                                                                 "entry kind:bss(size=0)"))
         self.assertEqual(len(self.rows()), 1)
 
-    def test_a_second_bss_name_at_the_object_start_is_an_alias(self):
+    def test_start_alias_policy_is_not_extended_to_bss(self):
         self.symbols.write_text(self.symbols.read_text().replace("0x02111abc", "0x02111ab4"))
-        self.assertEqual(self.rows(), [("entry", 0x02111ab4, "block", 0, "overlays/ov047")])
+        self.assertEqual(self.rows(), [])
 
     def test_wrong_kind_zero_size_and_out_of_bounds_extents_fail(self):
         original = self.symbols.read_text()

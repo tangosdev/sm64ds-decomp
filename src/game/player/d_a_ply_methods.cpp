@@ -510,7 +510,6 @@ extern daPly_c::State data_ov002_021100f4;
 extern daPly_c::State data_ov002_0211010c;
 extern daPly_c::State data_ov002_02110124;
 extern daPly_c::State data_ov002_0211013c;
-extern daPly_c::State data_ov002_02110154;
 extern daPly_c::State data_ov002_0211016c;
 extern daPly_c::State data_ov002_02110184;
 extern daPly_c::State data_ov002_0211019c;
@@ -520,7 +519,6 @@ extern daPly_c::State data_ov002_021101e4;
 extern daPly_c::State data_ov002_021101fc;
 extern daPly_c::State data_ov002_02110214;
 extern daPly_c::State data_ov002_0211022c;
-extern daPly_c::State data_ov002_02110244;
 extern daPly_c::State data_ov002_0211025c;
 extern daPly_c::State data_ov002_02110274;
 extern daPly_c::State data_ov002_0211028c;
@@ -953,8 +951,8 @@ void daPly_c::func_ov002_020bd06c(unsigned int state2) {
         flag = 0x16;
         break;
     case 5:
-        if (!this->IsState(data_ov002_02110154)) {
-            this->ChangeState(data_ov002_02110154);
+        if (!this->IsState(daPly_c::ST_WAIT)) {
+            this->ChangeState(daPly_c::ST_WAIT);
         }
         break;
     case 14:
@@ -2371,7 +2369,7 @@ int daPly_c::func_ov002_020bfec0() {
     }
 
     inc = 0x400;
-    if (this->IsState(data_ov002_02110154) || this->IsState(data_ov002_0211049c)) {
+    if (this->IsState(daPly_c::ST_WAIT) || this->IsState(data_ov002_0211049c)) {
         inc = 0x800;
     }
 
@@ -3714,7 +3712,7 @@ void daPly_c::func_ov002_020c2e78() {
     unsigned char w = IsPlayerWarping(mPlayerNo);
     if (w == 0)
         return;
-    if (!this->IsState(data_ov002_02110154)) {
+    if (!this->IsState(daPly_c::ST_WAIT)) {
         func_02020388(mPlayerNo);
         return;
     }
@@ -4192,7 +4190,7 @@ int daPly_c::St_Respawn_Main() {
             if (mPlayerNo == gLocalPlayerId) {
                 FUN_02029934();
             }
-            this->ChangeState(data_ov002_02110154);
+            this->ChangeState(daPly_c::ST_WAIT);
         }
         break;
     }
@@ -4660,7 +4658,7 @@ int daPly_c::ShowMessage2(fBase_c &actor_, unsigned int msg, const Vector3 *pos,
     } else {
         r7 = 0;
         if (IsState(data_ov002_0211013c) || IsState(data_ov002_02110364) ||
-            IsState(data_ov002_0211043c) || IsState(data_ov002_02110154) ||
+            IsState(data_ov002_0211043c) || IsState(daPly_c::ST_WAIT) ||
             IsState(data_ov002_02110424) || IsState(data_ov002_021104e4) ||
             IsState(data_ov002_02110514)) {
             r7 = 1;
@@ -4771,7 +4769,7 @@ int daPly_c::StartTalk(fBase_c &actor_, bool b_) {
         return 0;
     }
 
-    if (!(IsState(data_ov002_0211013c) || IsState(data_ov002_02110154) || IsState(data_ov002_021104e4) || IsState(data_ov002_02110514) || IsState(data_ov002_02110364) || IsState(data_ov002_02110424) || IsState(data_ov002_021105a4) || IsState(data_ov002_0211043c)))
+    if (!(IsState(data_ov002_0211013c) || IsState(daPly_c::ST_WAIT) || IsState(data_ov002_021104e4) || IsState(data_ov002_02110514) || IsState(data_ov002_02110364) || IsState(data_ov002_02110424) || IsState(data_ov002_021105a4) || IsState(data_ov002_0211043c)))
         return 0;
 
     if (b_ == 0) {
@@ -4779,7 +4777,7 @@ int daPly_c::StartTalk(fBase_c &actor_, bool b_) {
         if (!(*(u16 *)(data_0209f49e + (u8)gActivePlayerSlot * 0x18) & 3))
             goto ret0;
 
-        if (!((IsState(data_ov002_0211013c) && mHorzSpeed < 0x8000) || IsState(data_ov002_0211043c) || IsState(data_ov002_02110154)))
+        if (!((IsState(data_ov002_0211013c) && mHorzSpeed < 0x8000) || IsState(data_ov002_0211043c) || IsState(daPly_c::ST_WAIT)))
             goto ret0;
 
         mStateStep = 0;
@@ -7513,7 +7511,7 @@ extern "C" {
 int daPly_c::TryEnterStarDoor(Vector3 &pos_, short kind) {
     extern void Vec3_RotateYAndTranslate(void*, void*, short angle, void*);
     int *pos = (int *)&pos_;
-    if (IsState(data_ov002_0211013c) || IsState(data_ov002_02110154) || IsState(data_ov002_0211043c)) {
+    if (IsState(data_ov002_0211013c) || IsState(daPly_c::ST_WAIT) || IsState(data_ov002_0211043c)) {
         if (this->SetNoControlState(0xa, -1, 0)) {
             mStateAnchorX = pos[0];
             mStateAnchorY = pos[1];
@@ -7543,7 +7541,7 @@ int daPly_c::CanEnterDoor(unsigned char door) {
         if (!(mStateStep == 0x13 && mIsOpeningBigDoor != 0))
             return 0;
     }
-    if (IsState(data_ov002_0211013c) || IsState(data_ov002_02110154) ||
+    if (IsState(data_ov002_0211013c) || IsState(daPly_c::ST_WAIT) ||
         IsState(data_ov002_0211022c) || IsState(data_ov002_0211043c)) {
         /* Yoshi with something in his mouth cannot take a door. If its
            OnYoshiTryEat() code is 6 (enemies such as daKrb_c and daSpd_c,
@@ -7685,7 +7683,7 @@ void daPly_c::func_ov002_020ca940() {
                 b = b == 1;
                 if (b == false) {
                     if (IsState(data_ov002_0211013c) || IsState(data_ov002_0211043c) ||
-                        IsState(data_ov002_02110154)) {
+                        IsState(daPly_c::ST_WAIT)) {
                         mStateFlags |= 4;
                         break;
                     }
@@ -7712,7 +7710,7 @@ void daPly_c::func_ov002_020ca940() {
 
     if (IsState(data_ov002_0211013c))
         return;
-    if (IsState(data_ov002_02110154))
+    if (IsState(daPly_c::ST_WAIT))
         return;
     if (IsState(data_ov002_0211043c))
         return;
@@ -11238,7 +11236,7 @@ int daPly_c::func_ov002_020d225c() {
 
 void daPly_c::func_ov002_020d228c() {
 
-    ChangeState(data_ov002_02110154);
+    ChangeState(daPly_c::ST_WAIT);
     SetAnim(9, 0, 0x1000, 0);
     mStateStep = 4;
     mSleepBubbleScaleX = 0;
@@ -11926,7 +11924,7 @@ int daPly_c::St_Walk_Main() {
     extern s16 data_0209f4a0[];
 
     if ((u16)(mStateFlags & 0x800)) {
-        this->ChangeState(data_ov002_02110154);
+        this->ChangeState(daPly_c::ST_WAIT);
         return 1;
     }
     if (func_ov002_020c5244()) return 1;
@@ -11986,7 +11984,7 @@ int daPly_c::St_Walk_Main() {
 label_1f0:
     if (mIsMega != 0) {
         if (this->FinishedAnim() && this->IsAnim(0x9d)) {
-            this->ChangeState(data_ov002_02110154);
+            this->ChangeState(daPly_c::ST_WAIT);
             mStateWork = 1;
             func_ov002_020cabe0();
         }
@@ -12003,7 +12001,7 @@ label_1f0:
     }
 
 label_27c:
-    this->ChangeState(data_ov002_02110154);
+    this->ChangeState(daPly_c::ST_WAIT);
     mStateWork = 1;
     func_ov002_020cabe0();
     goto end;
@@ -12290,7 +12288,7 @@ merge:
     mGrabbedByActor = 0;
     mStateStep = 0;
     mEatingPlayer = 0;
-    if (func_ov002_020e3078(&data_ov002_02110154) != 0) {
+    if (func_ov002_020e3078(&daPly_c::ST_WAIT) != 0) {
         mWalkTimer = 0x10;
         if (data_0209f498[gActivePlayerSlot].mag != 0) {
             mPrevAngleY = mDesiredAngleY;
@@ -13457,7 +13455,7 @@ int daPly_c::func_ov002_020d6790() {
     }
 
     if (!IsState(data_ov002_0211013c)) {
-        if (!IsState(data_ov002_02110154)) {
+        if (!IsState(daPly_c::ST_WAIT)) {
             if (!IsState(data_ov002_0211067c))
                 return 0;
         }
@@ -15565,7 +15563,7 @@ int daPly_c::St_GrabBowserTail_Main() {
         break;
     case 2:
         if (this->FinishedAnim())
-            this->ChangeState(data_ov002_02110154);
+            this->ChangeState(daPly_c::ST_WAIT);
         break;
     }
 
@@ -17878,7 +17876,7 @@ int daPly_c::func_ov002_020dec70() {
     mSurfaceSoundHandle =
         Sound::PlayLong((u32)mSurfaceSoundHandle, 3, 0x90, *(Vector3 *)&mCamSpacePos, 0);
     if (IsState(data_ov002_02110274) || IsState(data_ov002_021102d4) ||
-        IsState(data_ov002_02110244) || mIsMetal || mIsMega || mIsNoControl || mIsAirborne == 0)
+        IsState(daPly_c::ST_OWL) || mIsMetal || mIsMega || mIsNoControl || mIsAirborne == 0)
         return 0;
     if (func_ov002_020e0478() != 0 || mIsBalloon != 0) {
         if (t < 0x898000)
@@ -18198,7 +18196,7 @@ int daPly_c::St_Owl_Init() {
 
 extern "C" {
 int daPly_c::func_ov002_020df7ac() {
-    if (this->IsState(data_ov002_02110244) == 0)
+    if (this->IsState(daPly_c::ST_OWL) == 0)
         return 0;
     this->St_Owl_Cleanup();
     this->ChangeState(data_ov002_021101b4);
@@ -18208,7 +18206,7 @@ int daPly_c::func_ov002_020df7ac() {
 
 extern "C" {
 int func_ov002_020df7f4(daPly_c *player) {
-    if (!player->IsState(data_ov002_02110244) || player->mHeldObj == 0)
+    if (!player->IsState(daPly_c::ST_OWL) || player->mHeldObj == 0)
         return -1;
     return player->mStateStep != 0;
 }
@@ -18225,7 +18223,7 @@ int daPly_c::func_ov002_020df840(void *arg1, Vector3 *arg2) {
         return 0;
     if (this->mHeldObj != 0)
         return 0;
-    this->ChangeState(data_ov002_02110244);
+    this->ChangeState(daPly_c::ST_OWL);
     this->mHeldObj = (dActor_c *)arg1;
     this->mAttachOffsetY = arg2->y;
     this->mAngleYSpeed = Vec3_HorzAngle(&this->mPos, arg2);
@@ -21905,8 +21903,8 @@ int *func_ov002_020e6bb0(void *model) {
  * Still written by hand: the objects it builds keep their ROM-owned .bss
  * homes, so a compiler-emitted initializer has nothing to define. */
 /* Zero-filled .bss owned by this TU (0x0210e14c..0x02110924).
- * data_ov002_02110154 is the St_Wait state. daPly_c::ST_WAIT is its other name.
- * data_ov002_02110244 is the St_Owl state. daPly_c::ST_OWL is its other name.
+ * daPly_c::ST_WAIT is the St_Wait state at 0x02110154.
+ * daPly_c::ST_OWL is the St_Owl state at 0x02110244.
  * Outside .init: the section pragma would place these objects in .init.
  * No constructor and no initializer, so __sinit_ov002_021019d0 stays put. */
 extern "C" {
@@ -22694,9 +22692,10 @@ daPly_c::State data_ov002_021100f4;
 daPly_c::State data_ov002_0211010c;
 daPly_c::State data_ov002_02110124;
 daPly_c::State data_ov002_0211013c;
-/* data_ov002_02110154 and daPly_c::ST_WAIT are this one object. The member
- * stays a declaration; the link assigns _ZN7daPly_c7ST_WAITE at this address. */
-daPly_c::State data_ov002_02110154;
+}
+/* St_Wait. C++ linkage, so the object is _ZN7daPly_c7ST_WAITE. */
+daPly_c::State daPly_c::ST_WAIT;
+extern "C" {
 daPly_c::State data_ov002_0211016c;
 daPly_c::State data_ov002_02110184;
 daPly_c::State data_ov002_0211019c;
@@ -22706,9 +22705,10 @@ daPly_c::State data_ov002_021101e4;
 daPly_c::State data_ov002_021101fc;
 daPly_c::State data_ov002_02110214;
 daPly_c::State data_ov002_0211022c;
-/* data_ov002_02110244 and daPly_c::ST_OWL are this one object. The member
- * stays a declaration; the link assigns _ZN7daPly_c6ST_OWLE at this address. */
-daPly_c::State data_ov002_02110244;
+}
+/* St_Owl. C++ linkage, so the object is _ZN7daPly_c6ST_OWLE. */
+daPly_c::State daPly_c::ST_OWL;
+extern "C" {
 daPly_c::State data_ov002_0211025c;
 daPly_c::State data_ov002_02110274;
 daPly_c::State data_ov002_0211028c;

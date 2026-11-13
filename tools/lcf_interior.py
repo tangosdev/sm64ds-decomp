@@ -34,10 +34,7 @@ stays inside the section.
 
 BSS interior labels, including overlay labels, retain configured identities even
 without live imports when one actual source provider proves the complete NOBITS
-object. A second BSS name at that object's own address is the same kind of
-alias: one definition, the other name assigned in the LCF. The older
-imported-label path remains available and still requires the label to sit
-strictly inside the object. The LCF
+object. The older imported-label path remains available. The LCF
 defines the canonical label inside its enclosing output module. This preserves aliases
 without adding storage, changing object bytes, or assuming an overlay base.
 
@@ -178,6 +175,7 @@ def _source_storage_interior_rows(config_root, objects_txt, definitions, bss=Fal
             continue
         enclosing = [(owner, base) for owner, mod, base, size in owners
                      if mod == module and base <= address < base + size
+                     and (not bss or base < address)
                      and address + (declared_size or 0) <= base + size]
         if len(enclosing) == 1:
             owner, base = enclosing[0]
