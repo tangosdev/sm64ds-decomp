@@ -93,8 +93,8 @@ enum {
 extern "C" {
 extern void func_02012694(unsigned int id, const Vector3 *v);
 extern dCamera_c *gCamera;
-extern void *gPFlowerCloseModelFile[];
-extern void *gPFlowerOpenModelFile[];
+extern SharedFilePtr gPFlowerCloseModelFile;
+extern SharedFilePtr gPFlowerOpenModelFile;
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *act, Fix12i a, Fix12i b, void *d, void *e);
 }
@@ -229,7 +229,7 @@ void daObjPowerUpItem_c::StateLaunched()
 
     mWithMeshClsn.SetRadius(0x3c000);
     mWithMeshClsn.SetHeight(0x3c000);
-    UpdatePos((dCc_c*)&mdCcAc_c);
+    UpdatePos(&mdCcAc_c);
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
 
     if (mWithMeshClsn.TouchesWater()) {
@@ -368,7 +368,7 @@ void daObjPowerUpItem_c::DropShadow() {
     int b = (int)((mFlags & 0x40000) != 0);
     if (b != 0)
         return;
-    *(struct Matrix4x3*)&mShadowMat = *(struct Matrix4x3*)&mOpenModel.mat4x3;
+    mShadowMat = mOpenModel.mat4x3;
     mShadowMat.m[10] = mGroundY >> 3;
     r3 = 0x78000;
     if (mState == FLOWER_STATE_LAUNCHED) {
@@ -387,13 +387,13 @@ void daObjPowerUpItem_c::UpdateMatrices(){
   mOpenModel.mat4x3.m[9] = mPosX >> 3;
   mOpenModel.mat4x3.m[10] = mPosY >> 3;
   mOpenModel.mat4x3.m[11] = mPosZ >> 3;
-  *(struct Matrix4x3*)&mCloseModel.mat4x3 = *(struct Matrix4x3*)&mOpenModel.mat4x3;
+  mCloseModel.mat4x3 = mOpenModel.mat4x3;
 }
 
 s32 daObjPowerUpItem_c::CleanupResources()
 {
-    ((SharedFilePtr *)gPFlowerCloseModelFile)->Release();
-    ((SharedFilePtr *)gPFlowerOpenModelFile)->Release();
+    gPFlowerCloseModelFile.Release();
+    gPFlowerOpenModelFile.Release();
     return 1;
 }
 
@@ -429,8 +429,8 @@ int daObjPowerUpItem_c::Behavior()
     CheckPickup();
     UpdateMatrices();
     DropShadow();
-    ((dCc_c *)&mdCcAc_c)->Clear();
-    ((dCc_c *)&mdCcAc_c)->Update();
+    mdCcAc_c.Clear();
+    mdCcAc_c.Update();
     if (SaveData::HasPlayerLostCap()) {
         SmallPoofDust();
         MarkForDestruction();
@@ -442,11 +442,11 @@ int daObjPowerUpItem_c::InitResources()
 {
     struct Vector3 pos;
 
-    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)gPFlowerCloseModelFile);
-    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)gPFlowerOpenModelFile);
-    if (mOpenModel.SetFile((BMD_File*)gPFlowerOpenModelFile[1], 1, -1) == 0)
+    dExtSimpleModel_c::LoadFile(gPFlowerCloseModelFile);
+    dExtSimpleModel_c::LoadFile(gPFlowerOpenModelFile);
+    if (mOpenModel.SetFile((BMD_File *)gPFlowerOpenModelFile.filePtr, 1, -1) == 0)
         return 0;
-    if (mCloseModel.SetFile((BMD_File*)gPFlowerCloseModelFile[1], 1, -1) == 0)
+    if (mCloseModel.SetFile((BMD_File *)gPFlowerCloseModelFile.filePtr, 1, -1) == 0)
         return 0;
     if (mShadowModel.InitCylinder() == 0)
         return 0;
