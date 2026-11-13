@@ -136,7 +136,6 @@ enum {
     kTiltStep = 0x80
 };
 
-
 void func_02012694(unsigned int id, const Vector3 *pos);
 extern "C" {
 
@@ -144,7 +143,6 @@ unsigned short DecIfAbove0_Short(unsigned short *p);
 }
 
 /* local extern: d_bg_w.cpp defines these; no header declares them. */
-
 
 extern int data_02092138;
 extern u8 data_ov073_02123420[];

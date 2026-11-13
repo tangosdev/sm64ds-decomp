@@ -48,7 +48,6 @@ struct EmmYukaCollisionFilePtr : SharedFilePtr {
     ~EmmYukaCollisionFilePtr();
 };
 
-
 extern EmmYukaFiles data_ov052_021125a0;
 extern "C" {
 
@@ -60,7 +59,6 @@ void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 /* local extern: CalcLib conflicts with this TU's Vec3_MulScalar spelling. */
 void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
 }
-
 
 #pragma defer_codegen off
 
@@ -160,8 +158,7 @@ int daObjEmmYuka_c::InitResources()
  * RTTI, allocation size, vtable identity, and the EMM_YUKA registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: SquarePathLift_Spawn. */
-daObjEmmYuka_c *daObjEmmYuka_c_classInit()
-{
+daObjEmmYuka_c *daObjEmmYuka_c_classInit() {
     return new daObjEmmYuka_c();
 }
 

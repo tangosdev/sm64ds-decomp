@@ -10,7 +10,6 @@ void terminate();
 
 extern "C" {
 
-
 extern unsigned char func_02072d90(struct ActionWalk *c);
 }
 
@@ -19,7 +18,6 @@ extern "C" {
 
 extern unsigned char *ReadSignedVarInt(unsigned char *p, int *out);
 }
-
 
 /* EH runtime, rethrow: walk a copy of the context's actions to action 13,
    read its signed offset into the frame (ReadSignedVarInt) and return the

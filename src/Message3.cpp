@@ -43,7 +43,6 @@
 
 struct OamAttr;
 
-
 extern u8 data_0209fc6c;
 extern u8 data_0209fc70;
 extern u8 data_0209fc74;
@@ -155,7 +154,6 @@ void func_02033e50(int p0, int p1);
 void Message_DrawLineBG2VS(void);
 void func_020345b0(int arg0);
 void LoadFont3D(void);
-
 
 /* The text cursor's current control record (data_0209fd0c). Bytes 3 and 4 are
  * a big-endian argument; 5 and 6 are the number-format mode and base. */

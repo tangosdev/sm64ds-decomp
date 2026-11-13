@@ -4,8 +4,6 @@
 #include "Ov007Settings.h"
 #include "Ov007Display.h"
 
-
-
 extern void func_ov007_020c33d0(Ov007CharRecord *rec, int target, unsigned int offset);
 extern void func_ov007_020c32e8(Ov007Palette *pal, int target, unsigned int row, int skip);
 extern "C" void *func_ov007_020b3f20(int idx);
@@ -37,4 +35,3 @@ void func_ov007_020bcdb8(int idx) {
     func_ov007_020c3544(rec);
     func_ov007_020b3edc(slot);
 }
-

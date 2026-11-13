@@ -52,7 +52,6 @@
 #include "math/CalcLib.h"
 #include "Ov007Settings.h"
 
-
 extern FileSaveData *data_0209b33c;
 extern u8 data_0209b34b[];
 extern u8 data_0209b34e[];
@@ -86,7 +85,6 @@ void StartMinigameMenu(u8 returnToRecRoom);
 extern "C" void SetSoundMode(int mode);
 extern "C" void TurnBacklightOn(void);
 extern "C" void TurnBacklightOff(void);
-
 
 /* data_0209b340 (decl_common.h's int[]) is the download-play table. */
 #define sBootArgs (*(Ov007BootArgs *)data_0209b340)
@@ -376,9 +374,7 @@ FileSaveData *DSMT_GetFileBuffer(int slot) {
     return &data_0209b33c[slot];
 }
 
-
 /* Behavior consumes a nonnegative pending music ID after the delay; -1 is idle.
  * Keep the configured identity while its shared declaration is reserved. */
 int data_ov007_02103260 = -1;
 BaseSpawnInfo<dScDSMT_c> g_profile_DSMT = {dScDSMT_c_classInit, 1, 3};
-

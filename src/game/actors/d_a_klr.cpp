@@ -50,7 +50,6 @@ extern "C" {
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 
-
 /* Indexed by mState: [0] StateFly, [1] StateShotDown.
    Defined at the end of this file so it does not insert a function into .text. */
 typedef void (daKlr_c::*KlrStateFunc)();

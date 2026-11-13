@@ -4,10 +4,8 @@
 
 extern "C" {
 
-
 extern void func_02023408(void);
 }
-
 
 extern u8 data_0208a178[];
 extern const void *data_0208c178;

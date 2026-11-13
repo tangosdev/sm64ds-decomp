@@ -17,6 +17,6 @@ RouletteRacer::RouletteRacer() {}
  * `new` inlines the implicit constructor: the base chain, this class's
  * vptr, then mDealer, mRacers and mBoard's two models in declaration order.
  * Historical alias: MgMushroomRoulette_Spawn. */
- void *dScMgRoulette_c_classInit(void) {
+void *dScMgRoulette_c_classInit(void) {
     return new dScMgRoulette_c;
 }

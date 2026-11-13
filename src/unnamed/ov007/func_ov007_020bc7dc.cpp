@@ -3,8 +3,6 @@
 #include "Ov007Model.h"
 #include "nitro/fx/fx_cp.h"
 
-
-
 extern "C" void func_ov007_020c9110(void *p);
 void func_0204531c(char *model, int x);
 
@@ -33,4 +31,3 @@ void func_ov007_020bc7dc(Ov007Model *m) {
     if (m->blendFrames <= 0)
         m->blendFrames = 0;
 }
-

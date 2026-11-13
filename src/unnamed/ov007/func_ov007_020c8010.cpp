@@ -2,8 +2,6 @@
 #include "Ov007Spring.h"
 #include "math/CalcLib.h"
 
-
-
 /* Links two followers: once both have a target, dir is the vector between
  * them and length its length. */
 void func_ov007_020c8010(Ov007Link *link, Ov007Follower *from, Ov007Follower *to) {
@@ -16,4 +14,3 @@ void func_ov007_020c8010(Ov007Link *link, Ov007Follower *from, Ov007Follower *to
     VEC_Subtract(link->from->target, link->to->target, &link->dir);
     link->length = VEC_Mag(&link->dir);
 }
-

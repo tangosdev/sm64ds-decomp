@@ -61,25 +61,45 @@ enum dScMgCoin_c_AssetId {
 #include "nitro/gx/gx_load.h"
 struct OamAttr;
 struct Matrix2x2;
-namespace s20b1de8 { void Mg_DrawCreditsIcon(int, int, int, int); }
+namespace s20b1de8 {
+void Mg_DrawCreditsIcon(int, int, int, int);
+}
 using s20b1de8::Mg_DrawCreditsIcon;
-namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+namespace s20b0aa0 {
+void FreeGfxSlotsById(int);
+}
 using s20b0aa0::FreeGfxSlotsById;
-namespace s20b023c { void Mg_RenderSpriteBothPalMtx(void *a0, int, int, int, void *a4); }
+namespace s20b023c {
+void Mg_RenderSpriteBothPalMtx(void *a0, int, int, int, void *a4);
+}
 using s20b023c::Mg_RenderSpriteBothPalMtx;
-namespace s20b0104 { void RenderOamBothScreens(void *attr, int, int, int, int, void *mtx); }
+namespace s20b0104 {
+void RenderOamBothScreens(void *attr, int, int, int, int, void *mtx);
+}
 using s20b0104::RenderOamBothScreens;
-namespace s20afdd0 { void Mg_RenderSpriteBoth(void *a0, int, int, int, int); }
+namespace s20afdd0 {
+void Mg_RenderSpriteBoth(void *a0, int, int, int, int);
+}
 using s20afdd0::Mg_RenderSpriteBoth;
-namespace s20afcf8 { void DrawOamSprite(OamAttr *attr, int, int, Matrix2x2 *mtx); }
+namespace s20afcf8 {
+void DrawOamSprite(OamAttr *attr, int, int, Matrix2x2 *mtx);
+}
 using s20afcf8::DrawOamSprite;
-namespace s20afa20 { void RenderOamMainScreen(OamAttr *oam, int, int, int, int); }
+namespace s20afa20 {
+void RenderOamMainScreen(OamAttr *oam, int, int, int, int);
+}
 using s20afa20::RenderOamMainScreen;
-namespace s20ae274 { void Mg_PlayJingle(void*); }
+namespace s20ae274 {
+void Mg_PlayJingle(void *);
+}
 using s20ae274::Mg_PlayJingle;
-namespace s20adc1c { int Mg_GetTopRecord(void); }
+namespace s20adc1c {
+int Mg_GetTopRecord(void);
+}
 using s20adc1c::Mg_GetTopRecord;
-namespace s20ad674 { s32 GetGameLanguage(void); }
+namespace s20ad674 {
+s32 GetGameLanguage(void);
+}
 using s20ad674::GetGameLanguage;
 
 #pragma defer_codegen off /* ROM-ascending emission; dropping this inverts it */
@@ -118,7 +138,6 @@ enum {
     kTileStep = 0x20
 };
 
-
 extern const int sCoinBagRowTopY[];
 
 extern const int sCoinBagRowHeight[];
@@ -138,10 +157,7 @@ extern const unsigned char sCoinCaptionBlinkSprites[];
 extern const u16 sCoinCaptionCountInTimes[];
 
 extern const u8 sCoinCaptionCountInSprites[];
-extern "C" {
-
-
-}
+extern "C" {}
 
 extern const int sCoinSparkleSpawnOffsets[];
 
@@ -152,35 +168,24 @@ extern int sCoinPopupSprites;
 extern const int sCoinPopupY[];
 
 extern OamAttr **sCoinScorePlayerSprites[];
-extern "C" {
-
-
-}
+extern "C" {}
 
 struct OamAttr;
 
 struct Matrix2x2;
-extern "C" {
-
-
-}
+extern "C" {}
 
 extern void *sCoinValuesSprites[];
 
 extern void *sCoinSparkleSprites[];
 
 extern void *sCoinBagSprites[];
-extern "C" {
-
-}
+extern "C" {}
 
 extern void func_020127a4(int a, int b, int c, int d);
 
 extern const int sCoinRowY[];
-extern "C" {
-
-
-}
+extern "C" {}
 
 extern const u16 sCoinBlockFrameSprites[];
 
@@ -203,13 +208,10 @@ extern const int sCoinBlockHopVX[];
 extern const u16 sCoinBlockFrameTimes[];
 extern "C" {
 
-
-
-
 extern void *LoadFile(int handle);
 
-extern void DecompressLZ16(void *src, void *dst);}
-
+extern void DecompressLZ16(void *src, void *dst);
+}
 
 extern u8 gMainScreenLayers;
 
@@ -218,8 +220,8 @@ extern u8 gSubScreenLayers;
 extern int data_0208ee44;
 extern "C" {
 
-extern void func_0203b9b4(int *p, int v);}
-
+extern void func_0203b9b4(int *p, int v);
+}
 
 /* The per-state handler tables: {pmf, delta} records indexed by the
    record's own state byte. Static initialisation fills each one from the
@@ -253,7 +255,6 @@ extern const CoinPmfEntry pmf_dScMgCoin_c_Caption_StateDelay, pmf_dScMgCoin_c_Ca
 extern const CoinPmfEntry pmf_dScMgCoin_c_Bag_StateIdle, pmf_dScMgCoin_c_Bag_StateRise,
     pmf_dScMgCoin_c_Bag_StateParked, pmf_dScMgCoin_c_Bag_StateBounceDown;
 
-
 /* the phases (Behavior) */
 Entry_Behavior sCoinPhaseStateTable[6] = {
     {pmf_dScMgCoin_c_Phase_StateIdle},       {pmf_dScMgCoin_c_Phase_StateIntro},
@@ -283,7 +284,6 @@ CoinPmfEntry sCoinBagStateTable[4] = {{pmf_dScMgCoin_c_Bag_StateIdle},
                                       {pmf_dScMgCoin_c_Bag_StateRise},
                                       {pmf_dScMgCoin_c_Bag_StateParked},
                                       {pmf_dScMgCoin_c_Bag_StateBounceDown}};
-
 
 /* Nothing to destroy by hand: D1 stores the vptr and calls dScMgBase_c's
    D2, and D0 adds the delete. */
@@ -897,9 +897,9 @@ void dScMgCoin_c::DrawBlocks() {
 struct Pair_dd658 {
     int a;
     int b;
-};extern "C" void Mg_SpawnFx(int a, int b, struct Pair_dd658 *p2, struct Pair_dd658 *p3,
+};
+extern "C" void Mg_SpawnFx(int a, int b, struct Pair_dd658 *p2, struct Pair_dd658 *p3,
                            struct Pair_dd658 *p4);
-
 
 void dScMgCoin_c::Block_StateFallIn(int i) {
     int oldVy;
@@ -1477,7 +1477,7 @@ inline dScMgCoin_c::dScMgCoin_c() {
  * allocation size, vtable identity, and the MG_COIN registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: MgCoincentration_Spawn. */
- void *dScMgCoin_c_classInit() {
+void *dScMgCoin_c_classInit() {
     return new dScMgCoin_c;
 }
 
@@ -1531,4 +1531,3 @@ extern const int sCoinBlockDropRowY[6] = {-168, -108, -48, 48, 112, 176};
 extern const int sCoinBlockFallRowY[6] = {-168, -108, -48, 48, 112, 176};
 
 extern const int sCoinSparkleSpawnOffsets[8] = {-4, -4, 4, -4, -4, 4, 4, 4};
-

@@ -30,6 +30,9 @@
 #include "types.h"
 #include "nitro/os/context.h"
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+extern "C" {
+#endif
 
 #define OS_THREAD_MAX_NUM 16
 
@@ -122,5 +125,8 @@ void OS_SetThreadStackWarningOffset(OSThread *, u32);
 int OS_SetThreadPriority(OSThread *, u32);
 u32 OS_GetThreadPriority(const OSThread *);
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+}
+#endif
 
 #endif /* NITRO_OS_THREAD_H */

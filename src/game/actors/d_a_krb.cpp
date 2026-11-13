@@ -158,7 +158,6 @@ enum {
     SND_TUMBLE_BOUNCE_LATER = 0x13b   /* second and third bounce */
 };
 
-
 /* data_ov084_02130cf8 is the BMD this TU LoadFile / Release. The other
    six handles are never passed to a SharedFilePtr method; this TU reads
    filePtr as the loaded BCA. Selected by role (see SetAnim calls):
@@ -180,7 +179,7 @@ extern KrbModelFilePtr gKuriboLowModelModelFile;
 extern StateHandler data_ov084_02130d74[];
 int func_02037e20(int* p);
 void func_02012694(unsigned int id, const Vector3 *pos);
-int SurfaceInfo_TestFlag0x20(int* p);
+int SurfaceInfo_TestFlag0x20(int *p);
 extern u8 data_0209f208[];
 extern u8 *data_0209f344;
 /* Three-register reconstructed interface; death-state stores also use r3. */
@@ -1885,22 +1884,19 @@ int daKrb_c::OnYoshiTryEat()
     return 0;
 }
 
- daKrb_c *daKrb_c_classInit_KURIBO_L()
-{
+daKrb_c *daKrb_c_classInit_KURIBO_L() {
     return new daKrb_c();
 }
 
- daKrb_c *daKrb_c_classInit_KURIBO_S()
-{
+daKrb_c *daKrb_c_classInit_KURIBO_S() {
     return new daKrb_c();
 }
 
- daKrb_c *daKrb_c_classInit_KURIBO()
-{
+daKrb_c *daKrb_c_classInit_KURIBO() {
     return new daKrb_c();
 }
 
- SpawnInfo<daKrb_c> g_profile_KURIBO = {
+SpawnInfo<daKrb_c> g_profile_KURIBO = {
     daKrb_c_classInit_KURIBO,
     0x00c8, /* KURIBO registry id 200 */
     0x0018,
@@ -1911,7 +1907,7 @@ int daKrb_c::OnYoshiTryEat()
     0x01000000,
 };
 
- SpawnInfo<daKrb_c> g_profile_KURIBO_S = {
+SpawnInfo<daKrb_c> g_profile_KURIBO_S = {
     daKrb_c_classInit_KURIBO_S,
     0x00c9,
     0x0019,
@@ -1922,7 +1918,7 @@ int daKrb_c::OnYoshiTryEat()
     0x00800000,
 };
 
- SpawnInfo<daKrb_c> g_profile_KURIBO_L = {
+SpawnInfo<daKrb_c> g_profile_KURIBO_L = {
     daKrb_c_classInit_KURIBO_L,
     0x00ca,
     0x001a,
@@ -1957,7 +1953,6 @@ StateHandler data_ov084_02130d74[5] = {
     &daKrb_c::ActTumble,        /* STATE_TUMBLE */
     &daKrb_c::ActPause,         /* STATE_PAUSE */
 };
-
 
 SharedFilePtr *const sKuriboAnimationFiles[7] = {
     &data_ov084_02130ce8,         &data_ov084_02130ce0, &data_ov084_02130cd0, &data_ov084_02130cc0,

@@ -86,11 +86,11 @@ extern "C" {
 
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 
-void Matrix4x3_ApplyInPlaceToRotationY(void *m, short angY);}
+void Matrix4x3_ApplyInPlaceToRotationY(void *m, short angY);
+}
 void Puff_DrawAll(void);
 void Puff_UpdateAll(void);
 void Puff_ClearAll(int a0, int a1);
-
 
 /* The mState records this file installs or compares. */
 extern Jump3DState pmf_dMgJump3DMario_c_StateMove;
@@ -121,10 +121,8 @@ extern Jump3DState pmf_dMgJump3DMario_c_StateRespawn_2;
 
 extern Jump3DState pmf_dMgJump3DMario_c_StateFallOut;
 
-
 /* Slots the current mAnimIdx (0/1/2) picks the anim file from. */
 extern BCA_File **sJump3DAnimTable[];
-
 
 /* Tuning words, read as plain ints. */
 extern int sJump3DBounceVy;
@@ -143,7 +141,6 @@ extern int sJump3DMariosLeft;
 
 extern int sJump3DRisenOutCount;
 
-
 /* The six anim files LoadResources loads. The destructor clears only
  * five of them; 0214041c survives in the ROM too. */
 extern BCA_File *sJump3DAnimSdown;
@@ -157,7 +154,6 @@ extern BCA_File *sJump3DAnimWallJump;
 extern BCA_File *sJump3DAnimStruggle;
 
 extern BCA_File *sJump3DAnimJump;
-
 
 /* Six anim handles call SharedFilePtr::Construct. The model handle calls
    func_02017a24. */
@@ -175,7 +171,6 @@ typedef char Jump3DMarioAnimFilePtr_size[sizeof(Jump3DMarioAnimFilePtr) == 8 ? 1
 
 typedef char Jump3DModelFilePtr_size[sizeof(Jump3DModelFilePtr) == 8 ? 1 : -1];
 
-
 extern Jump3DMarioAnimFilePtr sJump3DMarioWallJumpAnimFile;
 
 extern Jump3DMarioAnimFilePtr sJump3DMarioSdownAnimFile;
@@ -189,7 +184,6 @@ extern Jump3DMarioAnimFilePtr sJump3DMarioRollJumpAnimFile;
 extern Jump3DMarioAnimFilePtr sJump3DMarioJumpAnimFile;
 
 extern Jump3DMarioAnimFilePtr sJump3DMarioDoubleJump1AnimFile;
-
 
 /* The pool the minigame scenes hand in: count, base pointer, level, round
  * and the three player slots. */
@@ -205,7 +199,6 @@ extern char *sJumpAdapters[];
 
 extern int pmf_dMgJump3DMario_c_StateIdle[2];
 
-
 extern u8  data_ov006_02140400;
 
 extern u16 sJump3DSpinAngle;
@@ -220,18 +213,14 @@ extern Vector3 sJump3DMarioScale;
 
 extern char sJump3DRoundLayouts[];
 
-
 extern Matrix4x3 data_020a0e68;
 
 extern fBase_c *gCurrentScene;
-  /* extern "C" */
-
-
+/* extern "C" */
 
 /* Rescales the six tuning words at 0213b008..0213b01c from one input,
  * clamped to 0x3000. */
- void Jump3D_SetTuning(int a)
-{
+void Jump3D_SetTuning(int a) {
     int b;
     if (a > 0x3000) a = 0x3000;
     b = FX_Sqrt(a);
@@ -243,8 +232,7 @@ extern fBase_c *gCurrentScene;
     sJump3DBounceVy = FX_MUL(b, 0x5000);
 }
 
- void Jump3D_DrawAll(void)
-{
+void Jump3D_DrawAll(void) {
     int i;
     for (i = 0; i < sJump3DMarioCount; i++) {
         ((dMgJump3DMario_c *)(sJump3DMarioPool + i * 0xb8))->Draw();
@@ -252,8 +240,7 @@ extern fBase_c *gCurrentScene;
     Puff_DrawAll();
 }
 
- void Jump3D_UpdateAll(void)
-{
+void Jump3D_UpdateAll(void) {
     int i;
     sJump3DSpinAngle = sJump3DSpinAngle + 0x800;
     for (i = 0; i < sJump3DMarioCount; i++) {
@@ -284,12 +271,15 @@ extern "C" void Jump3D_Arrange(u32 a0, u32 a1)
     sJump3DRisenOutCount = 0;
 }
 
- void Jump3D_DisableInput(void) { data_ov006_02140400 = 0; }
+void Jump3D_DisableInput(void) {
+    data_ov006_02140400 = 0;
+}
 
- void Jump3D_EnableInput(void) { data_ov006_02140400 = 1; }
+void Jump3D_EnableInput(void) {
+    data_ov006_02140400 = 1;
+}
 
- void Jump3D_RestoreCount(void)
-{
+void Jump3D_RestoreCount(void) {
     ApproachLinear(sJump3DMariosLeft, sJump3DMarioCount, 1);
 }
 
@@ -301,8 +291,7 @@ struct Jump3DEnt {
     int y;
     char _pad44[0x74];
 };
- int Jump3D_AllIdle(void)
-{
+int Jump3D_AllIdle(void) {
     int i;
     for (i = 0; i < sJump3DMarioCount; i++) {
         int *v = (int *)(&((Jump3DEnt *)sJump3DMarioPool)[i].x);
@@ -314,8 +303,7 @@ struct Jump3DEnt {
     return 1;
 }
 
- void Jump3D_SetLowGravity(void)
-{
+void Jump3D_SetLowGravity(void) {
     int i;
     int off;
     i = 0;
@@ -332,8 +320,7 @@ struct Jump3DEnt {
     } while (i < sJump3DMarioCount);
 }
 
- void Jump3D_StopGravity(void)
-{
+void Jump3D_StopGravity(void) {
     int n = sJump3DMarioCount;
     int i = 0;
     int off;
@@ -360,8 +347,7 @@ struct Jump3DLayoutSlot {
 };
 typedef char Jump3DLayoutSlot_size_must_be_0xc[sizeof(Jump3DLayoutSlot) == 0xc ? 1 : -1];
 
- void Jump3D_StartRoundLayout(void)
-{
+void Jump3D_StartRoundLayout(void) {
     int i;
     int eoff;
     int ooff;

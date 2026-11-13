@@ -27,10 +27,8 @@
 #include "SurfaceInfo.h"
 #include "math/CalcLib.h"
 
-
 int dBgS_ChkPolySafe(void *arg);
 extern CLPS data_020a0c78;
-
 
 /* Ground and line scans use the real dBgW virtual interface and dActor_c
    clip-volume fields, as the sphere scans do below. PFN retains its pending

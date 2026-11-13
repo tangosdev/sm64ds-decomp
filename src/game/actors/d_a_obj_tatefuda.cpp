@@ -167,7 +167,6 @@ extern "C" {
 extern CLPS_Block data_ov002_0210d714;
 }
 
-
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 28 -- daObjTatefuda_c_classInit, 0x020bc3c8, size 0x4c */
 /* -------------------------------------------------------------------------- */
@@ -181,8 +180,7 @@ extern CLPS_Block data_ov002_0210d714;
  * hand: fBase_c::operator new(0x5a4), dBgActor_c's base constructor, the
  * vptr store, then the dCcAc_c, dExtShadowModel_c and dBgCh_Actr member
  * constructors in declaration order. */
-daObjTatefuda_c *daObjTatefuda_c_classInit(void)
-{
+daObjTatefuda_c *daObjTatefuda_c_classInit(void) {
     return new daObjTatefuda_c;
 }
 

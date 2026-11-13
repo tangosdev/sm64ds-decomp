@@ -37,15 +37,14 @@ daObjWaterfall_c *daObjWaterfall_c_classInit() {
     return new daObjWaterfall_c();
 }
 
-SpawnInfo<daObjWaterfall_c> g_profile_WATERFALL = {
-    daObjWaterfall_c_classInit,
-    0x00c5, /* WATERFALL registry id 197 */
-    0x0015,
-    0x00800003,
-    0x00060000,
-    0x00300000,
-    0x02000000,
-    0};
+SpawnInfo<daObjWaterfall_c> g_profile_WATERFALL = {daObjWaterfall_c_classInit,
+                                                   0x00c5, /* WATERFALL registry id 197 */
+                                                   0x0015,
+                                                   0x00800003,
+                                                   0x00060000,
+                                                   0x00300000,
+                                                   0x02000000,
+                                                   0};
 
 s32 daObjWaterfall_c::InitResources() {
     mParticleID = kWaterfallMistDefault;

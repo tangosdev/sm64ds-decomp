@@ -34,7 +34,6 @@
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 
-
 /* local extern: no header in include/ declares these (dClipper.h only
  * mentions the clipper instance, daPly_c.h only the water height). */
 extern dClipper data_0209f43c;
@@ -51,7 +50,6 @@ void func_0204dc84(char *record);
 }
 
 void func_02049d60(Particle::Manager *manager, Particle::System *system);
-
 
 void dPa_c::level_c::callback_c::SpawnParticles(Particle::System&)
 {
@@ -233,8 +231,7 @@ void dPa_c::level_c::edStarKiraCallback_c::SpawnParticles(
 int dPa_c::level_c::edStarKiraCallback_c::OnUpdate(Particle::System& system,
                                                     bool active)
 {
-    func_0204dab4(&system, (TrackingRecord *)trackingRecords, 0x40, 0,
-                  (void*)func_02022260);
+    func_0204dab4(&system, (TrackingRecord *)trackingRecords, 0x40, 0, (void *)func_02022260);
     return simpleCallback_c::OnUpdate(system, active);
 }
 

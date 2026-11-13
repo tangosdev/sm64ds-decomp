@@ -3,9 +3,7 @@
 #include "OamAnimation.h"
 #include "nitro/fx/fx_trig.h"
 
-
 struct Matrix2x2;
-
 
 /* Draw an OamAnimation's current frame at (x, y). OamAnimation.h's names
  * are kept although this reader contradicts two of them: `tile` holds the

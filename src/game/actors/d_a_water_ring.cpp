@@ -51,7 +51,6 @@ extern "C" {
 int AngleDiff(int a, int b);
 }
 
-
 extern SharedFilePtr data_ov002_0210da10; /* the ring's BMD */
 
 daWater_Ring_c::~daWater_Ring_c() {}

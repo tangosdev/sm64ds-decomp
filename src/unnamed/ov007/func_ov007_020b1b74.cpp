@@ -6,8 +6,6 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
 
-
-
 extern "C" void func_ov007_020b2614(int a, int b, int c);
 
 /* Grows the model over states[1]'s ticks: at tick 0 it starts
@@ -39,4 +37,3 @@ void func_ov007_020b1b74(void)
     if (WORK->figureIndex == 1)
         WORK->modelGrowth = 0x1000;
 }
-

@@ -47,8 +47,6 @@
 #include "nitro/gx/gx.h"
 #include "Ov007MenuMem.h"
 
-
-
 /* func_ov007_020b7138's first argument: the hooks dScDSMT_c hands the menu
  * (data_ov007_02103290). */
 typedef struct Ov007MenuHooks {
@@ -209,4 +207,3 @@ int func_ov007_020b6eb4(void) {
     }
     return 1;
 }
-

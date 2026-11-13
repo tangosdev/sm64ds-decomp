@@ -106,8 +106,6 @@ daEykn_c::State gEyknStates[3] = {
     {&daEykn_c::St_Die_Init, &daEykn_c::St_Die_Main},
 };
 
-
-
 extern "C" int AngleDiff(int a, int b);
 extern "C" u8 DecIfAbove0_Byte(u8 *counter);
 s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
@@ -117,9 +115,9 @@ s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 /* Fix12<int> by value. Scalar parameters: the member form size-DIFFs.
    See the leftover list. */
 extern "C" int d_a_eyknNewHold(u32 uniqueID, u32 effectID, int x, int y, int z, const void *dir,
-                    void *callback);
+                               void *callback);
 extern "C" u32 d_a_eyknNewCleanParticleHold(u32 uniqueID, u32 effectID, int x, int y, int z,
-                                 const Vector3_16f *dir);
+                                            const Vector3_16f *dir);
 extern "C" void d_a_eyknNewSimpleHold(u32 effectID, int x, int y, int z);
 
 /* Sine and cosine pairs indexed by (angle >> 4) * 2. */
@@ -129,7 +127,6 @@ extern SharedFilePtr data_ov002_0210da38; /* sleep-bubble model, out of ov002 */
 extern SharedFilePtr *const gEyknTextureSequenceFiles[2] = {&gEyknCloseTextureSequenceFile,
                                                             &gEyknOpenTextureSequenceFile};
 extern SharedFilePtr *const gEyknDeathAnimationFilePtr = &gEyknDeathAnimationFile;
-
 
 /* Debug-table actor ids, and the thresholds this file compares against. */
 enum {
@@ -799,19 +796,15 @@ s32 daEykn_c::InitResources()
     return 1;
 }
 
-daEykn_c *daEykn_c_classInit_EYEKUN_BOSS()
-{
+daEykn_c *daEykn_c_classInit_EYEKUN_BOSS() {
     return new daEykn_c();
 }
 
-daEykn_c *daEykn_c_classInit_EYEKUN()
-{
+daEykn_c *daEykn_c_classInit_EYEKUN() {
     return new daEykn_c();
 }
-
 
 SpawnInfo<daEykn_c> g_profile_EYEKUN = {
     daEykn_c_classInit_EYEKUN, 0x106, 0x78, 0x10000003, 0, 0x5f000, 0x1000000, 0xbb8000};
 SpawnInfo<daEykn_c> g_profile_EYEKUN_BOSS = {
     daEykn_c_classInit_EYEKUN_BOSS, 0x107, 0x79, 0x10000003, 0, 0xbe000, 0x1000000, 0xbb8000};
-

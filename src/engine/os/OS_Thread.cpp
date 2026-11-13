@@ -54,13 +54,11 @@ typedef char OSThreadInfo_size_must_be_0x54[sizeof(OSThreadInfo) == 0x54 ? 1 : -
 
 extern "C" {
 
-
 /* NitroSDK linker constants: the address is the value (the LCF assigns
  * SDK_SYS_STACKSIZE = 0 and SDK_IRQ_STACKSIZE = 0x600). */
 extern void SDK_SYS_STACKSIZE(void);
 extern void SDK_IRQ_STACKSIZE(void);
 }
-
 
 extern OSSwitchThreadCallback OSi_SystemCallbackInSwitchThread;
 extern OSThread **OSi_CurrentThreadPtr;

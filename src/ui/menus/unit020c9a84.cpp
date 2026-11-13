@@ -33,8 +33,6 @@
 #include "math/ProgressRatio.h"
 #include "Ov007MenuMem.h"
 
-
-
 extern int func_ov007_020c30ac(Vector3 *points, int count, Vector3 *target, int maxDist,
                                int *outDist);
 extern "C" void func_ov007_020c7504(Ov007PointList *list, int damping, int shift);
@@ -278,4 +276,3 @@ void func_ov007_020c9a84(Ov007Swing *self, Vector3 *offset, u16 *rotX, u16 *rotY
     *rotX = (self->params->maxRotX * (easeX * Sign(tiltX))) >> 12;
     *rotY = (self->params->maxRotY * (easeY * Sign(tiltY))) >> 12;
 }
-

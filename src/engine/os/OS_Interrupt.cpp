@@ -27,8 +27,7 @@
 // mangles C++ data names. The tables are in nitro/os/interrupt.h.
 
 extern OSThreadQueue OSi_IrqThreadQueue;
- /* os_irqHandler.c, in DTCM */
-
+/* os_irqHandler.c, in DTCM */
 
 #ifndef _MSC_VER
 

@@ -1,6 +1,5 @@
 //cpp
 
-
 void InitialiseVramGlobals(void);
 int func_02045d10(void);
 int func_02045cf0(void);
@@ -15,4 +14,3 @@ void func_ov007_020bd4a0(int r0) {
         break;
     }
 }
-

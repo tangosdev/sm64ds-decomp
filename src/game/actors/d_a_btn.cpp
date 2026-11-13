@@ -105,13 +105,11 @@ void func_02011d38(void);
 void func_02012694(unsigned int a, const Vector3 *p);
 extern "C" {
 
-
 /* ---- arm9 / ov002 ---- */
 int AngleDiff(int, int);
 void Matrix4x3_ApplyInPlaceToScale(void *m, int x, int y, int z);
 int func_ov002_020dd8b8(void *c);
 }
-
 
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int a, int b, void *c, void *d);
@@ -120,7 +118,6 @@ extern "C" {
 extern void hold_d_a_btn(void *mc, void *kcl, void *mtx, int fix, s16 s, void *clps);
 void d_a_btnEarthquakeHold(void *self, const void *v, int f);
 }
-
 
 /* ---- data ---- */
 extern unsigned int gNextActorUpdateMask;
@@ -202,7 +199,6 @@ extern daBtn_c::StateFunc data_ov079_02127bf8;   /* 9 func_ov079_021246d8 */
 extern daBtn_c::StateFunc data_ov079_02127be0;   /* 10 func_ov079_02124638 */
 extern daBtn_c::StateFunc data_ov079_02127c08;   /* 11 func_ov079_02124530 */
 
-
 daBtn_c::StateFunc data_ov079_02128280[12] = {
     data_ov079_02127c00, data_ov079_02127bd0, data_ov079_02127c10,
     data_ov079_02127bd8, data_ov079_02127bc0, data_ov079_02127bc8,
@@ -215,13 +211,11 @@ daBtn_c::StateFunc data_ov079_02128280[12] = {
    Vector3-by-value call, so this view lets the virtual forward to it. */
 namespace vecret { extern "C" Vector3 func_ov079_02123d4c(void *thiz); }
 
-daBtn_c *daBtn_c_classInit_BATAN()
-{
+daBtn_c *daBtn_c_classInit_BATAN() {
     return new daBtn_c();
 }
 
-daBtn_c *daBtn_c_classInit_BATANKING()
-{
+daBtn_c *daBtn_c_classInit_BATANKING() {
     return new daBtn_c();
 }
 
@@ -962,7 +956,7 @@ void daBtn_c::func_ov079_02124ed4()
         if (mPounded != 0) {
             mPounded = 0;
             mHitPoints--;
-            func_02012694(0x134,(const Vector3 *)(&mCamSpacePosX));
+            func_02012694(0x134, (const Vector3 *)(&mCamSpacePosX));
             {
                 s32 *p = &mPounder->mPosX;
                 Particle::System::NewSimple(kPtclWhompPounded, p[0], p[1], p[2]);
@@ -1503,7 +1497,7 @@ void daBtn_c::OnHitByMegaChar(daPly_c &player) {
     if (mIsKing != 0) return;
     if (mDeathState == 8) return;
     player.IncMegaKillCount();
-    func_02012694(0x1e,(const Vector3 *)(&mCamSpacePosX));
+    func_02012694(0x1e, (const Vector3 *)(&mCamSpacePosX));
     Vector3 pos;
     func_ov079_02123d4c(&pos, this);
     Vector3 dust;

@@ -12,7 +12,6 @@ void terminate();
 
 extern "C" {
 
-
 extern unsigned char func_02072d90(struct ActionWalk *c);
 extern u8 *func_02071a50(u8 *p, int *out);
 extern u8 *ReadSignedVarInt(u8 *p, int *out);

@@ -21,7 +21,6 @@
 #include "nitro/hw/mmap_shared.h"
 #include "private/debugger_block.h"
 
-
 extern const char data_020868a0[52];
 extern char data_020868d4;
 void func_0206ccd8(int fmt, ...);
@@ -34,13 +33,11 @@ void func_0206a928(void *a, int b, void *c, void *d);
 void func_0206cbc0(struct Csl *sl, u8 *sb, int count);
 }
 
-
 struct CardBusState {
     unsigned short exmemcnt;
     unsigned short busMirror;
     unsigned short ready;
 };
-
 
 /* optimize_for_size is this library's own build setting, not a matching lever:
    the ISD debug console and its soft-float helpers were shipped size-optimized. */
@@ -56,8 +53,6 @@ void func_0206ce20(struct CardBusState* s){
     ((struct DebuggerBlock *)HW_ISD_RESERVED)->busMirror = 0x20;
   }
 }
-
-
 
 #pragma optimize_for_size on
 void func_0206cd9c(struct CardBusState *s)
@@ -81,7 +76,6 @@ void func_0206cd9c(struct CardBusState *s)
     }
     REG_EXMEMCNT = s->exmemcnt;
 }
-
 
 namespace cstd {
 
@@ -108,8 +102,7 @@ void __assert(const char *file, int line, const char *exp, int stop) {
  * through func_0206a928 with a print-argument struct and the func_0206cbc0
  * console callback. The print struct stays function-local. Lowest address
  * in the TU, so it goes last for reverse-source emission. */
-void func_0206ccd8(int fmt, ...)
-{
+void func_0206ccd8(int fmt, ...) {
     struct S { int f0, f1, f2, f3; void *cb; };
     S s;
     int *p;

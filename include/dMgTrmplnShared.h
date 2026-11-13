@@ -18,5 +18,4 @@
  * next to their callers (decl_common.h and the two scene TUs). An extern "C"
  * declaration here would hide those usings and emit the unmangled name. */
 
-
 #endif

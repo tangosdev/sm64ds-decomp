@@ -1020,29 +1020,53 @@ dMgTrmpln2Mario_c::~dMgTrmpln2Mario_c() {
    is this class's C1, not a daPly_c method. */
 dMgTrmpln2Mario_c::dMgTrmpln2Mario_c() {}
 
-namespace ns_020ca7b8 { int Trmp2Mario_Hide(void); }
+namespace ns_020ca7b8 {
+int Trmp2Mario_Hide(void);
+}
 using ns_020ca7b8::Trmp2Mario_Hide;
-namespace ns_020ca840 { void Trmp2Mario_EnterAll(void); }
+namespace ns_020ca840 {
+void Trmp2Mario_EnterAll(void);
+}
 using ns_020ca840::Trmp2Mario_EnterAll;
-namespace ns_020ca8e0 { void Trmp2Mario_MoveToStart(void); }
+namespace ns_020ca8e0 {
+void Trmp2Mario_MoveToStart(void);
+}
 using ns_020ca8e0::Trmp2Mario_MoveToStart;
-namespace ns_020caa08 { void Trmp2Mario_PlaceAtStart(void); }
+namespace ns_020caa08 {
+void Trmp2Mario_PlaceAtStart(void);
+}
 using ns_020caa08::Trmp2Mario_PlaceAtStart;
-namespace ns_020cac30 { void Trmp2Mario_UpdateAll(void); }
+namespace ns_020cac30 {
+void Trmp2Mario_UpdateAll(void);
+}
 using ns_020cac30::Trmp2Mario_UpdateAll;
-namespace ns_020cc9fc { void Trmp3DMario_EnterWalkIn(char *); }
+namespace ns_020cc9fc {
+void Trmp3DMario_EnterWalkIn(char *);
+}
 using ns_020cc9fc::Trmp3DMario_EnterWalkIn;
-namespace ns_020ccd04 { int Trmp3DMario_IsOffstage(int *); }
+namespace ns_020ccd04 {
+int Trmp3DMario_IsOffstage(int *);
+}
 using ns_020ccd04::Trmp3DMario_IsOffstage;
-namespace ns_020cd158 { int Trmp3DMario_CountFinished(void); }
+namespace ns_020cd158 {
+int Trmp3DMario_CountFinished(void);
+}
 using ns_020cd158::Trmp3DMario_CountFinished;
-namespace ns_020cd1e0 { void Trmp3DMario_StartAll(void); }
+namespace ns_020cd1e0 {
+void Trmp3DMario_StartAll(void);
+}
 using ns_020cd1e0::Trmp3DMario_StartAll;
-namespace ns_020cd39c { void Trmp3DMario_UpdateAll(void); }
+namespace ns_020cd39c {
+void Trmp3DMario_UpdateAll(void);
+}
 using ns_020cd39c::Trmp3DMario_UpdateAll;
-namespace ns_020cd510 { void Trmp3DMario_SetTuning(int); }
+namespace ns_020cd510 {
+void Trmp3DMario_SetTuning(int);
+}
 using ns_020cd510::Trmp3DMario_SetTuning;
-namespace ns_020cd62c { void Trmp3DMario_SetSpawnHeight(int); }
+namespace ns_020cd62c {
+void Trmp3DMario_SetSpawnHeight(int);
+}
 using ns_020cd62c::Trmp3DMario_SetSpawnHeight;
 
 namespace ns_020ca7b8 {

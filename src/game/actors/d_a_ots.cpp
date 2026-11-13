@@ -195,7 +195,6 @@ extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int atan2_hold_d_a_ots_1(int a, int b);
 }
 
-
 /* -------------------------------------------------------------------------- */
 /* recovered: named members + shared header, real C++ method
  *

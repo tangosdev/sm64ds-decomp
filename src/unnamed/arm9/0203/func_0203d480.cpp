@@ -6,8 +6,6 @@
 #include "Vector2Math.h"
 #include "nitro/fx/fx_cp.h"
 
-
-
 typedef int Fix12i;
 
 void func_0203d480(Fix12i *out, Fix12i *in)

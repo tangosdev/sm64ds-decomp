@@ -42,7 +42,8 @@ int PlayLong(u32, u32, u32, const Vector3 &, s16);
 
 extern "C" int *Vec3_LslInPlace(Vector3 *, int);
 /* local extern: these five names hold the @NNN count. */
-extern "C" void d_a_snm_bthPlayLongHold(int handle, unsigned int a, unsigned int b, void *pos, unsigned int c);
+extern "C" void d_a_snm_bthPlayLongHold(int handle, unsigned int a, unsigned int b, void *pos,
+                                        unsigned int c);
 extern u8 gGameMode;
 extern SharedFilePtr data_ov002_0210da40;
 extern SharedFilePtr data_ov002_0210d9a0;
@@ -335,8 +336,7 @@ int daSnmBth_c::InitResources()
 }
 
 /* SNOWMAN_BREATH factory. */
-daSnmBth_c *daSnmBth_c_classInit()
-{
+daSnmBth_c *daSnmBth_c_classInit() {
     return new daSnmBth_c();
 }
 

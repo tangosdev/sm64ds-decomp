@@ -124,8 +124,8 @@ u8 IsAreaShowing(int idx);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, dActor_c *actor, Fix12i radius, Fix12i height, Vector3_16 *a,
                          Vector3_16 *b);
-extern "C" unsigned int d_a_trsNewHold(unsigned int uniqueID, unsigned int effectID, int x, int y, int z,
-                            const void *dir, void *callback);
+extern "C" unsigned int d_a_trsNewHold(unsigned int uniqueID, unsigned int effectID, int x, int y,
+                                       int z, const void *dir, void *callback);
 
 extern signed char gCurrentSublevel;
 extern unsigned char gCurrentEntranceId;
@@ -1703,9 +1703,7 @@ void daTrs_c::func_ov063_02118eac() {
     this->mFoundActor = 0;
 }
 
-
-void func_ov063_02118f24(daTrsIcon_c *icon, const Vector3 &pos)
-{
+void func_ov063_02118f24(daTrsIcon_c *icon, const Vector3 &pos) {
     unsigned int val = 4;
     icon->UntrackAndSpawnStar(icon->mTrackStarID, icon->mStarID, pos, val);
 }
@@ -3435,23 +3433,19 @@ int daTrs_c::OnYoshiTryEat() {
     return r;
 }
 
-daTrsIcon_c *daTrsIcon_c_classInit()
-{
+daTrsIcon_c *daTrsIcon_c_classInit() {
     return new daTrsIcon_c();
 }
 
-daTBasket_c *daTBasket_c_classInit()
-{
+daTBasket_c *daTBasket_c_classInit() {
     return new daTBasket_c();
 }
 
-daTrs_c *daTrs_c_classInit_BOSS_TERESA()
-{
+daTrs_c *daTrs_c_classInit_BOSS_TERESA() {
     return new daTrs_c();
 }
 
-daTrs_c *daTrs_c_classInit_TERESA()
-{
+daTrs_c *daTrs_c_classInit_TERESA() {
     return new daTrs_c();
 }
 

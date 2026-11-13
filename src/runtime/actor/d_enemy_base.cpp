@@ -115,7 +115,6 @@ dEnemyBase_c::~dEnemyBase_c()
 
 extern void func_02038414(dBgCh_Actr *);
 
-
 void dEnemyBase_c::UpdateWMClsn(dBgCh_Actr &clsn, unsigned int sel) {
     switch (sel) {
     case 1:
@@ -224,7 +223,7 @@ struct Aea30C : dEnemyBase_c {
     void func_ov002_020ae73c(dActor_c *, dBgCh_Actr *);
     void func_ov002_020aea2c(dActor_c *, dBgCh_Actr *);
 };
-void func_ov002_020aea30(Aea30C* c, dActor_c* a, dBgCh_Actr* b) {
+void func_ov002_020aea30(Aea30C *c, dActor_c *a, dBgCh_Actr *b) {
     if (c->mDeathState == 0)
         return;
     c->mFlags &= ~0x10000000;
@@ -273,7 +272,6 @@ extern "C" {
 
 extern u16 data_ov002_020ff01c[];
 }
-
 
 /* Actor ID 0xbf is the player. Int-returning, as the 0/1 the ROM
    materialises before testing it requires. */
@@ -425,7 +423,6 @@ extern void *d_enemy_baseNewHold(unsigned int a, unsigned int b, int c, int d, i
 extern u32 d_enemy_baseNewCleanParticleHold(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y,
                                             Fix12i z, const Vector3_16f *dir);
 }
-
 
 int EnemyDeathC::func_ov002_020ae4cc(dBgCh_Actr &clsn) {
     int v[3];
@@ -676,7 +673,6 @@ extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern s16 atan2_hold_d_enemy_base_1(s32 y, s32 x);
 extern s32 *Vec3_AsrInPlace(s32 *v, s32 sh);
 }
-
 
 void dEnemyBase_c::SpawnMegaCharParticles(dActor_c &other, char *p) {
     s16 dirvec[3];

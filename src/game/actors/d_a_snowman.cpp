@@ -80,7 +80,6 @@ enum {
     kSpawnWatcher = 0x300    /* kind 3 */
 };
 
-
 /* Sound::Play2D(2, id). This TU calls the wrapper, not Play2D. */
 extern s16 data_ov081_021289a4;
 extern s16 data_ov081_021289a6;
@@ -93,7 +92,7 @@ extern Vector3 data_ov081_02128998; /* cylinder offset (0, 0x1e000, 0) */
 extern unsigned char gNumPlayers;
 extern daPly_c *gPlayers[];
 extern "C" unsigned d_a_snowmanNewHold(unsigned a, unsigned b, int c, int d, int e, const void *f,
-                                   void *g);
+                                       void *g);
 extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern "C" void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);
 extern struct Matrix4x3 data_020a0e68;
@@ -269,7 +268,7 @@ void daSnowman_c::CheckAttacks() {
         hit = 1;
     }
     if (flags & 0x40000) {
-        func_02012694(0xdb,(const Vector3 *)(&this->mCamSpacePosX));
+        func_02012694(0xdb, (const Vector3 *)(&this->mCamSpacePosX));
         hit = 1;
         SetState(&data_ov081_02128e24);
     }
@@ -287,7 +286,7 @@ void daSnowman_c::CheckAttacks() {
             vv.y = 0;
             vv.z = 0;
             KillByInvincibleChar(vv, *(daPly_c *)found, 0);
-            func_02012694(0x1d,(const Vector3 *)(&this->mCamSpacePosX));
+            func_02012694(0x1d, (const Vector3 *)(&this->mCamSpacePosX));
             hit = 1;
         }
         if ((flags & 0x40) && (s32)found->param1 == 2) {
@@ -428,7 +427,7 @@ int daSnowman_c::StateDeathEnter() {
             this->mSnowballID = 0;
         }
     }
-    func_02012694(0xdb,(const Vector3 *)(&this->mCamSpacePosX));
+    func_02012694(0xdb, (const Vector3 *)(&this->mCamSpacePosX));
     this->mInitAngleY = 0;
     this->mTimer = 0;
     return 1;
@@ -604,7 +603,7 @@ int daSnowman_c::StateRiseFromGroundEnter() {
 
     this->mVertSpeed = 0x3c000;
     this->mVertAccel = -0x4000;
-    func_02012694(0xdc,(const Vector3 *)(&this->mCamSpacePosX));
+    func_02012694(0xdc, (const Vector3 *)(&this->mCamSpacePosX));
     pos.x = this->mHomePos.x;
     pos.y = this->mHomePos.y;
     pos.z = this->mHomePos.z;
@@ -643,7 +642,7 @@ int daSnowman_c::StateHopExecute() {
     int len;
 
     if (this->mWithMeshClsn.IsOnGround()) {
-        func_02012694(0xe5,(const Vector3 *)(&this->mCamSpacePosX));
+        func_02012694(0xe5, (const Vector3 *)(&this->mCamSpacePosX));
         SetState(&data_ov081_02128e54);
         this->mAnmModel.SetAnim((BCA_File *)gSnowmanJumpEdAnimationFile.filePtr, 0x40000000, 0x1000,
                                 0);
@@ -681,7 +680,7 @@ int daSnowman_c::StateWalkExecute() {
             this->mVertSpeed = 0x14000;
             this->mVertAccel = -0x4000;
             this->mStep = 2;
-            func_02012694(0xdd,(const Vector3 *)(&this->mCamSpacePosX));
+            func_02012694(0xdd, (const Vector3 *)(&this->mCamSpacePosX));
         }
 
         PathPtr p;
@@ -694,7 +693,7 @@ int daSnowman_c::StateWalkExecute() {
             int st = this->mStep;
             if (st != 0) {
                 if (st == 1)
-                    func_02012694(0xe5,(const Vector3 *)(&this->mCamSpacePosX));
+                    func_02012694(0xe5, (const Vector3 *)(&this->mCamSpacePosX));
                 this->mStep++;
                 if (this->mStep < 0xb)
                     return 1;
@@ -704,7 +703,7 @@ int daSnowman_c::StateWalkExecute() {
             this->mVertAccel = -0x4000;
             this->mAnmModel.SetAnim((BCA_File *)gSnowmanJumpStAnimationFile.filePtr, 0x40000000,
                                     0x1000, 0);
-            func_02012694(0xdd,(const Vector3 *)(&this->mCamSpacePosX));
+            func_02012694(0xdd, (const Vector3 *)(&this->mCamSpacePosX));
             SetState(&data_ov081_02128e74);
         }
     }
@@ -876,7 +875,7 @@ int daSnowman_c::Behavior()
             mType = 0;
         }
         if (mDeathState == 0 && mDeathSound != 0) {
-            func_02012694(0x166,(const Vector3 *)(&mCamSpacePosX));
+            func_02012694(0x166, (const Vector3 *)(&mCamSpacePosX));
             mDeathSound = 0;
         }
         UpdateModelMatrices();
@@ -1016,8 +1015,7 @@ s32 daSnowman_c::OnAimedAtWithEgg() {
     return 0x98000;
 }
 
- daSnowman_c *daSnowman_c_classInit()
-{
+daSnowman_c *daSnowman_c_classInit() {
     return new daSnowman_c();
 }
 

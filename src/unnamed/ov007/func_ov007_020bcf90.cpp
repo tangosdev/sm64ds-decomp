@@ -5,8 +5,6 @@
 #include "Ov007Settings.h"
 #include "Ov007Camera.h"
 
-
-
 extern "C" void func_ov007_020c93b4(struct Ov007PaletteBuf *buf);
 extern void func_ov007_020b2160(int a);
 extern void func_ov007_020b8fd4(struct Ov007Camera *camera);
@@ -111,4 +109,3 @@ void func_ov007_020bcf90(void) {
     }
     ScreenFade_Draw(WORK->cameras[0]);
 }
-

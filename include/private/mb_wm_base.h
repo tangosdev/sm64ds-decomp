@@ -15,8 +15,14 @@
 
 #include "types.h"
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+extern "C" {
+#endif
 
 int MBi_SendMP(const void *, int, int);
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+}
+#endif
 
 #endif

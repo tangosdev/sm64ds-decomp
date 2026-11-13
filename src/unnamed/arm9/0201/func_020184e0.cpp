@@ -4,12 +4,10 @@
 
 extern "C" {
 
-
 extern int myFS_ReadFile(FSFile *p_file, void *dst, int len);
 extern void func_02018770(void);
 extern int func_02018568(int a);
 }
-
 
 /* Read up to n bytes of the open file into buf (cache-maintained around the
    read), close it and unload any archive the open mounted. The length read,

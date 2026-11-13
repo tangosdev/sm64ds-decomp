@@ -54,15 +54,14 @@ daObjKm2_Ukishima_c *daObjKm2_Ukishima_c_classInit() {
     return new daObjKm2_Ukishima_c();
 }
 
-SpawnInfo<daObjKm2_Ukishima_c> g_profile_KM2_UKISHIMA = {
-    daObjKm2_Ukishima_c_classInit,
-    0x0091, /* KM2_UKISHIMA registry id 145 */
-    0x00d8,
-    2,
-    0x00060000,
-    0x01000000,
-    0x02000000,
-    0};
+SpawnInfo<daObjKm2_Ukishima_c> g_profile_KM2_UKISHIMA = {daObjKm2_Ukishima_c_classInit,
+                                                         0x0091, /* KM2_UKISHIMA registry id 145 */
+                                                         0x00d8,
+                                                         2,
+                                                         0x00060000,
+                                                         0x01000000,
+                                                         0x02000000,
+                                                         0};
 
 s32 daObjKm2_Ukishima_c::InitResources() {
     return InitResourcesFrom(&data_ov045_02112f08, kBobAmplitude);

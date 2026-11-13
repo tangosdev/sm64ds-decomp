@@ -7,8 +7,6 @@
 #include "nitro/fx/fx_cp.h"
 #include "Ov007MenuMem.h"
 
-
-
 extern "C" int func_ov007_020c3ba8(int);
 extern "C" void *func_ov007_020c9388(int initialState);
 extern "C" void func_ov007_020c937c(void *state);
@@ -134,4 +132,3 @@ void func_ov007_020ca1d4(Ov007MeshWave *wave, Ov007Mesh *mesh) {
     }
     wave->frame++;
 }
-

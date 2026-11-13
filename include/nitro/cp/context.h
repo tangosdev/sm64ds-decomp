@@ -14,6 +14,9 @@
 #include "types.h"
 
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+extern "C" {
+#endif
 typedef struct CPContext {
     u64 div_numer; /* 0x00 -- 0x04000290 */
     u64 div_denom; /* 0x08 -- 0x04000298 */
@@ -30,6 +33,9 @@ void CP_SaveContext(CPContext *);
 extern "C"
 #endif
 void CPi_RestoreContext(const CPContext *);
+#if defined(_MSC_VER) && defined(__cplusplus)
+}
+#endif
 
 
 #ifndef SM64DS_PLATFORM_PC

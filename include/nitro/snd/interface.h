@@ -20,8 +20,14 @@
 
 #include "types.h"
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+extern "C" {
+#endif
 
 void SNDi_SetSurroundDecay(s32);
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+}
+#endif
 
 #endif /* NITRO_SND_INTERFACE_H */

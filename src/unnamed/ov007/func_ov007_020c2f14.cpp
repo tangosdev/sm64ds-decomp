@@ -5,7 +5,6 @@
 // Plain coordinate values: shared Vector3 has nontrivial construction and
 // destruction, changing these copies (280 bytes instead of the required 320).
 
-
 void func_ov007_020c2f14(VecFx32 *points, int pointCount, int *outMinX, int *outMaxX, int *outMinY,
                          int *outMaxY, int *outMinZ, int *outMaxZ) {
     VecFx32 maximum = points[0];

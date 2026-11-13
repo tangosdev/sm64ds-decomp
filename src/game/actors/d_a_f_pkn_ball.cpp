@@ -66,7 +66,6 @@ int func_ov002_020ad660(void *cc, void *pp, void *r5p, int flags);
 
 void func_02012694(unsigned int, const Vector3 *);
 
-
 /* D1: own vptr, then the members in reverse declaration order (dExtShadowModel_c,
  * dBgCh_Actr, dCcAc_c), then dEnemyBase_c's destructor. D0 is the same body
  * plus the inherited operator delete; it has no source of its own. */

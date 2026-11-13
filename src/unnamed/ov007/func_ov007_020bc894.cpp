@@ -2,7 +2,6 @@
 #include "dExtModel_c.h"
 #include "Ov007Model.h"
 
-
 extern "C" void func_ov007_020c9110(void *);
 extern "C" void func_02046bbc(void *, void *, unsigned int);
 extern "C" void func_020469e8(void *, void *, int);
@@ -41,4 +40,3 @@ void func_ov007_020bc894(Ov007Model *m) {
         }
     }
 }
-

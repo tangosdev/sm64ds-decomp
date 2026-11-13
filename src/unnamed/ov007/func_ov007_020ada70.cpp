@@ -6,7 +6,6 @@
 
 #include "nitro/os/cache.h"
 
-
 extern void func_ov007_020c32e8(Ov007Palette *pal, int target, unsigned int row, int skip);
 
 void RequestScreenFade(int kind, int flags, void (*onEnd)(void));
@@ -42,4 +41,3 @@ void func_ov007_020ada70(void) {
     GXS_LoadOBJPltt(dst, 0x180, 0x20);
     RequestScreenFade(9, 2, func_ov007_020adb84);
 }
-

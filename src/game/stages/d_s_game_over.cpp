@@ -105,8 +105,9 @@ extern u8 data_0209f204;
  * at both consumers (see notes/experiments/gameover-2711-bg1scrptr-u16.md).
  * Init passes the result to DecompressLZ16's void* param either way. */
 
-extern "C" void OamRender10_d_s_game_over(s32 sub, OamAttr *data, s32 x, s32 y, s32 palette, s32 priority,
-                               Fix12i scaleX, Fix12i scaleY, s32 rotation, s32 mode);
+extern "C" void OamRender10_d_s_game_over(s32 sub, OamAttr *data, s32 x, s32 y, s32 palette,
+                                          s32 priority, Fix12i scaleX, Fix12i scaleY, s32 rotation,
+                                          s32 mode);
 extern "C" void *LoadFile(int handle);
 extern "C" void DecompressLZ16(void *src, void *dst);
 

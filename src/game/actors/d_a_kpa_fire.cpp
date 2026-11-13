@@ -118,14 +118,15 @@ extern PMF data_ov060_0211af74[];
 
 /* Fix12<int>-by-value and other mangled-name calls (see the banner). */
 extern "C" u32 d_a_kpa_fireNewCleanParticleHold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e,
-                                            const struct Vector3_16f *f);
-extern "C" u32 d_a_kpa_fireNewHold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const void *f, void *g);
+                                                const struct Vector3_16f *f);
+extern "C" u32 d_a_kpa_fireNewHold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const void *f,
+                                   void *g);
 extern "C" void d_a_kpa_fireNewSimpleHold(u32 id, Fix12i x, Fix12i y, Fix12i z);
 extern "C" void d_a_kpa_firePlayLongHold(u32 a, u32 b, u32 c, void *pos, u32 d);
 
-short Vec3_HorzAngle(const struct Vector3* a, const struct Vector3* b);
+short Vec3_HorzAngle(const struct Vector3 *a, const struct Vector3 *b);
 Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-extern "C" int RandomIntInternal(int* seed);
+extern "C" int RandomIntInternal(int *seed);
 
 /* ov060 tables indexed by mSubVariant (02119358, 0211934c) and the mouth-pose
  * rows variant 0 reads (02119364); see the handlers below. */
@@ -134,8 +135,7 @@ extern int data_ov060_0211934c[];
 extern u16 data_ov060_02119364[];
 
 /* Historical alias BowserFire_Spawn. First in source because codegen is deferred. */
-daKpaFire_c *daKpaFire_c_classInit(void)
-{
+daKpaFire_c *daKpaFire_c_classInit(void) {
     return new daKpaFire_c;
 }
 
@@ -856,10 +856,8 @@ daKpaFire_c::~daKpaFire_c() {}
 /* Behavior handler table (mVariant 0..7); one Entry{PMF} per slot. */
 extern Entry data_ov060_0211afb4[8] = {
     {data_ov060_0211a794}, {data_ov060_0211a78c}, {data_ov060_0211a76c}, {data_ov060_0211a77c},
-    {data_ov060_0211a764}, {data_ov060_0211a774}, {data_ov060_0211a744}, {data_ov060_0211a784}
-};
+    {data_ov060_0211a764}, {data_ov060_0211a774}, {data_ov060_0211a744}, {data_ov060_0211a784}};
 /* InitResources handler table (mVariant 0..7); one PMF per slot. */
-extern PMF data_ov060_0211af74[8] = {
-    data_ov060_0211a75c, data_ov060_0211a754, data_ov060_0211a73c, data_ov060_0211a74c,
-    data_ov060_0211a734, data_ov060_0211a7ac, data_ov060_0211a7a4, data_ov060_0211a79c
-};
+extern PMF data_ov060_0211af74[8] = {data_ov060_0211a75c, data_ov060_0211a754, data_ov060_0211a73c,
+                                     data_ov060_0211a74c, data_ov060_0211a734, data_ov060_0211a7ac,
+                                     data_ov060_0211a7a4, data_ov060_0211a79c};

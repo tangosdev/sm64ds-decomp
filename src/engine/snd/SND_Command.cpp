@@ -28,8 +28,6 @@
 typedef int BOOL;
 #define FALSE 0
 
-
-
 #define SND_CMD_COUNT 256
 #define SND_CMD_WAIT_QUEUE_COUNT 8
 #define SND_CMD_FLAG_NOBLOCK 0x0
@@ -40,33 +38,33 @@ typedef int BOOL;
 struct SNDSharedWork;
 
 extern SNDCommand *data_020a6484;
-    /* sFreeList */
+/* sFreeList */
 extern u32 data_020a6488;
-            /* sFinishedTag */
+/* sFinishedTag */
 extern SNDCommand *data_020a648c;
-    /* sReserveList */
+/* sReserveList */
 extern SNDCommand *data_020a6490;
-    /* sReserveListEnd */
+/* sReserveListEnd */
 extern SNDCommand *data_020a6494;
-    /* sFreeListEnd */
+/* sFreeListEnd */
 extern s32 data_020a6498;
-            /* sWaitingCommandListQueueRead */
+/* sWaitingCommandListQueueRead */
 extern s32 data_020a649c;
-            /* sWaitingCommandListQueueWrite */
+/* sWaitingCommandListQueueWrite */
 extern s32 data_020a64a0;
-            /* sWaitingCommandListCount */
+/* sWaitingCommandListCount */
 extern u32 data_020a64a4;
-            /* sCurrentTag */
+/* sCurrentTag */
 extern SNDCommand *data_020a64a8[];
-  /* sWaitingCommandListQueue */
+/* sWaitingCommandListQueue */
 extern SNDSharedWork data_020a64e0;
-  /* sSharedWork */
+/* sSharedWork */
 extern SNDCommand data_020a6760[];
-   /* sCommandArray */
+/* sCommandArray */
 extern SNDCommand data_020a7f48;
-     /* sCommandArray[SND_CMD_COUNT - 1] */
+/* sCommandArray[SND_CMD_COUNT - 1] */
 extern SNDSharedWork *data_020a7fc0;
- /* SNDi_SharedWork */
+/* SNDi_SharedWork */
 
 /* The ROM reaches sCommandArray[SND_CMD_COUNT - 1].next through this
  * label, 0x1000 bytes into the array. */

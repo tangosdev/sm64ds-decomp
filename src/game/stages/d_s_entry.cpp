@@ -68,15 +68,13 @@
 #include "nitro/hw/registers.h"
 #include "math/Approach.h"
 
-
-
 extern "C" void DecompressLZ16(void *, void *);
 void Deallocate(void *);
 
 extern unsigned char data_0209b2e4;
 
-extern "C" void OamRender10_d_s_entry(int a, void *oam, int b, int c, int d, int e, int f, int g, int h,
-                                  int i);
+extern "C" void OamRender10_d_s_entry(int a, void *oam, int b, int c, int d, int e, int f, int g,
+                                      int h, int i);
 int func_0203d974(void);
 
 extern "C" int GetLanguageIndex(void);
@@ -99,10 +97,10 @@ struct EntryPair {
     EntryPair(int pw, int ph) : w((short)pw), h((short)ph) {}
     ~EntryPair();
 };
- extern EntryPair data_ov075_0211d948[];
- extern EntryPair data_ov075_0211d72c[];
- extern EntryPair data_ov075_0211d740[];
- extern EntryPair data_ov075_0211d754[];
+extern EntryPair data_ov075_0211d948[];
+extern EntryPair data_ov075_0211d72c[];
+extern EntryPair data_ov075_0211d740[];
+extern EntryPair data_ov075_0211d754[];
 
 /* Written first so D1 and D0 are emitted first, as in the cartridge. The
  * body is empty: tearing down the four OamAnimations and the nine icon_c
@@ -331,8 +329,6 @@ void dScEntry_c::RenderIcons() {
  * a rotated register assignment.
  */
 
-
-
 extern "C" int func_02030958(int val);
 extern u8 data_0209fc50;
 
@@ -524,7 +520,6 @@ OamAttr data_ov075_0211c934[2] = {
  * The eight-pointer list has four base choices plus four alternate choices;
  * the five-pointer list includes the initial selection at index 4. */
 
-
 OamAttr data_ov075_0211c6f0[1] = {
     {0x00e0, 0xc1e0, 0x8090, 0xffff},
 };
@@ -666,18 +661,18 @@ extern dScEntry_c::Step data_ov075_0211c8d0;
 extern dScEntry_c::Step data_ov075_0211c8d8;
 
 dScEntry_c::graphCallback_c sEntryGraphCallback;
- EntryPair data_ov075_0211d948[14] __attribute__((aligned(4))) = {
+EntryPair data_ov075_0211d948[14] __attribute__((aligned(4))) = {
     EntryPair(0x80, 0x10), EntryPair(0x3c, 0x10), EntryPair(0x1c, 0x10), EntryPair(8, 0x10),
     EntryPair(8, 0x10),    EntryPair(0x20, 0x10), EntryPair(0x30, 0x10), EntryPair(0x20, 0x20),
     EntryPair(0x28, 0x10), EntryPair(0x58, 0x10), EntryPair(0x78, 0x10), EntryPair(0x20, 0x10),
     EntryPair(0xa, 0x10),  EntryPair(0, 0)};
- EntryPair data_ov075_0211d72c[5] __attribute__((aligned(4))) = {
+EntryPair data_ov075_0211d72c[5] __attribute__((aligned(4))) = {
     EntryPair(0x20, 0x10), EntryPair(0x18, 0x10), EntryPair(0x1c, 0x10), EntryPair(0x1c, 0x10),
     EntryPair(0x20, 0x10)};
- EntryPair data_ov075_0211d740[5] __attribute__((aligned(4))) = {
+EntryPair data_ov075_0211d740[5] __attribute__((aligned(4))) = {
     EntryPair(0x30, 0x10), EntryPair(0x30, 0x10), EntryPair(0x30, 0x10), EntryPair(0x30, 0x10),
     EntryPair(0x18, 0x10)};
- EntryPair data_ov075_0211d754[5] __attribute__((aligned(4))) = {
+EntryPair data_ov075_0211d754[5] __attribute__((aligned(4))) = {
     EntryPair(0x20, 0x10), EntryPair(0x20, 0x10), EntryPair(0x28, 0x10), EntryPair(0x20, 0x10),
     EntryPair(0x30, 0x10)};
 

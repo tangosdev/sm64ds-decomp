@@ -5,7 +5,6 @@
 
 extern "C" {
 
-
 extern WBTBlockInfoList *func_02065ae0(void);
 extern void func_02065ad0(WBTBlockInfoList *list);
 }

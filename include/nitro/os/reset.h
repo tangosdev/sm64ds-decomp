@@ -13,15 +13,19 @@
 
 #include "types.h"
 
-
 #ifdef __cplusplus
 extern "C"
+#endif
+#if defined(_MSC_VER) && defined(__cplusplus)
+    extern "C" {
 #endif
 void OS_InitReset(void);
 #ifdef __cplusplus
 extern "C"
 #endif
-void OS_ResetSystem(u32);
-
+    void OS_ResetSystem(u32);
+#if defined(_MSC_VER) && defined(__cplusplus)
+}
+#endif
 
 #endif

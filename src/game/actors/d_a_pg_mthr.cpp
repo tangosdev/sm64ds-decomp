@@ -124,8 +124,7 @@ extern SharedFilePtr *data_ov018_02112c04[2];
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *act, int a, int b, void *c2, void *d);
 
-daPgMthr_c *daPgMthr_c_classInit()
-{
+daPgMthr_c *daPgMthr_c_classInit() {
     return new daPgMthr_c();
 }
 

@@ -103,13 +103,12 @@ void func_020167a4(dExtAnmModel_c *model);
 void func_0204531c(ModelComponents *data, s32 weight);
 short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 extern "C" {
-        /* the selected star */
+/* the selected star */
 
 int AngleDiff(int a, int b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 }
-
 
 /* Render's per-segment bend table, one 0xc record per body bone.
  * The six ROM records are {0, 0, scale} with scales 1,1,1,1,-1,0.
@@ -119,7 +118,6 @@ struct MorayRenderStep {
     s32 pad_04;
     s32 angleScale;
 };
-
 
 extern MorayRenderStep data_ov016_02114908[];
 
@@ -800,8 +798,7 @@ s32 daMoray_c::InitResources()
  * The implicit constructor builds the base, collision cylinders, background
  * checker, model animation, and seven segment positions in declaration order.
  * Vector3's empty default constructor is the array callback at 0x0203d384. */
-daMoray_c *daMoray_c_classInit()
-{
+daMoray_c *daMoray_c_classInit() {
     return new daMoray_c;
 }
 

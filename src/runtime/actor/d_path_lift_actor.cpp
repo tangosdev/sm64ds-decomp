@@ -86,8 +86,6 @@ extern "C" {
 }
 void func_ov002_020eff90(dBgW *collider, dActor_c *lift, dActor_c *rider);
 
-
-
 extern PathLiftState data_ov002_0210af2c[];
 
 /* Which lift this is. An int-returning inline: the ROM materialises the 0/1

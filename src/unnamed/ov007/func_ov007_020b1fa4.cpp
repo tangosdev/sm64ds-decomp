@@ -5,8 +5,6 @@
 #include "Ov007Camera.h"
 #include "nitro/fx/fx_cp.h"
 
-
-
 extern "C" void func_ov007_020c0128(Ov007Camera *cam);
 extern "C" void func_ov007_020bffb8(Ov007Camera *cam);
 extern void func_ov007_020c0078(Ov007Camera *cam);
@@ -48,4 +46,3 @@ void func_ov007_020b1fa4(int preset) {
     func_ov007_020c0078(cam);
     WORK->cameraPreset = preset;
 }
-

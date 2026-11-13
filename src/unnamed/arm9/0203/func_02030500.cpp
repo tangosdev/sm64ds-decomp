@@ -10,7 +10,6 @@
 
 extern "C" {
 
-
 extern void Disable3dEngines(void);
 }
 
@@ -21,7 +20,6 @@ extern void DecompressLZ16(const void *src, void *dst);
 extern void SetBg1Offset(int a, int b);
 extern void SetSubBg1Offset(int a, int b);
 }
-
 
 /* The visible-plane masks of the two engines, kept beside DISPCNT bits 8-12
    (BG0-BG3, OBJ): d_a_demo.cpp sets and clears bits here and writes the

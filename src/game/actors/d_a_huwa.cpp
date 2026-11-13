@@ -343,7 +343,7 @@ s32 daHuwa_c::OnYoshiTryEat() {
     return 6;
 }
 
- daHuwa_c *daHuwa_c_classInit() {
+daHuwa_c *daHuwa_c_classInit() {
     return new daHuwa_c();
 }
 

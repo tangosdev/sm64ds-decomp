@@ -55,7 +55,7 @@ int daObjFl_Koma_D_c::InitResources() {
  * `new daObjFl_Koma_D_c` is the whole sequence the loose factory spelled
  * by hand: fBase_c::operator new(0x320), dBgActor_c's base constructor,
  * then daObjKaitendai_c's vptr store and this class's own. */
- daObjFl_Koma_D_c *daObjFl_Koma_D_c_classInit(void) {
+daObjFl_Koma_D_c *daObjFl_Koma_D_c_classInit(void) {
     return new daObjFl_Koma_D_c;
 }
 

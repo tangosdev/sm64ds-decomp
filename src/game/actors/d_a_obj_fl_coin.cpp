@@ -426,7 +426,6 @@ FlCoinModelFilePtr gFl1412ModelFile(ASSET_FL_14_12_BMD);
 FlCoinModelFilePtr gFl1413ModelFile(ASSET_FL_14_13_BMD);
 FlCoinCollisionFilePtr data_ov064_0211c800(ASSET_FL_14_00_KCL);
 
-
 extern Entry data_ov064_0211bf68;
 extern Entry data_ov064_0211bf70;
 extern Entry data_ov064_0211bf78;

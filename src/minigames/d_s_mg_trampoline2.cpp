@@ -123,9 +123,13 @@ extern dFdBrightness_c *gSceneFader;
 
 extern int sTrmp2TouchBlocked;
 int TrmpLine_Create(s16 *startPoint, s16 *endPoint);
-namespace s20ad90c { void Mg_CommitRecords(void); }
+namespace s20ad90c {
+void Mg_CommitRecords(void);
+}
 using s20ad90c::Mg_CommitRecords;
-namespace s20ad674 { int GetGameLanguage(void); }
+namespace s20ad674 {
+int GetGameLanguage(void);
+}
 using s20ad674::GetGameLanguage;
 extern "C" {
 
@@ -135,14 +139,19 @@ void func_0203cd80(int *m, short angle);
 struct OamAttr;
 
 struct Matrix2x2;
-namespace s20afcf8 { void DrawOamSprite(OamAttr *, int, int, Matrix2x2 *); }
+namespace s20afcf8 {
+void DrawOamSprite(OamAttr *, int, int, Matrix2x2 *);
+}
 using s20afcf8::DrawOamSprite;
-namespace s20afa20 { void RenderOamMainScreen(OamAttr *, int, int, int, int); }
+namespace s20afa20 {
+void RenderOamMainScreen(OamAttr *, int, int, int, int);
+}
 using s20afa20::RenderOamMainScreen;
 extern "C" {
 
 unsigned int d_s_mg_trampoline2NewCleanParticleHold(unsigned int a, unsigned int b, int c, int d,
-                                                    int e, const Vector3_16f *f);}
+                                                    int e, const Vector3_16f *f);
+}
 void Jump2Popup_UpdateAll(void);
 
 extern const VecFx32 sTrmp2RandomSpawnPositions[];
@@ -152,9 +161,9 @@ int Trmp2_PickFaceA(int x);
 int Trmp2_PickFaceB(int a);
 extern "C" {
 
-extern void func_0203cc28(int *vector, int angle);}
+extern void func_0203cc28(int *vector, int angle);
+}
 char *TrmpItem_Spawn(int position, int *normal, int itemType, int motionType);
-
 
 extern int func_020126e8(int a);
 
@@ -217,7 +226,8 @@ extern "C" {
 
 extern void *LoadFile(int handle);
 
-extern void DecompressLZ16(void *src, void *dst);}
+extern void DecompressLZ16(void *src, void *dst);
+}
 
 extern void Deallocate(void *ptr);
 
@@ -244,7 +254,6 @@ extern OamAttr *sMgTextSpritesGerman[];
 extern OamAttr *sMgTextSpritesItalian[];
 dScMgTrampoline2_c *dScMgTrampoline2_c_classInit(void);
 
-
 /* Data owned by this production TU; the original TU grouping is inferred. */
 int sTrmp2TouchBlocked = 1;
 
@@ -267,7 +276,6 @@ OamAttr **sTrmp2TextSpritesByLanguage[] = {sMgTextSpritesEnglish, sMgTextSprites
                                            sMgTextSpritesFrench, sMgTextSpritesGerman,
                                            sMgTextSpritesItalian};
 
-
 /* The three models, mTexAnim and mUnusedVec are all built before the
    empty body, in declaration order. */
 TrmpItem::TrmpItem() {}
@@ -276,7 +284,7 @@ TrmpItem::TrmpItem() {}
    constructor (dScMgBase_c's C2, its vtable, mDrawSubScreen, the empty loop
    over the two cameras, mParticle), then this class's vtable and the six
    element arrays. Historical alias: MgTrampolineTerror_Spawn. */
- dScMgTrampoline2_c *dScMgTrampoline2_c_classInit(void) {
+dScMgTrampoline2_c *dScMgTrampoline2_c_classInit(void) {
     return new dScMgTrampoline2_c;
 }
 
@@ -639,7 +647,6 @@ void dScMgTrampoline2_c::UpdateTouchInput() {
     }
 }
 
-
 int Trmp2_ColumnForKind(int x) {
     switch (x) {
     case 0:
@@ -661,8 +668,6 @@ int Trmp2_ColumnForKind(int x) {
     }
     return 0;
 }
-
-
 
 unsigned short Trmp2_OccupancyBits(int sel, int b) {
     unsigned short r = 0;
@@ -695,8 +700,6 @@ unsigned short Trmp2_OccupancyBits(int sel, int b) {
     return r;
 }
 
-
-
 int Trmp2_PickFaceA(int x) {
     int r;
     if (x < 5) {
@@ -706,8 +709,6 @@ int Trmp2_PickFaceA(int x) {
     r = (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
     return r < 0xc00 ? 6 : 7;
 }
-
-
 
 int Trmp2_PickFaceB(int a) {
     int r;
@@ -726,7 +727,6 @@ int Trmp2_PickFaceB(int a) {
         return 8;
     return 7;
 }
-
 
 void dScMgTrampoline2_c::SpawnWave() {
     int occupancy;
@@ -1084,7 +1084,6 @@ Trmp2Spinner::~Trmp2Spinner() {
     sTrmp2StarModelFile.Release();
 }
 
-
 void Trmp2Spinner_LoadAll(int x, int count) {
     int i;
     sTrmp2Spinners = (unsigned char *)x;
@@ -1093,8 +1092,6 @@ void Trmp2Spinner_LoadAll(int x, int count) {
         Trmp2Spinner_SetModel((void *)(sTrmp2Spinners + i * 0x78));
     }
 }
-
-
 
 void Trmp2Spinner_InitAll(int hitCount) {
     int i = 0;
@@ -1116,8 +1113,6 @@ void Trmp2Spinner_InitAll(int hitCount) {
     } while (i < sTrmp2SpinnerCount);
 }
 
-
-
 void Trmp2Spinner_HideAll(void) {
     int i = 0;
     if (sTrmp2SpinnerCount > 0) {
@@ -1130,8 +1125,6 @@ void Trmp2Spinner_HideAll(void) {
     }
 }
 
-
-
 void Trmp2Spinner_UpdateAll(void) {
     int i;
     for (i = 0; i < sTrmp2SpinnerCount; i++) {
@@ -1141,8 +1134,6 @@ void Trmp2Spinner_UpdateAll(void) {
         }
     }
 }
-
-
 
 void Trmp2Spinner_UpdateMatricesAll(void) {
     int i;
@@ -1154,20 +1145,16 @@ void Trmp2Spinner_UpdateMatricesAll(void) {
     }
 }
 
-
- void Trmp2Spinner_SetModel(void *raw) {
+void Trmp2Spinner_SetModel(void *raw) {
     BMD_File *file = dExtSimpleModel_c::LoadFile(sTrmp2StarModelFile);
     ((dExtModel_c *)raw)->SetFile(file, 1, -1);
 }
-
 
 extern struct Tbl sTrmp2SpinnerSpeeds;
 
 extern const u16 sTrmp2SpinnerColors[];
 
-
 extern void func_020169f4(char *self, int kind);
-
 
 void Trmp2Spinner_Init(void *r0, int value) {
     Trmp2Spinner *spinner = (Trmp2Spinner *)r0;
@@ -1216,8 +1203,6 @@ void Trmp2Spinner_Init(void *r0, int value) {
     func_02016a04((char *)spinner, 0);
 }
 
-
-
 void Trmp2Spinner_Update(char *raw) {
     ApproachLinear2(SPINNER(raw)->mLifeTimer, 0, 1);
     short *p = &SPINNER(raw)->mAngleZ;
@@ -1225,8 +1210,7 @@ void Trmp2Spinner_Update(char *raw) {
     VEC_Add(&SPINNER(raw)->mPos, &SPINNER(raw)->mVel, &SPINNER(raw)->mPos);
 }
 
-
- void Trmp2Spinner_UpdateMatrix(char *raw) {
+void Trmp2Spinner_UpdateMatrix(char *raw) {
     Matrix4x3_FromTranslation(&data_020a0e68, SPINNER(raw)->mPos.x, SPINNER(raw)->mPos.y,
                               SPINNER(raw)->mPos.z);
     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, SPINNER(raw)->mAngleZ);

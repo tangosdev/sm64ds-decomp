@@ -58,7 +58,7 @@ static inline int IsOffScreen(dActor_c *actor) {
    the implicit constructor inlines dBgActor_c's C2 and the derived vptr
    store. Declaring a constructor of our own would emit a `bl` the factory
    does not have. */
- daObjRc_Guruguru_c *daObjRc_Guruguru_c_classInit() {
+daObjRc_Guruguru_c *daObjRc_Guruguru_c_classInit() {
     return new daObjRc_Guruguru_c();
 }
 

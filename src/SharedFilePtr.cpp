@@ -56,10 +56,9 @@ void Deallocate(void *ptr);
 #include "nitro/fs/file.h"
 #endif
 
-
 /* The last file ID any handle touched: every entry point stores it first,
    so a crash mid-load names the file. */
-extern unsigned int data_0209d3bc;
+extern "C" unsigned int data_0209d3bc;
 
 void func_02017e0c(void *self, unsigned int fileID);
 extern "C" {
@@ -78,7 +77,6 @@ int func_020185c0(void *buf, unsigned int x);
 void func_02018770(void);
 int myFS_ReadFile(void *a, void *b, int c);
 }
-
 
 #ifndef _MSC_VER
 void *func_02017e48(void *self, unsigned int fileID) {

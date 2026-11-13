@@ -103,7 +103,6 @@ extern "C" {
 extern int RandomIntInternal(int *seed);
 }
 
-
 daObjCtKaitendai_c *daObjCtKaitendai_c_classInit_CT_MECHA06() {
     return new daObjCtKaitendai_c();
 }

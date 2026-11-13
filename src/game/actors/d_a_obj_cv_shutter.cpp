@@ -48,7 +48,6 @@ daObjCvShutter_c *daObjCvShutter_c_classInit() {
     return new daObjCvShutter_c();
 }
 
-
 s32 daObjCvShutter_c::InitResources() {
     return InitResourcesFrom(&data_ov021_021148d0);
 }

@@ -3,7 +3,6 @@
 #include "nitro/os/cache.h"
 #include "nitro/mi/dma.h"
 
-
 extern int func_ov007_020be0dc(void);
 extern "C" int func_ov007_020c0b20(Ov007OamList *list, void *oam, int slot);
 extern void func_ov007_020be3bc(void);
@@ -22,4 +21,3 @@ void Display_DrawOam(Ov007Display *d) {
     DC_FlushRange(d->oamMain, 0x400);
     DC_FlushRange(d->oamSub, 0x400);
 }
-

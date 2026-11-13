@@ -2,8 +2,6 @@
 #include "nitro/os/cache.h"
 #include "CaptureEffect.h"
 
-
-
 typedef short s16;
 
 /* Capture effect 1, run on each captured stereo buffer (len bytes per channel,

@@ -62,20 +62,15 @@ struct V3Quint {
 
 /* Scalar ABI declarations retained by this TU. */
 
-
 /* arm9 scalar ABI and unnamed helpers; see the remaining work above. */
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 extern void func_02012694(unsigned int id, void *v);
 extern "C" {
 
-
 /* ov002 -- unnamed particle helper. */
 }
 struct Aea30C;
 extern void func_ov002_020aea30(Aea30C *self, dActor_c *actor, dBgCh_Actr *collision);
-
-
-
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
 enum daYurei_Mucho_c_AssetId {
@@ -117,8 +112,7 @@ extern daYurei_Mucho_c::State data_ov065_0211d660;
    daYurei_Mucho_c()` MATCHES (size 0x50); the synthesized ctor stores
    `_ZTV15daYurei_Mucho_c + 2`. classInit is a reconstructed source-style
    name, not a preserved identifier. */
-daYurei_Mucho_c *daYurei_Mucho_c_classInit(void)
-{
+daYurei_Mucho_c *daYurei_Mucho_c_classInit(void) {
     return new daYurei_Mucho_c();
 }
 

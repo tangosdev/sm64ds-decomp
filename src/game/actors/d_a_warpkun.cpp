@@ -33,7 +33,6 @@ daWarpkun_c *daWarpkun_c_classInit() {
     return new daWarpkun_c();
 }
 
-
 /* ROM ordinal 6 -- key function: sizes the clip volume and the trigger
    cylinder from the spawn param's low two nibbles. Init's flags are 2
    (dCc_c.h documents only bit 0x1) and vulnFlags 0x400000 (the player bit

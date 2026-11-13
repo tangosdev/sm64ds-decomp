@@ -2,8 +2,6 @@
 #include "OAM.h"
 #include "dGraph_c.h"
 
-
-
 extern void func_0202345c(void);
 extern void func_02018efc(void);
 extern "C" {

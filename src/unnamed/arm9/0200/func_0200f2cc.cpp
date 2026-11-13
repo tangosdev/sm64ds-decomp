@@ -6,8 +6,6 @@
 #include "nitro/hw/registers.h"
 #include "nitro/gx/gx_bgcnt.h"
 
-
-
 /* Display setup shared by the scenes in src/game/stages/d_s_entry_methods.cpp
  * and src/game/stages/d_s_mb.cpp: VRAM banks, both engines' BG modes with
  * 2D-mapped OBJ characters, and the BG controls the loaders func_0200f220

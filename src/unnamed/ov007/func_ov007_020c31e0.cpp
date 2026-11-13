@@ -2,7 +2,6 @@
 #include "types.h"
 #include "nitro/cp/sqrt.h"
 
-
 inline s64 inline_fn(int arg0) {
     return (s64)arg0;
 }
@@ -33,4 +32,3 @@ int func_ov007_020c31e0(int *xa, int *xb, int n, int cx, int qy, int maxr, int *
     }
     return -1;
 }
-

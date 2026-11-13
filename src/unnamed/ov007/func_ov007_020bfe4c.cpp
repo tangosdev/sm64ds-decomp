@@ -5,10 +5,6 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/MtxStack.h"
 
-
-
-
-
 /* Unprojects the screen point (a, b), in 20.12 pixels, at depth c through
  * the camera's fovy and inverse view matrix. */
 void func_ov007_020bfe4c(Ov007Camera *cam, int a, int b, int c, Vector3 *out) {
@@ -28,4 +24,3 @@ void func_ov007_020bfe4c(Ov007Camera *cam, int a, int b, int c, Vector3 *out) {
     MTX_Inverse43(&cam->viewMatrix, &inv);
     MTX_MultVec43(&v, &inv, out);
 }
-

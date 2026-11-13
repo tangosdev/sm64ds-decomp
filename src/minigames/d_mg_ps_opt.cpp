@@ -26,7 +26,9 @@ struct M;
 void Mg_DrawSpriteListEntry(S *, int, int, M *);
 }
 using s20aea78::Mg_DrawSpriteListEntry;
-namespace s20ad674 { s32 GetGameLanguage(void); }
+namespace s20ad674 {
+s32 GetGameLanguage(void);
+}
 using s20ad674::GetGameLanguage;
 
 /* The blitter's 2x2 matrix. This panel always passes none. */
@@ -86,7 +88,8 @@ extern u16 sPsOptSoundNextSprite[];
 extern void func_ov001_020ab5b0(char *icon, int kind, short x, short y, short halfW, short halfH);
 extern int TouchArea_Update(void *icon, int touch);
 extern /* Toggles mOn, drops mReady, and reloads mPressTimer from mPressTime. */
-void func_ov001_020ab3f0(void *icon);
+    void
+    func_ov001_020ab3f0(void *icon);
 /* Sound::Play2D(2, id). The ROM calls this thunk, not Play2D. */
 extern "C" int GetSoundMode(void);
 extern "C" {
@@ -102,7 +105,6 @@ extern unsigned char gSubScreenLayers;
 extern unsigned char data_0208ee3c;
 
 void PsOpt_PlaceIcon(dMgPsOpt_c::TouchIcon_c *icon, int style, int variant, short x, short y);
-
 
 /* One icon's half extents. The destructor is the shared empty arm9 one
    (NoOpDestructor, 0x0203b98c), so it is declared here and not defined. */
@@ -327,8 +329,7 @@ int dMgPsOpt_c::IsIdle() {
    (kind 2); the back button is a held hit (kind 1). TouchArea_Update is
    what reads that kind. The two captions take their half extents from the
    per-language records; every other style shares the flat table. */
-void PsOpt_PlaceIcon(dMgPsOpt_c::TouchIcon_c *icon, int style, int variant, short x,
-                                short y) {
+void PsOpt_PlaceIcon(dMgPsOpt_c::TouchIcon_c *icon, int style, int variant, short x, short y) {
     int kind;
     int lang, lang2;
 
@@ -351,7 +352,6 @@ void PsOpt_PlaceIcon(dMgPsOpt_c::TouchIcon_c *icon, int style, int variant, shor
                             HALF_H_AT(sPsOptStylePosY, style));
     }
 }
-
 
 /* Styles 2 and 3 draw an OAM arrow and nudge it two pixels while held.
    Styles 0, 1 and 6 repaint BG1 screen entries: style 0 first stamps a

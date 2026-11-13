@@ -4,8 +4,6 @@
 #include "Memory.h"
 #include "nitro/os/thread.h"
 
-
-
 extern unsigned char data_0209d4f8;
 extern void *data_0209d518;
 extern OSThread data_0209d5b8;

@@ -35,15 +35,25 @@ enum dScMgMemory2_c_AssetId { ASSET_D_2D_MG_CARD_NCL_BIN = 0x00bb };
 #include "PlayerInput.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
-namespace s20b1e34 { void Mg_DrawScoreTally(void*, int, int, int); }
+namespace s20b1e34 {
+void Mg_DrawScoreTally(void *, int, int, int);
+}
 using s20b1e34::Mg_DrawScoreTally;
-namespace s20b1bc8 { void Mg_DrawCredits(char *a0, int, int, int); }
+namespace s20b1bc8 {
+void Mg_DrawCredits(char *a0, int, int, int);
+}
 using s20b1bc8::Mg_DrawCredits;
-namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+namespace s20b0aa0 {
+void FreeGfxSlotsById(int);
+}
 using s20b0aa0::FreeGfxSlotsById;
-namespace s20af68c { void Hud_RenderSprite(void *attr, int, int, int, int); }
+namespace s20af68c {
+void Hud_RenderSprite(void *attr, int, int, int, int);
+}
 using s20af68c::Hud_RenderSprite;
-namespace s20ad674 { s32 GetGameLanguage(void); }
+namespace s20ad674 {
+s32 GetGameLanguage(void);
+}
 using s20ad674::GetGameLanguage;
 void MgCoins_Reset(void);
 void MgCoins_Update(void);
@@ -61,8 +71,8 @@ s16 atan2(s32, s32);
  * calculations; they are not original class layouts. */
 
 typedef void (dScMgMemory2_c::*dScMgMemory2_cState)();
-typedef void (dScMgMemory2_c::*dScMgMemory2_cCardState)(int);extern dScMgMemory2_cCardState sMemory2CardTable[];
-
+typedef void (dScMgMemory2_c::*dScMgMemory2_cCardState)(int);
+extern dScMgMemory2_cCardState sMemory2CardTable[];
 
 typedef struct FlyAwayCardView {
     /* 0x00 */ s32 x;
@@ -106,19 +116,16 @@ typedef struct {
     u16 targetPairs;   /* 0x53ea */
     char _pad3[0x1e];
     u8 difficulty; /* 0x540a */
-} DealSceneView;extern dScMgMemory2_cState sMemory2ResultTable[];
+} DealSceneView;
+extern dScMgMemory2_cState sMemory2ResultTable[];
 extern dScMgMemory2_cState sMemory2StateTable[];
 extern dScMgMemory2_cState sMemory2RoundTable[];
 
-
 extern "C" {
-
-
 
 extern s16 atan2_hold_d_s_mg_memory2_1(int y, int x);
 
 extern void MgCoins_StartLoseOneMore(void);
-
 }
 
 extern u16 sMemory2CardFrameSprites[];
@@ -128,9 +135,7 @@ extern void *sMemory2CardSprites[];
 extern s32 sMemory2FlyAwayLimitPerMode[];
 
 extern unsigned short sMemory2FlipFrameTimes[];
-extern "C" {
-
-}
+extern "C" {}
 
 extern u16 *sMemory2CardPositionsPerDifficulty[];
 
@@ -139,19 +144,19 @@ extern int sMemory2ResultRowsPerDifficulty[];
 extern int sMemory2ResultColsPerDifficulty[];
 extern "C" {
 
-extern void MgCoins_StartPayout(int count);}
+extern void MgCoins_StartPayout(int count);
+}
 
 extern short gMgCoinsStatus;
 extern "C" {
 
 extern void Mg_SetPerfectBanner(void);
-
-
 }
 void Dealer_PlayWin(void *c);
 extern "C" {
 
-extern void Dealer_PlayLose(void *c);}
+extern void Dealer_PlayLose(void *c);
+}
 void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
 
 extern int sMemory2FourthDealsPerDifficulty[];
@@ -165,19 +170,17 @@ extern int sMemory2EasyDealsPerDifficulty[];
 extern int sMemory2PreviewCountPerDifficulty[];
 
 extern int sMemory2PreviewTimePerDifficulty[];
-extern "C" {
-
-}
+extern "C" {}
 void Dealer_PlayIdle(char *c);
 int Dealer_IsIdle(Dealer *dealer);
 extern "C" {
 
 extern void MgCoins_Reset(void);
 
-
 void Dealer_Draw(void *);
 
-extern void MgCoins_Update(void);}
+extern void MgCoins_Update(void);
+}
 namespace s020c19d0 {
 void Dealer_Update(Dealer *dealer);
 }
@@ -185,24 +188,22 @@ using s020c19d0::Dealer_Update;
 void LoadCard2SubBg3(void *);
 extern "C" {
 
-
 void *LoadFile(int handle);
 
-void DecompressLZ16(void *src, void *dst);}
+void DecompressLZ16(void *src, void *dst);
+}
 
-void Deallocate(void *ptr);extern "C" {
+void Deallocate(void *ptr);
+extern "C" {
 
 int Dealer_Load(void *c);
 
-
-
-
-void Mg_PlaceBannersOnTopScreen(void);}
+void Mg_PlaceBannersOnTopScreen(void);
+}
 
 extern u8 gMainScreenLayers;
 
 extern u8 gSubScreenLayers;
-
 
 /* The scene seen through a pointer stepped one card at a time, for the
  * DrawCards walk. */
@@ -1208,7 +1209,7 @@ s32 dScMgMemory2_c::InitResources() {
     return 1;
 }
 
- void *dScMgMemory2_c_classInit() {
+void *dScMgMemory2_c_classInit() {
     return new dScMgMemory2_c;
 }
 
@@ -1220,8 +1221,8 @@ s32 dScMgMemory2_c::InitResources() {
  * pointers emit the 29 eight-byte descriptor constants the initializer copies.
  * The manifest binds those compiler-local constants to the configured pmf_ names. */
 /* The non-actor profile is interleaved with the member-pointer constants. */
-BaseSpawnInfo<void> g_profile_MG_MEMORY_J = {dScMgMemory2_c_classInit, 0x016b, 0x016b};extern int sMgCardSprites[];
-
+BaseSpawnInfo<void> g_profile_MG_MEMORY_J = {dScMgMemory2_c_classInit, 0x016b, 0x016b};
+extern int sMgCardSprites[];
 
 void *sMemory2CardSprites[23] = {
     (void *)sMgCardSprites[0],  (void *)sMgCardSprites[1],  (void *)sMgCardSprites[2],

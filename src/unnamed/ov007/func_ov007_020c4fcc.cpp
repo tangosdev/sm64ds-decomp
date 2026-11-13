@@ -2,8 +2,6 @@
 #include "nitro/gx/g3imm.h"
 #include "nitro/gx/g3imm_cmd.h"
 
-
-
 /* Sets up the untextured stroke polygons func_ov007_020c19cc then draws:
  * no texture, vertex colour `color`, and a polygon attribute of both faces
  * shown, polygon ID 6 and alpha `alpha`. The colour goes to REG_COLOR as
@@ -15,4 +13,3 @@ void func_ov007_020c4fcc(int color, int alpha) {
     REG_COLOR = color;
     REG_POLYGON_ATTR = 0x060000c0 | (alpha << 16);
 }
-

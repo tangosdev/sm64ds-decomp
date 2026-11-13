@@ -36,8 +36,6 @@
 #include "daPly_c.h"
 #include "Sound.h"
 
-
-
 /* Per cap slot: dMap_c::Render draws the slot's cap icon while it is set. */
 extern unsigned char gMapCapIconShown[];
 extern unsigned char data_0208a0e0;
@@ -497,7 +495,6 @@ extern "C" void CapIconMgr_DispatchVs(void) {
         }
     }
 }
-
 
 u8 gCapIconFlashTimer;
 u8 gCapIconDispatchLocked;

@@ -37,7 +37,7 @@ extern McFlagAnimResFileHandle data_ov009_02113eb0;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
- daMcFlag_c *daMcFlag_c_classInit() {
+daMcFlag_c *daMcFlag_c_classInit() {
     return new daMcFlag_c();
 }
 

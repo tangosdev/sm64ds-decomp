@@ -163,6 +163,9 @@
 #define GX_VRAM_SUB_OBJEXTPLTT_NONE GX_VRAM_NONE
 #define GX_VRAM_SUB_OBJEXTPLTT_0_I  GX_VRAM_I
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+extern "C" {
+#endif
 
 void GX_SetBankForBG(int);
 void GX_SetBankForOBJ(int);
@@ -208,5 +211,8 @@ int GX_GetBankForSubOBJ(void);
 int GX_GetSizeOfTex(void);
 int GX_GetSizeOfTexPltt(void);
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+}
+#endif
 
 #endif

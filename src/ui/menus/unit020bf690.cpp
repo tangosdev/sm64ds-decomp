@@ -49,8 +49,6 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/MtxStack.h"
 
-
-
 /* The 0x14-byte screen-fade record sScreenFade points at. */
 typedef struct Ov007Fade {
     Ov007Transition *transition; /* 0x00 */
@@ -340,4 +338,3 @@ void ScreenFade_Update(void) {
         return;
     G2_SetBlendBrightness(0x3f, -0x10);
 }
-

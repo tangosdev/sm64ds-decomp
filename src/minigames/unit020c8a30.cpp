@@ -16,9 +16,13 @@
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "math/Approach.h"
-namespace s20af68c { void Hud_RenderSprite(void *attr, int, int, int, int); }
+namespace s20af68c {
+void Hud_RenderSprite(void *attr, int, int, int, int);
+}
 using s20af68c::Hud_RenderSprite;
-namespace s20ad674 { int GetGameLanguage(void); }
+namespace s20ad674 {
+int GetGameLanguage(void);
+}
 using s20ad674::GetGameLanguage;
 
 /* One puff sprite: position, velocity, a swaying spread that shrinks by
@@ -42,17 +46,13 @@ struct Puff {
 extern "C" {
 
 /* local extern: arm9 C helpers with no shared header. */
-
 }
-
 
 extern void **sPuffSprites[];
 
 int sPuffNextIndex;
 void **sPuffXTable;
 Puff sPuffs[3];
-
-
 
 void Puff_Spawn(int x, int y) {
     int i;
@@ -87,11 +87,9 @@ void Puff_Spawn(int x, int y) {
     }
 }
 
-
 void Puff_Clear(Puff *p) {
     p->mActive = 0;
 }
-
 
 void Puff_Update(Puff *entry) {
     if (entry->mActive == 0)
@@ -108,7 +106,6 @@ void Puff_Update(Puff *entry) {
         entry->y += entry->mVelY;
     }
 }
-
 
 void Puff_Draw(Puff *entry) {
     void *sprite;
@@ -129,7 +126,6 @@ void Puff_Draw(Puff *entry) {
     Hud_RenderSprite(sprite, drawX >> 12, entry->y >> 12, -1, -1);
 }
 
-
 void Puff_ClearAll(int a0, int a1) {
     int i;
     for (i = 0; i < 3; i++) {
@@ -139,7 +135,6 @@ void Puff_ClearAll(int a0, int a1) {
     sPuffXTable = (void **)a1;
 }
 
-
 void Puff_UpdateAll(void) {
     int i;
     for (i = 0; i < 3; i++) {
@@ -147,14 +142,12 @@ void Puff_UpdateAll(void) {
     }
 }
 
-
 void Puff_DrawAll(void) {
     int i;
     for (i = 2; i >= 0; i--) {
         Puff_Draw(&sPuffs[i]);
     }
 }
-
 
 inline Puff::~Puff() {}
 

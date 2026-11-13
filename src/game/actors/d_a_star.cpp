@@ -132,7 +132,6 @@ extern int func_0203d024(struct Vector3*, struct Vector3*);
 extern void DeathTable_ClearBit(int);
 extern void FUN_0202a130(void);
 
-
 extern void UnloadSilverStarAndNumber(void);
 extern "C" {
 extern StarAnimationFileHandle data_ov002_02110934;
@@ -140,7 +139,6 @@ extern unsigned int gNextActorUpdateMask;
 extern int data_ov002_0210da28[];
 extern signed char gNumStageStars[];
 }
-
 
 extern signed char NumRedCoins(void);
 extern "C" {
@@ -157,7 +155,6 @@ extern dCamera_c *gCamera;
 extern unsigned char IsAreaShowing(int idx);
 extern void func_02012694(unsigned int a, void *p);
 
-
 extern void func_ov002_020e8244(void *out, daStar_c *b);
 extern "C" {
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
@@ -171,7 +168,6 @@ extern Matrix4x3 data_020a0e68;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 }
-
 
 extern int SurfaceInfo_TestFlag0x20(void* p);
 extern "C" {
@@ -239,15 +235,14 @@ extern s32 data_0209cef0;
 extern s32 data_02092138;
 extern StarModelFilePtr data_ov002_0211094c;
 extern StarModelFilePtr data_ov002_02110954;
-extern StarModelFilePtr data_ov002_0211095c;}
+extern StarModelFilePtr data_ov002_0211095c;
+}
 
 extern void LoadSilverStarAndNumber(void);
-
 
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, s32 a, s32 b, void *p1, void *p2);
 extern s32 IsStarCollected(s32 level, s32 idx);
-
 
 /* The two destructor bodies are defined first so their D1/D0 groups lead the
  * object in ROM order. Under defer_codegen off each out-of-line destructor
@@ -1160,7 +1155,6 @@ extern int func_ov002_020ca0f4(void *player);
 
 
 }
-
 
 void daStar_c::StateCollectBegin() {
     daPly_c *common;
@@ -2347,8 +2341,6 @@ void func_ov002_020e8244(void *out, daStar_c *b)
     ((int *)out)[2] = b->mCenterZ;
 }
 
-
-
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 32 -- UpdateTrailEffect, 0x020e81e0, size 0x64 */
 /* -------------------------------------------------------------------------- */
@@ -2895,8 +2887,6 @@ void LoadSilverStarAndNumber(void)
     dExtSimpleModel_c::LoadFile(data_ov002_02110954);
 }
 
-
-
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 11 -- UnloadSilverStarAndNumber, 0x020e717c, size 0x2c */
 /* -------------------------------------------------------------------------- */
@@ -2907,8 +2897,6 @@ void UnloadSilverStarAndNumber(void)
     ((SharedFilePtr *)data_ov002_0210da28)->Release();
     data_ov002_02110954.Release();
 }
-
-
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 10 -- SetSwitchState, 0x020e7104, size 0x78 */

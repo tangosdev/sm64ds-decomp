@@ -24,7 +24,6 @@
 #include "nitro/os/interrupt_check.h"
 #include "nitro/os/thread.h"
 
-
 extern int data_0209d514;
 extern int data_0208ee44;
 extern u8 data_0209d4f0;
@@ -37,7 +36,6 @@ extern void func_02019100(void);
 }
 
 extern u8 data_0209d4dc;
-
 
 // 0x0201a534 (0x98)
 namespace IRQ {
@@ -58,8 +56,7 @@ void VBlankHandler(void) {
 }
 
 // 0x0201a4e4 (0x50)
-void func_0201a4e4(void)
-{
+void func_0201a4e4(void) {
     data_0209d4fc = 0;
     data_0209d500 = 0;
     OS_SetIrqFunction(OS_IE_V_BLANK, IRQ::VBlankHandler);

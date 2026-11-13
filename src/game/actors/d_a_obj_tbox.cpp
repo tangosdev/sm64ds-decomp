@@ -45,7 +45,6 @@ extern "C" {
 s32 AngleDiff(s32 a, s32 b);
 }
 
-
 /* The overlay's three {init, behavior} pointer-to-member pairs, filled by the
  * static initializer this TU now carries at 0x0211b59c. */
 extern daObjTbox_c::StateFunc data_ov064_0211c98c[][2];

@@ -12,8 +12,6 @@
 #include "types.h"
 #include "nitro/os/cache.h"
 
-
-
 struct SNDWaveArc;
 
 struct SNDWaveArcLink {

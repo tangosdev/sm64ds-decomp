@@ -123,8 +123,6 @@ namespace Sound {
 int PlayLong(u32, u32, u32, const Vector3 &, s16);
 }
 
-
-
 /* Defined below. */
 void func_ov002_020ed63c(daYegg_c *c, int i);
 void func_ov002_020edca4(daYegg_c *self);
@@ -140,8 +138,6 @@ extern s16 data_ov002_021000a8[];
    TU's nested Matrix4x3 grows the object by 0x30 bytes. */
 extern Matrix4x3 data_020a0e68;
 }
-
-
 
 extern int func_02035638(u8 *p);
 extern "C" {
@@ -195,7 +191,6 @@ extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(Matrix4x3 *m, int x, int y, i
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
 extern int func_ov002_020cf700(void *g);
 }
-
 
 /* One native destructor definition emits both ROM variants. D1 is one vtable
  * store and five destructor calls, every one a consequence of
@@ -892,7 +887,11 @@ void daYegg_c::EnterFollowPlayer() {
 /* -------------------------------------------------------------------------- */
 /* Switches to state `i` and runs that state's enter handler. daPly_c's
  * St_YoshiPower_Init calls it with state 1 on the egg it holds. */
-void func_ov002_020ed63c(daYegg_c *c, int i) { c->mState = i; int j = c->mState; (c->*data_ov002_02110a5c[j].pmf[0])(); }
+void func_ov002_020ed63c(daYegg_c *c, int i) {
+    c->mState = i;
+    int j = c->mState;
+    (c->*data_ov002_02110a5c[j].pmf[0])();
+}
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 20 -- RunState, 0x020ed684, size 0x48 */
@@ -1130,7 +1129,6 @@ int daYegg_c::FindTarget(int a1, int best) {
  * position and sets mBurstDone. Stays a free function: d_a_ply_methods.cpp calls it
  * on its held object, and daPly_c is not deslopped here. */
 
-
 void func_ov002_020edca4(daYegg_c* self)
 {
     struct Vector3 pos;
@@ -1167,8 +1165,6 @@ void func_ov002_020edca4(daYegg_c* self)
 
     self->mBurstDone = 1;
 }
-
-
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 27 -- HandleCylinderHit, 0x020eddc4, size 0x190 */
@@ -1442,8 +1438,7 @@ int daYegg_c::InitResources()
  * `new daYegg_c` is the whole sequence the loose factory spelled by hand:
  * fBase_c::operator new(0x42c), dEnemyBase_c's base constructor, the vptr
  * store, then the four member constructors in declaration order. */
-daYegg_c *daYegg_c_classInit(void)
-{
+daYegg_c *daYegg_c_classInit(void) {
     return new daYegg_c;
 }
 

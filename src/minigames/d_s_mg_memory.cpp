@@ -37,15 +37,25 @@ enum d_s_mg_memory_AssetId {
 #include "nitro/fx/fx_trig.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
-namespace s20b1e34 { void Mg_DrawScoreTally(void*, int, int, int); }
+namespace s20b1e34 {
+void Mg_DrawScoreTally(void *, int, int, int);
+}
 using s20b1e34::Mg_DrawScoreTally;
-namespace s20b1bc8 { void Mg_DrawCredits(char *a0, int, int, int); }
+namespace s20b1bc8 {
+void Mg_DrawCredits(char *a0, int, int, int);
+}
 using s20b1bc8::Mg_DrawCredits;
-namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+namespace s20b0aa0 {
+void FreeGfxSlotsById(int);
+}
 using s20b0aa0::FreeGfxSlotsById;
-namespace s20af68c { void Hud_RenderSprite(void *attr, int, int, int, int); }
+namespace s20af68c {
+void Hud_RenderSprite(void *attr, int, int, int, int);
+}
 using s20af68c::Hud_RenderSprite;
-namespace s20ad674 { s32 GetGameLanguage(void); }
+namespace s20ad674 {
+s32 GetGameLanguage(void);
+}
 using s20ad674::GetGameLanguage;
 void MgCoins_Reset(void);
 void MgCoins_Update(void);
@@ -72,23 +82,21 @@ enum MemoryCardState {
 
 typedef void (dScMgMemory_c::*dScMgMemory_cState)();
 typedef void (dScMgMemory_c::*dScMgMemory_cCardState)(int);
-typedef void (dScMgMemory_c::*dScMgMemory_cPlayerState)(int);extern dScMgMemory_cState sMemoryResultTable[];
+typedef void (dScMgMemory_c::*dScMgMemory_cPlayerState)(int);
+extern dScMgMemory_cState sMemoryResultTable[];
 extern dScMgMemory_cState sMemoryStateTable[];
 
 extern dScMgMemory_cState sMemoryRoundTable[];
-extern dScMgMemory_cCardState sMemoryCardTable[];extern /* daPly_c markers use the int-argument handlers, like the card handlers. */
- dScMgMemory_cPlayerState sMemoryPlayerTable[];
-
+extern dScMgMemory_cCardState sMemoryCardTable[];
+extern /* daPly_c markers use the int-argument handlers, like the card handlers. */
+    dScMgMemory_cPlayerState sMemoryPlayerTable[];
 
 extern "C" {
-
-
 
 /* Unused. Deleting this named prototype renumbers @NNN later in the file. */
 extern short atan2_hold_d_s_mg_memory_1(int y, int x);
 
 void MgCoins_StartLoseOneMore(void);
-
 }
 
 extern u16 sMemoryCardFrameSprites[];
@@ -96,31 +104,27 @@ extern u16 sMemoryCardFrameSprites[];
 extern void *sMemoryCardSprites[];
 
 extern unsigned short sMemoryFlipFrameTimes[];
-extern "C" {
-
-}
+extern "C" {}
 
 extern u16 *sMemoryCardPositionsPerDifficulty[];
 extern "C" {
 
-extern void MgCoins_StartPayout(int);}
+extern void MgCoins_StartPayout(int);
+}
 
 extern short gMgCoinsStatus;
 extern "C" {
 
 extern void Mg_SetPerfectBanner(void);
-
-
 }
 void Dealer_PlayWin(void *c);
 void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
 extern "C" {
 
-
-
 void Dealer_Draw(char *p);
 
-void MgCoins_Update(void);}
+void MgCoins_Update(void);
+}
 namespace s020c19d0 {
 void Dealer_Update(Dealer *dealer);
 }
@@ -128,28 +132,27 @@ using s020c19d0::Dealer_Update;
 void LoadCard2SubBg3(void *);
 extern "C" {
 
-
 void *LoadFile(int handle);
 
-void DecompressLZ16(void *src, void *dst);}
+void DecompressLZ16(void *src, void *dst);
+}
 
-void Deallocate(void *ptr);extern "C" {
+void Deallocate(void *ptr);
+extern "C" {
 
 int Dealer_Load(void *c);
 
-
-
-void MgCoins_Reset(void);}
+void MgCoins_Reset(void);
+}
 int Dealer_IsIdle(Dealer *dealer);
 extern "C" {
 
-
-void Mg_PlaceBannersOnTopScreen(void);}
+void Mg_PlaceBannersOnTopScreen(void);
+}
 
 extern u8 gMainScreenLayers;
 
 extern u8 gSubScreenLayers;
-
 
 /* Load-bearing: source order, and the opt pragmas on DrawCards and
  * CardFlyAway. Under deferred emission the last pragma setting wins for the
@@ -1058,15 +1061,15 @@ s32 dScMgMemory_c::InitResources() {
 
 /* `new` inlines the implicit constructor: the base chain, this class's
    vptr, then mDealer. */
- dScMgMemory_c *dScMgMemory_c_classInit() {
+dScMgMemory_c *dScMgMemory_c_classInit() {
     return new dScMgMemory_c;
-}extern /* Static-init globals (was the handwritten __sinit_ov006_021311c8 shard).
+}
+extern /* Static-init globals (was the handwritten __sinit_ov006_021311c8 shard).
  * The sprite-pointer table plus the five PMF state tables plain-copied
  * from native member-pointer constants, in retail copy order: the permuted sprite
  * pointers, the five main states, the six round states, the four result
  * states, the seven card states, then the three player states. */
- int sMgCardSprites[];
-
+    int sMgCardSprites[];
 
 void *sMemoryCardSprites[15] = {
     (void *)sMgCardSprites[0],  (void *)sMgCardSprites[1],  (void *)sMgCardSprites[2],
@@ -1100,8 +1103,7 @@ dScMgMemory_cPlayerState sMemoryPlayerTable[3] = {
     &dScMgMemory_c::PlayerWait,
 };
 
-BaseSpawnInfo<dScMgMemory_c> g_profile_MG_MEMORY = {dScMgMemory_c_classInit, 0x016a,
-                                                               0x016a};
+BaseSpawnInfo<dScMgMemory_c> g_profile_MG_MEMORY = {dScMgMemory_c_classInit, 0x016a, 0x016a};
 
 /* Twelve interleaved screen x/y pairs per difficulty. The flat indexing
  * in CardMove preserves the pinned compiler's measured address formation. */

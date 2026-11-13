@@ -18,7 +18,6 @@
 #include "nitro/os/spinLock.h"
 #include "nitro/mi/memory.h"
 
-
 int func_0203da3c(void);
 extern "C" {
 
@@ -35,7 +34,6 @@ void CARD_Init(void);
 }
 
 void CARD_IdentifyBackup(int type);
-
 
 /* func_02042f68(type, magic) at 0x02042f68 -- the cart I/O pair's setup.
  *

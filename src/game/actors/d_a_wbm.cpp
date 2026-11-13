@@ -117,8 +117,7 @@ State data_ov098_0213c930[3] = {
 /* Reconstructed source-style name: SM64DS proves daWbm_c through RTTI,
  * allocation size, vtable identity and the WATERBOMB registry profile; later
  * EAD lineage supplies classInit. Historical alias: WaterBomb_Spawn. */
-int *daWbm_c_classInit(void)
-{
+int *daWbm_c_classInit(void) {
     return (int *)new daWbm_c;
 }
 

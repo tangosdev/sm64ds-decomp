@@ -5,7 +5,9 @@
 #define func_0201a244 _Z13func_0201a244PFviEiiPvi
 #endif
 
-
+#if defined(_MSC_VER) && defined(__cplusplus)
+extern "C" {
+#endif
 typedef void (*AsyncJobCallback)(int argument);
 
 /* Runs immediately when the worker is already occupied. Returns 1 when the
@@ -19,6 +21,10 @@ void func_0201a2f8(int unused);
 #ifdef __cplusplus
 extern "C"
 #endif
-void LoadMultiBootResources(int unused);
+    void
+    LoadMultiBootResources(int unused);
+#if defined(_MSC_VER) && defined(__cplusplus)
+}
+#endif
 
 #endif

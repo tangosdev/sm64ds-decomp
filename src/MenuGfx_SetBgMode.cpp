@@ -5,9 +5,6 @@
 #include "nitro/gx/g2.h"
 #include "nitro/gx/gx_bgcnt.h"
 
-
-
-
 void MenuGfx_SetBgMode(int mode) {
     switch (mode) {
     case 1:
@@ -83,4 +80,3 @@ void MenuGfx_SetBgMode(int mode) {
         break;
     }
 }
-

@@ -4,7 +4,7 @@
 /* std::terminate takes no arguments. The default arm still passes the
  * opcode and the 0x80 test: that cast is a direct bl to _ZSt9terminatev,
  * and it keeps r1 live from the flag test. An ellipsis declaration links
- * to a different symbol. The file stays .c: delinks.txt names this path. */
+ * to a different symbol. */
 namespace std {
 void terminate();
 }

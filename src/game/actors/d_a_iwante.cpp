@@ -211,7 +211,6 @@ struct EyerokCollisionFilePtr : SharedFilePtr {
     ~EyerokCollisionFilePtr();
 };
 
-
 /* ---- ov066 .bss: 8-byte SharedFilePtr slots (0x0211ae14..0x0211aebc) ----
  * Each one's filePtr is the loaded file, which the states pass to SetAnim /
  * SetFile. Roles, from InitResources and the order __sinit_d_a_iwante.cpp
@@ -361,8 +360,6 @@ extern "C" void hold_d_a_iwante(void *self, void *kcl, void *mtx, int fix, short
 
 extern "C" u32 d_a_iwanteNewHold(u32 a, u32 b, int x, int y, int z, const void *v, void *cb);
 
-
-
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
  * off screen. These int-returning predicates are what make the ROM
  * materialize 0/1 before testing it. */
@@ -470,7 +467,7 @@ int daIwante_c::CheckAttacked() {
                     mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211aebc.filePtr, 0x40000000,
                                              0x1000, 0);
                 }
-                func_02012694(SE_HAND_HIT,(const Vector3 *)(&mCamSpacePosX));
+                func_02012694(SE_HAND_HIT, (const Vector3 *)(&mCamSpacePosX));
                 return 1;
             }
 
@@ -482,7 +479,7 @@ int daIwante_c::CheckAttacked() {
                 data_ov066_0211ae08 = (u8)(x + 1);
                 data_ov066_0211abe4 = -3;
             }
-            func_02012694(SE_HAND_DEFEATED,(const Vector3 *)(&mCamSpacePosX));
+            func_02012694(SE_HAND_DEFEATED, (const Vector3 *)(&mCamSpacePosX));
             SetState(&data_ov066_0211b07c);
             return 2;
         }
@@ -722,7 +719,7 @@ void daIwante_c::PoundGround(int strength) {
         mPosX += 0x80000;
     mPosZ += 0x80000;
     HugeLandingDust(true);
-    func_02012694(SE_LANDING,(const Vector3 *)(&mCamSpacePosX));
+    func_02012694(SE_LANDING, (const Vector3 *)(&mCamSpacePosX));
     mPos = saved;
 }
 
@@ -790,7 +787,7 @@ int daIwante_c::HandDefeatExecute() {
             v.z = mPosZ;
             TriplePoofDustAt(*(Vector3 *)&v);
         }
-        func_02012694(SE_DEFEAT_POOF,(const Vector3 *)(&mCamSpacePosX));
+        func_02012694(SE_DEFEAT_POOF, (const Vector3 *)(&mCamSpacePosX));
         MarkForDestruction();
     }
     return 1;
@@ -867,11 +864,11 @@ int daIwante_c::HandPattern9Execute() {
             }
 
             if ((unsigned short)(mBlendAnmModel.currFrame >> 0xc) == 0)
-                func_02012694(SE_ANIM_FRAME_0,(const Vector3 *)(&mCamSpacePosX));
+                func_02012694(SE_ANIM_FRAME_0, (const Vector3 *)(&mCamSpacePosX));
 
             if ((unsigned short)(mBlendAnmModel.currFrame >> 0xc) == 0) {
                 BeginVulnerable();
-                func_02012694(SE_START_MOVING,(const Vector3 *)(&mCamSpacePosX));
+                func_02012694(SE_START_MOVING, (const Vector3 *)(&mCamSpacePosX));
             }
 
             ang = Vec3_HorzAngle(&mPos, (const Vector3 *)&mTargetPosX);
@@ -1005,7 +1002,7 @@ int daIwante_c::HandPattern8Execute() {
                 mTargetPosX -= 0xf2000;
             }
         }
-        func_02012694(SE_START_MOVING,(const Vector3 *)(&mCamSpacePosX));
+        func_02012694(SE_START_MOVING, (const Vector3 *)(&mCamSpacePosX));
         mTargetPosY = mRestPosY + 0x1c2000;
         mSubState = 1;
         break;
@@ -1161,7 +1158,7 @@ int daIwante_c::HandPattern7Execute() {
                 else if (mTargetPosZ > -0x73a000)
                     mTargetPosZ = -0x73a000;
             }
-            func_02012694(SE_START_MOVING,(const Vector3 *)(&mCamSpacePosX));
+            func_02012694(SE_START_MOVING, (const Vector3 *)(&mCamSpacePosX));
             mTargetPosY = mRestPosY + 0x1c2000;
             mSubState = 1;
         } else if (mTimer1 == 0) {
@@ -1229,7 +1226,7 @@ int daIwante_c::HandPattern7Execute() {
     case 4:
         BeginVulnerable();
         if ((unsigned short)(mBlendAnmModel.currFrame >> 0xc) == 0)
-            func_02012694(SE_ANIM_FRAME_0,(const Vector3 *)(&mCamSpacePosX));
+            func_02012694(SE_ANIM_FRAME_0, (const Vector3 *)(&mCamSpacePosX));
         if (mStateWork1 == 1) {
             int r = CheckAttacked();
             UpdateTexturePattern();
@@ -1356,7 +1353,7 @@ int daIwante_c::HandPattern6Execute() {
                         mTargetPosX -= 0x1c2000;
                 }
             }
-            func_02012694(SE_START_MOVING,(const Vector3 *)(&mCamSpacePosX));
+            func_02012694(SE_START_MOVING, (const Vector3 *)(&mCamSpacePosX));
             mSubState = 1;
         } else if (mTimer1 == 0) {
             SetLoweredPose();
@@ -1405,7 +1402,7 @@ int daIwante_c::HandPattern6Execute() {
     case 3:
         BeginVulnerable();
         if ((unsigned short)(mBlendAnmModel.currFrame >> 0xc) == 0)
-            func_02012694(SE_ANIM_FRAME_0,(const Vector3 *)(&mCamSpacePosX));
+            func_02012694(SE_ANIM_FRAME_0, (const Vector3 *)(&mCamSpacePosX));
         if (mStateWork1 == 1) {
             int r = CheckAttacked();
             UpdateTexturePattern();
@@ -1536,7 +1533,7 @@ int daIwante_c::HandPattern5Execute() {
         }
 
         if ((unsigned short)(mBlendAnmModel.currFrame >> 0xc) == 0) {
-            func_02012694(SE_ANIM_FRAME_0,(const Vector3 *)(&mCamSpacePosX));
+            func_02012694(SE_ANIM_FRAME_0, (const Vector3 *)(&mCamSpacePosX));
         }
 
         BeginVulnerable();
@@ -1707,7 +1704,7 @@ int daIwante_c::HandRiseExecute() {
                 mVertAccel = -0x800;
             }
             mStateWork0 = 1;
-            func_02012694(SE_START_MOVING,(const Vector3 *)(&mCamSpacePosX));
+            func_02012694(SE_START_MOVING, (const Vector3 *)(&mCamSpacePosX));
         }
         return 1;
     }
@@ -2107,7 +2104,7 @@ int daIwante_c::BodyTalkExecute() {
             Message::PrepareTalk();
             if (mTalkPlayer->ShowMessage(*this, msgid, &out, 0, 0) == 1) {
                 mStateWork1 = 1;
-                func_02012694(SE_TALK_STARTED,(const Vector3 *)(&mCamSpacePosX));
+                func_02012694(SE_TALK_STARTED, (const Vector3 *)(&mCamSpacePosX));
             }
         }
     } else {
@@ -2610,7 +2607,7 @@ void daIwante_c::StoodOnCallback(dBgW *collider, dActor_c *owner, dActor_c *othe
  * allocation size, vtable identity, and the IWANTE registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: Eyerok_Spawn. */
- daIwante_c *daIwante_c_classInit(void) {
+daIwante_c *daIwante_c_classInit(void) {
     return new daIwante_c();
 }
 

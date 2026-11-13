@@ -2,8 +2,6 @@
 /* Distance between two Fix12 (x, y) pairs. Only two words are read. */
 #include "cstd.h"
 
-
-
 typedef int Fix12i;
 
 typedef unsigned long long u64;

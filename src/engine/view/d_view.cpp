@@ -28,7 +28,6 @@
 
 void CopyToViewMat(const Matrix4x3 *mat);
 
-
 extern int gRunningKuppaScript;
 extern u8 *gSavedKuppaScript;
 void func_0202fd2c(void)
@@ -36,7 +35,6 @@ void func_0202fd2c(void)
     gRunningKuppaScript = 0;
     gSavedKuppaScript = 0;
 }
-
 
 s32 dView_c::Render()
 {

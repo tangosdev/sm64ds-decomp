@@ -4,8 +4,6 @@
 #include "Ov007Mesh.h"
 #include "nitro/fx/fx_cp.h"
 
-
-
 /* The ROM copies the template with one ldm/stm block. Under C++ a struct of
  * six named ints copies word by word, a struct with an array member as one
  * block, so the copy goes through this. */
@@ -114,4 +112,3 @@ Ov007Mesh *func_ov007_020cbbb0(int columns, int rows, int width, Ov007MeshParams
     func_ov007_020cb3dc(mesh);
     return mesh;
 }
-

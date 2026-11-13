@@ -82,7 +82,6 @@ int SublevelToLevel(int i);
 int IsStarCollected(int level, int star);
 extern "C" {
 
-
 extern u8 data_0209f20c;
 extern u8 gGamePaused;
 extern u8 gVsExitScreenActive;
@@ -130,7 +129,6 @@ extern "C" {
 void Vec3_MulScalarInPlace(Vector3 *v, int s);
 void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *in, short ang, const Vector3 *t);
 }
-
 
 /* The centre of the 256x192 touch screen, (128, 96) in 20.12 fixed point:
  * the screen point the minimap is drawn around. A file-scope Vector3 with a
@@ -930,7 +928,6 @@ extern u16 *gMinimapTileObjs;
 extern s32 gRunningKuppaScript;
 }
 
-
 #pragma opt_strength_reduction off
 /* Kept: the ROM recomputes i << 11 for each screen block; strength reduction
  * turns it into a running offset and needs one more register. */
@@ -1091,7 +1088,6 @@ void dMap_c::GetPosOnMinimap(Vector3 *pos, Vector3 *center, Fix12i scale, short 
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: Minimap_Spawn. It was once labelled
  * the dMap_c constructor, but it takes no `this`: it is the registry factory. */
-dMap_c *dMap_c_classInit()
-{
+dMap_c *dMap_c_classInit() {
     return new dMap_c();
 }

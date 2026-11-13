@@ -12,9 +12,15 @@
  * Parameters stay unnamed: a named parameter in a declaration takes a
  * compiler @NNN number in every includer. */
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+extern "C" {
+#endif
 
 int abs(int);
 int rand(void);
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+}
+#endif
 
 #endif /* MSL_STDLIB_H */

@@ -577,8 +577,7 @@ int IsCannonOpenInLevel(s8 levelID);
 void CollectStarInLevel(s8 levelID, s32 starID);
 int IsStarCollectedInLevel(s8 levelID, s32 starID);
 void func_ov002_020b18f0(char *a);
-extern "C" {
-}
+extern "C" {}
 void UnloadLevelOverlays(int levelID);
 void LoadLevelOverlays(int level);
 void LoadOrUnloadObjectOverlays(void (*fn)(int), int levelID);
@@ -2783,7 +2782,6 @@ void dScStage_c::PS_Init() {
     G2S_SetBlendBrightness(subBlendTargets | 0x20, -7);
 }
 
-
 int func_02029600(int x) {
     int b = (int)(gGameMode == 2);
     if (b == 0) {
@@ -2794,8 +2792,6 @@ int func_02029600(int x) {
     }
     return 0;
 }
-
-
 
 int IsButtonInputValid(void) {
     int mode;
@@ -2836,7 +2832,6 @@ int IsButtonInputValid(void) {
     }
     return 0;
 }
-
 
 /* Vtable slot 2. Every dispatcher calls it as `ldr r1,[r0]; ldr r1,[r1,#8];
    blx r1` with r0 = the callback object. The matrix at +0x4 stays zero until
@@ -3962,12 +3957,10 @@ void dScStage_c::OnPendingDestroy() {
 
 void func_020391f0(void);
 void func_0203083c(void);
-extern "C" {
-}
+extern "C" {}
 void func_ov001_020aaf40(void);
 void func_0203db3c(int i, int v);
-extern "C" {
-}
+extern "C" {}
 
 int dScStage_c::Render() {
     if (((gVsExitScreenActive | (gGamePaused | data_0209f20c)) & 0xff) == 0) {

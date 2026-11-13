@@ -7,7 +7,6 @@
    and restart. dScene_c::BeforeBehavior runs the fade out with
    gSoftResetFader and then destroys the scene. */
 
-
 extern unsigned char data_0209b2fc;
 extern unsigned char gMgSaveDirty;
 extern void func_0202fd2c(void);

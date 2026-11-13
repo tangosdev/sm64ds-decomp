@@ -113,7 +113,6 @@ extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern short atan2_hold_d_a_coin_1(int a, int b);
 }
 
-
 daCoin_c::~daCoin_c()
 {
 }
@@ -445,7 +444,6 @@ void func_ov002_020b18f0(char* self)
     Event::SetBit(0x1f);
     star->AddStarMarker();
 }
-
 
 /* Collection by the player: if the coin was hit by a player (hitFlags 0x400000)
  * it stops its disappear timer and hands out the reward for its coin type
@@ -813,7 +811,6 @@ int daCoin_c::Behavior()
     return 1;
 }
 
-
 extern int SublevelToLevel(int i);
 extern void SetStarMarker(int i, void* actor, int v2);
 /* Parameter names keep this TU's @NNN. */
@@ -1019,18 +1016,15 @@ s32 daCoin_c::OnYoshiTryEat()
 }
 
 /* Blue, red and yellow coin factories, in ROM order. */
-daCoin_c *daCoin_c_classInit_BLUE_COIN()
-{
+daCoin_c *daCoin_c_classInit_BLUE_COIN() {
     return new daCoin_c();
 }
 
-daCoin_c *daCoin_c_classInit_RED_COIN()
-{
+daCoin_c *daCoin_c_classInit_RED_COIN() {
     return new daCoin_c();
 }
 
-daCoin_c *daCoin_c_classInit_COIN()
-{
+daCoin_c *daCoin_c_classInit_COIN() {
     return new daCoin_c();
 }
 

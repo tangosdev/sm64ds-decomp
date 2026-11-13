@@ -61,8 +61,6 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
 
-
-
 /* data_ov007_02104b9c: the 0x14-byte sprite record. */
 typedef struct Ov007PickerSprites {
     /* 0x00, medium confidence: Q12; while it is <= 0x1000,
@@ -105,8 +103,8 @@ extern "C" unsigned short func_ov007_020c3be0(int t, int a, int b);
 extern "C" void func_ov007_020c3d1c(void *);
 extern "C" void *func_ov007_020c3df4(const char *name, int size);
 extern "C" void func_ov007_020c4f50(void *c, int a1, int a2, int a3, int a4);
-extern "C" void func_ov007_020c4e98(Ov007Picker *c, int a1, int a2, int a3, int a4, unsigned short a5,
-                                int a6);
+extern "C" void func_ov007_020c4e98(Ov007Picker *c, int a1, int a2, int a3, int a4,
+                                    unsigned short a5, int a6);
 extern "C" void func_ov007_020c5188(void *, int);
 extern "C" void func_ov007_020c5490(void *obj, int *m);
 extern "C" void func_ov007_020c55bc(Ov007Picker *self, int m1, int m2);
@@ -1552,4 +1550,3 @@ Ov007MenuState *PickerScene_GetScaleAnimState(void) {
 Ov007MenuState *PickerScene_GetMoveAnimState(void) {
     return SCENE->states[3];
 }
-

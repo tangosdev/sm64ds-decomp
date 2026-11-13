@@ -3,8 +3,6 @@
 #include "OAM.h"
 #include "OamAttr.h"
 
-
-
 /* func_0203083c at 0x0203083c, size=0x6c
  * If data_0209fc68 is non-null, looks up an OamAttr* in a table indexed by
  * func_0203d9f4(), then calls OAM::Render(false, oam, 8, 0xb8, ...).
@@ -12,16 +10,16 @@
  */
 
 extern int data_0209fc68;
-                /* 0x0209fc68: checked for non-zero */
+/* 0x0209fc68: checked for non-zero */
 extern struct OamAttr *data_020927a0[];
-  /* 0x020927a0: table of OamAttr* */
+/* 0x020927a0: table of OamAttr* */
 
 extern s32 func_0203d9f4(void);
 extern "C" {
-    /* 0x0203d9f4 */
+/* 0x0203d9f4 */
 extern void func_02030838(void);
 }
-   /* 0x02030838 (empty stub, bx lr) */
+/* 0x02030838 (empty stub, bx lr) */
 
 void func_0203083c(void)
 {

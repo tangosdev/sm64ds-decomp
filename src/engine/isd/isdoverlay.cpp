@@ -64,8 +64,6 @@ void SetFIQState(bool);
 void SetIRQState(bool);
 }
 
-
-
 struct OverlayInfo {
     u32 m_VMA;     /* load address */
     u32 romOffset; /* func_02018b64 passes the overlay's ROM offset */
@@ -106,12 +104,11 @@ typedef struct {
     u32 irqState;
     u32 fiqState;
     u32 mpuRegion7;
-}
- SavedIntState;
+} SavedIntState;
 
 extern struct OverlayTable *data_020a9ec0[2];
 extern const char data_020868fc;
- /* "isdoverlay.c" */
+/* "isdoverlay.c" */
 extern const char data_0208690c;
 extern const char data_0208692c;
 extern const char data_0208696c;
@@ -122,9 +119,9 @@ extern const char data_02086a08;
 extern const char data_02086a30;
 
 extern int func_0206da18(void);
- /* IRQ::SetIRQState(false) entry */
+/* IRQ::SetIRQState(false) entry */
 extern int func_0206d9cc(void);
- /* IRQ::SetFIQState(false) entry */
+/* IRQ::SetFIQState(false) entry */
 extern u32 func_0206dab4(u32 value, void *lock);
 
 void func_0206d940(struct OverlayTable *pInfo, u32 nIndex);

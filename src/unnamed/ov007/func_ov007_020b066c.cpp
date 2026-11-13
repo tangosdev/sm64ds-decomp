@@ -5,7 +5,6 @@
 #include "Ov007Model.h"
 #include "Ov007Figure.h"
 
-
 extern "C" void func_ov007_020b283c(void);
 void PickerScene_Destroy(void);
 extern "C" void func_ov007_020bf304(void);
@@ -15,7 +14,6 @@ extern "C" void func_ov007_020bca40(int i);
 void RequestScreenFade(int kind, int flags, void (*onEnd)(void));
 extern "C" void func_ov007_020bd1c0(int i);
 extern "C" void func_ov007_020b131c(void);
-
 
 void func_ov007_020b066c(void) {
     switch (WORK->states[0]->previousState) {

@@ -209,7 +209,7 @@ extern "C" u16 DecIfAbove0_Short(u16 *p);
 extern "C" void Matrix4x3_FromRotationY(void *m, int angle);
 extern "C" void d_a_obj_hatena_blockEarthquakeHold(void *self, void *pos, s32 radius);
 extern "C" void hold_d_a_obj_hatena_block(void *thiz, void *kcl, void *mtx, int fix, short s,
-                                      void *clps);
+                                          void *clps);
 
 /* Free: the block is its second argument (dst, src), so member form would
    swap the register operands. */
@@ -287,33 +287,27 @@ PMF data_ov102_0214e870[1][4] = {
      &daObjHatenaBlock_c::SpawnPrizeFeather, &daObjHatenaBlock_c::SpawnPrizeFeather},
 };
 
-daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_VS_ITEM_BLOCK()
-{
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_VS_ITEM_BLOCK() {
     return new daObjHatenaBlock_c();
 }
 
-daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_HATENA_BLOCK()
-{
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_HATENA_BLOCK() {
     return new daObjHatenaBlock_c();
 }
 
-daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_ITEM_BLOCK()
-{
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_ITEM_BLOCK() {
     return new daObjHatenaBlock_c();
 }
 
-daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_M()
-{
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_M() {
     return new daObjHatenaBlock_c();
 }
 
-daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_L()
-{
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_L() {
     return new daObjHatenaBlock_c();
 }
 
-daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_W()
-{
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_W() {
     return new daObjHatenaBlock_c();
 }
 

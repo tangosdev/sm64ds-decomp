@@ -7,7 +7,6 @@
 
 extern "C" {
 
-
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int *Vec3_AsrInPlace(int *v, int sh);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);

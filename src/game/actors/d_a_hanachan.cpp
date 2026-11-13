@@ -1167,8 +1167,7 @@ int daHanachan_c::InitResources()
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: Wiggler_Spawn.
  */
-daHanachan_c *daHanachan_c_classInit()
-{
+daHanachan_c *daHanachan_c_classInit() {
     return new daHanachan_c;
 }
 
@@ -1212,41 +1211,41 @@ typedef void (daHanachan_c::*HanachanStatePmf)();
 
 /* The 8-byte PMF descriptors the static initializer copies into the state
  * table rows, in table order. ROM-supplied .data, referenced by address. */
-extern HanachanStatePmf data_ov034_02114370;   /* StateDemoWaitInit */
-extern HanachanStatePmf data_ov034_021143b0;   /* StateDemoWaitMain */
-extern HanachanStatePmf data_ov034_021143c0;   /* StateDemoCallInit */
-extern HanachanStatePmf data_ov034_02114360;   /* StateDemoCallMain */
-extern HanachanStatePmf data_ov034_02114378;   /* StateMoveStopInit */
-extern HanachanStatePmf data_ov034_021143d8;   /* StateMoveStopMain */
-extern HanachanStatePmf data_ov034_021143e8;   /* StateMoveStartInit */
-extern HanachanStatePmf data_ov034_02114380;   /* StateMoveStartMain */
-extern HanachanStatePmf data_ov034_02114390;   /* StateMoveInit */
-extern HanachanStatePmf data_ov034_02114368;   /* StateMoveMain */
-extern HanachanStatePmf data_ov034_02114388;   /* StateDamageInit */
-extern HanachanStatePmf data_ov034_02114400;   /* StateDamageMain */
-extern HanachanStatePmf data_ov034_021143f8;   /* StateDamageTalkInit */
-extern HanachanStatePmf data_ov034_021143f0;   /* StateDamageTalkMain */
-extern HanachanStatePmf data_ov034_021143e0;   /* StateDeadInit */
-extern HanachanStatePmf data_ov034_021143b8;   /* StateDeadMain */
-extern HanachanStatePmf data_ov034_021143c8;   /* StateDamageStopInit */
-extern HanachanStatePmf data_ov034_021143a8;   /* StateDamageStopMain */
-extern HanachanStatePmf data_ov034_02114358;   /* StateDamageWaitInit */
-extern HanachanStatePmf data_ov034_021143d0;   /* StateDamageWaitMain */
-extern HanachanStatePmf data_ov034_021143a0;   /* StateDamageStartInit */
-extern HanachanStatePmf data_ov034_02114398;   /* StateDamageStartMain */
+extern HanachanStatePmf data_ov034_02114370; /* StateDemoWaitInit */
+extern HanachanStatePmf data_ov034_021143b0; /* StateDemoWaitMain */
+extern HanachanStatePmf data_ov034_021143c0; /* StateDemoCallInit */
+extern HanachanStatePmf data_ov034_02114360; /* StateDemoCallMain */
+extern HanachanStatePmf data_ov034_02114378; /* StateMoveStopInit */
+extern HanachanStatePmf data_ov034_021143d8; /* StateMoveStopMain */
+extern HanachanStatePmf data_ov034_021143e8; /* StateMoveStartInit */
+extern HanachanStatePmf data_ov034_02114380; /* StateMoveStartMain */
+extern HanachanStatePmf data_ov034_02114390; /* StateMoveInit */
+extern HanachanStatePmf data_ov034_02114368; /* StateMoveMain */
+extern HanachanStatePmf data_ov034_02114388; /* StateDamageInit */
+extern HanachanStatePmf data_ov034_02114400; /* StateDamageMain */
+extern HanachanStatePmf data_ov034_021143f8; /* StateDamageTalkInit */
+extern HanachanStatePmf data_ov034_021143f0; /* StateDamageTalkMain */
+extern HanachanStatePmf data_ov034_021143e0; /* StateDeadInit */
+extern HanachanStatePmf data_ov034_021143b8; /* StateDeadMain */
+extern HanachanStatePmf data_ov034_021143c8; /* StateDamageStopInit */
+extern HanachanStatePmf data_ov034_021143a8; /* StateDamageStopMain */
+extern HanachanStatePmf data_ov034_02114358; /* StateDamageWaitInit */
+extern HanachanStatePmf data_ov034_021143d0; /* StateDamageWaitMain */
+extern HanachanStatePmf data_ov034_021143a0; /* StateDamageStartInit */
+extern HanachanStatePmf data_ov034_02114398; /* StateDamageStartMain */
 
 /* The state-name strings the table's name pointers reference. */
-extern char data_ov034_02114408[];   /* "DEMOWAIT" */
-extern char data_ov034_02114414[];   /* "DEMOCALL" */
-extern char data_ov034_02114420[];   /* "MOVE_STOP" */
-extern char data_ov034_02114438[];   /* "MOVE_START" */
-extern char data_ov034_02114348[];   /* "MOVE" */
-extern char data_ov034_02114350[];   /* "DAMAGE" */
-extern char data_ov034_0211442c[];   /* "DAMAGETALK" */
-extern char data_ov034_02114340[];   /* "DEAD" */
-extern char data_ov034_02114444[];   /* "DAMAGE_STOP" */
-extern char data_ov034_02114450[];   /* "DAMAGE_WAIT" */
-extern char data_ov034_02114468[];   /* "DAMAGE_START" */
+extern char data_ov034_02114408[]; /* "DEMOWAIT" */
+extern char data_ov034_02114414[]; /* "DEMOCALL" */
+extern char data_ov034_02114420[]; /* "MOVE_STOP" */
+extern char data_ov034_02114438[]; /* "MOVE_START" */
+extern char data_ov034_02114348[]; /* "MOVE" */
+extern char data_ov034_02114350[]; /* "DAMAGE" */
+extern char data_ov034_0211442c[]; /* "DAMAGETALK" */
+extern char data_ov034_02114340[]; /* "DEAD" */
+extern char data_ov034_02114444[]; /* "DAMAGE_STOP" */
+extern char data_ov034_02114450[]; /* "DAMAGE_WAIT" */
+extern char data_ov034_02114468[]; /* "DAMAGE_START" */
 
 daHanachan_c::State data_ov034_02114538[11] = {
     { data_ov034_02114370, data_ov034_021143b0, data_ov034_02114408 },   /* DEMOWAIT */

@@ -167,7 +167,6 @@ extern StateFunc data_ov062_0211e0a4[6];
    caller reconstruction under the pinned compiler. */
 extern "C" s16 atan2_hold_d_a_r_nk_1(int y, int x);
 
-
 /* Positional sound at the actor's camera-space position (Sound::Play(3, id, pos)). */
 /* This scalar entry follows its C definition, including u16 startFrame.
    dExtAnmModel_c.h instead declares u32; that shared contract is still unresolved. */
@@ -194,8 +193,6 @@ extern RNkAnimationFileHandle gdaRNkNokonokoWait1AnimationFile;  /* ANIM_IDLE */
 extern RNkAnimationFileHandle gdaRNkNokonokoWait2AnimationFile;  /* ANIM_TALK */
 extern RNkAnimationFileHandle data_ov062_0211e02c;  /* ANIM_JUMP */
 extern RNkAnimationFileHandle data_ov062_0211e004;  /* ANIM_LAND */
-
-
 
 int *daRNk_c_classInit(void)
 {
@@ -485,7 +482,7 @@ void daRNk_c::func_ov062_0211a1f4()
         if (this->mPlayer->GetTalkState() != -1)
             return;
         Sound::PlaySub(0x1f, 0x7f, 0, 0x7f000, 0);
-        func_02012694(kSfx4D,(const Vector3 *)(&this->mCamSpacePosX));
+        func_02012694(kSfx4D, (const Vector3 *)(&this->mCamSpacePosX));
         Sound::LoadAndSetMusic_Layer2(kMusicRace);
         this->mIsRacing = 1;
         this->mStep++;

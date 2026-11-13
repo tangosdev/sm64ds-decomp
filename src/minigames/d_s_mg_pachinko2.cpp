@@ -53,33 +53,61 @@ enum dScMgPachinko2_c_AssetId {
 #include "LevelRng.h"
 #include "math/CalcLib.h"
 #include "nitro/mi/memory.h"
-namespace s20b2444 { void Mg_DrawBigNumber(int, int, int, int, int, int, int); }
+namespace s20b2444 {
+void Mg_DrawBigNumber(int, int, int, int, int, int, int);
+}
 using s20b2444::Mg_DrawBigNumber;
-namespace s20b1e44 { void Mg_DrawTopCenterCounter(int); }
+namespace s20b1e44 {
+void Mg_DrawTopCenterCounter(int);
+}
 using s20b1e44::Mg_DrawTopCenterCounter;
-namespace s20b1a5c { void Mg_DrawTopRightCounter(int, int); }
+namespace s20b1a5c {
+void Mg_DrawTopRightCounter(int, int);
+}
 using s20b1a5c::Mg_DrawTopRightCounter;
-namespace s20b19f0 { void Mg_DrawTopLeftCounter(int); }
+namespace s20b19f0 {
+void Mg_DrawTopLeftCounter(int);
+}
 using s20b19f0::Mg_DrawTopLeftCounter;
-namespace s20b0a54 { void Mg_SetSharedState(s32); }
+namespace s20b0a54 {
+void Mg_SetSharedState(s32);
+}
 using s20b0a54::Mg_SetSharedState;
-namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+namespace s20b0aa0 {
+void FreeGfxSlotsById(int);
+}
 using s20b0aa0::FreeGfxSlotsById;
-namespace s20b04d0 { void Mg_SetTopScreenYOffset(int); }
+namespace s20b04d0 {
+void Mg_SetTopScreenYOffset(int);
+}
 using s20b04d0::Mg_SetTopScreenYOffset;
-namespace s20aff38 { int Mg_RenderSpriteBothScaled(struct OamAttr *a0, int, int, int, int, Fix12i, int); }
+namespace s20aff38 {
+int Mg_RenderSpriteBothScaled(struct OamAttr *a0, int, int, int, int, Fix12i, int);
+}
 using s20aff38::Mg_RenderSpriteBothScaled;
-namespace s20afdd0 { void Mg_RenderSpriteBoth(void *a0, int, int, int, int); }
+namespace s20afdd0 {
+void Mg_RenderSpriteBoth(void *a0, int, int, int, int);
+}
 using s20afdd0::Mg_RenderSpriteBoth;
-namespace s20af2f8 { void Mg_InitBrush(char*, char, int, int); }
+namespace s20af2f8 {
+void Mg_InitBrush(char *, char, int, int);
+}
 using s20af2f8::Mg_InitBrush;
-namespace s20adbe0 { int Mg_IsNewRecord(void); }
+namespace s20adbe0 {
+int Mg_IsNewRecord(void);
+}
 using s20adbe0::Mg_IsNewRecord;
-namespace s20adb1c { void Mg_SubmitScore(int); }
+namespace s20adb1c {
+void Mg_SubmitScore(int);
+}
 using s20adb1c::Mg_SubmitScore;
-namespace s20adc1c { int Mg_GetTopRecord(void); }
+namespace s20adc1c {
+int Mg_GetTopRecord(void);
+}
 using s20adc1c::Mg_GetTopRecord;
-namespace s20adbc0 { int Mg_GetSubmittedScore(void); }
+namespace s20adbc0 {
+int Mg_GetSubmittedScore(void);
+}
 using s20adbc0::Mg_GetSubmittedScore;
 
 namespace Sound {
@@ -99,26 +127,11 @@ struct Entry {
 
 extern "C" {
 
-
 /* --- shared ov004, main and library helpers --- */
 }
 
 struct OamAttr;
-extern "C" {
-
-
-
-
-
-
-
-
-
-
-
-
-
-}
+extern "C" {}
 
 extern int Sound_PlayIfNotActive(int a, int b, int c, short d);
 
@@ -126,18 +139,21 @@ extern int func_020126e8(int a);
 
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 
-extern void func_02012718(int, int);extern "C" {
+extern void func_02012718(int, int);
+extern "C" {
 
-extern void *LoadFile(int handle);}
+extern void *LoadFile(int handle);
+}
 
-extern void Deallocate(void *);extern "C" {
+extern void Deallocate(void *);
+extern "C" {
 
-extern void DecompressLZ16(void *src, void *dst);}
+extern void DecompressLZ16(void *src, void *dst);
+}
 
 /* local extern: nitro/gx/gx_load.h leaves GX_LoadBG3Scr out until
  * decl_common.h's non-const spelling of it goes. */
 extern void GX_LoadBG3Scr(const void *, u32, u32);
-
 
 /* --- ROM data this TU reads --- */
 extern u8 gMainScreenLayers;
@@ -190,14 +206,12 @@ extern int *sPachinko2PaddleSweepLimits[];
 
 extern int *sPachinko2PaddleGatherTargets[];
 
-
 /* The three pointer-to-member tables the helpers dispatch through. */
 extern Entry sPachinko2CupStateTable[];
 
 extern Entry sPachinko2BallStateTable[];
 
 extern PMF sPachinko2PaddleStateTable[];
-
 
 /* The ROM {code pointer, adjustment} records the three tables copy from
    (unlicensed .data), grouped by destination table in retail copy order. */
@@ -256,7 +270,7 @@ extern PMF pmf_dScMgPachinko2_c_Cup_StateHopLeft;
 extern PMF pmf_dScMgPachinko2_c_Cup_StateHopRight;
 
 extern PMF pmf_dScMgPachinko2_c_Cup_StateDecide;
- /* extern "C" */
+/* extern "C" */
 
 /* Both variants come from this one definition: D1 stores this class's
    vtable and calls dScMgBase_c's D2; D0 adds dScMgBase_c::operator delete. */
@@ -1817,8 +1831,8 @@ void dScMgPachinko2_c::Ball_DrawAll() {
             if (t != 0) {
                 Mg_RenderSpriteBoth(sPachinko2BallCountSprites[t - 1], x, y, -1, -1);
             } else {
-                Mg_RenderSpriteBothScaled((s20aff38::OamAttr *)sPachinko2BallSprite, x, y, -1, -1, 0x1000,
-                                          mBalls[i].rotation);
+                Mg_RenderSpriteBothScaled((s20aff38::OamAttr *)sPachinko2BallSprite, x, y, -1, -1,
+                                          0x1000, mBalls[i].rotation);
             }
         }
     }
@@ -2426,7 +2440,7 @@ s32 dScMgPachinko2_c::InitResources() {
    bytes, dScMgBase_c's C2, then this class's vtable. The classInit
    spelling follows later EAD lineage; the historical alias is
    MgLakituLaunch_Spawn. */
- dScMgPachinko2_c *dScMgPachinko2_c_classInit(void) {
+dScMgPachinko2_c *dScMgPachinko2_c_classInit(void) {
     return new dScMgPachinko2_c;
 }
 

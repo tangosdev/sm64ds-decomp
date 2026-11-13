@@ -2,12 +2,10 @@
 #include "Ov007Picker.h"
 #include "Ov007MenuMem.h"
 
-
 extern "C" void func_ov007_020c78dc(Ov007PointList *list);
 /* A long-branch veneer to func_ov007_020c3d1c, the free hook. */
 extern "C" void func_ov007_020c8098(void *p);
 extern "C" void func_ov007_020c2bf8(void *path);
-
 
 /* Frees committed group idx, if there is one: its point list, its points
  * and their rest copies, its links, its stroke, its head and tail links. */

@@ -8,8 +8,6 @@
 #include "nitro/hw/registers.h"
 #include "nitro/os/reset.h"
 
-
-
 extern u32 data_0209cde4;
 extern u8 data_0209cdcc;
 extern mHeap::Heap_t *data_020a0e9c;

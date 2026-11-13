@@ -56,11 +56,13 @@
 #ifdef __cplusplus
 extern "C"
 #endif
-void __cxa_vec_cleanup(void *, unsigned int, unsigned int, dtor_t);
+    void
+    __cxa_vec_cleanup(void *, unsigned int, unsigned int, dtor_t);
 #ifdef __cplusplus
 extern "C"
 #endif
-void NullDestructor_0203d47c(void);
+    void
+    NullDestructor_0203d47c(void);
 void SmartballObj_ElemDtor(void);
 
 struct cMgSmartball_spring_c;

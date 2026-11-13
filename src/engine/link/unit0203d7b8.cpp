@@ -111,8 +111,6 @@ struct EmptyInit {
     EmptyInit() {}
 };
 
-
-
 extern void MB_End(void);
 extern "C" {
 
@@ -141,7 +139,6 @@ extern void WBT_MpChildRecvHook(int data, int length);
 extern void WBT_MpParentRecvHook(int data, int length, int aid);
 }
 
-
 extern void func_0201a4d0(void);
 extern "C" {
 
@@ -150,14 +147,13 @@ extern WMErrCode func_0206259c(WMCallbackFunc callback, u32 param);
 extern void (*data_0209a03c)(void *);
 }
 
-
 extern char data_02082158[];
 extern u8 data_02099e18;
 extern u8 data_02099e1c;
 extern int data_02099e20;
 extern void *data_02099e24;
 extern char data_02099e6c[];
- /* "rom" */
+/* "rom" */
 extern u8 data_020a0ef0;
 extern u8 data_020a0ef4;
 extern u8 data_020a0ef8;
@@ -171,7 +167,7 @@ extern unsigned short data_020a0f14;
 extern s16 data_020a0f18;
 extern u16 data_020a0f1c;
 extern u16 data_020a0f20;
- /* 0x020a0f20 - counter */
+/* 0x020a0f20 - counter */
 extern unsigned short data_020a0f24;
 extern unsigned short data_020a0f28;
 extern unsigned short data_020a0f2c;
@@ -3160,8 +3156,7 @@ typedef struct {
     u16 nickNameLength; /* 0x18 */
     u16 comment[26];    /* 0x1a */
     u16 commentLength;  /* 0x4e */
-}
- OwnerInfo;
+} OwnerInfo;
 
 /* Start the link (func_0201fec8 passes per-language data): keep the 0x40 and
    0x1c bytes it is given, clear the input records, profiles and link state.
@@ -3489,4 +3484,4 @@ int func_0203d7b8(void) {
     return (data_020a0f1c & 128) != 0;
 }
 
- /* extern "C" */
+/* extern "C" */

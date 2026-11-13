@@ -369,7 +369,7 @@ int daPeach_c::InitResources() {
 }
 
 /* PEACH_PRINCESS factory. */
- daPeach_c *daPeach_c_classInit(void) {
+daPeach_c *daPeach_c_classInit(void) {
     return new daPeach_c();
 }
 

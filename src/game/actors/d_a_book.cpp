@@ -838,23 +838,19 @@ s32 daBook_c::OnYoshiTryEat()
     unsigned int b = actorID==kKillerBookActorId; return b ? 2 : 0;
 }
 
-daBook_c *daBook_c_classInit_BOOK_SWITCH()
-{
+daBook_c *daBook_c_classInit_BOOK_SWITCH() {
     return new daBook_c;
 }
 
-daBookGen_c *daBookGen_c_classInit()
-{
+daBookGen_c *daBookGen_c_classInit() {
     return new daBookGen_c;
 }
 
-daBook_c *daBook_c_classInit_KILLER_BOOK()
-{
+daBook_c *daBook_c_classInit_KILLER_BOOK() {
     return new daBook_c;
 }
 
-daBook_c *daBook_c_classInit_SHOOT_BOOK()
-{
+daBook_c *daBook_c_classInit_SHOOT_BOOK() {
     return new daBook_c;
 }
 

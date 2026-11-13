@@ -107,8 +107,6 @@ extern u8 data_ov007_020d75e4[];
 /* each digit's width in pixels */
 extern unsigned char data_ov007_020d7610[];
 
-
-
 extern "C" void func_ov007_020ae834(Ov007Item *item);
 extern "C" Ov007Item *func_ov007_020aea6c(int id, Ov007ItemLayout *layout, Ov007HitBox *hitBox);
 extern "C" void func_ov007_020aea4c(Ov007Item *item);
@@ -890,4 +888,3 @@ void func_ov007_020b413c(Ov007ItemView *view, int number) {
     }
     G3_PopMtx(1);
 }
-

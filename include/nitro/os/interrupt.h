@@ -42,6 +42,9 @@
 #include "types.h"
 
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+extern "C" {
+#endif
 typedef u32 OSIrqMask;
 
 /* The IE/IF bits (os/common/interrupt.h). Macros, not enumerators or
@@ -120,6 +123,9 @@ extern "C"
 #endif
 /* os_irqHandler.c */
 void OS_IrqHandler(void);
+#if defined(_MSC_VER) && defined(__cplusplus)
+}
+#endif
 
 
 #endif /* NITRO_OS_INTERRUPT_H */

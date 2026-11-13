@@ -4,7 +4,6 @@
 
 extern "C" {
 
-
 extern void func_02065ad0(struct WBTBlockInfoList *list);
 extern WBTWork *func_02065b94(void);
 }

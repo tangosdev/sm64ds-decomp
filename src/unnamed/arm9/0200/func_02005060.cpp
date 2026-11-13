@@ -2,8 +2,6 @@
 #include "dCamera_c.h"
 #include "dActor_c.h"
 
-
-
 extern struct CamMode data_020874cc;
 
 /* Camera state init: enter mode data_020874cc with mBaseAngleOffset set to

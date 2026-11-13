@@ -12,6 +12,6 @@
  * allocation size, vtable identity, and the MG_JUMP registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: MgBounceAndPounce_Spawn. */
- dScMgJump_c *dScMgJump_c_classInit(void) {
+dScMgJump_c *dScMgJump_c_classInit(void) {
     return new dScMgJump_c;
 }

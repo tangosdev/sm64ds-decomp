@@ -44,7 +44,7 @@ extern CLPS_Block data_ov032_02112f98;
  * The implicit constructor is what keeps the intervening dBgActor_c
  * construction inlined; declaring a constructor of our own would emit a `bl`
  * the factory does not have. */
- daObjTdFuta_c *daObjTdFuta_c_classInit() {
+daObjTdFuta_c *daObjTdFuta_c_classInit() {
     return new daObjTdFuta_c();
 }
 

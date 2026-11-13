@@ -49,7 +49,6 @@ extern "C" {
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 
-
 /* --- Collision events, 0x020eea84..0x020ef320. ------------------------------
  *
  * The character side of a hit on a level object: given the mover's dBgCh_Actr
@@ -80,18 +79,16 @@ void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
  * label. The ray and ceiling hits are copied into a local dBgPi by its
  * implicit copy constructor, and its destructor runs on every exit. */
 
-
 /* dBgCh_Actr queries (src/engine/collision/d_bg_ch_actr.cpp), not yet
    declared in dBgCh_Actr.h. */
 int func_02035638(void *clsn);
- /* mSphereClsn.flags & 0x10: the ceiling bit */
+/* mSphereClsn.flags & 0x10: the ceiling bit */
 void *func_0203564c(void *clsn);
 extern "C" {
- /* mSphereClsn.GetUnderResult(): the ceiling hit */
+/* mSphereClsn.GetUnderResult(): the ceiling hit */
 /* d_a_ply_methods.cpp: sets 0x20 in daPly_c::mStateFlags. */
 void func_ov002_020d8838(void *player);
 }
-
 
 /* Is this actor of the given kind? An int-returning inline: the ROM
    materialises the 0/1 result before it branches on it. */

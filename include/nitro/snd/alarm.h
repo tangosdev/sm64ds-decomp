@@ -18,8 +18,14 @@
  * ARM7 driver reports the alarm. */
 typedef void (*SNDAlarmCallback)(void *);
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+extern "C" {
+#endif
 
 void SND_AlarmInit(void);
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+}
+#endif
 
 #endif /* NITRO_SND_ALARM_H */

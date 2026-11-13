@@ -304,7 +304,7 @@ s32 daSBird_c::InitResources() {
     return 1;
 }
 
- daSBird_c *daSBird_c_classInit() {
+daSBird_c *daSBird_c_classInit() {
     return new daSBird_c();
 }
 

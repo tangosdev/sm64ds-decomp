@@ -40,7 +40,6 @@ struct fBaseActorInfo {
 /* Keep the list-head and pointer signatures used here local: decl_common.h
  * gives incompatible integer declarations for some of these symbols. */
 
-
 /* Intrusive-list operations on the four global list heads below. All four take
    (list head, node); the legacy files spelled the heads `int`, `char` and
    `int[]` in different files and passed `&x` or `x` accordingly. Unified on the
@@ -67,7 +66,6 @@ extern "C" {
 extern int  func_0203b2ec(void *l, void *n, void *p);
 }
 
-
 extern void *data_020a4b68;
 extern int  data_020a4b6c[];
 extern int  data_020a4b78[];
@@ -93,7 +91,6 @@ extern int  func_0204424c(char *p);
    Memory::Allocate and Memory::Deallocate come from include/Memory.h;
    data_020a0eac, the actor heap they are handed, comes from
    include/fBase_c.h, which needs it for its inline operator delete. */
-
 
 /* aliveState is 0 before the actor joins the lists, 1 while it is alive
  * in them and 2 once it is dying; data_02099f24 is the frame loop's phase word.
@@ -137,8 +134,7 @@ struct L {
 };
 }
 
-int func_0204405c(void *list, void *nodep)
-{
+int func_0204405c(void *list, void *nodep) {
     Absorb0204405c::L *l = (Absorb0204405c::L *)list;
     Absorb0204405c::N *n = (Absorb0204405c::N *)nodep;
     Absorb0204405c::N *node;
@@ -169,8 +165,7 @@ struct ProcessListDescriptor {
     ProcessCallback callback; // 0x8
 };
 
-void *func_02043fdc(ProcessListDescriptor *list)
-{
+void *func_02043fdc(ProcessListDescriptor *list) {
     fLiNdBaPr_c *node;
     if (list->callback == 0) return (void *)1;
     node = list->head;
@@ -186,8 +181,7 @@ void *func_02043fdc(ProcessListDescriptor *list)
 }
 }
 
-fLiNdBa_c *func_02043f98(fLiNdBa_c **head, unsigned int key)
-{
+fLiNdBa_c *func_02043f98(fLiNdBa_c **head, unsigned int key) {
     fLiNdBa_c *node = *head;
     while (node != 0) {
         if (!OwnerUniqueIDDiffers(node, key))
@@ -197,9 +191,7 @@ fLiNdBa_c *func_02043f98(fLiNdBa_c **head, unsigned int key)
     return 0;
 }
 
-fLiNdBa_c *func_02043f4c(fLiNdBa_c **head, unsigned int key,
-                                    fLiNdBa_c *after)
-{
+fLiNdBa_c *func_02043f4c(fLiNdBa_c **head, unsigned int key, fLiNdBa_c *after) {
     fLiNdBa_c *node = after ? after->next : *head;
     while (node != 0) {
         if (!OwnerActorIDDiffers(node, key))
@@ -667,7 +659,6 @@ extern fBase_c::AfterProcessFunction data_02099e9c;
 extern void func_0204302c(int actorID);
 extern int func_02043060(int actorID);
 extern "C" {
-
 
 /* The create hooks a scene installs, and the create entry's progress:
    data_020a4b4c steps 2..5 through fBase_make and data_020a4b50 holds

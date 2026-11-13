@@ -32,7 +32,9 @@
 #include "nitro/os/thread.h"
 #include "nitro/pxi/fifo.h"
 
-
+#if defined(_MSC_VER) && defined(__cplusplus)
+extern "C" {
+#endif
 /* NitroSDK MIDmaCallback: run with its argument when a transfer ends. */
 typedef void (*MIDmaCallback)(void *);
 
@@ -112,22 +114,26 @@ void CARD_UnlockBackup(u16);
 #ifdef __cplusplus
 extern "C"
 #endif
-/* The backup type the game selected: word 0 of its backup spec (ntrtwl/NitroSDK
+    /* The backup type the game selected: word 0 of its backup spec (ntrtwl/NitroSDK
  * nitro/card/common.h). The SDK returns a CARDBackupType; the
  * definition, src/CARD_GetCurrentBackupType.c, spells it int. */
-int CARD_GetCurrentBackupType(void);
+    int
+    CARD_GetCurrentBackupType(void);
 
 #ifdef __cplusplus
 extern "C"
 #endif
-/* card_request.c */
-void CARDi_OnFifoRecv(PXIFifoTag, u32, int);
+    /* card_request.c */
+    void
+    CARDi_OnFifoRecv(PXIFifoTag, u32, int);
 void CARDi_TaskThread(void *);
 int CARDi_Request(CARDiCommon *, s32, s32);
 
 /* pret's CARDi_EndTask(p, TRUE), out of line in this SDK: clear the busy
  * and task bits, wake the waiters, then run the callback. */
 void CARDi_EndTask(CARDiCommon *);
-
+#if defined(_MSC_VER) && defined(__cplusplus)
+}
+#endif
 
 #endif /* NITRO_CARD_COMMON_H */

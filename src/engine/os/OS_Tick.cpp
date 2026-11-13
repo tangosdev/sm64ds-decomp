@@ -22,17 +22,15 @@
 
 extern "C" {
 
-
 extern void OSi_SetTimerReserved(int timerNum);
 }
 
-
 extern u16 data_020a6430;
-          /* OSi_UseTick */
+/* OSi_UseTick */
 extern int data_020a6434;
-          /* OSi_NeedResetTimer */
+/* OSi_NeedResetTimer */
 extern volatile u64 data_020a6438;
- /* OSi_TickCounter */
+/* OSi_TickCounter */
 
 void OSi_CountUpTick(void);
 

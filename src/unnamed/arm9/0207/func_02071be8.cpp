@@ -10,7 +10,6 @@ void terminate();
 
 extern "C" {
 
-
 extern void func_02072dac(int handle, ActionIterator *ctx);
 extern void func_02071864(ThrowContext *t, ActionIterator *it);
 }

@@ -8,8 +8,6 @@
 
 #define FALSE 0
 
-
-
 extern int func_02040714(void);
 extern void func_02040724(void);
 extern void func_0201a4d0(void);

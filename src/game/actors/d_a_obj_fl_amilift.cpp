@@ -65,7 +65,6 @@ struct BMD_File;
 struct KCL_File;
 struct CLPS_Block;
 
-
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern "C" {
 
@@ -73,7 +72,6 @@ extern void Vec3_Sub(Vector3 *dst, const Vector3 *a, const Vector3 *b);
 }
 
 /* local extern: d_bg_w.cpp defines these and no header declares them. */
-
 
 extern LiftState data_ov064_0211c750[];
 extern AmiliftModelFilePtr data_ov064_0211c730;

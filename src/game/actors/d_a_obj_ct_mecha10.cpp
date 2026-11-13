@@ -91,10 +91,8 @@ extern s16 data_ov035_02111ef0[];    /* |angle step| by rotation state */
 extern s16 data_ov035_02111ef4[][4]; /* dwell by state, by clock setting */
 extern u8 data_0209f2c0;             /* arm9 clock setting */
 
-
 extern "C" u16 DecIfAbove0_Short(u16 *p);
 extern "C" int RandomIntInternal(int *state);
-
 
 daObjCtMecha10_c *daObjCtMecha10_c_classInit_CT_MECHA10() {
     return new daObjCtMecha10_c();

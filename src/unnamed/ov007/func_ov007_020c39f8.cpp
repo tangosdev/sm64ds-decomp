@@ -3,7 +3,6 @@
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
 
-
 /* The table reads stay hand-indexed: the ROM doubles all three indices up
    front, before the first call. Through FX_SinIdx/FX_CosIdx
    (nitro/fx/fx_trig.h) each index is doubled at its own call instead, and
@@ -21,4 +20,3 @@ void func_ov007_020c39f8(struct Matrix4x3 *mat, int rx, int ry, int rz) {
     MTX_RotX43_(&t, FX_SinCosTable_[ix], FX_SinCosTable_[ix + 1]);
     MTX_Concat43(mat, &t, mat);
 }
-

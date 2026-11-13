@@ -9,8 +9,6 @@
 #include "nitro/os/system.h"
 #include "nitro/card/card_common.h"
 
-
-
 void func_0206062c(CARDiCommon *p);
 
 int func_02060484(u32 dst, const void *src, u32 len, MIDmaCallback callback, void *arg,

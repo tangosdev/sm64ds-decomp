@@ -3,8 +3,6 @@
 #include "Ov007Picker.h"
 #include "nitro/fx/fx_cp.h"
 
-
-
 /* Advances the draw limit along the committed strokes' progress
  * thresholds to progress x: 0 inside a stroke, 1 when it steps on to the
  * next stroke, 2 once it passes the last stroke. */
@@ -56,4 +54,3 @@ int Ov007Picker::func_ov007_020c5014(int x) {
     }
     return 2;
 }
-

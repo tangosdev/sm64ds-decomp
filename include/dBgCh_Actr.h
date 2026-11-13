@@ -215,13 +215,12 @@ typedef char dBgCh_Actr_size_must_be_0x1bc[
    has to name the veneer or its relocation moves. */
 
 void dBgCh_Actr_UpdateContinuous_Veneer(dBgCh_Actr *);
-     /* UpdateContinuous */
+/* UpdateContinuous */
 void func_020383f0(dBgCh_Actr *);
-                          /* UpdateContinuousNoLava */
+/* UpdateContinuousNoLava */
 void func_020383e4(dBgCh_Actr *);
-                          /* UpdateExtraContinous */
+/* UpdateExtraContinous */
 void dBgCh_Actr_UpdateDiscreteNoLava_veneer(dBgCh_Actr *);
- /* UpdateDiscreteNoLava */
-
+/* UpdateDiscreteNoLava */
 
 #endif /* DBGCH_ACTR_H */

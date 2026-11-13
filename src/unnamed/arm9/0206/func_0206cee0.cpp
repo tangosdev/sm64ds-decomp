@@ -7,7 +7,6 @@ void SetFIQState(bool);
 void SetIRQState(bool);
 }
 
-
 extern int func_0206da18(void);
 extern int func_0206d9cc(void);
 /* One try at the cartridge lock, with IRQ and FIQ disabled first (the

@@ -47,7 +47,6 @@ void func_0204a5c8(void *manager);
 void func_0204a730(void *manager, void *system);
 }
 
-
 typedef Particle::Manager::TextureEntry TextureEntry;
 
 /* SystemDefinition::Data::flags as func_0204a17c reads it. Each set bit means
@@ -82,8 +81,6 @@ struct SystemState {
 static inline SystemState &StateOf(Particle::System *system) {
     return *(SystemState *)&system->callbackFlags;
 }
-
-
 
 char *func_0204a4c8(char *(*alloc)(int), int numSystems, int numParticles, int minPolygonID,
                     unsigned short maxPolygonID) {
@@ -308,7 +305,6 @@ void func_02049ee8(Particle::Manager *manager, Matrix4x3 *matrix) {
     } while (system != 0);
 }
 
-
 /* Particle::Manager::AddSystem -- spawn a System, arm9
  * 0x02049e0c..0x02049ee8. func_0204d958 pops one off mFreeSystems,
  * func_0204ae2c initializes it from the indexed SystemDefinition, the
@@ -348,8 +344,6 @@ System *Manager::AddSystem(int definitionID, Vector3 &position) {
 }
 
 }
-
-
 
 void func_02049d78(Particle::Manager *manager, Particle::System *system) {
     void *particle;

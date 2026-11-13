@@ -22,6 +22,9 @@
 
 #include "nitro/os/thread.h"
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+extern "C" {
+#endif
 
 void OS_InitMutex(OSMutex *);
 void OS_LockMutex(OSMutex *);
@@ -29,5 +32,8 @@ void OS_UnlockMutex(OSMutex *);
 int OS_TryLockMutex(OSMutex *);
 void OSi_UnlockAllMutex(OSThread *);
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+}
+#endif
 
 #endif /* NITRO_OS_MUTEX_H */

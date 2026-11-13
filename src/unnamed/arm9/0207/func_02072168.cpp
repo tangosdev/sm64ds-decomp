@@ -51,12 +51,9 @@ namespace std {
 void terminate();
 }
 
-
-
 typedef void (*F2)(int, int);
 typedef void (*F1)(int);
 extern "C" {
-
 
 /* File-local views. The roles match CodeWarrior's exception runtime: case 0xd
  * is its ACTIVECATCHBLOCK (hand a live catch object's destructor on to a
@@ -70,7 +67,6 @@ extern void func_02071864(ThrowContext *t, ActionIterator *it);
 extern unsigned char *ReadSignedVarInt(unsigned char *p, int *out);
 extern unsigned char *func_02071a50(unsigned char *p, int *out);
 }
-
 
 void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
     int saved = 0;

@@ -99,7 +99,6 @@ extern OnmsModelFilePtr gOnimasuModelFile;
 extern OnmsCollisionFilePtr gOnimasuCollisionFile;
 extern daOnms_cStateEntry data_ov092_02132568[9];
 
-
 extern "C" int func_ov002_020de328(void *player);
 extern "C" void d_a_onmsEarthquakeHold(void *v, int f);
 /* Sound::Play(3, id, pos). The overlay calls this wrapper, not Sound::Play. */
@@ -114,14 +113,13 @@ extern "C" void Matrix4x3_ApplyInPlaceToRotationX(void *m, short angX);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short angZ);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationY(void *m, short angY);
 extern "C" void hold_d_a_onms(dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat, int scale,
-                          short angY, void *clps);
+                              short angY, void *clps);
 /* Stores beforeClsnCallback: p[6] = value, the word at dBgW + 0x18. */
 /* CLPS block ("CLPS" magic) handed to SetFile. */
 extern char data_ov092_02132220;
 /* Three s32* move scripts, indexed by param1 & 3. A path (kind 3) ignores it. */
 extern char data_ov092_02132294;
 extern struct Matrix4x3 data_020a0e68;
-
 
 /* D1 tears down dCcAcPos_c, dBgCh_Actr and the inline dBgActor_c base.
    D0 is that teardown plus the actor-heap free. */
@@ -268,8 +266,7 @@ void daOnms_c::StateKnocked()
 }
 
 /* Path mode: step to the next path node and pick the roll that heads for it. */
-void daOnms_c::func_ov092_021313b0()
-{
+void daOnms_c::func_ov092_021313b0() {
     daOnms_c *self = this;
     Vector3 old;
 
@@ -464,8 +461,7 @@ void daOnms_c::CheckPlayerHit()
 
 /* Copy the model matrix over the collider and put the actor position in
    the translation row (flat Matrix4x3 words 9..11), then Transform. */
-void daOnms_c::func_ov092_02131a88()
-{
+void daOnms_c::func_ov092_02131a88() {
     daOnms_c *self = this;
 
     self->mClsnMat = self->mModel.mat4x3;
@@ -597,8 +593,7 @@ int daOnms_c::InitResources()
     return 1;
 }
 
-daOnms_c *daOnms_c_classInit()
-{
+daOnms_c *daOnms_c_classInit() {
     return new daOnms_c();
 }
 

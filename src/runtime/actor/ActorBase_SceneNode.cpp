@@ -60,8 +60,7 @@ struct N {
     struct N *fc;   /* 0xc */
 };
 
-int func_0203b438(struct N *a, struct N *b, struct N *c)
-{
+int func_0203b438(struct N *a, struct N *b, struct N *c) {
     struct N *t;
     struct N *n;
     if (b != 0) {
@@ -96,8 +95,7 @@ int func_0203b438(struct N *a, struct N *b, struct N *c)
 namespace Absorb0203b3c0 {
 struct Node { int f0; int f4; struct Node* f8; struct Node* fc; };
 
-int func_0203b3c0(int* list, struct Node* n)
-{
+int func_0203b3c0(int *list, struct Node *n) {
     if (n != 0) {
         if (n->f4 != 0)
             return 0;

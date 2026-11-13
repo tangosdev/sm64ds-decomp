@@ -5,8 +5,6 @@
 #include "nitro/gx/g2.h"
 #include "Ov007BgLayer.h"
 
-
-
 /* local extern: nitro/gx/gx_load.h leaves GX_LoadBG3Scr out until
  * decl_common.h's non-const spelling of it goes. */
 void GX_LoadBG3Scr(const void *dst, u32 offset, u32 len);
@@ -94,4 +92,3 @@ void func_ov007_020c076c(Ov007BgLayer *layer, int engines) {
         }
     }
 }
-

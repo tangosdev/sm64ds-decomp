@@ -35,23 +35,19 @@
 #include "daTrsTrap_c.h"
 #include "dBgW.h"
 
-daTrsTrap_c *daTrsTrap_c_classInit_KAIDAN(void)
-{
+daTrsTrap_c *daTrsTrap_c_classInit_KAIDAN(void) {
     return new daTrsTrap_c();
 }
 
-daTrsTrap_c *daTrsTrap_c_classInit_BOOKSHELF(void)
-{
+daTrsTrap_c *daTrsTrap_c_classInit_BOOKSHELF(void) {
     return new daTrsTrap_c();
 }
 
-daTrsTrap_c *daTrsTrap_c_classInit_MERRYGOROUND(void)
-{
+daTrsTrap_c *daTrsTrap_c_classInit_MERRYGOROUND(void) {
     return new daTrsTrap_c();
 }
 
-daTrsTrap_c *daTrsTrap_c_classInit_TERESAPIT(void)
-{
+daTrsTrap_c *daTrsTrap_c_classInit_TERESAPIT(void) {
     return new daTrsTrap_c();
 }
 

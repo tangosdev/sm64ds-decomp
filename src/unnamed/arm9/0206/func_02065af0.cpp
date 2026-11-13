@@ -5,7 +5,6 @@
 
 extern "C" {
 
-
 extern WBTCommand *func_02065b88(void);
 }
 

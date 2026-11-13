@@ -1,8 +1,6 @@
 //cpp
 #include "Sound.h"
 
-
-
 extern void func_0203da2c(int v);
 extern void func_02030500(void);
 extern "C" {

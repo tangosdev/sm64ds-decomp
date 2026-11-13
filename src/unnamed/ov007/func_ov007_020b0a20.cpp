@@ -12,9 +12,6 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
 
-
-
-
 extern "C" int func_ov007_020aebac(void);
 void RequestScreenFade(int kind, int flags, void (*onEnd)(void));
 extern "C" void func_ov007_020b1fa4(int preset);
@@ -118,4 +115,3 @@ void func_ov007_020b0a20(void) {
     model->scale.x = model->scale.y;
     WORK->itemNodes[8]->item->state->requestedState = 1;
 }
-

@@ -3,11 +3,10 @@
  * frame counters: it only empties the alarm queue and masks V-count. */
 #include "nitro/os/interrupt.h"
 
-
 extern volatile u16 data_020a644c;
- /* OSi_UseVAlarm */
+/* OSi_UseVAlarm */
 extern u32 data_020a6450[2];
-       /* OSi_VAlarmQueue: head, tail */
+/* OSi_VAlarmQueue: head, tail */
 
 void OS_InitVAlarm(void) {
     if (data_020a644c != 0)

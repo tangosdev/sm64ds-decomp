@@ -42,8 +42,6 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
 
-
-
 void func_0204f934(NNSSndHandle *);
 void func_0204f94c(NNSSndHandle *);
 int func_0204fa2c(NNSSndHandle *, int);
@@ -256,4 +254,3 @@ void func_ov007_020bd9e4(int arg) {
         }
     }
 }
-

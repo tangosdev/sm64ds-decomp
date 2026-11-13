@@ -49,14 +49,14 @@
       "ordinal": 3
     },
     {
-      "symbol": "_Z29SharedFilePtr_Destruct_TexSeqi",
+      "symbol": "SharedFilePtr_Destruct_TexSeq",
       "address": "0x0201791c",
       "size": "0x00000018",
       "legacy_source": "src/SharedFilePtr_Destruct_TexSeq.c",
       "ordinal": 4
     },
     {
-      "symbol": "_Z30SharedFilePtr_Construct_TexSeqPvj",
+      "symbol": "SharedFilePtr_Construct_TexSeq",
       "address": "0x02017934",
       "size": "0x00000018",
       "legacy_source": "src/SharedFilePtr_Construct_TexSeq.c",
@@ -70,7 +70,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "_Z27SharedFilePtr_Destruct_Animi",
+      "symbol": "SharedFilePtr_Destruct_Anim",
       "address": "0x02017984",
       "size": "0x00000018",
       "legacy_source": "src/SharedFilePtr_Destruct_Anim.c",

@@ -33,13 +33,11 @@
 #include "nitro/hw/registers.h"
 #include "private/gxdma.h"
 
-
 extern int GXi_DmaId;
 extern "C" {
 
 void GXi_NopClearFifo128_(unsigned addr);
 }
-
 
 #ifndef _MSC_VER
 

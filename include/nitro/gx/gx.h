@@ -50,6 +50,9 @@
 #define GX_BG0_AS_2D 0
 #define GX_BG0_AS_3D 1
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+extern "C" {
+#endif
 
 void GX_Init(void);
 int GX_HBlankIntr(int);
@@ -60,6 +63,9 @@ void GX_SetGraphicsMode(int, int, int);
 void GXS_SetGraphicsMode(int);
 void GXx_SetMasterBrightness_(volatile unsigned short *, int);
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+}
+#endif
 
 /* The SDK's public wrappers over GXx_SetMasterBrightness_, one per engine.
  * Macros rather than the SDK's static inlines: an inline body in a shared

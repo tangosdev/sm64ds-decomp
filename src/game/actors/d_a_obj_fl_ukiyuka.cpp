@@ -100,7 +100,7 @@ UkiyukaCollisionFilePtr gdaObjFl_UkiyukaFlShisoCollisionFile(ASSET_FL_SHISO_KCL)
  * `new daObjFl_Ukiyuka_c` is the whole sequence the loose factory spelled by
  * hand: fBase_c::operator new(0x330), dBgActor_c's base constructor, then
  * daObjUkiyuka_c's vptr store and this class's. */
- daObjFl_Ukiyuka_c *daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA_L(void) {
+daObjFl_Ukiyuka_c *daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA_L(void) {
     return new daObjFl_Ukiyuka_c;
 }
 
@@ -108,6 +108,6 @@ UkiyukaCollisionFilePtr gdaObjFl_UkiyukaFlShisoCollisionFile(ASSET_FL_SHISO_KCL)
  * allocation size, vtable identity, and the FL_UKIYUKA registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: FloatingFloorLllBig_Spawn. */
- daObjFl_Ukiyuka_c *daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA(void) {
+daObjFl_Ukiyuka_c *daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA(void) {
     return new daObjFl_Ukiyuka_c;
 }

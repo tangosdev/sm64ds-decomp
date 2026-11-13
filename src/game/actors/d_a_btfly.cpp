@@ -531,8 +531,7 @@ int daBtfly_c::InitResources()
     return 1;
 }
 
-daBtfly_c *daBtfly_c_classInit()
-{
+daBtfly_c *daBtfly_c_classInit() {
     return new daBtfly_c();
 }
 

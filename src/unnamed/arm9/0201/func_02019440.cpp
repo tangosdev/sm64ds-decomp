@@ -7,13 +7,11 @@
 #include "nitro/mi/memory.h"
 #include "nitro/gx/gx.h"
 
-
-
 extern dGraph_c::callback_c *gGraphCallback;
- /* the scene graph callback (d_s_dsmt.cpp) */
+/* the scene graph callback (d_s_dsmt.cpp) */
 class dFdBrightness_c;
 extern dFdBrightness_c *data_0209d4ac;
- /* the brightness fader (d_scene.cpp) */
+/* the brightness fader (d_scene.cpp) */
 /* the active transition fader (d_s_stage_methods.cpp wipes, KuppaScript.cpp colour fades) */
 extern int data_0209d4b0;
 extern "C" {
@@ -27,7 +25,6 @@ extern "C" {
 
 extern void func_0200f46c(void);
 }
-
 
 /* Display bring-up at boot (func_0201a054), the NitroSDK demo idiom: power
    both 2D engines and the 3D engine (POWCNT1 0x20e, GX_SetPower), enable the

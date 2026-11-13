@@ -15,8 +15,6 @@
 #include "nitro/os/thread.h"
 #include "nitro/os/message.h"
 
-
-
 void OS_InitMessageQueue(OSMessageQueue *mq, OSMessage *msgArray, s32 msgCount) {
     mq->queueSend = 0;
     mq->queueReceive = 0;

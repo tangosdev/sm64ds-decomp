@@ -23,17 +23,29 @@
 #include "GX.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/os/cache.h"
-namespace s20b290c { void Mg_ResetBgOffsets(void); }
+namespace s20b290c {
+void Mg_ResetBgOffsets(void);
+}
 using s20b290c::Mg_ResetBgOffsets;
-namespace s20b2980 { void Mg_DisableAllBanks(void); }
+namespace s20b2980 {
+void Mg_DisableAllBanks(void);
+}
 using s20b2980::Mg_DisableAllBanks;
-namespace s20b0d30 { void Mg_ResetOverlays(void); }
+namespace s20b0d30 {
+void Mg_ResetOverlays(void);
+}
 using s20b0d30::Mg_ResetOverlays;
-namespace s20adc68 { void *Ov004_LoadFile(int); }
+namespace s20adc68 {
+void *Ov004_LoadFile(int);
+}
 using s20adc68::Ov004_LoadFile;
-namespace s20adc5c { void Ov004_Deallocate(void *ptr); }
+namespace s20adc5c {
+void Ov004_Deallocate(void *ptr);
+}
 using s20adc5c::Ov004_Deallocate;
-namespace s20ad674 { s32 GetGameLanguage(void); }
+namespace s20ad674 {
+s32 GetGameLanguage(void);
+}
 using s20ad674::GetGameLanguage;
 
 /* An OAM entry, with attributes 0 and 1 stored as one word the way this
@@ -43,8 +55,6 @@ typedef struct Oam {
     u16 attr2;
     u16 aff;
 } Oam;
-
-
 
 /* ov006's own data. These six objects are this file's .bss
  * (0x02141a40..0x02141e54). The OAM shadow is a C++ array, so mwcc emits
@@ -63,7 +73,6 @@ Oam sD3DOamShadow[128];
 
 extern unsigned char sD3DSoundPanOffsets[];
 
-
 /* arm9 / ov004 globals with no project header. */
 extern unsigned char gSubScreenLayers;
 
@@ -81,8 +90,6 @@ extern int data_0208ee44;
 
 extern dScMgBase_c::graphCallback_c sMgGraphCallback;
 
-
-
 /* arm9 / ov004 helpers with no project header. */
 void GXS_LoadOAM(const void *src, unsigned int offset, unsigned int count);
 
@@ -90,19 +97,14 @@ int   func_020126e8(int a);
 
 void  func_020126ac(int a0, int a1, int a2, int a3, int s0);
 
-void  func_020127ec(int a0, int a1, int a2, int a3, int a4, int a5);extern "C" {
-
-
-
-
-
+void func_020127ec(int a0, int a1, int a2, int a3, int a4, int a5);
+extern "C" {
 
 void  DecompressLZ16(void *src, void *dst);
 
 /* The file ID is really u16, but passing it narrowed grows InitSubScreenBg by
  * 16 bytes. Keep it wide. */
 u32 LoadCompressedFileAt(int fileID, void *target);
-
 }
 void D3D_InitDualScreen(void);
 void D3D_ClearCaptureTable(void);
@@ -112,10 +114,9 @@ void D3D_CaptureToMain(void);
 void D3D_ReleaseSubBg1(void *);
 int D3D_PanForX(int a);
 
-
 namespace Particle { void RenderAll(); }
 
- void D3D_CaptureToMain(void) {
+void D3D_CaptureToMain(void) {
     GX_SetDispSelect(GX_DISP_SELECT_MAIN_SUB);
     GX_ResetBankForSubOBJ();
     GX_SetBankForSubBG(GX_VRAM_SUB_BG_128_C);
@@ -130,8 +131,7 @@ namespace Particle { void RenderAll(); }
     G2S_BG2Mosaic(false);
 }
 
- void D3D_CaptureToSub(void)
-{
+void D3D_CaptureToSub(void) {
     GX_SetDispSelect(GX_DISP_SELECT_SUB_MAIN);
     GX_ResetBankForSubBG();
     GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_128_D);
@@ -143,8 +143,7 @@ namespace Particle { void RenderAll(); }
     *(volatile int *)0x4001000 = (*(volatile int *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
 }
 
- void D3D_DrawSpriteTable(void)
-{
+void D3D_DrawSpriteTable(void) {
     int entry;
     int x;
     int y;
@@ -183,13 +182,11 @@ namespace Particle { void RenderAll(); }
     GXS_LoadOAM(sD3DOamShadow, 0, 0x400);
 }
 
- void D3D_ClearCaptureTable(void)
-{
+void D3D_ClearCaptureTable(void) {
     GXS_LoadOAM(sD3DOamShadow, 0, 0x400u);
 }
 
- void D3D_InitDualScreen(void)
-{
+void D3D_InitDualScreen(void) {
     GX_ResetBankForSubBG();
     GX_ResetBankForSubOBJ();
     GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_128_D);
@@ -268,7 +265,9 @@ void dScMgD3DBase_c::InitEngines()
 
 /* Clears the sub-screen BG1 claim. The caller passes this, which is
  * unused. */
- void D3D_ReleaseSubBg1(void *) { data_0209e660 = 0; }
+void D3D_ReleaseSubBg1(void *) {
+    data_0209e660 = 0;
+}
 
 /* The key function: the first virtual declared but not defined inline, so
    defining it here emits the vtable, the RTTI and the D1 and D0 pair. */
@@ -373,25 +372,23 @@ int dScMgD3DBase_c::GetDisplayMode()
 
 /* Returns whatever func_02012718 leaves in r0; decl_common.h declares it
    void, so there is no return statement. */
- int D3D_PlaySeAtX(int a, int b)
-{
+int D3D_PlaySeAtX(int a, int b) {
     func_02012718(a, b + 0x80000);
 }
 
- void Sound_PlayBank1Panned(int a0, int a1, int a2) {
+void Sound_PlayBank1Panned(int a0, int a1, int a2) {
     a1 += sD3DSoundPanOffsets[a0];
     int pan = D3D_PanForX(a2);
     func_020127ec(1, a1, 4, 0, 0, pan);
 }
 
- void D3D_PlaySePannedLoop(int a0, int a1, int a2) {
+void D3D_PlaySePannedLoop(int a0, int a1, int a2) {
     int pan = func_020126e8(a1 + 0x80000);
     func_020126ac(a0, 6, 0, a2, pan);
 }
 
 /* Thunk: func_020126e8(a + 0x80000). */
- int D3D_PanForX(int a)
-{
+int D3D_PanForX(int a) {
     return func_020126e8(a + 0x80000);
 }
 

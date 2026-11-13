@@ -62,7 +62,6 @@ extern "C" {
 void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 }
 
-
 daObjFl_KomaU_c::~daObjFl_KomaU_c() {}
 
 s32 daObjFl_KomaU_c::CleanupResources() {

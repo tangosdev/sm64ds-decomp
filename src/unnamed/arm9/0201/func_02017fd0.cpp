@@ -4,8 +4,6 @@
 #include "nitro/fs/overlay.h"
 #include "nitro/mi/memory.h"
 
-
-
 /* Poison an unloaded overlay's RAM (UnloadOverlay): invalidate both caches
    over its code and bss, then fill them with 0xe6000010, an ARM undefined
    instruction, so a stale call into it traps. */

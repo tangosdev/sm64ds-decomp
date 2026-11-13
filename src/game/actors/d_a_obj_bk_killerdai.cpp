@@ -88,8 +88,6 @@ extern int IsStarCollectedInCurLevel(int starID);
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 
-
-
 #pragma defer_codegen off
 
 daObjBkKillerdai_c::~daObjBkKillerdai_c() {}

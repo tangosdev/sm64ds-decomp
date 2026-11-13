@@ -44,17 +44,29 @@ struct C { char pad[0x5004]; PMF m; };
 #include "LevelRng.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
-namespace s20b1e34 { void Mg_DrawScoreTally(void*, int, int, int); }
+namespace s20b1e34 {
+void Mg_DrawScoreTally(void *, int, int, int);
+}
 using s20b1e34::Mg_DrawScoreTally;
-namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+namespace s20b0aa0 {
+void FreeGfxSlotsById(int);
+}
 using s20b0aa0::FreeGfxSlotsById;
-namespace s20afcf8 { void DrawOamSprite(OamAttr *attr, int, int, Matrix2x2 *mtx); }
+namespace s20afcf8 {
+void DrawOamSprite(OamAttr *attr, int, int, Matrix2x2 *mtx);
+}
 using s20afcf8::DrawOamSprite;
-namespace s20afa20 { void RenderOamMainScreen(OamAttr *oam, int, int, int, int); }
+namespace s20afa20 {
+void RenderOamMainScreen(OamAttr *oam, int, int, int, int);
+}
 using s20afa20::RenderOamMainScreen;
-namespace s20ad90c { void Mg_CommitRecords(void); }
+namespace s20ad90c {
+void Mg_CommitRecords(void);
+}
 using s20ad90c::Mg_CommitRecords;
-namespace s20ad674 { s32 GetGameLanguage(void); }
+namespace s20ad674 {
+s32 GetGameLanguage(void);
+}
 using s20ad674::GetGameLanguage;
 
 struct V3 { int w[3]; };
@@ -72,27 +84,21 @@ extern MgJumpModelFilePtr gJumpBack01ModelFile;
 /* Everything below that decl_common.h does not declare. Keep it above the
  * first function: tools/tiers.py charges text between two functions to the
  * earlier one. */
-extern "C" {
-
-
-
-}
+extern "C" {}
 
 struct OamAttr;
 
 struct Matrix2x2;
 extern "C" {
 
-
-
 void func_0203cd80(int *m, short angle);
 
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 
-
 void *LoadFile(int handle);
 
-void DecompressLZ16(void *src, void *dst);}
+void DecompressLZ16(void *src, void *dst);
+}
 void Heyho_ReactAll(void);
 void Heyho_SeparateAll(void);
 void Jump3D_UpdateAll(void);
@@ -104,9 +110,9 @@ int Heyho_AllIdle(void);
 int Heyho_InitPool(void *heyhos, int count);
 extern "C" {
 
-int Jump3D_InitPool(void *base, int count);}
+int Jump3D_InitPool(void *base, int count);
+}
 void Jump3D_EnableInput(void);
-
 
 extern Matrix4x3 data_020a0e68;
 
@@ -135,8 +141,6 @@ extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Idle;
 extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Idle_2;
 
 extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Play;
-
-
 
 /* Slot 18. 0 is an eat (one more egg, capped like the HUD score), 0x12 a
  * miss that clears the count and the shared scene's copy of it; anything

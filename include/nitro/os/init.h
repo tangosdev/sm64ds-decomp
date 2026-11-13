@@ -10,8 +10,14 @@
  * game's NitroStartUp runs it before any static constructor.
  */
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+extern "C" {
+#endif
 
 void OS_Init(void);
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+}
+#endif
 
 #endif /* NITRO_OS_INIT_H */

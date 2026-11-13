@@ -229,7 +229,8 @@ void MBi_CommParentCallback(u16 type, void *arg) {
 
         /* MBi_ClearParentPieceBuffer */
         MI_CpuClear8(pPwork->req_data_buf.data_buf[sparg->aid - 1],
-                     (_Z13func_0206881cv() - 2) * (MB_COMM_REQ_DATA_SIZE + 1) / (_Z13func_0206881cv() - 2));
+                     (_Z13func_0206881cv() - 2) * (MB_COMM_REQ_DATA_SIZE + 1) /
+                         (_Z13func_0206881cv() - 2));
         pPwork->req_data_buf.data_bmp[sparg->aid - 1] = 0;
 
         if (pPwork->fileid_of_child[sparg->aid - 1] != -1) {

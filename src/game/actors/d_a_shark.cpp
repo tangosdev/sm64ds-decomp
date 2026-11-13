@@ -147,7 +147,7 @@ int daShark_c::StateSwim(daShark_c *self) {
     frame = (frame >> 12) << 16;
     frame = (unsigned int)frame >> 16;
     if (frame == 0)
-        func_02012694(9,(const Vector3 *)(&self->mCamSpacePosX));
+        func_02012694(9, (const Vector3 *)(&self->mCamSpacePosX));
     self->mAnmModel.speed = 0x1000;
     static_cast<dExtFrameCtrl_c &>(self->mAnmModel).Advance();
     self->CheckPlayerHit();
@@ -280,7 +280,7 @@ int daShark_c::InitResources() {
     return 1;
 }
 
- daShark_c *daShark_c_classInit() {
+daShark_c *daShark_c_classInit() {
     return new daShark_c();
 }
 

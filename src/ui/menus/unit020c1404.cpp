@@ -47,8 +47,6 @@
 #include "nitro/os/system.h"
 #include "Ov007MenuMem.h"
 
-
-
 extern u32 data_ov007_02104bdc; /* next free texture slot */
 extern u32 data_ov007_02104be0; /* end of the palette region */
 extern u32 data_ov007_02104be4; /* end of the texture region */
@@ -289,5 +287,3 @@ void Texture_BindPalette(Ov007Texture *tex) {
         reg_G3_TEXPLTT_BASE = 0;
     }
 }
-
-

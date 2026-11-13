@@ -160,7 +160,8 @@ WMErrCode WM_SendCommand(WMApiid id, u16 paramNum, ...) {
     s32 i;
     int result;
 
-    (void)_Z17OS_ReceiveMessageP14OSMessageQueuePPvi(&bufMsgQ, (OSMessage *)&tmpAddr, OS_MESSAGE_BLOCK);
+    (void)_Z17OS_ReceiveMessageP14OSMessageQueuePPvi(&bufMsgQ, (OSMessage *)&tmpAddr,
+                                                     OS_MESSAGE_BLOCK);
 
     if (paramNum == 0) {
         DC_StoreRange(wm9buf->fifo9to7, WM_FIFO_BUF_SIZE);

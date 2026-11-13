@@ -42,8 +42,6 @@ typedef struct OSHeapInfo {
 #define HEADERSIZE ROUND(sizeof(Cell), ALIGNMENT)
 #define MINOBJSIZE (HEADERSIZE + ALIGNMENT)
 
-
-
 /* One heap descriptor table per arena (OSArenaId). */
 extern OSHeapInfo *OSiHeapInfo[];
 

@@ -34,13 +34,11 @@
 
 extern "C" {
 
-
 /* NitroSDK linker constants: the address is the value (the LCF assigns
  * SDK_SYS_STACKSIZE = 0 and SDK_IRQ_STACKSIZE = 0x600). */
 extern void SDK_IRQ_STACKSIZE(void);
 extern void SDK_SYS_STACKSIZE(void);
 }
-
 
 extern unsigned int OSi_Initialized;
 
@@ -158,4 +156,4 @@ void *OS_AllocFromArenaLo(int id, unsigned int size, unsigned int align) {
     return (void *)arenaLo;
 }
 
- // extern "C"
+// extern "C"

@@ -88,20 +88,18 @@ extern ChoropuStateRow data_ov080_02128438[6];
 
 #define LAUND(p) ((void*)(p))
 
-
-extern "C" unsigned int d_a_choropuNewHold(unsigned int a, unsigned int b, int x, int y, int z, void *vel,
-                                void *cb);
+extern "C" unsigned int d_a_choropuNewHold(unsigned int a, unsigned int b, int x, int y, int z,
+                                           void *vel, void *cb);
 /* Parameter names keep this TU's @NNN. */
 typedef int BgchInitAt_(void *self, void *actor, int radius, int height, Vector3_16 *a,
                         Vector3_16 *b);
-extern "C" int   RandomIntInternal(int *seed);
+extern "C" int RandomIntInternal(int *seed);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 int   Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-extern "C" void  Matrix4x3_FromRotationY(void *m, int ang);
+extern "C" void Matrix4x3_FromRotationY(void *m, int ang);
 void func_02012694(unsigned int a, const Vector3 *p);
 
 void  func_ov080_02124418(daChoro_Rock_c *t);
-
 
 extern int data_ov080_0212767c[];
 extern SharedFilePtr data_ov002_0210d9d8;
@@ -568,7 +566,7 @@ void daChoropu_c::func_ov080_02124208()
     }
 
     if ((mdCcAc_c.hitFlags & daChoropu_HIT_MEGA) != 0) {
-        func_02012694(0x1d,(const Vector3 *)(&mCamSpacePosX));
+        func_02012694(0x1d, (const Vector3 *)(&mCamSpacePosX));
         p->IncMegaKillCount();
         func_ov080_02124088();
         return;
@@ -621,8 +619,7 @@ void daChoropu_c::func_ov080_021243d8()
 }
 
 /* Same as func_ov080_021243d8, for the rock's model (mModel.mat4x3). */
-void func_ov080_02124418(daChoro_Rock_c *t)
-{
+void func_ov080_02124418(daChoro_Rock_c *t) {
     Matrix4x3_FromRotationY(&t->mModel.mat4x3, t->mAngleY);
     t->mModel.mat4x3.m[9] = t->mPosX >> 3;
     t->mModel.mat4x3.m[10] = t->mPosY >> 3;
@@ -815,14 +812,12 @@ s32 daChoro_Rock_c::InitResources()
 }
 
 /* Registry factory for the CHORO_ROCK profile. */
-daChoro_Rock_c *daChoro_Rock_c_classInit()
-{
+daChoro_Rock_c *daChoro_Rock_c_classInit() {
     return new daChoro_Rock_c();
 }
 
 /* Registry factory for the CHOROPU profile. */
-daChoropu_c *daChoropu_c_classInit()
-{
+daChoropu_c *daChoropu_c_classInit() {
     return new daChoropu_c();
 }
 

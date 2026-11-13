@@ -64,15 +64,14 @@ typedef struct { PMF enter, run; } ScuttlebugStateRow;
  * and break the register convention.
  * ------------------------------------------------------------------------ */
 
-
 extern "C" int AngleDiff(int a, int b);
 extern "C" unsigned short DecIfAbove0_Short(void *p);
 int   Vec3_Dist(const Vector3 *a, const Vector3 *b);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 
-extern "C" void  Matrix4x3_FromRotationY(void *m, int angle);
-extern "C" void  Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
-extern "C" void  Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
+extern "C" void Matrix4x3_FromRotationY(void *m, int angle);
+extern "C" void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
+extern "C" void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
 
 void func_02012694(unsigned int id, const Vector3 *pos);
 
@@ -88,7 +87,6 @@ extern Matrix4x3 data_020a0e68;           /* scratch matrix        */
 /* Intra-TU forward declarations.  mwccarm lays .text down in reverse source
  * order, so this file is written ROM-descending and nearly every intra-TU call
  * is a forward reference. */
-
 
 /* The bug's file-scope SharedFilePtr objects, spelled through the same
    wrapper idiom the landed folds use: the handles' code is the veneer pair
@@ -593,7 +591,7 @@ void daSpd_c::func_ov071_0211f498() {
     v.z = mPosZ;
     SpawnCoins(v, mCoinCount, 0xf000, 0);
     PoofDust();
-    func_02012694(0xc4,(const Vector3 *)(&mCamSpacePosX));
+    func_02012694(0xc4, (const Vector3 *)(&mCamSpacePosX));
     if (param1) {
         mCoinCount = 0;
         SetState(0);

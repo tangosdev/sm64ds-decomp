@@ -4,8 +4,6 @@
 #include "Ov007Camera.h"
 #include "nitro/fx/fx_trig.h"
 
-
-
 typedef int Fix12;
 
 extern "C" void func_ov007_020bff38(Ov007Camera *cam);
@@ -35,4 +33,3 @@ void func_ov007_020b2160(int mode) {
         break;
     }
 }
-

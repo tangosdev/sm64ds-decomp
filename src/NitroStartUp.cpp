@@ -5,7 +5,6 @@
 
 extern "C" {
 
-
 extern void func_0201a490(void);
 extern void func_02019ebc(void);
 }

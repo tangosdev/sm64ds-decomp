@@ -142,7 +142,6 @@ struct BCA_File;
    6ay, the struct-copy lever). */
 struct SwoopPositionWords { int w[3]; };
 
-
 extern signed char gCurrentSublevel;
 void func_02012694(unsigned int, const Vector3 *);
 s16 Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
@@ -207,8 +206,7 @@ static inline int IsNoControl(daPly_c *player) {
     return player->mIsNoControl != 0;
 }
 
- daJango_c *daJango_c_classInit()
-{
+daJango_c *daJango_c_classInit() {
     return new daJango_c();
 }
 
@@ -847,7 +845,7 @@ int daJango_c::EnterSwoopState() {
     mSpeedX = 0;
     mVertSpeed = 0;
     mSpeedZ = 0;
-    func_02012694(SND_AT_SWOOP_ENTER,(const Vector3 *)(&mCamSpacePosX));
+    func_02012694(SND_AT_SWOOP_ENTER, (const Vector3 *)(&mCamSpacePosX));
     mStateParam = ((((unsigned)RandomIntInternal(&data_0209e650.value) >> 8) & 3) << 8) + 0x300;
     mBlendAnmModel.SetAnim(*(BCA_File *)data_ov062_0211e114.filePtr, 4, 0, 0x1000, 0);
     return 1;
@@ -959,7 +957,7 @@ int daJango_c::EnterHurtState() {
         mHeldActorID = 0;
         mTimer = 0x1e;
     }
-    func_02012694(SND_AT_HURT_ENTER,(const Vector3 *)(&mCamSpacePosX));
+    func_02012694(SND_AT_HURT_ENTER, (const Vector3 *)(&mCamSpacePosX));
     Particle::System::NewSimple(PARTICLE_AT_HURT_ENTER, mPosX, mPosY, mPosZ);
     mSpeedX = 0;
     mVertSpeed = 0;

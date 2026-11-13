@@ -80,8 +80,6 @@ extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern "C" void VEC_Add(Vector3 *dst, Vector3 *add, Vector3 *src);
 extern "C" int AngleDiff(int a, int b);
 
-
-
 /* CHAIR registry factory. */
 daChair_c *daChair_c_classInit(void) {
     return new daChair_c();

@@ -49,7 +49,7 @@ extern Km2GuraClsnFilePtr data_ov045_02113228;
 extern CLPS_Block data_ov045_021124f0;
 
 ResourceDescriptor data_ov045_02112fdc = {&data_ov045_02113220, &data_ov045_02113228,
-                                                     &data_ov045_021124f0};
+                                          &data_ov045_021124f0};
 
 daObjKm2_Gura_c *daObjKm2_Gura_c_classInit() {
     return new daObjKm2_Gura_c();

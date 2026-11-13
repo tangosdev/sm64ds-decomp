@@ -93,13 +93,11 @@ enum {
     kClipEnable = 3
 };
 
-
 int IsStarCollectedInLevel(signed char levelID, int starID);
 extern Matrix4x3 data_0209b3ec;
 extern u8 data_ov080_02127714[];
 extern "C" void G3_LoadMtx43(void *mtx);
 extern void *data_ov080_02127834;
-
 
 /* The cartridge's vtable label is the address point (slot 0), and the
    vtable itself is emitted with the destructor, outside this file. */

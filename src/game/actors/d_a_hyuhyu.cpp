@@ -118,12 +118,12 @@ typedef int (daHyuhyu_c::*HyuhyuStateFn)();
 /* The six state member-pointer records live in .data
  * (0x0213533c..0x0213536c); the static initializer copies them into the
  * three state records below, one {enter, execute} pair each. */
- extern HyuhyuStateFn data_ov091_02135364; /* StateWaitInit */
- extern HyuhyuStateFn data_ov091_0213535c; /* StateWaitMain */
- extern HyuhyuStateFn data_ov091_0213534c; /* StateBlowInit */
- extern HyuhyuStateFn data_ov091_02135354; /* StateBlowMain */
- extern HyuhyuStateFn data_ov091_02135344; /* StateGustFlyInit */
- extern HyuhyuStateFn data_ov091_0213533c; /* StateGustFlyMain */
+extern HyuhyuStateFn data_ov091_02135364; /* StateWaitInit */
+extern HyuhyuStateFn data_ov091_0213535c; /* StateWaitMain */
+extern HyuhyuStateFn data_ov091_0213534c; /* StateBlowInit */
+extern HyuhyuStateFn data_ov091_02135354; /* StateBlowMain */
+extern HyuhyuStateFn data_ov091_02135344; /* StateGustFlyInit */
+extern HyuhyuStateFn data_ov091_0213533c; /* StateGustFlyMain */
 
 daHyuhyu_c_State data_ov091_021356d0 = {data_ov091_02135364,
                                         data_ov091_0213535c}; /* cloud: waiting */
@@ -134,7 +134,7 @@ daHyuhyu_c_State data_ov091_021356c0 = {data_ov091_02135344,
 
 /* The dEnemyBase_c C2, the vptr store and the dCcAc_c / dBgCh_Actr /
    dExtAnmModel_c C1s at 0x110 / 0x144 / 0x300 all fall out of the one `new`. */
- daHyuhyu_c *daHyuhyu_c_classInit() {
+daHyuhyu_c *daHyuhyu_c_classInit() {
     return new daHyuhyu_c();
 }
 

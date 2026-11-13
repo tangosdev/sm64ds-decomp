@@ -57,7 +57,6 @@
  * declares the namespace yet; d_s_star_sel_methods.cpp spells it the
  * same way. */
 
-
 extern "C" void func_020308b4(void);
 extern int data_0209fc68;
 
@@ -93,7 +92,7 @@ extern u8 gSubScreenLayers;
 extern s32 data_0208ee44;
 
 /* The scene manager Behavior polls through its slot 5. */
- extern dFdBrightness_c *gSceneFader;
+extern dFdBrightness_c *gSceneFader;
 
 #include "dEntObj_c.h"
 #include "OAM.h"
@@ -105,7 +104,6 @@ extern s32 data_0208ee44;
 #include "nitro/gx/gx_load.h"
 #include "nitro/mi/memory.h"
 #include "nitro/fx/fx_trig.h"
-
 
 int func_0203d974(void);
 extern "C" u8 func_02020168(void);
@@ -121,7 +119,6 @@ int Sound_PlayIfNotActive(int, int, int, short);
    generated decl_common.h catch-all declares that storage `void *`, so its real
    type is spelled once here instead of at each of the eighteen call sites. */
 #define ENTRY_GRAPH_CALLBACK ((dScEntry_c::graphCallback_c *)&sEntryGraphCallback)
-
 
 void func_020338b0(int, int, short, int);
 void func_02033464(int, int, int);
@@ -2164,7 +2161,7 @@ bool dScEntry_c::BeforeInitResources() {
     return ResetFadersAndSound();
 }
 
- void *dScEntry_c_classInit_RESULT(void) {
+void *dScEntry_c_classInit_RESULT(void) {
     return new dScEntry_c;
 }
 

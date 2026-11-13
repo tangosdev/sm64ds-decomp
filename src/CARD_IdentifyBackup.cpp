@@ -10,11 +10,9 @@
 
 extern "C" {
 
-
 void func_02060364(int type);
 void func_020607e8(CARDiCommon *p);
 }
-
 
 void CARD_IdentifyBackup(int type) {
     CARDiCommon *const p = &cardi_common;

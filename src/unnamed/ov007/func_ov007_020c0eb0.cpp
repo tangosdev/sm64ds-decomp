@@ -65,4 +65,3 @@ void func_ov007_020c0eb0(GXOamAttr *dst, const Ov007CellEntry *src, int xoff, in
         dst->attr01 &= ~0x1000;
     }
 }
-

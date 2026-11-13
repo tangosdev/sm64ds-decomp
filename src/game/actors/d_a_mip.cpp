@@ -61,8 +61,6 @@ namespace Sound {
 bool PlaySub(u32, u32, u32, int, bool);
 }
 
-
-
 /* ground probe / collision */
 int   SurfaceInfo_TestFlag0x20(void *);
 
@@ -85,10 +83,10 @@ int   SurfaceInfo_TestFlag0x20(void *);
 /* maths and the still-unnamed helpers */
 extern "C" void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 extern "C" int VEC_Mag(const Vector3 *);
-extern "C" int   AngleDiff(int, int);
-extern "C" void  Matrix4x3_FromTranslation(void *, int, int, int);
-extern "C" void  Matrix4x3_FromRotationY(void *, int);
-extern "C" void  Matrix4x3_ApplyInPlaceToRotationXYZExt(void *, int, int, int);
+extern "C" int AngleDiff(int, int);
+extern "C" void Matrix4x3_FromTranslation(void *, int, int, int);
+extern "C" void Matrix4x3_FromRotationY(void *, int);
+extern "C" void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *, int, int, int);
 extern "C" void MTX_Concat43(void *, void *, void *);
 extern "C" void MTX_Concat33(void *, void *, void *);
 extern "C" void MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
@@ -96,7 +94,7 @@ u8 NumStars(void);
 int func_02013890(int, int);
 void func_02013944(void);
 void func_02012694(unsigned int id, const Vector3 *pos);
-extern "C" void  func_0203c178(void *, int, int, int);
+extern "C" void func_0203c178(void *, int, int, int);
 
 /* The state records at 0x0213003c..0x021300bc are 8-byte Itanium
    pointer-to-member-function constants, so SetState reaches one through a real
@@ -1519,8 +1517,7 @@ s32 daMip_c::OnYoshiTryEat() {
 }
 
 /* Registry factory for the MIP profile. `return new daMip_c()`. */
- daMip_c *daMip_c_classInit(void)
-{
+daMip_c *daMip_c_classInit(void) {
     return new daMip_c();
 }
 

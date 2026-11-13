@@ -35,8 +35,6 @@
 #include "dExtFrameCtrl_c.h"
 #include "dExtAnmTexPat_c.h"
 
-
-
 typedef void *(*Ov007FileLoad)(u16 id);
 typedef void (*Ov007FileRelease)(void *file);
 
@@ -142,4 +140,3 @@ void func_ov007_020b3edc(int idx) {
     data_ov007_0210336c(file);
     data_ov007_02103370[idx] = 0;
 }
-

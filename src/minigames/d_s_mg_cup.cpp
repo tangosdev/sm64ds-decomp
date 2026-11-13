@@ -68,17 +68,29 @@ struct OamAttr;
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 #include "math/CalcLib.h"
-namespace s20b2574 { void Mg_DrawStockCounter(int, int); }
+namespace s20b2574 {
+void Mg_DrawStockCounter(int, int);
+}
 using s20b2574::Mg_DrawStockCounter;
-namespace s20b1e34 { void Mg_DrawScoreTally(void*, int, int, int); }
+namespace s20b1e34 {
+void Mg_DrawScoreTally(void *, int, int, int);
+}
 using s20b1e34::Mg_DrawScoreTally;
-namespace s20b1b78 { void Mg_SubCredits(void*, int); }
+namespace s20b1b78 {
+void Mg_SubCredits(void *, int);
+}
 using s20b1b78::Mg_SubCredits;
-namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+namespace s20b0aa0 {
+void FreeGfxSlotsById(int);
+}
 using s20b0aa0::FreeGfxSlotsById;
-namespace s20af770 { int Mg_RenderSubSpriteScaled(void *, int, int, int, int, int, unsigned short); }
+namespace s20af770 {
+int Mg_RenderSubSpriteScaled(void *, int, int, int, int, int, unsigned short);
+}
 using s20af770::Mg_RenderSubSpriteScaled;
-namespace s20af68c { void Hud_RenderSprite(void *attr, int, int, int, int); }
+namespace s20af68c {
+void Hud_RenderSprite(void *attr, int, int, int, int);
+}
 using s20af68c::Hud_RenderSprite;
 
 int CupFx_FindFree(CupFx *fx, int, int, int);
@@ -96,7 +108,8 @@ extern int OamRender8_d_s_mg_cup(int show, struct OamAttr *attr, int a, int b, i
                                  int f);
 
 extern int Mg_RenderSubSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
-                                    unsigned short a6);}
+                                    unsigned short a6);
+}
 
 extern RoundRow sCupRoundTable[];
 
@@ -105,19 +118,12 @@ extern s16 sCupShuffleSpeeds[];
 extern IdxPair sCupSwapFirst[];
 
 extern RestPos sCupHomePositions[];
-extern "C" {
-
-}
+extern "C" {}
 void Presenter_PlayCheer(void *c);
-extern "C" {
-
-}
+extern "C" {}
 extern "C" void Presenter_PlayMiss(char *c);
 void Presenter_PlayLose(char *c);
-extern "C" {
-
-
-}
+extern "C" {}
 
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 void CupFx_MoveForCup(CupFx *fx, int cup, int dx, int dy);
@@ -132,11 +138,7 @@ extern "C" void Presenter_ResetPose(char *c);
 void CupFx_DrawForCup(CupFx *fx, int cup);
 void CupFx_UpdateAll(CupFx *fx);
 void CupFx_ClearAll(CupFx *fx);
-extern "C" {
-
-
-
-}
+extern "C" {}
 
 extern char data_ov006_02139df4[];
 
@@ -159,8 +161,8 @@ extern void *LoadFile(int);
 void Cup_Nothing();
 extern "C" {
 
-void func_0203d738(void);}
-
+void func_0203d738(void);
+}
 
 #pragma defer_codegen off
 /* Emit each function as it is read, so D1 lands ahead of D0. */
@@ -173,9 +175,9 @@ dScMgCup_c::~dScMgCup_c() {
     __cxa_vec_cleanup(mFx, 0x20, 0x18, (dtor_t)(void *)CupFx_ElemDtor);
 }
 
- void CupFx_ElemDtor(void) {}
+void CupFx_ElemDtor(void) {}
 
- int CupFx_FindFree(CupFx *fx, int, int, int) {
+int CupFx_FindFree(CupFx *fx, int, int, int) {
     int slot;
     for (slot = 0; slot < 0x20; slot++) {
         if (fx[slot].active == 0)
@@ -184,7 +186,7 @@ dScMgCup_c::~dScMgCup_c() {
     return slot;
 }
 
- void CupFx_MoveForCup(CupFx *fx, int cup, int dx, int dy) {
+void CupFx_MoveForCup(CupFx *fx, int cup, int dx, int dy) {
     int i;
     for (i = 0; i < 0x20; i++) {
         if (fx[i].active != 0 && cup == fx[i].cup)
@@ -192,7 +194,7 @@ dScMgCup_c::~dScMgCup_c() {
     }
 }
 
- int CupFx_Spawn(CupFx *fx, int kind, int x, int y, signed char cup) {
+int CupFx_Spawn(CupFx *fx, int kind, int x, int y, signed char cup) {
     int slot = CupFx_FindFree(fx, kind, x, y);
     if (slot >= 0 && slot < 0x20) {
         fx[slot].Init(kind, x, y, cup);
@@ -201,7 +203,7 @@ dScMgCup_c::~dScMgCup_c() {
     return -1;
 }
 
- void CupFx_DrawForCup(CupFx *fx, int cup) {
+void CupFx_DrawForCup(CupFx *fx, int cup) {
     int i;
     for (i = 0; i < 0x20; i++) {
         if (fx[i].active != 0 && cup == fx[i].cup)
@@ -209,7 +211,7 @@ dScMgCup_c::~dScMgCup_c() {
     }
 }
 
- void CupFx_UpdateAll(CupFx *fx) {
+void CupFx_UpdateAll(CupFx *fx) {
     int i;
     for (i = 0; i < 0x20; i++) {
         if (fx[i].active)
@@ -217,7 +219,7 @@ dScMgCup_c::~dScMgCup_c() {
     }
 }
 
- void CupFx_ClearAll(CupFx *fx) {
+void CupFx_ClearAll(CupFx *fx) {
     int i;
     for (i = 0; i < 0x20; i++)
         fx[i].active = 0;
@@ -906,11 +908,11 @@ inline dScMgCup_c::dScMgCup_c() {
                    (dtor_t)(void *)NullDestructor_0203d47c);
 }
 
- void *dScMgCup_c_classInit() {
+void *dScMgCup_c_classInit() {
     return new dScMgCup_c;
 }
 
- void Cup_Nothing() {}
+void Cup_Nothing() {}
 
 /* Static-init globals (was the handwritten __sinit_ov006_021303d0 shard).
  * The compiler materializes and copies eight native member-pointer constants;
@@ -921,7 +923,6 @@ PMF sCupStateTable[8] = {
     &dScMgCup_c::StateWaitForInput, &dScMgCup_c::StateSelect,         &dScMgCup_c::StateResult,
     &dScMgCup_c::StateFinish,       &dScMgCup_c::StateIdle,
 };
-
 
 extern AnimStep data_ov006_02139dbc[];
 
@@ -936,7 +937,6 @@ extern AnimStep data_ov006_02139e4c[];
 extern AnimStep data_ov006_0213a274[];
 
 extern AnimStep data_ov006_0213a1ec[];
-
 
 RoundRow sCupRoundTable[10] = {
     {8, 1, 0},  {10, 4, 3}, {12, 7, 6}, {8, 1, 0},  {10, 2, 1},

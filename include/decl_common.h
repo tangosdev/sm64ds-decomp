@@ -126,50 +126,97 @@
 struct MgFx;
 struct MgBanner;
 struct dScMgBase_c;
-namespace s20aea78 { struct S; struct M; }
-namespace s20b2444 { void Mg_DrawBigNumber(int, int, int, int, int, int, int); }
+namespace s20aea78 {
+struct S;
+struct M;
+}
+namespace s20b2444 {
+void Mg_DrawBigNumber(int, int, int, int, int, int, int);
+}
 using s20b2444::Mg_DrawBigNumber;
-namespace s20b1ea4 { void Mg_DrawNumber(int, int, int, int, int, int, int); }
+namespace s20b1ea4 {
+void Mg_DrawNumber(int, int, int, int, int, int, int);
+}
 using s20b1ea4::Mg_DrawNumber;
-namespace s20b1a5c { void Mg_DrawTopRightCounter(int, int); }
+namespace s20b1a5c {
+void Mg_DrawTopRightCounter(int, int);
+}
 using s20b1a5c::Mg_DrawTopRightCounter;
-namespace s20b0d8c { void Mg_DrawBlinkSprite(void *, int, int); }
+namespace s20b0d8c {
+void Mg_DrawBlinkSprite(void *, int, int);
+}
 using s20b0d8c::Mg_DrawBlinkSprite;
-namespace s20b0cac { void Mg_ShowBanner(int, int, int, int, int, short); }
+namespace s20b0cac {
+void Mg_ShowBanner(int, int, int, int, int, short);
+}
 using s20b0cac::Mg_ShowBanner;
-namespace s20b0a54 { void Mg_SetSharedState(int); }
+namespace s20b0a54 {
+void Mg_SetSharedState(int);
+}
 using s20b0a54::Mg_SetSharedState;
-namespace s20b04d0 { void Mg_SetTopScreenYOffset(int); }
+namespace s20b04d0 {
+void Mg_SetTopScreenYOffset(int);
+}
 using s20b04d0::Mg_SetTopScreenYOffset;
-namespace s20b04c0 { int Mg_GetTopScreenYOffset(void); }
+namespace s20b04c0 {
+int Mg_GetTopScreenYOffset(void);
+}
 using s20b04c0::Mg_GetTopScreenYOffset;
-namespace s20b0380 { void Mg_RenderSpriteBothMtx(void *, int, int, void *); }
+namespace s20b0380 {
+void Mg_RenderSpriteBothMtx(void *, int, int, void *);
+}
 using s20b0380::Mg_RenderSpriteBothMtx;
-namespace s20afb20 { int Mg_RenderMainSpriteScaled(int, int, int, int, int, int, unsigned short); }
+namespace s20afb20 {
+int Mg_RenderMainSpriteScaled(int, int, int, int, int, int, unsigned short);
+}
 using s20afb20::Mg_RenderMainSpriteScaled;
-namespace s20af948 { void Mg_RenderSubSpriteMtx(void *, int, int, void *); }
+namespace s20af948 {
+void Mg_RenderSubSpriteMtx(void *, int, int, void *);
+}
 using s20af948::Mg_RenderSubSpriteMtx;
-namespace s20af868 { void Mg_RenderSubSpritePalMtx(void *, int, int, int, int, void *); }
+namespace s20af868 {
+void Mg_RenderSubSpritePalMtx(void *, int, int, int, int, void *);
+}
 using s20af868::Mg_RenderSubSpritePalMtx;
-namespace s20af2f8 { void Mg_InitBrush(char *, char, int, int); }
+namespace s20af2f8 {
+void Mg_InitBrush(char *, char, int, int);
+}
 using s20af2f8::Mg_InitBrush;
-namespace s20aea78 { void Mg_DrawSpriteListEntry(S *, int, int, M *); }
+namespace s20aea78 {
+void Mg_DrawSpriteListEntry(S *, int, int, M *);
+}
 using s20aea78::Mg_DrawSpriteListEntry;
-namespace s20ae858 { void Mg_DrawMenu(dScMgBase_c *); }
+namespace s20ae858 {
+void Mg_DrawMenu(dScMgBase_c *);
+}
 using s20ae858::Mg_DrawMenu;
-namespace s20ae20c { void Mg_RestoreMusic(void); }
+namespace s20ae20c {
+void Mg_RestoreMusic(void);
+}
 using s20ae20c::Mg_RestoreMusic;
-namespace s20add88 { void Mg_DrawFx(MgFx *); }
+namespace s20add88 {
+void Mg_DrawFx(MgFx *);
+}
 using s20add88::Mg_DrawFx;
-namespace s20adc00 { void Mg_SetTopRecord(int); }
+namespace s20adc00 {
+void Mg_SetTopRecord(int);
+}
 using s20adc00::Mg_SetTopRecord;
-namespace s20adb1c { void Mg_SubmitScore(int); }
+namespace s20adb1c {
+void Mg_SubmitScore(int);
+}
 using s20adb1c::Mg_SubmitScore;
-namespace s20ad8b8 { int Mg_GetSavedRecord0(void); }
+namespace s20ad8b8 {
+int Mg_GetSavedRecord0(void);
+}
 using s20ad8b8::Mg_GetSavedRecord0;
-namespace s20ad878 { int Mg_GetSavedRecord1(void); }
+namespace s20ad878 {
+int Mg_GetSavedRecord1(void);
+}
 using s20ad878::Mg_GetSavedRecord1;
-namespace s20ad79c { void Mg_SaveRecordPair(int, int); }
+namespace s20ad79c {
+void Mg_SaveRecordPair(int, int);
+}
 using s20ad79c::Mg_SaveRecordPair;
 void MgCoins_Draw(void);
 void MgCoins_PlaceBet(int);
@@ -196,7 +243,8 @@ void Mg_SetNextBanner(int);
    Verified safe: of the 1,644 function names declared across the decl_*.h
    headers, 1,572 are themselves the ROM symbol and 0 exist ONLY in a mangled
    form, so no declaration here relies on C++ mangling. The remaining 72 resolve
-   to neither spelling and are unresolvable with or without this guard. */struct daPly_c;
+   to neither spelling and are unresolvable with or without this guard. */
+struct daPly_c;
 struct daDossyCap_c;
 struct OamAttr;
 struct MascotWalker;
@@ -207,7 +255,7 @@ struct fLiNdBa_c;
 void Bomroom_DrawScore();
 int D3D_PlaySeAtX(int, int);
 int RouletteResults_Tick(void);
-int RouletteBoard_LoadModels(char*);
+int RouletteBoard_LoadModels(char *);
 unsigned char StarPopup_Clear(void);
 void Heyho_DrawAll(void);
 void Heyho_SpawnAll(void *, int);
@@ -216,15 +264,15 @@ void TrmpItem_MotionSway(void *);
 void TrmpItem_UpdateMatricesAll(void);
 void TrmpItem_HideAll(u32);
 void TrmpItem_ReleaseFiles(void);
-void TrmpItem_LoadAll(char*, int);
+void TrmpItem_LoadAll(char *, int);
 void TrmpLine_DrawAll(void);
 void TrmpLine_LoadTextures(void);
 void CupFx_ElemDtor();
-void D3D_ReleaseSubBg1(void*);
+void D3D_ReleaseSubBg1(void *);
 void D3D_CaptureToSub(void);
 void D3D_CaptureToMain(void);
 void StarPopup_Draw(void);
-void StarPopup_Update(char*);
+void StarPopup_Update(char *);
 void HanaPopup_DrawAll(void);
 void HanaPopup_UpdateAll();
 void HanaPopup_ClearAll(void);
@@ -235,36 +283,36 @@ void Jump2Popup_ClearAll(void);
 void Jump2Popup_InitPool(int, int);
 void Jump2_SetLights(void);
 void RouletteStrip_ResetAll(void);
-void RouletteStrip_LinkAll(char*);
-void RouletteBoard_Draw(char*);
-void RouletteBoard_StartSpin(char*);
-void RouletteRacer_Draw(char*);
-void RouletteRacer_PlaceAtStart(int*);
-void Roulette_DrawResultsThunk(char*);
-void SlotBlink_Draw(unsigned char*);
-void SlotBet_Reset(void*);
-void SlotBet_Place(char*);
-void Slot1_InitHud(void*);
+void RouletteStrip_LinkAll(char *);
+void RouletteBoard_Draw(char *);
+void RouletteBoard_StartSpin(char *);
+void RouletteRacer_Draw(char *);
+void RouletteRacer_PlaceAtStart(int *);
+void Roulette_DrawResultsThunk(char *);
+void SlotBlink_Draw(unsigned char *);
+void SlotBet_Reset(void *);
+void SlotBet_Place(char *);
+void Slot1_InitHud(void *);
 void SmartballObj_ElemDtor(void);
 void TrmpFx_DrawAll(void);
 void TrmpFx_UpdateAll(void);
 void TrmpFx_ClearAll(void);
-void TrmpFx_InitPool(void*, int);
-void Trmp2Spinner_UpdateMatrix(char*);
+void TrmpFx_InitPool(void *, int);
+void Trmp2Spinner_UpdateMatrix(char *);
 void Trmp2Spinner_UpdateMatricesAll(void);
 void Trmp2Spinner_UpdateAll(void);
 void Trmp2Spinner_HideAll(void);
 void Trmp2Spinner_LoadAll(int, int);
-void Dealer_PlayWin(void*);
-void Dealer_StartSwap(int*);
-void Dealer_PlayIdle(char*);
-void Mascot_Update(void*);
-void Mascot_Load(char*);
-void Presenter_PlayLose(char*);
-void FlowerFace_PlayPetalPulled(char*);
-void FlowerFace_Reset(void*);
-void FlowerFace_Draw(void*);
-int FlowerFace_Load(char*);
+void Dealer_PlayWin(void *);
+void Dealer_StartSwap(int *);
+void Dealer_PlayIdle(char *);
+void Mascot_Update(void *);
+void Mascot_Load(char *);
+void Presenter_PlayLose(char *);
+void FlowerFace_PlayPetalPulled(char *);
+void FlowerFace_Reset(void *);
+void FlowerFace_Draw(void *);
+int FlowerFace_Load(char *);
 void Jump3D_DrawAll(void);
 void Jump3D_DisableInput(void);
 void Jump3D_RestoreCount(void);
@@ -273,7 +321,7 @@ void Puff_ClearAll(int, int);
 extern void Bomroom_DrawScore();
 extern int D3D_PlaySeAtX(int, int);
 extern int RouletteResults_Tick(void);
-extern int RouletteBoard_LoadModels(char*);
+extern int RouletteBoard_LoadModels(char *);
 extern unsigned char StarPopup_Clear(void);
 extern void Heyho_DrawAll(void);
 extern void Heyho_SpawnAll(void *, int);
@@ -282,15 +330,15 @@ extern void TrmpItem_MotionSway(void *);
 extern void TrmpItem_UpdateMatricesAll(void);
 extern void TrmpItem_HideAll(u32);
 extern void TrmpItem_ReleaseFiles(void);
-extern void TrmpItem_LoadAll(char*, int);
+extern void TrmpItem_LoadAll(char *, int);
 extern void TrmpLine_DrawAll(void);
 extern void TrmpLine_LoadTextures(void);
 extern void CupFx_ElemDtor();
-extern void D3D_ReleaseSubBg1(void*);
+extern void D3D_ReleaseSubBg1(void *);
 extern void D3D_CaptureToSub(void);
 extern void D3D_CaptureToMain(void);
 extern void StarPopup_Draw(void);
-extern void StarPopup_Update(char*);
+extern void StarPopup_Update(char *);
 extern void HanaPopup_DrawAll(void);
 extern void HanaPopup_UpdateAll();
 extern void HanaPopup_ClearAll(void);
@@ -301,36 +349,36 @@ extern void Jump2Popup_ClearAll(void);
 extern void Jump2Popup_InitPool(int, int);
 extern void Jump2_SetLights(void);
 extern void RouletteStrip_ResetAll(void);
-extern void RouletteStrip_LinkAll(char*);
-extern void RouletteBoard_Draw(char*);
-extern void RouletteBoard_StartSpin(char*);
-extern void RouletteRacer_Draw(char*);
-extern void RouletteRacer_PlaceAtStart(int*);
-extern void Roulette_DrawResultsThunk(char*);
-extern void SlotBlink_Draw(unsigned char*);
-extern void SlotBet_Reset(void*);
-extern void SlotBet_Place(char*);
-extern void Slot1_InitHud(void*);
+extern void RouletteStrip_LinkAll(char *);
+extern void RouletteBoard_Draw(char *);
+extern void RouletteBoard_StartSpin(char *);
+extern void RouletteRacer_Draw(char *);
+extern void RouletteRacer_PlaceAtStart(int *);
+extern void Roulette_DrawResultsThunk(char *);
+extern void SlotBlink_Draw(unsigned char *);
+extern void SlotBet_Reset(void *);
+extern void SlotBet_Place(char *);
+extern void Slot1_InitHud(void *);
 extern void SmartballObj_ElemDtor(void);
 extern void TrmpFx_DrawAll(void);
 extern void TrmpFx_UpdateAll(void);
 extern void TrmpFx_ClearAll(void);
-extern void TrmpFx_InitPool(void*, int);
-extern void Trmp2Spinner_UpdateMatrix(char*);
+extern void TrmpFx_InitPool(void *, int);
+extern void Trmp2Spinner_UpdateMatrix(char *);
 extern void Trmp2Spinner_UpdateMatricesAll(void);
 extern void Trmp2Spinner_UpdateAll(void);
 extern void Trmp2Spinner_HideAll(void);
 extern void Trmp2Spinner_LoadAll(int, int);
-extern void Dealer_PlayWin(void*);
-extern void Dealer_StartSwap(int*);
-extern void Dealer_PlayIdle(char*);
-extern void Mascot_Update(void*);
-extern void Mascot_Load(char*);
-extern void Presenter_PlayLose(char*);
-extern void FlowerFace_PlayPetalPulled(char*);
-extern void FlowerFace_Reset(void*);
-extern void FlowerFace_Draw(void*);
-extern int FlowerFace_Load(char*);
+extern void Dealer_PlayWin(void *);
+extern void Dealer_StartSwap(int *);
+extern void Dealer_PlayIdle(char *);
+extern void Mascot_Update(void *);
+extern void Mascot_Load(char *);
+extern void Presenter_PlayLose(char *);
+extern void FlowerFace_PlayPetalPulled(char *);
+extern void FlowerFace_Reset(void *);
+extern void FlowerFace_Draw(void *);
+extern int FlowerFace_Load(char *);
 extern void Jump3D_DrawAll(void);
 extern void Jump3D_DisableInput(void);
 extern void Jump3D_RestoreCount(void);
@@ -338,7 +386,7 @@ extern void Puff_ClearAll(int, int);
 #endif
 #ifdef __cplusplus
 namespace ns_020cd658 {
-int Trmp3DMario_InitPool(unsigned char*, int);
+int Trmp3DMario_InitPool(unsigned char *, int);
 }
 using ns_020cd658::Trmp3DMario_InitPool;
 namespace s020c38b0 {
@@ -350,7 +398,7 @@ void FlowerFace_PlayLike(char *);
 }
 using s020c3908::FlowerFace_PlayLike;
 namespace s020c3d18 {
-void FlowerFace_Update(char*);
+void FlowerFace_Update(char *);
 }
 using s020c3d18::FlowerFace_Update;
 namespace ns_020caadc {
@@ -375,6 +423,9 @@ void Trmp3DMario_ResetAll(unsigned int, int);
 using ns_020cd424::Trmp3DMario_ResetAll;
 #endif
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+extern "C" {
+#endif
 extern Matrix4x3 data_ov021_02113a60, data_ov021_02113a80;
 extern s32 data_ov002_0210af00[3];
 extern Vector3 sMascotWalkerOffset;
@@ -478,13 +529,15 @@ extern char data_ov102_0214ea78;
 #ifdef __cplusplus
 extern "C"
 #endif
-/* No longer defined (now daObjFloatBoard_c::StoodOnCallback); kept because its
+    /* No longer defined (now daObjFloatBoard_c::StoodOnCallback); kept because its
    three named parameters hold @NNN numbers in every includer. */
-extern void func_ov002_020b5fc4(void* collider, void* board, void* other);
+    extern void
+    func_ov002_020b5fc4(void *collider, void *board, void *other);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov066_0211a35c(void* a, void* b, void* c);
+    extern void
+    func_ov066_0211a35c(void *a, void *b, void *c);
 extern char*data_ov002_021000a0[];
 extern char*data_ov002_02108ab8[];
 extern char*data_ov007_02104ba0;
@@ -494,7 +547,8 @@ extern int AddSpikeBomb(void*);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int AngleDiff(int, int);
+    extern int
+    AngleDiff(int, int);
 extern int G;
 extern int G1[];
 extern int GetOwnerLanguage(void);
@@ -504,26 +558,31 @@ extern int IsCannonOpenInCurLevel(void);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern unsigned char IsPlayerWarping(int);
+    extern unsigned char
+    IsPlayerWarping(int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int LoadArchive(int);
+    extern int
+    LoadArchive(int);
 extern int ObjectMessageIDToActualMessageID(short);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int SetPolygonID(void*, int);
+    extern int
+    SetPolygonID(void *, int);
 extern int SublevelToLevel(int);
 extern int VT[];
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int __aeabi_idiv(int, int);
+    extern int
+    __aeabi_idiv(int, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int __aeabi_idivmod(int, int);
+    extern int
+    __aeabi_idivmod(int, int);
 extern int data_02075244[];
 extern int data_02086f38[];
 extern int data_02086f48[];
@@ -722,7 +781,8 @@ extern int data_ov022_0211427c[];
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int data_ov025_02112654(void*);
+    extern int
+    data_ov025_02112654(void *);
 /* data_ov026_02113f2c is defined by d_a_water_tatumaki.cpp. */
 extern int data_ov029_02112b2c[];
 extern struct daObjFloatBoard_c_Resources data_ov029_02113be8;
@@ -791,7 +851,8 @@ extern int func_02007cec(void*, const struct Vector3*, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int GetLanguageIndex(void);
+    extern int
+    GetLanguageIndex(void);
 extern int func_02013890(int, int);
 extern int func_02013a44(void);
 extern int func_02013c84(int, void*, int, void*);
@@ -803,31 +864,37 @@ extern void func_0201eaac();
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int func_020308a8(void);
+    extern int
+    func_020308a8(void);
 extern void func_02034504();
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int func_0203553c(void*);
+    extern int
+    func_0203553c(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int func_020355a0(void*);
+    extern int
+    func_020355a0(void *);
 extern int func_02035638(u8*);
 extern void *func_0203564c(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_02035800();
+    extern void
+    func_02035800();
 extern int func_02037e20(int*);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int func_0203d024(struct Vector3*, struct Vector3*);
+    extern int
+    func_0203d024(struct Vector3 *, struct Vector3 *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int func_0203d434(int*);
+    extern int
+    func_0203d434(int *);
 extern int func_0203d7b8(void);
 extern int func_0203d8fc(void);
 extern int func_0203da3c(void);
@@ -855,7 +922,8 @@ extern int sMgMainBannerX;
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int func_ov080_021270dc(void*, void*);
+    extern int
+    func_ov080_021270dc(void *, void *);
 extern int func_ov002_020ad660(void *, void *, void *, int);
 struct dActor_c;
 struct dEnemyBase_c;
@@ -863,51 +931,62 @@ extern void func_ov002_020ae968(struct dEnemyBase_c *, struct dActor_c *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int func_ov002_020baa98;
+    extern int func_ov002_020baa98;
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int func_ov002_020bd250(char*, unsigned char*);
+    extern int
+    func_ov002_020bd250(char *, unsigned char *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int func_ov002_020c51d0(void*, void*);
+    extern int
+    func_ov002_020c51d0(void *, void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int func_ov002_020c56f0(unsigned char*, int);
+    extern int
+    func_ov002_020c56f0(unsigned char *, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int func_ov002_020cf700(void*);
+    extern int
+    func_ov002_020cf700(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int func_ov002_020d5ab4(void*);
+    extern int
+    func_ov002_020d5ab4(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int func_ov002_020d5f34(struct daPly_c *, void *);
+    extern int
+    func_ov002_020d5f34(struct daPly_c *, void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int func_ov002_020d6dac(struct daPly_c *);
+    extern int
+    func_ov002_020d6dac(struct daPly_c *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int func_ov002_020de328(void*);
+    extern int
+    func_ov002_020de328(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int func_ov002_020de33c(struct daPly_c *, void *);
+    extern int
+    func_ov002_020de33c(struct daPly_c *, void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int func_ov002_020df300(char*);
+    extern int
+    func_ov002_020df300(char *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int func_ov002_020e10a8(void*);
+    extern int
+    func_ov002_020e10a8(void *);
 extern int func_ov002_020f02c8(int);
 extern int func_ov002_020f035c(u32, int);
 extern void MiniGm_SaveIfDirty(char*);
@@ -918,23 +997,28 @@ extern int MiniGm_HasSecondPage(void*);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int Dealer_IsIdleAtRest(void*);
+    extern int
+    Dealer_IsIdleAtRest(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int Mascot_Destruct(char*);
+    extern int
+    Mascot_Destruct(char *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int Presenter_Destruct(char*);
+    extern int
+    Presenter_Destruct(char *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int FlowerFace_IsIdle(char*);
+    extern int
+    FlowerFace_IsIdle(char *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int Trmp2Mario_InitPool(void*, int);
+    extern int
+    Trmp2Mario_InitPool(void *, int);
 extern void Bomroom_DrawScore();
 extern int D3D_PlaySeAtX(int, int);
 /* The former func_ov006_020f9000..020f9f40 range is owned by the real
@@ -944,37 +1028,43 @@ extern int func_ov007_020b6f4c(void);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int func_ov007_020c3ba8(int);
+    extern int
+    func_ov007_020c3ba8(int);
 #ifdef __cplusplus
 extern "C"
 #endif
-/* ov007's allocator: (name, size). The parameters stay unnamed here on
+    /* ov007's allocator: (name, size). The parameters stay unnamed here on
    purpose: named, they renumbered compiler @NNN labels in this header's C++
    consumers, and the intact-TU stage refused ten or more actor TUs
    ("rename source @555 has 0 symbols"). */
-extern void *func_ov007_020c3df4(const char *, int);
+    extern void *
+    func_ov007_020c3df4(const char *, int);
 extern int func_ov010_02111984[];
 #ifdef __cplusplus
 extern "C"
 #endif
-/* Returns nothing: ov018 0x02111d18..0x02111d24 pops straight to bx lr with no
+    /* Returns nothing: ov018 0x02111d18..0x02111d24 pops straight to bx lr with no
    r0 set. Definition in src/game/actors/d_a_pg_mthr.cpp. */
-extern int func_ov025_0211123c(char*);
+    extern int
+    func_ov025_0211123c(char *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int func_ov062_02115f84(void*);
+    extern int
+    func_ov062_02115f84(void *);
 extern int func_ov065_021180d4(struct daDossyCap_c *);
 extern int func_ov065_02119210(struct daDossyCap_c *);
 extern int func_ov070_0211f0a4(struct daPropeller_Heyho_c *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int func_ov080_0212714c(void*, void*);
+    extern int
+    func_ov080_0212714c(void *, void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int func_ov080_021274ac(void*, void*);
+    extern int
+    func_ov080_021274ac(void *, void *);
 extern int func_ov100_02144f84(void);
 extern int func_ov100_02144fcc(void);
 extern int func_ov100_02145014(void);
@@ -990,7 +1080,8 @@ extern struct fLiNdBa_c *func_02043f4c(struct fLiNdBa_c **, unsigned int, struct
 #ifdef __cplusplus
 extern "C"
 #endif
-extern long long func_0203d5bc(int*);
+    extern long long
+    func_0203d5bc(int *);
 extern s16 data_02082414;
 extern s16 data_0209f4a4[];
 extern s16 data_0209f4a6;
@@ -1138,7 +1229,10 @@ extern unsigned char data_0209fc78;
 extern unsigned char data_0209fc94;
 extern unsigned char data_0209fc9c;
 extern unsigned char data_0209fcdc;
-extern unsigned char data_020a0e98;
+#ifdef __cplusplus
+extern "C"
+#endif
+    extern unsigned char data_020a0e98;
 extern unsigned char data_020a4bbc;
 extern unsigned char data_ov002_020ff040[];
 extern unsigned char data_ov002_020ff050[];
@@ -1175,7 +1269,8 @@ extern void FUN_0202a130(void);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void G3_MultMtx33(void *);
+    extern void
+    G3_MultMtx33(void *);
 extern void GiveLives(int);
 extern void Initialise3dGraphics(int);
 extern void InitialiseVramGlobals(void);
@@ -1186,108 +1281,132 @@ extern void LoadLevelNoReturn(int, u32, u32, u32);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void LoadOverlay(int);
+    extern void
+    LoadOverlay(int);
 extern void LoadSilverStarAndNumber(void);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void LoadTextNarcs(void);
+    extern void
+    LoadTextNarcs(void);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void MarkForDestruction(char*);
+    extern void
+    MarkForDestruction(char *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void Math_Function_0203b0fc(int*, int, int, int);
+    extern void
+    Math_Function_0203b0fc(int *, int, int, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void Matrix4x3_FromRotationXYZExt(Matrix4x3 *, int, int, int);
+    extern void
+    Matrix4x3_FromRotationXYZExt(Matrix4x3 *, int, int, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void Matrix4x3_FromRotationZXYExt(Matrix4x3 *, int, int, int);
+    extern void
+    Matrix4x3_FromRotationZXYExt(Matrix4x3 *, int, int, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void MTX_Concat33(void *, void *, void *);
+    extern void
+    MTX_Concat33(void *, void *, void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void MIi_CpuCopy32(const void *, void *, unsigned int);
+    extern void
+    MIi_CpuCopy32(const void *, void *, unsigned int);
 extern void OpenCannonInCurLevel(void);
 extern void SetBg0Offset(int, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void SetBg1Offset(int, int);
+    extern void
+    SetBg1Offset(int, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void SetBg2Offset(int, int);
+    extern void
+    SetBg2Offset(int, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void SetBg3Offset(int, int);
+    extern void
+    SetBg3Offset(int, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void SetNumPlayers(int);
+    extern void
+    SetNumPlayers(int);
 extern void SetPlayerGlobals(void);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void SetSubBg0Offset(int, int);
+    extern void
+    SetSubBg0Offset(int, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void SetSubBg1Offset(int, int);
+    extern void
+    SetSubBg1Offset(int, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void SetSubBg2Offset(int, int);
+    extern void
+    SetSubBg2Offset(int, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void SetSubBg3Offset(int, int);
+    extern void
+    SetSubBg3Offset(int, int);
 extern void StartExitFaderWipe(int);
 extern void StartFile(s8, u8);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void UnloadArchive(int);
+    extern void
+    UnloadArchive(int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void UnloadArchives(void);
+    extern void
+    UnloadArchives(void);
 extern void UnloadKeyModels(int);
 extern void UnloadSilverStarAndNumber(void);
 extern int Vec3_ApproachHorz(void*, void*, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int *Vec3_AsrInPlace(void *, int);
+    extern int *
+    Vec3_AsrInPlace(void *, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void WarpPlayer(int, int);
+    extern void
+    WarpPlayer(int, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void data_ov007_020cd72c(void*);
+    extern void
+    data_ov007_020cd72c(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void data_ov052_02111e84(void*);
+    extern void
+    data_ov052_02111e84(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void data_ov054_02111238(void*);
+    extern void
+    data_ov054_02111238(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void MI_SendGXCommand(unsigned int, const void *, unsigned int);
+    extern void
+    MI_SendGXCommand(unsigned int, const void *, unsigned int);
 /* func_02005348 removed: it is the member dScBoot_c::func_02005348(), declared in include/dScBoot_c.h */
 extern void Vec3fSetDistAndAngle(struct Vector3 *, const struct Vector3 *, int, short, short);
 extern void Vec3fGetDistAndAngle(const struct Vector3 *, const struct Vector3 *, int *, short *,
@@ -1310,11 +1429,13 @@ extern void func_02016aac(void*, int, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_02017e94(int);
+    extern void
+    func_02017e94(int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void Disable3dEngines(void);
+    extern void
+    Disable3dEngines(void);
 extern void func_0201a428(void);
 extern void func_0201cd08(int);
 extern void func_0201cebc(int);
@@ -1330,12 +1451,14 @@ extern void func_0201fc88(s16);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_02020388(int);
+    extern void
+    func_02020388(int);
 extern void func_02022260(int *, short *, short *, int *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_020233f4(void);
+    extern void
+    func_020233f4(void);
 extern void func_02023544(void);
 extern void func_0202a850(int, int);
 extern void func_0202ae74(void);
@@ -1343,66 +1466,81 @@ extern void func_0203083c(void);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_02030aa4(int);
+    extern void
+    func_02030aa4(int);
 extern void Message_DrawCenteredLineVS(int, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_02034b1c(void *, void *);
+    extern void
+    func_02034b1c(void *, void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_02035550(void*);
+    extern void
+    func_02035550(void *);
 extern void func_020371fc(char*);
 extern void func_02038414(void*);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_02039db8(void*, struct Vector3*, struct Vector3*);
+    extern void
+    func_02039db8(void *, struct Vector3 *, struct Vector3 *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_0203aa10(void*, Vector3*, Vector3*);
+    extern void
+    func_0203aa10(void *, Vector3 *, Vector3 *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_0203aa74(void*, Vector3*, Vector3*);
+    extern void
+    func_0203aa74(void *, Vector3 *, Vector3 *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int func_0203b27c(int, int);
+    extern int
+    func_0203b27c(int, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_0203c178(void*, int, int, int);
+    extern void
+    func_0203c178(void *, int, int, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_0203cc28(int*, int);
+    extern void
+    func_0203cc28(int *, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_0203ccd4(struct Vector3*, short);
+    extern void
+    func_0203ccd4(struct Vector3 *, short);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_0203ce80(struct Vector3*, struct Vector3*);
+    extern void
+    func_0203ce80(struct Vector3 *, struct Vector3 *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_0203cebc(struct Vector3*, struct Vector3*, struct Vector3*, struct Vector3*);
+    extern void
+    func_0203cebc(struct Vector3 *, struct Vector3 *, struct Vector3 *, struct Vector3 *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_0203cf00(struct Vector3*, struct Vector3*, struct Vector3*);
+    extern void
+    func_0203cf00(struct Vector3 *, struct Vector3 *, struct Vector3 *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_0203d388(int*, int);
+    extern void
+    func_0203d388(int *, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_0203d630(int*, int);
+    extern void
+    func_0203d630(int *, int);
 extern void func_0203d930(void);
 extern void func_0203dafc(int);
 /* 0x020440e8 is NOT `func_020440e8`. config/arm9/symbols.txt:1842 exports it as
@@ -1417,41 +1555,50 @@ extern void func_0204a17c(void*, void*);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_0204ae2c(void*, void*, void*);
+    extern void
+    func_0204ae2c(void *, void *, void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_0204d9a0(void*, void*);
-extern void func_0204dab4(void*, void*, int, u32, void*);
+    extern void
+    func_0204d9a0(void *, void *);
+extern void func_0204dab4(void *, void *, int, u32, void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void MTX_Copy33To44_(void *, void *);
+    extern void
+    MTX_Copy33To44_(void *, void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void MTX_RotX43_(struct Matrix4x3 *, int, int);
+    extern void
+    MTX_RotX43_(struct Matrix4x3 *, int, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void MTX_RotY43_(struct Matrix4x3 *, int, int);
+    extern void
+    MTX_RotY43_(struct Matrix4x3 *, int, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void MTX_RotZ43_(struct Matrix4x3 *, int, int);
+    extern void
+    MTX_RotZ43_(struct Matrix4x3 *, int, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void VEC_MultAdd(int, int *, int *, int *);
+    extern void
+    VEC_MultAdd(int, int *, int *, int *);
 extern void GX_DispOff(void);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void G3_MultMtx43(void *);
+    extern void
+    G3_MultMtx43(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void G3_LoadMtx43(void *);
+    extern void
+    G3_LoadMtx43(void *);
 extern void G3_LoadTexMtxEnv(int *);
 extern void GXS_LoadBG3Scr(const void *, u32, u32);
 extern void GX_LoadBG3Scr(const void *, u32, u32);
@@ -1461,92 +1608,112 @@ extern void GXS_LoadBG0Scr(const void *, int, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void MI_CpuFill8(void *, unsigned char, unsigned int);
+    extern void
+    MI_CpuFill8(void *, unsigned char, unsigned int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void __cxa_vec_delete(void *, int, int, void (*)(void *));
+    extern void
+    __cxa_vec_delete(void *, int, int, void (*)(void *));
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void data_ov001_020ad494(void);
+    extern void
+    data_ov001_020ad494(void);
 
-
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov002_020bcdf0(void*);
+    extern void
+    func_ov002_020bcdf0(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov002_020cd190(void*);
+    extern void
+    func_ov002_020cd190(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov002_020cd2c4(void*);
+    extern void
+    func_ov002_020cd2c4(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov002_020cd308(void*);
+    extern void
+    func_ov002_020cd308(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov002_020cd39c(void*);
+    extern void
+    func_ov002_020cd39c(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov002_020cd3e0(void*);
+    extern void
+    func_ov002_020cd3e0(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov002_020d2e74(void*);
+    extern void
+    func_ov002_020d2e74(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov002_020d99a4(struct daPly_c *);
+    extern void
+    func_ov002_020d99a4(struct daPly_c *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov002_020db54c(void *, int, int, short);
+    extern void
+    func_ov002_020db54c(void *, int, int, short);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov002_020db704(void*);
+    extern void
+    func_ov002_020db704(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov002_020dc09c(char*);
+    extern void
+    func_ov002_020dc09c(char *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov002_020e3e00(void*, void*, u32);
+    extern void
+    func_ov002_020e3e00(void *, void *, u32);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov002_020e6330(void*);
+    extern void
+    func_ov002_020e6330(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov002_020e69c0(void*);
+    extern void
+    func_ov002_020e69c0(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov002_020e6a78(char*, int);
+    extern void
+    func_ov002_020e6a78(char *, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov002_020e6b3c(void*);
+    extern void
+    func_ov002_020e6b3c(void *);
 extern int func_ov002_020eee3c(char*, char*);
 extern int func_ov002_020eeeb8(void*, char*);
 extern int func_ov002_020ef070(void*, char*);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov003_020b060c(void*);
+    extern void
+    func_ov003_020b060c(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov003_020b0730(void*, int);
+    extern void
+    func_ov003_020b0730(void *, int);
 extern void MiniGm_LoadGroupIcons(void*);
 #ifdef __cplusplus
 struct MgCamera;
@@ -1558,21 +1725,25 @@ extern void Dealer_PlayWin(void*);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void Dealer_PlayLose(void*);
+    extern void
+    Dealer_PlayLose(void *);
 extern void Dealer_StartSwap(int*);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void Dealer_StartReveal(void*, int, void*);
+    extern void
+    Dealer_StartReveal(void *, int, void *);
 extern void Dealer_PlayIdle(char*);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void Camera_InitSlotsView(char*);
+    extern void
+    Camera_InitSlotsView(char *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void Mascot_Draw(char*);
+    extern void
+    Mascot_Draw(char *);
 extern void Mascot_Update(void*);
 extern void Mascot_Load(char*);
 extern void Presenter_UpdateMatrix(char*);
@@ -1581,32 +1752,37 @@ extern void Presenter_PlayIdle(char*);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void Presenter_Draw(void*);
+    extern void
+    Presenter_Draw(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void Presenter_Update(char*);
+    extern void
+    Presenter_Update(char *);
 extern void FallingPetal_UpdateMatrix(char*);
 extern void FallingPetal_Draw(char*);
 extern void FlowerFace_PlayPetalPulled(char*);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void Camera_InitFlowerView(void*);
+    extern void
+    Camera_InitFlowerView(void *);
 extern void FlowerFace_Reset(void*);
 extern void FlowerFace_Draw(void*);
 extern int FlowerFace_Load(char*);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void*FlowerFace_Destruct(char*);
+    extern void *
+    FlowerFace_Destruct(char *);
 extern void Heyho_DrawAll(void);
 extern void Heyho_SpawnAll(void *, int);
 extern void Jump3D_DrawAll(void);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void Jump3D_Arrange(int, int);
+    extern void
+    Jump3D_Arrange(int, int);
 extern void Jump3D_DisableInput(void);
 extern void Jump3D_RestoreCount(void);
 extern void Puff_ClearAll(int, int);
@@ -1646,118 +1822,146 @@ extern void RouletteBoard_StartSpin(char*);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void Petal_ElemDtor();
+    extern void
+    Petal_ElemDtor();
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int func_ov007_020b7040(void*);
+    extern int
+    func_ov007_020b7040(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int func_ov007_020b7138(void*, void*);
+    extern int
+    func_ov007_020b7138(void *, void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int func_ov007_020bdeb0(int);
+    extern int
+    func_ov007_020bdeb0(int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov007_020c39f8(void*, int, int, int);
+    extern void
+    func_ov007_020c39f8(void *, int, int, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov007_020c7560(void*, int, int);
+    extern void
+    func_ov007_020c7560(void *, int, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov007_020c7694(struct Vector3*, struct Vector3*);
+    extern void
+    func_ov007_020c7694(struct Vector3 *, struct Vector3 *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov007_020c775c(struct Vector3*);
+    extern void
+    func_ov007_020c775c(struct Vector3 *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov007_020c7b2c(int, int, int);
+    extern void
+    func_ov007_020c7b2c(int, int, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov007_020c81a0(void*, int, int);
+    extern void
+    func_ov007_020c81a0(void *, int, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov007_020c831c(void*, int, int);
+    extern void
+    func_ov007_020c831c(void *, int, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov007_020c92d0(struct Ov007MenuState *);
+    extern void
+    func_ov007_020c92d0(struct Ov007MenuState *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov014_02111ebc(void*, int);
+    extern void
+    func_ov014_02111ebc(void *, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov018_021123d0(char*, int);
+    extern void
+    func_ov018_021123d0(char *, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov025_021112e0(char*);
+    extern void
+    func_ov025_021112e0(char *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov030_02111734(char*);
+    extern void
+    func_ov030_02111734(char *);
 #ifdef __cplusplus
 extern "C"
 #endif
-/* No longer defined (now daObjRc_Tikuwa_c::StoodOnCallback); kept because its
+    /* No longer defined (now daObjRc_Tikuwa_c::StoodOnCallback); kept because its
    three named parameters hold @NNN numbers in every includer. */
-extern void func_ov036_02111cc4(void* dBgW, void* self, void* clsn);
+    extern void
+    func_ov036_02111cc4(void *dBgW, void *self, void *clsn);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov060_021183f4();
+    extern void
+    func_ov060_021183f4();
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov062_02116edc(void*);
+    extern void
+    func_ov062_02116edc(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov062_02119800(void*);
+    extern void
+    func_ov062_02119800(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov062_02119954(void*);
+    extern void
+    func_ov062_02119954(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov062_0211aac0(void*);
+    extern void
+    func_ov062_0211aac0(void *);
 
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov065_02115ff0(char*);
+    extern void
+    func_ov065_02115ff0(char *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov065_0211696c(char*);
+    extern void
+    func_ov065_0211696c(char *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov065_02118c4c(struct daDossyCap_c *);
+    extern void
+    func_ov065_02118c4c(struct daDossyCap_c *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov065_021195bc(void *, void *, void *);
+    extern void
+    func_ov065_021195bc(void *, void *, void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov065_021195d0(void *, void *, void *);
+    extern void
+    func_ov065_021195d0(void *, void *, void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov070_0211f100(char*);
+    extern void
+    func_ov070_0211f100(char *);
 
 extern void func_ov070_02121c8c(void*);
 extern void func_ov070_02121e14(char*);
@@ -1768,19 +1972,23 @@ extern void func_ov092_02131a88(char*);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov096_0213585c(void*);
+    extern void
+    func_ov096_0213585c(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov096_02135efc(void*);
+    extern void
+    func_ov096_02135efc(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov096_021368b4(void*);
+    extern void
+    func_ov096_021368b4(void *);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void func_ov096_02136928(void*, int);
+    extern void
+    func_ov096_02136928(void *, int);
 extern void func_ov100_0214344c(struct daWanwan2_c *);
 extern void func_ov100_021435e8(struct daWanwan2_c *);
 extern void func_ov100_021437d4(struct daWanwan2_c *);
@@ -1788,9 +1996,10 @@ extern void func_ov100_02145070(int);
 #ifdef __cplusplus
 extern "C"
 #endif
-/* Returns int -- the tree's own definition (in src/game/actors/d_a_door.cpp)
+    /* Returns int -- the tree's own definition (in src/game/actors/d_a_door.cpp)
    defines it `extern "C" int`, and its early-out is `return 1`. */
-extern void*FindWithActorID(unsigned int, void*);
+    extern void *
+    FindWithActorID(unsigned int, void *);
 extern void*HEAP;
 extern void*data_0208a0e4[];
 extern void*data_02099d90;
@@ -1879,15 +2088,19 @@ extern void*func_0201787c(void*);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern void*func_0204d958(void*);
+    extern void *
+    func_0204d958(void *);
 extern void*func_02050cdc(int, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-extern int func_ov007_020aebac(void);
+    extern int
+    func_ov007_020aebac(void);
 extern volatile struct Matrix4x3 sDealerIdentityMtx;
 extern volatile unsigned short data_ov002_0210c208[];
 extern vu32 *sHanaBackgroundParts[];
-
+#if defined(_MSC_VER) && defined(__cplusplus)
+}
+#endif
 
 #endif

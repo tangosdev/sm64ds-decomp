@@ -19,10 +19,8 @@
 #include "nitro/os/spinLock.h"
 #include "nitro/os/emulator.h"
 
-
-
 extern int data_0209a040;
- /* OSi_ConsoleTypeCache, initialised to -1 */
+/* OSi_ConsoleTypeCache, initialised to -1 */
 
 int OSi_GetDeviceType(void);
 int OSi_IsRunOnDebugger(void);

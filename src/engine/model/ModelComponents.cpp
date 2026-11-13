@@ -137,7 +137,6 @@ void MTX_Identity43_(Matrix4x3 *mat);
 int MTX_Inverse43(const Matrix4x3 *a, Matrix4x3 *b);
 extern "C" {
 
-
 void func_02048234(int *out, int sa, int sb, int sc, u16 ax, u16 ay, u16 az, int tx, int ty,
                    int tz);
 void func_02047218(void *a, void *b, void *out, fx32 c);
@@ -175,7 +174,6 @@ void MTX_Copy33To44_(void *a, void *b);
 
 void G3_LoadTexMtxEnv(int *n);
 
-
 /* Bone-tree walk at 0x020453c0. UpdateBones forwards here. Samples each
  * bone's pose with func_0204547c (which stays out) from the model's
  * animation, or from the bone's own override once one is met, ORs in the
@@ -205,7 +203,6 @@ void ModelComponents::UpdateBones(BCA_File *file, int frame)
     func_020453c0(modelFile->bones, file, frame);
 }
 
-
 void func_0204531c(char *self, int arg)
 {
     ModelComponents *mc = (ModelComponents *)self;
@@ -220,8 +217,6 @@ void func_0204531c(char *self, int arg)
     for (i = 0; i < mc->modelFile->numBones; i++)
         func_02047910((int *)&mc->transforms[i], (int *)&blend[i], (int *)&mc->transforms[i], arg);
 }
-
-
 
 void func_02045178(int *out, int ax, int ay, int az, int tx, int ty, int tz) {
     int a0 = FX_SinIdx(ax >> 4);
@@ -248,7 +243,6 @@ void func_02045178(int *out, int ax, int ay, int az, int tx, int ty, int tz) {
     out[10] = ty;
     out[11] = tz;
 }
-
 
 void ModelComponents::func_02045074(BMD_Bone *fileBone) {
     struct Node *n = (struct Node *)fileBone;
@@ -279,7 +273,6 @@ void ModelComponents::UpdateVertsUsingBones()
     func_02045074(modelFile->bones);
 }
 
-
 void func_02044f74(void *g, struct Node *n)
 {
     int m[12];
@@ -299,8 +292,6 @@ void func_02044f74(void *g, struct Node *n)
         func_02044f74(g, n + n->fc);
 }
 
-
-
 void func_02044efc(BMD_File *self) {
     if (!self->numWeightedMatrices)
         return;
@@ -313,8 +304,6 @@ void func_02044efc(BMD_File *self) {
     }
     DC_StoreAll();
 }
-
-
 
 void func_02044e50(ModelComponents *self, int count, int base, int *out) {
     int i;
@@ -331,8 +320,6 @@ void func_02044e50(ModelComponents *self, int count, int base, int *out) {
     }
 }
 
-
-
 void func_02044dc4(ModelComponents *self) {
     unsigned int i;
     Matrix4x3 *dst;
@@ -345,7 +332,6 @@ void func_02044dc4(ModelComponents *self) {
         dst++;
     }
 }
-
 
 /* Material bind at 0x02044b30, called by Render before each display list:
  * sends material idx's polygon attributes, colours and texture parameters to

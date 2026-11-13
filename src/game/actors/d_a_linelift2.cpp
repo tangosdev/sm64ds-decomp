@@ -83,11 +83,11 @@ enum {
 static const int cSinkDepth = 0x1e000;
 static const int cSinkRate = 0x5000;
 
- daLinelift2_c *daLinelift2_c_classInit_KM3_LIFT() {
+daLinelift2_c *daLinelift2_c_classInit_KM3_LIFT() {
     return new daLinelift2_c();
 }
 
- daLinelift2_c *daLinelift2_c_classInit_KM2_SUSUMU() {
+daLinelift2_c *daLinelift2_c_classInit_KM2_SUSUMU() {
     return new daLinelift2_c();
 }
 

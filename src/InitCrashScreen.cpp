@@ -7,8 +7,6 @@
 #include "dScene_c.h"
 #include "nitro/hw/registers.h"
 
-
-
 extern void ResetCrashScreen(void);
 extern void ShowCrashScreen(void);
 extern u8 data_0208a178[];

@@ -89,54 +89,72 @@ namespace Sound {
     void PlayBank2_2D(unsigned int id);
 }
 
-
-namespace s20b2444 { void Mg_DrawBigNumber(int, int, int, int, int, int, int); }
+namespace s20b2444 {
+void Mg_DrawBigNumber(int, int, int, int, int, int, int);
+}
 using s20b2444::Mg_DrawBigNumber;
-namespace s20b1a5c { void Mg_DrawTopRightCounter(int, int); }
+namespace s20b1a5c {
+void Mg_DrawTopRightCounter(int, int);
+}
 using s20b1a5c::Mg_DrawTopRightCounter;
-namespace s20b19f0 { void Mg_DrawTopLeftCounter(int); }
+namespace s20b19f0 {
+void Mg_DrawTopLeftCounter(int);
+}
 using s20b19f0::Mg_DrawTopLeftCounter;
-namespace s20b0a54 { void Mg_SetSharedState(int); }
+namespace s20b0a54 {
+void Mg_SetSharedState(int);
+}
 using s20b0a54::Mg_SetSharedState;
-namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+namespace s20b0aa0 {
+void FreeGfxSlotsById(int);
+}
 using s20b0aa0::FreeGfxSlotsById;
-namespace s20b04d0 { void Mg_SetTopScreenYOffset(int); }
+namespace s20b04d0 {
+void Mg_SetTopScreenYOffset(int);
+}
 using s20b04d0::Mg_SetTopScreenYOffset;
-namespace s20b023c { void Mg_RenderSpriteBothPalMtx(void *a0, int, int, int, void *a4); }
+namespace s20b023c {
+void Mg_RenderSpriteBothPalMtx(void *a0, int, int, int, void *a4);
+}
 using s20b023c::Mg_RenderSpriteBothPalMtx;
 namespace s20aff38 {
 struct OamAttr;
 int Mg_RenderSpriteBothScaled(OamAttr *, int, int, int, int, int, int);
 }
 using s20aff38::Mg_RenderSpriteBothScaled;
-namespace s20afdd0 { void Mg_RenderSpriteBoth(void *a0, int, int, int, int); }
+namespace s20afdd0 {
+void Mg_RenderSpriteBoth(void *a0, int, int, int, int);
+}
 using s20afdd0::Mg_RenderSpriteBoth;
-namespace s20af2f8 { void Mg_InitBrush(char*, char, int, int); }
+namespace s20af2f8 {
+void Mg_InitBrush(char *, char, int, int);
+}
 using s20af2f8::Mg_InitBrush;
-namespace s20adb1c { void Mg_SubmitScore(int); }
+namespace s20adb1c {
+void Mg_SubmitScore(int);
+}
 using s20adb1c::Mg_SubmitScore;
-namespace s20adc1c { int Mg_GetTopRecord(void); }
+namespace s20adc1c {
+int Mg_GetTopRecord(void);
+}
 using s20adc1c::Mg_GetTopRecord;
-namespace s20adbc0 { int Mg_GetSubmittedScore(void); }
+namespace s20adbc0 {
+int Mg_GetSubmittedScore(void);
+}
 using s20adbc0::Mg_GetSubmittedScore;
 
 extern "C" {
 
-
 /* --- shared ov004, main and library helpers --- */
-
-
-
-
-
-
 }
 
 extern int  func_020126e8(int a);
 
-extern int  func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);extern "C" {
+extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
+extern "C" {
 
-extern void SetBg2Offset(int a, int b);}
+extern void SetBg2Offset(int a, int b);
+}
 
 struct OamAttr;
 #include "OAM.h"
@@ -144,25 +162,21 @@ struct OamAttr;
 #include "nitro/gx/g2.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/mi/memory.h"
-extern "C" {
-
-
-
-
-}
+extern "C" {}
 
 extern void func_020126ac(int a0, int a1, int a2, int a3, int s0);
 
 extern void func_02012718(int a, int b);
 
-extern int Sound_PlayIfNotActive(int handle, int player, int id, short unused);extern "C" {
+extern int Sound_PlayIfNotActive(int handle, int player, int id, short unused);
+extern "C" {
 
 extern s16 atan2_hold_d_s_mg_pachinko_1(int y, int x);
 
-
 extern void *LoadFile(int handle);
 
-extern void DecompressLZ16(void *src, void *dst);}
+extern void DecompressLZ16(void *src, void *dst);
+}
 
 extern void Deallocate(void *p);
 
@@ -170,12 +184,10 @@ extern void Deallocate(void *p);
  * decl_common.h's non-const spelling of it goes. */
 extern void GX_LoadBG3Scr(const void *dst, u32 offset, u32 len);
 
-
 /* --- ROM data this TU reads --- */
 extern unsigned char gMainScreenLayers;
 
 extern u8 gSubScreenLayers;
-
 
 extern void *sPachinkoDecoSprite;
 
@@ -225,7 +237,6 @@ extern u16 sPachinkoPopScores[];
 
 extern u8 sPachinkoWaveSlots[];
 
-
 /* The five state tables. Static initialisers fill them from the {code
    pointer, adjustment} records in ov006 .data. */
 extern Entry sPachinkoBgStateTable[];
@@ -237,7 +248,6 @@ extern Entry sPachinkoBobOmbStateTable[];
 extern PMF sPachinkoFlyerStateTable[];
 
 extern Entry sPachinkoBallStateTable[];
-
 
 /* The ROM {code pointer, adjustment} records the five tables copy from
    (unlicensed .data), grouped by destination table in retail copy order. */
@@ -290,7 +300,7 @@ extern PMF pmf_dScMgPachinko_c_Bg_StateRiseIn;
 extern PMF pmf_dScMgPachinko_c_Bg_StateScroll;
 
 extern PMF pmf_dScMgPachinko_c_Bg_StateSinkOut;
-  /* extern "C" */
+/* extern "C" */
 
 /* Both D1 and D0 come from this one definition. */
 dScMgPachinko_c::~dScMgPachinko_c()
@@ -2370,8 +2380,7 @@ s32 dScMgPachinko_c::InitResources()
  * allocation size, vtable identity, and the MG_PACHINKO registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: MgBobOmbSquad_Spawn. */
- void *dScMgPachinko_c_classInit()
-{
+void *dScMgPachinko_c_classInit() {
     return new dScMgPachinko_c;
 }
 

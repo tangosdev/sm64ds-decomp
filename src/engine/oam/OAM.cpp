@@ -61,15 +61,12 @@ extern GXOamAttr data_0209ea74[];             /* sub OAM staging buffer: 128 x 8
 extern const unsigned char data_020755a0[12]; /* OBJ width, stride 4 */
 extern const unsigned char data_020755ac[12]; /* OBJ height, stride 4 */
 
-
 void GX_LoadOAM(const void *src, unsigned int offset, unsigned int count);
 void GXS_LoadOAM(const void *src, unsigned int offset, unsigned int count);
 
 int func_0202043c(void *thiz);
 
-
 /* -------------------------------------------------------------------------- */
-
 
 void func_02020820(OamAnimation *anim, int *src, int screen, int loops, u8 enabled, u8 affine) {
     anim->frames = (const OamAnimFrame *)src[0];
@@ -85,7 +82,6 @@ void func_02020820(OamAnimation *anim, int *src, int screen, int loops, u8 enabl
     anim->affine = affine;
     anim->screen = screen;
 }
-
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 1 -- OAM::LoadAffineParams(OamAttr *, int *, Matrix2x2 *)

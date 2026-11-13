@@ -18,7 +18,9 @@
  * in a declaration costs every C++ includer an @NNN number), and the sizes
  * and channel numbers are spelled unsigned int, the SDK's u32. */
 
-
+#if defined(_MSC_VER) && defined(__cplusplus)
+extern "C" {
+#endif
 typedef void (*MIDmaCallback)(void *);
 
 void MI_DmaFill32(unsigned int, void *, unsigned int, unsigned int);
@@ -37,16 +39,20 @@ void MI_StopDma(unsigned int);
 #ifdef __cplusplus
 extern "C"
 #endif
-void MI_SendGXCommand(unsigned int, const void *, unsigned int);
+    void
+    MI_SendGXCommand(unsigned int, const void *, unsigned int);
 void MI_SendGXCommandAsync(unsigned int, const void *, unsigned int, MIDmaCallback, void *);
 
 #ifdef __cplusplus
 extern "C"
 #endif
-/* Arms one channel: source, destination, then the control word that starts
+    /* Arms one channel: source, destination, then the control word that starts
  * it, with interrupts masked (pret/pokediamond MI_dma.h). The body is in
  * ITCM, src/MIi_DmaSetParams.cpp. */
-void MIi_DmaSetParams(unsigned int, unsigned int, unsigned int, unsigned int);
-
+    void
+    MIi_DmaSetParams(unsigned int, unsigned int, unsigned int, unsigned int);
+#if defined(_MSC_VER) && defined(__cplusplus)
+}
+#endif
 
 #endif

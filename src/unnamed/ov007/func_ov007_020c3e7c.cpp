@@ -2,8 +2,6 @@
 #include "Ov007SpriteGroup.h"
 #include "Ov007MenuMem.h"
 
-
-
 extern void func_ov007_020c40b4(Ov007SpriteItem *item);
 extern "C" void func_ov007_020c1180(Ov007OamNode *node);
 
@@ -19,4 +17,3 @@ void func_ov007_020c3e7c(Ov007SpriteGroup *grp) {
     func_ov007_020c40b4(grp->extra);
     func_ov007_020c3d1c(grp);
 }
-

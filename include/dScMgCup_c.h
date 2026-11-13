@@ -14,12 +14,14 @@
 #ifdef __cplusplus
 extern "C"
 #endif
-void __cxa_vec_cleanup(void *base, unsigned int count, unsigned int stride, dtor_t dtor);
+    void
+    __cxa_vec_cleanup(void *base, unsigned int count, unsigned int stride, dtor_t dtor);
 void CupFx_ElemDtor(void);
 #ifdef __cplusplus
 extern "C"
 #endif
-void NullDestructor_0203d47c(void);
+    void
+    NullDestructor_0203d47c(void);
 
 struct OamAttr;
 

@@ -1,8 +1,6 @@
 //cpp
 #include "Ov007MenuState.h"
 
-
-
 /* Consume a pending request, detect entry (including direct state changes),
  * then advance the saturating state timer. Requesting the current state does
  * not restart it. The previous entered state survives subsequent ticks. */
@@ -29,4 +27,3 @@ void func_ov007_020c92d0(Ov007MenuState *state) {
 
     state->lastTickState = state->currentState;
 }
-

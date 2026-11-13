@@ -44,7 +44,6 @@
 #include "ResourceDescriptor.h"
 #include "math/MtxStack.h"
 
-
 void func_02012694(unsigned int a, const Vector3 *b);
 extern "C" int AngleDiff(int a, int b);
 extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
@@ -52,7 +51,6 @@ extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern "C" int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg);
 extern "C" int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist);
 extern "C" int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg);
-
 
 /* -------------------------------------------------------------------------- */
 /* ROM 0x02126fbc (D0, size 0x58) and 0x02127014 (D1, size 0x44)              */
@@ -84,7 +82,7 @@ void daObjMaruta_c_EmitDestructor(daObjMaruta_c *p) {
    direct `bl` the ROM has. */
 void daObjMaruta_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
-    func_02012694(0x1e,(const Vector3 *)(&mCamSpacePosX));
+    func_02012694(0x1e, (const Vector3 *)(&mCamSpacePosX));
     KillByMegaChar(player);
 }
 

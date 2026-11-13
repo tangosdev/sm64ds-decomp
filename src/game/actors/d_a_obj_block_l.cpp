@@ -67,7 +67,6 @@ extern u8 gCurrentStarId;
 
 int IsStarCollectedInCurLevel(int star);
 
-
 /* One class, six actor IDs (see the banner), so most members branch on
  * actorID. The ROM materializes each comparison into a register and then
  * tests that (cmp/moveq #1/movne #0/cmp #0/b); this int-returning predicate

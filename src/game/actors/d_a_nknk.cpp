@@ -84,9 +84,8 @@ struct NknkAnimationFileHandle : SharedFilePtr {
     ~NknkAnimationFileHandle();
 };
 
-
 extern "C" int d_a_nknkNewHold(u32 uniqueID, u32 effectID, s32 x, s32 y, s32 z, const void *dir,
-                           void *callback);
+                               void *callback);
 extern NknkAnimationFileHandle *data_ov062_0211cee8[];
 extern int data_ov062_0211cf0c[];
 /* The called scalar definition takes u16 startFrame. The unused dExtAnmModel_c
@@ -115,13 +114,10 @@ inline struct Matrix4x3 *inline_fn()
 
 int SurfaceInfo_TestFlag0x20(int *p); /* CLPS bit 0x20: water */
 
-
-
 daNknk_c *daNknk_c_classInit_NOKONOKO()
 {
     return new daNknk_c;
 }
-
 
 daNknk_c *daNknk_c_classInit_NOKONOKO_S()
 {
@@ -817,7 +813,7 @@ void daNknk_c::func_ov062_02117c98()
             return;
         }
         mDeathState = 5;
-        func_ov002_020aea30((Aea30C *)this, found, (dBgCh_Actr*)turnAround);
+        func_ov002_020aea30((Aea30C *)this, found, (dBgCh_Actr *)turnAround);
         return;
     }
     if (flags & 0x4000) {
@@ -867,7 +863,7 @@ void daNknk_c::func_ov062_02117c98()
             return;
         }
         {
-            s32* s = &player->mPosX;
+            s32 *s = &player->mPosX;
             L.sv.x = s[0];
             L.sv.y = s[1];
             L.sv.z = s[2];

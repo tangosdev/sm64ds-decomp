@@ -47,41 +47,75 @@ enum dScMgCurling2_c_AssetId {
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/mi/memory.h"
-namespace s20b2444 { void Mg_DrawBigNumber(int, int, int, int, int, int, int); }
+namespace s20b2444 {
+void Mg_DrawBigNumber(int, int, int, int, int, int, int);
+}
 using s20b2444::Mg_DrawBigNumber;
-namespace s20b1ea4 { void Mg_DrawNumber(int, int, int, int, int, int, int); }
+namespace s20b1ea4 {
+void Mg_DrawNumber(int, int, int, int, int, int, int);
+}
 using s20b1ea4::Mg_DrawNumber;
-namespace s20b1a5c { void Mg_DrawTopRightCounter(int, int); }
+namespace s20b1a5c {
+void Mg_DrawTopRightCounter(int, int);
+}
 using s20b1a5c::Mg_DrawTopRightCounter;
-namespace s20b19f0 { void Mg_DrawTopLeftCounter(int); }
+namespace s20b19f0 {
+void Mg_DrawTopLeftCounter(int);
+}
 using s20b19f0::Mg_DrawTopLeftCounter;
-namespace s20b0a54 { void Mg_SetSharedState(s32); }
+namespace s20b0a54 {
+void Mg_SetSharedState(s32);
+}
 using s20b0a54::Mg_SetSharedState;
-namespace s20b04d0 { void Mg_SetTopScreenYOffset(int); }
+namespace s20b04d0 {
+void Mg_SetTopScreenYOffset(int);
+}
 using s20b04d0::Mg_SetTopScreenYOffset;
-namespace s20b0104 { void RenderOamBothScreens(void *attr, int, int, int, int, void *mtx); }
+namespace s20b0104 {
+void RenderOamBothScreens(void *attr, int, int, int, int, void *mtx);
+}
 using s20b0104::RenderOamBothScreens;
-namespace s20afdd0 { void Mg_RenderSpriteBoth(void *a0, int, int, int, int); }
+namespace s20afdd0 {
+void Mg_RenderSpriteBoth(void *a0, int, int, int, int);
+}
 using s20afdd0::Mg_RenderSpriteBoth;
 struct OamAttr;
 struct Matrix2x2;
-namespace s20afcf8 { void DrawOamSprite(OamAttr *attr, int, int, Matrix2x2 *mtx); }
+namespace s20afcf8 {
+void DrawOamSprite(OamAttr *attr, int, int, Matrix2x2 *mtx);
+}
 using s20afcf8::DrawOamSprite;
-namespace s20af948 { void Mg_RenderSubSpriteMtx(void *a, int, int, void *m); }
+namespace s20af948 {
+void Mg_RenderSubSpriteMtx(void *a, int, int, void *m);
+}
 using s20af948::Mg_RenderSubSpriteMtx;
-namespace s20adc74 { void *Ov004_LoadFileByPath(const char *path); }
+namespace s20adc74 {
+void *Ov004_LoadFileByPath(const char *path);
+}
 using s20adc74::Ov004_LoadFileByPath;
-namespace s20adc5c { void Ov004_Deallocate(void *ptr); }
+namespace s20adc5c {
+void Ov004_Deallocate(void *ptr);
+}
 using s20adc5c::Ov004_Deallocate;
-namespace s20adbe0 { int Mg_IsNewRecord(void); }
+namespace s20adbe0 {
+int Mg_IsNewRecord(void);
+}
 using s20adbe0::Mg_IsNewRecord;
-namespace s20adb1c { void Mg_SubmitScore(int); }
+namespace s20adb1c {
+void Mg_SubmitScore(int);
+}
 using s20adb1c::Mg_SubmitScore;
-namespace s20adc1c { int Mg_GetTopRecord(void); }
+namespace s20adc1c {
+int Mg_GetTopRecord(void);
+}
 using s20adc1c::Mg_GetTopRecord;
-namespace s20adbc0 { int Mg_GetSubmittedScore(void); }
+namespace s20adbc0 {
+int Mg_GetSubmittedScore(void);
+}
 using s20adbc0::Mg_GetSubmittedScore;
-namespace s20ad674 { s32 GetGameLanguage(void); }
+namespace s20ad674 {
+s32 GetGameLanguage(void);
+}
 using s20ad674::GetGameLanguage;
 
 /* The receiver for the pointer-to-member tables. It must stay incomplete:
@@ -94,22 +128,7 @@ typedef void (C::*PMF1)(int);
 
 /* Everything this file calls or reads that no included header declares.
  * Keep it above the first function. */
-extern "C" {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-}
+extern "C" {}
 
 extern void func_02012718(int id, int v);
 
@@ -124,25 +143,21 @@ struct OamAttr;
 struct Matrix2x2;
 extern "C" {
 
-
-
-
 extern void SetBg2Offset(int a, int b);
 
 extern void SetBg0Offset(int a, int b);
 
 extern void DecompressLZ16(const void *src, void *dst);
 
-extern void *LoadFile(int handle);}
-
-extern void Deallocate(void *p);extern "C" {
-
+extern void *LoadFile(int handle);
 }
+
+extern void Deallocate(void *p);
+extern "C" {}
 
 /* local extern: nitro/gx/gx_load.h leaves GX_LoadBG3Scr out until
  * decl_common.h's non-const spelling of it goes. */
 extern void GX_LoadBG3Scr(const void *a, u32 b, u32 c);
-
 
 extern u8 gMainScreenLayers;
 
@@ -175,7 +190,6 @@ extern OamAttr **sCurling2CounterSprites[];
 extern int sCurling2CursorSprites[];
 
 extern char sCurling2BgJokyuNcgPath;
-
 
 /* The seven pointer-to-member state tables this file's functions dispatch
  * through. __sinit_ov006_02130758 fills them from the 8-byte {code
@@ -246,7 +260,7 @@ extern PMF pmf_dScMgCurling2_c_StepYRestart;
 extern PMF pmf_dScMgCurling2_c_StepYRampUp;
 
 extern PMF pmf_dScMgCurling2_c_StepYRampDown;
- /* extern "C" */
+/* extern "C" */
 
 namespace cstd {
 s16 atan2(s32, s32);
@@ -1732,7 +1746,7 @@ s32 dScMgCurling2_c::InitResources() {
  * allocation size, and vtable identity; later EAD lineage supplies the
  * classInit spelling prior. Exact original SM64DS spelling is not preserved.
  * Historical project alias: func_ov006_020e6bf4. */
- void *dScMgCurling2_c_classInit() {
+void *dScMgCurling2_c_classInit() {
     return new dScMgCurling2_c;
 }
 

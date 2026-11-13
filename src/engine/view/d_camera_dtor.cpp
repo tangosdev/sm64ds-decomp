@@ -48,7 +48,6 @@ extern void Math_Function_0203b0fc(int *value, int target, int step, int max);
 extern int AngleDiff(int a, int b);
 }
 
-
 #ifdef _MSC_VER
 /* Host definition of the one destructor MSVC emits. The flat D0 name is
  * port/hal/host_d0.cpp. Nothing in this arm reaches mwccarm. */
@@ -58,8 +57,6 @@ dCamera_c::~dCamera_c() {}
 
 dCamera_c::~dCamera_c() {}
 #endif
-
-
 
 void func_020070e8(dCamera_c *cam, int distTarget, int distStep, short vertTarget, short vertDiv,
                    short horzTarget, short horzDiv) {
@@ -107,6 +104,5 @@ int CutsceneGrandStarFlyAppCvars(dCamera_c *cam) {
     ApproachVec3fAsymptotic(&cam->lookAt, &vb, 0x800, 0xccc, 0x800);
     return 1;
 }
-
 
 /* The Vector3 destructor's body is the inline one in include/types.h. */

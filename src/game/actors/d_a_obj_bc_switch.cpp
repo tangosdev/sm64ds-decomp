@@ -133,7 +133,6 @@ extern u16 DecIfAbove0_Short(u16 *p);
 extern int func_ov002_020dd8b8(void *c);
 }
 
-
 /* Actor ID 0xbf is PLAYER. This int-returning predicate is what makes the
  * ROM materialize 0/1 before testing it. */
 static inline int IsPlayerActor(dActor_c *actor) {

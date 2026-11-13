@@ -25,17 +25,29 @@
 #include "nitro/gx/g2.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "math/CalcLib.h"
-namespace s20b1e34 { void Mg_DrawScoreTally(void*, int, int, int); }
+namespace s20b1e34 {
+void Mg_DrawScoreTally(void *, int, int, int);
+}
 using s20b1e34::Mg_DrawScoreTally;
-namespace s20b1bc8 { void Mg_DrawCredits(char *a0, int, int, int); }
+namespace s20b1bc8 {
+void Mg_DrawCredits(char *a0, int, int, int);
+}
 using s20b1bc8::Mg_DrawCredits;
-namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+namespace s20b0aa0 {
+void FreeGfxSlotsById(int);
+}
 using s20b0aa0::FreeGfxSlotsById;
-namespace s20afa20 { void RenderOamMainScreen(OamAttr *oam, int, int, int, int); }
+namespace s20afa20 {
+void RenderOamMainScreen(OamAttr *oam, int, int, int, int);
+}
 using s20afa20::RenderOamMainScreen;
-namespace s20af68c { void Hud_RenderSprite(void *attr, int, int, int, int); }
+namespace s20af68c {
+void Hud_RenderSprite(void *attr, int, int, int, int);
+}
 using s20af68c::Hud_RenderSprite;
-namespace s20ad674 { s32 GetGameLanguage(void); }
+namespace s20ad674 {
+s32 GetGameLanguage(void);
+}
 using s20ad674::GetGameLanguage;
 void MgCoins_Reset(void);
 void MgCoins_Update(void);
@@ -54,7 +66,6 @@ typedef struct OamAttrTmpl {
     u16 attr3; /* 0x6 */
 } OamAttrTmpl;
 
-
 extern int pmf_Dealer_StateDeal_2[2];
 
 extern int pmf_Dealer_StateReveal[2];
@@ -64,9 +75,7 @@ extern unsigned short sCardFaceSprites[];
 extern void *sCardObjSprites[];
 
 extern int sMgCardSprites[];
-extern "C" {
-
-}
+extern "C" {}
 
 extern void **sCardPayoutHighlightSprites[];
 
@@ -81,17 +90,16 @@ extern "C" {
 
 extern void Vec2_Sub(int *o, int *a, int *b);
 
-extern void func_0203d680(Vector2 *out, const Vector2 *in, int scale);}
+extern void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
+}
 
 extern const Five sCardHandOrder;
 
 extern int sCardFaceWeights[];
 extern "C" {
 
-
-
-
-extern void Dealer_Draw(void *c);}
+extern void Dealer_Draw(void *c);
+}
 
 extern OamAttr *data_ov006_02134028;
 namespace s020c19d0 {
@@ -102,20 +110,17 @@ extern "C" {
 
 void MgCoins_Update(void);
 
-extern int Dealer_IsBusy(void *p);}
+extern int Dealer_IsBusy(void *p);
+}
 int Dealer_IsIdle(Dealer *dealer);
 extern "C" {
 
 extern void Dealer_StartDeal(void *c, s16 arg1, s16 *arg2);
 
-extern void Dealer_PlayLose(void *c);}
-void Dealer_PlayWin(void *c);
-extern "C" {
-
-
-
-
+extern void Dealer_PlayLose(void *c);
 }
+void Dealer_PlayWin(void *c);
+extern "C" {}
 
 extern int sMgCoinsBetPlaced;
 
@@ -126,14 +131,15 @@ extern int gMgCoinsInPlay;
 extern int sCardHandPayouts[];
 extern "C" {
 
-
-extern void MgCoins_StartPayout(int a);}
+extern void MgCoins_StartPayout(int a);
+}
 
 extern s16 gMgCoinsStatus;
 void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
 extern "C" {
 
-extern void MgCoins_Reset(void);}
+extern void MgCoins_Reset(void);
+}
 
 extern u8 gMainScreenLayers;
 
@@ -143,19 +149,17 @@ extern "C" {
 
 extern void *LoadFile(int);
 
-
 extern void DecompressLZ16(void *, void *);
 
-extern int Dealer_Load(char *);}
-
+extern int Dealer_Load(char *);
+}
 
 /* `new` inlines the implicit constructor: the base chain, this class's
    vptr, mDealer, then the two hands through __cxa_vec_ctor. The two card
    classes' implicit constructors are generated here, as the ROM's
    _ZN12dMgCardObj_cC1Ev (0x020dbe30) and _ZN17dMgDilarCardObj_cC1Ev
    (0x020dbe14), the last two functions of the run. */
- void* dScMgCard_c_classInit()
-{
+void *dScMgCard_c_classInit() {
     return new dScMgCard_c;
 }
 

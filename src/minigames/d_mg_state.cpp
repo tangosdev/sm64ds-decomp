@@ -115,37 +115,65 @@
 #include "PlayerInput.h"
 #include "Sound.h"
 #include "math/Approach.h"
-namespace s20b2444 { void Mg_DrawBigNumber(int, int, int, int, int, int, int); }
+namespace s20b2444 {
+void Mg_DrawBigNumber(int, int, int, int, int, int, int);
+}
 using s20b2444::Mg_DrawBigNumber;
 extern "C" {
 extern void Mg_DrawRecordTable(void *);
 extern void Mg_CallStartRound(void *c, void *arg);
 }
-namespace s20b0d8c { void Mg_DrawBlinkSprite(void *c, s32, s32); }
+namespace s20b0d8c {
+void Mg_DrawBlinkSprite(void *c, s32, s32);
+}
 using s20b0d8c::Mg_DrawBlinkSprite;
-namespace s20b0cac { void Mg_ShowBanner(int, int, int, int, int, short); }
+namespace s20b0cac {
+void Mg_ShowBanner(int, int, int, int, int, short);
+}
 using s20b0cac::Mg_ShowBanner;
-namespace s20b0b1c { int Mg_CheckBannerButton(int); }
+namespace s20b0b1c {
+int Mg_CheckBannerButton(int);
+}
 using s20b0b1c::Mg_CheckBannerButton;
-namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+namespace s20b0aa0 {
+void FreeGfxSlotsById(int);
+}
 using s20b0aa0::FreeGfxSlotsById;
-namespace s20b04c0 { int Mg_GetTopScreenYOffset(void); }
+namespace s20b04c0 {
+int Mg_GetTopScreenYOffset(void);
+}
 using s20b04c0::Mg_GetTopScreenYOffset;
-namespace s20af948 { void Mg_RenderSubSpriteMtx(void *a, int, int, void *m); }
+namespace s20af948 {
+void Mg_RenderSubSpriteMtx(void *a, int, int, void *m);
+}
 using s20af948::Mg_RenderSubSpriteMtx;
-namespace s20ae2c8 { void Mg_StartMusic(void); }
+namespace s20ae2c8 {
+void Mg_StartMusic(void);
+}
 using s20ae2c8::Mg_StartMusic;
-namespace s20ae274 { void Mg_PlayJingle(void*); }
+namespace s20ae274 {
+void Mg_PlayJingle(void *);
+}
 using s20ae274::Mg_PlayJingle;
-namespace s20ae20c { void Mg_RestoreMusic(void); }
+namespace s20ae20c {
+void Mg_RestoreMusic(void);
+}
 using s20ae20c::Mg_RestoreMusic;
-namespace s20adbe0 { int Mg_IsNewRecord(void); }
+namespace s20adbe0 {
+int Mg_IsNewRecord(void);
+}
 using s20adbe0::Mg_IsNewRecord;
-namespace s20adbc0 { int Mg_GetSubmittedScore(void); }
+namespace s20adbc0 {
+int Mg_GetSubmittedScore(void);
+}
 using s20adbc0::Mg_GetSubmittedScore;
-namespace s20ad90c { void Mg_CommitRecords(void); }
+namespace s20ad90c {
+void Mg_CommitRecords(void);
+}
 using s20ad90c::Mg_CommitRecords;
-namespace s20ad674 { s32 GetGameLanguage(void); }
+namespace s20ad674 {
+s32 GetGameLanguage(void);
+}
 using s20ad674::GetGameLanguage;
 
 /* local extern: including Sound.h renumbers SetState's local static. */
@@ -153,9 +181,7 @@ namespace Sound {
 u32 PlayBank2_2D(u32);
 }
 
-extern "C" {
-
-}
+extern "C" {}
 
 extern void func_02012dd0(void *c);
 extern "C" {
@@ -164,7 +190,6 @@ extern void Mg_DrawRecordTable(void *);
 extern void Mg_CallStartRound(void *c, void *arg);
 }
 void Mg_SetNextBanner(int);
-
 
 struct W2 {
     int w[2];
@@ -292,7 +317,6 @@ void Mg_ResetBannerLayout(void) {
     sMgScoreDigitsX = 0x80;
     sMgScoreDigitsY = 0x80;
 }
-
 
 dMgState_c::dMgState_c() : mState(-1), mTimer(0), unk_020(0), mSuspended(0) {}
 
@@ -1058,19 +1082,15 @@ void Mg_PlaceBannersOnTopScreen(void) {
     }
 }
 
-
 void Mg_ResetRecordBannerPos(void) {
     sMgResultsBannerX = 0x80;
     sMgResultsBannerY = -0x1c;
 }
 
-
 void Mg_SetPerfectBanner(void) {
     Mg_SetNextBanner(6);
 }
 
-
 void Mg_SetNextBanner(int v) {
     sMgNextBanner = v;
 }
-

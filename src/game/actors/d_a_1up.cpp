@@ -395,7 +395,6 @@ extern "C" {
 void func_ov002_020bdf8c(daPly_c *player);
 }
 
-
 /* -------------------------------------------------------------------------- */
 /* Vtable slot 19, verified against config/arm9/overlays/ov002/relocs.txt:
    _ZTV7da1up_c (0x021083c8) + 0x4c relocates to 0x020af2b0, this address.
@@ -993,7 +992,6 @@ void da1up_c::UpdatePopOutDrift() {
 typedef void BgchInitAt_(void *thiz, dActor_c *a, int r, int h, Vector3_16 *p, int q);
 int IsStarCollectedInCurLevel(int a);
 
-
 /* Ordinal 34 dispatches through this pointer-to-member-function type: the
    fourteen descriptors at 0x02108300..0x02108370 are {function pointer, 0}
    records on da1up_c, copied into the 14-element array at 0x0210dc00 by
@@ -1190,15 +1188,13 @@ int da1up_c::InitResources()
 /* MEGA_MUSHROOM (277 / SCALEUP_KINOKO). `new` calls the inherited
    fBase_c::operator new; the implicit constructor inlines the dEnemyBase_c
    base step, vptr store, and the four member constructors. */
-da1up_c *da1up_c_classInit_SCALEUP_KINOKO()
-{
+da1up_c *da1up_c_classInit_SCALEUP_KINOKO() {
     return new da1up_c();
 }
 
 /* -------------------------------------------------------------------------- */
 /* ONE_UP_MUSHROOM (276 / ONEUPKINOKO). Same class, second profile. */
-da1up_c *da1up_c_classInit_ONEUPKINOKO()
-{
+da1up_c *da1up_c_classInit_ONEUPKINOKO() {
     return new da1up_c();
 }
 

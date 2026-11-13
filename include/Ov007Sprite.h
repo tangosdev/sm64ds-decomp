@@ -61,6 +61,9 @@ void func_ov007_020c44c4(Ov007Sprite *sprite);
 extern "C" {
 #endif
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+extern "C" {
+#endif
 struct Ov007Camera;
 
 Ov007Sprite *func_ov007_020c44e4(int frameCount);
@@ -72,6 +75,9 @@ void func_ov007_020c41dc(Ov007Sprite *base, Ov007Sprite *sprite, struct Ov007Cam
 void func_ov007_020c4128(Ov007Sprite *parent, Ov007Sprite *child, struct Ov007Camera *camera);
 void func_ov007_020c4684(Ov007Sprite *sprite, u16 color, int alpha, int polygonId, int flags,
                          s16 *vec);
+#if defined(_MSC_VER) && defined(__cplusplus)
+}
+#endif
 
 #ifdef __cplusplus
 }

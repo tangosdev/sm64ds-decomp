@@ -6,7 +6,6 @@
 
 extern "C" {
 
-
 extern int func_020186c0(unsigned int val);
 extern int func_02018568(int a);
 extern unsigned func_02018ac4(unsigned *p);

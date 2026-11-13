@@ -61,9 +61,8 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
 struct Model;
 struct MatAnimData;
 
-
 extern Matrix4x3 data_0209b3ec;
- /* local extern: the camera-space matrix the Render paths use */
+/* local extern: the camera-space matrix the Render paths use */
 /* local extern: no header declares it; sizes the transforms buffer from the file */
 int func_02046564(void *file);
 /* local extern: Model4.cpp's Dst/Desc/ElemA. Pointer casts at the calls. */
@@ -136,7 +135,6 @@ void func_020469e8(ModelComponents *model, BTA_File *file, int frame);
 void func_020470e8(BMD_File *model, BMA_File *file);
 void func_02046e28(struct Model *model, struct MatAnimData *file, unsigned short frame);
 }
-
 
 /* 0xc-byte records in the common model data array at data_0209cefc, counted
    by data_0209cef8. GetCommonModelComponents fills the two owned slots; the destructors

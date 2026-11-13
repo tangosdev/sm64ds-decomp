@@ -30,6 +30,9 @@
 #include "types.h"
 
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+extern "C" {
+#endif
 typedef enum OSProcMode {
     OS_PROCMODE_USER = 0x10,
     OS_PROCMODE_FIQ = 0x11,
@@ -85,6 +88,9 @@ void OS_SpinWait(u32);
 /* Halts for good. The SDK's lives in os_terminate_proc.c; this ROM links the
  * game's own in its place (src/OS_Terminate.cpp). */
 void OS_Terminate(void);
+#if defined(_MSC_VER) && defined(__cplusplus)
+}
+#endif
 
 
 #endif /* NITRO_OS_SYSTEM_H */

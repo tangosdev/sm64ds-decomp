@@ -84,7 +84,6 @@ extern "C" u8 DecIfAbove0_Byte(u8 *);
 extern "C" int RandomIntInternal(int *);
 int Vec3_Dist(const Vector3 *, const Vector3 *);
 
-
 /* ROM ordinals 0 and 1 -- ov091 0x02132d04 (D0, 0x68) and 0x02132d6c (D1,
  * 0x54). No source here: both destructor variants come from the ONE
  * inline body in include/daDsnBase_c.h, which the class's descendants need

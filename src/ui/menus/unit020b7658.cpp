@@ -36,8 +36,6 @@
 #include "Particle__Manager.h"
 #include "Particle__System.h"
 
-
-
 void func_02049f58(Particle::Manager *);
 void func_02049ee8(Particle::Manager *, Matrix4x3 *);
 void func_02049d78(Particle::Manager *, Particle::System *);
@@ -162,4 +160,3 @@ void func_ov007_020b7658(Matrix4x3 *viewMatrix, int update) {
     }
     func_02049ee8(data_ov007_0210344c, viewMatrix);
 }
-

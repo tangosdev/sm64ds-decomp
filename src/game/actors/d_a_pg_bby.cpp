@@ -59,8 +59,7 @@ extern SharedFilePtr *const gPenguinBabyAnimationFiles[5];
 extern Vector3 gPenguinBabyCarryOffsets[4];
 extern daPgBby_c::State gPenguinBabyStates[6];
 
-daPgBby_c *daPgBby_c_classInit()
-{
+daPgBby_c *daPgBby_c_classInit() {
     return new daPgBby_c();
 }
 

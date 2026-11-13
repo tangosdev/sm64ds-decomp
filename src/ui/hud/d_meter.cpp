@@ -144,7 +144,6 @@ extern struct OamAttr *data_ov002_0210ca0c[];
 extern int GetOwnerLanguage(void);
 extern "C" {
 
-
 extern unsigned char data_0209f2bc;
 extern unsigned short data_ov002_02111188;
 extern unsigned char gSubScreenLayers;
@@ -157,7 +156,6 @@ void DecompressLZ16(void *src, void *dst);
 
 void Deallocate(void *handle);
 void func_0203da4c(void);
-
 
 /* Mode 1 is versus mode. This int-returning predicate is what makes the ROM
    materialize 0/1 before testing it. */

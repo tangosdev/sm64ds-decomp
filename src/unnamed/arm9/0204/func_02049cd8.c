@@ -2,8 +2,8 @@
 #include "nitro/mi/memory.h"
 #include "nitro/snd/interface.h"
 
-extern int _Z13func_020507e0PvjiiiS_S_(void *buffer, unsigned int size, int format, int rate, int interval,
-                         void *callback, void *arg);
+extern int _Z13func_020507e0PvjiiiS_S_(void *buffer, unsigned int size, int format, int rate,
+                                       int interval, void *callback, void *arg);
 
 /* Start the sound-capture effect: clear its state (0xc0 bytes at
    data_020a4c70), set the effect kind data_020a4c64 to mode, and for kind

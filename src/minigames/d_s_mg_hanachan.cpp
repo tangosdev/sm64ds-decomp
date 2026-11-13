@@ -14,8 +14,7 @@
 
 void *dScMgHanachan_c_classInit(void);
 
-
- void *dScMgHanachan_c_classInit(void) {
+void *dScMgHanachan_c_classInit(void) {
     return new dScMgHanachan_c;
 }
 

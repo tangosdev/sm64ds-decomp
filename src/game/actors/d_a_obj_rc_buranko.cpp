@@ -95,7 +95,7 @@ u32 data_ov036_02112b84 = 0xffffffff;
    RTTI, allocation size, vtable identity, and the RC_BURANKO registry profile;
    later EAD lineage supplies classInit. Exact original spelling is not
    preserved. Historical alias: SwingingPlatform_Spawn. */
- daObjRcBuranko_c *daObjRcBuranko_c_classInit() {
+daObjRcBuranko_c *daObjRcBuranko_c_classInit() {
     return new daObjRcBuranko_c();
 }
 

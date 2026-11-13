@@ -3,7 +3,9 @@
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/mi/memory.h"
-namespace s20adc4c { int Mg_GetWorkBuffer(void); }
+namespace s20adc4c {
+int Mg_GetWorkBuffer(void);
+}
 using s20adc4c::Mg_GetWorkBuffer;
 
 enum LoadFont_AssetId {
@@ -22,8 +24,7 @@ extern unsigned char data_0209d660;
 extern short data_0209d6d4;
 
 void LoadFont(unsigned char arg);
-void LoadFont(unsigned char arg)
-{
+void LoadFont(unsigned char arg) {
     void *file;
     void *r4;
     data_0209d698 = arg;

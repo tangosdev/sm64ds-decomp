@@ -44,7 +44,6 @@
 #include "nitro/mi/memory.h"
 #include "nitro/gx/gx.h"
 
-
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 /* The message system's .bss, 0x0209d64c..0x0209e64c, defined here. mwcc
@@ -142,7 +141,6 @@ extern u32 gNextActorUpdateMask;
 extern s32 data_0208ee44;
 extern "C" {
 
-
 extern void SetBg1Offset(int a, int b);
 extern void SetBg3Offset(int a, int b);
 extern void SetSubBg1Offset(int a, int b);
@@ -159,7 +157,6 @@ namespace Sound {
 int ChangeMusicVolume(u32 a, s32 b);
 }
 
-
 void func_0201cd08(int arg);
 void func_0201cebc(short a0);
 void func_0201cfb8(int arg0);
@@ -175,7 +172,6 @@ void func_0201ef50(int arg);
 void func_0201f108(void);
 void func_0201f138(void);
 void func_0201f32c(int arg0);
-
 
 void dScStage_c::UpdateMessage() {
     if (data_0209d660 == 0)
@@ -263,8 +259,7 @@ void Message::DisplaySaveStatusText(unsigned short n)
     func_0201d418(0x109, 0x70);
 }
 
-void func_0201cebc(short a0)
-{
+void func_0201cebc(short a0) {
     volatile unsigned short v;
     volatile int z;
     data_0209d6d4 = a0;
@@ -295,8 +290,7 @@ void Message::DisplayLevelClearText(u16 msgID, u8 course) {
     func_0201e220(1);
 }
 
-void func_0201cfb8(int arg0)
-{
+void func_0201cfb8(int arg0) {
     data_0209d6d4 = (u16)arg0;
     data_0209d660 = 0;
     func_0201eaac();
@@ -332,8 +326,7 @@ void Message::DisplayOptionsMenuText(s16 n) {
  * copy forces the reload but not the same schedule (0x210). */
 #pragma push
 #pragma opt_common_subs off
-void LoadControllerModeText(int param0)
-{
+void LoadControllerModeText(int param0) {
     int n, m, i;
     short *scr;
 
@@ -1052,8 +1045,7 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
     func_0201b388(data_0209d6a8);
 }
 
-void func_0201eaac(void)
-{
+void func_0201eaac(void) {
     data_0209d6c0 = 0;
     data_0209d6b4 = 0;
     data_0209d69c = 0;
@@ -1168,8 +1160,7 @@ void func_0201ef38(void) {
 /* Shows a credit text (message arg + 0x24e) on the sub screen's BG0: clears
    all of BG0's character tiles, then lays the message out one 32-tile line
    at a time, centred vertically on the screen. A negative arg only clears. */
-void func_0201ef50(int arg)
-{
+void func_0201ef50(int arg) {
     volatile int zero;
     volatile int lineZero;
     int lines;
@@ -1223,8 +1214,7 @@ void func_0201f108(void) {
     } while (i < 0x400);
 }
 
-void func_0201f138(void)
-{
+void func_0201f138(void) {
     volatile int li;
     volatile unsigned short ls;
     int idx;
@@ -1291,8 +1281,7 @@ static inline int IsGameMode(int mode) {
    screen's text tiles and map, lays the box's tiles out row by row from tile
    0x200 (0x2200 on the sub screen), and pumps Message::Update until the
    open state reaches 4. */
-void func_0201f32c(int arg0)
-{
+void func_0201f32c(int arg0) {
     MessageEntry *entry;
     u8 disp2;
     u8 t;
@@ -1463,8 +1452,7 @@ void func_0201f32c(int arg0)
 
 /* Course ids that must not open the talk window. data_0209d664 is the byte
    after the shared reset flag at data_0209d660. */
-int func_0201fb4c(void)
-{
+int func_0201fb4c(void) {
     short v;
     unsigned int b;
     if (data_0209d664 != 0) goto no;
@@ -1505,8 +1493,7 @@ int ObjectMessageIDToActualMessageID(s16 id) {
     return id;
 }
 
-void func_0201fc88(s16 objectMsgID)
-{
+void func_0201fc88(s16 objectMsgID) {
     s16 id = (s16)ObjectMessageIDToActualMessageID(objectMsgID);
     func_0201f32c(id);
 }

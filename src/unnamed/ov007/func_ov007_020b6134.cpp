@@ -2,7 +2,6 @@
 #include "Ov007MenuState.h"
 #include "Ov007Work.h"
 
-
 extern "C" void func_ov007_020aec94(int);
 
 /* Slot `arg` was tapped: in main state 0 it hands arg + 3 to
@@ -39,4 +38,3 @@ void func_ov007_020b6134(int arg){
       break;
   }
 }
-

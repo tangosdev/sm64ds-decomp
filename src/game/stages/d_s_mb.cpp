@@ -60,7 +60,6 @@ extern u8 gSubScreenLayers;
 extern dGraph_c::callback_c *gGraphCallback;
 extern int data_0208ee44;
 
-
 /* Whether the loader job Behavior waits on has finished: InitResources seeds
    it from func_0201a244's return value (1 when the job ran synchronously) and
    Behavior's step 1 polls func_0201a1bc into it. It is this TU's .bss, sorted

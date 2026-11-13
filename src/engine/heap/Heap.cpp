@@ -44,12 +44,11 @@
 inline void* operator new(size_t, void* p) { return p; }
 
 /* 0x020a0eac, already named in config/arm9/symbols.txt. */
-extern Heap* GAME_HEAP_PTR;
+extern "C" Heap* GAME_HEAP_PTR;
 /* 0x020a0ea8 -- where SetupSolidHeapAsDefault parks the outgoing default heap.
    Unnamed in config/arm9/symbols.txt; left as the address symbol rather than
    minted here, since naming it is a claim of its own. */
-extern Heap* data_020a0ea8;
-
+extern "C" Heap* data_020a0ea8;
 
     /* `extern' is load-bearing on both of these, and specifically because they
        sit inside a BRACED linkage block. Written `extern "C" u32 X;' on its own
@@ -62,17 +61,16 @@ extern Heap* data_020a0ea8;
 
        build_pin.verify compiles a single file and never links, so it returned
        (True, '2004/b56') on the broken spelling. Only rombuild.py caught it. */
-    extern u32   ROOT_HEAP_ARENA_ID;
-            /* 0x020a0ea4 */
-    extern Heap* data_020a0e9c;
-                 /* the root heap; unnamed */
+extern "C" u32 ROOT_HEAP_ARENA_ID;
+/* 0x020a0ea4 */
+extern "C" Heap *data_020a0e9c;
+/* the root heap; unnamed */
 
-    unsigned int OS_GetArenaLo(s32 arena);
-    unsigned int OS_GetArenaHi(s32 arena);
-    void *OS_InitAlloc(s32 arena, void *lo, void *hi, int maxHeaps);
-    void OS_SetArenaLo(s32 arena, unsigned int lo);
-    void *OS_AllocFromArenaLo(s32 arena, unsigned int size, unsigned int align);
-
+unsigned int OS_GetArenaLo(s32 arena);
+unsigned int OS_GetArenaHi(s32 arena);
+void *OS_InitAlloc(s32 arena, void *lo, void *hi, int maxHeaps);
+void OS_SetArenaLo(s32 arena, unsigned int lo);
+void *OS_AllocFromArenaLo(s32 arena, unsigned int size, unsigned int align);
 
 /* The global allocation entry points, highest addresses first: two bodies
    over the default heap, then the four global operators as three-word
@@ -95,8 +93,6 @@ extern Heap* data_020a0ea8;
    array or not, is the CRT's. Nothing here reaches MSVC. */
 #ifndef _MSC_VER
 
-
-
 /* func_0203cc0c at 0x0203cc0c -- allocate from the default heap with the
  * default alignment. The body of operator new and operator new[]. */
 void *func_0203cc0c(u32 size) {
@@ -109,7 +105,6 @@ void *func_0203cc0c(u32 size) {
 void func_0203cbf0(void *ptr) {
     Memory::defaultHeapPtr->_Deallocate(ptr);
 }
-
 
 /* operator new(size_t) at 0x0203cbe4. Every new-expression in src/ resolves
  * here. */

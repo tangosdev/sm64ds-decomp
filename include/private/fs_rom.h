@@ -13,6 +13,9 @@
 #include "nitro/card/card_rom.h"
 #include "private/fs_views.h"
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+extern "C" {
+#endif
 
 extern u32 fsi_default_dma_no;
 extern s32 fsi_card_lock_id;
@@ -22,5 +25,8 @@ extern FSArchive fsi_arc_rom;
 
 void FSi_InitRom(u32 default_dma_no);
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+}
+#endif
 
 #endif /* PRIVATE_FS_ROM_H */

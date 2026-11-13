@@ -39,7 +39,6 @@ struct Matrix2x2Words {
 
 namespace GX { void DisableAllBanks(); }
 
-
 extern Matrix2x2 data_02092668;
 
 extern void Initialise3dGraphics(int arg);
@@ -78,7 +77,6 @@ extern int func_0203d9b4(void);
 extern int func_02013edc(s32 sceneID, s32 param, int a);
 
 extern dFdBrightness_c *data_0209d4ac;
-
 
 /* The scene's two global faders: the colour fade every scene change runs
    (SetAndStopColorFader, StartSceneFade) and the plain brightness fade

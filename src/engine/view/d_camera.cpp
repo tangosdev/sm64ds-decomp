@@ -160,7 +160,6 @@ extern void MTX_Concat43(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *out)
 extern void MTX_Identity43_(Matrix4x3 *matrix);
 }
 
-
 /* Camera-side records used by the follow handlers. Ground and line queries
    use the real dBgCh_Gnd and dBgCh_Lin classes above. */
 typedef struct Entry3 {
@@ -1419,7 +1418,6 @@ int dCamera_c::func_0200bec4(int *target, int baseY, char *modeArg, int speed) {
 dActor_c *KuppaScript::FindScriptPlayer(u32 character);
 dActor_c *KuppaScript::FindDemoActor(u32 param1);
 
-
 /* local extern: math/CalcLib.h spells the Vec3 helpers with const Vector3 *,
    which this file's VecFx32 callers cannot pass; only these two are taken
    from it. */
@@ -1474,7 +1472,6 @@ extern int data_0208729c;
 extern struct CamMode data_020874cc;
 extern "C" {
 
-
 /* Siblings defined below. */
 int func_02009414(dCamera_c *cam);
 int func_020094a8(dCamera_c *cam);
@@ -1488,7 +1485,6 @@ void Vec3fGetDistAndAngle(const Vector3 *v0, const Vector3 *v1, int *outDist, sh
                           short *outHorzAng);
 void ApproachVec3fAsymptotic(Vector3 *self, const Vector3 *src, int stepX, int stepY, int stepZ);
 extern "C" {
-
 
 /* State entries and helpers defined below. The declarations carry the C
    linkage their ROM symbols need. */
@@ -1510,7 +1506,6 @@ int func_02009540(dCamera_c *cam);
 int func_020094e4(dCamera_c *cam);
 void func_020094c0(dCamera_c *cam);
 }
-
 
 /* The turn-by-buttons follow (mode data_0208733c), Super Mario 64's
    mode_8_directions_camera: the yaw is mBaseAngleY plus mBaseAngleOffset
@@ -3305,7 +3300,6 @@ void dCamera_c::PrepareBgCh(dBgCh &bgCh) {
    member representation matters. */
 typedef int (CamPmfHost::*CamScriptOp)(unsigned char *, int, int);
 
-
 extern CamScriptOp data_02086c80, data_02086d80, data_02086c60, data_02086c90, data_02086bd8,
     data_02086d18, data_02086d98, data_02086c88, data_02086d00, data_02086bc0, data_02086e30,
     data_02086ce8, data_02086e38, data_02086e20, data_02086cd0, data_02086e08, data_02086df0,
@@ -3943,7 +3937,6 @@ int CutsceneGrandStarFlyMarioOffscreen(dCamera_c *cam) {
     ApproachLinear(cam->savedPos.z, 0x3e8000, cam->mRampSpeed * 10 / 15);
     return 1;
 }
-
 
 /* Nineteen camera states, definition order is retail __sinit order. Each
    record is two CamPmf (enter at +0, execute at +8), plain-copied from the

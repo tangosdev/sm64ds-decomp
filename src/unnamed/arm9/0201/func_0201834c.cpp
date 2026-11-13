@@ -7,14 +7,12 @@
 
 extern "C" {
 
-
 extern int myFS_ReadFile(FSFile *p_file, void *dst, int len);
 extern int func_02018568(void *a);
 extern unsigned int func_02018ac4(void *p);
 extern void DecompressLZ16(void *src, void *dst);
 extern void func_02018770(void);
 }
-
 
 /* Read the whole open file (more than 8 bytes, or crash) into a new heap
    block: an LZ77-tagged file is decompressed into a block of its unpacked

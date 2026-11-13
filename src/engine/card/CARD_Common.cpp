@@ -25,8 +25,6 @@
 #include "nitro/mi/memory.h"
 #include "nitro/pxi/fifo.h"
 
-
-
 /* local extern: no header declares this yet. */
 
 #define OS_LOCK_ID_ERROR (-3)

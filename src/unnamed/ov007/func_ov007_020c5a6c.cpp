@@ -9,9 +9,7 @@ struct Vec3Words {
     int w[3];
 };
 
-
 int func_ov007_020c30ac(Vector3 *arr, int count, Vector3 *target, int arg4, int *out);
-
 
 /* Picks the stroke point nearest target over every group (with flag set,
    only points before limitGroup/limitIndex). Mode 0 then moves pos onto it,
@@ -25,8 +23,7 @@ void func_ov007_020c5a6c(Ov007Picker *self, void *target, int flag) {
     int out;
     for (i = 0; i < self->groupCount; i++) {
         int best = func_ov007_020c30ac(self->groupPoints[i], self->groups[i]->pointCount,
-                                       (Vector3 *)target,
-                                       carry, &out);
+                                       (Vector3 *)target, carry, &out);
         /* The ROM tests flag twice (cmp r7,#0 / beq twice), so the
            redundant `flag != 0` stays. */
         if (best != -1 &&

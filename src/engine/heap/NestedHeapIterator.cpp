@@ -26,8 +26,6 @@
  */
 #include "nnsys/fnd.h"
 
-
-
 /* ---- NNS_FND_heapcommon.c ---- */
 
 extern int sRootListInitialized;

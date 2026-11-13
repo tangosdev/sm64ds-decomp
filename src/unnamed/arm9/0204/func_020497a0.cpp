@@ -3,8 +3,6 @@
 #include "nitro/os/cache.h"
 #include "CaptureEffect.h"
 
-
-
 /* Capture effect 2, a feedback cross-echo: each output sample is the input
    plus the delay-line entry from 24 samples earlier, saturated to s16. What
    goes back into the delay line is a quarter of the other channel's mixed

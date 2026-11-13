@@ -51,7 +51,6 @@ extern "C" int AngleDiff(int a, int b);
 
 /* the player side of the conversation */
 
-
 #pragma defer_codegen off
 
 /* One out-of-line definition; mwccarm emits D1 and D0 from it, in that
@@ -163,7 +162,7 @@ int daObjKanban_c::InitResources() {
  * what runs dBgActor_c's base step, stores the vptr and then
  * constructs the dCcAcPos_c at 0x320, in that order, and `operator
  * new` is fBase_c's. */
- daObjKanban_c *daObjKanban_c_classInit(void) {
+daObjKanban_c *daObjKanban_c_classInit(void) {
     return new daObjKanban_c();
 }
 

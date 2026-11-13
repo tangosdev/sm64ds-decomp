@@ -49,7 +49,6 @@ extern "C" {
 extern void LoadSilverStarAndNumber();
 }
 
-
 /* Actor IDs 0xf, 0x10 and 0x11 are three of the daObjBlockL_c brick
  * blocks a tag can attach to. This int-returning predicate is what makes
  * the ROM materialize 0/1 before testing it. */

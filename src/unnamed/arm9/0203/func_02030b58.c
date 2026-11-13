@@ -36,7 +36,8 @@ void func_02030b58(void) {
         }
     }
     if (data_0209fc5c[0] == 0) return;
-    if (data_0209fc5c[_Z13func_0203da9cv()] != 0) return;
+    if (data_0209fc5c[_Z13func_0203da9cv()] != 0)
+        return;
     data_0209fc58 |= 0xf;
     _Z13func_02030790v();
 }

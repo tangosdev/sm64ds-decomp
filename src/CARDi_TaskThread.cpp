@@ -8,8 +8,6 @@
 #include "nitro/os/system.h"
 #include "nitro/card/card_common.h"
 
-
-
 void CARDi_TaskThread(void *arg) {
     CARDiCommon *const p = &cardi_common;
     for (;;) {

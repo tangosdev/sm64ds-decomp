@@ -38,19 +38,33 @@ enum d_s_mg_single3_d_base_AssetId {
 
 /* SDK calls this file makes. */
 #include "nitro/os/cache.h"
-namespace s20b290c { void Mg_ResetBgOffsets(void); }
+namespace s20b290c {
+void Mg_ResetBgOffsets(void);
+}
 using s20b290c::Mg_ResetBgOffsets;
-namespace s20b2980 { void Mg_DisableAllBanks(void); }
+namespace s20b2980 {
+void Mg_DisableAllBanks(void);
+}
 using s20b2980::Mg_DisableAllBanks;
-namespace s20b0d30 { void Mg_ResetOverlays(void); }
+namespace s20b0d30 {
+void Mg_ResetOverlays(void);
+}
 using s20b0d30::Mg_ResetOverlays;
-namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+namespace s20b0aa0 {
+void FreeGfxSlotsById(int);
+}
 using s20b0aa0::FreeGfxSlotsById;
-namespace s20adc68 { void *Ov004_LoadFile(int); }
+namespace s20adc68 {
+void *Ov004_LoadFile(int);
+}
 using s20adc68::Ov004_LoadFile;
-namespace s20adc5c { void Ov004_Deallocate(void *ptr); }
+namespace s20adc5c {
+void Ov004_Deallocate(void *ptr);
+}
 using s20adc5c::Ov004_Deallocate;
-namespace s20ad674 { s32 GetGameLanguage(void); }
+namespace s20ad674 {
+s32 GetGameLanguage(void);
+}
 using s20ad674::GetGameLanguage;
 
 extern "C" {
@@ -59,14 +73,8 @@ void *LoadFile(int fileId);
 
 void DecompressLZ16(void *src, void *dst);
 
-
-
-
-
 /* Forwards to LoadFile. Its own definition is still declared without the
  * argument and result, so this file keeps a local declaration. */
-
-
 }
 
 extern u8 gSubScreenLayers;
@@ -84,7 +92,6 @@ extern int sSingle3DCommonNcgByLanguage[];
 extern int data_0208ee44;
 
 extern dGraph_c::callback_c *gGraphCallback;
-
 
 /* Slot 33 brings up both graphics engines, assigns VRAM banks and loads
  * the language's OBJ characters and the OBJ palettes into both engines
@@ -177,7 +184,7 @@ int dScMgSingle3DBase_c::GetDisplayMode()
 
 /* Load the sub screen's BG3 characters, palette and map, releasing each
  * buffer. */
- void LoadCard2SubBg3(void *) {
+void LoadCard2SubBg3(void *) {
     void *fileData = LoadFile(ASSET_D_2D_MG_BG_CARD2_NCG_BIN);
     gSubScreenLayers |= 8;
     G2S_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x1000,

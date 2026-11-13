@@ -79,4 +79,3 @@ void func_ov007_020aed98(void)
         func_ov007_020ad660(WORK->layerSlots[i]);
     }
 }
-

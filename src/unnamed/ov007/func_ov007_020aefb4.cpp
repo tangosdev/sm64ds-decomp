@@ -4,8 +4,6 @@
 #include "Ov007Item.h"
 #include "nitro/fx/fx_cp.h"
 
-
-
 extern int PickerScene_IsIdle(void);
 extern void func_ov007_020af260(int, int, int *, int *);
 extern Ov007MenuState *PickerScene_GetScaleAnimState(void);
@@ -51,4 +49,3 @@ void func_ov007_020aefb4(void) {
     }
     PickerScene_Update();
 }
-

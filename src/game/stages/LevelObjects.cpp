@@ -31,7 +31,6 @@
  * one spelling of each. */
 extern "C" {
 
-
 /* data_0209caa0 is the live save block; its first 0x44 bytes are the
  * current file. LoadEntranceObjects reads the character, LoadClsnAndObjects
  * flags2. */
@@ -67,7 +66,6 @@ extern u16 sObjToActorIdTable[];
 extern s16 sNextDeathTableID;
 }
 
-
 void func_0202af80(void *entries, s32 count);
 void func_0202b044(void *entries, s32 count);
 void func_0202b060(void *entries, s32 count);
@@ -77,12 +75,10 @@ void func_0202b0e0(LVL_Overlay::StandardEntry *e, int count);
 void StartEntranceFaderWipe(int index);
 extern "C" {
 
-
 /* dScStage_c::LoadClsnAndObjects' own callees. LoadFile is not in decl_common.h. */
 struct KCL_File;
 void *LoadFile(int handle);
 }
-
 
 /* LoadObjects dispatches through this table, indexed by object category.
  * Its entries are the fifteen category loaders. This text-only TU does not
@@ -91,9 +87,8 @@ typedef void (*ObjectLoader)(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 par
 extern "C" {
 
 extern ObjectLoader sObjectLoaders[];
-
 }
- /* extern "C" */
+/* extern "C" */
 
 /* The loaders test the game mode as a 0/1 value. */
 static inline int IsGameMode(int mode) {

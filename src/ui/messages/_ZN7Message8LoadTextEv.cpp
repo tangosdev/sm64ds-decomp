@@ -2,7 +2,6 @@
 #include "Message.h"
 #include "MessageBank.h"
 
-
 extern int GetOwnerLanguage(void);
 extern "C" {
 

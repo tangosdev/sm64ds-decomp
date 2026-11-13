@@ -63,8 +63,6 @@
 
 #pragma opt_loop_invariants off
 
-
-
 /* The window's state machine, as MessageWindow_Update steps it. */
 enum Ov007MessageWindowState {
     OV007_WINDOW_OPENING = 0, /* scale grows to 0x1000 */
@@ -888,4 +886,3 @@ void MenuText_ClearMainPlane(void) {
     MI_CpuFillFast(data_ov007_02103478[0], x, data_ov007_020d7a5c[0]);
     data_ov007_02102ddc.pad_14 = 0;
 }
-

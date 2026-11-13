@@ -4,8 +4,6 @@
 #include "nitro/hw/registers.h"
 #include "Ov007Transition.h"
 
-
-
 /* Starts the transition: state 1 from t = 0, with the request cleared, and
  * sets up its effect's registers on each of its screens. Mosaic (1) sets or
  * clears the mosaic bit of BG0..3CNT by the planes mask; blend alpha (2/3)
@@ -87,4 +85,3 @@ void func_ov007_020c86c4(Ov007Transition *tr) {
         return;
     }
 }
-

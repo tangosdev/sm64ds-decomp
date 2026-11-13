@@ -50,6 +50,9 @@ typedef volatile struct OSLockWord {
 
 #define OS_ReadOwnerOfLockCartridge() OS_ReadOwnerOfLockWord((OSLockWord *)HW_CTRDG_LOCK_BUF)
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+extern "C" {
+#endif
 
 void OS_InitLock(void);
 s32 OSi_DoLockByWord(u16, OSLockWord *, void (*)(void), u32);
@@ -71,5 +74,8 @@ void OSi_WaitByLoop(void);
 s32 OS_GetLockID(void);
 void OS_ReleaseLockID(u16);
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+}
+#endif
 
 #endif /* NITRO_OS_SPINLOCK_H */

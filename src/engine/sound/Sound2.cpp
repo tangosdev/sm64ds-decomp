@@ -36,24 +36,22 @@
 #include "nitro/cp/sqrt.h"
 #include "private/sound_positional.h"
 
-
-
 /* A playing sound is an NNSSndHandle. Its NNSSndSeqPlayer carries the
    (seqNo, seqArcIndex) pair Sound.cpp passes to func_02048a1c as (kind, id),
    and the voice priority (prio). The voice slots are SoundSlots
    (private/sound_positional.h). */
 
 extern u16 data_02099fa4;
-   /* pan channel */
+/* pan channel */
 extern u32 data_02099fa8;
-   /* near range: full volume inside it */
+/* near range: full volume inside it */
 extern u32 data_02099fac;
-   /* far range: silent beyond it */
+/* far range: silent beyond it */
 extern int data_02099fb0;
-   /* slot-9 voice count */
+/* slot-9 voice count */
 extern const u32 data_020821c0[16];
 extern void *data_020a4bec;
- /* the registry owner */
+/* the registry owner */
 extern SoundSlot data_020a4c18[];
 extern SoundSlot data_020a4c08[];
 extern SoundSlot data_020a4bf8[];
@@ -118,7 +116,6 @@ void func_02048ef4(void) {
     SetSoundRange(4);
 }
 
-
 namespace Sound {
 
 void Func_02048ee4() {
@@ -142,8 +139,6 @@ void Func_02048eb4() {
 }
 
 }
-
-
 
 void func_02048e94(void) {
     data_02099fb0 = 4;

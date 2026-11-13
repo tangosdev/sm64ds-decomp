@@ -28,8 +28,6 @@
  * Text only: the table stays ROM-owned and is reached by extern.
  */
 
-
-
 extern int sInputLocks[10];
 
 int func_ov007_020c1da0(int index) {
@@ -43,5 +41,3 @@ void func_ov007_020c1d8c(int index) {
 void func_ov007_020c1d78(int index) {
     sInputLocks[index] = 0;
 }
-
-

@@ -151,7 +151,6 @@ namespace Sound {
 int PlayLong(u32, u32, u32, const Vector3 &, s16);
 }
 
-
 extern signed char gCurrentSublevel;
 extern unsigned char gCurrentStarId;
 void func_02012694(unsigned int a, const Vector3 *pos);
@@ -159,13 +158,11 @@ short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 int IsStarCollectedInCurLevel(int);
 extern "C" {
 
-
 void d_a_owlPlayLongHold(unsigned int a, unsigned int b, unsigned int cc, void *pos,
                          unsigned int d);
 int func_ov002_020df7f4(void *c);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
-
 
 /* Actor ID 0xbf is PLAYER. This int-returning predicate is what makes the
  * ROM materialize 0/1 before testing it. */
@@ -276,7 +273,7 @@ int daOwl_c::UpdateCarrying() {
 
     if (OWL_TIMER(this) != 0) {
         if (unk_3e8 == 0 && OWL_FRAME(this) <= 2) {
-            func_02012694(0x139,(const Vector3 *)(&mCamSpacePosX));
+            func_02012694(0x139, (const Vector3 *)(&mCamSpacePosX));
             unk_3e8 = 1;
         } else {
             if (OWL_FRAME(this) > 2)
@@ -339,7 +336,7 @@ int daOwl_c::UpdateHover() {
                 if ((u16)(player->mStateFlags & 0x800) == 0) {
                     if (player->StartTalk(*this, 1) != 0) {
                         if (mTalkTarget->ShowMessage(*this, 0xa2, &mPos, 0, 0) == 1) {
-                            func_02012694(0x176,(const Vector3 *)(&mCamSpacePosX));
+                            func_02012694(0x176, (const Vector3 *)(&mCamSpacePosX));
                             mTalkState = TALK_TALKING;
                             ChangeState(OWL_STATE_TALK);
                             return 1;
@@ -562,7 +559,7 @@ int daOwl_c::Behavior()
         if ((m == OWL_STATE_TALK || m == OWL_STATE_HOVER ||
              m == OWL_STATE_RETURN) &&
             (unsigned short)(mAnmModel.currFrame >> 0xc) == 0) {
-            func_02012694(0x139,(const Vector3 *)(&mCamSpacePosX));
+            func_02012694(0x139, (const Vector3 *)(&mCamSpacePosX));
         }
     }
     /* The ROM tests this state twice; the else is unreachable. */
@@ -633,8 +630,7 @@ int daOwl_c::InitResources()
     return 1;
 }
 
-daOwl_c *daOwl_c_classInit()
-{
+daOwl_c *daOwl_c_classInit() {
     return new daOwl_c();
 }
 

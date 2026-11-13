@@ -18,7 +18,7 @@
 /* ROM order: the ENTRY factory, then EntryMesh (0x0211a948..0x0211b524). */
 #pragma defer_codegen off
 
- void *dScEntry_c_classInit_ENTRY(void) {
+void *dScEntry_c_classInit_ENTRY(void) {
     return new dScEntry_c;
 }
 
@@ -27,7 +27,6 @@
  * its Behavior and Render call Behavior and Render, which run the
  * {init, behavior, render} handler row this file's static initializer builds:
  * InitGrid, UpdateRipple and DrawGrid. */
-
 
 /* local extern: no header declares these arm9 vector helpers.
    EntryMeshVec is the POD view used for the grid data; APIs taking Vector3
@@ -395,7 +394,7 @@ int EntryMesh::Init(const Vector3 *pos, int angleY) {
 
 EntryMeshTexture EntryMeshTextureFile(0x8418);
 
- EntryMeshHandler EntryMeshHandlers[3] = {
+EntryMeshHandler EntryMeshHandlers[3] = {
     &EntryMesh::InitGrid,
     &EntryMesh::UpdateRipple,
     &EntryMesh::DrawGrid,

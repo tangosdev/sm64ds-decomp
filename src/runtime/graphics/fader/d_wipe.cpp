@@ -32,9 +32,7 @@
 #include "nitro/gx/gx.h"
 #include "nitro/mi/memory.h"
 
-
 void Wipe_HBlankHandler(void);
-
 
 extern u8           data_0209f5f8;   /* which display engine the wipe covers */
 extern volatile u8  data_0209f5fc;   /* the next HBlank has a fresh line */

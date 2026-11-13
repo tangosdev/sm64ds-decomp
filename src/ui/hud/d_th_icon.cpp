@@ -24,7 +24,6 @@
 #include "dThIcon_c.h"
 #include "PlayerInput.h"
 
-
 /* local extern: arm9 C helpers with no shared header. */
 int func_0203da9c(void);
 void func_ov001_020ab3f0(void *);
@@ -36,7 +35,7 @@ extern int data_0208ee44;
  * touchable (the latch Behavior applies), and set the press reload to
  * ten. The highest address in this unit, so first in the file. Callers
  * in ov004/ov006/ov075 pass the icon as a char *, so the entry keeps it. */
- void func_ov001_020ab5b0(char *p, int kind, short x, short y, short halfW, short halfH) {
+void func_ov001_020ab5b0(char *p, int kind, short x, short y, short halfW, short halfH) {
     dThIcon_c *icon = reinterpret_cast<dThIcon_c *>(p);
     icon->mTouchKind = kind;
     icon->mX = x;

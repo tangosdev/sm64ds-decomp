@@ -2643,11 +2643,11 @@
     },
     "arm9:0x0201791c": {
       "author": "tangosdev",
-      "name": "_Z29SharedFilePtr_Destruct_TexSeqi"
+      "name": "SharedFilePtr_Destruct_TexSeq"
     },
     "arm9:0x02017934": {
       "author": "tangosdev",
-      "name": "_Z30SharedFilePtr_Construct_TexSeqPvj"
+      "name": "SharedFilePtr_Construct_TexSeq"
     },
     "arm9:0x0201794c": {
       "author": "tangosdev",
@@ -2655,7 +2655,7 @@
     },
     "arm9:0x02017984": {
       "author": "tangosdev",
-      "name": "_Z27SharedFilePtr_Destruct_Animi"
+      "name": "SharedFilePtr_Destruct_Anim"
     },
     "arm9:0x0201799c": {
       "author": "tangosdev",
@@ -29235,7 +29235,7 @@
     },
     "ov007:0x020c3d1c": {
       "author": "andrewboudreau",
-      "name": "_Z19func_ov007_020c3d1cPv"
+      "name": "func_ov007_020c3d1c"
     },
     "ov007:0x020c3d40": {
       "author": "tangosdev",
@@ -29243,7 +29243,7 @@
     },
     "ov007:0x020c3df4": {
       "author": "tangosdev",
-      "name": "_Z19func_ov007_020c3df4PKci"
+      "name": "func_ov007_020c3df4"
     },
     "ov007:0x020c3e1c": {
       "author": "tangosdev",

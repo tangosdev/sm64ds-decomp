@@ -29,15 +29,25 @@ enum dScMgSound_c_AssetId {
 #include "nitro/gx/gx_load.h"
 #include "math/CalcLib.h"
 #include "nitro/fx/fx_trig.h"
-namespace s20b2574 { void Mg_DrawStockCounter(int, int); }
+namespace s20b2574 {
+void Mg_DrawStockCounter(int, int);
+}
 using s20b2574::Mg_DrawStockCounter;
-namespace s20b1e34 { void Mg_DrawScoreTally(void*, int, int, int); }
+namespace s20b1e34 {
+void Mg_DrawScoreTally(void *, int, int, int);
+}
 using s20b1e34::Mg_DrawScoreTally;
-namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+namespace s20b0aa0 {
+void FreeGfxSlotsById(int);
+}
 using s20b0aa0::FreeGfxSlotsById;
-namespace s20b023c { void Mg_RenderSpriteBothPalMtx(void *a0, int, int, int, void *a4); }
+namespace s20b023c {
+void Mg_RenderSpriteBothPalMtx(void *a0, int, int, int, void *a4);
+}
 using s20b023c::Mg_RenderSpriteBothPalMtx;
-namespace s20af68c { void Hud_RenderSprite(void *attr, int, int, int, int); }
+namespace s20af68c {
+void Hud_RenderSprite(void *attr, int, int, int, int);
+}
 using s20af68c::Hud_RenderSprite;
 
 /* The state/phase dispatch tables hold pointer-to-member records: the
@@ -108,9 +118,7 @@ extern Pmf pmf_dScMgSound_c_Pop12_Start;
 extern Pmf pmf_dScMgSound_c_Pop12_Fly;
 extern Pmf pmf_dScMgSound_c_Pop12_Finish;
 
-extern "C" {
-
-}
+extern "C" {}
 
 extern void *sSoundWinSpriteBSprites[];
 
@@ -121,9 +129,7 @@ extern void *sSoundWinSpriteASprites[];
 
 /* Stored timing suffixes are retained; WinSpriteA reads only indices 0 and 1. */
 extern const u16 sSoundWinSpriteATimes[4] = {50, 4, 50, 0};
-extern "C" {
-
-}
+extern "C" {}
 
 extern u8 data_ov006_0213f54c[];
 
@@ -183,7 +189,8 @@ extern const u8 sSoundPopSpawnKinds[5] = {0, 1, 2, 2, 1};
 void Presenter_PlayMatch(void *c);
 extern "C" {
 
-extern void Presenter_PlayMiss(void *c);}
+extern void Presenter_PlayMiss(void *c);
+}
 
 extern int sSoundRowLengthAlt[];
 
@@ -197,7 +204,6 @@ extern int sSoundScrollRowLength[];
  * array is retained without asserting its original purpose or declared bound. */
 extern const u16 sSoundNoteClosingTimes[8] = {2, 2, 3, 4, 4, 4, 4, 4};
 void Presenter_PlayCheerLoop(void *c);
-
 
 unsigned int func_02012174(u32 bank, u32 id);
 
@@ -237,22 +243,21 @@ u16 sSoundNotePositions10[20] = {32, 32,  80, 32,  128, 32,  176, 32,  224, 32,
 u16 *sSoundNotePositions[3] = {sSoundNotePositions6, sSoundNotePositions8, sSoundNotePositions10};
 extern "C" {
 
-extern void Presenter_ResetPose(void *c);}
+extern void Presenter_ResetPose(void *c);
+}
 void Presenter_PlayCheer(void *c);
 extern "C" {
-
-
 
 void *LoadFile(int handle);
 
 void DecompressLZ16(void *src, void *dst);
 
-int Presenter_Load(void *p);}
+int Presenter_Load(void *p);
+}
 
 extern u8 gMainScreenLayers;
 
 extern u8 gSubScreenLayers;
-
 
 /* The note and pop dispatch tables belong to this scene. Declaration
  * order preserves the cartridge static-initialization sequence. */
@@ -345,7 +350,7 @@ inline dScMgSound_c::dScMgSound_c() {}
 
 /* The MG_SOUND registry factory. It sits directly after InitResources and
    installs this class's vtable, so it was compiled with the class. */
- void *dScMgSound_c_classInit(void) {
+void *dScMgSound_c_classInit(void) {
     return new dScMgSound_c;
 }
 

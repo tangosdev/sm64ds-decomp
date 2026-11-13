@@ -8,6 +8,12 @@
 
 struct Vector2;
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+extern "C" {
+#endif
 Fix12i Vec2_Len(const Vector2 *v);
+#if defined(_MSC_VER) && defined(__cplusplus)
+}
+#endif
 
 #endif

@@ -84,8 +84,8 @@ struct EntObjTextureSequenceFileHandle : SharedFilePtr {
  * class type, mwccarm homes the register arguments and the callers grow, so
  * the measured scalar views stay. */
 
-extern "C" int d_ent_objNewHold(unsigned handle, unsigned id, int x, int y, int z, const Vector3_16 *dir,
-                     void *callback);
+extern "C" int d_ent_objNewHold(unsigned handle, unsigned id, int x, int y, int z,
+                                const Vector3_16 *dir, void *callback);
 
 extern "C" int RandomIntInternal(int *seed);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
@@ -165,8 +165,8 @@ typedef void (UnknownVsPlayer::*UnknownVsPlayerState)();
 struct UnknownVsPlayerStateRow {
     UnknownVsPlayerState state;
 };
- extern UnknownVsPlayerStateRow sVsPlayerMoveStates[];
- extern UnknownVsPlayerStateRow sVsPlayerAnimStates[];
+extern UnknownVsPlayerStateRow sVsPlayerMoveStates[];
+extern UnknownVsPlayerStateRow sVsPlayerAnimStates[];
 
 #pragma defer_codegen off
 
@@ -961,7 +961,7 @@ int dEntObj_c::InitResources() {
  * preserved. The array runtime passes each element address and ignores
  * lifecycle results; explicit function-pointer casts mark that runtime ABI
  * boundary. */
- dEntObj_c *dEntObj_c_classInit(void) {
+dEntObj_c *dEntObj_c_classInit(void) {
     return new dEntObj_c;
 }
 
@@ -999,7 +999,7 @@ EntObjTextureSequenceFileHandle data_ov075_0211d3dc(0x804e);
 
 /* The entry-stage object's base profile: the factory, then the same priority
    in both halfwords. */
- BaseSpawnInfo<dEntObj_c> g_profile_ENTRY_OBJECT = {
+BaseSpawnInfo<dEntObj_c> g_profile_ENTRY_OBJECT = {
     dEntObj_c_classInit,
     0x015a,
     0x015a,
@@ -1009,7 +1009,7 @@ EntObjTextureSequenceFileHandle data_ov075_0211d3dc(0x804e);
    six animation handlers for mAnimState; the unused indices point at the
    empty handlers. mwcc cannot link-time-initialize pointer-to-member
    records, so the initializer copies the descriptor records in. */
- UnknownVsPlayerStateRow sVsPlayerMoveStates[10] = {
+UnknownVsPlayerStateRow sVsPlayerMoveStates[10] = {
     {&UnknownVsPlayer::MoveNone},
     {&UnknownVsPlayer::MoveToSlot},
     {&UnknownVsPlayer::MoveWaitForExit},
@@ -1021,7 +1021,7 @@ EntObjTextureSequenceFileHandle data_ov075_0211d3dc(0x804e);
     {&UnknownVsPlayer::MoveWaitForPoseSound},
     {&UnknownVsPlayer::MovePoseParticles},
 };
- UnknownVsPlayerStateRow sVsPlayerAnimStates[6] = {
+UnknownVsPlayerStateRow sVsPlayerAnimStates[6] = {
     {&UnknownVsPlayer::AnimNone},        {&UnknownVsPlayer::AnimWalkSounds},
     {&UnknownVsPlayer::AnimWaitForNext}, {&UnknownVsPlayer::AnimWaitForIdle},
     {&UnknownVsPlayer::AnimSlowGait},    {&UnknownVsPlayer::AnimFastGait},

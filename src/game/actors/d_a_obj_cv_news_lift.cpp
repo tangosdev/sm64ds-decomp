@@ -105,9 +105,7 @@ extern "C" {
 s32 Vec3_Equal(const Vector3 *a, const Vector3 *b);
 u16 DecIfAbove0_Short(u16 *p);
 u8 DecIfAbove0_Byte(u8 *p);
-
 }
-
 
 /* The identity quaternion. Its other readers still declare it int[4], so this
    TU copies it through a Quaternion view. */
@@ -120,7 +118,6 @@ extern const u16 sNewsLiftPlatformYaws[4] = {0, 0x8000, 0x4000, 0xc000};
 daObjCvNewsLift_c *daObjCvNewsLift_c_classInit() {
     return new daObjCvNewsLift_c();
 }
-
 
 /* One callback per collider. Only the player (actor 0xbf) is handled.
  * The comparison stays in an int; see the notes above. */

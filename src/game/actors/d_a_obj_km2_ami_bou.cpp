@@ -53,15 +53,14 @@ daObjKm2_Ami_Bou_c *daObjKm2_Ami_Bou_c_classInit() {
     return new daObjKm2_Ami_Bou_c();
 }
 
-SpawnInfo<daObjKm2_Ami_Bou_c> g_profile_KM2_AMI_BOU = {
-    daObjKm2_Ami_Bou_c_classInit,
-    0x008e, /* KM2_AMI_BOU registry id 142 */
-    0x00d5,
-    2,
-    0x00100000,
-    0x00300000,
-    0x01000000,
-    0};
+SpawnInfo<daObjKm2_Ami_Bou_c> g_profile_KM2_AMI_BOU = {daObjKm2_Ami_Bou_c_classInit,
+                                                       0x008e, /* KM2_AMI_BOU registry id 142 */
+                                                       0x00d5,
+                                                       2,
+                                                       0x00100000,
+                                                       0x00300000,
+                                                       0x01000000,
+                                                       0};
 
 s32 daObjKm2_Ami_Bou_c::InitResources() {
     mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov045_021131b0), 1, -1);

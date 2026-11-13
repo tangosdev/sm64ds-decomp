@@ -42,8 +42,7 @@
 /* The registry factory behind the KERONPA_FIRE profile.
  * `return new daKpFr_c()` emits 0x48 with the synthesized ctor storing
  * `_ZTV8daKpFr_c + 2`. Historical aliases: daKpFr_c_Spawn, FlameChompFire_Spawn. */
-daKpFr_c *daKpFr_c_classInit(void)
-{
+daKpFr_c *daKpFr_c_classInit(void) {
     return new daKpFr_c();
 }
 
@@ -53,15 +52,7 @@ daKpFr_c *daKpFr_c_classInit(void)
  * spellings are not preserved. Historical aliases: daKpFr_c_Spawn and
  * daKpFr_c_SpawnInfo. The descriptor is at ov070:0x02123424. */
 SpawnInfo<daKpFr_c> g_profile_KERONPA_FIRE = {
-    daKpFr_c_classInit,
-    0x010f,
-    0x0082,
-    0x00000006,
-    0x0001e000,
-    0x0003c000,
-    0x01000000,
-    0x01000000
-};
+    daKpFr_c_classInit, 0x010f, 0x0082, 0x00000006, 0x0001e000, 0x0003c000, 0x01000000, 0x01000000};
 
 #include "decl_common.h"
 #include "dBgCh_Actr.h"
@@ -248,7 +239,7 @@ void daKpFr_c::func_ov070_02121cbc(){
 
 void daKpFr_c::func_ov070_02121c8c()
 {
-    func_02012694(0x166,(const Vector3 *)(&mCamSpacePosX));
+    func_02012694(0x166, (const Vector3 *)(&mCamSpacePosX));
     SmallPoofDust();
     MarkForDestruction();
 }

@@ -20,14 +20,10 @@
 #include "nitro/os/mutex.h"
 #include "msl/critical_regions.h"
 
-
 extern unsigned int random_next;
 extern void exit(int status);
 typedef void (*sig_func)(int);
 extern sig_func signal_funcs[];
-
-
-
 
 unsigned int strlen(const char *s)
 {
@@ -39,9 +35,6 @@ unsigned int strlen(const char *s)
   } while (c != 0);
   return n;
 }
-
-
-
 
 char *strcpy(char *dst, const char *src) {
     u8 *s = (u8 *)src;
@@ -85,9 +78,6 @@ char *strcpy(char *dst, const char *src) {
     return dst;
 }
 
-
-
-
 char *strncpy(char *dst, const char *src, unsigned int n)
 {
   char *d = dst;
@@ -104,9 +94,6 @@ char *strncpy(char *dst, const char *src, unsigned int n)
   } while (--n);
   return dst;
 }
-
-
-
 
 int strcmp(const char *a, const char *b) {
     unsigned int wb, wa, t;
@@ -175,8 +162,6 @@ int strcmp(const char *a, const char *b) {
     }
 }
 
-
-
 char *strchr(const char *s, int ch_in) {
     unsigned char ch = (unsigned char)ch_in;
     unsigned char c = *(const unsigned char *)s;
@@ -190,7 +175,6 @@ char *strchr(const char *s, int ch_in) {
     if (ch != 0) return 0;
     return (char *)(p - 1);
 }
-
 
 /* MSL raise (signal.c), statement for statement with Spirit Tracks' copy:
    signals 1..7 (__signal_max), the handler table signal_funcs read and
@@ -226,8 +210,6 @@ int raise(int sig) {
     signal_func(sig);
     return 0;
 }
-
-
 
 int rand(void) {
     unsigned int s = random_next * 0x41c64e6d + 0x3039;

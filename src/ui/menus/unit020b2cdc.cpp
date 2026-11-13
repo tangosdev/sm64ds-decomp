@@ -50,8 +50,6 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
 
-
-
 /* data_ov007_02103360: the 0x1c-byte cursor func_ov007_020b30b0 allocates. */
 typedef struct Ov007Cursor {
     Ov007MenuState *state; /* 0x00: func_ov007_020c9388(0xff); func_ov007_020b2e64 ticks it */
@@ -778,4 +776,3 @@ void func_ov007_020b2cf0(void) {
 Ov007MenuState *func_ov007_020b2cdc(void) {
     return data_ov007_02103360->state;
 }
-

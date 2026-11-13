@@ -102,7 +102,7 @@ s32 daObjFl_Seesaw_c::InitResources() {
     return 1;
 }
 
- daObjFl_Seesaw_c *daObjFl_Seesaw_c_classInit() {
+daObjFl_Seesaw_c *daObjFl_Seesaw_c_classInit() {
     return new daObjFl_Seesaw_c();
 }
 

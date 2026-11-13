@@ -26,12 +26,10 @@
 
 extern "C" {
 
-
 // local extern: no header declares these yet.
 extern void SVC_CpuSet(void *src, void *dst, u32 ctrl); // SVC_CpuClear
 extern void SVC_WaitByLoop(int count);
 }
-
 
 extern CTRDGWork CTRDGi_Work;
 

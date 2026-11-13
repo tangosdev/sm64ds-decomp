@@ -25,14 +25,10 @@ void GameCardIREQMCHandler(void);
 
 typedef int (*CardCallback)(void);
 
-
 extern int data_020a89a0;
-          /* set once the card has been pulled */
+/* set once the card has been pulled */
 extern CardCallback data_020a89a4;
- /* nonzero return: terminate */
-
-
-
+/* nonzero return: terminate */
 
 // Install the pull-out handler on the card interrupt.
 void func_02061138(void) {
@@ -54,7 +50,6 @@ void func_020610fc(void) {
     for (;;)
         ;
 }
-
 
 namespace IRQ {
 

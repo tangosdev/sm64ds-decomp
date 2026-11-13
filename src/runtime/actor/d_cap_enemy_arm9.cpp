@@ -32,7 +32,6 @@
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
 
-
 extern SharedFilePtr *data_ov002_020ff028[];
 
 extern unsigned char gGameMode;
@@ -40,10 +39,8 @@ extern unsigned char data_0208a0e0;
 extern daPly_c *gPlayers[];
 extern "C" {
 
-
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
-
 
 dCapEnemy_c::dCapEnemy_c() {}
 

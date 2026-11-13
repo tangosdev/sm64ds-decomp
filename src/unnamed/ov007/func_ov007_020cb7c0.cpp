@@ -1,7 +1,6 @@
 //cpp
 #include "common.h"
 
-
 extern "C" void func_ov007_020c368c(Vector3_16 *vectors, int count, int clamp);
 
 static inline s16 f12(int x) {
@@ -99,4 +98,3 @@ void func_ov007_020cb7c0(Vector3_16 *out, int w, int h, int *pts, s16 a5, s16 a6
     }
     func_ov007_020c368c(out, w * h * 2, 0);
 }
-

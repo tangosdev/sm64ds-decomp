@@ -126,7 +126,6 @@ daBmb_c *daBmb_c_classInit(void)
     return new daBmb_c();
 }
 
-
 extern SpawnInfo<daBmb_c> g_profile_BOMBHEI = {
     daBmb_c_classInit,
     0x00ce, /* BOMBHEI registry id 206 */

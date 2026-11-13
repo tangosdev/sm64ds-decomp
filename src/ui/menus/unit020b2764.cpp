@@ -58,8 +58,6 @@
 #include "dExtModel_c.h"
 #include "Ov007Figure.h"
 
-
-
 /* One sprite's corner-colour pair (BGR555): `outer` feeds cornerColors[0]
  * and [3], `inner` cornerColors[1] and [2]. */
 typedef struct Ov007CornerPair {
@@ -255,4 +253,3 @@ void FigureScene_SetScreenBlend(int t) {
         }
     }
 }
-

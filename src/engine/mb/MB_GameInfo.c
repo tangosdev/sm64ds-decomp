@@ -393,8 +393,8 @@ void MBi_SendFixedBeacon(void) {
     else
         data_020a9d2c.state = 4;
 
-    WM_SetGameInfo(0, (u16 *)&data_020a9d40, 0x70, _Z13func_020688e4v(), _Z13func_020688ccv(), _Z11MBi_GetTgidv(),
-                   (u8)(_Z16MBi_GetAttributev() | WM_ATTR_FLAG_MB));
+    WM_SetGameInfo(0, (u16 *)&data_020a9d40, 0x70, _Z13func_020688e4v(), _Z13func_020688ccv(),
+                   _Z11MBi_GetTgidv(), (u8)(_Z16MBi_GetAttributev() | WM_ATTR_FLAG_MB));
 }
 
 /* NitroSDK MBi_InitSendVolatBeacon, beacon send state 4: start the volatile

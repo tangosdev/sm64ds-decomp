@@ -55,39 +55,43 @@ struct SpriteAttr {
     int a, b;
 };
 
-namespace s20adc74 { void *Ov004_LoadFileByPath(const char *); }
+namespace s20adc74 {
+void *Ov004_LoadFileByPath(const char *);
+}
 using s20adc74::Ov004_LoadFileByPath;
-namespace s20afdd0 { void Mg_RenderSpriteBoth(void *, int, int, int, int); }
+namespace s20afdd0 {
+void Mg_RenderSpriteBoth(void *, int, int, int, int);
+}
 using s20afdd0::Mg_RenderSpriteBoth;
-namespace s20af770 { int Mg_RenderSubSpriteScaled(void *, int, int, int, int, int, unsigned short); }
+namespace s20af770 {
+int Mg_RenderSubSpriteScaled(void *, int, int, int, int, int, unsigned short);
+}
 using s20af770::Mg_RenderSubSpriteScaled;
-namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+namespace s20b0aa0 {
+void FreeGfxSlotsById(int);
+}
 using s20b0aa0::FreeGfxSlotsById;
-namespace s20adc5c { void Ov004_Deallocate(void *); }
+namespace s20adc5c {
+void Ov004_Deallocate(void *);
+}
 using s20adc5c::Ov004_Deallocate;
 extern "C" {
 
 extern void func_0203d388(int *p, int angle);
-
-
 }
 
 /* The dragged petal's two adjacent fixed-point coordinates. */
 typedef struct V2 {
     int x;
     int y;
-}
- V2;
+} V2;
 extern "C" {
 
 void Vec2_Sub(int *out, int *a, int *b);
 
-
-
 void *Ov004_LoadFileByPath(void *arg);
 
 void DecompressLZ16(void *src, void *dst);
-
 }
 
 extern int data_0208ee44;
@@ -95,7 +99,6 @@ extern int data_0208ee44;
 extern u8 gMainScreenLayers;
 
 extern u8 gSubScreenLayers;
-
 
 /* Written first so D1 and D0 are emitted first, as in the cartridge. The
  * body is empty: the compiler destroys mFace, then the petal table, in
@@ -581,7 +584,7 @@ inline dScMgFlower_c::dScMgFlower_c() {}
  * allocation size, vtable identity, and the MG_FLOWER registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: func_ov006_0212b7f8. */
- void *dScMgFlower_c_classInit() {
+void *dScMgFlower_c_classInit() {
     return new dScMgFlower_c;
 }
 

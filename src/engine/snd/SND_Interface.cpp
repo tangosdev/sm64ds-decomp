@@ -21,8 +21,6 @@
 #include "nitro/snd/command.h"
 #include "nitro/snd/interface.h"
 
-
-
 /* This SDK's command numbers. There is no SND_CMD_PREPARE_SEQ,
  * SND_CMD_START_PREPARED_SEQ or SND_CMD_SKIP_SEQ, so pause is 2 and
  * pret's 6..0x17 are 3 lower here. There is no SND_CMD_MASTER_PAN, so

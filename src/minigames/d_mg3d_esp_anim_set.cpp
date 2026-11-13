@@ -52,21 +52,37 @@
 #include "math/Approach.h"
 #include "LevelRng.h"
 #include "math/CalcLib.h"
-namespace s20b1e34 { void Mg_DrawScoreTally(void*, int, int, int); }
+namespace s20b1e34 {
+void Mg_DrawScoreTally(void *, int, int, int);
+}
 using s20b1e34::Mg_DrawScoreTally;
-namespace s20b0cac { void Mg_ShowBanner(int, int, int, int, int, short); }
+namespace s20b0cac {
+void Mg_ShowBanner(int, int, int, int, int, short);
+}
 using s20b0cac::Mg_ShowBanner;
-namespace s20b0a54 { void Mg_SetSharedState(s32); }
+namespace s20b0a54 {
+void Mg_SetSharedState(s32);
+}
 using s20b0a54::Mg_SetSharedState;
-namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+namespace s20b0aa0 {
+void FreeGfxSlotsById(int);
+}
 using s20b0aa0::FreeGfxSlotsById;
-namespace s20b04d0 { void Mg_SetTopScreenYOffset(int); }
+namespace s20b04d0 {
+void Mg_SetTopScreenYOffset(int);
+}
 using s20b04d0::Mg_SetTopScreenYOffset;
-namespace s20af948 { void Mg_RenderSubSpriteMtx(void *a, int, int, void *m); }
+namespace s20af948 {
+void Mg_RenderSubSpriteMtx(void *a, int, int, void *m);
+}
 using s20af948::Mg_RenderSubSpriteMtx;
-namespace s20af770 { int Mg_RenderSubSpriteScaled(void *, int, int, int, int, int, unsigned short); }
+namespace s20af770 {
+int Mg_RenderSubSpriteScaled(void *, int, int, int, int, int, unsigned short);
+}
 using s20af770::Mg_RenderSubSpriteScaled;
-namespace s20adb1c { void Mg_SubmitScore(int); }
+namespace s20adb1c {
+void Mg_SubmitScore(int);
+}
 using s20adb1c::Mg_SubmitScore;
 void Mg_SetNextBanner(int);
 
@@ -95,7 +111,6 @@ struct EspAnimSetTexSequenceFilePtr : SharedFilePtr {
     ~EspAnimSetTexSequenceFilePtr();
 };
 
-
 /* The file handles: word 1 of a SharedFilePtr is its loaded file. */
 extern EspAnimSetModelFilePtr gEspCardModelFile;
 
@@ -117,37 +132,31 @@ extern EspAnimSetModelFilePtr gEspHamonModelFile;
 
 extern EspAnimSetModelFilePtr gEspIrieModelFile;
 
-
 extern Matrix4x3 data_020a0e68;
 extern "C" {
 
-void Matrix4x3_FromTranslation(void* m, int x, int y, int z);}
+void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
+}
 
 void func_02046208(void *a, unsigned int b, int c);
 
-int func_020179b4(SharedFilePtr *r0, dExtModel_c *r1, int r2);extern "C" {
-
-
-
-
-
+int func_020179b4(SharedFilePtr *r0, dExtModel_c *r1, int r2);
+extern "C" {
 
 void Mg_SetNextBanner(int);
-
-
-
 }
 
 void InitialiseVramGlobals(void);
 
-void Deallocate(void*);extern "C" {
+void Deallocate(void *);
+extern "C" {
 
 void *LoadFile(int handle);
 
-void DecompressLZ16(void *src, void *dst);}
+void DecompressLZ16(void *src, void *dst);
+}
 
 void GXS_LoadBG2Scr(const void *, u32, u32);
-
 
 extern int sEsp3DMaterialAnim;
 
@@ -172,7 +181,6 @@ extern unsigned char gSubScreenLayers;
 extern int sMgClearBannerX;
 
 extern int sMgClearBannerY;
-
 
 extern Matrix4x3 data_ov006_0213c85c;
 
@@ -464,7 +472,8 @@ dMg3DEspModel_c::dMg3DEspModel_c()
    Behavior, four play phases for Play, five card states, three row states,
    two slot states, four slot type handlers and three flash modes. */
 typedef void (dScMg3DEsp_c::*dScMg3DEsp_cState)();
-typedef void (dScMg3DEsp_c::*dScMg3DEsp_cObjState)(int);extern dScMg3DEsp_cState s3DEspRoundTable[];
+typedef void (dScMg3DEsp_c::*dScMg3DEsp_cObjState)(int);
+extern dScMg3DEsp_cState s3DEspRoundTable[];
 extern dScMg3DEsp_cState s3DEspPhaseTable[];
 extern dScMg3DEsp_cState s3DEspFlashTable[];
 extern dScMg3DEsp_cObjState s3DEspSlotFallTable[];
@@ -473,7 +482,7 @@ extern dScMg3DEsp_cObjState s3DEspRowTable[];
 extern dScMg3DEsp_cObjState s3DEspSlotRiseTable[];
 extern /* The ROM PMF constants the seven state tables copy from (unlicensed
  * .data), grouped by destination table in retail copy order. */
- dScMg3DEsp_cState pmf_dScMg3DEsp_c_Wait;
+    dScMg3DEsp_cState pmf_dScMg3DEsp_c_Wait;
 extern dScMg3DEsp_cState pmf_dScMg3DEsp_c_Play;
 extern dScMg3DEsp_cState pmf_dScMg3DEsp_c_Results;
 extern dScMg3DEsp_cState pmf_dScMg3DEsp_c_Deal;
@@ -495,7 +504,6 @@ extern dScMg3DEsp_cObjState pmf_dScMg3DEsp_c_SlotDampen;
 extern dScMg3DEsp_cState pmf_dScMg3DEsp_c_FlashOnce;
 extern dScMg3DEsp_cState pmf_dScMg3DEsp_c_FlashSync;
 extern dScMg3DEsp_cState pmf_dScMg3DEsp_c_FlashQuick;
-
 
 void dScMg3DEsp_c::DrawBanner()
 {
@@ -721,8 +729,8 @@ void dScMg3DEsp_c::RenderRows()
             int y = mRows[i].mY >> 12;
             int priority = mRows[i].mPriority;
             int scale = mRows[i].mScale;
-            GXOamAttr *oam = (GXOamAttr *)Mg_RenderSubSpriteScaled((void *)sEsp3DAnimSetRowsSprites, x, y,
-                                                                   -1, priority, scale, 0);
+            GXOamAttr *oam = (GXOamAttr *)Mg_RenderSubSpriteScaled((void *)sEsp3DAnimSetRowsSprites,
+                                                                   x, y, -1, priority, scale, 0);
             if (mRows[i].mState == 2) {
                 G2_SetOBJMode(oam, GX_OAM_MODE_XLU, oam->cParam);
             }
@@ -1102,8 +1110,8 @@ void dScMg3DEsp_c::ResetRound() {
     mIdleTimer = 0;
     mFlashBeats = 0;
     mDone = 1;
-}extern unsigned int sEsp3DResultSfx[];
-
+}
+extern unsigned int sEsp3DResultSfx[];
 
 void dScMg3DEsp_c::Results() {
     UpdateRows();
@@ -1372,7 +1380,7 @@ s32 dScMg3DEsp_c::InitResources()
  * allocation size, vtable identity, and the MG_3DESP registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: MgPsycheOut_Spawn. */
- dScMg3DEsp_c *dScMg3DEsp_c_classInit(void) {
+dScMg3DEsp_c *dScMg3DEsp_c_classInit(void) {
     return new dScMg3DEsp_c;
 }
 

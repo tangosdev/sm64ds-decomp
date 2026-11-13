@@ -1,8 +1,6 @@
 //cpp
 #include "dFdBrightness_c.h"
 
-
-
 /* The scene's brightness fader (dScene_c sets it, d_scene.cpp) and the
    active transition fader: a stage wipe (dFdWipe_c, set and cleared by
    d_s_stage_methods.cpp) or the cutscene colour fader gKuppaScriptFader

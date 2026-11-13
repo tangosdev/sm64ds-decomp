@@ -61,7 +61,6 @@ int func_ov100_02145014(void);
 void func_ov100_02145070(int value);
 int func_ov100_02144f84(void);
 
-
 extern u8 gLocalPlayerId;
 extern dCamera_c *gCamera;
 extern daPly_c *gPlayers[];
@@ -103,32 +102,19 @@ daStarGate_c::State daStarGate_c::ST_STAY_CLOSED = {
 };
 
 daStarGateInfo data_ov100_02148390[] = {
-    { 12, 5, 28, 37 },
-    { 30, 6, 29, 38 },
-    { 50, 7, 30, 39 },
-    { 80, 8, 31, 36 }
-};
+    {12, 5, 28, 37}, {30, 6, 29, 38}, {50, 7, 30, 39}, {80, 8, 31, 36}};
 
 daStarGate_c *daStarGate_c_classInit();
 
 SpawnInfo<daStarGate_c> g_profile_STAR_GATE = {
-    daStarGate_c_classInit,
-    0x0162,
-    0x0162,
-    0x00000002,
-    0x00096000,
-    0x00096000,
-    0x01f40000,
-    0
-};
+    daStarGate_c_classInit, 0x0162, 0x0162, 0x00000002, 0x00096000, 0x00096000, 0x01f40000, 0};
 
 /* |v| for the scale-space reach test in IsInFrontOfPlayer. */
 static inline int Abs(int v) {
     return v < 0 ? -v : v;
 }
 
-daStarGate_c *daStarGate_c_classInit()
-{
+daStarGate_c *daStarGate_c_classInit() {
     return new daStarGate_c();
 }
 
@@ -296,7 +282,7 @@ bool daStarGate_c::St_Wait_Main(daPly_c *player) {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 bool daStarGate_c::St_TalkingToPlayer_Init(daPly_c *) {
-    func_02012694(0xb8,(const Vector3 *)(&mCamSpacePosX));
+    func_02012694(0xb8, (const Vector3 *)(&mCamSpacePosX));
     func_ov100_02145070(0x87);
     return true;
 }
@@ -341,7 +327,7 @@ bool daStarGate_c::St_OpenClose_Init(daPly_c *) {
     ShowArea((s8)mAngleZ);
     gCamera->SetFlag_3();
     mTerminalVelocity = -0x8a000;
-    func_02012694(0x4e,(const Vector3 *)(&mCamSpacePosX));
+    func_02012694(0x4e, (const Vector3 *)(&mCamSpacePosX));
     return true;
 }
 
@@ -359,7 +345,7 @@ bool daStarGate_c::St_OpenClose_Main(daPly_c *player) {
                 mCloseDoorTimer = 0x1c;
             } else if (DecIfAbove0_Byte(&mCloseDoorTimer) == 0) {
                 mTerminalVelocity = 0;
-                func_02012694(0x4f,(const Vector3 *)(&mCamSpacePosX), 0);
+                func_02012694(0x4f, (const Vector3 *)(&mCamSpacePosX), 0);
             } else if (mCloseDoorTimer == 8) {
                 gCamera->GoBehindPlayer(gLocalPlayerId);
             }

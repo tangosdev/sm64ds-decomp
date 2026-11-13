@@ -102,14 +102,12 @@ extern daSanbo_c::StateFunc data_ov096_02137b48[];
 /* Both profiles construct this class. The synthesized ctor stores
  * `_ZTV9daSanbo_c + 2`; do not restate a file-local `extern _ZTV`. */
 
-daSanbo_c *daSanbo_c_classInit_SANBO(void)
-{
+daSanbo_c *daSanbo_c_classInit_SANBO(void) {
     return new daSanbo_c();
 }
 
 /* Same class, SANBO_BODY profile (actor id 0xf1). */
-daSanbo_c *daSanbo_c_classInit_SANBO_BODY(void)
-{
+daSanbo_c *daSanbo_c_classInit_SANBO_BODY(void) {
     return new daSanbo_c();
 }
 
@@ -258,7 +256,6 @@ unsigned d_a_sanboNewHold(unsigned a, unsigned b, int x, int y, int z, const voi
 unsigned d_a_sanboNewCleanParticleHold(unsigned a, unsigned b, int x, int y, int z,
                                        const Vector3_16f *dir);
 }
-
 
 /* A segment tracks the one in front of it while that piece is still small. */
 int daSanbo_c::UpdateStackedBody() {

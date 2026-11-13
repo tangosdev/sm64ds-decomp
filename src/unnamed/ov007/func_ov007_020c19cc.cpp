@@ -7,7 +7,6 @@
  * this one, and g3imm_cmd.h has no G3_VtxXY. */
 #define REG_VTX_XY (*(volatile u32 *)0x04000494)
 
-
 extern "C" void MTX_RotZ33_(int *m, int s, int c);
 extern "C" void G3_MultTransMtx33(int *a, int *v);
 
@@ -130,4 +129,3 @@ void func_ov007_020c19cc(int count, Vector3 *pts, int half, int t) {
     }
     G3_End();
 }
-

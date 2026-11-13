@@ -10,8 +10,6 @@
 #include "nitro/os/interrupt.h"
 #include "nitro/spi/pm.h"
 
-
-
 extern void OS_InitArena(void);
 extern void OS_InitArenaEx(void);
 extern void OS_InitException(void);
@@ -26,7 +24,6 @@ extern "C" {
 
 extern void CARD_Init(void);
 }
-
 
 void OS_Init(void) {
     OS_InitArena();
@@ -44,4 +41,4 @@ void OS_Init(void) {
     PM_Init();
 }
 
- // extern "C"
+// extern "C"

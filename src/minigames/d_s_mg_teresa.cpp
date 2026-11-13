@@ -68,11 +68,17 @@
 struct ScoreView { unsigned char pad[0xb4]; int b4; int b8; };
 
 /* Everything this file calls or reads that decl_common.h does not declare. */
-namespace s20afa20 { void RenderOamMainScreen(OamAttr *, int, int, int, int); }
+namespace s20afa20 {
+void RenderOamMainScreen(OamAttr *, int, int, int, int);
+}
 using s20afa20::RenderOamMainScreen;
-namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+namespace s20b0aa0 {
+void FreeGfxSlotsById(int);
+}
 using s20b0aa0::FreeGfxSlotsById;
-namespace s20ad674 { int GetGameLanguage(void); }
+namespace s20ad674 {
+int GetGameLanguage(void);
+}
 using s20ad674::GetGameLanguage;
 extern "C" {
 
@@ -82,15 +88,25 @@ extern void DecompressLZ16(const void *src, void *dst);
 }
 
 struct Matrix2x2;
-namespace s20afcf8 { void DrawOamSprite(OamAttr *, int, int, Matrix2x2 *); }
+namespace s20afcf8 {
+void DrawOamSprite(OamAttr *, int, int, Matrix2x2 *);
+}
 using s20afcf8::DrawOamSprite;
-namespace s20af68c { void Hud_RenderSprite(void *, int, int, int, int); }
+namespace s20af68c {
+void Hud_RenderSprite(void *, int, int, int, int);
+}
 using s20af68c::Hud_RenderSprite;
-namespace s20b2220 { void Mg_DrawNumberRotated(int, int, int, int, int, int, unsigned short); }
+namespace s20b2220 {
+void Mg_DrawNumberRotated(int, int, int, int, int, int, unsigned short);
+}
 using s20b2220::Mg_DrawNumberRotated;
-namespace s20b1e34 { void Mg_DrawScoreTally(void *, int, int, int); }
+namespace s20b1e34 {
+void Mg_DrawScoreTally(void *, int, int, int);
+}
 using s20b1e34::Mg_DrawScoreTally;
-namespace s20adbe0 { int Mg_IsNewRecord(void); }
+namespace s20adbe0 {
+int Mg_IsNewRecord(void);
+}
 using s20adbe0::Mg_IsNewRecord;
 
 extern int   func_020126e8(int a);
@@ -100,8 +116,8 @@ extern int   func_02012468(int a, int b, int c, int d, int e, int f, int g, shor
 #include "nitro/mi/memory.h"
 extern "C" {
 extern void OamRender10_d_s_mg_teresa(int sub, struct OamAttr *data, s32 x, s32 y, s32 palette,
-                                      s32 priority, s32 scaleX, s32 scaleY, s32 rotation, s32 mode);}
-
+                                      s32 priority, s32 scaleX, s32 scaleY, s32 rotation, s32 mode);
+}
 
 extern unsigned char gSubScreenLayers;
 
@@ -147,7 +163,6 @@ extern int sTeresaPaintMask[];
 
 extern int            sMgTopScreenYOffset;
 
-
 /* The four pointer-to-member state tables. Pmf handlers take the Boo/slot
    index; the scene table in sTeresaSceneStateTable takes none. */
 typedef void (dScMgTeresa_c::*Pmf)(int);
@@ -156,15 +171,14 @@ typedef void (dScMgTeresa_c::*Pmf0)();
 
 struct PmfEntry { Pmf0 pmf; };
 
-
 extern Pmf sTeresaBigBooStateTable[];
-     /* big Boo flight states, by BigBoo::state */
+/* big Boo flight states, by BigBoo::state */
 extern Pmf sTeresaRevealStateTable[];
-     /* reveal states, by mReveal[0].state */
+/* reveal states, by mReveal[0].state */
 extern Pmf sTeresaBooStateTable[];
-        /* per-Boo states, one call per live row */
+/* per-Boo states, one call per live row */
 extern PmfEntry sTeresaSceneStateTable[];
- /* scene states, by mSceneState */
+/* scene states, by mSceneState */
 /* The ROM PMF constants the four state tables copy from (unlicensed .data),
  * grouped by destination table in retail copy order. */
 extern Pmf0 pmf_dScMgTeresa_c_Scene_StateInit;
@@ -220,7 +234,7 @@ extern Pmf pmf_dScMgTeresa_c_BigBoo_StateRemove;
 extern Pmf pmf_dScMgTeresa_c_BigBoo_StateGone;
 
 extern Pmf pmf_dScMgTeresa_c_BigBoo_StateResult;
-  /* extern "C" */
+/* extern "C" */
 
 namespace Sound { void PlayBank2_2D(unsigned int id); }
 
@@ -1879,8 +1893,7 @@ s32 dScMgTeresa_c::InitResources()
  * allocation size, vtable identity, and the MG_TERESA registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: MgHideAndBooSeek_Spawn. */
- void *dScMgTeresa_c_classInit()
-{
+void *dScMgTeresa_c_classInit() {
     return new dScMgTeresa_c;
 }
 

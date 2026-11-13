@@ -178,7 +178,6 @@ void dActor_c::AfterCleanupResources(u32 vfSuccess)
     fBase_c::AfterCleanupResources(vfSuccess);
 }
 
-
 u8 IsAreaShowing(int areaId);
 extern "C" {
 
@@ -186,13 +185,13 @@ void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 }
 
 extern int data_0209fc68;
- /* nonzero forces the actor to think anyway */
+/* nonzero forces the actor to think anyway */
 extern Matrix4x3 data_0209b3ec;
- /* world -> camera */
+/* world -> camera */
 extern dClipper data_0209f43c;
-  /* the dClipper instance */
+/* the dClipper instance */
 extern u8 data_0209f274;
-        /* doubles the clip distance when set */
+/* doubles the clip distance when set */
 extern u8 gGamePaused;
 extern u8 data_0209f20c;
 extern u8 gVsExitScreenActive;
@@ -281,7 +280,6 @@ void dActor_c::AfterRender(u32 vfSuccess)
     fBase_c::AfterRender(vfSuccess);
 }
 
-
 /* local extern: defined in ActorBase.cpp, which has no header. */
 extern fLiNdBa_c *func_02043f98(fLiNdBa_c **head, unsigned int key);
 
@@ -324,7 +322,6 @@ void func_02010e78(const Vector3 *pos, const Vector3_16 *rot, s8 areaID, s16 dea
     data_0208e378 = deathTableID;
     data_0209b458 = 0;
 }
-
 
 extern fBase_c *gCurrentScene;
 void func_02010e78(const Vector3 *pos, const Vector3_16 *rot, s8 areaID, s16 deathTableID);
@@ -435,15 +432,14 @@ void dActor_c::DropShadowScaleXYZ(dExtShadowModel_c &shadow, Matrix4x3 &matrix, 
     shadow.InitModel(&matrix, scaleX, scaleY, scaleZ, opacity);
 }
 
-
 extern int data_0208e380;
-           /* distance to the cached closest player */
+/* distance to the cached closest player */
 extern int data_0208e37c;
-           /* distance to the cached farthest player */
+/* distance to the cached farthest player */
 extern unsigned char gNumPlayers;
-   /* number of players */
+/* number of players */
 extern daPly_c *gPlayers[];
-         /* the player table */
+/* the player table */
 
 daPly_c *dActor_c::ClosestPlayer() {
     if (!data_0209b458) {
@@ -610,12 +606,11 @@ void dActor_c::SpawnCoins(const Vector3 &pos, s32 count, Fix12i spread, s16 angl
     }
 }
 
-
 extern const u16 data_02075230[4];
- /* yellow, red, blue */
+/* yellow, red, blue */
 extern const u32 data_02075238[3];
 void GiveCoins(s32 playerNo, s32 amount);
- /* 0x0202a7b8 */
+/* 0x0202a7b8 */
 
 void dActor_c::GivePlayerCoins(daPly_c &player, u8 count, u32 coinKind) {
     /* Null-tested on purpose: the mangled name says R6Player and the ROM's
@@ -794,7 +789,7 @@ extern "C" {
 /* local extern: daPly_c has no accessor for the current body model. */
 void *func_ov002_020e496c(daPly_c *p);
 }
- /* the player's current mBodyModels entry */
+/* the player's current mBodyModels entry */
 
 Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
     Vector3 t;
@@ -827,9 +822,8 @@ Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
     return &data_020a0e68;
 }
 
-
 extern dCamera_c *gCamera;
- /* the camera */
+/* the camera */
 
 void dActor_c::Earthquake(const Vector3 &pos, Fix12i magnitude) {
     gCamera->func_0200d8c8(&pos, magnitude);
@@ -912,13 +906,12 @@ dActor_c *dActor_c::SpawnNumber(const Vector3 &pos, u32 value, bool packLowNibbl
     return number->SetOwner(owner);
 }
 
-
 extern u8 gCurrentStarId[];
-        /* the star index this mission was entered for */
+/* the star index this mission was entered for */
 extern s8 gCurrentSublevel[];
-      /* the current sublevel id */
+/* the current sublevel id */
 extern dActor_c *STAR_MARKERS[12];
- /* 0x0209f40c */
+/* 0x0209f40c */
 void SetStarMarker(s32 slot, dActor_c *actor, s32 markerType);
 int IsStarCollectedInCurLevel(s32 starIdx);
 
@@ -965,11 +958,10 @@ dActor_c *dActor_c::UntrackAndSpawnStar(s8 &trackStarID, u32 starID,
                  mAreaId, -1);
 }
 
-
 extern unsigned char data_0209f2c0[];
- /* WDW's water level, 0..2 */
+/* WDW's water level, 0..2 */
 extern int data_02075244[];
-           /* the water height for each level */
+/* the water height for each level */
 
 /* In area 0 of sublevel 0x15 (WDW), the current water height; anywhere else,
    the actor's own height. */
@@ -985,9 +977,8 @@ s32 dActor_c::GetWaterHeightWDW()
     return height;
 }
 
-
 extern SharedFilePtr data_ov002_0210da00;
- /* the blue coin's two model files */
+/* the blue coin's two model files */
 extern SharedFilePtr data_ov002_0210d9c8;
 
 void dActor_c::LoadBlueCoinModel() {
@@ -1045,7 +1036,6 @@ void dActor_c::DisappearPoofDustAt(const Vector3 &pos)
     Particle::System::NewSimple(kPtclDisappearPoofA, pos.x, pos.y, pos.z);
     Particle::System::NewSimple(kPtclDisappearPoofB, pos.x, pos.y, pos.z);
 }
-
 
 /* func_0200fc44 at this actor's position. */
 int dActor_c::func_0200fccc(int doRaycast) {
@@ -1139,7 +1129,6 @@ void *dActor_c::func_0200fa04(Vector3 *pos, int doRaycast) {
     return Particle::System::NewSimple(kPtclBossLandingDust, pos->x, pos->y, pos->z);
 }
 
-
 unsigned int DeathTable_GetBit(int id);
 
 int dActor_c::GetBitInDeathTable()
@@ -1147,14 +1136,12 @@ int dActor_c::GetBitInDeathTable()
     return DeathTable_GetBit(mDeathTableID);
 }
 
-
 void DeathTable_SetBit(int id);
 
 void dActor_c::TrackInDeathTable()
 {
     DeathTable_SetBit(mDeathTableID);
 }
-
 
 void DeathTable_ClearBit(int id);
 

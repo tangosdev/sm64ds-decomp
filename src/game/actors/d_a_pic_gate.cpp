@@ -65,11 +65,10 @@
 extern "C" void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *out);
 extern "C" void VEC_Normalize(const Vector3 *v, Vector3 *out);
 extern "C" void G3_LoadMtx43(void *m);
-void  func_02012694(u32 id, const Vector3 *pos);
+void func_02012694(u32 id, const Vector3 *pos);
 void *func_0201787c(SharedFilePtr *sfp);
 u32   func_02045ad8(const void *src, u32 size);
 unsigned int func_02045a50(const void *src, unsigned int size);
-
 
 extern Matrix4x3 data_0209b3ec;
 extern char data_ov080_021277a8[];
@@ -224,7 +223,7 @@ void daPicGate_c::HitTest() {
     if (y > lim)
         return;
     BeginWave(x, y, 0);
-    func_02012694(0x7b,(const Vector3 *)(&mCamSpacePosX));
+    func_02012694(0x7b, (const Vector3 *)(&mCamSpacePosX));
 }
 
 /* BuildNormals: each cell's normal is the cross product of its column and
@@ -473,10 +472,8 @@ void daPicGate_c::PlaceCorners() {
     mCorners[3].texCoord = GX_ST(0, 0);
 }
 
-
 extern "C" void G3_MultMtx43(void *m);
 extern int data_ov080_0212771c[];
-
 
 /* DrawWave. The texture binds with normal-based texture coordinates
  * (GX_TEXGEN_NORMAL) and no repeat or flip, so each vertex sends only

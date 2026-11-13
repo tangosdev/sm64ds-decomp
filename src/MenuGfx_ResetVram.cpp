@@ -2,9 +2,6 @@
 #include "nitro/gx/gx_vramcnt.h"
 #include "nitro/mi/memory.h"
 
-
-
-
 void MenuGfx_ResetVram(void) {
     volatile int a;
     volatile int b;
@@ -29,4 +26,3 @@ void MenuGfx_ResetVram(void) {
     c = 0;
     MI_CpuFill32((int *)0x5000000, c, 0x400);
 }
-

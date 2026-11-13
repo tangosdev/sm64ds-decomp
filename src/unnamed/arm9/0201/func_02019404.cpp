@@ -1,8 +1,6 @@
 //cpp
 #include "dGraph_c.h"
 
-
-
 /* The scene's graph callback (d_s_dsmt.cpp and the other scenes set it). */
 extern dGraph_c::callback_c *gGraphCallback;
 

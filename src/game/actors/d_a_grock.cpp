@@ -80,8 +80,6 @@ struct GrockModelFilePtr : SharedFilePtr {
 
 extern void func_02012694(unsigned int id, const Vector3 *pos);
 
-
-
 extern GrockModelFilePtr data_ov021_02114a50;
 
 /* D1 stores this vtable, destroys the members in reverse declaration order,
@@ -393,7 +391,6 @@ int daGrock_c::InitResources() {
 daGrock_c *daGrock_c_classInit() {
     return new daGrock_c();
 }
-
 
 /* File-scope model handle. __sinit_d_a_grock.cpp emits the construction
  * and registers the destructor; the registration node is a compiler

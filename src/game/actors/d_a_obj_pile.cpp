@@ -141,7 +141,7 @@ void daObjPile_c::OnHitByMegaChar(daPly_c &player) {
         return;
     player.IncMegaKillCount();
     PoofDust();
-    func_02012694(0x62,(const Vector3 *)(&mCamSpacePosX));
+    func_02012694(0x62, (const Vector3 *)(&mCamSpacePosX));
     Sink(1);
 }
 
@@ -225,7 +225,7 @@ s32 daObjPile_c::InitResources() {
     return 1;
 }
 
- daObjPile_c *daObjPile_c_classInit() {
+daObjPile_c *daObjPile_c_classInit() {
     return new daObjPile_c();
 }
 

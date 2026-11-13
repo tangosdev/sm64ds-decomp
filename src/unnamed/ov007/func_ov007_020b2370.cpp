@@ -9,7 +9,6 @@ void func_ov007_020bc02c(Ov007Model *a, void *b);
 void func_ov007_020be9ac(Ov007Figure *a, Ov007Model *b, void *c);
 void func_ov007_020bbff0(Ov007Model *c);
 
-
 /* Poses the manager model and both figures against camera 0's view matrix,
  * scales the model by modelGrowth, then renders all three. */
 void func_ov007_020b2370(void) {

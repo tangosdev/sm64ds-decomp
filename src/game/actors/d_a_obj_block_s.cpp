@@ -136,7 +136,7 @@ int Vec3_HorzDist(const struct Vector3 *a, const struct Vector3 *b);
 extern "C" u8 DecIfAbove0_Byte(u8 *p);
 extern "C" void *d_a_obj_block_sNewHold(u32 a, u32 b, int c, int d, int e, const void *v, void *cb);
 extern "C" u32 d_a_obj_block_sNewCleanParticleHold(u32 a, u32 b, int c, int d, int e,
-                                               const Vector3_16f *v);
+                                                   const Vector3_16f *v);
 namespace Particle {
 void RunningSlidingDustAt(s32, s32, s32);
 }
@@ -145,12 +145,10 @@ extern "C" void hold_d_a_obj_block_s(char *thiz, int f, char *m, int fix, short 
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(char *thiz, char *actor, int b, int d, void *v, int f);
 
-
 int SurfaceInfo_TestFlag0x20(int *p);
 int func_ov002_020ef228(dBgCh_Actr *c, dActor_c *other);
 int func_ov002_020f030c(int x);
 extern "C" int func_ov002_020e496c(daPly_c *c);
-
 
 extern "C" void d_a_obj_block_sPlayLongHold(u32 a, u32 b, u32 c, const Vector3 *pos, u32 e);
 
@@ -594,8 +592,7 @@ void daObjBlockS_c::EnterIdle() {
 
 /* Enters state `i`: stores it in mState and calls that row's enter member of
  * the table at data_ov098_0213c878. */
-void Crate_SetState(daObjBlockS_c *self, int i)
-{
+void Crate_SetState(daObjBlockS_c *self, int i) {
     BlockSStateHost *c = (BlockSStateHost *)self;
     c->idx = i;
     int j = c->idx;
@@ -1321,8 +1318,7 @@ void daObjBlockS_c::OnTurnIntoEgg(daPly_c &player) {
  * allocation size, vtable identity, and the BLOCK_S registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: Crate_Spawn. */
-daObjBlockS_c *daObjBlockS_c_classInit()
-{
+daObjBlockS_c *daObjBlockS_c_classInit() {
     return new daObjBlockS_c();
 }
 

@@ -21,15 +21,12 @@
 #include "nitro/hw/registers.h"
 #include "nitro/os/system.h"
 
-
-
 /* The three per-channel DMA registers: 12 bytes, striding from 0x040000b0. */
 typedef struct DMAChannelRegs {
     u32 src;
     u32 dst;
     u32 cnt;
 } DMAChannelRegs;
-
 
 void MIi_DmaSetParams_wait(u32 channel, u32 src, u32 dst, u32 cnt) {
     volatile DMAChannelRegs *reg;
@@ -47,4 +44,3 @@ void MIi_DmaSetParams_wait(u32 channel, u32 src, u32 dst, u32 cnt) {
 
     OS_RestoreInterrupts(savedState);
 }
-

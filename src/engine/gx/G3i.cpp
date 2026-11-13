@@ -35,7 +35,6 @@ void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *out);
 Fix12i VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 }
 
-
 #define reg_CP_DIV_NUMER    (*(volatile u64 *)0x04000290)
 #define reg_CP_DIV_DENOM    (*(volatile u64 *)0x04000298)
 #define reg_G3_MTX_MODE     (*(volatile u32 *)0x04000440)

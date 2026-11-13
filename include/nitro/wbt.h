@@ -23,7 +23,9 @@
 
 #include "types.h"
 
-
+#if defined(_MSC_VER) && defined(__cplusplus)
+extern "C" {
+#endif
 /* A command's completion callback, and the system callback WBT_InitParent and
  * WBT_InitChild install; the argument is the WBTCommand. */
 typedef void (*WBTCallback)(void *);
@@ -145,54 +147,66 @@ void WBT_End(void);
 #ifdef __cplusplus
 extern "C"
 #endif
-int WBT_AidbitmapToAid(u16);
+    int WBT_AidbitmapToAid(u16);
 #ifdef __cplusplus
 extern "C"
 #endif
-int WBT_GetOwnAid(void);
+    int
+    WBT_GetOwnAid(void);
 #ifdef __cplusplus
 extern "C"
 #endif
-void WBT_SetOwnAid(int);
+    void
+    WBT_SetOwnAid(int);
 #ifdef __cplusplus
 extern "C"
 #endif
-int WBT_CalcPacketbitmapSize(int);
+    int
+    WBT_CalcPacketbitmapSize(int);
 #ifdef __cplusplus
 extern "C"
 #endif
-int WBT_NumOfRegisteredBlock(void);
+    int
+    WBT_NumOfRegisteredBlock(void);
 int WBT_RegisterBlock(WBTBlockInfoList *, u32, const void *, const void *, int, u16);
 WBTBlockInfoList *WBT_UnregisterBlock(u32);
 #ifdef __cplusplus
 extern "C"
 #endif
-int WBT_SetPacketSize(int, int);
+    int
+    WBT_SetPacketSize(int, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-int WBT_MpParentSendHook(void *, int);
+    int
+    WBT_MpParentSendHook(void *, int);
 #ifdef __cplusplus
 extern "C"
 #endif
-int WBT_MpChildSendHook(void *, int);
+    int
+    WBT_MpChildSendHook(void *, int);
 
 #ifdef __cplusplus
 extern "C"
 #endif
-void WBT_RequestSync(u16, WBTCallback);
+    void WBT_RequestSync(u16, WBTCallback);
 #ifdef __cplusplus
 extern "C"
 #endif
-void WBT_GetBlockInfo(u16, int, const void *, WBTCallback);
+    void
+    WBT_GetBlockInfo(u16, int, const void *, WBTCallback);
 #ifdef __cplusplus
 extern "C"
 #endif
-void WBT_GetBlock(u16, u32, const void *, u32, const void *, WBTCallback);
+    void
+    WBT_GetBlock(u16, u32, const void *, u32, const void *, WBTCallback);
 #ifdef __cplusplus
 extern "C"
 #endif
-int WBT_PutUserData(u16, const void *, int, WBTCallback);
-
+    int
+    WBT_PutUserData(u16, const void *, int, WBTCallback);
+#if defined(_MSC_VER) && defined(__cplusplus)
+}
+#endif
 
 #endif

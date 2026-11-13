@@ -21,7 +21,6 @@
 
 #pragma defer_codegen off
 
-
 extern void *data_020a4b68;
 extern int data_02099f24;
 extern const int data_02082178[6];
@@ -29,7 +28,6 @@ namespace Absorb02043fdc {
 struct ProcessListDescriptor;
 void *func_02043fdc(ProcessListDescriptor *list);
 }
-
 
 /* If this node is the one currently executing, clear that pointer. */
 fLiNdBaPr_c::~fLiNdBaPr_c() {

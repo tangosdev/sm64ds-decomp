@@ -53,7 +53,6 @@ extern u16 DecIfAbove0_Short(u16 *p);
 extern int RandomIntInternal(int *seed);
 }
 
-
 extern Mecha09ClsnFilePtr data_ov065_0211d9cc;
 extern Mecha09ModelFilePtr data_ov065_0211d9d4;
 extern u8 data_0209f2c0;

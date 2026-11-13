@@ -5,8 +5,6 @@
 #include "nitro/fs/archive.h"
 #include "nitro/mb/mb.h"
 
-
-
 extern void func_0201fec8(void);
 extern "C" {
 

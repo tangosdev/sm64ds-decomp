@@ -1,6 +1,7 @@
 #include "private/throw_context.h"
 
-extern void _Z13func_02072168P12ThrowContextP14ActionIteratorPc(ThrowContext *c, ActionIterator *s, char *end);
+extern void _Z13func_02072168P12ThrowContextP14ActionIteratorPc(ThrowContext *c, ActionIterator *s,
+                                                                char *end);
 extern void func_02071790(ThrowContext *context, ActionIterator *iterator, int pad);
 
 /* ThrowContext, ActionIterator and CatchInfo are shared

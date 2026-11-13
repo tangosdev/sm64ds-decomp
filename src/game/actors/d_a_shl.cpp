@@ -95,11 +95,12 @@ extern SharedFilePtr *data_ov102_0214d70c[];
 
 /* -- other modules -- */
 int func_ov002_020ad660(void *self, void *clsn, void *model, int kind);
-extern "C" int  func_ov002_020cc16c(void *player, void *actor);
+extern "C" int func_ov002_020cc16c(void *player, void *actor);
 extern "C" void Matrix4x3_FromRotationY(void *m, int angle);
 int  SurfaceInfo_TestFlag0x20(int *si);
 
-extern "C" int d_a_shlNewHold(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, void *dir, void *cb);
+extern "C" int d_a_shlNewHold(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, void *dir,
+                              void *cb);
 /* local extern: these five names hold the @NNN count. Sound::PlayLong is the call. */
 extern "C" void d_a_shlPlayLongHold(u32 handle, u32 a, u32 soundID, const Vector3 &pos, s16 e);
 
@@ -109,8 +110,7 @@ typedef void BgchInitAt_(void *self, dActor_c *owner, Fix12i radius, Fix12i heig
 
 /* func_ov102_0214c84c's positions are VecFx32: Vector3 members here emit
    an extra destructor function into this TU (measured). */
-daShl_c *daShl_c_classInit()
-{
+daShl_c *daShl_c_classInit() {
     return new daShl_c();
 }
 
@@ -621,7 +621,7 @@ extern ShlState data_ov102_0214ea68 = {
     &daShl_c::func_ov102_0214d1b0,
 };
 extern ShlStateEnd data_ov102_0214ea78 = {
-    { &daShl_c::func_ov102_0214d148, &daShl_c::func_ov102_0214d114 },
+    {&daShl_c::func_ov102_0214d148, &daShl_c::func_ov102_0214d114},
 };
 extern ShlState data_ov102_0214ea48 = {
     &daShl_c::func_ov102_0214d0bc,

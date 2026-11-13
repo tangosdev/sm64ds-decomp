@@ -4,8 +4,6 @@
 #include "nitro/mi/memory.h"
 #include "nitro/snd/interface.h"
 
-
-
 /* Switch the sound-capture effect to kind (data_020a4c64; func_02049ba8
    runs it): leaving kind 1 sends SNDi_SetSurroundDecay(0); then clear the
    effect's work (data_020a4c70) and store the kind under the IRQ lock, and

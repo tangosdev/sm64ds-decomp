@@ -5,8 +5,6 @@
 #include "nitro/gx/g2.h"
 #include "nitro/gx/gx.h"
 
-
-
 extern dGraph_c::callback_c *gGraphCallback;
 extern unsigned char gMainScreenLayers;
 extern unsigned char gSubScreenLayers;

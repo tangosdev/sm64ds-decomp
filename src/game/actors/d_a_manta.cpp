@@ -361,7 +361,7 @@ int daManta_c::InitResources() {
     return 1;
 }
 
- daManta_c *daManta_c_classInit() {
+daManta_c *daManta_c_classInit() {
     return new daManta_c();
 }
 

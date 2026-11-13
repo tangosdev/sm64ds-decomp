@@ -26,15 +26,11 @@
 #include "daPly_c.h"
 #include "LevelRng.h"
 
-
-
-
 /* The state table, ov022 .bss; the definition at the end of this file
  * fills it from the two .data handler constants. One State (init + behavior). */
 extern daObj_volcanoCannon_c::State data_ov022_02114690;
 extern daObj_volcanoCannon_c::StateFunc data_ov022_0211442c;
 extern daObj_volcanoCannon_c::StateFunc data_ov022_02114424;
-
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
  * off screen. This int-returning predicate is what makes the ROM
@@ -137,7 +133,7 @@ int daObj_volcanoCannon_c::InitResources() {
     return 1;
 }
 
- daObj_volcanoCannon_c *daObj_volcanoCannon_c_classInit(void) {
+daObj_volcanoCannon_c *daObj_volcanoCannon_c_classInit(void) {
     return new daObj_volcanoCannon_c;
 }
 

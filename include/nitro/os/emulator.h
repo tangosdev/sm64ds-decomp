@@ -17,6 +17,9 @@
 
 #include "types.h"
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+extern "C" {
+#endif
 
 /* OSi_ConsoleTypeCache before the first OS_GetConsoleType. */
 #define OSi_CONSOLE_NOT_DETECT 0xffffffff
@@ -35,5 +38,8 @@
 int OS_IsRunOnEmulator(void);
 u32 OS_GetConsoleType(void);
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+}
+#endif
 
 #endif /* NITRO_OS_EMULATOR_H */

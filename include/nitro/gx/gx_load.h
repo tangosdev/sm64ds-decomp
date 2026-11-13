@@ -48,6 +48,9 @@
  * spelling here would not compile beside theirs. Parameters stay unnamed: a name in a shared header takes an
  * @NNN in every includer. */
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+extern "C" {
+#endif
 
 void GX_LoadBGPltt(const void *, unsigned int, unsigned int);
 void GXS_LoadBGPltt(const void *, unsigned int, unsigned int);
@@ -87,5 +90,8 @@ void GX_BeginLoadTexPltt(void);
 void GX_LoadTexPltt(const void *, unsigned int, unsigned int);
 void GX_EndLoadTexPltt(void);
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+}
+#endif
 
 #endif

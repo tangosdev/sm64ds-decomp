@@ -45,8 +45,6 @@
 #include "math/ProgressRatio.h"
 #include "Ov007MenuMem.h"
 
-
-
 /* data_ov007_02104bd4: the 0x30-byte record func_ov007_020bf428 allocates
  * and fills; medium-confidence name. The slot names follow their builders. */
 typedef struct Ov007MeshScene {
@@ -404,4 +402,3 @@ void func_ov007_020bed60(int arg0, int arg1, int arg2) {
     }
     SCENE->wave->delay = 0x78;
 }
-

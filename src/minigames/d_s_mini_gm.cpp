@@ -78,8 +78,6 @@ struct TouchRec {
 typedef struct Pair { int x, y; } Pair;
 struct Off9 { int v[9]; };
 
-
-
 /* ---- arm9 globals ---- */
 extern u8 gMgSaveDirty;
 extern u8 gMgMenuPage;
@@ -141,17 +139,14 @@ int  func_02013580(int a, int b);
 void func_02013598(int x);
 int  func_020135d0(int r0);
 int  func_02013638(int n);
-extern "C" int  RandomIntInternal(int *seed);
+extern "C" int RandomIntInternal(int *seed);
 extern "C" void *LoadFile(int id);
 extern "C" void DecompressLZ16(void *src, void *dst);
 
-extern "C" void OamRender10_d_s_mini_gm(int sub, OamAttr *attr, int x, int y, int pal, int prio, int sx,
-                                    int sy, int c, int d);
+extern "C" void OamRender10_d_s_mini_gm(int sub, OamAttr *attr, int x, int y, int pal, int prio,
+                                        int sx, int sy, int c, int d);
 
-
-
-dScMiniGm_c *dScMiniGm_c_classInit()
-{
+dScMiniGm_c *dScMiniGm_c_classInit() {
     return new dScMiniGm_c();
 }
 
@@ -378,9 +373,7 @@ s32 dScMiniGm_c::InitResources()
     return 1;
 }
 
-
-void dScMiniGm_c::MiniGm_LoadGroupIcons()
-{
+void dScMiniGm_c::MiniGm_LoadGroupIcons() {
     dScMiniGm_c *scene = this;
     char *self = (char *)this;
     int i;
@@ -520,7 +513,6 @@ void dScMiniGm_c::MiniGm_LoadGroupIcons()
         i += 1;
     } while (i < 9);
 }
-
 
 void dScMiniGm_c::LoadIconPalette(int index) {
     void *file = LoadFile(sMiniGmIconPalettes[index]);
@@ -671,8 +663,6 @@ void dScMiniGm_c::DrawRecords() {
     } while (i <= end);
 }
 
-
-
 void MiniGm_DrawNumber(void *a0, int x, int y, int val){
     if(val==0){
         OAM::RenderSub((OamAttr *)sMiniGmDigits[0], x, y, -1, 0);
@@ -695,7 +685,6 @@ void MiniGm_DrawNumber(void *a0, int x, int y, int val){
         xx-=8;
     }while(val>0);
 }
-
 
 void dScMiniGm_c::DrawNewBadges() {
     int g = (mIconBlinkPhase >= 0x20) ? 1 : 0;
@@ -1069,7 +1058,6 @@ void dScMiniGm_c::UpdatePageScroll() {
     gSubBg3HOffset = (short)mSubBgScrollX;
 }
 
-
 int MiniGm_HasSecondPage(void *self) {
     int i, j;
     for (i = 0; i < 4; i++) {
@@ -1081,16 +1069,12 @@ int MiniGm_HasSecondPage(void *self) {
     return 0;
 }
 
-
-
 int MiniGm_IsUnlocked(void *self, int n) {
     if (n < 8) {
         return 1;
     }
     return func_02013638(n - 8);
 }
-
-
 
 int MiniGm_IsNew(void *self, int n) {
     if (n < 8) {
@@ -1099,7 +1083,6 @@ int MiniGm_IsNew(void *self, int n) {
         return func_020135d0(n - 8);
     }
 }
-
 
 void dScMiniGm_c::ClearNew(int n) {
     int seen = MiniGm_IsNew(this, n);
@@ -1112,19 +1095,15 @@ void dScMiniGm_c::ClearNew(int n) {
     gMgSaveDirty = 1;
 }
 
-
 int MiniGm_GetSaveTable(void *a, int i) {
     int offset = i * 0x34;
     return (*(unsigned int *)((char *)sMiniGmSaveTable + offset) >> 8) & 0xff;
 }
 
-
-
 int MiniGm_GetRecord(void *a, int b, int c) {
     int res = MiniGm_GetSaveTable(a, b);
     return func_02013580(res, c);
 }
-
 
 void dScMiniGm_c::SetRecord(int a1, int r2, int r3) {
     int r5 = r2;
@@ -1133,8 +1112,7 @@ void dScMiniGm_c::SetRecord(int a1, int r2, int r3) {
     func_02013568(r0, r5, r4);
 }
 
-void MiniGm_SaveIfDirty(char *self)
-{
+void MiniGm_SaveIfDirty(char *self) {
     if (gMgSaveDirty != 1) return;
     if (gSceneFader->IsAtStart() == 0)
         return;
@@ -1142,4 +1120,3 @@ void MiniGm_SaveIfDirty(char *self)
     gMgSaveDirty = 0;
     gSoftResetDisabled = 0;
 }
-

@@ -51,7 +51,6 @@ void func_0201fec8(void)
     data_0209e64c = 1;
 }
 
-
 /* One s32 seeded to 1. The empty destructor is func_0201973c, already
    defined in func_020196cc.c, so this declaration is not emitted. */
 #ifndef SM64DS_PLATFORM_PC

@@ -80,7 +80,6 @@ extern int NormalizeVec3IfNonZero(Vector3 *v);
 }
 void Jump2Popup_Spawn(int x, int y, int number);
 
-
 extern HeyhoMotion pmf_Heyho_MotionPatrolBob;
 
 extern HeyhoMotion pmf_Heyho_MotionBounceNear;
@@ -127,7 +126,6 @@ extern HeyhoMotion pmf_Heyho_MotionHitSpin_2;
 
 extern HeyhoMotion data_ov006_0213afc8;
 
-
 extern int sHeyhoUnsettledCount;
 
 extern int sJumpComboCount;
@@ -153,7 +151,6 @@ extern const HeyhoPath sHeyhoFlyInPaths[][4];
 extern const HeyhoPath sHeyhoSettlePaths[][5];
 
 extern MgCamera *sMgSubCamera;
-
 
 /* The Jump scene's three players, seen through the adapter base the Heyhos
    test against. */
@@ -1292,8 +1289,6 @@ int Heyho::IsChasing() {
     return mMotion != pmf_Heyho_MotionLeave && (mMotion != pmf_Heyho_MotionChase_2 || mLean == 0);
 }
 
-
-
 /* ---- Heyho_InitPool ---- */
 int Heyho_InitPool(void *heyhos, int count) {
     int i;
@@ -1307,7 +1302,6 @@ int Heyho_InitPool(void *heyhos, int count) {
     }
     return 1;
 }
-
 
 /* ---- Heyho_SpawnAll ---- */
 void Heyho_SpawnAll(void *arg0, int layout) {
@@ -1338,7 +1332,6 @@ void Heyho_SpawnAll(void *arg0, int layout) {
         }
     }
 }
-
 
 /* ---- Heyho_SeparateAll ---- */
 void Heyho_SeparateAll(void) {
@@ -1385,14 +1378,12 @@ void Heyho_SeparateAll(void) {
     }
 }
 
-
 /* ---- Heyho_DrawAll ---- */
 void Heyho_DrawAll(void) {
     int i;
     for (i = 0; i < sHeyhoCount; i++)
         sHeyhos[i].Draw();
 }
-
 
 /* ---- Heyho_SettleAll ---- */
 void Heyho_SettleAll(void) {
@@ -1406,14 +1397,12 @@ void Heyho_SettleAll(void) {
     }
 }
 
-
 /* ---- Heyho_ReactAll ---- */
 void Heyho_ReactAll(void) {
     int i;
     for (i = 0; i < sHeyhoCount; i++)
         sHeyhos[i].React();
 }
-
 
 /* ---- Heyho_AllIdle ---- */
 int Heyho_AllIdle(void) {
@@ -1424,7 +1413,6 @@ int Heyho_AllIdle(void) {
     }
     return 1;
 }
-
 
 dMg3DHeyhoObjAdapter_c::dMg3DHeyhoObjAdapter_c() : mCommand(0)
 {
@@ -1450,7 +1438,6 @@ int sHeyhoCount;
 int data_ov006_021403b8[3];
 
 char *sJumpAdapters[3];
-
 
 HeyhoAdapterModelFilePtr gMgPHeyhoMiniModelFile(0x217);
 HeyhoAdapterAnimationFileHandle gMgPHeyhoWaitAnimFile(0x218);

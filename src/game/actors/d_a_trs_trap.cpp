@@ -130,7 +130,8 @@ struct TrsTrapCollisionFilePtr : SharedFilePtr {
 /* dBgW callback-word stores (see above). */
 /* dBgW_KcMbg::SetFile, mangled (wall 6az, see above). Spelled exactly as the
    free definition declares it; only the TU-local linkage differs. */
-extern "C" void hold_d_a_trs_trap(void *self, void *f, const Matrix4x3 *m, int fx, short s, void *b);
+extern "C" void hold_d_a_trs_trap(void *self, void *f, const Matrix4x3 *m, int fx, short s,
+                                  void *b);
 
 extern Matrix4x3 data_020a0e68;             /* the shared scratch matrix */
 /* Staircase settle offsets, one signed byte per frame 0..3. */

@@ -110,7 +110,6 @@ extern "C" void MTX_Concat33(const int *a, const int *b, int *dst);
    that header renumbers this TU's @NNN .data locals. */
 extern "C" void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
 
-
 /* Reconstructed source-style name: SM64DS proves daLuigi_c through RTTI,
  * allocation size, vtable identity, and the LUIGI registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not

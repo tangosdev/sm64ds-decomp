@@ -47,15 +47,25 @@ enum d_s_mg_trampoline_AssetId {
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/mi/memory.h"
-namespace s20afdd0 { void Mg_RenderSpriteBoth(void *a0, int, int, int, int); }
+namespace s20afdd0 {
+void Mg_RenderSpriteBoth(void *a0, int, int, int, int);
+}
 using s20afdd0::Mg_RenderSpriteBoth;
-namespace s20afcf8 { void DrawOamSprite(OamAttr *attr, int, int, Matrix2x2 *mtx); }
+namespace s20afcf8 {
+void DrawOamSprite(OamAttr *attr, int, int, Matrix2x2 *mtx);
+}
 using s20afcf8::DrawOamSprite;
-namespace s20afa20 { void RenderOamMainScreen(OamAttr *oam, int, int, int, int); }
+namespace s20afa20 {
+void RenderOamMainScreen(OamAttr *oam, int, int, int, int);
+}
 using s20afa20::RenderOamMainScreen;
-namespace s20ad90c { void Mg_CommitRecords(void); }
+namespace s20ad90c {
+void Mg_CommitRecords(void);
+}
 using s20ad90c::Mg_CommitRecords;
-namespace s20ad674 { s32 GetGameLanguage(void); }
+namespace s20ad674 {
+s32 GetGameLanguage(void);
+}
 using s20ad674::GetGameLanguage;
 
 /* local: UpdateTouchInput only reproduces through a 4-byte-record view of
@@ -68,16 +78,12 @@ typedef struct Vec2s {
     s16 x, y;
 } Vec2s;
 
-extern "C" {
-
-}
+extern "C" {}
 
 extern int sTrmpRowScreenY[];
 
 extern int sTrmpRowMarkerSprite;
-extern "C" {
-
-}
+extern "C" {}
 void TrmpFx_Link(TrmpScorePopup *entry);
 
 extern TrmpScorePopup *sTrmpFxList;
@@ -85,7 +91,6 @@ extern TrmpScorePopup *sTrmpFxList;
 extern int sTrmpFxCount;
 
 extern TrmpScorePopup *sTrmpFxPool;
-
 
 extern int sTrmpBrushWord[];
 
@@ -97,24 +102,16 @@ extern int sTrmpTouchBlocked;
 int TrmpLine_Create(s16 *startPoint, s16 *endPoint);
 extern "C" {
 
-
 void SetBg2Offset(int a, int b);
-
 }
 
 extern unsigned char gMainScreenLayers;
-extern "C" {
-
-
-}
+extern "C" {}
 
 struct OamAttr;
 
 struct Matrix2x2;
-extern "C" {
-
-
-}
+extern "C" {}
 
 extern int func_020126e8(int a);
 
@@ -129,9 +126,7 @@ namespace ns_020cd158 {
 int Trmp3DMario_CountFinished(void);
 }
 using ns_020cd158::Trmp3DMario_CountFinished;
-extern "C" {
-
-}
+extern "C" {}
 namespace ns_020cd1e0 {
 void Trmp3DMario_StartAll(void);
 }
@@ -172,12 +167,12 @@ extern "C" {
 
 extern void *LoadFile(int handle);
 
-extern void DecompressLZ16(void *src, void *dst);}
+extern void DecompressLZ16(void *src, void *dst);
+}
 
 extern void Deallocate(void *ptr);
 
 extern int sTrmpNcgByLanguage[];
-
 
 extern void InitialiseVramGlobals(void);
 
@@ -188,9 +183,7 @@ int Trmp3DMario_InitPool(unsigned char *a0, int a1);
 using ns_020cd658::Trmp3DMario_InitPool;
 void TrmpFx_InitPool(void *records, int count);
 void TrmpLine_LoadTextures(void);
-extern "C" {
-
-}
+extern "C" {}
 namespace ns_020cd424 {
 void Trmp3DMario_ResetAll(unsigned int n, int arg1);
 }
@@ -200,16 +193,11 @@ void TrmpFx_ClearAll(void);
 extern int sTrmpPuffXByLanguage[];
 void Puff_ClearAll(int a0, int a1);
 
-
 extern void func_02012718(int, int);
 void TrmpFx_UpdateAll(void);
-extern "C" {
-
-}
+extern "C" {}
 void TrmpFx_DrawAll(void);
-extern "C" {
-
-}
+extern "C" {}
 
 extern void *sTrmpDoorSignSprites[];
 
@@ -241,7 +229,6 @@ extern OamAttr *sMgTextSpritesGerman[];
 
 extern OamAttr *sMgTextSpritesItalian[];
 
-
 /* Data owned by the same original TU. */
 BaseSpawnInfo<dScMgTrampoline_c> g_profile_MG_TRAMPOLINE = {
     dScMgTrampoline_c_classInit,
@@ -258,13 +245,12 @@ OamAttr **sTrmpTextSpritesByLanguage[] = {sMgTextSpritesEnglish, sMgTextSpritesS
 int sTrmpPuffXByLanguage[] = {(int)sTrmpPuffEnglish, (int)sTrmpPuffSpanish, (int)sTrmpPuffFrench,
                               (int)sTrmpPuffGerman, (int)sTrmpPuffItalian};
 
-
 TrmpScorePopup::TrmpScorePopup() {}
 
 /* `new dScMgTrampoline_c` reproduces it: the inline dScMgD3DBase_c
    constructor, then this class's vtable, the three element arrays and the
    door mark's clear. */
- dScMgTrampoline_c *dScMgTrampoline_c_classInit(void) {
+dScMgTrampoline_c *dScMgTrampoline_c_classInit(void) {
     return new dScMgTrampoline_c;
 }
 
@@ -347,7 +333,8 @@ s32 dScMgTrampoline_c::InitResources() {
     Mg_SetTopScreenYOffset(0x10);
     StartRound(-1);
     return 1;
-}void TrmpLine_ClearAll(u32);
+}
+void TrmpLine_ClearAll(u32);
 
 extern volatile s16 data_020a0dbc[];
 
@@ -936,14 +923,13 @@ void dScMgTrampoline_c::PaintSquare(int cx, int cy, int colour, int size) {
     }
 }
 
- /* .c-derived member: C linkage for the whole block */
+/* .c-derived member: C linkage for the whole block */
 void TrmpFx_InitPool(void *records, int count) {
     sTrmpFxPool = (TrmpScorePopup *)records;
     sTrmpFxCount = count;
 }
 
-
- /* .c-derived member: C linkage for the whole block */
+/* .c-derived member: C linkage for the whole block */
 void TrmpFx_Spawn(int x, int y) {
     int i;
     for (i = sTrmpFxCount - 1; i >= 0; i--) {
@@ -954,8 +940,7 @@ void TrmpFx_Spawn(int x, int y) {
     }
 }
 
-
- /* .c-derived member: C linkage for the whole block */
+/* .c-derived member: C linkage for the whole block */
 void TrmpFx_ClearAll(void) {
     int i;
     for (i = 0; i < sTrmpFxCount; i++) {
@@ -964,8 +949,7 @@ void TrmpFx_ClearAll(void) {
     sTrmpFxList = 0;
 }
 
-
- /* .c-derived member: C linkage for the whole block */
+/* .c-derived member: C linkage for the whole block */
 void TrmpFx_UpdateAll(void) {
     int i;
     for (i = 0; i < sTrmpFxCount; i++) {
@@ -973,8 +957,7 @@ void TrmpFx_UpdateAll(void) {
     }
 }
 
-
- /* .c-derived member: C linkage for the whole block */
+/* .c-derived member: C linkage for the whole block */
 void TrmpFx_DrawAll(void) {
     TrmpScorePopup *node = sTrmpFxList;
     if (node == 0)
@@ -985,8 +968,7 @@ void TrmpFx_DrawAll(void) {
     } while (node != 0);
 }
 
-
- /* .c-derived member: C linkage for the whole block */
+/* .c-derived member: C linkage for the whole block */
 void TrmpFx_Link(TrmpScorePopup *entry) {
     TrmpScorePopup *node;
     entry->next = sTrmpFxList;
@@ -1000,8 +982,7 @@ void TrmpFx_Link(TrmpScorePopup *entry) {
     }
 }
 
-
- /* .c-derived member: C linkage for the whole block */
+/* .c-derived member: C linkage for the whole block */
 void TrmpFx_Unlink(TrmpScorePopup *node) {
     TrmpScorePopup *prev = sTrmpFxList;
     if (prev == node) {
@@ -1019,7 +1000,6 @@ void TrmpFx_Unlink(TrmpScorePopup *node) {
     }
 }
 
-
 /* Fills a slot with fixed parameters and tail-calls TrmpFx_Link. */
 void TrmpScorePopup::Spawn(int y, int number) {
     x = 0x110000;
@@ -1032,7 +1012,8 @@ void TrmpScorePopup::Spawn(int y, int number) {
     active = 1;
     this->number = number;
     TrmpFx_Link(this);
-}extern "C" void func_0203d630(int *p, int m);
+}
+extern "C" void func_0203d630(int *p, int m);
 
 void TrmpScorePopup::Update() {
     if (active == 0) {

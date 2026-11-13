@@ -34,7 +34,6 @@ extern void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
 extern int Vec3_Equal(const struct Vector3 *a, const struct Vector3 *b);
 }
 
-
 int ApproachLinear(Vector3 &dst, const Vector3 &target, int step) {
     struct Vector3 diff;
     struct Vector3 scaled;

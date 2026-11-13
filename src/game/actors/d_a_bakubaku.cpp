@@ -118,12 +118,11 @@ static inline int IsInYoshiMouth(dActor_c *actor) {
     return (actor->mFlags & 0x40000) != 0;
 }
 
- daBakubaku_c *daBakubaku_c_classInit()
-{
+daBakubaku_c *daBakubaku_c_classInit() {
     return new daBakubaku_c();
 }
 
- SpawnInfo<daBakubaku_c> g_profile_BAKUBAKU = {
+SpawnInfo<daBakubaku_c> g_profile_BAKUBAKU = {
     daBakubaku_c_classInit,
     0x00e4, /* BAKUBAKU registry id 228 */
     0x0052,
@@ -568,13 +567,13 @@ void daBakubaku_c::HandleCylinderHit() {
                 SpawnMegaCharParticles(*f, 0);
                 PoofDust();
                 f->IncMegaKillCount();
-                func_02012694(0x1e,(const Vector3 *)(&mCamSpacePosX));
+                func_02012694(0x1e, (const Vector3 *)(&mCamSpacePosX));
                 KillAndTrackInDeathTable();
                 return;
             }
             if (mMouthOpen != 0) {
                 if (func_ov002_020c5cd8(f, this) == 1) {
-                    func_02012694(0xf6,(const Vector3 *)(&mCamSpacePosX));
+                    func_02012694(0xf6, (const Vector3 *)(&mCamSpacePosX));
                     return;
                 }
             }

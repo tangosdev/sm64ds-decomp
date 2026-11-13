@@ -127,8 +127,6 @@ void *AllocFromTail(NNSiFndFrmHeapHead *pFrmHeapHd, u32 size, int alignment) {
     return newBlock;
 }
 
-
-
 /* Frees every block allocated from the head, and every restore point with
    them: the records live in that space. */
 void FreeHead(NNSiFndHeapHead *pHeapHd) {
@@ -331,4 +329,4 @@ u32 NNS_FndResizeForMBlockFrmHeap(NNSFndHeapHandle heap, void *memBlock, u32 new
     }
 }
 
- /* extern "C" */
+/* extern "C" */

@@ -22,7 +22,6 @@ s32 func_01ff98f4(s32 a, s32 b);
 
 extern unsigned short gArctanTable[];
 
-
 namespace cstd {
 
 s16 atan2(s32 y, s32 x) {

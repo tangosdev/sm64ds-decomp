@@ -273,10 +273,10 @@ extern KpaTailState data_ov060_0211ae9c[];
  * C functions. Declarations only; no definition lives in this block. */
 /* The dCamera_c; Bowser publishes himself into its mFramedActor. */
 extern dCamera_c *gCamera;
-int Vec3_HorzDist(const struct Vector3*, const struct Vector3*);
-short Vec3_HorzAngle(const struct Vector3*, const struct Vector3*);
+int Vec3_HorzDist(const struct Vector3 *, const struct Vector3 *);
+short Vec3_HorzAngle(const struct Vector3 *, const struct Vector3 *);
 /* Eases a camera vector toward a target; 1 when it arrives (d_camera.cpp). */
-extern "C" int func_020092c4(void*, void*, void*);
+extern "C" int func_020092c4(void *, void *, void *);
 extern KpaAnimationFileHandle data_ov060_0211acd0;
 extern unsigned char data_ov060_02119264[];
 extern PmfEnt data_ov060_0211aeb4[];
@@ -293,8 +293,8 @@ extern "C" void *d_a_kpaNewHold(unsigned a, unsigned b, int x, int y, int z, voi
 extern "C" void d_a_kpaChangeMusicVolumeHold(unsigned int a, int b);
 extern KpaAnimationFileHandle data_ov060_0211ac88;
 extern KpaAnimationFileHandle data_ov060_0211ac60;
-int Vec3_HorzLen(const Vector3* v);
-extern "C" int RandomIntInternal(int* seed);
+int Vec3_HorzLen(const Vector3 *v);
+extern "C" int RandomIntInternal(int *seed);
 extern KpaAnimationFileHandle data_ov060_0211abe0;
 extern KpaAnimationFileHandle data_ov060_0211acd8;
 extern KpaAnimationFileHandle data_ov060_0211acf0;

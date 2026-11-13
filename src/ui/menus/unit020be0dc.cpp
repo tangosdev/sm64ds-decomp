@@ -62,8 +62,6 @@
 #include "nitro/fx/fx_cp.h"
 #include "Ov007MenuMem.h"
 
-
-
 /* Vector3 declares a constructor and destructor under C++, which makes its
  * assignment copy word by word. The ROM copies these with C's ldm/stm block
  * move, which C++ keeps for a struct with an array member. */
@@ -135,7 +133,8 @@ extern u16 data_ov007_020d7c58[];
 
 void func_0204dab4(void *sys, TrackingRecord *buf, int count, unsigned int mask, void *cb);
 extern "C" void func_0204dc84(char *self);
-extern "C" void Sprite_SetAnimation(Ov007OamNode *node, int animIndex, int mode, int rev, int frame);
+extern "C" void Sprite_SetAnimation(Ov007OamNode *node, int animIndex, int mode, int rev,
+                                    int frame);
 extern void *func_ov007_020b7690(int i);
 extern void func_ov007_020bfd70(struct Ov007Camera *cam, void *pos, int *outX, int *outY);
 extern void func_ov007_020c3e7c(Ov007SpriteGroup *grp);
@@ -588,4 +587,3 @@ int func_ov007_020be0dc(void) {
     node->visible = shown;
     return shown;
 }
-

@@ -26,6 +26,9 @@
 
 #include "nitro/fx/fx.h"
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+extern "C" {
+#endif
 
 fx32 FX_Div(fx32, fx32);
 fx32 FX_Inv(fx32);
@@ -41,5 +44,8 @@ void FX_SqrtAsync(fx32);
 int FX_DivS32(int, int); /* s32 in the SDK */
 int FX_ModS32(int, int); /* s32 in the SDK */
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+}
+#endif
 
 #endif /* NITRO_FX_FX_CP_H */

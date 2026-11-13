@@ -20,8 +20,6 @@ static inline int OS_EnableIrq(void) {
     return prep;
 }
 
-
-
 extern void func_020427f8(void);
 extern u64 func_02042784(void);
 extern "C" {
@@ -55,9 +53,8 @@ extern void func_020196cc(void);
 extern void func_0201a5cc(void);
 }
 
-
 extern char data_0208ee50[12];
- /* save magic, zero padded */
+/* save magic, zero padded */
 extern char ACTOR_SPAWN_TABLE[];
 extern void *data_020a4bb8;
 struct S0209ee90 {

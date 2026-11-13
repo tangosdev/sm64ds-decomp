@@ -2,12 +2,9 @@
 #include "types.h"
 #include "msl/stdlib.h"
 
-
-
 typedef struct {
     unsigned char b[3];
-}
- B3;
+} B3;
 
 struct B3c {
     unsigned char b[3];
@@ -41,8 +38,7 @@ typedef struct {
     u8 b20;
     u8 b21;
     u16 h22;
-}
- Src;
+} Src;
 
 typedef struct {
     int pad0, pad4, pad8;
@@ -50,8 +46,7 @@ typedef struct {
     u16 f18;
     u16 h1A, h1C, h1E;
     int f20, f24, f28;
-}
- Dst;
+} Dst;
 
 typedef struct {
     u8 pad0, pad1;
@@ -60,8 +55,7 @@ typedef struct {
     int *p8;
     short *pC;
     int *p10;
-}
- Ctx;
+} Ctx;
 
 extern B3 data_02099f80;
 extern const struct B3c data_02099f84;

@@ -3,8 +3,6 @@
 #include "common.h"
 #include "cstd.h"
 
-
-
 Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b) {
     Fix12i dx = a->x - b->x;
     Fix12i ay = a->y;

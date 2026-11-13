@@ -2,7 +2,6 @@
 #include "Ov007Picker.h"
 #include "Ov007Camera.h"
 
-
 extern "C" void func_ov007_020bfe4c(Ov007Camera *o, int x, int y, int z, void *out);
 
 /* Unprojects the camera's screen rectangle at the camera distance into the
@@ -20,4 +19,3 @@ void Ov007Picker::func_ov007_020c510c() {
         p->boundsMax.y = t;
     }
 }
-

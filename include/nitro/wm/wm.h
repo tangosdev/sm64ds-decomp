@@ -27,6 +27,9 @@
  * types: some consumers do not include types.h.
  */
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+extern "C" {
+#endif
 
 typedef enum WMApiid {
     WM_APIID_INITIALIZE = 0,
@@ -366,5 +369,8 @@ typedef struct WMStatus {
 
 typedef char WMStatus_size_must_be_0x930[sizeof(WMStatus) == 0x930 ? 1 : -1];
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+}
+#endif
 
 #endif

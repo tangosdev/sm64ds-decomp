@@ -187,7 +187,6 @@ struct daDoor_StateRecord {
 
 struct Vector3_16;
 
-
 /* Defined below, called before their definitions. These four are the shared
    countdown helpers -- free functions, not members: d_a_ply_methods.cpp, daMugenBGM_c
    and d_a_star_gate.cpp call them too, and none takes the door. */
@@ -213,7 +212,6 @@ void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(void *m, short angY);
 int AngleDiff(int a, int b);
 }
-
 
 extern DoorEntry data_ov100_02148204[];
 /* Indexed by mKeyModelIdx - 1: the character func_ov100_02144528 switches the
@@ -408,7 +406,8 @@ int daDoor_c::func_ov100_02144528(daPly_c *pl) {
                     func_02012790(0xa2);
                 Sound::ChangeMusicVolume(0, 0x19666);
             }
-            func_02012694(param1 == DOOR_ALT_SOUND ? SND_SWING_END_ALT : SND_SWING_END,(const Vector3 *)(&mCamSpacePosX));
+            func_02012694(param1 == DOOR_ALT_SOUND ? SND_SWING_END_ALT : SND_SWING_END,
+                          (const Vector3 *)(&mCamSpacePosX));
         }
         if (DecIfAbove0_Byte(&mTimer) == 0) {
             void *r1 = data_ov100_02148704 != 0 ? 0 : (void *)&data_ov100_021488f4;
@@ -479,7 +478,8 @@ int daDoor_c::func_ov100_02144730(daPly_c *arg1) {
         {
             gCamera->mFlags &= ~DOOR_CAMERA_FLAGS;
         }
-        func_02012694(param1 == DOOR_ALT_SOUND ? SND_SWING_END_ALT : SND_SWING_END,(const Vector3 *)(&mCamSpacePosX));
+        func_02012694(param1 == DOOR_ALT_SOUND ? SND_SWING_END_ALT : SND_SWING_END,
+                      (const Vector3 *)(&mCamSpacePosX));
     } else if (mKeyModelIdx != 0) {
         if (mModel.WillHitFrame((u16)(mModel.GetFrameCount() - 0x1c)) != 0) {
             gCamera->mFlags &= ~DOOR_CAMERA_FLAGS;
@@ -527,7 +527,8 @@ int daDoor_c::func_ov100_02144950(daPly_c *pl, int unused) {
     ShowArea((signed char)mAngleX);
     ShowArea((signed char)mAngleZ);
     gCamera->mFlags |= DOOR_CAMERA_FLAGS;
-    func_02012694((param1 == DOOR_ALT_SOUND) ? SND_SWING_START_ALT : SND_SWING_START,(const Vector3 *)(&mCamSpacePosX));
+    func_02012694((param1 == DOOR_ALT_SOUND) ? SND_SWING_START_ALT : SND_SWING_START,
+                  (const Vector3 *)(&mCamSpacePosX));
     mTimer = 0;
     return 1;
 }
@@ -642,7 +643,7 @@ int daDoor_c::func_ov100_02144c6c(daPly_c *r1) {
 /* State 021488c4, enter member. Play sound 0xb8 at the door and start the
    shared countdown at 0x87 (135). Was a C source. */
 int daDoor_c::func_ov100_02144ccc() {
-    func_02012694(0xb8,(const Vector3 *)(&mCamSpacePosX));
+    func_02012694(0xb8, (const Vector3 *)(&mCamSpacePosX));
     func_ov100_02145070(0x87);
     return 1;
 }

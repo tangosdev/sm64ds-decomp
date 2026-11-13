@@ -20,17 +20,29 @@ enum d_s_mg_bsc_AssetId { ASSET_D_2D_MG_BIG_SMALL_NCL_BIN = 0x00b3 };
 #include "LevelRng.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
-namespace s20b1e34 { void Mg_DrawScoreTally(void*, int, int, int); }
+namespace s20b1e34 {
+void Mg_DrawScoreTally(void *, int, int, int);
+}
 using s20b1e34::Mg_DrawScoreTally;
-namespace s20b1bc8 { void Mg_DrawCredits(char *a0, int, int, int); }
+namespace s20b1bc8 {
+void Mg_DrawCredits(char *a0, int, int, int);
+}
 using s20b1bc8::Mg_DrawCredits;
-namespace s20b0a38 { void Mg_ResumeSharedState(void); }
+namespace s20b0a38 {
+void Mg_ResumeSharedState(void);
+}
 using s20b0a38::Mg_ResumeSharedState;
-namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+namespace s20b0aa0 {
+void FreeGfxSlotsById(int);
+}
 using s20b0aa0::FreeGfxSlotsById;
-namespace s20af68c { void Hud_RenderSprite(void *attr, int, int, int, int); }
+namespace s20af68c {
+void Hud_RenderSprite(void *attr, int, int, int, int);
+}
 using s20af68c::Hud_RenderSprite;
-namespace s20ad674 { s32 GetGameLanguage(void); }
+namespace s20ad674 {
+s32 GetGameLanguage(void);
+}
 using s20ad674::GetGameLanguage;
 void MgCoins_Reset(void);
 void MgCoins_Update(void);
@@ -58,19 +70,18 @@ extern StateHandler pmf_dScMgBSC_c_StateReturnCards;
 extern StateHandler pmf_dScMgBSC_c_StateDone;
 extern StateHandler pmf_dScMgBSC_c_StateDone_2;
 
-
 extern short gMgCoinsStatus;
 extern "C" {
 
 extern int Math_Function_0203b14c(int *ptr, int target, int rate, int limit, int step);
-
 }
 int Dealer_IsIdle(Dealer *dealer);
 extern "C" {
 
 extern void MgCoins_StartPayout(int x);
 
-extern void MgCoins_StartLose(void);}
+extern void MgCoins_StartLose(void);
+}
 
 extern int gMgCoinsInPlay;
 void Dealer_PlayWin(void *c);
@@ -79,9 +90,6 @@ extern "C" {
 /* decl_common.h already declares this with a void pointer, so the
  * definition's char pointer cannot be repeated here. */
 extern void Dealer_PlayLose(void *c);
-
-
-
 }
 
 extern int sBscLaneX[];
@@ -90,15 +98,12 @@ extern int sMgCoinsBetPlaced;
 void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
 extern "C" {
 
-
 extern void MgCoins_Reset(void);
-
-
-
 
 void Dealer_Draw(void *table);
 
-void MgCoins_Update(void);}
+void MgCoins_Update(void);
+}
 namespace s020c19d0 {
 void Dealer_Update(Dealer *dealer);
 }
@@ -110,13 +115,12 @@ extern int data_0208ee44;
 void LoadCard2SubBg3(void *);
 extern "C" {
 
-
 extern u32 LoadCompressedFileAt(int fileID, void *target);
 
 extern void *LoadFile(int handle);
 
-extern int Dealer_Load(void *c);}
-
+extern int Dealer_Load(void *c);
+}
 
 /* Real C++ declarations for the engine calls below; the namespaces and the
  * reference parameter are what give the ROM's mangled names. */
@@ -128,7 +132,7 @@ void PlayBank2_2D(u32 id);
 
 /* `new` inlines the implicit constructor: the base chain, this class's
    vptr, then mDealer and mCardPos in declaration order. */
- void *dScMgBSC_c_classInit() {
+void *dScMgBSC_c_classInit() {
     return new dScMgBSC_c;
 }
 

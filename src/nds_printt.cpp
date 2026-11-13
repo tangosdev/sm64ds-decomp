@@ -1,8 +1,6 @@
 //cpp
 #include "msl/string.h"
 
-
-
 extern void func_020147bc(unsigned short *p, int c);
 
 /* opt_common_subs stays off: the cartridge keeps the lower-case, upper-case and

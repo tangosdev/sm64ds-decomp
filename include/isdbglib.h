@@ -13,6 +13,9 @@
 
 #include "types.h"
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+extern "C" {
+#endif
 
 /* Which processor's overlay table an entry goes in. */
 typedef enum { OVERLAYPROC_ARM9, OVERLAYPROC_ARM7 } OVERLAYPROC;
@@ -20,5 +23,8 @@ typedef enum { OVERLAYPROC_ARM9, OVERLAYPROC_ARM7 } OVERLAYPROC;
 int _ISDbgLib_RegistOverlayInfo(OVERLAYPROC, u32, u32, u32);
 int _ISDbgLib_UnregistOverlayInfo(OVERLAYPROC, u32, u32);
 
+#if defined(_MSC_VER) && defined(__cplusplus)
+}
+#endif
 
 #endif /* ISDBGLIB_H */

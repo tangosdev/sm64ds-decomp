@@ -2,8 +2,6 @@
 #include "Ov007MenuState.h"
 #include "Ov007MenuMem.h"
 
-
-
 extern void func_ov007_020c934c(Ov007MenuState *state, int initialState);
 
 void *func_ov007_020c9388(int initialState) {
@@ -11,4 +9,3 @@ void *func_ov007_020c9388(int initialState) {
     func_ov007_020c934c(state, initialState);
     return state;
 }
-

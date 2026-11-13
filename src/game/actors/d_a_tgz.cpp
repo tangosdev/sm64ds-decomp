@@ -100,7 +100,6 @@ TgzStateRecord gTgzStates[6] = {
     {&daTgz_c::func_ov077_02125480, &daTgz_c::func_ov077_021253a4},
 };
 
-
 extern DaJgmModelFile data_ov077_02127b48;
 extern DaJgmModelFile data_ov077_02127b38;
 int func_ov077_02124c28(daTgz_c *self);
@@ -147,8 +146,7 @@ int daTgz_c::OnAimedAtWithEgg()
 /* Until one is found, probe for a water surface below the Spiny and cache
  * its height in mWaterY. Returns how far above it the Spiny is (0 while
  * nothing has been found). */
-int func_ov077_02124c28(daTgz_c *self)
-{
+int func_ov077_02124c28(daTgz_c *self) {
     if (self->mWaterY == 0) {
         dBgCh_Gnd rg;
         Vector3 pos;
@@ -182,8 +180,7 @@ int func_ov077_02124ce4(daTgz_c *self) {
 
 /* Toxic floor destroys the Spiny. A sloped floor rewrites vertical speed
  * from mSpeedX/mSpeedZ and pitches mAngleX/mAngleZ to the normal. */
-void func_ov077_02124d08(daTgz_c *self, dBgCh_Actr *clsn)
-{
+void func_ov077_02124d08(daTgz_c *self, dBgCh_Actr *clsn) {
     Vector3 pos;
     Vector3 normal;
     Vector3 wallnormal;
@@ -346,8 +343,7 @@ void func_ov077_021251d0(daTgz_c *self) {
 }
 
 /* Upright matrix on the still model in states 0 and 4, otherwise on the anim. */
-void func_ov077_02125290(daTgz_c *self)
-{
+void func_ov077_02125290(daTgz_c *self) {
     int v = self->mState;
     int b = 1;
     Matrix4x3 *m;
@@ -708,20 +704,17 @@ int daTgz_c::func_ov077_02125dd4() {
     return 1;
 }
 
-void func_ov077_02125e20(daTgz_c *self)
-{
+void func_ov077_02125e20(daTgz_c *self) {
     TgzState *p = (TgzState *)self->mStateDesc + 1;
     (self->* *p)();
 }
 
-void func_ov077_02125e5c(daTgz_c *self)
-{
+void func_ov077_02125e5c(daTgz_c *self) {
     TgzState *p = (TgzState *)self->mStateDesc;
     (self->* *p)();
 }
 
-void func_ov077_02125e94(daTgz_c *self, int i)
-{
+void func_ov077_02125e94(daTgz_c *self, int i) {
     self->mStateDesc = &gTgzStates[i];
     func_ov077_02125e5c(self);
 }

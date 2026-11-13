@@ -36,30 +36,20 @@ int VEC_Distance(int *a, int *b) {
     return ((s32)CP_GetSqrtResult32() + 1) >> 1;
 }
 
-
-
-
 fx32 FX_Div(fx32 numerator, fx32 denominator) {
     FX_DivAsync(numerator, denominator);
     return FX_GetDivResult();
 }
-
-
-
 
 fx64c FX_DivFx64c(fx32 a, fx32 b) {
     FX_DivAsync(a, b);
     return CP_GetDivResult64();
 }
 
-
-
 fx32 FX_Inv(fx32 x) {
     FX_InvAsync(x);
     return FX_GetDivResult();
 }
-
-
 
 fx32 FX_Sqrt(fx32 a) {
     if (a > 0) {
@@ -68,8 +58,6 @@ fx32 FX_Sqrt(fx32 a) {
     }
     return 0;
 }
-
-
 
 fx32 FX_InvSqrt(fx32 x) {
     s64 quotient;
@@ -88,29 +76,19 @@ fx32 FX_InvSqrt(fx32 x) {
     return 0;
 }
 
-
-
-
 fx64c FX_GetDivResultFx64c(void) {
     CP_WaitDiv();
     return CP_GetDivResultImm64();
 }
-
-
-
 
 fx32 FX_GetDivResult(void) {
     CP_WaitDiv();
     return (fx32)((CP_GetDivResultImm64() + 0x80000) >> 20);
 }
 
-
-
 void FX_InvAsync(fx32 a) {
     CP_SetDiv64_32((u64)0x1000 << 32, (u32)a);
 }
-
-
 
 void FX_SqrtAsync(fx32 n) {
     if (n > 0) {
@@ -120,29 +98,19 @@ void FX_SqrtAsync(fx32 n) {
     }
 }
 
-
-
 fx32 FX_GetSqrtResult(void) {
     CP_WaitSqrt();
     return (fx32)((CP_GetSqrtResultImm32() + 0x200) >> 10);
 }
 
-
-
 void FX_DivAsync(fx32 a, fx32 b) {
     CP_SetDiv64_32((u64)(u32)a << 32, (u32)b);
 }
-
-
-
 
 s32 FX_DivS32(s32 a, s32 b) {
     CP_SetDiv32_32((u32)a, (u32)b);
     return CP_GetDivResult32();
 }
-
-
-
 
 s32 FX_ModS32(s32 a, s32 b) {
     CP_SetDiv32_32((u32)a, (u32)b);

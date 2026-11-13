@@ -2,8 +2,6 @@
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/mi/memory.h"
 
-
-
 void ResetCrashScreen(void)
 {
     void *ptr = G2_GetBG1ScrPtr();
