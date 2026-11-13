@@ -547,9 +547,8 @@ extern "C" void func_020522c4(void)
                     if (stream->startReady != 0) {
                         func_0204ffcc(stream);
                         {
-                            int *flagsp = (int *)&stream->uf0;
-                            *flagsp |= 2;
-                            *flagsp &= ~4;
+                            stream->uf0 |= 2;
+                            stream->uf0 &= ~4;
                         }
                     }
                 }
@@ -1285,7 +1284,11 @@ extern "C" int func_02050d54(data_020a5bb8_t *arc, struct SndHeap *heap, int loa
     return 1;
 }
 
-extern "C" int func_02050d3c(int v) { int old = ((int)data_020a5bb8); *(int*)(&data_020a5bb8) = (v); return old; }
+extern "C" int func_02050d3c(int v) {
+    int old = ((int)data_020a5bb8);
+    data_020a5bb8 = (char *)v;
+    return old;
+}
 
 extern "C" int func_02050d2c(void) { return ((int)data_020a5bb8); }
 
