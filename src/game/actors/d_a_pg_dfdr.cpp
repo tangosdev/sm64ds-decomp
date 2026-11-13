@@ -19,9 +19,7 @@
  *   The ROM calls func_0201267c.
  * - Assigning mMeshCollider.beforeClsnCallback is -4 bytes in
  *   InitResources (0x1c8 -> 0x1c4). The ROM calls dBgW::SetBeforeClsnCallback.
- * - Naming mAnmModel.currFrame and .file in StateWalk reorders 6 words (the
- *   straight-walk file loads after the frame). c+0x378 / c+0x380 and the
- *   ternary stay.
+ * - The straight-walk file compare in StateWalk stays a ternary.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -129,8 +127,10 @@ s32 daPgDfdr_c::InitResources() {
     file = dExtSimpleModel_c::LoadFile(data_ov027_02113c7c);
     mAnmModel.SetFile((BMD_File *)file, 1, -1);
 
-    for (i = 0; i < 3; i++)
-        dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov027_02112ca4[i]);
+    for (i = 0; i < 3; i++) {
+        SharedFilePtr *anim = (SharedFilePtr *)data_ov027_02112ca4[i];
+        dExtFrameCtrl_c::LoadFile(*anim);
+    }
 
     dExtAnmTexPat_c::LoadFile(data_ov027_02113c94);
     dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov027_02113c7c.filePtr,
@@ -210,7 +210,7 @@ s32 daPgDfdr_c::CleanupResources() {
 
 /* Select state idx and run its enter function. */
 void daPgDfdr_c::SetState(int idx) {
-    mStateTable = &((StatePair *)&data_ov027_02113ce4)[idx];
+    mStateTable = &data_ov027_02113ce4.a + idx * 2;
     CallStateInit();
 }
 
@@ -288,12 +288,9 @@ int daPgDfdr_c::StateWalk() {
     }
     UpdatePos(&mdCcAc_c);
     {
-        /* currFrame is +0x378 and the BCA is +0x380. Naming them reorders
-           6 words; the ternary keeps the straight-walk file in the compare. */
-        char *c = (char *)this;
-        int frameRaw = *(int *)(c + 0x378);
+        int frameRaw = mAnmModel.currFrame;
         int walkAnim = (int)data_ov027_02113c74.filePtr;
-        int curAnim = walkAnim ? *(int *)(c + 0x380) : *(int *)(c + 0x380);
+        int curAnim = walkAnim ? (int)mAnmModel.file : (int)mAnmModel.file;
         unsigned int frame = (unsigned int)(frameRaw << 4) >> 0x10;
         if (curAnim == walkAnim) {
             if (frame == 0xa || frame == 0x16) {
