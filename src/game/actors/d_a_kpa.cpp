@@ -318,16 +318,13 @@ extern void func_02011cfc(void);
  *                                    animations / six texture sequences),
  *                                    indexed by i: LoadFile, then ->Release()
  *   data_ov089_02132c50              a model handle in ov089
- *   data_ov060_0211b208              a model handle reached through a flat
- *                                    int[] view and cast (see its local extern)
+ *   data_ov060_0211b208              a model handle (SharedFilePtr)
  *   data_ov060_0211ac78              Bowser's model handle (KpaModelFilePtr) */
 extern SharedFilePtr *data_ov060_021192dc[];
 extern SharedFilePtr *data_ov060_0211927c[];
 extern SharedFilePtr data_ov089_02132c50;
-/* local extern: daFRing_c now defines this handle as a real typed object; the
- * decl_common.h row it used to share with that TU is retired, so the flat
- * int[] view it casts through lives here. */
-extern int data_ov060_0211b208[];
+/* daFRing_c defines this handle. decl_common.h no longer declares it. */
+extern SharedFilePtr data_ov060_0211b208;
 extern KpaModelFilePtr data_ov060_0211ac78;
 extern KpaTexSequenceFilePtr data_ov060_0211ac28;
 /* The other texture-pattern handles InitAnimation picks from. */
@@ -432,7 +429,7 @@ int daKpa_c::InitResources()
     for (i = 0; i < 6; i++)
         dExtAnmTexPat_c::LoadFile(*data_ov060_0211927c[i]);
 
-    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov060_0211b208);
+    dExtSimpleModel_c::LoadFile(data_ov060_0211b208);
     dExtSimpleModel_c::LoadFile(data_ov089_02132c50);
 
     if (this->mShadowModel.InitCylinder() == 0)
@@ -615,7 +612,7 @@ int daKpa_c::CleanupResources()
         data_ov060_021192dc[i]->Release();
     for (i = 0; i < 6; i++)
         data_ov060_0211927c[i]->Release();
-    ((SharedFilePtr *)(&data_ov060_0211b208))->Release();
+    data_ov060_0211b208.Release();
     data_ov089_02132c50.Release();
     func_02011cfc();
     return 1;
@@ -1265,15 +1262,15 @@ void daKpa_c::ActBreathFire() {
         }
     }
     if (Bowser_IsAnimAtLastFrame() == 0) return;
-    if (*(int *)&this->mAnmModel.file == (int)data_ov060_0211ac20.filePtr) {
+    if ((int)this->mAnmModel.file == (int)data_ov060_0211ac20.filePtr) {
         InitAnimation(6, 0x40000000);
         return;
     }
-    if (*(int *)&this->mAnmModel.file == (int)data_ov060_0211ac68.filePtr) {
+    if ((int)this->mAnmModel.file == (int)data_ov060_0211ac68.filePtr) {
         InitAnimation(7, 0x40000000);
         return;
     }
-    if (*(int *)&this->mAnmModel.file == (int)data_ov060_0211ac70.filePtr) {
+    if ((int)this->mAnmModel.file == (int)data_ov060_0211ac70.filePtr) {
         this->mState = BOWSER_STATE_IDLE;
         return;
     }
