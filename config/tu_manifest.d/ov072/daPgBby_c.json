@@ -262,7 +262,7 @@
       "ordinal": 30
     },
     {
-      "symbol": "daPgBby_c_classInit",
+      "symbol": "_Z19daPgBby_c_classInitv",
       "address": "0x02121fac",
       "size": "0x00000050",
       "legacy_source": "src/d_a_pg_bby.c",
@@ -1976,7 +1976,7 @@
       "source": "0x02122a6c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPgBby_c_classInit",
+      "symbol": "_Z19daPgBby_c_classInitv",
       "addend": 0,
       "target_module": "overlay(72)",
       "target_address": "0x02121fac"

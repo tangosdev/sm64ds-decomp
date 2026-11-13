@@ -85,11 +85,9 @@ CLPS_Block data_ov025_02112c28 = {
 };
 
 /* local extern: arm9 C helpers with no shared header yet. */
-extern "C" {
-void func_02012694(unsigned int, const Vector3 *);
-}
+extern "C" void func_02012694(unsigned int, const Vector3 *);
 
-extern "C" daDgr_c *daDgr_c_classInit() {
+daDgr_c *daDgr_c_classInit() {
     return new daDgr_c();
 }
 

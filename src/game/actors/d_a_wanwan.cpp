@@ -63,7 +63,6 @@ struct WanwanAnimationFileHandle : SharedFilePtr {
     ~WanwanAnimationFileHandle();
 };
 
-extern "C" {
 extern WanwanModelFilePtr data_ov014_02114968;
 extern WanwanModelFilePtr data_ov014_02114978;
 extern WanwanAnimationFileHandle data_ov014_02114980;
@@ -72,20 +71,19 @@ extern int data_ov014_02114700[]; /* collision offset (0, -200, 0) */
 extern const Matrix4x3 IDENTITY_MATRIX4X3;
 extern dCamera_c *gCamera;  /* CAMERA */
 
-short atan2_hold_d_a_wanwan_1(int y, int x);
+extern "C" short atan2_hold_d_a_wanwan_1(int y, int x);
 
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
-void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
-short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-int AngleDiff(int a, int b);
-int Math_Function_0203b14c(void *p, int a, int b, int c, int d);
+extern "C" void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
+extern "C" void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
+extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
+extern "C" void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
+extern "C" short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
+extern "C" int AngleDiff(int a, int b);
+extern "C" int Math_Function_0203b14c(void *p, int a, int b, int c, int d);
 /* local extern: no header this file includes declares it, and it must keep C
  * linkage now that its caller StateEscapeDemoMain is a member. Nonzero once
  * the position has reached the target. */
-s32 Vec3_ApproachHorz(Vector3 *out, Vector3 *target, s32 maxStep);
-}
+extern "C" s32 Vec3_ApproachHorz(Vector3 *out, Vector3 *target, s32 maxStep);
 
 namespace cstd {
 s16 atan2(s32, s32);
@@ -94,7 +92,7 @@ s16 atan2(s32, s32);
 #define SetChompAnim(self, bca) \
     (self)->mAnmModel.SetAnim((BCA_File *)(bca).filePtr, 0, 0x1000, 0)
 
-extern "C" daWanwan_c *daWanwan_c_classInit() {
+daWanwan_c *daWanwan_c_classInit() {
     return new daWanwan_c();
 }
 
@@ -616,34 +614,34 @@ typedef void (daWanwan_c::*WanwanPmf)();
 
 /* The descriptor objects the initializer copies into the table. They stay
  * ROM-supplied data; only their addresses are referenced here. */
-extern "C" WanwanPmf data_ov014_021146e0;
-extern "C" WanwanPmf data_ov014_021146b8;
-extern "C" WanwanPmf data_ov014_021146f0;
-extern "C" WanwanPmf data_ov014_021146c0;
-extern "C" WanwanPmf data_ov014_021146a8;
-extern "C" WanwanPmf data_ov014_021146a0;
-extern "C" WanwanPmf data_ov014_021146f8;
-extern "C" WanwanPmf data_ov014_021146b0;
-extern "C" WanwanPmf data_ov014_021146d8;
-extern "C" WanwanPmf data_ov014_021146c8;
-extern "C" WanwanPmf data_ov014_021146e8;
-extern "C" WanwanPmf data_ov014_021146d0;
+extern WanwanPmf data_ov014_021146e0;
+extern WanwanPmf data_ov014_021146b8;
+extern WanwanPmf data_ov014_021146f0;
+extern WanwanPmf data_ov014_021146c0;
+extern WanwanPmf data_ov014_021146a8;
+extern WanwanPmf data_ov014_021146a0;
+extern WanwanPmf data_ov014_021146f8;
+extern WanwanPmf data_ov014_021146b0;
+extern WanwanPmf data_ov014_021146d8;
+extern WanwanPmf data_ov014_021146c8;
+extern WanwanPmf data_ov014_021146e8;
+extern WanwanPmf data_ov014_021146d0;
 
 /* The state-name strings the table's name pointers reference. Also
  * ROM-supplied .data. */
-extern "C" char data_ov014_02114690[]; /* WAIT */
-extern "C" char data_ov014_02114688[]; /* WALK */
-extern "C" char data_ov014_02114698[]; /* ATTACK */
-extern "C" char data_ov014_0211470c[]; /* ESCAPE_DEMO */
-extern "C" char data_ov014_02114724[]; /* BOMB_DAMAGE */
-extern "C" char data_ov014_02114730[]; /* GIANT_DAMAGE */
+extern char data_ov014_02114690[]; /* WAIT */
+extern char data_ov014_02114688[]; /* WALK */
+extern char data_ov014_02114698[]; /* ATTACK */
+extern char data_ov014_0211470c[]; /* ESCAPE_DEMO */
+extern char data_ov014_02114724[]; /* BOMB_DAMAGE */
+extern char data_ov014_02114730[]; /* GIANT_DAMAGE */
 
 struct WanwanStateRow {
     WanwanPmf enter;
     WanwanPmf update;
     const char *name;
 };
-extern "C" WanwanStateRow data_ov014_0211476c[6];
+extern WanwanStateRow data_ov014_0211476c[6];
 
 void daWanwan_c::UpdateState() {
     (this->*data_ov014_0211476c[mState].update)();
@@ -939,7 +937,7 @@ WanwanModelFilePtr data_ov014_02114978(0x9c01);
 WanwanAnimationFileHandle data_ov014_02114980(0x9c04);
 WanwanAnimationFileHandle data_ov014_02114970(0x9c03);
 
-extern "C" WanwanStateRow data_ov014_0211476c[6] = {
+extern WanwanStateRow data_ov014_0211476c[6] = {
     {data_ov014_021146e0, data_ov014_021146b8, data_ov014_02114690},
     {data_ov014_021146f0, data_ov014_021146c0, data_ov014_02114688},
     {data_ov014_021146a8, data_ov014_021146a0, data_ov014_02114698},

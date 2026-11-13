@@ -337,7 +337,7 @@
       "ordinal": 42
     },
     {
-      "symbol": "func_ov063_02118f24",
+      "symbol": "_Z19func_ov063_02118f24P11daTrsIcon_cRK7Vector3",
       "address": "0x02118f24",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/ov063/func_ov063_02118f24.c",
@@ -491,7 +491,7 @@
       "ordinal": 64
     },
     {
-      "symbol": "func_ov063_0211a0a8",
+      "symbol": "_Z19func_ov063_0211a0a8iiiii",
       "address": "0x0211a0a8",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/ov063/func_ov063_0211a0a8.c",
@@ -687,28 +687,28 @@
       "ordinal": 92
     },
     {
-      "symbol": "daTrsIcon_c_classInit",
+      "symbol": "_Z21daTrsIcon_c_classInitv",
       "address": "0x0211c4a0",
       "size": "0x00000030",
       "legacy_source": "src/game/actors/daTrsIcon_c/d_a_trs_icon.c",
       "ordinal": 93
     },
     {
-      "symbol": "daTBasket_c_classInit",
+      "symbol": "_Z21daTBasket_c_classInitv",
       "address": "0x0211c4d0",
       "size": "0x00000050",
       "legacy_source": "src/game/actors/daTBasket_c/d_a_t_basket.cpp",
       "ordinal": 94
     },
     {
-      "symbol": "daTrs_c_classInit_BOSS_TERESA",
+      "symbol": "_Z29daTrs_c_classInit_BOSS_TERESAv",
       "address": "0x0211c520",
       "size": "0x00000070",
       "legacy_source": "src/game/actors/daTrs_c/d_a_trs_factories.cpp",
       "ordinal": 95
     },
     {
-      "symbol": "daTrs_c_classInit_TERESA",
+      "symbol": "_Z24daTrs_c_classInit_TERESAv",
       "address": "0x0211c590",
       "size": "0x00000070",
       "legacy_source": "src/game/actors/daTrs_c/d_a_trs_factories.cpp",

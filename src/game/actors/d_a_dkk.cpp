@@ -60,7 +60,7 @@ typedef char DkkClsnFileHandler_size_must_be_8[sizeof(DkkClsnFileHandler) == 8 ?
 extern DsnBaseFileTable data_ov025_02113814;
 
 /* DONKAKU factory. The `new` is the whole body. */
-extern "C" daDkk_c *daDkk_c_classInit() {
+daDkk_c *daDkk_c_classInit() {
     return new daDkk_c();
 }
 

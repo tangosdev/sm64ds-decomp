@@ -236,7 +236,7 @@
       "ordinal": 27
     },
     {
-      "symbol": "daBgSnmBdy_c_classInit",
+      "symbol": "_Z22daBgSnmBdy_c_classInitv",
       "address": "0x0211fedc",
       "size": "0x00000058",
       "legacy_source": "src/d_a_bg_snm_bdy.c",
@@ -558,7 +558,7 @@
       "source": "0x0212279c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daBgSnmBdy_c_classInit",
+      "symbol": "_Z22daBgSnmBdy_c_classInitv",
       "addend": 0,
       "target_module": "ov072",
       "target_address": "0x0211fedc"

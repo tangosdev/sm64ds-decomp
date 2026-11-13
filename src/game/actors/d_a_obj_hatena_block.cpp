@@ -183,7 +183,6 @@ enum {
    trigger (UpdateIdle) does not run for it. */
 enum { SAVE_FLAGS1_BIT31 = 0x80000000 };
 
-extern "C" {
 
 extern signed char gCurrentSublevel;
 extern int data_0209f32c;
@@ -204,18 +203,17 @@ extern SharedFilePtr gPFlowerOpenModelFile;
 extern SharedFilePtr gPFlowerCloseModelFile;
 extern CLPS_Block data_ov002_0210d954;
 
-extern int RandomIntInternal(int *seed);
-extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-extern u16 DecIfAbove0_Short(u16 *p);
-extern void Matrix4x3_FromRotationY(void *m, int angle);
-void d_a_obj_hatena_blockEarthquakeHold(void *self, void *pos, s32 radius);
-extern void hold_d_a_obj_hatena_block(void *thiz, void *kcl, void *mtx, int fix, short s,
+extern "C" int RandomIntInternal(int *seed);
+extern "C" int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
+extern "C" u16 DecIfAbove0_Short(u16 *p);
+extern "C" void Matrix4x3_FromRotationY(void *m, int angle);
+extern "C" void d_a_obj_hatena_blockEarthquakeHold(void *self, void *pos, s32 radius);
+extern "C" void hold_d_a_obj_hatena_block(void *thiz, void *kcl, void *mtx, int fix, short s,
                                       void *clps);
 
 /* Free: the block is its second argument (dst, src), so member form would
    swap the register operands. */
 void func_ov102_02149684(int *dst, daObjHatenaBlock_c *src);
-}
 
 /* The block's file-scope SharedFilePtr objects, spelled through the same
    wrapper idiom the landed folds use: the handles' code is the veneer pair
@@ -289,32 +287,32 @@ PMF data_ov102_0214e870[1][4] = {
      &daObjHatenaBlock_c::SpawnPrizeFeather, &daObjHatenaBlock_c::SpawnPrizeFeather},
 };
 
-extern "C" daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_VS_ITEM_BLOCK()
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_VS_ITEM_BLOCK()
 {
     return new daObjHatenaBlock_c();
 }
 
-extern "C" daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_HATENA_BLOCK()
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_HATENA_BLOCK()
 {
     return new daObjHatenaBlock_c();
 }
 
-extern "C" daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_ITEM_BLOCK()
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_ITEM_BLOCK()
 {
     return new daObjHatenaBlock_c();
 }
 
-extern "C" daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_M()
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_M()
 {
     return new daObjHatenaBlock_c();
 }
 
-extern "C" daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_L()
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_L()
 {
     return new daObjHatenaBlock_c();
 }
 
-extern "C" daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_W()
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_W()
 {
     return new daObjHatenaBlock_c();
 }
@@ -943,14 +941,12 @@ int daObjHatenaBlock_c::OnHitFromUnderneath(dActor_c &other)
 
 /* dst = the block's position with Y raised by 0x32000 (50 units): the point
    the prizes spawn at. */
-extern "C" {
 void func_ov102_02149684(int* dst, daObjHatenaBlock_c* src){
   int z = src->mPosZ;
   int liftedY = src->mPosY + 0x32000;
   dst[0] = src->mPosX;
   dst[1] = liftedY;
   dst[2] = z;
-}
 }
 
 /* Floor height under the block: a ground raycast (dBgCh_Gnd) from 0x28000 (40
@@ -1150,7 +1146,7 @@ int daObjHatenaBlock_c::IsHitBlocked() {
     return 0;
 }
 
-extern "C" SpawnInfo<daObjHatenaBlock_c> g_profile_VS_ITEM_BLOCK = {
+extern SpawnInfo<daObjHatenaBlock_c> g_profile_VS_ITEM_BLOCK = {
     daObjHatenaBlock_c_classInit_VS_ITEM_BLOCK,
     0x16,
     0x28,
@@ -1160,7 +1156,7 @@ extern "C" SpawnInfo<daObjHatenaBlock_c> g_profile_VS_ITEM_BLOCK = {
     0x1000000,
     0x1000000};
 
-extern "C" SpawnInfo<daObjHatenaBlock_c> g_profile_HATENA_BLOCK = {
+extern SpawnInfo<daObjHatenaBlock_c> g_profile_HATENA_BLOCK = {
     daObjHatenaBlock_c_classInit_HATENA_BLOCK,
     0x14,
     0x26,
@@ -1170,7 +1166,7 @@ extern "C" SpawnInfo<daObjHatenaBlock_c> g_profile_HATENA_BLOCK = {
     0x1000000,
     0x1000000};
 
-extern "C" SpawnInfo<daObjHatenaBlock_c> g_profile_ITEM_BLOCK = {
+extern SpawnInfo<daObjHatenaBlock_c> g_profile_ITEM_BLOCK = {
     daObjHatenaBlock_c_classInit_ITEM_BLOCK,
     0x15,
     0x27,
@@ -1180,7 +1176,7 @@ extern "C" SpawnInfo<daObjHatenaBlock_c> g_profile_ITEM_BLOCK = {
     0x1000000,
     0x1000000};
 
-extern "C" SpawnInfo<daObjHatenaBlock_c> g_profile_CAP_BLOCK_M = {
+extern SpawnInfo<daObjHatenaBlock_c> g_profile_CAP_BLOCK_M = {
     daObjHatenaBlock_c_classInit_CAP_BLOCK_M,
     0x17,
     0x29,
@@ -1190,7 +1186,7 @@ extern "C" SpawnInfo<daObjHatenaBlock_c> g_profile_CAP_BLOCK_M = {
     0x1000000,
     0x1000000};
 
-extern "C" SpawnInfo<daObjHatenaBlock_c> g_profile_CAP_BLOCK_L = {
+extern SpawnInfo<daObjHatenaBlock_c> g_profile_CAP_BLOCK_L = {
     daObjHatenaBlock_c_classInit_CAP_BLOCK_L,
     0x19,
     0x2b,
@@ -1200,7 +1196,7 @@ extern "C" SpawnInfo<daObjHatenaBlock_c> g_profile_CAP_BLOCK_L = {
     0x1000000,
     0x1000000};
 
-extern "C" SpawnInfo<daObjHatenaBlock_c> g_profile_CAP_BLOCK_W = {
+extern SpawnInfo<daObjHatenaBlock_c> g_profile_CAP_BLOCK_W = {
     daObjHatenaBlock_c_classInit_CAP_BLOCK_W,
     0x18,
     0x2a,

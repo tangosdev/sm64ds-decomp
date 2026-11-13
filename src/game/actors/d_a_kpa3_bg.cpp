@@ -49,12 +49,11 @@ struct BMD_File;
 struct KCL_File;
 struct CLPS_Block;
 
-extern "C" {
 
-int *Vec3_AsrInPlace(VecFx32 *v, int n);
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *res);
-void func_02012694(unsigned int, void *);
-int CopyTexPalFromLevelModel(void *);
+extern "C" int *Vec3_AsrInPlace(VecFx32 *v, int n);
+extern "C" void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *res);
+extern "C" void func_02012694(unsigned int, void *);
+extern "C" int CopyTexPalFromLevelModel(void *);
 
 /* One row per mVariant: where that platform piece sits (whole units,
  * shifted to fix12 on use) and the angle it faces. */
@@ -71,7 +70,6 @@ extern SharedFilePtr *data_ov060_02119514[];
 extern SharedFilePtr *data_ov060_0211953c[];
 extern CLPS_Block *data_ov060_0211a980[];
 extern int data_0208e738;
-}
 
 typedef void (daKpa3Bg_c::*Handler)();
 struct HandlerEntry { Handler pmf; };
@@ -96,7 +94,7 @@ daKpa3Bg_c::~daKpa3Bg_c() {}
 #pragma defer_codegen on
 
 /* Historical alias BowserSkyPlatform_Spawn. */
-extern "C" daKpa3Bg_c *daKpa3Bg_c_classInit(void)
+daKpa3Bg_c *daKpa3Bg_c_classInit(void)
 {
     return new daKpa3Bg_c;
 }

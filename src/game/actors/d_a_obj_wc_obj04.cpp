@@ -64,7 +64,7 @@ extern CLPS_Block data_ov029_0211304c;
  * check is the one `new` itself emits. The implicit constructor is what
  * keeps the intervening construction inlined; declaring a constructor of
  * our own would emit a `bl` the factory does not have. */
-extern "C" daObjWc_Obj04_c *daObjWc_Obj04_c_classInit() {
+daObjWc_Obj04_c *daObjWc_Obj04_c_classInit() {
     return new daObjWc_Obj04_c();
 }
 

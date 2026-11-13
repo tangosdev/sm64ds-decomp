@@ -85,11 +85,11 @@ enum { kFlightSpeed = 0x32000 };
 extern "C" {
 short atan2_hold_d_a_book_1(int, int);
 void Vec3_Sub(Vector3 *d, const Vector3 *a, const Vector3 *b);
-void func_ov063_0211cae8(void *found, int mask);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(dBgCh_Actr *self, dActor_c *actor, int radius, int height,
                          Vector3_16 *first, Vector3_16 *second);
 }
+void func_ov063_0211cae8(daTrsTrap_c *c, int m);
 
 /* BOOK_SWITCH push order, indexed by the book's param1: the value the
  * partner's low three book bits must have when that book is pushed. {0, 1, 3}

@@ -153,6 +153,6 @@ FRingAnimationFileHandle data_ov060_0211b1f8(ASSET_KPA_SHWAVE_BCA);
 FRingTexSequenceFilePtr data_ov060_0211b200(ASSET_KPA_SHWAVE_BTP);
 
 /* return new builds the ring and its eight animators. */
-extern "C" daFRing_c *daFRing_c_classInit(void) {
+daFRing_c *daFRing_c_classInit(void) {
     return new daFRing_c;
 }

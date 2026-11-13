@@ -118,7 +118,7 @@
       "ordinal": 11
     },
     {
-      "symbol": "daCnn_c_classInit",
+      "symbol": "_Z17daCnn_c_classInitv",
       "address": "0x0213b43c",
       "size": "0x00000040",
       "legacy_source": "src/d_a_cnn.cpp",

@@ -292,7 +292,7 @@
       "ordinal": 7
     },
     {
-      "symbol": "func_ov063_0211cae8",
+      "symbol": "_Z19func_ov063_0211cae8P11daTrsTrap_ci",
       "address": "0x0211cae8",
       "size": "0x0000006c",
       "legacy_source": "src/unnamed/ov063/func_ov063_0211cae8.c",

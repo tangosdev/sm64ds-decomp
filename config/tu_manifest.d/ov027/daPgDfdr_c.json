@@ -139,7 +139,7 @@
       "ordinal": 14
     },
     {
-      "symbol": "daPgDfdr_c_classInit",
+      "symbol": "_Z20daPgDfdr_c_classInitv",
       "address": "0x0211207c",
       "size": "0x00000048",
       "legacy_source": "src/d_a_pg_dfdr.c",

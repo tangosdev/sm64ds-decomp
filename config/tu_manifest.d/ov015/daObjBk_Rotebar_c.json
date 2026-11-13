@@ -76,7 +76,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "daObjBk_Rotebar_c_classInit",
+      "symbol": "_Z27daObjBk_Rotebar_c_classInitv",
       "address": "0x02112ba0",
       "size": "0x00000030",
       "legacy_source": "src/daObjBk_Rotebar_c_classInit.c",

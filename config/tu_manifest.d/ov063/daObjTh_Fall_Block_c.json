@@ -63,7 +63,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "daObjTh_Fall_Block_c_classInit",
+      "symbol": "_Z30daObjTh_Fall_Block_c_classInitv",
       "address": "0x0211d47c",
       "size": "0x0000003c",
       "legacy_source": "src/game/actors/daObjTh_Fall_Block_c/d_a_obj_th_fall_block.c",

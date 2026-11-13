@@ -34,7 +34,7 @@ struct BkBillboardModelFilePtr : SharedFilePtr {
 
 extern BkBillboardModelFilePtr gBkBillbordModelFile;
 
-extern "C" daObjBkBillboard_c *daObjBkBillboard_c_classInit() {
+daObjBkBillboard_c *daObjBkBillboard_c_classInit() {
     return new daObjBkBillboard_c();
 }
 

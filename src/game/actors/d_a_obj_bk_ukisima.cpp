@@ -45,7 +45,7 @@ extern s16 data_ov015_02114794;
 extern ResourceDescriptor data_ov015_021147a4;
 extern struct CLPS_Block data_ov015_02113614;
 
-extern "C" daObjBk_Ukisima_c *daObjBk_Ukisima_c_classInit() {
+daObjBk_Ukisima_c *daObjBk_Ukisima_c_classInit() {
     return new daObjBk_Ukisima_c();
 }
 

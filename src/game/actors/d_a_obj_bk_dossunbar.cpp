@@ -91,16 +91,14 @@ extern SharedFilePtr *data_ov015_02114538;
 extern CLPS_Block *data_ov015_0211453c;
 
 /* local extern: arm9 math and MeshCollider helpers with no shared header. */
-extern "C" {
-void Math_Function_0203b0fc(int *p, int target, int scale, int max);
-int Math_Function_0203b14c(int *p, int target, int scale, int max, int extra);
-}
+extern "C" void Math_Function_0203b0fc(int *p, int target, int scale, int max);
+extern "C" int Math_Function_0203b14c(int *p, int target, int scale, int max, int extra);
 
-extern "C" daObjBk_Dossunbar_c *daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_S() {
+daObjBk_Dossunbar_c *daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_S() {
     return new daObjBk_Dossunbar_c();
 }
 
-extern "C" daObjBk_Dossunbar_c *daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_L() {
+daObjBk_Dossunbar_c *daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_L() {
     return new daObjBk_Dossunbar_c();
 }
 

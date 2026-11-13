@@ -117,7 +117,7 @@
       "ordinal": 10
     },
     {
-      "symbol": "daKpa3Bg_c_classInit",
+      "symbol": "_Z20daKpa3Bg_c_classInitv",
       "address": "0x02118408",
       "size": "0x00000030",
       "legacy_source": "src/d_a_kpa3_bg.c",

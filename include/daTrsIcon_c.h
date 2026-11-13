@@ -38,6 +38,6 @@ typedef char daTrsIcon_c_size_must_be_0xd8[
     sizeof(struct daTrsIcon_c) == 0xd8 ? 1 : -1];
 #endif
 
-extern "C" daTrsIcon_c *daTrsIcon_c_classInit();
+daTrsIcon_c *daTrsIcon_c_classInit();
 
 #endif /* DATRSICON_C_H */

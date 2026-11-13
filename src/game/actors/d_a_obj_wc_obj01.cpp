@@ -42,7 +42,7 @@ enum {
     kRayStartAboveFix12 = 0x14000 /* 20.0 */
 };
 
-extern "C" daObjWcObj01_c *daObjWcObj01_c_classInit() {
+daObjWcObj01_c *daObjWcObj01_c_classInit() {
     return new daObjWcObj01_c();
 }
 

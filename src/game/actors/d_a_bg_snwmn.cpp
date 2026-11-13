@@ -50,11 +50,11 @@ extern Vector3 data_ov072_02122c70;
 
 /* Reconstructed source-style names. SM64DS directly preserves the class RTTI,
  * BIG_SNOWMAN ID, descriptor relationship, and factory behavior. */
-extern "C" daBgSnwmn_c *daBgSnwmn_c_classInit() {
+daBgSnwmn_c *daBgSnwmn_c_classInit() {
     return new daBgSnwmn_c();
 }
 
-extern "C" SpawnInfo<daBgSnwmn_c> g_profile_BIG_SNOWMAN = {
+extern SpawnInfo<daBgSnwmn_c> g_profile_BIG_SNOWMAN = {
     daBgSnwmn_c_classInit, 0x0110, 0x0083, 3, 1, 0x0012c000, 0x01000000, 0x00001000};
 
 s32 daBgSnwmn_c::InitResources() {

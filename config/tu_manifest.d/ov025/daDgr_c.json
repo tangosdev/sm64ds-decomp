@@ -102,7 +102,7 @@
       "ordinal": 8
     },
     {
-      "symbol": "daDgr_c_classInit",
+      "symbol": "_Z17daDgr_c_classInitv",
       "address": "0x02111898",
       "size": "0x00000030",
       "legacy_source": "src/d_a_dgr.c",
