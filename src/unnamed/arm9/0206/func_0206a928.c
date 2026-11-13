@@ -266,9 +266,6 @@ void func_0206a928(struct Stream *ctx, char *fmt, int **ap)
             }
             break;
         }
-            /* number gotos kept: cases 2-7 share the integer tail in ROM order; merging
-             * them under one label with a nested switch (0x12c4) or an if chain (0x129c)
-             * shrinks it */
             {
                 int w;
                 char *p;
@@ -285,24 +282,28 @@ void func_0206a928(struct Stream *ctx, char *fmt, int **ap)
                 }
                 flags |= 0x1000;
                 radix = 10;
+                // goto: if-chain 0x12b0, nested-switch 0x12c0, hex-ternary 0x12dc still DIFF func_0206a928
                 goto number;
             case 3:
                 *ap += 1;
                 n = (*ap)[-1];
                 flags |= 0x2000;
                 radix = 10;
+                // goto: if-chain 0x12b0, nested-switch 0x12c0, hex-ternary 0x12dc still DIFF func_0206a928
                 goto number;
             case 4:
                 *ap += 1;
                 n = (*ap)[-1];
                 flags |= 0x2000;
                 radix = 2;
+                // goto: if-chain 0x12b0, nested-switch 0x12c0, hex-ternary 0x12dc still DIFF func_0206a928
                 goto number;
             case 5:
                 *ap += 1;
                 n = (*ap)[-1];
                 flags |= 0x2000;
                 radix = 8;
+                // goto: if-chain 0x12b0, nested-switch 0x12c0, hex-ternary 0x12dc still DIFF func_0206a928
                 goto number;
             case 6:
                 *ap += 1;
@@ -310,6 +311,7 @@ void func_0206a928(struct Stream *ctx, char *fmt, int **ap)
                 flags |= 0x2000;
                 letteroff = 39;
                 radix = 16;
+                // goto: if-chain 0x12b0, nested-switch 0x12c0, hex-ternary 0x12dc still DIFF func_0206a928
                 goto number;
             case 7:
                 *ap += 1;
