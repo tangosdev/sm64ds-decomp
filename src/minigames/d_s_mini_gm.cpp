@@ -318,7 +318,7 @@ s32 dScMiniGm_c::InitResources()
     sp2 = 0x1f;
     MI_CpuFill16(dst, sp2, 0x1000);
 
-    MiniGm_LoadGroupIcons(this);
+    MiniGm_LoadGroupIcons();
 
     if (GetOwnerLanguage() == 5) {
         f = LoadFile(0xda);
