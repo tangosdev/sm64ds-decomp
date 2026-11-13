@@ -107,7 +107,7 @@ void func_0204531c(ModelComponents *data, s32 weight);
 u32 func_020462bc(int *file);
 /* local extern: no header declares it; initializes ModelComponents' side of
    the blend buffer. Spelled (int *, int) the way func_020462b4.c defines it */
-void func_020462b4(int *data, int buf);
+void func_020462b4(ModelComponents *data, int buf);
 /* local extern: dExtShadowModel_c's live list head and freeze flag */
 extern dExtShadowModel_c *data_0209cef4;
 extern u8 data_0209ceec;
@@ -127,7 +127,7 @@ void func_02046bbc(ModelComponents *model, BTP_File *file, unsigned int frame);
 void func_02046b64(BMD_File *model, BTA_File *file);
 void func_020469e8(ModelComponents *model, BTA_File *file, int frame);
 void func_020470e8(BMD_File *model, BMA_File *file);
-void func_02046e28(struct Model *model, struct MatAnimData *file, unsigned short frame);
+void func_02046e28(ModelComponents *model, BMA_File *file, unsigned short frame);
 }
 
 /* 0xc-byte records in the common model data array at data_0209cefc, counted
@@ -474,7 +474,7 @@ int dExtBlendAnmModel_c::InitBlendBuffer(char *file) {
     void *p = mBlendBuffer;
     if (p == 0)
         return 0;
-    func_020462b4((int *)&data, (int)p);
+    func_020462b4(&data, (int)p);
     return 1;
 }
 
@@ -948,7 +948,7 @@ void dExtAnmMaterial_c::SetFile(BMA_File &animFile, int flags, Fix12i speed, u16
 }
 
 void dExtAnmMaterial_c::Update(ModelComponents &model) {
-    func_02046e28((struct Model *)&model, (struct MatAnimData *)file, (u16)((u32)currFrame >> 12));
+    func_02046e28(&model, file, (u16)((u32)currFrame >> 12));
 }
 
 /* Static: no this. */
