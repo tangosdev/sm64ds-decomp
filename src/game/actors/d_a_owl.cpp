@@ -140,8 +140,7 @@ enum {
 #define OWL_STATE_CARRY     OWL_STATE(data_ov094_02136b70)
 #define OWL_STATE_RETURN    OWL_STATE(data_ov094_02136b30)
 
-/* mStateTimer is s16 but every read in the ROM is an unsigned halfword load. */
-#define OWL_TIMER(o)        (*(u16 *)&(o)->mStateTimer)
+#define OWL_TIMER(o)        ((o)->mStateTimer)
 
 /* Whole animation frame of the dExtAnmModel_c, as the ROM extracts it. */
 #define OWL_FRAME(o)        ((u16)((o)->mAnmModel.currFrame >> 12))
