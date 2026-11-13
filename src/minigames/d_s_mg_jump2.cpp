@@ -371,7 +371,6 @@ s32 dScMgJump2_c::Behavior() {
 }
 
 extern "C" { /* .c-derived member: C linkage for the whole block */
-void func_0203cd80(int *m, int x);
 
 void Jump2_SetLights(void) {
     int light0[3];

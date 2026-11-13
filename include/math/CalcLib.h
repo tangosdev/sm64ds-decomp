@@ -47,6 +47,9 @@ void VEC_Subtract(Vector3 *, Vector3 *, Vector3 *);
 int VEC_Mag(const Vector3 *);
 /* a . b, in fx32. */
 Fix12i VEC_DotProduct(const Vector3 *, const Vector3 *);
+/* Cross product and in-place normalizer. */
+void VEC_CrossProduct(const Vector3 *, const Vector3 *, Vector3 *);
+void VEC_Normalize(const Vector3 *, Vector3 *);
 /* The same two add/subtract routines under the name the newer TUs use. */
 void Vec3_Add(Vector3 *, const Vector3 *, const Vector3 *);
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
