@@ -14,10 +14,6 @@
 //   0x20000 / 0x40000). Each row of data_ov080_0212847c is an Init/Main pair.
 // - StateYoshiMouthMain stores 0 through *(int *)pad_0d0, the pad in front of
 //   mModel.
-// - StateYoshiMouthMain keeps `goto done` and StateCarriedMain keeps
-//   `goto clear`: early returns reschedule the tail (+48 bytes) and a
-//   keepCrate flag reschedules the break block (+16 bytes), both measured
-//   against the ROM-matching spelling.
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daBttBk_c_AssetId { ASSET_BATTA_BLOCK_BMD = 0x02ac };
@@ -188,14 +184,13 @@ void daBttBk_c::UpdateModelTransform() {
 int daBttBk_c::StateYoshiMouthMain() {
     int flags = mFlags;
     int inYoshiMouthA = (flags & 0x20000) ? 1 : 0;
-    if (inYoshiMouthA != 0)
-        goto done;
-    int inYoshiMouthB = (flags & 0x40000) ? 1 : 0;
-    if (inYoshiMouthB != 0)
-        goto done;
-    *(int *)pad_0d0 = 0;
-    SetState(0);
-done:
+    if (inYoshiMouthA == 0) {
+        int inYoshiMouthB = (flags & 0x40000) ? 1 : 0;
+        if (inYoshiMouthB == 0) {
+            *(int *)pad_0d0 = 0;
+            SetState(0);
+        }
+    }
     return 1;
 }
 
@@ -217,12 +212,13 @@ int daBttBk_c::StateCarriedMain() {
     {
         int flags = mFlags;
         int hasBit8 = (int)((flags & 0x100) != 0);
-        if (hasBit8 != 0) {
-            int hasBit13 = (int)((flags & 0x2000) != 0);
-            if (hasBit13 == 0)
-                goto clear;
-        }
-        {
+        do {
+            if (hasBit8 != 0) {
+                int hasBit13 = (int)((flags & 0x2000) != 0);
+                if (hasBit13 == 0)
+                    break;
+            }
+            {
             Vector3 vec;
             Vector3 vec2;
             int x = mPosX;
@@ -252,9 +248,9 @@ int daBttBk_c::StateCarriedMain() {
 
             Sound::PlayBank3(0x41, mCamSpacePos);
             MarkForDestruction();
-        }
+            }
+        } while (0);
     }
-clear:
     mdCcAc_c.Clear();
     return 1;
 }
