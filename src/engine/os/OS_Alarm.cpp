@@ -19,8 +19,8 @@
 #include "nitro/os/interrupt_check.h"
 #include "nitro/os/alarm.h"
 
-#define REG_TM1CNT_L (*(volatile u16 *)0x04000104)
-#define REG_TM1CNT_H (*(volatile u16 *)0x04000106)
+#define REG_TM1CNT_L (*(u16 *)0x04000104)
+#define REG_TM1CNT_H (*(u16 *)0x04000106)
 
 #define OSi_TICK_TIMERCONTROL 0xc1 /* enable, IRQ, prescaler /64 */
 
