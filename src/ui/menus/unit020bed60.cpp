@@ -383,10 +383,10 @@ void func_ov007_020beeb0(void) {
 void func_ov007_020bee14(void) {
     VecFx32 v = *(VecFx32 *)&data_ov007_020d7d60;
     v.z += 0x200;
-    func_ov007_020ca5f0(SCENE->mesh, SCENE->materials[0], (int *)&v, 0x3e8, 1);
+    func_ov007_020ca5f0(SCENE->mesh, SCENE->materials[0], &v.x, 0x3e8, 1);
     func_ov007_020cb3dc(SCENE->mesh);
     v.z += 0x200;
-    func_ov007_020ca5f0(SCENE->mesh, SCENE->materials[1], (int *)&v, 0x3e8, 1);
+    func_ov007_020ca5f0(SCENE->mesh, SCENE->materials[1], &v.x, 0x3e8, 1);
 }
 
 /* Pokes the mesh at screen point (arg0, arg1): func_ov007_020bf630 picks the
