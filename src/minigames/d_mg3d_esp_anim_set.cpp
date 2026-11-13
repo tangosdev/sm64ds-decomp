@@ -110,14 +110,14 @@ void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 void GXS_LoadBG2Scr(const void *, u32, u32);
 
-extern int sEsp3DMaterialAnim;
+extern BMA_File sEsp3DMaterialAnim;
 extern int pmf_dMg3DEspModel_c_Idle_2[];
 extern dMg3DEspModel_c::State pmf_dMg3DEspModel_c_Idle;
 extern dMg3DEspModel_c::State pmf_dMg3DEspModel_c_Hit;
 extern dMg3DEspModel_c::State pmf_dMg3DEspModel_c_Intro;
 extern dMg3DEspModel_c::State pmf_dMg3DEspModel_c_Wait;
 extern dMg3DEspModel_c::State pmf_dMg3DEspModel_c_Idle_3;
-extern void *sEsp3DTextureAnim;
+extern BTA_File sEsp3DTextureAnim;
 extern unsigned char gMainScreenLayers;
 extern unsigned char gSubScreenLayers;
 extern int sMgClearBannerX;
@@ -215,11 +215,11 @@ void dMg3DEspAnimSet_c::InitResources()
     mSpeed = 0x800;
     bmd = dExtSimpleModel_c::LoadFile(gEspHamonModelFile);
     bca = dExtFrameCtrl_c::LoadFile(gEspHamonAnimFile);
-    dExtAnmMaterial_c::Prepare(*bmd, *(BMA_File *)&sEsp3DMaterialAnim);
+    dExtAnmMaterial_c::Prepare(*bmd, sEsp3DMaterialAnim);
     for (i = 0; i < 3; i++) {
         mModels[i].SetFile(bmd, 1, -1);
         mModels[i].SetAnim(bca, 0x40000000, mSpeed, 0);
-        mMaterialChangers[i].SetFile(*(BMA_File *)&sEsp3DMaterialAnim, 0x40000000, mSpeed, 0);
+        mMaterialChangers[i].SetFile(sEsp3DMaterialAnim, 0x40000000, mSpeed, 0);
         mModels[i].SetPolygonID((i + 1) & 0xff);
         mActive[i] = 0;
     }
@@ -248,7 +248,7 @@ void dMg3DEspModel_c::Render()
     int* d = pmf_dMg3DEspModel_c_Idle_2;
     if (p[0] == d[0]) {
         if (p[1] == d[1]) return;
-        if (*(int *)&mState == 0)
+        if (mState == 0)
             return;
     }
 
@@ -273,7 +273,7 @@ void dMg3DEspModel_c::Behavior()
     s32* idleState = (s32*)&pmf_dMg3DEspModel_c_Idle;
     if (state[0] == idleState[0]) {
         if (state[1] == idleState[1]) return;
-        if (*(s32 *)&mState == 0)
+        if (mState == 0)
             return;
     }
 
@@ -376,10 +376,10 @@ int dMg3DEspModel_c::InitResources()
     dExtFrameCtrl_c::LoadFile(gEspCardWaitAnimFile);
     dExtFrameCtrl_c::LoadFile(gEspCardOpenAnimFile);
     dExtFrameCtrl_c::LoadFile(gEspCardOpenWaitAnimFile);
-    dExtAnmTexPat_c::Prepare(**(BMD_File **)((void **)&gEspCardModelFile + 1),
-                             **(BTP_File **)((void **)&gEspCardTexSeqFile + 1));
-    mTextureSequence.SetFile(**(BTP_File **)((void **)&gEspCardTexSeqFile + 1), 0, 0x1000, 0);
-    mAnmModel.SetAnim(*((BCA_File **)&gEspCardStartAnimFile + 1), 0x40000000, 0x800, 0);
+    dExtAnmTexPat_c::Prepare(*(BMD_File *)gEspCardModelFile.filePtr,
+                             *(BTP_File *)gEspCardTexSeqFile.filePtr);
+    mTextureSequence.SetFile(*(BTP_File *)gEspCardTexSeqFile.filePtr, 0, 0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)gEspCardStartAnimFile.filePtr, 0x40000000, 0x800, 0);
     mAnimSet.InitResources();
     ResetTransform();
     Reset();
@@ -1255,9 +1255,8 @@ s32 dScMg3DEsp_c::InitResources()
     if (func_020179b4(&gEspIrieModelFile, &mModel1, 1) == 0)
         return 0;
 
-    dExtAnmTexSRT_c::Prepare(**(BMD_File **)((void **)&gEspIrieModelFile + 1),
-                             *(BTA_File *)&sEsp3DTextureAnim);
-    mTextureTransformer.SetFile(*(BTA_File *)&sEsp3DTextureAnim, 0, 0x1000, 0);
+    dExtAnmTexSRT_c::Prepare(*(BMD_File *)gEspIrieModelFile.filePtr, sEsp3DTextureAnim);
+    mTextureTransformer.SetFile(sEsp3DTextureAnim, 0, 0x1000, 0);
 
     if (mEspModel.InitResources() == 0)
         return 0;
