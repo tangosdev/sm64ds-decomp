@@ -919,7 +919,7 @@ daPly_c *daDoor_c::func_ov100_02145370() {
 int daDoor_c::func_ov100_021453d8(void *p, int a2) {
     mState = p;
     daDoor_StateRecord *q = (daDoor_StateRecord *)mState;
-    if (*(int *)q == 0)
+    if (q->enter == 0)
         return 1;
     return (this->*q->enter)(a2);
 }
