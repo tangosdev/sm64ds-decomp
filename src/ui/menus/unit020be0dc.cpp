@@ -191,7 +191,7 @@ void func_ov007_020beb80(Ov007Figure *fig) {
             vel = 0;
             frames = 0x1000;
             if (motion.x != 0 || motion.y != 0 || motion.z != 0) {
-                int mag = (short)VEC_Fx16Mag((s16 *)&motion);
+                int mag = (short)VEC_Fx16Mag(&motion.x);
                 int t;
                 if (mag <= 0)
                     speed = 0;
@@ -206,7 +206,7 @@ void func_ov007_020beb80(Ov007Figure *fig) {
                 else
                     t = FX_Div(mag - 0x1f4, 0x1f4);
                 frames -= t;
-                VEC_Fx16Normalize((s16 *)&motion, (s16 *)&motion);
+                VEC_Fx16Normalize(&motion.x, &motion.x);
                 *(Vec3sWords *)&sys->direction = *(Vec3sWords *)&motion;
                 vel = (short)FX_MUL(speed, 0x460);
             }
