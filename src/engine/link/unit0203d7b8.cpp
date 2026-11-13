@@ -74,10 +74,11 @@ struct Pair {
 typedef struct {
     char stack[0x400];
     OSThread thread;
-    /* 0x494, just past the OSThread (0x94 bytes in this SDK): WFSi_CreateTaskThread
-       clears it before creating the thread; nothing in src/ reads it */
-    u16 mFlag;
-} LoaderThreadBlock;
+    /* 0x494, just past the OSThread (0x94 bytes in this SDK). In this SDK a
+       thread queue is a u16 bitmask, and OS_InitThreadQueue is a store of 0,
+       which is the only use of it in src/ (WFSi_CreateTaskThread). */
+    OSThreadQueue threadQueue;
+} WFSiTask;
 typedef struct {
     u32 kind : 4;
     u32 packetSizeHigh : 4; /* bits 8-11 of the packet size */
@@ -97,16 +98,9 @@ typedef struct {
     s16 hc;
 } RawMsg;
 typedef char
-    FileShareParentArea_mNodes_must_be_0xc0[(int)&((FileShareParentArea *)0)->mNodes == 0xc0 ? 1
-                                                                                             : -1];
-typedef char FileShareChildArea_mRecvWork_must_be_0xc70
-    [(int)&((FileShareChildArea *)0)->mRecvWork == 0xc70 ? 1 : -1];
-typedef struct {
-    char pad[0xb50];
-    u32 field_b50;
-    u32 pad_b54;
-    int field_b58; /* WFS_GetCurrentBitmap */
-} UnkStruct_020a3fc0;
+    WFSParentContext_list_must_be_0xc0[(int)&((WFSParentContext *)0)->list == 0xc0 ? 1 : -1];
+typedef char WFSChildContext_recv_pkt_bmp_buf_must_be_0xc70
+    [(int)&((WFSChildContext *)0)->recv_pkt_bmp_buf == 0xc70 ? 1 : -1];
 struct EmptyInit {
     EmptyInit() {}
 };
@@ -223,7 +217,6 @@ extern char data_020a2400[];
 extern char data_020a2404[];
 extern u8 data_020a2408[];
 extern u8 data_020a2409[];
-extern UnkStruct_020a3fc0 data_020a3fc0;
 
 int Wireless_Reset(void);
 int func_0203d81c(void);
@@ -290,15 +283,15 @@ void WFSi_PortCallback(void *arg);
 void WFSi_OnSetMPDataDone(void *arg);
 void WFSi_SetMPData(void);
 void WFSi_ReadRequest(FSFile *file);
-void WFSi_FromBusyToFree(FileShareParentArea *area, FileShareNode *node);
-void WFSi_FromAliveToBusy(FileShareParentArea *area, FileShareNode *node);
-void WFSi_FromBusyToAlive(FileShareParentArea *area, FileShareNode *node);
-FileShareNode *WFSi_FromFreeToBusy(FileShareParentArea *area);
-void WFSi_MoveList(FileShareNode **from, FileShareNode **to, FileShareNode *node);
-FileShareNode *WFSi_FindAliveForID(FileShareParentArea *area, int blockId);
-FileShareNode *WFSi_FindBusy(FileShareParentArea *area, int offset, int size);
-FileShareNode *WFSi_FindAlive(FileShareParentArea *area, int offset, int size);
-void WFSi_SendOpenAck(char *r7, FileShareNode *node, int);
+void WFSi_FromBusyToFree(WFSParentContext *area, WFSiFileList *node);
+void WFSi_FromAliveToBusy(WFSParentContext *area, WFSiFileList *node);
+void WFSi_FromBusyToAlive(WFSParentContext *area, WFSiFileList *node);
+WFSiFileList *WFSi_FromFreeToBusy(WFSParentContext *area);
+void WFSi_MoveList(WFSiFileList **from, WFSiFileList **to, WFSiFileList *node);
+WFSiFileList *WFSi_FindAliveForID(WFSParentContext *area, int blockId);
+WFSiFileList *WFSi_FindBusy(WFSParentContext *area, int offset, int size);
+WFSiFileList *WFSi_FindAlive(WFSParentContext *area, int offset, int size);
+void WFSi_SendOpenAck(char *r7, WFSiFileList *node, int);
 void WFSi_SendAck(void);
 void WFSi_OnSendMessageDone(void *arg);
 void WFSi_EndTaskThread(void);
@@ -398,14 +391,14 @@ int WFSi_WriteRomCallback(FSArchive *p_arc, const void *src, u32 pos, u32 size) 
 /* The child's archive proc. WFSi_ReplaceRomArchive installs it for every command with
  * FS_SetArchiveProc, and it returns NitroSDK FSResult codes.
  * A read (FS_COMMAND_READFILE, 0) fails with 5 (ERROR) until the share is
- * ready (mState 2), and succeeds at once (0) when empty. Otherwise
+ * ready (state 2), and succeeds at once (0) when empty. Otherwise
  * WFSi_ReadRequest asks the parent for the data and the read goes asynchronous
  * (6, PROC_ASYNC). A write (1) is unsupported (4), and any other command
  * falls through to the default handling (8, PROC_UNKNOWN). */
 int WFSi_RomArchiveProc(FSFile *self, int sel) {
     switch (sel) {
     case 0:
-        if (data_020a1fc0.mState != 2)
+        if (data_020a1fc0.state != 2)
             return 5;
         if (self->arg.readfile.len == 0)
             return 0;
@@ -420,11 +413,11 @@ int WFSi_RomArchiveProc(FSFile *self, int sel) {
 
 /* Allocate one block for the card's FAT, FNT and both overlay tables (each
  * as its size word followed by the data rounded up to 0x20 bytes, after one
- * leading word) and store it as mTable / mTableSize. The parent fills it from
+ * leading word) and store it as table / table_size. The parent fills it from
  * the ROM archive: it reads each region, then sets the leading word to the
  * larger of the block size and the largest FAT file. The child only
  * allocates. Its caller func_02040c34 then registers the parent's block as
- * region 0x20000, or on the child passes mTableSize to WFSi_ReallocBitmap to grow
+ * region 0x20000, or on the child passes table_size to WFSi_ReallocBitmap to grow
  * the receive work. */
 void WFSi_LoadTables(void) {
     int sizes[4];
@@ -449,9 +442,9 @@ void WFSi_LoadTables(void) {
         i++;
     } while (i < 4);
 
-    fp = FileShareAlloc(sl);
+    fp = WFSi_Alloc(sl);
 
-    if (data_020a1fc0.mIsParent != 0) {
+    if (data_020a1fc0.is_parent != 0) {
         FSArchive *sb;
         char *buf;
         int roundedSize;
@@ -501,8 +494,8 @@ void WFSi_LoadTables(void) {
         DC_WaitWriteBufferEmpty();
     }
 
-    data_020a1fc0.mTable = fp;
-    data_020a1fc0.mTableSize = sl;
+    data_020a1fc0.table = fp;
+    data_020a1fc0.table_size = sl;
 }
 
 /* Child: mount the file-share table block (WFSi_LoadTables's layout: a
@@ -544,60 +537,60 @@ void WFSi_NotifyBusy(void) {
     OS_WakeupThreadDirect(&data_020a15e4);
 }
 
-/* The parent's loader thread: while the share is up (mState), take each node
+/* The parent's loader thread: while the share is up (state), take each node
  * off the busy list; a loading one (state 1) has its region's file opened
  * from the ROM archive (FS_OpenFileDirect over
- * [mFileOffset, mFileOffset + mFileSize), by mFileId), its first three
+ * [rom_src, rom_src + rom_len), by own_id), its first three
  * 0x400-byte pages read into the cache, and is handed to WFSi_SendOpenAck; a
  * releasing one has its file closed and goes back to the free list
  * (WFSi_FromBusyToFree). The arc local is the archive FS_FindArchive finds (by name,
  * 3 characters). */
 void WFSi_TaskThread(void) {
     int i;
-    FileShareNode *node;
+    WFSiFileList *node;
     FSArchive *arc = FS_FindArchive(data_02099e6c, 3);
     int b = 2;
     int c = 3;
     int d = 1;
-    FileShareWork *work = &data_020a1fc0;
+    WFSWork *work = &data_020a1fc0;
     char *base = data_020a2400;
 
     while (1) {
         OSIntrMode irq = OS_DisableInterrupts();
-        FileShareParentArea *area = (FileShareParentArea *)base;
-        node = area->mBusyList;
+        WFSParentContext *area = (WFSParentContext *)base;
+        node = area->busy_list;
         while (node == 0) {
-            if (work->mState == 0) {
+            if (work->state == 0) {
                 OS_RestoreInterrupts(irq);
                 return;
             }
             OS_SleepThread(0);
-            node = area->mBusyList;
+            node = area->busy_list;
         }
         OS_RestoreInterrupts(irq);
 
-        if (node->mState == 1) {
-            FS_OpenFileDirect(&node->mFile, arc, node->mFileOffset,
-                              node->mFileOffset + node->mFileSize, node->mFileId);
+        if (node->stat == 1) {
+            FS_OpenFileDirect(&node->file, arc, node->rom_src, node->rom_src + node->rom_len,
+                              node->own_id);
             i = 0;
             {
                 int val = 0;
-                char *ptr = (char *)node->mPages;
+                char *ptr = (char *)node->cache;
                 for (; i < 3; i++) {
-                    node->mPageOffset[i] = val;
-                    FS_ReadFile(&node->mFile, ptr, 0x400);
+                    node->page[i] = val;
+                    FS_ReadFile(&node->file, ptr, 0x400);
                     val += 0x400;
                     ptr += 0x400;
                 }
             }
-            node->mPrevSeqNo = 0;
-            node->mLastRefillPage = b;
-            node->mLoadingPage = c;
+            node->ack_seq = 0;
+            node->last_page = b;
+            node->busy_page = c;
             irq = OS_DisableInterrupts();
             WFSi_SendOpenAck(base, node, d);
             OS_RestoreInterrupts(irq);
         } else {
-            FS_CloseFile(&node->mFile);
+            FS_CloseFile(&node->file);
             irq = OS_DisableInterrupts();
             WFSi_FromBusyToFree(area, node);
             OS_RestoreInterrupts(irq);
@@ -611,21 +604,21 @@ void WFSi_TaskThread(void) {
    (thread, entry, arg, stack top, stack size, priority 15 here), and
    OS_WakeupThreadDirect then wakes the thread. Both this and WFSi_EndTaskThread
    reach the block through a pointer cast; declaring data_020a11e4 itself a
-   LoaderThreadBlock changes the code of both. */
+   WFSiTask changes the code of both. */
 void WFSi_CreateTaskThread(void) {
-    LoaderThreadBlock *blk = (LoaderThreadBlock *)data_020a11e4;
-    blk->mFlag = 0;
+    WFSiTask *blk = (WFSiTask *)data_020a11e4;
+    blk->threadQueue = 0;
     OS_CreateThread(&blk->thread, (void (*)(void *))WFSi_TaskThread, blk,
                     blk->stack + sizeof(blk->stack), sizeof(blk->stack), 0xf);
     OS_WakeupThreadDirect(&blk->thread);
 }
 
 /* Stop the file-share loader thread (see WFSi_CreateTaskThread): until the thread is
- * terminated (state 2), wake it so that it sees mState cleared and returns,
+ * terminated (state 2), wake it so that it sees state cleared and returns,
  * then join it (OS_JoinThread sleeps on its join queue). WFS_End calls
  * this at shutdown. */
 void WFSi_EndTaskThread(void) {
-    LoaderThreadBlock *blk = (LoaderThreadBlock *)data_020a11e4;
+    WFSiTask *blk = (WFSiTask *)data_020a11e4;
     if (OS_IsThreadTerminated(&blk->thread))
         return;
     do {
@@ -635,77 +628,77 @@ void WFSi_EndTaskThread(void) {
 }
 
 /* The parent's reply-send callback (WBT_PutUserData's; the WBTCommand it
- * is called with goes unread): once the file-sharing work is up (mState) and
- * running as the parent, clear mReplySending, which WFSi_SendAck set after
+ * is called with goes unread): once the file-sharing work is up (state) and
+ * running as the parent, clear msg_busy, which WFSi_SendAck set after
  * its send, and let it send the next reply. */
 void WFSi_OnSendMessageDone(void *arg) {
-    FileShareWork *g = &data_020a1fc0;
-    if (g->mState == 0)
+    WFSWork *g = &data_020a1fc0;
+    if (g->state == 0)
         return;
-    if (g->mIsParent == 0)
+    if (g->is_parent == 0)
         return;
     {
-        FileShareParentArea *s = (FileShareParentArea *)g->mArea;
-        s->mReplySending = 0;
+        WFSParentContext *s = &g->context.parent;
+        s->msg_busy = 0;
         WFSi_SendAck();
     }
 }
 
 void WFSi_SendAck(void) {
-    FileShareParentArea *area = (FileShareParentArea *)FILE_SHARE_WORK->mArea;
-    FileShareMsg resizeMsg;
-    FileShareMsg replyMsg;
+    WFSParentContext *area = &FILE_SHARE_WORK->context.parent;
+    WFSiMessage resizeMsg;
+    WFSiMessage replyMsg;
 
-    if (data_020a1fc0.mIsParent == 0) {
+    if (data_020a1fc0.is_parent == 0) {
         return;
     }
-    if (area->mReplySending != 0) {
+    if (area->msg_busy != 0) {
         return;
     }
 
-    area->mReplyPending &= area->mConnectedBitmap;
-    area->mReplyGroup &= area->mConnectedBitmap;
-    area->mOpenChildren &= area->mConnectedBitmap;
-    area->mResizeChildren &= area->mConnectedBitmap;
+    area->ack_bitmap &= area->all_bitmap;
+    area->sync_bitmap &= area->all_bitmap;
+    area->busy_bitmap &= area->all_bitmap;
+    area->deny_bitmap &= area->all_bitmap;
 
-    if (area->mResizePending != 0 && area->mBusyCount == 0) {
-        int newSize = area->mNewPacketSize;
-        int childSize = data_020a1fc0.mChildPacketSize;
+    if (area->is_changing != 0 && area->busy_count == 0) {
+        int newSize = area->new_packet_size;
+        int childSize = data_020a1fc0.child_packet_size;
         int children;
 
-        area->mResizePending = 0;
-        data_020a1fc0.mParentPacketSize = newSize;
+        area->is_changing = 0;
+        data_020a1fc0.parent_packet_size = newSize;
         WBT_SetPacketSize(newSize, childSize);
 
-        children = area->mResizeChildren;
+        children = area->deny_bitmap;
         if (children == 0) {
             return;
         }
-        resizeMsg.mKind = 1;
-        resizeMsg.mFlag = 0;
-        resizeMsg.mFileId = 0;
-        resizeMsg.mPacketSizeHigh = (u8)(data_020a1fc0.mParentPacketSize >> 8);
-        resizeMsg.mPacketSizeLow = (u8)data_020a1fc0.mParentPacketSize;
+        resizeMsg.type = 1;
+        resizeMsg.flag = 0;
+        resizeMsg.arg = 0;
+        resizeMsg.pck_h = (u8)(data_020a1fc0.parent_packet_size >> 8);
+        resizeMsg.pck_l = (u8)data_020a1fc0.parent_packet_size;
         WBT_PutUserData(children, &resizeMsg, WBT_SIZE_USER_DATA, WFSi_OnSendMessageDone);
-        area->mReplySending = 1;
-        area->mResizeChildren = 0;
+        area->msg_busy = 1;
+        area->deny_bitmap = 0;
     } else {
         int mask;
-        FileShareMsg *first;
+        WFSiMessage *first;
         int grouped;
         int i;
         int group;
         int bit;
-        FileShareMsg *msg;
+        WFSiMessage *msg;
         u8 kind;
         int packetSize;
         int fileId;
 
-        mask = area->mReplyPending;
+        mask = area->ack_bitmap;
         if (mask == 0) {
             return;
         }
-        group = area->mReplyGroup;
+        group = area->sync_bitmap;
         first = 0;
         grouped = (group != 0 && group == (group & mask));
         if (grouped) {
@@ -714,7 +707,7 @@ void WFSi_SendAck(void) {
             mask &= ~group;
         }
 
-        msg = (FileShareMsg *)area->mReplies;
+        msg = (WFSiMessage *)area->recv_msg;
         i = 0;
         for (;;) {
             bit = 1 << i;
@@ -724,7 +717,7 @@ void WFSi_SendAck(void) {
             if (bit & mask) {
                 if (first == 0) {
                     first = msg;
-                } else if (first->mKind != msg->mKind || first->mFileId != msg->mFileId) {
+                } else if (first->type != msg->type || first->arg != msg->arg) {
                     mask &= ~bit;
                 }
             }
@@ -733,33 +726,33 @@ void WFSi_SendAck(void) {
         }
 
         if (grouped && mask != group) {
-            area->mReplyGroup = 0;
+            area->sync_bitmap = 0;
         }
         if (first == 0) {
             return;
         }
 
-        switch (first->mKind) {
+        switch (first->type) {
         case 0:
-            first->mKind = 1;
+            first->type = 1;
             break;
         case 2:
-            first->mKind = 3;
-            area->mOpenChildren &= ~mask;
+            first->type = 3;
+            area->busy_bitmap &= ~mask;
             break;
         }
 
-        kind = first->mKind;
-        fileId = first->mFileId;
-        packetSize = data_020a1fc0.mParentPacketSize;
-        replyMsg.mKind = kind;
-        replyMsg.mFlag = 1;
-        replyMsg.mFileId = fileId;
-        replyMsg.mPacketSizeHigh = (u8)(packetSize >> 8);
-        replyMsg.mPacketSizeLow = (u8)packetSize;
+        kind = first->type;
+        fileId = first->arg;
+        packetSize = data_020a1fc0.parent_packet_size;
+        replyMsg.type = kind;
+        replyMsg.flag = 1;
+        replyMsg.arg = fileId;
+        replyMsg.pck_h = (u8)(packetSize >> 8);
+        replyMsg.pck_l = (u8)packetSize;
         WBT_PutUserData(mask, &replyMsg, WBT_SIZE_USER_DATA, WFSi_OnSendMessageDone);
-        area->mReplySending = 1;
-        area->mReplyPending &= ~mask;
+        area->msg_busy = 1;
+        area->ack_bitmap &= ~mask;
     }
 }
 
@@ -768,32 +761,32 @@ void WFSi_SendAck(void) {
    registered with WBT_RegisterBlock (with the first page as data when the region
    fits in 0x400 bytes) and moved to the ready list by WFSi_FromBusyToAlive. Each
    waiting child then takes a reference and gets the node's file id in its
-   reply slot. Only while mState is set. The third word is
+   reply slot. Only while state is set. The third word is
    unused: WFSi_TaskThread passes 1 (reloaded from its frame into r2). */
-void WFSi_SendOpenAck(char *r7, FileShareNode *node, int) {
+void WFSi_SendOpenAck(char *r7, WFSiFileList *node, int) {
     OSIntrMode saved = OS_DisableInterrupts();
     int mask;
 
-    if (data_020a1fc0.mState != 0) {
+    if (data_020a1fc0.state != 0) {
         int bit;
-        int *q = &((FileShareParentArea *)r7)->mReplyPending;
-        mask = node->mWaitingChildren;
-        node->mWaitingChildren = 0;
+        int *q = &((WFSParentContext *)r7)->ack_bitmap;
+        mask = node->req_bitmap;
+        node->req_bitmap = 0;
         *q |= mask;
-        if (node->mRefCount <= 0) {
-            unsigned int diff = FS_GetLength(&node->mFile);
-            int fileId = node->mFileId;
-            WBT_RegisterBlock(&node->mRegion, fileId, data_02082158,
-                              (diff <= 0x400) ? node->mPages[0] : 0, diff, 0);
-            WFSi_FromBusyToAlive((FileShareParentArea *)r7, node);
+        if (node->ref <= 0) {
+            unsigned int diff = FS_GetLength(&node->file);
+            int fileId = node->own_id;
+            WBT_RegisterBlock(&node->info, fileId, data_02082158,
+                              (diff <= 0x400) ? node->cache[0] : 0, diff, 0);
+            WFSi_FromBusyToAlive((WFSParentContext *)r7, node);
         }
         for (bit = 0;; bit++) {
             if ((1 << bit) > mask) {
                 break;
             }
             if ((1 << bit) & mask) {
-                node->mRefCount++;
-                ((FileShareMsg *)r7)->mFileId = node->mFileId;
+                node->ref++;
+                ((WFSiMessage *)r7)->arg = node->own_id;
             }
             r7 += 0xc;
         }
@@ -803,15 +796,15 @@ void WFSi_SendOpenAck(char *r7, FileShareNode *node, int) {
 
 /* Find the ready node whose file covers [offset, offset + size); 0 if none.
    WFSi_OnParentSystemCallback serves an open request from it. */
-FileShareNode *WFSi_FindAlive(FileShareParentArea *area, int offset, int size) {
-    FileShareNode *node = area->mReadyList;
+WFSiFileList *WFSi_FindAlive(WFSParentContext *area, int offset, int size) {
+    WFSiFileList *node = area->alive_list;
     if (node == 0)
         return node;
     do {
-        if (node->mState == 2 && offset == node->mFile.prop.file.top &&
-            size == FS_GetLength(&node->mFile))
+        if (node->stat == 2 && offset == node->file.prop.file.top &&
+            size == FS_GetLength(&node->file))
             return node;
-        node = node->mNext;
+        node = node->next;
     } while (node != 0);
     return node;
 }
@@ -820,36 +813,36 @@ FileShareNode *WFSi_FindAlive(FileShareParentArea *area, int offset, int size) {
  * already holding that extent, or a fresh one off the free list
  * (WFSi_FromFreeToBusy) with the extent stored and the loader thread woken
  * (WFSi_NotifyBusy). */
-FileShareNode *WFSi_FindBusy(FileShareParentArea *area, int offset, int size) {
-    FileShareNode *node;
-    node = area->mBusyList;
+WFSiFileList *WFSi_FindBusy(WFSParentContext *area, int offset, int size) {
+    WFSiFileList *node;
+    node = area->busy_list;
     while (node != 0) {
-        if (node->mState == 1 && node->mFileOffset == offset && node->mFileSize == size) {
+        if (node->stat == 1 && node->rom_src == offset && node->rom_len == size) {
             break;
         }
-        node = node->mNext;
+        node = node->next;
     }
     if (node == 0) {
         node = WFSi_FromFreeToBusy(area);
-        node->mRefCount = 0;
-        node->mFileOffset = offset;
-        node->mFileSize = size;
+        node->ref = 0;
+        node->rom_src = offset;
+        node->rom_len = size;
         WFSi_NotifyBusy();
     }
     return node;
 }
 
-/* The parent's ready-list search: the first ready node (mState 2) whose
+/* The parent's ready-list search: the first ready node (stat 2) whose
  * registered block is blockId (the WBT block id WBT_RegisterBlock stored in
- * mRegion), else 0. */
-FileShareNode *WFSi_FindAliveForID(FileShareParentArea *area, int blockId) {
-    FileShareNode *node = area->mReadyList;
+ * info), else 0. */
+WFSiFileList *WFSi_FindAliveForID(WFSParentContext *area, int blockId) {
+    WFSiFileList *node = area->alive_list;
     if (node == 0)
         return node;
     do {
-        if (node->mState == 2 && node->mRegion.data_info.id == blockId)
+        if (node->stat == 2 && node->info.data_info.id == blockId)
             return node;
-        node = node->mNext;
+        node = node->next;
     } while (node != 0);
     return node;
 }
@@ -863,19 +856,19 @@ FileShareNode *WFSi_FindAliveForID(FileShareParentArea *area, int blockId) {
  * the head or breaks. A node third in its list is left where it is, and
  * nothing is moved. That is the ROM's code (0x02041bf4..0x02041c14), not a
  * decompilation slip; with a pool of three nodes, a list can be three long. */
-void WFSi_MoveList(FileShareNode **from, FileShareNode **to, FileShareNode *node) {
+void WFSi_MoveList(WFSiFileList **from, WFSiFileList **to, WFSiFileList *node) {
     OSIntrMode saved = OS_DisableInterrupts();
-    FileShareNode *cur = *from;
+    WFSiFileList *cur = *from;
     if (cur == node) {
-        *from = node->mNext;
-        node->mNext = *to;
+        *from = node->next;
+        node->next = *to;
         *to = node;
     } else {
         while (cur != 0) {
-            if (cur->mNext != node)
+            if (cur->next != node)
                 break;
-            cur->mNext = node->mNext;
-            node->mNext = *to;
+            cur->next = node->next;
+            node->next = *to;
             *to = node;
             break;
         }
@@ -884,141 +877,141 @@ void WFSi_MoveList(FileShareNode **from, FileShareNode **to, FileShareNode *node
 }
 
 /* free -> busy: takes the free list's head to be loaded (state 1) and
- * counts it in mBusyCount. */
-FileShareNode *WFSi_FromFreeToBusy(FileShareParentArea *area) {
-    FileShareNode *node;
-    node = area->mFreeList;
-    WFSi_MoveList(&area->mFreeList, &area->mBusyList, node);
-    node->mState = 1;
-    area->mBusyCount += 1;
+ * counts it in busy_count. */
+WFSiFileList *WFSi_FromFreeToBusy(WFSParentContext *area) {
+    WFSiFileList *node;
+    node = area->free_list;
+    WFSi_MoveList(&area->free_list, &area->busy_list, node);
+    node->stat = 1;
+    area->busy_count += 1;
     return node;
 }
 
 /* busy -> ready: the loader has read the region's first pages and
  * WFSi_SendOpenAck has registered it (state 2). */
-void WFSi_FromBusyToAlive(FileShareParentArea *area, FileShareNode *node) {
-    WFSi_MoveList(&area->mBusyList, &area->mReadyList, node);
-    node->mState = 2;
+void WFSi_FromBusyToAlive(WFSParentContext *area, WFSiFileList *node) {
+    WFSi_MoveList(&area->busy_list, &area->alive_list, node);
+    node->stat = 2;
 }
 
 /* ready -> busy: no child reads the node's region any more, so the loader
  * closes its file (state 3, releasing). */
-void WFSi_FromAliveToBusy(FileShareParentArea *area, FileShareNode *node) {
-    WFSi_MoveList(&area->mReadyList, &area->mBusyList, node);
-    node->mState = 3;
+void WFSi_FromAliveToBusy(WFSParentContext *area, WFSiFileList *node) {
+    WFSi_MoveList(&area->alive_list, &area->busy_list, node);
+    node->stat = 3;
 }
 
 /* busy -> free: the loader has closed the node's file (state 0), and the
- * node is no longer counted in mBusyCount. */
-void WFSi_FromBusyToFree(FileShareParentArea *area, FileShareNode *node) {
-    WFSi_MoveList(&area->mBusyList, &area->mFreeList, node);
-    node->mState = 0;
-    area->mBusyCount -= 1;
+ * node is no longer counted in busy_count. */
+void WFSi_FromBusyToFree(WFSParentContext *area, WFSiFileList *node) {
+    WFSi_MoveList(&area->busy_list, &area->free_list, node);
+    node->stat = 0;
+    area->busy_count -= 1;
 }
 
-/* The open request (kind 0) a child sends the parent: FileShareMsg's layout
+/* The open request (kind 0) a child sends the parent: WFSiMessage's layout
  * (arm9_a1fc0_file_share.h), with the region's length and offset where the
- * replies carry mFlag and mFileId. WFSi_OnParentSystemCallback reads it back: it compares the two packet-size bytes with its own mParentPacketSize,
+ * replies carry flag and arg. WFSi_OnParentSystemCallback reads it back: it compares the two packet-size bytes with its own parent_packet_size,
  * and looks the region up by (offset, length) with WFSi_FindAlive and
  * WFSi_FindBusy. */
 
 /* Child: ask the parent to open the region the FSFile read covers. The
  * receive work is grown to the read's length first, and the file is kept in
- * mReadRequest until WFSi_OnChildSystemCallback completes it. */
+ * target_file until WFSi_OnChildSystemCallback completes it. */
 void WFSi_ReadRequest(FSFile *file) {
     OpenRequest m;
     int packetSize;
     int len;
     int pos;
     WFSi_ReallocBitmap(data_020a2400, file->arg.readfile.len);
-    data_020a1fc0.mReadRequest = file;
+    data_020a1fc0.target_file = file;
     len = file->arg.readfile.len;
     pos = file->prop.file.pos;
     m.kind = 0;
     m.length = len;
-    packetSize = data_020a1fc0.mParentPacketSize;
+    packetSize = data_020a1fc0.parent_packet_size;
     m.offset = pos;
     m.packetSizeHigh = (packetSize >> 8) & 0xff;
     m.packetSizeLow = (u8)packetSize;
     WBT_PutUserData(1, &m, WBT_SIZE_USER_DATA, WFSi_OnSendMessageDone);
 }
 
-/* Send the pending file-sharing packet on mPort: WBT_MpParentSendHook (parent) or
- * WBT_MpChildSendHook (child), by mIsParent, builds it in the buffer at +0x40 with
+/* Send the pending file-sharing packet on port: WBT_MpParentSendHook (parent) or
+ * WBT_MpChildSendHook (child), by is_parent, builds it in the buffer at +0x40 with
  * that side's packet size as the limit, then WM_SetMPDataToPort sends it to AIDs
  * 0xffff with WFSi_OnSetMPDataDone as the callback. */
 void WFSi_SetMPData(void) {
-    FileShareWork *work = &data_020a1fc0;
-    int f0 = work->mIsParent;
+    WFSWork *work = &data_020a1fc0;
+    int f0 = work->is_parent;
     u16 a;
     u16 r;
     if (f0 != 0)
-        a = (u16)work->mParentPacketSize;
+        a = (u16)work->parent_packet_size;
     else
-        a = (u16)work->mChildPacketSize;
-    if (work->mSendRequest == 0)
+        a = (u16)work->child_packet_size;
+    if (work->send_idle == 0)
         return;
     {
-        unsigned char *sub = work->mSendBuf;
+        unsigned char *sub = work->send_buf;
         if (f0 != 0)
             r = WBT_MpParentSendHook(sub, a);
         else
             r = WBT_MpChildSendHook(sub, a);
-        work->mSendBusy = (WM_SetMPDataToPort(WFSi_OnSetMPDataDone, (u16 *)sub, r, 0xffff,
-                                              work->mPort, WM_PRIORITY_LOW) == WM_ERRCODE_OPERATING)
-                              ? 1
-                              : 0;
+        work->is_running = (WM_SetMPDataToPort(WFSi_OnSetMPDataDone, (u16 *)sub, r, 0xffff,
+                                               work->port, WM_PRIORITY_LOW) == WM_ERRCODE_OPERATING)
+                               ? 1
+                               : 0;
     }
-    /* re-read through the symbol: `work->mSendBusy` changes the .text bytes */
-    work->mSendRequest = (data_020a1fc0.mSendBusy == 0) ? 1 : 0;
+    /* re-read through the symbol: `work->is_running` changes the .text bytes */
+    work->send_idle = (data_020a1fc0.is_running == 0) ? 1 : 0;
 }
 
 /* The send callback WFSi_SetMPData hands the port send: unless the file
-   share is shut down (mState 0), raise mSendRequest, run WFSi_SendAck
+   share is shut down (state 0), raise send_idle, run WFSi_SendAck
    and send the next packet (WFSi_SetMPData). */
 void WFSi_OnSetMPDataDone(void *arg) {
-    FileShareWork *g = &data_020a1fc0;
-    if (g->mState == 0)
+    WFSWork *g = &data_020a1fc0;
+    if (g->state == 0)
         return;
-    g->mSendRequest = 1;
+    g->send_idle = 1;
     WFSi_SendAck();
     WFSi_SetMPData();
 }
 
 /* The file-sharing port receive callback. Once the work block is up
- * (mState): CONNECTED lets the parent resend (WFSi_SetMPData) unless a
+ * (state): CONNECTED lets the parent resend (WFSi_SetMPData) unless a
  * send is in flight; DISCONNECTED drops the child from the parent's
- * mConnectedBitmap; PORT_RECV marks the sender connected and hands
+ * all_bitmap; PORT_RECV marks the sender connected and hands
  * its packet to the parent's handler (WBT_MpParentRecvHook), or on a child to
  * WBT_MpChildRecvHook. The argument is a NitroSDK WMPortRecvCallback
  * (private/wm_views.h). */
 void WFSi_PortCallback(void *arg) {
     WMPortRecvCallback *cb = (WMPortRecvCallback *)arg;
-    FileShareWork *g = FILE_SHARE_WORK;
-    FileShareParentArea *base = (FileShareParentArea *)g->mArea;
+    WFSWork *g = FILE_SHARE_WORK;
+    WFSParentContext *base = &g->context.parent;
 
-    if (g->mState == 0)
+    if (g->state == 0)
         return;
 
     switch (cb->state) {
     case WM_STATECODE_CONNECTED:
-        if (g->mIsParent == 0)
+        if (g->is_parent == 0)
             return;
-        if (g->mSendBusy != 0)
+        if (g->is_running != 0)
             return;
         WFSi_SetMPData();
         return;
     case WM_STATECODE_DISCONNECTED:
-        if (g->mIsParent == 0)
+        if (g->is_parent == 0)
             return;
-        base->mConnectedBitmap &= ~(1 << cb->aid);
+        base->all_bitmap &= ~(1 << cb->aid);
         return;
     case WM_STATECODE_PORT_RECV: {
         s32 data = (s32)cb->data;
         u32 length = cb->length;
-        if (g->mIsParent != 0) {
+        if (g->is_parent != 0) {
             u32 aid = cb->aid;
-            base->mConnectedBitmap |= (1 << aid);
+            base->all_bitmap |= (1 << aid);
             WBT_MpParentRecvHook(data, length, aid);
         } else {
             WBT_MpChildRecvHook(data, length);
@@ -1070,7 +1063,7 @@ void WFSi_OnParentSystemCallback(void *arg) {
     int sb;
     int type;
     u32 r6;
-    FileShareNode *p;
+    WFSiFileList *p;
     WBTPrepareSendDataCallback *n;
     WBTCommand *cmd = (WBTCommand *)arg;
 
@@ -1091,7 +1084,7 @@ void WFSi_OnParentSystemCallback(void *arg) {
         r6 = sb * 0xc;
         RawMsg *m = (RawMsg *)cmd->u.user_data.data;
         char *base = data_020a2400;
-        FileShareParentArea *area = (FileShareParentArea *)base;
+        WFSParentContext *area = (WFSParentContext *)base;
         int kind;
 
         *(int *)(base + r6) = *(int *)m;
@@ -1116,39 +1109,39 @@ void WFSi_OnParentSystemCallback(void *arg) {
             u32 unk18v = m->w1;
             int val = (m->f4 << 8) | m->b8;
 
-            if (area->mResizePending != 0 || val != data_020a1fc0.mParentPacketSize) {
-                area->mResizePending = 1;
-                area->mResizeChildren |= (1 << sb);
-                area->mOpenChildren |= (1 << sb);
+            if (area->is_changing != 0 || val != data_020a1fc0.parent_packet_size) {
+                area->is_changing = 1;
+                area->deny_bitmap |= (1 << sb);
+                area->busy_bitmap |= (1 << sb);
             } else {
-                FileShareNode *p = WFSi_FindAlive(area, unk18v, nib1);
+                WFSiFileList *p = WFSi_FindAlive(area, unk18v, nib1);
 
                 if (p != 0) {
-                    area->mReplyPending |= (1 << sb);
-                    *(int *)(base + r6 + 4) = p->mFileId;
-                    p->mRefCount += 1;
+                    area->ack_bitmap |= (1 << sb);
+                    *(int *)(base + r6 + 4) = p->own_id;
+                    p->ref += 1;
                 } else {
-                    FileShareNode *q = WFSi_FindBusy(area, unk18v, nib1);
-                    q->mWaitingChildren |= (1 << sb);
+                    WFSiFileList *q = WFSi_FindBusy(area, unk18v, nib1);
+                    q->req_bitmap |= (1 << sb);
                 }
 
-                area->mOpenChildren |= (1 << sb);
+                area->busy_bitmap |= (1 << sb);
             }
             break;
         }
         case 2: {
             OSIntrMode saved = OS_DisableInterrupts();
-            FileShareNode *p;
+            WFSiFileList *p;
 
-            area->mReplyPending |= (1 << sb);
-            p = WFSi_FindAliveForID((FileShareParentArea *)base, m->w1);
+            area->ack_bitmap |= (1 << sb);
+            p = WFSi_FindAliveForID((WFSParentContext *)base, m->w1);
 
             if (p != 0) {
-                p->mRefCount -= 1;
-                if (p->mRefCount <= 0) {
-                    p->mWaitingChildren = 0;
+                p->ref -= 1;
+                if (p->ref <= 0) {
+                    p->req_bitmap = 0;
                     WBT_UnregisterBlock(m->w1);
-                    WFSi_FromAliveToBusy((FileShareParentArea *)base, p);
+                    WFSi_FromAliveToBusy((WFSParentContext *)base, p);
                     WFSi_NotifyBusy();
                 }
             }
@@ -1177,34 +1170,34 @@ void WFSi_OnParentSystemCallback(void *arg) {
         }
 
         n->data_ptr = 0;
-        p = WFSi_FindAliveForID((FileShareParentArea *)base, key);
+        p = WFSi_FindAliveForID((WFSParentContext *)base, key);
         if (p == 0)
             break;
 
         shortVal = n->own_packet_size;
-        p94 = p->mPrevSeqNo;
+        p94 = p->ack_seq;
         unk18v = n->block_seq_no;
 
-        if (p->mLoadingPage != 3) {
+        if (p->busy_page != 3) {
             /* FS_IsBusy: the page read is still in flight */
-            int t = (p->mFile.stat & FS_FILE_STATUS_BUSY) ? 1 : 0;
+            int t = (p->file.stat & FS_FILE_STATUS_BUSY) ? 1 : 0;
             if (t == 0)
-                p->mLoadingPage = 3;
+                p->busy_page = 3;
         }
 
         {
             int prod = shortVal * p94;
             int cnt2;
 
-            p->mPrevSeqNo = unk18v;
-            cnt2 = p->mLoadingPage;
+            p->ack_seq = unk18v;
+            cnt2 = p->busy_page;
 
             for (i = 0; i < 3; i++) {
                 if (i != cnt2) {
-                    int rem = prod - p->mPageOffset[i];
+                    int rem = prod - p->page[i];
                     if (rem >= 0 && rem + shortVal <= 0x400) {
                         n->block_seq_no = p94;
-                        n->data_ptr = p->mPages[i] + rem;
+                        n->data_ptr = p->cache[i] + rem;
                         data_020a0f8c = 0;
                         break;
                     }
@@ -1212,7 +1205,7 @@ void WFSi_OnParentSystemCallback(void *arg) {
             }
         }
 
-        if (p->mLoadingPage != 3)
+        if (p->busy_page != 3)
             break;
 
         {
@@ -1220,7 +1213,7 @@ void WFSi_OnParentSystemCallback(void *arg) {
             int prod2 = shortVal * unk18v;
 
             for (j = 0; j < 3; j++) {
-                int rem = prod2 - p->mPageOffset[j];
+                int rem = prod2 - p->page[j];
 
                 if (rem >= 0 && rem + shortVal <= 0x400)
                     break;
@@ -1230,7 +1223,7 @@ void WFSi_OnParentSystemCallback(void *arg) {
                 break;
 
             {
-                int nxt = p->mLastRefillPage;
+                int nxt = p->last_page;
                 int masked;
 
                 do {
@@ -1239,12 +1232,12 @@ void WFSi_OnParentSystemCallback(void *arg) {
                         nxt = 0;
                 } while (nxt == i);
 
-                p->mLastRefillPage = nxt;
-                p->mLoadingPage = nxt;
+                p->last_page = nxt;
+                p->busy_page = nxt;
                 masked = prod2 & -0x200;
-                p->mPageOffset[nxt] = masked;
-                FS_SeekFile(&p->mFile, masked, FS_SEEK_SET);
-                FS_ReadFileAsync(&p->mFile, p->mPages[nxt], 0x400);
+                p->page[nxt] = masked;
+                FS_SeekFile(&p->file, masked, FS_SEEK_SET);
+                FS_ReadFileAsync(&p->file, p->cache[nxt], 0x400);
             }
         }
 
@@ -1254,108 +1247,108 @@ void WFSi_OnParentSystemCallback(void *arg) {
 }
 
 /* Grow the child's receive work (WBT's packet bitmap) to cover a read of n
- * bytes, or with n < 0 reallocate it at the current mMaxReadSize. */
+ * bytes, or with n < 0 reallocate it at the current max_file_size. */
 void WFSi_ReallocBitmap(char *thiz, int n) {
-    FileShareChildArea *child = (FileShareChildArea *)thiz;
+    WFSChildContext *child = (WFSChildContext *)thiz;
     void *work;
     unsigned int size;
     if (n < 0) {
-        n = child->mMaxReadSize;
-        child->mMaxReadSize = 0;
+        n = child->max_file_size;
+        child->max_file_size = 0;
     }
-    if ((unsigned int)child->mMaxReadSize >= (unsigned int)n)
+    if ((unsigned int)child->max_file_size >= (unsigned int)n)
         return;
-    child->mMaxReadSize = n;
-    FileShareFree(child->mRecvWork);
+    child->max_file_size = n;
+    WFSi_Free(child->recv_pkt_bmp_buf);
     {
-        u32 payload = data_020a1fc0.mParentPacketSize - 0xe;  /* bytes per packet */
-        size = (child->mMaxReadSize + payload - 1) / payload; /* packets */
+        u32 payload = data_020a1fc0.parent_packet_size - 0xe;  /* bytes per packet */
+        size = (child->max_file_size + payload - 1) / payload; /* packets */
     }
     size = ((size + 0x1f) >> 2) << 4; /* packets, then the work's size in bytes */
-    work = FileShareAlloc(size);
-    child->mRecvWork = work;
-    child->mPacketBitmapTable[0] = child->mRecvWork;
+    work = WFSi_Alloc(size);
+    child->recv_pkt_bmp_buf = work;
+    child->recv_buf_packet_bmp_table[0] = child->recv_pkt_bmp_buf;
 }
 
-/* The FSFile a child read is for (FileShareWork.mReadRequest, set by
+/* The FSFile a child read is for (WFSWork.target_file, set by
  * WFSi_ReadRequest). */
 
 void WFSi_OnChildSystemCallback(void *arg) {
     WBTCommand *cmd = (WBTCommand *)arg;
     int aid = WBT_AidbitmapToAid(cmd->peer_bmp);
-    FileShareChildArea *child = (FileShareChildArea *)data_020a2400;
+    WFSChildContext *child = (WFSChildContext *)data_020a2400;
     switch (cmd->command) {
     case 2:
         if (cmd->target_bmp != 0) {
             return;
         }
-        data_020a1fc0.mParentPacketSize = cmd->u.sync.peer_packet_size + 0xe;
-        data_020a1fc0.mChildPacketSize = cmd->u.sync.my_packet_size + 0xe;
-        if (data_020a1fc0.mState != 2) {
-            WBT_GetBlockInfo(1, 0, child->mBlockInfoTable, WFSi_OnChildSystemCallback);
+        data_020a1fc0.parent_packet_size = cmd->u.sync.peer_packet_size + 0xe;
+        data_020a1fc0.child_packet_size = cmd->u.sync.my_packet_size + 0xe;
+        if (data_020a1fc0.state != 2) {
+            WBT_GetBlockInfo(1, 0, child->block_info_table, WFSi_OnChildSystemCallback);
             return;
         }
-        if (data_020a1fc0.mReadRequest != 0) {
-            WFSi_ReadRequest(data_020a1fc0.mReadRequest);
+        if (data_020a1fc0.target_file != 0) {
+            WFSi_ReadRequest(data_020a1fc0.target_file);
         }
         return;
 
     case 6:
-        child->mRecvBufTable[aid] = data_020a1fc0.mTable;
-        WBT_GetBlock(1, 0x20000, child->mRecvBufTable, data_020a1fc0.mTableSize,
-                     child->mPacketBitmapTable, WFSi_OnChildSystemCallback);
+        child->recv_buf_table[aid] = data_020a1fc0.table;
+        WBT_GetBlock(1, 0x20000, child->recv_buf_table, data_020a1fc0.table_size,
+                     child->recv_buf_packet_bmp_table, WFSi_OnChildSystemCallback);
         return;
 
     case 4:
         if (cmd->target_bmp != 0) {
             return;
         }
-        if (data_020a1fc0.mState != 2) {
-            DC_FlushRange(data_020a1fc0.mTable, data_020a1fc0.mTableSize);
-            WFSi_ReplaceRomArchive((int *)data_020a1fc0.mTable);
-            data_020a1fc0.mState = 2;
-            if (data_020a1fc0.mStateCallback != 0) {
-                data_020a1fc0.mStateCallback(0);
+        if (data_020a1fc0.state != 2) {
+            DC_FlushRange(data_020a1fc0.table, data_020a1fc0.table_size);
+            WFSi_ReplaceRomArchive((int *)data_020a1fc0.table);
+            data_020a1fc0.state = 2;
+            if (data_020a1fc0.state_func != 0) {
+                data_020a1fc0.state_func(0);
             }
             return;
         }
         {
-            FileShareMsg msg;
-            u32 region = child->mReadRegion;
+            WFSiMessage msg;
+            u32 region = child->block_id;
             int packetSize;
-            msg.mKind = 2;
-            msg.mFlag = 1;
-            packetSize = data_020a1fc0.mParentPacketSize;
-            msg.mFileId = region;
-            msg.mPacketSizeHigh = (u8)(packetSize >> 8);
-            msg.mPacketSizeLow = (u8)packetSize;
+            msg.type = 2;
+            msg.flag = 1;
+            packetSize = data_020a1fc0.parent_packet_size;
+            msg.arg = region;
+            msg.pck_h = (u8)(packetSize >> 8);
+            msg.pck_l = (u8)packetSize;
             WBT_PutUserData(1, &msg, WBT_SIZE_USER_DATA, WFSi_OnSendMessageDone);
         }
         return;
 
     case 0xc: {
-        FileShareMsg *m;
+        WFSiMessage *m;
         if (cmd->event != 0xa) {
             return;
         }
-        m = (FileShareMsg *)cmd->u.user_data.data;
-        switch (m->mKind) {
+        m = (WFSiMessage *)cmd->u.user_data.data;
+        switch (m->type) {
         case 1:
-            if (m->mFlag == 0) {
+            if (m->flag == 0) {
                 WBT_RequestSync(1, WFSi_OnChildSystemCallback);
                 return;
             }
-            child->mReadRegion = m->mFileId;
-            child->mRecvBufTable[aid] = data_020a1fc0.mReadRequest->arg.readfile.dst;
-            WBT_GetBlock(1, child->mReadRegion, child->mRecvBufTable,
-                         data_020a1fc0.mReadRequest->arg.readfile.len, child->mPacketBitmapTable,
-                         WFSi_OnChildSystemCallback);
+            child->block_id = m->arg;
+            child->recv_buf_table[aid] = data_020a1fc0.target_file->arg.readfile.dst;
+            WBT_GetBlock(1, child->block_id, child->recv_buf_table,
+                         data_020a1fc0.target_file->arg.readfile.len,
+                         child->recv_buf_packet_bmp_table, WFSi_OnChildSystemCallback);
             return;
 
         case 3: {
-            FSFile *p = data_020a1fc0.mReadRequest;
+            FSFile *p = data_020a1fc0.target_file;
             FSArchive *arc = p->arc;
-            data_020a1fc0.mReadRequest = 0;
+            data_020a1fc0.target_file = 0;
             p->prop.file.pos += p->arg.readfile.len;
             FS_NotifyArchiveAsyncEnd(arc, FS_RESULT_SUCCESS);
             return;
@@ -1374,7 +1367,7 @@ static inline void FlushFileShareArea(char *base, unsigned int size) {
 /* The other callees are C. */
 void func_02040c34(int isParent, int port, void (*stateCallback)(int),
                    void *(*allocFunc)(void *arg, unsigned int size, void *ptr), void *allocArg) {
-    FileShareWork *G = &data_020a1fc0;
+    WFSWork *G = &data_020a1fc0;
     OSIntrMode state = OS_DisableInterrupts();
     if (data_020a0f84 != 0) {
         OS_RestoreInterrupts(state);
@@ -1382,109 +1375,109 @@ void func_02040c34(int isParent, int port, void (*stateCallback)(int),
         data_020a0f84 = 1;
         OS_RestoreInterrupts(state);
 
-        G->mIsParent = isParent;
-        G->mPort = port;
-        G->mSendRequest = 0;
-        G->mSendBusy = 0;
-        G->mState = 1;
-        G->mStateCallback = stateCallback;
-        G->mAllocFunc = allocFunc;
-        G->mAllocArg = allocArg;
-        G->mReadRequest = 0;
-        G->mTableSize = 0;
-        G->mTable = 0;
-        G->mParentPacketSize = 0;
-        G->mChildPacketSize = 0xe;
+        G->is_parent = isParent;
+        G->port = port;
+        G->send_idle = 0;
+        G->is_running = 0;
+        G->state = 1;
+        G->state_func = stateCallback;
+        G->alloc_func = allocFunc;
+        G->alloc_arg = allocArg;
+        G->target_file = 0;
+        G->table_size = 0;
+        G->table = 0;
+        G->parent_packet_size = 0;
+        G->child_packet_size = 0xe;
         data_020a0f88 = 0;
         if (WM_SetPortCallback((u16)port, WFSi_PortCallback, 0) != 0)
             OS_Terminate();
         FS_Init(FS_DMA_NOT_USE);
 
-        if (G->mIsParent != 0) {
+        if (G->is_parent != 0) {
             {
-                char *base = (char *)G->mArea;
-                FileShareNode *node;
-                FileShareNode *next;
-                FileShareNode *saved;
+                char *base = (char *)&G->context;
+                WFSiFileList *node;
+                WFSiFileList *next;
+                WFSiFileList *saved;
                 char *zero;
-                FileShareNode *end;
-                FlushFileShareArea(base, sizeof(FileShareParentArea));
+                WFSiFileList *end;
+                FlushFileShareArea(base, sizeof(WFSParentContext));
                 DC_WaitWriteBufferEmpty();
-                FileShareParentArea *nodes = (FileShareParentArea *)base;
-                saved = nodes->mNodes;
+                WFSParentContext *nodes = (WFSParentContext *)base;
+                saved = nodes->list;
                 zero = 0;
                 node = saved;
                 next = node + 1;
-                end = ((int)next & 1) ? nodes->mNodes + 3 : nodes->mNodes + 3;
-                nodes->mFreeList = saved;
+                end = ((int)next & 1) ? nodes->list + 3 : nodes->list + 3;
+                nodes->free_list = saved;
                 if (next < end) {
                     do {
-                        node->mNext = node + 1;
-                        FS_InitFile(&node->mFile);
-                        node->mRefCount = (int)zero;
-                        node->mState = (int)zero;
-                        node->mFileId = (((int)node + 0xcc00cc0) - (int)saved) / 0xcc0;
+                        node->next = node + 1;
+                        FS_InitFile(&node->file);
+                        node->ref = (int)zero;
+                        node->stat = (int)zero;
+                        node->own_id = (((int)node + 0xcc00cc0) - (int)saved) / 0xcc0;
                         node += 1;
                     } while (node + 1 < end);
                 }
-                node->mNext = 0;
-                FileShareParentArea *area = (FileShareParentArea *)base;
-                area->mReplyGroup = 0;
-                area->mReplyPending = 0;
-                area->mReplySending = 0;
-                area->mReadyList = 0;
-                area->mBusyList = 0;
-                G->mParentPacketSize = 0x200;
-                area->mConnectedBitmap = 1;
-                area->mOpenChildren = 0;
-                area->mResizePending = 0;
-                area->mResizeChildren = 0;
-                area->mBusyCount = 0;
-                area->mNewPacketSize = G->mParentPacketSize;
-                FlushFileShareArea(base, sizeof(FileShareParentArea));
+                node->next = 0;
+                WFSParentContext *area = (WFSParentContext *)base;
+                area->sync_bitmap = 0;
+                area->ack_bitmap = 0;
+                area->msg_busy = 0;
+                area->alive_list = 0;
+                area->busy_list = 0;
+                G->parent_packet_size = 0x200;
+                area->all_bitmap = 1;
+                area->busy_bitmap = 0;
+                area->is_changing = 0;
+                area->deny_bitmap = 0;
+                area->busy_count = 0;
+                area->new_packet_size = G->parent_packet_size;
+                FlushFileShareArea(base, sizeof(WFSParentContext));
                 DC_WaitWriteBufferEmpty();
-                WBT_InitParent(G->mParentPacketSize, G->mChildPacketSize,
+                WBT_InitParent(G->parent_packet_size, G->child_packet_size,
                                WFSi_OnParentSystemCallback);
                 WFSi_LoadTables();
             }
             {
-                FileShareParentArea *area = (FileShareParentArea *)G->mArea;
-                FileShareNode *nd;
-                nd = area->mFreeList;
-                area->mFreeList = nd->mNext;
+                WFSParentContext *area = &G->context.parent;
+                WFSiFileList *nd;
+                nd = area->free_list;
+                area->free_list = nd->next;
                 MI_CpuClear8(nd, FILE_SHARE_NODE_SIZE);
-                /* mTableSize is read through data_020a1fc0, not G, here and in the
+                /* table_size is read through data_020a1fc0, not G, here and in the
                    child branch: the G-> spelling comes out 8 bytes short */
-                WBT_RegisterBlock(&nd->mRegion, 0x20000, data_02082158, G->mTable,
-                                  data_020a1fc0.mTableSize, 0);
-                nd->mNext = area->mReadyList;
-                area->mReadyList = nd;
-                nd->mRefCount = 1;
+                WBT_RegisterBlock(&nd->info, 0x20000, data_02082158, G->table,
+                                  data_020a1fc0.table_size, 0);
+                nd->next = area->alive_list;
+                area->alive_list = nd;
+                nd->ref = 1;
                 WFSi_CreateTaskThread();
             }
         } else {
-            char *base = (char *)G->mArea;
-            FileShareChildArea *arr = (FileShareChildArea *)base;
+            char *base = (char *)&G->context;
+            WFSChildContext *arr = (WFSChildContext *)base;
             int i;
             char *p;
-            FlushFileShareArea(base, sizeof(FileShareChildArea));
+            FlushFileShareArea(base, sizeof(WFSChildContext));
             DC_WaitWriteBufferEmpty();
             p = base + 0xc0;
             for (i = 0; i < 0x10; i++) {
-                arr->mBlockInfoTable[i] = p;
-                arr->mRecvBufTable[i] = 0;
-                arr->mPacketBitmapTable[i] = 0;
+                arr->block_info_table[i] = p;
+                arr->recv_buf_table[i] = 0;
+                arr->recv_buf_packet_bmp_table[i] = 0;
                 p += 0x28;
             }
-            arr->mRecvWork = 0;
-            arr->mReadRegion = 0;
-            G->mParentPacketSize = 0x80;
-            arr->mMaxReadSize = 0x100000;
+            arr->recv_pkt_bmp_buf = 0;
+            arr->block_id = 0;
+            G->parent_packet_size = 0x80;
+            arr->max_file_size = 0x100000;
             WFSi_ReallocBitmap(base, -1);
-            G->mParentPacketSize = 0;
+            G->parent_packet_size = 0;
             WFSi_LoadTables();
-            WFSi_ReallocBitmap(base, data_020a1fc0.mTableSize);
-            FlushFileShareArea(base, sizeof(FileShareChildArea));
+            WFSi_ReallocBitmap(base, data_020a1fc0.table_size);
+            FlushFileShareArea(base, sizeof(WFSChildContext));
             DC_WaitWriteBufferEmpty();
             WBT_InitChild(WFSi_OnChildSystemCallback);
         }
@@ -1495,20 +1488,20 @@ void func_02040c34(int isParent, int port, void (*stateCallback)(int),
 void WFS_Start(void) {
     int old;
     data_020a0f38 = 1;
-    old = data_020a1fc0.mIsParent;
-    data_020a1fc0.mSendRequest = 1;
+    old = data_020a1fc0.is_parent;
+    data_020a1fc0.send_idle = 1;
     if (old == 0) {
         /* WM_ReadStatus copies the WM status block into the child area's
-           mStatus (6 on a NULL buffer, then a cache-invalidated copy); its
+           status (6 on a NULL buffer, then a cache-invalidated copy); its
            aid goes to WBT_SetOwnAid. */
-        FileShareChildArea *child = (FileShareChildArea *)data_020a2400;
-        WM_ReadStatus(&child->mStatus);
-        WBT_SetOwnAid(child->mStatus.aid);
+        WFSChildContext *child = (WFSChildContext *)data_020a2400;
+        WM_ReadStatus(&child->status);
+        WBT_SetOwnAid(child->status.aid);
         WBT_RequestSync(1, WFSi_OnChildSystemCallback);
     } else {
         void (*fn)(int);
-        data_020a1fc0.mState = 2;
-        fn = data_020a1fc0.mStateCallback;
+        data_020a1fc0.state = 2;
+        fn = data_020a1fc0.state_func;
         if (fn != 0) {
             fn(0);
         }
@@ -1516,38 +1509,38 @@ void WFS_Start(void) {
     WFSi_SetMPData();
 }
 
-/* The FSFile a child read is in flight on (mReadRequest); only its archive is
+/* The FSFile a child read is in flight on (target_file); only its archive is
  * read here. */
 
-/* Shut the file share down: free the card tables (mTable), and as a child
- * cancel the read in flight and free the receive work (mRecvWork). The
- * mIsParent read goes through data_020a1fc0, not work, as FileShareFree's
+/* Shut the file share down: free the card tables (table), and as a child
+ * cancel the read in flight and free the receive work (recv_pkt_bmp_buf). The
+ * is_parent read goes through data_020a1fc0, not work, as WFSi_Free's
  * allocator reads do: the ROM reloads the block's address for it (through
  * work the function comes out shorter). */
 void WFS_End(void) {
-    FileShareWork *work = &data_020a1fc0;
+    WFSWork *work = &data_020a1fc0;
     OSIntrMode saved0 = OS_DisableInterrupts();
 
     if (data_020a0f84 != 0) {
-        void *table = work->mTable;
+        void *table = work->table;
 
         if (table != 0) {
-            FileShareFree(table);
-            work->mTable = 0;
-            work->mTableSize = 0;
+            WFSi_Free(table);
+            work->table = 0;
+            work->table_size = 0;
         }
 
-        work->mState = 0;
+        work->state = 0;
 
-        if (data_020a1fc0.mIsParent == 0) {
-            FSFile *p = work->mReadRequest;
-            FileShareChildArea *child = (FileShareChildArea *)work->mArea;
+        if (data_020a1fc0.is_parent == 0) {
+            FSFile *p = work->target_file;
+            WFSChildContext *child = &work->context.child;
             if (p != 0) {
                 FSArchive *arc = p->arc;
-                work->mReadRequest = 0;
+                work->target_file = 0;
                 FS_NotifyArchiveAsyncEnd(arc, FS_RESULT_ERROR);
             }
-            FileShareFree(child->mRecvWork);
+            WFSi_Free(child->recv_pkt_bmp_buf);
         } else {
             WFSi_EndTaskThread();
         }
@@ -1559,23 +1552,23 @@ void WFS_End(void) {
     OS_RestoreInterrupts(saved0);
 }
 
-/* The file share's mState: 2 once it is ready.
+/* The file share's state: 2 once it is ready.
    func_0203db64 waits for that before the download-play handshakes. */
 int WFS_GetStatus(void) {
-    return data_020a1fc0.mState;
+    return data_020a1fc0.state;
 }
 
-/* The word at +0xb58 of data_020a3fc0 (see WFS_EnableSync). */
+/* The parent's connected children, by AID bit (bit 0 is the parent). */
 int WFS_GetCurrentBitmap(void) {
-    return data_020a3fc0.field_b58;
+    return data_020a1fc0.context.parent.all_bitmap;
 }
 
-/* Store val with bit 0 clear at +0xb50 of data_020a3fc0, under the IRQ
-   lock. Its one caller, func_0203ea5c, passes it WFS_GetCurrentBitmap's result
+/* Set the children the parent answers as one group (sync_bitmap), leaving
+   out bit 0, the parent itself, under the IRQ lock. Its one caller, func_0203ea5c, passes it WFS_GetCurrentBitmap's result
    when there are more than two players (data_02099e18). */
 void WFS_EnableSync(u32 val) {
     OSIntrMode saved = OS_DisableInterrupts();
-    data_020a3fc0.field_b50 = val & ~1u;
+    data_020a1fc0.context.parent.sync_bitmap = val & ~1u;
     OS_RestoreInterrupts(saved);
 }
 
