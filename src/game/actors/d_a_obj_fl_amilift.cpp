@@ -85,7 +85,7 @@ daObjFl_Amilift_c::~daObjFl_Amilift_c() {}
 void daObjFl_Amilift_c::FaceToward(Vector3 *a, Vector3 *b) {
     Vector3 v;
     Vec3_Sub(&v, a, b);
-    mPrevAngleY = (short)cstd::atan2(v.x, v.z);
+    mPrevAngleY = cstd::atan2(v.x, v.z);
 }
 
 /* Advance along the path by one frame. Speeds up toward 0xa000 and slows to a
@@ -211,15 +211,15 @@ s32 daObjFl_Amilift_c::Behavior() {
     int idx = mState;
     (this->*data_ov064_0211c750[idx].pmf)();
     unsigned short *p338 = &mStateFrames;
-    *p338 = (unsigned short)(*p338 + 1);
+    *p338 = (*p338 + 1);
     if (idx != mState) {
         mStateFrames = 0;
     }
     int target = mRiderOn ? -0x28000 : 0;
     if (ApproachLinear(mSinkOffset, target, 0x5000)) {
         short *pAng = &mBobPhase;
-        *pAng = (short)(*pAng + 0xa00);
-        unsigned short h = *(unsigned short *)&mBobPhase;
+        *pAng = (*pAng + 0xa00);
+        unsigned short h = *&mBobPhase;
         short s = FX_SinIdx(h >> 4);
         short ten = 10;
         mBobOffset = s * ten;
