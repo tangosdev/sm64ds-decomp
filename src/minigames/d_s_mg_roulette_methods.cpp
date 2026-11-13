@@ -878,8 +878,7 @@ void RouletteRacer_Draw(char *racer) {
     RouletteRacer *t = (RouletteRacer *)racer;
     if (t->state == 6)
         return;
-    RenderOamBothScreens(sRouletteRacerSprites, t->x >> 0xc, t->y >> 0xc, -1, t->priority,
-                         (void *)0);
+    RenderOamBothScreens(sRouletteRacerSprites, t->x >> 0xc, t->y >> 0xc, -1, t->priority, 0);
     t->priority = 1;
 }
 }
@@ -1278,7 +1277,7 @@ void RouletteStrip_Draw(RouletteStrip *strip, int y) {
 
     {
         int b = y + 0x10;
-        RenderOamBothScreens(sRouletteRacerSprites, 0x20, b, -1, 1, (void *)0);
+        RenderOamBothScreens(sRouletteRacerSprites, 0x20, b, -1, 1, 0);
         Mg_DrawBigNumber(0x2e, b, strip->count, 0, -1, 1, 0);
     }
 }
