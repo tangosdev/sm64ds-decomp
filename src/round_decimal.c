@@ -63,7 +63,6 @@ void round_decimal(Decimal *dec, int new_length) {
         return;
     }
     if (new_length == 0)
-        // goto: for-continue (0x150), while-after (0x130), do-while (0x150) still DIFF round_decimal
         goto reset;
     dec->sig.length = new_length;
 }
