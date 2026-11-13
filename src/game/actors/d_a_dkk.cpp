@@ -176,7 +176,7 @@ void daDkk_c::StateLandPause() {
         return;
     }
     mState = 7;
-    mTurnTargetAngle = (s16)(mAngleY + 0x8000);
+    mTurnTargetAngle = (mAngleY + 0x8000);
 }
 
 /* mState 7, the turn. Steps mAngleY toward mTurnTargetAngle; once
