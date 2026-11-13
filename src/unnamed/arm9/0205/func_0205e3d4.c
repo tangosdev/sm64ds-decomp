@@ -113,10 +113,10 @@ void func_0205e3d4(void *ctx)
     }
 
     context->Intermediate_Hash[0] += A;
-    *(unsigned int *)(((int)&context->Intermediate_Hash[1]) & ~0ULL) += B;
-    *(unsigned int *)(((int)&context->Intermediate_Hash[2]) & ~0ULL) += C;
-    *(unsigned int *)(((int)&context->Intermediate_Hash[3]) & ~0ULL) += D;
-    *(unsigned int *)(((int)&context->Intermediate_Hash[4]) & ~0ULL) += E;
+    context->Intermediate_Hash[1] += B;
+    context->Intermediate_Hash[2] += C;
+    context->Intermediate_Hash[3] += D;
+    context->Intermediate_Hash[4] += E;
     context->Message_Block_Index = 0;
 
     if (data_020a80c4 != 0)
