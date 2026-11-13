@@ -5,7 +5,7 @@
 
 extern "C" {
 
-#define SEND_VTX(p) G3_Vtx((s16)((p)->x >> shift), (s16)((p)->y >> shift), (s16)((p)->z >> shift))
+#define SEND_VTX(p) G3_Vtx(((p)->x >> shift), ((p)->y >> shift), ((p)->z >> shift))
 #define SEND_NRM(q) G3_Normal((q)->x, (q)->y, (q)->z)
 
 void func_ov007_020ca86c(Vector3 *vtx, Vector3_16 *nrm, s32 w, s32 h, s32 shift) {
