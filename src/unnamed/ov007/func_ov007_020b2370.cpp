@@ -22,7 +22,7 @@ extern "C" void func_ov007_020b2370(void) {
     {
         int t = WORK->modelGrowth;
         long long v = ((long long)(0x1000 - t) << 8) + ((long long)t << 12);
-        int res = (int)(v >> 12);
+        int res = (v >> 12);
         model->scale.z = res;
         model->scale.y = model->scale.z;
         model->scale.x = model->scale.y;
