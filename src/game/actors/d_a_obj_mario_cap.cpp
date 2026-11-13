@@ -742,7 +742,6 @@ void daObjMarioCap_c::UpdateMatrix()
         off = 0;
         {
             int t = mModelIndex;
-            // goto: ||, else-if, inverted nest still DIFF UpdateMatrix
             if (t == 0)
                 goto neg;
             if (t == 1) {
