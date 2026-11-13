@@ -130,7 +130,7 @@ extern "C" void D3D_DrawSpriteTable(void)
     sprite = 0;
     for (entry = 0; entry < 0x80; entry++) {
         sD3DOamShadow[entry].attr01 = 0;
-        *(u32 *)&sD3DOamShadow[(int)(((long long)entry))].attr2 = 0;
+        *(u32 *)&sD3DOamShadow[(((long long)entry))].attr2 = 0;
     }
 
     y = 0;
@@ -141,7 +141,7 @@ extern "C" void D3D_DrawSpriteTable(void)
         for (; x < 0x100; x += 0x40) {
             sD3DOamShadow[sprite].attr01 = ((y & 0xff) | 0xc0000c00) | ((x & 0x1ff) << 16);
             sD3DOamShadow[sprite].attr2 =
-                (u16)(((int)(((long long)tileX)) + ((int)(((long long)tileY)) << 5)) | 0xf000);
+                (((int)(((long long)tileX)) + ((int)(((long long)tileY)) << 5)) | 0xf000);
             tileX += 8;
             sprite++;
         }
@@ -187,9 +187,9 @@ int dScMgD3DBase_c::InitSubScreenBg()
     gSubScreenLayers &= ~2;
     {
         s32 language = GetGameLanguage();
-        LoadCompressedFileAt(sD3DOptionNcgByLanguage[language], (void *)G2S_GetBG1CharPtr());
+        LoadCompressedFileAt(sD3DOptionNcgByLanguage[language], G2S_GetBG1CharPtr());
     }
-    LoadCompressedFileAt(0x5b, (void *)G2S_GetBG1ScrPtr());
+    LoadCompressedFileAt(0x5b, G2S_GetBG1ScrPtr());
     GX_SetBankForSubBG(mSubBgBank);
 }
 
