@@ -290,7 +290,6 @@ int daPgBby_c::StateHeldUpdate() {
     int held = (flags & 0x100) != 0;
     if (held) {
         int thrown = (flags & 0x2000) != 0;
-        // goto: folded ||, drop flag, thrown-init || still DIFF StateHeldUpdate
         if (!thrown)
             goto animate;
     }
@@ -600,7 +599,6 @@ int daPgBby_c::GuardStepHeight() {
         if (ground.DetectClsn() != 0) {
             int d = ground.clsnY - mPosY;
             if (d < 0) d = -d;
-            // goto: early return, stepOk flag, duplicated restore, far-bool still DIFF GuardStepHeight
             if (d <= 0x1900)
                 goto bail;
         }
