@@ -1207,7 +1207,7 @@ void dScMgSound_c::Pop07_Start(int slot) {
     unsigned short delay = mPops[slot].timer;
     if (delay != 0) {
         mPops[slot].timer = delay - 1;
-        if (*(short *)&mPops[slot].timer < 0)
+        if ((short)mPops[slot].timer < 0)
             mPops[slot].timer = 0;
         return;
     }
