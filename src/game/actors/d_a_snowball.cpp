@@ -259,7 +259,7 @@ int daSnowball_c::Behavior() {
     int tmp = mSpeedZ;
     mVertSpeed = hi;
     mSpeedZ = tmp;
-    UpdatePosWithOnlySpeed((dCc_c *)&mdCcAc_c);
+    UpdatePosWithOnlySpeed(&mdCcAc_c);
     UpdateWMClsn(mWithMeshClsn, 0);
     mAngleY = mPrevAngleY;
     UpdateModelMatrix();
