@@ -35,7 +35,9 @@
 // talk, in the course. The cartridge shows it on the castle arrival after the star's exit, and only when the count is
 // exactly the milestone. So a staying star's line is held (port_star_count_msg_hook in src/game/player/Player.cpp) and
 // shown on the next castle arrival instead, one per arrival, oldest first; a milestone the arrival shows on its own is
-// not shown twice. Held lines live for the session (not in the save file).
+// not shown twice. The pause menu's Exit Course arrives without that test (the cartridge never needed it: no star was got
+// in that visit), so there the port opens the held line itself, the same way the test does, once the player stands in the
+// castle with control and no box or pause up. Held lines live for the session (not in the save file).
 //
 // The act of the course does not change mid-visit (the DS loads a course for one act): objects of other acts stay as they are
 // until the player leaves and comes back.
@@ -75,12 +77,18 @@ extern int data_0209d708[];                // its entry table
 extern int data_0209d70c[];                // its info section
 int NumStars(void);
 void *_ZN8dActor_c4NextEPKS_(const void *prev);
-#ifndef PORT_ROM_CLEAN
-extern void *data_0209f394[];
+extern void *data_0209f394[];              // the players' bodies
 extern unsigned char data_0209f250;        // my player index
+extern unsigned char data_0209d660[];      // a message box is open
+extern unsigned char data_0209f2c4[];      // the pause screen, 0 = playing
+extern void *data_0209f318;                // the camera
+extern short data_ov002_020ff1a0[];        // the star-count lines, one per milestone (func_ov002_020c6e14)
+int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *thiz, void *actor, unsigned msg, const void *pos, unsigned char d,
+                                                   unsigned char e);
+void _ZN9dCamera_c9SetFlag_3Ev(void *cam);
+#ifndef PORT_ROM_CLEAN
 extern unsigned char data_0209cab4[];      // the live save block's star bytes, one per course
 extern unsigned char data_02092110[];      // pending level change, < 0 = none
-extern unsigned char data_0209d660[];      // a message box is open
 extern short data_0209d6d4;                // the open box's message id
 extern unsigned char data_0209f2ac;        // the last star got was a new one
 extern unsigned char data_0209f228;        // the last star got (its number)
@@ -261,9 +269,32 @@ int count_hook(int new_star) {
     return out;
 }
 
+// A held star-count line, opened in the castle once the player can take it (see the head of the file).
+int g_tick_lv = -999, g_tick_frames;
+void held_line_tick() {
+    if (g_nheld == 0 || course_of((int)data_0209f2f8) != 29 || g_tick_frames < 90 || g_tick_frames % 30 != 0) return;
+    if (data_0209d660[0] || data_0209f2c4[0]) return;
+    const int me = (int)data_0209f250;
+    char *body = (me >= 0 && me < 16) ? (char *)data_0209f394[me] : nullptr;
+    if (!body || *(const unsigned char *)(body + 0x709) != 0) return;   // Player::mIsNoControl
+    const int idx = g_held[0];
+    if (!_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(body, body, (unsigned)(unsigned short)data_ov002_020ff1a0[idx], nullptr, 0, 2))
+        return;   // not now (in the air, say): the next try
+    _ZN9dCamera_c9SetFlag_3Ev(data_0209f318);
+    for (int j = 0; j + 1 < g_nheld; ++j) g_held[j] = g_held[j + 1];
+    --g_nheld;
+#ifndef PORT_ROM_CLEAN
+    if (g_log) std::fprintf(stderr, "[staycourse] castle: held star-count line %d opened (message 0x%x), %d still held\n", idx,
+                            (unsigned)(unsigned short)data_ov002_020ff1a0[idx], g_nheld);
+#endif
+}
+
 // Once a frame: the text patch and the latches never outlive their star or their level.
 void stay_tick() {
     const int lv = (int)data_0209f2f8;
+    if (lv != g_tick_lv) { g_tick_lv = lv; g_tick_frames = 0; }
+    ++g_tick_frames;
+    held_line_tick();
     if (g_stay_star && (g_stay_level != lv || !star_alive(g_stay_star))) { g_stay_star = nullptr; g_stay_level = -1; }
     if (g_msg.on && !g_stay_star) msg_restore();
     for (Latch &l : g_latch)
