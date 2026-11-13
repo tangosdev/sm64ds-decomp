@@ -137,13 +137,13 @@ u8 *daPicGate_c::LoadTexture(s32 i) {
         b = o->materials;
         c = o->palettes;
         int sz;
-        e->texAddr = (int)dExtSimpleModel_c::LoadCompressedTextureToVram(a->data, a->size,
-                                                                         a->data + a->size);
+        e->texAddr =
+            dExtSimpleModel_c::LoadCompressedTextureToVram(a->data, a->size, a->data + a->size);
         sz = c->size;
         if (sz <= 8)
-            e->pltAddr = (int)func_02045ad8(c->data, (unsigned int)sz);
+            e->pltAddr = func_02045ad8(c->data, sz);
         else
-            e->pltAddr = (int)func_02045a50(c->data, (unsigned int)sz);
+            e->pltAddr = func_02045a50(c->data, sz);
         e->difAmb = b->diffuseAmbient;
         e->speEmi = b->specularEmission;
         e->param = a->flags;
@@ -370,7 +370,7 @@ void daPicGate_c::BeginWave(s32 a1, s32 a2, s32 a3) {
     m8 = param1;
     r0 = 0;
     if ((unsigned char)((m8 >> 0xd) & 3) == 1) {
-        f = (unsigned char)((m8 >> 8) & 0x1f);
+        f = ((m8 >> 8) & 0x1f);
         if (f == 4)
             r0 = 0xc;
         else if (f == 7)
