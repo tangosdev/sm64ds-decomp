@@ -93,7 +93,7 @@ void func_02012694(unsigned int id, const Vector3 *pos);
  * dBgActor_c::C2, the mid-construction daDsnBase_c vptr,
  * dExtAnmTexPat_c@0x324, dExtShadowModel_c@0x338 and this class's vptr are the
  * implicit constructor, inlined. */
-extern "C" daDsn_c *daDsn_c_classInit() {
+ daDsn_c *daDsn_c_classInit() {
     return new daDsn_c();
 }
 

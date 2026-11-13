@@ -79,7 +79,6 @@ struct BakubakuAnimationFileHandle : SharedFilePtr {
 /* The cylinder offsets are VecFx32: the retail initializer registers no
  * destructor for them, so they were never Vector3 globals (Vector3 carries
  * a declared ~Vector3, which would register at exit). */
-extern "C" {
 
 extern BakubakuModelFilePtr gBakubakuModelFile;    /* model 0x295 */
 extern BakubakuAnimationFileHandle data_ov032_02113a50; /* swim anim 0x297 */
@@ -94,24 +93,19 @@ extern s32 data_0209f32c;
 extern VecFx32 data_ov032_021137cc; /* body cylinder */
 extern VecFx32 data_ov032_021137d8; /* head cylinder */
 
-int AngleDiff(int a, int b);
-}
-
+extern "C" int AngleDiff(int a, int b);
 s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 
 /* local extern: retain the matched scalar ABI; native Fix12<int> calls remain pending. */
 /* Parameter names keep this TU's @NNN. */
+extern "C" {
 typedef void BgchInitAt_(dBgCh_Actr *self, dActor_c *actor, int radius, int height, void *a,
                          void *b);
-extern "C" {
-
-/* Sets daPly_c::mStateStep to 6 and stores this fish in mAttachedActor. */
-int func_ov002_020c5cd8(daPly_c *a, dActor_c *self);
 }
-
+/* Sets daPly_c::mStateStep to 6 and stores this fish in mAttachedActor. */
+extern "C" int func_ov002_020c5cd8(daPly_c *a, dActor_c *self);
 /* Sound::Play with bank 3. */
-void func_02012694(unsigned int a, void *p);
-
+void func_02012694(unsigned int a, const Vector3 *p);
 
 /* Both predicates are int-returning, as the ROM materializes the 0/1
    before testing it. dActor_c::mFlags bit 0x40000 is set while the actor
@@ -124,12 +118,12 @@ static inline int IsInYoshiMouth(dActor_c *actor) {
     return (actor->mFlags & 0x40000) != 0;
 }
 
-extern "C" daBakubaku_c *daBakubaku_c_classInit()
+ daBakubaku_c *daBakubaku_c_classInit()
 {
     return new daBakubaku_c();
 }
 
-extern "C" SpawnInfo<daBakubaku_c> g_profile_BAKUBAKU = {
+ SpawnInfo<daBakubaku_c> g_profile_BAKUBAKU = {
     daBakubaku_c_classInit,
     0x00e4, /* BAKUBAKU registry id 228 */
     0x0052,
@@ -574,13 +568,13 @@ void daBakubaku_c::HandleCylinderHit() {
                 SpawnMegaCharParticles(*f, 0);
                 PoofDust();
                 f->IncMegaKillCount();
-                func_02012694(0x1e, &mCamSpacePosX);
+                func_02012694(0x1e,(const Vector3 *)(&mCamSpacePosX));
                 KillAndTrackInDeathTable();
                 return;
             }
             if (mMouthOpen != 0) {
                 if (func_ov002_020c5cd8(f, this) == 1) {
-                    func_02012694(0xf6, &mCamSpacePosX);
+                    func_02012694(0xf6,(const Vector3 *)(&mCamSpacePosX));
                     return;
                 }
             }

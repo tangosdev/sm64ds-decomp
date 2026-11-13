@@ -87,9 +87,8 @@ struct NknkAnimationFileHandle : SharedFilePtr {
     ~NknkAnimationFileHandle();
 };
 
-extern "C" {
 
-extern int d_a_nknkNewHold(u32 uniqueID, u32 effectID, s32 x, s32 y, s32 z, const void *dir,
+extern "C" int d_a_nknkNewHold(u32 uniqueID, u32 effectID, s32 x, s32 y, s32 z, const void *dir,
                            void *callback);
 extern NknkAnimationFileHandle *data_ov062_0211cee8[];
 extern int data_ov062_0211cf0c[];
@@ -97,58 +96,40 @@ extern int data_ov062_0211cf0c[];
  * member declaration takes Fix12<int>/u32; its measured form grew this helper. */
 /* Reconstructed receiver/attacker/nullable collision interface; the original
  * source prototype is not uniquely recoverable from the register traffic. */
-}
-struct Aea30C;
-extern void func_ov002_020aea30(Aea30C *self, dActor_c *attacker, dBgCh_Actr *collision);
-extern "C" {
-
-extern void d_a_nknkRunningSlidingDustAtHold(int a, int b, int c);
-extern int RandomIntInternal(int *seed);
-}
-
-extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-extern "C" {
-
+extern "C" struct Aea30C;
+void func_ov002_020aea30(Aea30C *self, dActor_c *attacker, dBgCh_Actr *collision);
+extern "C" void d_a_nknkRunningSlidingDustAtHold(int a, int b, int c);
+extern "C" int RandomIntInternal(int *seed);
+short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 
 extern SharedFilePtr* data_ov062_0211ced8[2];
 extern SharedFilePtr* data_ov062_0211cee0[2];
-}
-
 
 /* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, dActor_c *a, int r, int h, Vector3_16 *p, int q);
 extern "C" {
+typedef void BgchInitAt_(void *self, dActor_c *a, int r, int h, Vector3_16 *p, int q);
+}
 
-
-extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
+extern "C" void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 inline struct Matrix4x3 *inline_fn()
 {
   return &data_020a0e68;
 }
-}
+
+int SurfaceInfo_TestFlag0x20(int *p); /* CLPS bit 0x20: water */
 
 
-extern int SurfaceInfo_TestFlag0x20(int *p);
- /* CLPS bit 0x20: water */
-
-
-extern "C" {
 
 daNknk_c *daNknk_c_classInit_NOKONOKO()
 {
     return new daNknk_c;
 }
-}
 
-
-extern "C" {
 
 daNknk_c *daNknk_c_classInit_NOKONOKO_S()
 {
     return new daNknk_c;
 }
-}
-
 
 s32 daNknk_c::OnYoshiTryEat() {
   if(mModelIndex==0) return 6;

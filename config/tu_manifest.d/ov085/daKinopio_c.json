@@ -137,7 +137,7 @@
       "ordinal": 13
     },
     {
-      "symbol": "daKinopio_c_classInit",
+      "symbol": "_Z21daKinopio_c_classInitv",
       "address": "0x02129cd0",
       "size": "0x00000048",
       "legacy_source": "src/d_a_kinopio.c",
@@ -1024,7 +1024,7 @@
       "source": "0x0212fe6c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daKinopio_c_classInit",
+      "symbol": "_Z21daKinopio_c_classInitv",
       "addend": 0,
       "target_module": "ov085",
       "target_address": "0x02129cd0"

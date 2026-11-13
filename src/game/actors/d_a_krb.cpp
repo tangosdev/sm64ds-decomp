@@ -158,7 +158,6 @@ enum {
     SND_TUMBLE_BOUNCE_LATER = 0x13b   /* second and third bounce */
 };
 
-extern "C" {
 
 /* data_ov084_02130cf8 is the BMD this TU LoadFile / Release. The other
    six handles are never passed to a SharedFilePtr method; this TU reads
@@ -179,41 +178,33 @@ extern KrbAnimationFileHandle data_ov084_02130cf0;
 extern KrbModelFilePtr data_ov084_02130cf8;
 extern KrbModelFilePtr gKuriboLowModelModelFile;
 extern StateHandler data_ov084_02130d74[];
-}
-
 int func_02037e20(int* p);
-extern void func_02012694(unsigned int id, const Vector3 *pos);
-extern int SurfaceInfo_TestFlag0x20(int* p);
-struct Aea30C;
-extern void func_ov002_020aea30(Aea30C *self, dActor_c *actor, dBgCh_Actr *collision);
-extern "C" {
-
+void func_02012694(unsigned int id, const Vector3 *pos);
+int SurfaceInfo_TestFlag0x20(int* p);
 extern u8 data_0209f208[];
 extern u8 *data_0209f344;
 /* Three-register reconstructed interface; death-state stores also use r3. */
+extern "C" struct Aea30C;
+void func_ov002_020aea30(Aea30C *self, dActor_c *actor, dBgCh_Actr *collision);
 extern int *data_ov084_0213088c;
 extern int data_ov084_02130248[];
 extern u8 data_ov084_02130204[];
 extern char data_ov084_0213089c;
 extern int data_ov084_02130228[];
 extern int data_ov084_02130268[];
-extern void func_ov074_0212087c(Vector3 *out, void *player, u8 flag);
-extern int Math_Function_0203b14c(int *v, int target, int a, int b, int c);
+void func_ov074_0212087c(Vector3 *out, void *player, u8 flag);
+extern "C" int Math_Function_0203b14c(int *v, int target, int a, int b, int c);
 extern s8 gCurrentSublevel;
-}
 void LoadSilverStarAndNumber(void);
-
 /* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, void *a, Fix12i b, Fix12i cc, void *d, Fix12i e);
 extern "C" {
-
+typedef void BgchInitAt_(void *self, void *a, Fix12i b, Fix12i cc, void *d, Fix12i e);
+}
 extern SharedFilePtr *const sKuriboAnimationFiles[7];
 extern int data_ov084_02130258[];
 extern int data_ov084_02130208[];
 extern int data_ov084_02130238[];
 extern int data_ov084_02130218[];
-}
-
 
 daKrb_c::~daKrb_c()
 {
@@ -457,7 +448,6 @@ void daKrb_c::func_ov084_021294d0() {
 
 /* Set the home position (mHomePos) from a three-word position. daKuriKing_c
  * calls this on each minion it spawns, after the Spawn. */
-extern "C" {
 
 void func_ov084_021296b0(void *a, void *b) {
     daKrb_c *goomba = (daKrb_c *)a;
@@ -466,8 +456,6 @@ void func_ov084_021296b0(void *a, void *b) {
     goomba->mHomePos.y = pos[1];
     goomba->mHomePos.z = pos[2];
 }
-}
-
 
 /* Pay out the reward the Goomba carries (mRewardType), then clear bits 4..7
  * and the upper halfword of param1 (mask 0xff0f), presumably so a respawned
@@ -1905,22 +1893,22 @@ int daKrb_c::OnYoshiTryEat()
     return 0;
 }
 
-extern "C" daKrb_c *daKrb_c_classInit_KURIBO_L()
+ daKrb_c *daKrb_c_classInit_KURIBO_L()
 {
     return new daKrb_c();
 }
 
-extern "C" daKrb_c *daKrb_c_classInit_KURIBO_S()
+ daKrb_c *daKrb_c_classInit_KURIBO_S()
 {
     return new daKrb_c();
 }
 
-extern "C" daKrb_c *daKrb_c_classInit_KURIBO()
+ daKrb_c *daKrb_c_classInit_KURIBO()
 {
     return new daKrb_c();
 }
 
-extern "C" SpawnInfo<daKrb_c> g_profile_KURIBO = {
+ SpawnInfo<daKrb_c> g_profile_KURIBO = {
     daKrb_c_classInit_KURIBO,
     0x00c8, /* KURIBO registry id 200 */
     0x0018,
@@ -1931,7 +1919,7 @@ extern "C" SpawnInfo<daKrb_c> g_profile_KURIBO = {
     0x01000000,
 };
 
-extern "C" SpawnInfo<daKrb_c> g_profile_KURIBO_S = {
+ SpawnInfo<daKrb_c> g_profile_KURIBO_S = {
     daKrb_c_classInit_KURIBO_S,
     0x00c9,
     0x0019,
@@ -1942,7 +1930,7 @@ extern "C" SpawnInfo<daKrb_c> g_profile_KURIBO_S = {
     0x00800000,
 };
 
-extern "C" SpawnInfo<daKrb_c> g_profile_KURIBO_L = {
+ SpawnInfo<daKrb_c> g_profile_KURIBO_L = {
     daKrb_c_classInit_KURIBO_L,
     0x00ca,
     0x001a,
@@ -1978,10 +1966,8 @@ StateHandler data_ov084_02130d74[5] = {
     &daKrb_c::ActPause,         /* STATE_PAUSE */
 };
 
-extern "C" {
 
 SharedFilePtr *const sKuriboAnimationFiles[7] = {
     &data_ov084_02130ce8,         &data_ov084_02130ce0, &data_ov084_02130cd0, &data_ov084_02130cc0,
     &gKuriboRecoverAnimationFile, &data_ov084_02130cc8, &data_ov084_02130cf0,
 };
-}

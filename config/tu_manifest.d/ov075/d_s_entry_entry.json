@@ -42,7 +42,7 @@
   ],
   "functions": [
     {
-      "symbol": "dScEntry_c_classInit_ENTRY",
+      "symbol": "_Z26dScEntry_c_classInit_ENTRYv",
       "address": "0x0211a854",
       "size": "0xf4",
       "legacy_source": "src/game/stages/d_s_entry_entry.cpp",

@@ -278,7 +278,7 @@
       "ordinal": 33
     },
     {
-      "symbol": "daSnowman_c_classInit",
+      "symbol": "_Z21daSnowman_c_classInitv",
       "address": "0x02125ec0",
       "size": "0x00000054",
       "legacy_source": "src/d_a_snowman.c",

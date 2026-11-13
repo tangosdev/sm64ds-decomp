@@ -52,35 +52,25 @@ struct HolheiState {
 
 
 
-extern short func_02010844(void* unused, Vector3* v, short angle);
-extern void func_02012694(unsigned int a, void *p);
-extern "C" {
-
-extern int daHolhei_c_ChangeState(daHolhei_c *self, HolheiState *p);
-extern int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
-extern void func_ov002_020db54c(void *self, int a, int b, short c);
+short func_02010844(void* unused, Vector3* v, short angle);
+void func_02012694(unsigned int a, const Vector3 *p);
+int daHolhei_c_ChangeState(daHolhei_c *self, HolheiState *p);
+extern "C" int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
+extern "C" void func_ov002_020db54c(void *self, int a, int b, short c);
 extern int data_02092138;
 extern dCamera_c *gCamera;
-}
-
 extern "C" int ApproachAngle(short *angle, short target, int a, int b,
-                  int c);
- /* local extern: named parameters preserve @NNN */
+                  int c); /* local extern: named parameters preserve @NNN */
 short Vec3_HorzAngle(const Vector3 *v0,
-                     const Vector3 *v1);
- /* local extern: named parameters preserve @NNN */
+                     const Vector3 *v1); /* local extern: named parameters preserve @NNN */
 int Vec3_Dist(const Vector3 *a,
-              const Vector3 *b);
-extern "C" {
- /* local extern: named parameters preserve @NNN */
+              const Vector3 *b); /* local extern: named parameters preserve @NNN */
 extern Matrix4x3 IDENTITY_MATRIX4X3;
-extern int Math_Function_0203b14c(void*, int, int, int, int);
-unsigned short
+extern "C" int Math_Function_0203b14c(void*, int, int, int, int);
+extern "C" unsigned short
 DecIfAbove0_Short(unsigned short *p); /* local extern: named parameters preserve @NNN */
 extern signed char gCurrentSublevel;
-extern int AngleDiff(int a, int b);
-}
-
+extern "C" int AngleDiff(int a, int b);
 
 /* Resource handles owned by this TU. The static initializer constructs the
    model (id 0x327) and five animations (ids 0x328..0x32c) and registers each
@@ -159,7 +149,7 @@ static inline int IsFlagSet(dActor_c *actor, u32 bit) {
 
 /* The cartridge's body is the one `new`: 0x438 into fBase_c::operator new,
    dEnemyBase_c's C2, this TU's vtable, then the member C1s. */
-extern "C" daHolhei_c *daHolhei_c_classInit(void)
+ daHolhei_c *daHolhei_c_classInit(void)
 {
     return new daHolhei_c();
 }
@@ -349,7 +339,7 @@ void daHolhei_c::UpdateHeldShadow() {
 
 /* Coined name. Switches to state p and runs its enter function, if any;
    Behavior runs the record's update from then on. */
-extern "C" int daHolhei_c_ChangeState(daHolhei_c *self, HolheiState *p)
+ int daHolhei_c_ChangeState(daHolhei_c *self, HolheiState *p)
 {
     self->mState = p;
     HolheiState *q = self->mState;
@@ -592,7 +582,7 @@ int daHolhei_c::func_ov062_02116498() {
     mVertSpeed = 0x3c000;
     mHorzSpeed = 0xa000;
     mTerminalVelocity = -0x64000;
-    func_02012694(0xf7, &mCamSpacePosX);
+    func_02012694(0xf7,(const Vector3 *)(&mCamSpacePosX));
     mFlags = 0;
     return 1;
 }
@@ -607,7 +597,7 @@ int daHolhei_c::func_ov062_021163b0() {
     if (mMeshClsn.IsOnGround() != 0) {
         TriplePoofDust();
         KillAndTrackInDeathTable();
-        func_02012694(0x125, &mCamSpacePosX);
+        func_02012694(0x125,(const Vector3 *)(&mCamSpacePosX));
         gCamera->func_0200d8c8(&mPos, 0x7d0000);
         v[0].x = mPosX;
         v[0].y = mPosY;
@@ -664,7 +654,7 @@ int daHolhei_c::func_ov062_021161a8() {
     if (mHeld != 0 && mModel.WillHitFrame(0x14)) {
         func_ov002_020db54c(mHeld, 0x28000, 0x50000, mAngleY);
         mHeld = 0;
-        func_02012694(0x126, &mCamSpacePosX);
+        func_02012694(0x126,(const Vector3 *)(&mCamSpacePosX));
     }
     if (mModel.Finished()) {
         mdCc_c.flags &= ~2;
@@ -690,7 +680,7 @@ void daHolhei_c::HandleCylinderHit() {
         v.y = 0;
         v.z = 0;
         KillByInvincibleChar(v, *(daPly_c *)a, 0);
-        func_02012694(0x125, &mCamSpacePosX);
+        func_02012694(0x125,(const Vector3 *)(&mCamSpacePosX));
         return;
     }
 

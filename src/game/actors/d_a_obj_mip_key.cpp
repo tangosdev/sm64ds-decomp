@@ -25,14 +25,9 @@
 
 
 s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-extern "C" {
-
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
-}
-
+extern "C" void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void CollectMinigameKey(int t, int x);
 void StartMinigameMenu(u8 a);
-
 
 extern dCamera_c *gCamera;
 extern u8 data_0209d660;
@@ -318,7 +313,7 @@ int daObj_Mip_Key_c::InitResources() {
 // classInit is a lineage-supported project spelling; ROM RTTI proves the class.
 // The exact original factory spelling is unknown (old alias: RabbitKey_Spawn).
 
-extern "C" daObj_Mip_Key_c *daObj_Mip_Key_c_classInit(void) {
+ daObj_Mip_Key_c *daObj_Mip_Key_c_classInit(void) {
     return new daObj_Mip_Key_c();
 }
 

@@ -97,7 +97,7 @@
       "ordinal": 8
     },
     {
-      "symbol": "daObjRc_Tikuwa_c_classInit",
+      "symbol": "_Z26daObjRc_Tikuwa_c_classInitv",
       "address": "0x02111cd8",
       "size": "0x0000003c",
       "legacy_source": "src/d_a_obj_rc_tikuwa.c",

@@ -118,14 +118,14 @@
       "ordinal": 10
     },
     {
-      "symbol": "daObjRotateUpdownLift_c_classInit_HS_UPDOWN_LIFT",
+      "symbol": "_Z48daObjRotateUpdownLift_c_classInit_HS_UPDOWN_LIFTv",
       "address": "0x02131ba4",
       "size": "0x00000038",
       "legacy_source": "src/d_a_obj_rotate_updown_lift_hs_updown_lift.c",
       "ordinal": 11
     },
     {
-      "symbol": "daObjRotateUpdownLift_c_classInit_UPDOWN_LIFT",
+      "symbol": "_Z45daObjRotateUpdownLift_c_classInit_UPDOWN_LIFTv",
       "address": "0x02131bdc",
       "size": "0x00000038",
       "legacy_source": "src/d_a_obj_rotate_updown_lift_updown_lift.c",

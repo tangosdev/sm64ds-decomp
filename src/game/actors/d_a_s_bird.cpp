@@ -84,11 +84,8 @@ extern SBirdAnimationFilePtr data_ov009_02113c28;
 extern SBirdStateTable data_ov009_02113c48;
 
 /* local extern: no shared header declares Vec3_Sub. */
-extern "C" {
 
-extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-}
-
+extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 
 /* The flock's random draws are unsigned: a signed % or >> changes codegen. */
 static inline u32 Random() {
@@ -307,7 +304,7 @@ s32 daSBird_c::InitResources() {
     return 1;
 }
 
-extern "C" daSBird_c *daSBird_c_classInit() {
+ daSBird_c *daSBird_c_classInit() {
     return new daSBird_c();
 }
 

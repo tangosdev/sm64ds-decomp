@@ -178,22 +178,17 @@ extern "C" {
 }
 
 extern OamAttr sSlotsSlotBlinkSprites[];
-extern "C" {
-
-
 extern void func_ov001_020ab3f0(void *c);
+extern "C" {
 
 }
 
 extern void *data_ov006_0213e528[];
-extern "C" {
-
-int TouchArea_Update(void *c, int x);}
+int TouchArea_Update(void *c, int x);
+extern "C" {}
 void SlotBet_OnTouch(void *c_);
-extern "C" {
-
-
 extern void func_ov001_020ab5b0(char *r0, int r1, short r2, short r3, short s4, short s5);
+extern "C" {
 
 }
 

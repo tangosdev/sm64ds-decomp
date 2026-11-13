@@ -48,7 +48,7 @@ struct FallBlockCollisionFilePtr : SharedFilePtr {
 
 extern ResourceDescriptor data_ov022_0211427c;
 
-extern "C" daObjFl_Fall_Block_c *daObjFl_Fall_Block_c_classInit() {
+ daObjFl_Fall_Block_c *daObjFl_Fall_Block_c_classInit() {
     return new daObjFl_Fall_Block_c();
 }
 

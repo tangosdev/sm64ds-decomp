@@ -110,7 +110,6 @@ RedBombheiState data_ov084_02130dc4[3] = {
     {&daRedBombhei_c::EnterCannonOpening, &daRedBombhei_c::UpdateCannonOpening},
 };
 
-extern "C" {
 
 
 /* -- globals -- */
@@ -124,8 +123,6 @@ extern u8  data_0209d6bc;               /* message box page state */
 extern u16 data_0209d6d4;               /* message on screen */
 extern Matrix4x3 data_020a0e68;         /* the shared scratch matrix */
 extern Matrix4x3 IDENTITY_MATRIX4X3;
-}
-
 
 /* -- other modules -- */
 int  IsCannonOpenInCurLevel(void);
@@ -135,19 +132,13 @@ int  IsStarCollected(int level, int star);
 int  SublevelToLevel(int sublevel);
 s8   NumRedCoins(void);
 void func_02012694(unsigned int soundID, const Vector3 *camSpacePos);
-extern "C" {
 
-
-void  Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void  Vec3_MulScalarInPlace(Vector3 *v, int s);
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
-void  Matrix4x3_FromRotationY(void *m, int angle);
-int   Math_Function_0203b14c(int *value, int target, int a, int b, int c);
-
-
-}
-
+extern "C" void  Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
+extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
+extern "C" void  Vec3_MulScalarInPlace(Vector3 *v, int s);
+extern "C" void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
+extern "C" void  Matrix4x3_FromRotationY(void *m, int angle);
+extern "C" int   Math_Function_0203b14c(int *value, int target, int a, int b, int c);
 
 /* This int-returning predicate is what makes the ROM materialize 0/1
  * before testing it. */
@@ -155,7 +146,7 @@ static inline int IsPlayerActor(dActor_c *actor) {
     return actor->actorID == kPlayerActorID;
 }
 
-extern "C" daRedBombhei_c *daRedBombhei_c_classInit()
+ daRedBombhei_c *daRedBombhei_c_classInit()
 {
     return new daRedBombhei_c();
 }

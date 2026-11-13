@@ -27,11 +27,7 @@
 
 /* local extern: arm9 C helpers with no shared header. */
 int func_0203da9c(void);
-extern "C" {
-
 void func_ov001_020ab3f0(void *);
-}
-
 
 extern int data_0208ee44;
 
@@ -40,7 +36,7 @@ extern int data_0208ee44;
  * touchable (the latch Behavior applies), and set the press reload to
  * ten. The highest address in this unit, so first in the file. Callers
  * in ov004/ov006/ov075 pass the icon as a char *, so the entry keeps it. */
-extern "C" void func_ov001_020ab5b0(char *p, int kind, short x, short y, short halfW, short halfH) {
+ void func_ov001_020ab5b0(char *p, int kind, short x, short y, short halfW, short halfH) {
     dThIcon_c *icon = reinterpret_cast<dThIcon_c *>(p);
     icon->mTouchKind = kind;
     icon->mX = x;
@@ -77,7 +73,7 @@ void dThIcon_c::Render() {}
 /* Test player `player`'s pen (the local player when negative) against the
  * icon's box. Fires per mTouchKind: 1 on a touch that begins inside, 2 when
  * the pen enters. Records whether the pen is inside for the next frame. */
-extern "C" int TouchArea_Update(char *c, int player) {
+int TouchArea_Update(void *c, int player) {
     int fired;
     int inside;
     int dx, dy;

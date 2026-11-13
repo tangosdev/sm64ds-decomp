@@ -42,7 +42,7 @@ SldMngVec3 data_ov019_021135d8(-0x12a0000, 0x700000, -0x200000);
  * allocation size, vtable identity, and the SLIDER_MANAGER registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: daSldMng_c_Spawn. */
-extern "C" daSldMng_c *daSldMng_c_classInit() {
+ daSldMng_c *daSldMng_c_classInit() {
     return new daSldMng_c();
 }
 

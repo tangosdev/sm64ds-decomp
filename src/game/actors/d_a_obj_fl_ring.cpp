@@ -93,7 +93,7 @@ static inline int IsOffScreen(dActor_c *actor) {
  * `new daObjFl_Ring_c` is the whole sequence the loose factory spelled by
  * hand: fBase_c::operator new(0x328), dBgActor_c's base constructor, then the
  * vptr store. */
-extern "C" daObjFl_Ring_c *daObjFl_Ring_c_classInit(void) {
+ daObjFl_Ring_c *daObjFl_Ring_c_classInit(void) {
     return new daObjFl_Ring_c;
 }
 

@@ -158,7 +158,7 @@
       "ordinal": 16
     },
     {
-      "symbol": "daRNk_c_classInit",
+      "symbol": "_Z17daRNk_c_classInitv",
       "address": "0x0211aee0",
       "size": "0x00000058",
       "legacy_source": "src/d_a_r_nk.c",

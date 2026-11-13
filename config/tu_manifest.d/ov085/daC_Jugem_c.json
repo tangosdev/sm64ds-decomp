@@ -258,7 +258,7 @@
       "ordinal": 31
     },
     {
-      "symbol": "daC_Jugem_c_classInit",
+      "symbol": "_Z21daC_Jugem_c_classInitv",
       "address": "0x0212ed54",
       "size": "0x00000058",
       "legacy_source": "src/d_a_c_jugem.c",

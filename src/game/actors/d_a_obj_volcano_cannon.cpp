@@ -26,7 +26,7 @@
 #include "daPly_c.h"
 #include "LevelRng.h"
 
-extern "C" {
+
 
 
 /* The state table, ov022 .bss; the definition at the end of this file
@@ -34,7 +34,6 @@ extern "C" {
 extern daObj_volcanoCannon_c::State data_ov022_02114690;
 extern daObj_volcanoCannon_c::StateFunc data_ov022_0211442c;
 extern daObj_volcanoCannon_c::StateFunc data_ov022_02114424;
-}
 
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
@@ -138,7 +137,7 @@ int daObj_volcanoCannon_c::InitResources() {
     return 1;
 }
 
-extern "C" daObj_volcanoCannon_c *daObj_volcanoCannon_c_classInit(void) {
+ daObj_volcanoCannon_c *daObj_volcanoCannon_c_classInit(void) {
     return new daObj_volcanoCannon_c;
 }
 

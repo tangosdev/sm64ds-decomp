@@ -115,31 +115,21 @@ struct JugemVec3 {
 
 /* Helpers not declared by the included headers. */
 s16   Vec3_VertAngle(const void *a, const void *b);
-extern "C" {
-
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-}
-
+extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int   Vec3_ApproachHorz(void *cur, const void *tgt, int maxStep);
-extern "C" {
-
-int   AngleDiff(int a, int b);
+extern "C" int   AngleDiff(int a, int b);
 
 /* local extern: each of these real members takes a Fix12<int> BY VALUE,
    which mwccarm passes differently at the call site than the loose scalar
    spelling -- the mangled spelling is the one that matches. Sound.h covers
    PlayLong, so only PlaySub stays. */
-int d_a_c_jugemPlaySubHold(u32 a, u32 b, u32 c, Fix12i d, bool loop);
+extern "C" int d_a_c_jugemPlaySubHold(u32 a, u32 b, u32 c, Fix12i d, bool loop);
 
 /* other overlays / arm9 */
-void  func_ov002_020c3e8c(void *player);
-void  func_ov002_020c3f18(void *p);
-void  func_ov002_020c3f2c(void *p);
-}
-
+extern "C" void  func_ov002_020c3e8c(void *player);
+extern "C" void  func_ov002_020c3f18(void *p);
+extern "C" void  func_ov002_020c3f2c(void *p);
 void  func_0201f32c(int a);
-extern "C" {
-
 
 /* globals */
 extern dCamera_c *gCamera;                  /* the camera object */
@@ -190,9 +180,6 @@ extern daC_Jugem_c::StateFn data_ov085_021302ac;
 extern daC_Jugem_c::StateFn data_ov085_02130284;
 extern daC_Jugem_c::StateFn data_ov085_0213029c;
 extern daC_Jugem_c::StateFn data_ov085_02130274;
-
-}
-
 
 #pragma defer_codegen off
 
@@ -922,7 +909,7 @@ int daC_Jugem_c::InitResources()
    0x2e8 and installs its vtable. Reconstructed source-style name
    (historical alias LakituBro_Spawn); the exact original spelling is not
    preserved. */
-extern "C" daC_Jugem_c *daC_Jugem_c_classInit(void)
+ daC_Jugem_c *daC_Jugem_c_classInit(void)
 {
     return new daC_Jugem_c();
 }

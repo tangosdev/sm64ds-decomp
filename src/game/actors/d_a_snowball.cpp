@@ -59,8 +59,7 @@ extern daSnowball_StateRec data_ov081_02128eb4;
 
 /* local extern: no shared header declares these. */
 
-void func_02012694(unsigned int a0, void *a1);
-
+void func_02012694(unsigned int a0, const Vector3 *a1);
 
 /* The key function. D1 stores the vtable, destroys the members in reverse
  * declaration order, then runs dEnemyBase_c::~dEnemyBase_c; D0 does the
@@ -147,7 +146,7 @@ void daSnowball_c::HandleContact() {
                 pos.y = mPosY;
                 pos.z = mPosZ;
                 player->Hurt(pos, 1, 0xc000, 1, 0, 1);
-                func_02012694(SND3_SNOWBALL_BURST, &mCamSpacePosX);
+                func_02012694(SND3_SNOWBALL_BURST,(const Vector3 *)(&mCamSpacePosX));
                 Particle::System::NewSimple(PTCL_SNOWBALL_BURST, mPosX, mPosY, mPosZ);
                 MarkForDestruction();
                 return;
@@ -178,7 +177,7 @@ int daSnowball_c::State0() {
         }
     }
     if (this->mStateTimer == 0 || mWithMeshClsn.IsOnGround() != 0) {
-        func_02012694(SND3_SNOWBALL_BURST, &this->mCamSpacePosX);
+        func_02012694(SND3_SNOWBALL_BURST,(const Vector3 *)(&this->mCamSpacePosX));
         Particle::System::NewSimple(PTCL_SNOWBALL_BURST, this->mPosX, this->mPosY, this->mPosZ);
         MarkForDestruction();
     }
@@ -298,7 +297,7 @@ int daSnowball_c::InitResources() {
     return 1;
 }
 
-extern "C" daSnowball_c *daSnowball_c_classInit() {
+ daSnowball_c *daSnowball_c_classInit() {
     return new daSnowball_c();
 }
 

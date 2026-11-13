@@ -202,7 +202,7 @@
       "ordinal": 22
     },
     {
-      "symbol": "daBakubaku_c_classInit",
+      "symbol": "_Z22daBakubaku_c_classInitv",
       "address": "0x0211244c",
       "size": "0x0000005c",
       "legacy_source": "src/daBakubaku_c_classInit.c",
@@ -988,7 +988,7 @@
       "source": "0x02113800",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daBakubaku_c_classInit",
+      "symbol": "_Z22daBakubaku_c_classInitv",
       "addend": 0,
       "target_module": "ov032",
       "target_address": "0x0211244c"

@@ -78,7 +78,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "daDsn_c_classInit",
+      "symbol": "_Z17daDsn_c_classInitv",
       "address": "0x02132cb8",
       "size": "0x0000004c",
       "legacy_source": "src/d_a_dsn.c",

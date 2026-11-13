@@ -67,11 +67,11 @@ extern CLPS_Block data_ov036_02112b28;
 FlyingCarpetResources data_ov036_02113f58 = {&gRcCarpetModelFile, &gRcCarpetCollisionFile,
                                              &data_ov036_02112b28};
 
-extern "C" daObjRcCarpet_c *daObjRcCarpet_c_classInit() {
+ daObjRcCarpet_c *daObjRcCarpet_c_classInit() {
     return new daObjRcCarpet_c();
 }
 
-extern "C" SpawnInfo<daObjRcCarpet_c> g_profile_RC_CARPET = {
+ SpawnInfo<daObjRcCarpet_c> g_profile_RC_CARPET = {
     daObjRcCarpet_c_classInit,
     0x0082,
     0x0104,

@@ -70,7 +70,7 @@ extern CLPS_Block data_ov064_0211bb0c;
  * `new daObjFl_Block_c` is the whole sequence the loose factory spelled by
  * hand: fBase_c::operator new(0x328), dBgActor_c's base constructor, then the
  * vptr store. */
-extern "C" daObjFl_Block_c *daObjFl_Block_c_classInit(void) {
+ daObjFl_Block_c *daObjFl_Block_c_classInit(void) {
     return new daObjFl_Block_c;
 }
 

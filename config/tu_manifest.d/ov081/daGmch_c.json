@@ -295,7 +295,7 @@
       "ordinal": 35
     },
     {
-      "symbol": "daGmch_c_classInit",
+      "symbol": "_Z18daGmch_c_classInitv",
       "address": "0x02127adc",
       "size": "0x00000058",
       "legacy_source": "src/d_a_gmch.c",
@@ -2046,7 +2046,7 @@
       "source": "0x02128be0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daGmch_c_classInit",
+      "symbol": "_Z18daGmch_c_classInitv",
       "addend": 0,
       "target_module": "overlay(81)",
       "target_address": "0x02127adc"

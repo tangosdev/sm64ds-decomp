@@ -131,14 +131,14 @@
       "ordinal": 12
     },
     {
-      "symbol": "daLinelift2_c_classInit_KM2_SUSUMU",
+      "symbol": "_Z34daLinelift2_c_classInit_KM2_SUSUMUv",
       "address": "0x02132394",
       "size": "0x00000038",
       "legacy_source": "src/d_a_linelift2_km2_susumu.c",
       "ordinal": 13
     },
     {
-      "symbol": "daLinelift2_c_classInit_KM3_LIFT",
+      "symbol": "_Z32daLinelift2_c_classInit_KM3_LIFTv",
       "address": "0x021323cc",
       "size": "0x00000038",
       "legacy_source": "src/d_a_linelift2_km3_lift.c",

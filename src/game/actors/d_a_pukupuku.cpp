@@ -94,13 +94,10 @@ extern Vector3 data_ov090_021342d8;
    dropping the declaration renumbers this TU's @NNN locals. */
 extern "C" void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
 
-extern "C" {
 
 int *daPukupuku_c_classInit(void) {
     return (int *)new daPukupuku_c;
 }
-}
-
 
 int daPukupuku_c::InitResources() {
     struct BMD_File *bmd;

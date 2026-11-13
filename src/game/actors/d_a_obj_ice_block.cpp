@@ -66,7 +66,6 @@ extern CLPS_Block data_ov002_0210d8d4;
 /* local extern: arm9 sound helper, no header declares it. */
 void func_02012694(u32 soundID, const Vector3 *pos);
 
-
 enum {
     kStarActorID = 0xb2,
     kStarBaseActorID = 0xb4,
@@ -74,7 +73,7 @@ enum {
     kShardHeight = 0x96000, /* 150.0 */
 };
 
-extern "C" daObjIceBlock_c *daObjIceBlock_c_classInit() {
+ daObjIceBlock_c *daObjIceBlock_c_classInit() {
     return new daObjIceBlock_c();
 }
 

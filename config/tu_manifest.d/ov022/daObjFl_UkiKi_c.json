@@ -81,7 +81,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "daObjFl_UkiKi_c_classInit",
+      "symbol": "_Z25daObjFl_UkiKi_c_classInitv",
       "address": "0x02112350",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_fl_uki_ki.c",

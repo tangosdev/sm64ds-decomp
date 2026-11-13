@@ -332,7 +332,7 @@
       "ordinal": 40
     },
     {
-      "symbol": "dEntObj_c_classInit",
+      "symbol": "_Z19dEntObj_c_classInitv",
       "address": "0x021159f4",
       "size": "0x00000094",
       "legacy_source": "src/d_ent_obj.cpp",
@@ -3217,7 +3217,7 @@
       "source": "0x0211c610",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "dEntObj_c_classInit",
+      "symbol": "_Z19dEntObj_c_classInitv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x021159f4"

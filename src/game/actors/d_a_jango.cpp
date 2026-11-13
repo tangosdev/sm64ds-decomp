@@ -142,29 +142,20 @@ struct BCA_File;
    6ay, the struct-copy lever). */
 struct SwoopPositionWords { int w[3]; };
 
-extern "C" {
 
 extern signed char gCurrentSublevel;
-}
-
-extern void func_02012694(unsigned int, void *);
-extern s16 Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
-extern "C" {
-
-extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);
-}
-
+void func_02012694(unsigned int, const Vector3 *);
+s16 Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
+extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
+extern "C" void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);
 /* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, void *a, Fix12i b, Fix12i c, void *d, void *e);
 extern "C" {
-
+typedef void BgchInitAt_(void *self, void *a, Fix12i b, Fix12i c, void *d, void *e);
+}
 extern SharedFilePtr data_ov002_0210da40;
 extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9c0;
 extern daPly_c *gPlayers[];
-}
-
 
 /* Actor ids (symbols/actor_debug_names.tsv). */
 enum {
@@ -216,7 +207,7 @@ static inline int IsNoControl(daPly_c *player) {
     return player->mIsNoControl != 0;
 }
 
-extern "C" daJango_c *daJango_c_classInit()
+ daJango_c *daJango_c_classInit()
 {
     return new daJango_c();
 }
@@ -856,7 +847,7 @@ int daJango_c::EnterSwoopState() {
     mSpeedX = 0;
     mVertSpeed = 0;
     mSpeedZ = 0;
-    func_02012694(SND_AT_SWOOP_ENTER, &mCamSpacePosX);
+    func_02012694(SND_AT_SWOOP_ENTER,(const Vector3 *)(&mCamSpacePosX));
     mStateParam = ((((unsigned)RandomIntInternal(&data_0209e650.value) >> 8) & 3) << 8) + 0x300;
     mBlendAnmModel.SetAnim(*(BCA_File *)data_ov062_0211e114.filePtr, 4, 0, 0x1000, 0);
     return 1;
@@ -968,7 +959,7 @@ int daJango_c::EnterHurtState() {
         mHeldActorID = 0;
         mTimer = 0x1e;
     }
-    func_02012694(SND_AT_HURT_ENTER, &mCamSpacePosX);
+    func_02012694(SND_AT_HURT_ENTER,(const Vector3 *)(&mCamSpacePosX));
     Particle::System::NewSimple(PARTICLE_AT_HURT_ENTER, mPosX, mPosY, mPosZ);
     mSpeedX = 0;
     mVertSpeed = 0;
