@@ -298,7 +298,7 @@ void func_0204a730(void *arg0, void *self) {
             }
 
             node->age++;
-            if ((u16)node->age > (u16)node->lifetime) {
+            if (node->age > node->lifetime) {
                 func_0204d9a0(&mgr->freeParticles, func_0204d8e8(&sys->particles, node));
             }
 
@@ -374,7 +374,7 @@ void func_0204a730(void *arg0, void *self) {
                 child->offset.z += child->velocity.z + sys->velocity.z;
                 child->age++;
 
-                if ((u16)child->age > (u16)child->lifetime) {
+                if (child->age > child->lifetime) {
                     func_0204d9a0(&mgr->freeParticles, func_0204d8e8(&sys->particles2, child));
                 }
 
