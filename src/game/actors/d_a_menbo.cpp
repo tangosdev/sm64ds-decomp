@@ -29,8 +29,6 @@
  * function is 0x124 against the ROM's 0x120).
  *
  * deslop leftovers:
- * - func_ov090_02131ac4: `mStateTimer == 0` is ldrsh. The ROM is ldrh, one
- *   word. `*(unsigned short *)&mStateTimer` matches.
  * - func_ov090_02131608: dExtAnmModel_c::SetAnim with a Fix12<int> rate is 0x4c
  *   against 0x40 and emits 4 bytes of .rodata. The scalar SetAnim call
  *   matches. The patrol, water-rest and water-chase entries keep it.
@@ -176,9 +174,9 @@ extern "C" void func_ov090_02130f94(daMenbo_c *c_)
         data_020a0e68 = *src;
         MTX_Concat43((const Matrix4x3 *)c->mAnmModel.data.transforms + (6 + i * 3), &data_020a0e68,
                      &data_020a0e68);
-        v.x = *(int *)((char *)&data_020a0e68 + 0x24);
-        v.y = *(int *)((char *)&data_020a0e68 + 0x28);
-        v.z = *(int *)((char *)&data_020a0e68 + 0x2c);
+        v.x = data_020a0e68.m[9];
+        v.y = data_020a0e68.m[10];
+        v.z = data_020a0e68.m[11];
         Vec3_Lsl(&r, &v, sh);
         v.x = r.x;
         v.y = r.y;
@@ -222,7 +220,7 @@ void daMenbo_c::func_ov090_021310b4() {
         func_ov002_020aea30(this, p, 0);
         return;
     }
-    if (JumpedOnByPlayer(*(dCc_c *)&mdCcAcPos_c, *(daPly_c *)p)) {
+    if (JumpedOnByPlayer(mdCcAcPos_c, *(daPly_c *)p)) {
         ((daPly_c *)p)->Bounce(0x28000);
         mDeathState = 1;
         func_ov002_020aea30(this, p, 0);
@@ -533,7 +531,7 @@ int daMenbo_c::func_ov090_02131ac4()
         func_ov090_02131e00((MenboState *)this, data_ov090_021344e4);
     }
     ApproachAngle(&mPrevAngleY, mTargetAngleY, 1, 0x100, 0x100);
-    if (*(unsigned short *)&mStateTimer == 0)
+    if (mStateTimer == 0)
         func_ov090_02131e00((MenboState *)this, data_ov090_021344f4);
     return 1;
 }
