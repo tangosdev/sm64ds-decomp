@@ -564,11 +564,10 @@ void daTrs_c::func_ov063_02116bf0() {
 void daTrs_c::func_ov063_02116bf4() {
 
         unsigned short *ip = (unsigned short *)&this->mBooFlags;
-        int *r3 = (int *)&this->mdCcAcPos_c.flags;
         unsigned char st;
-    
+
         *ip = (unsigned short)(*ip & ~TRS_FLAG_VISIBLE);
-        *r3 = *r3 | 1;
+        this->mdCcAcPos_c.flags = this->mdCcAcPos_c.flags | 1;
         func_ov063_02119c18(TRS_ID_MERRYGOROUND);
     
         st = this->mState;
@@ -1024,10 +1023,7 @@ void daTrs_c::func_ov063_021177b0() {
     if (UpdateDuringNonlethalHit(0x28) == 0)
         return;
     this->mState = 6;
-    {
-        int* p19c = (int*)&this->mdCcAcPos_c.flags;
-        *p19c |= 1;
-    }
+    this->mdCcAcPos_c.flags |= 1;
     this->mTargetOpacity = 0;
     Stop();
     this->mRelocateTimer = 0x78;
@@ -1449,9 +1445,8 @@ void daTrs_c::func_ov063_0211873c() {
         return;
     }
     if (this->mNextRelocateTimer == 0) {
-        int* p = (int*)&this->mdCcAcPos_c.flags;
         this->mState = 6;
-        *p |= 1;
+        this->mdCcAcPos_c.flags |= 1;
         this->mTargetOpacity = 0;
         this->mHorzSpeed = 0;
         Stop();
@@ -2068,8 +2063,7 @@ void daTrs_c::UpdateDying() {
         this->mState = 5;
         this->mSubState = 0;
         {
-            int* q = (int*)&this->mdCcAcPos_c.flags;
-            *q |= 1;
+            this->mdCcAcPos_c.flags |= 1;
         }
         {
             u16* p = (u16*)&this->mBooFlags;
@@ -2852,7 +2846,6 @@ int daTrs_c::Behavior()
     void *p;
     char *q;
     char *r2;
-    s32 *p19c;
     u16 *fp;
     u8 *bp;
     s32 y;
@@ -2906,8 +2899,7 @@ int daTrs_c::Behavior()
             } else {
                 mState = 5;
                 mSubState = 0;
-                p19c = (s32 *)&this->mdCcAcPos_c.flags;
-                *p19c = (*p19c) | 1;
+                this->mdCcAcPos_c.flags = this->mdCcAcPos_c.flags | 1;
                 fp = (u16 *)&this->mBooFlags;
                 *fp = (*fp) & (~TRS_FLAG_VISIBLE);
             }
