@@ -139,11 +139,10 @@ void daObjBk_Botaosi_c::HandleHit(dActor_c *other) {
     if (diff < 0x2000) {
         mKnockDir = -1;
     } else {
-        if (diff < 0x2000)
-            goto knockForward;
-        if (diff < 0x6000)
+        if (diff < 0x2000) {
+        } else if (diff < 0x6000) {
             return;
-    knockForward:
+        }
         mKnockDir = 1;
     }
 

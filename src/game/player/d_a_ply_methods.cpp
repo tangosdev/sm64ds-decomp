@@ -491,9 +491,7 @@ struct S18b2 { short a; short b; int c[5]; };
  * members of one signature. */
 typedef int (daPly_c::*ScriptCommand)(unsigned char *, int, int);
 
-/* The player states: init, main and cleanup handlers, declared once.
-   data_ov002_02110244 stays local: decl_common.h declares it as char at
-   file scope. */
+/* The player states: init, main and cleanup handlers, declared once. */
 extern "C" {
 extern daPly_c::State data_ov002_0210ffec;
 extern daPly_c::State data_ov002_02110004;
@@ -510,7 +508,6 @@ extern daPly_c::State data_ov002_021100f4;
 extern daPly_c::State data_ov002_0211010c;
 extern daPly_c::State data_ov002_02110124;
 extern daPly_c::State data_ov002_0211013c;
-extern daPly_c::State data_ov002_02110154;
 extern daPly_c::State data_ov002_0211016c;
 extern daPly_c::State data_ov002_02110184;
 extern daPly_c::State data_ov002_0211019c;
@@ -952,8 +949,8 @@ void daPly_c::func_ov002_020bd06c(unsigned int state2) {
         flag = 0x16;
         break;
     case 5:
-        if (!this->IsState(data_ov002_02110154)) {
-            this->ChangeState(data_ov002_02110154);
+        if (!this->IsState(daPly_c::ST_WAIT)) {
+            this->ChangeState(daPly_c::ST_WAIT);
         }
         break;
     case 14:
@@ -2369,7 +2366,7 @@ int daPly_c::func_ov002_020bfec0() {
     }
 
     inc = 0x400;
-    if (this->IsState(data_ov002_02110154) || this->IsState(data_ov002_0211049c)) {
+    if (this->IsState(daPly_c::ST_WAIT) || this->IsState(data_ov002_0211049c)) {
         inc = 0x800;
     }
 
@@ -3712,7 +3709,7 @@ void daPly_c::func_ov002_020c2e78() {
     unsigned char w = IsPlayerWarping(mPlayerNo);
     if (w == 0)
         return;
-    if (!this->IsState(data_ov002_02110154)) {
+    if (!this->IsState(daPly_c::ST_WAIT)) {
         func_02020388(mPlayerNo);
         return;
     }
@@ -4190,7 +4187,7 @@ int daPly_c::St_Respawn_Main() {
             if (mPlayerNo == gLocalPlayerId) {
                 FUN_02029934();
             }
-            this->ChangeState(data_ov002_02110154);
+            this->ChangeState(daPly_c::ST_WAIT);
         }
         break;
     }
@@ -4658,7 +4655,7 @@ int daPly_c::ShowMessage2(fBase_c &actor_, unsigned int msg, const Vector3 *pos,
     } else {
         r7 = 0;
         if (IsState(data_ov002_0211013c) || IsState(data_ov002_02110364) ||
-            IsState(data_ov002_0211043c) || IsState(data_ov002_02110154) ||
+            IsState(data_ov002_0211043c) || IsState(daPly_c::ST_WAIT) ||
             IsState(data_ov002_02110424) || IsState(data_ov002_021104e4) ||
             IsState(data_ov002_02110514)) {
             r7 = 1;
@@ -4769,7 +4766,10 @@ int daPly_c::StartTalk(fBase_c &actor_, bool b_) {
         return 0;
     }
 
-    if (!(IsState(data_ov002_0211013c) || IsState(data_ov002_02110154) || IsState(data_ov002_021104e4) || IsState(data_ov002_02110514) || IsState(data_ov002_02110364) || IsState(data_ov002_02110424) || IsState(data_ov002_021105a4) || IsState(data_ov002_0211043c)))
+    if (!(IsState(data_ov002_0211013c) || IsState(daPly_c::ST_WAIT) ||
+          IsState(data_ov002_021104e4) || IsState(data_ov002_02110514) ||
+          IsState(data_ov002_02110364) || IsState(data_ov002_02110424) ||
+          IsState(data_ov002_021105a4) || IsState(data_ov002_0211043c)))
         return 0;
 
     if (b_ == 0) {
@@ -4777,7 +4777,8 @@ int daPly_c::StartTalk(fBase_c &actor_, bool b_) {
         if (!(*(u16 *)(data_0209f49e + (u8)gActivePlayerSlot * 0x18) & 3))
             goto ret0;
 
-        if (!((IsState(data_ov002_0211013c) && mHorzSpeed < 0x8000) || IsState(data_ov002_0211043c) || IsState(data_ov002_02110154)))
+        if (!((IsState(data_ov002_0211013c) && mHorzSpeed < 0x8000) ||
+              IsState(data_ov002_0211043c) || IsState(daPly_c::ST_WAIT)))
             goto ret0;
 
         mStateStep = 0;
@@ -7512,7 +7513,7 @@ extern "C" {
 int daPly_c::TryEnterStarDoor(Vector3 &pos_, short kind) {
     extern void Vec3_RotateYAndTranslate(void*, void*, short angle, void*);
     int *pos = (int *)&pos_;
-    if (IsState(data_ov002_0211013c) || IsState(data_ov002_02110154) || IsState(data_ov002_0211043c)) {
+    if (IsState(data_ov002_0211013c) || IsState(daPly_c::ST_WAIT) || IsState(data_ov002_0211043c)) {
         if (this->SetNoControlState(0xa, -1, 0)) {
             mStateAnchorX = pos[0];
             mStateAnchorY = pos[1];
@@ -7542,8 +7543,8 @@ int daPly_c::CanEnterDoor(unsigned char door) {
         if (!(mStateStep == 0x13 && mIsOpeningBigDoor != 0))
             return 0;
     }
-    if (IsState(data_ov002_0211013c) || IsState(data_ov002_02110154) ||
-        IsState(data_ov002_0211022c) || IsState(data_ov002_0211043c)) {
+    if (IsState(data_ov002_0211013c) || IsState(daPly_c::ST_WAIT) || IsState(data_ov002_0211022c) ||
+        IsState(data_ov002_0211043c)) {
         /* Yoshi with something in his mouth cannot take a door. If its
            OnYoshiTryEat() code is 6 (enemies such as daKrb_c and daSpd_c,
            and the small crate daObjBlockS_c) or 1 (daBttBk_c, or another
@@ -7684,7 +7685,7 @@ void daPly_c::func_ov002_020ca940() {
                 b = b == 1;
                 if (b == false) {
                     if (IsState(data_ov002_0211013c) || IsState(data_ov002_0211043c) ||
-                        IsState(data_ov002_02110154)) {
+                        IsState(daPly_c::ST_WAIT)) {
                         mStateFlags |= 4;
                         break;
                     }
@@ -7711,7 +7712,7 @@ void daPly_c::func_ov002_020ca940() {
 
     if (IsState(data_ov002_0211013c))
         return;
-    if (IsState(data_ov002_02110154))
+    if (IsState(daPly_c::ST_WAIT))
         return;
     if (IsState(data_ov002_0211043c))
         return;
@@ -11235,7 +11236,7 @@ int daPly_c::func_ov002_020d225c() {
 
 void daPly_c::func_ov002_020d228c() {
 
-    ChangeState(data_ov002_02110154);
+    ChangeState(daPly_c::ST_WAIT);
     SetAnim(9, 0, 0x1000, 0);
     mStateStep = 4;
     mSleepBubbleScaleX = 0;
@@ -11923,7 +11924,7 @@ int daPly_c::St_Walk_Main() {
     extern s16 data_0209f4a0[];
 
     if ((u16)(mStateFlags & 0x800)) {
-        this->ChangeState(data_ov002_02110154);
+        this->ChangeState(daPly_c::ST_WAIT);
         return 1;
     }
     if (func_ov002_020c5244()) return 1;
@@ -11983,7 +11984,7 @@ int daPly_c::St_Walk_Main() {
 label_1f0:
     if (mIsMega != 0) {
         if (this->FinishedAnim() && this->IsAnim(0x9d)) {
-            this->ChangeState(data_ov002_02110154);
+            this->ChangeState(daPly_c::ST_WAIT);
             mStateWork = 1;
             func_ov002_020cabe0();
         }
@@ -12000,7 +12001,7 @@ label_1f0:
     }
 
 label_27c:
-    this->ChangeState(data_ov002_02110154);
+    this->ChangeState(daPly_c::ST_WAIT);
     mStateWork = 1;
     func_ov002_020cabe0();
     goto end;
@@ -12287,7 +12288,7 @@ merge:
     mGrabbedByActor = 0;
     mStateStep = 0;
     mEatingPlayer = 0;
-    if (func_ov002_020e3078(&data_ov002_02110154) != 0) {
+    if (func_ov002_020e3078(&daPly_c::ST_WAIT) != 0) {
         mWalkTimer = 0x10;
         if (data_0209f498[gActivePlayerSlot].mag != 0) {
             mPrevAngleY = mDesiredAngleY;
@@ -13454,7 +13455,7 @@ int daPly_c::func_ov002_020d6790() {
     }
 
     if (!IsState(data_ov002_0211013c)) {
-        if (!IsState(data_ov002_02110154)) {
+        if (!IsState(daPly_c::ST_WAIT)) {
             if (!IsState(data_ov002_0211067c))
                 return 0;
         }
@@ -15560,7 +15561,7 @@ int daPly_c::St_GrabBowserTail_Main() {
         break;
     case 2:
         if (this->FinishedAnim())
-            this->ChangeState(data_ov002_02110154);
+            this->ChangeState(daPly_c::ST_WAIT);
         break;
     }
 
@@ -17861,7 +17862,6 @@ int daPly_c::St_WindCarry_Init() {
 
 extern "C" {
 int daPly_c::func_ov002_020dec70() {
-    extern daPly_c::State data_ov002_02110244;
     int t = mPosY + 0x514000;
     if (t < (int)0xfdecc000) return 0;
     {
@@ -17872,8 +17872,8 @@ int daPly_c::func_ov002_020dec70() {
         func_ov002_020bf800(v);
     }
     mSurfaceSoundHandle = Sound::PlayLong((u32)mSurfaceSoundHandle, 3, 0x90, *&mCamSpacePos, 0);
-    if (IsState(data_ov002_02110274) || IsState(data_ov002_021102d4) ||
-        IsState(data_ov002_02110244) || mIsMetal || mIsMega || mIsNoControl || mIsAirborne == 0)
+    if (IsState(data_ov002_02110274) || IsState(data_ov002_021102d4) || IsState(daPly_c::ST_OWL) ||
+        mIsMetal || mIsMega || mIsNoControl || mIsAirborne == 0)
         return 0;
     if (func_ov002_020e0478() != 0 || mIsBalloon != 0) {
         if (t < 0x898000)
@@ -18193,8 +18193,7 @@ int daPly_c::St_Owl_Init() {
 
 extern "C" {
 int daPly_c::func_ov002_020df7ac() {
-    extern daPly_c::State data_ov002_02110244;
-    if (this->IsState(data_ov002_02110244) == 0)
+    if (this->IsState(daPly_c::ST_OWL) == 0)
         return 0;
     this->St_Owl_Cleanup();
     this->ChangeState(data_ov002_021101b4);
@@ -18204,8 +18203,7 @@ int daPly_c::func_ov002_020df7ac() {
 
 extern "C" {
 int func_ov002_020df7f4(daPly_c *player) {
-    extern daPly_c::State data_ov002_02110244;
-    if (!player->IsState(data_ov002_02110244) || player->mHeldObj == 0)
+    if (!player->IsState(daPly_c::ST_OWL) || player->mHeldObj == 0)
         return -1;
     return player->mStateStep != 0;
 }
@@ -18216,14 +18214,13 @@ int func_ov002_020df7f4(daPly_c *player) {
 extern "C" {
 int daPly_c::func_ov002_020df840(void *arg1, Vector3 *arg2) {
     extern u16 data_0209f49c[];
-    extern daPly_c::State data_ov002_02110244;
     if (this->mIsMega != 0 || this->mIsBalloon != 0)
         return 0;
     if ((data_0209f498[gActivePlayerSlot].held & 2) == 0)
         return 0;
     if (this->mHeldObj != 0)
         return 0;
-    this->ChangeState(data_ov002_02110244);
+    this->ChangeState(daPly_c::ST_OWL);
     this->mHeldObj = (dActor_c *)arg1;
     this->mAttachOffsetY = arg2->y;
     this->mAngleYSpeed = Vec3_HorzAngle(&this->mPos, arg2);
@@ -21902,7 +21899,9 @@ int *func_ov002_020e6bb0(void *model) {
 /* Static initializer __sinit_ov002_021019d0, placed in .init by define_section.
  * Still written by hand: the objects it builds keep their ROM-owned .bss
  * homes, so a compiler-emitted initializer has nothing to define. */
-/* Zero-filled .bss owned by this TU (0x0210e14c..0x0210f8d8).
+/* Zero-filled .bss owned by this TU (0x0210e14c..0x02110924).
+ * daPly_c::ST_WAIT is the St_Wait state at 0x02110154.
+ * daPly_c::ST_OWL is the St_Owl state at 0x02110244.
  * Outside .init: the section pragma would place these objects in .init.
  * No constructor and no initializer, so __sinit_ov002_021019d0 stays put. */
 extern "C" {
@@ -22529,6 +22528,244 @@ void *data_ov002_0210f8e4[3];
 void *data_ov002_0210f8f0[3];
 void *data_ov002_0210f8fc[3];
 void *data_ov002_0210f908[3];
+void *data_ov002_0210f914[3];
+void *data_ov002_0210f920[3];
+int data_ov002_0210f92c[3];
+void *data_ov002_0210f938[3];
+void *data_ov002_0210f944[3];
+void *data_ov002_0210f950[3];
+void *data_ov002_0210f95c[3];
+void *data_ov002_0210f968[3];
+void *data_ov002_0210f974[3];
+void *data_ov002_0210f980[3];
+void *data_ov002_0210f98c[3];
+void *data_ov002_0210f998[3];
+void *data_ov002_0210f9a4[3];
+void *data_ov002_0210f9b0[3];
+void *data_ov002_0210f9bc[3];
+void *data_ov002_0210f9c8[3];
+void *data_ov002_0210f9d4[3];
+void *data_ov002_0210f9e0[3];
+void *data_ov002_0210f9ec[3];
+void *data_ov002_0210f9f8[3];
+void *data_ov002_0210fa04[3];
+void *data_ov002_0210fa10[3];
+void *data_ov002_0210fa1c[3];
+void *data_ov002_0210fa28[3];
+void *data_ov002_0210fa34[3];
+void *data_ov002_0210fa40[3];
+void *data_ov002_0210fa4c[3];
+void *data_ov002_0210fa58[3];
+void *data_ov002_0210fa64[3];
+void *data_ov002_0210fa70[3];
+void *data_ov002_0210fa7c[3];
+void *data_ov002_0210fa88[3];
+void *data_ov002_0210fa94[3];
+void *data_ov002_0210faa0[3];
+void *data_ov002_0210faac[3];
+void *data_ov002_0210fab8[3];
+void *data_ov002_0210fac4[3];
+void *data_ov002_0210fad0[3];
+void *data_ov002_0210fadc[3];
+void *data_ov002_0210fae8[3];
+void *data_ov002_0210faf4[3];
+void *data_ov002_0210fb00[3];
+void *data_ov002_0210fb0c[3];
+void *data_ov002_0210fb18[3];
+void *data_ov002_0210fb24[3];
+void *data_ov002_0210fb30[3];
+void *data_ov002_0210fb3c[3];
+void *data_ov002_0210fb48[3];
+void *data_ov002_0210fb54[3];
+void *data_ov002_0210fb60[3];
+void *data_ov002_0210fb6c[3];
+void *data_ov002_0210fb78[3];
+void *data_ov002_0210fb84[3];
+void *data_ov002_0210fb90[3];
+void *data_ov002_0210fb9c[3];
+void *data_ov002_0210fba8[3];
+void *data_ov002_0210fbb4[3];
+void *data_ov002_0210fbc0[3];
+void *data_ov002_0210fbcc[3];
+void *data_ov002_0210fbd8[3];
+void *data_ov002_0210fbe4[3];
+void *data_ov002_0210fbf0[3];
+void *data_ov002_0210fbfc[3];
+void *data_ov002_0210fc08[3];
+void *data_ov002_0210fc14[3];
+void *data_ov002_0210fc20[3];
+void *data_ov002_0210fc2c[3];
+void *data_ov002_0210fc38[3];
+void *data_ov002_0210fc44[3];
+void *data_ov002_0210fc50[3];
+void *data_ov002_0210fc5c[3];
+void *data_ov002_0210fc68[3];
+void *data_ov002_0210fc74[3];
+void *data_ov002_0210fc80[3];
+void *data_ov002_0210fc8c[3];
+void *data_ov002_0210fc98[3];
+void *data_ov002_0210fca4[3];
+void *data_ov002_0210fcb0[3];
+void *data_ov002_0210fcbc[3];
+void *data_ov002_0210fcc8[3];
+void *data_ov002_0210fcd4[3];
+void *data_ov002_0210fce0[3];
+void *data_ov002_0210fcec[3];
+void *data_ov002_0210fcf8[3];
+void *data_ov002_0210fd04[3];
+void *data_ov002_0210fd10[3];
+void *data_ov002_0210fd1c[3];
+void *data_ov002_0210fd28[3];
+void *data_ov002_0210fd34[3];
+void *data_ov002_0210fd40[3];
+void *data_ov002_0210fd4c[3];
+void *data_ov002_0210fd58[3];
+void *data_ov002_0210fd64[3];
+void *data_ov002_0210fd70[3];
+void *data_ov002_0210fd7c[3];
+void *data_ov002_0210fd88[3];
+void *data_ov002_0210fd94[3];
+void *data_ov002_0210fda0[3];
+void *data_ov002_0210fdac[3];
+void *data_ov002_0210fdb8[3];
+void *data_ov002_0210fdc4[3];
+void *data_ov002_0210fdd0[3];
+void *data_ov002_0210fddc[3];
+void *data_ov002_0210fde8[3];
+void *data_ov002_0210fdf4[3];
+void *data_ov002_0210fe00[3];
+void *data_ov002_0210fe0c[3];
+void *data_ov002_0210fe18[3];
+void *data_ov002_0210fe24[3];
+void *data_ov002_0210fe30[3];
+void *data_ov002_0210fe3c[3];
+void *data_ov002_0210fe48[3];
+void *data_ov002_0210fe54[3];
+void *data_ov002_0210fe60[3];
+void *data_ov002_0210fe6c[3];
+void *data_ov002_0210fe78[3];
+void *data_ov002_0210fe84[3];
+void *data_ov002_0210fe90[3];
+void *data_ov002_0210fe9c[3];
+void *data_ov002_0210fea8[3];
+void *data_ov002_0210feb4[3];
+void *data_ov002_0210fec0[3];
+void *data_ov002_0210fecc[3];
+void *data_ov002_0210fed8[3];
+void *data_ov002_0210fee4[3];
+void *data_ov002_0210fef0[3];
+void *data_ov002_0210fefc[3];
+void *data_ov002_0210ff08[3];
+void *data_ov002_0210ff14[3];
+void *data_ov002_0210ff20[3];
+void *data_ov002_0210ff2c[3];
+void *data_ov002_0210ff38[3];
+void *data_ov002_0210ff44[3];
+void *data_ov002_0210ff50[3];
+void *data_ov002_0210ff5c[3];
+void *data_ov002_0210ff68[3];
+void *data_ov002_0210ff74[3];
+void *data_ov002_0210ff80[3];
+void *data_ov002_0210ff8c[3];
+void *data_ov002_0210ff98[3];
+void *data_ov002_0210ffa4[3];
+void *data_ov002_0210ffb0[3];
+void *data_ov002_0210ffbc[3];
+void *data_ov002_0210ffc8[3];
+void *data_ov002_0210ffd4[3];
+void *data_ov002_0210ffe0[3];
+daPly_c::State data_ov002_0210ffec;
+daPly_c::State data_ov002_02110004;
+daPly_c::State data_ov002_0211001c;
+daPly_c::State data_ov002_02110034;
+daPly_c::State data_ov002_0211004c;
+daPly_c::State data_ov002_02110064;
+daPly_c::State data_ov002_0211007c;
+daPly_c::State data_ov002_02110094;
+daPly_c::State data_ov002_021100ac;
+daPly_c::State data_ov002_021100c4;
+daPly_c::State data_ov002_021100dc;
+daPly_c::State data_ov002_021100f4;
+daPly_c::State data_ov002_0211010c;
+daPly_c::State data_ov002_02110124;
+daPly_c::State data_ov002_0211013c;
+}
+/* St_Wait. C++ linkage, so the object is _ZN7daPly_c7ST_WAITE. */
+daPly_c::State daPly_c::ST_WAIT;
+extern "C" {
+daPly_c::State data_ov002_0211016c;
+daPly_c::State data_ov002_02110184;
+daPly_c::State data_ov002_0211019c;
+daPly_c::State data_ov002_021101b4;
+daPly_c::State data_ov002_021101cc;
+daPly_c::State data_ov002_021101e4;
+daPly_c::State data_ov002_021101fc;
+daPly_c::State data_ov002_02110214;
+daPly_c::State data_ov002_0211022c;
+}
+/* St_Owl. C++ linkage, so the object is _ZN7daPly_c6ST_OWLE. */
+daPly_c::State daPly_c::ST_OWL;
+extern "C" {
+daPly_c::State data_ov002_0211025c;
+daPly_c::State data_ov002_02110274;
+daPly_c::State data_ov002_0211028c;
+daPly_c::State data_ov002_021102a4;
+daPly_c::State data_ov002_021102bc;
+daPly_c::State data_ov002_021102d4;
+daPly_c::State data_ov002_021102ec;
+daPly_c::State data_ov002_02110304;
+daPly_c::State data_ov002_0211031c;
+daPly_c::State data_ov002_02110334;
+daPly_c::State data_ov002_0211034c;
+daPly_c::State data_ov002_02110364;
+daPly_c::State data_ov002_0211037c;
+daPly_c::State data_ov002_02110394;
+daPly_c::State data_ov002_021103ac;
+daPly_c::State data_ov002_021103c4;
+daPly_c::State data_ov002_021103dc;
+daPly_c::State data_ov002_021103f4;
+daPly_c::State data_ov002_0211040c;
+daPly_c::State data_ov002_02110424;
+daPly_c::State data_ov002_0211043c;
+daPly_c::State data_ov002_02110454;
+daPly_c::State data_ov002_0211046c;
+daPly_c::State data_ov002_02110484;
+daPly_c::State data_ov002_0211049c;
+daPly_c::State data_ov002_021104b4;
+daPly_c::State data_ov002_021104cc;
+daPly_c::State data_ov002_021104e4;
+daPly_c::State data_ov002_021104fc;
+daPly_c::State data_ov002_02110514;
+daPly_c::State data_ov002_0211052c;
+daPly_c::State data_ov002_02110544;
+daPly_c::State data_ov002_0211055c;
+daPly_c::State data_ov002_02110574;
+daPly_c::State data_ov002_0211058c;
+daPly_c::State data_ov002_021105a4;
+daPly_c::State data_ov002_021105bc;
+daPly_c::State data_ov002_021105d4;
+daPly_c::State data_ov002_021105ec;
+daPly_c::State data_ov002_02110604;
+daPly_c::State data_ov002_0211061c;
+daPly_c::State data_ov002_02110634;
+daPly_c::State data_ov002_0211064c;
+daPly_c::State data_ov002_02110664;
+daPly_c::State data_ov002_0211067c;
+daPly_c::State data_ov002_02110694;
+daPly_c::State data_ov002_021106ac;
+daPly_c::State data_ov002_021106c4;
+daPly_c::State data_ov002_021106dc;
+daPly_c::State data_ov002_021106f4;
+daPly_c::State data_ov002_0211070c;
+daPly_c::State data_ov002_02110724;
+void (daPly_c::*data_ov002_0211073c[4])();
+void (daPly_c::*data_ov002_0211075c[7])();
+ScriptCommand data_ov002_02110794[14];
+unsigned short data_ov002_02110804[64];
+/* A PlayerStateFn[20] definition is not trivial: mwcc emits an empty sinit
+ * and a .ctor word for it. The bytes are 160 zero-filled BSS bytes. The
+ * stores below cast this object back to that view. */
+unsigned char data_ov002_02110884[0xa0];
 unsigned int data_ov002_0210e158;
 AnimScriptStep data_ov002_0210e7b8[1];
 }
@@ -23071,13 +23308,16 @@ extern void (daPly_c::*data_ov002_0210a29c)();
 extern void (daPly_c::*data_ov002_0210a30c)();
 extern PlayerFreeVoidPmf data_ov002_0210a334;
 
-/* daPly_c handler tables; the second is indexed by mNoCtrlKind, the third by mStateWork. */
+/* daPly_c handler tables; the second is indexed by mNoCtrlKind, the third by mStateWork.
+ * The objects below 0x02110884 are defined in the zero-filled block. C linkage
+ * keeps the ROM names. data_ov002_02110884 is defined with them. */
+extern "C" {
 extern void (daPly_c::*data_ov002_0211073c[4])();
-extern PlayerStateFn data_ov002_02110884[20];
+extern unsigned char data_ov002_02110884[0xa0];
 extern void (daPly_c::*data_ov002_0211075c[7])();
-
 /* The two 32-entry palette ramps func_ov002_020e69c0 and func_ov002_020e6a78 work on. */
 extern unsigned short data_ov002_02110804[];
+}
 
 #pragma section initsec end
 /* The state records and handler tables are initialized once, from the
@@ -23323,26 +23563,26 @@ static inline void PlayerInitStates() {
     data_ov002_0211073c[1] = data_ov002_0210a47c.pmf;
     data_ov002_0211073c[2] = data_ov002_0210a10c.pmf;
     data_ov002_0211073c[3] = &daPly_c::func_ov002_020e1c20;
-    data_ov002_02110884[0].voidPmf = data_ov002_02109dfc.pmf;
-    data_ov002_02110884[1].voidPmf = data_ov002_0210a264.pmf;
-    data_ov002_02110884[2].voidPmf = data_ov002_0210a244.pmf;
-    data_ov002_02110884[3].voidPmf = data_ov002_0210a23c.pmf;
-    data_ov002_02110884[4].voidPmf = &daPly_c::func_ov002_020c9d68;
-    data_ov002_02110884[5].intPmf = &daPly_c::func_ov002_020c9d1c;
-    data_ov002_02110884[6].voidPmf = &daPly_c::func_ov002_020c9cc0;
-    data_ov002_02110884[7].voidPmf = &daPly_c::func_ov002_020c9c4c;
-    data_ov002_02110884[8].intPmf = &daPly_c::func_ov002_020c9c00;
-    data_ov002_02110884[9].voidPmf = &daPly_c::func_ov002_020c9b7c;
-    data_ov002_02110884[10].voidPmf = &daPly_c::func_ov002_020c9b5c;
-    data_ov002_02110884[11].voidPmf = &daPly_c::func_ov002_020c9ac0;
-    data_ov002_02110884[12].intPmf = &daPly_c::func_ov002_020c9b10;
-    data_ov002_02110884[13].voidPmf = &daPly_c::func_ov002_020c9a04;
-    data_ov002_02110884[14].voidPmf = &daPly_c::func_ov002_020c9998;
-    data_ov002_02110884[15].voidPmf = &daPly_c::func_ov002_020c990c;
-    data_ov002_02110884[16].voidPmf = &daPly_c::func_ov002_020c98a4;
-    data_ov002_02110884[17].voidPmf = &daPly_c::func_ov002_020c9840;
-    data_ov002_02110884[18].voidPmf = &daPly_c::func_ov002_020c97f8;
-    data_ov002_02110884[19].voidPmf = &daPly_c::func_ov002_020c97e0;
+    ((PlayerStateFn *)data_ov002_02110884)[0].voidPmf = data_ov002_02109dfc.pmf;
+    ((PlayerStateFn *)data_ov002_02110884)[1].voidPmf = data_ov002_0210a264.pmf;
+    ((PlayerStateFn *)data_ov002_02110884)[2].voidPmf = data_ov002_0210a244.pmf;
+    ((PlayerStateFn *)data_ov002_02110884)[3].voidPmf = data_ov002_0210a23c.pmf;
+    ((PlayerStateFn *)data_ov002_02110884)[4].voidPmf = &daPly_c::func_ov002_020c9d68;
+    ((PlayerStateFn *)data_ov002_02110884)[5].intPmf = &daPly_c::func_ov002_020c9d1c;
+    ((PlayerStateFn *)data_ov002_02110884)[6].voidPmf = &daPly_c::func_ov002_020c9cc0;
+    ((PlayerStateFn *)data_ov002_02110884)[7].voidPmf = &daPly_c::func_ov002_020c9c4c;
+    ((PlayerStateFn *)data_ov002_02110884)[8].intPmf = &daPly_c::func_ov002_020c9c00;
+    ((PlayerStateFn *)data_ov002_02110884)[9].voidPmf = &daPly_c::func_ov002_020c9b7c;
+    ((PlayerStateFn *)data_ov002_02110884)[10].voidPmf = &daPly_c::func_ov002_020c9b5c;
+    ((PlayerStateFn *)data_ov002_02110884)[11].voidPmf = &daPly_c::func_ov002_020c9ac0;
+    ((PlayerStateFn *)data_ov002_02110884)[12].intPmf = &daPly_c::func_ov002_020c9b10;
+    ((PlayerStateFn *)data_ov002_02110884)[13].voidPmf = &daPly_c::func_ov002_020c9a04;
+    ((PlayerStateFn *)data_ov002_02110884)[14].voidPmf = &daPly_c::func_ov002_020c9998;
+    ((PlayerStateFn *)data_ov002_02110884)[15].voidPmf = &daPly_c::func_ov002_020c990c;
+    ((PlayerStateFn *)data_ov002_02110884)[16].voidPmf = &daPly_c::func_ov002_020c98a4;
+    ((PlayerStateFn *)data_ov002_02110884)[17].voidPmf = &daPly_c::func_ov002_020c9840;
+    ((PlayerStateFn *)data_ov002_02110884)[18].voidPmf = &daPly_c::func_ov002_020c97f8;
+    ((PlayerStateFn *)data_ov002_02110884)[19].voidPmf = &daPly_c::func_ov002_020c97e0;
     data_ov002_0211075c[0] = &daPly_c::func_ov002_020c75f0;
     data_ov002_0211075c[1] = &daPly_c::func_ov002_020c7350;
     data_ov002_0211075c[2] = &daPly_c::func_ov002_020c71e0;

@@ -2356,112 +2356,103 @@ int daTrs_c::GetAttackStatus() {
     VecFx32 v1, v2;
 
     id = this->mdCcAcPos_c.otherOwner;
-    if (id == 0)
-        goto ret0;
+    if (id != 0) {
+        if (this->mdCcAcPos_c.hitFlags & 0x207e0) {
+            void *found;
 
-    if (this->mdCcAcPos_c.hitFlags & 0x207e0) {
-        void* found;
+            this->mdCcAcPos_c.flags |= 1;
+            found = (void *)dActor_c::FindWithID(this->mdCcAcPos_c.otherOwner);
+            if (found) {
+                this->mTalkPlayer = (daPly_c *)found;
 
-        this->mdCcAcPos_c.flags |= 1;
-        found = dActor_c::FindWithID(this->mdCcAcPos_c.otherOwner);
-        if (found) {
-            this->mTalkPlayer = (daPly_c *)found;
-
-            {
-                int isBf = (int)(((dActor_c *)found)->actorID == TRS_ID_PLAYER);
-                if (isBf) {
-                    if (((dActor_c *)found)->param1 == 3) {
-                        u16* p = (u16*)&this->mBooFlags;
-                        *p |= TRS_FLAG_HIT_BY_PARAM3_PLAYER;
+                {
+                    int isBf = (int)(((dActor_c *)found)->actorID == TRS_ID_PLAYER);
+                    if (isBf) {
+                        if (((dActor_c *)found)->param1 == 3) {
+                            u16 *p = (u16 *)&this->mBooFlags;
+                            *p |= TRS_FLAG_HIT_BY_PARAM3_PLAYER;
+                        }
                     }
                 }
             }
-        }
-        return 1;
-    }
-
-    actor = dActor_c::FindWithID(id);
-    if (!actor)
-        goto ret0;
-    if (!(this->mdCcAcPos_c.hitFlags & 0x400000))
-        goto ret0;
-    player = static_cast<daPly_c *>(actor);
-    if (player->mIsVanish != 0)
-        return 0;
-
-    if (player->mIsMetal != 0) {
-        this->mdCcAcPos_c.flags |= 1;
-        this->mTalkPlayer = (daPly_c *)dActor_c::FindWithID(this->mdCcAcPos_c.otherOwner);
-        return 1;
-    }
-
-    if (this->JumpedOnByPlayer(*(dCc_c *)(&this->mdCcAcPos_c), *player) != 0) {
-        player->Bounce(0x28000);
-        func_0201267c(0x149, &this->mCamSpacePos);
-        return -1;
-    }
-
-    {
-    int isBigBoo = (int)(this->actorID == TRS_ID_BOSS_TERESA);
-    if (isBigBoo) {
-        if (player->mIsAirborne != 0) {
-            player->Bounce(0x28000);
-            func_0201267c(0x149, &this->mCamSpacePos);
-            return -1;
-        }
-
-        v1.x = this->mPosX;
-        v1.y = this->mPosY;
-        v1.z = this->mPosZ;
-        player->Hurt(*(Vector3 *)&v1, this->mHurtDamage, 0xc000, 1, 0, 1);
-        func_0201267c(0x149, &this->mCamSpacePos);
-        return -1;
-    }
-    }
-
-    if (this->mdCcAcPos_c.hitFlags & 0x10) {
-        u8 kind = this->mVariant;
-
-        if (kind < 2)
-            goto found_kind;
-        if (kind >= 6)
-            goto found_kind;
-        if (kind > 9)
-            goto no_kind;
-
-found_kind:
-        {
-            void* found2;
-            s16 v[3];
-
-            this->mdCcAcPos_c.flags |= 1;
-            found2 = dActor_c::FindWithID(this->mdCcAcPos_c.otherOwner);
-            if (!found2)
-                goto ret0;
-            this->mTalkPlayer = (daPly_c *)dActor_c::FindWithID(this->mdCcAcPos_c.otherOwner);
-
-            v[0] = -0x2000;
-            v[1] = 0;
-            v[2] = 0;
-            KillByInvincibleChar(*(Vector3_16 *)v, *(daPly_c *)found2, 0);
-
-            {
-                s16 *ap = &this->mAngleY;
-                *ap = (s16)(*ap + 0x8000);
-            }
             return 1;
         }
+
+        actor = dActor_c::FindWithID(id);
+        if (actor != 0) {
+            if (this->mdCcAcPos_c.hitFlags & 0x400000) {
+                player = static_cast<daPly_c *>(actor);
+                if (player->mIsVanish != 0)
+                    return 0;
+
+                if (player->mIsMetal != 0) {
+                    this->mdCcAcPos_c.flags |= 1;
+                    this->mTalkPlayer =
+                        (daPly_c *)dActor_c::FindWithID(this->mdCcAcPos_c.otherOwner);
+                    return 1;
+                }
+
+                if (this->JumpedOnByPlayer(*(dCc_c *)(&this->mdCcAcPos_c), *player) != 0) {
+                    player->Bounce(0x28000);
+                    func_0201267c(0x149, &this->mCamSpacePos);
+                    return -1;
+                }
+
+                {
+                    int isBigBoo = (int)(this->actorID == TRS_ID_BOSS_TERESA);
+                    if (isBigBoo) {
+                        if (player->mIsAirborne != 0) {
+                            player->Bounce(0x28000);
+                            func_0201267c(0x149, &this->mCamSpacePos);
+                            return -1;
+                        }
+
+                        v1.x = this->mPosX;
+                        v1.y = this->mPosY;
+                        v1.z = this->mPosZ;
+                        player->Hurt(*(Vector3 *)&v1, this->mHurtDamage, 0xc000, 1, 0, 1);
+                        func_0201267c(0x149, &this->mCamSpacePos);
+                        return -1;
+                    }
+                }
+
+                do {
+                    if ((this->mdCcAcPos_c.hitFlags & 0x10) != 0) {
+                        u8 kind = this->mVariant;
+                        if (kind < 2 || kind >= 6 || kind <= 9) {
+                            void *found2;
+                            s16 v[3];
+
+                            this->mdCcAcPos_c.flags |= 1;
+                            found2 = (void *)dActor_c::FindWithID(this->mdCcAcPos_c.otherOwner);
+                            if (found2) {
+                                this->mTalkPlayer =
+                                    (daPly_c *)dActor_c::FindWithID(this->mdCcAcPos_c.otherOwner);
+
+                                v[0] = -0x2000;
+                                v[1] = 0;
+                                v[2] = 0;
+                                KillByInvincibleChar(*(Vector3_16 *)v, *(daPly_c *)found2, 0);
+
+                                {
+                                    s16 *ap = (s16 *)&this->mAngleY;
+                                    *ap = (s16)(*ap + 0x8000);
+                                }
+                                return 1;
+                            }
+                            break;
+                        }
+                    }
+                    v2.x = this->mPosX;
+                    v2.y = this->mPosY;
+                    v2.z = this->mPosZ;
+                    player->Hurt(*(Vector3 *)&v2, this->mHurtDamage, 0xc000, 1, 0, 1);
+                    func_0201267c(0x149, &this->mCamSpacePos);
+                    return -1;
+                } while (0);
+            }
+        }
     }
-
-no_kind:
-    v2.x = this->mPosX;
-    v2.y = this->mPosY;
-    v2.z = this->mPosZ;
-    player->Hurt(*(Vector3 *)&v2, this->mHurtDamage, 0xc000, 1, 0, 1);
-    func_0201267c(0x149, &this->mCamSpacePos);
-    return -1;
-
-ret0:
     return 0;
 }
 

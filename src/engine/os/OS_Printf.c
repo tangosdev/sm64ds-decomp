@@ -233,8 +233,6 @@ int OS_VSNPrintf(char *buffer, int bufsz, const char *fmt, int *args) {
                 }
                 {
                     s8 cc = *fmt;
-                    /* num/xhex/dflt gotos kept: they are the shared integer, hex and
-                       invalid-spec tails, and the case bodies sit in ROM order */
                     switch (cc) {
                     case 0x6f:
                         pf[1] = eight;
@@ -309,11 +307,11 @@ int OS_VSNPrintf(char *buffer, int bufsz, const char *fmt, int *args) {
                         break;
                     }
                     case 0x25:
-                        if (pct + 1 != fmt)
-                            goto dflt;
-                        fmt++;
-                        string_put_char(&str, cc);
-                        break;
+                        if (pct + 1 == fmt) {
+                            fmt++;
+                            string_put_char(&str, cc);
+                            break;
+                        }
                     default:
                     dflt:
                         string_put_string(&str, pct, fmt - pct);

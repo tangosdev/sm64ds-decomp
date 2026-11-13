@@ -777,44 +777,41 @@ int daBook_c::InitResources()
         unsigned short id = actorID;
         unsigned int match1 = (id == kShootBookActorId);
 
-        if (match1)
-        {
-            mKind = KIND_FLYING_BOOK;
-            mState = STATE_SPAWNED;
-            mCoinType = 0;
-            mdCcAcPos_c.vulnFlags |= 0x26fe0;
-            goto success;
-        }
-        {
-            unsigned int match2 = (id == kKillerBookActorId);
-            if (match2)
-            {
+        do {
+            if (match1) {
                 mKind = KIND_FLYING_BOOK;
-                mState = STATE_WAIT;
-                mCoinType = 3;
-                mdCcAcPos_c.vulnFlags |= 0x2efe0;
-                goto success;
-            }
-        }
-        {
-            unsigned int match3 = (id == kBookSwitchActorId);
-            if (match3)
-            {
-                mKind = KIND_SWITCH_BOOK;
-                mState = STATE_SWITCH_WAIT;
+                mState = STATE_SPAWNED;
                 mCoinType = 0;
-                mdCcAcPos_c.flags |= 4;
-                mdCcAcPos_c.vulnFlags |= 0x3c0;
-                mScaleX = 0x1000;
-                mScaleY = 0x800;
-                mScaleZ = 0x800;
-                goto success;
+                mdCcAcPos_c.vulnFlags |= 0x26fe0;
+                break;
             }
-        }
+            {
+                unsigned int match2 = (id == kKillerBookActorId);
+                if (match2) {
+                    mKind = KIND_FLYING_BOOK;
+                    mState = STATE_WAIT;
+                    mCoinType = 3;
+                    mdCcAcPos_c.vulnFlags |= 0x2efe0;
+                    break;
+                }
+            }
+            {
+                unsigned int match3 = (id == kBookSwitchActorId);
+                if (match3) {
+                    mKind = KIND_SWITCH_BOOK;
+                    mState = STATE_SWITCH_WAIT;
+                    mCoinType = 0;
+                    mdCcAcPos_c.flags |= 4;
+                    mdCcAcPos_c.vulnFlags |= 0x3c0;
+                    mScaleX = 0x1000;
+                    mScaleY = 0x800;
+                    mScaleZ = 0x800;
+                    break;
+                }
+            }
+            return 0;
+        } while (0);
     }
-    return 0;
-
-success:
     return 1;
 }
 

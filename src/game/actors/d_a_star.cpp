@@ -710,18 +710,15 @@ int daStarBase_c::Behavior()
 int daStar_c::Render()
 {
     int locked;
-    if (mScaleX == 0) goto done;
-    locked = (mFlags & 0x40000) != 0;
-    if (locked) goto done;
-    if (mBits.visible) goto callit;
-done:
-    return 1;
-callit:
-    if (!mBits.collectedModel)
-        mAnmModel1.Render(&mScale);
-    else
-        mAnmModel2.Render(&mScale);
-    return 1;
+    if (mScaleX == 0 || (locked = (mFlags & 0x40000) != 0) || !mBits.visible)
+        return 1;
+    else {
+        if (!mBits.collectedModel)
+            mAnmModel1.Render(&mScale);
+        else
+            mAnmModel2.Render(&mScale);
+        return 1;
+    }
 }
 
 /* Draws the marker's model while it is visible. */
@@ -913,14 +910,10 @@ void daStar_c::StateFlyToMarker() {
         *yp += 0xc8000;
         mHorzSpeed = 0;
         mVertSpeed = 0x18000;
-        if (gCurrentSublevel == 0xb) {
-            if (mStarID == 3) {
-                mVertSpeed = 0x10000;
-                goto skip;
-            }
-        }
-        mVertSpeed = 0x18000;
-    skip:
+        if (gCurrentSublevel == 0xb && mStarID == 3)
+            mVertSpeed = 0x10000;
+        else
+            mVertSpeed = 0x18000;
         SetDefaultGravity();
         mState = STATE_LAND;
     }
@@ -1277,14 +1270,7 @@ void daStar_c::StateCollectTalk() {
         func_ov002_020e7eb4();
     }
     r2v = gGameMode == 1;
-    if (r2v != false)
-        goto modes;
-    b2 = actorID;
-    b2 = b2 == ACTOR_SILVER_STAR;
-    if (b2 == false)
-        goto big_else;
-modes:
-    {
+    if (r2v != false || (b2 = (actorID == ACTOR_SILVER_STAR)) != 0) {
         u32 tmp;
         u16 mode;
         tmp = actorID;
@@ -1304,18 +1290,15 @@ modes:
             }
         } else if (mode == 5) {
             int idx2 = mPlayer->mPlayerNo;
-            if (gNumStageStars[idx2] == 5 && r2v == false)
-                goto end;
-            if (r2v == false)
-                GiveVsStars(idx2, 1);
-            func_ov002_020e8244(&t2, this);
-            SpawnNumber(*(Vector3 *)&t2, gNumStageStars[mPlayer->mPlayerNo], st, 0, mPlayer);
-            FinishCollection();
+            if (!(gNumStageStars[idx2] == 5 && r2v == false)) {
+                if (r2v == false)
+                    GiveVsStars(idx2, 1);
+                func_ov002_020e8244(&t2, this);
+                SpawnNumber(*(Vector3 *)&t2, gNumStageStars[mPlayer->mPlayerNo], st, 0, mPlayer);
+                FinishCollection();
+            }
         }
-        goto end;
-    }
-big_else:
-    {
+    } else {
         if (mKind == KIND_9) {
             st2 = 0x11;
 LA:
@@ -1352,7 +1335,6 @@ LA:
         if (mHomeState == STATE_WAIT_MARKER || mStarID == 8)
             FinishCollection();
     }
-end:
     mAnmModel1.Advance();
     SpawnCollectEffects();
 }
@@ -1754,35 +1736,27 @@ int daStar_c::Collect(void *p) {
     r5 = 0;
     r4 = PickTalkState();
     {
-        if (r4 != 0) {
-            int t1 = (gGameMode == 1);
-            if (!t1) {
-                int t2 = (actorID == ACTOR_SILVER_STAR);
-                if (!t2) {
-                    if (mHomeState != STATE_WAIT_MARKER) {
-                        if (mStarID == 0) {
-                            sb = ((daPly_c *)p)->SetNoControlState(r4, 0x186, 0);
-                            Message::PrepareTalk();
-                            r5 = 1;
-                        } else if (func_ov002_020e9630() != 0) {
-                            sb = ((daPly_c *)p)->SetNoControlState(r4, 0x187, 0);
-                            Message::PrepareTalk();
-                            r5 = 1;
-                        } else {
-                            sb = ((daPly_c *)p)->SetNoControlState(r4, -1, 0);
-                        }
-                        goto after_sc;
-                    }
-                }
+        int t1;
+        int t2;
+        if (r4 != 0 && !(t1 = (gGameMode == 1)) && !(t2 = (actorID == ACTOR_SILVER_STAR)) &&
+            mHomeState != STATE_WAIT_MARKER) {
+            if (mStarID == 0) {
+                sb = ((daPly_c *)p)->SetNoControlState(r4, 0x186, 0);
+                Message::PrepareTalk();
+                r5 = 1;
+            } else if (func_ov002_020e9630() != 0) {
+                sb = ((daPly_c *)p)->SetNoControlState(r4, 0x187, 0);
+                Message::PrepareTalk();
+                r5 = 1;
+            } else {
+                sb = ((daPly_c *)p)->SetNoControlState(r4, -1, 0);
             }
+        } else {
+            sb = ((daPly_c *)p)->SetNoControlState(r4, -1, 0);
         }
-        sb = ((daPly_c *)p)->SetNoControlState(r4, -1, 0);
-    after_sc:;
+    }
 
-        if (sb == 0) {
-            goto ret0;
-        }
-
+    if (sb != 0) {
         {
             int b1 = (gGameMode == 1);
             if (!b1) {
@@ -1823,34 +1797,33 @@ int daStar_c::Collect(void *p) {
                 }
             }
         }
-    }
 
-    if (mHomeState == STATE_WAIT_MARKER) {
-        data_0209f208++;
-    }
-    func_02012790(0x2d);
-    mState = STATE_COLLECT_BEGIN;
-    mPlayer = (daPly_c *)p;
-    {
-        int b4 = (gGameMode == 1);
-        if (!b4) {
-            mPlayer->mFlags |= CUTSCENE_FLAG;
-            mFlags |= CUTSCENE_FLAG;
-            gNextActorUpdateMask |= CUTSCENE_FLAG;
+        if (mHomeState == STATE_WAIT_MARKER) {
+            data_0209f208++;
         }
-    }
-    mdCc_c.flags |= 1;
-    mdCc_c.Clear();
-    {
-        int b5 = (actorID == ACTOR_STAR);
-        if (b5 && r4 != 0) {
-            ((daPly_c *)p)->Heal(0x880);
+        func_02012790(0x2d);
+        mState = STATE_COLLECT_BEGIN;
+        mPlayer = (daPly_c *)p;
+        {
+            int b4 = (gGameMode == 1);
+            if (!b4) {
+                mPlayer->mFlags |= CUTSCENE_FLAG;
+                mFlags |= CUTSCENE_FLAG;
+                gNextActorUpdateMask |= CUTSCENE_FLAG;
+            }
         }
+        mdCc_c.flags |= 1;
+        mdCc_c.Clear();
+        {
+            int b5 = (actorID == ACTOR_STAR);
+            if (b5 && r4 != 0) {
+                ((daPly_c *)p)->Heal(0x880);
+            }
+        }
+        StopMotion();
+        data_0209d684 = 0;
+        return 1;
     }
-    StopMotion();
-    data_0209d684 = 0;
-    return 1;
-ret0:
     return 0;
 }
 
@@ -1938,17 +1911,10 @@ void daStar_c::AddStarMarker()
             }
         } else {
             if (mMarkerType == 2) {
-                if (mBits.collectedModel) goto setmark;
-                {
-                    int f43c = mKind;
-                    if (f43c == 5 || f43c == 7) {
-                        if (IsStarCollectedInCurLevel(mStarID) != 0) goto setmark;
-                    }
-                }
-                goto skipmark;
-            setmark:
-                mMarkerType = 3;
-            skipmark:;
+                int f43c;
+                if (mBits.collectedModel ||
+                    (((f43c = mKind) == 5 || f43c == 7) && IsStarCollectedInCurLevel(mStarID) != 0))
+                    mMarkerType = 3;
             }
             SetStarMarker((int)i, this, mMarkerType);
         }
@@ -2784,33 +2750,15 @@ void daStar_c::RelinkMarker() {
 u8 daStar_c::PickTalkState() {
     int c, a, b;
     unsigned char r2 = mStarID;
-    if (r2 == 8) {
+    if (r2 == 8)
         return 3;
-    }
 
     a = gGameMode == 1;
-    if (a != false) {
-        goto ret2;
-    }
-    b = actorID == ACTOR_SILVER_STAR;
-    if (b != false) {
-        goto ret2;
-    }
-    c = mHomeState;
-    if (c == 9) {
-ret2:
+    if (a != false || (b = (actorID == ACTOR_SILVER_STAR)) != false || (c = mHomeState) == 9)
         return 2;
-    }
 
-    if (r2 == 0) {
-        goto ret1;
-    }
-    if (func_ov002_020e9630() == 0) {
-        goto ret0;
-    }
-ret1:
-    return 1;
-ret0:
+    if (r2 == 0 || func_ov002_020e9630() != 0)
+        return 1;
     return 0;
 }
 

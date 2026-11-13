@@ -266,9 +266,6 @@ void func_0206a928(struct Stream *ctx, char *fmt, int **ap)
             }
             break;
         }
-            /* number gotos kept: cases 2-7 share the integer tail in ROM order; merging
-             * them under one label with a nested switch (0x12c4) or an if chain (0x129c)
-             * shrinks it */
             {
                 int w;
                 char *p;

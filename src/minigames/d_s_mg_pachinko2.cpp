@@ -1593,73 +1593,74 @@ void dScMgPachinko2_c::DrawAimLine() {
 
             if (adx >= ady) {
                 mGuideStep = adx / 2;
-            LX:
-                if (dx == 0) {
-                    PlotSubBg2Pixels(cx, cy, layer);
-                } else if (dx > 0) {
-                    cx++;
-                    mGuideStep += ady;
-                    if (mGuideStep > adx) {
-                        if (dy >= 0)
-                            cy++;
-                        else
-                            cy--;
-                        mGuideStep -= adx;
+                for (;;) {
+                    if (dx == 0) {
+                        PlotSubBg2Pixels(cx, cy, layer);
+                        break;
+                    } else if (dx > 0) {
+                        cx++;
+                        mGuideStep += ady;
+                        if (mGuideStep > adx) {
+                            if (dy >= 0)
+                                cy++;
+                            else
+                                cy--;
+                            mGuideStep -= adx;
+                        }
+                        PlotSubBg2Pixels(cx, cy, layer);
+                        if (cx == tx)
+                            break;
+                    } else {
+                        cx--;
+                        mGuideStep += ady;
+                        if (mGuideStep > adx) {
+                            if (dy >= 0)
+                                cy++;
+                            else
+                                cy--;
+                            mGuideStep -= adx;
+                        }
+                        PlotSubBg2Pixels(cx, cy, layer);
+                        if (cx == tx)
+                            break;
                     }
-                    PlotSubBg2Pixels(cx, cy, layer);
-                    if (cx == tx)
-                        goto DONEK;
-                    goto LX;
-                } else {
-                    cx--;
-                    mGuideStep += ady;
-                    if (mGuideStep > adx) {
-                        if (dy >= 0)
-                            cy++;
-                        else
-                            cy--;
-                        mGuideStep -= adx;
-                    }
-                    PlotSubBg2Pixels(cx, cy, layer);
-                    if (cx == tx)
-                        goto DONEK;
-                    goto LX;
                 }
             } else {
                 mGuideStep = ady / 2;
-            LY:
-                if (dy == 0) {
-                    PlotSubBg2Pixels(cx, cy, layer);
-                } else if (dy > 0) {
-                    cy++;
-                    mGuideStep += adx;
-                    if (mGuideStep > ady) {
-                        if (dx >= 0)
-                            cx++;
-                        else
-                            cx--;
-                        mGuideStep -= ady;
+                for (;;) {
+                    if (dy == 0) {
+                        PlotSubBg2Pixels(cx, cy, layer);
+                        break;
+                    } else if (dy > 0) {
+                        cy++;
+                        mGuideStep += adx;
+                        if (mGuideStep > ady) {
+                            if (dx >= 0)
+                                cx++;
+                            else
+                                cx--;
+                            mGuideStep -= ady;
+                        }
+                        PlotSubBg2Pixels(cx, cy, layer);
+                        if (cy == ty)
+                            break;
+                    } else {
+                        cy--;
+                        mGuideStep += adx;
+                        if (mGuideStep > ady) {
+                            if (dx >= 0)
+                                cx++;
+                            else
+                                cx--;
+                            mGuideStep -= ady;
+                        }
+                        PlotSubBg2Pixels(cx, cy, layer);
+                        if (cy != ty)
+                            continue;
+                        break;
                     }
-                    PlotSubBg2Pixels(cx, cy, layer);
-                    if (cy == ty)
-                        goto DONEK;
-                    goto LY;
-                } else {
-                    cy--;
-                    mGuideStep += adx;
-                    if (mGuideStep > ady) {
-                        if (dx >= 0)
-                            cx++;
-                        else
-                            cx--;
-                        mGuideStep -= ady;
-                    }
-                    PlotSubBg2Pixels(cx, cy, layer);
-                    if (cy != ty)
-                        goto LY;
                 }
             }
-        DONEK:
             k++;
         } while (k < 2);
     }

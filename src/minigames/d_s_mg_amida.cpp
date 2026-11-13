@@ -468,11 +468,8 @@ void dScMgAmida_c::PaintSquare(int brushX, int brushY, int colour, int /* size *
             return;
         }
         mark = (mStrokeGrid + brushX * 0x158)[gridY];
-        if (mark != 0 && mLineCount != mark)
-            goto fail;
-        mark = (mInkGrid + brushX * 0x158)[gridY];
-        if (mark != 0 && mLineCount != mark) {
-        fail:
+        if ((mark != 0 && mLineCount != mark) ||
+            ((mark = (mInkGrid + brushX * 0x158)[gridY]), mark != 0 && mLineCount != mark)) {
             mLineStartSet = 0;
             mLineEndSet = 1;
             return;
@@ -618,14 +615,14 @@ void dScMgAmida_c::HandlePen() {
                     int d1 = oldX - this->mPenStart.x;
                     if (d1 < 0)
                         d1 = -d1;
-                    if (d1 < 0x10) {
-                        int d2 = oldY - this->mPenStart.y;
-                        if (d2 < 0)
-                            d2 = -d2;
-                        if (d2 >= 0x10)
-                            goto classify;
-                    } else {
-                    classify:
+                    do {
+                        if (d1 < 0x10) {
+                            int d2 = oldY - this->mPenStart.y;
+                            if (d2 < 0)
+                                d2 = -d2;
+                            if (d2 < 0x10)
+                                break;
+                        }
                         if (oldX >= 0x21 && oldX <= 0x3f) {
                             if (this->mPenStart.x >= 0x41 && this->mPenStart.x <= 0x5f) {
                                 this->mLineStart.x = 0x60;
@@ -675,7 +672,7 @@ void dScMgAmida_c::HandlePen() {
                                 this->mLineEndSet = 1;
                             }
                         }
-                    }
+                    } while (0);
                 } else if (this->mLineEndSet == 0) {
                     int dx, dsx, adx, adsx;
                     dx = oldX - this->mLineStart.x;
@@ -2051,11 +2048,11 @@ s32 dScMgAmida_c::Behavior() {
 /* Slot 18: counts a win (arg 0) or resets the score, then sets up the next board. */
 void dScMgAmida_c::StartRound(int arg) {
     if (arg == 0) {
-        if (mLevel >= 0x7cf)
-            goto final;
-        mLevel = mLevel + 1;
-        if (mLevel > 0x270e)
-            mLevel = 0x270e;
+        if (mLevel < 0x7cf) {
+            mLevel = mLevel + 1;
+            if (mLevel > 0x270e)
+                mLevel = 0x270e;
+        }
     } else {
         mScore = 0;
         mLevel = 0;
@@ -2064,7 +2061,6 @@ void dScMgAmida_c::StartRound(int arg) {
         Mg_SubmitScore(mScore);
         mHudScore = mScore;
     }
-final:
     SetupRound();
 }
 

@@ -301,32 +301,26 @@ void daEykn_c::LookForPlayer()
  * with particle systems kDeathPtcl0 and kDeathPtcl1 attached. */
 void daEykn_c::CheckAttacks()
 {
-    /* One || is 6 words off. */
     dActor_c *egg = FindEgg(mdCcAcPos_c);
-    if (egg != 0) {
-        int isEgg9 = (egg->actorID == kYoshiEgg);
-        if (isEgg9) goto playSound;
+    int isEgg9;
+    if ((egg != 0 && (isEgg9 = (int)(egg->actorID == kYoshiEgg), isEgg9 != 0)) ||
+        FindExplosionActor(mdCcAcPos_c) != 0) {
+        Sound::PlayBank0(9, mCamSpacePos);
+        SetState(2);
+        return;
     }
-
-    if (FindExplosionActor(mdCcAcPos_c) == 0) goto idCheck;
-
-playSound:
-    Sound::PlayBank0(9, mCamSpacePos);
-    SetState(2);
-    return;
-
-idCheck:
 
     if (mdCcAcPos_c.otherOwner == 0) return;
 
     daPly_c *f = static_cast<daPly_c *>(FindWithID(mdCcAcPos_c.otherOwner));
     if (f == 0) return;
 
-    int isPlayer = (f->actorID == kPlayer);
+    int isPlayer = (int)(f->actorID == kPlayer);
     if (!isPlayer) return;
 
     if (mdCcAcPos_c.hitFlags & kKillHit) {
-        mParticleID0 = Particle::System::New(mParticleID0, kDeathPtcl0, mPosX, mPosY, mPosZ, 0, 0);
+        mParticleID0 =
+            (u32)Particle::System::New(mParticleID0, kDeathPtcl0, mPosX, mPosY, mPosZ, 0, 0);
         mParticleID1 =
             Particle::System::NewCleanParticle(mParticleID1, kDeathPtcl1, mPosX, mPosY, mPosZ, 0);
         SetState(2);

@@ -172,16 +172,10 @@ s32 dScMgBSC_c::CanEndState(int mode) {
         }
     }
     state = mState;
-    if (state >= STATE_WAIT_COINS) {
-        coinStatus = gMgCoinsStatus;
-        if (coinStatus == 1)
-            goto settle;
-    }
-    return 0;
-settle:
-    if (state == STATE_WAIT_COINS && coinStatus == 1) {
+    if (state < STATE_WAIT_COINS || (coinStatus = gMgCoinsStatus, coinStatus != 1))
+        return 0;
+    if (state == STATE_WAIT_COINS && coinStatus == 1)
         Mg_SaveRecordPair(mCredits, mHudScore);
-    }
     return 1;
 }
 

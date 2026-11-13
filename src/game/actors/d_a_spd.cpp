@@ -222,12 +222,8 @@ int daSpd_c::Behavior() {
 
 int daSpd_c::Render() {
     int flag = (mFlags & 0x40000) ? 1 : 0;
-    if (flag) goto ret;
-    if (!mState) goto ret;
-    goto call;
-ret:
-    return 1;
-call:
+    if (flag || !mState)
+        return 1;
     /* dExtAnmModel_c slot 5. The call stays virtual. */
     mAnmModel.Render(0);
     return 1;
@@ -473,20 +469,17 @@ int daSpd_c::func_ov071_0211fa54() {
         int b1 = (int)((v & 0x80000) != 0);
         if (b1 != 0) {
             SetState(7);
-            goto done;
-        }
-        {
+        } else {
             int b2 = (int)((v & 0x20000) != 0);
-            if (b2 != 0) goto done;
+            if (b2 == 0) {
+                int b3 = (int)((v & 0x40000) != 0);
+                if (b3 == 0) {
+                    mParent = 0;
+                    SetState(2);
+                }
+            }
         }
-        {
-            int b3 = (int)((v & 0x40000) != 0);
-            if (b3 != 0) goto done;
-        }
-        mParent = 0;
-        SetState(2);
     }
-done:
     mdCcAc_c.Clear();
     return 1;
 }

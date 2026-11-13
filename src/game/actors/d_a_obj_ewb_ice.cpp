@@ -199,19 +199,16 @@ int daObjEwbIce_c::StateArena_Update() {
     mAngleX = 0;
     mVertAccel = -kFallAccel;
     UpdatePos(0);
-    if (mVariant != 0)
-        goto done;
-    {
+    if (mVariant == 0) {
         int surface = data_02092138 + kSurfaceAboveVoid;
-        if (surface <= mPosY)
-            goto done;
-        mPosY = surface;
-        mTimer = 0;
-        mVertAccel = 0;
-        mVertSpeed = 0;
-        SetState(&data_ov073_021234a0);
+        if (surface > mPosY) {
+            mPosY = surface;
+            mTimer = 0;
+            mVertAccel = 0;
+            mVertSpeed = 0;
+            SetState(&data_ov073_021234a0);
+        }
     }
-done:
     return 1;
 }
 
