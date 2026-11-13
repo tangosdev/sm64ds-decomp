@@ -4448,15 +4448,13 @@ static void port_adventure_ending_state() {
             data_0209fc68[0] = 0;
             g_ending_state = true;
             std::fprintf(stderr, "[ghost] hub: the ending (mode 2) plays on the one-player session state; 1 -> 0 at "
-                         "level %d
-", (int)data_0209f2f8);
+                         "level %d\n", (int)data_0209f2f8);
         }
     } else if (g_ending_state) {
         g_ending_state = false;
         if (data_0209fc68[0] == 0) data_0209fc68[0] = 1;
         std::fprintf(stderr, "[ghost] hub: the ending's mode is over; the session state is the hub's %d again at "
-                     "level %d
-", data_0209fc68[0], (int)data_0209f2f8);
+                     "level %d\n", data_0209fc68[0], (int)data_0209f2f8);
     }
 }
 
