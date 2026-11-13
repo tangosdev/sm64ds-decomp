@@ -2744,6 +2744,7 @@ extern "C" void port_stage_preload_shared_models(void);   /* below */
 extern "C" int data_0209b454[];
 /* src/ResetKuppaScript.c, InitResources:268's own call. Matched, linked. */
 extern "C" void ResetKuppaScript(void);
+extern "C" void port_adventure_kuppa_cast(void);   /* hal/comms_sync.cpp: the cutscene cast on the hub */
 
 /* THE MESSAGE BOX DATA LAYER IS HOSTED now (hal/message_boot.cpp). func_0201f32c
    opens a message and its first line is
@@ -4045,6 +4046,7 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
        is not something to change on the strength of a star repro. It stays on
        section 2c's list. */
     ResetKuppaScript();
+    port_adventure_kuppa_cast();   /* CREDITS1: the cast numbered as a one-player boot numbers it (hal/comms_sync.cpp) */
 
     /* THE SOUND ROW, where Stage::InitResources seats it: after the overlay is
        up and the level is current, before LoadClsnAndObjects. This is the block

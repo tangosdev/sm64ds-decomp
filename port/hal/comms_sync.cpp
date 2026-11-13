@@ -116,6 +116,8 @@ void _ZN6Player11ChangeStateERNS_5StateE(char *, void *);
 // The per-slot Player pointers, the count, and which slot this console is.
 extern void *data_0209f394[];
 extern unsigned char data_0209f21c;
+// The next number the cutscene (kuppa) script gives a cast Player it spawns (src/unnamed/arm9/0200/func_0200e5fc.c).
+extern unsigned char data_0209b270;
 extern unsigned char data_0209f250;
 // The per-slot "this slot is live" byte (16 wide), for the body probe.
 extern unsigned char data_0209fc5c[];
@@ -4303,9 +4305,47 @@ extern "C" void port_adventure_ghost_park(void *body) { gw_park_body(body); }
 // Runs from the hold (hal/player_bridges.cpp), before the walk, so a repaired
 // body is skipped and parked before its first Behavior tick. Hub only.
 static void port_adventure_hub_opening_tick();   // the opening's hand-over, below
+// CREDITS1: THE CUTSCENE CAST IS NUMBERED AS A ONE-PLAYER BOOT NUMBERS IT.
+// A cutscene script spawns its cast (Luigi, Wario and Yoshi at the castle in the
+// ending, the runners of the credits) as Player actors through func_0200e5fc,
+// whose param packs the character, then data_0209b270 << 6, then the flag byte
+// << 8 (src/unnamed/arm9/0200/func_0200e5fc.c). data_0209b270 starts at the
+// player count (ResetKuppaScript, EndKuppaScript: data_0209b270 =
+// data_0209f21c) and counts up per spawn; Player::InitResources reads the
+// player number back as (param >> 6) & 3 and the flag byte as param >> 8
+// (src/game/player/Player.cpp:27018). A one-player boot numbers the cast 1, 2,
+// 3 and the flag byte stays the spawn's own. On the hub the count is 32, so
+// the first cast member came out as player 32 & 3 = 0, the local player's own
+// number, with bit 11 spilled into its flag byte: in the ending it walked in
+// through St_LevelEnter as if it were me, and its star pose set the
+// level-clear flag (func_ov002_020c7350, Player.cpp:7075/7099), so the
+// course-clear banner and the save prompt came up over the ending, the whole
+// stage froze with the real player in mid-air above the castle roof, and after
+// the save he fell from there and was hurt (measured, CREDITS1 rows w_before1..4,
+// w_cdb2). The number goes back to the one-player start, 1, while the script
+// has spawned nobody since its reset (ResetKuppaScript and EndKuppaScript zero
+// the cast id table data_0209b284[0..3] in the same breath as they seed the
+// number; each spawn fills its entry), so the cast counts up 1, 2, 3 from there
+// as on a one-player boot. From the level boot right after its
+// ResetKuppaScript (hal/level_boot.cpp), and every frame from the hold, before
+// the walk runs the script (EndKuppaScript reseeds it in the middle of a
+// level). Only with more than one seated body on the hub and the local player
+// on number 0, as he is in every world room (solo never comes here, a
+// one-player count is left as the ROM wrote it, and a player on another number
+// keeps the ROM's numbering).
+extern "C" int data_0209b284[];
+extern "C" void port_adventure_kuppa_cast() {
+    if (!(adventure_ghost_mode() && comms_hub_active())) return;
+    const int count = (int)data_0209f21c;
+    if (count <= 1 || data_0209f250 != 0 || (int)data_0209b270 != count) return;
+    for (int i = 0; i < 4; ++i)
+        if (data_0209b284[i] != 0) return;
+    data_0209b270 = 1;
+}
 extern "C" void port_adventure_hub_seat() {
     if (!(adventure_ghost_mode() && comms_hub_active())) return;
     port_adventure_hub_opening_tick();
+    port_adventure_kuppa_cast();
     const int count = (int)data_0209f21c;
     if (count <= 1 || count > kPortBodySlots) return;
     bool short_seat = (int)data_0208a0e0 != count;
