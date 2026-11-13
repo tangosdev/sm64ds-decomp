@@ -35,6 +35,7 @@ enum d_s_mg_trampoline_AssetId {
 
 #include "dScMgTrampoline_c.h"
 #include "TrmpScorePopup.h"
+#include "TrmpLine.h"
 #include "SpawnInfo.h"
 #include "types.h"
 #include "nitro/gx/g2.h"
@@ -99,7 +100,6 @@ extern const unsigned char sTrmpBrushPltt[];
 extern dFdBrightness_c *gSceneFader;
 
 extern int sTrmpTouchBlocked;
-int TrmpLine_Create(s16 *startPoint, s16 *endPoint);
 extern "C" {
 
 void SetBg2Offset(int a, int b);
@@ -329,7 +329,7 @@ s32 dScMgTrampoline_c::InitResources() {
     if (Trmp3DMario_InitPool((unsigned char *)mMarios, 4) == 0)
         return 0;
     TrmpFx_InitPool(mScorePopups, 5);
-    TrmpLine_LoadTextures();
+    TrmpLine::LoadTextures();
     Mg_SetTopScreenYOffset(0x10);
     StartRound(-1);
     return 1;
@@ -363,7 +363,7 @@ void dScMgTrampoline_c::StartRound(int /* arg */) {
     mScrollHoldTimer = 0;
     Trmp3DMario_ResetAll(mLevel, mScrollY);
 
-    TrmpLine_ClearAll(mLevel);
+    TrmpLine::ClearAll(mLevel);
     TrmpFx_ClearAll();
     Puff_ClearAll(0, sTrmpPuffXByLanguage[GetGameLanguage()]);
 
@@ -416,7 +416,7 @@ void dScMgTrampoline_c::BeginIntro() {
 void dScMgTrampoline_c::StateIntro() {
     int counter;
 
-    TrmpLine_UpdateAll();
+    TrmpLine::UpdateAll();
     mTimer -= 1;
     counter = mTimer;
 
@@ -433,7 +433,7 @@ void dScMgTrampoline_c::StateIntro() {
             MIi_CpuClear16(tmp, (char *)dst, 0x6000);
         }
 
-        TrmpLine_CreateStartLineT1();
+        TrmpLine::CreateStartLineT1();
         func_02012718(0x1af, 0x8000);
         BeginPlay();
         return;
@@ -504,7 +504,7 @@ void dScMgTrampoline_c::UpdateScroll() {
 
 void dScMgTrampoline_c::StatePlay() {
     int oldCombo = sTrmpComboCount;
-    TrmpLine_UpdateAll();
+    TrmpLine::UpdateAll();
     Trmp3DMario_UpdateAll();
     if (sTrmpComboCount > oldCombo) {
         if (sTrmpComboCount == 3)
@@ -733,7 +733,7 @@ s32 dScMgTrampoline_c::Render() {
 
     if (mRoundOver == 0) {
         Trmp3DMario_DrawAll();
-        TrmpLine_DrawAll();
+        TrmpLine::DrawAll();
     }
     return 1;
 }
@@ -801,7 +801,7 @@ int dScMgTrampoline_c::OnGraphCallback0() {
             from.y = mTouchStartY;
             to.x = mTouchX;
             to.y = mTouchY;
-            if (TrmpLine_Create(&from.x, &to.x)) {
+            if (TrmpLine::Create(&from.x, &to.x)) {
                 func_02012718(0x1af, (mTouchStartX + mTouchX) << 11);
             } else {
                 func_02012790(0xe);

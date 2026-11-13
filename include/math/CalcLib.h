@@ -94,6 +94,16 @@ extern "C"
     /* a . b, in fx32. */
     Fix12i
     VEC_DotProduct(const Vector3 *, const Vector3 *);
+#ifdef __cplusplus
+extern "C"
+#endif
+    void
+    VEC_CrossProduct(const Vector3 *, const Vector3 *, Vector3 *);
+#ifdef __cplusplus
+extern "C"
+#endif
+    void
+    VEC_Normalize(const Vector3 *, Vector3 *);
 /* The same two add/subtract routines under the name the newer TUs use. */
 #ifdef __cplusplus
 extern "C"

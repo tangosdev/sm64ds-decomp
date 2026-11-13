@@ -30,9 +30,9 @@
  * bytes; both DIFF.
  * The bounce states still walk the line in gotos and raw offsets -- that is
  * the matched state machine, not decoration. Helper prototypes with no owning
- * header (Puff_*, Sound_PlayBank1Panned, TrmpFx_Spawn,
- * TrmpItem_UpdateWithJumper, func_0203cd80, Vec3_MulScalar) stay TU-local
- * until include/ owns them; VEC_Add/Subtract/DotProduct come from
+ * header (Puff_*, Sound_PlayBank1Panned, TrmpFx_Spawn, Vec3_MulScalar) stay
+ * TU-local until include/ owns them; TrmpItem::UpdateWithJumper and
+ * func_0203cd80 come from their headers, and VEC_Add/Subtract/DotProduct from
  * math/CalcLib.h.
  */
 
@@ -56,6 +56,7 @@
 #include "Sound.h"
 #include "dMgTrmpln2Mario_c.h"
 #include "dMgTrmpln3DMario_c.h"
+#include "TrmpItem.h"
 #include "dMgTrmplnShared.h"
 #include "MgCamera.h"
 
@@ -217,12 +218,11 @@ extern TrmpGoal sTrmpGoalSlots;
 
 /* C callees owned by other units; no shared header declares them yet. */
 extern "C" void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
-void Sound_PlayBank1Panned(int bank, int id, int panX);
-void Puff_Spawn(int x, int y);
-void Puff_DrawAll();
-void Puff_UpdateAll();
-void TrmpFx_Spawn(int y, int combo);
-void TrmpItem_UpdateWithJumper(void *jumper, int index);
+extern "C" void Sound_PlayBank1Panned(int bank, int id, int panX);
+extern "C" void Puff_Spawn(int x, int y);
+extern "C" void Puff_DrawAll();
+extern "C" void Puff_UpdateAll();
+extern "C" void TrmpFx_Spawn(int y, int combo);
 extern "C" void func_0203cd80(VecFx32 *v, short angle);
 
 Vector3 *dMgTrmpln2Mario_c::GetVelocity() {
@@ -1168,13 +1168,13 @@ void Trmp2Mario_DrawAll(void) {
     v.x = 0;
     v.y = 0;
     v.z = -0xff8;
-    func_0203cd80(&v, -0x2000);
+    func_0203cd80((int *)&v, -0x2000);
     func_0203ccd4((Vector3 *)&v, -0x3000);
     G3_LightVector(GX_LIGHTID_0, v.x, v.y, v.z);
     w.x = 0;
     w.y = 0;
     w.z = -0xff8;
-    func_0203cd80(&w, -0x2000);
+    func_0203cd80((int *)&w, -0x2000);
     G3_LightVector(GX_LIGHTID_1, w.x, w.y, w.z);
     G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
     G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));
@@ -1202,7 +1202,7 @@ void Trmp2Mario_UpdateAll(void) {
         int off = 0;
         do {
             ((dMgTrmpln2Mario_c *)(sTrmp2Marios + off))->Update();
-            TrmpItem_UpdateWithJumper(sTrmp2Marios + off, i);
+            TrmpItem::UpdateWithJumper((TrampolineObjectCallbacks *)(sTrmp2Marios + off), i);
             i++;
             off += 0xdc;
         } while (i < sTrmp2MarioCount);
@@ -2374,14 +2374,14 @@ void Trmp3DMario_DrawAll(void) {
     v[0] = 0;
     v[1] = 0;
     v[2] = -0xff8;
-    func_0203cd80((VecFx32 *)v, 0x2000);
+    func_0203cd80((int *)v, 0x2000);
     func_0203ccd4((Vector3 *)v, 0);
     G3_LightVector(GX_LIGHTID_0, v[0], v[1], v[2]);
 
     w[0] = 0;
     w[1] = 0;
     w[2] = -0xff8;
-    func_0203cd80((VecFx32 *)w, -0x2000);
+    func_0203cd80((int *)w, -0x2000);
     G3_LightVector(GX_LIGHTID_1, w[0], w[1], w[2]);
 
     {
@@ -2469,7 +2469,7 @@ int Trmp3DMario_InitPool(unsigned char *a0, int a1) {
 }
 
 /* The Clear slot each bounce runs also restarts the combo
-   TrmpItem_UpdateWithJumper scores from. */
+   TrmpItem::UpdateWithJumper scores from. */
 void dMgTrmpRingObjAdapter_c::Clear() {
     dMgTrmpObjAdapter_c::Clear();
     mItemHitCount = 0;

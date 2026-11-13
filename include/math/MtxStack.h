@@ -120,7 +120,11 @@ extern "C"
 #endif
     /* dst = v * m (rotation and translation). */
     void
-    MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
+    MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);#ifdef __cplusplus
+extern "C"
+#endif
+    void
+    Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *, int, int, int);
 /* out = in * m (rotation only). */
 void MTX_MultVec33(const Vector3 *, const Matrix3x3 *, Vector3 *);
 /* dst = inverse of src; -1 (dst untouched) when src is singular, else 0. */

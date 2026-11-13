@@ -902,6 +902,7 @@ extern int func_0203da9c(void);
 extern unsigned short func_0203dae4(int);
 extern int func_0204424c(char *);
 extern void func_0204531c(char *, int);
+extern unsigned int func_02045a50(const void *, unsigned int);
 extern int func_02045ce0(void);
 extern int func_02045cf0(void);
 extern int func_02045d10(void);
@@ -1021,6 +1022,7 @@ extern "C"
     Trmp2Mario_InitPool(void *, int);
 extern void Bomroom_DrawScore();
 extern int D3D_PlaySeAtX(int, int);
+extern void D3D_PlaySePannedLoop(int, int, int);
 /* The former func_ov006_020f9000..020f9f40 range is owned by the real
    dScMgMCarlo2_c / dMgMCarlo2CardObj_c classes. Every caller is in that
    original TU, so none of those private members belongs in this header. */
@@ -1541,6 +1543,16 @@ extern "C"
 #endif
     extern void
     func_0203d630(int *, int);
+#ifdef __cplusplus
+extern "C"
+#endif
+    extern void
+    func_0203b958(short *, short *, short *);
+#ifdef __cplusplus
+extern "C"
+#endif
+    extern void
+    func_0203cd80(int *, int);
 extern void func_0203d930(void);
 extern void func_0203dafc(int);
 /* 0x020440e8 is NOT `func_020440e8`. config/arm9/symbols.txt:1842 exports it as
@@ -1786,14 +1798,6 @@ extern "C"
 extern void Jump3D_DisableInput(void);
 extern void Jump3D_RestoreCount(void);
 extern void Puff_ClearAll(int, int);
-extern void TrmpItem_MotionHover(void *);
-extern void TrmpItem_MotionSway(void *);
-extern void TrmpItem_UpdateMatricesAll(void);
-extern void TrmpItem_HideAll(u32);
-extern void TrmpItem_ReleaseFiles(void);
-extern void TrmpItem_LoadAll(char*, int);
-extern void TrmpLine_DrawAll(void);
-extern void TrmpLine_LoadTextures(void);
 extern void CupFx_ElemDtor();
 extern void D3D_ReleaseSubBg1(void*);
 extern void D3D_CaptureToSub(void);
@@ -1808,6 +1812,7 @@ extern void Jump2Popup_DrawAll(void);
 extern void Jump2Popup_UpdateAll(void);
 extern void Jump2Popup_ClearAll(void);
 extern void Jump2Popup_InitPool(int, int);
+extern void Jump2Popup_Spawn(int, int, int);
 extern void Jump2_SetLights(void);
 extern void Luigi_PrepareScanlines(void);
 extern void RouletteStrip_ResetAll(void);
@@ -1819,90 +1824,41 @@ extern void RouletteBoard_StartSpin(char*);
    so it returns int. Nothing outside src/minigames/d_s_mg_roulette_methods.cpp, which
    now defines it, references the symbol, so the wrong declaration is
    dropped rather than corrected. */
-#ifdef __cplusplus
-extern "C"
-#endif
-    extern void
-    Petal_ElemDtor();
-#ifdef __cplusplus
-extern "C"
-#endif
-    extern int
-    func_ov007_020b7040(void *);
-#ifdef __cplusplus
-extern "C"
-#endif
-    extern int
-    func_ov007_020b7138(void *, void *);
-#ifdef __cplusplus
-extern "C"
-#endif
-    extern int
-    func_ov007_020bdeb0(int);
-#ifdef __cplusplus
-extern "C"
-#endif
-    extern void
-    func_ov007_020c39f8(void *, int, int, int);
-#ifdef __cplusplus
-extern "C"
-#endif
-    extern void
-    func_ov007_020c7560(void *, int, int);
-#ifdef __cplusplus
-extern "C"
-#endif
-    extern void
-    func_ov007_020c7694(struct Vector3 *, struct Vector3 *);
-#ifdef __cplusplus
-extern "C"
-#endif
-    extern void
-    func_ov007_020c775c(struct Vector3 *);
-#ifdef __cplusplus
-extern "C"
-#endif
-    extern void
-    func_ov007_020c7b2c(int, int, int);
-#ifdef __cplusplus
-extern "C"
-#endif
-    extern void
-    func_ov007_020c81a0(void *, int, int);
-#ifdef __cplusplus
-extern "C"
-#endif
-    extern void
-    func_ov007_020c831c(void *, int, int);
-#ifdef __cplusplus
-extern "C"
-#endif
-    extern void
-    func_ov007_020c92d0(struct Ov007MenuState *);
-#ifdef __cplusplus
-extern "C"
-#endif
-    extern void
-    func_ov014_02111ebc(void *, int);
-#ifdef __cplusplus
-extern "C"
-#endif
-    extern void
-    func_ov018_021123d0(char *, int);
-#ifdef __cplusplus
-extern "C"
-#endif
-    extern void
-    func_ov025_021112e0(char *);
-#ifdef __cplusplus
-extern "C"
-#endif
-    extern void
-    func_ov030_02111734(char *);
-#ifdef __cplusplus
-extern "C"
-#endif
-    /* No longer defined (now daObjRc_Tikuwa_c::StoodOnCallback); kept because its
+extern void RouletteRacer_Draw(char*);
+extern void RouletteRacer_PlaceAtStart(int*);
+extern void Roulette_DrawResultsThunk(char*);
+extern void SlotBlink_Draw(unsigned char*);
+extern void SlotBet_Reset(void*);
+extern void SlotBet_Place(char*);
+extern void Slot1_InitHud(void*);
+extern void SmartballObj_ElemDtor(void);
+extern void TrmpFx_DrawAll(void);
+extern void TrmpFx_UpdateAll(void);
+extern void TrmpFx_ClearAll(void);
+extern void TrmpFx_InitPool(void*, int);
+extern void Trmp2Spinner_UpdateMatrix(char*);
+extern void Trmp2Spinner_UpdateMatricesAll(void);
+extern void Trmp2Spinner_UpdateAll(void);
+extern void Trmp2Spinner_HideAll(void);
+extern void Trmp2Spinner_LoadAll(int, int);
+extern void Trmp2Spinner_InitAll(int);
+extern void Petal_ElemDtor();
+extern int func_ov007_020b7040(void*);
+extern int func_ov007_020b7138(void*, void*);
+extern int func_ov007_020bdeb0(int);
+extern void func_ov007_020c39f8(void*, int, int, int);
+extern void func_ov007_020c7560(void*, int, int);
+extern void func_ov007_020c7694(struct Vector3*, struct Vector3*);
+extern void func_ov007_020c775c(struct Vector3*);
+extern void func_ov007_020c7b2c(int, int, int);
+extern void func_ov007_020c81a0(void*, int, int);
+extern void func_ov007_020c831c(void*, int, int);
+extern void func_ov007_020c92d0(struct Ov007MenuState *);
+extern void func_ov014_02111ebc(void*, int);
+extern void func_ov018_021123d0(char*, int);
+extern void func_ov025_021112e0(char*);
+extern void func_ov030_02111734(char*);
+/* No longer defined (now daObjRc_Tikuwa_c::StoodOnCallback); kept because its
    three named parameters hold @NNN numbers in every includer. */
     extern void
     func_ov036_02111cc4(void *dBgW, void *self, void *clsn);

@@ -135,7 +135,7 @@ typedef struct {
 /* Value types the board objects pass around; no shared header declares them. */
 
 /* (x, y) pair: the unit the board's vector helpers work on. */
-typedef struct {
+typedef struct V2 {
     int x, y;
 } V2;
 
