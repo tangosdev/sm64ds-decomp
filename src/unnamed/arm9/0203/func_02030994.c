@@ -26,7 +26,7 @@ void func_02030994(void)
         src++;
         if (b != 0) {
             *dst = acc;
-            acc = (signed char)(acc + 1);
+            acc = (acc + 1);
         } else {
             *dst = -1;
         }
