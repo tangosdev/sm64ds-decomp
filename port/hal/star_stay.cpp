@@ -80,8 +80,10 @@ int solo() {
     return 1;
 }
 
+#ifndef PORT_ROM_CLEAN
 bool g_log;
 const void *g_last_star; int g_last_ans = -1;
+#endif
 
 int stay_hook(const void *star, int course) {
     int ans = 0;
@@ -92,11 +94,13 @@ int stay_hook(const void *star, int course) {
         const int home = *(const int *)(a + kOffHome);
         ans = (cls == kClsPowerStar && id >= 1 && id <= 7 && home != kHomeMarker) ? 1 : 0;
     }
+#ifndef PORT_ROM_CLEAN
     if (g_log && (star != g_last_star || ans != g_last_ans)) {
         g_last_star = star; g_last_ans = ans;
         std::fprintf(stderr, "[staycourse] star %d course %d level %d: %s\n", star ? (int)*((const unsigned char *)star + kOffStarId) : -1,
                      course, (int)data_0209f2f8, ans ? "STAY (talk and save prompt, play on)" : "cartridge");
     }
+#endif
     return ans;
 }
 
