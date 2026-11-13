@@ -170,8 +170,6 @@ int daPeach_c::IsTouchingPlayer() {
         alive = 1;
     else
         alive = 0;
-    /* Both paths return alive. The cartridge still compares it with zero
-     * first; a single return lets the compiler delete that compare. */
     switch (alive) {
     case 0:
         return alive;
