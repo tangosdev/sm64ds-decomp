@@ -1380,7 +1380,7 @@ bool env_any(const char *n) {
 }
 
 void coop_frame_hook();
-void reread_files(const char *why);
+void reread_files(const char *why, bool coop_medium);
 
 void lv_chain() {
     if (g_lv_chained) return;
@@ -1501,15 +1501,11 @@ void leave_at_title() {
                  "name(s) cleared from both copies of the environment: %s\n", fields, names, names ? cleared.c_str() : "-");
     std::fflush(stderr);
     ntr::backup::select_coop(0);
-    reread_files("the single player save");   // the title was built from the coop medium; a solo pick must read the solo files
-    {   // RABBIT1: and the minigame record (the title's command 21): the room's record stayed in memory, so the solo game showed
-        // the room's minigame record and its next save wrote it over the player's own. The player's own record already holds
-        // the room's rabbit keys (coop_save.cpp rabbit_frame wrote them to this file while the room was up).
-        const int r = _ZN8SaveData16ReadMinigameDataEP16MinigameSaveData(data_0209caa0 + 0x44);
-        uint32_t w;
-        std::memcpy(&w, data_0209caa0 + 0x48, 4);
-        std::fprintf(stderr, "[seamless] the minigame record read again from the single player save: ok=%d unlock word %08x\n", r, w);
-    }
+    // the title was built from the coop medium; a solo pick must read the solo files. RABBIT1: and the minigame record (the
+    // title's command 21), or the solo game showed the room's record and its next save wrote it over the player's own; the
+    // player's own record already holds the room's rabbit keys (coop_save.cpp rabbit_frame wrote them to this file while the room
+    // was up). INT4: the record is read FIRST, inside reread_files, so the solo files' keys are filtered by the solo record.
+    reread_files("the single player save", false);
     unsigned extra = 0;
     const bool after_level = hub_game_heap_carved(&extra);
     const int ok = after_level ? port_mods_relatch_after_level("leaving the coop room")
@@ -1746,10 +1742,31 @@ void env_put(const char *n, const char *v) {
     _putenv_s(n, v ? v : "");
 }
 
-void reread_files(const char *why) {
+/* INT4 (run coopfix1, the coop leave key loss): the title reads the minigame record (command 21) BEFORE the three files (command 20),
+   because SaveData::ReadFileData ANDs each file's rabbit keys (+0x0c) with the record's unlock word in memory (+0x48). Before this
+   the files were read first, with the record of the medium just left still in memory: leaving a room read the player's own solo
+   files through the room's unlock word (a new room's is 0), so every solo rabbit key the room had not caught was gone, and the next
+   solo save wrote that for good (review CREDITS2 item 3; menu_online.cpp medium() has the same order since CREDITS2). Now every
+   switch reads the record of the medium now selected first. On the coop medium the room's keys are not filtered at all: the read
+   runs with every key bit open and the record's own word goes back right after, since RABBIT1 (coop_save.cpp rabbit_frame) rebuilds
+   the unlock word from the room's +0x0c on the room's first frame and relies on +0x0c arriving whole (a room file written before
+   RABBIT1 holds keys its record never unlocked). */
+void reread_files(const char *why, bool coop_medium) {
     if (!data_ov007_0210342c) { LOG("the title's files are not read again (%s): no title scene", why); return; }
+    const int r = _ZN8SaveData16ReadMinigameDataEP16MinigameSaveData(data_0209caa0 + 0x44);
+    uint32_t w;
+    std::memcpy(&w, data_0209caa0 + 0x48, 4);
+    if (coop_medium) {
+        const uint32_t open = 0x0FFFFFFFu | w;
+        std::memcpy(data_0209caa0 + 0x48, &open, 4);
+    }
     func_ov007_020cc600(20);
-    LOG("the title's three files read again from the medium now selected (the ROM's command 20; %s)", why);
+    if (coop_medium) std::memcpy(data_0209caa0 + 0x48, &w, 4);
+    uint32_t keys = 0;
+    std::memcpy(&keys, data_0209caa0 + 0x0c, 4);
+    LOG("the minigame record read from the medium now selected (the ROM's command 21): ok=%d unlock word %08x; then the title's "
+        "three files (command 20; %s)%s; open file's keys %08x", r, w, why,
+        coop_medium ? ", the room's keys read whole" : "", keys);
 }
 
 const char *hv(int nset, const char *const *sn, const char *const *sv, const char *n) {
@@ -1762,7 +1779,7 @@ void ip_undo(int nset, const char *const *sn, bool medium, bool relatched) {
     online_session_clear();
     for (int i = 0; i < nset; ++i) if (sn[i]) env_put(sn[i], nullptr);
     host_setting_adventure_env_reread();
-    if (medium) { ntr::backup::select_coop(0); reread_files("the hand-off was undone"); }
+    if (medium) { ntr::backup::select_coop(0); reread_files("the hand-off was undone", false); }
     coop_world_session_reset();
     coop_save_session_reset();
     party_hits::session_reset();
@@ -1877,7 +1894,7 @@ void inplace_step() {
             return;
         }
         if (r == 0) return;
-        reread_files("the host's record is in the guest's image");
+        reread_files("the host's record is in the guest's image", true);
         port_join_plate_inplace_end("the host answered and its save is here: the title walks to the room");
         IP.st = kIpDrive;
         IP.drive_t0 = tick();
@@ -1968,7 +1985,7 @@ extern "C" const char *port_coop_handoff_apply(int nset, const char *const *sn, 
         return "the host's coop save could not be prepared";
     }
     ntr::backup::select_coop(host ? 2 : 1);
-    reread_files("the coop medium");
+    reread_files("the coop medium", true);
     // 6. the hub and the ghost layer
     comms_conductor_leave_reset();
     hub_presence_leave_reset();
