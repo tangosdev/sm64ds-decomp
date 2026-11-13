@@ -272,7 +272,7 @@ int daWater_Tatumaki_c::SetState(const State *state) {
 /* Rebuild the model matrix from the position and angles. */
 void daWater_Tatumaki_c::UpdateModelMatrix() {
     Vector3 pos;
-    Vec3_Asr((Vector3 *)&pos, &mPos, 3);
+    Vec3_Asr(&pos, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     /* Twelve flat words. A Matrix4x3 assignment copies r and t separately. */
