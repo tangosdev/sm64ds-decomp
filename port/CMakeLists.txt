@@ -25677,6 +25677,13 @@ foreach(_tsetlive1 walk_window walk_window_hires)
         "${CMAKE_CURRENT_SOURCE_DIR}/hal/settings_live.cpp")
 endforeach()
 
+# Run coopfix1 lane STAYCOURSE1: the single player setting StayAfterStar (stay in the course after a star) and its row's greying
+# in a room; the star side is the _MSC_VER hook in src/game/actors/d_a_star.cpp. Own block, beside the settings engine.
+foreach(_tstaycourse1 walk_window walk_window_hires)
+    target_sources(${_tstaycourse1} PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/hal/star_stay.cpp")
+endforeach()
+
 # The same engine proved on the file alone (no ROM, no window): tests/smoke_settings_live.cpp.
 add_executable(smoke_settings_live tests/smoke_settings_live.cpp hal/host_settings.cpp
     hal/settings_live.cpp hal/pad_backend.cpp)

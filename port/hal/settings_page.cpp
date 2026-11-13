@@ -600,7 +600,9 @@ const Piece *arrow_right_piece(int w, int h)
 
 /* =========================================================== state and rows ============================================ */
 
-enum Tab { T_GENERAL = 0, T_DISPLAY, T_CONTROLS, T_SOUND, T_PATCHES, T_ONLINE, T_CHEATS, T_COUNT };
+/* STAYCOURSE1: GAME (after GENERAL) gathers every row that changes how the game plays, as sections in one list: the star options, the old
+   PATCHES tab's rows and the old CHEATS tab's rows (game_rows()). PATCHES and CHEATS are gone; every settings key is the same. */
+enum Tab { T_GENERAL = 0, T_GAME, T_DISPLAY, T_CONTROLS, T_SOUND, T_ONLINE, T_COUNT };
 /* CHEATS1: the strip shows TAB_VIS of the T_COUNT tabs, a window that keeps the selected tab in the middle where it can
    (start = clamp(tab - 2, 0, T_COUNT - TAB_VIS)); a window change slides over TAB_SLIDE page frames, a wrap snaps */
 enum { TAB_VIS = 5, TAB_SLIDE = 7 };
@@ -641,14 +643,16 @@ const Row ROWS_GENERAL[] = {
     { R_CHECK, "Coins in the middle", SL_COINS_MIDDLE, -1, 0, 0, 0 },
     { R_NOTE, "Puts the coin counter at the top middle, like SM64.", -1, -1, 0, 0, 0 },
 };
-/* PATCHES: changes to how the original game plays. "Keep lives between sessions" moved here from GENERAL (same key, SL_KEEP_LIVES,
-   same default off). "Fix original bugs" (key FixOriginalBugs, default on, SM64DS_FIX_ORIGINAL_BUGS=0 off) is defined in
-   settings_live by the lane that implements it; the row is looked up by key name, like Draw distance, so it shows once that key
-   exists in a build and the page builds without it. New patch rows go in patches_rows(). */
-Row g_patch_rows[8];
-const Row *patches_rows(int *n)
+/* The GAME tab's "Patches" section (it was the PATCHES tab): changes to how the original game plays. "Keep lives between sessions" moved
+   here from GENERAL (same key, SL_KEEP_LIVES, same default off). "Fix original bugs" (key FixOriginalBugs, default on,
+   SM64DS_FIX_ORIGINAL_BUGS=0 off) is defined in settings_live by the lane that implements it; the row is looked up by key name, like
+   Draw distance, so it shows once that key exists in a build and the page builds without it. New patch rows go in patches_rows(),
+   which appends them to the GAME tab's list at g_game_rows + k. */
+Row g_game_rows[MAXR];
+int patches_rows(int k)
 {
-    int k = 0;
+    Row *g_patch_rows = g_game_rows;
+    g_patch_rows[k++] = Row{ R_HEAD, "Patches", -1, -1, 0, 0, 0 };
     g_patch_rows[k++] = Row{ R_CHECK, "Keep lives between sessions", SL_KEEP_LIVES, -1, 0, 0, 0 };
     g_patch_rows[k++] = Row{ R_NOTE, "Off is the DS: every file starts with 4 lives.", -1, -1, 0, 0, 0 };
     const int fb = sl_find("FixOriginalBugs");
@@ -658,8 +662,7 @@ const Row *patches_rows(int *n)
     g_patch_rows[k++] = Row{ R_CHECK, "Peach star jingle", SL_PEACH_JINGLE, -1, 0, 0, 0 };
     g_patch_rows[k++] = Row{ R_CHECK, "Skip opening", SL_SKIP_OPENING, -1, 0, 0, 0 };   /* SKIPINTRO1 */
     g_patch_rows[k++] = Row{ R_NOTE, "New files skip Peach's letter and start at the castle.", -1, -1, 0, 0, 0 };
-    *n = k;
-    return g_patch_rows;
+    return k;
 }
 /* PAUSE3: CONTROLS is the old CONTROLS and CAMERA tabs together (the camera rows first, then the run rows, then the bindings) */
 const Row ROWS_CONTROLS[] = {
@@ -708,9 +711,10 @@ const Row ROWS_ONLINE[] = {
     { R_BIND, "Leave party", SL_KEY_BASE + HOST_KEY_PARTY_LEAVE, SL_PAD_BASE + HOST_PAD_PARTY_LEAVE, 0, 0, 0, 0, SL_MOUSE_BASE + HOST_MOUSE_PARTY_LEAVE + 1 },
     { R_NOTE, "Name, colours and voice are set in the launcher.", -1, -1, 0, 0, 0 },
 };
-/* CHEATS1: CHEATS holds the rows that change how the game plays, moved from GENERAL (same keys: DebugMenu, CharactersUnlockedFromStart,
-   CharacterStrip; the star select's character panel still reads CharacterStrip) */
+/* CHEATS1: the cheat rows, moved from GENERAL (same keys: DebugMenu, CharactersUnlockedFromStart, CharacterStrip; the star select's
+   character panel still reads CharacterStrip). STAYCOURSE1: the GAME tab's "Cheats" section (it was the CHEATS tab). */
 const Row ROWS_CHEATS[] = {
+    { R_HEAD, "Cheats", -1, -1, 0, 0, 0 },
     { R_CHECK, "Debug menu", SL_DEBUG_MENU, -1, 0, 0, 0 },
     { R_CHECK, "Custom characters from the start", SL_CHARS_FROM_START, -1, 0, 0, 0 },
     { R_CHECK, "Character select on star select", SL_CHARACTER_STRIP, -1, 0, 0, 0 },
@@ -720,7 +724,21 @@ const Row ROWS_SOUND[] = {
     { R_SLIDER, "Volume", SL_VOLUME, -1, 5, 0, 0 },
     { R_NOTE, "Music and effects share one volume.", -1, -1, 0, 0, 0 },
 };
-const char *const TAB_NAMES[T_COUNT] = { "GENERAL", "DISPLAY", "CONTROLS", "SOUND", "PATCHES", "ONLINE", "CHEATS" };
+const char *const TAB_NAMES[T_COUNT] = { "GENERAL", "GAME", "DISPLAY", "CONTROLS", "SOUND", "ONLINE" };
+
+/* STAYCOURSE1: the GAME tab, built per call (the Patches section looks rows up by key). Sections in this order: Stars (StayAfterStar,
+   single player only: settings_live greys it in a room or a VS match), Patches, Cheats. */
+const Row *game_rows(int *n)
+{
+    int k = 0;
+    g_game_rows[k++] = Row{ R_HEAD, "Stars", -1, -1, 0, 0, 0 };
+    g_game_rows[k++] = Row{ R_CHECK, "Stay in course after a star", SL_STAY_AFTER_STAR, -1, 0, 0, 0 };
+    g_game_rows[k++] = Row{ R_NOTE, "Single player only. Leave with Exit Course.", -1, -1, 0, 0, 0 };
+    k = patches_rows(k);
+    for (size_t i = 0; i < sizeof ROWS_CHEATS / sizeof ROWS_CHEATS[0] && k < MAXR; ++i) g_game_rows[k++] = ROWS_CHEATS[i];
+    *n = k;
+    return g_game_rows;
+}
 
 /* DISPLAY is built per call: the Frame rate row is there only when this build's settings_live has a FrameRate row (another lane makes it
    live; until then it stays a launcher setting and the note says so) */
@@ -777,10 +795,9 @@ const Row *rows_of(int tab, int *n)
     switch (tab) {
     case T_DISPLAY: return display_rows(n);
     case T_SOUND: *n = (int)(sizeof ROWS_SOUND / sizeof ROWS_SOUND[0]); return ROWS_SOUND;
-    case T_PATCHES: return patches_rows(n);
+    case T_GAME: return game_rows(n);
     case T_CONTROLS: *n = (int)(sizeof ROWS_CONTROLS / sizeof ROWS_CONTROLS[0]); return ROWS_CONTROLS;
     case T_ONLINE: *n = (int)(sizeof ROWS_ONLINE / sizeof ROWS_ONLINE[0]); return ROWS_ONLINE;
-    case T_CHEATS: *n = (int)(sizeof ROWS_CHEATS / sizeof ROWS_CHEATS[0]); return ROWS_CHEATS;
     default: *n = (int)(sizeof ROWS_GENERAL / sizeof ROWS_GENERAL[0]); return ROWS_GENERAL;
     }
 }
@@ -992,7 +1009,10 @@ void compute_layout(int w, int h)
         if (top < S.scroll) S.scroll = top;
         if (bot > S.scroll + vis) S.scroll = bot - vis;
         S.ensure_vis = 0;
-    } else if (S.ensure_vis) S.ensure_vis = 0;
+    } else if (S.ensure_vis) {   /* STAYCOURSE1: the Reset plank: the list's end, so a closing note under the last row shows too */
+        S.scroll = L.scroll_max;
+        S.ensure_vis = 0;
+    }
     if (S.scroll > L.scroll_max) S.scroll = L.scroll_max;
     if (S.scroll < 0) S.scroll = 0;
     for (int i = 0; i < n && i < MAXR; ++i) { L.r[i].y = L.body[1] + i * L.rowh - S.scroll; L.r[i].h = L.rowh; }

@@ -115,6 +115,7 @@ static const SlInfo INFO[] = {
     { "MinigameHiRes",          SL_KIND_BOOL,    0, 1, 0, 0, 1 },
     { "MinigameUpscale",        SL_KIND_BOOL,    0, 1, 0, 0, 1 },
     { "RenderScale",            SL_KIND_PERCENT, 0, 8, 0, 0, 0 },     /* RESSCALE1: saved for the next boot */
+    { "StayAfterStar",          SL_KIND_BOOL,    0, 1, 0, 0, 1 },     /* STAYCOURSE1: single player only */
 };
 
 /* INFO[] is positional: row i describes id i. If a host key or pad is added (HOST_KEY_COUNT / HOST_PAD_COUNT move, for example
@@ -174,6 +175,7 @@ int sl_get(int id)
     case SL_WIDE_DRAWING:       return host_setting_wide_drawing();
     case SL_PEACH_JINGLE:       return host_setting_peach_jingle();
     case SL_SKIP_OPENING:       return host_setting_skip_opening();
+    case SL_STAY_AFTER_STAR:    return host_setting_stay_after_star();
     case SL_MINIGAME_HIRES:     return host_setting_minigame_hires();
     case SL_MINIGAME_UPSCALE:   return host_setting_minigame_upscale();
     case SL_RENDER_SCALE:       return host_setting_render_scale_saved();
@@ -225,6 +227,7 @@ int sl_set(int id, int v)
     case SL_WIDE_DRAWING:       return host_setting_set_wide_drawing(v);
     case SL_PEACH_JINGLE:       return host_setting_set_peach_jingle(v);
     case SL_SKIP_OPENING:       return host_setting_set_skip_opening(v);
+    case SL_STAY_AFTER_STAR:    return host_setting_set_stay_after_star(v);
     case SL_MINIGAME_HIRES:     return host_setting_set_minigame_hires(v);
     case SL_MINIGAME_UPSCALE:   return host_setting_set_minigame_upscale(v);
     case SL_RENDER_SCALE:
@@ -237,9 +240,13 @@ int sl_set(int id, int v)
     return 0;
 }
 
+int (*sl_solo_hook)(void) = 0;
+
 int sl_applicable(int id)
 {
     switch (id) {
+    case SL_STAY_AFTER_STAR:    /* STAYCOURSE1: single player only; in a room or a VS match the row is greyed (it does nothing there) */
+        return sl_solo_hook ? sl_solo_hook() != 0 : 1;
     case SL_CAMERA_SENSITIVITY:     /* CAMPACK1: the DS camera's stepped turn is scaled too, so this applies in every mode */
         return 1;
     case SL_INVERT_CAMERA_Y:

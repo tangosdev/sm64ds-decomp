@@ -217,6 +217,12 @@ extern "C" int (*port_star_cam_foreign_hook)(const void *star, const void *playe
 extern "C" int (*port_star_cam_foreign_hook)(const void *star, const void *player) = 0;
 static int port_star_foreign(const void *star) { return port_star_cam_foreign_hook ? port_star_cam_foreign_hook(star, 0) : 0; }
 static int port_collector_foreign(const void *pl) { return port_star_cam_foreign_hook && pl && port_star_cam_foreign_hook(0, pl); }
+/* PC port, single player (lane STAYCOURSE1): STAY IN THE COURSE AFTER A STAR. func_ov002_020e9630 below is the cartridge's own
+   "this level keeps playing after a star" test (the castle and the Bowser stages: the star's talk and save prompt, then the
+   player plays on). The hook lets the port add the course the player stands in to that list when the player asked for it
+   (setting StayAfterStar, hal/star_stay.cpp). Null, or 0, is the cartridge. */
+extern "C" int (*port_star_stay_hook)(const void *star, int course);
+extern "C" int (*port_star_stay_hook)(const void *star, int course) = 0;
 #endif
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void* mF, s16 angY);
@@ -1913,6 +1919,10 @@ int daStar_c::func_ov002_020e9630() {
     if (lv == 0xf || lv == 0x10 || lv == 0x11 || lv == 0x12 ||
         lv == 0x13 || lv == 0x14 || lv == 0x1d)
         return 1;
+#if defined(_MSC_VER)
+    if (port_star_stay_hook && port_star_stay_hook(this, lv))
+        return 1;
+#endif
     return 0;
 }
 

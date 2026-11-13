@@ -1205,6 +1205,10 @@ int host_setting_mouse_sensitivity(void);
 /* SKIPINTRO1: SkipOpening, bool, OFF by default: a new file skips its opening and starts at the castle with the opening marked seen. Live. */
 int host_setting_skip_opening(void);
 int host_setting_set_skip_opening(int on);
+/* STAYCOURSE1: StayAfterStar, bool, OFF by default: in single player a power star in one of the 15 courses does not send the player
+   out (talk and save prompt, then play on). Live. */
+int host_setting_stay_after_star(void);
+int host_setting_set_stay_after_star(int on);
 
 #ifdef __cplusplus
 }
