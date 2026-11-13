@@ -401,44 +401,43 @@ int daObjHatenaBlock_c::InitResources()
         }
     }
 
-    {
+    do {
         int b14 = !(actorID != ACTOR_HATENA_BLOCK);
         if (b14 == 0) {
             int b15 = !(actorID != ACTOR_ITEM_BLOCK);
             if (b15 == 0)
-                goto end;
+                break;
         }
-    }
 
-    switch (mContentType) {
-    case CONTENT_COINS:
-    case CONTENT_STAR:
-        break;
-    case CONTENT_SHELL:
-        dExtSimpleModel_c::LoadFile(data_ov002_0210da18);
-        break;
-    case CONTENT_ONEUP:
-        dExtSimpleModel_c::LoadFile(data_ov002_0210d9d8);
-        break;
-    case CONTENT_SCALEUP_KINOKO:
-        dExtSimpleModel_c::LoadFile(data_ov002_0210da30);
-        break;
-    case CONTENT_POWER_UP_7:
-        dExtSimpleModel_c::LoadFile(gPFlowerOpenModelFile);
-        dExtSimpleModel_c::LoadFile(gPFlowerCloseModelFile);
-        dExtSimpleModel_c::LoadFile(data_ov002_0210d9e0);
-        break;
-    case CONTENT_POWER_UP_5:
-        dExtSimpleModel_c::LoadFile(data_ov002_0210da58);
-        dExtSimpleModel_c::LoadFile(gPFlowerOpenModelFile);
-        dExtSimpleModel_c::LoadFile(gPFlowerCloseModelFile);
-        break;
-    case CONTENT_POWER_UP_6:
-        dExtSimpleModel_c::LoadFile(gPFlowerOpenModelFile);
-        dExtSimpleModel_c::LoadFile(gPFlowerCloseModelFile);
-        break;
-    }
-end:
+        switch (mContentType) {
+        case CONTENT_COINS:
+        case CONTENT_STAR:
+            break;
+        case CONTENT_SHELL:
+            dExtSimpleModel_c::LoadFile(data_ov002_0210da18);
+            break;
+        case CONTENT_ONEUP:
+            dExtSimpleModel_c::LoadFile(data_ov002_0210d9d8);
+            break;
+        case CONTENT_SCALEUP_KINOKO:
+            dExtSimpleModel_c::LoadFile(data_ov002_0210da30);
+            break;
+        case CONTENT_POWER_UP_7:
+            dExtSimpleModel_c::LoadFile(gPFlowerOpenModelFile);
+            dExtSimpleModel_c::LoadFile(gPFlowerCloseModelFile);
+            dExtSimpleModel_c::LoadFile(data_ov002_0210d9e0);
+            break;
+        case CONTENT_POWER_UP_5:
+            dExtSimpleModel_c::LoadFile(data_ov002_0210da58);
+            dExtSimpleModel_c::LoadFile(gPFlowerOpenModelFile);
+            dExtSimpleModel_c::LoadFile(gPFlowerCloseModelFile);
+            break;
+        case CONTENT_POWER_UP_6:
+            dExtSimpleModel_c::LoadFile(gPFlowerOpenModelFile);
+            dExtSimpleModel_c::LoadFile(gPFlowerCloseModelFile);
+            break;
+        }
+    } while (0);
     return 1;
 }
 
@@ -471,37 +470,23 @@ int daObjHatenaBlock_c::Behavior()
         if (mMeshCollider.IsEnabled() != 0) {
             mMeshCollider.Disable();
         }
-        goto end;
-    }
-    if ((data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31) == 0) {
-        int b = (int)(actorID == ACTOR_HATENA_BLOCK);
-        if (b != 0) {
-            mAnmModel.Advance();
-            if (mMeshCollider.IsEnabled() != 0) {
-                mMeshCollider.Disable();
-            }
-            goto end;
+    } else if ((data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31) == 0 &&
+               (int)(actorID == ACTOR_HATENA_BLOCK) != 0) {
+        mAnmModel.Advance();
+        if (mMeshCollider.IsEnabled() != 0) {
+            mMeshCollider.Disable();
         }
-    }
-    {
-        int b = (int)(gGameMode == 1);
-        if (b != 0) {
-            if (mMeshCollider.IsEnabled() == 0) {
-                mMeshCollider.Enable(this);
-            }
-            goto end;
+    } else if ((int)(gGameMode == 1) != 0) {
+        if (mMeshCollider.IsEnabled() == 0) {
+            mMeshCollider.Enable(this);
         }
-    }
-    if (gCurrentSublevel == 0x1c) { /* LEVEL_ID 0x1c */
+    } else if (gCurrentSublevel == 0x1c) { /* LEVEL_ID 0x1c */
         if (IsClsnInRange(0x460000, 0x46000) != 0) {
             UpdateMeshCollider();
         }
-        goto end;
-    }
-    if (IsClsnInRange(0x118000, 0x46000) != 0) {
+    } else if (IsClsnInRange(0x118000, 0x46000) != 0) {
         UpdateMeshCollider();
     }
-end:
     return 1;
 }
 
@@ -510,19 +495,20 @@ end:
    mScaleX. Always returns 1. */
 int daObjHatenaBlock_c::Render()
 {
-    if (mState == STATE_POPPED)
-        goto done;
-    if ((data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31) == 0) {
-        int b = (actorID == ACTOR_HATENA_BLOCK);
-        if (b != 0) {
-            mAnmModel.Render(0);
-            goto done;
+    do {
+        if (mState == STATE_POPPED)
+            break;
+        if ((data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31) == 0) {
+            int b = (actorID == ACTOR_HATENA_BLOCK);
+            if (b != 0) {
+                mAnmModel.Render(0);
+                break;
+            }
         }
-    }
-    {
-        mModel.Render(&mScale);
-    }
-done:
+        {
+            mModel.Render(&mScale);
+        }
+    } while (0);
     return 1;
 }
 
@@ -541,12 +527,13 @@ int daObjHatenaBlock_c::CleanupResources()
     if (b)
         data_ov002_0210da58.Release();
 
-    b2 = (int)(actorID == ACTOR_HATENA_BLOCK);
-    if (b2)
-        goto dosw;
-    b3 = (int)(actorID == ACTOR_ITEM_BLOCK);
-    if (b3) {
-    dosw:
+    do {
+        b2 = (int)(actorID == ACTOR_HATENA_BLOCK);
+        if (b2 == 0) {
+            b3 = (int)(actorID == ACTOR_ITEM_BLOCK);
+            if (b3 == 0)
+                break;
+        }
         switch (mContentType) {
         case CONTENT_STAR:
             UntrackStar(*(s8 *)&mStarTracked);
@@ -575,7 +562,7 @@ int daObjHatenaBlock_c::CleanupResources()
             gPFlowerCloseModelFile.Release();
             break;
         }
-    }
+    } while (0);
 
     switch (actorID - ACTOR_HATENA_BLOCK) {
     case 0:   /* HATENA_BLOCK */
@@ -643,12 +630,8 @@ void daObjHatenaBlock_c::UpdateDropShadow() {
     int b0, b1;
 
     b0 = (mFlags & 8) ? 1 : 0;
-    if (b0 != 0) {
-        b1 = (gGameMode == 1) ? 1 : 0;
-        if (b1 == 0) goto skipcall;
-    }
-    mFloorY = GetFloorY();
-skipcall:
+    if (b0 == 0 || ((b1 = (*(volatile unsigned char *)&gGameMode == 1) ? 1 : 0) != 0))
+        mFloorY = GetFloorY();
     height = mPosY - mFloorY;
     if (height <= 0x1000) height = 0x1000;
     shadowScale = FX_MUL(height, 0x180);

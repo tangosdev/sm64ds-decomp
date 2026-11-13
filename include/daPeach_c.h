@@ -79,8 +79,6 @@ struct daPeach_c : dActor_c {
 
     void UpdateLookAt();
     void UpdateGroundCollision(dBgCh_Actr *collision);
-    /* 0x02129f8c. The body keeps a goto so the ROM's redundant final
-     * compare of the 0/1 result survives. */
     int IsTouchingPlayer();
     void UpdateModel();
     void CallStateBehavior();

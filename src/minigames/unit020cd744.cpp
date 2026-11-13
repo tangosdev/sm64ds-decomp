@@ -631,31 +631,28 @@ int TrmpItem::HitTest2D(TrampolineObjectCallbacks *jumper, int) {
         previousSide = -1;
     else if (previousSide > 1)
         previousSide = 1;
-    if (currentSide * previousSide > 0)
-        goto done;
-    if (currentSide == 0 && previousSide == 0)
-        goto done;
+    if (currentSide * previousSide <= 0 && (currentSide != 0 || previousSide != 0)) {
 
-    // Require an intersection strictly between the two line endpoints.
-    Vec2_Sub((int *)&movementDirection, (int *)&currentProjection, (int *)&previousProjection);
-    testDirection = movementDirection;
-    Vec2_Sub((int *)&toEnd, (int *)&lineEnd, (int *)&currentProjection);
-    firstOffset = toEnd;
-    Vec2_Sub((int *)&toStart, (int *)&lineStart, (int *)&currentProjection);
-    secondOffset = toStart;
-    endSide = func_0203d524(&testDirection, &firstOffset);
-    startSide = func_0203d524(&testDirection, &secondOffset);
-    if (endSide < -1)
-        endSide = -1;
-    else if (endSide > 1)
-        endSide = 1;
-    if (startSide < -1)
-        startSide = -1;
-    else if (startSide > 1)
-        startSide = 1;
-    if (endSide * startSide < 0 && (endSide != 0 || startSide != 0))
-        result = 1;
-done:
+        // Require an intersection strictly between the two line endpoints.
+        Vec2_Sub((int *)&movementDirection, (int *)&currentProjection, (int *)&previousProjection);
+        testDirection = movementDirection;
+        Vec2_Sub((int *)&toEnd, (int *)&lineEnd, (int *)&currentProjection);
+        firstOffset = toEnd;
+        Vec2_Sub((int *)&toStart, (int *)&lineStart, (int *)&currentProjection);
+        secondOffset = toStart;
+        endSide = func_0203d524(&testDirection, &firstOffset);
+        startSide = func_0203d524(&testDirection, &secondOffset);
+        if (endSide < -1)
+            endSide = -1;
+        else if (endSide > 1)
+            endSide = 1;
+        if (startSide < -1)
+            startSide = -1;
+        else if (startSide > 1)
+            startSide = 1;
+        if (endSide * startSide < 0 && (endSide != 0 || startSide != 0))
+            result = 1;
+    }
     return result;
 }
 

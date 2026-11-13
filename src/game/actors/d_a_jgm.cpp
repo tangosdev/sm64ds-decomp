@@ -30,9 +30,8 @@
  * - Sound::PlayLong is the Sound.h call. d_a_jgmPlayLongHold keeps the five
  *   named parameters that hold the @NNN count. Unnaming them gives -5.
  * - The manifest pins eight @NNN statics, so every named local, named
- *   parameter and goto label ahead of __sinit counts (each advances the
- *   counter by one, measured). Control-flow shape moves the counter too:
- *   removing the UpdateFlight goto drops a label but measures +1. Names
+ *   parameter ahead of __sinit counts (each advances the
+ *   counter by one, measured). Names
  *   that also hold that count: bodyFile /
  *   heldFile and the loop counters in InitResources / CleanupResources,
  *   `frame` in UpdateThrowState, the `offset` references in the hover and
@@ -159,7 +158,7 @@ typedef int BgchInitAt_(dBgCh_Actr *collision, dActor_c *actor, Fix12i radius, F
  * the @NNN count. Sound.h's PlayLong emits the same bytes. */
 extern void d_a_jgmPlayLongHold(unsigned int handle, unsigned int a, unsigned int id,
                                 const Vector3 *pos, unsigned int e);
-extern void d_a_jgmNewSimpleHold(unsigned int n, int x, int y, int z);
+extern void d_a_jgmNewSimpleHold(unsigned int n, int x, int, int);
 }
 
 extern "C" daJgm_c *daJgm_c_classInit()
@@ -628,26 +627,27 @@ void daJgm_c::DieAndDropCoins()
 }
 
 void daJgm_c::UpdateFlight() {
-    /* The goto is kept: the goto-free if/else emits 4 more bytes. */
     daPly_c *p = ClosestNonVanishPlayer();
     s32 *target;
     int chaseRange;
     if (p != 0) {
         chaseRange = (param1 != 0) ? 0x1068000 : 0x7d0000;
-        if (Vec3_HorzDist((Vector3 *)&mSpawnPosX, &p->mPos) < chaseRange) {
-            int d = mSpawnPosY - p->mPosY;
-            if (d < 0)
-                d = -d;
-            if (d < 0x5dc000) {
-                target = &p->mPosX;
-                goto haveTarget;
+        for (;;) {
+            if (Vec3_HorzDist((Vector3 *)&mSpawnPosX, &p->mPos) < chaseRange) {
+                int d = mSpawnPosY - p->mPosY;
+                if (d < 0)
+                    d = -d;
+                if (d < 0x5dc000) {
+                    target = &p->mPosX;
+                    break;
+                }
             }
+            target = &mSpawnPosX;
+            break;
         }
-        target = &mSpawnPosX;
     } else {
         target = &mSpawnPosX;
     }
-haveTarget:
     int hd = Vec3_HorzDist(&mPos, (Vector3 *)target);
     short ha = Vec3_HorzAngle(&mPos, (Vector3 *)target);
     ApproachLinear(mAngleY, ha, 0x5e8);

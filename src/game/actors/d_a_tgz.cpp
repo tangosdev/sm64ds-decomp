@@ -752,26 +752,27 @@ int daTgz_c::Render()
 int daTgz_c::Behavior()
 {
     int s = mState;
-    if (s != 1 || mWithMeshClsn.IsOnGround()) {
-        s = mState;
-        if (s != 4 && s != 5 && IsTooFarAwayFromPlayer(0x5dc000)) {
-            if (DecIfAbove0_Byte(&mDespawnTimer) == 0) {
-                MarkForDestruction();
-                return 1;
+    do {
+        if (s != 1 || mWithMeshClsn.IsOnGround()) {
+            s = mState;
+            if (s != 4 && s != 5 && IsTooFarAwayFromPlayer(0x5dc000)) {
+                if (DecIfAbove0_Byte(&mDespawnTimer) == 0) {
+                    MarkForDestruction();
+                    return 1;
+                }
+                break;
             }
-            goto done;
         }
-    }
-    func_ov077_02124c28(this);
-    func_ov077_02125e20(this);
-    MakeVanishLuigiWork(mdCcAc_c);
-    func_ov077_02125304(this);
-    if (gCurrentSublevel == 0x1c && mPosY <= -0x1600000) {
-        PoofDust();
-        func_02012694(0xc4, &mCamSpacePos);
-        MarkForDestruction();
-    }
-done:
+        func_ov077_02124c28(this);
+        func_ov077_02125e20(this);
+        MakeVanishLuigiWork(mdCcAc_c);
+        func_ov077_02125304(this);
+        if (gCurrentSublevel == 0x1c && mPosY <= -0x1600000) {
+            PoofDust();
+            func_02012694(0xc4, &mCamSpacePos);
+            MarkForDestruction();
+        }
+    } while (0);
     return 1;
 }
 
