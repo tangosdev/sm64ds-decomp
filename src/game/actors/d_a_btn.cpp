@@ -127,10 +127,10 @@ extern CLPS_Block data_ov015_021135d4;
 
 extern int data_ov079_021275dc[];
 extern int data_ov079_021275e4[];
-extern void *data_ov079_021275ec[];
-extern void *data_ov079_02127600[];
+extern SharedFilePtr *data_ov079_021275ec[];
+extern SharedFilePtr *data_ov079_02127600[];
 extern CLPS_Block data_ov079_02127ba0;   /* the plain Whomp's CLPS block */
-extern void *data_ov079_02127bf0[];
+extern SharedFilePtr *data_ov079_02127bf0[];
 extern int data_ov079_02127cfc[];
 }
 
@@ -237,8 +237,7 @@ int daBtn_c::InitResources()
         mAnmModel.SetFile((BMD_File *)bmd, 1, -1);
         animIdx = 0;
         do {
-            anim = data_ov079_02127600[animIdx];
-            dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)anim);
+            dExtFrameCtrl_c::LoadFile(*data_ov079_02127600[animIdx]);
             animIdx += 1;
         } while (animIdx < 6);
         dExtAnmTexPat_c::LoadFile(data_ov079_02128178);
@@ -248,14 +247,13 @@ int daBtn_c::InitResources()
         mAnmModel.SetFile((BMD_File *)bmd, 1, -1);
         animIdx = 0;
         do {
-            anim = data_ov079_021275ec[animIdx];
-            dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)anim);
+            dExtFrameCtrl_c::LoadFile(*data_ov079_021275ec[animIdx]);
             animIdx += 1;
         } while (animIdx < 5);
     }
 
     idx = mIsKing;
-    kcl = dBgW_Kc::LoadFile(*(SharedFilePtr *)data_ov079_02127bf0[idx]);
+    kcl = dBgW_Kc::LoadFile(*data_ov079_02127bf0[idx]);
     kcl;
 
     if (mShadowModel.InitCuboid() == 0) {
@@ -694,7 +692,7 @@ void daBtn_c::func_ov079_021256d4()
         s16 t;
         void *anim;
         int five;
-        void **tab;
+        SharedFilePtr **tab;
         dExtAnmModel_c *ma;
 
         Sound::StopLoadedMusic_Layer3();
@@ -1357,7 +1355,7 @@ void daBtn_c::func_ov079_02124188()
     int shadowRad;
     int tiltSin;
     int lean;
-    char *bone;
+    ModelBone *bone;
 
     Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngleX, mAngleY, mAngleZ);
 
@@ -1365,14 +1363,14 @@ void daBtn_c::func_ov079_02124188()
     mAnmModel.mat4x3.t.y = (mPosY + mTipLift) >> 3;
     mAnmModel.mat4x3.t.z = mPosZ >> 3;
 
-    bone = (char *)mAnmModel.data.bones;
+    bone = mAnmModel.data.bones;
     pos.x = mPosX;
     pos.y = mPosY;
     pos.z = mPosZ;
 
-    mBodyPitch = -*(unsigned short *)(bone + 0x1c);
-    mBodyYaw = *(unsigned short *)(bone + 0x1a);
-    mBodyRoll = (*(unsigned short *)(bone + 0x1e) - 0x4000);
+    mBodyPitch = -bone->rotY;
+    mBodyYaw = bone->rotX;
+    mBodyRoll = (bone->rotZ - 0x4000);
 
     if (mIsKing != 0) {
         tiltSin = FX_SinIdx((unsigned short)mAngleX >> 4);
@@ -1387,7 +1385,7 @@ void daBtn_c::func_ov079_02124188()
     pos.x += FX_MUL(lean, FX_SinIdx((unsigned short)mAngleY >> 4));
     pos.z += FX_MUL(lean, FX_CosIdx((unsigned short)mAngleY >> 4));
 
-    ::Vec3_Asr((::Vector3 *)&asr, (::Vector3 *)&pos, 3);
+    ::Vec3_Asr(&asr, &pos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, (mAngleY + mBodyYaw));
 
