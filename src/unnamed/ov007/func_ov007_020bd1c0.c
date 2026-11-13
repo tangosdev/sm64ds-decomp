@@ -3,6 +3,7 @@
 #include "Ov007Settings.h"
 #include "Ov007Light.h"
 #include "nitro/gx/g3x.h"
+#define PickerScene_Create _Z18PickerScene_Createii
 
 /* The lights' source points: lights[0] per menu, lights[1] in menu 0. */
 extern Vector3 data_ov007_020d7c34[];

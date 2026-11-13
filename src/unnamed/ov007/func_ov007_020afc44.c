@@ -3,6 +3,9 @@
 #include "Ov007Work.h"
 #include "Ov007Settings.h"
 #include "Ov007LayerSlot.h"
+#define MenuText_ScrollRecordBoard _Z26MenuText_ScrollRecordBoardi
+#define MenuText_DrawRecordBoard _Z24MenuText_DrawRecordBoardiPci
+#define RequestScreenFade _Z17RequestScreenFadeiiPFvvE
 
 extern int func_ov007_020c8f98(void *p);
 extern void func_ov007_020c1d78(int i);

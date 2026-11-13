@@ -198,12 +198,8 @@ u32 data_ov002_0210a584[3] = {118, 122, 119};
 #pragma cplusplus off
 typedef struct PlayerPosOffset {
     int x, y, z;
-}
-extern "C" {
- PlayerPosOffset;
+} PlayerPosOffset;
 PlayerPosOffset data_ov002_0210a590 = {0, -0xcd000, 0x19a000};
-}
-
 #pragma cplusplus on
 extern "C" {
 extern SharedFilePtr data_ov002_0210d9a0;
@@ -690,11 +686,10 @@ int daPly_c::func_ov002_020bcd38(unsigned char *params, int beginFrame, int endF
 /* One step of a Player animation script: w[0] is the SetAnim id (0 ends the
  * script), w[1] its argument (0x40000000 or 0). An array, not two named
  * fields: named fields move func_ov002_020bcdf0's stack copy of the step. */
+extern "C" {
 typedef struct {
     int w[2];
-}
-extern "C" {
- AnimScriptStep;
+} AnimScriptStep;
 
 /* The data records between the state-handler literals: animation steps,
  * two-id tables and the two-word P2 records. */

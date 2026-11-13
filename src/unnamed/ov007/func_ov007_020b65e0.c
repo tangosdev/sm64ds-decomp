@@ -1,5 +1,7 @@
 #include "Ov007Work.h"
 #include "Ov007MenuMem.h"
+#define ItemView_Destroy _Z16ItemView_DestroyP13Ov007ItemView
+#define PickerScene_Destroy _Z19PickerScene_Destroyv
 
 extern void func_ov007_020c937c(void *state);
 extern void func_ov007_020c020c(struct Ov007Camera *cam);

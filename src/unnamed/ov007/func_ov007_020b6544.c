@@ -1,4 +1,5 @@
 #include "Ov007Work.h"
+#define ItemView_ResetSprite _Z20ItemView_ResetSpriteP13Ov007ItemViewP11Ov007Camera
 
 extern void func_ov007_020c1d8c(int i);
 extern void func_ov007_020b20e8(void);

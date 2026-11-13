@@ -27,14 +27,14 @@
       "ordinal": 0
     },
     {
-      "symbol": "func_ov007_020b79c8",
+      "symbol": "_Z19func_ov007_020b79c8v",
       "address": "0x020b79c8",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b79c8.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "func_ov007_020b79e4",
+      "symbol": "_Z19func_ov007_020b79e4v",
       "address": "0x020b79e4",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b79e4.cpp",
@@ -69,49 +69,49 @@
       "ordinal": 6
     },
     {
-      "symbol": "func_ov007_020b7d94",
+      "symbol": "_Z19func_ov007_020b7d94i",
       "address": "0x020b7d94",
       "size": "0x00000158",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b7d94.c",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov007_020b7eec",
+      "symbol": "_Z19func_ov007_020b7eecP13Ov007BootArgs",
       "address": "0x020b7eec",
       "size": "0x00000184",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b7eec.c",
       "ordinal": 8
     },
     {
-      "symbol": "MenuText_ScrollRecordBoard",
+      "symbol": "_Z26MenuText_ScrollRecordBoardi",
       "address": "0x020b8070",
       "size": "0x00000118",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b8070.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "MenuText_DrawRecordBoard",
+      "symbol": "_Z24MenuText_DrawRecordBoardiPci",
       "address": "0x020b8188",
       "size": "0x00000360",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b8188.c",
       "ordinal": 10
     },
     {
-      "symbol": "MenuText_GetSourceScreen",
+      "symbol": "_Z24MenuText_GetSourceScreenv",
       "address": "0x020b84e8",
       "size": "0x0000000c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b84e8.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "MenuText_GetSubScreen",
+      "symbol": "_Z21MenuText_GetSubScreenv",
       "address": "0x020b84f4",
       "size": "0x0000000c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b84f4.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "MenuText_GetMainScreen",
+      "symbol": "_Z22MenuText_GetMainScreenv",
       "address": "0x020b8500",
       "size": "0x0000000c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b8500.cpp",

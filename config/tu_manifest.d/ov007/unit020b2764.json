@@ -20,7 +20,7 @@
   ],
   "functions": [
     {
-      "symbol": "FigureScene_SetScreenBlend",
+      "symbol": "_Z26FigureScene_SetScreenBlendi",
       "address": "0x020b2764",
       "size": "0x000000d8",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b2764.c",
@@ -34,7 +34,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov007_020b2998",
+      "symbol": "_Z19func_ov007_020b2998v",
       "address": "0x020b2998",
       "size": "0x0000023c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b2998.c",

@@ -27767,11 +27767,11 @@
     },
     "ov007:0x020ae2d0": {
       "author": "tangosdev",
-      "name": "func_ov007_020ae2d0"
+      "name": "_Z19func_ov007_020ae2d0P13Ov007ItemNode"
     },
     "ov007:0x020ae454": {
       "author": "tangosdev",
-      "name": "func_ov007_020ae454"
+      "name": "_Z19func_ov007_020ae454P13Ov007ItemNode"
     },
     "ov007:0x020ae558": {
       "author": "andrewboudreau",
@@ -27795,7 +27795,7 @@
     },
     "ov007:0x020aeaec": {
       "author": "tangosdev",
-      "name": "func_ov007_020aeaec"
+      "name": "_Z19func_ov007_020aeaecP9Ov007Itemiii"
     },
     "ov007:0x020aeb34": {
       "author": "tangosdev",
@@ -27919,7 +27919,7 @@
     },
     "ov007:0x020b0a20": {
       "author": "tangosdev",
-      "name": "func_ov007_020b0a20"
+      "name": "_Z19func_ov007_020b0a20v"
     },
     "ov007:0x020b0da0": {
       "author": "andrewboudreau",
@@ -27967,7 +27967,7 @@
     },
     "ov007:0x020b1718": {
       "author": "tangosdev",
-      "name": "func_ov007_020b1718"
+      "name": "_Z19func_ov007_020b1718v"
     },
     "ov007:0x020b1b4c": {
       "author": "ruspecial",
@@ -27979,23 +27979,23 @@
     },
     "ov007:0x020b1b74": {
       "author": "tangosdev",
-      "name": "func_ov007_020b1b74"
+      "name": "_Z19func_ov007_020b1b74v"
     },
     "ov007:0x020b1cf0": {
       "author": "tangosdev",
-      "name": "func_ov007_020b1cf0"
+      "name": "_Z19func_ov007_020b1cf0v"
     },
     "ov007:0x020b1f2c": {
       "author": "tangosdev",
-      "name": "func_ov007_020b1f2c"
+      "name": "_Z19func_ov007_020b1f2ciPi"
     },
     "ov007:0x020b1fa4": {
       "author": "tangosdev",
-      "name": "func_ov007_020b1fa4"
+      "name": "_Z19func_ov007_020b1fa4i"
     },
     "ov007:0x020b20e8": {
       "author": "tangosdev",
-      "name": "func_ov007_020b20e8"
+      "name": "_Z19func_ov007_020b20e8v"
     },
     "ov007:0x020b2160": {
       "author": "andrewboudreau",
@@ -28007,7 +28007,7 @@
     },
     "ov007:0x020b2308": {
       "author": "tangosdev",
-      "name": "func_ov007_020b2308"
+      "name": "_Z19func_ov007_020b2308Pvi"
     },
     "ov007:0x020b2370": {
       "author": "lunavyqo",
@@ -28031,7 +28031,7 @@
     },
     "ov007:0x020b2764": {
       "author": "tangosdev",
-      "name": "FigureScene_SetScreenBlend"
+      "name": "_Z26FigureScene_SetScreenBlendi"
     },
     "ov007:0x020b283c": {
       "author": "tangosdev",
@@ -28039,7 +28039,7 @@
     },
     "ov007:0x020b2998": {
       "author": "tangosdev",
-      "name": "func_ov007_020b2998"
+      "name": "_Z19func_ov007_020b2998v"
     },
     "ov007:0x020b2bd4": {
       "author": "lunavyqo",
@@ -28047,7 +28047,7 @@
     },
     "ov007:0x020b2cdc": {
       "author": "tangosdev",
-      "name": "func_ov007_020b2cdc"
+      "name": "_Z19func_ov007_020b2cdcv"
     },
     "ov007:0x020b2cf0": {
       "author": "tangosdev",
@@ -28099,7 +28099,7 @@
     },
     "ov007:0x020b3f20": {
       "author": "tangosdev",
-      "name": "func_ov007_020b3f20"
+      "name": "_Z19func_ov007_020b3f20i"
     },
     "ov007:0x020b40c0": {
       "author": "tangosdev",
@@ -28119,11 +28119,11 @@
     },
     "ov007:0x020b43dc": {
       "author": "tangosdev",
-      "name": "func_ov007_020b43dc"
+      "name": "_Z19func_ov007_020b43dci"
     },
     "ov007:0x020b4438": {
       "author": "tangosdev",
-      "name": "func_ov007_020b4438"
+      "name": "_Z19func_ov007_020b4438v"
     },
     "ov007:0x020b4464": {
       "author": "tangosdev",
@@ -28143,15 +28143,15 @@
     },
     "ov007:0x020b4b5c": {
       "author": "tangosdev",
-      "name": "ItemView_ResetSprite"
+      "name": "_Z20ItemView_ResetSpriteP13Ov007ItemViewP11Ov007Camera"
     },
     "ov007:0x020b4bd4": {
       "author": "tangosdev",
-      "name": "ItemView_Destroy"
+      "name": "_Z16ItemView_DestroyP13Ov007ItemView"
     },
     "ov007:0x020b4c04": {
       "author": "tangosdev",
-      "name": "ItemView_Create"
+      "name": "_Z15ItemView_Createi"
     },
     "ov007:0x020b5068": {
       "author": "tangosdev",
@@ -28243,7 +28243,7 @@
     },
     "ov007:0x020b7040": {
       "author": "tangosdev",
-      "name": "func_ov007_020b7040"
+      "name": "_Z19func_ov007_020b7040v"
     },
     "ov007:0x020b7090": {
       "author": "ruspecial",
@@ -28251,7 +28251,7 @@
     },
     "ov007:0x020b7138": {
       "author": "andrewboudreau",
-      "name": "func_ov007_020b7138"
+      "name": "_Z19func_ov007_020b7138P14Ov007MenuHooksP13Ov007BootArgs"
     },
     "ov007:0x020b72a0": {
       "author": "tangosdev",
@@ -28295,7 +28295,7 @@
     },
     "ov007:0x020b76a0": {
       "author": "tangosdev",
-      "name": "func_ov007_020b76a0"
+      "name": "_Z19func_ov007_020b76a0v"
     },
     "ov007:0x020b76c4": {
       "author": "tangosdev",
@@ -28311,7 +28311,7 @@
     },
     "ov007:0x020b77ac": {
       "author": "tangosdev",
-      "name": "func_ov007_020b77ac"
+      "name": "_Z19func_ov007_020b77acv"
     },
     "ov007:0x020b782c": {
       "author": "ruspecial",
@@ -28335,11 +28335,11 @@
     },
     "ov007:0x020b79c8": {
       "author": "tangosdev",
-      "name": "func_ov007_020b79c8"
+      "name": "_Z19func_ov007_020b79c8v"
     },
     "ov007:0x020b79e4": {
       "author": "tangosdev",
-      "name": "func_ov007_020b79e4"
+      "name": "_Z19func_ov007_020b79e4v"
     },
     "ov007:0x020b7a00": {
       "author": "tangosdev",
@@ -28359,31 +28359,31 @@
     },
     "ov007:0x020b7d94": {
       "author": "tangosdev",
-      "name": "func_ov007_020b7d94"
+      "name": "_Z19func_ov007_020b7d94i"
     },
     "ov007:0x020b7eec": {
       "author": "tangosdev",
-      "name": "func_ov007_020b7eec"
+      "name": "_Z19func_ov007_020b7eecP13Ov007BootArgs"
     },
     "ov007:0x020b8070": {
       "author": "andrewboudreau",
-      "name": "MenuText_ScrollRecordBoard"
+      "name": "_Z26MenuText_ScrollRecordBoardi"
     },
     "ov007:0x020b8188": {
       "author": "tangosdev",
-      "name": "MenuText_DrawRecordBoard"
+      "name": "_Z24MenuText_DrawRecordBoardiPci"
     },
     "ov007:0x020b84e8": {
       "author": "tangosdev",
-      "name": "MenuText_GetSourceScreen"
+      "name": "_Z24MenuText_GetSourceScreenv"
     },
     "ov007:0x020b84f4": {
       "author": "tangosdev",
-      "name": "MenuText_GetSubScreen"
+      "name": "_Z21MenuText_GetSubScreenv"
     },
     "ov007:0x020b8500": {
       "author": "tangosdev",
-      "name": "MenuText_GetMainScreen"
+      "name": "_Z22MenuText_GetMainScreenv"
     },
     "ov007:0x020b850c": {
       "author": "tangosdev",
@@ -28447,11 +28447,11 @@
     },
     "ov007:0x020b8f78": {
       "author": "tangosdev",
-      "name": "PickerScene_GetDisplayState"
+      "name": "_Z27PickerScene_GetDisplayStatev"
     },
     "ov007:0x020b8f8c": {
       "author": "tangosdev",
-      "name": "PickerScene_GetMainState"
+      "name": "_Z24PickerScene_GetMainStatev"
     },
     "ov007:0x020b8fa0": {
       "author": "tangosdev",
@@ -28471,15 +28471,15 @@
     },
     "ov007:0x020b9640": {
       "author": "ruspecial",
-      "name": "PickerScene_Update"
+      "name": "_Z18PickerScene_Updatev"
     },
     "ov007:0x020b9770": {
       "author": "tangosdev",
-      "name": "PickerScene_Destroy"
+      "name": "_Z19PickerScene_Destroyv"
     },
     "ov007:0x020b9880": {
       "author": "andrewboudreau",
-      "name": "PickerScene_Create"
+      "name": "_Z18PickerScene_Createii"
     },
     "ov007:0x020b9ca8": {
       "author": "ruspecial",
@@ -28571,7 +28571,7 @@
     },
     "ov007:0x020bc47c": {
       "author": "tangosdev",
-      "name": "func_ov007_020bc47c"
+      "name": "_Z19func_ov007_020bc47cP10Ov007Model"
     },
     "ov007:0x020bc53c": {
       "author": "tangosdev",
@@ -28615,7 +28615,7 @@
     },
     "ov007:0x020bcba8": {
       "author": "andrewboudreau",
-      "name": "func_ov007_020bcba8"
+      "name": "_Z19func_ov007_020bcba8i"
     },
     "ov007:0x020bcdb8": {
       "author": "tangosdev",
@@ -28623,7 +28623,7 @@
     },
     "ov007:0x020bce70": {
       "author": "tangosdev",
-      "name": "func_ov007_020bce70"
+      "name": "_Z19func_ov007_020bce70si"
     },
     "ov007:0x020bcf90": {
       "author": "tangosdev",
@@ -28635,7 +28635,7 @@
     },
     "ov007:0x020bd4a0": {
       "author": "tangosdev",
-      "name": "func_ov007_020bd4a0"
+      "name": "_Z19func_ov007_020bd4a0i"
     },
     "ov007:0x020bd4e8": {
       "author": "tangosdev",
@@ -28659,7 +28659,7 @@
     },
     "ov007:0x020bd9e4": {
       "author": "tangosdev",
-      "name": "func_ov007_020bd9e4"
+      "name": "_Z19func_ov007_020bd9e4i"
     },
     "ov007:0x020bda38": {
       "author": "tangosdev",
@@ -28683,7 +28683,7 @@
     },
     "ov007:0x020bdeb0": {
       "author": "ruspecial",
-      "name": "func_ov007_020bdeb0"
+      "name": "_Z19func_ov007_020bdeb0i"
     },
     "ov007:0x020bdebc": {
       "author": "tangosdev",
@@ -28735,11 +28735,11 @@
     },
     "ov007:0x020be964": {
       "author": "tangosdev",
-      "name": "func_ov007_020be964"
+      "name": "_Z19func_ov007_020be964P11Ov007Figure"
     },
     "ov007:0x020be980": {
       "author": "tangosdev",
-      "name": "func_ov007_020be980"
+      "name": "_Z19func_ov007_020be980P11Ov007Figureii"
     },
     "ov007:0x020be9ac": {
       "author": "tangosdev",
@@ -28771,11 +28771,11 @@
     },
     "ov007:0x020bf304": {
       "author": "andrewboudreau",
-      "name": "func_ov007_020bf304"
+      "name": "_Z19func_ov007_020bf304v"
     },
     "ov007:0x020bf428": {
       "author": "ruspecial",
-      "name": "func_ov007_020bf428"
+      "name": "_Z19func_ov007_020bf428v"
     },
     "ov007:0x020bf57c": {
       "author": "tangosdev",
@@ -28795,7 +28795,7 @@
     },
     "ov007:0x020bfacc": {
       "author": "tangosdev",
-      "name": "RequestScreenFade"
+      "name": "_Z17RequestScreenFadeiiPFvvE"
     },
     "ov007:0x020bfaf0": {
       "author": "tangosdev",
@@ -28803,7 +28803,7 @@
     },
     "ov007:0x020bfbdc": {
       "author": "tangosdev",
-      "name": "func_ov007_020bfbdc"
+      "name": "_Z19func_ov007_020bfbdcPv"
     },
     "ov007:0x020bfc54": {
       "author": "andrewboudreau",
@@ -28819,7 +28819,7 @@
     },
     "ov007:0x020bfe4c": {
       "author": "andrewboudreau",
-      "name": "func_ov007_020bfe4c"
+      "name": "_Z19func_ov007_020bfe4cP11Ov007CameraiiiP7Vector3"
     },
     "ov007:0x020bff38": {
       "author": "tangosdev",
@@ -28835,7 +28835,7 @@
     },
     "ov007:0x020c0128": {
       "author": "tangosdev",
-      "name": "func_ov007_020c0128"
+      "name": "_Z19func_ov007_020c0128P11Ov007Camera"
     },
     "ov007:0x020c020c": {
       "author": "tangosdev",
@@ -28847,11 +28847,11 @@
     },
     "ov007:0x020c0288": {
       "author": "tangosdev",
-      "name": "func_ov007_020c0288"
+      "name": "_Z19func_ov007_020c0288Ptii"
     },
     "ov007:0x020c02d8": {
       "author": "tangosdev",
-      "name": "func_ov007_020c02d8"
+      "name": "_Z19func_ov007_020c02d8Pvit"
     },
     "ov007:0x020c0308": {
       "author": "ruspecial",
@@ -28859,7 +28859,7 @@
     },
     "ov007:0x020c0354": {
       "author": "tangosdev",
-      "name": "func_ov007_020c0354"
+      "name": "_Z19func_ov007_020c0354PA2_ij"
     },
     "ov007:0x020c0384": {
       "author": "tangosdev",
@@ -28887,7 +28887,7 @@
     },
     "ov007:0x020c076c": {
       "author": "andrewboudreau",
-      "name": "func_ov007_020c076c"
+      "name": "_Z19func_ov007_020c076cP12Ov007BgLayeri"
     },
     "ov007:0x020c0a44": {
       "author": "tangosdev",
@@ -28919,7 +28919,7 @@
     },
     "ov007:0x020c0eb0": {
       "author": "andrewboudreau",
-      "name": "func_ov007_020c0eb0"
+      "name": "_Z19func_ov007_020c0eb0P9GXOamAttrPK14Ov007CellEntryiihiii"
     },
     "ov007:0x020c1048": {
       "author": "tangosdev",
@@ -28947,7 +28947,7 @@
     },
     "ov007:0x020c1180": {
       "author": "tangosdev",
-      "name": "func_ov007_020c1180"
+      "name": "_Z19func_ov007_020c1180P12Ov007OamNode"
     },
     "ov007:0x020c11ac": {
       "author": "tangosdev",
@@ -28963,7 +28963,7 @@
     },
     "ov007:0x020c1384": {
       "author": "tangosdev",
-      "name": "func_ov007_020c1384"
+      "name": "_Z19func_ov007_020c1384P13Ov007CellAnim"
     },
     "ov007:0x020c13a4": {
       "author": "tangosdev",
@@ -28975,15 +28975,15 @@
     },
     "ov007:0x020c1404": {
       "author": "tangosdev",
-      "name": "Texture_BindPalette"
+      "name": "_Z19Texture_BindPaletteP12Ov007Texture"
     },
     "ov007:0x020c1448": {
       "author": "andrewboudreau",
-      "name": "func_ov007_020c1448"
+      "name": "_Z19func_ov007_020c1448P12Ov007Texturejjjj"
     },
     "ov007:0x020c14b8": {
       "author": "tangosdev",
-      "name": "func_ov007_020c14b8"
+      "name": "_Z19func_ov007_020c14b8P12Ov007Texture"
     },
     "ov007:0x020c14d4": {
       "author": "tangosdev",
@@ -28999,7 +28999,7 @@
     },
     "ov007:0x020c1620": {
       "author": "tangosdev",
-      "name": "func_ov007_020c1620"
+      "name": "_Z19func_ov007_020c1620Pv"
     },
     "ov007:0x020c162c": {
       "author": "tangosdev",
@@ -29027,15 +29027,15 @@
     },
     "ov007:0x020c19cc": {
       "author": "lunavyqo",
-      "name": "func_ov007_020c19cc"
+      "name": "_Z19func_ov007_020c19cciP7Vector3ii"
     },
     "ov007:0x020c1d78": {
       "author": "tangosdev",
-      "name": "func_ov007_020c1d78"
+      "name": "_Z19func_ov007_020c1d78i"
     },
     "ov007:0x020c1d8c": {
       "author": "tangosdev",
-      "name": "func_ov007_020c1d8c"
+      "name": "_Z19func_ov007_020c1d8ci"
     },
     "ov007:0x020c1da0": {
       "author": "tangosdev",
@@ -29115,7 +29115,7 @@
     },
     "ov007:0x020c281c": {
       "author": "tangosdev",
-      "name": "func_ov007_020c281c"
+      "name": "_Z19func_ov007_020c281cP15Ov007StrokePathi"
     },
     "ov007:0x020c28ac": {
       "author": "tangosdev",
@@ -29155,7 +29155,7 @@
     },
     "ov007:0x020c2dfc": {
       "author": "tangosdev",
-      "name": "func_ov007_020c2dfc"
+      "name": "_Z19func_ov007_020c2dfcP15Ov007StrokePathii"
     },
     "ov007:0x020c2e90": {
       "author": "tangosdev",
@@ -29163,11 +29163,11 @@
     },
     "ov007:0x020c2f14": {
       "author": "ruspecial",
-      "name": "func_ov007_020c2f14"
+      "name": "_Z19func_ov007_020c2f14P7VecFx32iPiS1_S1_S1_S1_S1_"
     },
     "ov007:0x020c3054": {
       "author": "tangosdev",
-      "name": "func_ov007_020c3054"
+      "name": "_Z19func_ov007_020c3054PiiS_S_"
     },
     "ov007:0x020c30ac": {
       "author": "tangosdev",
@@ -29175,7 +29175,7 @@
     },
     "ov007:0x020c31e0": {
       "author": "tangosdev",
-      "name": "func_ov007_020c31e0"
+      "name": "_Z19func_ov007_020c31e0PiS_iiiiS_"
     },
     "ov007:0x020c32e8": {
       "author": "tangosdev",
@@ -29207,19 +29207,19 @@
     },
     "ov007:0x020c368c": {
       "author": "tangosdev",
-      "name": "func_ov007_020c368c"
+      "name": "_Z19func_ov007_020c368cP10Vector3_16ii"
     },
     "ov007:0x020c39f8": {
       "author": "tangosdev",
-      "name": "func_ov007_020c39f8"
+      "name": "_Z19func_ov007_020c39f8P9Matrix4x3iii"
     },
     "ov007:0x020c3abc": {
       "author": "tangosdev",
-      "name": "func_ov007_020c3abc"
+      "name": "_Z19func_ov007_020c3abcP9Matrix3x3iii"
     },
     "ov007:0x020c3ba8": {
       "author": "tangosdev",
-      "name": "func_ov007_020c3ba8"
+      "name": "_Z19func_ov007_020c3ba8i"
     },
     "ov007:0x020c3bc8": {
       "author": "tangosdev",
@@ -29227,23 +29227,23 @@
     },
     "ov007:0x020c3be0": {
       "author": "tangosdev",
-      "name": "func_ov007_020c3be0"
+      "name": "_Z19func_ov007_020c3be0iii"
     },
     "ov007:0x020c3ce4": {
       "author": "tangosdev",
-      "name": "MenuMem_GetMaxAllocSize"
+      "name": "_Z23MenuMem_GetMaxAllocSizev"
     },
     "ov007:0x020c3d1c": {
       "author": "andrewboudreau",
-      "name": "func_ov007_020c3d1c"
+      "name": "_Z19func_ov007_020c3d1cPv"
     },
     "ov007:0x020c3d40": {
       "author": "tangosdev",
-      "name": "MenuMem_AllocClear"
+      "name": "_Z18MenuMem_AllocClearPKci"
     },
     "ov007:0x020c3df4": {
       "author": "tangosdev",
-      "name": "func_ov007_020c3df4"
+      "name": "_Z19func_ov007_020c3df4PKci"
     },
     "ov007:0x020c3e1c": {
       "author": "tangosdev",
@@ -29291,7 +29291,7 @@
     },
     "ov007:0x020c40d4": {
       "author": "tangosdev",
-      "name": "func_ov007_020c40d4"
+      "name": "_Z19func_ov007_020c40d4i"
     },
     "ov007:0x020c4128": {
       "author": "andrewboudreau",
@@ -29331,7 +29331,7 @@
     },
     "ov007:0x020c49bc": {
       "author": "lunavyqo",
-      "name": "func_ov007_020c49bc"
+      "name": "_Z19func_ov007_020c49bciiiiiiPti"
     },
     "ov007:0x020c4dfc": {
       "author": "tangosdev",
@@ -29347,7 +29347,7 @@
     },
     "ov007:0x020c4fcc": {
       "author": "tangosdev",
-      "name": "func_ov007_020c4fcc"
+      "name": "_Z19func_ov007_020c4fccii"
     },
     "ov007:0x020c5014": {
       "author": "tangosdev",
@@ -29475,7 +29475,7 @@
     },
     "ov007:0x020c704c": {
       "author": "ruspecial",
-      "name": "func_ov007_020c704c"
+      "name": "_Z19func_ov007_020c704cP13Ov007FollowerP7Vector3iii"
     },
     "ov007:0x020c71c0": {
       "author": "tangosdev",
@@ -29551,7 +29551,7 @@
     },
     "ov007:0x020c8010": {
       "author": "tangosdev",
-      "name": "func_ov007_020c8010"
+      "name": "_Z19func_ov007_020c8010P9Ov007LinkP13Ov007FollowerS2_"
     },
     "ov007:0x020c806c": {
       "author": "tangosdev",
@@ -29603,7 +29603,7 @@
     },
     "ov007:0x020c86c4": {
       "author": "tangosdev",
-      "name": "func_ov007_020c86c4"
+      "name": "_Z19func_ov007_020c86c4P15Ov007Transition"
     },
     "ov007:0x020c8970": {
       "author": "tangosdev",
@@ -29631,7 +29631,7 @@
     },
     "ov007:0x020c8bc8": {
       "author": "tangosdev",
-      "name": "func_ov007_020c8bc8"
+      "name": "_Z19func_ov007_020c8bc8P15Ov007Transitioni"
     },
     "ov007:0x020c8c88": {
       "author": "tangosdev",
@@ -29691,7 +29691,7 @@
     },
     "ov007:0x020c92d0": {
       "author": "aitddlabs",
-      "name": "func_ov007_020c92d0"
+      "name": "_Z19func_ov007_020c92d0P14Ov007MenuState"
     },
     "ov007:0x020c934c": {
       "author": "tangosdev",
@@ -29703,7 +29703,7 @@
     },
     "ov007:0x020c9388": {
       "author": "tangosdev",
-      "name": "func_ov007_020c9388"
+      "name": "_Z19func_ov007_020c9388i"
     },
     "ov007:0x020c93b4": {
       "author": "ruspecial",
@@ -29819,11 +29819,11 @@
     },
     "ov007:0x020cb4b0": {
       "author": "tangosdev",
-      "name": "func_ov007_020cb4b0"
+      "name": "_Z19func_ov007_020cb4b0PsS_iiii"
     },
     "ov007:0x020cb7c0": {
       "author": "lunavyqo",
-      "name": "func_ov007_020cb7c0"
+      "name": "_Z19func_ov007_020cb7c0P10Vector3_16iiPiss"
     },
     "ov007:0x020cba78": {
       "author": "tangosdev",

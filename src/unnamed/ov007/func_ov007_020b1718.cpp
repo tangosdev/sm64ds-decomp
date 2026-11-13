@@ -40,7 +40,7 @@ extern "C" void func_ov007_020b257c(void);
 extern "C" void func_ov007_020b2454(void *a, void *b);
 extern "C" void func_ov007_020bce70(short n, int frames);
 extern "C" unsigned short func_ov007_020c3be0(int t, int a, int b);
-extern "C" void FigureScene_SetScreenBlend(int a);
+void FigureScene_SetScreenBlend(int a);
 
 void func_ov007_020b1718(void) {
     Ov007Model *F = WORK->model;

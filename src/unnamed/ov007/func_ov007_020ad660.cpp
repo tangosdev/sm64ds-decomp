@@ -17,7 +17,7 @@
 extern "C" void func_ov007_020c92d0(Ov007MenuState *state);
 extern "C" void func_ov007_020c0638(Ov007BgLayer *layer, int x, int y, u16 tile);
 extern "C" void func_ov007_020c02d8(void *a, int b, u16 c);
-extern "C" void RequestScreenFade(int kind, int flags, void (*onEnd)(void));
+void RequestScreenFade(int kind, int flags, void (*onEnd)(void));
 extern "C" void func_ov007_020c1d8c(int a);
 extern void func_ov007_020ada70(void);
 

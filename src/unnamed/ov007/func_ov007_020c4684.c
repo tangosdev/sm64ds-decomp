@@ -8,6 +8,7 @@ extern void func_ov007_020c49bc(int width, int height, fx32 s0, fx32 t0, int rep
                                 u16 *tilemap, int texWidth);
 extern int data_ov007_0210325c;
 #include "nitro/gx/g3imm_cmd.h"
+#define Texture_BindPalette _Z19Texture_BindPaletteP12Ov007Texture
 
 /* The NitroSDK immediate-mode commands evaluate their arguments right to
  * left, which is the load order the ROM shows for the texcoord and translate

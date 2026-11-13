@@ -198,19 +198,19 @@ int daObjBlockItemTag_c::InitResources() {
  * preserved. Historical aliases: SilverStarBlockTag_Spawn,
  * GreenShellBlockTag_Spawn, MegaMushroomBlockTag_Spawn,
  * OneUpMushroomBlockTag_Spawn. */
-extern "C" daObjBlockItemTag_c *daObjBlockItemTag_c_classInit_BLK_SLVSTAR_TAG() {
+daObjBlockItemTag_c *daObjBlockItemTag_c_classInit_BLK_SLVSTAR_TAG() {
     return new daObjBlockItemTag_c();
 }
 
-extern "C" daObjBlockItemTag_c *daObjBlockItemTag_c_classInit_BLK_GNSHELL_TAG() {
+daObjBlockItemTag_c *daObjBlockItemTag_c_classInit_BLK_GNSHELL_TAG() {
     return new daObjBlockItemTag_c();
 }
 
-extern "C" daObjBlockItemTag_c *daObjBlockItemTag_c_classInit_BLK_SKINOKO_TAG() {
+daObjBlockItemTag_c *daObjBlockItemTag_c_classInit_BLK_SKINOKO_TAG() {
     return new daObjBlockItemTag_c();
 }
 
-extern "C" daObjBlockItemTag_c *daObjBlockItemTag_c_classInit_BLK_OKINOKO_TAG() {
+daObjBlockItemTag_c *daObjBlockItemTag_c_classInit_BLK_OKINOKO_TAG() {
     return new daObjBlockItemTag_c();
 }
 

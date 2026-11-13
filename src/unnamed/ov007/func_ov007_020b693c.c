@@ -1,4 +1,5 @@
 #include "Ov007Work.h"
+#define ItemView_Create _Z15ItemView_Createi
 
 extern struct Ov007ItemView *ItemView_Create(int i);
 

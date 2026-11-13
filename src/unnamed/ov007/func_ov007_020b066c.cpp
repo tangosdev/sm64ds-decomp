@@ -7,12 +7,12 @@
 
 
 extern "C" void func_ov007_020b283c(void);
-extern "C" void PickerScene_Destroy(void);
+void PickerScene_Destroy(void);
 extern "C" void func_ov007_020bf304(void);
 extern "C" void func_ov007_020b6544(void);
 extern "C" void func_ov007_020bcba8(int i);
 extern "C" void func_ov007_020bca40(int i);
-extern "C" void RequestScreenFade(int kind, int flags, void (*onEnd)(void));
+void RequestScreenFade(int kind, int flags, void (*onEnd)(void));
 extern "C" void func_ov007_020bd1c0(int i);
 extern "C" void func_ov007_020b131c(void);
 
