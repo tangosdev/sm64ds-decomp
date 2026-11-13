@@ -428,7 +428,7 @@ int daBtfly_c::Render()
     if (mUseAnimModel != 0)
         mAnmModel.Render(0);
     else
-        mModel.Render((Vector3 *)&mScaleX);
+        mModel.Render(&this->dActor_c::mScale);
     return 1;
 }
 
