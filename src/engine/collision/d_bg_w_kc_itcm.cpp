@@ -704,6 +704,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                            faithful spelling here. The labels sit in the ROM's
                            block order: feat1-3, edge1-3, v12, v23, v31, vtail,
                            tail, face. */
+                        // goto: &&-nest 71 words, fall-through if -8 bytes, nn switch +0x34 still DIFF _ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr
                         if (dot1 > dot2) {
                             if (dot1 > dot3)
                                 goto feat1;
