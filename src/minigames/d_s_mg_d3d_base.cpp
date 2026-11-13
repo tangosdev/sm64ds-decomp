@@ -23,6 +23,18 @@
 #include "GX.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/os/cache.h"
+namespace s20b290c { void Mg_ResetBgOffsets(void); }
+using s20b290c::Mg_ResetBgOffsets;
+namespace s20b2980 { void Mg_DisableAllBanks(void); }
+using s20b2980::Mg_DisableAllBanks;
+namespace s20b0d30 { void Mg_ResetOverlays(void); }
+using s20b0d30::Mg_ResetOverlays;
+namespace s20adc68 { void *Ov004_LoadFile(int); }
+using s20adc68::Ov004_LoadFile;
+namespace s20adc5c { void Ov004_Deallocate(void *ptr); }
+using s20adc5c::Ov004_Deallocate;
+namespace s20ad674 { s32 GetGameLanguage(void); }
+using s20ad674::GetGameLanguage;
 
 /* An OAM entry, with attributes 0 and 1 stored as one word the way this
  * code writes them. */
@@ -60,16 +72,10 @@ void GXS_LoadOAM(const void *src, unsigned int offset, unsigned int count);
 int   func_020126e8(int a);
 void  func_020126ac(int a0, int a1, int a2, int a3, int s0);
 void  func_020127ec(int a0, int a1, int a2, int a3, int a4, int a5);
-void *Ov004_LoadFile(int id);
-void  Mg_ResetOverlays(void);
-void  Mg_ResetBgOffsets(void);
-void  Mg_DisableAllBanks(void);
-int   GetGameLanguage(void);
 void  DecompressLZ16(void *src, void *dst);
 /* The file ID is really u16, but passing it narrowed grows InitSubScreenBg by
  * 16 bytes. Keep it wide. */
 u32 LoadCompressedFileAt(int fileID, void *target);
-void  Ov004_Deallocate(void *x);
 
 /* Defined below. */
 void D3D_InitDualScreen(void);

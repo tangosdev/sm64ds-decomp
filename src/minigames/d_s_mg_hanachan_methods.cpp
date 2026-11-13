@@ -83,6 +83,18 @@ enum dScMgHanachan_c_AssetId {
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/fx/fx_cp.h"
+namespace s20b2220 { void Mg_DrawNumberRotated(int, int, int, int, int, int, u16); }
+using s20b2220::Mg_DrawNumberRotated;
+namespace s20b1e34 { void Mg_DrawScoreTally(void*, int, int, int); }
+using s20b1e34::Mg_DrawScoreTally;
+namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+using s20b0aa0::FreeGfxSlotsById;
+namespace s20afcf8 { void DrawOamSprite(OamAttr *attr, int, int, Matrix2x2 *mtx); }
+using s20afcf8::DrawOamSprite;
+namespace s20ad90c { void Mg_CommitRecords(void); }
+using s20ad90c::Mg_CommitRecords;
+namespace s20ad674 { s32 GetGameLanguage(void); }
+using s20ad674::GetGameLanguage;
 
 extern "C" void *dScMgHanachan_c_classInit();
 extern "C" BaseSpawnInfo<void> g_profile_MG_HANACHAN = {dScMgHanachan_c_classInit, 0x182, 0x182};
@@ -166,11 +178,6 @@ extern short sHanaPickedCount;
 extern unsigned short sHanaPickedIds[];
 extern unsigned short sHanaUsedIds[];
 extern s16 atan2_hold_d_s_mg_hanachan_methods_1(int y, int x);
-extern void Mg_CommitRecords(void);
-extern void Mg_DrawScoreTally(void *a, int b, int c, int d);
-extern int GetGameLanguage(void);
-extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
-extern void Mg_DrawNumberRotated(int a, int b, int c, int d, int e, int f, u16 g);
 extern void StarPopup_Start(int x, int y);
 extern void HanaPopup_Spawn(int x, int y);
 extern s16 sHanaRoundPatterns[];
@@ -194,7 +201,6 @@ extern s16 sHanaRoundPattern;
 /* LoadFile returns the buffer; one file typed it int and casts at each use. */
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
-extern void FreeGfxSlotsById(int x);
 }
 
 struct S_ea81c {

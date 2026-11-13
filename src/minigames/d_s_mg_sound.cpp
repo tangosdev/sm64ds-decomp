@@ -29,6 +29,16 @@ enum dScMgSound_c_AssetId {
 #include "nitro/gx/gx_load.h"
 #include "math/CalcLib.h"
 #include "nitro/fx/fx_trig.h"
+namespace s20b2574 { void Mg_DrawStockCounter(int, int); }
+using s20b2574::Mg_DrawStockCounter;
+namespace s20b1e34 { void Mg_DrawScoreTally(void*, int, int, int); }
+using s20b1e34::Mg_DrawScoreTally;
+namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+using s20b0aa0::FreeGfxSlotsById;
+namespace s20b023c { void Mg_RenderSpriteBothPalMtx(void *a0, int, int, int, void *a4); }
+using s20b023c::Mg_RenderSpriteBothPalMtx;
+namespace s20af68c { void Hud_RenderSprite(void *attr, int, int, int, int); }
+using s20af68c::Hud_RenderSprite;
 
 /* The state/phase dispatch tables hold pointer-to-member records: the
    sinit copies {pmf, delta} descriptors into them. */
@@ -99,14 +109,12 @@ extern Pmf pmf_dScMgSound_c_Pop12_Fly;
 extern Pmf pmf_dScMgSound_c_Pop12_Finish;
 
 extern "C" {
-extern void Hud_RenderSprite(void *a, int b, int c, int d, int e);
 extern void *sSoundWinSpriteBSprites[];
 /* WinSpriteB reads indices 0 through 2; the fourth stored value is unused here. */
 extern const u16 sSoundWinSpriteBTimes[4] = {50, 3, 3, 50};
 extern void *sSoundWinSpriteASprites[];
 /* Stored timing suffixes are retained; WinSpriteA reads only indices 0 and 1. */
 extern const u16 sSoundWinSpriteATimes[4] = {50, 4, 50, 0};
-extern void Mg_DrawStockCounter(int a, int b);
 extern u8 data_ov006_0213f54c[];
 extern u8 data_ov006_0213f544[];
 extern u8 data_ov006_0213f65c[];
@@ -172,8 +180,6 @@ u16 sSoundNotePositions10[20] = {32, 32,  80, 32,  128, 32,  176, 32,  224, 32,
 u16 *sSoundNotePositions[3] = {sSoundNotePositions6, sSoundNotePositions8, sSoundNotePositions10};
 extern void Presenter_ResetPose(void *c);
 extern void Presenter_PlayCheer(void *c);
-extern void Mg_DrawScoreTally(void *c, int a, int b, int d);
-void FreeGfxSlotsById(int id);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 int Presenter_Load(void *p);
@@ -1435,7 +1441,6 @@ void dScMgSound_c::Pop12_Finish(int slot) {
     }
 }
 
-extern "C" void Mg_RenderSpriteBothPalMtx(void *a0, int a1, int a2, int a3, void *a4);
 
 void dScMgSound_c::DrawPops() {
     int slot;

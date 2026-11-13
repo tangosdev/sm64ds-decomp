@@ -292,12 +292,12 @@
   "undefined_symbol_aliases": [],
   "defined_symbol_renames": [
     {
-      "from": "@15",
+      "from": "@11",
       "to": "data_ov006_021404cc",
       "evidence": "compiler temp: mwcc numbers this destructor-registration node @7, and ov064 already defines @7; it is renamed to the configured name at 0x021404cc. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change. Re-keyed from @7 to @15 when Puff_Draw's sine-table read became FX_SinIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier by 8; measured from the compiled object)."
     },
     {
-      "from": "__arraydtor$14",
+      "from": "__arraydtor$10",
       "to": "__arraydtor$6",
       "owned_function": {
         "module": "ov006",

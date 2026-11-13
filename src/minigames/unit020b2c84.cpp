@@ -29,9 +29,6 @@
  * (measured: Mg_FreeBannerFiles comes out last), and the ROM has them
  * ascending. Source is therefore ROM-ascending.
  *
- * The bodies were matched as one-function C or C++ sources and keep that
- * spelling under extern "C" and their ROM names.
- *
  * Numbered names. mwccarm numbers its generated names from one counter that
  * every named parameter (prototypes included), local and temporary before a
  * definition advances. The array gMgBanners at the end of the file
@@ -111,6 +108,19 @@
 #include "MgBanner.h"
 #include "nitro/fx/fx_cp.h"
 #include "math/CalcLib.h"
+struct OamAttr;
+namespace s20b2444 { void Mg_DrawBigNumber(int, int, int, int, int, int, int); }
+using s20b2444::Mg_DrawBigNumber;
+namespace s20b1cf0 { void Mg_RenderSpriteOn(OamAttr *a, int b, int c, int d, int e); }
+using s20b1cf0::Mg_RenderSpriteOn;
+namespace s20b1aec { int Mg_GetLevel(void); }
+using s20b1aec::Mg_GetLevel;
+namespace s20ad674 { s32 GetGameLanguage(void); }
+using s20ad674::GetGameLanguage;
+extern "C" {
+int Mg_CopySpriteList(int a, void *b, int c, int d);
+void Mg_SpawnFx(int state, short timer, Vector2 *pos, Vector2 *vel, Vector2 *accel);
+}
 
 struct M { int _00, _01, _10, _11; };
 struct SlotCharNos {
@@ -131,22 +141,20 @@ struct OamAttr;
 
 
 extern "C" {
-void Deallocate(void *ptr);
-int GetGameLanguage(void);
-void *LoadFile(int handle);
-void DecompressLZ16(void *src, void *dst);
-int Mg_CopySpriteList(int a, void *b, int c, int d);
-void func_0203d704(int *o, int *a, int *b);
-void func_0203d388(int *p, int angle);
-void Mg_SpawnFx(int state, short timer, Vector2 *pos, Vector2 *vel, Vector2 *accel);
-void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, M *a5);
-void Mg_RenderSpriteOn(OamAttr *a, int b, int c, int d, int e);
-int Mg_GetLevel(void);
-void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
-void Banner_DrawPlain(MgBanner *e);
-void Banner_StartSpin(MgBanner *e);
-void Banner_StartWaveBurst(MgBanner *e);
+extern void Deallocate(void *ptr);
+extern void *LoadFile(int handle);
+extern void DecompressLZ16(void *src, void *dst);
+extern void func_0203d704(int *o, int *a, int *b);
+extern void func_0203d388(int *p, int angle);
+extern void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, M *a5);
 }
+
+void Banner_DrawPlain(MgBanner *e);
+
+void Banner_StartSpin(MgBanner *e);
+
+void Banner_StartWaveBurst(MgBanner *e);
+
 
 /* The first OBJ character number of each graphics slot, {0x380, 0x300, 0x340}
    (MG_BANNER_SLOTn_CHARS / 32). Banner_Init copies it whole to the stack and
@@ -238,7 +246,7 @@ extern int *sMgMsgFourCardSpritesByLanguage[];
 extern int sMgMsgFiveCardNcgByLanguage[];
 extern int *sMgMsgFiveCardSpritesByLanguage[];
 
-extern "C" void Mg_FreeBannerFiles(void) {
+void Mg_FreeBannerFiles(void) {
     int i;
     for (i = 0; i < MG_BANNER_FILE_NUM; i++) {
         Deallocate(sMgBannerFiles[i]);
@@ -246,7 +254,8 @@ extern "C" void Mg_FreeBannerFiles(void) {
     }
 }
 
-extern "C" void Mg_LoadBannerFiles(void)
+
+void Mg_LoadBannerFiles(void)
 {
     int i;
     /* The ROM's template for this array is at 0x020bc6e8 and is all zero except
@@ -324,12 +333,14 @@ extern "C" void Mg_LoadBannerFiles(void)
     }
 }
 
-extern "C" void Banner_Free(MgBanner *e) {
+
+void Banner_Free(MgBanner *e) {
     e->mFileIndex = MG_BANNER_FILE_NUM;
     sMgBannerGfxSlotUsed[e->mGfxSlot] = 0;
 }
 
-extern "C" void Banner_Draw(MgBanner *e) {
+
+void Banner_Draw(MgBanner *e) {
     if (e->mFileIndex == MG_BANNER_FILE_NUM)
         return;
     if (e->mRender != 0) {
@@ -339,12 +350,14 @@ extern "C" void Banner_Draw(MgBanner *e) {
     Banner_DrawPlain(e);
 }
 
-extern "C" void Banner_Update(MgBanner *e) {
+
+void Banner_Update(MgBanner *e) {
     if (e->mFileIndex == MG_BANNER_FILE_NUM)
         return;
     if (e->mBehavior == 0) return;
     (e->*(e->mBehavior))();
 }
+
 
 extern "C" void Banner_Init(MgBanner *e, int file, short x, short y, int screen, int priority,
                             short style) {
@@ -443,7 +456,8 @@ extern "C" void Banner_Init(MgBanner *e, int file, short x, short y, int screen,
     e->mRender = sBannerDrawTable[e->mStyle];
 }
 
-extern "C" void Banner_DrawLevelNumber(MgBanner *e) {
+
+void Banner_DrawLevelNumber(MgBanner *e) {
     int x;
     int originX = e->mX;
     int n;
@@ -478,11 +492,13 @@ extern "C" void Banner_DrawLevelNumber(MgBanner *e) {
     Mg_DrawBigNumber(x, e->mY, n, e->mScreen, e->mPriority, 2, 0);
 }
 
-extern "C" void Banner_SetupNone(void)
+
+void Banner_SetupNone(void)
 {
 }
 
-extern "C" void Banner_DrawSpin(MgBanner *e) {
+
+void Banner_DrawSpin(MgBanner *e) {
     GXOamAttr *oam = (GXOamAttr *)e->mOam;
     int angle = (u16)e->mTimer;
     M m;
@@ -504,20 +520,23 @@ extern "C" void Banner_DrawSpin(MgBanner *e) {
     } while (flag != 0xffff);
 }
 
-extern "C" void Banner_UpdateSpin(MgBanner *e) {
+
+void Banner_UpdateSpin(MgBanner *e) {
     if (ApproachLinear(e->mTimer, e->mTimerEnd, 0x1000)) {
         e->mTimer = 0;
     }
 }
 
-extern "C" void Banner_StartSpin(MgBanner *e) {
+
+void Banner_StartSpin(MgBanner *e) {
     e->mTimer = 0;
     e->mTimerEnd = 0x27000;
     e->mBehavior = pmf_Banner_UpdateSpin;
     e->mRender = pmf_Banner_DrawSpin;
 }
 
-extern "C" void Banner_UpdateDrop(MgBanner *e) {
+
+void Banner_UpdateDrop(MgBanner *e) {
     if (e->mTimer < 0x30){
         e->mTimer++;
         return;
@@ -527,12 +546,14 @@ extern "C" void Banner_UpdateDrop(MgBanner *e) {
     }
 }
 
-extern "C" void Banner_SetupDrop(MgBanner *e) {
+
+void Banner_SetupDrop(MgBanner *e) {
     e->mTimer = 0;
     e->mY = -(sMgTopScreenYOffset + 0x60);
 }
 
-extern "C" void Banner_DrawWave(MgBanner *e) {
+
+void Banner_DrawWave(MgBanner *e) {
     GXOamAttr *oam = (GXOamAttr *)e->mOam;
     int x = e->mTimer >> 2;
     int t = 0x1000;
@@ -556,18 +577,20 @@ extern "C" void Banner_DrawWave(MgBanner *e) {
     } while (flag != 0xffff);
 }
 
-extern "C" void Banner_UpdateWave(MgBanner *e) {
+
+void Banner_UpdateWave(MgBanner *e) {
     if (ApproachLinear(e->mTimer, e->mTimerEnd, 0x1000)) {
         e->mTimer = 0;
     }
 }
+
 
 /* A random int in [0, n) from the actors' random state, the top 12 bits of the
    positive draw scaled by n (d_s_mg_pachinko.cpp's PACHINKO_RAND does the same
    from the minigame state). */
 #define BANNER_RAND(n) ((int)((u32)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19) * (n) >> 12)
 
-extern "C" void Banner_StartWaveBurst(MgBanner *e) {
+void Banner_StartWaveBurst(MgBanner *e) {
     int i;
 
     e->mTimer = 0;
@@ -598,7 +621,8 @@ extern "C" void Banner_StartWaveBurst(MgBanner *e) {
     }
 }
 
-extern "C" void Banner_DrawSqueeze(MgBanner *e) {
+
+void Banner_DrawSqueeze(MgBanner *e) {
     int m, t, v;
     unsigned short term;
     if (e->mTimer == 0) return;
@@ -625,20 +649,23 @@ extern "C" void Banner_DrawSqueeze(MgBanner *e) {
     }
 }
 
-extern "C" void Banner_UpdateFall(MgBanner *e) {
+
+void Banner_UpdateFall(MgBanner *e) {
     ApproachLinear(e->mTimer, e->mTimerEnd, 0x1000);
     if (ApproachLinear2(e->mY, e->mTargetY, 0x10) == 0)
         return;
     Banner_StartWaveBurst(e);
 }
 
-extern "C" void Banner_SetupFall(MgBanner *e) {
+
+void Banner_SetupFall(MgBanner *e) {
     e->mTimer = 0;
     e->mTimerEnd = 0x14000;
     e->mY = 96;
 }
 
-extern "C" void Banner_DrawPopSpinA(MgBanner *e) {
+
+void Banner_DrawPopSpinA(MgBanner *e) {
     u16 flag;
     if (e->mTimer == 0) return;
     {
@@ -684,7 +711,8 @@ extern "C" void Banner_DrawPopSpinA(MgBanner *e) {
     }
 }
 
-extern "C" void Banner_DrawPopSpinB(MgBanner *e) {
+
+void Banner_DrawPopSpinB(MgBanner *e) {
     u16 flag;
     if (e->mTimer == 0) return;
     {
@@ -730,24 +758,28 @@ extern "C" void Banner_DrawPopSpinB(MgBanner *e) {
     }
 }
 
-extern "C" void Banner_UpdatePopSpin(MgBanner *e) {
+
+void Banner_UpdatePopSpin(MgBanner *e) {
     if (ApproachLinear(e->mTimer, e->mTimerEnd, 0x1000)) {
         e->mTimer = 0x18000;
     }
 }
 
-extern "C" void Banner_SetupPopSpin(MgBanner *e) {
+
+void Banner_SetupPopSpin(MgBanner *e) {
     e->mTimer = 0;
     e->mTimerEnd = 0x27000;
 }
 
-extern "C" int Banner_IsPressFinished(MgBanner *e) {
+
+int Banner_IsPressFinished(MgBanner *e) {
     if (e->mBehavior == pmf_Banner_UpdatePressed_2 && e->mTimer == e->mTimerEnd)
         return 1;
     return 0;
 }
 
-extern "C" void Banner_DrawPressed(MgBanner *e) {
+
+void Banner_DrawPressed(MgBanner *e) {
     GXOamAttr *oam = (GXOamAttr *)e->mOam;
     int x = e->mTimer;
     u16 ang = (unsigned int)x >> 1;
@@ -771,11 +803,13 @@ extern "C" void Banner_DrawPressed(MgBanner *e) {
         e->mScreen, e->mPriority);
 }
 
-extern "C" void Banner_UpdatePressed(MgBanner *e) {
+
+void Banner_UpdatePressed(MgBanner *e) {
     ApproachLinear(e->mTimer, e->mTimerEnd, 0x1000);
 }
 
-extern "C" void Banner_Press(MgBanner *e) {
+
+void Banner_Press(MgBanner *e) {
     sMgBannerButtonsArmed = 0;
     switch (e->mFileIndex) {
     case 0:
@@ -792,19 +826,22 @@ extern "C" void Banner_Press(MgBanner *e) {
     e->mRender = pmf_Banner_DrawPressed;
 }
 
-extern "C" void Banner_DrawPlain(MgBanner *e) {
+
+void Banner_DrawPlain(MgBanner *e) {
     Mg_RenderSpriteOn((OamAttr *)e->mOam, e->mX, e->mY, e->mScreen, e->mPriority);
     if (e->mFileIndex != 0 && e->mFileIndex != 1 && e->mFileIndex != 2)
         return;
     Mg_RenderSpriteOn(data_ov006_021346bc, e->mX, e->mY, e->mScreen, e->mPriority);
 }
 
-extern "C" void Banner_SetupZoom(MgBanner *e) {
+
+void Banner_SetupZoom(MgBanner *e) {
     e->mTimer = 0;
     e->mTimerEnd = ((e->mOamCount + 1) << 2) + 0x1e << 0xc;
 }
 
-extern "C" void Banner_DrawZoomA(MgBanner *e) {
+
+void Banner_DrawZoomA(MgBanner *e) {
     u16 flag;
     int val = e->mTimer;
     if (val == 0) return;
@@ -866,7 +903,8 @@ extern "C" void Banner_DrawZoomA(MgBanner *e) {
     }
 }
 
-extern "C" void Banner_DrawZoomB(MgBanner *e) {
+
+void Banner_DrawZoomB(MgBanner *e) {
     u16 flag;
     int val = e->mTimer;
     if (val == 0) return;
@@ -928,13 +966,15 @@ extern "C" void Banner_DrawZoomB(MgBanner *e) {
     }
 }
 
-extern "C" void Banner_UpdateZoom(MgBanner *e) {
+
+void Banner_UpdateZoom(MgBanner *e) {
     if (ApproachLinear(e->mTimer, e->mTimerEnd, 0x1000)) {
         e->mTimer = 0x1e000;
     }
 }
 
-extern "C" void Banner_SetupZoomBurst(MgBanner *e) {
+
+void Banner_SetupZoomBurst(MgBanner *e) {
     int i;
 
     e->mTimer = 0;
@@ -959,39 +999,48 @@ extern "C" void Banner_SetupZoomBurst(MgBanner *e) {
     }
 }
 
-extern "C" void Banner_UpdateSlideFromRight(MgBanner *e) {
+
+void Banner_UpdateSlideFromRight(MgBanner *e) {
     if (ApproachLinear2(e->mX, e->mTargetX, 0x10))
         e->mArrived = 1;
 }
 
-extern "C" void Banner_SetupSlideFromRight(MgBanner *e) {
+
+void Banner_SetupSlideFromRight(MgBanner *e) {
     e->mX = 320;
 }
 
-extern "C" void Banner_UpdateSlideFromLeft(MgBanner *e) {
+
+void Banner_UpdateSlideFromLeft(MgBanner *e) {
     if (ApproachLinear2(e->mX, e->mTargetX, 0x10))
         e->mArrived = 1;
 }
 
-extern "C" void Banner_SetupSlideFromLeft(MgBanner *e) {
+
+void Banner_SetupSlideFromLeft(MgBanner *e) {
     e->mX = -0x40;
 }
 
-extern "C" void Banner_UpdateSlideFromBottom(MgBanner *e) {
+
+void Banner_UpdateSlideFromBottom(MgBanner *e) {
     ApproachLinear2(e->mY, e->mTargetY, 4);
 }
 
-extern "C" void Banner_SetupSlideFromBottom(MgBanner *e) {
+
+void Banner_SetupSlideFromBottom(MgBanner *e) {
     e->mY = 200;
 }
 
-extern "C" void Banner_UpdateSlideFromTop(MgBanner *e) {
+
+void Banner_UpdateSlideFromTop(MgBanner *e) {
     ApproachLinear2(e->mY, e->mTargetY, 4);
 }
 
-extern "C" void Banner_SetupSlideFromTop(MgBanner *e) {
+
+void Banner_SetupSlideFromTop(MgBanner *e) {
     e->mY = -8;
 }
+
 
 MgBanner::MgBanner() {
     mFileIndex = MG_BANNER_FILE_NUM;
@@ -1001,45 +1050,61 @@ MgBanner::MgBanner() {
    per-style tables copy (setup sBannerSetupTable, behavior
    sBannerUpdateTable, render sBannerDrawTable), and the words the
    29-entry file-id table copies. */
-extern "C" {
+
 extern ElemFn data_02086b58; /* __ptmf_null's address: the null member pointer */
 extern ElemFn pmf_Banner_SetupSlideFromTop, pmf_Banner_SetupSlideFromBottom,
     pmf_Banner_SetupSlideFromLeft, pmf_Banner_SetupSlideFromRight;
+
 extern ElemFn pmf_Banner_SetupZoomBurst, pmf_Banner_SetupPopSpin, pmf_Banner_SetupZoom,
     pmf_Banner_SetupZoomBurst_2;
+
 extern ElemFn pmf_Banner_SetupPopSpin_2, pmf_Banner_SetupFall, pmf_Banner_SetupDrop,
     pmf_Banner_SetupNone;
+
 extern ElemFn pmf_Banner_UpdateSlideFromTop, pmf_Banner_UpdateSlideFromBottom,
     pmf_Banner_UpdateSlideFromLeft, pmf_Banner_UpdateSlideFromRight;
+
 extern ElemFn pmf_Banner_UpdateZoom_2, pmf_Banner_UpdatePopSpin_2, pmf_Banner_UpdateZoom_3,
     pmf_Banner_UpdateZoom;
+
 extern ElemFn pmf_Banner_UpdatePopSpin, pmf_Banner_UpdateFall, pmf_Banner_UpdateDrop;
+
 extern ElemFn pmf_Banner_DrawZoomB, pmf_Banner_DrawPopSpinB, pmf_Banner_DrawZoomB_2,
     pmf_Banner_DrawZoomA;
+
 extern ElemFn pmf_Banner_DrawPopSpinA, pmf_Banner_DrawSqueeze, pmf_Banner_DrawLevelNumber;
+
 extern int sMgMsgRetrySpritesEnglish, sMgMsgQuitSpritesEnglish, sMgMsgLevelClearSpritesEnglish;
+
 extern int sMgMsgGoalSpritesEnglish, sMgMsgHiScoreSpritesEnglish, sMgMsgPerfectSpritesEnglish,
     sMgMsgResultHiScoreSpritesEnglish;
+
 extern int sMgMsgGameOverSpritesEnglish, sMgMsgYouWinSpritesEnglish, sMgMsgTooBadSpritesEnglish,
     sMgMsgDrawSpritesEnglish;
+
 extern int sMgMsgStartSpritesEnglish, sMgMsgLevelSpritesEnglish, sMgMsgTimeOverSpritesEnglish,
     sMgMsgWhereSpritesEnglish;
+
 extern int sMgMsgLikeSpritesEnglish, sMgMsgHateSpritesEnglish, sMgMsgLoveSpritesEnglish,
     sMgMsgDislikeSpritesEnglish;
+
 extern int sMgMsgEsperSpritesEnglish, sMgMsgSuperEsperSpritesEnglish, sMgMsgNoPairSpritesEnglish,
     sMgMsgOnePairSpritesEnglish;
+
 extern int sMgMsgTwoPairSpritesEnglish, sMgMsgThreeCardSpritesEnglish,
     sMgMsgFullHouseSpritesEnglish, sMgMsgFourCardSpritesEnglish;
+
 extern int sMgMsgFiveCardSpritesEnglish;
-}
+
 
 namespace s20b955c {
 extern "C" {
 MgBanner gMgBanners[3];
 }
+
 }
 
-extern "C" {
+
 int sMgBannerSprites[MG_BANNER_FILE_NUM] = {
     sMgMsgRetrySpritesEnglish,     sMgMsgGiveUpSprites,
     sMgMsgQuitSpritesEnglish,      sMgMsgLevelClearSpritesEnglish,
@@ -1056,6 +1121,7 @@ int sMgBannerSprites[MG_BANNER_FILE_NUM] = {
     sMgMsgTwoPairSpritesEnglish,   sMgMsgThreeCardSpritesEnglish,
     sMgMsgFullHouseSpritesEnglish, sMgMsgFourCardSpritesEnglish,
     sMgMsgFiveCardSpritesEnglish};
+
 ElemFn sBannerSetupTable[13] = {data_02086b58,
                                 pmf_Banner_SetupSlideFromTop,
                                 pmf_Banner_SetupSlideFromBottom,
@@ -1069,6 +1135,7 @@ ElemFn sBannerSetupTable[13] = {data_02086b58,
                                 pmf_Banner_SetupFall,
                                 pmf_Banner_SetupDrop,
                                 pmf_Banner_SetupNone};
+
 ElemFn sBannerUpdateTable[13] = {data_02086b58,
                                  pmf_Banner_UpdateSlideFromTop,
                                  pmf_Banner_UpdateSlideFromBottom,
@@ -1082,6 +1149,7 @@ ElemFn sBannerUpdateTable[13] = {data_02086b58,
                                  pmf_Banner_UpdateFall,
                                  pmf_Banner_UpdateDrop,
                                  data_02086b58};
+
 ElemFn sBannerDrawTable[13] = {data_02086b58,
                                data_02086b58,
                                data_02086b58,
@@ -1095,5 +1163,6 @@ ElemFn sBannerDrawTable[13] = {data_02086b58,
                                pmf_Banner_DrawSqueeze,
                                data_02086b58,
                                pmf_Banner_DrawLevelNumber};
+
 void *sMgBannerFiles[MG_BANNER_FILE_NUM];
-}
+

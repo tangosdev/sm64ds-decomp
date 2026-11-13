@@ -59,6 +59,28 @@ enum dScMgCoin_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "nitro/gx/gx_load.h"
+struct OamAttr;
+struct Matrix2x2;
+namespace s20b1de8 { void Mg_DrawCreditsIcon(int, int, int, int); }
+using s20b1de8::Mg_DrawCreditsIcon;
+namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+using s20b0aa0::FreeGfxSlotsById;
+namespace s20b023c { void Mg_RenderSpriteBothPalMtx(void *a0, int, int, int, void *a4); }
+using s20b023c::Mg_RenderSpriteBothPalMtx;
+namespace s20b0104 { void RenderOamBothScreens(void *attr, int, int, int, int, void *mtx); }
+using s20b0104::RenderOamBothScreens;
+namespace s20afdd0 { void Mg_RenderSpriteBoth(void *a0, int, int, int, int); }
+using s20afdd0::Mg_RenderSpriteBoth;
+namespace s20afcf8 { void DrawOamSprite(OamAttr *attr, int, int, Matrix2x2 *mtx); }
+using s20afcf8::DrawOamSprite;
+namespace s20afa20 { void RenderOamMainScreen(OamAttr *oam, int, int, int, int); }
+using s20afa20::RenderOamMainScreen;
+namespace s20ae274 { void Mg_PlayJingle(void*); }
+using s20ae274::Mg_PlayJingle;
+namespace s20adc1c { int Mg_GetTopRecord(void); }
+using s20adc1c::Mg_GetTopRecord;
+namespace s20ad674 { s32 GetGameLanguage(void); }
+using s20ad674::GetGameLanguage;
 
 #pragma defer_codegen off /* ROM-ascending emission; dropping this inverts it */
 
@@ -107,27 +129,18 @@ extern const unsigned char sCoinCaptionBlinkTimes[];
 extern const unsigned char sCoinCaptionBlinkSprites[];
 extern const u16 sCoinCaptionCountInTimes[];
 extern const u8 sCoinCaptionCountInSprites[];
-extern void Mg_DrawBlinkSprite(void *c, int arg1, int arg2);
-extern void Mg_DrawBigNumber(int a1, int a2, int num, int a4, int a5, int sel, int idx);
 extern const int sCoinSparkleSpawnOffsets[];
 extern const u16 sCoinSparkleAngles[];
 extern int sCoinPopupSprites;
 extern const int sCoinPopupY[];
 extern OamAttr **sCoinScorePlayerSprites[];
-extern int GetGameLanguage(void);
-extern void Mg_DrawCreditsIcon(int r0, int r1, int r2, int r3);
 struct OamAttr;
 struct Matrix2x2;
-extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
-extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 extern void *sCoinValuesSprites[];
 extern void *sCoinSparkleSprites[];
 extern void *sCoinBagSprites[];
-extern void Mg_RenderSpriteBothPalMtx(void *obj, int x, int y, int w, int *vec);
 extern void func_020127a4(int a, int b, int c, int d);
 extern const int sCoinRowY[];
-extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
-extern void RenderOamMainScreen(OamAttr *a, int b, int c, int d, int e);
 extern const u16 sCoinBlockFrameSprites[];
 extern void *sCoinBlocksSprites[];
 extern const int sCoinBlockFallRowY[];
@@ -138,9 +151,6 @@ extern const int sCoinBlockHopRowY[];
 extern const int sCoinBlockHopRowHeight[];
 extern const int sCoinBlockHopVX[];
 extern const u16 sCoinBlockFrameTimes[];
-extern void FreeGfxSlotsById(int n);
-extern void Mg_PlayJingle(void *c);
-extern int Mg_GetTopRecord(void);
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 

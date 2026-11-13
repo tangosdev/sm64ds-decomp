@@ -92,13 +92,6 @@ namespace Sound {
 extern "C" {
 
 /* --- shared ov004, main and library helpers --- */
-extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
-extern void Mg_DrawBigNumber(int x, int y, int h, int a, int b, int c, int d);
-extern int  Mg_GetSubmittedScore(void);
-extern void Mg_DrawTopRightCounter(int a, int b);
-extern int  Mg_GetTopRecord(void);
-extern void Mg_DrawTopLeftCounter(int score);
-extern void Mg_SubmitScore(int self);
 extern int  func_020126e8(int a);
 extern int  func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern void SetBg2Offset(int a, int b);
@@ -108,16 +101,43 @@ struct OamAttr;
 #include "nitro/gx/g2.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/mi/memory.h"
-extern void Mg_RenderSpriteBothPalMtx(void *sprite, int x, int y, int a3, void *m);
-extern int  Mg_RenderSpriteBothScaled(OamAttr *a, int b, int c, int d, int e, int f, int g);
-extern void Mg_SetSharedState(int a);
-extern void Mg_SetTopScreenYOffset(int a);
-extern void Mg_InitBrush(char *a, char b, int c, int d);
+}
+
+namespace s20b2444 { void Mg_DrawBigNumber(int, int, int, int, int, int, int); }
+using s20b2444::Mg_DrawBigNumber;
+namespace s20b1a5c { void Mg_DrawTopRightCounter(int, int); }
+using s20b1a5c::Mg_DrawTopRightCounter;
+namespace s20b19f0 { void Mg_DrawTopLeftCounter(int); }
+using s20b19f0::Mg_DrawTopLeftCounter;
+namespace s20b0a54 { void Mg_SetSharedState(s32); }
+using s20b0a54::Mg_SetSharedState;
+namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+using s20b0aa0::FreeGfxSlotsById;
+namespace s20b04d0 { void Mg_SetTopScreenYOffset(int); }
+using s20b04d0::Mg_SetTopScreenYOffset;
+namespace s20b023c { void Mg_RenderSpriteBothPalMtx(void *a0, int, int, int, void *a4); }
+using s20b023c::Mg_RenderSpriteBothPalMtx;
+namespace s20aff38 {
+struct OamAttr;
+int Mg_RenderSpriteBothScaled(OamAttr *, int, int, int, int, int, int);
+}
+using s20aff38::Mg_RenderSpriteBothScaled;
+namespace s20afdd0 { void Mg_RenderSpriteBoth(void *a0, int, int, int, int); }
+using s20afdd0::Mg_RenderSpriteBoth;
+namespace s20af2f8 { void Mg_InitBrush(char*, char, int, int); }
+using s20af2f8::Mg_InitBrush;
+namespace s20adb1c { void Mg_SubmitScore(int); }
+using s20adb1c::Mg_SubmitScore;
+namespace s20adc1c { int Mg_GetTopRecord(void); }
+using s20adc1c::Mg_GetTopRecord;
+namespace s20adbc0 { int Mg_GetSubmittedScore(void); }
+using s20adbc0::Mg_GetSubmittedScore;
+
+extern "C" {
 extern void func_020126ac(int a0, int a1, int a2, int a3, int s0);
 extern void func_02012718(int a, int b);
 extern int Sound_PlayIfNotActive(int handle, int player, int id, short unused);
 extern s16 atan2_hold_d_s_mg_pachinko_1(int y, int x);
-extern void FreeGfxSlotsById(int arg);
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 extern void Deallocate(void *p);
@@ -1706,7 +1726,7 @@ void dScMgPachinko_c::BobOmb_DrawAll() {
     for (i = 0; i < 0x30; i++) {
         if (mShot[i].visible == 0)
             continue;
-        Mg_RenderSpriteBothScaled((OamAttr *)sPachinkoBobOmbSprites, mShot[i].x >> 12,
+        Mg_RenderSpriteBothScaled((s20aff38::OamAttr *)sPachinkoBobOmbSprites, mShot[i].x >> 12,
                                   mShot[i].y >> 12, -1, -1, 0x1000, 0);
     }
 }

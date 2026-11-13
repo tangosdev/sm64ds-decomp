@@ -20,6 +20,22 @@ enum d_s_mg_bsc_AssetId { ASSET_D_2D_MG_BIG_SMALL_NCL_BIN = 0x00b3 };
 #include "LevelRng.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
+namespace s20b1e34 { void Mg_DrawScoreTally(void*, int, int, int); }
+using s20b1e34::Mg_DrawScoreTally;
+namespace s20b1bc8 { void Mg_DrawCredits(char *a0, int, int, int); }
+using s20b1bc8::Mg_DrawCredits;
+namespace s20b0a38 { void Mg_ResumeSharedState(void); }
+using s20b0a38::Mg_ResumeSharedState;
+namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+using s20b0aa0::FreeGfxSlotsById;
+namespace s20af68c { void Hud_RenderSprite(void *attr, int, int, int, int); }
+using s20af68c::Hud_RenderSprite;
+namespace s20ad674 { s32 GetGameLanguage(void); }
+using s20ad674::GetGameLanguage;
+void MgCoins_Reset(void);
+void MgCoins_Update(void);
+void MgCoins_StartLose(void);
+void MgCoins_StartPayout(int);
 
 /* The state table: one pointer-to-member per state, indexed by mState.
  * Declared outside extern "C" it still links by its plain name. */
@@ -45,33 +61,20 @@ extern StateHandler pmf_dScMgBSC_c_StateDone_2;
 extern "C" {
 extern short gMgCoinsStatus;
 extern int Math_Function_0203b14c(int *ptr, int target, int rate, int limit, int step);
-extern void Mg_ResumeSharedState(void);
 extern int Dealer_IsIdle(Dealer *dealer);
-extern void MgCoins_StartPayout(int x);
-extern void MgCoins_StartLose(void);
 extern int gMgCoinsInPlay;
 extern void Dealer_PlayWin(void *c);
 /* decl_common.h already declares this with a void pointer, so the
  * definition's char pointer cannot be repeated here. */
 extern void Dealer_PlayLose(void *c);
-extern void Mg_SubmitScore(int self);
-extern void Mg_SetSharedState(int v);
-extern void Mg_SaveRecordPair(int a, int b);
 extern int sBscLaneX[];
 extern int sMgCoinsBetPlaced;
 extern void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
-extern void FreeGfxSlotsById(int arg);
-extern void MgCoins_Reset(void);
-void Hud_RenderSprite(void *sprite, int x, int y, int a3, int a4);
-void Mg_DrawCredits(void *scene, int a1, int a2, int a3);
-void Mg_DrawScoreTally(void *scene, int a1, int a2, int a3);
 void Dealer_Draw(void *table);
-void MgCoins_Update(void);
 void Dealer_Update(Dealer *c);
 extern unsigned char gMainScreenLayers;
 extern int data_0208ee44;
 extern void LoadCard2SubBg3(void *);
-extern s32 GetGameLanguage(void);
 extern u32 LoadCompressedFileAt(int fileID, void *target);
 extern void *LoadFile(int handle);
 extern int Dealer_Load(void *c);
@@ -141,7 +144,7 @@ s32 dScMgBSC_c::Render() {
         }
     }
     MgCoins_Draw();
-    Mg_DrawCredits(this, 0xc, 0xc, 0);
+    Mg_DrawCredits((char *)this, 0xc, 0xc, 0);
     Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
     Dealer_Draw(&mDealer);
     return 1;

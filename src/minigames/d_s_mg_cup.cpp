@@ -68,6 +68,18 @@ struct OamAttr;
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 #include "math/CalcLib.h"
+namespace s20b2574 { void Mg_DrawStockCounter(int, int); }
+using s20b2574::Mg_DrawStockCounter;
+namespace s20b1e34 { void Mg_DrawScoreTally(void*, int, int, int); }
+using s20b1e34::Mg_DrawScoreTally;
+namespace s20b1b78 { void Mg_SubCredits(void*, int); }
+using s20b1b78::Mg_SubCredits;
+namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+using s20b0aa0::FreeGfxSlotsById;
+namespace s20af770 { int Mg_RenderSubSpriteScaled(void *, int, int, int, int, int, unsigned short); }
+using s20af770::Mg_RenderSubSpriteScaled;
+namespace s20af68c { void Hud_RenderSprite(void *attr, int, int, int, int); }
+using s20af68c::Hud_RenderSprite;
 
 extern "C" {
 int CupFx_FindFree(CupFx *fx, int kind, int x, int y);
@@ -77,19 +89,13 @@ extern unsigned char sCupFxFrameSprites[];
 extern OamAttr *sCupFxSprites[];
 extern int OamRender8_d_s_mg_cup(int show, struct OamAttr *attr, int a, int b, int c, int d, int e,
                                  int f);
-extern int Mg_RenderSubSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
-                                    unsigned short a6);
 extern RoundRow sCupRoundTable[];
 extern s16 sCupShuffleSpeeds[];
 extern IdxPair sCupSwapFirst[];
 extern RestPos sCupHomePositions[];
-extern void Mg_SetSharedState(int c);
 extern void Presenter_PlayCheer(void *c);
-extern void Mg_SubCredits(void *c, int val);
 extern void Presenter_PlayMiss(char *c);
 extern void Presenter_PlayLose(char *c);
-extern void Mg_SubmitScore(int self);
-extern void FreeGfxSlotsById(int arg);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 void CupFx_MoveForCup(CupFx *fx, int cup, int dx, int dy);
 int CupFx_Spawn(CupFx *fx, int kind, int x, int y, signed char cup);
@@ -101,9 +107,6 @@ extern void Presenter_ResetPose(char *c);
 void CupFx_DrawForCup(CupFx *fx, int cup);
 void CupFx_UpdateAll(CupFx *fx);
 void CupFx_ClearAll(CupFx *fx);
-void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
-void Mg_DrawStockCounter(int arg0, int arg1);
-void Mg_DrawScoreTally(void *a, int b, int c, int d);
 extern char data_ov006_02139df4[];
 extern PMF sCupStateTable[];
 extern AnimStep *sCupAnimTable[];
@@ -258,7 +261,7 @@ void dScMgCup_c::DrawOamList(OamAttr *list, int x, int y, int scale, int cupCont
 
     for (;;) {
         GXOamAttr *oam =
-            (GXOamAttr *)Mg_RenderSubSpriteScaled((int)entry, screenX, screenY, -1, -1, scale, 0);
+            (GXOamAttr *)Mg_RenderSubSpriteScaled(entry, screenX, screenY, -1, -1, scale, 0);
         if (oam != 0) {
             if (content == 2) {
                 if (entry->cParam == 3) {

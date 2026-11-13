@@ -58,6 +58,14 @@ enum d_s_mg_trampoline2_AssetId {
 #include "LevelRng.h"
 #include "nitro/mi/memory.h"
 #include "math/CalcLib.h"
+namespace s20afcf8 { void DrawOamSprite(OamAttr *attr, int, int, Matrix2x2 *mtx); }
+using s20afcf8::DrawOamSprite;
+namespace s20afa20 { void RenderOamMainScreen(OamAttr *oam, int, int, int, int); }
+using s20afa20::RenderOamMainScreen;
+namespace s20ad90c { void Mg_CommitRecords(void); }
+using s20ad90c::Mg_CommitRecords;
+namespace s20ad674 { s32 GetGameLanguage(void); }
+using s20ad674::GetGameLanguage;
 
 /* local: the ROM re-reads the slot byte at each use here, so keep the read volatile. */
 #define ACTIVE_SLOT (*(volatile unsigned char *)&gActivePlayerSlot)
@@ -114,13 +122,9 @@ extern const u16 sTrmp2BrushPltt[];
 extern dFdBrightness_c *gSceneFader;
 extern int sTrmp2TouchBlocked;
 int TrmpLine_Create(s16 *a, s16 *b);
-extern void Mg_CommitRecords(void);
 void func_0203cd80(int *m, short angle);
-int GetGameLanguage(void);
 struct OamAttr;
 struct Matrix2x2;
-void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
-void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 unsigned int d_s_mg_trampoline2NewCleanParticleHold(unsigned int a, unsigned int b, int c, int d,
                                                     int e, const Vector3_16f *f);
 void Jump2Popup_UpdateAll(void);

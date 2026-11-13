@@ -66,6 +66,30 @@ enum dScMgSlots_AssetId {
 #include "LevelRng.h"
 #include "nitro/mi/memory.h"
 #include "math/CalcLib.h"
+namespace s20b1e34 { void Mg_DrawScoreTally(void*, int, int, int); }
+using s20b1e34::Mg_DrawScoreTally;
+namespace s20b1bc8 { void Mg_DrawCredits(char *a0, int, int, int); }
+using s20b1bc8::Mg_DrawCredits;
+namespace s20b1ba0 { void Mg_AddCredits(void *c, s32); }
+using s20b1ba0::Mg_AddCredits;
+namespace s20b1b78 { void Mg_SubCredits(void*, int); }
+using s20b1b78::Mg_SubCredits;
+namespace s20b1b08 { void Mg_LoseCredits(int); }
+using s20b1b08::Mg_LoseCredits;
+namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+using s20b0aa0::FreeGfxSlotsById;
+namespace s20afa20 { void RenderOamMainScreen(OamAttr *oam, int, int, int, int); }
+using s20afa20::RenderOamMainScreen;
+namespace s20af770 { int Mg_RenderSubSpriteScaled(void *, int, int, int, int, int, unsigned short); }
+using s20af770::Mg_RenderSubSpriteScaled;
+namespace s20af68c { void Hud_RenderSprite(void *attr, int, int, int, int); }
+using s20af68c::Hud_RenderSprite;
+namespace s20ae274 { void Mg_PlayJingle(void*); }
+using s20ae274::Mg_PlayJingle;
+namespace s20b1b40 { void Mg_GainCredits(int); }
+using s20b1b40::Mg_GainCredits;
+namespace s20ad674 { s32 GetGameLanguage(void); }
+using s20ad674::GetGameLanguage;
 
 #pragma defer_codegen off
 /* Codegen is deferred by default in mwccarm 2004/b56, which is why its
@@ -93,21 +117,14 @@ struct TouchRec {
 extern "C" {
 extern int sMgMainBannerY;
 void SetBg1Offset(int a, int b);
-int GetGameLanguage(void);
 // Retained caller ABI: narrowing to the definition's u16 adds a mask in InitMainScreenBg.
 unsigned int LoadCompressedFileAt(int fileID, void *target);
 extern unsigned char gMainScreenLayers;
-void Mg_AddCredits(void *c, int delta);
-void Mg_SubCredits(void *c, int val);
-extern void Mg_SubmitScore(int self);
 extern int data_ov006_0213e948[];
 extern void Slot3_ReelDigits(char *c, int i);
 extern int Sound_PlayIfNotActive(int, int, int, short);
 void OamRender10_d_s_mg_slots(int b, void *attr, int a2, int a3, int a4, int a5, int a6, int a7,
                               int a8, int a9);
-void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
-void Mg_DrawCredits(char *a0, int a1, int a2, int a3);
-void Mg_DrawScoreTally(char *a0, int a1, int a2, int a3);
 extern void **sSlotLangSprites[];
 extern SlotState sSlot3StateTable[];
 /* The ROM PMF constants the Slot3 state table copies from (unlicensed
@@ -124,25 +141,16 @@ extern void *LoadFile(int handle);
 
 extern u8 gSubScreenLayers;
 extern int data_0208ee44;
-extern void RenderOamMainScreen(OamAttr *, int, int, int, int);
 extern OamAttr sSlotsSlotBlinkSprites[];
-extern void Mg_LoseCredits(int c);
 extern void func_ov001_020ab3f0(void *c);
-void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *m);
 extern void *data_ov006_0213e528[];
 int TouchArea_Update(void *c, int x);
 void SlotBet_OnTouch(void *c);
-void Mg_GainCredits(int x);
 extern void func_ov001_020ab5b0(char *r0, int r1, short r2, short r3, short s4, short s5);
-extern int Mg_GetSavedRecord0(void);
 extern int sSlot1ReelPos[][2];
 extern void *sSlot1Sprites[];
 extern unsigned char sSlot1Payouts[];
-extern void Mg_DrawBigNumber(int a1, int a2, int num, int a4, int a5, int sel, int idx);
-extern void Mg_RenderSubSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, void *a5);
 extern void SlotBlink_Draw(unsigned char *o);
-extern void Mg_SaveRecordPair(int a, int b);
-extern void Mg_PlayJingle(void *c);
 extern void SlotLamp_Start(void *o);
 extern void SlotLamp_Tick(void *o);
 extern void SlotBlink_Start(void *o, s16 x, s16 y);
@@ -156,8 +164,6 @@ extern s16 sSlotWildBlinkX[][2];
 extern s16 sSlotWildBlinkY[][2];
 extern dWipe_c data_0209f61c;
 
-extern int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5,
-                                    unsigned short a6);
 }
 
 /* ~dScMgSlot1_c() (D1, complete-object destructor). The empty body is the
@@ -452,9 +458,7 @@ void Slot3_StateSpin(char *c) {
 
 extern "C" { /* .c-derived member: C linkage for the whole block */
 void Mascot_LookAt(char *c, int *src);
-void Mg_ShowBanner(int c, int a1, int a2, int a3, int arg5, short arg6);
 void Mascot_StopLooking(int *p);
-void FreeGfxSlotsById(int arg);
 
 void Slot3_StateIntro(char *p) {
     dScMgSlot3_c *scene = (dScMgSlot3_c *)p;
@@ -737,8 +741,8 @@ s32 dScMgSlot3_c::Render() {
         Mg_DrawBigNumber(0x90, 0x28, 3, 0, 0, 0, 0x28);
     }
 
-    Mg_RenderMainSpriteScaled(sSlotLamp1Sprite, 0x18, 0x30, -1, 0, 0x1000, mLamp1Angle);
-    Mg_RenderMainSpriteScaled(sSlotLamp2Sprite, 0x40, 0x10, -1, 0, 0x1000, mLamp2Angle);
+    Mg_RenderMainSpriteScaled((int)sSlotLamp1Sprite, 0x18, 0x30, -1, 0, 0x1000, mLamp1Angle);
+    Mg_RenderMainSpriteScaled((int)sSlotLamp2Sprite, 0x40, 0x10, -1, 0, 0x1000, mLamp2Angle);
 
     return 1;
 }

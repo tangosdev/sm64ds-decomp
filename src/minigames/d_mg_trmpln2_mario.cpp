@@ -1662,7 +1662,6 @@ extern Vector3 data_020a0ebc;
 
 extern void func_02012718(int, int);
 extern void Camera_ProjectToScreen(void *, void *, int *, int *);
-extern int Mg_GetTopScreenYOffset(void);
 extern void TrmpFx_Spawn(int, int);
 extern void Trmp3DMario_EnterOffstage(char *);
 

@@ -87,18 +87,9 @@ extern "C" {
 /* Functions the members call need C linkage at file scope. Data names do
    not mangle, so the data_* declarations stay next to their users. */
 extern int RandomIntInternal(int *seed);
-extern s32 GetGameLanguage(void);
-extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *matrix);
-extern char *Mg_RenderMainSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
-                                       unsigned short a6);
 struct Matrix2x2;
-extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
-extern void Mg_DrawNumberRotated(int a, int b, int c, int d, int e, int f, u16 g);
 extern void func_020127a4(int a0, int a1, int a2, int a3);
-extern void Hud_RenderSprite(void *sprite, int b, int c, int d, int e);
 extern int Sound_PlayIfNotActive(int a, int b, int c, short d);
-extern void FreeGfxSlotsById(int arg);
-extern void Mg_SetSharedState(int c);
 
 extern void Luigi_PrepareScanlines(void);
 extern void Luigi_PushScanlineRecord(void);
@@ -106,6 +97,34 @@ extern dScMgLuigi_c *dScMgLuigi_c_classInit(void);
 }
 #include "nitro/os/cache.h"
 #include "nitro/mi/memory.h"
+namespace s20b2220 { void Mg_DrawNumberRotated(int, int, int, int, int, int, u16); }
+using s20b2220::Mg_DrawNumberRotated;
+namespace s20b1e34 { void Mg_DrawScoreTally(void*, int, int, int); }
+using s20b1e34::Mg_DrawScoreTally;
+namespace s20b0cac { void Mg_ShowBanner(int, int, int, int, int, short); }
+using s20b0cac::Mg_ShowBanner;
+namespace s20b0a54 { void Mg_SetSharedState(s32); }
+using s20b0a54::Mg_SetSharedState;
+namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+using s20b0aa0::FreeGfxSlotsById;
+namespace s20b04d0 { void Mg_SetTopScreenYOffset(int); }
+using s20b04d0::Mg_SetTopScreenYOffset;
+namespace s20afcf8 { void DrawOamSprite(OamAttr *attr, int, int, Matrix2x2 *mtx); }
+using s20afcf8::DrawOamSprite;
+namespace s20afb20 { int Mg_RenderMainSpriteScaled(int, int, int, int, int, int, unsigned short); }
+using s20afb20::Mg_RenderMainSpriteScaled;
+namespace s20af948 { void Mg_RenderSubSpriteMtx(void *a, int, int, void *m); }
+using s20af948::Mg_RenderSubSpriteMtx;
+namespace s20af68c { void Hud_RenderSprite(void *attr, int, int, int, int); }
+using s20af68c::Hud_RenderSprite;
+namespace s20adc74 { void *Ov004_LoadFileByPath(const char *path); }
+using s20adc74::Ov004_LoadFileByPath;
+namespace s20adc5c { void Ov004_Deallocate(void *ptr); }
+using s20adc5c::Ov004_Deallocate;
+namespace s20adb1c { void Mg_SubmitScore(int); }
+using s20adb1c::Mg_SubmitScore;
+namespace s20ad674 { s32 GetGameLanguage(void); }
+using s20ad674::GetGameLanguage;
 
 namespace cstd {
 int sqrt(unsigned long long x);
@@ -297,7 +316,6 @@ void dScMgLuigi_c::DrawReward() {
 }
 
 extern "C" {
-extern void Mg_SubmitScore(int self);
 }
 
 void dScMgLuigi_c::UpdateReward() {
@@ -1532,25 +1550,18 @@ void dScMgLuigi_c::StateSetup() {
 
 extern "C" {
 /* dScMgLuigi_c::StartRound */
-extern void FreeGfxSlotsById(int arg);
-extern void Mg_SubmitScore(int);
-extern void Mg_ShowBanner(int, int, int, int, int, short);
 extern unsigned char gMainScreenLayers;
 extern unsigned char gSubScreenLayers;
 /* dScMgLuigi_c::Render */
-extern void Mg_DrawScoreTally(void *c, int a, int b, int d);
 /* dScMgLuigi_c::Behavior */
 extern LuigiStateHandler sLuigiStateTable[];
 /* dScMgLuigi_c::InitResources */
 extern void *sLuigiBg1NcgPath;
-extern void *Ov004_LoadFileByPath(const char *path);
 extern void DecompressLZ16(void *src, void *dst);
 extern void *LoadFile(int handle);
-extern void Ov004_Deallocate(void *ptr);
 extern void GX_LoadBG3Scr(void *, u32, u32);
 extern void GXS_LoadBG2Scr(const void *, u32, u32);
 extern void Deallocate(void *);
-extern void Mg_SetTopScreenYOffset(int);
 extern int sMgResultsBannerX;
 extern int sMgResultsBannerY;
 }

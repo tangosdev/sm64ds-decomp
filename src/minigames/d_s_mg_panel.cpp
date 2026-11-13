@@ -58,6 +58,30 @@ enum dScMgPanel_c_AssetId {
 #include "nitro/gx/gx_load.h"
 #include "nitro/mi/memory.h"
 #include "math/CalcLib.h"
+namespace s20b2444 { void Mg_DrawBigNumber(int, int, int, int, int, int, int); }
+using s20b2444::Mg_DrawBigNumber;
+namespace s20b1e34 { void Mg_DrawScoreTally(void*, int, int, int); }
+using s20b1e34::Mg_DrawScoreTally;
+namespace s20b0cac { void Mg_ShowBanner(int, int, int, int, int, short); }
+using s20b0cac::Mg_ShowBanner;
+namespace s20b0a54 { void Mg_SetSharedState(s32); }
+using s20b0a54::Mg_SetSharedState;
+namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+using s20b0aa0::FreeGfxSlotsById;
+namespace s20b04d0 { void Mg_SetTopScreenYOffset(int); }
+using s20b04d0::Mg_SetTopScreenYOffset;
+namespace s20afdd0 { void Mg_RenderSpriteBoth(void *a0, int, int, int, int); }
+using s20afdd0::Mg_RenderSpriteBoth;
+namespace s20afcf8 { void DrawOamSprite(OamAttr *attr, int, int, Matrix2x2 *mtx); }
+using s20afcf8::DrawOamSprite;
+namespace s20af948 { void Mg_RenderSubSpriteMtx(void *a, int, int, void *m); }
+using s20af948::Mg_RenderSubSpriteMtx;
+namespace s20af868 { void Mg_RenderSubSpritePalMtx(void *a0, int, int, int, int, void *a5); }
+using s20af868::Mg_RenderSubSpritePalMtx;
+namespace s20af68c { void Hud_RenderSprite(void *attr, int, int, int, int); }
+using s20af68c::Hud_RenderSprite;
+namespace s20adb1c { void Mg_SubmitScore(int); }
+using s20adb1c::Mg_SubmitScore;
 
 /* Callees of the member helpers. Declared here, not in the bodies: a
    declaration inside a member body gets C++ linkage and names a symbol the ROM
@@ -66,16 +90,7 @@ extern "C" {
 void SetBg2Offset(int x, int y);
 void SetSubBg2Offset(int x, int y);
 void SetSubBg0Offset(int a, int b);
-void FreeGfxSlotsById(int arg);
 struct Matrix2x2;
-void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
-void Hud_RenderSprite(void *a, int b, int c, int d, int e);
-void Mg_SubmitScore(int a);
-void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *d);
-void Mg_RenderSpriteBoth(void *a, int b, int c, int d, int e);
-void Mg_SetSharedState(int a);
-void Mg_RenderSubSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, void *a5);
-void Mg_DrawBigNumber(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
 }
 
 /* The state tables are arrays of member-function pointers, defined at the end
@@ -1526,15 +1541,10 @@ extern void Deallocate(void *);
 extern int GetOwnerLanguage(void);
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
-extern void FreeGfxSlotsById(int arg);
 extern void SetSubBg0Offset(int, int);
 /* local extern: nitro/gx/gx_load.h leaves GX_LoadBG3Scr out until
  * decl_common.h's non-const spelling of it goes. */
 extern void GX_LoadBG3Scr(void *, u32, u32);
-extern void Mg_SubmitScore(int);
-extern void Mg_SetTopScreenYOffset(int);
-extern void Mg_ShowBanner(int, int, int, int, int, s16);
-extern void Mg_DrawScoreTally(void *a, int b, int c, int d);
 
 } /* extern "C" */
 

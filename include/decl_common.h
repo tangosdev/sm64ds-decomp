@@ -5,8 +5,70 @@
 #ifndef DECL_COMMON_H
 #define DECL_COMMON_H
 #include "common.h"
-
-
+#ifdef __cplusplus
+struct MgFx;
+struct MgBanner;
+struct dScMgBase_c;
+namespace s20aea78 { struct S; struct M; }
+namespace s20b2444 { void Mg_DrawBigNumber(int, int, int, int, int, int, int); }
+using s20b2444::Mg_DrawBigNumber;
+namespace s20b1ea4 { void Mg_DrawNumber(int, int, int, int, int, int, int); }
+using s20b1ea4::Mg_DrawNumber;
+namespace s20b1a5c { void Mg_DrawTopRightCounter(int, int); }
+using s20b1a5c::Mg_DrawTopRightCounter;
+namespace s20b0d8c { void Mg_DrawBlinkSprite(void *, int, int); }
+using s20b0d8c::Mg_DrawBlinkSprite;
+namespace s20b0cac { void Mg_ShowBanner(int, int, int, int, int, short); }
+using s20b0cac::Mg_ShowBanner;
+namespace s20b0a54 { void Mg_SetSharedState(int); }
+using s20b0a54::Mg_SetSharedState;
+namespace s20b04d0 { void Mg_SetTopScreenYOffset(int); }
+using s20b04d0::Mg_SetTopScreenYOffset;
+namespace s20b04c0 { int Mg_GetTopScreenYOffset(void); }
+using s20b04c0::Mg_GetTopScreenYOffset;
+namespace s20b0380 { void Mg_RenderSpriteBothMtx(void *, int, int, void *); }
+using s20b0380::Mg_RenderSpriteBothMtx;
+namespace s20afb20 { int Mg_RenderMainSpriteScaled(int, int, int, int, int, int, unsigned short); }
+using s20afb20::Mg_RenderMainSpriteScaled;
+namespace s20af948 { void Mg_RenderSubSpriteMtx(void *, int, int, void *); }
+using s20af948::Mg_RenderSubSpriteMtx;
+namespace s20af868 { void Mg_RenderSubSpritePalMtx(void *, int, int, int, int, void *); }
+using s20af868::Mg_RenderSubSpritePalMtx;
+namespace s20af2f8 { void Mg_InitBrush(char *, char, int, int); }
+using s20af2f8::Mg_InitBrush;
+namespace s20aea78 { void Mg_DrawSpriteListEntry(S *, int, int, M *); }
+using s20aea78::Mg_DrawSpriteListEntry;
+namespace s20ae858 { void Mg_DrawMenu(dScMgBase_c *); }
+using s20ae858::Mg_DrawMenu;
+namespace s20ae20c { void Mg_RestoreMusic(void); }
+using s20ae20c::Mg_RestoreMusic;
+namespace s20add88 { void Mg_DrawFx(MgFx *); }
+using s20add88::Mg_DrawFx;
+namespace s20adc00 { void Mg_SetTopRecord(int); }
+using s20adc00::Mg_SetTopRecord;
+namespace s20adb1c { void Mg_SubmitScore(int); }
+using s20adb1c::Mg_SubmitScore;
+namespace s20ad8b8 { int Mg_GetSavedRecord0(void); }
+using s20ad8b8::Mg_GetSavedRecord0;
+namespace s20ad878 { int Mg_GetSavedRecord1(void); }
+using s20ad878::Mg_GetSavedRecord1;
+namespace s20ad79c { void Mg_SaveRecordPair(int, int); }
+using s20ad79c::Mg_SaveRecordPair;
+void MgCoins_Draw(void);
+void MgCoins_PlaceBet(int);
+void MgCoins_RaiseBet(int);
+void MgCoins_StartLose(void);
+void MgCoins_StartSpend(int);
+void MgCoins_StartRefund(void);
+void Banner_Draw(MgBanner *);
+void Mg_LoadBannerFiles(void);
+void Mg_FreeBannerFiles(void);
+void Mg_ResetBannerLayout(void);
+void Mg_PlaceBannersOnTopScreen(void);
+void Mg_ResetRecordBannerPos(void);
+void Mg_SetPerfectBanner(void);
+void Mg_SetNextBanner(int);
+#endif
 /* C linkage. These declare ROM symbols by their exact final names, so a C++
    translation unit including this header must not mangle them -- a bare
    `void Foo(int);` seen from C++ emits _Z3Fooi, which exists nowhere. The file
@@ -477,13 +539,6 @@ extern int func_ov002_020df300(char*);
 extern int func_ov002_020e10a8(void*);
 extern int func_ov002_020f02c8(int);
 extern int func_ov002_020f035c(u32, int);
-extern int Mg_GetSavedRecord1(void);
-extern int Mg_GetSavedRecord0(void);
-extern void Mg_DrawMenu(void*);
-extern void Mg_DrawSpriteListEntry(void *, void *, void *, void *);
-extern int Mg_GetTopScreenYOffset(void);
-extern void MgCoins_RaiseBet(int);
-extern void MgCoins_PlaceBet(int);
 extern void MiniGm_SaveIfDirty(char*);
 extern int MiniGm_GetRecord(void*, int, int);
 extern int MiniGm_IsNew(void*, int);
@@ -872,35 +927,6 @@ extern int func_ov002_020eeeb8(void*, char*);
 extern int func_ov002_020ef070(void*, char*);
 extern void func_ov003_020b060c(void*);
 extern void func_ov003_020b0730(void*, int);
-extern void Mg_SaveRecordPair(int, int);
-extern void Mg_SubmitScore(int);
-extern void Mg_SetTopRecord(int);
-extern void Mg_DrawFx(void*);
-extern void Mg_RestoreMusic(void);
-extern void Mg_InitBrush(char*, int, int, int);
-extern void Mg_RenderSubSpritePalMtx(void*, int, int, int, int, void*);
-extern void Mg_RenderSubSpriteMtx(void*, int, int, void*);
-extern int Mg_RenderMainSpriteScaled(void*, int, int, int, int, int, u16);
-extern void Mg_RenderSpriteBothMtx(void*, int, int, void*);
-extern void Mg_SetTopScreenYOffset(int);
-extern void Mg_SetSharedState(int);
-extern void Mg_ShowBanner(int, int, int, int, int, short);
-extern void Mg_DrawBlinkSprite(void*, int, int);
-extern void Mg_DrawTopRightCounter(int, int);
-extern void Mg_DrawNumber(int, int, int, int, int, int, int);
-extern void Mg_DrawBigNumber(int, int, int, int, int, int, int);
-extern void Mg_FreeBannerFiles(void);
-extern void Mg_LoadBannerFiles(void);
-extern void Banner_Draw(void*);
-extern void MgCoins_StartRefund(void);
-extern void MgCoins_StartSpend(int);
-extern void MgCoins_StartLose(void);
-extern void MgCoins_Draw(void);
-extern void Mg_SetNextBanner(int);
-extern void Mg_SetPerfectBanner(void);
-extern void Mg_ResetRecordBannerPos(void);
-extern void Mg_PlaceBannersOnTopScreen(void);
-extern void Mg_ResetBannerLayout(char*);
 extern void MiniGm_LoadGroupIcons(void*);
 extern void Camera_ProjectToScreen16(void*, char*, short*);
 extern void MascotWalker_StartNextPath(void*);

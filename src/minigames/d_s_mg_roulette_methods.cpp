@@ -52,6 +52,29 @@ enum dScMgRoulette_c_AssetId {
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/fx/fx_cp.h"
+namespace s20b2220 { void Mg_DrawNumberRotated(int, int, int, int, int, int, u16); }
+using s20b2220::Mg_DrawNumberRotated;
+namespace s20b1bc8 { void Mg_DrawCredits(char *a0, int, int, int); }
+using s20b1bc8::Mg_DrawCredits;
+namespace s20b1b08 { void Mg_LoseCredits(int); }
+using s20b1b08::Mg_LoseCredits;
+namespace s20b0aa0 { void FreeGfxSlotsById(int); }
+using s20b0aa0::FreeGfxSlotsById;
+namespace s20b0104 { void RenderOamBothScreens(void *attr, int, int, int, int, void *mtx); }
+using s20b0104::RenderOamBothScreens;
+namespace s20af68c { void Hud_RenderSprite(void *attr, int, int, int, int); }
+using s20af68c::Hud_RenderSprite;
+namespace s20b1b40 { void Mg_GainCredits(int); }
+using s20b1b40::Mg_GainCredits;
+namespace s20adc68 { void *Ov004_LoadFile(int); }
+using s20adc68::Ov004_LoadFile;
+namespace s20adc5c { void Ov004_Deallocate(void *ptr); }
+using s20adc5c::Ov004_Deallocate;
+namespace s20ad674 { s32 GetGameLanguage(void); }
+using s20ad674::GetGameLanguage;
+void MgCoins_Reset(void);
+void MgCoins_Update(void);
+void MgCoins_StartPayout(int);
 
 /* Local views of the records the helpers walk. */
 
@@ -106,25 +129,12 @@ Vector2 sRouletteTiles[37] = {
 
 extern "C" {
 
-int GetGameLanguage(void);
-void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
-void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
 void Vec2_Sub(int *out, int *a, int *b);
 int Sound_PlayIfNotActive(int a, int b, int c, short d);
 void *LoadFile(int id);
 void DecompressLZ16(void *src, void *dst);
-void Ov004_Deallocate(void *p);
-void FreeGfxSlotsById(int a);
 
 void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
-void *Ov004_LoadFile(int id);
-void Mg_LoseCredits(int c);
-void Mg_GainCredits(int c);
-void Mg_DrawCredits(char *, int, int, int);
-void Mg_DrawNumberRotated(int, int, int, int, int, int, u16);
-void MgCoins_StartPayout(int);
-void MgCoins_Update(void);
-void MgCoins_Reset(void);
 int Dealer_IsAnimDone(void *a);
 int Dealer_IsIdle(Dealer *dealer);
 void Dealer_Draw(void *c);
