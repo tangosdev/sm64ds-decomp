@@ -14,14 +14,14 @@
 void *func_02071910(ThrowContext *c, void *) {
     int off = (c->mFrame.mArgsPushed != 0) ? 0x10 : 0;
     int frameSize = c->mFrame.mFrameSize;
-    char *save = (char *)((int)c->mFP + frameSize - off);
+    int *save = (int *)((int)c->mFP + frameSize - off);
     int i;
 
     for (i = 15; i >= 0; i--) {
         u16 flags = c->mFrame.mSavedRegMask;
         if (flags & (1 << i)) {
-            save -= 4;
-            c->mFrame.mGPR[i] = *(int *)save;
+            save -= 1;
+            c->mFrame.mGPR[i] = *save;
         }
     }
 
