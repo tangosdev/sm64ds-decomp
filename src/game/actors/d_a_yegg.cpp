@@ -1070,7 +1070,8 @@ int daYegg_c::FindTarget(int a1, int best) {
         matched = 0;
         for (int i = 0; i < 5; i++) {
             int bv = mTargetedIds[i];
-            if (bv == actor->uniqueID) matched = 1;
+            if (bv == actor->uniqueID)
+                matched = 1;
         }
         if (matched != 0)
             continue;
@@ -1178,7 +1179,7 @@ int daYegg_c::HandleCylinderHit() {
     id = mdCcAc_c.otherOwner;
     if (id != 0) {
         actor = static_cast<daPly_c *>(dActor_c::FindWithID(id));
-        if (actor != 0 && actor != (struct dActor_c*)mPlayer) {
+        if (actor != 0 && actor != (struct dActor_c *)mPlayer) {
             {
                 int t = (int)(actor->actorID == ACTOR_PLAYER);
                 if (t != 0) {
