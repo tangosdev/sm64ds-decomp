@@ -164,7 +164,7 @@ Ov007SpriteBank *func_ov007_020c9688(int arg) {
             attrs.attr2 = tile | (priority << 10) | (palette << 12);
             cell->oam[j].attr0 = ((u16 *)&attrs)[0];
             cell->oam[j].attr1 = ((u16 *)&attrs)[1];
-            cell->oam[j].attr2 = ((u16 *)&attrs)[2];
+            cell->oam[j].attr2 = attrs.attr2;
         }
     }
 
