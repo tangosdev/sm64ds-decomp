@@ -111,8 +111,6 @@ char *float2str(double x, char *buff_end, print_format format) {
     p = (unsigned char *)buff_end;
     *--p = 0;
 
-    /* e_format/f_format gotos kept: %g re-enters the %e or %f arm, as in MSL's float2str,
-       and the arms sit in ROM order */
     switch (code) {
     case 'g':
     case 'G':
@@ -130,6 +128,7 @@ char *float2str(double x, char *buff_end, print_format format) {
             else
                 code = 'E';
 
+            // goto: re-switch continue (0x69c), if/else (0x638), g-if plus switch (49 words) still DIFF float2str
             goto e_format;
         }
 
