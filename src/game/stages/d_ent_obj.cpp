@@ -484,8 +484,8 @@ int UnknownVsPlayer::UpdateCamera(Vector3 *at, Vector3 *pos) {
     }
     if (state != MOVE_FINISHED)
         return 0;
-    Math_Function_0203b0fc((int *)&pos->y, 0x2bc00, 0x66, 0x1c00);
-    Math_Function_0203b14c((int *)&pos->z, at->z, 1, 0x4000, 0x100);
+    Math_Function_0203b0fc(&pos->y, 0x2bc00, 0x66, 0x1c00);
+    Math_Function_0203b14c(&pos->z, at->z, 1, 0x4000, 0x100);
     at->y = pos->y;
     return 1;
 }
