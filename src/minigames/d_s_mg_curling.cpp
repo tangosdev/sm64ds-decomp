@@ -70,19 +70,28 @@ struct B4 {
  * `extern "C"` block, so the C-linkage names are collected here in one. */
 extern "C" {
 
+
 extern int Mg_GetSubmittedScore(void);
 extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *matrix);
 extern void Mg_RenderSpriteBoth(void *a, int b, int c, int d, int e);
 extern void Mg_DrawNumberRotated(int a1, int a2, int a3, int a4, int a5, int a6, u16 a7);
 extern void Mg_DrawBigNumber(int a1, int a2, int num, int a4, int a5, int sel, int idx);
+}
+
 extern void func_02012718(int a, int b);
+extern "C" {
+
 struct OamAttr;
 struct Matrix2x2;
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
+}
+
 extern int func_020126e8(int a);
 extern void func_020126ac(int a0, int a1, int a2, int a3, int s0);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
+extern "C" {
+
 extern int Mg_IsNewRecord(void);
 extern void Mg_SetSharedState(int state);
 extern void Mg_SubmitScore(int score);
@@ -93,7 +102,11 @@ extern void Mg_SetTopScreenYOffset(int a);
 
 extern void DecompressLZ16(const void *src, void *dst);
 extern void *LoadFile(int handle);
+}
+
 extern void Deallocate(void *ptr);
+extern "C" {
+
 extern void Ov004_Deallocate(void *p);
 
 extern unsigned char sCurlingBitAStates[];
@@ -152,7 +165,8 @@ extern PMF pmf_dScMgCurling_c_Bit_StateFallStart;
 extern PMF pmf_dScMgCurling_c_Bit_StateFallSpeedUp;
 extern PMF pmf_dScMgCurling_c_Bit_StateFallSlowDown;
 
-} /* extern "C" */
+}
+ /* extern "C" */
 
 namespace cstd {
 s16 atan2(s32, s32);

@@ -86,7 +86,7 @@ u16 FX_Atan2(fx32 x, fx32 y) {
     if (denominator == 0x0)
         return 0x0;
     if (positive)
-        return (u16)(bias + FX_AtanTable_[FX_Div((fx32)numerator, (fx32)denominator) >> 5]);
+        return (u16)(bias + FX_AtanTable_[_Z6FX_Divii((fx32)numerator, (fx32)denominator) >> 5]);
     else
-        return (u16)(bias - FX_AtanTable_[FX_Div((fx32)numerator, (fx32)denominator) >> 5]);
+        return (u16)(bias - FX_AtanTable_[_Z6FX_Divii((fx32)numerator, (fx32)denominator) >> 5]);
 }

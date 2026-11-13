@@ -58,6 +58,7 @@ typedef struct Vec2s {
 } Vec2s;
 
 extern "C" {
+
 extern void Mg_RenderSpriteBoth(void *a, int b, int c, int d, int e);
 extern int sTrmpRowScreenY[];
 extern int sTrmpRowMarkerSprite;
@@ -82,8 +83,12 @@ struct OamAttr;
 struct Matrix2x2;
 void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
+}
+
 extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
+extern "C" {
+
 extern short sTrmpGoalRow;
 
 extern void Trmp3DMario_UpdateAll(void);
@@ -105,9 +110,17 @@ extern s16 sTrmpStartTouchX;
 extern s16 sTrmpStartTouchY;
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
+}
+
 extern void Deallocate(void *ptr);
+extern "C" {
+
 extern int sTrmpNcgByLanguage[];
+}
+
 extern void InitialiseVramGlobals(void);
+extern "C" {
+
 extern s16 data_02082414;
 extern int Trmp3DMario_InitPool(unsigned char *, int);
 extern void TrmpFx_InitPool(void *, int);
@@ -117,7 +130,11 @@ extern void Trmp3DMario_ResetAll(unsigned int, int);
 extern void TrmpFx_ClearAll(void);
 extern int sTrmpPuffXByLanguage[];
 extern void Puff_ClearAll(int, int);
+}
+
 extern void func_02012718(int, int);
+extern "C" {
+
 extern void TrmpFx_UpdateAll(void);
 extern void Mg_SubmitScore(int);
 extern void TrmpFx_DrawAll(void);
@@ -152,6 +169,7 @@ OamAttr **sTrmpTextSpritesByLanguage[] = {sMgTextSpritesEnglish, sMgTextSpritesS
 int sTrmpPuffXByLanguage[] = {(int)sTrmpPuffEnglish, (int)sTrmpPuffSpanish, (int)sTrmpPuffFrench,
                               (int)sTrmpPuffGerman, (int)sTrmpPuffItalian};
 }
+
 
 TrmpScorePopup::TrmpScorePopup() {}
 
@@ -831,14 +849,17 @@ void dScMgTrampoline_c::PaintSquare(int cx, int cy, int colour, int size) {
     }
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void TrmpFx_InitPool(void *records, int count) {
     sTrmpFxPool = (TrmpScorePopup *)records;
     sTrmpFxCount = count;
 }
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void TrmpFx_Spawn(int x, int y) {
     int i;
     for (i = sTrmpFxCount - 1; i >= 0; i--) {
@@ -850,7 +871,9 @@ void TrmpFx_Spawn(int x, int y) {
 }
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void TrmpFx_ClearAll(void) {
     int i;
     for (i = 0; i < sTrmpFxCount; i++) {
@@ -860,7 +883,9 @@ void TrmpFx_ClearAll(void) {
 }
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void TrmpFx_UpdateAll(void) {
     int i;
     for (i = 0; i < sTrmpFxCount; i++) {
@@ -869,7 +894,9 @@ void TrmpFx_UpdateAll(void) {
 }
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void TrmpFx_DrawAll(void) {
     TrmpScorePopup *node = sTrmpFxList;
     if (node == 0)
@@ -881,7 +908,9 @@ void TrmpFx_DrawAll(void) {
 }
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void TrmpFx_Link(TrmpScorePopup *entry) {
     TrmpScorePopup *node;
     entry->next = sTrmpFxList;
@@ -896,7 +925,9 @@ void TrmpFx_Link(TrmpScorePopup *entry) {
 }
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void TrmpFx_Unlink(TrmpScorePopup *node) {
     TrmpScorePopup *prev = sTrmpFxList;
     if (prev == node) {
@@ -914,6 +945,7 @@ void TrmpFx_Unlink(TrmpScorePopup *node) {
     }
 }
 }
+
 
 /* Fills a slot with fixed parameters and tail-calls TrmpFx_Link. */
 void TrmpScorePopup::Spawn(int y, int number) {

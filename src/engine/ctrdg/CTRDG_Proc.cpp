@@ -55,12 +55,20 @@ typedef int BOOL;
 
 extern "C" {
 
+
 extern void SVC_WaitByLoop(int n);
+}
+
 
 extern CTRDGWork CTRDGi_Work;
-extern int data_020a9de4;         /* CTRDGi_InitModuleInfo's done flag */
-extern int data_020a9de8;         /* CTRDG_Init's done flag */
-extern int (*data_020a9dec)(int); /* the hook CTRDGi_PulledOutCallback asks before stopping */
+extern int data_020a9de4;
+         /* CTRDGi_InitModuleInfo's done flag */
+extern int data_020a9de8;
+extern "C" {
+         /* CTRDG_Init's done flag */
+extern int (*data_020a9dec)(int);
+}
+ /* the hook CTRDGi_PulledOutCallback asks before stopping */
 /* The copy of the CTRDGHeader at 0x08000000; the DMA in CTRDGi_InitModuleInfo
  * fills its last 0x40 bytes (+0x80) from the cartridge, and the BIOS logo goes
  * into nintendoLogo. */
@@ -167,5 +175,4 @@ void CTRDG_TerminateForPulledOut(void) {
     while (PXI_SendWordByFifo(PXI_FIFO_TAG_CTRDG, 2, FALSE) != PXI_FIFO_SUCCESS)
         ;
     OS_Terminate();
-}
 }

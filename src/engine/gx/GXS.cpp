@@ -27,7 +27,7 @@ extern int GXi_DmaId;     // RENDER_DMA_CHANNEL: DMA channel number, -1 if none
 extern u32 data_020a60a4; // BG ext-palette bank saved by BeginLoadBG, restored by EndLoadBG
 extern u32 data_020a60a8; // OBJ ext-palette bank saved by BeginLoadOBJ, restored by EndLoadOBJ
 
-extern "C" {
+
 
 void GX_LoadBGPltt(const void *pSrc, u32 offset, u32 szByte) {
     GXi_DmaCopy16(GXi_DmaId, pSrc, (void *)(HW_BG_PLTT + offset), szByte);
@@ -176,4 +176,4 @@ void GXS_EndLoadOBJExtPltt(void) {
     data_020a60a8 = 0;
 }
 
-} // extern "C"
+ // extern "C"

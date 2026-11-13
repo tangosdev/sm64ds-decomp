@@ -1,9 +1,10 @@
 #ifndef ASYNC_JOB_H
 #define ASYNC_JOB_H
-
-#ifdef __cplusplus
-extern "C" {
+#ifndef __cplusplus
+#define func_0201a2f8 _Z13func_0201a2f8i
+#define func_0201a244 _Z13func_0201a244PFviEiiPvi
 #endif
+
 
 typedef void (*AsyncJobCallback)(int argument);
 
@@ -15,9 +16,6 @@ int func_0201a244(AsyncJobCallback callback, int argument, int priority, void *s
 
 /* These jobs ignore the worker argument. */
 void func_0201a2f8(int unused);
-void LoadMultiBootResources(int unused);
+extern "C" void LoadMultiBootResources(int unused);
 
-#ifdef __cplusplus
-}
-#endif
 #endif

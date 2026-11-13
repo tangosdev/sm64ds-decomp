@@ -4,7 +4,7 @@
 #include "BMD_File.h"
 #include "nitro/os/system.h"
 
-extern "C" {
+
 
 /* The index of the BMD texture called name: the walk over numTextures and
    the 0x14-byte textures records. */
@@ -22,5 +22,4 @@ int func_020471ac(const BMD_File *tbl, const char *name) {
     }
     OS_Terminate();
     return -1;
-}
 }

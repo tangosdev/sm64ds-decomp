@@ -5,6 +5,7 @@
 
 extern "C" {
 
+
 /* Fills the unit square func_ov007_020c4684 has scaled onto a sprite with one
  * quad per 8x8-texel cell, top row first. Without a tile map the texture runs
  * on from (s0, t0), each cell advancing repeatU texels across and repeatV

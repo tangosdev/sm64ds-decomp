@@ -71,17 +71,23 @@ enum daSanbo_c_AssetId {
 enum { SANBO_HEAD = 0xf0, SANBO_BODY = 0xf1 };
 
 extern "C" {
+
 extern void Matrix4x3_FromTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);
 extern void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern struct Matrix4x3 data_020a0e68;
 extern void d_a_sanboNewSimpleHold(unsigned int, int, int, int);
+}
+
 extern void func_02038414(void *p);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int b, int c, void *v, int e);
+extern "C" {
+
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 }
+
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
  * pair (func_02017acc / func_02017ab4), spelled through a declared-only
@@ -248,11 +254,13 @@ namespace Sound { void PlayBank0(unsigned int id, const Vector3 &pos); }
 
 
 extern "C" {
+
 void d_a_sanboRunningSlidingDustAtHold(int x, int y, int z);
 unsigned d_a_sanboNewHold(unsigned a, unsigned b, int x, int y, int z, const void *dir, void *cb);
 unsigned d_a_sanboNewCleanParticleHold(unsigned a, unsigned b, int x, int y, int z,
                                        const Vector3_16f *dir);
 }
+
 
 /* A segment tracks the one in front of it while that piece is still small. */
 int daSanbo_c::UpdateStackedBody() {

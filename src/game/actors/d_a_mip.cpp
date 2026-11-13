@@ -61,10 +61,12 @@ namespace Sound {
 bool PlaySub(u32, u32, u32, int, bool);
 }
 
-extern "C" {
+
 
 /* ground probe / collision */
 int   SurfaceInfo_TestFlag0x20(void *);
+extern "C" {
+
 
 /* dActor_c / dEnemyBase_c, reached by their ROM names.
    dActor_c::ClosestPlayer and dActor_c::FindWithID are deliberately NOT here:
@@ -93,13 +95,18 @@ void  Matrix4x3_ApplyInPlaceToRotationXYZExt(void *, int, int, int);
 void MTX_Concat43(void *, void *, void *);
 void MTX_Concat33(void *, void *, void *);
 void MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
+}
+
 u8 NumStars(void);
 int func_02013890(int, int);
 void func_02013944(void);
 void func_02012694(unsigned int id, const Vector3 *pos);
+extern "C" {
+
 void  func_0203c178(void *, int, int, int);
 
 }
+
 
 /* The state records at 0x0213003c..0x021300bc are 8-byte Itanium
    pointer-to-member-function constants, so SetState reaches one through a real

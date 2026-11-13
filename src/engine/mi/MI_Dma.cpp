@@ -28,9 +28,12 @@
 
 extern "C" {
 
+
 /* in ITCM */
 extern void MIi_DmaSetParams(u32 dmaNo, u32 src, u32 dest, u32 ctrl);
 extern void MIi_DmaSetParams_wait(u32 dmaNo, u32 src, u32 dest, u32 ctrl);
+}
+
 
 void MI_DmaFill32(u32 dmaNo, void *dest, u32 data, u32 size) {
     vu32 *dmaCntp;
@@ -144,5 +147,4 @@ void MI_StopDma(u32 dmaNo) {
     (void)*dmaCntp;
 
     OS_RestoreInterrupts(enabled);
-}
 }

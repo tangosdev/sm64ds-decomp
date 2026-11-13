@@ -65,9 +65,9 @@ struct PileCollisionFilePtr : SharedFilePtr {
 };
 
 /* local extern: no shared header declares these. */
-extern "C" {
+
 extern void func_02012694(unsigned int a, void *b);
-}
+
 
 /* This TU's two file handles: the pile model and its collision file.
  * InitResources loads both, CleanupResources releases them. Defined at the

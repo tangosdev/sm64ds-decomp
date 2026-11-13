@@ -13,12 +13,12 @@
 #include "dActor_c.h"
 #include "decl_common.h"
 
-extern "C" {
+
 /* local extern: no header declares the CLPS water test (CLPS.h only
    documents it); d_bg_ch_sph_crr_query.cpp defines it with this
    signature. */
 extern int SurfaceInfo_TestFlag0x20(int *clpsWords);
-}
+
 
 
 /* Stores dBgW_Kc::depthDirMinDot (+0x44), the sphere query's face-dot threshold. */
@@ -249,7 +249,7 @@ void dBgW::UpdatePosWithVelocity(dBgW &clsn, dActor_c *clsnActor, dBgPi &res, Ve
     pos.z += velocity.z;
 }
 
-extern "C" void func_02039218(void) {
+void func_02039218(void) {
     int slot;
     for (slot = 0; slot < 0x18; slot++)
         data_020a0c80[slot] = 0;
@@ -261,7 +261,7 @@ void dScStage_c::ResetMeshColliders() {
         data_020a0c80[slot] = 0;
 }
 
-extern "C" void func_020391f0(void) {}
+void func_020391f0(void) {}
 
 int dBgW::Enable(dActor_c *actor) {
     for (s32 slot = 0; slot < 0x18; slot++) {

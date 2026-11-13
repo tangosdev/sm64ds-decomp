@@ -40,9 +40,9 @@ struct ClockModelFilePtr : SharedFilePtr {
     ~ClockModelFilePtr();
 };
 
-extern "C" {
+
 u8 IsAreaShowing(int areaId);
-}
+
 
 extern s8 gNextSublevel; /* hands advance while it is not positive */
 extern u8 data_0209f2c0; /* clock setting: 0 slow, 1 fast, 2 random, 3 stopped */

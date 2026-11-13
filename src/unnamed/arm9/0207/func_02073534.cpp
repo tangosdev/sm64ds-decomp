@@ -23,7 +23,7 @@ namespace std {
 void terminate();
 }
 
-extern "C" void func_02073534(void *base, void *current, unsigned int size, dtor_t dtor)
+void func_02073534(void *base, void *current, unsigned int size, dtor_t dtor)
 {
     char *p = (char *)current;
     try {

@@ -80,6 +80,7 @@ struct Off9 { int v[9]; };
 
 extern "C" {
 
+
 /* ---- arm9 globals ---- */
 extern u8 gMgSaveDirty;
 extern u8 gMgMenuPage;
@@ -134,6 +135,8 @@ extern void *sMiniGmRecordLabels[];
  * forward reference. */
 int  MiniGm_GetSaveTable(void *self, int i);
 void MiniGm_DrawNumber(void *self, int x, int y, int val);
+}
+
 
 /* ---- arm9 / cross-overlay externals ---- */
 void func_02013568(int a, int b, int v);
@@ -141,6 +144,8 @@ int  func_02013580(int a, int b);
 void func_02013598(int x);
 int  func_020135d0(int r0);
 int  func_02013638(int n);
+extern "C" {
+
 int  RandomIntInternal(int *seed);
 extern void *LoadFile(int id);
 extern void DecompressLZ16(void *src, void *dst);
@@ -149,6 +154,7 @@ extern void OamRender10_d_s_mini_gm(int sub, OamAttr *attr, int x, int y, int pa
                                     int sy, int c, int d);
 
 }
+
 
 extern "C" dScMiniGm_c *dScMiniGm_c_classInit()
 {
@@ -379,6 +385,7 @@ s32 dScMiniGm_c::InitResources()
 }
 
 extern "C" {
+
 void MiniGm_LoadGroupIcons(void *selfv)
 {
     dScMiniGm_c *scene = (dScMiniGm_c *)selfv;
@@ -521,6 +528,7 @@ void MiniGm_LoadGroupIcons(void *selfv)
     } while (i < 9);
 }
 }
+
 
 void dScMiniGm_c::LoadIconPalette(int index) {
     void *file = LoadFile(sMiniGmIconPalettes[index]);
@@ -673,6 +681,7 @@ void dScMiniGm_c::DrawRecords() {
 
 extern "C" {
 
+
 void MiniGm_DrawNumber(void *a0, int x, int y, int val){
     if(val==0){
         OAM::RenderSub((OamAttr *)sMiniGmDigits[0], x, y, -1, 0);
@@ -696,6 +705,7 @@ void MiniGm_DrawNumber(void *a0, int x, int y, int val){
     }while(val>0);
 }
 }
+
 
 void dScMiniGm_c::DrawNewBadges() {
     int g = (mIconBlinkPhase >= 0x20) ? 1 : 0;
@@ -1070,6 +1080,7 @@ void dScMiniGm_c::UpdatePageScroll() {
 }
 
 extern "C" {
+
 int MiniGm_HasSecondPage(void *self) {
     int i, j;
     for (i = 0; i < 4; i++) {
@@ -1082,7 +1093,9 @@ int MiniGm_HasSecondPage(void *self) {
 }
 }
 
+
 extern "C" {
+
 int MiniGm_IsUnlocked(void *self, int n) {
     if (n < 8) {
         return 1;
@@ -1091,7 +1104,9 @@ int MiniGm_IsUnlocked(void *self, int n) {
 }
 }
 
+
 extern "C" {
+
 int MiniGm_IsNew(void *self, int n) {
     if (n < 8) {
         return func_020135d0(n + 0x1c);
@@ -1100,6 +1115,7 @@ int MiniGm_IsNew(void *self, int n) {
     }
 }
 }
+
 
 void dScMiniGm_c::ClearNew(int n) {
     int seen = MiniGm_IsNew(this, n);
@@ -1113,18 +1129,22 @@ void dScMiniGm_c::ClearNew(int n) {
 }
 
 extern "C" {
+
 int MiniGm_GetSaveTable(void *a, int i) {
     int offset = i * 0x34;
     return (*(unsigned int *)((char *)sMiniGmSaveTable + offset) >> 8) & 0xff;
 }
 }
 
+
 extern "C" {
+
 int MiniGm_GetRecord(void *a, int b, int c) {
     int res = MiniGm_GetSaveTable(a, b);
     return func_02013580(res, c);
 }
 }
+
 
 void dScMiniGm_c::SetRecord(int a1, int r2, int r3) {
     int r5 = r2;

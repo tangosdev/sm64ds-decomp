@@ -95,9 +95,11 @@ extern daPly_c *gPlayers[];
 extern dCamera_c *gCamera;
 
 /* local extern: arm9/ov002 C helpers with no shared header yet. */
-extern "C" {
+
 /* Sound::Play2D(3, id). The ROM calls this wrapper, not Play2D. */
 unsigned int func_0201277c(unsigned int soundID);
+extern "C" {
+
 
 /* Depth from mModelOffsetY, mPosY, mSinkDepth and mGroundY; radius from that,
  * mIsBalloon, mIsMega and mScaleY. The definition takes char *. */
@@ -110,6 +112,7 @@ void MTX_Concat33(const int *a, const int *b, int *dst);
    that header renumbers this TU's @NNN .data locals. */
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
 }
+
 
 /* Reconstructed source-style name: SM64DS proves daLuigi_c through RTTI,
  * allocation size, vtable identity, and the LUIGI registry profile;

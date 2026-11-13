@@ -65,6 +65,7 @@ extern dScMgMemory_cCardState sMemoryCardTable[];
 extern "C" dScMgMemory_cPlayerState sMemoryPlayerTable[];
 
 extern "C" {
+
 extern void Mg_DrawScoreTally(void *c, int a, int b, int d);
 extern void Mg_DrawBlinkSprite(void *c, int arg1, int arg2);
 /* Unused. Deleting this named prototype renumbers @NNN later in the file. */
@@ -92,7 +93,11 @@ void LoadCard2SubBg3(void *);
 s32 GetGameLanguage(void);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
+}
+
 void Deallocate(void *ptr);
+extern "C" {
+
 int Dealer_Load(void *c);
 int Mg_GetSavedRecord0(void);
 int Mg_GetSavedRecord1(void);
@@ -103,6 +108,7 @@ void Mg_PlaceBannersOnTopScreen(void);
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 }
+
 
 /* Load-bearing: source order, and the opt pragmas on DrawCards and
  * CardFlyAway. Under deferred emission the last pragma setting wins for the
@@ -1060,6 +1066,7 @@ extern "C" BaseSpawnInfo<dScMgMemory_c> g_profile_MG_MEMORY = {dScMgMemory_c_cla
 /* Twelve interleaved screen x/y pairs per difficulty. The flat indexing
  * in CardMove preserves the pinned compiler's measured address formation. */
 extern "C" {
+
 u16 sMemoryCardPositionsEasy[24] = {224, 160, 160, 160, 96,  160, 32,  160, 224, 136, 160, 136,
                                     96,  136, 32,  136, 224, 64,  160, 64,  96,  64,  32,  64};
 u16 sMemoryCardPositionsNormal[24] = {200, 160, 136, 160, 224, 136, 176, 136, 128, 136, 80, 136,

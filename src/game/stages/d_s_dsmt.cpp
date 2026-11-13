@@ -53,6 +53,7 @@
 #include "Ov007Settings.h"
 
 extern "C" {
+
 extern FileSaveData *data_0209b33c;
 extern u8 data_0209b34b[];
 extern u8 data_0209b34e[];
@@ -81,12 +82,17 @@ int func_ov007_020b7090(u16 a0, u16 a1, u16 a2, u16 a3, int arg4);
 int func_ov007_020b6eb4(void);
 void Enable3dEngines();
 int GetSoundMode(void);
+}
+
 int IsStarCollected(int course, int star);
 void StartMinigameMenu(u8 returnToRecRoom);
+extern "C" {
+
 void SetSoundMode(int mode);
 void TurnBacklightOn(void);
 void TurnBacklightOff(void);
 }
+
 
 /* data_0209b340 (decl_common.h's int[]) is the download-play table. */
 #define sBootArgs (*(Ov007BootArgs *)data_0209b340)
@@ -377,6 +383,7 @@ extern "C" FileSaveData *DSMT_GetFileBuffer(int slot) {
 }
 
 extern "C" {
+
 /* Behavior consumes a nonnegative pending music ID after the delay; -1 is idle.
  * Keep the configured identity while its shared declaration is reserved. */
 int data_ov007_02103260 = -1;

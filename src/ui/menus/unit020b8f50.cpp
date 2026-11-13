@@ -61,7 +61,7 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
 
-extern "C" {
+
 
 /* data_ov007_02104b9c: the 0x14-byte sprite record. */
 typedef struct Ov007PickerSprites {
@@ -72,20 +72,29 @@ typedef struct Ov007PickerSprites {
     /* 0x04: func_ov007_020c44e4; [0] and [1] the board, [2] and [3] the
      * point-budget bar */
     Ov007Sprite *sprites[4];
-} Ov007PickerSprites;
+}
+extern "C" {
+ Ov007PickerSprites;
+}
+
 
 /* PickerScene_UpdateMoveAnim copies pos as three words. */
 typedef struct Vec3Words {
     Fix12i w[3];
-} Vec3Words;
+}
+extern "C" {
+ Vec3Words;
 
 extern char *data_ov007_02104ba0;
 extern Ov007PickerSprites *data_ov007_02104b9c;
 /* PickerScene_UpdateIntro's settle counter, -1 until the drawing is complete */
 extern s16 data_ov007_02104b98[];
+}
+
 
 #define SCENE ((Ov007PickerScene *)data_ov007_02104ba0)
 #define SPRITES data_ov007_02104b9c
+extern "C" {
 
 extern u16 data_ov007_020d7b54[];
 extern int data_ov007_020d7b60;

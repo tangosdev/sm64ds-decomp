@@ -57,11 +57,17 @@ struct BasabasaAnimationFileHandle : SharedFilePtr {
 /* arm9 C helpers with no shared header. Vec3_Asr's definition takes a
  * file-local struct, so no shared spelling agrees with it yet. */
 extern "C" {
+
 void func_ov002_020aea30(void *self, void *actor, void *collision);
+}
+
 void func_02012694(unsigned int id, const Vector3 *pos);
+extern "C" {
+
 void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 }
+
 
 
 extern BasabasaAnimationFileHandle data_ov065_0211d690; /* flying animation */

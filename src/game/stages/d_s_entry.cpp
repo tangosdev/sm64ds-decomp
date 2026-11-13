@@ -70,14 +70,23 @@
 
 extern "C" {
 
+
 void DecompressLZ16(void *, void *);
+}
+
 void Deallocate(void *);
+extern "C" {
+
 
 extern unsigned char data_0209b2e4;
 
 extern void OamRender10_d_s_entry(int a, void *oam, int b, int c, int d, int e, int f, int g, int h,
                                   int i);
+}
+
 extern int func_0203d974(void);
+extern "C" {
+
 
 int GetLanguageIndex(void);
 void func_ov001_020ab5b0(char *r0, int r1, short r2, short r3, short s4, short s5);
@@ -91,6 +100,7 @@ extern short data_ov075_0211d742[];
 extern short data_ov075_0211d756[];
 extern short data_ov075_0211d94a[];
 }
+
 
 #define SH(base, i) (*(short*)((char*)(base) + (i)*4))
 
@@ -342,8 +352,10 @@ void dScEntry_c::RenderIcons() {
 
 extern "C" {
 
+
 int func_02030958(int val);
 }
+
 extern u8 data_0209fc50;
 
 static inline void SetPalette(u16 *entry, u16 pal) {
@@ -401,6 +413,7 @@ void dScEntry_c::SetSlotBorderPalette(int slot, int dim) {
  *     operand order decides which of r0/r1 holds the shifted attribute word.
  */
 extern "C" {
+
 extern u8 data_ov075_0211c6e8[];
 extern OamAttr data_ov075_0211c7c0[];
 extern char data_ov075_0211c8b0[];
@@ -409,6 +422,7 @@ extern s8 gNumStageStars[];
 extern s16 gNumCoins[];
 extern char data_0209ee90[];
 }
+
 
 static inline int EntryPlayerIndex(int arg0) {
     return func_02030958(arg0);
@@ -516,6 +530,7 @@ void dScEntry_c::RenderPlayerScores() {
  * Both entries are drawn; attr3 == 0xffff ends the list after its last sprite.
  * Original list identifiers and artwork roles remain unproven. */
 extern "C" {
+
 OamAttr data_ov075_0211c914[2] = {
     {0x8018, 0x0008, 0xe282, 0x0000},
     {0x0018, 0x41f8, 0xe280, 0xffff},
@@ -530,6 +545,7 @@ OamAttr data_ov075_0211c934[2] = {
 };
 }
 
+
 /* Templates consumed by the four choice icons, selected-character icon and
  * player-result rows. The final entry is drawn before attr3 terminates each
  * list. Numeric identities are retained where artwork roles are unproven.
@@ -537,6 +553,7 @@ OamAttr data_ov075_0211c934[2] = {
  * the five-pointer list includes the initial selection at index 4. */
 
 extern "C" {
+
 OamAttr data_ov075_0211c6f0[1] = {
     {0x00e0, 0xc1e0, 0x8090, 0xffff},
 };
@@ -625,6 +642,7 @@ OamAttr *data_ov075_0211cb64[8] = {data_ov075_0211c890, data_ov075_0211d144, dat
                                    data_ov075_0211d18c, data_ov075_0211c708, data_ov075_0211d1d4,
                                    data_ov075_0211c6f0, data_ov075_0211d21c};
 }
+
 
 #pragma defer_codegen on
 /* Width/height pairs and the step sets __sinit installs. One Pair type, so

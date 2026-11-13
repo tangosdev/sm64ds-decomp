@@ -28,7 +28,7 @@ enum daBgSnwmn_c_AssetId {
 #include "math/MtxStack.h"
 
 /* arm9 C helper with no shared header. */
-extern "C" int IsStarCollectedInLevel(s8 levelID, int starID);
+int IsStarCollectedInLevel(s8 levelID, int starID);
 
 /* Four file-scope objects. mwcc emits __sinit_d_a_bg_snwmn.cpp from them.
  * The two model handles share one veneer pair, the BTP handle is the texseq

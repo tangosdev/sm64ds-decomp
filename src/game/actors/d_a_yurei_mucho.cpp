@@ -61,15 +61,18 @@ struct V3Quint {
 };
 
 /* Scalar ABI declarations retained by this TU. */
-extern "C" {
+
 
 /* arm9 scalar ABI and unnamed helpers; see the remaining work above. */
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 extern void func_02012694(unsigned int id, void *v);
+extern "C" {
+
 
 /* ov002 -- unnamed particle helper. */
 extern void func_ov002_020aea30(void *self, void *actor, void *collision);
 }
+
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
 enum daYurei_Mucho_c_AssetId {

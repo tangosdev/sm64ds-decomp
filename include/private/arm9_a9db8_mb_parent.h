@@ -202,22 +202,16 @@ typedef struct MB_CommPWork {
 
 /* NitroSDK mb_private.h: the work MB_Init is given, and the parent's view
  * of it. */
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 extern MB_CommCommonWork *mbc;
 
-/* mb_fileinfo.h: MB_FileInfo.c's block lookup, MBi_CommParentSendBlock's
+extern "C" /* mb_fileinfo.h: MB_FileInfo.c's block lookup, MBi_CommParentSendBlock's
  * source of each block's place. */
 int MBi_get_blockinfo(MB_BlockInfo *, MB_BlockInfoTable *, u32, MbDownloadFileInfoHeader *);
 
-/* mb_parent.h: the parent's WM callback, which MB_StartParent installs. */
+extern "C" /* mb_parent.h: the parent's WM callback, which MB_StartParent installs. */
 void MBi_CommParentCallback(u16, void *);
 
-#ifdef __cplusplus
-}
-#endif
 #define pPwork ((MB_CommPWork *)mbc)
 
 #endif

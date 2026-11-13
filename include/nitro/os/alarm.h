@@ -1,5 +1,12 @@
 #ifndef NITRO_OS_ALARM_H
 #define NITRO_OS_ALARM_H
+#ifndef __cplusplus
+#define OS_CancelAlarm _Z14OS_CancelAlarmP8OSiAlarm
+#define OS_SetAlarm _Z11OS_SetAlarmP8OSiAlarmxPFvPvES1_
+#define OS_CreateAlarm _Z14OS_CreateAlarmP8OSiAlarm
+#define OS_IsAlarmAvailable _Z19OS_IsAlarmAvailablev
+#define OS_InitAlarm _Z12OS_InitAlarmv
+#endif
 
 /*
  * The alarms of the Nitro SDK's os_alarm.c, under the SDK's own names
@@ -19,9 +26,6 @@
 
 #include "types.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /* Called with the alarm's arg when the alarm fires. */
 typedef void (*OSAlarmHandler)(void *);
@@ -45,8 +49,5 @@ void OS_CreateAlarm(OSAlarm *);
 void OS_SetAlarm(OSAlarm *, long long, OSAlarmHandler, void *);
 void OS_CancelAlarm(OSAlarm *);
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* NITRO_OS_ALARM_H */

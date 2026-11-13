@@ -94,22 +94,35 @@ struct CLPS_Block;
    own assignment goes member by member through Vector3 and comes out longer. */
 
 extern "C" {
+
 /* ---- this TU ---- */
 void func_ov079_02123d4c(Vector3 *out, daBtn_c *self);
 void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other);
 
 /* ---- arm9 / ov002 ---- */
 int AngleDiff(int, int);
+}
+
 int IsStarCollectedInCurLevel(int a);
+extern "C" {
+
 void Matrix4x3_ApplyInPlaceToScale(void *m, int x, int y, int z);
+}
+
 void *func_0200fa04(void *c, void *v, int b);
 void func_02011cfc(void);
 void func_02011d38(void);
 void func_02012694(unsigned int a, void *p);
+extern "C" {
+
 int func_ov002_020dd8b8(void *c);
+}
+
 
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int a, int b, void *c, void *d);
+extern "C" {
+
 extern void hold_d_a_btn(void *mc, void *kcl, void *mtx, int fix, s16 s, void *clps);
 void d_a_btnEarthquakeHold(void *self, const void *v, int f);
 
@@ -135,6 +148,7 @@ extern CLPS_Block data_ov079_02127ba0;   /* the plain Whomp's CLPS block */
 extern void *data_ov079_02127bf0[];
 extern int data_ov079_02127cfc[];
 }
+
 
 /* File-scope resource handles: each ctor/dtor pair is a ROM SharedFilePtr
    veneer (func_02017acc/func_02017ab4 for the two BMDs, SharedFilePtr::
@@ -181,6 +195,7 @@ BtnCollisionFilePtr     gBattanKingCollisionFile(ASSET_BATTAN_KING_KCL);   /* th
    the static initializer copies them into the table below, one member
    pointer per mState. */
 extern "C" {
+
 extern daBtn_c::StateFunc data_ov079_02127c00;   /* 0 func_ov079_02125b44 */
 extern daBtn_c::StateFunc data_ov079_02127bd0;   /* 1 func_ov079_021258fc */
 extern daBtn_c::StateFunc data_ov079_02127c10;   /* 2 func_ov079_021256d4 */
@@ -192,8 +207,10 @@ extern daBtn_c::StateFunc data_ov079_02127c20;   /* 7 func_ov079_021249f0 */
 extern daBtn_c::StateFunc data_ov079_02127be8;   /* 8 func_ov079_021246dc */
 extern daBtn_c::StateFunc data_ov079_02127bf8;   /* 9 func_ov079_021246d8 */
 extern daBtn_c::StateFunc data_ov079_02127be0;   /* 10 func_ov079_02124638 */
-extern daBtn_c::StateFunc data_ov079_02127c08;   /* 11 func_ov079_02124530 */
+extern daBtn_c::StateFunc data_ov079_02127c08;
 }
+   /* 11 func_ov079_02124530 */
+
 
 daBtn_c::StateFunc data_ov079_02128280[12] = {
     data_ov079_02127c00, data_ov079_02127bd0, data_ov079_02127c10,

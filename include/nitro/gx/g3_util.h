@@ -1,5 +1,8 @@
 #ifndef NITRO_GX_G3_UTIL_H
 #define NITRO_GX_G3_UTIL_H
+#ifndef __cplusplus
+#define G3_LoadTexMtxEnv _Z16G3_LoadTexMtxEnvPi
+#endif
 
 #include "types.h"
 
@@ -15,19 +18,13 @@
 
 struct Matrix4x3;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-void G3i_PerspectiveW_(Fix12i, Fix12i, Fix12i, Fix12i, Fix12i, Fix12i, int, struct Matrix4x3 *);
-void G3i_LookAt_(const struct Vector3 *, const struct Vector3 *, const struct Vector3 *, bool,
+extern "C" void G3i_PerspectiveW_(Fix12i, Fix12i, Fix12i, Fix12i, Fix12i, Fix12i, int, struct Matrix4x3 *);
+extern "C" void G3i_LookAt_(const struct Vector3 *, const struct Vector3 *, const struct Vector3 *, bool,
                  struct Matrix4x3 *);
 
 /* Loads the environment-mapping texture matrix: the SDK's MtxFx44, spelled
  * int * as its definition in src/engine/gx/G3i.cpp and decl_common.h spell
  * it (ntrtwl/NitroSDK nitro/gx/g3_util.h). */
 void G3_LoadTexMtxEnv(int *);
-#ifdef __cplusplus
-}
-#endif
 
 #endif

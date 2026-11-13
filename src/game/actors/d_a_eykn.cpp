@@ -108,11 +108,16 @@ daEykn_c::State gEyknStates[3] = {
 
 
 extern "C" {
+
 int AngleDiff(int a, int b);
 u8 DecIfAbove0_Byte(u8 *counter);
+}
+
 s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
+extern "C" {
+
 
 /* Fix12<int> by value. Scalar parameters: the member form size-DIFFs.
    See the leftover list. */
@@ -130,6 +135,7 @@ extern SharedFilePtr *const gEyknTextureSequenceFiles[2] = {&gEyknCloseTextureSe
                                                             &gEyknOpenTextureSequenceFile};
 extern SharedFilePtr *const gEyknDeathAnimationFilePtr = &gEyknDeathAnimationFile;
 }
+
 
 /* Debug-table actor ids, and the thresholds this file compares against. */
 enum {
@@ -817,6 +823,7 @@ extern "C" daEykn_c *daEykn_c_classInit_EYEKUN()
 }
 
 extern "C" {
+
 SpawnInfo<daEykn_c> g_profile_EYEKUN = {
     daEykn_c_classInit_EYEKUN, 0x106, 0x78, 0x10000003, 0, 0x5f000, 0x1000000, 0xbb8000};
 SpawnInfo<daEykn_c> g_profile_EYEKUN_BOSS = {

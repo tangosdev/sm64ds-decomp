@@ -2,7 +2,7 @@
 /* Distance between two Fix12 (x, y) pairs. Only two words are read. */
 #include "cstd.h"
 
-extern "C" {
+
 
 typedef int Fix12i;
 
@@ -15,5 +15,4 @@ Fix12i func_0203d5dc(const int *a, const int *b) {
     long long sq = (long long)dx * dx;
     sq += (long long)dy * dy;
     return cstd::sqrt((u64)sq);
-}
 }

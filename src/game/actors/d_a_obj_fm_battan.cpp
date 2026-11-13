@@ -50,11 +50,11 @@ enum d_a_obj_fm_battan_AssetId { ASSET_FM_BATTAN_BMD = 0x0616, ASSET_FM_BATTAN_K
 #include "math/CalcLib.h"
 
 extern CLPS_Block data_ov064_0211ba4c;
-extern "C" {
+
 extern void *func_0200fa04(dActor_c *, Vector3 *, int);
 
 /* The 8-byte store into the mesh collider's +0x18 callback slot. */
-}
+
 
 /* The retail static initializer constructs these two 8-byte resource handles
  * in source order and lets the C++ runtime register their destructors.  The

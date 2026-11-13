@@ -43,6 +43,7 @@ extern StateHandler pmf_dScMgBSC_c_StateDone;
 extern StateHandler pmf_dScMgBSC_c_StateDone_2;
 
 extern "C" {
+
 extern short gMgCoinsStatus;
 extern int Math_Function_0203b14c(int *ptr, int target, int rate, int limit, int step);
 extern void Mg_ResumeSharedState(void);
@@ -76,6 +77,7 @@ extern u32 LoadCompressedFileAt(int fileID, void *target);
 extern void *LoadFile(int handle);
 extern int Dealer_Load(void *c);
 }
+
 
 /* Real C++ declarations for the engine calls below; the namespaces and the
  * reference parameter are what give the ROM's mangled names. */

@@ -64,9 +64,9 @@ extern s8 gCurrentSublevel; /* current level */
 extern u8 gCurrentStarId;
 
 /* local extern: dBgW setters and a coined star helper with no shared header. */
-extern "C" {
+
 int IsStarCollectedInCurLevel(int star);
-}
+
 
 /* One class, six actor IDs (see the banner), so most members branch on
  * actorID. The ROM materializes each comparison into a register and then

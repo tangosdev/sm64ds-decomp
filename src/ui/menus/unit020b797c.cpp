@@ -63,7 +63,7 @@
 
 #pragma opt_loop_invariants off
 
-extern "C" {
+
 
 /* The window's state machine, as MessageWindow_Update steps it. */
 enum Ov007MessageWindowState {
@@ -83,7 +83,11 @@ typedef struct Ov007MessageWindow {
     s32 textDrawn; /* 0x10: the message is on plane 0 */
     s32 pad_14;    /* 0x14: cleared by MenuText_ClearMainPlane; no reader found */
     s32 textLine;  /* 0x18: the tile row the message starts on */
-} Ov007MessageWindow;
+}
+extern "C" {
+ Ov007MessageWindow;
+}
+
 
 typedef char Ov007MessageWindow_size_must_be_0x1c[sizeof(Ov007MessageWindow) == 0x1c ? 1 : -1];
 
@@ -92,7 +96,9 @@ typedef char Ov007MessageWindow_size_must_be_0x1c[sizeof(Ov007MessageWindow) == 
 typedef struct Ov007MessageRange {
     u16 firstId;
     u16 firstIndex;
-} Ov007MessageRange;
+}
+extern "C" {
+ Ov007MessageRange;
 
 extern Ov007MessageRange data_0208eeec[];
 

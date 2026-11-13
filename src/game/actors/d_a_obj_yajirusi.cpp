@@ -77,9 +77,12 @@ struct ArrowSignAssets {
 
 /* local extern: see the banner; the port builds this TU for the host. */
 extern "C" {
+
 void Matrix4x3_FromRotationY(void *mtx, int angle);
-void func_02012694(unsigned int id, void *pos);
 }
+
+void func_02012694(unsigned int id, void *pos);
+
 
 /* The model, KCL and CLPS for each of the two variants. */
 extern ArrowSignAssets data_ov098_0213c380[];

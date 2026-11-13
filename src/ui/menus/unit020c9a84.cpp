@@ -36,6 +36,7 @@
 
 extern "C" {
 
+
 extern int func_ov007_020c30ac(Vector3 *points, int count, Vector3 *target, int maxDist,
                                int *outDist);
 extern void func_ov007_020c7504(Ov007PointList *list, int damping, int shift);
@@ -50,6 +51,8 @@ extern Ov007Link *func_ov007_020c80a4(void);
 extern void func_ov007_020c80c8(Ov007Follower *f, int damping, int shift);
 extern void func_ov007_020c8440(void *p);
 extern Ov007Follower *func_ov007_020c844c(Vector3 *p, int q);
+}
+
 
 /* The ROM copies a Vector3 here as a block move (ldm/stm). The C++ front end
    copies Vector3, and any struct of three named ints, member by member; a
@@ -58,11 +61,15 @@ extern Ov007Follower *func_ov007_020c844c(Vector3 *p, int q);
 struct Vector3Bits {
     int w[3];
 };
+extern "C" {
+
 
 /* *dst = *src, as the block move. */
 static inline void CopyVec3(Vector3 *dst, const Vector3 *src) {
     *(Vector3Bits *)dst = *(const Vector3Bits *)src;
 }
+}
+
 
 /* The locals below are VecFx32. A real Vector3 local emits the vague-linkage
    ~Vector3 into this text-only unit, and with Vector3's user-declared
@@ -77,6 +84,8 @@ struct SwingSideRows {
     Vector3Bits x[2];
     Vector3Bits y[2];
 };
+extern "C" {
+
 
 /* Builds a swing from params: a chain of chainLength points laid along z
  * with x/y springs (mode 2) and its first point pinned, and two pairs of

@@ -20,7 +20,7 @@
 #include "nitro/fs/archive.h"
 #include "nitro/os/thread.h"
 
-extern "C" {
+
 
 #define FS_INVALID_ID 0x10000
 
@@ -29,7 +29,8 @@ extern "C" {
  * member by member, so the copies go through this view. */
 typedef struct FSDirPosWords {
     u32 w[3];
-} FSDirPosWords;
+}
+ FSDirPosWords;
 
 static inline void FSi_CopyDirPos(FSDirPos *dst, const FSDirPos *src) {
     *(FSDirPosWords *)dst = *(const FSDirPosWords *)src;
@@ -38,7 +39,8 @@ static inline void FSi_CopyDirPos(FSDirPos *dst, const FSDirPos *src) {
 /* FSFileID as its two words, for the same reason. */
 typedef struct FSFileIDWords {
     u32 w[2];
-} FSFileIDWords;
+}
+ FSFileIDWords;
 
 static inline void FSi_CopyFileID(FSFileID *dst, const FSFileID *src) {
     *(FSFileIDWords *)dst = *(const FSFileIDWords *)src;
@@ -52,7 +54,8 @@ typedef struct FSDirEntry {
     u32 is_directory; /* 0x0c */
     u32 name_len;     /* 0x10 */
     u8 name[128];     /* 0x14 -- FS_FILE_NAME_MAX */
-} FSDirEntry;
+}
+ FSDirEntry;
 
 typedef char FSDirEntry_size_must_be_0x94[sizeof(FSDirEntry) == 0x94 ? 1 : -1];
 
@@ -60,33 +63,37 @@ typedef char FSDirEntry_size_must_be_0x94[sizeof(FSDirEntry) == 0x94 ? 1 : -1];
 typedef struct FSArchiveFAT {
     u32 top;    /* 0x00 */
     u32 bottom; /* 0x04 */
-} FSArchiveFAT;
+}
+ FSArchiveFAT;
 
 /* An FNT directory entry. */
 typedef struct FSArchiveFNT {
     u32 start;  /* 0x00 -- the first child's offset into the FNT */
     u16 index;  /* 0x04 -- the first child's file id */
     u16 parent; /* 0x06 */
-} FSArchiveFNT;
+}
+ FSArchiveFNT;
 
 /* The archive and table position FSi_ReadTable reads next. */
 typedef struct FSiSyncReadParam {
     FSArchive *arc; /* 0x00 */
     u32 pos;        /* 0x04 */
-} FSiSyncReadParam;
+}
+ FSiSyncReadParam;
 
 int FSi_TranslateCommand(FSFile *p_file, int command);
-extern const char data_0209a044[]; /* ":/" */
+extern const char data_0209a044[];
+ /* ":/" */
 
 void FSi_ReadTable(FSiSyncReadParam *p, void *dst, u32 len);
 void FSi_SeekDirDirect(FSFile *p_dir, u32 id);
 int FSi_StrNICmp(const u8 *str1, const u8 *str2, int len);
-}
+
 
 #include "nitro/os/system.h"
 #include "nitro/mi/memory.h"
 
-extern "C" {
+
 
 /* The archive is still busy with a synchronous table read. The if/return body
  * is measured: `return (flag & FS_ARCHIVE_FLAG_IS_SYNC) != 0;' lets the loop
@@ -193,7 +200,8 @@ typedef struct FSiDirEntryHead {
     u8 len;
     u8 pad;
     u16 id;
-} FSiDirEntryHead;
+}
+ FSiDirEntryHead;
 
 /* Read the open directory's next FNT entry into arg.readdir.p_entry. A
  * directory entry is followed by its id, of which the low 12 bits are kept;
@@ -532,5 +540,4 @@ int FSi_OpenFileDirectCommand(FSFile *p_file) {
 
 int FSi_CloseFileCommand(FSFile *p_file) {
     return FS_RESULT_SUCCESS;
-}
 }

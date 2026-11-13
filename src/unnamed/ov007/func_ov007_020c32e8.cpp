@@ -4,6 +4,7 @@
 
 extern "C" {
 
+
 /* Loads a palette record's colours into palette RAM at 0x20-byte row
  * `row`: target 0/1 the main engine's OBJ/BG palette, 2/3 the sub
  * engine's. `skip` moves the source on by bytes but shortens the copy by

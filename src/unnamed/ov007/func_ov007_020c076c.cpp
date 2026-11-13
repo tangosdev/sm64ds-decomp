@@ -5,11 +5,13 @@
 #include "nitro/gx/g2.h"
 #include "Ov007BgLayer.h"
 
-extern "C" {
+
 
 /* local extern: nitro/gx/gx_load.h leaves GX_LoadBG3Scr out until
  * decl_common.h's non-const spelling of it goes. */
 extern void GX_LoadBG3Scr(void *dst, u32 offset, u32 len);
+extern "C" {
+
 
 /* Shows a BG layer on the engines in `engines` (&1 main, &2 sub): re-uploads
  * screen to its BG while it is dirty, then writes the scroll (fine + coarse,

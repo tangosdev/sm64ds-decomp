@@ -80,11 +80,17 @@ extern u16 data_ov098_0213c63c[3];
    two daPly_c helpers are defined in d_a_ply_methods.cpp, the Bob-omb one in
    d_a_bmb.cpp. */
 extern "C" {
+
 int AngleDiff(int a, int b);
+}
+
 short GetAngleToCamera(int playerNo);
+extern "C" {
+
 
 int func_ov002_020df300(daPly_c *player);
 }
+
 
 /* The cannon's file-scope SharedFilePtr object, spelled through the same
    wrapper idiom the landed folds use: the handle's code is the veneer pair

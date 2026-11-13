@@ -1,5 +1,9 @@
 #ifndef NITRO_OS_ALLOC_H
 #define NITRO_OS_ALLOC_H
+#ifndef __cplusplus
+#define OS_FreeToHeap _Z13OS_FreeToHeapiiPv
+#define OS_AllocFromHeap _Z16OS_AllocFromHeapiij
+#endif
 
 /*
  * The heap calls of the Nitro SDK's os_alloc.c, under the SDK's own names
@@ -16,17 +20,11 @@
 
 #include "types.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 typedef int OSHeapHandle;
 
 void *OS_AllocFromHeap(int, OSHeapHandle, u32);
 void OS_FreeToHeap(int, OSHeapHandle, void *);
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* NITRO_OS_ALLOC_H */

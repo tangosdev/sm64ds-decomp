@@ -83,6 +83,7 @@ extern Jump2ModelFile gOV006JumpBack01ModelFile; /* model file 0x203 */
 extern Jump2ModelFile sJump2Back02ModelFile;     /* model file 0x204 */
 
 extern "C" {
+
 extern void func_0203d630(int *p, int m);
 extern struct Jump2PopupLink *sJump2PopupList;
 extern int sJump2PopupCount;
@@ -123,6 +124,7 @@ extern int Jump3D_InitPool(void *base, int count);
 extern u8 gMainScreenLayers;
 extern s16 data_02082614;
 }
+
 
 
 /* Empty and out of line: mPopups' element constructor, which the factory
@@ -370,7 +372,8 @@ s32 dScMgJump2_c::Behavior() {
     return 1;
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void func_0203cd80(int *m, int x);
 
 void Jump2_SetLights(void) {
@@ -394,6 +397,7 @@ void Jump2_SetLights(void) {
     G3_LightVector(GX_LIGHTID_1, light1[0], light1[1], light1[2]);
 }
 }
+
 
 /* Slot 9. */
 // Consumed runtime-material prefix; this is not the BMD file record.
@@ -454,7 +458,8 @@ s32 dScMgJump2_c::CleanupResources() {
     return 1;
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void Jump2Popup_InitPool(int table, int count) {
     sJump2Popups = (struct Jump2Popup *)table;
     sJump2PopupCount = count;
@@ -462,7 +467,9 @@ void Jump2Popup_InitPool(int table, int count) {
 }
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void Jump2Popup_Spawn(int x, int y, int number) {
     int i;
     for (i = sJump2PopupCount - 1; i >= 0; i--) {
@@ -474,7 +481,9 @@ void Jump2Popup_Spawn(int x, int y, int number) {
 }
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void Jump2Popup_ClearAll(void) {
     int i;
     for (i = 0; i < sJump2PopupCount; i++) {
@@ -484,7 +493,9 @@ void Jump2Popup_ClearAll(void) {
 }
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void Jump2Popup_UpdateAll(void) {
     int i;
     for (i = 0; i < sJump2PopupCount; i++) {
@@ -493,13 +504,16 @@ void Jump2Popup_UpdateAll(void) {
 }
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void Jump2Popup_DrawAll(void) {
     Jump2PopupLink *node;
     for (node = sJump2PopupList; node != 0; node = node->next)
         ((Jump2Popup *)node)->DrawNumber();
 }
 }
+
 
 void Jump2PopupLink::Link() {
     next = sJump2PopupList;

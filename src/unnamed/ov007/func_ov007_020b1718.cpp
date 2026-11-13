@@ -10,14 +10,16 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
 
-extern "C" {
+
 
 /* Vector3 declares a constructor and destructor under C++, which makes its
  * assignment copy word by word. The ROM copies these with C's ldm/stm block
  * move, which C++ keeps for a struct with an array member. */
 typedef struct Vec3Words {
     Fix12i w[3];
-} Vec3Words;
+}
+extern "C" {
+ Vec3Words;
 /* recovered: per-frame update of a two-mode screen transition driven by the
  * manager at data_ov007_0210342c. Mode 1 eases a scale toward 0x1000 over
  * 12 frames and flags completion when the slot reaches its end; mode 0 copies

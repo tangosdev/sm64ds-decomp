@@ -34,8 +34,8 @@ typedef int BOOL;
 
 extern FSDirPos current_dir_pos;
 
-BOOL FSi_SendCommand(FSFile *p_file, int command);
-BOOL FSi_ExecuteSyncCommand(FSFile *p_file);
+BOOL _Z15FSi_SendCommandP6FSFilei(FSFile *p_file, int command);
+BOOL _Z22FSi_ExecuteSyncCommandP6FSFile(FSFile *p_file);
 
 static inline BOOL FS_IsBusy(volatile const FSFile *p_file) {
     return (p_file->stat & FS_FILE_STATUS_BUSY) ? TRUE : FALSE;
@@ -62,7 +62,7 @@ static BOOL is_init = FALSE;
 void FS_Init(u32 default_dma_no) {
     if (!is_init) {
         is_init = TRUE;
-        FSi_InitRom(default_dma_no);
+        _Z11FSi_InitRomj(default_dma_no);
     }
 }
 
@@ -93,7 +93,7 @@ static BOOL FSi_FindPath(FSFile *p_dir, const char *path, FSFileID *p_file_id,
             if (!c || FSi_IsSlash(c))
                 break;
             else if (c == ':') {
-                FSArchive *const p_arc = FS_FindArchive(path, i);
+                FSArchive *const p_arc = _Z14FS_FindArchivePKci(path, i);
                 if (!p_arc) {
                     return FALSE;
                 } else if (!FS_IsArchiveLoaded(p_arc)) {
@@ -125,7 +125,7 @@ static BOOL FSi_FindPath(FSFile *p_dir, const char *path, FSFileID *p_file_id,
         p_dir->arg.findpath.result.file = p_file_id;
     }
 
-    return FSi_SendCommand(p_dir, FS_COMMAND_FINDPATH);
+    return _Z15FSi_SendCommandP6FSFilei(p_dir, FS_COMMAND_FINDPATH);
 }
 
 static s32 FSi_ReadFileCore(FSFile *p_file, void *dst, s32 len, BOOL async) {
@@ -145,7 +145,7 @@ static s32 FSi_ReadFileCore(FSFile *p_file, void *dst, s32 len, BOOL async) {
     if (!async)
         p_file->stat |= FS_FILE_STATUS_SYNC;
 
-    (void)FSi_SendCommand(p_file, FS_COMMAND_READFILE);
+    (void)_Z15FSi_SendCommandP6FSFilei(p_file, FS_COMMAND_READFILE);
 
     if (!async) {
         if (FS_WaitAsync(p_file))
@@ -173,7 +173,7 @@ BOOL FS_OpenFileDirect(FSFile *p_file, FSArchive *p_arc, u32 image_top, u32 imag
     p_file->arg.openfiledirect.top = image_top;
     p_file->arg.openfiledirect.bottom = image_bottom;
 
-    if (!FSi_SendCommand(p_file, FS_COMMAND_OPENFILEDIRECT))
+    if (!_Z15FSi_SendCommandP6FSFilei(p_file, FS_COMMAND_OPENFILEDIRECT))
         return FALSE;
 
     p_file->stat |= FS_FILE_STATUS_IS_FILE;
@@ -189,7 +189,7 @@ BOOL FS_OpenFileFast(FSFile *p_file, FSFileID file_id) {
     p_file->arc = file_id.arc;
     p_file->arg.openfilefast.id = file_id;
 
-    if (!FSi_SendCommand(p_file, FS_COMMAND_OPENFILEFAST))
+    if (!_Z15FSi_SendCommandP6FSFilei(p_file, FS_COMMAND_OPENFILEFAST))
         return FALSE;
 
     p_file->stat |= FS_FILE_STATUS_IS_FILE;
@@ -204,7 +204,7 @@ BOOL FS_OpenFile(FSFile *p_file, const char *path) {
 }
 
 BOOL FS_CloseFile(FSFile *p_file) {
-    if (!FSi_SendCommand(p_file, FS_COMMAND_CLOSEFILE))
+    if (!_Z15FSi_SendCommandP6FSFilei(p_file, FS_COMMAND_CLOSEFILE))
         return FALSE;
 
     p_file->arc = NULL;
@@ -223,7 +223,7 @@ BOOL FS_GetPathName(FSFile *p_file, char *buf, u32 len) {
     p_file->arg.getpath.buf = (u8 *)buf;
     p_file->arg.getpath.buf_len = len;
 
-    return FSi_SendCommand(p_file, FS_COMMAND_GETPATH);
+    return _Z15FSi_SendCommandP6FSFilei(p_file, FS_COMMAND_GETPATH);
 }
 
 BOOL FS_WaitAsync(FSFile *p_file) {
@@ -235,13 +235,13 @@ BOOL FS_WaitAsync(FSFile *p_file) {
         if (is_owner)
             p_file->stat |= FS_FILE_STATUS_SYNC;
         do {
-            OS_SleepThread(&p_file->queue);
+            _Z14OS_SleepThreadPt(&p_file->queue);
         } while (FS_IsBusy(p_file));
     }
     (void)OS_RestoreInterrupts(bak_psr);
 
     if (is_owner) {
-        return FSi_ExecuteSyncCommand(p_file);
+        return _Z22FSi_ExecuteSyncCommandP6FSFile(p_file);
     }
 
     return FS_IsSucceeded(p_file);

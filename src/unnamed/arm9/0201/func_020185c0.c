@@ -6,7 +6,7 @@
 extern void func_02018598(FSFileID *c, int arg);
 extern int myFS_OpenFileFast(FSFile *p_file, FSFileID id);
 extern int LoadArchive(int idx);
-extern int func_0204eda4(int file, char *archive, unsigned int index);
+extern int _Z13func_0204eda4iPcj(int file, char *archive, unsigned int index);
 
 /* Open game file id into the FSFile at file. Ids below 0x8000 are FAT ids
    in the ROM archive (func_02018598 builds the FSFileID); higher ids are
@@ -33,11 +33,11 @@ int func_020185c0(FSFile *file, unsigned int id) {
                     if (LoadArchive(i) != 0)
                         data_0208eb54 = i;
                     if (e->archive == 0) {
-                        OS_Terminate();
+                        _Z12OS_Terminatev();
                         return 0;
                     }
                 }
-                result = func_0204eda4((int)file, e->archive, id - e->firstFileId);
+                result = _Z13func_0204eda4iPcj((int)file, e->archive, id - e->firstFileId);
                 break;
             }
             i++;
@@ -46,6 +46,6 @@ int func_020185c0(FSFile *file, unsigned int id) {
     }
 
     if (result == 0)
-        OS_Terminate();
+        _Z12OS_Terminatev();
     return result;
 }

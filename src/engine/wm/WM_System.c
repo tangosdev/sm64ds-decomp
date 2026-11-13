@@ -113,11 +113,11 @@ WMErrCode WM_Init(void *wmSysBuf, u16 dmaNo) {
             (void)WM_SetPortCallback((u16)i, NULL, NULL);
     }
 
-    OS_InitMessageQueue(&bufMsgQ, bufMsg, WM_BUF_MSG_NUM);
+    _Z19OS_InitMessageQueueP14OSMessageQueuePPvi(&bufMsgQ, bufMsg, WM_BUF_MSG_NUM);
     {
         s32 i;
         for (i = 0; i < WM_BUF_MSG_NUM; i++)
-            (void)OS_SendMessage(&bufMsgQ, fifoBuf[i], OS_MESSAGE_BLOCK);
+            (void)_Z14OS_SendMessageP14OSMessageQueuePvi(&bufMsgQ, fifoBuf[i], OS_MESSAGE_BLOCK);
     }
 
     PXI_SetFifoRecvCallback(PXI_FIFO_TAG_WM, WmReceiveFifo);
@@ -160,12 +160,12 @@ WMErrCode WM_SendCommand(WMApiid id, u16 paramNum, ...) {
     s32 i;
     int result;
 
-    (void)OS_ReceiveMessage(&bufMsgQ, (OSMessage *)&tmpAddr, OS_MESSAGE_BLOCK);
+    (void)_Z17OS_ReceiveMessageP14OSMessageQueuePPvi(&bufMsgQ, (OSMessage *)&tmpAddr, OS_MESSAGE_BLOCK);
 
     if (paramNum == 0) {
         DC_StoreRange(wm9buf->fifo9to7, WM_FIFO_BUF_SIZE);
         DC_InvalidateRange(tmpAddr, WM_FIFO_BUF_SIZE);
-        MI_DmaCopy32(wm9buf->dmaNo, wm9buf->fifo9to7, tmpAddr, WM_FIFO_BUF_SIZE);
+        _Z12MI_DmaCopy32jPKvPvj(wm9buf->dmaNo, wm9buf->fifo9to7, tmpAddr, WM_FIFO_BUF_SIZE);
     }
 
     *(u16 *)tmpAddr = (u16)id;
@@ -175,7 +175,7 @@ WMErrCode WM_SendCommand(WMApiid id, u16 paramNum, ...) {
 
     DC_StoreRange(tmpAddr, WM_FIFO_BUF_SIZE);
     result = PXI_SendWordByFifo(PXI_FIFO_TAG_WM, (u32)tmpAddr, FALSE);
-    (void)OS_SendMessage(&bufMsgQ, tmpAddr, OS_MESSAGE_BLOCK);
+    (void)_Z14OS_SendMessageP14OSMessageQueuePvi(&bufMsgQ, tmpAddr, OS_MESSAGE_BLOCK);
 
     if (result < 0)
         return WM_ERRCODE_FIFO_ERROR;
@@ -249,7 +249,7 @@ static void WmReceiveFifo(PXIFifoTag tag, u32 fifo_buf_adr, BOOL err) {
     if (callback_p->apiid >= WM_NUM_OF_CALLBACK) {
         if (callback_p->apiid == WM_APIID_INDICATION) {
             if (callback_p->errcode == WM_ERRCODE_FLASH_ERROR)
-                OS_Terminate();
+                _Z12OS_Terminatev();
             if (wm9buf->indCallback != NULL)
                 wm9buf->indCallback((void *)callback_p);
         } else if (callback_p->apiid == WM_APIID_PORT_RECV) {

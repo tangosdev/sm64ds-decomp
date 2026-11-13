@@ -67,6 +67,7 @@ struct Sound {
 void CopyToViewMat(const Matrix4x3 *);
 
 extern "C" {
+
 /* local extern: no shared math header declares MTX_MultVec43. */
 void MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
 void Matrix4x3_ApplyInPlaceToRotationZ(void *, short);
@@ -74,7 +75,11 @@ void Matrix4x3_FromQuaternion(const Quaternion *, Matrix4x3 *);
 void MTX_MultVec33(void *, void *, void *);
 void MTX_Concat43(void *, void *, void *);
 void __cxa_vec_cleanup(void *, unsigned int, unsigned int, dtor_t);
+}
+
 void func_020169d8(void *, int, unsigned int);
+extern "C" {
+
 void func_0203cebc(void *, void *, void *, void *);
 /* local extern: CalcLib conflicts with this TU's void* Vec3_HorzAngle
  * spelling; keep these declarations local but use the shared vector types. */
@@ -84,7 +89,11 @@ void Matrix4x3_ApplyInPlaceToRotationX(void *, short);
 void Matrix4x3_ApplyInPlaceToRotationY(void *, short);
 void Matrix4x3_FromTranslation(void *, int, int, int);
 int NormalizeVec3IfNonZero(Vector3 *);
+}
+
 void Quaternion_FromVector3(void *, void *, void *);
+extern "C" {
+
 void Quaternion_Normalize(void *);
 void Quaternion_SLerp(void *, void *, int, void *);
 int RandomIntInternal(int *);
@@ -92,22 +101,34 @@ int RandomIntInternal(int *);
  * other helper spellings, including its Vec3_HorzAngle declaration. */
 void VEC_Subtract(Vector3 *, Vector3 *, Vector3 *);
 void Vec3_Add(Vector3 *, const Vector3 *, const Vector3 *);
+}
+
 short Vec3_HorzAngle(const Vector3 *, const Vector3 *);
 // local extern: no shared header declares Vec3_VertAngle.
 short Vec3_VertAngle(const Vector3 *, const Vector3 *);
+extern "C" {
+
 void Vec3_MulScalar(Vector3 *, const Vector3 *, int);
 void Vec3_MulScalarInPlace(Vector3 *, int);
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
+}
+
 void *SharedFilePtr_Construct_TexSeq(void *, unsigned int);
 int SharedFilePtr_Destruct_Anim(void *);
 int SharedFilePtr_Destruct_TexSeq(void *);
+extern "C" {
+
 
 void __cxa_vec_ctor(void *, unsigned int, unsigned int, ctor_t, dtor_t);
+}
+
 unsigned int func_02012174(unsigned int, unsigned int);
 void func_02016a04(void *, int);
 void func_02016a14(void *, int);
 int func_02017ab4(void *);
 void *func_02017acc(void *, unsigned int);
+extern "C" {
+
 void Quaternion_Multiply(void *, void *, void *);
 void func_0203ccd4(void *, short);
 void func_0203cd80(void *, short);
@@ -186,6 +207,7 @@ void FlowerFace_Draw(void *self);
 void FlowerFace_Update(char *c);
 int FlowerFace_Load(char *c);
 }
+
 
 /* The file handles' constructors and destructors are the arm9 veneers the
    ROM calls: func_02017acc / func_02017ab4 for a model file,
@@ -307,6 +329,7 @@ struct C {
     PMF pmf;
 };
 extern "C" {
+
 void FlowerFace_Update(char *c) {
     (((C *)c)->*(((C *)c)->pmf))();
     FLOWERFACE(c)->mModel.Advance();
@@ -327,8 +350,10 @@ void FlowerFace_Update(char *c) {
 namespace s020c3bf4 {
 
 extern "C" {
+
 extern int data_ov006_0213aee8[12];
 }
+
 
 extern "C" void FlowerFace_Draw(void *self) {
     char *c = (char *)self;
@@ -366,6 +391,7 @@ extern "C" void FlowerFace_Draw(void *self) {
 
 namespace s020c3bc8 {
 extern "C" {
+
 void FlowerFace_Reset(void *a) {
     int i = 0;
     char *p = (char *)a;
@@ -381,6 +407,7 @@ void FlowerFace_Reset(void *a) {
 
 namespace s020c3b80 {
 extern "C" {
+
 extern int pmf_FlowerFace_StateIdle_2[];
 int FlowerFace_IsIdle(int *c) {
     int *idle = pmf_FlowerFace_StateIdle_2;
@@ -397,6 +424,7 @@ int FlowerFace_IsIdle(int *c) {
 
 namespace s020c3b2c {
 extern "C" {
+
 /* Camera_InitFlowerView at 0x020c3b2c
  *
  * MgCamera preset: sets the look-at point, position and fov angle, then
@@ -417,10 +445,12 @@ void Camera_InitFlowerView(MgCamera *camera) {
 }
 
 namespace s020c3adc {
-extern "C" {
+
 struct S {
     int w[2];
 };
+extern "C" {
+
 extern struct S pmf_FlowerFace_StateIdle;
 void FlowerFace_PlayIdle(char *p) {
     FLOWERFACE(p)->mModel.SetAnim((BCA_File *)FLOWERFACE(p)->mWaitAnim.filePtr, 0, 0x800, 0);
@@ -431,15 +461,18 @@ void FlowerFace_PlayIdle(char *p) {
 
 namespace s020c3ad8 {
 extern "C" {
+
 void FlowerFace_StateIdle(void) {}
 }
 }
 
 namespace s020c3990 {
-extern "C" {
+
 struct S8 {
     int w[2];
 };
+extern "C" {
+
 
 extern int pmf_FlowerFace_StatePick[2];
 
@@ -497,6 +530,7 @@ void FlowerFace_PlayPetalPulled(char *c) {
 
 namespace s020c395c {
 extern "C" {
+
 void FlowerFace_StatePick(int *c) {
     if (FLOWERFACE(c)->mModel.Finished() == 0)
         return;
@@ -506,10 +540,12 @@ void FlowerFace_StatePick(int *c) {
 }
 
 namespace s020c3908 {
-extern "C" {
+
 struct S {
     int w[2];
 };
+extern "C" {
+
 extern struct S pmf_FlowerFace_StateLike;
 void FlowerFace_PlayLike(char *p) {
     FLOWERFACE(p)->mModel.SetAnim((BCA_File *)FLOWERFACE(p)->mLikeAnim.filePtr, 0x40000000, 0x800,
@@ -521,15 +557,18 @@ void FlowerFace_PlayLike(char *p) {
 
 namespace s020c3904 {
 extern "C" {
+
 void FlowerFace_StateLike(void) {}
 }
 }
 
 namespace s020c38b0 {
-extern "C" {
+
 struct S {
     int w[2];
 };
+extern "C" {
+
 extern struct S pmf_FlowerFace_StateHate;
 void FlowerFace_PlayHate(char *p) {
     FLOWERFACE(p)->mModel.SetAnim((BCA_File *)FLOWERFACE(p)->mHateAnim.filePtr, 0x40000000, 0x800,
@@ -541,12 +580,14 @@ void FlowerFace_PlayHate(char *p) {
 
 namespace s020c38ac {
 extern "C" {
+
 void FlowerFace_StateHate(void) {}
 }
 }
 
 namespace s020c3884 {
 extern "C" {
+
 void FallingPetal_SetModel(char *t, int a1) {
     PETAL(t)->mModel.SetFile((BMD_File *)a1, 1, -1);
     PETAL(t)->mActive = 0;
@@ -556,6 +597,7 @@ void FallingPetal_SetModel(char *t, int a1) {
 
 namespace s020c3754 {
 extern "C" {
+
 extern int data_02092768[4];
 
 void FallingPetal_Spawn(FallingPetal *petal, const VecFx32 *pos, const VecFx32 *vel) {
@@ -588,10 +630,12 @@ void FallingPetal_Spawn(FallingPetal *petal, const VecFx32 *pos, const VecFx32 *
 }
 
 namespace s020c35e8 {
-extern "C" {
+
 struct Quat {
     int w[4];
 };
+extern "C" {
+
 
 extern Quat data_02092768;
 
@@ -652,6 +696,7 @@ extern "C" void FallingPetal_Draw(char *c) {
 
 namespace s020c3528 {
 extern "C" {
+
 extern struct Vector3 sPetalUpAxis;
 extern struct Matrix4x3 data_020a0e68;
 void FallingPetal_UpdateMatrix(char *c) {
@@ -705,6 +750,7 @@ Presenter::~Presenter() {
 
 namespace s020c3050 {
 extern "C" {
+
 extern char sPresenterLoseLoopTexAnim[];
 extern char sPresenterSmileTexAnim[];
 extern char sPresenterLoseTexAnim[];
@@ -783,7 +829,7 @@ int Presenter_Load(char *c) {
 }
 
 namespace s020c2be8 {
-extern "C" {
+
 
 /* Eases the four mSway words (Presenter_Draw adds them to two face
    materials' texture offsets) a quarter of the way toward targets set by
@@ -819,6 +865,7 @@ extern "C" {
             PRESENTER(c)->mSway[3] += sway3 >> 2; \
         } \
     }
+extern "C" {
 
 void Presenter_TrackStylus(char *c) {
     if (PRESENTER(c)->mTouchLocked != 0) {
@@ -846,11 +893,16 @@ void Presenter_TrackStylus(char *c) {
 
 namespace s020c2b8c {
 extern "C" {
+
 struct C;
+}
+
 typedef void (C::*PMF)();
 struct C {
     PMF pmf;
 };
+extern "C" {
+
 void Presenter_Update(C *c) {
     Presenter_TrackStylus((char *)c);
     if (c->pmf)
@@ -865,8 +917,10 @@ void Presenter_Update(C *c) {
 
 namespace s020c29dc {
 extern "C" {
+
 extern Vector3 sPresenterScale;
 }
+
 extern "C" void Presenter_Draw(char *c) {
     int keyLight[3];
     int fillLight[3];
@@ -907,10 +961,12 @@ extern "C" void Presenter_Draw(char *c) {
 }
 
 namespace s020c2994 {
-extern "C" {
+
 struct P {
     int x, y;
 };
+extern "C" {
+
 extern struct P pmf_Presenter_StateIdle;
 int Presenter_IsIdle(struct P *c) {
     int differs = 1;
@@ -928,6 +984,7 @@ int Presenter_IsIdle(struct P *c) {
 
 namespace s020c2984 {
 extern "C" {
+
 /* Presenter_IsAnimDone @ 0x20c2984 (ov006) -- veneer: add r0,r0,#0x58; b dExtFrameCtrl_c::Finished(). */
 
 int Presenter_IsAnimDone(void *a) {
@@ -938,6 +995,7 @@ int Presenter_IsAnimDone(void *a) {
 
 namespace s020c2924 {
 extern "C" {
+
 extern dFdBrightness_c *gSceneFader;
 void Presenter_ResetPose(char *c) {
     Presenter_PlayIdle(c);
@@ -957,14 +1015,20 @@ void Presenter_ResetPose(char *c) {
 
 namespace s020c2848 {
 extern "C" {
+
 extern char sPresenterIdleTexAnim[];
 extern dFdBrightness_c *gSceneFader;
+}
+
 struct P2 {
     void *a;
     void *b;
 };
+extern "C" {
+
 extern P2 pmf_Presenter_StateIdle_2;
 }
+
 
 extern "C" void Presenter_PlayIdle(char *c) {
     if (PRESENTER(c)->mFace.file != (BCA_File *)PRESENTER(c)->mWaitAnim.filePtr) {
@@ -993,6 +1057,7 @@ extern "C" void Presenter_PlayIdle(char *c) {
 
 namespace s020c27c4 {
 extern "C" {
+
 extern char sPresenterIdleTexAnim[];
 void Presenter_StateIdle(char *c) {
     if (!PRESENTER(c)->mFace.Finished())
@@ -1006,6 +1071,7 @@ void Presenter_StateIdle(char *c) {
 
 namespace s020c271c {
 extern "C" {
+
 extern char sPresenterMatchTexAnim[];
 extern long long pmf_Presenter_StateWin;
 void Presenter_PlayMatch(void *c) {
@@ -1031,6 +1097,7 @@ void Presenter_PlayMatch(void *c) {
 
 namespace s020c26f4 {
 extern "C" {
+
 void Presenter_StateWin(char *t) {
     int r = Presenter_IsAnimDone(t);
     if (r == 0)
@@ -1042,12 +1109,17 @@ void Presenter_StateWin(char *t) {
 
 namespace s020c2664 {
 extern "C" {
+
 extern char sPresenterMissTexAnim[];
 extern int pmf_Presenter_StateMistake[];
+}
+
 
 struct W2 {
     int w[2];
 };
+extern "C" {
+
 
 void Presenter_PlayMiss(char *c) {
     PRESENTER(c)->mFace.SetAnim(*(BCA_File *)PRESENTER(c)->mMistakeAnim.filePtr, 4, 0x40000000,
@@ -1062,6 +1134,7 @@ void Presenter_PlayMiss(char *c) {
 
 namespace s020c263c {
 extern "C" {
+
 void Presenter_StateMistake(char *t) {
     int r = Presenter_IsAnimDone(t);
     if (r == 0)
@@ -1073,6 +1146,7 @@ void Presenter_StateMistake(char *t) {
 
 namespace s020c2594 {
 extern "C" {
+
 extern char sPresenterCheerTexAnim[];
 /* volatile is load-bearing: a plain long long load costs Presenter_PlayCheer
    its bytes (measured 2026-11-08). */
@@ -1093,6 +1167,7 @@ void Presenter_PlayCheer(void *c) {
 
 namespace s020c24e4 {
 extern "C" {
+
 extern char sPresenterSmileTexAnim[];
 void Presenter_StateSurprisedThenSmile(void *c) {
     if (!Presenter_IsAnimDone(c))
@@ -1109,10 +1184,12 @@ void Presenter_StateSurprisedThenSmile(void *c) {
 }
 
 namespace s020c2440 {
-extern "C" {
+
 struct G2 {
     int w[2];
 };
+extern "C" {
+
 extern struct G2 pmf_Presenter_StateLoseStart;
 extern char sPresenterLoseTexAnim[];
 void Presenter_PlayLose(char *c) {
@@ -1130,6 +1207,7 @@ void Presenter_PlayLose(char *c) {
 
 namespace s020c23a8 {
 extern "C" {
+
 extern char sPresenterLoseLoopTexAnim[];
 void Presenter_StateLoseStart(void *c) {
     if (!Presenter_IsAnimDone(c))
@@ -1145,6 +1223,7 @@ void Presenter_StateLoseStart(void *c) {
 
 namespace s020c2300 {
 extern "C" {
+
 extern char sPresenterCheerTexAnim[];
 extern long long pmf_Presenter_StateSurprisedThenIdle;
 void Presenter_PlayCheerLoop(void *c) {
@@ -1166,6 +1245,7 @@ void Presenter_PlayCheerLoop(void *c) {
 
 namespace s020c22d8 {
 extern "C" {
+
 void Presenter_StateSurprisedThenIdle(char *t) {
     int r = Presenter_IsAnimDone(t);
     if (r == 0)
@@ -1177,6 +1257,7 @@ void Presenter_StateSurprisedThenIdle(char *t) {
 
 namespace s020c2290 {
 extern "C" {
+
 extern struct Matrix4x3 data_020a0e68;
 void Presenter_UpdateMatrix(char *c) {
     Matrix4x3_FromTranslation(&data_020a0e68, PRESENTER(c)->mPos.x, PRESENTER(c)->mPos.y,
@@ -1188,6 +1269,7 @@ void Presenter_UpdateMatrix(char *c) {
 
 namespace s020c225c {
 extern "C" {
+
 /* Camera_InitPresenterView at 0x020c225c
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov006).
@@ -1223,6 +1305,7 @@ Mascot::~Mascot() {
 
 namespace s020c2154 {
 extern "C" {
+
 void Mascot_Load(char *c) {
     void *f;
     f = dExtSimpleModel_c::LoadFile(MASCOT(c)->mModelFile);
@@ -1242,6 +1325,7 @@ void Mascot_Load(char *c) {
 
 namespace s020c2144 {
 extern "C" {
+
 /* Mascot_Update @ 0x20c2144 (ov006) -- veneer: add r0,r0,#0x10; b dExtBlendAnmModel_c::Advance(). */
 
 void Mascot_Update(void *a) {
@@ -1286,8 +1370,10 @@ namespace s020c1f4c {
 typedef short s16;
 
 extern "C" {
+
 extern Matrix4x3 data_020a0e68;
 }
+
 
 extern "C" void Mascot_UpdateMatrix(char *c) {
     Matrix4x3_FromTranslation(&data_020a0e68, MASCOT(c)->mPos.x, MASCOT(c)->mPos.y,
@@ -1305,6 +1391,7 @@ extern "C" void Mascot_UpdateMatrix(char *c) {
 
 namespace s020c1f04 {
 extern "C" {
+
 void Mascot_LookAt(char *c, int *src) {
     if (src != 0) {
         MASCOT(c)->mLookTarget.x = src[0];
@@ -1322,6 +1409,7 @@ void Mascot_LookAt(char *c, int *src) {
 
 namespace s020c1ef8 {
 extern "C" {
+
 void Mascot_StopLooking(int *p) {
     MASCOT(p)->mLooking = 0;
 }
@@ -1330,6 +1418,7 @@ void Mascot_StopLooking(int *p) {
 
 namespace s020c1eb4 {
 extern "C" {
+
 /* Camera_InitSlotsView at 0x020c1eb4
  *
  * MgCamera preset: sets the look-at point, position and fov angle, then
@@ -1388,6 +1477,7 @@ Dealer::~Dealer() {
 
 namespace s020c1a88 {
 extern "C" {
+
 extern struct Vector3 data_020a0ebc;
 extern struct Vector3_16 data_020a0edc;
 
@@ -1450,8 +1540,10 @@ struct C {
     PMF pmf;
 };
 extern "C" {
+
 extern short sDealerLampTimes[];
 }
+
 
 extern "C" void Dealer_Update(Dealer *dealer) {
     C *self = (C *)dealer;
@@ -1530,8 +1622,10 @@ struct P2 {
 };
 
 extern "C" {
+
 extern P2 pmf_Dealer_StateIdle;
 }
+
 
 extern "C" void Dealer_PlayIdle(char *c) {
     if (DEALER(c)->mHand == 1) {
@@ -1549,12 +1643,14 @@ extern "C" void Dealer_PlayIdle(char *c) {
 
 namespace s020c1760 {
 extern "C" {
+
 void Dealer_StateIdle(void) {}
 }
 }
 
 namespace s020c1718 {
 extern "C" {
+
 extern int pmf_Dealer_StateIdle_2[];
 int Dealer_IsIdle(Dealer *dealer) {
     int *idle = pmf_Dealer_StateIdle_2;
@@ -1571,6 +1667,7 @@ int Dealer_IsIdle(Dealer *dealer) {
 
 namespace s020c16b4 {
 extern "C" {
+
 extern int pmf_Dealer_StateIdle_3[];
 int Dealer_IsIdleAtRest(char *c) {
     int *idle = pmf_Dealer_StateIdle_3;
@@ -1587,11 +1684,13 @@ int Dealer_IsIdleAtRest(char *c) {
 }
 
 namespace s020c1604 {
-extern "C" {
+
 typedef short s16;
 struct M8 {
     int w[2];
 };
+extern "C" {
+
 extern char pmf_Dealer_StateShuffle[];
 
 void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter) {
@@ -1653,8 +1752,10 @@ struct P2 {
 };
 
 extern "C" {
+
 extern P2 pmf_Dealer_StateDeal;
 }
+
 
 extern "C" void Dealer_StartDeal(char *c, short count, s16 *counter) {
     DEALER(c)->mDealLeft = count;
@@ -1673,6 +1774,7 @@ extern "C" void Dealer_StartDeal(char *c, short count, s16 *counter) {
 
 namespace s020c11c0 {
 extern "C" {
+
 
 void Dealer_StateDeal(char *c) {
     void *anim = DEALER(c)->mModel.file;
@@ -1740,10 +1842,12 @@ void Dealer_StateDeal(char *c) {
 }
 
 namespace s020c1164 {
-extern "C" {
+
 struct P2 {
     int w[2];
 };
+extern "C" {
+
 extern P2 pmf_Dealer_StateReveal_2;
 
 void Dealer_StartReveal(int *t, int count, s16 *counter) {
@@ -1810,6 +1914,7 @@ other:
 
 namespace s020c0f0c {
 extern "C" {
+
 extern int pmf_Dealer_StateDeal_2[2];
 extern int pmf_Dealer_StateReveal[2];
 
@@ -1839,6 +1944,7 @@ int Dealer_IsBusy(int *c) {
 
 namespace s020c0efc {
 extern "C" {
+
 /* Dealer_IsAnimDone @ 0x20c0efc (ov006) -- veneer: add r0,r0,#0x6c; b dExtFrameCtrl_c::Finished(). */
 
 int Dealer_IsAnimDone(void *a) {
@@ -1848,10 +1954,12 @@ int Dealer_IsAnimDone(void *a) {
 }
 
 namespace s020c0e8c {
-extern "C" {
+
 struct P2 {
     int w[2];
 };
+extern "C" {
+
 extern P2 pmf_Dealer_StateSwap;
 
 void Dealer_StartSwap(int *t) {
@@ -1883,12 +1991,15 @@ extern "C" void Dealer_StateSwap(char *c) {
 }
 
 namespace s020c0d68 {
-extern "C" {
+
 struct P2 {
     int w[2];
 };
+extern "C" {
+
 extern P2 pmf_Dealer_StateLose;
 }
+
 
 extern "C" void Dealer_PlayLose(char *c) {
     if (DEALER(c)->mHand == 1) {
@@ -1905,6 +2016,7 @@ extern "C" void Dealer_PlayLose(char *c) {
 
 namespace s020c0ce8 {
 extern "C" {
+
 void Dealer_StateLose(char *c) {
     if (!DEALER(c)->mModel.Finished())
         return;
@@ -1920,10 +2032,12 @@ void Dealer_StateLose(char *c) {
 }
 
 namespace s020c0c80 {
-extern "C" {
+
 struct G2 {
     int w[2];
 };
+extern "C" {
+
 extern struct G2 pmf_Dealer_StateWin;
 void Dealer_PlayWin(void *c) {
     Sound::PlayBank2_2D(0x13b);
@@ -1937,6 +2051,7 @@ void Dealer_PlayWin(void *c) {
 
 namespace s020c0b74 {
 extern "C" {
+
 void Dealer_StateWin(char *p) {
     if (DEALER(p)->mModel.file == (BCA_File *)DEALER(p)->mWinStartAnim.filePtr &&
         DEALER(p)->mModel.Finished()) {
@@ -1962,6 +2077,7 @@ void Dealer_StateWin(char *p) {
 
 namespace s020c0af8 {
 extern "C" {
+
 extern struct Matrix4x3 sDealerIdentityMtx;
 void Dealer_ResetMatrices(char *c) {
     struct Matrix4x3 identity = sDealerIdentityMtx;
@@ -1973,6 +2089,7 @@ void Dealer_ResetMatrices(char *c) {
 
 namespace s020c0aa8 {
 extern "C" {
+
 /* Camera_InitDealerView at 0x020c0aa8
  *
  * MgCamera preset: sets the look-at point, position and fov angle, then
@@ -2013,11 +2130,15 @@ MascotWalker::~MascotWalker() {
 namespace s020c092c {
 
 extern "C" {
+
 extern Vector3 data_020a0ebc;
 }
+
 extern "C" {
+
 extern Vector3_16 data_020a0edc;
 }
+
 
 extern "C" void MascotWalker_Load(MascotWalker *walker) {
     {
@@ -2047,11 +2168,15 @@ struct C;
 typedef void (C::*PMF)();
 
 extern "C" {
+
 extern Vector3 sMascotWalkerOffset;
 }
+
 extern "C" {
+
 extern int pmf_MascotWalker_StateWalk_2[2];
 }
+
 
 extern "C" void MascotWalker_Update(MascotWalker *walker) {
     ((C *)walker->*(*(PMF *)walker->mState))();
@@ -2093,6 +2218,7 @@ extern "C" void MascotWalker_Update(MascotWalker *walker) {
 
 namespace s020c07a0 {
 extern "C" {
+
 void MascotWalker_Draw(char *t) {
     MascotWalker_UpdateMatrix((MascotWalker *)t);
     (&WALKER(t)->mShadow)->InitModel(&WALKER(t)->mModel.mat4x3, 0x3c000, 0x14000, 0x3c000, 0xc);
@@ -2104,8 +2230,10 @@ void MascotWalker_Draw(char *t) {
 
 namespace s020c06dc {
 extern "C" {
+
 extern Matrix4x3 data_020a0e68;
 }
+
 
 extern "C" void MascotWalker_UpdateMatrix(MascotWalker *walker) {
     walker->mModel.UpdateVerts();
@@ -2129,6 +2257,7 @@ struct WalkPath {
 
 namespace s020c057c {
 extern "C" {
+
 extern WalkPath sMascotWalkerPaths[];
 extern int pmf_MascotWalker_StateWalk[];
 void MascotWalker_StartNextPath(char *c) {
@@ -2180,6 +2309,7 @@ void MascotWalker_StartNextPath(char *c) {
 
 namespace s020c0364 {
 extern "C" {
+
 void MascotWalker_StateWalk(char *c) {
     int dx, dz;
     int stepX, stepZ;
@@ -2251,10 +2381,12 @@ void MascotWalker_StateWalk(char *c) {
 }
 
 namespace s020c0304 {
-extern "C" {
+
 struct P2 {
     int w[2];
 };
+extern "C" {
+
 extern P2 pmf_MascotWalker_StatePause;
 
 void MascotWalker_StartPause(int *t) {
@@ -2272,8 +2404,10 @@ struct P2 {
 };
 
 extern "C" {
+
 extern P2 pmf_MascotWalker_StateWalk_3;
 }
+
 
 extern "C" void MascotWalker_StatePause(char *c) {
     if (ApproachLinear2(WALKER(c)->mStateTimer, 0, 1) == 0)
@@ -2289,6 +2423,7 @@ extern "C" void MascotWalker_StatePause(char *c) {
 
 namespace s020c0134 {
 extern "C" {
+
 /* Camera_UpdateMatrices at 0x020c0134
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov006).
@@ -2334,6 +2469,7 @@ void Camera_UpdateMatrices(MgCamera *camera) {
 namespace s020bfff8 {
 extern "C" {
 
+
 void Camera_ProjectToScreen(MgCamera *camera, void *pos, int *screenX, int *screenY) {
     int view[3];
     MTX_MultVec43((Vector3 *)pos, (Matrix4x3 *)&camera->mViewMtx, (Vector3 *)view);
@@ -2353,6 +2489,7 @@ void Camera_ProjectToScreen(MgCamera *camera, void *pos, int *screenX, int *scre
 
 namespace s020bfec0 {
 extern "C" {
+
 
 void Camera_ProjectToScreen16(MgCamera *camera, void *pos, short *screen) {
     int view[3];

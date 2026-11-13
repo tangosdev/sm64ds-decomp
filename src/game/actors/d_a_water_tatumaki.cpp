@@ -112,9 +112,9 @@ extern BTA_File data_ov026_02112f40;
 #define STATE_DRAG (&data_ov026_02113f3c)
 
 /* local extern: no shared header declares these. */
-extern "C" {
+
 extern void KillPlayer(void);
-}
+
 
 daWater_Tatumaki_c::~daWater_Tatumaki_c() {}
 

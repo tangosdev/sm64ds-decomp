@@ -1,5 +1,9 @@
 #ifndef DSCENE_C_H
 #define DSCENE_C_H
+#ifndef __cplusplus
+#define Deallocate _Z10DeallocatePv
+#define Initialise3dGraphics _Z20Initialise3dGraphicsi
+#endif
 
 #include "dBase_c.h"
 
@@ -19,7 +23,7 @@ struct dFdBrightness_c;
 
 /* data_020a0eac is the actor heap. operator delete passes it to
    Memory::Deallocate, the same way fBase_c does. */
-extern "C" mHeap::Heap_t *data_020a0eac;
+extern mHeap::Heap_t *data_020a0eac;
 
 struct dScene_c : dBase_c {
     /* No separate dScene_c constructor exists in the ROM. This body is

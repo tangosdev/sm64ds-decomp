@@ -40,10 +40,13 @@ typedef void (daBttBk_c::*PMF)();
 
 /* arm9 C helpers. local extern: no shared header declares these. */
 extern "C" {
+
 int *Vec3_LslInPlace(Vector3 *v, int sh);
+}
+
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int a, int b, void *v, int c);
-}
+
 
 
 /* dExtSimpleModel_c-file handle. The derived constructor and destructor are the retail

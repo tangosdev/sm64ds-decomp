@@ -7,6 +7,7 @@
 
 extern "C" {
 
+
 extern void *func_ov007_020b3f20(int n);
 extern void MenuText_Init(void *unused, void *sheet, int baseTile, void *plane0, void *plane1,
                           int plane2, void *bank);

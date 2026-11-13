@@ -41,6 +41,7 @@ int PlayLong(u32, u32, u32, const Vector3 &, s16);
 }
 
 extern "C" {
+
 int *Vec3_LslInPlace(Vector3 *, int);
 /* local extern: these five names hold the @NNN count. */
 void d_a_snm_bthPlayLongHold(int handle, unsigned int a, unsigned int b, void *pos, unsigned int c);
@@ -49,6 +50,7 @@ extern SharedFilePtr data_ov002_0210da40;
 extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9c0;
 }
+
 
 /* Whole-matrix copies (InitResources, IsPlayerInRange) cast through Mtx43;
  * mInvModelMat is flat words. */

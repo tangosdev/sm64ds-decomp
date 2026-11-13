@@ -57,7 +57,7 @@
 extern char func_01ff8000;
 /* local extern: card_pullOut.c's CARD_InitPulledOutCallback in pret, still
  * unnamed in src/engine/card/CARD_PullOut.cpp, which no header declares. */
-extern void func_02061138(void);
+extern void _Z13func_02061138v(void);
 
 /* Whether [buf, buf + len) touches the ITCM (it ends at 0x02000000) or the
  * DTCM. */
@@ -122,9 +122,9 @@ static void CARDi_ReadEnd(void) {
     p->cmd->result = CARD_RESULT_SUCCESS;
     bak_psr = OS_DisableInterrupts();
     p->flag &= ~(CARD_STAT_BUSY | CARD_STAT_TASK);
-    OS_WakeupThread(&p->busy_q);
+    _Z15OS_WakeupThreadPt(&p->busy_q);
     if ((p->flag & CARD_STAT_RECV) != 0) {
-        OS_WakeupThreadDirect(&p->thread);
+        _Z21OS_WakeupThreadDirectP8OSThread(&p->thread);
     }
     (void)OS_RestoreInterrupts(bak_psr);
     if (func) {
@@ -184,9 +184,9 @@ static void CARDi_OnReadCard(void) {
     CARDRomStat *const p = &rom_stat;
 
     if (!CARDi_OnReadPageDirect(p)) {
-        MI_StopDma(cardi_common.dma);
-        (void)OS_DisableIrqMask(OS_IE_CARD_DATA);
-        (void)OS_ResetRequestIrqMask(OS_IE_CARD_DATA);
+        _Z10MI_StopDmaj(cardi_common.dma);
+        (void)_Z17OS_DisableIrqMaskj(OS_IE_CARD_DATA);
+        (void)_Z22OS_ResetRequestIrqMaskj(OS_IE_CARD_DATA);
         CARDi_ReadEnd();
     } else {
         CARDi_SetCardDma();
@@ -222,9 +222,9 @@ int CARDi_TryReadCardDma(CARDRomStat *p) {
         OSIntrMode bak_psr = OS_DisableInterrupts();
         DC_FlushRange((void *)c->dst, c->len);
         IC_InvalidateRange((void *)c->dst, c->len);
-        (void)OS_SetIrqFunction(OS_IE_CARD_DATA, CARDi_OnReadCard);
-        (void)OS_ResetRequestIrqMask(OS_IE_CARD_DATA);
-        (void)OS_EnableIrqMask(OS_IE_CARD_DATA);
+        (void)_Z17OS_SetIrqFunctionjPFvvE(OS_IE_CARD_DATA, CARDi_OnReadCard);
+        (void)_Z22OS_ResetRequestIrqMaskj(OS_IE_CARD_DATA);
+        (void)_Z16OS_EnableIrqMaskj(OS_IE_CARD_DATA);
         DC_WaitWriteBufferEmpty();
         (void)OS_RestoreInterrupts(bak_psr);
         CARDi_SetCardDma();
@@ -293,7 +293,7 @@ void CARDi_ReadRom(u32 dma, const void *src, void *dst, u32 len, MIDmaCallback c
     {
         OSIntrMode bak_psr = OS_DisableInterrupts();
         while ((c->flag & CARD_STAT_BUSY) != 0)
-            OS_SleepThread(&c->busy_q);
+            _Z14OS_SleepThreadPt(&c->busy_q);
         c->flag |= CARD_STAT_BUSY;
         (void)OS_RestoreInterrupts(bak_psr);
     }
@@ -306,13 +306,13 @@ void CARDi_ReadRom(u32 dma, const void *src, void *dst, u32 len, MIDmaCallback c
     c->callback_arg = arg;
 
     if (dma <= MI_DMA_MAX_NUM)
-        MI_StopDma(dma);
+        _Z10MI_StopDmaj(dma);
 
     if (CARDi_TryReadCardDma(p)) {
         if (!is_async)
             CARD_WaitRomAsync();
     } else if (is_async) {
-        CARDi_SetTask(CARDi_ReadRomSyncCore);
+        _Z13CARDi_SetTaskPFvP11CARDiCommonE(CARDi_ReadRomSyncCore);
     } else {
         c->cur_th = OSi_ThreadInfo.current;
         CARDi_ReadRomSyncCore(c);
@@ -321,7 +321,7 @@ void CARDi_ReadRom(u32 dma, const void *src, void *dst, u32 len, MIDmaCallback c
 
 // @symbol CARD_WaitRomAsync
 void CARD_WaitRomAsync(void) {
-    CARDi_WaitAsync();
+    _Z15CARDi_WaitAsyncv();
 }
 
 // @symbol CARD_Init
@@ -335,10 +335,10 @@ void CARD_Init(void) {
         p->callback = 0;
         p->callback_arg = 0;
 
-        CARDi_InitCommon();
+        _Z16CARDi_InitCommonv();
 
         rom_stat.read_func = CARDi_ReadCard;
 
-        func_02061138();
+        _Z13func_02061138v();
     }
 }

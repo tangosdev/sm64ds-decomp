@@ -9,11 +9,14 @@ namespace std {
 void terminate();
 }
 extern "C" {
+
 extern void *func_02071910(ThrowContext *c, void *s);
 extern void func_02072dac(int x, ActionIterator *b);
 extern void func_02071864(ThrowContext *t, ActionIterator *it);
 extern u8 *ReadSignedVarInt(u8 *p, int *out);
 extern u8 *func_02071a50(u8 *p, int *out);
+}
+
 u8 func_020729f4(ActionWalk *c) {
     ThrowContext *frame = &c->mThrow;
     u8 *ip;
@@ -163,5 +166,4 @@ tail:
         } while (op == 1);
     }
     return op;
-}
 }

@@ -38,6 +38,7 @@
 
 extern "C" {
 
+
 /* Per cap slot: dMap_c::Render draws the slot's cap icon while it is set. */
 extern unsigned char gMapCapIconShown[];
 extern unsigned char data_0208a0e0;
@@ -49,12 +50,16 @@ extern daPly_c *gPlayers[];
 extern unsigned char gShowTouchScreenArrows;
 extern unsigned char gGameMode;
 extern signed char gCurrentSublevel;
+}
+
 
 /* local extern: func_0202a8e0's first parameter is an address the callers
  * pass as object pointers; the definition spells it int. */
 extern int func_0202a8e0(int a, u8 b);
 extern int func_02029600(int x);
 extern int SublevelToLevel(int i);
+extern "C" {
+
 
 void CapIconMgr_DispatchVs(void);
 void CapIconMgr_SetMapIconShown(dCapIcon_c *icon, int shown);
@@ -74,6 +79,8 @@ void func_ov001_020aaf40(void);
 static inline int IsVsMode(void) {
     return gGameMode == 1;
 }
+}
+
 
 /* dCapIcon_c::mFlags, read bit by bit (see include/CapIcon.h). */
 typedef struct {
@@ -82,7 +89,9 @@ typedef struct {
     unsigned char unlinked : 1;
     unsigned char skipped : 1;
     unsigned char : 4;
-} CapIconFlags;
+}
+extern "C" {
+ CapIconFlags;
 
 /* Definitions emit in reverse source order. */
 
@@ -500,7 +509,9 @@ void CapIconMgr_DispatchVs(void) {
 
 }
 
+
 extern "C" {
+
 u8 gCapIconFlashTimer;
 u8 gCapIconDispatchLocked;
 u8 gCapIconRequestFlags[3];

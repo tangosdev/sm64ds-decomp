@@ -1,5 +1,8 @@
 #ifndef NITRO_SND_INTERFACE_H
 #define NITRO_SND_INTERFACE_H
+#ifndef __cplusplus
+#define SNDi_SetSurroundDecay _Z21SNDi_SetSurroundDecayi
+#endif
 
 /*
  * The ARM9 sound command calls of the Nitro SDK's SND_interface.c, under the
@@ -17,14 +20,8 @@
 
 #include "types.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 void SNDi_SetSurroundDecay(s32);
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* NITRO_SND_INTERFACE_H */

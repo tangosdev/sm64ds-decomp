@@ -26,7 +26,7 @@
 #include "fBase_c.h"
 
 /* Defined last below (reverse emission); func_0203b394 calls it. */
-extern "C" fBase_c::SceneNode *func_0203b358(fBase_c::SceneNode *node);
+fBase_c::SceneNode *func_0203b358(fBase_c::SceneNode *node);
 
 #ifndef SM64DS_PLATFORM_PC
 /* Five words: parent, child, prev, next, owner. fBase_c.h asserts the whole
@@ -60,7 +60,7 @@ struct N {
     struct N *fc;   /* 0xc */
 };
 
-extern "C" int func_0203b438(struct N *a, struct N *b, struct N *c)
+int func_0203b438(struct N *a, struct N *b, struct N *c)
 {
     struct N *t;
     struct N *n;
@@ -96,7 +96,7 @@ extern "C" int func_0203b438(struct N *a, struct N *b, struct N *c)
 namespace Absorb0203b3c0 {
 struct Node { int f0; int f4; struct Node* f8; struct Node* fc; };
 
-extern "C" int func_0203b3c0(int* list, struct Node* n)
+int func_0203b3c0(int* list, struct Node* n)
 {
     if (n != 0) {
         if (n->f4 != 0)
@@ -135,7 +135,7 @@ extern "C" int func_0203b3c0(int* list, struct Node* n)
 
 /* The pre-order successor of `node`: its first child, else the first node
  * after its subtree (func_0203b358). */
-extern "C" fBase_c::SceneNode *func_0203b394(fBase_c::SceneNode *node) {
+fBase_c::SceneNode *func_0203b394(fBase_c::SceneNode *node) {
     fBase_c::SceneNode *p = node->child;
     if (p == 0)
         p = func_0203b358(node);
@@ -144,7 +144,7 @@ extern "C" fBase_c::SceneNode *func_0203b394(fBase_c::SceneNode *node) {
 
 /* The first node after `node`'s subtree: its next sibling, else the next
  * sibling of the nearest ancestor that has one; 0 past the root. */
-extern "C" fBase_c::SceneNode *func_0203b358(fBase_c::SceneNode *node) {
+fBase_c::SceneNode *func_0203b358(fBase_c::SceneNode *node) {
     fBase_c::SceneNode *n;
     if (node->next)
         return node->next;

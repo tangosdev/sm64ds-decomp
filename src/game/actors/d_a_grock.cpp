@@ -77,9 +77,9 @@ struct GrockModelFilePtr : SharedFilePtr {
 
 /* arm9 C helper with no shared header. func_02012694 has the same body as
  * Sound::PlayBank3 (0x02012664); the ROM calls this copy. */
-extern "C" {
+
 extern void func_02012694(unsigned int id, void *pos);
-}
+
 
 extern GrockModelFilePtr data_ov021_02114a50;
 

@@ -1,5 +1,5 @@
 #include "types.h"
-extern int func_0203d890(void);
+extern int _Z13func_0203d890v(void);
 extern u8 data_0209fc5c[];
 extern s8 data_0209fc64[];
 extern u8 data_0209fc50;
@@ -9,7 +9,7 @@ extern u8 data_0209fc50;
    does for a local game. */
 void func_02030dac(void)
 {
-    int n = func_0203d890();
+    int n = _Z13func_0203d890v();
     int i;
     int j;
     for (i = 0; i < n; i++) {

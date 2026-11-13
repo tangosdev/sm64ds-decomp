@@ -70,6 +70,7 @@ struct ScoreView { unsigned char pad[0xb4]; int b4; int b8; };
 /* Everything this file calls or reads that decl_common.h does not declare. */
 extern "C" {
 
+
 extern void  RenderOamMainScreen(void*, int, int, int, int);
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(const void *src, void *dst);
@@ -81,10 +82,13 @@ extern void  Hud_RenderSprite(void *fn, int a, int b, int c, int d);
 extern void Mg_DrawNumberRotated(int, int, int, int, int, int, u16);
 extern void  Mg_DrawScoreTally(void *, int, int, int);
 extern int   Mg_IsNewRecord(void);
+}
+
 extern int   func_020126e8(int a);
 extern int   func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 #include "OAM.h"
 #include "nitro/mi/memory.h"
+extern "C" {
 extern void OamRender10_d_s_mg_teresa(int sub, struct OamAttr *data, s32 x, s32 y, s32 palette,
                                       s32 priority, s32 scaleX, s32 scaleY, s32 rotation, s32 mode);
 
@@ -110,12 +114,16 @@ extern int sTeresaSpawnKinds[];
 extern int sTeresaSpawnBurst[];
 extern int sTeresaPaintMask[];
 extern int            sMgTopScreenYOffset;
+}
+
 
 /* The four pointer-to-member state tables. Pmf handlers take the Boo/slot
    index; the scene table in sTeresaSceneStateTable takes none. */
 typedef void (dScMgTeresa_c::*Pmf)(int);
 typedef void (dScMgTeresa_c::*Pmf0)();
 struct PmfEntry { Pmf0 pmf; };
+extern "C" {
+
 
 extern Pmf sTeresaBigBooStateTable[];     /* big Boo flight states, by BigBoo::state */
 extern Pmf sTeresaRevealStateTable[];     /* reveal states, by mReveal[0].state */
@@ -151,7 +159,8 @@ extern Pmf pmf_dScMgTeresa_c_BigBoo_StateRemove;
 extern Pmf pmf_dScMgTeresa_c_BigBoo_StateGone;
 extern Pmf pmf_dScMgTeresa_c_BigBoo_StateResult;
 
-}  /* extern "C" */
+}
+  /* extern "C" */
 
 namespace Sound { void PlayBank2_2D(unsigned int id); }
 

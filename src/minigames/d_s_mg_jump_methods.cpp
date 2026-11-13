@@ -61,6 +61,7 @@ extern MgJumpModelFilePtr gJumpBack01ModelFile;
  * first function: tools/tiers.py charges text between two functions to the
  * earlier one. */
 extern "C" {
+
 void Mg_CommitRecords(void);
 void Mg_DrawScoreTally(void *a, int b, int c, int d);
 int  GetGameLanguage(void);
@@ -101,6 +102,7 @@ extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Idle;
 extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Idle_2;
 extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Play;
 }
+
 
 
 /* Slot 18. 0 is an eat (one more egg, capped like the HUD score), 0x12 a

@@ -102,6 +102,7 @@ struct dExtSimpleModel_c { ~dExtSimpleModel_c(); };
 */
 
 extern "C" {
+
 extern void Trmp2Spinner_UpdateMatrix(char *c);
 extern Trampoline2ModelFilePtr sTrmp2StarModelFile;
 extern int sTrmp2SpinnerCount;
@@ -131,8 +132,12 @@ extern int Trmp2_PickFaceA(int kind);
 extern int Trmp2_PickFaceB(int kind);
 extern void func_0203cc28(int *vector, int angle);
 extern char *TrmpItem_Spawn(int resource, int *up, int variant, int face);
+}
+
 extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
+extern "C" {
+
 extern void TrmpItem_UpdateAll(void);
 extern int Trmp2Mario_Hide(void);
 extern void Trmp2Mario_EnterAll(void);
@@ -158,7 +163,11 @@ extern volatile s16 data_020a0dbc[];
 extern u8 gMainScreenLayers;
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
+}
+
 extern void Deallocate(void *ptr);
+extern "C" {
+
 extern int sTrmp2NcgByLanguage[];
 extern int sTrmpPuffEnglish[];
 extern int sTrmpPuffSpanish[];
@@ -213,6 +222,7 @@ OamAttr **sTrmp2TextSpritesByLanguage[] = {sMgTextSpritesEnglish, sMgTextSprites
                                            sMgTextSpritesFrench, sMgTextSpritesGerman,
                                            sMgTextSpritesItalian};
 }
+
 
 /* The three models, mTexAnim and mUnusedVec are all built before the
    empty body, in declaration order. */
@@ -586,6 +596,7 @@ void dScMgTrampoline2_c::UpdateTouchInput() {
 }
 
 extern "C" {
+
 int Trmp2_ColumnForKind(int x) {
     switch (x) {
     case 0:
@@ -609,7 +620,9 @@ int Trmp2_ColumnForKind(int x) {
 }
 }
 
+
 extern "C" {
+
 unsigned short Trmp2_OccupancyBits(int sel, int b) {
     unsigned short r = 0;
     switch (sel) {
@@ -642,7 +655,9 @@ unsigned short Trmp2_OccupancyBits(int sel, int b) {
 }
 }
 
+
 extern "C" {
+
 int Trmp2_PickFaceA(int x) {
     int r;
     if (x < 5) {
@@ -654,7 +669,9 @@ int Trmp2_PickFaceA(int x) {
 }
 }
 
+
 extern "C" {
+
 int Trmp2_PickFaceB(int a) {
     int r;
     if (a < 5) {
@@ -673,6 +690,7 @@ int Trmp2_PickFaceB(int a) {
     return 7;
 }
 }
+
 
 void dScMgTrampoline2_c::SpawnWave() {
     int occupancy;
@@ -1031,6 +1049,7 @@ Trmp2Spinner::~Trmp2Spinner() {
 }
 
 extern "C" {
+
 void Trmp2Spinner_LoadAll(int x, int count) {
     int i;
     sTrmp2Spinners = (unsigned char *)x;
@@ -1041,7 +1060,9 @@ void Trmp2Spinner_LoadAll(int x, int count) {
 }
 }
 
+
 extern "C" {
+
 void Trmp2Spinner_InitAll(int hitCount) {
     int i = 0;
     int n = sTrmp2SpinnerCount;
@@ -1063,7 +1084,9 @@ void Trmp2Spinner_InitAll(int hitCount) {
 }
 }
 
+
 extern "C" {
+
 void Trmp2Spinner_HideAll(void) {
     int i = 0;
     if (sTrmp2SpinnerCount > 0) {
@@ -1077,7 +1100,9 @@ void Trmp2Spinner_HideAll(void) {
 }
 }
 
+
 extern "C" {
+
 void Trmp2Spinner_UpdateAll(void) {
     int i;
     for (i = 0; i < sTrmp2SpinnerCount; i++) {
@@ -1089,7 +1114,9 @@ void Trmp2Spinner_UpdateAll(void) {
 }
 }
 
+
 extern "C" {
+
 void Trmp2Spinner_UpdateMatricesAll(void) {
     int i;
     for (i = 0; i < sTrmp2SpinnerCount; i++) {
@@ -1101,15 +1128,21 @@ void Trmp2Spinner_UpdateMatricesAll(void) {
 }
 }
 
+
 extern "C" void Trmp2Spinner_SetModel(void *raw) {
     BMD_File *file = dExtSimpleModel_c::LoadFile(sTrmp2StarModelFile);
     ((dExtModel_c *)raw)->SetFile(file, 1, -1);
 }
 
 extern "C" {
+
 extern struct Tbl sTrmp2SpinnerSpeeds;
 extern const u16 sTrmp2SpinnerColors[];
+}
+
 extern void func_020169f4(char *self, int kind);
+extern "C" {
+
 
 void Trmp2Spinner_Init(void *r0, int value) {
     Trmp2Spinner *spinner = (Trmp2Spinner *)r0;
@@ -1159,7 +1192,9 @@ void Trmp2Spinner_Init(void *r0, int value) {
 }
 }
 
+
 extern "C" {
+
 void Trmp2Spinner_Update(char *raw) {
     ApproachLinear2(SPINNER(raw)->mLifeTimer, 0, 1);
     short *p = &SPINNER(raw)->mAngleZ;
@@ -1167,6 +1202,7 @@ void Trmp2Spinner_Update(char *raw) {
     VEC_Add(&SPINNER(raw)->mPos, &SPINNER(raw)->mVel, &SPINNER(raw)->mPos);
 }
 }
+
 
 extern "C" void Trmp2Spinner_UpdateMatrix(char *raw) {
     Matrix4x3_FromTranslation(&data_020a0e68, SPINNER(raw)->mPos.x, SPINNER(raw)->mPos.y,

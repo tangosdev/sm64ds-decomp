@@ -91,6 +91,7 @@ struct TouchRec {
 };
 
 extern "C" {
+
 extern int sMgMainBannerY;
 void SetBg1Offset(int a, int b);
 int GetGameLanguage(void);
@@ -102,7 +103,11 @@ void Mg_SubCredits(void *c, int val);
 extern void Mg_SubmitScore(int self);
 extern int data_ov006_0213e948[];
 extern void Slot3_ReelDigits(char *c, int i);
+}
+
 extern int Sound_PlayIfNotActive(int, int, int, short);
+extern "C" {
+
 void OamRender10_d_s_mg_slots(int b, void *attr, int a2, int a3, int a4, int a5, int a6, int a7,
                               int a8, int a9);
 void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
@@ -159,6 +164,7 @@ extern dWipe_c data_0209f61c;
 extern int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5,
                                     unsigned short a6);
 }
+
 
 /* ~dScMgSlot1_c() (D1, complete-object destructor). The empty body is the
    original ownership model: the compiler destroys the typed mBetIcon member,
@@ -229,7 +235,8 @@ void dScMgSlot3_c::InitMainScreenBg() {
                      GX_BG_CHARBASE_0x18000, GX_BG_EXTPLTT_01);
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void Slot3_ReelDigits(char *sceneBytes, int reelIndex);
 // Keep the strided cursors cast back to the class. mStripLength is read by
 // offset: a member read of it grows this body by 8 bytes (measured).
@@ -247,11 +254,15 @@ void Slot3_ReelDigits(char *c, int reelIndex) {
 }
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void Slot3_StateDone(void) {}
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 
 void Slot3_StateGameOver(char *c) {
     dScMgSlot3_c *self = (dScMgSlot3_c *)c;
@@ -268,9 +279,12 @@ void Slot3_StateGameOver(char *c) {
 }
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void Slot3_StateWait(void) {}
 }
+
 
 extern "C" void Slot3_StatePayout(char *c) {
     dScMgSlot3_c *self = (dScMgSlot3_c *)c;
@@ -316,7 +330,8 @@ extern "C" void Slot3_StatePayout(char *c) {
     Sound::PlayBank2_2D(0x14a);
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void Slot3_StateJudge(char *c) {
     unsigned char columnSymbols[3];
     int column;
@@ -382,7 +397,9 @@ void Slot3_StateJudge(char *c) {
 }
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void Slot3_StateSpin(char *c) {
     dScMgSlot3_c *scene = (dScMgSlot3_c *)c;
     u8 playerSlot;
@@ -450,7 +467,9 @@ void Slot3_StateSpin(char *c) {
 }
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void Mascot_LookAt(char *c, int *src);
 void Mg_ShowBanner(int c, int a1, int a2, int a3, int arg5, short arg6);
 void Mascot_StopLooking(int *p);
@@ -486,6 +505,7 @@ void Slot3_StateIntro(char *p) {
     scene->mState++;
 }
 }
+
 
 void dScMgSlot3_c::StartRound(int mode) {
     char *c = (char *)this;
@@ -892,7 +912,8 @@ extern "C" void *dScMgSlot3_c_classInit(void) {
     return new dScMgSlot3_c;
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void SlotLamp_Start(void *raw) {
     SlotLamp *lamp = (SlotLamp *)raw;
     lamp->mTimer = 0x48;
@@ -901,7 +922,9 @@ void SlotLamp_Start(void *raw) {
 }
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void SlotLamp_Tick(void *o_) {
     SlotLamp *lamp = (SlotLamp *)o_;
     if (lamp->mTimer <= 0)
@@ -917,17 +940,21 @@ void SlotLamp_Tick(void *o_) {
 }
 }
 
+
 /* mPayoutLamp (0x469c, a SlotLamp) blinks bit 1 of gSubScreenLayers the same
  * way: a timer and an on flag. This clears it, 0210c180 starts it and
  * 0210c1a8 ticks it. */
-extern "C" { /* .c-derived member: C linkage for the whole block */
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void SlotLamp_Clear(char *blink) {
     ((SlotLamp *)blink)->mTimer = 0;
     ((SlotLamp *)blink)->mOn = 0;
 }
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void SlotBlink_Start(void *raw, s16 x, s16 y) {
     SlotBlink *sprite = (SlotBlink *)raw;
     sprite->mX = x;
@@ -937,7 +964,9 @@ void SlotBlink_Start(void *raw, s16 x, s16 y) {
 }
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void SlotBlink_Draw(unsigned char *raw) {
     SlotBlink *sprite = (SlotBlink *)raw;
     if (sprite->mVisible == 0)
@@ -946,7 +975,9 @@ void SlotBlink_Draw(unsigned char *raw) {
 }
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void SlotBlink_Tick(void *o_) {
     SlotBlink *sprite = (SlotBlink *)o_;
     if (sprite->mTimer <= 0)
@@ -958,15 +989,18 @@ void SlotBlink_Tick(void *o_) {
 }
 }
 
+
 /* mMatchBlink and mWildBlink (0x4684, 0x4690) are SlotBlinks: s16 x and y,
  * a timer and a visible flag. This clears one, 0210c218 starts one, 0210c278
  * ticks it and 0210c234 draws it. */
-extern "C" { /* .c-derived member: C linkage for the whole block */
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void SlotBlink_Clear(char *sprite) {
     ((SlotBlink *)sprite)->mTimer = 0;
     ((SlotBlink *)sprite)->mVisible = 0;
 }
 }
+
 
 /* dThIcon_c.h keeps its words at 0x1c and 0x20 as unk_01c/unk_020 because
  * each derived icon gives them its own role. This file-local view names
@@ -986,7 +1020,8 @@ struct SlotBetIcon {
 typedef char SlotBetIcon_size_must_be_0x24[sizeof(SlotBetIcon) == 0x24 ? 1 : -1];
 #define BET_ICON(p) ((SlotBetIcon *)(p))
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 /* The symbol name is a misreading: Behavior state 5 passes &mBetIcon and
  * the payout multiplier, and this arms the bet icon's payout countdown. */
 void SlotReel_SetSpeed(void *raw, int value) {
@@ -994,7 +1029,9 @@ void SlotReel_SetSpeed(void *raw, int value) {
 }
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void SlotBet_OnTouch(void *c_) {
     dThIcon_c *icon = (dThIcon_c *)c_;
     void *scene;
@@ -1020,7 +1057,9 @@ void SlotBet_OnTouch(void *c_) {
 }
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void SlotBet_Reset(void *raw) {
     dThIcon_c *icon = (dThIcon_c *)raw;
     BET_ICON(icon)->mBetCount = 0;
@@ -1029,6 +1068,7 @@ void SlotBet_Reset(void *raw) {
         icon->mReady = 1;
 }
 }
+
 
 void dScMgSlot1_c::betIcon_c::Render() {
     OAM::RenderSub((OamAttr *)data_ov006_0213e528[mOn], mX, mY, -1, 1);
@@ -1056,12 +1096,14 @@ void dScMgSlot1_c::betIcon_c::Behavior() {
     dThIcon_c::Behavior();
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void SlotBet_Place(char *icon) {
     func_ov001_020ab5b0(icon, 1, 0x90, 0xb0, 0x10, 8);
     ((dThIcon_c *)icon)->mPressTime = 6;
 }
 }
+
 
 int dScMgSlot1_c::CloseMenu() {
     dScMgBase_c::CloseMenu();
@@ -1111,7 +1153,8 @@ int dScMgSlot1_c::SlotReels_CheckStopped() {
     return matches;
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void Slot1_InitHud(void *self) {
     char *raw = (char *)self;
     ((dScMgSlot1_c *)raw)->mPrevMatchedSymbol = -1;
@@ -1122,6 +1165,7 @@ void Slot1_InitHud(void *self) {
     scene->mCreditsShown = scene->mCredits;
 }
 }
+
 
 /* Slot 18. */
 void dScMgSlot1_c::StartRound(int i) {

@@ -44,7 +44,7 @@
 #include "nitro/mi/memory.h"
 #include "nitro/gx/gx.h"
 
-extern "C" {
+
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 /* The message system's .bss, 0x0209d64c..0x0209e64c, defined here. mwcc
@@ -140,23 +140,25 @@ extern s32 gRunningKuppaScript;
 extern s8 gNextSublevel;
 extern u32 gNextActorUpdateMask;
 extern s32 data_0208ee44;
+extern "C" {
+
 
 extern void SetBg1Offset(int a, int b);
 extern void SetBg3Offset(int a, int b);
 extern void SetSubBg1Offset(int a, int b);
+}
+
 extern void func_0201b6f8(int a);
 extern void func_0201b388(int a);
 extern void func_0201b100(int a);
 extern int func_0201fb4c(void);
-/* local extern: byte-forced spelling -- the definition is (s8, int); a s8
-   parameter would emit a sign-extend of arg0 the ROM lacks. */
-extern int IsStarCollected(s32 a, u8 b);
+extern int IsStarCollected(s32 a, s32 b);
 extern int SublevelToLevel(int a);
-}
+
 namespace Sound {
 int ChangeMusicVolume(u32 a, s32 b);
 }
-extern "C" {
+
 
 void func_0201cd08(int arg);
 void func_0201cebc(short a0);
@@ -173,7 +175,7 @@ void func_0201ef50(int arg);
 void func_0201f108(void);
 void func_0201f138(void);
 void func_0201f32c(int arg0);
-}
+
 
 void dScStage_c::UpdateMessage() {
     if (data_0209d660 == 0)
@@ -218,7 +220,7 @@ void dScStage_c::UpdateMessage() {
     }
 }
 
-extern "C" void func_0201cd08(int arg) {
+void func_0201cd08(int arg) {
     volatile int li;
     volatile unsigned short ls;
     int p, s;
@@ -261,7 +263,7 @@ void Message::DisplaySaveStatusText(unsigned short n)
     func_0201d418(0x109, 0x70);
 }
 
-extern "C" void func_0201cebc(short a0)
+void func_0201cebc(short a0)
 {
     volatile unsigned short v;
     volatile int z;
@@ -293,7 +295,7 @@ void Message::DisplayLevelClearText(u16 msgID, u8 course) {
     func_0201e220(1);
 }
 
-extern "C" void func_0201cfb8(int arg0)
+void func_0201cfb8(int arg0)
 {
     data_0209d6d4 = (u16)arg0;
     data_0209d660 = 0;
@@ -330,7 +332,7 @@ void Message::DisplayOptionsMenuText(s16 n) {
  * copy forces the reload but not the same schedule (0x210). */
 #pragma push
 #pragma opt_common_subs off
-extern "C" void LoadControllerModeText(int param0)
+void LoadControllerModeText(int param0)
 {
     int n, m, i;
     short *scr;
@@ -436,7 +438,7 @@ void Message::DisplayControllerModeText(unsigned short n)
     Message_DrawCenteredLine(0x280, 0x20);
 }
 
-extern "C" void func_0201d418(int p0, int p1) {
+void func_0201d418(int p0, int p1) {
     volatile int li;
     int i;
     int idx = data_0209d6d4;
@@ -472,7 +474,7 @@ extern "C" void func_0201d418(int p0, int p1) {
 
 /* Lays out the current message line into the main BG2 tiles at
    data_0209d674 and advances it. The caller writes the screen map. */
-extern "C" void Message_DrawLineBG2(void) {
+void Message_DrawLineBG2(void) {
     volatile int li;
     int n;
     int idx = data_0209d6d4;
@@ -497,7 +499,7 @@ extern "C" void Message_DrawLineBG2(void) {
    the centring go into the map position; the remaining pixels go into
    data_0209d65c as a shift. The line takes the next character tiles after
    data_0209d6a8, two map rows per line. */
-extern "C" void Message_DrawCenteredLine(int mapPos, int width) {
+void Message_DrawCenteredLine(int mapPos, int width) {
     volatile int zero;
     int bytes;
     u8 *p;
@@ -538,7 +540,7 @@ extern "C" void Message_DrawCenteredLine(int mapPos, int width) {
    (course < 15) gets its number line, the course name and the star line.
    The star line leads with glyph 0xf0 when the star is collected or
    data_0209f20c is set, and with 0xf1 otherwise. */
-extern "C" void func_0201d850(u32 course) {
+void func_0201d850(u32 course) {
     u16 tile = 0x200;
     u16 mapPos = 0x80;
     /* The fill values go through the stack, as the cartridge does. */
@@ -800,7 +802,7 @@ void Message::DisplayDontSaveText(unsigned short n)
     Message_DrawCenteredLine(0x291, 0xa);
 }
 
-extern "C" void func_0201e220(int arg) {
+void func_0201e220(int arg) {
     volatile int li;
     volatile unsigned short ls;
     int p, s;
@@ -1050,7 +1052,7 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
     func_0201b388(data_0209d6a8);
 }
 
-extern "C" void func_0201eaac(void)
+void func_0201eaac(void)
 {
     data_0209d6c0 = 0;
     data_0209d6b4 = 0;
@@ -1159,14 +1161,14 @@ void Message::DisplaySaving(unsigned short n)
     GX_SetVisiblePlane(gMainScreenLayers);
 }
 
-extern "C" void func_0201ef38(void) {
+void func_0201ef38(void) {
     gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
 }
 
 /* Shows a credit text (message arg + 0x24e) on the sub screen's BG0: clears
    all of BG0's character tiles, then lays the message out one 32-tile line
    at a time, centred vertically on the screen. A negative arg only clears. */
-extern "C" void func_0201ef50(int arg)
+void func_0201ef50(int arg)
 {
     volatile int zero;
     volatile int lineZero;
@@ -1212,7 +1214,7 @@ extern "C" void func_0201ef50(int arg)
     }
 }
 
-extern "C" void func_0201f108(void) {
+void func_0201f108(void) {
     u16 *scr = (u16 *)G2S_GetBG0ScrPtr();
     int i = 0;
     do {
@@ -1221,7 +1223,7 @@ extern "C" void func_0201f108(void) {
     } while (i < 0x400);
 }
 
-extern "C" void func_0201f138(void)
+void func_0201f138(void)
 {
     volatile int li;
     volatile unsigned short ls;
@@ -1289,7 +1291,7 @@ static inline int IsGameMode(int mode) {
    screen's text tiles and map, lays the box's tiles out row by row from tile
    0x200 (0x2200 on the sub screen), and pumps Message::Update until the
    open state reaches 4. */
-extern "C" void func_0201f32c(int arg0)
+void func_0201f32c(int arg0)
 {
     MessageEntry *entry;
     u8 disp2;
@@ -1461,7 +1463,7 @@ extern "C" void func_0201f32c(int arg0)
 
 /* Course ids that must not open the talk window. data_0209d664 is the byte
    after the shared reset flag at data_0209d660. */
-extern "C" int func_0201fb4c(void)
+int func_0201fb4c(void)
 {
     short v;
     unsigned int b;
@@ -1491,7 +1493,7 @@ no:
 
 struct Pair { unsigned short v; unsigned short pad; };
 
-extern "C" int ObjectMessageIDToActualMessageID(s16 id) {
+int ObjectMessageIDToActualMessageID(s16 id) {
     int i;
     extern struct Pair data_0208eeec[];
     extern struct Pair data_0208eeee[];
@@ -1503,7 +1505,7 @@ extern "C" int ObjectMessageIDToActualMessageID(s16 id) {
     return id;
 }
 
-extern "C" void func_0201fc88(s16 objectMsgID)
+void func_0201fc88(s16 objectMsgID)
 {
     s16 id = (s16)ObjectMessageIDToActualMessageID(objectMsgID);
     func_0201f32c(id);

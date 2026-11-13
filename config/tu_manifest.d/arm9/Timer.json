@@ -64,7 +64,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "func_0201964c",
+      "symbol": "_Z13func_0201964cP5Timer",
       "address": "0x0201964c",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0201/func_0201964c.c",

@@ -212,6 +212,7 @@ struct EyerokCollisionFilePtr : SharedFilePtr {
 };
 
 extern "C" {
+
 /* ---- ov066 .bss: 8-byte SharedFilePtr slots (0x0211ae14..0x0211aebc) ----
  * Each one's filePtr is the loaded file, which the states pass to SetAnim /
  * SetFile. Roles, from InitResources and the order __sinit_d_a_iwante.cpp
@@ -342,26 +343,45 @@ extern Matrix4x3 data_020a0e68;
 
 /* ---- arm9 helpers (unmangled ROM names) ---- */
 extern int AngleDiff(int a, int b);
-extern int ApproachAngle(s16 *angle, s16 target, int a, int b, int max);
+}
+
+extern "C" int ApproachAngle(s16 *angle, s16 target, int a, int b, int max);
+extern "C" {
+
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern int RandomIntInternal(int *seed);
+}
+
 extern int Vec3_ApproachHorz(void *out, void *a, int maxStep);
 extern int Vec3_Dist(const void *a, const void *b);
+extern "C" {
+
 extern void Vec3_Asr(void *d, void *s, int sh);
+}
+
 extern int Vec3_HorzDist(const void *a, const void *b);
 // local extern: CalcLib.h conflicts with this TU's opaque Vec3_Dist, Vec3_Asr, and Vec3_HorzDist prototypes.
 extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+extern "C" {
+
 extern int func_020092c4(void *cam, void *out, void *target);
+}
+
 extern void func_02011cfc(void);
 extern void func_02011d2c(void);
 extern void func_02012694(unsigned int a, void *p);
+extern "C" {
+
 
 /* Unreferenced. */
 extern void hold_d_a_iwante(void *self, void *kcl, void *mtx, int fix, short s, void *clps);
 }
+
 extern "C" {
+
 extern u32 d_a_iwanteNewHold(u32 a, u32 b, int x, int y, int z, const void *v, void *cb);
 }
+
 
 
 

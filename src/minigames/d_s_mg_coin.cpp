@@ -97,6 +97,7 @@ enum {
 };
 
 extern "C" {
+
 extern const int sCoinBagRowTopY[];
 extern const int sCoinBagRowHeight[];
 extern const int sCoinBagHopVX[];
@@ -124,7 +125,11 @@ extern void *sCoinValuesSprites[];
 extern void *sCoinSparkleSprites[];
 extern void *sCoinBagSprites[];
 extern void Mg_RenderSpriteBothPalMtx(void *obj, int x, int y, int w, int *vec);
+}
+
 extern void func_020127a4(int a, int b, int c, int d);
+extern "C" {
+
 extern const int sCoinRowY[];
 extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
 extern void RenderOamMainScreen(OamAttr *a, int b, int c, int d, int e);
@@ -150,6 +155,7 @@ extern int data_0208ee44;
 extern void func_0203b9b4(int *p, int v);
 }
 
+
 /* The per-state handler tables: {pmf, delta} records indexed by the
    record's own state byte. Static initialisation fills each one from the
    pointer-to-member constants at 0x0213be44..0x0213bf0c in .data, which
@@ -164,6 +170,7 @@ struct Entry_Behavior {
     PMF_Behavior pmf;
 };
 extern "C" {
+
 extern const Entry_Behavior pmf_dScMgCoin_c_Phase_StateIdle, pmf_dScMgCoin_c_Phase_StateIntro,
     pmf_dScMgCoin_c_Phase_StatePlay, pmf_dScMgCoin_c_Phase_StateSettle,
     pmf_dScMgCoin_c_Phase_StateScoreDelay, pmf_dScMgCoin_c_Phase_StateResult;
@@ -204,6 +211,7 @@ CoinPmfEntry sCoinBagStateTable[4] = {{pmf_dScMgCoin_c_Bag_StateIdle},
                                       {pmf_dScMgCoin_c_Bag_StateParked},
                                       {pmf_dScMgCoin_c_Bag_StateBounceDown}};
 }
+
 
 /* Nothing to destroy by hand: D1 stores the vptr and calls dScMgBase_c's
    D2, and D0 adds the delete. */
@@ -1408,6 +1416,7 @@ extern "C" void *dScMgCoin_c_classInit() {
  * The final flat table holds four XY pixel offsets for Sparkle_Burst.
  * Names describe the existing consumers, not recovered original identifiers. */
 extern "C" {
+
 extern const unsigned char sCoinCaptionBlinkTimes[2] = {7, 9};
 extern const unsigned char sCoinCaptionBlinkSprites[2] = {2, 1};
 extern const u8 sCoinCaptionCountInSprites[4] = {3, 4, 5, 6};

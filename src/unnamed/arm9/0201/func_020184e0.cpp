@@ -4,9 +4,12 @@
 
 extern "C" {
 
+
 extern int myFS_ReadFile(FSFile *p_file, void *dst, int len);
 extern void func_02018770(void);
 extern int func_02018568(int a);
+}
+
 
 /* Read up to n bytes of the open file into buf (cache-maintained around the
    read), close it and unload any archive the open mounted. The length read,
@@ -26,5 +29,4 @@ int func_020184e0(FSFile *self, unsigned int buf, unsigned int n) {
     func_02018568(buf);
     DC_StoreRange((void *)buf, len);
     return len;
-}
 }

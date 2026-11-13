@@ -5,10 +5,15 @@
 
 extern "C" {
 
+
 extern void func_ov007_020bc968(Ov007Model *m, void *other);
 extern void func_ov007_020bc894(Ov007Model *m);
 extern void func_ov007_020bc7dc(Ov007Model *m);
+}
+
 extern void func_02044dc4(struct ModelComponents *model);
+extern "C" {
+
 
 void func_ov007_020bc02c(Ov007Model *m, void *other) {
     struct ModelComponents *model = m->model;

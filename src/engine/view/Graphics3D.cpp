@@ -19,16 +19,18 @@
 #include "nitro/gx/g3imm_cmd.h"
 #include "math/MtxStack.h"
 
-extern "C" {
-extern Matrix4x3 data_0209b3ec; /* the view matrix */
-extern Matrix4x3 data_0209b41c; /* its inverse */
+
+extern Matrix4x3 data_0209b3ec;
+ /* the view matrix */
+extern Matrix4x3 data_0209b41c;
+ /* its inverse */
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 void func_02045d9c(void);
-}
+
 
 #include "nitro/gx/g3_util.h"
 
-extern "C" {
+
 
 // Bring up the geometry engine with the game's default 3D state.
 void Initialise3dGraphics(int arg) {
@@ -64,7 +66,7 @@ void func_0200f4b4(void) {
     G3_Identity();
     G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
 }
-}
+
 
 // Copy the camera matrix into the live view, then invert it.
 void CopyToViewMat(const Matrix4x3 *src) {

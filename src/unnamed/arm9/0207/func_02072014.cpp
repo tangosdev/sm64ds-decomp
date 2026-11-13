@@ -10,9 +10,16 @@ void terminate();
 
 extern "C" {
 
+
 extern unsigned char func_02072d90(struct ActionWalk *c);
+}
+
 extern unsigned char func_020729f4(struct ActionWalk *c);
+extern "C" {
+
 extern unsigned char *ReadSignedVarInt(unsigned char *p, int *out);
+}
+
 
 /* EH runtime, rethrow: walk a copy of the context's actions to action 13,
    read its signed offset into the frame (ReadSignedVarInt) and return the
@@ -68,5 +75,4 @@ CatchInfo *func_02072014(ThrowContext *c, struct ActionCursor *cursor) {
     c->mDtor = 0;
     c->mCatchInfo = info;
     return info;
-}
 }

@@ -1,5 +1,8 @@
 #ifndef PRIVATE_MB_WM_BASE_H
 #define PRIVATE_MB_WM_BASE_H
+#ifndef __cplusplus
+#define MBi_SendMP _Z10MBi_SendMPPKvii
+#endif
 
 /* The multiboot WM layer's MP send, as NitroSDK's private
  * libraries/mb/include/mb_wm_base.h declares it: mb_wm_base.c
@@ -12,14 +15,8 @@
 
 #include "types.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 int MBi_SendMP(const void *, int, int);
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif

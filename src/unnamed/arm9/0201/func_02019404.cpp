@@ -1,7 +1,7 @@
 //cpp
 #include "dGraph_c.h"
 
-extern "C" {
+
 
 /* The scene's graph callback (d_s_dsmt.cpp and the other scenes set it). */
 extern dGraph_c::callback_c *gGraphCallback;
@@ -13,5 +13,4 @@ void func_02019404(void) {
     if (!callback)
         return;
     callback->GraphCallback1();
-}
 }

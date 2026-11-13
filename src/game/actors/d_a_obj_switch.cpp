@@ -53,6 +53,7 @@ struct SwitchClsnFileHandle : SharedFilePtr {
 };
 
 extern "C" {
+
 extern u32 gNextActorUpdateMask;
 extern signed char gCurrentSublevel;
 extern SharedFilePtr data_ov002_0211092c;
@@ -69,13 +70,19 @@ int d_a_obj_switchChangeMusicVolumeHold(unsigned int id, int volume);
 // committed experiment.
 extern void hold_d_a_obj_switch(void *self, void *file, const Matrix4x3 *matrix, int scale,
                                 s16 angle, void *clps);
+}
+
 int func_02012310(int handle, int sound, short arg);
 unsigned char IsAreaShowing(int area);
+extern "C" {
+
 unsigned char DecIfAbove0_Byte(unsigned char *value);
 void LoadSilverStarAndNumber();
 void UnloadSilverStarAndNumber();
-int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 }
+
+int Vec3_Dist(const Vector3 *a, const Vector3 *b);
+
 
 /* Reconstructed source-style name: SM64DS proves daObjSwitch_c through RTTI,
  * allocation size, vtable identity, and the HANSWITCH registry profile;

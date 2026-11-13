@@ -63,9 +63,9 @@ struct HeyhoStateTable {
 extern HeyhoStateTable data_ov002_02111190;
 
 /* local extern: no shared header declares these. */
-extern "C" {
+
 void func_02012694(unsigned int a, const Vector3 *v);
-}
+
 
 /* Empty. D1 then D0 follow from the members. */
 daPropeller_Heyho_Fire_c::~daPropeller_Heyho_Fire_c() {}

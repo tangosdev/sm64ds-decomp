@@ -51,20 +51,28 @@ struct HolheiState {
 };
 
 
-extern "C" {
+
 extern short func_02010844(void* unused, Vector3* v, short angle);
 extern void func_02012694(unsigned int a, void *p);
+extern "C" {
+
 extern int daHolhei_c_ChangeState(daHolhei_c *self, HolheiState *p);
 extern int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
 extern void func_ov002_020db54c(void *self, int a, int b, short c);
 extern int data_02092138;
 extern dCamera_c *gCamera;
-int ApproachAngle(short *angle, short target, int a, int b,
-                  int c); /* local extern: named parameters preserve @NNN */
+}
+
+extern "C" int ApproachAngle(short *angle, short target, int a, int b,
+                  int c);
+ /* local extern: named parameters preserve @NNN */
 short Vec3_HorzAngle(const Vector3 *v0,
-                     const Vector3 *v1); /* local extern: named parameters preserve @NNN */
+                     const Vector3 *v1);
+ /* local extern: named parameters preserve @NNN */
 int Vec3_Dist(const Vector3 *a,
-              const Vector3 *b); /* local extern: named parameters preserve @NNN */
+              const Vector3 *b);
+extern "C" {
+ /* local extern: named parameters preserve @NNN */
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern int Math_Function_0203b14c(void*, int, int, int, int);
 unsigned short
@@ -72,6 +80,7 @@ DecIfAbove0_Short(unsigned short *p); /* local extern: named parameters preserve
 extern signed char gCurrentSublevel;
 extern int AngleDiff(int a, int b);
 }
+
 
 /* Resource handles owned by this TU. The static initializer constructs the
    model (id 0x327) and five animations (ids 0x328..0x32c) and registers each

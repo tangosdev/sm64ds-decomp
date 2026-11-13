@@ -37,7 +37,7 @@
 #include "Particle__Manager.h"
 #include "Particle__System.h"
 
-extern "C" {
+
 
 extern void func_02049f58(Particle::Manager *);
 extern void func_02049ee8(Particle::Manager *, Matrix4x3 *);
@@ -48,6 +48,8 @@ extern char *func_0204a4c8(char *(*alloc)(int), int, int, int, unsigned short);
 extern void func_0204a17c(Particle::Manager *, char *);
 extern int func_02045d00(void);
 extern int func_02045ce0(void);
+extern "C" {
+
 
 extern int func_ov007_020c1804(void);
 extern int func_ov007_020c17f4(void);

@@ -4,7 +4,7 @@
 #include "Memory.h"
 #include "nitro/os/thread.h"
 
-extern "C" {
+
 
 extern unsigned char data_0209d4f8;
 extern void *data_0209d518;
@@ -31,5 +31,4 @@ int func_0201a244(AsyncJobCallback callback, int argument, int priority, void *s
     OS_SetThreadStackWarningOffset(&data_0209d5b8, 0x400);
     OS_WakeupThreadDirect(&data_0209d5b8);
     return 0;
-}
 }

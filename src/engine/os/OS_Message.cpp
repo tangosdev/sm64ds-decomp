@@ -15,7 +15,7 @@
 #include "nitro/os/thread.h"
 #include "nitro/os/message.h"
 
-extern "C" {
+
 
 void OS_InitMessageQueue(OSMessageQueue *mq, OSMessage *msgArray, s32 msgCount) {
     mq->queueSend = 0;
@@ -61,5 +61,4 @@ int OS_ReceiveMessage(OSMessageQueue *mq, OSMessage *msg, s32 flags) {
     OS_WakeupThread(&mq->queueSend);
     OS_RestoreInterrupts(enabled);
     return 1;
-}
 }

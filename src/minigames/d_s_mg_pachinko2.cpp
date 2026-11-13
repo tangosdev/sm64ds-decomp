@@ -71,6 +71,7 @@ struct Entry {
 
 extern "C" {
 
+
 /* --- shared ov004, main and library helpers --- */
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 struct OamAttr;
@@ -87,16 +88,28 @@ extern void Mg_InitBrush(char *, char, int, int);
 extern void Mg_SetTopScreenYOffset(int);
 extern void Mg_SetSharedState(int);
 extern void FreeGfxSlotsById(int n);
+}
+
 extern int Sound_PlayIfNotActive(int a, int b, int c, short d);
 extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern void func_02012718(int, int);
+extern "C" {
+
 extern void *LoadFile(int handle);
+}
+
 extern void Deallocate(void *);
+extern "C" {
+
 extern void DecompressLZ16(void *src, void *dst);
+}
+
 /* local extern: nitro/gx/gx_load.h leaves GX_LoadBG3Scr out until
  * decl_common.h's non-const spelling of it goes. */
 extern void GX_LoadBG3Scr(void *, u32, u32);
+extern "C" {
+
 
 /* --- ROM data this TU reads --- */
 extern u8 gMainScreenLayers;
@@ -161,7 +174,8 @@ extern PMF pmf_dScMgPachinko2_c_Cup_StateHopLeft;
 extern PMF pmf_dScMgPachinko2_c_Cup_StateHopRight;
 extern PMF pmf_dScMgPachinko2_c_Cup_StateDecide;
 
-} /* extern "C" */
+}
+ /* extern "C" */
 
 /* Both variants come from this one definition: D1 stores this class's
    vtable and calls dScMgBase_c's D2; D0 adds dScMgBase_c::operator delete. */

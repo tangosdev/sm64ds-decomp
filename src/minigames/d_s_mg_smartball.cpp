@@ -123,6 +123,7 @@ typedef struct State2 {
 } State2;
 
 extern "C" {
+
 extern void func_0203d388(V2 *p, int angle);
 extern long long func_0203d5bc(int *p);
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
@@ -131,7 +132,11 @@ extern void OamRender10_d_s_mg_smartball(int sub, struct OamAttr *data, s32 x, s
                                          s32 priority, Fix12i scaleX, Fix12i scaleY, s32 rotation,
                                          s32 mode);
 extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
+}
+
 extern int GetOwnerLanguage(void);
+extern "C" {
+
 extern OamAttr *sSmartballLineSpritesItalian[];
 extern OamAttr *sSmartballLineSpritesSpanish[];
 extern OamAttr *sSmartballLineSpritesGerman[];
@@ -140,10 +145,18 @@ extern OamAttr *sSmartballLineSprites[];
 extern OamAttr *sSmartballCellSprites[];
 extern s32 sSmartballCellOrder[];
 extern OamAttr *sSmartballCellRowSprites[];
+}
+
 
 extern void func_02012718(int a, int b);
+extern "C" {
+
 extern struct W9 sSmartballCellStartOrder;
+}
+
 extern int Sound_PlayIfNotActive(int a, int b, int c, short d);
+extern "C" {
+
 extern void *sSmartballSlotFrameSprite;
 extern void *sSmartballSlotReelEndSprite;
 extern void *sSmartballSlotReelLowerSprite;
@@ -151,12 +164,20 @@ extern void *sSmartballSlotReelUpperSprite;
 extern void Vec2_Sub(int *o, int *a, int *b);
 extern OamAttr *sSmartballDokanSprites[];
 extern OamAttr *sSmartballAnaSprites[];
+}
+
 extern int func_020126e8(int a);
 extern void func_020126ac(int a0, int a1, int a2, int a3, int s0);
+extern "C" {
+
 extern int func_0203d570(V2 *a, V2 *b);
 extern int func_0203d434(V2 *p);
 extern void func_0203d630(V2 *p, int scale);
+}
+
 extern void func_0203d480(V2 *out, V2 *in);
+extern "C" {
+
 extern int func_0203d524(V2 *a, V2 *b);
 extern int func_0203d4d0(void *p, int *a, int *b);
 extern OamAttr *sSmartballSparkSpritesAlt[];
@@ -244,6 +265,7 @@ extern OamAttr *sSmartballPakkunSprites[];
 extern OamAttr *sSmartballWingBodySprites[];
 }
 
+
 /* local extern: no header declares these vtable symbols. The symbol is the
    slot array itself, so a vptr store is [0], not the compiler's _ZTV+8. */
 extern VFunc cMgSmartball_pushswitch_c_vtbl[];
@@ -260,6 +282,7 @@ extern VFunc cMgSmartball_slot_c_vtbl[];
 extern VFunc cMgSmartball_wing_c_vtbl[];
 /* Helpers, some called before their definition. */
 extern "C" {
+
 cMgSmartball_wing_c *cMgSmartball_wing_c_Construct(cMgSmartball_wing_c *self, dScMgSmartball_c *x,
                                                    int y, V2 *src);
 cMgSmartball_kinoko_c *cMgSmartball_kinoko_c_Construct(cMgSmartball_kinoko_c *self,
@@ -286,9 +309,11 @@ cMgSmartball_slot_c *cMgSmartball_slot_c_Construct(cMgSmartball_slot_c *c, dScMg
                                                    int a2, V2 *src);
 }
 
+
 /* Declarations kept out of the common header: three of its parameter views
    clash with definitions here, which makes an illegal overload if included. */
 extern "C" {
+
 
 extern int sMgResultsBannerY;
 extern int sMgResultsBannerX;
@@ -298,11 +323,14 @@ extern void Mg_RestoreMusic(void);
 extern void Mg_SetSharedState(int);
 }
 
+
 extern "C" {
+
 void GetObjectDelta(void *a, cMgSmartball_object_c *b);
 cMgSmartball_object_c *cMgSmartball_object_c_Construct(cMgSmartball_object_c *o,
                                                        dScMgSmartball_c *a1, int a2, int *a3);
 }
+
 static inline void CallObjectConstruct(cMgSmartball_object_c *c, dScMgSmartball_c *a1, int a2,
                                        int *a3) {
     cMgSmartball_object_c_Construct(c, a1, a2, a3);
@@ -349,9 +377,11 @@ dScMgSmartball_c::~dScMgSmartball_c() {
     __cxa_vec_cleanup(mDustPos, 0x10, 8, (dtor_t)NullDestructor_0203d47c);
     __cxa_vec_cleanup(mPopupPos, 5, 8, (dtor_t)NullDestructor_0203d47c);
 }
-extern "C" { /* C linkage, as in the original .c file */
+extern "C" {
+ /* C linkage, as in the original .c file */
 void SmartballObj_ElemDtor(void) {}
 }
+
 
 int cMgSmartball_wing_c::IsSettled() {
     if (mTriggerCount == 0)
@@ -528,7 +558,8 @@ void cMgSmartball_wing_c::RestoreInitial() {
     RebuildVerts();
 }
 
-extern "C" { /* C linkage, as in the original .c file */
+extern "C" {
+ /* C linkage, as in the original .c file */
 cMgSmartball_wing_c *cMgSmartball_wing_c_Construct(cMgSmartball_wing_c *self, dScMgSmartball_c *x,
                                                    int y, V2 *src) {
     int v[2];
@@ -543,6 +574,7 @@ cMgSmartball_wing_c *cMgSmartball_wing_c_Construct(cMgSmartball_wing_c *self, dS
     return self;
 }
 }
+
 
 int cMgSmartball_pushswitch_c::BallsClear() {
     int i;
@@ -622,7 +654,8 @@ void cMgSmartball_pushswitch_c::RestoreInitial() {
     mReleaseDelay = 0;
 }
 
-extern "C" { /* C linkage, as in the original .c file */
+extern "C" {
+ /* C linkage, as in the original .c file */
 cMgSmartball_pushswitch_c *cMgSmartball_pushswitch_c_Construct(cMgSmartball_pushswitch_c *c,
                                                                dScMgSmartball_c *b, int d, V2 *s) {
     int tmp[2];
@@ -634,6 +667,7 @@ cMgSmartball_pushswitch_c *cMgSmartball_pushswitch_c_Construct(cMgSmartball_push
     return c;
 }
 }
+
 
 int cMgSmartball_board_c::AnyLineActive() {
     int i;
@@ -1178,7 +1212,8 @@ void cMgSmartball_board_c::ShuffleCells() {
     }
 }
 
-extern "C" { /* C linkage, as in the original .c file */
+extern "C" {
+ /* C linkage, as in the original .c file */
 cMgSmartball_board_c *cMgSmartball_board_c_Construct(cMgSmartball_board_c *c, dScMgSmartball_c *b,
                                                      int d, V2 *s) {
     int tmp[2];
@@ -1190,6 +1225,7 @@ cMgSmartball_board_c *cMgSmartball_board_c_Construct(cMgSmartball_board_c *c, dS
     return c;
 }
 }
+
 
 int cMgSmartball_slot_c::ReelsStopped() {
     int i;
@@ -1432,6 +1468,7 @@ void cMgSmartball_slot_c::RestoreInitial() {
 }
 
 extern "C" {
+
 cMgSmartball_slot_c *cMgSmartball_slot_c_Construct(cMgSmartball_slot_c *c, dScMgSmartball_c *a1,
                                                    int a2, V2 *src) {
     int tmp[2];
@@ -1445,6 +1482,7 @@ cMgSmartball_slot_c *cMgSmartball_slot_c_Construct(cMgSmartball_slot_c *c, dScMg
     return c;
 }
 }
+
 
 /* Ball-vs-piranha test: the closed jaws, or the ring around the head while
  * biting. */
@@ -1624,7 +1662,8 @@ void cMgSmartball_pakkun_c::RestoreInitial() {
     mActionTimer = 0;
 }
 
-extern "C" { /* C linkage, as in the original .c file */
+extern "C" {
+ /* C linkage, as in the original .c file */
 cMgSmartball_pakkun_c *cMgSmartball_pakkun_c_Construct(cMgSmartball_pakkun_c *c,
                                                        dScMgSmartball_c *b, int d, V2 *s) {
     int tmp[2];
@@ -1636,6 +1675,7 @@ cMgSmartball_pakkun_c *cMgSmartball_pakkun_c_Construct(cMgSmartball_pakkun_c *c,
     return c;
 }
 }
+
 
 int cMgSmartball_dokan_c::CheckBall(int *b) {
     int ax = mCurrent0;
@@ -1710,7 +1750,8 @@ void cMgSmartball_dokan_c::RestoreInitial() {
     cMgSmartball_object_c::RestoreInitial();
 }
 
-extern "C" { /* C linkage, as in the original .c file */
+extern "C" {
+ /* C linkage, as in the original .c file */
 cMgSmartball_dokan_c *cMgSmartball_dokan_c_Construct(cMgSmartball_dokan_c *c, dScMgSmartball_c *b,
                                                      int d, V2 *s) {
     int tmp[2];
@@ -1722,6 +1763,7 @@ cMgSmartball_dokan_c *cMgSmartball_dokan_c_Construct(cMgSmartball_dokan_c *c, dS
     return c;
 }
 }
+
 
 int cMgSmartball_propeller_c::HitTest(int *pos) {
     struct S *p = (struct S *)pos;
@@ -1884,7 +1926,8 @@ void cMgSmartball_propeller_c::RestoreInitial() {
     RebuildVerts();
 }
 
-extern "C" { /* C linkage, as in the original .c file */
+extern "C" {
+ /* C linkage, as in the original .c file */
 cMgSmartball_propeller_c *cMgSmartball_propeller_c_Construct(cMgSmartball_propeller_c *c,
                                                              dScMgSmartball_c *b, int d, V2 *s) {
     int tmp[2];
@@ -1896,6 +1939,7 @@ cMgSmartball_propeller_c *cMgSmartball_propeller_c_Construct(cMgSmartball_propel
     return c;
 }
 }
+
 
 /* Slot 1: draws the spring pair for the current level mode. */
 void cMgSmartball_spring_c::Update() {
@@ -1984,7 +2028,8 @@ void cMgSmartball_spring_c::RestoreInitial() {
     mSoundHandle = 0;
 }
 
-extern "C" { /* C linkage, as in the original .c file */
+extern "C" {
+ /* C linkage, as in the original .c file */
 cMgSmartball_spring_c *cMgSmartball_spring_c_Construct(cMgSmartball_spring_c *c,
                                                        dScMgSmartball_c *b, int d, V2 *s) {
     int tmp[2];
@@ -1996,6 +2041,7 @@ cMgSmartball_spring_c *cMgSmartball_spring_c_Construct(cMgSmartball_spring_c *c,
     return c;
 }
 }
+
 
 int cMgSmartball_ana_c::HasBall() {
     return mHasBall;
@@ -2056,7 +2102,8 @@ void cMgSmartball_ana_c::RestoreInitial() {
     mRespawnTimer = 0;
 }
 
-extern "C" { /* C linkage, as in the original .c file */
+extern "C" {
+ /* C linkage, as in the original .c file */
 cMgSmartball_ana_c *cMgSmartball_ana_c_Construct(cMgSmartball_ana_c *c, dScMgSmartball_c *b, int d,
                                                  V2 *s) {
     int tmp[2];
@@ -2068,6 +2115,7 @@ cMgSmartball_ana_c *cMgSmartball_ana_c_Construct(cMgSmartball_ana_c *c, dScMgSma
     return c;
 }
 }
+
 
 /* Slot 1: draws the mushroom (variant 0) or its turning shell (variant 1). */
 void cMgSmartball_kinoko_c::Update() {
@@ -2169,7 +2217,8 @@ void cMgSmartball_kinoko_c::RestoreInitial() {
     mHitTimer = 0;
 }
 
-extern "C" { /* C linkage, as in the original .c file */
+extern "C" {
+ /* C linkage, as in the original .c file */
 cMgSmartball_kinoko_c *cMgSmartball_kinoko_c_Construct(cMgSmartball_kinoko_c *self,
                                                        dScMgSmartball_c *x, int y, V2 *src) {
     int v[2];
@@ -2182,6 +2231,7 @@ cMgSmartball_kinoko_c *cMgSmartball_kinoko_c_Construct(cMgSmartball_kinoko_c *se
     return self;
 }
 }
+
 
 void cMgSmartball_ball_c::PlayHitSound(int a1, int *vel) {
     int spd;
@@ -2658,7 +2708,7 @@ block2:
 #pragma push
 #pragma opt_strength_reduction off
 /* Leftover: the owner selection keeps its own address computation. */
-extern "C" { /* C linkage, as in the original .c file */
+ /* C linkage, as in the original .c file */
 
 void cMgSmartball_ball_c::UpdatePhysics() {
     State2 state;
@@ -3193,7 +3243,7 @@ outer_loop:
         i++;
     } while (i < mpManager->mAnaCount);
 }
-}
+
 
 #pragma pop
 
@@ -3472,7 +3522,8 @@ void cMgSmartball_ball_c::RestoreInitial() {
     mExitGateOpen = 0;
 }
 
-extern "C" { /* C linkage, as in the original .c file */
+extern "C" {
+ /* C linkage, as in the original .c file */
 cMgSmartball_ball_c *cMgSmartball_ball_c_Construct(cMgSmartball_ball_c *c, dScMgSmartball_c *b,
                                                    int d, V2 *s) {
     int tmp[2];
@@ -3484,6 +3535,7 @@ cMgSmartball_ball_c *cMgSmartball_ball_c_Construct(cMgSmartball_ball_c *c, dScMg
     return c;
 }
 }
+
 
 int cMgSmartball_object_c::PointInTriangle(int *p, int *q0, int *q1, int *q2) {
     int v0[2], v1[2], v2[2];
@@ -3513,7 +3565,8 @@ void cMgSmartball_object_c::SetVel(int *velocity) {
     mVel1 = velocity[1];
 }
 
-extern "C" { /* C linkage, as in the original .c file */
+extern "C" {
+ /* C linkage, as in the original .c file */
 void CopyObjectVel(void *a, void *b) {
     int *out = (int *)a;
     cMgSmartball_object_c *object = (cMgSmartball_object_c *)b;
@@ -3522,13 +3575,17 @@ void CopyObjectVel(void *a, void *b) {
 }
 }
 
-extern "C" { /* C linkage, as in the original .c file */
+
+extern "C" {
+ /* C linkage, as in the original .c file */
 void GetObjectDelta(void *a, cMgSmartball_object_c *b) {
     Vec2_Sub((int *)a, &b->mCurrent0, &b->mSnapshot0);
 }
 }
 
-extern "C" { /* C linkage, as in the original .c file */
+
+extern "C" {
+ /* C linkage, as in the original .c file */
 void CopyObjectPos(void *a, void *b) {
     int *out = (int *)a;
     cMgSmartball_object_c *object = (cMgSmartball_object_c *)b;
@@ -3536,6 +3593,7 @@ void CopyObjectPos(void *a, void *b) {
     out[1] = object->mCurrent1;
 }
 }
+
 
 /* Slot 1: empty here; every child overrides it. */
 void cMgSmartball_object_c::Update() {}
@@ -3555,7 +3613,8 @@ void cMgSmartball_object_c::RestoreInitial() {
     mCurrent1 = hi;
 }
 
-extern "C" { /* C linkage, as in the original .c file */
+extern "C" {
+ /* C linkage, as in the original .c file */
 cMgSmartball_object_c *cMgSmartball_object_c_Construct(cMgSmartball_object_c *o,
                                                        dScMgSmartball_c *a1, int a2, int *a3) {
     int lo, hi;
@@ -3577,6 +3636,7 @@ cMgSmartball_object_c *cMgSmartball_object_c_Construct(cMgSmartball_object_c *o,
     return o;
 }
 }
+
 
 /* Slot 25: forwards the graph callback to the minigame base. */
 int dScMgSmartball_c::OnGraphCallback3() {

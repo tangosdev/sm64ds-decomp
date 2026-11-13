@@ -100,6 +100,7 @@ enum dScMgAmida_c_AssetId {
 #include "nitro/mi/memory.h"
 
 extern "C" {
+
 /* --- shared ov004 and main helpers --- */
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 extern void Mg_DrawScoreTally(void *a0, int a1, int a2, int a3);
@@ -107,10 +108,14 @@ extern void FreeGfxSlotsById(int a);
 extern u32 LoadCompressedFileAt(int fileID, void *target);
 extern void *LoadFile(int handle);
 extern void SetSubBg2Offset(int a, int b);
+}
+
 extern void func_02012dbc(int a);
 extern int func_020126e8(int a);
 extern void func_020126ac(int a0, int a1, int a2, int a3, int a4);
 extern int func_02012468(int handle, int a, int sfx, int b, int c, int d, int pan, short e);
+extern "C" {
+
 extern int GetGameLanguage(void);
 
 /* --- the class's own functions defined below --- */
@@ -128,6 +133,8 @@ extern char sAmidaPatternGoalShuffle[];
 extern char sAmidaPatternSpeeds[];
 extern char sAmidaPatternRungSkip[];
 extern char sAmidaPatternExtraRungs[];
+}
+
 
 /* File-local view of one 0x1c-byte pattern record, indexed by
    mPatternIndex. Each field but walkerStagger has its own symbol above
@@ -145,6 +152,8 @@ struct AmidaPattern {
     s32 speedUp;       /* 0x18 sAmidaPatternSpeedUp */
 };
 typedef char AmidaPattern_size_must_be_0x1c[sizeof(AmidaPattern) == 0x1c ? 1 : -1];
+extern "C" {
+
 extern void *sAmidaWalkerSprite;
 extern void *sAmidaSideSprite;
 extern void *sAmidaHurryButtonSprite;
@@ -157,6 +166,7 @@ extern int sAmidaBoardAnimationFrames[13];
 extern s32 sAmidaLaneTargets[];
 extern s32 sAmidaLaneSaved[];
 }
+
 
 namespace Memory {
 void *Allocate(unsigned int size);
@@ -2241,5 +2251,6 @@ AmidaRungPosition sAmidaInitialRungPositions[11] = {
 /* Match the existing void* factory declaration; its original return type
  * remains a separate source-reconstruction question. */
 extern "C" {
+
 BaseSpawnInfo<void> g_profile_MG_AMIDA = {dScMgAmida_c_classInit, 371, 371};
 }

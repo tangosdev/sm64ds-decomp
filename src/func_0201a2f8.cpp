@@ -5,17 +5,29 @@
 #include "nitro/fs/archive.h"
 #include "nitro/mb/mb.h"
 
-extern "C" {
+
 
 extern void func_0201fec8(void);
+extern "C" {
+
 extern void func_02018aa4(void);
+}
+
 extern void func_020134c8(void);
+extern "C" {
+
 extern int GetSoundMode(void);
 extern void SetSoundMode(int mode);
+}
+
 extern u32 FS_TryLoadTable(void *p_mem, u32 size);
+extern "C" {
+
 extern void LoadOverlay(int id);
 extern void InitializeAssetHandleTable(void);
 extern void UnloadOverlay(int id);
+}
+
 extern void LoadFont(unsigned char id);
 
 extern int OVERLAY_0_ID;
@@ -61,5 +73,4 @@ void func_0201a2f8(int unused) {
     if (!isChild) {
         LoadFont(0);
     }
-}
 }

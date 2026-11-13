@@ -94,6 +94,7 @@ struct HanachanTextureSeqFileHandle : SharedFilePtr {
 extern daHanachan_c::State data_ov034_02114538[];
 
 extern "C" {
+
 extern void **data_ov034_02113888[];
 extern void **data_ov034_0211389c[];
 extern void **data_ov034_02113860[];
@@ -118,9 +119,11 @@ extern s32 data_ov034_021138d8[];
 extern int func_020092c4(void *arg0, void *out, void *target);
 extern u32 data_ov034_02113828[];
 extern dCamera_c *gCamera;
+}
+
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int fix1, int fix2, void *v, int t);
-}
+
 
 /* Destroys the eight per-segment arrays in reverse declaration order, then
  * the dEnemyBase_c base. D0 frees through the inherited operator delete. */

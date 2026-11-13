@@ -4,6 +4,7 @@
 
 extern "C" {
 
+
 /* Copies a character record's tiles to `offset` in one VRAM target: 0..4
  * the main engine's OBJ, BG0, BG1, BG2 and BG3 characters, 5..9 the sub
  * engine's. */

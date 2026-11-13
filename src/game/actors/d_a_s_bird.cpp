@@ -85,8 +85,10 @@ extern SBirdStateTable data_ov009_02113c48;
 
 /* local extern: no shared header declares Vec3_Sub. */
 extern "C" {
+
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
+
 
 /* The flock's random draws are unsigned: a signed % or >> changes codegen. */
 static inline u32 Random() {

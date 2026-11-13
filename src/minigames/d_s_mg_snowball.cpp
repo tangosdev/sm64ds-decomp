@@ -90,6 +90,7 @@ typedef struct Pair {
 
 
 extern "C" {
+
 extern void RenderOamBothScreens(void *a, int b, int c, int d, int e, void *f);
 extern OamAttr *sSnowballBitSprites[];
 extern void func_0203d388(int *p, int angle);
@@ -97,7 +98,11 @@ extern int func_0203d434(int *p);
 extern void func_0203d630(int *p, int m);
 extern u32 d_s_mg_snowballNewHold(u32 uniqueID, u32 effectID, int x, int y, int z, const void *dir,
                                   void *callback);
+}
+
 extern void func_02012718(int a, int b);
+extern "C" {
+
 extern int atan2_hold_d_s_mg_snowball_1(int y, int x);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short ang);
@@ -134,9 +139,11 @@ void DecompressLZ16(void *src, void *dst);
 extern int data_0208ee44;
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
+}
+
 /* Where two recovered declarations disagreed, the more precise one is
   * kept. */
-}
+
 
 /* Empty: every call in the ROM's body is compiler-generated. The members go
    in reverse declaration order -- __cxa_vec_cleanup on mSprays (with

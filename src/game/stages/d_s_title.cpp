@@ -66,7 +66,7 @@ struct OamTmp {
  * spells its own. Everything else these
  * functions call comes from decl_common.h or Sound.h and is deliberately
  * NOT repeated here. */
-extern "C" {
+
 /* The level-list cursor index. RECONCILED: the three legacy sources spelt
  * it `int[]`, `int` and `u32`. `u32` is the one the bytes need, because
  * Behavior's `% 0x36` is an unsigned reduction; the array spelling was only
@@ -87,7 +87,7 @@ extern char data_020a0d90[];
 extern u8 gMainScreenLayers;
 extern int data_0208ee44;
 extern char data_0209ee90[];
-extern void Enable3dEngines(void);
+extern "C" extern void Enable3dEngines(void);
 /* The print helper reads name; Behavior reads the signed level ID and entrance.
  * IDs -2 and -1 select the versus and minigame scenes. The two trailing bytes
  * are natural alignment padding; no observed consumer reads them. These type
@@ -123,14 +123,14 @@ extern const TitleLevelEntry sTitleLevelEntries[] = {
     {"Ex Wario Map", 48, 0},   {"Ex Wario Boss", 49, 0},  {"Play Room", 50, 0},
     {"Vs Main", 51, 0},        {"VS Entry", -2, 0},       {"Mini Game", -1, 0},
 };
-/* `void *` is the tree's plurality spelling for this one (it is declared
+extern "C" /* `void *` is the tree's plurality spelling for this one (it is declared
  * five different ways across five files); the cast at the one call site is
  * free. */
 /* RECONCILED: the two legacy call sites spelt the parameter `int` and
  * `char *`; the body ignores it. `void *` is the spelling neither call site
  * has to cast away from. */
 extern void TitleScrollLevelList(void *self);
-}
+
 
 /* The stylus went down this frame: held, with the held state just changed
  * (see PlayerInput.h). Int-returning, so the ROM materializes the 0/1 it
@@ -334,7 +334,8 @@ void dScTitle_c::OnPendingDestroy() {}
  * RECONCILED: decl_common.h already declares gTitleListTop `extern int`, so
  * the legacy `int[]` spelling is dropped in favour of the header's scalar
  * and the `[0]` subscripts became scalar accesses. */
-extern "C" { /* .c-derived member: C linkage for the whole block */
+extern "C" {
+ /* .c-derived member: C linkage for the whole block */
 void TitleScrollLevelList(void *) {
     int v = gTitleCursor;
     int nv = v - 0xa;
@@ -359,6 +360,7 @@ void TitleScrollLevelList(void *) {
     TitlePrintString((signed char *)data_020a0d90, 0, 0);
 }
 }
+
 
 /* [1] [0] 0x020ad69c (D0) and 0x020ad660 (D1) -- neither is written here.
  * The header's inline destructor is what emits the pair, D1 first, the

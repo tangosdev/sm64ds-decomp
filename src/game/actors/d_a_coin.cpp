@@ -90,23 +90,29 @@ struct CoinFlagBits {
 
 /* ROM symbols. Mangled spellings live inside extern "C" so the C++ front end
  * does not mangle them a second time. */
-extern "C" {
+
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern int Vec3_HorzLen(void *v);
+extern "C" {
+
 extern int VEC_Mag(const Vector3 *v);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
+}
+
 extern void GiveCoins(int idx, int amount);
 extern int GiveRedCoins(int i, int amt);
 extern s8 NumRedCoins(void);
 extern void func_02012694(unsigned int id, const Vector3 *v);
 extern int SurfaceInfo_TestFlag0x20(void* p);
-}
+
 extern "C" {
+
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern short atan2_hold_d_a_coin_1(int a, int b);
 }
+
 
 daCoin_c::~daCoin_c()
 {
@@ -412,6 +418,7 @@ void daCoin_c::CollectYellowCoin(daPly_c *player) {
  * param 0x20) 300 units above the player, sets the event bit and gives the
  * star a marker. */
 extern "C" {
+
 void func_ov002_020b18f0(char* self)
 {
     extern signed char gCurrentSublevel;
@@ -441,6 +448,7 @@ void func_ov002_020b18f0(char* self)
     star->AddStarMarker();
 }
 }
+
 
 /* Collection by the player: if the coin was hit by a player (hitFlags 0x400000)
  * it stops its disappear timer and hands out the reward for its coin type
@@ -808,12 +816,12 @@ int daCoin_c::Behavior()
     return 1;
 }
 
-extern "C" {
+
 extern int SublevelToLevel(int i);
 extern void SetStarMarker(int i, void* actor, int v2);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *thiz, void *actor, s32 f1, s32 f2, void *v, s32 f3);
-}
+
 s32 daCoin_c::InitResources()
 {
     /* Vtable slot 0. mBehaviorType is the low nibble of param1 (9..15 become 1)

@@ -53,15 +53,20 @@ struct SpriteAttr {
 };
 
 extern "C" {
+
 extern void func_0203d388(int *p, int angle);
 extern void Mg_SetTopScreenYOffset(int n);
 void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5, u16 a6);
+}
+
 /* The dragged petal's two adjacent fixed-point coordinates. */
 typedef struct V2 {
     int x;
     int y;
-} V2;
+}
+extern "C" {
+ V2;
 void Vec2_Sub(int *out, int *a, int *b);
 void FreeGfxSlotsById(int a);
 void *Ov004_LoadFileByPath(void *arg);
@@ -71,6 +76,7 @@ extern int data_0208ee44;
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 }
+
 
 /* Written first so D1 and D0 are emitted first, as in the cartridge. The
  * body is empty: the compiler destroys mFace, then the petal table, in

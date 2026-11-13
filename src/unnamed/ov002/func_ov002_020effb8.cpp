@@ -17,10 +17,11 @@
 #include "math/CalcLib.h"
 #include "nitro/fx/fx_cp.h"
 
-extern "C" {
+
 
 /* One coordinate's share: p * w, rounded from fx16 back to fx12. */
 #define TERM(p, w) ((FX_MUL(p, w) + 8) >> 4)
+extern "C" {
 
 /* Returns whether the floor normal's Y (normalY) is at most the
  * threshold for surface class sel. */

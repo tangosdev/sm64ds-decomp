@@ -1,7 +1,7 @@
 //cpp
 #include "dFdBrightness_c.h"
 
-extern "C" {
+
 
 /* The scene's brightness fader (dScene_c sets it, d_scene.cpp) and the
    active transition fader: a stage wipe (dFdWipe_c, set and cleared by
@@ -27,5 +27,4 @@ void func_02018ec0(void) {
     if (!fader)
         return;
     fader->AdvanceFade();
-}
 }

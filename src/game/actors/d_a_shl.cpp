@@ -87,6 +87,7 @@ int PlayLong(u32, u32, u32, const Vector3 &, s16);
 extern "C" {
 
 
+
 /* -- the four state records (.bss) and the model handles (.rodata) -- */
 extern ShlState data_ov102_0214ea48;
 extern ShlState data_ov102_0214ea58;
@@ -97,18 +98,28 @@ extern SharedFilePtr *data_ov102_0214d70c[];
 /* -- other modules -- */
 int  func_ov002_020ad660(char *self, char *clsn, char *model, int kind);
 int  func_ov002_020cc16c(void *player, void *actor);
+}
+
 void func_020105cc(void *self, u32 flags);
+extern "C" {
+
 void Matrix4x3_FromRotationY(void *m, int angle);
+}
+
 int  SurfaceInfo_TestFlag0x20(int *si);
+extern "C" {
+
 
 int d_a_shlNewHold(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, void *dir, void *cb);
 /* local extern: these five names hold the @NNN count. Sound::PlayLong is the call. */
 void d_a_shlPlayLongHold(u32 handle, u32 a, u32 soundID, const Vector3 &pos, s16 e);
+}
+
 
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, dActor_c *owner, Fix12i radius, Fix12i height, Vector3_16 *d,
                          int e);
-}
+
 
 /* func_ov102_0214c84c's positions are VecFx32: Vector3 members here emit
    an extra destructor function into this TU (measured). */

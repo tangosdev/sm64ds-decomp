@@ -1,5 +1,18 @@
 #ifndef NNSYS_SND_PLAYER_H
 #define NNSYS_SND_PLAYER_H
+#ifndef __cplusplus
+#define NNS_SndPlayerSetTempoRatio _Z26NNS_SndPlayerSetTempoRatioP12NNSSndHandlei
+#define NNS_SndPlayerSetTrackModSpeed _Z29NNS_SndPlayerSetTrackModSpeedP12NNSSndHandleii
+#define NNS_SndPlayerSetTrackModDepth _Z29NNS_SndPlayerSetTrackModDepthP12NNSSndHandleii
+#define NNS_SndPlayerSetTrackPan _Z24NNS_SndPlayerSetTrackPanP12NNSSndHandleii
+#define NNS_SndPlayerSetTrackPitch _Z26NNS_SndPlayerSetTrackPitchP12NNSSndHandleii
+#define NNS_SndPlayerSetTrackVolume _Z27NNS_SndPlayerSetTrackVolumeP12NNSSndHandleii
+#define NNS_SndPlayerSetTrackMute _Z25NNS_SndPlayerSetTrackMuteP12NNSSndHandleii
+#define NNS_SndPlayerSetChannelPriority _Z31NNS_SndPlayerSetChannelPriorityP12NNSSndHandlei
+#define NNS_SndPlayerMoveVolume _Z23NNS_SndPlayerMoveVolumeP12NNSSndHandleii
+#define NNS_SndPlayerSetInitialVolume _Z29NNS_SndPlayerSetInitialVolumeP12NNSSndHandlei
+#define NNS_SndPlayerSetVolume _Z22NNS_SndPlayerSetVolumeP12NNSSndHandlei
+#endif
 
 /*
  * NitroSystem's sequence-player handle and the player it points at, laid
@@ -13,9 +26,6 @@
 #include "nnsys/fnd.h"
 #include "nnsys/snd/fader.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 typedef struct NNSSndSeqPlayer {
     struct NNSSndHandle *handle; /* 0x00 */
@@ -61,8 +71,5 @@ void NNS_SndPlayerSetTrackModDepth(NNSSndHandle *handle, int trackBitMask, int d
 void NNS_SndPlayerSetTrackModSpeed(NNSSndHandle *handle, int trackBitMask, int speed);
 void NNS_SndPlayerSetTempoRatio(NNSSndHandle *handle, int ratio);
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif

@@ -49,6 +49,7 @@
 
 extern "C" {
 
+
 extern u32 data_ov007_02104bdc; /* next free texture slot */
 extern u32 data_ov007_02104be0; /* end of the palette region */
 extern u32 data_ov007_02104be4; /* end of the texture region */
@@ -199,15 +200,21 @@ Ov007Texture *Texture_Create(int fmt, int texSrc, int sizeS, int sizeT, int pltt
     Texture_GetSizes(fmt, width, height, plttColorCount, &tex->texSize, &tex->plttSize);
     return tex;
 }
+}
+
 
 /* Frees a texture record. Built with long_calls, so the tail call is the
  * pooled `ldr ip,[pc]; bx ip` form; bracketed because the pragma is
  * positional. */
 #pragma long_calls on
+extern "C" {
 void func_ov007_020c1620(void *tex) {
     func_ov007_020c3d1c(tex);
 }
+}
+
 #pragma long_calls off
+extern "C" {
 
 /* Clears a texture record. */
 void func_ov007_020c15ec(Ov007Texture *tex) {
@@ -290,4 +297,5 @@ void Texture_BindPalette(Ov007Texture *tex) {
     }
 }
 
-} // extern "C"
+}
+ // extern "C"

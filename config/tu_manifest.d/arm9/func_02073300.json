@@ -30,7 +30,7 @@
   ],
   "functions": [
     {
-      "symbol": "func_02073300",
+      "symbol": "_Z13func_02073300PvjjPFvS_E",
       "address": "0x02073300",
       "size": "0x000000a8",
       "legacy_source": "src/func_02073300.c",

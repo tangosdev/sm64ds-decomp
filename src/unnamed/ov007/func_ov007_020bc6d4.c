@@ -2,8 +2,8 @@
 #include "dExtModel_c.h"
 #include "Ov007Model.h"
 #include "Ov007MenuMem.h"
-extern int func_02046564(void *p);
-extern int func_020462bc(void *p);
+extern int _Z13func_02046564Pv(void *p);
+extern void *_Z13func_020462bcPi(int *p);
 extern void *func_ov007_020c92ac(void);
 extern void func_ov007_020bc47c(Ov007Model *self);
 
@@ -29,14 +29,14 @@ Ov007Model *func_ov007_020bc6d4(struct BMD_File *file, int flags) {
     m->numTexSeqAnims = 0;
     m->texSeqAnims = 0;
     m->texSeqAnim = 0;
-    n = func_02046564(file);
+    n = _Z13func_02046564Pv(file);
     m->transforms = func_ov007_020c3df4(0, n);
     if (m->flags & 2)
         m->nextTransforms = func_ov007_020c3df4(0, n);
     else
         m->nextTransforms = 0;
     if (m->flags & 4) {
-        m->blendBuffer = func_ov007_020c3df4(0, func_020462bc(file));
+        m->blendBuffer = func_ov007_020c3df4(0, _Z13func_020462bcPi(file));
         m->blendAnim = func_ov007_020c92ac();
     } else {
         m->blendBuffer = 0;

@@ -143,18 +143,28 @@ struct BCA_File;
 struct SwoopPositionWords { int w[3]; };
 
 extern "C" {
+
 extern signed char gCurrentSublevel;
+}
+
 extern void func_02012694(unsigned int, void *);
 extern s16 Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
+extern "C" {
+
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);
+}
+
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *a, Fix12i b, Fix12i c, void *d, void *e);
+extern "C" {
+
 extern SharedFilePtr data_ov002_0210da40;
 extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9c0;
 extern daPly_c *gPlayers[];
 }
+
 
 /* Actor ids (symbols/actor_debug_names.tsv). */
 enum {

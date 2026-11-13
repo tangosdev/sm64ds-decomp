@@ -83,9 +83,11 @@ extern CLPS_Block data_ov016_02113cac;
 
 /* local extern: no shared header declares these. */
 extern "C" {
+
 /* The camera the shake request goes to (arm9). */
 extern dCamera_c *gCamera;
 }
+
 
 /* -------------------------------------------------------------------------- */
 /* Reconstructed source-style name: SM64DS proves daObjKi_Hasira_c through

@@ -57,10 +57,10 @@ extern FlBlockModelFilePtr data_ov022_02114558;
 extern FlBlockCollisionFilePtr data_ov022_02114550;
 extern CLPS_Block data_ov064_0211bb0c;
 
-extern "C" {
+
 /* local extern: stores the callbacks at dBgW+0x18 and +0x1c. d_bg_w.cpp
  * defines them and no header declares them. */
-}
+
 
 /* Reconstructed source-style name: SM64DS proves daObjFl_Block_c through RTTI,
  * allocation size, vtable identity, and the FL_BLOCK registry profile; later

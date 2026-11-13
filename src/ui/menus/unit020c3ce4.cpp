@@ -45,11 +45,13 @@
 #include "nitro/mi/memory.h"
 #include "nitro/os/alloc.h"
 
-extern "C" {
+
 
 typedef int (*Ov007QueryHook)(void);
 typedef void (*Ov007FreeHook)(void *);
 typedef void *(*Ov007AllocHook)(unsigned int size);
+extern "C" {
+
 
 extern Ov007QueryHook data_ov007_02104c14;
 extern Ov007FreeHook data_ov007_02103254;

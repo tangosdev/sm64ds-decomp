@@ -68,14 +68,19 @@ struct Mtx { int a, b, c, d; };
  * above the first function. */
 extern "C" {
 
+
 /* Fix12<int> by value in the real signatures; see the banner. */
 void Sound_PlayBank1Panned(int a, int b, int c);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int NormalizeVec3IfNonZero(VecFx32 *v);
+}
+
 void func_02012718(int a, int b);
 void func_02016a14(void *self, int a);
 void func_02016a04(void *self, int a);
 int func_020179b4(SharedFilePtr *f, dExtModel_c *m, int extra);
+extern "C" {
+
 void Camera_ProjectToScreen16(void *cam, VecFx32 *pos, short *out);
 int D3D_PlaySeAtX(int a, int b);
 void Puff_Spawn(int a, int b);
@@ -122,6 +127,8 @@ extern BCA_File *sJump3DAnimRollJump;
 extern BCA_File *sJump3DAnimWallJump;
 extern BCA_File *sJump3DAnimStruggle;
 extern BCA_File *sJump3DAnimJump;
+}
+
 
 /* Six anim handles call SharedFilePtr::Construct. The model handle calls
    func_02017a24. */
@@ -135,6 +142,8 @@ struct Jump3DModelFilePtr : SharedFilePtr {
 };
 typedef char Jump3DMarioAnimFilePtr_size[sizeof(Jump3DMarioAnimFilePtr) == 8 ? 1 : -1];
 typedef char Jump3DModelFilePtr_size[sizeof(Jump3DModelFilePtr) == 8 ? 1 : -1];
+extern "C" {
+
 
 extern Jump3DMarioAnimFilePtr sJump3DMarioWallJumpAnimFile;
 extern Jump3DMarioAnimFilePtr sJump3DMarioSdownAnimFile;
@@ -164,7 +173,8 @@ extern char sJump3DRoundLayouts[];
 extern Matrix4x3 data_020a0e68;
 extern fBase_c *gCurrentScene;
 
-}  /* extern "C" */
+}
+  /* extern "C" */
 
 
 

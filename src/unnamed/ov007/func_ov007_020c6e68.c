@@ -53,7 +53,7 @@ void func_ov007_020c6e68(Ov007Picker *self, int idx) {
     dx = px[0] - px[last];
     dz = pz[0] - pz[last];
     lensq = FX_MUL(dx, dx) + FX_MUL(dz, dz);
-    if (FX_Sqrt(lensq) <= proj)
+    if (_Z7FX_Sqrti(lensq) <= proj)
         flag |= 2;
 
     {

@@ -80,10 +80,13 @@ extern u8 gCurrentStarId;
 
 /* arm9 C helpers with no shared header. */
 extern "C" {
+
 u8 DecIfAbove0_Byte(u8 *p);
+}
+
 int IsStarCollectedInCurLevel(int starID);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-}
+
 
 /* BK_LIFT01's registry factory. 0x394 is this class's size, and the calls the
    cartridge inlines here -- fBase_c::operator new, dBgActor_c's base

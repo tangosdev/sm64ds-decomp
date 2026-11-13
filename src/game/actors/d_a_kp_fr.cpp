@@ -67,8 +67,10 @@ extern "C" SpawnInfo<daKpFr_c> g_profile_KERONPA_FIRE = {
 #include "dBgCh_Actr.h"
 #include "private/mtx43.h"
 extern "C" {
+
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 }
+
 
 int daKpFr_c::InitResources()
 {
@@ -224,7 +226,7 @@ void daKpFr_c::func_ov070_02121d50(void* vclsn) {
         func_ov070_02121c8c();
 }
 
-extern "C" void func_02012694(unsigned int id, void *pos);
+void func_02012694(unsigned int id, void *pos);
 
 void daKpFr_c::func_ov070_02121cbc(){
   dActor_c* found;

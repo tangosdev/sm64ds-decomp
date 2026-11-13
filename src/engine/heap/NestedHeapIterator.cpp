@@ -26,7 +26,7 @@
  */
 #include "nnsys/fnd.h"
 
-extern "C" {
+
 
 /* ---- NNS_FND_heapcommon.c ---- */
 
@@ -167,5 +167,4 @@ void *NNS_FndGetPrevListObject(NNSFndList *list, void *object) {
     if (object == 0)
         return list->tailObject;
     return OBJ_TO_LINK(list, object)->prevObject;
-}
 }

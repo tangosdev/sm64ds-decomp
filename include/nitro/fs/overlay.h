@@ -1,5 +1,8 @@
 #ifndef NITRO_FS_OVERLAY_H
 #define NITRO_FS_OVERLAY_H
+#ifndef __cplusplus
+#define func_02017fd0 _Z13func_02017fd0P13FSOverlayInfo
+#endif
 
 /*
  * NitroSDK FSOverlayInfo, the record FS_LoadOverlayInfo (and the game's
@@ -15,9 +18,6 @@
 #include "nitro/mi/exMemory.h"
 #include "private/fs_views.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 typedef u32 FSOverlayID;
 
@@ -54,30 +54,27 @@ static inline void *FS_GetOverlayAddress(const FSOverlayInfo *p_ovi) {
     return p_ovi->header.ram_address;
 }
 
-/* fs_overlay.c (src/engine/fs/FS_Overlay.c). The SDK's BOOL returns are
+extern "C" /* fs_overlay.c (src/engine/fs/FS_Overlay.c). The SDK's BOOL returns are
    spelled int: no shared header here defines BOOL. */
 FSFileID FS_GetOverlayFileID(const FSOverlayInfo *p_ovi);
-int FS_LoadOverlayInfo(FSOverlayInfo *p_ovi, MIProcessor target, FSOverlayID id);
-void FS_ClearOverlayImage(FSOverlayInfo *p_ovi);
-void FS_StartOverlay(FSOverlayInfo *p_ovi);
-void FS_EndOverlay(FSOverlayInfo *p_ovi);
-int FS_UnloadOverlayImage(FSOverlayInfo *p_ovi);
-int FS_UnloadOverlay(MIProcessor target, FSOverlayID id);
-void FS_AttachOverlayTable(MIProcessor target, const void *ptr, u32 len);
+extern "C" int FS_LoadOverlayInfo(FSOverlayInfo *p_ovi, MIProcessor target, FSOverlayID id);
+extern "C" void FS_ClearOverlayImage(FSOverlayInfo *p_ovi);
+extern "C" void FS_StartOverlay(FSOverlayInfo *p_ovi);
+extern "C" void FS_EndOverlay(FSOverlayInfo *p_ovi);
+extern "C" int FS_UnloadOverlayImage(FSOverlayInfo *p_ovi);
+extern "C" int FS_UnloadOverlay(MIProcessor target, FSOverlayID id);
+extern "C" void FS_AttachOverlayTable(MIProcessor target, const void *ptr, u32 len);
 
-/* The game's copy of FS_LoadOverlayInfo: fill info with overlay id's table
+extern "C" /* The game's copy of FS_LoadOverlayInfo: fill info with overlay id's table
    entry for target (0 ARM9, 1 ARM7); 0 if id is past the table. */
 int func_02018c00(FSOverlayInfo *info, int target, int id);
 /* Poison an unloaded overlay's code and bss with an undefined instruction. */
 void func_02017fd0(FSOverlayInfo *info);
-/* The game's copy of FS_LoadOverlay (src/FS_LoadOverlay.c): load overlay
+extern "C" /* The game's copy of FS_LoadOverlay (src/FS_LoadOverlay.c): load overlay
    id for target and start it; 0 if its entry or image could not be read.
    Parameters unnamed: a named parameter here renumbers every C++
    includer's @NNN. */
 int FS_LoadOverlay(MIProcessor, FSOverlayID);
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif

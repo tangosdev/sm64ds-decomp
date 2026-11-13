@@ -7,6 +7,7 @@
 #include "nitro/os/cache.h"
 
 extern "C" {
+
 extern void func_ov007_020c32e8(Ov007Palette *pal, int target, unsigned int row, int skip);
 
 extern void RequestScreenFade(int kind, int flags, void (*onEnd)(void));

@@ -29,7 +29,7 @@
   ],
   "functions": [
     {
-      "symbol": "func_02073534",
+      "symbol": "_Z13func_02073534PvS_jPFvS_E",
       "address": "0x02073534",
       "size": "0x00000068",
       "legacy_source": "src/func_02073534.c",

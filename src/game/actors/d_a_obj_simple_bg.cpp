@@ -83,7 +83,7 @@ extern u8 gCurrentStarId;
 extern u8 gGameMode;
 
 /* local extern: no shared header declares it. */
-extern "C" int IsStarCollectedInCurLevel(int starID);
+int IsStarCollectedInCurLevel(int starID);
 
 /* Actor ID 0x31 is BK_TOWER; gGameMode is CURRENT_GAMEMODE
  * (symbols/verified.tsv). These int-returning predicates are what make the

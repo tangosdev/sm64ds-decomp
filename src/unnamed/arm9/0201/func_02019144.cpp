@@ -5,7 +5,7 @@
 #include "nitro/gx/g2.h"
 #include "nitro/gx/gx.h"
 
-extern "C" {
+
 
 extern dGraph_c::callback_c *gGraphCallback;
 extern unsigned char gMainScreenLayers;
@@ -59,5 +59,4 @@ void func_02019144(void)
     G2S_SetBG1Offset(gSubBg1HOffset, gSubBg1VOffset);
     G2S_SetBG2Offset(gSubBg2HOffset, gSubBg2VOffset);
     G2S_SetBG3Offset(gSubBg3HOffset, gSubBg3VOffset);
-}
 }

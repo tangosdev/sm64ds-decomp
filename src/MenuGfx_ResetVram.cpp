@@ -4,6 +4,7 @@
 
 extern "C" {
 
+
 void MenuGfx_ResetVram(void) {
     volatile int a;
     volatile int b;

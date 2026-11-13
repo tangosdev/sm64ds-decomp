@@ -272,48 +272,77 @@ extern KpaTailState data_ov060_0211ae9c[];
  * data objects below have to stay unmangled, and the address-named callees are
  * C functions. Declarations only; no definition lives in this block. */
 extern "C" {
+
 /* The dCamera_c; Bowser publishes himself into its mFramedActor. */
 extern dCamera_c *gCamera;
+}
+
 extern int Vec3_HorzDist(const struct Vector3*, const struct Vector3*);
 extern short Vec3_HorzAngle(const struct Vector3*, const struct Vector3*);
+extern "C" {
+
 /* Eases a camera vector toward a target; 1 when it arrives (d_camera.cpp). */
 extern int func_020092c4(void*, void*, void*);
 extern KpaAnimationFileHandle data_ov060_0211acd0;
 extern unsigned char data_ov060_02119264[];
 extern PmfEnt data_ov060_0211aeb4[];
+}
+
 /* Sound::Play(3, id, pos) (sound/Sound.cpp). The legacy shards passed a third
  * argument the callee does not take; dropped rather than widening the
  * signature. */
 extern void func_02012694(unsigned int id, const Vector3 *v);
 /* Veneer to dBgCh_Actr::UpdateContinuousExceptSlot0. */
 void func_02038408(dBgCh_Actr *self);
+extern "C" {
+
 extern PmfEnt data_ov060_0211aed4[];
+}
+
 extern unsigned char NumStars(void);
+extern "C" {
+
 /* Unused; the named parameters pin this TU's @NNN counter (see the header). */
 extern void *d_a_kpaNewHold(unsigned a, unsigned b, int x, int y, int z, void *v, void *cb);
 extern void d_a_kpaChangeMusicVolumeHold(unsigned int a, int b);
 extern KpaAnimationFileHandle data_ov060_0211ac88;
 extern KpaAnimationFileHandle data_ov060_0211ac60;
+}
+
 extern int Vec3_HorzLen(const Vector3* v);
+extern "C" {
+
 extern int RandomIntInternal(int* seed);
 extern KpaAnimationFileHandle data_ov060_0211abe0;
+}
+
 /* Spawns the boss landing dust particle at a position (d_actor.cpp). */
 extern void *func_0200fa04(void *c, void *v, int a);
+extern "C" {
+
 extern KpaAnimationFileHandle data_ov060_0211acd8;
 extern KpaAnimationFileHandle data_ov060_0211acf0;
 extern KpaAnimationFileHandle data_ov060_0211ac20;
 extern KpaAnimationFileHandle data_ov060_0211ac68;
 extern KpaAnimationFileHandle data_ov060_0211ac70;
 extern s16 data_ov060_0211a4e0[];
+}
+
 extern s16 func_02010844(void *unused, void *v, s16 angle);
+extern "C" {
+
 /* local extern: the Vector3 spelling math/CalcLib.h declares. */
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern int *Vec3_LslInPlace(void *v, int sh);
 extern Matrix4x3 data_020a0e68;
 /* Unused; the named parameters pin this TU's @NNN counter (see the header). */
 void d_a_kpaEarthquakeHold(void *self, struct Vector3 *v, int f);
+}
+
 /* Sound.cpp 0xc-byte cleanup veneer. */
 extern void func_02011cfc(void);
+extern "C" {
+
 /* One declaration per resource handle, typed from how InitResources and
  * CleanupResources use it:
  *
@@ -352,10 +381,12 @@ extern KpaAnimationFileHandle data_ov060_0211ac90;
 extern short data_ov060_02119294[];
 extern short data_ov060_02119296[];
 extern short data_ov060_02119298[];
+}
+
 /* Unused; the named parameters pin this TU's @NNN counter (see the header). */
 typedef void BgchInitAt_(void *self, void *act, int a, int b, void *d1, void *d2);
 
-}
+
 
 /* The two destructor bodies are defined first so their D1/D0 groups lead the
  * object: the eager window is the only one before the deferred queue fills. */

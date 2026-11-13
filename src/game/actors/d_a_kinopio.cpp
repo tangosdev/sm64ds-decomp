@@ -86,6 +86,7 @@ bool PlaySub(u32, u32, u32, int, bool);
 
 extern "C" {
 
+
 /* ov085 statics */
 extern u8 data_ov085_0212f27c[];           /* star-count requirement table */
 
@@ -97,6 +98,8 @@ extern SharedFilePtr data_ov002_0210d9c0;
 /* arm9 statics */
 extern s8 gCurrentSublevel;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
+}
+
 
 /* math / vector helpers. (ApproachLinear, from math/Approach.h, returns whether
    it arrived, and that is load-bearing: St_Talk_Main tests the result to decide
@@ -104,7 +107,11 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
 s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 s32 Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
+extern "C" {
+
 s32 AngleDiff(s32 a, s32 b);
+}
+
 
 /* game state */
 int func_020138dc(void);
@@ -112,6 +119,8 @@ int func_02013a44(void);
 int ObjectMessageIDToActualMessageID(s16 id);
 int IsStarCollectedInCurLevel(int starID);
 u8 NumStars(void);
+extern "C" {
+
 
 /* dActor_c / Sound.
    The mangled spellings are kept wherever the real declaration takes a
@@ -119,6 +128,7 @@ u8 NumStars(void);
    the call site than a loose spelling would. */
 int d_a_kinopioPlaySubHold(u32 a, u32 b, u32 c, int d, int e);
 }
+
 
 /* Actor ID 0xbf is PLAYER. This int-returning predicate is what makes the
  * ROM materialize 0/1 before testing it. */

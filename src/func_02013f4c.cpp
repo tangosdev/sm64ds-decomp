@@ -8,7 +8,7 @@
 #include "nitro/hw/registers.h"
 #include "nitro/os/reset.h"
 
-extern "C" {
+
 
 extern u32 data_0209cde4;
 extern u8 data_0209cdcc;
@@ -98,5 +98,4 @@ void func_02013f4c(void)
     }
     while ((int)REG_VCOUNT < 192) {
     }
-}
 }

@@ -9,7 +9,7 @@
 #include "nitro/card/card_common.h"
 #include "nitro/mi/memory.h"
 
-extern "C" {
+
 
 void func_0206062c(CARDiCommon *p) {
     do {
@@ -31,5 +31,4 @@ void func_0206062c(CARDiCommon *p) {
         p->len -= len;
     } while (p->len != 0);
     CARDi_EndTask(p);
-}
 }

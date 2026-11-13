@@ -111,12 +111,18 @@ struct JugemVec3 {
     ~JugemVec3();
 };
 
-extern "C" {
+
 
 /* Helpers not declared by the included headers. */
 s16   Vec3_VertAngle(const void *a, const void *b);
+extern "C" {
+
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
+}
+
 int   Vec3_ApproachHorz(void *cur, const void *tgt, int maxStep);
+extern "C" {
+
 int   AngleDiff(int a, int b);
 
 /* local extern: each of these real members takes a Fix12<int> BY VALUE,
@@ -129,7 +135,11 @@ int d_a_c_jugemPlaySubHold(u32 a, u32 b, u32 c, Fix12i d, bool loop);
 void  func_ov002_020c3e8c(void *player);
 void  func_ov002_020c3f18(void *p);
 void  func_ov002_020c3f2c(void *p);
+}
+
 void  func_0201f32c(int a);
+extern "C" {
+
 
 /* globals */
 extern dCamera_c *gCamera;                  /* the camera object */
@@ -182,6 +192,7 @@ extern daC_Jugem_c::StateFn data_ov085_0213029c;
 extern daC_Jugem_c::StateFn data_ov085_02130274;
 
 }
+
 
 #pragma defer_codegen off
 

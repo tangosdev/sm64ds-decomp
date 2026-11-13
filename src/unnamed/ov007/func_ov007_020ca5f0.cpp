@@ -12,6 +12,7 @@
 
 extern "C" {
 
+
 extern void func_ov007_020c1448(Ov007Texture *self, u32 texGen, u32 repeat, u32 flip, u32 color0);
 extern void Texture_BindPalette(Ov007Texture *tex);
 extern void func_ov007_020caeac(Vector3 *vtx, Vector3_16 *nrm, s32 *tu, s32 *tv, s32 w, s32 h,

@@ -102,8 +102,11 @@ extern "C" OnmsCollisionFilePtr gOnimasuCollisionFile;
 extern "C" daOnms_cStateEntry data_ov092_02132568[9];
 
 extern "C" {
+
 int func_ov002_020de328(void *player);
 void d_a_onmsEarthquakeHold(void *v, int f);
+}
+
 /* Sound::Play(3, id, pos). The overlay calls this wrapper, not Sound::Play. */
 void func_02012694(unsigned int id, const Vector3 *v);
 /* Stores mRadius: p[6] = value, the word at dBgCh_Actr + 0x18. */
@@ -111,6 +114,8 @@ s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(dBgCh_Actr *self, int a1, int a2, int a3, int sp0, int sp1);
+extern "C" {
+
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationX(void *m, short angX);
 void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short angZ);
@@ -124,6 +129,7 @@ extern char data_ov092_02132220;
 extern char data_ov092_02132294;
 extern struct Matrix4x3 data_020a0e68;
 }
+
 
 /* D1 tears down dCcAcPos_c, dBgCh_Actr and the inline dBgActor_c base.
    D0 is that teardown plus the actor-heap free. */

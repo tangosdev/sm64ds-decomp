@@ -85,11 +85,13 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
  * The one file-scope extern "C" region.  Everything here is reached from a
  * C++-named member, which cannot declare it in its own body.
  * ------------------------------------------------------------------------ */
-extern "C" {
+
 
 /* -- other modules -- */
 void  GiveCoins(int who, int count);
 int   SurfaceInfo_TestFlag0x20(int *si);
+extern "C" {
+
 /* 0x0203b0e8. Not declared in math/CalcLib.h (a shared header); callers spell it int, int. */
 int AngleDiff(int, int);
 /* The out-of-line stores of mWithMeshClsn's radius and height. */
@@ -100,14 +102,19 @@ int func_ov002_020e496c(daPly_c *c);
 int Math_Function_0203b14c(int *out, int a1, int a2, int a3, int a4);
 void Vec3_Lsl(Vector3 *d, const Vector3 *s, int sh);
 int *Vec3_LslInPlace(int *v, int sh);
+}
+
 /* Real definitions: func_0201267c and func_0200fc44 (arm9).
    The methods call through these so the names stay unmangled. */
 int func_0200fc44(dActor_c *a, Vector3 *pos, int flag);
+extern "C" {
+
 
 extern signed char gCurrentSublevel;
 extern unsigned char gCurrentStarId;
 extern unsigned char gGameMode;
 }
+
 
 /* ==========================================================================
  *
@@ -129,12 +136,14 @@ extern unsigned char gGameMode;
 
 extern "C" {
 
+
 daBmb_c *daBmb_c_classInit(void)
 {
     return new daBmb_c();
 }
 
 }
+
 
 extern "C" SpawnInfo<daBmb_c> g_profile_BOMBHEI = {
     daBmb_c_classInit,
@@ -432,7 +441,7 @@ void daBmb_c::State0() {
 /* ==========================================================================
  * ======================================================================== */
 
-extern "C" {
+
 
 void daBmb_c::func_ov102_0214beb4() {
     extern int data_0209e650;
@@ -450,7 +459,7 @@ void daBmb_c::func_ov102_0214beb4() {
     }
     *(short *)&mTargetAngY = Vec3_HorzAngle(&mPos, &o->mPos);
 }
-}
+
 
 /* ==========================================================================
  *
@@ -554,19 +563,23 @@ void daBmb_c::State3()
 /* ==========================================================================
  * ======================================================================== */
 
-extern "C" {
+
 
 /* THE QUAD VIEW AND ITS TWO TABLES SIT AT FILE SCOPE. They used to be declared
    inside the body below, but C++ gives a function-local class no linkage, so an
    `extern` of that type is ill-formed (MSVC C2624) even though mwccarm accepts
    it. Hoisting the type changes nothing the compiler emits: the object is
    byte-identical under 2004/b56. */
-typedef struct { int v[4]; } Quad;
+typedef struct { int v[4]; }
+extern "C" {
+ Quad;
+}
+
 /* Thrown-bob-omb launch speeds, indexed by the carrier's param1 (clamped to 4):
    horizontal, then vertical. */
 extern "C" Quad data_ov102_0214e514 = {{0x28000, 0x28000, 0x50000, 0x28000}};
 extern "C" Quad data_ov102_0214e524 = {{0xa000, 0xa000, 0x1a000, 0xa000}};
-}
+
 
 void daBmb_c::func_ov102_0214bc20() {
     Quad a1 = data_ov102_0214e514;
@@ -851,7 +864,7 @@ void daBmb_c::UpdateShadow() {
 /* ==========================================================================
  * ======================================================================== */
 
-extern "C" {
+
 
 void daBmb_c::func_ov102_0214b3f0(int a1) {
     unsigned int v = mState - 3;
@@ -864,12 +877,12 @@ do_call:
     func_ov102_0214bd20();
 }
 
-}
+
 
 /* ==========================================================================
  * ======================================================================== */
 
-extern "C" {
+
 
 void daBmb_c::func_ov102_0214b3b8() {
     if (mState != 3)
@@ -878,7 +891,7 @@ void daBmb_c::func_ov102_0214b3b8() {
     mPrevAngleY = mCarrier->mAngleY;
     mCarrier = 0;
 }
-}
+
 
 /* ==========================================================================
  *

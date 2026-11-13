@@ -41,7 +41,7 @@ typedef char MaterialState_size_must_be_0x30[sizeof(struct MaterialState) == 0x3
 void func_02046bbc(struct ModelComponents *model, struct BTP_File *file, unsigned int frame) {
     int i;
     if (frame >= file->numFrames) {
-        OS_Terminate();
+        _Z12OS_Terminatev();
     }
     for (i = 0; i < file->numSeqRecords; i++) {
         int j;
@@ -55,7 +55,7 @@ void func_02046bbc(struct ModelComponents *model, struct BTP_File *file, unsigne
         int flags;
         e = &file->seqRecords[i];
         if (e->materialId == 0xffff) {
-            OS_Terminate();
+            _Z12OS_Terminatev();
         }
         mat = &((struct MaterialState *)model->materials)[e->materialId];
         j = e->numKeys - 1;
@@ -67,7 +67,7 @@ void func_02046bbc(struct ModelComponents *model, struct BTP_File *file, unsigne
             p--;
             j--;
             if (j < 0) {
-                OS_Terminate();
+                _Z12OS_Terminatev();
             }
         }
 

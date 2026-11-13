@@ -6,14 +6,19 @@
 
 extern "C" {
 
+
 extern void func_ov007_020c33d0(Ov007CharRecord *rec, int target, unsigned int offset);
 extern void func_ov007_020c32e8(Ov007Palette *pal, int target, unsigned int row, int skip);
 extern void *func_ov007_020b3f20(int idx);
 extern Ov007CharRecord *func_ov007_020c99d8(int x);
 extern void func_ov007_020c3544(void *p);
 extern void func_ov007_020b3edc(int idx);
+}
+
 
 typedef char Ov007Work_display_must_be_at_0x74[(int)&((Ov007Work *)0)->display == 0x74 ? 1 : -1];
+extern "C" {
+
 
 /* Loads character record idx into the sub engine's OBJ characters and
  * palette 1 into its OBJ palette. For language 2 and up it also builds a

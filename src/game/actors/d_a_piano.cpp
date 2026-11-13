@@ -52,8 +52,10 @@ extern char data_ov063_0211ecb8;
 
 /* local extern: no shared header declares these. */
 extern "C" {
+
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
+
 
 /* Reconstructed registry name; the class identity is backed by retail RTTI.
  * Historical alias: daPiano_c_Spawn. The inherited allocator and native

@@ -9,6 +9,7 @@
 
 extern "C" {
 
+
 extern int func_ov007_020c3ba8(int);
 extern void *func_ov007_020c9388(int initialState);
 extern void func_ov007_020c937c(void *state);

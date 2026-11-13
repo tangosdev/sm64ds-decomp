@@ -40,6 +40,7 @@ enum d_s_mg_single3_d_base_AssetId {
 #include "nitro/os/cache.h"
 
 extern "C" {
+
 void *LoadFile(int fileId);
 void DecompressLZ16(void *src, void *dst);
 void Ov004_Deallocate(void *p);
@@ -60,6 +61,7 @@ extern int sSingle3DCommonNcgByLanguage[];
 extern int data_0208ee44;
 extern dGraph_c::callback_c *gGraphCallback;
 }
+
 
 /* Slot 33 brings up both graphics engines, assigns VRAM banks and loads
  * the language's OBJ characters and the OBJ palettes into both engines

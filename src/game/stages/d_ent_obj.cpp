@@ -84,11 +84,16 @@ struct EntObjTextureSequenceFileHandle : SharedFilePtr {
  * class type, mwccarm homes the register arguments and the callers grow, so
  * the measured scalar views stay. */
 extern "C" {
+
 int d_ent_objNewHold(unsigned handle, unsigned id, int x, int y, int z, const Vector3_16 *dir,
                      void *callback);
 
 int RandomIntInternal(int *seed);
+}
+
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+extern "C" {
+
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
 void Vec3_MulScalarInPlace(Vector3 *v, int scale);
 void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
@@ -96,8 +101,12 @@ void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short angY);
 int Math_Function_0203b14c(int *p, int target, int a, int b, int c);
 unsigned char DecIfAbove0_Byte(unsigned char *p);
+}
+
 unsigned int func_02012174(unsigned int a, unsigned int b);
 void func_020167a4(dExtAnmModel_c *model);
+extern "C" {
+
 
 extern Matrix4x3 data_020a0e68;
 extern dClipper data_0209f43c;
@@ -149,6 +158,7 @@ extern const int sVsPlayerExitX[16] = {0,       1843200, 1843200, 1843200, -2048
                                        1843200, 1843200, -368640, 0,       368640,  1843200,
                                        -491520, -163840, 163840,  491520};
 }
+
 
 /* A pointer-to-member row: the two per-figure state tables are arrays of
  * these. __sinit_ov075_0211b5e0 fills them, which fixes each index:

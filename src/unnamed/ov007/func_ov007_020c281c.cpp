@@ -4,6 +4,7 @@
 
 extern "C" {
 
+
 extern int func_ov007_020c2dfc(Ov007StrokePath *path, int idx, int v);
 extern void func_ov007_020c24d0(Ov007StrokePath *path, int idx);
 

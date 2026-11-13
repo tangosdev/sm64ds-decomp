@@ -105,11 +105,13 @@ enum {
 /* daPkn_c::EnterLunge, declared on the class's own header: hands the
    spawned PAKUN the grow-in frame. */
 
-extern "C" {
+
 void func_02012694(u32 id, const Vector3 *pos);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 int IsStarCollectedInCurLevel(s32 flag);
 void SetStarMarker(int i, void *self, int v);
+extern "C" {
+
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 int *Vec3_LslInPlace(void *v, int sh);
 void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
@@ -128,8 +130,10 @@ extern void *data_ov084_02130e1c[];         /* post-spit animation; decl_common.
 extern SharedFilePtr data_ov084_02130e24;   /* death animation */
 extern int data_ov084_0213029c[];           /* SpawnDeathBurst reach per frame */
 extern int data_ov084_021302c4[];           /* SpawnDeathBurst height per frame */
-extern u8 data_ov084_02130294[];            /* UpdateClsnOffset's five bone indices */
+extern u8 data_ov084_02130294[];
 }
+            /* UpdateClsnOffset's five bone indices */
+
 
 /* One vtable store and four destructor calls, every one a consequence of
  * `struct daFPkn_c : dEnemyBase_c` and the members that declaration types,

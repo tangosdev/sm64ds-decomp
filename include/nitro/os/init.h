@@ -1,5 +1,8 @@
 #ifndef NITRO_OS_INIT_H
 #define NITRO_OS_INIT_H
+#ifndef __cplusplus
+#define OS_Init _Z7OS_Initv
+#endif
 
 /*
  * The Nitro SDK's OS start-up call, under its own name (ntrtwl/NitroSDK
@@ -7,14 +10,8 @@
  * game's NitroStartUp runs it before any static constructor.
  */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 void OS_Init(void);
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* NITRO_OS_INIT_H */

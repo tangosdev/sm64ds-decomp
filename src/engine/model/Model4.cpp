@@ -19,7 +19,7 @@
 #include "nitro/os/tcm.h"
 #include "nitro/os/system.h"
 
-extern "C" {
+
 extern u32 data_020a4bc8;
 extern u32 data_020a4bcc;
 extern u32 data_020a4bd8;
@@ -27,7 +27,7 @@ extern u32 data_020a4bdc;
 extern u32 data_020a4be0;
 extern u32 data_020a4be4;
 extern u32 data_020a4be8;
-}
+
 
 #define REBASE(p) ((char *)(p) + base)
 void dExtSimpleModel_c::UpdateFileOffsets(BMD_File &file) {
@@ -92,7 +92,7 @@ void dExtSimpleModel_c::UpdateFileOffsets(BMD_File &file) {
 }
 #undef REBASE
 
-extern "C" int func_02046590(const void *tbl, const char *name)
+int func_02046590(const void *tbl, const char *name)
 {
     const BMD_File *t = (const BMD_File *)tbl;
     u32 count = t->numMaterials;
@@ -113,7 +113,7 @@ extern "C" int func_02046590(const void *tbl, const char *name)
     return -1;
 }
 
-extern "C" int func_02046564(void *p)
+int func_02046564(void *p)
 {
     BMD_File *s = (BMD_File *)p;
     int a = s->numBones;
@@ -125,18 +125,20 @@ extern "C" int func_02046564(void *p)
     return t;
 }
 
-extern "C" {
+
 typedef struct SrcA {
     int f0, f4, f8, fc, f10;
     u16 f14, f16;
     int f18, f1c, f20, f24, f28, f2c;
-} SrcA;
+}
+ SrcA;
 
 typedef struct ElemA {
     int f0, f4, f8, fc;
     u16 f10, f12;
     int f14, f18, f1c, f20, f24, f28, f2c;
-} ElemA;
+}
+ ElemA;
 
 typedef struct SrcB {
     int f0, f4;
@@ -144,22 +146,26 @@ typedef struct SrcB {
     int fc, f10, f14, f18;
     u16 f1c, f1e, f20, f22;
     int f24, f28, f2c, f30, f34, f38, f3c;
-} SrcB;
+}
+ SrcB;
 
 typedef struct ElemB {
     int f0, f4, f8, fc, f10, f14;
     u16 f18, f1a, f1c, f1e;
     int f20, f24, f28, f2c;
     u16 f30, f32;
-} ElemB;
+}
+ ElemB;
 
 typedef struct T14 {
     int f0, f4, f8, fc, f10;
-} T14;
+}
+ T14;
 
 typedef struct T16 {
     int f0, f4, f8, fc;
-} T16;
+}
+ T16;
 
 typedef struct Desc {
     int f0;
@@ -173,7 +179,8 @@ typedef struct Desc {
     SrcA *f28;
     int f2c;
     int f30;
-} Desc;
+}
+ Desc;
 
 typedef struct Dst {
     Desc *f0;
@@ -181,7 +188,8 @@ typedef struct Dst {
     ElemB *f8;
     ElemA *fc;
     int f10;
-} Dst;
+}
+ Dst;
 
 void func_020462d0(Dst *d, Desc *h, ElemA *arr)
 {
@@ -259,14 +267,14 @@ void func_020462d0(Dst *d, Desc *h, ElemA *arr)
         e2->f30 = 0;
     }
 }
-}
 
-extern "C" void *func_020462bc(int *p)
+
+void *func_020462bc(int *p)
 {
     return &((Matrix4x3 *)0)[p[1]];
 }
 
-extern "C" void func_020462b4(int *p, int v)
+void func_020462b4(int *p, int v)
 {
     p[4] = v;
 }
@@ -284,7 +292,7 @@ void ModelComponents::SetPolygonMode(int mode) {
         SetMaterialPolygonMode(mode, i);
 }
 
-extern "C" void func_02046208(void *self, unsigned int value, int index)
+void func_02046208(void *self, unsigned int value, int index)
 {
     ModelComponents *obj = (ModelComponents *)self;
     BMD_Material *e = &obj->materials[index];
@@ -382,7 +390,7 @@ void ModelComponents::SetEmission(unsigned int color) {
         SetMaterialEmission(color, i);
 }
 
-extern "C" void func_02045e44(void *self, unsigned int value, int index)
+void func_02045e44(void *self, unsigned int value, int index)
 {
     struct Element { char pad[0x1c]; unsigned int flags; char pad2[0x30 - 0x1c - 4]; };
     struct Obj { void *pad0; struct Element *arr; };
@@ -399,7 +407,7 @@ extern "C" void func_02045e2c(int obj, int i, BCA_File *a, short b) {
     e->animFrame = b;
 }
 
-extern "C" void func_02045d9c(void)
+void func_02045d9c(void)
 {
     OS_EnableDTCM();
     G3X_AlphaTest(true, 0);
@@ -414,7 +422,7 @@ extern "C" void func_02045d9c(void)
     OS_Terminate();
 }
 
-extern "C" void InitialiseVramGlobals(void)
+void InitialiseVramGlobals(void)
 {
     int r = GX_GetSizeOfTex();
     data_020a4be4 = 0;
@@ -426,13 +434,13 @@ extern "C" void InitialiseVramGlobals(void)
     data_020a4bcc = 0;
 }
 
-extern "C" int func_02045d10(void) { return data_020a4bc8; }
+int func_02045d10(void) { return data_020a4bc8; }
 
-extern "C" int func_02045d00(void) { return data_020a4bdc; }
+int func_02045d00(void) { return data_020a4bdc; }
 
-extern "C" int func_02045cf0(void) { return data_020a4bcc; }
+int func_02045cf0(void) { return data_020a4bcc; }
 
-extern "C" int func_02045ce0(void) { return data_020a4bd8; }
+int func_02045ce0(void) { return data_020a4bd8; }
 
 u32 dExtSimpleModel_c::GetVramOffset(u32 size) {
     u32 *p;
@@ -476,7 +484,7 @@ u32 dExtSimpleModel_c::LoadCompressedTextureToVram(char *src, u32 size, char *ds
 }
 
 // 0x02045ad8 (0x80)
-extern "C" u32 func_02045ad8(const void *src, u32 size)
+u32 func_02045ad8(const void *src, u32 size)
 {
     u32 slot;
     u32 end;
@@ -498,7 +506,7 @@ extern "C" u32 func_02045ad8(const void *src, u32 size)
 }
 
 // 0x02045a50 (0x88)
-extern "C" u32 func_02045a50(const void *src, u32 size)
+u32 func_02045a50(const void *src, u32 size)
 {
     u32 slot;
     u32 end;

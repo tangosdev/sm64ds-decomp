@@ -1,5 +1,11 @@
 #ifndef DBGCH_ACTR_H
 #define DBGCH_ACTR_H
+#ifndef __cplusplus
+#define func_020383e4 _Z13func_020383e4P10dBgCh_Actr
+#define func_020383f0 _Z13func_020383f0P10dBgCh_Actr
+#define dBgCh_Actr_UpdateContinuous_Veneer _Z34dBgCh_Actr_UpdateContinuous_VeneerP10dBgCh_Actr
+#define dBgCh_Actr_UpdateDiscreteNoLava_veneer _Z38dBgCh_Actr_UpdateDiscreteNoLava_veneerP10dBgCh_Actr
+#endif
 
 #include "types.h"
 #include "dBgCh.h"
@@ -207,11 +213,15 @@ typedef char dBgCh_Actr_size_must_be_0x1bc[
    src/engine/collision/d_bg_ch_sph_crr_query.cpp. Each is its own ROM
    function, and callers branch to it rather than to the member, so a call
    has to name the veneer or its relocation moves. */
-extern "C" {
-void dBgCh_Actr_UpdateContinuous_Veneer(dBgCh_Actr *);     /* UpdateContinuous */
-void func_020383f0(dBgCh_Actr *);                          /* UpdateContinuousNoLava */
-void func_020383e4(dBgCh_Actr *);                          /* UpdateExtraContinous */
-void dBgCh_Actr_UpdateDiscreteNoLava_veneer(dBgCh_Actr *); /* UpdateDiscreteNoLava */
-}
+
+void dBgCh_Actr_UpdateContinuous_Veneer(dBgCh_Actr *);
+     /* UpdateContinuous */
+void func_020383f0(dBgCh_Actr *);
+                          /* UpdateContinuousNoLava */
+void func_020383e4(dBgCh_Actr *);
+                          /* UpdateExtraContinous */
+void dBgCh_Actr_UpdateDiscreteNoLava_veneer(dBgCh_Actr *);
+ /* UpdateDiscreteNoLava */
+
 
 #endif /* DBGCH_ACTR_H */

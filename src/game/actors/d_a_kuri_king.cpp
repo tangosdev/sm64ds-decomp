@@ -136,15 +136,15 @@ union KuriKingFreeState {
 extern "C" dCamera_c *gCamera;
 extern "C" int RandomIntInternal(int *seed);
 extern "C" u16 DecIfAbove0_Short(u16* p);
-extern "C" s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
-extern "C" void func_02012694(u32 a, void* b);
+s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
+void func_02012694(u32 a, void* b);
 
 /* local extern: include/Sound.h does not declare the layer-3 pair yet. */
 namespace Sound {
 void StopLoadedMusic_Layer3();
 void LoadAndSetMusic_Layer3(unsigned int musicId);
 }
-extern "C" void func_02011cfc();
+void func_02011cfc();
 namespace Sound {
 void ChangeMusicVolume(u32 a, int f);
 }
@@ -159,10 +159,10 @@ extern "C" int data_ov074_0212291c[];
 extern "C" int data_ov074_0212290c[];
 extern "C" float data_ov074_02122e4c[];
 extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern "C" s32 Vec3_HorzLen(const Vector3 *v);
+s32 Vec3_HorzLen(const Vector3 *v);
 extern "C" s16 atan2_hold_d_a_kuri_king_1(s32 y, s32 x);
 extern "C" unsigned char DecIfAbove0_Byte(unsigned char *p);
-extern "C" s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
+s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
 extern "C" int *Vec3_LslInPlace(void *v, int n);
 extern "C" struct Matrix4x3 data_020a0e68;
 extern "C" struct Matrix4x3 IDENTITY_MATRIX4X3;
@@ -181,8 +181,8 @@ extern BMA_File data_ov010_021123f4;
 extern BTA_File data_ov010_021124ac;
 extern "C" void Vec3_Asr(Vector3* d, Vector3* s, int sh);
 extern "C" void Matrix4x3_ApplyInPlaceToScale(void* m, int x, int y, int z);
-extern "C" int func_02037e20(int *p);
-extern "C" unsigned int func_0201277c(unsigned int a);
+int func_02037e20(int *p);
+unsigned int func_0201277c(unsigned int a);
 extern "C" u8 data_ov074_02122d80[];
 extern SharedFilePtr data_ov002_0210da30;
 extern SharedFilePtr data_ov084_02130cf8;
@@ -733,7 +733,7 @@ void daKuriKing_c::EnterWalk() {
     UpdateMaxWalkSpeed();
 }
 
-extern "C" void func_02011d20(void);
+void func_02011d20(void);
 void daKuriKing_c::UpdateIntroTalkEnd() {
     if (this->mTalkPlayer->GetTalkState() != -1)
         return;

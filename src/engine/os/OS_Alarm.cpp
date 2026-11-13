@@ -24,15 +24,20 @@
 
 #define OSi_TICK_TIMERCONTROL 0xc1 /* enable, IRQ, prescaler /64 */
 
-extern "C" {
+
 
 typedef struct OSiAlarmQueue {
     OSAlarm *head;
     OSAlarm *tail;
-} OSiAlarmQueue;
+}
+ OSiAlarmQueue;
 
 extern long long OS_GetTick(void);
+extern "C" {
+
 extern void OSi_SetTimerReserved(int timerNum);
+}
+
 
 extern u16 OSi_UseAlarm;
 extern OSiAlarmQueue OSi_AlarmQueue;
@@ -202,5 +207,4 @@ void OSi_ArrangeTimer(void) {
     }
     if (OSi_AlarmQueue.head != 0)
         OSi_SetTimer(OSi_AlarmQueue.head);
-}
 }

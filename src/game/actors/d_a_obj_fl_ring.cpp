@@ -74,9 +74,9 @@ extern daObjFl_Ring_c_Files data_ov022_02113cc8;
 extern RingModelFilePtr gFlRingModelFile;
 extern RingCollisionFilePtr gFlRingCollisionFile;
 
-extern "C" {
+
 /* local extern: d_bg_w.cpp defines these and no header declares them. */
-}
+
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
  * off screen. This int-returning predicate is what makes the ROM

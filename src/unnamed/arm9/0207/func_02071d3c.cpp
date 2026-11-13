@@ -12,6 +12,7 @@ void terminate();
 
 extern "C" {
 
+
 extern unsigned char func_02072d90(struct ActionWalk *c);
 extern u8 *func_02071a50(u8 *p, int *out);
 extern u8 *ReadSignedVarInt(u8 *p, int *out);
@@ -19,6 +20,8 @@ extern int __throw_catch_compare(const u8 *throwtype, const u8 *catchtype, int *
 extern int func_02071f88(void *a, ExSpecification *spec);
 extern void func_02071f1c(ThrowContext *context, ActionIterator *it, ExSpecification *spec,
                           unsigned char *action);
+}
+
 extern unsigned char func_020729f4(struct ActionWalk *c);
 
 struct Tmp {
@@ -101,5 +104,4 @@ u8 *func_02071d3c(ThrowContext *self, struct ActionCursor *src, int *flag) {
     }
 
     return (u8 *)buf.iterator.mAction;
-}
 }

@@ -122,6 +122,7 @@ struct JgmVector3 {
 };
 
 extern "C" {
+
 extern DaJgmModelFile data_ov077_02127b50;
 extern DaJgmModelFile data_ov077_02127b48;
 extern DaJgmModelFile data_ov077_02127b38;
@@ -146,21 +147,30 @@ extern DaJgmStateHandler data_ov077_021277f8;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
+}
+
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+extern "C" {
+
 
 extern int *Vec3_LslInPlace(void *v, int sh);
 extern void Vec3_Asr(void *d, void *s, int sh);
+}
+
 
 /* Parameter names keep this TU's @NNN. */
 typedef int BgchInitAt_(dBgCh_Actr *collision, dActor_c *actor, Fix12i radius, Fix12i height,
                         void *a, void *b);
+extern "C" {
+
 /* local extern: kept as a count holder: its five named parameters hold
  * the @NNN count. Sound.h's PlayLong emits the same bytes. */
 extern void d_a_jgmPlayLongHold(unsigned int handle, unsigned int a, unsigned int id,
                                 const Vector3 *pos, unsigned int e);
 extern void d_a_jgmNewSimpleHold(unsigned int n, int x, int y, int z);
 }
+
 
 extern "C" daJgm_c *daJgm_c_classInit()
 {

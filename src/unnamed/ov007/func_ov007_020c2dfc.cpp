@@ -4,6 +4,7 @@
 
 extern "C" {
 
+
 /* Whether the path turns by less than v degrees at point idx - 1
  * (2 <= idx < pointCount): the change between the angles of segments idx - 1
  * and idx, squared, against v's binary angle squared. A negative v never

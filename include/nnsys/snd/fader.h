@@ -8,9 +8,6 @@
  * current value, then target, frame and a zero counter.
  */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 typedef struct NNSSndFader {
     int origin;
@@ -19,8 +16,5 @@ typedef struct NNSSndFader {
     int frame;
 } NNSSndFader;
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif

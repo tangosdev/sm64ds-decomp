@@ -24,10 +24,17 @@
 #include "Memory.h"
 #include "private/particle_resource_header.h"
 
+
+void func_02049ee8(Particle::Manager *manager, Matrix4x3 *renderState);
+void func_02049f58(Particle::Manager *manager);
+int func_0204a0dc(Particle::Manager *manager, u32 (*allocTexVram)(u32, u32));
+int func_0204a028(Particle::Manager *manager, u32 (*allocPalVram)(u32, u32));
+void func_0204a17c(Particle::Manager *manager, char *resource);
 extern "C" {
-void func_02049ee8(void* manager, void* renderState);
+
 void DecompressLZ16(const void* src, void* dst);
 }
+
 
 extern Matrix4x3 data_0209b3ec;
 extern u32 sParticlePalVramLowCursor;
@@ -62,14 +69,14 @@ dPa_c::~dPa_c() {
     gParticleControl = 0;
 }
 
-extern "C" {
+
 
 char *func_02023178(int size) {
     char *block = (char *)sParticleHeapCursor;
     sParticleHeapCursor = block + size;
     return block;
 }
-}
+
 
 namespace Particle {
 
@@ -143,7 +150,7 @@ void dPa_c::Initialise() {
         mResourceFile = dst;
     }
 
-    func_0204a17c(mManager, mResourceFile);
+    func_0204a17c(mManager, (char *)mResourceFile);
     func_0204a0dc(mManager, (u32(*)(u32, u32))Particle::Texture::AllocTexVram);
     func_0204a028(mManager, (u32(*)(u32, u32))Particle::Texture::AllocPalVram);
 

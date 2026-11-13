@@ -63,19 +63,27 @@
 #include "nitro/fx/fx_cp.h"
 #include "Ov007MenuMem.h"
 
-extern "C" {
+
 
 /* Vector3 declares a constructor and destructor under C++, which makes its
  * assignment copy word by word. The ROM copies these with C's ldm/stm block
  * move, which C++ keeps for a struct with an array member. */
 typedef struct Vec3Words {
     Fix12i w[3];
-} Vec3Words;
+}
+extern "C" {
+ Vec3Words;
+}
+
 
 /* The same for Vector3s's six-byte halfword copy. */
 typedef struct Vec3sWords {
     s16 w[3];
-} Vec3sWords;
+}
+extern "C" {
+ Vec3sWords;
+}
+
 
 /* One 0xc-byte particle tracking record of the kind func_0204dab4 fills (as
  * dPa_c's edStarKiraCallback_c::trackingRecords). func_0204dab4 claims a free
@@ -111,7 +119,11 @@ typedef struct GXOamAffine {
     short PC;
     unsigned short _3[3];
     short PD;
-} GXOamAffine;
+}
+extern "C" {
+ GXOamAffine;
+}
+
 
 typedef char GXOamAffine_size_must_be_0x20[sizeof(GXOamAffine) == 0x20 ? 1 : -1];
 
@@ -123,18 +135,28 @@ typedef struct Ov007ParticleSprites {
     /* 0x08: sixteen OBJ affine matrices (PA, PB, PC, PD in Q12);
    * func_ov007_020be8b8 fills each with a uniform scale */
     int affine[16][4];
-} Ov007ParticleSprites;
+}
+extern "C" {
+ Ov007ParticleSprites;
+}
+
 
 typedef char
     Ov007ParticleSprites_size_must_be_0x108[sizeof(Ov007ParticleSprites) == 0x108 ? 1 : -1];
+extern "C" {
+
 
 extern Ov007ParticleSprites *data_ov007_02104bc0;
 extern int data_ov007_02103230;
 extern char data_ov007_02103234[]; /* "2DEffect" */
 extern int data_ov007_020d7c6c;
 extern u16 data_ov007_020d7c58[];
+}
+
 
 extern void func_0204dab4(void *sys, TrackingRecord *buf, int count, unsigned int mask, void *cb);
+extern "C" {
+
 extern void func_0204dc84(char *self);
 extern void Sprite_SetAnimation(Ov007OamNode *node, int animIndex, int mode, int rev, int frame);
 extern void *func_ov007_020b7690(int i);
@@ -157,8 +179,11 @@ extern void func_ov007_020bc3dc(void *model, int anim, int a2);
 extern void func_ov007_020bc53c(Ov007Model *model);
 extern void func_ov007_020bc6b4(Ov007Model *model, void *files, int count);
 extern Ov007Model *func_ov007_020bc6d4(void *file, int flags);
+}
+
 
 #define SPRITES data_ov007_02104bc0
+extern "C" {
 
 /* Points the figure's particle system along bone 0's motion: on the frames
  * the model steps, refreshes the figure's yaw and remembered position; while

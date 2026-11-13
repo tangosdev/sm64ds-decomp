@@ -39,20 +39,34 @@ struct fBaseActorInfo {
 
 /* Keep the list-head and pointer signatures used here local: decl_common.h
  * gives incompatible integer declarations for some of these symbols. */
-extern "C" {
+
 
 /* Intrusive-list operations on the four global list heads below. All four take
    (list head, node); the legacy files spelled the heads `int`, `char` and
    `int[]` in different files and passed `&x` or `x` accordingly. Unified on the
    array spelling, so every call site passes the bare name and every reloc is
    the same addend-0 reference it always was. */
-extern int  func_0203b3c0(void *list, void *node);
+namespace Absorb0203b3c0 {
+struct Node;
+int func_0203b3c0(int *list, Node *node);
+}
+namespace Absorb0203b438 {
+struct N;
+int func_0203b438(N *root, N *node, N *parent);
+}
+extern "C" {
+
 extern int  func_0203b27c(void *list, void *node);
 extern int  func_0203b20c(void *list, void *node);
 extern int  func_0203b244(void *list, void *node);
+}
+
 extern int  func_0204405c(void *list, void *node);
-extern int  func_0203b438(void *root, void *node, void *parent);
+extern "C" {
+
 extern int  func_0203b2ec(void *l, void *n, void *p);
+}
+
 
 extern void *data_020a4b68;
 extern int  data_020a4b6c[];
@@ -68,7 +82,8 @@ extern u8   data_020a4b48;
 extern void *data_020a4b64;
 extern fBaseActorInfo **data_020a4bb8;
 
-extern void func_02044334(void *p);
+struct LifecycleSequence;
+extern void func_02044334(LifecycleSequence *p);
 extern int  func_0204424c(char *p);
 
 /* Heap's methods and fields come from include/Heap.h. The heap locals stay
@@ -78,7 +93,7 @@ extern int  func_0204424c(char *p);
    Memory::Allocate and Memory::Deallocate come from include/Memory.h;
    data_020a0eac, the actor heap they are handed, comes from
    include/fBase_c.h, which needs it for its inline operator delete. */
-}
+
 
 /* aliveState is 0 before the actor joins the lists, 1 while it is alive
  * in them and 2 once it is dying; data_02099f24 is the frame loop's phase word.
@@ -120,13 +135,14 @@ struct L {
     struct N *head;
     struct N *tail;
 };
+}
 
-extern "C" int func_0204405c(void *list, void *nodep)
+int func_0204405c(void *list, void *nodep)
 {
-    struct L *l = (struct L *)list;
-    struct N *n = (struct N *)nodep;
-    struct N *node;
-    struct N *next;
+    Absorb0204405c::L *l = (Absorb0204405c::L *)list;
+    Absorb0204405c::N *n = (Absorb0204405c::N *)nodep;
+    Absorb0204405c::N *node;
+    Absorb0204405c::N *next;
     node = l->head;
     if (n == 0)
         return 0;
@@ -137,7 +153,6 @@ extern "C" int func_0204405c(void *list, void *nodep)
     while ((next = node->next) != 0 && next->c <= n->c)
         node = next;
     return func_0203b2ec(l, n, node);
-}
 }
 
 /* Process lists hold real actor-owned nodes. Each descriptor's callback is
@@ -154,7 +169,7 @@ struct ProcessListDescriptor {
     ProcessCallback callback; // 0x8
 };
 
-extern "C" void *func_02043fdc(ProcessListDescriptor *list)
+void *func_02043fdc(ProcessListDescriptor *list)
 {
     fLiNdBaPr_c *node;
     if (list->callback == 0) return (void *)1;
@@ -171,8 +186,7 @@ extern "C" void *func_02043fdc(ProcessListDescriptor *list)
 }
 }
 
-namespace Absorb02043f98 {
-extern "C" fLiNdBa_c *func_02043f98(fLiNdBa_c **head, unsigned int key)
+fLiNdBa_c *func_02043f98(fLiNdBa_c **head, unsigned int key)
 {
     fLiNdBa_c *node = *head;
     while (node != 0) {
@@ -182,10 +196,8 @@ extern "C" fLiNdBa_c *func_02043f98(fLiNdBa_c **head, unsigned int key)
     }
     return 0;
 }
-}
 
-namespace Absorb02043f4c {
-extern "C" fLiNdBa_c *func_02043f4c(fLiNdBa_c **head, unsigned int key,
+fLiNdBa_c *func_02043f4c(fLiNdBa_c **head, unsigned int key,
                                     fLiNdBa_c *after)
 {
     fLiNdBa_c *node = after ? after->next : *head;
@@ -196,7 +208,6 @@ extern "C" fLiNdBa_c *func_02043f4c(fLiNdBa_c **head, unsigned int key,
     }
     return 0;
 }
-}
 
 fBase_c::fBase_c() : manager(this)
 {
@@ -206,7 +217,9 @@ fBase_c::fBase_c() : manager(this)
     actorID = data_020a4b54;
     mGroupType = data_020a4b48;
 
-    func_0203b438(data_020a4b6c, &manager.sceneNode, data_020a4b64);
+    Absorb0203b438::func_0203b438((Absorb0203b438::N *)data_020a4b6c,
+                                  (Absorb0203b438::N *)&manager.sceneNode,
+                                  (Absorb0203b438::N *)data_020a4b64);
 
     fBaseActorInfo *info = data_020a4bb8[actorID];
     manager.SetBehaviorPriority(info->behaviorPriority);
@@ -299,12 +312,12 @@ void fBase_c::AfterCleanupResources(u32 vfSuccess)
 {
     if (vfSuccess != 2)
         return;
-    func_0203b3c0(data_020a4b6c, &manager.sceneNode);
+    Absorb0203b3c0::func_0203b3c0(data_020a4b6c, (Absorb0203b3c0::Node *)&manager.sceneNode);
     func_0203b27c(data_020a4ba8, &manager.behaviorNode);
     if (heap)
         ((Heap *)heap)->_Destroy();
     if (lifecycleState)
-        func_02044334(lifecycleState);
+        func_02044334((LifecycleSequence *)lifecycleState);
     this->~fBase_c();   /* vtable+0x40 = slot 16 = D1 */
     Memory::Deallocate(this, data_020a0eac);
 }
@@ -637,7 +650,7 @@ void fBase_c::runCreate() {
  * do/before/after group (0/4/8, 0xc/0x10/0x14, 0x18/0x1c/0x20,
  * 0x24/0x28/0x2c), so the wrappers are NSMBW's createPack, deletePack,
  * executePack and drawPack. */
-extern "C" {
+
 extern fBase_c::ProcessFunction data_02099ebc;
 extern fBase_c::BeforeProcessFunction data_02099ec4;
 extern fBase_c::AfterProcessFunction data_02099e94;
@@ -653,12 +666,16 @@ extern fBase_c::AfterProcessFunction data_02099e9c;
 /* Defined below; the calls are emitted first. */
 extern void func_0204302c(int actorID);
 extern int func_02043060(int actorID);
+extern "C" {
+
 
 /* The create hooks a scene installs, and the create entry's progress:
    data_020a4b4c steps 2..5 through fBase_make and data_020a4b50 holds
    the profile being created (0xffff when idle). */
 extern void (*data_020a4b5c)(int actorID);
 extern int (*data_020a4b58)(int actorID);
+}
+
 extern u16 data_020a4b50;
 extern u8 data_020a4b4c;
 
@@ -764,5 +781,4 @@ fBase_c *fBase_c::createChild(u32 actorID, fBase_c *parent, u32 param1, int grou
 /* Create a process at the root of the scene tree. */
 int fBase_c::createRoot(int actorID, u32 param1, int groupType) {
     return (int)fBase_make(actorID, 0, param1, groupType);
-}
 }

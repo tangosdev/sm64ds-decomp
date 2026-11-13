@@ -29,21 +29,28 @@ extern "C" void *dScEntry_c_classInit_ENTRY(void) {
  * InitGrid, UpdateRipple and DrawGrid. */
 
 extern "C" {
+
 /* local extern: no header declares these arm9 vector helpers.
    EntryMeshVec is the POD view used for the grid data; APIs taking Vector3
    receive explicit pointer views so the C++ Vector3 destructor is not emitted. */
 void VEC_CrossProduct(const Vector3 *, const Vector3 *, Vector3 *);
 void VEC_Normalize(const Vector3 *, Vector3 *);
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
+}
+
 /* local extern: the BMD texture and palette VRAM loaders. */
 unsigned int func_02045ad8(const void *, unsigned int);
 unsigned int func_02045a50(const void *, unsigned int);
+extern "C" {
+
 /* local extern: the geometry-engine matrix load and the
    BMD load through a file handle, declared only in decl_common.h, which
    clashes with dScEntry_c.h's vtable spellings. */
 void G3_LoadMtx43(void *);
-void *func_0201787c(SharedFilePtr *);
 }
+
+void *func_0201787c(SharedFilePtr *);
+
 /* local extern: the camera matrix, declared per consumer (d_ext_model.cpp,
    d_ent_obj.cpp). */
 extern Matrix4x3 data_0209b3ec;

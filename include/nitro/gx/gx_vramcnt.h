@@ -1,5 +1,44 @@
 #ifndef NITRO_GX_GX_VRAMCNT_H
 #define NITRO_GX_GX_VRAMCNT_H
+#ifndef __cplusplus
+#define GX_GetSizeOfTexPltt _Z19GX_GetSizeOfTexPlttv
+#define GX_GetSizeOfTex _Z15GX_GetSizeOfTexv
+#define GX_GetBankForSubOBJ _Z19GX_GetBankForSubOBJv
+#define GX_GetBankForSubBG _Z18GX_GetBankForSubBGv
+#define GX_GetBankForTexPltt _Z20GX_GetBankForTexPlttv
+#define GX_GetBankForTex _Z16GX_GetBankForTexv
+#define GX_DisableBankForSubOBJExtPltt _Z30GX_DisableBankForSubOBJExtPlttv
+#define GX_DisableBankForSubBGExtPltt _Z29GX_DisableBankForSubBGExtPlttv
+#define GX_DisableBankForSubOBJ _Z23GX_DisableBankForSubOBJv
+#define GX_DisableBankForSubBG _Z22GX_DisableBankForSubBGv
+#define GX_DisableBankForLCDC _Z21GX_DisableBankForLCDCv
+#define GX_DisableBankForARM7 _Z21GX_DisableBankForARM7v
+#define GX_DisableBankForClearImage _Z27GX_DisableBankForClearImagev
+#define GX_DisableBankForTexPltt _Z24GX_DisableBankForTexPlttv
+#define GX_DisableBankForTex _Z20GX_DisableBankForTexv
+#define GX_DisableBankForOBJExtPltt _Z27GX_DisableBankForOBJExtPlttv
+#define GX_DisableBankForBGExtPltt _Z26GX_DisableBankForBGExtPlttv
+#define GX_DisableBankForOBJ _Z20GX_DisableBankForOBJv
+#define GX_DisableBankForBG _Z19GX_DisableBankForBGv
+#define GX_ResetBankForSubOBJExtPltt _Z28GX_ResetBankForSubOBJExtPlttv
+#define GX_ResetBankForSubBGExtPltt _Z27GX_ResetBankForSubBGExtPlttv
+#define GX_ResetBankForSubOBJ _Z21GX_ResetBankForSubOBJv
+#define GX_ResetBankForSubBG _Z20GX_ResetBankForSubBGv
+#define GX_ResetBankForTexPltt _Z22GX_ResetBankForTexPlttv
+#define GX_ResetBankForTex _Z18GX_ResetBankForTexv
+#define GX_ResetBankForOBJ _Z18GX_ResetBankForOBJv
+#define GX_ResetBankForBG _Z17GX_ResetBankForBGv
+#define GX_SetBankForSubOBJExtPltt _Z26GX_SetBankForSubOBJExtPltti
+#define GX_SetBankForSubBGExtPltt _Z25GX_SetBankForSubBGExtPltti
+#define GX_SetBankForSubOBJ _Z19GX_SetBankForSubOBJi
+#define GX_SetBankForSubBG _Z18GX_SetBankForSubBGi
+#define GX_SetBankForLCDC _Z17GX_SetBankForLCDCi
+#define GX_SetBankForTexPltt _Z20GX_SetBankForTexPltti
+#define GX_SetBankForTex _Z16GX_SetBankForTexi
+#define GX_SetBankForBGExtPltt _Z22GX_SetBankForBGExtPltti
+#define GX_SetBankForOBJ _Z16GX_SetBankForOBJi
+#define GX_SetBankForBG _Z15GX_SetBankForBGi
+#endif
 
 /* NitroSDK's VRAM bank control (gx_vramcnt.h), defined in
  * src/engine/gx/GX_VramCnt.cpp (pret pokediamond
@@ -124,9 +163,6 @@
 #define GX_VRAM_SUB_OBJEXTPLTT_NONE GX_VRAM_NONE
 #define GX_VRAM_SUB_OBJEXTPLTT_0_I  GX_VRAM_I
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 void GX_SetBankForBG(int);
 void GX_SetBankForOBJ(int);
@@ -172,8 +208,5 @@ int GX_GetBankForSubOBJ(void);
 int GX_GetSizeOfTex(void);
 int GX_GetSizeOfTexPltt(void);
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif

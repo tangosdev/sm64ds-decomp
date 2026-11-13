@@ -64,6 +64,7 @@ struct WanwanAnimationFileHandle : SharedFilePtr {
 };
 
 extern "C" {
+
 extern WanwanModelFilePtr data_ov014_02114968;
 extern WanwanModelFilePtr data_ov014_02114978;
 extern WanwanAnimationFileHandle data_ov014_02114980;
@@ -78,14 +79,20 @@ void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
+}
+
 short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
+extern "C" {
+
 int AngleDiff(int a, int b);
 int Math_Function_0203b14c(void *p, int a, int b, int c, int d);
+}
+
 /* local extern: no header this file includes declares it, and it must keep C
  * linkage now that its caller StateEscapeDemoMain is a member. Nonzero once
  * the position has reached the target. */
 s32 Vec3_ApproachHorz(Vector3 *out, Vector3 *target, s32 maxStep);
-}
+
 
 namespace cstd {
 s16 atan2(s32, s32);

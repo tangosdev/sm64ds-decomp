@@ -31,18 +31,24 @@
 
 extern "C" {
 
+
 extern SharedFilePtr *data_ov019_02112788[7];      /* the seven BCA handles */
 extern SharedFilePtr *data_ov019_0211277c[3];      /* the three BTP handles */
-extern unsigned char data_0209d684;                /* talk-script choice */
+extern unsigned char data_0209d684;
+}
+                /* talk-script choice */
 
 extern unsigned char NumStars(void);
 extern void func_02038414(void *clsn);
+extern "C" {
+
 extern void Matrix4x3_FromRotationY(Matrix4x3 *m, int angle);
 
 extern void d_a_pg_rcerPlaySubHold(unsigned int a, unsigned int b, unsigned int c, int d, int e);
 extern void *d_a_pg_rcerNewHold(u32 handle, u32 effect, int x, int y, int z, void *dir, void *cb);
 
 }
+
 
 
 /* Resource handles owned by this TU. The static initializer constructs the

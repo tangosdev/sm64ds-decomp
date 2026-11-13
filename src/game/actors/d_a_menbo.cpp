@@ -79,6 +79,7 @@ typedef int LocFix12;
 
 extern "C" {
 
+
 void MTX_Concat43(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *out);
 void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void Matrix4x3_FromRotationY(void *m, int angle);
@@ -87,21 +88,37 @@ void  Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
 void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int rx, int ry, int rz);
 void  Vec3_Lsl(Vector3 *out, const Vector3 *in, int n);
 void  Vec3_Asr(void *dst, void *src, int n);
+}
+
 int   Vec3_Dist(const Vector3 *a, const Vector3 *b);
 int   Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 s16   Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
+extern "C" {
+
 int   AngleDiff(int a, int b);
-int ApproachAngle(s16 *cur, s16 target, int divisor, int band, int maxStep);
+}
+
+extern "C" int ApproachAngle(s16 *cur, s16 target, int divisor, int band, int maxStep);
+extern "C" {
+
 u16   DecIfAbove0_Short(u16 *p);
 int   RandomIntInternal(int *seed);
+}
+
 void func_02012694(unsigned int id, const Vector3 *pos);
+extern "C" {
+
 
 int d_a_menboNewHold(unsigned int a0, unsigned int a1, int a2, int a3, int a4, int a5, int a6);
+}
+
 
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(dBgCh_Actr *self, int a, LocFix12 r, LocFix12 h, int p, int q);
 int   SurfaceInfo_TestFlag0x20(const SurfaceInfo *p);
 int   func_02035638(u8 *p);
+extern "C" {
+
 
 void  func_ov002_020aea30(void *self, void *actor, void *collision);
 
@@ -128,6 +145,7 @@ int  func_ov090_021314a0(daMenbo_c *c);
 int  func_ov090_02131e00(MenboState *c, MenboStateFn *p);
 
 }
+
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
  * off screen. Actor ID 0xbf is PLAYER. gGameMode is the current game

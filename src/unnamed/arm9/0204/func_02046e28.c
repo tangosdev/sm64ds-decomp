@@ -27,7 +27,7 @@ void func_02046e28(struct Model *model, struct MatAnimData *anim, unsigned short
     for (i = 0; i < anim->count; i++) {
         e = &anim->entries[i];
         if (e->matIdx == 0xffff)
-            OS_Terminate();
+            _Z12OS_Terminatev();
 
         mat = &model->materials[e->matIdx];
         mat->diffAmb = 0x8000;

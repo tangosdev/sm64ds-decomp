@@ -193,10 +193,15 @@ extern ObjKeyStateTable data_ov089_02132cec;
  * temporary size-DIFFs (see the file comment). The ROM calls the
  * UpdateContinuous veneer, not the method. */
 extern "C" {
+
 extern dCamera_c *gCamera;
 extern u32 gNextActorUpdateMask;
 extern void *d_a_obj_keyNewHold(u32 a, u32 b, int c, int d, int e, void *f, void *g);
+}
+
 extern void func_02012694(unsigned int id, const Vector3 *pos);
+extern "C" {
+
 extern void func_ov002_020c3dbc(void *player);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void *data_ov089_021328b4[];
@@ -213,8 +218,12 @@ extern Vector3 data_ov089_02132b40;
 extern VecFx32 data_ov089_02132ca4;
 extern int *Vec3_LslInPlace(void *v, int sh);
 extern void LoadKeyModels(int idx);
+}
+
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *thiz, void *actor, int a, int b, void *v, void *w);
+extern "C" {
+
 /* An ObjKeyFile in layout, but daDemo_c::InitResources declares it `char`;
    keep that spelling so the declarations of this symbol stay in agreement. */
 extern char data_ov002_0211094c;
@@ -228,6 +237,7 @@ extern int d_a_obj_keyChangeMusicVolumeHold(unsigned int id, int vol);
    (the func_ov002_020e3e00 precedent for its neighbours 0x02111b64/6c). */
 extern int data_ov055_02111b68;
 }
+
 
 /* The key function, defined first. Under defer_codegen off it emits D1, D0 and
  * a D2 the cartridge does not keep, then the vtable and RTTI chain. */

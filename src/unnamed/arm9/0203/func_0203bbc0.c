@@ -15,7 +15,7 @@ void func_0203bbc0(void)
     TP_GetUserInfo(&data_020a0de0);
     TP_SetCalibrateParam(&data_020a0de0);
     if (TP_RequestSetStability(3, 30) != 0)
-        OS_Terminate();
+        _Z12OS_Terminatev();
     if (TP_RequestAutoSamplingStart(0, 4, (TPData *)data_020a0df8, 9) != 0)
-        OS_Terminate();
+        _Z12OS_Terminatev();
 }

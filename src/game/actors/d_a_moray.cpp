@@ -93,11 +93,14 @@ extern daMoray_c::State data_ov016_02114dbc;
  * lifetime work in the retail initializer: a VecFx32, not a Vector3. Its
  * components are copied into the collision API's Vector3 locals below. */
 extern "C" {
+
 extern VecFx32 data_ov016_02114d4c; /* cylinder offset, bss */
 
 extern unsigned char gCurrentStarId;        /* the selected star */
 
 int AngleDiff(int a, int b);
+}
+
 int SublevelToLevel(int sub);
 int IsStarCollected(int level, int star);
 /* Sound::Play(3, id, pos). Calling Play directly is one word larger
@@ -110,9 +113,12 @@ void func_020167a4(dExtAnmModel_c *model);
 void func_0204531c(ModelComponents *data, s32 weight);
 
 short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
+extern "C" {
+
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 }
+
 
 /* Render's per-segment bend table, one 0xc record per body bone.
  * The six ROM records are {0, 0, scale} with scales 1,1,1,1,-1,0.

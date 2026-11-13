@@ -1,5 +1,8 @@
 #ifndef NITRO_OS_SYSTEM_H
 #define NITRO_OS_SYSTEM_H
+#ifndef __cplusplus
+#define OS_Terminate _Z12OS_Terminatev
+#endif
 
 /*
  * The CPSR interrupt primitives of the Nitro SDK's os_system.c, under the
@@ -26,9 +29,6 @@
 
 #include "types.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 typedef enum OSProcMode {
     OS_PROCMODE_USER = 0x10,
@@ -46,15 +46,15 @@ typedef enum OSIntrMode {
     OS_INTRMODE_ENABLE = 0
 } OSIntrMode;
 
-OSIntrMode OS_EnableInterrupts(void);
-OSIntrMode OS_DisableInterrupts(void);
-OSIntrMode OS_RestoreInterrupts(OSIntrMode);
-OSIntrMode OS_DisableInterrupts_IrqAndFiq(void);
-OSIntrMode OS_RestoreInterrupts_IrqAndFiq(OSIntrMode);
-OSProcMode OS_GetProcMode(void);
-void OS_Halt(void);
+extern "C" OSIntrMode OS_EnableInterrupts(void);
+extern "C" OSIntrMode OS_DisableInterrupts(void);
+extern "C" OSIntrMode OS_RestoreInterrupts(OSIntrMode);
+extern "C" OSIntrMode OS_DisableInterrupts_IrqAndFiq(void);
+extern "C" OSIntrMode OS_RestoreInterrupts_IrqAndFiq(OSIntrMode);
+extern "C" OSProcMode OS_GetProcMode(void);
+extern "C" void OS_Halt(void);
 
-/* Burns about the given number of CPU cycles, four per loop pass. The
+extern "C" /* Burns about the given number of CPU cycles, four per loop pass. The
  * body is hand-written asm, in src/OS_SpinWait.c. */
 void OS_SpinWait(u32);
 
@@ -62,8 +62,5 @@ void OS_SpinWait(u32);
  * game's own in its place (src/OS_Terminate.cpp). */
 void OS_Terminate(void);
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* NITRO_OS_SYSTEM_H */

@@ -45,10 +45,13 @@
 
 /* arm9 C helpers with no shared header. */
 extern "C" {
+
 unsigned char DecIfAbove0_Byte(unsigned char *p);
 void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
-short Vec3_HorzAngle(const Vector3 *from, const Vector3 *to);
 }
+
+short Vec3_HorzAngle(const Vector3 *from, const Vector3 *to);
+
 extern signed char gCurrentSublevel;
 
 /* Inferred eight-byte resource-family ABI views, not recovered original

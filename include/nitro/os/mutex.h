@@ -1,5 +1,12 @@
 #ifndef NITRO_OS_MUTEX_H
 #define NITRO_OS_MUTEX_H
+#ifndef __cplusplus
+#define OS_TryLockMutex _Z15OS_TryLockMutexP7OSMutex
+#define OSi_UnlockAllMutex _Z18OSi_UnlockAllMutexP8OSThread
+#define OS_UnlockMutex _Z14OS_UnlockMutexP7OSMutex
+#define OS_LockMutex _Z12OS_LockMutexP7OSMutex
+#define OS_InitMutex _Z12OS_InitMutexP7OSMutex
+#endif
 
 /*
  * The mutex calls of the Nitro SDK's os_mutex.c, under the SDK's own names
@@ -15,9 +22,6 @@
 
 #include "nitro/os/thread.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 void OS_InitMutex(OSMutex *);
 void OS_LockMutex(OSMutex *);
@@ -25,8 +29,5 @@ void OS_UnlockMutex(OSMutex *);
 int OS_TryLockMutex(OSMutex *);
 void OSi_UnlockAllMutex(OSThread *);
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* NITRO_OS_MUTEX_H */

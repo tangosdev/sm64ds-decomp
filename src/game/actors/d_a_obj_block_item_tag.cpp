@@ -45,8 +45,10 @@ extern ItemTagAction data_ov002_0210dd30[];
 
 /* arm9 / ov002 C helpers with no shared header. */
 extern "C" {
+
 extern void LoadSilverStarAndNumber();
 }
+
 
 /* Actor IDs 0xf, 0x10 and 0x11 are three of the daObjBlockL_c brick
  * blocks a tag can attach to. This int-returning predicate is what makes

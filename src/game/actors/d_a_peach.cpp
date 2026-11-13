@@ -27,9 +27,12 @@ struct Vector3_16;
 
 /* local extern: no header declares these two. */
 extern "C" {
+
 int AngleDiff(int, int);
-short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 }
+
+short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
+
 
 /* ov085 statics. data_ov085_0212f280 keeps include/decl_common.h's
  * spelling, so this file adds no new reading of it. */

@@ -40,6 +40,7 @@ typedef struct OamAttrTmpl {
 } OamAttrTmpl;
 
 extern "C" {
+
 extern int pmf_Dealer_StateDeal_2[2];
 extern int pmf_Dealer_StateReveal[2];
 extern unsigned short sCardFaceSprites[];
@@ -88,6 +89,7 @@ extern int GetGameLanguage(void);
 extern void DecompressLZ16(void *, void *);
 extern int Dealer_Load(char *);
 }
+
 
 /* `new` inlines the implicit constructor: the base chain, this class's
    vptr, mDealer, then the two hands through __cxa_vec_ctor. The two card

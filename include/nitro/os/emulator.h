@@ -1,5 +1,9 @@
 #ifndef NITRO_OS_EMULATOR_H
 #define NITRO_OS_EMULATOR_H
+#ifndef __cplusplus
+#define OS_GetConsoleType _Z17OS_GetConsoleTypev
+#define OS_IsRunOnEmulator _Z18OS_IsRunOnEmulatorv
+#endif
 
 /*
  * Console detection, the Nitro SDK's os_emulator.c, under the SDK's own
@@ -13,9 +17,6 @@
 
 #include "types.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /* OSi_ConsoleTypeCache before the first OS_GetConsoleType. */
 #define OSi_CONSOLE_NOT_DETECT 0xffffffff
@@ -34,8 +35,5 @@ extern "C" {
 int OS_IsRunOnEmulator(void);
 u32 OS_GetConsoleType(void);
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* NITRO_OS_EMULATOR_H */

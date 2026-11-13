@@ -34,6 +34,7 @@ typedef struct Oam {
 
 extern "C" {
 
+
 /* ov006's own data. These six objects are this file's .bss
  * (0x02141a40..0x02141e54). The OAM shadow is a C++ array, so mwcc emits
  * __sinit_d_s_mg_d3d_base.cpp as a bare bx lr and one .ctor word. */
@@ -54,12 +55,16 @@ extern dGraph_c::callback_c *gGraphCallback;
 extern int data_020a0db0;
 extern int data_0208ee44;
 extern dScMgBase_c::graphCallback_c sMgGraphCallback;
+}
+
 
 /* arm9 / ov004 helpers with no project header. */
 void GXS_LoadOAM(const void *src, unsigned int offset, unsigned int count);
 int   func_020126e8(int a);
 void  func_020126ac(int a0, int a1, int a2, int a3, int s0);
 void  func_020127ec(int a0, int a1, int a2, int a3, int a4, int a5);
+extern "C" {
+
 void *Ov004_LoadFile(int id);
 void  Mg_ResetOverlays(void);
 void  Mg_ResetBgOffsets(void);
@@ -81,6 +86,7 @@ void D3D_ReleaseSubBg1(void *self);
 int  D3D_PanForX(int a);
 
 }
+
 
 namespace Particle { void RenderAll(); }
 

@@ -58,14 +58,16 @@
 #include "dExtModel_c.h"
 #include "Ov007Figure.h"
 
-extern "C" {
+
 
 /* One sprite's corner-colour pair (BGR555): `outer` feeds cornerColors[0]
  * and [3], `inner` cornerColors[1] and [2]. */
 typedef struct Ov007CornerPair {
     u16 outer;
     u16 inner;
-} Ov007CornerPair;
+}
+extern "C" {
+ Ov007CornerPair;
 
 extern int data_ov007_020ccc48[2];             /* [figureIndex]: model file */
 extern Ov007CornerPair data_ov007_020ccc50[3]; /* colours at blend 0 */
@@ -74,9 +76,13 @@ extern int data_ov007_020ccc68[][3];           /* [figureIndex]: animation files
 extern int data_ov007_020ccc80[3][3];          /* [set]: animation files */
 extern void *data_ov007_020d7ee8[3][3];        /* [set]: animation data in the overlay */
 extern void *data_ov007_02103348[3];           /* data_ov007_020ccc80[set], loaded */
-extern void *data_ov007_02103354[3];           /* data_ov007_020ccc68[figureIndex], loaded */
+extern void *data_ov007_02103354[3];
+}
+           /* data_ov007_020ccc68[figureIndex], loaded */
 
 extern void func_02044efc(void *bmd);
+extern "C" {
+
 extern void func_ov007_020b3edc(int idx);
 extern void *func_ov007_020b3f20(int idx);
 extern void func_ov007_020b7708(int idx, void *pos);

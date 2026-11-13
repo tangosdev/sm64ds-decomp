@@ -88,8 +88,10 @@ typedef char RcHaneModelFilePtr_size_must_be_8[sizeof(RcHaneModelFilePtr) == 8 ?
 extern RcHaneModelFilePtr data_ov036_02114070; /* the wing's BMD */
 
 extern "C" {
+
 void Vec3_Asr(void *dst, void *src, int n);
 }
+
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */

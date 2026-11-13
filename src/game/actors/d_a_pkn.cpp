@@ -89,11 +89,13 @@ PknStatePMF data_ov084_02130e80[9] = {
 };
 
 /* C-linkage declarations for the remaining raw entry points and shared data. */
-extern "C" {
+
 
 /* -- other modules -- */
 void  func_02012694(u32 id, void *pos);
 void  func_020105cc(void *thiz, u32 flags);
+extern "C" {
+
 
 
 /* -- shared tables -- */
@@ -106,6 +108,7 @@ int *Vec3_LslInPlace(int *v, int sh);
 void *d_a_pknNewHold(u32 handle, u32 id, int x, int y, int z, const void *f, void *cb);
 int d_a_pknPlaySubHold(u32 a, u32 b, u32 c, int t, int flag);
 }
+
 
 /* ==========================================================================
  *

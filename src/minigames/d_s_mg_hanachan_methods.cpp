@@ -150,6 +150,7 @@ s16 atan2(s32, s32);
 }
 
 extern "C" {
+
 /* This TU's own functions. */
 extern int Hana_PickUnused(int n, int mask);
 extern void Hana_ChooseStarWiggler(int count);
@@ -160,8 +161,12 @@ extern void *sWigglerSprites[];
 extern void *sHanaWigglerTargetSprites[];
 extern void *sHanaWigglerFieldSprites[];
 extern void OamRender8_d_s_mg_hanachan(int b, void *attr, int x, int y, int a, int c, int f, int g);
+}
+
 
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
+extern "C" {
+
 extern short sHanaPickedCount;
 extern unsigned short sHanaPickedIds[];
 extern unsigned short sHanaUsedIds[];
@@ -177,11 +182,15 @@ extern s16 sHanaRoundPatterns[];
 extern volatile int sHanaFieldWigglerCounts[];
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
+}
+
 
 /* These helpers read or write two scalar words. Cast the plain Point
    records at the C ABI boundary rather than giving the externs new types. */
 /* Scalar pair ABI agrees with the arm9 definitions; V2 only names this TU workspace. */
 extern int func_0203d5dc(const int *a, const int *b);
+extern "C" {
+
 extern void func_0203d704(int *o, int *a, int *b);
 extern void Vec2_Sub(int *o, int *a, int *b);
 extern void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
@@ -196,6 +205,7 @@ extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 extern void FreeGfxSlotsById(int x);
 }
+
 
 struct S_ea81c {
     int x;                 /* +0x0 */
@@ -214,10 +224,12 @@ struct S_ea81c {
    HanaPopup_Spawn's layout, which it needs to match; the other
    functions keep the spelling their own match used, through a cast. */
 extern "C" {
+
 extern char sHanaStarPopup[];
 extern struct S_ea81c sHanaPopups[];
 extern OamAttr *sMgDigitSprites[];
 }
+
 
 /* Empty: the compiler destroys the fifteen 0x98-byte wigglers at 0x4678
    through __cxa_vec_cleanup with Wiggler's destructor, as dScMgBase_c's own
@@ -1015,6 +1027,7 @@ int dScMgHanachan_c::Wiggler::GetFlag(int n) {
 }
 
 extern "C" {
+
 int Hana_PickUnused(int n, int mask) {
     int v;
     int i;
@@ -1045,7 +1058,9 @@ int Hana_PickUnused(int n, int mask) {
 }
 }
 
+
 extern "C" {
+
 void Hana_ChooseStarWiggler(int count) {
     int i, j;
     sHanaPickedLow = (short)(RandomIntInternal(&data_0209e650.value) & 0xf);
@@ -1072,7 +1087,9 @@ void Hana_ChooseStarWiggler(int count) {
 }
 }
 
+
 extern "C" {
+
 int Hana_PickMoveKind(void) {
     int v = 3;
     int r = (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
@@ -1085,6 +1102,7 @@ int Hana_PickMoveKind(void) {
     return v;
 }
 }
+
 
 int dScMgHanachan_c::Wiggler::ClampToScreen() {
     int boundaryMask = 0;
@@ -2009,6 +2027,7 @@ s32 dScMgHanachan_c::InitResources() {
 }
 
 extern "C" {
+
 void Hana_LoadBackground(void) {
     void *ncg = LoadFile(ASSET_D_2D_MG_BG_HANA_SAGASE1_NCG_BIN);
     void *nsc = LoadFile(ASSET_D_2D_MG_BG_HANA_SAGASE1_NSC_BIN);

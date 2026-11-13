@@ -25,16 +25,10 @@ enum critical_regions {
     num_critical_regions = 9
 };
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 extern int __cs_id[num_critical_regions];
 extern int __cs_ref[num_critical_regions];
 extern OSMutex __cs[num_critical_regions];
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* MSL_CRITICAL_REGIONS_H */

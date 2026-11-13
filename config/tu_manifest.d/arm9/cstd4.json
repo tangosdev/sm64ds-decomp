@@ -19,7 +19,7 @@
   ],
   "functions": [
     {
-      "symbol": "func_0206dab4",
+      "symbol": "_Z13func_0206dab4jPv",
       "address": "0x0206dab4",
       "size": "0x00000008",
       "legacy_source": "src/unnamed/arm9/0206/func_0206dab4.c",
@@ -33,189 +33,189 @@
       "ordinal": 1
     },
     {
-      "symbol": "__exit",
+      "symbol": "_Z6__exiti",
       "address": "0x0206dac4",
       "size": "0x00000134",
       "legacy_source": "src/unnamed/arm9/0206/func_0206dac4.c",
       "ordinal": 2
     },
     {
-      "symbol": "exit",
+      "symbol": "_Z4exiti",
       "address": "0x0206dbf8",
       "size": "0x00000054",
       "legacy_source": "src/unnamed/arm9/0206/func_0206dbf8.c",
       "ordinal": 3
     },
     {
-      "symbol": "abort",
+      "symbol": "_Z5abortv",
       "address": "0x0206dc4c",
       "size": "0x00000030",
       "legacy_source": "src/unnamed/arm9/0206/func_0206dc4c.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_0206dc7c",
+      "symbol": "_Z13func_0206dc7cddi",
       "address": "0x0206dc7c",
       "size": "0x00000058",
       "legacy_source": "src/unnamed/arm9/0206/func_0206dc7c.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_0206dcd4",
+      "symbol": "_Z13func_0206dcd4ddi",
       "address": "0x0206dcd4",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/arm9/0206/func_0206dcd4.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_0206dd30",
+      "symbol": "_Z13func_0206dd30ffi",
       "address": "0x0206dd30",
       "size": "0x0000004c",
       "legacy_source": "src/unnamed/arm9/0206/func_0206dd30.c",
       "ordinal": 7
     },
     {
-      "symbol": "func_0206dd7c",
+      "symbol": "_Z13func_0206dd7cdi",
       "address": "0x0206dd7c",
       "size": "0x00000050",
       "legacy_source": "src/unnamed/arm9/0206/func_0206dd7c.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_0206ddcc",
+      "symbol": "_Z13func_0206ddccfi",
       "address": "0x0206ddcc",
       "size": "0x00000048",
       "legacy_source": "src/unnamed/arm9/0206/func_0206ddcc.c",
       "ordinal": 9
     },
     {
-      "symbol": "func_0206de14",
+      "symbol": "_Z13func_0206de14i4PairS_j",
       "address": "0x0206de14",
       "size": "0x00000100",
       "legacy_source": "src/unnamed/arm9/0206/func_0206de14.c",
       "ordinal": 10
     },
     {
-      "symbol": "__flush_all",
+      "symbol": "_Z11__flush_allv",
       "address": "0x0206df14",
       "size": "0x00000070",
       "legacy_source": "src/unnamed/arm9/0206/func_0206df14.c",
       "ordinal": 11
     },
     {
-      "symbol": "abs",
+      "symbol": "_Z3absi",
       "address": "0x0206df84",
       "size": "0x0000000c",
       "legacy_source": "src/_ZN4cstd3absEi.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "__flush_buffer",
+      "symbol": "_Z14__flush_bufferP5_FILEPm",
       "address": "0x0206df90",
       "size": "0x000000a0",
       "legacy_source": "src/unnamed/arm9/0206/func_0206df90.c",
       "ordinal": 13
     },
     {
-      "symbol": "__prep_buffer",
+      "symbol": "_Z13__prep_bufferP5_FILE",
       "address": "0x0206e030",
       "size": "0x00000038",
       "legacy_source": "src/unnamed/arm9/0206/func_0206e030.c",
       "ordinal": 14
     },
     {
-      "symbol": "__convert_from_newlines",
+      "symbol": "_Z23__convert_from_newlinesPhPm",
       "address": "0x0206e068",
       "size": "0x00000004",
       "legacy_source": "src/unnamed/arm9/0206/func_0206e068.c",
       "ordinal": 15
     },
     {
-      "symbol": "fflush",
+      "symbol": "_Z6fflushP5_FILE",
       "address": "0x0206e06c",
       "size": "0x00000118",
       "legacy_source": "src/unnamed/arm9/0206/func_0206e06c.c",
       "ordinal": 16
     },
     {
-      "symbol": "wcstombs",
+      "symbol": "_Z8wcstombsPcPtj",
       "address": "0x0206e184",
       "size": "0x00000094",
       "legacy_source": "src/unnamed/arm9/0206/func_0206e184.c",
       "ordinal": 17
     },
     {
-      "symbol": "wctomb",
+      "symbol": "_Z6wctombPct",
       "address": "0x0206e218",
       "size": "0x00000028",
       "legacy_source": "src/unnamed/arm9/0206/func_0206e218.c",
       "ordinal": 18
     },
     {
-      "symbol": "__wctomb_noconv",
+      "symbol": "_Z15__wctomb_noconvPhh",
       "address": "0x0206e240",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0206/func_0206e240.c",
       "ordinal": 19
     },
     {
-      "symbol": "__mbtowc_noconv",
+      "symbol": "_Z15__mbtowc_noconvPtPhi",
       "address": "0x0206e254",
       "size": "0x00000038",
       "legacy_source": "src/unnamed/arm9/0206/func_0206e254.c",
       "ordinal": 20
     },
     {
-      "symbol": "memcmp",
+      "symbol": "_Z6memcmpPKvS0_j",
       "address": "0x0206e28c",
       "size": "0x00000040",
       "legacy_source": "src/unnamed/arm9/0206/func_0206e28c.c",
       "ordinal": 21
     },
     {
-      "symbol": "memchr",
+      "symbol": "_Z6memchrPKvij",
       "address": "0x0206e2cc",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/arm9/0206/func_0206e2cc.c",
       "ordinal": 22
     },
     {
-      "symbol": "memset",
+      "symbol": "_Z6memsetPvij",
       "address": "0x0206e2f8",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0206/func_0206e2f8.c",
       "ordinal": 23
     },
     {
-      "symbol": "memcpy",
+      "symbol": "_Z6memcpyPvPKvj",
       "address": "0x0206e310",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0206/func_0206e310.c",
       "ordinal": 24
     },
     {
-      "symbol": "__fill_mem",
+      "symbol": "_Z10__fill_memPvij",
       "address": "0x0206e330",
       "size": "0x000000ac",
       "legacy_source": "src/unnamed/arm9/0206/func_0206e330.c",
       "ordinal": 25
     },
     {
-      "symbol": "vsnprintf",
+      "symbol": "_Z9vsnprintfPcmPKcS_",
       "address": "0x0206e3dc",
       "size": "0x00000074",
       "legacy_source": "src/unnamed/arm9/0206/func_0206e3dc.c",
       "ordinal": 26
     },
     {
-      "symbol": "__StringWrite",
+      "symbol": "_Z13__StringWritePvPKcm",
       "address": "0x0206e450",
       "size": "0x00000054",
       "legacy_source": "src/unnamed/arm9/0206/func_0206e450.c",
       "ordinal": 27
     },
     {
-      "symbol": "__pformatter",
+      "symbol": "_Z12__pformatterPFiPvPKcmES_PKhPc",
       "address": "0x0206e4a4",
       "size": "0x0000083c",
       "legacy_source": "src/unnamed/arm9/0206/func_0206e4a4.c",

@@ -111,6 +111,7 @@ typedef char Sprite_size_must_be_0x24[sizeof(Sprite) == 0x24 ? 1 : -1];
 
 
 extern "C" {
+
 extern void Vec2_Sub(void* o, void* a, void* b);
 extern void func_0203d680(void* out, void* in, int scale);
 extern int GetGameLanguage(void);
@@ -187,6 +188,7 @@ extern int sMgCoinsDeltaShown;   /* nonzero: MgCoins_Draw shows the count */
 extern unsigned char sMgCoinsVisible[];
 extern int data_020a0db0;
 }
+
 
 /* The twenty sprites. mwcc builds them in this file's static initializer
    (retail 0x020b9ad0) with __cxa_vec_ctor and registers their cleanup

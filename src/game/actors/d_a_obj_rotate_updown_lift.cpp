@@ -126,6 +126,7 @@ extern UpdownClpsSlot data_ov091_02134c38[];
 extern s8 gCurrentSublevel;
 
 extern "C" {
+
 void Matrix4x3_FromRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
 /* local extern: no shared math header declares MTX_MultVec43. */
 void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
@@ -134,11 +135,16 @@ void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 void VEC_Subtract(void *a, void *b, void *c);
 int VEC_Mag(void *v);
+}
+
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 void func_02012694(unsigned int id, const Vector3 *pos);
+extern "C" {
+
 extern void hold_d_a_obj_rotate_updown_lift(dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat,
                                             int scale, s16 angY, CLPS_Block *clps);
 }
+
 
 // 0x02130f00 (0x4c)
 daObjRotateUpdownLift_c::~daObjRotateUpdownLift_c()

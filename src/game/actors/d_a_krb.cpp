@@ -159,6 +159,7 @@ enum {
 };
 
 extern "C" {
+
 /* data_ov084_02130cf8 is the BMD this TU LoadFile / Release. The other
    six handles are never passed to a SharedFilePtr method; this TU reads
    filePtr as the loaded BCA. Selected by role (see SetAnim calls):
@@ -178,9 +179,13 @@ extern KrbAnimationFileHandle data_ov084_02130cf0;
 extern KrbModelFilePtr data_ov084_02130cf8;
 extern KrbModelFilePtr gKuriboLowModelModelFile;
 extern StateHandler data_ov084_02130d74[];
+}
+
 int func_02037e20(int* p);
 extern void func_02012694(unsigned int id, const Vector3 *pos);
 extern int SurfaceInfo_TestFlag0x20(int* p);
+extern "C" {
+
 extern u8 data_0209f208[];
 extern u8 *data_0209f344;
 /* Three-register reconstructed interface; death-state stores also use r3. */
@@ -195,14 +200,19 @@ extern void func_ov074_0212087c(Vector3 *out, void *player, u8 flag);
 extern int Math_Function_0203b14c(int *v, int target, int a, int b, int c);
 extern s8 gCurrentSublevel;
 void LoadSilverStarAndNumber(void);
+}
+
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *a, Fix12i b, Fix12i cc, void *d, Fix12i e);
+extern "C" {
+
 extern SharedFilePtr *const sKuriboAnimationFiles[7];
 extern int data_ov084_02130258[];
 extern int data_ov084_02130208[];
 extern int data_ov084_02130238[];
 extern int data_ov084_02130218[];
 }
+
 
 daKrb_c::~daKrb_c()
 {
@@ -447,6 +457,7 @@ void daKrb_c::func_ov084_021294d0() {
 /* Set the home position (mHomePos) from a three-word position. daKuriKing_c
  * calls this on each minion it spawns, after the Spawn. */
 extern "C" {
+
 void func_ov084_021296b0(void *a, void *b) {
     daKrb_c *goomba = (daKrb_c *)a;
     int *pos = (int *)b;
@@ -455,6 +466,7 @@ void func_ov084_021296b0(void *a, void *b) {
     goomba->mHomePos.z = pos[2];
 }
 }
+
 
 /* Pay out the reward the Goomba carries (mRewardType), then clear bits 4..7
  * and the upper halfword of param1 (mask 0xff0f), presumably so a respawned
@@ -1966,6 +1978,7 @@ StateHandler data_ov084_02130d74[5] = {
 };
 
 extern "C" {
+
 SharedFilePtr *const sKuriboAnimationFiles[7] = {
     &data_ov084_02130ce8,         &data_ov084_02130ce0, &data_ov084_02130cd0, &data_ov084_02130cc0,
     &gKuriboRecoverAnimationFile, &data_ov084_02130cc8, &data_ov084_02130cf0,

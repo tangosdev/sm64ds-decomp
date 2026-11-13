@@ -3,7 +3,7 @@
 #include "private/spl_particle_views.h"
 #include "nitro/fx/fx_cp.h"
 
-extern "C" {
+
 
 /* spl_particle_views.h's record, spelled again so the declaration gate reads
  * TrackingRecord below as a struct tag */
@@ -27,8 +27,12 @@ struct TrackingRecord {
 
 typedef char ParticleElement_size_must_be_0x44[sizeof(ParticleElement) == 0x44 ? 1 : -1];
 typedef char TrackingRecord_size_must_be_0xc[sizeof(TrackingRecord) == 0xc ? 1 : -1];
+extern "C" {
+
 
 extern void func_0204dcc0(int *src, short *o1, short *o2, int *o3);
+}
+
 
 void func_0204dab4(void *sys, TrackingRecord *buf, int count, unsigned int mask, void *cb) {
     int sp[4];
@@ -106,5 +110,4 @@ void func_0204dab4(void *sys, TrackingRecord *buf, int count, unsigned int mask,
         *fp6 = (unsigned char)(*fp6 & ~4u);
         p++;
     } while (++j < count);
-}
 }

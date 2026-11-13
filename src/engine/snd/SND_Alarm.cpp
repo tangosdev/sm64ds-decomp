@@ -25,9 +25,10 @@ typedef struct AlarmCallback {
     u8 padding[3];       /* 0x9 */
 } AlarmCallback;
 
-extern "C" {
 
-extern AlarmCallback data_020a7f60[SND_ALARM_COUNT]; /* sCallbackTable */
+
+extern AlarmCallback data_020a7f60[SND_ALARM_COUNT];
+ /* sCallbackTable */
 
 void SND_AlarmInit(void) {
     for (s32 i = 0; i < SND_ALARM_COUNT; i++) {
@@ -57,5 +58,4 @@ void SNDi_CallAlarmHandler(s32 idx) {
     if (ac->cb == 0)
         return;
     ac->cb(ac->data);
-}
 }

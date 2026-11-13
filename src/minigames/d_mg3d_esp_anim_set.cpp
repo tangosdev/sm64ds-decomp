@@ -79,6 +79,7 @@ struct EspAnimSetTexSequenceFilePtr : SharedFilePtr {
 };
 
 extern "C" {
+
 /* The file handles: word 1 of a SharedFilePtr is its loaded file. */
 extern EspAnimSetModelFilePtr gEspCardModelFile;
 extern EspAnimSetAnimationFileHandle gEspCardStartAnimFile;
@@ -93,8 +94,12 @@ extern EspAnimSetModelFilePtr gEspIrieModelFile;
 
 extern Matrix4x3 data_020a0e68;
 void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
+}
+
 void func_02046208(char *a, unsigned int b, int c);
 int func_020179b4(void *r0, void *r1, int r2);
+extern "C" {
+
 void FreeGfxSlotsById(int a);
 int Mg_RenderSubSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5, u16 a6);
 void Mg_RenderSubSpriteMtx(void* a, int b, int c, void* m);
@@ -104,11 +109,19 @@ void Mg_SetNextBanner(int);
 void Mg_SetSharedState(int);
 void Mg_ShowBanner(int, int, int, int, int, short);
 void Mg_SetTopScreenYOffset(int);
+}
+
 void InitialiseVramGlobals(void);
 void Deallocate(void*);
+extern "C" {
+
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
+}
+
 void GXS_LoadBG2Scr(const void *, u32, u32);
+extern "C" {
+
 
 extern int sEsp3DMaterialAnim;
 extern int pmf_dMg3DEspModel_c_Idle_2[];
@@ -123,6 +136,7 @@ extern unsigned char gSubScreenLayers;
 extern int sMgClearBannerX;
 extern int sMgClearBannerY;
 }
+
 
 extern Matrix4x3 data_ov006_0213c85c;
 

@@ -63,7 +63,7 @@ typedef enum MbSegmentType {
  * .bss, which the TU build cannot claim yet. */
 extern u8 data_020a9d28;
 
-extern BOOL MBi_IsStarted(void);
+extern BOOL _Z13MBi_IsStartedv(void);
 extern void MBi_MakeGameInfo(char *dst, MBGameRegistry *src, const void *parent);
 extern void MB_AddGameInfo(MBGameInfo *newGameInfo);
 
@@ -154,7 +154,7 @@ BOOL MB_ReadSegment(FSFile *file, void *buf, u32 len) {
                 mem_rom->own_size = 16 * 1024 * 1024;
 
             FS_InitFile(own_bin);
-            (void)FS_OpenFileDirect(own_bin, FS_FindArchive("rom", 3), 0,
+            (void)FS_OpenFileDirect(own_bin, _Z14FS_FindArchivePKci("rom", 3), 0,
                                     (u32)(mem_rom->own_size + MB_AUTHCODE_SIZE), (u32)~0);
             file = own_bin;
             bak_pos = FS_GetPosition(file);
@@ -248,7 +248,7 @@ BOOL MB_RegisterFile(MBGameRegistry *game_reg, const void *buf) {
 
     enabled = OS_DisableInterrupts();
 
-    if (!MBi_IsStarted()) {
+    if (!_Z13MBi_IsStartedv()) {
         (void)OS_RestoreInterrupts(enabled);
         return FALSE;
     }
@@ -346,7 +346,7 @@ static void MBi_SetSegmentInfo(const RomHeaderView *mbRomHeaderp, const MbSegmen
             seg_infop->recv_addr = seg_infop->load_addr;
             seg_infop->target = MI_PROCESSOR_ARM9;
         } else {
-            OS_Terminate();
+            _Z12OS_Terminatev();
         }
         break;
 
@@ -381,7 +381,7 @@ static void MBi_SetSegmentInfo(const RomHeaderView *mbRomHeaderp, const MbSegmen
         }
 
         if (error_flag == TRUE) {
-            OS_Terminate();
+            _Z12OS_Terminatev();
         }
 
         {

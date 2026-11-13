@@ -44,8 +44,10 @@
 #include "ResourceDescriptor.h"
 #include "math/MtxStack.h"
 
-extern "C" {
+
 void func_02012694(unsigned int a, void *b);
+extern "C" {
+
 int AngleDiff(int a, int b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 
@@ -53,6 +55,7 @@ int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg);
 int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist);
 int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg);
 }
+
 
 /* -------------------------------------------------------------------------- */
 /* ROM 0x02126fbc (D0, size 0x58) and 0x02127014 (D1, size 0x44)              */

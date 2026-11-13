@@ -19,98 +19,98 @@
   ],
   "functions": [
     {
-      "symbol": "FX_ModS32",
+      "symbol": "_Z9FX_ModS32ii",
       "address": "0x02052ef4",
       "size": "0x00000058",
       "legacy_source": "src/FX_ModS32.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "FX_DivS32",
+      "symbol": "_Z9FX_DivS32ii",
       "address": "0x02052f4c",
       "size": "0x00000058",
       "legacy_source": "src/FX_DivS32.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "FX_DivAsync",
+      "symbol": "_Z11FX_DivAsyncii",
       "address": "0x02052fa4",
       "size": "0x00000038",
       "legacy_source": "src/_ZN4cstd10fdiv_asyncE5Fix12IiE5Fix12IiE.c",
       "ordinal": 2
     },
     {
-      "symbol": "FX_GetSqrtResult",
+      "symbol": "_Z16FX_GetSqrtResultv",
       "address": "0x02052fdc",
       "size": "0x0000002c",
       "legacy_source": "src/func_02052fdc.c",
       "ordinal": 3
     },
     {
-      "symbol": "FX_SqrtAsync",
+      "symbol": "_Z12FX_SqrtAsynci",
       "address": "0x02053008",
       "size": "0x00000088",
       "legacy_source": "src/unnamed/arm9/0205/func_02053008.c",
       "ordinal": 4
     },
     {
-      "symbol": "FX_InvAsync",
+      "symbol": "_Z11FX_InvAsynci",
       "address": "0x02053090",
       "size": "0x0000003c",
       "legacy_source": "src/_ZN4cstd16reciprocal_asyncE5Fix12IiE.c",
       "ordinal": 5
     },
     {
-      "symbol": "FX_GetDivResult",
+      "symbol": "_Z15FX_GetDivResultv",
       "address": "0x020530cc",
       "size": "0x0000003c",
       "legacy_source": "src/FX_GetDivResult.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "FX_GetDivResultFx64c",
+      "symbol": "_Z20FX_GetDivResultFx64cv",
       "address": "0x02053108",
       "size": "0x00000028",
       "legacy_source": "src/FX_GetDivResultFx64c.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "FX_InvSqrt",
+      "symbol": "_Z10FX_InvSqrti",
       "address": "0x02053130",
       "size": "0x00000074",
       "legacy_source": "src/unnamed/arm9/0205/func_02053130.c",
       "ordinal": 8
     },
     {
-      "symbol": "FX_Sqrt",
+      "symbol": "_Z7FX_Sqrti",
       "address": "0x020531a4",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/arm9/0205/FX_Sqrt.c",
       "ordinal": 9
     },
     {
-      "symbol": "FX_Inv",
+      "symbol": "_Z6FX_Invi",
       "address": "0x02053200",
       "size": "0x0000001c",
       "legacy_source": "src/FX_Inv.c",
       "ordinal": 10
     },
     {
-      "symbol": "FX_DivFx64c",
+      "symbol": "_Z11FX_DivFx64cii",
       "address": "0x0205321c",
       "size": "0x0000003c",
       "legacy_source": "src/FX_DivFx64c.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "FX_Div",
+      "symbol": "_Z6FX_Divii",
       "address": "0x02053258",
       "size": "0x0000001c",
       "legacy_source": "src/FX_Div.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "VEC_Distance",
+      "symbol": "_Z12VEC_DistancePiS_",
       "address": "0x02053274",
       "size": "0x000000ac",
       "legacy_source": "src/unnamed/arm9/0205/func_02053274.c",

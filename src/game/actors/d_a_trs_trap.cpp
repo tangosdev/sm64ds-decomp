@@ -131,6 +131,7 @@ struct TrsTrapCollisionFilePtr : SharedFilePtr {
  * The one file-scope extern "C" region.
  * ------------------------------------------------------------------------ */
 extern "C" {
+
 /* dBgW callback-word stores (see above). */
 /* dBgW_KcMbg::SetFile, mangled (wall 6az, see above). Spelled exactly as the
    free definition declares it; only the TU-local linkage differs. */
@@ -145,10 +146,12 @@ extern int data_ov063_0211e270[];
 void Vec3_Asr(void *dst, void *src, int n);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
+}
+
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 u8 IsAreaShowing(int idx);
-}
+
 
 /* InitResources tests the profile's actor id as a 0/1 value. */
 static inline int IsActorType(u16 actorType, int id) {

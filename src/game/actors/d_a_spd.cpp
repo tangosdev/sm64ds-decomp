@@ -65,14 +65,21 @@ typedef struct { PMF enter, run; } ScuttlebugStateRow;
  * ------------------------------------------------------------------------ */
 extern "C" {
 
+
 int AngleDiff(int a, int b);
 unsigned short DecIfAbove0_Short(void *p);
+}
+
 int   Vec3_Dist(const Vector3 *a, const Vector3 *b);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+extern "C" {
+
 
 void  Matrix4x3_FromRotationY(void *m, int angle);
 void  Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 void  Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
+}
+
 
 void func_02012694(unsigned int id, void *pos);
 
@@ -81,14 +88,18 @@ void func_02012694(unsigned int id, void *pos);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, dActor_c *actor, int radius, int height, Vector3_16 *a,
                          Vector3_16 *b);
+extern "C" {
+
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
-extern Matrix4x3 data_020a0e68;           /* scratch matrix        */
+extern Matrix4x3 data_020a0e68;
+}
+           /* scratch matrix        */
 
 /* Intra-TU forward declarations.  mwccarm lays .text down in reverse source
  * order, so this file is written ROM-descending and nearly every intra-TU call
  * is a forward reference. */
-}
+
 
 /* The bug's file-scope SharedFilePtr objects, spelled through the same
    wrapper idiom the landed folds use: the handles' code is the veneer pair

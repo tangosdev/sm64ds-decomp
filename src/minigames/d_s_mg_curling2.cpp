@@ -60,6 +60,7 @@ typedef void (C::*PMF1)(int);
  * Keep it above the first function. */
 extern "C" {
 
+
 extern int Mg_GetSubmittedScore(void);
 extern void Mg_SubmitScore(int self);
 extern int Mg_IsNewRecord(void);
@@ -73,10 +74,14 @@ extern void Mg_DrawTopRightCounter(int a, int b);
 extern void Mg_DrawNumber(int a, int b, int c, int d, int e, int f, int g);
 extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
 extern void Mg_RenderSpriteBoth(void *a, int b, int c, int d, int e);
+}
+
 extern void func_02012718(int id, int v);
 extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, s16 h);
 extern void func_020126ac(int a0, int a1, int a2, int a3, int s0);
+extern "C" {
+
 struct OamAttr;
 struct Matrix2x2;
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
@@ -86,11 +91,19 @@ extern void SetBg2Offset(int a, int b);
 extern void SetBg0Offset(int a, int b);
 extern void DecompressLZ16(const void *src, void *dst);
 extern void *LoadFile(int handle);
+}
+
 extern void Deallocate(void *p);
+extern "C" {
+
 extern void Ov004_Deallocate(void *p);
+}
+
 /* local extern: nitro/gx/gx_load.h leaves GX_LoadBG3Scr out until
  * decl_common.h's non-const spelling of it goes. */
 extern void GX_LoadBG3Scr(void *a, u32 b, u32 c);
+extern "C" {
+
 
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
@@ -148,7 +161,8 @@ extern PMF pmf_dScMgCurling2_c_StepYRestart;
 extern PMF pmf_dScMgCurling2_c_StepYRampUp;
 extern PMF pmf_dScMgCurling2_c_StepYRampDown;
 
-} /* extern "C" */
+}
+ /* extern "C" */
 
 namespace cstd {
 s16 atan2(s32, s32);

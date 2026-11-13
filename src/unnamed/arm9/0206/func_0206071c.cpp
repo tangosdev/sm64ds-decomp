@@ -8,7 +8,7 @@
 #include "nitro/card/card_common.h"
 #include "nitro/mi/memory.h"
 
-extern "C" {
+
 
 /* opt_loop_invariants stays off for schedule colour only: with it on the function
    is still 0xcc, but the prologue hoists &p->src ahead of the 0x100, 6 and 1
@@ -40,5 +40,4 @@ void func_0206071c(CARDiCommon *p) {
     } while (p->len != 0);
 
     CARDi_EndTask(p);
-}
 }

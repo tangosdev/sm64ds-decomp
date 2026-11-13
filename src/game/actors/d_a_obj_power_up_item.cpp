@@ -90,14 +90,18 @@ enum {
     CHARACTER_YOSHI = 3
 };
 
-extern "C" {
+
 extern void func_02012694(unsigned int id, const Vector3 *v);
+extern "C" {
+
 extern dCamera_c *gCamera;
 extern void *gPFlowerCloseModelFile[];
 extern void *gPFlowerOpenModelFile[];
+}
+
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *act, Fix12i a, Fix12i b, void *d, void *e);
-}
+
 
 daObjPowerUpItem_c::~daObjPowerUpItem_c()
 {

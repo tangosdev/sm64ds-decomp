@@ -20,28 +20,28 @@
   ],
   "functions": [
     {
-      "symbol": "OSi_IsRunOnDebugger",
+      "symbol": "_Z19OSi_IsRunOnDebuggerv",
       "address": "0x0205865c",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/arm9/0205/func_0205865c.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "OSi_GetDeviceType",
+      "symbol": "_Z17OSi_GetDeviceTypev",
       "address": "0x02058690",
       "size": "0x000000d4",
       "legacy_source": "src/unnamed/arm9/0205/func_0205865c.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "OS_GetConsoleType",
+      "symbol": "_Z17OS_GetConsoleTypev",
       "address": "0x02058764",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/arm9/0205/func_0205865c.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "OS_IsRunOnEmulator",
+      "symbol": "_Z18OS_IsRunOnEmulatorv",
       "address": "0x020587dc",
       "size": "0x00000008",
       "legacy_source": "src/OS_IsRunOnEmulator.c",

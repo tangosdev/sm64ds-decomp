@@ -61,6 +61,7 @@ enum dScGameOver_c_AssetId {
 
 /* Native scene data: prompt selection and the animated GAME OVER sprites. */
 extern "C" {
+
 /* Screen-map offsets for the two prompt rows, and the glyph animation's
  * off-screen starts and final x positions. The initial-position symbol retains
  * its existing shared declaration in decl_common.h. */
@@ -94,8 +95,10 @@ OamAttr *sGameOverGlyphTemplates[9] = {
 };
 }
 
+
 /* External scene services not declared by the included headers. */
 extern "C" {
+
 extern dFdBrightness_c *gSceneFader;
 extern int data_0208ee44;
 /* Scalars, not tables: the two BG-enable bit registers, main and sub --
@@ -113,6 +116,7 @@ void OamRender10_d_s_game_over(s32 sub, OamAttr *data, s32 x, s32 y, s32 palette
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 }
+
 
 /* The stylus went down this frame: held, with the held state just changed
  * (see PlayerInput.h). Int-returning, so the ROM materializes the 0/1 it
@@ -487,5 +491,6 @@ void dScGameOver_c::UpdateIntro() {
 
 /* Scene registry priorities use the base profile, without an actor tail. */
 extern "C" {
+
 BaseSpawnInfo<dScGameOver_c> g_profile_GAME_OVER = {dScGameOver_c_classInit, 8, 11};
 }

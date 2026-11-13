@@ -63,14 +63,17 @@ extern HuwaAnimationFileHandle gHuwahuwaMoveAnimationFile;
 /* C helpers with no shared header: the arm9 vector routines and
  * func_ov002_020e10a8, daPly_c::IsState of the state SpinBounce enters. */
 extern "C" {
+
 extern int func_ov002_020e10a8(void *);
 
 void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *out);
 void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *out);
 int *Vec3_LslInPlace(Vector3 *v, int shift);
+}
+
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-}
+
 
 /* dCc_c hitFlags bits this actor tests. 0x10 / 0x2000 / 0x4000 / 0x40000 /
  * 0x400000 are the names in dCc_c.h. 0x20000 is not in that table; this

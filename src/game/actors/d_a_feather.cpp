@@ -68,10 +68,12 @@ extern dCamera_c *gCamera;
 
 extern "C" {
 
+
 daFeather_c *daFeather_c_classInit(void) {
     return new daFeather_c();
 }
 }
+
 
 /* ==========================================================================
  * Vtable slot 0.

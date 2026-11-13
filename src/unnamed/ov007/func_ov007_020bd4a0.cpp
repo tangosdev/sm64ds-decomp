@@ -1,9 +1,11 @@
 //cpp
 
-extern "C" {
+
 extern void InitialiseVramGlobals(void);
 extern int func_02045d10(void);
 extern int func_02045cf0(void);
+extern "C" {
+
 extern void Texture_InitRegions(int, int);
 void func_ov007_020bd4a0(int r0) {
     switch (r0) {

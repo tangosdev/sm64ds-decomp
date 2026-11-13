@@ -4,6 +4,7 @@
 #include "nitro/mi/dma.h"
 
 extern "C" {
+
 extern int func_ov007_020be0dc(void);
 extern int func_ov007_020c0b20(Ov007OamList *list, void *oam, int slot);
 extern void func_ov007_020be3bc(void);

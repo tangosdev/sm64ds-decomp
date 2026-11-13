@@ -66,6 +66,7 @@ typedef void (Heyho::*HeyhoMotion)();
 #define HEYHO_RAND(n) ((int)(((u32)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19) * (n)) >> 12)
 
 extern "C" {
+
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
@@ -113,6 +114,7 @@ extern const HeyhoPath sHeyhoFlyInPaths[][4];
 extern const HeyhoPath sHeyhoSettlePaths[][5];
 extern MgCamera *sMgSubCamera;
 }
+
 
 /* The Jump scene's three players, seen through the adapter base the Heyhos
    test against. */
@@ -1253,6 +1255,7 @@ int Heyho::IsChasing() {
 
 extern "C" {
 
+
 /* ---- Heyho_InitPool ---- */
 int Heyho_InitPool(void *heyhos, int count) {
     int i;
@@ -1379,6 +1382,7 @@ int Heyho_AllIdle(void) {
 }
 }
 
+
 dMg3DHeyhoObjAdapter_c::dMg3DHeyhoObjAdapter_c() : mCommand(0)
 {
 }
@@ -1388,6 +1392,7 @@ dMg3DHeyhoObjAdapter_c::dMg3DHeyhoObjAdapter_c() : mCommand(0)
  * the model handle, then the animation handle. The plain counters have
  * no initializer: one would grow the sinit. */
 extern "C" {
+
 int sHeyhoUnsettledCount;
 int sJumpComboCount;
 int sHeyhoScorePopups;
@@ -1397,6 +1402,7 @@ int sHeyhoCount;
 int data_ov006_021403b8[3];
 char *sJumpAdapters[3];
 }
+
 
 HeyhoAdapterModelFilePtr gMgPHeyhoMiniModelFile(0x217);
 HeyhoAdapterAnimationFileHandle gMgPHeyhoWaitAnimFile(0x218);

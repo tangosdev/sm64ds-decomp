@@ -13,9 +13,6 @@
 
 #include "types.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 typedef struct CPContext {
     u64 div_numer; /* 0x00 -- 0x04000290 */
@@ -25,12 +22,9 @@ typedef struct CPContext {
     u16 sqrt_mode; /* 0x1a -- 0x040002b0 (low bit) */
 } CPContext;
 
-void CP_SaveContext(CPContext *);
-void CPi_RestoreContext(const CPContext *);
+extern "C" void CP_SaveContext(CPContext *);
+extern "C" void CPi_RestoreContext(const CPContext *);
 
-#ifdef __cplusplus
-}
-#endif
 
 #ifndef SM64DS_PLATFORM_PC
 typedef char CPContext_size_must_be_0x1c[sizeof(CPContext) == 0x1c ? 1 : -1];

@@ -87,7 +87,7 @@ void func_ov007_020af59c(void) {
                 menu->stateWork = 2;
                 return;
             case 2:
-                OS_Terminate();
+                _Z12OS_Terminatev();
                 return;
             }
             return;

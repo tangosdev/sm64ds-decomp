@@ -15,140 +15,140 @@
   ],
   "functions": [
     {
-      "symbol": "NNS_FndGetSizeForMBlockExpHeap",
+      "symbol": "_Z30NNS_FndGetSizeForMBlockExpHeapPKv",
       "address": "0x0204e084",
       "size": "0x8",
       "ordinal": 0,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator14SizeofInternalEPv.cpp"
     },
     {
-      "symbol": "NNS_FndVisitAllocatedForExpHeap",
+      "symbol": "_Z31NNS_FndVisitAllocatedForExpHeapP15NNSiFndHeapHeadPFvPvS0_jEj",
       "address": "0x0204e08c",
       "size": "0x54",
       "ordinal": 1,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator13DeallocateAllEPFvPvPS_jEj.cpp"
     },
     {
-      "symbol": "NNS_FndGetGroupIDForExpHeap",
+      "symbol": "_Z27NNS_FndGetGroupIDForExpHeapP15NNSiFndHeapHead",
       "address": "0x0204e0e0",
       "size": "0x8",
       "ordinal": 2,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator9GetNodeIDEv.cpp"
     },
     {
-      "symbol": "NNS_FndSetGroupIDForExpHeap",
+      "symbol": "_Z27NNS_FndSetGroupIDForExpHeapP15NNSiFndHeapHeadj",
       "address": "0x0204e0e8",
       "size": "0x10",
       "ordinal": 3,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator9SetNodeIDEj.cpp"
     },
     {
-      "symbol": "NNS_FndGetAllocatableSizeForExpHeapEx",
+      "symbol": "_Z37NNS_FndGetAllocatableSizeForExpHeapExP15NNSiFndHeapHeadi",
       "address": "0x0204e0f8",
       "size": "0x88",
       "ordinal": 4,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator18MaxAllocatableSizeEi.cpp"
     },
     {
-      "symbol": "NNS_FndGetTotalFreeSizeForExpHeap",
+      "symbol": "_Z33NNS_FndGetTotalFreeSizeForExpHeapP15NNSiFndHeapHead",
       "address": "0x0204e180",
       "size": "0x28",
       "ordinal": 5,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator10MemoryLeftEv.cpp"
     },
     {
-      "symbol": "NNS_FndFreeToExpHeap",
+      "symbol": "_Z20NNS_FndFreeToExpHeapP15NNSiFndHeapHeadPv",
       "address": "0x0204e1a8",
       "size": "0x40",
       "ordinal": 6,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator10DeallocateEPv.cpp"
     },
     {
-      "symbol": "NNS_FndResizeForMBlockExpHeap",
+      "symbol": "_Z29NNS_FndResizeForMBlockExpHeapP15NNSiFndHeapHeadPvj",
       "address": "0x0204e1e8",
       "size": "0x188",
       "ordinal": 7,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator10ReallocateEPvj.cpp"
     },
     {
-      "symbol": "NNS_FndAllocFromExpHeapEx",
+      "symbol": "_Z25NNS_FndAllocFromExpHeapExP15NNSiFndHeapHeadji",
       "address": "0x0204e370",
       "size": "0x44",
       "ordinal": 8,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator8AllocateEji.cpp"
     },
     {
-      "symbol": "NNS_FndDestroyExpHeap",
+      "symbol": "_Z21NNS_FndDestroyExpHeapP15NNSiFndHeapHead",
       "address": "0x0204e3b4",
       "size": "0xc",
       "ordinal": 9,
       "legacy_source": "src/_ZN13HeapAllocator7DestroyEv.cpp"
     },
     {
-      "symbol": "NNS_FndCreateExpHeapEx",
+      "symbol": "_Z22NNS_FndCreateExpHeapExPvjt",
       "address": "0x0204e3c0",
       "size": "0x4c",
       "ordinal": 10,
       "legacy_source": "src/_ZN5mHeap6Heap_t28CreateExpandingHeapAllocatorEPvjj.cpp"
     },
     {
-      "symbol": "RecycleRegion",
+      "symbol": "_Z13RecycleRegionP18NNSiFndExpHeapHeadPK13NNSiMemRegion",
       "address": "0x0204e40c",
       "size": "0xf8",
       "ordinal": 11,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator8FreeNodeEP10MemoryNodePNS0_6TargetE.cpp"
     },
     {
-      "symbol": "AllocFromTail",
+      "symbol": "_Z13AllocFromTailP15NNSiFndHeapHeadji",
       "address": "0x0204e504",
       "size": "0xc4",
       "ordinal": 12,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator17AllocateBackwardsEjj.cpp"
     },
     {
-      "symbol": "AllocFromHead",
+      "symbol": "_Z13AllocFromHeadP15NNSiFndHeapHeadji",
       "address": "0x0204e5c8",
       "size": "0xc8",
       "ordinal": 13,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator16AllocateForwardsEjj.cpp"
     },
     {
-      "symbol": "AllocUsedBlockFromFreeBlock",
+      "symbol": "_Z27AllocUsedBlockFromFreeBlockP18NNSiFndExpHeapHeadP24NNSiFndExpHeapMBlockHeadPvjt",
       "address": "0x0204e690",
       "size": "0x198",
       "ordinal": 14,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator12AllocateNodeEP10MemoryNodeS1_Pvjt.cpp"
     },
     {
-      "symbol": "InitExpHeap",
+      "symbol": "_Z11InitExpHeapPvS_t",
       "address": "0x0204e828",
       "size": "0x88",
       "ordinal": 15,
       "legacy_source": "src/_ZN22ExpandingHeapAllocatorC1EPvj.cpp"
     },
     {
-      "symbol": "InitMBlock",
+      "symbol": "_Z10InitMBlockPK13NNSiMemRegiont",
       "address": "0x0204e8b0",
       "size": "0x30",
       "ordinal": 16,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator10CreateNodeEPN10MemoryNode6TargetEt.cpp"
     },
     {
-      "symbol": "InsertMBlock",
+      "symbol": "_Z12InsertMBlockP20NNSiFndExpMBlockListP24NNSiFndExpHeapMBlockHeadS2_",
       "address": "0x0204e8e0",
       "size": "0x30",
       "ordinal": 17,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator8LinkNodeEP10MemoryNodeS1_S1_.cpp"
     },
     {
-      "symbol": "RemoveMBlock",
+      "symbol": "_Z12RemoveMBlockP20NNSiFndExpMBlockListP24NNSiFndExpHeapMBlockHead",
       "address": "0x0204e910",
       "size": "0x28",
       "ordinal": 18,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator10UnlinkNodeEP10MemoryNodeS1_.cpp"
     },
     {
-      "symbol": "GetRegionOfMBlock",
+      "symbol": "_Z17GetRegionOfMBlockP13NNSiMemRegionP24NNSiFndExpHeapMBlockHead",
       "address": "0x0204e938",
       "size": "0x2c",
       "ordinal": 19,

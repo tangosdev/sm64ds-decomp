@@ -43,10 +43,13 @@ extern SharedFilePtr data_ov079_02128300;
 extern SharedFilePtr data_ov079_021282f0;
 
 /* local extern: arm9 C helpers with no shared header yet. */
-extern "C" {
+
 void func_02012694(u32 id, const Vector3 *pos);
+extern "C" {
+
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
+
 
 /* Indexed by mState: [0] StateFly, [1] StateShotDown.
    Defined at the end of this file so it does not insert a function into .text. */

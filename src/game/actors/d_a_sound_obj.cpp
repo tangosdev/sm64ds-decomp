@@ -69,14 +69,20 @@ bool PlaySub(u32, u32, u32, int, bool);
 }
 
 extern "C" {
+
 extern SoundObjRow data_ov002_0210c080[]; /* 7 rows; row 7 is the _ZTV12daSoundObj_c header */
 extern int gSubSoundID;                   /* current sub-sound ID, owned by Sound::PlaySub */
 extern int gMusicVolume;                  /* MUSIC_VOLUME_LSL_12 */
-extern int gSubVolume;                    /* MESSAGE_SOUND_VOLUME_LSL_12 */
+extern int gSubVolume;
+}
+                    /* MESSAGE_SOUND_VOLUME_LSL_12 */
 extern int func_0200f7f0(dActor_c *actor, u16 *counter);
+extern "C" {
+
 int func_ov002_020f9468(daSoundObj_c *self, u16 *counter);
 int func_ov002_020f93a8(daSoundObj_c *self, u16 *counter);
 }
+
 
 namespace Sound {
 int PlaySecretSound(dActor_c *actor, u16 *counter);

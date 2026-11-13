@@ -81,14 +81,19 @@ enum {
 };
 
 extern "C" {
+
 /* Sound::Play2D(2, id). This TU calls the wrapper, not Play2D. */
 extern s16 data_ov081_021289a4;
 extern s16 data_ov081_021289a6;
 extern s16 data_ov081_021289a8;
 extern int AngleDiff(int a, int b);
 extern void func_ov002_020aea30(void *self, void *actor, void *collision);
+}
+
 /* Sound::Play(3, id, pos) — PlayBank3. This TU calls the wrapper. */
 extern void func_02012694(unsigned int a, void *p);
+extern "C" {
+
 extern Vector3 data_ov081_02128998; /* cylinder offset (0, 0x1e000, 0) */
 extern unsigned char gNumPlayers;
 extern daPly_c *gPlayers[];
@@ -97,10 +102,15 @@ extern unsigned d_a_snowmanNewHold(unsigned a, unsigned b, int c, int d, int e, 
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);
 extern struct Matrix4x3 data_020a0e68;
+}
+
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int b, int c, void *v16, int e);
+extern "C" {
+
 extern int atan2_hold_d_a_snowman_1(int a, int b);
 }
+
 
 /* File handles the static initializer constructs. The two models use
  * func_02017acc; the five animations use SharedFilePtr::Construct.

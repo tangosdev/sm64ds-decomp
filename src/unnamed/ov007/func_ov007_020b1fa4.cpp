@@ -7,6 +7,7 @@
 
 extern "C" {
 
+
 extern void func_ov007_020c0128(Ov007Camera *cam);
 extern void func_ov007_020bffb8(Ov007Camera *cam);
 extern void func_ov007_020c0078(Ov007Camera *cam);

@@ -47,7 +47,7 @@
 #include "nitro/gx/gx.h"
 #include "Ov007MenuMem.h"
 
-extern "C" {
+
 
 /* func_ov007_020b7138's first argument: the hooks dScDSMT_c hands the menu
  * (data_ov007_02103290). */
@@ -58,13 +58,19 @@ typedef struct Ov007MenuHooks {
     int fileLoad;            /* 0x0c: func_ov007_020b4100 */
     int fileRelease;         /* 0x10: func_ov007_020b4100 */
     int (*callback)(int id); /* 0x14: becomes the work block's callback */
-} Ov007MenuHooks;
+}
+extern "C" {
+ Ov007MenuHooks;
 
 /* set once the bring-up or a frame's drawing is done; cleared as the
  * bring-up, the frame's logic and the teardown start */
 extern int sFrameReady;
+}
+
 
 extern void func_02045d9c(void);
+extern "C" {
+
 extern void func_ov007_020aed98(void);
 extern void func_ov007_020b2e64(TPData *sample);
 extern void func_ov007_020b3050(void);

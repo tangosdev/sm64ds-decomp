@@ -18,7 +18,7 @@ int FS_LoadOverlay(MIProcessor target, FSOverlayID id) {
         if (sum + info.header.bss_size <= 0x214eaa0u)
             goto start;
     }
-    OS_Terminate();
+    _Z12OS_Terminatev();
 start:
     FS_StartOverlay(&info);
     return 1;

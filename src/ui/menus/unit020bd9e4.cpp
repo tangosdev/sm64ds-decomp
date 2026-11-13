@@ -43,12 +43,14 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
 
-extern "C" {
+
 
 extern void func_0204f934(NNSSndHandle *);
 extern void func_0204f94c(NNSSndHandle *);
 extern int func_0204fa2c(NNSSndHandle *, int);
 extern int func_02051f1c(void *, unsigned int, int);
+extern "C" {
+
 extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020c3d1c(void *);
 

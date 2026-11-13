@@ -21,7 +21,7 @@
 #include "nitro/snd/command.h"
 #include "nitro/snd/interface.h"
 
-extern "C" {
+
 
 /* This SDK's command numbers. There is no SND_CMD_PREPARE_SEQ,
  * SND_CMD_START_PREPARED_SEQ or SND_CMD_SKIP_SEQ, so pause is 2 and
@@ -208,5 +208,4 @@ void PushCommand_impl(s32 id, u32 par1, u32 par2, u32 par3, u32 par4) {
     cmd->arg[2] = par3;
     cmd->arg[3] = par4;
     SND_PushCommand(cmd);
-}
 }

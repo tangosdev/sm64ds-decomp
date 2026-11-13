@@ -124,6 +124,7 @@ struct StateRecord {
 
 extern "C" {
 
+
 /* This unit's own globals (its .bss claim). sTrmp2MarioPtrs is read only by
    d_mg_trmpln2_mario. */
 void *sTrmpLinePlttAddr;
@@ -189,7 +190,11 @@ void func_0203d704(int *, int *, int *);
 void func_0203cd80(int *, short);
 void Matrix4x3_FromQuaternion(const Quaternion *, Matrix4x3 *);
 void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *, int, int, int);
+}
+
 unsigned int func_02045a50(const void *, unsigned int);
+extern "C" {
+
 
 /* Vec3/Vector2 helpers: one-function C sources in src/, no owning header. */
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
@@ -236,6 +241,7 @@ void TrmpLine_ClearAll(u32);
 void TrmpLine_CreateStartLineT2(void);
 void TrmpLine_CreateStartLineT1(void);
 }
+
 
 extern "C" void TrmpItem_GrowScale(TrmpItem *c) {
     ApproachLinear(c->mScale.x, 0x1200, 0x80);

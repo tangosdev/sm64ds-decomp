@@ -58,8 +58,10 @@ extern FileTable data_ov064_0211adbc;
 
 /* local extern: MTX_MultVec43 has no shared header yet. */
 extern "C" {
+
 void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 }
+
 
 daObjFl_KomaU_c::~daObjFl_KomaU_c() {}
 

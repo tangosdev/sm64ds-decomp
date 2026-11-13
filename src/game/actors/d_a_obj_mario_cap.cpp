@@ -222,17 +222,23 @@ enum {
  * ROM symbols. Mangled spellings live inside extern "C" so the C++ front end
  * does not mangle them a second time.
  * ------------------------------------------------------------------------ */
-extern "C" {
+
 
 /* -- other modules -- */
 void  func_02013a88(void);
 short func_02010844(void *self, void *v, short angle);
 void func_020167a4(dExtAnmModel_c *model);
+extern "C" {
+
 int func_ov002_020f030c(int x);
 
 unsigned short DecIfAbove0_Short(unsigned short *p);
+}
+
 
 Fix12i Vec3_HorzLen(const Vector3 *v);
+extern "C" {
+
 void  Vec3_MulScalarInPlace(void *v, int s);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Asr(Vector3 *out, Vector3 *v, int shift);
@@ -243,10 +249,14 @@ void  Matrix4x3_FromRotationY(void *m, int angle);
 
 
 short atan2_hold_d_a_obj_mario_cap_1(int y, int x);
+}
+
 
 
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *thiz, void *actor, s32 f1, s32 f2, void *v, void *w);
+extern "C" {
+
 
 
 /* -- data -- */
@@ -287,6 +297,7 @@ extern SharedFilePtr *data_ov002_020ff0b8[];
 extern int            *data_ov002_020ff0c4[];
 
 }
+
 
 extern "C" daObjMarioCap_c *daObjMarioCap_c_classInit(void)
 {

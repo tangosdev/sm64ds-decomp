@@ -88,12 +88,21 @@ extern CLPS_Block data_ov021_02113a60;
 extern CLPS_Block data_ov021_02113a80;
 
 extern "C" {
+
 void Matrix4x3_FromQuaternion(const struct Quaternion *q, struct Matrix4x3 *mF);
 void Vec3_Asr(void *d, void *s, int sh);
+}
+
 int MTX_Inverse43(const struct Matrix4x3 *s, struct Matrix4x3 *d);
+extern "C" {
+
 void MTX_MultVec43(Vector3 *src, Matrix4x3 *mtx, Vector3 *dst);
 void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *dst);
+}
+
 void Quaternion_FromVector3(void *q, Vector3 *axis, Vector3 *v);
+extern "C" {
+
 void Quaternion_Normalize(void *q);
 void Quaternion_SLerp(void *q0, void *q1, int t, void *out);
 s32 Vec3_Equal(const Vector3 *a, const Vector3 *b);
@@ -101,6 +110,7 @@ u16 DecIfAbove0_Short(u16 *p);
 u8 DecIfAbove0_Byte(u8 *p);
 
 }
+
 
 /* The identity quaternion. Its other readers still declare it int[4], so this
    TU copies it through a Quaternion view. */

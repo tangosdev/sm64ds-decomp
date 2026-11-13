@@ -1,5 +1,26 @@
 #ifndef NITRO_OS_SPINLOCK_H
 #define NITRO_OS_SPINLOCK_H
+#ifndef __cplusplus
+#define OS_UnLockCartridge _Z18OS_UnLockCartridget
+#define OS_GetLockID _Z12OS_GetLockIDv
+#define OS_ReleaseLockID _Z16OS_ReleaseLockIDt
+#define OSi_WaitByLoop _Z14OSi_WaitByLoopv
+#define OS_ReadOwnerOfLockWord _Z22OS_ReadOwnerOfLockWordPV10OSLockWord
+#define OSi_FreeCardBus _Z15OSi_FreeCardBusv
+#define OSi_AllocateCardBus _Z19OSi_AllocateCardBusv
+#define OS_UnlockCard _Z13OS_UnlockCardt
+#define OS_TryLockCard _Z14OS_TryLockCardt
+#define OSi_FreeCartridgeBus _Z20OSi_FreeCartridgeBusv
+#define OSi_AllocateCartridgeBus _Z24OSi_AllocateCartridgeBusv
+#define OS_TryLockCartridge _Z19OS_TryLockCartridget
+#define OS_UnlockCartridge _Z18OS_UnlockCartridget
+#define OSi_DoTryLockByWord _Z19OSi_DoTryLockByWordtPV10OSLockWordPFvvEj
+#define OS_UnlockByWord _Z15OS_UnlockByWordtPV10OSLockWordPFvvE
+#define OSi_DoUnlockByWord _Z18OSi_DoUnlockByWordtPV10OSLockWordPFvvEj
+#define OS_TryLockByWord _Z16OS_TryLockByWordtPV10OSLockWordPFvvE
+#define OSi_DoLockByWord _Z16OSi_DoLockByWordtPV10OSLockWordPFvvEj
+#define OS_InitLock _Z11OS_InitLockv
+#endif
 
 /*
  * Lock words for the resources the two CPUs share, under the NitroSDK's own
@@ -29,9 +50,6 @@ typedef volatile struct OSLockWord {
 
 #define OS_ReadOwnerOfLockCartridge() OS_ReadOwnerOfLockWord((OSLockWord *)HW_CTRDG_LOCK_BUF)
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 void OS_InitLock(void);
 s32 OSi_DoLockByWord(u16, OSLockWord *, void (*)(void), u32);
@@ -53,8 +71,5 @@ void OSi_WaitByLoop(void);
 s32 OS_GetLockID(void);
 void OS_ReleaseLockID(u16);
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* NITRO_OS_SPINLOCK_H */

@@ -11,7 +11,7 @@ enum LoadFont_AssetId {
 extern "C" void *LoadFile(int handle);
 extern "C" int Mg_GetWorkBuffer(void);
 extern "C" int LoadFileAt(int handle, int dest);
-extern "C" void Deallocate(void *ptr);
+void Deallocate(void *ptr);
 
 extern "C" void DecompressLZ16(void *dst, void *src);
 
@@ -20,8 +20,8 @@ extern int data_0209d6f8;
 extern unsigned char data_0209d660;
 extern short data_0209d6d4;
 
-extern "C" void LoadFont(unsigned char arg);
-extern "C" void LoadFont(unsigned char arg)
+void LoadFont(unsigned char arg);
+void LoadFont(unsigned char arg)
 {
     void *file;
     void *r4;

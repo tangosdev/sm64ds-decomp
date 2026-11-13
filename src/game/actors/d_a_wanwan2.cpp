@@ -158,8 +158,13 @@ struct Vector3_16;
 struct dCc_c;
 
 extern "C" {
+
 unsigned short DecIfAbove0_Short(unsigned short *p);
+}
+
 void func_02012694(unsigned int, void *);
+extern "C" {
+
 void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
 void Matrix4x3_FromRotationY(void *m, int angle);
 void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angX);
@@ -168,10 +173,18 @@ void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
+}
+
 int Vec3_HorzLen(void *v);
+extern "C" {
+
 int VEC_Mag(const Vector3 *v);
+}
+
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-int ApproachAngle(short *cur, short target, int step, int a, int b);
+extern "C" int ApproachAngle(short *cur, short target, int step, int a, int b);
+extern "C" {
+
 int atan2_hold_d_a_wanwan2_1(int y, int x);
 void LoadSilverStarAndNumber();
 void UnloadSilverStarAndNumber();
@@ -185,6 +198,7 @@ extern ChompPmf data_ov100_02147ff8;
 extern unsigned char gGameMode;
 extern Matrix4x3 data_020a0e68;
 }
+
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 

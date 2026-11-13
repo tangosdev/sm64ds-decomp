@@ -93,6 +93,7 @@ struct OamAttr;
 struct Matrix2x2;
 
 extern "C" {
+
 /* RenderTimeTimer draws gRaceTimer only while this is set. The writers
    start that timer with it: daPly_c on surface type 15 and the Koopa the
    Quick race (daRNk_c). InitResources clears it. */
@@ -121,16 +122,28 @@ extern unsigned char gPrevReturnState;
 extern unsigned char gNewStarCollected;
 extern unsigned char gLevelClearStep;
 extern int data_020a0db0;
+}
+
 extern unsigned char NumStars(void);
+extern "C" {
+
 extern signed char gNumRedCoins[];
 extern signed char gCurrentSublevel;
+}
+
 extern int SublevelToLevel(int i);
+extern "C" {
+
 extern unsigned char gGamePaused;
 extern unsigned char data_0209f20c;
 extern unsigned char gVsExitScreenActive;
 extern unsigned char data_0209f204;
 extern struct OamAttr *data_ov002_0210ca0c[];
+}
+
 extern int GetOwnerLanguage(void);
+extern "C" {
+
 
 extern unsigned char data_0209f2bc;
 extern unsigned short data_ov002_02111188;
@@ -140,9 +153,11 @@ extern unsigned char gShowTouchScreenArrows;
 extern dFdBrightness_c *gSceneFader;
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
+}
+
 void Deallocate(void *handle);
 void func_0203da4c(void);
-}
+
 
 /* Mode 1 is versus mode. This int-returning predicate is what makes the ROM
    materialize 0/1 before testing it. */

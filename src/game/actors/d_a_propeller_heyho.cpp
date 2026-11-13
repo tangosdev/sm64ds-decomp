@@ -192,11 +192,14 @@ extern int (daPropeller_Heyho_c::*data_ov070_02123110)();
 extern void (daPropeller_Heyho_c::*data_ov070_021230e0)();
 extern int (daPropeller_Heyho_c::*data_ov070_021230f8)();
 extern void (daPropeller_Heyho_c::*data_ov070_02123100)();
-extern "C" {
+
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, dActor_c *a, int r, int h, Vector3_16 *p, Vector3_16 *q);
+extern "C" {
+
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);
 }
+
 
 /* Loads the model (shared file 02123530) and six animation files, then seeds:
  * mCanSpitFire from the low byte of param1 (0xff counts as 0), the terminal fall
@@ -232,8 +235,10 @@ int daPropeller_Heyho_c::InitResources()
 extern daPropeller_Heyho_c::State data_ov070_021235cc;
 extern daPropeller_Heyho_c::State data_ov070_021235bc;
 extern "C" {
+
 extern void func_ov070_0211f100(daPropeller_Heyho_c *c);
 }
+
 
 /* Per-frame update. In order: Yoshi-mouth handling, then the death sequence
  * (mDeathState != 0), then the current state's main handler, gravity clamped at
@@ -357,8 +362,10 @@ int daPropeller_Heyho_c::CleanupResources()
 
 extern "C" {
 
+
 extern Matrix4x3 data_020a0e68;
 }
+
 
 /* The matrix copies go through the flat Mtx43: assigning Matrix4x3 grows
    .text by 0x34 bytes. */
@@ -392,6 +399,7 @@ extern "C" int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::S
 
 /* -------------------------------------------------------------------------- */
 extern "C" {
+
 /* Wander init: heading = a random multiple of 0x1000 (one of 16 directions,
  * 22.5 degrees apart), timer = 50 + random 0..31 frames, plays the file-02123520
  * animation at speed 1.0. */
@@ -405,11 +413,14 @@ int func_ov070_0211ffa8(daPropeller_Heyho_c* c){
 }
 }
 
+
 /* -------------------------------------------------------------------------- */
-extern "C" {
+
 typedef short s16;
 
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
+extern "C" {
+
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 
 extern Matrix4x3 data_020a0e68;
@@ -479,8 +490,10 @@ int func_ov070_0211fd98(daPropeller_Heyho_c *c)
 }
 }
 
+
 /* -------------------------------------------------------------------------- */
 extern "C" {
+
 /* (data_ov070_02123520: SharedFilePtr view declared earlier in this TU) */
 /* Chase init: plays the file-02123520 animation (the wander one) at speed 1.0. */
 int func_ov070_0211fd60(daPropeller_Heyho_c *p) {
@@ -489,10 +502,13 @@ int func_ov070_0211fd60(daPropeller_Heyho_c *p) {
 }
 }
 
+
 /* -------------------------------------------------------------------------- */
-extern "C" {
+
 
 extern short Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
+extern "C" {
+
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 
 extern signed char gCurrentSublevel;
@@ -596,8 +612,10 @@ int func_ov070_0211fae4(daPropeller_Heyho_c *c)
 }
 }
 
+
 /* -------------------------------------------------------------------------- */
 extern "C" {
+
 /* Dive init: clears mHitDuringAttack and mStateStep, timer = 63 frames, heading
  * from HorzAngleToCPlayerOrAng, plays the file-02123518 animation (flags
  * 0x40000000) at speed 1.0. */
@@ -611,14 +629,17 @@ int func_ov070_0211fa80(daPropeller_Heyho_c *c) {
 }
 }
 
+
 /* -------------------------------------------------------------------------- */
-extern "C" {
+
 typedef int s32;
 typedef short s16;
 typedef unsigned int u32;
 typedef unsigned short u16;
 typedef unsigned char u8;
 typedef signed char s8;
+extern "C" {
+
 
 
 /* (data_ov070_02123510: SharedFilePtr view declared earlier in this TU) */
@@ -629,8 +650,10 @@ extern s32 data_0209f32c;
 extern Matrix4x3 data_020a0e68;
 
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);
-extern short Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 }
+
+extern short Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
+
 
 /* Dive main. Turns toward mTargetAngY and levels the Z bank. When the animation
  * has finished: the first time (mStateStep == 0) it starts the file-02123510
@@ -757,6 +780,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
 
 /* -------------------------------------------------------------------------- */
 extern "C" {
+
 /* Settle init: mStateStep = 0; plays the file-02123508 animation (flags
  * 0x40000000) unless mHitDuringAttack is set. */
 int func_ov070_0211f694(daPropeller_Heyho_c *c) {
@@ -768,12 +792,15 @@ int func_ov070_0211f694(daPropeller_Heyho_c *c) {
 }
 }
 
+
 /* -------------------------------------------------------------------------- */
 extern "C" {
+
 extern signed char gCurrentSublevel;
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
 }
+
 
 /* Settle main: once the animation has finished, raises home by 300 units (not
  * when LEVEL_ID == 0x16), clears mStateStep, starts the 90-frame cooldown and
@@ -806,12 +833,15 @@ extern "C" int func_ov070_0211f5f0(daPropeller_Heyho_c *c) {
 }
 
 /* -------------------------------------------------------------------------- */
-extern "C" {
+
 short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 void func_02012694(unsigned int a, void *p);
+extern "C" {
+
 int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
 }
+
 
 #define M(p) (p)
 
@@ -864,6 +894,7 @@ int daPropeller_Heyho_c::func_ov070_0211f48c() {
 
 /* -------------------------------------------------------------------------- */
 extern "C" {
+
 /* Knocked init: zeroes the 0x0a4 / mVertSpeed / 0x0ac velocity words, then
  * mVertSpeed = +50.0 units/frame (upward pop), mVertAccel = -5.0, timer = 3
  * frames and mFlags = 0. */
@@ -878,6 +909,7 @@ short func_ov070_0211f450(daPropeller_Heyho_c *c) {
     return 1;
 }
 }
+
 
 /* -------------------------------------------------------------------------- */
 extern "C" int func_ov070_0211f0a4(daPropeller_Heyho_c *c);
@@ -929,10 +961,13 @@ extern daPropeller_Heyho_c::State data_ov070_021235cc;
 /* (data_ov070_02123528: SharedFilePtr view declared earlier in this TU) */
 
 extern "C" {
+
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);
 extern void func_ov002_020aea30(void *self, void *actor, void *collision);
-extern void func_02012694(unsigned int a, void *b);
 }
+
+extern void func_02012694(unsigned int a, void *b);
+
 
 /* Hit reaction, run once per frame outside the knocked state. Takes the colliding
  * actor from the collider (mdCcAc_c.otherOwner) and reads hitFlags: fire sends it

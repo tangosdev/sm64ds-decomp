@@ -70,6 +70,7 @@ struct OamAttr;
 #include "math/CalcLib.h"
 
 extern "C" {
+
 int CupFx_FindFree(CupFx *fx, int kind, int x, int y);
 struct OamAttr;
 extern int sCupFxScales[];
@@ -90,12 +91,20 @@ extern void Presenter_PlayMiss(char *c);
 extern void Presenter_PlayLose(char *c);
 extern void Mg_SubmitScore(int self);
 extern void FreeGfxSlotsById(int arg);
+}
+
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
+extern "C" {
+
 void CupFx_MoveForCup(CupFx *fx, int cup, int dx, int dy);
 int CupFx_Spawn(CupFx *fx, int kind, int x, int y, signed char cup);
+}
+
 struct CupShuffleOffset {
     s8 x, y;
 };
+extern "C" {
+
 extern CupShuffleOffset sCupShuffleOffsets[];
 extern void Presenter_ResetPose(char *c);
 void CupFx_DrawForCup(CupFx *fx, int cup);
@@ -117,6 +126,7 @@ void __cxa_vec_ctor(void *base, unsigned int count, unsigned int stride, void *c
 void Cup_Nothing(void);
 void func_0203d738(void);
 }
+
 
 #pragma defer_codegen off
 /* Emit each function as it is read, so D1 lands ahead of D0. */
@@ -878,6 +888,7 @@ PMF sCupStateTable[8] = {
 };
 
 extern "C" {
+
 extern AnimStep data_ov006_02139dbc[];
 extern AnimStep data_ov006_02139e9c[];
 extern AnimStep data_ov006_02139ec4[];
@@ -886,6 +897,7 @@ extern AnimStep data_ov006_02139e4c[];
 extern AnimStep data_ov006_0213a274[];
 extern AnimStep data_ov006_0213a1ec[];
 }
+
 
 RoundRow sCupRoundTable[10] = {
     {8, 1, 0},  {10, 4, 3}, {12, 7, 6}, {8, 1, 0},  {10, 2, 1},
@@ -922,5 +934,6 @@ s16 sCupShuffleSpeeds[16] = {512,  -512,  1024, -1024, 1536, -1536, 2048, -2048,
 int sCupFxScales[14] = {6144, 4096, 4096, 3584, 4096, 4096, 4096,
                         2048, 2048, 2560, 3072, 3584, 4096, 4096};
 extern "C" {
+
 BaseSpawnInfo<void> g_profile_MG_CUP = {dScMgCup_c_classInit, 361, 361};
 }

@@ -43,6 +43,7 @@ enum CardState {
  * encode. */
 
 extern "C" {
+
 extern dMgMCarloCardObj_c *sMCarloFirstPick;  /* first pick */
 extern dMgMCarloCardObj_c *sMCarloCards;      /* board list head */
 extern dMgMCarloCardObj_c *sMCarloCardsTail;  /* board list tail */
@@ -63,7 +64,11 @@ extern int sMCarloCardSprites[];
 extern void Vec2_Sub(int *o, int *a, int *b);
 extern void func_0203d630(int *p, int m);
 extern int sMgCoinsBetPlaced;
+}
+
 extern int func_0203d5dc(void *a, void *b);
+extern "C" {
+
 extern void Mg_DrawNumber(int a, int b, int c, int d, int e, int f, int g);
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 void Mg_DrawCredits(char *a0, int a1, int a2, int a3);
@@ -86,6 +91,7 @@ extern int Dealer_Load(char *p);
 extern unsigned char gMainScreenLayers;
 extern unsigned char gSubScreenLayers;
 }
+
 
 dMgMCarloCardObj_c::dMgMCarloCardObj_c() : mPrev(0), mNext(0) {}
 

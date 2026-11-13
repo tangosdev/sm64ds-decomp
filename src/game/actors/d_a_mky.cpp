@@ -73,8 +73,10 @@
  * a variable's name does not mangle. */
 extern "C" {
 
+
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 }
+
 
 /* Actor IDs 0xbf, 0x10b and 0x10c are PLAYER, UKIKI_THIEF and UKIKI_STAR.
  * dActor_c::mFlags bits 0x20000 and 0x40000 are the two yoshi-mouth states.
@@ -1402,12 +1404,14 @@ extern MkyAnimFilePtr data_ov030_02115cf0;
  * methods above are members of this class and are not redeclared. */
 extern "C" {
 
+
 extern SharedFilePtr  data_ov002_0210da40;
 extern SharedFilePtr  data_ov002_0210d9a0;
 extern SharedFilePtr  data_ov002_0210d9c0;
 extern SharedFilePtr *data_ov030_02114824[10];
 
 }
+
 
 /* Vtable slot 3.  Releases the four shared files the class holds plus its
  * ten-entry table; it never touches `this`, which is why the legacy C form

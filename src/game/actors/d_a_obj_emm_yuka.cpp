@@ -49,6 +49,7 @@ struct EmmYukaCollisionFilePtr : SharedFilePtr {
 };
 
 extern "C" {
+
 extern EmmYukaFiles data_ov052_021125a0;
 extern void hold_d_a_obj_emm_yuka(dBgW_KcMbg *self, KCL_File *kcl, const Matrix4x3 *mtx, int scale,
                                   s16 angleY, CLPS_Block *clps);
@@ -58,6 +59,7 @@ void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 /* local extern: CalcLib conflicts with this TU's Vec3_MulScalar spelling. */
 void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
 }
+
 
 #pragma defer_codegen off
 

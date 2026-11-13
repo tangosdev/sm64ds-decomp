@@ -20,7 +20,7 @@ void func_ov007_020c2d44(Ov007StrokePath *path, int n) {
     }
     int a = FX_MUL(dy, dy);
     int b = FX_MUL(dx, dx);
-    int len = FX_Sqrt(a + b);
+    int len = _Z7FX_Sqrti(a + b);
     path->segmentLengths[n] = len;
     path->segmentAngles[n] = -ang;
     if (n == 1) {

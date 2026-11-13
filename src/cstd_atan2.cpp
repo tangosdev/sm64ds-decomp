@@ -15,10 +15,13 @@ typedef short s16;
 #include "nitro/fx/fx_cp.h"
 
 extern "C" {
+
 s32 func_01ffa4bc(s32 a);
 s32 func_01ff98f4(s32 a, s32 b);
-extern unsigned short gArctanTable[];
 }
+
+extern unsigned short gArctanTable[];
+
 
 namespace cstd {
 

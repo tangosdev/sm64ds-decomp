@@ -8,6 +8,7 @@
 
 extern "C" {
 
+
 /* Item 1's wiggle: while its state is idle and wiggleTimer runs, posY swings
  * about the layout's home row on a sine that fades out with the remaining
  * time. */

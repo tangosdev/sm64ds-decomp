@@ -49,7 +49,7 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/MtxStack.h"
 
-extern "C" {
+
 
 /* The 0x14-byte screen-fade record sScreenFade points at. */
 typedef struct Ov007Fade {
@@ -60,13 +60,23 @@ typedef struct Ov007Fade {
     /* 0x10: RequestScreenFade's first, the fade kind; ScreenFade_Update
      * starts it and clears it */
     int request;
-} Ov007Fade;
+}
+extern "C" {
+ Ov007Fade;
+}
+
 
 typedef char Ov007Fade_size_must_be_0x14[sizeof(Ov007Fade) == 0x14 ? 1 : -1];
+extern "C" {
+
 
 extern Ov007Fade *sScreenFade;
+}
+
 
 extern void InitialiseVramGlobals(void);
+extern "C" {
+
 extern void func_ov007_020b3edc(int size);
 extern void *func_ov007_020b3f20(int idx);
 extern void func_ov007_020bbff0(void *c);

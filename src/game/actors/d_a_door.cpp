@@ -188,6 +188,7 @@ struct daDoor_StateRecord {
 struct Vector3_16;
 
 extern "C" {
+
 /* Defined below, called before their definitions. These four are the shared
    countdown helpers -- free functions, not members: d_a_ply_methods.cpp, daMugenBGM_c
    and d_a_star_gate.cpp call them too, and none takes the door. */
@@ -196,11 +197,14 @@ int func_ov100_02144fcc(void);
 int func_ov100_02145014(void);
 void func_ov100_02145070(int v);
 }
-extern "C" {
+
+
 /* func_0201277c(id) plays a sound id with no position, as func_02012790
    does (Sound.h); func_02012694(id, pos) plays it at a position. */
 unsigned int func_0201277c(unsigned int a);
 void func_02012694(unsigned int a, void *b);
+extern "C" {
+
 int func_ov002_020ca78c(void *p);
 void Vec3_RotateYAndTranslate(Vector3 *res, const Vector3 *translation, short angY,
                               const Vector3 *v);
@@ -208,11 +212,15 @@ void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(void *m, short angY);
 int AngleDiff(int a, int b);
+}
+
 unsigned char NumStars(void);
 void ChangeArea(int areaID);
 void ShowArea(int idx);
 unsigned char IsAreaShowing(int idx);
 void SetTouchScreenDelay(void);
+extern "C" {
+
 void LoadKeyModels(int idx);
 void UnloadKeyModels(int idx);
 
@@ -271,6 +279,7 @@ extern SharedFilePtr data_ov089_02132c50;
    element type. */
 extern void *data_ov089_02132894[];
 }
+
 
 /* The door's file-scope SharedFilePtr objects, spelled through the same
    wrapper idiom the landed folds use: the handles' code is the veneer pair

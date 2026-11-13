@@ -6,7 +6,7 @@
 #include "nitro/hw/registers.h"
 #include "nitro/gx/gx_bgcnt.h"
 
-extern "C" {
+
 
 /* Display setup shared by the scenes in src/game/stages/d_s_entry_methods.cpp
  * and src/game/stages/d_s_mb.cpp: VRAM banks, both engines' BG modes with
@@ -48,5 +48,4 @@ void func_0200f2cc(void)
     G2S_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x3800,
                           GX_BG_CHARBASE_0x04000);
     G2S_BG3Mosaic(0);
-}
 }

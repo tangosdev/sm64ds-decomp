@@ -91,6 +91,7 @@ namespace Sound {
 
 extern "C" {
 
+
 /* --- shared ov004, main and library helpers --- */
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 extern void Mg_DrawBigNumber(int x, int y, int h, int a, int b, int c, int d);
@@ -99,31 +100,46 @@ extern void Mg_DrawTopRightCounter(int a, int b);
 extern int  Mg_GetTopRecord(void);
 extern void Mg_DrawTopLeftCounter(int score);
 extern void Mg_SubmitScore(int self);
+}
+
 extern int  func_020126e8(int a);
 extern int  func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
+extern "C" {
+
 extern void SetBg2Offset(int a, int b);
 struct OamAttr;
+}
+
 #include "OAM.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/g2.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/mi/memory.h"
+extern "C" {
 extern void Mg_RenderSpriteBothPalMtx(void *sprite, int x, int y, int a3, void *m);
 extern int  Mg_RenderSpriteBothScaled(OamAttr *a, int b, int c, int d, int e, int f, int g);
 extern void Mg_SetSharedState(int a);
 extern void Mg_SetTopScreenYOffset(int a);
 extern void Mg_InitBrush(char *a, char b, int c, int d);
+}
+
 extern void func_020126ac(int a0, int a1, int a2, int a3, int s0);
 extern void func_02012718(int a, int b);
 extern int Sound_PlayIfNotActive(int handle, int player, int id, short unused);
+extern "C" {
+
 extern s16 atan2_hold_d_s_mg_pachinko_1(int y, int x);
 extern void FreeGfxSlotsById(int arg);
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
+}
+
 extern void Deallocate(void *p);
 /* local extern: nitro/gx/gx_load.h leaves GX_LoadBG3Scr out until
  * decl_common.h's non-const spelling of it goes. */
 extern void GX_LoadBG3Scr(void *dst, u32 offset, u32 len);
+extern "C" {
+
 
 /* --- ROM data this TU reads --- */
 extern unsigned char gMainScreenLayers;
@@ -190,7 +206,8 @@ extern PMF pmf_dScMgPachinko_c_Bg_StateRiseIn;
 extern PMF pmf_dScMgPachinko_c_Bg_StateScroll;
 extern PMF pmf_dScMgPachinko_c_Bg_StateSinkOut;
 
-}  /* extern "C" */
+}
+  /* extern "C" */
 
 /* Both D1 and D0 come from this one definition. */
 dScMgPachinko_c::~dScMgPachinko_c()

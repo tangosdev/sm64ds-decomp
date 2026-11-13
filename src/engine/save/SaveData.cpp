@@ -49,19 +49,26 @@
 #include "SaveData.h"
 #include "nitro/mi/memory.h"
 
-extern "C" {
-extern int data_0209caf4[][5];        /* the minigame record tables, at block + 0x54 */
-extern u8 gGameMode;                  /* gate byte read by CanPlayerHaveCap */
-extern u8 data_0209cad2[];            /* coin records; local extern: no field on the byte array */
-extern unsigned char data_0209cab4[]; /* star bits per course */
-extern unsigned char data_0209f224;   /* last collected star id */
-extern void ClearCapHeldByToad(void); /* forward: called by func_02013a88 above its definition */
-extern void UnlockMinigame(int minigame); /* forward: defined at the end of this file */
+
+extern int data_0209caf4[][5];
+        /* the minigame record tables, at block + 0x54 */
+extern u8 gGameMode;
+                  /* gate byte read by CanPlayerHaveCap */
+extern u8 data_0209cad2[];
+            /* coin records; local extern: no field on the byte array */
+extern unsigned char data_0209cab4[];
+ /* star bits per course */
+extern unsigned char data_0209f224;
+   /* last collected star id */
+extern void ClearCapHeldByToad(void);
+ /* forward: called by func_02013a88 above its definition */
+extern void UnlockMinigame(int minigame);
+ /* forward: defined at the end of this file */
 /* local extern: no header declares it */
 extern int SublevelToLevel(int levelID);
-}
 
-extern "C" void ClearSaveBlock(void) {
+
+void ClearSaveBlock(void) {
     MI_CpuClear8(&data_0209caa0, 0x32c);
 }
 
@@ -108,7 +115,7 @@ int SaveData::EraseSaveFile(u32 fileID, char *saveArea) {
     return 0;
 }
 
-extern "C" int func_02013c84(u8 charID, FileSaveData *src, s32 fileIndex, FileSaveData *dest) {
+int func_02013c84(u8 charID, FileSaveData *src, s32 fileIndex, FileSaveData *dest) {
     MI_CpuCopy8(src, dest, 0x44);
     if (fileIndex < 0) {
         data_0209caa0.activeFile = charID;
@@ -166,26 +173,26 @@ void SaveData::PlayerLoseCap() {
     data_0209caa0.file.flags1 |= (0x1000000u << data_0209caa0.file.mCharacter);
 }
 
-extern "C" void func_02013a88(void) {
+void func_02013a88(void) {
     if (!SaveData::CanPlayerHaveCap())
         return;
     data_0209caa0.file.flags1 &= ~(0x1000000u << data_0209caa0.file.mCharacter);
     ClearCapHeldByToad();
 }
 
-extern "C" int func_02013a44(void) {
+int func_02013a44(void) {
     if (!SaveData::CanPlayerHaveCap())
         return 0;
     return data_0209caa0.file.flags1 & (0x8000000u << data_0209caa0.file.mCharacter);
 }
 
-extern "C" void func_02013a00(void) {
+void func_02013a00(void) {
     if (!SaveData::CanPlayerHaveCap())
         return;
     data_0209caa0.file.flags1 |= (0x8000000u << data_0209caa0.file.mCharacter);
 }
 
-extern "C" void ClearCapHeldByToad(void) {
+void ClearCapHeldByToad(void) {
     if (!SaveData::CanPlayerHaveCap())
         return;
     data_0209caa0.file.flags1 &= ~(0x8000000u << data_0209caa0.file.mCharacter);
@@ -206,7 +213,7 @@ int SaveData::NumGlowingRabbitsFound() {
 }
 
 /* Sets flags2 bit (0x100000 << rabbit count). At 7 rabbits, also sets flags1 bit 0x80. */
-extern "C" void func_02013944(void) {
+void func_02013944(void) {
     u32 count = SaveData::NumGlowingRabbitsFound();
     data_0209caa0.file.flags2 |= (0x100000u << count);
     if ((s32)count >= 7)
@@ -221,7 +228,7 @@ void SaveData::SetCharacterIntro(s32 character) {
     data_0209caa0.file.flags2 |= 1 << character;
 }
 
-extern "C" int func_020138dc(void) {
+int func_020138dc(void) {
     int count = 0;
     int i;
     int f = data_0209caa0.file.minigameRabbits;
@@ -232,7 +239,7 @@ extern "C" int func_020138dc(void) {
     return count;
 }
 
-extern "C" int func_02013890(int rabbit, int character) {
+int func_02013890(int rabbit, int character) {
     if (character < 0) {
         int f = data_0209caa0.file.minigameRabbits;
         int m = 0xf << (rabbit * 4);
@@ -245,33 +252,33 @@ extern "C" int func_02013890(int rabbit, int character) {
 
 /* A rabbit's minigame key, collected by one character (daObj_Mip_Key_c):
    marks it in the file and unlocks the minigame of the same index. */
-extern "C" void CollectMinigameKey(int rabbit, int character) {
+void CollectMinigameKey(int rabbit, int character) {
     int minigame = (rabbit << 2) | character;
     data_0209caa0.file.minigameRabbits |= 1 << minigame;
     UnlockMinigame(minigame);
 }
 
-extern "C" int IsCannonOpen(int n) {
+int IsCannonOpen(int n) {
     return data_0209caa0.file.cannonFlags & (1 << n);
 }
 
-extern "C" void OpenCannon(int n) {
+void OpenCannon(int n) {
     data_0209caa0.file.cannonFlags |= 1 << n;
 }
 
-extern "C" int IsCannonOpenInLevel(s8 levelID) {
+int IsCannonOpenInLevel(s8 levelID) {
     return IsCannonOpen(SublevelToLevel(levelID));
 }
 
-extern "C" void OpenCannonInLevel(s8 levelID) {
+void OpenCannonInLevel(s8 levelID) {
     OpenCannon(SublevelToLevel(levelID));
 }
 
-extern "C" int IsStarCollected(s32 courseID, s32 starID) {
+int IsStarCollected(s32 courseID, s32 starID) {
     return ((1 << starID) & data_0209cab4[courseID]) & 0xff;
 }
 
-extern "C" void CollectStar(int courseID, int starID) {
+void CollectStar(int courseID, int starID) {
     data_0209cab4[courseID] |= 1 << starID;
     data_0209f224 = starID;
 }
@@ -286,7 +293,7 @@ u8 SaveData::CountStarsCollectedInLevel(u32 courseID) {
     return count;
 }
 
-extern "C" u8 CountStarsCollectedInLevelToDisplay(s32 courseID) {
+u8 CountStarsCollectedInLevelToDisplay(s32 courseID) {
     u8 total;
     s32 course;
     if (courseID <= 0xe)
@@ -300,15 +307,15 @@ extern "C" u8 CountStarsCollectedInLevelToDisplay(s32 courseID) {
     return total;
 }
 
-extern "C" int IsStarCollectedInLevel(s8 levelID, s32 starID) {
+int IsStarCollectedInLevel(s8 levelID, s32 starID) {
     return IsStarCollected(SublevelToLevel(levelID), starID);
 }
 
-extern "C" void CollectStarInLevel(s8 levelID, s32 starID) {
+void CollectStarInLevel(s8 levelID, s32 starID) {
     CollectStar(SublevelToLevel(levelID), starID);
 }
 
-extern "C" u8 NumStars(void) {
+u8 NumStars(void) {
     u8 count = 0;
     s8 level = 0;
     s32 star;
@@ -337,15 +344,15 @@ void SaveData::SetCoinRecordIfHigher(int courseID, u8 coins) {
  * one). The record tables at block + 0x54, five words each, are what
  * src/minigames/d_s_mg_base.cpp reads and writes. */
 
-extern "C" int func_02013638(int minigame) {
+int func_02013638(int minigame) {
     return data_0209caa0.mg.unlocked & (1 << minigame);
 }
 
-extern "C" void UnlockMinigame(int minigame) {
+void UnlockMinigame(int minigame) {
     data_0209caa0.mg.unlocked |= 1 << minigame;
 }
 
-extern "C" int func_020135d0(int minigame) {
+int func_020135d0(int minigame) {
     int res;
     if (minigame < 0x1c) {
         res = (data_0209caa0.mg.seenLo & (1 << minigame)) ? 0 : 1;
@@ -357,16 +364,16 @@ extern "C" int func_020135d0(int minigame) {
 
 /* For minigame < 0x1c the byte store below shifts by a negative count, which
  * on ARM sets no bit; only the word store takes effect. */
-extern "C" void func_02013598(int minigame) {
+void func_02013598(int minigame) {
     if (minigame < 0x1c)
         data_0209caa0.mg.seenLo |= 1 << minigame;
     data_0209caa0.mg.seenHi |= 1 << (minigame - 0x1c);
 }
 
-extern "C" int func_02013580(int table, int index) {
+int func_02013580(int table, int index) {
     return data_0209caf4[table][index];
 }
 
-extern "C" void func_02013568(int table, int index, int value) {
+void func_02013568(int table, int index, int value) {
     data_0209caf4[table][index] = value;
 }

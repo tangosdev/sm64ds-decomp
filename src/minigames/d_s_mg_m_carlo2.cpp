@@ -33,6 +33,7 @@
 
 /* Globals that decl_common.h does not already declare with these types. */
 extern "C" {
+
 extern dMgMCarlo2CardObj_c *sMCarlo2CardTail;
 extern dMgMCarlo2CardObj_c *sMCarlo2CardHead;
 extern dMgMCarlo2CardObj_c *sMCarlo2FirstPick;
@@ -42,12 +43,16 @@ extern dMgMCarlo2CardObj_c *sMCarlo2Cards;
 extern s16 sMCarlo2BoardDelay;   /* frames left before the pair resolves  */
 extern s16 sMCarlo2CardsMoving;  /* pieces still animating                */
 extern s16 sMCarlo2BoardStep;    /* difficulty row into sMCarlo2BoardRows */
-extern int sMCarlo2FaceCounts[]; /* per-face weights the picker draws from  */
+extern int sMCarlo2FaceCounts[];
+}
+ /* per-face weights the picker draws from  */
 /* Twenty-three sprite words. The static initializer copies them out of
  * sMgCardSprites in this order; an in-order copy does not. */
 struct Carlo2SpriteWords {
     int a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12,a13,a14,a15,a16,a17,a18,a19,a20,a21,a22;
 };
+extern "C" {
+
 extern int sMgCardSprites[];
 extern Carlo2SpriteWords sMCarlo2CardSprites;
 extern unsigned short sMCarlo2CardFrameSprites[];
@@ -63,7 +68,11 @@ int  GetGameLanguage(void);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 void Vec2_Sub(int* out, int* a, int* b);
+}
+
 int  func_0203d5dc(void* a, void* b);
+extern "C" {
+
 void Mg_CommitRecords(void);
 void Mg_SubmitScore(int score);
 void LoadCard2SubBg3(void *);
@@ -74,6 +83,7 @@ void Dealer_Update(Dealer *t);
 int  Dealer_Load(void* t);
 
 }
+
 
 /* C++ linkage: the reference parameters are part of the ROM names. */
 

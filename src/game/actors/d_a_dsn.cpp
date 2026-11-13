@@ -80,7 +80,7 @@ extern DsnTextureSeqFileHandle gDosuneTextureSequenceFile;
 extern DsnBaseFileTable data_ov091_02135138;
 
 /* The bank-3 sound veneer (src/engine/sound/Sound.cpp); no shared header. */
-extern "C" void func_02012694(unsigned int id, const Vector3 *pos);
+void func_02012694(unsigned int id, const Vector3 *pos);
 
 /* -------------------------------------------------------------------------- */
 

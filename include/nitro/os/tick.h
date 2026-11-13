@@ -1,5 +1,9 @@
 #ifndef NITRO_OS_TICK_H
 #define NITRO_OS_TICK_H
+#ifndef __cplusplus
+#define OS_GetTick _Z10OS_GetTickv
+#define OS_InitTick _Z11OS_InitTickv
+#endif
 
 /*
  * The system tick of the Nitro SDK's os_tick.c, under the SDK's own names
@@ -14,15 +18,9 @@
 
 #include "types.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 void OS_InitTick(void);
 s64 OS_GetTick(void);
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* NITRO_OS_TICK_H */

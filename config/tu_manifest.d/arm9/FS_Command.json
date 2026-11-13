@@ -20,14 +20,14 @@
   ],
   "functions": [
     {
-      "symbol": "FSi_TranslateCommand",
+      "symbol": "_Z20FSi_TranslateCommandP6FSFilei",
       "address": "0x0205c5e4",
       "size": "0x000001a4",
       "legacy_source": "src/unnamed/arm9/0205/func_0205c5e4.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "FSi_ReleaseCommand",
+      "symbol": "_Z18FSi_ReleaseCommandP6FSFilei",
       "address": "0x0205c788",
       "size": "0x0000003c",
       "legacy_source": "src/unnamed/arm9/0205/func_0205c788.c",

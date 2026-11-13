@@ -4,7 +4,7 @@
 #include "Ov007Mesh.h"
 #include "nitro/fx/fx_cp.h"
 
-extern "C" {
+
 
 /* The ROM copies the template with one ldm/stm block. Under C++ a struct of
  * six named ints copies word by word, a struct with an array member as one
@@ -12,6 +12,8 @@ extern "C" {
 struct MeshParamsWords {
     int w[6];
 };
+extern "C" {
+
 
 extern void *func_ov007_020c3df4(const char *name, int size);
 extern Ov007Grid *func_ov007_020c73f0(int springMode, int columns, int rows, int pointMass);

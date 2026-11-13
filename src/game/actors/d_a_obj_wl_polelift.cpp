@@ -46,12 +46,14 @@ struct PoleliftModelFile : SharedFilePtr {
 };
 
 extern "C" {
+
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *a, int scale);
 
 extern Vector3 data_ov026_02113a9c;
 extern PoleliftModelFile data_ov026_02113ea0;
 }
+
 
 extern "C" daObjWlPolelift_c *daObjWlPolelift_c_classInit()
 {

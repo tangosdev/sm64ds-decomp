@@ -1,5 +1,8 @@
 #ifndef SM64DS_MATH_MTXSTACK_H
 #define SM64DS_MATH_MTXSTACK_H
+#ifndef __cplusplus
+#define MTX_Inverse43 _Z13MTX_Inverse43PK9Matrix4x3PS_
+#endif
 
 #include "common.h"
 
@@ -24,29 +27,26 @@
  * includes this header, so naming an unnamed one renumbers those files.
  *
  * Only routines some includer calls are declared so far. */
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-void Matrix4x3_FromRotationX(Matrix4x3 *, int);
-void Matrix4x3_FromRotationY(Matrix4x3 *m, int angle);
-void Matrix4x3_FromRotationZ(Matrix4x3 *, int);
-void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *, short);
-void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short angle);
-void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *, short);
-void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToRotationZXYExt(Matrix4x3 *, int, int, int);
-void Matrix4x3_FromRotationXYZExt(Matrix4x3 *, int, int, int);
-void Matrix4x3_FromRotationZXYExt(Matrix4x3 *, int, int, int);
-void MTX_Concat43(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *out);
-void MTX_Identity43_(Matrix4x3 *);
-/* m = rotation about one axis, from its sine and cosine. */
+extern "C" void Matrix4x3_FromRotationX(Matrix4x3 *, int);
+extern "C" void Matrix4x3_FromRotationY(Matrix4x3 *m, int angle);
+extern "C" void Matrix4x3_FromRotationZ(Matrix4x3 *, int);
+extern "C" void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
+extern "C" void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *, short);
+extern "C" void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short angle);
+extern "C" void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *, short);
+extern "C" void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *m, int x, int y, int z);
+extern "C" void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
+extern "C" void Matrix4x3_ApplyInPlaceToRotationZXYExt(Matrix4x3 *, int, int, int);
+extern "C" void Matrix4x3_FromRotationXYZExt(Matrix4x3 *, int, int, int);
+extern "C" void Matrix4x3_FromRotationZXYExt(Matrix4x3 *, int, int, int);
+extern "C" void MTX_Concat43(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *out);
+extern "C" void MTX_Identity43_(Matrix4x3 *);
+extern "C" /* m = rotation about one axis, from its sine and cosine. */
 void MTX_RotX43_(Matrix4x3 *, int, int);
-void MTX_RotY43_(Matrix4x3 *, int, int);
-void MTX_RotZ43_(Matrix4x3 *, int, int);
-/* dst = v * m (rotation and translation). */
+extern "C" void MTX_RotY43_(Matrix4x3 *, int, int);
+extern "C" void MTX_RotZ43_(Matrix4x3 *, int, int);
+extern "C" /* dst = v * m (rotation and translation). */
 void MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
 /* dst = inverse of src; -1 (dst untouched) when src is singular, else 0. */
 int MTX_Inverse43(const Matrix4x3 *, Matrix4x3 *);
@@ -54,7 +54,7 @@ int MTX_Inverse43(const Matrix4x3 *, Matrix4x3 *);
 extern Matrix4x3 data_020a0e68;
 
 #ifdef __cplusplus
-}
+
 
 struct MtxStack {
     static Matrix4x3 &get() {

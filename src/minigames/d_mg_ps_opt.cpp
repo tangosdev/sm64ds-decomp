@@ -70,6 +70,7 @@ enum { kSndMode = 0x64, kSndBack = 0x65, kSndLight = 0x66, kSndReject = 0x67 };
 enum { kSubBgBit = 2 };
 
 extern "C" {
+
 extern void Mg_DrawSpriteListEntry(void *sprite, int x, int y, struct M *matrix);
 /* The two arrow sprites: one 16x16 OAM entry each (tile 0x49 previous,
    0x47 next, palette 13) and a 0xffff terminator. Mg_DrawSpriteListEntry
@@ -93,6 +94,7 @@ extern unsigned char gSubScreenLayers;
 extern unsigned char data_0208ee3c;
 void PsOpt_PlaceIcon(dMgPsOpt_c::TouchIcon_c *icon, int style, int variant, short x, short y);
 }
+
 
 /* One icon's half extents. The destructor is the shared empty arm9 one
    (NoOpDestructor, 0x0203b98c), so it is declared here and not defined. */

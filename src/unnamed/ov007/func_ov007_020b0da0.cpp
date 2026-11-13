@@ -7,7 +7,7 @@
 #include "Ov007Model.h"
 #include "nitro/fx/fx_cp.h"
 
-extern "C" {
+
 
 #include "decl_common.h"
 #include "common.h"
@@ -23,13 +23,18 @@ extern "C" {
  * move, which C++ keeps for a struct with an array member. */
 typedef struct Vec3Words {
     Fix12i w[3];
-} Vec3Words;
+}
+extern "C" {
+ Vec3Words;
+}
+
 
 
 /* stateWork bits, by what this file does with them; medium confidence */
 #define OV007_FIGURE_SWAY 1    /* rock the model and bob it (periods 160 and 40 ticks) */
 #define OV007_FIGURE_TOUCHED 2 /* a touch landed in the box below; stop at the next rest */
 #define OV007_FIGURE_RISE 4    /* lift it 30 units over the 80 ticks after data_ov007_02103344 */
+extern "C" {
 
 /* The figure's update hook (func_ov007_020b0a20 installs it): on the first
  * tick shows the model and starts it swaying; a touch inside (0x60..0xa0,

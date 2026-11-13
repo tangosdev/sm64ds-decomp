@@ -27,10 +27,10 @@
 #include "SurfaceInfo.h"
 #include "math/CalcLib.h"
 
-extern "C" {
+
 int dBgS_ChkPolySafe(void *arg);
 extern CLPS data_020a0c78;
-}
+
 
 /* Ground and line scans use the real dBgW virtual interface and dActor_c
    clip-volume fields, as the sphere scans do below. PFN retains its pending
@@ -388,37 +388,37 @@ int dBgCh_Lin::DetectClsnExceptSlot0() {
 
 /* dBgCh_Actr_UpdateDiscreteNoLava_veneer @ 0x2038420 (arm9) -- tail-call veneer to dBgCh_Actr::UpdateDiscreteNoLava (0x2037024).
  * r0 (the dBgCh_Actr) passes straight through to the member. */
-extern "C" void dBgCh_Actr_UpdateDiscreteNoLava_veneer(dBgCh_Actr *self) {
+void dBgCh_Actr_UpdateDiscreteNoLava_veneer(dBgCh_Actr *self) {
     self->UpdateDiscreteNoLava();
 }
 
 /* func_02038414 @ 0x2038414 (arm9) -- tail-call veneer to dBgCh_Actr::UpdateDiscreteNoLava_2 (0x2036ee4).
  * r0 (the dBgCh_Actr) passes straight through to the member. */
-extern "C" void func_02038414(void *self) {
+void func_02038414(void *self) {
     ((dBgCh_Actr *)self)->UpdateDiscreteNoLava_2();
 }
 
 /* func_02038408 @ 0x2038408 (arm9) -- tail-call veneer to dBgCh_Actr::UpdateContinuousExceptSlot0 (0x2036acc).
  * r0 (the dBgCh_Actr) passes straight through to the member. */
-extern "C" void func_02038408(dBgCh_Actr *self) {
+void func_02038408(dBgCh_Actr *self) {
     self->UpdateContinuousExceptSlot0();
 }
 
 /* dBgCh_Actr_UpdateContinuous_Veneer @ 0x20383fc (arm9) -- tail-call veneer to dBgCh_Actr::UpdateContinuous (0x20366b4).
  * r0 (the dBgCh_Actr) passes straight through to the member. */
-extern "C" void dBgCh_Actr_UpdateContinuous_Veneer(dBgCh_Actr *self) {
+void dBgCh_Actr_UpdateContinuous_Veneer(dBgCh_Actr *self) {
     self->UpdateContinuous();
 }
 
 /* func_020383f0 @ 0x20383f0 (arm9) -- tail-call veneer to dBgCh_Actr::UpdateContinuousNoLava (0x2036318).
  * r0 (the dBgCh_Actr) passes straight through to the member. */
-extern "C" void func_020383f0(dBgCh_Actr *self) {
+void func_020383f0(dBgCh_Actr *self) {
     self->UpdateContinuousNoLava();
 }
 
 /* func_020383e4 @ 0x20383e4 (arm9) -- tail-call veneer to dBgCh_Actr::UpdateExtraContinous (0x20358ac).
  * r0 (the dBgCh_Actr) passes straight through to the member. */
-extern "C" void func_020383e4(dBgCh_Actr *self) {
+void func_020383e4(dBgCh_Actr *self) {
     self->UpdateExtraContinous();
 }
 
@@ -427,7 +427,7 @@ extern "C" void func_020383e4(dBgCh_Actr *self) {
    Named after TWW's dBgS::MoveBgCrrPos, which runs the same guards and calls
    the collider's position correction; the dBgS_ prefix is coined (there is
    no dBgS object here, the table is a global). */
-extern "C" void dBgS_MoveBgCrrPos(void *arg, int b, int c, int d) {
+void dBgS_MoveBgCrrPos(void *arg, int b, int c, int d) {
     dBgPi *hit = (dBgPi *)arg;
     int idx;
     dBgW *obj;
@@ -449,7 +449,7 @@ extern "C" void dBgS_MoveBgCrrPos(void *arg, int b, int c, int d) {
    and re-identify against its entry. Named after TWW's cBgS::ChkPolySafe,
    same checks in the same order; the dBgS_ prefix is coined. Member-called: the mangled free
    spellings emit the same bl and read worse under decl agreement. */
-extern "C" int dBgS_ChkPolySafe(void *arg) {
+int dBgS_ChkPolySafe(void *arg) {
     dBgPi *hit = (dBgPi *)arg;
     int idx;
     dBgW *collider;
@@ -473,7 +473,7 @@ extern "C" int dBgS_ChkPolySafe(void *arg) {
    dispatches the entry's stored callback. Named after
    TWW's dBgS::RideCallBack (the stored callback is its ride callback); the
    dBgS_ prefix is coined. */
-extern "C" void dBgS_RideCallBack(int a, int b) {
+void dBgS_RideCallBack(int a, int b) {
     int idx;
     dBgW *entry;
     StoodOnCallback fn;
@@ -500,7 +500,7 @@ CLPS_BlockRef &CLPS_BlockRef::operator=(CLPS_Block &block)
    table, or the default entry data_020a0c78 (reset by CLPS::SetDefault) when
    the block is missing or its entries are not 8 bytes. Written first to
    land last in the ROM (reverse emission). */
-extern "C" void func_020381cc(void *block, int idx, void **out) {
+void func_020381cc(void *block, int idx, void **out) {
     unsigned char *table = *(unsigned char **)block;
     if (table == 0 || *(unsigned short *)(table + 4) != 8) {
         data_020a0c78.SetDefault();
@@ -626,7 +626,7 @@ dBgPc::~dBgPc()
 
 /* Fill a SurfaceInfo from a CLPS entry, passed by value as its two words,
    and a face normal. Opens the dBgPc run. */
-extern "C" void func_02037eb0(SurfaceInfo *info, CLPS clps, Vector3 *normal) {
+void func_02037eb0(SurfaceInfo *info, CLPS clps, Vector3 *normal) {
     info->clps.w0 = clps.w0;
     info->clps.w1 = clps.w1;
     info->normal.x = normal->x;
@@ -649,7 +649,7 @@ int CLPS::GetSoundType() const {
     return w0 & 0x1f;
 }
 
-extern "C" int SurfaceInfo_TestFlag0x20(int *p) {
+int SurfaceInfo_TestFlag0x20(int *p) {
     return p[0] & 0x20;
 }
 
@@ -673,7 +673,7 @@ int CLPS::IsCameraPassThrough() const {
     return w0 & 0x1000000;
 }
 
-extern "C" int func_02037e20(int *p) {
+int func_02037e20(int *p) {
     return p[0] & 0x2000000;
 }
 
@@ -703,6 +703,6 @@ void SurfaceInfo::CopyNormalTo(Vector3 &out) const
     out.z = normal.z;
 }
 
-extern "C" int func_02037dc4(int p) {
+int func_02037dc4(int p) {
     return p + 8;
 }

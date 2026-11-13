@@ -50,7 +50,7 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
 
-extern "C" {
+
 
 /* data_ov007_02103360: the 0x1c-byte cursor func_ov007_020b30b0 allocates. */
 typedef struct Ov007Cursor {
@@ -73,9 +73,15 @@ typedef struct Ov007Cursor {
     /* 0x18: the state Cursor_UpdateState returns to when the cursor leaves
      * states 0x16/0x17; -1 none */
     int returnState;
-} Ov007Cursor;
+}
+extern "C" {
+ Ov007Cursor;
+}
+
 
 typedef char Ov007Cursor_size_must_be_0x1c[sizeof(Ov007Cursor) == 0x1c ? 1 : -1];
+extern "C" {
+
 
 extern Ov007Cursor *data_ov007_02103360;
 extern int data_ov007_02103364;
@@ -98,9 +104,12 @@ extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020c92d0(Ov007MenuState *state);
 extern void func_ov007_020c937c(void *state);
 extern void *func_ov007_020c9388(int initialState);
+}
+
 
 /* The menu cursor (data_ov007_02103360). */
 #define CURSOR data_ov007_02103360
+extern "C" {
 
 /* Writes a stylus touch at the current item's position, in pixels: touch
  * down, both axes valid. */

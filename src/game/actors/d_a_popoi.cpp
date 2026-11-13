@@ -113,15 +113,22 @@ extern PopoiPMF data_ov077_02127cd8[2];
  * kept here too so each call site reads identically). The _ZN spellings are
  * the Fix12-by-value signatures the real headers cannot express. */
 extern "C" {
+
 extern int data_0209f32c;               /* WATER_HEIGHT */
 extern signed char gCurrentSublevel;    /* LEVEL_ID */
 extern Matrix4x3 data_020a0e68;         /* scratch Matrix4x3 */
-extern Vector3 data_ov077_02127a5c;     /* sensor offset (0, 0, 44 units) */
+extern Vector3 data_ov077_02127a5c;
+}
+     /* sensor offset (0, 0, 44 units) */
 
 extern s16 func_02010844(void *unused, Vector3 *v, s16 angle);
+extern "C" {
+
 extern int func_ov002_020db674(void *c, int a1, int a2, int a3);
-void func_02012694(unsigned int id, const Vector3 *pos);
 }
+
+void func_02012694(unsigned int id, const Vector3 *pos);
+
 
 /* Actor ID daPopoi_ACTOR_PLAYER (0xbf) is the daPly_c. These int-returning
  * predicates are what make the ROM materialize 0/1 before testing it. */

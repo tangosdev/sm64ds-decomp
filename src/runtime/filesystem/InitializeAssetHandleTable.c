@@ -4,7 +4,7 @@
 #include "nitro/os/thread.h"
 #include "private/watchdog_alarm.h"
 
-extern int AllocAssetHandleTable(int count);
+extern int _Z21AllocAssetHandleTablei(int count);
 extern int func_020189f0(const char *path);
 extern void SetAssetHandleFileID(unsigned handle, int fileId);
 
@@ -2077,11 +2077,11 @@ static const char *sAssetPaths[ASSET_HANDLE_COUNT] = {
 void InitializeAssetHandleTable(void) {
     /* Suspend the timer callback and allocate the zeroed file-ID table. */
     unsigned char savedTimerState = func_0201a9ec(&data_0209d574);
-    AllocAssetHandleTable(ASSET_HANDLE_COUNT);
+    _Z21AllocAssetHandleTablei(ASSET_HANDLE_COUNT);
 
     OSThread *currentThread = OSi_ThreadInfo.current;
-    unsigned int savedPriority = OS_GetThreadPriority(currentThread);
-    OS_SetThreadPriority(currentThread, ASSET_LOOKUP_PRIORITY);
+    unsigned int savedPriority = _Z20OS_GetThreadPriorityPK8OSThread(currentThread);
+    _Z20OS_SetThreadPriorityP8OSThreadj(currentThread, ASSET_LOOKUP_PRIORITY);
 
     /* Resolve each path once so later loads can use numeric file IDs. */
     int handle;
@@ -2092,9 +2092,9 @@ void InitializeAssetHandleTable(void) {
         }
     }
 
-    OS_SetThreadPriority(currentThread, savedPriority);
+    _Z20OS_SetThreadPriorityP8OSThreadj(currentThread, savedPriority);
 
     /* Reset elapsed time before restoring the timer's previous state. */
     func_0201a9fc(&data_0209d574);
-    func_0201a96c(&data_0209d574, savedTimerState);
+    _Z13func_0201a96cP13WatchdogAlarmi(&data_0209d574, savedTimerState);
 }

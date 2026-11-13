@@ -74,7 +74,7 @@ void dBgW_Kc::SetFile(KCL_File *file, CLPS_Block &clpsBlock) {
 }
 
 /* A prism record's index in the file's triangle table (records are 0x10). */
-extern "C" unsigned func_020396dc(dBgW_Kc *self, KCL_Tri *tri) {
+unsigned func_020396dc(dBgW_Kc *self, KCL_Tri *tri) {
     return ((unsigned)tri - (unsigned)self->kclFile->tris) >> 4;
 }
 

@@ -152,17 +152,24 @@ int PlayLong(u32, u32, u32, const Vector3 &, s16);
 }
 
 extern "C" {
+
 extern signed char gCurrentSublevel;
 extern unsigned char gCurrentStarId;
 
 void d_a_owlPlayLongHold(unsigned int a, unsigned int b, unsigned int cc, void *pos,
                          unsigned int d);
 int func_ov002_020df7f4(void *c);
+}
+
 void func_02012694(unsigned int a, void *pos);
 short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
+extern "C" {
+
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-int IsStarCollectedInCurLevel(int);
 }
+
+int IsStarCollectedInCurLevel(int);
+
 
 /* Actor ID 0xbf is PLAYER. This int-returning predicate is what makes the
  * ROM materialize 0/1 before testing it. */

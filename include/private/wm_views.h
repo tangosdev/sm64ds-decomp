@@ -111,23 +111,17 @@ typedef char WMDataSharingInfo_size_must_be_0x420[sizeof(WMDataSharingInfo) == 0
  * states to accept, or paramNum words to copy into the request block.
  * WM_SetCallbackTable stores a request's callback in callbackTable by API
  * id. */
-#ifdef __cplusplus
-extern "C" {
-#endif
-WMArm9Buf *WM_GetSystemWork(void);
-WMErrCode WM_CheckStateEx(int paramNum, ...);
-WMErrCode WM_SendCommand(WMApiid id, unsigned short paramNum, ...);
-void WM_SetCallbackTable(WMApiid id, WMCallbackFunc callback);
-WMErrCode WMi_CheckIdle(void);
-WMErrCode WMi_CheckInitialized(void);
+extern "C" WMArm9Buf *WM_GetSystemWork(void);
+extern "C" WMErrCode WM_CheckStateEx(int paramNum, ...);
+extern "C" WMErrCode WM_SendCommand(WMApiid id, unsigned short paramNum, ...);
+extern "C" void WM_SetCallbackTable(WMApiid id, WMCallbackFunc callback);
+extern "C" WMErrCode WMi_CheckIdle(void);
+extern "C" WMErrCode WMi_CheckInitialized(void);
 
-/* NitroSDK wm_ds.c (WM_Ds.c): data sharing. This SDK build takes the
+extern "C" /* NitroSDK wm_ds.c (WM_Ds.c): data sharing. This SDK build takes the
  * bitmap, length and mode as ints. */
 WMErrCode WM_StartDataSharing(WMDataSharingInfo *, unsigned short, int, int, int);
-WMErrCode WM_StepDataSharing(WMDataSharingInfo *, const void *, WMDataSet *);
-unsigned short *WM_GetSharedDataAddress(WMDataSharingInfo *, WMDataSet *, int);
-#ifdef __cplusplus
-}
-#endif
+extern "C" WMErrCode WM_StepDataSharing(WMDataSharingInfo *, const void *, WMDataSet *);
+extern "C" unsigned short *WM_GetSharedDataAddress(WMDataSharingInfo *, WMDataSet *, int);
 
 #endif

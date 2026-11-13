@@ -4,7 +4,7 @@
 #include "nitro/mi/memory.h"
 #include "nitro/snd/interface.h"
 
-extern "C" {
+
 
 /* Switch the sound-capture effect to kind (data_020a4c64; func_02049ba8
    runs it): leaving kind 1 sends SNDi_SetSurroundDecay(0); then clear the
@@ -28,5 +28,4 @@ void func_02049c48(int kind) {
     if (kind == 1) {
         SNDi_SetSurroundDecay(0x3000);
     }
-}
 }

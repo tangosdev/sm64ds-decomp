@@ -26,6 +26,7 @@
 #include "nitro/fx/fx_trig.h"
 
 extern "C" {
+
 /* local extern: no header declares these matrix entry points (checked
  * include/math/*.h and decl_*.h). */
 void MTX_RotX33_(Matrix3x3 *matrix, int sin, int cos);
@@ -33,6 +34,7 @@ void MTX_RotY33_(Matrix3x3 *matrix, int sin, int cos);
 void MTX_RotZ33_(Matrix3x3 *matrix, int sin, int cos);
 void MTX_MultVec33(const Vector3 *in, const Matrix3x3 *matrix, Vector3 *out);
 }
+
 
 /* SPL's random draw (pret's pokeplatinum/lib/spl/include/spl_random.h);
  * data_020a4d30 is its state, read by the SPLAnim callbacks too. */

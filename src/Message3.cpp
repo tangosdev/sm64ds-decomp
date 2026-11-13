@@ -44,7 +44,7 @@
 
 struct OamAttr;
 
-extern "C" {
+
 extern u8 data_0209fc6c;
 extern u8 data_0209fc70;
 extern u8 data_0209fc74;
@@ -90,7 +90,11 @@ extern u8 data_0209fd20[];
 extern u32 data_0209fd5c[];
 extern u8 data_02092818[];
 extern int data_0209285c[];
+extern "C" {
+
 extern void (*data_02092830[])(void);
+}
+
 extern u8 data_0208f074[];
 extern u8 data_0208f174[];
 extern s32 data_0208ee44;
@@ -121,12 +125,16 @@ extern u32 data_0209287c[];
 extern MBUserInfo *func_0203d8a0(int idx);
 extern u8 NumStars(void);
 extern int func_020138dc(void);
+extern "C" {
+
 extern void DecompressLZ16(void *src, void *dst);
 extern void *LoadFile(int handle);
 /* local extern: Fix12 wall -- the by-value Fix12<int> form cannot be spelled
    from a header; the literal name keeps the def's own scalar params. */
 extern void OamRender10_Message3(int sub, struct OamAttr *attr_, int xOff, int yOff, int palette,
                                  int priority, int scaleX, int scaleY, int rotation, int mode);
+}
+
 #include "OAM.h"
 #include "nitro/mi/memory.h"
 
@@ -146,7 +154,7 @@ void func_02033e50(int p0, int p1);
 void Message_DrawLineBG2VS(void);
 void func_020345b0(int arg0);
 void LoadFont3D(void);
-}
+
 
 /* The text cursor's current control record (data_0209fd0c). Bytes 3 and 4 are
  * a big-endian argument; 5 and 6 are the number-format mode and base. */
@@ -164,7 +172,7 @@ inline bool CharDiffers(u16 a, u16 b) {
     return a != b;
 }
 
-extern "C" s32 GetLanguageIndexVS(void) {
+s32 GetLanguageIndexVS(void) {
     s32 lang = GetOwnerLanguage();
     switch (lang) {
     case 2:
@@ -180,7 +188,7 @@ extern "C" s32 GetLanguageIndexVS(void) {
     }
 }
 
-extern "C" void func_02031028(int arg) {
+void func_02031028(int arg) {
     MBUserInfo *p;
     int i;
     int j;
@@ -256,7 +264,7 @@ void Message::AddChoiceVS() {
     }
 }
 
-extern "C" void func_0203128c(void) {
+void func_0203128c(void) {
     u8 *g;
     int mode;
     int sub;
@@ -317,7 +325,7 @@ void Message::AddCharPairVS() {
  * and spills the scaled row indices, a CSE-off recompute no spelling reaches. */
 #pragma push
 #pragma opt_common_subs off
-extern "C" void func_02031428(void) {
+void func_02031428(void) {
     int cnt;
     int i;
     int j;
@@ -393,7 +401,7 @@ extern "C" void func_02031428(void) {
 }
 #pragma pop
 
-extern "C" void func_020316d8(int screen, int c, u32 x, void *buf) {
+void func_020316d8(int screen, int c, u32 x, void *buf) {
     u32 *chr;
     int pitch;
     if (screen == 1)
@@ -454,7 +462,7 @@ extern "C" void func_020316d8(int screen, int c, u32 x, void *buf) {
     }
 }
 
-extern "C" void func_020318a4(int sl) {
+void func_020318a4(int sl) {
     int base;
     int acc;
     int m;
@@ -506,7 +514,7 @@ extern "C" void func_020318a4(int sl) {
     }
 }
 
-extern "C" void func_020319fc(int n) {
+void func_020319fc(int n) {
     u32 *dst;
     int i;
     u32 col;
@@ -591,7 +599,7 @@ void Message::AddCharVS(u8 c) {
     }
 }
 
-extern "C" void func_02031cd4(void *arg) {
+void func_02031cd4(void *arg) {
     int i;
     u8 *base;
     u8 cmd;
@@ -751,7 +759,7 @@ void Message::LayoutLineVS() {
     }
 }
 
-extern "C" int func_020321fc(void) {
+int func_020321fc(void) {
     if (data_0209fcb8 == 0) {
         if (data_0209fc8c > data_0209fc6c && data_0209fc74 > data_0209fce0) {
             int t;
@@ -844,7 +852,7 @@ extern "C" int func_020321fc(void) {
  * swaps the slot index and the held byte (r3/r2), 8 words, same size. */
 #pragma push
 #pragma opt_common_subs off
-extern "C" void func_020326ac(void) {
+void func_020326ac(void) {
     switch (data_0209fcc8) {
     case 0:
     case 8:
@@ -1060,7 +1068,7 @@ void Message::SetTextGlobalsVS() {
     data_0209fd08 = ip + 0x30;
 }
 
-extern "C" void func_02032f54(void) {
+void func_02032f54(void) {
     if (data_0209fc9c == 0)
         return;
     if (func_020321fc() == 0)
@@ -1068,7 +1076,7 @@ extern "C" void func_02032f54(void) {
     func_020326ac();
 }
 
-extern "C" void func_02032f9c(int a) {
+void func_02032f9c(int a) {
     volatile int li;
     volatile unsigned short ls;
     int idx;
@@ -1142,7 +1150,7 @@ extern "C" void func_02032f9c(int a) {
     data_0209fcdc = (u8)(((data_0209fc88 + 7) >> 3) << 1);
 }
 
-extern "C" void func_020331fc(int a0, int a1, int a2) {
+void func_020331fc(int a0, int a1, int a2) {
     volatile int li;
     short *scr;
     int base;
@@ -1198,7 +1206,7 @@ extern "C" void func_020331fc(int a0, int a1, int a2) {
     }
 }
 
-extern "C" void func_02033390(int sub) {
+void func_02033390(int sub) {
     data_0209fc9c = 0;
     func_02034504();
     data_0209fc94 = 1;
@@ -1225,7 +1233,7 @@ extern "C" void func_02033390(int sub) {
    decl_common.h spells it plain. The macro expands each use to a volatile deref
    of the global -- the inner name paints blue and resolves to the extern. */
 #define data_0209fc78 (*(volatile u8 *)&data_0209fc78)
-extern "C" void func_02033464(int arg0, int arg1, int arg2) {
+void func_02033464(int arg0, int arg1, int arg2) {
     volatile unsigned short sv0;
     volatile unsigned short sv2;
     volatile int li4;
@@ -1348,7 +1356,7 @@ extern "C" void func_02033464(int arg0, int arg1, int arg2) {
 }
 #undef data_0209fc78
 
-extern "C" void func_020337ec(void) {
+void func_020337ec(void) {
     volatile unsigned short v;
     volatile int z;
     data_0209fc9c = 0;
@@ -1371,7 +1379,7 @@ extern "C" void func_020337ec(void) {
     func_02033464(0, 0, 0);
 }
 
-extern "C" void func_020338b0(int a, int b, short c, int d) {
+void func_020338b0(int a, int b, short c, int d) {
     int p, s;
     volatile int li0, li1;
     volatile unsigned short ls0, ls1;
@@ -1425,7 +1433,7 @@ void Message::DisplayVsExitText(unsigned short n) {
     Message_DrawCenteredLineVS(0x1c0, 0x20);
 }
 
-extern "C" void func_02033a80(int arg0) {
+void func_02033a80(int arg0) {
     data_0209fce8 = (u16)arg0;
     data_0209fc9c = 0;
     func_02034504();
@@ -1461,7 +1469,7 @@ void Message::DisplayOptionsMenuTextVS(s16 arg) {
  * what CSE would share (0x298 bytes; 0x278 with CSE on). */
 #pragma push
 #pragma opt_common_subs off
-extern "C" void func_02033bb8(int param0) {
+void func_02033bb8(int param0) {
     volatile int li;
     volatile unsigned short sv;
     int n, m, i;
@@ -1551,7 +1559,7 @@ extern "C" void func_02033bb8(int param0) {
 }
 #pragma pop
 
-extern "C" void func_02033e50(int p0, int p1) {
+void func_02033e50(int p0, int p1) {
     int i;
     int idx = data_0209fce8;
     char *base = (char *)data_0209fd08;
@@ -1630,7 +1638,7 @@ extern "C" void func_02033e50(int p0, int p1) {
     data_0209fcc8 = 0;
 }
 
-extern "C" void Message_DrawLineBG2VS(void) {
+void Message_DrawLineBG2VS(void) {
     volatile int li;
     int n;
     int idx = data_0209fce8;
@@ -1652,7 +1660,7 @@ extern "C" void Message_DrawLineBG2VS(void) {
     data_0209fcdc = data_0209fcdc + (u8)(((data_0209fc88 + 7) / 8) << 1);
 }
 
-extern "C" void Message_DrawCenteredLineVS(int a0, int a1) {
+void Message_DrawCenteredLineVS(int a0, int a1) {
     volatile int li;
     int n, i, oldc;
     short *scr;
@@ -1730,7 +1738,7 @@ void Message::DisplayDontSaveTextVS(unsigned short n) {
     Message_DrawCenteredLineVS(0x291, 0xa);
 }
 
-extern "C" void func_02034504(void) {
+void func_02034504(void) {
     data_0209fcb0 = 0;
     data_0209fcbc = 0;
     data_0209fcc4 = 0 * 0;
@@ -1745,7 +1753,7 @@ extern "C" void func_02034504(void) {
     data_0209fc7c = 0;
 }
 
-extern "C" void func_020345b0(int arg0) {
+void func_020345b0(int arg0) {
     u16 *scr;
     s32 i;
     s32 cols;
@@ -1834,7 +1842,7 @@ extern "C" void func_020345b0(int arg0) {
     GX_SetVisiblePlane(gMainScreenLayers);
 }
 
-extern "C" void LoadFont3D(void) {
+void LoadFont3D(void) {
     void *r5;
     void *r4;
 

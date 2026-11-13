@@ -80,6 +80,7 @@ struct BakubakuAnimationFileHandle : SharedFilePtr {
  * destructor for them, so they were never Vector3 globals (Vector3 carries
  * a declared ~Vector3, which would register at exit). */
 extern "C" {
+
 extern BakubakuModelFilePtr gBakubakuModelFile;    /* model 0x295 */
 extern BakubakuAnimationFileHandle data_ov032_02113a50; /* swim anim 0x297 */
 extern BakubakuAnimationFileHandle data_ov032_02113a48; /* bite anim 0x296 */
@@ -94,17 +95,23 @@ extern VecFx32 data_ov032_021137cc; /* body cylinder */
 extern VecFx32 data_ov032_021137d8; /* head cylinder */
 
 int AngleDiff(int a, int b);
+}
+
 s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 
 /* local extern: retain the matched scalar ABI; native Fix12<int> calls remain pending. */
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(dBgCh_Actr *self, dActor_c *actor, int radius, int height, void *a,
                          void *b);
+extern "C" {
+
 /* Sets daPly_c::mStateStep to 6 and stores this fish in mAttachedActor. */
 int func_ov002_020c5cd8(daPly_c *a, dActor_c *self);
+}
+
 /* Sound::Play with bank 3. */
 void func_02012694(unsigned int a, void *p);
-}
+
 
 /* Both predicates are int-returning, as the ROM materializes the 0/1
    before testing it. dActor_c::mFlags bit 0x40000 is set while the actor

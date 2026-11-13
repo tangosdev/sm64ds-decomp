@@ -75,15 +75,18 @@ enum {
 };
 
 extern "C" {
+
 /* dExtSimpleModel_c files: the fragment's, which the other variants load too. */
 extern SharedFilePtr data_ov002_0210da38;
 /* The five fragments' launch angles. */
 extern u16 data_ov098_0213bf90[];
+}
+
 
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(dBgCh_Actr *self, dActor_c *actor, s32 radius, s32 height, Vector3_16 *a,
                          Vector3_16 *b);
-}
+
 
 /* The bomb's file-scope SharedFilePtr object, spelled through the same
    wrapper idiom the landed folds use: the handle's code is the veneer pair

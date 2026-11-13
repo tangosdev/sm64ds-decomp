@@ -7,6 +7,7 @@
 
 extern "C" {
 
+
 void MenuGfx_SetBgMode(int mode) {
     switch (mode) {
     case 1:

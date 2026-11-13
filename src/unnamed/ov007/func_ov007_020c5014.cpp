@@ -3,7 +3,7 @@
 #include "Ov007Picker.h"
 #include "nitro/fx/fx_cp.h"
 
-extern "C" {
+
 
 /* Advances the draw limit along the committed strokes' progress
  * thresholds to progress x: 0 inside a stroke, 1 when it steps on to the
@@ -11,6 +11,7 @@ extern "C" {
 /* opt_common_subs stays off: the cartridge re-reads the stroke's threshold on
    each pass of the advance loop, and CSE hoists it (0xf0 against 0xf8). */
 #pragma opt_common_subs off
+extern "C" {
 int func_ov007_020c5014(char *c, int x) {
     Ov007Picker *self = (Ov007Picker *)c;
     Ov007StrokePath *obj;

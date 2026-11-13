@@ -8,7 +8,7 @@
 
 #define FALSE 0
 
-extern "C" {
+
 
 extern int func_02040714(void);
 extern void func_02040724(void);
@@ -61,5 +61,4 @@ int func_02019f10(void) {
     OS_CreateThread(thread, func_02019f64, 0, thread, 0x3f6c, 0);
     OS_WakeupThreadDirect(thread);
     return 0;
-}
 }

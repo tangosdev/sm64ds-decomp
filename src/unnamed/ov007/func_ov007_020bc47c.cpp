@@ -2,8 +2,8 @@
 #include "dExtSimpleModel_c.h"
 #include "Ov007Model.h"
 
-extern "C" void func_020462d0(void *a, void *b, void *c);
-extern "C" void func_020462b4(int *p, int v);
+void func_020462d0(void *a, void *b, void *c);
+void func_020462b4(int *p, int v);
 extern "C" void func_ov007_020bc434(Ov007Model *m);
 
 /* Binds the model's file, loads its textures and palettes unless flags & 8,

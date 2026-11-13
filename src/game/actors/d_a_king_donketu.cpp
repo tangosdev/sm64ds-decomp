@@ -224,10 +224,15 @@ int PlayLong(u32, u32, u32, const Vector3 &, s16);
 
 extern "C" {
 
+
 int ChiefChilly_ChangeState(C *c, PMF *p);
 
 extern struct BCA_File *data_ov002_0210da30[2];
+}
+
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+extern "C" {
+
 extern void Matrix4x3_FromRotationY(void* m, short ang);
 extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern void MTX_Concat43(void *dst, void *a, void *b);
@@ -238,17 +243,31 @@ extern struct Matrix4x3 data_020a0e68;
 /* Vec3_Sub is not declared by math/CalcLib.h. */
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int atan2_hold_d_a_king_donketu_1(Fix12i y, Fix12i x);
+}
+
 extern Fix12i Vec3_HorzLen(const Vector3 *v);
+extern "C" {
+
 
 extern u16 DecIfAbove0_Short(void* p);
+}
+
 extern void func_02012694(unsigned int a, void *b);
+extern "C" {
+
 /* local extern: CalcLib.h conflicts with DecIfAbove0_Short(void *). */
 extern int RandomIntInternal(int *seed);
 }
+
 extern "C" {
+
 extern void d_a_king_donketuPlayLongHold(unsigned int a, unsigned int b, unsigned int c,
                                          struct Vector3 *v, unsigned int d);
+}
+
 extern s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
+extern "C" {
+
 extern void Matrix4x3_ApplyInPlaceToRotationX(struct Matrix4x3 *m, short angX);
 extern void d_a_king_donketuRunningSlidingDustAtHold(int a, int b, int c);
 /* local extern: the Vector3 spelling math/CalcLib.h declares. This TU's
@@ -258,6 +277,7 @@ extern void Matrix4x3_FromTranslation(struct Matrix4x3 *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
 extern void UnloadKeyModels(int i);
 }
+
 
 daKing_Donketu_c::~daKing_Donketu_c()
 {
@@ -1838,10 +1858,13 @@ int daKing_Donketu_c::Behavior()
 }
 
 extern "C" {
+
 extern void LoadKeyModels(int idx);
+}
+
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, dActor_c *a, Fix12i r, Fix12i h, Vector3_16 *p, Vector3_16 *q);
-}
+
 
 #pragma pop
 

@@ -1,5 +1,5 @@
 #include "nitro/fs/overlay.h"
-extern int func_0203d7b8(void);
+extern int _Z13func_0203d7b8v(void);
 
 /* A loaded-overlay slot (see func_02017e60.c). */
 struct OverlaySlot {
@@ -30,7 +30,7 @@ void func_02017e94(int key) {
         return;
     FS_UnloadOverlay(MI_PROCESSOR_ARM9, key);
     func_02018c00(&info, 0, key);
-    if (func_0203d7b8() != 0)
+    if (_Z13func_0203d7b8v() != 0)
         return;
-    func_02017fd0(&info);
+    _Z13func_02017fd0P13FSOverlayInfo(&info);
 }

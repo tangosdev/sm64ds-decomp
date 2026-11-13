@@ -1,7 +1,7 @@
 //cpp
 #include "Heap.h"
 
-extern "C" {
+
 
 extern int func_0203d974(void);
 extern void *func_02011e94(int *size);
@@ -16,5 +16,4 @@ void *func_0201a3e4(void) {
         data_0209d520 = mHeap::Heap_t::CreateRootHeap(func_02011e94(&size), (unsigned int)size);
     }
     return data_0209d520;
-}
 }

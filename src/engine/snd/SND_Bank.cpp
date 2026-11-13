@@ -12,7 +12,7 @@
 #include "types.h"
 #include "nitro/os/cache.h"
 
-extern "C" {
+
 
 struct SNDWaveArc;
 
@@ -99,5 +99,4 @@ void SND_DestroyWaveArc(SNDWaveArc *waveArc) {
         DC_StoreRange(link, sizeof(SNDWaveArcLink));
         link = next;
     }
-}
 }

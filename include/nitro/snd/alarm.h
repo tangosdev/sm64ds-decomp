@@ -1,5 +1,8 @@
 #ifndef NITRO_SND_ALARM_H
 #define NITRO_SND_ALARM_H
+#ifndef __cplusplus
+#define SND_AlarmInit _Z13SND_AlarmInitv
+#endif
 
 /*
  * The sound alarm callback type of the Nitro SDK's SND_alarm.c
@@ -15,14 +18,8 @@
  * ARM7 driver reports the alarm. */
 typedef void (*SNDAlarmCallback)(void *);
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 void SND_AlarmInit(void);
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* NITRO_SND_ALARM_H */

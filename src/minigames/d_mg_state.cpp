@@ -122,9 +122,14 @@ u32 PlayBank2_2D(u32);
 }
 
 extern "C" {
+
 extern void FreeGfxSlotsById(int arg);
 extern int GetGameLanguage(void);
+}
+
 extern void func_02012dd0(void *c);
+extern "C" {
+
 extern void Mg_CommitRecords(void);
 extern int Mg_GetSubmittedScore(void);
 extern int Mg_IsNewRecord(void);
@@ -141,6 +146,7 @@ extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
 extern void Mg_CallStartRound(void *c, void *arg);
 extern void Mg_SetNextBanner(int);
 }
+
 
 struct W2 {
     int w[2];

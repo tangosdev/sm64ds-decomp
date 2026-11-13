@@ -4,7 +4,7 @@
 #include "cstd.h"
 #include "Vector2Math.h"
 
-extern "C" {
+
 
 Fix12i Vec2_Len(const Vector2 *v) {
     const Fix12i *xy = (const Fix12i *)v;
@@ -12,7 +12,7 @@ Fix12i Vec2_Len(const Vector2 *v) {
     sq += (long long)xy[1] * xy[1];
     return cstd::sqrt((u64)sq);
 }
-}
+
 
 /* Zero 2D origin. Retail __sinit_020750ec stores both words and registers
    NullDestructor_0203d47c, the empty ~Vector2. */

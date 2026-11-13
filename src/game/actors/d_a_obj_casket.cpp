@@ -76,12 +76,18 @@ extern CasketCollisionFilePtr data_ov071_021230d8;
 extern CLPS_Block data_ov063_0211ebd8;
 
 extern "C" {
+
 void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *out);
+}
+
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
+extern "C" {
+
 unsigned short DecIfAbove0_Short(unsigned short *p);
 }
+
 
 /* Reconstructed source-style name: SM64DS proves daObjCasket_c through RTTI,
  * allocation size, vtable identity, and the CASKET registry profile; later EAD

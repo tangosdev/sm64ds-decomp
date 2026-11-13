@@ -28,7 +28,7 @@
 typedef int BOOL;
 #define FALSE 0
 
-extern "C" {
+
 
 #define SND_CMD_COUNT 256
 #define SND_CMD_WAIT_QUEUE_COUNT 8
@@ -39,20 +39,34 @@ extern "C" {
 
 struct SNDSharedWork;
 
-extern SNDCommand *data_020a6484;    /* sFreeList */
-extern u32 data_020a6488;            /* sFinishedTag */
-extern SNDCommand *data_020a648c;    /* sReserveList */
-extern SNDCommand *data_020a6490;    /* sReserveListEnd */
-extern SNDCommand *data_020a6494;    /* sFreeListEnd */
-extern s32 data_020a6498;            /* sWaitingCommandListQueueRead */
-extern s32 data_020a649c;            /* sWaitingCommandListQueueWrite */
-extern s32 data_020a64a0;            /* sWaitingCommandListCount */
-extern u32 data_020a64a4;            /* sCurrentTag */
-extern SNDCommand *data_020a64a8[];  /* sWaitingCommandListQueue */
-extern SNDSharedWork data_020a64e0;  /* sSharedWork */
-extern SNDCommand data_020a6760[];   /* sCommandArray */
-extern SNDCommand data_020a7f48;     /* sCommandArray[SND_CMD_COUNT - 1] */
-extern SNDSharedWork *data_020a7fc0; /* SNDi_SharedWork */
+extern SNDCommand *data_020a6484;
+    /* sFreeList */
+extern u32 data_020a6488;
+            /* sFinishedTag */
+extern SNDCommand *data_020a648c;
+    /* sReserveList */
+extern SNDCommand *data_020a6490;
+    /* sReserveListEnd */
+extern SNDCommand *data_020a6494;
+    /* sFreeListEnd */
+extern s32 data_020a6498;
+            /* sWaitingCommandListQueueRead */
+extern s32 data_020a649c;
+            /* sWaitingCommandListQueueWrite */
+extern s32 data_020a64a0;
+            /* sWaitingCommandListCount */
+extern u32 data_020a64a4;
+            /* sCurrentTag */
+extern SNDCommand *data_020a64a8[];
+  /* sWaitingCommandListQueue */
+extern SNDSharedWork data_020a64e0;
+  /* sSharedWork */
+extern SNDCommand data_020a6760[];
+   /* sCommandArray */
+extern SNDCommand data_020a7f48;
+     /* sCommandArray[SND_CMD_COUNT - 1] */
+extern SNDSharedWork *data_020a7fc0;
+ /* SNDi_SharedWork */
 
 /* The ROM reaches sCommandArray[SND_CMD_COUNT - 1].next through this
  * label, 0x1000 bytes into the array. */
@@ -309,5 +323,4 @@ SNDCommand *AllocCommand(void) {
     if (data_020a6484 == 0)
         data_020a6494 = 0;
     return retval;
-}
 }

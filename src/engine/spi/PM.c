@@ -165,7 +165,7 @@ void PM_Init(void) {
         PMi_RegisterBuffer[i].flag = FALSE;
     }
 
-    OS_InitMutex(&PMi_Mutex);
+    _Z12OS_InitMutexP7OSMutex(&PMi_Mutex);
 
     PMi_LCDCount = OS_GetVBlankCount();
 }
@@ -406,8 +406,8 @@ void PM_GoSleepMode(PMWakeUpTrigger trigger, PMLogic logic, u16 keyPattern) {
 
     prepIrq = OS_DisableIrq();
     prepIntrMode = OS_DisableInterrupts();
-    prepIntrMask = OS_DisableIrqMask((1 << OS_IRQ_TABLE_MAX) - 1);
-    (void)OS_SetIrqMask(OS_IE_SPFIFO_RECV);
+    prepIntrMask = _Z17OS_DisableIrqMaskj((1 << OS_IRQ_TABLE_MAX) - 1);
+    (void)_Z13OS_SetIrqMaskj(OS_IE_SPFIFO_RECV);
     (void)OS_RestoreInterrupts(prepIntrMode);
     (void)OS_EnableIrq();
 
@@ -418,7 +418,7 @@ void PM_GoSleepMode(PMWakeUpTrigger trigger, PMLogic logic, u16 keyPattern) {
     }
 
     if (trigger & PM_TRIGGER_CARTRIDGE) {
-        if (!CTRDG_IsExisting()) {
+        if (!_Z16CTRDG_IsExistingv()) {
             trigger &= ~PM_TRIGGER_CARTRIDGE;
         }
     }
@@ -442,7 +442,7 @@ void PM_GoSleepMode(PMWakeUpTrigger trigger, PMLogic logic, u16 keyPattern) {
     }
 
     (void)OS_DisableInterrupts();
-    (void)OS_SetIrqMask(prepIntrMask);
+    (void)_Z13OS_SetIrqMaskj(prepIntrMask);
     (void)OS_RestoreInterrupts(prepIntrMode);
     (void)OS_RestoreIrq(prepIrq);
 

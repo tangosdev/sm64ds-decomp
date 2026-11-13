@@ -2,6 +2,7 @@
 #include "nitro/fx/fx_cp.h"
 
 extern "C" {
+
 int func_ov007_020c3598(int val, int n, char *buf, int base) {
     int res = 0;
     int fnd = 0;

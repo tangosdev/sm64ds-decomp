@@ -130,8 +130,10 @@ struct EntryTable {
 struct OamAttr;
 
 
-extern "C" {
+
 void Deallocate(void *ptr);
+extern "C" {
+
 int GetGameLanguage(void);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
@@ -147,6 +149,7 @@ void Banner_DrawPlain(MgBanner *e);
 void Banner_StartSpin(MgBanner *e);
 void Banner_StartWaveBurst(MgBanner *e);
 }
+
 
 /* The first OBJ character number of each graphics slot, {0x380, 0x300, 0x340}
    (MG_BANNER_SLOTn_CHARS / 32). Banner_Init copies it whole to the stack and
@@ -1002,6 +1005,7 @@ MgBanner::MgBanner() {
    sBannerUpdateTable, render sBannerDrawTable), and the words the
    29-entry file-id table copies. */
 extern "C" {
+
 extern ElemFn data_02086b58; /* __ptmf_null's address: the null member pointer */
 extern ElemFn pmf_Banner_SetupSlideFromTop, pmf_Banner_SetupSlideFromBottom,
     pmf_Banner_SetupSlideFromLeft, pmf_Banner_SetupSlideFromRight;
@@ -1033,13 +1037,16 @@ extern int sMgMsgTwoPairSpritesEnglish, sMgMsgThreeCardSpritesEnglish,
 extern int sMgMsgFiveCardSpritesEnglish;
 }
 
+
 namespace s20b955c {
 extern "C" {
+
 MgBanner gMgBanners[3];
 }
 }
 
 extern "C" {
+
 int sMgBannerSprites[MG_BANNER_FILE_NUM] = {
     sMgMsgRetrySpritesEnglish,     sMgMsgGiveUpSprites,
     sMgMsgQuitSpritesEnglish,      sMgMsgLevelClearSpritesEnglish,

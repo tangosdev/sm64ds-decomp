@@ -63,6 +63,7 @@ enum dScMgPanel_c_AssetId {
    declaration inside a member body gets C++ linkage and names a symbol the ROM
    doesn't have. */
 extern "C" {
+
 void SetBg2Offset(int x, int y);
 void SetSubBg2Offset(int x, int y);
 void SetSubBg0Offset(int a, int b);
@@ -77,6 +78,7 @@ void Mg_SetSharedState(int a);
 void Mg_RenderSubSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, void *a5);
 void Mg_DrawBigNumber(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
 }
+
 
 /* The state tables are arrays of member-function pointers, defined at the end
    of this file. Each dispatcher calls through one of them. */
@@ -289,8 +291,10 @@ void dScMgPanel_c::Shake_StateLoseTry(int index) {
 }
 
 extern "C" {
+
 void SetSubBg0Offset(int a, int b);
 }
+
 void dScMgPanel_c::Shake_StateShake(int index) {
     extern int sPanelShakeOffsets[];
     mShake[index].timer++;
@@ -684,14 +688,17 @@ void dScMgPanel_c::Answer_StateResetBoard() {
     }
 }
 
-extern "C" {
+
 typedef struct WarpEntry_730 {
     u8 a;
     u8 b;
     u8 c;
     u8 d;
-} WarpEntry_730;
 }
+extern "C" {
+ WarpEntry_730;
+}
+
 void dScMgPanel_c::Answer_StateWaitButton() {
     // local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
     extern u8 gActivePlayerSlot;
@@ -1520,23 +1527,30 @@ void dScMgPanel_c::Scene_StateInit() {
  * doesn't have. Their callees are declared here instead, below every helper,
  * so the helpers' own declarations are untouched. Data declarations are not
  * mangled, so those stay in the bodies. */
-extern "C" {
+
 
 extern void Deallocate(void *);
 extern int GetOwnerLanguage(void);
+extern "C" {
+
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 extern void FreeGfxSlotsById(int arg);
 extern void SetSubBg0Offset(int, int);
+}
+
 /* local extern: nitro/gx/gx_load.h leaves GX_LoadBG3Scr out until
  * decl_common.h's non-const spelling of it goes. */
 extern void GX_LoadBG3Scr(void *, u32, u32);
+extern "C" {
+
 extern void Mg_SubmitScore(int);
 extern void Mg_SetTopScreenYOffset(int);
 extern void Mg_ShowBanner(int, int, int, int, int, s16);
 extern void Mg_DrawScoreTally(void *a, int b, int c, int d);
 
-} /* extern "C" */
+}
+ /* extern "C" */
 
 /* Vtable slot 18, an override of dScMgBase_c::StartRound(int).  The
    signature has to repeat the base declaration exactly or mwcc appends a new

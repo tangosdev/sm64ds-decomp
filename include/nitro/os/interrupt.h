@@ -1,5 +1,26 @@
 #ifndef NITRO_OS_INTERRUPT_H
 #define NITRO_OS_INTERRUPT_H
+#ifndef __cplusplus
+#define OS_ResetRequestIrqMask _Z22OS_ResetRequestIrqMaskj
+#define OS_DisableIrqMask _Z17OS_DisableIrqMaskj
+#define OS_EnableIrqMask _Z16OS_EnableIrqMaskj
+#define OS_SetIrqMask _Z13OS_SetIrqMaskj
+#define OSi_EnterTimerCallback _Z22OSi_EnterTimerCallbackjPFvPvES_
+#define OSi_EnterDmaCallback _Z20OSi_EnterDmaCallbackjPFvPvES_
+#define OS_GetIrqFunction _Z17OS_GetIrqFunctionj
+#define OS_SetIrqFunction _Z17OS_SetIrqFunctionjPFvvE
+#define OS_InitIrqTable _Z15OS_InitIrqTablev
+#define OSi_IrqTimer3 _Z13OSi_IrqTimer3v
+#define OSi_IrqTimer2 _Z13OSi_IrqTimer2v
+#define OSi_IrqTimer1 _Z13OSi_IrqTimer1v
+#define OSi_IrqTimer0 _Z13OSi_IrqTimer0v
+#define OSi_IrqDma3 _Z11OSi_IrqDma3v
+#define OSi_IrqDma2 _Z11OSi_IrqDma2v
+#define OSi_IrqDma1 _Z11OSi_IrqDma1v
+#define OSi_IrqDma0 _Z11OSi_IrqDma0v
+#define OSi_IrqCallback _Z15OSi_IrqCallbacki
+#define OS_IrqDummy _Z11OS_IrqDummyv
+#endif
 
 /*
  * The interrupt table and masks of the Nitro SDK, under the SDK's own names
@@ -20,9 +41,6 @@
 
 #include "types.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 typedef u32 OSIrqMask;
 
@@ -97,11 +115,8 @@ void OSi_IrqTimer1(void);
 void OSi_IrqTimer2(void);
 void OSi_IrqTimer3(void);
 
-/* os_irqHandler.c */
+extern "C" /* os_irqHandler.c */
 void OS_IrqHandler(void);
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* NITRO_OS_INTERRUPT_H */

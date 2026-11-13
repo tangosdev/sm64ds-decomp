@@ -113,6 +113,7 @@ int PlayLong(u32, u32, u32, const Vector3 &, s16);
 }
 
 extern "C" {
+
 /* This file's own helpers, defined further down. */
 extern Entry data_ov060_0211afb4[];
 extern PMF data_ov060_0211af74[];
@@ -123,9 +124,13 @@ extern u32 d_a_kpa_fireNewCleanParticleHold(u32 a, u32 b, Fix12i c, Fix12i d, Fi
 extern u32 d_a_kpa_fireNewHold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const void *f, void *g);
 void d_a_kpa_fireNewSimpleHold(u32 id, Fix12i x, Fix12i y, Fix12i z);
 extern void d_a_kpa_firePlayLongHold(u32 a, u32 b, u32 c, void *pos, u32 d);
+}
+
 
 extern short Vec3_HorzAngle(const struct Vector3* a, const struct Vector3* b);
 extern Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
+extern "C" {
+
 extern int RandomIntInternal(int* seed);
 
 /* ov060 tables indexed by mSubVariant (02119358, 0211934c) and the mouth-pose
@@ -134,6 +139,7 @@ extern int data_ov060_02119358[];
 extern int data_ov060_0211934c[];
 extern u16 data_ov060_02119364[];
 }
+
 
 /* Historical alias BowserFire_Spawn. First in source because codegen is deferred. */
 extern "C" daKpaFire_c *daKpaFire_c_classInit(void)

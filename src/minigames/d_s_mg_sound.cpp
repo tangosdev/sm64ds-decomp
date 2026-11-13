@@ -99,6 +99,7 @@ extern Pmf pmf_dScMgSound_c_Pop12_Fly;
 extern Pmf pmf_dScMgSound_c_Pop12_Finish;
 
 extern "C" {
+
 extern void Hud_RenderSprite(void *a, int b, int c, int d, int e);
 extern void *sSoundWinSpriteBSprites[];
 /* WinSpriteB reads indices 0 through 2; the fourth stored value is unused here. */
@@ -146,7 +147,11 @@ extern int sSoundScrollRowLength[];
  * array is retained without asserting its original purpose or declared bound. */
 extern const u16 sSoundNoteClosingTimes[8] = {2, 2, 3, 4, 4, 4, 4, 4};
 void Presenter_PlayCheerLoop(void *p);
+}
+
 unsigned int func_02012174(u32 bank, u32 id);
+extern "C" {
+
 extern const u16 sSoundNoteOpeningTimes[8] = {2, 2, 3, 4, 4, 4, 6, 4};
 /* Parallel playback selectors and sound IDs retain all 42 stored entries.
  * Some entries are not exercised by the current deal logic. */
@@ -180,6 +185,7 @@ int Presenter_Load(void *p);
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 }
+
 
 /* The note and pop dispatch tables belong to this scene. Declaration
  * order preserves the cartridge static-initialization sequence. */

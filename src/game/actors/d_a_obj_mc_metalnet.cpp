@@ -40,9 +40,9 @@ extern CLPS_Block data_ov009_02112bf8;
    places across the tree, always to mean "not the ordinary single-player run". */
 extern unsigned char gGameMode;
 
-extern "C" {
+
 unsigned char NumStars(void);
-}
+
 
 /* gGameMode (CURRENT_GAMEMODE) is 1 in VS mode: PrepareVsMode stores it.
    Both gates below skip in VS. Same predicate as CapIconMgr and d_meter. */

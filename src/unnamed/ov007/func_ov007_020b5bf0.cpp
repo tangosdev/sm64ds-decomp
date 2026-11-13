@@ -12,6 +12,7 @@
 
 extern "C" {
 
+
 extern unsigned short func_ov007_020c3be0(int t, int a, int b);
 extern void func_ov007_020b5f64(Ov007ItemView *view);
 extern int func_ov007_020c8f98(struct Ov007Tween *tw);

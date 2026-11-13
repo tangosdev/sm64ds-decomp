@@ -46,7 +46,7 @@
 #include "math/ProgressRatio.h"
 #include "Ov007MenuMem.h"
 
-extern "C" {
+
 
 /* data_ov007_02104bd4: the 0x30-byte record func_ov007_020bf428 allocates
  * and fills; medium-confidence name. The slot names follow their builders. */
@@ -55,9 +55,15 @@ typedef struct Ov007MeshScene {
     Ov007MeshMaterial *materials[2]; /* 0x04: func_ov007_020bee14 draws the mesh with each */
     Ov007MeshWave *wave;             /* 0x0c: func_ov007_020ca2a8 */
     Ov007Swing *swings[8];           /* 0x10: func_ov007_020ca010, one per item */
-} Ov007MeshScene;
+}
+extern "C" {
+ Ov007MeshScene;
+}
+
 
 typedef char Ov007MeshScene_size_must_be_0x30[sizeof(Ov007MeshScene) == 0x30 ? 1 : -1];
+extern "C" {
+
 
 extern Ov007MeshScene *data_ov007_02104bd4;
 extern struct Vector3 data_ov007_020d7d60;
@@ -95,6 +101,8 @@ extern Ov007MeshMaterial *func_ov007_020cbf8c(Ov007MeshMaterial *src);
 /* Defined below, after their callers (ROM order). */
 void func_ov007_020bed60(int arg0, int arg1, int arg2);
 void func_ov007_020beeb0(void);
+}
+
 
 #define SCENE data_ov007_02104bd4
 
@@ -105,7 +113,11 @@ void func_ov007_020beeb0(void);
  * calls take the copy's address as the Ov007Sprite it holds. */
 typedef struct Ov007SpriteBits {
     s32 words[0x88 / 4];
-} Ov007SpriteBits;
+}
+extern "C" {
+ Ov007SpriteBits;
+}
+
 
 typedef struct Ov007SpriteView {
     char pad_00[0x10];
@@ -114,15 +126,25 @@ typedef struct Ov007SpriteView {
     s32 worldWidth;  /* 0x20 */
     s32 worldHeight; /* 0x24 */
     char pad_28[0x60];
-} Ov007SpriteView;
+}
+extern "C" {
+ Ov007SpriteView;
+}
+
 
 typedef union Ov007SpriteCopy {
     Ov007SpriteBits bits;
     Ov007SpriteView view;
-} Ov007SpriteCopy;
+}
+extern "C" {
+ Ov007SpriteCopy;
+}
+
 
 typedef char
     Ov007SpriteCopy_size_must_match[sizeof(Ov007SpriteCopy) == sizeof(Ov007Sprite) ? 1 : -1];
+extern "C" {
+
 
 /* Picks the grid point of the mesh under screen point (x, y): the point is
  * unprojected through the camera at the camera's depth, then
