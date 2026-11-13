@@ -40,6 +40,7 @@ extern "C" int hal_window_focused(void);           /* hal/sub_screen.cpp */
 extern "C" int port_host_key_script(int vk);       /* tests/walk_window.cpp: SM64DS_HOST_KEY, 0 when unset */
 
 extern "C" {
+extern unsigned char data_0209caa0[];      /* the current file record; + 0x44 the minigame record, + 0x48 its unlock word */
 unsigned char func_ov007_020cc600(int arg);   /* src/game/stages/d_s_dsmt.cpp: the title's client command dispatcher; 20 = read the three files again (allocates a fresh 0xcc byte block) */
 int port_title_elem_boxes(int *slot, int *id, int *x0, int *y0, int *x1, int *y1, int max);
 void func_ov007_020bdeb0(int idx);   /* the title scene's own sound call (overlay 7) */
@@ -86,6 +87,12 @@ void medium(int online)
        wrote the cut keys and that record to the medium for good. The title's own boot reads the record before the files. */
     func_ov007_020cc600(21);
     func_ov007_020cc600(20);
+    {
+        unsigned w = 0;
+        memcpy(&w, data_0209caa0 + 0x48, 4);
+        fprintf(stderr, "[online] save medium -> %s: the minigame record, then the three files, read from it (unlock word %08x)\n",
+                online ? "the online save" : "the single player save", w);
+    }
 }
 
 int elem_box(int id, int *x0, int *y0, int *x1, int *y1)
