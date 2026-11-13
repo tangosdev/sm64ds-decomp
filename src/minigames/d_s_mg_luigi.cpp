@@ -157,7 +157,7 @@ void Luigi_PushScanlineRecord(void) {
     extern volatile u32 data_0209f608;
     extern struct IrisScanlineTable data_0209f648[];
     data_0209f608 = data_0209f60c;
-    MI_CpuCopy32((int *)&data_0209f648[data_0209f608], (int *)0x04000040, 4);
+    MI_CpuCopy32(&data_0209f648[data_0209f608], (int *)0x04000040, 4);
 }
 }
 
@@ -1542,7 +1542,7 @@ extern void Mg_DrawScoreTally(void *c, int a, int b, int d);
 /* dScMgLuigi_c::Behavior */
 extern LuigiStateHandler sLuigiStateTable[];
 /* dScMgLuigi_c::InitResources */
-extern void *sLuigiBg1NcgPath;
+extern const char sLuigiBg1NcgPath[];
 extern void *Ov004_LoadFileByPath(const char *path);
 extern void DecompressLZ16(void *src, void *dst);
 extern void *LoadFile(int handle);
@@ -1614,7 +1614,7 @@ s32 dScMgLuigi_c::InitResources() {
     void *fileData;
     void *objectTiles;
 
-    arc = Ov004_LoadFileByPath((const char *)&sLuigiBg1NcgPath);
+    arc = Ov004_LoadFileByPath(sLuigiBg1NcgPath);
     if (arc == 0)
         return 0;
 
