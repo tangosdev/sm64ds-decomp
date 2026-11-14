@@ -327,7 +327,7 @@ dBgActor_c::dBgActor_c()
 /* Same enable/disable-by-distance as IsClsnInRange, except an off-screen actor
  * (mFlags & 8) always drops its collider, and radius 0 unconditionally enables
  * instead of falling back to the clip volume. */
-int dBgActor_c::IsClsnInRangeOnScreen(Fix12i radius, Fix12i yOffset) {
+int dBgActor_c::IsClsnInRangeOnScreen(fx32 radius, fx32 yOffset) {
     int offScreen = (mFlags & 8) != 0;
     if (offScreen) {
         if (mMeshCollider.IsEnabled())
@@ -362,7 +362,7 @@ int dBgActor_c::IsClsnInRangeOnScreen(Fix12i radius, Fix12i yOffset) {
 /* Keeps the mesh collider in the world only while the closest player is within
  * radius of (pos + yOffset). Zero radius falls back to the clip volume
  * (mClipRadius, shifted into fix12); zero yOffset to mClipOffsetY. */
-int dBgActor_c::IsClsnInRange(Fix12i radius, Fix12i yOffset) {
+int dBgActor_c::IsClsnInRange(fx32 radius, fx32 yOffset) {
     Vector3 center;
     center.x = mPosX;
     center.y = mPosY;
@@ -411,7 +411,7 @@ void dBgActor_c::UpdateClsnPosAndRot()
  * the per-frame angle steps, integrate, and Kill() when the fuse runs out.
  * Callers (pushblock, signpost, ski lift, Bill Blaster) pass the X step and a
  * model-pivot height; nonzero return means "still flying". */
-int dBgActor_c::UpdateKillByMegaChar(s16 angStepX, s16 angStepY, s16 angStepZ, Fix12i pivotY) {
+int dBgActor_c::UpdateKillByMegaChar(s16 angStepX, s16 angStepY, s16 angStepZ, fx32 pivotY) {
     Vector3 probe;
     Vector3 rayEnd;
     Vector3 sum;
@@ -467,9 +467,9 @@ void dBgActor_c::Kill()
 {
     Vector3 pos;
     Vector3 dustPos;
-    Fix12i x = mPosX;
-    Fix12i y = mPosY + 0x64000;
-    Fix12i z = mPosZ;
+    fx32 x = mPosX;
+    fx32 y = mPosY + 0x64000;
+    fx32 z = mPosZ;
     pos.x = x;
     pos.y = y;
     pos.z = z;

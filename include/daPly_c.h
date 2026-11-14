@@ -790,7 +790,7 @@ struct daPly_c : dActor_c {
     int HasNoCap();
     int Heal(const int amt);
     /* Unnamed parameters: a named one advances @NNN in every daPly_c.h consumer. */
-    int Hurt(const Vector3 &, const u32, const Fix12i, const u8, const u8, const u8);
+    int Hurt(const Vector3 &, const u32, const fx32, const u8, const u8, const u8);
     int IsAnim(const u32 a);
     int IsBeingShotOutOfCannon();
     int IsCollectingCap();
@@ -1017,8 +1017,8 @@ struct daPly_c : dActor_c {
     u32 GetBodyModelID(u32 a, bool b_) const;
     void BlowAway(const s16 v);
     /* Unnamed parameters: a named one advances @NNN in every daPly_c.h consumer. */
-    void Bounce(const Fix12i);
-    void SpinBounce(const Fix12i);
+    void Bounce(const fx32);
+    void SpinBounce(const fx32);
     void EnterWhirlpool();
     void IncMegaKillCount();
     void InitBalloonMario();
@@ -1030,7 +1030,7 @@ struct daPly_c : dActor_c {
     void PlayMammaMiaSound();
     void RegisterEggCoinCount(const u32 count, const bool b2, const bool b3);
     /* Unnamed parameters: a named one advances @NNN in every daPly_c.h consumer. */
-    void SetAnim(const u32, const int, const Fix12i, const u16);
+    void SetAnim(const u32, const int, const fx32, const u16);
     void SetNewHatCharacter(const u32 p1, const u32 p2, const bool p3);
     void SetRealCharacter(const u32 chr_);
     void TurnOffToonShading(const u32 j);
@@ -1093,7 +1093,7 @@ struct daPly_c : dActor_c {
     /* Non-virtual helpers that were free functions taking the player as `self`.
        Coined names; parameters stay unnamed because a named parameter in a
        class-scope declaration renumbers @NNN in every consumer TU. */
-    void SplineGetWeights(Fix12i *);     /* func_ov002_020c3160 */
+    void SplineGetWeights(fx32 *);     /* func_ov002_020c3160 */
     void ClearClimbCollider();           /* func_ov002_020caf68 */
     void LeaveShellRide();               /* func_ov002_020cc1f4 */
     void StartAnim0xAB();                /* func_ov002_020cd2c4 */
@@ -1122,7 +1122,7 @@ struct daPly_c : dActor_c {
     int func_ov002_020beb38();
     int func_ov002_020becf4(const int, const int);
     void func_ov002_020bf13c();
-    void func_ov002_020bf2d8(const Fix12i);
+    void func_ov002_020bf2d8(const fx32);
     void func_ov002_020bf36c(void *);
     int func_ov002_020bf40c();
     void func_ov002_020bf5e0();
@@ -1250,11 +1250,11 @@ struct daPly_c : dActor_c {
     void func_ov002_020be008();
     void func_ov002_020bebd4();
     void func_ov002_020bec2c();
-    void func_ov002_020bec9c(const u32, const int, const Fix12i, const u16);
+    void func_ov002_020bec9c(const u32, const int, const fx32, const u16);
     void AdvanceAnims();
     int func_ov002_020bf224(const int, const int);
     int func_ov002_020bf27c(const int);
-    Fix12i ScaleByCharFactor(const Fix12i);
+    fx32 ScaleByCharFactor(const fx32);
     void func_ov002_020bf340(int *, const int, const int);
     int func_ov002_020bf56c(const int);
     void func_ov002_020bf800(const Vector3_16f);
@@ -1290,7 +1290,7 @@ struct daPly_c : dActor_c {
     int func_ov002_020ceb54();
     void func_ov002_020ceb7c();
     int func_ov002_020cec2c();
-    Fix12i func_ov002_020cedb0(const Fix12i);
+    fx32 func_ov002_020cedb0(const fx32);
     int func_ov002_020cef84();
     int func_ov002_020cf20c();
     void func_ov002_020cf2f8();
@@ -1359,7 +1359,7 @@ struct daPly_c : dActor_c {
     void func_ov002_020dbe70();
     void func_ov002_020dbf4c();
     void func_ov002_020dc020();
-    void func_ov002_020dc174(const Vector3 *, const Fix12i, const Fix12i, const u32, const u32);
+    void func_ov002_020dc174(const Vector3 *, const fx32, const fx32, const u32, const u32);
     void func_ov002_020dc560();
     void func_ov002_020dcafc();
     int func_ov002_020dd2f4();
