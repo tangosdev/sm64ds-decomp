@@ -24607,6 +24607,8 @@ void __sinit_ov002_021019d0(void) {
 }
 }
 
+}
+
 #pragma section initsec end
 
 /* Retail constructor-table word .p__sinit_ov002_021019d0 at 0x02108110.
