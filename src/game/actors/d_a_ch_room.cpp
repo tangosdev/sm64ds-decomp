@@ -24,12 +24,10 @@
 
 /* arm9 C helpers with no shared header. */
 extern "C" {
-
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_RotateYAndTranslate(Vector3 *out, void *m, s16 ang, const Vector3 *in);
-}
-
 void ChangeArea(int);
+}
 
 extern u8 gLocalPlayerId;
 extern daPly_c *gPlayers[];
@@ -39,7 +37,8 @@ daChRoom_c *daChRoom_c_classInit() {
     return new daChRoom_c();
 }
 
-SpawnInfo<daChRoom_c> g_profile_CH_ROOM = {daChRoom_c_classInit, 0x015c, 0x015c, 0, 0, 0, 0, 0};
+extern "C" SpawnInfo<daChRoom_c> g_profile_CH_ROOM = {
+    daChRoom_c_classInit, 0x015c, 0x015c, 0, 0, 0, 0, 0};
 
 int daChRoom_c::InitResources() {
     mScaleX = (((param1 & 0xf) + 1) * 0x64000) >> 1;

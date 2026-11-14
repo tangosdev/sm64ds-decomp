@@ -83,10 +83,11 @@ extern s8 gCurrentSublevel;
 extern u8 gCurrentStarId;
 
 /* arm9 C helpers with no shared header. */
-
-extern int IsStarCollectedInCurLevel(int starID);
+extern "C" {
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+}
+extern int IsStarCollectedInCurLevel(int starID);
 
 #pragma defer_codegen off
 

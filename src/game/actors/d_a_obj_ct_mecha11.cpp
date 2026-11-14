@@ -56,10 +56,12 @@ struct Mecha11ClsnFilePtr : SharedFilePtr {
     ~Mecha11ClsnFilePtr();
 };
 
+extern "C" {
 /* local extern: these matching CalcLib signatures keep their names to avoid
  * renumbering this TU's compiler-generated static-initializer aliases. */
-extern "C" unsigned short DecIfAbove0_Short(unsigned short *p);
-extern "C" int RandomIntInternal(int *p);
+extern unsigned short DecIfAbove0_Short(unsigned short *p);
+extern int RandomIntInternal(int *p);
+}
 
 extern Mecha11ClsnFilePtr RotatingClockHand_ClsnFile;
 extern Mecha11ModelFilePtr RotatingClockHand_ModelFile;

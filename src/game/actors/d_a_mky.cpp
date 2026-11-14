@@ -71,8 +71,10 @@
  * rejects two extern "C" declarations of one name that disagree, so one
  * spelling has to serve every call site. Data objects stay in the bodies:
  * a variable's name does not mangle. */
+extern "C" {
 
-extern "C" void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
+void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
+}
 
 /* The model handle constructs through func_02017acc and the animation
  * handles through SharedFilePtr::Construct. Declared here, ahead of the
@@ -1398,11 +1400,13 @@ extern MkyAnimFilePtr data_ov030_02115cf0;
  * inside a daMky_c method gets C++ linkage and the reference mangles a
  * second time, so these callees are declared here. The func_ov030_*
  * methods above are members of this class and are not redeclared. */
+extern "C" {
 
 extern SharedFilePtr  data_ov002_0210da40;
 extern SharedFilePtr  data_ov002_0210d9a0;
 extern SharedFilePtr  data_ov002_0210d9c0;
 extern SharedFilePtr *data_ov030_02114824[10];
+}
 
 /* Vtable slot 3.  Releases the four shared files the class holds plus its
  * ten-entry table; it never touches `this`, which is why the legacy C form
@@ -1578,7 +1582,7 @@ MkyAnimFilePtr gMonkeyWait4AnimationFile(ASSET_MONKEY_WAIT4_BCA);
 
 /* Eleven {enter, update} pairs. Brace-init is what makes __sinit copy the
  * 22 pointer-to-member constants; a constructor body here scalarizes. */
-daMky_c::StateFunctions data_ov030_02115e0c[11] = {
+extern "C" daMky_c::StateFunctions data_ov030_02115e0c[11] = {
     {&daMky_c::EnterState0, &daMky_c::func_ov030_02113ff0},
     {&daMky_c::EnterState1, &daMky_c::func_ov030_02113d20},
     {&daMky_c::EnterState2, &daMky_c::func_ov030_02113b38},

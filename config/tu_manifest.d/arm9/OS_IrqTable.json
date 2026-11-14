@@ -20,70 +20,70 @@
   ],
   "functions": [
     {
-      "symbol": "_Z13OSi_IrqTimer3v",
+      "symbol": "OSi_IrqTimer3",
       "address": "0x02056c40",
       "size": "0x00000010",
       "legacy_source": "src/_ZN3IRQ19Tim3OverflowHandlerEv.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "_Z13OSi_IrqTimer2v",
+      "symbol": "OSi_IrqTimer2",
       "address": "0x02056c50",
       "size": "0x00000010",
       "legacy_source": "src/_ZN3IRQ19Tim2OverflowHandlerEv.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "_Z13OSi_IrqTimer1v",
+      "symbol": "OSi_IrqTimer1",
       "address": "0x02056c60",
       "size": "0x00000010",
       "legacy_source": "src/_ZN3IRQ19Tim1OverflowHandlerEv.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "_Z13OSi_IrqTimer0v",
+      "symbol": "OSi_IrqTimer0",
       "address": "0x02056c70",
       "size": "0x00000010",
       "legacy_source": "src/_ZN3IRQ19Tim0OverflowHandlerEv.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "_Z11OSi_IrqDma3v",
+      "symbol": "OSi_IrqDma3",
       "address": "0x02056c80",
       "size": "0x00000010",
       "legacy_source": "src/_ZN3IRQ11Dma3HandlerEv.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "_Z11OSi_IrqDma2v",
+      "symbol": "OSi_IrqDma2",
       "address": "0x02056c90",
       "size": "0x00000010",
       "legacy_source": "src/_ZN3IRQ11Dma2HandlerEv.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "_Z11OSi_IrqDma1v",
+      "symbol": "OSi_IrqDma1",
       "address": "0x02056ca0",
       "size": "0x00000010",
       "legacy_source": "src/_ZN3IRQ11Dma1HandlerEv.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "_Z11OSi_IrqDma0v",
+      "symbol": "OSi_IrqDma0",
       "address": "0x02056cb0",
       "size": "0x00000010",
       "legacy_source": "src/_ZN3IRQ11Dma0HandlerEv.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_Z15OSi_IrqCallbacki",
+      "symbol": "OSi_IrqCallback",
       "address": "0x02056cc0",
       "size": "0x000000a0",
       "legacy_source": "src/_ZN3IRQ13DmaTimHandlerEj.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "_Z11OS_IrqDummyv",
+      "symbol": "OS_IrqDummy",
       "address": "0x02056d60",
       "size": "0x00000004",
       "legacy_source": "src/_ZN3IRQ12EmptyHandlerEv.cpp",

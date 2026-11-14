@@ -92,7 +92,7 @@
       "legacy_source": "src/IsStarCollectedInLevel.c"
     },
     {
-      "symbol": "_Z35CountStarsCollectedInLevelToDisplayi",
+      "symbol": "CountStarsCollectedInLevelToDisplay",
       "address": "0x02013714",
       "size": "0x54",
       "ordinal": 11,
@@ -155,7 +155,7 @@
       "legacy_source": "src/unnamed/arm9/0201/func_02013868.c"
     },
     {
-      "symbol": "_Z13func_02013890ii",
+      "symbol": "func_02013890",
       "address": "0x02013890",
       "size": "0x4c",
       "ordinal": 20,
@@ -211,7 +211,7 @@
       "legacy_source": "src/unnamed/arm9/0201/func_02013a00.c"
     },
     {
-      "symbol": "_Z13func_02013a44v",
+      "symbol": "func_02013a44",
       "address": "0x02013a44",
       "size": "0x44",
       "ordinal": 28,
@@ -274,7 +274,7 @@
       "legacy_source": "src/_ZN8SaveData18SetDefaultValuesMgEP16MinigameSaveData.cpp"
     },
     {
-      "symbol": "_Z13func_02013c84hP12FileSaveDataiS0_",
+      "symbol": "func_02013c84",
       "address": "0x02013c84",
       "size": "0x50",
       "ordinal": 37,

@@ -54,7 +54,7 @@ daBgSnwmn_c *daBgSnwmn_c_classInit() {
     return new daBgSnwmn_c();
 }
 
-extern SpawnInfo<daBgSnwmn_c> g_profile_BIG_SNOWMAN = {
+extern "C" SpawnInfo<daBgSnwmn_c> g_profile_BIG_SNOWMAN = {
     daBgSnwmn_c_classInit, 0x0110, 0x0083, 3, 1, 0x0012c000, 0x01000000, 0x00001000};
 
 s32 daBgSnwmn_c::InitResources() {

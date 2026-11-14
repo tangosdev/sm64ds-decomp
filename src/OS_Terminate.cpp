@@ -17,10 +17,8 @@ extern "C" {
 /* local extern: the exception handler (an OSExceptionHandler); no header
    declares it. */
 extern void func_0201a03c(u32 context, void *arg);
-}
 
-extern u8 data_0209d4d8;
-// 0x0209d4d8
+extern u8 data_0209d4d8; // 0x0209d4d8
 
 void OS_Terminate(void) {
     OS_DisableInterrupts();
@@ -32,4 +30,5 @@ void OS_Terminate(void) {
         OS_DisableInterrupts();
         OS_Halt();
     }
+}
 }

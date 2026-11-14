@@ -42,15 +42,13 @@
 #include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
 
+extern "C" {
 extern unsigned char sStarSelectCharacterOrder[];
 extern unsigned short sStarSelectDecimalDivisors[];
-unsigned char NumStars(void);
 
 extern int data_0208ee44;
 extern PadData data_020a0e58[];
-int IsStarCollectedInLevel(s8 levelID, s32 starID);
-extern "C" void OamRender10_d_s_star_sel_methods(int, void *, int, int, int, int, int, int, int,
-                                                 int);
+void OamRender10_d_s_star_sel_methods(int, void *, int, int, int, int, int, int, int, int);
 extern s8 gNextSublevel;
 extern s32 data_020a0db0;
 extern u8 data_02092128[];
@@ -67,6 +65,9 @@ extern u8 data_ov001_020abbf4;
  * actually differed; only the return spelling did, and every call site in
  * this file consumes it as `!= 0`. The declaration in SaveData.h is the one
  * they all already held. */
+}
+extern unsigned char NumStars(void);
+int IsStarCollectedInLevel(s8 levelID, s32 starID);
 
 void CopyToViewMat(const Matrix4x3 *);
 
@@ -563,8 +564,10 @@ s32 dScStarSel_c::Render() {
 // as four fresh locals they colour the other way round (re-measured: 8 words differ;
 // splitting `val` alone still leaves 6).
 
+extern "C" {
 extern dFdBrightness_c *gSceneFader;
 extern dFdColor_c gSceneColorFader;
+}
 
 s32 dScStarSel_c::Behavior() {
     u8 *rec;
@@ -853,13 +856,15 @@ enum ZN12dScStarSel_c13InitResourcesEv_AssetId {
  * arms, which is what keeps the value in the register the ternary lands in (r3)
  * and lets the loop's +0x23 temp take a fresh r1. */
 
-extern "C" void Enable3dEngines(void);
-extern "C" void *LoadFile(int);
-extern "C" void DecompressLZ16(void *, void *);
-int IsStarCollected(int, int);
+extern "C" {
+void Enable3dEngines(void);
+void *LoadFile(int);
+void DecompressLZ16(void *, void *);
 
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
+}
+int IsStarCollected(int, int);
 
 s32 dScStarSel_c::InitResources() {
     void *file;
@@ -1196,6 +1201,7 @@ dScStarSel_c *dScStarSel_c_classInit(void) {
     return new dScStarSel_c;
 }
 
+extern "C" {
 /* Sub-screen BG palette entry 0, the backdrop colour (0x7fff, white):
    InitResources loads these two bytes with GXS_LoadBGPltt(.., 0, 2). */
 u16 sStarSelectSubBackdropColor = 32767;
@@ -1215,3 +1221,4 @@ u16 sStarSelectDecimalDivisors[3] = {100, 10, 1};
 s8 sStarSelectCharYStep[12] = {0, 0, 0, 0, 0, 0, 0, 0, 32, 0, 0, 0};
 s16 sStarSelectCharXStep[12] = {0, 0, 0, 0, 72, 0, 0, 0, -68, 136, 0, 0};
 BaseSpawnInfo<dScStarSel_c> g_profile_STAR_SELECT = {dScStarSel_c_classInit, 4, 7};
+}

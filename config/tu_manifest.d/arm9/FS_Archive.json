@@ -21,140 +21,140 @@
   ],
   "functions": [
     {
-      "symbol": "_Z17FS_SetArchiveProcP9FSArchivePFiP6FSFileiEj",
+      "symbol": "FS_SetArchiveProc",
       "address": "0x0205c7c4",
       "size": "0x00000020",
       "legacy_source": "src/FS_SetArchiveProc.c",
       "ordinal": 0
     },
     {
-      "symbol": "_Z16FS_ResumeArchiveP9FSArchive",
+      "symbol": "FS_ResumeArchive",
       "address": "0x0205c7e4",
       "size": "0x00000080",
       "legacy_source": "src/FS_ResumeArchive.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "_Z17FS_SuspendArchiveP9FSArchive",
+      "symbol": "FS_SuspendArchive",
       "address": "0x0205c864",
       "size": "0x000000b8",
       "legacy_source": "src/unnamed/arm9/0205/func_0205c864.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "_Z22FS_UnloadArchiveTablesP9FSArchive",
+      "symbol": "FS_UnloadArchiveTables",
       "address": "0x0205c91c",
       "size": "0x0000009c",
       "legacy_source": "src/unnamed/arm9/0205/func_0205c91c.c",
       "ordinal": 3
     },
     {
-      "symbol": "_Z20FS_LoadArchiveTablesP9FSArchivePvj",
+      "symbol": "FS_LoadArchiveTables",
       "address": "0x0205c9b8",
       "size": "0x000000f0",
       "legacy_source": "src/unnamed/arm9/0205/func_0205c9b8.c",
       "ordinal": 4
     },
     {
-      "symbol": "_Z16FS_UnloadArchiveP9FSArchive",
+      "symbol": "FS_UnloadArchive",
       "address": "0x0205caa8",
       "size": "0x000000c0",
       "legacy_source": "src/unnamed/arm9/0205/func_0205caa8.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "_Z14FS_LoadArchiveP9FSArchivejjjjjPFiS0_PvjjEPFiS0_PKvjjE",
+      "symbol": "FS_LoadArchive",
       "address": "0x0205cb68",
       "size": "0x0000007c",
       "legacy_source": "src/FS_LoadArchive.c",
       "ordinal": 6
     },
     {
-      "symbol": "_Z21FS_ReleaseArchiveNameP9FSArchive",
+      "symbol": "FS_ReleaseArchiveName",
       "address": "0x0205cbe4",
       "size": "0x0000009c",
       "legacy_source": "src/FS_ReleaseArchiveName.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_Z22FS_RegisterArchiveNameP9FSArchivePKci",
+      "symbol": "FS_RegisterArchiveName",
       "address": "0x0205cc80",
       "size": "0x000000b4",
       "legacy_source": "src/FS_RegisterArchiveName.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "_Z14FS_InitArchiveP9FSArchive",
+      "symbol": "FS_InitArchive",
       "address": "0x0205cd34",
       "size": "0x00000028",
       "legacy_source": "src/FS_InitArchive.c",
       "ordinal": 9
     },
     {
-      "symbol": "_Z24FS_NotifyArchiveAsyncEndP9FSArchivei",
+      "symbol": "FS_NotifyArchiveAsyncEnd",
       "address": "0x0205cd5c",
       "size": "0x00000098",
       "legacy_source": "src/unnamed/arm9/0205/func_0205cd5c.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "_Z15FSi_SendCommandP6FSFilei",
+      "symbol": "FSi_SendCommand",
       "address": "0x0205cdf4",
       "size": "0x00000168",
       "legacy_source": "src/FSi_SendCommand.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "_Z22FSi_ExecuteSyncCommandP6FSFile",
+      "symbol": "FSi_ExecuteSyncCommand",
       "address": "0x0205cf5c",
       "size": "0x00000048",
       "legacy_source": "src/FSi_ExecuteSyncCommand.c",
       "ordinal": 12
     },
     {
-      "symbol": "_Z23FSi_ExecuteAsyncCommandP6FSFile",
+      "symbol": "FSi_ExecuteAsyncCommand",
       "address": "0x0205cfa4",
       "size": "0x000000a0",
       "legacy_source": "src/FSi_ExecuteAsyncCommand.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "_Z15FSi_NextCommandP9FSArchive",
+      "symbol": "FSi_NextCommand",
       "address": "0x0205d044",
       "size": "0x000001f8",
       "legacy_source": "src/FSi_NextCommand.cpp",
       "ordinal": 14
     },
     {
-      "symbol": "_Z14FS_FindArchivePKci",
+      "symbol": "FS_FindArchive",
       "address": "0x0205d23c",
       "size": "0x00000050",
       "legacy_source": "src/FS_FindArchive.cpp",
       "ordinal": 15
     },
     {
-      "symbol": "_Z18FSi_ReadMemoryCoreP9FSArchivePvjj",
+      "symbol": "FSi_ReadMemoryCore",
       "address": "0x0205d28c",
       "size": "0x00000024",
       "legacy_source": "src/unnamed/arm9/0205/func_0205d28c.c",
       "ordinal": 16
     },
     {
-      "symbol": "_Z20FSi_WriteMemCallbackP9FSArchivePKvjj",
+      "symbol": "FSi_WriteMemCallback",
       "address": "0x0205d2b0",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/arm9/0205/func_0205d2b0.c",
       "ordinal": 17
     },
     {
-      "symbol": "_Z19FSi_ReadMemCallbackP9FSArchivePvjj",
+      "symbol": "FSi_ReadMemCallback",
       "address": "0x0205d2dc",
       "size": "0x00000028",
       "legacy_source": "src/unnamed/arm9/0205/func_0205d2dc.c",
       "ordinal": 18
     },
     {
-      "symbol": "_Z17FSi_GetPackedNamePKci",
+      "symbol": "FSi_GetPackedName",
       "address": "0x0205d304",
       "size": "0x00000064",
       "legacy_source": "src/FSi_GetPackedName.c",

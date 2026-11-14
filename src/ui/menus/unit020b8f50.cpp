@@ -95,11 +95,11 @@ extern void func_ov007_020bda38(int v);
 extern void func_ov007_020bda8c(int a, int b);
 extern void func_ov007_020bdbcc(int a0, int a1);
 extern void func_ov007_020bde2c(int idx);
-int func_ov007_020bdeb0(int a);
-void func_ov007_020bfe4c(Ov007Camera *cam, int x, int y, int z, Vector3 *out);
+extern "C" int func_ov007_020bdeb0(int a);
+extern "C" void func_ov007_020bfe4c(Ov007Camera *cam, int x, int y, int z, Vector3 *out);
 extern int func_ov007_020c1da0(int i);
-int func_ov007_020c3ba8(int);
-unsigned short func_ov007_020c3be0(int t, int a, int b);
+extern "C" int func_ov007_020c3ba8(int);
+extern "C" unsigned short func_ov007_020c3be0(int t, int a, int b);
 extern "C" void func_ov007_020c3d1c(void *);
 extern "C" void *func_ov007_020c3df4(const char *name, int size);
 extern "C" void func_ov007_020c4f50(void *c, int a1, int a2, int a3, int a4);
@@ -118,9 +118,9 @@ extern "C" void func_ov007_020c5ef0(void *o);
 extern "C" int func_ov007_020c8f98(void *p);
 extern "C" void func_ov007_020c9080(void *);
 extern "C" Ov007Tween *func_ov007_020c908c(s32 *out);
-void func_ov007_020c92d0(Ov007MenuState *state);
+extern "C" void func_ov007_020c92d0(Ov007MenuState *state);
 extern "C" void func_ov007_020c937c(void *state);
-void *func_ov007_020c9388(int a);
+extern "C" void *func_ov007_020c9388(int a);
 
 /* Replays the drawing one frame: strokeTime advances so that it covers
  * totalStrokeTime in replayFrames frames (param 0) or 0x168 frames, by at
@@ -1135,7 +1135,7 @@ void PickerScene_UpdateEdit(void) {
     }
 }
 
-void PickerScene_Create(int mode, int drawingIndex) {
+extern "C" void PickerScene_Create(int mode, int drawingIndex) {
     int centerY, size, spriteMode, startAlpha;
     int i;
     Ov007Sprite *sprite;
@@ -1246,7 +1246,7 @@ void PickerScene_Create(int mode, int drawingIndex) {
     func_ov007_020bbe60(drawingIndex);
 }
 
-void PickerScene_Destroy(void) {
+extern "C" void PickerScene_Destroy(void) {
     int i;
 
     if (SCENE == 0)
@@ -1271,7 +1271,7 @@ void PickerScene_Destroy(void) {
     data_ov007_02104b9c = 0;
 }
 
-void PickerScene_Update(void) {
+extern "C" void PickerScene_Update(void) {
     Ov007MenuState *p;
     short st;
     int ticks;
@@ -1534,11 +1534,11 @@ int PickerScene_IsAwaitingTap(void) {
     return SCENE->awaitingTap;
 }
 
-Ov007MenuState *PickerScene_GetMainState(void) {
+extern "C" Ov007MenuState *PickerScene_GetMainState(void) {
     return SCENE->states[0];
 }
 
-Ov007MenuState *PickerScene_GetDisplayState(void) {
+extern "C" Ov007MenuState *PickerScene_GetDisplayState(void) {
     return SCENE->states[1];
 }
 

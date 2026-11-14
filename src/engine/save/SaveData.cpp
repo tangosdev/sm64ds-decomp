@@ -49,22 +49,17 @@
 #include "SaveData.h"
 #include "nitro/mi/memory.h"
 
-extern int data_0209caf4[][5];
-/* the minigame record tables, at block + 0x54 */
-extern u8 gGameMode;
-/* gate byte read by CanPlayerHaveCap */
-extern u8 data_0209cad2[];
-/* coin records; local extern: no field on the byte array */
-extern unsigned char data_0209cab4[];
-/* star bits per course */
-extern unsigned char data_0209f224;
-/* last collected star id */
-extern void ClearCapHeldByToad(void);
-/* forward: called by func_02013a88 above its definition */
-extern void UnlockMinigame(int minigame);
-/* forward: defined at the end of this file */
+extern "C" {
+extern int data_0209caf4[][5];        /* the minigame record tables, at block + 0x54 */
+extern u8 gGameMode;                  /* gate byte read by CanPlayerHaveCap */
+extern u8 data_0209cad2[];            /* coin records; local extern: no field on the byte array */
+extern unsigned char data_0209cab4[]; /* star bits per course */
+extern unsigned char data_0209f224;   /* last collected star id */
 /* local extern: no header declares it */
 extern int SublevelToLevel(int levelID);
+}
+extern void ClearCapHeldByToad(void); /* forward: called by func_02013a88 above its definition */
+extern void UnlockMinigame(int minigame); /* forward: defined at the end of this file */
 
 void ClearSaveBlock(void) {
     MI_CpuClear8(&data_0209caa0, 0x32c);
@@ -113,7 +108,7 @@ int SaveData::EraseSaveFile(u32 fileID, char *saveArea) {
     return 0;
 }
 
-int func_02013c84(u8 charID, FileSaveData *src, s32 fileIndex, FileSaveData *dest) {
+extern "C" int func_02013c84(u8 charID, FileSaveData *src, s32 fileIndex, FileSaveData *dest) {
     MI_CpuCopy8(src, dest, 0x44);
     if (fileIndex < 0) {
         data_0209caa0.activeFile = charID;
@@ -178,7 +173,7 @@ void func_02013a88(void) {
     ClearCapHeldByToad();
 }
 
-int func_02013a44(void) {
+extern "C" int func_02013a44(void) {
     if (!SaveData::CanPlayerHaveCap())
         return 0;
     return data_0209caa0.file.flags1 & (0x8000000u << data_0209caa0.file.mCharacter);
@@ -237,7 +232,7 @@ int func_020138dc(void) {
     return count;
 }
 
-int func_02013890(int rabbit, int character) {
+extern "C" int func_02013890(int rabbit, int character) {
     if (character < 0) {
         int f = data_0209caa0.file.minigameRabbits;
         int m = 0xf << (rabbit * 4);
@@ -291,7 +286,7 @@ u8 SaveData::CountStarsCollectedInLevel(u32 courseID) {
     return count;
 }
 
-u8 CountStarsCollectedInLevelToDisplay(s32 courseID) {
+extern "C" u8 CountStarsCollectedInLevelToDisplay(s32 courseID) {
     u8 total;
     s32 course;
     if (courseID <= 0xe)

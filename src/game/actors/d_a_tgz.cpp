@@ -100,8 +100,16 @@ TgzStateRecord gTgzStates[6] = {
     {&daTgz_c::func_ov077_02125480, &daTgz_c::func_ov077_021253a4},
 };
 
+extern "C" {
 extern DaJgmModelFile data_ov077_02127b48;
 extern DaJgmModelFile data_ov077_02127b38;
+
+unsigned int d_a_tgzNewHold(unsigned int uniqueID, unsigned int effectID, int x, int y, int z,
+                            const void *dir, void *callback);
+extern int data_0209f32c;
+extern Matrix4x3 IDENTITY_MATRIX4X3;
+extern signed char gCurrentSublevel;
+}
 int func_ov077_02124c28(daTgz_c *self);
 void func_ov077_02124d08(daTgz_c *self, dBgCh_Actr *clsn);
 void func_ov077_021251d0(daTgz_c *self);
@@ -115,14 +123,6 @@ void func_ov077_021250a8(daTgz_c *self);
 void func_ov077_02125304(daTgz_c *self);
 int SurfaceInfo_TestFlag0x20(int *p);
 void func_02012694(unsigned int id, const Vector3 *pos);
-extern "C" {
-unsigned int d_a_tgzNewHold(unsigned int uniqueID, unsigned int effectID, int x, int y, int z,
-                            const void *dir, void *callback);
-}
-
-extern int data_0209f32c;
-extern Matrix4x3 IDENTITY_MATRIX4X3;
-extern signed char gCurrentSublevel;
 
 /* Vtable slot 16. The compiler writes the whole body: one vtable store, the
  * members in reverse, then ~dActor_c. Slot 17 (D0) is the deleting variant of

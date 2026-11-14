@@ -81,7 +81,7 @@ daEyBm_c *daEyBm_c_classInit() {
 }
 
 /* The actor-table descriptor, at ov071:0x02122dc4. */
-SpawnInfo<daEyBm_c> g_profile_EYEKUN_BEAM = {
+extern "C" SpawnInfo<daEyBm_c> g_profile_EYEKUN_BEAM = {
     daEyBm_c_classInit, 0x0108, 0x007a, 0x00000002, 0, 0x00019000, 0x01000000, 0x01000000};
 
 int daEyBm_c::InitResources() {

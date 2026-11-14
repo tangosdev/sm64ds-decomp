@@ -2,7 +2,6 @@
 #include "Ov007Work.h"
 #include "Ov007Settings.h"
 
-#define func_ov007_020bd9e4 _Z19func_ov007_020bd9e4i
 extern void func_ov007_020bd9e4(int);
 
 /* Records the menu choice and routes it: choice 9 after either read

@@ -2,7 +2,6 @@
 #include "Ov007Settings.h"
 #include "Ov007MenuMem.h"
 
-#define func_ov007_020c9388 _Z19func_ov007_020c9388i
 extern void *func_ov007_020c9388(int initialState);
 extern struct Ov007Camera *func_ov007_020c023c(void);
 extern struct Ov007Light *func_ov007_020c241c(int id);

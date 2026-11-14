@@ -1,11 +1,11 @@
 #include "types.h"
 
-extern s32 _Z16GetOwnerLanguagev(void);
+extern s32 GetOwnerLanguage(void);
 
 /* The console language as an index into the per-language asset tables:
    English 0, French 1, German 2, Italian 3, Spanish 4; anything else 0. */
 s32 GetLanguageIndex(void) {
-    s32 lang = _Z16GetOwnerLanguagev();
+    s32 lang = GetOwnerLanguage();
     switch (lang) {
     case 2:
         return 1;

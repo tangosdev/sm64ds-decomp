@@ -230,56 +230,56 @@
       "ordinal": 27
     },
     {
-      "symbol": "_ZN11ns_020ca7b815Trmp2Mario_HideEv",
+      "symbol": "Trmp2Mario_Hide",
       "address": "0x020ca7b8",
       "size": "0x00000088",
       "legacy_source": "src/func_ov006_020ca7b8.c",
       "ordinal": 28
     },
     {
-      "symbol": "_ZN11ns_020ca84019Trmp2Mario_EnterAllEv",
+      "symbol": "Trmp2Mario_EnterAll",
       "address": "0x020ca840",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov006_020ca840.c",
       "ordinal": 29
     },
     {
-      "symbol": "_ZN11ns_020ca8e022Trmp2Mario_MoveToStartEv",
+      "symbol": "Trmp2Mario_MoveToStart",
       "address": "0x020ca8e0",
       "size": "0x00000128",
       "legacy_source": "src/func_ov006_020ca8e0.cpp",
       "ordinal": 30
     },
     {
-      "symbol": "_ZN11ns_020caa0823Trmp2Mario_PlaceAtStartEv",
+      "symbol": "Trmp2Mario_PlaceAtStart",
       "address": "0x020caa08",
       "size": "0x000000d4",
       "legacy_source": "src/func_ov006_020caa08.c",
       "ordinal": 31
     },
     {
-      "symbol": "_ZN11ns_020caadc18Trmp2Mario_DrawAllEv",
+      "symbol": "Trmp2Mario_DrawAll",
       "address": "0x020caadc",
       "size": "0x00000154",
       "legacy_source": "src/func_ov006_020caadc.c",
       "ordinal": 32
     },
     {
-      "symbol": "_ZN11ns_020cac3020Trmp2Mario_UpdateAllEv",
+      "symbol": "Trmp2Mario_UpdateAll",
       "address": "0x020cac30",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov006_020cac30.cpp",
       "ordinal": 33
     },
     {
-      "symbol": "_ZN11ns_020cac9c19Trmp2Mario_ResetAllEj",
+      "symbol": "Trmp2Mario_ResetAll",
       "address": "0x020cac9c",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov006_020cac9c.c",
       "ordinal": 34
     },
     {
-      "symbol": "_ZN11ns_020cad3c20Trmp2Mario_SetTuningEi",
+      "symbol": "Trmp2Mario_SetTuning",
       "address": "0x020cad3c",
       "size": "0x00000160",
       "legacy_source": "src/func_ov006_020cad3c.c",
@@ -503,7 +503,7 @@
       "ordinal": 66
     },
     {
-      "symbol": "_ZN11ns_020cc9fc23Trmp3DMario_EnterWalkInEPc",
+      "symbol": "Trmp3DMario_EnterWalkIn",
       "address": "0x020cc9fc",
       "size": "0x000000e4",
       "legacy_source": "src/func_ov006_020cc9fc.cpp",
@@ -524,7 +524,7 @@
       "ordinal": 69
     },
     {
-      "symbol": "_ZN11ns_020ccd0422Trmp3DMario_IsOffstageEPi",
+      "symbol": "Trmp3DMario_IsOffstage",
       "address": "0x020ccd04",
       "size": "0x00000060",
       "legacy_source": "src/func_ov006_020ccd04.c",
@@ -566,56 +566,56 @@
       "ordinal": 75
     },
     {
-      "symbol": "_ZN11ns_020cd15825Trmp3DMario_CountFinishedEv",
+      "symbol": "Trmp3DMario_CountFinished",
       "address": "0x020cd158",
       "size": "0x00000088",
       "legacy_source": "src/func_ov006_020cd158.c",
       "ordinal": 76
     },
     {
-      "symbol": "_ZN11ns_020cd1e020Trmp3DMario_StartAllEv",
+      "symbol": "Trmp3DMario_StartAll",
       "address": "0x020cd1e0",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_020cd1e0.c",
       "ordinal": 77
     },
     {
-      "symbol": "_ZN11ns_020cd27019Trmp3DMario_DrawAllEv",
+      "symbol": "Trmp3DMario_DrawAll",
       "address": "0x020cd270",
       "size": "0x0000012c",
       "legacy_source": "src/func_ov006_020cd270.c",
       "ordinal": 78
     },
     {
-      "symbol": "_ZN11ns_020cd39c21Trmp3DMario_UpdateAllEv",
+      "symbol": "Trmp3DMario_UpdateAll",
       "address": "0x020cd39c",
       "size": "0x00000088",
       "legacy_source": "src/func_ov006_020cd39c.c",
       "ordinal": 79
     },
     {
-      "symbol": "_ZN11ns_020cd42420Trmp3DMario_ResetAllEji",
+      "symbol": "Trmp3DMario_ResetAll",
       "address": "0x020cd424",
       "size": "0x000000ec",
       "legacy_source": "src/func_ov006_020cd424.c",
       "ordinal": 80
     },
     {
-      "symbol": "_ZN11ns_020cd51021Trmp3DMario_SetTuningEi",
+      "symbol": "Trmp3DMario_SetTuning",
       "address": "0x020cd510",
       "size": "0x0000011c",
       "legacy_source": "src/func_ov006_020cd510.c",
       "ordinal": 81
     },
     {
-      "symbol": "_ZN11ns_020cd62c26Trmp3DMario_SetSpawnHeightEi",
+      "symbol": "Trmp3DMario_SetSpawnHeight",
       "address": "0x020cd62c",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov006_020cd62c.c",
       "ordinal": 82
     },
     {
-      "symbol": "_ZN11ns_020cd65820Trmp3DMario_InitPoolEPhi",
+      "symbol": "Trmp3DMario_InitPool",
       "address": "0x020cd658",
       "size": "0x00000080",
       "legacy_source": "src/func_ov006_020cd658.c",

@@ -1,6 +1,6 @@
-extern unsigned short _Z13func_0203da80t(unsigned short x);
-extern int _Z13func_0203d950i(int i);
-extern void _Z13func_02030790v(void);
+extern unsigned short func_0203da80(unsigned short x);
+extern int func_0203d950(int i);
+extern void func_02030790(void);
 extern int data_0209fc68;
 extern unsigned char data_0209fc58;
 extern unsigned char data_0209fc54;
@@ -17,25 +17,25 @@ extern void (*data_020927ec[])(void);
 int func_02030e4c(void)
 {
     void (*fn)(void);
-    if (data_0209fc68 != 0 && data_0209fc68 < 5 && _Z13func_0203da80t(0x9d)) {
-        if (_Z13func_0203da80t(4)) {
+    if (data_0209fc68 != 0 && data_0209fc68 < 5 && func_0203da80(0x9d)) {
+        if (func_0203da80(4)) {
             data_0209fc58 |= 0x10;
-        } else if (_Z13func_0203da80t(0x80)) {
+        } else if (func_0203da80(0x80)) {
             data_0209fc58 |= 0x20;
         } else {
             data_0209fc58 |= 0xf;
             if (data_0209fc68 < 4)
                 data_0209fc58 |= 0x20;
         }
-        _Z13func_02030790v();
+        func_02030790();
     } else if (data_0209fc68 >= 3 && data_0209fc68 < 5) {
-        if (_Z13func_0203d950i(0) == 0 || data_0209fc54 != 0) {
+        if (func_0203d950(0) == 0 || data_0209fc54 != 0) {
             data_0209fc58 |= 1;
             if (data_0209fc68 < 4)
                 data_0209fc58 |= 0x20;
             if (data_0209fc54 != 0)
                 data_0209fc58 |= 0x40;
-            _Z13func_02030790v();
+            func_02030790();
         }
     }
     fn = data_020927ec[data_0209fc68];

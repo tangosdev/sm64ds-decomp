@@ -68,15 +68,19 @@
 
 /* Shared ABI seams. Each is the most complete of the spellings the retired
  * one-function shards carried. */
+extern "C" {
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-extern "C" void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
-extern "C" unsigned short DecIfAbove0_Short(unsigned short *timer);
+void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
+unsigned short DecIfAbove0_Short(unsigned short *timer);
+}
+extern "C" {
 
 /* arm9 statics this TU reads but does not own. */
 extern dClipper data_0209f43c;
 extern Matrix4x3 data_0209b3ec;
+}
 
 /* The model handle. dExtSimpleModel_c reaches its file through this wrapper's
  * constructor and destructor veneers; the manifest maps both to the retail

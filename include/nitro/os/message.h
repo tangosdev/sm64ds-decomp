@@ -1,10 +1,5 @@
 #ifndef NITRO_OS_MESSAGE_H
 #define NITRO_OS_MESSAGE_H
-#ifndef __cplusplus
-#define OS_ReceiveMessage _Z17OS_ReceiveMessageP14OSMessageQueuePPvi
-#define OS_SendMessage _Z14OS_SendMessageP14OSMessageQueuePvi
-#define OS_InitMessageQueue _Z19OS_InitMessageQueueP14OSMessageQueuePPvi
-#endif
 
 /*
  * The message queue of the Nitro SDK's os_message.c, this SDK's layout. The
@@ -17,9 +12,7 @@
 #include "types.h"
 
 #ifdef __cplusplus
-#ifdef _MSC_VER
 extern "C" {
-#endif
 #endif
 
 #define OS_MESSAGE_NOBLOCK 0
@@ -45,9 +38,7 @@ int OS_SendMessage(OSMessageQueue *, OSMessage, s32);
 int OS_ReceiveMessage(OSMessageQueue *, OSMessage *, s32);
 
 #ifdef __cplusplus
-#ifdef _MSC_VER
 }
-#endif
 #endif
 
 #endif

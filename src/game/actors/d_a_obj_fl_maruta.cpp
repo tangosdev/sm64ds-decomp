@@ -22,7 +22,9 @@
 #include "daObjFlMaruta_c.h"
 #include "SharedFilePtr.h"
 
+extern "C" {
 extern int data_ov022_02112c98[];
+}
 
 #pragma defer_codegen off
 

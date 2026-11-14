@@ -96,7 +96,6 @@ extern "C" struct Aea30C;
 void func_ov002_020aea30(Aea30C *self, dActor_c *attacker, dBgCh_Actr *collision);
 extern "C" void d_a_nknkRunningSlidingDustAtHold(int a, int b, int c);
 extern "C" int RandomIntInternal(int *seed);
-short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 
 extern SharedFilePtr* data_ov062_0211ced8[2];
 extern SharedFilePtr* data_ov062_0211cee0[2];

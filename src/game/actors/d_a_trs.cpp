@@ -22,8 +22,8 @@
  *
  * The func_ov063_* helpers are methods now (daTrs_c, one on daTBasket_c):
  * r0 is the object, so each one is a member of that class.
- * func_ov063_02118f24 stays free: its receiver is the ICON_TERESA
- * marker, not the Boo. func_ov063_0211a0a8 is pure math.
+ * func_ov063_02118f24 stays free (C linkage): its receiver is the
+ * ICON_TERESA marker, not the Boo. func_ov063_0211a0a8 is pure math.
  *
  * deslop leftovers:
  * - DropShadowRadHeight, dCcAcPos_c::Init, dCcAc_c::Init, dBgCh_Actr::Init,
@@ -112,20 +112,15 @@ struct TrsBone {
 typedef char TrsBone_size_must_be_0x34[sizeof(TrsBone) == 0x34 ? 1 : -1];
 #endif
 
-
+extern "C" {
 /* shared engine entry points without a header declaration */
-void LoadKeyModels(int n);
-void UnloadKeyModels(int n);
-unsigned char NumStars(void);
-int IsStarCollectedInCurLevel(int n);
-u8 IsAreaShowing(int idx);
 
 /* ABI seams whose header member forms do not reproduce the ROM (see notes) */
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, dActor_c *actor, Fix12i radius, Fix12i height, Vector3_16 *a,
                          Vector3_16 *b);
-extern "C" unsigned int d_a_trsNewHold(unsigned int uniqueID, unsigned int effectID, int x, int y,
-                                       int z, const void *dir, void *callback);
+unsigned int d_a_trsNewHold(unsigned int uniqueID, unsigned int effectID, int x, int y, int z,
+                            const void *dir, void *callback);
 
 extern signed char gCurrentSublevel;
 extern unsigned char gCurrentEntranceId;
@@ -133,6 +128,12 @@ extern unsigned char gCurrentEntranceId;
 extern int data_ov063_0211e22c[];
 extern int data_ov063_0211e1ec[];
 extern Matrix4x3 data_020a0e68;
+}
+void LoadKeyModels(int n);
+void UnloadKeyModels(int n);
+unsigned char NumStars(void);
+int IsStarCollectedInCurLevel(int n);
+u8 IsAreaShowing(int idx);
 
 /* The seven file handles __sinit_ov063_0211e29c constructs. SharedFilePtr
  * declares no constructor of its own, so the model handles get the
@@ -163,23 +164,18 @@ extern SharedFilePtr data_ov002_0210d9b8;
 
 /* File-local helpers and engine entry points, with the C-linkage spellings
  * these bodies were matched against. */
-extern "C" int d_a_trsPlaySubHold(unsigned int a, unsigned int b, unsigned int c, s32 d, int e);
-extern "C" int func_020092c4(void *cam, void *out, void *target);
-void func_02012694(unsigned int a, const Vector3 *p);
+extern "C" {
+int d_a_trsPlaySubHold(unsigned int a, unsigned int b, unsigned int c, s32 d, int e);
+int func_020092c4(void *cam, void *out, void *target);
 u16 func_0201277c(unsigned int a);
 extern dCamera_c *gCamera;
-void func_ov063_02118f24(daTrsIcon_c *icon, const Vector3 &pos);
-int func_ov063_0211a0a8(int a0, int a1, int a2, int a3, int a4);
-void func_020167a4(dExtAnmModel_c *model);
-extern "C" void d_a_trsChangeMusicVolumeHold(unsigned a, int fx);
-void func_02011cfc(void);
+extern void d_a_trsChangeMusicVolumeHold(unsigned a, int fx);
+extern void func_02011cfc(void);
 extern s16 data_ov063_0211e1c8[];
 /* The call at 0x02118004 relocates to overlays(27,55). r0 still holds the
    state timer there, so the callee takes no object: ov055's free function at
    0x02111264, not ov027's daObjSlIceBlock_c::CleanupResources. */
-void func_ov055_02111264(void);
-extern "C" int func_ov002_020c51d0(void *c, int *st);
-u16 func_02011d14(void);
+extern int func_ov002_020c51d0(void *c, int *st);
 extern int data_ov008_02111b6c;
 extern s16 data_ov063_0211e1dc[];
 extern s16 data_ov063_0211e1e4[];
@@ -188,7 +184,14 @@ extern int data_ov063_0211e1d0[];
 extern int gMusicVolume;
 extern u8 data_0209d660;
 extern short data_ov063_0211e7e0[];
-extern "C" void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
+extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
+}
+void func_02012694(unsigned int a, const Vector3 *p);
+void func_ov063_02118f24(daTrsIcon_c *icon, const Vector3 &pos);
+int func_ov063_0211a0a8(int a0, int a1, int a2, int a3, int a4);
+extern void func_020167a4(dExtAnmModel_c *model);
+extern void func_ov055_02111264(void);
+extern u16 func_02011d14(void);
 
 /* Actor ids this file spawns, finds or compares (the names are the ones in
    symbols/actor_debug_names.tsv). */

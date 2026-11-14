@@ -95,20 +95,21 @@ extern daPly_c *gPlayers[];
 extern dCamera_c *gCamera;
 
 /* local extern: arm9/ov002 C helpers with no shared header yet. */
-
+extern "C" {
 /* Sound::Play2D(3, id). The ROM calls this wrapper, not Play2D. */
 unsigned int func_0201277c(unsigned int soundID);
 
 /* Depth from mModelOffsetY, mPosY, mSinkDepth and mGroundY; radius from that,
  * mIsBalloon, mIsMega and mScaleY. The definition takes char *. */
 /* Returns mBodyModels[GetBodyModelID(mBodyModelId, 1)] as int. */
-extern "C" int func_ov002_020e496c(daPly_c *player);
+int func_ov002_020e496c(daPly_c *player);
 
-extern "C" void func_0203c178(Matrix4x3 *m, int sx, int sy, int sz);
-extern "C" void MTX_Concat33(const int *a, const int *b, int *dst);
+void func_0203c178(Matrix4x3 *m, int sx, int sy, int sz);
+void MTX_Concat33(const int *a, const int *b, int *dst);
 /* local extern: math/CalcLib.h's spelling is the one below, but including
    that header renumbers this TU's @NNN .data locals. */
-extern "C" void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
+void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
+}
 
 /* Reconstructed source-style name: SM64DS proves daLuigi_c through RTTI,
  * allocation size, vtable identity, and the LUIGI registry profile;

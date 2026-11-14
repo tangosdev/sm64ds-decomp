@@ -47,6 +47,7 @@
 #include "nitro/fx/fx.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/Quaternion.h"
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
 enum daObjCvNewsLift_c_AssetId {
@@ -88,20 +89,11 @@ extern CLPS_Block data_ov021_02113a60;
 extern CLPS_Block data_ov021_02113a80;
 
 extern "C" {
-
 void Matrix4x3_FromQuaternion(const struct Quaternion *q, struct Matrix4x3 *mF);
 void Vec3_Asr(void *d, void *s, int sh);
-}
-
 int MTX_Inverse43(const struct Matrix4x3 *s, struct Matrix4x3 *d);
-extern "C" {
-
 void MTX_MultVec43(Vector3 *src, Matrix4x3 *mtx, Vector3 *dst);
 void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *dst);
-}
-
-extern "C" {
-
 s32 Vec3_Equal(const Vector3 *a, const Vector3 *b);
 u16 DecIfAbove0_Short(u16 *p);
 u8 DecIfAbove0_Byte(u8 *p);
@@ -144,7 +136,7 @@ void daObjCvNewsLift_c::OnMainMeshRide(dActor_c *player) {
         axis.x = 0;
         axis.y = 0x1000;
         axis.z = 0;
-        Quaternion_FromVector3((Quat *)&mTargetRotation, &axis, &inFrame);
+        Quaternion_FromVector3(&mTargetRotation, &axis, &inFrame);
         Quaternion_Normalize((int *)&mTargetRotation);
         mTiltHoldTimer = 10;
     }
@@ -523,5 +515,5 @@ void daObjCvNewsLift_c::UpdateClsnTransforms() {
 }
 
 /* Typed registry descriptor; priorities, flags and clip ranges match retail. */
-SpawnInfo<daObjCvNewsLift_c> g_profile_CV_NEWS_LIFT = {
+extern "C" SpawnInfo<daObjCvNewsLift_c> g_profile_CV_NEWS_LIFT = {
     daObjCvNewsLift_c_classInit, 0x44, 0x8b, 6, 0, 0x2a8000, 0x1900000, 0x1900000};

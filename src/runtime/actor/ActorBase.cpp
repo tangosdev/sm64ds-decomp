@@ -82,7 +82,7 @@ extern fBaseActorInfo **data_020a4bb8;
 
 struct LifecycleSequence;
 extern void func_02044334(LifecycleSequence *p);
-extern int  func_0204424c(char *p);
+extern "C" int func_0204424c(char *p);
 
 /* Heap's methods and fields come from include/Heap.h. The heap locals stay
    `void *` (and are cast at each use): Virtual34 and Virtual38 read its
@@ -191,7 +191,7 @@ fLiNdBa_c *func_02043f98(fLiNdBa_c **head, unsigned int key) {
     return 0;
 }
 
-fLiNdBa_c *func_02043f4c(fLiNdBa_c **head, unsigned int key, fLiNdBa_c *after) {
+extern "C" fLiNdBa_c *func_02043f4c(fLiNdBa_c **head, unsigned int key, fLiNdBa_c *after) {
     fLiNdBa_c *node = after ? after->next : *head;
     while (node != 0) {
         if (!OwnerActorIDDiffers(node, key))

@@ -3,6 +3,8 @@
 #include "nitro/fx/fx_cp.h"
 #include "nitro/gx/g3imm_cmd.h"
 
+extern "C" {
+
 /* Fills the unit square func_ov007_020c4684 has scaled onto a sprite with one
  * quad per 8x8-texel cell, top row first. Without a tile map the texture runs
  * on from (s0, t0), each cell advancing repeatU texels across and repeatV
@@ -66,4 +68,5 @@ void func_ov007_020c49bc(int width, int height, fx32 s0, fx32 t0, int repeatU, i
         }
     }
     G3_End();
+}
 }

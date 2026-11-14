@@ -1,6 +1,8 @@
 //cpp
 #include "Heap.h"
 
+extern "C" {
+
 /* func_0201a458 -- create the root heap over 0x0211d9c0..0x02140d80, store it in
  * data_0209d524 and return it, like func_0201a3e4. Both callers (LoadMultiBootResources in
  * d_s_mb.cpp and dScDSMT_c's result-6 path) use the returned heap, then load
@@ -26,4 +28,5 @@ void *func_0201a458(void) {
 void func_0201a428(void) {
     data_0209d524->Destroy();
     data_0209d524 = 0;
+}
 }

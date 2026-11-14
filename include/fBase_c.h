@@ -1,8 +1,5 @@
 #ifndef FBASE_C_H
 #define FBASE_C_H
-#ifndef __cplusplus
-#define Deallocate _Z10DeallocatePv
-#endif
 
 #include "types.h"
 
@@ -43,7 +40,7 @@
 /* The actor heap, for the inline operator delete at the end of the class.
    data_020a0eac is the heap every actor is allocated from. */
 #include "Memory.h"
-extern mHeap::Heap_t *data_020a0eac;
+extern "C" mHeap::Heap_t *data_020a0eac;
 
 struct fBase_c {
     /* Intrusive scene-graph node owned by every actor. */

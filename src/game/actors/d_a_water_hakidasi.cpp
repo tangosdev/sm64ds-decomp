@@ -71,7 +71,9 @@ extern HakPmfSlot data_ov064_0211c2e4;
 extern HakPmfSlot data_ov064_0211c2dc;
 extern HakPmfTable data_ov064_0211c934;
 
+extern "C" {
 extern int SublevelToLevel(int);
+}
 extern int IsStarCollected(int r0, int r1);
 
 extern SharedFilePtr data_ov002_0210da10;

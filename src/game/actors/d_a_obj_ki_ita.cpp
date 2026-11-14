@@ -38,7 +38,7 @@ daObjKi_Ita_c *daObjKi_Ita_c_classInit() {
     return new daObjKi_Ita_c();
 }
 
-SpawnInfo<daObjKi_Ita_c> g_profile_KI_ITA = {
+extern "C" SpawnInfo<daObjKi_Ita_c> g_profile_KI_ITA = {
     daObjKi_Ita_c_classInit,
     0x003c, /* KI_ITA registry id 60 */
     0x00b8,

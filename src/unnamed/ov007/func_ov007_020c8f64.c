@@ -1,6 +1,5 @@
 #include "Ov007Tween.h"
 #include "Ov007MenuMem.h"
-#define MenuMem_AllocClear _Z18MenuMem_AllocClearPKci
 
 extern void func_ov007_020c90f8(void *p);
 /* Allocates a vector tween bound to out, as func_ov007_020c908c does a scalar one. */

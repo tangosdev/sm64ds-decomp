@@ -66,7 +66,7 @@ extern "C" void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *ou
 extern "C" void VEC_Normalize(const Vector3 *v, Vector3 *out);
 extern "C" void G3_LoadMtx43(void *m);
 void func_02012694(u32 id, const Vector3 *pos);
-void *func_0201787c(SharedFilePtr *sfp);
+extern "C" void *func_0201787c(SharedFilePtr *sfp);
 u32   func_02045ad8(const void *src, u32 size);
 unsigned int func_02045a50(const void *src, unsigned int size);
 

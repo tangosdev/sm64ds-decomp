@@ -85,9 +85,12 @@ extern "C" void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int rx, int ry, int rz);
 extern "C" void Vec3_Lsl(Vector3 *out, const Vector3 *in, int n);
 extern "C" void Vec3_Asr(void *dst, void *src, int n);
-int   Vec3_Dist(const Vector3 *a, const Vector3 *b);
-int   Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-s16   Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
+/* local extern: CalcLib.h clashes with this TU's C Vec3_Asr (void *) and Vec3_Lsl (non-const source) */
+extern "C" int Vec3_Dist(const Vector3 *a, const Vector3 *b);
+/* local extern: CalcLib.h clashes with this TU's C Vec3_Asr (void *) and Vec3_Lsl (non-const source) */
+extern "C" int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
+/* local extern: CalcLib.h clashes with this TU's C Vec3_Asr (void *) and Vec3_Lsl (non-const source) */
+extern "C" s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 extern "C" int AngleDiff(int a, int b);
 extern "C" int ApproachAngle(s16 *cur, s16 target, int divisor, int band, int maxStep);
 extern "C" u16 DecIfAbove0_Short(u16 *p);
@@ -102,7 +105,7 @@ extern "C" {
 typedef void BgchInitAt_(dBgCh_Actr *self, int a, LocFix12 r, LocFix12 h, int p, int q);
 }
 int SurfaceInfo_TestFlag0x20(int *p);
-int   func_02035638(u8 *p);
+extern "C" int func_02035638(u8 *p);
 
 extern "C" struct Aea30C;
 void func_ov002_020aea30(Aea30C *self, dActor_c *actor, dBgCh_Actr *collision);

@@ -302,7 +302,7 @@
       "ordinal": 27
     },
     {
-      "symbol": "_Z26Message_DrawCenteredLineVSii",
+      "symbol": "Message_DrawCenteredLineVS",
       "address": "0x020341a8",
       "size": "0x000001b0",
       "legacy_source": "src/unnamed/arm9/0203/func_020341a8.cpp",
@@ -323,7 +323,7 @@
       "ordinal": 30
     },
     {
-      "symbol": "_Z13func_02034504v",
+      "symbol": "func_02034504",
       "address": "0x02034504",
       "size": "0x000000ac",
       "legacy_source": "src/unnamed/arm9/0203/func_02034504.c",

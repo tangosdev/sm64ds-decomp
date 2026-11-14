@@ -104,6 +104,7 @@ enum daKuriKing_c_AssetId {
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 
 /* Resource handles this TU's static initializer constructs. The wrapper
  * spellings are reconstructed; constructor and destructor addresses, file
@@ -144,7 +145,7 @@ namespace Sound {
 void StopLoadedMusic_Layer3();
 void LoadAndSetMusic_Layer3(unsigned int musicId);
 }
-void func_02011cfc();
+extern "C" void func_02011cfc();
 namespace Sound {
 void ChangeMusicVolume(u32 a, int f);
 }
@@ -159,10 +160,8 @@ extern int data_ov074_0212291c[];
 extern int data_ov074_0212290c[];
 extern float data_ov074_02122e4c[];
 extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-s32 Vec3_HorzLen(const Vector3 *v);
 extern "C" s16 atan2_hold_d_a_kuri_king_1(s32 y, s32 x);
 extern "C" unsigned char DecIfAbove0_Byte(unsigned char *p);
-s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
 extern "C" int *Vec3_LslInPlace(void *v, int n);
 extern struct Matrix4x3 data_020a0e68;
 extern struct Matrix4x3 IDENTITY_MATRIX4X3;
@@ -180,8 +179,8 @@ extern void *data_ov074_02122e5c[];
 extern BMA_File data_ov010_021123f4;
 extern BTA_File data_ov010_021124ac;
 extern "C" void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-extern int func_02037e20(int *p);
-extern unsigned int func_0201277c(unsigned int a);
+extern "C" int func_02037e20(int *p);
+extern "C" unsigned int func_0201277c(unsigned int a);
 extern "C" u8 data_ov074_02122d80[];
 extern SharedFilePtr data_ov002_0210da30;
 extern SharedFilePtr data_ov084_02130cf8;

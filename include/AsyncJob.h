@@ -1,15 +1,10 @@
 #ifndef ASYNC_JOB_H
 #define ASYNC_JOB_H
-#ifndef __cplusplus
-#define func_0201a2f8 _Z13func_0201a2f8i
-#define func_0201a244 _Z13func_0201a244PFviEiiPvi
-#endif
 
 #ifdef __cplusplus
-#ifdef _MSC_VER
 extern "C" {
 #endif
-#endif
+
 typedef void (*AsyncJobCallback)(int argument);
 
 /* Runs immediately when the worker is already occupied. Returns 1 when the
@@ -20,15 +15,9 @@ int func_0201a244(AsyncJobCallback callback, int argument, int priority, void *s
 
 /* These jobs ignore the worker argument. */
 void func_0201a2f8(int unused);
+void LoadMultiBootResources(int unused);
+
 #ifdef __cplusplus
-extern "C"
-#endif
-    void
-    LoadMultiBootResources(int unused);
-#ifdef __cplusplus
-#ifdef _MSC_VER
 }
 #endif
-#endif
-
 #endif

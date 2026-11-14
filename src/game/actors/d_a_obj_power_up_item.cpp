@@ -90,16 +90,14 @@ enum {
     CHARACTER_YOSHI = 3
 };
 
-extern void func_02012694(unsigned int id, const Vector3 *v);
 extern "C" {
-
 extern dCamera_c *gCamera;
 extern void *gPFlowerCloseModelFile[];
 extern void *gPFlowerOpenModelFile[];
-}
-
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *act, Fix12i a, Fix12i b, void *d, void *e);
+}
+extern void func_02012694(unsigned int id, const Vector3 *v);
 
 daObjPowerUpItem_c::~daObjPowerUpItem_c()
 {
@@ -503,7 +501,7 @@ daObjPowerUpItem_c *daObjPowerUpItem_c_classInit() {
     return new daObjPowerUpItem_c();
 }
 
-SpawnInfo<daObjPowerUpItem_c> g_profile_POWER_UP_ITEM = {
+extern "C" SpawnInfo<daObjPowerUpItem_c> g_profile_POWER_UP_ITEM = {
     daObjPowerUpItem_c_classInit,
     0x0132, /* POWER_UP_ITEM registry id 306 */
     0x0125,

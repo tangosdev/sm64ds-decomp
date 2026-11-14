@@ -32,7 +32,7 @@ extern void OSReadROMArea(u32 src, void *dst, int len);
  */
 void OS_ResetSystem(u32 resetArg) {
     if (MB_IsMultiBootChild())
-        _Z12OS_Terminatev();
+        OS_Terminate();
 
     *(u32 *)HW_RESET_PARAMETER_BUF = resetArg;
     OSi_SendToPxi(0x10);
@@ -63,7 +63,7 @@ void OSi_ReloadRomData(void) {
     u32 dst_arm9 = *(u32 *)(p + 0x28);
     u32 len_arm9 = *(u32 *)(p + 0x2c);
 
-    _Z14OS_TryLockCardt((u16)_Z12OS_GetLockIDv());
+    OS_TryLockCard((u16)OS_GetLockID());
     DC_FlushAll();
 
     if (src_arm9 < 0x8000) {

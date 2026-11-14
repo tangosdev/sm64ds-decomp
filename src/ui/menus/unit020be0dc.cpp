@@ -131,7 +131,8 @@ extern char data_ov007_02103234[]; /* "2DEffect" */
 extern int data_ov007_020d7c6c;
 extern u16 data_ov007_020d7c58[];
 
-void func_0204dab4(void *sys, TrackingRecord *buf, int count, unsigned int mask, void *cb);
+extern "C" void func_0204dab4(void *sys, TrackingRecord *buf, int count, unsigned int mask,
+                              void *cb);
 extern "C" void func_0204dc84(char *self);
 extern "C" void Sprite_SetAnimation(Ov007OamNode *node, int animIndex, int mode, int rev,
                                     int frame);
@@ -148,7 +149,7 @@ extern void *data_ov007_02104bc4[2][2];
 extern "C" int VEC_Fx16Mag(s16 *v);
 extern "C" void VEC_Fx16Normalize(s16 *in, s16 *out);
 extern "C" void func_ov007_020b3edc(int idx);
-void *func_ov007_020b3f20(int idx);
+extern "C" void *func_ov007_020b3f20(int idx);
 extern "C" int func_ov007_020aebac(void);
 extern void func_ov007_020bc02c(Ov007Model *model, void *viewMatrix);
 extern "C" void func_ov007_020bc3dc(void *model, int anim, int a2);
@@ -297,14 +298,14 @@ void func_ov007_020be9ac(Ov007Figure *fig, Ov007Model *owner, void *viewMatrix) 
 }
 
 /* Starts animation `anim` on the figure's model and shows it. */
-void func_ov007_020be980(Ov007Figure *fig, int anim, int a2) {
+extern "C" void func_ov007_020be980(Ov007Figure *fig, int anim, int a2) {
     func_ov007_020bc3dc(fig->model, anim, a2);
     fig->model->visible = 1;
     fig->model->animTick = 1;
 }
 
 /* Holds the figure's bone animation if it is playing; returns its state. */
-int func_ov007_020be964(Ov007Figure *fig) {
+extern "C" int func_ov007_020be964(Ov007Figure *fig) {
     s32 *state = &fig->model->boneAnim->state;
     if (*state == 0) {
         *state = 1;

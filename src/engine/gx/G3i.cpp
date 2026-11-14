@@ -29,7 +29,6 @@
 #include "nitro/gx/g3imm_cmd.h"
 
 extern "C" {
-
 void VEC_Normalize(const Vector3 *v, Vector3 *out);
 void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *out);
 Fix12i VEC_DotProduct(const Vector3 *a, const Vector3 *b);
@@ -191,7 +190,7 @@ void G3i_LookAt_(const Vector3 *camPos, const Vector3 *camUp, const Vector3 *tar
     mtx->t.z = tz;
 }
 
-void G3_LoadTexMtxEnv(int *m) {
+extern "C" void G3_LoadTexMtxEnv(int *m) {
     reg_G3_MTX_MODE = GX_MTXMODE_TEXTURE;
     reg_G3_MTX_LOAD_4x4 = m[0] << 4;
     reg_G3_MTX_LOAD_4x4 = m[1] << 4;

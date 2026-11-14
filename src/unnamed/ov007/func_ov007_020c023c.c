@@ -3,7 +3,6 @@
 
 extern Ov007VecTween *func_ov007_020c8f64(Vector3 *out);
 extern Ov007Tween *func_ov007_020c908c(s32 *out);
-#define func_ov007_020c0128 _Z19func_ov007_020c0128P11Ov007Camera
 extern void func_ov007_020c0128(Ov007Camera *cam);
 
 /* Allocates a camera, binds each of its three tweens to the field it drives

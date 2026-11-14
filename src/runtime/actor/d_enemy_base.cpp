@@ -112,8 +112,9 @@ dEnemyBase_c::~dEnemyBase_c()
 /* local extern: func_02038414, the tail-call veneer to
    dBgCh_Actr::UpdateDiscreteNoLava_2, is the one veneer dBgCh_Actr.h does
    not declare -- decl_common.h already spells it with a void *. */
-
-extern void func_02038414(void *);
+extern "C" {
+extern void func_02038414(dBgCh_Actr *);
+}
 
 void dEnemyBase_c::UpdateWMClsn(dBgCh_Actr &clsn, unsigned int sel) {
     switch (sel) {
@@ -269,7 +270,6 @@ void Aea30C::func_ov002_020ae9f8(dActor_c*, dBgCh_Actr*)
 
 /* Knock-back strengths, indexed by the attacking player's param1. */
 extern "C" {
-
 extern u16 data_ov002_020ff01c[];
 }
 
@@ -417,7 +417,6 @@ int func_ov002_020ae5c8(dEnemyBase_c *c, int x) {
 }
 
 extern "C" {
-
 extern void *d_enemy_baseNewHold(unsigned int a, unsigned int b, int c, int d, int e, const void *f,
                                  void *g);
 extern u32 d_enemy_baseNewCleanParticleHold(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y,
@@ -665,7 +664,6 @@ int dEnemyBase_c::SpawnParticlesIfHitOtherObj(dCc_c &clsn) {
 }
 
 extern "C" {
-
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern s16 atan2_hold_d_enemy_base_1(s32 y, s32 x);
 extern s32 *Vec3_AsrInPlace(s32 *v, s32 sh);

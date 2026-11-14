@@ -38,6 +38,7 @@ enum dScBoot_c_AssetId { ASSET_D_2D_FRAMEWORK_INITIALIZE_NSC_BIN = 0x022d };
 
 #pragma opt_common_subs off
 
+extern "C" {
 extern dFdBrightness_c *gSceneFader;
 /* Whether the boot job InitResources starts has finished. d_s_boot's own
    .bss; only InitResources and Behavior read it. */
@@ -47,7 +48,6 @@ extern int data_0208ee44;
 extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
 extern dFdColor_c gSceneColorFader;
-extern "C" {
 
 u32 LoadCompressedFileAt(int fileID, void *target);
 void *LoadFile(int handle);

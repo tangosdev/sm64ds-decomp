@@ -38,10 +38,12 @@ typedef struct {
     unsigned char : 4;
 } CapIconFlags;
 
-extern int data_0209f3e8[];
+extern "C" {
 
-void CapIconMgr_SetMapIconShown(dCapIcon_c *icon, int shown);
-void CapIconMgr_ClearDispatched(int character);
+extern int data_0209f3e8[];
+}
+extern void CapIconMgr_SetMapIconShown(dCapIcon_c *icon, int shown);
+extern void CapIconMgr_ClearDispatched(int character);
 
 void dCapIcon_c::Unlink()
 {

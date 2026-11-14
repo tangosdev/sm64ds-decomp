@@ -56,16 +56,16 @@ extern "C" int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
 extern "C" void func_ov002_020db54c(void *self, int a, int b, short c);
 extern int data_02092138;
 extern dCamera_c *gCamera;
-extern "C" int ApproachAngle(short *angle, short target, int a, int b,
-                             int c); /* local extern: named parameters preserve @NNN */
-short Vec3_HorzAngle(const Vector3 *v0,
-                     const Vector3 *v1); /* local extern: named parameters preserve @NNN */
-int Vec3_Dist(const Vector3 *a,
-              const Vector3 *b); /* local extern: named parameters preserve @NNN */
+/* local extern: named parameters preserve @NNN */
+extern "C" int ApproachAngle(short *angle, short target, int a, int b, int c);
+/* local extern: named parameters preserve @NNN */
+extern "C" short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
+/* local extern: named parameters preserve @NNN */
+extern "C" int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern "C" int Math_Function_0203b14c(void *, int, int, int, int);
-extern "C" unsigned short
-DecIfAbove0_Short(unsigned short *p); /* local extern: named parameters preserve @NNN */
+/* local extern: named parameters preserve @NNN */
+extern "C" unsigned short DecIfAbove0_Short(unsigned short *p);
 extern signed char gCurrentSublevel;
 extern "C" int AngleDiff(int a, int b);
 

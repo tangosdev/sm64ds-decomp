@@ -21,35 +21,35 @@
   ],
   "functions": [
     {
-      "symbol": "_Z27CTRDG_TerminateForPulledOutv",
+      "symbol": "CTRDG_TerminateForPulledOut",
       "address": "0x0206a600",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/arm9/0206/func_0206a600.c",
       "ordinal": 0
     },
     {
-      "symbol": "_Z24CTRDGi_PulledOutCallback10PXIFifoTagji",
+      "symbol": "CTRDGi_PulledOutCallback",
       "address": "0x0206a634",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0206/func_0206a600.c",
       "ordinal": 1
     },
     {
-      "symbol": "_Z32CTRDGi_CallbackForInitModuleInfo10PXIFifoTagji",
+      "symbol": "CTRDGi_CallbackForInitModuleInfo",
       "address": "0x0206a694",
       "size": "0x0000003c",
       "legacy_source": "src/unnamed/arm9/0206/func_0206a694.c",
       "ordinal": 2
     },
     {
-      "symbol": "_Z21CTRDGi_InitModuleInfov",
+      "symbol": "CTRDGi_InitModuleInfo",
       "address": "0x0206a6d0",
       "size": "0x000001bc",
       "legacy_source": "src/unnamed/arm9/0206/func_0206a6d0.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "_Z10CTRDG_Initv",
+      "symbol": "CTRDG_Init",
       "address": "0x0206a88c",
       "size": "0x0000009c",
       "legacy_source": "src/CTRDG_Init.c",

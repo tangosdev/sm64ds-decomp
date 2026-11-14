@@ -18,6 +18,8 @@
 #include "types.h"
 #include "nitro/os/cache.h"
 
+extern "C" {
+
 #define SND_PLAYER_COUNT 16
 #define SND_PLAYER_VARIABLE_COUNT 16
 #define SND_GLOBAL_VARIABLE_COUNT 16
@@ -38,8 +40,7 @@ typedef struct SNDSharedWork {
     s16 globalVariable[SND_GLOBAL_VARIABLE_COUNT]; /* 0x260 */
 } SNDSharedWork;
 
-extern SNDSharedWork *data_020a7fc0;
-/* SNDi_SharedWork */
+extern SNDSharedWork *data_020a7fc0; /* SNDi_SharedWork */
 
 u32 SND_GetPlayerStatus(void) {
     DC_InvalidateRange(data_020a7fc0, sizeof(SNDSharedWork));
@@ -69,4 +70,5 @@ void SNDi_InitSharedWork(SNDSharedWork *sw) {
         sw->globalVariable[j] = SND_DEFAULT_VARIABLE;
 
     DC_FlushRange(sw, sizeof(SNDSharedWork));
+}
 }

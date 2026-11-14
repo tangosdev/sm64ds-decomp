@@ -14,10 +14,10 @@ void func_02049ba8(void *left, void *right, unsigned int len, int format, Captur
     case 0:
         return;
     case 1:
-        _Z13func_020499bcPsS_jP13CaptureEffect(left, right, len, ctx);
+        func_020499bc(left, right, len, ctx);
         return;
     case 2:
-        _Z13func_020497a0PsS_jP13CaptureEffect(left, right, len, ctx);
+        func_020497a0(left, right, len, ctx);
         return;
     }
 }

@@ -24,8 +24,8 @@
  *   called by name.
  * - func_ov089_02131df4: one control arm (mState != 7) size 0x110 -> 0xe8
  *   (-0x28). The ROM has both copies.
- * - LoadKeyModels / UnloadKeyModels are called by daDoor_c, daPly_c and the
- *   bosses.
+ * - LoadKeyModels / UnloadKeyModels are C by necessity: daDoor_c, daPly_c and the
+ *   bosses call them by name.
  * - StateFlyToCenter / StateStarJump: the Fix12<int> calls (Particle::System::New,
  *   ApproachLinear, Sound::ChangeMusicVolume) go by symbol for the same reason
  *   as StateDrop's. mStateTimer is counted through a u16 pointer; the ROM
@@ -41,8 +41,8 @@
  * - func_ov089_02130fb4, func_ov089_0213115c, func_ov089_02131dcc and
  *   func_ov089_02131df4 are members under those addresses; the cartridge
  *   records no names for them.
- * - LoadKeyModels and UnloadKeyModels take the key kind. daDoor_c, daPly_c
- *   and the bosses call them.
+ * - LoadKeyModels and UnloadKeyModels stay C. The first parameter is the
+ *   kind, and daDoor_c, daPly_c and the bosses call them by name.
  * - func_ov002_020c3dbc stays a call into ov002.
  * - The Fix12<int>-by-value calls, the UpdateContinuous veneer, both
  *   control arms in func_ov089_02131df4, the u16* state timer, the s32*
@@ -192,13 +192,11 @@ extern ObjKeyStateTable data_ov089_02132cec;
  * dExtAnmModel_c::SetAnim take Fix12<int> by value; the scalar call does not compile and the Fix12
  * temporary size-DIFFs (see the file comment). The ROM calls the
  * UpdateContinuous veneer, not the method. */
-
+extern "C" {
 extern dCamera_c *gCamera;
 extern u32 gNextActorUpdateMask;
-extern "C" void *d_a_obj_keyNewHold(u32 a, u32 b, int c, int d, int e, void *f, void *g);
-void func_02012694(unsigned int id, const Vector3 *pos);
-int Vec3_ApproachHorz(Vector3 *out, Vector3 *target, int maxStep);
-extern "C" void func_ov002_020c3dbc(void *player);
+extern void *d_a_obj_keyNewHold(u32 a, u32 b, int c, int d, int e, void *f, void *g);
+extern void func_ov002_020c3dbc(void *player);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void *data_ov089_021328b4[];
 extern ObjKeyFile data_ov002_02110964;
@@ -212,8 +210,7 @@ extern ObjKeyModelFile gMarioKeyModelFile;
 extern ObjKeyModelFile gWarioKeyModelFile;
 extern Vector3 data_ov089_02132b40;
 extern VecFx32 data_ov089_02132ca4;
-extern "C" int *Vec3_LslInPlace(void *v, int sh);
-extern void LoadKeyModels(int idx);
+extern int *Vec3_LslInPlace(void *v, int sh);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *thiz, void *actor, int a, int b, void *v, void *w);
 /* An ObjKeyFile in layout, but daDemo_c::InitResources declares it `char`;
@@ -223,11 +220,14 @@ extern int data_0209cef0;
 /* The collect animations, by mAnimID. */
 extern ObjKeyFile *data_ov089_02132880[];
 /* Names stay on this unused prototype so this file's @NNN numbers do not move. */
-extern "C" int d_a_obj_keyChangeMusicVolumeHold(unsigned int id, int vol);
+extern int d_a_obj_keyChangeMusicVolumeHold(unsigned int id, int vol);
 /* Level-overlay BSS: ov089 relocs record the store as claimed by fourteen
    overlays, and ov055 is the one that names 0x02111b68 unambiguous kind:bss
    (the func_ov002_020e3e00 precedent for its neighbours 0x02111b64/6c). */
 extern int data_ov055_02111b68;
+}
+extern void func_02012694(unsigned int id, const Vector3 *pos);
+extern void LoadKeyModels(int idx);
 
 /* The key function, defined first. Under defer_codegen off it emits D1, D0 and
  * a D2 the cartridge does not keep, then the vtable and RTTI chain. */
@@ -372,7 +372,7 @@ void daObjKey_c::StateFlyToCenter()
         center2.x = 0;
         center2.y = 0;
         center2.z = 0;
-        Vec3_ApproachHorz((Vector3 *)&mPosX, &center2, mHorzSpeed);
+        Vec3_ApproachHorz(&mPosX, &center2, mHorzSpeed);
         if (mBounceCount == 0) {
             if (mVertSpeed < 0) {
                 int floor = mHomePos.y;

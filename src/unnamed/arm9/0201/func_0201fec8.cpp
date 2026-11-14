@@ -14,12 +14,11 @@ extern const char data_02075304[28];
 extern const char data_02075320[28];
 extern const char data_0207533c[28];
 extern "C" {
-
 extern void OS_GetOwnerInfo(unsigned char *dst);
 }
 
-extern void func_0203db64(void *a, void *b);
-extern int func_0203daac(void);
+extern "C" void func_0203db64(void *a, void *b);
+extern "C" int func_0203daac(void);
 
 void func_0201fec8(void)
 {

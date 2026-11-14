@@ -20,7 +20,7 @@
   ],
   "functions": [
     {
-      "symbol": "_Z19func_ov007_020bd9e4i",
+      "symbol": "func_ov007_020bd9e4",
       "address": "0x020bd9e4",
       "size": "0x00000054",
       "legacy_source": "src/unnamed/ov007/func_ov007_020bd9e4.cpp",
@@ -62,7 +62,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "_Z19func_ov007_020bdeb0i",
+      "symbol": "func_ov007_020bdeb0",
       "address": "0x020bdeb0",
       "size": "0x0000000c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020bdeb0.c",

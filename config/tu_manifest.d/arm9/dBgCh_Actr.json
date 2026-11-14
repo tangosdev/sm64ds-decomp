@@ -118,7 +118,7 @@
       "ordinal": 13
     },
     {
-      "symbol": "_Z13func_02035638Ph",
+      "symbol": "func_02035638",
       "address": "0x02035638",
       "size": "0x0000000c",
       "legacy_source": "src/func_02035638.c",
@@ -132,7 +132,7 @@
       "ordinal": 15
     },
     {
-      "symbol": "_Z13func_0203564cPv",
+      "symbol": "func_0203564c",
       "address": "0x0203564c",
       "size": "0x00000010",
       "legacy_source": "src/func_0203564c.c",
@@ -391,7 +391,7 @@
       "ordinal": 52
     },
     {
-      "symbol": "_Z13func_020371fcPc",
+      "symbol": "func_020371fc",
       "address": "0x020371fc",
       "size": "0x0000011c",
       "legacy_source": "src/func_020371fc.cpp",

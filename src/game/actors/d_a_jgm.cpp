@@ -120,6 +120,7 @@ struct JgmVector3 {
     ~JgmVector3();
 };
 
+extern "C" {
 extern DaJgmModelFile data_ov077_02127b50;
 extern DaJgmModelFile data_ov077_02127b48;
 extern DaJgmModelFile data_ov077_02127b38;
@@ -142,21 +143,19 @@ extern DaJgmStateHandler data_ov077_02127808;
 extern DaJgmStateHandler data_ov077_02127810;
 extern DaJgmStateHandler data_ov077_021277f8;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
-extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-extern "C" {
 
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
+/* local extern: CalcLib.h clashes with this TU's C Vec3_Asr (void *) */
+extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
+/* local extern: CalcLib.h clashes with this TU's C Vec3_Asr (void *) */
+extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 
 extern int *Vec3_LslInPlace(void *v, int sh);
 extern void Vec3_Asr(void *d, void *s, int sh);
-}
 
 /* Parameter names keep this TU's @NNN. */
 typedef int BgchInitAt_(dBgCh_Actr *collision, dActor_c *actor, Fix12i radius, Fix12i height,
                         void *a, void *b);
-extern "C" {
-
 /* local extern: kept as a count holder: its five named parameters hold
  * the @NNN count. Sound.h's PlayLong emits the same bytes. */
 extern void d_a_jgmPlayLongHold(unsigned int handle, unsigned int a, unsigned int id,
@@ -168,8 +167,8 @@ daJgm_c *daJgm_c_classInit() {
     return new daJgm_c();
 }
 
-SpawnInfo<daJgm_c> g_profile_JUGEM = {daJgm_c_classInit, 0x0109,     0x007c,     0x10000006,
-                                      0x0001e000,        0x00064000, 0x01000000, 0x01000000};
+extern "C" SpawnInfo<daJgm_c> g_profile_JUGEM = {
+    daJgm_c_classInit, 0x0109, 0x007c, 0x10000006, 0x0001e000, 0x00064000, 0x01000000, 0x01000000};
 
 void daJgm_c::OnTurnIntoEgg(daPly_c &player) {
     if (player.IsCollectingCap())

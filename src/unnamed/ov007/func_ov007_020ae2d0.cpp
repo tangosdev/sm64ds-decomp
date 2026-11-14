@@ -7,6 +7,8 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
 
+extern "C" {
+
 typedef char
     Ov007Work_itemViews_must_be_at_0x114[(int)&((Ov007Work *)0)->itemViews == 0x114 ? 1 : -1];
 
@@ -70,4 +72,5 @@ void func_ov007_020ae2d0(Ov007ItemNode *self) {
         return;
     }
     }
+}
 }

@@ -72,58 +72,19 @@ typedef struct WBTWork {
  * (wbt_context.c); this revision's builders do not read the size, but their
  * callers pass it. Parameters unnamed. */
 #ifdef __cplusplus
-extern "C"
+extern "C" {
 #endif
+int func_02065538(void *, int);
+int func_020653cc(void *, int);
+int func_02063d3c(WBTWork *, int, void *, int);
+int func_02063e08(WBTWork *, int, void *, int);
+int func_02063ae4(WBTWork *, int, void *, int);
+int func_02063da0(WBTWork *, int, void *, int);
+int func_02063bc4(WBTWork *, int, void *, int);
+int func_02063980(WBTWork *, void *, int);
+int func_02063718(WBTWork *, void *, int);
 #ifdef __cplusplus
-#ifdef _MSC_VER
-    extern "C" {
-#endif
-#endif
-    int func_02065538(void *, int);
-#ifdef __cplusplus
-    extern "C"
-#endif
-        int
-        func_020653cc(void *, int);
-#ifdef __cplusplus
-    extern "C"
-#endif
-        int
-        func_02063d3c(WBTWork *, int, void *, int);
-#ifdef __cplusplus
-    extern "C"
-#endif
-        int
-        func_02063e08(WBTWork *, int, void *, int);
-#ifdef __cplusplus
-    extern "C"
-#endif
-        int
-        func_02063ae4(WBTWork *, int, void *, int);
-#ifdef __cplusplus
-    extern "C"
-#endif
-        int
-        func_02063da0(WBTWork *, int, void *, int);
-#ifdef __cplusplus
-    extern "C"
-#endif
-        int
-        func_02063bc4(WBTWork *, int, void *, int);
-#ifdef __cplusplus
-    extern "C"
-#endif
-        int
-        func_02063980(WBTWork *, void *, int);
-#ifdef __cplusplus
-    extern "C"
-#endif
-        int
-        func_02063718(WBTWork *, void *, int);
-#ifdef __cplusplus
-#ifdef _MSC_VER
 }
-#endif
 #endif
 
 #ifndef SM64DS_PLATFORM_PC

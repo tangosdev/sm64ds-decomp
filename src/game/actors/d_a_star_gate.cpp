@@ -45,7 +45,7 @@ enum d_a_star_gate_AssetId {
 #include "math/CalcLib.h"
 
 void func_02012694(unsigned int soundID, const Vector3 *position);
-void ChangeArea(int areaID);
+extern "C" void ChangeArea(int areaID);
 void ShowArea(int areaID);
 unsigned char NumStars(void);
 void SetTouchScreenDelay(void);

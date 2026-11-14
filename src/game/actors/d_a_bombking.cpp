@@ -147,7 +147,6 @@ PMF data_ov078_021270fc[2] = {&daBombking_c::EnterWalkHome, &daBombking_c::TickW
 PMF data_ov078_0212705c[2] = {&daBombking_c::EnterDefeated, &daBombking_c::TickDefeated};
 
 extern "C" {
-
 /* Canonical single declaration per ROM data symbol -- the generated
      * preamble carried up to three contradictory spellings of each. */
 extern unsigned char gCurrentStarId;
@@ -161,12 +160,11 @@ extern int data_02092138;
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void func_02012694(unsigned int a, const Vector3 *p);
-extern void func_02011cfc(void);
+extern "C" void func_02011cfc(void);
 
 // local extern: CalcLib.h does not declare Vec3_VertAngle yet.
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 extern "C" {
-
 extern int atan2_hold_d_a_bombking_1(int a, int b);
 extern int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
 }

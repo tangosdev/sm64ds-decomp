@@ -4,7 +4,7 @@
 #include "Ov007Item.h"
 
 extern void MessageWindow_Update(void);
-void func_ov007_020c92d0(Ov007MenuState *state);
+extern "C" void func_ov007_020c92d0(Ov007MenuState *state);
 extern void func_ov007_020c934c(Ov007MenuState *state, int initialState);
 extern void func_ov007_020b066c(void);
 extern "C" void func_ov007_020af0e4(void);

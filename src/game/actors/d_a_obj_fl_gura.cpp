@@ -30,7 +30,7 @@ daObjFl_Gura_c *daObjFl_Gura_c_classInit() {
     return new daObjFl_Gura_c();
 }
 
-SpawnInfo<daObjFl_Gura_c> g_profile_FL_GURA = {
+extern "C" SpawnInfo<daObjFl_Gura_c> g_profile_FL_GURA = {
     daObjFl_Gura_c_classInit,
     0x0048, /* FL_GURA registry id 72 */
     0x0118,

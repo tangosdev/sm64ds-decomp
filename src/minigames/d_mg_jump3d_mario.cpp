@@ -67,58 +67,30 @@ struct Mtx { int a, b, c, d; };
 
 /* Everything this file calls or reads that no header declares. Keep it
  * above the first function. */
-void Sound_PlayBank1Panned(int a0, int a1, int a2);
 extern "C" {
 
+/* Fix12<int> by value in the real signatures; see the banner. */
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-}
-
 void func_02012718(int a, int b);
-
-void func_02016a14(char *self, int a);
-
-void func_02016a04(char *self, int a);
-
-int func_020179b4(SharedFilePtr *f, dExtModel_c *m, int extra);
-int D3D_PlaySeAtX(int a, int b);
-void Puff_Spawn(int x, int y);
-extern "C" {
-
+void func_02016a14(void *self, int a);
+void func_02016a04(void *self, int a);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-
 void Matrix4x3_ApplyInPlaceToRotationY(void *m, short angY);
-}
-void Puff_DrawAll(void);
-void Puff_UpdateAll(void);
-void Puff_ClearAll(int a0, int a1);
 
 /* The mState records this file installs or compares. */
 extern Jump3DState pmf_dMgJump3DMario_c_StateMove;
-
 extern Jump3DState pmf_dMgJump3DMario_c_StateHold;
-
 extern Jump3DState pmf_dMgJump3DMario_c_StateDamp;
-
 extern Jump3DState pmf_dMgJump3DMario_c_StateRespawn;
-
 extern Jump3DState pmf_dMgJump3DMario_c_StateIdle_2;
-
 extern Jump3DState pmf_dMgJump3DMario_c_StateWindUp;
-
 extern Jump3DState pmf_dMgJump3DMario_c_StateIdle_3;
-
 extern Jump3DState pmf_dMgJump3DMario_c_StateBounce;
-
 extern Jump3DState pmf_dMgJump3DMario_c_StateWindUp_2;
-
 extern Jump3DState pmf_dMgJump3DMario_c_StateWindUp_3;
-
 extern Jump3DState pmf_dMgJump3DMario_c_StateBounce_2;
-
 extern Jump3DState pmf_dMgJump3DMario_c_StateRiseOut;
-
 extern Jump3DState pmf_dMgJump3DMario_c_StateRespawn_2;
-
 extern Jump3DState pmf_dMgJump3DMario_c_StateFallOut;
 
 /* Slots the current mAnimIdx (0/1/2) picks the anim file from. */
@@ -126,33 +98,21 @@ extern BCA_File **sJump3DAnimTable[];
 
 /* Tuning words, read as plain ints. */
 extern int sJump3DBounceVy;
-
 extern int sJump3DRiseVy;
-
 extern int sJump3DStartVx;
-
 extern int sJump3DFallSpeed;
-
 extern int sJump3DGravityStep;
-
 extern int sJump3DMoveSpeed;
-
 extern int sJump3DMariosLeft;
-
 extern int sJump3DRisenOutCount;
 
 /* The six anim files LoadResources loads. The destructor clears only
  * five of them; 0214041c survives in the ROM too. */
 extern BCA_File *sJump3DAnimSdown;
-
 extern BCA_File *sJump3DAnimDoubleJump1;
-
 extern BCA_File *sJump3DAnimRollJump;
-
 extern BCA_File *sJump3DAnimWallJump;
-
 extern BCA_File *sJump3DAnimStruggle;
-
 extern BCA_File *sJump3DAnimJump;
 
 /* Six anim handles call SharedFilePtr::Construct. The model handle calls
@@ -161,62 +121,49 @@ struct Jump3DMarioAnimFilePtr : SharedFilePtr {
     Jump3DMarioAnimFilePtr(unsigned fileId);
     ~Jump3DMarioAnimFilePtr();
 };
-
 struct Jump3DModelFilePtr : SharedFilePtr {
     Jump3DModelFilePtr(unsigned fileId);
     ~Jump3DModelFilePtr();
 };
-
 typedef char Jump3DMarioAnimFilePtr_size[sizeof(Jump3DMarioAnimFilePtr) == 8 ? 1 : -1];
-
 typedef char Jump3DModelFilePtr_size[sizeof(Jump3DModelFilePtr) == 8 ? 1 : -1];
 
 extern Jump3DMarioAnimFilePtr sJump3DMarioWallJumpAnimFile;
-
 extern Jump3DMarioAnimFilePtr sJump3DMarioSdownAnimFile;
-
 extern Jump3DMarioAnimFilePtr sJump3DMarioStruggleAnimFile;
-
 extern Jump3DModelFilePtr gMarioModelMgModelFile;
-
 extern Jump3DMarioAnimFilePtr sJump3DMarioRollJumpAnimFile;
-
 extern Jump3DMarioAnimFilePtr sJump3DMarioJumpAnimFile;
-
 extern Jump3DMarioAnimFilePtr sJump3DMarioDoubleJump1AnimFile;
 
 /* The pool the minigame scenes hand in: count, base pointer, level, round
  * and the three player slots. */
 extern int sJump3DArrangeLevel;
-
 extern int sJump3DLayout;
-
 extern int sJump3DMarioCount;
-
 extern char *sJump3DMarioPool;
-
 extern char *sJumpAdapters[];
-
 extern int pmf_dMgJump3DMario_c_StateIdle[2];
 
 extern u8  data_ov006_02140400;
-
 extern u16 sJump3DSpinAngle;
-
 extern struct MgCamera *sMgMainCamera;
-
 extern void *sMgCurCamera;
-
 extern OamAttr *data_ov006_02134d1c;
-
 extern Vector3 sJump3DMarioScale;
-
 extern char sJump3DRoundLayouts[];
 
 extern Matrix4x3 data_020a0e68;
-
 extern fBase_c *gCurrentScene;
-/* extern "C" */
+
+} /* extern "C" */
+void Sound_PlayBank1Panned(int a, int b, int c);
+int func_020179b4(SharedFilePtr *f, dExtModel_c *m, int extra);
+int D3D_PlaySeAtX(int a, int b);
+void Puff_Spawn(int a, int b);
+void Puff_DrawAll(void);
+void Puff_UpdateAll(void);
+void Puff_ClearAll(int a, int b);
 
 /* Rescales the six tuning words at 0213b008..0213b01c from one input,
  * clamped to 0x3000. */
@@ -921,8 +868,8 @@ int dMgJump3DMario_c::LoadResources()
 
     t = gCurrentScene->actorID == 0x175;
     if (t != 0) {
-        func_02016a14((char *)&mAnmModel, 0x7fff);
-        func_02016a04((char *)&mAnmModel, 0x210);
+        func_02016a14(&mAnmModel, 0x7fff);
+        func_02016a04(&mAnmModel, 0x210);
     }
     mAnmModel.SetAnim(sJump3DAnimJump, 0x40000000, kAnimSpeed, 0);
 

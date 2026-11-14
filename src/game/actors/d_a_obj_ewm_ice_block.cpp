@@ -32,8 +32,8 @@ enum daObjEwmIceBlock_c_AssetId {
 #include "nitro/fx/fx_cp.h"
 #include "math/CalcLib.h"
 
-extern SharedFilePtr *data_ov056_02113314[];
 extern "C" {
+extern SharedFilePtr *data_ov056_02113314[];
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 extern void hold_d_a_obj_ewm_ice_block(dBgW_KcMbg *self, void *kcl, const Matrix4x3 *mtx, int scale,

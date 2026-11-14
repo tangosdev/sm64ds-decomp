@@ -73,7 +73,7 @@
       "ordinal": 4
     },
     {
-      "symbol": "_Z13func_0204424cPc",
+      "symbol": "func_0204424c",
       "address": "0x0204424c",
       "size": "0x00000038",
       "legacy_source": "src/func_0204424c.c",

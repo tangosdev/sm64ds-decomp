@@ -8,7 +8,7 @@
 
 extern void func_ov007_020c32e8(Ov007Palette *pal, int target, unsigned int row, int skip);
 
-void RequestScreenFade(int kind, int flags, void (*onEnd)(void));
+extern "C" void RequestScreenFade(int kind, int flags, void (*onEnd)(void));
 extern "C" void func_ov007_020adb84(void);
 
 /* For palette states 4..7, loads palette 2..5 into the sub BG palette, then

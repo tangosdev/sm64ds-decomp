@@ -2,6 +2,8 @@
 #include "nitro/os/cache.h"
 #include "CaptureEffect.h"
 
+extern "C" {
+
 typedef short s16;
 
 /* Capture effect 1, run on each captured stereo buffer (len bytes per channel,
@@ -69,4 +71,5 @@ void func_020499bc(s16 *left, s16 *right, unsigned int len, CaptureEffect *ctx) 
 
     DC_FlushRange(left, len);
     DC_FlushRange(right, len);
+}
 }

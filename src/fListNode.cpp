@@ -163,7 +163,7 @@ struct LifecycleSequence {
 int func_02044284(LifecycleSequence *self, int flag);
 
 /* Step a pending sequence once. Returns 0 while it is still pending. */
-int func_0204424c(char *c) {
+extern "C" int func_0204424c(char *c) {
     LifecycleSequence *self = (LifecycleSequence *)c;
     if (self->state == 1)
         self->state = func_02044284(self, 0);

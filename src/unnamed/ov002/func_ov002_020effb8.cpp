@@ -12,7 +12,7 @@
  *
  * Not folded: neither neighbour calls or is called by any of the four, so
  * neither dPathLiftActor_c nor daSCoin_c is evidence of an owner. All four
- * are C++ linkage; symbols.txt records the Itanium names. */
+ * keep C linkage because those other TUs call them by their C names. */
 #include "nitro/fx/fx.h"
 #include "math/CalcLib.h"
 #include "nitro/fx/fx_cp.h"

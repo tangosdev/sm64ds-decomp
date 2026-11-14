@@ -6,16 +6,10 @@ extern "C" {
 
 extern void func_02065ad0(struct WBTBlockInfoList *list);
 extern WBTWork *func_02065b94(void);
-}
-
 extern int func_02065af0(int *thiz);
-extern "C" {
-
 extern void func_02065be0(void);
 extern void func_02065ba0(int v);
 extern void func_02065bb0(int v);
-}
-
 extern int data_020a94c0;
 
 /* NitroSDK WBT_End: the teardown twin of WBT_InitParent (WBT_InitParent) and
@@ -55,4 +49,5 @@ void WBT_End(void) {
     func_02065ba0(-1);
     func_02065bb0(-1);
     OS_RestoreInterrupts(saved);
+}
 }

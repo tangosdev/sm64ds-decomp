@@ -64,7 +64,6 @@ extern s32 data_ov002_02100348[];
 /* local extern: arm9/ov002 C helpers with no shared header yet. Vec3_Asr is
    not among them any more -- math/CalcLib.h, included above, declares it. */
 int func_ov002_020ad660(void *cc, void *pp, void *r5p, int flags);
-
 void func_02012694(unsigned int, const Vector3 *);
 
 /* D1: own vptr, then the members in reverse declaration order (dExtShadowModel_c,

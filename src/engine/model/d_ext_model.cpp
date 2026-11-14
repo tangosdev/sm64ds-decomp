@@ -64,7 +64,7 @@ struct MatAnimData;
 extern Matrix4x3 data_0209b3ec;
 /* local extern: the camera-space matrix the Render paths use */
 /* local extern: no header declares it; sizes the transforms buffer from the file */
-int func_02046564(void *file);
+extern "C" int func_02046564(void *file);
 /* local extern: Model4.cpp's Dst/Desc/ElemA. Pointer casts at the calls. */
 struct Dst;
 struct Desc;
@@ -74,7 +74,6 @@ void func_020462d0(Dst *data, Desc *file, ElemA *buffer);
    components from it */
 ModelComponents *GetCommonModelComponents(BMD_File *file);
 extern "C" {
-
 /* local extern: LoadFile.c defines int(int); the file comes back as a
    pointer here (banked return row). */
 void *LoadFile(int ov0ID);
@@ -85,7 +84,7 @@ int func_020469e0(void *ptr);
 
 /* local extern: no header declares it; dExtModel_c's destructor frees the file.
    decl_common.h's copy is the same spelling; that catch-all does not count. */
-void Deallocate(void *ptr);
+extern "C" void Deallocate(void *ptr);
 /* local extern: game heap pointer TrimModelFile reads */
 extern void *data_020a0ea0;
 /* decl_common.h's int[] spelling. The records are 0xc-byte CommonModelData. */
@@ -105,10 +104,10 @@ u32 TrimModelFile(void *ptr);
 extern "C" void func_02045e2c(int obj, int i, BCA_File *a, int b);
 /* local extern: blends verts toward the old pose in Virtual10/UpdateVerts
    while blendWeight is still below 1.0. Definition takes char *. */
-void func_0204531c(char *data, int weight);
+extern "C" void func_0204531c(char *data, int weight);
 /* local extern: no header declares it; sizes the mBlendBuffer blend buffer off the
    file. Spelled (int *) the way func_020462bc.c defines it */
-u32 func_020462bc(int *file);
+extern "C" u32 func_020462bc(int *file);
 /* local extern: no header declares it; initializes ModelComponents' side of
    the blend buffer. Spelled (int *, int) the way func_020462b4.c defines it */
 void func_020462b4(int *data, int buf);
@@ -122,7 +121,6 @@ extern u8 data_0209ceec;
 extern BMD_File data_ov001_020ad524;
 extern BMD_File data_ov001_020ad560;
 extern "C" {
-
 /* local extern: no header declares it; the shadow scale matrix */
 void func_0203c178(Matrix4x3 *m, Fix12i sx, Fix12i sy, Fix12i sz);
 /* local extern: the texture-animation helpers. Each Prepare's ROM body is a
@@ -243,7 +241,7 @@ ModelComponents *GetCommonModelComponents(BMD_File *file) {
     return e->components;
 }
 
-void CleanCommonModelDataArr(void) {
+extern "C" void CleanCommonModelDataArr(void) {
     CommonModelData *e = (CommonModelData *)data_0209cefc;
     int i = 0;
 
@@ -337,7 +335,7 @@ void dExtSimpleModel_c::SetPolygonID(int id) {
     data.SetPolygonID(id);
 }
 
-void func_02016aac(char *self, int id, int index) {
+extern "C" void func_02016aac(char *self, int id, int index) {
     ((dExtSimpleModel_c *)self)->data.SetMaterialPolygonID(id, index);
 }
 
@@ -363,11 +361,11 @@ void dExtSimpleModel_c::ShowMaterial(int boneID, int listIdx) {
     mats[ids[listIdx]].flags &= 0x7fffffff;
 }
 
-void func_02016a14(char *self, int color) {
+extern "C" void func_02016a14(char *self, int color) {
     ((dExtSimpleModel_c *)self)->data.SetDiffuse(color);
 }
 
-void func_02016a04(char *self, int color) {
+extern "C" void func_02016a04(char *self, int color) {
     ((dExtSimpleModel_c *)self)->data.SetAmbient(color);
 }
 
@@ -375,7 +373,7 @@ void func_020169f4(char *self, int color) {
     ((dExtSimpleModel_c *)self)->data.SetEmission(color);
 }
 
-void func_020169d8(char *self, int index, unsigned int value) {
+extern "C" void func_020169d8(char *self, int index, unsigned int value) {
     ((dExtSimpleModel_c *)self)->data.SetMaterialEmission(value, index);
 }
 

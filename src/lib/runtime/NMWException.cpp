@@ -36,7 +36,7 @@
  * and the two .exceptix records. Then turn exceptions on and restore MSL's
  * `static` on dthandler and thandler.
  */
-void abort(void);
+extern "C" void abort(void);
 
 namespace std {
 

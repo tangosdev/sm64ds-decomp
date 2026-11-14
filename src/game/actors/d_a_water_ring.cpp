@@ -44,12 +44,10 @@ extern Vector3 data_ov064_0211c3d0; /* the collider offset */
 extern char data_ov002_0210d6dc[];  /* the ring's BTA */
 
 /* local extern: no shared header declares these. */
-
-s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 extern "C" {
-
 int AngleDiff(int a, int b);
 }
+s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 
 extern SharedFilePtr data_ov002_0210da10; /* the ring's BMD */
 

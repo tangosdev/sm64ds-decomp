@@ -23,9 +23,11 @@
  */
 #include "dCcPos_c.h"
 
+extern "C" {
 /* local extern: ROM data no TU defines and no header declares -- the
    font-base halfword the absorbed print helper below adds the glyph index to. */
 extern unsigned short data_0208e500;
+}
 
 /* pos is left uninitialised: the body is empty and the compiler emits the
    dCc_c base step and the vptr store from the class declaration alone. */
@@ -69,6 +71,6 @@ void dCcPos_c::Init(const Vector3 &pos, Fix12i radius, Fix12i height, u32 flags,
  * nds_printt.cpp, which keep their own matching extern declarations and call
  * sites; only the definition moves. Body as recovered. */
 
-void func_020147bc(unsigned short *dst, int glyph) {
+extern "C" void func_020147bc(unsigned short *dst, int glyph) {
     *dst = (data_0208e500 + glyph);
 }

@@ -178,22 +178,15 @@ enum {
    locally cannot stay where they were; one spelling per symbol is hoisted here.
    The views differed only in pointer types, so marshalling -- and the emitted
    bytes -- are unchanged. */
-
+extern "C" {
 int Vec3_HorzLen(const Vector3*);
 short Vec3_HorzAngle(const Vector3 *, const Vector3 *);
-extern "C" {
-
 void Vec3_Asr(Vector3 *, Vector3 *, int);
 void Matrix4x3_FromRotationY(void*, int);
 void Matrix4x3_FromTranslation(void*, int, int, int);
-}
-
-void GiveCoins(int, int);
-extern "C" {
-
 short atan2_hold_d_a_1up_1(int, int);
 }
-
+void GiveCoins(int, int);
 /* ONE definition, both variants. The complete-object destructor (D1) tears the
    four members down in exact reverse of the factories' construction order --
    dExtShadowModel_c at 0x350, dExtSimpleModel_c at 0x300, dBgCh_Actr at 0x144, dCcAc_c at 0x110,
@@ -388,10 +381,8 @@ int da1up_c::UpdateExpiryCountdown(int n) {
    from void to int to agree with the old hook declaration despite its void
    terminal call. Ordinals 9, 19 and 22 now use this one void declaration;
    ordinals 19 and 22 retain the player lookup result and its null test. */
-
-void GiveLives(int count);
 extern "C" {
-
+void GiveLives(int count);
 void func_ov002_020bdf8c(daPly_c *player);
 }
 
@@ -987,9 +978,10 @@ void da1up_c::UpdatePopOutDrift() {
 /* File-scope `extern "C"` region for the members below. Every one of these
    is spelt as the shard that uses it recovered it; nothing above declares
    any of them, so nothing here overrides a recovered view. */
-
+extern "C" {
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *thiz, dActor_c *a, int r, int h, Vector3_16 *p, int q);
+}
 int IsStarCollectedInCurLevel(int a);
 
 /* Ordinal 34 dispatches through this pointer-to-member-function type: the

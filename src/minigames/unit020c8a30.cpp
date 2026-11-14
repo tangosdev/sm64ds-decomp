@@ -16,14 +16,6 @@
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "math/Approach.h"
-namespace s20af68c {
-void Hud_RenderSprite(void *attr, int, int, int, int);
-}
-using s20af68c::Hud_RenderSprite;
-namespace s20ad674 {
-int GetGameLanguage(void);
-}
-using s20ad674::GetGameLanguage;
 
 /* One puff sprite: position, velocity, a swaying spread that shrinks by
    mScale each frame, and a lifetime. */
@@ -44,8 +36,9 @@ struct Puff {
 };
 
 extern "C" {
-
 /* local extern: arm9 C helpers with no shared header. */
+int GetGameLanguage(void);
+void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 }
 
 extern void **sPuffSprites[];

@@ -113,17 +113,16 @@ extern DossyCollisionFileHandle gDossyNeckCollisionFile;
 extern DossyCollisionFileHandle gDossyBodyCollisionFile;
 extern DossyCollisionFileHandle gDossyHeadCollisionFile;
 
+extern "C" {
 extern u8 data_ov065_0211c078[];
 extern void *data_ov065_0211cd68[];
 extern SharedFilePtr data_ov002_0210d9c0;
 extern SharedFilePtr *data_ov065_0211c080[];
 extern SharedFilePtr *data_ov065_0211c08c[];
-extern "C" {
 
 int *Vec3_LslInPlace(Vector3 *v, s32 sh);
 extern int AngleDiff(int a, int b);
 }
-
 int func_ov065_021180d4(daDossyCap_c *cap);
 void func_ov065_02118c4c(daDossyCap_c *cap);
 int func_ov065_02119210(daDossyCap_c *cap);
@@ -131,7 +130,7 @@ void func_ov065_021195bc(dBgW *collider, dActor_c *owner, dActor_c *other);
 void func_ov065_021195d0(dBgW *collider, dActor_c *owner, dActor_c *other);
 
 typedef void (daDossy_c::*StateFunc)();
-extern StateFunc data_ov065_0211d7fc[];
+extern "C" StateFunc data_ov065_0211d7fc[];
 
 DorriePlatform::DorriePlatform()
 {
@@ -656,7 +655,7 @@ DossyCollisionFileHandle gDossyHeadCollisionFile(ASSET_DOSSY_HEAD_KCL);
 /* The state table Behavior dispatches through: three pointer-to-member
    records. Retail stores the records as compiler temporaries in .data
    (0x0211cd2c, 0x0211cd1c, 0x0211cd24) and the live table in .bss. */
-StateFunc data_ov065_0211d7fc[3] = {
+extern "C" StateFunc data_ov065_0211d7fc[3] = {
     &daDossy_c::func_ov065_02118634,
     &daDossy_c::func_ov065_021183c8,
     &daDossy_c::func_ov065_021182e4,

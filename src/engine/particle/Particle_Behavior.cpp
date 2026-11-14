@@ -26,7 +26,6 @@
 #include "nitro/fx/fx_trig.h"
 
 extern "C" {
-
 /* local extern: no header declares these matrix entry points (checked
  * include/math/*.h and decl_*.h). */
 void MTX_RotX33_(Matrix3x3 *matrix, int sin, int cos);

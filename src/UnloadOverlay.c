@@ -1,6 +1,6 @@
 #include "nitro/fs/overlay.h"
 #include "nitro/os/system.h"
-extern int _Z13func_0203d7b8v(void);
+extern int func_0203d7b8(void);
 
 /* A loaded-overlay slot (see func_02017e60.c): the overlay id, -1 when the
    slot is free, and the RAM range the overlay occupies. */
@@ -25,10 +25,10 @@ void UnloadOverlay(int id) {
         }
     }
     if (found == 0)
-        _Z12OS_Terminatev();
+        OS_Terminate();
     FS_UnloadOverlay(MI_PROCESSOR_ARM9, id);
     func_02018c00(&info, 0, id);
-    if (_Z13func_0203d7b8v() != 0)
+    if (func_0203d7b8() != 0)
         return;
-    _Z13func_02017fd0P13FSOverlayInfo(&info);
+    func_02017fd0(&info);
 }

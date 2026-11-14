@@ -61,7 +61,7 @@
       "ordinal": 4
     },
     {
-      "symbol": "_Z13func_02013f28v",
+      "symbol": "func_02013f28",
       "address": "0x02013f28",
       "size": "0x00000024",
       "legacy_source": "src/unnamed/arm9/0201/func_02013f28.c",

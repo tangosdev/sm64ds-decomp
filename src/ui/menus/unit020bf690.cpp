@@ -64,15 +64,15 @@ typedef char Ov007Fade_size_must_be_0x14[sizeof(Ov007Fade) == 0x14 ? 1 : -1];
 
 extern Ov007Fade *sScreenFade;
 
-void InitialiseVramGlobals(void);
+extern "C" void InitialiseVramGlobals(void);
 extern "C" void func_ov007_020b3edc(int size);
-void *func_ov007_020b3f20(int idx);
+extern "C" void *func_ov007_020b3f20(int idx);
 extern void func_ov007_020bbff0(Ov007Model *c);
 extern void func_ov007_020bc02c(Ov007Model *a, void *b);
-void func_ov007_020bc47c(Ov007Model *thiz);
+extern "C" void func_ov007_020bc47c(Ov007Model *thiz);
 extern void func_ov007_020bc53c(Ov007Model *p);
 extern "C" Ov007Model *func_ov007_020bc6d4(void *file, int flags);
-int func_ov007_020bdeb0(int a);
+extern "C" int func_ov007_020bdeb0(int a);
 extern "C" void func_ov007_020c3d1c(void *self);
 extern "C" void *func_ov007_020c3df4(const char *name, int size);
 extern "C" void Transition_Update(Ov007Transition *tr);
@@ -118,7 +118,7 @@ void ScreenFade_Destroy(void) {
 /* Turns the model to face the screen and puts it 0x1064 in front of the
  * camera: the point (0, 0, -0x1064) taken back through the inverse of the
  * camera's view matrix. */
-void func_ov007_020bfbdc(void *self) {
+extern "C" void func_ov007_020bfbdc(void *self) {
     Ov007Camera *cam = (Ov007Camera *)self;
     Ov007Model *model = sScreenFade->model;
     Vector3 vec;
@@ -157,7 +157,7 @@ void ScreenFade_Draw(Ov007Camera *cam) {
 /* Queues fade kind `kind` (1..9, see ScreenFade_Start) with flags and
  * the end callback onEnd (0 for none); ScreenFade_Update starts it on its
  * next run. */
-void RequestScreenFade(int kind, int flags, void (*onEnd)(void)) {
+extern "C" void RequestScreenFade(int kind, int flags, void (*onEnd)(void)) {
     sScreenFade->request = kind;
     sScreenFade->flags = flags;
     sScreenFade->onEnd = onEnd;

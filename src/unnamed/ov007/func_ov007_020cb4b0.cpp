@@ -1,5 +1,6 @@
 //cpp
 
+extern "C" {
 typedef short s16;
 
 void func_ov007_020cb4b0(s16 *p, s16 *nrm, int w1, int h1, int x, int y) {
@@ -65,4 +66,5 @@ void func_ov007_020cb4b0(s16 *p, s16 *nrm, int w1, int h1, int x, int y) {
             }
         }
     }
+}
 }

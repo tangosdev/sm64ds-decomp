@@ -23,8 +23,10 @@
 #include "private/mtx43.h"
 #include "SaveBlock.h"
 
+extern "C" {
+void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
+}
 s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-extern "C" void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void CollectMinigameKey(int t, int x);
 void StartMinigameMenu(u8 a);
 

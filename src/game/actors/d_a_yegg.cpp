@@ -124,10 +124,8 @@ namespace Sound {
 int PlayLong(u32, u32, u32, const Vector3 &, s16);
 }
 
-/* Defined below. */
-void func_ov002_020ed63c(daYegg_c *c, int i);
-void func_ov002_020edca4(daYegg_c *self);
 extern "C" {
+/* Defined below. */
 
 /* Data. 0x0210e6b0 and 0x0210eb78 are the two shared animation file
    handles; d_a_ply_methods.cpp's static initializer constructs both. */
@@ -138,11 +136,8 @@ extern s16 data_ov002_021000a8[];
    clash with these. The copies go through the flat Mtx43: assigning this
    TU's nested Matrix4x3 grows the object by 0x30 bytes. */
 extern Matrix4x3 data_020a0e68;
-}
 
 extern int func_02035638(u8 *p);
-extern "C" {
-
 extern char *data_ov002_021000a0[];
 extern void Matrix4x3_FromRotationZXYExt(void *m, int x, int y, int z);
 /* Was spelled `func_02123804`, a name no symbols.txt defines. ov002's relocs
@@ -163,28 +158,16 @@ extern int func_ov002_020d6048(void *c);
 extern s32 d_a_yeggNewHold(u32 a, u32 b, s32 x, s32 y, s32 z, Vector3_16 *rot, void *cb);
 extern void d_a_yeggRunningSlidingDustAtHold(s32 x, s32 y, s32 z);
 extern void d_a_yeggPlayLongHold(u32 a, u32 b, u32 c, void *v, u32 d);
-}
-
 extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-extern "C" {
-
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
-}
-
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int radius, int height, void *a, void *b);
-extern "C" {
-
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern int Math_Function_0203b14c(void *ptr, int target, int rate, int limit, int step);
-}
-
-extern "C" int ApproachAngle(short *cur, short target, int divisor, int band, int maxStep);
-extern "C" {
-
+extern int ApproachAngle(short *cur, short target, int divisor, int band, int maxStep);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *m, int x, int y, int z);
@@ -192,6 +175,8 @@ extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(Matrix4x3 *m, int x, int y, i
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
 extern int func_ov002_020cf700(void *g);
 }
+void func_ov002_020ed63c(daYegg_c *c, int i);
+void func_ov002_020edca4(daYegg_c *self);
 
 /* One native destructor definition emits both ROM variants. D1 is one vtable
  * store and five destructor calls, every one a consequence of
@@ -1129,7 +1114,6 @@ int daYegg_c::FindTarget(int a1, int best) {
  * for destruction, plays Sound::PlayCharVoice id 0x103 at its camera-space
  * position and sets mBurstDone. Stays a free function: d_a_ply_methods.cpp calls it
  * on its held object, and daPly_c is not deslopped here. */
-
 void func_ov002_020edca4(daYegg_c* self)
 {
     struct Vector3 pos;

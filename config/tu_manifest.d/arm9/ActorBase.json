@@ -283,7 +283,7 @@
       "ordinal": 36
     },
     {
-      "symbol": "_Z13func_02043f4cPP9fLiNdBa_cjS0_",
+      "symbol": "func_02043f4c",
       "address": "0x02043f4c",
       "size": "0x0000004c",
       "legacy_source": "src/unnamed/arm9/0204/func_02043f4c.c",

@@ -1,8 +1,5 @@
 #ifndef PRIVATE_ARM9_A0F90_CHANNEL_MEASURE_H
 #define PRIVATE_ARM9_A0F90_CHANNEL_MEASURE_H
-#ifndef __cplusplus
-#define func_0203f9d4 _Z13func_0203f9d4PvPFvP19ChannelMeasureReplyE
-#endif
 
 /*
  * The wireless channel measurement func_0203e20c starts with func_0203f9d4
@@ -20,9 +17,7 @@ typedef struct ChannelMeasureReply {
 typedef void (*ChannelMeasureCallback)(ChannelMeasureReply *);
 
 #ifdef __cplusplus
-#ifdef _MSC_VER
 extern "C" {
-#endif
 #endif
 
 extern ChannelMeasureCallback data_020a0f90;
@@ -30,9 +25,7 @@ extern ChannelMeasureCallback data_020a0f90;
 void func_0203f9d4(void *, ChannelMeasureCallback);
 
 #ifdef __cplusplus
-#ifdef _MSC_VER
 }
-#endif
 #endif
 
 #endif

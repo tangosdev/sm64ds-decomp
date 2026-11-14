@@ -52,7 +52,7 @@ extern signed char gCurrentSublevel;
  * pass as object pointers; the definition spells it int. */
 int func_0202a8e0(int a, u8 b);
 int func_02029600(int x);
-int SublevelToLevel(int i);
+extern "C" int SublevelToLevel(int i);
 
 extern "C" void CapIconMgr_DispatchVs(void);
 void CapIconMgr_SetMapIconShown(dCapIcon_c *icon, int shown);

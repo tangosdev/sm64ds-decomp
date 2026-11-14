@@ -175,7 +175,7 @@ endfunction()
 # copies under the build tree -- src/ itself is never edited.
 set(GATE4A_SYMS
     G3_MultTransMtx33 G3_MultMtx43 G3_LoadMtx43 G3X_ClearFifo
-    _Z21MI_SendGXCommandAsyncjPKvjPFvPvES1_ _Z16MIi_FIFOCallbackv _Z15MIi_DMACallbackPv _Z20OSi_EnterDmaCallbackjPFvPvES_ _Z10MI_WaitDmaj)
+    MI_SendGXCommandAsync MIi_FIFOCallback MIi_DMACallback OSi_EnterDmaCallback MI_WaitDma)
 sm64ds_hostgen_symbols(GATE4A_GEN ${GATE4A_SYMS})
 
 add_executable(smoke_gx tests/smoke_gx.cpp ${GATE4A_GEN})
@@ -192,7 +192,7 @@ endif()
 # Gate 4b: the whole dExtSimpleModel_c pipeline. Adds the material-bind and matrix
 # feeders to the hostgen set and the dExtSimpleModel_c/render slice on top of everything.
 set(GATE4B_SYMS _ZN15ModelComponents13func_02044b30Ei G3_MultMtx33
-    _Z16G3_LoadTexMtxEnvPi _ZN15ModelComponents13func_02044534EiP9Matrix4x3P7Vector3
+    G3_LoadTexMtxEnv _ZN15ModelComponents13func_02044534EiP9Matrix4x3P7Vector3
     _ZN15ModelComponents13func_0204488cEiP7Vector3 VEC_Normalize)
 sm64ds_hostgen_symbols(GATE4B_GEN ${GATE4B_SYMS})
 

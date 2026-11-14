@@ -64,7 +64,6 @@ extern s8 gCurrentSublevel; /* current level */
 extern u8 gCurrentStarId;
 
 /* local extern: dBgW setters and a coined star helper with no shared header. */
-
 int IsStarCollectedInCurLevel(int star);
 
 /* One class, six actor IDs (see the banner), so most members branch on
@@ -479,9 +478,9 @@ daObjBlockL_c *daObjBlockL_c_classInit_BLOCK_L() {
 
 /* Retail initializer order. The handles themselves land in address order
  * because their names sort that way; these definitions are the call order. */
-BlockModelFile data_ov002_0210dcc0(1108);
-daObjBlockLClsnFile data_ov002_0210dcb8(1109);
-BlockModelFile data_ov002_0210dce0(1110);
-daObjBlockLClsnFile data_ov002_0210dcc8(1111);
-BlockModelFile data_ov002_0210dcd0(1425);
-daObjBlockLClsnFile data_ov002_0210dcd8(1426);
+extern "C" BlockModelFile data_ov002_0210dcc0(1108);
+extern "C" daObjBlockLClsnFile data_ov002_0210dcb8(1109);
+extern "C" BlockModelFile data_ov002_0210dce0(1110);
+extern "C" daObjBlockLClsnFile data_ov002_0210dcc8(1111);
+extern "C" BlockModelFile data_ov002_0210dcd0(1425);
+extern "C" daObjBlockLClsnFile data_ov002_0210dcd8(1426);

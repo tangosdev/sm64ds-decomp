@@ -10,7 +10,6 @@ extern void Transition_Destroy(void *p);
 extern void func_ov007_020c3544(void *p);
 extern void func_ov007_020c338c(void *p);
 extern void func_ov007_020c121c(void *p);
-#define func_ov007_020c1180 _Z19func_ov007_020c1180P12Ov007OamNode
 extern void func_ov007_020c1180(Ov007OamNode *node);
 extern void func_ov007_020c0a9c(void *p);
 

@@ -1,8 +1,5 @@
 #ifndef DACTOR_C_H
 #define DACTOR_C_H
-#ifndef __cplusplus
-#define Deallocate _Z10DeallocatePv
-#endif
 
 #include "types.h"
 
@@ -54,7 +51,7 @@ struct dExtShadowModel_c;
 
 /* data_020a0eac is the heap every actor is allocated from. operator delete
    passes it to Memory::Deallocate, declared in Memory.h via fBase_c.h. */
-extern mHeap::Heap_t *data_020a0eac;
+extern "C" mHeap::Heap_t *data_020a0eac;
 
 struct dActor_c : dBase_c {
     /* The global actor list (data_0209b468) threads through every actor: the

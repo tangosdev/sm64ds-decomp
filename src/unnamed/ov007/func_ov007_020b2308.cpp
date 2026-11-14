@@ -5,7 +5,7 @@ extern struct Ov007Texture *Texture_Create(int, int, int, int, int, unsigned sho
 
 // Keep the existing address-named caller ABI while decoding the model file
 // through its established texture and palette records.
-void *func_ov007_020b2308(void *fileData, int index) {
+extern "C" void *func_ov007_020b2308(void *fileData, int index) {
     BMD_File *file = static_cast<BMD_File *>(fileData);
     BMD_Texture *texture = &file->textures[index];
     unsigned flags = texture->flags;

@@ -21,7 +21,7 @@
   ],
   "functions": [
     {
-      "symbol": "_Z13func_0201787cP13SharedFilePtr",
+      "symbol": "func_0201787c",
       "address": "0x0201787c",
       "size": "0x00000038",
       "legacy_source": "src/unnamed/arm9/0201/func_0201787c.c",

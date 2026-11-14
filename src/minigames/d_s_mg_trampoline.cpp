@@ -48,26 +48,11 @@ enum d_s_mg_trampoline_AssetId {
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/mi/memory.h"
-namespace s20afdd0 {
-void Mg_RenderSpriteBoth(void *a0, int, int, int, int);
-}
-using s20afdd0::Mg_RenderSpriteBoth;
-namespace s20afcf8 {
-void DrawOamSprite(OamAttr *attr, int, int, Matrix2x2 *mtx);
-}
-using s20afcf8::DrawOamSprite;
-namespace s20afa20 {
-void RenderOamMainScreen(OamAttr *oam, int, int, int, int);
-}
-using s20afa20::RenderOamMainScreen;
-namespace s20ad90c {
-void Mg_CommitRecords(void);
-}
-using s20ad90c::Mg_CommitRecords;
-namespace s20ad674 {
-s32 GetGameLanguage(void);
-}
-using s20ad674::GetGameLanguage;
+extern "C" void Mg_RenderSpriteBoth(void *a0, int, int, int, int);
+extern "C" void DrawOamSprite(OamAttr *attr, int, int, Matrix2x2 *mtx);
+extern "C" void RenderOamMainScreen(OamAttr *oam, int, int, int, int);
+extern "C" void Mg_CommitRecords(void);
+extern "C" s32 GetGameLanguage(void);
 
 /* local: UpdateTouchInput only reproduces through a 4-byte-record view of
    each lane; the flat `gTouchHeld[slot * 4]` and TouchInfo forms DIFF there
@@ -79,12 +64,9 @@ typedef struct Vec2s {
     s16 x, y;
 } Vec2s;
 
-extern "C" {}
-
 extern int sTrmpRowScreenY[];
 
 extern int sTrmpRowMarkerSprite;
-extern "C" {}
 void TrmpFx_Link(TrmpScorePopup *entry);
 
 extern TrmpScorePopup *sTrmpFxList;
@@ -101,36 +83,18 @@ extern dFdBrightness_c *gSceneFader;
 
 extern int sTrmpTouchBlocked;
 extern "C" {
-
 void SetBg2Offset(int a, int b);
 }
 
 extern unsigned char gMainScreenLayers;
-extern "C" {}
-
 struct OamAttr;
 
 struct Matrix2x2;
-extern "C" {}
-
 extern int func_020126e8(int a);
 
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 
 extern short sTrmpGoalRow;
-namespace ns_020cd39c {
-void Trmp3DMario_UpdateAll(void);
-}
-using ns_020cd39c::Trmp3DMario_UpdateAll;
-namespace ns_020cd158 {
-int Trmp3DMario_CountFinished(void);
-}
-using ns_020cd158::Trmp3DMario_CountFinished;
-extern "C" {}
-namespace ns_020cd1e0 {
-void Trmp3DMario_StartAll(void);
-}
-using ns_020cd1e0::Trmp3DMario_StartAll;
 
 extern int sTrmpComboCount;
 
@@ -140,22 +104,6 @@ extern int sTrmpMariosInPlay;
 
 extern int sTrmpAnyOnLedge;
 void TrmpLine_UpdateAll(void);
-namespace ns_020ccd04 {
-int Trmp3DMario_IsOffstage(int *r0);
-}
-using ns_020ccd04::Trmp3DMario_IsOffstage;
-namespace ns_020cc9fc {
-void Trmp3DMario_EnterWalkIn(char *c);
-}
-using ns_020cc9fc::Trmp3DMario_EnterWalkIn;
-namespace ns_020cd62c {
-void Trmp3DMario_SetSpawnHeight(int n);
-}
-using ns_020cd62c::Trmp3DMario_SetSpawnHeight;
-namespace ns_020cd510 {
-void Trmp3DMario_SetTuning(int a);
-}
-using ns_020cd510::Trmp3DMario_SetTuning;
 void TrmpLine_CreateStartLineT1(void);
 
 extern s16 sTrmpIntroFromX;
@@ -164,48 +112,34 @@ extern s16 sTrmpStartTouchX;
 
 extern s16 sTrmpStartTouchY;
 extern "C" {
-
 extern void *LoadFile(int handle);
 
 extern void DecompressLZ16(void *src, void *dst);
 }
 
-extern void Deallocate(void *ptr);
+extern "C" void Deallocate(void *ptr);
 
 extern int sTrmpNcgByLanguage[];
 
-extern void InitialiseVramGlobals(void);
+extern "C" void InitialiseVramGlobals(void);
 
 extern s16 data_02082414;
-namespace ns_020cd658 {
-int Trmp3DMario_InitPool(unsigned char *a0, int a1);
-}
-using ns_020cd658::Trmp3DMario_InitPool;
+extern "C" int Trmp3DMario_InitPool(unsigned char *a0, int a1);
 void TrmpFx_InitPool(void *records, int count);
 void TrmpLine_LoadTextures(void);
-extern "C" {}
-namespace ns_020cd424 {
-void Trmp3DMario_ResetAll(unsigned int n, int arg1);
-}
-using ns_020cd424::Trmp3DMario_ResetAll;
+extern "C" void Trmp3DMario_ResetAll(unsigned int n, int arg1);
 void TrmpFx_ClearAll(void);
 
 extern int sTrmpPuffXByLanguage[];
 void Puff_ClearAll(int a0, int a1);
 
-extern void func_02012718(int, int);
+extern "C" void func_02012718(int, int);
 void TrmpFx_UpdateAll(void);
-extern "C" {}
 void TrmpFx_DrawAll(void);
-extern "C" {}
-
 extern void *sTrmpDoorSignSprites[];
 
 extern void *sTrmpArrowSprite;
-namespace ns_020cd270 {
-void Trmp3DMario_DrawAll(void);
-}
-using ns_020cd270::Trmp3DMario_DrawAll;
+extern "C" void Trmp3DMario_DrawAll(void);
 void TrmpLine_DrawAll(void);
 dScMgTrampoline_c *dScMgTrampoline_c_classInit(void);
 

@@ -83,7 +83,7 @@ daObjKm3_Kaitendai_c *daObjKm3_Kaitendai_c_classInit() {
     return new daObjKm3_Kaitendai_c();
 }
 
-SpawnInfo<daObjKm3_Kaitendai_c> g_profile_KM3_KAITENDAI = {
+extern "C" SpawnInfo<daObjKm3_Kaitendai_c> g_profile_KM3_KAITENDAI = {
     daObjKm3_Kaitendai_c_classInit,
     0x009c, /* KM3_KAITENDAI registry id 156 */
     0x00e3,

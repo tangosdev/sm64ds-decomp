@@ -1,7 +1,8 @@
 //cpp
 #include "common.h"
 
-void func_ov007_020c368c(Vector3_16 *vectors, int count, int clamp);
+extern "C" {
+extern void func_ov007_020c368c(Vector3_16 *vectors, int count, int clamp);
 
 static inline s16 f12(int x) {
     return (s16)((x + 0x800) >> 12);
@@ -97,4 +98,5 @@ void func_ov007_020cb7c0(Vector3_16 *out, int w, int h, int *pts, s16 a5, s16 a6
         } while (row < h);
     }
     func_ov007_020c368c(out, w * h * 2, 0);
+}
 }

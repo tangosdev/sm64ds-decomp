@@ -64,11 +64,9 @@ enum {
 };
 
 extern "C" {
-
 int AngleDiff(int a, int b);
-}
-
 /* 1: return to the rec room when the menu closes. */
+}
 void StartMinigameMenu(unsigned char returnToRecRoom);
 
 extern u8 data_0209d684;

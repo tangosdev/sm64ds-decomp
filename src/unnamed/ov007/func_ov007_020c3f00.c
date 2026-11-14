@@ -3,7 +3,6 @@
 #include "Ov007MenuMem.h"
 
 extern Ov007OamNode *func_ov007_020c11ac(int n);
-#define func_ov007_020c40d4 _Z19func_ov007_020c40d4i
 extern Ov007SpriteItem *func_ov007_020c40d4(int animCount);
 extern void func_ov007_020c10b0(Ov007OamNode *parent, Ov007OamNode *child);
 extern void func_ov007_020c4090(Ov007SpriteItem *item);

@@ -616,12 +616,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@178",
+      "from": "@198",
       "to": "data_ov004_020bfa28",
-      "evidence": "compiler temp renumbered when unit020b4aa4.cpp uses shared Vec2i from ov006_ec4dc_obj.h and drops its local __aeabi_idiv declaration (two named parameters); candidate ELF emits @200 for the 12-byte destructor-registration node. It is renamed to the configured name at 0x020bfa28. The initializer relocation and target are checked by the TU link proof. Re-keyed from @200 to @198 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @198 to @178 when fakematch extern C was dropped (measured)."
+      "evidence": "compiler temp renumbered when unit020b4aa4.cpp uses shared Vec2i from ov006_ec4dc_obj.h and drops its local __aeabi_idiv declaration (two named parameters); candidate ELF emits @200 for the 12-byte destructor-registration node. It is renamed to the configured name at 0x020bfa28. The initializer relocation and target are checked by the TU link proof. Re-keyed from @200 to @198 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "__arraydtor$177",
+      "from": "__arraydtor$197",
       "to": "__arraydtor$192",
       "owned_function": {
         "module": "ov004",
@@ -631,7 +631,7 @@
         "raw_type": "STT_FUNC",
         "raw_binding": "STB_LOCAL"
       },
-      "evidence": "the sMgCoins array destructor thunk; after using shared Vec2i from ov006_ec4dc_obj.h and dropping its local __aeabi_idiv declaration, the candidate ELF emits it as __arraydtor$199. It is renamed onto the configured __arraydtor$192 at 0x020b67bc; TU verification checks its relocation destination. Re-keyed from __arraydtor$199 to __arraydtor$197 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from __arraydtor$197 to __arraydtor$177 when fakematch extern C was dropped (measured)."
+      "evidence": "the sMgCoins array destructor thunk; after using shared Vec2i from ov006_ec4dc_obj.h and dropping its local __aeabi_idiv declaration, the candidate ELF emits it as __arraydtor$199. It is renamed onto the configured __arraydtor$192 at 0x020b67bc; TU verification checks its relocation destination. Re-keyed from __arraydtor$199 to __arraydtor$197 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ]
 }

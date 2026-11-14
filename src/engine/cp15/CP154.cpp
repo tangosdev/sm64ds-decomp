@@ -8,7 +8,7 @@
 // C, so the asm is the faithful source.
 #include "types.h"
 
-
+extern "C" {
 // HAND-ASM PRIMITIVE: CP15 control-register primitive; mrc/mcr p15 are
 // unreachable from C, so the asm block is the source.
 asm int func_0206da64(void) {
@@ -34,7 +34,7 @@ asm void func_0206da94(void) { mrc p15, 0, r0, c7, c10, 1; bx lr }
 // HAND-ASM PRIMITIVE: CP15 cache primitive; mrc p15 is unreachable from C, so
 // the asm block is the source.
 asm void func_0206da9c(void) { mrc p15, 0, r0, c7, c6, 1; bx lr }
-
+}
 
 #pragma push
 #pragma defer_codegen off

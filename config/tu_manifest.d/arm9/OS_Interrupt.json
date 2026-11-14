@@ -20,63 +20,63 @@
   ],
   "functions": [
     {
-      "symbol": "_Z22OS_ResetRequestIrqMaskj",
+      "symbol": "OS_ResetRequestIrqMask",
       "address": "0x02056d64",
       "size": "0x00000034",
       "legacy_source": "src/_ZN3IRQ15ClearInterruptsEj.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "_Z17OS_DisableIrqMaskj",
+      "symbol": "OS_DisableIrqMask",
       "address": "0x02056d98",
       "size": "0x00000048",
       "legacy_source": "src/_ZN3IRQ11DisableIRQsEj.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "_Z16OS_EnableIrqMaskj",
+      "symbol": "OS_EnableIrqMask",
       "address": "0x02056de0",
       "size": "0x00000038",
       "legacy_source": "src/_ZN3IRQ10EnableIRQsEj.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "_Z13OS_SetIrqMaskj",
+      "symbol": "OS_SetIrqMask",
       "address": "0x02056e18",
       "size": "0x00000034",
       "legacy_source": "src/_ZN3IRQ7SetIRQsEj.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "_Z22OSi_EnterTimerCallbackjPFvPvES_",
+      "symbol": "OSi_EnterTimerCallback",
       "address": "0x02056e4c",
       "size": "0x0000004c",
       "legacy_source": "src/unnamed/arm9/0205/func_02056e4c.c",
       "ordinal": 4
     },
     {
-      "symbol": "_Z20OSi_EnterDmaCallbackjPFvPvES_",
+      "symbol": "OSi_EnterDmaCallback",
       "address": "0x02056e98",
       "size": "0x0000004c",
       "legacy_source": "src/unnamed/arm9/0205/func_02056e98.c",
       "ordinal": 5
     },
     {
-      "symbol": "_Z17OS_GetIrqFunctionj",
+      "symbol": "OS_GetIrqFunction",
       "address": "0x02056ee4",
       "size": "0x0000008c",
       "legacy_source": "src/_ZN3IRQ13GetIRQHandlerEj.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "_Z17OS_SetIrqFunctionjPFvvE",
+      "symbol": "OS_SetIrqFunction",
       "address": "0x02056f70",
       "size": "0x00000090",
       "legacy_source": "src/_ZN3IRQ13SetIRQHandlerEjPFvvE.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_Z15OS_InitIrqTablev",
+      "symbol": "OS_InitIrqTable",
       "address": "0x02057000",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0205/func_02057000.c",

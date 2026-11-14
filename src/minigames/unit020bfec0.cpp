@@ -107,9 +107,9 @@ struct WalkPath {
 };
 
 /* local extern: address-named arm9 routines, no owning header. */
-void func_020169d8(char *, int, unsigned int);
-void func_02016a04(char *, int);
-void func_02016a14(char *, int);
+extern "C" void func_020169d8(char *, int, unsigned int);
+extern "C" void func_02016a04(char *, int);
+extern "C" void func_02016a14(char *, int);
 int func_02017ab4(int);
 void *func_02017acc(void *, unsigned int);
 unsigned int func_02012174(unsigned int, unsigned int);
@@ -452,7 +452,7 @@ void FallingPetal::Spawn(const VecFx32 *pos, const VecFx32 *vel) {
     mRot[1] = data_02092768.w[1];
     mRot[2] = data_02092768.w[2];
     mRot[3] = data_02092768.w[3];
-    Quaternion_FromVector3((Quat *)mRot, &sAxis, &mAxis);
+    Quaternion_FromVector3(mRot, &sAxis, &mAxis);
     mActive = 1;
 }
 
@@ -491,7 +491,7 @@ void FallingPetal::Update() {
     if (NormalizeVec3IfNonZero(&dir) == 0)
         return;
     turn = data_02092768;
-    Quaternion_FromVector3((Quat *)&target, &mAxis, &dir);
+    Quaternion_FromVector3(&target, &mAxis, &dir);
     Quaternion_SLerp((int *)&turn, (int *)&target, 0x200, (int *)&turn);
     Quaternion_Normalize((int *)&turn);
     Quaternion_Multiply(mRot, &turn, mRot);
