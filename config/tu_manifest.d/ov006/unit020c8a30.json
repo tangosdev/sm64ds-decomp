@@ -58,21 +58,21 @@
       "ordinal": 2
     },
     {
-      "symbol": "_Z9Puff_DrawP4Puff",
+      "symbol": "_ZN4Puff4DrawEv",
       "address": "0x020c8af4",
       "size": "0x000000b4",
       "legacy_source": "src/func_ov006_020c8af4.c",
       "ordinal": 3
     },
     {
-      "symbol": "_Z11Puff_UpdateP4Puff",
+      "symbol": "_ZN4Puff6UpdateEv",
       "address": "0x020c8ba8",
       "size": "0x000000c4",
       "legacy_source": "src/func_ov006_020c8ba8.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "_Z10Puff_ClearP4Puff",
+      "symbol": "_ZN4Puff5ClearEv",
       "address": "0x020c8c6c",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov006_020c8c6c.c",

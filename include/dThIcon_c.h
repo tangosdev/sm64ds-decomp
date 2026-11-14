@@ -42,7 +42,7 @@ struct dThIcon_c {
        pen enters, 0 never. func_ov001_020ab5b0 stores it. */
     s32 mTouchKind; /* 0x014 */
     /* mPressTimer's reload: func_ov001_020ab5b0 stores 10 and
-       SlotBet_Place 6. */
+       dScMgSlot1_c::betIcon_c::Place 6. */
     s32 mPressTime; /* 0x018 */
     s32 unk_01c;
     s32 unk_020;

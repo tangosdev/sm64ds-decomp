@@ -20051,7 +20051,7 @@
     },
     "ov005:0x020bff4c": {
       "author": "tangosdev",
-      "name": "_Z18MiniGm_SaveIfDirtyPc"
+      "name": "_ZN11dScMiniGm_c11SaveIfDirtyEv"
     },
     "ov005:0x020bffc8": {
       "author": "tangosdev",
@@ -20059,11 +20059,11 @@
     },
     "ov005:0x020bfff4": {
       "author": "tangosdev",
-      "name": "_Z16MiniGm_GetRecordPvii"
+      "name": "_ZN11dScMiniGm_c9GetRecordEii"
     },
     "ov005:0x020c0010": {
       "author": "tangosdev",
-      "name": "_Z19MiniGm_GetSaveTablePvi"
+      "name": "_ZN11dScMiniGm_c12GetSaveTableEi"
     },
     "ov005:0x020c0030": {
       "author": "tangosdev",
@@ -20071,15 +20071,15 @@
     },
     "ov005:0x020c007c": {
       "author": "tangosdev",
-      "name": "_Z12MiniGm_IsNewPvi"
+      "name": "_ZN11dScMiniGm_c5IsNewEi"
     },
     "ov005:0x020c00b4": {
       "author": "tangosdev",
-      "name": "_Z17MiniGm_IsUnlockedPvi"
+      "name": "_ZN11dScMiniGm_c10IsUnlockedEi"
     },
     "ov005:0x020c00e4": {
       "author": "tangosdev",
-      "name": "_Z20MiniGm_HasSecondPagePv"
+      "name": "_ZN11dScMiniGm_c13HasSecondPageEv"
     },
     "ov005:0x020c0140": {
       "author": "lunavyqo",
@@ -20115,7 +20115,7 @@
     },
     "ov005:0x020c1030": {
       "author": "tangosdev",
-      "name": "_Z17MiniGm_DrawNumberPviii"
+      "name": "_ZN11dScMiniGm_c10DrawNumberEiii"
     },
     "ov005:0x020c1130": {
       "author": "lunavyqo",
@@ -20135,7 +20135,7 @@
     },
     "ov005:0x020c16e4": {
       "author": "lunavyqo",
-      "name": "_ZN11dScMiniGm_c21MiniGm_LoadGroupIconsEv"
+      "name": "_ZN11dScMiniGm_c14LoadGroupIconsEv"
     },
     "ov005:0x020c1a20": {
       "author": "tangosdev",
@@ -20891,15 +20891,15 @@
     },
     "ov006:0x020c8af4": {
       "author": "tangosdev",
-      "name": "_Z9Puff_DrawP4Puff"
+      "name": "_ZN4Puff4DrawEv"
     },
     "ov006:0x020c8ba8": {
       "author": "tangosdev",
-      "name": "_Z11Puff_UpdateP4Puff"
+      "name": "_ZN4Puff6UpdateEv"
     },
     "ov006:0x020c8c6c": {
       "author": "tangosdev",
-      "name": "_Z10Puff_ClearP4Puff"
+      "name": "_ZN4Puff5ClearEv"
     },
     "ov006:0x020c8c78": {
       "author": "andrewboudreau",
@@ -25643,35 +25643,35 @@
     },
     "ov006:0x0210ab08": {
       "author": "tangosdev",
-      "name": "_Z16Slot3_ReelDigitsPci"
+      "name": "_ZN12dScMgSlot3_c10ReelDigitsEi"
     },
     "ov006:0x0210ab90": {
       "author": "tangosdev",
-      "name": "_Z15Slot3_StateDonev"
+      "name": "_ZN12dScMgSlot3_c9StateDoneEv"
     },
     "ov006:0x0210ab94": {
       "author": "tangosdev",
-      "name": "_Z19Slot3_StateGameOverPc"
+      "name": "_ZN12dScMgSlot3_c13StateGameOverEv"
     },
     "ov006:0x0210ac38": {
       "author": "tangosdev",
-      "name": "_Z15Slot3_StateWaitv"
+      "name": "_ZN12dScMgSlot3_c9StateWaitEv"
     },
     "ov006:0x0210ac3c": {
       "author": "tangosdev",
-      "name": "_Z17Slot3_StatePayoutPc"
+      "name": "_ZN12dScMgSlot3_c11StatePayoutEv"
     },
     "ov006:0x0210adac": {
       "author": "lunavyqo",
-      "name": "_Z16Slot3_StateJudgePc"
+      "name": "_ZN12dScMgSlot3_c10StateJudgeEv"
     },
     "ov006:0x0210af64": {
       "author": "tangosdev",
-      "name": "_Z15Slot3_StateSpinPc"
+      "name": "_ZN12dScMgSlot3_c9StateSpinEv"
     },
     "ov006:0x0210b1fc": {
       "author": "tangosdev",
-      "name": "_Z16Slot3_StateIntroPc"
+      "name": "_ZN12dScMgSlot3_c10StateIntroEv"
     },
     "ov006:0x0210b314": {
       "author": "ruspecial",
@@ -25695,43 +25695,43 @@
     },
     "ov006:0x0210c180": {
       "author": "tangosdev",
-      "name": "_Z14SlotLamp_StartPv"
+      "name": "_ZN8SlotLamp5StartEv"
     },
     "ov006:0x0210c1a8": {
       "author": "tangosdev",
-      "name": "_Z13SlotLamp_TickPv"
+      "name": "_ZN8SlotLamp4TickEv"
     },
     "ov006:0x0210c208": {
       "author": "tangosdev",
-      "name": "_Z14SlotLamp_ClearPc"
+      "name": "_ZN8SlotLamp5ClearEv"
     },
     "ov006:0x0210c218": {
       "author": "tangosdev",
-      "name": "_Z15SlotBlink_StartPvss"
+      "name": "_ZN9SlotBlink5StartEss"
     },
     "ov006:0x0210c234": {
       "author": "tangosdev",
-      "name": "_Z14SlotBlink_DrawPh"
+      "name": "_ZN9SlotBlink4DrawEv"
     },
     "ov006:0x0210c278": {
       "author": "tangosdev",
-      "name": "_Z14SlotBlink_TickPv"
+      "name": "_ZN9SlotBlink4TickEv"
     },
     "ov006:0x0210c2b0": {
       "author": "tangosdev",
-      "name": "_Z15SlotBlink_ClearPc"
+      "name": "_ZN9SlotBlink5ClearEv"
     },
     "ov006:0x0210c2c0": {
       "author": "tangosdev",
-      "name": "_Z17SlotReel_SetSpeedPvi"
+      "name": "_ZN12dScMgSlot1_c9betIcon_c9ArmPayoutEi"
     },
     "ov006:0x0210c2d4": {
       "author": "tangosdev",
-      "name": "_Z15SlotBet_OnTouchPv"
+      "name": "_ZN12dScMgSlot1_c9betIcon_c7OnTouchEv"
     },
     "ov006:0x0210c354": {
       "author": "tangosdev",
-      "name": "_Z13SlotBet_ResetPv"
+      "name": "_ZN12dScMgSlot1_c9betIcon_c5ResetEv"
     },
     "ov006:0x0210c374": {
       "author": "tangosdev",
@@ -25743,7 +25743,7 @@
     },
     "ov006:0x0210c478": {
       "author": "tangosdev",
-      "name": "_Z13SlotBet_PlacePc"
+      "name": "_ZN12dScMgSlot1_c9betIcon_c5PlaceEv"
     },
     "ov006:0x0210c4b8": {
       "author": "andrewboudreau",
@@ -25759,7 +25759,7 @@
     },
     "ov006:0x0210c638": {
       "author": "tangosdev",
-      "name": "_Z13Slot1_InitHudPv"
+      "name": "_ZN12dScMgSlot1_c7InitHudEv"
     },
     "ov006:0x0210c674": {
       "author": "tangosdev",

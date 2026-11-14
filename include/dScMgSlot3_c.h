@@ -18,8 +18,8 @@
  * header claimed: a THREE-ELEMENT s32 array sits at 0x4fe4, indexed by
  * five of this class's methods (the legacy Render's local
  * `struct T4fe4 { char pad[0x4fe4]; int vals[3]; }` names it outright, and
- * InitResources, Slot3_StateSpin, Slot3_StateJudge and
- * Slot3_ReelDigits all index it as
+ * InitResources, StateSpin, StateJudge and
+ * ReelDigits all index it as
  * `[i]` or `+ i*4`). It closes exactly on mReelPeriod.
  *
  * OWN TAIL, 0x4ff0..0x5043: seventeen fields carried over verbatim from
@@ -67,6 +67,16 @@ struct dScMgSlot3_c : dScMgSingle3DBase_c {
     virtual void InitMainScreenBg();      /* slot 32 */
     s32 Behavior();                       /* slot  6 */
     s32 Render();                         /* slot  9 */
+
+    /* The sSlot3StateTable states and their reel helper. */
+    void ReelDigits(int);
+    void StateDone();
+    void StateGameOver();
+    void StateWait();
+    void StatePayout();
+    void StateJudge();
+    void StateSpin();
+    void StateIntro();
 
     Mascot mMascot;          /* 0x4f38 -- Toad at the table, see file banner */
     s32 mReelPos[3];         /* 0x4fe4 -- Fix12 scroll of each reel; seeded to a
