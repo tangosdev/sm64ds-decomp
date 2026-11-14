@@ -41,8 +41,9 @@
  *    resource handles and 19 state descriptors are now typed objects defined
  *    at the bottom of this file; the 38 pointer-to-member records they copy
  *    from keep their data_ov066 names.
- *  - The model and shadow matrices are copied through Mtx43. Vec4 is an
- *    unused stack object with a destructor.
+ *  - The model and shadow matrices are copied through Mtx43: assigning
+ *    Matrix4x3 grows .text by 0x54 bytes. Vec4 is an unused stack object
+ *    with a destructor.
  *  - Handler descriptions come from reading the code, not from play-testing.
  *  - Sound::ChangeMusicVolume keeps its mangled decl (Fix12<int> by value, S13 wall); the Layer3 pair keeps file-local mangled decls because Sound.h declares only Layer1/Layer2 (this file excludes decl_common.h).
  */

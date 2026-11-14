@@ -673,6 +673,7 @@ void daNknk_c::UpdateModelMatrixAndShadow() {
         Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
         angleY = &mAngleY;
         Matrix4x3_ApplyInPlaceToRotationY(inline_fn(), *angleY);
+        /* Flat copy: assigning Matrix4x3 grows .text by 0x1c bytes. */
         *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
         {
             int b = (int)((mFlags & 0x40000) != 0);
