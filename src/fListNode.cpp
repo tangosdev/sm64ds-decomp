@@ -40,29 +40,18 @@ fLiNdBa_c::~fLiNdBa_c() {
         data_020a4b68 = 0;
 }
 
-/* func_020441cc's own view of a tree node and the descriptor that names the
- * callback. */
+/* The process tree's sentinel: the root scene node, then the callback
+ * func_020441cc runs on each node's owner. */
 namespace ProcessTree {
-class Obj {
-public:
-    int dummy;
-};
-typedef void (Obj::*PMF)();
-
-struct Node {
-    char pad[0x10];
-    Obj *obj; // 0x10
-};
-
 struct Thing {
-    Node *head;   // 0
-    PMF callback; // 4
+    fBase_c::SceneNode *head;          // 0
+    fBase_c::ProcessFunction callback; // 4
 
-    Thing(PMF &p) {
+    Thing(fBase_c::ProcessFunction &p) {
         callback = p;
         head = 0;
     }
-    void *func_020441cc();
+    int func_020441cc();
 };
 }
 
@@ -72,18 +61,15 @@ struct Thing {
  * copying them is not a constant expression, so mwcc emits __sinit_fListNode.cpp
  * (was the handwritten __sinit_02075154) in this definition order. No destructor
  * is registered. ActorBase.cpp still reaches the heads by their address names. */
-struct fBase_c;
-typedef int (fBase_c::*ProcessCallback)();
-
-extern ProcessTree::PMF data_02099f60;
-extern ProcessCallback data_02099f70, data_02099f48, data_02099f68, data_02099f50;
+extern fBase_c::ProcessFunction data_02099f60;
+extern fBase_c::ProcessFunction data_02099f70, data_02099f48, data_02099f68, data_02099f50;
 
 struct ProcessList {
     fLiNdBaPr_c *head;
     fLiNdBaPr_c *tail;
-    ProcessCallback callback;
+    fBase_c::ProcessFunction callback;
 
-    ProcessList(ProcessCallback &p) {
+    ProcessList(fBase_c::ProcessFunction &p) {
         head = 0;
         tail = 0;
         callback = p;
@@ -124,17 +110,17 @@ fBase_c::SceneNode *func_0203b394(fBase_c::SceneNode *node);
 namespace ProcessTree {
 /* Walk a tree list, calling the descriptor's callback on each owner.
  * Unlike func_02043fdc, it does not set data_020a4b68. */
-void *Thing::func_020441cc() {
-    Node *node;
-    if (this->callback == 0)
-        return (void *)1;
-    node = this->head;
+int Thing::func_020441cc() {
+    fBase_c::SceneNode *node;
+    if (callback == 0)
+        return 1;
+    node = head;
     while (node) {
-        Node *next = (Node *)func_0203b394((fBase_c::SceneNode *)node);
-        (node->obj->*this->callback)();
+        fBase_c::SceneNode *next = func_0203b394(node);
+        (node->owner->*callback)();
         node = next;
     }
-    return (void *)1;
+    return 1;
 }
 }
 
