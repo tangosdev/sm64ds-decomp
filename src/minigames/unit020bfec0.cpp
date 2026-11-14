@@ -508,14 +508,11 @@ void FallingPetal::Draw() {
 }
 
 void FallingPetal::UpdateMatrix() {
-    union {
-        Matrix4x3 full;
-        Matrix3x3 r;
-    } rot;
-    Matrix4x3_FromQuaternion(reinterpret_cast<const Quaternion *>(mRot), &rot.full);
-    MTX_MultVec33(&sPetalUpAxis, &rot.r, &mAxis);
+    Matrix4x3 rot;
+    Matrix4x3_FromQuaternion(reinterpret_cast<const Quaternion *>(mRot), &rot);
+    MTX_MultVec33(&sPetalUpAxis, (const Matrix3x3 *)&rot, &mAxis);
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    MTX_Concat43(&rot.full, &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(&rot, &data_020a0e68, &data_020a0e68);
     mModel.mat4x3 = data_020a0e68;
 }
 
