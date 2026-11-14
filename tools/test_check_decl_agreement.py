@@ -3120,7 +3120,14 @@ class IncludedInlineDestructorTests(unittest.TestCase):
     def test_real_vector_carriers_reference_inline_header_bodies(self):
         targets=['src/engine/view/d_camera_dtor.cpp', 'src/runtime/actor/d_actor.cpp']
         _, _, defs, _=CDA.collect(REPO, targets)
-        for owner, line in (('Vector3', 72), ('Vector3s', 100)):
+        # Locate the inline destructors rather than pinning line numbers, so an
+        # edit elsewhere in types.h does not fail this test.
+        lines=(REPO / 'include/types.h').read_text(encoding='utf-8').splitlines()
+        def dtor_line(owner):
+            hits=[i + 1 for i, text in enumerate(lines) if text.strip() == '~%s() {}' % owner]
+            self.assertEqual(len(hits), 1, owner)
+            return hits[0]
+        for owner, line in (('Vector3', dtor_line('Vector3')), ('Vector3s', dtor_line('Vector3s'))):
             symbol='_ZN%d%sD1Ev' % (len(owner), owner)
             found=[d for d in defs if d.symbol == symbol]
             self.assertEqual(len(found), 1)
