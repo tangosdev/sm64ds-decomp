@@ -912,7 +912,7 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
     s32 mRunDuringFade;            /* 0x0a4 */
     s32 mCredits;            /* 0x0a8 */
     s32 mCreditsShown;            /* 0x0ac */
-    u8  pad_0b0[0x4];
+    s32 unk_0b0;            /* 0x0b0 -- BeforeInitResources zeroes it; no reader found */
     s32 mHudScore;          /* 0x0b4 -- zeroed by BeforeInitResources. Leaves
                                 count into it or copy their own tally here, and
                                 the value leaves submit through
