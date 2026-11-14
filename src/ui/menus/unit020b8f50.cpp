@@ -74,7 +74,7 @@ typedef struct Ov007PickerSprites {
 
 /* PickerScene_UpdateMoveAnim copies pos as three words. */
 typedef struct Vec3Words {
-    Fix12i w[3];
+    fx32 w[3];
 } Vec3Words;
 
 extern char *data_ov007_02104ba0;

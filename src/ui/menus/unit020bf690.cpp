@@ -143,11 +143,11 @@ void ScreenFade_Draw(Ov007Camera *cam) {
     if (model->visible == 0)
         return;
     int fovyIdx = cam->fovy >> 4;
-    Fix12i sinDist = FX_MUL(FX_SinIdx(fovyIdx), 0x1064);
-    Fix12i size = model->scale.x * 0xd800 + 0x12c000;
-    Fix12i scaled = FX_MUL(size, sinDist);
+    fx32 sinDist = FX_MUL(FX_SinIdx(fovyIdx), 0x1064);
+    fx32 size = model->scale.x * 0xd800 + 0x12c000;
+    fx32 scaled = FX_MUL(size, sinDist);
     int cosScaled = FX_CosIdx(fovyIdx) * 0x60;
-    Fix12i extent = FX_Div(scaled, cosScaled);
+    fx32 extent = FX_Div(scaled, cosScaled);
     model->scale.z = FX_Div(extent, 0x5000);
     model->scale.x = model->scale.z;
     func_ov007_020bc02c(model, &cam->viewMatrix);

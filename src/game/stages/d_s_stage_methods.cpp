@@ -24,7 +24,7 @@
 
 // leftovers:
 // - OAM::Render, OAM::RenderSub, Sound::PlaySub and cstd::atan2
-//   stay mangled (Fix12 by value). Fog::Init is the scalar Fix12i method.
+//   stay mangled (Fix12 by value). Fog::Init is the scalar fx32 method.
 //   RenderNumber keeps a local extern spelled over the member's mask-emitting
 //   parameter conversions. InitResources calls LoadGraphics2D with the comparison
 //   itself as the bool, which is what the ROM passes.
@@ -3385,7 +3385,7 @@ struct MinimapChangeNode {
     struct MinimapChangeNode *next; /* 0x0c */
 };
 
-void LoadMinimapChangeObject(int idx, Fix12i val, s8 h) {
+void LoadMinimapChangeObject(int idx, fx32 val, s8 h) {
     struct MinimapChangeNode *nn = (MinimapChangeNode *)::operator new(sizeof(MinimapChangeNode));
     StageArea *e = &((StageArea *)data_0209f314)[idx];
     struct MinimapChangeNode *cur = (MinimapChangeNode *)e->mBlockList;
@@ -4366,7 +4366,7 @@ void dScStage_c::CheckInput() {
 /* Fills the density ramp from a near/far pair, then writes the fog registers.
    The ramp is walked with a running `p`, not `mDensity[i]`: MEASURED,
    the indexed spelling changes the function's size. */
-void Fog::Init(unsigned short color, Fix12i nearv, Fix12i farv) {
+void Fog::Init(unsigned short color, fx32 nearv, fx32 farv) {
     int dist;
     int step;
     int i;

@@ -1,16 +1,14 @@
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 
-typedef int Fix12i;
-
 typedef short s16;
 
-extern void func_0203d480(Fix12i *out, Fix12i *in);
+extern void func_0203d480(fx32 *out, fx32 *in);
 
 /* Normalize a Vector2 (Vector2.h): 0 for the zero vector, else 1 after
    func_0203d480 normalizes it. */
-int func_0203d434(Fix12i *in) {
-    Fix12i out[3];
+int func_0203d434(fx32 *in) {
+    fx32 out[3];
     if (in[0] == 0 && in[1] == 0)
         return 0;
     func_0203d480(out, in);

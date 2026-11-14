@@ -109,7 +109,7 @@ extern u8 data_0209f204;
  * Init passes the result to DecompressLZ16's void* param either way. */
 
 void OamRender10_d_s_game_over(s32 sub, OamAttr *data, s32 x, s32 y, s32 palette, s32 priority,
-                               Fix12i scaleX, Fix12i scaleY, s32 rotation, s32 mode);
+                               fx32 scaleX, fx32 scaleY, s32 rotation, s32 mode);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 }

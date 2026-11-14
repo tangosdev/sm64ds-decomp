@@ -40,13 +40,13 @@
    deadstrip-duplicate rows against those two addresses (as daDpLift_c's does
    for _ZN7Vector3C1Ev). */
 typedef struct Vector2 {
-    Fix12i x, y;
+    fx32 x, y;
 #ifdef __cplusplus
     Vector2() {}
     /* Statics initialised with a value spell it `Vector2(x, y)`, as Vector3's
        do: the inline member ctor gives the retail shape, two stores and then
        the ~Vector2() registration (unit020b2c84's banner effect origins). */
-    Vector2(Fix12i x_, Fix12i y_) : x(x_), y(y_) {}
+    Vector2(fx32 x_, fx32 y_) : x(x_), y(y_) {}
     ~Vector2() {}
 #endif
 } Vector2;

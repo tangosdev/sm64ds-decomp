@@ -72,7 +72,7 @@ struct daOwl_c : dEnemyBase_c {
     s32 unk_3e8;                      /* 0x3e8 -- per-state scratch, see d_a_owl.cpp */
     s16 mWanderAngleY;                /* 0x3ec -- heading the hover state steers to */
     u8  pad_3ee[2];
-    Fix12i mAnimSpeed;                /* 0x3f0 -- copied into mAnmModel.speed */
+    fx32 mAnimSpeed;                  /* 0x3f0 -- copied into mAnmModel.speed */
     u32 mSoundHandle;                 /* 0x3f4 -- Sound::PlayLong's returned handle */
 
     /* --- vtable --- */

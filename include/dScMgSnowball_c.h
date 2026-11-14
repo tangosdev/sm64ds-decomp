@@ -150,8 +150,8 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
        int[2] and two scalar temps all lose it, measured on 2004/b56.
        Nested so the coined name cannot collide with anything global. */
     struct Vec2 {
-        Fix12i x;
-        Fix12i y;
+        fx32 x;
+        fx32 y;
         ~Vec2() {}
     };
 
