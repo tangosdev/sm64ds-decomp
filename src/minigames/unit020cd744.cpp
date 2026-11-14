@@ -88,7 +88,7 @@ struct V2 {
     int x, y;
 };
 
-/* A line patch vertex: the same three-Fix12i spelling as TrmpLine::Vtx. */
+/* A line patch vertex: the same three-fx32 spelling as TrmpLine::Vtx. */
 typedef TrmpLine::Vtx Vec3;
 
 /* The object a state record is installed in, seen only as its first two words:
@@ -1380,7 +1380,7 @@ void TrmpLine::Build(short *startPoint, short *endPoint) {
     Vector3 endpointSum, midpoint, lineSpan, directionCopy, zAxis, lineNormal;
     Vector3 spareVec;
     short swapX, swapY;
-    Fix12i lineLength, rowStep;
+    fx32 lineLength, rowStep;
     s32 row;
     s32 flag;
     TrmpLine::Vtx *cell, *mirror;

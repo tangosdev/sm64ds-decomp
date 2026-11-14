@@ -538,8 +538,8 @@ void dCamera_c::SetFovAngle(short arg) {
  * point comes closer; there is no magnitude, decay or phase step, and the
  * shake is mShakeY's vertical offset rather than a pitch magnitude. */
 void dCamera_c::func_0200d8c8(const Vector3 *point, int strength) {
-    Fix12i dist;
-    Fix12i offset;
+    fx32 dist;
+    fx32 offset;
 
     dist = Vec3_Dist(&pos, point);
     if (strength <= dist)
@@ -1436,7 +1436,7 @@ extern void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, short angle);
 extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short angle);
 
 extern int NormalizeVec3IfNonZero(Vector3 *v);
-extern Fix12i VEC_DotProduct(const Vector3 *a, const Vector3 *b);
+extern fx32 VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 /* The 64-bit squared distance between two points. */
 extern long long func_0203cf94(int *a, int *b);
 }
@@ -3327,7 +3327,7 @@ int RunCameraCommand(dCamera_c *cam, u8 *command, int first, int last) {
 
 /* Script op: set lookAt from three whole-unit shorts. */
 int func_02008500(dCamera_c *cam, u8 *data) {
-    Fix12i x, y, z;
+    fx32 x, y, z;
     z = ReadUnalignedShort(data + 4) << 12;
     y = ReadUnalignedShort(data + 2) << 12;
     x = ReadUnalignedShort(data) << 12;
@@ -3372,7 +3372,7 @@ int func_0200840c(dCamera_c *cam, u8 *data) {
 /* Script op: grow the viewport from the given rectangle to the full screen
    over frames lo..hi, keeping mAspect in step. */
 int func_020082f8(dCamera_c *cam, u8 *src, int lo, int hi) {
-    Fix12i slope = FX_Div((gKuppaScriptFrame - lo) << 12, (hi - lo) << 12);
+    fx32 slope = FX_Div((gKuppaScriptFrame - lo) << 12, (hi - lo) << 12);
     cam->mViewport[0] = (FX_MUL((src[0] << 12), slope) >> 12);
     cam->mViewport[1] = (FX_MUL((src[1] << 12), slope) >> 12);
     cam->mViewport[2] = ((FX_MUL(((src[2] - 0xff) << 12), slope) >> 12) + 0xff);
@@ -3474,7 +3474,7 @@ int func_02008080(dCamera_c *cam) {
 /* Script op: walk the paths, then ease pos.y toward demo actor 0x13's
    height above where the walk left it. */
 int func_02008028(dCamera_c *cam) {
-    Fix12i y;
+    fx32 y;
     dActor_c *obj;
 
     y = cam->pos.y;
@@ -3505,7 +3505,7 @@ int func_02007f14(dCamera_c *cam, u8 *data) {
     int pos[3];
     int rot[3];
     int *posPtr, *rotPtr;
-    Fix12i px, py, pz;
+    fx32 px, py, pz;
     int rx, ry, rz;
     pz = ReadUnalignedShort(data + 4) << 12;
     py = ReadUnalignedShort(data + 2) << 12;
@@ -3536,7 +3536,7 @@ int func_02007e5c(dCamera_c *cam, u8 *data) {
     int pos[3];
     int rot[3];
     int *posPtr, *rotPtr;
-    Fix12i px, py, pz;
+    fx32 px, py, pz;
     int rx, ry, rz;
     pz = ReadUnalignedShort(data + 4) << 12;
     py = ReadUnalignedShort(data + 2) << 12;
@@ -3616,7 +3616,7 @@ extern "C" void Vec3fGetDistAndAngle(const Vector3 *v0, const Vector3 *v1, int *
 /* Super Mario 64's vec3f_set_dist_and_angle, the inverse: res is trans plus
    mag along pitch ang, turned by yaw angY. The N64 takes the origin first;
    this takes the result first. */
-extern "C" void Vec3fSetDistAndAngle(Vector3 *res, const Vector3 *trans, Fix12i mag, short ang,
+extern "C" void Vec3fSetDistAndAngle(Vector3 *res, const Vector3 *trans, fx32 mag, short ang,
                                      short angY) {
     Vector3 v;
     unsigned idx = (unsigned short)ang >> 4;
@@ -3631,7 +3631,7 @@ extern "C" void Vec3fSetDistAndAngle(Vector3 *res, const Vector3 *trans, Fix12i 
    whole-unit offset. */
 int func_02007b98(dCamera_c *cam, u8 *data) {
     struct Vector3 v;
-    Fix12i x, y, z;
+    fx32 x, y, z;
     int b;
     z = ReadUnalignedShort(data + 4) << 12;
     y = ReadUnalignedShort(data + 2) << 12;
@@ -3653,7 +3653,7 @@ int FocusInFrontOfMario(dCamera_c *cam, u8 *rec) {
     Vector3 res;
     dActor_c *owner;
     int step;
-    Fix12i vx, vy, vz;
+    fx32 vx, vy, vz;
     vz = ReadUnalignedShort(rec + 4) << 12;
     vy = ReadUnalignedShort(rec + 2) << 12;
     vx = ReadUnalignedShort(rec + 0) << 12;
@@ -3670,7 +3670,7 @@ int FocusInFrontOfMario(dCamera_c *cam, u8 *rec) {
 /* Script op: orbit pos around the target player (func_020070e8); a yaw of
    -1 means mOrbitTargetYaw. */
 int func_02007a8c(dCamera_c *cam, u8 *data) {
-    Fix12i distTarget = ReadUnalignedShort(data) << 12;
+    fx32 distTarget = ReadUnalignedShort(data) << 12;
     int distStep = data[2] << 4;
     short vertTarget = ReadUnalignedShort(data + 3);
     short vertDiv = data[5];

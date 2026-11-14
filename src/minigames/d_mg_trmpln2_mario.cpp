@@ -303,7 +303,7 @@ void dMgTrmpln2Mario_c::Update() {
         ((void (*)(void *))fn)(tobj);
     }
     ApplyGravity();
-    Fix12i v = FX_MUL(mBounceVy, 0xb4b);
+    fx32 v = FX_MUL(mBounceVy, 0xb4b);
     if (mVel.y > v) {
         if (mAnmModel.file == sTrmpAnimBounce) {
             mParticleId = Particle::System::New(mParticleId, kPtclMgTrampolineTrail, mPos.x << 3,
@@ -1263,7 +1263,7 @@ void dMgTrmpln3DMario_c::Update() {
         ((void (*)(void *))fn)(tobj);
     }
     ApplyGravity();
-    Fix12i v = FX_MUL(mBounceVy, 0xb4b);
+    fx32 v = FX_MUL(mBounceVy, 0xb4b);
     if (mVel.y > v) {
         if (mAnmModel.file == sTrmpAnimBounce) {
             mParticleId = Particle::System::New(mParticleId, kPtclMgTrampolineTrail, mPos.x << 3,

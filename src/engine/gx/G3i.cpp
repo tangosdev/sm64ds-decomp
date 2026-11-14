@@ -31,7 +31,7 @@
 extern "C" {
 void VEC_Normalize(const Vector3 *v, Vector3 *out);
 void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *out);
-Fix12i VEC_DotProduct(const Vector3 *a, const Vector3 *b);
+fx32 VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 }
 
 #define reg_CP_DIV_NUMER    (*(volatile u64 *)0x04000290)
@@ -54,8 +54,8 @@ static inline void FX_InvAsyncImm(fx32 denom) {
 /* The Nitro SDK's G3i_PerspectiveW_: the draw flag is a BOOL. Spelled bool,
    the body tests it differently from the ROM; int reproduces it. The matrix
    is the SDK's MtxFx44, sixteen words. */
-void G3i_PerspectiveW_(Fix12i fovySin, Fix12i fovyCos, Fix12i aspect, Fix12i n, Fix12i f,
-                       Fix12i scaleW, int draw, Matrix4x3 *mtxp) {
+void G3i_PerspectiveW_(fx32 fovySin, fx32 fovyCos, fx32 aspect, fx32 n, fx32 f, fx32 scaleW,
+                       int draw, Matrix4x3 *mtxp) {
     int *mtx = (int *)mtxp;
     fx32 fovyCot;
     volatile s32 *port;
@@ -131,9 +131,9 @@ void G3i_LookAt_(const Vector3 *camPos, const Vector3 *camUp, const Vector3 *tar
     Vector3 vLook;
     Vector3 vRight;
     Vector3 vUp;
-    Fix12i tx;
-    Fix12i ty;
-    Fix12i tz;
+    fx32 tx;
+    fx32 ty;
+    fx32 tz;
     volatile s32 *port;
 
     /* The view's z axis, from the target back toward the camera (the
