@@ -146,10 +146,10 @@ struct dEnemyBase_c : dActor_c {
        r3. Nothing anchors the class spelling either -- the whole image contains
        zero `_Z...` strings and zero occurrences of `5Fix12IiE`, so every
        mangled name in this tree is reconstructed and this one was a guess that
-       the bytes disagree with. `Fix12i` keeps the fixed-point intent and
+       the bytes disagree with. `fx32` keeps the fixed-point intent and
        mangles as plain `i`. See notes/mwccarm-codegen.md 6az. */
-    int IsGoingOffCliff(dBgCh_Actr &clsn_, Fix12i down_, s16 maxSlope_, bool detectWater_,
-                        bool allowObjFloor_, Fix12i up_);
+    int IsGoingOffCliff(dBgCh_Actr &clsn_, fx32 down_, s16 maxSlope_, bool detectWater_,
+                        bool allowObjFloor_, fx32 up_);
     void SpawnCoin();
     int SpawnParticlesIfHitOtherObj(dCc_c & clsn_);
     /* Its own file still builds this from a local `struct dEnemyBase_c { char pad[0x100]; }`
@@ -195,11 +195,11 @@ struct dEnemyBase_c : dActor_c {
            It is a fixed-point value, by the sibling:
            `dBgActor_c::UpdateKillByMegaChar(s16, s16, s16, Fix12<int>)` is the
            background-actor form of the same operation and ends in the same
-           parameter. It is the scalar Fix12i here: the body never reads r3, so
+           parameter. It is the scalar fx32 here: the body never reads r3, so
            the bytes cannot tell a by-value Fix12<int> from a scalar, and the
            scalar lets the definition be a real method (notes/mwccarm-codegen.md
            6az). */
-    void KillByInvincibleChar(const Vector3_16 &spin_, daPly_c &player_, Fix12i unused_);
+    void KillByInvincibleChar(const Vector3_16 &spin_, daPly_c &player_, fx32 unused_);
 };
 
 /* Makes dEnemyBase_c's size a claim the compiler enforces, and makes every header

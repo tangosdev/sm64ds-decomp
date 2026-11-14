@@ -16,12 +16,12 @@
  *   Sound::PlaySub and Sound::ChangeMusicVolume stay mangled. The symbol
  *   carries 5Fix12IiE. Sound.h does not declare the last two.
  *   All 16 body-local declarations of Particle::System::New use ONE spelling:
- *       u32 (u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z,
+ *       u32 (u32 handle, u32 kind, fx32 x, fx32 y, fx32 z,
  *            const void *dir, void *callback)
  *   The mangled name gives the real types of the last two -- const Vector3_16f *
  *   and dPa_c::level_c::callback_c * -- but the call sites pass several different
  *   three-by-s16 shapes, so they stay void pointers until those are unified.
- *   Fix12i is a scalar typedef, so it costs nothing here; the by-value
+ *   fx32 is a scalar typedef, so it costs nothing here; the by-value
  *   Fix12<int> the symbol names is still the wall (notes/mwccarm-codegen.md
  *   6az). Keep them identical: 16 spellings of one symbol is how a wrong
  *   return type or argument order hides.
@@ -324,12 +324,12 @@ extern "C" int SublevelToLevel(int);
 extern int SurfaceInfo_TestFlag0x20(int *);
 extern "C" {
 extern void Vec3_MulScalar(Vector3 *, const Vector3 *, int s);
-extern int atan2_hold_Player_1(Fix12i a, int b);
-extern int atan2_hold_Player_10(Fix12i a, int b);
-extern int atan2_hold_Player_15(Fix12i, Fix12i);
-extern int atan2_hold_Player_5(Fix12i y, Fix12i x);
-extern Fix12i atan2_hold_Player_6(Fix12i a, Fix12i b);
-extern int atan2_hold_Player_7(Fix12i a, int b);
+extern int atan2_hold_Player_1(fx32 a, int b);
+extern int atan2_hold_Player_10(fx32 a, int b);
+extern int atan2_hold_Player_15(fx32, fx32);
+extern int atan2_hold_Player_5(fx32 y, fx32 x);
+extern fx32 atan2_hold_Player_6(fx32 a, fx32 b);
+extern int atan2_hold_Player_7(fx32 a, int b);
 /* local extern: including nitro/fx/fx_trig.h renumbers this TU; spelled as the header does. */
 extern const fx16 FX_SinCosTable_[];
 extern signed char gCurrentSublevel;
@@ -436,10 +436,10 @@ extern u8 gShowTouchScreenArrows;
 extern void LoadLevel(int levelID, u32 entranceID, int starID, u32 arg3, s8 returnState);
 extern u8 NumStars(void);
 extern "C" {
-extern void PlayerNewSimpleHold10(unsigned int id, Fix12i a, Fix12i b, Fix12i c);
-extern void PlayerNewSimpleHold11(u32 id, Fix12i x, Fix12i y, Fix12i z);
-extern void PlayerNewSimpleHold15(unsigned int id, Fix12i a, Fix12i b, Fix12i d);
-extern void PlayerNewSimpleHold8(unsigned int id, Fix12i a, Fix12i b, Fix12i c);
+extern void PlayerNewSimpleHold10(unsigned int id, fx32 a, fx32 b, fx32 c);
+extern void PlayerNewSimpleHold11(u32 id, fx32 x, fx32 y, fx32 z);
+extern void PlayerNewSimpleHold15(unsigned int id, fx32 a, fx32 b, fx32 d);
+extern void PlayerNewSimpleHold8(unsigned int id, fx32 a, fx32 b, fx32 c);
 }
 
 extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
@@ -452,11 +452,11 @@ extern void func_ov002_020dc09c(char *c);
 extern void func_ov002_020e69c0(void *unused);
 extern void func_ov002_020e6a78(void *ramp, int blend);
 extern void func_ov002_020e6b3c(void *model);
-extern u32 PlayerNewHold(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+extern u32 PlayerNewHold(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
                          void *callback);
-extern u32 PlayerNewHold3(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+extern u32 PlayerNewHold3(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
                           void *callback);
-extern u32 PlayerNewHold4(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+extern u32 PlayerNewHold4(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
                           void *callback);
 extern void PlayerPlayLongHold_c133c(unsigned int a, unsigned int b, unsigned int c,
                                      Vector3 const *v, unsigned int d);
@@ -471,7 +471,7 @@ extern void func_ov002_020eedc0(dBgCh_Actr *, dActor_c *);
 extern "C" {
 extern u8 gMeterShownHealth;
 extern unsigned char gShowRaceTimer[];
-extern u32 PlayerNewHold5(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+extern u32 PlayerNewHold5(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
                           void *callback);
 extern void PlayerPlayLongHold_cec2c(unsigned int a, unsigned int b, unsigned int c,
                                      const Vector3 *v, unsigned int d);
@@ -479,28 +479,28 @@ extern struct P2 data_ov002_0210a084;
 extern struct P2 data_ov002_0210a34c;
 /* local extern: including CalcLib.h renumbers this TU's @NNN aliases. */
 extern int RandomIntInternal(int *seed);
-extern u32 PlayerNewHold7(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+extern u32 PlayerNewHold7(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
                           void *callback);
-extern u32 PlayerNewHold8(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+extern u32 PlayerNewHold8(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
                           void *callback);
-extern u32 PlayerNewHold9(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+extern u32 PlayerNewHold9(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
                           void *callback);
-extern u32 PlayerNewHold10(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+extern u32 PlayerNewHold10(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
                            void *callback);
-extern u32 PlayerNewHold11(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+extern u32 PlayerNewHold11(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
                            void *callback);
-extern u32 PlayerNewHold12(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+extern u32 PlayerNewHold12(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
                            void *callback);
-extern u32 PlayerNewHold13(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+extern u32 PlayerNewHold13(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
                            void *callback);
-extern u32 PlayerNewHold14(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+extern u32 PlayerNewHold14(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
                            void *callback);
-extern u32 PlayerNewHold15(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+extern u32 PlayerNewHold15(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
                            void *callback);
 extern void PlayerPlayLongHold_burnfire(unsigned int handle, unsigned int id, unsigned int vol,
                                         const void *vec, unsigned int flags);
 extern char *gPlayers[];
-extern u32 PlayerNewHold16(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+extern u32 PlayerNewHold16(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
                            void *callback);
 }
 
@@ -510,7 +510,7 @@ extern "C" {
 extern SharedFilePtr data_ov002_02110aa4;
 extern void MulMat4x3Mat4x3(void *a, void *b, void *c);
 /* local extern: MtxStack's named parameters take an @NNN in every includer. */
-extern void Matrix4x3_ApplyInPlaceToTranslation(struct Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z);
+extern void Matrix4x3_ApplyInPlaceToTranslation(struct Matrix4x3 *mF, fx32 x, fx32 y, fx32 z);
 /* local extern: MtxStack's named parameters take an @NNN in every includer. */
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
 /* local extern: including CalcLib.h renumbers this TU's @NNN aliases. */
@@ -521,12 +521,12 @@ extern u8 gReturnSublevel;
 extern void func_02011f7c(void *a);
 extern int func_02011ee4(void *x);
 
-extern u32 PlayerNewHold2(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+extern u32 PlayerNewHold2(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
                           void *callback);
 
 class dFdColor_c;
 extern dFdColor_c gSceneColorFader;
-extern u32 PlayerNewHold6(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+extern u32 PlayerNewHold6(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
                           void *callback);
 
 /* ---------------------------------------------------------------------------
@@ -544,7 +544,7 @@ struct V3Quad { Vector3 a; Vector3 d; Vector3 e; Vector3 b; };
 /* A stand-in for Fix12<int>, and load-bearing as a CLASS rather than as a
  * name: func_ov002_020bf800 builds three of these and passes each as an int
  * read through its address. The ROM stores x, y and z to sp+0xc..0x14 and
- * reloads x and y from there for the call (z goes out from a register). Plain Fix12i
+ * reloads x and y from there for the call (z goes out from a register). Plain fx32
  * locals -- or passing xv/yv/zv straight to the callee -- keep all three in
  * registers and shrink that function from 140 bytes to 120. Measured both
  * ways; it stays until Fix12<int> itself is reconstructed. */
@@ -1865,7 +1865,7 @@ int func_ov002_020bec84(daPly_c *p, unsigned int i) {
 }
 }
 
-void daPly_c::func_ov002_020bec9c(unsigned int a, int b, Fix12i d, u16 e) {
+void daPly_c::func_ov002_020bec9c(unsigned int a, int b, fx32 d, u16 e) {
     SetAnim(data_ov002_020ff220[a], b, d, e);
 }
 
@@ -1945,7 +1945,7 @@ int daPly_c::IsAnim(unsigned int a) {
   return matches ? 1 : 0;
 }
 
-void daPly_c::SetAnim(u32 animId, int flags, Fix12i speed, u16 startFrame) {
+void daPly_c::SetAnim(u32 animId, int flags, fx32 speed, u16 startFrame) {
     extern u8 gGameMode;
     u32 capChar;
     SharedFilePtr *capFile;
@@ -2076,13 +2076,13 @@ int daPly_c::func_ov002_020bf27c(int r1) {
     return r1;
 }
 
-void daPly_c::func_ov002_020bf2d8(Fix12i a) {
+void daPly_c::func_ov002_020bf2d8(fx32 a) {
     void *c = this;
     unsigned int t = data_ov002_020ff140[param1];
     this->mVertSpeed = FX_MUL(a, (int)t);
 }
 
-Fix12i daPly_c::ScaleByCharFactor(Fix12i a) {
+fx32 daPly_c::ScaleByCharFactor(fx32 a) {
     int idx = param1 & 0xff;
     unsigned int t = data_ov002_020ff170[idx];
     return FX_MUL(a, (int)t);
@@ -2102,8 +2102,7 @@ void daPly_c::func_ov002_020bf340(int *p, int delta, int limit) {
 }
 
 void daPly_c::func_ov002_020bf36c(void *arg) {
-    typedef int Fix12i;
-    Fix12i saved;
+    fx32 saved;
     unsigned char f = this->mIsNoControl;
     if (f == 0)
         this->func_ov002_020bfa74();
@@ -3360,7 +3359,6 @@ int daPly_c::func_ov002_020c200c(int arg) {
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
 int daPly_c::func_ov002_020c2138() {
     char* self = (char*)this;
-    typedef int Fix12i;
 int ang;
 if (this->mIsUnderwater || this->mIsBalloon) return 0;
 if (this->mWallNormalY) return 0;
@@ -3826,7 +3824,7 @@ void daPly_c::func_ov002_020c2f64() {
 /* SM64's anim_spline_poll: blend the current four keyframes into out,
    advance, and return 1 once the path has run out. */
 int daPly_c::AnimSplinePoll(int *out) {
-    Fix12i tmp[4];
+    fx32 tmp[4];
     int i;
     int ret;
     EndingFlyPoint *row;
@@ -3881,8 +3879,8 @@ static inline int FX(int a, int b) {
 /* SM64's spline_get_weights: the uniform cubic B-spline basis at
    mSplineKeyframeFraction, four weights for the four keyframes
    AnimSplinePoll blends; mSplineState picks the clamped-end variant. The
-   caller passes a Fix12i[4]. */
-void daPly_c::SplineGetWeights(Fix12i *out) {
+   caller passes a fx32[4]. */
+void daPly_c::SplineGetWeights(fx32 *out) {
     typedef long long s64;
     int t = mSplineKeyframeFraction;
     int u = 0x1000 - t;
@@ -4058,7 +4056,6 @@ int daPly_c::JumboStarCutsceneTakingOff() {
 }
 
 void daPly_c::JumboStarCutsceneFalling() {
-    typedef int Fix12i;
   if (mStateWork == 0){
     mHasWings = 1;
     mPowerupTimer = 0x708;
@@ -4523,10 +4520,9 @@ int daPly_c::St_Talk_Cleanup() {
 /* recovered: shared common types */
 
 int daPly_c::func_ov002_020c47f4() {
-    typedef int Fix12i;
     Vector3 vec;
     int r, a;
-    Fix12i y;
+    fx32 y;
     vec.x = this->mPosX;
     y = this->mPosY;
     vec.y = y;
@@ -5615,7 +5611,6 @@ int daPly_c::func_ov002_020c6908() {
 
 /* recovered: named members + shared header, real C++ method */
 int daPly_c::St_Squish_Init() {
-    typedef int Fix12i;
     ReleaseHeldActor();
     this->SetAnim(0x47, 0, 0x1000, 0);
     mStateWork = 0;
@@ -7135,7 +7130,6 @@ void daPly_c::func_ov002_020c990c() {
 /* recovered: shared common types */
 
 void daPly_c::func_ov002_020c9998() {
-    typedef int Fix12i;
     this->mStateStep = 0x12;
     this->SetAnim(0x92, 0x40000000, 0x1000, 0);
     dActor_c::Spawn(0xb2, 0xffff, this->mPos, &this->mAngle, this->mAreaId, -1);
@@ -7191,7 +7185,6 @@ void daPly_c::func_ov002_020c9b5c() {
 }
 
 void daPly_c::func_ov002_020c9b7c() {
-    typedef int Fix12i;
     this->mStateStep = 0xb;
     this->mIsBodyClsnEnabled = 0;
     if (this->mIsAirborne) {
@@ -7217,7 +7210,6 @@ int daPly_c::func_ov002_020c9c00() {
 }
 
 void daPly_c::func_ov002_020c9c4c() {
-    typedef int Fix12i;
     this->SetAnim(data_ov002_020ff118[mStateStep], 0x40000000, 0x1000, 0);
     this->mStateStep += 7;
     mRootMotionMode = 1;
@@ -7826,7 +7818,6 @@ int daPly_c::St_CameraZoom_Main() {
 }
 
 void daPly_c::func_ov002_020cae10() {
-    typedef int Fix12i;
     extern void *gCamera;
     int r4 = 0x4000;
     int ang;
@@ -9595,7 +9586,7 @@ int daPly_c::func_ov002_020cec2c() {
     return 0;
 }
 
-Fix12i daPly_c::func_ov002_020cedb0(Fix12i a) {
+fx32 daPly_c::func_ov002_020cedb0(fx32 a) {
     unsigned int t = data_ov002_020ff158[param1];
     return FX_MUL(a, (int)t);
 }
@@ -9928,7 +9919,7 @@ int daPly_c::St_OnWall_Main() {
                 mPrevAngleY = ang - 0x4000;
                 anim = 0x5c;
             }
-            Fix12i spd = FX_MUL(mHorzSpeed, 0x600);
+            fx32 spd = FX_MUL(mHorzSpeed, 0x600);
             if (spd < 0x400)
                 spd = 0x400;
             this->SetAnim(anim, 0, spd, 0);
@@ -10549,7 +10540,6 @@ int daPly_c::func_ov002_020d0d2c() {
 /* recovered: named members + shared header, real C++ method */
 
 int daPly_c::St_WallSlide_Main() {
-    typedef int Fix12i;
     extern unsigned char data_0209f49e[];
 
     mPeakY = mPosY;
@@ -14595,7 +14585,7 @@ void daPly_c::func_ov002_020d8d10(Vector3 *pos) {
 /* recovered: named members + shared header, declarations from a shared header */
 /* recovered: named members + shared header */
 
-int daPly_c::Hurt(const Vector3 &a, u32 b, Fix12i dmg, u8 arg4, u8 arg5, u8 arg6) {
+int daPly_c::Hurt(const Vector3 &a, u32 b, fx32 dmg, u8 arg4, u8 arg5, u8 arg6) {
     s16 ang;
     void* p360;
     int hasCap;
@@ -14773,7 +14763,7 @@ extern "C" int func_ov002_020d9298(daPly_c *player) {
 
 /* recovered: named members + shared header, declarations from a shared header */
 /* recovered: named members + shared header */
-void daPly_c::Bounce(Fix12i f) {
+void daPly_c::Bounce(fx32 f) {
     if (this->IsState(data_ov002_021105a4))
         return;
     if (this->GetHealth() == 0)
@@ -16384,8 +16374,7 @@ void func_ov002_020dc09c(char *c) {
 /* The attack collision's offset, reach and height. pos is a const Vector3 *: it
    goes straight to dCcAcPos_c::Init, whose ROM symbol mangles that
    parameter as RK7Vector3, a const Vector3 &. Eleven callers in this file each used to spell it void *. */
-void daPly_c::func_ov002_020dc174(const Vector3 *pos, Fix12i reach, Fix12i height, u32 flags,
-                                  u32 a6) {
+void daPly_c::func_ov002_020dc174(const Vector3 *pos, fx32 reach, fx32 height, u32 flags, u32 a6) {
     int f = mIsMega ? 0x10 : 0;
     mAttackClsn.Init(this, *pos, reach, height, flags | 2 | f, a6);
 }
@@ -17599,7 +17588,7 @@ int daPly_c::St_Balloon_Init() {
     return 1;
 }
 
-// local extern: this file's local Vector3/Fix12i shadow the shared headers, so it cannot include daPly_c.h and use the member
+// local extern: this file's local Vector3/fx32 shadow the shared headers, so it cannot include daPly_c.h and use the member
 
 struct Vector3e968 { int x, y, z; ~Vector3e968(){} };
 
@@ -18757,7 +18746,7 @@ int daPly_c::St_CrazedCrate_Init() {
 }
 
 /* recovered: named members + shared header */
-void daPly_c::SpinBounce(Fix12i f) {
+void daPly_c::SpinBounce(fx32 f) {
     if (this->IsState(data_ov002_021105a4))
         return;
     if (this->GetHealth() == 0)

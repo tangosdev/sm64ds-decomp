@@ -333,8 +333,7 @@ dActor_c *dActor_c::Spawn(u32 actorID, u32 spawnParam, const Vector3 &pos,
 
 /* The radius, clip distance and far distance are stored at 1/8 scale, the
    scale BeforeBehavior projects into. */
-void dActor_c::SetRanges(Fix12i clipOffsetY, Fix12i clipRadius, Fix12i clipDistance,
-                         Fix12i farDistance) {
+void dActor_c::SetRanges(fx32 clipOffsetY, fx32 clipRadius, fx32 clipDistance, fx32 farDistance) {
     mClipOffsetY = clipOffsetY;
     mClipRadius = clipRadius >> 3;
     mClipDistance = clipDistance >> 3;
@@ -416,15 +415,15 @@ void dActor_c::UpdatePos(dCc_c *clsn)
     UpdatePosWithOnlySpeed(clsn);
 }
 
-void dActor_c::DropShadowRadHeight(dExtShadowModel_c &shadow, Matrix4x3 &matrix, Fix12i radius,
-                                   Fix12i depth, u8 opacity) {
+void dActor_c::DropShadowRadHeight(dExtShadowModel_c &shadow, Matrix4x3 &matrix, fx32 radius,
+                                   fx32 depth, u8 opacity) {
     if (mFlags & 0x10) /* beyond mFarDistance: no drop shadow */
         return;
     shadow.InitModel(&matrix, radius, depth, radius, opacity);
 }
 
-void dActor_c::DropShadowScaleXYZ(dExtShadowModel_c &shadow, Matrix4x3 &matrix, Fix12i scaleX,
-                                  Fix12i scaleY, Fix12i scaleZ, u8 opacity) {
+void dActor_c::DropShadowScaleXYZ(dExtShadowModel_c &shadow, Matrix4x3 &matrix, fx32 scaleX,
+                                  fx32 scaleY, fx32 scaleZ, u8 opacity) {
     if (mFlags & 0x10)
         return;
     shadow.InitModel(&matrix, scaleX, scaleY, scaleZ, opacity);
@@ -526,7 +525,7 @@ dActor_c *dActor_c::ClosestWithActorID(u32 actorID)
 {
     dActor_c *actor = 0;
     dActor_c *closest = 0;
-    Fix12i closestDist = 0x7fffffff;
+    fx32 closestDist = 0x7fffffff;
 
     for (;;) {
         actor = FindWithActorID(actorID, actor);
@@ -534,7 +533,7 @@ dActor_c *dActor_c::ClosestWithActorID(u32 actorID)
             break;
 
         if (actor != this) {
-            Fix12i dist = Vec3_Dist(&mPos, &actor->mPos);
+            fx32 dist = Vec3_Dist(&mPos, &actor->mPos);
             if (dist < closestDist) {
                 closestDist = dist;
                 closest = actor;
@@ -559,7 +558,7 @@ s16 dActor_c::func_02010844(Vector3 *v, s16 angle) {
 /* count is SIGNED, although the old mangled name claimed unsigned: 0x02010734
    branches with `ble` and the loop closes with `blt`, which an unsigned count
    assembles as `bls`/`blo`. */
-void dActor_c::SpawnCoins(const Vector3 &pos, s32 count, Fix12i spread, s16 angle) {
+void dActor_c::SpawnCoins(const Vector3 &pos, s32 count, fx32 spread, s16 angle) {
     dActor_c *actor;
     s32 ang;
     s32 prev;
@@ -695,7 +694,7 @@ bool dActor_c::IsPlayerInRange(s32 maxDist)
     return Vec3_Dist(&mPos, &closest->mPos) < (maxDist << 12);
 }
 
-bool dActor_c::IsPlayerInRange(Fix12i posX, Fix12i posY, Fix12i posZ, s32 maxDist) {
+bool dActor_c::IsPlayerInRange(fx32 posX, fx32 posY, fx32 posZ, s32 maxDist) {
     Vector3 pos;
     pos.x = posX;
     pos.y = posY;
@@ -712,7 +711,7 @@ bool dActor_c::IsPlayerInRange(const Vector3 &pos, s32 maxDist)
 }
 
 /* Mirrors angToReflect, turned around, about the normal's heading. */
-s16 dActor_c::ReflectAngle(Fix12i normalX, Fix12i normalZ, s16 angToReflect) {
+s16 dActor_c::ReflectAngle(fx32 normalX, fx32 normalZ, s16 angToReflect) {
     s16 normalAngle = cstd::atan2(normalX, normalZ);
     s16 delta = (s16)((angToReflect + 0x8000) - normalAngle);
     return (s16)(normalAngle - delta);
@@ -772,8 +771,8 @@ daPly_c *dActor_c::func_02010304(dCc_c *clsn) {
 /* Spawns actor 0xfe, daFPknBall_c (the fire piranha plant's fireball), with
    its starting speed and the speed it then approaches. Returns the ball: r0
    holds it from the Spawn call to the `bx lr`, and daTrs_c reads it back. */
-dActor_c *dActor_c::SpawnFireball(const Vector3 &pos, const Vector3_16 *rot, Fix12i horzSpeed,
-                                  Fix12i targetSpeed, u32 param1) {
+dActor_c *dActor_c::SpawnFireball(const Vector3 &pos, const Vector3_16 *rot, fx32 horzSpeed,
+                                  fx32 targetSpeed, u32 param1) {
     dActor_c *ball = dActor_c::Spawn(0xfe, param1, pos, rot, mAreaId, -1);
     if (ball != 0) {
         ball->mHorzSpeed = horzSpeed;
@@ -822,7 +821,7 @@ Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
 extern dCamera_c *gCamera;
 /* the camera */
 
-void dActor_c::Earthquake(const Vector3 &pos, Fix12i magnitude) {
+void dActor_c::Earthquake(const Vector3 &pos, fx32 magnitude) {
     gCamera->func_0200d8c8(&pos, magnitude);
 }
 
@@ -1224,7 +1223,7 @@ void dActor_c::func_0200f760(dCc_c *clsn) {
 
 /* True only while the actor is off screen (mFlags 0x08), nothing forces it to
    think, and the closest player is at least threshold away. */
-int dActor_c::IsTooFarAwayFromPlayer(Fix12i threshold) {
+int dActor_c::IsTooFarAwayFromPlayer(fx32 threshold) {
     if (data_0209fc68 == 0) {
         int offScreen = (mFlags & 8) != 0;
         if (offScreen != 0) {
