@@ -197,7 +197,7 @@ int daSpd_c::InitResources() {
     mScaleZ = 0x1000;
     mParent = 0;
     mTimer = 0x3c;
-    *(Matrix4x3 *)mShadowMtx = IDENTITY_MATRIX4X3;
+    mShadowMat = IDENTITY_MATRIX4X3;
     func_ov071_0211f524();
     return 1;
 }
@@ -576,7 +576,7 @@ void daSpd_c::func_ov071_0211f524() {
     mShadowMtx[11] = mPosZ >> 3;
 
     int dh = (mState == 8) ? 0x190000 : 0xc8000;
-    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMtx, 0xa0000, dh, 0xf);
+    DropShadowRadHeight(mShadowModel, mShadowMat, 0xa0000, dh, 0xf);
 }
 
 void daSpd_c::func_ov071_0211f498() {
@@ -650,11 +650,11 @@ void daSpd_c::func_ov071_0211f29c() {
         return;
 
     {
-        int v[3];
-        v[0] = mPosX;
-        v[1] = mPosY;
-        v[2] = mPosZ;
-        if (hitPlayer->Hurt(*(Vector3 *)v, 1, 0xc000, 1, 0, 1) != 0)
+        Vector3 v;
+        v.x = mPosX;
+        v.y = mPosY;
+        v.z = mPosZ;
+        if (hitPlayer->Hurt(v, 1, 0xc000, 1, 0, 1) != 0)
             SetState(4);
     }
 }

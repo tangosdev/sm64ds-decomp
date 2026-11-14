@@ -162,7 +162,7 @@ int daObjFloatBoard_c::Behavior() {
             short *ctr = &mBobPhase;
             short cval = *ctr;
             *ctr = (short)(cval + 0xa00);
-            mBobOffset = 10 * FX_SinIdx(*(unsigned short *)&mBobPhase >> 4);
+            mBobOffset = 10 * FX_SinIdx((unsigned short)mBobPhase >> 4);
         }
 
         if (mRider == 0) {

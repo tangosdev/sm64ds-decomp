@@ -68,7 +68,7 @@ char *longlong2str(long long num, char *buff_end, print_format format) {
         ++digits;
     } while (num != 0);
 
-    if (base == 8 && format.alternate_form && *(unsigned char *)p != '0') {
+    if (base == 8 && format.alternate_form && (unsigned char)*p != '0') {
         *--p = '0';
         ++digits;
     }

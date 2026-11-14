@@ -679,12 +679,12 @@ void daObjTatefuda_c::Talk()
     tz = mPosZ;
     tgt.z = tz;
 
-    ang = *(u16 *)&mAngleY;
+    ang = (unsigned short)mAngleY;
     sinV = FX_SinIdx(ang >> 4);
     tx = tx + FX_MUL(scale, sinV);
     tgt.x = tx;
 
-    ang = *(u16 *)&mAngleY;
+    ang = (unsigned short)mAngleY;
     cosV = FX_CosIdx(ang >> 4);
     tz = tz + FX_MUL(scale, cosV);
     tgt.z = tz;

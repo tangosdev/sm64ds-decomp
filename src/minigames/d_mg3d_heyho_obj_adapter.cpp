@@ -971,9 +971,11 @@ void Heyho::MotionChase() {
         for (i = 0; i < 3; i++) {
             if (JumpAdapter(i)->IsLaunched() != 0) {
                 int dot;
-                op = *(const Vector3 *)JumpAdapter(i)->GetPos();
+                const Vector3 *pos = (const Vector3 *)JumpAdapter(i)->GetPos();
+                op = *pos;
                 Vec3_Sub(&delta, &mPos, &op);
-                nrm = *(const Vector3 *)JumpAdapter(i)->GetVelocity();
+                const Vector3 *vel = (const Vector3 *)JumpAdapter(i)->GetVelocity();
+                nrm = *vel;
                 if (NormalizeVec3IfNonZero(&nrm) != 0) {
                     dot = VEC_DotProduct(&nrm, &delta);
                     if (dot > 0) {

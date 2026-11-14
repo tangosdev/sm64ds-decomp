@@ -608,7 +608,7 @@ void PlayBank0(u32 id, const Vector3 &pos)
 void Play(unsigned int j1, unsigned int j2, const Vector3 &v)
 {
     char *s = (char *)func_02050cdc(j1, j2);
-    int t = *(unsigned char *)(s + 5);
+    int t = (unsigned char)s[5];
     if (t == 9 || t == 2) {
         SoundSlot *slot = func_02048720(&v, j1, j2);
         if (slot == 0)

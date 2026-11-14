@@ -700,7 +700,7 @@ int daEykn_c::Render()
 {
     mTextureSequence.Update(mAnmModel.data);
     /* Not &mScale: daEykn_c's own s32 mScale hides dActor_c's vector. */
-    mAnmModel.Render((Vector3 *)&mScaleX);
+    mAnmModel.Render(&this->dActor_c::mScale);
     return 1;
 }
 

@@ -37,15 +37,39 @@ enum daFRing_c_AssetId {
  * texture-sequence handle through SharedFilePtr_Construct_TexSeq/
  * SharedFilePtr_Destruct_TexSeq. Each wrapper's ctor and dtor stay
  * undefined here; the manifest aliases them onto those ROM veneers. */
-struct FRingModelFilePtr : SharedFilePtr {
+struct FRingModelFilePtr {
+    union {
+        SharedFilePtr base;
+        struct {
+            u16 fileID;
+            u8 numRefs;
+            BMD_File *filePtr;
+        };
+    };
     FRingModelFilePtr(u32 fileID);
     ~FRingModelFilePtr();
 };
-struct FRingAnimationFileHandle : SharedFilePtr {
+struct FRingAnimationFileHandle {
+    union {
+        SharedFilePtr base;
+        struct {
+            u16 fileID;
+            u8 numRefs;
+            BCA_File *filePtr;
+        };
+    };
     FRingAnimationFileHandle(u32 fileID);
     ~FRingAnimationFileHandle();
 };
-struct FRingTexSequenceFilePtr : SharedFilePtr {
+struct FRingTexSequenceFilePtr {
+    union {
+        SharedFilePtr base;
+        struct {
+            u16 fileID;
+            u8 numRefs;
+            BTP_File *filePtr;
+        };
+    };
     FRingTexSequenceFilePtr(u32 fileID);
     ~FRingTexSequenceFilePtr();
 };
@@ -61,9 +85,9 @@ extern BTA_File data_ov048_021115f4;
 daFRing_c::~daFRing_c() {}
 
 s32 daFRing_c::CleanupResources() {
-    data_ov060_0211b208.Release();
-    data_ov060_0211b1f8.Release();
-    data_ov060_0211b200.Release();
+    data_ov060_0211b208.base.Release();
+    data_ov060_0211b1f8.base.Release();
+    data_ov060_0211b200.base.Release();
     return 1;
 }
 
@@ -113,32 +137,32 @@ s32 daFRing_c::Behavior() {
 }
 
 s32 daFRing_c::InitResources() {
-    mAnmModel1.SetFile(dExtSimpleModel_c::LoadFile(data_ov060_0211b208), 1, 0x13);
-    mAnmModel2.SetFile((BMD_File *)data_ov060_0211b208.filePtr, 1, 0x13);
+    mAnmModel1.SetFile(dExtSimpleModel_c::LoadFile(data_ov060_0211b208.base), 1, 0x13);
+    mAnmModel2.SetFile(data_ov060_0211b208.filePtr, 1, 0x13);
 
-    dExtFrameCtrl_c::LoadFile(data_ov060_0211b1f8);
-    dExtAnmTexPat_c::LoadFile(data_ov060_0211b200);
+    dExtFrameCtrl_c::LoadFile(data_ov060_0211b1f8.base);
+    dExtAnmTexPat_c::LoadFile(data_ov060_0211b200.base);
 
     mAnmModel1.SetMaterialFlags(0x4000);
     mAnmModel2.SetMaterialFlags(0x4000);
 
-    mAnmModel1.SetAnim((BCA_File *)data_ov060_0211b1f8.filePtr, 0x40000000, 0x1000, 0);
-    mAnmModel2.SetAnim((BCA_File *)data_ov060_0211b1f8.filePtr, 0x40000000, 0x1000, 0);
+    mAnmModel1.SetAnim(data_ov060_0211b1f8.filePtr, 0x40000000, 0x1000, 0);
+    mAnmModel2.SetAnim(data_ov060_0211b1f8.filePtr, 0x40000000, 0x1000, 0);
 
-    dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov060_0211b208.filePtr,
-                             *(BTP_File *)data_ov060_0211b200.filePtr);
-    dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov060_0211b208.filePtr,
-                             *(BTP_File *)data_ov060_0211b200.filePtr);
-    mTextureSequence1.SetFile(*(BTP_File *)data_ov060_0211b200.filePtr, 0x40000000, 0x1000, 0);
-    mTextureSequence2.SetFile(*(BTP_File *)data_ov060_0211b200.filePtr, 0x40000000, 0x1000, 0);
+    dExtAnmTexPat_c::Prepare(*data_ov060_0211b208.filePtr,
+                             *data_ov060_0211b200.filePtr);
+    dExtAnmTexPat_c::Prepare(*data_ov060_0211b208.filePtr,
+                             *data_ov060_0211b200.filePtr);
+    mTextureSequence1.SetFile(*data_ov060_0211b200.filePtr, 0x40000000, 0x1000, 0);
+    mTextureSequence2.SetFile(*data_ov060_0211b200.filePtr, 0x40000000, 0x1000, 0);
 
-    dExtAnmMaterial_c::Prepare(*(BMD_File *)data_ov060_0211b208.filePtr, data_ov048_021115e4);
-    dExtAnmMaterial_c::Prepare(*(BMD_File *)data_ov060_0211b208.filePtr, data_ov048_021115e4);
+    dExtAnmMaterial_c::Prepare(*data_ov060_0211b208.filePtr, data_ov048_021115e4);
+    dExtAnmMaterial_c::Prepare(*data_ov060_0211b208.filePtr, data_ov048_021115e4);
     mMaterialChanger1.SetFile(data_ov048_021115e4, 0x40000000, 0x1000, 0);
     mMaterialChanger2.SetFile(data_ov048_021115e4, 0x40000000, 0x1000, 0);
 
-    dExtAnmTexSRT_c::Prepare(*(BMD_File *)data_ov060_0211b208.filePtr, data_ov048_021115f4);
-    dExtAnmTexSRT_c::Prepare(*(BMD_File *)data_ov060_0211b208.filePtr, data_ov048_021115f4);
+    dExtAnmTexSRT_c::Prepare(*data_ov060_0211b208.filePtr, data_ov048_021115f4);
+    dExtAnmTexSRT_c::Prepare(*data_ov060_0211b208.filePtr, data_ov048_021115f4);
     mTextureTransformer1.SetFile(data_ov048_021115f4, 0x40000000, 0x1000, 0);
     mTextureTransformer2.SetFile(data_ov048_021115f4, 0x40000000, 0x1000, 0);
 

@@ -69,16 +69,22 @@ struct daGmch_c : dActor_c {
        ApproachLinear2, so the four bytes 0x3f0..0x3f3 are read and written as
        one word there and as three separate bytes everywhere else.
        [UpdateState0, Render, InitResources] */
-    u8  mState;            /* 0x3f0 */
-    /* The phase within a state: the two multi-phase states switch on it and
-       reset it to 0 on entry.
-       [UpdateState0, UpdateState3, EnterState0, EnterState3] */
-    u8  mPhase;            /* 0x3f1 */
-    /* A frame countdown: two states set it and then end when
-       DecIfAbove0_Byte drives it to zero.
-       [EnterState1, EnterState8, UpdateState1, UpdateState8] */
-    u8  mTimer;            /* 0x3f2 */
-    u8  pad_3f3[0x1];
+    union {
+        struct {
+            u8  mState;            /* 0x3f0 */
+            /* The phase within a state: the two multi-phase states switch on it and
+               reset it to 0 on entry.
+               [UpdateState0, UpdateState3, EnterState0, EnterState3] */
+            u8  mPhase;            /* 0x3f1 */
+            /* A frame countdown: two states set it and then end when
+               DecIfAbove0_Byte drives it to zero.
+               [EnterState1, EnterState8, UpdateState1, UpdateState8] */
+            u8  mTimer;            /* 0x3f2 */
+            u8  pad_3f3[0x1];
+        };
+        /* UpdateState0 steps this word through ApproachLinear2. */
+        s32 mStateWord;
+    };
 
     virtual ~daGmch_c();            /* slots 16 (D1), 17 (D0) */
 

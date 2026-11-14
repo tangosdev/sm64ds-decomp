@@ -208,12 +208,14 @@ struct OvTbl {
    back to when no minimap-change record applies. */
 struct LevelTexAnim {
     int x;
-    void *bta;
+    BTA_File *bta;
     s8 minimapId; /* 0x08 */
     char pad[3];
 };
 struct LevelInfo {
-    char pad[0xc];
+    char pad[8];
+    u16 modelFile; /* 0x08 -- LoadModel passes it to LoadAndSetFile */
+    char pad_0a[2];
     /* func_0202a980; dMap_c decompresses it into the minimap BG3 characters. */
     u16 minimapTilesFile; /* 0x0c */
     /* func_0202a96c; dMap_c loads it as the minimap BG extended palette. */
@@ -3832,9 +3834,9 @@ void dScStage_c::LoadTextureTransformers() {
     int areaIndex;
     for (areaIndex = 0; areaIndex < ((LevelInfo *)data_0209f340)->count; areaIndex++) {
         if (entry->bta) {
-            dExtAnmTexSRT_c::Prepare(*modelFile, *(BTA_File *)entry->bta);
+            dExtAnmTexSRT_c::Prepare(*modelFile, *entry->bta);
             area->mTransformer = new dExtAnmTexSRT_c;
-            area->mTransformer->SetFile(*(BTA_File *)entry->bta, 0, 0x1000, 0);
+            area->mTransformer->SetFile(*entry->bta, 0, 0x1000, 0);
         }
         entry++;
         area++;
@@ -3842,7 +3844,7 @@ void dScStage_c::LoadTextureTransformers() {
 }
 
 void dScStage_c::LoadModel() {
-    mModel.LoadAndSetFile(*(unsigned short *)(*&data_0209f340 + 8), 1, -1);
+    mModel.LoadAndSetFile(((LevelInfo *)data_0209f340)->modelFile, 1, -1);
     BMD_File *modelFile;
     unsigned int materialCount;
     BMD_Material *material;

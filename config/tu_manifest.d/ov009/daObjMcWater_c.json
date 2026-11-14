@@ -731,119 +731,119 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@334",
+      "from": "@338",
       "to": "data_ov009_02113c78",
-      "evidence": "compiler temp mapped to 0x02113c78 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @361 to @334 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x02113c78 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @361 to @334 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @334 to @338 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@335",
+      "from": "@339",
       "to": "data_ov009_02113cc0",
-      "evidence": "compiler temp mapped to 0x02113cc0 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @362 to @335 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x02113cc0 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @362 to @335 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @335 to @339 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@337",
+      "from": "@341",
       "to": "data_ov009_02113d74",
-      "evidence": "compiler temp mapped to 0x02113d74 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @364 to @337 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x02113d74 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @364 to @337 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @337 to @341 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@340",
+      "from": "@344",
       "to": "data_ov009_02113d80",
-      "evidence": "compiler temp mapped to 0x02113d80 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @367 to @340 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x02113d80 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @367 to @340 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @340 to @344 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@343",
+      "from": "@347",
       "to": "data_ov009_02113d08",
-      "evidence": "compiler temp mapped to 0x02113d08 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @370 to @343 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x02113d08 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @370 to @343 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @343 to @347 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@346",
+      "from": "@350",
       "to": "data_ov009_02113d14",
-      "evidence": "compiler temp mapped to 0x02113d14 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @373 to @346 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x02113d14 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @373 to @346 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @346 to @350 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@349",
+      "from": "@353",
       "to": "data_ov009_02113d5c",
-      "evidence": "compiler temp mapped to 0x02113d5c by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @376 to @349 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x02113d5c by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @376 to @349 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @349 to @353 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@352",
+      "from": "@356",
       "to": "data_ov009_02113d50",
-      "evidence": "compiler temp mapped to 0x02113d50 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @379 to @352 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x02113d50 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @379 to @352 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @352 to @356 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@355",
+      "from": "@359",
       "to": "data_ov009_02113d44",
-      "evidence": "compiler temp mapped to 0x02113d44 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @382 to @355 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x02113d44 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @382 to @355 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @355 to @359 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@357",
+      "from": "@361",
       "to": "data_ov009_02113d2c",
-      "evidence": "compiler temp mapped to 0x02113d2c by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @384 to @357 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x02113d2c by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @384 to @357 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @357 to @361 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@360",
+      "from": "@364",
       "to": "data_ov009_02113d20",
-      "evidence": "compiler temp mapped to 0x02113d20 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @387 to @360 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x02113d20 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @387 to @360 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @360 to @364 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@363",
+      "from": "@367",
       "to": "data_ov009_02113c90",
-      "evidence": "compiler temp mapped to 0x02113c90 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @390 to @363 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x02113c90 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @390 to @363 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @363 to @367 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@366",
+      "from": "@370",
       "to": "data_ov009_02113c84",
-      "evidence": "compiler temp mapped to 0x02113c84 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @393 to @366 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x02113c84 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @393 to @366 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @366 to @370 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@369",
+      "from": "@373",
       "to": "data_ov009_02113cfc",
-      "evidence": "compiler temp mapped to 0x02113cfc by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @396 to @369 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x02113cfc by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @396 to @369 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @369 to @373 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@372",
+      "from": "@376",
       "to": "data_ov009_02113cf0",
-      "evidence": "compiler temp mapped to 0x02113cf0 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @399 to @372 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x02113cf0 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @399 to @372 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @372 to @376 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@375",
+      "from": "@379",
       "to": "data_ov009_02113cb4",
-      "evidence": "compiler temp mapped to 0x02113cb4 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @402 to @375 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x02113cb4 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @402 to @375 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @375 to @379 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@377",
+      "from": "@381",
       "to": "data_ov009_02113ccc",
-      "evidence": "compiler temp mapped to 0x02113ccc by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @404 to @377 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x02113ccc by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @404 to @377 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @377 to @381 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@380",
+      "from": "@384",
       "to": "data_ov009_02113cd8",
-      "evidence": "compiler temp mapped to 0x02113cd8 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @407 to @380 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x02113cd8 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @407 to @380 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @380 to @384 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@383",
+      "from": "@387",
       "to": "data_ov009_02113ce4",
-      "evidence": "compiler temp mapped to 0x02113ce4 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @410 to @383 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x02113ce4 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @410 to @383 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @383 to @387 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@386",
+      "from": "@390",
       "to": "data_ov009_02113d68",
-      "evidence": "compiler temp mapped to 0x02113d68 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @413 to @386 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x02113d68 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @413 to @386 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @386 to @390 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@389",
+      "from": "@393",
       "to": "data_ov009_02113ca8",
-      "evidence": "compiler temp mapped to 0x02113ca8 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @416 to @389 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x02113ca8 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @416 to @389 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @389 to @393 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@392",
+      "from": "@396",
       "to": "data_ov009_02113d38",
-      "evidence": "compiler temp mapped to 0x02113d38 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @419 to @392 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x02113d38 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @419 to @392 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @392 to @396 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@395",
+      "from": "@399",
       "to": "data_ov009_02113c9c",
-      "evidence": "compiler temp mapped to 0x02113c9c by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @422 to @395 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x02113c9c by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @422 to @395 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @395 to @399 when a redundant pun was removed (same section, offset, size, type and binding)."
     }
   ],
   "symbol_binding_rewrites": [

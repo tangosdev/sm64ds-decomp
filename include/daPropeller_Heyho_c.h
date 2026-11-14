@@ -2,6 +2,7 @@
 #define DAPROPELLER_HEYHO_C_H
 
 #include "types.h"
+#include "private/mtx43.h"
 
 /* Derives from dEnemyBase_c, on the evidence of its own destructor: `_ZN19daPropeller_Heyho_cD1Ev`
  * stores this vtable, destroys its members in reverse declaration order, then
@@ -50,11 +51,9 @@ struct daPropeller_Heyho_c : dEnemyBase_c {
     dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
     dExtAnmModel_c mAnmModel;                         /* 0x300 */
     dExtShadowModel_c                  mShadowModel;          /* 0x364 */
-    /* 0x30-byte block copy from data_020a0e68 in func_ov070_02120070; that
-       helper then passes it to DropShadowRadHeight. Left as twelve words
-       rather than Matrix4x3: Vector3's destructor would change D1/D0.
-       [func_ov070_02120070, in src/game/actors/d_a_propeller_heyho.cpp] */
-    s32                          mShadowMatrix[12];     /* 0x38c */
+    /* Shadow matrix written by func_ov070_02120070 and passed to
+       DropShadowRadHeight. */
+    Mtx43                        mShadowMatrix;         /* 0x38c */
     State                       *mCurrentState;         /* 0x3bc */
     /* InitResources copies mPosX/Y/Z here. Wander/chase compare Vec3_Dist
        against this triple; several states rewrite it from the live position

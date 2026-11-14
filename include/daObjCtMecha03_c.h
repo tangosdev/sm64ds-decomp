@@ -25,8 +25,8 @@ struct daObjCtMecha03_c : dBgActor_c {
     s16 mSwingAccel; /* 0x320 -- data_ov065_0211c0b0[setting], re-rolled to 0xd/0x2a under setting 2 */
     s16 mSwingAngle; /* 0x322 -- 0x1964 at InitResources */
     s16 mSwingSpeed; /* 0x324 */
-    s16 mSoundTimer; /* 0x326 -- DecIfAbove0_Short; at 0 plays bank-3 sound 0x38, reloaded as mPauseTimer + 0xf */
-    s16 mPauseTimer;                /* 0x328 -- DecIfAbove0_Short; gates the whole swing update */
+    u16 mSoundTimer; /* 0x326 -- DecIfAbove0_Short; at 0 plays bank-3 sound 0x38, reloaded as mPauseTimer + 0xf */
+    u16 mPauseTimer;                /* 0x328 -- DecIfAbove0_Short; gates the whole swing update */
     s32 mGroundY;                   /* 0x32c -- probe Y, then dBgCh_Gnd::clsnY on a hit */
     dExtShadowModel_c mShadowModel; /* 0x330 */
     /* UpdateShadow builds this from mAngleY, then writes X / ground Y / Z

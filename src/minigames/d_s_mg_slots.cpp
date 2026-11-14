@@ -577,8 +577,7 @@ void dScMgSlot3_c::StartRound(int mode) {
             mReelSpinning[j2] = 1;
             mReelStopped[j2] = 0;
             for (k2 = 0; k2 < 3; k2++) {
-                /* mResultSymbols[j2][k2]; a typed spelling grows the function. */
-                *(u8 *)(w2 + k2 + SLOT3_OFF(mResultSymbols)) = mStripLength;
+                ((dScMgSlot3_c *)(w2 + k2))->mResultSymbols[0][0] = mStripLength;
             }
         }
         for (m2 = 0; m2 < 3; m2++) {

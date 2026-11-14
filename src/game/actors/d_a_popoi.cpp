@@ -89,16 +89,15 @@ struct daPopoi_StateRecord {
 };
 
 struct PopoiTurnAwayRec {
-    PopoiPMF enter;
-    PopoiPMF update;
+    daPopoi_StateRecord state;
     /* Section-alignment fill: retail BSS runs 0x18 bytes past the update slot,
      * to the section end at 0x02127d40. The constructor never stores here. */
     u8 tailFill[0x18];
 
     PopoiTurnAwayRec()
     {
-        enter = &daPopoi_c::EnterTurnAwayState;
-        update = &daPopoi_c::UpdateTurnAwayState;
+        state.enter = &daPopoi_c::EnterTurnAwayState;
+        state.update = &daPopoi_c::UpdateTurnAwayState;
     }
 };
 
@@ -366,7 +365,7 @@ int daPopoi_c::UpdateWanderState() {
     mSoundHandle = Sound::PlayLong(mSoundHandle, 3, daPopoi_SND_MOVE_LOOP, mCamSpacePos, 0);
 
     if (IsBlockedAhead() != 0) {
-        ChangeState((daPopoi_StateRecord *)&data_ov077_02127d18); /* TurnAway */
+        ChangeState(&data_ov077_02127d18.state); /* TurnAway */
         return 1;
     }
 
@@ -497,7 +496,7 @@ int daPopoi_c::UpdateChaseState() {
     dist = Vec3_Dist(&mPos, reinterpret_cast<const Vector3 *>(&mHomePosX));
 
     if (IsBlockedAhead() != 0) {
-        ChangeState((daPopoi_StateRecord *)&data_ov077_02127d18); /* TurnAway */
+        ChangeState(&data_ov077_02127d18.state); /* TurnAway */
         return 1;
     }
 

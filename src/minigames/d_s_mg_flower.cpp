@@ -57,11 +57,6 @@ extern void func_0203d388(int *p, int angle);
 extern void Mg_SetTopScreenYOffset(int n);
 void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5, u16 a6);
-/* The dragged petal's two adjacent fixed-point coordinates. */
-typedef struct V2 {
-    int x;
-    int y;
-} V2;
 void Vec2_Sub(int *out, int *a, int *b);
 void FreeGfxSlotsById(int a);
 void *Ov004_LoadFileByPath(void *arg);
@@ -105,9 +100,9 @@ void dScMgFlower_c::UpdatePetals() {
         mPetals[i].fallSpeed += 0x100;
         if (mPetals[i].fallSpeed >= 0x4000)
             mPetals[i].fallSpeed = 0x4000;
-        mPetals[i].x += mPetals[i].driftX;
-        mPetals[i].y += mPetals[i].fallSpeed;
-        if (mPetals[i].y >= 0x100000)
+        mPetals[i].pos.x += mPetals[i].driftX;
+        mPetals[i].pos.y += mPetals[i].fallSpeed;
+        if (mPetals[i].pos.y >= 0x100000)
             mPetals[i].active = 0;
         else
             mPetalsSettled = 0;
@@ -138,8 +133,8 @@ void dScMgFlower_c::DealPetals() {
         mPetals[clearIndex].held = 0;
         mPetals[clearIndex].released = 0;
         mPetals[clearIndex].counted = 0;
-        mPetals[clearIndex].x = 0;
-        mPetals[clearIndex].y = 0;
+        mPetals[clearIndex].pos.x = 0;
+        mPetals[clearIndex].pos.y = 0;
         mPetals[clearIndex].touchStartX = 0;
         mPetals[clearIndex].touchStartY = 0;
         mPetals[clearIndex].driftX = 0;
@@ -155,11 +150,11 @@ void dScMgFlower_c::DealPetals() {
     baseAngle = MG_RAND(0x10000);
     for (petalIndex = 0; petalIndex < mPetalsLeft; petalIndex++) {
         mPetals[petalIndex].angle = baseAngle + petalIndex * 0x10000 / mPetalsLeft;
-        mPetals[petalIndex].x = 0;
-        mPetals[petalIndex].y = 0x30000;
-        func_0203d388(&mPetals[petalIndex].x, (s16)mPetals[petalIndex].angle);
-        mPetals[petalIndex].x += 0x80000;
-        mPetals[petalIndex].y += 0x60000;
+        mPetals[petalIndex].pos.x = 0;
+        mPetals[petalIndex].pos.y = 0x30000;
+        func_0203d388(&mPetals[petalIndex].pos.x, (s16)mPetals[petalIndex].angle);
+        mPetals[petalIndex].pos.x += 0x80000;
+        mPetals[petalIndex].pos.y += 0x60000;
         mPetals[petalIndex].active = 1;
     }
     for (shuffleIndex = 0; shuffleIndex < mPetalsLeft; shuffleIndex++) {
@@ -171,12 +166,12 @@ void dScMgFlower_c::DealPetals() {
             savedAngle = mPetals[shuffleIndex].angle;
             mPetals[shuffleIndex].angle = mPetals[swapIndex].angle;
             mPetals[swapIndex].angle = savedAngle;
-            savedPosition.x = mPetals[shuffleIndex].x;
-            savedPosition.y = mPetals[shuffleIndex].y;
-            mPetals[shuffleIndex].x = mPetals[swapIndex].x;
-            mPetals[shuffleIndex].y = mPetals[swapIndex].y;
-            mPetals[swapIndex].x = savedPosition.x;
-            mPetals[swapIndex].y = savedPosition.y;
+            savedPosition.x = mPetals[shuffleIndex].pos.x;
+            savedPosition.y = mPetals[shuffleIndex].pos.y;
+            mPetals[shuffleIndex].pos.x = mPetals[swapIndex].pos.x;
+            mPetals[shuffleIndex].pos.y = mPetals[swapIndex].pos.y;
+            mPetals[swapIndex].pos.x = savedPosition.x;
+            mPetals[swapIndex].pos.y = savedPosition.y;
         }
     }
     mHeldPetal = -1;
@@ -228,7 +223,7 @@ s32 dScMgFlower_c::Render() {
             attr.a = (attr.a & 0xc1fffcff) | 0x100;
             if (mHeldPetal == i)
                 palette = 0;
-            Mg_RenderSubSpriteScaled(&attr, mPetals[i].x >> 12, mPetals[i].y >> 12, -1, palette,
+            Mg_RenderSubSpriteScaled(&attr, mPetals[i].pos.x >> 12, mPetals[i].pos.y >> 12, -1, palette,
                                      0x1000, (s16)(mPetals[i].angle + 0x8000));
         }
     }
@@ -301,7 +296,7 @@ s32 dScMgFlower_c::Behavior() {
                     if (mPetals[attachedIndex].active != 0 && mPetals[attachedIndex].held != 1 &&
                         mPetals[attachedIndex].released != 1) {
                         int withinGrabRadius;
-                        Vec2_Sub(&toCursor.x, &mPetals[attachedIndex].x, &mCursorX);
+                        Vec2_Sub(&toCursor.x, &mPetals[attachedIndex].pos.x, &mCursorX);
                         withinGrabRadius = Vec2_Len(&toCursor) < 0x18000 ? 1 : 0;
                         if (withinGrabRadius != 0) {
                             Sound::PlayBank2_2D(0x109);
@@ -322,7 +317,7 @@ s32 dScMgFlower_c::Behavior() {
                     for (freeIndex = 0; freeIndex < 0x16; freeIndex++) {
                         if (mPetals[freeIndex].active != 0 && mPetals[freeIndex].held != 1) {
                             int withinGrabRadius2;
-                            Vec2_Sub(&toCursor2.x, &mPetals[freeIndex].x, &mCursorX);
+                            Vec2_Sub(&toCursor2.x, &mPetals[freeIndex].pos.x, &mCursorX);
                             withinGrabRadius2 = Vec2_Len(&toCursor2) < 0x18000 ? 1 : 0;
                             if (withinGrabRadius2 != 0) {
                                 mPetals[freeIndex].held = 1;
@@ -341,7 +336,7 @@ s32 dScMgFlower_c::Behavior() {
             newlyCounted = 0;
             if (gTouchHeld[playerSlot * 4] != 0) {
                 Vec2_Sub(&drag.x, &mCursorX, &mPrevCursorX);
-                V2 *pos = (V2 *)&mPetals[mHeldPetal].x;
+                V2 *pos = &mPetals[mHeldPetal].pos;
                 pos->x += drag.x;
                 pos->y += drag.y;
             } else {

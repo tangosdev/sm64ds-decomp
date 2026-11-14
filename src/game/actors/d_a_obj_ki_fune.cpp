@@ -70,13 +70,16 @@ int daObjKi_Fune_c::InitResources() {
     else
         mModelIndex = 1;
     idx = mModelIndex;
-    BMD_File *model = dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov016_021136e4[idx]);
+    SharedFilePtr *modelFile = (SharedFilePtr *)data_ov016_021136e4[idx];
+    BMD_File *model = dExtSimpleModel_c::LoadFile(*modelFile);
     mModel.SetFile(model, 1, -1);
     UpdateModelMatrix();
     UpdateClsnPosAndRot();
     idx = mModelIndex;
-    KCL_File *collision = dBgW_Kc::LoadFile(*(SharedFilePtr *)data_ov016_021136dc[idx]);
-    mMeshCollider.SetFile(collision, mClsnMat, 0x1000, mAngleY, *(CLPS_Block *)clpsBlocks[idx]);
+    SharedFilePtr *collisionFile = (SharedFilePtr *)data_ov016_021136dc[idx];
+    KCL_File *collision = dBgW_Kc::LoadFile(*collisionFile);
+    CLPS_Block *clps = (CLPS_Block *)clpsBlocks[idx];
+    mMeshCollider.SetFile(collision, mClsnMat, 0x1000, mAngleY, *clps);
     if (mModelIndex == 0) {
         mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     }

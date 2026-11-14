@@ -683,19 +683,19 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@546",
+      "from": "@558",
       "to": "@543",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @540 per TU and ov080 daPicGate_c (on main) also defines a global @540, so the scratch link collides Re-keyed from @602 to @548 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @540 per TU and ov080 daPicGate_c (on main) also defines a global @540, so the scratch link collides Re-keyed from @602 to @548 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @546 to @558 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@548",
+      "from": "@560",
       "to": "@130",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @542 per TU and ov080 daPicGate_c (on main) also defines a global @542, so the scratch link collides; the first target @557 collides with ov064 daObjFl_Amilift_c's global @557 on main, so it lands on @130 Re-keyed from @604 to @550 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @542 per TU and ov080 daPicGate_c (on main) also defines a global @542, so the scratch link collides; the first target @557 collides with ov064 daObjFl_Amilift_c's global @557 on main, so it lands on @130 Re-keyed from @604 to @550 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @548 to @560 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@547",
+      "from": "@559",
       "to": "@541",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @556 now; licensed under the existing pin @541 Re-keyed from @603 to @549 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @556 now; licensed under the existing pin @541 Re-keyed from @603 to @549 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @547 to @559 when a redundant pun was removed (same section, offset, size, type and binding)."
     }
   ]
 }

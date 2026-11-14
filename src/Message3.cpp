@@ -1048,7 +1048,12 @@ void Message::SetTextGlobalsVS() {
     int r2 = ip + 0x20;
     data_0209fd04 = ip;
     data_0209fcf8 = (int *)r2;
-    int r3 = r2 + *(int *)(r2 + 4);
+    struct VsSection {
+        int header;
+        int distance;
+    };
+    VsSection *section = (VsSection *)r2;
+    int r3 = r2 + section->distance;
     data_0209fcfc = r3;
     data_0209fd08 = ip + 0x30;
 }

@@ -24,7 +24,7 @@
 struct daObjSimpleLift_c : dBgActor_c {
     u8 mPauseTimer;                       /* 0x31e */
     u8  pad_31f[0x1];
-    s16 mMoveTimer;                      /* 0x320 */
+    u16 mMoveTimer;                      /* 0x320 */
     u8 mVariant;                       /* 0x322 */
 
     /* --- vtable --- */

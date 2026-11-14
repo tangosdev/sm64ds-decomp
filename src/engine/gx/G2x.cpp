@@ -29,26 +29,26 @@
 void G2x_SetBGyAffine_(volatile unsigned short *p, Matrix2x2 *m, int a, int b, int c, int d) {
     u16 pa = (u16)(s16)(m->m00 >> 4);
     u16 pb = (u16)(s16)(m->m01 >> 4);
-    *(volatile unsigned int *)p = pa | (pb << 16);
+    *(unsigned int *)p = pa | (pb << 16);
 
     u16 pc = (u16)(s16)(m->m10 >> 4);
     u16 pd = (u16)(s16)(m->m11 >> 4);
-    *(volatile unsigned int *)(p + 2) = pc | (pd << 16);
+    *(unsigned int *)(p + 2) = pc | (pd << 16);
 
     int dx = c - a;
     int dy = d - b;
     int x = m->m00 * dx + m->m01 * dy + (a << 12);
     int y = m->m10 * dx + m->m11 * dy + (b << 12);
 
-    *(volatile int *)(p + 4) = x >> 4;
-    *(volatile int *)(p + 6) = y >> 4;
+    *(int *)(p + 4) = x >> 4;
+    *(int *)(p + 6) = y >> 4;
 }
 
 /* The final argument is 32-bit: the ROM loads its stack slot with `ldr`,
    not `ldrh`. */
 void G2x_SetBlendAlpha_(volatile u16 *reg, int firstTarget, int secondTarget, int firstAlpha,
                         int secondAlpha) {
-    *(volatile u32 *)reg =
+    *(u32 *)reg =
         ((firstTarget | 0x40) | (secondTarget << 8)) |
         ((firstAlpha | (secondAlpha << 8)) << 16);
 }

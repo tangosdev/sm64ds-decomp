@@ -1029,7 +1029,7 @@ s32 daDoor_c::InitResources() {
     DoorEntry *e;
     void *f;
     void *an;
-    VecFx32 tmp;
+    Vector3 tmp;
     int r4;
     int v;
     int b;
@@ -1074,15 +1074,17 @@ s32 daDoor_c::InitResources() {
                 mKeyFile = &data_ov089_02132c50;
             }
         }
-        if (mKeyFile != 0)
-            dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)mKeyFile);
+        if (mKeyFile != 0) {
+            SharedFilePtr *keyFile = (SharedFilePtr *)mKeyFile;
+            dExtSimpleModel_c::LoadFile(*keyFile);
+        }
     }
 
     an = dExtFrameCtrl_c::LoadFile(data_ov100_02148744);
     mModel.SetAnim((BCA_File *)an, 0x40000000, 0x1000, 0);
 
     /* The model matrix takes the position >> 3. */
-    Vec3_Asr((Vector3 *)&tmp, &mPos, 3);
+    Vec3_Asr(&tmp, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, tmp.x, tmp.y, tmp.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
     *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;

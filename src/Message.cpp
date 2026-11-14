@@ -662,14 +662,14 @@ extern "C" void func_0201d850(u32 course) {
         if (course < 0xf) {
             if (data_0209f20c != 0) {
                 s32 off = course * 7 + 0x1b3;
-                data_0209d6f0 = (u8 *)&data_0209d708[off + gCollectedStarId];
+                data_0209d6f0 = (u8 *)(data_0209d708 + (off + gCollectedStarId));
             } else {
                 s32 off = course * 7 + 0x1b3;
-                data_0209d6f0 = (u8 *)&data_0209d708[off + gCurrentStarId];
+                data_0209d6f0 = (u8 *)(data_0209d708 + (off + gCurrentStarId));
             }
             mapPos = 0x140;
         } else {
-            data_0209d6f0 = (u8 *)&data_0209d708[0x21d];
+            data_0209d6f0 = (u8 *)(data_0209d708 + 0x21d);
             mapPos = 0x100;
         }
         {
@@ -704,9 +704,9 @@ extern "C" void func_0201d850(u32 course) {
         s32 i;
 
         if (course < 0xf || course >= 0x15)
-            data_0209d6f0 = (u8 *)&data_0209d708[0x28c];
+            data_0209d6f0 = (u8 *)(data_0209d708 + 0x28c);
         else
-            data_0209d6f0 = (u8 *)&data_0209d708[0x2b3];
+            data_0209d6f0 = (u8 *)(data_0209d708 + 0x2b3);
         data_0209d6b8 = 0;
         {
             s32 base = data_0209d6fc + 0x28 + data_0209d70c[1];

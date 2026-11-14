@@ -29,7 +29,7 @@
 //   swapped for Vector2 in the pass that typed mArray1/mArray2.
 // - Measured residue, each with a note at the site: DrawCourseColumn's
 //   volatile tile locals and SNOW_OFF row arithmetic, Render's y loads through
-//   a stepped receiver, Behavior's volatile touch read, ResetScene's Pair copy,
+//   a stepped receiver, Behavior's volatile touch read,
 //   and the opt_common_subs / opt_strength_reduction brackets.
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum dScMgSnowball_c_AssetId {
@@ -39,13 +39,8 @@ enum dScMgSnowball_c_AssetId {
 
 #pragma defer_codegen off
 
-/* Include order is load-bearing. dScMgSnowball_c.h reaches math/Matrix.h,
-   which defines Matrix4x3 as {Matrix3x3 r; Vector3 t;}; common.h carries a
-   second, flat `s32 m[12]` spelling of the same 0x30-byte type behind the
-   same guard, and whichever a TU sees first stands. The nested spelling wins
-   here, so the one copy that has to be a block move goes through the flat
-   Mtx43 rather than member-wise through Vector3's destructor, which is
-   0x20 bytes more than the ROM has. */
+/* common.h is first so Matrix4x3 is the flat 12-word struct. */
+#include "common.h"
 #include "dScMgSnowball_c.h"
 #include "nitro/hw/registers.h"
 #include "nitro/gx/gx_bgcnt.h"
@@ -59,7 +54,6 @@ enum dScMgSnowball_c_AssetId {
 #include "decl_common.h"
 #include "math/Quaternion.h"
 #include "LevelRng.h"
-#include "common.h"
 #include "Sound.h"
 #include "dScMgBase_c.h"
 #include "Particle__System.h"
@@ -67,7 +61,6 @@ enum dScMgSnowball_c_AssetId {
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
-#include "private/mtx43.h"
 #include "OamAttr.h"
 #include "Vector2Math.h"
 #include "nitro/gx/g3x.h"
@@ -79,11 +72,6 @@ enum dScMgSnowball_c_AssetId {
 
 /* Declarations the recovered sources need that no project header supplies.
  * Each one was checked against include/*.h first; these are the residue. */
-
-typedef struct Pair {
-    s32 x;
-    s32 y;
-} Pair;
 
 /* Byte offset of a dScMgSnowball_c member, for the sites that must keep
    `pointer + constant` arithmetic because every member spelling moved bytes. */
@@ -155,8 +143,8 @@ void dScMgSnowball_c::SnowSpray_DrawAll() {
     int i;
     for (i = 0; i < 0x20; i++) {
         if (mSprays[i].active != 0) {
-            RenderOamBothScreens(sSnowballBitSprites[mSprays[i].sprite], mSprays[i].x >> 12,
-                                 ((mSprays[i].y - mSprays[i].z - mScrollY) >> 12) - 0x110, -1, 0,
+            RenderOamBothScreens(sSnowballBitSprites[mSprays[i].sprite], mSprays[i].pos.x >> 12,
+                                 ((mSprays[i].pos.y - mSprays[i].pos.z - mScrollY) >> 12) - 0x110, -1, 0,
                                  0);
         }
     }
@@ -173,9 +161,9 @@ void dScMgSnowball_c::SnowSpray_UpdateAll() {
                     return;
                 }
             }
-            mSprays[i].vz -= 0x200;
-            VEC_Add((Vector3 *)&mSprays[i].x, (Vector3 *)&mSprays[i].vx, (Vector3 *)&mSprays[i].x);
-            if (mSprays[i].vz < 0 && mSprays[i].z < 0) {
+            mSprays[i].vel.z -= 0x200;
+            VEC_Add(&mSprays[i].pos, &mSprays[i].vel, &mSprays[i].pos);
+            if (mSprays[i].vel.z < 0 && mSprays[i].pos.z < 0) {
                 mSprays[i].active = 0;
                 return;
             }
@@ -186,12 +174,12 @@ void dScMgSnowball_c::SnowSpray_UpdateAll() {
 void dScMgSnowball_c::SnowSpray_ClearAll() {
     int i;
     for (i = 0; i < 0x20; i++) {
-        mSprays[i].x = 0;
-        mSprays[i].y = 0;
-        mSprays[i].z = 0;
-        mSprays[i].vx = 0;
-        mSprays[i].vy = 0;
-        mSprays[i].vz = 0;
+        mSprays[i].pos.x = 0;
+        mSprays[i].pos.y = 0;
+        mSprays[i].pos.z = 0;
+        mSprays[i].vel.x = 0;
+        mSprays[i].vel.y = 0;
+        mSprays[i].vel.z = 0;
         mSprays[i].life = 0;
         mSprays[i].active = 0;
         mSprays[i].sprite = 0;
@@ -488,7 +476,7 @@ void dScMgSnowball_c::UpdateSnowball() {
                 mProbeHit[j] = 1;
                 mProbePush[j] = 1;
                 anyHit = 1;
-                if (Vec2_Len((const Vector2 *)&mVelX) >= 0x800)
+                if (Vec2_Len(&mVel) >= 0x800)
                     fastWallHit = 1;
                 hit.x = sample[0];
                 hit.y = sample[1];
@@ -528,8 +516,8 @@ void dScMgSnowball_c::UpdateSnowball() {
                 angle = (s16)(angle + 0x800);
             }
             func_0203d434(response);
-            if (Vec2_Len((const Vector2 *)&mVelX) < 0x800)
-                func_0203d630(response, Vec2_Len((const Vector2 *)&mVelX));
+            if (Vec2_Len(&mVel) < 0x800)
+                func_0203d630(response, Vec2_Len(&mVel));
             else
                 func_0203d630(response, pushDirY);
             mPosX -= response[0];
@@ -549,8 +537,8 @@ void dScMgSnowball_c::UpdateSnowball() {
                 angle = (s16)(angle + 0x800);
             }
             func_0203d434(response);
-            mVelX += response[0];
-            mVelY += response[1];
+            mVel.x += response[0];
+            mVel.y += response[1];
             if (allWater == 1)
                 mAllWater = 1;
         }
@@ -558,7 +546,7 @@ void dScMgSnowball_c::UpdateSnowball() {
     } while (anyHit == 1 && resolvePass < 0x21);
 
     if (mHitBreakable == 1) {
-        len = Vec2_Len((const Vector2 *)&mVelX);
+        len = Vec2_Len(&mVel);
         mBallSize -= len;
         if (mBallSize < 0x4000)
             mBallSize = 0x4000;
@@ -617,20 +605,20 @@ void dScMgSnowball_c::UpdateSnowball() {
         return;
 
     func_0203d434(push);
-    normalVelocity = FX_MUL(mVelX, push[0]) + FX_MUL(mVelY, push[1]);
+    normalVelocity = FX_MUL(mVel.x, push[0]) + FX_MUL(mVel.y, push[1]);
     if (mHitBreakable == 1) {
         normalVelocity = FX_MUL(normalVelocity, 0x1800);
-        mVelX -= FX_MUL(normalVelocity, push[0]);
-        mVelY -= FX_MUL(normalVelocity, push[1]);
-        headingComponent = FX_SinIdx((unsigned short)cstd::atan2(mVelY, mVelX) >> 4);
-        vx = mVelX;
-        mVelX = vx / 8 + FX_MUL(vx, headingComponent) / 4;
-        vy = mVelY;
-        mVelY = vy / 8 + FX_MUL(vy, headingComponent) / 4;
+        mVel.x -= FX_MUL(normalVelocity, push[0]);
+        mVel.y -= FX_MUL(normalVelocity, push[1]);
+        headingComponent = FX_SinIdx((unsigned short)cstd::atan2(mVel.y, mVel.x) >> 4);
+        vx = mVel.x;
+        mVel.x = vx / 8 + FX_MUL(vx, headingComponent) / 4;
+        vy = mVel.y;
+        mVel.y = vy / 8 + FX_MUL(vy, headingComponent) / 4;
     } else {
         normalVelocity = FX_MUL(normalVelocity, 0x1200);
-        mVelX -= FX_MUL(normalVelocity, push[0]);
-        mVelY -= FX_MUL(normalVelocity, push[1]);
+        mVel.x -= FX_MUL(normalVelocity, push[0]);
+        mVel.y -= FX_MUL(normalVelocity, push[1]);
     }
 }
 
@@ -666,7 +654,7 @@ void dScMgSnowball_c::UpdateCamera() {
     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mHeadingAngle);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mRollAngle);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
-    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    mModel.mat4x3 = data_020a0e68;
 }
 
 void dScMgSnowball_c::RedrawCourse() {
@@ -1177,7 +1165,7 @@ void dScMgSnowball_c::ResetScene() {
     s32 tmp[3];
     int i;
     int y;
-    Pair *saved;
+    PrevPos *saved;
 
     if (IsAltVariant()) {
         mStartY = 0x2dc0;
@@ -1215,13 +1203,13 @@ void dScMgSnowball_c::ResetScene() {
     G2S_SetBG2Offset(0, (mScrollY >> 12) + 0x110);
     G2S_SetBG3Offset(0, (mScrollY >> 12) + 0x110);
 
-    mPrevPosX = mPosX;
-    mPrevPosY = mPosY;
-    saved = (Pair *)&mPrevPosX;
+    mPrevPos.x = mPosX;
+    mPrevPos.y = mPosY;
+    saved = &mPrevPos;
     mDrawPosX = saved->x;
     mDrawPosY = saved->y;
-    mVelX = 0;
-    mVelY = 0;
+    mVel.x = 0;
+    mVel.y = 0;
     mBallSize = 0x4000;
     mRollAngle = 0;
     mAngleY = 0;
@@ -1434,8 +1422,8 @@ s32 dScMgSnowball_c::Behavior() {
     mPrevRollAngle = mRollAngle;
     mPrevAngleY = mAngleY;
     mPrevHeadingAngle = mHeadingAngle;
-    mPrevPosX = mPosX;
-    mPrevPosY = mPosY;
+    mPrevPos.x = mPosX;
+    mPrevPos.y = mPosY;
 
     scrollMax = (mScrollLimit << 16) - 0x1d0000;
     scrollStart = mScrollY;
@@ -1479,43 +1467,43 @@ s32 dScMgSnowball_c::Behavior() {
                 steer[0] = 0;
                 steer[1] = 0;
             }
-            heading = cstd::atan2(mVelY, mVelX);
+            heading = cstd::atan2(mVel.y, mVel.x);
             func_0203d388(steer, (short)-heading);
             steer[1] = steer[1] << 2;
             func_0203d388(steer, heading);
-            if (mVelY >= 0) {
+            if (mVel.y >= 0) {
                 if (steer[1] > 0)
                     steer[1] = 0;
             }
             if (steer[1] > 0) {
-                if (steer[1] >= -mVelY) {
-                    mVelY = 0;
+                if (steer[1] >= -mVel.y) {
+                    mVel.y = 0;
                     steer[1] = 0;
                 }
             }
-            mVelX += steer[0];
-            mVelY += steer[1];
+            mVel.x += steer[0];
+            mVel.y += steer[1];
         }
 
-        if (mVelX != 0 || mVelY != 0) {
-            if (Vec2_Len((const Vector2 *)&mVelX) >= 0x8000 && func_0203d434(&mVelX) != 0)
-                func_0203d630(&mVelX, 0x8000);
+        if (mVel.x != 0 || mVel.y != 0) {
+            if (Vec2_Len(&mVel) >= 0x8000 && func_0203d434(&mVel.x) != 0)
+                func_0203d630(&mVel.x, 0x8000);
         }
         UpdateSnowball();
 
-        mPosX += mVelX;
-        mPosY += mVelY;
+        mPosX += mVel.x;
+        mPosY += mVel.y;
 
-        if (mPosY >= mPrevPosY) {
-            mUphillDebt += mPosY - mPrevPosY;
+        if (mPosY >= mPrevPos.y) {
+            mUphillDebt += mPosY - mPrevPos.y;
         } else if (mUphillDebt > 0) {
-            mUphillDebt += mPosY - mPrevPosY;
+            mUphillDebt += mPosY - mPrevPos.y;
             if (mUphillDebt < 0) {
                 mBallSize += (-mUphillDebt) / 128;
                 mUphillDebt = 0;
             }
         } else {
-            mBallSize += (mPrevPosY - mPosY) / 128;
+            mBallSize += (mPrevPos.y - mPosY) / 128;
         }
 
         if (mBallSize >= 0x37000)
@@ -1541,12 +1529,12 @@ s32 dScMgSnowball_c::Behavior() {
         if (mScrollY >= scrollMax)
             mScrollY = scrollMax;
 
-        if (Vec2_Len((const Vector2 *)&mVelX) >= 0x10) {
-            v = Vec2_Len((const Vector2 *)&mVelX);
+        if (Vec2_Len(&mVel) >= 0x10) {
+            v = Vec2_Len(&mVel);
             q = v * 0x2710 / mBallSize;
             mRollAngle += (u16)q;
-            m = cstd::atan2(mVelX, mVelY);
-            ApproachLinear(mHeadingAngle, m, (Vec2_Len((const Vector2 *)&mVelX) / 16));
+            m = cstd::atan2(mVel.x, mVel.y);
+            ApproachLinear(mHeadingAngle, m, (Vec2_Len(&mVel) / 16));
         }
 
         if (mAllWater == 1 || mTimeLeft <= 0) {
@@ -1595,30 +1583,30 @@ s32 dScMgSnowball_c::Behavior() {
             mEndDelayTimer = 0;
         UpdateSnowball();
 
-        if (mVelX != 0 || mVelY != 0) {
-            speed = Vec2_Len((const Vector2 *)&mVelX);
+        if (mVel.x != 0 || mVel.y != 0) {
+            speed = Vec2_Len(&mVel);
             if (mPosY < 0xc0000)
                 speed -= 0x80;
             if (speed < 0) {
-                mVelX = 0;
-                mVelY = 0;
-            } else if (func_0203d434(&mVelX) != 0) {
-                func_0203d630(&mVelX, speed);
+                mVel.x = 0;
+                mVel.y = 0;
+            } else if (func_0203d434(&mVel.x) != 0) {
+                func_0203d630(&mVel.x, speed);
             }
         }
 
-        mPosX += mVelX;
-        mPosY += mVelY;
+        mPosX += mVel.x;
+        mPosY += mVel.y;
         if (mPosY < 0xe8000)
             mScreensSwapped = 0;
         else
             mScreensSwapped = 1;
 
-        if (Vec2_Len((const Vector2 *)&mVelX) >= 0x10) {
-            v = Vec2_Len((const Vector2 *)&mVelX);
+        if (Vec2_Len(&mVel) >= 0x10) {
+            v = Vec2_Len(&mVel);
             q = v * 0x2710 / mBallSize;
             mRollAngle += (u16)q;
-            mHeadingAngle = cstd::atan2(mVelX, mVelY);
+            mHeadingAngle = cstd::atan2(mVel.x, mVel.y);
         }
 
         mScrollY = mPosY - 0x190000;
@@ -1632,12 +1620,12 @@ s32 dScMgSnowball_c::Behavior() {
 
     case 4:
         if (mCrashTimer < 0x3c) {
-            if (mVelX != 0 || mVelY != 0) {
-                speed = Vec2_Len((const Vector2 *)&mVelX) + 0x100;
+            if (mVel.x != 0 || mVel.y != 0) {
+                speed = Vec2_Len(&mVel) + 0x100;
                 if (speed >= 0x8000)
                     speed = 0x8000;
-                if (func_0203d434(&mVelX) != 0)
-                    func_0203d630(&mVelX, speed);
+                if (func_0203d434(&mVel.x) != 0)
+                    func_0203d630(&mVel.x, speed);
             }
             mCrashTimer += 1;
         } else if (mCrashTimer == 0x3c) {
@@ -1681,11 +1669,11 @@ s32 dScMgSnowball_c::Behavior() {
             }
         }
 
-        if (Vec2_Len((const Vector2 *)&mVelX) >= 0x10) {
-            v = Vec2_Len((const Vector2 *)&mVelX);
+        if (Vec2_Len(&mVel) >= 0x10) {
+            v = Vec2_Len(&mVel);
             q = v * 0x2710 / mBallSize;
             mRollAngle += (u16)q;
-            mHeadingAngle = cstd::atan2(mVelX, mVelY);
+            mHeadingAngle = cstd::atan2(mVel.x, mVel.y);
         }
         break;
 

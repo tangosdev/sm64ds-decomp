@@ -191,15 +191,15 @@ struct dScMgSmartball_c : dScMgBase_c {
     s32 mPopupScore[5];      /* 0x478c -- the score value; > 0 marks a live slot */
     s32 mPopupMultiplier[5]; /* 0x47a0 -- EmitScore's last argument */
     s32 mPopupAge[5];        /* 0x47b4 -- frames shown; cleared past 0x3c */
-    u8 mPopupPos[0x28];      /* 0x47c8 -- elem dtor NullDestructor_0203d47c */
+    s32 mPopupPos[5][2];     /* 0x47c8 -- elem dtor NullDestructor_0203d47c */
     s32 mPopupDelay[5];      /* 0x47f0 */
     /* The dust puffs: SpawnDust sets mDustActive and UpdateDust clears it,
        retiring a puff once mDustAge reaches 0xf. mDustPos/mDustVel are the
        0x10 * 8 positions and velocities. */
     u8 mDustActive[0x10]; /* 0x4804 */
     s32 mDustAge[0x10];   /* 0x4814 */
-    u8 mDustPos[0x80];    /* 0x4854 -- elem dtor NullDestructor_0203d47c */
-    u8 mDustVel[0x80];    /* 0x48d4 -- elem dtor NullDestructor_0203d47c */
+    s32 mDustPos[16][2];  /* 0x4854 -- elem dtor NullDestructor_0203d47c */
+    s32 mDustVel[16][2];  /* 0x48d4 -- elem dtor NullDestructor_0203d47c */
     /* sSmartballBg1NscFmt / sSmartballBg2NscFmt decompressed: scanned for the
        object tiles, and GetTile's upper and lower halves. */
     u16 mBg1Map[0x400]; /* 0x4954 */

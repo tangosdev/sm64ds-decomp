@@ -18,6 +18,7 @@
 #include "msl/stdlib.h"
 #include "file_struc.h"
 #include "nitro/os/mutex.h"
+#include "msl/stdarg.h"
 
 extern "C" {
 // HAND-ASM PRIMITIVE: `swp` atomic swap has no C equivalent under mwccarm, so asm is the source.
@@ -657,6 +658,8 @@ int __StringWrite(void *osc, const char *Buffer, size_t NumChars) {
 
 #pragma push
 #pragma defer_codegen off
+#pragma push
+#pragma defer_codegen off
 /* __pformatter @ 0x0206e4a4 (arm9, size 0x83c)
  * MSL __pformatter: the printf formatting engine. Walks the format string,
  * hands each %-specifier to parse_format, pulls the matching
@@ -702,17 +705,17 @@ int __pformatter(int (*WriteProc)(void *, const char *, size_t), void *WriteProc
         case 'd':
         case 'i':
             if (format.argument_options == long_argument)
-                long_num = *(long *)((arg += sizeof(long)) - sizeof(long));
+                long_num = va_arg(arg, long);
             else if (format.argument_options == long_long_argument)
-                long_long_num = *(long long *)((arg += sizeof(long long)) - sizeof(long long));
+                long_long_num = va_arg(arg, long long);
             else if (format.argument_options == intmax_argument)
-                long_num = (long)*(long long *)((arg += sizeof(long long)) - sizeof(long long));
+                long_num = (long)va_arg(arg, long long);
             else if (format.argument_options == size_t_argument)
-                long_num = *(long *)((arg += sizeof(long)) - sizeof(long));
+                long_num = va_arg(arg, long);
             else if (format.argument_options == ptrdiff_argument)
-                long_num = *(long *)((arg += sizeof(long)) - sizeof(long));
+                long_num = va_arg(arg, long);
             else
-                long_num = *(int *)((arg += sizeof(int)) - sizeof(int));
+                long_num = va_arg(arg, int);
 
             if (format.argument_options == short_argument)
                 long_num = (short)long_num;
@@ -734,17 +737,17 @@ int __pformatter(int (*WriteProc)(void *, const char *, size_t), void *WriteProc
         case 'x':
         case 'X':
             if (format.argument_options == long_argument)
-                long_num = *(long *)((arg += sizeof(long)) - sizeof(long));
+                long_num = va_arg(arg, long);
             else if (format.argument_options == long_long_argument)
-                long_long_num = *(long long *)((arg += sizeof(long long)) - sizeof(long long));
+                long_long_num = va_arg(arg, long long);
             else if (format.argument_options == intmax_argument)
-                long_num = (long)*(long long *)((arg += sizeof(long long)) - sizeof(long long));
+                long_num = (long)va_arg(arg, long long);
             else if (format.argument_options == size_t_argument)
-                long_num = *(long *)((arg += sizeof(long)) - sizeof(long));
+                long_num = va_arg(arg, long);
             else if (format.argument_options == ptrdiff_argument)
-                long_num = *(long *)((arg += sizeof(long)) - sizeof(long));
+                long_num = va_arg(arg, long);
             else
-                long_num = *(int *)((arg += sizeof(int)) - sizeof(int));
+                long_num = va_arg(arg, int);
 
             if (format.argument_options == short_argument)
                 long_num = (unsigned short)long_num;
@@ -768,9 +771,9 @@ int __pformatter(int (*WriteProc)(void *, const char *, size_t), void *WriteProc
         case 'g':
         case 'G':
             if (format.argument_options == long_double_argument)
-                long_double_num = *(long double *)((arg += sizeof(long double)) - sizeof(long double));
+                long_double_num = va_arg(arg, long double);
             else
-                long_double_num = *(double *)((arg += sizeof(double)) - sizeof(double));
+                long_double_num = va_arg(arg, double);
             if (!(buff_ptr = (unsigned char *)float2str(long_double_num, conv_buff + MAX_BUFF, format)))
                 goto invalid_conversion;
             n = &conv_buff[MAX_BUFF - 1] - (char *)buff_ptr;
@@ -779,9 +782,9 @@ int __pformatter(int (*WriteProc)(void *, const char *, size_t), void *WriteProc
         case 'a':
         case 'A':
             if (format.argument_options == long_double_argument)
-                long_double_num = *(long double *)((arg += sizeof(long double)) - sizeof(long double));
+                long_double_num = va_arg(arg, long double);
             else
-                long_double_num = *(double *)((arg += sizeof(double)) - sizeof(double));
+                long_double_num = va_arg(arg, double);
             if (!(buff_ptr = (unsigned char *)double2hex(long_double_num, conv_buff + MAX_BUFF, format)))
                 goto invalid_conversion;
             n = &conv_buff[MAX_BUFF - 1] - (char *)buff_ptr;
@@ -789,14 +792,14 @@ int __pformatter(int (*WriteProc)(void *, const char *, size_t), void *WriteProc
 
         case 's':
             if (format.argument_options == wchar_argument) {
-                unsigned short *ws = *(unsigned short **)((arg += sizeof(void *)) - sizeof(void *));
+                unsigned short *ws = va_arg(arg, unsigned short *);
                 if (ws == 0)
                     ws = data_0209a5e4;
                 if ((int)wcstombs(conv_buff, ws, MAX_BUFF) < 0)
                     goto invalid_conversion;
                 buff_ptr = (unsigned char *)conv_buff;
             } else {
-                buff_ptr = *(unsigned char **)((arg += sizeof(void *)) - sizeof(void *));
+                buff_ptr = va_arg(arg, unsigned char *);
             }
             if (buff_ptr == 0)
                 buff_ptr = (unsigned char *)data_0209a5e8;
@@ -815,7 +818,7 @@ int __pformatter(int (*WriteProc)(void *, const char *, size_t), void *WriteProc
             break;
 
         case 'n': {
-            void *p = *(void **)((arg += sizeof(void *)) - sizeof(void *));
+            void *p = va_arg(arg, void *);
             switch (format.argument_options) {
             case normal_argument:
                 *(int *)p = num_chars;
@@ -834,7 +837,7 @@ int __pformatter(int (*WriteProc)(void *, const char *, size_t), void *WriteProc
         }
 
         case 'c':
-            conv_buff[0] = (char)*(int *)((arg += sizeof(int)) - sizeof(int));
+            conv_buff[0] = (char)va_arg(arg, int);
             buff_ptr = (unsigned char *)conv_buff;
             n = 1;
             break;

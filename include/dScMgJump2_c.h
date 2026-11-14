@@ -57,15 +57,7 @@ struct dScMgJump2_c : dScMgD3DBase_c {
     virtual void StartRound(int arg);  /* slot 18 */
     virtual int CanEndState(int mode); /* slot 19 */
 
-    /* 0x5004 -- the state callback, a pointer-to-member of this class, which
-       is mwccarm's eight bytes exactly. Behavior calls through it every frame:
-       `(this->**(State *)pad_5004)()`. Was "no matched access", which was only
-       ever true of the files NAMED after this class -- the access was in
-       func_ov006_020ef3e0 all along, and reads as this class's own now that
-       the function carries its real name. Left as bytes rather than declared
-       as the member pointer: naming it would fix a signature for every state
-       function in the table, and none of them is recovered. */
-    u8 pad_5004[0x8];             /* 0x5004 -- the state callback; see the block above */
+    void (dScMgJump2_c::*mState)(); /* 0x5004 -- state callback */
     dMgJump3DMario_c mPlayers[3]; /* 0x500c -- RTTI-proven element type */
     Heyho mHeyhos[6];             /* 0x5234 -- 6 * 0xf0 */
     Jump2Popup mPopups[0x10];     /* 0x57d4 -- 0x10 * 0x24 */

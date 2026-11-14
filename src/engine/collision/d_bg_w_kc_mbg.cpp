@@ -131,11 +131,11 @@ void dBgW_KcMbg::Transform(const Matrix4x3 &mtx, s16 angle) {
     *(Mtx43 *)&invScaledMat = *(Mtx43 *)&newScaledMat;
     MTX_Inverse43(&invScaledMat, &invScaledMat);
 
-    VecFx32 up;
+    Vector3 up;
     up.x = 0;
     up.y = 0x1000;
     up.z = 0;
-    WorldToLocalDirection(*(Vector3 *)&up, *(Vector3 *)&upAxis);
+    WorldToLocalDirection(up, *(Vector3 *)&upAxis);
 
     if (!filterByMoveDir)
         return;
@@ -143,15 +143,15 @@ void dBgW_KcMbg::Transform(const Matrix4x3 &mtx, s16 angle) {
     /* Aim dBgW_Kc's depth policy along the horizontal motion: depthByDir on,
        depthDir the direction in collider space, depthDirMinDot its threshold.
        A collider that is not moving sideways sets shallowOnly instead. */
-    VecFx32 moveDir;
-    GetVelocity(*(Vector3 *)&moveDir);
+    Vector3 moveDir;
+    GetVelocity(moveDir);
     moveDir.y = 0;
-    if (VEC_Mag((Vector3 *)&moveDir) != 0) {
+    if (VEC_Mag(&moveDir) != 0) {
         SetDepthByDir();
-        VEC_Normalize((Vector3 *)&moveDir, (Vector3 *)&moveDir);
-        VecFx32 localDir;
-        WorldToLocalDirection(*(Vector3 *)&moveDir, *(Vector3 *)&localDir);
-        SetDepthDir((Vector3 *)&localDir);
+        VEC_Normalize(&moveDir, &moveDir);
+        Vector3 localDir;
+        WorldToLocalDirection(moveDir, localDir);
+        SetDepthDir(&localDir);
         SetDepthDirMinDot(0xe66);
         ClearShallowOnly();
     } else {
@@ -182,15 +182,15 @@ void dBgW_KcMbg::GetTriangleOrigin(s16 triID, Vector3 &res) {
 }
 
 void dBgW_KcMbg::WorldToLocalPosition(const Vector3 &position, Vector3 &result) {
-    MTX_MultVec43((Vector3 *)&position, &invScaledMat, &result);
+    MTX_MultVec43(const_cast<Vector3 *>(&position), &invScaledMat, &result);
 }
 
 void dBgW_KcMbg::LocalToWorldPosition(const Vector3 &position, Vector3 &result) {
-    MTX_MultVec43((Vector3 *)&position, &newScaledMat, &result);
+    MTX_MultVec43(const_cast<Vector3 *>(&position), &newScaledMat, &result);
 }
 
 void dBgW_KcMbg::WorldToLocalDirection(const Vector3 &direction, Vector3 &result) {
-    MTX_MultVec43((Vector3 *)&direction, &invRotMat, &result);
+    MTX_MultVec43(const_cast<Vector3 *>(&direction), &invRotMat, &result);
 }
 
 /* Transform a direction by mat, leaving out the translation. */
@@ -200,7 +200,7 @@ void dBgW_KcMbg::LocalToWorldDirection(const Vector3 &direction, Vector3 &result
     rotation.t.x = 0;
     rotation.t.y = 0;
     rotation.t.z = 0;
-    MTX_MultVec43((Vector3 *)&direction, &rotation, &result);
+    MTX_MultVec43(const_cast<Vector3 *>(&direction), &rotation, &result);
 }
 
 int dBgW_KcMbg::DetectClsn(dBgCh_Gnd &ray) {
@@ -318,7 +318,7 @@ int dBgW_KcMbg::DetectClsn(dBgCh_Lin &ray) {
 /* Out of the previous frame's space, into the current one. */
 int dBgW_KcMbg::TransformPos(const Vector3 &localCentre, Vector3 &res) {
     Vector3 localPos;
-    MTX_MultVec43((Vector3 *)&localCentre, &invMat, &localPos);
+    MTX_MultVec43(const_cast<Vector3 *>(&localCentre), &invMat, &localPos);
     MTX_MultVec43(&localPos, &mat, &res);
     return 1;
 }

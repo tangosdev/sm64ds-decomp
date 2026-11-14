@@ -374,8 +374,8 @@ void daPropeller_Heyho_c::func_ov070_02120070() {
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
     Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, (mPosY - 0xa000) >> 3, mPosZ >> 3);
-    *(Mtx43 *)mShadowMatrix = *(Mtx43 *)&data_020a0e68;
-    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMatrix, 0x76000, 0x320000, 0xf);
+    mShadowMatrix = *(Mtx43 *)&data_020a0e68;
+    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)&mShadowMatrix, 0x76000, 0x320000, 0xf);
 }
 
 /* -------------------------------------------------------------------------- */

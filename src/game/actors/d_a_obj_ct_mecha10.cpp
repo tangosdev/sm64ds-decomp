@@ -157,14 +157,14 @@ int daObjCtMecha10_c::Behavior() {
     }
 
     if (ApproachLinear(mAngleY, mTargetAngleY, 0xc8) &&
-        DecIfAbove0_Short((u16 *)&mStepTimer) == 0) {
+        DecIfAbove0_Short(&mStepTimer) == 0) {
         mTargetAngleY += mAngleYStep;
 
         u8 setting = data_0209f2c0;
         mStepTimer = data_ov035_02111ef4[mRotationState][setting];
         if (setting == CLOCK_SETTING_RANDOM) {
             int rnd = RandomIntInternal(&data_0209e650.value);
-            if (DecIfAbove0_Short((u16 *)&mDirTimer) == 0) {
+            if (DecIfAbove0_Short(&mDirTimer) == 0) {
                 if ((unsigned int)rnd % 3 != 0) {
                     mAngleYStep = data_ov035_02111ef0[mRotationState];
                     mDirTimer = (rnd & 3) * 0x3c + 0x5a;

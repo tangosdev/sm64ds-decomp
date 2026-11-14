@@ -184,7 +184,11 @@ extern u8 data_0209b2ec[];
 extern u8 data_0209b2ed[];
 extern u8 data_0209fc50;
 extern u8 data_0209fc58;
-extern char data_0209ee90[];
+struct EntryWinCounts {
+    char pad[0x1d4];
+    int baseCount;
+};
+extern EntryWinCounts data_0209ee90;
 extern u8 data_0208ee3c;
 extern PadData data_020a0e58[];
 extern ControllerInput data_0209f498[];
@@ -1066,7 +1070,7 @@ void dScEntry_c::RenderWinCounts() {
         do {
             int *p;
 
-            n = *(int *)(data_0209ee90 + 0x1d4) + data_0209b2ec[func_02030958(i)];
+            n = data_0209ee90.baseCount + data_0209b2ec[func_02030958(i)];
             n = n % 100;
             tens = n / 10;
             if (tens != 0) {

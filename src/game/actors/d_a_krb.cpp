@@ -178,9 +178,9 @@ extern KrbAnimationFileHandle data_ov084_02130cf0;
 extern KrbModelFilePtr data_ov084_02130cf8;
 extern KrbModelFilePtr gKuriboLowModelModelFile;
 extern StateHandler data_ov084_02130d74[];
-int func_02037e20(int* p);
+int func_02037e20(int *p);
 extern void func_02012694(unsigned int id, const Vector3 *pos);
-extern int SurfaceInfo_TestFlag0x20(int* p);
+extern int SurfaceInfo_TestFlag0x20(int *p);
 extern u8 data_0209f208[];
 extern u8 *data_0209f344;
 /* Three-register reconstructed interface; death-state stores also use r3. */
@@ -188,7 +188,6 @@ extern void func_ov002_020aea30(void *self, void *actor, void *collision);
 extern BMA_File data_ov084_0213088c;
 extern int data_ov084_02130248[];
 extern u8 data_ov084_02130204[];
-extern char data_ov084_0213089c;
 extern int data_ov084_02130228[];
 extern int data_ov084_02130268[];
 extern void func_ov074_0212087c(Vector3 *out, void *player, u8 flag);
@@ -321,7 +320,7 @@ void daKrb_c::func_ov084_02129238() {
         rg.StopDetectingOrdinary();
         rg.SetObjAndPos(pos, goomba);
         if (rg.DetectClsn() != 0) {
-            if (func_02037e20((int*)&rg.surface) != 0) {
+            if (func_02037e20((int *)&rg.surface) != 0) {
                 if (rg.clsnY != 0x80000000) {
                     if (goomba->mPosY < rg.clsnY) {
                         goomba->SpawnCoin();
@@ -787,9 +786,9 @@ void daKrb_c::func_ov084_02129cf4(Fix12i distThresh) {
  * either back into its `if` collapses the pair. See notes/matching-style.md 3. */
 void daKrb_c::func_ov084_02129ed4() {
     daKrb_c *goomba = this;
-    s16 killDirNormal[3];
-    s16 killDirVariant[3];
-    s16 killDirPlayer[3];
+    Vector3_16 killDirNormal;
+    Vector3_16 killDirVariant;
+    Vector3_16 killDirPlayer;
     Vector3 playerPos;
     Vector3 playerPosJump;
     Vector3 capReleaseOnHit;
@@ -830,16 +829,16 @@ void daKrb_c::func_ov084_02129ed4() {
         goomba->ReleaseCap(capReleaseOnHit);
         typeMatch = (goomba->actorID == ACTOR_KURIBO);
         if (typeMatch != 0) {
-            killDirNormal[0] = -0x2000;
-            killDirNormal[1] = 0;
-            killDirNormal[2] = 0;
-            goomba->KillByInvincibleChar(*(Vector3_16 *)killDirNormal, *other, 0x41000); /* 65.0 */
+            killDirNormal.x = -0x2000;
+            killDirNormal.y = 0;
+            killDirNormal.z = 0;
+            goomba->KillByInvincibleChar(killDirNormal, *other, 0x41000); /* 65.0 */
             return;
         }
-        killDirVariant[0] = -0x1800;
-        killDirVariant[1] = 0;
-        killDirVariant[2] = 0;
-        goomba->KillByInvincibleChar(*(Vector3_16 *)killDirVariant, *other, 0x96000); /* 150.0 */
+        killDirVariant.x = -0x1800;
+        killDirVariant.y = 0;
+        killDirVariant.z = 0;
+        goomba->KillByInvincibleChar(killDirVariant, *other, 0x96000); /* 150.0 */
         return;
     }
 
@@ -889,11 +888,10 @@ void daKrb_c::func_ov084_02129ed4() {
                         capReleaseOnKill.y = 0x6c000;
                         capReleaseOnKill.z = 0; /* 108.0 */
                         goomba->ReleaseCap(capReleaseOnKill);
-                        killDirPlayer[0] = 0x2000;
-                        killDirPlayer[1] = 0;
-                        killDirPlayer[2] = 0;
-                        goomba->KillByInvincibleChar(*(Vector3_16 *)killDirPlayer, *other,
-                                                     0x41000); /* 65.0 */
+                        killDirPlayer.x = 0x2000;
+                        killDirPlayer.y = 0;
+                        killDirPlayer.z = 0;
+                        goomba->KillByInvincibleChar(killDirPlayer, *other, 0x41000); /* 65.0 */
                         return;
                     }
                     {

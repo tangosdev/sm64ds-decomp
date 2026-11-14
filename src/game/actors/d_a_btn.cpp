@@ -141,11 +141,29 @@ extern int data_ov079_02127cfc[];
    SharedFilePtr_Destruct_Clsn for the two KCLs), spelled through
    declared-only subclasses so the static initializer names the real
    entry points. */
-struct BtnModelFilePtr : SharedFilePtr {
+struct BtnModelFilePtr {
+    union {
+        SharedFilePtr base;
+        struct {
+            u16 fileID;
+            u8 numRefs;
+            u8 pad_;
+            BMD_File *filePtr;
+        } bmd;
+    };
     BtnModelFilePtr(u32 fileID);
     ~BtnModelFilePtr();
 };
-struct BtnTextureSeqFileHandle : SharedFilePtr {
+struct BtnTextureSeqFileHandle {
+    union {
+        SharedFilePtr base;
+        struct {
+            u16 fileID;
+            u8 numRefs;
+            u8 pad_;
+            BTP_File *filePtr;
+        } btp;
+    };
     BtnTextureSeqFileHandle(u32 fileID);
     ~BtnTextureSeqFileHandle();
 };
@@ -233,17 +251,17 @@ int daBtn_c::InitResources()
     int b = (id == 0xa5);
     if (b) {
         mIsKing = 1;
-        bmd = dExtSimpleModel_c::LoadFile(data_ov079_02128168);
+        bmd = dExtSimpleModel_c::LoadFile(data_ov079_02128168.base);
         mAnmModel.SetFile((BMD_File *)bmd, 1, -1);
         animIdx = 0;
         do {
             dExtFrameCtrl_c::LoadFile(*data_ov079_02127600[animIdx]);
             animIdx += 1;
         } while (animIdx < 6);
-        dExtAnmTexPat_c::LoadFile(data_ov079_02128178);
+        dExtAnmTexPat_c::LoadFile(data_ov079_02128178.base);
     } else {
         mIsKing = 0;
-        bmd = dExtSimpleModel_c::LoadFile(data_ov079_02128170);
+        bmd = dExtSimpleModel_c::LoadFile(data_ov079_02128170.base);
         mAnmModel.SetFile((BMD_File *)bmd, 1, -1);
         animIdx = 0;
         do {
@@ -262,9 +280,9 @@ int daBtn_c::InitResources()
 
     if (mIsKing != 0) {
         mHitPoints = 3;
-        dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov079_02128168.filePtr,
-                                 *(BTP_File *)data_ov079_02128178.filePtr);
-        mTextureSequence.SetFile(*(BTP_File *)data_ov079_02128178.filePtr, 0, 0x1000, 0);
+        dExtAnmTexPat_c::Prepare(*data_ov079_02128168.bmd.filePtr,
+                                 *data_ov079_02128178.btp.filePtr);
+        mTextureSequence.SetFile(*data_ov079_02128178.btp.filePtr, 0, 0x1000, 0);
         mTextureSequence.SetFlags(0x40000000);
         mTextureSequence.speed = 0x1000;
         mTextureSequence.currFrame = 0;
@@ -448,12 +466,12 @@ int daBtn_c::CleanupResources()
     mMovingMeshCollider.Disable();
   ((SharedFilePtr *)(data_ov079_02127bf0[mIsKing]))->Release();
   if(mIsKing){
-      data_ov079_02128168.Release();
+      data_ov079_02128168.base.Release();
       for (i = 0; i < 6; i++)
           ((SharedFilePtr *)(data_ov079_02127600[i]))->Release();
-      data_ov079_02128178.Release();
+      data_ov079_02128178.base.Release();
   } else {
-      data_ov079_02128170.Release();
+      data_ov079_02128170.base.Release();
       for (i = 0; i < 5; i++)
           ((SharedFilePtr *)(data_ov079_021275ec[i]))->Release();
   }
@@ -1654,9 +1672,6 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
             }
         }
         if (mState != 0xa) {
-            /* Both reads are measured. A plain mState read here or at the
-               second site below shrinks the function 0x288 -> 0x284; plain
-               reads at both sites give 0x280. */
             mResumeState = *(volatile s32 *)&mState;
             mSavedStateTimer = mStateTimer;
             mSavedSubState = mSubState;

@@ -370,10 +370,10 @@ extern "C" void func_ov077_02125304(daTgz_c *self) {
         func_ov077_021251d0(self);
     else
         func_ov077_02125290(self);
-    self->mShadowMatrix[9] = self->mPosX >> 3;
-    self->mShadowMatrix[10] = self->mPosY >> 3;
-    self->mShadowMatrix[11] = self->mPosZ >> 3;
-    self->DropShadowRadHeight(self->mShadowModel, *(Matrix4x3 *)self->mShadowMatrix, 0x50000,
+    self->mShadowMatrix.a[9] = self->mPosX >> 3;
+    self->mShadowMatrix.a[10] = self->mPosY >> 3;
+    self->mShadowMatrix.a[11] = self->mPosZ >> 3;
+    self->DropShadowRadHeight(self->mShadowModel, *(Matrix4x3 *)&self->mShadowMatrix, 0x50000,
                               0x320000, 0xf);
 }
 
@@ -794,7 +794,7 @@ int daTgz_c::InitResources()
     mScaleZ = 0x1000;
     mDespawnTimer = 0x2c;
     func_ov077_02125e94(this, 0);
-    *(Matrix4x3 *)mShadowMatrix = IDENTITY_MATRIX4X3;
+    mShadowMatrix = *(Mtx43 *)&IDENTITY_MATRIX4X3;
     func_ov077_02125304(this);
     return 1;
 }

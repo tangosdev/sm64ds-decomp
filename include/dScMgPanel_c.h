@@ -91,7 +91,7 @@ struct dScMgPanel_c : dScMgBase_c {
     s32 mSlide;    /* 0x4660 Fix12 */
     s32 mSlideY;   /* 0x4664 */
     s32 mSlideVel; /* 0x4668 */
-    u8 pad_466c[0x4];
+    s32 pad_466c;
     u16 mHold; /* 0x4670 */
     u8 pad_4672[0x2];
     u8 mSlideOn;                          /* 0x4674 */
@@ -124,7 +124,7 @@ struct dScMgPanel_c : dScMgBase_c {
     u16 mResultTimer;     /* 0x4ec0 frames before the result: 0x40 once solved,
                              0x50 once out of credits, 0x10 to rewind;
                              Scene_StateResult/_StateGameOver count it down */
-    u8 pad_4ec2[0x2];
+    s16 pad_4ec2;
     u16 mDelay;            /* 0x4ec4 countdown; the answer helpers clamp it at a signed 0 */
     u16 mScrollFrames;     /* 0x4ec6 Scene_StateResult counts the frames it runs
                               Scroll_Update; ResetRound clears it; nothing

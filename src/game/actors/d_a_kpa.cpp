@@ -250,7 +250,16 @@ struct PmfEnt { PMF pmf; };
  * handles through SharedFilePtr_Construct_TexSeq/SharedFilePtr_Destruct_TexSeq.
  * Each wrapper's ctor and dtor stay undefined here; the manifest aliases them
  * onto those ROM veneers. */
-struct KpaModelFilePtr : SharedFilePtr {
+struct KpaModelFilePtr {
+    union {
+        SharedFilePtr base;
+        struct {
+            u16 fileID;
+            u8 numRefs;
+            u8 pad_;
+            BMD_File *filePtr;
+        } bmd;
+    };
     KpaModelFilePtr(u32 fileID);
     ~KpaModelFilePtr();
 };
@@ -258,7 +267,11 @@ struct KpaAnimationFileHandle : SharedFilePtr {
     KpaAnimationFileHandle(u32 fileID);
     ~KpaAnimationFileHandle();
 };
-struct KpaTexSequenceFilePtr : SharedFilePtr {
+struct KpaTexSequenceFilePtr {
+    u16 fileID;
+    u8 numRefs;
+    u8 pad_;
+    BTP_File *filePtr;
     KpaTexSequenceFilePtr(u32 fileID);
     ~KpaTexSequenceFilePtr();
 };
@@ -421,7 +434,7 @@ int daKpa_c::InitResources()
     daKpaFire_c *fire;
     daKpaTail_c *tail;
 
-    this->mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov060_0211ac78), 1, 0x16);
+    this->mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov060_0211ac78.base), 1, 0x16);
 
     for (i = 0; i < 0x1c; i++)
         dExtFrameCtrl_c::LoadFile(*data_ov060_021192dc[i]);
@@ -437,10 +450,10 @@ int daKpa_c::InitResources()
 
     InitAnimation(BOWSER_ANIM_IDLE, 0);
 
-    dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov060_0211ac78.filePtr,
-                             *(BTP_File *)data_ov060_0211ac28.filePtr);
+    dExtAnmTexPat_c::Prepare(*data_ov060_0211ac78.bmd.filePtr,
+                             *data_ov060_0211ac28.filePtr);
 
-    this->mTextureSequence.SetFile(*(BTP_File *)data_ov060_0211ac28.filePtr, 0, 0x1000, 0);
+    this->mTextureSequence.SetFile(*data_ov060_0211ac28.filePtr, 0, 0x1000, 0);
 
     this->mTextureSequence.SetFlags(0x40000000);
 
@@ -607,7 +620,7 @@ int daKpaTail_c::CleanupResources()
 int daKpa_c::CleanupResources()
 {
     int i;
-    data_ov060_0211ac78.Release();
+    data_ov060_0211ac78.base.Release();
     for (i = 0; i < 0x1c; i++)
         data_ov060_021192dc[i]->Release();
     for (i = 0; i < 6; i++)
@@ -2931,41 +2944,41 @@ void daKpa_c::InitAnimation(int idx, int animFlags) {
     this->mAnmModel.SetAnim((BCA_File *)(data_ov060_021192dc[idx]->filePtr), a, 0x1000, 0);
     switch (idx) {
     case 1:
-        dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov060_0211ac78.filePtr,
-                                 *(BTP_File *)data_ov060_0211ac40.filePtr);
-        this->mTextureSequence.SetFile(*(BTP_File *)data_ov060_0211ac40.filePtr, 0, 0x1000, 0);
+        dExtAnmTexPat_c::Prepare(*data_ov060_0211ac78.bmd.filePtr,
+                                 *data_ov060_0211ac40.filePtr);
+        this->mTextureSequence.SetFile(*data_ov060_0211ac40.filePtr, 0, 0x1000, 0);
         this->mTextureSequence.SetFlags(0x40000000);
         return;
     case 2:
-        dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov060_0211ac78.filePtr,
-                                 *(BTP_File *)data_ov060_0211acb8.filePtr);
-        this->mTextureSequence.SetFile(*(BTP_File *)data_ov060_0211acb8.filePtr, 0, 0x1000, 0);
+        dExtAnmTexPat_c::Prepare(*data_ov060_0211ac78.bmd.filePtr,
+                                 *data_ov060_0211acb8.filePtr);
+        this->mTextureSequence.SetFile(*data_ov060_0211acb8.filePtr, 0, 0x1000, 0);
         this->mTextureSequence.SetFlags(0x40000000);
         return;
     case 3:
     case 5:
-        dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov060_0211ac78.filePtr,
-                                 *(BTP_File *)data_ov060_0211ac10.filePtr);
-        this->mTextureSequence.SetFile(*(BTP_File *)data_ov060_0211ac10.filePtr, 0, 0x1000, 0);
+        dExtAnmTexPat_c::Prepare(*data_ov060_0211ac78.bmd.filePtr,
+                                 *data_ov060_0211ac10.filePtr);
+        this->mTextureSequence.SetFile(*data_ov060_0211ac10.filePtr, 0, 0x1000, 0);
         this->mTextureSequence.SetFlags(0);
         return;
     case 14:
-        dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov060_0211ac78.filePtr,
-                                 *(BTP_File *)data_ov060_0211abf0.filePtr);
-        this->mTextureSequence.SetFile(*(BTP_File *)data_ov060_0211abf0.filePtr, 0, 0x1000, 0);
+        dExtAnmTexPat_c::Prepare(*data_ov060_0211ac78.bmd.filePtr,
+                                 *data_ov060_0211abf0.filePtr);
+        this->mTextureSequence.SetFile(*data_ov060_0211abf0.filePtr, 0, 0x1000, 0);
         this->mTextureSequence.SetFlags(0);
         return;
     case 10:
-        dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov060_0211ac78.filePtr,
-                                 *(BTP_File *)data_ov060_0211ac30.filePtr);
-        this->mTextureSequence.SetFile(*(BTP_File *)data_ov060_0211ac30.filePtr, 0, 0x1000, 0);
+        dExtAnmTexPat_c::Prepare(*data_ov060_0211ac78.bmd.filePtr,
+                                 *data_ov060_0211ac30.filePtr);
+        this->mTextureSequence.SetFile(*data_ov060_0211ac30.filePtr, 0, 0x1000, 0);
         this->mTextureSequence.SetFlags(0x40000000);
         return;
     case 0:
     default:
-        dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov060_0211ac78.filePtr,
-                                 *(BTP_File *)data_ov060_0211ac28.filePtr);
-        this->mTextureSequence.SetFile(*(BTP_File *)data_ov060_0211ac28.filePtr, 0, 0x1000, 0);
+        dExtAnmTexPat_c::Prepare(*data_ov060_0211ac78.bmd.filePtr,
+                                 *data_ov060_0211ac28.filePtr);
+        this->mTextureSequence.SetFile(*data_ov060_0211ac28.filePtr, 0, 0x1000, 0);
         this->mTextureSequence.SetFlags(0);
         return;
     }

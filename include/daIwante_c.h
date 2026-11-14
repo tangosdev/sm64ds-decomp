@@ -62,9 +62,8 @@ struct daIwante_c : dBgActor_c {
     dExtSimpleModel_c mModel2;                              /* 0x3d0 */
     dExtShadowModel_c mShadowModel;                         /* 0x420 */
     dExtAnmTexPat_c mTextureSequence;                       /* 0x448 */
-    /* Drop-shadow matrix, flat words. A Matrix4x3 member would run another
-       ~Vector3 from ~daIwante_c. */
-    s32 mShadowMtx[12];                                     /* 0x45c */
+    /* Drop-shadow matrix passed to DropShadowRadHeight. */
+    Matrix4x3 mShadowMtx;                                   /* 0x45c */
     /* Behavior loads this word and calls through the pointer-to-member at
        +8 of what it points at, and compares it against &data_ov066_0211b07c --
        so it is a pointer to the current state descriptor, not a byte.
@@ -96,9 +95,7 @@ struct daIwante_c : dBgActor_c {
     /* The point a hand is currently moving to. The state handlers fill it
        (from the closest player's position, or a fixed spot) and then walk
        mPosX/Z toward it with Vec3_ApproachHorz / ApproachLinear. */
-    s32 mTargetPosX;                                        /* 0x4bc */
-    s32 mTargetPosY;                                        /* 0x4c0 */
-    s32 mTargetPosZ;                                        /* 0x4c4 */
+    Vector3 mTargetPos;                                     /* 0x4bc */
     /* Per-frame step handed to ApproachLinear(mHorzSpeed, 0x258000, step):
        the sideways-run states bump it by 0x1a or 0x130 each frame while it is
        below 0x2710. */

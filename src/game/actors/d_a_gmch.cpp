@@ -16,8 +16,8 @@
  *   UpdateState6.
  * - UpdateState0 keeps mPhase++. mPhase = (u8)(mPhase + 1) is 0x144
  *   against 0x158, and mSpinAngleY += 0xc00 is four words off.
- * - ApproachLinear2 steps *(int *)&mState because mState, mPhase and
- *   mTimer share one word. State numbers, mFlags bit 0x80000 and hit
+ * - ApproachLinear2 steps mStateWord, the int sharing mState, mPhase and
+ *   mTimer. State numbers, mFlags bit 0x80000 and hit
  *   mask 0x66fe0 stay numeric.
  * - The loaded BCA is data_ov081_02128edc.filePtr. GmchDrawReg is the
  *   one-slot init sentinel the folded sinit needs.
@@ -684,7 +684,7 @@ int daGmch_c::UpdateState0()
 {
     switch (mPhase) {
     case 0:
-        if (ApproachLinear2(*(int *)&mState, 1, 2) != 0) {
+        if (ApproachLinear2(mStateWord, 1, 2) != 0) {
             mdCcAc_c.Init(this, 0x4b000, 0x73000, 0x200000, 0);
             mFlags &= ~0x10000000;
             mPhase++;
@@ -698,7 +698,7 @@ int daGmch_c::UpdateState0()
         }
         break;
     case 2:
-        if (ApproachLinear2(*(int *)&mState, 0x1f, 2) != 0) {
+        if (ApproachLinear2(mStateWord, 0x1f, 2) != 0) {
             mdCcAc_c.Init(this, 0x4b000, 0x73000, 0x200000, 0x6eff0);
             SetState(3);
         }

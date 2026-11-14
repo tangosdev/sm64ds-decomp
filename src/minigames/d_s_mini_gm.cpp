@@ -125,7 +125,11 @@ extern struct Off9 sMiniGmIconScreenOffsets; /* 9-entry screen-offset table, not
    0x0a00 and 0x2201. Bytes 1 and 2 each give every row a distinct number
    0..35. */
 extern const MgEntry sMiniGmRows[];
-extern int sMiniGmSaveTable[];
+struct MiniGmSaveRow {
+    unsigned int saveSlotWord;
+    char rest[0x30];
+};
+extern MiniGmSaveRow sMiniGmSaveTable[];
 extern int sMiniGmDigits[];
 extern void *sMiniGmRecordLabels[];
 
@@ -1114,8 +1118,7 @@ void dScMiniGm_c::ClearNew(int n) {
 
 extern "C" {
 int MiniGm_GetSaveTable(void *a, int i) {
-    int offset = i * 0x34;
-    return (*(unsigned int *)((char *)sMiniGmSaveTable + offset) >> 8) & 0xff;
+    return (sMiniGmSaveTable[i].saveSlotWord >> 8) & 0xff;
 }
 }
 

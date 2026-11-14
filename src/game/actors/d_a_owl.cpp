@@ -426,16 +426,16 @@ int daOwl_c::EnterTalk() {
 int daOwl_c::UpdateDormant() {
     daPly_c *p = ClosestPlayer();
     if (p != 0 && p->mClimbClsn != 0) {
-        VecFx32 *playerPos = (VecFx32 *)&p->mPosX;
+        const Vector3 *playerPos = &p->mPos;
         VecFx32 pp;
         VecFx32 d;
-        VecFx32 *selfpos = (VecFx32 *)&mPosX;
+        const Vector3 *selfpos = &mPos;
         pp.x = playerPos->x;
         pp.y = playerPos->y;
         pp.z = playerPos->z;
         mPosY = p->mGroundY + 0x190000;
         mTalkTarget = p;
-        Vec3_Sub((Vector3 *)&d, (const Vector3 *)selfpos, (const Vector3 *)&pp);
+        Vec3_Sub((Vector3 *)&d, selfpos, (const Vector3 *)&pp);
         if (VEC_Mag((const Vector3 *)&d) < 0x28000) {
             d.x = mPosX;
             d.y = mPosY;

@@ -149,12 +149,12 @@ static inline int Roulette_IsQuadTile(int tile) {
     return (tile >= 0x1d && tile <= 0x22) ? 1 : 0;
 }
 
-extern short sRouletteSlowStops[];
+extern ShortTbl12 sRouletteSlowStops;
 /* The single number (0..0xb) under each of the twelve stops in
    sRouletteSlowStops, in wheel order. */
 extern short sRouletteStopTiles[12];
-extern struct Pair pmf_RouletteBoard_StateSlow;
-extern struct Pair2W pmf_RouletteBoard_StateSpin;
+extern RouletteBoardState pmf_RouletteBoard_StateSlow;
+extern RouletteBoardState pmf_RouletteBoard_StateSpin;
 extern int sRouletteTileBounds[];
 extern int sRouletteRowEdgesY[];
 /* The numbers each pair tile (0xc..0x1c) and each group-of-four tile
@@ -1061,7 +1061,7 @@ void RouletteBoard_StartSpin(char *slider) {
 
 extern "C" {
 void RouletteBoard_SetStateSpin(RouletteBoard *board) {
-    *(Pair2W *)&board->mState = pmf_RouletteBoard_StateSpin;
+    board->mState = pmf_RouletteBoard_StateSpin;
 }
 }
 
@@ -1121,7 +1121,7 @@ extern "C" {
 void RouletteBoard_StartSlowdown(RouletteBoard *board) {
     board->mSpinSpeed += 0x140;
     board->mSlowBias = -board->mBoardAngle;
-    *(struct Pair *)&board->mState = pmf_RouletteBoard_StateSlow;
+    board->mState = pmf_RouletteBoard_StateSlow;
 }
 }
 
@@ -1162,7 +1162,7 @@ void RouletteBoard_StateSlow(RouletteBoard *board) {
 
     sum = board->mOrbitAngle + board->mSlowBias;
 
-    stops = *(ShortTbl12 *)sRouletteSlowStops;
+    stops = sRouletteSlowStops;
 
     for (idx = 0; idx < 12; idx++) {
         short ad;

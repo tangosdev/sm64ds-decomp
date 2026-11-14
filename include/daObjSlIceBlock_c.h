@@ -22,8 +22,8 @@
 #include "dBgActor_c.h"
 
 struct daObjSlIceBlock_c : dBgActor_c {
-    s16 mDelayTimer; /* 0x31e -- DecIfAbove0_Short; both variants of Behavior do nothing until it reaches 0 */
-    s8 mNumToBigIce; /* 0x320 */
+    unsigned short mDelayTimer; /* 0x31e -- DecIfAbove0_Short; both variants of Behavior do nothing until it reaches 0 */
+    unsigned char mNumToBigIce; /* 0x320 */
     u8 pad_321[0x3];
     s32 mMinPosY; /* 0x324 */
     s32 mSoundID; /* 0x328 */

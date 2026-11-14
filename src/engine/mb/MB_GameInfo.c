@@ -62,30 +62,35 @@ typedef struct MbBeaconSendStatus {
 } MbBeaconSendStatus;
 
 typedef struct MbBeacon {
-    u32 ggid;        /* 0x00 */
-    u8 dataAttr : 2; /* 0x04 -- 2: volatile data */
-    u8 fileNo : 6;   /* 0x04 */
-    u8 seqNoFixed;   /* 0x05 */
-    u8 seqNoVolat;   /* 0x06 */
-    u8 beaconNo;     /* 0x07 */
     union {
         struct {
-            u16 sum;           /* 0x08 */
-            u8 fragmentNo;     /* 0x0a */
-            u8 fragmentMaxNum; /* 0x0b */
-            u8 size;           /* 0x0c */
-            u8 rsv;            /* 0x0d */
-            u8 data[0x62];     /* 0x0e */
-        } fixed;
-        struct {
-            u16 sum;         /* 0x08 */
-            u8 nowPlayerNum; /* 0x0a */
-            u8 pad;
-            u16 nowPlayerFlag;    /* 0x0c */
-            u16 changePlayerFlag; /* 0x0e */
-            u8 member[4][0x16];   /* 0x10 */
-        } volat;
-    } data;
+            u32 ggid;        /* 0x00 */
+            u8 dataAttr : 2; /* 0x04 -- 2: volatile data */
+            u8 fileNo : 6;   /* 0x04 */
+            u8 seqNoFixed;   /* 0x05 */
+            u8 seqNoVolat;   /* 0x06 */
+            u8 beaconNo;     /* 0x07 */
+            union {
+                struct {
+                    u16 sum;           /* 0x08 */
+                    u8 fragmentNo;     /* 0x0a */
+                    u8 fragmentMaxNum; /* 0x0b */
+                    u8 size;           /* 0x0c */
+                    u8 rsv;            /* 0x0d */
+                    u8 data[0x62];     /* 0x0e */
+                } fixed;
+                struct {
+                    u16 sum;         /* 0x08 */
+                    u8 nowPlayerNum; /* 0x0a */
+                    u8 pad;
+                    u16 nowPlayerFlag;    /* 0x0c */
+                    u16 changePlayerFlag; /* 0x0e */
+                    u8 member[4][0x16];   /* 0x10 */
+                } volat;
+            } data;
+        };
+        u16 words[0x38];
+    };
 } MbBeacon;
 
 #ifndef SM64DS_PLATFORM_PC
@@ -93,10 +98,9 @@ typedef char MbBeacon_size_must_be_0x70[sizeof(MbBeacon) == 0x70 ? 1 : -1];
 #endif
 
 extern MbBeaconSendStatus data_020a9d2c;
-/* data_020a9d40 must be the struct object itself: reached through a cast
- * (or a local pointer) the beacon stores reorder. The checksum span
- * (data, +8), the fixed piece (+0xe) and the volatile members (+0x10) are
- * addressed through their own symbols, each with its own literal-pool word. */
+/* The checksum span (data, +8), the fixed piece (+0xe) and the volatile
+ * members (+0x10) are addressed through their own symbols, each with its
+ * own literal-pool word. */
 extern MbBeacon data_020a9d40;
 extern u16 data_020a9d48[];
 extern u8 data_020a9d4e[];
@@ -393,7 +397,7 @@ void MBi_SendFixedBeacon(void) {
     else
         data_020a9d2c.state = 4;
 
-    WM_SetGameInfo(0, (u16 *)&data_020a9d40, 0x70, func_020688e4(), func_020688cc(), MBi_GetTgid(),
+    WM_SetGameInfo(0, data_020a9d40.words, 0x70, func_020688e4(), func_020688cc(), MBi_GetTgid(),
                    (u8)(MBi_GetAttribute() | WM_ATTR_FLAG_MB));
 }
 
@@ -480,6 +484,6 @@ void MBi_SendVolatBeacon(void) {
     a = func_020688e4();
     b = func_020688cc();
     c = MBi_GetTgid();
-    WM_SetGameInfo(0, (u16 *)&data_020a9d40, 0x70, a, b, c,
+    WM_SetGameInfo(0, data_020a9d40.words, 0x70, a, b, c,
                    (u8)(MBi_GetAttribute() | WM_ATTR_FLAG_MB));
 }

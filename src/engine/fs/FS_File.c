@@ -53,8 +53,8 @@ static inline BOOL FSi_IsSlash(u32 c) {
     return (c == '/') || (c == '\\');
 }
 
-static inline u8 MI_ReadByte(const void *address) {
-    return *(u8 *)address;
+static inline u8 MI_ReadByte(const char *address) {
+    return (u8)*address;
 }
 
 static BOOL is_init = FALSE;

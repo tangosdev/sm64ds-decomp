@@ -520,7 +520,7 @@ int daJango_c::ChangeState(void *p) {
     StateRecord *qq = (StateRecord *)p;
     mState = qq;
     StateRecord *q = (StateRecord *)mState;
-    if (*(int *)q == 0)
+    if (q->enter == 0)
         return 1;
     return (this->*q->enter)();
 }

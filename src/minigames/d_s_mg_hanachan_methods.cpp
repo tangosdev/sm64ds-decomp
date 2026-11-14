@@ -40,8 +40,7 @@
  * - Wiggler::StepSegmentsA, StepSegmentsB, StepSegmentsC and MoveBounce:
  *   cstd::atan2(Fix12<int>, Fix12<int>) does not link.
  *   cstd::atan2(int, int) mangles Eii, not E5Fix12IiES1_.
- * - Wiggler::GetFlag reads the four 2-bit colours in color (+0x74) through
- *   the B72 bitfield view.
+ * - Wiggler::GetFlag reads the four 2-bit fields of color.
  * - Wiggler::DrawField: OAM::Render(int, OamAttr*, int, int, int,
  *   int, int, int) does not typecheck (the sprite table is void*). The
  *   ROM symbol's scale parameter is Fix12<int>, which this tree cannot spell.
@@ -1003,13 +1002,13 @@ int dScMgHanachan_c::Wiggler::GetFlag(int n) {
     case 0:
         return face;
     case 1:
-        return ((struct B72 *)&color)->f0 + 7;
+        return color.bits.f0 + 7;
     case 2:
-        return ((struct B72 *)&color)->f1 + 7;
+        return color.bits.f1 + 7;
     case 3:
-        return ((struct B72 *)&color)->f2 + 7;
+        return color.bits.f2 + 7;
     default:
-        return ((struct B72 *)&color)->f3 + 7;
+        return color.bits.f3 + 7;
     }
 }
 
@@ -1577,7 +1576,7 @@ void dScMgHanachan_c::Wiggler::Spawn(int arg1, int arg2) {
     for (i = 0; i < 5; i++)
         stretch[i] = 0x10000;
 
-    color = (short)Hana_PickUnused(arg1, 0xff);
+    color.raw = (short)Hana_PickUnused(arg1, 0xff);
 
     switch (sHanaRoundPattern) {
     case 0:

@@ -190,7 +190,7 @@ extern "C" void func_ov090_02130f94(daMenbo_c *c_)
 
 /* Contact response, in the order the tests run. */
 void daMenbo_c::func_ov090_021310b4() {
-    short hv[3];
+    Vector3_16 hv;
     Vector3 sv;
     Vector3 cv;
     Vector3 hurt;
@@ -203,7 +203,7 @@ void daMenbo_c::func_ov090_021310b4() {
         return;
     if ((p = dActor_c::FindWithID(mdCcAcPos_c.otherOwner)) == 0)
         return;
-    flags = (int)((long long)*(int *)&mdCcAcPos_c.hitFlags);
+    flags = (int)(long long)(int)mdCcAcPos_c.hitFlags;
 
     if (flags & 0x2400) {
         mDeathState = 2;
@@ -236,10 +236,10 @@ void daMenbo_c::func_ov090_021310b4() {
         return;
     }
     if (flags & 0x10) {
-        hv[0] = 0x1000;
-        hv[1] = 0;
-        hv[2] = 0;
-        KillByInvincibleChar(*(Vector3_16 *)hv, *(daPly_c *)p, 0);
+        hv.x = 0x1000;
+        hv.y = 0;
+        hv.z = 0;
+        KillByInvincibleChar(hv, *(daPly_c *)p, 0);
         func_02012694(0x1d, &mCamSpacePos);
         return;
     }
@@ -844,8 +844,8 @@ int daMenbo_c::InitResources()
         {
             r = RandomIntInternal(&data_0209e650.value);
             short ang = (short)((((unsigned int)r >> 8) & 0xf) << 12);
-            *(short *)&mTargetAngleY = ang;
-            mPrevAngleY = *(short *)&mTargetAngleY;
+            mTargetAngleY = (u16)ang;
+            mPrevAngleY = mTargetAngleYSigned;
             mAngleY = mPrevAngleY;
         }
         func_ov090_02131e00((MenboState *)this, data_ov090_021344e4);

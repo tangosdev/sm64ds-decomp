@@ -29,10 +29,7 @@
  *
  * Leftover. The first three items were tried in their clean form and moved
  * the bytes; the rest are names or types the evidence does not give:
- * - StateCollectTalk keeps the `*(u16 *)((int)&mStarFlags)` halfword
- *   stores and the LA label; a plain mBits.answer store loses the address
- *   rematerialization. The `& ~0ULL` identity mask that used to sit on that
- *   address is gone and the sentence no longer claims it.
+ * - StateCollectTalk keeps the LA label.
  * - Render keeps its gotos, and mStateTimer keeps its (u16) casts.
  * - func_ov002_020e8244 stays a free function; its first parameter is the
  *   output vector, not the star.
@@ -1301,8 +1298,8 @@ void daStar_c::StateCollectTalk() {
             st2 = 0x11;
 LA:
         if (mBits.answer == 0) {
-            *(u16 *)((int)&mStarFlags) =
-                (*(u16 *)((int)&mStarFlags) & ~0xc00) | ((data_0209d684 & 3) << 10);
+            u16 *starFlags = &mStarFlags;
+            *starFlags = (*starFlags & ~0xc00) | ((data_0209d684 & 3) << 10);
             {
                 u32 b3 = mBits.answer;
                 if (b3 == 1) {
@@ -2286,7 +2283,7 @@ void func_ov002_020e8244(void *out, daStar_c *b)
     VEC_Add((struct Vector3 *)&b->mCenterX, &b->mPos, (struct Vector3 *)&b->mCenterX);
     {
         int *p = &b->mCenterY;
-        *p = *(int *)((char *)b->mAnmModel1.data.bones + 0xc) * 0xd + *p;
+        *p = b->mAnmModel1.data.bones->scaleX * 0xd + *p;
     }
     ((int *)out)[0] = b->mCenterX;
     ((int *)out)[1] = b->mCenterY;
@@ -2345,14 +2342,14 @@ void daStar_c::SpawnCollectEffects() {
  * plays from frame 2 on, and a one-shot effect 0x30 when frame 0x75 is
  * reached. */
 void daStar_c::SpawnPoseEffects() {
-    void* obj;
+    ModelBone *obj;
     struct Vector3 v1;
     struct Vector3 v2;
 
     obj = mAnmModel1.data.bones;
 
-    if (!mAnmModel1.Finished() && (u32)((*(u32 *)&mAnmModel1.currFrame << 4) >> 0x10) >= 2 &&
-        *(int *)((char *)obj + 0xc) != 0) {
+    if (!mAnmModel1.Finished() && (u32)(((u32)mAnmModel1.currFrame << 4) >> 0x10) >= 2 &&
+        obj->scaleX != 0) {
         func_ov002_020e8244(&v1, this);
         mParticle[0] =
             (u32)Particle::System::New(mParticle[0], kPtclStarPose, v1.x, v1.y, v1.z, 0, 0);
@@ -2389,8 +2386,9 @@ void daStar_c::UpdateSparkleEffect() {
         zvar = zraw;
         y = yadj;
     }
+    volatile u32 &slot = mParticle[2];
     mParticle[2] =
-        (u32)Particle::System::New(*(volatile u32 *)&mParticle[2], kPtclStarSparkle, x, y, z, 0, 0);
+        (u32)Particle::System::New(slot, kPtclStarSparkle, x, y, z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2617,8 +2615,8 @@ void daStar_c::StepCameraCutscene() {
     switch (mCamSeq) {
     case 0:
     {
-        int *s1 = (int *)&cam->lookAt;
-        int *s2 = (int *)&cam->pos;
+        s32 *s1 = &cam->lookAt.x;
+        s32 *s2 = &cam->pos.x;
         mCamLookAtX = s1[0];
         mCamLookAtY = s1[1];
         mCamLookAtZ = s1[2];
@@ -2639,8 +2637,8 @@ void daStar_c::StepCameraCutscene() {
         break;
     case 0x64:
     {
-        int *s1 = (int *)&cam->lookAt;
-        int *s2 = (int *)&cam->pos;
+        s32 *s1 = &cam->lookAt.x;
+        s32 *s2 = &cam->pos.x;
         mCamLookAtX = s1[0];
         mCamLookAtY = s1[1];
         mCamLookAtZ = s1[2];

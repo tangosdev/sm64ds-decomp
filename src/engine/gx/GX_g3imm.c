@@ -16,23 +16,23 @@
 
 void G3_LoadMtx43(int *m) {
     REG_GXFIFO = G3OP_MTX_LOAD_4x3;
-    GX_SendFifo48B(m, (void *)&REG_GXFIFO);
+    GX_SendFifo48B(m, &REG_GXFIFO);
 }
 
 void G3_MultMtx43(int *m) {
     REG_GXFIFO = G3OP_MTX_MULT_4x3;
-    GX_SendFifo48B(m, (void *)&REG_GXFIFO);
+    GX_SendFifo48B(m, &REG_GXFIFO);
 }
 
 void G3_MultMtx33(int *m) {
     REG_GXFIFO = G3OP_MTX_MULT_3x3;
-    GX_SendFifo36B(m, (void *)&REG_GXFIFO);
+    GX_SendFifo36B(m, &REG_GXFIFO);
 }
 
 /* The 3x3 matrix plus a translation row: sent as a 4x3 multiply. */
 void G3_MultTransMtx33(int *mtx, int *trans) {
     REG_GXFIFO = G3OP_MTX_MULT_4x3;
-    GX_SendFifo36B(mtx, (void *)&REG_GXFIFO);
+    GX_SendFifo36B(mtx, &REG_GXFIFO);
     REG_GXFIFO = trans[0];
     REG_GXFIFO = trans[1];
     REG_GXFIFO = trans[2];

@@ -13,12 +13,9 @@
  *   the player position through V3Blk for the same reason.
  *   TestWaterBelow's ground probe stays a stack buffer; clsnY is
  *   detect[12].
- * - Render stores the colour at BMD_Material+0x20,
- *   which is pad, and walks materials as an int**. Naming that walk
- *   off data.modelFile shrinks Render, so only the int** slot is
- *   retyped to BMD_File for numMaterials.
- * - UpdateMirrorShadow keeps its Obj overlay. Spelling the position
- *   and a Mtx43* at pad_3e8 moves 34 words.
+ * - Render writes mMaterialColor into each material's texImageParam.
+ *   numMaterials is still read through the first word of ModelComponents.
+ * - The mirror shadow matrix is mMirrorMtx.
  * - The read-modify-writes of the player's mStateFlags, mTargetAngY and
  *   mEatenTimer are compound assignments (`|=`, `+=`, `++`). An earlier draft
  *   spelled them through pointer locals and a (long long)(int)& launder
@@ -114,12 +111,12 @@ struct daMip_cSelf { char pad[0x364]; daMip_cStateFn *pp; };
  * pairs and read the glowing-rabbit count. mwcc emits __sinit_d_a_mip.cpp
  * from those definitions. The wrapper names are local; the handle
  * constructors and destructors are the ROM resource-family functions,
- * aliased in the manifest. MipVec3's plain overload builds the first vector
- * with ordinary stores; the (int, int, long) overload builds the other
- * three through a volatile lvalue, exactly as retail. Both share the one
- * declared-not-defined destructor (never ~Vector3: a Vector3 here would
- * instantiate its vague-linkage D1 into this TU, which deliberately avoids
- * it); the destructor alias points at the ROM's canonical copy. */
+ * aliased in the manifest. Both MipVec3 overloads store the three
+ * components. The (int, int, long) overload is the one the three wider
+ * initializers call. Both share the one declared-not-defined destructor
+ * (never ~Vector3: a Vector3 here would instantiate its vague-linkage D1
+ * into this TU, which deliberately avoids it); the destructor alias
+ * points at the ROM's canonical copy. */
 struct DaMipModelFile : SharedFilePtr {
     DaMipModelFile(u32 fileID);
     ~DaMipModelFile();
@@ -140,10 +137,9 @@ struct MipVec3 {
     }
     MipVec3(int a, int b, long c)
     {
-        volatile int *p = (volatile int *)&x;
-        p[0] = a;
-        p[1] = b;
-        p[2] = (int)c;
+        x = a;
+        y = b;
+        z = (int)c;
     }
     ~MipVec3();
 };
@@ -760,7 +756,7 @@ int daMip_c::StateFleeMain() {
             *((volatile s32 *)(&pos.y)) = y;
             *((volatile s32 *)(&pos.z)) = z;
             mDustParticle = Particle::System::NewFitWater(
-                mDustParticle, kPtclWaterSurfaceMove, *((volatile s32 *)(&pos.x)), *(&pos.y), z, 0);
+                mDustParticle, kPtclWaterSurfaceMove, pos.x, pos.y, z, 0);
         }
     }
 
@@ -913,7 +909,7 @@ int daMip_c::StateIdleMain()
         *((volatile s32*)(&sp.y)) = y;
         *((volatile s32*)(&sp.z)) = z;
         mDustParticle = Particle::System::NewFitWater(mDustParticle, kPtclWaterSurfaceMove,
-                                                      *((volatile s32 *)(&sp.x)), *(&sp.y), z, 0);
+                                                      sp.x, sp.y, z, 0);
     }
 
     VecFx32 pp;
@@ -1004,21 +1000,21 @@ int daMip_c::SetState(void *record)
 
 void daMip_c::UpdateMatrixAndShadow()
 {
-    extern Mtx43 data_020a0e68;
+    extern Matrix4x3 data_020a0e68;
 
     char tmp[0x30];
     VecFx32 t;
     Vec3_Asr((Vector3 *)&t, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
-    *(Mtx43 *)&mAnmModel.mat4x3 = data_020a0e68;
+    *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
     MTX_Concat43(mAnmModel.data.transforms, &mAnmModel.mat4x3, tmp);
     Matrix4x3_FromTranslation(&data_020a0e68,
         mPosX >> 3,
         (mPosY - 0xe000) >> 3,
         mPosZ >> 3);
-    *(Mtx43 *)mShadowMtx = data_020a0e68;
-    DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)mShadowMtx, 0x46000, 0x258000, 0xf);
+    mShadowMtx = *(Mtx43 *)&data_020a0e68;
+    DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)&mShadowMtx, 0x46000, 0x258000, 0xf);
 }
 
 /* While carried, the matrix comes from UpdateCarry plus one of four hold
@@ -1026,7 +1022,7 @@ void daMip_c::UpdateMatrixAndShadow()
 void daMip_c::UpdateCarriedMatrix()
 {
     extern MipVec3 data_ov085_021306ec;
-    extern int data_020a0e68[];
+    extern Matrix4x3 data_020a0e68;
 
     int idx;
     void* res;
@@ -1040,31 +1036,17 @@ void daMip_c::UpdateCarriedMatrix()
     if ((int)mTalkingPlayer->param1 == 2) {
         idx = (idx + 2) & 0xff;
     }
-    res = UpdateCarry(*mTalkingPlayer, *(Vector3 *)((char *)&data_ov085_021306ec + idx * 0xc));
+    res = UpdateCarry(*mTalkingPlayer, *(Vector3 *)&(&data_ov085_021306ec)[idx]);
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)res;
-    Matrix4x3_FromTranslation(data_020a0e68, mPosX >> 3, (mPosY - 0xc000) >> 3, mPosZ >> 3);
-    *(Mtx43 *)mShadowMtx = *(Mtx43 *)data_020a0e68;
-    DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)mShadowMtx, 0x46000, 0x258000, 0xf);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, (mPosY - 0xc000) >> 3, mPosZ >> 3);
+    mShadowMtx = *(Mtx43 *)&data_020a0e68;
+    DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)&mShadowMtx, 0x46000, 0x258000, 0xf);
 }
 
-/* Second shadow, on the far side of the mirror plane at x = 0x1086000.
-   The matrix is the 0x30 bytes at this+0x3e8, in the pad after mShadowModel2.
-   Naming mPosX and mShadowModel2, with the matrix as its own Mtx43*, stays
-   the same size and differs by 34 words. The overlay keeps the block move. */
+/* Second shadow, on the far side of the mirror plane at x = 0x1086000. */
 void daMip_c::UpdateMirrorShadow()
 {
-    struct Obj {
-        char pad5c[0x5c];
-        int v5c;
-        int v60;
-        int v64;
-        char pad3c0[0x3c0 - 0x68];
-        char shadowmodel[0x28];
-        Mtx43 mtx;
-    };
-    extern Mtx43 data_020a0e68;
-
-    struct Obj *c = (struct Obj *)this;
+    extern Matrix4x3 data_020a0e68;
 
     VecFx32 v;
     VecFx32 res;
@@ -1074,25 +1056,24 @@ void daMip_c::UpdateMirrorShadow()
     res.x = 0; res.y = 0; res.z = 0;
     vd.x = 0; vd.y = 0; vd.z = 0;
 
-    vd.x = c->v5c;
-    vd.y = c->v60;
-    vd.z = c->v64;
+    vd.x = mPosX;
+    vd.y = mPosY;
+    vd.z = mPosZ;
     vd.x = 0x1086000;
-    v.z = Vec3_HorzDist((const Vector3 *)&c->v5c, (const Vector3 *)&vd);
+    v.z = Vec3_HorzDist(&mPos, (const Vector3 *)&vd);
     Matrix4x3_FromRotationY(&data_020a0e68,
-                            Vec3_HorzAngle((const Vector3 *)&c->v5c, (const Vector3 *)&vd));
-    MTX_MultVec43((Vector3 *)&v, (Matrix4x3 *)&data_020a0e68, (Vector3 *)&res);
+                            Vec3_HorzAngle(&mPos, (const Vector3 *)&vd));
+    MTX_MultVec43((Vector3 *)&v, &data_020a0e68, (Vector3 *)&res);
     {
         int t;
         vd.x = vd.x + res.x;
-        t = c->v60;
+        t = mPosY;
         vd.y = t;
         vd.z = vd.z + res.z;
         Matrix4x3_FromTranslation(&data_020a0e68, vd.x >> 3, (t - 0xc000) >> 3, vd.z >> 3);
     }
-    c->mtx = data_020a0e68;
-    ((dActor_c *)c)
-        ->DropShadowRadHeight(*(dExtShadowModel_c *)&c->shadowmodel, *(Matrix4x3 *)&c->mtx, 0x46000,
+    mMirrorMtx = *(Mtx43 *)&data_020a0e68;
+    DropShadowRadHeight(mShadowModel2, *(Matrix4x3 *)&mMirrorMtx, 0x46000,
                               0x258000, 0xf);
 }
 
@@ -1143,10 +1124,10 @@ int daMip_c::Render()
            walking it as BMD_Material:: does not match this loop. */
         int **base = (int **)&mAnmModel.data;
         BMD_File *modelData = (BMD_File *)base[0];
-        char* mat = (char*)base[1];
+        BMD_Material *mat = (BMD_Material *)base[1];
         for (unsigned int i = 0; i < modelData->numMaterials; i++) {
-            *(int*)(mat + 0x20) = mMaterialColor;
-            mat += 0x30;
+            mat->texImageParam = mMaterialColor;
+            mat++;
         }
     }
 
@@ -1506,7 +1487,7 @@ int daMip_c::InitResources()
         if (mAreaId == 3)
             mFlags = 0x8280;
     }
-    mMaterialColor = (mColorVariant << 1) + *(s32 *)((char *)mAnmModel.data.materials + 0x20);
+    mMaterialColor = (mColorVariant << 1) + mAnmModel.data.materials->texImageParam;
     SetState(&data_ov085_021306cc);
     return 1;
 }

@@ -543,7 +543,7 @@ int daObjMarioCap_c::Behavior()
     /* Run the current state's per-frame function (the second member pointer
        of the record in mStateEntry), if it has one. */
     {
-        CapStateRec *q = *(CapStateRec **)&mStateEntry;
+        CapStateRec *q = (CapStateRec *)mStateEntry;
         if (q->fn != 0) {
             (((CapStateSelf *)this)->*(q->fn))();
         }
@@ -709,12 +709,12 @@ void daObjMarioCap_c::UpdateMatrix()
     mAnmModel.mat4x3 = data_020a0e68;
 
     {
-        char *s = *(char **)&mStateEntry;
-        if (s == (char *)&data_ov002_0210df54)
+        McapStateRec *s = (McapStateRec *)mStateEntry;
+        if (s == &data_ov002_0210df54)
             return;
-        if (s == (char *)&data_ov002_0210df74)
+        if (s == &data_ov002_0210df74)
             return;
-        if (s == (char *)&data_ov002_0210df44)
+        if (s == &data_ov002_0210df44)
             return;
     }
 
@@ -760,8 +760,8 @@ void daObjMarioCap_c::UpdateMatrix()
  * if that member pointer is null. */
 int daObjMarioCap_c::EnterState(void *rec)
 {
-    *(CapEnterPmf **)&mStateEntry = (CapEnterPmf *)rec;
-    CapEnterPmf *q = *(CapEnterPmf **)&mStateEntry;
+    mStateEntry = (int)rec;
+    CapEnterPmf *q = (CapEnterPmf *)mStateEntry;
     if (*q == 0) return 0;
     return (((CapEnterSelf *)this)->**q)();
 }

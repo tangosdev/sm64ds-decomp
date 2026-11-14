@@ -142,10 +142,7 @@ extern void Mg_CallStartRound(void *c, void *arg);
 extern void Mg_SetNextBanner(int);
 }
 
-struct W2 {
-    int w[2];
-};
-extern W2 data_02086b58; /* __ptmf_null's address: the null member pointer */
+extern void (dMgState_c::*data_02086b58)(); /* __ptmf_null's address: the null member pointer */
 extern dFdBrightness_c *gSceneFader;
 extern dWipe_c data_0209f61c;
 extern int sMgTopScreenYOffset;
@@ -841,7 +838,7 @@ void dMgState_c::Results_Update() {
         return;
     func_02012790(0x62);
     FreeGfxSlotsById(7);
-    *(W2 *)&mRender = data_02086b58;
+    mRender = data_02086b58;
     RetryPromptWide_Enter();
 }
 
@@ -871,7 +868,7 @@ void dMgState_c::ResultsNewRecord_Update() {
         if (flag != 0) {
             FreeGfxSlotsById(7);
             func_02012790(0x62);
-            *(W2 *)&mRender = data_02086b58;
+            mRender = data_02086b58;
             RetryPromptWide_Enter();
         }
     }
@@ -922,7 +919,7 @@ void dMgState_c::GameOver_Update() {
     }
     if (g->CanEndState(mState) == 0)
         return;
-    *(W2 *)&mRender = data_02086b58;
+    mRender = data_02086b58;
     FreeGfxSlotsById(0x1d);
     if (Mg_IsNewRecord() != 0) {
         ResultsNewRecord_Enter();
@@ -961,7 +958,7 @@ void dMgState_c::Finished_Update() {
     }
     if (g->CanEndState(mState) == 0)
         return;
-    *(W2 *)&mRender = data_02086b58;
+    mRender = data_02086b58;
     FreeGfxSlotsById(0x1d);
     if (Mg_IsNewRecord() != 0) {
         ResultsNewRecord_Enter();

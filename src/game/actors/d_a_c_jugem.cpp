@@ -66,29 +66,43 @@ enum daC_Jugem_c_AssetId {
  * 0x2d9), fill the eleven state pairs and build the two carry-offset
  * vectors. mwcc emits __sinit_d_a_c_jugem.cpp from those definitions. The
  * wrapper names are local; the handle constructors and destructors are the
- * ROM resource-family functions, aliased in the manifest. JugemVec3's plain
- * overload builds the first vector with ordinary stores; the (int, int,
- * long) overload builds the second through a volatile lvalue, exactly as
- * retail. Both share the one declared-not-defined destructor, aliased to
- * the ROM's canonical ~Vector3. Plain `Vector3(x, y, z)` globals were
- * measured (#821): the first reproduces, but the second hoists its zero x
- * ahead of the address load and __sinit stops matching, so JugemVec3 stays
- * until the second vector's real shape is known. Also measured and ruled out
- * for the second vector: copy-initialisation from a Vector3 temporary,
- * const/static, every literal spelling of the arguments, by-reference, short
- * and long long ctor parameters, a member Set() from the ctor body, and
- * scheduling/peephole/optimisation-level pragmas at end of file. */
-struct JugemModelFile : SharedFilePtr {
+ * ROM resource-family functions, aliased in the manifest. The home vector
+ * is a JugemVec3; the approach target is a Vector3. */
+struct JugemModelFile {
+    union {
+        SharedFilePtr base;
+        struct {
+            u16 fileID;
+            u8 numRefs;
+            BMD_File *filePtr;
+        };
+    };
     JugemModelFile(u32 fileID);
     ~JugemModelFile();
 };
 
-struct JugemAnimationFilePtr : SharedFilePtr {
+struct JugemAnimationFilePtr {
+    union {
+        SharedFilePtr base;
+        struct {
+            u16 fileID;
+            u8 numRefs;
+            BCA_File *filePtr;
+        };
+    };
     JugemAnimationFilePtr(u32 fileID);
     ~JugemAnimationFilePtr();
 };
 
-struct JugemTexSequenceFilePtr : SharedFilePtr {
+struct JugemTexSequenceFilePtr {
+    union {
+        SharedFilePtr base;
+        struct {
+            u16 fileID;
+            u8 numRefs;
+            BTP_File *filePtr;
+        };
+    };
     JugemTexSequenceFilePtr(u32 fileID);
     ~JugemTexSequenceFilePtr();
 };
@@ -140,7 +154,7 @@ extern JugemModelFile  data_ov085_0213074c;  /* model file */
 extern JugemAnimationFilePtr  data_ov085_02130744;  /* animation file */
 extern JugemTexSequenceFilePtr  data_ov085_0213073c;  /* texture sequence file */
 extern JugemVec3        data_ov085_02130840;  /* home position */
-extern JugemVec3        data_ov085_0213084c;  /* approach target */
+extern Vector3          data_ov085_0213084c;
 
 /* The twelve state records, {enter, run} pairs written by the module sinit. */
 extern daC_Jugem_c::StateFn data_ov085_02130790[2];
@@ -248,10 +262,10 @@ int daC_Jugem_c::StateApproachMain()
     cam = gCamera;
     cam->SetFlag_3();
     mSfxHandle = Sound::PlayLong(mSfxHandle, 3, 0x182, mCamSpacePos, 0);
-    ApproachLinear(mAngleY, ::Vec3_HorzAngle(&mPos, (const Vector3 *)&data_ov085_0213084c), 0x200);
-    ApproachLinear(mAngleX, Vec3_VertAngle(&mPos, (const Vector3 *)&data_ov085_0213084c), 0x200);
+    ApproachLinear(mAngleY, ::Vec3_HorzAngle(&mPos, &data_ov085_0213084c), 0x200);
+    ApproachLinear(mAngleX, Vec3_VertAngle(&mPos, &data_ov085_0213084c), 0x200);
     ApproachLinear(mHorzSpeed, 0x28000, 0x2000);
-    ApproachLinear(mPrevAngleY, ::Vec3_HorzAngle(&mPos, (const Vector3 *)&data_ov085_0213084c),
+    ApproachLinear(mPrevAngleY, ::Vec3_HorzAngle(&mPos, &data_ov085_0213084c),
                    (s16)mAuxCounter);
     mAngleY = mPrevAngleY;
     mAuxCounter += 5;
@@ -268,7 +282,7 @@ int daC_Jugem_c::StateApproachMain()
     ApproachLinear(mCamPos, v[1], spd);
     cam->SetLookAt(mCamLook);
     cam->SetPos(mCamPos);
-    Vec3_Sub(&v[2], &mPos, (const Vector3 *)&data_ov085_0213084c);
+    Vec3_Sub(&v[2], &mPos, &data_ov085_0213084c);
     len = VEC_Mag(&v[2]);
     if (len == 0 || len < 0x7d0000)
         SetState(data_ov085_021307a0);
@@ -826,9 +840,9 @@ void daC_Jugem_c::UpdateShadowPlayer()
 
 int daC_Jugem_c::CleanupResources()
 {
-    data_ov085_0213074c.Release();
-    data_ov085_02130744.Release();
-    data_ov085_0213073c.Release();
+    data_ov085_0213074c.base.Release();
+    data_ov085_02130744.base.Release();
+    data_ov085_0213073c.base.Release();
     return 1;
 }
 
@@ -871,16 +885,16 @@ int daC_Jugem_c::Behavior()
 
 int daC_Jugem_c::InitResources()
 {
-    BMD_File *bmd = dExtSimpleModel_c::LoadFile(data_ov085_0213074c);
+    BMD_File *bmd = dExtSimpleModel_c::LoadFile(data_ov085_0213074c.base);
     mAnmModel1.SetFile(bmd, 1, -1);
-    dExtFrameCtrl_c::LoadFile(data_ov085_02130744);
-    dExtAnmTexPat_c::LoadFile(data_ov085_0213073c);
+    dExtFrameCtrl_c::LoadFile(data_ov085_02130744.base);
+    dExtAnmTexPat_c::LoadFile(data_ov085_0213073c.base);
     mShadowModel1.InitCylinder();
     mShadowModel2.InitCylinder();
-    dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov085_0213074c.filePtr,
-                             *(BTP_File *)data_ov085_0213073c.filePtr);
-    mAnmModel1.SetAnim((BCA_File *)data_ov085_02130744.filePtr, 0, 0x1000, 0);
-    mTextureSequence.SetFile(*(BTP_File *)data_ov085_0213073c.filePtr, 0, 0x1000, 0);
+    dExtAnmTexPat_c::Prepare(*data_ov085_0213074c.filePtr,
+                             *data_ov085_0213073c.filePtr);
+    mAnmModel1.SetAnim(data_ov085_02130744.filePtr, 0, 0x1000, 0);
+    mTextureSequence.SetFile(*data_ov085_0213073c.filePtr, 0, 0x1000, 0);
     mAnmModel1.speed = 0x1000;
     mVariant = param1 & 0xff;
     if (mVariant == 0xff)
@@ -935,4 +949,4 @@ daC_Jugem_c::StateFn data_ov085_021307f0[2] = {data_ov085_021302c4, data_ov085_0
 daC_Jugem_c::StateFn data_ov085_02130820[2] = {data_ov085_021302ac, data_ov085_02130284};
 daC_Jugem_c::StateFn data_ov085_021307a0[2] = {data_ov085_0213029c, data_ov085_02130274};
 JugemVec3 data_ov085_02130840(-0x640000, 0x378000, 0x1670000);
-JugemVec3 data_ov085_0213084c(0, 0x4d8000, (long)-0x104000);
+Vector3 data_ov085_0213084c(0, 0x4d8000, (long)-0x104000);

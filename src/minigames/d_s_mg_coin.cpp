@@ -1094,8 +1094,8 @@ void dScMgCoin_c::ResetRound() {
         mCoins[j].collected = 0;
     }
 
-    *(u32 *)&pad_4d00[0] = 0;
-    *(u32 *)&pad_4d00[4] = 0;
+    pad_4d00 = 0;
+    pad_4d04 = 0;
     mScore.total = 0;
     mScore.shown = 0;
     mScore.tick = 0;
@@ -1114,7 +1114,7 @@ void dScMgCoin_c::ResetRound() {
     mCountdown = 0;
     mWonLast = 0;
     pad_51dd = 0;
-    *(u32 *)pad_51d0 = 0;
+    pad_51d0 = 0;
     mCaptionLatch = 0;
     Caption_Reset();
     Bag_Hide();

@@ -184,11 +184,10 @@ void daObjPowerUpItem_c::BeginOpening()
     int x = mPosX;
     int y = mPosY + 0x82000;
     int z = mPosZ;
-    ((int *)&pos)[0] = x;
-    ((int *)&pos)[1] = y;
-    ((int *)&pos)[2] = z;
-    Particle::System::NewSimple(kPtclPowerFlowerOpen, ((int *)&pos)[0], ((int *)&pos)[1],
-                                ((int *)&pos)[2]);
+    pos.x = x;
+    pos.y = y;
+    pos.z = z;
+    Particle::System::NewSimple(kPtclPowerFlowerOpen, pos.x, pos.y, pos.z);
     func_02012694(0x7d, &mCamSpacePos);
     mEffectHandle = 0;
     mAngleY = gCamera->mAngleY;

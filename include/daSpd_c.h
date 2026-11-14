@@ -34,9 +34,10 @@ struct daSpd_c : dActor_c {
     dExtShadowModel_c mShadowModel;                /* 0x138 */
     dCcAc_c mdCcAc_c;  /* 0x160 */
     dBgCh_Actr mWithMeshClsn;              /* 0x194 */
-    /* Drop-shadow matrix, flat words. A Matrix4x3 member would run ~Vector3
-       from ~daSpd_c, and the structured spelling breaks the store. */
-    s32 mShadowMtx[12];                      /* 0x350 */
+    union {
+        s32 mShadowMtx[12];                  /* 0x350 */
+        Matrix4x3 mShadowMat;
+    };
     /* Current row of data_ov071_02122fa8. Two pointer-to-member calls. */
     void *mStateRow;                         /* 0x380 */
     s32 mHomeX;                              /* 0x384 */

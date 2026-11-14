@@ -15,9 +15,6 @@
  *     passed, not used. Jump2Popup's empty constructor and destructor
  *     are also dScMgTrampoline2_c's: its hand-built factory and array
  *     cleanup register them by their mangled names.
- *   - pad_5004 stays bytes: the state functions copy the whole eight-byte
- *     PMF record into it with a struct assign, and Behavior calls through
- *     it. See the header's state-machine note.
  *   - The func_ov006_020cNNN and func_ov004_* externs are foreign callees
  *     (the board objects' TUs and the minigame base), not this TU's own.
  */
@@ -60,14 +57,7 @@ struct S3 {
     int w[3];
 };
 
-/* The state callback stored at 0x5004 (pad_5004 in the header). */
 typedef void (dScMgJump2_c::*dScMgJump2_cState)();
-
-/* The same eight bytes as a plain pair: the state functions copy the next
- * state into 0x5004 whole. */
-struct G2 {
-    int w[2];
-};
 
 /* File-scope objects at the end of this file construct the two model
  * handles (files 0x203 and 0x204). mwcc emits __sinit_d_s_mg_jump2.cpp
@@ -102,17 +92,17 @@ extern void Mg_SetSharedState(int);
 extern void Heyho_SeparateAll(void);
 extern void Jump3D_UpdateAll(void);
 extern int sJumpComboCount;
-extern struct G2 pmf_dScMgJump2_c_State_Idle;
-extern struct G2 pmf_dScMgJump2_c_State_End;
+extern dScMgJump2_cState pmf_dScMgJump2_c_State_Idle;
+extern dScMgJump2_cState pmf_dScMgJump2_c_State_End;
 extern void Heyho_SettleAll(void);
 extern void Jump3D_SetTuning(int a);
 extern int sHeyhoUnsettledCount;
 extern int sHeyhoCount;
 extern int sJump3DMariosLeft;
-extern struct G2 pmf_dScMgJump2_c_State_Play;
+extern dScMgJump2_cState pmf_dScMgJump2_c_State_Play;
 extern void Jump3D_StartRoundLayout(void);
-extern struct G2 pmf_dScMgJump2_c_State_Result;
-extern struct G2 pmf_dScMgJump2_c_State_Intro;
+extern dScMgJump2_cState pmf_dScMgJump2_c_State_Result;
+extern dScMgJump2_cState pmf_dScMgJump2_c_State_Intro;
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 extern void Jump3D_SetLowGravity(void);
@@ -229,7 +219,7 @@ void dScMgJump2_c::BeginIntro() {
     mStateTimer = 0x78;
     mTextureOffsetT = 0;
     mTextureScrollRate = 0x4000;
-    *(struct G2 *)pad_5004 = pmf_dScMgJump2_c_State_Intro;
+    mState = pmf_dScMgJump2_c_State_Intro;
 }
 
 void dScMgJump2_c::State_Intro() {
@@ -248,7 +238,7 @@ void dScMgJump2_c::State_Intro() {
 
 void dScMgJump2_c::BeginPlay() {
     mStateTimer = 0xf0;
-    *(struct G2 *)pad_5004 = pmf_dScMgJump2_c_State_Play;
+    mState = pmf_dScMgJump2_c_State_Play;
 }
 
 void dScMgJump2_c::State_Play() {
@@ -317,7 +307,7 @@ void dScMgJump2_c::State_Play() {
 
 void dScMgJump2_c::BeginEnd() {
     mStateTimer = 0x20;
-    *(struct G2 *)pad_5004 = pmf_dScMgJump2_c_State_End;
+    mState = pmf_dScMgJump2_c_State_End;
 }
 
 void dScMgJump2_c::State_End() {
@@ -331,7 +321,7 @@ void dScMgJump2_c::State_End() {
     }
     Jump3D_SetLowGravity();
     Heyho_ReactAll();
-    *(struct G2 *)pad_5004 = pmf_dScMgJump2_c_State_Result;
+    mState = pmf_dScMgJump2_c_State_Result;
 }
 
 void dScMgJump2_c::State_Result() {
@@ -340,7 +330,7 @@ void dScMgJump2_c::State_Result() {
             Mg_SubmitScore(sJumpComboCount);
             Mg_SetSharedState(MG_STATE_GAME_OVER);
             mPromptEnabled = 0;
-            *(struct G2 *)pad_5004 = pmf_dScMgJump2_c_State_Idle;
+            mState = pmf_dScMgJump2_c_State_Idle;
         }
     }
     Heyho_SeparateAll();
@@ -363,10 +353,7 @@ s32 dScMgJump2_c::Behavior() {
         system->emitInterval = 0x2c;
     }
     Jump2Popup_UpdateAll();
-    {
-        dScMgJump2_cState *pp = (dScMgJump2_cState *)pad_5004;
-        (this->**pp)();
-    }
+    (this->*mState)();
     return 1;
 }
 

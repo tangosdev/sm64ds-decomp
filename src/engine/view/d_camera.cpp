@@ -208,6 +208,10 @@ typedef struct CamEntryE {
    which exists only to give the pointer-to-member a class. */
 struct CamPmfHost;
 typedef int (CamPmfHost::*CamPmf)();
+struct CamState {
+    CamPmf enter;
+    CamPmf exec;
+};
 struct CamPmfHost {
     char pad138[0x138];
     CamPmf *pp;                     /* camera +0x138 == mState */
@@ -858,7 +862,7 @@ void dCamera_c::func_0200cf40() {
 }
 
 void dCamera_c::func_0200cce4() {
-    VecFx32 vec;
+    Vector3 vec;
     VecFx32 tmp1;
     VecFx32 tmp2;
     u32 d;
@@ -903,7 +907,7 @@ void dCamera_c::func_0200cce4() {
             vec.y = ty;
             vec.z = tz;
         }
-        line.SetObjAndLine(pos, *(Vector3 *)&vec, 0);
+        line.SetObjAndLine(pos, vec, 0);
         if (line.DetectClsn() != 0) {
             Vector3 cp = line.GetClsnPos();
             vec.x = cp.x;
@@ -912,7 +916,7 @@ void dCamera_c::func_0200cce4() {
         }
         dBgCh_Gnd ground;
         PrepareBgCh(ground);
-        ground.SetObjAndPos(*(Vector3 *)&vec, 0);
+        ground.SetObjAndPos(vec, 0);
         if (ground.DetectClsn() != 0) {
             pos.y = d + ground.clsnY;
         }
@@ -1046,10 +1050,9 @@ int dCamera_c::UpdateState() {
     } else if (flags & 0x8000) {
         RestoreCameraStateAfterTalk();
     } else {
-        u8 *obj = (u8 *)mState;
-        if (*(int *)(obj + 8) != 0) {
-            CamPmf *execPmf = (CamPmf *)(obj + 8);
-            result = (host->**execPmf)();
+        CamState *st = (CamState *)mState;
+        if (st->exec != 0) {
+            result = (host->*(st->exec))();
         }
     }
     return result;
@@ -1084,10 +1087,10 @@ void dCamera_c::func_0200c9e0(s32 *minRise, s32 *maxRise) {
  * the choice in mAreaMode and mViewObj. Returns the player's ground height,
  * or the floor height when a type-4 view object takes over. */
 int dCamera_c::func_0200c66c(void *posArg, int *viewArg, int *modeArg, int *outFramed) {
-    VecFx32 *pos = (VecFx32 *)posArg;
+    Vector3 *pos = (Vector3 *)posArg;
     void **outView = (void **)viewArg;
     void **outMode = (void **)modeArg;
-    VecFx32 above;
+    Vector3 above;
     int floorY;
     int areaType;
     int viewId;
@@ -1119,7 +1122,7 @@ int dCamera_c::func_0200c66c(void *posArg, int *viewArg, int *modeArg, int *outF
             above.y = y;
             above.z = z;
         }
-        line.SetObjAndLine(*(Vector3 *)pos, *(Vector3 *)&above, 0);
+        line.SetObjAndLine(*pos, above, 0);
         if (line.DetectClsn() != 0) {
             Vector3 hit = line.GetClsnPos();
             above.x = hit.x;
@@ -1128,15 +1131,15 @@ int dCamera_c::func_0200c66c(void *posArg, int *viewArg, int *modeArg, int *outF
         }
         dBgCh_Gnd ground;
         PrepareBgCh(ground);
-        ground.SetObjAndPos(*(Vector3 *)&above, 0);
+        ground.SetObjAndPos(above, 0);
         if (ground.DetectClsn() == 0) {
             floorY = pos->y;
             areaType = 0;
             viewId = 0x3f;
         } else {
             floorY = ground.clsnY;
-            areaType = ((const CLPS *)&ground.surface)->GetCameraBehavior() & 0xff;
-            viewId = ((const CLPS *)&ground.surface)->GetViewID() & 0xff;
+            areaType = ground.surface.clps.GetCameraBehavior() & 0xff;
+            viewId = ground.surface.clps.GetViewID() & 0xff;
         }
     }
 
@@ -1274,7 +1277,7 @@ int dCamera_c::func_0200c394(int areaType, void *viewArg, void *pos, void **outM
  * eases mLookAtOffset toward it at speed, then moves lookAt.y within the
  * mode's followRise. Returns the ground height under that point. */
 int dCamera_c::func_0200bec4(int *target, int baseY, char *modeArg, int speed) {
-    VecFx32 goal;
+    Vector3 goal;
     Vector3 to;
     Vector3 from;
     Vector3 above;
@@ -1307,7 +1310,7 @@ int dCamera_c::func_0200bec4(int *target, int baseY, char *modeArg, int speed) {
     above.y = goal.y + 0x100000;
     above.z = goal.z;
     PrepareBgCh(line);
-    line.SetObjAndLine(*(Vector3 *)&goal, above, 0);
+    line.SetObjAndLine(goal, above, 0);
     if (line.DetectClsn() != 0) {
         Vector3 hit = line.GetClsnPos();
         above = hit;
@@ -2132,9 +2135,18 @@ s32 dCamera_c::func_02009e70() {
     s32 farDist;
     s32 minY;
     s32 prevDist;
-    u16 pitch;
-    struct CamMode *mode;
-    CamViewObj *view;
+    union {
+        u16 pitch;
+        s16 pitchS;
+    };
+    union {
+        struct CamMode *mode;
+        int modeAsInt;
+    };
+    union {
+        CamViewObj *view;
+        int viewAsInt;
+    };
     s32 framing;
     s32 dist;
     s32 minRise;
@@ -2179,7 +2191,7 @@ s32 dCamera_c::func_02009e70() {
             mLookTargetPos.z = q->z;
             mFocusDist = 0xdfe60;
         }
-        r6 = func_0200c66c(&mTargetPos, (int *)&view, (int *)&mode, &framing);
+        r6 = func_0200c66c(&mTargetPos, &viewAsInt, &modeAsInt, &framing);
         r4 = 0;
         if (framing != 0) {
             r4 = 0x1000;
@@ -2218,15 +2230,15 @@ s32 dCamera_c::func_02009e70() {
         turnInput = data_0209f498[gActivePlayerSlot].pressed & 0x4300;
         if (mFocusActor != 0) {
             mAngleY = Vec3_HorzAngle(&lookAt, &pos);
-        } else if (mode == (CamMode *)&data_0208733c) {
+        } else if ((u32)mode == (u32)&data_0208733c) {
             Mode8DirectionsCamera(view);
             turnInput = 0;
-        } else if (mode == (CamMode *)&data_020873dc) {
+        } else if ((u32)mode == (u32)&data_020873dc) {
             UpdateFixedCamera(view, r6);
         } else if ((mFlags & 0x400) == 0) {
             if (mode == &data_02087404) {
                 UpdateSpiralStairsCamera(view, r6);
-            } else if (mode == (CamMode *)&data_0208742c) {
+            } else if ((u32)mode == (u32)&data_0208742c) {
                 UpdateParallelTrackingCamera(view, r6);
             } else {
                 mFlags |= 0x1000;
@@ -2385,7 +2397,7 @@ s32 dCamera_c::func_02009e70() {
                                         sb = 0x3f80;
                                     fp = Vec3_HorzLen(&offset);
                                     pitch = cstd::atan2(-offset.y, fp);
-                                    ApproachAngle((s16 *)&pitch, sb, 0x20, 0x800, 0);
+                                    ApproachAngle(&pitchS, sb, 0x20, 0x800, 0);
                                     offset.y = FX_MUL(dist, -FX_SinIdx(pitch >> 4));
                                     t0 = FX_Div(FX_MUL(dist, FX_CosIdx(pitch >> 4)), fp);
                                     offset.x = FX_MUL(offset.x, t0);

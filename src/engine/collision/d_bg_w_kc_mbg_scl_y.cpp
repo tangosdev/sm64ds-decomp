@@ -123,7 +123,7 @@ int dBgW_KcMbgSclY::DetectClsn(dBgCh_SphCrr &sphere) {
     /* The local query's push-out bounds, and the same bounds scaled back out.
        Plain words: Vector3 declares a destructor. */
     struct {
-        VecFx32 localMin, localMax;
+        int localMin[3], localMax[3];
         VecFx32 scaledMin, scaledMax;
     } bounds;
     int inverseScale;
@@ -145,13 +145,13 @@ int dBgW_KcMbgSclY::DetectClsn(dBgCh_SphCrr &sphere) {
     (dBgCh &)localSphere = sphere;
     hit = dBgW_Kc::DetectClsn(localSphere);
     if (hit) {
-        localSphere.GetPushOutBounds((Vector3 *)&bounds.localMin, (Vector3 *)&bounds.localMax);
-        bounds.scaledMin.x = FX_MUL(bounds.localMin.x, scale);
-        bounds.scaledMin.y = FX_MUL(bounds.localMin.y, scale);
-        bounds.scaledMin.z = FX_MUL(bounds.localMin.z, scale);
-        bounds.scaledMax.x = FX_MUL(bounds.localMax.x, scale);
-        bounds.scaledMax.y = FX_MUL(bounds.localMax.y, scale);
-        bounds.scaledMax.z = FX_MUL(bounds.localMax.z, scale);
+        localSphere.GetPushOutBounds((Vector3 *)bounds.localMin, (Vector3 *)bounds.localMax);
+        bounds.scaledMin.x = FX_MUL(bounds.localMin[0], scale);
+        bounds.scaledMin.y = FX_MUL(bounds.localMin[1], scale);
+        bounds.scaledMin.z = FX_MUL(bounds.localMin[2], scale);
+        bounds.scaledMax.x = FX_MUL(bounds.localMax[0], scale);
+        bounds.scaledMax.y = FX_MUL(bounds.localMax[1], scale);
+        bounds.scaledMax.z = FX_MUL(bounds.localMax[2], scale);
         sphere.ExpandPushOutBounds(bounds.scaledMin.x, bounds.scaledMin.y, bounds.scaledMin.z,
                                    bounds.scaledMax.x, bounds.scaledMax.y, bounds.scaledMax.z);
         (dBgPi &)sphere = (dBgPi &)localSphere;

@@ -14,6 +14,7 @@
 #include "dCcAc_c.h"
 #include "dExtShadowModel_c.h"
 #include "dBgCh_Actr.h"
+#include "private/mtx43.h"
 
 struct daYurei_Mucho_c : dEnemyBase_c {
     /* Two 8-byte PMFs, called on state entry and each frame. The names and
@@ -29,9 +30,9 @@ struct daYurei_Mucho_c : dEnemyBase_c {
     dExtAnmModel_c mAnmModel;         /* 0x300 */
     dExtShadowModel_c mShadowModel;         /* 0x364 */
     /* DropShadowRadHeight matrix. UpdateModelTransform writes a translation of
-       (mPosX, mPosY - 0x18000, mPosZ) >> 3. s32[12] rather than Matrix4x3:
+       (mPosX, mPosY - 0x18000, mPosZ) >> 3. Mtx43 rather than Matrix4x3:
        the latter embeds a Vector3 whose destructor would run in D1/D0. */
-    s32 mShadowMat[12];               /* 0x38c */
+    Mtx43 mShadowMat;                 /* 0x38c */
     State *mCurrentState;             /* 0x3bc */
     /* Bone-derived shot origin. UpdateModelTransform fills it from the last
        column of the transformed model matrix (<< 3, y -= 0xa000);

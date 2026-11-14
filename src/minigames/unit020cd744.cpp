@@ -207,7 +207,7 @@ void TrmpItem::MotionSpinHover() {
     struct Vector3 normalCopy;
     struct Vector3 tangent;
     struct Vector3 tangentCopy;
-    func_0203cc28((int *)&mForward, 0x100);
+    func_0203cc28(&mForward.x, 0x100);
     func_0203ce80(&normalCopy, &mForward);
     func_0203cf00(&tangent, &mForward, &sUnitZ);
     mSide.x = tangent.x;
@@ -231,7 +231,7 @@ void TrmpItem::MotionSpinDrift() {
 
     struct Vector3 normalCopy, tangent, tangentCopy;
 
-    func_0203cc28((int *)&mForward, 0x100);
+    func_0203cc28(&mForward.x, 0x100);
     func_0203ce80(&normalCopy, &mForward);
     func_0203cf00(&tangent, &mForward, &sUnitZ);
     mSide.x = tangent.x;
@@ -254,7 +254,7 @@ void TrmpItem::MotionSpinSway() {
     struct Vector3 normalCopy;
     struct Vector3 tangent;
     struct Vector3 tangentCopy;
-    func_0203cc28((int *)&mForward, 0x100);
+    func_0203cc28(&mForward.x, 0x100);
     func_0203ce80(&normalCopy, &mForward);
     func_0203cf00(&tangent, &mForward, &sUnitZ);
     mSide.x = tangent.x;
@@ -314,7 +314,7 @@ void TrmpItem::MotionSpin() {
 
     struct Vector3 normalCopy, tangent, tangentCopy;
 
-    func_0203cc28((int *)&mForward, 0x100);
+    func_0203cc28(&mForward.x, 0x100);
     func_0203ce80(&normalCopy, &mForward);
     func_0203cf00(&tangent, &mForward, &sUnitZ);
     mSide.x = tangent.x;
@@ -717,20 +717,18 @@ void TrmpItem::Init(int *position, int *normal, int itemType, short motionType) 
     mForward.x = normal[0];
     mForward.y = normal[1];
     mForward.z = normal[2];
-    /* Load-bearing: both component-pointer copies below. Plain field copies
-       or a Vector3 assignment reallocate the whole function. */
     {
-        int *normalComponents = (int *)&mForward;
+        int *normalComponents = &mForward.x;
         mSide.x = normalComponents[0];
         mSide.y = normalComponents[1];
         mSide.z = normalComponents[2];
     }
-    func_0203cc28((int *)&mSide, -0x4000);
+    func_0203cc28(&mSide.x, -0x4000);
     mPrevPos.x = mPos.x;
     mPrevPos.y = mPos.y;
     mPrevPos.z = mPos.z;
     {
-        int *cachedPosition = (int *)&mPrevPos;
+        int *cachedPosition = &mPrevPos.x;
         mSpawnPos.x = cachedPosition[0];
         mSpawnPos.y = cachedPosition[1];
         mSpawnPos.z = cachedPosition[2];
@@ -1403,7 +1401,9 @@ void TrmpLine::Build(short *startPoint, short *endPoint) {
     endPoint[0] = (endPoint[0] - 0x80);
     endPoint[1] = (s16)(0 - endPoint[1]);
 
-    if (*(const s16 *)startPoint > *(const s16 *)endPoint) {
+    const s16 *startCmp = startPoint;
+    const s16 *endCmp = endPoint;
+    if (*startCmp > *endCmp) {
         swapX = startPoint[0];
         swapY = startPoint[1];
         startPoint[0] = endPoint[0];
@@ -1857,9 +1857,6 @@ int TrmpLine::Create(s16 *startPoint, s16 *endPoint) {
             slotOffset = slotIndex * 0x32c;
             newLine = (char *)sTrmpLines + slotOffset;
             ((TrmpLine *)newLine)->Build(startCopy, endCopy);
-            /* Load-bearing: the ROM adds slotOffset as an integer to each field's
-               own address constant. sTrmpLines[slotIndex].field (999 words) and
-               char * arithmetic (7 words) both differ. */
             *(s16 *)((int)&sTrmpLines[0].mBouncesLeft + slotOffset) = 1;
             *(u16 *)((int)&sTrmpLines[0].mBounceCount + slotOffset) = 0;
             *(s16 *)((int)&sTrmpLines[0].mSlotIndex + slotOffset) = (s16)slotIndex;

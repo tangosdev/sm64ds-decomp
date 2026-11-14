@@ -629,15 +629,15 @@ int daBakubaku_c::ShouldReturnHome() {
 /* Mario is a chase target. Stores his position. */
 int daBakubaku_c::FindChaseTarget() {
     daPly_c *pl = ClosestPlayer();
-    int *s;
+    const Vector3 *s;
     void *t;
     int d;
     if (pl == 0 || mChaseCooldown != 0)
         return 0;
-    s = (int *)&pl->mPosX;
-    mTargetPosX = s[0];
-    mTargetPosY = s[1];
-    mTargetPosZ = s[2];
+    s = &pl->mPos;
+    mTargetPosX = s->x;
+    mTargetPosY = s->y;
+    mTargetPosZ = s->z;
     t = mState;
     if (t != &data_ov032_02113abc && t != &data_ov032_02113a7c) {
         if (pl->mIsUnderwater == 0)

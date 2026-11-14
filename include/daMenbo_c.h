@@ -67,7 +67,10 @@ struct daMenbo_c : dEnemyBase_c {
        and reloads it with a random 0..0x3f; a turn or a spotted player
        reloads it too. Behavior counts it down. Was unk_398. */
     u16 mWanderTimer;                                   /* 0x398 */
-    u16 mTargetAngleY;                                  /* 0x39a */
+    union {
+        u16 mTargetAngleY; /* 0x39a */
+        s16 mTargetAngleYSigned;
+    };
     /* 1 while the skeeter stands on water: the ground probe (02131378) sets
        it when the floor is below the water height and Y is at the water;
        InitResources sets it for a surface with flag 0x20. Idle and patrol go

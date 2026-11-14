@@ -453,11 +453,12 @@ void daOnms_c::CheckPlayerHit()
     int b = (o->actorID == 0xbf);
     if (b == 0) return;
     int f = mdCcAcPos_c.hitFlags;
+    daPly_c *player = (daPly_c *)o;
     if (f & 0x40) {
         Launch(o, 0);
     } else if (f & (0x80 | 0x100 | 0x200)) {
         Launch(o, 1);
-    } else if (BumpedUnderneathByPlayer(*(daPly_c *)o) != 0) {
+    } else if (BumpedUnderneathByPlayer(*player) != 0) {
         if (o->mPosY > mPosY - 0x64000)
             Launch(o, 2);
     }
