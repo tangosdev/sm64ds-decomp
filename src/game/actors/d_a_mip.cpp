@@ -1134,12 +1134,13 @@ int daMip_c::Render()
     mScaleY = mScaleZ;
 
     {
-        /* modelFile, then materials.
-           +0x20 of each 0x30-byte material is still pad in BMD_Material;
-           walking it as BMD_Material:: does not match this loop. */
-        int **base = (int **)&mAnmModel.data;
-        BMD_File *modelData = (BMD_File *)base[0];
-        char* mat = (char*)base[1];
+        /* modelFile, then materials. +0x20 is a word of the 0x30-byte runtime
+           material record (MaterialState, still local to
+           src/engine/model/ModelComponents.cpp), not of BMD_Material, whose
+           file layout dExtModel_c gives the pointer. Raw until it has a header. */
+        ModelComponents *components = &mAnmModel.data;
+        BMD_File *modelData = components->modelFile;
+        char *mat = (char *)components->materials;
         for (unsigned int i = 0; i < modelData->numMaterials; i++) {
             *(int*)(mat + 0x20) = mMaterialColor;
             mat += 0x30;
