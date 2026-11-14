@@ -182,7 +182,7 @@ struct dScMgSlot1_c : dScMgBase_c {
     u8 mStoppedReelCount;  /* 0x4705 -- reels stopped by touch this spin */
     s8 mPrevMatchedSymbol; /* 0x4706 -- Slot1_InitHud seeds -1, StartRound(4) copies
                               mMatchedSymbol; nothing here reads it back */
-    u8 mUnk4707;           /* 0x4707 -- Slot1_InitHud stores 1; no reader */
+    u8 unk_4707;           /* 0x4707 -- Slot1_InitHud stores 1; no reader */
     u8 mSpeedTableOffset;  /* 0x4708 -- added to reel index in the speed table */
     u8 mMatchedSymbol;     /* 0x4709 -- common non-wild symbol, or 5 if all wild */
     u8 mHasMatch;          /* 0x470a -- all three symbols agree, allowing wilds */
