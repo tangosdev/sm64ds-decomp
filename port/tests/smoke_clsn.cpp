@@ -100,8 +100,8 @@ int main(void)
     }
 
     /* vertical probes over a grid derived from the file's own octree box
-       (origin and mask extents are in raw units = Fix12i >> 6) */
-    /* origin is Fix12i; the mask extents count 0x40-fx cells */
+       (origin and mask extents are in raw units = fx32 >> 6) */
+    /* origin is fx32; the mask extents count 0x40-fx cells */
     KCL_File *f = kcl;
     const int ex_ = (int)(~f->xMask + 1) << 6, ez_ = (int)(~f->zMask + 1) << 6;
     const int ey_ = (int)(~f->yMask + 1) << 6;

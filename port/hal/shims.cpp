@@ -40,7 +40,7 @@ void dFdBrightness_c::AdvanceFade() { AdvanceInterp(); }
 // Retain the encoded C entry for legacy host callers. The fader now uses the
 // native reference interface directly; both spellings reach the same helper.
 int ApproachLinear(int &ref, int target, int step);
-extern "C" void _Z14ApproachLinearRiii(Fix12i *value, Fix12i target, Fix12i step)
+extern "C" void _Z14ApproachLinearRiii(fx32 *value, fx32 target, fx32 step)
 {
     (void)ApproachLinear(*value, target, step);
 }
