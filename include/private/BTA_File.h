@@ -31,9 +31,9 @@ typedef struct BTAMaterialRecord {
 typedef struct BTA_File {
     u16 numFrames;
     u16 pad_02;
-    Fix12i *keyScales;
+    fx32 *keyScales;
     u16 *keyRotations;
-    Fix12i *keyTranslations;
+    fx32 *keyTranslations;
     u16 numMaterialRecords;
     u16 pad_12;
     BTAMaterialRecord *materialRecords;

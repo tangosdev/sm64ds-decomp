@@ -22,7 +22,7 @@
  *  - The Fix12-by-value dExtShadowModel_c::InitModel call keeps its measured
  *    scalar-extern spelling: spelled as
  *    the real member types, mwccarm homes the register arguments and the
- *    callers grow. G3i_PerspectiveW_ is the Fix12i method.
+ *    callers grow. G3i_PerspectiveW_ takes the SDK's fx32 scalars.
  *  - The Matrix4x3 copies go through the flat Mtx43; assigning Matrix4x3
  *    itself grows .text by 0x6c bytes.
  *  - Behavior's mFellOffThisFrame probe keeps the second `walk` induction variable

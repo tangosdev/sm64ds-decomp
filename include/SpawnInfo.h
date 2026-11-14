@@ -32,10 +32,10 @@ template <class T> struct SpawnInfo {
     u16 behaviorPriority;
     u16 renderPriority;
     u32 actorFlags;
-    Fix12i clipOffsetY;
-    Fix12i clipRadius;
-    Fix12i clipDistance;
-    Fix12i farDistance;
+    fx32 clipOffsetY;
+    fx32 clipRadius;
+    fx32 clipDistance;
+    fx32 farDistance;
 };
 
 /* 0x1c with 32-bit pointers; the PC port's 64-bit pointers widen classInit. */

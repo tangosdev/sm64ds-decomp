@@ -23,7 +23,7 @@
  *   a plain `playerPos = o->mPos` uses [r8,#0x5c] addressing and shortens
  *   Behavior by 4 bytes. The focus copy already goes through a pointer
  *   local, so `&focus->mPos` needs no launder.
- * - GetPosFromMinimapPos and GetPosOnMinimap are static Fix12i methods;
+ * - GetPosFromMinimapPos and GetPosOnMinimap are static fx32 methods;
  *   the third parameter is the scalar, not Fix12<int>.
  * - The OAM and Vec3 helpers stay on C-linkage or hand-mangled
  *   externs for the same reason.
@@ -1063,7 +1063,7 @@ int dMap_c::InitResources()
 
 #pragma opt_strength_reduction on
 
-void dMap_c::GetPosFromMinimapPos(Vector3 &minimapPos, Vector3 &center, Fix12i scale, short angle,
+void dMap_c::GetPosFromMinimapPos(Vector3 &minimapPos, Vector3 &center, fx32 scale, short angle,
                                   Vector3 &out) {
     Vector3 offset;
     Vec3_Sub(&offset, &minimapPos, &sMapScreenCenter);
@@ -1071,7 +1071,7 @@ void dMap_c::GetPosFromMinimapPos(Vector3 &minimapPos, Vector3 &center, Fix12i s
     Vec3_RotateYAndTranslate(&out, &center, angle, &offset);
 }
 
-void dMap_c::GetPosOnMinimap(Vector3 *pos, Vector3 *center, Fix12i scale, short angle,
+void dMap_c::GetPosOnMinimap(Vector3 *pos, Vector3 *center, fx32 scale, short angle,
                              Vector3 *out) {
     Vector3 offset;
     Vec3_Sub(&offset, pos, center);

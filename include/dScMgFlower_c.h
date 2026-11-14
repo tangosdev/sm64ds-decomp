@@ -93,8 +93,8 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
        and two scalar temps all lose the slot -- measured, 2004/b56). Nested so
        the coined name cannot collide with anything global. */
     struct Vec2 {
-        Fix12i x;
-        Fix12i y;
+        fx32 x;
+        fx32 y;
         ~Vec2() {}
     };
 

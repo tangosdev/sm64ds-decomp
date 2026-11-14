@@ -44,7 +44,7 @@ struct dFdColor_c : dFdBrightness_c {
        reason as dFdBrightness_c's: the ROM has no out-of-line constructor for
        this class either. The initial interpolator value is forwarded to
        dFdBrightness_c unchanged; dWipe_c passes 0 (see that header). */
-    dFdColor_c(Fix12i initial = 0x1000);
+    dFdColor_c(fx32 initial = 0x1000);
 
     virtual ~dFdColor_c();          /* key function; see above */
     virtual void AdvanceFade();     /* slot 2 -- the only override */
@@ -55,7 +55,7 @@ struct dFdColor_c : dFdBrightness_c {
    inline body and reports the whole header UNPARSED. `inline` keeps the
    emission identical: the body still goes wherever it is used, and the ROM
    has no out-of-line constructor for this class. */
-inline dFdColor_c::dFdColor_c(Fix12i initial) : dFdBrightness_c(initial) { color = 0; }
+inline dFdColor_c::dFdColor_c(fx32 initial) : dFdBrightness_c(initial) { color = 0; }
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */

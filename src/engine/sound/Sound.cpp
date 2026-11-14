@@ -13,7 +13,7 @@
  *   Play2D returns Player_PlaySoundEffect's result, which its tail call
  *   leaves in r0.
  * - ChangeMusicVolume is Sound::ChangeMusicVolume(unsigned int, int). The
- *   second value is a 0x1000-scaled volume, spelled Fix12i in the header.
+ *   second value is a 0x1000-scaled volume, spelled fx32 in the header.
  * - `int dd = (int)(((long long)d))' in func_02012468 is a no-op tower of
  *   unknown load-bearing status.
  */

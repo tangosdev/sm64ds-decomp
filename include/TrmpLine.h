@@ -46,7 +46,7 @@ struct TrmpLine {
        arrays, where the cartridge's are a single store and an empty body
        (MEASURED: 0x80 and 0x54 bytes against 0xc and 0x4). */
     struct Vtx {
-        Fix12i x, y, z;
+        fx32 x, y, z;
     };
 
     s32 mState[2];          /* 0x000 -- the current state's member-pointer record */

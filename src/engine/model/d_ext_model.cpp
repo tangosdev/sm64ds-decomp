@@ -122,7 +122,7 @@ extern BMD_File data_ov001_020ad524;
 extern BMD_File data_ov001_020ad560;
 extern "C" {
 /* local extern: no header declares it; the shadow scale matrix */
-void func_0203c178(Matrix4x3 *m, Fix12i sx, Fix12i sy, Fix12i sz);
+void func_0203c178(Matrix4x3 *m, fx32 sx, fx32 sy, fx32 sz);
 /* local extern: the texture-animation helpers. Each Prepare's ROM body is a
    0xc long-call veneer (ldr ip, [pc]; bx ip); the registers pass through
    untouched, so the helper's own two-argument signature is the call surface. */

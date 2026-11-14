@@ -36,7 +36,7 @@ struct dFdBrightness_c : dFader_c {
        (0x0202fc40) runs the same vptr/store/vptr/store chain but writes
        `currInterp = 0`, so its constructor passes 0 where the fader leaves
        the default. */
-    dFdBrightness_c(Fix12i initial = 0x1000);
+    dFdBrightness_c(fx32 initial = 0x1000);
 
     /* Declared first among the virtuals -- key function. The D0/D1/D2 sources
        now define the real destructor and isolate the requested variant from
@@ -58,7 +58,7 @@ struct dFdBrightness_c : dFader_c {
    inline body and reports the whole header UNPARSED. `inline` keeps the
    emission identical: the body still goes wherever it is used, and the ROM
    has no out-of-line constructor for this class. */
-inline dFdBrightness_c::dFdBrightness_c(Fix12i initial) { currInterp = initial; speed = 0; }
+inline dFdBrightness_c::dFdBrightness_c(fx32 initial) { currInterp = initial; speed = 0; }
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */

@@ -5,10 +5,10 @@
 #include "common.h"
 #include "math/MtxStack.h"
 
-extern void MTX_Scale43_(struct Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z)
+extern void MTX_Scale43_(struct Matrix4x3 *mF, fx32 x, fx32 y, fx32 z)
     __attribute__((long_call, target("thumb")));
 
-void Matrix4x3_ApplyInPlaceToScale(struct Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z)
+void Matrix4x3_ApplyInPlaceToScale(struct Matrix4x3 *mF, fx32 x, fx32 y, fx32 z)
 {
     struct Matrix4x3 tmp;
     MTX_Scale43_(&tmp, x, y, z);

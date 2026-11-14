@@ -5,7 +5,7 @@
 #include "common.h"
 #include "math/MtxStack.h"
 
-void Matrix4x3_ApplyInPlaceToTranslation(struct Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z)
+void Matrix4x3_ApplyInPlaceToTranslation(struct Matrix4x3 *mF, fx32 x, fx32 y, fx32 z)
 {
     struct Matrix4x3 tmp;
     Matrix4x3_FromTranslation(&tmp, x, y, z);
