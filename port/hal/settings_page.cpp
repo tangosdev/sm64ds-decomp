@@ -671,9 +671,9 @@ const Row ROWS_CONTROLS[] = {
     { R_CHOICE, "Run", SL_RUN_MODE, -1, 0, RUN_LABELS, 3 },
     { R_SLIDER, "Camera speed", SL_CAMERA_SENSITIVITY, -1, 5, 0, 0 },
     { R_SLIDER, "Mouse speed", SL_MOUSE_SENSITIVITY, -1, 5, 0, 0 },
-    { R_SLIDER, "Stick acceleration", SL_CAMERA_STICK_ACCEL, -1, 1, 0, 0 },   /* SKYCAM1 phase 2 */
-    { R_SLIDER, "Stick deceleration", SL_CAMERA_STICK_DECEL, -1, 1, 0, 0 },
-    { R_NOTE, "Right stick camera: seconds to speed up and to stop. 0 is instant.", -1, -1, 0, 0, 0 },
+    { R_SLIDER, "Acceleration", SL_CAMERA_STICK_ACCEL, -1, 1, 0, 0 },   /* SKYCAM1 phase 2 */
+    { R_SLIDER, "Deceleration", SL_CAMERA_STICK_DECEL, -1, 1, 0, 0 },
+    { R_NOTE, "Right stick turning. 0 is instant, higher is smoother.", -1, -1, 0, 0, 0 },
     { R_CHECK, "Invert camera left/right", SL_SWAP_CAMERA_TURN, -1, 0, 0, 0 },
     { R_CHECK, "Invert camera up/down", SL_INVERT_CAMERA_Y, -1, 0, 0, 0 },
     { R_CHECK, "Lock mouse", SL_MOUSE_CAPTURE, -1, 0, 0, 0 },
