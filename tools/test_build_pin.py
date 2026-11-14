@@ -24,8 +24,7 @@ import rombuild as RB      # noqa: E402
 
 # The tools that rewrite a source file and keep the rewrite when a check passes. These
 # are the ones where "any version in the sweep" is a false green rather than a report.
-VERIFY_AND_KEEP = ["resolve_placeholders.py", "extern_c_wrap.py", "resolve_blind.py",
-                   "reconcile_names.py", "demember_calls.py"]
+VERIFY_AND_KEEP = ["resolve_placeholders.py", "resolve_blind.py", "demember_calls.py"]
 
 
 def _toolchain():

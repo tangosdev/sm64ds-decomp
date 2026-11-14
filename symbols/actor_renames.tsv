@@ -9930,6 +9930,7 @@ ov002	0x020d6334	_ZN7daPly_c19func_ov002_020d6334Ei	_ZN7daPly_c19func_ov002_020d
 ov002	0x020e7090	_ZN8daStar_c13CollectNoPoseEi	_ZN8daStar_c13CollectNoPoseEP7daPly_c	CollectNoPose stores the collecting player in mPlayer; the parameter is the daPly_c pointer, not an int
 arm9	0x02016254	_ZN15dExtAnm2Model_c4CopyERKS_Pcj	_ZN15dExtAnm2Model_c4CopyERKS_PcP8BCA_File	the second-animation BCA lives in a BCA_File* member, so the copy parameter is BCA_File*
 arm9	0x020162c4	_ZN15dExtAnm2Model_c13Func_020162C4Ejiit	_ZN15dExtAnm2Model_c13Func_020162C4EP8BCA_Fileiit	Func_020162C4 is SetAnim for the second BCA; the animation file parameter is BCA_File* like dExtAnmModel_c::SetAnim
+ov002	0x020f5ad4	func_ov002_020f5ad4	_ZN8daDemo_c9StaffRoll19func_ov002_020f5ad4Ev	free helper -> daDemo_c::StaffRoll member: only caller (the staff-roll init, ov002 handler 20) passes the freshly built block in r0, no address-taken loads; it clears the star/hold-orbit fields then calls the sub-initialisers on the same block
 arm9	0x020352b4	dScMB_c_classInit	_Z17dScMB_c_classInitv	C++ linkage; symbols.txt emits this name
 arm9	0x02023624	dScBoot_c_classInit	_Z19dScBoot_c_classInitv	C++ linkage; symbols.txt emits this name
 arm9	0x0202e088	dScStage_c_classInit	_Z20dScStage_c_classInitv	C++ linkage; symbols.txt emits this name

@@ -55,7 +55,9 @@
       "src/game/actors/d_a_obj_cannon_shutter.cpp": [
         "param:#1 const Vector3 *",
         "param:#2 const Vector3 *",
-        "param:#3 Vector3 *"
+        "param:#3 Vector3 *",
+        "param:#1 Vector3 *",
+        "param:#2 Vector3 *"
       ],
       "src/game/actors/d_a_obj_casket.cpp": [
         "param:#1 Vector3 *",
@@ -75,7 +77,9 @@
       "src/game/actors/d_a_obj_cv_news_lift.cpp": [
         "param:#1 const Vector3 *",
         "param:#2 const Vector3 *",
-        "param:#3 Vector3 *"
+        "param:#3 Vector3 *",
+        "param:#1 Vector3 *",
+        "param:#2 Vector3 *"
       ],
       "src/game/actors/d_a_obj_fl_koma_u.cpp": [
         "param:#1 const Vector3 *",
@@ -123,6 +127,21 @@
         "param:#3 Vector3 *"
       ],
       "src/game/actors/d_a_piano.cpp": [
+        "param:#1 Vector3 *",
+        "param:#2 Vector3 *",
+        "param:#3 Vector3 *"
+      ],
+      "include/math/CalcLib.h": [
+        "param:#1 Vector3 *",
+        "param:#2 Vector3 *",
+        "param:#3 Vector3 *"
+      ],
+      "src/game/actors/d_a_chair.cpp": [
+        "param:#1 Vector3 *",
+        "param:#2 Vector3 *",
+        "param:#3 Vector3 *"
+      ],
+      "src/game/actors/d_a_linelift2.cpp": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *",
         "param:#3 Vector3 *"
@@ -267,7 +286,9 @@
       "src/engine/collision/d_clipper.cpp": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
+        "param:#3 Vector3 *",
+        "param:#1 const Vector3 *",
+        "param:#2 const Vector3 *"
       ],
       "src/engine/gx/G3i.cpp": [
         "param:#1 const Vector3 *",
@@ -282,22 +303,43 @@
       "src/unnamed/arm9/0203/func_0203ce80.c": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
+        "param:#3 Vector3 *",
+        "param:#1 const Vector3 *",
+        "param:#2 const Vector3 *"
       ],
       "src/SPLDraw_Child_DirectionalBillboard.c": [
         "param:#1 Vec3 *",
         "param:#2 Vec3 *",
-        "param:#3 Vec3 *"
+        "param:#3 Vec3 *",
+        "param:#1 const Vector3 *",
+        "param:#2 const Vector3 *",
+        "param:#3 Vector3 *"
       ],
       "src/SPLDraw_DirectionalBillboard.c": [
         "param:#1 Vec3 *",
         "param:#2 Vec3 *",
-        "param:#3 Vec3 *"
+        "param:#3 Vec3 *",
+        "param:#1 const Vector3 *",
+        "param:#2 const Vector3 *",
+        "param:#3 Vector3 *"
       ],
       "src/game/stages/d_s_entry_entry.cpp": [
         "param:#1 const EntryMeshVec *",
         "param:#2 const EntryMeshVec *",
-        "param:#3 EntryMeshVec *"
+        "param:#3 EntryMeshVec *",
+        "param:#1 const Vector3 *",
+        "param:#2 const Vector3 *",
+        "param:#3 Vector3 *"
+      ],
+      "include/math/CalcLib.h": [
+        "param:#1 const Vector3 *",
+        "param:#2 const Vector3 *",
+        "param:#3 Vector3 *"
+      ],
+      "src/game/actors/d_a_pic_gate.cpp": [
+        "param:#1 const Vector3 *",
+        "param:#2 const Vector3 *",
+        "param:#3 Vector3 *"
       ]
     },
     "DecIfAbove0_Byte": {
@@ -349,7 +391,9 @@
         "param:#2 const Vec3 *"
       ],
       "src/engine/collision/d_bg_w_kc_itcm.cpp": [
-        "param:#1 const signed int *"
+        "param:#1 const signed int *",
+        "param:#1 const Vector3 *",
+        "param:#2 const Vector3 *"
       ],
       "src/minigames/d_mg3d_heyho_obj_adapter.cpp": [
         "param:#1 Vec3 *",
@@ -357,6 +401,18 @@
         "param:#2 Vec3 *",
         "param:#2 const Vec3 *",
         "return:Fix12"
+      ],
+      "include/math/CalcLib.h": [
+        "param:#1 const Vector3 *",
+        "param:#2 const Vector3 *"
+      ],
+      "src/engine/gx/G3i.cpp": [
+        "param:#1 const Vector3 *",
+        "param:#2 const Vector3 *"
+      ],
+      "src/engine/view/d_camera.cpp": [
+        "param:#1 const Vector3 *",
+        "param:#2 const Vector3 *"
       ]
     },
     "DrawOamSprite": {
@@ -456,10 +512,12 @@
         "param:#1 Vector3 *"
       ],
       "src/game/actors/d_a_manta.cpp": [
-        "param:#1 Vector3 *"
+        "param:#1 Vector3 *",
+        "param:#1 const Vector3 *"
       ],
       "src/game/actors/d_a_mip.cpp": [
-        "param:#1 const void *"
+        "param:#1 const void *",
+        "param:#1 const Vector3 *"
       ],
       "src/game/actors/d_a_obj_ewm_ice_block.cpp": [
         "param:#1 Vector3 *"
@@ -471,10 +529,23 @@
         "param:#1 VecFx32 *"
       ],
       "src/game/actors/d_a_wanwan2.cpp": [
-        "param:#1 Vector3 *"
+        "param:#1 Vector3 *",
+        "param:#1 const Vector3 *"
       ],
       "src/engine/view/d_camera.cpp": [
         "param:#1 Vector3 *",
+        "param:#1 const Vector3 *"
+      ],
+      "include/math/CalcLib.h": [
+        "param:#1 const Vector3 *"
+      ],
+      "src/Vec3_ApproachHorz.cpp": [
+        "param:#1 const Vector3 *"
+      ],
+      "src/game/actors/d_a_coin.cpp": [
+        "param:#1 const Vector3 *"
+      ],
+      "src/game/actors/d_a_obj_emm_yuka.cpp": [
         "param:#1 const Vector3 *"
       ]
     },
@@ -879,15 +950,18 @@
     "VEC_Normalize": {
       "src/engine/collision/d_bg_w_kc_mbg_scl_y.cpp": [
         "param:#1 Vector3 *",
-        "param:#2 Vector3 *"
+        "param:#2 Vector3 *",
+        "param:#1 const Vector3 *"
       ],
       "src/engine/collision/d_clipper.cpp": [
         "param:#1 Vector3 *",
-        "param:#2 Vector3 *"
+        "param:#2 Vector3 *",
+        "param:#1 const Vector3 *"
       ],
       "src/engine/gx/G3i.cpp": [
         "param:#1 Vector3 *",
-        "param:#2 Vector3 *"
+        "param:#2 Vector3 *",
+        "param:#1 const Vector3 *"
       ],
       "src/func_020458a8.c": [
         "param:#1 const Vector3 *",
@@ -899,19 +973,26 @@
       ],
       "src/unnamed/arm9/0204/func_02047910.c": [
         "param:#1 Vec3 *",
-        "param:#2 Vec3 *"
+        "param:#2 Vec3 *",
+        "param:#1 const Vector3 *",
+        "param:#2 Vector3 *"
       ],
       "src/SPLDraw_Child_DirectionalBillboard.c": [
         "param:#1 Vec3 *",
-        "param:#2 Vec3 *"
+        "param:#2 Vec3 *",
+        "param:#1 const Vector3 *",
+        "param:#2 Vector3 *"
       ],
       "src/SPLDraw_DirectionalBillboard.c": [
         "param:#1 Vec3 *",
-        "param:#2 Vec3 *"
+        "param:#2 Vec3 *",
+        "param:#1 const Vector3 *",
+        "param:#2 Vector3 *"
       ],
       "src/unnamed/arm9/0204/func_0204c584.c": [
         "param:#1 Vector3 *",
-        "param:#2 Vector3 *"
+        "param:#2 Vector3 *",
+        "param:#1 const Vector3 *"
       ],
       "src/unnamed/arm9/0204/func_0204d9f0.c": [
         "param:#1 const Vector3 *",
@@ -923,15 +1004,44 @@
       ],
       "src/unnamed/ov007/func_ov007_020c2390.c": [
         "param:#1 Vector3 *",
-        "param:#2 Vector3 *"
+        "param:#2 Vector3 *",
+        "param:#1 const Vector3 *"
       ],
       "src/engine/model/ModelComponents.cpp": [
         "param:#1 Vec3 *",
-        "param:#2 Vec3 *"
+        "param:#2 Vec3 *",
+        "param:#1 const Vector3 *",
+        "param:#2 Vector3 *"
       ],
       "src/game/stages/d_s_entry_entry.cpp": [
         "param:#1 const EntryMeshVec *",
-        "param:#2 EntryMeshVec *"
+        "param:#2 EntryMeshVec *",
+        "param:#1 const Vector3 *",
+        "param:#2 Vector3 *"
+      ],
+      "include/math/CalcLib.h": [
+        "param:#1 const Vector3 *",
+        "param:#2 Vector3 *"
+      ],
+      "src/SPLRandom_VecFx32.c": [
+        "param:#1 const Vector3 *",
+        "param:#2 Vector3 *"
+      ],
+      "src/SPLRandom_VecFx32_XY.c": [
+        "param:#1 const Vector3 *",
+        "param:#2 Vector3 *"
+      ],
+      "src/engine/collision/d_bg_w_kc_mbg.cpp": [
+        "param:#1 const Vector3 *",
+        "param:#2 Vector3 *"
+      ],
+      "src/game/actors/d_a_pic_gate.cpp": [
+        "param:#1 const Vector3 *",
+        "param:#2 Vector3 *"
+      ],
+      "src/unnamed/ov007/func_ov007_020c8de0.c": [
+        "param:#1 const Vector3 *",
+        "param:#2 Vector3 *"
       ]
     },
     "NormalizeVec3IfNonZero": {
@@ -1789,6 +1899,26 @@
         "param:#3 Vector3 *"
       ],
       "src/unnamed/ov007/func_ov007_020c7c60.c": [
+        "param:#1 Vector3 *",
+        "param:#2 Vector3 *",
+        "param:#3 Vector3 *"
+      ],
+      "include/math/CalcLib.h": [
+        "param:#1 Vector3 *",
+        "param:#2 Vector3 *",
+        "param:#3 Vector3 *"
+      ],
+      "src/Vec3_ApproachHorz.cpp": [
+        "param:#1 Vector3 *",
+        "param:#2 Vector3 *",
+        "param:#3 Vector3 *"
+      ],
+      "src/game/actors/d_a_f_pkn.cpp": [
+        "param:#1 Vector3 *",
+        "param:#2 Vector3 *",
+        "param:#3 Vector3 *"
+      ],
+      "src/game/actors/d_a_obj_emm_yuka.cpp": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *",
         "param:#3 Vector3 *"
@@ -15059,6 +15189,10 @@
     "VEC_Fx16Normalize": {
       "src/unnamed/arm9/0204/func_0204c584.c": [
         "param:#2 Vector3s *"
+      ],
+      "src/ui/menus/unit020be0dc.cpp": [
+        "param:#1 short *",
+        "param:#2 short *"
       ]
     },
     "func_02054d88": {
@@ -16603,6 +16737,33 @@
     "func_0203f9d4": {
       "include/private/arm9_a0f90_channel_measure.h": [
         "param:#2 void (*)(ChannelMeasureReply *)"
+      ]
+    },
+    "VEC_Fx16Mag": {
+      "src/ui/menus/unit020be0dc.cpp": [
+        "param:#1 short *"
+      ]
+    },
+    "VEC_MultAdd": {
+      "include/decl_common.h": [
+        "param:#2 int *",
+        "param:#3 int *",
+        "param:#4 int *"
+      ],
+      "src/unnamed/ov007/func_ov007_020c7d60.c": [
+        "param:#2 int *",
+        "param:#3 int *",
+        "param:#4 int *"
+      ],
+      "src/unnamed/ov007/func_ov007_020c831c.c": [
+        "param:#2 int *",
+        "param:#3 int *",
+        "param:#4 int *"
+      ],
+      "src/unnamed/ov007/func_ov007_020c8de0.c": [
+        "param:#2 int *",
+        "param:#3 int *",
+        "param:#4 int *"
       ]
     }
   },

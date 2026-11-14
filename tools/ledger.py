@@ -108,7 +108,7 @@ def floor_set():
     nothing on a fresh clone. nearmiss/db.jsonl is committed, which makes it the only
     portable record of "this one is a verified wall, do not schedule it". Reading it
     here means every scheduler gets the same answer instead of each re-deriving one:
-    coddog and refine_wl already consulted the DB, while worklist.py and harvest_wl.py
+    coddog and refine_wl already consulted the DB, while worklist.py and the retired harvest_wl
     did not, so an agent that built a worklist directly was still offered floors."""
     out = set()
     for rec in read_records(NEARMISS):

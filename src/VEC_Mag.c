@@ -1,9 +1,10 @@
 #include "types.h"
 #include "nitro/cp/sqrt.h"
+#include "nitro/fx/fx_vec.h"
 
 /* |v|: the squared length through the hardware square root, rounded back to
    20.12 (NitroSDK fx_vec.c). */
-int VEC_Mag(const Vector3 *v) {
+fx32 VEC_Mag(const VecFx32 *v) {
     s64 sq = (s64)v->x * v->x;
     sq += (s64)v->y * v->y;
     sq += (s64)v->z * v->z;
