@@ -3021,14 +3021,11 @@ int daDemo_c::func_ov002_020f72bc()
     this->mOpacity = 0x1f;
 
     mParticleID[0] =
-        Particle::System::New(mParticleID[0], kPtclDemoSpinA, *((fx32 *)&this->mPosX),
-                              *((fx32 *)&this->mPosY), *((fx32 *)&this->mPosZ), 0, 0);
+        Particle::System::New(mParticleID[0], kPtclDemoSpinA, mPos.x, mPos.y, mPos.z, 0, 0);
     mParticleID[1] =
-        Particle::System::New(mParticleID[1], kPtclDemoSpinB, *(fx32 *)(&this->mPosX),
-                              *(fx32 *)(&this->mPosY), *(fx32 *)(&this->mPosZ), 0, 0);
+        Particle::System::New(mParticleID[1], kPtclDemoSpinB, mPos.x, mPos.y, mPos.z, 0, 0);
     mParticleID[2] =
-        Particle::System::New(mParticleID[2], kPtclDemoSpinC, *(fx32 *)(&this->mPosX),
-                              *(fx32 *)(&this->mPosY), *((fx32 *)&this->mPosZ), 0, 0);
+        Particle::System::New(mParticleID[2], kPtclDemoSpinC, mPos.x, mPos.y, mPos.z, 0, 0);
     return 1;
 }
 

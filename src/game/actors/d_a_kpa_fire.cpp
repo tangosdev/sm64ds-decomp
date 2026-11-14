@@ -354,8 +354,7 @@ void daKpaFire_c::func_ov060_0211747c() {
  *     and stops -- this branch returns whether or not the spawn worked;
  *   - otherwise it spawns a coin and zeroes the coin's three velocity words. */
 void daKpaFire_c::func_ov060_021172e0() {
-    Particle::System::NewSimple(kPtclFlameOutPuff, *(fx32 *)&this->mPosX, *(fx32 *)&this->mPosY,
-                                *(fx32 *)&this->mPosZ);
+    Particle::System::NewSimple(kPtclFlameOutPuff, mPos.x, mPos.y, mPos.z);
     this->MarkForDestruction();
 
     if ((((u32)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10) >= 2) {
