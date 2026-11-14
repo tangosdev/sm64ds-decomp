@@ -23,7 +23,6 @@
 
 #pragma defer_codegen off
 #include "types.h"
-#include "MessageBank.h"
 #include "nitro/hw/registers.h"
 #include "Message.h"
 #include "MessageBank.h"

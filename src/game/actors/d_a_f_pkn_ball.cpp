@@ -23,7 +23,6 @@
 #pragma defer_codegen off
 
 #include "common.h"
-#include "daKpa_c.h"
 #include "daPly_c.h"
 #include "SaveData.h"
 #include "Sound.h"

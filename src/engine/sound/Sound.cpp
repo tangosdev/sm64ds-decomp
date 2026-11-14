@@ -19,7 +19,6 @@
  */
 #include "types.h"
 #include "Sound.h"
-#include "daPly_c.h"
 #include "private/watchdog_alarm.h"
 #include "Memory.h"
 #include "math/Approach.h"

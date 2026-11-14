@@ -50,7 +50,6 @@
 #include "Memory.h"
 #include "math/Approach.h"
 #include "nitro/hw/registers.h"
-#include "OamAttr.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/mi/memory.h"
 
