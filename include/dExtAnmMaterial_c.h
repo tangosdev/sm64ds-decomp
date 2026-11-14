@@ -27,7 +27,7 @@
  * r2 is never touched, so there is no third argument and hence no this; r0 is
  * the BMD, forwarded to the name-lookup helper. A static member mangles
  * identically, so the symbol is unchanged.
- * SetFile is a real member under its scalar mangling: speed is a Fix12i
+ * SetFile is a real member under its scalar mangling: speed is an fx32
  * and startFrame a u16. Measured against the ROM body, a u32 startFrame
  * adds a truncation (0x5c, not 0x54) and Fix12<int> by value spills it
  * through the stack (0x6c); the sibling dExtAnmTexPat_c::SetFile is the
@@ -50,7 +50,7 @@ struct dExtAnmMaterial_c : dExtFrameCtrl_c {
 
     /* --- non-virtual --- */
     void Update(ModelComponents &model);
-    void SetFile(BMA_File &animFile, int flags, Fix12i speed, u16 startFrame);
+    void SetFile(BMA_File &animFile, int flags, fx32 speed, u16 startFrame);
 
     /* --- static --- */
     static void Prepare(BMD_File &model, BMA_File &animFile);

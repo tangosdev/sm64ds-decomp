@@ -27,14 +27,14 @@
  * extern "C" free function taking an explicit `thiz`, on the grounds that wall
  * 6az forbade the method form. That was wrong: the wall was the NAME. The old
  * symbol spelled a by-value `Fix12<int>` that we invented -- the cartridge
- * carries no mangled names at all -- and under the honest scalar `Fix12i` the
+ * carries no mangled names at all -- and under the honest scalar `fx32` the
  * method reproduces 0x020163e0/0x9c exactly. See notes/mwccarm-codegen.md
  * section 6az, MEASURED 2026-10-22.
  */
 
 struct dExtBlendAnmModel_c : dExtAnmModel_c {
-    Fix12i blendWeight;        /* 0x64 - 0x1000 is 1.0 */
-    Fix12i blendStep;          /* 0x68 - per-frame increment */
+    fx32 blendWeight;   /* 0x64 - 0x1000 is 1.0 */
+    fx32 blendStep;     /* 0x68 - per-frame increment */
     void *mBlendBuffer; /* 0x6c - pose blend buffer; DoSetFile tail allocates it, D1 frees it */
 
     /* --- vtable order. Do not reorder. --- */
@@ -64,7 +64,7 @@ struct dExtBlendAnmModel_c : dExtAnmModel_c {
     /* --- non-virtual --- */
     dExtBlendAnmModel_c();
     void Advance();
-    void SetAnim(BCA_File &animFile, int numBlendFrames, int flags, Fix12i speed, u16 startFrame);
+    void SetAnim(BCA_File &animFile, int numBlendFrames, int flags, fx32 speed, u16 startFrame);
     int InitBlendBuffer(char *); /* DoSetFile's tail (0x020165c4); coined */
 };
 
