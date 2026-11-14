@@ -19,17 +19,17 @@
 #include "nitro/cp/divider.h"
 #include "nitro/cp/sqrt.h"
 #include "nitro/fx/fx_cp.h"
+#include "nitro/fx/fx_vec.h"
 
 /* |a - b|: the squared distance through the hardware sqrt unit, rounded
    back to 20.12. */
-
-int VEC_Distance(int *a, int *b) {
-    int dx = a[0] - b[0];
+fx32 VEC_Distance(const VecFx32 *a, const VecFx32 *b) {
+    fx32 dx = a->x - b->x;
     long long sq = (long long)dx * dx;
-    int dy = a[1] - b[1];
-    int dz;
+    fx32 dy = a->y - b->y;
+    fx32 dz;
     sq += (long long)dy * dy;
-    dz = a[2] - b[2];
+    dz = a->z - b->z;
     sq += (long long)dz * dz;
     sq <<= 2;
     CP_SetSqrt64((u64)sq);

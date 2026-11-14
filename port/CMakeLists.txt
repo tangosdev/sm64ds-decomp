@@ -264,9 +264,9 @@ endif()
 
 # Gate 8: collision -- the octree walk over real KCL data. cstd::sqrt
 # drives the hardware sqrt unit through literal MMIO -> hostgen. The hostgen
-# copy of src/cstd.cpp also defines _Z6FX_Divii, so these targets drop
+# copy of src/cstd.cpp also defines FX_Div, so these targets drop
 # hal/cstd_div.c.
-set(GATE8_SYMS _ZN4cstd4sqrtEy _Z15FX_GetDivResultv _Z11FX_InvAsynci
+set(GATE8_SYMS _ZN4cstd4sqrtEy FX_GetDivResult FX_InvAsync
     Matrix4x3_ApplyInPlaceToScale)
 sm64ds_hostgen_symbols(GATE8_GEN ${GATE8_SYMS})
 

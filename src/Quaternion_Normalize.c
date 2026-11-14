@@ -11,7 +11,7 @@ void Quaternion_Normalize(s32 *q)
     ss += (s64)q[1]*q[1];
     ss += (s64)q[2]*q[2];
     ss += (s64)q[3]*q[3];
-    inv = _Z10FX_InvSqrti((s32)(ss >> 12));
+    inv = FX_InvSqrt((s32)(ss >> 12));
     q[0] = FX_MUL(inv, q[0]);
     q[1] = FX_MUL(inv, q[1]);
     q[2] = FX_MUL(inv, q[2]);

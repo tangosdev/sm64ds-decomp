@@ -1,6 +1,7 @@
 #include "Ov007StrokePath.h"
+#include "nitro/fx/fx.h"
 
-extern int func_ov007_020c2e90(Ov007StrokePath *path, int *a, int *b, int minLen, int maxLen);
+extern int func_ov007_020c2e90(Ov007StrokePath *path, const VecFx32 *a, const VecFx32 *b, int minLen, int maxLen);
 extern void func_ov007_020c2d44(Ov007StrokePath *path, int n);
 #define func_ov007_020c2dfc _Z19func_ov007_020c2dfcP15Ov007StrokePathii
 extern int func_ov007_020c2dfc(Ov007StrokePath *path, int idx, int angle);
@@ -14,14 +15,14 @@ extern void func_ov007_020c24d0(Ov007StrokePath *path, int idx);
 int func_ov007_020c25fc(Ov007StrokePath *path, int x, int y, int minLen, int maxLen, int minTurn) {
     int ok = 1;
     if (path->pointCount != 0) {
-        int point[3], last[3];
-        point[0] = x;
-        point[1] = y;
-        last[0] = path->xCoords[path->pointCount - 1];
-        last[1] = path->yCoords[path->pointCount - 1];
-        last[2] = 0;
-        point[2] = 0;
-        ok = func_ov007_020c2e90(path, point, last, minLen, maxLen);
+        VecFx32 point, last;
+        point.x = x;
+        point.y = y;
+        last.x = path->xCoords[path->pointCount - 1];
+        last.y = path->yCoords[path->pointCount - 1];
+        last.z = 0;
+        point.z = 0;
+        ok = func_ov007_020c2e90(path, &point, &last, minLen, maxLen);
     }
     if (ok != 0) {
         path->xCoords[path->pointCount] = x;
