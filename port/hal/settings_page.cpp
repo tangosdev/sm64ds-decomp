@@ -673,7 +673,7 @@ const Row ROWS_CONTROLS[] = {
     { R_SLIDER, "Mouse speed", SL_MOUSE_SENSITIVITY, -1, 5, 0, 0 },
     { R_SLIDER, "Acceleration", SL_CAMERA_STICK_ACCEL, -1, 1, 0, 0 },   /* SKYCAM1 phase 2 */
     { R_SLIDER, "Deceleration", SL_CAMERA_STICK_DECEL, -1, 1, 0, 0 },
-    { R_NOTE, "Right stick turning. 0 is instant, higher is smoother.", -1, -1, 0, 0, 0 },
+    { R_NOTE, "Right stick turning. 0 is instant, higher is smoother.", SL_CAMERA_STICK_ACCEL, -1, 0, 0, 0 },   /* greys with the two sliders */
     { R_CHECK, "Invert camera left/right", SL_SWAP_CAMERA_TURN, -1, 0, 0, 0 },
     { R_CHECK, "Invert camera up/down", SL_INVERT_CAMERA_Y, -1, 0, 0, 0 },
     { R_CHECK, "Lock mouse", SL_MOUSE_CAPTURE, -1, 0, 0, 0 },
@@ -2154,7 +2154,8 @@ extern "C" void settings_page_draw(uint32_t *px, int stride, int w, int h)
         const int y = L.r[i].y, rh = L.r[i].h;
         if (y + rh < L.body[1] || y > L.body[3]) continue;
         const int cy = y + rh / 2;
-        const int app = (R.t == R_BIND || R.t == R_HEAD || R.t == R_NOTE) ? 1 : sl_applicable(R.id) != 0;
+        /* a note that carries a setting id greys with that setting (the stick acceleration note in DS camera) */
+        const int app = (R.t == R_BIND || R.t == R_HEAD || (R.t == R_NOTE && R.id < 0)) ? 1 : sl_applicable(R.id) != 0;
         const int alpha = app ? 255 : 110;
         const int sel = i == S.sel && S.cursor_shown;
         if (R.t == R_HEAD) {
@@ -2162,7 +2163,7 @@ extern "C" void settings_page_draw(uint32_t *px, int stride, int w, int h)
             continue;
         }
         if (R.t == R_NOTE) {
-            text_mid(s, (float)L.lab_x, (float)cy, R.label, (float)P(23), C_QUIET, 255, clip);
+            text_mid(s, (float)L.lab_x, (float)cy, R.label, (float)P(23), C_QUIET, alpha, clip);
             continue;
         }
         if (R.t != R_CHECK) text_mid(s, (float)L.lab_x, (float)cy, R.label, (float)P(30), app ? C_TEXT : C_QUIET, alpha, clip);
