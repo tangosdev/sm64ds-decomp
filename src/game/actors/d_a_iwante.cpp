@@ -189,54 +189,22 @@ struct CLPS_Block;
  * records the ROM keeps in .data, the enter handler at +0 and the run handler
  * at +8, laid out the way SetState reads them (see EyerokState
  * above). */
-struct EyerokModelFilePtr {
-    union {
-        SharedFilePtr base;
-        struct {
-            u16 fileID;
-            u8 numRefs;
-            BMD_File *filePtr;
-        };
-    };
+struct EyerokModelFilePtr : SharedFilePtr {
     EyerokModelFilePtr(unsigned int fileID);
     ~EyerokModelFilePtr();
 };
 
-struct EyerokAnimationFilePtr {
-    union {
-        SharedFilePtr base;
-        struct {
-            u16 fileID;
-            u8 numRefs;
-            BCA_File *filePtr;
-        };
-    };
+struct EyerokAnimationFilePtr : SharedFilePtr {
     EyerokAnimationFilePtr(unsigned int fileID);
     ~EyerokAnimationFilePtr();
 };
 
-struct EyerokTextureSequencePtr {
-    union {
-        SharedFilePtr base;
-        struct {
-            u16 fileID;
-            u8 numRefs;
-            BTP_File *filePtr;
-        };
-    };
+struct EyerokTextureSequencePtr : SharedFilePtr {
     EyerokTextureSequencePtr(unsigned int fileID);
     ~EyerokTextureSequencePtr();
 };
 
-struct EyerokCollisionFilePtr {
-    union {
-        SharedFilePtr base;
-        struct {
-            u16 fileID;
-            u8 numRefs;
-            KCL_File *filePtr;
-        };
-    };
+struct EyerokCollisionFilePtr : SharedFilePtr {
     EyerokCollisionFilePtr(unsigned int fileID);
     ~EyerokCollisionFilePtr();
 };
@@ -489,11 +457,15 @@ int daIwante_c::CheckAttacked() {
         if (hit != 0) {
             if (mHitPoints > 0) {
                 if (mPartIdx == PART_HAND_2) {
-                    mBlendAnmModel.SetAnim(*data_ov066_0211ae5c.filePtr, 4, 0x40000000, 0x1000, 0);
-                    mTextureSequence.SetFile(*data_ov066_0211ae3c.filePtr, 0x40000000, 0x1000, 0);
+                    mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211ae5c.filePtr, 4, 0x40000000,
+                                           0x1000, 0);
+                    mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211ae3c.filePtr, 0x40000000,
+                                             0x1000, 0);
                 } else {
-                    mBlendAnmModel.SetAnim(*data_ov066_0211ae84.filePtr, 4, 0x40000000, 0x1000, 0);
-                    mTextureSequence.SetFile(*data_ov066_0211aebc.filePtr, 0x40000000, 0x1000, 0);
+                    mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211ae84.filePtr, 4, 0x40000000,
+                                           0x1000, 0);
+                    mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211aebc.filePtr, 0x40000000,
+                                             0x1000, 0);
                 }
                 func_02012694(SE_HAND_HIT, &mCamSpacePos);
                 return 1;
@@ -555,15 +527,19 @@ void daIwante_c::UpdateTexturePattern() {
         return;
     if (mTexPhase == 0) {
         if (mPartIdx == PART_HAND_2)
-            mTextureSequence.SetFile(*data_ov066_0211ae2c.filePtr, 0x40000000, 0x1000, 0);
+            mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211ae2c.filePtr, 0x40000000, 0x1000,
+                                     0);
         else
-            mTextureSequence.SetFile(*data_ov066_0211ae9c.filePtr, 0x40000000, 0x1000, 0);
+            mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211ae9c.filePtr, 0x40000000, 0x1000,
+                                     0);
         mTexTimer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) * 2 + 0x32;
     } else {
         if (mPartIdx == PART_HAND_2)
-            mTextureSequence.SetFile(*data_ov066_0211ae3c.filePtr, 0x40000000, 0x1000, 0);
+            mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211ae3c.filePtr, 0x40000000, 0x1000,
+                                     0);
         else
-            mTextureSequence.SetFile(*data_ov066_0211aebc.filePtr, 0x40000000, 0x1000, 0);
+            mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211aebc.filePtr, 0x40000000, 0x1000,
+                                     0);
         mTexTimer = 8;
     }
     mTexPhase ^= 1;
@@ -584,9 +560,9 @@ void daIwante_c::BeginVulnerable() {
     mFlags = 0x10000000;
     mdCcAcPos_c.flags |= 2;
     if (mPartIdx == PART_HAND_2) {
-        mBlendAnmModel.SetAnim(*data_ov066_0211ae64.filePtr, 4, 0, 0x1000, 0);
+        mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211ae64.filePtr, 4, 0, 0x1000, 0);
     } else {
-        mBlendAnmModel.SetAnim(*data_ov066_0211ae44.filePtr, 4, 0, 0x1000, 0);
+        mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211ae44.filePtr, 4, 0, 0x1000, 0);
     }
     mStateWork1 = 1;
 }
@@ -599,11 +575,11 @@ void daIwante_c::BeginVulnerable() {
  * HIT_SPIN_OR_GROUND_POUND, and sets mFlags to 0. */
 void daIwante_c::EndVulnerable() {
     if (mPartIdx == PART_HAND_2) {
-        mBlendAnmModel.SetAnim(*data_ov066_0211ae54.filePtr, 4, 0x40000000, 0x1000, 0);
-        mTextureSequence.SetFile(*data_ov066_0211ae3c.filePtr, 0x40000000, 0x1000, 0);
+        mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211ae54.filePtr, 4, 0x40000000, 0x1000, 0);
+        mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211ae3c.filePtr, 0x40000000, 0x1000, 0);
     } else {
-        mBlendAnmModel.SetAnim(*data_ov066_0211ae94.filePtr, 4, 0x40000000, 0x1000, 0);
-        mTextureSequence.SetFile(*data_ov066_0211aebc.filePtr, 0x40000000, 0x1000, 0);
+        mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211ae94.filePtr, 4, 0x40000000, 0x1000, 0);
+        mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211aebc.filePtr, 0x40000000, 0x1000, 0);
     }
     mBlendAnmModel.speed = 0x1000;
     {
@@ -623,21 +599,21 @@ void daIwante_c::EndVulnerable() {
 void daIwante_c::SetLoweredPose() {
 
     if (mPartIdx == PART_HAND_2) {
-        mBlendAnmModel.SetAnim(*data_ov066_0211ae54.filePtr, 4, 0x40000000, 0x1000, 0);
-        mTextureSequence.SetFile(*data_ov066_0211ae2c.filePtr, 0x40000000, 0x1000, 0);
+        mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211ae54.filePtr, 4, 0x40000000, 0x1000, 0);
+        mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211ae2c.filePtr, 0x40000000, 0x1000, 0);
     } else {
-        mBlendAnmModel.SetAnim(*data_ov066_0211ae94.filePtr, 4, 0x40000000, 0x1000, 0);
-        mTextureSequence.SetFile(*data_ov066_0211ae9c.filePtr, 0x40000000, 0x1000, 0);
+        mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211ae94.filePtr, 4, 0x40000000, 0x1000, 0);
+        mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211ae9c.filePtr, 0x40000000, 0x1000, 0);
     }
 
     if (mMeshCollider2.IsEnabled() != 0)
         mMeshCollider2.Disable();
 
     if (mPartIdx == PART_HAND_1) {
-        mMeshCollider2.SetFile(data_ov066_0211ae34.filePtr, mClsnMat2, 0x199, mAngleY,
+        mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae34.filePtr), mClsnMat2, 0x199, mAngleY,
                                data_ov025_02112cc8);
     } else {
-        mMeshCollider2.SetFile(data_ov066_0211ae1c.filePtr, mClsnMat2, 0x199, mAngleY,
+        mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae1c.filePtr), mClsnMat2, 0x199, mAngleY,
                                data_ov025_02112c88);
     }
 
@@ -827,9 +803,9 @@ int daIwante_c::HandDefeatEnter() {
     mSubState = 0;
     mHorzSpeed = -0xa000;
     if (mPartIdx == PART_HAND_2) {
-        mBlendAnmModel.SetAnim(*data_ov066_0211aea4.filePtr, 4, 0x40000000, 0x1000, 0);
+        mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211aea4.filePtr, 4, 0x40000000, 0x1000, 0);
     } else {
-        mBlendAnmModel.SetAnim(*data_ov066_0211ae8c.filePtr, 4, 0x40000000, 0x1000, 0);
+        mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211ae8c.filePtr, 4, 0x40000000, 0x1000, 0);
     }
     return 1;
 }
@@ -920,11 +896,11 @@ int daIwante_c::HandPattern9Execute() {
             if (mMeshCollider2.IsEnabled() != 0)
                 mMeshCollider2.Disable();
             if (mPartIdx == PART_HAND_1)
-                mMeshCollider2.SetFile(data_ov066_0211ae14.filePtr, mClsnMat2, 0x199, mAngleY,
-                                       data_ov025_02112c08);
+                mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae14.filePtr), mClsnMat2, 0x199,
+                                       mAngleY, data_ov025_02112c08);
             else
-                mMeshCollider2.SetFile(data_ov066_0211aeac.filePtr, mClsnMat2, 0x199, mAngleY,
-                                       data_ov025_02112d48);
+                mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211aeac.filePtr), mClsnMat2, 0x199,
+                                       mAngleY, data_ov025_02112d48);
             mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
             mMeshCollider2.SetStoodOnCallback(&StoodOnCallback);
             mMeshCollider2.SetFilterByMoveDir();
@@ -1277,11 +1253,11 @@ int daIwante_c::HandPattern7Execute() {
             if (mMeshCollider2.IsEnabled() != 0)
                 mMeshCollider2.Disable();
             if (mPartIdx == PART_HAND_1)
-                mMeshCollider2.SetFile(data_ov066_0211ae14.filePtr, mClsnMat2, 0x199, mAngleY,
-                                       data_ov025_02112c08);
+                mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae14.filePtr), mClsnMat2, 0x199,
+                                       mAngleY, data_ov025_02112c08);
             else
-                mMeshCollider2.SetFile(data_ov066_0211aeac.filePtr, mClsnMat2, 0x199, mAngleY,
-                                       data_ov025_02112d48);
+                mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211aeac.filePtr), mClsnMat2, 0x199,
+                                       mAngleY, data_ov025_02112d48);
             mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
             mMeshCollider2.SetStoodOnCallback(&StoodOnCallback);
             mMeshCollider2.SetFilterByMoveDir();
@@ -1453,11 +1429,11 @@ int daIwante_c::HandPattern6Execute() {
             if (mMeshCollider2.IsEnabled() != 0)
                 mMeshCollider2.Disable();
             if (mPartIdx == PART_HAND_1)
-                mMeshCollider2.SetFile(data_ov066_0211ae14.filePtr, mClsnMat2, 0x199, mAngleY,
-                                       data_ov025_02112c08);
+                mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae14.filePtr), mClsnMat2, 0x199,
+                                       mAngleY, data_ov025_02112c08);
             else
-                mMeshCollider2.SetFile(data_ov066_0211aeac.filePtr, mClsnMat2, 0x199, mAngleY,
-                                       data_ov025_02112d48);
+                mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211aeac.filePtr), mClsnMat2, 0x199,
+                                       mAngleY, data_ov025_02112d48);
             mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
             mMeshCollider2.SetStoodOnCallback(&StoodOnCallback);
             mMeshCollider2.SetFilterByMoveDir();
@@ -1591,11 +1567,11 @@ int daIwante_c::HandPattern5Execute() {
             mMeshCollider2.Disable();
 
         if (mPartIdx == PART_HAND_1) {
-            mMeshCollider2.SetFile(data_ov066_0211ae14.filePtr, mClsnMat2, 0x199, mAngleY,
-                                   data_ov025_02112c08);
+            mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae14.filePtr), mClsnMat2, 0x199,
+                                   mAngleY, data_ov025_02112c08);
         } else {
-            mMeshCollider2.SetFile(data_ov066_0211aeac.filePtr, mClsnMat2, 0x199, mAngleY,
-                                   data_ov025_02112d48);
+            mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211aeac.filePtr), mClsnMat2, 0x199,
+                                   mAngleY, data_ov025_02112d48);
         }
 
         mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
@@ -1758,11 +1734,11 @@ int daIwante_c::HandRiseExecute() {
  * (speed 0) and clears the work words. */
 int daIwante_c::HandRiseEnter() {
     if (mPartIdx == PART_HAND_2) {
-        mBlendAnmModel.SetAnim(*data_ov066_0211ae74.filePtr, 4, 0x40000000, 0x1000, 0);
-        mTextureSequence.SetFile(*data_ov066_0211ae3c.filePtr, 0x40000000, 0x1000, 0);
+        mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211ae74.filePtr, 4, 0x40000000, 0x1000, 0);
+        mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211ae3c.filePtr, 0x40000000, 0x1000, 0);
     } else {
-        mBlendAnmModel.SetAnim(*data_ov066_0211ae7c.filePtr, 4, 0x40000000, 0x1000, 0);
-        mTextureSequence.SetFile(*data_ov066_0211aebc.filePtr, 0x40000000, 0x1000, 0);
+        mBlendAnmModel.SetAnim(*(BCA_File *)data_ov066_0211ae7c.filePtr, 4, 0x40000000, 0x1000, 0);
+        mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211aebc.filePtr, 0x40000000, 0x1000, 0);
     }
     mBlendAnmModel.speed = 0;
     mStateWork0 = 0;
@@ -2264,28 +2240,28 @@ int daIwante_c::CleanupResources() {
     if (mMeshCollider2.IsEnabled())
         mMeshCollider2.Disable();
     if (mPartIdx == PART_MAIN) {
-        data_ov066_0211ae6c.base.Release();
-        data_ov066_0211ae4c.base.Release();
-        data_ov066_0211aeb4.base.Release();
-        data_ov066_0211aebc.base.Release();
-        data_ov066_0211ae9c.base.Release();
-        data_ov066_0211ae3c.base.Release();
-        data_ov066_0211ae2c.base.Release();
-        data_ov066_0211ae5c.base.Release();
-        data_ov066_0211ae84.base.Release();
-        data_ov066_0211aea4.base.Release();
-        data_ov066_0211ae8c.base.Release();
-        data_ov066_0211ae54.base.Release();
-        data_ov066_0211ae94.base.Release();
-        data_ov066_0211ae64.base.Release();
-        data_ov066_0211ae44.base.Release();
-        data_ov066_0211ae74.base.Release();
-        data_ov066_0211ae7c.base.Release();
-        data_ov066_0211ae24.base.Release();
-        data_ov066_0211aeac.base.Release();
-        data_ov066_0211ae14.base.Release();
-        data_ov066_0211ae1c.base.Release();
-        data_ov066_0211ae34.base.Release();
+        data_ov066_0211ae6c.Release();
+        data_ov066_0211ae4c.Release();
+        data_ov066_0211aeb4.Release();
+        data_ov066_0211aebc.Release();
+        data_ov066_0211ae9c.Release();
+        data_ov066_0211ae3c.Release();
+        data_ov066_0211ae2c.Release();
+        data_ov066_0211ae5c.Release();
+        data_ov066_0211ae84.Release();
+        data_ov066_0211aea4.Release();
+        data_ov066_0211ae8c.Release();
+        data_ov066_0211ae54.Release();
+        data_ov066_0211ae94.Release();
+        data_ov066_0211ae64.Release();
+        data_ov066_0211ae44.Release();
+        data_ov066_0211ae74.Release();
+        data_ov066_0211ae7c.Release();
+        data_ov066_0211ae24.Release();
+        data_ov066_0211aeac.Release();
+        data_ov066_0211ae14.Release();
+        data_ov066_0211ae1c.Release();
+        data_ov066_0211ae34.Release();
     }
     return 1;
 }
@@ -2465,40 +2441,44 @@ int daIwante_c::InitResources() {
 
     switch (mPartIdx) {
     case 0:
-        mModel2.SetFile(dExtSimpleModel_c::LoadFile(data_ov066_0211ae6c.base), 1, -1);
-        dExtSimpleModel_c::LoadFile(data_ov066_0211ae4c.base);
-        dExtSimpleModel_c::LoadFile(data_ov066_0211aeb4.base);
-        dExtAnmTexPat_c::LoadFile(data_ov066_0211aebc.base);
-        dExtAnmTexPat_c::LoadFile(data_ov066_0211ae9c.base);
-        dExtAnmTexPat_c::LoadFile(data_ov066_0211ae3c.base);
-        dExtAnmTexPat_c::LoadFile(data_ov066_0211ae2c.base);
-        dExtFrameCtrl_c::LoadFile(data_ov066_0211ae5c.base);
-        dExtFrameCtrl_c::LoadFile(data_ov066_0211ae84.base);
-        dExtFrameCtrl_c::LoadFile(data_ov066_0211aea4.base);
-        dExtFrameCtrl_c::LoadFile(data_ov066_0211ae8c.base);
-        dExtFrameCtrl_c::LoadFile(data_ov066_0211ae54.base);
-        dExtFrameCtrl_c::LoadFile(data_ov066_0211ae94.base);
-        dExtFrameCtrl_c::LoadFile(data_ov066_0211ae64.base);
-        dExtFrameCtrl_c::LoadFile(data_ov066_0211ae44.base);
-        dExtFrameCtrl_c::LoadFile(data_ov066_0211ae74.base);
-        dExtFrameCtrl_c::LoadFile(data_ov066_0211ae7c.base);
-        dBgW_Kc::LoadFile(data_ov066_0211ae24.base);
-        dBgW_Kc::LoadFile(data_ov066_0211aeac.base);
-        dBgW_Kc::LoadFile(data_ov066_0211ae14.base);
-        dBgW_Kc::LoadFile(data_ov066_0211ae1c.base);
-        dBgW_Kc::LoadFile(data_ov066_0211ae34.base);
+        mModel2.SetFile(dExtSimpleModel_c::LoadFile(data_ov066_0211ae6c), 1, -1);
+        dExtSimpleModel_c::LoadFile(data_ov066_0211ae4c);
+        dExtSimpleModel_c::LoadFile(data_ov066_0211aeb4);
+        dExtAnmTexPat_c::LoadFile(data_ov066_0211aebc);
+        dExtAnmTexPat_c::LoadFile(data_ov066_0211ae9c);
+        dExtAnmTexPat_c::LoadFile(data_ov066_0211ae3c);
+        dExtAnmTexPat_c::LoadFile(data_ov066_0211ae2c);
+        dExtFrameCtrl_c::LoadFile(data_ov066_0211ae5c);
+        dExtFrameCtrl_c::LoadFile(data_ov066_0211ae84);
+        dExtFrameCtrl_c::LoadFile(data_ov066_0211aea4);
+        dExtFrameCtrl_c::LoadFile(data_ov066_0211ae8c);
+        dExtFrameCtrl_c::LoadFile(data_ov066_0211ae54);
+        dExtFrameCtrl_c::LoadFile(data_ov066_0211ae94);
+        dExtFrameCtrl_c::LoadFile(data_ov066_0211ae64);
+        dExtFrameCtrl_c::LoadFile(data_ov066_0211ae44);
+        dExtFrameCtrl_c::LoadFile(data_ov066_0211ae74);
+        dExtFrameCtrl_c::LoadFile(data_ov066_0211ae7c);
+        dBgW_Kc::LoadFile(data_ov066_0211ae24);
+        dBgW_Kc::LoadFile(data_ov066_0211aeac);
+        dBgW_Kc::LoadFile(data_ov066_0211ae14);
+        dBgW_Kc::LoadFile(data_ov066_0211ae1c);
+        dBgW_Kc::LoadFile(data_ov066_0211ae34);
         break;
     case 1:
-        if (mBlendAnmModel.SetFile(data_ov066_0211ae4c.filePtr, 1, -1) == 0)
+        if (mBlendAnmModel.SetFile((BMD_File *)data_ov066_0211ae4c.filePtr, 1, -1) == 0)
             return 0;
-        dExtAnmTexPat_c::Prepare(*data_ov066_0211ae4c.filePtr, *data_ov066_0211aebc.filePtr);
-        dExtAnmTexPat_c::Prepare(*data_ov066_0211ae4c.filePtr, *data_ov066_0211ae9c.filePtr);
+        dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov066_0211ae4c.filePtr,
+                                 *(BTP_File *)data_ov066_0211aebc.filePtr);
+        dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov066_0211ae4c.filePtr,
+                                 *(BTP_File *)data_ov066_0211ae9c.filePtr);
         break;
     case 2:
-        if (mBlendAnmModel.SetFile(data_ov066_0211aeb4.filePtr, 1, -1) == 0)
+        if (mBlendAnmModel.SetFile((BMD_File *)data_ov066_0211aeb4.filePtr, 1, -1) == 0)
             return 0;
-        dExtAnmTexPat_c::Prepare(*data_ov066_0211aeb4.filePtr, *data_ov066_0211ae3c.filePtr);
-        dExtAnmTexPat_c::Prepare(*data_ov066_0211aeb4.filePtr, *data_ov066_0211ae2c.filePtr);
+        dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov066_0211aeb4.filePtr,
+                                 *(BTP_File *)data_ov066_0211ae3c.filePtr);
+        dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov066_0211aeb4.filePtr,
+                                 *(BTP_File *)data_ov066_0211ae2c.filePtr);
         break;
     }
 
@@ -2544,7 +2524,7 @@ int daIwante_c::InitResources() {
         data_ov066_0211abe4 = 1;
         data_ov066_0211ae04 = PHASE_DORMANT;
         data_ov066_0211abe0 = HANDS_BOTH;
-        mMeshCollider2.SetFile(data_ov066_0211ae24.filePtr, mClsnMat2, 0x199, mAngleY,
+        mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae24.filePtr), mClsnMat2, 0x199, mAngleY,
                                data_ov025_02112ca8);
         mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
         mMeshCollider2.SetStoodOnCallback(&StoodOnCallback);
@@ -2559,12 +2539,12 @@ int daIwante_c::InitResources() {
         mSpawnPosY = mPosY;
         mSpawnPosZ = mPosZ;
         if (mPartIdx == PART_HAND_1) {
-            mMeshCollider2.SetFile(data_ov066_0211ae14.filePtr, mClsnMat2, 0x199, mAngleY,
-                                   data_ov025_02112c08);
+            mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae14.filePtr), mClsnMat2, 0x199,
+                                   mAngleY, data_ov025_02112c08);
             mRestPosX -= 0x31F000;
         } else {
-            mMeshCollider2.SetFile(data_ov066_0211aeac.filePtr, mClsnMat2, 0x199, mAngleY,
-                                   data_ov025_02112d48);
+            mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211aeac.filePtr), mClsnMat2, 0x199,
+                                   mAngleY, data_ov025_02112d48);
             mRestPosX += 0x31F000;
         }
         mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
