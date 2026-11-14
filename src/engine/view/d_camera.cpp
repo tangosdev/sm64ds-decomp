@@ -84,20 +84,21 @@ extern void *data_02086f08;
 extern s32 data_02086f14[3];
 extern Vector3 data_02086f20;
 extern Vector3 data_02086f2c;
-extern int data_02086fcc;
-extern char data_02086ff4;
-extern char data_02087094;
-extern int data_0208706c;
-extern int data_0208715c;
+struct CamMode;
+extern struct CamMode data_02086fcc;
+extern struct CamMode data_02086ff4;
+extern struct CamMode data_02087094;
+extern struct CamMode data_0208706c;
+extern struct CamMode data_0208715c;
 extern int data_02087184;
 extern int data_020871fc;
 extern int data_02087224;
 extern int data_02087274;
 extern int data_02087314;
-extern int data_0208747c;
-extern char data_020871ac;
-extern char data_020871d4;
-extern char data_02087404;
+extern struct CamMode data_0208747c;
+extern struct CamMode data_020871ac;
+extern struct CamMode data_020871d4;
+extern struct CamMode data_02087404;
 extern u8 data_0208738c;
 extern s8 gNextSublevel;
 extern s32 data_0209ee90[];
@@ -112,7 +113,7 @@ extern daPly_c *gPlayers[];
 extern dClipper data_0209f43c;
 extern s32 gRunningKuppaScript;
 extern Matrix4x3 data_020a0e68;
-extern void *data_ov002_0210c3b0;
+extern struct OamAttr data_ov002_0210c3b0;
 extern void *data_ov002_0210c3e0[2];
 
 extern "C" {
@@ -129,11 +130,11 @@ extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern int Vec3_HorzLen(const void *v);
 extern int VEC_Mag(void *v);
-extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
+extern void Vec3_Add(void *out, const void *a, const void *b);
+extern void Vec3_Sub(void *out, const void *a, const void *b);
 extern void VEC_Add(void *a, void *b, void *c);
 extern void VEC_Subtract(void *a, void *b, void *c);
-extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
+extern void Vec3_MulScalar(void *out, const void *in, int scale);
 extern void Vec3_MulScalarInPlace(void *v, int s);
 extern int *Vec3_LslInPlace(int *v, int sh);
 extern void Vec3_RotateYAndTranslate(void *out, const void *in, short angle, const void *src);
@@ -207,6 +208,10 @@ typedef struct CamEntryE {
    which exists only to give the pointer-to-member a class. */
 struct CamPmfHost;
 typedef int (CamPmfHost::*CamPmf)();
+struct CamState {
+    CamPmf enter;
+    CamPmf exec;
+};
 struct CamPmfHost {
     char pad138[0x138];
     CamPmf *pp;                     /* camera +0x138 == mState */
@@ -410,8 +415,7 @@ int dCamera_c::Render()
         s32 flags = mFlags;
         if (!(flags & 8)) {
             if ((u8 *)mMode == &data_0208738c) {
-                OAM::Render(0, (OamAttr *)&data_ov002_0210c3b0, 0x80, 0x60, -1, -1, 0x1000, 0x1000,
-                            0, -1);
+                OAM::Render(0, &data_ov002_0210c3b0, 0x80, 0x60, -1, -1, 0x1000, 0x1000, 0, -1);
                 G2_SetBlendAlpha(0x10, 0x2f, 0xc, 6);
             } else {
                 if (flags & 0x20) {
@@ -831,7 +835,7 @@ void dCamera_c::func_0200cf40() {
     mAspect = 0x1555;
     mNear = 0x1000;
     mFar = 0x1388000;
-    mAreaMode = (CamMode *)&data_0208715c;
+    mAreaMode = &data_0208715c;
     mViewObj = 0;
     if (param1 != 0xf) {
         CamEntryE *v;
@@ -858,13 +862,13 @@ void dCamera_c::func_0200cf40() {
 }
 
 void dCamera_c::func_0200cce4() {
-    VecFx32 vec;
+    Vector3 vec;
     VecFx32 tmp1;
     VecFx32 tmp2;
     u32 d;
 
     if (mTargetPlayer != 0) {
-        VecFx32 *p = (VecFx32 *)&mTargetPlayer->mPos;
+        Vector3 *p = &mTargetPlayer->mPos;
         mTargetPos.x = p->x;
         mTargetPos.y = p->y;
         mTargetPos.z = p->z;
@@ -903,7 +907,7 @@ void dCamera_c::func_0200cce4() {
             vec.y = ty;
             vec.z = tz;
         }
-        line.SetObjAndLine(pos, *(Vector3 *)&vec, 0);
+        line.SetObjAndLine(pos, vec, 0);
         if (line.DetectClsn() != 0) {
             Vector3 cp = line.GetClsnPos();
             vec.x = cp.x;
@@ -912,7 +916,7 @@ void dCamera_c::func_0200cce4() {
         }
         dBgCh_Gnd ground;
         PrepareBgCh(ground);
-        ground.SetObjAndPos(*(Vector3 *)&vec, 0);
+        ground.SetObjAndPos(vec, 0);
         if (ground.DetectClsn() != 0) {
             pos.y = d + ground.clsnY;
         }
@@ -1046,10 +1050,9 @@ int dCamera_c::UpdateState() {
     } else if (flags & 0x8000) {
         RestoreCameraStateAfterTalk();
     } else {
-        u8 *obj = (u8 *)mState;
-        if (*(int *)(obj + 8) != 0) {
-            CamPmf *execPmf = (CamPmf *)(obj + 8);
-            result = (host->**execPmf)();
+        CamState *st = (CamState *)mState;
+        if (st->exec != 0) {
+            result = (host->*(st->exec))();
         }
     }
     return result;
@@ -1084,10 +1087,10 @@ void dCamera_c::func_0200c9e0(s32 *minRise, s32 *maxRise) {
  * the choice in mAreaMode and mViewObj. Returns the player's ground height,
  * or the floor height when a type-4 view object takes over. */
 int dCamera_c::func_0200c66c(void *posArg, int *viewArg, int *modeArg, int *outFramed) {
-    VecFx32 *pos = (VecFx32 *)posArg;
+    Vector3 *pos = (Vector3 *)posArg;
     void **outView = (void **)viewArg;
     void **outMode = (void **)modeArg;
-    VecFx32 above;
+    Vector3 above;
     int floorY;
     int areaType;
     int viewId;
@@ -1119,7 +1122,7 @@ int dCamera_c::func_0200c66c(void *posArg, int *viewArg, int *modeArg, int *outF
             above.y = y;
             above.z = z;
         }
-        line.SetObjAndLine(*(Vector3 *)pos, *(Vector3 *)&above, 0);
+        line.SetObjAndLine(*pos, above, 0);
         if (line.DetectClsn() != 0) {
             Vector3 hit = line.GetClsnPos();
             above.x = hit.x;
@@ -1128,15 +1131,15 @@ int dCamera_c::func_0200c66c(void *posArg, int *viewArg, int *modeArg, int *outF
         }
         dBgCh_Gnd ground;
         PrepareBgCh(ground);
-        ground.SetObjAndPos(*(Vector3 *)&above, 0);
+        ground.SetObjAndPos(above, 0);
         if (ground.DetectClsn() == 0) {
             floorY = pos->y;
             areaType = 0;
             viewId = 0x3f;
         } else {
             floorY = ground.clsnY;
-            areaType = ((const CLPS *)&ground.surface)->GetCameraBehavior() & 0xff;
-            viewId = ((const CLPS *)&ground.surface)->GetViewID() & 0xff;
+            areaType = ground.surface.clps.GetCameraBehavior() & 0xff;
+            viewId = ground.surface.clps.GetViewID() & 0xff;
         }
     }
 
@@ -1220,7 +1223,7 @@ int dCamera_c::func_0200c394(int areaType, void *viewArg, void *pos, void **outM
             mLookTargetPos.y = y;
             mLookTargetPos.z = z;
         }
-        Vec3_Sub((Vector3 *)&toFocus, &mLookTargetPos, (const Vector3 *)pos);
+        Vec3_Sub(&toFocus, &mLookTargetPos, (const Vector3 *)pos);
         mFocusDist = VEC_Mag(&toFocus) >> 1;
         signed char level = gCurrentSublevel;
         int inLevel2d = level == 0x2d;
@@ -1237,7 +1240,7 @@ int dCamera_c::func_0200c394(int areaType, void *viewArg, void *pos, void **outM
         }
         if (level == 0x2f && mFocusDist > 0xc0000) {
             Vec3_MulScalarInPlace(&toFocus, FX_Div(0xc0000, mFocusDist << 1));
-            Vec3_Add(&focus, (const Vector3 *)pos, (const Vector3 *)&toFocus);
+            Vec3_Add(&focus, (const Vector3 *)pos, &toFocus);
             mLookTargetPos = focus;
             mFocusDist = 0xc0000;
         } else {
@@ -1249,8 +1252,8 @@ int dCamera_c::func_0200c394(int areaType, void *viewArg, void *pos, void **outM
     }
 
     if (modeFlags & 4)
-        return mode != (CamMode *)&data_0208706c;
-    if (mode == (CamMode *)&data_0208715c) {
+        return mode != &data_0208706c;
+    if (mode == &data_0208715c) {
         if (locked)
             *outMode = &data_0208747c;
         else if (areaType == 8)
@@ -1274,7 +1277,7 @@ int dCamera_c::func_0200c394(int areaType, void *viewArg, void *pos, void **outM
  * eases mLookAtOffset toward it at speed, then moves lookAt.y within the
  * mode's followRise. Returns the ground height under that point. */
 int dCamera_c::func_0200bec4(int *target, int baseY, char *modeArg, int speed) {
-    VecFx32 goal;
+    Vector3 goal;
     Vector3 to;
     Vector3 from;
     Vector3 above;
@@ -1307,7 +1310,7 @@ int dCamera_c::func_0200bec4(int *target, int baseY, char *modeArg, int speed) {
     above.y = goal.y + 0x100000;
     above.z = goal.z;
     PrepareBgCh(line);
-    line.SetObjAndLine(*(Vector3 *)&goal, above, 0);
+    line.SetObjAndLine(goal, above, 0);
     if (line.DetectClsn() != 0) {
         Vector3 hit = line.GetClsnPos();
         above = hit;
@@ -1334,7 +1337,7 @@ int dCamera_c::func_0200bec4(int *target, int baseY, char *modeArg, int speed) {
     goal.y += ScaleHeightByFov(height);
     horzDist = Vec3_HorzLen(&goal);
     VecFx32 focus;
-    Vec3_MulScalar((Vector3 *)&focus, &mLookTargetPos, mFocusBlend);
+    Vec3_MulScalar(&focus, &mLookTargetPos, mFocusBlend);
     VEC_Add(&goal, &focus, &goal);
     if (mFlags & 4) {
         mLookAtOffset.x = goal.x;
@@ -1347,7 +1350,7 @@ int dCamera_c::func_0200bec4(int *target, int baseY, char *modeArg, int speed) {
         } else if (shrink > 0) {
             speed += FX_MUL(shrink, 0x400);
         }
-        Vec3_Sub(&delta, (const Vector3 *)&goal, &mLookAtOffset);
+        Vec3_Sub(&delta, &goal, &mLookAtOffset);
         horzDist = Vec3_HorzLen(&delta);
         {
             int left = horzDist;
@@ -1419,8 +1422,7 @@ extern int NormalizeVec3IfNonZero(Vector3 *v);
 extern Fix12i VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 /* The 64-bit squared distance between two points. */
 extern long long func_0203cf94(int *a, int *b);
-extern void func_ov002_020effb8(Vector3 *out, s32 t, Vector3 *p0, Vector3 *p1, Vector3 *p2,
-                                Vector3 *p3);
+extern void func_ov002_020effb8(void *out, s32 t, void *p0, void *p1, void *p2, void *p3);
 extern void FUN_02029ab0(void);
 extern int Sound_PlayIfNotActive(int handle, int bank, int id, short arg);
 extern void func_020070e8(dCamera_c *cam, int distTarget, int distStep, short vertTarget,
@@ -1446,10 +1448,10 @@ extern int data_02086ec0[3];
 extern int data_02086ed8[3];
 extern int data_02086f38[4];
 extern int data_02086f48[4];
-extern int data_020870e4;
-extern int data_0208710c;
-extern int data_0208724c;
-extern int data_0208729c;
+extern struct CamMode data_020870e4;
+extern struct CamMode data_0208710c;
+extern struct CamMode data_0208724c;
+extern struct CamMode data_0208729c;
 extern struct CamMode data_020874cc;
 
 /* Siblings defined below. */
@@ -2066,7 +2068,7 @@ void dCamera_c::func_0200af20(Vector3 *v1, Vector3 *v2, short *out) {
 }
 
 int dCamera_c::func_0200af0c() {
-    mMode = (CamMode *)&data_0208715c;
+    mMode = &data_0208715c;
     return 1;
 }
 
@@ -2133,9 +2135,18 @@ s32 dCamera_c::func_02009e70() {
     s32 farDist;
     s32 minY;
     s32 prevDist;
-    u16 pitch;
-    struct CamMode *mode;
-    CamViewObj *view;
+    union {
+        u16 pitch;
+        s16 pitchS;
+    };
+    union {
+        struct CamMode *mode;
+        int modeAsInt;
+    };
+    union {
+        CamViewObj *view;
+        int viewAsInt;
+    };
     s32 framing;
     s32 dist;
     s32 minRise;
@@ -2159,7 +2170,7 @@ s32 dCamera_c::func_02009e70() {
     if (mTargetPlayer == 0) {
         mAngleY = Vec3_HorzAngle(&lookAt, &pos);
     } else {
-        mode = (mFlags & 0x100) ? (CamMode *)&data_0208747c : mMode;
+        mode = (mFlags & 0x100) ? &data_0208747c : mMode;
         Vec3_Sub(&targetMove, &mTargetPlayer->mPos, &mTargetPos);
         {
             struct Vector3 *q = &mTargetPlayer->mPos;
@@ -2180,7 +2191,7 @@ s32 dCamera_c::func_02009e70() {
             mLookTargetPos.z = q->z;
             mFocusDist = 0xdfe60;
         }
-        r6 = func_0200c66c(&mTargetPos, (int *)&view, (int *)&mode, &framing);
+        r6 = func_0200c66c(&mTargetPos, &viewAsInt, &modeAsInt, &framing);
         r4 = 0;
         if (framing != 0) {
             r4 = 0x1000;
@@ -2219,15 +2230,15 @@ s32 dCamera_c::func_02009e70() {
         turnInput = data_0209f498[gActivePlayerSlot].pressed & 0x4300;
         if (mFocusActor != 0) {
             mAngleY = Vec3_HorzAngle(&lookAt, &pos);
-        } else if (mode == (CamMode *)&data_0208733c) {
+        } else if ((u32)mode == (u32)&data_0208733c) {
             Mode8DirectionsCamera(view);
             turnInput = 0;
-        } else if (mode == (CamMode *)&data_020873dc) {
+        } else if ((u32)mode == (u32)&data_020873dc) {
             UpdateFixedCamera(view, r6);
         } else if ((mFlags & 0x400) == 0) {
-            if (mode == (CamMode *)&data_02087404) {
+            if (mode == &data_02087404) {
                 UpdateSpiralStairsCamera(view, r6);
-            } else if (mode == (CamMode *)&data_0208742c) {
+            } else if ((u32)mode == (u32)&data_0208742c) {
                 UpdateParallelTrackingCamera(view, r6);
             } else {
                 mFlags |= 0x1000;
@@ -2356,11 +2367,10 @@ s32 dCamera_c::func_02009e70() {
                                     mTurningToTarget = 0;
                             } else {
                                 m = mode;
-                                if (m == (CamMode *)&data_020871ac ||
-                                    m == (CamMode *)&data_020871d4) {
+                                if (m == &data_020871ac || m == &data_020871d4) {
                                     UpdateRadialCamera(view, r7);
                                 } else if (framing == 0) {
-                                    if (m == (CamMode *)&data_0208724c)
+                                    if (m == &data_0208724c)
                                         t0 = mTargetPlayer->mPrevAngleY;
                                     else
                                         t0 = mTargetPlayer->mAngleY;
@@ -2379,7 +2389,7 @@ s32 dCamera_c::func_02009e70() {
 
                             prevDist = dist;
                             if (dist > r4) {
-                                if (r7 != 0 && mode == (CamMode *)&data_02086fcc) {
+                                if (r7 != 0 && mode == &data_02086fcc) {
                                     sb = cstd::atan2(targetMove.y, Vec3_HorzLen(&targetMove));
                                     if (sb < -0x3f80)
                                         sb = -0x3f80;
@@ -2387,7 +2397,7 @@ s32 dCamera_c::func_02009e70() {
                                         sb = 0x3f80;
                                     fp = Vec3_HorzLen(&offset);
                                     pitch = cstd::atan2(-offset.y, fp);
-                                    ApproachAngle((s16 *)&pitch, sb, 0x20, 0x800, 0);
+                                    ApproachAngle(&pitchS, sb, 0x20, 0x800, 0);
                                     offset.y = FX_MUL(dist, -FX_SinIdx(pitch >> 4));
                                     t0 = FX_Div(FX_MUL(dist, FX_CosIdx(pitch >> 4)), fp);
                                     offset.x = FX_MUL(offset.x, t0);
@@ -2446,10 +2456,10 @@ s32 dCamera_c::func_02009e70() {
                         ground.mProbeHeight = 0x5dc000;
                         PrepareBgCh(ground);
                         ground.SetObjAndPos(probe, 0);
-                        if (mode > (CamMode *)&data_02086fcc)
+                        if (mode > &data_02086fcc)
                             ground.StartDetectingWater();
                         sb = (ground.DetectClsn() != 0) ? ground.clsnY : y;
-                        if (mode == (CamMode *)&data_02086ff4) {
+                        if (mode == &data_02086ff4) {
                             if (sb < data_0209f32c)
                                 sb = data_0209f32c;
                             goalY = sb + 0x64000;
@@ -2467,7 +2477,7 @@ s32 dCamera_c::func_02009e70() {
                             maxRise = mode->maxRiseSlope;
                             func_0200c9e0(&minRise, &maxRise);
                             offset.y = goalY - lookAt.y;
-                            if (mode == (CamMode *)&data_0208706c && targetMove.y < 0)
+                            if (mode == &data_0208706c && targetMove.y < 0)
                                 t0 = 0xa49;
                             else
                                 t0 = minRise;
@@ -2486,9 +2496,8 @@ s32 dCamera_c::func_02009e70() {
                             if (sb + 0x25bc8 > (s32)0x80000000)
                                 minY = sb + 0x25bc8;
                         }
-                        if (mode != (CamMode *)&data_02087094 &&
-                            mode != (CamMode *)&data_020870e4 &&
-                            mode != (CamMode *)&data_0208710c) {
+                        if (mode != &data_02087094 && mode != &data_020870e4 &&
+                            mode != &data_0208710c) {
                             if ((s32)goalY < minY)
                                 goalY = minY;
                             else if ((s32)goalY > ceil)
@@ -2565,7 +2574,7 @@ int func_02009d70(dCamera_c *cam) {
 int dCamera_c::func_02009d30() {
     int result = 1;
 
-    mMode = (CamMode *)&data_0208729c;
+    mMode = &data_0208729c;
 
     mTurningToTarget = result;
 
@@ -3173,8 +3182,7 @@ int MovePointAlongSpline(Vector3 *pos, s16 *segment, s32 *progress, CutsceneSpli
         v[i].z = z;
     }
 
-    func_ov002_020effb8(pos, *progPtr, (Vector3 *)&v[0], (Vector3 *)&v[1], (Vector3 *)&v[2],
-                        (Vector3 *)&v[3]);
+    func_ov002_020effb8(pos, *progPtr, &v[0], &v[1], &v[2], &v[3]);
 
     lo = 0;
     hi = 0;
@@ -3235,7 +3243,7 @@ void dCamera_c::UpdateTargetPos() {
     mTargetPos.x = playerPos->x;
     mTargetPos.y = playerPos->y;
     mTargetPos.z = playerPos->z;
-    Vec3_Sub((Vector3 *)offset, (const Vector3 *)&lookAt.x, (const Vector3 *)&mTargetPos.x);
+    Vec3_Sub((Vector3 *)offset, &lookAt, &mTargetPos);
     mLookAtOffset.x = offset[0];
     mLookAtOffset.y = offset[1];
     mLookAtOffset.z = offset[2];

@@ -45,7 +45,7 @@ extern int sMCarlo2FaceCounts[]; /* per-face weights the picker draws from  */
 /* Twenty-three sprite words. The static initializer copies them out of
  * sMgCardSprites in this order; an in-order copy does not. */
 struct Carlo2SpriteWords {
-    int a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12,a13,a14,a15,a16,a17,a18,a19,a20,a21,a22;
+    int w[23];
 };
 extern int sMgCardSprites[];
 extern Carlo2SpriteWords sMCarlo2CardSprites;
@@ -478,7 +478,7 @@ void dMgMCarlo2CardObj_c::Render()
     {
         int idx = (mFace + 1) * 5 + (mLift >> 12);
         unsigned short sprite = sMCarlo2CardFrameSprites[idx];
-        Hud_RenderSprite((void *)((int *)&sMCarlo2CardSprites)[sprite], (mX >> 12) + 0x18,
+        Hud_RenderSprite((void *)sMCarlo2CardSprites.w[sprite], (mX >> 12) + 0x18,
                          (mY >> 12) + 0x18, -1, -1);
     }
 }

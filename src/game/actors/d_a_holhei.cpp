@@ -212,7 +212,7 @@ int daHolhei_c::Behavior()
     mAngleX = mPrevAngleX;
     mAngleY = mPrevAngleY;
     mAngleZ = mPrevAngleZ;
-    UpdatePos((dCc_c*)&mdCc_c);
+    UpdatePos(&mdCc_c);
 
     if (mState != &data_ov062_0211dea0) {
         if (mState != &data_ov062_0211dec0 && mState != &data_ov062_0211de70) {

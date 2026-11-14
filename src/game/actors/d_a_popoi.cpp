@@ -23,8 +23,8 @@
  * into mAngleY every frame.
  *
  * deslop leftovers:
- *   - The state records and the four file homes keep decl_common.h's char
- *     spelling, so each install site casts to daPopoi_StateRecord *.
+ *   - TurnAway (data_ov077_02127d18) is its own record, so ChangeState
+ *     still takes that object's address as daPopoi_StateRecord *.
  *   - dExtAnmModel_c::SetAnim and the three collision Init calls stay spelled-out
  *     _ZN identifiers (Fix12<int> by value; the real headers can't express the
  *     call-site mangling). Sound::PlayLong and dBgCh_Actr::GetFloorResult are
@@ -83,17 +83,21 @@ struct PopoiAnimationFilePtr : SharedFilePtr {
     ~PopoiAnimationFilePtr();
 };
 
+struct daPopoi_StateRecord {
+    int (daPopoi_c::*enter)();
+    int (daPopoi_c::*update)();
+};
+
 struct PopoiTurnAwayRec {
-    PopoiPMF enter;
-    PopoiPMF update;
+    daPopoi_StateRecord state;
     /* Section-alignment fill: retail BSS runs 0x18 bytes past the update slot,
      * to the section end at 0x02127d40. The constructor never stores here. */
     u8 tailFill[0x18];
 
     PopoiTurnAwayRec()
     {
-        enter = &daPopoi_c::EnterTurnAwayState;
-        update = &daPopoi_c::UpdateTurnAwayState;
+        state.enter = &daPopoi_c::EnterTurnAwayState;
+        state.update = &daPopoi_c::UpdateTurnAwayState;
     }
 };
 
@@ -101,11 +105,11 @@ extern PopoiModelFile data_ov077_02127c88;
 extern PopoiAnimationFilePtr data_ov077_02127ca0;
 extern PopoiAnimationFilePtr data_ov077_02127c90;
 extern PopoiAnimationFilePtr data_ov077_02127c98;
-extern PopoiPMF data_ov077_02127ce8[2];
-extern PopoiPMF data_ov077_02127cf8[2];
-extern PopoiPMF data_ov077_02127d08[2];
+extern daPopoi_StateRecord data_ov077_02127ce8;
+extern daPopoi_StateRecord data_ov077_02127cf8;
+extern daPopoi_StateRecord data_ov077_02127d08;
 extern PopoiTurnAwayRec data_ov077_02127d18;
-extern PopoiPMF data_ov077_02127cd8[2];
+extern daPopoi_StateRecord data_ov077_02127cd8;
 
 /* Member bodies have C++ linkage and mwccarm does not inherit C linkage into
  * their block-scope externs, so every external FUNCTION declaration lives in
@@ -173,7 +177,7 @@ int daPopoi_c::InitResources()
     mSavedPosX = mPosX;
     mSavedPosY = mPosY;
     mSavedPosZ = mPosZ;
-    ChangeState((daPopoi_StateRecord *)&data_ov077_02127ce8); /* start in Wander */
+    ChangeState(&data_ov077_02127ce8); /* start in Wander */
     return 1;
 }
 
@@ -181,8 +185,6 @@ int daPopoi_c::InitResources()
  * pointer-to-member functions on this class: the ENTER handler at offset 0
  * (run once by ChangeState as the state is installed) and the UPDATE
  * handler at offset 8 (run each frame below). */
-struct daPopoi_StateRecord { int (daPopoi_c::*enter)(); int (daPopoi_c::*update)(); };
-
 /* The per-frame update (vtable slot 6).
  *
  * Below the water surface (data_0209f32c, WATER_HEIGHT) the actor is put back at its
@@ -246,7 +248,7 @@ int daPopoi_c::Behavior()
 
     /* On the ground and not already in Grab (data_ov077_02127cd8): see whether the
      * sensor is touching a daPly_c to grab. */
-    if (mWithMeshClsn.IsOnGround() && mState != (daPopoi_StateRecord *)data_ov077_02127cd8) {
+    if (mWithMeshClsn.IsOnGround() && mState != &data_ov077_02127cd8) {
         TryGrabPlayer();
     }
     mdCcAc_c.Clear();
@@ -332,7 +334,7 @@ int daPopoi_c::EnterWanderState() {
     mAnmModel.speed = 0x1000;
     mHorzSpeed = 0x8000;
     unk_41c = 0;
-    mAnmModel.SetAnim((BCA_File *)(((int *)&data_ov077_02127c90)[1]), 0, 0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)data_ov077_02127c90.filePtr, 0, 0x1000, 0);
     return 1;
 }
 
@@ -363,7 +365,7 @@ int daPopoi_c::UpdateWanderState() {
     mSoundHandle = Sound::PlayLong(mSoundHandle, 3, daPopoi_SND_MOVE_LOOP, mCamSpacePos, 0);
 
     if (IsBlockedAhead() != 0) {
-        ChangeState((daPopoi_StateRecord *)&data_ov077_02127d18); /* TurnAway */
+        ChangeState(&data_ov077_02127d18.state); /* TurnAway */
         return 1;
     }
 
@@ -385,7 +387,7 @@ int daPopoi_c::UpdateWanderState() {
         mAnmModel.speed = 0x1000 / (0x64 - mStateTimer);
 
     if (mStateTimer == 0) {
-        ChangeState((daPopoi_StateRecord *)data_ov077_02127cf8); /* Pause */
+        ChangeState(&data_ov077_02127cf8); /* Pause */
         return 1;
     }
 
@@ -400,7 +402,7 @@ int daPopoi_c::UpdateWanderState() {
         pp.z = src->z;
         if (Vec3_Dist(reinterpret_cast<const Vector3 *>(&mHomePosX), &pp) < 0x3e8000 &&
             player->mIsMetal == 0 && player->mIsMega == 0 && player->GetHurtState() < 0) {
-            ChangeState((daPopoi_StateRecord *)data_ov077_02127d08); /* Chase */
+            ChangeState(&data_ov077_02127d08); /* Chase */
             return 1;
         }
     }
@@ -414,7 +416,7 @@ int daPopoi_c::EnterPauseState() {
     mHorzSpeed = 0;
     mStateTimer = 0x46;
     mAnmModel.speed = 0x1000;
-    mAnmModel.SetAnim((BCA_File *)(((void **)&data_ov077_02127c98)[1]), 0, 0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)data_ov077_02127c98.filePtr, 0, 0x1000, 0);
     return 1;
 }
 
@@ -423,7 +425,7 @@ int daPopoi_c::EnterPauseState() {
 int daPopoi_c::UpdatePauseState() {
     unsigned short timer = mStateTimer;
     if (timer == 0) {
-        ChangeState((daPopoi_StateRecord *)&data_ov077_02127ce8); /* Wander */
+        ChangeState(&data_ov077_02127ce8); /* Wander */
     }
     return 1;
 }
@@ -434,7 +436,7 @@ int daPopoi_c::UpdatePauseState() {
 int daPopoi_c::EnterTurnAwayState() {
     mTargetAngleY = mAngleY + 0x4000;
     mAnmModel.speed = 0x1000;
-    mAnmModel.SetAnim((BCA_File *)(((void **)&data_ov077_02127c90)[1]), 0, 0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)data_ov077_02127c90.filePtr, 0, 0x1000, 0);
     return 1;
 }
 
@@ -450,7 +452,7 @@ int daPopoi_c::UpdateTurnAwayState() {
     int diff = (AngleDiff)(mPrevAngleY, mTargetAngleY);
     if (diff < 0x100) {
         mCooldown = 0x1e;
-        ChangeState((daPopoi_StateRecord *)&data_ov077_02127ce8); /* Wander */
+        ChangeState(&data_ov077_02127ce8); /* Wander */
     }
     return 1;
 }
@@ -466,7 +468,7 @@ int daPopoi_c::EnterChaseState() {
     mTurnRate = 0;
     unk_41c = 0;
     mAnmModel.speed = 0x2000;
-    mAnmModel.SetAnim((BCA_File *)(((int *)&data_ov077_02127c90)[1]), 0, 0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)data_ov077_02127c90.filePtr, 0, 0x1000, 0);
     return 1;
 }
 
@@ -494,7 +496,7 @@ int daPopoi_c::UpdateChaseState() {
     dist = Vec3_Dist(&mPos, reinterpret_cast<const Vector3 *>(&mHomePosX));
 
     if (IsBlockedAhead() != 0) {
-        ChangeState((daPopoi_StateRecord *)&data_ov077_02127d18); /* TurnAway */
+        ChangeState(&data_ov077_02127d18.state); /* TurnAway */
         return 1;
     }
 
@@ -524,7 +526,7 @@ int daPopoi_c::UpdateChaseState() {
     }
 
     if (dist > 0x5dc000 || mStateTimer == 0 || IsBlockedAhead() != 0)
-        ChangeState((daPopoi_StateRecord *)data_ov077_02127cf8); /* Pause */
+        ChangeState(&data_ov077_02127cf8); /* Pause */
 
     return 1;
 }
@@ -535,7 +537,7 @@ int daPopoi_c::UpdateChaseState() {
 int daPopoi_c::EnterGrabState() {
     mHorzSpeed = 0;
     mAnmModel.speed = 0x1000;
-    mAnmModel.SetAnim((BCA_File *)(((void **)&data_ov077_02127ca0)[1]), 0x40000000, 0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)data_ov077_02127ca0.filePtr, 0x40000000, 0x1000, 0);
     return 1;
 }
 
@@ -585,7 +587,7 @@ int daPopoi_c::UpdateGrabState() {
         }
     }
     if (mAnmModel.Finished() != 0) {
-        ChangeState((daPopoi_StateRecord *)&data_ov077_02127cf8); /* Pause */
+        ChangeState(&data_ov077_02127cf8); /* Pause */
     }
     return 1;
 }
@@ -618,7 +620,7 @@ void daPopoi_c::TryGrabPlayer() {
     if (a->GetHurtState() >= 0) return;
     if (a->IsCollectingCap() != 0) return;
     mCaughtPlayer = a;
-    ChangeState((daPopoi_StateRecord *)&data_ov077_02127cd8); /* Grab */
+    ChangeState(&data_ov077_02127cd8); /* Grab */
 }
 
 /* Probe ahead for a wall or a missing floor. Returns 1 if the way is blocked,
@@ -749,24 +751,24 @@ PopoiAnimationFilePtr data_ov077_02127ca0(ASSET_POPOI_ATTACK_BCA);
 PopoiAnimationFilePtr data_ov077_02127c90(ASSET_POPOI_MOVE1_BCA);
 PopoiAnimationFilePtr data_ov077_02127c98(ASSET_POPOI_MOVE2_BCA);
 
-PopoiPMF data_ov077_02127ce8[2] = {
+daPopoi_StateRecord data_ov077_02127ce8 = {
     &daPopoi_c::EnterWanderState,
     &daPopoi_c::UpdateWanderState,
 };
 
-PopoiPMF data_ov077_02127cf8[2] = {
+daPopoi_StateRecord data_ov077_02127cf8 = {
     &daPopoi_c::EnterPauseState,
     &daPopoi_c::UpdatePauseState,
 };
 
-PopoiPMF data_ov077_02127d08[2] = {
+daPopoi_StateRecord data_ov077_02127d08 = {
     &daPopoi_c::EnterChaseState,
     &daPopoi_c::UpdateChaseState,
 };
 
 PopoiTurnAwayRec data_ov077_02127d18;
 
-PopoiPMF data_ov077_02127cd8[2] = {
+daPopoi_StateRecord data_ov077_02127cd8 = {
     &daPopoi_c::EnterGrabState,
     &daPopoi_c::UpdateGrabState,
 };

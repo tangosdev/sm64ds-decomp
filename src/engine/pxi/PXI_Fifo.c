@@ -28,10 +28,14 @@ typedef int BOOL;
 #define PXI_PROC_ARM PXI_PROC_ARM9
 
 /* The ARM9 side's PXI registers (nitro/hw/ARM9/ioreg_PXI.h). */
-#define reg_PXI_INTF (*(volatile u16 *)0x04000180)
-#define reg_PXI_FIFO_CNT (*(volatile u16 *)0x04000184)
-#define reg_PXI_SEND_FIFO (*(volatile u32 *)0x04000188)
-#define reg_PXI_RECV_FIFO (*(volatile u32 *)0x04100000)
+static volatile u16 *const reg_PXI_INTF_p = (volatile u16 *)0x04000180;
+static volatile u16 *const reg_PXI_FIFO_CNT_p = (volatile u16 *)0x04000184;
+static volatile u32 *const reg_PXI_SEND_FIFO_p = (volatile u32 *)0x04000188;
+static volatile u32 *const reg_PXI_RECV_FIFO_p = (volatile u32 *)0x04100000;
+#define reg_PXI_INTF (*reg_PXI_INTF_p)
+#define reg_PXI_FIFO_CNT (*reg_PXI_FIFO_CNT_p)
+#define reg_PXI_SEND_FIFO (*reg_PXI_SEND_FIFO_p)
+#define reg_PXI_RECV_FIFO (*reg_PXI_RECV_FIFO_p)
 
 #define REG_PXI_FIFO_CNT_E_MASK 0x8000
 #define REG_PXI_FIFO_CNT_ERR_MASK 0x4000

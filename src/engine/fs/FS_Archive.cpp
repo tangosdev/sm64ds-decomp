@@ -41,7 +41,7 @@ extern FSDirPos current_dir_pos;
 
 int FSi_TranslateCommand(FSFile *p_file, int command);
 void FSi_ReleaseCommand(FSFile *p_file, int ret);
-void FSi_AppendToList(FSFile *elem, FSFile *list);
+void FSi_AppendToList(FSFile *elem, FSFileLink *list);
 
 u32 FSi_GetPackedName(const char *name, int name_len);
 int FSi_ReadMemCallback(FSArchive *p_arc, void *dst, u32 pos, u32 size);
@@ -275,7 +275,7 @@ int FSi_SendCommand(FSFile *p_file, int command) {
         }
         if ((bit & FS_ARCHIVE_PROC_SYNC) != 0)
             p_file->stat |= FS_FILE_STATUS_SYNC;
-        FSi_AppendToList(p_file, (FSFile *)&p_arc->list);
+        FSi_AppendToList(p_file, &p_arc->list);
         if (!FSi_IsArchiveRunning(p_arc)) {
             p_arc->flag |= FS_ARCHIVE_FLAG_RUNNING;
             OS_RestoreInterrupts(bak_psr);

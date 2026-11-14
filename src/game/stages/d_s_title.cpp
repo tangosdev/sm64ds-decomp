@@ -314,9 +314,13 @@ s32 dScTitle_c::Render() {
     {
         int idx = data_0209e664;
         unsigned int v = ((gTitleCursor - gTitleListTop + 2) << 3) & 0xff;
-        char *p = data_0209e674 + (idx << 3);
-        *(int *)p = v | 0x80000;
-        *(short *)(p + 4) = 0;
+        struct TitleCursorOam {
+            unsigned int attr;
+            short pad;
+        };
+        TitleCursorOam *oam = (TitleCursorOam *)(data_0209e674 + (idx << 3));
+        oam->attr = v | 0x80000;
+        oam->pad = 0;
     }
     return 1;
 }

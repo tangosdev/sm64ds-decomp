@@ -27,14 +27,14 @@ typedef struct
 } T4;
 
 extern int data_020a80c4;
-extern unsigned int data_0209a054[4];
+extern T4 data_0209a054;
 
 #define SHA1CircularShift(bits, word) (((word) << (bits)) | ((word) >> (32 - (bits))))
 
 void func_0205e3d4(void *ctx)
 {
     SHA1Context *context = (SHA1Context *)ctx;
-    unsigned int K[4];
+    T4 K;
     int t;
     unsigned int temp;
     unsigned int W[80];
@@ -42,7 +42,7 @@ void func_0205e3d4(void *ctx)
     unsigned int save[2];
     unsigned char *blk;
 
-    *(T4 *)K = *(T4 *)data_0209a054;
+    K = data_0209a054;
     blk = context->Message_Block;
     if (data_020a80c4 != 0)
     {
@@ -74,7 +74,7 @@ void func_0205e3d4(void *ctx)
     for (t = 0; t < 20; t++)
     {
         temp = SHA1CircularShift(5, A) + ((B & C) | ((~B) & D)) + E + W[t] +
-               ((volatile unsigned int *)K)[0];
+               ((volatile unsigned int *)K.w)[0];
         E = D;
         D = C;
         C = SHA1CircularShift(30, B);
@@ -84,7 +84,7 @@ void func_0205e3d4(void *ctx)
 
     for (t = 20; t < 40; t++)
     {
-        temp = SHA1CircularShift(5, A) + (B ^ C ^ D) + E + W[t] + K[1];
+        temp = SHA1CircularShift(5, A) + (B ^ C ^ D) + E + W[t] + K.w[1];
         E = D;
         D = C;
         C = SHA1CircularShift(30, B);
@@ -94,7 +94,7 @@ void func_0205e3d4(void *ctx)
 
     for (t = 40; t < 60; t++)
     {
-        temp = SHA1CircularShift(5, A) + ((B & C) | (B & D) | (C & D)) + E + W[t] + K[2];
+        temp = SHA1CircularShift(5, A) + ((B & C) | (B & D) | (C & D)) + E + W[t] + K.w[2];
         E = D;
         D = C;
         C = SHA1CircularShift(30, B);
@@ -104,7 +104,7 @@ void func_0205e3d4(void *ctx)
 
     for (t = 60; t < 80; t++)
     {
-        temp = SHA1CircularShift(5, A) + (B ^ C ^ D) + E + W[t] + K[3];
+        temp = SHA1CircularShift(5, A) + (B ^ C ^ D) + E + W[t] + K.w[3];
         E = D;
         D = C;
         C = SHA1CircularShift(30, B);
@@ -113,10 +113,10 @@ void func_0205e3d4(void *ctx)
     }
 
     context->Intermediate_Hash[0] += A;
-    *(unsigned int *)(((int)&context->Intermediate_Hash[1]) & ~0ULL) += B;
-    *(unsigned int *)(((int)&context->Intermediate_Hash[2]) & ~0ULL) += C;
-    *(unsigned int *)(((int)&context->Intermediate_Hash[3]) & ~0ULL) += D;
-    *(unsigned int *)(((int)&context->Intermediate_Hash[4]) & ~0ULL) += E;
+    context->Intermediate_Hash[1] += B;
+    context->Intermediate_Hash[2] += C;
+    context->Intermediate_Hash[3] += D;
+    context->Intermediate_Hash[4] += E;
     context->Message_Block_Index = 0;
 
     if (data_020a80c4 != 0)

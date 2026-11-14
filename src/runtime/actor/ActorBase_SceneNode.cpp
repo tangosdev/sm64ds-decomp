@@ -94,7 +94,12 @@ extern "C" int func_0203b438(struct N *a, struct N *b, struct N *c)
 }
 
 namespace Absorb0203b3c0 {
-struct Node { int f0; int f4; struct Node* f8; struct Node* fc; };
+struct Node {
+    struct Node *f0;
+    struct Node *f4;
+    struct Node *f8;
+    struct Node *fc;
+};
 
 extern "C" int func_0203b3c0(int* list, struct Node* n)
 {
@@ -105,7 +110,7 @@ extern "C" int func_0203b3c0(int* list, struct Node* n)
             n->f8->fc = n->fc;
         } else {
             if (n->f0 != 0) {
-                *(int *)(n->f0 + 4) = (int)n->fc;
+                n->f0->f4 = n->fc;
             } else {
                 *list = 0;
             }

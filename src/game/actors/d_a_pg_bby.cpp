@@ -482,7 +482,7 @@ int daPgBby_c::func_ov072_02121368()
     from.x = x;
     from.y = aboveY;
     from.z = z;
-    DetectRaycastClsn(*fromp, *(Vector3 *)posX, store);
+    DetectRaycastClsn(*fromp, mPos, store);
 
     mEatingPlayer = 0;
     mWithMeshClsn.SetLimMovFlag();

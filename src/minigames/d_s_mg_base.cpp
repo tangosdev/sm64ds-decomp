@@ -49,6 +49,7 @@
 #include "Memory.h"
 #include "math/Approach.h"
 #include "nitro/hw/registers.h"
+#include "OamAttr.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/mi/memory.h"
 
@@ -1125,7 +1126,7 @@ extern "C" void Mg_DrawMenu(dScMgBase_c *scene)
     for (i = 0; i < 3; i++) {
         if (i == scene->mMenuCursor) {
             int idx = (int)(((u32)scene->mMenuCursorPhase << 0xf) >> 0x10) >> 4;
-            char *cursor = (char *)extra[i];
+            OamAttr *cursor = (OamAttr *)extra[i];
             s16 *pos;
             u16 v;
             int *pbuf = buf;
@@ -1145,8 +1146,8 @@ extern "C" void Mg_DrawMenu(dScMgBase_c *scene)
             do {
                 Mg_DrawSpriteListEntry(cursor, (void *)(int)pos[0], (void *)(int)pos[1],
                                        (void *)buf);
-                v = *(u16 *)(cursor + 6);
-                cursor += 8;
+                v = cursor->attr3;
+                cursor++;
             } while (v != 0xffff);
 
             Mg_DrawSpriteList(data_ov006_021346bc, tbl[i][0], tbl[i][1], 0);
@@ -1166,15 +1167,15 @@ extern "C" {
    entry from `self`, up to and including the one whose attr3 is 0xffff. */
 extern "C" void Mg_DrawSpriteList(void *self, void *actor, void *c2, void *c3)
 {
-    void *r8 = self;
+    OamAttr *r8 = (OamAttr *)self;
     void *r7 = actor;
     void *r6 = c2;
     void *r5 = c3;
     u16 sentinel = 0xffff;
     do {
         Mg_DrawSpriteListEntry(r8, r7, r6, r5);
-        u16 v = *(u16*)((char*)r8 + 6);
-        r8 = (char*)r8 + 8;
+        u16 v = r8->attr3;
+        r8++;
         if (v == sentinel) break;
     } while (1);
 }
@@ -1374,11 +1375,11 @@ void dScMgBase_c::RestoreScreenFromMenu() {
     gMainScreenLayers = 0;
     gSubScreenLayers = 0;
 
-    *(u32 *)0x4000000 &= ~0x1f00;
-    *(u32 *)0x4001000 &= ~0x1f00;
+    REG_DISPCNT &= ~0x1f00;
+    REG_DISPCNT_SUB &= ~0x1f00;
     REG_POWCNT1 = (mSavedScreenSwap << 15) | (REG_POWCNT1 & ~0x8000);
-    *(u32 *)0x4000000 = (*(u32 *)0x4000000 & ~0xe000) | ((u32)data_0209d460 << 13);
-    *(u32 *)0x4001000 = (*(u32 *)0x4001000 & ~0xe000) | ((u32)data_0209d458 << 13);
+    GX_SetVisibleWnd(data_0209d460);
+    GXS_SetVisibleWnd(data_0209d458);
 
     GX_LoadBGPltt(save->mainBgPltt, 0x20, 0x1e0);
     {
@@ -1398,8 +1399,8 @@ void dScMgBase_c::RestoreScreenFromMenu() {
     if (GetDisplayMode() == 2)
         return;
 
-    *(u32 *)0x4000000 = (*(u32 *)0x4000000 & ~0x1f00) | ((u32)gMainScreenLayers << 8);
-    *(u32 *)0x4001000 = (*(u32 *)0x4001000 & ~0x1f00) | ((u32)gSubScreenLayers << 8);
+    GX_SetVisiblePlane(gMainScreenLayers);
+    GXS_SetVisiblePlane(gSubScreenLayers);
 }
 
 namespace s20af04c {
@@ -1464,10 +1465,10 @@ int dScMgBase_c::SaveScreenForMenu() {
     gMainScreenLayers = 0;
     gSubScreenLayers = 0;
 
-    *(volatile int *)0x4000000 &= ~0x1f00;
-    *(volatile int *)0x4001000 &= ~0x1f00;
-    *(volatile int *)0x4000000 &= ~0xe000;
-    *(volatile int *)0x4001000 &= ~0xe000;
+    REG_DISPCNT &= ~0x1f00;
+    REG_DISPCNT_SUB &= ~0x1f00;
+    REG_DISPCNT &= ~0xe000;
+    REG_DISPCNT_SUB &= ~0xe000;
 
     MI_CpuCopy32((int *)0x5000020, save->mainBgPltt, 0x1e0);
     {
@@ -3309,8 +3310,8 @@ void dScMgBase_c::InitEngines() {
     GX_SetDispSelect(GX_DISP_SELECT_MAIN_SUB);
     Mg_DisableAllBanks();
     Mg_ResetBgOffsets();
-    *(vu32 *)0x4000000u &= ~0x7000000u;
-    *(vu32 *)0x4000000u &= ~0x38000000u;
+    REG_DISPCNT &= ~REG_GX_DISPCNT_BGCHAROFFSET_MASK;
+    REG_DISPCNT &= ~REG_GX_DISPCNT_BGSCREENOFFSET_MASK;
     GX_SetBankForBG(GX_VRAM_BG_256_AB);
     GX_SetBankForOBJ(GX_VRAM_OBJ_64_E);
     gMainScreenLayers = DISPLAY_LAYER_OBJ;

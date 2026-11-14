@@ -223,6 +223,19 @@ struct JugemTexSequenceFilePtr : SharedFilePtr {
     ~JugemTexSequenceFilePtr();
 };
 
+struct DemoModelFile : SharedFilePtr {
+    DemoModelFile(unsigned int fileID);
+    ~DemoModelFile();
+};
+struct DemoAnimFile : SharedFilePtr {
+    DemoAnimFile(unsigned int fileID);
+    ~DemoAnimFile();
+};
+struct DemoTexSeqFile : SharedFilePtr {
+    DemoTexSeqFile(unsigned int fileID);
+    ~DemoTexSeqFile();
+};
+
 extern "C" {
 extern unsigned char gSubScreenLayers;
 extern int data_0209e650;
@@ -311,7 +324,7 @@ extern void func_02012694(unsigned int, void*);
 extern int* Vec3_LslInPlace(int *v, int sh);
 extern u16 gKuppaScriptFrame;
 extern char *gCamera;
-extern int data_ov002_0210b958;
+extern Vector3 data_ov002_0210b958;
 /* local extern dropped: decl_common.h declares data_0209b41c */
 extern s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
 extern void func_0201f138(void);
@@ -333,7 +346,7 @@ extern int data_ov002_0210b964[3];
 extern Matrix4x3 data_020a0e68;
 extern Matrix4x3 data_0209b41c;
 extern unsigned char gGameMode;
-extern char data_ov002_0211094c;
+extern SharedFilePtr data_ov002_0211094c;
 extern JugemModelFile data_ov085_0213074c;
 extern SharedFilePtr *data_ov002_0210b600[1];
 extern SharedFilePtr *data_ov002_0210b604[1];
@@ -623,9 +636,9 @@ void func_ov002_020f2790(char* c, int p1, int p2, int p3, s16 p4)
 {
     ((StaffRoll *)c)->kira.unk308 = p3;
     ((StaffRoll *)c)->kira.unk30c = p4;
-    ((StaffRoll *)c)->kiraParticle = Particle::System::New(
-        ((StaffRoll *)c)->kiraParticle, kPtclEndingStarSparkle, p1 << 12, p2 << 12, 0, 0,
-        (dPa_c::level_c::callback_c *)((struct ParticleCallback *)&((StaffRoll *)c)->kira));
+    ((StaffRoll *)c)->kiraParticle =
+        Particle::System::New(((StaffRoll *)c)->kiraParticle, kPtclEndingStarSparkle, p1 << 12,
+                              p2 << 12, 0, 0, &((StaffRoll *)c)->kira);
 }
 }
 
@@ -1489,7 +1502,7 @@ void StaffRoll::func_ov002_020f43cc(int i) {
                 *(int *)((char *)&this->stars[0].speed + off) + 0x120;
         {
             s = c + idx * 0x4c;
-            int dx = (((StaffRoll *)s)->stars[0].targetX - *(int *)px) >> 12;
+            int dx = (((StaffRoll *)s)->stars[0].targetX - ((StaffRoll *)px)->stars[0].x) >> 12;
             int dy = (((StaffRoll *)s)->stars[0].targetY - this->stars[idx].y) >> 12;
             if (dx >= -2 && dx <= 2 && dy >= -2 && dy <= 2) {
                 this->stars[idx].phase++;
@@ -2033,7 +2046,7 @@ void StaffRoll::func_ov002_020f55b4(int i) {
     char *e = c + i * 0x4c;
     if (((StaffRoll *)e)->stars[0].frame != 0x10)
         return;
-    (*((unsigned char *)&this->stars[0].step + i * 0x4c)) += 1;
+    (&this->stars[0].step)[i * 0x4c] += 1;
     ((StaffRoll *)e)->stars[0].radius = 0x38000;
     ((StaffRoll *)e)->stars[0].heading = data_ov002_021000d8[i];
     ((StaffRoll *)e)->stars[0].phase = 0;
@@ -2210,8 +2223,14 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f5ad4(char* c)
 {
     /* StaffRoll::pad_1f0: two words cleared here and read nowhere. */
-    *(int*)(c+0x1f0) = 0;
-    *(int*)(c+0x1f4) = 0;
+    struct Cleared {
+        char before[0x1f0];
+        s32 first;
+        s32 second;
+    };
+    Cleared *cleared = (Cleared *)c;
+    cleared->first = 0;
+    cleared->second = 0;
     ((StaffRoll *)c)->kiraStar = 0;
     ((StaffRoll *)c)->holdOrbit = 0;
     func_ov002_020f5a6c(c);
@@ -2599,10 +2618,17 @@ int daDemo_c::func_ov002_020f6448(unsigned char *arg1)
 
 void daDemo_c::anmModel_c::func_ov002_020f64ac(char *r4)
 {
+    struct AnimEntry {
+        u8 anim;
+        s8 btp;
+        u8 loop;
+        s8 next;
+    };
     Advance();
     if (!Finished())
         return;
-    signed char r2 = *(signed char *)(r4 + (mAnimEntry << 2) + 3);
+    AnimEntry *entry = (AnimEntry *)r4 + mAnimEntry;
+    signed char r2 = entry->next;
     if (r2 < 0)
         return;
     func_ov002_020f6514((u8 *)r4, (u8)(r2 & 0xff));
@@ -2837,7 +2863,7 @@ int daDemo_c::func_ov002_020f6c24(unsigned char *src)
 int daDemo_c::func_ov002_020f6c34(unsigned char *src)
 {
     unsigned char v = *src;
-    ((anmModel_c *)this->mAnmModel)->func_ov002_020f6514((u8 *)&data_ov002_0210bc88, v);
+    ((anmModel_c *)this->mAnmModel)->func_ov002_020f6514(&data_ov002_0210bc88, v);
     return 1;
 }
 
@@ -2881,8 +2907,8 @@ int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
   }
   else
   {
-      MTX_MultVec43((Vector3 *)&data_ov002_0210b958, (Matrix4x3 *)&data_0209b41c, (Vector3 *)&v);
-      Vec3_LslInPlace((int *)&v, 3);
+      MTX_MultVec43(&data_ov002_0210b958, &data_0209b41c, (Vector3 *)&v);
+      Vec3_LslInPlace(&v.x, 3);
       func_ov002_020f6f48((Vector3 *)&v, 8);
   }
   this->mPrevAngleX = this->mAngleX;
@@ -2977,7 +3003,7 @@ int daDemo_c::func_ov002_020f7038(int a, int arg)
     {
         anmModel_c *obj = (anmModel_c *)this->mAnmModel;
         if (obj->mAnimEntry == 0 && (this->mGroundFlags & 1)) {
-            obj->func_ov002_020f6514((u8 *)&data_ov002_0210bc88, 1);
+            obj->func_ov002_020f6514(&data_ov002_0210bc88, 1);
         }
     }
     this->mPosY -= FX_MUL(mRate, 0x199);
@@ -3030,24 +3056,21 @@ int daDemo_c::func_ov002_020f71c4(int a, int arg)
 
 int daDemo_c::func_ov002_020f72bc()
 {
-    *((u32*)&this->mScaleX) = 0x3000;
-    *((u32*)&this->mScaleY) = 0x3000;
-    *((u32*)&this->mScaleZ) = 0x3000;
+    this->mScaleX = 0x3000;
+    this->mScaleY = 0x3000;
+    this->mScaleZ = 0x3000;
     {
         s16* p = &this->mAngleY;
         *p = *p + 0x400;
     }
     this->mOpacity = 0x1f;
 
-    mParticleID[0] =
-        Particle::System::New(mParticleID[0], kPtclDemoSpinA, *((Fix12i *)&this->mPosX),
-                              *((Fix12i *)&this->mPosY), *((Fix12i *)&this->mPosZ), 0, 0);
-    mParticleID[1] =
-        Particle::System::New(mParticleID[1], kPtclDemoSpinB, *(Fix12i *)(&this->mPosX),
-                              *(Fix12i *)(&this->mPosY), *(Fix12i *)(&this->mPosZ), 0, 0);
-    mParticleID[2] =
-        Particle::System::New(mParticleID[2], kPtclDemoSpinC, *(Fix12i *)(&this->mPosX),
-                              *(Fix12i *)(&this->mPosY), *((Fix12i *)&this->mPosZ), 0, 0);
+    mParticleID[0] = Particle::System::New(mParticleID[0], kPtclDemoSpinA, this->mPosX, this->mPosY,
+                                           this->mPosZ, 0, 0);
+    mParticleID[1] = Particle::System::New(mParticleID[1], kPtclDemoSpinB, this->mPosX, this->mPosY,
+                                           this->mPosZ, 0, 0);
+    mParticleID[2] = Particle::System::New(mParticleID[2], kPtclDemoSpinC, this->mPosX, this->mPosY,
+                                           this->mPosZ, 0, 0);
     return 1;
 }
 
@@ -3082,7 +3105,7 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
     int b = in[1] << 8;
     int t;
     if (a != 0 && sel == gKuppaScriptFrame) {
-        Vector3 *p = ((param_c &)*(simpleModel_c *)this->mModel).mScale;
+        Vector3 *p = ((simpleModel_c *)this->mModel)->mScale;
         p->x = -0x5d00;
         p->y = 0x1800;
         p->z = -0x16000;
@@ -3091,12 +3114,12 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
         this->mAngleZ = 0;
         func_0201f138();
     }
-    MTX_MultVec43(((param_c &)*(simpleModel_c *)this->mModel).mScale, (Matrix4x3 *)&data_0209b41c,
+    MTX_MultVec43(((simpleModel_c *)this->mModel)->mScale, &data_0209b41c,
                   (&this->mPos));
     Vec3_LslInPlace(&this->mPosX, 3);
     if (ApproachLinear(this->mMagnitude, a, b) != 0 && a == 0 && b != 0)
         func_0201ef38();
-    *(char *)(&this->mOpacity) = *(&this->mMagnitude) >> 12;
+    this->mOpacity = this->mMagnitude >> 12;
     {
         unsigned char r = *(&this->mOpacity);
         if (r != 0 || a != 0) {
@@ -3122,7 +3145,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
     int b = arg1[1];
     int f1 = a << 0xc;
     int f2 = b << 8;
-    int *base;
+    const Vector3 *base;
     int scale;
     VecFx32 tmp, diff, scaled, sum;
 
@@ -3139,30 +3162,29 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
     static Vector3 sViewIdle(0x4c00, -0xf200, -0xff00);
 
     if (f1 != 0) {
-        base = (int *)&sViewStart;
+        base = &sViewStart;
         scale = 0x1000;
     } else {
-        base = (int *)&sViewIdle;
+        base = &sViewIdle;
         scale = 0;
     }
 
     Math_Function_0203b0fc(&this->mRate, scale, 0x40, 0x100);
-    Vec3_Sub((Vector3 *)&diff, (const Vector3 *)&sViewEnd, (const Vector3 *)base);
+    Vec3_Sub((Vector3 *)&diff, &sViewEnd, base);
     tmp.x = diff.x;
     tmp.y = diff.y;
     tmp.z = diff.z;
     Vec3_MulScalar((Vector3 *)&scaled, (const Vector3 *)&tmp, this->mRate);
-    Vec3_Add((Vector3 *)&sum, (const Vector3 *)base, (const Vector3 *)&scaled);
+    Vec3_Add((Vector3 *)&sum, base, (const Vector3 *)&scaled);
 
     {
-        Vector3 *dp = ((param_c &)*(anmModel_c *)this->mAnmModel).mScale;
+        Vector3 *dp = ((anmModel_c *)this->mAnmModel)->mScale;
         dp->x = sum.x;
         dp->y = sum.y;
         dp->z = sum.z;
     }
-    MTX_MultVec43(((param_c &)*(anmModel_c *)this->mAnmModel).mScale, (Matrix4x3 *)&data_0209b41c,
-                  &this->mPos);
-    Vec3_LslInPlace((int *)(&this->mPosX), 3);
+    MTX_MultVec43(((anmModel_c *)this->mAnmModel)->mScale, &data_0209b41c, &this->mPos);
+    Vec3_LslInPlace(&this->mPosX, 3);
     ApproachLinear(this->mMagnitude, f1, f2);
     this->mOpacity = this->mMagnitude >> 0xc;
     return 1;
@@ -3186,11 +3208,11 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
             v[1] = data_ov002_0210b970[1];
             v[2] = data_ov002_0210b970[2];
 
-            idx = *(volatile unsigned char *)&gLocalPlayerId;
+            idx = gLocalPlayerId;
             {
                 short ang = ((dActor_c *)gPlayers[idx])->mAngleY;
 
-                Vec3_RotateYAndTranslate(&this->mPosX, (int *)&cam->pos, (ang + 0x8000), v);
+                Vec3_RotateYAndTranslate(&this->mPosX, &cam->pos, (ang + 0x8000), v);
             }
         }
 
@@ -3224,20 +3246,20 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
 
             state = *&this->mPhase;
             if (state < 0xa9) {
-                UpdateAngle(*(short *)&this->mPrevAngleY, 0x1800, 0x1e, 0x4000);
+                UpdateAngle(this->mPrevAngleY, 0x1800, 0x1e, 0x4000);
             }
             ApproachLinear(this->mPrevAngleX, -0x3000, 0x70);
         }
     }
 
     {
-        unsigned short a = *((unsigned short *)&this->mPrevAngleX);
+        unsigned short a = this->mPrevAngleX;
         int t = this->mMagnitude;
         short s0 = FX_SinCosTable_[((a >> 4) << 1) + 1];
         this->mHorzSpeed = FX_MUL(t, s0);
     }
     {
-        unsigned short a = *(unsigned short *)(&this->mPrevAngleX);
+        unsigned short a = this->mPrevAngleX;
         int t = this->mMagnitude;
         int s1 = -FX_SinCosTable_[(a >> 4) << 1];
         this->mVertSpeed = FX_MUL(t, s1);
@@ -3292,7 +3314,7 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
         h = (unsigned short)this->mPhase;
         t = FX_SinCosTable_[(h >> 4) * 2 + 1];
         {
-            int *p60 = (int *)(&this->mPosY);
+            int *p60 = &this->mPosY;
             *p60 = *p60 + FX_MUL(t, 0x96000);
         }
 
@@ -3359,7 +3381,7 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
     src[1] = FX_MUL(dist, FX_SinCosTable_[(((u16)vertAngle) >> 4) * 2]);
     src[2] = FX_MUL(dist, FX_SinCosTable_[(((u16)vertAngle) >> 4) * 2 + 1]);
 
-    Vec3_RotateYAndTranslate((int *)(&this->mPosX), (int *)&cam->pos, heading, src);
+    Vec3_RotateYAndTranslate(&this->mPosX, &cam->pos, heading, src);
 
     this->mAngleX = cstd::atan2(v1.y, Vec3_HorzLen(&v1));
     this->mAngleY = cstd::atan2(v1.x, v1.z);
@@ -3424,24 +3446,22 @@ int daDemo_c::Render() {
     if (param1 == 0x19) {
         /* Draw the model three times: copy INV_VIEW_MATRIX_ASR_3 into its
            mat4x3, then for each entry of data_ov002_0210bb7c overwrite the
-           translation column (m[9..11]) and render. The {p, cur, src} struct
-           is the allocation shape the ROM compiles; a plain Matrix4x3
-           pointer builds the same size with different registers. */
+           translation column (m[9..11]) and render. */
         struct {
-            char *p;
-            char *cur;
+            Matrix4x3 *p;
+            Matrix4x3 *cur;
             Matrix4x3 *src;
         } s;
         s.src = &data_0209b41c;
-        s.p = (char *)&mModel->mat4x3;
+        s.p = &mModel->mat4x3;
         s.cur = s.p;
-        *(Matrix4x3 *)s.cur = *s.src;
+        *s.cur = *s.src;
         int *tbl = data_ov002_0210bb7c;
         int i = 0;
         do {
-            ((Matrix4x3 *)s.p)->m[9] = tbl[0];
-            ((Matrix4x3 *)s.p)->m[10] = tbl[1];
-            ((Matrix4x3 *)s.p)->m[11] = tbl[2];
+            s.p->m[9] = tbl[0];
+            s.p->m[10] = tbl[1];
+            s.p->m[11] = tbl[2];
             mModel->Render(0);
             tbl += 3;
             i++;
@@ -3538,23 +3558,23 @@ int daDemo_c::InitResources()
         if (this->mAnmModel == 0)
             return 0;
         if (((anmModel_c *)this->mAnmModel)
-                ->func_ov002_020f6618((SharedFilePtr *)&data_ov085_0213074c, 1, data_ov002_0210b60c,
-                                      1, 1, data_ov002_0210b608, -1) == 0)
+                ->func_ov002_020f6618(&data_ov085_0213074c, 1, data_ov002_0210b60c, 1, 1,
+                                      data_ov002_0210b608, -1) == 0)
             return 0;
     } else if (param1 == 0x13) {
         this->mAnmModel = new anmModel_c;
         if (this->mAnmModel == 0)
             return 0;
-        t = (*(volatile unsigned char *)&gGameMode == 2);
+        t = (gGameMode == 2);
         if (t == 0) {
             if (((anmModel_c *)this->mAnmModel)
-                    ->func_ov002_020f6618((SharedFilePtr *)&data_ov002_02110b98, 1,
+                    ->func_ov002_020f6618(&data_ov002_02110b98, 1,
                                           data_ov002_0210b610, 1, 1, data_ov002_0210b600,
                                           0x16) == 0)
                 return 0;
         } else {
             if (((anmModel_c *)this->mAnmModel)
-                    ->func_ov002_020f6618((SharedFilePtr *)&data_ov002_02110c18, 0xD,
+                    ->func_ov002_020f6618(&data_ov002_02110c18, 0xD,
                                           (SharedFilePtr **)&data_ov002_0210bcf0, 1, 0xD,
                                           (SharedFilePtr **)&data_ov002_0210bd24, 0x16) == 0)
                 return 0;
@@ -3562,19 +3582,20 @@ int daDemo_c::InitResources()
     } else if (param1 >= 0x14 && param1 <= 0x16) {
         this->mModel = new simpleModel_c;
         if (this->mModel == 0) return 0;
-        if (((simpleModel_c*)this->mModel)->func_ov002_020f6960((SharedFilePtr*)&data_ov002_02110b70, -1) == 0) return 0;
+        if (((simpleModel_c*)this->mModel)->func_ov002_020f6960(&data_ov002_02110b70, -1) == 0) return 0;
     } else if (param1 == 0x17) {
         this->mModel = new simpleModel_c;
         if (this->mModel == 0) return 0;
-        if (((simpleModel_c*)this->mModel)->func_ov002_020f6960((SharedFilePtr*)&data_ov002_02110b50, 0x19) == 0) return 0;
+        if (((simpleModel_c*)this->mModel)->func_ov002_020f6960(&data_ov002_02110b50, 0x19) == 0) return 0;
     } else if (param1 == 0x18) {
         this->mModel = new simpleModel_c;
         if (this->mModel == 0) return 0;
-        if (((simpleModel_c*)this->mModel)->func_ov002_020f6960((SharedFilePtr*)&data_ov002_0211094c, -1) == 0) return 0;
+        if (((simpleModel_c *)this->mModel)->func_ov002_020f6960(&data_ov002_0211094c, -1) == 0)
+            return 0;
     } else if (param1 == 0x19) {
         this->mModel = new simpleModel_c;
         if (this->mModel == 0) return 0;
-        if (((simpleModel_c*)this->mModel)->func_ov002_020f6960((SharedFilePtr*)&data_ov002_02110b78, 0x13) == 0) return 0;
+        if (((simpleModel_c*)this->mModel)->func_ov002_020f6960(&data_ov002_02110b78, 0x13) == 0) return 0;
     } else if (param1 >= 0x1A && param1 <= 0x2D) {
         this->mAnmModel = new anmModel_c;
         if (this->mAnmModel == 0)
@@ -3610,24 +3631,7 @@ extern "C" daDemo_c *daDemo_c_classInit(void)
 
 /* File handles and the ten state tables. mwcc emits __sinit_d_a_demo.cpp
    from these definitions: constructors in retail order, then the
-   pointer-to-member copies. The 8-byte sources are POD aggregates so the
-   copy stays a whole-struct move. */
-struct DemoModelFile {
-    unsigned int w[2];
-    DemoModelFile(unsigned int fileID);
-    ~DemoModelFile();
-};
-struct DemoAnimFile {
-    unsigned int w[2];
-    DemoAnimFile(unsigned int fileID);
-    ~DemoAnimFile();
-};
-struct DemoTexSeqFile {
-    unsigned int w[2];
-    DemoTexSeqFile(unsigned int fileID);
-    ~DemoTexSeqFile();
-};
-
+   pointer-to-member copies. */
 extern "C" {
 
 int data_ov002_0210b658[2] = {(int)0x81f020f0, (int)0xffff0100};
@@ -3676,11 +3680,11 @@ DemoModelFile data_ov002_02110b78(0x475);
 /* One-entry file lists InitResources hands to anmModel_c::func_ov002_020f6618:
    the BCA list and the BTP list for param1 0x12 (0x0210b60c, 0x0210b608) and
    0x13 (0x0210b610, 0x0210b600), and the BCA list for 0x1a..0x2d. */
-SharedFilePtr *data_ov002_0210b600[1] = {(SharedFilePtr *)&data_ov002_02110b10};
+SharedFilePtr *data_ov002_0210b600[1] = {&data_ov002_02110b10};
 SharedFilePtr *data_ov002_0210b604[1] = {(SharedFilePtr *)data_ov009_02113c28};
 SharedFilePtr *data_ov002_0210b608[1] = {&data_ov085_0213073c};
 SharedFilePtr *data_ov002_0210b60c[1] = {&data_ov085_02130744};
-SharedFilePtr *data_ov002_0210b610[1] = {(SharedFilePtr *)&data_ov002_02110bf8};
+SharedFilePtr *data_ov002_0210b610[1] = {&data_ov002_02110bf8};
 /* The last cue time func_ov002_020f6c60 played sound 0x6a for. */
 int data_ov002_0210b614 = -1;
 int data_ov002_0210b630[2] = {(int)0x81f020f0, (int)0xffff0108};

@@ -166,16 +166,16 @@ extern int data_020a0db0;
 extern u8 data_ov002_02111150;
 extern u8 gMeterCounterSlideState;
 extern u8 gZoomButtonActiveTimer;
-extern int data_ov002_0210cea8;
-extern int data_ov002_0210cee8;
-extern int data_ov002_0210cf28;
-extern int data_ov002_0210cf78;
-extern int data_ov002_0210cb14;
-extern int data_ov002_0210ce90;
-extern int data_ov002_0210ced0;
-extern int data_ov002_0210cf08;
-extern int data_ov002_0210cfa0;
-extern int data_ov002_0210caf4;
+extern OamAttr data_ov002_0210cea8;
+extern OamAttr data_ov002_0210cee8;
+extern OamAttr data_ov002_0210cf28;
+extern OamAttr data_ov002_0210cf78;
+extern OamAttr data_ov002_0210cb14;
+extern OamAttr data_ov002_0210ce90;
+extern OamAttr data_ov002_0210ced0;
+extern OamAttr data_ov002_0210cf08;
+extern OamAttr data_ov002_0210cfa0;
+extern OamAttr data_ov002_0210caf4;
 extern void *data_ov001_020abd98[];
 extern void *data_ov001_020ac218[];
 extern void *data_ov001_020ac64c[];
@@ -208,12 +208,14 @@ struct OvTbl {
    back to when no minimap-change record applies. */
 struct LevelTexAnim {
     int x;
-    void *bta;
+    BTA_File *bta;
     s8 minimapId; /* 0x08 */
     char pad[3];
 };
 struct LevelInfo {
-    char pad[0xc];
+    char pad[8];
+    u16 modelFile; /* 0x08 -- LoadModel passes it to LoadAndSetFile */
+    char pad_0a[2];
     /* func_0202a980; dMap_c decompresses it into the minimap BG3 characters. */
     u16 minimapTilesFile; /* 0x0c */
     /* func_0202a96c; dMap_c loads it as the minimap BG extended palette. */
@@ -238,7 +240,7 @@ extern u16 data_02075600[7];
 extern u16 data_02075620[];
 extern struct LevelReturnEntry data_02075638[];
 extern s16 data_020756b0[];
-extern void *data_020756f0[12];
+extern SharedFilePtr *data_020756f0[12];
 extern unsigned char data_02075768[];
 extern u8 data_02075769[];
 extern s8 data_0207576a[];
@@ -503,19 +505,19 @@ extern PadData data_020a0e58[];
 extern u16 data_020a0e5a[];
 extern void *data_ov002_0210ca0c[];
 extern int data_ov002_0210cfd0[];
-extern int data_ov002_0210d008;
+extern OamAttr data_ov002_0210d008;
 extern int data_ov002_0210d050[];
-extern int data_ov002_0210d098;
+extern OamAttr data_ov002_0210d098;
 extern int data_ov002_0210d0e8[];
-extern int data_ov002_0210d130;
+extern OamAttr data_ov002_0210d130;
 extern int data_ov002_0210d188[];
-extern int data_ov002_0210d1c8;
-extern int data_ov002_0210d210;
-extern int data_ov002_0210d378;
-extern int data_ov002_0210d3a0;
-extern int data_ov002_0210d3c0;
-extern int data_ov002_0210d3e0;
-extern int data_ov002_0210d420;
+extern OamAttr data_ov002_0210d1c8;
+extern OamAttr data_ov002_0210d210;
+extern OamAttr data_ov002_0210d378;
+extern OamAttr data_ov002_0210d3a0;
+extern OamAttr data_ov002_0210d3c0;
+extern OamAttr data_ov002_0210d3e0;
+extern OamAttr data_ov002_0210d420;
 extern u16 data_ov002_02111188;
 }
 
@@ -766,55 +768,40 @@ void dScStage_c::LC_Render() {
     if (SublevelToLevel(gLastCourseSublevel) >= 0xf &&
         SublevelToLevel(gLastCourseSublevel) < 0x15) {
         if (GetOwnerLanguage() == 5)
-            OAM::Render(0, (OamAttr *)&data_ov002_0210cea8, 0x80, 0x38, -1, -1, 0x1000, 0x1000, 0,
-                        -1);
+            OAM::Render(0, &data_ov002_0210cea8, 0x80, 0x38, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 4)
-            OAM::Render(0, (OamAttr *)&data_ov002_0210cee8, 0x80, 0x38, -1, -1, 0x1000, 0x1000, 0,
-                        -1);
+            OAM::Render(0, &data_ov002_0210cee8, 0x80, 0x38, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 3)
-            OAM::Render(0, (OamAttr *)&data_ov002_0210cf28, 0x80, 0x38, -1, -1, 0x1000, 0x1000, 0,
-                        -1);
+            OAM::Render(0, &data_ov002_0210cf28, 0x80, 0x38, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 2)
-            OAM::Render(0, (OamAttr *)&data_ov002_0210cf78, 0x80, 0x38, -1, -1, 0x1000, 0x1000, 0,
-                        -1);
+            OAM::Render(0, &data_ov002_0210cf78, 0x80, 0x38, -1, -1, 0x1000, 0x1000, 0, -1);
         else
-            OAM::Render(0, (OamAttr *)&data_ov002_0210cb14, 0x80, 0x38, -1, -1, 0x1000, 0x1000, 0,
-                        -1);
+            OAM::Render(0, &data_ov002_0210cb14, 0x80, 0x38, -1, -1, 0x1000, 0x1000, 0, -1);
     }
 
     if (sLevelClearNewRecord != 0) {
         if (data_0209f20c != 0 && SublevelToLevel(gLastCourseSublevel) >= 0xf) {
             if (GetOwnerLanguage() == 5)
-                OAM::Render(0, (OamAttr *)&data_ov002_0210ce90, 0x80, 0x70, -1, -1, 0x1000, 0x1000,
-                            0, -1);
+                OAM::Render(0, &data_ov002_0210ce90, 0x80, 0x70, -1, -1, 0x1000, 0x1000, 0, -1);
             else if (GetOwnerLanguage() == 4)
-                OAM::Render(0, (OamAttr *)&data_ov002_0210ced0, 0x80, 0x70, -1, -1, 0x1000, 0x1000,
-                            0, -1);
+                OAM::Render(0, &data_ov002_0210ced0, 0x80, 0x70, -1, -1, 0x1000, 0x1000, 0, -1);
             else if (GetOwnerLanguage() == 3)
-                OAM::Render(0, (OamAttr *)&data_ov002_0210cf08, 0x80, 0x70, -1, -1, 0x1000, 0x1000,
-                            0, -1);
+                OAM::Render(0, &data_ov002_0210cf08, 0x80, 0x70, -1, -1, 0x1000, 0x1000, 0, -1);
             else if (GetOwnerLanguage() == 2)
-                OAM::Render(0, (OamAttr *)&data_ov002_0210cfa0, 0x80, 0x70, -1, -1, 0x1000, 0x1000,
-                            0, -1);
+                OAM::Render(0, &data_ov002_0210cfa0, 0x80, 0x70, -1, -1, 0x1000, 0x1000, 0, -1);
             else
-                OAM::Render(0, (OamAttr *)&data_ov002_0210caf4, 0x80, 0x70, -1, -1, 0x1000, 0x1000,
-                            0, -1);
+                OAM::Render(0, &data_ov002_0210caf4, 0x80, 0x70, -1, -1, 0x1000, 0x1000, 0, -1);
         } else {
             if (GetOwnerLanguage() == 5)
-                OAM::Render(0, (OamAttr *)&data_ov002_0210ce90, 0x80, 0x80, -1, -1, 0x1000, 0x1000,
-                            0, -1);
+                OAM::Render(0, &data_ov002_0210ce90, 0x80, 0x80, -1, -1, 0x1000, 0x1000, 0, -1);
             else if (GetOwnerLanguage() == 4)
-                OAM::Render(0, (OamAttr *)&data_ov002_0210ced0, 0x80, 0x80, -1, -1, 0x1000, 0x1000,
-                            0, -1);
+                OAM::Render(0, &data_ov002_0210ced0, 0x80, 0x80, -1, -1, 0x1000, 0x1000, 0, -1);
             else if (GetOwnerLanguage() == 3)
-                OAM::Render(0, (OamAttr *)&data_ov002_0210cf08, 0x80, 0x80, -1, -1, 0x1000, 0x1000,
-                            0, -1);
+                OAM::Render(0, &data_ov002_0210cf08, 0x80, 0x80, -1, -1, 0x1000, 0x1000, 0, -1);
             else if (GetOwnerLanguage() == 2)
-                OAM::Render(0, (OamAttr *)&data_ov002_0210cfa0, 0x80, 0x80, -1, -1, 0x1000, 0x1000,
-                            0, -1);
+                OAM::Render(0, &data_ov002_0210cfa0, 0x80, 0x80, -1, -1, 0x1000, 0x1000, 0, -1);
             else
-                OAM::Render(0, (OamAttr *)&data_ov002_0210caf4, 0x80, 0x80, -1, -1, 0x1000, 0x1000,
-                            0, -1);
+                OAM::Render(0, &data_ov002_0210caf4, 0x80, 0x80, -1, -1, 0x1000, 0x1000, 0, -1);
         }
     }
 
@@ -2807,23 +2794,23 @@ int IsButtonInputValid(void) {
         gVsExitScreenActive == 0) {
         mode = data_0209caa0.file.controllerMode;
         if (mode == 0) {
-            val = *(unsigned short *)((char *)&data_020a0e5a + (gActivePlayerSlot << 2));
+            val = data_020a0e5a[gActivePlayerSlot * 2];
             if (val & 0xf)
                 return 1;
         }
         if (mode == 1) {
-            val = *(unsigned short *)((char *)&data_020a0e5a + (gActivePlayerSlot << 2));
+            val = data_020a0e5a[gActivePlayerSlot * 2];
             if (val & 0xc0f)
                 return 1;
         }
         if (mode == 2) {
-            val = *(unsigned short *)((char *)&data_020a0e5a + (gActivePlayerSlot << 2));
+            val = data_020a0e5a[gActivePlayerSlot * 2];
             if (val & 0xcff)
                 return 1;
         }
         return 0;
     }
-    val = *(unsigned short *)((char *)&data_020a0e5a + (gActivePlayerSlot << 2));
+    val = data_020a0e5a[gActivePlayerSlot * 2];
     if (val & 0xc) {
         data_0209f27c = 0;
         return 1;
@@ -3147,20 +3134,15 @@ void dScStage_c::RenderVsModeCountdown() {
         return;
     if (data_0209f2bc != 0) {
         if (GetOwnerLanguage() == 5)
-            OAM::Render(0, (OamAttr *)&data_ov002_0210d008, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0,
-                        -1);
+            OAM::Render(0, &data_ov002_0210d008, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 4)
-            OAM::Render(0, (OamAttr *)&data_ov002_0210d098, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0,
-                        -1);
+            OAM::Render(0, &data_ov002_0210d098, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 3)
-            OAM::Render(0, (OamAttr *)&data_ov002_0210d130, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0,
-                        -1);
+            OAM::Render(0, &data_ov002_0210d130, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 2)
-            OAM::Render(0, (OamAttr *)&data_ov002_0210d1c8, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0,
-                        -1);
+            OAM::Render(0, &data_ov002_0210d1c8, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0, -1);
         else
-            OAM::Render(0, (OamAttr *)&data_ov002_0210d210, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0,
-                        -1);
+            OAM::Render(0, &data_ov002_0210d210, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0, -1);
         OAM::Render(0, (OamAttr *)data_ov002_0210ca0c[3 - data_0209f2bc], 0x80, 0x50, -1, -1,
                     0x1000, 0x1000, 0, -1);
         return;
@@ -3168,15 +3150,15 @@ void dScStage_c::RenderVsModeCountdown() {
     if (data_0209f304 == 0)
         return;
     if (GetOwnerLanguage() == 5)
-        OAM::Render(0, (OamAttr *)&data_ov002_0210d378, 0x80, 0x50, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &data_ov002_0210d378, 0x80, 0x50, -1, -1, 0x1000, 0x1000, 0, -1);
     else if (GetOwnerLanguage() == 4)
-        OAM::Render(0, (OamAttr *)&data_ov002_0210d3a0, 0x80, 0x50, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &data_ov002_0210d3a0, 0x80, 0x50, -1, -1, 0x1000, 0x1000, 0, -1);
     else if (GetOwnerLanguage() == 3)
-        OAM::Render(0, (OamAttr *)&data_ov002_0210d3c0, 0x80, 0x50, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &data_ov002_0210d3c0, 0x80, 0x50, -1, -1, 0x1000, 0x1000, 0, -1);
     else if (GetOwnerLanguage() == 2)
-        OAM::Render(0, (OamAttr *)&data_ov002_0210d3e0, 0x80, 0x50, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &data_ov002_0210d3e0, 0x80, 0x50, -1, -1, 0x1000, 0x1000, 0, -1);
     else
-        OAM::Render(0, (OamAttr *)&data_ov002_0210d420, 0x80, 0x50, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &data_ov002_0210d420, 0x80, 0x50, -1, -1, 0x1000, 0x1000, 0, -1);
 }
 
 extern "C" s32 NumVsStarsObtained(void) {
@@ -3363,7 +3345,7 @@ extern "C" int func_0202a8e0(int a, unsigned char b) {
  * 0x0209f340 rather than through a field, so the bytes cannot show the
  * `this` -- the call site is the evidence. */
 int dScStage_c::GetSkyboxID() {
-    unsigned int *p = *(unsigned int **)&data_0209f340;
+    unsigned int *p = (unsigned int *)data_0209f340;
     return (p[6] >> 4) & 0x1f;
 }
 
@@ -3852,9 +3834,9 @@ void dScStage_c::LoadTextureTransformers() {
     int areaIndex;
     for (areaIndex = 0; areaIndex < ((LevelInfo *)data_0209f340)->count; areaIndex++) {
         if (entry->bta) {
-            dExtAnmTexSRT_c::Prepare(*modelFile, *(BTA_File *)entry->bta);
+            dExtAnmTexSRT_c::Prepare(*modelFile, *entry->bta);
             area->mTransformer = new dExtAnmTexSRT_c;
-            area->mTransformer->SetFile(*(BTA_File *)entry->bta, 0, 0x1000, 0);
+            area->mTransformer->SetFile(*entry->bta, 0, 0x1000, 0);
         }
         entry++;
         area++;
@@ -3862,7 +3844,7 @@ void dScStage_c::LoadTextureTransformers() {
 }
 
 void dScStage_c::LoadModel() {
-    mModel.LoadAndSetFile(*(unsigned short *)(*&data_0209f340 + 8), 1, -1);
+    mModel.LoadAndSetFile(((LevelInfo *)data_0209f340)->modelFile, 1, -1);
     BMD_File *modelFile;
     unsigned int materialCount;
     BMD_Material *material;
@@ -4455,7 +4437,7 @@ int dScStage_c::CleanupResources() {
     u32 fileIndex;
 
     for (fileIndex = 0; fileIndex < 12; fileIndex++)
-        ((SharedFilePtr *)(data_020756f0[fileIndex]))->Release();
+        data_020756f0[fileIndex]->Release();
 
     {
         int atEnd = (gGameMode == 2);
@@ -4777,7 +4759,7 @@ int dScStage_c::InitResources() {
         {
             u32 i;
             for (i = 0; i < 0xC; i++) {
-                dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_020756f0[i]);
+                dExtSimpleModel_c::LoadFile(*data_020756f0[i]);
             }
         }
 
@@ -4804,8 +4786,8 @@ int dScStage_c::InitResources() {
         data_0209f340 = (char *)data_02092208[gCurrentSublevel];
         scene->LoadModel();
         data_0208ee44 = 2;
-        dScStage_c::LoadClsnAndObjects(*(LVL_Overlay *)data_0209f340, gCurrentEntranceId,
-                                       scene->mMeshCollider);
+        LVL_Overlay *level = (LVL_Overlay *)data_0209f340;
+        dScStage_c::LoadClsnAndObjects(*level, gCurrentEntranceId, scene->mMeshCollider);
 
         int vsModeMusic = (gGameMode == 1) ? 1 : 0;
         if (vsModeMusic == 0) {

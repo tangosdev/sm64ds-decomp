@@ -110,7 +110,9 @@ int daEyBm_c::Behavior() {
         return 1;
 
     if (!IsBeingEaten(this)) {
-        offset = *(VecFx32 *)&data_ov071_021230b8;
+        offset.x = data_ov071_021230b8.x;
+        offset.y = data_ov071_021230b8.y;
+        offset.z = data_ov071_021230b8.z;
         mdCcAcPos_c.SetPosRelativeToActor(*(Vector3 *)&offset);
 
         velocity.z = mHorzSpeed;

@@ -2,6 +2,7 @@
 #include "OAM.h"
 #include "OamAnimation.h"
 #include "nitro/fx/fx_trig.h"
+#include "nitro/gx/gxcommon.h"
 
 extern "C" {
 struct Matrix2x2;
@@ -50,11 +51,11 @@ extern "C" void func_0202048c(OamAnimation *anim, int x, int y) {
     /* The first OamAttr's first word is attr0 | attr1 << 16: bits 28 and 29
        are attr1's horizontal and vertical flip. They are folded into the
        matrix here, because in an affine sprite those bits pick the matrix. */
-    if (*(int *)anim->tile & 0x10000000) {
+    if (((GXOamAttr *)anim->tile)->attr01 & 0x10000000) {
         m[0] = -m[0];
         m[1] = -m[1];
     }
-    if (*(int *)anim->tile & 0x20000000) {
+    if (((GXOamAttr *)anim->tile)->attr01 & 0x20000000) {
         m[2] = -m[2];
         m[3] = -m[3];
     }

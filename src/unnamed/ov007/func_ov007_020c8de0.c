@@ -64,7 +64,7 @@ int func_ov007_020c8de0(Ov007VecTween *o) {
                 ok = 1;
             } else {
                 VEC_Normalize(&tmp, &tmp);
-                VEC_MultAdd(step, (int *)&tmp, (int *)dst, (int *)dst);
+                VEC_MultAdd(step, &tmp.x, &dst->x, &dst->x);
                 ok = 0;
             }
             if (ok) {

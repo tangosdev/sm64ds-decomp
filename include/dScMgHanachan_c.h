@@ -61,7 +61,15 @@ struct dScMgHanachan_c : dScMgBase_c {
         int voice;           /* 0x68 sound handle */
         int voiceId;         /* 0x6c */
         int decoy;           /* 0x70 0 = this wiggler has the star */
-        u16 color;           /* 0x74 four 2-bit body colors */
+        union {
+            u16 raw;
+            struct {
+                unsigned short f0 : 2;
+                unsigned short f1 : 2;
+                unsigned short f2 : 2;
+                unsigned short f3 : 2;
+            } bits;
+        } color;             /* 0x74 four 2-bit body colors */
         s16 aim;             /* 0x76 */
         s16 timer;           /* 0x78 */
         s16 ang[5];          /* 0x7a */

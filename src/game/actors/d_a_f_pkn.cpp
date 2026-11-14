@@ -319,7 +319,8 @@ void daFPkn_c::CheckClsnHits()
     }
     cmp = (int)(actorID == ACTOR_FIREPAKUN_S);
     if (cmp != 0) {
-        if (JumpedOnByPlayer(mdCcAc_c, *(daPly_c *)hitter) != 0) {
+        daPly_c *player = (daPly_c *)hitter;
+        if (JumpedOnByPlayer(mdCcAc_c, *player) != 0) {
             Sound::PlayBank0(SND_JUMPED_ON, mCamSpacePos);
             ((daPly_c *)hitter)->Bounce(0x28000);
             goto activate_path;

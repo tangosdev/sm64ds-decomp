@@ -59,11 +59,11 @@ int func_02071708(int w0, ...) {
         }
         c = ~c;
         *p = c;
-        if ((*(volatile unsigned char *)p & 1) == 0)
+        if ((*p & 1) == 0)
             return count;
         do {
             count++;
-            *p = ((int)*(volatile unsigned char *)p >> 1);
+            *p = ((int)*p >> 1);
         } while (*(volatile unsigned char *)p & 1);
         return count;
     }
@@ -342,10 +342,12 @@ void __two_exp(Decimal *out, int n) {
     }
 }
 
-void __num2dec_internal(char *out, double x) {
+union DblWords { double d; int w[2]; };
+
+void __num2dec_internal(Decimal *out, double x) {
     int e;
-    double t1;
-    double t2;
+    union DblWords t1;
+    union DblWords t2;
     double mm;
     unsigned char dec[0x26];
     unsigned char big[0x26];
@@ -355,26 +357,26 @@ void __num2dec_internal(char *out, double x) {
     int cls2;
 
     if (v == 0.0) {
-        out[0] = neg;
-        *(short *)(out + 2) = 0;
-        out[4] = 1;
-        out[5] = 0;
+        out->sign = neg;
+        out->exp = 0;
+        out->sig.length = 1;
+        out->sig.text[0] = 0;
         return;
     }
 
-    t1 = v;
+    t1.d = v;
 
     /* fpclassify, open-coded: an inline helper's temporaries would take
        frame slots after mm and reorder the stack. */
-    switch (((int *)&t1)[1] & 0x7ff00000) {
+    switch (t1.w[1] & 0x7ff00000) {
     case 0x7ff00000:
-        if ((((int *)&t1)[1] & 0xfffff) != 0 || ((int *)&t1)[0] != 0)
+        if ((t1.w[1] & 0xfffff) != 0 || t1.w[0] != 0)
             cls = 1;
         else
             cls = 2;
         break;
     case 0:
-        if ((((int *)&t1)[1] & 0xfffff) != 0 || ((int *)&t1)[0] != 0)
+        if ((t1.w[1] & 0xfffff) != 0 || t1.w[0] != 0)
             cls = 5;
         else
             cls = 3;
@@ -384,20 +386,20 @@ void __num2dec_internal(char *out, double x) {
         break;
     }
     if (cls <= 2) {
-        out[0] = neg;
-        *(short *)(out + 2) = 0;
-        out[4] = 1;
+        out->sign = neg;
+        out->exp = 0;
+        out->sig.length = 1;
 
-        t2 = x;
-        switch (((int *)&t2)[1] & 0x7ff00000) {
+        t2.d = x;
+        switch (t2.w[1] & 0x7ff00000) {
         case 0x7ff00000:
-            if ((((int *)&t2)[1] & 0xfffff) != 0 || ((int *)&t2)[0] != 0)
+            if ((t2.w[1] & 0xfffff) != 0 || t2.w[0] != 0)
                 cls2 = 1;
             else
                 cls2 = 2;
             break;
         case 0:
-            if ((((int *)&t2)[1] & 0xfffff) != 0 || ((int *)&t2)[0] != 0)
+            if ((t2.w[1] & 0xfffff) != 0 || t2.w[0] != 0)
                 cls2 = 5;
             else
                 cls2 = 3;
@@ -406,7 +408,7 @@ void __num2dec_internal(char *out, double x) {
             cls2 = 4;
             break;
         }
-        out[5] = (cls2 == 1) ? 0x4e : 0x49;
+        out->sig.text[0] = (cls2 == 1) ? 0x4e : 0x49;
     } else {
         double m;
         int nbits, k;
@@ -424,8 +426,8 @@ void __num2dec_internal(char *out, double x) {
         k = 0x35 - nbits;
         __two_exp((Decimal *)big, e - k);
         __ull2dec((Decimal *)dec, ldexp(m, k));
-        __timesdec((Decimal *)out, (Decimal *)dec, (Decimal *)big);
-        out[0] = neg;
+        __timesdec(out, (Decimal *)dec, (Decimal *)big);
+        out->sign = neg;
     }
 }
 
@@ -438,7 +440,7 @@ void __num2dec(void *a0, double x, void *d) {
     Decimal *c = (Decimal *)d;
     int i;
     n = ((decform *)a0)->digits;
-    __num2dec_internal((char *)c, x);
+    __num2dec_internal(c, x);
     if (c->sig.text[0] > 9) /* inf or nan: no digits to round */
         return;
     if (n > 0x20)

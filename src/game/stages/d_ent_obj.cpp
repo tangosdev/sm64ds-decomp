@@ -28,8 +28,6 @@
  *  - Behavior's mFellOffThisFrame probe keeps the second `walk` induction variable
  *    alongside `player`: folding it into `player->mFellOffThisFrame` drops a
  *    register and rewrites the whole function.
- *  - GetExitX's row*16/playerNo*4 byte form stays: the
- *    int[]-indexed spelling emits a different addressing pair.
  */
 
 #include "Particle__System.h"
@@ -129,8 +127,13 @@ extern EntObjAnimationFileHandle data_ov075_0211d414;
 extern EntObjAnimationFileHandle data_ov075_0211d41c;
 extern EntObjAnimationFileHandle data_ov075_0211d424;
 extern EntObjAnimationFileHandle data_ov075_0211d42c;
-extern int *data_ov075_0211c678[];
-extern int *data_ov075_0211c688[];
+struct EntAnimSlot {
+    u16 fileID;
+    u8 numRefs;
+    BCA_File *file;
+};
+extern EntAnimSlot *data_ov075_0211c678[];
+extern EntAnimSlot *data_ov075_0211c688[];
 
 extern unsigned char data_ov075_0211b524[];
 /* Q12 takeoff thresholds and speed limits, indexed by the four player slots.
@@ -143,8 +146,7 @@ extern const int sVsPlayerStandingX[4][4] = {{0, 1843200, 1843200, 1843200},
                                              {-409600, 409600, 1843200, 1843200},
                                              {-737280, 0, 737280, 1843200},
                                              {-983040, -327680, 327680, 983040}};
-/* The exit positions use the same logical rows. Keep the flat storage view
- * used by the matching byte-offset consumer below. */
+/* Exit x by player-count row and compacted player column, stored flat. */
 extern const int sVsPlayerExitX[16] = {0,       1843200, 1843200, 1843200, -204800, 204800,
                                        1843200, 1843200, -368640, 0,       368640,  1843200,
                                        -491520, -163840, 163840,  491520};
@@ -298,8 +300,7 @@ void UnknownVsPlayer::MoveChoosePose() {
         textureFile = (BTP_File *)data_ov075_0211d40c.filePtr;
         mMoveState = MOVE_WAIT_FOR_POSE_SOUND;
     } else {
-        mModel.SetAnim(*(BCA_File *)((data_ov075_0211c688[data_ov075_0211d380 & 3])[1]), 0, 0,
-                       0x1000, 0);
+        mModel.SetAnim(*data_ov075_0211c688[data_ov075_0211d380 & 3]->file, 0, 0, 0x1000, 0);
         textureFile = (BTP_File *)data_ov075_0211d3dc.filePtr;
         mMoveState = MOVE_POSE_PARTICLES;
         data_ov075_0211d380 >>= 2;
@@ -464,7 +465,7 @@ int UnknownVsPlayer::IsIdle() {
 /* Go idle in the player's own standing animation. */
 int UnknownVsPlayer::StartIdle() {
     unsigned char playerNo = mPlayerNo;
-    mModel.SetAnim(*(BCA_File *)(data_ov075_0211c678[playerNo][1]), 4, 0, 0x1000, 0);
+    mModel.SetAnim(*data_ov075_0211c678[playerNo]->file, 4, 0, 0x1000, 0);
     mModel.speed = 0x1000;
     mMoveState = MOVE_IDLE;
     mAnimState = ANIM_NONE;
@@ -484,8 +485,8 @@ int UnknownVsPlayer::UpdateCamera(Vector3 *at, Vector3 *pos) {
     }
     if (state != MOVE_FINISHED)
         return 0;
-    Math_Function_0203b0fc((int *)&pos->y, 0x2bc00, 0x66, 0x1c00);
-    Math_Function_0203b14c((int *)&pos->z, at->z, 1, 0x4000, 0x100);
+    Math_Function_0203b0fc(&pos->y, 0x2bc00, 0x66, 0x1c00);
+    Math_Function_0203b14c(&pos->z, at->z, 1, 0x4000, 0x100);
     at->y = pos->y;
     return 1;
 }
@@ -584,7 +585,7 @@ int UnknownVsPlayer::Init(unsigned char kind, unsigned char playerNo, int x) {
     mAnimation.SetAnim((BCA_File *)data_ov075_0211d414.filePtr, 0, 0x1000, 0);
 
     if (kind == 0 || kind == 2) {
-        mModel.SetAnim(*(BCA_File *)(data_ov075_0211c678[playerNo][1]), 0, 0, 0x1000, 0);
+        mModel.SetAnim(*data_ov075_0211c678[playerNo]->file, 0, 0, 0x1000, 0);
         textureFile = (BTP_File *)data_ov075_0211d40c.filePtr;
         mMoveState = MOVE_IDLE;
     } else {
@@ -711,8 +712,8 @@ void dEntObj_c::SetMarkerPosition(int playerNo) {
 }
 
 /* The exit x for player slot playerNo, from the row for the current player
- * count. This path widens the column-map byte unsigned, unlike the standing
- * table lookup below. Preserve that spelling and its ineffective negative check. */
+ * count. The column-map byte is widened unsigned, unlike the standing table
+ * lookup below, and the negative check never fires. */
 int dEntObj_c::GetExitX(int playerNo) {
     unsigned int count = data_0209fc50;
     int row;
@@ -724,7 +725,8 @@ int dEntObj_c::GetExitX(int playerNo) {
         if (playerNo < 0)
             playerNo = 3;
     }
-    return *(const int *)((const char *)sVsPlayerExitX + row * 16 + playerNo * 4);
+    const int *exitRow = sVsPlayerExitX + row * 4;
+    return exitRow[playerNo];
 }
 
 /* The standing x for player slot playerNo, laid out the same way as the

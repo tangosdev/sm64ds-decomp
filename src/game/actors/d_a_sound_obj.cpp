@@ -98,11 +98,16 @@ SoundObjStarter data_ov002_0210c030 = {(int)&func_ov002_020f93a8, 0};
 SoundObjStarter data_ov002_0210c038 = {(int)&func_ov002_020f9468, 0};
 SoundObjStarter data_ov002_0210c040 = {(int)&Sound::PlaySecretSound, 0};
 
-SoundObjectCallback data_ov002_0211110c[7] = {
-    *(SoundObjectCallback *)&data_ov002_0210c040, *(SoundObjectCallback *)&data_ov002_0210c010,
-    *(SoundObjectCallback *)&data_ov002_0210c020, *(SoundObjectCallback *)&data_ov002_0210c038,
-    *(SoundObjectCallback *)&data_ov002_0210c030, *(SoundObjectCallback *)&data_ov002_0210c018,
-    *(SoundObjectCallback *)&data_ov002_0210c028,
+union SoundObjSlot {
+    SoundObjStarter words;
+    SoundObjectCallback cb;
+};
+
+SoundObjSlot data_ov002_0211110c[7] = {
+    {data_ov002_0210c040}, {data_ov002_0210c010},
+    {data_ov002_0210c020}, {data_ov002_0210c038},
+    {data_ov002_0210c030}, {data_ov002_0210c018},
+    {data_ov002_0210c028},
 };
 
 extern "C" daSoundObj_c *daSoundObj_c_classInit()
@@ -155,7 +160,7 @@ int daSoundObj_c::InitResources()
 int daSoundObj_c::Behavior()
 {
     SoundObjectCallbackOwner *owner = (SoundObjectCallbackOwner *)this;
-    int done = (owner->*data_ov002_0211110c[param1])(&mCounter);
+    int done = (owner->*data_ov002_0211110c[param1].cb)(&mCounter);
     if (done != 0 || mSoundID != gSubSoundID || (mCounter > 0xa && gSubVolume <= 0x7f)) {
         MarkForDestruction();
         if (gSubSoundID != 0x22) {

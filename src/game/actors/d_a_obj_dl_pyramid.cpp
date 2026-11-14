@@ -170,13 +170,13 @@ int daObjDlPyramid_c::Behavior() {
             mState++;
         break;
     case 1:
-        Sound::PlaySecretSound(this, (u16 *)&mSoundTimer);
+        Sound::PlaySecretSound(this, &mSoundTimer);
         if (mStateTimer == 0)
             Sound::PlayBank3(0x4b, mCamSpacePos);
         Descend();
         break;
     case 2:
-        if (Sound::PlaySecretSound(this, (u16 *)&mSoundTimer)) {
+        if (Sound::PlaySecretSound(this, &mSoundTimer)) {
             Sound::PlayBank3(0x4c, mCamSpacePos);
             FinishDescent();
         } else {

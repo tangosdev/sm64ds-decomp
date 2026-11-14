@@ -235,8 +235,7 @@ int daNknk_c::Behavior()
     MakeVanishLuigiWork(mdCc_c);
 
     if (UpdateYoshiEat(mWithMeshClsn) != 0) {
-        int *pb0 = (int *)&mFlags;
-        *pb0 = *pb0 & ~0x10000000;
+        mFlags = mFlags & ~0x10000000;
         if (SpawnParticlesIfHitOtherObj(mdCc_c) != 0) {
             PoofDust();
             SpawnBlueCoin();
@@ -265,10 +264,9 @@ int daNknk_c::Behavior()
             return 1;
 
         {
-            int *pb0 = (int *)&mFlags;
             if (mLandingDustTimer != 0)
                 mLandingDustTimer -= 1;
-            *pb0 = *pb0 | 0x10000000;
+            mFlags = mFlags | 0x10000000;
         }
         UpdateClosestPlayer(0x3e8000);
 
@@ -291,7 +289,7 @@ int daNknk_c::Behavior()
             int ang = mPrevAngleY;
             mAngleY = (s16)ang;
             {
-                u16 *p100 = (u16 *)&mStateTimer;
+                u16 *p100 = &mStateTimer;
                 *p100 = (*p100 + 1);
             }
         }
@@ -542,12 +540,11 @@ void daNknk_c::func_ov062_02118718()
                     u16 *turn = &mTurnTimer;
                     *turn = (*turn - 1);
                 } else {
-                    /* (int)& forces the pool add. mTargetAngle -= folds to mAnmModel+0xc2. */
                     if (((unsigned)RandomIntInternal(&data_0209e650.value) >> 16) & 0x8000)
-                        *(s16 *)((int)&mTargetAngle) -=
+                        mTargetAngle -=
                             ((unsigned)RandomIntInternal(&data_0209e650.value) >> 16) & 0x1fff;
                     else
-                        *(s16 *)((int)&mTargetAngle) +=
+                        mTargetAngle +=
                             ((unsigned)RandomIntInternal(&data_0209e650.value) >> 16) & 0x1fff;
                     mTurnTimer = 0x14;
                 }
@@ -680,7 +677,6 @@ void daNknk_c::UpdateModelMatrixAndShadow() {
         Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
         angleY = &mAngleY;
         Matrix4x3_ApplyInPlaceToRotationY(inline_fn(), *angleY);
-        /* Flat copy: assigning Matrix4x3 grows .text by 0x1c bytes. */
         *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
         {
             int b = (int)((mFlags & 0x40000) != 0);

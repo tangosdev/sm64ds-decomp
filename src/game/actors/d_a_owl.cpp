@@ -140,8 +140,7 @@ enum {
 #define OWL_STATE_CARRY     OWL_STATE(data_ov094_02136b70)
 #define OWL_STATE_RETURN    OWL_STATE(data_ov094_02136b30)
 
-/* mStateTimer is s16 but every read in the ROM is an unsigned halfword load. */
-#define OWL_TIMER(o)        (*(u16 *)&(o)->mStateTimer)
+#define OWL_TIMER(o)        ((o)->mStateTimer)
 
 /* Whole animation frame of the dExtAnmModel_c, as the ROM extracts it. */
 #define OWL_FRAME(o)        ((u16)((o)->mAnmModel.currFrame >> 12))
@@ -427,16 +426,16 @@ int daOwl_c::EnterTalk() {
 int daOwl_c::UpdateDormant() {
     daPly_c *p = ClosestPlayer();
     if (p != 0 && p->mClimbClsn != 0) {
-        VecFx32 *playerPos = (VecFx32 *)&p->mPosX;
+        const Vector3 *playerPos = &p->mPos;
         VecFx32 pp;
         VecFx32 d;
-        VecFx32 *selfpos = (VecFx32 *)&mPosX;
+        const Vector3 *selfpos = &mPos;
         pp.x = playerPos->x;
         pp.y = playerPos->y;
         pp.z = playerPos->z;
         mPosY = p->mGroundY + 0x190000;
         mTalkTarget = p;
-        Vec3_Sub((Vector3 *)&d, (const Vector3 *)selfpos, (const Vector3 *)&pp);
+        Vec3_Sub((Vector3 *)&d, selfpos, (const Vector3 *)&pp);
         if (VEC_Mag((const Vector3 *)&d) < 0x28000) {
             d.x = mPosX;
             d.y = mPosY;

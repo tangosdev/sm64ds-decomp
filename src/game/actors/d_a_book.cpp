@@ -638,18 +638,18 @@ void daBook_c::UpdateModelMatrix() {
 
 int daBook_c::CleanupResources()
 {
-    ((SharedFilePtr *)(&data_ov020_02114aa0))->Release();
-    ((SharedFilePtr *)(&data_ov020_02114ab8))->Release();
-    ((SharedFilePtr *)(&data_ov020_02114aa8))->Release();
-    ((SharedFilePtr *)(&data_ov020_02114ab0))->Release();
+    data_ov020_02114aa0.Release();
+    data_ov020_02114ab8.Release();
+    data_ov020_02114aa8.Release();
+    data_ov020_02114ab0.Release();
     UnloadBlueCoinModel();
     return 1;
 }
 
 int daBookGen_c::CleanupResources()
 {
-    ((SharedFilePtr *)&data_ov020_02114aa0)->Release();
-    ((SharedFilePtr *)&data_ov020_02114ab8)->Release();
+    data_ov020_02114aa0.Release();
+    data_ov020_02114ab8.Release();
     UnloadBlueCoinModel();
     return 1;
 }
@@ -740,10 +740,10 @@ int daBookGen_c::Behavior()
  * kick. */
 int daBook_c::InitResources()
 {
-    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov020_02114aa0);
-    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov020_02114ab8);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov020_02114aa8);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov020_02114ab0);
+    dExtSimpleModel_c::LoadFile(data_ov020_02114aa0);
+    dExtSimpleModel_c::LoadFile(data_ov020_02114ab8);
+    dExtFrameCtrl_c::LoadFile(data_ov020_02114aa8);
+    dExtFrameCtrl_c::LoadFile(data_ov020_02114ab0);
     LoadBlueCoinModel();
 
     if (mShadowModel.InitCylinder() == 0)
@@ -818,8 +818,8 @@ int daBook_c::InitResources()
 int daBookGen_c::InitResources()
 {
     mSpawnTimer = 0;
-    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov020_02114aa0);
-    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov020_02114ab8);
+    dExtSimpleModel_c::LoadFile(data_ov020_02114aa0);
+    dExtSimpleModel_c::LoadFile(data_ov020_02114ab8);
     LoadBlueCoinModel();
     return 1;
 }

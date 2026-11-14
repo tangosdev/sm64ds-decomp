@@ -63,7 +63,9 @@ static const int kAnimSpeed = 0x800; /* SetAnim speed every install uses */
 
 /* OAM.h forward-declares Matrix2x2 and says the files that pass one keep
  * their own 4 x s32 definition; this is that definition. */
-struct Mtx { int a, b, c, d; };
+struct Matrix2x2 {
+    int a, b, c, d;
+};
 
 /* Everything this file calls or reads that no header declares. Keep it
  * above the first function. */
@@ -397,7 +399,7 @@ void dMgJump3DMario_c::Draw()
     int scaleX;
     int scaleY;
     int wave;
-    Mtx mtx;
+    Matrix2x2 mtx;
 
     if (mVisible == 0)
         return;
@@ -417,7 +419,7 @@ void dMgJump3DMario_c::Draw()
         mp[0] = 0; mp[1] = 0; mp[2] = 0; mp[3] = 0;
         mtx.d = scaleY;
         mtx.a = scaleX;
-        OAM::Render(false, data_ov006_02134d1c, screen[0], screen[1], -1, -1, (Matrix2x2 *)&mtx);
+        OAM::Render(false, data_ov006_02134d1c, screen[0], screen[1], -1, -1, &mtx);
     }
 
     mAnmModel.Render(&sJump3DMarioScale);

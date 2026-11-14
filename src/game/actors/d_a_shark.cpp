@@ -258,7 +258,7 @@ int daShark_c::InitResources() {
      * before the cylinder init and the second is after it. */
     mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov090_021345a4), 1, -1);
     dExtFrameCtrl_c::LoadFile(data_ov090_021345ac);
-    mPathID = (*(s32 *)&param1) & 0xff;
+    mPathID = param1 & 0xff;
     if (mPathID < 0)
         mPathID = 0;
     {

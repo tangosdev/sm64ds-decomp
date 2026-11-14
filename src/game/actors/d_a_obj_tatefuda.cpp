@@ -334,9 +334,9 @@ int daObjTatefuda_c::Behavior()
         x = mPosX;
         z = mPosZ;
         y = mPosY + 0x50000;
-        ((int *)&v)[0] = x;
-        ((int *)&v)[1] = y;
-        ((int *)&v)[2] = z;
+        v.x = x;
+        v.y = y;
+        v.z = z;
         if (DecIfAbove0_Byte(&mBreakTimer) != 0) {
             mParticleHandle1 =
                 Particle::System::New(mParticleHandle1, kPtclDeathA, v.x, v.y, v.z, 0, 0);
@@ -347,9 +347,9 @@ int daObjTatefuda_c::Behavior()
             x2 = mPosX;
             z2 = mPosZ;
             y2 = mPosY + 0x28000;
-            ((int *)&vec)[0] = x2;
-            ((int *)&vec)[1] = y2;
-            ((int *)&vec)[2] = z2;
+            vec.x = x2;
+            vec.y = y2;
+            vec.z = z2;
             vec2 = vec;
             DisappearPoofDustAt(vec2);
             Reset();
@@ -544,12 +544,12 @@ void daObjTatefuda_c::InitDropped()
 {
     daPly_c *other;
     int* py;
-    VecFx32 *src;
+    Vector3 *src;
     mHorzSpeed = 0;
     mVertSpeed = 0;
     other = mHoldingPlayer;
     py = &mPosY;
-    src = (VecFx32 *)&other->mPosX;
+    src = &other->mPos;
     mPosX = src->x;
     mPosY = src->y;
     mPosZ = src->z;
@@ -679,12 +679,12 @@ void daObjTatefuda_c::Talk()
     tz = mPosZ;
     tgt.z = tz;
 
-    ang = *(u16 *)&mAngleY;
+    ang = (unsigned short)mAngleY;
     sinV = FX_SinIdx(ang >> 4);
     tx = tx + FX_MUL(scale, sinV);
     tgt.x = tx;
 
-    ang = *(u16 *)&mAngleY;
+    ang = (unsigned short)mAngleY;
     cosV = FX_CosIdx(ang >> 4);
     tz = tz + FX_MUL(scale, cosV);
     tgt.z = tz;

@@ -30,9 +30,7 @@
  *   (0x8c -> 0xb0). The scalar extern passes the three positions in r1-r3.
  * - func_ov091_02131160: a Matrix4x3 * local for mShadowMat is +4
  *   (0x1e0 -> 0x1e4); the translation row is stored through `this`.
- * - Behavior: one this+0x3a2 halfword for the arrived pitch is
- *   -0xc (0x488 -> 0x47c); &mPitchBase is a pool add of 0x3a2 and the
- *   step stays this+0x300+0xa4.
+ * - Behavior: &mPitchBase is a pool add of 0x3a2.
  * - InitResources: paths[variant].node[index] swaps the mla registers (3 words, same
  *   size); the char* stride multiply stays.
  */
@@ -66,7 +64,7 @@ enum daObjRotateUpdownLift_c_AssetId {
 
 /* Ten nodes, 0x78 bytes. Three of these sit at data_ov091_02134cdc. */
 struct UpdownPath {
-    VecFx32 node[10];
+    Vector3 node[10];
 };
 
 /* Node 5's Y, one word per path, stride 0x78. The symbol is 0x40 bytes
@@ -160,7 +158,7 @@ void daObjRotateUpdownLift_c::func_ov091_02130fac()
     mPosZ = mBasePosZ;
     mWaypointIndex = (param1 & 0xf);
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MTX_MultVec43((Vector3 *)&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68,
+    MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68,
                   (Vector3 *)&tmp[0]);
     Vec3_Add((Vector3 *)&tmp[1], (const Vector3 *)&mBasePosX, (const Vector3 *)&tmp[0]);
     mPosX = tmp[1].x;
@@ -375,9 +373,9 @@ int daObjRotateUpdownLift_c::Behavior()
     if (prevIndex < 0)
         prevIndex = 9;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MTX_MultVec43((Vector3 *)&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68,
+    MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68,
                   &cur);
-    MTX_MultVec43((Vector3 *)&data_ov091_02134cdc[mVariant].node[prevIndex], &data_020a0e68, &prev);
+    MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[prevIndex], &data_020a0e68, &prev);
     Vec3_Add(&target, (const Vector3 *)&mBasePosX, &cur);
     Vec3_Sub(&remain, &mPos, &target);
     Vec3_Sub(&edge, &cur, &prev);
@@ -392,13 +390,11 @@ int daObjRotateUpdownLift_c::Behavior()
         mPosY = snapped.y;
         mPosZ = snapped.z;
         /* &mPitchBase is offsetof 0x3a2, which is not an ARM immediate, so this
-           is a pool add. The step is the halfword at this+0x300+0xa4. One
-           base for both grows the function. */
+           is a pool add. */
         {
             s16 *pitch = &mPitchBase;
-            s16 *stepAt = (s16 *)((char *)this + 0x300);
             arrived = 1;
-            *pitch = (*pitch + *(s16 *)((char *)stepAt + 0xa4));
+            *pitch = (*pitch + mPitchStep);
         }
     } else {
         Vec3_MulScalar(&stepVec, &remain, FX_Div(stepLen, dist));
@@ -472,7 +468,7 @@ int daObjRotateUpdownLift_c::InitResources()
 
     if (mWaypointIndex == 2) {
         Vec3_Add(&spawnAt, (const Vector3 *)&mBasePosX,
-                 (const Vector3 *)&data_ov091_02134cdc[mVariant].node[0]);
+                 &data_ov091_02134cdc[mVariant].node[0]);
         spawnAt.y += data_ov091_02134d1c[mVariant].y;
         Spawn(0x1d, 0xffff, spawnAt, 0, mAreaId, -1);
     }

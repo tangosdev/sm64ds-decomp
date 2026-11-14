@@ -98,7 +98,7 @@ s32 daObjWlPolelift_c::Behavior()
     int scale;
     int skipCollision;
 
-    if (DecIfAbove0_Short((u16 *)&bounceTimer) == 0) {
+    if (DecIfAbove0_Short(&bounceTimer) == 0) {
         speed = moveSpeed;
         current = curNodeIdx;
         prevNodeIdx = current - speed;

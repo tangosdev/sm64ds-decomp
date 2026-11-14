@@ -5,13 +5,19 @@
 // Was func_02071ba0; the size-0 second name in config/arm9/symbols.txt could not define
 // it, because a size-0 alias only reaches the link inside a dsd gap object and this
 // range is carved out by a complete delinks entry. See notes/mwccarm-codegen.md 9a.
-void __end__catch(int obj)
+struct EndCatch {
+    int head;
+    int mid;
+    void (*fn)(int, int);
+};
+
+void __end__catch(struct EndCatch *obj)
 {
     int p;
     void (*fn)(int, int);
-    p = *(int*)obj;
+    p = obj->head;
     if (p == 0) return;
-    fn = *(void(**)(int, int))(obj + 8);
+    fn = obj->fn;
     if (fn == 0) return;
     fn(p, -1);
 }

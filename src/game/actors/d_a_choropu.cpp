@@ -478,9 +478,9 @@ void daChoropu_c::func_ov080_02124088()
         v1.z = mPosZ;
         v1.y = y1 + (mdCcAc_c.height - 0x50000);
     }
-    ((int *)&v2)[0] = ((int *)&v1)[0];
-    ((int *)&v2)[1] = ((int *)&v1)[1];
-    ((int *)&v2)[2] = ((int *)&v1)[2];
+    v2.x = v1.x;
+    v2.y = v1.y;
+    v2.z = v1.z;
     PoofDustAt(v2);
 
     func_ov080_02124360();

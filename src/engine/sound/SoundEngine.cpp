@@ -76,6 +76,16 @@ struct NitroBlockHeader {
     u32 kind; /* 0x0 */
     u32 size; /* 0x4 */
 };
+struct NarcFileSpan {
+    int start;
+    int end;
+};
+struct NarcFatBlock {
+    NitroBlockHeader header;
+    u16 fileCount;
+    u16 reserved;
+    NarcFileSpan files[1];
+};
 /* One sequence of a sequence archive: its offset in the archive's data
    (-1 for none), then the same parameters a Sound::InfoSequenceEntry
    carries after its fileId. */
@@ -137,6 +147,11 @@ struct data_020a5bb8_t {
    header come the offsets, from the block start, of its record tables; each
    lookup below reads one, bounds-checks the id against the table's count and
    returns the record at the id's offset (0 for none). */
+/* A count, then one file offset per id. Offset 0 means the id is absent. */
+struct SoundOffsetTable {
+    unsigned count;
+    int offset[1];
+};
 struct SndInfoBlock {
     NitroBlockHeader header;
     int seqTable;     /* 0x08: Sound::InfoSequenceEntry::GetWithID */
@@ -243,7 +258,7 @@ struct LL {
 struct S82 {
     /* 0x00 */ FSArchive arc;
     /* 0x50 */ char *narc;         /* the file func_0204ef9c checked for 'NARC' */
-    /* 0x54 */ unsigned char *f54; /* its FATB block */
+    /* 0x54 */ NarcFatBlock *f54; /* its FATB block */
     /* 0x58 */ unsigned char *f58; /* its FIMG data */
 };
 struct HeapAllocator_205212c {
@@ -547,9 +562,8 @@ extern "C" void func_020522c4(void)
                     if (stream->startReady != 0) {
                         func_0204ffcc(stream);
                         {
-                            int *flagsp = (int *)&stream->uf0;
-                            *flagsp |= 2;
-                            *flagsp &= ~4;
+                            stream->uf0 |= 2;
+                            stream->uf0 &= ~4;
                         }
                     }
                 }
@@ -1285,7 +1299,11 @@ extern "C" int func_02050d54(data_020a5bb8_t *arc, struct SndHeap *heap, int loa
     return 1;
 }
 
-extern "C" int func_02050d3c(int v) { int old = ((int)data_020a5bb8); *(int*)(&data_020a5bb8) = (v); return old; }
+extern "C" int func_02050d3c(int v) {
+    int old = ((int)data_020a5bb8);
+    data_020a5bb8 = (char *)v;
+    return old;
+}
 
 extern "C" int func_02050d2c(void) { return ((int)data_020a5bb8); }
 
@@ -1315,8 +1333,9 @@ Sound::InfoSequenceEntry *Sound::InfoSequenceEntry::GetWithID(u32 id)
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
     if ((int)id < 0) return 0;
-    if (id >= *(unsigned*)tbl) return 0;
-    int v = ((int*)(tbl + id * 4))[1];
+    SoundOffsetTable *table = (SoundOffsetTable *)tbl;
+    if (id >= table->count) return 0;
+    int v = table->offset[id];
     char *base = (char *)((data_020a5bb8_t *)root)->info;
     return (v == 0) ? 0 : (InfoSequenceEntry *)(base + v);
 }
@@ -1328,8 +1347,9 @@ extern "C" struct SndArchiveInfo *func_02050c14(unsigned int id) {
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
     if ((int)id < 0) return 0;
-    if (id >= *(unsigned*)tbl) return 0;
-    int v = ((int*)(tbl + id * 4))[1];
+    SoundOffsetTable *table = (SoundOffsetTable *)tbl;
+    if (id >= table->count) return 0;
+    int v = table->offset[id];
     char *base = (char *)((data_020a5bb8_t *)root)->info;
     return (v == 0) ? 0 : (struct SndArchiveInfo *)(base + v);
 }
@@ -1342,8 +1362,9 @@ Sound::InfoInstrumentBankEntry *Sound::InfoInstrumentBankEntry::GetWithID(u32 id
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
     if ((int)id < 0) return 0;
-    if (id >= *(unsigned*)tbl) return 0;
-    int v = ((int*)(tbl + id * 4))[1];
+    SoundOffsetTable *table = (SoundOffsetTable *)tbl;
+    if (id >= table->count) return 0;
+    int v = table->offset[id];
     char *base = (char *)((data_020a5bb8_t *)root)->info;
     return (v == 0) ? 0 : (InfoInstrumentBankEntry *)(base + v);
 }
@@ -1355,8 +1376,9 @@ extern "C" struct SndArchiveInfo *func_02050b4c(unsigned int id) {
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
     if ((int)id < 0) return 0;
-    if (id >= *(unsigned*)tbl) return 0;
-    int v = ((int*)(tbl + id * 4))[1];
+    SoundOffsetTable *table = (SoundOffsetTable *)tbl;
+    if (id >= table->count) return 0;
+    int v = table->offset[id];
     char *base = (char *)((data_020a5bb8_t *)root)->info;
     return (v == 0) ? 0 : (struct SndArchiveInfo *)(base + v);
 }
@@ -1368,8 +1390,9 @@ extern "C" struct SndPlayerInfo *func_02050ae8(unsigned int id) {
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
     if ((int)id < 0) return 0;
-    if (id >= *(unsigned*)tbl) return 0;
-    int v = ((int*)(tbl + id * 4))[1];
+    SoundOffsetTable *table = (SoundOffsetTable *)tbl;
+    if (id >= table->count) return 0;
+    int v = table->offset[id];
     char *base = (char *)((data_020a5bb8_t *)root)->info;
     return (v == 0) ? 0 : (struct SndPlayerInfo *)(base + v);
 }
@@ -1381,8 +1404,9 @@ extern "C" struct List *func_02050a84(unsigned int id) {
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
     if ((int)id < 0) return 0;
-    if (id >= *(unsigned*)tbl) return 0;
-    int v = ((int*)(tbl + id * 4))[1];
+    SoundOffsetTable *table = (SoundOffsetTable *)tbl;
+    if (id >= table->count) return 0;
+    int v = table->offset[id];
     char *base = (char *)((data_020a5bb8_t *)root)->info;
     return (v == 0) ? 0 : (struct List *)(base + v);
 }
@@ -2333,7 +2357,8 @@ extern "C" int func_0204ee40(struct S82 *self, char *name, char *p) {
     i = 0;
     if (n > 0) {
         do {
-            unsigned int m = *(unsigned int *)cur;
+            NitroBlockHeader *block = (NitroBlockHeader *)cur;
+            unsigned int m = block->kind;
             switch (m) {
             case 0x46415442:
                 fatb = cur;
@@ -2345,23 +2370,25 @@ extern "C" int func_0204ee40(struct S82 *self, char *name, char *p) {
                 fimg = cur;
                 break;
             }
-            cur += *(int *)(cur + 4);
+            cur += block->size;
             i++;
         } while (i < n);
     }
 
     FS_InitArchive(&self->arc);
     self->narc = p;
-    self->f54 = (unsigned char *)fatb;
+    self->f54 = (NarcFatBlock *)fatb;
     fimg_off = fimg + 8;
     self->f58 = (unsigned char *)fimg_off;
 
     if (FS_RegisterArchiveName(&self->arc, name, strlen(name)) == 0)
         return 0;
 
+    NitroBlockHeader *fatHeader = (NitroBlockHeader *)fatb;
+    NitroBlockHeader *fntHeader = (NitroBlockHeader *)fntb;
     if (FS_LoadArchive(&self->arc, (u32)fimg_off, (u32)(fatb + 0xc) - (u32)fimg_off,
-                       *(u32 *)(fatb + 4) - 0xc, (u32)(fntb + 8) - (u32)fimg_off,
-                       *(u32 *)(fntb + 4) - 8, 0, 0))
+                       fatHeader->size - 0xc, (u32)(fntb + 8) - (u32)fimg_off,
+                       fntHeader->size - 8, 0, 0))
         return 1;
 
     FS_ReleaseArchiveName(&self->arc);
@@ -2376,17 +2403,16 @@ extern "C" int func_0204ee10(struct S82 *self) {
 }
 
 extern "C" int func_0204ede8(struct S82 *o, unsigned int i) {
-    unsigned char *base = o->f54;
     int r = 0;
-    if (i < *(unsigned short *)(base + 8)) {
-        r = (int)o->f58 + *(int *)(base + i * 8 + 0xc);
+    if (i < o->f54->fileCount) {
+        r = (int)o->f58 + o->f54->files[i].start;
     }
     return r;
 }
 
 extern "C" int func_0204eda4(int r0, char* a, u32 idx) {
     int r = 0;
-    if (idx < *(u16 *)(((struct S82 *)a)->f54 + 8)) {
+    if (idx < ((struct S82 *)a)->f54->fileCount) {
         FSFileID id;
         id.arc = &((struct S82 *)a)->arc;
         id.file_id = idx;

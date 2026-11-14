@@ -94,13 +94,13 @@ struct HanachanTextureSeqFileHandle : SharedFilePtr {
 extern daHanachan_c::State data_ov034_02114538[];
 
 extern "C" {
-extern void **data_ov034_02113888[];
-extern void **data_ov034_0211389c[];
-extern void **data_ov034_02113860[];
+extern SharedFilePtr *data_ov034_02113888[];
+extern SharedFilePtr *data_ov034_0211389c[];
+extern SharedFilePtr *data_ov034_02113860[];
 extern int Math_Function_0203b14c(void *base, int a, int b, int c, int d);
 extern int data_ov034_021138c4[];
 extern short data_ov034_02113820[];
-extern void **data_ov034_021138b0[];
+extern SharedFilePtr *data_ov034_021138b0[];
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int data_ov034_02114488[];
 // local extern: no shared header declares Vec3_Add.
@@ -109,7 +109,7 @@ extern int NormalizeVec3IfNonZero(Vector3 *v);
 extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
 extern SharedFilePtr *data_ov034_02113838[];
 extern SharedFilePtr *data_ov034_0211384c[];
-extern void **data_ov034_02113874[];
+extern SharedFilePtr *data_ov034_02113874[];
 extern void d_a_hanachanRunningSlidingDustAtHold(s32 x, s32 y, s32 z);
 extern void *d_a_hanachanNewHold(u32 a, u32 b, s32 x, s32 y, s32 z, const void *v, void *cb);
 extern int func_ov002_020c51d0(void *, void *);
@@ -822,15 +822,14 @@ void daHanachan_c::UpdateSegmentModels()
        the base and drops that add; a dExtSimpleModel_c* walk keeps it. */
     int i;
     char *rot = (char *)this;
-    char *model = (char *)&mAnmModels[0];
+    dExtSimpleModel_c *model = &mAnmModels[0];
     for (i = 0; i < 5; i++) {
-        Matrix4x3_FromRotationY(&((dExtSimpleModel_c *)model)->mat4x3,
-                                ((daHanachan_c *)rot)->mSegmentRot[0].y);
+        Matrix4x3_FromRotationY(&model->mat4x3, ((daHanachan_c *)rot)->mSegmentRot[0].y);
         mAnmModels[i].mat4x3.t.x = mSegmentPos[i].x >> 3;
         mAnmModels[i].mat4x3.t.y = mSegmentPos[i].y >> 3;
         mAnmModels[i].mat4x3.t.z = mSegmentPos[i].z >> 3;
         rot += sizeof(Vector3s);
-        model += sizeof(dExtAnmModel_c);
+        model = (dExtSimpleModel_c *)((char *)model + sizeof(dExtAnmModel_c));
     }
 }
 
@@ -872,9 +871,7 @@ int daHanachan_c::Render()
  * set, the camera. */
 int daHanachan_c::Behavior()
 {
-    /* void ** like the table it comes from: typed SharedFilePtr * here,
-     * the .bss @NNN labels move down by four. */
-    void **animFile;
+    SharedFilePtr *animFile;
     s32 i;
     Vector3 head;
     Vector3 part;
@@ -1083,10 +1080,10 @@ int daHanachan_c::InitResources()
         dExtAnmTexPat_c::LoadFile(*texFile);
         animFile = (SharedFilePtr *)data_ov034_02113860[i];
         dExtFrameCtrl_c::LoadFile(*animFile);
-        dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov034_02113874[i]);
-        dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov034_02113888[i]);
-        dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov034_0211389c[i]);
-        dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov034_021138b0[i]);
+        dExtFrameCtrl_c::LoadFile(*data_ov034_02113874[i]);
+        dExtFrameCtrl_c::LoadFile(*data_ov034_02113888[i]);
+        dExtFrameCtrl_c::LoadFile(*data_ov034_0211389c[i]);
+        dExtFrameCtrl_c::LoadFile(*data_ov034_021138b0[i]);
         animRow->SetFile((BMD_File *)modelFile->filePtr, one, minusOne);
         (animRow)->SetAnim((BCA_File *)animFile->filePtr, zeroA, 0x1000, zeroA);
         dExtAnmTexPat_c::Prepare(*(BMD_File *)modelFile->filePtr, *(BTP_File *)texFile->filePtr);

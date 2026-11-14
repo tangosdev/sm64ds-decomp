@@ -127,10 +127,10 @@ extern CLPS_Block data_ov015_021135d4;
 
 extern int data_ov079_021275dc[];
 extern int data_ov079_021275e4[];
-extern void *data_ov079_021275ec[];
-extern void *data_ov079_02127600[];
+extern SharedFilePtr *data_ov079_021275ec[];
+extern SharedFilePtr *data_ov079_02127600[];
 extern CLPS_Block data_ov079_02127ba0;   /* the plain Whomp's CLPS block */
-extern void *data_ov079_02127bf0[];
+extern SharedFilePtr *data_ov079_02127bf0[];
 extern int data_ov079_02127cfc[];
 }
 
@@ -141,11 +141,29 @@ extern int data_ov079_02127cfc[];
    SharedFilePtr_Destruct_Clsn for the two KCLs), spelled through
    declared-only subclasses so the static initializer names the real
    entry points. */
-struct BtnModelFilePtr : SharedFilePtr {
+struct BtnModelFilePtr {
+    union {
+        SharedFilePtr base;
+        struct {
+            u16 fileID;
+            u8 numRefs;
+            u8 pad_;
+            BMD_File *filePtr;
+        } bmd;
+    };
     BtnModelFilePtr(u32 fileID);
     ~BtnModelFilePtr();
 };
-struct BtnTextureSeqFileHandle : SharedFilePtr {
+struct BtnTextureSeqFileHandle {
+    union {
+        SharedFilePtr base;
+        struct {
+            u16 fileID;
+            u8 numRefs;
+            u8 pad_;
+            BTP_File *filePtr;
+        } btp;
+    };
     BtnTextureSeqFileHandle(u32 fileID);
     ~BtnTextureSeqFileHandle();
 };
@@ -233,29 +251,27 @@ int daBtn_c::InitResources()
     int b = (id == 0xa5);
     if (b) {
         mIsKing = 1;
-        bmd = dExtSimpleModel_c::LoadFile(data_ov079_02128168);
+        bmd = dExtSimpleModel_c::LoadFile(data_ov079_02128168.base);
         mAnmModel.SetFile((BMD_File *)bmd, 1, -1);
         animIdx = 0;
         do {
-            anim = data_ov079_02127600[animIdx];
-            dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)anim);
+            dExtFrameCtrl_c::LoadFile(*data_ov079_02127600[animIdx]);
             animIdx += 1;
         } while (animIdx < 6);
-        dExtAnmTexPat_c::LoadFile(data_ov079_02128178);
+        dExtAnmTexPat_c::LoadFile(data_ov079_02128178.base);
     } else {
         mIsKing = 0;
-        bmd = dExtSimpleModel_c::LoadFile(data_ov079_02128170);
+        bmd = dExtSimpleModel_c::LoadFile(data_ov079_02128170.base);
         mAnmModel.SetFile((BMD_File *)bmd, 1, -1);
         animIdx = 0;
         do {
-            anim = data_ov079_021275ec[animIdx];
-            dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)anim);
+            dExtFrameCtrl_c::LoadFile(*data_ov079_021275ec[animIdx]);
             animIdx += 1;
         } while (animIdx < 5);
     }
 
     idx = mIsKing;
-    kcl = dBgW_Kc::LoadFile(*(SharedFilePtr *)data_ov079_02127bf0[idx]);
+    kcl = dBgW_Kc::LoadFile(*data_ov079_02127bf0[idx]);
     kcl;
 
     if (mShadowModel.InitCuboid() == 0) {
@@ -264,9 +280,9 @@ int daBtn_c::InitResources()
 
     if (mIsKing != 0) {
         mHitPoints = 3;
-        dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov079_02128168.filePtr,
-                                 *(BTP_File *)data_ov079_02128178.filePtr);
-        mTextureSequence.SetFile(*(BTP_File *)data_ov079_02128178.filePtr, 0, 0x1000, 0);
+        dExtAnmTexPat_c::Prepare(*data_ov079_02128168.bmd.filePtr,
+                                 *data_ov079_02128178.btp.filePtr);
+        mTextureSequence.SetFile(*data_ov079_02128178.btp.filePtr, 0, 0x1000, 0);
         mTextureSequence.SetFlags(0x40000000);
         mTextureSequence.speed = 0x1000;
         mTextureSequence.currFrame = 0;
@@ -450,12 +466,12 @@ int daBtn_c::CleanupResources()
     mMovingMeshCollider.Disable();
   ((SharedFilePtr *)(data_ov079_02127bf0[mIsKing]))->Release();
   if(mIsKing){
-      data_ov079_02128168.Release();
+      data_ov079_02128168.base.Release();
       for (i = 0; i < 6; i++)
           ((SharedFilePtr *)(data_ov079_02127600[i]))->Release();
-      data_ov079_02128178.Release();
+      data_ov079_02128178.base.Release();
   } else {
-      data_ov079_02128170.Release();
+      data_ov079_02128170.base.Release();
       for (i = 0; i < 5; i++)
           ((SharedFilePtr *)(data_ov079_021275ec[i]))->Release();
   }
@@ -694,7 +710,7 @@ void daBtn_c::func_ov079_021256d4()
         s16 t;
         void *anim;
         int five;
-        void **tab;
+        SharedFilePtr **tab;
         dExtAnmModel_c *ma;
 
         Sound::StopLoadedMusic_Layer3();
@@ -1357,7 +1373,7 @@ void daBtn_c::func_ov079_02124188()
     int shadowRad;
     int tiltSin;
     int lean;
-    char *bone;
+    ModelBone *bone;
 
     Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngleX, mAngleY, mAngleZ);
 
@@ -1365,14 +1381,14 @@ void daBtn_c::func_ov079_02124188()
     mAnmModel.mat4x3.t.y = (mPosY + mTipLift) >> 3;
     mAnmModel.mat4x3.t.z = mPosZ >> 3;
 
-    bone = (char *)mAnmModel.data.bones;
+    bone = mAnmModel.data.bones;
     pos.x = mPosX;
     pos.y = mPosY;
     pos.z = mPosZ;
 
-    mBodyPitch = -*(unsigned short *)(bone + 0x1c);
-    mBodyYaw = *(unsigned short *)(bone + 0x1a);
-    mBodyRoll = (*(unsigned short *)(bone + 0x1e) - 0x4000);
+    mBodyPitch = -bone->rotY;
+    mBodyYaw = bone->rotX;
+    mBodyRoll = (bone->rotZ - 0x4000);
 
     if (mIsKing != 0) {
         tiltSin = FX_SinIdx((unsigned short)mAngleX >> 4);
@@ -1387,7 +1403,7 @@ void daBtn_c::func_ov079_02124188()
     pos.x += FX_MUL(lean, FX_SinIdx((unsigned short)mAngleY >> 4));
     pos.z += FX_MUL(lean, FX_CosIdx((unsigned short)mAngleY >> 4));
 
-    ::Vec3_Asr((::Vector3 *)&asr, (::Vector3 *)&pos, 3);
+    ::Vec3_Asr(&asr, &pos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, (mAngleY + mBodyYaw));
 
@@ -1656,9 +1672,6 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
             }
         }
         if (mState != 0xa) {
-            /* Both reads are measured. A plain mState read here or at the
-               second site below shrinks the function 0x288 -> 0x284; plain
-               reads at both sites give 0x280. */
             mResumeState = *(volatile s32 *)&mState;
             mSavedStateTimer = mStateTimer;
             mSavedSubState = mSubState;

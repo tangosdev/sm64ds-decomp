@@ -152,7 +152,7 @@ extern StateSlot pmf_FlowerFace_StatePick;
 extern StateSlot pmf_Presenter_StateIdle;
 extern StateSlot pmf_Presenter_StateLoseStart;
 extern StateSlot pmf_Presenter_StateMistake;
-extern VolatileStateSlot pmf_Presenter_StateIdle_2;
+extern volatile VolatileStateSlot pmf_Presenter_StateIdle_2;
 extern long long pmf_Presenter_StateWin;
 extern volatile long long pmf_Presenter_StateSurprisedThenSmile;
 extern long long pmf_Presenter_StateSurprisedThenIdle;
@@ -263,8 +263,8 @@ FlowerFace::~FlowerFace() {
 FallingPetal::~FallingPetal() {}
 
 int FlowerFace::Load() {
-    void *bmd = dExtSimpleModel_c::LoadFile(mModelFile);
-    mModel.SetFile((BMD_File *)bmd, 1, -1);
+    BMD_File *bmd = dExtSimpleModel_c::LoadFile(mModelFile);
+    mModel.SetFile(bmd, 1, -1);
     dExtFrameCtrl_c::LoadFile(mWaitAnim);
     dExtFrameCtrl_c::LoadFile(mPickAnim);
     dExtFrameCtrl_c::LoadFile(mLikeAnim);
@@ -492,8 +492,8 @@ void FallingPetal::Update() {
         return;
     turn = data_02092768;
     Quaternion_FromVector3(&target, &mAxis, &dir);
-    Quaternion_SLerp((int *)&turn, (int *)&target, 0x200, (int *)&turn);
-    Quaternion_Normalize((int *)&turn);
+    Quaternion_SLerp(turn.w, target.w, 0x200, turn.w);
+    Quaternion_Normalize(turn.w);
     Quaternion_Multiply(mRot, &turn, mRot);
 }
 
@@ -508,11 +508,14 @@ void FallingPetal::Draw() {
 }
 
 void FallingPetal::UpdateMatrix() {
-    Matrix4x3 rot;
-    Matrix4x3_FromQuaternion(reinterpret_cast<const Quaternion *>(mRot), &rot);
-    MTX_MultVec33(&sPetalUpAxis, (const Matrix3x3 *)&rot, &mAxis);
+    union {
+        Matrix4x3 full;
+        Matrix3x3 r;
+    } rot;
+    Matrix4x3_FromQuaternion(reinterpret_cast<const Quaternion *>(mRot), &rot.full);
+    MTX_MultVec33(&sPetalUpAxis, &rot.r, &mAxis);
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    MTX_Concat43(&rot, &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(&rot.full, &data_020a0e68, &data_020a0e68);
     mModel.mat4x3 = data_020a0e68;
 }
 
@@ -555,8 +558,8 @@ Presenter::~Presenter() {
 }
 
 int Presenter::Load() {
-    void *faceFile;
-    void *backFile;
+    BMD_File *faceFile;
+    BMD_File *backFile;
 
     faceFile = dExtSimpleModel_c::LoadFile(mFaceModel);
     backFile = dExtSimpleModel_c::LoadFile(mBackModel);
@@ -577,28 +580,28 @@ int Presenter::Load() {
     dExtAnmTexPat_c::LoadFile(mSmileTexSeq);
     dExtAnmTexPat_c::LoadFile(mSurprisedTexSeq);
 
-    if (!mFace.SetFile((BMD_File *)faceFile, 1, -1))
+    if (!mFace.SetFile(faceFile, 1, -1))
         return 0;
 
     mFace.SetMaterialFlags(2);
 
-    dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile, *(BTP_File *)mWaitTexSeq.filePtr);
-    dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile, *(BTP_File *)mMistakeTexSeq.filePtr);
-    dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile, *(BTP_File *)mWinTexSeq.filePtr);
-    dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile, *(BTP_File *)mLoseTexSeq.filePtr);
-    dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile, *(BTP_File *)mLoseStartTexSeq.filePtr);
-    dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile, *(BTP_File *)mLoseEndTexSeq.filePtr);
-    dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile, *(BTP_File *)mSmileTexSeq.filePtr);
-    dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile, *(BTP_File *)mSurprisedTexSeq.filePtr);
+    dExtAnmTexPat_c::Prepare(*faceFile, *(BTP_File *)mWaitTexSeq.filePtr);
+    dExtAnmTexPat_c::Prepare(*faceFile, *(BTP_File *)mMistakeTexSeq.filePtr);
+    dExtAnmTexPat_c::Prepare(*faceFile, *(BTP_File *)mWinTexSeq.filePtr);
+    dExtAnmTexPat_c::Prepare(*faceFile, *(BTP_File *)mLoseTexSeq.filePtr);
+    dExtAnmTexPat_c::Prepare(*faceFile, *(BTP_File *)mLoseStartTexSeq.filePtr);
+    dExtAnmTexPat_c::Prepare(*faceFile, *(BTP_File *)mLoseEndTexSeq.filePtr);
+    dExtAnmTexPat_c::Prepare(*faceFile, *(BTP_File *)mSmileTexSeq.filePtr);
+    dExtAnmTexPat_c::Prepare(*faceFile, *(BTP_File *)mSurprisedTexSeq.filePtr);
 
-    dExtAnmTexSRT_c::Prepare(*(BMD_File *)faceFile, *(BTA_File *)sPresenterIdleTexAnim);
-    dExtAnmTexSRT_c::Prepare(*(BMD_File *)faceFile, *(BTA_File *)sPresenterMissTexAnim);
-    dExtAnmTexSRT_c::Prepare(*(BMD_File *)faceFile, *(BTA_File *)sPresenterMatchTexAnim);
-    dExtAnmTexSRT_c::Prepare(*(BMD_File *)faceFile, *(BTA_File *)sPresenterLoseLoopTexAnim);
-    dExtAnmTexSRT_c::Prepare(*(BMD_File *)faceFile, *(BTA_File *)sPresenterLoseTexAnim);
-    dExtAnmTexSRT_c::Prepare(*(BMD_File *)faceFile, *(BTA_File *)sPresenterTextureAnim);
-    dExtAnmTexSRT_c::Prepare(*(BMD_File *)faceFile, *(BTA_File *)sPresenterCheerTexAnim);
-    dExtAnmTexSRT_c::Prepare(*(BMD_File *)faceFile, *(BTA_File *)sPresenterSmileTexAnim);
+    dExtAnmTexSRT_c::Prepare(*faceFile, *(BTA_File *)sPresenterIdleTexAnim);
+    dExtAnmTexSRT_c::Prepare(*faceFile, *(BTA_File *)sPresenterMissTexAnim);
+    dExtAnmTexSRT_c::Prepare(*faceFile, *(BTA_File *)sPresenterMatchTexAnim);
+    dExtAnmTexSRT_c::Prepare(*faceFile, *(BTA_File *)sPresenterLoseLoopTexAnim);
+    dExtAnmTexSRT_c::Prepare(*faceFile, *(BTA_File *)sPresenterLoseTexAnim);
+    dExtAnmTexSRT_c::Prepare(*faceFile, *(BTA_File *)sPresenterTextureAnim);
+    dExtAnmTexSRT_c::Prepare(*faceFile, *(BTA_File *)sPresenterCheerTexAnim);
+    dExtAnmTexSRT_c::Prepare(*faceFile, *(BTA_File *)sPresenterSmileTexAnim);
 
     PlayIdle();
     mPos.x = 0;
@@ -606,7 +609,7 @@ int Presenter::Load() {
     mPos.z = 0;
     UpdateMatrix();
 
-    if (!mBack.SetFile((BMD_File *)backFile, 1, -1))
+    if (!mBack.SetFile(backFile, 1, -1))
         return 0;
 
     Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, 0);
@@ -673,7 +676,7 @@ void Presenter::TrackStylus() {
 
 void Presenter::Update() {
     TrackStylus();
-    if (*(PresenterState *)this)
+    if (mState[0])
         (this->*(*(PresenterState *)mState))();
     mTexSeq.Advance();
     mTexAnim.Advance();
@@ -685,7 +688,7 @@ void Presenter::Draw() {
     int keyLight[3];
     int fillLight[3];
     int *materials;
-    char *components;
+    ModelComponents *components;
 
     keyLight[0] = 0;
     keyLight[1] = 0;
@@ -701,21 +704,18 @@ void Presenter::Draw() {
 
     G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
     G3_LightVector(GX_LIGHTID_0, keyLight[0], keyLight[1], keyLight[2]);
-    components = (char *)&mFace.data;
+    components = &mFace.data;
     G3_LightColor(GX_LIGHTID_1, GX_RGB(11, 10, 10));
     G3_LightVector(GX_LIGHTID_1, fillLight[0], fillLight[1], fillLight[2]);
 
-    /* The two tex animations scroll materials 5 and 6 by +0x14/+0x18, which
-       BMD_Material leaves in its unnamed pad_0c (the u offsets are pad_0c[8]).
-       The material pointer stays an int* view: naming the ModelComponents or
-       the pad_0c fields moves 30 words (measured). */
-    materials = *(int **)(components + 4);
-    mTexSeq.Update(*(ModelComponents *)components);
-    mTexAnim.Update(*(ModelComponents *)components);
-    *(int *)((int)materials + 0x104) -= mSway[2];
-    *(int *)((int)materials + 0x108) += mSway[3];
-    *(int *)((int)materials + 0x134) += mSway[0];
-    *(int *)((int)materials + 0x138) += mSway[1];
+    /* Materials 5 and 6, texture offsets at +0x14 and +0x18. */
+    materials = (int *)components->materials;
+    mTexSeq.Update(*components);
+    mTexAnim.Update(*components);
+    materials[0x41] -= mSway[2];
+    materials[0x42] += mSway[3];
+    materials[0x4d] += mSway[0];
+    materials[0x4e] += mSway[1];
     mFace.Render(0);
     mBack.Render(&sPresenterScale);
 }
@@ -767,10 +767,10 @@ void Presenter::PlayIdle() {
     /* The volatile word reads are load-bearing: a plain struct copy moves two
        words (measured 2026-11-08). */
     {
-        void *lo = ((volatile VolatileStateSlot *)&pmf_Presenter_StateIdle_2)->lo;
-        void *hi = ((volatile VolatileStateSlot *)&pmf_Presenter_StateIdle_2)->hi;
-        *(void **)&mState[0] = lo;
-        *(void **)&mState[1] = hi;
+        void *lo = pmf_Presenter_StateIdle_2.lo;
+        void *hi = pmf_Presenter_StateIdle_2.hi;
+        mState[0] = (int)lo;
+        mState[1] = (int)hi;
     }
 }
 
@@ -920,9 +920,9 @@ Mascot::~Mascot() {
 }
 
 void Mascot::Load() {
-    void *f;
+    BMD_File *f;
     f = dExtSimpleModel_c::LoadFile(mModelFile);
-    mModel.SetFile((BMD_File *)f, 1, -1);
+    mModel.SetFile(f, 1, -1);
     dExtFrameCtrl_c::LoadFile(mWaitAnimFile);
     mModel.SetAnim(*(BCA_File *)mWaitAnimFile.filePtr, 0, 0, 0x800, 0);
     mModel.HideMaterial(7, 0);
@@ -1513,8 +1513,8 @@ MascotWalker::~MascotWalker() {
 
 void MascotWalker::Load() {
     {
-        void *bmd = dExtSimpleModel_c::LoadFile(mModelFile);
-        mModel.SetFile((BMD_File *)bmd, 1, -1);
+        BMD_File *bmd = dExtSimpleModel_c::LoadFile(mModelFile);
+        mModel.SetFile(bmd, 1, -1);
     }
     dExtFrameCtrl_c::LoadFile(mWalkAnimFile);
     dExtFrameCtrl_c::LoadFile(mPauseAnimFile);

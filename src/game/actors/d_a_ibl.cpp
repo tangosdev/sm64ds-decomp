@@ -15,8 +15,7 @@
 /* leftovers:
  * - The eight helpers' names (CheckContact through SpawnerBehavior) are
  *   coined from their bodies and gIblKindHandlers' kind order, not
- *   recovered. Behavior reads gIblKindHandlers by hand, through two-word
- *   records, rather than calling a pointer-to-member.
+ *   recovered.
  * - daPly_c::Hurt stays mangled: it takes Fix12<int> by value. The local
  *   Hurt declaration agrees with the current scalar definition.
  * - The spawner copies daPly_c position through a byte view of the whole object
@@ -30,8 +29,7 @@
  *   speeds and kill heights chosen from them.
  * - func_020383f0 and func_02038414 are the two probes picked by that
  *   level id. func_02012694 plays a bank-3 sound at a position.
- * - Behavior's dispatch and InitResources' param1 shift keep the
- *   spellings the bytes need.
+ * - InitResources' param1 shift keeps the spelling the bytes need.
  */
 
 #pragma defer_codegen off
@@ -87,15 +85,6 @@ enum { daIbl_PTCL_BREAK = 0xf };
 
 /* The model and shadow matrix copies go through the flat Mtx43: assigning
    the C++ Matrix4x3 grows .text by 0x34 bytes. */
-
-/* Behavior's handler table, gIblKindHandlers: one pointer-to-member
-   per kind, as the two words mwcc lays one out in (function or vtable
-   offset, then this-adjustment doubled with the virtual bit in bit 0). */
-struct VtEntry {
-    int field0;
-    int field1;
-};
-typedef void (*FnPtr)(void *);
 
 namespace Sound {
 /* local extern: including Sound.h renumbers @NNN. */
@@ -255,7 +244,8 @@ void daIbl_c::UpdateModelMatrix() {
     mModel.mat4x3.t.x = mPosX >> 3;
     mModel.mat4x3.t.y = mPosY >> 3;
     mModel.mat4x3.t.z = mPosZ >> 3;
-    *(Mtx43 *)mShadowMtx = *(Mtx43 *)&mModel.mat4x3;
+    Mtx43 *shadow = (Mtx43 *)mShadowMtx;
+    *shadow = *(Mtx43 *)&mModel.mat4x3;
     int k = 0x32;
     mShadowMtx[10] = (mDrawScale.x * k + mPosY) >> 3;
     if (mWithMeshClsn.IsOnGround() != 0)
@@ -711,17 +701,7 @@ int daIbl_c::Render()
    gIblKindHandlers, on this actor. */
 int daIbl_c::Behavior()
 {
-    unsigned char idx = mVariant;
-    struct VtEntry *e = (struct VtEntry *)((char *)gIblKindHandlers + ((int)idx << 3));
-    int f1 = e->field1;
-    void *obj = ((char *)(this) + (f1 >> 1));
-    FnPtr fn;
-    if (f1 & 1) {
-        fn = (FnPtr)*(int *)((char *)*(int **)obj + e->field0);
-    } else {
-        fn = (FnPtr)e->field0;
-    }
-    fn(obj);
+    (this->*gIblKindHandlers[mVariant])();
     return 1;
 }
 
@@ -769,8 +749,8 @@ int daIbl_c::InitResources()
         }
         AdvancePath();
         mPrevAngleY = mHeadingToNode;
-        mKillY = *(int *)&data_02092138;
-        d = *(signed char *)&gCurrentSublevel;
+        mKillY = data_02092138;
+        d = gCurrentSublevel;
         /* Sublevel 0x19 is the half-size ball: speed 10 units/frame, scale
            0.5 (0x800), collider radius and height 30 units. */
         if (d == 0x19) {
@@ -820,7 +800,7 @@ int daIbl_c::InitResources()
            Sublevel 0x19: 512 to 6000. Otherwise the minimum is 1024 and the
            maximum 7000 in sublevels 0x18 and 0x16, 4600 in 6, 6500
            elsewhere. */
-        d = *(signed char *)&gCurrentSublevel;
+        d = gCurrentSublevel;
         if (d == 0x19) {
             mMinSpawnDist = 0x200000;
             mMaxSpawnDist = 0x1770000;

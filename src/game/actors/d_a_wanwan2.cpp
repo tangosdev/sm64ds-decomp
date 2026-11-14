@@ -292,11 +292,11 @@ extern "C" void func_ov100_0214344c(daWanwan2_c *self)
     if (other->mIsVanish != 0)
         return;
     {
-        VecFx32 pos;
+        Vector3 pos;
         pos.x = self->mPosX;
         pos.y = self->mPosY;
         pos.z = self->mPosZ;
-        other->Hurt(*(Vector3 *)&pos, 2, 0xc000, 1, 0, 1);
+        other->Hurt(pos, 2, 0xc000, 1, 0, 1);
     }
 }
 
@@ -384,23 +384,23 @@ extern "C" void func_ov100_021435e8(daWanwan2_c *c)
    carries. */
 extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
 {
-    VecFx32 in, out, cur, delta, added, v48, v54, v60;
-    VecFx32 *pos, *vel, *src;
+    Vector3 in, out, cur, delta, added, v48, v54, v60;
+    Vector3 *pos, *vel, *src;
     int *heights;
     int loop;
     int angOff;
     int idx, val, ang, hlen, angz;
 
-    pos = (VecFx32 *)thisx->mLinkPos;
-    vel = (VecFx32 *)thisx->mLinkVel;
+    pos = thisx->mLinkPos;
+    vel = thisx->mLinkVel;
     heights = thisx->mLinkMinY;
 
     in.z = -0xfa000; in.x = 0; in.y = 0;    /* 250 units behind */
     out.x = 0; out.y = 0; out.z = 0;
 
     Matrix4x3_FromRotationXYZExt(&data_020a0e68, thisx->mAngleX, thisx->mAngleY, thisx->mAngleZ);
-    MTX_MultVec43((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
-    Vec3_Add((Vector3 *)&added, &thisx->mPos, (const Vector3 *)&out);
+    MTX_MultVec43(&in, &data_020a0e68, &out);
+    Vec3_Add(&added, &thisx->mPos, &out);
 
     {
         int ax = added.x, ay = added.y, az = added.z;
@@ -443,12 +443,12 @@ extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
         angz = (s16)(-cstd::atan2(delta.y, hlen));
         Matrix4x3_FromRotationY(&data_020a0e68, ang);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, angz);
-        MTX_MultVec43((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
+        MTX_MultVec43(&in, &data_020a0e68, &out);
         vel->x = pos->x; vel->y = pos->y; vel->z = pos->z;
-        Vec3_Add((Vector3 *)&v48, (const Vector3 *)src, (const Vector3 *)&out);
+        Vec3_Add(&v48, src, &out);
         pos->x = v48.x; pos->y = v48.y; pos->z = v48.z;
-        Vec3_Sub((Vector3 *)&v54, (const Vector3 *)pos, (const Vector3 *)vel);
-        Vec3_MulScalar((Vector3 *)&v60, (const Vector3 *)&v54, 0xbb8);
+        Vec3_Sub(&v54, pos, vel);
+        Vec3_MulScalar(&v60, &v54, 0xbb8);
         vel->x = v60.x; vel->y = v60.y; vel->z = v60.z;
         *heights = thisx->mPosY - 0xc8000;     /* 200 units below the chomp */
         if (*heights - pos->y > 0xc8000) *heights = pos->y;

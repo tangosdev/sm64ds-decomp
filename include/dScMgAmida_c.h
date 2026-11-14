@@ -157,7 +157,7 @@ struct dScMgAmida_c : dScMgBase_c {
                                  pattern table and clamped to 0x64 */
     s32 mScrollAccum;          /* 0x536c -- mScrollSpeed accumulates here;
                                  the high bits become the step count, low 4 kept */
-    u8  pad_5370[0x4];
+    s32 pad_5370;
     s32 mRoundCount;           /* 0x5374 -- zeroed on reset; below 5 the scene
                                  replays, at 5 it finishes */
     s32 mLaneFlashTimer[4];   /* 0x5378 -- per-lane wrong-goal flash

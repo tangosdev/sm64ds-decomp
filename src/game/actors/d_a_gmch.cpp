@@ -16,8 +16,8 @@
  *   UpdateState6.
  * - UpdateState0 keeps mPhase++. mPhase = (u8)(mPhase + 1) is 0x144
  *   against 0x158, and mSpinAngleY += 0xc00 is four words off.
- * - ApproachLinear2 steps *(int *)&mState because mState, mPhase and
- *   mTimer share one word. State numbers, mFlags bit 0x80000 and hit
+ * - ApproachLinear2 steps mStateWord, the int sharing mState, mPhase and
+ *   mTimer. State numbers, mFlags bit 0x80000 and hit
  *   mask 0x66fe0 stay numeric.
  * - The loaded BCA is data_ov081_02128edc.filePtr. GmchDrawReg is the
  *   one-slot init sentinel the folded sinit needs.
@@ -684,7 +684,7 @@ int daGmch_c::UpdateState0()
 {
     switch (mPhase) {
     case 0:
-        if (ApproachLinear2(*(int *)&mState, 1, 2) != 0) {
+        if (ApproachLinear2(mStateWord, 1, 2) != 0) {
             mdCcAc_c.Init(this, 0x4b000, 0x73000, 0x200000, 0);
             mFlags &= ~0x10000000;
             mPhase++;
@@ -698,7 +698,7 @@ int daGmch_c::UpdateState0()
         }
         break;
     case 2:
-        if (ApproachLinear2(*(int *)&mState, 0x1f, 2) != 0) {
+        if (ApproachLinear2(mStateWord, 0x1f, 2) != 0) {
             mdCcAc_c.Init(this, 0x4b000, 0x73000, 0x200000, 0x6eff0);
             SetState(3);
         }
@@ -760,11 +760,11 @@ void daGmch_c::SetState(int n)
 int daGmch_c::CleanupResources()
 {
     extern GmchModelFileHandle data_ov081_02128ed4;
-    extern void *data_ov081_021280d8[];
+    extern SharedFilePtr *data_ov081_021280d8[];
 
-    ((SharedFilePtr *)&data_ov081_02128ed4)->Release();
+    data_ov081_02128ed4.Release();
     for (int i = 0; i < 4; i++) {
-        ((SharedFilePtr *)data_ov081_021280d8[i])->Release();
+        data_ov081_021280d8[i]->Release();
     }
     return 1;
 }
@@ -811,17 +811,17 @@ int daGmch_c::Behavior()
 int daGmch_c::InitResources()
 {
     extern GmchModelFileHandle data_ov081_02128ed4;
-    extern void *data_ov081_021280d8[];
+    extern SharedFilePtr *data_ov081_021280d8[];
     extern SharedFilePtr data_ov002_0210d9b8;
     extern Matrix4x3 IDENTITY_MATRIX4X3;
 
     Vector3 pos;
-    BMD_File *modelFile = dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov081_02128ed4);
+    BMD_File *modelFile = dExtSimpleModel_c::LoadFile(data_ov081_02128ed4);
     mAnmModel.SetFile(modelFile, 1, 1);
     if (mModel.SetFile((BMD_File *)data_ov002_0210d9b8.filePtr, 1, 1) == 0)
         return 0;
     for (int i = 0; i < 4; i++)
-        dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov081_021280d8[i]);
+        dExtFrameCtrl_c::LoadFile(*data_ov081_021280d8[i]);
     if (mShadowModel.InitCylinder() == 0)
         return 0;
     mdCcAc_c.Init(this, 0x4b000, 0x73000, 0x200000, 0x6eff0);

@@ -92,8 +92,6 @@ extern short data_ov075_0211d756[];
 extern short data_ov075_0211d94a[];
 }
 
-#define SH(base, i) (*(short*)((char*)(base) + (i)*4))
-
 struct EntryPair {
     short w;
     short h;
@@ -244,21 +242,21 @@ void dScEntry_c::icon_c::Place(int type, int index, s16 x, s16 y) {
     if (type == 5) {
         widthLanguage = GetLanguageIndex();
         heightLanguage = GetLanguageIndex();
-        func_ov001_020ab5b0((char *)this, touchKind, x, y, SH(data_ov075_0211d72c, widthLanguage),
-                            SH(data_ov075_0211d72e, heightLanguage));
+        func_ov001_020ab5b0((char *)this, touchKind, x, y, data_ov075_0211d72c[widthLanguage].w,
+                            data_ov075_0211d72c[heightLanguage].h);
     } else if (type == 6) {
         widthLanguage = GetLanguageIndex();
         heightLanguage = GetLanguageIndex();
-        func_ov001_020ab5b0((char *)this, touchKind, x, y, SH(data_ov075_0211d740, widthLanguage),
-                            SH(data_ov075_0211d742, heightLanguage));
+        func_ov001_020ab5b0((char *)this, touchKind, x, y, data_ov075_0211d740[widthLanguage].w,
+                            data_ov075_0211d740[heightLanguage].h);
     } else if (type == 0xb) {
         widthLanguage = GetLanguageIndex();
         heightLanguage = GetLanguageIndex();
-        func_ov001_020ab5b0((char *)this, touchKind, x, y, SH(data_ov075_0211d754, widthLanguage),
-                            SH(data_ov075_0211d756, heightLanguage));
+        func_ov001_020ab5b0((char *)this, touchKind, x, y, data_ov075_0211d754[widthLanguage].w,
+                            data_ov075_0211d754[heightLanguage].h);
     } else {
-        func_ov001_020ab5b0((char *)this, touchKind, x, y, SH(data_ov075_0211d948, type),
-                            SH(data_ov075_0211d94a, type));
+        func_ov001_020ab5b0((char *)this, touchKind, x, y, data_ov075_0211d948[type].w,
+                            data_ov075_0211d948[type].h);
     }
 }
 

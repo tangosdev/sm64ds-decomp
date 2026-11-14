@@ -362,7 +362,7 @@ int daJango_c::Behavior()
         mVertSpeed = lim;
         mSpeedZ = t;
     }
-    UpdatePosWithOnlySpeed((dCc_c *)&mdCcAc_c1);
+    UpdatePosWithOnlySpeed(&mdCcAc_c1);
     UpdateWMClsn(mWithMeshClsn, 0);
 
     /* The states steer with mPrevAngle*; the model is turned by mAngle*. */
@@ -520,7 +520,7 @@ int daJango_c::ChangeState(void *p) {
     StateRecord *qq = (StateRecord *)p;
     mState = qq;
     StateRecord *q = (StateRecord *)mState;
-    if (*(int *)q == 0)
+    if (q->enter == 0)
         return 1;
     return (this->*q->enter)();
 }
@@ -935,8 +935,7 @@ int daJango_c::UpdateSwoopState() {
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 int daJango_c::EnterHurtState() {
     dActor_c* found;
-    ((dExtBlendAnmModel_c *)&(mBlendAnmModel))
-        ->SetAnim(*(BCA_File *)data_ov062_0211e10c.filePtr, 4, 0x40000000, 0x1000, 0);
+    mBlendAnmModel.SetAnim(*(BCA_File *)data_ov062_0211e10c.filePtr, 4, 0x40000000, 0x1000, 0);
     mStateParam = 1;
     if (mHeldActorID != 0 && (found = dActor_c::FindWithID(mHeldActorID)) != 0) {
         found->mVertAccel = -0x2000;

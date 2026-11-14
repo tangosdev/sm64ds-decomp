@@ -209,14 +209,14 @@ int daRNk_c::InitResources()
     unsigned char b;
     int zero;
 
-    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&gdaRNkNokonokoModelFile);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov062_0211e014);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov062_0211e024);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&gdaRNkNokonokoWalkEdAnimationFile);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&gdaRNkNokonokoWait1AnimationFile);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&gdaRNkNokonokoWait2AnimationFile);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov062_0211e02c);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov062_0211e004);
+    dExtSimpleModel_c::LoadFile(gdaRNkNokonokoModelFile);
+    dExtFrameCtrl_c::LoadFile(data_ov062_0211e014);
+    dExtFrameCtrl_c::LoadFile(data_ov062_0211e024);
+    dExtFrameCtrl_c::LoadFile(gdaRNkNokonokoWalkEdAnimationFile);
+    dExtFrameCtrl_c::LoadFile(gdaRNkNokonokoWait1AnimationFile);
+    dExtFrameCtrl_c::LoadFile(gdaRNkNokonokoWait2AnimationFile);
+    dExtFrameCtrl_c::LoadFile(data_ov062_0211e02c);
+    dExtFrameCtrl_c::LoadFile(data_ov062_0211e004);
     if (mAnmModel.SetFile((BMD_File *)gdaRNkNokonokoModelFile.filePtr, 1, -1) == 0)
         return 0;
     if (mShadowModel.InitCylinder() == 0)
@@ -267,14 +267,14 @@ int daRNk_c::InitResources()
 /* Release the eight shared files, and stop the race music if it is playing. */
 int daRNk_c::CleanupResources()
 {
-    ((SharedFilePtr *)&gdaRNkNokonokoModelFile)->Release();
-    ((SharedFilePtr *)&data_ov062_0211e014)->Release();
-    ((SharedFilePtr *)&data_ov062_0211e024)->Release();
-    ((SharedFilePtr *)&gdaRNkNokonokoWalkEdAnimationFile)->Release();
-    ((SharedFilePtr *)&gdaRNkNokonokoWait1AnimationFile)->Release();
-    ((SharedFilePtr *)&gdaRNkNokonokoWait2AnimationFile)->Release();
-    ((SharedFilePtr *)&data_ov062_0211e02c)->Release();
-    ((SharedFilePtr *)&data_ov062_0211e004)->Release();
+    gdaRNkNokonokoModelFile.Release();
+    data_ov062_0211e014.Release();
+    data_ov062_0211e024.Release();
+    gdaRNkNokonokoWalkEdAnimationFile.Release();
+    gdaRNkNokonokoWait1AnimationFile.Release();
+    gdaRNkNokonokoWait2AnimationFile.Release();
+    data_ov062_0211e02c.Release();
+    data_ov062_0211e004.Release();
     if (mIsRacing)
         Sound::StopLoadedMusic_Layer2();
     return 1;

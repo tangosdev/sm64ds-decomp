@@ -364,9 +364,7 @@ void dScMgMemory2_c::CardFlyAway(int cardIndex) {
     s32 rowWidth;
     s32 column;
     s32 precedingOffset;
-    s32 *currentX;
     s32 scanLimit;
-    u8 *flyAwayStarted;
 
     view->cards[cardIndex].x -= 0x10000;
     if (view->cards[cardIndex].flyAwayStarted == 0) {
@@ -386,12 +384,9 @@ void dScMgMemory2_c::CardFlyAway(int cardIndex) {
         precedingOffset = 1;
         if (scanLimit > 1) {
             do {
-                currentX = (s32 *)((u8 *)&view->raw[cardIndex] + MEMORY2_OFF(mCards[0].x));
-                flyAwayStarted =
-                    (u8 *)&view->raw[cardIndex] + MEMORY2_OFF(mCards[0].flyAwayStarted);
                 if (view->cards[cardIndex - precedingOffset].active != 0) {
-                    if (((*currentX - view->cards[cardIndex - precedingOffset].x) >> 12) <= 4) {
-                        *flyAwayStarted = 1;
+                    if (((view->cards[cardIndex].x - view->cards[cardIndex - precedingOffset].x) >> 12) <= 4) {
+                        view->cards[cardIndex].flyAwayStarted = 1;
                         view->cards[cardIndex - precedingOffset].state = CARD_FLY_AWAY;
                     }
                 }

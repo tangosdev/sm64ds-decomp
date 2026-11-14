@@ -104,16 +104,16 @@ void daGrock_c::SpawnStar() {
 }
 
 /* Shift the position down 3, build the scratch matrix, keep the unrotated
- * copy in pad_188 for the shadow, then rotate it into the model. */
+ * copy in mShadowMtx for the shadow, then rotate it into the model. */
 void daGrock_c::UpdateModelTransform() {
     int shifted[3];
 
     Vec3_Asr(reinterpret_cast<Vector3 *>(shifted), &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, shifted[0], shifted[1], shifted[2]);
-    *(Matrix4x3 *)pad_188 = data_020a0e68;
+    mShadowMtx = data_020a0e68;
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     mModel.mat4x3 = data_020a0e68;
-    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)pad_188, 0x1f4000, 0x1f4000, 0xf);
+    DropShadowRadHeight(mShadowModel, mShadowMtx, 0x1f4000, 0x1f4000, 0xf);
 }
 
 /* Cylinder hit. Mega always breaks the rock. Punch/kick/breakdance/slide
@@ -258,7 +258,7 @@ int daGrock_c::Behavior() {
             s16 *roll;
 
             ApplyGravityAndMove();
-            roll = (s16 *)&mAngleX;
+            roll = &mAngleX;
             *roll = (s16)(*roll + (mHorzSpeed >> 12) * 0x43);
             mAngleY = mPrevAngleY;
             HandleMeshCollision();
@@ -324,7 +324,7 @@ int daGrock_c::Behavior() {
             }
         }
         {
-            u16 *timer = (u16 *)&mStateTimer;
+            u16 *timer = &mStateTimer;
             *timer = (u16)(*timer + 1);
         }
     }

@@ -115,7 +115,7 @@ extern DossyCollisionFileHandle gDossyHeadCollisionFile;
 
 extern "C" {
 extern u8 data_ov065_0211c078[];
-extern void *data_ov065_0211cd68[];
+extern CLPS_Block *data_ov065_0211cd68[];
 extern SharedFilePtr data_ov002_0210d9c0;
 extern SharedFilePtr *data_ov065_0211c080[];
 extern SharedFilePtr *data_ov065_0211c08c[];
@@ -207,7 +207,7 @@ int daDossy_c::InitResources()
     for (j = 0; j < 7; j++) {
         KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov065_0211c08c[j]);
         mPlatforms[j].mClsn.dBgW_KcMbg::SetFile(kcl, mPlatforms[j].mClsnNextMat, 0x1000, mAngleY,
-                                                *(CLPS_Block *)data_ov065_0211cd68[j]);
+                                                *data_ov065_0211cd68[j]);
         if ((unsigned)j <= 2) {
             mPlatforms[j].mClsn.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
             if (j == 2)

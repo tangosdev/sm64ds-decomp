@@ -271,7 +271,7 @@ void da1up_c::UpdatePhysics() {
             if (mHorzSpeed >= 0xf000) mHorzSpeed = 0xf000;
         }
     }
-    UpdatePosWithOnlySpeed((dCc_c*)&mdCcAc_c);
+    UpdatePosWithOnlySpeed(&mdCcAc_c);
     UpdateWMClsn(mWithMeshClsn, 0);
     if (!mWithMeshClsn.IsOnWall()) return;
     mPrevAngleY = ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
@@ -294,15 +294,11 @@ void da1up_c::SteerTowardPlayer() {
     if(p != 0){
         Vector3 diff;
         Vector3 ppos;
-        /* The player's position is read through an int * over a (void *) of
-           &p->mPosX; reading p->mPosX/Y/Z directly here changes the bytes
-           (tried: it did not byte-match), so that spelling stays. The (int)
-           round-trip that used to sit between the two casts did nothing and
-           is gone (#821). */
-        int *s = (int *)(void *)&p->mPosX;
-        ppos.x = s[0];
-        ppos.y = s[1];
-        ppos.z = s[2];
+        /* mPos is the position. Reading mPosX/Y/Z directly changes the bytes. */
+        const Vector3 *s = &p->mPos;
+        ppos.x = s->x;
+        ppos.y = s->y;
+        ppos.z = s->z;
         diff.x = ppos.x - mPosX;
         if (p->func_ov002_020d0d2c() != 0)
             diff.y = ppos.y - mPosY - 0x50000;

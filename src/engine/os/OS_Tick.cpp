@@ -16,7 +16,7 @@
 #include "nitro/os/interrupt.h"
 #include "nitro/hw/registers.h"
 
-#define REG_TM0CNT_H (*(volatile u16 *)0x04000102)
+#define REG_TM0CNT_H (*(u16 *)0x04000102)
 
 #define OSi_TICK_TIMERCONTROL 0xc1 /* enable, IRQ, prescaler /64 */
 

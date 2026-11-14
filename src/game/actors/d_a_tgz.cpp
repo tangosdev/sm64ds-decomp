@@ -115,7 +115,7 @@ void func_ov077_02124eb0(daTgz_c *self);
 void func_ov077_021250a8(daTgz_c *self);
 void func_ov077_02125304(daTgz_c *self);
 
-int SurfaceInfo_TestFlag0x20(int *p);
+int SurfaceInfo_TestFlag0x20(SurfaceInfo *p);
 void func_02012694(unsigned int id, const Vector3 *pos);
 unsigned int d_a_tgzNewHold(unsigned int uniqueID, unsigned int effectID, int x, int y, int z,
                             const void *dir, void *callback);
@@ -162,7 +162,7 @@ extern "C" int func_ov077_02124c28(daTgz_c *self)
         }
         rg.SetObjAndPos(pos, self);
         rg.StartDetectingWater();
-        if (rg.DetectClsn() != 0 && SurfaceInfo_TestFlag0x20((int *)&rg.surface) != 0)
+        if (rg.DetectClsn() != 0 && SurfaceInfo_TestFlag0x20(&rg.surface) != 0)
             self->mWaterY = rg.clsnY;
         else
             return 0;
@@ -370,10 +370,10 @@ extern "C" void func_ov077_02125304(daTgz_c *self) {
         func_ov077_021251d0(self);
     else
         func_ov077_02125290(self);
-    self->mShadowMatrix[9] = self->mPosX >> 3;
-    self->mShadowMatrix[10] = self->mPosY >> 3;
-    self->mShadowMatrix[11] = self->mPosZ >> 3;
-    self->DropShadowRadHeight(self->mShadowModel, *(Matrix4x3 *)self->mShadowMatrix, 0x50000,
+    self->mShadowMatrix.a[9] = self->mPosX >> 3;
+    self->mShadowMatrix.a[10] = self->mPosY >> 3;
+    self->mShadowMatrix.a[11] = self->mPosZ >> 3;
+    self->DropShadowRadHeight(self->mShadowModel, *(Matrix4x3 *)&self->mShadowMatrix, 0x50000,
                               0x320000, 0xf);
 }
 
@@ -438,9 +438,9 @@ int daTgz_c::func_ov077_02125550() {
             x = mPosX;
             y = mPosY + 0x28000;
             z = mPosZ;
-            ((int *)&vec)[0] = x;
-            ((int *)&vec)[1] = y;
-            ((int *)&vec)[2] = z;
+            vec.x = x;
+            vec.y = y;
+            vec.z = z;
             Particle::System::NewSimple(kPtclLandingDust, vec.x, vec.y, vec.z);
             func_0201267c(0x109, &mCamSpacePos);
         } else {
@@ -683,9 +683,9 @@ int daTgz_c::func_ov077_02125bb4() {
             x = mPosX;
             y = mPosY + 0x28000;
             z = mPosZ;
-            ((int *)&vec)[0] = x;
-            ((int *)&vec)[1] = y;
-            ((int *)&vec)[2] = z;
+            vec.x = x;
+            vec.y = y;
+            vec.z = z;
             Particle::System::NewSimple(kPtclLandingDust, vec.x, vec.y, vec.z);
             func_0201267c(0x109, &mCamSpacePos);
         }
@@ -794,7 +794,7 @@ int daTgz_c::InitResources()
     mScaleZ = 0x1000;
     mDespawnTimer = 0x2c;
     func_ov077_02125e94(this, 0);
-    *(Matrix4x3 *)mShadowMatrix = IDENTITY_MATRIX4X3;
+    mShadowMatrix = *(Mtx43 *)&IDENTITY_MATRIX4X3;
     func_ov077_02125304(this);
     return 1;
 }

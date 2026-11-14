@@ -33,7 +33,7 @@ struct daObjDlPyramid_c : dBgActor_c {
     s32 mSpinParticleID;  /* 0x3ac */
     s16 mAngVelY;         /* 0x3b0 */
     u16 mStateTimer;      /* 0x3b2 */
-    s16 mSoundTimer;      /* 0x3b4 */
+    u16 mSoundTimer;      /* 0x3b4 */
     u8 mNumTagsTriggered; /* 0x3b6 */
     u8 mState;            /* 0x3b7 */
 

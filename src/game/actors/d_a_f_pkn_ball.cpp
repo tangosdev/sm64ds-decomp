@@ -23,6 +23,7 @@
 #pragma defer_codegen off
 
 #include "common.h"
+#include "daKpa_c.h"
 #include "daPly_c.h"
 #include "SaveData.h"
 #include "Sound.h"
@@ -99,10 +100,10 @@ void daFPknBall_c::TryDropItem() {
     }
     {
         daPly_c *player = ClosestPlayer();
-        char *koopa;
+        daKpa_c *koopa;
         if (player != 0 && player->param1 == 3 &&
-            (koopa = (char *)dActor_c::FindWithActorID(ACTOR_KOOPA, 0)) != 0 &&
-            *(u8 *)(koopa + 0x42b) == 0) {
+            (koopa = (daKpa_c *)dActor_c::FindWithActorID(ACTOR_KOOPA, 0)) != 0 &&
+            koopa->mCapActorAlive == 0) {
             int c;
             int idx;
             int unlocked = 0;
@@ -116,7 +117,7 @@ void daFPknBall_c::TryDropItem() {
             } while ((unlocked & (1 << idx)) == 0);
             if (dActor_c::Spawn(ACTOR_OBJ_MARIO_CAP, (idx << 8) | 0xb, mPos, &mAngle, mAreaId,
                                 -1) != 0) {
-                *(u8 *)(koopa + 0x42b) = 1;
+                koopa->mCapActorAlive = 1;
                 return;
             }
         }

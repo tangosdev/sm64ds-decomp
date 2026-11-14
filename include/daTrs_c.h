@@ -144,9 +144,8 @@ struct daTrs_c : dCapEnemy_c {
     u16 mCarriedID;            /* 0x4a0 */
     u8  pad_4a2[0x2];
     /* mShadowModel1's drop matrix, rebuilt by 021166ac / 0211640c and handed
-       to DropShadowRadHeight. Spelled as twelve words (the sites store
-       through a Matrix4x3 cast); mShadowMtx2 below is the typed twin. */
-    s32 mShadowMtx[12];        /* 0x4a4 */
+       to DropShadowRadHeight. */
+    Matrix4x3 mShadowMtx;      /* 0x4a4 */
     /* mShadowModel2's drop matrix, same 021166ac/DropShadowRadHeight pair. */
     Matrix4x3 mShadowMtx2;     /* 0x4d4 */
     /* Where the carried item sits: 02119ab0 copies the Boo's position here
@@ -303,8 +302,12 @@ struct daTrs_c : dCapEnemy_c {
     u8  mAttackRepeats;        /* 0x5d2 */
     u8  unk_5d3;               /* 0x5d3 -- zeroed, no reader recovered */
     /* Typed (not a u8 placeholder) so member access compiles to the ROM's
-       add+ldrh instead of a literal-pool address load. */
-    BooFlags16 mBooFlags;      /* 0x5d4 */
+       add+ldrh instead of a literal-pool address load. mBooFlagsWord is the
+       same halfword, for the sites that read or mask the whole value. */
+    union {
+        BooFlags16 mBooFlags; /* 0x5d4 */
+        u16 mBooFlagsWord;
+    };
     u8  pad_5d6[0x2];
     /* Recycled effect handles (0x95/0x96/0x97/0x98), like daBmb_c's. */
     u32 mParticle0;            /* 0x5d8 */

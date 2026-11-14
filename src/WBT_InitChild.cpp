@@ -8,7 +8,7 @@ extern "C" {
 extern int data_020a94c0;
 extern void func_02065ad0(struct WBTBlockInfoList *list);
 extern WBTWork *func_02065b94(void);
-extern int func_02065af0(int *thiz);
+extern int func_02065af0(WBTCommand *thiz);
 extern void func_02065be0(void);
 extern void func_02065ba0(int v);
 extern void func_02065bb0(int v);
@@ -43,7 +43,7 @@ void WBT_InitChild(WBTCallback callback) {
         work->peer[i].last_cmd_counter = 0;
     }
     cmd.command = WBT_CMD_REQ_NONE;
-    func_02065af0((int *)&cmd);
+    func_02065af0(&cmd);
     func_02065be0();
     func_02065ba0(0);
     func_02065bb0(0);

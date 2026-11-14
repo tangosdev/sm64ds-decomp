@@ -684,7 +684,6 @@ int daMky_c::EnterState7()
     typedef unsigned short u16;
     typedef short s16;
     extern void *gMonkeyJumpStAnimationFile[];
-    u8 *new_var;
     int *pos;
     int *py;
     int *pz;
@@ -725,7 +724,7 @@ int daMky_c::EnterState7()
     other = this->mPlayer;
     {
         int oy = other->mPosY;
-        int oz = *((int *)(new_var = (u8 *)&other->mPosZ));
+        int oz = other->mPosZ;
         mul = oy + 0x50000;
         v.x = other->mPosX;
         v.y = mul;
@@ -1169,8 +1168,8 @@ int daMky_c::EnterState3()
        mwccarm passes differently at the call site, so declaring the true
        types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 
-    extern char gMonkeyHoldAnimationFile[];
-    this->mAnmModel.SetAnim((BCA_File *)(*(void **)(gMonkeyHoldAnimationFile + 4)), 0, 0x1000, 0);
+    extern SharedFilePtr gMonkeyHoldAnimationFile;
+    this->mAnmModel.SetAnim((BCA_File *)gMonkeyHoldAnimationFile.filePtr, 0, 0x1000, 0);
     this->mAnmModel.speed = 0x1000;
     if (mHasSpawnedCap == 0 && SaveData::HasPlayerLostCap()) {
         mSubState = 5;
@@ -1214,7 +1213,7 @@ int daMky_c::EnterState2() {
     typedef int Fix12i;
     typedef short s16;
 
-    extern void *gMonkeyJumpStAnimationFile;
+    extern SharedFilePtr gMonkeyJumpStAnimationFile;
     daPly_c *p;
 
     p = this->mPlayer;
@@ -1235,8 +1234,7 @@ int daMky_c::EnterState2() {
     this->mVertSpeed = IsUkikiThief(this) ? 0x23000 : 0x1e000;
 
     this->mWithMeshClsn.SetLimMovFlag();
-    this->mAnmModel.SetAnim((BCA_File *)(((void **)&gMonkeyJumpStAnimationFile)[1]), 0x40000000,
-                            0x1000, 0);
+    this->mAnmModel.SetAnim((BCA_File *)gMonkeyJumpStAnimationFile.filePtr, 0x40000000, 0x1000, 0);
     func_0201267c(0xd1, &this->mCamSpacePos);
     func_0201267c(0xf1, &this->mCamSpacePos);
     this->mState = 2;
@@ -1248,7 +1246,7 @@ int daMky_c::func_ov030_02113d20()
     typedef int Fix12i;
     typedef short s16;
 
-    extern void *gMonkeyRunAnimationFile;
+    extern SharedFilePtr gMonkeyRunAnimationFile;
     daPly_c *p;
     Fix12i dist;
     s16 angle;
@@ -1293,7 +1291,7 @@ int daMky_c::func_ov030_02113d20()
     ApproachLinear(this->mAngleY, angle, 0xa28);
     this->mPrevAngleY = this->mAngleY;
     if (this->mHorzSpeed != 0)
-        this->mAnmModel.SetAnim((BCA_File *)(((void **)&gMonkeyRunAnimationFile)[1]), 0, 0x1000, 0);
+        this->mAnmModel.SetAnim((BCA_File *)gMonkeyRunAnimationFile.filePtr, 0, 0x1000, 0);
     else
         CycleIdleAnimation();
 

@@ -68,8 +68,6 @@ enum daBtfly_c_AssetId {
 /* The model-matrix copies go through Mtx43, a flat 12-word copy. Assigning
  * Matrix4x3 would run ~Vector3 on its translation. */
 
-/* InitResources' collider offset is a VecFx32. dCcAcPos_c::Init's offset
- * argument is passed as a pointer; a stack Vector3 here would emit ~Vector3. */
 typedef void (daBtfly_c::*ButterflyState)();
 
 /* File-scope objects at the end of this file construct the two resource
@@ -428,7 +426,7 @@ int daBtfly_c::Render()
     if (mUseAnimModel != 0)
         mAnmModel.Render(0);
     else
-        mModel.Render((Vector3 *)&mScaleX);
+        mModel.Render(&this->dActor_c::mScale);
     return 1;
 }
 
@@ -494,11 +492,11 @@ int daBtfly_c::InitResources()
 
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
 
-    VecFx32 v;
+    Vector3 v;
     v.x = 0;
     v.y = -0x32000;
     v.z = 0;
-    mdCcAcPos_c.Init(this, *(Vector3 *)&v, 0x32000, 0x64000, 0x200000, 0);
+    mdCcAcPos_c.Init(this, v, 0x32000, 0x64000, 0x200000, 0);
 
     int sub = (int)(u8)(param1 & 0x30);
     if (sub != 0x10 && sub != 0x20) {

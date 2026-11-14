@@ -40,7 +40,7 @@
 
 /* arm9 C helpers with no shared header. */
 extern "C" {
-int SurfaceInfo_TestFlag0x20(int *p);
+int SurfaceInfo_TestFlag0x20(void *p);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -104,7 +104,7 @@ int daObjAbuku_c::IsNearWaterSurface() {
     probe.z = z;
     rg.SetObjAndPos(probe, this);
     if (rg.DetectClsn()) {
-        if (SurfaceInfo_TestFlag0x20((int *)&rg.surface)) {
+        if (SurfaceInfo_TestFlag0x20(&rg.surface)) {
             return 1;
         }
     }

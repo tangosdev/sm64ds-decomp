@@ -31,9 +31,8 @@ int AngleDiff(int, int);
 short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 }
 
-/* ov085 statics. data_ov085_0212f280 keeps include/decl_common.h's
- * spelling, so this file adds no new reading of it. */
-extern int data_ov085_0212f280[]; /* the seven animation files */
+/* Seven animation-file handles. */
+extern SharedFilePtr *data_ov085_0212f280[];
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
 enum daPeach_c_AssetId {
@@ -320,7 +319,7 @@ int daPeach_c::CleanupResources() {
     gPeachModelFile.Release();
     s32 i = 0;
     do {
-        ((SharedFilePtr *)data_ov085_0212f280[i])->Release();
+        data_ov085_0212f280[i]->Release();
         i++;
     } while (i < 7);
     return 1;
@@ -354,7 +353,7 @@ int daPeach_c::InitResources() {
     BMD_File *f = dExtSimpleModel_c::LoadFile(gPeachModelFile);
     mAnmModel.SetFile(f, 1, -1);
     for (int i = 0; i < 7; i++)
-        dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov085_0212f280[i]);
+        dExtFrameCtrl_c::LoadFile(*data_ov085_0212f280[i]);
     if (mShadowModel.InitCylinder() == 0)
         return 0;
     mCylinder.Init(this, 0x90000, 0xc0000, 0x4800004, 0);

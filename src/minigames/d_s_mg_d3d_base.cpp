@@ -105,11 +105,11 @@ extern "C" void D3D_CaptureToSub(void)
     GX_ResetBankForSubBG();
     GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_128_D);
     GX_SetBankForLCDC(GX_VRAM_LCDC_C);
-    *(volatile int *)0x4000064 = 0x80360010;
+    REG_DISPCAPCNT = 0x80360010;
     GXS_SetGraphicsMode(GX_BGMODE_5);
     gSubScreenLayers |= 0x10;
     gSubScreenLayers &= ~4;
-    *(volatile int *)0x4001000 = (*(volatile int *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
+    REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~0x1f00) | (gSubScreenLayers << 8);
 }
 
 extern "C" void D3D_DrawSpriteTable(void)
@@ -163,7 +163,7 @@ extern "C" void D3D_InitDualScreen(void)
     GX_ResetBankForSubOBJ();
     GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_128_D);
     GX_SetBankForSubBG(GX_VRAM_SUB_BG_128_C);
-    *(unsigned int *)0x4001000 &= ~0x300010;
+    REG_DISPCNT_SUB &= ~0x300010;
 }
 
 /* Slot 31: loads the sub-screen BG and OBJ graphics, then restores the
@@ -209,8 +209,8 @@ void dScMgD3DBase_c::InitEngines()
     GX::DisableAllBanks();
     GX_SetBankForTex(GX_VRAM_TEX_0_A);
     GX_SetBankForTexPltt(GX_VRAM_TEXPLTT_0_G);
-    *(vu32 *)0x4000000u &= ~0x7000000u;
-    *(vu32 *)0x4000000u &= ~0x38000000u;
+    REG_DISPCNT &= ~0x7000000u;
+    REG_DISPCNT &= ~0x38000000u;
     GX_SetBankForBGExtPltt(GX_VRAM_BGEXTPLTT_NONE);
     GX_SetBankForOBJ(GX_VRAM_OBJ_64_E);
     GX_SetBankForBG(GX_VRAM_BG_128_B);
@@ -227,7 +227,7 @@ void dScMgD3DBase_c::InitEngines()
     data_0208ee44 = 1;
     GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_3D);
     GXS_SetGraphicsMode(GX_BGMODE_5);
-    *(vu32 *)0x4000000u &= 0xffcfffefu;
+    REG_DISPCNT &= 0xffcfffefu;
     sMgCurCamera = (int)&mCameras[0];
     sMgMainCamera = &mCameras[0];
     sMgSubCamera = &mCameras[1];
@@ -320,7 +320,7 @@ int dScMgD3DBase_c::OnGraphCallback2()
         } else {
             D3D_CaptureToMain();
             if (data_0209f5f8 == 0) {
-                *(int*)0x4001000 &= ~0xe000;
+                REG_DISPCNT_SUB &= ~0xe000;
                 data_0209f5f8 = 1;
             }
         }

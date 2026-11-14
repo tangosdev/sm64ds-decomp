@@ -77,7 +77,13 @@ typedef char Ov007OamRecord_size_must_be_0x14[sizeof(Ov007OamRecord) == 0x14 ? 1
 
 /* One packed OAM entry: attr0 and attr1 in one word, then attr2. */
 typedef struct Ov007OamAttrs {
-    u32 attr01;
+    union {
+        u32 attr01;
+        struct {
+            u16 attr0;
+            u16 attr1;
+        };
+    };
     u16 attr2;
 } Ov007OamAttrs;
 
@@ -162,9 +168,9 @@ Ov007SpriteBank *func_ov007_020c9688(int arg) {
                 }
             }
             attrs.attr2 = tile | (priority << 10) | (palette << 12);
-            cell->oam[j].attr0 = ((u16 *)&attrs)[0];
-            cell->oam[j].attr1 = ((u16 *)&attrs)[1];
-            cell->oam[j].attr2 = ((u16 *)&attrs)[2];
+            cell->oam[j].attr0 = attrs.attr0;
+            cell->oam[j].attr1 = attrs.attr1;
+            cell->oam[j].attr2 = attrs.attr2;
         }
     }
 

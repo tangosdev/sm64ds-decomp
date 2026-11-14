@@ -33,7 +33,12 @@ enum daObjEwmIceBlock_c_AssetId {
 #include "math/CalcLib.h"
 
 extern "C" {
-extern SharedFilePtr *data_ov056_02113314[];
+struct EwmIceFileTable {
+    SharedFilePtr *model;
+    SharedFilePtr *collision;
+    CLPS_Block *clps;
+};
+extern EwmIceFileTable data_ov056_02113314;
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 extern void hold_d_a_obj_ewm_ice_block(dBgW_KcMbg *self, void *kcl, const Matrix4x3 *mtx, int scale,
@@ -50,8 +55,8 @@ int daObjEwmIceBlock_c::CleanupResources()
 {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
-    data_ov056_02113314[0]->Release();
-    data_ov056_02113314[1]->Release();
+    data_ov056_02113314.model->Release();
+    data_ov056_02113314.collision->Release();
     return 1;
 }
 
@@ -137,11 +142,11 @@ int daObjEwmIceBlock_c::Behavior()
 
 int daObjEwmIceBlock_c::InitResources()
 {
-    mModel.SetFile(dExtSimpleModel_c::LoadFile(*data_ov056_02113314[0]), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(*data_ov056_02113314.model), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*data_ov056_02113314[1]), mClsnMat, 0x199, mAngleY,
-                          *(CLPS_Block *)(data_ov056_02113314[2]));
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*data_ov056_02113314.collision), mClsnMat, 0x199, mAngleY,
+                          *data_ov056_02113314.clps);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mPath.FromID(param1 & 0xff);
     mPathDir = 1;

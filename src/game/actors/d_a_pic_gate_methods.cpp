@@ -32,10 +32,8 @@
  * - UpdateContinuousRipple and UpdateProximityRipple: mWavePhase += phaseStep
  *   differs by 6 words. The add that matches reuses the r5+0x100 base
  *   already formed for mNumCells; += addresses mWavePhase at 0x1b4.
- * - InitResources: a picture-id local, and declaring the default wave
- *   row as a WaveParams, shrank the function from 0x2ec to 0x2b4. The
- *   bit extracts stay written out, and the row stays an untyped object
- *   whose address is cast.
+ * - InitResources: a picture-id local shrank the function from 0x2ec to
+ *   0x2b4. The bit extracts stay written out.
  * - DrawRippleImage: for-loops over the columns and the rows grew
  *   it from 0x23c to 0x24c. The entry test is still n = mCols; i = 0;
  *   n = n - 1, so the subtract consumes that n, and both loops stay

@@ -716,15 +716,13 @@ L4d8:
     }
     this->mBgMatrixC = -this->mBgMatrixB;
     this->mBgMatrixD = this->mBgMatrixA;
-    ((Vector3*)&this->mMapCenterWorldX)->x = ((Vector3*)&this->mMapOriginX)->x;
-    ((Vector3*)&this->mMapCenterWorldX)->y = ((Vector3*)&this->mMapOriginX)->y;
-    ((Vector3*)&this->mMapCenterWorldX)->z = ((Vector3*)&this->mMapOriginX)->z;
+    this->mMapCenterWorldX = this->mMapOriginX;
+    this->mMapCenterWorldY = this->mMapOriginY;
+    this->mMapCenterWorldZ = this->mMapOriginZ;
     this->mMapCenterX =
-        this->mMapCenterOffset +
-        ((FX_MUL(((Vector3 *)&this->mMapCenterWorldX)->x, this->mScale) + 0x800) >> 12);
+        this->mMapCenterOffset + ((FX_MUL(this->mMapCenterWorldX, this->mScale) + 0x800) >> 12);
     this->mMapCenterY =
-        this->mMapCenterOffset +
-        ((FX_MUL(((Vector3 *)&this->mMapCenterWorldX)->z, this->mScale) + 0x800) >> 12);
+        this->mMapCenterOffset + ((FX_MUL(this->mMapCenterWorldZ, this->mScale) + 0x800) >> 12);
 
     focusPosSrc = &focus->mPos;
     focusPos = *focusPosSrc;
@@ -767,11 +765,9 @@ L738:
     Vec3_Sub(&scrollDelta, &focusPos, &clampedWorld);
     VEC_Add((Vector3 *)&this->mMapCenterWorldX, &scrollDelta, (Vector3 *)&this->mMapCenterWorldX);
     this->mMapCenterX =
-        this->mMapCenterOffset +
-        ((FX_MUL(((Vector3 *)&this->mMapCenterWorldX)->x, this->mScale) + 0x800) >> 12);
+        this->mMapCenterOffset + ((FX_MUL(this->mMapCenterWorldX, this->mScale) + 0x800) >> 12);
     this->mMapCenterY =
-        this->mMapCenterOffset +
-        ((FX_MUL(((Vector3 *)&this->mMapCenterWorldX)->z, this->mScale) + 0x800) >> 12);
+        this->mMapCenterOffset + ((FX_MUL(this->mMapCenterWorldZ, this->mScale) + 0x800) >> 12);
 
     /* Project each object list onto the map. A missing object gets map id -1. Stars whose
      * kind byte in gStarMarkerTypes is 4 are the ones Render draws as MM_RED_COIN. */

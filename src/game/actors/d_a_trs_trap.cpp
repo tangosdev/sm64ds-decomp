@@ -443,7 +443,6 @@ int daTrsTrap_c::Behavior()
  *     swaps the two strh at +0x2a0/+0x2a4. */
 int daTrsTrap_c::InitResources()
 {
-    char *c = (char *)this;
     u16 actorType;
     s32 param;
     s32 dx;
@@ -491,7 +490,7 @@ int daTrsTrap_c::InitResources()
     mStandingActor = 0;
     mInitLatch = 0;
     mOccupiedFlag = 0;
-    *(u8 *)(c + 0x154) = 0;
+    pad_154 = 0;
     mTriggered = 0;
     mSoundHandle = 0;
     mSoundTimer = 0;

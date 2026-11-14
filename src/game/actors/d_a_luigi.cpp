@@ -105,10 +105,10 @@ unsigned int func_0201277c(unsigned int soundID);
 int func_ov002_020e496c(daPly_c *player);
 
 void func_0203c178(Matrix4x3 *m, int sx, int sy, int sz);
-void MTX_Concat33(const int *a, const int *b, int *dst);
+void MTX_Concat33(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *dst);
 /* local extern: math/CalcLib.h's spelling is the one below, but including
    that header renumbers this TU's @NNN .data locals. */
-void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
+void Vec3_Asr(VecFx32 *dst, Vector3 *src, int shift);
 }
 
 /* Reconstructed source-style name: SM64DS proves daLuigi_c through RTTI,
@@ -141,7 +141,7 @@ int daLuigi_c::InitResources() {
 
     mAnmModel.SetAnim(dExtFrameCtrl_c::LoadFile(data_ov002_0210eaa0), 0, kFxOne, 0);
 
-    Vec3_Asr((Vector3 *)&t, &mPos, 3);
+    Vec3_Asr(&t, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
 
@@ -211,7 +211,7 @@ int daLuigi_c::Render() {
     *(Mtx43 *)mat = *(Mtx43 *)&body->mat4x3;
     mat->t.x = -mat->t.x;
     func_0203c178(&data_020a0e68, kMirrorSx, kFxOne, kFxOne);
-    MTX_Concat33((const int *)mat, (const int *)&data_020a0e68, (int *)mat);
+    MTX_Concat33(mat, &data_020a0e68, mat);
     *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)mat;
 
     if (data_ov055_02111b64 & kHideBit)

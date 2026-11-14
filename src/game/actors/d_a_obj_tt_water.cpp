@@ -40,7 +40,7 @@ struct TtWaterCollisionFilePtr : SharedFilePtr {
 extern TtWaterModelFilePtr data_ov033_021124f0;
 extern TtWaterCollisionFilePtr data_ov033_021124e8;
 
-extern int data_ov033_02111bc8[];
+extern BTA_File data_ov033_02111bc8;
 extern CLPS_Block data_ov033_02111c1c;
 
 /* Emission order is ROM order: the destructor pair must stay first.
@@ -91,9 +91,8 @@ int daObjTtWater_c::Behavior() {
 int daObjTtWater_c::InitResources() {
     BMD_File *m = dExtSimpleModel_c::LoadFile(data_ov033_021124f0);
     mModel.SetFile(m, 1, 0x14);
-    dExtAnmTexSRT_c::Prepare(*(BMD_File *)data_ov033_021124f0.filePtr,
-                             *(BTA_File *)data_ov033_02111bc8);
-    mTextureTransformer.SetFile(*(BTA_File *)data_ov033_02111bc8, 0, 0x1000, 0);
+    dExtAnmTexSRT_c::Prepare(*(BMD_File *)data_ov033_021124f0.filePtr, data_ov033_02111bc8);
+    mTextureTransformer.SetFile(data_ov033_02111bc8, 0, 0x1000, 0);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     KCL_File *mc = dBgW_Kc::LoadFile(data_ov033_021124e8);

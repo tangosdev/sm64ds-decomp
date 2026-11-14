@@ -197,7 +197,7 @@ int daSanbo_c::Render()
 
 void daSanbo_c::OnPendingDestroy()
 {
-    int isBody = *(unsigned short *)((char *)&actorID);
+    int isBody = actorID;
     isBody = (isBody == SANBO_BODY);
     if (isBody) return;
     daSanbo_c *p = mNextSegment;
@@ -391,9 +391,9 @@ int daSanbo_c::UpdateKnockback() {
         x = mPosX;
         z = mPosZ;
         y = mPosY + 0x3c000;
-        ((int *)&pos)[0] = x;
-        ((int *)&pos)[1] = y;
-        ((int *)&pos)[2] = z;
+        pos.x = x;
+        pos.y = y;
+        pos.z = z;
         mParticle0 = Particle::System::New(mParticle0, kPtclDeathA, pos.x, pos.y, pos.z, 0, 0);
         mParticle1 =
             Particle::System::NewCleanParticle(mParticle1, kPtclDeathB, pos.x, pos.y, pos.z, 0);
@@ -649,9 +649,9 @@ void daSanbo_c::HandleAttacks() {
             x = mPosX;
             z = mPosZ;
             y = mPosY + 0x3c000;
-            ((int *)&pos)[0] = x;
-            ((int *)&pos)[1] = y;
-            ((int *)&pos)[2] = z;
+            pos.x = x;
+            pos.y = y;
+            pos.z = z;
             mParticle0 = Particle::System::New(mParticle0, kPtclDeathA, pos.x, pos.y, pos.z, 0, 0);
             mParticle1 =
                 Particle::System::NewCleanParticle(mParticle1, kPtclDeathB, pos.x, pos.y, pos.z, 0);

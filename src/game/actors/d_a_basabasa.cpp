@@ -101,11 +101,11 @@ void daBasabasa_c::CheckTouch() {
         return;
     }
     if (flags & 0x10) {
-        short v[3];
-        v[0] = -0x2000;
-        v[1] = 0;
-        v[2] = 0;
-        KillByInvincibleChar(*(Vector3_16 *)v, *p, 0);
+        Vector3_16 v;
+        v.x = -0x2000;
+        v.y = 0;
+        v.z = 0;
+        KillByInvincibleChar(v, *p, 0);
         func_02012694(0x112, &mCamSpacePos);
         return;
     }

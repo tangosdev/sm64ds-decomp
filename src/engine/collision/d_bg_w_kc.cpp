@@ -49,10 +49,11 @@ int dBgW_Kc::ClassifyNormalY(int normalY) {
 /* The four header words of a fresh KCL file are file-relative offsets;
    rebase them into pointers. */
 void dBgW_Kc::UpdateFileOffsets(KCL_File &file) {
-    file.positions = (s32(*)[3])((char *)&file + (int)file.positions);
-    file.normals = (s16(*)[3])((char *)&file + (int)file.normals);
-    file.tris = (KCL_Tri *)((char *)&file + (int)file.tris);
-    file.octree = (char *)&file + (int)file.octree;
+    unsigned int base = (unsigned int)&file;
+    file.positions = (s32(*)[3])(base + (int)file.positions);
+    file.normals = (s16(*)[3])(base + (int)file.normals);
+    file.tris = (KCL_Tri *)(base + (int)file.tris);
+    file.octree = (char *)(base + (int)file.octree);
 }
 
 void dBgW_Kc::SetFile(KCL_File *file, CLPS_Block &clpsBlock) {
