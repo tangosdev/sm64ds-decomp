@@ -911,7 +911,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                             sphere.flags |= 4;
                             WIDEN_PUSH_OUT(loPY, hiPY, sn.y)
                             if (sn.y > sphere.mFloorNormal.y)
-                                sphere.SetFloorNormal(&sn.x);
+                                sphere.SetFloorNormal((const s32 *)&sn);
                         } else if (cls == 1) {
                             sphere.flags |= 8;
                             sphere.RecordWallHit(triID, &data_020a0cec.surface);

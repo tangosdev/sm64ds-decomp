@@ -137,7 +137,7 @@ void daObjCvNewsLift_c::OnMainMeshRide(dActor_c *player) {
         axis.y = 0x1000;
         axis.z = 0;
         Quaternion_FromVector3(&mTargetRotation, &axis, &inFrame);
-        Quaternion_Normalize(&mTargetRotation.x);
+        Quaternion_Normalize((int *)&mTargetRotation);
         mTiltHoldTimer = 10;
     }
 }
@@ -383,7 +383,7 @@ s32 daObjCvNewsLift_c::Behavior() {
             mTargetRotation = *(Quaternion *)data_02092768;
         }
     }
-    Quaternion_SLerp(&mRotation.x, &mTargetRotation.x, 0x199, &mRotation.x);
+    Quaternion_SLerp((int *)&mRotation, (int *)&mTargetRotation, 0x199, (int *)&mRotation);
     if (Vec3_Equal(&mPos, &mHomePos))
         mResetTimer = 300;
     if (!DecIfAbove0_Short(&mResetTimer)) {

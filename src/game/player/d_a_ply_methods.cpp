@@ -3983,7 +3983,7 @@ void daPly_c::JumboStarCutsceneFlying() {
         *p = *p + 1;
         /* fallthrough */
     case 1:
-        if (AnimSplinePoll(&s.d.x) != 0) {
+        if (AnimSplinePoll((int *)&s.d) != 0) {
             p = &this->mStateWork;
             *p = *p + 1;
             return;

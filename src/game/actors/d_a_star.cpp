@@ -2645,8 +2645,8 @@ void daStar_c::StepCameraCutscene() {
     switch (mCamSeq) {
     case 0:
     {
-        s32 *s1 = &cam->lookAt.x;
-        s32 *s2 = &cam->pos.x;
+        int *s1 = (int *)&cam->lookAt;
+        int *s2 = (int *)&cam->pos;
         mCamLookAtX = s1[0];
         mCamLookAtY = s1[1];
         mCamLookAtZ = s1[2];
@@ -2667,8 +2667,8 @@ void daStar_c::StepCameraCutscene() {
         break;
     case 0x64:
     {
-        s32 *s1 = &cam->lookAt.x;
-        s32 *s2 = &cam->pos.x;
+        int *s1 = (int *)&cam->lookAt;
+        int *s2 = (int *)&cam->pos;
         mCamLookAtX = s1[0];
         mCamLookAtY = s1[1];
         mCamLookAtZ = s1[2];

@@ -442,8 +442,9 @@ void dScMgTrampoline2_c::StatePlay() {
             vecA.x = 0;
             vecA.y = 0x1000;
             vecA.z = 0;
-            func_0203cc28(&vecA.x, d->angles[i]);
-            TrmpItem::Spawn((int)&d->positions[i], &vecA.x, d->itemTypes[i], d->motionTypes[i]);
+            func_0203cc28((int *)&vecA, d->angles[i]);
+            TrmpItem::Spawn((int)&d->positions[i], (int *)&vecA, d->itemTypes[i],
+                            d->motionTypes[i]);
         }
         if (ApproachLinear(mPattern, 6, 1)) {
             mScriptDone = 1;
@@ -459,8 +460,9 @@ void dScMgTrampoline2_c::StatePlay() {
                 vecB.x = 0;
                 vecB.y = 0x1000;
                 vecB.z = 0;
-                func_0203cc28(&vecB.x, d->angles[i]);
-                TrmpItem::Spawn((int)&d->positions[i], &vecB.x, d->itemTypes[i], d->motionTypes[i]);
+                func_0203cc28((int *)&vecB, d->angles[i]);
+                TrmpItem::Spawn((int)&d->positions[i], (int *)&vecB, d->itemTypes[i],
+                                d->motionTypes[i]);
             }
             mWaveStep = 0;
         } else {
@@ -716,13 +718,13 @@ void dScMgTrampoline2_c::SpawnWave() {
         up.y = 0x1000;
         up.z = 0;
         if (kind >= 5 || ((kind & 1) != 0 && (faces[i] == 8 || faces[i] == 5))) {
-            func_0203cc28(&up.x, 0x4000);
+            func_0203cc28((int *)&up, 0x4000);
         }
 
         variant = 1;
         if (faces[i] == 6)
             variant = 2;
-        TrmpItem::Spawn((int)&sTrmp2RandomSpawnPositions[kinds[i]], &up.x, variant, faces[i]);
+        TrmpItem::Spawn((int)&sTrmp2RandomSpawnPositions[kinds[i]], (int *)&up, variant, faces[i]);
     }
 }
 
