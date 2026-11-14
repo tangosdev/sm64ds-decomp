@@ -685,7 +685,7 @@ void Presenter::Draw() {
     int keyLight[3];
     int fillLight[3];
     int *materials;
-    char *components;
+    ModelComponents *components;
 
     keyLight[0] = 0;
     keyLight[1] = 0;
@@ -701,17 +701,17 @@ void Presenter::Draw() {
 
     G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
     G3_LightVector(GX_LIGHTID_0, keyLight[0], keyLight[1], keyLight[2]);
-    components = (char *)&mFace.data;
+    components = &mFace.data;
     G3_LightColor(GX_LIGHTID_1, GX_RGB(11, 10, 10));
     G3_LightVector(GX_LIGHTID_1, fillLight[0], fillLight[1], fillLight[2]);
 
     /* The two tex animations scroll materials 5 and 6 by +0x14/+0x18, which
-       BMD_Material leaves in its unnamed pad_0c (the u offsets are pad_0c[8]).
-       The material pointer stays an int* view: naming the ModelComponents or
-       the pad_0c fields moves 30 words (measured). */
-    materials = *(int **)(components + 4);
-    mTexSeq.Update(*(ModelComponents *)components);
-    mTexAnim.Update(*(ModelComponents *)components);
+       BMD_Material leaves in its unnamed pad_0c (the u offsets are pad_0c[8]),
+       so the material array is read through an int * view until those
+       fields are named. */
+    materials = (int *)components->materials;
+    mTexSeq.Update(*components);
+    mTexAnim.Update(*components);
     *(int *)((int)materials + 0x104) -= mSway[2];
     *(int *)((int)materials + 0x108) += mSway[3];
     *(int *)((int)materials + 0x134) += mSway[0];
