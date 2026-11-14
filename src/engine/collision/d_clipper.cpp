@@ -42,7 +42,7 @@ static inline int PlaneDistance(const ClipperPlane &n, long long x, long long y,
     return FX_MUL(z, n.z) + (FX_MUL(x, n.x) + FX_MUL(y, n.y));
 }
 
-int dClipper::ClipSphere(Vector3 &viewPos, Fix12i radius, u8 *cachedPlane) {
+int dClipper::ClipSphere(Vector3 &viewPos, fx32 radius, u8 *cachedPlane) {
     if (cachedPlane != 0) {
         unsigned int firstPlane;
         long long y;
@@ -116,7 +116,7 @@ int dClipper::ClipSphere(Vector3 &viewPos, Fix12i radius, u8 *cachedPlane) {
     }
 }
 
-int dClipper::TransformAndClip(Matrix4x3 &worldToView, Vector3 &worldPos, Fix12i radius,
+int dClipper::TransformAndClip(Matrix4x3 &worldToView, Vector3 &worldPos, fx32 radius,
                                Vector3 &viewPos) {
     MTX_MultVec43(&worldPos, &worldToView, &viewPos);
     return ClipSphere(viewPos, radius, 0);
@@ -134,8 +134,8 @@ int dClipper::TransformAndClip(Matrix4x3 &worldToView, Vector3 &worldPos, Fix12i
  */
 void dClipper::UpdateFrustumPlanes() {
     int tanHalfFov = FX_Div(FX_SinIdx(mFovAngle >> 4), FX_CosIdx(mFovAngle >> 4));
-    Fix12i halfHeight = FX_MUL(mNearZ, tanHalfFov);
-    Fix12i halfWidth = FX_MUL(mAspectRatio, halfHeight);
+    fx32 halfHeight = FX_MUL(mNearZ, tanHalfFov);
+    fx32 halfWidth = FX_MUL(mAspectRatio, halfHeight);
     Vector3 corner0, corner1, corner2, corner3;
     corner0.x = -halfWidth;
     corner0.y = -halfHeight;
@@ -165,7 +165,7 @@ void dClipper::UpdateFrustumPlanes() {
    fov angle is signed: both callers pass a short camera angle unconverted
    (Camera_UpdateMatrices loads it with ldrsh), which a u16 parameter would
    re-narrow; the body only stores it, so s16 and u16 compile alike here. */
-void dClipper::Func_020156DC(Fix12i aspectRatio, s16 fovAngle, Fix12i nearZ, Fix12i farZ) {
+void dClipper::Func_020156DC(fx32 aspectRatio, s16 fovAngle, fx32 nearZ, fx32 farZ) {
     mAspectRatio = aspectRatio;
     mFovAngle = fovAngle;
     mNearZ = nearZ;

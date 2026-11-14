@@ -62,9 +62,9 @@ extern "C" {
    local extern: no header in include/ declares them. */
 
 /* local extern: no shared header declares it; match src/VEC_DotProduct.c. */
-Fix12i VEC_DotProduct(const Vector3 *a, const Vector3 *b);
+fx32 VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 /* local extern: no header in include/ declares it. */
-Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
+fx32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 }
 s16 func_020396dc(dBgW_Kc *self, KCL_Tri *tri); /* prism -> triangle index */
 void func_020381cc(void *block, int idx, void **out);
@@ -122,7 +122,7 @@ extern dBgPc data_020a0cec;
 /* Post-subtraction form: components already relative to the centre. The wall
    block is the one place that uses the ROUNDED Fix12 multiply, FX_MUL --
    `smull` / `adds #0x800` / `adc` / `lsr #0xc` / `orr lsl #20`: the collider's
-   axis is Fix12i where the edge normals are 0x400-scale, so MUL10 is wrong here
+   axis is fx32 where the edge normals are 0x400-scale, so MUL10 is wrong here
    and FX_MUL is wrong everywhere else. */
 #define AXIS_DOT0(v) (FX_MUL(upAxis.x, (v).x) \
                     + FX_MUL(upAxis.y, (v).y) \
@@ -1189,7 +1189,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_Lin &ray)
     return 1;
 }
 
-Fix12i dBgW_Kc::GetOctreeOriginY() const
+fx32 dBgW_Kc::GetOctreeOriginY() const
 {
     return kclFile->origin.y << 6;
 }
@@ -1199,7 +1199,7 @@ Fix12i dBgW_Kc::GetOctreeOriginY() const
    units, hence the `lsl #12` against the origin's `lsl #6`. The name is the
    ROM's own, so it is kept rather than renamed to what the arithmetic
    suggests. */
-Fix12i dBgW_Kc::GetUnkOctreeY() const
+fx32 dBgW_Kc::GetUnkOctreeY() const
 {
     return (kclFile->origin.y << 6) + (~kclFile->yMask << 12);
 }

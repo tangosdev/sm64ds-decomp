@@ -47,7 +47,7 @@ dBgCh_Actr::~dBgCh_Actr()
 {
 }
 
-void dBgCh_Actr::Init(dActor_c *actor, Fix12i radius, Fix12i height, Vector3_16 *a, Vector3_16 *b) {
+void dBgCh_Actr::Init(dActor_c *actor, fx32 radius, fx32 height, Vector3_16 *a, Vector3_16 *b) {
     mActor = actor;
     mRadius = radius;
     mHeight = height;
@@ -908,7 +908,7 @@ void dBgCh_Actr::StopIgnoringType14Walls() {
     mSphereClsn.StopIgnoringType14Walls();
 }
 
-void func_02035798(dBgCh_Actr *self, Fix12i maxNormalY) {
+void func_02035798(dBgCh_Actr *self, fx32 maxNormalY) {
     self->mMaxNormalY = maxNormalY;
 }
 
@@ -984,11 +984,11 @@ s32 dBgCh_Actr::GetLimMovFlag() const
     return mFlags & 0x80;
 }
 
-void dBgCh_Actr::SetRadius(Fix12i radius) {
+void dBgCh_Actr::SetRadius(fx32 radius) {
     mRadius = radius;
 }
 
-void dBgCh_Actr::SetHeight(Fix12i height) {
+void dBgCh_Actr::SetHeight(fx32 height) {
     mHeight = height;
 }
 
