@@ -73,7 +73,8 @@ struct dScMgPachinko_ball {
 typedef char dScMgPachinko_ball_size_must_be_0x38[sizeof(struct dScMgPachinko_ball) == 0x38 ? 1 : -1];
 #endif
 
-/* One ball being aimed with the stylus, 0x38 bytes, at 0x4ed8. */
+/* One Bob-omb shot, aimed with the stylus and fired up the board: 0x38 bytes,
+   48 of them at 0x4ed8 (mShot). */
 struct dScMgPachinko_shot {
     s32 x;              /* 0x00 */
     s32 y;              /* 0x04 */
@@ -347,7 +348,8 @@ struct dScMgPachinko_c : dScMgBase_c {
                     by DrawAimLine, cleared by ClearAimLine */
     u8 mUnused5c30; /* 0x5c30 -- ResetRound and CheckTargetsLeft (time up) clear it;
                     nothing reads it */
-    u8 unk_5c31; /* 0x5c31 */
+    u8 mUnused5c31; /* 0x5c31 -- ResetRound and BobOmb_StateAim (on a launch)
+                       clear it; nothing reads it */
     u8 mPlayStarted; /* 0x5c32 -- latched from 0 to 1 by CountLaunch on the
                         first play-phase frame Behavior runs it (Behavior skips it
                         while mHitPause is set); ResetRound
