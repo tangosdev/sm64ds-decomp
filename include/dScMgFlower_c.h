@@ -84,7 +84,7 @@
 #include "FlowerFace.h"
 
 struct dScMgFlower_c : dScMgSingle3DBase_c {
-    /* The 2-vector value type the petal setup swaps through (Fix12 x, y --
+    /* The 2-vector value type the petal setup swaps through (fx32 x, y --
        the same pair func_0203d388 rotates in place). THE EMPTY DESTRUCTOR IS
        LOAD-BEARING, for the reason types.h gives Vector3 one: a local of this
        type keeps an 8-byte stack home even though every copy through it goes
@@ -147,7 +147,7 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
         u8 released;     /* 0x01, detached from the flower */
         u8 held;         /* 0x02, follows the stylus */
         u8 counted;      /* 0x03, pull already counted in the round */
-        s32 x;           /* 0x04, Fix12 screen position */
+        s32 x;           /* 0x04, fx32 screen position */
         s32 y;           /* 0x08 */
         s32 driftX;      /* 0x0c */
         s32 fallSpeed;   /* 0x10 */
@@ -160,7 +160,7 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
     FlowerFace mFace;   /* 0x51f8 -- Yoshi and the falling petals; the
                               FlowerFace_* helpers take its address */
     u8 pad_5fa4[0x14];  /* 0x5fa4 -- untouched up to mCursorX */
-    s32 mCursorX;       /* 0x5fb8 -- Fix12 stylus position, from the touch
+    s32 mCursorX;       /* 0x5fb8 -- fx32 stylus position, from the touch
                               sample gTouchX/gTouchY << 12 */
     s32 mCursorY;       /* 0x5fbc */
     s32 mPrevCursorX;   /* 0x5fc0 -- last tick's mCursor; the drag delta */

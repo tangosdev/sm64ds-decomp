@@ -11,12 +11,7 @@
  */
 
 // leftovers:
-// - Particle::System::New / SetSelfDestructFlag, dExtAnmModel_c::SetAnim,
-//   dBgCh_Actr::Init, dActor_c::IsTooFarAwayFromPlayer, daPly_c::Bounce /
-//   Hurt and Particle::RunningSlidingDustAt stay mangled. Each passes Fix12<int>
-//   by value (notes/mwccarm-codegen.md 6az), or the header declaration
-//   does not mangle to the ROM symbol. func_0201267c is the bank-3
-//   Sound::Play wrapper.
+// - func_0201267c is the bank-3 Sound::Play wrapper.
 // - GetFloorResult is still called through its local extern (the wall
 //   lookup uses the dBgCh_Actr method). Deleting that prototype shifts the
 //   static initializer's @NNN temps, which the intact-object manifest pins
@@ -88,8 +83,6 @@ extern "C" int d_a_nknkNewHold(u32 uniqueID, u32 effectID, s32 x, s32 y, s32 z, 
                                void *callback);
 extern NknkAnimationFileHandle *data_ov062_0211cee8[];
 extern int data_ov062_0211cf0c[];
-/* The called scalar definition takes u16 startFrame. The unused dExtAnmModel_c
- * member declaration takes Fix12<int>/u32; its measured form grew this helper. */
 /* Reconstructed receiver/attacker/nullable collision interface; the original
  * source prototype is not uniquely recoverable from the register traffic. */
 extern "C" struct Aea30C;
@@ -765,10 +758,6 @@ void daNknk_c::func_ov062_02118058() {
     SetAnimByIndex(3);
 }
 
-/* Signature deliberately copied from the local declaration above: the
-   ROM name carries by-value class parameters (e.g. Fix12<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 void daNknk_c::SlideToStop(int a1) {
     int r = mWithMeshClsn.IsOnGround();
     if (r == 0) return;

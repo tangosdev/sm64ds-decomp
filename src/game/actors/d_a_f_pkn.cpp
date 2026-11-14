@@ -20,8 +20,6 @@
  * and RTTI.
  */
 /* leftovers:
- * - daPly_c::Hurt / Bounce stay mangled. Each takes Fix12<int> by value
- *   and the member spelling of those calls stops matching.
  * - CheckClsnHits, StateGrow and StateSpit keep their int locals and
  *   gotos. The direct spelling at each of those sites stops matching.
  * - mFlags bit 0x10000000 and the sound ids stay numeric. They are named
@@ -113,8 +111,6 @@ extern "C" void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern "C" int *Vec3_LslInPlace(void *v, int sh);
 extern "C" void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
 
-/* Called by their mangled names: each carries a Fix12<int> by value and
-   the member spelling DIFFs. */
 extern "C" u32 d_a_f_pknNewHold(u32 a, u32 b, fx32 c, fx32 d, fx32 e, const void *f, void *g);
 
 extern SharedFilePtr data_ov084_02130dfc;   /* the plant's model */
@@ -729,7 +725,6 @@ int daFPkn_c::InitResources()
     dExtSimpleModel_c::LoadFile(data_ov002_0210da38);
     LoadBlueCoinModel();
 
-    /* A real SetAnim call with a Fix12<int> speed DIFFs; see the file header. */
     mAnmModel.SetAnim((BCA_File *)data_ov084_02130df4.filePtr, 0x40000000, 0x1000, 0);
 
     mdCcAc_c.Init(this, 0, 0, 0x200001, HIT_DAMAGE & ~HIT_MEGA_CHARACTER);

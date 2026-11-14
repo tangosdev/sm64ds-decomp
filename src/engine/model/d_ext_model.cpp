@@ -705,13 +705,7 @@ int dExtShadowModel_c::InitCylinder() {
     return SetFile(&data_ov001_020ad560, 1, -1);
 }
 
-/* MEASURED 2026-10-26: a real method reproduces 0x02015e64/0x58 exactly. The
- * old note here said the definition had to stay in the C front end because
- * wall 6az homes class-typed by-value parameters -- but the by-value class was
- * never in the ROM. The stripped cartridge carries no _Z strings at all, so
- * the 5Fix12IiE in the old symbol was OUR spelling of a 20.12 scalar, and
- * nothing about the bytes asked for it. Scalars, a real method, same bytes.
- */
+/* Reproduces 0x02015e64/0x58; the three scales are fx32 scalars. */
 void dExtShadowModel_c::InitModel(Matrix4x3 *m, fx32 sx, fx32 sy, fx32 sz, u8 opacity) {
     mat = m;
     scale.x = sx;

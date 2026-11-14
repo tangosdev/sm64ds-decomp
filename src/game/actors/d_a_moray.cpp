@@ -12,9 +12,6 @@
  * common.h stays first: the pose reads Matrix4x3 words m[9], m[10], m[11].
  *
  * leftovers:
- * - dExtBlendAnmModel_c::SetAnim, dCcAcPos_c::Init, ApproachLinear and
- *   dActor_c::SetRanges stay scalar Fix12 externs. The member forms
- *   grow the callers (02111718, InitResources, 02111758).
  * - currFrame >> 12 instead of the << 4 >> 16 shift shrinks 02111758
  *   and moves its pool off data_020a0e68.
  * - GetNode writes node 0 onto mPos, then node 1 over it. Filling a

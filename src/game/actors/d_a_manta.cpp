@@ -22,7 +22,6 @@
  *   Dropping it loses the reload of dActor_c's z speed.
  * - Matrix4x3 stays decl_common.h's flat s32[12].
  *   UpdateModelAndRingPos indexes .m. common.h must not replace it.
- * - daPly_c::Hurt stays mangled (Fix12 by value).
  */
 
 #pragma defer_codegen off

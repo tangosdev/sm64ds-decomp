@@ -11,7 +11,7 @@
  * filled in by ov073's sinit (__sinit_ov073_02122874). The pairs below were
  * read off that sinit; the descriptions are what the handlers do, and the
  * labels are mine -- the cartridge's names for these states are not recovered.
- * (Fix12: 0x1000 = 1.0; angles: 0x10000 = a full turn.)
+ * (fx32: 0x1000 = 1.0; angles: 0x10000 = a full turn.)
  *
  *   record     enter     update    what the pair does
  *   ---------  --------  --------  ---------------------------------------
@@ -76,10 +76,6 @@
  *   pointer-to-member shape from completeness). ChiefChilly_ChangeState
  *   takes C*. The sixteen state labels are descriptions; the sinit owns
  *   the records. The header's 0x504 size wrap stays.
- * - dExtBlendAnmModel_c::SetAnim, Particle::System::New / NewSimple,
- *   RunningSlidingDustAt, daPly_c::Hurt, Sound::ChangeMusicVolume and
- *   DropShadowRadHeight stay mangled (Fix12<int> by value).
- *   NewSimple and the layer-3 sound calls retain their local declarations.
  * - Vec3_* / Matrix4x3_* have no shared header this TU
  *   can include alone. gCamera, data_020a0e68 and data_0209e650 are arm9
  *   globals. data_ov002_0210da30 is ov002's; Cleanup only Releases it.
@@ -264,7 +260,7 @@ daKing_Donketu_c::~daKing_Donketu_c()
 }
 
 /* The 0x77 / 0x78 effects the cut scenes and the defeat keep alive each frame. The point is
-   mPos with y raised by 30.0 * the scale (mScaleX is Fix12, so the 0x1e000
+   mPos with y raised by 30.0 * the scale (mScaleX is fx32, so the 0x1e000
    constant shrinks with the boss) and x/z moved 200.0 (0xc8000) along
    mPrevAngleY. Particle systems 0x77 and 0x78 are renewed there (ids kept in
    mParticleId0/1), and the emitRadius of each is set to 20.0 * the scale. The
@@ -1129,7 +1125,7 @@ int daKing_Donketu_c::func_ov073_021208e4() {
    saved miss position (mEdgePos) along mAngleY + 0x8000, at 20.0 (0x14000)
    a frame; mAngleY becomes the angle to mSpawnPos, mPrevAngleY that + 0x8000.
    mStateScratch advances 0x500 a frame and mAngleX approaches mStateParam times
-   the sine of it (Fix12) by 0x400. Then,
+   the sine of it (fx16) by 0x400. Then,
    when HandleHit returns nonzero (the boss took a hit or, in this
    state, hurt the player) the state becomes ..33f0. */
 int daKing_Donketu_c::UpdateEdgeWobble() {

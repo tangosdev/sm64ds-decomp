@@ -102,7 +102,7 @@ struct dScMgJump_c : dScMgD3DBase_c {
     struct StatePmf { s32 w[2]; };
     StatePmf mState;      /* 0x5004 -- current state pair */
     s32   mAccum;          /* 0x500c -- gains mAccumStep >> 12 a tick */
-    s32   mAccumStep;      /* 0x5010 -- Fix12 */
+    s32   mAccumStep;      /* 0x5010 -- fx32 */
     s16   mStateTimer;     /* 0x5014 -- countdown to the state change */
     u8    pad_5016[0x6];   /* 0x5016 */
     dExtSimpleModel_c mModel;     /* 0x501c -- 0x50, destroyed last, see banner */

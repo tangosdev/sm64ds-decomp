@@ -30,7 +30,7 @@ typedef struct Vec3Words {
  * func_ov007_020b1fa4, the camera preset), with no role to name.
  *
  * Codegen note: `r7val = v - 2; divisor = 0x28;` must be assigned BEFORE the
- * Fix12 store block (the compiler sinks both defs to the block exit, ahead of
+ * fx32 store block (the compiler sinks both defs to the block exit, ahead of
  * the predicated flag write); assigning them after the block instead lands the
  * movge first and rotates the block's coloring.
  */

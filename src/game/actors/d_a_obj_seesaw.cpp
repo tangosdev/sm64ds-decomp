@@ -74,7 +74,7 @@ enum { kFlagOffScreen = 8 };
 /* ±45 degrees in the angle units (full circle 0x10000). */
 enum { kMaxPitch = 0x2000 };
 
-/* Fix12 2.0. Mega ground pounds use this instead of the character scale. */
+/* fx32 2.0. Mega ground pounds use this instead of the character scale. */
 enum { kMegaPoundScale = 0x2000 };
 
 /* PlayLong bank-3 id while |mAngleXSpeed| > 0xa. */

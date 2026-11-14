@@ -21,7 +21,7 @@
  * daSoundObj_c, dBgCh_Gnd and dBgCh_Actr instead of offset arithmetic, and each
  * function says what it does.
  *
- * Units: positions, speeds and scales are Fix12 (0x1000 = 1.0; the comments
+ * Units: positions, speeds and scales are fx32 (0x1000 = 1.0; the comments
  * give decimal values); angles are s16 (0x10000 = a full turn); a model or
  * shadow matrix takes the position >> 3. Hit-flag bits and sound ids stay
  * numbers; the sound calls are func_02012694 (positional, bank 3) and
@@ -38,8 +38,8 @@
  *   output vector, not the star.
  * - Still unnamed: the dActor_c word at +0xc8 and the halfword at
  *   data_02082714 + 0x56, which lands mid-word in an untyped arm9 table.
- * - Fix12-by-value callees stay as mangled extern "C" names, and `this`
- *   goes to some externs as (char *)this to keep their declared signatures.
+ * - `this` goes to LinkSilverStarAndStarMarker as (char *)this to keep its
+ *   declared signature.
  * - The Kind names are numbers (KIND_n): only what the code evidences is
  *   said about each one.
  * Methods are named for what their bodies do (and, for the State handlers and the

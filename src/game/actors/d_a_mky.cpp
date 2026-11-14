@@ -15,10 +15,6 @@
  *   pointer-to-member records at 0x02115ac8, EnterState0..10 store
  *   mState. The other eleven are the ticks. Helpers those ticks call
  *   take the same Ukiki, so they are methods too.
- * - Shared animation/collision/scalar declarations retain their current
- *   reconstructed Fix12<int> spellings. Genuine scalar definitions and
- *   callers match in separate experiments; canonical shared migration
- *   remains pending, rather than an inherent compiler limitation.
  * - func_0201267c and PlayBank3 are the bank-3 wrappers.
  *   func_02012790 is Sound::Play2D(2, id). func_020383f0 and
  *   dBgCh_Actr_UpdateContinuous_Veneer are the tail-call veneers the
@@ -1176,11 +1172,6 @@ int daMky_c::func_ov030_021136b0()
 }
 int daMky_c::EnterState3()
 {
-    /* The scalar ABI binding is retained: the
-       ROM name carries by-value class parameters (e.g. Fix12<int>), which
-       mwccarm passes differently at the call site, so declaring the true
-       types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-
     extern MkyAnimFilePtr gMonkeyHoldAnimationFile;
     this->mAnmModel.SetAnim((BCA_File *)gMonkeyHoldAnimationFile.filePtr, 0, 0x1000, 0);
     this->mAnmModel.speed = 0x1000;

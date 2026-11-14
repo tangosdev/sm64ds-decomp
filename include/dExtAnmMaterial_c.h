@@ -28,8 +28,7 @@
  * identically, so the symbol is unchanged.
  * SetFile is a real member under its scalar mangling: speed is an fx32
  * and startFrame a u16. Measured against the ROM body, a u32 startFrame
- * adds a truncation (0x5c, not 0x54) and Fix12<int> by value spills it
- * through the stack (0x6c); the sibling dExtAnmTexPat_c::SetFile is the
+ * adds a truncation (0x5c, not 0x54); the sibling dExtAnmTexPat_c::SetFile is the
  * same body under the same spelling.
  */
 

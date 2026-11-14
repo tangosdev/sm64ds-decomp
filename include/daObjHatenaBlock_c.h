@@ -23,7 +23,7 @@ struct daObjHatenaBlock_c : dBgActor_c {
        by UpdateDropShadow. DropShadowScaleXYZ takes this pairing. 0x3ac + 0x30 = 0x3dc. */
     Matrix4x3 mShadowMat;             /* 0x3ac */
     /* Bounce squash Y added onto mPosY when writing the model/collider
-       translation (UpdateModelMatrix / 02149e38 / 021498e0). Fix12:
+       translation (UpdateModelMatrix / 02149e38 / 021498e0). fx32:
        0x1000 = 1 unit. */
     s32 mBounceYOffs;                 /* 0x3dc */
     s32 mHomePosY;                    /* 0x3e0 -- mPosY at InitResources; Behavior clamps mPosY up to it after UpdatePos (not while POPPED) */

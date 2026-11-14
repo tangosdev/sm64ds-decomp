@@ -62,15 +62,6 @@ bool PlaySub(u32, u32, u32, int, bool);
 /* ground probe / collision */
 int SurfaceInfo_TestFlag0x20(int *);
 
-/* dActor_c / dEnemyBase_c, reached by their ROM names.
-   dActor_c::ClosestPlayer and dActor_c::FindWithID are deliberately NOT here:
-   both are declared members whose recovered signatures carry no by-value class
-   parameter, so this TU calls them as members and lets the compiler produce the
-   symbol. Everything else keeps the mangled spelling its legacy file matched
-   under, because DropShadowRadHeight and Spawn take Fix12<int> and s8/s16 BY
-   VALUE in their real declarations and mwccarm passes those differently at the
-   call site. */
-
 /* daPly_c / Message / Sound / SaveData */
 /* The return type is load-bearing: StateTalkMain tests it in an `if`, so the
    `void` spelling three of the four legacy files used cannot be the one. */

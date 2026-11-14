@@ -20,7 +20,7 @@
 /* The banner that drops in at the start of a round (func_ov006_02104a84
    and its state table sPanelBannerStateTable). */
 struct dScMgPanel_Banner {
-    s32 x;      /* +0x00 -- Fix12 */
+    s32 x;      /* +0x00 -- fx32 */
     s32 y;      /* +0x04 */
     u16 timer;  /* +0x08 */
     u16 hold;   /* +0x0a */
@@ -59,7 +59,7 @@ struct dScMgPanel_Scroll {
 
 /* One of the 64 debris particles (Particle_UpdateAll steps them). */
 struct dScMgPanel_Particle {
-    s32 x;      /* +0x00 -- Fix12 */
+    s32 x;      /* +0x00 -- fx32 */
     s32 y;      /* +0x04 */
     s32 vx;     /* +0x08 */
     s32 vy;     /* +0x0c */
@@ -88,7 +88,7 @@ struct dScMgPanel_c : dScMgBase_c {
     virtual void StartRound(int arg); /* slot 18 */
 
     /* Intro card slides in on mSlide, then holds. */
-    s32 mSlide;    /* 0x4660 Fix12 */
+    s32 mSlide;    /* 0x4660 fx32 */
     s32 mSlideY;   /* 0x4664 */
     s32 mSlideVel; /* 0x4668 */
     s32 unk_466c;  /* 0x466c only ever written 0, by ResetRound */
@@ -109,8 +109,8 @@ struct dScMgPanel_c : dScMgBase_c {
     s32 mCount;                           /* 0x4cb8 panel count, mWidth * mWidth */
     s32 mWidth;                           /* 0x4cbc grid width */
     s32 mFlips;                           /* 0x4cc0 how many panels the deal flips */
-    s32 mX[0x24];                         /* 0x4cc4 panel x, Fix12 */
-    s32 mY[0x24];                         /* 0x4d54 panel y, Fix12 */
+    s32 mX[0x24];                         /* 0x4cc4 panel x, fx32 */
+    s32 mY[0x24];                         /* 0x4d54 panel y, fx32 */
     /* ScramblePanels' last alt-variant pick (0..0xe); a reroll avoids
        dealing the same one twice. */
     s32 mLastPuzzle; /* 0x4de4 */

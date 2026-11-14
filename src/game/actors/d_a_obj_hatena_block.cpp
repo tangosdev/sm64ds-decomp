@@ -53,17 +53,6 @@
  *   OnAttacked1 / OnHitFromUnderneath keep their valueless nested-if exits;
  *   C++ rejects a valueless return in a non-void function.
  *
- * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS:
- *
- *   (a) Fix12<int> passed by value (notes/mwccarm-codegen.md 6az). A
- *       method call homes the argument and the bytes move: dExtAnmModel_c::SetAnim and
- *       dBgW_KcMbg::SetFile (InitResources), dBgActor_c::IsClsnInRange
- *       (Behavior), dActor_c::DropShadowScaleXYZ (UpdateDropShadow),
- *       Particle::System::NewSimple (also absent from Particle.h).
- *
- *   (b) No usable declaration: dActor_c::Earthquake is not on dActor_c.h
- *       (EnterBouncing).
- *
  * Known limits:
  *   The helpers carry role names (symbols/actor_renames.tsv records the evidence for each);
  *   func_ov102_02149684 keeps its address. All take the block as arg0 and are declared as members on
@@ -611,7 +600,7 @@ void daObjHatenaBlock_c::UpdateModelMatrix() {
  * at least 0x1000 (1 unit).
  *   horizontal shadow scale = 0xb4000 (180 units) - height * 0x180 / 0x1000
  *                   (about 0.094 * height), at least 0xa000 (10 units), then
- *                   times mScaleX (a Fix12 multiply)
+ *                   times mScaleX (an fx32 multiply)
  *   shadow Y scale = height + 0x14000 (20 units)
  *   mClipOffsetY  = -(height + 0x14000) / 2 (signed divide by 2)
  *   mClipRadius   = max(height + 0x214000, 0x200000) / 16 (signed divide)
@@ -719,7 +708,7 @@ void daObjHatenaBlock_c::EnterBouncing() {
  *
  * While mBounceTimer is still counting down (DecIfAbove0_Short returns the
  * new value; non-zero means it has not reached 0), squash and stretch, with
- * s = sin(mBounceAng) as Fix12 from FX_SinCosTable_ (0x1000 = 1.0):
+ * s = sin(mBounceAng) as fx16 from FX_SinCosTable_ (0x1000 = 1.0):
  *   mScaleY       = (1 + s) * 0x999/0x1000 + 0x666/0x1000
  *                 = 0.4 + 0.6 * (1 + s)
  *   mScaleX, Z    = (1 - s) + 1.0

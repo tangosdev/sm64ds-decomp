@@ -122,7 +122,7 @@ void LoadSimpleObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
 }
 
 /* One actor per standard object entry. Each StandardEntry is 0x10 bytes: raw id
- * index into sObjToActorIdTable, s16 position (shifted left by 12 into Fix12),
+ * index into sObjToActorIdTable, s16 position (shifted left by 12 into fx32),
  * Vector3s rotation, u16 param. Each spawn takes the next death-table ID. The
  * third parameter is part of the shared loader signature and unused here. */
 void LoadStandardObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {

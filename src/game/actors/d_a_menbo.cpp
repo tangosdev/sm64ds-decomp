@@ -31,9 +31,6 @@
  * deslop leftovers:
  * - func_ov090_02131ac4: `mStateTimer == 0` is ldrsh. The ROM is ldrh, one
  *   word. `*(unsigned short *)&mStateTimer` matches.
- * - func_ov090_02131608: dExtAnmModel_c::SetAnim with a Fix12<int> rate is 0x4c
- *   against 0x40 and emits 4 bytes of .rodata. The scalar SetAnim call
- *   matches. The patrol, water-rest and water-chase entries keep it.
  */
 
 #pragma defer_codegen off

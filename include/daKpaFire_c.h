@@ -30,7 +30,7 @@
  *   mSubVariant     (param1 >> 4) & 3, a sub-selector several variants read: it
  *                   indexes the terminal-velocity and particle-id tables and
  *                   switches speeds and spawn choices.
- *   mFireScale      Fix12 size of the fire (0x1000 = 1.0). It is the particle
+ *   mFireScale      fx32 size of the fire (0x1000 = 1.0). It is the particle
  *                   scale and, times mShadowRadiusMul, the shadow radius.
  *   mKpaUniqueID    uniqueID of a daKpa_c (actor id 0x117), zero from
  *                   InitResources. daKpa_c's own spawn code writes its uniqueID
@@ -82,7 +82,7 @@ struct daKpaFire_c : dEnemyBase_c {
     dExtShadowModel_c mShadowModel; /* 0x304 */
     u8 mShadowMat[0x30];            /* 0x32c -- shadow Matrix4x3 storage */
     s32 mVariant;                   /* 0x35c */
-    s32 mFireScale;                 /* 0x360 -- Fix12 */
+    s32 mFireScale;                 /* 0x360 -- fx32 */
     s32 mGroundY;                   /* 0x364 */
     s32 mShadowRadiusMul;           /* 0x368 -- integer multiplier; handlers store 0x10 */
     s32 mLanded;                    /* 0x36c */
