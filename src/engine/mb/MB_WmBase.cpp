@@ -65,6 +65,8 @@
  * push/pop around RecordScannedParent and its caller, it changes nothing. */
 #pragma always_inline on
 
+extern "C" {
+
 /* sDmaNo, sWmWork and sScanParam; mbc and pPwork are mb_parent's
  * (private/arm9_a9db8_mb_parent.h). */
 extern u16 data_020a9db0;
@@ -88,12 +90,11 @@ extern u16 *data_0209a084;
 typedef struct {
     u16 w[0x40];
 } GameInfo;
-extern "C" {
+
 
 extern void OS_GetMacAddress(unsigned char *macAddress);
 
 extern void MB_InitSendGameInfoStatus(void);
-}
 
 void MBi_CheckWmErrcode(int apiid, int errcode);
 int MBi_CommEnd(void);
@@ -911,4 +912,5 @@ void MBi_CheckWmErrcode(int apiid, int errcode) {
     p.apiid = apiid;
     p.errcode = errcode;
     WM_WORK->userCallback(0xff, &p);
+}
 }

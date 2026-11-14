@@ -158,8 +158,8 @@ struct Vector3_16;
 struct dCc_c;
 
 void func_02012694(unsigned int, const Vector3 *);
-int Vec3_HorzLen(const Vector3 *v);
-short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+extern "C" int Vec3_HorzLen(const Vector3 *v);
+extern "C" short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 void LoadSilverStarAndNumber();
 void UnloadSilverStarAndNumber();
 extern "C" {

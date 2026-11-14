@@ -75,10 +75,12 @@ enum ChairSfxId {
 /* local extern: arm9 C helpers with no shared header yet. Vec3_Sub takes the
    shared Vector3 interface; this TU keeps NitroSDK VecFx32 views. VEC_Add
    also takes Vector3 (math/CalcLib.h declares it). */
+extern "C" {
+void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
+void VEC_Add(Vector3 *dst, Vector3 *add, Vector3 *src);
+int AngleDiff(int a, int b);
+}
 
-extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern "C" void VEC_Add(Vector3 *dst, Vector3 *add, Vector3 *src);
-extern "C" int AngleDiff(int a, int b);
 
 /* CHAIR registry factory. */
 daChair_c *daChair_c_classInit(void) {

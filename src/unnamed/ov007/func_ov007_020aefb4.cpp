@@ -8,7 +8,7 @@ extern int PickerScene_IsIdle(void);
 extern void func_ov007_020af260(int, int, int *, int *);
 extern Ov007MenuState *PickerScene_GetScaleAnimState(void);
 extern Ov007MenuState *PickerScene_GetMoveAnimState(void);
-void PickerScene_Update(void);
+extern "C" void PickerScene_Update(void);
 
 typedef char
     Ov007Work_itemNodes_must_be_at_0xa4[(int)&((Ov007Work *)0)->itemNodes == 0xa4 ? 1 : -1];

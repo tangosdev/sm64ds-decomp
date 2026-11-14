@@ -62,8 +62,8 @@ void PXI_InitFifo(void) {
             FifoRecvCallbackTable[i] = NULL;
         }
 
-        _Z17OS_SetIrqFunctionjPFvvE(OS_IE_SPFIFO_RECV, PXIi_HandlerRecvFifoNotEmpty);
-        _Z16OS_EnableIrqMaskj(OS_IE_SPFIFO_RECV);
+        OS_SetIrqFunction(OS_IE_SPFIFO_RECV, PXIi_HandlerRecvFifoNotEmpty);
+        OS_EnableIrqMask(OS_IE_SPFIFO_RECV);
 
         reg_PXI_FIFO_CNT = (REG_PXI_FIFO_CNT_SEND_CL_MASK | REG_PXI_FIFO_CNT_RECV_RI_MASK |
                             REG_PXI_FIFO_CNT_E_MASK | REG_PXI_FIFO_CNT_ERR_MASK);

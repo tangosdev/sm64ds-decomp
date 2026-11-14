@@ -12,7 +12,6 @@ extern "C" {
 
 void func_02060364(int type);
 void func_020607e8(CARDiCommon *p);
-}
 
 void CARD_IdentifyBackup(int type) {
     CARDiCommon *const p = &cardi_common;
@@ -30,4 +29,5 @@ void CARD_IdentifyBackup(int type) {
     p->callback_arg = 0;
     cardi_common.cur_th = OSi_ThreadInfo.current;
     func_020607e8(p);
+}
 }

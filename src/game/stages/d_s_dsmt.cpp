@@ -43,14 +43,7 @@
 #include "Sound.h"
 #include "SaveData.h"
 #include "Heap.h"
-/* decl_common's C++ line would mangle (int, void *, int, void *). The
-   cartridge name is the one the C half of that header already spells, and
-   the calls keep that line's argument types. */
-#define func_02013c84 func_02013c84_hidden
 #include "decl_common.h"
-#undef func_02013c84
-extern "C" int _Z13func_02013c84hP12FileSaveDataiS0_(int, void *, int, void *);
-#define func_02013c84 _Z13func_02013c84hP12FileSaveDataiS0_
 #include "nitro/spi/tp.h"
 #include "Memory.h"
 #include "nitro/gx/gx.h"
@@ -59,6 +52,7 @@ extern "C" int _Z13func_02013c84hP12FileSaveDataiS0_(int, void *, int, void *);
 #include "math/CalcLib.h"
 #include "Ov007Settings.h"
 
+extern "C" {
 extern FileSaveData *data_0209b33c;
 extern u8 data_0209b34b[];
 extern u8 data_0209b34e[];
@@ -79,19 +73,20 @@ extern void *data_020a0ea0;
 extern int OVERLAY_100_ID;
 extern int OVERLAY_102_ID;
 
+void Enable3dEngines();
+int GetSoundMode(void);
+void SetSoundMode(int mode);
+void TurnBacklightOn(void);
+void TurnBacklightOff(void);
+}
 FileSaveData *DSMT_GetFileBuffer(int slot);
 void DSMT_SetFileBuffers(FileSaveData *files);
 int DSMT_SetPendingMusic(int musicId, unsigned int delayFrames);
 void DSMT_UpdateBootArgs(u32 saveSlot);
 int func_ov007_020b7090(u16 a0, u16 a1, u16 a2, u16 a3, int arg4);
 int func_ov007_020b6eb4(void);
-extern "C" void Enable3dEngines();
-extern "C" int GetSoundMode(void);
 int IsStarCollected(int course, int star);
 void StartMinigameMenu(u8 returnToRecRoom);
-extern "C" void SetSoundMode(int mode);
-extern "C" void TurnBacklightOn(void);
-extern "C" void TurnBacklightOff(void);
 
 /* data_0209b340 (decl_common.h's int[]) is the download-play table. */
 #define sBootArgs (*(Ov007BootArgs *)data_0209b340)
@@ -239,8 +234,7 @@ s32 dScDSMT_c::InitResources() {
     data_0208ee44 = 1;
     GX::DisableAllBanks();
     data_ov007_02103260 = -1;
-    func_ov007_020b7138((struct Ov007MenuHooks *)&data_ov007_02103290,
-                        (Ov007BootArgs *)data_0209b340);
+    func_ov007_020b7138(&data_ov007_02103290, data_0209b340);
     func_ov007_020b7090(0, 0, 0, 0, 0);
     Sound::LoadInitialGroup(2);
     return 1;
@@ -306,7 +300,7 @@ s32 dScDSMT_c::Behavior() {
 
 /* Render: forward to the overlay's draw routine. */
 s32 dScDSMT_c::Render() {
-    func_ov007_020b7040();
+    func_ov007_020b7040(this);
     return 1;
 }
 
@@ -382,7 +376,9 @@ FileSaveData *DSMT_GetFileBuffer(int slot) {
     return &data_0209b33c[slot];
 }
 
+extern "C" {
 /* Behavior consumes a nonnegative pending music ID after the delay; -1 is idle.
  * Keep the configured identity while its shared declaration is reserved. */
 int data_ov007_02103260 = -1;
 BaseSpawnInfo<dScDSMT_c> g_profile_DSMT = {dScDSMT_c_classInit, 1, 3};
+}

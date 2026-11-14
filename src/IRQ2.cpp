@@ -24,18 +24,16 @@
 #include "nitro/os/interrupt_check.h"
 #include "nitro/os/thread.h"
 
+extern "C" {
 extern int data_0209d514;
 extern int data_0208ee44;
 extern u8 data_0209d4f0;
 extern u16 data_0209d500;
 extern u16 data_0209d4fc;
-extern void func_02019144(void);
-extern "C" {
-
 extern void func_02019100(void);
-}
-
 extern u8 data_0209d4dc;
+}
+extern void func_02019144(void);
 
 // 0x0201a534 (0x98)
 namespace IRQ {
@@ -56,7 +54,8 @@ void VBlankHandler(void) {
 }
 
 // 0x0201a4e4 (0x50)
-void func_0201a4e4(void) {
+void func_0201a4e4(void)
+{
     data_0209d4fc = 0;
     data_0209d500 = 0;
     OS_SetIrqFunction(OS_IE_V_BLANK, IRQ::VBlankHandler);
@@ -65,13 +64,13 @@ void func_0201a4e4(void) {
 
 // 0x0201a4d0 (0x14)
 /* Sleep until the next VBlank. */
-void func_0201a4d0(void) {
+extern "C" void func_0201a4d0(void) {
     OS_SleepThread(&data_0209d4fc);
 }
 
 // 0x0201a4bc (0x14)
 /* The main loops' frame wait (func_020197b8 and func_020199a4 raise
  * data_0209d4f0 around it). */
-void func_0201a4bc(void) {
+extern "C" void func_0201a4bc(void) {
     OS_SleepThread(&data_0209d500);
 }

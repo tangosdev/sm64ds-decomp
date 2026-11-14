@@ -72,7 +72,7 @@ daObjClock_c *daObjClock_c_classInit_CLOCK_SHORT() {
 
 /* The two actor profiles. Source order is CLOCK_LONG (0x021121c0) then
  * CLOCK_SHORT (0x021121dc). */
-extern SpawnInfo<daObjClock_c> g_profile_CLOCK_LONG = {
+extern "C" SpawnInfo<daObjClock_c> g_profile_CLOCK_LONG = {
     daObjClock_c_classInit_CLOCK_LONG,
     ACTOR_CLOCK_LONG,
     0x00a3,
@@ -83,7 +83,7 @@ extern SpawnInfo<daObjClock_c> g_profile_CLOCK_LONG = {
     0x00640000,
 };
 
-extern SpawnInfo<daObjClock_c> g_profile_CLOCK_SHORT = {
+extern "C" SpawnInfo<daObjClock_c> g_profile_CLOCK_SHORT = {
     daObjClock_c_classInit_CLOCK_SHORT,
     ACTOR_CLOCK_SHORT,
     0x00a2,

@@ -94,8 +94,8 @@ extern "C" unsigned int d_a_choropuNewHold(unsigned int a, unsigned int b, int x
 typedef int BgchInitAt_(void *self, void *actor, int radius, int height, Vector3_16 *a,
                         Vector3_16 *b);
 extern "C" int RandomIntInternal(int *seed);
-short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-int   Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
+extern "C" short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+extern "C" int   Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern "C" void Matrix4x3_FromRotationY(void *m, int ang);
 void func_02012694(unsigned int a, const Vector3 *p);
 

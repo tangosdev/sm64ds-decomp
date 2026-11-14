@@ -23,287 +23,287 @@
   ],
   "functions": [
     {
-      "symbol": "_Z19GX_GetSizeOfTexPlttv",
+      "symbol": "GX_GetSizeOfTexPltt",
       "address": "0x02053e1c",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0205/func_02053e1c.c",
       "ordinal": 0
     },
     {
-      "symbol": "_Z15GX_GetSizeOfTexv",
+      "symbol": "GX_GetSizeOfTex",
       "address": "0x02053e34",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0205/func_02053e34.c",
       "ordinal": 1
     },
     {
-      "symbol": "_Z14GX_GetSizeOfX_i",
+      "symbol": "GX_GetSizeOfX_",
       "address": "0x02053e4c",
       "size": "0x00000054",
       "legacy_source": "src/unnamed/arm9/0205/func_02053e4c.c",
       "ordinal": 2
     },
     {
-      "symbol": "_Z19GX_GetBankForSubOBJv",
+      "symbol": "GX_GetBankForSubOBJ",
       "address": "0x02053ea0",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0205/func_02053ea0.c",
       "ordinal": 3
     },
     {
-      "symbol": "_Z18GX_GetBankForSubBGv",
+      "symbol": "GX_GetBankForSubBG",
       "address": "0x02053eb0",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0205/func_02053eb0.c",
       "ordinal": 4
     },
     {
-      "symbol": "_Z20GX_GetBankForTexPlttv",
+      "symbol": "GX_GetBankForTexPltt",
       "address": "0x02053ec0",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0205/func_02053ec0.c",
       "ordinal": 5
     },
     {
-      "symbol": "_Z16GX_GetBankForTexv",
+      "symbol": "GX_GetBankForTex",
       "address": "0x02053ed0",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0205/func_02053ed0.c",
       "ordinal": 6
     },
     {
-      "symbol": "_Z30GX_DisableBankForSubOBJExtPlttv",
+      "symbol": "GX_DisableBankForSubOBJExtPltt",
       "address": "0x02053ee0",
       "size": "0x00000028",
       "legacy_source": "src/unnamed/arm9/0205/func_02053ee0.c",
       "ordinal": 7
     },
     {
-      "symbol": "_Z29GX_DisableBankForSubBGExtPlttv",
+      "symbol": "GX_DisableBankForSubBGExtPltt",
       "address": "0x02053f08",
       "size": "0x00000028",
       "legacy_source": "src/unnamed/arm9/0205/func_02053f08.c",
       "ordinal": 8
     },
     {
-      "symbol": "_Z23GX_DisableBankForSubOBJv",
+      "symbol": "GX_DisableBankForSubOBJ",
       "address": "0x02053f30",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0205/func_02053f30.c",
       "ordinal": 9
     },
     {
-      "symbol": "_Z22GX_DisableBankForSubBGv",
+      "symbol": "GX_DisableBankForSubBG",
       "address": "0x02053f44",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0205/func_02053f44.c",
       "ordinal": 10
     },
     {
-      "symbol": "_Z21GX_DisableBankForLCDCv",
+      "symbol": "GX_DisableBankForLCDC",
       "address": "0x02053f58",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0205/func_02053f58.c",
       "ordinal": 11
     },
     {
-      "symbol": "_Z21GX_DisableBankForARM7v",
+      "symbol": "GX_DisableBankForARM7",
       "address": "0x02053f6c",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0205/func_02053f6c.c",
       "ordinal": 12
     },
     {
-      "symbol": "_Z27GX_DisableBankForClearImagev",
+      "symbol": "GX_DisableBankForClearImage",
       "address": "0x02053f80",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0205/func_02053f80.c",
       "ordinal": 13
     },
     {
-      "symbol": "_Z24GX_DisableBankForTexPlttv",
+      "symbol": "GX_DisableBankForTexPltt",
       "address": "0x02053f94",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0205/func_02053f94.c",
       "ordinal": 14
     },
     {
-      "symbol": "_Z20GX_DisableBankForTexv",
+      "symbol": "GX_DisableBankForTex",
       "address": "0x02053fa8",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0205/func_02053fa8.c",
       "ordinal": 15
     },
     {
-      "symbol": "_Z27GX_DisableBankForOBJExtPlttv",
+      "symbol": "GX_DisableBankForOBJExtPltt",
       "address": "0x02053fbc",
       "size": "0x00000024",
       "legacy_source": "src/unnamed/arm9/0205/func_02053fbc.c",
       "ordinal": 16
     },
     {
-      "symbol": "_Z26GX_DisableBankForBGExtPlttv",
+      "symbol": "GX_DisableBankForBGExtPltt",
       "address": "0x02053fe0",
       "size": "0x00000024",
       "legacy_source": "src/unnamed/arm9/0205/func_02053fe0.c",
       "ordinal": 17
     },
     {
-      "symbol": "_Z20GX_DisableBankForOBJv",
+      "symbol": "GX_DisableBankForOBJ",
       "address": "0x02054004",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0205/func_02054004.c",
       "ordinal": 18
     },
     {
-      "symbol": "_Z19GX_DisableBankForBGv",
+      "symbol": "GX_DisableBankForBG",
       "address": "0x02054018",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0205/func_02054018.c",
       "ordinal": 19
     },
     {
-      "symbol": "_Z16disableBankForX_Pt",
+      "symbol": "disableBankForX_",
       "address": "0x0205402c",
       "size": "0x000000c4",
       "legacy_source": "src/DisableVramBanks.c",
       "ordinal": 20
     },
     {
-      "symbol": "_Z28GX_ResetBankForSubOBJExtPlttv",
+      "symbol": "GX_ResetBankForSubOBJExtPltt",
       "address": "0x020540f0",
       "size": "0x00000028",
       "legacy_source": "src/unnamed/arm9/0205/func_020540f0.c",
       "ordinal": 21
     },
     {
-      "symbol": "_Z27GX_ResetBankForSubBGExtPlttv",
+      "symbol": "GX_ResetBankForSubBGExtPltt",
       "address": "0x02054118",
       "size": "0x00000028",
       "legacy_source": "src/unnamed/arm9/0205/func_02054118.c",
       "ordinal": 22
     },
     {
-      "symbol": "_Z21GX_ResetBankForSubOBJv",
+      "symbol": "GX_ResetBankForSubOBJ",
       "address": "0x02054140",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0205/func_02054140.c",
       "ordinal": 23
     },
     {
-      "symbol": "_Z20GX_ResetBankForSubBGv",
+      "symbol": "GX_ResetBankForSubBG",
       "address": "0x02054154",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0205/func_02054154.c",
       "ordinal": 24
     },
     {
-      "symbol": "_Z22GX_ResetBankForTexPlttv",
+      "symbol": "GX_ResetBankForTexPltt",
       "address": "0x02054168",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0205/func_02054168.c",
       "ordinal": 25
     },
     {
-      "symbol": "_Z18GX_ResetBankForTexv",
+      "symbol": "GX_ResetBankForTex",
       "address": "0x0205417c",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0205/func_0205417c.c",
       "ordinal": 26
     },
     {
-      "symbol": "_Z18GX_ResetBankForOBJv",
+      "symbol": "GX_ResetBankForOBJ",
       "address": "0x02054190",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0205/func_02054190.c",
       "ordinal": 27
     },
     {
-      "symbol": "_Z17GX_ResetBankForBGv",
+      "symbol": "GX_ResetBankForBG",
       "address": "0x020541a4",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0205/func_020541a4.c",
       "ordinal": 28
     },
     {
-      "symbol": "_Z14resetBankForX_Pt",
+      "symbol": "resetBankForX_",
       "address": "0x020541b8",
       "size": "0x00000038",
       "legacy_source": "src/unnamed/arm9/0205/func_020541b8.c",
       "ordinal": 29
     },
     {
-      "symbol": "_Z26GX_SetBankForSubOBJExtPltti",
+      "symbol": "GX_SetBankForSubOBJExtPltt",
       "address": "0x020541f0",
       "size": "0x0000008c",
       "legacy_source": "src/_ZN2GX23SetBankForSubOBJExtPlttEt.cpp",
       "ordinal": 30
     },
     {
-      "symbol": "_Z25GX_SetBankForSubBGExtPltti",
+      "symbol": "GX_SetBankForSubBGExtPltt",
       "address": "0x0205427c",
       "size": "0x0000008c",
       "legacy_source": "src/_ZN2GX22SetBankForSubBGExtPlttEt.cpp",
       "ordinal": 31
     },
     {
-      "symbol": "_Z19GX_SetBankForSubOBJi",
+      "symbol": "GX_SetBankForSubOBJ",
       "address": "0x02054308",
       "size": "0x0000007c",
       "legacy_source": "src/_ZN2GX16SetBankForSubOBJEt.cpp",
       "ordinal": 32
     },
     {
-      "symbol": "_Z18GX_SetBankForSubBGi",
+      "symbol": "GX_SetBankForSubBG",
       "address": "0x02054384",
       "size": "0x000000ac",
       "legacy_source": "src/_ZN2GX15SetBankForSubBGEt.cpp",
       "ordinal": 33
     },
     {
-      "symbol": "_Z17GX_SetBankForLCDCi",
+      "symbol": "GX_SetBankForLCDC",
       "address": "0x02054430",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0205/func_02054430.c",
       "ordinal": 34
     },
     {
-      "symbol": "_Z20GX_SetBankForTexPltti",
+      "symbol": "GX_SetBankForTexPltt",
       "address": "0x02054450",
       "size": "0x000000f4",
       "legacy_source": "src/_ZN2GX17SetBankForTexPlttEt.cpp",
       "ordinal": 35
     },
     {
-      "symbol": "_Z16GX_SetBankForTexi",
+      "symbol": "GX_SetBankForTex",
       "address": "0x02054544",
       "size": "0x00000204",
       "legacy_source": "src/_ZN2GX13SetBankForTexEt.cpp",
       "ordinal": 36
     },
     {
-      "symbol": "_Z22GX_SetBankForBGExtPltti",
+      "symbol": "GX_SetBankForBGExtPltt",
       "address": "0x02054748",
       "size": "0x00000114",
       "legacy_source": "src/unnamed/arm9/0205/func_02054748.c",
       "ordinal": 37
     },
     {
-      "symbol": "_Z16GX_SetBankForOBJi",
+      "symbol": "GX_SetBankForOBJ",
       "address": "0x0205485c",
       "size": "0x0000016c",
       "legacy_source": "src/_ZN2GX13SetBankForOBJEt.cpp",
       "ordinal": 38
     },
     {
-      "symbol": "_Z15GX_SetBankForBGi",
+      "symbol": "GX_SetBankForBG",
       "address": "0x020549c8",
       "size": "0x000002b8",
       "legacy_source": "src/_ZN2GX12SetBankForBGEt.cpp",
       "ordinal": 39
     },
     {
-      "symbol": "_Z19GX_VRAMCNT_SetLCDC_i",
+      "symbol": "GX_VRAMCNT_SetLCDC_",
       "address": "0x02054c80",
       "size": "0x000000b8",
       "legacy_source": "src/Vram__Map.c",

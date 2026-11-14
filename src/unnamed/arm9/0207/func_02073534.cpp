@@ -23,7 +23,8 @@ namespace std {
 void terminate();
 }
 
-void func_02073534(void *base, void *current, unsigned int size, dtor_t dtor) {
+extern "C" void func_02073534(void *base, void *current, unsigned int size, dtor_t dtor)
+{
     char *p = (char *)current;
     try {
         while (p > (char *)base) {

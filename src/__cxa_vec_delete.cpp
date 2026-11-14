@@ -1,7 +1,7 @@
 //cpp
 #include "MWCPlusLib.h"
 
-void func_02073300(void *block, unsigned int n, unsigned int size, dtor_t dtor);
+extern "C" void func_02073300(void *block, unsigned int n, unsigned int size, dtor_t dtor);
 
 /* The Itanium C++ ABI's __cxa_vec_delete(array, element_size,
    padding_size, destructor). The name is the compiler's: mwccarm compiles

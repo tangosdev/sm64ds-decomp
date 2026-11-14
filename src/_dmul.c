@@ -16,8 +16,8 @@
 // outside the body. The six eors after the pool are the fallthrough into func_01ff8e10.
 
 extern unsigned int *func_0207322c(void);
-extern double _Z13func_0206dd7cdi(double a, int op);
-extern double _Z13func_0206dcd4ddi(double a, double b, int op);
+extern double func_0206dd7c(double a, int op);
+extern double func_0206dcd4(double a, double b, int op);
 
 asm double _dmul(double a, double b)
 {
@@ -452,7 +452,7 @@ _L63c:
     add sp, sp, #0x10
     sub r1, r1, #0x60000000
     ldr r2, [pc, #0x94]
-    bl _Z13func_0206dd7cdi
+    bl func_0206dd7c
     ldmia sp!, {r4, r5, r6, r7, lr}
     bx lr
 _L654:
@@ -464,7 +464,7 @@ _L654:
     sub r12, r12, #0x600
     orr r1, r1, r12, lsl #20
     ldr r2, [pc, #0x68]
-    bl _Z13func_0206dd7cdi
+    bl func_0206dd7c
     ldmia sp!, {r4, r5, r6, r7, lr}
     bx lr
 _L680:
@@ -476,21 +476,21 @@ _L680:
     add r12, r12, #0x600
     orr r1, r1, r12, lsl #20
     ldr r2, [pc, #0x40]
-    bl _Z13func_0206dd7cdi
+    bl func_0206dd7c
     ldmia sp!, {r4, r5, r6, r7, lr}
     bx lr
 _L6ac:
     ldmia sp!, {r0, r1, r2, r3}
     ldr ip, [pc, #0x30]
     stmdb sp!, {r12}
-    bl _Z13func_0206dcd4ddi
+    bl func_0206dcd4
     add sp, sp, #4
     ldmia sp!, {r4, r5, r6, r7, lr}
     bx lr
 _L6c8:
     add sp, sp, #0x10
     ldr r2, [pc, #0x18]
-    bl _Z13func_0206dd7cdi
+    bl func_0206dd7c
     ldmia sp!, {r4, r5, r6, r7, lr}
     bx lr
 _pool7ff00000:

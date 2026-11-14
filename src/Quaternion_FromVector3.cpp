@@ -4,22 +4,17 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/CalcLib.h"
 
+extern "C" {
+
 /* Trivial 12-byte working storage. The vector routines take Vector3 pointers,
  * but making these locals Vector3 objects emits its inline destructor; cast
  * the same-layout buffers at those ABI boundaries to preserve the original
  * lifetime and code generation. */
-typedef struct {
-    int x, y, z;
-} Vec3;
-typedef struct {
-    int x, y, z, w;
-} Quat;
-extern "C" {
+typedef struct { int x, y, z; } Vec3;
+typedef struct { int x, y, z, w; } Quat;
 
 extern int NormalizeVec3IfNonZero(Vector3 *v);
 extern void func_0203cebc(Vector3 *out, Vector3 *p, Vector3 *q, Vector3 *r);
-}
-
 extern Quat data_02075b04;
 
 void Quaternion_FromVector3(Quat *out, Vector3 *a, Vector3 *b) {
@@ -61,4 +56,5 @@ void Quaternion_FromVector3(Quat *out, Vector3 *a, Vector3 *b) {
     out->y = data_02075b04.y;
     out->z = data_02075b04.z;
     out->w = data_02075b04.w;
+}
 }

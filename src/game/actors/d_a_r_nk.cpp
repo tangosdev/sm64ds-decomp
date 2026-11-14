@@ -171,7 +171,7 @@ extern "C" s16 atan2_hold_d_a_r_nk_1(int y, int x);
 /* This scalar entry follows its C definition, including u16 startFrame.
    dExtAnmModel_c.h instead declares u32; that shared contract is still unresolved. */
 /* Play2D(3, id): a sound with no position. */
-unsigned int func_0201277c(unsigned int id);
+extern "C" unsigned int func_0201277c(unsigned int id);
 extern signed char gCurrentSublevel; /* LEVEL_ID */
 extern u8 gShowRaceTimer;            /* nonzero: dMeter_c draws the race timer */
 extern "C" bool d_a_r_nkPlaySubHold(u32 a, u32 b, u32 c, int d, int e);

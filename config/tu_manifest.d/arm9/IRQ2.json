@@ -21,14 +21,14 @@
   ],
   "functions": [
     {
-      "symbol": "_Z13func_0201a4bcv",
+      "symbol": "func_0201a4bc",
       "address": "0x0201a4bc",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0201/func_0201a4bc.c",
       "ordinal": 0
     },
     {
-      "symbol": "_Z13func_0201a4d0v",
+      "symbol": "func_0201a4d0",
       "address": "0x0201a4d0",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0201/func_0201a4bc.c",

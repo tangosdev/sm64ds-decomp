@@ -45,16 +45,12 @@ static inline void MIi_CallCallback(MIDmaCallback callback, void *arg) {
         callback(arg);
 }
 
-/* BSS word. mwcc leaves the name unmangled. The host stub is C. */
-#if defined(_MSC_VER)
-extern "C"
-#endif
-    extern MIiGXDmaParams MIi_GXDmaParams;
 extern "C" {
+
+extern MIiGXDmaParams MIi_GXDmaParams;
 
 /* in ITCM */
 extern void MIi_DmaSetParams(u32 dmaNo, u32 src, u32 dest, u32 ctrl);
-}
 
 void MIi_FIFOCallback(void);
 void MIi_DMACallback(void *arg);
@@ -129,4 +125,5 @@ void MIi_DMACallback(void *arg) {
     MIi_GXDmaParams.isBusy = 0;
 
     MIi_CallCallback(MIi_GXDmaParams.callback, MIi_GXDmaParams.arg);
+}
 }

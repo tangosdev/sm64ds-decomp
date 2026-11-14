@@ -20,63 +20,63 @@
   ],
   "functions": [
     {
-      "symbol": "_Z17CARD_UnlockBackupt",
+      "symbol": "CARD_UnlockBackup",
       "address": "0x0205ff70",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0205/func_0205ff70.c",
       "ordinal": 0
     },
     {
-      "symbol": "_Z15CARD_LockBackupt",
+      "symbol": "CARD_LockBackup",
       "address": "0x0205ff80",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0205/func_0205ff80.c",
       "ordinal": 1
     },
     {
-      "symbol": "_Z14CARD_UnlockRomt",
+      "symbol": "CARD_UnlockRom",
       "address": "0x0205ff90",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0205/func_0205ff90.c",
       "ordinal": 2
     },
     {
-      "symbol": "_Z12CARD_LockRomt",
+      "symbol": "CARD_LockRom",
       "address": "0x0205ffb0",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0205/func_0205ffb0.c",
       "ordinal": 3
     },
     {
-      "symbol": "_Z15CARDi_WaitAsyncv",
+      "symbol": "CARDi_WaitAsync",
       "address": "0x0205ffd0",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/arm9/0205/func_0205ffd0.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "_Z16CARDi_InitCommonv",
+      "symbol": "CARDi_InitCommon",
       "address": "0x0206002c",
       "size": "0x000000b4",
       "legacy_source": "src/unnamed/arm9/0206/func_0206002c.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "_Z20CARDi_UnlockResourceii",
+      "symbol": "CARDi_UnlockResource",
       "address": "0x020600e0",
       "size": "0x000000a8",
       "legacy_source": "src/unnamed/arm9/0206/func_020600e0.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "_Z18CARDi_LockResourceii",
+      "symbol": "CARDi_LockResource",
       "address": "0x02060188",
       "size": "0x000000a0",
       "legacy_source": "src/unnamed/arm9/0206/func_02060188.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_Z13CARDi_SetTaskPFvP11CARDiCommonE",
+      "symbol": "CARDi_SetTask",
       "address": "0x02060228",
       "size": "0x00000094",
       "legacy_source": "src/unnamed/arm9/0206/func_02060228.c",

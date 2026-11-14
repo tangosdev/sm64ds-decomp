@@ -2,7 +2,7 @@
 #include "Ov007Picker.h"
 #include "Ov007Camera.h"
 
-void func_ov007_020bfe4c(Ov007Camera *o, int x, int y, int z, Vector3 *out);
+extern "C" void func_ov007_020bfe4c(Ov007Camera *o, int x, int y, int z, Vector3 *out);
 
 /* Unprojects the camera's screen rectangle at the camera distance into the
    picker's clamp rectangle; screen y runs down, so the two y bounds swap. */

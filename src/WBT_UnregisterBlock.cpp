@@ -7,8 +7,6 @@ extern "C" {
 
 extern WBTBlockInfoList *func_02065ae0(void);
 extern void func_02065ad0(WBTBlockInfoList *list);
-}
-
 WBTBlockInfoList *WBT_UnregisterBlock(u32 block_id) {
     OSIntrMode saved = (0, OS_DisableInterrupts());
     WBTBlockInfoList *head = func_02065ae0();
@@ -37,4 +35,5 @@ WBTBlockInfoList *WBT_UnregisterBlock(u32 block_id) {
 
     OS_RestoreInterrupts(saved);
     return 0;
+}
 }

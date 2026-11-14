@@ -4,6 +4,8 @@
 #include "Ov007Spring.h"
 #include "nitro/fx/fx_cp.h"
 
+extern "C" {
+
 /* Vector3 declares a constructor and destructor under C++, which makes its
  * assignment copy word by word. The ROM copies these with C's ldm/stm block
  * move, which C++ keeps for a struct with an array member. */
@@ -45,4 +47,5 @@ int func_ov007_020c704c(Ov007Follower *f, Vector3 *target, int pull, int reach, 
         return 1;
     }
     return 0;
+}
 }

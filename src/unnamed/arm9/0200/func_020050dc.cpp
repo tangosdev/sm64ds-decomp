@@ -1,6 +1,7 @@
 //cpp
 #include "dCamera_c.h"
 
+
 /* Camera state init: switch to mode record 0x1e, place lookAt and pos from
  * it (func_0200cce4), and set mFlags 0x100. */
 int func_020050dc(dCamera_c *cam) {

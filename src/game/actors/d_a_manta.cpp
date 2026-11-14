@@ -85,12 +85,13 @@ extern MantaAnimationFilePtr data_ov090_0213452c;
 extern unsigned char gGameMode;
 
 /* local extern: arm9 vector helpers with no shared header yet. */
-
-extern "C" void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern "C" int VEC_Mag(const Vector3 *v);
+extern "C" {
+void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
+void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
+int VEC_Mag(const Vector3 *v);
+void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
+}
 short Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
-extern "C" void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 
 extern MantaState data_ov090_0213454c;
 

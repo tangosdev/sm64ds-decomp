@@ -40,14 +40,15 @@ namespace Sound {
 int PlayLong(u32, u32, u32, const Vector3 &, s16);
 }
 
-extern "C" int *Vec3_LslInPlace(Vector3 *, int);
+extern "C" {
+int *Vec3_LslInPlace(Vector3 *, int);
 /* local extern: these five names hold the @NNN count. */
-extern "C" void d_a_snm_bthPlayLongHold(int handle, unsigned int a, unsigned int b, void *pos,
-                                        unsigned int c);
+void d_a_snm_bthPlayLongHold(int handle, unsigned int a, unsigned int b, void *pos, unsigned int c);
 extern u8 gGameMode;
 extern SharedFilePtr data_ov002_0210da40;
 extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9c0;
+}
 
 /* Whole-matrix copies (InitResources, IsPlayerInRange) cast through Mtx43;
  * mInvModelMat is flat words. */
@@ -336,7 +337,8 @@ int daSnmBth_c::InitResources()
 }
 
 /* SNOWMAN_BREATH factory. */
-daSnmBth_c *daSnmBth_c_classInit() {
+daSnmBth_c *daSnmBth_c_classInit()
+{
     return new daSnmBth_c();
 }
 
@@ -345,5 +347,5 @@ Vector3 data_ov027_02113d10(0x27a52b, 0xdf2000, 0x2626bb);
 
 /* The actor registry uses this factory, priorities, flags and clip ranges.
  * SpawnInfo and the profile name are reconstructed interface names. */
-extern SpawnInfo<daSnmBth_c> g_profile_SNOWMAN_BREATH = {
+extern "C" SpawnInfo<daSnmBth_c> g_profile_SNOWMAN_BREATH = {
     daSnmBth_c_classInit, 0x113, 0x86, 0x00800002, 0, 0x3e8000, 0x1000000, 0x7d0000};

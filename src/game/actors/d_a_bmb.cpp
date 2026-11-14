@@ -15,7 +15,7 @@
  * - Behavior's helpers and the state arms are methods: every caller passes
  *   this Bob-omb as the first argument. Members whose purpose nothing in the
  *   cartridge names keep their address as the method name. Their C callees
- *   come from extern "C" file-scope declarations (below, Sound.h,
+ *   come from extern "C" file-scope declarations (this block, Sound.h,
  *   CalcLib.h): a block-scope extern inside a member gets C++ linkage and the
  *   module stops linking.
  * - func_ov102_0214ad14, 0214ae1c and 0214b384 are called from other overlays
@@ -81,27 +81,32 @@ Vector3 gBmbCarryOffsets[4] = {
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
-/* Foreign callees. A C++ member cannot declare them in its own body. */
+/* --------------------------------------------------------------------------
+ * The one file-scope extern "C" region.  Everything here is reached from a
+ * C++-named member, which cannot declare it in its own body.
+ * ------------------------------------------------------------------------ */
+extern "C" {
 
 /* -- other modules -- */
-void  GiveCoins(int who, int count);
-int   SurfaceInfo_TestFlag0x20(int *si);
 /* 0x0203b0e8. Not declared in math/CalcLib.h (a shared header); callers spell it int, int. */
-extern "C" int AngleDiff(int, int);
+int AngleDiff(int, int);
 /* The out-of-line stores of mWithMeshClsn's radius and height. */
 /* local extern: no header declares these; each is spelled as its
    definition is (d_bg_actor.cpp, d_a_ply_methods.cpp, src/). */
-int func_ov002_020ef228(dBgCh_Actr *clsn, dActor_c *other);
-extern "C" int func_ov002_020e496c(daPly_c *c);
-extern "C" int Math_Function_0203b14c(int *out, int a1, int a2, int a3, int a4);
-extern "C" void Vec3_Lsl(Vector3 *d, const Vector3 *s, int sh);
-extern "C" int *Vec3_LslInPlace(int *v, int sh);
+int func_ov002_020e496c(daPly_c *c);
+int Math_Function_0203b14c(int *out, int a1, int a2, int a3, int a4);
+void Vec3_Lsl(Vector3 *d, const Vector3 *s, int sh);
+int *Vec3_LslInPlace(int *v, int sh);
 /* Real definition: func_0201267c (arm9). The methods call through it so the
    name stays unmangled. */
 
 extern signed char gCurrentSublevel;
 extern unsigned char gCurrentStarId;
 extern unsigned char gGameMode;
+}
+void  GiveCoins(int who, int count);
+int   SurfaceInfo_TestFlag0x20(int *si);
+int func_ov002_020ef228(dBgCh_Actr *clsn, dActor_c *other);
 
 /* ==========================================================================
  *
@@ -109,6 +114,7 @@ extern unsigned char gGameMode;
  * (0x0214c748 is where daShl_c starts), so it is written FIRST here: mwccarm
  * lays .text down in reverse source order.
  *
+ * C linkage preserves the project's existing bare registry-factory label.
  * The address is ROM-proven; the original SM64DS spelling is not preserved.
  * `return new daBmb_c()` MATCHES (size 0x50); the synthesized ctor stores
  * `_ZTV7daBmb_c + 2` because this TU defines the vtable. `new` calls the
@@ -126,7 +132,8 @@ daBmb_c *daBmb_c_classInit(void)
     return new daBmb_c();
 }
 
-extern SpawnInfo<daBmb_c> g_profile_BOMBHEI = {
+
+extern "C" SpawnInfo<daBmb_c> g_profile_BOMBHEI = {
     daBmb_c_classInit,
     0x00ce, /* BOMBHEI registry id 206 */
     0x002d,
@@ -422,6 +429,7 @@ void daBmb_c::State0() {
 /* ==========================================================================
  * ======================================================================== */
 
+extern "C" {
 
 void daBmb_c::func_ov102_0214beb4() {
     extern int data_0209e650;
@@ -438,6 +446,7 @@ void daBmb_c::func_ov102_0214beb4() {
         return;
     }
     *(short *)&mTargetAngY = Vec3_HorzAngle(&mPos, &o->mPos);
+}
 }
 
 /* ==========================================================================
@@ -542,6 +551,7 @@ void daBmb_c::State3()
 /* ==========================================================================
  * ======================================================================== */
 
+extern "C" {
 
 /* THE QUAD VIEW AND ITS TWO TABLES SIT AT FILE SCOPE. They used to be declared
    inside the body below, but C++ gives a function-local class no linkage, so an
@@ -551,8 +561,9 @@ void daBmb_c::State3()
 typedef struct { int v[4]; } Quad;
 /* Thrown-bob-omb launch speeds, indexed by the carrier's param1 (clamped to 4):
    horizontal, then vertical. */
-extern Quad data_ov102_0214e514 = {{0x28000, 0x28000, 0x50000, 0x28000}};
-extern Quad data_ov102_0214e524 = {{0xa000, 0xa000, 0x1a000, 0xa000}};
+extern "C" Quad data_ov102_0214e514 = {{0x28000, 0x28000, 0x50000, 0x28000}};
+extern "C" Quad data_ov102_0214e524 = {{0xa000, 0xa000, 0x1a000, 0xa000}};
+}
 
 void daBmb_c::func_ov102_0214bc20() {
     Quad a1 = data_ov102_0214e514;
@@ -837,6 +848,7 @@ void daBmb_c::UpdateShadow() {
 /* ==========================================================================
  * ======================================================================== */
 
+extern "C" {
 
 void daBmb_c::func_ov102_0214b3f0(int a1) {
     unsigned int v = mState - 3;
@@ -849,10 +861,12 @@ do_call:
     func_ov102_0214bd20();
 }
 
+}
 
 /* ==========================================================================
  * ======================================================================== */
 
+extern "C" {
 
 void daBmb_c::func_ov102_0214b3b8() {
     if (mState != 3)
@@ -860,6 +874,7 @@ void daBmb_c::func_ov102_0214b3b8() {
     func_ov102_0214bc20();
     mPrevAngleY = mCarrier->mAngleY;
     mCarrier = 0;
+}
 }
 
 /* ==========================================================================

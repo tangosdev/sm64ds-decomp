@@ -167,7 +167,7 @@ struct dBgW {
 /* The enabled-collider table: Enable puts a collider in the first free
    entry and records the index in slotIdx, Disable and
    dScStage_c::ResetMeshColliders clear entries, and the query TUs walk it. */
-extern dBgW *data_020a0c80[];
+extern "C" dBgW *data_020a0c80[];
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */

@@ -8,9 +8,9 @@
 
 #define FALSE 0
 
-extern int func_02040714(void);
-extern void func_02040724(void);
-extern void func_0201a4d0(void);
+extern "C" int func_02040714(void);
+extern "C" void func_02040724(void);
+extern "C" void func_0201a4d0(void);
 extern unsigned char data_0209d4e4;
 
 void func_0201a028(void) {
@@ -54,7 +54,7 @@ void func_02019f64(void *arg) {
    FX_SinCosTable_ (0x02082214..0x02086214), which ends where FX_AtanTable_
    begins: the OSThread takes the table's top 0x94 bytes and its
    0x3f6c-byte stack runs down from there to the table's start. */
-int func_02019f10(void) {
+extern "C" int func_02019f10(void) {
     OSThread *thread = (OSThread *)FX_AtanTable_ - 1;
     OS_CreateThread(thread, func_02019f64, 0, thread, 0x3f6c, 0);
     OS_WakeupThreadDirect(thread);

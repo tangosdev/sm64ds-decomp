@@ -20,42 +20,42 @@
   ],
   "functions": [
     {
-      "symbol": "_Z12OS_InitAllociPvS_i",
+      "symbol": "OS_InitAlloc",
       "address": "0x02059040",
       "size": "0x000000bc",
       "legacy_source": "src/unnamed/arm9/0205/func_02059040.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "_Z13OS_FreeToHeapiiPv",
+      "symbol": "OS_FreeToHeap",
       "address": "0x020590fc",
       "size": "0x00000074",
       "legacy_source": "src/unnamed/arm9/0205/func_020590fc.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "_Z16OS_AllocFromHeapiij",
+      "symbol": "OS_AllocFromHeap",
       "address": "0x02059170",
       "size": "0x0000012c",
       "legacy_source": "src/unnamed/arm9/0205/func_02059170.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "_Z8DLInsertP4CellS0_",
+      "symbol": "DLInsert",
       "address": "0x0205929c",
       "size": "0x000000c8",
       "legacy_source": "src/unnamed/arm9/0205/func_0205929c.c",
       "ordinal": 3
     },
     {
-      "symbol": "_Z9DLExtractP4CellS0_",
+      "symbol": "DLExtract",
       "address": "0x02059364",
       "size": "0x00000028",
       "legacy_source": "src/unnamed/arm9/0205/func_02059364.c",
       "ordinal": 4
     },
     {
-      "symbol": "_Z10DLAddFrontP4CellS0_",
+      "symbol": "DLAddFront",
       "address": "0x0205938c",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/arm9/0205/func_0205938c.c",

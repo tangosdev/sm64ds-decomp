@@ -22,7 +22,7 @@ extern unsigned char *func_02071a50(unsigned char *p, int *out);
 extern unsigned char *ReadSignedVarInt(unsigned char *p, int *out);
 }
 
-extern void func_02072168(ThrowContext *c, ActionIterator *s, char *end);
+extern "C" void func_02072168(ThrowContext *c, ActionIterator *s, char *end);
 extern "C" {
 
 extern void func_02071ccc(ThrowContext *s, int off, int add);
@@ -38,7 +38,7 @@ extern void func_02071790(ThrowContext *context, ActionIterator *iterator, int p
    offset and catch-info offset, unwinds the frames above it
    (func_02072168), fills the handler's catch info (func_02071ccc) and
    jumps to the landing pad (func_02071790). */
-void func_02071be8(ThrowContext *s) {
+extern "C" void func_02071be8(ThrowContext *s) {
     int local0;
     struct ActionCursor ctx;
     int blk[3];

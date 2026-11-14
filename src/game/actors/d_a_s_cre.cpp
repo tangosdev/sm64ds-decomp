@@ -20,7 +20,8 @@ enum {
     kStarSpawnStyle = 0x40
 };
 
-daSCre_c *daSCre_c_classInit(void) {
+daSCre_c *daSCre_c_classInit(void)
+{
     return new daSCre_c;
 }
 

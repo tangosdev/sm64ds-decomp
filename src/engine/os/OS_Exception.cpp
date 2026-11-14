@@ -24,16 +24,12 @@
  * that owns exceptions leaves a main-RAM handler address there. */
 #define HW_EXCP_VECTOR_BUF_FOR_DEBUGGER 0x027ffd9c
 
+extern "C" {
 
-
-extern OSExceptionHandler data_020a63a0;
- /* OSi_UserExceptionHandler */
-extern void *data_020a63a4;
-              /* OSi_UserExceptionHandlerArg */
-extern u32 data_020a63a8;
-                /* OSi_DebuggerHandler */
-extern u32 data_020a63ac;
-                /* OSi_ExContext */
+extern OSExceptionHandler data_020a63a0; /* OSi_UserExceptionHandler */
+extern void *data_020a63a4;              /* OSi_UserExceptionHandlerArg */
+extern u32 data_020a63a8;                /* OSi_DebuggerHandler */
+extern u32 data_020a63ac;                /* OSi_ExContext */
 
 void OSi_ExceptionHandler(void);
 void OSi_GetAndDisplayContext(void);
@@ -164,4 +160,5 @@ void OSi_DisplayExContext(void) {
     OS_EnableProtectionUnit();
     data_020a63a0((u32)&data_020a63ac, data_020a63a4);
     OS_DisableProtectionUnit();
+}
 }

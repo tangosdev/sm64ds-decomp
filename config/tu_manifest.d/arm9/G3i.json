@@ -19,7 +19,7 @@
   ],
   "functions": [
     {
-      "symbol": "_Z16G3_LoadTexMtxEnvPi",
+      "symbol": "G3_LoadTexMtxEnv",
       "address": "0x02055998",
       "size": "0x000000cc",
       "legacy_source": "src/unnamed/arm9/0205/func_02055998.c",

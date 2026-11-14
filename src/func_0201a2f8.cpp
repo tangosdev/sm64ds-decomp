@@ -18,7 +18,7 @@ extern int GetSoundMode(void);
 extern void SetSoundMode(int mode);
 }
 
-extern u32 FS_TryLoadTable(void *p_mem, u32 size);
+extern "C" u32 FS_TryLoadTable(void *p_mem, u32 size);
 extern "C" {
 
 extern void LoadOverlay(int id);
@@ -26,7 +26,7 @@ extern void InitializeAssetHandleTable(void);
 extern void UnloadOverlay(int id);
 }
 
-extern void LoadFont(unsigned char id);
+extern "C" void LoadFont(unsigned char id);
 
 extern int OVERLAY_0_ID;
 extern int OVERLAY_1_ID;
@@ -40,7 +40,7 @@ extern char data_0208ee5c[];
  * builds the asset handle table and is unloaded again, and overlay 1 stays.
  * A child loads sound group 0x2f with bank 0x36 and no font; a card boot
  * loads the initial sound group and font 0. */
-void func_0201a2f8(int unused) {
+extern "C" void func_0201a2f8(int unused) {
     int isChild = MB_IsMultiBootChild();
     void *ptr;
     if (isChild) {

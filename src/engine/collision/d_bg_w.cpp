@@ -13,10 +13,13 @@
 #include "dActor_c.h"
 #include "decl_common.h"
 
+extern "C" {
 /* local extern: no header declares the CLPS water test (CLPS.h only
    documents it); d_bg_ch_sph_crr_query.cpp defines it with this
    signature. */
+}
 extern int SurfaceInfo_TestFlag0x20(int *clpsWords);
+
 
 /* Stores dBgW_Kc::depthDirMinDot (+0x44), the sphere query's face-dot threshold. */
 void dBgW_Kc::SetDepthDirMinDot(Fix12i value) {

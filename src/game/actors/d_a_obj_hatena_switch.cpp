@@ -100,7 +100,7 @@ daObjHatenaSwitch_c *daObjHatenaSwitch_c_classInit() {
 
 /* HATENA_SWITCH is the literal ROM registry ID. The g_profile spelling is a
  * lineage-supported reconstruction; historical alias QuestionSwitch_SpawnInfo. */
-SpawnInfo<daObjHatenaSwitch_c> g_profile_HATENA_SWITCH = {
+extern "C" SpawnInfo<daObjHatenaSwitch_c> g_profile_HATENA_SWITCH = {
     daObjHatenaSwitch_c_classInit,
     0x001a,
     0x0126,

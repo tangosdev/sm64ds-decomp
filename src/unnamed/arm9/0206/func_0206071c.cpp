@@ -8,6 +8,7 @@
 #include "nitro/card/card_common.h"
 #include "nitro/mi/memory.h"
 
+
 /* opt_loop_invariants stays off for schedule colour only: with it on the function
    is still 0xcc, but the prologue hoists &p->src ahead of the 0x100, 6 and 1
    constants -- five words, unreachable from the source either with or without

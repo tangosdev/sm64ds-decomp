@@ -5,7 +5,7 @@
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 
-void *func_ov007_020b3f20(int n);
+extern "C" void *func_ov007_020b3f20(int n);
 extern void MenuText_Init(void *unused, void *sheet, int baseTile, void *plane0, void *plane1,
                           int plane2, void *bank);
 extern void func_ov007_020c32e8(Ov007Palette *pal, int target, unsigned int row, int skip);
@@ -18,7 +18,7 @@ extern void MenuText_LoadFontPalette(void);
  * sub BG1 (set 3 adds main BG3), its characters and palettes, and for set
  * 1 the OBJ sheet (files 0x2c/0x2d), the language's BG3 characters (file
  * 0x25 + language) and the BG palette (file 0x2b). */
-void func_ov007_020bcba8(int idx) {
+extern "C" void func_ov007_020bcba8(int idx) {
     Ov007Display *s;
     Ov007Work *g = WORK;
     s = g->display;

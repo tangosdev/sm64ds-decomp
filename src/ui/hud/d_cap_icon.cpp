@@ -38,10 +38,13 @@ typedef struct {
     unsigned char : 4;
 } CapIconFlags;
 
+extern "C" {
+
 extern int data_0209f3e8[];
 
-void CapIconMgr_SetMapIconShown(dCapIcon_c *icon, int shown);
-void CapIconMgr_ClearDispatched(int character);
+}
+extern void CapIconMgr_SetMapIconShown(dCapIcon_c *icon, int shown);
+extern void CapIconMgr_ClearDispatched(int character);
 
 void dCapIcon_c::Unlink()
 {
@@ -134,7 +137,8 @@ dCapIcon_c::~dCapIcon_c()
     Unlink();
 }
 
-void func_ov001_020ab2e4(void) {
+void func_ov001_020ab2e4(void)
+{
     int i;
     for (i = 0; i < 3; i++) {
         gCapIconListHeads[i] = 0;

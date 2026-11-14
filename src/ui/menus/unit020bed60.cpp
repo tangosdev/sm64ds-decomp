@@ -64,13 +64,13 @@ extern Ov007MeshWaveParams data_ov007_020d7c9c;
 extern Ov007SwingParams data_ov007_020d7cc8;
 extern Ov007MeshMaterial data_ov007_020d7cf8[2];
 
-Ov007MenuState *func_ov007_020b2cdc(void);
+extern "C" Ov007MenuState *func_ov007_020b2cdc(void);
 extern Ov007Sprite *NumberSprite_Create(int index);
-void func_ov007_020bce70(short n, int frames);
-void func_ov007_020bfe4c(Ov007Camera *camera, int x, int y, int z, Vector3 *out);
+extern "C" void func_ov007_020bce70(short n, int frames);
+extern "C" void func_ov007_020bfe4c(Ov007Camera *camera, int x, int y, int z, Vector3 *out);
 extern int func_ov007_020c1da0(int i);
 extern int func_ov007_020c30ac(Vector3 *arr, int count, Vector3 *target, int arg4, int *out);
-unsigned short func_ov007_020c3be0(int t, int a, int b);
+extern "C" unsigned short func_ov007_020c3be0(int t, int a, int b);
 extern void func_ov007_020c9a84(Ov007Swing *swing, Vector3 *offset, u16 *rotX, u16 *rotY);
 extern void func_ov007_020c9c24(Ov007Swing *swing, int shift);
 extern void func_ov007_020c9d90(Ov007Swing *swing, Ov007Mesh *mesh);
@@ -81,7 +81,7 @@ extern void func_ov007_020ca1d4(Ov007MeshWave *wave, Ov007Mesh *mesh);
 extern void func_ov007_020ca26c(Ov007MeshWave *wave);
 extern Ov007MeshWave *func_ov007_020ca2a8(Ov007MeshWaveParams *params);
 extern "C" void func_ov007_020ca578(Ov007Mesh *mesh, int i, int j, int t);
-extern void func_ov007_020ca5f0(Ov007Mesh *mesh, Ov007MeshMaterial *mat, int *pos, int scaleZ,
+extern "C" void func_ov007_020ca5f0(Ov007Mesh *mesh, Ov007MeshMaterial *mat, int *pos, int scaleZ,
                                 int smooth);
 extern "C" void func_ov007_020cb3dc(Ov007Mesh *mesh);
 extern "C" void func_ov007_020cba78(Ov007Mesh *mesh, int shift);
@@ -155,7 +155,7 @@ void func_ov007_020bf57c(Ov007Camera *camera, int idx) {
  * (each given one of the menu's textures), the wave and the eight swings
  * (each bound to its item), then the manager's three number sprites, and
  * runs the frame 0x14 times to settle the mesh. */
-void func_ov007_020bf428(void) {
+extern "C" void func_ov007_020bf428(void) {
     int i;
     Ov007MeshMaterial *w;
     u8 *bp;
@@ -195,7 +195,7 @@ void func_ov007_020bf428(void) {
 
 /* Tears down the mesh scene: frees the mesh, the wave, both materials and
  * the eight swings, then the manager's number sprites and the scene itself. */
-void func_ov007_020bf304(void) {
+extern "C" void func_ov007_020bf304(void) {
     int i;
     Ov007MeshScene *g;
 

@@ -21,84 +21,84 @@
   ],
   "functions": [
     {
-      "symbol": "_Z13func_02048528P12NNSSndHandlePK7Vector3",
+      "symbol": "func_02048528",
       "address": "0x02048528",
       "size": "0x000000c8",
       "legacy_source": "src/unnamed/arm9/0204/func_02048528.c",
       "ordinal": 0
     },
     {
-      "symbol": "_Z13func_020485f0P12NNSSndHandlePK7Vector3",
+      "symbol": "func_020485f0",
       "address": "0x020485f0",
       "size": "0x00000130",
       "legacy_source": "src/unnamed/arm9/0204/func_020485f0.c",
       "ordinal": 1
     },
     {
-      "symbol": "_Z13func_02048720PK7Vector3ii",
+      "symbol": "func_02048720",
       "address": "0x02048720",
       "size": "0x000001e8",
       "legacy_source": "src/unnamed/arm9/0204/func_02048720.c",
       "ordinal": 2
     },
     {
-      "symbol": "_Z13func_02048908P9SoundSlotPK7Vector3",
+      "symbol": "func_02048908",
       "address": "0x02048908",
       "size": "0x00000110",
       "legacy_source": "src/unnamed/arm9/0204/func_02048908.c",
       "ordinal": 3
     },
     {
-      "symbol": "_Z13func_02048a18ii",
+      "symbol": "func_02048a18",
       "address": "0x02048a18",
       "size": "0x00000004",
       "legacy_source": "src/unnamed/arm9/0204/func_02048a18.c",
       "ordinal": 4
     },
     {
-      "symbol": "_Z13func_02048a1cPK7Vector3ii",
+      "symbol": "func_02048a1c",
       "address": "0x02048a1c",
       "size": "0x000000d8",
       "legacy_source": "src/unnamed/arm9/0204/func_02048a1c.c",
       "ordinal": 5
     },
     {
-      "symbol": "_Z13func_02048af4P12NNSSndHandlePK7Vector3i",
+      "symbol": "func_02048af4",
       "address": "0x02048af4",
       "size": "0x0000013c",
       "legacy_source": "src/unnamed/arm9/0204/func_02048af4.c",
       "ordinal": 6
     },
     {
-      "symbol": "_Z13func_02048c30P12NNSSndHandlePK7Vector3i",
+      "symbol": "func_02048c30",
       "address": "0x02048c30",
       "size": "0x00000150",
       "legacy_source": "src/unnamed/arm9/0204/func_02048c30.c",
       "ordinal": 7
     },
     {
-      "symbol": "_Z13func_02048d80P12NNSSndHandlePK7Vector3",
+      "symbol": "func_02048d80",
       "address": "0x02048d80",
       "size": "0x000000d4",
       "legacy_source": "src/unnamed/arm9/0204/func_02048d80.c",
       "ordinal": 8
     },
     {
-      "symbol": "_Z13func_02048e54v",
+      "symbol": "func_02048e54",
       "address": "0x02048e54",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0204/func_02048e54.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "_Z13func_02048e74v",
+      "symbol": "func_02048e74",
       "address": "0x02048e74",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0204/func_02048e74.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "_Z13func_02048e94v",
+      "symbol": "func_02048e94",
       "address": "0x02048e94",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0204/func_02048e94.cpp",
@@ -119,7 +119,7 @@
       "ordinal": 13
     },
     {
-      "symbol": "_Z13func_02048ed4v",
+      "symbol": "func_02048ed4",
       "address": "0x02048ed4",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0204/func_02048ed4.c",
@@ -133,35 +133,35 @@
       "ordinal": 15
     },
     {
-      "symbol": "_Z13func_02048ef4v",
+      "symbol": "func_02048ef4",
       "address": "0x02048ef4",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0204/func_02048ef4.c",
       "ordinal": 16
     },
     {
-      "symbol": "_Z13func_02048f04v",
+      "symbol": "func_02048f04",
       "address": "0x02048f04",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0204/func_02048f04.c",
       "ordinal": 17
     },
     {
-      "symbol": "_Z13func_02048f14v",
+      "symbol": "func_02048f14",
       "address": "0x02048f14",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0204/func_02048f14.c",
       "ordinal": 18
     },
     {
-      "symbol": "_Z13func_02048f24v",
+      "symbol": "func_02048f24",
       "address": "0x02048f24",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0204/func_02048f24.c",
       "ordinal": 19
     },
     {
-      "symbol": "_Z13func_02048f34Pv",
+      "symbol": "func_02048f34",
       "address": "0x02048f34",
       "size": "0x000000a0",
       "legacy_source": "src/unnamed/arm9/0204/func_02048f34.c",
@@ -175,7 +175,7 @@
       "ordinal": 21
     },
     {
-      "symbol": "_Z13func_02049018PK7Vector3",
+      "symbol": "func_02049018",
       "address": "0x02049018",
       "size": "0x00000098",
       "legacy_source": "src/func_02049018.c",

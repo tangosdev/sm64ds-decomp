@@ -3,18 +3,15 @@
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/mi/memory.h"
-namespace s20adc4c {
-int Mg_GetWorkBuffer(void);
-}
-using s20adc4c::Mg_GetWorkBuffer;
 
 enum LoadFont_AssetId {
     ASSET_D_2D_MARIO_3DFONT_NCL_BIN = 0x0237
 };
 
 extern "C" void *LoadFile(int handle);
+extern "C" int Mg_GetWorkBuffer(void);
 extern "C" int LoadFileAt(int handle, int dest);
-void Deallocate(void *ptr);
+extern "C" void Deallocate(void *ptr);
 
 extern "C" void DecompressLZ16(void *dst, void *src);
 
@@ -23,8 +20,9 @@ extern int data_0209d6f8;
 extern unsigned char data_0209d660;
 extern short data_0209d6d4;
 
-void LoadFont(unsigned char arg);
-void LoadFont(unsigned char arg) {
+extern "C" void LoadFont(unsigned char arg);
+extern "C" void LoadFont(unsigned char arg)
+{
     void *file;
     void *r4;
     data_0209d698 = arg;

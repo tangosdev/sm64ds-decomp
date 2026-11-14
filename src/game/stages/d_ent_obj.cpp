@@ -83,21 +83,19 @@ struct EntObjTextureSequenceFileHandle : SharedFilePtr {
 /* Fix12<int> is passed by value at these call boundaries. Spelled as the
  * class type, mwccarm homes the register arguments and the callers grow, so
  * the measured scalar views stay. */
+extern "C" {
+int d_ent_objNewHold(unsigned handle, unsigned id, int x, int y, int z, const Vector3_16 *dir,
+                     void *callback);
 
-extern "C" int d_ent_objNewHold(unsigned handle, unsigned id, int x, int y, int z,
-                                const Vector3_16 *dir, void *callback);
-
-extern "C" int RandomIntInternal(int *seed);
+int RandomIntInternal(int *seed);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-extern "C" void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
-extern "C" void Vec3_MulScalarInPlace(Vector3 *v, int scale);
-extern "C" void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
-extern "C" void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
-extern "C" void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short angY);
-extern "C" int Math_Function_0203b14c(int *p, int target, int a, int b, int c);
-extern "C" unsigned char DecIfAbove0_Byte(unsigned char *p);
-unsigned int func_02012174(unsigned int a, unsigned int b);
-void func_020167a4(dExtAnmModel_c *model);
+void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
+void Vec3_MulScalarInPlace(Vector3 *v, int scale);
+void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
+void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
+void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short angY);
+int Math_Function_0203b14c(int *p, int target, int a, int b, int c);
+unsigned char DecIfAbove0_Byte(unsigned char *p);
 
 extern Matrix4x3 data_020a0e68;
 extern dClipper data_0209f43c;
@@ -148,6 +146,9 @@ extern const int sVsPlayerStandingX[4][4] = {{0, 1843200, 1843200, 1843200},
 extern const int sVsPlayerExitX[16] = {0,       1843200, 1843200, 1843200, -204800, 204800,
                                        1843200, 1843200, -368640, 0,       368640,  1843200,
                                        -491520, -163840, 163840,  491520};
+}
+unsigned int func_02012174(unsigned int a, unsigned int b);
+void func_020167a4(dExtAnmModel_c *model);
 
 /* A pointer-to-member row: the two per-figure state tables are arrays of
  * these. __sinit_ov075_0211b5e0 fills them, which fixes each index:
@@ -165,8 +166,8 @@ typedef void (UnknownVsPlayer::*UnknownVsPlayerState)();
 struct UnknownVsPlayerStateRow {
     UnknownVsPlayerState state;
 };
-extern UnknownVsPlayerStateRow sVsPlayerMoveStates[];
-extern UnknownVsPlayerStateRow sVsPlayerAnimStates[];
+extern "C" UnknownVsPlayerStateRow sVsPlayerMoveStates[];
+extern "C" UnknownVsPlayerStateRow sVsPlayerAnimStates[];
 
 #pragma defer_codegen off
 
@@ -999,7 +1000,7 @@ EntObjTextureSequenceFileHandle data_ov075_0211d3dc(0x804e);
 
 /* The entry-stage object's base profile: the factory, then the same priority
    in both halfwords. */
-BaseSpawnInfo<dEntObj_c> g_profile_ENTRY_OBJECT = {
+extern "C" BaseSpawnInfo<dEntObj_c> g_profile_ENTRY_OBJECT = {
     dEntObj_c_classInit,
     0x015a,
     0x015a,
@@ -1009,7 +1010,7 @@ BaseSpawnInfo<dEntObj_c> g_profile_ENTRY_OBJECT = {
    six animation handlers for mAnimState; the unused indices point at the
    empty handlers. mwcc cannot link-time-initialize pointer-to-member
    records, so the initializer copies the descriptor records in. */
-UnknownVsPlayerStateRow sVsPlayerMoveStates[10] = {
+extern "C" UnknownVsPlayerStateRow sVsPlayerMoveStates[10] = {
     {&UnknownVsPlayer::MoveNone},
     {&UnknownVsPlayer::MoveToSlot},
     {&UnknownVsPlayer::MoveWaitForExit},
@@ -1021,7 +1022,7 @@ UnknownVsPlayerStateRow sVsPlayerMoveStates[10] = {
     {&UnknownVsPlayer::MoveWaitForPoseSound},
     {&UnknownVsPlayer::MovePoseParticles},
 };
-UnknownVsPlayerStateRow sVsPlayerAnimStates[6] = {
+extern "C" UnknownVsPlayerStateRow sVsPlayerAnimStates[6] = {
     {&UnknownVsPlayer::AnimNone},        {&UnknownVsPlayer::AnimWalkSounds},
     {&UnknownVsPlayer::AnimWaitForNext}, {&UnknownVsPlayer::AnimWaitForIdle},
     {&UnknownVsPlayer::AnimSlowGait},    {&UnknownVsPlayer::AnimFastGait},

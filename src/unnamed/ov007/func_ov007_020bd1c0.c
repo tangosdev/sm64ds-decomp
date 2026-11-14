@@ -3,21 +3,11 @@
 #include "Ov007Settings.h"
 #include "Ov007Light.h"
 #include "nitro/gx/g3x.h"
-#define PickerScene_Create _Z18PickerScene_Createii
 
 /* The lights' source points: lights[0] per menu, lights[1] in menu 0. */
 extern Vector3 data_ov007_020d7c34[];
 extern Vector3 data_ov007_020d7c28;
 
-#define func_ov007_020bce70 _Z19func_ov007_020bce70si
-#define func_ov007_020b3f20 _Z19func_ov007_020b3f20i
-#define func_ov007_020b1fa4 _Z19func_ov007_020b1fa4i
-#define func_ov007_020bd4a0 _Z19func_ov007_020bd4a0i
-#define func_ov007_020b2998 _Z19func_ov007_020b2998v
-#define func_ov007_020bfbdc _Z19func_ov007_020bfbdcPv
-#define func_ov007_020c14b8 _Z19func_ov007_020c14b8P12Ov007Texture
-#define func_ov007_020b77ac _Z19func_ov007_020b77acv
-#define func_ov007_020bf428 _Z19func_ov007_020bf428v
 extern void func_ov007_020bce70(short n, int m);
 extern void* func_ov007_020b3f20(int idx);
 extern void func_ov007_020b22e0(int* a, int* b, int c);

@@ -4,8 +4,8 @@
 #include "nitro/os/thread.h"
 #include "nitro/os/alarm.h"
 
-extern void OS_InitTick(void);
-extern void OS_SetUserExceptionHandler(OSExceptionHandler handler, void *arg);
+extern "C" void OS_InitTick(void);
+extern "C" void OS_SetUserExceptionHandler(OSExceptionHandler handler, void *arg);
 extern void func_0201a054(void);
 extern void func_020197b8(void);
 extern "C" {

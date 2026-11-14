@@ -45,7 +45,6 @@
 /* ROM symbols with no header of their own, spelled to agree with their
  * definitions. */
 extern "C" {
-
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 
@@ -79,13 +78,11 @@ void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
  * label. The ray and ceiling hits are copied into a local dBgPi by its
  * implicit copy constructor, and its destructor runs on every exit. */
 
+extern "C" {
 /* dBgCh_Actr queries (src/engine/collision/d_bg_ch_actr.cpp), not yet
    declared in dBgCh_Actr.h. */
-int func_02035638(unsigned char *clsn);
-/* mSphereClsn.flags & 0x10: the ceiling bit */
-void *func_0203564c(void *clsn);
-extern "C" {
-/* mSphereClsn.GetUnderResult(): the ceiling hit */
+int func_02035638(void *clsn); /* mSphereClsn.flags & 0x10: the ceiling bit */
+void *func_0203564c(void *clsn); /* mSphereClsn.GetUnderResult(): the ceiling hit */
 /* d_a_ply_methods.cpp: sets 0x20 in daPly_c::mStateFlags. */
 void func_ov002_020d8838(void *player);
 }
@@ -241,7 +238,7 @@ int func_ov002_020eedc0(dBgCh_Actr *clsn, dActor_c *other) {
 int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player) {
     dBgPi *hit;
     dActor_c *owner;
-    if (clsn->IsOnWall() || clsn->IsOnGround() || func_02035638((unsigned char *)clsn)) {
+    if (clsn->IsOnWall() || clsn->IsOnGround() || func_02035638(clsn)) {
         hit = clsn->GetSphereResult();
         if (hit->GetClsnID() != -1) {
             owner = dActor_c::FindWithID(hit->GetClsnID());
@@ -255,7 +252,7 @@ int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player) {
 }
 
 int func_ov002_020eeca8(dBgCh_Actr *clsn, dActor_c *other) {
-    if (func_02035638((unsigned char *)clsn)) {
+    if (func_02035638(clsn)) {
         dBgPi *hit = clsn->GetSphereResult();
         if (hit->GetClsnID() != -1) {
             dActor_c *owner = dActor_c::FindWithID(hit->GetClsnID());
@@ -282,7 +279,7 @@ int func_ov002_020eea84(dBgCh_Actr *clsn, dActor_c *player) {
     if (!IsActorID(player, 0xbf))
         return 0;
 
-    if (func_02035638((unsigned char *)clsn)) {
+    if (func_02035638(clsn)) {
         dBgPi hit(*(const dBgPi *)func_0203564c(clsn));
         if (hit.GetClsnID() != -1) {
             owner = dActor_c::FindWithID(hit.GetClsnID());

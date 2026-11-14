@@ -20,7 +20,7 @@
  *   data_ov010_02112d28 is the state record the compiler copies into .bss;
  *   data_ov010_021122f8 is CLPS
  * - common.h first via dBgActor_c.h (Matrix4x3 copies in UpdateModel/Collision)
- * - func_ov010_02111984 three-argument collider adapter
+ * - func_ov010_02111984 three-argument C ABI collider adapter
  * - VecFx32 POD locals stay trivial; math/CalcLib.h's vector helpers operate
  *   on the same three-word buffers through their Vector3 pointer interface
  */
@@ -80,7 +80,7 @@ daObjC1_Trap_c *daObjC1_Trap_c_classInit() {
     return new daObjC1_Trap_c();
 }
 
-extern SpawnInfo<daObjC1_Trap_c> g_profile_C1_TRAP = {
+extern "C" SpawnInfo<daObjC1_Trap_c> g_profile_C1_TRAP = {
     daObjC1_Trap_c_classInit, 0x0024, 0x0143, 0, 0, 0x001f4000, 0, 0};
 
 /*
@@ -88,6 +88,7 @@ extern SpawnInfo<daObjC1_Trap_c> g_profile_C1_TRAP = {
 void func_ov010_02111984(dBgW *collider, dActor_c *owner, dActor_c *other) {
     static_cast<daObjC1_Trap_c *>(owner)->OnCollision(*other);
 }
+
 
 void daObjC1_Trap_c::OnCollision(dActor_c &other) {
     daObjC1_Trap_c *spawner;

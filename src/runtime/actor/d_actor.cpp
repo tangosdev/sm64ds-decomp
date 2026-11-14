@@ -66,7 +66,6 @@ extern s16 *data_0209b460;
 extern s16 *data_0209b45c;
 extern s16 data_0208e378;
 extern "C" {
-
 /* local extern: no header declares it. */
 int func_0203b244(void *list, void *node);
 }
@@ -180,7 +179,6 @@ void dActor_c::AfterCleanupResources(u32 vfSuccess)
 
 u8 IsAreaShowing(int areaId);
 extern "C" {
-
 void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 }
 
@@ -785,7 +783,6 @@ dActor_c *dActor_c::SpawnFireball(const Vector3 &pos, const Vector3_16 *rot, Fix
 }
 
 extern "C" {
-
 /* local extern: daPly_c has no accessor for the current body model. */
 void *func_ov002_020e496c(daPly_c *p);
 }
@@ -1143,7 +1140,7 @@ void dActor_c::TrackInDeathTable()
     DeathTable_SetBit(mDeathTableID);
 }
 
-void DeathTable_ClearBit(int id);
+extern "C" void DeathTable_ClearBit(int id);
 
 void dActor_c::UntrackInDeathTable()
 {

@@ -2,6 +2,7 @@
 #include "types.h"
 #include "nitro/fx/fx_cp.h"
 
+
 Vector3 *Vec3_DivScalarInPlace(Vector3 *v, int s) {
     if (s == 0) {
         if (v->x > 0)

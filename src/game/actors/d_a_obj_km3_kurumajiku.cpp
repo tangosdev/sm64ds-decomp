@@ -81,7 +81,7 @@ daObjKm3_Kurumajiku_c *daObjKm3_Kurumajiku_c_classInit() {
     return new daObjKm3_Kurumajiku_c();
 }
 
-SpawnInfo<daObjKm3_Kurumajiku_c> g_profile_KM3_KURUMAJIKU = {
+extern "C" SpawnInfo<daObjKm3_Kurumajiku_c> g_profile_KM3_KURUMAJIKU = {
     daObjKm3_Kurumajiku_c_classInit,
     0x0098, /* KM3_KURUMAJIKU registry id 152 */
     0x00df,

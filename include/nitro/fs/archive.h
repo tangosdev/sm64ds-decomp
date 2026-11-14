@@ -1,19 +1,5 @@
 #ifndef NITRO_FS_ARCHIVE_H
 #define NITRO_FS_ARCHIVE_H
-#ifndef __cplusplus
-#define FS_SetArchiveProc _Z17FS_SetArchiveProcP9FSArchivePFiP6FSFileiEj
-#define FS_ResumeArchive _Z16FS_ResumeArchiveP9FSArchive
-#define FS_SuspendArchive _Z17FS_SuspendArchiveP9FSArchive
-#define FS_UnloadArchiveTables _Z22FS_UnloadArchiveTablesP9FSArchive
-#define FS_LoadArchiveTables _Z20FS_LoadArchiveTablesP9FSArchivePvj
-#define FS_UnloadArchive _Z16FS_UnloadArchiveP9FSArchive
-#define FS_LoadArchive _Z14FS_LoadArchiveP9FSArchivejjjjjPFiS0_PvjjEPFiS0_PKvjjE
-#define FS_ReleaseArchiveName _Z21FS_ReleaseArchiveNameP9FSArchive
-#define FS_RegisterArchiveName _Z22FS_RegisterArchiveNameP9FSArchivePKci
-#define FS_InitArchive _Z14FS_InitArchiveP9FSArchive
-#define FS_NotifyArchiveAsyncEnd _Z24FS_NotifyArchiveAsyncEndP9FSArchivei
-#define FS_FindArchive _Z14FS_FindArchivePKci
-#endif
 
 /* The archive half of the Nitro SDK's nitro/fs/archive.h: the FSResult codes
  * an archive's procedure and callbacks return, the FSCommandType a procedure
@@ -32,9 +18,7 @@
 #include "private/fs_views.h"
 
 #ifdef __cplusplus
-#ifdef _MSC_VER
 extern "C" {
-#endif
 #endif
 
 #define FS_ARCHIVE_NAME_LEN_MAX 3
@@ -110,9 +94,7 @@ int FS_ResumeArchive(FSArchive *);
 void FS_SetArchiveProc(FSArchive *, FS_ARCHIVE_PROC_FUNC, u32);
 
 #ifdef __cplusplus
-#ifdef _MSC_VER
 }
-#endif
 #endif
 
 #endif /* NITRO_FS_ARCHIVE_H */

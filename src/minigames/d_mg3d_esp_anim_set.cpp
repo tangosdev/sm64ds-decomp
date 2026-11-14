@@ -52,38 +52,14 @@
 #include "math/Approach.h"
 #include "LevelRng.h"
 #include "math/CalcLib.h"
-namespace s20b1e34 {
-void Mg_DrawScoreTally(void *, int, int, int);
-}
-using s20b1e34::Mg_DrawScoreTally;
-namespace s20b0cac {
-void Mg_ShowBanner(int, int, int, int, int, short);
-}
-using s20b0cac::Mg_ShowBanner;
-namespace s20b0a54 {
-void Mg_SetSharedState(s32);
-}
-using s20b0a54::Mg_SetSharedState;
-namespace s20b0aa0 {
-void FreeGfxSlotsById(int);
-}
-using s20b0aa0::FreeGfxSlotsById;
-namespace s20b04d0 {
-void Mg_SetTopScreenYOffset(int);
-}
-using s20b04d0::Mg_SetTopScreenYOffset;
-namespace s20af948 {
-void Mg_RenderSubSpriteMtx(void *a, int, int, void *m);
-}
-using s20af948::Mg_RenderSubSpriteMtx;
-namespace s20af770 {
-int Mg_RenderSubSpriteScaled(void *, int, int, int, int, int, unsigned short);
-}
-using s20af770::Mg_RenderSubSpriteScaled;
-namespace s20adb1c {
-void Mg_SubmitScore(int);
-}
-using s20adb1c::Mg_SubmitScore;
+extern "C" void Mg_DrawScoreTally(void *, int, int, int);
+extern "C" void Mg_ShowBanner(int, int, int, int, int, short);
+extern "C" void Mg_SetSharedState(s32);
+extern "C" void FreeGfxSlotsById(int);
+extern "C" void Mg_SetTopScreenYOffset(int);
+extern "C" void Mg_RenderSubSpriteMtx(void *a, int, int, void *m);
+extern "C" int Mg_RenderSubSpriteScaled(void *, int, int, int, int, int, unsigned short);
+extern "C" void Mg_SubmitScore(int);
 void Mg_SetNextBanner(int);
 
 struct BMD_File;
@@ -134,7 +110,6 @@ extern EspAnimSetModelFilePtr gEspIrieModelFile;
 
 extern Matrix4x3 data_020a0e68;
 extern "C" {
-
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 }
 
@@ -142,21 +117,19 @@ void func_02046208(void *a, unsigned int b, int c);
 
 int func_020179b4(SharedFilePtr *r0, dExtModel_c *r1, int r2);
 extern "C" {
-
 void Mg_SetNextBanner(int);
 }
 
-void InitialiseVramGlobals(void);
+extern "C" void InitialiseVramGlobals(void);
 
-void Deallocate(void *);
+extern "C" void Deallocate(void *);
 extern "C" {
-
 void *LoadFile(int handle);
 
 void DecompressLZ16(void *src, void *dst);
 }
 
-void GXS_LoadBG2Scr(const void *, u32, u32);
+extern "C" void GXS_LoadBG2Scr(const void *, u32, u32);
 
 extern int sEsp3DMaterialAnim;
 

@@ -41,7 +41,7 @@ extern "C" void func_ov007_020c7804(Ov007PointList *list);
 extern "C" void func_ov007_020c78dc(void *p);
 extern "C" Ov007PointList *func_ov007_020c798c(int springMode, int count, int pointMass, int flags);
 extern "C" void func_ov007_020c7a84(Ov007Link *link, int stiffness, int damping);
-void func_ov007_020c8010(Ov007Link *link, Ov007Follower *from, Ov007Follower *to);
+extern "C" void func_ov007_020c8010(Ov007Link *link, Ov007Follower *from, Ov007Follower *to);
 extern "C" void func_ov007_020c8098(void *p);
 extern "C" Ov007Link *func_ov007_020c80a4(void);
 extern "C" void func_ov007_020c80c8(Ov007Follower *f, int damping, int shift);

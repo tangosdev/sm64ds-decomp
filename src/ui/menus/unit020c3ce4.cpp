@@ -83,7 +83,7 @@ extern "C" void *func_ov007_020c3df4(const char *name, int size) {
     return data_ov007_02103258(size);
 }
 
-void *MenuMem_AllocClear(const char *name, int n) {
+extern "C" void *MenuMem_AllocClear(const char *name, int n) {
     int *r = (int *)func_ov007_020c3df4(name, n);
     volatile unsigned short v16;
     volatile unsigned v32;
@@ -115,7 +115,7 @@ extern "C" void func_ov007_020c3d1c(void *self) {
     data_ov007_02103254(self);
 }
 
-int MenuMem_GetMaxAllocSize(void) {
+extern "C" int MenuMem_GetMaxAllocSize(void) {
     if (data_ov007_02104c14 == 0)
         return 0;
     return data_ov007_02104c14();

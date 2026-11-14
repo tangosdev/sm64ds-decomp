@@ -34,14 +34,14 @@
       "ordinal": 1
     },
     {
-      "symbol": "_Z19func_ov007_020b43dci",
+      "symbol": "func_ov007_020b43dc",
       "address": "0x020b43dc",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b43dc.c",
       "ordinal": 2
     },
     {
-      "symbol": "_Z19func_ov007_020b4438v",
+      "symbol": "func_ov007_020b4438",
       "address": "0x020b4438",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b4438.cpp",
@@ -76,21 +76,21 @@
       "ordinal": 7
     },
     {
-      "symbol": "_Z20ItemView_ResetSpriteP13Ov007ItemViewP11Ov007Camera",
+      "symbol": "ItemView_ResetSprite",
       "address": "0x020b4b5c",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b4b5c.c",
       "ordinal": 8
     },
     {
-      "symbol": "_Z16ItemView_DestroyP13Ov007ItemView",
+      "symbol": "ItemView_Destroy",
       "address": "0x020b4bd4",
       "size": "0x00000030",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b4bd4.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "_Z15ItemView_Createi",
+      "symbol": "ItemView_Create",
       "address": "0x020b4c04",
       "size": "0x00000464",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b4c04.c",

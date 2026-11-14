@@ -89,7 +89,7 @@ extern "C" void MTX_Concat43(void *, void *, void *);
 extern "C" void MTX_Concat33(void *, void *, void *);
 extern "C" void MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
 u8 NumStars(void);
-int func_02013890(int, int);
+extern "C" int func_02013890(int, int);
 void func_02013944(void);
 void func_02012694(unsigned int id, const Vector3 *pos);
 extern "C" void func_0203c178(void *, int, int, int);

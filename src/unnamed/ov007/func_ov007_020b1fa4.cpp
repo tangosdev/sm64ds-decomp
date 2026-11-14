@@ -5,12 +5,12 @@
 #include "Ov007Camera.h"
 #include "nitro/fx/fx_cp.h"
 
-void func_ov007_020c0128(Ov007Camera *cam);
+extern "C" void func_ov007_020c0128(Ov007Camera *cam);
 extern "C" void func_ov007_020bffb8(Ov007Camera *cam);
 extern void func_ov007_020c0078(Ov007Camera *cam);
 
 /* preset: 1 (func_ov007_020b10dc), 4 (func_ov007_020b0a20), 2 and 3. */
-void func_ov007_020b1fa4(int preset) {
+extern "C" void func_ov007_020b1fa4(int preset) {
     Ov007Camera *cam = WORK->cameras[0];
     func_ov007_020c0128(cam);
     switch (preset) {

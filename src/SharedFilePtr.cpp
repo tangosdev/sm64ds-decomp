@@ -56,24 +56,12 @@ void Deallocate(void *ptr);
 #include "nitro/fs/file.h"
 #endif
 
+extern "C" {
 /* The last file ID any handle touched: every entry point stores it first,
    so a crash mid-load names the file. */
-extern "C" unsigned int data_0209d3bc;
-
-/* ROM symbol is _Z13func_02017e0cPvj. The host call is C. */
-#ifdef _MSC_VER
-extern "C"
-#endif
-    void
-    func_02017e0c(void *self, unsigned int fileID);
-extern "C" {
+extern unsigned int data_0209d3bc;
 
 unsigned int func_02018a24(unsigned int);
-}
-
-unsigned int TrimModelFile(void *file);
-extern "C" {
-
 int func_020186c0(unsigned int val);
 int func_02018568(int a);
 unsigned int func_02018ac4(unsigned int *p);
@@ -82,6 +70,8 @@ int func_020185c0(void *buf, unsigned int x);
 void func_02018770(void);
 int myFS_ReadFile(void *a, void *b, int c);
 }
+void func_02017e0c(void *self, unsigned int fileID);
+unsigned int TrimModelFile(void *file);
 
 #ifndef _MSC_VER
 void *func_02017e48(void *self, unsigned int fileID) {
@@ -313,7 +303,7 @@ SharedFilePtr &SharedFilePtr::Construct(unsigned int fileID) {
     return *this;
 }
 
-int SharedFilePtr_Destruct_Anim(int self) {
+extern "C" int SharedFilePtr_Destruct_Anim(int self) {
     func_02017e34(reinterpret_cast<void *>(self));
     return self;
 }
@@ -336,12 +326,12 @@ BCA_File *dExtFrameCtrl_c::LoadFile(SharedFilePtr &ptr) {
 #endif
 
 #ifndef _MSC_VER
-void *SharedFilePtr_Construct_TexSeq(void *self, unsigned int fileID) {
+extern "C" void *SharedFilePtr_Construct_TexSeq(void *self, unsigned int fileID) {
     func_02017e48(self, fileID);
     return self;
 }
 
-int SharedFilePtr_Destruct_TexSeq(int self) {
+extern "C" int SharedFilePtr_Destruct_TexSeq(int self) {
     func_02017e34(reinterpret_cast<void *>(self));
     return self;
 }
@@ -369,7 +359,7 @@ int func_020178b4(int self) {
 
 /* A BMD LoadFile that rebases the file but, unlike dExtSimpleModel_c::LoadFile, neither
    registers it in the common model data array nor trims its allocation. */
-void *func_0201787c(SharedFilePtr *ptr) {
+extern "C" void *func_0201787c(SharedFilePtr *ptr) {
     void *filePtr;
     ptr->LoadFile();
     filePtr = ptr->filePtr;

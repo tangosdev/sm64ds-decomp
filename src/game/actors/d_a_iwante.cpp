@@ -344,15 +344,15 @@ extern "C" int AngleDiff(int a, int b);
 extern "C" int ApproachAngle(s16 *angle, s16 target, int a, int b, int max);
 extern "C" unsigned short DecIfAbove0_Short(unsigned short *p);
 extern "C" int RandomIntInternal(int *seed);
-int Vec3_ApproachHorz(Vector3 *out, Vector3 *a, int maxStep);
-int Vec3_Dist(const Vector3 *a, const Vector3 *b);
+extern "C" int Vec3_ApproachHorz(Vector3 *out, Vector3 *a, int maxStep);
+extern "C" int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern "C" void Vec3_Asr(void *d, void *s, int sh);
-int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
+extern "C" int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 // local extern: CalcLib.h conflicts with this TU's opaque Vec3_Dist, Vec3_Asr, and Vec3_HorzDist prototypes.
-s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+extern "C" s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern "C" int func_020092c4(void *cam, void *out, void *target);
-void func_02011cfc(void);
-void func_02011d2c(void);
+extern "C" void func_02011cfc(void);
+extern "C" void func_02011d2c(void);
 void func_02012694(unsigned int a, const Vector3 *p);
 
 /* Unreferenced. */

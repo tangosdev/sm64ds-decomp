@@ -10,9 +10,9 @@ struct Csl {
 
 int func_0206cf7c(int mask);
 void func_0206cec0(void *c);
-void _Z13func_0206ce20P12CardBusState(void *s);
-void _Z13func_0206cd9cP12CardBusState(void *s);
-void _Z13func_0206ce90j(u32 flags);
+void func_0206ce20(void *s);
+void func_0206cd9c(void *s);
+void func_0206ce90(u32 flags);
 void func_0206cb0c(void *c, int b);
 void func_0206ca7c(void *c, int b);
 
@@ -53,7 +53,7 @@ void func_0206cbc0(struct Csl *sl, u8 *sb, int count)
         return;
 
     func_0206cec0(lb);
-    _Z13func_0206ce20P12CardBusState(la);
+    func_0206ce20(la);
 
     if (sl != 0) {
         while (count-- != 0) {
@@ -74,6 +74,6 @@ void func_0206cbc0(struct Csl *sl, u8 *sb, int count)
         }
     }
 
-    _Z13func_0206cd9cP12CardBusState(la);
-    _Z13func_0206ce90j(lb[0]);
+    func_0206cd9c(la);
+    func_0206ce90(lb[0]);
 }

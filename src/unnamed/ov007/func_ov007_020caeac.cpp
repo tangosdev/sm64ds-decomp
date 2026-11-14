@@ -3,6 +3,7 @@
 #include "nitro/fx/fx.h"
 #include "nitro/gx/g3imm_cmd.h"
 
+
 #define SEND_VTX(p) G3_Vtx((s16)((p)->x >> shift), (s16)((p)->y >> shift), (s16)((p)->z >> shift))
 #define SEND_NRM(q) G3_Normal((q)->x, (q)->y, (q)->z)
 #define SEND_TEX(s, t) G3_TexCoord((s), (t))

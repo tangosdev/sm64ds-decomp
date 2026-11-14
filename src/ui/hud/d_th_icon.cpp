@@ -25,7 +25,7 @@
 #include "PlayerInput.h"
 
 /* local extern: arm9 C helpers with no shared header. */
-int func_0203da9c(void);
+extern "C" int func_0203da9c(void);
 void func_ov001_020ab3f0(void *);
 
 extern int data_0208ee44;

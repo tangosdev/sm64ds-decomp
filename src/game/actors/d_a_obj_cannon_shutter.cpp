@@ -41,13 +41,11 @@ enum d_a_obj_cannon_shutter_AssetId {
 #include "math/MtxStack.h"
 
 extern "C" {
-
 void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *dst);
-}
-
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
+}
 
 extern signed char gCurrentSublevel;
 extern unsigned char gCurrentStarId;
@@ -91,14 +89,15 @@ daObjCannonShutter_c *daObjCannonShutter_c_classInit() {
  * Exact original SM64DS spellings are not preserved. Historical project
  * aliases: daObjCannonShutter_c_Spawn and daObjCannonShutter_c_SpawnInfo.
  * The descriptor is at ov002:0x02109d14. */
-SpawnInfo<daObjCannonShutter_c> g_profile_CANNON_SHUTTER = {daObjCannonShutter_c_classInit,
-                                                            0x000e,
-                                                            0x009e,
-                                                            0x00800002,
-                                                            0x00000000,
-                                                            0x00100000,
-                                                            0x01000000,
-                                                            0x00000000};
+extern "C" SpawnInfo<daObjCannonShutter_c> g_profile_CANNON_SHUTTER = {
+    daObjCannonShutter_c_classInit,
+    0x000e,
+    0x009e,
+    0x00800002,
+    0x00000000,
+    0x00100000,
+    0x01000000,
+    0x00000000};
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */

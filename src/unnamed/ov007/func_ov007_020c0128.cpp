@@ -8,7 +8,7 @@ extern "C" void MTX_Identity44_(void *p);
 /* Resets a camera: eye at z 1.0 looking at the origin, y up, a 30-degree
  * fovy, 4:3 aspect, near 1.0 and far 400.0, the whole 256x192 screen as the
  * viewport and identity view and projection matrices. */
-void func_ov007_020c0128(Ov007Camera *cam) {
+extern "C" void func_ov007_020c0128(Ov007Camera *cam) {
     cam->eye.y = 0;
     cam->eye.x = cam->eye.y;
     cam->eye.z = 0x1000;

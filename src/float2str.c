@@ -77,15 +77,15 @@ char *float2str(double x, char *buff_end, print_format format) {
         if (func_01ff9e2c(x, 0.0)) {
             p = (unsigned char *)buff_end - 5;
             if (ISUPPER(code))
-                _Z6strcpyPcPKc((char *)p, data_0209a5ec);
+                strcpy((char *)p, data_0209a5ec);
             else
-                _Z6strcpyPcPKc((char *)p, data_0209a5f4);
+                strcpy((char *)p, data_0209a5f4);
         } else {
             p = (unsigned char *)buff_end - 4;
             if (ISUPPER(code))
-                _Z6strcpyPcPKc((char *)p, data_0209a5fc);
+                strcpy((char *)p, data_0209a5fc);
             else
-                _Z6strcpyPcPKc((char *)p, data_0209a600);
+                strcpy((char *)p, data_0209a600);
         }
         return (char *)p;
 
@@ -93,15 +93,15 @@ char *float2str(double x, char *buff_end, print_format format) {
         if (dec.sign) {
             p = (unsigned char *)buff_end - 5;
             if (ISUPPER(code))
-                _Z6strcpyPcPKc((char *)p, data_0209a604);
+                strcpy((char *)p, data_0209a604);
             else
-                _Z6strcpyPcPKc((char *)p, data_0209a60c);
+                strcpy((char *)p, data_0209a60c);
         } else {
             p = (unsigned char *)buff_end - 4;
             if (ISUPPER(code))
-                _Z6strcpyPcPKc((char *)p, data_0209a614);
+                strcpy((char *)p, data_0209a614);
             else
-                _Z6strcpyPcPKc((char *)p, data_0209a618);
+                strcpy((char *)p, data_0209a618);
         }
         return (char *)p;
     }

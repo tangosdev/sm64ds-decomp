@@ -21,105 +21,105 @@
   ],
   "functions": [
     {
-      "symbol": "_Z12AllocCommandv",
+      "symbol": "AllocCommand",
       "address": "0x0205adf8",
       "size": "0x00000038",
       "legacy_source": "src/unnamed/arm9/0205/func_0205adf8.c",
       "ordinal": 0
     },
     {
-      "symbol": "_Z18RequestCommandProcv",
+      "symbol": "RequestCommandProc",
       "address": "0x0205ae30",
       "size": "0x00000034",
       "legacy_source": "src/func_0205ae30.c",
       "ordinal": 1
     },
     {
-      "symbol": "_Z7InitPXIv",
+      "symbol": "InitPXI",
       "address": "0x0205ae64",
       "size": "0x0000006c",
       "legacy_source": "src/unnamed/arm9/0205/func_0205ae64.c",
       "ordinal": 2
     },
     {
-      "symbol": "_Z15PxiFifoCallback10PXIFifoTagji",
+      "symbol": "PxiFifoCallback",
       "address": "0x0205aed0",
       "size": "0x00000030",
       "legacy_source": "src/unnamed/arm9/0205/func_0205aed0.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "_Z23SND_CountWaitingCommandv",
+      "symbol": "SND_CountWaitingCommand",
       "address": "0x0205af00",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0205/func_0205af00.c",
       "ordinal": 4
     },
     {
-      "symbol": "_Z24SND_CountReservedCommandv",
+      "symbol": "SND_CountReservedCommand",
       "address": "0x0205af20",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/arm9/0205/func_0205af00.c",
       "ordinal": 5
     },
     {
-      "symbol": "_Z20SND_CountFreeCommandv",
+      "symbol": "SND_CountFreeCommand",
       "address": "0x0205af4c",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/arm9/0205/func_0205af00.c",
       "ordinal": 6
     },
     {
-      "symbol": "_Z24SND_IsFinishedCommandTagj",
+      "symbol": "SND_IsFinishedCommandTag",
       "address": "0x0205af78",
       "size": "0x0000003c",
       "legacy_source": "src/unnamed/arm9/0205/func_0205af78.c",
       "ordinal": 7
     },
     {
-      "symbol": "_Z24SND_GetCurrentCommandTagv",
+      "symbol": "SND_GetCurrentCommandTag",
       "address": "0x0205afb4",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/arm9/0205/func_0205afb4.c",
       "ordinal": 8
     },
     {
-      "symbol": "_Z22SND_WaitForCommandProcj",
+      "symbol": "SND_WaitForCommandProc",
       "address": "0x0205afe0",
       "size": "0x00000090",
       "legacy_source": "src/unnamed/arm9/0205/func_0205afe0.c",
       "ordinal": 9
     },
     {
-      "symbol": "_Z16SND_FlushCommandj",
+      "symbol": "SND_FlushCommand",
       "address": "0x0205b070",
       "size": "0x00000134",
       "legacy_source": "src/func_0205b070.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "_Z15SND_PushCommandP10SNDCommand",
+      "symbol": "SND_PushCommand",
       "address": "0x0205b1a4",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/arm9/0205/func_0205b1a4.c",
       "ordinal": 11
     },
     {
-      "symbol": "_Z16SND_AllocCommandj",
+      "symbol": "SND_AllocCommand",
       "address": "0x0205b1d8",
       "size": "0x0000009c",
       "legacy_source": "src/unnamed/arm9/0205/func_0205b1d8.c",
       "ordinal": 12
     },
     {
-      "symbol": "_Z20SND_RecvCommandReplyj",
+      "symbol": "SND_RecvCommandReply",
       "address": "0x0205b274",
       "size": "0x000000e4",
       "legacy_source": "src/unnamed/arm9/0205/func_0205b274.c",
       "ordinal": 13
     },
     {
-      "symbol": "_Z15SND_CommandInitv",
+      "symbol": "SND_CommandInit",
       "address": "0x0205b358",
       "size": "0x00000118",
       "legacy_source": "src/unnamed/arm9/0205/func_0205b358.c",

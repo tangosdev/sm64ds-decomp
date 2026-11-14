@@ -11,7 +11,7 @@
  * screen's 192 lines. Each axis has its own block: with the height half
  * reusing the width half's locals, it schedules the height load early and
  * 25 words differ. */
-void func_ov007_020c43bc(Ov007Sprite *sprite, Ov007Camera *camera) {
+extern "C" void func_ov007_020c43bc(Ov007Sprite *sprite, Ov007Camera *camera) {
     {
         int x = sprite->depth;
         int idx = camera->fovy >> 4;

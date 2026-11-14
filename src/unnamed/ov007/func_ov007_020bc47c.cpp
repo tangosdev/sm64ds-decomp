@@ -13,7 +13,7 @@ extern "C" void func_ov007_020bc434(Ov007Model *m);
    resets the placement, snapshots each BMD material's +0x1c word (no name in
    BMD_File.h's pad) into materialTexParams, and shows the model with no
    cross-fade running. */
-void func_ov007_020bc47c(Ov007Model *self) {
+extern "C" void func_ov007_020bc47c(Ov007Model *self) {
     ModelComponents *m = self->model;
 
     if ((self->flags & 8) == 0) {

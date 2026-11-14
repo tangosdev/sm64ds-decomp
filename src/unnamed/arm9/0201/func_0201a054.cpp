@@ -20,8 +20,8 @@ static inline int OS_EnableIrq(void) {
     return prep;
 }
 
-extern void func_020427f8(void);
-extern u64 func_02042784(void);
+extern "C" void func_020427f8(void);
+extern "C" u64 func_02042784(void);
 extern "C" {
 
 extern void func_0203d740(void);

@@ -39,7 +39,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "_Z13func_02023544v",
+      "symbol": "func_02023544",
       "address": "0x02023544",
       "size": "0x54",
       "legacy_source": "src/unnamed/arm9/0202/func_0202345c.cpp",

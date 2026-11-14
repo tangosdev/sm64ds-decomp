@@ -103,7 +103,7 @@ int PlayLong(u32, u32, u32, const Vector3 &, s16);
 }
 
 void func_02012694(unsigned int a, const Vector3 *p);
-void func_02038414(void *p);
+extern "C" void func_02038414(void *p);
 int func_ov002_020ad660(void *a, void *b, void *d, int e);
 extern "C" {
 void d_a_iblPlayLongHold(u32 a, u32 b, u32 c, void *v, u32 d);

@@ -49,35 +49,35 @@
       "ordinal": 3
     },
     {
-      "symbol": "_Z13func_02049f58PN8Particle7ManagerE",
+      "symbol": "func_02049f58",
       "address": "0x02049f58",
       "size": "0xd0",
       "legacy_source": "src/unnamed/arm9/0204/func_02049f58.c",
       "ordinal": 4
     },
     {
-      "symbol": "_Z13func_0204a028PN8Particle7ManagerEPFjjjE",
+      "symbol": "func_0204a028",
       "address": "0x0204a028",
       "size": "0xb4",
       "legacy_source": "src/unnamed/arm9/0204/func_0204a028.c",
       "ordinal": 5
     },
     {
-      "symbol": "_Z13func_0204a0dcPN8Particle7ManagerEPFjjjE",
+      "symbol": "func_0204a0dc",
       "address": "0x0204a0dc",
       "size": "0xa0",
       "legacy_source": "src/unnamed/arm9/0204/func_0204a0dc.c",
       "ordinal": 6
     },
     {
-      "symbol": "_Z13func_0204a17cPN8Particle7ManagerEPc",
+      "symbol": "func_0204a17c",
       "address": "0x0204a17c",
       "size": "0x34c",
       "legacy_source": "src/unnamed/arm9/0204/func_0204a17c.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_Z13func_0204a4c8PFPciEiiit",
+      "symbol": "func_0204a4c8",
       "address": "0x0204a4c8",
       "size": "0xf4",
       "legacy_source": "src/unnamed/arm9/0204/func_0204a4c8.c",

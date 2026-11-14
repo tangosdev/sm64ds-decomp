@@ -1,6 +1,5 @@
 #include "Ov007StrokePath.h"
 #include "Ov007Picker.h"
-#define MenuMem_GetMaxAllocSize _Z23MenuMem_GetMaxAllocSizev
 
 extern int MenuMem_GetMaxAllocSize(void);
 extern int func_ov007_020c5db0(void *c);

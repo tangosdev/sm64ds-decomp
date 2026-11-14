@@ -68,14 +68,16 @@ typedef char MarutaClsnFileHandle_size_must_be_8[sizeof(MarutaClsnFileHandle) ==
 extern ResourceDescriptor data_ov030_02115a04;
 extern struct CLPS_Block data_ov030_02114f24;
 
+extern "C" {
 /* The helpers live in ov080, out of branch range of this overlay, so the ROM
  * reaches them with the pooled `ldr ip,[pc]; bx ip` tail call. long_calls is
  * positional and binds at the declaration; closed again straight after. */
 #pragma long_calls on
-extern "C" int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg);
-extern "C" int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist);
-extern "C" int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg);
+int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg);
+int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist);
+int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg);
 #pragma long_calls off
+}
 
 extern int data_ov030_021159f4;
 

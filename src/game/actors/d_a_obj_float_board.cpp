@@ -36,16 +36,14 @@
 
 /* local extern: no shared header declares these. */
 extern "C" {
-
 extern s8 gCurrentSublevel;   /* current stage id */
-extern int data_0209f32c;
-}
-/* the stage water's global height (written by d_a_obj_wc_mizu) */
+extern int data_0209f32c;     /* the stage water's global height (written by d_a_obj_wc_mizu) */
 
-int SurfaceInfo_TestFlag0x20(int *p);
 
 /* Stores into the mesh collider's two callback slots (+0x1c / +0x18 of the
    embedded dBgW; the +0x0c store is dBgW::SetClipRadius). */
+}
+int SurfaceInfo_TestFlag0x20(int *p);
 
 /* ROM ordinals 0 and 1 -- ov002 0x020b5a18 (D0, 0x58) and 0x020b5a70 (D1,
  * 0x44). No source here: both destructor variants come from the ONE

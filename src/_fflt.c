@@ -17,7 +17,7 @@
 // this block, which is the tell that these are one hand-written assembly file.
 
 extern unsigned int *func_0207322c(void);
-extern float _Z13func_0206ddccfi(float a, int op);
+extern float func_0206ddcc(float a, int op);
 
 asm float _fflt(int value)
 {
@@ -64,13 +64,13 @@ _L090:
     bx lr
     stmdb sp!, {lr}
     ldr r1, [pc, #0x1c]
-    bl _Z13func_0206ddccfi
+    bl func_0206ddcc
     ldmia sp!, {lr}
     bx lr
 _L0b0:
     stmdb sp!, {lr}
     ldr r1, [pc, #0xc]
-    bl _Z13func_0206ddccfi
+    bl func_0206ddcc
     ldmia sp!, {lr}
     bx lr
 _pool40000308:

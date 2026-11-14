@@ -69,15 +69,12 @@ bool PlaySub(u32, u32, u32, int, bool);
 }
 
 extern "C" {
-
 extern SoundObjRow data_ov002_0210c080[]; /* 7 rows; row 7 is the _ZTV12daSoundObj_c header */
 extern int gSubSoundID;                   /* current sub-sound ID, owned by Sound::PlaySub */
 extern int gMusicVolume;                  /* MUSIC_VOLUME_LSL_12 */
-extern int gSubVolume;
+extern int gSubVolume;                    /* MESSAGE_SOUND_VOLUME_LSL_12 */
 }
-/* MESSAGE_SOUND_VOLUME_LSL_12 */
 extern int func_0200f7f0(dActor_c *actor, u16 *counter);
-
 int func_ov002_020f9468(daSoundObj_c *self, u16 *counter);
 int func_ov002_020f93a8(daSoundObj_c *self, u16 *counter);
 
@@ -108,7 +105,8 @@ SoundObjectCallback data_ov002_0211110c[7] = {
     *(SoundObjectCallback *)&data_ov002_0210c028,
 };
 
-daSoundObj_c *daSoundObj_c_classInit() {
+daSoundObj_c *daSoundObj_c_classInit()
+{
     return new daSoundObj_c();
 }
 
@@ -191,7 +189,8 @@ int func_ov002_020f9468(daSoundObj_c *self, u16 *counter) {
     return 0;
 }
 
-int func_ov002_020f93a8(daSoundObj_c *self, u16 *counter) {
+int func_ov002_020f93a8(daSoundObj_c *self, u16 *counter)
+{
     if (counter[0] < self->mCounterLimit) {
         int vol = self->mVolume;
         if (Sound::PlaySub(self->mSoundID, vol, 0x7f, ((0x7f - vol) << 12) / 5, 1) != 0)

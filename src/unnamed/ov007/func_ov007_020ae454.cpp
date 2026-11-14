@@ -6,6 +6,8 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
 
+extern "C" {
+
 /* Item 1's wiggle: while its state is idle and wiggleTimer runs, posY swings
  * about the layout's home row on a sine that fades out with the remaining
  * time. */
@@ -33,4 +35,5 @@ void func_ov007_020ae454(Ov007ItemNode *self) {
         int e = s->layout->homeY;
         s->posY = e << 0xc;
     }
+}
 }

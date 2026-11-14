@@ -178,21 +178,21 @@
       "ordinal": 54
     },
     {
-      "symbol": "_Z20Vec3fSetDistAndAngleP7Vector3PKS_iss",
+      "symbol": "Vec3fSetDistAndAngle",
       "address": "0x02007c14",
       "size": "0x00000088",
       "legacy_source": "src/unnamed/arm9/0200/func_02007c14.c",
       "ordinal": 55
     },
     {
-      "symbol": "_Z20Vec3fGetDistAndAnglePK7Vector3S1_PiPsS3_",
+      "symbol": "Vec3fGetDistAndAngle",
       "address": "0x02007c9c",
       "size": "0x00000050",
       "legacy_source": "src/unnamed/arm9/0200/func_02007c9c.c",
       "ordinal": 56
     },
     {
-      "symbol": "_Z13func_02007cecPvPK7Vector3i",
+      "symbol": "func_02007cec",
       "address": "0x02007cec",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0200/func_02007cec.c",

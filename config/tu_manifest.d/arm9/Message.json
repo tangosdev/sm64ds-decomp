@@ -34,7 +34,7 @@
       "ordinal": 0
     },
     {
-      "symbol": "_Z13func_0201cd08i",
+      "symbol": "func_0201cd08",
       "address": "0x0201cd08",
       "size": "0x00000108",
       "legacy_source": "src/unnamed/arm9/0201/func_0201cd08.cpp",
@@ -48,7 +48,7 @@
       "ordinal": 2
     },
     {
-      "symbol": "_Z13func_0201cebcs",
+      "symbol": "func_0201cebc",
       "address": "0x0201cebc",
       "size": "0x000000c4",
       "legacy_source": "src/unnamed/arm9/0201/func_0201cebc.c",
@@ -62,7 +62,7 @@
       "ordinal": 4
     },
     {
-      "symbol": "_Z13func_0201cfb8i",
+      "symbol": "func_0201cfb8",
       "address": "0x0201cfb8",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0201/func_0201cfb8.c",
@@ -90,7 +90,7 @@
       "ordinal": 8
     },
     {
-      "symbol": "_Z13func_0201d418ii",
+      "symbol": "func_0201d418",
       "address": "0x0201d418",
       "size": "0x00000178",
       "legacy_source": "src/unnamed/arm9/0201/func_0201d418.c",
@@ -104,14 +104,14 @@
       "ordinal": 10
     },
     {
-      "symbol": "_Z24Message_DrawCenteredLineii",
+      "symbol": "Message_DrawCenteredLine",
       "address": "0x0201d6a0",
       "size": "0x000001b0",
       "legacy_source": "src/Message_DrawCenteredLine.c",
       "ordinal": 11
     },
     {
-      "symbol": "_Z13func_0201d850j",
+      "symbol": "func_0201d850",
       "address": "0x0201d850",
       "size": "0x000007f4",
       "legacy_source": "src/unnamed/arm9/0201/func_0201d850.c",
@@ -132,7 +132,7 @@
       "ordinal": 14
     },
     {
-      "symbol": "_Z13func_0201e220i",
+      "symbol": "func_0201e220",
       "address": "0x0201e220",
       "size": "0x000000f4",
       "legacy_source": "src/unnamed/arm9/0201/func_0201e220.cpp",
@@ -174,7 +174,7 @@
       "ordinal": 20
     },
     {
-      "symbol": "_Z13func_0201eaacv",
+      "symbol": "func_0201eaac",
       "address": "0x0201eaac",
       "size": "0x000000e8",
       "legacy_source": "src/unnamed/arm9/0201/func_0201eaac.c",
@@ -230,14 +230,14 @@
       "ordinal": 28
     },
     {
-      "symbol": "_Z32ObjectMessageIDToActualMessageIDs",
+      "symbol": "ObjectMessageIDToActualMessageID",
       "address": "0x0201fc10",
       "size": "0x00000078",
       "legacy_source": "src/ObjectMessageIDToActualMessageID.c",
       "ordinal": 29
     },
     {
-      "symbol": "_Z13func_0201fc88s",
+      "symbol": "func_0201fc88",
       "address": "0x0201fc88",
       "size": "0x00000024",
       "legacy_source": "src/unnamed/arm9/0201/func_0201fc88.c",

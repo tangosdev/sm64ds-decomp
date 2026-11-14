@@ -101,11 +101,11 @@ struct OamAttr;
 dScStage_c::graphCallback_c sStageGraphCallback;
 dClipper data_0209f43c;
 
-int IsButtonInputValid(void);
-int SublevelToLevel(int lv);
-int GetOwnerLanguage(void);
-void GiveLives(int n);
-void Deallocate(void *ptr);
+extern "C" int IsButtonInputValid(void);
+extern "C" int SublevelToLevel(int lv);
+extern "C" int GetOwnerLanguage(void);
+extern "C" void GiveLives(int n);
+extern "C" void Deallocate(void *ptr);
 int func_02029408(void);
 void SetControllerMode(unsigned char m);
 int IsStarCollected(int lv, int star);
@@ -577,7 +577,6 @@ int IsCannonOpenInLevel(s8 levelID);
 void CollectStarInLevel(s8 levelID, s32 starID);
 int IsStarCollectedInLevel(s8 levelID, s32 starID);
 void func_ov002_020b18f0(char *a);
-extern "C" {}
 void UnloadLevelOverlays(int levelID);
 void LoadLevelOverlays(int level);
 void LoadOrUnloadObjectOverlays(void (*fn)(int), int levelID);
@@ -2791,7 +2790,7 @@ int func_02029600(int x) {
     return 0;
 }
 
-int IsButtonInputValid(void) {
+extern "C" int IsButtonInputValid(void) {
     int mode;
     int val;
 
@@ -2875,13 +2874,13 @@ void StartExitCharacterWipe(void) {
     StartExitFaderWipe(data_020755bc[data_0209caa0.file.mCharacter]);
 }
 
-void StartExitFaderWipe(int index) {
+extern "C" void StartExitFaderWipe(int index) {
     dFdWipe_c *f = &((dFdWipe_c *)data_0209f324)[index];
     dScene_c::SetFaders(f);
     f->SetToStart();
 }
 
-void FUN_02029934(void) {
+extern "C" void FUN_02029934(void) {
     dFdBrightness_c *o = gSceneFader;
     if (o->IsBetweenStartAndEnd() == 0) {
         data_0209d4b0 = 0;
@@ -2904,7 +2903,7 @@ struct WipeFader {
     virtual void w8();
     virtual void w9();
 };
-void FUN_02029980(void) {
+extern "C" void FUN_02029980(void) {
     if (gSceneFader->IsBetweenStartAndEnd() != 0)
         return;
     WipeFader *o2 = (WipeFader *)((dFdWipe_c *)data_0209f324 + 6);
@@ -2922,7 +2921,7 @@ void FUN_020299f4(void) {
     o2->w4(0x1e, 0);
 }
 
-void FUN_02029a68(void) {
+extern "C" void FUN_02029a68(void) {
     if (data_0209d4b0 == (int)((dFdWipe_c *)data_0209f324 + 6)) {
         data_0209d4b0 = 0;
         G2_BlendNone();
@@ -2953,7 +2952,7 @@ void EnterBigBoosHaunt(void) {
 
 /* Kill the player: if lives remain, go to the next level with reason 2,
    otherwise trigger a game-over scene fade. Then play the death sound. */
-void KillPlayer(void) {
+extern "C" void KillPlayer(void) {
     if (gNumLives != 0)
         SetNextLevel(2);
     else
@@ -3034,7 +3033,7 @@ void SetNextStar(void) {
 
 /* The actor death table: one 16-word row of bits per level part, indexed by
    an actor's deathTableID. */
-void DeathTable_ClearBit(s32 id) {
+extern "C" void DeathTable_ClearBit(s32 id) {
     if (id < 0)
         return;
     s32 level = GetLevelPart(gCurrentSublevel);
@@ -3115,7 +3114,7 @@ void dScStage_c::RenderVsModeNewStar() {
     data_0209f1f4 = 0;
 }
 
-void FUN_0202a130(void) {
+extern "C" void FUN_0202a130(void) {
     if (data_0209f2bc != 0)
         return;
     data_0209f308 = 0xb4;
@@ -3170,7 +3169,7 @@ void dScStage_c::RenderVsModeCountdown() {
         OAM::Render(0, (OamAttr *)&data_ov002_0210d420, 0x80, 0x50, -1, -1, 0x1000, 0x1000, 0, -1);
 }
 
-s32 NumVsStarsObtained(void) {
+extern "C" s32 NumVsStarsObtained(void) {
     int i = 1;
     signed char sum = gNumStageStars[0];
     signed char *p;
@@ -3207,7 +3206,7 @@ void ClearSpikeBomb(int idx) {
         data_0209f3a4[idx] = 0;
 }
 
-int AddSpikeBomb(void *p) {
+extern "C" int AddSpikeBomb(void *p) {
     int i;
     for (i = 0; i < 8; i++) {
         if (data_0209f3a4[i] == 0) {
@@ -3223,11 +3222,11 @@ void SetStarMarker(int i, dActor_c *actor, int v2) {
     gStarMarkerTypes[i] = v2;
 }
 
-void OpenCannonInCurLevel(void) {
+extern "C" void OpenCannonInCurLevel(void) {
     OpenCannonInLevel(gCurrentSublevel);
 }
 
-int IsCannonOpenInCurLevel(void) {
+extern "C" int IsCannonOpenInCurLevel(void) {
     return IsCannonOpenInLevel(gCurrentSublevel);
 }
 
@@ -3300,7 +3299,7 @@ void GiveCoins(int idx, int amount) {
 }
 
 /* Returns the clamped health, which daPly_c::GiveHealth hands straight back. */
-int GiveHealth(int idx, int amt) {
+extern "C" int GiveHealth(int idx, int amt) {
     int v;
     gPlayerHealth[idx] += amt;
     v = gPlayerHealth[idx];
@@ -3316,7 +3315,7 @@ int GiveHealth(int idx, int amt) {
     return v;
 }
 
-void func_0202a850(int a, int b) {
+extern "C" void func_0202a850(int a, int b) {
     data_02092138 = a;
     data_0209212c = b;
     data_02092138 -= 0x64000;
@@ -3431,14 +3430,14 @@ unsigned char IsAreaShowing(int idx) {
     return ((StageArea *)data_0209f314)[idx].mShowing;
 }
 
-void ChangeArea(int areaID) {
+extern "C" void ChangeArea(int areaID) {
     if (gCurrentAreaId >= 0)
         HideArea(gCurrentAreaId);
     gCurrentAreaId = areaID;
     ShowArea(areaID);
 }
 
-void GiveLives(int delta) {
+extern "C" void GiveLives(int delta) {
     int v = gNumLives + delta;
     if (v < 0)
         v = 0;
@@ -3494,14 +3493,14 @@ void LoadLevel(int levelID, u32 entranceID, int starID, u32 arg3, s8 returnState
     }
 }
 
-void LoadLevelNoReturn(int levelID, u32 arg1, u32 arg2, u32 arg3) {
+extern "C" void LoadLevelNoReturn(int levelID, u32 arg1, u32 arg2, u32 arg3) {
     LoadLevel(levelID, arg1, arg2, arg3, -1);
     gReturnSublevel = -1;
     gCheckpointSublevel = -1;
 }
 
 /* Initialise the player globals: lives, health, controller mode. */
-void SetPlayerGlobals(void) {
+extern "C" void SetPlayerGlobals(void) {
     gNumLives = 4;
     s32 i = 0;
     do {
@@ -3517,7 +3516,7 @@ void SetPlayerGlobals(void) {
 
 /* Leave the minigame menu, either back to the rec room or fading to the main
    menu. */
-void ExitMinigameMenu(void) {
+extern "C" void ExitMinigameMenu(void) {
     if (data_0209f298) {
         LoadLevelNoReturn(0x32, 4, 1, 0);
         gCurrentSublevel = 6;
@@ -3544,14 +3543,14 @@ void PrepareVsMode(void) {
     SaveData::SetDefaultValues(&data_0209caa0.file);
 }
 
-void func_0202ae74(void) {
+extern "C" void func_0202ae74(void) {
     StartFile(1, 0);
 }
 
 /* Start a single-player file: clear the game mode, load the level, set the
    player globals, copy the current character to data_02092128, one player,
    clear the star/level flags, then start the scene fade. */
-void StartFile(s8 levelID, u8 entranceID) {
+extern "C" void StartFile(s8 levelID, u8 entranceID) {
     gGameMode = 0;
     LoadLevelNoReturn(levelID, entranceID, 1, 0);
     SetPlayerGlobals();
@@ -3800,7 +3799,7 @@ struct Arg {
     struct TexPalEntry *entries; /* 0x04 */
 };
 
-int CopyTexPalFromLevelModel(void *p) {
+extern "C" int CopyTexPalFromLevelModel(void *p) {
     struct Arg *arg = (struct Arg *)p;
     struct Arg *level = (struct Arg *)data_0209f320;
     int ret = 1;
@@ -3954,12 +3953,9 @@ void dScStage_c::OnPendingDestroy() {
 }
 
 void func_020391f0(void);
-void func_0203083c(void);
-extern "C" {}
+extern "C" void func_0203083c(void);
 void func_ov001_020aaf40(void);
-void func_0203db3c(int i, int v);
-extern "C" {}
-
+extern "C" void func_0203db3c(int i, int v);
 int dScStage_c::Render() {
     if (((gVsExitScreenActive | (gGamePaused | data_0209f20c)) & 0xff) == 0) {
         StageArea *area = mAreas;
@@ -4546,17 +4542,17 @@ int dScStage_c::CleanupResources() {
 // therefore wildcards to the byte gate -- but sends each address to the wrong pool slot.
 // match.py --strict-relocs is what distinguishes them; keep this order.
 void ResetInput(void);
-int SublevelToLevel(int i);
-void Initialise3dGraphics(int arg);
-void InitialiseVramGlobals(void);
+extern "C" int SublevelToLevel(int i);
+extern "C" void Initialise3dGraphics(int arg);
+extern "C" void InitialiseVramGlobals(void);
 void func_02039218(void);
 int GetSoundGroupID(int level, int mode);
-void LoadDebugFont(void);
+extern "C" void LoadDebugFont(void);
 int IsLevelInsideCastle(int level);
 int IsLevelTinyHugeIslandOutside(int level);
-int func_0203da9c(void);
-int func_0203da3c(void);
-u32 func_0203dad4(void);
+extern "C" int func_0203da9c(void);
+extern "C" int func_0203da3c(void);
+extern "C" u32 func_0203dad4(void);
 extern "C" {
 
 void Enable3dEngines(void);
@@ -4880,8 +4876,8 @@ enum ZN10dScStage_c14LoadGraphics2DEbi_AssetId {
     ASSET_D_2D_UPR_TOUCH_TO_SELECT_NSC_BIN = 0x025c
 };
 
-void LoadFont(u8 arg);
-int GetOwnerLanguage(void);
+extern "C" void LoadFont(u8 arg);
+extern "C" int GetOwnerLanguage(void);
 void LoadControllerModeText(int a);
 void LoadFont3D(void);
 extern "C" {

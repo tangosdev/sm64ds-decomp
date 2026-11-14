@@ -29,7 +29,7 @@ void func_02045d9c(void);
 #include "nitro/gx/g3_util.h"
 
 // Bring up the geometry engine with the game's default 3D state.
-void Initialise3dGraphics(int arg) {
+extern "C" void Initialise3dGraphics(int arg) {
     G3X_Init();
     G3X_InitTable();
     G3X_InitMtxStack();

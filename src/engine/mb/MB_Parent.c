@@ -73,7 +73,7 @@ extern u8 *MBi_MakeParentSendBuffer(MBCommParentBlockHeader *hdr, u8 *buf);
 extern int MBi_ReceiveRequestDataPiece(u8 *hdr, int aid);
 extern void MB_SendGameInfoBeacon(void);
 extern void MB_UpdateGameInfoMember(char *self, void *src, u32 flags, int s);
-extern int _Z13func_0206881cv(void);
+extern int func_0206881c(void);
 
 static void MBi_CommChangeParentState(u16 child, int state, void *arg);
 static void MBi_CommChangeParentStateCallbackOnly(u16 child, int state, void *arg);
@@ -229,8 +229,7 @@ void MBi_CommParentCallback(u16 type, void *arg) {
 
         /* MBi_ClearParentPieceBuffer */
         MI_CpuClear8(pPwork->req_data_buf.data_buf[sparg->aid - 1],
-                     (_Z13func_0206881cv() - 2) * (MB_COMM_REQ_DATA_SIZE + 1) /
-                         (_Z13func_0206881cv() - 2));
+                     (func_0206881c() - 2) * (MB_COMM_REQ_DATA_SIZE + 1) / (func_0206881c() - 2));
         pPwork->req_data_buf.data_bmp[sparg->aid - 1] = 0;
 
         if (pPwork->fileid_of_child[sparg->aid - 1] != -1) {

@@ -68,7 +68,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "_Z13func_02022260PiPsS0_S_",
+      "symbol": "func_02022260",
       "address": "0x02022260",
       "size": "0x00000038",
       "legacy_source": "src/unnamed/arm9/0202/func_02022260.c",

@@ -92,23 +92,27 @@ extern daMoray_c::State data_ov016_02114dbc;
 /* The zero cylinder offset has three signed components and no registered
  * lifetime work in the retail initializer: a VecFx32, not a Vector3. Its
  * components are copied into the collision API's Vector3 locals below. */
-
+extern "C" {
 extern VecFx32 data_ov016_02114d4c; /* cylinder offset, bss */
 
-extern unsigned char gCurrentStarId;
-int SublevelToLevel(int sub);
-int IsStarCollected(int level, int star);
-void func_02012694(unsigned int id, const Vector3 *pos);
-void func_020167a4(dExtAnmModel_c *model);
-void func_0204531c(char *data, s32 weight);
-short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-extern "C" {
-/* the selected star */
+extern unsigned char gCurrentStarId;        /* the selected star */
 
 int AngleDiff(int a, int b);
+int SublevelToLevel(int sub);
+/* Sound::Play(3, id, pos). Calling Play directly is one word larger
+   (StateLungeInit 0x54 -> 0x58). */
+/* UpdateBones(model.data, model.file, frame). Inlining that grows Render
+   0x8c -> 0x9c. */
+/* Blend the posed bones by blendWeight. No named method. */
+void func_0204531c(ModelComponents *data, s32 weight);
+
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 }
+int IsStarCollected(int level, int star);
+void func_02012694(unsigned int id, const Vector3 *pos);
+void func_020167a4(dExtAnmModel_c *model);
+short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 
 /* Render's per-segment bend table, one 0xc record per body bone.
  * The six ROM records are {0, 0, scale} with scales 1,1,1,1,-1,0.
@@ -119,7 +123,8 @@ struct MorayRenderStep {
     s32 angleScale;
 };
 
-extern MorayRenderStep data_ov016_02114908[];
+
+extern "C" MorayRenderStep data_ov016_02114908[];
 
 /* Out of line, and FIRST in this ROM-ascending file: that puts D1 and D0 at
  * 0x021111a0 / 0x02111208, the two lowest addresses in the unit.
@@ -626,7 +631,7 @@ s32 daMoray_c::Render()
         step++;
         bone++;
     }
-    func_0204531c((char *)&mBlendAnmModel.data, mBlendAnmModel.blendWeight);
+    func_0204531c(&mBlendAnmModel.data, mBlendAnmModel.blendWeight);
     mBlendAnmModel.dExtSimpleModel_c::Render(0);
     return 1;
 }
@@ -798,7 +803,8 @@ s32 daMoray_c::InitResources()
  * The implicit constructor builds the base, collision cylinders, background
  * checker, model animation, and seven segment positions in declaration order.
  * Vector3's empty default constructor is the array callback at 0x0203d384. */
-daMoray_c *daMoray_c_classInit() {
+daMoray_c *daMoray_c_classInit()
+{
     return new daMoray_c;
 }
 

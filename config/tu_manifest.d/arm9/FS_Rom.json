@@ -21,42 +21,42 @@
   ],
   "functions": [
     {
-      "symbol": "_Z15FS_TryLoadTablePvj",
+      "symbol": "FS_TryLoadTable",
       "address": "0x0205d94c",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0205/func_0205d94c.c",
       "ordinal": 0
     },
     {
-      "symbol": "_Z11FSi_InitRomj",
+      "symbol": "FSi_InitRom",
       "address": "0x0205d96c",
       "size": "0x00000128",
       "legacy_source": "src/FSi_InitRom.c",
       "ordinal": 1
     },
     {
-      "symbol": "_Z18FSi_RomArchiveProcP6FSFilei",
+      "symbol": "FSi_RomArchiveProc",
       "address": "0x0205da94",
       "size": "0x00000090",
       "legacy_source": "src/unnamed/arm9/0205/func_0205da94.c",
       "ordinal": 2
     },
     {
-      "symbol": "_Z22FSi_WriteDummyCallbackP9FSArchivePKvjj",
+      "symbol": "FSi_WriteDummyCallback",
       "address": "0x0205db24",
       "size": "0x00000008",
       "legacy_source": "src/unnamed/arm9/0205/func_0205db24.c",
       "ordinal": 3
     },
     {
-      "symbol": "_Z19FSi_ReadRomCallbackP9FSArchivePvjj",
+      "symbol": "FSi_ReadRomCallback",
       "address": "0x0205db2c",
       "size": "0x0000004c",
       "legacy_source": "src/unnamed/arm9/0205/func_0205db2c.c",
       "ordinal": 4
     },
     {
-      "symbol": "_Z17FSi_OnRomReadDonePv",
+      "symbol": "FSi_OnRomReadDone",
       "address": "0x0205db78",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0205/func_0205db78.c",

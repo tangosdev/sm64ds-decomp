@@ -72,14 +72,13 @@ struct SlideBoxClsnFilePtr : SharedFilePtr {
     ~SlideBoxClsnFilePtr();
 };
 
-extern SlideBoxModelFilePtr gKiSlideBoxModelFile;
-extern SlideBoxClsnFilePtr gKiSlideBoxCollisionFile;
+extern "C" SlideBoxModelFilePtr gKiSlideBoxModelFile;
+extern "C" SlideBoxClsnFilePtr gKiSlideBoxCollisionFile;
 
+extern "C" {
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(dBgCh_Actr *self, int actor, Fix12i radius, Fix12i height, int a, int b);
 extern int data_ov016_02113bac[];
-extern "C" {
-
 extern void Matrix4x3_FromRotationXYZExt(void *mtx, int angleX, int angleY, int angleZ);
 
 extern void hold_d_a_slide_box(void *thiz, void *kcl, void *mtx, int scale, short angleY,
@@ -261,7 +260,8 @@ int daSlide_Box_c::InitResources()
  * allocation size, vtable identity, and the SLIDE_BOX registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: SlidingBox_Spawn. */
-daSlide_Box_c *daSlide_Box_c_classInit() {
+daSlide_Box_c *daSlide_Box_c_classInit()
+{
     return new daSlide_Box_c();
 }
 

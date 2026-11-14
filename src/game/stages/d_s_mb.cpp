@@ -34,15 +34,11 @@
 #include "nitro/mi/memory.h"
 
 extern "C" {
-
 void DecompressLZ16(void *src, void *dst);
 
 void func_020308b4(void);
 
 void func_0201a5f8(int t);
-}
-
-void *func_0201a3e4(void);
 /* Linker-defined overlay IDs: the address is the overlay number. */
 extern int OVERLAY_100_ID;
 extern int OVERLAY_102_ID;
@@ -59,6 +55,8 @@ extern u8 gSubScreenLayers;
    of every scene's nested graphCallback_c (include/dGraph_c.h). */
 extern dGraph_c::callback_c *gGraphCallback;
 extern int data_0208ee44;
+}
+void *func_0201a3e4(void);
 
 /* Whether the loader job Behavior waits on has finished: InitResources seeds
    it from func_0201a244's return value (1 when the job ran synchronously) and

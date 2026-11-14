@@ -2,7 +2,7 @@
 extern void *func_0201817c(int fileID);
 extern u32 func_02018ac4(void *buffer);
 extern void DecompressLZ16(void *source, void *dest);
-extern void _Z10DeallocatePv(void *ptr);
+extern void Deallocate(void *ptr);
 
 u32 LoadCompressedFileAt(int fileID, void *target) {
     void *src;
@@ -14,6 +14,6 @@ u32 LoadCompressedFileAt(int fileID, void *target) {
 
     size = func_02018ac4(src);
     DecompressLZ16(src, target);
-    _Z10DeallocatePv(src);
+    Deallocate(src);
     return size;
 }

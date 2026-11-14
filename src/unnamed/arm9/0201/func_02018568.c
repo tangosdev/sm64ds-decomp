@@ -8,5 +8,5 @@ extern int data_0208edf8[];
    a + 4 (func_02018ac4) and decompress from there. The file address is an
    int here, as most of the callers declare it. */
 int func_02018568(int a) {
-    return _Z6memcmpPKvS0_j((const void *)a, data_0208edf8, 4) == 0;
+    return memcmp((const void *)a, data_0208edf8, 4) == 0;
 }

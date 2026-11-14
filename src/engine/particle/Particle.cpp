@@ -25,10 +25,6 @@
 #include "private/particle_resource_header.h"
 
 void func_02049ee8(Particle::Manager *manager, Matrix4x3 *renderState);
-void func_02049f58(Particle::Manager *manager);
-int func_0204a0dc(Particle::Manager *manager, u32 (*allocTexVram)(u32, u32));
-int func_0204a028(Particle::Manager *manager, u32 (*allocPalVram)(u32, u32));
-void func_0204a17c(Particle::Manager *manager, char *resource);
 extern "C" {
 
 void DecompressLZ16(const void* src, void* dst);
@@ -67,7 +63,7 @@ dPa_c::~dPa_c() {
     gParticleControl = 0;
 }
 
-char *func_02023178(int size) {
+extern "C" char *func_02023178(int size) {
     char *block = (char *)sParticleHeapCursor;
     sParticleHeapCursor = block + size;
     return block;

@@ -6,14 +6,14 @@ extern u16 data_020a0e48[4];
 extern u16 data_020a0e50[4];
 extern PadData data_020a0e58[4];
 
-extern u16 _Z13func_0203dae4i(int idx);
+extern u16 func_0203dae4(int idx);
 
 void func_0203bc7c(void) {
     PadData *p = data_020a0e58;
     int i;
     data_020a0e44 = 0;
     for (i = 0; i < 4; i++) {
-        u16 keys = _Z13func_0203dae4i(i);
+        u16 keys = func_0203dae4(i);
         u16 old;
         int changed;
         if ((keys & 0x30) == 0x30)

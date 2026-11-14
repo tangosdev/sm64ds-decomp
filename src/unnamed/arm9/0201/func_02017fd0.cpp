@@ -4,6 +4,8 @@
 #include "nitro/fs/overlay.h"
 #include "nitro/mi/memory.h"
 
+extern "C" {
+
 /* Poison an unloaded overlay's RAM (UnloadOverlay): invalidate both caches
    over its code and bss, then fill them with 0xe6000010, an ARM undefined
    instruction, so a stale call into it traps. */
@@ -24,4 +26,5 @@ void func_02017fd0(FSOverlayInfo *info) {
 
     fillVal = 0xe6000010;
     MI_CpuFill32(ptr, fillVal, len);
+}
 }

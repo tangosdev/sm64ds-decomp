@@ -10,7 +10,7 @@
 // The C++ entry point IRQ::SetIRQState(bool) is the `ldr`/`bx` at +0x10; the
 // link defines it at its ROM address. The block itself keeps C linkage under its
 // address name.
-asm int func_0206da18(void) {
+extern "C" asm int func_0206da18(void) {
     mov r0, #0
     b lbl
     mov r0, #1

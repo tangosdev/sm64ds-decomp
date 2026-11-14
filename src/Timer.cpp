@@ -70,7 +70,8 @@ void Timer::ResetTimer()
 /* The C1 constructor (ResetTimer, then return this) stays an extern "C"
    helper under its address name; the Timer::Timer() spelling would rename
    the symbol. */
-Timer *func_0201964c(Timer *__this) {
+Timer *func_0201964c(Timer *__this)
+{
     __this->ResetTimer();
     return __this;
 }

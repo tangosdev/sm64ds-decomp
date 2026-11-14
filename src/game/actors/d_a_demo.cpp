@@ -246,7 +246,7 @@ extern int data_ov002_02100140[];
 extern void func_ov002_020f2790(char *c, int p1, int p2, int p3, short p4);
 extern int func_ov002_020f2984(char *p);
 
-extern int GetOwnerLanguage(void);
+extern "C" int GetOwnerLanguage(void);
 extern "C" {
 
 extern void OamRender10_d_a_demo(int a, struct OamAttr *attr, int x, int y, int e, int f, int g,
@@ -319,10 +319,10 @@ extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 }
 
-extern void Deallocate(void* p);
-extern void GXS_LoadBG1Scr(const void *src, int offset, int count);
-extern void GXS_LoadBG3Scr(const void *src, u32 offset, u32 count);
-extern void GXS_LoadBG2Scr(const void *src, u32 offset, u32 count);
+extern "C" void Deallocate(void* p);
+extern "C" void GXS_LoadBG1Scr(const void *src, int offset, int count);
+extern "C" void GXS_LoadBG3Scr(const void *src, u32 offset, u32 count);
+extern "C" void GXS_LoadBG2Scr(const void *src, u32 offset, u32 count);
 
 extern void func_ov002_020f5ad4(char* c);
 extern void func_ov002_020f5f60(char *c);

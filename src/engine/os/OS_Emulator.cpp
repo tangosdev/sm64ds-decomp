@@ -19,8 +19,9 @@
 #include "nitro/os/spinLock.h"
 #include "nitro/os/emulator.h"
 
-extern int data_0209a040;
-/* OSi_ConsoleTypeCache, initialised to -1 */
+extern "C" {
+
+extern int data_0209a040; /* OSi_ConsoleTypeCache, initialised to -1 */
 
 int OSi_GetDeviceType(void);
 int OSi_IsRunOnDebugger(void);
@@ -87,4 +88,5 @@ int OSi_IsRunOnDebugger(void) {
     else
         checkAddress = HW_CHECK_DEBUGGER_BUF2;
     return *(volatile u16 *)checkAddress == 1;
+}
 }

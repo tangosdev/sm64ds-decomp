@@ -2,9 +2,9 @@
 #include "BMD_File.h"
 #include "private/BTP_File.h"
 
-int _Z13func_020471acPK8BMD_FilePKc(const struct BMD_File *model, const char *name);
-int _Z13func_02047144PK8BMD_FilePKc(const struct BMD_File *model, const char *name);
-int _Z13func_02046590PKvPKc(const void *model, const char *name);
+int func_020471ac(const struct BMD_File *model, const char *name);
+int func_02047144(const struct BMD_File *model, const char *name);
+int func_02046590(const void *model, const char *name);
 
 /* dExtAnmTexPat_c::Prepare's body (see dExtAnmTexPat_c.h): resolve the
    texture-pattern file's three name tables against the BMD, the first
@@ -16,13 +16,13 @@ void func_02046d50(struct BMD_File *model, BTP_File *file) {
 
     rec = file->texRecords;
     for (i = 0; i < file->numTexRecords; i++, rec++) {
-        rec->resourceId = _Z13func_020471acPK8BMD_FilePKc(model, rec->name);
+        rec->resourceId = func_020471ac(model, rec->name);
     }
     rec = file->palRecords;
     for (i = 0; i < file->numPalRecords; i++, rec++) {
-        rec->resourceId = _Z13func_02047144PK8BMD_FilePKc(model, rec->name);
+        rec->resourceId = func_02047144(model, rec->name);
     }
     for (i = 0; i < file->numSeqRecords; i++) {
-        file->seqRecords[i].materialId = _Z13func_02046590PKvPKc(model, file->seqRecords[i].name);
+        file->seqRecords[i].materialId = func_02046590(model, file->seqRecords[i].name);
     }
 }

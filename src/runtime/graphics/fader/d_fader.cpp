@@ -35,7 +35,6 @@
 int ApproachLinear(Fix12i &value, Fix12i target, Fix12i step);
 
 extern "C" {
-
 void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *m, Fix12i x, Fix12i y, Fix12i z);
 }
 

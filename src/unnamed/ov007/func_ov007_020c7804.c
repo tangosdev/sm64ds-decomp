@@ -1,6 +1,5 @@
 #include "Ov007Spring.h"
 
-#define func_ov007_020c8010 _Z19func_ov007_020c8010P9Ov007LinkP13Ov007FollowerS2_
 extern void func_ov007_020c8010(Ov007Link *link, Ov007Follower *from, Ov007Follower *to);
 
 /* Binds each link i to points i and i + 1 (the last wraps to point 0 when

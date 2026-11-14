@@ -7,8 +7,6 @@ extern "C" {
 
 extern void func_0201a490(void);
 extern void func_02019ebc(void);
-}
-
 extern mHeap::Heap_t *data_020a0e9c;
 
 /* NitroSDK's startup hook. crt0 calls it after _fp_init and before
@@ -23,4 +21,5 @@ void NitroStartUp(void) {
     func_02019ebc();
     mHeap::Heap_t::InitializeRootHeap();
     data_020a0e9c->SetNodeID(1);
+}
 }

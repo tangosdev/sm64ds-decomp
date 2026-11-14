@@ -66,7 +66,7 @@ void func_ov007_020b40c0(void) {
     data_ov007_0210336c = 0;
 }
 
-void *func_ov007_020b3f20(int idx) {
+extern "C" void *func_ov007_020b3f20(int idx) {
     if (idx == 0) {
         return 0;
     }

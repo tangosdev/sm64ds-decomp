@@ -41,10 +41,11 @@ typedef char KiFuneModelFilePtr_size_must_be_8[sizeof(KiFuneModelFilePtr) == 8 ?
 typedef char KiFuneClsnFileHandle_size_must_be_8[sizeof(KiFuneClsnFileHandle) == 8 ? 1 : -1];
 
 /* local extern: no shared header declares these. */
-extern int IsStarCollected(int a, int b);
-extern "C" {}
+extern "C" {
 
 extern unsigned char gCurrentStarId;
+}
+extern int IsStarCollected(int a, int b);
 
 /* Actor 0x39 is the rocking hull, which uses model/collision index 0. */
 static inline int IsRockingHull(daObjKi_Fune_c *ship) {

@@ -106,7 +106,7 @@ enum {
    spawned PAKUN the grow-in frame. */
 
 void func_02012694(u32 id, const Vector3 *pos);
-short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+extern "C" short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 int IsStarCollectedInCurLevel(s32 flag);
 void SetStarMarker(int i, dActor_c *self, int v);
 extern "C" void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);

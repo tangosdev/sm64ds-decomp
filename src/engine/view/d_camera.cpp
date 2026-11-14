@@ -116,7 +116,6 @@ extern void *data_ov002_0210c3b0;
 extern void *data_ov002_0210c3e0[2];
 
 extern "C" {
-
 /* Siblings below 0x0200bec4 (defined at the end of the file). */
 extern int func_020092c4(void *cam, Vector3 *out, const Vector3 *target);
 extern s32 Math_Function_0203b14c(s32 *p, s32 tgt, s32 rate, s32 lim, s32 step);
@@ -124,19 +123,17 @@ extern s32 Math_Function_0203b14c(s32 *p, s32 tgt, s32 rate, s32 lim, s32 step);
 
 extern int StartWithFarCamera();
 extern "C" {
-
 /* Actor-table factory; the registry row names the bare symbol. */
 extern dCamera_c *dCamera_c_classInit();
 }
 
 extern struct ViewObj *GetViewObj(int idx);
 
-extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
+extern "C" s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
-extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-extern int Vec3_HorzLen(const Vector3 *v);
+extern "C" int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
+extern "C" int Vec3_HorzLen(const Vector3 *v);
 extern "C" {
-
 extern int VEC_Mag(void *v);
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
@@ -149,9 +146,8 @@ extern void Vec3_RotateYAndTranslate(void *out, const void *in, short angle, con
 extern void MTX_MultVec43(void *dst, Matrix4x3 *src, void *out);
 }
 
-extern s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
+extern "C" s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern "C" {
-
 /* local extern: including math/MtxStack.h renumbers this TU's function-local
    statics (sScriptOps, sPrevTurnInput), whose numbered names symbols.txt
    records, so its matrix routines stay declared here. */
@@ -1424,7 +1420,6 @@ dActor_c *KuppaScript::FindDemoActor(u32 param1);
    func_02009e70 no longer reproduce. C linkage matches the definition. */
 extern "C" s32 ApproachAngle(s16 *cur, s32 target, s32 div, s32 band, s32 step);
 extern "C" {
-
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 /* local extern: math/MtxStack.h declares these; see the matrix helpers above. */
 extern void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
@@ -1471,7 +1466,6 @@ extern int data_0208724c;
 extern int data_0208729c;
 extern struct CamMode data_020874cc;
 extern "C" {
-
 /* Siblings defined below. */
 int func_02009414(dCamera_c *cam);
 int func_020094a8(dCamera_c *cam);
@@ -1480,12 +1474,11 @@ short func_02008abc(dCamera_c *cam);
 short func_02008a70(dCamera_c *cam);
 }
 
-void Vec3fSetDistAndAngle(Vector3 *res, const Vector3 *trans, int mag, short ang, short angY);
-void Vec3fGetDistAndAngle(const Vector3 *v0, const Vector3 *v1, int *outDist, short *outVertAng,
+extern "C" void Vec3fSetDistAndAngle(Vector3 *res, const Vector3 *trans, int mag, short ang, short angY);
+extern "C" void Vec3fGetDistAndAngle(const Vector3 *v0, const Vector3 *v1, int *outDist, short *outVertAng,
                           short *outHorzAng);
 void ApproachVec3fAsymptotic(Vector3 *self, const Vector3 *src, int stepX, int stepY, int stepZ);
 extern "C" {
-
 /* State entries and helpers defined below. The declarations carry the C
    linkage their ROM symbols need. */
 int func_02009e30(dCamera_c *cam);
@@ -3597,13 +3590,13 @@ void ApproachVec3fAsymptotic(Vector3 *self, const Vector3 *src, int stepX, int s
 /* The same with one rate for all three axes. Its callers' declaration
    says int, and the ROM hands back whatever ApproachVec3fAsymptotic left in r0, so
    there is no return statement. */
-int func_02007cec(void *dest, const Vector3 *src, int step) {
+extern "C" int func_02007cec(void *dest, const Vector3 *src, int step) {
     ApproachVec3fAsymptotic((Vector3 *)dest, src, step, step, step);
 }
 
 /* Super Mario 64's vec3f_get_dist_and_angle: the distance and the pitch and
    yaw from v0 to v1. */
-void Vec3fGetDistAndAngle(const Vector3 *v0, const Vector3 *v1, int *outDist, short *outVertAng,
+extern "C" void Vec3fGetDistAndAngle(const Vector3 *v0, const Vector3 *v1, int *outDist, short *outVertAng,
                           short *outHorzAng) {
     *outDist = Vec3_Dist(v0, v1);
     *outVertAng = Vec3_VertAngle(v1, v0);
@@ -3613,7 +3606,7 @@ void Vec3fGetDistAndAngle(const Vector3 *v0, const Vector3 *v1, int *outDist, sh
 /* Super Mario 64's vec3f_set_dist_and_angle, the inverse: res is trans plus
    mag along pitch ang, turned by yaw angY. The N64 takes the origin first;
    this takes the result first. */
-void Vec3fSetDistAndAngle(Vector3 *res, const Vector3 *trans, Fix12i mag, short ang, short angY) {
+extern "C" void Vec3fSetDistAndAngle(Vector3 *res, const Vector3 *trans, Fix12i mag, short ang, short angY) {
     Vector3 v;
     unsigned idx = (unsigned short)ang >> 4;
 

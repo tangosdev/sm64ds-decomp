@@ -71,8 +71,10 @@
  * rejects two extern "C" declarations of one name that disagree, so one
  * spelling has to serve every call site. Data objects stay in the bodies:
  * a variable's name does not mangle. */
+extern "C" {
 
-extern "C" void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
+void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
+}
 
 /* Actor IDs 0xbf, 0x10b and 0x10c are PLAYER, UKIKI_THIEF and UKIKI_STAR.
  * dActor_c::mFlags bits 0x20000 and 0x40000 are the two yoshi-mouth states.
@@ -1397,11 +1399,14 @@ extern MkyAnimFilePtr data_ov030_02115cf0;
  * inside a daMky_c method gets C++ linkage and the reference mangles a
  * second time, so these callees are declared here. The func_ov030_*
  * methods above are members of this class and are not redeclared. */
+extern "C" {
 
 extern SharedFilePtr  data_ov002_0210da40;
 extern SharedFilePtr  data_ov002_0210d9a0;
 extern SharedFilePtr  data_ov002_0210d9c0;
 extern SharedFilePtr *data_ov030_02114824[10];
+
+}
 
 /* Vtable slot 3.  Releases the four shared files the class holds plus its
  * ten-entry table; it never touches `this`, which is why the legacy C form
@@ -1525,7 +1530,8 @@ void daMky_c::OnTurnIntoEgg(daPly_c &player) {
  * allocation size, vtable identity, and the MONKEY_STAR registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: UkikiStar_Spawn. */
-daMky_c *daMky_c_classInit_MONKEY_STAR() {
+daMky_c *daMky_c_classInit_MONKEY_STAR()
+{
     return new daMky_c();
 }
 
@@ -1533,7 +1539,8 @@ daMky_c *daMky_c_classInit_MONKEY_STAR() {
  * allocation size, vtable identity, and the MONKEY_THIEF registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: UkikiThief_Spawn. */
-daMky_c *daMky_c_classInit_MONKEY_THIEF() {
+daMky_c *daMky_c_classInit_MONKEY_THIEF()
+{
     return new daMky_c();
 }
 
@@ -1577,7 +1584,7 @@ MkyAnimFilePtr gMonkeyWait4AnimationFile(ASSET_MONKEY_WAIT4_BCA);
 
 /* Eleven {enter, update} pairs. Brace-init is what makes __sinit copy the
  * 22 pointer-to-member constants; a constructor body here scalarizes. */
-daMky_c::StateFunctions data_ov030_02115e0c[11] = {
+extern "C" daMky_c::StateFunctions data_ov030_02115e0c[11] = {
     {&daMky_c::EnterState0, &daMky_c::func_ov030_02113ff0},
     {&daMky_c::EnterState1, &daMky_c::func_ov030_02113d20},
     {&daMky_c::EnterState2, &daMky_c::func_ov030_02113b38},

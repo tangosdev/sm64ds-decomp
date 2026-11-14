@@ -20,28 +20,28 @@
   ],
   "functions": [
     {
-      "symbol": "_Z12OS_GetTickLov",
+      "symbol": "OS_GetTickLo",
       "address": "0x02059640",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0205/func_02059640.c",
       "ordinal": 0
     },
     {
-      "symbol": "_Z10OS_GetTickv",
+      "symbol": "OS_GetTick",
       "address": "0x02059650",
       "size": "0x000000b0",
       "legacy_source": "src/unnamed/arm9/0205/func_02059650.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "_Z15OSi_CountUpTickv",
+      "symbol": "OSi_CountUpTick",
       "address": "0x02059700",
       "size": "0x00000088",
       "legacy_source": "src/unnamed/arm9/0205/func_02059700.c",
       "ordinal": 2
     },
     {
-      "symbol": "_Z11OS_InitTickv",
+      "symbol": "OS_InitTick",
       "address": "0x02059788",
       "size": "0x0000009c",
       "legacy_source": "src/unnamed/arm9/0205/func_02059788.cpp",

@@ -82,7 +82,7 @@ static inline SystemState &StateOf(Particle::System *system) {
     return *(SystemState *)&system->callbackFlags;
 }
 
-char *func_0204a4c8(char *(*alloc)(int), int numSystems, int numParticles, int minPolygonID,
+extern "C" char *func_0204a4c8(char *(*alloc)(int), int numSystems, int numParticles, int minPolygonID,
                     unsigned short maxPolygonID) {
     int i;
     Particle::Manager *manager;
@@ -118,7 +118,7 @@ char *func_0204a4c8(char *(*alloc)(int), int numSystems, int numParticles, int m
     return (char *)manager;
 }
 
-void func_0204a17c(Particle::Manager *manager, char *resource) {
+extern "C" void func_0204a17c(Particle::Manager *manager, char *resource) {
     int offset = sizeof(ParticleResourceHeader);
     int i;
 
@@ -226,7 +226,7 @@ void func_0204a17c(Particle::Manager *manager, char *resource) {
     }
 }
 
-int func_0204a0dc(Particle::Manager *manager, u32 (*allocTexVram)(u32, u32)) {
+extern "C" int func_0204a0dc(Particle::Manager *manager, u32 (*allocTexVram)(u32, u32)) {
     int i;
     GX_BeginLoadTex();
     for (i = 0; i < manager->mNumTextures; i++) {
@@ -242,7 +242,7 @@ int func_0204a0dc(Particle::Manager *manager, u32 (*allocTexVram)(u32, u32)) {
     return 1;
 }
 
-int func_0204a028(Particle::Manager *manager,
+extern "C" int func_0204a028(Particle::Manager *manager,
                   unsigned int (*allocPalVram)(unsigned int, unsigned int)) {
     int i;
 
@@ -266,7 +266,7 @@ int func_0204a028(Particle::Manager *manager,
     return 1;
 }
 
-void func_02049f58(Particle::Manager *manager) {
+extern "C" void func_02049f58(Particle::Manager *manager) {
     Particle::System *system = manager->mActiveSystems.head;
     Particle::System *next;
     if (system == 0)

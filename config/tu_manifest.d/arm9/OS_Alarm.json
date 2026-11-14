@@ -20,63 +20,63 @@
   ],
   "functions": [
     {
-      "symbol": "_Z16OSi_AlarmHandlerPv",
+      "symbol": "OSi_AlarmHandler",
       "address": "0x02059824",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0205/func_02059824.c",
       "ordinal": 0
     },
     {
-      "symbol": "_Z16OSi_ArrangeTimerv",
+      "symbol": "OSi_ArrangeTimer",
       "address": "0x02059834",
       "size": "0x0000011c",
       "legacy_source": "src/unnamed/arm9/0205/func_02059834.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "_Z14OS_CancelAlarmP8OSiAlarm",
+      "symbol": "OS_CancelAlarm",
       "address": "0x02059950",
       "size": "0x00000098",
       "legacy_source": "src/unnamed/arm9/0205/func_02059950.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "_Z11OS_SetAlarmP8OSiAlarmxPFvPvES1_",
+      "symbol": "OS_SetAlarm",
       "address": "0x020599e8",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/arm9/0205/func_020599e8.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "_Z15OSi_InsertAlarmP8OSiAlarmy",
+      "symbol": "OSi_InsertAlarm",
       "address": "0x02059a60",
       "size": "0x00000140",
       "legacy_source": "src/unnamed/arm9/0205/func_02059a60.c",
       "ordinal": 4
     },
     {
-      "symbol": "_Z14OS_CreateAlarmP8OSiAlarm",
+      "symbol": "OS_CreateAlarm",
       "address": "0x02059ba0",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0205/func_02059ba0.c",
       "ordinal": 5
     },
     {
-      "symbol": "_Z19OS_IsAlarmAvailablev",
+      "symbol": "OS_IsAlarmAvailable",
       "address": "0x02059bb0",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0205/func_02059bb0.c",
       "ordinal": 6
     },
     {
-      "symbol": "_Z12OS_InitAlarmv",
+      "symbol": "OS_InitAlarm",
       "address": "0x02059bc0",
       "size": "0x00000058",
       "legacy_source": "src/unnamed/arm9/0205/func_02059bc0.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_Z12OSi_SetTimerP8OSiAlarm",
+      "symbol": "OSi_SetTimer",
       "address": "0x02059c18",
       "size": "0x0000009c",
       "legacy_source": "src/unnamed/arm9/0205/func_02059c18.cpp",

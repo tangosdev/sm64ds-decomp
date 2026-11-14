@@ -1,18 +1,18 @@
 extern unsigned char data_0209d4b4;
-extern void _Z13func_02011d5ci(int mode);
+extern void func_02011d5c(int mode);
 
 void SetSoundMode(int mode)
 {
     data_0209d4b4 = mode;
     switch (mode) {
     case 0:
-        _Z13func_02011d5ci(1);
+        func_02011d5c(1);
         break;
     case 1:
-        _Z13func_02011d5ci(2);
+        func_02011d5c(2);
         break;
     default:
-        _Z13func_02011d5ci(0);
+        func_02011d5c(0);
         break;
     }
 }

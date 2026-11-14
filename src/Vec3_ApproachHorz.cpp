@@ -21,13 +21,8 @@
 struct Vector3 { int x, y, z; };
 
 extern "C" {
-
 extern void Vec3_Sub(struct Vector3 *out, const struct Vector3 *a, const struct Vector3 *b);
-}
-
 extern int Vec3_HorzLen(const struct Vector3* v);
-extern "C" {
-
 extern int VEC_Mag(const struct Vector3 *v);
 extern void Vec3_MulScalar(struct Vector3 *out, const struct Vector3 *in, int scale);
 extern void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
@@ -52,7 +47,7 @@ int ApproachLinear(Vector3 &dst, const Vector3 &target, int step) {
     return 0;
 }
 
-int Vec3_ApproachHorz(struct Vector3 *out, struct Vector3 *a, int maxStep) {
+extern "C" int Vec3_ApproachHorz(struct Vector3 *out, struct Vector3 *a, int maxStep) {
     struct Vector3 diff;
     struct Vector3 scaled;
     int len;
