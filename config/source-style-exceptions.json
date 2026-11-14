@@ -1416,6 +1416,86 @@
       "count": 1,
       "reason": "The cartridge header copy's ARM9/ARM7 rom offset, ram address and size, read as the SDK's os_reset.c reads them. No shared header declares a ROM-header struct, and adding one would be a speculative type.",
       "evidence": "NitroSDK libraries/os/common/src/os_reset.c OSi_ReloadRomData reads these six header fields through p = HW_ROM_HEADER_BUF at these offsets; ROM itcm 0x01ffdd08 size 0x90 matches 2004/b56"
+    },
+    {
+      "path": "src/minigames/d_s_mg_base.cpp",
+      "rule": "unknown-field",
+      "match": "unk_0b0",
+      "count": 1,
+      "reason": "BeforeInitResources clears gMgScene+0xb0 through the new dScMgBase_c member instead of a raw `*(s32 *)((char *)gMgScene + 0xb0)` store. It is the only access to the field anywhere in the tree; with no reader there is no evidence for a name, so none is invented. Follow-up: name it if a reader is found.",
+      "evidence": "include/dScMgBase_c.h `s32 unk_0b0; /* 0x0b0 */` (was pad_0b0[0x4]); check_header_offsets 0 mismatched; match.py dScMgBase_c::BeforeInitResources 2004/b56 on src/raw-offsets-game"
+    },
+    {
+      "path": "include/dScMgBase_c.h",
+      "rule": "unknown-field",
+      "match": "unk_0b0",
+      "count": 1,
+      "reason": "Declares the write-only s32 at 0x0b0 that BeforeInitResources clears, replacing pad_0b0[0x4] at the same offset and size; with no reader there is no evidence for a name, so none is invented. Follow-up: name it if a reader is found.",
+      "evidence": "src/minigames/d_s_mg_base.cpp BeforeInitResources is the only access; check_header_offsets include/dScMgBase_c.h 0 mismatched"
+    },
+    {
+      "path": "src/minigames/d_s_mg_amida.cpp",
+      "rule": "unknown-field",
+      "match": "unk_5370",
+      "count": 1,
+      "reason": "SetupRound stores 1 to scene+0x5370 through the new dScMgAmida_c member instead of `*(s32 *)(raw + 0x5370)` off a `(char *)this` alias. It is the only access to the field anywhere in the tree; with no reader there is no evidence for a name, so none is invented. Follow-up: name it if a reader is found.",
+      "evidence": "include/dScMgAmida_c.h `s32 unk_5370; /* 0x5370 */` (was pad_5370[0x4]); check_header_offsets 0 mismatched; match.py _ZN12dScMgAmida_c10SetupRoundEv ov006 0x020d3ba0 2004/b56"
+    },
+    {
+      "path": "include/dScMgAmida_c.h",
+      "rule": "unknown-field",
+      "match": "unk_5370",
+      "count": 1,
+      "reason": "Declares the write-only s32 at 0x5370 that SetupRound sets to 1, replacing pad_5370[0x4] at the same offset and size; with no reader there is no evidence for a name, so none is invented. Follow-up: name it if a reader is found.",
+      "evidence": "src/minigames/d_s_mg_amida.cpp SetupRound is the only access; check_header_offsets include/dScMgAmida_c.h 0 mismatched"
+    },
+    {
+      "path": "src/minigames/d_s_mg_panel.cpp",
+      "rule": "unknown-field",
+      "match": "unk_466c",
+      "count": 1,
+      "reason": "ResetRound clears scene+0x466c through the new dScMgPanel_c member instead of a raw store off a `char *scene` alias. It is the only access to the field anywhere in the tree; with no reader there is no evidence for a name, so none is invented. Follow-up: name it if a reader is found.",
+      "evidence": "include/dScMgPanel_c.h `s32 unk_466c; /* 0x466c */`; check_header_offsets 0 mismatched; match.py dScMgPanel_c::ResetRound 2004/b56"
+    },
+    {
+      "path": "src/minigames/d_s_mg_panel.cpp",
+      "rule": "unknown-field",
+      "match": "unk_4ec2",
+      "count": 1,
+      "reason": "ResetRound clears scene+0x4ec2 through the new dScMgPanel_c member instead of a raw store off a `char *scene` alias. It is the only access to the field anywhere in the tree; with no reader there is no evidence for a name, so none is invented. Follow-up: name it if a reader is found.",
+      "evidence": "include/dScMgPanel_c.h `s16 unk_4ec2; /* 0x4ec2 */`; check_header_offsets 0 mismatched; match.py dScMgPanel_c::ResetRound 2004/b56"
+    },
+    {
+      "path": "include/dScMgPanel_c.h",
+      "rule": "unknown-field",
+      "match": "unk_466c",
+      "count": 1,
+      "reason": "Declares the write-only s32 at 0x466c that ResetRound clears, at the offset and size of the pad it replaces; with no reader there is no evidence for a name, so none is invented. Follow-up: name it if a reader is found.",
+      "evidence": "src/minigames/d_s_mg_panel.cpp ResetRound is the only access; check_header_offsets include/dScMgPanel_c.h 0 mismatched"
+    },
+    {
+      "path": "include/dScMgPanel_c.h",
+      "rule": "unknown-field",
+      "match": "unk_4ec2",
+      "count": 1,
+      "reason": "Declares the write-only s16 at 0x4ec2 that ResetRound clears, at the offset and size of the pad it replaces; with no reader there is no evidence for a name, so none is invented. Follow-up: name it if a reader is found.",
+      "evidence": "src/minigames/d_s_mg_panel.cpp ResetRound is the only access; check_header_offsets include/dScMgPanel_c.h 0 mismatched"
+    },
+    {
+      "path": "src/minigames/d_s_mg_slots.cpp",
+      "rule": "unknown-field",
+      "match": "unk_4707",
+      "count": 1,
+      "reason": "Slot1_InitHud stores 1 to scene+0x4707 through the new dScMgSlot1_c member instead of a raw byte store off the void * scene. It is the only access to the field anywhere in the tree; with no reader there is no evidence for a name, so none is invented. Follow-up: name it if a reader is found.",
+      "evidence": "include/dScMgSlot1_c.h `u8 unk_4707; /* 0x4707 */` (was pad_4707[0x1]); check_header_offsets 0 mismatched; match.py _Z13Slot1_InitHudPv ov006 0x0210c638 2004/b56"
+    },
+    {
+      "path": "include/dScMgSlot1_c.h",
+      "rule": "unknown-field",
+      "match": "unk_4707",
+      "count": 1,
+      "reason": "Declares the write-only byte at 0x4707 that Slot1_InitHud sets to 1, replacing pad_4707[0x1] at the same offset and size; with no reader there is no evidence for a name, so none is invented. Follow-up: name it if a reader is found.",
+      "evidence": "src/minigames/d_s_mg_slots.cpp Slot1_InitHud is the only access; check_header_offsets include/dScMgSlot1_c.h 0 mismatched"
     }
   ]
 }
