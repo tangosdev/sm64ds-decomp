@@ -15,6 +15,7 @@
  * pending request first.
  */
 #include "types.h"
+#include "nitro/hw/mmap_global.h"
 #include "nitro/os/interrupt.h"
 #include "nitro/os/system.h"
 #include "nitro/os/systemWork.h"
@@ -27,15 +28,22 @@ typedef int BOOL;
 
 #define PXI_PROC_ARM PXI_PROC_ARM9
 
-/* The ARM9 side's PXI registers (nitro/hw/ARM9/ioreg_PXI.h). */
-static volatile u16 *const reg_PXI_INTF_p = (volatile u16 *)0x04000180;
-static volatile u16 *const reg_PXI_FIFO_CNT_p = (volatile u16 *)0x04000184;
-static volatile u32 *const reg_PXI_SEND_FIFO_p = (volatile u32 *)0x04000188;
-static volatile u32 *const reg_PXI_RECV_FIFO_p = (volatile u32 *)0x04100000;
-#define reg_PXI_INTF (*reg_PXI_INTF_p)
-#define reg_PXI_FIFO_CNT (*reg_PXI_FIFO_CNT_p)
-#define reg_PXI_SEND_FIFO (*reg_PXI_SEND_FIFO_p)
-#define reg_PXI_RECV_FIFO (*reg_PXI_RECV_FIFO_p)
+/* The ARM9 side's PXI registers, as nitro/hw/ARM9/ioreg_PXI.h spells them. */
+#define REG_PXI_INTF_OFFSET 0x180
+#define REG_PXI_INTF_ADDR (HW_REG_BASE + REG_PXI_INTF_OFFSET)
+#define reg_PXI_INTF (*(vu16 *)REG_PXI_INTF_ADDR)
+
+#define REG_PXI_FIFO_CNT_OFFSET 0x184
+#define REG_PXI_FIFO_CNT_ADDR (HW_REG_BASE + REG_PXI_FIFO_CNT_OFFSET)
+#define reg_PXI_FIFO_CNT (*(vu16 *)REG_PXI_FIFO_CNT_ADDR)
+
+#define REG_PXI_SEND_FIFO_OFFSET 0x188
+#define REG_PXI_SEND_FIFO_ADDR (HW_REG_BASE + REG_PXI_SEND_FIFO_OFFSET)
+#define reg_PXI_SEND_FIFO (*(vu32 *)REG_PXI_SEND_FIFO_ADDR)
+
+#define REG_PXI_RECV_FIFO_OFFSET 0x100000
+#define REG_PXI_RECV_FIFO_ADDR (HW_REG_BASE + REG_PXI_RECV_FIFO_OFFSET)
+#define reg_PXI_RECV_FIFO (*(vu32 *)REG_PXI_RECV_FIFO_ADDR)
 
 #define REG_PXI_FIFO_CNT_E_MASK 0x8000
 #define REG_PXI_FIFO_CNT_ERR_MASK 0x4000
