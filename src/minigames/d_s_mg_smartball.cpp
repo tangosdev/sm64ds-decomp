@@ -154,7 +154,7 @@ extern OamAttr *sSmartballDokanSprites[];
 extern OamAttr *sSmartballAnaSprites[];
 extern int func_020126e8(int a);
 extern void func_020126ac(int a0, int a1, int a2, int a3, int s0);
-extern int func_0203d570(int *a, int *b);
+extern int func_0203d570(V2 *a, V2 *b);
 extern int func_0203d434(int *p);
 extern void func_0203d630(int *p, int scale);
 extern void func_0203d480(int *out, int *in);
@@ -485,14 +485,18 @@ void cMgSmartball_wing_c::Update() {
         Mg_RenderSpriteBoth(sSmartballWingBodySprites[1], mCurrent0 >> 12, (mCurrent1 >> 12) + 5,
                             -1, 2);
     }
-    OAM::Render(0, (OamAttr *)sSmartballWingSprites[0], (mCurrent0 >> 12) - 0x10, (mCurrent1 >> 12) + 0x118,
-                -1, 1, 0x1000, 0x1000, (unsigned short)(short)(-0x4000 - mAngle), -1);
-    OAM::Render(0, (OamAttr *)sSmartballWingSprites[0], (mCurrent0 >> 12) + 0x10, (mCurrent1 >> 12) + 0x118,
-                -1, 1, 0x1000, 0x1000, (unsigned short)(short)(mAngle - 0x4000), -1);
-    OAM::Render(0, (OamAttr *)sSmartballWingSprites[1], (mCurrent0 >> 12) - 0x10, (mCurrent1 >> 12) + 0x11d,
-                -1, 2, 0x1000, 0x1000, (unsigned short)(short)(-0x4000 - mAngle), -1);
-    OAM::Render(0, (OamAttr *)sSmartballWingSprites[1], (mCurrent0 >> 12) + 0x10, (mCurrent1 >> 12) + 0x11d,
-                -1, 2, 0x1000, 0x1000, (unsigned short)(short)(mAngle - 0x4000), -1);
+    OAM::Render(0, (OamAttr *)sSmartballWingSprites[0], (mCurrent0 >> 12) - 0x10,
+                (mCurrent1 >> 12) + 0x118, -1, 1, 0x1000, 0x1000,
+                (unsigned short)(short)(-0x4000 - mAngle), -1);
+    OAM::Render(0, (OamAttr *)sSmartballWingSprites[0], (mCurrent0 >> 12) + 0x10,
+                (mCurrent1 >> 12) + 0x118, -1, 1, 0x1000, 0x1000,
+                (unsigned short)(short)(mAngle - 0x4000), -1);
+    OAM::Render(0, (OamAttr *)sSmartballWingSprites[1], (mCurrent0 >> 12) - 0x10,
+                (mCurrent1 >> 12) + 0x11d, -1, 2, 0x1000, 0x1000,
+                (unsigned short)(short)(-0x4000 - mAngle), -1);
+    OAM::Render(0, (OamAttr *)sSmartballWingSprites[1], (mCurrent0 >> 12) + 0x10,
+                (mCurrent1 >> 12) + 0x11d, -1, 2, 0x1000, 0x1000,
+                (unsigned short)(short)(mAngle - 0x4000), -1);
 }
 
 /* Slot 0: eases the flap angle toward its 0x3000 stop and rebuilds the
@@ -2786,7 +2790,7 @@ outer_loop:
         work.z = state.zero;
         work.z += mRadius;
         func_0203d388(&work.x, angle);
-        dot = func_0203d570(&work.x, &mVel0);
+        dot = func_0203d570((V2 *)&work, (V2 *)&mVel0);
         if (dot >= 0) {
             work.x += mCurrent0;
             work.z += mCurrent1;

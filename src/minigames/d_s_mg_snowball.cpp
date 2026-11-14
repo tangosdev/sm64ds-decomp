@@ -144,8 +144,8 @@ void dScMgSnowball_c::SnowSpray_DrawAll() {
     for (i = 0; i < 0x20; i++) {
         if (mSprays[i].active != 0) {
             RenderOamBothScreens(sSnowballBitSprites[mSprays[i].sprite], mSprays[i].pos.x >> 12,
-                                 ((mSprays[i].pos.y - mSprays[i].pos.z - mScrollY) >> 12) - 0x110, -1, 0,
-                                 0);
+                                 ((mSprays[i].pos.y - mSprays[i].pos.z - mScrollY) >> 12) - 0x110,
+                                 -1, 0, 0);
         }
     }
 }

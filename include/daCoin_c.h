@@ -101,7 +101,7 @@ struct daCoin_c : dActor_c {
     union {
         u8 raw;
         CoinFlagBits bits;
-    } mCoinFlags;              /* 0x3ae */
+    } mCoinFlags; /* 0x3ae */
     /* Set to 1 by LinkToBlock once it has looked for a BLOCK_L
        actor near a red coin, so the search runs one time. */
     u8  mBlockScanned;            /* 0x3af */

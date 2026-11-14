@@ -150,7 +150,8 @@ void daCoin_c::ProbeFloor() {
     offScreen = ((mFlags & 8) != 0);
     if (offScreen) return;
 
-    if (mCoinFlags.bits.floorState != FLOOR_UNPROBED) return;
+    if (mCoinFlags.bits.floorState != FLOOR_UNPROBED)
+        return;
 
     if (gCurrentSublevel == 0x1c || gCurrentSublevel == 0x27) {
         platform = dActor_c::Next(0);
@@ -305,7 +306,8 @@ void daCoin_c::UpdateModelMatrix() {
     inYoshiMouth = inYoshiMouth != 0;
     if (inYoshiMouth) return;
 
-    if (mCoinFlags.bits.active == 0) return;
+    if (mCoinFlags.bits.active == 0)
+        return;
 
     if (mCoinType == COIN_RED) {
         if (mInBrickBlock != 0) return;
@@ -673,7 +675,8 @@ void daCoin_c::StateIdle() {
     dActor_c *found;
 
     LinkToBlock();
-    if (mCoinFlags.bits.active) return;
+    if (mCoinFlags.bits.active)
+        return;
     if (Event::GetBit(mSpawnFilter) == 0) return;
     mCoinFlags.bits.active = 1;
     mBehaviorType = BEHAVIOR_RESTING;
@@ -738,7 +741,8 @@ int daCoin_c::Render()
     int flags;
     int inYoshiMouth;
 
-    if (!mCoinFlags.bits.active) return 1;
+    if (!mCoinFlags.bits.active)
+        return 1;
     flags = mFlags;
     inYoshiMouth = (flags & 0x40000) != 0;
     if (inYoshiMouth) return 1;

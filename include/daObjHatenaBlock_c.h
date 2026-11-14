@@ -39,7 +39,7 @@ struct daObjHatenaBlock_c : dBgActor_c {
        (EnterPopped), where it is the delay before the block can come
        back. */
     u16 mBounceTimer;                 /* 0x3ee */
-    s8 mStarTracked;                  /* 0x3f0 -- TrackStar's result (CONTENT_STAR only); passed back to UntrackStar */
+    s8 mStarTracked; /* 0x3f0 -- TrackStar's result (CONTENT_STAR only); passed back to UntrackStar */
     u8 mStarId;                       /* 0x3f1 -- param1 bits 8..15 (CONTENT_STAR only) */
     /* Truncated from the hitter's param1 by every combat callback, then
        ChangeState(this, STATE_BOUNCING). A prize column is picked

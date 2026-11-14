@@ -41,7 +41,7 @@
 struct daGrock_c : dEnemyBase_c {
     dExtSimpleModel_c mModel;       /* 0x110 */
     dExtShadowModel_c mShadowModel; /* 0x160 */
-    Matrix4x3 mShadowMtx; /* 0x188 */
+    Matrix4x3 mShadowMtx;           /* 0x188 */
     dCcAcPos_c mdCcAcPos_c;   /* 0x1b8 */
     dBgCh_Actr mWithMeshClsn; /* 0x1f8 */
     /* On a star rock, the uniqueID of the spawner that made it (the spawner

@@ -373,8 +373,7 @@ int daObjRotateUpdownLift_c::Behavior()
     if (prevIndex < 0)
         prevIndex = 9;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68,
-                  &cur);
+    MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68, &cur);
     MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[prevIndex], &data_020a0e68, &prev);
     Vec3_Add(&target, (const Vector3 *)&mBasePosX, &cur);
     Vec3_Sub(&remain, &mPos, &target);
@@ -467,8 +466,7 @@ int daObjRotateUpdownLift_c::InitResources()
     mWaypointIndex = (param1 & 0xf);
 
     if (mWaypointIndex == 2) {
-        Vec3_Add(&spawnAt, (const Vector3 *)&mBasePosX,
-                 &data_ov091_02134cdc[mVariant].node[0]);
+        Vec3_Add(&spawnAt, (const Vector3 *)&mBasePosX, &data_ov091_02134cdc[mVariant].node[0]);
         spawnAt.y += data_ov091_02134d1c[mVariant].y;
         Spawn(0x1d, 0xffff, spawnAt, 0, mAreaId, -1);
     }

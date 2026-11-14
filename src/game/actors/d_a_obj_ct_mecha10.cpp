@@ -156,8 +156,7 @@ int daObjCtMecha10_c::Behavior() {
         return 1;
     }
 
-    if (ApproachLinear(mAngleY, mTargetAngleY, 0xc8) &&
-        DecIfAbove0_Short(&mStepTimer) == 0) {
+    if (ApproachLinear(mAngleY, mTargetAngleY, 0xc8) && DecIfAbove0_Short(&mStepTimer) == 0) {
         mTargetAngleY += mAngleYStep;
 
         u8 setting = data_0209f2c0;

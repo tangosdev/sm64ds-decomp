@@ -48,7 +48,7 @@ struct PianoAnimationFilePtr : SharedFilePtr {
 extern PianoModelFilePtr gPianoModelFile;
 extern PianoCollisionFilePtr gPianoCollisionFile;
 extern PianoAnimationFilePtr gPianoAttackAnimationFile;
-extern CLPS_Block data_ov063_0211ecb8;
+extern char data_ov063_0211ecb8;
 
 /* local extern: no shared header declares these. */
 extern "C" {
@@ -90,7 +90,8 @@ int daPiano_c::InitResources() {
         cylinder++;
     }
     f = dBgW_Kc::LoadFile(gPianoCollisionFile);
-    mMeshCollider.SetFile((KCL_File *)f, mClsnMat, 0x199, mAngleY, data_ov063_0211ecb8);
+    mMeshCollider.SetFile((KCL_File *)f, mClsnMat, 0x199, mAngleY,
+                          *(CLPS_Block *)&data_ov063_0211ecb8);
     UpdateModelMatrix();
     UpdateClsnMatrix();
     UpdateShadows();

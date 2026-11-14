@@ -72,7 +72,7 @@ extern "C" {
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-void Vec3_Asr(Vector3 *dst, s32 *src, int shift);
+void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
 unsigned short DecIfAbove0_Short(unsigned short *timer);
 
 
@@ -457,7 +457,7 @@ int daBgSnmBdy_c::State5()
         return 1;
     Vector3 clipResult;
     Vector3 homePos;
-    Vec3_Asr(&homePos, &mHomePosX, 3);
+    Vec3_Asr(&homePos, (Vector3 *)&mHomePosX, 3);
     if (data_0209f43c.TransformAndClip(data_0209b3ec, homePos, 0x1f400, clipResult) < 0x1194000)
         return 1;
     mPosX = mHomePosX;

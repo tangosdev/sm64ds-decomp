@@ -346,7 +346,7 @@ extern int data_ov002_0210b964[3];
 extern Matrix4x3 data_020a0e68;
 extern Matrix4x3 data_0209b41c;
 extern unsigned char gGameMode;
-extern SharedFilePtr data_ov002_0211094c;
+extern char data_ov002_0211094c;
 extern JugemModelFile data_ov085_0213074c;
 extern SharedFilePtr *data_ov002_0210b600[1];
 extern SharedFilePtr *data_ov002_0210b604[1];
@@ -3114,8 +3114,7 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
         this->mAngleZ = 0;
         func_0201f138();
     }
-    MTX_MultVec43(((simpleModel_c *)this->mModel)->mScale, &data_0209b41c,
-                  (&this->mPos));
+    MTX_MultVec43(((simpleModel_c *)this->mModel)->mScale, &data_0209b41c, (&this->mPos));
     Vec3_LslInPlace(&this->mPosX, 3);
     if (ApproachLinear(this->mMagnitude, a, b) != 0 && a == 0 && b != 0)
         func_0201ef38();
@@ -3568,9 +3567,8 @@ int daDemo_c::InitResources()
         t = (gGameMode == 2);
         if (t == 0) {
             if (((anmModel_c *)this->mAnmModel)
-                    ->func_ov002_020f6618(&data_ov002_02110b98, 1,
-                                          data_ov002_0210b610, 1, 1, data_ov002_0210b600,
-                                          0x16) == 0)
+                    ->func_ov002_020f6618(&data_ov002_02110b98, 1, data_ov002_0210b610, 1, 1,
+                                          data_ov002_0210b600, 0x16) == 0)
                 return 0;
         } else {
             if (((anmModel_c *)this->mAnmModel)
@@ -3582,20 +3580,24 @@ int daDemo_c::InitResources()
     } else if (param1 >= 0x14 && param1 <= 0x16) {
         this->mModel = new simpleModel_c;
         if (this->mModel == 0) return 0;
-        if (((simpleModel_c*)this->mModel)->func_ov002_020f6960(&data_ov002_02110b70, -1) == 0) return 0;
+        if (((simpleModel_c *)this->mModel)->func_ov002_020f6960(&data_ov002_02110b70, -1) == 0)
+            return 0;
     } else if (param1 == 0x17) {
         this->mModel = new simpleModel_c;
         if (this->mModel == 0) return 0;
-        if (((simpleModel_c*)this->mModel)->func_ov002_020f6960(&data_ov002_02110b50, 0x19) == 0) return 0;
+        if (((simpleModel_c *)this->mModel)->func_ov002_020f6960(&data_ov002_02110b50, 0x19) == 0)
+            return 0;
     } else if (param1 == 0x18) {
         this->mModel = new simpleModel_c;
         if (this->mModel == 0) return 0;
-        if (((simpleModel_c *)this->mModel)->func_ov002_020f6960(&data_ov002_0211094c, -1) == 0)
+        if (((simpleModel_c *)this->mModel)
+                ->func_ov002_020f6960((SharedFilePtr *)&data_ov002_0211094c, -1) == 0)
             return 0;
     } else if (param1 == 0x19) {
         this->mModel = new simpleModel_c;
         if (this->mModel == 0) return 0;
-        if (((simpleModel_c*)this->mModel)->func_ov002_020f6960(&data_ov002_02110b78, 0x13) == 0) return 0;
+        if (((simpleModel_c *)this->mModel)->func_ov002_020f6960(&data_ov002_02110b78, 0x13) == 0)
+            return 0;
     } else if (param1 >= 0x1A && param1 <= 0x2D) {
         this->mAnmModel = new anmModel_c;
         if (this->mAnmModel == 0)

@@ -1840,7 +1840,7 @@ void dScMgPachinko_c::BobOmb_StateAim(int i) {
             mNextBallDelay = (u16)(*(s32 *)(c + SHOT_OFF(speed) + off) >> 10);
             if (mNextBallDelay == 0)
                 mNextBallDelay = 1;
-            unk_5c31 = 0;
+            mUnused5c31 = 0;
             {
                 int ai = (*(u16 *)(c + SHOT_OFF(angle) + off) >> 4) * 2 + 1;
                 *(s32 *)(c + SHOT_OFF(velX) + off) =
@@ -2027,7 +2027,7 @@ void dScMgPachinko_c::ResetRound() {
     mUnused5c22 = 0;
     mUnused5c1e = 0;
     mUnused5c30 = 0;
-    unk_5c31 = 0;
+    mUnused5c31 = 0;
     mPlayStarted = 0;
     mWaveTimer = 0;
     mFlyerOut = 0;

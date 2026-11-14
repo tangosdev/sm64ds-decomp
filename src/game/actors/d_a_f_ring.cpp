@@ -149,10 +149,8 @@ s32 daFRing_c::InitResources() {
     mAnmModel1.SetAnim(data_ov060_0211b1f8.filePtr, 0x40000000, 0x1000, 0);
     mAnmModel2.SetAnim(data_ov060_0211b1f8.filePtr, 0x40000000, 0x1000, 0);
 
-    dExtAnmTexPat_c::Prepare(*data_ov060_0211b208.filePtr,
-                             *data_ov060_0211b200.filePtr);
-    dExtAnmTexPat_c::Prepare(*data_ov060_0211b208.filePtr,
-                             *data_ov060_0211b200.filePtr);
+    dExtAnmTexPat_c::Prepare(*data_ov060_0211b208.filePtr, *data_ov060_0211b200.filePtr);
+    dExtAnmTexPat_c::Prepare(*data_ov060_0211b208.filePtr, *data_ov060_0211b200.filePtr);
     mTextureSequence1.SetFile(*data_ov060_0211b200.filePtr, 0x40000000, 0x1000, 0);
     mTextureSequence2.SetFile(*data_ov060_0211b200.filePtr, 0x40000000, 0x1000, 0);
 

@@ -60,7 +60,7 @@ struct daBombking_c : dEnemyBase_c {
     /* ClosestPlayer / the actor handed to ShowMessage and GetTalkState. */
     daPly_c *mTalkingPlayer; /* 0x430 */
     /* DropShadowRadHeight matrix: IDENTITY then translation = pos >> 3. */
-    Matrix4x3 mShadowMtx;             /* 0x434 */
+    Matrix4x3 mShadowMtx; /* 0x434 */
     u8  pad_464[0x30];
     /* TryGrab / DropActor target. Render also tests its +0xc8 mtx pointer. */
     daPly_c *mHeldActor;              /* 0x494 */
@@ -93,7 +93,7 @@ struct daBombking_c : dEnemyBase_c {
     u8 mSoundCooldown; /* 0x505 */
     /* 1 while fight BGM layer 3 is up. */
     u8  mMusicLayer3;                 /* 0x506 */
-    s8  mStarTracked;                 /* 0x507 */
+    s8 mStarTracked;                  /* 0x507 */
     u8  mIntroTalked;                 /* 0x508 */
     u8  mStarID;                      /* 0x509 */
     /* Counts while mMusicLayer3; resets the fight when it exceeds 0xc8. */

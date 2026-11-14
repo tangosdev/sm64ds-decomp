@@ -1105,12 +1105,15 @@ void daObjBlockS_c::UpdateModelMatrix() {
             if (mHoldingPlayer->param1 == 2) {
                 r5 = (r5 + 2) & 0xff;
             }
-            Math_Function_0203b14c(&mCarryOffset.x, *(int *)((char *)data_ov098_0213bf60 + r5 * 0xc),
-                                   0x800, 0x3e8000, 4);
-            Math_Function_0203b14c(&mCarryOffset.y, *(int *)((char *)data_ov098_0213bf64 + r5 * 0xc),
-                                   0x800, 0x3e8000, 4);
-            Math_Function_0203b14c(&mCarryOffset.z, *(int *)((char *)data_ov098_0213bf68 + r5 * 0xc),
-                                   0x800, 0x3e8000, 4);
+            Math_Function_0203b14c(&mCarryOffset.x,
+                                   *(int *)((char *)data_ov098_0213bf60 + r5 * 0xc), 0x800,
+                                   0x3e8000, 4);
+            Math_Function_0203b14c(&mCarryOffset.y,
+                                   *(int *)((char *)data_ov098_0213bf64 + r5 * 0xc), 0x800,
+                                   0x3e8000, 4);
+            Math_Function_0203b14c(&mCarryOffset.z,
+                                   *(int *)((char *)data_ov098_0213bf68 + r5 * 0xc), 0x800,
+                                   0x3e8000, 4);
             {
                 Matrix4x3 *res = UpdateCarry(*mHoldingPlayer, mCarryOffset);
                 mModel.mat4x3 = *res;
@@ -1197,8 +1200,7 @@ int daObjBlockS_c::Behavior()
     }
 
     b2 = (enum Bool)((mFlags & ACTOR_FLAG_OFF_SCREEN) != 0);
-    if (b2 != FALSE && Vec3_HorzDist(&mPos, &mHomePos) &&
-        DistToCPlayer() > 0x7d0000) {
+    if (b2 != FALSE && Vec3_HorzDist(&mPos, &mHomePos) && DistToCPlayer() > 0x7d0000) {
         Crate_SetState(this, STATE_BROKEN);
         return 1;
     }

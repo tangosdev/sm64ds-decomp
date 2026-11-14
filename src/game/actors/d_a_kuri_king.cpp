@@ -169,7 +169,9 @@ extern "C" struct Matrix4x3 IDENTITY_MATRIX4X3;
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, s32 fa, s32 fb, void *v0, void *v1);
 extern "C" void d_a_kuri_kingEarthquakeHold(void *thiz, void *v, int f);
-struct KuriKingBoneIdx { int v[3]; };
+struct KuriKingBoneIdx {
+    int v[3];
+};
 extern "C" KuriKingBoneIdx data_ov074_02122e24;
 extern "C" char data_ov074_02122f3c[];
 extern "C" char data_ov074_02122f38[];
@@ -1425,7 +1427,11 @@ void daKuriKing_c::UpdateAnimation() {
  * the SharedFilePtr that holds the BCA_File, the matching BTA_File for the
  * texture transformer, and SetAnim's animation index. */
 struct KuriKingAnimFile { u16 fileID; u8 numRefs; void *filePtr; };
-struct KuriKingAnimEntry { KuriKingAnimFile *anim; BTA_File *btaFile; int animArg; };
+struct KuriKingAnimEntry {
+    KuriKingAnimFile *anim;
+    BTA_File *btaFile;
+    int animArg;
+};
 extern KuriKingAnimEntry data_ov074_02122f34[];
 
 /* Is clip `idx` the one currently playing: compare its file pointer with the
@@ -1438,7 +1444,7 @@ int daKuriKing_c::IsAnimPlaying(int idx) {
 /* Start clip `idx`: its BCA on the dExtAnmModel_c and its BTA on the texture
  * transformer. */
 void daKuriKing_c::PlayAnim(int idx) {
-    void* file1 = data_ov074_02122f34[idx].anim->filePtr;
+    void *file1 = data_ov074_02122f34[idx].anim->filePtr;
     int off = idx * 0xc;
     int arg2 = *(int*)(data_ov074_02122f3c + off);
     this->mAnmModel.SetAnim((BCA_File *)file1, arg2, 0x1000, 0);

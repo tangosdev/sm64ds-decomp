@@ -104,10 +104,8 @@ union SoundObjSlot {
 };
 
 SoundObjSlot data_ov002_0211110c[7] = {
-    {data_ov002_0210c040}, {data_ov002_0210c010},
-    {data_ov002_0210c020}, {data_ov002_0210c038},
-    {data_ov002_0210c030}, {data_ov002_0210c018},
-    {data_ov002_0210c028},
+    {data_ov002_0210c040}, {data_ov002_0210c010}, {data_ov002_0210c020}, {data_ov002_0210c038},
+    {data_ov002_0210c030}, {data_ov002_0210c018}, {data_ov002_0210c028},
 };
 
 extern "C" daSoundObj_c *daSoundObj_c_classInit()

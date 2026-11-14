@@ -501,14 +501,8 @@ CLPS_BlockRef &CLPS_BlockRef::operator=(CLPS_Block &block)
    the block is missing or its entries are not 8 bytes. Written first to
    land last in the ROM (reverse emission). */
 extern "C" void func_020381cc(void *block, int idx, void **out) {
-    struct ClpsTable {
-        unsigned int magic;
-        unsigned short stride;
-    };
-    unsigned char **slot = (unsigned char **)block;
-    unsigned char *table = *slot;
-    ClpsTable *hdr = (ClpsTable *)table;
-    if (table == 0 || hdr->stride != 8) {
+    unsigned char *table = *(unsigned char **)block;
+    if (table == 0 || *(unsigned short *)(table + 4) != 8) {
         data_020a0c78.SetDefault();
         *out = &data_020a0c78;
         return;

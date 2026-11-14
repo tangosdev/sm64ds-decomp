@@ -154,7 +154,7 @@ extern JugemModelFile  data_ov085_0213074c;  /* model file */
 extern JugemAnimationFilePtr  data_ov085_02130744;  /* animation file */
 extern JugemTexSequenceFilePtr  data_ov085_0213073c;  /* texture sequence file */
 extern JugemVec3        data_ov085_02130840;  /* home position */
-extern Vector3          data_ov085_0213084c;
+extern Vector3 data_ov085_0213084c;
 
 /* The twelve state records, {enter, run} pairs written by the module sinit. */
 extern daC_Jugem_c::StateFn data_ov085_02130790[2];
@@ -265,8 +265,7 @@ int daC_Jugem_c::StateApproachMain()
     ApproachLinear(mAngleY, ::Vec3_HorzAngle(&mPos, &data_ov085_0213084c), 0x200);
     ApproachLinear(mAngleX, Vec3_VertAngle(&mPos, &data_ov085_0213084c), 0x200);
     ApproachLinear(mHorzSpeed, 0x28000, 0x2000);
-    ApproachLinear(mPrevAngleY, ::Vec3_HorzAngle(&mPos, &data_ov085_0213084c),
-                   (s16)mAuxCounter);
+    ApproachLinear(mPrevAngleY, ::Vec3_HorzAngle(&mPos, &data_ov085_0213084c), (s16)mAuxCounter);
     mAngleY = mPrevAngleY;
     mAuxCounter += 5;
     if (mAuxCounter > 0x800)
@@ -891,8 +890,7 @@ int daC_Jugem_c::InitResources()
     dExtAnmTexPat_c::LoadFile(data_ov085_0213073c.base);
     mShadowModel1.InitCylinder();
     mShadowModel2.InitCylinder();
-    dExtAnmTexPat_c::Prepare(*data_ov085_0213074c.filePtr,
-                             *data_ov085_0213073c.filePtr);
+    dExtAnmTexPat_c::Prepare(*data_ov085_0213074c.filePtr, *data_ov085_0213073c.filePtr);
     mAnmModel1.SetAnim(data_ov085_02130744.filePtr, 0, 0x1000, 0);
     mTextureSequence.SetFile(*data_ov085_0213073c.filePtr, 0, 0x1000, 0);
     mAnmModel1.speed = 0x1000;

@@ -35,7 +35,7 @@ struct daSpd_c : dActor_c {
     dCcAc_c mdCcAc_c;  /* 0x160 */
     dBgCh_Actr mWithMeshClsn;              /* 0x194 */
     union {
-        s32 mShadowMtx[12];                  /* 0x350 */
+        s32 mShadowMtx[12]; /* 0x350 */
         Matrix4x3 mShadowMat;
     };
     /* Current row of data_ov071_02122fa8. Two pointer-to-member calls. */

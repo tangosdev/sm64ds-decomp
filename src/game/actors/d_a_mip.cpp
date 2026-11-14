@@ -755,8 +755,8 @@ int daMip_c::StateFleeMain() {
             *((volatile s32 *)(&pos.x)) = x;
             *((volatile s32 *)(&pos.y)) = y;
             *((volatile s32 *)(&pos.z)) = z;
-            mDustParticle = Particle::System::NewFitWater(
-                mDustParticle, kPtclWaterSurfaceMove, pos.x, pos.y, z, 0);
+            mDustParticle = Particle::System::NewFitWater(mDustParticle, kPtclWaterSurfaceMove,
+                                                          pos.x, pos.y, z, 0);
         }
     }
 
@@ -908,8 +908,8 @@ int daMip_c::StateIdleMain()
         *((volatile s32*)(&sp.x)) = x;
         *((volatile s32*)(&sp.y)) = y;
         *((volatile s32*)(&sp.z)) = z;
-        mDustParticle = Particle::System::NewFitWater(mDustParticle, kPtclWaterSurfaceMove,
-                                                      sp.x, sp.y, z, 0);
+        mDustParticle =
+            Particle::System::NewFitWater(mDustParticle, kPtclWaterSurfaceMove, sp.x, sp.y, z, 0);
     }
 
     VecFx32 pp;
@@ -1061,8 +1061,7 @@ void daMip_c::UpdateMirrorShadow()
     vd.z = mPosZ;
     vd.x = 0x1086000;
     v.z = Vec3_HorzDist(&mPos, (const Vector3 *)&vd);
-    Matrix4x3_FromRotationY(&data_020a0e68,
-                            Vec3_HorzAngle(&mPos, (const Vector3 *)&vd));
+    Matrix4x3_FromRotationY(&data_020a0e68, Vec3_HorzAngle(&mPos, (const Vector3 *)&vd));
     MTX_MultVec43((Vector3 *)&v, &data_020a0e68, (Vector3 *)&res);
     {
         int t;
@@ -1073,8 +1072,7 @@ void daMip_c::UpdateMirrorShadow()
         Matrix4x3_FromTranslation(&data_020a0e68, vd.x >> 3, (t - 0xc000) >> 3, vd.z >> 3);
     }
     mMirrorMtx = *(Mtx43 *)&data_020a0e68;
-    DropShadowRadHeight(mShadowModel2, *(Matrix4x3 *)&mMirrorMtx, 0x46000,
-                              0x258000, 0xf);
+    DropShadowRadHeight(mShadowModel2, *(Matrix4x3 *)&mMirrorMtx, 0x46000, 0x258000, 0xf);
 }
 
 /* Seven releases, straight-line. Not address order, so not a table walk.

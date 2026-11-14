@@ -52,7 +52,7 @@ struct daTBasket_c : dEnemyBase_c {
     dExtSimpleModel_c mModel;                         /* 0x300 */
     dExtShadowModel_c                  mShadowModel;          /* 0x350 */
     s32                          mParticleID;               /* 0x378 */
-    u16                          mSoundTimer;               /* 0x37c */
+    u16 mSoundTimer;                                        /* 0x37c */
     u8                           mMuteSecretSound;      /* 0x37e -- nonzero skips Sound::PlaySecretSound */
     u8  pad_37f[0x1];
 

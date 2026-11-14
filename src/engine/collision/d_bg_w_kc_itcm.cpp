@@ -61,11 +61,11 @@ s16 func_020396dc(dBgW_Kc *self, KCL_Tri *tri); /* prism -> triangle index */
    lookup and the SurfaceInfo write, which takes the entry by value into 0x0
    and the normal into 0x8.
    local extern: no header in include/ declares them. */
-void func_020381cc(void *block, int idx, CLPS **out);
+void func_020381cc(void *block, int idx, void **out);
 void func_02037eb0(SurfaceInfo *info, CLPS clps, Vector3 *normal);
 
 /* local extern: no shared header declares it; match src/VEC_DotProduct.c. */
-Fix12i VEC_DotProduct(const void *a, const void *b);
+Fix12i VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 /* local extern: no header in include/ declares it. */
 Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
 
@@ -179,7 +179,7 @@ extern dBgPc data_020a0cec;
                 continue;                                                          \
             dh = (d) >> 4;                                                         \
             fh = faceDot >> 4;                                                     \
-            axisDot = VEC_DotProduct(&sn, &upAxis);                       \
+            axisDot = VEC_DotProduct(&sn, (const Vector3 *)&upAxis);                       \
             CP_SetSqrt64((s64)fh * fh + (s64)dh * dh);                         \
             CP_WaitSqrt();                                                     \
             hypv = SQRT_RESULT;                                                    \
@@ -212,7 +212,7 @@ void dBgW_Kc::GetSurfaceInfo(s16 triID, SurfaceInfo &res)
     KCL_Tri *tri = &kclFile->tris[triID];
 
     GetNormal(triID, normal);
-    func_020381cc(&clps, tri->attribute, &entry);
+    func_020381cc(&clps, tri->attribute, (void **)&entry);
     func_02037eb0(&res, *entry, &normal);
 }
 
@@ -641,7 +641,8 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                             nrm[0] = fn[0] << 2;
                             nrm[1] = fn[1] << 2;
                             nrm[2] = fn[2] << 2;
-                            if (VEC_DotProduct(nrm, &depthDir) > depthDirMinDot) {
+                            if (VEC_DotProduct((const Vector3 *)nrm, (const Vector3 *)&depthDir) >
+                                depthDirMinDot) {
                                 if (faceDot < -f->prismThickness)
                                     continue;
                             } else {

@@ -68,11 +68,11 @@ typedef struct {
     u16 seqno;
 } MBCommParentBlockHeader;
 
-extern u8 *MBi_SetRecvBufferFromChild(unsigned short *src, MBCommChildBlockHeader *dst);
+extern u8 *MBi_SetRecvBufferFromChild(u8 *src, u8 *dst);
 extern u8 *MBi_MakeParentSendBuffer(MBCommParentBlockHeader *hdr, u8 *buf);
-extern int MBi_ReceiveRequestDataPiece(MBCommChildBlockHeader *hdr, int aid);
+extern int MBi_ReceiveRequestDataPiece(u8 *hdr, int aid);
 extern void MB_SendGameInfoBeacon(void);
-extern void MB_UpdateGameInfoMember(MBGameInfo *self, void *src, u32 flags, int s);
+extern void MB_UpdateGameInfoMember(char *self, void *src, u32 flags, int s);
 extern int func_0206881c(void);
 
 static void MBi_CommChangeParentState(u16 child, int state, void *arg);
@@ -265,7 +265,8 @@ void MBi_CommParentCallback(u16 type, void *arg) {
 
         for (i = 0; i < MB_MAX_FILE; i++) {
             if (pPwork->fileinfo[i].active && pPwork->fileinfo[i].gameinfo_changed_bmp) {
-                MB_UpdateGameInfoMember(&pPwork->fileinfo[i].game_info, &pPwork->childUser[0],
+                MB_UpdateGameInfoMember((char *)&pPwork->fileinfo[i].game_info,
+                                        &pPwork->childUser[0],
                                         pPwork->fileinfo[i].gameinfo_child_bmp,
                                         pPwork->fileinfo[i].gameinfo_changed_bmp);
 
@@ -349,7 +350,7 @@ static void MBi_CommParentRecvDataPerChild(void *arg, u16 child) {
     MBCommChildBlockHeader hd;
     int state;
 
-    MBi_SetRecvBufferFromChild(&((WMMpRecvData *)arg)->cdata[0], &hd);
+    MBi_SetRecvBufferFromChild((u8 *)&((WMMpRecvData *)arg)->cdata[0], (u8 *)&hd);
 
     if (child == 0 || child > WM_NUM_MAX_CHILD) {
         return;
@@ -362,7 +363,7 @@ static void MBi_CommParentRecvDataPerChild(void *arg, u16 child) {
         if (state == MB_COMM_PSTATE_CONNECTED) {
             MBCommRequestData req_data;
 
-            if (MBi_ReceiveRequestDataPiece(&hd, child) == TRUE) {
+            if (MBi_ReceiveRequestDataPiece((u8 *)&hd, child) == TRUE) {
                 MI_CpuCopy8(pPwork->req_data_buf.data_buf[child - 1], &req_data,
                             MB_COMM_REQ_DATA_SIZE);
 

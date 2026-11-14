@@ -34,7 +34,7 @@ extern "C" {
 int  func_02037dc4(int p);   /* SurfaceInfo * -> Vector3 * (the hit normal) */
 void dBgS_RideCallBack(int a, int b);
 void dBgS_MoveBgCrrPos(void *arg, int b, int c, int d);
-int SurfaceInfo_TestFlag0x20(const void *p);
+int  SurfaceInfo_TestFlag0x20(int *p);
 }
 
 /* Lifecycle first; the group emits at the run's tail. Both bodies are empty:
@@ -1033,7 +1033,7 @@ s32 dBgCh_Actr::GetResultFlag1() const
 
 s32 dBgCh_Actr::TouchesWater() const
 {
-    return SurfaceInfo_TestFlag0x20(&mSphereClsn.surface);
+    return SurfaceInfo_TestFlag0x20((int *)&mSphereClsn.surface);
 }
 
 void dBgCh_Actr::SetFlag400() {

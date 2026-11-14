@@ -347,7 +347,7 @@ struct dScMgPachinko_c : dScMgBase_c {
                     by DrawAimLine, cleared by ClearAimLine */
     u8 mUnused5c30; /* 0x5c30 -- ResetRound and CheckTargetsLeft (time up) clear it;
                     nothing reads it */
-    u8 unk_5c31; /* 0x5c31 */
+    u8 mUnused5c31; /* 0x5c31 -- cleared with mUnused5c30; nothing reads it */
     u8 mPlayStarted; /* 0x5c32 -- latched from 0 to 1 by CountLaunch on the
                         first play-phase frame Behavior runs it (Behavior skips it
                         while mHitPause is set); ResetRound

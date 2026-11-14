@@ -39,7 +39,7 @@ extern "C" {
 extern s8 gCurrentSublevel;   /* current stage id */
 extern int data_0209f32c;     /* the stage water's global height (written by d_a_obj_wc_mizu) */
 
-int SurfaceInfo_TestFlag0x20(SurfaceInfo *p);
+int SurfaceInfo_TestFlag0x20(int *p);
 
 /* Stores into the mesh collider's two callback slots (+0x1c / +0x18 of the
    embedded dBgW; the +0x0c store is dBgW::SetClipRadius). */
@@ -97,7 +97,7 @@ int daObjFloatBoard_c::UpdateWaterY() {
     rg.SetObjAndPos(vec, this);
     if (rg.DetectClsn() != 0) {
         mWaterY = rg.clsnY;
-        if (SurfaceInfo_TestFlag0x20(&rg.surface) != 0) {
+        if (SurfaceInfo_TestFlag0x20((int *)&rg.surface) != 0) {
             return 1;
         }
     }

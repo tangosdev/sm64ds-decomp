@@ -115,7 +115,7 @@ void func_ov077_02124eb0(daTgz_c *self);
 void func_ov077_021250a8(daTgz_c *self);
 void func_ov077_02125304(daTgz_c *self);
 
-int SurfaceInfo_TestFlag0x20(SurfaceInfo *p);
+int SurfaceInfo_TestFlag0x20(int *p);
 void func_02012694(unsigned int id, const Vector3 *pos);
 unsigned int d_a_tgzNewHold(unsigned int uniqueID, unsigned int effectID, int x, int y, int z,
                             const void *dir, void *callback);
@@ -162,7 +162,7 @@ extern "C" int func_ov077_02124c28(daTgz_c *self)
         }
         rg.SetObjAndPos(pos, self);
         rg.StartDetectingWater();
-        if (rg.DetectClsn() != 0 && SurfaceInfo_TestFlag0x20(&rg.surface) != 0)
+        if (rg.DetectClsn() != 0 && SurfaceInfo_TestFlag0x20((int *)&rg.surface) != 0)
             self->mWaterY = rg.clsnY;
         else
             return 0;

@@ -223,8 +223,8 @@ s32 dScMgFlower_c::Render() {
             attr.a = (attr.a & 0xc1fffcff) | 0x100;
             if (mHeldPetal == i)
                 palette = 0;
-            Mg_RenderSubSpriteScaled(&attr, mPetals[i].pos.x >> 12, mPetals[i].pos.y >> 12, -1, palette,
-                                     0x1000, (s16)(mPetals[i].angle + 0x8000));
+            Mg_RenderSubSpriteScaled(&attr, mPetals[i].pos.x >> 12, mPetals[i].pos.y >> 12, -1,
+                                     palette, 0x1000, (s16)(mPetals[i].angle + 0x8000));
         }
     }
 
@@ -336,7 +336,7 @@ s32 dScMgFlower_c::Behavior() {
             newlyCounted = 0;
             if (gTouchHeld[playerSlot * 4] != 0) {
                 Vec2_Sub(&drag.x, &mCursorX, &mPrevCursorX);
-                V2 *pos = &mPetals[mHeldPetal].pos;
+                PetalPos *pos = &mPetals[mHeldPetal].pos;
                 pos->x += drag.x;
                 pos->y += drag.y;
             } else {

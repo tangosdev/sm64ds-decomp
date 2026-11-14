@@ -40,7 +40,7 @@
  *   0x16c  s32  numNodes    -- PathPtr::NumNodes(), cached once by InitResources
  *   0x170  s32  curNodeIdx  -- current path-node index; Behavior's state
  *   0x180  s32  moveSpeed   -- +/-1 step applied to curNodeIdx each advance
- *   0x184  unsigned short bounceTimer -- DecIfAbove0_Short pauses movement while nonzero;
+ *   0x184  u16  bounceTimer -- DecIfAbove0_Short pauses movement while nonzero;
  *                              set to 0x3c when a non-looping path end is hit
  *   0x1b0  Matrix4x3 dropShadowMtx -- copy of the model's own matrix (0xf0),
  *                              fed to dActor_c::DropShadowScaleXYZ (0x30 bytes,
@@ -67,7 +67,7 @@ struct daObjWlPolelift_c : dActor_c {
     s32  curNodeIdx;                 /* 0x170 */
     u8   pad_174[0xc];               /* 0x174 -- unobserved */
     s32  moveSpeed;                  /* 0x180 */
-    unsigned short bounceTimer;      /* 0x184 */
+    u16 bounceTimer;                 /* 0x184 */
     u8   pad_186[0x2];               /* 0x186 -- unobserved */
     dExtShadowModel_c shadow;              /* 0x188 */
     struct Matrix4x3 dropShadowMtx;  /* 0x1b0 */

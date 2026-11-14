@@ -385,7 +385,8 @@ void dScMgMemory2_c::CardFlyAway(int cardIndex) {
         if (scanLimit > 1) {
             do {
                 if (view->cards[cardIndex - precedingOffset].active != 0) {
-                    if (((view->cards[cardIndex].x - view->cards[cardIndex - precedingOffset].x) >> 12) <= 4) {
+                    if (((view->cards[cardIndex].x - view->cards[cardIndex - precedingOffset].x) >>
+                         12) <= 4) {
                         view->cards[cardIndex].flyAwayStarted = 1;
                         view->cards[cardIndex - precedingOffset].state = CARD_FLY_AWAY;
                     }

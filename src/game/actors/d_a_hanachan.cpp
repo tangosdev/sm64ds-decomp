@@ -94,13 +94,13 @@ struct HanachanTextureSeqFileHandle : SharedFilePtr {
 extern daHanachan_c::State data_ov034_02114538[];
 
 extern "C" {
-extern SharedFilePtr *data_ov034_02113888[];
-extern SharedFilePtr *data_ov034_0211389c[];
-extern SharedFilePtr *data_ov034_02113860[];
+extern void *data_ov034_02113888[];
+extern void *data_ov034_0211389c[];
+extern void *data_ov034_02113860[];
 extern int Math_Function_0203b14c(void *base, int a, int b, int c, int d);
 extern int data_ov034_021138c4[];
 extern short data_ov034_02113820[];
-extern SharedFilePtr *data_ov034_021138b0[];
+extern void *data_ov034_021138b0[];
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int data_ov034_02114488[];
 // local extern: no shared header declares Vec3_Add.
@@ -109,7 +109,7 @@ extern int NormalizeVec3IfNonZero(Vector3 *v);
 extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
 extern SharedFilePtr *data_ov034_02113838[];
 extern SharedFilePtr *data_ov034_0211384c[];
-extern SharedFilePtr *data_ov034_02113874[];
+extern void *data_ov034_02113874[];
 extern void d_a_hanachanRunningSlidingDustAtHold(s32 x, s32 y, s32 z);
 extern void *d_a_hanachanNewHold(u32 a, u32 b, s32 x, s32 y, s32 z, const void *v, void *cb);
 extern int func_ov002_020c51d0(void *, void *);
@@ -913,7 +913,7 @@ int daHanachan_c::Behavior()
         }
     }
 
-    animFile = data_ov034_021138b0[0];
+    animFile = (SharedFilePtr *)data_ov034_021138b0[0];
     if (mAnmModels[0].file == ((SharedFilePtr *)animFile)->filePtr &&
         (((u32)mAnmModels[0].currFrame << 4) >> 16) == 0xf) {
         func_0201267c(0x11e, &mCamSpacePos);
@@ -1080,10 +1080,10 @@ int daHanachan_c::InitResources()
         dExtAnmTexPat_c::LoadFile(*texFile);
         animFile = (SharedFilePtr *)data_ov034_02113860[i];
         dExtFrameCtrl_c::LoadFile(*animFile);
-        dExtFrameCtrl_c::LoadFile(*data_ov034_02113874[i]);
-        dExtFrameCtrl_c::LoadFile(*data_ov034_02113888[i]);
-        dExtFrameCtrl_c::LoadFile(*data_ov034_0211389c[i]);
-        dExtFrameCtrl_c::LoadFile(*data_ov034_021138b0[i]);
+        dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov034_02113874[i]);
+        dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov034_02113888[i]);
+        dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov034_0211389c[i]);
+        dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov034_021138b0[i]);
         animRow->SetFile((BMD_File *)modelFile->filePtr, one, minusOne);
         (animRow)->SetAnim((BCA_File *)animFile->filePtr, zeroA, 0x1000, zeroA);
         dExtAnmTexPat_c::Prepare(*(BMD_File *)modelFile->filePtr, *(BTP_File *)texFile->filePtr);

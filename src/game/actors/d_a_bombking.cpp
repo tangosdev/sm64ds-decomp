@@ -1331,8 +1331,7 @@ void daBombking_c::UpdateShadow() {
     this->mShadowMtx.m[9] = this->mPosX >> 3;
     this->mShadowMtx.m[10] = this->mPosY >> 3;
     this->mShadowMtx.m[11] = this->mPosZ >> 3;
-    DropShadowRadHeight(this->mShadowModel, this->mShadowMtx, scale, ip + 0x28000,
-                        0xf);
+    DropShadowRadHeight(this->mShadowModel, this->mShadowMtx, scale, ip + 0x28000, 0xf);
 }
 
 /* -------------------------------------------------------------------------- */

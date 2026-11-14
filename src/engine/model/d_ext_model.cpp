@@ -107,7 +107,7 @@ void func_0204531c(ModelComponents *data, s32 weight);
 u32 func_020462bc(int *file);
 /* local extern: no header declares it; initializes ModelComponents' side of
    the blend buffer. Spelled (int *, int) the way func_020462b4.c defines it */
-void func_020462b4(ModelComponents *data, int buf);
+void func_020462b4(int *data, int buf);
 /* local extern: dExtShadowModel_c's live list head and freeze flag */
 extern dExtShadowModel_c *data_0209cef4;
 extern u8 data_0209ceec;
@@ -474,7 +474,7 @@ int dExtBlendAnmModel_c::InitBlendBuffer(char *file) {
     void *p = mBlendBuffer;
     if (p == 0)
         return 0;
-    func_020462b4(&data, (int)p);
+    func_020462b4((int *)&data, (int)p);
     return 1;
 }
 

@@ -78,7 +78,7 @@ extern "C" SlideBoxClsnFilePtr gKiSlideBoxCollisionFile;
 extern "C" {
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(dBgCh_Actr *self, int actor, Fix12i radius, Fix12i height, int a, int b);
-extern CLPS_Block data_ov016_02113bac;
+extern int data_ov016_02113bac[];
 extern void Matrix4x3_FromRotationXYZExt(void *mtx, int angleX, int angleY, int angleZ);
 
 extern void hold_d_a_slide_box(void *thiz, void *kcl, void *mtx, int scale, short angleY,
@@ -244,7 +244,8 @@ int daSlide_Box_c::InitResources()
     UpdateModel();
     UpdateClsnPosAndRot();
     KCL_File *clsnFile = dBgW_Kc::LoadFile(ClsnFile);
-    mMeshCollider.SetFile((clsnFile), mClsnMat, kMeshScale, mAngleY, data_ov016_02113bac);
+    mMeshCollider.SetFile((clsnFile), mClsnMat, kMeshScale, mAngleY,
+                          *(CLPS_Block *)(data_ov016_02113bac));
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mWithMeshClsn.Init(this, kClsnRadius, kClsnRadius, 0, 0);
     mVertAccel = kGravity;

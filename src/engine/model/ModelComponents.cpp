@@ -139,7 +139,7 @@ void func_02047218(void *a, void *b, void *out, fx32 c);
 void func_02047910(int *m0, int *m1, int *dst, int t);
 void func_0204547c(int *a, int b, int c, void *elem);
 void MTX_Scale43_(Mtx43 *m, int x, int y, int z);
-void VEC_Normalize(const Mtx43Row *a, Mtx43Row *b);
+void VEC_Normalize(const Vector3 *a, Vector3 *b);
 void func_020458a8(void *src, void *dst);
 void G3_MultMtx33(void *m);
 extern VecFx32 data_02099f88;
@@ -542,7 +542,7 @@ void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
                     m.r[1].x = mp->r[1].x;
                     m.r[1].y = mp->r[1].y;
                     m.r[1].z = 0;
-                    VEC_Normalize(&m.r[1], &m.r[1]);
+                    VEC_Normalize((const Vector3 *)&m.r[1], (Vector3 *)&m.r[1]);
                     t = FX_MUL(m.r[1].x, dir->x);
                     m.r[1].x = t;
                     {
@@ -558,7 +558,7 @@ void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
                     m.r[0].x = mp->r[0].x;
                     m.r[0].y = mp->r[0].y;
                     m.r[0].z = 0;
-                    VEC_Normalize(&m.r[0], &m.r[0]);
+                    VEC_Normalize((const Vector3 *)&m.r[0], (Vector3 *)&m.r[0]);
                     m.r[0].x = FX_MUL(m.r[0].x, dir->x);
                     t = FX_MUL(m.r[0].y, dir->y);
                     m.r[1].y = m.r[0].x;

@@ -83,7 +83,7 @@
 #include "dScMgSingle3DBase_c.h"
 #include "FlowerFace.h"
 
-struct V2 {
+struct PetalPos {
     int x;
     int y;
 };
@@ -152,7 +152,7 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
         u8 released;     /* 0x01, detached from the flower */
         u8 held;         /* 0x02, follows the stylus */
         u8 counted;      /* 0x03, pull already counted in the round */
-        V2 pos;          /* 0x04, Fix12 screen position; y at 0x08 */
+        PetalPos pos;    /* 0x04, Fix12 screen position; y at 0x08 */
         s32 driftX;      /* 0x0c */
         s32 fallSpeed;   /* 0x10 */
         s32 touchStartX; /* 0x14, cursor position when picked up */

@@ -52,7 +52,7 @@ extern int sCardSelectLocked;
 extern int sCardSwapRequested;
 extern int data_ov006_02141770;
 extern void Vec2_Sub(int *o, int *a, int *b);
-extern void func_0203d680(int *out, const int *in, int scale);
+extern void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
 extern const Five sCardHandOrder;
 extern int sCardFaceWeights[];
 extern void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
@@ -1154,7 +1154,7 @@ void dMgCardObj_c::DealIn(const s32 *src)
     mY = GetOffscreenY();
     mX = 0x80000;
     Vec2_Sub(&buf[0], &mTargetX, &mX);
-    func_0203d680(&buf[2], &buf[0], 0x100);
+    func_0203d680((Vector2 *)&buf[2], (const Vector2 *)&buf[0], 0x100);
     mXStep = buf[2];
     mYStep = buf[3];
     if (mXStep < 0) mXStep = -mXStep;
@@ -1176,7 +1176,7 @@ void dMgCardObj_c::Redeal()
     mY = GetOffscreenY();
     mX = 0x80000;
     Vec2_Sub(&buf[0], &mTargetX, &mX);
-    func_0203d680(&buf[2], &buf[0], 0x100);
+    func_0203d680((Vector2 *)&buf[2], (const Vector2 *)&buf[0], 0x100);
     mXStep = buf[2];
     mYStep = buf[3];
     if (mXStep < 0) mXStep = -mXStep;

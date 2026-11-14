@@ -450,8 +450,7 @@ int daKpa_c::InitResources()
 
     InitAnimation(BOWSER_ANIM_IDLE, 0);
 
-    dExtAnmTexPat_c::Prepare(*data_ov060_0211ac78.bmd.filePtr,
-                             *data_ov060_0211ac28.filePtr);
+    dExtAnmTexPat_c::Prepare(*data_ov060_0211ac78.bmd.filePtr, *data_ov060_0211ac28.filePtr);
 
     this->mTextureSequence.SetFile(*data_ov060_0211ac28.filePtr, 0, 0x1000, 0);
 
@@ -2944,40 +2943,34 @@ void daKpa_c::InitAnimation(int idx, int animFlags) {
     this->mAnmModel.SetAnim((BCA_File *)(data_ov060_021192dc[idx]->filePtr), a, 0x1000, 0);
     switch (idx) {
     case 1:
-        dExtAnmTexPat_c::Prepare(*data_ov060_0211ac78.bmd.filePtr,
-                                 *data_ov060_0211ac40.filePtr);
+        dExtAnmTexPat_c::Prepare(*data_ov060_0211ac78.bmd.filePtr, *data_ov060_0211ac40.filePtr);
         this->mTextureSequence.SetFile(*data_ov060_0211ac40.filePtr, 0, 0x1000, 0);
         this->mTextureSequence.SetFlags(0x40000000);
         return;
     case 2:
-        dExtAnmTexPat_c::Prepare(*data_ov060_0211ac78.bmd.filePtr,
-                                 *data_ov060_0211acb8.filePtr);
+        dExtAnmTexPat_c::Prepare(*data_ov060_0211ac78.bmd.filePtr, *data_ov060_0211acb8.filePtr);
         this->mTextureSequence.SetFile(*data_ov060_0211acb8.filePtr, 0, 0x1000, 0);
         this->mTextureSequence.SetFlags(0x40000000);
         return;
     case 3:
     case 5:
-        dExtAnmTexPat_c::Prepare(*data_ov060_0211ac78.bmd.filePtr,
-                                 *data_ov060_0211ac10.filePtr);
+        dExtAnmTexPat_c::Prepare(*data_ov060_0211ac78.bmd.filePtr, *data_ov060_0211ac10.filePtr);
         this->mTextureSequence.SetFile(*data_ov060_0211ac10.filePtr, 0, 0x1000, 0);
         this->mTextureSequence.SetFlags(0);
         return;
     case 14:
-        dExtAnmTexPat_c::Prepare(*data_ov060_0211ac78.bmd.filePtr,
-                                 *data_ov060_0211abf0.filePtr);
+        dExtAnmTexPat_c::Prepare(*data_ov060_0211ac78.bmd.filePtr, *data_ov060_0211abf0.filePtr);
         this->mTextureSequence.SetFile(*data_ov060_0211abf0.filePtr, 0, 0x1000, 0);
         this->mTextureSequence.SetFlags(0);
         return;
     case 10:
-        dExtAnmTexPat_c::Prepare(*data_ov060_0211ac78.bmd.filePtr,
-                                 *data_ov060_0211ac30.filePtr);
+        dExtAnmTexPat_c::Prepare(*data_ov060_0211ac78.bmd.filePtr, *data_ov060_0211ac30.filePtr);
         this->mTextureSequence.SetFile(*data_ov060_0211ac30.filePtr, 0, 0x1000, 0);
         this->mTextureSequence.SetFlags(0x40000000);
         return;
     case 0:
     default:
-        dExtAnmTexPat_c::Prepare(*data_ov060_0211ac78.bmd.filePtr,
-                                 *data_ov060_0211ac28.filePtr);
+        dExtAnmTexPat_c::Prepare(*data_ov060_0211ac78.bmd.filePtr, *data_ov060_0211ac28.filePtr);
         this->mTextureSequence.SetFile(*data_ov060_0211ac28.filePtr, 0, 0x1000, 0);
         this->mTextureSequence.SetFlags(0);
         return;

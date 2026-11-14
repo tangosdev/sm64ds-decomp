@@ -21,7 +21,9 @@ distinction is computed and printed rather than assumed -- see changed_paths.
 """
 import re, subprocess, sys, pathlib
 SZ = {"u8":1,"s8":1,"char":1,"bool":1,"u16":2,"s16":2,"short":2,"u32":4,"s32":4,"int":4,
-      "unsigned":4,"long":4,"Fix12i":4,"float":4,"u64":8,"s64":8,"double":8}
+      "unsigned":4,"long":4,"Fix12i":4,"float":4,"u64":8,"s64":8,"double":8,
+      # include/private/mtx43.h: union of int[12], no size assertion of its own.
+      "Mtx43":0x30}
 # Alignment is NOT the same as width once aggregates are in play: a Vector3 is 12
 # bytes wide but 4-aligned, and using the width for the padding test would invent
 # padding before every one.
@@ -943,6 +945,28 @@ def main(argv, repo=None):
             # SysTracker in include/dScStage_c.h is the first instance) starts with `~`,
             # which the type-name alternative below never matches (`~` is not in
             # `[A-Za-z_]`), so without this alternative it fell through to UNPARSED.
+            # A pointer-to-member field is storage: mwccarm's member-function
+            # pointer is eight bytes (code address plus the this adjustment).
+            # The method pattern below also matches `void (Class::*name)();`
+            # and would skip it, leaving every later field eight bytes short.
+            pmf = re.match(
+                r"^\s*\w[\w\s:&]*\(\s*\w+\s*::\s*\*\s*(\w+)\s*\)\s*\([^;]*\)\s*;"
+                r"(?:\s*/\*\s*(0x[0-9a-fA-F]+))?",
+                line)
+            # A typedef of that shape (`typedef void (Class::*Phase)();`)
+            # declares no field. Only the member that uses it does.
+            if pmf and not re.match(r"^\s*typedef\b", line):
+                name, decl = pmf.group(1), pmf.group(2)
+                if off % 4:
+                    off += 4 - (off % 4)
+                if decl is not None and trusted:
+                    n += 1
+                    if int(decl, 16) != off:
+                        pending.append(f"  MISMATCH {path}:{lineno} {name}: comment {decl}, "
+                                       f"computed 0x{off:03x}")
+                        bad += 1
+                off += 8
+                continue
             method_code, _ = _code_without_comments_or_strings(line)
             allocation_method = ALLOCATION_METHOD.match(method_code)
             inline_method = INLINE_METHOD.match(method_code)

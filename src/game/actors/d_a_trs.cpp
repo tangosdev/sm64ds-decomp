@@ -381,8 +381,7 @@ void daTrs_c::func_ov063_0211640c() {
         Matrix4x3_FromTranslation(&data_020a0e68,
             pos.x >> 3, pos.y >> 3, pos.z >> 3);
         this->mShadowMtx = data_020a0e68;
-        DropShadowRadHeight(this->mShadowModel1, this->mShadowMtx, 0x12c000,
-                            0xc8000, 0xf);
+        DropShadowRadHeight(this->mShadowModel1, this->mShadowMtx, 0x12c000, 0xc8000, 0xf);
 
         if (this->mBooFlags.mirrored) {
             s16 neg = -1;
@@ -450,11 +449,9 @@ void daTrs_c::func_ov063_021166ac() {
     {
         int big = (this->actorID == TRS_ID_BOSS_TERESA);
         if (big)
-            DropShadowRadHeight(this->mShadowModel1, this->mShadowMtx, 0x12c000,
-                                0xc8000, 0xf);
+            DropShadowRadHeight(this->mShadowModel1, this->mShadowMtx, 0x12c000, 0xc8000, 0xf);
         else
-            DropShadowRadHeight(this->mShadowModel1, this->mShadowMtx, 0x64000,
-                                0xc8000, 0xf);
+            DropShadowRadHeight(this->mShadowModel1, this->mShadowMtx, 0x64000, 0xc8000, 0xf);
     }
     this->mCapPosY = this->mClsnOff.y + FX_MUL(this->mScaleX, 0x60000);
     pos.x = this->mCapPosX;
@@ -557,49 +554,48 @@ void daTrs_c::func_ov063_02116bf0() {
    while fewer than two are alive, five at most. */
 void daTrs_c::func_ov063_02116bf4() {
 
-        unsigned short *ip = &this->mBooFlagsWord;
-        unsigned char st;
+    unsigned short *ip = &this->mBooFlagsWord;
+    unsigned char st;
 
-        *ip = (unsigned short)(*ip & ~TRS_FLAG_VISIBLE);
-        this->mdCcAcPos_c.flags = this->mdCcAcPos_c.flags | 1;
-        func_ov063_02119c18(TRS_ID_MERRYGOROUND);
-    
-        st = this->mState;
-        switch (st) {
-        case 0:
-            if (this->mDistToPlayer >= 0x3e8000)
-                return;
-            if (this->mChildDeaths < 5) {
-                unsigned char cb = this->mSpawnCount;
-                if (cb != 5 && (int)cb - this->mChildDeaths < 2) {
-                    char *p = (char *)dActor_c::Spawn(TRS_ID_TERESA, 0xfff1, this->mPos,
-                                                      &this->mPrevAngle, this->mAreaIdx, -1);
-                    if (p != 0) {
-                        ((daTrs_c *)p)->mSpawnerID = this->uniqueID;
-                        ((daTrs_c *)p)->mCachedActorID = this->mCachedActorID;
-                    }
-                    {
-                        unsigned char *q = &this->mSpawnCount;
-                        *q = *q + 1;
-                    }
+    *ip = (unsigned short)(*ip & ~TRS_FLAG_VISIBLE);
+    this->mdCcAcPos_c.flags = this->mdCcAcPos_c.flags | 1;
+    func_ov063_02119c18(TRS_ID_MERRYGOROUND);
+
+    st = this->mState;
+    switch (st) {
+    case 0:
+        if (this->mDistToPlayer >= 0x3e8000)
+            return;
+        if (this->mChildDeaths < 5) {
+            unsigned char cb = this->mSpawnCount;
+            if (cb != 5 && (int)cb - this->mChildDeaths < 2) {
+                char *p = (char *)dActor_c::Spawn(TRS_ID_TERESA, 0xfff1, this->mPos,
+                                                  &this->mPrevAngle, this->mAreaIdx, -1);
+                if (p != 0) {
+                    ((daTrs_c *)p)->mSpawnerID = this->uniqueID;
+                    ((daTrs_c *)p)->mCachedActorID = this->mCachedActorID;
                 }
                 {
-                    unsigned char *q = &this->mState;
+                    unsigned char *q = &this->mSpawnCount;
                     *q = *q + 1;
                 }
             }
-            if (this->mChildDeaths >= 5)
-                this->mState = 2;
-            break;
-        case 1:
-            if (this->mStateTimer > 0x3c)
-                this->mState = 0;
-            break;
-        case 2:
-            break;
+            {
+                unsigned char *q = &this->mState;
+                *q = *q + 1;
+            }
         }
+        if (this->mChildDeaths >= 5)
+            this->mState = 2;
+        break;
+    case 1:
+        if (this->mStateTimer > 0x3c)
+            this->mState = 0;
+        break;
+    case 2:
+        break;
+    }
 }
-
 
 /* Behavior handler for variant 5: the Boo carrying the cage (T_BASKET). */
 void daTrs_c::func_ov063_02116d38() {
@@ -662,9 +658,8 @@ void daTrs_c::func_ov063_02116e14() {
     }
     this->mState = 3;
     {
-        char *r = (char *)dActor_c::Spawn(this->mCarriedID, 0,
-                                          *(const Vector3 *)&this->mCarriedPosX,
-                                          (0), this->mAreaIdx, -1);
+        char *r = (char *)dActor_c::Spawn(
+            this->mCarriedID, 0, *(const Vector3 *)&this->mCarriedPosX, (0), this->mAreaIdx, -1);
         if (r != 0) {
             ((dActor_c *)r)->mSpeedX = 0;
             ((dActor_c *)r)->mVertSpeed = 0x32000;
@@ -969,7 +964,7 @@ void daTrs_c::func_ov063_021177b0() {
             return;
 
         {
-            unsigned short* pf = &this->mBooFlagsWord;
+            unsigned short *pf = &this->mBooFlagsWord;
             *pf = (unsigned short)(*pf & ~TRS_FLAG_VISIBLE);
         }
         this->mState = 8;
@@ -2031,7 +2026,7 @@ void daTrs_c::UpdateDying() {
         char* r = (char*)RespawnIfHasCap();
         if (r == 0) return;
         {
-            u16* p = &((daTrs_c *)r)->mBooFlagsWord;
+            u16 *p = &((daTrs_c *)r)->mBooFlagsWord;
             *p &= ~TRS_FLAG_CARRYING;
         }
     } else {
@@ -2041,7 +2036,7 @@ void daTrs_c::UpdateDying() {
             this->mdCcAcPos_c.flags |= 1;
         }
         {
-            u16* p = &this->mBooFlagsWord;
+            u16 *p = &this->mBooFlagsWord;
             *p &= ~TRS_FLAG_VISIBLE;
         }
     }

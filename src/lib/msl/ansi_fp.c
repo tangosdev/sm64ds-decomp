@@ -342,7 +342,10 @@ void __two_exp(Decimal *out, int n) {
     }
 }
 
-union DblWords { double d; int w[2]; };
+union DblWords {
+    double d;
+    int w[2];
+};
 
 void __num2dec_internal(Decimal *out, double x) {
     int e;

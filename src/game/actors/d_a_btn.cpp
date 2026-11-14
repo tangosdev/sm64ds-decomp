@@ -128,9 +128,9 @@ extern CLPS_Block data_ov015_021135d4;
 extern int data_ov079_021275dc[];
 extern int data_ov079_021275e4[];
 extern SharedFilePtr *data_ov079_021275ec[];
-extern SharedFilePtr *data_ov079_02127600[];
+extern void *data_ov079_02127600[];
 extern CLPS_Block data_ov079_02127ba0;   /* the plain Whomp's CLPS block */
-extern SharedFilePtr *data_ov079_02127bf0[];
+extern void *data_ov079_02127bf0[];
 extern int data_ov079_02127cfc[];
 }
 
@@ -255,7 +255,7 @@ int daBtn_c::InitResources()
         mAnmModel.SetFile((BMD_File *)bmd, 1, -1);
         animIdx = 0;
         do {
-            dExtFrameCtrl_c::LoadFile(*data_ov079_02127600[animIdx]);
+            dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov079_02127600[animIdx]);
             animIdx += 1;
         } while (animIdx < 6);
         dExtAnmTexPat_c::LoadFile(data_ov079_02128178.base);
@@ -271,7 +271,7 @@ int daBtn_c::InitResources()
     }
 
     idx = mIsKing;
-    kcl = dBgW_Kc::LoadFile(*data_ov079_02127bf0[idx]);
+    kcl = dBgW_Kc::LoadFile(*(SharedFilePtr *)data_ov079_02127bf0[idx]);
     kcl;
 
     if (mShadowModel.InitCuboid() == 0) {

@@ -1590,7 +1590,13 @@ int daKing_Donketu_c::EnterIntroTalk() {
 /* Stores the state record in mState (the shadow struct's pp, at +0x37c) and
    calls the enter member held in the record's first pointer-to-member; returns
    1 without calling if that pointer is null. */
-extern "C" int ChiefChilly_ChangeState(C *c, daKing_Donketu_c::State *p) { c->pp = (PMF *)p; PMF *q = c->pp; if (*q == 0) return 1; return (c->**q)(); }
+extern "C" int ChiefChilly_ChangeState(C *c, daKing_Donketu_c::State *p) {
+    c->pp = (PMF *)p;
+    PMF *q = c->pp;
+    if (*q == 0)
+        return 1;
+    return (c->**q)();
+}
 
 /* Called at the end of every Behavior. Builds the model matrix (mPos >> 3,
    rotated by mAngleX/Y/Z) into mBlendAnmModel.mat4x3, then sets mFootPos[0..1]

@@ -2387,8 +2387,7 @@ void daStar_c::UpdateSparkleEffect() {
         y = yadj;
     }
     volatile u32 &slot = mParticle[2];
-    mParticle[2] =
-        (u32)Particle::System::New(slot, kPtclStarSparkle, x, y, z, 0, 0);
+    mParticle[2] = (u32)Particle::System::New(slot, kPtclStarSparkle, x, y, z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */

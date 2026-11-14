@@ -145,7 +145,7 @@ struct daTrs_c : dCapEnemy_c {
     u8  pad_4a2[0x2];
     /* mShadowModel1's drop matrix, rebuilt by 021166ac / 0211640c and handed
        to DropShadowRadHeight. */
-    Matrix4x3 mShadowMtx;      /* 0x4a4 */
+    Matrix4x3 mShadowMtx; /* 0x4a4 */
     /* mShadowModel2's drop matrix, same 021166ac/DropShadowRadHeight pair. */
     Matrix4x3 mShadowMtx2;     /* 0x4d4 */
     /* Where the carried item sits: 02119ab0 copies the Boo's position here

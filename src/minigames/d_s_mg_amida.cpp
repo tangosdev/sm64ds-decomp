@@ -138,7 +138,7 @@ extern char sAmidaPatternExtraRungs[];
 /* First word of one 0x1c-stride pattern table (speeds, shuffle, rung skip, extra rungs). */
 struct AmidaTableWord {
     s32 word;
-    char pad[0x18];
+    char tail[0x18];
 };
 typedef char AmidaTableWord_size_must_be_0x1c[sizeof(AmidaTableWord) == 0x1c ? 1 : -1];
 
@@ -1777,7 +1777,8 @@ void dScMgAmida_c::RenderBoard() {
                 }
             }
             frames = sAmidaBoardAnimationFrames;
-            Mg_RenderSpriteBoth(sAmidaBoardAnimSprites[frames.a[mLaneFlashFrame[i]]], y, 0xb8, -1, 0);
+            Mg_RenderSpriteBoth(sAmidaBoardAnimSprites[frames.a[mLaneFlashFrame[i]]], y, 0xb8, -1,
+                                0);
         }
     }
     {

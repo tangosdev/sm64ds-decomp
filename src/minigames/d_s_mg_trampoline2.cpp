@@ -465,8 +465,7 @@ void dScMgTrampoline2_c::StatePlay() {
             vecA.y = 0x1000;
             vecA.z = 0;
             func_0203cc28(&vecA.x, d->angles[i]);
-            TrmpItem::Spawn((int)&d->positions[i], &vecA.x, d->itemTypes[i],
-                            d->motionTypes[i]);
+            TrmpItem::Spawn((int)&d->positions[i], &vecA.x, d->itemTypes[i], d->motionTypes[i]);
         }
         if (ApproachLinear(mPattern, 6, 1)) {
             mScriptDone = 1;
@@ -483,8 +482,7 @@ void dScMgTrampoline2_c::StatePlay() {
                 vecB.y = 0x1000;
                 vecB.z = 0;
                 func_0203cc28(&vecB.x, d->angles[i]);
-                TrmpItem::Spawn((int)&d->positions[i], &vecB.x, d->itemTypes[i],
-                                d->motionTypes[i]);
+                TrmpItem::Spawn((int)&d->positions[i], &vecB.x, d->itemTypes[i], d->motionTypes[i]);
             }
             mWaveStep = 0;
         } else {
@@ -880,8 +878,7 @@ int dScMgTrampoline2_c::OnGraphCallback0() {
 
     if (mTouchReleased != 0) {
         s16 a = *(volatile s16 *)&mTouchStartX;
-        if ((a < 0x18 && mTouchX < 0x18) ||
-            (a > 0xe8 && mTouchX > 0xe8)) {
+        if ((a < 0x18 && mTouchX < 0x18) || (a > 0xe8 && mTouchX > 0xe8)) {
             func_02012790(0xe);
         } else {
             buf[1] = mTouchStartX;

@@ -34,7 +34,7 @@ typedef struct TexAnim {
 extern Vector3s data_02099fc4;
 extern void VEC_Fx16Normalize(void *a, Vector3s *b);
 extern Node *func_0204d958(List *list);
-extern void func_0204d9a0(ParticleList *list, Node *node);
+extern void func_0204d9a0(List *list, Node *node);
 extern void SPLRandom_VecFx32(Vector3 *out);
 extern void SPLRandom_VecFx32_XY(Vector3 *out);
 struct Vector3;
@@ -136,7 +136,7 @@ void func_0204c584(ParticleSystem *sys, List *list) {
         p = (ParticleElement *)func_0204d958(list);
         if (p == 0)
             return;
-        func_0204d9a0(&sys->particles, (Node *)p);
+        func_0204d9a0((List *)&sys->particles, (Node *)p);
         switch (def->emissionType) {
         case 0:
             p->offset.x = p->offset.y = p->offset.z = 0;

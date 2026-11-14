@@ -6596,9 +6596,8 @@ int daPly_c::func_ov002_020c8714() {
         /* mPosY (+0x60), re-read by index: this->mPosY lets the compiler reuse the
            load above and drops the ROM's second load (one word short, measured). */
         v[1] = ((int *)this)[0x18] + 0x3c000;
-        mParticle1 =
-            Particle::System::New(*(volatile int *)&this->mParticle1, 0x27, v[0], v[1], this->mPosZ,
-                                  0, 0);
+        mParticle1 = Particle::System::New(*(volatile int *)&this->mParticle1, 0x27, v[0], v[1],
+                                           this->mPosZ, 0, 0);
     } else if (this->FinishedAnim() != 0) {
         if (mNoCtrlKind == 0x10) {
             mStateStep = 0x19;
@@ -9451,8 +9450,7 @@ int daPly_c::func_ov002_020ce5f8() {
     Vec3_LslInPlace(&pos, 3);
 
     if (pos.y < data_0209f32c - 0x1e000) {
-        Particle::System::NewBubble(pos.x, *(volatile int *)&pos.y,
-                                    pos.z);
+        Particle::System::NewBubble(pos.x, *(volatile int *)&pos.y, pos.z);
         if (mStateWaitTimer == 0) {
             Sound::PlayBank3(0xb, mCamSpacePos);
             mStateWaitTimer = 0xa;
@@ -13647,7 +13645,7 @@ extern "C" {
 int daPly_c::TongueWallProbe() {
     daPly_c *player = this;
     extern void MTX_MultVec43(void *v, void *m, void *dst);
-    extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
+    extern void Vec3_MulScalarInPlace(Vector3 * v, int s);
     extern int VEC_Distance(int *a, int *b);
     Vector3_16f dir;
     Vector3 p1;
@@ -13801,8 +13799,7 @@ void daPly_c::func_ov002_020d71ec(int arg1) {
         if (mUseAltBodyModel == 0) {
             SharedFilePtr *file = (SharedFilePtr *)slot[1].w[arg1];
             ((dExtAnmModel_c *)mModels.mHeadModels[3])
-                ->SetAnim((BCA_File *)file->filePtr, 0x40000000, 0x1000,
-                          0);
+                ->SetAnim((BCA_File *)file->filePtr, 0x40000000, 0x1000, 0);
         }
 
         if (arg1 == 1) {
@@ -13819,8 +13816,7 @@ void daPly_c::func_ov002_020d71ec(int arg1) {
 
     SetAnim(0x6c, 0x40000000, -0x1000, 0);
     ((dExtAnmModel_c *)mModels.mHeadModels[3])
-        ->SetAnim((BCA_File *)data_ov002_0210eb88.w[1], 0x40000000, -0x1000,
-                  0);
+        ->SetAnim((BCA_File *)data_ov002_0210eb88.w[1], 0x40000000, -0x1000, 0);
     mStateStep = 2;
     mStateTimer = 0xa;
 }
@@ -14281,7 +14277,8 @@ int daPly_c::St_DizzyStars_Main() {
     /* Read SIGNED on purpose. mStateTimer is u16 and every other user treats
        it that way, but this test is `> 0` against a signed short, which is a
        bgt rather than a bhi. Spelling it unsigned changes the instruction. */
-    if ((s16)mStateTimer > 0) return 1;
+    if ((s16)mStateTimer > 0)
+        return 1;
     this->ChangeState(data_ov002_0211013c);
     return 1;
 }

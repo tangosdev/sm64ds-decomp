@@ -927,12 +927,12 @@ int daObjHatenaBlock_c::OnHitFromUnderneath(dActor_c &other)
 /* dst = the block's position with Y raised by 0x32000 (50 units): the point
    the prizes spawn at. */
 extern "C" {
-void func_ov102_02149684(Vector3* dst, daObjHatenaBlock_c* src){
-  int z = src->mPosZ;
-  int liftedY = src->mPosY + 0x32000;
-  dst->x = src->mPosX;
-  dst->y = liftedY;
-  dst->z = z;
+void func_ov102_02149684(Vector3 *dst, daObjHatenaBlock_c *src) {
+    int z = src->mPosZ;
+    int liftedY = src->mPosY + 0x32000;
+    dst->x = src->mPosX;
+    dst->y = liftedY;
+    dst->z = z;
 }
 }
 

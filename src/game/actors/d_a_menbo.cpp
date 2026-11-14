@@ -203,7 +203,7 @@ void daMenbo_c::func_ov090_021310b4() {
         return;
     if ((p = dActor_c::FindWithID(mdCcAcPos_c.otherOwner)) == 0)
         return;
-    flags = (int)(long long)(int)mdCcAcPos_c.hitFlags;
+    flags = (int)((long long)*(int *)&mdCcAcPos_c.hitFlags);
 
     if (flags & 0x2400) {
         mDeathState = 2;
