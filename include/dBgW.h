@@ -87,14 +87,14 @@ typedef void (*StoodOnCallback)(dBgW *, dActor_c *, dActor_c *);
 
 struct dBgW {
     /* 0x00 is the vptr, placed implicitly by the first virtual declaration. */
-    dActor_c *owner;             /* 0x04 - set by Enable, null when free */
-    s32 ownerUniqueID;        /* 0x08 - owner->uniqueID, -1 when free */
+    dActor_c *owner;   /* 0x04 - set by Enable, null when free */
+    s32 ownerUniqueID; /* 0x08 - owner->uniqueID, -1 when free */
     /* The query TUs cull a collider by distance from its owner's position
        raised by clipOffsetY. -0x1000 (the init value) means "use the owner's
        own clip box": owner mClipOffsetY, and mClipRadius << 3 as the radius. */
-    Fix12i clipRadius;        /* 0x0c - init -0x1000 */
-    Fix12i clipOffsetY;       /* 0x10 */
-    u8 slotIdx;               /* 0x14 - index into data_020a0c80; 0x18 = disabled */
+    fx32 clipRadius;  /* 0x0c - init -0x1000 */
+    fx32 clipOffsetY; /* 0x10 */
+    u8 slotIdx;       /* 0x14 - index into data_020a0c80; 0x18 = disabled */
     u8 pad_15[3];
     BeforeClsnCallback beforeClsnCallback; /* 0x18 */
     /* Run by dBgS_RideCallBack when an actor commits a floor hit on this collider
@@ -136,10 +136,10 @@ struct dBgW {
     int GetSlotIndex() const;
     void SetSlotIndex(int);
     void ClearSlotIndex();
-    void SetClipRadius(Fix12i);
-    Fix12i GetClipRadius() const;
-    void SetClipOffsetY(Fix12i);
-    Fix12i GetClipOffsetY() const;
+    void SetClipRadius(fx32);
+    fx32 GetClipRadius() const;
+    void SetClipOffsetY(fx32);
+    fx32 GetClipOffsetY() const;
     void SetBeforeClsnCallback(BeforeClsnCallback);
     BeforeClsnCallback GetBeforeClsnCallback() const;
     void SetStoodOnCallback(StoodOnCallback);

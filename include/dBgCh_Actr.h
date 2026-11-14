@@ -76,10 +76,10 @@ struct dActor_c;
 struct Vector3_16;   /* pointers only; see the note above */
 
 struct dBgCh_Actr : dBgCh {
-    u32 mFlags;                 /* 0x010 - word, see above */
-    dActor_c *mActor;              /* 0x014 - Init arg 1 */
-    Fix12i mRadius;             /* 0x018 - Init arg 2, the sphere radius */
-    Fix12i mHeight;             /* 0x01c - Init arg 3, a height */
+    u32 mFlags;       /* 0x010 - word, see above */
+    dActor_c *mActor; /* 0x014 - Init arg 1 */
+    fx32 mRadius;     /* 0x018 - Init arg 2, the sphere radius */
+    fx32 mHeight;     /* 0x01c - Init arg 3, a height */
 
     /* THE TWO SUB-OBJECTS, now typed as themselves. Both classes carry real,
        out-of-line constructors, which is what lets this class's constructor
@@ -98,7 +98,7 @@ struct dBgCh_Actr : dBgCh {
                                    the largest y (dBgW_Kc's sphere query hands SetFloorNormal
                                    `&sn` when sn.y beats it); func_020371fc snaps only when .y
                                    is under 0xf20, i.e. on a slope. */
-    Fix12i mMaxNormalY;         /* 0x1b8 - every Update* copies it into
+    fx32 mMaxNormalY;           /* 0x1b8 - every Update* copies it into
                                    mSphereClsn.mMaxNormalY, the face-normal Y
                                    ceiling of the sphere query; Init sets
                                    0x1000, the sphere's own accept-every-face
@@ -116,8 +116,8 @@ struct dBgCh_Actr : dBgCh {
     dBgCh_Actr();
 
     /* --- non-virtual --- */
-    void Init(dActor_c *actor, Fix12i radius, Fix12i height,
-              Vector3_16 *a, Vector3_16 *b);  /* free definition, wall 6az */
+    void Init(dActor_c *actor, fx32 radius, fx32 height, Vector3_16 *a,
+              Vector3_16 *b); /* free definition, wall 6az */
     void ClearAllGroundFlags();
     void ClearGroundFlag();
     void ClearJustHitGroundFlag();
@@ -157,8 +157,8 @@ struct dBgCh_Actr : dBgCh {
     int TestLeftGroundFlag();    /* mFlags & 0x40 */
     void SetJustHitGroundFlag(); /* mFlags |= 0x20 */
     dBgPi *GetSphereResult();    /* mSphereClsn as its dBgPi base */
-    void SetRadius(Fix12i);      /* mRadius = radius */
-    void SetHeight(Fix12i);      /* mHeight = height */
+    void SetRadius(fx32);        /* mRadius = radius */
+    void SetHeight(fx32);        /* mHeight = height */
     /* Both the raycast line and the sphere collider take the flag. */
     void StartIgnoringVanishSurfaces();
     void StopIgnoringVanishSurfaces();
