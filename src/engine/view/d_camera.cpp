@@ -2163,18 +2163,9 @@ s32 dCamera_c::func_02009e70() {
     s32 farDist;
     s32 minY;
     s32 prevDist;
-    union {
-        u16 pitch;
-        s16 pitchS;
-    };
-    union {
-        struct CamMode *mode;
-        int modeAsInt;
-    };
-    union {
-        CamViewObj *view;
-        int viewAsInt;
-    };
+    u16 pitch;
+    struct CamMode *mode;
+    CamViewObj *view;
     s32 framing;
     s32 dist;
     s32 minRise;
@@ -2219,7 +2210,7 @@ s32 dCamera_c::func_02009e70() {
             mLookTargetPos.z = q->z;
             mFocusDist = 0xdfe60;
         }
-        r6 = func_0200c66c(&mTargetPos, &viewAsInt, &modeAsInt, &framing);
+        r6 = func_0200c66c(&mTargetPos, (int *)&view, (int *)&mode, &framing);
         r4 = 0;
         if (framing != 0) {
             r4 = 0x1000;
@@ -2258,15 +2249,15 @@ s32 dCamera_c::func_02009e70() {
         turnInput = data_0209f498[gActivePlayerSlot].pressed & 0x4300;
         if (mFocusActor != 0) {
             mAngleY = Vec3_HorzAngle(&lookAt, &pos);
-        } else if ((u32)mode == (u32)&data_0208733c) {
+        } else if (mode == (CamMode *)&data_0208733c) {
             Mode8DirectionsCamera(view);
             turnInput = 0;
-        } else if ((u32)mode == (u32)&data_020873dc) {
+        } else if (mode == (CamMode *)&data_020873dc) {
             UpdateFixedCamera(view, r6);
         } else if ((mFlags & 0x400) == 0) {
             if (mode == &data_02087404) {
                 UpdateSpiralStairsCamera(view, r6);
-            } else if ((u32)mode == (u32)&data_0208742c) {
+            } else if (mode == (CamMode *)&data_0208742c) {
                 UpdateParallelTrackingCamera(view, r6);
             } else {
                 mFlags |= 0x1000;
@@ -2425,7 +2416,7 @@ s32 dCamera_c::func_02009e70() {
                                         sb = 0x3f80;
                                     fp = Vec3_HorzLen(&offset);
                                     pitch = cstd::atan2(-offset.y, fp);
-                                    ApproachAngle(&pitchS, sb, 0x20, 0x800, 0);
+                                    ApproachAngle((s16 *)&pitch, sb, 0x20, 0x800, 0);
                                     offset.y = FX_MUL(dist, -FX_SinIdx(pitch >> 4));
                                     t0 = FX_Div(FX_MUL(dist, FX_CosIdx(pitch >> 4)), fp);
                                     offset.x = FX_MUL(offset.x, t0);

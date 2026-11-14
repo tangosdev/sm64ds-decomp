@@ -81,6 +81,14 @@ enum {
     FLOOR_UNPROBED = 7   /* set for behaviors 1 and 7 until the floor is probed */
 };
 
+/* The byte at mCoinFlags (+0x3ae). */
+struct CoinFlagBits {
+    u8 active : 1;             /* Render draws nothing while it is clear */
+    u8 launchSoundPending : 1; /* Behavior clears it and plays sound 0x30 */
+    u8 bounces : 3;            /* bounces so far; scales the next one */
+    u8 floorState : 3;         /* FLOOR_* */
+};
+
 /* ROM symbols. Mangled spellings live inside extern "C" so the C++ front end
  * does not mangle them a second time. */
 
@@ -152,8 +160,7 @@ void daCoin_c::ProbeFloor() {
     offScreen = ((mFlags & 8) != 0);
     if (offScreen) return;
 
-    if (mCoinFlags.bits.floorState != FLOOR_UNPROBED)
-        return;
+    if (((CoinFlagBits*)&mCoinFlags)->floorState != FLOOR_UNPROBED) return;
 
     if (gCurrentSublevel == 0x1c || gCurrentSublevel == 0x27) {
         platform = dActor_c::Next(0);
@@ -166,7 +173,7 @@ void daCoin_c::ProbeFloor() {
                     int dist = Vec3_HorzDist(&mPos, &platform->mPos);
                     if (dist < (radius << 3) && dy <= 0x1f4000 && dy >= 0) {
                         mFloorPosY = platform->mPosY + 0x32000;
-                        mCoinFlags.bits.floorState = FLOOR_FIXED;
+                        ((CoinFlagBits *)&mCoinFlags)->floorState = FLOOR_FIXED;
                         return;
                     }
                 }
@@ -191,11 +198,11 @@ void daCoin_c::ProbeFloor() {
         if (ray.DetectClsn()) {
             ray.CopyTo(hit);
             if (hit.GetClsnID() != (u32)-1 && dActor_c::FindWithID(hit.GetClsnID()) != 0) {
-                mCoinFlags.bits.floorState = FLOOR_DYNAMIC;
+                ((CoinFlagBits *)&mCoinFlags)->floorState = FLOOR_DYNAMIC;
             } else {
                 Vector3 pos = ray.GetClsnPos();
                 mFloorPosY = pos.y;
-                mCoinFlags.bits.floorState = FLOOR_FIXED;
+                ((CoinFlagBits *)&mCoinFlags)->floorState = FLOOR_FIXED;
             }
         }
     }
@@ -308,14 +315,13 @@ void daCoin_c::UpdateModelMatrix() {
     inYoshiMouth = inYoshiMouth != 0;
     if (inYoshiMouth) return;
 
-    if (mCoinFlags.bits.active == 0)
-        return;
+    if (((CoinFlagBits*)&mCoinFlags)->active == 0) return;
 
     if (mCoinType == COIN_RED) {
         if (mInBrickBlock != 0) return;
     }
 
-    floorState = mCoinFlags.bits.floorState;
+    floorState = ((CoinFlagBits*)&mCoinFlags)->floorState;
     if (floorState == FLOOR_DYNAMIC) {
         DropShadowRadHeight(mShadowModel, mShadowMat, 0x50000, 0x1f4000, 0xf);
         mClipRadius = 0x3e800;
@@ -492,7 +498,7 @@ void daCoin_c::StateLaunchNearPlayer() {
     int range;
     int speed;
 
-    if (mCoinFlags.bits.bounces == 0) {
+    if (((CoinFlagBits *)&mCoinFlags)->bounces == 0) {
         player = ClosestPlayer();
         if (player == 0) return;
         range = (gCurrentSublevel == 0xb) ? 0x258000 : 0x4b0000;
@@ -505,7 +511,7 @@ void daCoin_c::StateLaunchNearPlayer() {
             speed <<= 1;
         mHorzSpeed = speed;
         mVertSpeed = 0x14000;
-        mCoinFlags.bits.bounces++;
+        ((CoinFlagBits *)&mCoinFlags)->bounces++;
         mWithMeshClsn.SetLimMovFlag();
         mDisappearTimer = 0x1c2;
     }
@@ -575,9 +581,9 @@ void daCoin_c::StateBounce() {
             if (mPosY <= flCoin->mPosY) {
                 mPosY = flCoin->mPosY;
                 Sound::PlayBank3(0x52, mCamSpacePos);
-                bits = &mCoinFlags.bits;
+                bits = (CoinFlagBits *)&mCoinFlags;
                 bits->bounces++;
-                bounces = mCoinFlags.bits.bounces;
+                bounces = ((CoinFlagBits *)&mCoinFlags)->bounces;
                 if (bounces < 3u)
                     damping = ((3 - bounces) << 12) / 3;
                 else
@@ -607,9 +613,9 @@ void daCoin_c::StateBounce() {
             if (mDisappearTimer > 0xf000)
                 mDisappearTimer = 0xf;
             Sound::PlayBank3(0x52, mCamSpacePos);
-            bits = &mCoinFlags.bits;
+            bits = (CoinFlagBits *)&mCoinFlags;
             bits->bounces++;
-            bounces = mCoinFlags.bits.bounces;
+            bounces = ((CoinFlagBits *)&mCoinFlags)->bounces;
             if (bounces < 3u)
                 damping = ((3 - bounces) << 12) / 3;
             else
@@ -674,10 +680,9 @@ void daCoin_c::StateIdle() {
     dActor_c *found;
 
     LinkToBlock();
-    if (mCoinFlags.bits.active)
-        return;
+    if (((CoinFlagBits *)&mCoinFlags)->active) return;
     if (Event::GetBit(mSpawnFilter) == 0) return;
-    mCoinFlags.bits.active = 1;
+    ((CoinFlagBits *)&mCoinFlags)->active = 1;
     mBehaviorType = BEHAVIOR_RESTING;
     mdCc_c.flags &= ~1;
     found = dActor_c::FindWithActorID(0xa, 0);
@@ -740,8 +745,7 @@ int daCoin_c::Render()
     int flags;
     int inYoshiMouth;
 
-    if (!mCoinFlags.bits.active)
-        return 1;
+    if (!((CoinFlagBits *)&mCoinFlags)->active) return 1;
     flags = mFlags;
     inYoshiMouth = (flags & 0x40000) != 0;
     if (inYoshiMouth) return 1;
@@ -766,12 +770,12 @@ int daCoin_c::Behavior()
     extern Handler data_ov002_0210dc70[];
     extern unsigned char gGameMode;
 
-    if ((unsigned int)(mCoinFlags.raw << 0x1e) >> 0x1f) {
-        mCoinFlags.raw &= ~2;
+    if ((unsigned int)(mCoinFlags << 0x1e) >> 0x1f) {
+        mCoinFlags &= ~2;
         Sound::PlayBank3(0x30, mCamSpacePos);
     }
     if ((int)(actorID == 0x122) != 0) {
-        if ((unsigned int)(mCoinFlags.raw << 0x1f) >> 0x1f)
+        if ((unsigned int)(mCoinFlags << 0x1f) >> 0x1f)
             mAreaId = -1;
     }
     if (KillIfCollected() != 0)
@@ -816,7 +820,12 @@ s32 daCoin_c::InitResources()
      * type (0x121 red, 0x122 blue, else yellow), which decides the models
      * loaded and whether a red coin claims a star-tracking slot. The rest builds
      * the two models, the shadow cylinder, the actor collider and the mesh
-     * collider, then sets the disappear and no-collision timers. */
+     * collider, then sets the disappear and no-collision timers.
+     *
+     * Launders kept: the three `mCoinFlags = (mCoinFlags & ~m) | v` stores
+     * go through `*(u8 *)((int)&mCoinFlags)`. Spelled as the plain member,
+     * each one changes the code (measured per site); the plain `&=`/`|=`
+     * sites take the member as is. */
 
     extern Matrix4x3 IDENTITY_MATRIX4X3;
     extern s8 gCurrentSublevel;
@@ -833,7 +842,7 @@ s32 daCoin_c::InitResources()
     s8 slot;
     s32 type;
 
-    mCoinFlags.raw = 0;
+    mCoinFlags = 0;
     ccRadius = 0x64000;
     behavior = (s32)param1 & 0xf;
     mBehaviorType = behavior;
@@ -848,11 +857,11 @@ s32 daCoin_c::InitResources()
         mVertSpeed = 0x14000;
         mVertAccel = -0x4000;
         mTerminalVelocity = -0x37000;
-        mCoinFlags.bits.floorState = FLOOR_NO_SHADOW;
+        *(u8 *)((int)&mCoinFlags) = (*(u8 *)((int)&mCoinFlags) & ~0xe0) | (FLOOR_NO_SHADOW << 5);
     } else if (behavior != 1 && behavior != 7) {
         if (behavior != 5) {
             mVertSpeed = 0x24000;
-            mCoinFlags.raw |= 2;
+            mCoinFlags |= 2;
         } else {
             u32 flags = param1;
             if (flags & 8) {
@@ -863,9 +872,9 @@ s32 daCoin_c::InitResources()
         }
         mVertAccel = -0x4000;
         mTerminalVelocity = -0x37000;
-        mCoinFlags.raw &= ~0xe0;
+        mCoinFlags &= ~0xe0;
     } else {
-        mCoinFlags.bits.floorState = FLOOR_UNPROBED;
+        *(u8 *)((int)&mCoinFlags) = (*(u8 *)((int)&mCoinFlags) & ~0xe0) | (FLOOR_UNPROBED << 5);
         mFloorPosY = mPosY - 0x1f4000;
         if (mBehaviorType == 7) {
             ccRadius = 0x32000;
@@ -960,7 +969,7 @@ s32 daCoin_c::InitResources()
         mDisappearTimer = 0xd2;
     } while (0);
 
-    mCoinFlags.bits.active = 1;
+    *(u8 *)((int)&mCoinFlags) = (*(u8 *)((int)&mCoinFlags) & ~1) | 1;
 
     behavior = mBehaviorType;
     if (behavior != 1 && behavior != 7) {
@@ -972,12 +981,12 @@ s32 daCoin_c::InitResources()
     } else {
         mNoClsnTimer = 0;
         if (mCoinType == COIN_BLUE && (u32)mSpawnFilter < 8) {
-            mCoinFlags.raw &= ~1;
+            mCoinFlags &= ~1;
             mdCc_c.flags |= 1;
         }
     }
 
-    mCoinFlags.raw &= ~0x1c;
+    mCoinFlags &= ~0x1c;
     mPuzzleManagerID = 0;
     return 1;
 }

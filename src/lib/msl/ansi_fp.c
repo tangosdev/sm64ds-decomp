@@ -342,15 +342,10 @@ void __two_exp(Decimal *out, int n) {
     }
 }
 
-union DblWords {
-    double d;
-    int w[2];
-};
-
 void __num2dec_internal(Decimal *d, double x) {
     int e;
-    union DblWords t1;
-    union DblWords t2;
+    double t1;
+    double t2;
     double mm;
     Decimal dec;
     Decimal big;
@@ -367,19 +362,19 @@ void __num2dec_internal(Decimal *d, double x) {
         return;
     }
 
-    t1.d = v;
+    t1 = v;
 
     /* fpclassify, open-coded: an inline helper's temporaries would take
        frame slots after mm and reorder the stack. */
-    switch (t1.w[1] & 0x7ff00000) {
+    switch (((int *)&t1)[1] & 0x7ff00000) {
     case 0x7ff00000:
-        if ((t1.w[1] & 0xfffff) != 0 || t1.w[0] != 0)
+        if ((((int *)&t1)[1] & 0xfffff) != 0 || ((int *)&t1)[0] != 0)
             cls = 1;
         else
             cls = 2;
         break;
     case 0:
-        if ((t1.w[1] & 0xfffff) != 0 || t1.w[0] != 0)
+        if ((((int *)&t1)[1] & 0xfffff) != 0 || ((int *)&t1)[0] != 0)
             cls = 5;
         else
             cls = 3;
@@ -393,16 +388,16 @@ void __num2dec_internal(Decimal *d, double x) {
         d->exp = 0;
         d->sig.length = 1;
 
-        t2.d = x;
-        switch (t2.w[1] & 0x7ff00000) {
+        t2 = x;
+        switch (((int *)&t2)[1] & 0x7ff00000) {
         case 0x7ff00000:
-            if ((t2.w[1] & 0xfffff) != 0 || t2.w[0] != 0)
+            if ((((int *)&t2)[1] & 0xfffff) != 0 || ((int *)&t2)[0] != 0)
                 cls2 = 1;
             else
                 cls2 = 2;
             break;
         case 0:
-            if ((t2.w[1] & 0xfffff) != 0 || t2.w[0] != 0)
+            if ((((int *)&t2)[1] & 0xfffff) != 0 || ((int *)&t2)[0] != 0)
                 cls2 = 5;
             else
                 cls2 = 3;
