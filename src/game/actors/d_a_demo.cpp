@@ -323,8 +323,6 @@ extern void Deallocate(void* p);
 extern void GXS_LoadBG1Scr(const void *src, int offset, int count);
 extern void GXS_LoadBG3Scr(const void *src, u32 offset, u32 count);
 extern void GXS_LoadBG2Scr(const void *src, u32 offset, u32 count);
-
-extern void func_ov002_020f5ad4(char* c);
 extern void func_ov002_020f5f60(char *c);
 extern int func_ov002_020f5fb8(void* c);
 extern int func_ov002_020f5f8c(void* c);
@@ -2207,19 +2205,17 @@ int func_ov002_020f5a94(void *unused){
     return count;
 }
 
-void func_ov002_020f5ad4(char* c)
-{
-    /* StaffRoll::pad_1f0: two words cleared here and read nowhere. */
-    *(int*)(c+0x1f0) = 0;
-    *(int*)(c+0x1f4) = 0;
-    ((StaffRoll *)c)->kiraStar = 0;
-    ((StaffRoll *)c)->holdOrbit = 0;
-    func_ov002_020f5a6c(c);
-    func_ov002_020f396c(c);
-    func_ov002_020f30d4(c);
-    func_ov002_020f2ea0(c);
-    func_ov002_020f2a68(c);
-    func_ov002_020f2984(c);
+void StaffRoll::func_ov002_020f5ad4() {
+    unk1f0 = 0;
+    unk1f4 = 0;
+    kiraStar = 0;
+    holdOrbit = 0;
+    func_ov002_020f5a6c((char *)this);
+    func_ov002_020f396c((char *)this);
+    func_ov002_020f30d4((char *)this);
+    func_ov002_020f2ea0((char *)this);
+    func_ov002_020f2a68((char *)this);
+    func_ov002_020f2984((char *)this);
 }
 
 void StaffRoll::func_ov002_020f5b24() {
@@ -2537,7 +2533,7 @@ void func_ov002_020f5fe4(char* c)
     DecompressLZ16(f, ((StaffRoll *)c)->starChars);
     Deallocate(f);
 
-    func_ov002_020f5ad4(c);
+    ((StaffRoll *)c)->func_ov002_020f5ad4();
 }
 
 int daDemo_c::func_ov002_020f63a0()
