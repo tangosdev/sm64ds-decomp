@@ -10556,9 +10556,6 @@ arm9	0x0205929c	DLInsert	_Z8DLInsertP4CellS0_	C++ linkage; symbols.txt emits thi
 arm9	0x02059170	OS_AllocFromHeap	_Z16OS_AllocFromHeapiij	C++ linkage; symbols.txt emits this name
 arm9	0x020590fc	OS_FreeToHeap	_Z13OS_FreeToHeapiiPv	C++ linkage; symbols.txt emits this name
 arm9	0x02059040	OS_InitAlloc	_Z12OS_InitAllociPvS_i	C++ linkage; symbols.txt emits this name
-arm9	0x02052fdc	FX_GetSqrtResult	_Z16FX_GetSqrtResultv	C++ linkage; symbols.txt emits this name
-arm9	0x02053008	FX_SqrtAsync	_Z12FX_SqrtAsynci	C++ linkage; symbols.txt emits this name
-arm9	0x02053130	FX_InvSqrt	_Z10FX_InvSqrti	C++ linkage; symbols.txt emits this name
 arm9	0x020603c8	CARD_IdentifyBackup	_Z19CARD_IdentifyBackupi	C++ linkage; symbols.txt emits this name
 arm9	0x0205d96c	FSi_InitRom	_Z11FSi_InitRomj	C++ linkage; symbols.txt emits this name
 arm9	0x0204f86c	NNS_SndPlayerSetTrackMute	_Z25NNS_SndPlayerSetTrackMuteP12NNSSndHandleii	C++ linkage; symbols.txt emits this name
@@ -10824,17 +10821,6 @@ arm9	0x020564f4	GXS_LoadBG0Scr	_Z14GXS_LoadBG0ScrPKvii	C++ linkage; symbols.txt 
 arm9	0x02056554	GX_LoadBG0Scr	_Z13GX_LoadBG0ScrPKvii	C++ linkage; symbols.txt emits this name
 arm9	0x02056674	GXS_LoadOAM	_Z11GXS_LoadOAMPKvjj	C++ linkage; symbols.txt emits this name
 arm9	0x020566dc	GX_LoadOAM	_Z10GX_LoadOAMPKvjj	C++ linkage; symbols.txt emits this name
-arm9	0x02052ef4	FX_ModS32	_Z9FX_ModS32ii	C++ linkage; symbols.txt emits this name
-arm9	0x02052f4c	FX_DivS32	_Z9FX_DivS32ii	C++ linkage; symbols.txt emits this name
-arm9	0x02052fa4	FX_DivAsync	_Z11FX_DivAsyncii	C++ linkage; symbols.txt emits this name
-arm9	0x02053090	FX_InvAsync	_Z11FX_InvAsynci	C++ linkage; symbols.txt emits this name
-arm9	0x020530cc	FX_GetDivResult	_Z15FX_GetDivResultv	C++ linkage; symbols.txt emits this name
-arm9	0x02053108	FX_GetDivResultFx64c	_Z20FX_GetDivResultFx64cv	C++ linkage; symbols.txt emits this name
-arm9	0x020531a4	FX_Sqrt	_Z7FX_Sqrti	C++ linkage; symbols.txt emits this name
-arm9	0x02053200	FX_Inv	_Z6FX_Invi	C++ linkage; symbols.txt emits this name
-arm9	0x0205321c	FX_DivFx64c	_Z11FX_DivFx64cii	C++ linkage; symbols.txt emits this name
-arm9	0x02053258	FX_Div	_Z6FX_Divii	C++ linkage; symbols.txt emits this name
-arm9	0x02053274	VEC_Distance	_Z12VEC_DistancePiS_	C++ linkage; symbols.txt emits this name
 arm9	0x02052b34	MTX_Inverse43	_Z13MTX_Inverse43PK9Matrix4x3PS_	C++ linkage; symbols.txt emits this name
 arm9	0x02019740	OS_Terminate	_Z12OS_Terminatev	C++ linkage; symbols.txt emits this name
 arm9	0x0206a600	CTRDG_TerminateForPulledOut	_Z27CTRDG_TerminateForPulledOutv	C++ linkage; symbols.txt emits this name

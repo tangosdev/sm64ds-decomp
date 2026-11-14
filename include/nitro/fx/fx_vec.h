@@ -5,10 +5,6 @@
  * NitroSDK's vector library (nitro/fx/fx_vec.h, libraries/fx/src/fx_vec.c),
  * arm9 .text 0x02053274..0x020538b8, under the SDK's own signatures.
  *
- * VEC_Distance (0x02053274, src/cstd.cpp) is not declared here yet: the
- * tree gives it C++ linkage as _Z12VEC_DistancePiS_, so an extern "C"
- * declaration would not link to it.
- *
  * These take the SDK's VecFx32 / VecFx16, not the game's Vector3 / Vector3s.
  * The words are the same, but in C++ Vector3 declares a constructor and a
  * destructor, so a Vector3 * does not convert to a VecFx32 *. Callers still
@@ -42,6 +38,9 @@ void VEC_Fx16Normalize(const VecFx16 *, VecFx16 *);
 
 /* dst = a * v1 + v2. */
 void VEC_MultAdd(fx32, const VecFx32 *, const VecFx32 *, VecFx32 *);
+
+/* |v1 - v2|. */
+fx32 VEC_Distance(const VecFx32 *, const VecFx32 *);
 
 #ifdef __cplusplus
 }

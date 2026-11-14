@@ -25,7 +25,6 @@
 #define func_0201787c _Z13func_0201787cP13SharedFilePtr
 #define SublevelToLevel _Z15SublevelToLeveli
 #define Vec3_ApproachHorz _Z17Vec3_ApproachHorzP7Vector3S0_i
-#define VEC_Distance _Z12VEC_DistancePiS_
 #define func_02035638 _Z13func_02035638Ph
 #define func_0203564c _Z13func_0203564cPv
 #define func_020371fc _Z13func_020371fcPc
@@ -800,7 +799,6 @@ extern void func_02049f58(void *);
 extern int func_0204a028(void*, unsigned int (*cb)(unsigned int, unsigned int));
 extern int func_0204a0dc(void *, u32 (*cb)(u32, u32));
 extern int GX_HBlankIntr(int);
-extern int VEC_Distance(const Vector3 *, const Vector3 *);
 extern int gMgCoinsShowDelta;
 extern int sMgWinBannerY;
 extern int sMgResultsBannerY;
