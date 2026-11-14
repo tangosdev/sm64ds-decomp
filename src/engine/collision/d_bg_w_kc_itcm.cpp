@@ -1189,8 +1189,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_Lin &ray)
     return 1;
 }
 
-fx32 dBgW_Kc::GetOctreeOriginY() const
-{
+fx32 dBgW_Kc::GetOctreeOriginY() const {
     return kclFile->origin.y << 6;
 }
 
@@ -1199,8 +1198,7 @@ fx32 dBgW_Kc::GetOctreeOriginY() const
    units, hence the `lsl #12` against the origin's `lsl #6`. The name is the
    ROM's own, so it is kept rather than renamed to what the arithmetic
    suggests. */
-fx32 dBgW_Kc::GetUnkOctreeY() const
-{
+fx32 dBgW_Kc::GetUnkOctreeY() const {
     return (kclFile->origin.y << 6) + (~kclFile->yMask << 12);
 }
 
