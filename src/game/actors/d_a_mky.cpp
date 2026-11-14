@@ -74,6 +74,18 @@
 
 extern "C" void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 
+/* The model handle constructs through func_02017acc and the animation
+ * handles through SharedFilePtr::Construct. Declared here, ahead of the
+ * members that read them; defined at the bottom in retail __sinit order. */
+struct MkyModelFilePtr : SharedFilePtr {
+    MkyModelFilePtr(unsigned int fileID);
+    ~MkyModelFilePtr();
+};
+struct MkyAnimFilePtr : SharedFilePtr {
+    MkyAnimFilePtr(unsigned int fileID);
+    ~MkyAnimFilePtr();
+};
+
 /* Actor IDs 0xbf, 0x10b and 0x10c are PLAYER, UKIKI_THIEF and UKIKI_STAR.
  * dActor_c::mFlags bits 0x20000 and 0x40000 are the two yoshi-mouth states.
  * These int-returning predicates are what make the ROM materialize 0/1
@@ -497,10 +509,10 @@ int daMky_c::func_ov030_02112578()
     extern void *gMonkeyRunAnimationFile[];
     dActor_c *cage = dActor_c::FindWithActorID(0x67, 0);
     daPly_c *player = this->ClosestPlayer();
-    s32 v[3];
-    *(s32 *)((u8 *)v + 0) = 0x981;
-    *(s32 *)((u8 *)v + 4) = 0x77a;
-    *(s32 *)((u8 *)v + 8) = 0x501;
+    Vector3 v;
+    v.x = 0x981;
+    v.y = 0x77a;
+    v.z = 0x501;
 
     switch (this->mSubState) {
     case 0:
@@ -1167,8 +1179,8 @@ int daMky_c::EnterState3()
        mwccarm passes differently at the call site, so declaring the true
        types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 
-    extern char gMonkeyHoldAnimationFile[];
-    this->mAnmModel.SetAnim((BCA_File *)(*(void **)(gMonkeyHoldAnimationFile + 4)), 0, 0x1000, 0);
+    extern MkyAnimFilePtr gMonkeyHoldAnimationFile;
+    this->mAnmModel.SetAnim((BCA_File *)gMonkeyHoldAnimationFile.filePtr, 0, 0x1000, 0);
     this->mAnmModel.speed = 0x1000;
     if (mHasSpawnedCap == 0 && SaveData::HasPlayerLostCap()) {
         mSubState = 5;
@@ -1379,17 +1391,6 @@ void daMky_c::ChangeState(int idx) {
     this->mStateDesc = &data_ov030_02115e0c[idx];
     CallStateEnter();
 }
-/* The model handle constructs through func_02017acc and the animation
- * handles through SharedFilePtr::Construct. Declared here, ahead of the
- * virtuals that call them; defined at the bottom in retail __sinit order. */
-struct MkyModelFilePtr : SharedFilePtr {
-    MkyModelFilePtr(unsigned int fileID);
-    ~MkyModelFilePtr();
-};
-struct MkyAnimFilePtr : SharedFilePtr {
-    MkyAnimFilePtr(unsigned int fileID);
-    ~MkyAnimFilePtr();
-};
 extern MkyModelFilePtr data_ov030_02115d00;
 extern MkyAnimFilePtr data_ov030_02115cf0;
 

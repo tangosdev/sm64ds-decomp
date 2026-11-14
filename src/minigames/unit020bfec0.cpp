@@ -21,9 +21,9 @@
  *   `adj ? fn : fn`; FallingPetal::Draw stores its scale z, y, x; and
  *   Dealer::StateReveal keeps its `goto other` (the structured rewrite moves
  *   92 words).
- * - Presenter::Draw's material table stays an int* view reached through a
- *   char* components pointer: naming the ModelComponents or the BMD_Material
- *   pad_0c fields moves 30 words. Dealer::Draw fills its lamp array through a
+ * - Presenter::Draw's material table stays an int* view: the scrolled words
+ *   are fields of the runtime material record (MaterialState, still local to
+ *   src/engine/model/ModelComponents.cpp), not of BMD_Material. Dealer::Draw fills its lamp array through a
  *   walking pointer with an if/else body (indexing or a value-select moves
  *   three words). MascotWalker::Update compares its state words through int*
  *   (a StateSlot view changes the relocation).
@@ -685,7 +685,7 @@ void Presenter::Draw() {
     int keyLight[3];
     int fillLight[3];
     int *materials;
-    char *components;
+    ModelComponents *components;
 
     keyLight[0] = 0;
     keyLight[1] = 0;
@@ -701,17 +701,18 @@ void Presenter::Draw() {
 
     G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
     G3_LightVector(GX_LIGHTID_0, keyLight[0], keyLight[1], keyLight[2]);
-    components = (char *)&mFace.data;
+    components = &mFace.data;
     G3_LightColor(GX_LIGHTID_1, GX_RGB(11, 10, 10));
     G3_LightVector(GX_LIGHTID_1, fillLight[0], fillLight[1], fillLight[2]);
 
-    /* The two tex animations scroll materials 5 and 6 by +0x14/+0x18, which
-       BMD_Material leaves in its unnamed pad_0c (the u offsets are pad_0c[8]).
-       The material pointer stays an int* view: naming the ModelComponents or
-       the pad_0c fields moves 30 words (measured). */
-    materials = *(int **)(components + 4);
-    mTexSeq.Update(*(ModelComponents *)components);
-    mTexAnim.Update(*(ModelComponents *)components);
+    /* Scrolls materials 5 and 6 by +0x14/+0x18, texTransS/texTransT of the
+       0x30-byte runtime material record. That record is MaterialState, still
+       local to src/engine/model/ModelComponents.cpp; dExtModel_c types the
+       pointer as the file's BMD_Material, whose layout differs. So it stays an
+       int * view until MaterialState moves to a header. */
+    materials = (int *)components->materials;
+    mTexSeq.Update(*components);
+    mTexAnim.Update(*components);
     *(int *)((int)materials + 0x104) -= mSway[2];
     *(int *)((int)materials + 0x108) += mSway[3];
     *(int *)((int)materials + 0x134) += mSway[0];
