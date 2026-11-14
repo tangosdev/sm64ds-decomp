@@ -235,9 +235,9 @@ extern dCamera_c *gCamera;
 extern struct Matrix4x3 data_020a0e68;
 /* Vec3_Sub is not declared by math/CalcLib.h. */
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int atan2_hold_d_a_king_donketu_1(Fix12i y, Fix12i x);
+extern int atan2_hold_d_a_king_donketu_1(fx32 y, fx32 x);
 /* local extern: CalcLib.h clashes with this TU's C DecIfAbove0_Short and Vec3_Lsl (void *) */
-extern Fix12i Vec3_HorzLen(const Vector3 *v);
+extern fx32 Vec3_HorzLen(const Vector3 *v);
 
 extern u16 DecIfAbove0_Short(void* p);
 /* local extern: CalcLib.h conflicts with DecIfAbove0_Short(void *). */
@@ -1850,7 +1850,7 @@ int daKing_Donketu_c::Behavior()
 
 extern "C" {
 /* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, dActor_c *a, Fix12i r, Fix12i h, Vector3_16 *p, Vector3_16 *q);
+typedef void BgchInitAt_(void *self, dActor_c *a, fx32 r, fx32 h, Vector3_16 *p, Vector3_16 *q);
 }
 extern void LoadKeyModels(int idx);
 

@@ -200,9 +200,6 @@ typedef unsigned char u8;
 /* shadow typedef 'u16' */
 typedef unsigned short u16;
 
-/* shadow typedef 'Fix12i' */
-typedef int Fix12i;
-
 /* shadow typedef 'Vector3' */
 
 /* Lakitu's model, animation and texture-sequence file handles, owned and
@@ -238,7 +235,7 @@ extern u8 data_ov002_02111144;
 extern u32 data_020a0db0;
 extern struct OamAttr *data_ov002_0210b6a8[];
 
-extern u32 d_a_demoNewHold(u32 slot, u32 unk, Fix12i x, Fix12i y, Fix12i z, void *rot,
+extern u32 d_a_demoNewHold(u32 slot, u32 unk, fx32 x, fx32 y, fx32 z, void *rot,
                            struct ParticleCallback *callback);
 extern int data_ov002_02100140[];
 }
@@ -3024,14 +3021,14 @@ int daDemo_c::func_ov002_020f72bc()
     this->mOpacity = 0x1f;
 
     mParticleID[0] =
-        Particle::System::New(mParticleID[0], kPtclDemoSpinA, *((Fix12i *)&this->mPosX),
-                              *((Fix12i *)&this->mPosY), *((Fix12i *)&this->mPosZ), 0, 0);
+        Particle::System::New(mParticleID[0], kPtclDemoSpinA, *((fx32 *)&this->mPosX),
+                              *((fx32 *)&this->mPosY), *((fx32 *)&this->mPosZ), 0, 0);
     mParticleID[1] =
-        Particle::System::New(mParticleID[1], kPtclDemoSpinB, *(Fix12i *)(&this->mPosX),
-                              *(Fix12i *)(&this->mPosY), *(Fix12i *)(&this->mPosZ), 0, 0);
+        Particle::System::New(mParticleID[1], kPtclDemoSpinB, *(fx32 *)(&this->mPosX),
+                              *(fx32 *)(&this->mPosY), *(fx32 *)(&this->mPosZ), 0, 0);
     mParticleID[2] =
-        Particle::System::New(mParticleID[2], kPtclDemoSpinC, *(Fix12i *)(&this->mPosX),
-                              *(Fix12i *)(&this->mPosY), *((Fix12i *)&this->mPosZ), 0, 0);
+        Particle::System::New(mParticleID[2], kPtclDemoSpinC, *(fx32 *)(&this->mPosX),
+                              *(fx32 *)(&this->mPosY), *((fx32 *)&this->mPosZ), 0, 0);
     return 1;
 }
 
@@ -3300,7 +3297,7 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
 {
     Vector3 v0, v1;
     int src[3];
-    Fix12i dist;
+    fx32 dist;
     s16 vertAngle, heading;
     dCamera_c *cam;
     unsigned int tbl1, tbl2;

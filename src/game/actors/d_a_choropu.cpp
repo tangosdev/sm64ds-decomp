@@ -175,9 +175,9 @@ void daChoropu_c::func_ov080_02123924()
     {
         daPly_c *p = ClosestPlayer();
         Vector3 v;
-        Fix12i *q;
+        fx32 *q;
         if (p == 0) return;
-        q = (Fix12i *)((int)&p->mPosX);
+        q = (fx32 *)((int)&p->mPosX);
         v.x = q[0];
         v.y = q[1];
         v.z = q[2];

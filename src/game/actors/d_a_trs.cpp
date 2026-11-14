@@ -117,7 +117,7 @@ extern "C" {
 
 /* ABI seams whose header member forms do not reproduce the ROM (see notes) */
 /* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, dActor_c *actor, Fix12i radius, Fix12i height, Vector3_16 *a,
+typedef void BgchInitAt_(void *self, dActor_c *actor, fx32 radius, fx32 height, Vector3_16 *a,
                          Vector3_16 *b);
 unsigned int d_a_trsNewHold(unsigned int uniqueID, unsigned int effectID, int x, int y, int z,
                             const void *dir, void *callback);

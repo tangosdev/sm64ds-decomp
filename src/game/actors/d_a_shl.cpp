@@ -97,12 +97,12 @@ extern SharedFilePtr *data_ov102_0214d70c[];
 int func_ov002_020cc16c(void *player, void *actor);
 void Matrix4x3_FromRotationY(void *m, int angle);
 
-int d_a_shlNewHold(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, void *dir, void *cb);
+int d_a_shlNewHold(u32 uniqueID, u32 effectID, fx32 x, fx32 y, fx32 z, void *dir, void *cb);
 /* local extern: these five names hold the @NNN count. Sound::PlayLong is the call. */
 void d_a_shlPlayLongHold(u32 handle, u32 a, u32 soundID, const Vector3 &pos, s16 e);
 
 /* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, dActor_c *owner, Fix12i radius, Fix12i height, Vector3_16 *d,
+typedef void BgchInitAt_(void *self, dActor_c *owner, fx32 radius, fx32 height, Vector3_16 *d,
                          int e);
 }
 int func_ov002_020ad660(void *self, void *clsn, void *model, int kind);

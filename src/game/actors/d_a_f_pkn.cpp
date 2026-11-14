@@ -115,7 +115,7 @@ extern "C" void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
 
 /* Called by their mangled names: each carries a Fix12<int> by value and
    the member spelling DIFFs. */
-extern "C" u32 d_a_f_pknNewHold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const void *f, void *g);
+extern "C" u32 d_a_f_pknNewHold(u32 a, u32 b, fx32 c, fx32 d, fx32 e, const void *f, void *g);
 
 extern SharedFilePtr data_ov084_02130dfc;   /* the plant's model */
 extern SharedFilePtr *data_ov084_021302f4[];/* the six shared animation handles */

@@ -96,7 +96,7 @@ struct PgMthrState {
     int (daPgMthr_c::*update)();
 };
 extern "C" {
-extern Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
+extern fx32 Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern int AngleDiff(int a, int b);
 /* 0x0201267c plays Sound::Play(3, id, pos). Sound::PlayBank3 is the
@@ -421,13 +421,13 @@ void daPgMthr_c::CheckFollow() {
 
 void daPgMthr_c::TurnHeadToward(char *b) {
     dActor_c *who;
-    Fix12i dist;
+    fx32 dist;
     s16 horzAngle;
     s16 delta, vert;
     Vector3 lookTarget;
     Vector3 nodePos;
     Matrix4x3 *bone;
-    Fix12i tx, ty, tz;
+    fx32 tx, ty, tz;
 
     if (b == 0)
         return;

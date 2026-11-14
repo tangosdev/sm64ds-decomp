@@ -97,9 +97,9 @@ daObjBkKillerdai_c::~daObjBkKillerdai_c() {}
 void daObjBkKillerdai_c::Kill() {
     Vector3 pos;
     Vector3 dustPos;
-    Fix12i x = mPosX;
-    Fix12i y = mPosY + 0x96000;
-    Fix12i z = mPosZ;
+    fx32 x = mPosX;
+    fx32 y = mPosY + 0x96000;
+    fx32 z = mPosZ;
     pos.x = x;
     pos.y = y;
     pos.z = z;

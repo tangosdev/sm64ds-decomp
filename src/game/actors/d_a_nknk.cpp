@@ -936,11 +936,11 @@ void daNknk_c::DropShell() {
 dActor_c *daNknk_c::FindNearestShell() {
     dActor_c *found = 0;
     dActor_c *best = 0;
-    Fix12i bestDist = 0x7FFFFFFF;
+    fx32 bestDist = 0x7FFFFFFF;
     while (1) {
         found = dActor_c::FindWithActorID(0x11d /* SHELL */, found);
         if (!found) break;
-        Fix12i d = Vec3_Dist(&mPos, &found->mPos);
+        fx32 d = Vec3_Dist(&mPos, &found->mPos);
         if (d < bestDist) {
             bestDist = d;
             best = found;

@@ -542,7 +542,7 @@ int daBgSnmBdy_c::AdvancePath()
 void daBgSnmBdy_c::UpdateRollAngle()
 {
     int circumference = FX_Mul32x64c(mRadius << 1, FX64C_PI);
-    Fix12i turns = FX_Div(mHorzSpeed, circumference);
+    fx32 turns = FX_Div(mHorzSpeed, circumference);
     mAngleX = (short)(mAngleX + FX_Mul(turns, ANGLE_FULL_TURN));
 }
 

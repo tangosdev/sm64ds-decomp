@@ -410,12 +410,12 @@ void daObjSwitch_c::StateExpiredMain() {
     SetState(3);
 }
 
-void daObjSwitch_c::ScaleOverTime(int mask, Fix12i frames, Fix12i base, Fix12i target) {
-    Fix12i d = FX_Div((Fix12i)mTimer, frames);
-    Fix12i diff = target - base;
-    Fix12i e = FX_MUL(diff, d);
-    Fix12i v = base + FX_Div(e, 0x1000);
-    Fix12i h = FX_MUL(v, 0x3c000);
+void daObjSwitch_c::ScaleOverTime(int mask, fx32 frames, fx32 base, fx32 target) {
+    fx32 d = FX_Div((fx32)mTimer, frames);
+    fx32 diff = target - base;
+    fx32 e = FX_MUL(diff, d);
+    fx32 v = base + FX_Div(e, 0x1000);
+    fx32 h = FX_MUL(v, 0x3c000);
     mDisplacementY = 0x3c000 - h;
     if (mask & 1) mDrawScale.x = v;
     if (mask & 2) mDrawScale.y = v;

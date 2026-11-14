@@ -20,7 +20,7 @@
  *   0x32c -> 0x344 (+0x18).
  * - InitResources: mWithMeshClsn.Init(...) links to the undefined
  *   _ZN10dBgCh_Actr4InitEP8dActor_ciiP10Vector3_16S3_: dBgCh_Actr.h spells
- *   the radii Fix12i, a plain s32, so the ROM's Fix12<int> mangling is
+ *   the radii fx32, a plain s32, so the ROM's Fix12<int> mangling is
  *   called by name.
  * - func_ov089_02131df4: one control arm (mState != 7) size 0x110 -> 0xe8
  *   (-0x28). The ROM has both copies.
