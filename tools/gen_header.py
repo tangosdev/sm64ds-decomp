@@ -31,11 +31,11 @@ FIELD = re.compile(r"^\s*([A-Za-z_][\w ]*?)\s*(\*?)\s+(\w+)\s*(\[[^\]]*\])?\s*;"
                    r"\s*/\*\s*(0x[0-9a-fA-F]+)")
 
 DECLARED_WIDTH = {"u8": 1, "s8": 1, "char": 1, "signed char": 1, "unsigned char": 1,
-                  "u16": 2, "s16": 2, "short": 2, "unsigned short": 2,
+                  "u16": 2, "s16": 2, "short": 2, "fx16": 2, "unsigned short": 2,
                   "u32": 4, "s32": 4, "int": 4, "unsigned int": 4, "long": 4,
-                  "Fix12i": 4, "float": 4, "void": 4,
+                  "fx32": 4, "float": 4, "void": 4,
                   "s64": 8, "u64": 8, "long long": 8, "double": 8}
-SIGNED_TYPES = {"s8", "s16", "s32", "int", "short", "signed char", "long", "Fix12i"}
+SIGNED_TYPES = {"s8", "s16", "s32", "int", "short", "signed char", "long", "fx16", "fx32"}
 UNSIGNED_TYPES = {"u8", "u16", "u32", "unsigned char", "unsigned short", "unsigned int"}
 
 

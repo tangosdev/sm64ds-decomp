@@ -246,7 +246,7 @@ def _norm_type(t, c_file, tmap=None):
                "u32": "unsigned int", "u64": "unsigned long long",
                "s8": "signed char", "s16": "short", "s32": "int",
                "s64": "long long", "f32": "float", "f64": "double",
-               "size_t": "unsigned long", "Fix12i": "int",
+               "size_t": "unsigned long", "fx32": "int", "fx16": "short",
                "vu8": "unsigned char", "vu16": "unsigned short",
                "vu32": "unsigned int", "vs8": "signed char",
                "vs16": "short", "vs32": "int"}
