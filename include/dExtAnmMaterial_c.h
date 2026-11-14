@@ -3,7 +3,6 @@
 
 #include "types.h"
 #include "dExtFrameCtrl_c.h"
-#include "math/Fix12.h"
 #include "private/BMA_File.h"
 
 /* dExtFrameCtrl_c child that drives BMA-file playback, vtable _ZTV17dExtAnmMaterial_c at 0x0208e7f4:

@@ -50,9 +50,9 @@ typedef signed int intptr_t;
    ROM take it), so that is the period spelling, with FX32_SHIFT and FX_MUL
    from nitro/fx/fx.h. An earlier community name, Fix12i, was retired for it;
    both named `signed int`, so the respelling changed no byte and no mangled
-   name. Fix12<T> (include/math/Fix12.h) is a different thing, a class
-   template whose by-value parameters change calling convention
-   (notes/mwccarm-codegen.md 6az): converting to it is matching work. */
+   name. So was the Fix12<T> class template: no function in the ROM takes
+   one by value (mwccarm would home it to the stack; notes/mwccarm-codegen.md
+   6az), so every parameter it once spelled turned out to be a plain scalar. */
 #ifndef NITRO_FX_SCALAR_TYPES
 #define NITRO_FX_SCALAR_TYPES
 typedef signed int fx32;

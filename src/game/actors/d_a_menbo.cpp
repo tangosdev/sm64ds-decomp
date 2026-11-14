@@ -74,9 +74,6 @@ struct MenboAnimationFilePtr : SharedFilePtr {
     ~MenboAnimationFilePtr();
 };
 
-/* By-value Fix12<int> in a mangled name; the calls pass a bare word. */
-typedef int LocFix12;
-
 extern "C" void MTX_Concat43(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *out);
 extern "C" void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 extern "C" void Matrix4x3_FromRotationY(void *m, int angle);
@@ -102,7 +99,7 @@ extern "C" int d_a_menboNewHold(unsigned int a0, unsigned int a1, int a2, int a3
 
 /* Parameter names keep this TU's @NNN. */
 extern "C" {
-typedef void BgchInitAt_(dBgCh_Actr *self, int a, LocFix12 r, LocFix12 h, int p, int q);
+typedef void BgchInitAt_(dBgCh_Actr *self, int a, fx32 r, fx32 h, int p, int q);
 }
 int SurfaceInfo_TestFlag0x20(int *p);
 extern "C" int func_02035638(u8 *p);

@@ -155,7 +155,6 @@ extern "C" {
 extern void *sWigglerSprites[];
 extern void *sHanaWigglerTargetSprites[];
 extern void *sHanaWigglerFieldSprites[];
-extern void OamRender8_d_s_mg_hanachan(int b, void *attr, int x, int y, int a, int c, int f, int g);
 
 extern short sHanaPickedCount;
 extern unsigned short sHanaPickedIds[];

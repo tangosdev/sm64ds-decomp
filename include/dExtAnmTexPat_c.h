@@ -3,7 +3,6 @@
 
 #include "types.h"
 #include "dExtFrameCtrl_c.h"
-#include "math/Fix12.h"
 #include "private/BTP_File.h"
 
 /* dExtFrameCtrl_c child that drives BTP-file playback, vtable _ZTV15dExtAnmTexPat_c at 0x0208e7d4:

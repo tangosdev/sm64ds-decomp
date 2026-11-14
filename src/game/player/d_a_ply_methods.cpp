@@ -541,14 +541,6 @@ extern u32 PlayerNewHold6(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const vo
  * be load-bearing.
  * ------------------------------------------------------------------------- */
 struct V3Quad { Vector3 a; Vector3 d; Vector3 e; Vector3 b; };
-/* A stand-in for Fix12<int>, and load-bearing as a CLASS rather than as a
- * name: func_ov002_020bf800 builds three of these and passes each as an int
- * read through its address. The ROM stores x, y and z to sp+0xc..0x14 and
- * reloads x and y from there for the call (z goes out from a register). Plain fx32
- * locals -- or passing xv/yv/zv straight to the callee -- keep all three in
- * registers and shrink that function from 140 bytes to 120. Measured both
- * ways; it stays until Fix12<int> itself is reconstructed. */
-struct Fix12v { int v; Fix12v(int a) : v(a) {} };
 namespace Sound { void PlayBank0(unsigned int, const Vector3 &); }
 /* Only ever an opaque pointer: the camera's extern, and func_ov002_020ceb7c's
  * parameter, which is a daPly_c (it reads mPosY, mPlayerNo and mStateWork). */
@@ -2263,14 +2255,8 @@ flag_done:
 }
 
 void daPly_c::func_ov002_020bf800(Vector3_16f v) {
-    typedef unsigned int u32;
-    typedef short s16;
-    int xv = mPosX - v.x * 0x2bc;
-    int zv = mPosZ - v.z * 0x2bc;
-    int yv = mPosY - v.y * 0x2bc;
-    Fix12v a(xv), b(yv), d(zv);
-    mParticle1 = Particle::System::New(mParticle1, kPtclCurrentFlow, *(int *)&a, *(int *)&b,
-                                       *(int *)&d, (const Vector3_16f *)(&v), 0);
+    Vector3 pos(mPosX - v.x * 0x2bc, mPosY - v.y * 0x2bc, mPosZ - v.z * 0x2bc);
+    mParticle1 = Particle::System::New(mParticle1, kPtclCurrentFlow, pos.x, pos.y, pos.z, &v, 0);
 }
 
 void daPly_c::func_ov002_020bf88c() {
@@ -6810,12 +6796,7 @@ int daPly_c::func_ov002_020c8f0c() {
 }
 
 /* recovered: shared common types */
-/* Signature deliberately copied from the local declaration above: the
-   ROM name carries by-value class parameters (e.g. Fix12t<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 int daPly_c::func_ov002_020c8f80() {
-    typedef int Fix12t;
     char *p = (char *)this;
 
     this->mScaleX -= 0x80;
@@ -7113,7 +7094,6 @@ void daPly_c::func_ov002_020c98a4() {
 }
 
 void daPly_c::func_ov002_020c990c() {
-    typedef int Fix12;
     this->mHasNoCap = 1;
     if (this->mIsAirborne) {
         this->mStateStep = 0x16;
@@ -15236,7 +15216,6 @@ int daPly_c::St_SwingPlayer_Cleanup() {
 
 int daPly_c::St_SwingPlayer_Main() {
     char* c = (char*)this;
-    typedef s32 Fix12;
     extern u16 data_0209f49e[];
     extern s16 data_0209f4a0[];
     switch (this->mStateStep) {

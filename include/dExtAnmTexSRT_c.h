@@ -3,7 +3,6 @@
 
 #include "types.h"
 #include "dExtFrameCtrl_c.h"
-#include "math/Fix12.h"
 #include "private/BTA_File.h"
 
 /* dExtFrameCtrl_c child that drives BTA-file playback, vtable _ZTV15dExtAnmTexSRT_c at 0x0208e7c4:
