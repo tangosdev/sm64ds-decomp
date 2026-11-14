@@ -963,6 +963,7 @@ extern int data_0209b008[], data_0209b078[], data_0209b0f8[];
 extern void *data_0209f318;          /* the Camera singleton */
 extern signed char data_02092120;    /* currently shown area, -1 = none */
 extern unsigned char data_0209f250;  /* local player index */
+extern "C" short GetAngleToCamera(int i);   /* SKYCAM1 trace: the heading the light warp tests */
 extern "C" void _ZN6Player14InitMetalWarioEv(void *);   /* SM64DS_METAL_POKE */
 extern "C" void _ZN6Player16InitBalloonMarioEv(void *);   /* SM64DS_BALLOON_POKE */
 extern "C" void _ZN6Player15InitVanishLuigiEv(void *);   /* SM64DS_VANISH_POKE */
@@ -20225,6 +20226,48 @@ int main(void)
                         fc_yaw = (short)(fc_yaw + d);
                     }
                 }
+            }
+        }
+        /* SKYCAM1 (run coopfix1, Tango 11-13: "freecam doesnt let you look into the sky to go to wingcap"). The cartridge opens the
+           Tower of the Wing Cap from the first-person view only: Player::St_CameraZoom_Main calls func_ov002_020cac60, which warps
+           when the player stands on the sunlight floor (surface 0xd) with 14 stars, faces the window (GetAngleToCamera within
+           +-0x1000) and the first-person camera (state 9) has its look-up angle +0x17e at 0x1aab or more (the camera clamps it at
+           0x1c00, func_02009aa8). On the DS that angle and the look-around +0x17c come from the circle pad (data_0209f4a2/a4), and
+           that is all the port fed them. In the analog cam, the freecam and the hybrid, the mouse and the right stick are the
+           camera; first person is a game-camera moment where the rig stands down, so those controls went nowhere and the view could
+           not tilt up. Here they turn the first-person look, by the rig's own amounts and signs, onto the two angles the camera
+           tick integrates and clamps next. The DS camera mode is left alone (cartridge-identical). Dev builds only: SM64DS_SKYCAM_OFF=1
+           is the before arm, SM64DS_SKYCAM_TRACE=1 logs one [skycam] line a tick while the first-person camera is up. */
+        {
+            static int sk_off = -1, sk_trace = -1;
+            if (sk_off < 0) {
+                sk_off = 0; sk_trace = 0;
+#ifndef PORT_ROM_CLEAN
+                sk_off = getenv("SM64DS_SKYCAM_OFF") ? 1 : 0;
+                sk_trace = getenv("SM64DS_SKYCAM_TRACE") ? 1 : 0;
+#endif
+            }
+            const int fp = real_camera && cam && c && cam93_state_idx(cam) == 9;
+            if (fp && !sk_off && (cam_mode != CAM_DS || cam_hybrid) && !cam_paused && !menu_on && !rb_replaying()) {
+                const int cs = host_setting_camera_sensitivity();
+                const int inv = host_setting_invert_camera_y() ? -1 : 1;
+                const int dyaw = (fc_stick_rate(stick_rx, CAM_STEP * cs / 100) + mouse_dyaw) * cam_turn;
+                const int dpitch = (stick_zoom ? 0 : -inv * fc_stick_rate(stick_ry, (CAM_STEP / 2) * cs / 100)) + inv * mouse_dpitch;
+                short *look_yaw = (short *)((char *)cam + 0x17c), *look_up = (short *)((char *)cam + 0x17e);
+                if (dyaw) *look_yaw = (short)(*look_yaw + dyaw);   /* past +-0x2000 from the body the camera tick turns the player, as the pad does */
+                if (dpitch) {
+                    int u = *look_up - dpitch;   /* the rig's pitch is the eye's height (up the screen is less); the look-up angle is the other way */
+                    if (u > 0x1c00) u = 0x1c00;
+                    if (u < -0x1c00) u = -0x1c00;
+                    *look_up = (short)u;
+                }
+            }
+            if (fp && sk_trace) {
+                fprintf(stderr, "[skycam] f%d mode=%d hy=%d off=%d mouse=%d,%d stick=%d,%d look=%04x up=%d surf=%d head=%d camang=%d pyaw=%04x\n",
+                        frame, cam_mode, cam_hybrid, sk_off, mouse_dyaw, mouse_dpitch, stick_rx, stick_ry,
+                        (unsigned)(unsigned short)*(short *)((char *)cam + 0x17c), (int)*(short *)((char *)cam + 0x17e),
+                        *(int *)(c + 0x664), (int)*(short *)(c + 0x766), (int)GetAngleToCamera(*(unsigned char *)&data_0209f250),
+                        (unsigned)(unsigned short)*(short *)(c + 0x8e));
             }
         }
         {   /* CAMERA093 test hook (SM64DS_CAM93_BEHIND=<frame>): the game's own Camera::GoBehindPlayer, the
