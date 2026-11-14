@@ -33,8 +33,8 @@ extern "C" {
    defined. */
 }
 int func_02037dc4(int p); /* SurfaceInfo * -> Vector3 * (the hit normal) */
-void dBgS_RideCallBack(int a, int b);
-void dBgS_MoveBgCrrPos(void *arg, int b, int c, int d);
+void dBgS_RideCallBack(dBgPi *hit, dActor_c *rider);
+void dBgS_MoveBgCrrPos(dBgPi *hit, Vector3 *pos, Vector3_16 *motionAng, Vector3_16 *ang);
 int  SurfaceInfo_TestFlag0x20(int *p);
 
 /* Lifecycle first; the group emits at the run's tail. Both bodies are empty:
@@ -52,8 +52,8 @@ void dBgCh_Actr::Init(dActor_c *actor, fx32 radius, fx32 height, Vector3_16 *a, 
     mRadius = radius;
     mHeight = height;
     mFlags = 0;
-    mSphereClsn.mMotionAngPtr = (s32)a;
-    mAngPtr = (s32)b;
+    mSphereClsn.mMotionAngPtr = a;
+    mAngPtr = b;
     mMaxNormalY = 0x1000;
 }
 
@@ -78,8 +78,7 @@ void func_02037318(dBgCh_Actr *clsn) {
 /* The ground-snap step run once per landing: when the sphere query flagged a
    floor hit and the actor is close to a dBgCh_Gnd probed surface, snap the
    actor's position onto it and raise the on-ground state. */
-extern "C" void func_020371fc(char *self) {
-    dBgCh_Actr *clsn = (dBgCh_Actr *)self;
+extern "C" void func_020371fc(dBgCh_Actr *clsn) {
     if ((clsn->mSphereClsn.flags & 1) == 0) return;
     if ((clsn->mSphereClsn.flags & 8) == 0) return;
     if ((clsn->mFlags & 0x100) == 0) return;
@@ -115,7 +114,7 @@ extern "C" void func_020371fc(char *self) {
 void dBgCh_Actr::CommitFloorHit(s32 wasOnGround) {
     if (wasOnGround == 0)
         SetJustHitGroundFlag();
-    dBgS_RideCallBack((int)GetFloorResult(), (int)mActor);
+    dBgS_RideCallBack(GetFloorResult(), mActor);
     SetGroundFlag();
     if (GetLimMovFlag() == 0)
         mActor->mVertSpeed = 0;
@@ -131,8 +130,7 @@ void dBgCh_Actr::UpdateDiscreteNoLava()
     struct Vector3 *prev = &mActor->mPrevPos;
 
     if (IsOnGround() && IsFlag800Clear() && ShouldUpdatePos()) {
-        dBgS_MoveBgCrrPos((void *)mSphereClsn.GetFloorResult(), (int)pos, mSphereClsn.mMotionAngPtr,
-                          mAngPtr);
+        dBgS_MoveBgCrrPos(mSphereClsn.GetFloorResult(), pos, mSphereClsn.mMotionAngPtr, mAngPtr);
     }
     onGround = IsOnGround();
     ClearAllGroundFlags();
@@ -228,8 +226,7 @@ void dBgCh_Actr::UpdateContinuousExceptSlot0() {
     prev = &a->mPrevPos;
 
     if (IsOnGround() && IsFlag800Clear() && ShouldUpdatePos())
-        dBgS_MoveBgCrrPos((void *)mSphereClsn.GetFloorResult(), (int)pos, mSphereClsn.mMotionAngPtr,
-                          mAngPtr);
+        dBgS_MoveBgCrrPos(mSphereClsn.GetFloorResult(), pos, mSphereClsn.mMotionAngPtr, mAngPtr);
 
     hitFloor = false;
     dBgPi floorHit;
@@ -356,8 +353,7 @@ void dBgCh_Actr::UpdateContinuous()
     prev = &a->mPrevPos;
 
     if (IsOnGround() && IsFlag800Clear() && ShouldUpdatePos())
-        dBgS_MoveBgCrrPos((void *)mSphereClsn.GetFloorResult(), (int)pos, mSphereClsn.mMotionAngPtr,
-                          mAngPtr);
+        dBgS_MoveBgCrrPos(mSphereClsn.GetFloorResult(), pos, mSphereClsn.mMotionAngPtr, mAngPtr);
 
     hitFloor = false;
     dBgPi floorHit;
@@ -609,8 +605,7 @@ void dBgCh_Actr::UpdateExtraContinous()
     prev = &actor->mPrevPos;
 
     if (IsOnGround() && IsFlag800Clear())
-        dBgS_MoveBgCrrPos((void *)mSphereClsn.GetFloorResult(), (int)pos, mSphereClsn.mMotionAngPtr,
-                          mAngPtr);
+        dBgS_MoveBgCrrPos(mSphereClsn.GetFloorResult(), pos, mSphereClsn.mMotionAngPtr, mAngPtr);
 
     {
         hitFloor = false;

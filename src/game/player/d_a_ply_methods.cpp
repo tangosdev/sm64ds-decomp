@@ -271,8 +271,6 @@ extern void func_02020388(int playerNo);
 extern "C" int func_02035638(unsigned char *);
 extern "C" void *func_0203564c(void *);
 extern void func_02035798(dBgCh_Actr *, int);
-extern "C" void func_020371fc(char *);
-extern void func_02037318(dBgCh_Actr *);
 extern "C" int func_02037e20(int *);
 extern "C" void func_0203db0c(int idx, unsigned short val);
 extern void func_ov002_020ed63c(daYegg_c *, int);
@@ -3529,7 +3527,7 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
         mClsnFlags |= 4;
 
     if (mIsUnderwater == 0)
-        func_020371fc((char *)&mMeshClsn);
+        func_020371fc(&mMeshClsn);
 
     if (mClsnFlags & 1) {
         fr = mMeshClsn.GetFloorResult();
