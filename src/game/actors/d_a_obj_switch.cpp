@@ -85,8 +85,7 @@ void UnloadSilverStarAndNumber();
  * `new daObjSwitch_c` is the whole sequence the loose factory spelled by
  * hand: fBase_c::operator new(0x354), dBgActor_c's base constructor, then
  * the vptr store. */
-daObjSwitch_c *daObjSwitch_c_classInit_HANSWITCH(void)
-{
+daObjSwitch_c *daObjSwitch_c_classInit_HANSWITCH(void) {
     return new daObjSwitch_c;
 }
 
@@ -94,8 +93,7 @@ daObjSwitch_c *daObjSwitch_c_classInit_HANSWITCH(void)
  * allocation size, vtable identity, and the STAR_SWITCH registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: StarSwitch_Spawn. */
-daObjSwitch_c *daObjSwitch_c_classInit_STAR_SWITCH(void)
-{
+daObjSwitch_c *daObjSwitch_c_classInit_STAR_SWITCH(void) {
     return new daObjSwitch_c;
 }
 

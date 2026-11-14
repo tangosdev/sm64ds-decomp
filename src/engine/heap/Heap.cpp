@@ -51,7 +51,7 @@ extern "C" Heap* GAME_HEAP_PTR;
 extern "C" Heap* data_020a0ea8;
 
 extern "C" {
-    /* `extern' is load-bearing on both of these, and specifically because they
+/* `extern' is load-bearing on both of these, and specifically because they
        sit inside a BRACED linkage block. Written `extern "C" u32 X;' on its own
        line the extern specifier is implied and the line is a declaration.
        Written `extern "C" { u32 X; }' mwccarm emits a DEFINITION, which
@@ -62,14 +62,14 @@ extern "C" {
 
        build_pin.verify compiles a single file and never links, so it returned
        (True, '2004/b56') on the broken spelling. Only rombuild.py caught it. */
-    extern u32   ROOT_HEAP_ARENA_ID;            /* 0x020a0ea4 */
-    extern Heap* data_020a0e9c;                 /* the root heap; unnamed */
+extern u32 ROOT_HEAP_ARENA_ID; /* 0x020a0ea4 */
+extern Heap *data_020a0e9c;    /* the root heap; unnamed */
 
-    unsigned int OS_GetArenaLo(s32 arena);
-    unsigned int OS_GetArenaHi(s32 arena);
-    void *OS_InitAlloc(s32 arena, void *lo, void *hi, int maxHeaps);
-    void OS_SetArenaLo(s32 arena, unsigned int lo);
-    void *OS_AllocFromArenaLo(s32 arena, unsigned int size, unsigned int align);
+unsigned int OS_GetArenaLo(s32 arena);
+unsigned int OS_GetArenaHi(s32 arena);
+void *OS_InitAlloc(s32 arena, void *lo, void *hi, int maxHeaps);
+void OS_SetArenaLo(s32 arena, unsigned int lo);
+void *OS_AllocFromArenaLo(s32 arena, unsigned int size, unsigned int align);
 }
 
 /* The global allocation entry points, highest addresses first: two bodies

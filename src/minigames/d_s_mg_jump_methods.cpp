@@ -63,7 +63,7 @@ extern MgJumpModelFilePtr gJumpBack01ModelFile;
 extern "C" {
 void Mg_CommitRecords(void);
 void Mg_DrawScoreTally(void *a, int b, int c, int d);
-int  GetGameLanguage(void);
+int GetGameLanguage(void);
 struct OamAttr;
 struct Matrix2x2;
 void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
@@ -79,7 +79,7 @@ int Jump3D_InitPool(void *base, int count);
 extern Matrix4x3 data_020a0e68;
 extern int sJumpLastPick;
 extern u8 gMainScreenLayers;
-extern s16  data_02082614;
+extern s16 data_02082614;
 extern int sJump3DMarioCount;
 extern int sHeyhoUnsettledCount;
 extern int sJump3DRisenOutCount;
@@ -97,8 +97,8 @@ void Jump3D_UpdateAll(void);
 void Jump3D_SetLowGravity(void);
 void Jump3D_StopGravity(void);
 void Jump3D_StartRoundLayout(void);
-int  Jump3D_AllIdle(void);
-int  Heyho_AllIdle(void);
+int Jump3D_AllIdle(void);
+int Heyho_AllIdle(void);
 int Heyho_InitPool(void *ptr, int n);
 void Jump3D_EnableInput(void);
 

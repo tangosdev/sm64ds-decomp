@@ -89,7 +89,6 @@ typedef struct Pair {
    `pointer + constant` arithmetic because every member spelling moved bytes. */
 #define SNOW_OFF(m) ((int)&((dScMgSnowball_c *)0)->m)
 
-
 extern "C" {
 extern void RenderOamBothScreens(void *a, int b, int c, int d, int e, void *f);
 extern OamAttr *sSnowballBitSprites[];

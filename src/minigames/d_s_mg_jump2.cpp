@@ -124,7 +124,6 @@ extern void Jump3D_SetLowGravity(void);
 extern void Heyho_ReactAll(void);
 extern int Heyho_InitPool(void *ptr, int n);
 
-
 /* Empty and out of line: mPopups' element constructor, which the factory
  * below registers with __cxa_vec_ctor (dScMgTrampoline2_c's factory reuses
  * it). Written above the factory because this TU emits .text in reverse

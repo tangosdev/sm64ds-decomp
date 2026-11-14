@@ -872,7 +872,11 @@ void daYegg_c::EnterFollowPlayer() {
 /* -------------------------------------------------------------------------- */
 /* Switches to state `i` and runs that state's enter handler. daPly_c's
  * St_YoshiPower_Init calls it with state 1 on the egg it holds. */
-void func_ov002_020ed63c(daYegg_c *c, int i) { c->mState = i; int j = c->mState; (c->*data_ov002_02110a5c[j].pmf[0])(); }
+void func_ov002_020ed63c(daYegg_c *c, int i) {
+    c->mState = i;
+    int j = c->mState;
+    (c->*data_ov002_02110a5c[j].pmf[0])();
+}
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 20 -- RunState, 0x020ed684, size 0x48 */
@@ -1418,8 +1422,7 @@ int daYegg_c::InitResources()
  * `new daYegg_c` is the whole sequence the loose factory spelled by hand:
  * fBase_c::operator new(0x42c), dEnemyBase_c's base constructor, the vptr
  * store, then the four member constructors in declaration order. */
-daYegg_c *daYegg_c_classInit(void)
-{
+daYegg_c *daYegg_c_classInit(void) {
     return new daYegg_c;
 }
 

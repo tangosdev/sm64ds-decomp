@@ -131,7 +131,8 @@ extern char data_ov007_02103234[]; /* "2DEffect" */
 extern int data_ov007_020d7c6c;
 extern u16 data_ov007_020d7c58[];
 
-extern "C" void func_0204dab4(void *sys, TrackingRecord *buf, int count, unsigned int mask, void *cb);
+extern "C" void func_0204dab4(void *sys, TrackingRecord *buf, int count, unsigned int mask,
+                              void *cb);
 extern "C" void func_0204dc84(char *self);
 extern "C" void Sprite_SetAnimation(Ov007OamNode *node, int animIndex, int mode, int rev,
                                     int frame);

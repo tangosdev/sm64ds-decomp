@@ -47,7 +47,6 @@ int sPuffNextIndex;
 void **sPuffXTable;
 Puff sPuffs[3];
 
-
 void Puff_Spawn(int x, int y) {
     int i;
     int v;

@@ -51,8 +51,7 @@ int daObjFlMaruta_c::InitResources()
     return func_ov080_021274ac(this, data_ov022_02112c9c);
 }
 
-int *daObjFlMaruta_c_classInit(void)
-{
+int *daObjFlMaruta_c_classInit(void) {
     return (int *)new daObjFlMaruta_c;
 }
 

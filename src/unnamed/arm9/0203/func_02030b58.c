@@ -36,7 +36,8 @@ void func_02030b58(void) {
         }
     }
     if (data_0209fc5c[0] == 0) return;
-    if (data_0209fc5c[func_0203da9c()] != 0) return;
+    if (data_0209fc5c[func_0203da9c()] != 0)
+        return;
     data_0209fc58 |= 0xf;
     func_02030790();
 }

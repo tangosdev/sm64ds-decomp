@@ -39,7 +39,6 @@ unsigned int strlen(const char *s)
   } while (c != 0);
   return n;
 }
-
 }
 
 extern "C" {
@@ -104,7 +103,6 @@ char *strncpy(char *dst, const char *src, unsigned int n)
   } while (--n);
   return dst;
 }
-
 }
 
 extern "C" {

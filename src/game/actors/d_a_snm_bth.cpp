@@ -337,8 +337,7 @@ int daSnmBth_c::InitResources()
 }
 
 /* SNOWMAN_BREATH factory. */
-daSnmBth_c *daSnmBth_c_classInit()
-{
+daSnmBth_c *daSnmBth_c_classInit() {
     return new daSnmBth_c();
 }
 

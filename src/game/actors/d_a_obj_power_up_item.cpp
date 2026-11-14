@@ -497,8 +497,7 @@ s32 daObjPowerUpItem_c::OnYoshiTryEat()
  * RTTI, allocation size, vtable identity, and the POWER_UP_ITEM registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: PowerFlower_Spawn. */
-daObjPowerUpItem_c *daObjPowerUpItem_c_classInit()
-{
+daObjPowerUpItem_c *daObjPowerUpItem_c_classInit() {
     return new daObjPowerUpItem_c();
 }
 

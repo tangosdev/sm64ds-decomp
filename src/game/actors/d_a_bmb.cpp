@@ -104,8 +104,8 @@ extern signed char gCurrentSublevel;
 extern unsigned char gCurrentStarId;
 extern unsigned char gGameMode;
 }
-void  GiveCoins(int who, int count);
-int   SurfaceInfo_TestFlag0x20(int *si);
+void GiveCoins(int who, int count);
+int SurfaceInfo_TestFlag0x20(int *si);
 int func_ov002_020ef228(dBgCh_Actr *clsn, dActor_c *other);
 
 /* ==========================================================================
@@ -126,12 +126,10 @@ int func_ov002_020ef228(dBgCh_Actr *clsn, dActor_c *other);
  * Historical alias: BobOmb_Spawn.
  * ======================================================================== */
 
-
 daBmb_c *daBmb_c_classInit(void)
 {
     return new daBmb_c();
 }
-
 
 extern "C" SpawnInfo<daBmb_c> g_profile_BOMBHEI = {
     daBmb_c_classInit,
@@ -860,7 +858,6 @@ do_call:
     mCarrier = (daPly_c *)a1;
     func_ov102_0214bd20();
 }
-
 }
 
 /* ==========================================================================

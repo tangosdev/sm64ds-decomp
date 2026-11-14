@@ -74,8 +74,6 @@ int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
 unsigned short DecIfAbove0_Short(unsigned short *timer);
-
-
 }
 extern "C" {
 
@@ -152,8 +150,7 @@ static inline short AbsAngle(short angle) {
 /* Reconstructed source-style names. SM64DS preserves this class's RTTI, the
  * BIG_SNOWMAN_BODY registry ID, the descriptor relationship and the factory's
  * behavior; it preserves neither identifier below. */
-daBgSnmBdy_c *daBgSnmBdy_c_classInit()
-{
+daBgSnmBdy_c *daBgSnmBdy_c_classInit() {
     return new daBgSnmBdy_c();
 }
 

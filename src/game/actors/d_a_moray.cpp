@@ -95,7 +95,7 @@ extern daMoray_c::State data_ov016_02114dbc;
 extern "C" {
 extern VecFx32 data_ov016_02114d4c; /* cylinder offset, bss */
 
-extern unsigned char gCurrentStarId;        /* the selected star */
+extern unsigned char gCurrentStarId; /* the selected star */
 
 int AngleDiff(int a, int b);
 int SublevelToLevel(int sub);
@@ -122,7 +122,6 @@ struct MorayRenderStep {
     s32 pad_04;
     s32 angleScale;
 };
-
 
 extern "C" MorayRenderStep data_ov016_02114908[];
 
@@ -803,8 +802,7 @@ s32 daMoray_c::InitResources()
  * The implicit constructor builds the base, collision cylinders, background
  * checker, model animation, and seven segment positions in declaration order.
  * Vector3's empty default constructor is the array callback at 0x0203d384. */
-daMoray_c *daMoray_c_classInit()
-{
+daMoray_c *daMoray_c_classInit() {
     return new daMoray_c;
 }
 

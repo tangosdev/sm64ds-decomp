@@ -915,7 +915,7 @@ void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 }
 
-extern "C" void Deallocate(void* ptr);
+extern "C" void Deallocate(void *ptr);
 int func_0202a96c(void);
 
 int func_0202a958(void);

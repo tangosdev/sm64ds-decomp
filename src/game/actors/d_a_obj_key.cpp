@@ -273,8 +273,7 @@ void daObjKey_c::func_ov089_02130fb4(Vector3 *target, int height)
 
 /* UnloadKeyModels, 0x021310cc */
 /* daDoor_c, daPly_c and the bosses that drop a key call these two by name. */
-void UnloadKeyModels(int kind)
-{
+void UnloadKeyModels(int kind) {
     if (kind >= 8)
         return;
     ((SharedFilePtr *)data_ov089_02132894[kind])->Release();
@@ -284,8 +283,7 @@ void UnloadKeyModels(int kind)
 }
 
 /* LoadKeyModels, 0x02131114 */
-void LoadKeyModels(int kind)
-{
+void LoadKeyModels(int kind) {
     SharedFilePtr *extra;
     if (kind >= 8)
         return;
@@ -925,13 +923,11 @@ int daObjKey_c::InitResources()
 /* Both profiles build the same class. fBase_c's inline operator new forwards to
  * _ZN7fBase_cnwEm; the implicit constructor inlines dEnemyBase_c's base step,
  * the vptr store and the five member constructors. */
-daObjKey_c *daObjKey_c_classInit_LAST_STAR()
-{
+daObjKey_c *daObjKey_c_classInit_LAST_STAR() {
     return new daObjKey_c();
 }
 
-daObjKey_c *daObjKey_c_classInit_OBJ_KEY()
-{
+daObjKey_c *daObjKey_c_classInit_OBJ_KEY() {
     return new daObjKey_c();
 }
 

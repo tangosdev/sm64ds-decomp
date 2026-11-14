@@ -2,7 +2,6 @@
 #include "dCamera_c.h"
 #include "daPly_c.h"
 
-
 /* Camera state main: frame the target player's position and ground height
  * in the current mode (func_0200bec4, with its mFlags 0x20000 argument), then
  * pull the eye to distance 0x80000 (ApproachDist). */

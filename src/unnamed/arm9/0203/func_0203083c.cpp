@@ -11,11 +11,11 @@ extern "C" {
  * Always calls empty stub func_02030838 at end.
  */
 
-extern int data_0209fc68;                /* 0x0209fc68: checked for non-zero */
-extern struct OamAttr *data_020927a0[];  /* 0x020927a0: table of OamAttr* */
+extern int data_0209fc68;               /* 0x0209fc68: checked for non-zero */
+extern struct OamAttr *data_020927a0[]; /* 0x020927a0: table of OamAttr* */
 
-extern s32 func_0203d9f4(void);    /* 0x0203d9f4 */
-extern void func_02030838(void);   /* 0x02030838 (empty stub, bx lr) */
+extern s32 func_0203d9f4(void);  /* 0x0203d9f4 */
+extern void func_02030838(void); /* 0x02030838 (empty stub, bx lr) */
 
 void func_0203083c(void)
 {

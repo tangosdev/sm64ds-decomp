@@ -97,7 +97,6 @@ extern void Mg_DrawNumberRotated(int a, int b, int c, int d, int e, int f, u16 g
 extern void Hud_RenderSprite(void *sprite, int b, int c, int d, int e);
 extern void FreeGfxSlotsById(int arg);
 extern void Mg_SetSharedState(int c);
-
 }
 extern void func_020127a4(int a0, int a1, int a2, int a3);
 extern int Sound_PlayIfNotActive(int a, int b, int c, short d);

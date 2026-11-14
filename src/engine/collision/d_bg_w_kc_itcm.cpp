@@ -65,7 +65,6 @@ extern "C" {
 Fix12i VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 /* local extern: no header in include/ declares it. */
 Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
-
 }
 s16 func_020396dc(dBgW_Kc *self, KCL_Tri *tri); /* prism -> triangle index */
 void func_020381cc(void *block, int idx, void **out);

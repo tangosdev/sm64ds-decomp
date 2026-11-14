@@ -36,7 +36,7 @@ extern "C" int func_02051e60(NNSSndHandle *handle, int b, int c, int d, unsigned
 extern "C" u32 func_02051074(struct SndHeap *heap);
 extern "C" void func_020510a4(struct SndHeap *heap, int level);
 extern "C" void *func_020511d4(struct SndHeap *heap, u32 size, SndHeapDisposeCallback callback,
-                           u32 data1, u32 data2);
+                               u32 data1, u32 data2);
 extern "C" int func_0203d974(void);
 extern "C" s32 func_0205117c(struct SndHeap *heap);
 extern "C" int func_0203d7d4(int a);
@@ -48,7 +48,7 @@ extern "C" void func_0204f94c(NNSSndHandle *p);
 extern "C" void func_0204f070(void);
 extern "C" struct SndHeap *func_0205130c(u32 addr, u32 size);
 extern "C" void func_02050f34(data_020a5bb8_t *arc, const char *path, struct SndHeap *heap,
-                          int loadSymbols);
+                              int loadSymbols);
 extern "C" int func_02052008(struct SndHeap *heap);
 extern "C" void func_020506fc(int arg);
 extern "C" {
@@ -695,7 +695,8 @@ extern "C" int func_0201226c(int a0, int a1, int a2, const Vector3 *a3, int a4, 
     return func_020116c4((char *)&data_0209b53c, a1, a2, a3, a4, a5);
 }
 
-extern "C" int func_02012194(int handle, int a1, int a2, int a3, int s0, const Vector3 *s1, short s2) {
+extern "C" int func_02012194(int handle, int a1, int a2, int a3, int s0, const Vector3 *s1,
+                             short s2) {
     SndRegEntry *e;
     if (func_02048a1c(s1, a1, a2) == 0)
         return 0;

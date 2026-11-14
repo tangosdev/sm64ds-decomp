@@ -220,8 +220,7 @@ extern "C" {
 /* Returns mLastRecordRank: the index (0..4) at which Mg_RankSessionBest last
    inserted a score into the five saved records, or -1 if it placed nowhere
    (the constructor also seeds -1). */
-int Mg_GetLastRecordRank(dScMgBase_c *scene)
-{
+int Mg_GetLastRecordRank(dScMgBase_c *scene) {
     return scene->mLastRecordRank;
 }
 }
@@ -502,7 +501,9 @@ int Mg_GetSaveTable(void *scene) {
 namespace s20adc4c {
 extern "C" {
 extern int sMgWorkBuffer[];
-int Mg_GetWorkBuffer(void) { return sMgWorkBuffer[0]; }
+int Mg_GetWorkBuffer(void) {
+    return sMgWorkBuffer[0];
+}
 }
 }
 
@@ -679,15 +680,16 @@ extern void Mg_InitFx(void *rec, char *state, short timer, short pos, int *vecA,
    `pos` is the position pointer, tested whole (movs r4, r2). They are left
    as they are because retyping them adds new disagreements with the
    callers' differing declarations in the declaration-agreement gate. */
-void Mg_SpawnFx(char *state, short timer, short pos, int *vecA, int *vecB, int *unused){
-  if(pos==0) return;
-  int i;
-  for(i=0;i<0x40;i++){
-    if(sMgFxPool[i].mTimer == 0){
-      Mg_InitFx(&sMgFxPool[i], state, timer, pos, vecA, vecB);
-      return;
+void Mg_SpawnFx(char *state, short timer, short pos, int *vecA, int *vecB, int *unused) {
+    if (pos == 0)
+        return;
+    int i;
+    for (i = 0; i < 0x40; i++) {
+        if (sMgFxPool[i].mTimer == 0) {
+            Mg_InitFx(&sMgFxPool[i], state, timer, pos, vecA, vecB);
+            return;
+        }
     }
-  }
 }
 }
 }
@@ -1104,8 +1106,7 @@ void Mg_DrawSpriteList(void *self, int a1, int a2, void *a3);
    is FX_Inv of a pulse that mMenuCursorPhase drives through
    FX_SinIdx. Nothing is drawn while mTouchOptions.Draw() returns
    nonzero. */
-extern "C" void Mg_DrawMenu(dScMgBase_c *scene)
-{
+extern "C" void Mg_DrawMenu(dScMgBase_c *scene) {
     int extra[3];
     s16 *tbl[3];
     int buf[4];
@@ -1164,8 +1165,7 @@ namespace s20aea30 {
 extern "C" {
 /* Draws an OAM sprite list: calls Mg_DrawSpriteListEntry on each 8-byte
    entry from `self`, up to and including the one whose attr3 is 0xffff. */
-extern "C" void Mg_DrawSpriteList(void *self, void *actor, void *c2, void *c3)
-{
+extern "C" void Mg_DrawSpriteList(void *self, void *actor, void *c2, void *c3) {
     void *r8 = self;
     void *r7 = actor;
     void *r6 = c2;
@@ -1184,7 +1184,7 @@ extern "C" void Mg_DrawSpriteList(void *self, void *actor, void *c2, void *c3)
 namespace s20aea78 {
 extern "C" {
 struct M { int _00, _01, _10, _11; };
-extern void Mg_RenderSpriteOnMtx(void* a0, int a1, int a2, int a3, int a4, struct M* a5);
+extern void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, struct M *a5);
 
 struct BF { unsigned int lo:10; unsigned int hi:22; };
 struct S { int x; BF y; };
@@ -1192,8 +1192,7 @@ struct S { int x; BF y; };
 /* Draws one sprite-list entry at (a1, a2) through Mg_RenderSpriteOnMtx.
    When the scene's GetDisplayMode (slot 26) returns 2, the copy
    drawn has 0x200 subtracted from its tile number (attr2 bits 0..9). */
-extern "C" void Mg_DrawSpriteListEntry(S* self, int a1, int a2, struct M* a3)
-{
+extern "C" void Mg_DrawSpriteListEntry(S *self, int a1, int a2, struct M *a3) {
     S v = *self;
     if (gMgScene->GetDisplayMode() == 2) {
         v.y.lo = (self->y.lo - 0x200) & 0x3ff;
@@ -1415,8 +1414,8 @@ extern void Enable3dEngines();
 }
 }
 
-int dScMgBase_c::CloseMenu()
-{ using s20af04c::Enable3dEngines;
+int dScMgBase_c::CloseMenu() {
+    using s20af04c::Enable3dEngines;
     func_02012e1c();
     mMenuOpen = 0;
     mTouchOptions.Close();
@@ -1654,8 +1653,7 @@ typedef struct Item {
    attr3 is 0xffff) from `src` to `dst`, adding `add` to each tile number
    (the low ten bits of attr2). At most 0x20 entries: the 32nd is given the
    0xffff terminator. Returns the number of entries written. */
-int Mg_CopySpriteList(Item* src, Item* dst, int add)
-{
+int Mg_CopySpriteList(Item *src, Item *dst, int add) {
     int n = 1;
     int i;
     for (i = 0; i < 0x20; i++) {
@@ -2257,8 +2255,7 @@ namespace s20b0a54 {
 extern "C" {
 /* Sets the UI state controller's state and clears mRecordRevealTimer. The singleton
    is read again after SetState, as the ROM does. */
-extern "C" void Mg_SetSharedState(s32 state)
-{
+extern "C" void Mg_SetSharedState(s32 state) {
     dScMgBase_c *scene = gMgScene;
     if (!scene)
         return;
@@ -2648,7 +2645,7 @@ extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
 
 namespace s20b14f0 {
 extern "C" {
-extern int Mg_GetLastRecordRank(void* self, int a);
+extern int Mg_GetLastRecordRank(void *self, int a);
 
 /* Draws the five saved records in rows 0x18 apart from (0xa8, 0x28),
    revealing one more row every 0x14 frames as mRecordRevealTimer counts up. mRecordRevealTimer
@@ -2911,16 +2908,16 @@ extern "C" {
 struct M { int _00, _01, _10, _11; };
 /* a3 picks the wrapper: -1 RenderOamBothScreens, 0 Mg_RenderSubSpritePalMtx,
    anything else Mg_RenderMainSpritePalMtx; each is passed -1 in its place. */
-void Mg_RenderSpriteOnMtx(void* a0, int a1, int a2, int a3, int a4, struct M* a5){
-  if(a3==-1){
-    RenderOamBothScreens(a0, a1, a2, -1, a4, a5);
-    return;
-  }
-  if(a3==0){
-    Mg_RenderSubSpritePalMtx(a0, a1, a2, -1, a4, a5);
-    return;
-  }
-  Mg_RenderMainSpritePalMtx(a0, a1, a2, -1, a4, a5);
+void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, struct M *a5) {
+    if (a3 == -1) {
+        RenderOamBothScreens(a0, a1, a2, -1, a4, a5);
+        return;
+    }
+    if (a3 == 0) {
+        Mg_RenderSubSpritePalMtx(a0, a1, a2, -1, a4, a5);
+        return;
+    }
+    Mg_RenderMainSpritePalMtx(a0, a1, a2, -1, a4, a5);
 }
 }
 }
@@ -2948,8 +2945,8 @@ void Mg_RenderSpriteOn(OamAttr *a, int b, int c, int sel, int e) {
 
 namespace s20b1d60 {
 extern "C" {
-extern void RenderOamBothScreens(void* a0, int a1, int a2, int a3, int a4, void* a5);
-extern void Mg_RenderMainSpritePalMtx(void* a0, int a1, int a2, int a3, int a4, void* a5);
+extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
+extern void Mg_RenderMainSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, void *a5);
 /* Mg_RenderSpriteOnMtx without a matrix: the wrappers get 0. */
 void Mg_RenderSpriteOnNoMtx(void* a0, int a1, int a2, int a3, int a4){
   if(a3==-1){
@@ -3097,7 +3094,7 @@ extern "C" {
    allocator keeps the thousands counter in r0 as the cartridge does; with
    the products written out in the body it lands in ip or r3. */
 struct M { int _00, _01, _10, _11; };
-extern void Mg_RenderSpriteOnMtx(void* a0, int a1, int a2, int a3, int a4, struct M* a5);
+extern void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, struct M *a5);
 extern OamAttr *sMgDigitSprites[];
 
 static inline int FX_Mul(int v1, int v2)

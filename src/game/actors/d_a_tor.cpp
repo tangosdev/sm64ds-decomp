@@ -294,7 +294,6 @@ int daTor_c::InitResources()
     return 1;
 }
 
-daTor_c *daTor_c_classInit()
-{
+daTor_c *daTor_c_classInit() {
     return new daTor_c();
 }

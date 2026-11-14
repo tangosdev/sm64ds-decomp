@@ -156,10 +156,10 @@ extern "C" {
  * stable when CalcLib's shared declarations are included above. */
 extern int RandomIntInternal(int *seed);
 extern void func_02038414(void *clsn);
-extern void   Matrix4x3_FromRotationY(void *m, int angle);
-extern void   Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
-extern void   Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
-extern void   Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 angY);
+extern void Matrix4x3_FromRotationY(void *m, int angle);
+extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
+extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
+extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 angY);
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 
 /* Parameter names keep this TU's @NNN. */
@@ -874,8 +874,7 @@ void daGmch_c::OnTurnIntoEgg(daPly_c &player) {
  * allocation size, vtable identity and the GAMAGUCHI registry profile; later
  * EAD lineage supplies classInit. Exact original spelling is not preserved.
  * Historical alias: Moneybag_Spawn. */
-daGmch_c *daGmch_c_classInit(void)
-{
+daGmch_c *daGmch_c_classInit(void) {
     return new daGmch_c();
 }
 

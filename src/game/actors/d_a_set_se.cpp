@@ -44,8 +44,7 @@ extern int gRunningKuppaScript;    /* RUNNING_KUPPA_SCRIPT */
 
 int IsStarCollectedInLevel(s8 levelID, int starID);
 
-daSetSE_c *daSetSE_c_classInit()
-{
+daSetSE_c *daSetSE_c_classInit() {
     return new daSetSE_c();
 }
 

@@ -122,7 +122,6 @@ extern SharedFilePtr *data_ov065_0211c08c[];
 
 int *Vec3_LslInPlace(Vector3 *v, s32 sh);
 extern int AngleDiff(int a, int b);
-
 }
 int func_ov065_021180d4(daDossyCap_c *cap);
 void func_ov065_02118c4c(daDossyCap_c *cap);
@@ -137,13 +136,11 @@ DorriePlatform::DorriePlatform()
 {
 }
 
-daDossy_c *daDossy_c_classInit(void)
-{
+daDossy_c *daDossy_c_classInit(void) {
     return new daDossy_c();
 }
 
-daDossyCap_c *daDossyCap_c_classInit(void)
-{
+daDossyCap_c *daDossyCap_c_classInit(void) {
     return new daDossyCap_c();
 }
 

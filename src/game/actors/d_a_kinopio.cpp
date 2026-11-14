@@ -569,8 +569,7 @@ int daKinopio_c::InitResources()
  * allocation size, vtable identity and the KINOPIO registry profile; later
  * EAD lineage supplies classInit. The exact original spelling is not
  * preserved. Historical alias: Toad_Spawn. */
-daKinopio_c *daKinopio_c_classInit(void)
-{
+daKinopio_c *daKinopio_c_classInit(void) {
     return new daKinopio_c();
 }
 

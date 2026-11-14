@@ -319,7 +319,7 @@ extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 }
 
-extern "C" void Deallocate(void* p);
+extern "C" void Deallocate(void *p);
 extern "C" void GXS_LoadBG1Scr(const void *src, int offset, int count);
 extern "C" void GXS_LoadBG3Scr(const void *src, u32 offset, u32 count);
 extern void func_ov002_020f5f60(char *c);

@@ -82,8 +82,8 @@ static inline SystemState &StateOf(Particle::System *system) {
     return *(SystemState *)&system->callbackFlags;
 }
 
-extern "C" char *func_0204a4c8(char *(*alloc)(int), int numSystems, int numParticles, int minPolygonID,
-                    unsigned short maxPolygonID) {
+extern "C" char *func_0204a4c8(char *(*alloc)(int), int numSystems, int numParticles,
+                               int minPolygonID, unsigned short maxPolygonID) {
     int i;
     Particle::Manager *manager;
     char *system;
@@ -243,7 +243,7 @@ extern "C" int func_0204a0dc(Particle::Manager *manager, u32 (*allocTexVram)(u32
 }
 
 extern "C" int func_0204a028(Particle::Manager *manager,
-                  unsigned int (*allocPalVram)(unsigned int, unsigned int)) {
+                             unsigned int (*allocPalVram)(unsigned int, unsigned int)) {
     int i;
 
     GX_BeginLoadTexPltt();

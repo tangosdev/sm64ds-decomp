@@ -198,8 +198,7 @@ void ModelComponents::UpdateBones(BCA_File *file, int frame)
     func_020453c0(modelFile->bones, file, frame);
 }
 
-extern "C" void func_0204531c(char *self, int arg)
-{
+extern "C" void func_0204531c(char *self, int arg) {
     ModelComponents *mc = (ModelComponents *)self;
     unsigned int i;
     Matrix4x3 *save = mc->transforms;

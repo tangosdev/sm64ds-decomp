@@ -90,9 +90,9 @@ extern "C" {
 /* --- shared ov004, main and library helpers --- */
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 extern void Mg_DrawBigNumber(int x, int y, int h, int a, int b, int c, int d);
-extern int  Mg_GetSubmittedScore(void);
+extern int Mg_GetSubmittedScore(void);
 extern void Mg_DrawTopRightCounter(int a, int b);
-extern int  Mg_GetTopRecord(void);
+extern int Mg_GetTopRecord(void);
 extern void Mg_DrawTopLeftCounter(int score);
 extern void Mg_SubmitScore(int self);
 extern void SetBg2Offset(int a, int b);
@@ -103,7 +103,7 @@ struct OamAttr;
 #include "nitro/gx/gx_load.h"
 #include "nitro/mi/memory.h"
 extern void Mg_RenderSpriteBothPalMtx(void *sprite, int x, int y, int a3, void *m);
-extern int  Mg_RenderSpriteBothScaled(OamAttr *a, int b, int c, int d, int e, int f, int g);
+extern int Mg_RenderSpriteBothScaled(OamAttr *a, int b, int c, int d, int e, int f, int g);
 extern void Mg_SetSharedState(int a);
 extern void Mg_SetTopScreenYOffset(int a);
 extern void Mg_InitBrush(char *a, char b, int c, int d);
@@ -182,9 +182,9 @@ extern PMF pmf_dScMgPachinko_c_Bg_StateRiseIn;
 extern PMF pmf_dScMgPachinko_c_Bg_StateScroll;
 extern PMF pmf_dScMgPachinko_c_Bg_StateSinkOut;
 
-}  /* extern "C" */
-extern int  func_020126e8(int a);
-extern int  func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
+} /* extern "C" */
+extern int func_020126e8(int a);
+extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern void func_020126ac(int a0, int a1, int a2, int a3, int s0);
 extern int Sound_PlayIfNotActive(int handle, int player, int id, short unused);
 
@@ -2211,8 +2211,7 @@ s32 dScMgPachinko_c::InitResources()
  * allocation size, vtable identity, and the MG_PACHINKO registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: MgBobOmbSquad_Spawn. */
-void *dScMgPachinko_c_classInit()
-{
+void *dScMgPachinko_c_classInit() {
     return new dScMgPachinko_c;
 }
 

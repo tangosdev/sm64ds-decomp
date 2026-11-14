@@ -260,8 +260,7 @@ int daSlide_Box_c::InitResources()
  * allocation size, vtable identity, and the SLIDE_BOX registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: SlidingBox_Spawn. */
-daSlide_Box_c *daSlide_Box_c_classInit()
-{
+daSlide_Box_c *daSlide_Box_c_classInit() {
     return new daSlide_Box_c();
 }
 

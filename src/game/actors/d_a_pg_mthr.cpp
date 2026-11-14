@@ -121,8 +121,7 @@ typedef void BgchInitAt_(void *self, void *act, int a, int b, void *c2, void *d)
 }
 extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 
-daPgMthr_c *daPgMthr_c_classInit()
-{
+daPgMthr_c *daPgMthr_c_classInit() {
     return new daPgMthr_c();
 }
 

@@ -20,7 +20,6 @@ extern "C" {
 }
 extern int SurfaceInfo_TestFlag0x20(int *clpsWords);
 
-
 /* Stores dBgW_Kc::depthDirMinDot (+0x44), the sphere query's face-dot threshold. */
 void dBgW_Kc::SetDepthDirMinDot(Fix12i value) {
     depthDirMinDot = value;

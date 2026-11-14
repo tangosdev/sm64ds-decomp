@@ -53,7 +53,6 @@ dCamera_c::~dCamera_c() {}
 dCamera_c::~dCamera_c() {}
 #endif
 
-
 void func_020070e8(dCamera_c *cam, int distTarget, int distStep, short vertTarget, short vertDiv,
                    short horzTarget, short horzDiv) {
     int dist;

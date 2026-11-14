@@ -112,7 +112,6 @@ struct TrsBone {
 typedef char TrsBone_size_must_be_0x34[sizeof(TrsBone) == 0x34 ? 1 : -1];
 #endif
 
-
 extern "C" {
 /* shared engine entry points without a header declaration */
 
@@ -1709,9 +1708,7 @@ void daTrs_c::func_ov063_02118eac() {
     this->mFoundActor = 0;
 }
 
-
-void func_ov063_02118f24(daTrsIcon_c *icon, const Vector3 &pos)
-{
+void func_ov063_02118f24(daTrsIcon_c *icon, const Vector3 &pos) {
     unsigned int val = 4;
     icon->UntrackAndSpawnStar(icon->mTrackStarID, icon->mStarID, pos, val);
 }
@@ -3442,23 +3439,19 @@ int daTrs_c::OnYoshiTryEat() {
     return r;
 }
 
-daTrsIcon_c *daTrsIcon_c_classInit()
-{
+daTrsIcon_c *daTrsIcon_c_classInit() {
     return new daTrsIcon_c();
 }
 
-daTBasket_c *daTBasket_c_classInit()
-{
+daTBasket_c *daTBasket_c_classInit() {
     return new daTBasket_c();
 }
 
-daTrs_c *daTrs_c_classInit_BOSS_TERESA()
-{
+daTrs_c *daTrs_c_classInit_BOSS_TERESA() {
     return new daTrs_c();
 }
 
-daTrs_c *daTrs_c_classInit_TERESA()
-{
+daTrs_c *daTrs_c_classInit_TERESA() {
     return new daTrs_c();
 }
 

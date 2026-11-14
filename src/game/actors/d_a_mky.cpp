@@ -1405,7 +1405,6 @@ extern SharedFilePtr  data_ov002_0210da40;
 extern SharedFilePtr  data_ov002_0210d9a0;
 extern SharedFilePtr  data_ov002_0210d9c0;
 extern SharedFilePtr *data_ov030_02114824[10];
-
 }
 
 /* Vtable slot 3.  Releases the four shared files the class holds plus its
@@ -1530,8 +1529,7 @@ void daMky_c::OnTurnIntoEgg(daPly_c &player) {
  * allocation size, vtable identity, and the MONKEY_STAR registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: UkikiStar_Spawn. */
-daMky_c *daMky_c_classInit_MONKEY_STAR()
-{
+daMky_c *daMky_c_classInit_MONKEY_STAR() {
     return new daMky_c();
 }
 
@@ -1539,8 +1537,7 @@ daMky_c *daMky_c_classInit_MONKEY_STAR()
  * allocation size, vtable identity, and the MONKEY_THIEF registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: UkikiThief_Spawn. */
-daMky_c *daMky_c_classInit_MONKEY_THIEF()
-{
+daMky_c *daMky_c_classInit_MONKEY_THIEF() {
     return new daMky_c();
 }
 

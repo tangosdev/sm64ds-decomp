@@ -89,7 +89,6 @@ void func_ov010_02111984(dBgW *collider, dActor_c *owner, dActor_c *other) {
     static_cast<daObjC1_Trap_c *>(owner)->OnCollision(*other);
 }
 
-
 void daObjC1_Trap_c::OnCollision(dActor_c &other) {
     daObjC1_Trap_c *spawner;
     u32 spawnerID;

@@ -106,7 +106,6 @@ daEykn_c::State gEyknStates[3] = {
     {&daEykn_c::St_Die_Init, &daEykn_c::St_Die_Main},
 };
 
-
 extern "C" {
 int AngleDiff(int a, int b);
 u8 DecIfAbove0_Byte(u8 *counter);
@@ -799,13 +798,11 @@ s32 daEykn_c::InitResources()
     return 1;
 }
 
-daEykn_c *daEykn_c_classInit_EYEKUN_BOSS()
-{
+daEykn_c *daEykn_c_classInit_EYEKUN_BOSS() {
     return new daEykn_c();
 }
 
-daEykn_c *daEykn_c_classInit_EYEKUN()
-{
+daEykn_c *daEykn_c_classInit_EYEKUN() {
     return new daEykn_c();
 }
 

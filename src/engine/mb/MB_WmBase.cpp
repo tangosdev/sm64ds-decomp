@@ -91,7 +91,6 @@ typedef struct {
     u16 w[0x40];
 } GameInfo;
 
-
 extern void OS_GetMacAddress(unsigned char *macAddress);
 
 extern void MB_InitSendGameInfoStatus(void);

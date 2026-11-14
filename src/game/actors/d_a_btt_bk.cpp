@@ -41,7 +41,6 @@ int *Vec3_LslInPlace(Vector3 *v, int sh);
 typedef void BgchInitAt_(void *self, void *actor, int a, int b, void *v, int c);
 }
 
-
 /* dExtSimpleModel_c-file handle. The derived constructor and destructor are the retail
  * SharedFilePtr pair; this TU does not define them. */
 struct BttBkModelFilePtr : SharedFilePtr {

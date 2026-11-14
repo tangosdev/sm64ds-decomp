@@ -80,8 +80,7 @@ extern dClipper data_0209f43c;
 extern Matrix4x3 data_0209b3ec;
 extern dCamera_c *gCamera;
 
-daTree_c *daTree_c_classInit()
-{
+daTree_c *daTree_c_classInit() {
     return new daTree_c();
 }
 

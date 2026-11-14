@@ -128,7 +128,6 @@ extern void OamRender10_Message3(int sub, struct OamAttr *attr_, int xOff, int y
 
 /* Slot 0's nx/ny are data_0209f4a2/data_0209f4a4. The record stride is 0x18. */
 extern ControllerInput data_0209f498[];
-
 }
 extern u8 NumStars(void);
 extern int func_020138dc(void);

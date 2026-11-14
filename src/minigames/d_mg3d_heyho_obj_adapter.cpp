@@ -1250,7 +1250,6 @@ int Heyho::IsChasing() {
     return mMotion != pmf_Heyho_MotionLeave && (mMotion != pmf_Heyho_MotionChase_2 || mLean == 0);
 }
 
-
 /* ---- Heyho_InitPool ---- */
 int Heyho_InitPool(void *heyhos, int count) {
     int i;

@@ -82,7 +82,7 @@ extern fBaseActorInfo **data_020a4bb8;
 
 struct LifecycleSequence;
 extern void func_02044334(LifecycleSequence *p);
-extern "C" int  func_0204424c(char *p);
+extern "C" int func_0204424c(char *p);
 
 /* Heap's methods and fields come from include/Heap.h. The heap locals stay
    `void *` (and are cast at each use): Virtual34 and Virtual38 read its

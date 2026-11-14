@@ -524,14 +524,12 @@ int daObjRotateUpdownLift_c::InitResources()
 }
 
 // 0x02131ba4 (0x38)
-daObjRotateUpdownLift_c *daObjRotateUpdownLift_c_classInit_HS_UPDOWN_LIFT()
-{
+daObjRotateUpdownLift_c *daObjRotateUpdownLift_c_classInit_HS_UPDOWN_LIFT() {
     return new daObjRotateUpdownLift_c();
 }
 
 // 0x02131bdc (0x38)
-daObjRotateUpdownLift_c *daObjRotateUpdownLift_c_classInit_UPDOWN_LIFT()
-{
+daObjRotateUpdownLift_c *daObjRotateUpdownLift_c_classInit_UPDOWN_LIFT() {
     return new daObjRotateUpdownLift_c();
 }
 

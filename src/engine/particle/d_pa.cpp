@@ -228,8 +228,7 @@ void dPa_c::level_c::edStarKiraCallback_c::SpawnParticles(
 int dPa_c::level_c::edStarKiraCallback_c::OnUpdate(Particle::System& system,
                                                     bool active)
 {
-    func_0204dab4(&system, trackingRecords, 0x40, 0,
-                  (void*)func_02022260);
+    func_0204dab4(&system, trackingRecords, 0x40, 0, (void *)func_02022260);
     return simpleCallback_c::OnUpdate(system, active);
 }
 

@@ -267,7 +267,8 @@ extern "C" void func_ov007_020c14b8(Ov007Texture *tex) {
 /* Binds a record's texels for drawing: TEXIMAGE_PARAM gets its VRAM slot,
  * format and size with the given coordinate source (texGen), repeat, flip
  * and colour-0 bits. No record selects no texture. */
-extern "C" void func_ov007_020c1448(Ov007Texture *self, u32 texGen, u32 repeat, u32 flip, u32 color0) {
+extern "C" void func_ov007_020c1448(Ov007Texture *self, u32 texGen, u32 repeat, u32 flip,
+                                    u32 color0) {
     if (self != 0) {
         G3_TexImageParam((GXTexFmt)self->fmt, (GXTexGen)texGen, (GXTexSizeS)self->sizeS,
                          (GXTexSizeT)self->sizeT, (GXTexRepeat)repeat, (GXTexFlip)flip,

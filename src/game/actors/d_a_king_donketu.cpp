@@ -224,7 +224,6 @@ int PlayLong(u32, u32, u32, const Vector3 &, s16);
 
 extern "C" {
 
-
 extern struct BCA_File *data_ov002_0210da30[2];
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern void Matrix4x3_FromRotationY(void* m, short ang);
@@ -237,7 +236,9 @@ extern struct Matrix4x3 data_020a0e68;
 /* Vec3_Sub is not declared by math/CalcLib.h. */
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int atan2_hold_d_a_king_donketu_1(Fix12i y, Fix12i x);
-extern Fix12i Vec3_HorzLen(const Vector3 *v); /* local extern: CalcLib.h clashes with this TU's C DecIfAbove0_Short and Vec3_Lsl (void *) */
+extern Fix12i Vec3_HorzLen(
+    const Vector3 *
+        v); /* local extern: CalcLib.h clashes with this TU's C DecIfAbove0_Short and Vec3_Lsl (void *) */
 
 extern u16 DecIfAbove0_Short(void* p);
 /* local extern: CalcLib.h conflicts with DecIfAbove0_Short(void *). */
@@ -1602,7 +1603,13 @@ int daKing_Donketu_c::EnterIntroTalk() {
 /* Stores the state record in mState (the shadow struct's pp, at +0x37c) and
    calls the enter member held in the record's first pointer-to-member; returns
    1 without calling if that pointer is null. */
-int ChiefChilly_ChangeState(C *c, PMF *p) { c->pp = p; PMF *q = c->pp; if (*q == 0) return 1; return (c->**q)(); }
+int ChiefChilly_ChangeState(C *c, PMF *p) {
+    c->pp = p;
+    PMF *q = c->pp;
+    if (*q == 0)
+        return 1;
+    return (c->**q)();
+}
 
 /* Called at the end of every Behavior. Builds the model matrix (mPos >> 3,
    rotated by mAngleX/Y/Z) into mBlendAnmModel.mat4x3, then sets mFootPos[0..1]
@@ -1905,8 +1912,7 @@ s32 daKing_Donketu_c::OnAimedAtWithEgg()
 }
 
 /* Construct the KING_DONKETU actor and its members in declaration order. */
-daKing_Donketu_c *daKing_Donketu_c_classInit()
-{
+daKing_Donketu_c *daKing_Donketu_c_classInit() {
     return new daKing_Donketu_c;
 }
 

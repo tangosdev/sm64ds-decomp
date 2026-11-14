@@ -40,10 +40,8 @@ extern void Matrix4x3_FromRotationY(Matrix4x3 *m, int angle);
 
 extern void d_a_pg_rcerPlaySubHold(unsigned int a, unsigned int b, unsigned int c, int d, int e);
 extern void *d_a_pg_rcerNewHold(u32 handle, u32 effect, int x, int y, int z, void *dir, void *cb);
-
 }
 extern unsigned char NumStars(void);
-
 
 /* Resource handles owned by this TU. The static initializer constructs the
    model, seven animations and three texture sequences and registers each
@@ -104,8 +102,7 @@ daPgRcerState data_ov019_0211356c[6] = {
 Vector3 data_ov019_021134e8(-0x18c28a1, -0x164c644, -0x18f1a11);
 Vector3 data_ov019_0211353c(-0x1290000, 0x600000, 0);
 
-daPgRcer_c *daPgRcer_c_classInit()
-{
+daPgRcer_c *daPgRcer_c_classInit() {
     return new daPgRcer_c();
 }
 

@@ -9,7 +9,6 @@
 #include "nitro/card/card_common.h"
 #include "nitro/mi/memory.h"
 
-
 void func_0206062c(CARDiCommon *p) {
     do {
         u32 len = p->len;

@@ -240,10 +240,8 @@ void  Matrix4x3_FromRotationY(void *m, int angle);
 
 short atan2_hold_d_a_obj_mario_cap_1(int y, int x);
 
-
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *thiz, void *actor, s32 f1, s32 f2, void *v, void *w);
-
 
 /* -- data -- */
 extern Matrix4x3      data_020a0e68;
@@ -281,14 +279,12 @@ extern McapStatePmf data_ov002_0210959c, data_ov002_021095a4;
 extern SharedFilePtr *data_ov002_020ff0a0[];
 extern SharedFilePtr *data_ov002_020ff0b8[];
 extern int            *data_ov002_020ff0c4[];
-
 }
-void  func_02013a88(void);
+void func_02013a88(void);
 void func_020167a4(dExtAnmModel_c *model);
 int func_ov002_020f030c(int x);
 
-daObjMarioCap_c *daObjMarioCap_c_classInit(void)
-{
+daObjMarioCap_c *daObjMarioCap_c_classInit(void) {
     return new daObjMarioCap_c();
 }
 

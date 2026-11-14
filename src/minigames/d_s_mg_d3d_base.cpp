@@ -58,29 +58,28 @@ extern dScMgBase_c::graphCallback_c sMgGraphCallback;
 /* arm9 / ov004 helpers with no project header. */
 void GXS_LoadOAM(const void *src, unsigned int offset, unsigned int count);
 void *Ov004_LoadFile(int id);
-void  Mg_ResetOverlays(void);
-void  Mg_ResetBgOffsets(void);
-void  Mg_DisableAllBanks(void);
-int   GetGameLanguage(void);
+void Mg_ResetOverlays(void);
+void Mg_ResetBgOffsets(void);
+void Mg_DisableAllBanks(void);
+int GetGameLanguage(void);
 void  DecompressLZ16(void *src, void *dst);
 /* The file ID is really u16, but passing it narrowed grows InitSubScreenBg by
  * 16 bytes. Keep it wide. */
 u32 LoadCompressedFileAt(int fileID, void *target);
-void  Ov004_Deallocate(void *x);
+void Ov004_Deallocate(void *x);
 
 /* Defined below. */
-
 }
-int   func_020126e8(int a);
-void  func_020126ac(int a0, int a1, int a2, int a3, int s0);
-void  func_020127ec(int a0, int a1, int a2, int a3, int a4, int a5);
+int func_020126e8(int a);
+void func_020126ac(int a0, int a1, int a2, int a3, int s0);
+void func_020127ec(int a0, int a1, int a2, int a3, int a4, int a5);
 void D3D_InitDualScreen(void);
 void D3D_ClearCaptureTable(void);
 void D3D_DrawSpriteTable(void);
 void D3D_CaptureToSub(void);
 void D3D_CaptureToMain(void);
 void D3D_ReleaseSubBg1(void *self);
-int  D3D_PanForX(int a);
+int D3D_PanForX(int a);
 
 namespace Particle { void RenderAll(); }
 
@@ -99,8 +98,7 @@ void D3D_CaptureToMain(void) {
     G2S_BG2Mosaic(false);
 }
 
-void D3D_CaptureToSub(void)
-{
+void D3D_CaptureToSub(void) {
     GX_SetDispSelect(GX_DISP_SELECT_SUB_MAIN);
     GX_ResetBankForSubBG();
     GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_128_D);
@@ -112,8 +110,7 @@ void D3D_CaptureToSub(void)
     *(volatile int *)0x4001000 = (*(volatile int *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
 }
 
-void D3D_DrawSpriteTable(void)
-{
+void D3D_DrawSpriteTable(void) {
     int entry;
     int x;
     int y;
@@ -152,13 +149,11 @@ void D3D_DrawSpriteTable(void)
     GXS_LoadOAM(sD3DOamShadow, 0, 0x400);
 }
 
-void D3D_ClearCaptureTable(void)
-{
+void D3D_ClearCaptureTable(void) {
     GXS_LoadOAM(sD3DOamShadow, 0, 0x400u);
 }
 
-void D3D_InitDualScreen(void)
-{
+void D3D_InitDualScreen(void) {
     GX_ResetBankForSubBG();
     GX_ResetBankForSubOBJ();
     GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_128_D);
@@ -237,7 +232,9 @@ void dScMgD3DBase_c::InitEngines()
 
 /* Clears the sub-screen BG1 claim. The caller passes this, which is
  * unused. */
-void D3D_ReleaseSubBg1(void *) { data_0209e660 = 0; }
+void D3D_ReleaseSubBg1(void *) {
+    data_0209e660 = 0;
+}
 
 /* The key function: the first virtual declared but not defined inline, so
    defining it here emits the vtable, the RTTI and the D1 and D0 pair. */
@@ -342,8 +339,7 @@ int dScMgD3DBase_c::GetDisplayMode()
 
 /* Returns whatever func_02012718 leaves in r0; decl_common.h declares it
    void, so there is no return statement. */
-int D3D_PlaySeAtX(int a, int b)
-{
+int D3D_PlaySeAtX(int a, int b) {
     func_02012718(a, b + 0x80000);
 }
 
@@ -359,8 +355,7 @@ void D3D_PlaySePannedLoop(int a0, int a1, int a2) {
 }
 
 /* Thunk: func_020126e8(a + 0x80000). */
-int D3D_PanForX(int a)
-{
+int D3D_PanForX(int a) {
     return func_020126e8(a + 0x80000);
 }
 

@@ -532,8 +532,7 @@ extern "C" struct Elem *func_020523e0(struct ElemTable *obj, int idx) {
     return e;
 }
 
-extern "C" void func_020522c4(void)
-{
+extern "C" void func_020522c4(void) {
     int i;
     int t1;
     Obj_205212c *stream = data_020a5bd4;
@@ -575,22 +574,22 @@ extern "C" void func_020522c4(void)
     }
 }
 
-extern "C" void func_0205227c(void){
-  int i;
-  for (i = 0; i < 4; i++){
-      if (((int)data_020a5bd4[i].uf0 << 30) >> 31) {
-          func_0204ff48(&data_020a5bd4[i]);
-      }
-  }
+extern "C" void func_0205227c(void) {
+    int i;
+    for (i = 0; i < 4; i++) {
+        if (((int)data_020a5bd4[i].uf0 << 30) >> 31) {
+            func_0204ff48(&data_020a5bd4[i]);
+        }
+    }
 }
 
-extern "C" void func_02052234(void){
-  int i;
-  for (i = 0; i < 4; i++){
-      if (((int)data_020a5bd4[i].uf0 << 30) >> 31) {
-          func_0204fed0(&data_020a5bd4[i]);
-      }
-  }
+extern "C" void func_02052234(void) {
+    int i;
+    for (i = 0; i < 4; i++) {
+        if (((int)data_020a5bd4[i].uf0 << 30) >> 31) {
+            func_0204fed0(&data_020a5bd4[i]);
+        }
+    }
 }
 
 extern "C" void func_02052208(Obj_205212c *stream) {
@@ -1229,8 +1228,7 @@ extern "C" s32 func_02050fd4(struct SndHeap *heap) {
     return 1;
 }
 
-extern "C" void func_02050fb0(void)
-{
+extern "C" void func_02050fb0(void) {
     u32 r = SND_GetCurrentCommandTag();
     SND_FlushCommand(1);
     SND_WaitForCommandProc(r);
@@ -1285,12 +1283,17 @@ extern "C" int func_02050d54(data_020a5bb8_t *arc, struct SndHeap *heap, int loa
     return 1;
 }
 
-extern "C" int func_02050d3c(int v) { int old = ((int)data_020a5bb8); *(int*)(&data_020a5bb8) = (v); return old; }
+extern "C" int func_02050d3c(int v) {
+    int old = ((int)data_020a5bb8);
+    *(int *)(&data_020a5bb8) = (v);
+    return old;
+}
 
-extern "C" int func_02050d2c(void) { return ((int)data_020a5bb8); }
+extern "C" int func_02050d2c(void) {
+    return ((int)data_020a5bb8);
+}
 
-extern "C" void *func_02050cdc(int a, int idx)
-{
+extern "C" void *func_02050cdc(int a, int idx) {
     struct SndArchiveInfo *info;
     struct ElemTable *o;
     struct Elem *e;
@@ -1441,8 +1444,7 @@ extern "C" void func_02050950(void) {
     data_020a5634.f0 = (0);
 }
 
-extern "C" void func_020508a0(void)
-{
+extern "C" void func_020508a0(void) {
     T *g = &data_020a5634;
     NNSSndFader *sub;
     int v;
@@ -1478,7 +1480,7 @@ extern "C" int func_020507e0(void *a0, unsigned int a1, int a2, int a3, int a4, 
                          a4, (int)a5, (int)a6);
 }
 
-extern "C" void func_02050798(void){
+extern "C" void func_02050798(void) {
     if (data_020a5634.f0 == 0)
         return;
     if (data_020a5634.f4 != 1)
@@ -1486,8 +1488,7 @@ extern "C" void func_02050798(void){
     func_020502b8();
 }
 
-extern "C" void func_020506fc(int arg)
-{
+extern "C" void func_020506fc(int arg) {
     if (data_020a55fc != 0)
         return;
     data_020a55f8 = 0;
@@ -1497,9 +1498,8 @@ extern "C" void func_020506fc(int arg)
     OS_WakeupThreadDirect(&data_020a5684);
 }
 
-extern "C" int func_020503a4(int a, int b, int c, int d, int p5, int p6, int p7, int p8,
-                  int p9, int p10, int p11, int p12, int p13, int p14, int p15)
-{
+extern "C" int func_020503a4(int a, int b, int c, int d, int p5, int p6, int p7, int p8, int p9,
+                             int p10, int p11, int p12, int p13, int p14, int p15) {
     int mode = 0;
     int align;
     int total;
@@ -1592,8 +1592,7 @@ extern "C" int func_020503a4(int a, int b, int c, int d, int p5, int p6, int p7,
     }
 }
 
-extern "C" void func_020502b8(void)
-{
+extern "C" void func_020502b8(void) {
     struct T *d = &data_020a5634;
     int has = (d->f28 >= 0);
     int mask = has ? (1 << d->f28) : 0;
@@ -1615,8 +1614,7 @@ extern "C" void func_020502b8(void)
     d->f0 = 0;
 }
 
-extern "C" void func_02050258(void)
-{
+extern "C" void func_02050258(void) {
     struct T *G = &data_020a5634;
     int sh;
     int mask;
@@ -1634,8 +1632,7 @@ extern "C" void func_02050258(void)
     SND_WaitForCommandProc(p);
 }
 
-extern "C" void func_020501b8(void)
-{
+extern "C" void func_020501b8(void) {
     T *g = &data_020a5634;
     volatile int a;
     volatile int b;
@@ -1789,8 +1786,7 @@ void C::func_0204fce8(void *arg) {
     }
 }
 
-extern "C" void func_0204fc40(void)
-{
+extern "C" void func_0204fc40(void) {
     int i;
     NNS_FndInitList(&data_020a4d60, 0x14);
     NNS_FndInitList(&data_020a4d54, 0x14);
@@ -2236,8 +2232,7 @@ extern "C" void func_0204f15c(unsigned int mask) {
     data_020a4d50 &= ~mask;
 }
 
-extern "C" int func_0204f138(unsigned int mask)
-{
+extern "C" int func_0204f138(unsigned int mask) {
     if (mask & data_020a4d48)
         return 0;
     data_020a4d48 = data_020a4d48 | mask;
@@ -2248,8 +2243,7 @@ extern "C" void func_0204f11c(int mask) {
     data_020a4d48 &= ~mask;
 }
 
-extern "C" int func_0204f0d8(void)
-{
+extern "C" int func_0204f0d8(void) {
     int i;
     int mask = 1;
     unsigned int v = data_020a4d4c;
@@ -2265,22 +2259,21 @@ extern "C" int func_0204f0d8(void)
     return -1;
 }
 
-extern "C" int func_0204f0b8(unsigned int bit)
-{
+extern "C" int func_0204f0b8(unsigned int bit) {
     return data_020a4d4c &= ~(1 << bit);
 }
 
-extern "C" void func_0204f070(void){
-  if (data_020a4d44 != 0) return;
-  data_020a4d44 = 1;
-  SND_Init();
-  func_0204f1e8();
-  func_02050950();
-  func_0204fc40();
+extern "C" void func_0204f070(void) {
+    if (data_020a4d44 != 0)
+        return;
+    data_020a4d44 = 1;
+    SND_Init();
+    func_0204f1e8();
+    func_02050950();
+    func_0204fc40();
 }
 
-extern "C" void func_0204f03c(void)
-{
+extern "C" void func_0204f03c(void) {
     while (SND_RecvCommandReply(0) != 0)
         ;
     func_0204fafc();
@@ -2304,7 +2297,7 @@ extern "C" void func_0204efe0(void) {
     func_02052234();
 }
 
-extern "C" int func_0204ef9c(void* p) {
+extern "C" int func_0204ef9c(void *p) {
     if (((struct NitroFileHeader *)p)->magic != 0x4352414e)
         return 0;
     if (((struct NitroFileHeader *)p)->byteOrder != 0xfffe)
@@ -2383,7 +2376,7 @@ extern "C" int func_0204ede8(struct S82 *o, unsigned int i) {
     return r;
 }
 
-extern "C" int func_0204eda4(int r0, char* a, u32 idx) {
+extern "C" int func_0204eda4(int r0, char *a, u32 idx) {
     int r = 0;
     if (idx < *(u16 *)(((struct S82 *)a)->f54 + 8)) {
         FSFileID id;
@@ -2393,4 +2386,3 @@ extern "C" int func_0204eda4(int r0, char* a, u32 idx) {
     }
     return r;
 }
-

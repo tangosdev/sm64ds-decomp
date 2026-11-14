@@ -317,8 +317,7 @@ int dMgPsOpt_c::IsIdle() {
    (kind 2); the back button is a held hit (kind 1). TouchArea_Update is
    what reads that kind. The two captions take their half extents from the
    per-language records; every other style shares the flat table. */
-void PsOpt_PlaceIcon(dMgPsOpt_c::TouchIcon_c *icon, int style, int variant, short x,
-                                short y) {
+void PsOpt_PlaceIcon(dMgPsOpt_c::TouchIcon_c *icon, int style, int variant, short x, short y) {
     int kind;
     int lang, lang2;
 

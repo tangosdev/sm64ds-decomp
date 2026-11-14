@@ -129,7 +129,6 @@ struct EntryTable {
 };
 struct OamAttr;
 
-
 extern "C" {
 void Deallocate(void *ptr);
 int GetGameLanguage(void);
@@ -246,8 +245,7 @@ void Mg_FreeBannerFiles(void) {
     }
 }
 
-void Mg_LoadBannerFiles(void)
-{
+void Mg_LoadBannerFiles(void) {
     int i;
     /* The ROM's template for this array is at 0x020bc6e8 and is all zero except
        entry 1. What stood here was 29 invented pairs {1,100}, {2,101} ... {29,128};
@@ -478,9 +476,7 @@ void Banner_DrawLevelNumber(MgBanner *e) {
     Mg_DrawBigNumber(x, e->mY, n, e->mScreen, e->mPriority, 2, 0);
 }
 
-void Banner_SetupNone(void)
-{
-}
+void Banner_SetupNone(void) {}
 
 void Banner_DrawSpin(MgBanner *e) {
     GXOamAttr *oam = (GXOamAttr *)e->mOam;

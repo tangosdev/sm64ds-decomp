@@ -289,33 +289,27 @@ PMF data_ov102_0214e870[1][4] = {
      &daObjHatenaBlock_c::SpawnPrizeFeather, &daObjHatenaBlock_c::SpawnPrizeFeather},
 };
 
-daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_VS_ITEM_BLOCK()
-{
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_VS_ITEM_BLOCK() {
     return new daObjHatenaBlock_c();
 }
 
-daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_HATENA_BLOCK()
-{
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_HATENA_BLOCK() {
     return new daObjHatenaBlock_c();
 }
 
-daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_ITEM_BLOCK()
-{
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_ITEM_BLOCK() {
     return new daObjHatenaBlock_c();
 }
 
-daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_M()
-{
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_M() {
     return new daObjHatenaBlock_c();
 }
 
-daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_L()
-{
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_L() {
     return new daObjHatenaBlock_c();
 }
 
-daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_W()
-{
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_W() {
     return new daObjHatenaBlock_c();
 }
 

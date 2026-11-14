@@ -53,7 +53,6 @@ u32 LoadCompressedFileAt(int fileID, void *target);
 void *LoadFile(int handle);
 
 void DecompressLZ16(const void *src, void *dst);
-
 }
 
 /* These names describe the observed transitions; original state names are unknown. */

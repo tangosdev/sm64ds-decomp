@@ -82,7 +82,7 @@ extern void func_ov007_020ca26c(Ov007MeshWave *wave);
 extern Ov007MeshWave *func_ov007_020ca2a8(Ov007MeshWaveParams *params);
 extern "C" void func_ov007_020ca578(Ov007Mesh *mesh, int i, int j, int t);
 extern "C" void func_ov007_020ca5f0(Ov007Mesh *mesh, Ov007MeshMaterial *mat, int *pos, int scaleZ,
-                                int smooth);
+                                    int smooth);
 extern "C" void func_ov007_020cb3dc(Ov007Mesh *mesh);
 extern "C" void func_ov007_020cba78(Ov007Mesh *mesh, int shift);
 extern void func_ov007_020cbb04(Ov007Mesh *mesh);

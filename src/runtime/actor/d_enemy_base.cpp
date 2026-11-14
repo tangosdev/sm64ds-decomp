@@ -224,7 +224,7 @@ struct Aea30C : dEnemyBase_c {
     void func_ov002_020ae73c(dActor_c *, dBgCh_Actr *);
     void func_ov002_020aea2c(dActor_c *, dBgCh_Actr *);
 };
-void func_ov002_020aea30(Aea30C* c, dActor_c* a, dBgCh_Actr* b) {
+void func_ov002_020aea30(Aea30C *c, dActor_c *a, dBgCh_Actr *b) {
     if (c->mDeathState == 0)
         return;
     c->mFlags &= ~0x10000000;

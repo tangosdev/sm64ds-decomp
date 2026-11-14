@@ -54,8 +54,7 @@ extern C1PeachModelFilePtr gC1PeachModelFile;
  *
  * fBase_c::operator new(unsigned long) keeps the allocation on
  * _ZN7fBase_cnwEm. The emitted constructor stores the vtable address point. */
-daObjC1Peach_c *daObjC1Peach_c_classInit()
-{
+daObjC1Peach_c *daObjC1Peach_c_classInit() {
     return new daObjC1Peach_c();
 }
 

@@ -85,8 +85,7 @@ extern void LoadCard2SubBg3(void *);
    classes' implicit constructors are generated here, as the ROM's
    _ZN12dMgCardObj_cC1Ev (0x020dbe30) and _ZN17dMgDilarCardObj_cC1Ev
    (0x020dbe14), the last two functions of the run. */
-void* dScMgCard_c_classInit()
-{
+void *dScMgCard_c_classInit() {
     return new dScMgCard_c;
 }
 

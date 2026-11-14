@@ -132,11 +132,9 @@ static inline int IsNoControl(daPly_c *player) {
 }
 
 /* resolved: VT0 = _ZTV9daPopoi_c */
-int *daPopoi_c_classInit(void)
-{
+int *daPopoi_c_classInit(void) {
     return (int *)new daPopoi_c;
 }
-
 
 /* Loads the four files (data_ov077_02127c88 = file 0x40d, the model; 02127ca0 =
  * 0x40e, 02127c90 = 0x40f and 02127c98 = 0x410, the three animations, the way

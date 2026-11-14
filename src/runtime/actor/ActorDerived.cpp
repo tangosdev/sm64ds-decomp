@@ -41,8 +41,7 @@ static inline int OS_DisableIrq(void) {
  * (arm9 0x02013f28..0x02013f4c): fatal-error spin, IME off then call the
  * next entry forever. Defined first because this file emits in reverse
  * source order, so the tail body lands at the run's right edge. */
-extern "C" void func_02013f28(void)
-{
+extern "C" void func_02013f28(void) {
     (void)OS_DisableIrq();
     for (;;)
         func_02013f4c();

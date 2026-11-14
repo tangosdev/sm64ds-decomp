@@ -105,8 +105,7 @@ void __assert(const char *file, int line, const char *exp, int stop) {
  * through func_0206a928 with a print-argument struct and the func_0206cbc0
  * console callback. The print struct stays function-local. Lowest address
  * in the TU, so it goes last for reverse-source emission. */
-void func_0206ccd8(int fmt, ...)
-{
+void func_0206ccd8(int fmt, ...) {
     struct S { int f0, f1, f2, f3; void *cb; };
     S s;
     int *p;

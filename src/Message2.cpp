@@ -181,7 +181,6 @@ void Message::AddChoice() {
     }
 }
 
-
 void func_0201aca4(void) {
 
     struct MsgTextChar {
@@ -245,7 +244,6 @@ void Message::AddCharPair() {
     AddChar(data_0208ee6c[idx]);
     AddChar((data_0208ee6c[idx] + 1) & 0xff);
 }
-
 
 void func_0201adfc(void) {
     int n;
@@ -507,7 +505,6 @@ void Message::AddChar(u8 c) {
         data_0209d6a4 = data_0209d6a4 + 1;
     }
 }
-
 
 void func_0201b6f8(int mode) {
     int i;

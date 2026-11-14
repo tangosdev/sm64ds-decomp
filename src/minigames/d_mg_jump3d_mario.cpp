@@ -156,7 +156,7 @@ extern char sJump3DRoundLayouts[];
 extern Matrix4x3 data_020a0e68;
 extern fBase_c *gCurrentScene;
 
-}  /* extern "C" */
+} /* extern "C" */
 void Sound_PlayBank1Panned(int a, int b, int c);
 int func_020179b4(SharedFilePtr *f, dExtModel_c *m, int extra);
 int D3D_PlaySeAtX(int a, int b);
@@ -165,12 +165,9 @@ void Puff_DrawAll(void);
 void Puff_UpdateAll(void);
 void Puff_ClearAll(int a, int b);
 
-
-
 /* Rescales the six tuning words at 0213b008..0213b01c from one input,
  * clamped to 0x3000. */
-void Jump3D_SetTuning(int a)
-{
+void Jump3D_SetTuning(int a) {
     int b;
     if (a > 0x3000) a = 0x3000;
     b = FX_Sqrt(a);
@@ -182,8 +179,7 @@ void Jump3D_SetTuning(int a)
     sJump3DBounceVy = FX_MUL(b, 0x5000);
 }
 
-void Jump3D_DrawAll(void)
-{
+void Jump3D_DrawAll(void) {
     int i;
     for (i = 0; i < sJump3DMarioCount; i++) {
         ((dMgJump3DMario_c *)(sJump3DMarioPool + i * 0xb8))->Draw();
@@ -191,8 +187,7 @@ void Jump3D_DrawAll(void)
     Puff_DrawAll();
 }
 
-void Jump3D_UpdateAll(void)
-{
+void Jump3D_UpdateAll(void) {
     int i;
     sJump3DSpinAngle = sJump3DSpinAngle + 0x800;
     for (i = 0; i < sJump3DMarioCount; i++) {
@@ -223,12 +218,15 @@ extern "C" void Jump3D_Arrange(u32 a0, u32 a1)
     sJump3DRisenOutCount = 0;
 }
 
-void Jump3D_DisableInput(void) { data_ov006_02140400 = 0; }
+void Jump3D_DisableInput(void) {
+    data_ov006_02140400 = 0;
+}
 
-void Jump3D_EnableInput(void) { data_ov006_02140400 = 1; }
+void Jump3D_EnableInput(void) {
+    data_ov006_02140400 = 1;
+}
 
-void Jump3D_RestoreCount(void)
-{
+void Jump3D_RestoreCount(void) {
     ApproachLinear(sJump3DMariosLeft, sJump3DMarioCount, 1);
 }
 
@@ -240,8 +238,7 @@ struct Jump3DEnt {
     int y;
     char _pad44[0x74];
 };
-int Jump3D_AllIdle(void)
-{
+int Jump3D_AllIdle(void) {
     int i;
     for (i = 0; i < sJump3DMarioCount; i++) {
         int *v = (&((Jump3DEnt *)sJump3DMarioPool)[i].x);
@@ -253,8 +250,7 @@ int Jump3D_AllIdle(void)
     return 1;
 }
 
-void Jump3D_SetLowGravity(void)
-{
+void Jump3D_SetLowGravity(void) {
     int i;
     int off;
     i = 0;
@@ -271,8 +267,7 @@ void Jump3D_SetLowGravity(void)
     } while (i < sJump3DMarioCount);
 }
 
-void Jump3D_StopGravity(void)
-{
+void Jump3D_StopGravity(void) {
     int n = sJump3DMarioCount;
     int i = 0;
     int off;
@@ -299,8 +294,7 @@ struct Jump3DLayoutSlot {
 };
 typedef char Jump3DLayoutSlot_size_must_be_0xc[sizeof(Jump3DLayoutSlot) == 0xc ? 1 : -1];
 
-void Jump3D_StartRoundLayout(void)
-{
+void Jump3D_StartRoundLayout(void) {
     int i;
     int eoff;
     int ooff;

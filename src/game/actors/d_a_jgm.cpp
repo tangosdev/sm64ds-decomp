@@ -145,8 +145,12 @@ extern DaJgmStateHandler data_ov077_021277f8;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
-extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b); /* local extern: CalcLib.h clashes with this TU's C Vec3_Asr (void *) */
-extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b); /* local extern: CalcLib.h clashes with this TU's C Vec3_Asr (void *) */
+extern int Vec3_HorzDist(
+    const Vector3 *a,
+    const Vector3 *b); /* local extern: CalcLib.h clashes with this TU's C Vec3_Asr (void *) */
+extern short Vec3_HorzAngle(
+    const Vector3 *a,
+    const Vector3 *b); /* local extern: CalcLib.h clashes with this TU's C Vec3_Asr (void *) */
 
 extern int *Vec3_LslInPlace(void *v, int sh);
 extern void Vec3_Asr(void *d, void *s, int sh);
@@ -161,21 +165,12 @@ extern void d_a_jgmPlayLongHold(unsigned int handle, unsigned int a, unsigned in
 extern void d_a_jgmNewSimpleHold(unsigned int n, int x, int, int);
 }
 
-daJgm_c *daJgm_c_classInit()
-{
+daJgm_c *daJgm_c_classInit() {
     return new daJgm_c();
 }
 
 extern "C" SpawnInfo<daJgm_c> g_profile_JUGEM = {
-    daJgm_c_classInit,
-    0x0109,
-    0x007c,
-    0x10000006,
-    0x0001e000,
-    0x00064000,
-    0x01000000,
-    0x01000000
-};
+    daJgm_c_classInit, 0x0109, 0x007c, 0x10000006, 0x0001e000, 0x00064000, 0x01000000, 0x01000000};
 
 void daJgm_c::OnTurnIntoEgg(daPly_c &player) {
     if (player.IsCollectingCap())

@@ -128,16 +128,14 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
 int  IsCannonOpenInCurLevel(void);
 void OpenCannonInCurLevel(void);
 int ObjectMessageIDToActualMessageID(s16);
-int  SublevelToLevel(int sublevel);
+int SublevelToLevel(int sublevel);
 
-void  Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
+void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void  Vec3_MulScalarInPlace(Vector3 *v, int s);
+void Vec3_MulScalarInPlace(Vector3 *v, int s);
 void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
-void  Matrix4x3_FromRotationY(void *m, int angle);
-int   Math_Function_0203b14c(int *value, int target, int a, int b, int c);
-
-
+void Matrix4x3_FromRotationY(void *m, int angle);
+int Math_Function_0203b14c(int *value, int target, int a, int b, int c);
 }
 int  IsStarCollected(int level, int star);
 s8   NumRedCoins(void);
@@ -149,8 +147,7 @@ static inline int IsPlayerActor(dActor_c *actor) {
     return actor->actorID == kPlayerActorID;
 }
 
-daRedBombhei_c *daRedBombhei_c_classInit()
-{
+daRedBombhei_c *daRedBombhei_c_classInit() {
     return new daRedBombhei_c();
 }
 

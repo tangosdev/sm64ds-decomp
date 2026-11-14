@@ -97,7 +97,6 @@ void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *dst);
 s32 Vec3_Equal(const Vector3 *a, const Vector3 *b);
 u16 DecIfAbove0_Short(u16 *p);
 u8 DecIfAbove0_Byte(u8 *p);
-
 }
 
 /* The identity quaternion. Its other readers still declare it int[4], so this

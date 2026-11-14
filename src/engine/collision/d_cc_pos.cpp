@@ -71,7 +71,6 @@ void dCcPos_c::Init(const Vector3 &pos, Fix12i radius, Fix12i height, u32 flags,
  * nds_printt.cpp, which keep their own matching extern declarations and call
  * sites; only the definition moves. Body as recovered. */
 
-extern "C" void func_020147bc(unsigned short *dst, int glyph)
-{
+extern "C" void func_020147bc(unsigned short *dst, int glyph) {
     *dst = (data_0208e500 + glyph);
 }

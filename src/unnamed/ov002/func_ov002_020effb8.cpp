@@ -17,7 +17,6 @@
 #include "math/CalcLib.h"
 #include "nitro/fx/fx_cp.h"
 
-
 /* One coordinate's share: p * w, rounded from fx16 back to fx12. */
 #define TERM(p, w) ((FX_MUL(p, w) + 8) >> 4)
 

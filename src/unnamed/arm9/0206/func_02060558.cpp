@@ -10,7 +10,8 @@
 
 void func_0206071c(CARDiCommon *p);
 
-extern "C" int func_02060558(u32 src, void *dst, u32 len, MIDmaCallback callback, void *arg, int is_async) {
+extern "C" int func_02060558(u32 src, void *dst, u32 len, MIDmaCallback callback, void *arg,
+                             int is_async) {
     CARDiCommon *const p = &cardi_common;
 
     {

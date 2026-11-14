@@ -105,8 +105,7 @@ SoundObjectCallback data_ov002_0211110c[7] = {
     *(SoundObjectCallback *)&data_ov002_0210c028,
 };
 
-daSoundObj_c *daSoundObj_c_classInit()
-{
+daSoundObj_c *daSoundObj_c_classInit() {
     return new daSoundObj_c();
 }
 
@@ -189,8 +188,7 @@ int func_ov002_020f9468(daSoundObj_c *self, u16 *counter) {
     return 0;
 }
 
-int func_ov002_020f93a8(daSoundObj_c *self, u16 *counter)
-{
+int func_ov002_020f93a8(daSoundObj_c *self, u16 *counter) {
     if (counter[0] < self->mCounterLimit) {
         int vol = self->mVolume;
         if (Sound::PlaySub(self->mSoundID, vol, 0x7f, ((0x7f - vol) << 12) / 5, 1) != 0)

@@ -70,17 +70,17 @@ struct ScoreView { unsigned char pad[0xb4]; int b4; int b8; };
 /* Everything this file calls or reads that decl_common.h does not declare. */
 extern "C" {
 
-extern void  RenderOamMainScreen(void*, int, int, int, int);
+extern void RenderOamMainScreen(void *, int, int, int, int);
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(const void *src, void *dst);
-extern void  FreeGfxSlotsById(int arg);
-extern int   GetGameLanguage(void);
+extern void FreeGfxSlotsById(int arg);
+extern int GetGameLanguage(void);
 struct Matrix2x2;
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
-extern void  Hud_RenderSprite(void *fn, int a, int b, int c, int d);
+extern void Hud_RenderSprite(void *fn, int a, int b, int c, int d);
 extern void Mg_DrawNumberRotated(int, int, int, int, int, int, u16);
-extern void  Mg_DrawScoreTally(void *, int, int, int);
-extern int   Mg_IsNewRecord(void);
+extern void Mg_DrawScoreTally(void *, int, int, int);
+extern int Mg_IsNewRecord(void);
 #include "OAM.h"
 #include "nitro/mi/memory.h"
 extern void OamRender10_d_s_mg_teresa(int sub, struct OamAttr *data, s32 x, s32 y, s32 palette,
@@ -149,9 +149,9 @@ extern Pmf pmf_dScMgTeresa_c_BigBoo_StateRemove;
 extern Pmf pmf_dScMgTeresa_c_BigBoo_StateGone;
 extern Pmf pmf_dScMgTeresa_c_BigBoo_StateResult;
 
-}  /* extern "C" */
-extern int   func_020126e8(int a);
-extern int   func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
+} /* extern "C" */
+extern int func_020126e8(int a);
+extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 
 namespace Sound { void PlayBank2_2D(unsigned int id); }
 
@@ -1810,8 +1810,7 @@ s32 dScMgTeresa_c::InitResources()
  * allocation size, vtable identity, and the MG_TERESA registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: MgHideAndBooSeek_Spawn. */
-void *dScMgTeresa_c_classInit()
-{
+void *dScMgTeresa_c_classInit() {
     return new dScMgTeresa_c;
 }
 

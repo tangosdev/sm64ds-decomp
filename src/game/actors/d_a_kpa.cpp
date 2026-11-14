@@ -276,7 +276,7 @@ extern "C" {
 /* The dCamera_c; Bowser publishes himself into its mFramedActor. */
 extern dCamera_c *gCamera;
 /* Eases a camera vector toward a target; 1 when it arrives (d_camera.cpp). */
-extern int func_020092c4(void*, void*, void*);
+extern int func_020092c4(void *, void *, void *);
 extern KpaAnimationFileHandle data_ov060_0211acd0;
 extern unsigned char data_ov060_02119264[];
 extern PmfEnt data_ov060_0211aeb4[];
@@ -290,7 +290,7 @@ extern void *d_a_kpaNewHold(unsigned a, unsigned b, int x, int y, int z, void *v
 extern void d_a_kpaChangeMusicVolumeHold(unsigned int a, int b);
 extern KpaAnimationFileHandle data_ov060_0211ac88;
 extern KpaAnimationFileHandle data_ov060_0211ac60;
-extern int RandomIntInternal(int* seed);
+extern int RandomIntInternal(int *seed);
 extern KpaAnimationFileHandle data_ov060_0211abe0;
 extern KpaAnimationFileHandle data_ov060_0211acd8;
 extern KpaAnimationFileHandle data_ov060_0211acf0;
@@ -346,7 +346,6 @@ extern short data_ov060_02119296[];
 extern short data_ov060_02119298[];
 /* Unused; the named parameters pin this TU's @NNN counter (see the header). */
 typedef void BgchInitAt_(void *self, void *act, int a, int b, void *d1, void *d2);
-
 }
 extern void func_02012694(unsigned int id, const Vector3 *v);
 void func_02038408(dBgCh_Actr *self);

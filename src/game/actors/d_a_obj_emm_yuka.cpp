@@ -157,8 +157,7 @@ int daObjEmmYuka_c::InitResources()
  * RTTI, allocation size, vtable identity, and the EMM_YUKA registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: SquarePathLift_Spawn. */
-daObjEmmYuka_c *daObjEmmYuka_c_classInit()
-{
+daObjEmmYuka_c *daObjEmmYuka_c_classInit() {
     return new daObjEmmYuka_c();
 }
 

@@ -39,7 +39,7 @@
 #include "nitro/mi/memory.h"
 
 extern "C" {
-extern void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
+extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 extern OamAttr *sBomroomPenGateSprites[];
 extern int sBomroomPenGateX[];
 extern int sBomroomPenGateY[];
@@ -49,7 +49,7 @@ extern int sBomroomHatchPanelX[];
 extern int sBomroomHatchPanelY[];
 extern unsigned char *sBomroomBombFrameTimes[];
 extern unsigned char sBomroomBombFrameCounts[];
-extern void Mg_RenderSpriteBoth(void* a0, int a1, int a2, int a3, int a4);
+extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 extern unsigned char *sBomroomBombSprites[];
 extern unsigned char *sBomroomBombLitSprites[];
 extern void *sBomroomBombsSprites[];
@@ -1842,8 +1842,7 @@ s32 dScMgBomroom_c::InitResources() {
  * allocation size, vtable identity, and the MG_BOMROOM registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: MgSortOrSplode_Spawn. */
-void *dScMgBomroom_c_classInit()
-{
+void *dScMgBomroom_c_classInit() {
     return new dScMgBomroom_c;
 }
 

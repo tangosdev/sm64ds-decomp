@@ -167,8 +167,7 @@ extern void func_02012694(unsigned int a, const Vector3 *b);
  * hand: fBase_c::operator new(0x5a4), dBgActor_c's base constructor, the
  * vptr store, then the dCcAc_c, dExtShadowModel_c and dBgCh_Actr member
  * constructors in declaration order. */
-daObjTatefuda_c *daObjTatefuda_c_classInit(void)
-{
+daObjTatefuda_c *daObjTatefuda_c_classInit(void) {
     return new daObjTatefuda_c;
 }
 
