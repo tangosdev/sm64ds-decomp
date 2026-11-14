@@ -38,22 +38,35 @@ typedef unsigned long size_t;
 typedef signed int intptr_t;
 #endif
 
-/* 20.12 fixed-point scalar, as used by the SDK/game maths.
+/* NitroSDK's fixed-point scalars (nitro/fx/fx.h): fx32 is 20.12 in an s32,
+   fx16 is 4.12 in an s16. Declared here under the same guard as fx.h so every
+   file sees the SDK's spelling without pulling in fx.h's vectors and macros,
+   and a file may include both headers in either order. */
+#ifndef NITRO_FX_SCALAR_TYPES
+#define NITRO_FX_SCALAR_TYPES
+typedef signed int fx32;
+typedef signed long long fx64;
+typedef signed long long fx64c;
+typedef signed short fx16;
+#endif
 
-   NOT named `Fix12`. In the original C++ that is a class TEMPLATE, not a scalar typedef;
-   this tree's convention spells it out in mangled names, e.g.
-   `_ZN4cstd5atan2E5Fix12IiES1_` for `cstd::atan2(Fix12<int>, Fix12<int>)`. That is a
-   convention and not evidence: the image holds zero `_Z...` strings, so no function's
-   mangled name here is ROM-derived (its RTTI carries class names only). Where a
-   by-value `5Fix12IiE` parameter contradicts the bytes, the bytes win -- see
-   notes/mwccarm-codegen.md 6az. Taking the name here for a plain `s32` would
-   collide with the real type the moment it is reconstructed, and every consumer would have
-   to be edited and re-verified to give it back. `Fix12i` is already the spelling most src/
-   files use and is not a real C++ type name, so it stays free.
+/* Fix12i: the tree's older spelling of a 20.12 scalar, now an alias of fx32.
 
-   A local `typedef s32 Fix12;` in an individual src/ file is still fine -- it is private to
-   that translation unit. This rule is about what the SHARED header claims. */
-typedef s32 Fix12i;
+   The name is coined, not recovered. The ROM is stripped: it carries RTTI
+   class names and no function symbols, so no type spelling of a 20.12 value
+   comes from the cartridge. What the toolchain verifiably had is the SDK's
+   fx32 (the NitroSDK functions linked into this ROM take it), so that is the
+   period spelling; new and touched code should write fx32 (and FX32_SHIFT /
+   FX_MUL from nitro/fx/fx.h) rather than Fix12i. Both name `signed int`, so
+   moving a declaration between them changes no byte and no mangled name.
+
+   NOT named `Fix12`: include/math/Fix12.h reserves that for the class
+   template Fix12<T>, whose by-value parameters change calling convention
+   (notes/mwccarm-codegen.md 6az) and are matching work, not a rename.
+
+   A local `typedef int Fix12i;` in an individual src/ file still compiles:
+   it names the same type. */
+typedef fx32 Fix12i;
 
 typedef struct Vector3 {
     Fix12i x, y, z;
