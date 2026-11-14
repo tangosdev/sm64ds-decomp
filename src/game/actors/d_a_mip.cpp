@@ -1206,7 +1206,9 @@ int daMip_c::Behavior()
        function would come out 8 bytes longer. The ROM emits no cleanup for either of
        these, which is itself the evidence that they were never Vector3s: they are
        scratch x/y/z the code fills and reads back. */
-    typedef volatile struct { Fix12i x, y, z; } Vec3Scratch;
+    typedef volatile struct {
+        fx32 x, y, z;
+    } Vec3Scratch;
 
     extern s8 gCurrentSublevel;
     extern s8 gCurrentAreaId;

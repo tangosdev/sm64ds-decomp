@@ -645,7 +645,7 @@ void daPgRcer_c::CheckFallCheat() {
 int daPgRcer_c::IsNearPathNode(Vector3 *pos, unsigned int nodeIndex) {
     Vector3 node;
     mPath.GetNode(node, nodeIndex);
-    Fix12i dist = Vec3_HorzDist(&node, pos);
+    fx32 dist = Vec3_HorzDist(&node, pos);
     return dist <= 0x320000;
 }
 

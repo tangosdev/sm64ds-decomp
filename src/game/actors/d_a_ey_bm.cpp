@@ -157,7 +157,7 @@ void daEyBm_c::UpdateShadow() {
 
     dBgCh_Gnd ground;
     ground.SetObjAndPos(mPos, this);
-    Fix12i depth;
+    fx32 depth;
     if (ground.DetectClsn())
         depth = (mPosY - ground.clsnY) + 0x1e000;
     else

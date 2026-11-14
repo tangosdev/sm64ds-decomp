@@ -900,7 +900,7 @@ void daYegg_c::RunState() {
  * after 15 shorter moves in a row; it stays 1 while the egg stays put), else
  * 0. */
 int daYegg_c::IsStalled() {
-    Fix12i d = Vec3_HorzDist((struct Vector3 *)&mLastPosX, &mPos);
+    fx32 d = Vec3_HorzDist((struct Vector3 *)&mLastPosX, &mPos);
     mLastPosX = mPosX;
     mLastPosY = mPosY;
     mLastPosZ = mPosZ;

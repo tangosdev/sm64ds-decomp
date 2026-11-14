@@ -119,10 +119,10 @@ extern Entry data_ov060_0211afb4[];
 extern PMF data_ov060_0211af74[];
 
 /* Fix12<int>-by-value and other mangled-name calls (see the banner). */
-extern u32 d_a_kpa_fireNewCleanParticleHold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e,
+extern u32 d_a_kpa_fireNewCleanParticleHold(u32 a, u32 b, fx32 c, fx32 d, fx32 e,
                                             const struct Vector3_16f *f);
-extern u32 d_a_kpa_fireNewHold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const void *f, void *g);
-void d_a_kpa_fireNewSimpleHold(u32 id, Fix12i x, Fix12i y, Fix12i z);
+extern u32 d_a_kpa_fireNewHold(u32 a, u32 b, fx32 c, fx32 d, fx32 e, const void *f, void *g);
+void d_a_kpa_fireNewSimpleHold(u32 id, fx32 x, fx32 y, fx32 z);
 extern void d_a_kpa_firePlayLongHold(u32 a, u32 b, u32 c, void *pos, u32 d);
 
 extern int RandomIntInternal(int *seed);
@@ -354,8 +354,7 @@ void daKpaFire_c::func_ov060_0211747c() {
  *     and stops -- this branch returns whether or not the spawn worked;
  *   - otherwise it spawns a coin and zeroes the coin's three velocity words. */
 void daKpaFire_c::func_ov060_021172e0() {
-    Particle::System::NewSimple(kPtclFlameOutPuff, *(Fix12i *)&this->mPosX, *(Fix12i *)&this->mPosY,
-                                *(Fix12i *)&this->mPosZ);
+    Particle::System::NewSimple(kPtclFlameOutPuff, mPos.x, mPos.y, mPos.z);
     this->MarkForDestruction();
 
     if ((((u32)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10) >= 2) {

@@ -125,8 +125,8 @@ struct GmchDrawReg { GmchDrawReg(Vector3 &v) { v.x = 0; v.y = 0x2000; v.z = 0; }
  * ApproachLinear and RandomIntInternal.  Collapsing each onto ONE spelling was
  * measured, not assumed, and eight of the nine cost nothing:
  *
- *   TWO were never different types at all.  Fix12i is `typedef s32`, so
- *   Vec3_Dist and dActor_c::DistToCPlayer spelt `Fix12i` and spelt `int` are
+ *   TWO were never different types at all.  fx32 is `typedef s32`, so
+ *   Vec3_Dist and dActor_c::DistToCPlayer spelt `fx32` and spelt `int` are
  *   the same declaration written twice.
  *
  *   FIVE disagreed only about something no call site can see: a return value
@@ -193,8 +193,8 @@ void daGmch_c::ChooseNextState()
 {
     extern int data_0209e650;
 
-    Fix12i distC;
-    Fix12i dist;
+    fx32 distC;
+    fx32 dist;
     int curState;
 
     distC = DistToCPlayer();
@@ -527,7 +527,7 @@ int daGmch_c::EnterState6()
 
 int daGmch_c::UpdateState5()
 {
-    Fix12i distToSpawn = Vec3_Dist(&mPos, (Vector3 *)&mSpawnPosX);
+    fx32 distToSpawn = Vec3_Dist(&mPos, (Vector3 *)&mSpawnPosX);
     if (distToSpawn < mHorzSpeed) {
         mAngleY = Vec3_HorzAngle(&mPos, (Vector3 *)&mSpawnPosX);
         mPrevAngleY = mAngleY;

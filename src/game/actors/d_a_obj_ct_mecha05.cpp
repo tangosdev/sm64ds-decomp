@@ -3,7 +3,7 @@
  *
  * What stays, and why:
  * - dBgW_KcMbg::SetFile / DropShadowScaleXYZ / dBgActor_c::IsClsnInRange
- *   are header member calls whose headers spell Fix12 as Fix12i, a plain
+ *   are header member calls whose headers take Fix12 as the scalar fx32, a plain
  *   s32 (6az)
  * - dBgW::SetBeforeClsnCallback stores dBgW+0x18 (beforeClsnCallback); dBgW::SetClipRadius
  *   stores +0x0c; dBgW::SetClipOffsetY stores +0x10

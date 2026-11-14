@@ -1204,7 +1204,6 @@ int daMky_c::EnterState3()
 
 int daMky_c::func_ov030_02113b38()
 {
-    typedef int Fix12i;
     extern int gMonkeyRunAnimationFile[];
     this->mAnmModel.Advance();
     this->UpdatePos(&this->mdCcAc_c);
@@ -1223,7 +1222,6 @@ int daMky_c::func_ov030_02113b38()
     return 1;
 }
 int daMky_c::EnterState2() {
-    typedef int Fix12i;
     typedef short s16;
 
     extern void *gMonkeyJumpStAnimationFile;
@@ -1257,12 +1255,11 @@ int daMky_c::EnterState2() {
 
 int daMky_c::func_ov030_02113d20()
 {
-    typedef int Fix12i;
     typedef short s16;
 
     extern void *gMonkeyRunAnimationFile;
     daPly_c *p;
-    Fix12i dist;
+    fx32 dist;
     s16 angle;
     int onWall;
 
@@ -1344,7 +1341,6 @@ int daMky_c::EnterState1(){
 
 int daMky_c::func_ov030_02113ff0()
 {
-    typedef int Fix12i;
     typedef short s16;
     extern int gMonkeyRunAnimationFile[];
     int dist = this->DistToCPlayer();

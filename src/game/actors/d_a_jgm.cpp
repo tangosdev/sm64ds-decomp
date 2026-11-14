@@ -154,8 +154,8 @@ extern int *Vec3_LslInPlace(void *v, int sh);
 extern void Vec3_Asr(void *d, void *s, int sh);
 
 /* Parameter names keep this TU's @NNN. */
-typedef int BgchInitAt_(dBgCh_Actr *collision, dActor_c *actor, Fix12i radius, Fix12i height,
-                        void *a, void *b);
+typedef int BgchInitAt_(dBgCh_Actr *collision, dActor_c *actor, fx32 radius, fx32 height, void *a,
+                        void *b);
 /* local extern: kept as a count holder: its five named parameters hold
  * the @NNN count. Sound.h's PlayLong emits the same bytes. */
 extern void d_a_jgmPlayLongHold(unsigned int handle, unsigned int a, unsigned int id,

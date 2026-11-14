@@ -122,7 +122,7 @@ int AngleDiff(int a, int b);
    which mwccarm passes differently at the call site than the loose scalar
    spelling -- the mangled spelling is the one that matches. Sound.h covers
    PlayLong, so only PlaySub stays. */
-int d_a_c_jugemPlaySubHold(u32 a, u32 b, u32 c, Fix12i d, bool loop);
+int d_a_c_jugemPlaySubHold(u32 a, u32 b, u32 c, fx32 d, bool loop);
 
 /* other overlays / arm9 */
 void func_ov002_020c3e8c(void *player);

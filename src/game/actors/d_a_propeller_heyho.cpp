@@ -858,11 +858,10 @@ short func_ov070_0211f450(daPropeller_Heyho_c *c) {
 
 /* -------------------------------------------------------------------------- */
 int func_ov070_0211f0a4(daPropeller_Heyho_c *c);
-typedef int Fix12i;
 
-extern "C" unsigned d_a_propeller_heyhoNewHold(unsigned a, unsigned b, Fix12i c, Fix12i d, Fix12i e,
+extern "C" unsigned d_a_propeller_heyhoNewHold(unsigned a, unsigned b, fx32 c, fx32 d, fx32 e,
                                                void *f, void *g);
-extern "C" u32 d_a_propeller_heyhoNewCleanParticleHold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e,
+extern "C" u32 d_a_propeller_heyhoNewCleanParticleHold(u32 a, u32 b, fx32 c, fx32 d, fx32 e,
                                                        const Vector3_16f *f);
 
 /* Knocked main. While mStateStep is non-zero (normally a fire hit; the

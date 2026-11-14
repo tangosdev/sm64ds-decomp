@@ -706,7 +706,7 @@ void daSpd_c::func_ov071_0211f148(dBgCh_Actr *w) {
 
 void daSpd_c::func_ov071_0211f0b4() {
     dActor_c *p;
-    Fix12i d;
+    fx32 d;
     short ang;
     if (mTimer != 0) return;
     p = (dActor_c *)ClosestNonVanishPlayer();
