@@ -8779,59 +8779,59 @@
     },
     "arm9:0x02052ef4": {
       "author": "tangosdev",
-      "name": "_Z9FX_ModS32ii"
+      "name": "FX_ModS32"
     },
     "arm9:0x02052f4c": {
       "author": "tangosdev",
-      "name": "_Z9FX_DivS32ii"
+      "name": "FX_DivS32"
     },
     "arm9:0x02052fa4": {
       "author": "tangosdev",
-      "name": "_Z11FX_DivAsyncii"
+      "name": "FX_DivAsync"
     },
     "arm9:0x02052fdc": {
       "author": "tangosdev",
-      "name": "_Z16FX_GetSqrtResultv"
+      "name": "FX_GetSqrtResult"
     },
     "arm9:0x02053008": {
       "author": "tangosdev",
-      "name": "_Z12FX_SqrtAsynci"
+      "name": "FX_SqrtAsync"
     },
     "arm9:0x02053090": {
       "author": "tangosdev",
-      "name": "_Z11FX_InvAsynci"
+      "name": "FX_InvAsync"
     },
     "arm9:0x020530cc": {
       "author": "tangosdev",
-      "name": "_Z15FX_GetDivResultv"
+      "name": "FX_GetDivResult"
     },
     "arm9:0x02053108": {
       "author": "tangosdev",
-      "name": "_Z20FX_GetDivResultFx64cv"
+      "name": "FX_GetDivResultFx64c"
     },
     "arm9:0x02053130": {
       "author": "tangosdev",
-      "name": "_Z10FX_InvSqrti"
+      "name": "FX_InvSqrt"
     },
     "arm9:0x020531a4": {
       "author": "tangosdev",
-      "name": "_Z7FX_Sqrti"
+      "name": "FX_Sqrt"
     },
     "arm9:0x02053200": {
       "author": "tangosdev",
-      "name": "_Z6FX_Invi"
+      "name": "FX_Inv"
     },
     "arm9:0x0205321c": {
       "author": "tangosdev",
-      "name": "_Z11FX_DivFx64cii"
+      "name": "FX_DivFx64c"
     },
     "arm9:0x02053258": {
       "author": "tangosdev",
-      "name": "_Z6FX_Divii"
+      "name": "FX_Div"
     },
     "arm9:0x02053274": {
       "author": "tangosdev",
-      "name": "_Z12VEC_DistancePiS_"
+      "name": "VEC_Distance"
     },
     "arm9:0x02053320": {
       "author": "tangosdev",
