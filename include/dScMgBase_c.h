@@ -4,6 +4,9 @@
  * why the destructor is declared here but defined out of line. */
 #ifndef DSCMGBASE_C_H
 #define DSCMGBASE_C_H
+#ifndef __cplusplus
+#define Deallocate _Z10DeallocatePv
+#endif
 #include "dScene_c.h"
 #include "dGraph_c.h"
 #include "dMgState_c.h"
@@ -12,7 +15,7 @@
 
 /* The live minigame scene: the dScMgBase_c constructor sets it, the destructor clears it. */
 struct dScMgBase_c;
-extern "C" dScMgBase_c *gMgScene;
+extern dScMgBase_c *gMgScene;
 
 struct dScMgBase_c : dScene_c {
 

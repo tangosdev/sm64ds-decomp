@@ -42,10 +42,9 @@ extern u8 gCurrentStarId;          /* STAR_ID */
 extern u8 gGameMode;               /* CURRENT_GAMEMODE */
 extern int gRunningKuppaScript;    /* RUNNING_KUPPA_SCRIPT */
 
-extern "C" int IsStarCollectedInLevel(s8 levelID, int starID);
+int IsStarCollectedInLevel(s8 levelID, int starID);
 
-extern "C" daSetSE_c *daSetSE_c_classInit()
-{
+daSetSE_c *daSetSE_c_classInit() {
     return new daSetSE_c();
 }
 

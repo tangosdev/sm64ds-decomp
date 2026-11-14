@@ -19,49 +19,49 @@
   ],
   "functions": [
     {
-      "symbol": "rand",
+      "symbol": "_Z4randv",
       "address": "0x02070348",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/arm9/0207/func_02070348.c",
       "ordinal": 0
     },
     {
-      "symbol": "raise",
+      "symbol": "_Z5raisei",
       "address": "0x0207037c",
       "size": "0x00000150",
       "legacy_source": "src/unnamed/arm9/0207/func_0207037c.c",
       "ordinal": 1
     },
     {
-      "symbol": "strchr",
+      "symbol": "_Z6strchrPKci",
       "address": "0x020704cc",
       "size": "0x0000003c",
       "legacy_source": "src/_ZN4cstd6strchrEPKcc.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "strcmp",
+      "symbol": "_Z6strcmpPKcS0_",
       "address": "0x02070508",
       "size": "0x00000134",
       "legacy_source": "src/_ZN4cstd6strcmpEPKcS1_.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "strncpy",
+      "symbol": "_Z7strncpyPcPKcj",
       "address": "0x0207063c",
       "size": "0x00000074",
       "legacy_source": "src/_ZN4cstd7strncpyEPcPKcj.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "strcpy",
+      "symbol": "_Z6strcpyPcPKc",
       "address": "0x020706b0",
       "size": "0x000000d8",
       "legacy_source": "src/unnamed/arm9/0207/func_020706b0.c",
       "ordinal": 5
     },
     {
-      "symbol": "strlen",
+      "symbol": "_Z6strlenPKc",
       "address": "0x02070788",
       "size": "0x0000001c",
       "legacy_source": "src/_ZN4cstd6strlenEPKc.cpp",

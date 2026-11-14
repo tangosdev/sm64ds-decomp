@@ -75,11 +75,11 @@ BattanCollisionFilePtr data_ov023_02112080(ASSET_FM_BATTAN_KCL);
  * fBase_c::operator new; the implicit constructor calls dBgActor_c's C2,
  * stores this class's vptr, and constructs mShadowModel. The null check is
  * the one `new` itself emits. */
-extern "C" daObjFm_Battan_c *daObjFm_Battan_c_classInit() {
+daObjFm_Battan_c *daObjFm_Battan_c_classInit() {
     return new daObjFm_Battan_c();
 }
 
-extern "C" SpawnInfo<daObjFm_Battan_c> g_profile_FM_BATTAN = {
+SpawnInfo<daObjFm_Battan_c> g_profile_FM_BATTAN = {
     daObjFm_Battan_c_classInit, 0x0054, 0x0124, 0x02000000, 0, 0x00500000, 0x01000000, 0x01000000};
 
 int daObjFm_Battan_c::InitResources() {

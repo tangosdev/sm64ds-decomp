@@ -184,7 +184,7 @@
       "ordinal": 17
     },
     {
-      "symbol": "func_ov074_0212007c",
+      "symbol": "_Z19func_ov074_0212007cv",
       "address": "0x0212007c",
       "size": "0x00000004",
       "legacy_source": "src/func_ov074_0212007c.c",
@@ -212,7 +212,7 @@
       "ordinal": 21
     },
     {
-      "symbol": "func_ov074_021201ec",
+      "symbol": "_Z19func_ov074_021201ecv",
       "address": "0x021201ec",
       "size": "0x00000004",
       "legacy_source": "src/func_ov074_021201ec.c",
@@ -226,7 +226,7 @@
       "ordinal": 23
     },
     {
-      "symbol": "func_ov074_021203e0",
+      "symbol": "_Z19func_ov074_021203e0v",
       "address": "0x021203e0",
       "size": "0x00000004",
       "legacy_source": "src/func_ov074_021203e0.c",
@@ -282,7 +282,7 @@
       "ordinal": 31
     },
     {
-      "symbol": "func_ov074_0212087c",
+      "symbol": "_Z19func_ov074_0212087cPiP12daKuriKing_ci",
       "address": "0x0212087c",
       "size": "0x000002a8",
       "legacy_source": "src/func_ov074_0212087c.c",
@@ -317,7 +317,7 @@
       "ordinal": 36
     },
     {
-      "symbol": "func_ov074_02121270",
+      "symbol": "_Z19func_ov074_02121270P7Vector3P12daKuriKing_ci",
       "address": "0x02121270",
       "size": "0x00000090",
       "legacy_source": "src/func_ov074_02121270.c",
@@ -436,14 +436,14 @@
       "ordinal": 53
     },
     {
-      "symbol": "daKuriKing_c_classInit_KURIKING_VANISH",
+      "symbol": "_Z38daKuriKing_c_classInit_KURIKING_VANISHv",
       "address": "0x02122764",
       "size": "0x000000d4",
       "legacy_source": "src/d_a_kuri_king_kuriking_vanish.cpp",
       "ordinal": 54
     },
     {
-      "symbol": "daKuriKing_c_classInit_KURIKING",
+      "symbol": "_Z31daKuriKing_c_classInit_KURIKINGv",
       "address": "0x02122838",
       "size": "0x000000d4",
       "legacy_source": "src/d_a_kuri_king_kuriking.cpp",
@@ -1193,7 +1193,7 @@
       "source": "0x02122988",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1483,7 +1483,7 @@
       "source": "0x02122c88",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -2013,7 +2013,7 @@
       "source": "0x02122d9c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov074_0212007c",
+      "symbol": "_Z19func_ov074_0212007cv",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x0212007c"
@@ -2053,7 +2053,7 @@
       "source": "0x02122dbc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov074_021203e0",
+      "symbol": "_Z19func_ov074_021203e0v",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x021203e0"
@@ -2133,7 +2133,7 @@
       "source": "0x02122e0c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov074_021201ec",
+      "symbol": "_Z19func_ov074_021201ecv",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x021201ec"
@@ -2383,7 +2383,7 @@
       "source": "0x02122e78",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daKuriKing_c_classInit_KURIKING",
+      "symbol": "_Z31daKuriKing_c_classInit_KURIKINGv",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x02122838"
@@ -2393,7 +2393,7 @@
       "source": "0x02122e94",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daKuriKing_c_classInit_KURIKING_VANISH",
+      "symbol": "_Z38daKuriKing_c_classInit_KURIKING_VANISHv",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x02122764"
@@ -2722,14 +2722,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN20KuriKingModelFilePtrC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN20KuriKingModelFilePtrD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the wrapper destructor's exact ABS32 relocation"

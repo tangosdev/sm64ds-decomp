@@ -38,7 +38,6 @@ enum dScBoot_c_AssetId { ASSET_D_2D_FRAMEWORK_INITIALIZE_NSC_BIN = 0x022d };
 
 #pragma opt_common_subs off
 
-extern "C" {
 extern dFdBrightness_c *gSceneFader;
 /* Whether the boot job InitResources starts has finished. d_s_boot's own
    .bss; only InitResources and Behavior read it. */
@@ -48,12 +47,12 @@ extern int data_0208ee44;
 extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
 extern dFdColor_c gSceneColorFader;
+extern "C" {
 
 u32 LoadCompressedFileAt(int fileID, void *target);
 void *LoadFile(int handle);
 
 void DecompressLZ16(const void *src, void *dst);
-
 }
 
 /* These names describe the observed transitions; original state names are unknown. */
@@ -389,7 +388,7 @@ void dScBoot_c::UpdateButtonPalettes() {
  * setup, returns 1. Defined last because this file emits .text in reverse
  * source order, so the lead body lands at the run's left edge. The camera
  * calls are spelled as the members they are (dCamera_c.h). */
-extern "C" int func_02005324(void *p) {
+int func_02005324(void *p) {
     ((dCamera_c *)p)->SaveCameraStateBeforeTalk();
     ((dCamera_c *)p)->SetMode(0x19);
     return 1;

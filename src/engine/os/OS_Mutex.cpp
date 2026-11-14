@@ -18,8 +18,6 @@
 #include "nitro/os/system.h"
 #include "nitro/os/mutex.h"
 
-extern "C" {
-
 void OSi_EnqueueTail(OSThread *thread, OSMutex *mutex);
 void OSi_DequeueItem(OSThread *thread, OSMutex *mutex);
 OSMutex *func_02058960(OSThread *thread);
@@ -130,5 +128,4 @@ OSMutex *func_02058960(OSThread *thread) {
         next->link.prev = 0;
     thread->mutexQueue.head = next;
     return mutex;
-}
 }

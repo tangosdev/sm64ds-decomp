@@ -1,6 +1,6 @@
-extern int func_0203da9c(void);
-extern unsigned char GetPlayerFlagByte(int player, int byte);
-extern void func_0203db3c(int byte, int value);
+extern int _Z13func_0203da9cv(void);
+extern unsigned char _Z17GetPlayerFlagByteii(int player, int byte);
+extern void _Z13func_0203db3cii(int byte, int value);
 
 /* If playerNo is the local player's, clears bits 4-6 of its link
    settings byte 0, the field IsPlayerWarping reads. daPly_c::
@@ -8,8 +8,8 @@ extern void func_0203db3c(int byte, int value);
    is not in state daPly_c::ST_WAIT; otherwise it copies the field
    into mTeleportId. */
 void func_02020388(int playerNo) {
-    if (playerNo != func_0203da9c())
+    if (playerNo != _Z13func_0203da9cv())
         return;
-    int v = GetPlayerFlagByte(playerNo, 0);
-    func_0203db3c(0, (unsigned char)(v & ~0x70));
+    int v = _Z17GetPlayerFlagByteii(playerNo, 0);
+    _Z13func_0203db3cii(0, (unsigned char)(v & ~0x70));
 }

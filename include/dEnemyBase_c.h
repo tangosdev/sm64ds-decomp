@@ -4,6 +4,9 @@
  * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef DENEMYBASE_C_H
 #define DENEMYBASE_C_H
+#ifndef __cplusplus
+#define Deallocate _Z10DeallocatePv
+#endif
 #include "types.h"
 #include "dActor_c.h"
 #include "math/Fix12.h"
@@ -23,7 +26,7 @@ struct outAngle_;
 struct ww_;
 /* data_020a0eac is the actor heap. operator delete passes it to
    Memory::Deallocate, the same way fBase_c and dActor_c do. */
-extern "C" mHeap::Heap_t *data_020a0eac;
+extern mHeap::Heap_t *data_020a0eac;
 
 struct dEnemyBase_c : dActor_c {
     /* DERIVES FROM dActor_c, at last -- this header used to restate dActor_c's whole

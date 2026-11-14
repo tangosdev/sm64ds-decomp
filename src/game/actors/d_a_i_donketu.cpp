@@ -69,7 +69,7 @@ extern BullyResourceConfig data_ov027_021138f4;
  * ICE_DONKETU registry profile; later EAD lineage supplies classInit.
  * Exact original spelling is not preserved. Historical alias:
  * daIDonketu_c_Spawn. */
-extern "C" daIDonketu_c *daIDonketu_c_classInit(void) {
+daIDonketu_c *daIDonketu_c_classInit(void) {
     return new daIDonketu_c();
 }
 

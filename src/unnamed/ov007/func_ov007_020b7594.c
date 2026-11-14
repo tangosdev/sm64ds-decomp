@@ -1,6 +1,7 @@
 #include "Ov007Display.h"
 #include "Ov007MenuMem.h"
 
+#define func_ov007_020c0354 _Z19func_ov007_020c0354PA2_ij
 extern void func_ov007_020c0354(int (*words)[2], unsigned count);
 extern Ov007OamList *func_ov007_020c1068(void);
 extern Ov007BgList *func_ov007_020c0604(int engines, int mask);

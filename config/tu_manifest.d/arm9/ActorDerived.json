@@ -40,7 +40,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_02013edc",
+      "symbol": "_Z13func_02013edciii",
       "address": "0x02013edc",
       "size": "0x0000000c",
       "legacy_source": "src/func_02013edc.c",
@@ -61,7 +61,7 @@
       "ordinal": 4
     },
     {
-      "symbol": "func_02013f28",
+      "symbol": "_Z13func_02013f28v",
       "address": "0x02013f28",
       "size": "0x00000024",
       "legacy_source": "src/unnamed/arm9/0201/func_02013f28.c",

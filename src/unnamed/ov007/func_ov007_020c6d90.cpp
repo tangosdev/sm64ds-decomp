@@ -2,16 +2,14 @@
 #include "Ov007Picker.h"
 #include "Ov007MenuMem.h"
 
-extern "C" {
-extern void func_ov007_020c78dc(Ov007PointList *list);
+extern "C" void func_ov007_020c78dc(Ov007PointList *list);
 /* A long-branch veneer to func_ov007_020c3d1c, the free hook. */
-extern void func_ov007_020c8098(void *p);
-extern void func_ov007_020c2bf8(void *path);
-}
+extern "C" void func_ov007_020c8098(void *p);
+extern "C" void func_ov007_020c2bf8(void *path);
 
 /* Frees committed group idx, if there is one: its point list, its points
  * and their rest copies, its links, its stroke, its head and tail links. */
-extern "C" void func_ov007_020c6d90(Ov007Picker *c, int idx) {
+void func_ov007_020c6d90(Ov007Picker *c, int idx) {
     if (c->groups[idx] == 0)
         return;
     func_ov007_020c78dc(c->pointLists[idx]);

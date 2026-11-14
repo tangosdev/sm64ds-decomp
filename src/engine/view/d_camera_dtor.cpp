@@ -29,16 +29,21 @@
 #include "math/CalcLib.h"
 
 extern "C" {
+
 /* local extern: these camera vector helpers have no header outside the
    decl_common.h catch-all, which is C. */
 extern void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *trans, short ang,
                                      const Vector3 *add);
+}
+
 extern void Vec3fGetDistAndAngle(const Vector3 *from, const Vector3 *to, int *outDist,
                                  short *outVertAng, short *outHorzAng);
 extern void Vec3fSetDistAndAngle(Vector3 *res, const Vector3 *trans, int mag, short ang,
                                  short angY);
 extern int func_02007cec(void *a, const Vector3 *b, int c);
 extern void ApproachVec3fAsymptotic(Vector3 *self, const Vector3 *src, int sx, int sy, int sz);
+extern "C" {
+
 extern void Math_Function_0203b0fc(int *value, int target, int step, int max);
 extern int AngleDiff(int a, int b);
 }
@@ -52,8 +57,6 @@ dCamera_c::~dCamera_c() {}
 
 dCamera_c::~dCamera_c() {}
 #endif
-
-extern "C" {
 
 void func_020070e8(dCamera_c *cam, int distTarget, int distStep, short vertTarget, short vertDiv,
                    short horzTarget, short horzDiv) {
@@ -100,7 +103,6 @@ int CutsceneGrandStarFlyAppCvars(dCamera_c *cam) {
     func_02007cec(&cam->pos, &va, 0x28);
     ApproachVec3fAsymptotic(&cam->lookAt, &vb, 0x800, 0xccc, 0x800);
     return 1;
-}
 }
 
 /* The Vector3 destructor's body is the inline one in include/types.h. */

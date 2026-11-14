@@ -102,17 +102,15 @@ namespace Sound {
 int PlayLong(u32, u32, u32, const Vector3 &, s16);
 }
 
-extern "C" {
-/* Defined below. */
-
-void func_02012694(unsigned int a, void *p);
-void d_a_iblPlayLongHold(u32 a, u32 b, u32 c, void *v, u32 d);
+void func_02012694(unsigned int a, const Vector3 *p);
 void func_02038414(void *p);
-int atan2_hold_d_a_ibl_1(int y, int x);
 int func_ov002_020ad660(void *a, void *b, void *d, int e);
+extern "C" {
+void d_a_iblPlayLongHold(u32 a, u32 b, u32 c, void *v, u32 d);
+int atan2_hold_d_a_ibl_1(int y, int x);
+}
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
-}
 
 extern signed char gCurrentSublevel;
 extern int data_02092138;
@@ -193,7 +191,7 @@ void daIbl_c::CheckContact() {
             Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, mPosY, mPosZ);
             PoofDust();
             MarkForDestruction();
-            func_02012694(daIbl_SND_BREAK, &mCamSpacePosX);
+            func_02012694(daIbl_SND_BREAK, (const Vector3 *)(&mCamSpacePosX));
             return;
         }
         Sound::PlayBank0(daIbl_SND_HIT_NOT_BROKEN, mCamSpacePos);
@@ -407,7 +405,7 @@ void daIbl_c::PathBehavior() {
         if (r != 2)
             return;
         Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, mPosY, mPosZ);
-        func_02012694(daIbl_SND_BREAK, &mCamSpacePosX);
+        func_02012694(daIbl_SND_BREAK, (const Vector3 *)(&mCamSpacePosX));
         return;
     }
 
@@ -436,7 +434,7 @@ void daIbl_c::PathBehavior() {
             mRollSoundHandle = 0;
         } else if (mWithMeshClsn.IsOnGround() != 0) {
             if (mWithMeshClsn.JustHitGround() != 0) {
-                func_02012694(daIbl_SND_LAND, &mCamSpacePosX);
+                func_02012694(daIbl_SND_LAND, (const Vector3 *)(&mCamSpacePosX));
                 LandingDust(1);
                 if (vy < -0x14000)
                     mVertSpeed = (int)(-vy + ((u32)-vy >> 31)) >> 1;
@@ -483,7 +481,7 @@ void daIbl_c::RollOffBehavior() {
             return;
 
         Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, mPosY, mPosZ);
-        func_02012694(daIbl_SND_BREAK, &mCamSpacePosX);
+        func_02012694(daIbl_SND_BREAK, (const Vector3 *)(&mCamSpacePosX));
         return;
     }
 
@@ -495,7 +493,7 @@ void daIbl_c::RollOffBehavior() {
            mPosY this function compiles to 0x1e8 bytes against the ROM's 0x1ec,
            and testing mHitWall first instead moves seven words. */
         Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, *(volatile int *)&mPosY, mPosZ);
-        func_02012694(daIbl_SND_BREAK, &mCamSpacePosX);
+        func_02012694(daIbl_SND_BREAK, (const Vector3 *)(&mCamSpacePosX));
         TriplePoofDust();
         MarkForDestruction();
         return;
@@ -509,7 +507,7 @@ void daIbl_c::RollOffBehavior() {
         mPrevAngleY = cstd::atan2(mSpeedX, mSpeedZ);
 
         if (mWithMeshClsn.JustHitGround()) {
-            func_02012694(daIbl_SND_LAND, &mCamSpacePosX);
+            func_02012694(daIbl_SND_LAND, (const Vector3 *)(&mCamSpacePosX));
             LandingDust(1);
 
             if (mVertSpeed < -0x8000)
@@ -559,7 +557,7 @@ void daIbl_c::FreeRollBehavior() {
         if (r != 2)
             return;
         Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, mPosY, mPosZ);
-        func_02012694(daIbl_SND_BREAK, &mCamSpacePosX);
+        func_02012694(daIbl_SND_BREAK, (const Vector3 *)(&mCamSpacePosX));
         return;
     }
 
@@ -586,7 +584,7 @@ void daIbl_c::FreeRollBehavior() {
         }
 
         if (mWithMeshClsn.JustHitGround()) {
-            func_02012694(daIbl_SND_LAND, &mCamSpacePosX);
+            func_02012694(daIbl_SND_LAND, (const Vector3 *)(&mCamSpacePosX));
             LandingDust(1);
         } else {
             mRollSoundHandle =
@@ -846,8 +844,7 @@ int daIbl_c::InitResources()
 }
 
 /* return new constructs the ball and its members. */
-extern "C" daIbl_c *daIbl_c_classInit(void)
-{
+daIbl_c *daIbl_c_classInit(void) {
     return new daIbl_c;
 }
 

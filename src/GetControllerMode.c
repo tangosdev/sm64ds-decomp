@@ -1,5 +1,5 @@
-extern unsigned char GetPlayerFlagByte(int a0, int a1);
+extern unsigned char _Z17GetPlayerFlagByteii(int a0, int a1);
 unsigned char GetControllerMode(int a0)
 {
-    return GetPlayerFlagByte(a0, 4) & 3;
+    return _Z17GetPlayerFlagByteii(a0, 4) & 3;
 }

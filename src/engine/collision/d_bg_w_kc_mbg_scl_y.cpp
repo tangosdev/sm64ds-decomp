@@ -22,15 +22,19 @@
 #include "math/MtxStack.h"
 
 extern "C" {
+
 /* Shared math worker.
    local extern: no header in include/ declares it. */
 void VEC_Normalize(const Vector3 *src, Vector3 *dst);
+}
 
 /* local extern: no header in include/ declares these three. */
-extern dBgCh_Lin data_020a0d0c; /* the scratch line, in collider space */
-extern Vector3 data_020a0d60;   /* == data_020a0d0c.lineEnd  (+0x54) */
-extern dBgPi data_020a0d1c;     /* == data_020a0d0c's dBgPi   (+0x10) */
-}
+extern dBgCh_Lin data_020a0d0c;
+/* the scratch line, in collider space */
+extern Vector3 data_020a0d60;
+/* == data_020a0d0c.lineEnd  (+0x54) */
+extern dBgPi data_020a0d1c;
+/* == data_020a0d0c's dBgPi   (+0x10) */
 
 dBgW_KcMbgSclY::dBgW_KcMbgSclY() {}
 

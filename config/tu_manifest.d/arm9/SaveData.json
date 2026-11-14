@@ -15,42 +15,42 @@
   ],
   "functions": [
     {
-      "symbol": "func_02013568",
+      "symbol": "_Z13func_02013568iii",
       "address": "0x02013568",
       "size": "0x18",
       "ordinal": 0,
       "legacy_source": "src/unnamed/arm9/0201/func_02013568.c"
     },
     {
-      "symbol": "func_02013580",
+      "symbol": "_Z13func_02013580ii",
       "address": "0x02013580",
       "size": "0x18",
       "ordinal": 1,
       "legacy_source": "src/unnamed/arm9/0201/func_02013568.c"
     },
     {
-      "symbol": "func_02013598",
+      "symbol": "_Z13func_02013598i",
       "address": "0x02013598",
       "size": "0x38",
       "ordinal": 2,
       "legacy_source": "src/unnamed/arm9/0201/func_02013598.c"
     },
     {
-      "symbol": "func_020135d0",
+      "symbol": "_Z13func_020135d0i",
       "address": "0x020135d0",
       "size": "0x4c",
       "ordinal": 3,
       "legacy_source": "src/unnamed/arm9/0201/func_020135d0.c"
     },
     {
-      "symbol": "UnlockMinigame",
+      "symbol": "_Z14UnlockMinigamei",
       "address": "0x0201361c",
       "size": "0x1c",
       "ordinal": 4,
       "legacy_source": "src/unnamed/arm9/0201/func_0201361c.c"
     },
     {
-      "symbol": "func_02013638",
+      "symbol": "_Z13func_02013638i",
       "address": "0x02013638",
       "size": "0x18",
       "ordinal": 5,
@@ -71,28 +71,28 @@
       "legacy_source": "src/_ZN8SaveData13GetCoinRecordEj.cpp"
     },
     {
-      "symbol": "NumStars",
+      "symbol": "_Z8NumStarsv",
       "address": "0x0201367c",
       "size": "0x60",
       "ordinal": 8,
       "legacy_source": "src/NumStars.c"
     },
     {
-      "symbol": "CollectStarInLevel",
+      "symbol": "_Z18CollectStarInLevelai",
       "address": "0x020136dc",
       "size": "0x1c",
       "ordinal": 9,
       "legacy_source": "src/CollectStarInLevel.c"
     },
     {
-      "symbol": "IsStarCollectedInLevel",
+      "symbol": "_Z22IsStarCollectedInLevelai",
       "address": "0x020136f8",
       "size": "0x1c",
       "ordinal": 10,
       "legacy_source": "src/IsStarCollectedInLevel.c"
     },
     {
-      "symbol": "CountStarsCollectedInLevelToDisplay",
+      "symbol": "_Z35CountStarsCollectedInLevelToDisplayi",
       "address": "0x02013714",
       "size": "0x54",
       "ordinal": 11,
@@ -106,63 +106,63 @@
       "legacy_source": "src/_ZN8SaveData26CountStarsCollectedInLevelEj.cpp"
     },
     {
-      "symbol": "CollectStar",
+      "symbol": "_Z11CollectStarii",
       "address": "0x020137a8",
       "size": "0x38",
       "ordinal": 13,
       "legacy_source": "src/CollectStar.c"
     },
     {
-      "symbol": "IsStarCollected",
+      "symbol": "_Z15IsStarCollectedii",
       "address": "0x020137e0",
       "size": "0x1c",
       "ordinal": 14,
       "legacy_source": "src/IsStarCollected.c"
     },
     {
-      "symbol": "OpenCannonInLevel",
+      "symbol": "_Z17OpenCannonInLevela",
       "address": "0x020137fc",
       "size": "0x1c",
       "ordinal": 15,
       "legacy_source": "src/OpenCannonInLevel.c"
     },
     {
-      "symbol": "IsCannonOpenInLevel",
+      "symbol": "_Z19IsCannonOpenInLevela",
       "address": "0x02013818",
       "size": "0x1c",
       "ordinal": 16,
       "legacy_source": "src/IsCannonOpenInLevel.c"
     },
     {
-      "symbol": "OpenCannon",
+      "symbol": "_Z10OpenCannoni",
       "address": "0x02013834",
       "size": "0x1c",
       "ordinal": 17,
       "legacy_source": "src/OpenCannon.c"
     },
     {
-      "symbol": "IsCannonOpen",
+      "symbol": "_Z12IsCannonOpeni",
       "address": "0x02013850",
       "size": "0x18",
       "ordinal": 18,
       "legacy_source": "src/IsCannonOpen.c"
     },
     {
-      "symbol": "CollectMinigameKey",
+      "symbol": "_Z18CollectMinigameKeyii",
       "address": "0x02013868",
       "size": "0x28",
       "ordinal": 19,
       "legacy_source": "src/unnamed/arm9/0201/func_02013868.c"
     },
     {
-      "symbol": "func_02013890",
+      "symbol": "_Z13func_02013890ii",
       "address": "0x02013890",
       "size": "0x4c",
       "ordinal": 20,
       "legacy_source": "src/unnamed/arm9/0201/func_02013890.c"
     },
     {
-      "symbol": "func_020138dc",
+      "symbol": "_Z13func_020138dcv",
       "address": "0x020138dc",
       "size": "0x34",
       "ordinal": 21,
@@ -183,7 +183,7 @@
       "legacy_source": "src/_ZN8SaveData19IsCharacterUnlockedEj.cpp"
     },
     {
-      "symbol": "func_02013944",
+      "symbol": "_Z13func_02013944v",
       "address": "0x02013944",
       "size": "0x40",
       "ordinal": 24,
@@ -197,28 +197,28 @@
       "legacy_source": "src/_ZN8SaveData22NumGlowingRabbitsFoundEv.cpp"
     },
     {
-      "symbol": "ClearCapHeldByToad",
+      "symbol": "_Z18ClearCapHeldByToadv",
       "address": "0x020139b8",
       "size": "0x48",
       "ordinal": 26,
       "legacy_source": "src/unnamed/arm9/0201/func_020139b8.c"
     },
     {
-      "symbol": "func_02013a00",
+      "symbol": "_Z13func_02013a00v",
       "address": "0x02013a00",
       "size": "0x44",
       "ordinal": 27,
       "legacy_source": "src/unnamed/arm9/0201/func_02013a00.c"
     },
     {
-      "symbol": "func_02013a44",
+      "symbol": "_Z13func_02013a44v",
       "address": "0x02013a44",
       "size": "0x44",
       "ordinal": 28,
       "legacy_source": "src/unnamed/arm9/0201/func_02013a44.c"
     },
     {
-      "symbol": "func_02013a88",
+      "symbol": "_Z13func_02013a88v",
       "address": "0x02013a88",
       "size": "0x4c",
       "ordinal": 29,
@@ -274,7 +274,7 @@
       "legacy_source": "src/_ZN8SaveData18SetDefaultValuesMgEP16MinigameSaveData.cpp"
     },
     {
-      "symbol": "func_02013c84",
+      "symbol": "_Z13func_02013c84hP12FileSaveDataiS0_",
       "address": "0x02013c84",
       "size": "0x50",
       "ordinal": 37,
@@ -316,7 +316,7 @@
       "legacy_source": "src/_ZN8SaveData16EraseAllSaveDataEv.cpp"
     },
     {
-      "symbol": "ClearSaveBlock",
+      "symbol": "_Z14ClearSaveBlockv",
       "address": "0x02013e64",
       "size": "0x1c",
       "ordinal": 43,

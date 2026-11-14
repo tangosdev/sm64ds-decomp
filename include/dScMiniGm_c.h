@@ -50,6 +50,7 @@ struct dScMiniGm_c : dScene_c {
     void DrawNewBadges();
     void DrawRecords();
     void LoadIconPalette(int);
+    void MiniGm_LoadGroupIcons();
 };
 
 #ifndef SM64DS_PLATFORM_PC

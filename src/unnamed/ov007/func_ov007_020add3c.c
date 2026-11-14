@@ -5,6 +5,8 @@
 
 extern int func_ov007_020ae558(Ov007ItemNode *self);
 extern void func_ov007_020ae834(Ov007Item *item);
+#define func_ov007_020ae2d0 _Z19func_ov007_020ae2d0P13Ov007ItemNode
+#define func_ov007_020ae454 _Z19func_ov007_020ae454P13Ov007ItemNode
 extern void func_ov007_020ae2d0(Ov007ItemNode *self);
 extern void func_ov007_020ae070(Ov007ItemNode *self);
 extern void func_ov007_020ae454(Ov007ItemNode *self);

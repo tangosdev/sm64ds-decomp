@@ -20,49 +20,49 @@
   ],
   "functions": [
     {
-      "symbol": "MI_StopDma",
+      "symbol": "_Z10MI_StopDmaj",
       "address": "0x02059f58",
       "size": "0x00000050",
       "legacy_source": "src/unnamed/arm9/0205/func_02059f58.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "MI_WaitDma",
+      "symbol": "_Z10MI_WaitDmaj",
       "address": "0x02059fa8",
       "size": "0x00000028",
       "legacy_source": "src/func_02059fa8.c",
       "ordinal": 1
     },
     {
-      "symbol": "MI_DmaCopy32Async",
+      "symbol": "_Z17MI_DmaCopy32AsyncjPKvPvjPFvS1_ES1_",
       "address": "0x02059fd0",
       "size": "0x00000094",
       "legacy_source": "src/func_02059fd0.c",
       "ordinal": 2
     },
     {
-      "symbol": "MI_DmaFill32Async",
+      "symbol": "_Z17MI_DmaFill32AsyncjPvjjPFvS_ES_",
       "address": "0x0205a064",
       "size": "0x000000a8",
       "legacy_source": "src/unnamed/arm9/0205/func_0205a064.c",
       "ordinal": 3
     },
     {
-      "symbol": "MI_DmaCopy16",
+      "symbol": "_Z12MI_DmaCopy16jPKvPvj",
       "address": "0x0205a10c",
       "size": "0x00000054",
       "legacy_source": "src/DMASyncHalfTransfer.c",
       "ordinal": 4
     },
     {
-      "symbol": "MI_DmaCopy32",
+      "symbol": "_Z12MI_DmaCopy32jPKvPvj",
       "address": "0x0205a160",
       "size": "0x00000054",
       "legacy_source": "src/DMASyncWordTransfer.c",
       "ordinal": 5
     },
     {
-      "symbol": "MI_DmaFill32",
+      "symbol": "_Z12MI_DmaFill32jPvjj",
       "address": "0x0205a1b4",
       "size": "0x00000068",
       "legacy_source": "src/DMASyncFillTransfer.c",

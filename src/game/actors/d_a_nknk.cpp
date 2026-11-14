@@ -84,47 +84,44 @@ struct NknkAnimationFileHandle : SharedFilePtr {
     ~NknkAnimationFileHandle();
 };
 
-extern "C" {
-extern int d_a_nknkNewHold(u32 uniqueID, u32 effectID, s32 x, s32 y, s32 z, const void *dir,
-                           void *callback);
+extern "C" int d_a_nknkNewHold(u32 uniqueID, u32 effectID, s32 x, s32 y, s32 z, const void *dir,
+                               void *callback);
 extern NknkAnimationFileHandle *data_ov062_0211cee8[];
 extern int data_ov062_0211cf0c[];
 /* The called scalar definition takes u16 startFrame. The unused dExtAnmModel_c
  * member declaration takes Fix12<int>/u32; its measured form grew this helper. */
 /* Reconstructed receiver/attacker/nullable collision interface; the original
  * source prototype is not uniquely recoverable from the register traffic. */
-extern void func_ov002_020aea30(void* self, void* attacker, dBgCh_Actr* collision);
-extern void d_a_nknkRunningSlidingDustAtHold(int a, int b, int c);
-extern int RandomIntInternal(int *seed);
-extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+extern "C" struct Aea30C;
+void func_ov002_020aea30(Aea30C *self, dActor_c *attacker, dBgCh_Actr *collision);
+extern "C" void d_a_nknkRunningSlidingDustAtHold(int a, int b, int c);
+extern "C" int RandomIntInternal(int *seed);
+short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 
 extern SharedFilePtr* data_ov062_0211ced8[2];
 extern SharedFilePtr* data_ov062_0211cee0[2];
 
 /* Parameter names keep this TU's @NNN. */
+extern "C" {
 typedef void BgchInitAt_(void *self, dActor_c *a, int r, int h, Vector3_16 *p, int q);
+}
 
-extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
+extern "C" void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 inline struct Matrix4x3 *inline_fn()
 {
   return &data_020a0e68;
 }
 
-extern int SurfaceInfo_TestFlag0x20(int *p); /* CLPS bit 0x20: water */
-}
+int SurfaceInfo_TestFlag0x20(int *p); /* CLPS bit 0x20: water */
 
-extern "C" {
 daNknk_c *daNknk_c_classInit_NOKONOKO()
 {
     return new daNknk_c;
 }
-}
 
-extern "C" {
 daNknk_c *daNknk_c_classInit_NOKONOKO_S()
 {
     return new daNknk_c;
-}
 }
 
 s32 daNknk_c::OnYoshiTryEat() {
@@ -814,7 +811,7 @@ void daNknk_c::func_ov062_02117c98()
             return;
         }
         mDeathState = 5;
-        func_ov002_020aea30(this, found, (dBgCh_Actr*)turnAround);
+        func_ov002_020aea30((Aea30C *)this, found, (dBgCh_Actr *)turnAround);
         return;
     }
     if (flags & 0x4000) {
@@ -841,7 +838,7 @@ void daNknk_c::func_ov062_02117c98()
                 mScaleY = 0x1000;
                 mScaleZ = 0x1000;
             }
-            func_ov002_020aea30(this, found, 0);
+            func_ov002_020aea30((Aea30C *)this, found, 0);
             return;
         }
     } else {
@@ -852,60 +849,68 @@ void daNknk_c::func_ov062_02117c98()
         } L;
         int isPlayer;
         isPlayer = (player->actorID == 0xbf /* PLAYER */) ? 1 : turnAround;
-        if (isPlayer != 0) {
-            if (player->mIsMetal != 0) {
-                if (mKoopaVariant == 0) {
-                    DropShell();
-                } else {
-                    mDeathState = 6;
-                    func_ov002_020aea30(this, found, 0);
-                    return;
-                }
+        if (isPlayer == 0)
+            goto tail;
+        if (player->mIsMetal != 0) {
+            if (mKoopaVariant == 0) {
+                DropShell();
+                goto tail;
+            }
+            mDeathState = 6;
+            func_ov002_020aea30((Aea30C *)this, found, 0);
+            return;
+        }
+        {
+            s32 *s = &player->mPosX;
+            L.sv.x = s[0];
+            L.sv.y = s[1];
+            L.sv.z = s[2];
+        }
+        if (player->IsOnShell()) {
+            mDeathState = 5;
+            turnAround = 1;
+            goto tail;
+        }
+        if (JumpedOnByPlayer(mdCc_c, *player)) {
+            if (mKoopaVariant == 0) {
+                DropShell();
             } else {
-                {
-                    s32 *s = &player->mPosX;
-                    L.sv.x = s[0];
-                    L.sv.y = s[1];
-                    L.sv.z = s[2];
-                }
-                if (player->IsOnShell()) {
-                    mDeathState = 5;
-                    turnAround = 1;
-                } else if (JumpedOnByPlayer(mdCc_c, *player)) {
-                    if (mKoopaVariant == 0) {
-                        DropShell();
-                    } else {
-                        mDeathState = 1;
-                        func_ov002_020aea30(this, found, 0);
-                        mScaleX = 0x1000;
-                        mScaleY = 0x1000;
-                        mScaleZ = 0x1000;
-                        func_0201267c(0x113, &mCamSpacePos);
-                    }
-                    ((daPly_c *)found)->Bounce(0x28000);
-                    return;
-                } else if (player->mIsVanish == 0 && (mdCc_c.hitFlags & 0x400000) != 0 &&
-                           mState != 0) {
-                    s32 pw;
-                    L.hv.x = mPosX;
-                    L.hv.y = mPosY;
-                    L.hv.z = mPosZ;
-                    pw = mHorzSpeed;
-                    if (pw < 0xf000)
-                        pw = 0xf000;
-                    player->Hurt(*(Vector3 *)&L.hv, 0, pw, 1, 0, 1);
-                    BounceOffHurtPlayer();
-                    if (mKoopaVariant == 2) {
-                        PoofDust();
-                        SpawnBlueCoin();
-                        KillAndTrackInDeathTable();
-                    }
-                }
+                mDeathState = 1;
+                func_ov002_020aea30((Aea30C *)this, found, 0);
+                mScaleX = 0x1000;
+                mScaleY = 0x1000;
+                mScaleZ = 0x1000;
+                func_0201267c(0x113, &mCamSpacePos);
+            }
+            ((daPly_c *)found)->Bounce(0x28000);
+            return;
+        }
+        if (player->mIsVanish != 0)
+            goto tail;
+        if ((mdCc_c.hitFlags & 0x400000) == 0)
+            goto tail;
+        if (mState == 0)
+            goto tail;
+        {
+            s32 pw;
+            L.hv.x = mPosX;
+            L.hv.y = mPosY;
+            L.hv.z = mPosZ;
+            pw = mHorzSpeed;
+            if (pw < 0xf000)
+                pw = 0xf000;
+            player->Hurt(*(Vector3 *)&L.hv, 0, pw, 1, 0, 1);
+            BounceOffHurtPlayer();
+            if (mKoopaVariant == 2) {
+                PoofDust();
+                SpawnBlueCoin();
+                KillAndTrackInDeathTable();
             }
         }
     }
 
-    func_ov002_020aea30(this, found, &mWithMeshClsn);
+tail:
+    func_ov002_020aea30((Aea30C *)this, found, &mWithMeshClsn);
     if (turnAround)
         mAngleY = (u16)(mPrevAngleY + 0x8000);
 }

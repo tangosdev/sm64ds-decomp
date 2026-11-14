@@ -43,19 +43,19 @@ extern SharedFilePtr *data_ov031_02111424[];
 
 /* Four C-linkage factories: one `new`, four names. The EAD classInit spelling
  * would collide, so each profile keeps its HS_* suffix. */
-extern "C" daObjHsBillboard_c *daObjHsBillboard_c_classInit_HS_MOON() {
+daObjHsBillboard_c *daObjHsBillboard_c_classInit_HS_MOON() {
     return new daObjHsBillboard_c();
 }
 
-extern "C" daObjHsBillboard_c *daObjHsBillboard_c_classInit_HS_STAR() {
+daObjHsBillboard_c *daObjHsBillboard_c_classInit_HS_STAR() {
     return new daObjHsBillboard_c();
 }
 
-extern "C" daObjHsBillboard_c *daObjHsBillboard_c_classInit_HS_Y_STAR() {
+daObjHsBillboard_c *daObjHsBillboard_c_classInit_HS_Y_STAR() {
     return new daObjHsBillboard_c();
 }
 
-extern "C" daObjHsBillboard_c *daObjHsBillboard_c_classInit_HS_B_STAR() {
+daObjHsBillboard_c *daObjHsBillboard_c_classInit_HS_B_STAR() {
     return new daObjHsBillboard_c();
 }
 

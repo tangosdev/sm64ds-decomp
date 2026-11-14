@@ -123,23 +123,40 @@ enum {
 enum { CUTSCENE_FLAG = 0x4000000 };
 
 extern "C" {
+
 /* dExtAnmModel_c::SetAnim, called with a scalar speed. */
 extern char data_02082714[];
 extern int func_0203d024(struct Vector3*, struct Vector3*);
+}
+
 extern void DeathTable_ClearBit(int);
 extern void FUN_0202a130(void);
+
 extern void UnloadSilverStarAndNumber(void);
+extern "C" {
 extern StarAnimationFileHandle data_ov002_02110934;
 extern unsigned int gNextActorUpdateMask;
 extern int data_ov002_0210da28[];
 extern signed char gNumStageStars[];
+}
+
 extern signed char NumRedCoins(void);
+extern "C" {
+
 extern unsigned char gGameMode;
-extern void func_02035860(void* o, void* src);
+}
+
+extern void func_02035860(dBgCh_Actr *o, const Vector3 *src);
+extern "C" {
+
 extern dCamera_c *gCamera;
+}
+
 extern unsigned char IsAreaShowing(int idx);
-extern void func_02012694(unsigned int a, void *p);
+extern void func_02012694(unsigned int a, const Vector3 *p);
+
 extern void func_ov002_020e8244(void *out, daStar_c *b);
+extern "C" {
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void* mF, s16 angY);
 /* local extern: math/MtxStack.h takes Matrix4x3 pointers, and
@@ -150,34 +167,56 @@ extern int *Vec3_LslInPlace(void *v, int sh);
 extern Matrix4x3 data_020a0e68;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void Matrix4x3_FromRotationY(void* m, int angle);
-extern int SurfaceInfo_TestFlag0x20(void* p);
+}
+
+extern int SurfaceInfo_TestFlag0x20(int *p);
+extern "C" {
+
 extern int data_0209f32c;
 extern signed char gCurrentSublevel;
+}
+
 extern void SetStarMarker(int i, dActor_c *actor, int v2);
 extern int IsStarCollectedInCurLevel(int starID);
+extern "C" {
+
 extern dActor_c *STAR_MARKERS[12];
 extern u8 data_0209f208;
 extern unsigned char gCurrentEntranceId;
+}
+
 void GiveVsStars(int idx, int delta);
 void CollectStarInCurLevel(int i);
 int SublevelToLevel(int i);
 s16 NumCoins(void);
+extern "C" {
+
 extern u8 gCollectedStarId;
 extern u8 gNewStarCollected;
 extern s16 gNumCoins[];
 extern u8 data_0209d684;
+}
+
 extern s16 GetAngleToCamera(int i);
+extern "C" {
+
 extern u8 *data_0209f344;
 }
+
 /* local extern: the header KuppaScript.h would renumber this TU's compiler temps (@NNN pins in its manifest) */
 namespace KuppaScript {
 void End(void);
 }
 extern "C" {
+
 extern u8 data_0209d660;
 extern s8 gNumStageStars[];
 extern signed char gNumStageStars[];
+}
+
 extern int NumVsStarsObtained(void);
+extern "C" {
+
 extern StarModelFilePtr data_ov002_0211092c;
 extern StarModelFilePtr data_ov002_0211093c;
 extern StarAnimationFileHandle data_ov002_02110924;
@@ -197,11 +236,13 @@ extern s32 data_02092138;
 extern StarModelFilePtr data_ov002_0211094c;
 extern StarModelFilePtr data_ov002_02110954;
 extern StarModelFilePtr data_ov002_0211095c;
+}
+
 extern void LoadSilverStarAndNumber(void);
+
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, s32 a, s32 b, void *p1, void *p2);
 extern s32 IsStarCollected(s32 level, s32 idx);
-}
 
 /* The two destructor bodies are defined first so their D1/D0 groups lead the
  * object in ROM order. Under defer_codegen off each out-of-line destructor
@@ -807,7 +848,7 @@ void daStar_c::StateLaunch() {
     mFlags |= CUTSCENE_FLAG;
     gNextActorUpdateMask |= CUTSCENE_FLAG;
     mCamSeq = 0;
-    func_02012694(0x57, &mCamSpacePosX);
+    func_02012694(0x57, (const Vector3 *)&mCamSpacePosX);
     mVertSpeed = 0x20000;
     SetDefaultGravity();
     other = dActor_c::FindWithID(mMarkerID);
@@ -1107,6 +1148,7 @@ int daStar_c::PickCollectSoundID() {
  * otherwise, in a VS match, it takes one star off the player's VS count
  * (GiveVsStars -1, when the count is not zero) and bounces away. */
 extern "C" {
+
 extern int func_ov002_020ca0f4(void *player);
 
 
@@ -1978,7 +2020,7 @@ void daStar_c::ReturnToHome() {
         mPosX = mHomePosX;
         mPosY = mHomePosY;
         mPosZ = mHomePosZ;
-        func_02035860(&mWithMeshClsn, &mPosX);
+        func_02035860((dBgCh_Actr *)(void *)&mWithMeshClsn, (const Vector3 *)&mPosX);
         mState = mHomeState;
         StopMotion();
         mdCc_c.flags |= 1;
@@ -2006,7 +2048,7 @@ void daStar_c::ReturnToHome() {
     mPosX = mHomePosX;
     mPosY = mHomePosY;
     mPosZ = mHomePosZ;
-    func_02035860(&mWithMeshClsn, &mPosX);
+    func_02035860((dBgCh_Actr *)(void *)&mWithMeshClsn, (const Vector3 *)&mPosX);
     mState = mHomeState;
     mVertSpeed = 0x20000;
     SetDefaultGravity();
@@ -2034,7 +2076,7 @@ void daStar_c::OnBounceLand() {
         mBits.noPickup = 0;
         mStateTimer = 0;
     }
-    func_02012694(0x55, &mCamSpacePosX);
+    func_02012694(0x55, (const Vector3 *)&mCamSpacePosX);
     if (mBits.water == WATER_IN) {
         mHorzSpeed = 0xc000;
         mVertSpeed = 0xe000;
@@ -2121,7 +2163,7 @@ void daStar_c::UpdateWater() {
         v.z = tz;
         rc.SetObjAndPos(v, this);
         if (rc.DetectClsn() != 0) {
-            if (SurfaceInfo_TestFlag0x20(&rc.surface) != 0) {
+            if (SurfaceInfo_TestFlag0x20((int *)&rc.surface) != 0) {
                 mWaterHeight = rc.clsnY;
                 data_0209f32c = mWaterHeight;
                 if (mWaterHeight >= mPosY + 0x3c000) {
@@ -2262,7 +2304,7 @@ void daStar_c::DrawShadow() {
  * the cache each frame). Otherwise it multiplies the first bone's matrix with
  * a translation and Y rotation of the star, scales the result about the star's
  * position (<< 3) and raises Y by 13 times a word of the bone data at +0xc. */
-extern "C" {  /* C linkage: the ROM symbol is a bare name, not a mangled member */
+
 void func_ov002_020e8244(void *out, daStar_c *b)
 {
     Mtx43 local;
@@ -2293,7 +2335,6 @@ void func_ov002_020e8244(void *out, daStar_c *b)
     ((int *)out)[0] = b->mCenterX;
     ((int *)out)[1] = b->mCenterY;
     ((int *)out)[2] = b->mCenterZ;
-}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2458,7 +2499,7 @@ int daStar_c::RearmSoundObj6() {
  * hides it, clears its touch volume and bursts effects 0x12c, 0x12d and 0x12e. */
 void daStarBase_c::Collect()
 {
-    func_02012694(0x53, &mCamSpacePosX);
+    func_02012694(0x53, (const Vector3 *)&mCamSpacePosX);
     {
         mBits.hold = 1;
         mBits.visible = 0;
@@ -2725,7 +2766,7 @@ void daStar_c::RelinkMarker() {
     mPosX = s[0];
     mPosY = s[1];
     mPosZ = s[2];
-    func_02035860(&mWithMeshClsn, &mPosX);
+    func_02035860((dBgCh_Actr *)(void *)&mWithMeshClsn, (const Vector3 *)&mPosX);
     if (a->mState == STATE_LAND) {
         mHomeState = a->mLinkedStarState;
         mState = mHomeState;
@@ -2835,24 +2876,22 @@ void daStarBase_c::LinkSilverStarAndStarMarker(char* b) {
 /* ROM ordinal 12 -- LoadSilverStarAndNumber, 0x020e71a8, size 0x2c */
 /* -------------------------------------------------------------------------- */
 /* Loads the silver star and score-number model files. */
-extern "C" {  /* C linkage: the ROM symbol is a bare name, not a mangled member */
+
 void LoadSilverStarAndNumber(void)
 {
     dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov002_0210da28);
     dExtSimpleModel_c::LoadFile(data_ov002_02110954);
-}
 }
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 11 -- UnloadSilverStarAndNumber, 0x020e717c, size 0x2c */
 /* -------------------------------------------------------------------------- */
 /* Releases the silver star and score-number model files. */
-extern "C" {  /* C linkage: the ROM symbol is a bare name, not a mangled member */
+
 void UnloadSilverStarAndNumber(void)
 {
     ((SharedFilePtr *)data_ov002_0210da28)->Release();
     data_ov002_02110954.Release();
-}
 }
 
 /* -------------------------------------------------------------------------- */

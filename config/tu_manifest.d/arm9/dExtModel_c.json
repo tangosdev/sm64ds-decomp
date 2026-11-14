@@ -675,14 +675,14 @@
       "ordinal": 47
     },
     {
-      "symbol": "func_0201628c",
+      "symbol": "_Z13func_0201628cii",
       "address": "0x0201628c",
       "size": "0x00000018",
       "legacy_source": "src/engine/model/d_ext_anm2_model.cpp",
       "ordinal": 48
     },
     {
-      "symbol": "func_020162a4",
+      "symbol": "_Z13func_020162a4ii",
       "address": "0x020162a4",
       "size": "0x00000020",
       "legacy_source": "src/engine/model/d_ext_anm2_model.cpp",
@@ -808,7 +808,7 @@
       "ordinal": 66
     },
     {
-      "symbol": "func_020167a4",
+      "symbol": "_Z13func_020167a4P14dExtAnmModel_c",
       "address": "0x020167a4",
       "size": "0x00000020",
       "legacy_source": "src/engine/model/d_ext_anm_model.cpp",
@@ -878,28 +878,28 @@
       "ordinal": 76
     },
     {
-      "symbol": "func_020169d8",
+      "symbol": "_Z13func_020169d8Pcij",
       "address": "0x020169d8",
       "size": "0x0000001c",
       "legacy_source": "src/engine/model/d_ext_simple_model.cpp",
       "ordinal": 77
     },
     {
-      "symbol": "func_020169f4",
+      "symbol": "_Z13func_020169f4Pci",
       "address": "0x020169f4",
       "size": "0x00000010",
       "legacy_source": "src/engine/model/d_ext_simple_model.cpp",
       "ordinal": 78
     },
     {
-      "symbol": "func_02016a04",
+      "symbol": "_Z13func_02016a04Pci",
       "address": "0x02016a04",
       "size": "0x00000010",
       "legacy_source": "src/engine/model/d_ext_simple_model.cpp",
       "ordinal": 79
     },
     {
-      "symbol": "func_02016a14",
+      "symbol": "_Z13func_02016a14Pci",
       "address": "0x02016a14",
       "size": "0x00000010",
       "legacy_source": "src/engine/model/d_ext_simple_model.cpp",
@@ -934,7 +934,7 @@
       "ordinal": 84
     },
     {
-      "symbol": "func_02016aac",
+      "symbol": "_Z13func_02016aacPcii",
       "address": "0x02016aac",
       "size": "0x00000010",
       "legacy_source": "src/engine/model/d_ext_simple_model.cpp",
@@ -1025,14 +1025,14 @@
       "ordinal": 97
     },
     {
-      "symbol": "CleanCommonModelDataArr",
+      "symbol": "_Z23CleanCommonModelDataArrv",
       "address": "0x02016df8",
       "size": "0x00000078",
       "legacy_source": "src/engine/model/d_ext_simple_model.cpp",
       "ordinal": 98
     },
     {
-      "symbol": "GetCommonModelComponents",
+      "symbol": "_Z24GetCommonModelComponentsP8BMD_File",
       "address": "0x02016e70",
       "size": "0x00000098",
       "legacy_source": "src/engine/model/d_ext_simple_model.cpp",
@@ -1067,7 +1067,7 @@
       "ordinal": 103
     },
     {
-      "symbol": "TrimModelFile",
+      "symbol": "_Z13TrimModelFilePv",
       "address": "0x02017060",
       "size": "0x00000058",
       "legacy_source": "src/engine/model/d_ext_simple_model.cpp",

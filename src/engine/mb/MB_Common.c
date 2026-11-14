@@ -20,7 +20,7 @@ int MBi_BlockHeaderEnd(int body_len, u16 pollbmp, u32 *sendbuf) {
     DC_FlushRange(sendbuf, MY_ROUND(body_len, 32));
     DC_WaitWriteBufferEmpty();
 
-    return MBi_SendMP(sendbuf, body_len, pollbmp);
+    return _Z10MBi_SendMPPKvii(sendbuf, body_len, pollbmp);
 }
 
 u16 MBi_calc_cksum(const u16 *buf, int length) {

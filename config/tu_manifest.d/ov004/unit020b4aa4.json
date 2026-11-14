@@ -38,280 +38,280 @@
   ],
   "functions": [
     {
-      "symbol": "Coin_FlyToCounter",
+      "symbol": "_Z17Coin_FlyToCounterP6Sprite",
       "address": "0x020b4aa4",
       "size": "0x000000e0",
       "legacy_source": "src/func_ov004_020b4aa4.c",
       "ordinal": 0
     },
     {
-      "symbol": "Coin_PlacePayout",
+      "symbol": "_Z16Coin_PlacePayoutP6SpriteP5Vec2i",
       "address": "0x020b4b84",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov004_020b4b84.c",
       "ordinal": 1
     },
     {
-      "symbol": "Coin_MoveThenRefund",
+      "symbol": "_Z19Coin_MoveThenRefundP6Sprite",
       "address": "0x020b4c30",
       "size": "0x00000094",
       "legacy_source": "src/func_ov004_020b4c30.c",
       "ordinal": 2
     },
     {
-      "symbol": "Coin_Return",
+      "symbol": "_Z11Coin_ReturnP6Sprite",
       "address": "0x020b4cc4",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov004_020b4cc4.c",
       "ordinal": 3
     },
     {
-      "symbol": "Coin_RiseSpent",
+      "symbol": "_Z14Coin_RiseSpentP6Sprite",
       "address": "0x020b4d50",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov004_020b4d50.c",
       "ordinal": 4
     },
     {
-      "symbol": "Coin_MoveThenRiseSpent",
+      "symbol": "_Z22Coin_MoveThenRiseSpentP6Sprite",
       "address": "0x020b4dfc",
       "size": "0x0000007c",
       "legacy_source": "src/func_ov004_020b4dfc.c",
       "ordinal": 5
     },
     {
-      "symbol": "Coin_Spend",
+      "symbol": "_Z10Coin_SpendP6Sprite",
       "address": "0x020b4e78",
       "size": "0x000000cc",
       "legacy_source": "src/func_ov004_020b4e78.c",
       "ordinal": 6
     },
     {
-      "symbol": "Coin_Rise",
+      "symbol": "_Z9Coin_RiseP6Sprite",
       "address": "0x020b4f44",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov004_020b4f44.c",
       "ordinal": 7
     },
     {
-      "symbol": "Coin_MoveThenRise",
+      "symbol": "_Z17Coin_MoveThenRiseP6Sprite",
       "address": "0x020b4ff0",
       "size": "0x0000007c",
       "legacy_source": "src/func_ov004_020b4ff0.c",
       "ordinal": 8
     },
     {
-      "symbol": "Coin_SendOff",
+      "symbol": "_Z12Coin_SendOffP6Sprite",
       "address": "0x020b506c",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov004_020b506c.c",
       "ordinal": 9
     },
     {
-      "symbol": "Coin_Launch",
+      "symbol": "_Z11Coin_LaunchP6SpriteP5Vec2i",
       "address": "0x020b5108",
       "size": "0x000000dc",
       "legacy_source": "src/func_ov004_020b5108.c",
       "ordinal": 10
     },
     {
-      "symbol": "Coin_Hide",
+      "symbol": "_Z9Coin_HideP6Sprite",
       "address": "0x020b51e4",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov004_020b51e4.c",
       "ordinal": 11
     },
     {
-      "symbol": "Coin_MoveThenBank",
+      "symbol": "_Z17Coin_MoveThenBankP6Sprite",
       "address": "0x020b51f0",
       "size": "0x00000098",
       "legacy_source": "src/func_ov004_020b51f0.c",
       "ordinal": 12
     },
     {
-      "symbol": "Coin_Move",
+      "symbol": "_Z9Coin_MoveP6Sprite",
       "address": "0x020b5288",
       "size": "0x00000030",
       "legacy_source": "src/func_ov004_020b5288.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "Coin_Draw",
+      "symbol": "_Z9Coin_DrawP6Sprite",
       "address": "0x020b52b8",
       "size": "0x00000044",
       "legacy_source": "src/func_ov004_020b52b8.c",
       "ordinal": 14
     },
     {
-      "symbol": "Coin_Update",
+      "symbol": "_Z11Coin_UpdateP6Sprite",
       "address": "0x020b52fc",
       "size": "0x00000038",
       "legacy_source": "src/func_ov004_020b52fc.cpp",
       "ordinal": 15
     },
     {
-      "symbol": "Coin_Reset",
+      "symbol": "_Z10Coin_ResetP6Sprite",
       "address": "0x020b5334",
       "size": "0x00000034",
       "legacy_source": "src/func_ov004_020b5334.c",
       "ordinal": 16
     },
     {
-      "symbol": "MgCoins_StepPayoutFinish",
+      "symbol": "_Z24MgCoins_StepPayoutFinishv",
       "address": "0x020b5368",
       "size": "0x00000088",
       "legacy_source": "src/func_ov004_020b5368.c",
       "ordinal": 17
     },
     {
-      "symbol": "MgCoins_StepPayoutNext",
+      "symbol": "_Z22MgCoins_StepPayoutNextv",
       "address": "0x020b53f0",
       "size": "0x0000017c",
       "legacy_source": "src/func_ov004_020b53f0.c",
       "ordinal": 18
     },
     {
-      "symbol": "MgCoins_StepPayoutLayout",
+      "symbol": "_Z24MgCoins_StepPayoutLayoutv",
       "address": "0x020b556c",
       "size": "0x0000015c",
       "legacy_source": "src/func_ov004_020b556c.cpp",
       "ordinal": 19
     },
     {
-      "symbol": "MgCoins_StartPayout",
+      "symbol": "_Z19MgCoins_StartPayouti",
       "address": "0x020b56c8",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov004_020b56c8.c",
       "ordinal": 20
     },
     {
-      "symbol": "MgCoins_StepRefund",
+      "symbol": "_Z18MgCoins_StepRefundv",
       "address": "0x020b5768",
       "size": "0x00000104",
       "legacy_source": "src/func_ov004_020b5768.cpp",
       "ordinal": 21
     },
     {
-      "symbol": "MgCoins_StepSpendHold",
+      "symbol": "_Z21MgCoins_StepSpendHoldv",
       "address": "0x020b586c",
       "size": "0x00000058",
       "legacy_source": "src/func_ov004_020b586c.cpp",
       "ordinal": 22
     },
     {
-      "symbol": "MgCoins_StepSpend",
+      "symbol": "_Z17MgCoins_StepSpendv",
       "address": "0x020b58c4",
       "size": "0x00000190",
       "legacy_source": "src/func_ov004_020b58c4.cpp",
       "ordinal": 23
     },
     {
-      "symbol": "MgCoins_StepHoldThenFinish",
+      "symbol": "_Z26MgCoins_StepHoldThenFinishv",
       "address": "0x020b5a54",
       "size": "0x00000058",
       "legacy_source": "src/func_ov004_020b5a54.cpp",
       "ordinal": 24
     },
     {
-      "symbol": "MgCoins_StepLoseOneMore",
+      "symbol": "_Z23MgCoins_StepLoseOneMorev",
       "address": "0x020b5aac",
       "size": "0x0000016c",
       "legacy_source": "src/func_ov004_020b5aac.cpp",
       "ordinal": 25
     },
     {
-      "symbol": "MgCoins_StepLose",
+      "symbol": "_Z16MgCoins_StepLosev",
       "address": "0x020b5c18",
       "size": "0x0000015c",
       "legacy_source": "src/func_ov004_020b5c18.cpp",
       "ordinal": 26
     },
     {
-      "symbol": "MgCoins_StartRefund",
+      "symbol": "_Z19MgCoins_StartRefundv",
       "address": "0x020b5d74",
       "size": "0x00000060",
       "legacy_source": "src/func_ov004_020b5d74.c",
       "ordinal": 27
     },
     {
-      "symbol": "MgCoins_StartLoseOneMore",
+      "symbol": "_Z24MgCoins_StartLoseOneMorev",
       "address": "0x020b5dd4",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov004_020b5dd4.c",
       "ordinal": 28
     },
     {
-      "symbol": "MgCoins_StartSpend",
+      "symbol": "_Z18MgCoins_StartSpendi",
       "address": "0x020b5e40",
       "size": "0x00000090",
       "legacy_source": "src/func_ov004_020b5e40.c",
       "ordinal": 29
     },
     {
-      "symbol": "MgCoins_StartLose",
+      "symbol": "_Z17MgCoins_StartLosev",
       "address": "0x020b5ed0",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov004_020b5ed0.c",
       "ordinal": 30
     },
     {
-      "symbol": "MgCoins_StepLaunchQuick",
+      "symbol": "_Z23MgCoins_StepLaunchQuickv",
       "address": "0x020b5f6c",
       "size": "0x000001c0",
       "legacy_source": "src/func_ov004_020b5f6c.cpp",
       "ordinal": 31
     },
     {
-      "symbol": "MgCoins_StepLaunch",
+      "symbol": "_Z18MgCoins_StepLaunchv",
       "address": "0x020b612c",
       "size": "0x00000108",
       "legacy_source": "src/func_ov004_020b612c.c",
       "ordinal": 32
     },
     {
-      "symbol": "MgCoins_AddBetCoin",
+      "symbol": "_Z18MgCoins_AddBetCoinv",
       "address": "0x020b6234",
       "size": "0x000000f0",
       "legacy_source": "src/func_ov004_020b6234.cpp",
       "ordinal": 33
     },
     {
-      "symbol": "MgCoins_RaiseBet",
+      "symbol": "_Z16MgCoins_RaiseBeti",
       "address": "0x020b6324",
       "size": "0x0000007c",
       "legacy_source": "src/func_ov004_020b6324.c",
       "ordinal": 34
     },
     {
-      "symbol": "MgCoins_PlaceBet",
+      "symbol": "_Z16MgCoins_PlaceBeti",
       "address": "0x020b63a0",
       "size": "0x00000090",
       "legacy_source": "src/func_ov004_020b63a0.c",
       "ordinal": 35
     },
     {
-      "symbol": "MgCoins_Draw",
+      "symbol": "_Z12MgCoins_Drawv",
       "address": "0x020b6430",
       "size": "0x0000010c",
       "legacy_source": "src/func_ov004_020b6430.c",
       "ordinal": 36
     },
     {
-      "symbol": "MgCoins_DrawDelta",
+      "symbol": "_Z17MgCoins_DrawDeltai",
       "address": "0x020b653c",
       "size": "0x000000a8",
       "legacy_source": "src/func_ov004_020b653c.c",
       "ordinal": 37
     },
     {
-      "symbol": "MgCoins_Update",
+      "symbol": "_Z14MgCoins_Updatev",
       "address": "0x020b65e4",
       "size": "0x000000f0",
       "legacy_source": "src/func_ov004_020b65e4.c",
       "ordinal": 38
     },
     {
-      "symbol": "MgCoins_Reset",
+      "symbol": "_Z13MgCoins_Resetv",
       "address": "0x020b66d4",
       "size": "0x000000e8",
       "legacy_source": "src/func_ov004_020b66d4.c",
@@ -616,12 +616,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@198",
+      "from": "@178",
       "to": "data_ov004_020bfa28",
-      "evidence": "compiler temp renumbered when unit020b4aa4.cpp uses shared Vec2i from ov006_ec4dc_obj.h and drops its local __aeabi_idiv declaration (two named parameters); candidate ELF emits @200 for the 12-byte destructor-registration node. It is renamed to the configured name at 0x020bfa28. The initializer relocation and target are checked by the TU link proof. Re-keyed from @200 to @198 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp renumbered when unit020b4aa4.cpp uses shared Vec2i from ov006_ec4dc_obj.h and drops its local __aeabi_idiv declaration (two named parameters); candidate ELF emits @200 for the 12-byte destructor-registration node. It is renamed to the configured name at 0x020bfa28. The initializer relocation and target are checked by the TU link proof. Re-keyed from @200 to @198 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @198 to @178 when fakematch extern C was dropped (measured)."
     },
     {
-      "from": "__arraydtor$197",
+      "from": "__arraydtor$177",
       "to": "__arraydtor$192",
       "owned_function": {
         "module": "ov004",
@@ -631,7 +631,7 @@
         "raw_type": "STT_FUNC",
         "raw_binding": "STB_LOCAL"
       },
-      "evidence": "the sMgCoins array destructor thunk; after using shared Vec2i from ov006_ec4dc_obj.h and dropping its local __aeabi_idiv declaration, the candidate ELF emits it as __arraydtor$199. It is renamed onto the configured __arraydtor$192 at 0x020b67bc; TU verification checks its relocation destination. Re-keyed from __arraydtor$199 to __arraydtor$197 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "the sMgCoins array destructor thunk; after using shared Vec2i from ov006_ec4dc_obj.h and dropping its local __aeabi_idiv declaration, the candidate ELF emits it as __arraydtor$199. It is renamed onto the configured __arraydtor$192 at 0x020b67bc; TU verification checks its relocation destination. Re-keyed from __arraydtor$199 to __arraydtor$197 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from __arraydtor$197 to __arraydtor$177 when fakematch extern C was dropped (measured)."
     }
   ]
 }

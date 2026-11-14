@@ -87,7 +87,7 @@ Vector3 data_ov009_02113de0[7] = {
 /* -------------------------------------------------------------------------- */
 /* Reconstructed source-style name; exact original SM64DS spelling is not
  * preserved. Historical alias: CastleWater_Spawn. */
-extern "C" daObjMcWater_c *daObjMcWater_c_classInit() {
+daObjMcWater_c *daObjMcWater_c_classInit() {
     return new daObjMcWater_c();
 }
 

@@ -34,6 +34,7 @@
 #include "private/particle_resource_header.h"
 
 extern "C" {
+
 /* local extern: decl_common.h, a C catch-all, declares func_0204d958,
  * func_0204d9a0 and func_0204ae2c; no real header declares any of these. */
 void *func_0204d958(void *list);
@@ -80,8 +81,6 @@ struct SystemState {
 static inline SystemState &StateOf(Particle::System *system) {
     return *(SystemState *)&system->callbackFlags;
 }
-
-extern "C" {
 
 char *func_0204a4c8(char *(*alloc)(int), int numSystems, int numParticles, int minPolygonID,
                     unsigned short maxPolygonID) {
@@ -305,7 +304,6 @@ void func_02049ee8(Particle::Manager *manager, Matrix4x3 *matrix) {
         system = system->next;
     } while (system != 0);
 }
-}
 
 /* Particle::Manager::AddSystem -- spawn a System, arm9
  * 0x02049e0c..0x02049ee8. func_0204d958 pops one off mFreeSystems,
@@ -347,8 +345,6 @@ System *Manager::AddSystem(int definitionID, Vector3 &position) {
 
 }
 
-extern "C" {
-
 void func_02049d78(Particle::Manager *manager, Particle::System *system) {
     void *particle;
     particle = func_0204d958(&system->particles);
@@ -367,5 +363,4 @@ void func_02049d78(Particle::Manager *manager, Particle::System *system) {
 
 void func_02049d60(Particle::Manager *manager, Particle::System *system) {
     func_0204a5bc(system, &manager->mFreeParticles);
-}
 }

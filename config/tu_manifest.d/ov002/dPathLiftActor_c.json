@@ -183,7 +183,7 @@
       "ordinal": 20
     },
     {
-      "symbol": "func_ov002_020eff90",
+      "symbol": "_Z19func_ov002_020eff90P4dBgWP8dActor_cS2_",
       "address": "0x020eff90",
       "size": "0x00000028",
       "legacy_source": "src/func_ov002_020eff90.cpp",

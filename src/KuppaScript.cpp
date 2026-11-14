@@ -80,18 +80,20 @@ enum KuppaScriptCommand {
     KS_DEMO_FIRST = 0x12          /* 0x12 and up: a daDemo_c, by param1 */
 };
 
-extern "C" {
 /* The camera's command dispatcher. */
 int RunCameraCommand(dCamera_c *camera, u8 *command, int first, int last);
 void func_0201f32c(int messageID);
 void LoadLevelNoReturn(int levelID, u32 entrance, u32 arg2, u32 arg3);
 void func_02011c8c();
+extern "C" {
+
 int GetSoundMode();
 void SetSoundMode(int mode);
+}
+
 void CollectStarInLevel(s8 levelID, s32 starID);
 void DisableSoundPlayersForCredits();
 u8 GetStarCameraSetting(s32 star);
-}
 
 /* Script state. */
 extern u8 *gRunningKuppaScript;

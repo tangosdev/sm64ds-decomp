@@ -2,10 +2,12 @@
 #include "Message.h"
 #include "MessageBank.h"
 
-extern "C" {
 extern int GetOwnerLanguage(void);
+extern "C" {
+
 extern void *LoadFile(int id);
 }
+
 extern void *gMessageBankBase;
 
 /* Loads the message bank for the console's language and splits it with

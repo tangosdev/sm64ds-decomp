@@ -25,11 +25,8 @@
  * the reverse of source order, so the highest-address function is written
  * first here and the functions come out in ROM order.
  *
- * Text only: the table stays ROM-owned and is reached by extern. The
- * functions keep their ROM names under C linkage.
+ * Text only: the table stays ROM-owned and is reached by extern.
  */
-
-extern "C" {
 
 extern int sInputLocks[10];
 
@@ -44,5 +41,3 @@ void func_ov007_020c1d8c(int index) {
 void func_ov007_020c1d78(int index) {
     sInputLocks[index] = 0;
 }
-
-} // extern "C"

@@ -1,6 +1,6 @@
 #include "types.h"
-extern void func_0203da2c(int v);
-extern void func_0203da4c(void);
+extern void _Z13func_0203da2ci(int v);
+extern void _Z13func_0203da4cv(void);
 extern u8 data_0209fc5c[];
 extern signed char data_0209fc64[];
 extern u8 data_0209fc50;
@@ -19,8 +19,8 @@ extern u8 gSoftResetDisabled;
 void func_02030aa4(int arg)
 {
     int i;
-    func_0203da2c(arg);
-    func_0203da4c();
+    _Z13func_0203da2ci(arg);
+    _Z13func_0203da4cv();
     for (i = 0; i < 4; i++) {
         data_0209fc5c[i] = 0;
         data_0209fc64[i] = -1;

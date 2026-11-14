@@ -2,7 +2,7 @@
 #include "nitro/os/system.h"
 
 extern int LoadArchive(int idx);
-extern int func_0204ede8(void *o, unsigned int i);
+extern int _Z13func_0204ede8P3S82j(void *o, unsigned int i);
 
 /* The address of archived file val's bytes inside its mounted archive
    (func_0204ede8), mounting the archive first if needed. 0 for a FAT id
@@ -19,14 +19,14 @@ int func_020186c0(unsigned int val) {
                 if (LoadArchive(i))
                     data_0208eb54 = i;
                 if (e->archive == 0) {
-                    OS_Terminate();
+                    _Z12OS_Terminatev();
                     return 0;
                 }
             }
-            return func_0204ede8(e->archive, val - e->firstFileId);
+            return _Z13func_0204ede8P3S82j(e->archive, val - e->firstFileId);
         }
         e++;
     }
-    OS_Terminate();
+    _Z12OS_Terminatev();
     return 0;
 }

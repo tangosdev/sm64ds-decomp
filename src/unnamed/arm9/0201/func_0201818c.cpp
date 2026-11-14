@@ -13,6 +13,8 @@ extern void DecompressLZ16(void *src, void *dst);
 extern int func_020185c0(void *buf, unsigned int x);
 extern void func_02018770(void);
 extern unsigned int func_02018a24(unsigned int i);
+}
+
 extern void *func_0201834c(FSFile *file, int flush);
 
 /* Load file id (an asset handle, or an archived file id) into a new heap
@@ -45,5 +47,4 @@ void *func_0201818c(unsigned int id, int flush) {
     }
     func_020185c0(&file, func_02018a24(id));
     return func_0201834c(&file, flush);
-}
 }

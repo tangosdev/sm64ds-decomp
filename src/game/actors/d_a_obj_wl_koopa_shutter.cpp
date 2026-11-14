@@ -91,7 +91,7 @@ s32 daObjWlKoopaShutter_c::InitResources() {
  * RTTI, allocation size, vtable identity, and the WL_KOOPA_SHUTTER registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: BowserShutter_Spawn. */
-extern "C" daObjWlKoopaShutter_c *daObjWlKoopaShutter_c_classInit() {
+daObjWlKoopaShutter_c *daObjWlKoopaShutter_c_classInit() {
     return new daObjWlKoopaShutter_c();
 }
 

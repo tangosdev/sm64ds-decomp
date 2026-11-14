@@ -29,7 +29,6 @@
  * the reverse of source order, so the highest-address function is written
  * first here and the functions come out in ROM order.
  *
- * The functions keep their ROM names under C linkage.
  */
 #include "common.h"
 #include "nitro/fx/fx.h"
@@ -45,8 +44,6 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
 #include "Ov007MenuMem.h"
-
-extern "C" {
 
 /* data_ov007_02104bd4: the 0x30-byte record func_ov007_020bf428 allocates
  * and fills; medium-confidence name. The slot names follow their builders. */
@@ -67,34 +64,34 @@ extern Ov007MeshWaveParams data_ov007_020d7c9c;
 extern Ov007SwingParams data_ov007_020d7cc8;
 extern Ov007MeshMaterial data_ov007_020d7cf8[2];
 
-extern Ov007MenuState *func_ov007_020b2cdc(void);
+Ov007MenuState *func_ov007_020b2cdc(void);
 extern Ov007Sprite *NumberSprite_Create(int index);
-extern void func_ov007_020bce70(short n, int frames);
-extern void func_ov007_020bfe4c(Ov007Camera *camera, int x, int y, int z, void *out);
+void func_ov007_020bce70(short n, int frames);
+void func_ov007_020bfe4c(Ov007Camera *camera, int x, int y, int z, Vector3 *out);
 extern int func_ov007_020c1da0(int i);
-extern int func_ov007_020c30ac(Vector3 *arr, int count, void *target, int arg4, int *out);
-extern unsigned short func_ov007_020c3be0(int t, int a, int b);
+extern int func_ov007_020c30ac(Vector3 *arr, int count, Vector3 *target, int arg4, int *out);
+unsigned short func_ov007_020c3be0(int t, int a, int b);
 extern void func_ov007_020c9a84(Ov007Swing *swing, Vector3 *offset, u16 *rotX, u16 *rotY);
 extern void func_ov007_020c9c24(Ov007Swing *swing, int shift);
 extern void func_ov007_020c9d90(Ov007Swing *swing, Ov007Mesh *mesh);
-extern void func_ov007_020c9f10(Ov007Swing *swing, void *pos, int w, int h);
+extern void func_ov007_020c9f10(Ov007Swing *swing, Vector3 *pos, int w, int h);
 extern void func_ov007_020c9fa0(Ov007Swing *swing);
 extern Ov007Swing *func_ov007_020ca010(Ov007SwingParams *params);
 extern void func_ov007_020ca1d4(Ov007MeshWave *wave, Ov007Mesh *mesh);
 extern void func_ov007_020ca26c(Ov007MeshWave *wave);
 extern Ov007MeshWave *func_ov007_020ca2a8(Ov007MeshWaveParams *params);
-extern void func_ov007_020ca578(Ov007Mesh *mesh, int i, int j, int t);
+extern "C" void func_ov007_020ca578(Ov007Mesh *mesh, int i, int j, int t);
 extern void func_ov007_020ca5f0(Ov007Mesh *mesh, Ov007MeshMaterial *mat, int *pos, int scaleZ,
                                 int smooth);
-extern void func_ov007_020cb3dc(Ov007Mesh *mesh);
-extern void func_ov007_020cba78(Ov007Mesh *mesh, int shift);
+extern "C" void func_ov007_020cb3dc(Ov007Mesh *mesh);
+extern "C" void func_ov007_020cba78(Ov007Mesh *mesh, int shift);
 extern void func_ov007_020cbb04(Ov007Mesh *mesh);
 extern Ov007Mesh *func_ov007_020cbbb0(int columns, int rows, int width, Ov007MeshParams *params);
-extern Ov007MeshMaterial *func_ov007_020cbf8c(Ov007MeshMaterial *src);
+extern "C" Ov007MeshMaterial *func_ov007_020cbf8c(Ov007MeshMaterial *src);
 
 /* Defined below, after their callers (ROM order). */
 void func_ov007_020bed60(int arg0, int arg1, int arg2);
-void func_ov007_020beeb0(void);
+extern "C" void func_ov007_020beeb0(void);
 
 #define SCENE data_ov007_02104bd4
 
@@ -150,7 +147,7 @@ void func_ov007_020bf57c(Ov007Camera *camera, int idx) {
     buf.view.depth = -camera->distance;
     func_ov007_020c43bc((Ov007Sprite *)&buf, camera);
     func_ov007_020c4388((Ov007Sprite *)&buf, camera);
-    func_ov007_020c9f10(swing, &buf.view.pos, buf.view.worldWidth, buf.view.worldHeight);
+    func_ov007_020c9f10(swing, (Vector3 *)&buf.view.pos, buf.view.worldWidth, buf.view.worldHeight);
     func_ov007_020c9d90(swing, SCENE->mesh);
 }
 
@@ -404,5 +401,4 @@ void func_ov007_020bed60(int arg0, int arg1, int arg2) {
         func_ov007_020ca578(mesh, m, d, arg2);
     }
     SCENE->wave->delay = 0x78;
-}
 }

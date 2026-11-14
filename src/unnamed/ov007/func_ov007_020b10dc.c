@@ -1,6 +1,10 @@
 #include "Ov007MenuState.h"
 #include "Ov007Work.h"
+#define FigureScene_SetScreenBlend _Z26FigureScene_SetScreenBlendi
+#define RequestScreenFade _Z17RequestScreenFadeiiPFvvE
 
+#define func_ov007_020bdeb0 _Z19func_ov007_020bdeb0i
+#define func_ov007_020b1fa4 _Z19func_ov007_020b1fa4i
 extern int func_ov007_020bdeb0(int x);
 extern void RequestScreenFade(int kind, int flags, void (*onEnd)(void));
 extern void func_ov007_020b1fa4(int preset);

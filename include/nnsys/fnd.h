@@ -1,5 +1,36 @@
 #ifndef NNSYS_FND_H
 #define NNSYS_FND_H
+#ifndef __cplusplus
+#define NNS_FndGetSizeForMBlockExpHeap _Z30NNS_FndGetSizeForMBlockExpHeapPKv
+#define NNS_FndVisitAllocatedForExpHeap _Z31NNS_FndVisitAllocatedForExpHeapP15NNSiFndHeapHeadPFvPvS0_jEj
+#define NNS_FndGetGroupIDForExpHeap _Z27NNS_FndGetGroupIDForExpHeapP15NNSiFndHeapHead
+#define NNS_FndSetGroupIDForExpHeap _Z27NNS_FndSetGroupIDForExpHeapP15NNSiFndHeapHeadj
+#define NNS_FndGetAllocatableSizeForExpHeapEx _Z37NNS_FndGetAllocatableSizeForExpHeapExP15NNSiFndHeapHeadi
+#define NNS_FndGetTotalFreeSizeForExpHeap _Z33NNS_FndGetTotalFreeSizeForExpHeapP15NNSiFndHeapHead
+#define NNS_FndFreeToExpHeap _Z20NNS_FndFreeToExpHeapP15NNSiFndHeapHeadPv
+#define NNS_FndResizeForMBlockExpHeap _Z29NNS_FndResizeForMBlockExpHeapP15NNSiFndHeapHeadPvj
+#define NNS_FndAllocFromExpHeapEx _Z25NNS_FndAllocFromExpHeapExP15NNSiFndHeapHeadji
+#define NNS_FndDestroyExpHeap _Z21NNS_FndDestroyExpHeapP15NNSiFndHeapHead
+#define NNS_FndCreateExpHeapEx _Z22NNS_FndCreateExpHeapExPvjt
+#define NNS_FndGetPrevListObject _Z24NNS_FndGetPrevListObjectP10NNSFndListPv
+#define NNS_FndGetNextListObject _Z24NNS_FndGetNextListObjectP10NNSFndListPv
+#define NNS_FndRemoveListObject _Z23NNS_FndRemoveListObjectP10NNSFndListPv
+#define NNS_FndInsertListObject _Z23NNS_FndInsertListObjectP10NNSFndListPvS1_
+#define NNS_FndPrependListObject _Z24NNS_FndPrependListObjectP10NNSFndListPv
+#define NNS_FndAppendListObject _Z23NNS_FndAppendListObjectP10NNSFndListPv
+#define NNS_FndInitList _Z15NNS_FndInitListP10NNSFndListt
+#define NNSi_FndFinalizeHeap _Z20NNSi_FndFinalizeHeapP15NNSiFndHeapHead
+#define NNSi_FndInitHeapHead _Z20NNSi_FndInitHeapHeadP15NNSiFndHeapHeadjPvS1_t
+#define NNS_FndResizeForMBlockFrmHeap _Z29NNS_FndResizeForMBlockFrmHeapP15NNSiFndHeapHeadPvj
+#define NNS_FndAdjustFrmHeap _Z20NNS_FndAdjustFrmHeapP15NNSiFndHeapHead
+#define NNS_FndFreeByStateToFrmHeap _Z27NNS_FndFreeByStateToFrmHeapP15NNSiFndHeapHeadj
+#define NNS_FndRecordStateForFrmHeap _Z28NNS_FndRecordStateForFrmHeapP15NNSiFndHeapHeadj
+#define NNS_FndGetAllocatableSizeForFrmHeapEx _Z37NNS_FndGetAllocatableSizeForFrmHeapExP15NNSiFndHeapHeadi
+#define NNS_FndFreeToFrmHeap _Z20NNS_FndFreeToFrmHeapP15NNSiFndHeapHeadi
+#define NNS_FndAllocFromFrmHeapEx _Z25NNS_FndAllocFromFrmHeapExP15NNSiFndHeapHeadji
+#define NNS_FndDestroyFrmHeap _Z21NNS_FndDestroyFrmHeapP15NNSiFndHeapHead
+#define NNS_FndCreateFrmHeapEx _Z22NNS_FndCreateFrmHeapExPvjt
+#endif
 
 #include "types.h"
 
@@ -12,7 +43,9 @@
  */
 
 #ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 
 typedef struct NNSFndLink {
@@ -144,7 +177,9 @@ u32 NNS_FndAdjustFrmHeap(NNSFndHeapHandle heap);
 u32 NNS_FndResizeForMBlockFrmHeap(NNSFndHeapHandle heap, void *memBlock, u32 newSize);
 
 #ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif

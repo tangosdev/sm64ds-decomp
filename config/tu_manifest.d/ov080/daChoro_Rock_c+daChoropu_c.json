@@ -145,7 +145,7 @@
       "ordinal": 14
     },
     {
-      "symbol": "func_ov080_02124418",
+      "symbol": "_Z19func_ov080_02124418P14daChoro_Rock_c",
       "address": "0x02124418",
       "size": "0x00000040",
       "legacy_source": "src/func_ov080_02124418.c",
@@ -208,14 +208,14 @@
       "ordinal": 23
     },
     {
-      "symbol": "daChoro_Rock_c_classInit",
+      "symbol": "_Z24daChoro_Rock_c_classInitv",
       "address": "0x02124998",
       "size": "0x00000048",
       "legacy_source": "src/d_a_choro_rock.c",
       "ordinal": 24
     },
     {
-      "symbol": "daChoropu_c_classInit",
+      "symbol": "_Z21daChoropu_c_classInitv",
       "address": "0x021249e0",
       "size": "0x00000040",
       "legacy_source": "src/d_a_choropu.c",
@@ -851,14 +851,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN16ChoropuModelFileC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN16ChoropuModelFileD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the model wrapper destructor's exact ABS32 relocation"
@@ -970,7 +970,7 @@
       "source": "0x021278d0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -990,7 +990,7 @@
       "source": "0x021278ec",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1100,7 +1100,7 @@
       "source": "0x02127a00",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"

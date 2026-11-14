@@ -26,11 +26,11 @@ enum d_a_obj_fl_gura_AssetId { ASSET_FL_GURA_BMD = 0x05f3, ASSET_FL_GURA_KCL = 0
 
 extern ResourceDescriptor data_ov064_0211adb0;
 
-extern "C" daObjFl_Gura_c *daObjFl_Gura_c_classInit() {
+daObjFl_Gura_c *daObjFl_Gura_c_classInit() {
     return new daObjFl_Gura_c();
 }
 
-extern "C" SpawnInfo<daObjFl_Gura_c> g_profile_FL_GURA = {
+SpawnInfo<daObjFl_Gura_c> g_profile_FL_GURA = {
     daObjFl_Gura_c_classInit,
     0x0048, /* FL_GURA registry id 72 */
     0x0118,

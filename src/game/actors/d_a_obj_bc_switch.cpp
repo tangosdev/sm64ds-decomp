@@ -125,8 +125,10 @@ extern BcSwitchCollisionFilePtr daObjBC_Switch_c_ClsnFile;
 extern BcSwitchModelFilePtr daObjBC_Switch_c_ModelFile;
 
 /* arm9 / ov002 C helpers with no shared header. */
-extern "C" {
+
 extern u8 IsAreaShowing(s32 idx);
+extern "C" {
+
 extern u16 DecIfAbove0_Short(u16 *p);
 extern int func_ov002_020dd8b8(void *c);
 }
@@ -148,7 +150,7 @@ static inline int IsPlayerActor(dActor_c *actor) {
  * inline operator new; 0x020f15e0 calls dBgActor_c's C2 and the store at
  * 0x020f15ec lays down this class's vptr. The null check is the one `new`
  * itself emits. */
-extern "C" daObjBC_Switch_c *daObjBC_Switch_c_classInit(void) {
+daObjBC_Switch_c *daObjBC_Switch_c_classInit(void) {
     return new daObjBC_Switch_c();
 }
 

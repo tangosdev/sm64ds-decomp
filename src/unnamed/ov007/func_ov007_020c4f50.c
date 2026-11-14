@@ -1,5 +1,7 @@
 #include "Ov007Picker.h"
 
+#define func_ov007_020c4fcc _Z19func_ov007_020c4fccii
+#define func_ov007_020c19cc _Z19func_ov007_020c19cciP7Vector3ii
 extern void func_ov007_020c4fcc(int r0, int r1);
 /* The definition takes half as s16; declared that way, the call does not match. */
 extern void func_ov007_020c19cc(int count, Vector3 *pts, int half, int t);

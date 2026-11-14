@@ -14,6 +14,6 @@ Ov007Follower *func_ov007_020c844c(Vector3 *p, int q) {
     if (q == 0x1000)
         f->invMass = 0x1000;
     else
-        f->invMass = FX_Inv(q);
+        f->invMass = _Z6FX_Invi(q);
     return f;
 }

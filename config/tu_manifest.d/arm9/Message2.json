@@ -40,7 +40,7 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_0201aca4",
+      "symbol": "_Z13func_0201aca4v",
       "address": "0x0201aca4",
       "size": "0x00000108",
       "legacy_source": "src/unnamed/arm9/0201/func_0201aca4.c",
@@ -54,21 +54,21 @@
       "ordinal": 4
     },
     {
-      "symbol": "func_0201adfc",
+      "symbol": "_Z13func_0201adfcv",
       "address": "0x0201adfc",
       "size": "0x00000304",
       "legacy_source": "src/unnamed/arm9/0201/func_0201adfc.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_0201b100",
+      "symbol": "_Z13func_0201b100i",
       "address": "0x0201b100",
       "size": "0x00000288",
       "legacy_source": "src/unnamed/arm9/0201/func_0201b100.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_0201b388",
+      "symbol": "_Z13func_0201b388i",
       "address": "0x0201b388",
       "size": "0x00000220",
       "legacy_source": "src/unnamed/arm9/0201/func_0201b388.c",
@@ -82,7 +82,7 @@
       "ordinal": 8
     },
     {
-      "symbol": "func_0201b6f8",
+      "symbol": "_Z13func_0201b6f8i",
       "address": "0x0201b6f8",
       "size": "0x000000d4",
       "legacy_source": "src/unnamed/arm9/0201/func_0201b6f8.c",

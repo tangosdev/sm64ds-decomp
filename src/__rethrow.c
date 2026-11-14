@@ -26,7 +26,7 @@
 // to 0x2c bytes opening `stmdb sp!,{lr}; sub sp,sp,#0x74` with a full epilogue, and no
 // source form reaches a prologue that saves without restoring.
 struct ThrowContext;
-extern void func_02071be8(struct ThrowContext *context);
+extern void _Z13func_02071be8P12ThrowContext(struct ThrowContext *context);
 
 asm void __rethrow(void) {
     mov ip, sp
@@ -47,5 +47,5 @@ asm void __rethrow(void) {
     str ip, [sp, #4]
     str ip, [sp, #8]
     mov r0, sp
-    b func_02071be8
+    b _Z13func_02071be8P12ThrowContext
 }

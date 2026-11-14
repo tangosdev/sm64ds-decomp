@@ -2,6 +2,7 @@
 #include "Ov007Work.h"
 #include "Ov007Item.h"
 
+#define func_ov007_020c1d8c _Z19func_ov007_020c1d8ci
 extern void func_ov007_020c1d8c(int i);
 
 void func_ov007_020b63e4(Ov007ItemView *view);

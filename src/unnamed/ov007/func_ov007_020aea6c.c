@@ -2,6 +2,7 @@
 #include "Ov007MenuState.h"
 #include "Ov007Item.h"
 #include "Ov007MenuMem.h"
+#define func_ov007_020c9388 _Z19func_ov007_020c9388i
 extern void *func_ov007_020c9388(int initialState);
 extern void func_ov007_020ae810(Ov007Item *item);
 

@@ -1,7 +1,7 @@
 #include "Ov007StrokePath.h"
 
 /* The distance |a - b| between two Q12 3-vectors (src/cstd.cpp). */
-extern int VEC_Distance(int *a, int *b);
+extern int _Z12VEC_DistancePiS_(int *a, int *b);
 
 /* Whether a point at a may follow the last point, at b: always while the path
  * is empty or either bound is negative; otherwise only with room left and
@@ -10,7 +10,7 @@ int func_ov007_020c2e90(Ov007StrokePath *path, int *a, int *b, int minLen, int m
     int dist;
     if (path->pointCount != 0 && minLen >= 0 && maxLen >= 0) {
         if (path->pointCount < path->capacity) {
-            dist = VEC_Distance(a, b);
+            dist = _Z12VEC_DistancePiS_(a, b);
             return (minLen << 12) <= dist && dist <= (maxLen << 12);
         }
         return 0;

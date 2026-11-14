@@ -6,5 +6,5 @@
 #include "private/watchdog_alarm.h"
 
 void func_0201aaa4(OSAlarm *alarm) {
-    OS_CancelAlarm(alarm);
+    _Z14OS_CancelAlarmP8OSiAlarm(alarm);
 }

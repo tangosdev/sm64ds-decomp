@@ -76,10 +76,8 @@ struct ArrowSignAssets {
 };
 
 /* local extern: see the banner; the port builds this TU for the host. */
-extern "C" {
-void Matrix4x3_FromRotationY(void *mtx, int angle);
-void func_02012694(unsigned int id, void *pos);
-}
+extern "C" void Matrix4x3_FromRotationY(void *mtx, int angle);
+void func_02012694(unsigned int id, const Vector3 *pos);
 
 /* The model, KCL and CLPS for each of the two variants. */
 extern ArrowSignAssets data_ov098_0213c380[];
@@ -88,12 +86,12 @@ extern ArrowSignAssets data_ov098_0213c380[];
 /* Second registry factory for the same class (YAJIRUSI_L profile); body twin
  * of _R below. Contiguous at 0x02138008..0x02138040, so the genuine TU spans
  * 0x02137be0..0x02138040 with no hole. Historical alias: ArrowSignLeft_Spawn. */
-extern "C" int *daObjYajirusi_c_classInit_YAJIRUSI_L(void) {
+int *daObjYajirusi_c_classInit_YAJIRUSI_L(void) {
     return (int *)new daObjYajirusi_c;
 }
 
 // 0x02137fd0 (0x38)
-extern "C" int *daObjYajirusi_c_classInit_YAJIRUSI_R(void) {
+int *daObjYajirusi_c_classInit_YAJIRUSI_R(void) {
     return (int *)new daObjYajirusi_c;
 }
 
@@ -152,7 +150,7 @@ int daObjYajirusi_c::CleanupResources() {
 // 0x02137d80 (0x3c)
 void daObjYajirusi_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
-    func_02012694(0x1e, &mCamSpacePosX);
+    func_02012694(0x1e, (const Vector3 *)&mCamSpacePosX);
     KillByMegaChar(player);
 }
 

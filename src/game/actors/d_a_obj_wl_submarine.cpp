@@ -87,7 +87,7 @@ s32 daObjWlSubmarine_c::InitResources() {
  * RTTI, allocation size, vtable identity, and the WL_SUBMARINE registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: Submarine_Spawn. */
-extern "C" daObjWlSubmarine_c *daObjWlSubmarine_c_classInit() {
+daObjWlSubmarine_c *daObjWlSubmarine_c_classInit() {
     return new daObjWlSubmarine_c();
 }
 

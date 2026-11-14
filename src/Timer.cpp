@@ -19,7 +19,7 @@
    so this file does not emit it: retail registers func_0201973c, the empty
    destructor defined in func_020196cc.c. */
 extern "C" void func_0203b9b4(int *p, int v);
-extern "C" Timer *func_0201964c(Timer *timer);
+Timer *func_0201964c(Timer *timer);
 #include "LevelRng.h"
 
 inline LevelRng::LevelRng() {
@@ -70,8 +70,7 @@ void Timer::ResetTimer()
 /* The C1 constructor (ResetTimer, then return this) stays an extern "C"
    helper under its address name; the Timer::Timer() spelling would rename
    the symbol. */
-extern "C" Timer *func_0201964c(Timer *__this)
-{
+Timer *func_0201964c(Timer *__this) {
     __this->ResetTimer();
     return __this;
 }

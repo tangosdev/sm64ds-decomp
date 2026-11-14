@@ -3,16 +3,14 @@
 #include "OamAnimation.h"
 #include "nitro/fx/fx_trig.h"
 
-extern "C" {
 struct Matrix2x2;
-}
 
 /* Draw an OamAnimation's current frame at (x, y). OamAnimation.h's names
  * are kept although this reader contradicts two of them: `tile` holds the
  * current frame's OamAttr list (func_0202044c copies it from the frame
  * table), and `affine` gates drawing at all. `screen` picks the engine
  * (0 main, 1 sub, 2 both, the main copy 0xc0 lower). */
-extern "C" void func_0202048c(OamAnimation *anim, int x, int y) {
+void func_0202048c(OamAnimation *anim, int x, int y) {
     if (anim->affine == 0)
         return;
     if (anim->tile == 0)

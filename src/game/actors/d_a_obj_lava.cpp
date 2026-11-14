@@ -21,11 +21,11 @@
 
 enum { kLavaBubbleEffect = 0xb7 };
 
-extern "C" daObjLava_c *daObjLava_c_classInit() {
+daObjLava_c *daObjLava_c_classInit() {
     return new daObjLava_c();
 }
 
-extern "C" SpawnInfo<daObjLava_c> g_profile_LAVA = {
+SpawnInfo<daObjLava_c> g_profile_LAVA = {
     daObjLava_c_classInit,
     0x00c4, /* LAVA registry id 196 */
     0x0014,

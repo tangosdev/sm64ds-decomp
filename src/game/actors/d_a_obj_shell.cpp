@@ -99,7 +99,7 @@ extern ShellAnimationFilePtr data_ov064_0211c9cc;
  * allocator as a real class member, so the factory is a plain `new` and the
  * ROM's own allocator call is what the compiler emits.
  */
-extern "C" daObjShell_c *daObjShell_c_classInit() {
+daObjShell_c *daObjShell_c_classInit() {
     return new daObjShell_c();
 }
 

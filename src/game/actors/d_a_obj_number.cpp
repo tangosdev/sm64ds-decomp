@@ -53,7 +53,7 @@ extern u32 gNextActorUpdateMask;
  * 0x020f0d94 loads 336 = 0x150 -- the class's own size -- into
  * fBase_c::operator new; dActor_c's C2, this class's vptr, dExtSimpleModel_c C1 at
  * +0xd4 and dExtAnmTexPat_c C1 at +0x124 are the implicit constructor. */
-extern "C" daObjNumber_c *daObjNumber_c_classInit(void) {
+daObjNumber_c *daObjNumber_c_classInit(void) {
     return new daObjNumber_c();
 }
 

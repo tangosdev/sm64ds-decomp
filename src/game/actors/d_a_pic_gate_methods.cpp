@@ -93,13 +93,11 @@ enum {
     kClipEnable = 3
 };
 
-extern "C" {
-extern int IsStarCollectedInLevel(signed char levelID, int starID);
+int IsStarCollectedInLevel(signed char levelID, int starID);
 extern Matrix4x3 data_0209b3ec;
 extern u8 data_ov080_02127714[];
-extern void G3_LoadMtx43(void *mtx);
+extern "C" void G3_LoadMtx43(void *mtx);
 extern void *data_ov080_02127834;
-}
 
 /* The cartridge's vtable label is the address point (slot 0), and the
    vtable itself is emitted with the destructor, outside this file. */
@@ -365,7 +363,7 @@ s32 daPicGate_c::InitResources() {
     return 1;
 }
 
-extern "C" daPicGate_c *daPicGate_c_classInit() {
+daPicGate_c *daPicGate_c_classInit() {
     return new daPicGate_c;
 }
 

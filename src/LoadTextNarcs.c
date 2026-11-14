@@ -1,6 +1,6 @@
 #include "types.h"
 extern s32 LoadArchive(s32 archiveID);
-extern s32 GetOwnerLanguage(void);
+extern s32 _Z16GetOwnerLanguagev(void);
 
 void LoadTextNarcs(void)
 {
@@ -11,7 +11,7 @@ void LoadTextNarcs(void)
         return;
 
     archiveID = 8;
-    lang = GetOwnerLanguage();
+    lang = _Z16GetOwnerLanguagev();
     switch (lang)
     {
     case 2:

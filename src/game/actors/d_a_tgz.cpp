@@ -100,7 +100,6 @@ TgzStateRecord gTgzStates[6] = {
     {&daTgz_c::func_ov077_02125480, &daTgz_c::func_ov077_021253a4},
 };
 
-extern "C" {
 extern DaJgmModelFile data_ov077_02127b48;
 extern DaJgmModelFile data_ov077_02127b38;
 int func_ov077_02124c28(daTgz_c *self);
@@ -114,15 +113,16 @@ int func_ov077_02124ce4(daTgz_c *self);
 void func_ov077_02124eb0(daTgz_c *self);
 void func_ov077_021250a8(daTgz_c *self);
 void func_ov077_02125304(daTgz_c *self);
-
 int SurfaceInfo_TestFlag0x20(int *p);
 void func_02012694(unsigned int id, const Vector3 *pos);
+extern "C" {
 unsigned int d_a_tgzNewHold(unsigned int uniqueID, unsigned int effectID, int x, int y, int z,
                             const void *dir, void *callback);
+}
+
 extern int data_0209f32c;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern signed char gCurrentSublevel;
-}
 
 /* Vtable slot 16. The compiler writes the whole body: one vtable store, the
  * members in reverse, then ~dActor_c. Slot 17 (D0) is the deleting variant of
@@ -146,8 +146,7 @@ int daTgz_c::OnAimedAtWithEgg()
 /* Until one is found, probe for a water surface below the Spiny and cache
  * its height in mWaterY. Returns how far above it the Spiny is (0 while
  * nothing has been found). */
-extern "C" int func_ov077_02124c28(daTgz_c *self)
-{
+int func_ov077_02124c28(daTgz_c *self) {
     if (self->mWaterY == 0) {
         dBgCh_Gnd rg;
         Vector3 pos;
@@ -172,7 +171,7 @@ extern "C" int func_ov077_02124c28(daTgz_c *self)
 }
 
 /* Is the Spiny below the cached water surface? */
-extern "C" int func_ov077_02124ce4(daTgz_c *self) {
+int func_ov077_02124ce4(daTgz_c *self) {
     int waterY = self->mWaterY;
     if (waterY == 0)
         return 0;
@@ -181,8 +180,7 @@ extern "C" int func_ov077_02124ce4(daTgz_c *self) {
 
 /* Toxic floor destroys the Spiny. A sloped floor rewrites vertical speed
  * from mSpeedX/mSpeedZ and pitches mAngleX/mAngleZ to the normal. */
-extern "C" void func_ov077_02124d08(daTgz_c *self, dBgCh_Actr *clsn)
-{
+void func_ov077_02124d08(daTgz_c *self, dBgCh_Actr *clsn) {
     Vector3 pos;
     Vector3 normal;
     Vector3 wallnormal;
@@ -229,7 +227,7 @@ extern "C" void func_ov077_02124d08(daTgz_c *self, dBgCh_Actr *clsn)
 
 /* Hit response while walking or spinning. Egg and the knock-up destroy or
  * launch; a shell / metal / attack hit in state 1 starts the chase. */
-extern "C" void func_ov077_02124eb0(daTgz_c *self) {
+void func_ov077_02124eb0(daTgz_c *self) {
     daPly_c *player;
     int b;
 
@@ -297,7 +295,7 @@ extern "C" void func_ov077_02124eb0(daTgz_c *self) {
 
 /* Hit response during the thrown spin. Mega turns it to face away and
  * knocks it up; fire is ignored; anything else hurts the player. */
-extern "C" void func_ov077_021250a8(daTgz_c *self) {
+void func_ov077_021250a8(daTgz_c *self) {
     unsigned int id = self->mdCcAc_c.otherOwner;
     if (id == 0)
         return;
@@ -331,7 +329,7 @@ extern "C" void func_ov077_021250a8(daTgz_c *self) {
 
 /* Tumble matrix: translate to pos>>3, up by the egg-aim height, rotate, then
  * back down by that height, and keep the result on the anim model's matrix. */
-extern "C" void func_ov077_021251d0(daTgz_c *self) {
+void func_ov077_021251d0(daTgz_c *self) {
     int v[3];
     Vec3_Asr(reinterpret_cast<Vector3 *>(v), &self->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
@@ -345,8 +343,7 @@ extern "C" void func_ov077_021251d0(daTgz_c *self) {
 }
 
 /* Upright matrix on the still model in states 0 and 4, otherwise on the anim. */
-extern "C" void func_ov077_02125290(daTgz_c *self)
-{
+void func_ov077_02125290(daTgz_c *self) {
     int v = self->mState;
     int b = 1;
     Matrix4x3 *m;
@@ -362,7 +359,7 @@ extern "C" void func_ov077_02125290(daTgz_c *self)
     m->m[11] = self->mPosZ >> 3;
 }
 
-extern "C" void func_ov077_02125304(daTgz_c *self) {
+void func_ov077_02125304(daTgz_c *self) {
     int b = ((self->mFlags & 0x40000) != 0);
     if (b != 0)
         return;
@@ -707,20 +704,17 @@ int daTgz_c::func_ov077_02125dd4() {
     return 1;
 }
 
-extern "C" void func_ov077_02125e20(daTgz_c *self)
-{
+void func_ov077_02125e20(daTgz_c *self) {
     TgzState *p = (TgzState *)self->mStateDesc + 1;
     (self->* *p)();
 }
 
-extern "C" void func_ov077_02125e5c(daTgz_c *self)
-{
+void func_ov077_02125e5c(daTgz_c *self) {
     TgzState *p = (TgzState *)self->mStateDesc;
     (self->* *p)();
 }
 
-extern "C" void func_ov077_02125e94(daTgz_c *self, int i)
-{
+void func_ov077_02125e94(daTgz_c *self, int i) {
     self->mStateDesc = &gTgzStates[i];
     func_ov077_02125e5c(self);
 }
@@ -809,7 +803,7 @@ void daTgz_c::OnTurnIntoEgg(daPly_c &player) {
     MarkForDestruction();
 }
 
-extern "C" daTgz_c *daTgz_c_classInit() {
+daTgz_c *daTgz_c_classInit() {
     return new daTgz_c;
 }
 

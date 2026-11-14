@@ -39,17 +39,16 @@
 #include "nitro/fx/fx_trig.h"
 
 /* arm9 C helpers with no shared header. */
-extern "C" {
+
 int SurfaceInfo_TestFlag0x20(int *p);
-}
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-extern "C" daObjAbuku_c *daObjAbuku_c_classInit() {
+daObjAbuku_c *daObjAbuku_c_classInit() {
     return new daObjAbuku_c();
 }
 
-extern "C" SpawnInfo<daObjAbuku_c> g_profile_OBJ_ABUKU = {
+SpawnInfo<daObjAbuku_c> g_profile_OBJ_ABUKU = {
     daObjAbuku_c_classInit, 0x0123, 0x00a1, 0, 0x00060000, 0x00200000, 0x01000000, 0};
 
 /* -------------------------------------------------------------------------- */

@@ -188,6 +188,6 @@ void daDpLift_c::StoodOnCallback(dBgW *collider, dActor_c *lift, dActor_c *rider
  * The inline Vector3 default constructor gives mMarkerPositions the ROM's
  * __cxa_vec_ctor(..., func_0203d384, _ZN7Vector3D1Ev); the manifest binds
  * the emitted _ZN7Vector3C1Ev to that arm9 body. */
-extern "C" daDpLift_c *daDpLift_c_classInit(void) {
+daDpLift_c *daDpLift_c_classInit(void) {
     return new daDpLift_c;
 }

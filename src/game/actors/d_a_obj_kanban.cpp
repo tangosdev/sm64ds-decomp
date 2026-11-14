@@ -45,12 +45,11 @@ extern KanbanModelFilePtr data_ov085_02130858;
 extern Vector3 data_ov085_0212f29c;
 
 /* local extern: no shared header declares these. */
-extern "C" {
-extern int Vec3_ApproachHorz(Vector3 *out, Vector3 *a, int maxStep);
-extern int AngleDiff(int a, int b);
+
+int Vec3_ApproachHorz(Vector3 *out, Vector3 *a, int maxStep);
+extern "C" int AngleDiff(int a, int b);
 
 /* the player side of the conversation */
-}
 
 #pragma defer_codegen off
 
@@ -163,7 +162,7 @@ int daObjKanban_c::InitResources() {
  * what runs dBgActor_c's base step, stores the vptr and then
  * constructs the dCcAcPos_c at 0x320, in that order, and `operator
  * new` is fBase_c's. */
-extern "C" daObjKanban_c *daObjKanban_c_classInit(void) {
+daObjKanban_c *daObjKanban_c_classInit(void) {
     return new daObjKanban_c();
 }
 

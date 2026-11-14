@@ -8,11 +8,9 @@
 #include "Ov007Pad.h"
 #include "nitro/fx/fx_cp.h"
 
-extern "C" {
-
-extern void func_ov007_020b2614(int a, int b, int c);
+extern "C" void func_ov007_020b2614(int a, int b, int c);
 extern int func_ov007_020c1da0(int i);
-extern void func_ov007_020aec94(int r4);
+extern "C" void func_ov007_020aec94(int r4);
 
 void func_ov007_020b1cf0(void) {
     Ov007Model *model = WORK->model;
@@ -85,5 +83,4 @@ void func_ov007_020b1cf0(void) {
             return;
         func_ov007_020aec94(8);
     }
-}
 }

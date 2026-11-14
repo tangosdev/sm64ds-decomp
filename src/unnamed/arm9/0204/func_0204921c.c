@@ -93,8 +93,9 @@ void func_0204921c(NNSSndHandle *a, int mode) {
             data_020a4c5c[i] = 0;
         else if (data_020a4c5c[i] > 0x7f000)
             data_020a4c5c[i] = 0x7f000;
-        NNS_SndPlayerSetTrackVolume(a, data_020a4c48[i], data_020a4c5c[i] >> 12);
+        _Z27NNS_SndPlayerSetTrackVolumeP12NNSSndHandleii(a, data_020a4c48[i],
+                                                         data_020a4c5c[i] >> 12);
         if (data_020a4c5c[i] == 0)
-            NNS_SndPlayerSetTrackMute(a, data_020a4c48[i], 1);
+            _Z25NNS_SndPlayerSetTrackMuteP12NNSSndHandleii(a, data_020a4c48[i], 1);
     }
 }

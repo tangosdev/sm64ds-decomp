@@ -3,10 +3,8 @@
 #include "Ov007Model.h"
 #include "nitro/fx/fx_cp.h"
 
-extern "C" {
-
-extern void func_ov007_020c9110(void *p);
-extern void func_0204531c(void *model, int x);
+extern "C" void func_ov007_020c9110(void *p);
+void func_0204531c(char *model, int x);
 
 /* Poses the model from blendAnim's current frame and blends it in with
  * weight blendFrames / blendFrameCount, counting blendFrames down on the
@@ -24,7 +22,7 @@ void func_ov007_020bc7dc(Ov007Model *m) {
     if (p->anim != -1)
         model->UpdateBones(entry, p->frame);
 
-    func_0204531c(model, quot);
+    func_0204531c((char *)model, quot);
 
     if (m->animTick == 0)
         return;
@@ -32,5 +30,4 @@ void func_ov007_020bc7dc(Ov007Model *m) {
     m->blendFrames -= 1;
     if (m->blendFrames <= 0)
         m->blendFrames = 0;
-}
 }

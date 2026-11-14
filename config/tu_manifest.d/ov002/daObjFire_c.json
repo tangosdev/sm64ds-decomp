@@ -66,14 +66,14 @@
       "ordinal": 5
     },
     {
-      "symbol": "daObjFire_c_classInit_OBJ_BLUE_FIRE",
+      "symbol": "_Z35daObjFire_c_classInit_OBJ_BLUE_FIREv",
       "address": "0x020b59a8",
       "size": "0x00000038",
       "legacy_source": "src/d_a_obj_fire_obj_blue_fire.c",
       "ordinal": 6
     },
     {
-      "symbol": "daObjFire_c_classInit_OBJ_RED_FIRE",
+      "symbol": "_Z34daObjFire_c_classInit_OBJ_RED_FIREv",
       "address": "0x020b59e0",
       "size": "0x00000038",
       "legacy_source": "src/d_a_obj_fire_obj_red_fire.c",
@@ -206,7 +206,7 @@
       "source": "0x02108ef8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daObjFire_c_classInit_OBJ_RED_FIRE",
+      "symbol": "_Z34daObjFire_c_classInit_OBJ_RED_FIREv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020b59e0"
@@ -216,7 +216,7 @@
       "source": "0x02108f14",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daObjFire_c_classInit_OBJ_BLUE_FIRE",
+      "symbol": "_Z35daObjFire_c_classInit_OBJ_BLUE_FIREv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020b59a8"

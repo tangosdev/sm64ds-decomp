@@ -47,7 +47,7 @@
  * the reverse of source order, so the highest-address function is written
  * first here and the functions come out in ROM order.
  *
- * The functions keep C linkage. The ItemView_ names are coined from the
+ * The ItemView_ names are coined from the
  * bodies, after the in-tree Ov007ItemView.
  */
 #include "types.h"
@@ -107,33 +107,31 @@ extern u8 data_ov007_020d75e4[];
 /* each digit's width in pixels */
 extern unsigned char data_ov007_020d7610[];
 
-extern "C" {
-
-extern void func_ov007_020ae834(Ov007Item *item);
-extern Ov007Item *func_ov007_020aea6c(int id, Ov007ItemLayout *layout, Ov007HitBox *hitBox);
-extern void func_ov007_020aea4c(Ov007Item *item);
-extern void func_ov007_020aec94(int choice);
-extern int func_ov007_020b58e4(Ov007ItemView *view);
+extern "C" void func_ov007_020ae834(Ov007Item *item);
+extern "C" Ov007Item *func_ov007_020aea6c(int id, Ov007ItemLayout *layout, Ov007HitBox *hitBox);
+extern "C" void func_ov007_020aea4c(Ov007Item *item);
+extern "C" void func_ov007_020aec94(int choice);
+extern "C" int func_ov007_020b58e4(Ov007ItemView *view);
 extern void func_ov007_020b5bf0(Ov007ItemView *view);
 extern void func_ov007_020b6134(int a);
-extern int func_ov007_020b6208(int id);
-extern void func_ov007_020b63e4(Ov007ItemView *view);
-extern void func_ov007_020b647c(int r0, int r1, short r2);
-extern void func_ov007_020b64a8(int dir);
-extern int func_ov007_020b79e4(void);
-extern void MessageWindow_Close(void);
-extern void func_ov007_020b7d94(int kind);
-extern void func_ov007_020b7eec(Ov007BootArgs *bootArgs);
-extern Ov007MenuState *PickerScene_GetDisplayState(void);
+extern "C" int func_ov007_020b6208(int id);
+extern "C" void func_ov007_020b63e4(Ov007ItemView *view);
+extern "C" void func_ov007_020b647c(int r0, int r1, short r2);
+extern "C" void func_ov007_020b64a8(int dir);
+int func_ov007_020b79e4(void);
+extern "C" void MessageWindow_Close(void);
+void func_ov007_020b7d94(int kind);
+void func_ov007_020b7eec(Ov007BootArgs *bootArgs);
+Ov007MenuState *PickerScene_GetDisplayState(void);
 extern int PickerScene_IsAwaitingTap(void);
-extern void func_ov007_020c1d78(int i);
-extern void func_ov007_020c1d8c(int i);
+void func_ov007_020c1d78(int i);
+void func_ov007_020c1d8c(int i);
 extern int func_ov007_020c1da0(int i);
 extern int func_ov007_020c3598(int value, int count, char *digits, int base);
-extern void func_ov007_020c3d1c(void *p);
-extern void *func_ov007_020c3df4(const char *name, int size);
-extern void func_ov007_020c9080(void *tween);
-extern struct Ov007Tween *func_ov007_020c908c(s32 *out);
+extern "C" void func_ov007_020c3d1c(void *p);
+extern "C" void *func_ov007_020c3df4(const char *name, int size);
+extern "C" void func_ov007_020c9080(void *tween);
+extern "C" struct Ov007Tween *func_ov007_020c908c(s32 *out);
 
 void ItemView_TryChoose(Ov007ItemView *view);
 
@@ -598,7 +596,8 @@ static inline int elem_selectable(Ov007ItemView *elem) {
  * FREE at 0; the transform is written out longhand only to keep the four
  * edges reading alike.
  */
-void ItemView_HandleTouch(void *arg0, void *arg1) {
+void Ov007ItemView::ItemView_HandleTouch(void *arg1) {
+    void *arg0 = this;
     Ov007ItemView *elem = (Ov007ItemView *)arg0;
     Ov007Touch *tp = (Ov007Touch *)arg1;
     int held = 0;
@@ -888,5 +887,4 @@ void func_ov007_020b413c(Ov007ItemView *view, int number) {
         func_ov007_020c4128(view->sprite, WORK->numberSprites[1], WORK->cameras[1]);
     }
     G3_PopMtx(1);
-}
 }

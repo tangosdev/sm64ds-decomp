@@ -47,11 +47,9 @@ extern BkRotebarModelFilePtr data_ov015_02114a8c;     /* bar BMD */
 extern CLPS_Block data_ov015_02113654;
 
 /* arm9 C helpers with no shared header. */
-extern "C" {
-unsigned char DecIfAbove0_Byte(unsigned char *p);
-}
+extern "C" unsigned char DecIfAbove0_Byte(unsigned char *p);
 
-extern "C" daObjBk_Rotebar_c *daObjBk_Rotebar_c_classInit() {
+daObjBk_Rotebar_c *daObjBk_Rotebar_c_classInit() {
     return new daObjBk_Rotebar_c();
 }
 

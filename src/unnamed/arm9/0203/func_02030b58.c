@@ -1,10 +1,10 @@
 #include "types.h"
-extern int func_0203d9b4(void);
-extern int func_0203d950(int i);
+extern int _Z13func_0203d9b4v(void);
+extern int _Z13func_0203d950i(int i);
 extern void func_02020214(unsigned int flags);
 extern u8 func_0202027c(int bit);
-extern int func_0203da9c(void);
-extern void func_02030790(void);
+extern int _Z13func_0203da9cv(void);
+extern void _Z13func_02030790v(void);
 
 extern u8 data_0209fc5c[];
 extern u8 data_0209fc58;
@@ -17,11 +17,11 @@ extern u8 data_0209fc58;
    console's own slot (func_0203da9c) is not, flag all four and end the
    session (func_02030790). */
 void func_02030b58(void) {
-    if (func_0203d9b4() != 0) {
+    if (_Z13func_0203d9b4v() != 0) {
         u8 flags = 0;
         int j;
         for (j = 0; j < 4; j++) {
-            if (func_0203d950(j) != 0)
+            if (_Z13func_0203d950i(j) != 0)
                 flags = (u8)(flags | (1 << j));
         }
         func_02020214(flags);
@@ -36,7 +36,8 @@ void func_02030b58(void) {
         }
     }
     if (data_0209fc5c[0] == 0) return;
-    if (data_0209fc5c[func_0203da9c()] != 0) return;
+    if (data_0209fc5c[_Z13func_0203da9cv()] != 0)
+        return;
     data_0209fc58 |= 0xf;
-    func_02030790();
+    _Z13func_02030790v();
 }

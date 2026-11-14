@@ -117,7 +117,7 @@ s32 daObjHeart_c::InitResources() {
 }
 
 /* Reconstructed source-style name; historical alias HealingHeart_Spawn. */
-extern "C" daObjHeart_c *daObjHeart_c_classInit(void) {
+daObjHeart_c *daObjHeart_c_classInit(void) {
     return new daObjHeart_c();
 }
 

@@ -9,16 +9,26 @@
  * are coined; ov007 records none. */
 
 #ifdef __cplusplus
+
+void MenuMem_SetAllocHook(int);
+
+void MenuMem_SetFreeHook(int);
+
+void MenuMem_SetMaxAllocSizeHook(int);
+
+/* C++ linkage: the objects emit the Itanium names. */
+void *MenuMem_AllocClear(const char *, int);
+int MenuMem_GetMaxAllocSize(void);
 extern "C" {
+#else
+#define MenuMem_AllocClear _Z18MenuMem_AllocClearPKci
+#define MenuMem_GetMaxAllocSize _Z23MenuMem_GetMaxAllocSizev
+void *MenuMem_AllocClear(const char *, int);
+int MenuMem_GetMaxAllocSize(void);
 #endif
 
 void *func_ov007_020c3df4(const char *, int);
-void *MenuMem_AllocClear(const char *, int);
 void func_ov007_020c3d1c(void *);
-int MenuMem_GetMaxAllocSize(void);
-void MenuMem_SetAllocHook(int);
-void MenuMem_SetFreeHook(int);
-void MenuMem_SetMaxAllocSizeHook(int);
 
 #ifdef __cplusplus
 }

@@ -1,14 +1,20 @@
 //cpp
 #include "Sound.h"
 
-extern "C" {
-
 extern void func_0203da2c(int v);
 extern void func_02030500(void);
+extern "C" {
+
 extern void func_02019a58(void);
+}
+
 extern void func_020132d8(void);
+extern "C" {
+
 extern void func_0201ffcc(void);
 extern void func_020199a4(void);
+}
+
 extern unsigned char data_02092778;
 extern int data_0209fc68;
 extern int data_0209277c;
@@ -41,5 +47,4 @@ void func_02030790(void)
     }
     func_0201ffcc();
     func_020199a4();
-}
 }

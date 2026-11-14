@@ -37,6 +37,32 @@ enum d_s_mg_memory_AssetId {
 #include "nitro/fx/fx_trig.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
+namespace s20b1e34 {
+void Mg_DrawScoreTally(void *, int, int, int);
+}
+using s20b1e34::Mg_DrawScoreTally;
+namespace s20b1bc8 {
+void Mg_DrawCredits(char *a0, int, int, int);
+}
+using s20b1bc8::Mg_DrawCredits;
+namespace s20b0aa0 {
+void FreeGfxSlotsById(int);
+}
+using s20b0aa0::FreeGfxSlotsById;
+namespace s20af68c {
+void Hud_RenderSprite(void *attr, int, int, int, int);
+}
+using s20af68c::Hud_RenderSprite;
+namespace s20ad674 {
+s32 GetGameLanguage(void);
+}
+using s20ad674::GetGameLanguage;
+void MgCoins_Reset(void);
+void MgCoins_Update(void);
+void MgCoins_StartLoseOneMore(void);
+void MgCoins_StartPayout(int);
+void Mg_PlaceBannersOnTopScreen(void);
+void Mg_SetPerfectBanner(void);
 
 namespace cstd {
 s16 atan2(s32, s32);
@@ -57,46 +83,76 @@ enum MemoryCardState {
 typedef void (dScMgMemory_c::*dScMgMemory_cState)();
 typedef void (dScMgMemory_c::*dScMgMemory_cCardState)(int);
 typedef void (dScMgMemory_c::*dScMgMemory_cPlayerState)(int);
-extern "C" dScMgMemory_cState sMemoryResultTable[];
-extern "C" dScMgMemory_cState sMemoryStateTable[];
+extern dScMgMemory_cState sMemoryResultTable[];
+extern dScMgMemory_cState sMemoryStateTable[];
+
 extern dScMgMemory_cState sMemoryRoundTable[];
 extern dScMgMemory_cCardState sMemoryCardTable[];
-/* daPly_c markers use the int-argument handlers, like the card handlers. */
-extern "C" dScMgMemory_cPlayerState sMemoryPlayerTable[];
+extern /* daPly_c markers use the int-argument handlers, like the card handlers. */
+    dScMgMemory_cPlayerState sMemoryPlayerTable[];
 
 extern "C" {
-extern void Mg_DrawScoreTally(void *c, int a, int b, int d);
-extern void Mg_DrawBlinkSprite(void *c, int arg1, int arg2);
+
 /* Unused. Deleting this named prototype renumbers @NNN later in the file. */
 extern short atan2_hold_d_s_mg_memory_1(int y, int x);
+
 void MgCoins_StartLoseOneMore(void);
-extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
-extern u16 sMemoryCardFrameSprites[];
-extern void *sMemoryCardSprites[];
-extern unsigned short sMemoryFlipFrameTimes[];
-extern void Mg_SaveRecordPair(int a, int b);
-extern u16 *sMemoryCardPositionsPerDifficulty[];
-extern void MgCoins_StartPayout(int);
-extern short gMgCoinsStatus;
-extern void Mg_SetPerfectBanner(void);
-extern void Mg_SetSharedState(int c);
-extern void Mg_SubmitScore(int self);
-extern void FreeGfxSlotsById(int x);
-void Mg_DrawCredits(char *c, int a, int b, int d);
-void MgCoins_Update(void);
-void LoadCard2SubBg3(void *);
-s32 GetGameLanguage(void);
-void *LoadFile(int handle);
-void DecompressLZ16(void *src, void *dst);
-void Deallocate(void *ptr);
-int Mg_GetSavedRecord0(void);
-int Mg_GetSavedRecord1(void);
-void MgCoins_Reset(void);
-void Mg_SetTopScreenYOffset(int v);
-void Mg_PlaceBannersOnTopScreen(void);
-extern u8 gMainScreenLayers;
-extern u8 gSubScreenLayers;
 }
+
+extern u16 sMemoryCardFrameSprites[];
+
+extern void *sMemoryCardSprites[];
+
+extern unsigned short sMemoryFlipFrameTimes[];
+extern "C" {}
+
+extern u16 *sMemoryCardPositionsPerDifficulty[];
+extern "C" {
+
+extern void MgCoins_StartPayout(int);
+}
+
+extern short gMgCoinsStatus;
+extern "C" {
+
+extern void Mg_SetPerfectBanner(void);
+}
+void Dealer_PlayWin(void *c);
+void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
+extern "C" {
+
+void Dealer_Draw(char *p);
+
+void MgCoins_Update(void);
+}
+namespace s020c19d0 {
+void Dealer_Update(Dealer *dealer);
+}
+using s020c19d0::Dealer_Update;
+void LoadCard2SubBg3(void *);
+extern "C" {
+
+void *LoadFile(int handle);
+
+void DecompressLZ16(void *src, void *dst);
+}
+
+void Deallocate(void *ptr);
+extern "C" {
+
+int Dealer_Load(void *c);
+
+void MgCoins_Reset(void);
+}
+int Dealer_IsIdle(Dealer *dealer);
+extern "C" {
+
+void Mg_PlaceBannersOnTopScreen(void);
+}
+
+extern u8 gMainScreenLayers;
+
+extern u8 gSubScreenLayers;
 
 /* Load-bearing: source order, and the opt pragmas on DrawCards and
  * CardFlyAway. Under deferred emission the last pragma setting wins for the
@@ -1005,16 +1061,15 @@ s32 dScMgMemory_c::InitResources() {
 
 /* `new` inlines the implicit constructor: the base chain, this class's
    vptr, then mDealer. */
-extern "C" dScMgMemory_c *dScMgMemory_c_classInit() {
+dScMgMemory_c *dScMgMemory_c_classInit() {
     return new dScMgMemory_c;
 }
-
-/* Static-init globals (was the handwritten __sinit_ov006_021311c8 shard).
+extern /* Static-init globals (was the handwritten __sinit_ov006_021311c8 shard).
  * The sprite-pointer table plus the five PMF state tables plain-copied
  * from native member-pointer constants, in retail copy order: the permuted sprite
  * pointers, the five main states, the six round states, the four result
  * states, the seven card states, then the three player states. */
-extern "C" int sMgCardSprites[];
+    int sMgCardSprites[];
 
 void *sMemoryCardSprites[15] = {
     (void *)sMgCardSprites[0],  (void *)sMgCardSprites[1],  (void *)sMgCardSprites[2],
@@ -1048,27 +1103,31 @@ dScMgMemory_cPlayerState sMemoryPlayerTable[3] = {
     &dScMgMemory_c::PlayerWait,
 };
 
-extern "C" BaseSpawnInfo<dScMgMemory_c> g_profile_MG_MEMORY = {dScMgMemory_c_classInit, 0x016a,
-                                                               0x016a};
+BaseSpawnInfo<dScMgMemory_c> g_profile_MG_MEMORY = {dScMgMemory_c_classInit, 0x016a, 0x016a};
 
 /* Twelve interleaved screen x/y pairs per difficulty. The flat indexing
  * in CardMove preserves the pinned compiler's measured address formation. */
-extern "C" {
+
 u16 sMemoryCardPositionsEasy[24] = {224, 160, 160, 160, 96,  160, 32,  160, 224, 136, 160, 136,
                                     96,  136, 32,  136, 224, 64,  160, 64,  96,  64,  32,  64};
+
 u16 sMemoryCardPositionsNormal[24] = {200, 160, 136, 160, 224, 136, 176, 136, 128, 136, 80, 136,
                                       32,  136, 224, 64,  176, 64,  128, 64,  80,  64,  32, 64};
+
 u16 sMemoryCardPositionsHard[24] = {209, 160, 155, 160, 101, 160, 47,  160, 209, 104, 155, 104,
                                     101, 104, 47,  104, 209, 48,  155, 48,  101, 48,  47,  48};
+
 u16 *sMemoryCardPositionsPerDifficulty[3] = {sMemoryCardPositionsEasy, sMemoryCardPositionsNormal,
                                              sMemoryCardPositionsHard};
+
 /* Frames0..4 are used by the flip handlers. The sixth stored value is
  * also24; its original purpose is unknown. */
 u16 sMemoryFlipFrameTimes[6] = {8, 6, 4, 6, 24, 24};
+
 int sMemoryCardNcgByLanguage[5] = {ASSET_D_2D_MG_CARD_NCG_BIN, ASSET_D_2D_MG_CARD_S_NCG_BIN,
                                    ASSET_D_2D_MG_CARD_F_NCG_BIN, ASSET_D_2D_MG_CARD_G_NCG_BIN,
                                    ASSET_D_2D_MG_CARD_I_NCG_BIN};
+
 /* Seven card values, five flip frames each, indexed by value*5+frame. */
 u16 sMemoryCardFrameSprites[35] = {0, 0, 0, 0, 0, 0,  1, 2, 4, 3, 0,  1,  2, 6, 5, 0,  1, 2,
                                    8, 7, 0, 1, 2, 10, 9, 0, 1, 2, 12, 11, 0, 1, 2, 14, 13};
-}

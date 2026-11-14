@@ -22,11 +22,9 @@
 #include "dBase_c.h"
 #include "nitro/hw/registers.h"
 
-extern "C" {
 /* local extern: no header declares it; the next ROM entry's crash-forward
  * target, called only by the absorbed spin below. */
 extern void func_02013f4c(void);
-}
 
 /* NitroSDK's inline IME helper (os/common/interrupt.h); returns the previous
  * master enable. File-local: an inline body in a shared header renumbers
@@ -41,8 +39,7 @@ static inline int OS_DisableIrq(void) {
  * (arm9 0x02013f28..0x02013f4c): fatal-error spin, IME off then call the
  * next entry forever. Defined first because this file emits in reverse
  * source order, so the tail body lands at the run's right edge. */
-extern "C" void func_02013f28(void)
-{
+void func_02013f28(void) {
     (void)OS_DisableIrq();
     for (;;)
         func_02013f4c();
@@ -59,6 +56,6 @@ fBase_c *dBase_c::Spawn(u32 actorID, fBase_c *parent, int a, int b) {
     return createChild(actorID, parent, a, b);
 }
 
-extern "C" int func_02013edc(int a, int b, int c) {
+int func_02013edc(int a, int b, int c) {
     return fBase_c::createRoot(a, b, c);
 }

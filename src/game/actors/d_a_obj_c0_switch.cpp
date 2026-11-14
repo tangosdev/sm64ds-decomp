@@ -78,7 +78,7 @@ extern CLPS_Block data_ov012_02111cd0;
  * itself emits. The implicit constructor is what keeps the intervening
  * dBgActor_c construction inlined; declaring a constructor of our own would
  * emit a `bl` the factory does not have. */
-extern "C" daObjC0_Switch_c *daObjC0_Switch_c_classInit() {
+daObjC0_Switch_c *daObjC0_Switch_c_classInit() {
     return new daObjC0_Switch_c();
 }
 

@@ -2,6 +2,7 @@
 #include "Ov007Picker.h"
 
 extern Ov007StrokePath *func_ov007_020c2a04(Ov007StrokePath *src, int start, int end);
+#define func_ov007_020c281c _Z19func_ov007_020c281cP15Ov007StrokePathi
 extern void func_ov007_020c281c(Ov007StrokePath *path, int minTurn);
 extern void func_ov007_020c27b4(Ov007StrokePath *path);
 extern void func_ov007_020c26fc(Ov007StrokePath *path);

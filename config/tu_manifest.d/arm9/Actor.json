@@ -67,7 +67,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "func_0200f7f0",
+      "symbol": "_Z13func_0200f7f0P8dActor_cPt",
       "address": "0x0200f7f0",
       "size": "0x00000084",
       "legacy_source": "src/func_0200f7f0.c",
@@ -592,7 +592,7 @@
       "ordinal": 78
     },
     {
-      "symbol": "func_02010e78",
+      "symbol": "_Z13func_02010e78PK7Vector3PK10Vector3_16as",
       "address": "0x02010e78",
       "size": "0x00000054",
       "legacy_source": "src/func_02010e78.c",

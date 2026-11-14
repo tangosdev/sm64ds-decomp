@@ -20,63 +20,63 @@
   ],
   "functions": [
     {
-      "symbol": "CARD_UnlockBackup",
+      "symbol": "_Z17CARD_UnlockBackupt",
       "address": "0x0205ff70",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0205/func_0205ff70.c",
       "ordinal": 0
     },
     {
-      "symbol": "CARD_LockBackup",
+      "symbol": "_Z15CARD_LockBackupt",
       "address": "0x0205ff80",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0205/func_0205ff80.c",
       "ordinal": 1
     },
     {
-      "symbol": "CARD_UnlockRom",
+      "symbol": "_Z14CARD_UnlockRomt",
       "address": "0x0205ff90",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0205/func_0205ff90.c",
       "ordinal": 2
     },
     {
-      "symbol": "CARD_LockRom",
+      "symbol": "_Z12CARD_LockRomt",
       "address": "0x0205ffb0",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0205/func_0205ffb0.c",
       "ordinal": 3
     },
     {
-      "symbol": "CARDi_WaitAsync",
+      "symbol": "_Z15CARDi_WaitAsyncv",
       "address": "0x0205ffd0",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/arm9/0205/func_0205ffd0.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "CARDi_InitCommon",
+      "symbol": "_Z16CARDi_InitCommonv",
       "address": "0x0206002c",
       "size": "0x000000b4",
       "legacy_source": "src/unnamed/arm9/0206/func_0206002c.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "CARDi_UnlockResource",
+      "symbol": "_Z20CARDi_UnlockResourceii",
       "address": "0x020600e0",
       "size": "0x000000a8",
       "legacy_source": "src/unnamed/arm9/0206/func_020600e0.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "CARDi_LockResource",
+      "symbol": "_Z18CARDi_LockResourceii",
       "address": "0x02060188",
       "size": "0x000000a0",
       "legacy_source": "src/unnamed/arm9/0206/func_02060188.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "CARDi_SetTask",
+      "symbol": "_Z13CARDi_SetTaskPFvP11CARDiCommonE",
       "address": "0x02060228",
       "size": "0x00000094",
       "legacy_source": "src/unnamed/arm9/0206/func_02060228.c",

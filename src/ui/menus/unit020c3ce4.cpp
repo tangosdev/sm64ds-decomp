@@ -35,7 +35,7 @@
  * first here and the functions come out in ROM order.
  *
  * The MenuMem_* names are coined from the bodies and their callers; ov007
- * records no names. All keep C linkage. func_ov007_020c3df4 (alloc) and
+ * records no names. func_ov007_020c3df4 (alloc) and
  * func_ov007_020c3d1c (free) keep address names while files another
  * branch holds call them. The third hook is word 2 of dScDSMT_c's hook
  * table data_ov007_02103290 (0x020cca80 in the ROM image), whose body is
@@ -44,8 +44,6 @@
  */
 #include "nitro/mi/memory.h"
 #include "nitro/os/alloc.h"
-
-extern "C" {
 
 typedef int (*Ov007QueryHook)(void);
 typedef void (*Ov007FreeHook)(void *);
@@ -80,7 +78,8 @@ void MenuMem_SetMaxAllocSizeHook(int v) {
 /* The menu's allocator: forwards the size to the alloc hook and returns
  * the block. name tags the allocation ("global data", "pad",
  * "touch_panel", ...; most callers pass 0) and is dropped. */
-void *func_ov007_020c3df4(const char *name, int size) {
+/* Callers, including the .c files, declare this with C linkage. */
+extern "C" void *func_ov007_020c3df4(const char *name, int size) {
     return data_ov007_02103258(size);
 }
 
@@ -112,7 +111,7 @@ void *MenuMem_AllocClear(const char *name, int n) {
 }
 
 /* NOT a daPly_c method: it reads no fields, it only calls the free hook. */
-void func_ov007_020c3d1c(void *self) {
+extern "C" void func_ov007_020c3d1c(void *self) {
     data_ov007_02103254(self);
 }
 
@@ -120,5 +119,4 @@ int MenuMem_GetMaxAllocSize(void) {
     if (data_ov007_02104c14 == 0)
         return 0;
     return data_ov007_02104c14();
-}
 }

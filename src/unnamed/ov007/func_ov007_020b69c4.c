@@ -3,6 +3,7 @@
 #include "Ov007Work.h"
 #include "Ov007PaletteBuf.h"
 
+#define func_ov007_020c9388 _Z19func_ov007_020c9388i
 extern void *func_ov007_020c9388(int initialState);
 extern Ov007PaletteBuf *func_ov007_020c946c(const void *source);
 

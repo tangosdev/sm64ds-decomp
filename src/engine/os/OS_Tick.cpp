@@ -23,10 +23,14 @@
 extern "C" {
 
 extern void OSi_SetTimerReserved(int timerNum);
+}
 
-extern u16 data_020a6430;          /* OSi_UseTick */
-extern int data_020a6434;          /* OSi_NeedResetTimer */
-extern volatile u64 data_020a6438; /* OSi_TickCounter */
+extern u16 data_020a6430;
+/* OSi_UseTick */
+extern int data_020a6434;
+/* OSi_NeedResetTimer */
+extern volatile u64 data_020a6438;
+/* OSi_TickCounter */
 
 void OSi_CountUpTick(void);
 
@@ -69,5 +73,4 @@ long long OS_GetTick(void) {
 
 int OS_GetTickLo(void) {
     return REG_TM0CNT_L;
-}
 }

@@ -53,13 +53,13 @@ extern LondonModelFile data_ov022_02114580;
 extern LondonCollisionFilePtr data_ov022_02114578;
 extern CLPS_Block data_ov064_0211bb2c;
 
-extern "C" daObjFl_London_c *daObjFl_London_c_classInit() {
+daObjFl_London_c *daObjFl_London_c_classInit() {
     return new daObjFl_London_c();
 }
 
 /* The actor profile the registry points at. Word 0 relocates to the
  * factory above; the rest is the ROM's, read back at 0x02113f4c. */
-extern "C" SpawnInfo<daObjFl_London_c> g_profile_FL_LONDON = {
+SpawnInfo<daObjFl_London_c> g_profile_FL_LONDON = {
     daObjFl_London_c_classInit,
     0x0049,
     0x0119,

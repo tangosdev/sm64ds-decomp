@@ -1,5 +1,8 @@
 #ifndef NITRO_SND_COMMAND_H
 #define NITRO_SND_COMMAND_H
+#ifndef __cplusplus
+#define SND_CommandInit _Z15SND_CommandInitv
+#endif
 
 /*
  * The ARM9 sound command record of the Nitro SDK's SND_command.c, under the
@@ -22,13 +25,17 @@ typedef struct SNDCommand {
 } SNDCommand;
 
 #ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 
 void SND_CommandInit(void);
 
 #ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif /* NITRO_SND_COMMAND_H */

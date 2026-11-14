@@ -83,9 +83,34 @@ enum dScMgHanachan_c_AssetId {
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/fx/fx_cp.h"
+namespace s20b2220 {
+void Mg_DrawNumberRotated(int, int, int, int, int, int, u16);
+}
+using s20b2220::Mg_DrawNumberRotated;
+namespace s20b1e34 {
+void Mg_DrawScoreTally(void *, int, int, int);
+}
+using s20b1e34::Mg_DrawScoreTally;
+namespace s20b0aa0 {
+void FreeGfxSlotsById(int);
+}
+using s20b0aa0::FreeGfxSlotsById;
+namespace s20afcf8 {
+void DrawOamSprite(OamAttr *attr, int, int, Matrix2x2 *mtx);
+}
+using s20afcf8::DrawOamSprite;
+namespace s20ad90c {
+void Mg_CommitRecords(void);
+}
+using s20ad90c::Mg_CommitRecords;
+namespace s20ad674 {
+s32 GetGameLanguage(void);
+}
+using s20ad674::GetGameLanguage;
 
-extern "C" void *dScMgHanachan_c_classInit();
-extern "C" BaseSpawnInfo<void> g_profile_MG_HANACHAN = {dScMgHanachan_c_classInit, 0x182, 0x182};
+void *dScMgHanachan_c_classInit(void);
+
+BaseSpawnInfo<void> g_profile_MG_HANACHAN = {dScMgHanachan_c_classInit, 0x182, 0x182};
 
 typedef dScMgHanachan_c::Point V2;
 typedef struct {
@@ -149,52 +174,69 @@ namespace cstd {
 s16 atan2(s32, s32);
 }
 
-extern "C" {
-/* This TU's own functions. */
-extern int Hana_PickUnused(int n, int mask);
-extern void Hana_ChooseStarWiggler(int count);
-extern int Hana_PickMoveKind(void);
-extern void Hana_LoadBackground(void);
+int Hana_PickUnused(int n, int mask);
+void Hana_ChooseStarWiggler(int count);
+int Hana_PickMoveKind(void);
+void Hana_LoadBackground(void);
 
 extern void *sWigglerSprites[];
+
 extern void *sHanaWigglerTargetSprites[];
+
 extern void *sHanaWigglerFieldSprites[];
+extern "C" {
+
 extern void OamRender8_d_s_mg_hanachan(int b, void *attr, int x, int y, int a, int c, int f, int g);
+}
 
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
+
 extern short sHanaPickedCount;
+
 extern unsigned short sHanaPickedIds[];
+
 extern unsigned short sHanaUsedIds[];
+extern "C" {
+
 extern s16 atan2_hold_d_s_mg_hanachan_methods_1(int y, int x);
-extern void Mg_CommitRecords(void);
-extern void Mg_DrawScoreTally(void *a, int b, int c, int d);
-extern int GetGameLanguage(void);
-extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
-extern void Mg_DrawNumberRotated(int a, int b, int c, int d, int e, int f, u16 g);
-extern void StarPopup_Start(int x, int y);
-extern void HanaPopup_Spawn(int x, int y);
+}
+void StarPopup_Start(int x, int y);
+void HanaPopup_Spawn(int r0, int r1);
+
 extern s16 sHanaRoundPatterns[];
+
 extern volatile int sHanaFieldWigglerCounts[];
+
 extern u8 gMainScreenLayers;
+
 extern u8 gSubScreenLayers;
 
 /* These helpers read or write two scalar words. Cast the plain Point
    records at the C ABI boundary rather than giving the externs new types. */
 /* Scalar pair ABI agrees with the arm9 definitions; V2 only names this TU workspace. */
 extern int func_0203d5dc(const int *a, const int *b);
+extern "C" {
+
 extern void func_0203d704(int *o, int *a, int *b);
-extern void Vec2_Sub(int *o, int *a, int *b);
+
+extern "C" void Vec2_Sub(int *o, int *a, int *b);
+
 extern void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
+}
+
 /* sHanaPickedLow is only read where it is unsigned and only written as a
    halfword, so the unsigned spelling costs the writer nothing. */
 extern unsigned short sHanaPickedLow;
+
 /* sHanaRoundPattern: Phase_SetupRound spelled it volatile and only ever
    stores to it (never re-reads), so the plain spelling emits the same strh. */
 extern s16 sHanaRoundPattern;
+extern "C" {
+
 /* LoadFile returns the buffer; one file typed it int and casts at each use. */
 extern void *LoadFile(int handle);
+
 extern void DecompressLZ16(void *src, void *dst);
-extern void FreeGfxSlotsById(int x);
 }
 
 struct S_ea81c {
@@ -213,11 +255,12 @@ struct S_ea81c {
    sHanaPopups, 0x14 bytes each. The sixteen are declared with
    HanaPopup_Spawn's layout, which it needs to match; the other
    functions keep the spelling their own match used, through a cast. */
-extern "C" {
+
 extern char sHanaStarPopup[];
+
 extern struct S_ea81c sHanaPopups[];
+
 extern OamAttr *sMgDigitSprites[];
-}
 
 /* Empty: the compiler destroys the fifteen 0x98-byte wigglers at 0x4678
    through __cxa_vec_cleanup with Wiggler's destructor, as dScMgBase_c's own
@@ -248,7 +291,7 @@ typedef char HanaStarPopup_size_must_be_0x14[sizeof(HanaStarPopup) == 0x14 ? 1 :
 /* Draws the single popup while its visible flag is 1: a sprite from the
    language's table 8 pixels left of it and one from sMgDigitSprites
    8 pixels right. */
-extern "C" void StarPopup_Draw(void) {
+void StarPopup_Draw(void) {
     int x;
     int y;
     s32 r;
@@ -275,9 +318,9 @@ typedef struct {
     u8 t;
     u8 pad[0x13];
 } Timer20;
-extern "C" Timer20 sHanaStarPopups[];
+extern Timer20 sHanaStarPopups[];
 
-extern "C" void StarPopup_Update(char *arg) {
+void StarPopup_Update(char *arg) {
     int i;
     char *f = sHanaStarPopup;
     for (i = 0; i < 1; i++, f += 0x14) {
@@ -339,7 +382,7 @@ extern "C" void StarPopup_Update(char *arg) {
 
 /* Starts the single popup at (x, y), x kept between 0x10000 and 0xf4000,
    unless it is already active. */
-extern "C" void StarPopup_Start(int x, int y) {
+void StarPopup_Start(int x, int y) {
     char *g = sHanaStarPopup;
     if (((HanaStarPopup *)g)->active != 0)
         return;
@@ -358,7 +401,7 @@ extern "C" void StarPopup_Start(int x, int y) {
 }
 
 /* Clears the single popup's active and draw flags. */
-extern "C" unsigned char StarPopup_Clear(void) {
+unsigned char StarPopup_Clear(void) {
     ((HanaStarPopup *)sHanaStarPopup)->active = 0;
     ((HanaStarPopup *)sHanaStarPopup)->visible = 0;
     return 0;
@@ -374,7 +417,7 @@ typedef struct {
     int pad1;
 } Ent_ea670;
 
-extern "C" void HanaPopup_DrawAll(void) {
+void HanaPopup_DrawAll(void) {
     void *a = 0, *b = 0, *c = 0;
     int i;
     for (i = 0; i < 16; i++) {
@@ -406,7 +449,7 @@ typedef struct Ent71c {
     u8 pad[3];
 } Ent71c;
 
-extern "C" void HanaPopup_UpdateAll(void) {
+void HanaPopup_UpdateAll(void) {
     int i;
     for (i = 0; i < 16; i++) {
         Ent71c *e = &((Ent71c *)sHanaPopups)[i];
@@ -442,7 +485,7 @@ extern "C" void HanaPopup_UpdateAll(void) {
 /* Starts a popup in the first free one of the sixteen slots at (r0, r1),
    r0 kept between 0x14000 and 0xf0000. */
 
-extern "C" void HanaPopup_Spawn(int r0, int r1) {
+void HanaPopup_Spawn(int r0, int r1) {
     int i;
     for (i = 0; i < 0x10; i++) {
         if (sHanaPopups[i].inuse == 0) {
@@ -471,7 +514,7 @@ struct E6_ea8e0 {
     unsigned char pad2[4];
 };
 
-extern "C" void HanaPopup_ClearAll(void) {
+void HanaPopup_ClearAll(void) {
     int i;
     for (i = 0; i < 0x10; i++) {
         if (((struct E6_ea8e0 *)sHanaPopups)[i].e == 0) {
@@ -1014,7 +1057,6 @@ int dScMgHanachan_c::Wiggler::GetFlag(int n) {
     }
 }
 
-extern "C" {
 int Hana_PickUnused(int n, int mask) {
     int v;
     int i;
@@ -1043,9 +1085,7 @@ int Hana_PickUnused(int n, int mask) {
     sHanaUsedIds[n] = v;
     return v;
 }
-}
 
-extern "C" {
 void Hana_ChooseStarWiggler(int count) {
     int i, j;
     sHanaPickedLow = (short)(RandomIntInternal(&data_0209e650.value) & 0xf);
@@ -1070,9 +1110,7 @@ void Hana_ChooseStarWiggler(int count) {
         }
     }
 }
-}
 
-extern "C" {
 int Hana_PickMoveKind(void) {
     int v = 3;
     int r = (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
@@ -1083,7 +1121,6 @@ int Hana_PickMoveKind(void) {
     else if (r < 0xc00)
         v = 2;
     return v;
-}
 }
 
 int dScMgHanachan_c::Wiggler::ClampToScreen() {
@@ -2008,7 +2045,6 @@ s32 dScMgHanachan_c::InitResources() {
     return 1;
 }
 
-extern "C" {
 void Hana_LoadBackground(void) {
     void *ncg = LoadFile(ASSET_D_2D_MG_BG_HANA_SAGASE1_NCG_BIN);
     void *nsc = LoadFile(ASSET_D_2D_MG_BG_HANA_SAGASE1_NSC_BIN);
@@ -2044,10 +2080,15 @@ void Hana_LoadBackground(void) {
  * vu32* ring sHanaBackgroundParts. Non-constant initializers, so the
  * compiler emits __sinit_d_s_mg_hanachan_methods.cpp to copy them at load. */
 extern void *data_ov006_021374b8;
+
 extern void *data_ov006_021374c4;
+
 extern void *data_ov006_021374ac;
+
 extern void *data_ov006_021374e8;
+
 extern void *data_ov006_021374f4;
+
 extern void *sHanaBackgroundPartsB[];
 
 void *sWigglerSprites[11] = {
@@ -2063,4 +2104,3 @@ void *sWigglerSprites[11] = {
     (void *)sHanaBackgroundParts[6],
     (void *)sHanaBackgroundParts[9],
 };
-}

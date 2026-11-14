@@ -21,196 +21,196 @@
   ],
   "functions": [
     {
-      "symbol": "PushCommand_impl",
+      "symbol": "_Z16PushCommand_implijjjj",
       "address": "0x0205a86c",
       "size": "0x00000058",
       "legacy_source": "src/Snd_SendCommand.c",
       "ordinal": 0
     },
     {
-      "symbol": "SNDi_SetSurroundDecay",
+      "symbol": "_Z21SNDi_SetSurroundDecayi",
       "address": "0x0205a8c4",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/arm9/0205/func_0205a8c4.c",
       "ordinal": 1
     },
     {
-      "symbol": "SNDi_SetTrackParam",
+      "symbol": "_Z18SNDi_SetTrackParamijjji",
       "address": "0x0205a8f0",
       "size": "0x00000034",
       "legacy_source": "src/SNDi_SetTrackParam.c",
       "ordinal": 2
     },
     {
-      "symbol": "SNDi_SetPlayerParam",
+      "symbol": "_Z19SNDi_SetPlayerParamijji",
       "address": "0x0205a924",
       "size": "0x00000034",
       "legacy_source": "src/SNDi_SetPlayerParam.c",
       "ordinal": 3
     },
     {
-      "symbol": "SND_SetOutputSelector",
+      "symbol": "_Z21SND_SetOutputSelectoriiii",
       "address": "0x0205a958",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/arm9/0205/func_0205a958.c",
       "ordinal": 4
     },
     {
-      "symbol": "SND_InvalidateWaveData",
+      "symbol": "_Z22SND_InvalidateWaveDataPKvS0_",
       "address": "0x0205a98c",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/arm9/0205/func_0205a98c.c",
       "ordinal": 5
     },
     {
-      "symbol": "SND_InvalidateBankData",
+      "symbol": "_Z22SND_InvalidateBankDataPKvS0_",
       "address": "0x0205a9b8",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/arm9/0205/func_0205a9b8.c",
       "ordinal": 6
     },
     {
-      "symbol": "SND_InvalidateSeqData",
+      "symbol": "_Z21SND_InvalidateSeqDataPKvS0_",
       "address": "0x0205a9e4",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/arm9/0205/func_0205a9e4.c",
       "ordinal": 7
     },
     {
-      "symbol": "SND_SetupChannelPcm",
+      "symbol": "_Z19SND_SetupChannelPcmiiPKviiiiiii",
       "address": "0x0205aa10",
       "size": "0x00000058",
       "legacy_source": "src/unnamed/arm9/0205/func_0205aa10.c",
       "ordinal": 8
     },
     {
-      "symbol": "SND_SetChannelVolume",
+      "symbol": "_Z20SND_SetChannelVolumejii",
       "address": "0x0205aa68",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/arm9/0205/func_0205aa68.c",
       "ordinal": 9
     },
     {
-      "symbol": "SND_UnlockChannel",
+      "symbol": "_Z17SND_UnlockChanneljj",
       "address": "0x0205aa9c",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/arm9/0205/func_0205aa9c.c",
       "ordinal": 10
     },
     {
-      "symbol": "SND_LockChannel",
+      "symbol": "_Z15SND_LockChanneljj",
       "address": "0x0205aac8",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/arm9/0205/func_0205aac8.c",
       "ordinal": 11
     },
     {
-      "symbol": "SND_SetTrackMute",
+      "symbol": "_Z16SND_SetTrackMuteiji",
       "address": "0x0205aaf4",
       "size": "0x00000034",
       "legacy_source": "src/SND_SetTrackMute.c",
       "ordinal": 12
     },
     {
-      "symbol": "SND_SetupAlarm",
+      "symbol": "_Z14SND_SetupAlarmijjPFvPvES_",
       "address": "0x0205ab28",
       "size": "0x00000044",
       "legacy_source": "src/unnamed/arm9/0205/func_0205ab28.c",
       "ordinal": 13
     },
     {
-      "symbol": "SND_SetupCapture",
+      "symbol": "_Z16SND_SetupCaptureiiPvjiii",
       "address": "0x0205ab6c",
       "size": "0x0000004c",
       "legacy_source": "src/unnamed/arm9/0205/func_0205ab6c.c",
       "ordinal": 14
     },
     {
-      "symbol": "SND_StopTimer",
+      "symbol": "_Z13SND_StopTimerjjjj",
       "address": "0x0205abb8",
       "size": "0x00000070",
       "legacy_source": "src/unnamed/arm9/0205/func_0205abb8.c",
       "ordinal": 15
     },
     {
-      "symbol": "SND_StartTimer",
+      "symbol": "_Z14SND_StartTimerjjjj",
       "address": "0x0205ac28",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/arm9/0205/func_0205ac28.c",
       "ordinal": 16
     },
     {
-      "symbol": "SND_SetTrackModSpeed",
+      "symbol": "_Z20SND_SetTrackModSpeediji",
       "address": "0x0205ac5c",
       "size": "0x00000028",
       "legacy_source": "src/SND_SetTrackModSpeed.c",
       "ordinal": 17
     },
     {
-      "symbol": "SND_SetTrackModDepth",
+      "symbol": "_Z20SND_SetTrackModDepthiji",
       "address": "0x0205ac84",
       "size": "0x00000028",
       "legacy_source": "src/SND_SetTrackModDepth.c",
       "ordinal": 18
     },
     {
-      "symbol": "SND_SetTrackPan",
+      "symbol": "_Z15SND_SetTrackPaniji",
       "address": "0x0205acac",
       "size": "0x00000028",
       "legacy_source": "src/SND_SetTrackPan.c",
       "ordinal": 19
     },
     {
-      "symbol": "SND_SetTrackPitch",
+      "symbol": "_Z17SND_SetTrackPitchiji",
       "address": "0x0205acd4",
       "size": "0x00000028",
       "legacy_source": "src/SND_SetTrackPitch.c",
       "ordinal": 20
     },
     {
-      "symbol": "SND_SetTrackVolume",
+      "symbol": "_Z18SND_SetTrackVolumeiji",
       "address": "0x0205acfc",
       "size": "0x00000028",
       "legacy_source": "src/SND_SetTrackVolume.c",
       "ordinal": 21
     },
     {
-      "symbol": "SND_SetPlayerChannelPriority",
+      "symbol": "_Z28SND_SetPlayerChannelPriorityii",
       "address": "0x0205ad24",
       "size": "0x00000018",
       "legacy_source": "src/SND_SetPlayerChannelPriority.c",
       "ordinal": 22
     },
     {
-      "symbol": "SND_SetPlayerVolume",
+      "symbol": "_Z19SND_SetPlayerVolumeii",
       "address": "0x0205ad3c",
       "size": "0x00000018",
       "legacy_source": "src/SND_SetPlayerVolume.c",
       "ordinal": 23
     },
     {
-      "symbol": "SND_SetPlayerTempoRatio",
+      "symbol": "_Z23SND_SetPlayerTempoRatioii",
       "address": "0x0205ad54",
       "size": "0x00000018",
       "legacy_source": "src/SND_SetPlayerTempoRatio.c",
       "ordinal": 24
     },
     {
-      "symbol": "SND_PauseSeq",
+      "symbol": "_Z12SND_PauseSeqii",
       "address": "0x0205ad6c",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/arm9/0205/func_0205ad6c.c",
       "ordinal": 25
     },
     {
-      "symbol": "SND_StopSeq",
+      "symbol": "_Z11SND_StopSeqi",
       "address": "0x0205ad98",
       "size": "0x0000002c",
       "legacy_source": "src/SND_StopSeq.c",
       "ordinal": 26
     },
     {
-      "symbol": "SND_StartSeq",
+      "symbol": "_Z12SND_StartSeqiPKvjP11SNDBankData",
       "address": "0x0205adc4",
       "size": "0x00000034",
       "legacy_source": "src/SND_StartSeq.c",
