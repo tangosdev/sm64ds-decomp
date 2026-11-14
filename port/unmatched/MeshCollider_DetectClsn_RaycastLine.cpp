@@ -27,7 +27,7 @@ struct dBgCh_Lin {
     u8      hasClsn;        /* 0x50 */
     u8      pad_051[0x3];
     Vector3 lineEnd;        /* 0x54 */
-    Fix12i  clsnDist;       /* 0x60 */
+    fx32  clsnDist;       /* 0x60 */
 };
 
 namespace cstd {
@@ -43,7 +43,7 @@ void func_02037fd4(dBgPi *res, s16 triIdx, SurfaceInfo *info);
 u32  func_020396dc(dBgW_Kc *self, KCL_Tri *prism);
 int  _ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(void *self, SurfaceInfo *surf,
                                                     dBgCh_Lin *ray, int isSteep);
-Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
+fx32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(SurfaceInfo *self, Vector3 *out);
 }
 
@@ -76,7 +76,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_Lin &ray)
     const Vector3 *origin;
 
     /* Everything downstream -- origin, vertices, the plane math and its
-       0x20000 thresholds -- lives in Fix12i (the castle KCL proves it: its
+       0x20000 thresholds -- lives in fx32 (the castle KCL proves it: its
        floor vertices only sit inside the octree box at fx scale). The
        endpoints therefore stay fx; cells are still (fx - origin) >> 6. */
     s.x = lineStart->x;
@@ -242,7 +242,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_Lin &ray)
     if (!found) return 0;
 
     ray.clsnDist = bestDist << 6;   /* undo the >>6 of the dist metric */
-    /* best is already Fix12i under the fx-consistent scale (the raw-scale
+    /* best is already fx32 under the fx-consistent scale (the raw-scale
        draft shifted here; that shift moved into the metric only) */
     pos.x = best.x;
     pos.y = best.y;
