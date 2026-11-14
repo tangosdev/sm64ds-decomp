@@ -28,12 +28,12 @@ void dM3dGSph::SetCentre(const Vector3 &centre_) {
     centre = centre_;
 }
 
-void dM3dGSph::Set(const Vector3 &centre_, Fix12i radius_) {
+void dM3dGSph::Set(const Vector3 &centre_, fx32 radius_) {
     SetCentre(centre_);
     SetRadius(radius_);
 }
 
-void dM3dGSph::SetRadius(Fix12i radius_) {
+void dM3dGSph::SetRadius(fx32 radius_) {
     radius = radius_;
 }
 

@@ -11,7 +11,7 @@ dBgCh_SphCrr::~dBgCh_SphCrr()
 {
 }
 
-void dBgCh_SphCrr::SetObjAndSphere(const Vector3 &pos, Fix12i radius, dActor_c *actor) {
+void dBgCh_SphCrr::SetObjAndSphere(const Vector3 &pos, fx32 radius, dActor_c *actor) {
     /* through the REFERENCE: a pointer-level upcast makes mwcc emit the
        null-checked MI adjustment (movs/addne), the ROM's is unconditional */
     ((dM3dGSph &)*this).Set(pos, radius);
