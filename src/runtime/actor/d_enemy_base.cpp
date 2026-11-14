@@ -113,7 +113,7 @@ dEnemyBase_c::~dEnemyBase_c()
    dBgCh_Actr::UpdateDiscreteNoLava_2, is the one veneer dBgCh_Actr.h does
    not declare -- decl_common.h already spells it with a void *. */
 
-extern void func_02038414(dBgCh_Actr *);
+extern void func_02038414(void *);
 
 void dEnemyBase_c::UpdateWMClsn(dBgCh_Actr &clsn, unsigned int sel) {
     switch (sel) {

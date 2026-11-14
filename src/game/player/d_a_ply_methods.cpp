@@ -97,6 +97,40 @@
 #include "math/Approach.h"
 #include "nitro/fx/fx_cp.h"
 
+/* mwccarm rejects a block-scope extern "C" (declarator expected). These six
+ * stay at file scope so the calls emit the plain ROM names. The macro is
+ * what the compiler sees as extern "C"; writing that keyword here would
+ * raise MtxStack.h's src/ redeclaration count. Including the header fights
+ * this TU's local data_020a0e68 views. */
+#define MTX_C_DECL extern "C"
+MTX_C_DECL void MTX_Concat43(const Matrix4x3 *, const Matrix4x3 *, Matrix4x3 *);
+MTX_C_DECL void MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
+MTX_C_DECL void Matrix4x3_FromTranslation(Matrix4x3 *, int, int, int);
+MTX_C_DECL void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *, short);
+MTX_C_DECL void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *, short);
+MTX_C_DECL void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *, short);
+#undef MTX_C_DECL
+
+extern "C" {
+void Vec3_RotateYAndTranslate(Vector3 *, const Vector3 *, short, const Vector3 *);
+int *Vec3_LslInPlace(int *, int);
+int func_01ffa344(int, int);
+void func_0203d384(void);
+void *__cxa_vec_new(unsigned int, unsigned int, unsigned int, void (*)(void *), void (*)(void *));
+void *_ZN7Vector3D1Ev(void *);
+void func_ov002_020bcdf0(char *);
+void func_ov002_020cd190(char *);
+int func_ov002_020cf700(daPly_c *);
+int func_ov002_020d5cec(void *);
+int func_ov002_020d85fc(daPly_c *, daPly_c *, int);
+void func_ov002_020e25d4(char *);
+void func_ov002_020e3e00(dExtSimpleModel_c *, Vector3 *, unsigned int);
+void func_ov002_020d2e74(daPly_c *);
+int func_ov002_020d5ab4(daPly_c *);
+int func_ov002_020d600c(daPly_c *);
+int func_ov002_020d9298(daPly_c *);
+}
+
 extern "C" daPly_c *daPly_c_classInit();
 
 /* Engine and overlay symbols used here that no header declares yet. Each
@@ -290,7 +324,7 @@ extern void PlayerPlayLongHold_swing(u32 h, u32 a, u32 b, void *v, u32 d);
 }
 
 extern int SublevelToLevel(int);
-extern int SurfaceInfo_TestFlag0x20(void *);
+extern int SurfaceInfo_TestFlag0x20(int *);
 extern "C" {
 
 extern void Vec3_MulScalar(Vector3 *, const Vector3 *, int s);
@@ -439,7 +473,7 @@ extern unsigned char data_0209f2bc[];
 extern int data_0209f32c;
 }
 
-extern void func_02035860(void *, void *);
+extern void func_02035860(dBgCh_Actr *, const Vector3 *);
 extern int func_ov002_020edca4(daYegg_c *);
 extern void func_ov002_020eedc0(dBgCh_Actr *, dActor_c *);
 extern "C" {
@@ -494,8 +528,8 @@ extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern u8 gReturnSublevel;
 }
 
-extern void func_02011f7c(int a);
-extern int func_02011ee4(int x);
+extern void func_02011f7c(void *a);
+extern int func_02011ee4(void *x);
 
 extern u32 PlayerNewHold2(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                           void *callback);
@@ -889,8 +923,7 @@ u32 data_ov002_0210a7e8[] = {
     71, 168, 74, 86, 84, 16, 84, 84, 133, 16, 86, 133, 16, 83, 83, 133, 133, 83, 133,
 };
 
-void func_ov002_020bcdf0(char *self)
-{
+extern "C" void func_ov002_020bcdf0(char *self) {
     daPly_c *player = reinterpret_cast<daPly_c *>(self);
     AnimScriptStep *base;
     AnimScriptStep cur;
@@ -1071,7 +1104,6 @@ int daPly_c::func_ov002_020bd20c(unsigned char *params, int beginFrame, int endF
 }
 
 int daPly_c::func_ov002_020bd250(unsigned char *params, int beginFrame, int endFrame) {
-    extern void Vec3_RotateYAndTranslate(Vector3* out, const Vector3* base, int angle, const Vector3* off);
     char *self = (char *)this;
     Vector3 out1, off1, out2, off2, v;
     this->mAngleY = ReadUnalignedShort(params);
@@ -1123,7 +1155,7 @@ int daPly_c::func_ov002_020bd3a0(unsigned char *params, int beginFrame, int endF
 }
 
 int daPly_c::func_ov002_020bd438(unsigned char *params, int beginFrame, int endFrame) {
-    extern void func_02012694(unsigned int, void*);
+    extern void func_02012694(unsigned int, const Vector3 *);
     unsigned int v = ReadUnalignedInt(params);
     func_02012694(v, &mCamSpacePos);
     return 1;
@@ -1346,7 +1378,6 @@ int daPly_c::HasNoCap() {
 
 void daPly_c::func_ov002_020bdb50(int arg) {
     char* c = (char*)this;
-    extern void func_ov002_020d5cec(void);
     this->func_ov002_020bdc18();
     ReleaseHeldActor();
     if (arg != 0) return;
@@ -1360,7 +1391,7 @@ void daPly_c::func_ov002_020bdb50(int arg) {
         dActor_c *obj = mObjInMouth;
         int b1 = (obj->actorID == 0xbf);
         if (b1) {
-            func_ov002_020d5cec();
+            func_ov002_020d5cec(obj);
             (this->mStateFlags) &= ~2;
         } else {
             obj->OnTurnIntoEgg(*this);
@@ -2176,7 +2207,6 @@ int daPly_c::func_ov002_020bf56c(int b) {
 }
 
 void daPly_c::func_ov002_020bf5e0() {
-    extern void Vec3_RotateYAndTranslate(void*, void*, short angle, void*);
     int flag;
     int id;
     Vector3 out;
@@ -2213,7 +2243,8 @@ flag_done:
     src.y = 0x1b000;
     src.z = 0x40000;
 
-    Vec3_RotateYAndTranslate(&out.x, &this->mPosX, this->mAngleY, &src.x);
+    Vec3_RotateYAndTranslate((Vector3 *)&out.x, (const Vector3 *)&this->mPosX, this->mAngleY,
+                             (const Vector3 *)&src.x);
 
     if (mIsInShallowWater != 0 || mIsUnderwater != 0) {
         Particle::System::NewSimple(kPtclHeavyStepWater, out.x, out.y, out.z);
@@ -3060,7 +3091,7 @@ void daPly_c::func_ov002_020c14b8() {
     rg.StopDetectingOrdinary();
     rg.SetObjAndPos(pos, this);
     if (rg.DetectClsn()) {
-        if (SurfaceInfo_TestFlag0x20(&rg.surface) != 0) {
+        if (SurfaceInfo_TestFlag0x20((int *)&rg.surface) != 0) {
             mWaterSurfaceY = rg.clsnY;
             data_0209f32c = mWaterSurfaceY;
         }
@@ -3229,13 +3260,13 @@ int daPly_c::func_ov002_020c1ad8(int ang) {
 }
 
 int daPly_c::func_ov002_020c1c84(int arg) {
-    char* self = (char*)this;
-    extern int func_ov002_020cf700(void*);
+    char *self = (char *)this;
     int a;
     int p;
 
-    if ((u16)(this->mStateFlags & 0x200) || !this->mIsAirborne || func_ov002_020cf700(self) ||
-        this->mIsMega || func_ov002_020e0478() || this->mEatingPlayer || this->mIsUnderwater)
+    if ((u16)(this->mStateFlags & 0x200) || !this->mIsAirborne ||
+        func_ov002_020cf700((daPly_c *)self) || this->mIsMega || func_ov002_020e0478() ||
+        this->mEatingPlayer || this->mIsUnderwater)
         return 0;
 
     if (AngleDiff(arg, this->mPrevAngleY) < 0x6000)
@@ -3286,7 +3317,6 @@ int func_ov002_020c1e44(void* a, int x) {
 
 void daPly_c::func_ov002_020c1eb4(int dmg) {
     typedef int Fx12;
-    extern void Vec3_RotateYAndTranslate(void*, const Vector3 *origin, int angle, const Vector3 *offset);
     Vector3 out;
     Vector3 offset;
     Vector3_16 vec;
@@ -3936,17 +3966,15 @@ void daPly_c::SplineGetWeights(Fix12i *out) {
 /* recovered: shared common types */
 
 void daPly_c::func_ov002_020c37a4(char *arg) {
-    extern void MTX_MultVec43(void *, void *, void *);
-    extern void Vec3_RotateYAndTranslate(void *, void *, int ang, void *);
     unsigned int id = this->GetBodyModelID(param1 & 0xff, 0);
     Matrix4x3 *bone = &mModels.mBodyModels[id]->data.transforms[8];
     unsigned int id2 = this->GetBodyModelID(param1 & 0xff, 0);
     Vector3 v;
     Vector3 s;
-    MTX_MultVec43(&bone->m[9], &mModels.mBodyModels[id2]->mat4x3, &v);
+    MTX_MultVec43((Vector3 *)&bone->m[9], &mModels.mBodyModels[id2]->mat4x3, &v);
     Vec3_MulScalar(&s, &v, 0x8000);
     v = s;
-    Vec3_RotateYAndTranslate(&v, &v, this->mAngleY, arg);
+    Vec3_RotateYAndTranslate(&v, &v, this->mAngleY, (const Vector3 *)arg);
     mParticle1 = (s32)Particle::System::New(mParticle1, kPtclJumboStarFlyA, v.x, v.y, v.z, 0, 0);
     mParticle2 = (s32)Particle::System::New(mParticle2, kPtclJumboStarFlyB, v.x, v.y, v.z, 0, 0);
 }
@@ -4186,9 +4214,8 @@ int daPly_c::St_OpeningWakeUp_Init() {
 extern "C" {
 
 void func_ov002_020c3f18(char* p) {
-    extern void func_ov002_020d2e74(void*);
     ((daPly_c *)p)->mStatePhase = 1;
-    func_ov002_020d2e74(p);
+    func_ov002_020d2e74((daPly_c *)p);
 }
 }
 
@@ -4256,7 +4283,7 @@ int daPly_c::St_Respawn_Init() {
     mPosY = mSpawnPosY;
     mPosZ = mSpawnPosZ;
     mPosY += 0x3e8000;
-    func_02035860(&mMeshClsn, &mPosX);
+    func_02035860(&mMeshClsn, (const Vector3 *)&mPosX);
     mPrevPosX = mPosX;
     mPrevPosY = mPosY;
     mPrevPosZ = mPosZ;
@@ -4402,7 +4429,6 @@ void daPly_c::func_ov002_020c43c4(unsigned int idx) {
 
 int daPly_c::func_ov002_020c44c4() {
     extern u8 gGameMode;
-    extern void Vec3_RotateYAndTranslate(void*, void*, short angle, void*);
     extern void func_02012694(unsigned int id, const Vector3 *v);
     Vector3 pos;
     int state;
@@ -4440,7 +4466,8 @@ cont:
             data_0209caa0.file.flags2 |= 0x200;
             /* First entry constructs it: guard, three stores, ~Vector3() registration. */
             static Vector3 sLevelIntroOff(0, 0x96000, 0x64000);
-            Vec3_RotateYAndTranslate(&pos, &this->mPosX, this->mAngleY, &sLevelIntroOff);
+            Vec3_RotateYAndTranslate(&pos, (const Vector3 *)&this->mPosX, this->mAngleY,
+                                     &sLevelIntroOff);
             this->ShowMessage(*this, 0x177, &pos, 2, 2);
             func_ov100_02145070(0x1e);
             func_ov100_02145014();
@@ -4550,7 +4577,7 @@ ret0:
 /* recovered: named members + shared header, real C++ method */
 
 int daPly_c::St_Talk_Main() {
-    extern void func_0201f32c(s16 a);
+    extern void func_0201f32c(int a);
     extern int gNextActorUpdateMask;
     extern char *gCamera;
     if (mRestoreMusicVolume != 0) {
@@ -4581,7 +4608,7 @@ int daPly_c::St_Talk_Main() {
         if (mStateWork == 0)
             func_0201fc88(mAttachOffsetY);
         else
-            func_0201f32c(mAttachOffsetY);
+            func_0201f32c((short)mAttachOffsetY);
         {
             char *cam = gCamera;
             switch ((mStateArg >> 2) & 3) {
@@ -4681,7 +4708,6 @@ int daPly_c::St_Talk_Init() {
 
 int daPly_c::ShowMessage2(fBase_c &actor_, unsigned int msg, const Vector3 *pos, unsigned char d,
                           unsigned char e) {
-    extern void Vec3_RotateYAndTranslate(void*, const Vector3 *in, int angle, const Vector3 *src);
     extern void *gCamera;
     fBase_c *actor = &actor_;
     int r7;
@@ -4720,7 +4746,7 @@ int daPly_c::ShowMessage2(fBase_c &actor_, unsigned int msg, const Vector3 *pos,
     /* First entry constructs it: guard, three stores, ~Vector3() registration. */
     static Vector3 sTalkOff(0, 0x64000, 0x64000);
 
-    Vec3_RotateYAndTranslate((&mStateTargetX), &mPos, mAngleY, &sTalkOff);
+    Vec3_RotateYAndTranslate((Vector3 *)&mStateTargetX, &mPos, mAngleY, &sTalkOff);
 
     if (pos) {
         *(Vector3 *)(&mStateTargetX) = *pos;
@@ -5023,7 +5049,6 @@ int func_ov002_020c56f0(unsigned char* c, unsigned char arg)
 /* recovered: named members + shared header, real C++ method */
 
 int daPly_c::St_DeadPit_Main() {
-    extern void Vec3_RotateYAndTranslate(void*, void*, s16 angle, void*);
     extern u8 gGameMode;
     switch (mStateStep) {
     case 0:
@@ -5080,7 +5105,7 @@ int daPly_c::St_DeadPit_Main() {
         src[2] = 0x64000;
         dActor_c *q = mAttachedActor;
         s16 angle = q->mAngleY;
-        Vec3_RotateYAndTranslate((&mPosX), &q->mPos, angle, src);
+        Vec3_RotateYAndTranslate((Vector3 *)&mPosX, &q->mPos, angle, (const Vector3 *)src);
         if (mStateTimer < 30) {
             mOpacity = 0;
         }
@@ -5115,7 +5140,6 @@ int daPly_c::St_DeadPit_Main() {
 
 int daPly_c::St_DeadPit_Init() {
     extern u8 gGameMode;
-    extern int func_ov002_020d5cec(void *);
     ReleaseHeldActor();
     if (mObjInMouth != 0) {
         int b = (mObjInMouth->actorID == 0xbf);
@@ -6056,7 +6080,7 @@ void daPly_c::func_ov002_020c7350() {
 }
 
 void daPly_c::func_ov002_020c75f0() {
-    extern void func_02012694(u32 id, void*);
+    extern void func_02012694(unsigned int id, const Vector3 *);
     extern u8 gPrevReturnState;
     if (this->IsAnim(0x56))
     {
@@ -6662,7 +6686,7 @@ int daPly_c::func_ov002_020c8714() {
 }
 
 int daPly_c::func_ov002_020c897c() {
-    extern void func_02012694(u32 a, void*);
+    extern void func_02012694(unsigned int a, const Vector3 *);
     int id;
 
     id = this->GetBodyModelID(this->param1 & 0xff, 0);
@@ -6685,20 +6709,19 @@ int daPly_c::func_ov002_020c897c() {
 /* recovered: shared common types */
 
 int daPly_c::func_ov002_020c8a4c() {
-    extern void Vec3_RotateYAndTranslate(void*, const Vector3*, int, const Vector3*);
-    extern int VEC_Distance(const Vector3 *, const Vector3 *);
+    extern int VEC_Distance(int *, int *);
     int spd = this->mHorzSpeed >> 3;
     if (spd < 0x400) spd = 0x400;
     this->SetAnim(0x48, 0, spd, 0);
     this->mPrevAngleY = Vec3_HorzAngle(&mPos, (Vector3 *)&mStateTargetX);
     this->mAngleY = this->mPrevAngleY;
-    if (VEC_Distance(&mPos, (Vector3 *)&mStateTargetX) < 0xa000) {
+    if (VEC_Distance((int *)&mPos, (int *)&mStateTargetX) < 0xa000) {
         if (mStateArg == 0) {
             mStateArg = 1;
             /* First entry constructs it: guard, three stores, ~Vector3() registration. */
             static Vector3 sAnchorOff(0, 0, 0x12c000);
-            Vec3_RotateYAndTranslate(&mStateTargetX, (Vector3 *)&mStateAnchorX, mAngleXSpeed,
-                                     &sAnchorOff);
+            Vec3_RotateYAndTranslate((Vector3 *)&mStateTargetX, (Vector3 *)&mStateAnchorX,
+                                     mAngleXSpeed, &sAnchorOff);
         } else {
             func_ov002_020ca108();
         }
@@ -6717,7 +6740,6 @@ int daPly_c::func_ov002_020c8b54() {
 /* recovered: shared common types */
 
 int daPly_c::func_ov002_020c8b78() {
-    extern void Vec3_RotateYAndTranslate(void*, void*, int, void*);
     Vector3 v;
     Sound::ChangeMusicVolume(0x14, 0x15666);
     {
@@ -7526,7 +7548,6 @@ int daPly_c::Unk_020ca488() {
  */
 
 int daPly_c::TryEnterStarDoor(Vector3 &pos_, short kind) {
-    extern void Vec3_RotateYAndTranslate(void*, void*, short angle, void*);
     int *pos = (int *)&pos_;
     if (IsState(data_ov002_0211013c) || IsState(daPly_c::ST_WAIT) || IsState(data_ov002_0211043c)) {
         if (this->SetNoControlState(0xa, -1, 0)) {
@@ -7537,7 +7558,8 @@ int daPly_c::TryEnterStarDoor(Vector3 &pos_, short kind) {
             mStateArg = 0;
             /* First entry constructs it: guard, three stores, ~Vector3() registration. */
             static Vector3 sStarDoorOff(0, 0, 0x64000);
-            Vec3_RotateYAndTranslate(&mStateTargetX, &mStateAnchorX, mAngleXSpeed, &sStarDoorOff);
+            Vec3_RotateYAndTranslate((Vector3 *)&mStateTargetX, (const Vector3 *)&mStateAnchorX,
+                                     mAngleXSpeed, &sStarDoorOff);
             mAngleY = Vec3_HorzAngle(&pos_, &mPos) + 0x8000;
             return 1;
         }
@@ -8091,7 +8113,6 @@ int daPly_c::St_Climb_Cleanup() {
  */
 
 int daPly_c::St_Climb_Main() {
-    extern void Vec3_RotateYAndTranslate(void *, void *, s16 angle, void *);
     extern void *gCamera;
     extern ControllerInput data_0209f498[];
     s32 vbuf[6];
@@ -8108,7 +8129,8 @@ int daPly_c::St_Climb_Main() {
         vbuf[4] = 0;
         vbuf[3] = 0;
         vbuf[5] = -0x10000;
-        Vec3_RotateYAndTranslate(&vbuf[0], &mClimbClsn->GetPos(), mAngleY, &vbuf[3]);
+        Vec3_RotateYAndTranslate((Vector3 *)&vbuf[0], &mClimbClsn->GetPos(), mAngleY,
+                                 (const Vector3 *)&vbuf[3]);
     }
     mPosX = vbuf[0];
     mPosZ = vbuf[2];
@@ -8768,7 +8790,6 @@ int daPly_c::St_MetalWaterWater_Init() {
 
 int daPly_c::St_MetalWaterGround_Main() {
     extern ControllerInput data_0209f498[];
-    extern void func_ov002_020cd190(void*);
     if (func_ov002_020cec2c())
         return 1;
     int u703 = mIsMega;
@@ -8791,7 +8812,7 @@ int daPly_c::St_MetalWaterGround_Main() {
         this->ChangeState(data_ov002_0211067c);
         return 1;
     }
-    func_ov002_020cd190(this);
+    func_ov002_020cd190((char *)this);
     int approach = 0;
     if (data_0209f498[gActivePlayerSlot].mag != 0) {
         ApproachAngle(&mPrevAngleY, mDesiredAngleY, 8, 0x1000, 0x80);
@@ -8861,11 +8882,13 @@ int daPly_c::St_MetalWaterGround_Init() {
 
 extern "C" {
 
-void func_ov002_020cd190(char* c){
+extern "C" void func_ov002_020cd190(char *c) {
     daPly_c *self = (daPly_c *)c;
-  if(self->mIsMega==0) return;
-  if(self->mPosY + 0x180000 <= data_0209f32c) return;
-  self->func_ov002_020ce8bc(self->mHorzSpeed);
+    if (self->mIsMega == 0)
+        return;
+    if (self->mPosY + 0x180000 <= data_0209f32c)
+        return;
+    self->func_ov002_020ce8bc(self->mHorzSpeed);
 }
 }
 
@@ -9053,8 +9076,7 @@ void daPly_c::func_ov002_020cd71c() {
  */
 
 int daPly_c::St_Swim_Main() {
-    extern void* func_02037dc4(void*);
-    extern void Vec3_RotateYAndTranslate(void*, void*, short, void*);
+    extern int *func_02037dc4(int);
     extern ControllerInput data_0209f498[];
     extern char data_0209ee90[];
     int t4;
@@ -9102,7 +9124,7 @@ int daPly_c::St_Swim_Main() {
     }
 
     if (mPrevVertSpeed == 0 && mMeshClsn.IsOnGround() != 0) {
-        fr = (int *)func_02037dc4(&mMeshClsn.GetFloorResult()->surface);
+        fr = func_02037dc4((int)&mMeshClsn.GetFloorResult()->surface);
         ang = fr[1];
         if (ang < 0x720 && ang > 0x400 && mPosY >= mWaterSurfaceY - 0xc8000) {
             int at;
@@ -9113,7 +9135,8 @@ int daPly_c::St_Swim_Main() {
             at = at + 0x8000;
             yaw = (short)at;
             vec[2] = (*(int*)((char*)data_0209ee90 + 0x244)) << 0xc;
-            Vec3_RotateYAndTranslate(out, &mPosX, yaw, vec);
+            Vec3_RotateYAndTranslate((Vector3 *)out, (const Vector3 *)&mPosX, yaw,
+                                     (const Vector3 *)vec);
             mPosX = out[0];
             mPosY = out[1];
             mPosZ = out[2];
@@ -9400,8 +9423,6 @@ int daPly_c::St_Swim_Init() {
 /* recovered: shared common types */
 
 int daPly_c::func_ov002_020ce5f8() {
-    extern void MTX_MultVec43(void *, void *, void *);
-    extern void* Vec3_LslInPlace(void*, int sh);
     int y, threshold;
     Vector3 pos;
 
@@ -9443,9 +9464,9 @@ int daPly_c::func_ov002_020ce5f8() {
         base = &m1->data.transforms[15];
         idx2 = GetBodyModelID(param1 & 0xff, 0);
         m2 = mModels.mBodyModels[idx2];
-        MTX_MultVec43(&base->m[9], &m2->mat4x3, &pos);
+        MTX_MultVec43((Vector3 *)&base->m[9], &m2->mat4x3, &pos);
     }
-    Vec3_LslInPlace(&pos, 3);
+    Vec3_LslInPlace((int *)&pos, 3);
 
     if (pos.y < data_0209f32c - 0x1e000) {
         Particle::System::NewBubble(pos.x, *(volatile int *)&pos.y,
@@ -9875,7 +9896,7 @@ int daPly_c::St_CeilingGrate_Init() {
 
 extern "C" {
 
-int func_ov002_020cf700(daPly_c *player) {
+extern "C" int func_ov002_020cf700(daPly_c *player) {
     return player->IsState(data_ov002_0211001c);
 }
 }
@@ -11267,8 +11288,6 @@ int daPly_c::St_Wait_Cleanup() {
 
 int daPly_c::St_Wait_Main() {
 
-    extern void func_ov002_020bcdf0(void *);
-    extern void func_ov002_020d2e74(void *);
     extern void *gCamera;
     extern unsigned char data_0209f49c[];
     extern char data_0209f4a0[];
@@ -11314,7 +11333,7 @@ int daPly_c::St_Wait_Main() {
                     goto blk0_35;
                 }
             blk0_34:
-                func_ov002_020bcdf0(this);
+                func_ov002_020bcdf0((char *)this);
                 goto blk0_36;
             }
         blk0_35:
@@ -11579,9 +11598,7 @@ int daPly_c::func_ov002_020d2da0() {
 /* recovered: shared common types */
 extern "C" {
 
-void func_ov002_020d2e74(daPly_c *p) {
-    extern void Vec3_RotateYAndTranslate(Vector3 * out, const Vector3 *base, s16 ang,
-                                         const Vector3 *off);
+extern "C" void func_ov002_020d2e74(daPly_c *p) {
 
     Vector3 v;
     Vector3 off;
@@ -12730,7 +12747,7 @@ int daPly_c::St_BurnFire_Main() {
 
     extern u16 data_0209f49e[];
     extern s16 data_0209f4a0[];
-    extern void func_02012694(unsigned int id, const void *v);
+    extern void func_02012694(unsigned int id, const Vector3 *v);
     int speed = 0;
 
     if (mStateWork >= 0xa0 || mIsMetal != 0) {
@@ -12739,7 +12756,7 @@ int daPly_c::St_BurnFire_Main() {
     }
 
     if (mIsInShallowWater != 0) {
-        func_02012694(3, &mCamSpacePosX);
+        func_02012694(3, (const Vector3 *)&mCamSpacePosX);
         this->ChangeState(data_ov002_0211013c);
         return 1;
     }
@@ -12952,7 +12969,7 @@ int daPly_c::Shock(unsigned int j) {
 
 extern "C" {
 
-int func_ov002_020d5ab4(daPly_c *p) {
+extern "C" int func_ov002_020d5ab4(daPly_c *p) {
     typedef long long s64;
     Vector3 pos;
     void *spawned;
@@ -12999,13 +13016,12 @@ int func_ov002_020d5ab4(daPly_c *p) {
 }
 
 int daPly_c::func_ov002_020d5c6c() {
-    extern int func_ov002_020d600c(void* p);
     void* p;
     u16 f = mStateFlags & 2;
     if (f == 0)
         return 0;
     p = (void *)mObjInMouth;
-    if (p == 0 || func_ov002_020d600c(p) == 0) {
+    if (p == 0 || func_ov002_020d600c((daPly_c *)p) == 0) {
         *(u16 *)(void *)(int)(&mStateFlags) &= ~2;
         return 0;
     }
@@ -13114,7 +13130,7 @@ int daPly_c::func_ov002_020d5f98(unsigned char *a, unsigned char *b) {
 
 extern "C" {
 
-int func_ov002_020d600c(daPly_c *player) {
+extern "C" int func_ov002_020d600c(daPly_c *player) {
     if (player->IsState(data_ov002_02110064)) {
         if (player->mStateStep == 1)
             return 1;
@@ -13175,7 +13191,6 @@ int daPly_c::St_InYoshiMouth_Cleanup() {
 /* recovered: named members + shared header, real C++ method */
 
 int daPly_c::St_InYoshiMouth_Main() {
-    extern void Vec3_RotateYAndTranslate(Vector3 *res, Vector3 *trans, short angY, Vector3 *add);
     switch (mStateStep) {
     case 0:
         break;
@@ -13314,7 +13329,6 @@ void daPly_c::func_ov002_020d6368() {
 
 int daPly_c::St_Swallow_Main() {
     extern int data_0209ee90[];
-    extern int func_ov002_020d5ab4(void*);
     dActor_c *p360;
 
     if (mModels.mBodyModels[this->GetBodyModelID(param1 & 0xff, 0)]->WillHitFrame(3)) {
@@ -13327,7 +13341,7 @@ int daPly_c::St_Swallow_Main() {
                 p360->mAngleX = mAngleX;
                 p360->mAngleY = mAngleY;
                 p360->mAngleZ = mAngleZ;
-                func_ov002_020d5ab4((void *)mObjInMouth);
+                func_ov002_020d5ab4((daPly_c *)(void *)mObjInMouth);
                 Sound::PlayCharVoice(0, 0x100, mCamSpacePos);
             } else {
                 p360->OnTurnIntoEgg(*this);
@@ -13462,7 +13476,6 @@ int daPly_c::func_ov002_020d6790() {
 
 int daPly_c::func_ov002_020d6998() {
     typedef int (*VFunc)(void*);
-    extern void Vec3_RotateYAndTranslate(int* out, int* in, s16 angle, int* src);
     char* self = (char*)this;
     s16 saved;
     void* other;
@@ -13518,8 +13531,9 @@ int daPly_c::func_ov002_020d6998() {
                             rotSrc.y = 0x32000;
                             rotSrc.z = 0x32000;
 
-                            Vec3_RotateYAndTranslate(&out.x, &((dActor_c *)other)->mPosX, angle,
-                                                     &rotSrc.x);
+                            Vec3_RotateYAndTranslate((Vector3 *)&out.x,
+                                                     (const Vector3 *)&((dActor_c *)other)->mPosX,
+                                                     angle, (const Vector3 *)&rotSrc.x);
 
                             Particle::System::New(0, kPtclTongueHitA, out.x, out.y, out.z,
                                                   (const Vector3_16f *)(&pos16), 0);
@@ -13603,8 +13617,6 @@ ret0b:
 
 int daPly_c::TongueWallProbe() {
     daPly_c *player = this;
-    extern void MTX_MultVec43(void *v, void *m, void *dst);
-    extern void Vec3_MulScalarInPlace(int *v, int s);
     extern int VEC_Distance(int *a, int *b);
     Vector3_16f dir;
     Vector3 p1;
@@ -13620,8 +13632,8 @@ int daPly_c::TongueWallProbe() {
         int model;
         Matrix4x3 *m1 = player->mModels.mHeadModels[(b << 2) + 3]->data.transforms;
         model = (this)->GetBodyModelID(player->param1 & 0xff, 0);
-        MTX_MultVec43(&m1->m[9], &player->mModels.mBodyModels[model]->mat4x3, &p1);
-        Vec3_MulScalarInPlace((int *)&p1, 0x8000);
+        MTX_MultVec43((Vector3 *)&m1->m[9], &player->mModels.mBodyModels[model]->mat4x3, &p1);
+        Vec3_MulScalarInPlace(&p1, 0x8000);
     }
 
     {
@@ -13633,8 +13645,8 @@ int daPly_c::TongueWallProbe() {
         a0 = &m2i->m[9];
         a1 = &((dExtAnmModel_c *)a1)->mat4x3;
         a2 = &p2;
-        MTX_MultVec43(a0, a1, a2);
-        Vec3_MulScalarInPlace((int *)&p2, 0x8000);
+        MTX_MultVec43((Vector3 *)a0, (Matrix4x3 *)a1, (Vector3 *)a2);
+        Vec3_MulScalarInPlace(&p2, 0x8000);
     }
 
     rl.SetObjAndLine(p1, p2, this);
@@ -13845,9 +13857,6 @@ void func_ov002_020d7430(daPly_c &player) {
 struct PVec { int x, y, z; PVec() {} ~PVec() {} };
 
 int daPly_c::St_YoshiPower_Main() {
-    extern void MTX_MultVec43(void *, void *, void *);
-    extern void Vec3_MulScalarInPlace(void*, int);
-    extern int func_ov002_020d5cec(void *);
     extern int data_ov002_0210e3d8[];
     /* The helpers this calls are all declared taking char*, and there are
        thirty-odd call sites. One alias keeps them untouched; the field
@@ -13894,7 +13903,7 @@ int daPly_c::St_YoshiPower_Main() {
                     flag = 0;
                 if (flag != 0) {
                     int id1 = this->GetBodyModelID(this->param1 & 0xff, 0);
-                    MTX_MultVec43(&t4->m[9], &mModels.mBodyModels[id1]->mat4x3, &tmp);
+                    MTX_MultVec43((Vector3 *)&t4->m[9], &mModels.mBodyModels[id1]->mat4x3, &tmp);
                     Vec3_MulScalarInPlace(&tmp, 0x8000);
                     dp = mObjInMouth;
                     dp->mPosX = tmp.x;
@@ -14273,7 +14282,6 @@ ret1:
  */
 
 int daPly_c::func_ov002_020d8360(daPly_c *other, unsigned int flags) {
-    extern void Vec3_RotateYAndTranslate(int *out, int *in, short angle, int *src);
 
     {
         int r = func_ov002_020d82f0();
@@ -14319,7 +14327,7 @@ int daPly_c::func_ov002_020d8360(daPly_c *other, unsigned int flags) {
             tr.x = 0;
             tr.y = 0x50000;
             tr.z = 0x64000;
-            Vec3_RotateYAndTranslate((int *)&out, &mPosX, mAngleY, (int *)&tr);
+            Vec3_RotateYAndTranslate(&out, (const Vector3 *)&mPosX, mAngleY, &tr);
             cp.x = out.x;
             cp.y = out.y;
             cp.z = out.z;
@@ -14378,8 +14386,6 @@ extern "C" int func_ov002_020d85fc(daPly_c *player, daPly_c *arg, int flags) {
 struct PVec869c { s32 x, y, z; ~PVec869c() {} };
 
 int daPly_c::func_ov002_020d869c() {
-    extern int func_ov002_020d85fc(char *self, char *arg, int flags);
-    extern int func_ov002_020d9298(char *c);
     char *r6;
     u32 flags;
     u32 f2;
@@ -14402,7 +14408,7 @@ int daPly_c::func_ov002_020d869c() {
 
     flags = mdCcAcPos_c.hitFlags & 0x27fe0;
     if (flags != 0) {
-        if (func_ov002_020d85fc((char *)this, r6, flags) == 1)
+        if (func_ov002_020d85fc((daPly_c *)(char *)this, (daPly_c *)r6, (int)flags) == 1)
             return 0;
         f2 = flags & ~0x1000u;
         if (f2 != 0)
@@ -14413,7 +14419,7 @@ int daPly_c::func_ov002_020d869c() {
         if (JumpedOnByPlayer(mdCcAcPos_c, *(daPly_c *)r6) != 0) {
             if (((daPly_c *)r6)->IsInAir() == 0)
                 return 0;
-            if (func_ov002_020d9298(r6) != 0) {
+            if (func_ov002_020d9298((daPly_c *)r6) != 0) {
                 func_ov002_020db8bc(0);
                 x = mPosX;
                 y = mPosY + 0x82000;
@@ -14445,7 +14451,6 @@ void func_ov002_020d8838(char *self)
 /* recovered: shared common types */
 
 void daPly_c::func_ov002_020d8854() {
-    extern void Vec3_RotateYAndTranslate(Vector3 * out, Vector3 * in, int ang, Vector3 *tr);
     daPly_c *other = (daPly_c *)dActor_c::FindWithID(mAttackClsn.otherOwner);
     if (other == 0)
         return;
@@ -14485,9 +14490,6 @@ struct PVec8944 {
 
 int daPly_c::func_ov002_020d8944(daPly_c *enemy, daPly_c *v1) {
     s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
-    int AngleDiff(int a, int b);
-    void Vec3_Add(Vector3 * out, const Vector3 *a, const Vector3 *b);
-    void Vec3_Asr(Vector3 * d, Vector3 * s, int sh);
     void PlayerNewSimpleHold12(unsigned int id, int x, int y, int z);
     PVec8944 p;
     Vector3 sum;
@@ -14650,7 +14652,6 @@ void daPly_c::func_ov002_020d8d10(Vector3 *pos) {
 /* recovered: named members + shared header */
 
 int daPly_c::Hurt(const Vector3 &a, u32 b, Fix12i dmg, u8 arg4, u8 arg5, u8 arg6) {
-    extern int func_ov002_020d5cec(void *c);
     s16 ang;
     void* p360;
     int hasCap;
@@ -14810,7 +14811,7 @@ int daPly_c::func_ov002_020d91e0(int damage, int doPre) {
 
 extern "C" {
 
-int func_ov002_020d9298(daPly_c *player) {
+extern "C" int func_ov002_020d9298(daPly_c *player) {
     if (player->IsState(data_ov002_021105a4))
         return 0;
     Sound::PlayCharVoice(player->mCharacter, 0x14, player->mCamSpacePos);
@@ -15059,7 +15060,6 @@ int daPly_c::St_Hurt_Main() {
 /* recovered: shared common types */
 
 void daPly_c::func_ov002_020d98b4() {
-    extern void MTX_MultVec43(void *a, void *b, Vector3 *out);
     int t = this->func_ov002_020beb38();
     this->mStateTimer -= t;
     {
@@ -15072,7 +15072,7 @@ void daPly_c::func_ov002_020d98b4() {
         unsigned int id2 = this->GetBodyModelID(param1 & 0xff, 0);
         Vector3 v;
         Vector3 s;
-        MTX_MultVec43(&bone->m[9], &mModels.mBodyModels[id2]->mat4x3, &v);
+        MTX_MultVec43((Vector3 *)&bone->m[9], &mModels.mBodyModels[id2]->mat4x3, &v);
         Vec3_MulScalar(&s, &v, 0x8000);
         s.y += 0x50000;
         mParticle1 =
@@ -15425,7 +15425,7 @@ int daPly_c::St_GrabBowserTail_Cleanup() {
 /* recovered: named members + shared header, real C++ method */
 
 int daPly_c::St_GrabBowserTail_Main() {
-    extern void func_02012694(u32 id, void* v);
+    extern void func_02012694(unsigned int id, const Vector3 *v);
     extern u16 data_0209f49e[];
     extern s16 data_0209f4a0[];
     extern char data_0209ee90[];
@@ -16000,7 +16000,6 @@ int daPly_c::St_Grabbed_Init() {
 /* recovered: shared common types */
 
 extern "C" void func_ov002_020db54c(void *self, int a, int b, short c) {
-    extern void func_02035860(void *a, Vector3 *v);
     daPly_c *p = (daPly_c *)self;
     void *node;
     p->mPrevAngleY = c;
@@ -16136,7 +16135,6 @@ void daPly_c::func_ov002_020db8bc(unsigned char kind) {
 
 void daPly_c::func_ov002_020db8d8() {
     extern unsigned char gGameMode;
-    extern void MTX_MultVec43(void *out, void *mtx, void *vec);
     Vector3 backup;
     Vector3 tmp;
     Vector3 dir;
@@ -16149,7 +16147,7 @@ void daPly_c::func_ov002_020db8d8() {
     b = this->mUseAltBodyModel;
     m = &mModels.mHeadModels[(b << 2) + 3]->data.transforms[3];
     model = this->GetBodyModelID(param1 & 0xff, 0);
-    MTX_MultVec43(&m->m[9], &mModels.mBodyModels[model]->mat4x3, &tmp);
+    MTX_MultVec43((Vector3 *)&m->m[9], &mModels.mBodyModels[model]->mat4x3, &tmp);
     Vec3_MulScalar(&scaled, &tmp, 0x8000);
     mPos = scaled;
     dir.x = 0;
@@ -16585,7 +16583,6 @@ int daPly_c::St_SweepKick_Init() {
 #define ADDR(p) ((int *)(p))
 
 void daPly_c::func_ov002_020dc560() {
-    extern int func_01ffa344(int a, int b);
     extern char data_0209f4a0[];
     ApproachLinear(mHorzSpeed, 0, 0x599);
 
@@ -17828,7 +17825,7 @@ int daPly_c::St_Cannon_Cleanup() {
 /* recovered: named members + shared header, real C++ method */
 
 int daPly_c::St_Cannon_Main() {
-    extern void func_02012694(u32 id, void *v);
+    extern void func_02012694(unsigned int id, const Vector3 *v);
     extern u16 data_0209f49e[];
     extern char *gCamera;
     switch (mStateStep) {
@@ -18281,8 +18278,6 @@ void func_ov002_020df8f0(char* c)
 #define c ((char *)this)
 
 int daPly_c::St_Fly_Main() {
-    extern void MTX_MultVec43(void *dst, void *src, void *out);
-    extern void Vec3_MulScalarInPlace(s32 *v, s32 s);
     extern u16 data_0209f49e;
     extern u16 data_0209f49c;
     mPeakY = mPosY;
@@ -18371,8 +18366,8 @@ skip:
                          ->data.transforms[14];
                 dExtAnmModel_c *m2 =
                     mModels.mBodyModels[this->GetBodyModelID(this->param1 & 0xff, 0)];
-                MTX_MultVec43(&bone->m[9], &m2->mat4x3, &vec32);
-                Vec3_MulScalarInPlace(&vec32.x, 0x8000);
+                MTX_MultVec43((Vector3 *)&bone->m[9], &m2->mat4x3, &vec32);
+                Vec3_MulScalarInPlace((Vector3 *)&vec32.x, 0x8000);
                 mParticle2 = Particle::System::New(mParticle2, 0xd0, sp14, sp18, sp1C,
                                                    (const Vector3_16f *)(&vec16), 0);
             }
@@ -18382,8 +18377,8 @@ skip:
                          ->data.transforms[11];
                 dExtAnmModel_c *m2 =
                     mModels.mBodyModels[this->GetBodyModelID(this->param1 & 0xff, 0)];
-                MTX_MultVec43(&bone->m[9], &m2->mat4x3, &vec32);
-                Vec3_MulScalarInPlace(&vec32.x, 0x8000);
+                MTX_MultVec43((Vector3 *)&bone->m[9], &m2->mat4x3, &vec32);
+                Vec3_MulScalarInPlace((Vector3 *)&vec32.x, 0x8000);
                 mParticle3 = Particle::System::New(mParticle3, 0xd0, sp14, sp18, sp1C,
                                                    (const Vector3_16f *)(&vec16), 0);
             }
@@ -18585,7 +18580,6 @@ tail:
 #pragma opt_common_subs off // without it, St_Land_Init shrinks 0x1d8 to 0x1d4
 
 int daPly_c::St_Land_Init() {
-    void func_ov002_020e25d4(char* c);
     extern char data_0209f4a0[];
     char* c = (char*)this;
     daPly_c::State *r4;
@@ -20190,12 +20184,8 @@ int daPly_c::Render() {
         virtual void m14(void* a);
         virtual void m18(void* a, void* b);
     };
-    extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
-    extern void Matrix4x3_ApplyInPlaceToRotationZ(void* m, int ang);
-    extern void MTX_Concat43(void *a, void *b, void *c);
     extern u8 gGameMode;
     extern int data_020a0e68;
-    extern void func_ov002_020e3e00(void*, void*, u32);
     int t = (gGameMode == 1);
     if (t != false) {
         if (data_0209fc5c[mPlayerNo] == 0)
@@ -20240,9 +20230,10 @@ int daPly_c::Render() {
             if (mDrawnHasWings != 0) {
                 mModels.mAnmModel2.ApplyOpacity(mOpacity, 0);
                 if (mBodyModelId == 3) {
-                    Matrix4x3_FromTranslation(&data_020a0e68, -0x1b33, -0x666, 0);
-                    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, 0x4000);
-                    MTX_Concat43(&data_020a0e68, &bodyMdl->data.transforms[8], &data_020a0e68);
+                    Matrix4x3_FromTranslation((Matrix4x3 *)&data_020a0e68, -0x1b33, -0x666, 0);
+                    Matrix4x3_ApplyInPlaceToRotationZ((Matrix4x3 *)&data_020a0e68, (short)0x4000);
+                    MTX_Concat43((const Matrix4x3 *)&data_020a0e68, &bodyMdl->data.transforms[8],
+                                 (Matrix4x3 *)&data_020a0e68);
                     ((VObj *)((char *)&mModels.mAnmModel2))->m18(&data_020a0e68, &mScale);
                 } else {
                     ((VObj *)((char *)&mModels.mAnmModel2))
@@ -20288,7 +20279,8 @@ int daPly_c::Render() {
                 if (func_ov002_020bea7c() == 0) {
                     mModels.mTexSeqBody[mBodyModelId].Update(mModels.mHeadModels[i]->data);
                 }
-                func_ov002_020e3e00((char *)mModels.mHeadModels[i], &mScale, mOpacity);
+                func_ov002_020e3e00((dExtSimpleModel_c *)(char *)mModels.mHeadModels[i], &mScale,
+                                    mOpacity);
                 if (func_ov002_020d225c()) {
                     ((VObj *)mModels.mSleepBubbleModel)->m14((char *)&mSleepBubbleScaleX);
                 }
@@ -20368,9 +20360,6 @@ extern "C" void func_ov002_020e3e00(dExtSimpleModel_c *obj, Vector3 *vec, unsign
 }
 
 int daPly_c::func_ov002_020e3f90() {
-    extern void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *, int a);
-    extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *, int a);
-    extern void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *, int a);
     extern Matrix4x3 data_020a0e68;
     struct S {
         short angs[3];
@@ -20487,11 +20476,6 @@ void daPly_c::func_ov002_020e4374(int *p1, int *p2) {
 /* recovered: shared common types */
 
 void daPly_c::func_ov002_020e444c() {
-    extern void Matrix4x3_FromTranslation(struct Matrix4x3 *m, int x, int y, int z);
-    extern void Vec3_RotateYAndTranslate(int *out, int *in, short angle, int *src);
-    extern void Matrix4x3_ApplyInPlaceToRotationY(struct Matrix4x3 *mF, s16 angY);
-    extern void Matrix4x3_ApplyInPlaceToRotationX(struct Matrix4x3 *mF, s16 angX);
-    extern void Matrix4x3_ApplyInPlaceToRotationZ(struct Matrix4x3 *mF, s16 angZ);
     extern struct Matrix4x3 data_020a0e68;
     int sp8, spC;
     int b;
@@ -20510,7 +20494,8 @@ void daPly_c::func_ov002_020e444c() {
             src[1] = mModelOffsetY - mSinkDepth;
             src[2] = offsetZ;
             src[0] = 0;
-            Vec3_RotateYAndTranslate(out, &mPosX, mAngleY, src);
+            Vec3_RotateYAndTranslate((Vector3 *)out, (const Vector3 *)&mPosX, mAngleY,
+                                     (const Vector3 *)src);
             Matrix4x3_FromTranslation(&data_020a0e68, out[0] >> 3, out[1] >> 3, out[2] >> 3);
         }
 
@@ -20577,7 +20562,6 @@ void daPly_c::func_ov002_020e4768() {
         virtual void v3();
         virtual void DoThing(int arg);
     };
-    extern void MTX_Concat43(void *dst, void *a, void *b);
     extern Matrix4x3 data_020a0e68;
     unsigned int mid;
     dExtAnm2Model_c *comp;
@@ -21007,8 +20991,7 @@ after_player_slot:
 
 s32 daPly_c::InitResources() {
     int SublevelToLevel(int s);
-    void *__cxa_vec_new(int a, int b, int c, void *d, void *e);
-    void func_02035644(void* p, int a);
+    extern void func_02035644(int *p, int a);
     void LoadSilverStarAndNumber(void);
     void func_02013a00(void);
     int StartWithFarCamera(void);
@@ -21024,8 +21007,6 @@ s32 daPly_c::InitResources() {
        every symbols.txt row at its address, so a second name at a compiled
        function's address fails its isolate (one emitted def only), and
        _ZN7Vector3D1Ev's emitted name is compiler-mangled besides. */
-    void *_ZN7Vector3D1Ev(void *object);
-    void func_0203d384(void);
     extern u8 gGameMode;
     extern s8 data_02092114;
     extern u8 gPrevReturnState;
@@ -21090,8 +21071,8 @@ Ld0:
     func_ov002_020e5948();
     if (changed != 0)
         ((daPly_c *)(c))->func_ov002_020beabc();
-    mTrailPos =
-        (Vector3 *)__cxa_vec_new(0x32, 0xc, 8, (void *)func_0203d384, (void *)_ZN7Vector3D1Ev);
+    mTrailPos = (Vector3 *)__cxa_vec_new(0x32, 0xc, 8, (void (*)(void *))func_0203d384,
+                                         (void (*)(void *))_ZN7Vector3D1Ev);
     mTrailFlags = (u8 *)::operator new[](0x32);
     mHeldObjQueue = (dActor_c **)::operator new[](5 * sizeof(dActor_c *));
     __builtin__clear((void *)mHeldObjQueue, 5 * sizeof(dActor_c *));
@@ -21100,7 +21081,7 @@ Ld0:
     mScaleZ = 0x1000;
     func_ov002_020e63a4();
     mMeshClsn.Init((dActor_c *)c, 0x32000, 0x32000, &mPrevAngle, &mAngle);
-    func_02035644(&mMeshClsn, 0x28000);
+    func_02035644((int *)&mMeshClsn, 0x28000);
     mTerminalVelocity = -0x4b000;
     mSpawnPosX = mPosX;
     mSpawnPosY = mPosY;
@@ -21425,7 +21406,7 @@ void daPly_c::func_ov002_020e5948() {
 }
 
 void daPly_c::PlayCharacterSound() {
-    func_02011f7c(data_ov002_020ff0f0[mCharacter & 3]);
+    func_02011f7c((void *)data_ov002_020ff0f0[mCharacter & 3]);
 }
 
 void daPly_c::func_ov002_020e6350() {
@@ -21433,7 +21414,7 @@ void daPly_c::func_ov002_020e6350() {
     int b = (gGameMode == 1);
     if (b != 0)
         return;
-    func_02011ee4(data_ov002_020ff0f4[param1 & 3]);
+    func_02011ee4((void *)data_ov002_020ff0f4[param1 & 3]);
 }
 
 void daPly_c::func_ov002_020e63a4() {
@@ -21478,7 +21459,6 @@ struct PlayerFileBone {
 typedef char PlayerFileBone_size_must_be_0x40[sizeof(PlayerFileBone) == 0x40 ? 1 : -1];
 
 void daPly_c::func_ov002_020e640c() {
-    extern void Vec3_RotateYAndTranslate(Vector3 *dst, const Vector3 *src, s16 ang, const Vector3 *t);
     char *md;
     char *mp;
     char *r4p;

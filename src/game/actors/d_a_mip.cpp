@@ -60,7 +60,7 @@ bool PlaySub(u32, u32, u32, int, bool);
 }
 
 /* ground probe / collision */
-int   SurfaceInfo_TestFlag0x20(void *);
+int SurfaceInfo_TestFlag0x20(int *);
 
 /* dActor_c / dEnemyBase_c, reached by their ROM names.
    dActor_c::ClosestPlayer and dActor_c::FindWithID are deliberately NOT here:
@@ -232,7 +232,7 @@ int daMip_c::TestWaterBelow()
     rg.SetObjAndPos(*(::Vector3 *)&v, this);
     if (rg.DetectClsn()) {
         mFloorY = rg.clsnY;
-        if (SurfaceInfo_TestFlag0x20(&rg.surface))
+        if (SurfaceInfo_TestFlag0x20((int *)&rg.surface))
             return 1;
     }
     return 0;

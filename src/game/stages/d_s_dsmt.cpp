@@ -43,7 +43,14 @@
 #include "Sound.h"
 #include "SaveData.h"
 #include "Heap.h"
+/* decl_common's C++ line would mangle (int, void *, int, void *). The
+   cartridge name is the one the C half of that header already spells, and
+   the calls keep that line's argument types. */
+#define func_02013c84 func_02013c84_hidden
 #include "decl_common.h"
+#undef func_02013c84
+extern "C" int _Z13func_02013c84hP12FileSaveDataiS0_(int, void *, int, void *);
+#define func_02013c84 _Z13func_02013c84hP12FileSaveDataiS0_
 #include "nitro/spi/tp.h"
 #include "Memory.h"
 #include "nitro/gx/gx.h"

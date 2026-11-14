@@ -158,7 +158,7 @@ struct Vector3_16;
 struct dCc_c;
 
 void func_02012694(unsigned int, const Vector3 *);
-int Vec3_HorzLen(void *v);
+int Vec3_HorzLen(const Vector3 *v);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 void LoadSilverStarAndNumber();
 void UnloadSilverStarAndNumber();
@@ -435,7 +435,7 @@ void func_ov100_021437d4(daWanwan2_c *thisx) {
         if (val <= *heights) val = *heights;
         delta.y = val - src->y;
         ang = cstd::atan2(delta.x, delta.z);
-        hlen = Vec3_HorzLen(&delta);
+        hlen = Vec3_HorzLen((const Vector3 *)&delta);
         angz = (s16)(-cstd::atan2(delta.y, hlen));
         Matrix4x3_FromRotationY(&data_020a0e68, ang);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, angz);

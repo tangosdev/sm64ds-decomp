@@ -218,11 +218,11 @@ extern TrmpGoal sTrmpGoalSlots;
 
 /* C callees owned by other units; no shared header declares them yet. */
 extern "C" void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
-extern "C" void Sound_PlayBank1Panned(int bank, int id, int panX);
-extern "C" void Puff_Spawn(int x, int y);
-extern "C" void Puff_DrawAll();
-extern "C" void Puff_UpdateAll();
-extern "C" void TrmpFx_Spawn(int y, int combo);
+void Sound_PlayBank1Panned(int bank, int id, int panX);
+void Puff_Spawn(int x, int y);
+void Puff_DrawAll();
+void Puff_UpdateAll();
+void TrmpFx_Spawn(int y, int combo);
 
 Vector3 *dMgTrmpln2Mario_c::GetVelocity() {
     return &mVel;

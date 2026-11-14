@@ -50,7 +50,7 @@ struct HolheiState {
     HolheiStateFn update; /* 0x8 */
 };
 
-extern "C" void func_02012694(unsigned int a, const Vector3 *p);
+extern void func_02012694(unsigned int a, const Vector3 *p);
 int daHolhei_c_ChangeState(daHolhei_c *self, HolheiState *p);
 extern "C" int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
 extern "C" void func_ov002_020db54c(void *self, int a, int b, short c);

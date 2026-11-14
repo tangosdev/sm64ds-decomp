@@ -136,7 +136,8 @@ extern short data_ov002_020ff0d0[];
 extern Vector3 data_ov002_020ff0d4[];
 }
 
-extern void func_02012694(unsigned int a, void *b);
+extern void func_02012694(unsigned int a, const Vector3 *b);
+extern int Vec3_ApproachHorz(Vector3 *out, Vector3 *target, int maxStep);
 
 extern s16 Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
 extern "C" {
@@ -915,7 +916,7 @@ void daObjTatefuda_c::Kill()
  * dActor_c's own field pair (include/dActor_c.h, 0x08e/0x094). */
 void daObjTatefuda_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
-    func_02012694(0x1d, &mCamSpacePosX);
+    func_02012694(0x1d, (const Vector3 *)&mCamSpacePosX);
     KillByMegaChar(player);
     mAngleY = mPrevAngleY;
 }

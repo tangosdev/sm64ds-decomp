@@ -44,7 +44,7 @@ enum d_a_star_gate_AssetId {
 #include "SaveBlock.h"
 #include "math/CalcLib.h"
 
-void func_02012694(int soundID, const Vector3 *position, ...);
+void func_02012694(unsigned int soundID, const Vector3 *position);
 void ChangeArea(int areaID);
 void ShowArea(int areaID);
 unsigned char NumStars(void);
@@ -345,7 +345,7 @@ bool daStarGate_c::St_OpenClose_Main(daPly_c *player) {
                 mCloseDoorTimer = 0x1c;
             } else if (DecIfAbove0_Byte(&mCloseDoorTimer) == 0) {
                 mTerminalVelocity = 0;
-                func_02012694(0x4f, (const Vector3 *)(&mCamSpacePosX), 0);
+                func_02012694(0x4f, (const Vector3 *)(&mCamSpacePosX));
             } else if (mCloseDoorTimer == 8) {
                 gCamera->GoBehindPlayer(gLocalPlayerId);
             }

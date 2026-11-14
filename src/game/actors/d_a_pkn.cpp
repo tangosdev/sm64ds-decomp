@@ -91,7 +91,7 @@ PknStatePMF data_ov084_02130e80[9] = {
 /* C-linkage declarations for the remaining raw entry points and shared data. */
 
 /* -- other modules -- */
-extern "C" void func_02012694(u32 id, const Vector3 *pos);
+extern void func_02012694(u32 id, const Vector3 *pos);
 
 /* -- shared tables -- */
 extern int data_ov084_0213030c[];        /* per-frame particle X/Z offset (0212f460, 0xfb) */

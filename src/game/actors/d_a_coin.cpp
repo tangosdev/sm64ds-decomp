@@ -93,7 +93,7 @@ struct CoinFlagBits {
 
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-extern int Vec3_HorzLen(void *v);
+extern int Vec3_HorzLen(const Vector3 *v);
 extern "C" {
 
 extern int VEC_Mag(const Vector3 *v);
@@ -105,7 +105,7 @@ extern void GiveCoins(int idx, int amount);
 extern int GiveRedCoins(int i, int amt);
 extern s8 NumRedCoins(void);
 extern void func_02012694(unsigned int id, const Vector3 *v);
-extern int SurfaceInfo_TestFlag0x20(void* p);
+extern int SurfaceInfo_TestFlag0x20(int *p);
 
 extern "C" {
 
@@ -281,7 +281,7 @@ void daCoin_c::Step() {
     else
         dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
     if (!mWithMeshClsn.IsOnGround()) return;
-    if (SurfaceInfo_TestFlag0x20((char *)mWithMeshClsn.GetFloorResult() + 4) == 0)
+    if (SurfaceInfo_TestFlag0x20((int *)((char *)mWithMeshClsn.GetFloorResult() + 4)) == 0)
         return;
     if (mVertSpeed > 0) return;
     func_02012694(0xe2, &mCamSpacePos);
@@ -520,7 +520,7 @@ void daCoin_c::StateLaunchNearPlayer() {
         mDisappearTimer = 0x1c2;
     }
     if (mWithMeshClsn.JustHitGround()) {
-        if (SurfaceInfo_TestFlag0x20((char *)mWithMeshClsn.GetFloorResult() + 4) == 0) {
+        if (SurfaceInfo_TestFlag0x20((int *)((char *)mWithMeshClsn.GetFloorResult() + 4)) == 0) {
             Sound::PlayBank3(0x52, mCamSpacePos);
             mVertSpeed = 0x19000;
         }
@@ -538,7 +538,7 @@ void daCoin_c::StateSlideAwayFromMario() {
     Step();
     BounceOffWall();
     if (!mWithMeshClsn.JustHitGround()) return;
-    if (SurfaceInfo_TestFlag0x20((char *)mWithMeshClsn.GetFloorResult() + 4) != 0)
+    if (SurfaceInfo_TestFlag0x20((int *)((char *)mWithMeshClsn.GetFloorResult() + 4)) != 0)
         return;
     Sound::PlayBank3(0x52, mCamSpacePos);
     if (mHorzSpeed == 0) {
@@ -613,7 +613,7 @@ void daCoin_c::StateBounce() {
     ((SurfaceInfo*)(floor + 4))->CopyNormalTo(normal);
 
     if (mWithMeshClsn.JustHitGround() != 0) {
-        if (SurfaceInfo_TestFlag0x20((char *)mWithMeshClsn.GetFloorResult() + 4) == 0) {
+        if (SurfaceInfo_TestFlag0x20((int *)((char *)mWithMeshClsn.GetFloorResult() + 4)) == 0) {
             if (mDisappearTimer > 0xf000)
                 mDisappearTimer = 0xf;
             Sound::PlayBank3(0x52, mCamSpacePos);
@@ -634,7 +634,7 @@ void daCoin_c::StateBounce() {
         int *velocity = &mSpeedX;
         *velocity += normal.x * slide;
         mSpeedZ += normal.z * slide;
-        mHorzSpeed = Vec3_HorzLen(velocity);
+        mHorzSpeed = Vec3_HorzLen((const Vector3 *)velocity);
         if (mHorzSpeed > 0x1c000) {
             mHorzSpeed = 0x1c000;
             UpdatePosWithHorzSpeedAndAng();
@@ -644,7 +644,7 @@ void daCoin_c::StateBounce() {
 
     if (mWithMeshClsn.JustHitGround() != 0)
         return;
-    if (SurfaceInfo_TestFlag0x20((char *)mWithMeshClsn.GetFloorResult() + 4) != 0)
+    if (SurfaceInfo_TestFlag0x20((int *)((char *)mWithMeshClsn.GetFloorResult() + 4)) != 0)
         return;
 
     if (normal.y != 0) {

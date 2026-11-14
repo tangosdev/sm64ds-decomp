@@ -197,6 +197,7 @@ extern dCamera_c *gCamera;
 extern u32 gNextActorUpdateMask;
 extern "C" void *d_a_obj_keyNewHold(u32 a, u32 b, int c, int d, int e, void *f, void *g);
 void func_02012694(unsigned int id, const Vector3 *pos);
+int Vec3_ApproachHorz(Vector3 *out, Vector3 *target, int maxStep);
 extern "C" void func_ov002_020c3dbc(void *player);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void *data_ov089_021328b4[];
@@ -371,7 +372,7 @@ void daObjKey_c::StateFlyToCenter()
         center2.x = 0;
         center2.y = 0;
         center2.z = 0;
-        Vec3_ApproachHorz(&mPosX, &center2, mHorzSpeed);
+        Vec3_ApproachHorz((Vector3 *)&mPosX, &center2, mHorzSpeed);
         if (mBounceCount == 0) {
             if (mVertSpeed < 0) {
                 int floor = mHomePos.y;

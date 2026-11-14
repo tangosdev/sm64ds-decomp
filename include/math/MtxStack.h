@@ -126,8 +126,12 @@ extern "C"
 #endif
     void
     Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *, int, int, int);
-/* out = in * m (rotation only). */
-void MTX_MultVec33(const Vector3 *, const Matrix3x3 *, Vector3 *);
+/* out = in * m (rotation only). The ROM symbol is the plain C name. */
+#ifdef __cplusplus
+extern "C"
+#endif
+    void
+    MTX_MultVec33(const Vector3 *, const Matrix3x3 *, Vector3 *);
 /* dst = inverse of src; -1 (dst untouched) when src is singular, else 0. */
 int MTX_Inverse43(const Matrix4x3 *, Matrix4x3 *);
 

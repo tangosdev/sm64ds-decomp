@@ -1435,9 +1435,10 @@ extern int NormalizeVec3IfNonZero(Vector3 *v);
 extern Fix12i VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 /* The 64-bit squared distance between two points. */
 extern long long func_0203cf94(int *a, int *b);
+}
+
 extern void func_ov002_020effb8(Vector3 *out, s32 t, Vector3 *p0, Vector3 *p1, Vector3 *p2,
                                 Vector3 *p3);
-}
 
 extern void FUN_02029ab0(void);
 extern int Sound_PlayIfNotActive(int handle, int bank, int id, short arg);

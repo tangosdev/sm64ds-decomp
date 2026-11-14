@@ -142,20 +142,12 @@ extern int sTrmp2BrushWord[];
 extern const u16 sTrmp2BrushPltt[];
 extern dFdBrightness_c *gSceneFader;
 extern int sTrmp2TouchBlocked;
-extern void Mg_CommitRecords(void);
 void func_0203cd80(int *m, short angle);
-int GetGameLanguage(void);
-struct OamAttr;
-struct Matrix2x2;
-void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
-void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 unsigned int d_s_mg_trampoline2NewCleanParticleHold(unsigned int a, unsigned int b, int c, int d,
                                                     int e, const Vector3_16f *f);
 void Jump2Popup_UpdateAll(void);
 extern const VecFx32 sTrmp2RandomSpawnPositions[];
 extern void func_0203cc28(int *vector, int angle);
-extern int func_020126e8(int a);
-extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern int sTrmpItemsHit;
 extern int sTrmp2Lives;
 extern int sTrmp2Score;
@@ -202,6 +194,25 @@ OamAttr **sTrmp2TextSpritesByLanguage[] = {sMgTextSpritesEnglish, sMgTextSprites
                                            sMgTextSpritesFrench, sMgTextSpritesGerman,
                                            sMgTextSpritesItalian};
 }
+
+namespace s20ad90c {
+void Mg_CommitRecords(void);
+}
+using s20ad90c::Mg_CommitRecords;
+namespace s20ad674 {
+int GetGameLanguage(void);
+}
+using s20ad674::GetGameLanguage;
+namespace s20afcf8 {
+void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
+}
+using s20afcf8::DrawOamSprite;
+namespace s20afa20 {
+void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
+}
+using s20afa20::RenderOamMainScreen;
+int func_020126e8(int a);
+int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 
 /* The three models, mTexAnim and mUnusedVec are all built before the
    empty body, in declaration order. */
@@ -1091,8 +1102,8 @@ void Trmp2Spinner_SetModel(void *raw) {
 extern "C" {
 extern struct Tbl sTrmp2SpinnerSpeeds;
 extern const u16 sTrmp2SpinnerColors[];
-extern void func_020169f4(char *self, int kind);
 }
+void func_020169f4(char *self, int kind);
 
 void Trmp2Spinner_Init(void *r0, int value) {
     Trmp2Spinner *spinner = (Trmp2Spinner *)r0;

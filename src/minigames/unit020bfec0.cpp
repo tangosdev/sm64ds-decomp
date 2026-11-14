@@ -107,13 +107,13 @@ struct WalkPath {
 };
 
 /* local extern: address-named arm9 routines, no owning header. */
-extern "C" {
-void func_020169d8(void *, int, unsigned int);
-void func_02016a04(void *, int);
-void func_02016a14(void *, int);
+void func_020169d8(char *, int, unsigned int);
+void func_02016a04(char *, int);
+void func_02016a14(char *, int);
 int func_02017ab4(int);
 void *func_02017acc(void *, unsigned int);
 unsigned int func_02012174(unsigned int, unsigned int);
+extern "C" {
 void func_0203ccd4(void *, short);
 void func_0203cd80(void *, short);
 void func_0203cebc(void *, void *, void *, void *);
@@ -301,8 +301,8 @@ void FlowerFace::Draw() {
 
     G3_LightVector(GX_LIGHTID_0, light.x, light.y, light.z);
 
-    func_02016a14(&mModel, 0x2bff);
-    func_02016a04(&mModel, 0x1211);
+    func_02016a14((char *)&mModel, 0x2bff);
+    func_02016a04((char *)&mModel, 0x1211);
 
     mModel.mat4x3 = data_ov006_0213aee8;
 
@@ -693,7 +693,7 @@ void Presenter::Draw() {
     fillLight[0] = 0;
     fillLight[1] = 0;
     fillLight[2] = -0xff8;
-    func_02016a04(&mFace, 0x3d6d);
+    func_02016a04((char *)&mFace, 0x3d6d);
     func_0203cd80(keyLight, -0x2000);
     func_0203ccd4(keyLight, 0x2000);
     func_0203cd80(fillLight, 0x4200);
@@ -1138,8 +1138,8 @@ void Dealer::Draw() {
     G3_LightVector(GX_LIGHTID_0, keyLight.x, keyLight.y, keyLight.z);
     G3_LightVector(GX_LIGHTID_1, spinLight.x, spinLight.y, spinLight.z);
 
-    func_02016a14(&mModel, 0x7fff);
-    func_02016a04(&mModel, 0x4210);
+    func_02016a14((char *)&mModel, 0x7fff);
+    func_02016a04((char *)&mModel, 0x4210);
 
     {
         short pattern = mLampPattern;
@@ -1155,9 +1155,9 @@ void Dealer::Draw() {
         }
     }
 
-    func_020169d8(&mTable, 0, (unsigned short)(lamp[0] | (lamp[1] << 5) | (lamp[2] << 10)));
-    func_020169d8(&mTable, 4, 0x6318);
-    func_020169d8(&mTable, 5, (unsigned short)(lamp[1] | (lamp[2] << 5) | (lamp[0] << 10)));
+    func_020169d8((char *)&mTable, 0, (unsigned short)(lamp[0] | (lamp[1] << 5) | (lamp[2] << 10)));
+    func_020169d8((char *)&mTable, 4, 0x6318);
+    func_020169d8((char *)&mTable, 5, (unsigned short)(lamp[1] | (lamp[2] << 5) | (lamp[0] << 10)));
 
     mModel.Render(0);
     mWalker.Draw();

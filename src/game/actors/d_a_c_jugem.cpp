@@ -114,7 +114,7 @@ struct JugemVec3 {
 /* Helpers not declared by the included headers. */
 s16 Vec3_VertAngle(const void *a, const void *b);
 extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-int   Vec3_ApproachHorz(void *cur, const void *tgt, int maxStep);
+int Vec3_ApproachHorz(Vector3 *cur, Vector3 *tgt, int maxStep);
 extern "C" int AngleDiff(int a, int b);
 
 /* local extern: each of these real members takes a Fix12<int> BY VALUE,

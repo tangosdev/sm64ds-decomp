@@ -238,6 +238,7 @@ extern dCamera_c *gCamera;
 extern struct Matrix4x3 data_020a0e68;
 extern Fix12i Vec3_HorzLen(const Vector3 *v);
 extern void func_02012694(unsigned int a, const Vector3 *b);
+extern int Vec3_ApproachHorz(Vector3 *out, Vector3 *target, int maxStep);
 extern "C" {
 
 /* Vec3_Sub is not declared by math/CalcLib.h. */
@@ -1169,7 +1170,7 @@ int daKing_Donketu_c::UpdateEdgeWobble() {
     in.x = c->mEdgePosX + out.x;
     in.y = c->mEdgePosY;
     in.z = c->mEdgePosZ + out.z;
-    Vec3_ApproachHorz(&c->mPosX, &in, 0x14000);
+    Vec3_ApproachHorz((Vector3 *)&c->mPosX, &in, 0x14000);
     c->mAngleY = Vec3_HorzAngle(&c->mPos, &c->mSpawnPos);
     c->mPrevAngleY = c->mAngleY + 0x8000;
     c->mStateScratch += 0x500;

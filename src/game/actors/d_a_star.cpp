@@ -146,14 +146,14 @@ extern "C" {
 extern unsigned char gGameMode;
 }
 
-extern void func_02035860(void* o, void* src);
+extern void func_02035860(dBgCh_Actr *o, const Vector3 *src);
 extern "C" {
 
 extern dCamera_c *gCamera;
 }
 
 extern unsigned char IsAreaShowing(int idx);
-extern void func_02012694(unsigned int a, void *p);
+extern void func_02012694(unsigned int a, const Vector3 *p);
 
 extern void func_ov002_020e8244(void *out, daStar_c *b);
 extern "C" {
@@ -169,7 +169,7 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 }
 
-extern int SurfaceInfo_TestFlag0x20(void* p);
+extern int SurfaceInfo_TestFlag0x20(int *p);
 extern "C" {
 
 extern int data_0209f32c;
@@ -848,7 +848,7 @@ void daStar_c::StateLaunch() {
     mFlags |= CUTSCENE_FLAG;
     gNextActorUpdateMask |= CUTSCENE_FLAG;
     mCamSeq = 0;
-    func_02012694(0x57, &mCamSpacePosX);
+    func_02012694(0x57, (const Vector3 *)&mCamSpacePosX);
     mVertSpeed = 0x20000;
     SetDefaultGravity();
     other = dActor_c::FindWithID(mMarkerID);
@@ -2020,7 +2020,7 @@ void daStar_c::ReturnToHome() {
         mPosX = mHomePosX;
         mPosY = mHomePosY;
         mPosZ = mHomePosZ;
-        func_02035860(&mWithMeshClsn, &mPosX);
+        func_02035860((dBgCh_Actr *)(void *)&mWithMeshClsn, (const Vector3 *)&mPosX);
         mState = mHomeState;
         StopMotion();
         mdCc_c.flags |= 1;
@@ -2048,7 +2048,7 @@ void daStar_c::ReturnToHome() {
     mPosX = mHomePosX;
     mPosY = mHomePosY;
     mPosZ = mHomePosZ;
-    func_02035860(&mWithMeshClsn, &mPosX);
+    func_02035860((dBgCh_Actr *)(void *)&mWithMeshClsn, (const Vector3 *)&mPosX);
     mState = mHomeState;
     mVertSpeed = 0x20000;
     SetDefaultGravity();
@@ -2076,7 +2076,7 @@ void daStar_c::OnBounceLand() {
         mBits.noPickup = 0;
         mStateTimer = 0;
     }
-    func_02012694(0x55, &mCamSpacePosX);
+    func_02012694(0x55, (const Vector3 *)&mCamSpacePosX);
     if (mBits.water == WATER_IN) {
         mHorzSpeed = 0xc000;
         mVertSpeed = 0xe000;
@@ -2163,7 +2163,7 @@ void daStar_c::UpdateWater() {
         v.z = tz;
         rc.SetObjAndPos(v, this);
         if (rc.DetectClsn() != 0) {
-            if (SurfaceInfo_TestFlag0x20(&rc.surface) != 0) {
+            if (SurfaceInfo_TestFlag0x20((int *)&rc.surface) != 0) {
                 mWaterHeight = rc.clsnY;
                 data_0209f32c = mWaterHeight;
                 if (mWaterHeight >= mPosY + 0x3c000) {
@@ -2499,7 +2499,7 @@ int daStar_c::RearmSoundObj6() {
  * hides it, clears its touch volume and bursts effects 0x12c, 0x12d and 0x12e. */
 void daStarBase_c::Collect()
 {
-    func_02012694(0x53, &mCamSpacePosX);
+    func_02012694(0x53, (const Vector3 *)&mCamSpacePosX);
     {
         mBits.hold = 1;
         mBits.visible = 0;
@@ -2766,7 +2766,7 @@ void daStar_c::RelinkMarker() {
     mPosX = s[0];
     mPosY = s[1];
     mPosZ = s[2];
-    func_02035860(&mWithMeshClsn, &mPosX);
+    func_02035860((dBgCh_Actr *)(void *)&mWithMeshClsn, (const Vector3 *)&mPosX);
     if (a->mState == STATE_LAND) {
         mHomeState = a->mLinkedStarState;
         mState = mHomeState;

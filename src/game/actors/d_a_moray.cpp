@@ -100,7 +100,7 @@ int SublevelToLevel(int sub);
 int IsStarCollected(int level, int star);
 void func_02012694(unsigned int id, const Vector3 *pos);
 void func_020167a4(dExtAnmModel_c *model);
-void func_0204531c(ModelComponents *data, s32 weight);
+void func_0204531c(char *data, s32 weight);
 short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 extern "C" {
 /* the selected star */
@@ -626,7 +626,7 @@ s32 daMoray_c::Render()
         step++;
         bone++;
     }
-    func_0204531c(&mBlendAnmModel.data, mBlendAnmModel.blendWeight);
+    func_0204531c((char *)&mBlendAnmModel.data, mBlendAnmModel.blendWeight);
     mBlendAnmModel.dExtSimpleModel_c::Render(0);
     return 1;
 }

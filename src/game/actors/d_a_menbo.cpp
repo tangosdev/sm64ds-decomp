@@ -101,7 +101,7 @@ extern "C" int d_a_menboNewHold(unsigned int a0, unsigned int a1, int a2, int a3
 extern "C" {
 typedef void BgchInitAt_(dBgCh_Actr *self, int a, LocFix12 r, LocFix12 h, int p, int q);
 }
-int   SurfaceInfo_TestFlag0x20(const SurfaceInfo *p);
+int SurfaceInfo_TestFlag0x20(int *p);
 int   func_02035638(u8 *p);
 
 extern "C" struct Aea30C;
@@ -823,7 +823,7 @@ int daMenbo_c::InitResources()
         ground.SetObjAndPos(pos, this);
         mFloorY = data_02092138;
         if (ground.DetectClsn() != 0) {
-            if (SurfaceInfo_TestFlag0x20(&ground.surface) != 0) {
+            if (SurfaceInfo_TestFlag0x20((int *)&ground.surface) != 0) {
                 mOnWater = 1;
                 mSurfaceY = ground.clsnY;
             } else {

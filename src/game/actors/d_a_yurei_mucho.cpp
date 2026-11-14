@@ -64,7 +64,7 @@ struct V3Quint {
 
 /* arm9 scalar ABI and unnamed helpers; see the remaining work above. */
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-extern void func_02012694(unsigned int id, void *v);
+extern void func_02012694(unsigned int id, const Vector3 *v);
 extern "C" {
 
 /* ov002 -- unnamed particle helper. */
@@ -468,7 +468,7 @@ int daYurei_Mucho_c::UpdateShoot() {
             void *spawned = dActor_c::Spawn(0xe9, 1, *(Vector3 *)&mShotPosX, 0, mAreaId, -1);
             if (spawned != 0) {
                 dActor_c *shot = (dActor_c *)spawned;
-                func_02012694(0xfb, &mCamSpacePosX);
+                func_02012694(0xfb, (const Vector3 *)&mCamSpacePosX);
                 L.spv.x = 0;
                 L.spv.y = 0;
                 L.spv.z = 0x1e000;
@@ -557,23 +557,23 @@ void daYurei_Mucho_c::HandleCollision() {
     if (flags & 0x40000) {
         mDeathState = 4;
         func_ov002_020aea30((Aea30C *)this, p, 0);
-        func_02012694(0x11e, &mCamSpacePosX);
+        func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
         return;
     }
     if (flags & 0x2400) {
         mDeathState = 2;
         func_ov002_020aea30((Aea30C *)this, p, 0);
-        func_02012694(0x11e, &mCamSpacePosX);
+        func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
         return;
     }
     if (flags & 0x4380) {
         mDeathState = 3;
         func_ov002_020aea30((Aea30C *)this, p, 0);
-        func_02012694(0x11e, &mCamSpacePosX);
+        func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
         return;
     }
     if (BumpedUnderneathByPlayer(*p) == 1) {
-        func_02012694(0x11e, &mCamSpacePosX);
+        func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
         ChangeState(&data_ov065_0211d660);
         return;
     }
@@ -582,19 +582,19 @@ void daYurei_Mucho_c::HandleCollision() {
         v.y = 0;
         v.z = 0;
         KillByInvincibleChar(v, *p, 0);
-        func_02012694(0x11e, &mCamSpacePosX);
+        func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
         return;
     }
     if (flags & 0x40) {
         mDeathState = 2;
         func_ov002_020aea30((Aea30C *)this, p, 0);
-        func_02012694(0x11e, &mCamSpacePosX);
+        func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
         return;
     }
     if (flags & 0x20) {
         mDeathState = 1;
         func_ov002_020aea30((Aea30C *)this, p, 0);
-        func_02012694(0x11e, &mCamSpacePosX);
+        func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
         return;
     }
     {
@@ -609,7 +609,7 @@ void daYurei_Mucho_c::HandleCollision() {
         p->Bounce(0x28000);
         mDeathState = 1;
         func_ov002_020aea30((Aea30C *)this, p, 0);
-        func_02012694(0x11e, &mCamSpacePosX);
+        func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
         return;
     }
     hv.x = mPosX;
@@ -628,7 +628,7 @@ void daYurei_Mucho_c::KillWithCoins() {
     v.z = mPosZ;
     SpawnCoins(v, mExtraCoinCount + 1, 0xa000, 0);
     KillAndTrackInDeathTable();
-    func_02012694(0x11e, &mCamSpacePosX);
+    func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
 }
 
 /* -------------------------------------------------------------------------- */

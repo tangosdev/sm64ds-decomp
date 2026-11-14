@@ -254,7 +254,7 @@ extern void OamRender10_d_a_demo(int a, struct OamAttr *attr, int x, int y, int 
 extern struct OamAttr* data_ov002_0210b988[];
 }
 
-extern void func_0201ef50(unsigned char v);
+extern void func_0201ef50(int v);
 extern void func_0201f108(void);
 extern "C" {
 
@@ -335,7 +335,7 @@ extern int func_ov002_020f2990(char *c);
 extern void func_ov002_020f5fe4(char *c);
 
 /* local extern dropped: decl_common.h declares func_ov002_020f6514(unsigned char*, void*, unsigned char) */
-extern void func_02012694(unsigned int, void*);
+extern void func_02012694(unsigned int, const Vector3 *);
 extern "C" {
 
 /* local extern dropped: decl_common.h declares data_ov002_0210bc88 as 'int'; callers cast the address */
@@ -2777,7 +2777,7 @@ int daDemo_c::func_ov002_020f6ae4(unsigned char *p)
 int daDemo_c::func_ov002_020f6b28(unsigned char *p)
 {
     unsigned int v = ReadUnalignedInt(p);
-    func_02012694(v, &mCamSpacePosX);
+    func_02012694(v, (const Vector3 *)&mCamSpacePosX);
     return 1;
 }
 

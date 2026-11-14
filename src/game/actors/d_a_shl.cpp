@@ -95,8 +95,8 @@ extern SharedFilePtr *data_ov102_0214d70c[];
 
 /* -- other modules -- */
 int func_ov002_020ad660(void *self, void *clsn, void *model, int kind);
-int  func_ov002_020cc16c(void *player, void *actor);
-void Matrix4x3_FromRotationY(void *m, int angle);
+extern "C" int func_ov002_020cc16c(void *player, void *actor);
+extern "C" void Matrix4x3_FromRotationY(void *m, int angle);
 int  SurfaceInfo_TestFlag0x20(int *si);
 
 extern "C" int d_a_shlNewHold(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, void *dir,

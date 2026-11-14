@@ -52,7 +52,12 @@ enum dScGameOver_c_AssetId {
 #include "OamAttr.h"
 #include "OAM.h"
 #include "SpawnInfo.h"
+/* decl_common's C++ line takes int. Hide it and declare the definition's
+   short. local extern: decl_common.h */
+#define func_0201cebc func_0201cebc_hidden
 #include "decl_common.h"
+#undef func_0201cebc
+void func_0201cebc(short); /* local extern: decl_common.h */
 #include "PlayerInput.h"
 #include "dFdBrightness_c.h"
 #include "Sound.h"

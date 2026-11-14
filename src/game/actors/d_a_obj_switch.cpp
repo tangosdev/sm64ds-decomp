@@ -77,9 +77,10 @@ unsigned char IsAreaShowing(int area);
 extern "C" {
 
 unsigned char DecIfAbove0_Byte(unsigned char *value);
+}
+
 void LoadSilverStarAndNumber();
 void UnloadSilverStarAndNumber();
-}
 
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 

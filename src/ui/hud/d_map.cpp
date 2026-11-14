@@ -122,7 +122,8 @@ extern void SetSubBg2Offset(s32 a, s32 b);
 
 extern s32 GetMinimapID(dActor_c *actor, s32 arg);
 extern s32  GetMinimapScale(s32 idx);
-extern void UpdateMinimap(s32 *a, u32 b, u32 c, u32 d, u32 e);
+struct MinimapDesc;
+extern void UpdateMinimap(MinimapDesc *a, u32 b, u32 c, u32 d, u32 e);
 Vector3 *Vec3_DivScalarInPlace(Vector3 *v, int s);
 extern "C" {
 
@@ -903,9 +904,10 @@ Lc00:
     data_ov002_02111148 = id;
     this->mTargetInvScale = GetMinimapScale(id);
     }
-Lc30:
-    UpdateMinimap(&this->mBgMatrixA, this->mMapCenterX, this->mMapCenterY, this->mMapCenterX - 0x80, this->mMapCenterY - 0x60);
-    return 1;
+    Lc30:
+        UpdateMinimap((MinimapDesc *)&this->mBgMatrixA, this->mMapCenterX, this->mMapCenterY,
+                      this->mMapCenterX - 0x80, this->mMapCenterY - 0x60);
+        return 1;
 }
 
 /* What InitResources loads the map graphics with. */
