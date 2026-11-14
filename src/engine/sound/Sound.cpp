@@ -967,8 +967,8 @@ void func_02011a5c(void *vc) {
     for (i = 0; i < 16; i++) c->buckets[i] = 0;
 }
 
-void func_02011a28(char *c) {
-    SndRegEntry *p = ((SndRegTable *)c)->entries;
+void func_02011a28(SndRegTable *c) {
+    SndRegEntry *p = c->entries;
     int i;
     for (i = 0; i < 0x40; i++) {
         func_0204f94c(&p->handle);
