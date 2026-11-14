@@ -104,8 +104,7 @@ struct System {
     /* Unnamed parameters: a name here numbers @NNN in every includer. */
     static void *NewSimple(u32, fx32, fx32, fx32);
     /* The callback is stored in the level emitter New() starts (level_c::emitter_c::mCallback). */
-    static int New(u32, u32, fx32, fx32, fx32, const Vector3_16f *,
-                   dPa_c::level_c::callback_c *);
+    static int New(u32, u32, fx32, fx32, fx32, const Vector3_16f *, dPa_c::level_c::callback_c *);
     static u32 NewRipple(fx32, fx32, fx32);
     static void NewBigSplash(fx32, fx32, fx32);
     /* One wrapper per dPa_c callback: each starts a level emitter with that

@@ -54,8 +54,8 @@ static inline void FX_InvAsyncImm(fx32 denom) {
 /* The Nitro SDK's G3i_PerspectiveW_: the draw flag is a BOOL. Spelled bool,
    the body tests it differently from the ROM; int reproduces it. The matrix
    is the SDK's MtxFx44, sixteen words. */
-void G3i_PerspectiveW_(fx32 fovySin, fx32 fovyCos, fx32 aspect, fx32 n, fx32 f,
-                       fx32 scaleW, int draw, Matrix4x3 *mtxp) {
+void G3i_PerspectiveW_(fx32 fovySin, fx32 fovyCos, fx32 aspect, fx32 n, fx32 f, fx32 scaleW,
+                       int draw, Matrix4x3 *mtxp) {
     int *mtx = (int *)mtxp;
     fx32 fovyCot;
     volatile s32 *port;

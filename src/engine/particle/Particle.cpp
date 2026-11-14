@@ -188,8 +188,8 @@ System *System::FromUniqueID(u32 uniqueID) {
 /* A live uniqueID moves its system to the new position (and direction, when
  * one is given) and re-runs the callback's SpawnParticles; anything else
  * starts a fresh system of definitionID. */
-int System::New(u32 uniqueID, u32 definitionID, fx32 x, fx32 y, fx32 z,
-                const Vector3_16f *dir, dPa_c::level_c::callback_c *callback) {
+int System::New(u32 uniqueID, u32 definitionID, fx32 x, fx32 y, fx32 z, const Vector3_16f *dir,
+                dPa_c::level_c::callback_c *callback) {
     dPa_c::level_c::emitter_c *found;
     dPa_c::level_c *level;
     dPa_c::level_c::emitter_c *emitter;
@@ -255,8 +255,8 @@ u32 System::NewCheckYogan(u32 uniqueID, u32 effectID, fx32 x, fx32 y, fx32 z,
 
 namespace Particle {
 
-u32 System::NewWeather(u32 uniqueID, u32 effectID, fx32 x, fx32 y, fx32 z,
-                       const Vector3_16f *dir, u8 numWeatherEffectsNow) {
+u32 System::NewWeather(u32 uniqueID, u32 effectID, fx32 x, fx32 y, fx32 z, const Vector3_16f *dir,
+                       u8 numWeatherEffectsNow) {
     dPa_c::level_c::clipCallback_c *callback = &gParticleControl->mWeatherCallback;
     callback->enabled = numWeatherEffectsNow;
     return New(uniqueID, effectID, x, y, z, dir, callback);
@@ -272,7 +272,6 @@ void RunningSlidingDustAt(fx32 x, fx32 y, fx32 z) {
         System::New(gParticleControl->mRunningSlidingDustSystemID, kPtclRunningDust, x, y, z, 0,
                     &gParticleControl->mRunningSlidingDustCallback);
 }
-
 }
 
 namespace Particle {
@@ -293,7 +292,6 @@ void System::NewBigSplash(fx32 x, fx32 y, fx32 z) {
     gParticleControl->mBigSplashSystemID = New(gParticleControl->mBigSplashSystemID, kPtclBigSplash,
                                                x, y, z, 0, &gParticleControl->mBigSplashCallback);
 }
-
 }
 
 namespace Particle {
@@ -324,7 +322,6 @@ u32 System::NewRipple(fx32 x, fx32 y, fx32 z) {
     gParticleControl->mRippleSystemID = result;
     return result;
 }
-
 }
 
 namespace Particle {

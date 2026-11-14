@@ -61,8 +61,8 @@
  */
 #ifdef __cplusplus
 struct dFader_c {
-    fx32 currInterp;  /* 0x04 -- current fade level, 0..0x1000 */
-    fx32 speed;       /* 0x08 -- per-frame delta; sign selects the target */
+    fx32 currInterp; /* 0x04 -- current fade level, 0..0x1000 */
+    fx32 speed;      /* 0x08 -- per-frame delta; sign selects the target */
 
     /* Declared first, making the destructor the key function. The D0/D1/D2
        sources now define a real dFader_c::~dFader_c(); mwcc therefore emits its
@@ -93,8 +93,8 @@ typedef char dFader_c_size_must_be_0xc[sizeof(dFader_c) == 0xc ? 1 : -1];
    functions, so the vptr the compiler would place is explicit. */
 struct dFader_c {
     void*  vtable;      /* 0x00 */
-    fx32 currInterp;  /* 0x04 */
-    fx32 speed;       /* 0x08 */
+    fx32 currInterp;    /* 0x04 */
+    fx32 speed;         /* 0x08 */
 };
 #endif
 
