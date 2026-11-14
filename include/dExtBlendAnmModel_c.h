@@ -33,8 +33,8 @@
  */
 
 struct dExtBlendAnmModel_c : dExtAnmModel_c {
-    fx32 blendWeight;          /* 0x64 - 0x1000 is 1.0 */
-    fx32 blendStep;            /* 0x68 - per-frame increment */
+    fx32 blendWeight;   /* 0x64 - 0x1000 is 1.0 */
+    fx32 blendStep;     /* 0x68 - per-frame increment */
     void *mBlendBuffer; /* 0x6c - pose blend buffer; DoSetFile tail allocates it, D1 frees it */
 
     /* --- vtable order. Do not reorder. --- */
