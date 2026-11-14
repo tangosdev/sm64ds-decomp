@@ -24606,7 +24606,6 @@ void __sinit_ov002_021019d0(void) {
     PlayerInitStates();
 }
 }
-
 }
 
 #pragma section initsec end
