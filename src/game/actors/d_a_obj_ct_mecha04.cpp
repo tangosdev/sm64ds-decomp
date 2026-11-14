@@ -12,7 +12,7 @@
 
 // What stays, and why (each measured; simplifying changes the emitted bytes):
 // dBgW_KcMbg::SetFile / DropShadowScaleXYZ / dBgActor_c::IsClsnInRange are
-// header member calls whose headers spell Fix12 as Fix12i, a plain s32
+// header member calls whose headers take Fix12 as the scalar fx32, a plain s32
 // (6az). dBgW::SetStoodOnCallback / dBgW::GetStoodOnCallback
 // store/load dBgW+0x1c -- the ROM's own call, not an inlineable assignment.
 // common.h first: UpdateShadow writes mShadowMat.m[9..11] on the flat 12-word
@@ -239,7 +239,7 @@ int daObjCtMecha04_c::CleanupResources() {
     return 1;
 }
 
-/* Inferred descriptive name. DropShadowScaleXYZ's three sizes are Fix12i
+/* Inferred descriptive name. DropShadowScaleXYZ's three sizes are fx32
  * (a plain s32); Fix12<int> by value homes arguments absent from the
  * cartridge (6az). */
 void daObjCtMecha04_c::UpdateShadow() {

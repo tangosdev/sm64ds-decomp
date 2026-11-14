@@ -14,7 +14,7 @@
  * D2 body.
  *
  * Notes:
- * - dBgW_KcMbg::SetFile is a header member call; its scale is Fix12i, a
+ * - dBgW_KcMbg::SetFile is a header member call; its scale is fx32, a
  *   plain s32 (notes/mwccarm-codegen.md 6az).
  * - Sound::PlayLong / Sound::PlaySecretSound come from Sound.h, which now
  *   declares both. The ROM mangle is RK7Vector3 (const Vector3 &); a pointer
