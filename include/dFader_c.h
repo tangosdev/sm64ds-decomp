@@ -15,7 +15,7 @@
  *
  * LAYOUT. dFader_c is polymorphic -- the ROM carries its vtable at data_0208eafc,
  * and dFader_c::~dFader_c stores it into [this+0x0]. So the vptr is at 0x0 and the first
- * data member starts at 0x4. dFader_c::AdvanceInterp reads a Fix12i at 0x8 and
+ * data member starts at 0x4. dFader_c::AdvanceInterp reads an fx32 at 0x8 and
  * passes &[this+0x4] to the 20.12 approach helper at 0x0203ae58, which pins
  * currInterp=0x4 and speed=0x8, both 4 bytes. dFdWipe_c::dFdWipe_c writes
  * 0x1000 to [this+0x4] and 0 to [this+0x8] on the way up the chain, which is
@@ -61,8 +61,8 @@
  */
 #ifdef __cplusplus
 struct dFader_c {
-    Fix12i currInterp;  /* 0x04 -- current fade level, 0..0x1000 */
-    Fix12i speed;       /* 0x08 -- per-frame delta; sign selects the target */
+    fx32 currInterp;  /* 0x04 -- current fade level, 0..0x1000 */
+    fx32 speed;       /* 0x08 -- per-frame delta; sign selects the target */
 
     /* Declared first, making the destructor the key function. The D0/D1/D2
        sources now define a real dFader_c::~dFader_c(); mwcc therefore emits its
@@ -93,8 +93,8 @@ typedef char dFader_c_size_must_be_0xc[sizeof(dFader_c) == 0xc ? 1 : -1];
    functions, so the vptr the compiler would place is explicit. */
 struct dFader_c {
     void*  vtable;      /* 0x00 */
-    Fix12i currInterp;  /* 0x04 */
-    Fix12i speed;       /* 0x08 */
+    fx32 currInterp;  /* 0x04 */
+    fx32 speed;       /* 0x08 */
 };
 #endif
 

@@ -102,38 +102,38 @@ struct System {
 
     static System *FromUniqueID(u32 uniqueID);
     /* Unnamed parameters: a name here numbers @NNN in every includer. */
-    static void *NewSimple(u32, Fix12i, Fix12i, Fix12i);
+    static void *NewSimple(u32, fx32, fx32, fx32);
     /* The callback is stored in the level emitter New() starts (level_c::emitter_c::mCallback). */
-    static int New(u32, u32, Fix12i, Fix12i, Fix12i, const Vector3_16f *,
+    static int New(u32, u32, fx32, fx32, fx32, const Vector3_16f *,
                    dPa_c::level_c::callback_c *);
-    static u32 NewRipple(Fix12i, Fix12i, Fix12i);
-    static void NewBigSplash(Fix12i, Fix12i, Fix12i);
+    static u32 NewRipple(fx32, fx32, fx32);
+    static void NewBigSplash(fx32, fx32, fx32);
     /* One wrapper per dPa_c callback: each starts a level emitter with that
        callback and returns its id (the caller keeps it). Named for the
        ROM-RTTI callback class they pass (dPa_c::level_c::*Callback_c). */
-    static u32 NewCheckWater(u32, u32, Fix12i, Fix12i, Fix12i, const Vector3_16f *);
-    static u32 NewCheckWaterRipple(u32, u32, Fix12i, Fix12i, Fix12i, const Vector3_16f *);
-    static u32 NewFitWater(u32, u32, Fix12i, Fix12i, Fix12i, const Vector3_16f *);
-    static u32 NewFitWaterRaised(u32, u32, Fix12i, Fix12i, Fix12i, const Vector3_16f *);
-    static u32 NewCheckYogan(u32, u32, Fix12i, Fix12i, Fix12i, const Vector3_16f *);
-    static u32 NewCleanParticle(u32, u32, Fix12i, Fix12i, Fix12i, const Vector3_16f *);
+    static u32 NewCheckWater(u32, u32, fx32, fx32, fx32, const Vector3_16f *);
+    static u32 NewCheckWaterRipple(u32, u32, fx32, fx32, fx32, const Vector3_16f *);
+    static u32 NewFitWater(u32, u32, fx32, fx32, fx32, const Vector3_16f *);
+    static u32 NewFitWaterRaised(u32, u32, fx32, fx32, fx32, const Vector3_16f *);
+    static u32 NewCheckYogan(u32, u32, fx32, fx32, fx32, const Vector3_16f *);
+    static u32 NewCleanParticle(u32, u32, fx32, fx32, fx32, const Vector3_16f *);
     /* One fixed effect each, kept in dPa_c's own id slot (see the bank in
        dPa_c.h); named for the effect. */
-    static u32 NewSplash(Fix12i, Fix12i, Fix12i);
-    static u32 NewBubble(Fix12i, Fix12i, Fix12i);
-    static u32 NewRedFlame(Fix12i, Fix12i, Fix12i);
-    static u32 NewBlueFlame(Fix12i, Fix12i, Fix12i);
-    static void NewFlamethrowerRedA(Fix12i, Fix12i, Fix12i, s16, s16);
-    static void NewFlamethrowerRedB(Fix12i, Fix12i, Fix12i, s16, s16);
-    static void NewFlamethrowerBlueA(Fix12i, Fix12i, Fix12i, s16, s16);
-    static void NewFlamethrowerBlueB(Fix12i, Fix12i, Fix12i, s16, s16);
+    static u32 NewSplash(fx32, fx32, fx32);
+    static u32 NewBubble(fx32, fx32, fx32);
+    static u32 NewRedFlame(fx32, fx32, fx32);
+    static u32 NewBlueFlame(fx32, fx32, fx32);
+    static void NewFlamethrowerRedA(fx32, fx32, fx32, s16, s16);
+    static void NewFlamethrowerRedB(fx32, fx32, fx32, s16, s16);
+    static void NewFlamethrowerBlueA(fx32, fx32, fx32, s16, s16);
+    static void NewFlamethrowerBlueB(fx32, fx32, fx32, s16, s16);
     /* Last parameter is u8. unsigned int shrinks a caller and reloads the
        argument as a word; the matched body loads a byte. */
-    static u32 NewWeather(u32, u32, Fix12i, Fix12i, Fix12i, const Vector3_16f *, u8);
+    static u32 NewWeather(u32, u32, fx32, fx32, fx32, const Vector3_16f *, u8);
 };
 
-void RunningSlidingDustAt(Fix12i, Fix12i, Fix12i);
-void MegaRunningSlidingDustAt(Fix12i, Fix12i, Fix12i);
+void RunningSlidingDustAt(fx32, fx32, fx32);
+void MegaRunningSlidingDustAt(fx32, fx32, fx32);
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */

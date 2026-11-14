@@ -83,9 +83,6 @@ struct W9 {
     int w[9];
 };
 
-/* OAM::Render's scale arguments. */
-typedef int Fix12i;
-
 /* The pipe's scratch block: three pairs. */
 typedef struct {
     V2 d;
@@ -128,7 +125,7 @@ extern long long func_0203d5bc(int *p);
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 extern struct OamAttr *sSmartballWingSprites[];
 extern void OamRender10_d_s_mg_smartball(int sub, struct OamAttr *data, s32 x, s32 y, s32 palette,
-                                         s32 priority, Fix12i scaleX, Fix12i scaleY, s32 rotation,
+                                         s32 priority, fx32 scaleX, fx32 scaleY, s32 rotation,
                                          s32 mode);
 extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
 extern int GetOwnerLanguage(void);

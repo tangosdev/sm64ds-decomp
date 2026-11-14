@@ -32,10 +32,10 @@
 
 // These helpers have native definitions but no shared declaration yet.
 #include "nitro/os/cache.h"
-int ApproachLinear(Fix12i &value, Fix12i target, Fix12i step);
+int ApproachLinear(fx32 &value, fx32 target, fx32 step);
 
 extern "C" {
-void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *m, Fix12i x, Fix12i y, Fix12i z);
+void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *m, fx32 x, fx32 y, fx32 z);
 }
 
 #ifndef _MSC_VER
@@ -54,7 +54,7 @@ dFdBrightness_c::~dFdBrightness_c()
    black the backdrop palette is reloaded as well. */
 void dFdBrightness_c::AdvanceFade()
 {
-    Fix12i before = currInterp;
+    fx32 before = currInterp;
     int level;
 
     AdvanceInterp();
@@ -130,8 +130,8 @@ void dFdBrightness_c::SetToStart()
    1.0, a negative one toward 0.0; the helper takes a nonnegative step. */
 void dFader_c::AdvanceInterp()
 {
-    Fix12i step = speed;
-    Fix12i target = step >= 0 ? 0x1000 : 0;
+    fx32 step = speed;
+    fx32 target = step >= 0 ? 0x1000 : 0;
     if (step < 0)
         step = -step;
     ApproachLinear(currInterp, target, step);
@@ -179,8 +179,8 @@ dFdWipe_c::~dFdWipe_c()
 
 void dFdWipe_c::AdvanceFade()
 {
-    Fix12i old = currInterp;
-    Fix12i cur;
+    fx32 old = currInterp;
+    fx32 cur;
     AdvanceInterp();
     cur = currInterp;
     if (cur == 0 && cur == old) return;
@@ -192,7 +192,7 @@ void dFdWipe_c::AdvanceFade()
                 G2_BlendNone();
         }
         if (currInterp != 0) {
-            Fix12i scale = FX_MUL(0x1000 - currInterp, 0x20000);
+            fx32 scale = FX_MUL(0x1000 - currInterp, 0x20000);
             Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, -0x1000);
             Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, scale, scale, scale);
             Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, 0x4000);
