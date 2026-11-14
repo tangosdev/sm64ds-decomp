@@ -131,7 +131,7 @@ all rather than pick a side.
 
 TYPEDEF ALIASES ARE NOT DISAGREEMENTS. `include/types.h` is parsed for its scalar typedefs
 and they are resolved transitively before comparison, so `u32` and `unsigned int` and
-`unsigned` are one type, `Fix12i` and `s32` and `signed int` and `int` are one type, and a
+`unsigned` are one type, `fx32` and `s32` and `signed int` and `int` are one type, and a
 file that spells a parameter `u16` is not billed for a file that spells it `unsigned short`.
 Elaborated specifiers collapse too (`struct Vector3` is `Vector3`), a top-level `const` on a
 by-value parameter is dropped because it is not part of the type, and an array parameter

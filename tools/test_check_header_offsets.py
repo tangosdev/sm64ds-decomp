@@ -1410,7 +1410,7 @@ class DerivedVptrAndLocalAggregateTests(unittest.TestCase):
         self.assertIn("2 commented fields, 0 mismatched, 0 unparsed, struct spans 0x19", out)
 
     def test_nitro_fx_scalars_size_a_local_aggregate(self):
-        # dClipper.h's ClipperPlane spells its members fx32 once Fix12i retires.
+        # dClipper.h's ClipperPlane spells its members fx32.
         rc, out = self._run(
             "struct Plane { fx32 x, y, z; };\n"
             "struct Widget {\n"

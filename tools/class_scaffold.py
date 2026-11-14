@@ -629,7 +629,7 @@ def fix12_wall_note(sym):
     out = ["/* WALL 6az (notes/mwccarm-codegen.md): Fix12<int> by value. A body that reads it",
            "   is homed to the stack (+2 words per use) and class-typed callers pay too."]
     if alt:
-        out.append(f"   A real member with a scalar Fix12i parameter mangles to {alt};")
+        out.append(f"   A real member with a scalar fx32 parameter mangles to {alt};")
         out.append("   renaming the symbol (and its callers) is the repair. Keeping the extern \"C\"")
     else:
         out.append("   Ask tools/mangle.py for the scalar spelling before renaming. Keeping the extern \"C\"")

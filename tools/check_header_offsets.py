@@ -21,8 +21,8 @@ distinction is computed and printed rather than assumed -- see changed_paths.
 """
 import re, subprocess, sys, pathlib
 SZ = {"u8":1,"s8":1,"char":1,"bool":1,"u16":2,"s16":2,"short":2,"u32":4,"s32":4,"int":4,
-      "unsigned":4,"long":4,"Fix12i":4,"float":4,"u64":8,"s64":8,"double":8,
-      # NitroSDK fixed-point scalars (nitro/fx/fx.h); Fix12i is an alias of fx32.
+      "unsigned":4,"long":4,"float":4,"u64":8,"s64":8,"double":8,
+      # NitroSDK fixed-point scalars (nitro/fx/fx.h, also declared in types.h).
       "fx16":2,"fx32":4,"fx64":8,"fx64c":8}
 # Alignment is NOT the same as width once aggregates are in play: a Vector3 is 12
 # bytes wide but 4-aligned, and using the width for the padding test would invent
@@ -40,7 +40,7 @@ ALIGN = {t: min(w, 4) for t, w in SZ.items()}
 REPO = pathlib.Path(__file__).resolve().parent.parent
 # A simple aggregate body: no nested braces, no methods.
 AGG = re.compile(r"(?:typedef\s+)?struct\s+(\w+)\s*\{([^{}]*)\}", re.S)
-# `Fix12i x, y, z;` -- one type, several declarators, optional array bounds.
+# `fx32 x, y, z;` -- one type, several declarators, optional array bounds.
 MEMBERS = re.compile(r"^\s*([A-Za-z_]\w*)\s+([^;]+);", re.M)
 
 

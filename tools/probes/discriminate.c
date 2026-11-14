@@ -54,6 +54,6 @@ int pressure(int a, int b, int c, int d, int e, int f) {
 int count_leading(unsigned x) { int n = 0; while (n < 32 && !(x & 0x80000000u)) { x <<= 1; n++; } return n; }
 unsigned rotl(unsigned x, int r) { return (x << r) | (x >> (32 - r)); }
 
-/* --- scaled / fixed-point (Fix12i idiom from the game) --- */
+/* --- scaled / fixed-point (fx32 idiom from the game) --- */
 int fix_mul(int a, int b) { return (int)(((long long)a * b + 0x800) >> 12); }
 int scaled_index(const int *p, int i) { return p[i * 3 + 2]; }
