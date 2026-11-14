@@ -66,10 +66,6 @@ extern SNDCommand data_020a7f48;
 extern SNDSharedWork *data_020a7fc0;
 /* SNDi_SharedWork */
 
-/* The ROM reaches sCommandArray[SND_CMD_COUNT - 1].next through this
- * label, 0x1000 bytes into the array. */
-extern unsigned char data_020a7760[];
-
 void SNDi_CallAlarmHandler(s32 idx);
 void SNDi_InitSharedWork(SNDSharedWork *sw);
 u32 SNDi_GetFinishedCommandTag(void);
@@ -96,7 +92,7 @@ void SND_CommandInit(void) {
     data_020a6484 = data_020a6760;
     for (i = 0; i < SND_CMD_COUNT - 1; i++)
         data_020a6760[i].next = &data_020a6760[i + 1];
-    *(SNDCommand **)(data_020a7760 + 0x7e8) = 0;
+    data_020a6760[SND_CMD_COUNT - 1].next = 0;
     data_020a6494 = &data_020a7f48;
 
     data_020a648c = 0;
