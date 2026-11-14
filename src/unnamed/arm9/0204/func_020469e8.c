@@ -14,8 +14,8 @@
  * at 0x08..0x18. */
 struct MaterialState {
     char pad_00[8];
-    fx32 texScaleS; /* 0x08 */
-    fx32 texScaleT; /* 0x0c */
+    fx32 texScaleS;   /* 0x08 */
+    fx32 texScaleT;   /* 0x0c */
     u16 texRotation;  /* 0x10 */
     u16 pad_12;
     fx32 texTransS; /* 0x14 */

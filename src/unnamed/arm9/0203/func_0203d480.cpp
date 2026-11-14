@@ -8,8 +8,7 @@
 
 extern "C" {
 
-void func_0203d480(fx32 *out, fx32 *in)
-{
+void func_0203d480(fx32 *out, fx32 *in) {
     fx32 mag;
     mag = Vec2_Len((const Vector2 *)in);
     in[0] = FX_Div(in[0], mag);

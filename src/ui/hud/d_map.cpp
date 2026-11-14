@@ -1071,8 +1071,7 @@ void dMap_c::GetPosFromMinimapPos(Vector3 &minimapPos, Vector3 &center, fx32 sca
     Vec3_RotateYAndTranslate(&out, &center, angle, &offset);
 }
 
-void dMap_c::GetPosOnMinimap(Vector3 *pos, Vector3 *center, fx32 scale, short angle,
-                             Vector3 *out) {
+void dMap_c::GetPosOnMinimap(Vector3 *pos, Vector3 *center, fx32 scale, short angle, Vector3 *out) {
     Vector3 offset;
     Vec3_Sub(&offset, pos, center);
     Vec3_MulScalarInPlace(&offset, scale);

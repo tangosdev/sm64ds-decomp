@@ -58,7 +58,10 @@ struct dFdBrightness_c : dFader_c {
    inline body and reports the whole header UNPARSED. `inline` keeps the
    emission identical: the body still goes wherever it is used, and the ROM
    has no out-of-line constructor for this class. */
-inline dFdBrightness_c::dFdBrightness_c(fx32 initial) { currInterp = initial; speed = 0; }
+inline dFdBrightness_c::dFdBrightness_c(fx32 initial) {
+    currInterp = initial;
+    speed = 0;
+}
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
