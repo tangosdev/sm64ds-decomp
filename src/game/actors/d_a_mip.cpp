@@ -133,9 +133,10 @@ struct MipVec3 {
     }
     MipVec3(int a, int b, long c)
     {
-        x = a;
-        y = b;
-        z = (int)c;
+        volatile int *p = (volatile int *)&x;
+        p[0] = a;
+        p[1] = b;
+        p[2] = (int)c;
     }
     ~MipVec3();
 };

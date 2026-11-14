@@ -1197,7 +1197,7 @@ void Mg_DrawMenu(dScMgBase_c *scene) {
     for (i = 0; i < 3; i++) {
         if (i == scene->mMenuCursor) {
             int idx = (int)(((u32)scene->mMenuCursorPhase << 0xf) >> 0x10) >> 4;
-            OamAttr *cursor = (OamAttr *)extra[i];
+            char *cursor = (char *)extra[i];
             s16 *pos;
             u16 v;
             int *pbuf = buf;

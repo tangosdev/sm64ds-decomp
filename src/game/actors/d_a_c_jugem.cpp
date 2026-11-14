@@ -67,7 +67,8 @@ enum daC_Jugem_c_AssetId {
  * vectors. mwcc emits __sinit_d_a_c_jugem.cpp from those definitions. The
  * wrapper names are local; the handle constructors and destructors are the
  * ROM resource-family functions, aliased in the manifest. The home vector
- * is a JugemVec3; the approach target is a Vector3. */
+ * is a JugemVec3. The (int, int, long) overload stores through a volatile
+ * lvalue; a plain Vector3 global for the approach target changes __sinit. */
 struct JugemModelFile {
     union {
         SharedFilePtr base;
@@ -117,9 +118,10 @@ struct JugemVec3 {
     }
     JugemVec3(int a, int b, long c)
     {
-        x = a;
-        y = b;
-        z = (int)c;
+        volatile int *p = (volatile int *)&x;
+        p[0] = a;
+        p[1] = b;
+        p[2] = (int)c;
     }
     ~JugemVec3();
 };
@@ -153,7 +155,7 @@ extern JugemModelFile  data_ov085_0213074c;  /* model file */
 extern JugemAnimationFilePtr  data_ov085_02130744;  /* animation file */
 extern JugemTexSequenceFilePtr  data_ov085_0213073c;  /* texture sequence file */
 extern JugemVec3        data_ov085_02130840;  /* home position */
-extern Vector3 data_ov085_0213084c;
+extern JugemVec3 data_ov085_0213084c;
 
 /* The twelve state records, {enter, run} pairs written by the module sinit. */
 extern daC_Jugem_c::StateFn data_ov085_02130790[2];
@@ -259,10 +261,11 @@ int daC_Jugem_c::StateApproachMain()
     cam = gCamera;
     cam->SetFlag_3();
     mSfxHandle = Sound::PlayLong(mSfxHandle, 3, 0x182, mCamSpacePos, 0);
-    ApproachLinear(mAngleY, ::Vec3_HorzAngle(&mPos, &data_ov085_0213084c), 0x200);
-    ApproachLinear(mAngleX, Vec3_VertAngle(&mPos, &data_ov085_0213084c), 0x200);
+    ApproachLinear(mAngleY, ::Vec3_HorzAngle(&mPos, (const Vector3 *)&data_ov085_0213084c), 0x200);
+    ApproachLinear(mAngleX, Vec3_VertAngle(&mPos, (const Vector3 *)&data_ov085_0213084c), 0x200);
     ApproachLinear(mHorzSpeed, 0x28000, 0x2000);
-    ApproachLinear(mPrevAngleY, ::Vec3_HorzAngle(&mPos, &data_ov085_0213084c), (s16)mAuxCounter);
+    ApproachLinear(mPrevAngleY, ::Vec3_HorzAngle(&mPos, (const Vector3 *)&data_ov085_0213084c),
+                   (s16)mAuxCounter);
     mAngleY = mPrevAngleY;
     mAuxCounter += 5;
     if (mAuxCounter > 0x800)
@@ -278,7 +281,7 @@ int daC_Jugem_c::StateApproachMain()
     ApproachLinear(mCamPos, v[1], spd);
     cam->SetLookAt(mCamLook);
     cam->SetPos(mCamPos);
-    Vec3_Sub(&v[2], &mPos, &data_ov085_0213084c);
+    Vec3_Sub(&v[2], &mPos, (const Vector3 *)&data_ov085_0213084c);
     len = VEC_Mag(&v[2]);
     if (len == 0 || len < 0x7d0000)
         SetState(data_ov085_021307a0);
@@ -943,4 +946,4 @@ daC_Jugem_c::StateFn data_ov085_021307f0[2] = {data_ov085_021302c4, data_ov085_0
 daC_Jugem_c::StateFn data_ov085_02130820[2] = {data_ov085_021302ac, data_ov085_02130284};
 daC_Jugem_c::StateFn data_ov085_021307a0[2] = {data_ov085_0213029c, data_ov085_02130274};
 JugemVec3 data_ov085_02130840(-0x640000, 0x378000, 0x1670000);
-Vector3 data_ov085_0213084c(0, 0x4d8000, (long)-0x104000);
+JugemVec3 data_ov085_0213084c(0, 0x4d8000, (long)-0x104000);
