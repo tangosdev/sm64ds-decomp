@@ -28,7 +28,7 @@
  *
  * mArray1 and mArray2 share an element ctor/dtor pair (func_0203d738 /
  * NullDestructor_0203d47c), the arm9 Vector2 structors (include/Vector2.h),
- * and both hold Fix12 {x, y} pairs, so they are Vector2[0x80]. mSprays has
+ * and both hold fx32 {x, y} pairs, so they are Vector2[0x80]. mSprays has
  * its own pair (_ZN9SnowSprayC1Ev / _ZN9SnowSprayD1Ev), and its element
  * fields are read back from the three SnowSpray_* helpers (SnowSpray,
  * below). Every element structor is empty and inline, so the constructor and
@@ -140,7 +140,7 @@ typedef char dScMgSnowball_bit_size_must_be_0x24[sizeof(dScMgSnowball_bit) == 0x
 
 struct dScMgSnowball_c : dScMgSingle3DBase_c {
     /* The 2-vector value type the collision ring carries the last hit in
-       (Fix12 x, y -- the same pair func_0203d388 rotates in place). THE
+       (fx32 x, y -- the same pair func_0203d388 rotates in place). THE
        EMPTY DESTRUCTOR IS LOAD-BEARING, for the reason types.h gives
        Vector3 one and dScMgFlower_c::Vec2 repeats: a local of this type
        keeps an 8-byte stack home in the frame's aggregate region instead
@@ -226,7 +226,7 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
                                 downhill travel grow mBallSize (by 1/128) */
     s32 mGoalCenterX;       /* 0xab5c -- BuildCourse clears it, then
                                 writes the generated corridor's centre lane in
-                                Fix12 on the row before the goal */
+                                fx32 on the row before the goal */
     s32   mVelX;            /* 0xab60 -- Fix12, capped at 0x8000 */
     s32   mVelY;            /* 0xab64 */
     s32   mScrollX;         /* 0xab68 -- subtracted from every world X to draw */
@@ -254,7 +254,7 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     u8    mProbePush[0x20]; /* 0xac18 -- same probe hit solid; drives the push-out */
     u8    mProbeWater[0x20];/* 0xac38 -- same probe is inside water */
     u8    mArray1Active[0x80]; /* 0xac58 -- 1 = this mArray1 slot is live */
-    Vector2 mArray1[0x80];     /* 0xacd8 -- Fix12 positions, Render draws them */
+    Vector2 mArray1[0x80];     /* 0xacd8 -- fx32 positions, Render draws them */
     s32   mArray1Kind[0x80]; /* 0xb0d8 -- 1 picks the 8-frame animated sprite
                                 table, anything else the static one */
     u8    mArray1Hit[0x80]; /* 0xb2d8 -- HitsBreakable sets it on
@@ -262,7 +262,7 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     u8    mArray2Active[0x80]; /* 0xb358 -- 1 = this mArray2 slot is live */
     s32   mArray2Kind[0x80]; /* 0xb3d8 -- Render switches 0..2 against 3 to
                                 pick the sprite */
-    Vector2 mArray2[0x80];   /* 0xb5d8 -- Fix12 positions, as mArray1 */
+    Vector2 mArray2[0x80];   /* 0xb5d8 -- fx32 positions, as mArray1 */
     s32   mAnimCounter;     /* 0xb9d8 -- Render bumps it, wraps at 0x20; the
                                 obstacle sprite frame is (n / 4) & 7 */
     s32   mTimeLeft;        /* 0xb9dc -- frames; Render draws it as

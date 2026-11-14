@@ -48,11 +48,7 @@ typedef signed int intptr_t;
    spelling of a 20.12 value comes from the cartridge. What the toolchain
    verifiably had is the SDK's fx32 (the NitroSDK functions linked into this
    ROM take it), so that is the period spelling, with FX32_SHIFT and FX_MUL
-   from nitro/fx/fx.h. An earlier community name, Fix12i, was retired for it;
-   both named `signed int`, so the respelling changed no byte and no mangled
-   name. So was the Fix12<T> class template: no function in the ROM takes
-   one by value (mwccarm would home it to the stack; notes/mwccarm-codegen.md
-   6az), so every parameter it once spelled turned out to be a plain scalar. */
+   from nitro/fx/fx.h. */
 #ifndef NITRO_FX_SCALAR_TYPES
 #define NITRO_FX_SCALAR_TYPES
 typedef signed int fx32;

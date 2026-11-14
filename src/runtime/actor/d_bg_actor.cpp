@@ -14,16 +14,9 @@
  * reverse source order. Do not reorder.
  *
  * deslop leftovers:
- * - IsClsnInRange / IsClsnInRangeOnScreen stay extern "C" free functions with
- *   int params: the ROM names claim Fix12<int> by value and the bytes refuse
- *   it (notes/mwccarm-codegen.md 6az), which is why the header deliberately
- *   does not declare them. Same spelling every leaf call site uses.
  * - func_ov002_020ee5d0 keeps its ROM label: the mega-knockback model-matrix
  *   helper, called only from UpdateKillByMegaChar. It is a member: the ROM
  *   places it between Kill and UpdateKillByMegaChar.
- * - dActor_c::Earthquake / Particle::System::NewSimple stay TU-local mangled
- *   calls: Fix12<int> by value (6az); typed shared-header decls of them are
- *   overload poison (S13).
  * - daPly_c is only forward-declared here, so the closest player's position
  *   is read through a dActor_c cast rather than pulling in daPly_c.h.
  * - data_020a0e68 is the shared scratch matrix; no header owns it, TU-local.
@@ -361,7 +354,7 @@ int dBgActor_c::IsClsnInRangeOnScreen(fx32 radius, fx32 yOffset) {
 
 /* Keeps the mesh collider in the world only while the closest player is within
  * radius of (pos + yOffset). Zero radius falls back to the clip volume
- * (mClipRadius, shifted into fix12); zero yOffset to mClipOffsetY. */
+ * (mClipRadius, shifted into fx32); zero yOffset to mClipOffsetY. */
 int dBgActor_c::IsClsnInRange(fx32 radius, fx32 yOffset) {
     Vector3 center;
     center.x = mPosX;

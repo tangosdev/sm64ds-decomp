@@ -45,10 +45,6 @@
  *
  *
  * deslop leftovers:
- * - SetAnim 6az: helpers pass Fix12<int> by value; header method form size-DIFFs.
- * - IsTooFarAwayFromPlayer / IsPlayerInRange(Fix12,Fix12,Fix12,s32) 6az:
- *   Step / ActChaseMario. Header methods carry Fix12<int>.
- * - Particle::System::New / NewSimple 6az: func_ov064_0211616c / 02115f98.
  * - func_0201267c: PlayStepSound / PlayHitSound / PlayDeathSound at mCamSpacePosX.
  * - 0x398..0x3f9 stay children's padding (annexing them as members would move
  *   the fields the children declare from 0x3fa on); the helpers reach them
@@ -59,7 +55,6 @@
  *   also called by the children. InitResourcesCommon / BehaviorCommon are the
  *   two that were leftover shards; names describe the children's slot-0 /
  *   slot-6 wrappers.
- * - InitResourcesCommon 6az: dBgCh_Actr::Init / SetAnim keep mangled forms (Fix12<int> by value).
  * - BehaviorCommon: the mStateTimer increment stays unsigned short (ldrh).
  * - daOts_c.h first: nested Matrix4x3 for mAnmModel.mat4x3.t (02116bac).
  *   common.h's flat m[12] would stand down if it came first.
@@ -891,7 +886,7 @@ void daOts_c::func_ov064_02115f98(char* a1)
 }
 
 /* -------------------------------------------------------------------------- */
-/* Slot 29. The height (a fix12 amount added to pos.y) the egg aims at:
+/* Slot 29. The height (an fx32 amount added to pos.y) the egg aims at:
  * config->eggAimHeight, or 20 units when there is no config block. */
 int daOts_c::OnAimedAtWithEgg()
 {

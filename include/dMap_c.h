@@ -18,7 +18,7 @@ struct dMap_c : dBase_c {
        Behavior fills A and B from the sin/cos table FX_SinCosTable_ scaled by
        mInvScale, then sets C = -B and D = A -- a rotate-and-scale -- and hands
        &mBgMatrixA to UpdateMinimap as the four-word block. Seeded 1,0,0,1 in
-       Fix12 by InitResources. D was called mPosX, which the `mBgMatrixD =
+       fx32 by InitResources. D was called mPosX, which the `mBgMatrixD =
        mBgMatrixA` in Behavior makes untenable. */
     s32 mBgMatrixA;                      /* 0x050 */
     s32 mBgMatrixB;                      /* 0x054 */

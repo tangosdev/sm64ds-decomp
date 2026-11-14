@@ -37,8 +37,6 @@
  *   sMiniGmCaption OAM. Overlay .rodata/.data this TU does not
  *   own.
  * Leftover: g_profile_MINIGAME lives outside this TU (S14).
- * Leftover: OAM::Render Fix12-by-value stays mangled (OAM.h, wall 6az).
- *   This TU's Render.
  * Leftover: inline destructor (out-of-line emits D0 before D1 plus a
  *   homeless D2).
  */

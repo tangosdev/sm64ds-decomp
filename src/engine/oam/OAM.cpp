@@ -8,10 +8,6 @@
  * dPa_c::level_c::cutTable. The OamAttr field initializer
  * func_02020820 opens the run under its own address name.
  *
- * Two Render overloads stay `extern "C"` free functions -- the by-value
- * Fix12<int> scale/rotation parameters are on the by-value-class wall
- * (OAM.h's note: mwccarm homes r0-r3 to the stack for them, +0x14).
- *
  * Source order is ROM-ascending under `#pragma defer_codegen off` -- the
  * deferred default would read optimization pragmas last-wins at end of file
  * and this member needs a positional bracket: the 10-arg Render keeps its
@@ -26,9 +22,6 @@
  * cast.
  *
  * deslop leftovers:
- * - The two Fix12 Render overloads keep mangled `extern "C"` spellings
- *   (wall above); RenderSub's call sites keep them as one-declared
- *   callee.
  * - GetObjWidth/GetObjHeight read single bytes out of the stride-4
  *   slots in data_020755a0/data_020755ac, and the double cast is
  *   load-bearing.
@@ -161,8 +154,7 @@ void OAM::Render(bool sub, struct OamAttr *attr_, int xOff, int yOff, int palett
      * this frame, clipping against the screen; a non-unit scale or a rotation
      * goes through an affine slot from LoadAffineParams. palette / priority
      * == -1 keep the entry's own bits, mode > 0 overrides the entry's object
-     * mode. scaleX/scaleY are Fix12<int> by value in the real signature --
-     * the literal-name spelling is the by-value-class wall again.
+     * mode.
      *
      * The three pragma offs above are load-bearing: the scalar parameters
      * are used DIRECTLY, never copied into locals, which is what reproduces

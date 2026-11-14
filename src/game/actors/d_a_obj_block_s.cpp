@@ -1235,7 +1235,7 @@ int daObjBlockS_c::Behavior()
 /* Fails (returns 0) unless the actor is BLOCK_S. Saves the spawn position and
  * angles as the home, then builds the crate from data_ov098_0213c4c8 (three
  * words: the model file, the collision file and a CLPS block): model,
- * cuboid shadow, KCL mesh collider (SetFile with mClsnMat, a Fix12 0x199
+ * cuboid shadow, KCL mesh collider (SetFile with mClsnMat, an fx32 0x199
  * (about 0.1), mAngleY and the CLPS block word) and the dBgCh_Actr (Init with radius 40 and height
  * 40 units, 0x28000 each) with water detection on. Gravity is -2 units per
  * frame^2 (-0x2000) with a terminal velocity of -60 units per frame

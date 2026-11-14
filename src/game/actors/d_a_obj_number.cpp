@@ -15,8 +15,8 @@
  *   consumes the four handles; overlay .bss owns them. symbols.txt has
  *   no recovered name, so they are not coined.
  * - volatile mPosY in Behavior's landing puff: a plain field read
- *   CSE's with the add and store above it (likely the Fix12<int> class
- *   wall; mPosY, mPos.y and Vector3 copies are all 4 bytes off).
+ *   CSE's with the add and store above it (mPosY, mPos.y and Vector3
+ *   copies are all 4 bytes off).
  * - Render's star walk keeps the `for (;;)` with a break: a `while`
  *   on the FindWithActorID result DIFFs.
  * - SetOwner is a non-virtual member returning this: the only caller,

@@ -13,10 +13,8 @@
  *    names; no original names are recovered. SetState was Scuttlebug_SetState.
  *  - The position temporaries are Vector3 (measured: same object as the old
  *    POD twin).
- *  - The extern "C" preamble is hand-spelt: Fix12<int>/Vector3 parameters
- *    are written as plain words where the true types break the register
- *    convention, and the spelled mangled calls stay where the member
- *    spelling would change codegen.
+ *  - The extern "C" preamble is hand-spelt: Vector3 parameters are written
+ *    as pointers where the true types break the register convention.
  *  - volatile int force_stack pads OnTurnIntoEgg's frame to the ROM shape.
  */
 
@@ -59,9 +57,9 @@ typedef struct { PMF enter, run; } ScuttlebugStateRow;
 /* ------------------------------------------------------------------------
  * ABI imports.  One declaration per symbol, hand-reconciled: the generated
  * preamble carried these names with contradictory spellings from thirty-odd
- * source files.  The by-value Fix12<int> and Vector3 parameters are spelt as
- * plain words / pointers on purpose -- the true types are passed differently
- * and break the register convention.
+ * source files.  By-value Vector3 parameters are spelt as pointers on
+ * purpose -- the true type is passed differently and breaks the register
+ * convention.
  * ------------------------------------------------------------------------ */
 
 extern "C" int AngleDiff(int a, int b);

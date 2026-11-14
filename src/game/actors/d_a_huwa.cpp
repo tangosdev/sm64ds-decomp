@@ -16,8 +16,6 @@
  * 814); this TU only loads and releases them.
  *
  * Notes (measured spellings that do not match):
- * - HandleCylinderHit: daPly_c::Hurt with Fix12<int> knockback: 0x210 -> 0x21c
- *   (+12). SpinBounce with Fix12<int>: 0x210 -> 0x21c (+12).
  * - The 0/1 the ROM materializes in HandleCylinderHit, UpdateModelTransform
  *   and Render comes from the int-returning IsPlayerActor / IsInYoshiMouth
  *   inlines. A direct `!=` or bit test is 16 / 12 / 12 bytes short.

@@ -62,7 +62,7 @@ typedef char dScMgCoin_Sparkle_size_must_be_0x18[sizeof(dScMgCoin_Sparkle) == 0x
    State 1 waits out delay (Block_StateWaiting), 2 has passed its own row,
    4 has landed and scored (Block_StateFallIn). */
 struct dScMgCoin_Block {
-    s32 x;         /* 0x00 Fix12 */
+    s32 x;         /* 0x00 fx32 */
     s32 y;         /* 0x04 */
     s32 vx;        /* 0x08 */
     s32 vy;        /* 0x0c */

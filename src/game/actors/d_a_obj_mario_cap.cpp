@@ -59,7 +59,7 @@
  *   df44    InitDormant    Dormant     13               enter clears mBlinkHidden; per-frame does
  *                                                       nothing
  *
- * Fix12 reads throughout: 0x1000 is 1.0, and positions / sizes shown as "N
+ * fx32 reads throughout: 0x1000 is 1.0, and positions / sizes shown as "N
  * units" are the raw value >> 12. Angles: 0x10000 is a full turn.
  *
  * DO NOT "TIDY" THESE -- each one is load-bearing:
@@ -84,12 +84,6 @@
  *   (0x224 vs 0x21c); taking `&player->mAngleX` / `&player->mPosX` and indexing
  *   the pointer matches. mStateTimer is s16 in dEnemyBase_c but the helpers
  *   read it unsigned, hence CAP_TIMER.
- *
- * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS:
- *   dActor_c::SetRanges is not on the header (notes/mwccarm-codegen.md 6az).
- *   dExtAnmModel_c::SetAnim / DropShadowRadHeight / ReflectAngle take Fix12<int>
- *   by value, which has no implicit int conversion (notes/mwccarm-codegen.md
- *   6az).
  *
  * leftovers:
  *   InitResources keeps two `(u32)param1` read-side casts; spelled plainly,
@@ -211,7 +205,7 @@ enum {
 /* Sound bank 3: the 1-Up chime (da1up_c plays it for the 1-up mushroom too). */
 enum { kSfx1Up = 0x6e };
 
-/* Sizes in fix12 (0x1000 = 1.0 unit). */
+/* Sizes in fx32 (0x1000 = 1.0 unit). */
 enum {
     kClsnSizeSmall = 0x1e000,   /* 30 units: dCcAc_c radius and height at Init */
     kClsnSizeLarge = 0x32000,   /* 50 units: collider radius and height of the df34 types */
