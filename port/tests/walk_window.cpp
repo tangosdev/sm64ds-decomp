@@ -20310,6 +20310,7 @@ int main(void)
                     *look_up = (short)u;
                 }
             }
+#ifndef PORT_ROM_CLEAN
             if (fp && sk_trace) {
                 fprintf(stderr, "[skycam] f%d mode=%d hy=%d off=%d mouse=%d,%d stick=%d,%d look=%04x up=%d surf=%d head=%d camang=%d pyaw=%04x\n",
                         frame, cam_mode, cam_hybrid, sk_off, mouse_dyaw, mouse_dpitch, stick_rx, stick_ry,
@@ -20317,6 +20318,7 @@ int main(void)
                         *(int *)(c + 0x664), (int)*(short *)(c + 0x766), (int)GetAngleToCamera(*(unsigned char *)&data_0209f250),
                         (unsigned)(unsigned short)*(short *)(c + 0x8e));
             }
+#endif
         }
         {   /* CAMERA093 test hook (SM64DS_CAM93_BEHIND=<frame>): the game's own Camera::GoBehindPlayer, the
                fixed camera a door walk-through uses, so a headless run can show the rig stand down and hand back */
