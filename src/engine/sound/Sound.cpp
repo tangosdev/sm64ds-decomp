@@ -16,8 +16,6 @@
  *   second value is a 0x1000-scaled volume, spelled Fix12i in the header.
  * - `int dd = (int)(((long long)d))' in func_02012468 is a no-op tower of
  *   unknown load-bearing status.
- * - func_02013078 reads the player object raw (+0x706 flag byte, +0x60 word);
- *   daPly_c.h is out of scope for this TU.
  */
 #include "types.h"
 #include "Sound.h"
@@ -26,6 +24,7 @@
 #include "math/Approach.h"
 #include "nnsys/snd/player.h"
 #include "private/sound_positional.h"
+#include "daPly_c.h"
 
 /* SoundEngine's sound heap, opaque here. */
 struct SndHeap;
@@ -182,7 +181,7 @@ extern int data_0209baa0;
 extern char data_0208e498[];
 extern unsigned char gLocalPlayerId;
 extern signed char gCurrentSublevel;
-extern void *gPlayers[];
+extern daPly_c *gPlayers[];
 extern signed char gCurrentAreaId;
 extern const unsigned char data_02075250[8];
 extern unsigned char data_02075258[];
@@ -253,14 +252,14 @@ void LoadAndSetMusic_Layer1(int j)
 }
 
 int func_02013078(void) {
-    char *obj = (char *)gPlayers[gLocalPlayerId];
+    daPly_c *player = gPlayers[gLocalPlayerId];
     int state;
     int flag;
     int result;
 
-    if (obj == 0)
+    if (player == 0)
         return -1;
-    flag = (*(unsigned char *)(obj + 0x706) != 0);
+    flag = (player->mIsUnderwater != 0);
     state = gCurrentSublevel;
     result = -1;
     if (state == 8) {
@@ -283,9 +282,9 @@ int func_02013078(void) {
             data_0209b48c = Sound_PlayIfNotActive(data_0209b48c, 3, 0x18d, 0);
         result = (gCurrentAreaId == 0) ? 4 : 3;
     } else if (state == 0xd) {
-        result = (*(int *)(obj + 0x60) < (int)0xffe3e000) ? 5 : 6;
+        result = (player->mPos.y < (int)0xffe3e000) ? 5 : 6;
     } else if (state == 0x15) {
-        result = (*(int *)(obj + 0x60) < 0) ? 5 : 6;
+        result = (player->mPos.y < 0) ? 5 : 6;
     }
     if (result >= 0 && result != sMusicTrackMode) {
         sMusicTrackMode = result;

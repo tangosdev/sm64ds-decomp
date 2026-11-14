@@ -342,23 +342,23 @@ void __two_exp(Decimal *out, int n) {
     }
 }
 
-void __num2dec_internal(char *out, double x) {
+void __num2dec_internal(Decimal *d, double x) {
     int e;
     double t1;
     double t2;
     double mm;
-    unsigned char dec[0x26];
-    unsigned char big[0x26];
+    Decimal dec;
+    Decimal big;
     double v = x;
     unsigned char neg = (((int *)&x)[1] & 0x80000000) != 0;
     int cls;
     int cls2;
 
     if (v == 0.0) {
-        out[0] = neg;
-        *(short *)(out + 2) = 0;
-        out[4] = 1;
-        out[5] = 0;
+        d->sign = neg;
+        d->exp = 0;
+        d->sig.length = 1;
+        d->sig.text[0] = 0;
         return;
     }
 
@@ -384,9 +384,9 @@ void __num2dec_internal(char *out, double x) {
         break;
     }
     if (cls <= 2) {
-        out[0] = neg;
-        *(short *)(out + 2) = 0;
-        out[4] = 1;
+        d->sign = neg;
+        d->exp = 0;
+        d->sig.length = 1;
 
         t2 = x;
         switch (((int *)&t2)[1] & 0x7ff00000) {
@@ -406,7 +406,7 @@ void __num2dec_internal(char *out, double x) {
             cls2 = 4;
             break;
         }
-        out[5] = (cls2 == 1) ? 0x4e : 0x49;
+        d->sig.text[0] = (cls2 == 1) ? 0x4e : 0x49;
     } else {
         double m;
         int nbits, k;
@@ -422,10 +422,10 @@ void __num2dec_internal(char *out, double x) {
         else
             nbits = func_02071708(mp[1] | 0x100000) + 0x20;
         k = 0x35 - nbits;
-        __two_exp((Decimal *)big, e - k);
-        __ull2dec((Decimal *)dec, ldexp(m, k));
-        __timesdec((Decimal *)out, (Decimal *)dec, (Decimal *)big);
-        out[0] = neg;
+        __two_exp(&big, e - k);
+        __ull2dec(&dec, ldexp(m, k));
+        __timesdec(d, &dec, &big);
+        d->sign = neg;
     }
 }
 
@@ -438,7 +438,7 @@ void __num2dec(void *a0, double x, void *d) {
     Decimal *c = (Decimal *)d;
     int i;
     n = ((decform *)a0)->digits;
-    __num2dec_internal((char *)c, x);
+    __num2dec_internal(c, x);
     if (c->sig.text[0] > 9) /* inf or nan: no digits to round */
         return;
     if (n > 0x20)

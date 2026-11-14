@@ -16,6 +16,7 @@
  * modes; the SDK writes them as asm, and they stay asm here.
  */
 #include "types.h"
+#include "nitro/hw/mmap_tcm.h"
 #include "nitro/os/protectionUnit.h"
 #include "nitro/os/exception.h"
 #include "nitro/os/emulator.h"
@@ -43,12 +44,10 @@ void OS_InitException(void) {
     else
         data_020a63a8 = 0;
     if (data_020a63a8 == 0 || (OS_GetConsoleType() & OS_CONSOLE_ISDEBUGGER) == 0) {
-        /* base + 0xfdc is HW_EXCP_VECTOR_BUF, the exception vector in the
-         * DTCM system reserve. Written as one constant address, it no longer
-         * matches. */
-        char *base = (char *)0x23c3000;
+        /* HW_EXCP_VECTOR_BUF is in DTCM, so the store goes through the
+         * linker's DTCM base: a pool word of base + 0x3000, then #0xfdc. */
         *(void **)HW_EXCP_VECTOR_BUF_FOR_DEBUGGER = (void *)OSi_ExceptionHandler;
-        *(void **)(base + 0xfdc) = (void *)OSi_ExceptionHandler;
+        *(void **)HW_EXCP_VECTOR_BUF = (void *)OSi_ExceptionHandler;
     }
     data_020a63a0 = 0;
 }

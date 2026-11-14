@@ -17933,7 +17933,7 @@ matched: yes</title></rect><rect x="569.33" y="770.39" width="8.94" height="4.76
 module: ov002
 addr: 0x020f5a94
 size: 64 bytes
-matched: yes</title></rect><rect x="578.28" y="770.39" width="11.18" height="4.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z19func_ov002_020f5ad4Pc
+matched: yes</title></rect><rect x="578.28" y="770.39" width="11.18" height="4.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daDemo_c9StaffRoll19func_ov002_020f5ad4Ev
 module: ov002
 addr: 0x020f5ad4
 size: 80 bytes

@@ -2,6 +2,8 @@
 #include "Ov007Work.h"
 #include "Ov007Settings.h"
 #include "Ov007Light.h"
+#include "Ov007Texture.h"
+#include "BMD_File.h"
 #include "nitro/gx/g3x.h"
 
 /* The lights' source points: lights[0] per menu, lights[1] in menu 0. */
@@ -10,7 +12,7 @@ extern Vector3 data_ov007_020d7c28;
 
 extern void func_ov007_020bce70(short n, int m);
 extern void* func_ov007_020b3f20(int idx);
-extern void func_ov007_020b22e0(int* a, int* b, int c);
+extern void func_ov007_020b22e0(Ov007Texture *tex, struct BMD_File *file, int i);
 extern void func_ov007_020b1fa4(int self);
 extern void func_ov007_020bd4a0(int r0);
 extern void func_ov007_020b2998(void);
