@@ -5184,6 +5184,39 @@ static void hy_set_mode(int m, void *cam, char *player, const char *why)
     if (cam_mode == CAM_ANALOG) an_pivot_live = 0;
 }
 /* hybrid only: back to the DS camera now (a level change, a state load, a game camera moment) */
+/* SKYCAM1 phase 2 (Tango 11-13: "camera smoothing options, like acceleration and deceleration ... for the analogue camera"). The right
+   stick's turn and tilt in the analog cam and the freecam (the hybrid's analog half too) ease toward the rate the stick asks for:
+   settings.json CameraStickAccel is the tenths of a second from still to a full push's speed, CameraStickDecel the tenths of a
+   second from that speed to a stop once the stick is let go (or pulled the other way: it stops first, then speeds up again).
+   0 for both, the default, is the rate the stick asks for on the same tick, which is 1.0.6 exactly. The mouse, the keys, the
+   bumpers and the DS camera never go through here. One state per axis on this console (each console's camera is its own player's).
+   Dev builds only: SM64DS_CAM_EASE=<accel>:<decel> overrides the two settings for proof rows, SM64DS_CAM_EASE_TRACE=1 logs one
+   [camease] line a tick while the rig reads the stick. */
+static double ce_yaw, ce_pitch;     /* the eased stick rates, in the rig's binangs a tick */
+static int ce_frame = -10;          /* the tick they were last eased on: a gap (DS camera, a game camera moment, the pause) clears them */
+static int ce_setting(int which)
+{
+    int v = which ? host_setting_camera_stick_decel() : host_setting_camera_stick_accel();
+#ifndef PORT_ROM_CLEAN
+    static int ov = -2, oa, od;
+    if (ov == -2) { const char *e = getenv("SM64DS_CAM_EASE"); ov = e ? 1 : -1; if (e) sscanf(e, "%d:%d", &oa, &od); }
+    if (ov > 0) v = which ? od : oa;
+#endif
+    return v < 0 ? 0 : v > 10 ? 10 : v;
+}
+static double ce_step(double cur, double tgt, double full)
+{
+    const int acc = ce_setting(0), dec = ce_setting(1);
+    if (!acc && !dec) return tgt;
+    const int slowing = (cur > 0 && tgt < cur) || (cur < 0 && tgt > cur);
+    const int tenths = slowing ? dec : acc;
+    double aim = tgt;
+    if (slowing && ((cur > 0 && tgt < 0) || (cur < 0 && tgt > 0))) aim = 0;   /* pulled the other way: stop first */
+    if (!tenths || full <= 0) return aim;
+    const double step = full / (tenths * 3.0);   /* 3 ticks a tenth of a second at the game's 30 */
+    if (cur < aim) return cur + step < aim ? cur + step : aim;
+    return cur - step > aim ? cur - step : aim;
+}
 static void hy_to_ds(const char *why, int frame)
 {
     if (!cam_hybrid) return;
@@ -20142,14 +20175,19 @@ int main(void)
                 /* stick and mouse are both a rightward push measured to the
                    right, so both take cam_turn as-is */
                 const int cs = host_setting_camera_sensitivity();   /* percent, 100 = today */
-                const int r = (fc_stick_rate(stick_rx, CAM_STEP * cs / 100) + mouse_dyaw)
+                const int yfull = CAM_STEP * cs / 100, pfull = (CAM_STEP / 2) * cs / 100;   /* SKYCAM1 phase 2: the stick eased */
+                if (ce_frame != frame - 1) ce_yaw = ce_pitch = 0;
+                ce_frame = frame;
+                ce_yaw = ce_step(ce_yaw, fc_stick_rate(stick_rx, yfull), yfull);
+                ce_pitch = ce_step(ce_pitch, stick_zoom ? 0 : fc_stick_rate(stick_ry, pfull), pfull);
+                const int r = ((int)(ce_yaw < 0 ? ce_yaw - 0.5 : ce_yaw + 0.5) + mouse_dyaw)
                               * cam_turn;
                 if (r) { fc_yaw = (short)(fc_yaw + r); rig_touched = 1; }
             }
             {
                 const int cs = host_setting_camera_sensitivity();
                 const int inv = host_setting_invert_camera_y() ? -1 : 1;
-                int t = fc_pitch - (stick_zoom ? 0 : inv * fc_stick_rate(stick_ry, (CAM_STEP / 2) * cs / 100))
+                int t = fc_pitch - (stick_zoom ? 0 : inv * (int)(ce_pitch < 0 ? ce_pitch - 0.5 : ce_pitch + 0.5))
                         + inv * mouse_dpitch;
                 if (mouse_dpitch) rig_touched = 1;
                 if (cb_up) t += 0x80;       /* CamUp / CamDown: R and F unless rebound */
@@ -20162,6 +20200,16 @@ int main(void)
                 if (t > 0x3a00) t = 0x3a00;      /* just short of overhead */
                 if (t < -0x1000) t = -0x1000;    /* a little from below */
                 fc_pitch = (short)t;
+#ifndef PORT_ROM_CLEAN
+                {   /* SKYCAM1 phase 2 proof trace, SM64DS_CAM_EASE_TRACE=1 */
+                    static int ctr = -1;
+                    if (ctr < 0) ctr = getenv("SM64DS_CAM_EASE_TRACE") ? 1 : 0;
+                    if (ctr)
+                        fprintf(stderr, "[camease] f%d acc=%d dec=%d stick=%d,%d rate=%.1f,%.1f yaw=%04x pitch=%04x mode=%d hy=%d\n", frame,
+                                ce_setting(0), ce_setting(1), stick_rx, stick_ry, ce_yaw, ce_pitch, (unsigned)(unsigned short)fc_yaw,
+                                (unsigned)(unsigned short)fc_pitch, cam_mode, cam_hybrid);
+                }
+#endif
             }
             {
                 /* Q pushes left, E pushes right, off the same sign as the

@@ -671,6 +671,9 @@ const Row ROWS_CONTROLS[] = {
     { R_CHOICE, "Run", SL_RUN_MODE, -1, 0, RUN_LABELS, 3 },
     { R_SLIDER, "Camera speed", SL_CAMERA_SENSITIVITY, -1, 5, 0, 0 },
     { R_SLIDER, "Mouse speed", SL_MOUSE_SENSITIVITY, -1, 5, 0, 0 },
+    { R_SLIDER, "Stick acceleration", SL_CAMERA_STICK_ACCEL, -1, 1, 0, 0 },   /* SKYCAM1 phase 2 */
+    { R_SLIDER, "Stick deceleration", SL_CAMERA_STICK_DECEL, -1, 1, 0, 0 },
+    { R_NOTE, "Right stick camera: seconds to speed up and to stop. 0 is instant.", -1, -1, 0, 0, 0 },
     { R_CHECK, "Invert camera left/right", SL_SWAP_CAMERA_TURN, -1, 0, 0, 0 },
     { R_CHECK, "Invert camera up/down", SL_INVERT_CAMERA_Y, -1, 0, 0, 0 },
     { R_CHECK, "Lock mouse", SL_MOUSE_CAPTURE, -1, 0, 0, 0 },
@@ -2183,6 +2186,10 @@ extern "C" void settings_page_draw(uint32_t *px, int stride, int w, int h)
             slider_geometry(&rx, &rw);
             draw_slider(s, L.ctl_x, cy, L.rail_w, sl_get(R.id), I->min, I->max, alpha, clip);
             snprintf(buf, sizeof buf, "%d%%", sl_get(R.id));
+            if (R.id == SL_CAMERA_STICK_ACCEL || R.id == SL_CAMERA_STICK_DECEL) {   /* SKYCAM1: tenths of a second */
+                const int t = sl_get(R.id);
+                if (t) snprintf(buf, sizeof buf, "%d.%d s", t / 10, t % 10); else snprintf(buf, sizeof buf, "0");
+            }
             const float vem = (float)P(28);
             const float vw = ui_text_width(buf, vem);
             text_mid(s, (float)(L.ctl_x + L.rail_w + P(86)) - vw, (float)cy, buf, vem, app ? C_TEXT : C_QUIET, alpha, clip);

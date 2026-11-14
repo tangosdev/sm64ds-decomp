@@ -117,6 +117,8 @@ static const SlInfo INFO[] = {
     { "RenderScale",            SL_KIND_PERCENT, 0, 8, 0, 0, 0 },     /* RESSCALE1: saved for the next boot */
     { "StayAfterStar",          SL_KIND_BOOL,    0, 1, 0, 0, 1 },     /* STAYCOURSE1: single player only */
     { "ExitToPainting",         SL_KIND_BOOL,    0, 1, 0, 0, 1 },     /* EXITPAINT1: single player only */
+    { "CameraStickAccel",       SL_KIND_PERCENT, 0, 10, 0, 0, 1 },    /* SKYCAM1: tenths of a second, 0 instant */
+    { "CameraStickDecel",       SL_KIND_PERCENT, 0, 10, 0, 0, 1 },    /* SKYCAM1: tenths of a second, 0 instant */
 };
 
 /* INFO[] is positional: row i describes id i. If a host key or pad is added (HOST_KEY_COUNT / HOST_PAD_COUNT move, for example
@@ -178,6 +180,8 @@ int sl_get(int id)
     case SL_SKIP_OPENING:       return host_setting_skip_opening();
     case SL_STAY_AFTER_STAR:    return host_setting_stay_after_star();
     case SL_EXIT_TO_PAINTING:   return host_setting_exit_to_painting();
+    case SL_CAMERA_STICK_ACCEL: return host_setting_camera_stick_accel();
+    case SL_CAMERA_STICK_DECEL: return host_setting_camera_stick_decel();
     case SL_MINIGAME_HIRES:     return host_setting_minigame_hires();
     case SL_MINIGAME_UPSCALE:   return host_setting_minigame_upscale();
     case SL_RENDER_SCALE:       return host_setting_render_scale_saved();
@@ -231,6 +235,8 @@ int sl_set(int id, int v)
     case SL_SKIP_OPENING:       return host_setting_set_skip_opening(v);
     case SL_STAY_AFTER_STAR:    return host_setting_set_stay_after_star(v);
     case SL_EXIT_TO_PAINTING:   return host_setting_set_exit_to_painting(v);
+    case SL_CAMERA_STICK_ACCEL: return host_setting_set_camera_stick_accel(v);
+    case SL_CAMERA_STICK_DECEL: return host_setting_set_camera_stick_decel(v);
     case SL_MINIGAME_HIRES:     return host_setting_set_minigame_hires(v);
     case SL_MINIGAME_UPSCALE:   return host_setting_set_minigame_upscale(v);
     case SL_RENDER_SCALE:
@@ -256,6 +262,8 @@ int sl_applicable(int id)
     case SL_INVERT_CAMERA_Y:
     case SL_MOUSE_SENSITIVITY:
     case SL_CAMERA_COLLISION:   /* CAMCOLL1: the DS camera is the ROM's own */
+    case SL_CAMERA_STICK_ACCEL: /* SKYCAM1: the analog / free camera only */
+    case SL_CAMERA_STICK_DECEL:
         return host_setting_camera_mode() != 2;
     case SL_RUN_THRESHOLD:
         return host_setting_run_mode() == 1;

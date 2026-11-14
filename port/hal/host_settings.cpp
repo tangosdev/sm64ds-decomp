@@ -721,6 +721,7 @@ int g_stick_dead = 7849;             /* raw units of 32767 */
 int g_run_thresh_pct = -1;           /* -1 = the ROM's own point, no remap */
 int g_invert_camera_y;               /* default 0 */
 int g_camera_sens = 100;
+int g_cam_stick_accel, g_cam_stick_decel;   /* CameraStickAccel / CameraStickDecel 0..10, 0 = instant (SKYCAM1 phase 2) */
 int g_mouse_sens = 100;
 int g_ctl_gen = 1;
 int g_cam_gen = 1;                   /* moves when CameraMode is SET or reloaded */
@@ -1645,6 +1646,7 @@ void load_once(void)
     g_run_thresh_pct = -1;
     g_invert_camera_y = 0;
     g_camera_sens = 100;
+    g_cam_stick_accel = g_cam_stick_decel = 0;
     g_mouse_sens = 100;
     for (int i = 0; i < HOST_KEY_COUNT; ++i) g_key[i] = KEY_BIND[i].dflt;
     for (int i = 0; i < HOST_PAD_COUNT; ++i) g_pad[i] = PAD_BIND[i].dflt;
@@ -1750,6 +1752,9 @@ void load_once(void)
             g_run_thresh_pct = (rt >= 30 && rt <= 100 && rt != RUN_THRESH_ROM_PCT) ? rt : -1;
             int cs = json_int(text, "CameraSensitivity", 100);
             g_camera_sens = cs < 10 ? 10 : cs > 400 ? 400 : cs;
+            const int ca = json_int(text, "CameraStickAccel", 0), cd = json_int(text, "CameraStickDecel", 0);
+            g_cam_stick_accel = ca < 0 ? 0 : ca > 10 ? 10 : ca;
+            g_cam_stick_decel = cd < 0 ? 0 : cd > 10 ? 10 : cd;
             int ms = json_int(text, "MouseSensitivity", 100);
             g_mouse_sens = ms < 10 ? 10 : ms > 400 ? 400 : ms;
         }
@@ -2518,6 +2523,9 @@ int reload_controls(const char *text)
     {
         int cs = json_int(text, "CameraSensitivity", g_camera_sens);
         CTL_SET(g_camera_sens, cs < 10 ? 10 : cs > 400 ? 400 : cs);
+        const int ca = json_int(text, "CameraStickAccel", g_cam_stick_accel), cd = json_int(text, "CameraStickDecel", g_cam_stick_decel);
+        CTL_SET(g_cam_stick_accel, ca < 0 ? 0 : ca > 10 ? 10 : ca);
+        CTL_SET(g_cam_stick_decel, cd < 0 ? 0 : cd > 10 ? 10 : cd);
         int ms = json_int(text, "MouseSensitivity", g_mouse_sens);
         CTL_SET(g_mouse_sens, ms < 10 ? 10 : ms > 400 ? 400 : ms);
     }
@@ -3676,6 +3684,26 @@ extern "C" int host_setting_set_camera_sensitivity(int pct)
     queue_int("CameraSensitivity", pct);
     return 1;
 }
+
+/* SKYCAM1 phase 2: the right stick's camera turn eases in (accel) and out (decel); 0..10, 0 = instant (1.0.6) */
+extern "C" int host_setting_set_camera_stick_accel(int v)
+{
+    load_once();
+    if (v < 0 || v > 10) return 0;
+    if (g_cam_stick_accel != v) { g_cam_stick_accel = v; ++g_ctl_gen; }
+    queue_int("CameraStickAccel", v);
+    return 1;
+}
+extern "C" int host_setting_set_camera_stick_decel(int v)
+{
+    load_once();
+    if (v < 0 || v > 10) return 0;
+    if (g_cam_stick_decel != v) { g_cam_stick_decel = v; ++g_ctl_gen; }
+    queue_int("CameraStickDecel", v);
+    return 1;
+}
+extern "C" int host_setting_camera_stick_accel(void) { load_once(); return g_cam_stick_accel; }
+extern "C" int host_setting_camera_stick_decel(void) { load_once(); return g_cam_stick_decel; }
 
 extern "C" int host_setting_set_mouse_sensitivity(int pct)
 {

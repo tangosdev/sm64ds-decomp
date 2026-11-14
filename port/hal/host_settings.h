@@ -1202,6 +1202,13 @@ double host_setting_run_norm(void);          /* 0.87 by default (MP fold) */
 int host_setting_invert_camera_y(void);
 int host_setting_camera_sensitivity(void);
 int host_setting_mouse_sensitivity(void);
+/* SKYCAM1 phase 2: CameraStickAccel / CameraStickDecel, 0..10, 0 by default (instant, the 1.0.6 feel). How many tenths of a second
+   the right stick's analog / free camera turn takes to reach full speed after a push, and to stop after the stick is let go.
+   The mouse and the DS camera are untouched. Live. */
+int host_setting_camera_stick_accel(void);
+int host_setting_camera_stick_decel(void);
+int host_setting_set_camera_stick_accel(int v);
+int host_setting_set_camera_stick_decel(int v);
 /* SKIPINTRO1: SkipOpening, bool, OFF by default: a new file skips its opening and starts at the castle with the opening marked seen. Live. */
 int host_setting_skip_opening(void);
 int host_setting_set_skip_opening(int on);

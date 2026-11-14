@@ -70,6 +70,8 @@ enum SlId {
     SL_RENDER_SCALE,            /* int: RenderScale 0..8, host rows per DS row (0 the default); not live, read at boot (RESSCALE1) */
     SL_STAY_AFTER_STAR,         /* bool: StayAfterStar, single player stays in the course after a star (STAYCOURSE1); off by default */
     SL_EXIT_TO_PAINTING,        /* bool: ExitToPainting, single player's Exit Course lands at the course's painting (EXITPAINT1); off by default */
+    SL_CAMERA_STICK_ACCEL,      /* int 0..10: CameraStickAccel, tenths of a second for the right stick's camera turn to reach full speed (SKYCAM1); 0 */
+    SL_CAMERA_STICK_DECEL,      /* int 0..10: CameraStickDecel, tenths of a second for it to stop after the stick is let go (SKYCAM1); 0 */
     SL_COUNT
 };
 
