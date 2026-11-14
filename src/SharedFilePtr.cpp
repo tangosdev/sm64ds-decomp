@@ -70,7 +70,14 @@ int func_020185c0(void *buf, unsigned int x);
 void func_02018770(void);
 int myFS_ReadFile(void *a, void *b, int c);
 }
-void func_02017e0c(void *self, unsigned int fileID);
+
+/* ROM symbol is _Z13func_02017e0cPvj. The host call is C: port/hal/fs.cpp
+   declares it inside its extern "C" seam. */
+#ifdef _MSC_VER
+extern "C"
+#endif
+    void
+    func_02017e0c(void *self, unsigned int fileID);
 unsigned int TrimModelFile(void *file);
 
 #ifndef _MSC_VER
