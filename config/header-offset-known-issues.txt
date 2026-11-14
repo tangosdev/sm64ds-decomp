@@ -22,10 +22,6 @@ include/OamAttr.h
 # body cannot be walked. Two members affected.
 include/cMgSmartball_slot_c.h
 
-# `T val;` inside a template. There is no width for T until it is instantiated, so
-# this is not answerable by textual walk at all and probably never leaves this list.
-include/math/Fix12.h
-
 # --- a real disagreement, unresolved ----------------------------------------------
 # Four fields sit exactly 3 bytes later than the tool computes (0x4660 vs 0x465d, and
 # three pads after it). A constant 3-byte shortfall means one earlier member is modelled

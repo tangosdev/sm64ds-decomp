@@ -7113,7 +7113,6 @@ void daPly_c::func_ov002_020c98a4() {
 }
 
 void daPly_c::func_ov002_020c990c() {
-    typedef int Fix12;
     this->mHasNoCap = 1;
     if (this->mIsAirborne) {
         this->mStateStep = 0x16;
@@ -15236,7 +15235,6 @@ int daPly_c::St_SwingPlayer_Cleanup() {
 
 int daPly_c::St_SwingPlayer_Main() {
     char* c = (char*)this;
-    typedef s32 Fix12;
     extern u16 data_0209f49e[];
     extern s16 data_0209f4a0[];
     switch (this->mStateStep) {

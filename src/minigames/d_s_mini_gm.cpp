@@ -143,8 +143,6 @@ extern "C" int RandomIntInternal(int *seed);
 extern "C" void *LoadFile(int id);
 extern "C" void DecompressLZ16(void *src, void *dst);
 
-extern "C" void OamRender10_d_s_mini_gm(int sub, OamAttr *attr, int x, int y, int pal, int prio,
-                                        int sx, int sy, int c, int d);
 
 dScMiniGm_c *dScMiniGm_c_classInit() {
     return new dScMiniGm_c();

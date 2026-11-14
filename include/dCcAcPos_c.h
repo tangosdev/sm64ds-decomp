@@ -38,7 +38,6 @@
  * position, this one returns its own field.
  */
 
-#include "math/Fix12.h"
 
 struct dCcAcPos_c : dCcAc_c {
     Vector3 pos;            /* 0x34 */

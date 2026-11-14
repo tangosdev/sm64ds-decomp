@@ -1706,7 +1706,6 @@ struct D3DBaseView : dScMgBase_c {
 namespace s20af68c {
 extern "C" {
 extern "C" {
-void OamRender10_d_s_mg_base_a(int, OamAttr *, s32, s32, int, int, int, int, int, int);
 void Hud_RenderSprite(void *attr, int x, int y, int palette, int priority) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
@@ -1730,8 +1729,6 @@ extern "C" {
 extern "C" {
 struct OamAttr;
 }
-extern int OamRender8_d_s_mg_base(int show, struct OamAttr *attr, int a, int b, int c, int d,
-                                  fx32 e, int f);
 
 extern "C" int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5,
                                         unsigned short a6) {
@@ -1791,7 +1788,6 @@ void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *m) {
 namespace s20afa20 {
 extern "C" {
 extern "C" {
-void OamRender10_d_s_mg_base_a(int, OamAttr *, s32, s32, int, int, int, int, int, int);
 
 extern "C" void RenderOamMainScreen(OamAttr *oam, int x, int y, int palette, int priority) {
     dScMgBase_c *scene = gMgScene;
@@ -1816,8 +1812,6 @@ extern "C" {
 extern "C" {
 struct OamAttr;
 }
-extern int OamRender8_d_s_mg_base(int show, struct OamAttr *attr, int a, int b, int c, int d,
-                                  fx32 e, int f);
 
 extern "C" int Mg_RenderMainSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
                                          unsigned short a6) {
@@ -1875,7 +1869,6 @@ extern "C" void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx) {
 namespace s20afdd0 {
 extern "C" {
 extern "C" {
-int OamRender10_d_s_mg_base_b(int, void *, int, int, int, int, int, int, int, int);
 void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
@@ -1905,8 +1898,6 @@ extern "C" {
 struct OamAttr;
 extern int sMgTopScreenYOffset;
 }
-extern int OamRender8_d_s_mg_base(int show, struct OamAttr *attr, int a, int b, int c, int d,
-                                  fx32 e, int f);
 
 extern "C" int Mg_RenderSpriteBothScaled(struct OamAttr *a0, int a1, int a2, int a3, int a4,
                                          fx32 a5, int a6) {

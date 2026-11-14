@@ -7,7 +7,6 @@
 #include "dExtSimpleModel_c.h"
 #include "dExtFrameCtrl_c.h"
 #include "math/Matrix.h"
-#include "math/Fix12.h"
 
 /* The first multiply-inheriting class in the tree: dExtAnmModel_c derives from
  * dExtSimpleModel_c AND dExtFrameCtrl_c. The dExtFrameCtrl_c base sits at +0x50, which is exactly

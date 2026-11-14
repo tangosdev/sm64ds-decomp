@@ -2,7 +2,6 @@
 #define DEXTFRAMECTRL_C_H
 
 #include "types.h"
-#include "math/Fix12.h"
 
 /* The animation-playback root, vtable _ZTV15dExtFrameCtrl_c:
  *

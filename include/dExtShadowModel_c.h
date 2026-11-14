@@ -5,7 +5,6 @@
 #include "BMD_File.h"
 #include "dExtModel_c.h"
 #include "math/Matrix.h"
-#include "math/Fix12.h"
 
 /* dExtModel_c sibling for drop shadows, vtable _ZTV17dExtShadowModel_c at
  * 0x0208e868:

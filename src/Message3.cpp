@@ -119,10 +119,6 @@ extern u32 data_0209287c[];
 extern MBUserInfo *func_0203d8a0(int idx);
 extern void DecompressLZ16(void *src, void *dst);
 extern void *LoadFile(int handle);
-/* local extern: Fix12 wall -- the by-value Fix12<int> form cannot be spelled
-   from a header; the literal name keeps the def's own scalar params. */
-extern void OamRender10_Message3(int sub, struct OamAttr *attr_, int xOff, int yOff, int palette,
-                                 int priority, int scaleX, int scaleY, int rotation, int mode);
 #include "OAM.h"
 #include "nitro/mi/memory.h"
 

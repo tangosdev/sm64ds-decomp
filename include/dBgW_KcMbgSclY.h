@@ -27,7 +27,6 @@
 
 #ifdef __cplusplus
 
-#include "math/Fix12.h"
 
 struct dBgW_KcMbgSclY : dBgW_KcMbg {
     fx32 scaleY;    /* 0x1c8 */
