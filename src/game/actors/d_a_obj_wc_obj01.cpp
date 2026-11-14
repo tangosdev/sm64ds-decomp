@@ -39,7 +39,7 @@ struct WcObj01CollisionFilePtr : SharedFilePtr {
 };
 
 enum {
-    kRayStartAboveFix12 = 0x14000 /* 20.0 */
+    kRayStartAbove = 0x14000 /* 20.0 */
 };
 
 daObjWcObj01_c *daObjWcObj01_c_classInit() {
@@ -64,7 +64,7 @@ int daObjWcObj01_c::InitResources() {
             end.z = z;
             start.x = x;
             start.z = z;
-            start.y = y + kRayStartAboveFix12;
+            start.y = y + kRayStartAbove;
             end.y = waterY;
             line.SetObjAndLine(start, end, this);
             if (line.DetectClsn() == 0) {
