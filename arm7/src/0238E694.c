@@ -1,0 +1,55 @@
+extern int dat_27D7A84[];
+extern unsigned char dat_27D6A84[];
+extern unsigned char dat_27D6A98[];
+extern unsigned char dat_27D6AB8[];
+extern unsigned char dat_27D6ACC[];
+extern unsigned char dat_27D6B4C[];
+extern unsigned char dat_27D6B60[];
+extern unsigned char dat_27D6BE0[];
+extern unsigned char dat_27D6BF4[];
+extern int dat_27D8074[];
+extern int dat_27D7C74[];
+extern int unk_3805C6C[];
+extern int unk_3805BF4[];
+extern void fn_02381698(void *a1, void *a2, int a3);
+extern void fn_02381874(void *a1);
+extern void fn_02381110(void *a1, void *a2, int a3, void *a4, int a5, int a6);
+extern void fn_02380FAC(void *a1);
+extern void fn_02382EF8(int *a1);
+extern void fn_023830C8(int a1, void *a2);
+extern void fn_0237E13C(void);
+extern void fn_0237E1BC(void);
+extern void fn_0237CDA8(void);
+extern int fn_0238E43C(int *a1);
+
+int fn_0238E694(int *a1, int *a2) {
+    int i;
+    unsigned char *p;
+    dat_27D7A84[385] = a2[0];
+    dat_27D7A84[386] = a1[9];
+    dat_27D7A84[387] = a1[10];
+    dat_27D7A84[388] = 0;
+    fn_02381698(dat_27D6A84, dat_27D6A98, 8);
+    fn_02381698(dat_27D6AB8, dat_27D6ACC, 32);
+    fn_02381698(dat_27D6B4C, dat_27D6B60, 32);
+    fn_02381698(dat_27D6BE0, dat_27D6BF4, 32);
+    a1[4] = (int)dat_27D6A84;
+    a1[5] = (int)dat_27D6AB8;
+    fn_02381874(dat_27D8074);
+    fn_02381110(unk_3805C6C, fn_0237E13C, 0, dat_27D8074, 1024, a2[1]);
+    fn_02380FAC(unk_3805C6C);
+    fn_02381110(unk_3805BF4, fn_0237E1BC, 0, dat_27D7C74, 4096, a2[2]);
+    fn_02380FAC(unk_3805BF4);
+    i = 0;
+    do {
+        p = dat_27D6A84 + i;
+        p += 0x1000;
+        p[0x614] = 0;
+        i++;
+    } while (i < 16);
+    dat_27D7A84[393] = 0;
+    fn_02382EF8(dat_27D7A84);
+    fn_023830C8(10, fn_0237CDA8);
+    a1[6] = 2;
+    return fn_0238E43C(a1);
+}
