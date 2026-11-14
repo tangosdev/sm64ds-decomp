@@ -6,9 +6,9 @@
 struct Matrix4x3;
 
 /* The quaternion Matrix3x3_FromQuaternion and Matrix4x3_FromQuaternion take:
- * four Fix12i in x, y, z, w order, as the two matrix builders read them. */
+ * four fx32 in x, y, z, w order, as the two matrix builders read them. */
 struct Quaternion {
-    Fix12i x, y, z, w;
+    fx32 x, y, z, w;
 };
 typedef char Quaternion_size_must_be_0x10[sizeof(struct Quaternion) == 0x10 ? 1 : -1];
 
@@ -19,6 +19,7 @@ typedef char Quaternion_size_must_be_0x10[sizeof(struct Quaternion) == 0x10 ? 1 
 extern "C" {
 #endif
 
+void Quaternion_FromVector3(void *, Vector3 *, Vector3 *);
 void Quaternion_Normalize(int *);
 void Quaternion_SLerp(int *, int *, int, int *);
 void Quaternion_Multiply(void *, void *, void *);
@@ -26,8 +27,6 @@ void Matrix4x3_FromQuaternion(const struct Quaternion *, struct Matrix4x3 *);
 
 #ifdef __cplusplus
 }
-struct Quat;
-void Quaternion_FromVector3(Quat *, Vector3 *, Vector3 *);
 #endif
 
 #endif

@@ -1,10 +1,10 @@
 //cpp
 
-void InitialiseVramGlobals(void);
-int func_02045d10(void);
-int func_02045cf0(void);
+extern "C" void InitialiseVramGlobals(void);
+extern "C" int func_02045d10(void);
+extern "C" int func_02045cf0(void);
 extern void Texture_InitRegions(int, int);
-void func_ov007_020bd4a0(int r0) {
+extern "C" void func_ov007_020bd4a0(int r0) {
     switch (r0) {
     case 0:
         InitialiseVramGlobals();

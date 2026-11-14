@@ -10,6 +10,6 @@ void SND_Init(void) {
     if (data_020a6480)
         return;
     data_020a6480 = 1;
-    _Z15SND_CommandInitv();
-    _Z13SND_AlarmInitv();
+    SND_CommandInit();
+    SND_AlarmInit();
 }

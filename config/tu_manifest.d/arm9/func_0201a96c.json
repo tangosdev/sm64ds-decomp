@@ -34,7 +34,7 @@
   ],
   "functions": [
     {
-      "symbol": "_Z13func_0201a96cP13WatchdogAlarmi",
+      "symbol": "func_0201a96c",
       "address": "0x0201a96c",
       "size": "0x80",
       "legacy_source": "src/unnamed/arm9/0201/func_0201a96c.cpp",

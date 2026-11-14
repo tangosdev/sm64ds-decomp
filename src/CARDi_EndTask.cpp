@@ -2,6 +2,8 @@
 #include "nitro/os/system.h"
 #include "nitro/card/card_common.h"
 
+extern "C" {
+
 /* NitroSDK CARDi_EndTask: take the callback, clear the busy and task bits,
  * wake every caller waiting on busy_q and, if the card thread is waiting
  * for work (CARD_STAT_RECV), the card thread itself; then, interrupts
@@ -19,4 +21,5 @@ void CARDi_EndTask(CARDiCommon *p) {
     if (callback != 0) {
         callback(arg);
     }
+}
 }

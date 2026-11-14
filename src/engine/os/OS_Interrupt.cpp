@@ -25,19 +25,19 @@
 
 // The DTCM queue keeps C linkage: the PC port links this file, and MSVC
 // mangles C++ data names. The tables are in nitro/os/interrupt.h.
-
-extern OSThreadQueue OSi_IrqThreadQueue;
-/* os_irqHandler.c, in DTCM */
+extern "C" {
+extern OSThreadQueue OSi_IrqThreadQueue; /* os_irqHandler.c, in DTCM */
+}
 
 #ifndef _MSC_VER
 
 // OS_InitThreadQueue(&OSi_IrqThreadQueue): this SDK's thread queue is a u16
 // mask of thread ids, so emptying it is a store of 0.
-void OS_InitIrqTable(void) {
+extern "C" void OS_InitIrqTable(void) {
     OSi_IrqThreadQueue = 0;
 }
 
-void OS_SetIrqFunction(OSIrqMask intrBit, OSIrqFunction function) {
+extern "C" void OS_SetIrqFunction(OSIrqMask intrBit, OSIrqFunction function) {
     for (int i = 0; i < OS_IRQ_TABLE_MAX; i++) {
         if (intrBit & 1) {
             OSIrqCallbackInfo *info = 0;
@@ -58,7 +58,7 @@ void OS_SetIrqFunction(OSIrqMask intrBit, OSIrqFunction function) {
     }
 }
 
-OSIrqFunction OS_GetIrqFunction(OSIrqMask intrBit) {
+extern "C" OSIrqFunction OS_GetIrqFunction(OSIrqMask intrBit) {
     int i = 0;
     OSIrqFunction *funcPtr = &OS_IRQTable[0];
     for (; i < OS_IRQ_TABLE_MAX; i++) {
@@ -81,7 +81,7 @@ OSIrqFunction OS_GetIrqFunction(OSIrqMask intrBit) {
 
 // Installs a DMA channel's completion callback and enables its interrupt.
 // The entry stays armed only if the channel's interrupt was already enabled.
-void OSi_EnterDmaCallback(u32 dmaNo, void (*callback)(void *), void *arg) {
+extern "C" void OSi_EnterDmaCallback(u32 dmaNo, void (*callback)(void *), void *arg) {
     OSIrqMask imask = 1UL << (REG_OS_IE_D0_SHIFT + dmaNo);
 
     OSi_IrqCallbackInfo[dmaNo].func = callback;
@@ -95,7 +95,7 @@ void OSi_EnterDmaCallback(u32 dmaNo, void (*callback)(void *), void *arg) {
 // indexes the entry as OSi_IrqCallbackInfo[timerNo + OSi_IRQCALLBACK_NO_TIMER0];
 // the ROM's three literals (table + 0x30 + field) are what this compiler
 // emits only when the offset is applied to the table before the index.
-void OSi_EnterTimerCallback(u32 timerNo, void (*callback)(void *), void *arg) {
+extern "C" void OSi_EnterTimerCallback(u32 timerNo, void (*callback)(void *), void *arg) {
     OSIrqMask imask = 1UL << (REG_OS_IE_T0_SHIFT + timerNo);
 
     (OSi_IrqCallbackInfo + OSi_IRQCALLBACK_NO_TIMER0)[timerNo].func = callback;
@@ -105,7 +105,7 @@ void OSi_EnterTimerCallback(u32 timerNo, void (*callback)(void *), void *arg) {
     (OSi_IrqCallbackInfo + OSi_IRQCALLBACK_NO_TIMER0)[timerNo].enable = 1;
 }
 
-OSIrqMask OS_SetIrqMask(OSIrqMask mask) {
+extern "C" OSIrqMask OS_SetIrqMask(OSIrqMask mask) {
     u16 ime = REG_IME;
     REG_IME = 0;
     OSIrqMask old = REG_IE;
@@ -115,7 +115,7 @@ OSIrqMask OS_SetIrqMask(OSIrqMask mask) {
     return old;
 }
 
-OSIrqMask OS_EnableIrqMask(OSIrqMask mask) {
+extern "C" OSIrqMask OS_EnableIrqMask(OSIrqMask mask) {
     u16 ime = REG_IME;
     REG_IME = 0;
     OSIrqMask old = REG_IE;
@@ -125,7 +125,7 @@ OSIrqMask OS_EnableIrqMask(OSIrqMask mask) {
     return old;
 }
 
-OSIrqMask OS_DisableIrqMask(OSIrqMask mask) {
+extern "C" OSIrqMask OS_DisableIrqMask(OSIrqMask mask) {
     u16 ime = REG_IME;
     REG_IME = 0;
     OSIrqMask old = REG_IE;
@@ -137,7 +137,7 @@ OSIrqMask OS_DisableIrqMask(OSIrqMask mask) {
 
 // Acknowledges the interrupts in mask and returns the requests that were
 // pending before.
-OSIrqMask OS_ResetRequestIrqMask(OSIrqMask mask) {
+extern "C" OSIrqMask OS_ResetRequestIrqMask(OSIrqMask mask) {
     u16 ime = REG_IME;
     REG_IME = 0;
     OSIrqMask old = REG_IF;

@@ -37,14 +37,14 @@ extern "C" {
 void func_020190b8(void);
 }
 
-void func_0201a4bc(void);
+extern "C" void func_0201a4bc(void);
 extern "C" {
 
 void func_0201ffcc(void);
 }
 
-void func_020132d8(void);
-unsigned short func_0203da80(unsigned short);
+extern "C" void func_020132d8(void);
+extern "C" unsigned short func_0203da80(unsigned short);
 extern "C" {
 
 int func_02030e4c(void);

@@ -33,14 +33,14 @@
       "ordinal": 1
     },
     {
-      "symbol": "_Z13func_0206cd9cP12CardBusState",
+      "symbol": "func_0206cd9c",
       "address": "0x0206cd9c",
       "size": "0x00000084",
       "legacy_source": "src/unnamed/arm9/0206/func_0206cd9c.c",
       "ordinal": 2
     },
     {
-      "symbol": "_Z13func_0206ce20P12CardBusState",
+      "symbol": "func_0206ce20",
       "address": "0x0206ce20",
       "size": "0x00000070",
       "legacy_source": "src/unnamed/arm9/0206/func_0206ce20.c",

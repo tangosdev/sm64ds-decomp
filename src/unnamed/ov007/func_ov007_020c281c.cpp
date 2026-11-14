@@ -2,8 +2,10 @@
 #include "Ov007StrokePath.h"
 #include "nitro/fx/fx_cp.h"
 
-int func_ov007_020c2dfc(Ov007StrokePath *path, int idx, int v);
-extern "C" void func_ov007_020c24d0(Ov007StrokePath *path, int idx);
+extern "C" {
+
+extern int func_ov007_020c2dfc(Ov007StrokePath *path, int idx, int v);
+extern void func_ov007_020c24d0(Ov007StrokePath *path, int idx);
 
 /* Straightens a planar path: walks its points and drops each one where the
  * path turns by less than minTurn degrees (func_ov007_020c2dfc). The
@@ -24,4 +26,5 @@ void func_ov007_020c281c(Ov007StrokePath *path, int minTurn) {
     case 1:
         break;
     }
+}
 }

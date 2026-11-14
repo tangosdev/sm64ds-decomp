@@ -2,6 +2,7 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
 
+extern "C" {
 int func_ov007_020b1f2c(int x, int *out) {
     if (x >= 0 && x <= 0x3c) {
         int r;
@@ -13,4 +14,5 @@ int func_ov007_020b1f2c(int x, int *out) {
     }
     *out = 0;
     return 0;
+}
 }

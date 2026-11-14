@@ -100,11 +100,10 @@ void func_ov079_02123d4c(Vector3 *out, daBtn_c *self);
 
 void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other);
 int IsStarCollectedInCurLevel(int a);
-void func_02011cfc(void);
+extern "C" void func_02011cfc(void);
 void func_02011d38(void);
 void func_02012694(unsigned int a, const Vector3 *p);
 extern "C" {
-
 /* ---- arm9 / ov002 ---- */
 int AngleDiff(int, int);
 int func_ov002_020dd8b8(void *c);
@@ -113,7 +112,6 @@ int func_ov002_020dd8b8(void *c);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int a, int b, void *c, void *d);
 extern "C" {
-
 extern void hold_d_a_btn(void *mc, void *kcl, void *mtx, int fix, s16 s, void *clps);
 void d_a_btnEarthquakeHold(void *self, const void *v, int f);
 }

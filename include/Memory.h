@@ -1,8 +1,5 @@
 #ifndef MEMORY_H
 #define MEMORY_H
-#ifndef __cplusplus
-#define Deallocate _Z10DeallocatePv
-#endif
 #include "types.h"
 
 namespace mHeap { struct Heap_t; }

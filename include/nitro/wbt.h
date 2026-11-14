@@ -1,12 +1,5 @@
 #ifndef NITRO_WBT_H
 #define NITRO_WBT_H
-#ifndef __cplusplus
-#define WBT_End _Z7WBT_Endv
-#define WBT_InitChild _Z13WBT_InitChildPFvPvE
-#define WBT_InitParent _Z14WBT_InitParentiiPFvPvE
-#define WBT_RegisterBlock _Z17WBT_RegisterBlockP16WBTBlockInfoListjPKvS2_it
-#define WBT_UnregisterBlock _Z19WBT_UnregisterBlockj
-#endif
 
 /* The Nitro SDK's nitro/wbt.h (wireless block transfer): the WBTCallback a
  * command reports through, the WBTCommandType of a command and of the event
@@ -24,10 +17,9 @@
 #include "types.h"
 
 #ifdef __cplusplus
-#ifdef _MSC_VER
 extern "C" {
 #endif
-#endif
+
 /* A command's completion callback, and the system callback WBT_InitParent and
  * WBT_InitChild install; the argument is the WBTCommand. */
 typedef void (*WBTCallback)(void *);
@@ -146,71 +138,24 @@ typedef struct WBTCommand {
 void WBT_InitParent(int, int, WBTCallback);
 void WBT_InitChild(WBTCallback);
 void WBT_End(void);
-#ifdef __cplusplus
-extern "C"
-#endif
-    int WBT_AidbitmapToAid(u16);
-#ifdef __cplusplus
-extern "C"
-#endif
-    int
-    WBT_GetOwnAid(void);
-#ifdef __cplusplus
-extern "C"
-#endif
-    void
-    WBT_SetOwnAid(int);
-#ifdef __cplusplus
-extern "C"
-#endif
-    int
-    WBT_CalcPacketbitmapSize(int);
-#ifdef __cplusplus
-extern "C"
-#endif
-    int
-    WBT_NumOfRegisteredBlock(void);
+int WBT_AidbitmapToAid(u16);
+int WBT_GetOwnAid(void);
+void WBT_SetOwnAid(int);
+int WBT_CalcPacketbitmapSize(int);
+int WBT_NumOfRegisteredBlock(void);
 int WBT_RegisterBlock(WBTBlockInfoList *, u32, const void *, const void *, int, u16);
 WBTBlockInfoList *WBT_UnregisterBlock(u32);
-#ifdef __cplusplus
-extern "C"
-#endif
-    int
-    WBT_SetPacketSize(int, int);
-#ifdef __cplusplus
-extern "C"
-#endif
-    int
-    WBT_MpParentSendHook(void *, int);
-#ifdef __cplusplus
-extern "C"
-#endif
-    int
-    WBT_MpChildSendHook(void *, int);
+int WBT_SetPacketSize(int, int);
+int WBT_MpParentSendHook(void *, int);
+int WBT_MpChildSendHook(void *, int);
+
+void WBT_RequestSync(u16, WBTCallback);
+void WBT_GetBlockInfo(u16, int, const void *, WBTCallback);
+void WBT_GetBlock(u16, u32, const void *, u32, const void *, WBTCallback);
+int WBT_PutUserData(u16, const void *, int, WBTCallback);
 
 #ifdef __cplusplus
-extern "C"
-#endif
-    void WBT_RequestSync(u16, WBTCallback);
-#ifdef __cplusplus
-extern "C"
-#endif
-    void
-    WBT_GetBlockInfo(u16, int, const void *, WBTCallback);
-#ifdef __cplusplus
-extern "C"
-#endif
-    void
-    WBT_GetBlock(u16, u32, const void *, u32, const void *, WBTCallback);
-#ifdef __cplusplus
-extern "C"
-#endif
-    int
-    WBT_PutUserData(u16, const void *, int, WBTCallback);
-#ifdef __cplusplus
-#ifdef _MSC_VER
 }
-#endif
 #endif
 
 #endif

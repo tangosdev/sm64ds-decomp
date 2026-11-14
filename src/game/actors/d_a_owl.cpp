@@ -156,7 +156,6 @@ void func_02012694(unsigned int a, const Vector3 *pos);
 short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 int IsStarCollectedInCurLevel(int);
 extern "C" {
-
 void d_a_owlPlayLongHold(unsigned int a, unsigned int b, unsigned int cc, void *pos,
                          unsigned int d);
 int func_ov002_020df7f4(void *c);

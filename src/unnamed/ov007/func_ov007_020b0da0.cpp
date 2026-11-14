@@ -20,7 +20,7 @@
  * assignment copy word by word. The ROM copies these with C's ldm/stm block
  * move, which C++ keeps for a struct with an array member. */
 typedef struct Vec3Words {
-    Fix12i w[3];
+    fx32 w[3];
 } Vec3Words;
 
 

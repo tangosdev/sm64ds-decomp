@@ -54,9 +54,11 @@ struct C1HikariModelFilePtr : SharedFilePtr {
 extern C1HikariModelFilePtr gC1HikariModelFile;
 
 /* local extern: arm9 math and save helpers with no shared header. */
-extern "C" void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern "C" int AngleDiff(int a, int b);
-unsigned char NumStars(void);
+extern "C" {
+extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
+extern int AngleDiff(int a, int b);
+}
+extern unsigned char NumStars(void);
 
 namespace Sound {
 int PlaySmallSecretSound(dActor_c *actor, u16 *counter);

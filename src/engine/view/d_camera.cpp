@@ -117,7 +117,6 @@ extern struct OamAttr data_ov002_0210c3b0;
 extern void *data_ov002_0210c3e0[2];
 
 extern "C" {
-
 /* Siblings below 0x0200bec4 (defined at the end of the file). */
 extern int func_020092c4(void *cam, Vector3 *out, const Vector3 *target);
 extern s32 Math_Function_0203b14c(s32 *p, s32 tgt, s32 rate, s32 lim, s32 step);
@@ -125,19 +124,20 @@ extern s32 Math_Function_0203b14c(s32 *p, s32 tgt, s32 rate, s32 lim, s32 step);
 
 extern int StartWithFarCamera();
 extern "C" {
-
 /* Actor-table factory; the registry row names the bare symbol. */
 extern dCamera_c *dCamera_c_classInit();
 }
 
 extern struct ViewObj *GetViewObj(int idx);
 
-extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
+/* local extern: CalcLib.h clashes with this TU's C Vec3_HorzLen (int) and Vec3_MulScalarInPlace (void *) */
+extern "C" s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
-extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-extern int Vec3_HorzLen(const Vector3 *v);
+/* local extern: CalcLib.h clashes with this TU's C Vec3_HorzLen (int) and Vec3_MulScalarInPlace (void *) */
+extern "C" int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
+/* local extern: CalcLib.h clashes with this TU's C Vec3_HorzLen (int) and Vec3_MulScalarInPlace (void *) */
+extern "C" int Vec3_HorzLen(const Vector3 *v);
 extern "C" {
-
 extern int VEC_Mag(void *v);
 extern void Vec3_Add(void *out, const void *a, const void *b);
 extern void Vec3_Sub(void *out, const void *a, const void *b);
@@ -150,9 +150,9 @@ extern void Vec3_RotateYAndTranslate(void *out, const void *in, short angle, con
 extern void MTX_MultVec43(void *dst, Matrix4x3 *src, void *out);
 }
 
-extern s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
+/* local extern: CalcLib.h clashes with this TU's C Vec3_HorzLen (int) and Vec3_MulScalarInPlace (void *) */
+extern "C" s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern "C" {
-
 /* local extern: including math/MtxStack.h renumbers this TU's function-local
    statics (sScriptOps, sPrevTurnInput), whose numbered names symbols.txt
    records, so its matrix routines stay declared here. */
@@ -542,8 +542,8 @@ void dCamera_c::SetFovAngle(short arg) {
  * point comes closer; there is no magnitude, decay or phase step, and the
  * shake is mShakeY's vertical offset rather than a pitch magnitude. */
 void dCamera_c::func_0200d8c8(const Vector3 *point, int strength) {
-    Fix12i dist;
-    Fix12i offset;
+    fx32 dist;
+    fx32 offset;
 
     dist = Vec3_Dist(&pos, point);
     if (strength <= dist)
@@ -1433,7 +1433,6 @@ dActor_c *KuppaScript::FindDemoActor(u32 param1);
    func_02009e70 no longer reproduce. C linkage matches the definition. */
 extern "C" s32 ApproachAngle(s16 *cur, s32 target, s32 div, s32 band, s32 step);
 extern "C" {
-
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 /* local extern: math/MtxStack.h declares these; see the matrix helpers above. */
 extern void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
@@ -1441,7 +1440,7 @@ extern void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, short angle);
 extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short angle);
 
 extern int NormalizeVec3IfNonZero(Vector3 *v);
-extern Fix12i VEC_DotProduct(const Vector3 *a, const Vector3 *b);
+extern fx32 VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 /* The 64-bit squared distance between two points. */
 extern long long func_0203cf94(int *a, int *b);
 }
@@ -1480,7 +1479,6 @@ extern struct CamMode data_0208724c;
 extern struct CamMode data_0208729c;
 extern struct CamMode data_020874cc;
 extern "C" {
-
 /* Siblings defined below. */
 int func_02009414(dCamera_c *cam);
 int func_020094a8(dCamera_c *cam);
@@ -1489,12 +1487,12 @@ short func_02008abc(dCamera_c *cam);
 short func_02008a70(dCamera_c *cam);
 }
 
-void Vec3fSetDistAndAngle(Vector3 *res, const Vector3 *trans, int mag, short ang, short angY);
-void Vec3fGetDistAndAngle(const Vector3 *v0, const Vector3 *v1, int *outDist, short *outVertAng,
-                          short *outHorzAng);
+extern "C" void Vec3fSetDistAndAngle(Vector3 *res, const Vector3 *trans, int mag, short ang,
+                                     short angY);
+extern "C" void Vec3fGetDistAndAngle(const Vector3 *v0, const Vector3 *v1, int *outDist,
+                                     short *outVertAng, short *outHorzAng);
 void ApproachVec3fAsymptotic(Vector3 *self, const Vector3 *src, int stepX, int stepY, int stepZ);
 extern "C" {
-
 /* State entries and helpers defined below. The declarations carry the C
    linkage their ROM symbols need. */
 int func_02009e30(dCamera_c *cam);
@@ -3339,7 +3337,7 @@ int RunCameraCommand(dCamera_c *cam, u8 *command, int first, int last) {
 
 /* Script op: set lookAt from three whole-unit shorts. */
 int func_02008500(dCamera_c *cam, u8 *data) {
-    Fix12i x, y, z;
+    fx32 x, y, z;
     z = ReadUnalignedShort(data + 4) << 12;
     y = ReadUnalignedShort(data + 2) << 12;
     x = ReadUnalignedShort(data) << 12;
@@ -3384,7 +3382,7 @@ int func_0200840c(dCamera_c *cam, u8 *data) {
 /* Script op: grow the viewport from the given rectangle to the full screen
    over frames lo..hi, keeping mAspect in step. */
 int func_020082f8(dCamera_c *cam, u8 *src, int lo, int hi) {
-    Fix12i slope = FX_Div((gKuppaScriptFrame - lo) << 12, (hi - lo) << 12);
+    fx32 slope = FX_Div((gKuppaScriptFrame - lo) << 12, (hi - lo) << 12);
     cam->mViewport[0] = (FX_MUL((src[0] << 12), slope) >> 12);
     cam->mViewport[1] = (FX_MUL((src[1] << 12), slope) >> 12);
     cam->mViewport[2] = ((FX_MUL(((src[2] - 0xff) << 12), slope) >> 12) + 0xff);
@@ -3486,7 +3484,7 @@ int func_02008080(dCamera_c *cam) {
 /* Script op: walk the paths, then ease pos.y toward demo actor 0x13's
    height above where the walk left it. */
 int func_02008028(dCamera_c *cam) {
-    Fix12i y;
+    fx32 y;
     dActor_c *obj;
 
     y = cam->pos.y;
@@ -3517,7 +3515,7 @@ int func_02007f14(dCamera_c *cam, u8 *data) {
     int pos[3];
     int rot[3];
     int *posPtr, *rotPtr;
-    Fix12i px, py, pz;
+    fx32 px, py, pz;
     int rx, ry, rz;
     pz = ReadUnalignedShort(data + 4) << 12;
     py = ReadUnalignedShort(data + 2) << 12;
@@ -3548,7 +3546,7 @@ int func_02007e5c(dCamera_c *cam, u8 *data) {
     int pos[3];
     int rot[3];
     int *posPtr, *rotPtr;
-    Fix12i px, py, pz;
+    fx32 px, py, pz;
     int rx, ry, rz;
     pz = ReadUnalignedShort(data + 4) << 12;
     py = ReadUnalignedShort(data + 2) << 12;
@@ -3612,14 +3610,14 @@ void ApproachVec3fAsymptotic(Vector3 *self, const Vector3 *src, int stepX, int s
 /* The same with one rate for all three axes. Its callers' declaration
    says int, and the ROM hands back whatever ApproachVec3fAsymptotic left in r0, so
    there is no return statement. */
-int func_02007cec(void *dest, const Vector3 *src, int step) {
+extern "C" int func_02007cec(void *dest, const Vector3 *src, int step) {
     ApproachVec3fAsymptotic((Vector3 *)dest, src, step, step, step);
 }
 
 /* Super Mario 64's vec3f_get_dist_and_angle: the distance and the pitch and
    yaw from v0 to v1. */
-void Vec3fGetDistAndAngle(const Vector3 *v0, const Vector3 *v1, int *outDist, short *outVertAng,
-                          short *outHorzAng) {
+extern "C" void Vec3fGetDistAndAngle(const Vector3 *v0, const Vector3 *v1, int *outDist,
+                                     short *outVertAng, short *outHorzAng) {
     *outDist = Vec3_Dist(v0, v1);
     *outVertAng = Vec3_VertAngle(v1, v0);
     *outHorzAng = Vec3_HorzAngle(v0, v1);
@@ -3628,7 +3626,8 @@ void Vec3fGetDistAndAngle(const Vector3 *v0, const Vector3 *v1, int *outDist, sh
 /* Super Mario 64's vec3f_set_dist_and_angle, the inverse: res is trans plus
    mag along pitch ang, turned by yaw angY. The N64 takes the origin first;
    this takes the result first. */
-void Vec3fSetDistAndAngle(Vector3 *res, const Vector3 *trans, Fix12i mag, short ang, short angY) {
+extern "C" void Vec3fSetDistAndAngle(Vector3 *res, const Vector3 *trans, fx32 mag, short ang,
+                                     short angY) {
     Vector3 v;
     unsigned idx = (unsigned short)ang >> 4;
 
@@ -3642,7 +3641,7 @@ void Vec3fSetDistAndAngle(Vector3 *res, const Vector3 *trans, Fix12i mag, short 
    whole-unit offset. */
 int func_02007b98(dCamera_c *cam, u8 *data) {
     struct Vector3 v;
-    Fix12i x, y, z;
+    fx32 x, y, z;
     int b;
     z = ReadUnalignedShort(data + 4) << 12;
     y = ReadUnalignedShort(data + 2) << 12;
@@ -3664,7 +3663,7 @@ int FocusInFrontOfMario(dCamera_c *cam, u8 *rec) {
     Vector3 res;
     dActor_c *owner;
     int step;
-    Fix12i vx, vy, vz;
+    fx32 vx, vy, vz;
     vz = ReadUnalignedShort(rec + 4) << 12;
     vy = ReadUnalignedShort(rec + 2) << 12;
     vx = ReadUnalignedShort(rec + 0) << 12;
@@ -3681,7 +3680,7 @@ int FocusInFrontOfMario(dCamera_c *cam, u8 *rec) {
 /* Script op: orbit pos around the target player (func_020070e8); a yaw of
    -1 means mOrbitTargetYaw. */
 int func_02007a8c(dCamera_c *cam, u8 *data) {
-    Fix12i distTarget = ReadUnalignedShort(data) << 12;
+    fx32 distTarget = ReadUnalignedShort(data) << 12;
     int distStep = data[2] << 4;
     short vertTarget = ReadUnalignedShort(data + 3);
     short vertDiv = data[5];

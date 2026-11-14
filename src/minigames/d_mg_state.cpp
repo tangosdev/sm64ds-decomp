@@ -115,81 +115,32 @@
 #include "PlayerInput.h"
 #include "Sound.h"
 #include "math/Approach.h"
-namespace s20b2444 {
-void Mg_DrawBigNumber(int, int, int, int, int, int, int);
-}
-using s20b2444::Mg_DrawBigNumber;
-extern "C" {
-extern void Mg_DrawRecordTable(void *);
-extern void Mg_CallStartRound(void *c, void *arg);
-}
-namespace s20b0d8c {
-void Mg_DrawBlinkSprite(void *c, s32, s32);
-}
-using s20b0d8c::Mg_DrawBlinkSprite;
-namespace s20b0cac {
-void Mg_ShowBanner(int, int, int, int, int, short);
-}
-using s20b0cac::Mg_ShowBanner;
-namespace s20b0b1c {
-int Mg_CheckBannerButton(int);
-}
-using s20b0b1c::Mg_CheckBannerButton;
-namespace s20b0aa0 {
-void FreeGfxSlotsById(int);
-}
-using s20b0aa0::FreeGfxSlotsById;
-namespace s20b04c0 {
-int Mg_GetTopScreenYOffset(void);
-}
-using s20b04c0::Mg_GetTopScreenYOffset;
-namespace s20af948 {
-void Mg_RenderSubSpriteMtx(void *a, int, int, void *m);
-}
-using s20af948::Mg_RenderSubSpriteMtx;
-namespace s20ae2c8 {
-void Mg_StartMusic(void);
-}
-using s20ae2c8::Mg_StartMusic;
-namespace s20ae274 {
-void Mg_PlayJingle(void *);
-}
-using s20ae274::Mg_PlayJingle;
-namespace s20ae20c {
-void Mg_RestoreMusic(void);
-}
-using s20ae20c::Mg_RestoreMusic;
-namespace s20adbe0 {
-int Mg_IsNewRecord(void);
-}
-using s20adbe0::Mg_IsNewRecord;
-namespace s20adbc0 {
-int Mg_GetSubmittedScore(void);
-}
-using s20adbc0::Mg_GetSubmittedScore;
-namespace s20ad90c {
-void Mg_CommitRecords(void);
-}
-using s20ad90c::Mg_CommitRecords;
-namespace s20ad674 {
-s32 GetGameLanguage(void);
-}
-using s20ad674::GetGameLanguage;
 
 /* local extern: including Sound.h renumbers SetState's local static. */
 namespace Sound {
 u32 PlayBank2_2D(u32);
 }
 
-extern "C" {}
-
-extern void func_02012dd0(void *c);
 extern "C" {
-
+extern void FreeGfxSlotsById(int arg);
+extern int GetGameLanguage(void);
+extern void Mg_CommitRecords(void);
+extern int Mg_GetSubmittedScore(void);
+extern int Mg_IsNewRecord(void);
+extern void Mg_RestoreMusic(void);
+extern void Mg_PlayJingle(void *c);
+extern void Mg_StartMusic(void);
+extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *d);
+extern int Mg_GetTopScreenYOffset(void);
+extern int Mg_CheckBannerButton(int arg);
+extern void Mg_ShowBanner(int c, int a1, int a2, int a3, int arg5, short arg6);
+extern void Mg_DrawBlinkSprite(void *, int, int);
 extern void Mg_DrawRecordTable(void *);
+extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
 extern void Mg_CallStartRound(void *c, void *arg);
 }
-void Mg_SetNextBanner(int);
+extern void func_02012dd0(void *c);
+extern void Mg_SetNextBanner(int);
 
 extern void (dMgState_c::*data_02086b58)(); /* __ptmf_null's address: the null member pointer */
 extern dFdBrightness_c *gSceneFader;

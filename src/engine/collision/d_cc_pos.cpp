@@ -23,9 +23,11 @@
  */
 #include "dCcPos_c.h"
 
+extern "C" {
 /* local extern: ROM data no TU defines and no header declares -- the
    font-base halfword the absorbed print helper below adds the glyph index to. */
 extern unsigned short data_0208e500;
+}
 
 /* pos is left uninitialised: the body is empty and the compiler emits the
    dCc_c base step and the vptr store from the class declaration alone. */
@@ -54,10 +56,10 @@ u32 dCcPos_c::GetOwnerID()
     return 0;
 }
 
-/* Scalar Fix12i: a by-value Fix12<int> is the class type wall 6az homes
+/* Scalar fx32: a by-value Fix12<int> is the class type wall 6az homes
    on the stack. The reference is the same address the pointer spelling
    passed. */
-void dCcPos_c::Init(const Vector3 &pos, Fix12i radius, Fix12i height, u32 flags, u32 vulnFlags) {
+void dCcPos_c::Init(const Vector3 &pos, fx32 radius, fx32 height, u32 flags, u32 vulnFlags) {
     this->pos.x = pos.x;
     this->pos.y = pos.y;
     this->pos.z = pos.z;
@@ -69,6 +71,6 @@ void dCcPos_c::Init(const Vector3 &pos, Fix12i radius, Fix12i height, u32 flags,
  * nds_printt.cpp, which keep their own matching extern declarations and call
  * sites; only the definition moves. Body as recovered. */
 
-void func_020147bc(unsigned short *dst, int glyph) {
+extern "C" void func_020147bc(unsigned short *dst, int glyph) {
     *dst = (data_0208e500 + glyph);
 }

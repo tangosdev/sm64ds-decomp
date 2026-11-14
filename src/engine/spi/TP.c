@@ -235,7 +235,7 @@ static void TPi_TpCallback(PXIFifoTag tag, u32 data, BOOL err) {
 
     case SPI_PXI_RESULT_INVALID_COMMAND:
     default:
-        _Z12OS_Terminatev();
+        OS_Terminate();
         return;
     }
 }

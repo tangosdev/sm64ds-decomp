@@ -35,6 +35,7 @@ enum daObjSwitch_c_AssetId {
 #include "daStar_c.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/CalcLib.h"
 
 namespace Event { int ClearBit(unsigned int bit); void SetBit(unsigned int bit); }
 
@@ -53,7 +54,6 @@ struct SwitchClsnFileHandle : SharedFilePtr {
 };
 
 extern "C" {
-
 extern u32 gNextActorUpdateMask;
 extern signed char gCurrentSublevel;
 extern SharedFilePtr data_ov002_0211092c;
@@ -70,19 +70,12 @@ int d_a_obj_switchChangeMusicVolumeHold(unsigned int id, int volume);
 // committed experiment.
 extern void hold_d_a_obj_switch(void *self, void *file, const Matrix4x3 *matrix, int scale,
                                 s16 angle, void *clps);
-}
-
 int func_02012310(int handle, int sound, short arg);
-unsigned char IsAreaShowing(int area);
-extern "C" {
-
 unsigned char DecIfAbove0_Byte(unsigned char *value);
 }
-
+unsigned char IsAreaShowing(int area);
 void LoadSilverStarAndNumber();
 void UnloadSilverStarAndNumber();
-
-int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 
 /* Reconstructed source-style name: SM64DS proves daObjSwitch_c through RTTI,
  * allocation size, vtable identity, and the HANSWITCH registry profile;
@@ -417,12 +410,12 @@ void daObjSwitch_c::StateExpiredMain() {
     SetState(3);
 }
 
-void daObjSwitch_c::ScaleOverTime(int mask, Fix12i frames, Fix12i base, Fix12i target) {
-    Fix12i d = FX_Div((Fix12i)mTimer, frames);
-    Fix12i diff = target - base;
-    Fix12i e = FX_MUL(diff, d);
-    Fix12i v = base + FX_Div(e, 0x1000);
-    Fix12i h = FX_MUL(v, 0x3c000);
+void daObjSwitch_c::ScaleOverTime(int mask, fx32 frames, fx32 base, fx32 target) {
+    fx32 d = FX_Div((fx32)mTimer, frames);
+    fx32 diff = target - base;
+    fx32 e = FX_MUL(diff, d);
+    fx32 v = base + FX_Div(e, 0x1000);
+    fx32 h = FX_MUL(v, 0x3c000);
     mDisplacementY = 0x3c000 - h;
     if (mask & 1) mDrawScale.x = v;
     if (mask & 2) mDrawScale.y = v;

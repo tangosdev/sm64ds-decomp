@@ -72,9 +72,6 @@
  */
 #ifndef DSCMGD3DBASE_C_H
 #define DSCMGD3DBASE_C_H
-#ifndef __cplusplus
-#define Deallocate _Z10DeallocatePv
-#endif
 #include "dScMgBase_c.h"
 #include "dScStage_c.h"
 #include "MgCamera.h"

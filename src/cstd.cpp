@@ -19,38 +19,49 @@
 #include "nitro/cp/divider.h"
 #include "nitro/cp/sqrt.h"
 #include "nitro/fx/fx_cp.h"
+#include "nitro/fx/fx_vec.h"
 
 /* |a - b|: the squared distance through the hardware sqrt unit, rounded
    back to 20.12. */
-
-int VEC_Distance(int *a, int *b) {
-    int dx = a[0] - b[0];
+extern "C" {
+fx32 VEC_Distance(const VecFx32 *a, const VecFx32 *b) {
+    fx32 dx = a->x - b->x;
     long long sq = (long long)dx * dx;
-    int dy = a[1] - b[1];
-    int dz;
+    fx32 dy = a->y - b->y;
+    fx32 dz;
     sq += (long long)dy * dy;
-    dz = a[2] - b[2];
+    dz = a->z - b->z;
     sq += (long long)dz * dz;
     sq <<= 2;
     CP_SetSqrt64((u64)sq);
     return ((s32)CP_GetSqrtResult32() + 1) >> 1;
 }
+}
+
+extern "C" {
 
 fx32 FX_Div(fx32 numerator, fx32 denominator) {
     FX_DivAsync(numerator, denominator);
     return FX_GetDivResult();
 }
+}
+
+extern "C" {
 
 fx64c FX_DivFx64c(fx32 a, fx32 b) {
     FX_DivAsync(a, b);
     return CP_GetDivResult64();
 }
+}
 
+extern "C" {
 fx32 FX_Inv(fx32 x) {
     FX_InvAsync(x);
     return FX_GetDivResult();
 }
+}
 
+extern "C" {
 fx32 FX_Sqrt(fx32 a) {
     if (a > 0) {
         CP_SetSqrt64((u64)a << 32);
@@ -58,7 +69,9 @@ fx32 FX_Sqrt(fx32 a) {
     }
     return 0;
 }
+}
 
+extern "C" {
 fx32 FX_InvSqrt(fx32 x) {
     s64 quotient;
 
@@ -75,21 +88,31 @@ fx32 FX_InvSqrt(fx32 x) {
 
     return 0;
 }
+}
+
+extern "C" {
 
 fx64c FX_GetDivResultFx64c(void) {
     CP_WaitDiv();
     return CP_GetDivResultImm64();
 }
+}
+
+extern "C" {
 
 fx32 FX_GetDivResult(void) {
     CP_WaitDiv();
     return (fx32)((CP_GetDivResultImm64() + 0x80000) >> 20);
 }
+}
 
+extern "C" {
 void FX_InvAsync(fx32 a) {
     CP_SetDiv64_32((u64)0x1000 << 32, (u32)a);
 }
+}
 
+extern "C" {
 void FX_SqrtAsync(fx32 n) {
     if (n > 0) {
         CP_SetSqrt64((u64)n << 32);
@@ -97,22 +120,33 @@ void FX_SqrtAsync(fx32 n) {
         CP_SetSqrt64(0);
     }
 }
+}
 
+extern "C" {
 fx32 FX_GetSqrtResult(void) {
     CP_WaitSqrt();
     return (fx32)((CP_GetSqrtResultImm32() + 0x200) >> 10);
 }
+}
 
+extern "C" {
 void FX_DivAsync(fx32 a, fx32 b) {
     CP_SetDiv64_32((u64)(u32)a << 32, (u32)b);
 }
+}
+
+extern "C" {
 
 s32 FX_DivS32(s32 a, s32 b) {
     CP_SetDiv32_32((u32)a, (u32)b);
     return CP_GetDivResult32();
 }
+}
+
+extern "C" {
 
 s32 FX_ModS32(s32 a, s32 b) {
     CP_SetDiv32_32((u32)a, (u32)b);
     return CP_GetDivRemainder32();
+}
 }

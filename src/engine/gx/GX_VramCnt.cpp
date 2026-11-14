@@ -43,6 +43,8 @@
     (REG_GX_VRAMCNT_E_MASK | ((ofs) << REG_GX_VRAMCNT_OFS_SHIFT) |                              \
      ((mst) << REG_GX_VRAMCNT_MST_SHIFT))
 
+extern "C" {
+
 void GX_VRAMCNT_SetLCDC_(int mask) {
     if (mask & GX_VRAM_A)
         REG_VRAMCNT_A = GX_VRAMCNT(0, 0);
@@ -565,4 +567,4 @@ int GX_GetSizeOfTexPltt(void) {
     return GX_GetSizeOfX_(data_020a6088.texPltt);
 }
 
-// extern "C"
+} // extern "C"

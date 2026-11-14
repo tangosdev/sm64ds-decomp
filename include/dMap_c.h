@@ -106,8 +106,8 @@ struct dMap_c : dBase_c {
     static void FixTHIPaintingRoomPos(Vector3 & v_);
     static void UpdateLevelSpecific();
     /* Types only. A named parameter here renumbers @NNN in every consumer. */
-    static void GetPosOnMinimap(Vector3 *, Vector3 *, Fix12i, short, Vector3 *);
-    static void GetPosFromMinimapPos(Vector3 &, Vector3 &, Fix12i, short, Vector3 &);
+    static void GetPosOnMinimap(Vector3 *, Vector3 *, fx32, short, Vector3 *);
+    static void GetPosFromMinimapPos(Vector3 &, Vector3 &, fx32, short, Vector3 &);
     int InitResources();
     int Render();
     s32 CleanupResources();

@@ -45,11 +45,11 @@ typedef char StageArea_size_must_be_0xc[sizeof(struct StageArea) == 0xc ? 1 : -1
 
 /* The level loader's minimap-change sentinel: link a record into area idx's
  * height-sorted mBlockList so that above the given height the minimap switches
- * to the given id (0xf for none). The height is a plain Fix12i; a by-value
+ * to the given id (0xf for none). The height is a plain fx32; a by-value
  * Fix12<int> would cost the caller a literal-pool reload
  * (notes/mwccarm-codegen.md 6az). The id is signed: LoadSimpleObjects
  * sign-extends it into r2 (lsl/asr #24), where an unsigned id would mask. */
-void LoadMinimapChangeObject(int, Fix12i, s8);
+void LoadMinimapChangeObject(int, fx32, s8);
 
 /* The playable level: fBase_c -> dBase_c -> dScene_c -> dScStage_c (dScStage_c in
  * the ROM's own type graph). A leaf; it adds no virtual of its own and

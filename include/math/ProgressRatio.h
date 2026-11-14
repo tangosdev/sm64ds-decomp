@@ -1,8 +1,5 @@
 #ifndef SM64DS_MATH_PROGRESSRATIO_H
 #define SM64DS_MATH_PROGRESSRATIO_H
-#ifndef __cplusplus
-#define FX_DivS32 _Z9FX_DivS32ii
-#endif
 
 #include "nitro/fx/fx.h"
 

@@ -71,7 +71,7 @@ daObjRcCarpet_c *daObjRcCarpet_c_classInit() {
     return new daObjRcCarpet_c();
 }
 
-SpawnInfo<daObjRcCarpet_c> g_profile_RC_CARPET = {
+extern "C" SpawnInfo<daObjRcCarpet_c> g_profile_RC_CARPET = {
     daObjRcCarpet_c_classInit,
     0x0082,
     0x0104,

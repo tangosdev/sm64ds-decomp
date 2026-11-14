@@ -18,7 +18,7 @@
 // (`stmdb sp!, {r0, r1, r3, ip, lr}`), a register set no compiler prologue saves.
 
 extern unsigned int *func_0207322c(void);
-extern float _Z13func_0206ddccfi(float a, int op);
+extern float func_0206ddcc(float a, int op);
 
 asm int _ffix(int bits)
 {
@@ -79,13 +79,13 @@ _L0c0:
 _L0cc:
     ldr r1, =0x04c00048
     stmdb sp!, {lr}
-    bl _Z13func_0206ddccfi
+    bl func_0206ddcc
     ldmia sp!, {lr}
     bx lr
 _L0e0:
     ldr r1, =0x40c00048
     stmdb sp!, {lr}
-    bl _Z13func_0206ddccfi
+    bl func_0206ddcc
     ldmia sp!, {lr}
     bx lr
 }

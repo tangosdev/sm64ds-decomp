@@ -23,7 +23,7 @@
  *   a plain `playerPos = o->mPos` uses [r8,#0x5c] addressing and shortens
  *   Behavior by 4 bytes. The focus copy already goes through a pointer
  *   local, so `&focus->mPos` needs no launder.
- * - GetPosFromMinimapPos and GetPosOnMinimap are static Fix12i methods;
+ * - GetPosFromMinimapPos and GetPosOnMinimap are static fx32 methods;
  *   the third parameter is the scalar, not Fix12<int>.
  * - The OAM and Vec3 helpers stay on C-linkage or hand-mangled
  *   externs for the same reason.
@@ -72,16 +72,14 @@ struct Event {
 #define ICON_Y_VISIBLE(y) ((u16)((y) + 0x10) < 0xe0)
 
 extern "C" {
-
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern signed char gCurrentSublevel;
 extern u8 gCurrentStarId;
 }
 
-int SublevelToLevel(int i);
+extern "C" int SublevelToLevel(int i);
 int IsStarCollected(int level, int star);
 extern "C" {
-
 extern u8 data_0209f20c;
 extern u8 gGamePaused;
 extern u8 gVsExitScreenActive;
@@ -126,7 +124,6 @@ struct MinimapDesc;
 extern void UpdateMinimap(MinimapDesc *a, u32 b, u32 c, u32 d, u32 e);
 Vector3 *Vec3_DivScalarInPlace(Vector3 *v, int s);
 extern "C" {
-
 void Vec3_MulScalarInPlace(Vector3 *v, int s);
 void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *in, short ang, const Vector3 *t);
 }
@@ -910,17 +907,15 @@ Lc00:
 
 int func_0202a980(void);
 extern "C" {
-
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 }
 
-void Deallocate(void* ptr);
+extern "C" void Deallocate(void *ptr);
 int func_0202a96c(void);
 
 int func_0202a958(void);
 extern "C" {
-
 extern u8 gNumMinimapTileObjs;
 extern u16 *gMinimapTileObjs;
 extern s32 gRunningKuppaScript;
@@ -1064,7 +1059,7 @@ int dMap_c::InitResources()
 
 #pragma opt_strength_reduction on
 
-void dMap_c::GetPosFromMinimapPos(Vector3 &minimapPos, Vector3 &center, Fix12i scale, short angle,
+void dMap_c::GetPosFromMinimapPos(Vector3 &minimapPos, Vector3 &center, fx32 scale, short angle,
                                   Vector3 &out) {
     Vector3 offset;
     Vec3_Sub(&offset, &minimapPos, &sMapScreenCenter);
@@ -1072,8 +1067,7 @@ void dMap_c::GetPosFromMinimapPos(Vector3 &minimapPos, Vector3 &center, Fix12i s
     Vec3_RotateYAndTranslate(&out, &center, angle, &offset);
 }
 
-void dMap_c::GetPosOnMinimap(Vector3 *pos, Vector3 *center, Fix12i scale, short angle,
-                             Vector3 *out) {
+void dMap_c::GetPosOnMinimap(Vector3 *pos, Vector3 *center, fx32 scale, short angle, Vector3 *out) {
     Vector3 offset;
     Vec3_Sub(&offset, pos, center);
     Vec3_MulScalarInPlace(&offset, scale);

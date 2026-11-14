@@ -112,61 +112,22 @@ typedef char WMDataSharingInfo_size_must_be_0x420[sizeof(WMDataSharingInfo) == 0
  * WM_SetCallbackTable stores a request's callback in callbackTable by API
  * id. */
 #ifdef __cplusplus
-extern "C"
+extern "C" {
 #endif
-#ifdef __cplusplus
-#ifdef _MSC_VER
-    extern "C" {
-#endif
-#endif
-    WMArm9Buf *WM_GetSystemWork(void);
-#ifdef __cplusplus
-    extern "C"
-#endif
-        WMErrCode
-        WM_CheckStateEx(int paramNum, ...);
-#ifdef __cplusplus
-    extern "C"
-#endif
-        WMErrCode
-        WM_SendCommand(WMApiid id, unsigned short paramNum, ...);
-#ifdef __cplusplus
-    extern "C"
-#endif
-        void
-        WM_SetCallbackTable(WMApiid id, WMCallbackFunc callback);
-#ifdef __cplusplus
-    extern "C"
-#endif
-        WMErrCode
-        WMi_CheckIdle(void);
-#ifdef __cplusplus
-    extern "C"
-#endif
-        WMErrCode
-        WMi_CheckInitialized(void);
+WMArm9Buf *WM_GetSystemWork(void);
+WMErrCode WM_CheckStateEx(int paramNum, ...);
+WMErrCode WM_SendCommand(WMApiid id, unsigned short paramNum, ...);
+void WM_SetCallbackTable(WMApiid id, WMCallbackFunc callback);
+WMErrCode WMi_CheckIdle(void);
+WMErrCode WMi_CheckInitialized(void);
 
-#ifdef __cplusplus
-    extern "C"
-#endif
-        /* NitroSDK wm_ds.c (WM_Ds.c): data sharing. This SDK build takes the
+/* NitroSDK wm_ds.c (WM_Ds.c): data sharing. This SDK build takes the
  * bitmap, length and mode as ints. */
-        WMErrCode
-        WM_StartDataSharing(WMDataSharingInfo *, unsigned short, int, int, int);
+WMErrCode WM_StartDataSharing(WMDataSharingInfo *, unsigned short, int, int, int);
+WMErrCode WM_StepDataSharing(WMDataSharingInfo *, const void *, WMDataSet *);
+unsigned short *WM_GetSharedDataAddress(WMDataSharingInfo *, WMDataSet *, int);
 #ifdef __cplusplus
-    extern "C"
-#endif
-        WMErrCode
-        WM_StepDataSharing(WMDataSharingInfo *, const void *, WMDataSet *);
-#ifdef __cplusplus
-    extern "C"
-#endif
-        unsigned short *
-        WM_GetSharedDataAddress(WMDataSharingInfo *, WMDataSet *, int);
-#ifdef __cplusplus
-#ifdef _MSC_VER
 }
-#endif
 #endif
 
 #endif

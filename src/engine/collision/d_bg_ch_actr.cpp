@@ -27,10 +27,12 @@
 #include "dActor_c.h"
 #include "daPly_c.h"
 
+extern "C" {
+
 /* Checker-family helpers shared across the collision TUs, spelled as
    defined. */
-int func_02037dc4(int p);
-/* SurfaceInfo * -> Vector3 * (the hit normal) */
+}
+int func_02037dc4(int p); /* SurfaceInfo * -> Vector3 * (the hit normal) */
 void dBgS_RideCallBack(int a, int b);
 void dBgS_MoveBgCrrPos(void *arg, int b, int c, int d);
 int  SurfaceInfo_TestFlag0x20(int *p);
@@ -45,7 +47,7 @@ dBgCh_Actr::~dBgCh_Actr()
 {
 }
 
-void dBgCh_Actr::Init(dActor_c *actor, Fix12i radius, Fix12i height, Vector3_16 *a, Vector3_16 *b) {
+void dBgCh_Actr::Init(dActor_c *actor, fx32 radius, fx32 height, Vector3_16 *a, Vector3_16 *b) {
     mActor = actor;
     mRadius = radius;
     mHeight = height;
@@ -76,7 +78,7 @@ void func_02037318(dBgCh_Actr *clsn) {
 /* The ground-snap step run once per landing: when the sphere query flagged a
    floor hit and the actor is close to a dBgCh_Gnd probed surface, snap the
    actor's position onto it and raise the on-ground state. */
-void func_020371fc(char *self) {
+extern "C" void func_020371fc(char *self) {
     dBgCh_Actr *clsn = (dBgCh_Actr *)self;
     if ((clsn->mSphereClsn.flags & 1) == 0) return;
     if ((clsn->mSphereClsn.flags & 8) == 0) return;
@@ -906,7 +908,7 @@ void dBgCh_Actr::StopIgnoringType14Walls() {
     mSphereClsn.StopIgnoringType14Walls();
 }
 
-void func_02035798(dBgCh_Actr *self, Fix12i maxNormalY) {
+void func_02035798(dBgCh_Actr *self, fx32 maxNormalY) {
     self->mMaxNormalY = maxNormalY;
 }
 
@@ -982,11 +984,11 @@ s32 dBgCh_Actr::GetLimMovFlag() const
     return mFlags & 0x80;
 }
 
-void dBgCh_Actr::SetRadius(Fix12i radius) {
+void dBgCh_Actr::SetRadius(fx32 radius) {
     mRadius = radius;
 }
 
-void dBgCh_Actr::SetHeight(Fix12i height) {
+void dBgCh_Actr::SetHeight(fx32 height) {
     mHeight = height;
 }
 
@@ -1002,7 +1004,7 @@ dBgPi *dBgCh_Actr::GetWallResult() const {
     return const_cast<dBgCh_SphCrr &>(mSphereClsn).GetWallResult();
 }
 
-void *func_0203564c(void *p) {
+extern "C" void *func_0203564c(void *p) {
     return ((dBgCh_Actr *)p)->mSphereClsn.GetUnderResult();
 }
 
@@ -1010,7 +1012,7 @@ void func_02035644(int *p, int v) {
     p[67] = v; /* mSphereClsn's wall-rejection half extent (its +0xec) */
 }
 
-int func_02035638(unsigned char *p) {
+extern "C" int func_02035638(unsigned char *p) {
     return p[144] & 16;   /* mSphereClsn.flags & 0x10 -- the ceiling bit */
 }
 

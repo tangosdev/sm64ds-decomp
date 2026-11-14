@@ -25,10 +25,6 @@
 #include "private/particle_resource_header.h"
 
 void func_02049ee8(Particle::Manager *manager, Matrix4x3 *renderState);
-void func_02049f58(Particle::Manager *manager);
-int func_0204a0dc(Particle::Manager *manager, u32 (*allocTexVram)(u32, u32));
-int func_0204a028(Particle::Manager *manager, u32 (*allocPalVram)(u32, u32));
-void func_0204a17c(Particle::Manager *manager, char *resource);
 extern "C" {
 
 void DecompressLZ16(const void* src, void* dst);
@@ -67,7 +63,7 @@ dPa_c::~dPa_c() {
     gParticleControl = 0;
 }
 
-char *func_02023178(int size) {
+extern "C" char *func_02023178(int size) {
     char *block = (char *)sParticleHeapCursor;
     sParticleHeapCursor = block + size;
     return block;
@@ -176,7 +172,7 @@ void RenderAll()
     func_02049ee8(particle->mManager, &data_0209b3ec);
 }
 
-void *System::NewSimple(u32 uniqueID, Fix12i x, Fix12i y, Fix12i z) {
+void *System::NewSimple(u32 uniqueID, fx32 x, fx32 y, fx32 z) {
     Vector3 pos;
     pos.x = x >> 3;
     pos.y = y >> 3;
@@ -192,8 +188,8 @@ System *System::FromUniqueID(u32 uniqueID) {
 /* A live uniqueID moves its system to the new position (and direction, when
  * one is given) and re-runs the callback's SpawnParticles; anything else
  * starts a fresh system of definitionID. */
-int System::New(u32 uniqueID, u32 definitionID, Fix12i x, Fix12i y, Fix12i z,
-                const Vector3_16f *dir, dPa_c::level_c::callback_c *callback) {
+int System::New(u32 uniqueID, u32 definitionID, fx32 x, fx32 y, fx32 z, const Vector3_16f *dir,
+                dPa_c::level_c::callback_c *callback) {
     dPa_c::level_c::emitter_c *found;
     dPa_c::level_c *level;
     dPa_c::level_c::emitter_c *emitter;
@@ -229,29 +225,29 @@ int System::New(u32 uniqueID, u32 definitionID, Fix12i x, Fix12i y, Fix12i z,
 
 namespace Particle {
 
-u32 System::NewCheckWater(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
+u32 System::NewCheckWater(u32 uniqueID, u32 effectID, fx32 x, fx32 y, fx32 z,
                           const Vector3_16f *dir) {
     return New(uniqueID, effectID, x, y, z, dir, &gParticleControl->mCheckWaterCallback);
 }
 
-u32 System::NewCheckWaterRipple(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
+u32 System::NewCheckWaterRipple(u32 uniqueID, u32 effectID, fx32 x, fx32 y, fx32 z,
                                 const Vector3_16f *dir) {
     return New(uniqueID, effectID, x, y, z, dir, &gParticleControl->mCheckWaterRippleCallback);
 }
 
-u32 System::NewFitWater(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
+u32 System::NewFitWater(u32 uniqueID, u32 effectID, fx32 x, fx32 y, fx32 z,
                         const Vector3_16f *dir) {
     return New(uniqueID, effectID, x, y, z, dir, &gParticleControl->mFitWaterCallback);
 }
 
-u32 System::NewFitWaterRaised(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
+u32 System::NewFitWaterRaised(u32 uniqueID, u32 effectID, fx32 x, fx32 y, fx32 z,
                               const Vector3_16f *dir) {
     return New(uniqueID, effectID, x, y, z, dir, &gParticleControl->mFitWaterRaisedCallback);
 }
 
 /* System::New with dPa_c's checkYoganCallback_c ("yogan" is lava);
    daObjLava_c's popping lava bubbles are its one caller. */
-u32 System::NewCheckYogan(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
+u32 System::NewCheckYogan(u32 uniqueID, u32 effectID, fx32 x, fx32 y, fx32 z,
                           const Vector3_16f *dir) {
     return New(uniqueID, effectID, x, y, z, dir, &gParticleControl->mCheckYoganCallback);
 }
@@ -259,24 +255,23 @@ u32 System::NewCheckYogan(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i
 
 namespace Particle {
 
-u32 System::NewWeather(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
-                       const Vector3_16f *dir, u8 numWeatherEffectsNow) {
+u32 System::NewWeather(u32 uniqueID, u32 effectID, fx32 x, fx32 y, fx32 z, const Vector3_16f *dir,
+                       u8 numWeatherEffectsNow) {
     dPa_c::level_c::clipCallback_c *callback = &gParticleControl->mWeatherCallback;
     callback->enabled = numWeatherEffectsNow;
     return New(uniqueID, effectID, x, y, z, dir, callback);
 }
 
-u32 System::NewCleanParticle(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
+u32 System::NewCleanParticle(u32 uniqueID, u32 effectID, fx32 x, fx32 y, fx32 z,
                              const Vector3_16f *dir) {
     return New(uniqueID, effectID, x, y, z, dir, &gParticleControl->mCleanParticleCallback);
 }
 
-void RunningSlidingDustAt(Fix12i x, Fix12i y, Fix12i z) {
+void RunningSlidingDustAt(fx32 x, fx32 y, fx32 z) {
     gParticleControl->mRunningSlidingDustSystemID =
         System::New(gParticleControl->mRunningSlidingDustSystemID, kPtclRunningDust, x, y, z, 0,
                     &gParticleControl->mRunningSlidingDustCallback);
 }
-
 }
 
 namespace Particle {
@@ -284,7 +279,7 @@ namespace Particle {
 /* RunningSlidingDustAt for Mega Mario: daPly_c calls this instead whenever
    mIsMega is set. Effect 0x61 is effect 0xda's dust (same texture, shape,
    lifetime and animation) at twice the emitter radius. */
-void MegaRunningSlidingDustAt(Fix12i x, Fix12i y, Fix12i z) {
+void MegaRunningSlidingDustAt(fx32 x, fx32 y, fx32 z) {
     gParticleControl->mMegaRunningSlidingDustSystemID =
         System::New(gParticleControl->mMegaRunningSlidingDustSystemID, kPtclMegaRunningDust, x, y,
                     z, 0, &gParticleControl->mMegaRunningSlidingDustCallback);
@@ -293,16 +288,15 @@ void MegaRunningSlidingDustAt(Fix12i x, Fix12i y, Fix12i z) {
 
 namespace Particle {
 
-void System::NewBigSplash(Fix12i x, Fix12i y, Fix12i z) {
+void System::NewBigSplash(fx32 x, fx32 y, fx32 z) {
     gParticleControl->mBigSplashSystemID = New(gParticleControl->mBigSplashSystemID, kPtclBigSplash,
                                                x, y, z, 0, &gParticleControl->mBigSplashCallback);
 }
-
 }
 
 namespace Particle {
 
-u32 System::NewSplash(Fix12i x, Fix12i y, Fix12i z) {
+u32 System::NewSplash(fx32 x, fx32 y, fx32 z) {
     dPa_c *particle = gParticleControl;
     u32 result =
         New(particle->mSplashSystemID, kPtclSplash, x, y, z, 0, &particle->mBigSplashCallback);
@@ -310,7 +304,7 @@ u32 System::NewSplash(Fix12i x, Fix12i y, Fix12i z) {
     return result;
 }
 
-u32 System::NewBubble(Fix12i x, Fix12i y, Fix12i z) {
+u32 System::NewBubble(fx32 x, fx32 y, fx32 z) {
     dPa_c *particle = gParticleControl;
     u32 result =
         New(particle->mBubbleSystemID, kPtclBubble, x, y, z, 0, &particle->mBubbleCallback);
@@ -321,21 +315,20 @@ u32 System::NewBubble(Fix12i x, Fix12i y, Fix12i z) {
 
 namespace Particle {
 
-u32 System::NewRipple(Fix12i x, Fix12i y, Fix12i z) {
+u32 System::NewRipple(fx32 x, fx32 y, fx32 z) {
     dPa_c *particle = gParticleControl;
     u32 result =
         New(particle->mRippleSystemID, kPtclRipple, x, y, z, 0, &particle->mRippleCallback);
     gParticleControl->mRippleSystemID = result;
     return result;
 }
-
 }
 
 namespace Particle {
 
 /* daObjFire_c's RED_FLAME. Effect 0x118 is kPtclFlame's red-orange
    flipbook (textures 14..21) as a continuous emitter. */
-u32 System::NewRedFlame(Fix12i x, Fix12i y, Fix12i z) {
+u32 System::NewRedFlame(fx32 x, fx32 y, fx32 z) {
     dPa_c *particle = gParticleControl;
     u32 result =
         New(particle->mRedFlameSystemID, kPtclObjRedFire, x, y, z, 0, &particle->mRedFlameCallback);
@@ -345,7 +338,7 @@ u32 System::NewRedFlame(Fix12i x, Fix12i y, Fix12i z) {
 
 /* daObjFire_c's BLUE_FLAME (actor 0x13d): effect 0x117, NewRedFlame's
    emitter on the other flame flipbook (textures 6..13). */
-u32 System::NewBlueFlame(Fix12i x, Fix12i y, Fix12i z) {
+u32 System::NewBlueFlame(fx32 x, fx32 y, fx32 z) {
     dPa_c *particle = gParticleControl;
     u32 result = New(particle->mBlueFlameSystemID, kPtclObjBlueFire, x, y, z, 0,
                      &particle->mBlueFlameCallback);
@@ -353,7 +346,7 @@ u32 System::NewBlueFlame(Fix12i x, Fix12i y, Fix12i z) {
     return result;
 }
 
-void System::NewFlamethrowerRedA(Fix12i x, Fix12i y, Fix12i z, s16 scale, s16 velocity) {
+void System::NewFlamethrowerRedA(fx32 x, fx32 y, fx32 z, s16 scale, s16 velocity) {
     gParticleControl->mFlamethrowerRedACallback.scale = scale;
     gParticleControl->mFlamethrowerRedACallback.velocity = velocity;
     gParticleControl->mFlamethrowerRedASystemID =
@@ -361,7 +354,7 @@ void System::NewFlamethrowerRedA(Fix12i x, Fix12i y, Fix12i z, s16 scale, s16 ve
             &gParticleControl->mFlamethrowerRedACallback);
 }
 
-void System::NewFlamethrowerRedB(Fix12i x, Fix12i y, Fix12i z, s16 scale, s16 velocity) {
+void System::NewFlamethrowerRedB(fx32 x, fx32 y, fx32 z, s16 scale, s16 velocity) {
     gParticleControl->mFlamethrowerRedBCallback.scale = scale;
     gParticleControl->mFlamethrowerRedBCallback.velocity = velocity;
     gParticleControl->mFlamethrowerRedBSystemID =
@@ -369,7 +362,7 @@ void System::NewFlamethrowerRedB(Fix12i x, Fix12i y, Fix12i z, s16 scale, s16 ve
             &gParticleControl->mFlamethrowerRedBCallback);
 }
 
-void System::NewFlamethrowerBlueA(Fix12i x, Fix12i y, Fix12i z, s16 scale, s16 velocity) {
+void System::NewFlamethrowerBlueA(fx32 x, fx32 y, fx32 z, s16 scale, s16 velocity) {
     gParticleControl->mFlamethrowerBlueACallback.scale = scale;
     gParticleControl->mFlamethrowerBlueACallback.velocity = velocity;
     gParticleControl->mFlamethrowerBlueASystemID =
@@ -377,7 +370,7 @@ void System::NewFlamethrowerBlueA(Fix12i x, Fix12i y, Fix12i z, s16 scale, s16 v
             &gParticleControl->mFlamethrowerBlueACallback);
 }
 
-void System::NewFlamethrowerBlueB(Fix12i x, Fix12i y, Fix12i z, s16 scale, s16 velocity) {
+void System::NewFlamethrowerBlueB(fx32 x, fx32 y, fx32 z, s16 scale, s16 velocity) {
     gParticleControl->mFlamethrowerBlueBCallback.scale = scale;
     gParticleControl->mFlamethrowerBlueBCallback.velocity = velocity;
     gParticleControl->mFlamethrowerBlueBSystemID =

@@ -61,26 +61,6 @@ enum d_s_mg_trampoline2_AssetId {
 #include "nitro/mi/memory.h"
 #include "math/CalcLib.h"
 
-namespace ns_020ca7b8 {
-int Trmp2Mario_Hide();
-}
-using ns_020ca7b8::Trmp2Mario_Hide;
-namespace ns_020ca840 {
-void Trmp2Mario_EnterAll();
-}
-using ns_020ca840::Trmp2Mario_EnterAll;
-namespace ns_020ca8e0 {
-void Trmp2Mario_MoveToStart();
-}
-using ns_020ca8e0::Trmp2Mario_MoveToStart;
-namespace ns_020caa08 {
-void Trmp2Mario_PlaceAtStart();
-}
-using ns_020caa08::Trmp2Mario_PlaceAtStart;
-namespace ns_020cac30 {
-void Trmp2Mario_UpdateAll();
-}
-using ns_020cac30::Trmp2Mario_UpdateAll;
 
 /* local: the ROM re-reads the slot byte at each use here, so keep the read volatile. */
 #define ACTIVE_SLOT (gActivePlayerSlot)
@@ -195,22 +175,10 @@ OamAttr **sTrmp2TextSpritesByLanguage[] = {sMgTextSpritesEnglish, sMgTextSprites
                                            sMgTextSpritesItalian};
 }
 
-namespace s20ad90c {
-void Mg_CommitRecords(void);
-}
-using s20ad90c::Mg_CommitRecords;
-namespace s20ad674 {
-int GetGameLanguage(void);
-}
-using s20ad674::GetGameLanguage;
-namespace s20afcf8 {
-void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
-}
-using s20afcf8::DrawOamSprite;
-namespace s20afa20 {
-void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
-}
-using s20afa20::RenderOamMainScreen;
+extern "C" void Mg_CommitRecords(void);
+extern "C" int GetGameLanguage(void);
+extern "C" void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
+extern "C" void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 int func_020126e8(int a);
 int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 

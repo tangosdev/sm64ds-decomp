@@ -1,12 +1,9 @@
 #include "Ov007MenuState.h"
 #include "Ov007Work.h"
 #include "Ov007Item.h"
-#define PickerScene_GetMainState _Z24PickerScene_GetMainStatev
-#define PickerScene_Update _Z18PickerScene_Updatev
 
 /* Returns the picker scene's states[0] (unit020b8f50). */
 extern Ov007MenuState *PickerScene_GetMainState(void);
-#define func_ov007_020c1d78 _Z19func_ov007_020c1d78i
 extern void func_ov007_020c1d78(int i);
 extern void PickerScene_Update(void);
 

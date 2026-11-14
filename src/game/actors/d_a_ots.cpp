@@ -190,7 +190,6 @@ enum {
 /* ROM symbols with no header of their own. `extern` on every data declaration:
  * without it the block form defines rather than declares. */
 extern "C" {
-
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int atan2_hold_d_a_ots_1(int a, int b);
 }
@@ -896,7 +895,7 @@ void daOts_c::func_ov064_02115f98(char* a1)
 int daOts_c::OnAimedAtWithEgg()
 {
     BullyResourceConfig *config = mFileTable;
-    Fix12i aimHeight = 0x14000;
+    fx32 aimHeight = 0x14000;
     if (config != 0)
         aimHeight = config->eggAimHeight;
 

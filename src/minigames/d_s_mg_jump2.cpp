@@ -42,22 +42,6 @@ enum d_s_mg_jump2_AssetId {
 #include "nitro/gx/g3x.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/gx/gx_bgcnt.h"
-namespace s20afcf8 {
-void DrawOamSprite(OamAttr *attr, int, int, Matrix2x2 *mtx);
-}
-using s20afcf8::DrawOamSprite;
-namespace s20afa20 {
-void RenderOamMainScreen(OamAttr *oam, int, int, int, int);
-}
-using s20afa20::RenderOamMainScreen;
-namespace s20ad90c {
-void Mg_CommitRecords(void);
-}
-using s20ad90c::Mg_CommitRecords;
-namespace s20ad674 {
-s32 GetGameLanguage(void);
-}
-using s20ad674::GetGameLanguage;
 
 /* The list link at the head of each Jump2Popup. Its two methods link `this` into
  * and back out of the live list at sJump2PopupList. */
@@ -89,68 +73,46 @@ extern Jump2ModelFile gOV006JumpBack01ModelFile; /* model file 0x203 */
 extern Jump2ModelFile sJump2Back02ModelFile;     /* model file 0x204 */
 
 extern "C" {
-
 extern void func_0203d630(int *p, int m);
-}
-
 extern struct Jump2PopupLink *sJump2PopupList;
-
 extern int sJump2PopupCount;
-
 extern struct Jump2Popup *sJump2Popups;
-
 extern void *sJump2BackFile;
-extern "C" {}
-
+void Mg_CommitRecords(void);
+int GetGameLanguage(void);
 struct OamAttr;
-
 struct Matrix2x2;
-extern "C" {}
-void Jump2Popup_UpdateAll(void);
-int Jump3D_AllIdle(void);
-int Heyho_AllIdle(void);
-extern "C" {}
-void Heyho_SeparateAll(void);
-void Jump3D_UpdateAll(void);
-
+void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
+void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
+extern void Mg_SubmitScore(int);
+extern void Mg_SetSharedState(int);
 extern int sJumpComboCount;
-
 extern void (dScMgJump2_c::*pmf_dScMgJump2_c_State_Idle)();
-
 extern void (dScMgJump2_c::*pmf_dScMgJump2_c_State_End)();
-void Heyho_SettleAll(void);
-void Jump3D_SetTuning(int a);
-
 extern int sHeyhoUnsettledCount;
-
 extern int sHeyhoCount;
-
 extern int sJump3DMariosLeft;
-
 extern void (dScMgJump2_c::*pmf_dScMgJump2_c_State_Play)();
-void Jump3D_StartRoundLayout(void);
-
 extern void (dScMgJump2_c::*pmf_dScMgJump2_c_State_Result)();
-
 extern void (dScMgJump2_c::*pmf_dScMgJump2_c_State_Intro)();
-extern "C" {
-
 extern void *LoadFile(int handle);
-
 extern void DecompressLZ16(void *src, void *dst);
-}
-void Jump3D_SetLowGravity(void);
-void Heyho_ReactAll(void);
-extern "C" {}
-int Heyho_InitPool(void *heyhos, int count);
-extern "C" {
-
+extern int Mg_GetTopScreenYOffset(void);
 extern int Jump3D_InitPool(void *base, int count);
-}
-
 extern u8 gMainScreenLayers;
-
 extern s16 data_02082614;
+}
+void Jump2Popup_UpdateAll(void);
+extern int Jump3D_AllIdle(void);
+extern int Heyho_AllIdle(void);
+extern void Heyho_SeparateAll(void);
+extern void Jump3D_UpdateAll(void);
+extern void Heyho_SettleAll(void);
+extern void Jump3D_SetTuning(int a);
+extern void Jump3D_StartRoundLayout(void);
+extern void Jump3D_SetLowGravity(void);
+extern void Heyho_ReactAll(void);
+extern int Heyho_InitPool(void *ptr, int n);
 
 /* Empty and out of line: mPopups' element constructor, which the factory
  * below registers with __cxa_vec_ctor (dScMgTrampoline2_c's factory reuses
@@ -394,10 +356,6 @@ s32 dScMgJump2_c::Behavior() {
     return 1;
 }
 
-extern "C" {
-/* .c-derived member: C linkage for the whole block */
-void func_0203cd80(int *m, short x);
-}
 
 void Jump2_SetLights(void) {
     int light0[3];
@@ -479,14 +437,12 @@ s32 dScMgJump2_c::CleanupResources() {
     return 1;
 }
 
-/* .c-derived member: C linkage for the whole block */
 void Jump2Popup_InitPool(int table, int count) {
     sJump2Popups = (struct Jump2Popup *)table;
     sJump2PopupCount = count;
     data_ov006_021421b4 = 0;
 }
 
-/* .c-derived member: C linkage for the whole block */
 void Jump2Popup_Spawn(int x, int y, int number) {
     int i;
     for (i = sJump2PopupCount - 1; i >= 0; i--) {
@@ -497,7 +453,6 @@ void Jump2Popup_Spawn(int x, int y, int number) {
     }
 }
 
-/* .c-derived member: C linkage for the whole block */
 void Jump2Popup_ClearAll(void) {
     int i;
     for (i = 0; i < sJump2PopupCount; i++) {
@@ -506,7 +461,6 @@ void Jump2Popup_ClearAll(void) {
     sJump2PopupList = 0;
 }
 
-/* .c-derived member: C linkage for the whole block */
 void Jump2Popup_UpdateAll(void) {
     int i;
     for (i = 0; i < sJump2PopupCount; i++) {
@@ -514,7 +468,6 @@ void Jump2Popup_UpdateAll(void) {
     }
 }
 
-/* .c-derived member: C linkage for the whole block */
 void Jump2Popup_DrawAll(void) {
     Jump2PopupLink *node;
     for (node = sJump2PopupList; node != 0; node = node->next)

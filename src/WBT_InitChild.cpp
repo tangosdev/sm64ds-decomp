@@ -3,20 +3,15 @@
 #include "private/arm9_wbt.h"
 #include "nitro/os/system.h"
 
-extern int data_020a94c0;
 extern "C" {
 
+extern int data_020a94c0;
 extern void func_02065ad0(struct WBTBlockInfoList *list);
 extern WBTWork *func_02065b94(void);
-}
-
 extern int func_02065af0(int *thiz);
-extern "C" {
-
 extern void func_02065be0(void);
 extern void func_02065ba0(int v);
 extern void func_02065bb0(int v);
-}
 
 /* NitroSDK WBT_InitChild(callback): as WBT_InitParent (WBT_InitParent), but
  * stores -1 through WBT_SetOwnAid and sets both packet sizes to 0. The
@@ -53,4 +48,5 @@ void WBT_InitChild(WBTCallback callback) {
     func_02065ba0(0);
     func_02065bb0(0);
     OS_RestoreInterrupts(saved);
+}
 }

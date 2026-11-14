@@ -73,6 +73,7 @@
 
 #include "nitro/os/cache.h"
 #include "nitro/mi/dma.h"
+#include "nitro/gx/g3_util.h"
 
 /* The four-pointer block at BMD_File::skin (UpdateFileOffsets rebases all
    four). */
@@ -130,13 +131,10 @@ struct MaterialState {
 };
 
 extern "C" {
-
 void MTX_Identity43_(Matrix4x3 *mat);
 }
 
-int MTX_Inverse43(const Matrix4x3 *a, Matrix4x3 *b);
 extern "C" {
-
 void func_02048234(int *out, int sa, int sb, int sc, u16 ax, u16 ay, u16 az, int tx, int ty,
                    int tz);
 void func_02047218(void *a, void *b, void *out, fx32 c);
@@ -148,7 +146,6 @@ struct Src;
 struct Dst;
 void func_0204547c(Ctx *a, Src *b, int c, Dst *elem);
 extern "C" {
-
 void MTX_Scale43_(Mtx43 *m, int x, int y, int z);
 void VEC_Normalize(const Vector3 *a, Vector3 *b);
 void func_020458a8(void *src, void *dst);
@@ -165,14 +162,12 @@ extern struct Buf8 data_02099f94;
 extern s16 data_020a4bc0;
 extern s16 data_020a4bc4;
 extern "C" {
-
 void G3_LoadMtx43(void *m);
 void G3_MultMtx43(void *m);
 void MTX_Concat33(void *a, void *b, void *dst);
 void MTX_Copy33To44_(void *a, void *b);
 }
 
-void G3_LoadTexMtxEnv(int *n);
 
 /* Bone-tree walk at 0x020453c0. UpdateBones forwards here. Samples each
  * bone's pose with func_0204547c (which stays out) from the model's
@@ -203,8 +198,7 @@ void ModelComponents::UpdateBones(BCA_File *file, int frame)
     func_020453c0(modelFile->bones, file, frame);
 }
 
-void func_0204531c(char *self, int arg)
-{
+extern "C" void func_0204531c(char *self, int arg) {
     ModelComponents *mc = (ModelComponents *)self;
     unsigned int i;
     Matrix4x3 *save = mc->transforms;

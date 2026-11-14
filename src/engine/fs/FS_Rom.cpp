@@ -26,12 +26,11 @@
 #include "private/fs_rom.h"
 #include "nitro/fs/archive.h"
 
-extern const char data_0209a048[];
 extern "C" {
-/* "rom" */
+
+extern const char data_0209a048[]; /* "rom" */
 
 void CARD_Init(void);
-}
 
 void FSi_OnRomReadDone(void *p_arc);
 int FSi_ReadRomCallback(FSArchive *p_arc, void *dst, u32 src, u32 len);
@@ -112,4 +111,4 @@ u32 FS_TryLoadTable(void *p_mem, u32 size) {
     return FS_LoadArchiveTables(&fsi_arc_rom, p_mem, size);
 }
 
-/* extern "C" */
+} /* extern "C" */

@@ -57,6 +57,7 @@ enum daChoropu_c_AssetId {
 #include "ParticleIds.h"
 #include "LevelRng.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/CalcLib.h"
 
 /* daChoropu_c's state table: one pointer-to-member per state, indexed by
  * the state number at +0x17c. */
@@ -94,8 +95,6 @@ extern "C" unsigned int d_a_choropuNewHold(unsigned int a, unsigned int b, int x
 typedef int BgchInitAt_(void *self, void *actor, int radius, int height, Vector3_16 *a,
                         Vector3_16 *b);
 extern "C" int RandomIntInternal(int *seed);
-short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-int   Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern "C" void Matrix4x3_FromRotationY(void *m, int ang);
 void func_02012694(unsigned int a, const Vector3 *p);
 
@@ -176,9 +175,9 @@ void daChoropu_c::func_ov080_02123924()
     {
         daPly_c *p = ClosestPlayer();
         Vector3 v;
-        Fix12i *q;
+        fx32 *q;
         if (p == 0) return;
-        q = (Fix12i *)((int)&p->mPosX);
+        q = (fx32 *)((int)&p->mPosX);
         v.x = q[0];
         v.y = q[1];
         v.z = q[2];

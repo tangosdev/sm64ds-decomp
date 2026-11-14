@@ -27,7 +27,7 @@
       "ordinal": 0
     },
     {
-      "symbol": "_Z26OS_IrqHandler_ThreadSwitchv",
+      "symbol": "OS_IrqHandler_ThreadSwitch",
       "address": "0x01ffd9d4",
       "size": "0x00000154",
       "legacy_source": "src/unnamed/arm9/01ff/func_01ffd9d4.c",

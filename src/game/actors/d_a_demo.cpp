@@ -200,9 +200,6 @@ typedef unsigned char u8;
 /* shadow typedef 'u16' */
 typedef unsigned short u16;
 
-/* shadow typedef 'Fix12i' */
-typedef int Fix12i;
-
 /* shadow typedef 'Vector3' */
 
 /* Lakitu's model, animation and texture-sequence file handles, owned and
@@ -251,7 +248,7 @@ extern u8 data_ov002_02111144;
 extern u32 data_020a0db0;
 extern struct OamAttr *data_ov002_0210b6a8[];
 
-extern u32 d_a_demoNewHold(u32 slot, u32 unk, Fix12i x, Fix12i y, Fix12i z, void *rot,
+extern u32 d_a_demoNewHold(u32 slot, u32 unk, fx32 x, fx32 y, fx32 z, void *rot,
                            struct ParticleCallback *callback);
 extern int data_ov002_02100140[];
 }
@@ -259,7 +256,7 @@ extern int data_ov002_02100140[];
 extern void func_ov002_020f2790(char *c, int p1, int p2, int p3, short p4);
 extern int func_ov002_020f2984(char *p);
 
-extern int GetOwnerLanguage(void);
+extern "C" int GetOwnerLanguage(void);
 extern "C" {
 
 extern void OamRender10_d_a_demo(int a, struct OamAttr *attr, int x, int y, int e, int f, int g,
@@ -332,10 +329,9 @@ extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 }
 
-extern void Deallocate(void* p);
-extern void GXS_LoadBG1Scr(const void *src, int offset, int count);
-extern void GXS_LoadBG3Scr(const void *src, u32 offset, u32 count);
-extern void GXS_LoadBG2Scr(const void *src, u32 offset, u32 count);
+extern "C" void Deallocate(void *p);
+extern "C" void GXS_LoadBG1Scr(const void *src, int offset, int count);
+extern "C" void GXS_LoadBG3Scr(const void *src, u32 offset, u32 count);
 extern void func_ov002_020f5f60(char *c);
 extern int func_ov002_020f5fb8(void* c);
 extern int func_ov002_020f5f8c(void* c);
@@ -3044,12 +3040,12 @@ int daDemo_c::func_ov002_020f72bc()
     }
     this->mOpacity = 0x1f;
 
-    mParticleID[0] = Particle::System::New(mParticleID[0], kPtclDemoSpinA, this->mPosX, this->mPosY,
-                                           this->mPosZ, 0, 0);
-    mParticleID[1] = Particle::System::New(mParticleID[1], kPtclDemoSpinB, this->mPosX, this->mPosY,
-                                           this->mPosZ, 0, 0);
-    mParticleID[2] = Particle::System::New(mParticleID[2], kPtclDemoSpinC, this->mPosX, this->mPosY,
-                                           this->mPosZ, 0, 0);
+    mParticleID[0] =
+        Particle::System::New(mParticleID[0], kPtclDemoSpinA, mPos.x, mPos.y, mPos.z, 0, 0);
+    mParticleID[1] =
+        Particle::System::New(mParticleID[1], kPtclDemoSpinB, mPos.x, mPos.y, mPos.z, 0, 0);
+    mParticleID[2] =
+        Particle::System::New(mParticleID[2], kPtclDemoSpinC, mPos.x, mPos.y, mPos.z, 0, 0);
     return 1;
 }
 
@@ -3316,7 +3312,7 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
 {
     Vector3 v0, v1;
     int src[3];
-    Fix12i dist;
+    fx32 dist;
     s16 vertAngle, heading;
     dCamera_c *cam;
     unsigned int tbl1, tbl2;

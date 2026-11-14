@@ -45,11 +45,12 @@ extern KanbanModelFilePtr data_ov085_02130858;
 extern Vector3 data_ov085_0212f29c;
 
 /* local extern: no shared header declares these. */
-
-int Vec3_ApproachHorz(Vector3 *out, Vector3 *a, int maxStep);
-extern "C" int AngleDiff(int a, int b);
+extern "C" {
+extern int Vec3_ApproachHorz(Vector3 *out, Vector3 *a, int maxStep);
+extern int AngleDiff(int a, int b);
 
 /* the player side of the conversation */
+}
 
 #pragma defer_codegen off
 

@@ -1,8 +1,5 @@
 #ifndef DACTOR_C_H
 #define DACTOR_C_H
-#ifndef __cplusplus
-#define Deallocate _Z10DeallocatePv
-#endif
 
 #include "types.h"
 
@@ -54,7 +51,7 @@ struct dExtShadowModel_c;
 
 /* data_020a0eac is the heap every actor is allocated from. operator delete
    passes it to Memory::Deallocate, declared in Memory.h via fBase_c.h. */
-extern mHeap::Heap_t *data_020a0eac;
+extern "C" mHeap::Heap_t *data_020a0eac;
 
 struct dActor_c : dBase_c {
     /* The global actor list (data_0209b468) threads through every actor: the
@@ -240,16 +237,16 @@ struct dActor_c : dBase_c {
     s16  HorzAngleToFPlayer();
     s16  HorzAngleToCPlayerOrAng();
     /* Both took a by-value Fix12<int> in their old mangled names; measured
-       2026-10-23, the honest parameter is the scalar Fix12i and both reproduce
+       2026-10-23, the honest parameter is the scalar fx32 and both reproduce
        as real methods (0x02010e08/0x24 and 0x0200f70c/0x54).
        notes/mwccarm-codegen.md 6az. Parameters are unnamed on purpose: a
        named class-scope parameter consumes an @NNN number in every consumer.
        SetRanges(clipOffsetY, clipRadius, clipDistance, farDistance);
        IsTooFarAwayFromPlayer(threshold). */
-    void SetRanges(Fix12i, Fix12i, Fix12i, Fix12i);
-    int IsTooFarAwayFromPlayer(Fix12i);
-    /* Intensity is a 0x1000-scaled Fix12i, not a by-value Fix12<int>. */
-    void Earthquake(const Vector3 &, Fix12i);
+    void SetRanges(fx32, fx32, fx32, fx32);
+    int IsTooFarAwayFromPlayer(fx32);
+    /* Intensity is a 0x1000-scaled fx32, not a by-value Fix12<int>. */
+    void Earthquake(const Vector3 &, fx32);
 
     bool IsPlayerInRange(s32 maxDist);
     bool IsPlayerInRange(const Vector3 &pos, s32 maxDist);
@@ -376,20 +373,20 @@ struct dActor_c : dBase_c {
        name carrying a by-value class parameter can never be DEFINED as a
        method, because CW homes such a parameter to the stack (+0x14). The
        by-value class was never in the ROM -- it was our own spelling of a
-       20.12 scalar -- so with Fix12i the rule does not apply. The parameter
+       20.12 scalar -- so with fx32 the rule does not apply. The parameter
        NAMES here are load-bearing: a class-scope named parameter consumes an
        @NNN number in every consumer, so they must not be dropped.
        notes/mwccarm-codegen.md 6az. */
     /* Returns the spawned ball; see the definition. */
-    dActor_c *SpawnFireball(const Vector3 &pos, const Vector3_16 *rot, Fix12i horzSpeed,
-                            Fix12i targetSpeed, u32 param1);
-    bool IsPlayerInRange(Fix12i posX, Fix12i posY, Fix12i posZ, s32 maxDist);
-    void DropShadowScaleXYZ(dExtShadowModel_c &, Matrix4x3 &matrix, Fix12i scaleX, Fix12i scaleY,
-                            Fix12i scaleZ, u8 opacity);
-    s16 ReflectAngle(Fix12i normalX, Fix12i normalZ, s16 angToReflect);
+    dActor_c *SpawnFireball(const Vector3 &pos, const Vector3_16 *rot, fx32 horzSpeed,
+                            fx32 targetSpeed, u32 param1);
+    bool IsPlayerInRange(fx32 posX, fx32 posY, fx32 posZ, s32 maxDist);
+    void DropShadowScaleXYZ(dExtShadowModel_c &, Matrix4x3 &matrix, fx32 scaleX, fx32 scaleY,
+                            fx32 scaleZ, u8 opacity);
+    s16 ReflectAngle(fx32 normalX, fx32 normalZ, s16 angToReflect);
     /* count is signed; see the branch evidence at the definition. */
-    void SpawnCoins(const Vector3 &pos, s32 count, Fix12i spread, s16 angle);
-    void DropShadowRadHeight(dExtShadowModel_c &, Matrix4x3 &matrix, Fix12i radius, Fix12i depth,
+    void SpawnCoins(const Vector3 &pos, s32 count, fx32 spread, s16 angle);
+    void DropShadowRadHeight(dExtShadowModel_c &, Matrix4x3 &matrix, fx32 radius, fx32 depth,
                              u8 opacity);
 
     /* INLINE, AND ON THIS CLASS RATHER THAN A BASE -- both are load-bearing.

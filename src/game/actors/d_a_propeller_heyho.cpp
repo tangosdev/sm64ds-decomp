@@ -398,7 +398,6 @@ int func_ov070_0211ffa8(daPropeller_Heyho_c* c){
 
 typedef short s16;
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-extern "C" {}
 int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 
 extern Matrix4x3 data_020a0e68;
@@ -479,7 +478,6 @@ int func_ov070_0211fd60(daPropeller_Heyho_c *p) {
 
 /* -------------------------------------------------------------------------- */
 extern short Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
-extern "C" {}
 int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 
 extern signed char gCurrentSublevel;
@@ -616,8 +614,6 @@ extern s32 data_0209f32c;
 extern Matrix4x3 data_020a0e68;
 int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 extern short Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
-extern "C" {}
-
 /* Dive main. Turns toward mTargetAngY and levels the Z bank. When the animation
  * has finished: the first time (mStateStep == 0) it starts the file-02123510
  * animation and sets mStateStep = 1; if mHitDuringAttack == 1 (set by the hit
@@ -792,8 +788,6 @@ int func_ov070_0211f5f0(daPropeller_Heyho_c *c) {
 /* -------------------------------------------------------------------------- */
 short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 void func_02012694(unsigned int a, const Vector3 *p);
-extern "C" {}
-
 int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
 
@@ -864,11 +858,10 @@ short func_ov070_0211f450(daPropeller_Heyho_c *c) {
 
 /* -------------------------------------------------------------------------- */
 int func_ov070_0211f0a4(daPropeller_Heyho_c *c);
-typedef int Fix12i;
 
-extern "C" unsigned d_a_propeller_heyhoNewHold(unsigned a, unsigned b, Fix12i c, Fix12i d, Fix12i e,
+extern "C" unsigned d_a_propeller_heyhoNewHold(unsigned a, unsigned b, fx32 c, fx32 d, fx32 e,
                                                void *f, void *g);
-extern "C" u32 d_a_propeller_heyhoNewCleanParticleHold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e,
+extern "C" u32 d_a_propeller_heyhoNewCleanParticleHold(u32 a, u32 b, fx32 c, fx32 d, fx32 e,
                                                        const Vector3_16f *f);
 
 /* Knocked main. While mStateStep is non-zero (normally a fire hit; the
@@ -914,9 +907,6 @@ int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 struct Aea30C;
 extern void func_ov002_020aea30(Aea30C *self, dActor_c *actor, dBgCh_Actr *collision);
 extern void func_02012694(unsigned int a, const Vector3 *b);
-extern "C" {
-}
-
 /* Hit reaction, run once per frame outside the knocked state. Takes the colliding
  * actor from the collider (mdCcAc_c.otherOwner) and reads hitFlags: fire sends it
  * to the knocked state with mStateStep = 1 (particles); 0x20 kills it through

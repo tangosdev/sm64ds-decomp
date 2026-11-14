@@ -114,9 +114,6 @@
  */
 #ifndef HEAP_H
 #define HEAP_H
-#ifndef __cplusplus
-#define Deallocate _Z10DeallocatePv
-#endif
 #include "types.h"
 
 /* The class is spelled twice, the way include/dFader_c.h spells dFader_c: a C

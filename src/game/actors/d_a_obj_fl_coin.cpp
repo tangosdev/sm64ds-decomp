@@ -426,12 +426,14 @@ FlCoinModelFilePtr gFl1412ModelFile(ASSET_FL_14_12_BMD);
 FlCoinModelFilePtr gFl1413ModelFile(ASSET_FL_14_13_BMD);
 FlCoinCollisionFilePtr data_ov064_0211c800(ASSET_FL_14_00_KCL);
 
+extern "C" {
 extern Entry data_ov064_0211bf68;
 extern Entry data_ov064_0211bf70;
 extern Entry data_ov064_0211bf78;
 extern Entry data_ov064_0211bf80;
 extern Entry data_ov064_0211bf88;
 extern Entry data_ov064_0211bf90;
+}
 Entry data_ov064_0211c904[6] = {
     data_ov064_0211bf80, data_ov064_0211bf68, data_ov064_0211bf90,
     data_ov064_0211bf70, data_ov064_0211bf88, data_ov064_0211bf78,

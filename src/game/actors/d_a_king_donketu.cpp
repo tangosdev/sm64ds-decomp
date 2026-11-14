@@ -222,37 +222,30 @@ namespace Sound {
 int PlayLong(u32, u32, u32, const Vector3 &, s16);
 }
 
-int ChiefChilly_ChangeState(C *c, PMF *p);
+extern "C" {
 
 struct BCA_File;
 extern SharedFilePtr data_ov002_0210da30;
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-extern "C" {
 extern void Matrix4x3_FromRotationY(void* m, short ang);
 extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern void MTX_Concat43(void *dst, void *a, void *b);
 extern void Vec3_Lsl(void *d, void *s, int sh);
 extern void d_a_king_donketuNewSimpleHold(unsigned int id, int x, int y, int z);
-}
-
 extern dCamera_c *gCamera;
 extern struct Matrix4x3 data_020a0e68;
-extern Fix12i Vec3_HorzLen(const Vector3 *v);
-extern void func_02012694(unsigned int a, const Vector3 *b);
-extern int Vec3_ApproachHorz(Vector3 *out, Vector3 *target, int maxStep);
-extern "C" {
-
 /* Vec3_Sub is not declared by math/CalcLib.h. */
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int atan2_hold_d_a_king_donketu_1(Fix12i y, Fix12i x);
+extern int atan2_hold_d_a_king_donketu_1(fx32 y, fx32 x);
+/* local extern: CalcLib.h clashes with this TU's C DecIfAbove0_Short and Vec3_Lsl (void *) */
+extern fx32 Vec3_HorzLen(const Vector3 *v);
 
 extern u16 DecIfAbove0_Short(void* p);
 /* local extern: CalcLib.h conflicts with DecIfAbove0_Short(void *). */
 extern int RandomIntInternal(int *seed);
 }
-
-extern s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-extern void UnloadKeyModels(int i);
+int ChiefChilly_ChangeState(C *c, PMF *p);
+extern void func_02012694(unsigned int a, const Vector3 *b);
 extern "C" {
 extern void d_a_king_donketuPlayLongHold(unsigned int a, unsigned int b, unsigned int c,
                                          struct Vector3 *v, unsigned int d);
@@ -264,6 +257,8 @@ extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern void Matrix4x3_FromTranslation(struct Matrix4x3 *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
 }
+extern s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
+extern void UnloadKeyModels(int i);
 
 daKing_Donketu_c::~daKing_Donketu_c()
 {
@@ -1158,7 +1153,7 @@ int daKing_Donketu_c::UpdateEdgeWobble() {
     in.x = c->mEdgePosX + out.x;
     in.y = c->mEdgePosY;
     in.z = c->mEdgePosZ + out.z;
-    Vec3_ApproachHorz((Vector3 *)&c->mPosX, &in, 0x14000);
+    Vec3_ApproachHorz(&c->mPosX, &in, 0x14000);
     c->mAngleY = Vec3_HorzAngle(&c->mPos, &c->mSpawnPos);
     c->mPrevAngleY = c->mAngleY + 0x8000;
     c->mStateScratch += 0x500;
@@ -1841,11 +1836,11 @@ int daKing_Donketu_c::Behavior()
     return 1;
 }
 
-extern void LoadKeyModels(int idx);
-extern "C" {}
-
+extern "C" {
 /* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, dActor_c *a, Fix12i r, Fix12i h, Vector3_16 *p, Vector3_16 *q);
+typedef void BgchInitAt_(void *self, dActor_c *a, fx32 r, fx32 h, Vector3_16 *p, Vector3_16 *q);
+}
+extern void LoadKeyModels(int idx);
 
 #pragma pop
 

@@ -1,7 +1,5 @@
 #include "Ov007Work.h"
 
-#define func_ov007_020b3f20 _Z19func_ov007_020b3f20i
-#define func_ov007_020b2308 _Z19func_ov007_020b2308Pvi
 extern void *func_ov007_020b3f20(int n);
 extern void *func_ov007_020b2308(void *a, int b);
 

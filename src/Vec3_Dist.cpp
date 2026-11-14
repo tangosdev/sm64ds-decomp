@@ -3,16 +3,19 @@
 #include "common.h"
 #include "cstd.h"
 
-Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b) {
-    Fix12i dx = a->x - b->x;
-    Fix12i ay = a->y;
+extern "C" {
+
+fx32 Vec3_Dist(const Vector3 *a, const Vector3 *b) {
+    fx32 dx = a->x - b->x;
+    fx32 ay = a->y;
     long long sq = (long long)dx * dx;
-    Fix12i by = b->y;
-    Fix12i az = a->z;
+    fx32 by = b->y;
+    fx32 az = a->z;
     ay -= by;
-    Fix12i bz = b->z;
+    fx32 bz = b->z;
     sq += (long long)ay * ay;
     ay = az - bz;
     sq += (long long)ay * ay;
     return cstd::sqrt((u64)sq);
+}
 }

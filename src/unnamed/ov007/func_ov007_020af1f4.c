@@ -1,7 +1,6 @@
 #include "Ov007MenuState.h"
 #include "Ov007Work.h"
 
-#define func_ov007_020c1d8c _Z19func_ov007_020c1d8ci
 extern void func_ov007_020c1d8c(int i);
 
 /* Sends states[2] to state 4 unless it is in state 7 with no transition

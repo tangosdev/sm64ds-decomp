@@ -45,6 +45,7 @@
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/CalcLib.h"
 
 /* Views of daObjBC_Switch_c.h and daObjFl_Coin_c.h, same member names and
    offsets: including either header renumbers this TU's @NNN labels. */
@@ -83,11 +84,8 @@ enum {
 /* ROM symbols. Mangled spellings live inside extern "C" so the C++ front end
  * does not mangle them a second time. */
 
-extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-extern Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-extern int Vec3_HorzLen(const Vector3 *v);
+extern "C" int SublevelToLevel(int i);
 extern "C" {
-
 extern int VEC_Mag(const Vector3 *v);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
@@ -100,7 +98,6 @@ extern void func_02012694(unsigned int id, const Vector3 *v);
 extern int SurfaceInfo_TestFlag0x20(int *p);
 
 extern "C" {
-
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern short atan2_hold_d_a_coin_1(int a, int b);
 }
@@ -414,7 +411,6 @@ void func_ov002_020b18f0(char* self)
 {
     extern signed char gCurrentSublevel;
     extern short gNumCoins[];
-    extern int SublevelToLevel(int);
 
     daPly_c *player = (daPly_c *)self;
     daStar_c* star;
@@ -808,7 +804,6 @@ int daCoin_c::Behavior()
     return 1;
 }
 
-extern int SublevelToLevel(int i);
 extern void SetStarMarker(int i, dActor_c *actor, int v2);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *thiz, void *actor, s32 f1, s32 f2, void *v, s32 f3);

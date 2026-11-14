@@ -37,7 +37,7 @@ dCc_c::~dCc_c() {
     Unlink();
 }
 
-void dCc_c::Init(Fix12i radius_, Fix12i height_, u32 flags_, u32 vulnFlags_) {
+void dCc_c::Init(fx32 radius_, fx32 height_, u32 flags_, u32 vulnFlags_) {
     radius = radius_;
     height = height_;
     flags = flags_;
@@ -99,11 +99,11 @@ void func_02014f44(u32 id, dCc_c *self) {
 
 void dCc_c::Process() {
     u32 ownerID;
-    Fix12i verticalOverlap;
+    fx32 verticalOverlap;
     Vector3 *position;
     dCc_c *other;
-    Fix12i horizontalDistance;
-    Fix12i overlap;
+    fx32 horizontalDistance;
+    fx32 overlap;
     u32 sharedFlags;
     Vector3 separation;
 
@@ -168,11 +168,11 @@ void dCc_c::Process() {
                 if (flags & 4) {
                     if (otherFlags & 4) {
                         if (separation.y < 0) {
-                            Fix12i halfVerticalOverlap = verticalOverlap >> 1;
+                            fx32 halfVerticalOverlap = verticalOverlap >> 1;
                             listHead->pushback.y = halfVerticalOverlap;
                             other->pushback.y = -halfVerticalOverlap;
                         } else {
-                            Fix12i halfVerticalOverlap = verticalOverlap >> 1;
+                            fx32 halfVerticalOverlap = verticalOverlap >> 1;
                             listHead->pushback.y = -halfVerticalOverlap;
                             other->pushback.y = halfVerticalOverlap;
                         }
@@ -184,8 +184,8 @@ void dCc_c::Process() {
                         else
                             other->pushback.y = verticalOverlap;
                         if (listHead->flags & 8) {
-                            Fix12i radius = listHead->radius;
-                            Fix12i adjustedOverlap =
+                            fx32 radius = listHead->radius;
+                            fx32 adjustedOverlap =
                                 overlap - (radius - (((radius << 1) + radius) >> 3));
                             if (adjustedOverlap < 0)
                                 overlap = 0;
@@ -205,9 +205,8 @@ void dCc_c::Process() {
                     else
                         listHead->pushback.y = -verticalOverlap;
                     if (other->flags & 8) {
-                        Fix12i radius = listHead->radius;
-                        Fix12i adjustedOverlap =
-                            overlap - (radius - (((radius << 1) + radius) >> 3));
+                        fx32 radius = listHead->radius;
+                        fx32 adjustedOverlap = overlap - (radius - (((radius << 1) + radius) >> 3));
                         if (adjustedOverlap < 0)
                             overlap = 0;
                         else
@@ -221,15 +220,15 @@ void dCc_c::Process() {
                     other->pushback.z = 0;
                 } else if (!(flags & 0x10000000) && !(otherFlags & 0x10000000)) {
                     if (separation.y < 0) {
-                        Fix12i halfVerticalOverlap = verticalOverlap >> 1;
+                        fx32 halfVerticalOverlap = verticalOverlap >> 1;
                         listHead->pushback.y = halfVerticalOverlap;
                         other->pushback.y = -halfVerticalOverlap;
                     } else {
-                        Fix12i halfVerticalOverlap = verticalOverlap >> 1;
+                        fx32 halfVerticalOverlap = verticalOverlap >> 1;
                         listHead->pushback.y = -halfVerticalOverlap;
                         other->pushback.y = halfVerticalOverlap;
                     }
-                    Fix12i ratio = FX_Div(overlap, horizontalDistance) >> 1;
+                    fx32 ratio = FX_Div(overlap, horizontalDistance) >> 1;
                     listHead->pushback.x = -FX_MUL(separation.x, ratio);
                     listHead->pushback.z = -FX_MUL(separation.z, ratio);
                     other->pushback.x = FX_MUL(separation.x, ratio);

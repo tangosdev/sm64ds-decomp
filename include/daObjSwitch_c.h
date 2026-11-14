@@ -72,7 +72,7 @@ struct daObjSwitch_c : dBgActor_c {
        collision by the squash. */
     int FindTargetStar();
     void UpdateClsnMatrix();
-    void ScaleOverTime(int mask, Fix12i frames, Fix12i base, Fix12i target);
+    void ScaleOverTime(int mask, fx32 frames, fx32 base, fx32 target);
     void StateExpiredMain();
     void StateUnpressedMain();
     void StateTickingMain();

@@ -27,26 +27,11 @@ enum d_s_mg_m_carlo_AssetId { ASSET_D_2D_MG_CARD_NCL_BIN = 0x00bb };
 #include "LevelRng.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
-namespace s20b1e34 {
-void Mg_DrawScoreTally(void *, int, int, int);
-}
-using s20b1e34::Mg_DrawScoreTally;
-namespace s20b1bc8 {
-void Mg_DrawCredits(char *a0, int, int, int);
-}
-using s20b1bc8::Mg_DrawCredits;
-namespace s20b0aa0 {
-void FreeGfxSlotsById(int);
-}
-using s20b0aa0::FreeGfxSlotsById;
-namespace s20af68c {
-void Hud_RenderSprite(void *attr, int, int, int, int);
-}
-using s20af68c::Hud_RenderSprite;
-namespace s20ad674 {
-s32 GetGameLanguage(void);
-}
-using s20ad674::GetGameLanguage;
+extern "C" void Mg_DrawScoreTally(void *, int, int, int);
+extern "C" void Mg_DrawCredits(char *a0, int, int, int);
+extern "C" void FreeGfxSlotsById(int);
+extern "C" void Hud_RenderSprite(void *attr, int, int, int, int);
+extern "C" s32 GetGameLanguage(void);
 void MgCoins_Reset(void);
 void MgCoins_Update(void);
 void MgCoins_Draw(void);
@@ -100,7 +85,6 @@ extern int sMgCardSprites[];
 
 extern int sMCarloCardSprites[];
 extern "C" {
-
 extern "C" void Vec2_Sub(int *o, int *a, int *b);
 
 extern void func_0203d630(int *p, int m);
@@ -110,22 +94,15 @@ extern int sMgCoinsBetPlaced;
 
 extern int func_0203d5dc(const int *a, const int *b);
 extern "C" {
-
 void MgCoins_Draw(void);
 }
 extern "C" void Dealer_Draw(void *self);
 int Dealer_IsIdle(Dealer *dealer);
 extern "C" {
-
 void MgCoins_Update(void);
 }
-namespace s020c19d0 {
-void Dealer_Update(Dealer *dealer);
-}
-using s020c19d0::Dealer_Update;
 void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
 extern "C" {
-
 void MgCoins_Reset(void);
 
 void MgCoins_StartPayout(int count);
@@ -134,7 +111,6 @@ void MgCoins_StartPayout(int count);
 extern unsigned short gMgCoinsStatus;
 void LoadCard2SubBg3(void *);
 extern "C" {
-
 extern void *LoadFile(int handle);
 
 extern void DecompressLZ16(void *src, void *dst);

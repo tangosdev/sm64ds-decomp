@@ -175,7 +175,7 @@ endfunction()
 # copies under the build tree -- src/ itself is never edited.
 set(GATE4A_SYMS
     G3_MultTransMtx33 G3_MultMtx43 G3_LoadMtx43 G3X_ClearFifo
-    _Z21MI_SendGXCommandAsyncjPKvjPFvPvES1_ _Z16MIi_FIFOCallbackv _Z15MIi_DMACallbackPv _Z20OSi_EnterDmaCallbackjPFvPvES_ _Z10MI_WaitDmaj)
+    MI_SendGXCommandAsync MIi_FIFOCallback MIi_DMACallback OSi_EnterDmaCallback MI_WaitDma)
 sm64ds_hostgen_symbols(GATE4A_GEN ${GATE4A_SYMS})
 
 add_executable(smoke_gx tests/smoke_gx.cpp ${GATE4A_GEN})
@@ -192,7 +192,7 @@ endif()
 # Gate 4b: the whole dExtSimpleModel_c pipeline. Adds the material-bind and matrix
 # feeders to the hostgen set and the dExtSimpleModel_c/render slice on top of everything.
 set(GATE4B_SYMS _ZN15ModelComponents13func_02044b30Ei G3_MultMtx33
-    _Z16G3_LoadTexMtxEnvPi _ZN15ModelComponents13func_02044534EiP9Matrix4x3P7Vector3
+    G3_LoadTexMtxEnv _ZN15ModelComponents13func_02044534EiP9Matrix4x3P7Vector3
     _ZN15ModelComponents13func_0204488cEiP7Vector3 VEC_Normalize)
 sm64ds_hostgen_symbols(GATE4B_GEN ${GATE4B_SYMS})
 
@@ -264,9 +264,9 @@ endif()
 
 # Gate 8: collision -- the octree walk over real KCL data. cstd::sqrt
 # drives the hardware sqrt unit through literal MMIO -> hostgen. The hostgen
-# copy of src/cstd.cpp also defines _Z6FX_Divii, so these targets drop
+# copy of src/cstd.cpp also defines FX_Div, so these targets drop
 # hal/cstd_div.c.
-set(GATE8_SYMS _ZN4cstd4sqrtEy _Z15FX_GetDivResultv _Z11FX_InvAsynci
+set(GATE8_SYMS _ZN4cstd4sqrtEy FX_GetDivResult FX_InvAsync
     Matrix4x3_ApplyInPlaceToScale)
 sm64ds_hostgen_symbols(GATE8_GEN ${GATE8_SYMS})
 

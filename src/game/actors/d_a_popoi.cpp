@@ -114,17 +114,16 @@ extern daPopoi_StateRecord data_ov077_02127cd8;
 /* Member bodies have C++ linkage and mwccarm does not inherit C linkage into
  * their block-scope externs, so every external FUNCTION declaration lives in
  * this file-scope region (extern data names are unmangled either way; they are
- * kept here too so each call site reads identically). The _ZN spellings are
- * the Fix12-by-value signatures the real headers cannot express. */
-
+ * kept here too so each call site reads identically). */
+extern "C" {
 extern int data_0209f32c;               /* WATER_HEIGHT */
 extern signed char gCurrentSublevel;    /* LEVEL_ID */
 extern Matrix4x3 data_020a0e68;         /* scratch Matrix4x3 */
-extern Vector3 data_ov077_02127a5c;
-void func_02012694(unsigned int id, const Vector3 *pos);
-extern "C" {
+extern Vector3 data_ov077_02127a5c;     /* sensor offset (0, 0, 44 units) */
+
 extern int func_ov002_020db674(void *c, int a1, int a2, int a3);
 }
+void func_02012694(unsigned int id, const Vector3 *pos);
 
 /* Actor ID daPopoi_ACTOR_PLAYER (0xbf) is the daPly_c. These int-returning
  * predicates are what make the ROM materialize 0/1 before testing it. */

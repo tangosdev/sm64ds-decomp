@@ -52,49 +52,6 @@ enum dScMgRoulette_c_AssetId {
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/fx/fx_cp.h"
-namespace s20b2220 {
-void Mg_DrawNumberRotated(int, int, int, int, int, int, u16);
-}
-using s20b2220::Mg_DrawNumberRotated;
-namespace s20b1bc8 {
-void Mg_DrawCredits(char *a0, int, int, int);
-}
-using s20b1bc8::Mg_DrawCredits;
-namespace s20b1b08 {
-void Mg_LoseCredits(int);
-}
-using s20b1b08::Mg_LoseCredits;
-namespace s20b0aa0 {
-void FreeGfxSlotsById(int);
-}
-using s20b0aa0::FreeGfxSlotsById;
-namespace s20b0104 {
-void RenderOamBothScreens(void *attr, int, int, int, int, void *mtx);
-}
-using s20b0104::RenderOamBothScreens;
-namespace s20af68c {
-void Hud_RenderSprite(void *attr, int, int, int, int);
-}
-using s20af68c::Hud_RenderSprite;
-namespace s20b1b40 {
-void Mg_GainCredits(int);
-}
-using s20b1b40::Mg_GainCredits;
-namespace s20adc68 {
-void *Ov004_LoadFile(int);
-}
-using s20adc68::Ov004_LoadFile;
-namespace s20adc5c {
-void Ov004_Deallocate(void *ptr);
-}
-using s20adc5c::Ov004_Deallocate;
-namespace s20ad674 {
-s32 GetGameLanguage(void);
-}
-using s20ad674::GetGameLanguage;
-void MgCoins_Reset(void);
-void MgCoins_Update(void);
-void MgCoins_StartPayout(int);
 
 /* Local views of the records the helpers walk. */
 
@@ -149,61 +106,34 @@ Vector2 sRouletteTiles[37] = {
 
 extern "C" {
 
-extern "C" void Vec2_Sub(int *out, int *a, int *b);
-}
-
-int Sound_PlayIfNotActive(int a, int b, int c, short d);
-extern "C" {
-
+int GetGameLanguage(void);
+void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
+void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
+void Vec2_Sub(int *out, int *a, int *b);
 void *LoadFile(int id);
-
 void DecompressLZ16(void *src, void *dst);
+void Ov004_Deallocate(void *p);
+void FreeGfxSlotsById(int a);
 
 void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
-
-void MgCoins_StartPayout(int);
-
-void MgCoins_Update(void);
-
-void MgCoins_Reset(void);
-}
-int Dealer_IsAnimDone(void *a);
-int Dealer_IsIdle(Dealer *dealer);
-extern "C" {
-
-void Dealer_Draw(void *c);
-}
-namespace s020c19d0 {
-void Dealer_Update(Dealer *dealer);
-}
-using s020c19d0::Dealer_Update;
-extern "C" {
-
-int Dealer_Load(void *c);
-}
+void *Ov004_LoadFile(int id);
+void Mg_LoseCredits(int c);
+void Mg_GainCredits(int c);
+void Mg_DrawCredits(char *, int, int, int);
+void Mg_DrawNumberRotated(int, int, int, int, int, int, u16);
 
 int sRouletteResultsTimer;
-
 extern int sRouletteResultIndex;
-
 RouletteStrip *sRouletteStrips[4];
-
 void *sRouletteLandedRacer;
-
 extern int data_020a0db0;
-
 /* The first of the two blink frames in sRouletteStripSprites for each strip's
    marker: {0, 2, 6, 8} for strips 0..3. A horizontal pair adds 2. */
 extern s32 sRouletteStripSpriteBase[];
-
 extern void *sRouletteStripSprites[];
-
 extern void **sRouletteTextSpritesByLanguage[];
-
 extern int sRoulettePayoutMultipliers[];
-
 extern void *sRouletteRacerSprites;
-
 /* Bet tiles: 0..0xb are single numbers, 0xc..0x1c pairs of numbers and
  * 0x1d..0x22 groups of four (RouletteRacer_GetPayout checks 1, 2 and 4
  * table entries for them and pays 12, 6 and 3). */
@@ -224,33 +154,33 @@ extern short sRouletteStopTiles[12];
 extern RouletteBoardState pmf_RouletteBoard_StateSlow;
 
 extern RouletteBoardState pmf_RouletteBoard_StateSpin;
-
 extern int sRouletteTileBounds[];
-
 extern int sRouletteRowEdgesY[];
-
 /* The numbers each pair tile (0xc..0x1c) and each group-of-four tile
    (0x1d..0x22) covers. */
 extern short sRoulettePairNumbers[17][2];
-
 extern short sRouletteQuadNumbers[6][4];
-
 extern s32 sMgCoinRiseFrames;
-
 extern u16 gMgCoinsStatus;
-
 extern u8 gMainScreenLayers;
-
 extern u8 gSubScreenLayers;
+
+/* This file's helpers. The file runs from the highest address down, so
+   most calls between them are forward references. */
+}
+int Sound_PlayIfNotActive(int a, int b, int c, short d);
+void MgCoins_StartPayout(int);
+void MgCoins_Update(void);
+void MgCoins_Reset(void);
 void RouletteResults_Draw(void);
 void RouletteStrip_AddRacer(RouletteStrip *strip, RouletteRacer *racer);
 void RouletteStrip_Reset(RouletteStrip *strip);
-void RouletteBoard_Update(RouletteBoard *c);
+void RouletteBoard_Update(RouletteBoard *board);
 void RouletteBoard_StateSlow(RouletteBoard *board);
 void RouletteBoard_StartSlowdown(RouletteBoard *board);
 void RouletteBoard_StateSpin(RouletteBoard *board);
 void RouletteBoard_SetStateSpin(RouletteBoard *board);
-int RouletteBoard_FreeModels(RouletteBoard *res);
+int RouletteBoard_FreeModels(RouletteBoard *board);
 short Roulette_TileAt(int x, int y);
 int RouletteRacer_GetPayout(RouletteRacer *racer, int tile);
 void RouletteRacer_CheckLandingB(RouletteRacer *racer);
@@ -483,7 +413,6 @@ s32 dScMgRoulette_c::Behavior() {
 }
 
 /* A tail-call veneer to RouletteResults_Draw. */
-
 void Roulette_DrawResultsThunk(char *) {
     RouletteResults_Draw();
 }
@@ -693,7 +622,6 @@ void RouletteRacer_SetTarget(RouletteRacer *racer, int *target) {
 /* Clamps the racer's target into a box round the tile's centre and slides
    it there: tiles 0x23 and 0x24 get the box to their right, tiles up to 0xb
    one centred on them; any other tile leaves the racer alone. */
-
 void RouletteRacer_MoveToTile(RouletteRacer *racer, int tile) {
     Vector2 goal;
     goal.x = racer->targetX;
@@ -748,7 +676,6 @@ void RouletteRacer_MoveToTile(RouletteRacer *racer, int tile) {
 }
 
 /* First call builds the goal at (0xc000, 0xc000) and registers ~Vector2. */
-
 void RouletteRacer_Init(RouletteRacer *racer) {
     static Vector2 sRouletteRacerGoal(0xc000, 0xc000);
     RouletteRacer_SetVelocityToward(racer, &sRouletteRacerGoal.x, 0x80);
@@ -938,7 +865,6 @@ void RouletteRacer_Draw(char *racer) {
 /* The three range tests are kept as 0 or 1 values held in a local and
    tested; the ROM materialises them. The 0x23 case tests `tile < 6`, the
    opposite of the case beside it, and the two share one `payout = 2`. */
-
 int RouletteRacer_GetPayout(RouletteRacer *racer, int tile) {
     int landed = racer->tile;
     int payout = 0;

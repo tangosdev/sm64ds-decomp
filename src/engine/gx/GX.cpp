@@ -32,6 +32,8 @@ extern u32 data_020a60c0;                    // size of the first block
 extern const u16 data_02086314[8];           // texture-palette LCDC block, by bank combination
 extern const GXTexStartAddr data_02086324[]; // texture blocks, by bank combination
 
+extern "C" {
+
 void GX_BeginLoadTex() {
     data_020a60b8 = GX_ResetBankForTex();
     data_020a60ac = data_02086324[data_020a60b8].blk1 << 12;
@@ -89,4 +91,4 @@ void GX_EndLoadTexPltt() {
     data_020a60b0 = 0;
 }
 
-// extern "C"
+} // extern "C"

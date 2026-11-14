@@ -6,6 +6,6 @@
 
 void func_020607e8(CARDiCommon *p) {
     p->cmd->type = CARD_GetCurrentBackupType();
-    _Z13CARDi_RequestP11CARDiCommonii(p, CARD_REQ_IDENTIFY, 1);
-    _Z13CARDi_EndTaskP11CARDiCommon(p);
+    CARDi_Request(p, CARD_REQ_IDENTIFY, 1);
+    CARDi_EndTask(p);
 }

@@ -50,8 +50,10 @@ extern Kpa2BgCollisionFilePtr daKpa2Bg_c_ClsnFile;
 extern CLPS_Block data_ov046_021115bc;
 
 /* local extern: arm9 C helpers with no shared header yet. */
+extern "C" {
+void Vec3_Asr(void *dst, void *src, int shift);
+}
 int Sound_PlayIfNotActive(int handle, int a, int b, short c);
-extern "C" void Vec3_Asr(void *dst, void *src, int shift);
 
 daKpa2Bg_c::~daKpa2Bg_c() {}
 

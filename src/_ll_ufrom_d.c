@@ -18,7 +18,7 @@
 // through func_0206dd7c carrying a packed exception code (0x04c000f8 / 0x40c000f8).
 
 extern unsigned int *func_0207322c(void);
-extern double _Z13func_0206dd7cdi(double a, int op);
+extern double func_0206dd7c(double a, int op);
 
 asm long long _ll_ufrom_d(double x)
 {
@@ -107,13 +107,13 @@ _L108:
 _L138:
     ldr r2, =0x04c000f8
     stmdb sp!, {lr}
-    bl _Z13func_0206dd7cdi
+    bl func_0206dd7c
     ldmia sp!, {lr}
     bx lr
 _L14c:
     ldr r2, =0x40c000f8
     stmdb sp!, {lr}
-    bl _Z13func_0206dd7cdi
+    bl func_0206dd7c
     ldmia sp!, {lr}
     bx lr
 }

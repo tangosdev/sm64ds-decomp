@@ -3,7 +3,7 @@
 /* OS_SetAlarm, but only once the alarm system is up (OS_IsAlarmAvailable).
    The watchdog (func_0201a8b4, func_0201a96c) arms its alarm through it. */
 void func_0201aa50(OSAlarm *alarm, long long tick, OSAlarmHandler handler, void *arg) {
-    if (_Z19OS_IsAlarmAvailablev() == 0)
+    if (OS_IsAlarmAvailable() == 0)
         return;
-    _Z11OS_SetAlarmP8OSiAlarmxPFvPvES1_(alarm, tick, handler, arg);
+    OS_SetAlarm(alarm, tick, handler, arg);
 }

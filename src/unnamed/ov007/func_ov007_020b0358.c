@@ -1,10 +1,6 @@
 #include "Ov007MenuState.h"
 #include "Ov007Work.h"
-#define PickerScene_GetDisplayState _Z27PickerScene_GetDisplayStatev
 
-#define func_ov007_020c1d8c _Z19func_ov007_020c1d8ci
-#define func_ov007_020bcba8 _Z19func_ov007_020bcba8i
-#define func_ov007_020b76a0 _Z19func_ov007_020b76a0v
 extern void func_ov007_020c1d8c(int i);
 extern void func_ov007_020bca40(int i);
 extern void func_ov007_020bcba8(int i);

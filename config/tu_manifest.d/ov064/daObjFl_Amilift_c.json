@@ -594,29 +594,29 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@529",
+      "from": "@527",
       "to": "@106",
-      "evidence": "mwcc emits this compiler temp as @545; ov091 promotes @545 globally, so the configured @106 stays the licensed name | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @541 to @519 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @519 to @529 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "mwcc emits this compiler temp as @545; ov091 promotes @545 globally, so the configured @106 stays the licensed name | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @541 to @519 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @519 to @529 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @529 to @527 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
+    },
+    {
+      "from": "@528",
+      "to": "@557",
+      "evidence": "mwcc emits this compiler temp as @546; ov080 promotes @546 globally, so the configured @557 stays the licensed name | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @542 to @520 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @520 to @530 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @530 to @528 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
       "from": "@530",
-      "to": "@557",
-      "evidence": "mwcc emits this compiler temp as @546; ov080 promotes @546 globally, so the configured @557 stays the licensed name | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @542 to @520 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @520 to @530 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "to": "@107",
+      "evidence": "mwcc emits this compiler temp as @548; ov080 promotes @548 globally, so the configured @107 stays the licensed name | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @544 to @522 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @522 to @532 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @532 to @530 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@532",
-      "to": "@107",
-      "evidence": "mwcc emits this compiler temp as @548; ov080 promotes @548 globally, so the configured @107 stays the licensed name | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @544 to @522 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @522 to @532 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "from": "@531",
+      "to": "@108",
+      "evidence": "mwcc emits this compiler temp as @549; ov091 promotes @549 globally, so the configured @108 stays the licensed name | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @545 to @523 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @523 to @533 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @533 to @531 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
       "from": "@533",
-      "to": "@108",
-      "evidence": "mwcc emits this compiler temp as @549; ov091 promotes @549 globally, so the configured @108 stays the licensed name | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @545 to @523 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @523 to @533 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
-    },
-    {
-      "from": "@535",
       "to": "@109",
-      "evidence": "mwcc emits this compiler temp as @551; the configured @109 stays the licensed name so the ov064 symbol surface is unchanged by the classInit tail merge | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @547 to @525 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @525 to @535 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "mwcc emits this compiler temp as @551; the configured @109 stays the licensed name so the ov064 symbol surface is unchanged by the classInit tail merge | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @547 to @525 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @525 to @535 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @535 to @533 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     }
   ],
   "symbol_binding_rewrites": [

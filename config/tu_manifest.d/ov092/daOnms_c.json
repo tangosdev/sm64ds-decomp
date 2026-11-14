@@ -1127,57 +1127,57 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@979",
+      "from": "@975",
       "to": "@214",
       "evidence": "Input-only compiler temporary shift after native floor-result and CLPS member access. Exact full allocated bytes, symbol attributes and typed edges match the pinned control under the eleven-name bijection; canonical destinations and storage are unchanged. Re-keyed from @1023 to @964 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @962 to @976 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @976 to @978 when the TU took hand pass: FX_SinIdx/FX_CosIdx rewrite (onms) (measured from the compiled object). Re-keyed from @978 to @979 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@980",
+      "from": "@976",
       "to": "@964",
       "evidence": "Input-only compiler temporary shift after native floor-result and CLPS member access. Exact full allocated bytes, symbol attributes and typed edges match the pinned control under the eleven-name bijection; canonical destinations and storage are unchanged. Re-keyed from @1024 to @965 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @963 to @977 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @977 to @979 when the TU took hand pass: FX_SinIdx/FX_CosIdx rewrite (onms) (measured from the compiled object). Re-keyed from @979 to @980 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@982",
+      "from": "@978",
       "to": "@966",
       "evidence": "Input-only compiler temporary shift after native floor-result and CLPS member access. Exact full allocated bytes, symbol attributes and typed edges match the pinned control under the eleven-name bijection; canonical destinations and storage are unchanged. Re-keyed from @1026 to @967 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @965 to @979 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @979 to @981 when the TU took hand pass: FX_SinIdx/FX_CosIdx rewrite (onms) (measured from the compiled object). Re-keyed from @981 to @982 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@984",
+      "from": "@980",
       "to": "@968",
       "evidence": "Input-only compiler temporary shift after native floor-result and CLPS member access. Exact full allocated bytes, symbol attributes and typed edges match the pinned control under the eleven-name bijection; canonical destinations and storage are unchanged. Re-keyed from @1028 to @969 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @967 to @981 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @981 to @983 when the TU took hand pass: FX_SinIdx/FX_CosIdx rewrite (onms) (measured from the compiled object). Re-keyed from @983 to @984 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@986",
+      "from": "@982",
       "to": "@970",
       "evidence": "Input-only compiler temporary shift after native floor-result and CLPS member access. Exact full allocated bytes, symbol attributes and typed edges match the pinned control under the eleven-name bijection; canonical destinations and storage are unchanged. Re-keyed from @1030 to @971 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @969 to @983 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @983 to @985 when the TU took hand pass: FX_SinIdx/FX_CosIdx rewrite (onms) (measured from the compiled object). Re-keyed from @985 to @986 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@988",
+      "from": "@984",
       "to": "@972",
       "evidence": "Input-only compiler temporary shift after native floor-result and CLPS member access. Exact full allocated bytes, symbol attributes and typed edges match the pinned control under the eleven-name bijection; canonical destinations and storage are unchanged. Re-keyed from @1032 to @973 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @971 to @985 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @985 to @987 when the TU took hand pass: FX_SinIdx/FX_CosIdx rewrite (onms) (measured from the compiled object). Re-keyed from @987 to @988 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@990",
+      "from": "@986",
       "to": "@974",
       "evidence": "Input-only compiler temporary shift after native floor-result and CLPS member access. Exact full allocated bytes, symbol attributes and typed edges match the pinned control under the eleven-name bijection; canonical destinations and storage are unchanged. Re-keyed from @1034 to @975 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @973 to @987 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @987 to @989 when the TU took hand pass: FX_SinIdx/FX_CosIdx rewrite (onms) (measured from the compiled object). Re-keyed from @989 to @990 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@992",
+      "from": "@988",
       "to": "@976",
       "evidence": "Input-only compiler temporary shift after native floor-result and CLPS member access. Exact full allocated bytes, symbol attributes and typed edges match the pinned control under the eleven-name bijection; canonical destinations and storage are unchanged. Re-keyed from @1036 to @977 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @975 to @989 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @989 to @991 when the TU took hand pass: FX_SinIdx/FX_CosIdx rewrite (onms) (measured from the compiled object). Re-keyed from @991 to @992 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@994",
+      "from": "@990",
       "to": "@978",
       "evidence": "Input-only compiler temporary shift after native floor-result and CLPS member access. Exact full allocated bytes, symbol attributes and typed edges match the pinned control under the eleven-name bijection; canonical destinations and storage are unchanged. Re-keyed from @1038 to @979 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @977 to @991 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @991 to @993 when the TU took hand pass: FX_SinIdx/FX_CosIdx rewrite (onms) (measured from the compiled object). Re-keyed from @993 to @994 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@995",
+      "from": "@991",
       "to": "@979",
       "evidence": "Input-only compiler temporary shift after native floor-result and CLPS member access. Exact full allocated bytes, symbol attributes and typed edges match the pinned control under the eleven-name bijection; canonical destinations and storage are unchanged. Re-keyed from @1039 to @980 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @978 to @992 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @992 to @994 when the TU took hand pass: FX_SinIdx/FX_CosIdx rewrite (onms) (measured from the compiled object). Re-keyed from @994 to @995 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@997",
+      "from": "@993",
       "to": "@981",
       "evidence": "Input-only compiler temporary shift after native floor-result and CLPS member access. Exact full allocated bytes, symbol attributes and typed edges match the pinned control under the eleven-name bijection; canonical destinations and storage are unchanged. Re-keyed from @1041 to @982 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @980 to @994 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @994 to @996 when the TU took hand pass: FX_SinIdx/FX_CosIdx rewrite (onms) (measured from the compiled object). Re-keyed from @996 to @997 when a redundant pun was removed (same section, offset, size, type and binding)."
     }

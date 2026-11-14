@@ -59,7 +59,7 @@ daObjFl_London_c *daObjFl_London_c_classInit() {
 
 /* The actor profile the registry points at. Word 0 relocates to the
  * factory above; the rest is the ROM's, read back at 0x02113f4c. */
-SpawnInfo<daObjFl_London_c> g_profile_FL_LONDON = {
+extern "C" SpawnInfo<daObjFl_London_c> g_profile_FL_LONDON = {
     daObjFl_London_c_classInit,
     0x0049,
     0x0119,

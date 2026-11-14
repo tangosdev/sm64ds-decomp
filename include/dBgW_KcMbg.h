@@ -15,7 +15,7 @@
  * key-function rule. src/engine/collision/d_bg_w_kc_mbg.cpp defines it once
  * and the TU keeps all five structor variants.
  *
- * SetFile takes the scale as Fix12i (a scalar; it mangles as i).
+ * SetFile takes the scale as fx32 (a scalar; it mangles as i).
  * SetFile and Transform copy matrices through a flat 12-word
  * view (the dExtSimpleModel_c::Virtual10 lesson).
  */
@@ -23,24 +23,24 @@
 #include "math/Fix12.h"
 
 struct dBgW_KcMbg : dBgW_Kc {
-    Fix12i scale;              /* 0x50 */
-    Matrix4x3 mat;             /* 0x54 */
-    Matrix4x3 invRotMat;       /* 0x84 - rotation-only inverse */
-    Matrix4x3 scaledMat;       /* 0xb4 */
-    Matrix4x3 invMat;          /* 0xe4 - previous frame's inverse in Transform */
-    s16 angY;                  /* 0x114 */
-    s16 angVelY;               /* 0x116 */
-    Vector3 pos;               /* 0x118 */
-    Vector3 velocity;          /* 0x124 */
+    fx32 scale;          /* 0x50 */
+    Matrix4x3 mat;       /* 0x54 */
+    Matrix4x3 invRotMat; /* 0x84 - rotation-only inverse */
+    Matrix4x3 scaledMat; /* 0xb4 */
+    Matrix4x3 invMat;    /* 0xe4 - previous frame's inverse in Transform */
+    s16 angY;            /* 0x114 */
+    s16 angVelY;         /* 0x116 */
+    Vector3 pos;         /* 0x118 */
+    Vector3 velocity;    /* 0x124 */
     /* Set by SetFilterByMoveDir. While set, Transform points dBgW_Kc's
        depth policy (shallowOnly/depthByDir/depthDir/depthDirMinDot) along the
        collider's horizontal velocity every frame. SetFile clears it. */
     bool filterByMoveDir; /* 0x130 */
     u8 pad_131[3];
-    Matrix4x3 newScaledMat;    /* 0x134 */
-    s32 invScale;              /* 0x164 - FX_Inv(scale) */
-    Matrix4x3 invScaledMat;    /* 0x168 */
-    Matrix4x3 prevInvScaledMat;/* 0x198 */
+    Matrix4x3 newScaledMat;     /* 0x134 */
+    s32 invScale;               /* 0x164 - FX_Inv(scale) */
+    Matrix4x3 invScaledMat;     /* 0x168 */
+    Matrix4x3 prevInvScaledMat; /* 0x198 */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
     virtual ~dBgW_KcMbg();                        /* slots 0/1 */
@@ -62,7 +62,7 @@ struct dBgW_KcMbg : dBgW_Kc {
     dBgW_KcMbg();
 
     /* --- non-virtual --- */
-    void SetFile(KCL_File *file, const Matrix4x3 &mat, Fix12i scale, s16 angY, CLPS_Block &clps);
+    void SetFile(KCL_File *file, const Matrix4x3 &mat, fx32 scale, s16 angY, CLPS_Block &clps);
     void Transform(const Matrix4x3 &mat, s16 angY);
 
     /* Current-frame coordinate conversions. Position transforms include the

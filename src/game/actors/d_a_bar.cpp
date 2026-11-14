@@ -27,7 +27,7 @@ daBar_c *daBar_c_classInit() {
     return new daBar_c();
 }
 
-SpawnInfo<daBar_c> g_profile_BAR = {
+extern "C" SpawnInfo<daBar_c> g_profile_BAR = {
     daBar_c_classInit,
     0x011f,     /* behavior/execute priority */
     0x0099,     /* render priority */

@@ -19,6 +19,7 @@
 #include "nitro/os/tcm.h"
 #include "nitro/os/system.h"
 
+extern "C" {
 extern u32 data_020a4bc8;
 extern u32 data_020a4bcc;
 extern u32 data_020a4bd8;
@@ -26,6 +27,7 @@ extern u32 data_020a4bdc;
 extern u32 data_020a4be0;
 extern u32 data_020a4be4;
 extern u32 data_020a4be8;
+}
 
 #define REBASE(p) ((char *)(p) + base)
 void dExtSimpleModel_c::UpdateFileOffsets(BMD_File &file) {
@@ -90,7 +92,7 @@ void dExtSimpleModel_c::UpdateFileOffsets(BMD_File &file) {
 }
 #undef REBASE
 
-int func_02046590(const void *tbl, const char *name) {
+extern "C" int func_02046590(const void *tbl, const char *name) {
     const BMD_File *t = (const BMD_File *)tbl;
     u32 count = t->numMaterials;
     u32 i = 0;
@@ -110,7 +112,7 @@ int func_02046590(const void *tbl, const char *name) {
     return -1;
 }
 
-int func_02046564(void *p) {
+extern "C" int func_02046564(void *p) {
     BMD_File *s = (BMD_File *)p;
     int a = s->numBones;
     int b = s->numWeightedMatrices;
@@ -255,7 +257,7 @@ void func_020462d0(Dst *d, Desc *h, ElemA *arr)
     }
 }
 
-void *func_020462bc(int *p) {
+extern "C" void *func_020462bc(int *p) {
     return &((Matrix4x3 *)0)[p[1]];
 }
 
@@ -373,7 +375,7 @@ void ModelComponents::SetEmission(unsigned int color) {
         SetMaterialEmission(color, i);
 }
 
-void func_02045e44(void *self, unsigned int value, int index) {
+extern "C" void func_02045e44(void *self, unsigned int value, int index) {
     struct Element { char pad[0x1c]; unsigned int flags; char pad2[0x30 - 0x1c - 4]; };
     struct Obj { void *pad0; struct Element *arr; };
     struct Obj *obj = (struct Obj *)self;
@@ -403,7 +405,7 @@ void func_02045d9c(void) {
     OS_Terminate();
 }
 
-void InitialiseVramGlobals(void) {
+extern "C" void InitialiseVramGlobals(void) {
     int r = GX_GetSizeOfTex();
     data_020a4be4 = 0;
     data_020a4bc8 = 0;
@@ -414,7 +416,7 @@ void InitialiseVramGlobals(void) {
     data_020a4bcc = 0;
 }
 
-int func_02045d10(void) {
+extern "C" int func_02045d10(void) {
     return data_020a4bc8;
 }
 
@@ -422,11 +424,11 @@ int func_02045d00(void) {
     return data_020a4bdc;
 }
 
-int func_02045cf0(void) {
+extern "C" int func_02045cf0(void) {
     return data_020a4bcc;
 }
 
-int func_02045ce0(void) {
+extern "C" int func_02045ce0(void) {
     return data_020a4bd8;
 }
 

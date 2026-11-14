@@ -43,6 +43,7 @@
 
 struct OamAttr;
 
+extern "C" {
 extern u8 data_0209fc6c;
 extern u8 data_0209fc70;
 extern u8 data_0209fc74;
@@ -88,11 +89,7 @@ extern u8 data_0209fd20[];
 extern u32 data_0209fd5c[];
 extern u8 data_02092818[];
 extern int data_0209285c[];
-extern "C" {
-
 extern void (*data_02092830[])(void);
-}
-
 extern u8 data_0208f074[];
 extern u8 data_0208f174[];
 extern s32 data_0208ee44;
@@ -120,24 +117,20 @@ extern u32 data_0209283c[];
 extern u32 data_0209287c[];
 
 extern MBUserInfo *func_0203d8a0(int idx);
-extern u8 NumStars(void);
-extern int func_020138dc(void);
-extern "C" {
-
 extern void DecompressLZ16(void *src, void *dst);
 extern void *LoadFile(int handle);
 /* local extern: Fix12 wall -- the by-value Fix12<int> form cannot be spelled
    from a header; the literal name keeps the def's own scalar params. */
 extern void OamRender10_Message3(int sub, struct OamAttr *attr_, int xOff, int yOff, int palette,
                                  int priority, int scaleX, int scaleY, int rotation, int mode);
-}
-
 #include "OAM.h"
 #include "nitro/mi/memory.h"
 
 /* Slot 0's nx/ny are data_0209f4a2/data_0209f4a4. The record stride is 0x18. */
 extern ControllerInput data_0209f498[];
-
+}
+extern u8 NumStars(void);
+extern int func_020138dc(void);
 void func_02031cd4(void *arg);
 int func_020321fc(void);
 void func_020326ac(void);
@@ -1224,7 +1217,7 @@ void func_02033390(int sub) {
 /* byte-forced: this function accesses data_0209fc78 volatile (reload per use);
    decl_common.h spells it plain. The macro expands each use to a volatile deref
    of the global -- the inner name paints blue and resolves to the extern. */
-#define data_0209fc78 (*(volatile u8 *)&data_0209fc78)
+#define data_0209fc78 (*(u8 *)&data_0209fc78)
 void func_02033464(int arg0, int arg1, int arg2) {
     volatile unsigned short sv0;
     volatile unsigned short sv2;
@@ -1652,7 +1645,7 @@ void Message_DrawLineBG2VS(void) {
     data_0209fcdc = data_0209fcdc + (u8)(((data_0209fc88 + 7) / 8) << 1);
 }
 
-void Message_DrawCenteredLineVS(int a0, int a1) {
+extern "C" void Message_DrawCenteredLineVS(int a0, int a1) {
     volatile int li;
     int n, i, oldc;
     short *scr;
@@ -1730,7 +1723,7 @@ void Message::DisplayDontSaveTextVS(unsigned short n) {
     Message_DrawCenteredLineVS(0x291, 0xa);
 }
 
-void func_02034504(void) {
+extern "C" void func_02034504(void) {
     data_0209fcb0 = 0;
     data_0209fcbc = 0;
     data_0209fcc4 = 0 * 0;

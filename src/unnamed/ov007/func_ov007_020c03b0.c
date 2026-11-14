@@ -3,7 +3,6 @@
 
 /* Per BG, its bit in Ov007BgList.mask. */
 extern int data_ov007_020d7d6c[];
-#define func_ov007_020c076c _Z19func_ov007_020c076cP12Ov007BgLayeri
 extern void func_ov007_020c076c(Ov007BgLayer *layer, int engines);
 
 /* Shows the list's layers on its engines: for each BG, the first listed

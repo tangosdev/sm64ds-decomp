@@ -101,8 +101,8 @@ struct TatumakiAnimFileHandle : SharedFilePtr {
     ~TatumakiAnimFileHandle();
 };
 
-extern TatumakiModelFilePtr gWaterTatumakiModelFile;           /* water_tatumaki.bmd, 0x4a9 */
-extern TatumakiAnimFileHandle gWaterTatumakiAnimationFile;     /* water_tatumaki.bca, 0x4a8 */
+extern "C" TatumakiModelFilePtr gWaterTatumakiModelFile;       /* water_tatumaki.bmd, 0x4a9 */
+extern "C" TatumakiAnimFileHandle gWaterTatumakiAnimationFile; /* water_tatumaki.bca, 0x4a8 */
 extern daWater_Tatumaki_c::State data_ov026_02113f2c;          /* spin, waiting to catch */
 extern daWater_Tatumaki_c::State data_ov026_02113f3c;          /* drag the player down */
 extern BTA_File data_ov026_02112f40;
@@ -112,8 +112,9 @@ extern BTA_File data_ov026_02112f40;
 #define STATE_DRAG (&data_ov026_02113f3c)
 
 /* local extern: no shared header declares these. */
-
+extern "C" {
 extern void KillPlayer(void);
+}
 
 daWater_Tatumaki_c::~daWater_Tatumaki_c() {}
 

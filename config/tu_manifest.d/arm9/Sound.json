@@ -175,14 +175,14 @@
       "ordinal": 18
     },
     {
-      "symbol": "_Z13func_02011cfcv",
+      "symbol": "func_02011cfc",
       "address": "0x02011cfc",
       "legacy_source": "src/func_02011cfc.c",
       "size": "0x0000000c",
       "ordinal": 19
     },
     {
-      "symbol": "_Z13func_02011d08v",
+      "symbol": "func_02011d08",
       "address": "0x02011d08",
       "legacy_source": "src/func_02011d08.c",
       "size": "0x0000000c",
@@ -203,7 +203,7 @@
       "ordinal": 22
     },
     {
-      "symbol": "_Z13func_02011d2cv",
+      "symbol": "func_02011d2c",
       "address": "0x02011d2c",
       "legacy_source": "src/func_02011d2c.c",
       "size": "0x0000000c",
@@ -217,35 +217,35 @@
       "ordinal": 24
     },
     {
-      "symbol": "_Z13func_02011d44v",
+      "symbol": "func_02011d44",
       "address": "0x02011d44",
       "legacy_source": "src/func_02011d44.c",
       "size": "0x0000000c",
       "ordinal": 25
     },
     {
-      "symbol": "_Z13func_02011d50v",
+      "symbol": "func_02011d50",
       "address": "0x02011d50",
       "legacy_source": "src/func_02011d50.c",
       "size": "0x0000000c",
       "ordinal": 26
     },
     {
-      "symbol": "_Z13func_02011d5ci",
+      "symbol": "func_02011d5c",
       "address": "0x02011d5c",
       "legacy_source": "src/func_02011d5c.c",
       "size": "0x00000058",
       "ordinal": 27
     },
     {
-      "symbol": "_Z13func_02011db4v",
+      "symbol": "func_02011db4",
       "address": "0x02011db4",
       "legacy_source": "src/func_02011db4.c",
       "size": "0x0000000c",
       "ordinal": 28
     },
     {
-      "symbol": "_Z13func_02011dc0v",
+      "symbol": "func_02011dc0",
       "address": "0x02011dc0",
       "legacy_source": "src/func_02011dc0.c",
       "size": "0x0000000c",
@@ -336,21 +336,21 @@
       "ordinal": 41
     },
     {
-      "symbol": "_Z13func_02012194iiiiiPK7Vector3s",
+      "symbol": "func_02012194",
       "address": "0x02012194",
       "legacy_source": "src/func_02012194.c",
       "size": "0x000000d8",
       "ordinal": 42
     },
     {
-      "symbol": "_Z13func_0201226ciiiPK7Vector3is",
+      "symbol": "func_0201226c",
       "address": "0x0201226c",
       "legacy_source": "src/func_0201226c.c",
       "size": "0x000000a4",
       "ordinal": 43
     },
     {
-      "symbol": "_Z13func_02012310iis",
+      "symbol": "func_02012310",
       "address": "0x02012310",
       "legacy_source": "src/func_02012310.c",
       "size": "0x00000018",
@@ -385,7 +385,7 @@
       "ordinal": 48
     },
     {
-      "symbol": "_Z13func_0201251ciiPK7Vector3i",
+      "symbol": "func_0201251c",
       "address": "0x0201251c",
       "legacy_source": "src/func_0201251c.c",
       "size": "0x00000074",
@@ -413,7 +413,7 @@
       "ordinal": 52
     },
     {
-      "symbol": "_Z13func_0201267cjPK7Vector3",
+      "symbol": "func_0201267c",
       "address": "0x0201267c",
       "legacy_source": "src/func_0201267c.cpp",
       "size": "0x00000018",
@@ -441,7 +441,7 @@
       "ordinal": 56
     },
     {
-      "symbol": "_Z13func_02012718ii",
+      "symbol": "func_02012718",
       "address": "0x02012718",
       "legacy_source": "src/func_02012718.c",
       "size": "0x0000003c",
@@ -462,14 +462,14 @@
       "ordinal": 59
     },
     {
-      "symbol": "_Z13func_0201277cj",
+      "symbol": "func_0201277c",
       "address": "0x0201277c",
       "legacy_source": "src/func_0201277c.c",
       "size": "0x00000014",
       "ordinal": 60
     },
     {
-      "symbol": "_Z13func_02012790j",
+      "symbol": "func_02012790",
       "address": "0x02012790",
       "legacy_source": "src/func_02012790.c",
       "size": "0x00000014",
@@ -588,7 +588,7 @@
       "ordinal": 77
     },
     {
-      "symbol": "_Z13func_02012e78v",
+      "symbol": "func_02012e78",
       "address": "0x02012e78",
       "legacy_source": "src/func_02012e78.c",
       "size": "0x0000006c",
@@ -630,7 +630,7 @@
       "ordinal": 83
     },
     {
-      "symbol": "_Z13func_020132d8v",
+      "symbol": "func_020132d8",
       "address": "0x020132d8",
       "legacy_source": "src/func_020132d8.cpp",
       "size": "0x000000e4",

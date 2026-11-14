@@ -118,14 +118,13 @@ enum {
 enum { CUTSCENE_FLAG = 0x4000000 };
 
 extern "C" {
-
 /* dExtAnmModel_c::SetAnim, called with a scalar speed. */
 extern char data_02082714[];
 extern int func_0203d024(struct Vector3*, struct Vector3*);
 }
 
-extern void DeathTable_ClearBit(int);
-extern void FUN_0202a130(void);
+extern "C" void DeathTable_ClearBit(int);
+extern "C" void FUN_0202a130(void);
 
 extern void UnloadSilverStarAndNumber(void);
 extern "C" {
@@ -137,13 +136,11 @@ extern signed char gNumStageStars[];
 
 extern signed char NumRedCoins(void);
 extern "C" {
-
 extern unsigned char gGameMode;
 }
 
 extern void func_02035860(dBgCh_Actr *o, const Vector3 *src);
 extern "C" {
-
 extern dCamera_c *gCamera;
 }
 
@@ -166,7 +163,6 @@ extern void Matrix4x3_FromRotationY(void* m, int angle);
 
 extern int SurfaceInfo_TestFlag0x20(int *p);
 extern "C" {
-
 extern int data_0209f32c;
 extern signed char gCurrentSublevel;
 }
@@ -174,7 +170,6 @@ extern signed char gCurrentSublevel;
 extern void SetStarMarker(int i, dActor_c *actor, int v2);
 extern int IsStarCollectedInCurLevel(int starID);
 extern "C" {
-
 extern dActor_c *STAR_MARKERS[12];
 extern u8 data_0209f208;
 extern unsigned char gCurrentEntranceId;
@@ -182,19 +177,17 @@ extern unsigned char gCurrentEntranceId;
 
 void GiveVsStars(int idx, int delta);
 void CollectStarInCurLevel(int i);
-int SublevelToLevel(int i);
+extern "C" int SublevelToLevel(int i);
 s16 NumCoins(void);
 extern "C" {
-
 extern u8 gCollectedStarId;
 extern u8 gNewStarCollected;
 extern s16 gNumCoins[];
 extern u8 data_0209d684;
 }
 
-extern s16 GetAngleToCamera(int i);
+extern "C" s16 GetAngleToCamera(int i);
 extern "C" {
-
 extern u8 *data_0209f344;
 }
 
@@ -203,15 +196,13 @@ namespace KuppaScript {
 void End(void);
 }
 extern "C" {
-
 extern u8 data_0209d660;
 extern s8 gNumStageStars[];
 extern signed char gNumStageStars[];
 }
 
-extern int NumVsStarsObtained(void);
+extern "C" int NumVsStarsObtained(void);
 extern "C" {
-
 extern StarModelFilePtr data_ov002_0211092c;
 extern StarModelFilePtr data_ov002_0211093c;
 extern StarAnimationFileHandle data_ov002_02110924;
@@ -1143,7 +1134,6 @@ int daStar_c::PickCollectSoundID() {
  * otherwise, in a VS match, it takes one star off the player's VS count
  * (GiveVsStars -1, when the count is not zero) and bounces away. */
 extern "C" {
-
 extern int func_ov002_020ca0f4(void *player);
 
 

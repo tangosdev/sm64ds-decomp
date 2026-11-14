@@ -123,10 +123,10 @@ extern u32 data_ov007_020d7aa0[];   /* keep-masks per pixel offset in a tile */
 extern u32 data_ov007_020d7ac4[];   /* colour masks per text colour */
 extern u8 data_ov007_020d7b04[][6]; /* first text line per kind and language */
 
-int func_ov007_020bdeb0(int sound);
+extern "C" int func_ov007_020bdeb0(int sound);
 extern void func_ov007_020c0308(unsigned short *dst, int b, int c);
-void func_ov007_020c1d78(int i);
-void func_ov007_020c1d8c(int i);
+extern "C" void func_ov007_020c1d78(int i);
+extern "C" void func_ov007_020c1d8c(int i);
 extern int func_ov007_020c3598(int value, int count, char *digits, int base);
 extern int func_ov007_020c94a0(int unused, unsigned int messageIndex);
 extern void func_ov007_020c94e4(void);
@@ -521,15 +521,15 @@ void MenuText_LoadFontPalette(void) {
     GXS_LoadBGPltt(data_ov007_020d7a44, 0x1f6, 0xa);
 }
 
-void *MenuText_GetMainScreen(void) {
+extern "C" void *MenuText_GetMainScreen(void) {
     return data_ov007_02104598;
 }
 
-void *MenuText_GetSubScreen(void) {
+extern "C" void *MenuText_GetSubScreen(void) {
     return data_ov007_02103f98;
 }
 
-void *MenuText_GetSourceScreen(void) {
+extern "C" void *MenuText_GetSourceScreen(void) {
     return data_ov007_02103998;
 }
 
@@ -554,7 +554,7 @@ void *MenuText_GetSourceScreen(void) {
  * so its spill store lands after s3c's; row/m use `+=` for the ROM's add
  * operand order; the line-1 heading is an if/else inside case 1 (the 0x1f58
  * chain is the else arm, not part of case 0x11). */
-void MenuText_DrawRecordBoard(int slot, char *records, int alt) {
+extern "C" void MenuText_DrawRecordBoard(int slot, char *records, int alt) {
     volatile int zero;
     int t = 2;
     int one = 1;
@@ -640,7 +640,7 @@ void MenuText_DrawRecordBoard(int slot, char *records, int alt) {
 
 /* Shows the record board (plane 2) scrolled by `n` tile rows across
  * planes 1 and 0, 0x17 rows each, clearing what it does not cover. */
-void MenuText_ScrollRecordBoard(int n) {
+extern "C" void MenuText_ScrollRecordBoard(int n) {
     volatile int z1, z2, z3, z4;
     if (n < 0x17) {
         int b, a;
@@ -669,7 +669,7 @@ void MenuText_ScrollRecordBoard(int n) {
 /* Draws the file-select header into plane 0 from the boot arguments: the
  * message for soundModeItem, then messages 0x1f51 and 0x1f52 in colours 0xb
  * and 0xc, swapped when backlightOn is clear. */
-void func_ov007_020b7eec(Ov007BootArgs *bootArgs) {
+extern "C" void func_ov007_020b7eec(Ov007BootArgs *bootArgs) {
     int r;
     func_ov007_020c0308(data_ov007_02103998, 0x18, 0xf);
     func_ov007_020c0308(data_ov007_02104598, 0x18, 0xf);
@@ -709,7 +709,7 @@ void func_ov007_020b7eec(Ov007BootArgs *bootArgs) {
 /* Opens the window for message kind `kind` (0 opens nothing): places and
  * sizes the frame for the kind, picks the first text line for the kind and
  * language, and lays the frame out. */
-void func_ov007_020b7d94(int kind) {
+extern "C" void func_ov007_020b7d94(int kind) {
     switch (kind) {
     case 0:
         return;
@@ -866,11 +866,11 @@ void func_ov007_020b7a00(void) {
     func_ov007_020c421c(data_ov007_02103460);
 }
 
-int func_ov007_020b79e4(void) {
+extern "C" int func_ov007_020b79e4(void) {
     return data_ov007_02102ddc.state != OV007_WINDOW_CLOSED;
 }
 
-int func_ov007_020b79c8(void) {
+extern "C" int func_ov007_020b79c8(void) {
     return data_ov007_02102ddc.state == OV007_WINDOW_SHOWN;
 }
 

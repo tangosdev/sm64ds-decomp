@@ -151,22 +151,22 @@ extern void func_0201b388(int a);
 extern void func_0201b100(int a);
 extern int func_0201fb4c(void);
 extern int IsStarCollected(s32 a, s32 b);
-extern int SublevelToLevel(int a);
+extern "C" int SublevelToLevel(int a);
 
 namespace Sound {
 int ChangeMusicVolume(u32 a, s32 b);
 }
 
-void func_0201cd08(int arg);
-void func_0201cebc(short a0);
-void func_0201cfb8(int arg0);
+extern "C" void func_0201cd08(int arg);
+extern "C" void func_0201cebc(short a0);
+extern "C" void func_0201cfb8(int arg0);
 void LoadControllerModeText(int param0);
-void func_0201d418(int p0, int p1);
+extern "C" void func_0201d418(int p0, int p1);
 void Message_DrawLineBG2(void);
-void Message_DrawCenteredLine(int mapPos, int width);
-void func_0201d850(u32 course);
-void func_0201e220(int arg);
-void func_0201eaac(void);
+extern "C" void Message_DrawCenteredLine(int mapPos, int width);
+extern "C" void func_0201d850(u32 course);
+extern "C" void func_0201e220(int arg);
+extern "C" void func_0201eaac(void);
 void func_0201ef38(void);
 void func_0201ef50(int arg);
 void func_0201f108(void);
@@ -216,7 +216,7 @@ void dScStage_c::UpdateMessage() {
     }
 }
 
-void func_0201cd08(int arg) {
+extern "C" void func_0201cd08(int arg) {
     volatile int li;
     volatile unsigned short ls;
     int p, s;
@@ -259,7 +259,7 @@ void Message::DisplaySaveStatusText(unsigned short n)
     func_0201d418(0x109, 0x70);
 }
 
-void func_0201cebc(short a0) {
+extern "C" void func_0201cebc(short a0) {
     volatile unsigned short v;
     volatile int z;
     data_0209d6d4 = a0;
@@ -290,7 +290,7 @@ void Message::DisplayLevelClearText(u16 msgID, u8 course) {
     func_0201e220(1);
 }
 
-void func_0201cfb8(int arg0) {
+extern "C" void func_0201cfb8(int arg0) {
     data_0209d6d4 = arg0;
     data_0209d660 = 0;
     func_0201eaac();
@@ -431,7 +431,7 @@ void Message::DisplayControllerModeText(unsigned short n)
     Message_DrawCenteredLine(0x280, 0x20);
 }
 
-void func_0201d418(int p0, int p1) {
+extern "C" void func_0201d418(int p0, int p1) {
     volatile int li;
     int i;
     int idx = data_0209d6d4;
@@ -492,7 +492,7 @@ void Message_DrawLineBG2(void) {
    the centring go into the map position; the remaining pixels go into
    data_0209d65c as a shift. The line takes the next character tiles after
    data_0209d6a8, two map rows per line. */
-void Message_DrawCenteredLine(int mapPos, int width) {
+extern "C" void Message_DrawCenteredLine(int mapPos, int width) {
     volatile int zero;
     int bytes;
     u8 *p;
@@ -533,7 +533,7 @@ void Message_DrawCenteredLine(int mapPos, int width) {
    (course < 15) gets its number line, the course name and the star line.
    The star line leads with glyph 0xf0 when the star is collected or
    data_0209f20c is set, and with 0xf1 otherwise. */
-void func_0201d850(u32 course) {
+extern "C" void func_0201d850(u32 course) {
     u16 tile = 0x200;
     u16 mapPos = 0x80;
     /* The fill values go through the stack, as the cartridge does. */
@@ -795,7 +795,7 @@ void Message::DisplayDontSaveText(unsigned short n)
     Message_DrawCenteredLine(0x291, 0xa);
 }
 
-void func_0201e220(int arg) {
+extern "C" void func_0201e220(int arg) {
     volatile int li;
     volatile unsigned short ls;
     int p, s;
@@ -1045,7 +1045,7 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
     func_0201b388(data_0209d6a8);
 }
 
-void func_0201eaac(void) {
+extern "C" void func_0201eaac(void) {
     data_0209d6c0 = 0;
     data_0209d6b4 = 0;
     data_0209d69c = 0;
@@ -1481,7 +1481,7 @@ no:
 
 struct Pair { unsigned short v; unsigned short pad; };
 
-int ObjectMessageIDToActualMessageID(s16 id) {
+extern "C" int ObjectMessageIDToActualMessageID(s16 id) {
     int i;
     extern struct Pair data_0208eeec[];
     extern struct Pair data_0208eeee[];
@@ -1493,7 +1493,7 @@ int ObjectMessageIDToActualMessageID(s16 id) {
     return id;
 }
 
-void func_0201fc88(s16 objectMsgID) {
+extern "C" void func_0201fc88(s16 objectMsgID) {
     s16 id = ObjectMessageIDToActualMessageID(objectMsgID);
     func_0201f32c(id);
 }

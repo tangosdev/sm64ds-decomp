@@ -1,6 +1,6 @@
-extern int _Z13func_0203da9cv(void);
-extern int _Z13func_0203d950i(int i);
-extern int _Z13func_0203d890v(void);
+extern int func_0203da9c(void);
+extern int func_0203d950(int i);
+extern int func_0203d890(void);
 extern void func_02020214(unsigned int flags);
 
 extern unsigned char data_0208f274;
@@ -22,10 +22,10 @@ void func_02030ca0(void) {
     int k;
     unsigned char mask;
 
-    _Z13func_0203da9cv();
+    func_0203da9c();
     count = data_0208f274;
     for (i = 0; i < count; i++) {
-        if (_Z13func_0203d950i(i))
+        if (func_0203d950(i))
             data_0209fc5c[i] = 1;
         else
             data_0209fc5c[1] = 0;
@@ -44,7 +44,7 @@ void func_02030ca0(void) {
     }
 
     data_0209fc50 = cnt;
-    if (data_0209fc50 != _Z13func_0203d890v())
+    if (data_0209fc50 != func_0203d890())
         return;
     if (data_0209fc68 != 0)
         data_0209fc68 = 4;

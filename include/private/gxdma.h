@@ -1,11 +1,5 @@
 #ifndef PRIVATE_GXDMA_H
 #define PRIVATE_GXDMA_H
-#ifndef __cplusplus
-#define MI_WaitDma _Z10MI_WaitDmaj
-#define MI_DmaCopy32Async _Z17MI_DmaCopy32AsyncjPKvPvjPFvS1_ES1_
-#define MI_DmaCopy16 _Z12MI_DmaCopy16jPKvPvj
-#define MI_DmaCopy32 _Z12MI_DmaCopy32jPKvPvj
-#endif
 
 /* The gx library's DMA helpers, shared by its VRAM loaders (gx_load2d.c,
  * src/engine/gx/GXS.cpp, and gx_load3d.c, src/engine/gx/GX.cpp). Each takes

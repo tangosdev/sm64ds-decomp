@@ -65,25 +65,16 @@ extern PathStuff data_ov002_0210d9f0;
 
 /* ROM symbols with no header of their own. */
 extern "C" {
-
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-}
-
-extern short Vec3_VertAngle(const Vector3 *from, const Vector3 *to);
-extern "C" {
-
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
-}
-
 /* Sound.cpp: plays sound `id' at a camera-space position. */
-void func_02012694(unsigned int id, const Vector3 *camSpacePos);
-extern "C" {
-
 /* dBgW.cpp: sets a collider's stoodOnCallback. */
 
 /* Defined last: the ROM-ascending order puts the collider callback after
    BaseInitResources, which stores its address. */
 }
+extern short Vec3_VertAngle(const Vector3 *from, const Vector3 *to);
+void func_02012694(unsigned int id, const Vector3 *camSpacePos);
 void func_ov002_020eff90(dBgW *collider, dActor_c *lift, dActor_c *rider);
 
 extern PathLiftState data_ov002_0210af2c[];

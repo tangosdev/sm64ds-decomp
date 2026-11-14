@@ -35,7 +35,7 @@
   ],
   "functions": [
     {
-      "symbol": "_Z17Vec3_ApproachHorzP7Vector3S0_i",
+      "symbol": "Vec3_ApproachHorz",
       "address": "0x0203b7dc",
       "size": "0x000000c0",
       "legacy_source": "src/Vec3_ApproachHorz.c",

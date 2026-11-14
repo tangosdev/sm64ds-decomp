@@ -20,7 +20,7 @@
  *
  * What stays, and why:
  * - func_02012694 and Vec3_Add have no shared header, so
- *   they keep a local extern block. data_ov079_02128300 / 021282f0 are
+ *   they keep a local extern "C" block. data_ov079_02128300 / 021282f0 are
  *   the model handles, in overlay data this TU does not own.
  * - Mtx43 keeps the one 0x30-byte mat4x3 block copy; Matrix4x3's
  *   own memberwise assignment comes out 0x18 bytes longer.
@@ -43,12 +43,10 @@ extern SharedFilePtr data_ov079_02128300;
 extern SharedFilePtr data_ov079_021282f0;
 
 /* local extern: arm9 C helpers with no shared header yet. */
-
-void func_02012694(u32 id, const Vector3 *pos);
 extern "C" {
-
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
+void func_02012694(u32 id, const Vector3 *pos);
 
 /* Indexed by mState: [0] StateFly, [1] StateShotDown.
    Defined at the end of this file so it does not insert a function into .text. */

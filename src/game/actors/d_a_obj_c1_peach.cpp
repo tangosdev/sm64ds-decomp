@@ -43,8 +43,10 @@ struct C1PeachModelFilePtr : SharedFilePtr {
     ~C1PeachModelFilePtr();
 };
 
+extern "C" {
 /* Defined at the end of this file so its constructor does not enter .text. */
 extern C1PeachModelFilePtr gC1PeachModelFile;
+}
 
 /* Reconstructed source-style name. SM64DS proves daObjC1Peach_c through
  * RTTI, the 0x128 allocation, the vtable, and profile C1_PEACH; later EAD

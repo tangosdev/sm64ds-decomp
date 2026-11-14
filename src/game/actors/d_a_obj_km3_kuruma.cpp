@@ -70,14 +70,15 @@ daObjKm3_Kuruma_c *daObjKm3_Kuruma_c_classInit() {
     return new daObjKm3_Kuruma_c();
 }
 
-SpawnInfo<daObjKm3_Kuruma_c> g_profile_KM3_KURUMA = {daObjKm3_Kuruma_c_classInit,
-                                                     0x0097, /* KM3_KURUMA registry id 151 */
-                                                     0x00de,
-                                                     2,
-                                                     0,
-                                                     0x00200000,
-                                                     0x01000000,
-                                                     0};
+extern "C" SpawnInfo<daObjKm3_Kuruma_c> g_profile_KM3_KURUMA = {
+    daObjKm3_Kuruma_c_classInit,
+    0x0097, /* KM3_KURUMA registry id 151 */
+    0x00de,
+    2,
+    0,
+    0x00200000,
+    0x01000000,
+    0};
 
 s32 daObjKm3_Kuruma_c::InitResources() {
     return InitResourcesFrom(&gKm3KurumaResources);

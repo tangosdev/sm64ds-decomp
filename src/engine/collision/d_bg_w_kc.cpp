@@ -32,10 +32,9 @@ bool dBgW_Kc::IsNearZeroDivisor(int value) {
 }
 
 /* True when a face normal's y lies strictly inside the wall band. */
-bool dBgW_Kc::IsWallNormal(Fix12i normalY) {
+bool dBgW_Kc::IsWallNormal(fx32 normalY) {
     return normalY < 0x600 && normalY > -0xccc;
 }
-
 
 /* Slope band of a face normal's y: 0 floor, 1 wall, 2 underside. */
 int dBgW_Kc::ClassifyNormalY(int normalY) {

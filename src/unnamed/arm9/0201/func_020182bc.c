@@ -2,7 +2,7 @@
 #include "nitro/fs/file.h"
 
 extern int myFS_OpenFileFast(FSFile *p_file, FSFileID id);
-extern void *_Z13func_0201834cP6FSFilei(FSFile *p_file, int flush);
+extern void *func_0201834c(FSFile *p_file, int flush);
 extern int myFS_ConvertPathToFileID(FSFileID *p_file_id, const char *path);
 
 /* Load the file an FSFileID names (see func_0201834c); flush nonzero
@@ -12,9 +12,9 @@ void *func_020182ec(FSFileID fileId, int flush) {
     void *result = 0;
     FS_InitFile(&file);
     if (myFS_OpenFileFast(&file, fileId) == 0)
-        _Z12OS_Terminatev();
+        OS_Terminate();
     else
-        result = _Z13func_0201834cP6FSFilei(&file, flush);
+        result = func_0201834c(&file, flush);
     return result;
 }
 

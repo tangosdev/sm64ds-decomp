@@ -2,12 +2,7 @@
 #include "Ov007Display.h"
 #include "Ov007LayerSlot.h"
 #include "Ov007MenuMem.h"
-#define MenuText_GetSourceScreen _Z24MenuText_GetSourceScreenv
-#define MenuText_GetSubScreen _Z21MenuText_GetSubScreenv
-#define MenuText_GetMainScreen _Z22MenuText_GetMainScreenv
 
-#define func_ov007_020c9388 _Z19func_ov007_020c9388i
-#define func_ov007_020c02d8 _Z19func_ov007_020c02d8Pvit
 extern void *func_ov007_020c9388(int a);
 extern void *MenuText_GetMainScreen(void);
 extern void *MenuText_GetSourceScreen(void);

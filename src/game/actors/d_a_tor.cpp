@@ -267,7 +267,7 @@ int daTor_c::InitResources()
 {
     mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(gSandTornadoModelFile), 1, 0x15);
     dExtFrameCtrl_c::LoadFile(gSandTornadoAnimationFile);
-    func_02016aac((char *)&mAnmModel, 0x16, 1);
+    func_02016aac(&mAnmModel, 0x16, 1);
     mAnmModel.SetAnim((BCA_File *)((void *)gSandTornadoAnimationFile.filePtr), 0, 0x1000, 0);
     dExtAnmTexSRT_c::Prepare(*(BMD_File *)gSandTornadoModelFile.filePtr, data_ov024_02112968);
     mTextureTransformer.SetFile(data_ov024_02112968, 0, 0x1000, 0);

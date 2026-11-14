@@ -125,13 +125,11 @@ extern BcSwitchCollisionFilePtr daObjBC_Switch_c_ClsnFile;
 extern BcSwitchModelFilePtr daObjBC_Switch_c_ModelFile;
 
 /* arm9 / ov002 C helpers with no shared header. */
-
-extern u8 IsAreaShowing(s32 idx);
 extern "C" {
-
 extern u16 DecIfAbove0_Short(u16 *p);
 extern int func_ov002_020dd8b8(void *c);
 }
+extern u8 IsAreaShowing(s32 idx);
 
 /* Actor ID 0xbf is PLAYER. This int-returning predicate is what makes the
  * ROM materialize 0/1 before testing it. */

@@ -14,7 +14,7 @@
  * ledge check, collision, and the stuck check.
  *
  * leftovers:
- * - dBgCh_Actr::Init stays mangled. Fix12i is a plain s32, so the
+ * - dBgCh_Actr::Init stays mangled. fx32 is a plain s32, so the
  *   header method mangles as int.
  * - daPly_c::Hurt, daPly_c::Bounce and dActor_c::IsTooFarAwayFromPlayer
  *   are not declared on those classes.
@@ -177,7 +177,7 @@ extern KrbAnimationFileHandle data_ov084_02130cf0;
 extern KrbModelFilePtr data_ov084_02130cf8;
 extern KrbModelFilePtr gKuriboLowModelModelFile;
 extern StateHandler data_ov084_02130d74[];
-int func_02037e20(int* p);
+extern "C" int func_02037e20(int *p);
 void func_02012694(unsigned int id, const Vector3 *pos);
 int SurfaceInfo_TestFlag0x20(int *p);
 extern u8 data_0209f208[];
@@ -196,7 +196,7 @@ extern s8 gCurrentSublevel;
 void LoadSilverStarAndNumber(void);
 /* Parameter names keep this TU's @NNN. */
 extern "C" {
-typedef void BgchInitAt_(void *self, void *a, Fix12i b, Fix12i cc, void *d, Fix12i e);
+typedef void BgchInitAt_(void *self, void *a, fx32 b, fx32 cc, void *d, fx32 e);
 }
 extern SharedFilePtr *const sKuriboAnimationFiles[7];
 extern int data_ov084_02130258[];
@@ -694,7 +694,7 @@ void daKrb_c::BeginJump() {
  *    running); else "none".
  *  - Capless Goomba: ignore the player if the player is farther than
  *    distThresh from home, else chase the player. */
-void daKrb_c::func_ov084_02129cf4(Fix12i distThresh) {
+void daKrb_c::func_ov084_02129cf4(fx32 distThresh) {
     struct Vector3 ppos;
 
     daKrb_c *goomba = this;

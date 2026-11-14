@@ -23,7 +23,7 @@ int ApproachLinear2(short &, short, short);
 
 /* Move a point straight toward target by at most step, a Fix12 distance
  * (src/Vec3_ApproachHorz.cpp, 0x0203b89c); nonzero once it arrives. The step
- * is a plain int, as Fix12i is: a by-value Fix12<int> costs every caller a
+ * is a plain int, as fx32 is: a by-value Fix12<int> costs every caller a
  * literal-pool reload (notes/mwccarm-codegen.md 6az). */
 struct Vector3;
 int ApproachLinear(Vector3 &, const Vector3 &, int);

@@ -7,7 +7,6 @@
 
 extern u8 data_ov007_020ccc44[];
 
-#define func_ov007_020c0288 _Z19func_ov007_020c0288Ptii
 extern void func_ov007_020c0288(u16 *entries, int count, int palette);
 extern void func_ov007_020c0638(Ov007BgLayer *layer, int x, int y, u16 tile);
 void func_ov007_020b1390(int mode) {

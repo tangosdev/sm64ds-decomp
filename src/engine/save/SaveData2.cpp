@@ -18,22 +18,16 @@
 #include "nitro/os/spinLock.h"
 #include "nitro/mi/memory.h"
 
-int func_0203da3c(void);
 extern "C" {
-
+int func_0203da3c(void);
 u32 CARD_GetBackupTotalSize(void);
-}
-
 int func_02060558(u32 src, void *dst, u32 len, MIDmaCallback callback, void *arg, int is_async);
 int func_02060484(u32 dst, const void *src, u32 len, MIDmaCallback callback, void *arg,
                   int is_async);
-extern "C" {
-
 /* local extern: no include/ header declares the CARD backup setup. */
 void CARD_Init(void);
-}
-
 void CARD_IdentifyBackup(int type);
+}
 
 /* func_02042f68(type, magic) at 0x02042f68 -- the cart I/O pair's setup.
  *

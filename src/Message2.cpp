@@ -31,6 +31,7 @@
 #include "SaveData.h"
 #include "Sound.h"
 
+extern "C" {
 extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
 /* The message box rectangle: see the comment at Message.cpp's definitions. */
@@ -39,8 +40,7 @@ extern u8 gMsgBoxLeft;
 extern u8 gMsgBoxWinLeft;
 extern u8 data_0209d65c;
 extern u8 data_0209d660;
-extern u8 data_0209d664;
-/* nonzero while a dialogue box is up */
+extern u8 data_0209d664; /* nonzero while a dialogue box is up */
 extern u8 data_0209d668;
 extern u8 data_0209d66c;
 extern u8 data_0209d670;
@@ -68,8 +68,7 @@ extern u8 data_0209d6b4;
 extern u8 data_0209d6b8;
 extern u8 data_0209d6bc;
 extern u8 data_0209d6c0;
-extern u8 gMsgBoxStyle;
-/* the box style: see Message.cpp */
+extern u8 gMsgBoxStyle; /* the box style: see Message.cpp */
 extern u8 gMsgBoxCenterY;
 extern u8 gMsgBoxTop;
 extern u8 gMsgBoxCenterX;
@@ -106,18 +105,14 @@ extern struct OamAttr data_ov002_0210c390;
 extern struct OamAttr data_ov002_0210c398;
 extern struct OamAttr data_ov002_0210c3a0;
 extern struct OamAttr data_ov002_0210c3a8;
-extern "C" {
-
 extern void (*MSG_GEN_TEXT_FUNCS[])(void);
-}
 
 extern int IsButtonInputValid(void);
+}
 extern int func_0201fb4c(void);
 extern u8 NumStars(void);
 extern int func_020138dc(void);
-
 extern "C" {
-
 void OamRender10_Message2(int a, void *b, int c, int d, int e, int f, int g, int h, int i, int j);
 }
 

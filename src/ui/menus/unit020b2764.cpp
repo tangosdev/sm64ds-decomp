@@ -76,7 +76,7 @@ extern void *data_ov007_02103354[3];           /* data_ov007_020ccc68[figureInde
 
 void func_02044efc(struct BMD_File *bmd);
 extern "C" void func_ov007_020b3edc(int idx);
-void *func_ov007_020b3f20(int idx);
+extern "C" void *func_ov007_020b3f20(int idx);
 extern void func_ov007_020b7708(int idx, void *pos);
 extern "C" void func_ov007_020bbf98(void *model, unsigned int lights);
 extern void func_ov007_020bc53c(Ov007Model *model);
@@ -86,7 +86,7 @@ extern "C" void func_ov007_020bc6b4(Ov007Model *model, void *files, int count);
 extern "C" Ov007Model *func_ov007_020bc6d4(void *bmd, int flags);
 extern void func_ov007_020bea44(Ov007Figure *fig);
 extern Ov007Figure *func_ov007_020beaa0(int index, int figureIndex);
-unsigned short func_ov007_020c3be0(int t, int a, int b);
+extern "C" unsigned short func_ov007_020c3be0(int t, int a, int b);
 
 extern "C" void func_ov007_020b283c(void);
 
@@ -128,7 +128,7 @@ Ov007Model *func_ov007_020b2bd4(int figureIndex, int stage) {
  * sets modelReady. The three quads cover the screen at 256 x 256 pixels on
  * camera 1, each a little nearer than the last: [0] a corner-colour fill,
  * [1] textures[9] tiled four times across, [2] plain white. */
-void func_ov007_020b2998(void) {
+extern "C" void func_ov007_020b2998(void) {
     int i;
     Ov007Sprite *sprite;
     Vector3 pos;
@@ -233,7 +233,7 @@ static inline int MulFx(int a, int b) {
  * data_ov007_020ccc50 (t = 0) to data_ov007_020ccc5c (t = 0x1000), and
  * fades [1]'s alpha along a curve: 31 (of 31) at either end, 16 at
  * t = 0x800. */
-void FigureScene_SetScreenBlend(int t) {
+extern "C" void FigureScene_SetScreenBlend(int t) {
     int i;
     Ov007Sprite *sprite;
     int falling = 0x1000 - (t - 0x800) * 2;

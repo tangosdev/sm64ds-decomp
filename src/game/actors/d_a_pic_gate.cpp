@@ -66,7 +66,7 @@ extern "C" void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *ou
 extern "C" void VEC_Normalize(const Vector3 *v, Vector3 *out);
 extern "C" void G3_LoadMtx43(void *m);
 void func_02012694(u32 id, const Vector3 *pos);
-void *func_0201787c(SharedFilePtr *sfp);
+extern "C" void *func_0201787c(SharedFilePtr *sfp);
 u32   func_02045ad8(const void *src, u32 size);
 unsigned int func_02045a50(const void *src, unsigned int size);
 
@@ -292,7 +292,7 @@ s32 daPicGate_c::RippleHeight(s32 r6) {
     unsigned short r4 = mWaveTimer;
     const WaveParams *wave;
     int r5res, r4res, sum;
-    Fix12i f;
+    fx32 f;
     fx16 tv;
 
     if (r4 == 0)
@@ -335,7 +335,7 @@ s32 daPicGate_c::WaveAmplitude(s32 n) {
 /* The wave's phase at distance dist from the origin: dist * 0xffff /
  * wavelength, 4.12 fixed-point, minus the running phase mWavePhase. */
 s32 daPicGate_c::WavePhase(s32 dist) {
-    Fix12i speed = FX_Div(0xffff, mWaveParams->wavelength);
+    fx32 speed = FX_Div(0xffff, mWaveParams->wavelength);
     int result = FX_MUL(dist, speed);
     s16 cur = mWavePhase;
     return (s16)(result - cur);

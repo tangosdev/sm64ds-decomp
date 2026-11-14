@@ -20,84 +20,84 @@
   ],
   "functions": [
     {
-      "symbol": "_Z20FSi_CloseFileCommandP6FSFile",
+      "symbol": "FSi_CloseFileCommand",
       "address": "0x0205bbdc",
       "size": "0x00000008",
       "legacy_source": "src/unnamed/arm9/0205/func_0205bbdc.c",
       "ordinal": 0
     },
     {
-      "symbol": "_Z25FSi_OpenFileDirectCommandP6FSFile",
+      "symbol": "FSi_OpenFileDirectCommand",
       "address": "0x0205bbe4",
       "size": "0x00000028",
       "legacy_source": "src/unnamed/arm9/0205/func_0205bbe4.c",
       "ordinal": 1
     },
     {
-      "symbol": "_Z23FSi_OpenFileFastCommandP6FSFile",
+      "symbol": "FSi_OpenFileFastCommand",
       "address": "0x0205bc0c",
       "size": "0x0000007c",
       "legacy_source": "src/unnamed/arm9/0205/func_0205bc0c.c",
       "ordinal": 2
     },
     {
-      "symbol": "_Z18FSi_GetPathCommandP6FSFile",
+      "symbol": "FSi_GetPathCommand",
       "address": "0x0205bc88",
       "size": "0x000003c0",
       "legacy_source": "src/unnamed/arm9/0205/func_0205bc88.c",
       "ordinal": 3
     },
     {
-      "symbol": "_Z19FSi_FindPathCommandP6FSFile",
+      "symbol": "FSi_FindPathCommand",
       "address": "0x0205c048",
       "size": "0x0000021c",
       "legacy_source": "src/unnamed/arm9/0205/func_0205c048.c",
       "ordinal": 4
     },
     {
-      "symbol": "_Z18FSi_ReadDirCommandP6FSFile",
+      "symbol": "FSi_ReadDirCommand",
       "address": "0x0205c264",
       "size": "0x00000114",
       "legacy_source": "src/unnamed/arm9/0205/func_0205c264.c",
       "ordinal": 5
     },
     {
-      "symbol": "_Z18FSi_SeekDirCommandP6FSFile",
+      "symbol": "FSi_SeekDirCommand",
       "address": "0x0205c378",
       "size": "0x00000098",
       "legacy_source": "src/unnamed/arm9/0205/func_0205c378.c",
       "ordinal": 6
     },
     {
-      "symbol": "_Z20FSi_WriteFileCommandP6FSFile",
+      "symbol": "FSi_WriteFileCommand",
       "address": "0x0205c410",
       "size": "0x00000038",
       "legacy_source": "src/unnamed/arm9/0205/func_0205c410.c",
       "ordinal": 7
     },
     {
-      "symbol": "_Z19FSi_ReadFileCommandP6FSFile",
+      "symbol": "FSi_ReadFileCommand",
       "address": "0x0205c448",
       "size": "0x00000038",
       "legacy_source": "src/unnamed/arm9/0205/func_0205c448.c",
       "ordinal": 8
     },
     {
-      "symbol": "_Z12FSi_StrNICmpPKhS0_i",
+      "symbol": "FSi_StrNICmp",
       "address": "0x0205c480",
       "size": "0x00000064",
       "legacy_source": "src/unnamed/arm9/0205/func_0205c480.c",
       "ordinal": 9
     },
     {
-      "symbol": "_Z17FSi_SeekDirDirectP6FSFilej",
+      "symbol": "FSi_SeekDirDirect",
       "address": "0x0205c4e4",
       "size": "0x00000044",
       "legacy_source": "src/unnamed/arm9/0205/func_0205c4e4.c",
       "ordinal": 10
     },
     {
-      "symbol": "_Z13FSi_ReadTableP16FSiSyncReadParamPvj",
+      "symbol": "FSi_ReadTable",
       "address": "0x0205c528",
       "size": "0x000000bc",
       "legacy_source": "src/unnamed/arm9/0205/func_0205c528.cpp",

@@ -1,12 +1,5 @@
 #ifndef SOUND_H
 #define SOUND_H
-#ifndef __cplusplus
-#define func_02012194 _Z13func_02012194iiiiiPK7Vector3s
-#define func_0201226c _Z13func_0201226ciiiPK7Vector3is
-#define func_0201251c _Z13func_0201251ciiPK7Vector3i
-#define func_0201267c _Z13func_0201267cjPK7Vector3
-#define func_02012790 _Z13func_02012790j
-#endif
 
 /* The sound namespace. The tree already spells `namespace Sound { ... }` for
  * its free functions -- PauseMusic, LoadGroupAndSetBank and a dozen others --
@@ -35,19 +28,21 @@ struct dActor_c;
 /* Two of the arm9 bank-bound wrappers defined in src/engine/sound/Sound.cpp,
    with their C names: func_0201267c is Sound::Play(3, id, *pos), and
    func_02012790 is Sound::Play2D(2, id). */
-
+extern "C" {
 void func_0201267c(unsigned int, const Vector3 *);
 unsigned int func_02012790(unsigned int);
+}
 
 /* Positioned sounds, defined in src/engine/sound/Sound.cpp. The position is
    the sound's camera-space Vector3 (dActor_c::mCamSpacePos). func_0201251c
    plays a one-shot; func_0201226c and func_02012194 keep a looping sound
    going, taking the registry id it was given last time (0 for none) and
    returning the id now playing. */
-
+extern "C" {
 void func_0201251c(int, int, const Vector3 *, int);
 int func_0201226c(int, int, int, const Vector3 *, int, short);
 int func_02012194(int, int, int, int, int, const Vector3 *, short);
+}
 
 namespace Sound {
 
@@ -101,7 +96,7 @@ struct Player {
      rather than ROM evidence (see the Fix12 note in types.h). What they are is
      the one spelling every existing caller already agrees on, which is what a
      shared declaration needs. Where the convention and the bytes disagree the
-     bytes win -- so `5Fix12IiE` is declared Fix12i, the plain s32 the callers
+     bytes win -- so `5Fix12IiE` is declared fx32, the plain s32 the callers
      actually pass, not the template the name implies.
 
      RETURN TYPES come from each DEFINITION in src/, never from a caller. A
@@ -119,9 +114,9 @@ u32  PlayBank2_2D(u32);
 u32 PlayBank3_2D(u32);
 u32  PlayCharVoice(u32, u32, const Vector3 &v);
 int  PlayLong(u32 handle, u32, u32, const Vector3 &pos, s16);
-bool PlaySub(u32, u32, u32, Fix12i, bool);
+bool PlaySub(u32, u32, u32, fx32, bool);
 /* A named parameter here numbers @NNN in every includer. */
-int ChangeMusicVolume(u32, Fix12i);
+int ChangeMusicVolume(u32, fx32);
 int  PlaySecretSound(dActor_c *actor, u16 *counter);
 
 void PauseMusic();

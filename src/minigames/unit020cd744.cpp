@@ -88,7 +88,7 @@ struct V2 {
     int x, y;
 };
 
-/* A line patch vertex: the same three-Fix12i spelling as TrmpLine::Vtx. */
+/* A line patch vertex: the same three-fx32 spelling as TrmpLine::Vtx. */
 typedef TrmpLine::Vtx Vec3;
 
 /* The object a state record is installed in, seen only as its first two words:
@@ -214,7 +214,7 @@ void TrmpItem::MotionSpinHover() {
     mSide.y = tangent.y;
     mSide.z = tangent.z;
     func_0203ce80(&tangentCopy, &mSide);
-    Quaternion_FromVector3((Quat *)mRotation, &sUnitY, &mForward);
+    Quaternion_FromVector3(mRotation, &sUnitY, &mForward);
     Quaternion_Normalize(mRotation);
     MotionHover();
 }
@@ -238,7 +238,7 @@ void TrmpItem::MotionSpinDrift() {
     mSide.y = tangent.y;
     mSide.z = tangent.z;
     func_0203ce80(&tangentCopy, &mSide);
-    Quaternion_FromVector3((Quat *)mRotation, &sUnitY, &mForward);
+    Quaternion_FromVector3(mRotation, &sUnitY, &mForward);
     Quaternion_Normalize(mRotation);
 }
 
@@ -261,7 +261,7 @@ void TrmpItem::MotionSpinSway() {
     mSide.y = tangent.y;
     mSide.z = tangent.z;
     func_0203ce80(&tangentCopy, &mSide);
-    Quaternion_FromVector3((Quat *)mRotation, &sUnitY, &mForward);
+    Quaternion_FromVector3(mRotation, &sUnitY, &mForward);
     Quaternion_Normalize(mRotation);
     MotionSway();
 }
@@ -321,7 +321,7 @@ void TrmpItem::MotionSpin() {
     mSide.y = tangent.y;
     mSide.z = tangent.z;
     func_0203ce80(&tangentCopy, &mSide);
-    Quaternion_FromVector3((Quat *)mRotation, &sUnitY, &mForward);
+    Quaternion_FromVector3(mRotation, &sUnitY, &mForward);
     Quaternion_Normalize(mRotation);
 }
 
@@ -743,7 +743,7 @@ void TrmpItem::Init(int *position, int *normal, int itemType, short motionType) 
     mRotation[1] = data_02092768[1];
     mRotation[2] = data_02092768[2];
     mRotation[3] = data_02092768[3];
-    Quaternion_FromVector3((Quat *)mRotation, &sUnitY, &mForward);
+    Quaternion_FromVector3(mRotation, &sUnitY, &mForward);
     mSizeIdx = itemType;
     mMotionKind = motionType;
     mActive = 1;
@@ -1378,7 +1378,7 @@ void TrmpLine::Build(short *startPoint, short *endPoint) {
     Vector3 endpointSum, midpoint, lineSpan, directionCopy, zAxis, lineNormal;
     Vector3 spareVec;
     short swapX, swapY;
-    Fix12i lineLength, rowStep;
+    fx32 lineLength, rowStep;
     s32 row;
     s32 flag;
     TrmpLine::Vtx *cell, *mirror;

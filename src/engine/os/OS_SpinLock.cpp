@@ -19,10 +19,9 @@
 #include "nitro/mi/memory.h"
 #include "nitro/mi/swap.h"
 
+extern "C" {
 
-
-extern u32 data_020a6124;
- // OS_InitLock's isInitialized
+extern u32 data_020a6124; // OS_InitLock's isInitialized
 
 // Run once from OS_Init. Takes the init word as ID 0x7e and waits for the
 // ARM7 to clear its extension field, marks every ARM9 lock ID free, clears the
@@ -232,4 +231,4 @@ asm void OS_ReleaseLockID(u16 lockID)
     bx lr
 }
 
- // extern "C"
+} // extern "C"

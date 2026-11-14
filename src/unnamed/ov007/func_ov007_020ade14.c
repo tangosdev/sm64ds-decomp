@@ -2,7 +2,6 @@
 #include "Ov007Item.h"
 #include "Ov007MenuMem.h"
 
-#define func_ov007_020c1180 _Z19func_ov007_020c1180P12Ov007OamNode
 extern void func_ov007_020c1180(Ov007OamNode *node);
 extern void func_ov007_020aea4c(Ov007Item *item);
 

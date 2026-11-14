@@ -20,12 +20,12 @@
 #include "nitro/os/mutex.h"
 #include "msl/stdarg.h"
 
-
+extern "C" {
 // HAND-ASM PRIMITIVE: `swp` atomic swap has no C equivalent under mwccarm, so asm is the source.
 // Store value to *lock and return the word it held. The isdoverlay table
 // edits (_ISDbgLib_UnregistOverlayInfo, _ISDbgLib_RegistOverlayInfo) spin on it with 0x80 to take a lock.
 asm u32 func_0206dab4(u32 value, void *lock) { swp r0, r0, [r1]; bx lr }
-
+}
 
 #pragma push
 #pragma defer_codegen off
@@ -40,23 +40,15 @@ void __builtin_trap(void)
 }
 #pragma pop
 
-
+extern "C" {
 #pragma push
 #pragma defer_codegen off
 int fflush(FILE *file);
-extern "C" {
-
 extern void _ExitProcess(void);
-}
-
 
 extern volatile int __atexit_curr_func;
-extern "C" {
-
 extern void (*volatile __atexit_funcs[])(void);
 extern void (*__console_exit)(void);
-}
-
 
 /* MSL __exit, statement for statement with Spirit Tracks' copy of
    abort_exit_arm_eabi.c: run __atexit_funcs newest first inside the
@@ -103,11 +95,7 @@ typedef void (*exit_proc)(void);
 
 extern int __aborting;
 extern exit_proc __stdio_exit;
-extern "C" {
-
 void __destroy_global_chain(void);
-}
-
 
 /* MSL exit: unless abort is under way (__aborting),
    destroy the static objects (__destroy_global_chain) and call
@@ -142,8 +130,7 @@ typedef union Pair {
     double d;
     float f;
     struct { int x, y; } w;
-}
- Pair;
+} Pair;
 void func_0206de14(int a0, Pair p1, Pair p2, unsigned int flags);
 
 #pragma push
@@ -201,7 +188,6 @@ float func_0206ddcc(float a, int op) {
 
 #pragma push
 #pragma defer_codegen off
-extern "C" {
 /* Dispatches to one of five handlers selected by bits 26-30 of flags, then
  * forwards its own arguments unchanged.
  *
@@ -217,8 +203,6 @@ extern "C" {
  * 6ai for the fBase_c::Process wrappers.
  */
 extern unsigned int __ieee_status(unsigned int mask, unsigned int flags);
-}
-
 extern int raise(int sig);
 
 typedef void (*DispatchFn)(int a0, Pair p1, Pair p2, unsigned int flags);
@@ -228,13 +212,8 @@ typedef void (*DispatchFn)(int a0, Pair p1, Pair p2, unsigned int flags);
 typedef struct FpHandlerTable {
     unsigned int head;
     DispatchFn handler[5];
-}
- FpHandlerTable;
-extern "C" {
-
+} FpHandlerTable;
 extern void *func_02073238(void);
-}
-
 
 void func_0206de14(int a0, Pair p1, Pair p2, unsigned int flags)
 {
@@ -303,21 +282,21 @@ int __flush_all(void) {
     return result;
 }
 #pragma pop
-
+}
 
 #pragma push
 #pragma defer_codegen off
-
+extern "C" {
 
 int abs(int x)
 {
   return x<0 ? -x : x;
 }
 
-
+}
 #pragma pop
 
-
+extern "C" {
 #pragma push
 #pragma defer_codegen off
 void __convert_from_newlines(unsigned char *buffer, size_t *count);
@@ -541,8 +520,7 @@ typedef struct {
     char pad7;
     int field_width;
     int precision;
-}
- print_format;
+} print_format;
 
 enum { only_minus = 0, sign_always = 1, space_holder = 2 };
 enum { left_justification = 0, right_justification = 1, zero_fill = 2 };
@@ -560,11 +538,8 @@ enum {
 };
 
 #define MAX_BUFF 512
-extern "C" {
 
 extern unsigned char *parse_format(unsigned char *format_string, char **arg, print_format *format);
-}
-
 
 /* MSL's __OutStrCtrl: the string vsnprintf formats into, written through
  * __StringWrite. */
@@ -572,20 +547,15 @@ typedef struct {
     char *CharStr;
     size_t MaxCharCount;
     size_t CharsWritten;
-}
- __OutStrCtrl;
+} __OutStrCtrl;
 
 extern int __StringWrite(void *osc, const char *Buffer, size_t NumChars);
 extern int __pformatter(int (*WriteProc)(void *, const char *, size_t), void *WriteProcArg,
                         const unsigned char *format_str, char *arg);
-extern "C" {
-
 extern char *float2str(double x, char *buff_end, print_format format);
 extern char *double2hex(double x, char *buff_end, print_format format);
 extern char *longlong2str(long long num, char *buff_end, print_format format);
 extern char *long2str(long num, char *buff_end, print_format format);
-}
-
 
 extern unsigned short data_0209a5e4[];
 extern char data_0209a5e8[];
@@ -924,3 +894,4 @@ int __pformatter(int (*WriteProc)(void *, const char *, size_t), void *WriteProc
     return num_chars;
 }
 #pragma pop
+}

@@ -20,56 +20,56 @@
   ],
   "functions": [
     {
-      "symbol": "_Z13func_02058960P8OSThread",
+      "symbol": "func_02058960",
       "address": "0x02058960",
       "size": "0x00000028",
       "legacy_source": "src/unnamed/arm9/0205/func_02058960.c",
       "ordinal": 0
     },
     {
-      "symbol": "_Z15OSi_DequeueItemP8OSThreadP7OSMutex",
+      "symbol": "OSi_DequeueItem",
       "address": "0x02058988",
       "size": "0x00000024",
       "legacy_source": "src/unnamed/arm9/0205/func_02058988.c",
       "ordinal": 1
     },
     {
-      "symbol": "_Z15OSi_EnqueueTailP8OSThreadP7OSMutex",
+      "symbol": "OSi_EnqueueTail",
       "address": "0x020589ac",
       "size": "0x00000028",
       "legacy_source": "src/unnamed/arm9/0205/func_020589ac.c",
       "ordinal": 2
     },
     {
-      "symbol": "_Z15OS_TryLockMutexP7OSMutex",
+      "symbol": "OS_TryLockMutex",
       "address": "0x020589d4",
       "size": "0x00000070",
       "legacy_source": "src/unnamed/arm9/0205/func_020589d4.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "_Z18OSi_UnlockAllMutexP8OSThread",
+      "symbol": "OSi_UnlockAllMutex",
       "address": "0x02058a44",
       "size": "0x00000050",
       "legacy_source": "src/unnamed/arm9/0205/func_02058a44.c",
       "ordinal": 4
     },
     {
-      "symbol": "_Z14OS_UnlockMutexP7OSMutex",
+      "symbol": "OS_UnlockMutex",
       "address": "0x02058a94",
       "size": "0x00000074",
       "legacy_source": "src/unnamed/arm9/0205/func_02058a94.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "_Z12OS_LockMutexP7OSMutex",
+      "symbol": "OS_LockMutex",
       "address": "0x02058b08",
       "size": "0x00000094",
       "legacy_source": "src/unnamed/arm9/0205/func_02058b08.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "_Z12OS_InitMutexP7OSMutex",
+      "symbol": "OS_InitMutex",
       "address": "0x02058b9c",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0205/func_02058b9c.c",

@@ -112,8 +112,9 @@ dEnemyBase_c::~dEnemyBase_c()
 /* local extern: func_02038414, the tail-call veneer to
    dBgCh_Actr::UpdateDiscreteNoLava_2, is the one veneer dBgCh_Actr.h does
    not declare -- decl_common.h already spells it with a void *. */
-
-extern void func_02038414(void *);
+extern "C" {
+extern void func_02038414(dBgCh_Actr *);
+}
 
 void dEnemyBase_c::UpdateWMClsn(dBgCh_Actr &clsn, unsigned int sel) {
     switch (sel) {
@@ -269,7 +270,6 @@ void Aea30C::func_ov002_020ae9f8(dActor_c*, dBgCh_Actr*)
 
 /* Knock-back strengths, indexed by the attacking player's param1. */
 extern "C" {
-
 extern u16 data_ov002_020ff01c[];
 }
 
@@ -417,11 +417,10 @@ int func_ov002_020ae5c8(dEnemyBase_c *c, int x) {
 }
 
 extern "C" {
-
 extern void *d_enemy_baseNewHold(unsigned int a, unsigned int b, int c, int d, int e, const void *f,
                                  void *g);
-extern u32 d_enemy_baseNewCleanParticleHold(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y,
-                                            Fix12i z, const Vector3_16f *dir);
+extern u32 d_enemy_baseNewCleanParticleHold(u32 uniqueID, u32 effectID, fx32 x, fx32 y, fx32 z,
+                                            const Vector3_16f *dir);
 }
 
 int EnemyDeathC::func_ov002_020ae4cc(dBgCh_Actr &clsn) {
@@ -465,10 +464,10 @@ int EnemyDeathC::func_ov002_020ae454(dBgCh_Actr &clsn) {
 }
 
 /* Written as the real method over the real dBgCh_Lin/dBgPi classes, which is the
-   form the legacy shard recovered and byte-matched. The two by-value Fix12i
+   form the legacy shard recovered and byte-matched. The two by-value fx32
    parameters the mangled name claims are spelled as themselves. */
-int dEnemyBase_c::IsGoingOffCliff(dBgCh_Actr &clsn, Fix12i down, s16 maxSlope, bool detectWater,
-                                  bool allowObjFloor, Fix12i up) {
+int dEnemyBase_c::IsGoingOffCliff(dBgCh_Actr &clsn, fx32 down, s16 maxSlope, bool detectWater,
+                                  bool allowObjFloor, fx32 up) {
     Vector3 start;
     Vector3 end;
     mCliffState = 0;
@@ -665,7 +664,6 @@ int dEnemyBase_c::SpawnParticlesIfHitOtherObj(dCc_c &clsn) {
 }
 
 extern "C" {
-
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern s16 atan2_hold_d_enemy_base_1(s32 y, s32 x);
 extern s32 *Vec3_AsrInPlace(s32 *v, s32 sh);
@@ -742,7 +740,7 @@ void dEnemyBase_c::SpawnMegaCharParticles(dActor_c &other, char *p) {
    arity and this address's overlay; this member spent a long time spelled
    func_ov002_020ada40 because the mangled name was sitting on ov004's unrelated
    function at the same address. */
-void dEnemyBase_c::KillByInvincibleChar(const Vector3_16 &spin, daPly_c &player, Fix12i) {
+void dEnemyBase_c::KillByInvincibleChar(const Vector3_16 &spin, daPly_c &player, fx32) {
     mFlags &= ~0x10000001;
     mPrevAngleY = Vec3_HorzAngle(&player.mPos, &mPos);
     mHorzSpeed = 0xa000;

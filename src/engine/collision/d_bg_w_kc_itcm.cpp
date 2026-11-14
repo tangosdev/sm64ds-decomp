@@ -51,27 +51,24 @@
 #include "nitro/fx/fx_cp.h"
 #include "nitro/cp/sqrt.h"
 
+extern "C" {
+
 /* Shared collider helpers, defined in the arm9 TU (src/engine/collision/d_bg_w_kc.cpp).
    local extern: they are free functions of that TU and no header declares them. */
-s16 func_020396dc(dBgW_Kc *self, KCL_Tri *tri);
-/* prism -> triangle index */
 
-extern /* CLPS helpers (src/engine/collision/d_bg_ch_sph_crr_query.cpp): the entry
+/* CLPS helpers (src/engine/collision/d_bg_ch_sph_crr_query.cpp): the entry
    lookup and the SurfaceInfo write, which takes the entry by value into 0x0
    and the normal into 0x8.
    local extern: no header in include/ declares them. */
-    void
-    func_020381cc(void *block, int idx, void **out);
-void func_02037eb0(SurfaceInfo *info, CLPS clps, Vector3 *normal);
-extern "C" {
 
-extern /* local extern: no shared header declares it; match src/VEC_DotProduct.c. */
-    Fix12i
-    VEC_DotProduct(const Vector3 *a, const Vector3 *b);
-}
-
+/* local extern: no shared header declares it; match src/VEC_DotProduct.c. */
+fx32 VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 /* local extern: no header in include/ declares it. */
-Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
+fx32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
+}
+s16 func_020396dc(dBgW_Kc *self, KCL_Tri *tri); /* prism -> triangle index */
+void func_020381cc(void *block, int idx, void **out);
+void func_02037eb0(SurfaceInfo *info, CLPS clps, Vector3 *normal);
 
 /* The shared scratch dBgPc at 0x020a0cec, defined (and constructed) by
    d_bg_w_kc.cpp. GetSurfaceInfo fills its surface record, which
@@ -125,7 +122,7 @@ extern dBgPc data_020a0cec;
 /* Post-subtraction form: components already relative to the centre. The wall
    block is the one place that uses the ROUNDED Fix12 multiply, FX_MUL --
    `smull` / `adds #0x800` / `adc` / `lsr #0xc` / `orr lsl #20`: the collider's
-   axis is Fix12i where the edge normals are 0x400-scale, so MUL10 is wrong here
+   axis is fx32 where the edge normals are 0x400-scale, so MUL10 is wrong here
    and FX_MUL is wrong everywhere else. */
 #define AXIS_DOT0(v) (FX_MUL(upAxis.x, (v).x) \
                     + FX_MUL(upAxis.y, (v).y) \
@@ -1192,8 +1189,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_Lin &ray)
     return 1;
 }
 
-Fix12i dBgW_Kc::GetOctreeOriginY() const
-{
+fx32 dBgW_Kc::GetOctreeOriginY() const {
     return kclFile->origin.y << 6;
 }
 
@@ -1202,8 +1198,7 @@ Fix12i dBgW_Kc::GetOctreeOriginY() const
    units, hence the `lsl #12` against the origin's `lsl #6`. The name is the
    ROM's own, so it is kept rather than renamed to what the arithmetic
    suggests. */
-Fix12i dBgW_Kc::GetUnkOctreeY() const
-{
+fx32 dBgW_Kc::GetUnkOctreeY() const {
     return (kclFile->origin.y << 6) + (~kclFile->yMask << 12);
 }
 

@@ -13,13 +13,15 @@
 #include "dActor_c.h"
 #include "decl_common.h"
 
+extern "C" {
 /* local extern: no header declares the CLPS water test (CLPS.h only
    documents it); d_bg_ch_sph_crr_query.cpp defines it with this
    signature. */
+}
 extern int SurfaceInfo_TestFlag0x20(int *clpsWords);
 
 /* Stores dBgW_Kc::depthDirMinDot (+0x44), the sphere query's face-dot threshold. */
-void dBgW_Kc::SetDepthDirMinDot(Fix12i value) {
+void dBgW_Kc::SetDepthDirMinDot(fx32 value) {
     depthDirMinDot = value;
 }
 
@@ -189,25 +191,25 @@ s32 dBgW::GetActorUniqueID() const {
 
 
 /* Sets clipRadius (+0x0c). */
-void dBgW::SetClipRadius(Fix12i radius) {
+void dBgW::SetClipRadius(fx32 radius) {
     clipRadius = radius;
 }
 
 
 /* Reads clipRadius (+0x0c). */
-Fix12i dBgW::GetClipRadius() const {
+fx32 dBgW::GetClipRadius() const {
     return clipRadius;
 }
 
 
 /* Sets clipOffsetY (+0x10). */
-void dBgW::SetClipOffsetY(Fix12i offsetY) {
+void dBgW::SetClipOffsetY(fx32 offsetY) {
     clipOffsetY = offsetY;
 }
 
 
 /* Reads clipOffsetY (+0x10). */
-Fix12i dBgW::GetClipOffsetY() const {
+fx32 dBgW::GetClipOffsetY() const {
     return clipOffsetY;
 }
 

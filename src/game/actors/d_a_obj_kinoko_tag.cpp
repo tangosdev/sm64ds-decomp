@@ -36,21 +36,22 @@ daObjKinokoTag_c *daObjKinokoTag_c_classInit_KINOKO_TAG() {
 }
 
 /* The actor profile at ov002:0x02108cb4. */
-SpawnInfo<daObjKinokoTag_c> g_profile_KINOKO_TAG = {daObjKinokoTag_c_classInit_KINOKO_TAG,
-                                                    0x0140,
-                                                    0x013e,
-                                                    0x00000003,
-                                                    0x00060000,
-                                                    0x00200000,
-                                                    0x01000000,
-                                                    0};
+extern "C" SpawnInfo<daObjKinokoTag_c> g_profile_KINOKO_TAG = {
+    daObjKinokoTag_c_classInit_KINOKO_TAG,
+    0x0140,
+    0x013e,
+    0x00000003,
+    0x00060000,
+    0x00200000,
+    0x01000000,
+    0};
 
 daObjKinokoTag_c *daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG() {
     return new daObjKinokoTag_c();
 }
 
 /* The actor profile at ov002:0x02108cd0. */
-SpawnInfo<daObjKinokoTag_c> g_profile_KINOKO_CREATE_TAG = {
+extern "C" SpawnInfo<daObjKinokoTag_c> g_profile_KINOKO_CREATE_TAG = {
     daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG, 0x013f, 0x013d, 0, 0, 0, 0, 0};
 
 s32 daObjKinokoTag_c::InitResources() {

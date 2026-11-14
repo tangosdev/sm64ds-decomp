@@ -28,7 +28,7 @@
   ],
   "functions": [
     {
-      "symbol": "_Z13func_0202043cPv",
+      "symbol": "func_0202043c",
       "address": "0x0202043c",
       "size": "0x10",
       "legacy_source": "src/unnamed/arm9/0202/func_0202043c.c",

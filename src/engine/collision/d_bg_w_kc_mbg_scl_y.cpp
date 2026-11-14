@@ -4,7 +4,7 @@
  * non-virtual members DetectClsn and GetNormal call by address, and
  * daObjKm2_Nobiru_c reads scaleY through GetScaleY.
  * SetFile and SetScaleY are real methods taking the scale as a scalar
- * Fix12i, which is what the bytes pass. ToColliderSpace multiplies y by
+ * fx32, which is what the bytes pass. ToColliderSpace multiplies y by
  * invScaleY after the parent's inverse matrix; ToWorldSpace applies scaleY
  * before the parent's scaled matrix.
  */
@@ -22,32 +22,28 @@
 #include "math/MtxStack.h"
 
 extern "C" {
-
 /* Shared math worker.
    local extern: no header in include/ declares it. */
 void VEC_Normalize(const Vector3 *src, Vector3 *dst);
-}
 
 /* local extern: no header in include/ declares these three. */
-extern dBgCh_Lin data_020a0d0c;
-/* the scratch line, in collider space */
-extern Vector3 data_020a0d60;
-/* == data_020a0d0c.lineEnd  (+0x54) */
-extern dBgPi data_020a0d1c;
-/* == data_020a0d0c's dBgPi   (+0x10) */
+extern dBgCh_Lin data_020a0d0c; /* the scratch line, in collider space */
+extern Vector3 data_020a0d60;   /* == data_020a0d0c.lineEnd  (+0x54) */
+extern dBgPi data_020a0d1c;     /* == data_020a0d0c's dBgPi   (+0x10) */
+}
 
 dBgW_KcMbgSclY::dBgW_KcMbgSclY() {}
 
 dBgW_KcMbgSclY::~dBgW_KcMbgSclY() {}
 
-void dBgW_KcMbgSclY::SetFile(KCL_File *file, const Matrix4x3 &mat, Fix12i scale, s16 angY,
+void dBgW_KcMbgSclY::SetFile(KCL_File *file, const Matrix4x3 &mat, fx32 scale, s16 angY,
                              CLPS_Block &clps) {
     dBgW_KcMbg::SetFile(file, mat, scale, angY, clps);
     scaleY = 0x1000;
     invScaleY = 0x1000;
 }
 
-void dBgW_KcMbgSclY::SetScaleY(Fix12i newScaleY) {
+void dBgW_KcMbgSclY::SetScaleY(fx32 newScaleY) {
     scaleY = newScaleY;
     if (scaleY == 0)
         return;
@@ -62,7 +58,7 @@ s32 dBgW_KcMbgSclY::GetScaleY() {
  * out of the y stretch. */
 void dBgW_KcMbgSclY::ToColliderSpace(Vector3 *worldPos, Vector3 *localPos) {
     MTX_MultVec43(worldPos, &invScaledMat, localPos);
-    Fix12i inverseVerticalScale = invScaleY;
+    fx32 inverseVerticalScale = invScaleY;
     if (inverseVerticalScale == 0x1000)
         return;
     localPos->y = FX_MUL(localPos->y, inverseVerticalScale);
@@ -76,7 +72,7 @@ void dBgW_KcMbgSclY::ToWorldSpace(Vector3 *localPos, Vector3 *worldPos) {
     scaledPos.y = localPos->y;
     scaledPos.z = localPos->z;
     if (scaleY != 0x1000) {
-        Fix12i verticalScale = scaleY;
+        fx32 verticalScale = scaleY;
         scaledPos.y = FX_MUL(scaledPos.y, verticalScale);
     }
     MTX_MultVec43(&scaledPos, &newScaledMat, worldPos);
@@ -203,7 +199,7 @@ int dBgW_KcMbgSclY::DetectClsn(dBgCh_Lin &ray) {
 
     int hit = dBgW_Kc::DetectClsn(data_020a0d0c);
     if (hit != 0) {
-        Fix12i dist = data_020a0d0c.clsnDist;
+        fx32 dist = data_020a0d0c.clsnDist;
         ToWorldSpace(&data_020a0d60, &worldPos);
         ray.SetClsnPos(worldPos);
         ray.clsnDist = dist;
@@ -221,7 +217,7 @@ void dBgW_KcMbgSclY::GetNormal(s16 triID, Vector3 &res) {
     u16 normalIndex = mesh->tris[triID].normalIdx;
     s16 *packedNormal = mesh->normals[normalIndex];
     Vector3 normal;
-    Fix12i verticalScale;
+    fx32 verticalScale;
     normal.x = packedNormal[0] << 2;
     normal.y = packedNormal[1] << 2;
     normal.z = packedNormal[2] << 2;

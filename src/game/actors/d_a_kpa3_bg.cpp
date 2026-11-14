@@ -52,7 +52,7 @@ struct CLPS_Block;
 extern "C" int *Vec3_AsrInPlace(int *v, int n);
 extern "C" void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *res);
 void func_02012694(unsigned int, const Vector3 *);
-int CopyTexPalFromLevelModel(void *);
+extern "C" int CopyTexPalFromLevelModel(void *);
 
 /* One row per mVariant: where that platform piece sits (whole units,
  * shifted to fix12 on use) and the angle it faces. */

@@ -12,7 +12,7 @@ extern "C" void func_ov007_020b2614(int a, int b, int c);
 extern int func_ov007_020c1da0(int i);
 extern "C" void func_ov007_020aec94(int r4);
 
-void func_ov007_020b1cf0(void) {
+extern "C" void func_ov007_020b1cf0(void) {
     Ov007Model *model = WORK->model;
     Ov007MenuState *menu = WORK->states[1];
     int hi = menu->previousState;

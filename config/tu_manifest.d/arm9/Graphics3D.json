@@ -41,7 +41,7 @@
       "ordinal": 2
     },
     {
-      "symbol": "_Z20Initialise3dGraphicsi",
+      "symbol": "Initialise3dGraphics",
       "address": "0x0200f558",
       "size": "0x00000100",
       "legacy_source": "src/Initialise3dGraphics.cpp",

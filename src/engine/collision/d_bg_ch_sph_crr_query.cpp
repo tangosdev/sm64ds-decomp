@@ -27,8 +27,10 @@
 #include "SurfaceInfo.h"
 #include "math/CalcLib.h"
 
-int dBgS_ChkPolySafe(void *arg);
+extern "C" {
 extern CLPS data_020a0c78;
+}
+int dBgS_ChkPolySafe(void *arg);
 
 /* Ground and line scans use the real dBgW virtual interface and dActor_c
    clip-volume fields, as the sphere scans do below. PFN retains its pending
@@ -386,13 +388,13 @@ int dBgCh_Lin::DetectClsnExceptSlot0() {
 
 /* dBgCh_Actr_UpdateDiscreteNoLava_veneer @ 0x2038420 (arm9) -- tail-call veneer to dBgCh_Actr::UpdateDiscreteNoLava (0x2037024).
  * r0 (the dBgCh_Actr) passes straight through to the member. */
-void dBgCh_Actr_UpdateDiscreteNoLava_veneer(dBgCh_Actr *self) {
+extern "C" void dBgCh_Actr_UpdateDiscreteNoLava_veneer(dBgCh_Actr *self) {
     self->UpdateDiscreteNoLava();
 }
 
 /* func_02038414 @ 0x2038414 (arm9) -- tail-call veneer to dBgCh_Actr::UpdateDiscreteNoLava_2 (0x2036ee4).
  * r0 (the dBgCh_Actr) passes straight through to the member. */
-void func_02038414(void *self) {
+extern "C" void func_02038414(void *self) {
     ((dBgCh_Actr *)self)->UpdateDiscreteNoLava_2();
 }
 
@@ -404,19 +406,19 @@ void func_02038408(dBgCh_Actr *self) {
 
 /* dBgCh_Actr_UpdateContinuous_Veneer @ 0x20383fc (arm9) -- tail-call veneer to dBgCh_Actr::UpdateContinuous (0x20366b4).
  * r0 (the dBgCh_Actr) passes straight through to the member. */
-void dBgCh_Actr_UpdateContinuous_Veneer(dBgCh_Actr *self) {
+extern "C" void dBgCh_Actr_UpdateContinuous_Veneer(dBgCh_Actr *self) {
     self->UpdateContinuous();
 }
 
 /* func_020383f0 @ 0x20383f0 (arm9) -- tail-call veneer to dBgCh_Actr::UpdateContinuousNoLava (0x2036318).
  * r0 (the dBgCh_Actr) passes straight through to the member. */
-void func_020383f0(dBgCh_Actr *self) {
+extern "C" void func_020383f0(dBgCh_Actr *self) {
     self->UpdateContinuousNoLava();
 }
 
 /* func_020383e4 @ 0x20383e4 (arm9) -- tail-call veneer to dBgCh_Actr::UpdateExtraContinous (0x20358ac).
  * r0 (the dBgCh_Actr) passes straight through to the member. */
-void func_020383e4(dBgCh_Actr *self) {
+extern "C" void func_020383e4(dBgCh_Actr *self) {
     self->UpdateExtraContinous();
 }
 
@@ -671,7 +673,7 @@ int CLPS::IsCameraPassThrough() const {
     return w0 & 0x1000000;
 }
 
-int func_02037e20(int *p) {
+extern "C" int func_02037e20(int *p) {
     return p[0] & 0x2000000;
 }
 

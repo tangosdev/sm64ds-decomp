@@ -30,7 +30,7 @@
   ],
   "functions": [
     {
-      "symbol": "_Z13func_02073300PvjjPFvS_E",
+      "symbol": "func_02073300",
       "address": "0x02073300",
       "size": "0x000000a8",
       "legacy_source": "src/func_02073300.c",
@@ -69,7 +69,7 @@
       "source": "0x02073994",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_Z13func_02073300PvjjPFvS_E",
+      "symbol": "func_02073300",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02073300"

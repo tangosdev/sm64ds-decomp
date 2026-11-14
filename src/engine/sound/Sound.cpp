@@ -13,7 +13,7 @@
  *   Play2D returns Player_PlaySoundEffect's result, which its tail call
  *   leaves in r0.
  * - ChangeMusicVolume is Sound::ChangeMusicVolume(unsigned int, int). The
- *   second value is a 0x1000-scaled volume, spelled Fix12i in the header.
+ *   second value is a 0x1000-scaled volume, spelled fx32 in the header.
  * - `int dd = (int)(((long long)d))' in func_02012468 is a no-op tower of
  *   unknown load-bearing status.
  */
@@ -32,33 +32,33 @@ struct SndHeap;
 typedef void (*SndHeapDisposeCallback)(void *mem, u32 size, u32 data1, u32 data2);
 
 /* Foreign callees. */
-extern int func_02051f1c(void *a, u32 b, int c);
-extern int func_02051e60(NNSSndHandle *handle, int b, int c, int d, unsigned int e, int f);
-extern u32 func_02051074(struct SndHeap *heap);
-extern void func_020510a4(struct SndHeap *heap, int level);
-extern void *func_020511d4(struct SndHeap *heap, u32 size, SndHeapDisposeCallback callback,
-                           u32 data1, u32 data2);
-extern int func_0203d974(void);
-extern s32 func_0205117c(struct SndHeap *heap);
-extern int func_0203d7d4(int a);
-extern void func_0204f9c4(int a, int b);
-extern void func_0204f958(int a, int b);
-extern int func_0204fa2c(NNSSndHandle *handle, int z);
+extern "C" int func_02051f1c(void *a, u32 b, int c);
+extern "C" int func_02051e60(NNSSndHandle *handle, int b, int c, int d, unsigned int e, int f);
+extern "C" u32 func_02051074(struct SndHeap *heap);
+extern "C" void func_020510a4(struct SndHeap *heap, int level);
+extern "C" void *func_020511d4(struct SndHeap *heap, u32 size, SndHeapDisposeCallback callback,
+                               u32 data1, u32 data2);
+extern "C" int func_0203d974(void);
+extern "C" s32 func_0205117c(struct SndHeap *heap);
+extern "C" int func_0203d7d4(int a);
+extern "C" void func_0204f9c4(int a, int b);
+extern "C" void func_0204f958(int a, int b);
+extern "C" int func_0204fa2c(NNSSndHandle *handle, int z);
 struct data_020a5bb8_t;
-extern void func_0204f94c(NNSSndHandle *p);
-extern void func_0204f070(void);
-extern struct SndHeap *func_0205130c(u32 addr, u32 size);
-extern void func_02050f34(data_020a5bb8_t *arc, const char *path, struct SndHeap *heap,
-                          int loadSymbols);
-extern int func_02052008(struct SndHeap *heap);
-extern void func_020506fc(int arg);
+extern "C" void func_0204f94c(NNSSndHandle *p);
+extern "C" void func_0204f070(void);
+extern "C" struct SndHeap *func_0205130c(u32 addr, u32 size);
+extern "C" void func_02050f34(data_020a5bb8_t *arc, const char *path, struct SndHeap *heap,
+                              int loadSymbols);
+extern "C" int func_02052008(struct SndHeap *heap);
+extern "C" void func_020506fc(int arg);
 extern "C" {
 
 extern void func_02049cd8(void *a, int b, int mode);
 }
 
-extern int func_02051918(unsigned int id, struct SndHeap *heap);
-extern int func_02051fb4(void *g, unsigned int x);
+extern "C" int func_02051918(unsigned int id, struct SndHeap *heap);
+extern "C" int func_02051fb4(void *g, unsigned int x);
 extern "C" {
 
 extern void func_02049764(void);
@@ -67,11 +67,11 @@ extern void func_020494cc(void *p, int s);
 }
 
 extern void func_020490b0(NNSSndHandle *p);
-extern void func_0204f03c(void);
-extern void *func_02050cdc(int a, int idx);
+extern "C" void func_0204f03c(void);
+extern "C" void *func_02050cdc(int a, int idx);
 extern void func_02049c48(int self);
-extern void func_0204efe0(void);
-extern void func_0204effc(void);
+extern "C" void func_0204efe0(void);
+extern "C" void func_0204effc(void);
 
 /* In-TU functions, declared once so callers ahead of their definitions link. */
 extern void func_02013524(NNSSndHandle *handle, int vol, int mode);
@@ -341,7 +341,7 @@ void UnpauseMusic(void)
 
 }
 
-void func_02012e78(void) {
+extern "C" void func_02012e78(void) {
     if (sSavedMusicVolume >= 0)
         return;
     sSavedMusicVolume = sMusicVolumeTarget;
@@ -540,11 +540,11 @@ void func_020127a4(int r0, int r1, int r2, int r3) {
     NNS_SndPlayerSetTrackPan(&data_0209b4a4, r2, r3);
 }
 
-unsigned int func_02012790(unsigned int a) {
+extern "C" unsigned int func_02012790(unsigned int a) {
     return Sound::Play2D(2, a);
 }
 
-unsigned int func_0201277c(unsigned int a) {
+extern "C" unsigned int func_0201277c(unsigned int a) {
     return Sound::Play2D(3, a);
 }
 
@@ -562,7 +562,7 @@ unsigned int PlayBank2_2D(unsigned int a)
 
 }
 
-void func_02012718(int a, int b) {
+extern "C" void func_02012718(int a, int b) {
     func_020127ec(2, a, 4, 0, 0, func_020126e8(b));
 }
 
@@ -581,7 +581,7 @@ void func_02012694(unsigned int id, const Vector3 *v) {
     Sound::Play(3, id, *v);
 }
 
-void func_0201267c(unsigned int id, const Vector3 *v) {
+extern "C" void func_0201267c(unsigned int id, const Vector3 *v) {
     Sound::Play(3, id, *v);
 }
 
@@ -617,7 +617,7 @@ void Play(unsigned int j1, unsigned int j2, const Vector3 &v)
 
 }
 
-void func_0201251c(int a, int b, const Vector3 *c, int d) {
+extern "C" void func_0201251c(int a, int b, const Vector3 *c, int d) {
     int r4 = func_02048a18(b, d);
     if (func_02048a1c(c, a, r4) == 0)
         return;
@@ -681,11 +681,11 @@ int PlayLong(u32 handle, u32 a, u32 b, const Vector3 &pos, s16 e)
 
 }
 
-int func_02012310(int handle, int sound, short arg) {
+extern "C" int func_02012310(int handle, int sound, short arg) {
     return Sound_PlayIfNotActive(handle, 2, sound, arg);
 }
 
-int func_0201226c(int a0, int a1, int a2, const Vector3 *a3, int a4, short a5) {
+extern "C" int func_0201226c(int a0, int a1, int a2, const Vector3 *a3, int a4, short a5) {
     SndRegEntry *p;
     if (func_02048a1c(a3, a1, a2) == 0)
         return 0;
@@ -698,7 +698,8 @@ int func_0201226c(int a0, int a1, int a2, const Vector3 *a3, int a4, short a5) {
     return func_020116c4(&data_0209b53c, a1, a2, a3, a4, a5);
 }
 
-int func_02012194(int handle, int a1, int a2, int a3, int s0, const Vector3 *s1, short s2) {
+extern "C" int func_02012194(int handle, int a1, int a2, int a3, int s0, const Vector3 *s1,
+                             short s2) {
     SndRegEntry *e;
     if (func_02048a1c(s1, a1, a2) == 0)
         return 0;
@@ -829,15 +830,15 @@ int func_02011dcc(NNSSndHandle *handle, int x) {
     return r4;
 }
 
-void func_02011dc0(void) {
+extern "C" void func_02011dc0(void) {
     func_0204effc();
 }
 
-void func_02011db4(void) {
+extern "C" void func_02011db4(void) {
     func_0204efe0();
 }
 
-void func_02011d5c(int self) {
+extern "C" void func_02011d5c(int self) {
     if (gSoundInitialized == 0)
         return;
     switch (self) {
@@ -848,11 +849,11 @@ void func_02011d5c(int self) {
     func_02049c48(self);
 }
 
-void func_02011d50(void) {
+extern "C" void func_02011d50(void) {
     func_02048f24();
 }
 
-void func_02011d44(void) {
+extern "C" void func_02011d44(void) {
     func_02048f14();
 }
 
@@ -860,7 +861,7 @@ void func_02011d38(void) {
     func_02048f04();
 }
 
-void func_02011d2c(void) {
+extern "C" void func_02011d2c(void) {
     func_02048ef4();
 }
 
@@ -872,11 +873,11 @@ void func_02011d14(void) {
     func_02048ed4();
 }
 
-void func_02011d08(void) {
+extern "C" void func_02011d08(void) {
     Sound::Func_02048ec4();
 }
 
-void func_02011cfc(void) {
+extern "C" void func_02011cfc(void) {
     Sound::Func_02048eb4();
 }
 
@@ -1104,7 +1105,7 @@ int func_02011654(char *table, char *n) {
 
 #pragma defer_codegen off
 
-void func_020132d8(void) {
+extern "C" void func_020132d8(void) {
     if (gSoundInitialized == 0)
         return;
     func_02012d64();

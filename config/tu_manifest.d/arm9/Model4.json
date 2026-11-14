@@ -61,14 +61,14 @@
       "ordinal": 5
     },
     {
-      "symbol": "_Z13func_02045ce0v",
+      "symbol": "func_02045ce0",
       "address": "0x02045ce0",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0204/func_02045ce0.c",
       "ordinal": 6
     },
     {
-      "symbol": "_Z13func_02045cf0v",
+      "symbol": "func_02045cf0",
       "address": "0x02045cf0",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0204/func_02045cf0.c",
@@ -82,14 +82,14 @@
       "ordinal": 8
     },
     {
-      "symbol": "_Z13func_02045d10v",
+      "symbol": "func_02045d10",
       "address": "0x02045d10",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0204/func_02045d10.c",
       "ordinal": 9
     },
     {
-      "symbol": "_Z21InitialiseVramGlobalsv",
+      "symbol": "InitialiseVramGlobals",
       "address": "0x02045d20",
       "size": "0x0000007c",
       "legacy_source": "src/InitialiseVramGlobals.c",
@@ -110,7 +110,7 @@
       "ordinal": 12
     },
     {
-      "symbol": "_Z13func_02045e44Pvji",
+      "symbol": "func_02045e44",
       "address": "0x02045e44",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/arm9/0204/func_02045e44.c",
@@ -222,7 +222,7 @@
       "ordinal": 28
     },
     {
-      "symbol": "_Z13func_020462bcPi",
+      "symbol": "func_020462bc",
       "address": "0x020462bc",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0204/func_020462bc.c",
@@ -236,14 +236,14 @@
       "ordinal": 30
     },
     {
-      "symbol": "_Z13func_02046564Pv",
+      "symbol": "func_02046564",
       "address": "0x02046564",
       "size": "0x0000002c",
       "legacy_source": "src/func_02046564.c",
       "ordinal": 31
     },
     {
-      "symbol": "_Z13func_02046590PKvPKc",
+      "symbol": "func_02046590",
       "address": "0x02046590",
       "size": "0x0000006c",
       "legacy_source": "src/unnamed/arm9/0204/func_02046590.c",

@@ -1,7 +1,5 @@
 #include "Ov007Transition.h"
 
-#define func_ov007_020c86c4 _Z19func_ov007_020c86c4P15Ov007Transition
-#define func_ov007_020c8bc8 _Z19func_ov007_020c8bc8P15Ov007Transitioni
 extern void func_ov007_020c86c4(Ov007Transition *tr);
 extern void func_ov007_020c897c(Ov007Transition *tr);
 extern void func_ov007_020c8970(Ov007Transition *tr);

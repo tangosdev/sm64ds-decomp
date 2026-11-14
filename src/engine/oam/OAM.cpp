@@ -61,10 +61,12 @@ extern GXOamAttr data_0209ea74[];             /* sub OAM staging buffer: 128 x 8
 extern const unsigned char data_020755a0[12]; /* OBJ width, stride 4 */
 extern const unsigned char data_020755ac[12]; /* OBJ height, stride 4 */
 
+extern "C" {
 void GX_LoadOAM(const void *src, unsigned int offset, unsigned int count);
 void GXS_LoadOAM(const void *src, unsigned int offset, unsigned int count);
 
 int func_0202043c(void *thiz);
+}
 
 /* -------------------------------------------------------------------------- */
 

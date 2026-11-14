@@ -26,17 +26,12 @@
  */
 #include "nnsys/fnd.h"
 
+extern "C" {
+
 /* ---- NNS_FND_heapcommon.c ---- */
 
-/* Data. mwcc does not mangle it. MSVC does, and the host defines the C name. */
-#if defined(_MSC_VER)
-extern "C"
-#endif
-    extern int sRootListInitialized;
-#if defined(_MSC_VER)
-extern "C"
-#endif
-    extern NNSFndList sRootList;
+extern int sRootListInitialized;
+extern NNSFndList sRootList;
 
 #define OBJ_TO_LINK(list, obj) ((NNSFndLink *)((char *)(obj) + (list)->offset))
 
@@ -172,4 +167,5 @@ void *NNS_FndGetPrevListObject(NNSFndList *list, void *object) {
     if (object == 0)
         return list->tailObject;
     return OBJ_TO_LINK(list, object)->prevObject;
+}
 }

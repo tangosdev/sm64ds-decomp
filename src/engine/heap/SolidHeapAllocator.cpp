@@ -78,7 +78,7 @@ static inline NNSiFndHeapHead *GetHeapHeadPtrFromFrmHeapHead(NNSiFndFrmHeapHead 
     return (NNSiFndHeapHead *)SubU32ToPtr(pFrmHeapHd, sizeof(NNSiFndHeapHead));
 }
 
-NNSiFndHeapHead *InitFrameHeap(void *startAddress, void *endAddress, u16 optFlag) {
+extern "C" NNSiFndHeapHead *InitFrameHeap(void *startAddress, void *endAddress, u16 optFlag) {
     NNSiFndHeapHead *pHeapHd = (NNSiFndHeapHead *)startAddress;
     NNSiFndFrmHeapHead *pFrmHeapHd = GetFrmHeapHeadPtrFromHeapHead(pHeapHd);
 
@@ -126,6 +126,8 @@ void *AllocFromTail(NNSiFndFrmHeapHead *pFrmHeapHd, u32 size, int alignment) {
 
     return newBlock;
 }
+
+extern "C" {
 
 /* Frees every block allocated from the head, and every restore point with
    them: the records live in that space. */
@@ -329,4 +331,4 @@ u32 NNS_FndResizeForMBlockFrmHeap(NNSFndHeapHandle heap, void *memBlock, u32 new
     }
 }
 
-/* extern "C" */
+} /* extern "C" */

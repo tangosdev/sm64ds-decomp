@@ -96,7 +96,6 @@ extern "C" struct Aea30C;
 void func_ov002_020aea30(Aea30C *self, dActor_c *attacker, dBgCh_Actr *collision);
 extern "C" void d_a_nknkRunningSlidingDustAtHold(int a, int b, int c);
 extern "C" int RandomIntInternal(int *seed);
-short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 
 extern SharedFilePtr* data_ov062_0211ced8[2];
 extern SharedFilePtr* data_ov062_0211cee0[2];
@@ -933,11 +932,11 @@ void daNknk_c::DropShell() {
 dActor_c *daNknk_c::FindNearestShell() {
     dActor_c *found = 0;
     dActor_c *best = 0;
-    Fix12i bestDist = 0x7FFFFFFF;
+    fx32 bestDist = 0x7FFFFFFF;
     while (1) {
         found = dActor_c::FindWithActorID(0x11d /* SHELL */, found);
         if (!found) break;
-        Fix12i d = Vec3_Dist(&mPos, &found->mPos);
+        fx32 d = Vec3_Dist(&mPos, &found->mPos);
         if (d < bestDist) {
             bestDist = d;
             best = found;

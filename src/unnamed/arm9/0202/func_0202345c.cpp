@@ -46,7 +46,7 @@ dFader_c *gSoftResetFader;
    re-apply the current sound mode. dScene_c::BeforeBehavior calls it when
    the request lands on a scene whose actorID is 0; dScDSMT_c::InitResources
    calls it too. */
-void func_02023544(void) {
+extern "C" void func_02023544(void) {
     gSoftResetPending = 0;
     func_0202fd2c();
     data_0209b2fc = 0;

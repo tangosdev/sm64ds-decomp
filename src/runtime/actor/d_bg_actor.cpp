@@ -45,7 +45,6 @@
 /* ROM symbols with no header of their own, spelled to agree with their
  * definitions. */
 extern "C" {
-
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 
@@ -79,13 +78,11 @@ void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
  * label. The ray and ceiling hits are copied into a local dBgPi by its
  * implicit copy constructor, and its destructor runs on every exit. */
 
+extern "C" {
 /* dBgCh_Actr queries (src/engine/collision/d_bg_ch_actr.cpp), not yet
    declared in dBgCh_Actr.h. */
-int func_02035638(unsigned char *clsn);
-/* mSphereClsn.flags & 0x10: the ceiling bit */
-void *func_0203564c(void *clsn);
-extern "C" {
-/* mSphereClsn.GetUnderResult(): the ceiling hit */
+int func_02035638(void *clsn);   /* mSphereClsn.flags & 0x10: the ceiling bit */
+void *func_0203564c(void *clsn); /* mSphereClsn.GetUnderResult(): the ceiling hit */
 /* d_a_ply_methods.cpp: sets 0x20 in daPly_c::mStateFlags. */
 void func_ov002_020d8838(void *player);
 }
@@ -241,7 +238,7 @@ int func_ov002_020eedc0(dBgCh_Actr *clsn, dActor_c *other) {
 int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player) {
     dBgPi *hit;
     dActor_c *owner;
-    if (clsn->IsOnWall() || clsn->IsOnGround() || func_02035638((unsigned char *)clsn)) {
+    if (clsn->IsOnWall() || clsn->IsOnGround() || func_02035638(clsn)) {
         hit = clsn->GetSphereResult();
         if (hit->GetClsnID() != -1) {
             owner = dActor_c::FindWithID(hit->GetClsnID());
@@ -255,7 +252,7 @@ int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player) {
 }
 
 int func_ov002_020eeca8(dBgCh_Actr *clsn, dActor_c *other) {
-    if (func_02035638((unsigned char *)clsn)) {
+    if (func_02035638(clsn)) {
         dBgPi *hit = clsn->GetSphereResult();
         if (hit->GetClsnID() != -1) {
             dActor_c *owner = dActor_c::FindWithID(hit->GetClsnID());
@@ -282,7 +279,7 @@ int func_ov002_020eea84(dBgCh_Actr *clsn, dActor_c *player) {
     if (!IsActorID(player, 0xbf))
         return 0;
 
-    if (func_02035638((unsigned char *)clsn)) {
+    if (func_02035638(clsn)) {
         dBgPi hit(*(const dBgPi *)func_0203564c(clsn));
         if (hit.GetClsnID() != -1) {
             owner = dActor_c::FindWithID(hit.GetClsnID());
@@ -330,7 +327,7 @@ dBgActor_c::dBgActor_c()
 /* Same enable/disable-by-distance as IsClsnInRange, except an off-screen actor
  * (mFlags & 8) always drops its collider, and radius 0 unconditionally enables
  * instead of falling back to the clip volume. */
-int dBgActor_c::IsClsnInRangeOnScreen(Fix12i radius, Fix12i yOffset) {
+int dBgActor_c::IsClsnInRangeOnScreen(fx32 radius, fx32 yOffset) {
     int offScreen = (mFlags & 8) != 0;
     if (offScreen) {
         if (mMeshCollider.IsEnabled())
@@ -365,7 +362,7 @@ int dBgActor_c::IsClsnInRangeOnScreen(Fix12i radius, Fix12i yOffset) {
 /* Keeps the mesh collider in the world only while the closest player is within
  * radius of (pos + yOffset). Zero radius falls back to the clip volume
  * (mClipRadius, shifted into fix12); zero yOffset to mClipOffsetY. */
-int dBgActor_c::IsClsnInRange(Fix12i radius, Fix12i yOffset) {
+int dBgActor_c::IsClsnInRange(fx32 radius, fx32 yOffset) {
     Vector3 center;
     center.x = mPosX;
     center.y = mPosY;
@@ -414,7 +411,7 @@ void dBgActor_c::UpdateClsnPosAndRot()
  * the per-frame angle steps, integrate, and Kill() when the fuse runs out.
  * Callers (pushblock, signpost, ski lift, Bill Blaster) pass the X step and a
  * model-pivot height; nonzero return means "still flying". */
-int dBgActor_c::UpdateKillByMegaChar(s16 angStepX, s16 angStepY, s16 angStepZ, Fix12i pivotY) {
+int dBgActor_c::UpdateKillByMegaChar(s16 angStepX, s16 angStepY, s16 angStepZ, fx32 pivotY) {
     Vector3 probe;
     Vector3 rayEnd;
     Vector3 sum;
@@ -470,9 +467,9 @@ void dBgActor_c::Kill()
 {
     Vector3 pos;
     Vector3 dustPos;
-    Fix12i x = mPosX;
-    Fix12i y = mPosY + 0x64000;
-    Fix12i z = mPosZ;
+    fx32 x = mPosX;
+    fx32 y = mPosY + 0x64000;
+    fx32 z = mPosZ;
     pos.x = x;
     pos.y = y;
     pos.z = z;

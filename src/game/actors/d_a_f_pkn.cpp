@@ -40,6 +40,7 @@
 #include "math/Approach.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/CalcLib.h"
 
 #pragma defer_codegen off
 
@@ -106,7 +107,6 @@ enum {
    spawned PAKUN the grow-in frame. */
 
 void func_02012694(u32 id, const Vector3 *pos);
-short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 int IsStarCollectedInCurLevel(s32 flag);
 void SetStarMarker(int i, dActor_c *self, int v);
 extern "C" void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
@@ -115,7 +115,7 @@ extern "C" void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
 
 /* Called by their mangled names: each carries a Fix12<int> by value and
    the member spelling DIFFs. */
-extern "C" u32 d_a_f_pknNewHold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const void *f, void *g);
+extern "C" u32 d_a_f_pknNewHold(u32 a, u32 b, fx32 c, fx32 d, fx32 e, const void *f, void *g);
 
 extern SharedFilePtr data_ov084_02130dfc;   /* the plant's model */
 extern SharedFilePtr *data_ov084_021302f4[];/* the six shared animation handles */

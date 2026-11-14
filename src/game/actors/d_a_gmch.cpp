@@ -125,8 +125,8 @@ struct GmchDrawReg { GmchDrawReg(Vector3 &v) { v.x = 0; v.y = 0x2000; v.z = 0; }
  * ApproachLinear and RandomIntInternal.  Collapsing each onto ONE spelling was
  * measured, not assumed, and eight of the nine cost nothing:
  *
- *   TWO were never different types at all.  Fix12i is `typedef s32`, so
- *   Vec3_Dist and dActor_c::DistToCPlayer spelt `Fix12i` and spelt `int` are
+ *   TWO were never different types at all.  fx32 is `typedef s32`, so
+ *   Vec3_Dist and dActor_c::DistToCPlayer spelt `fx32` and spelt `int` are
  *   the same declaration written twice.
  *
  *   FIVE disagreed only about something no call site can see: a return value
@@ -151,21 +151,18 @@ struct GmchDrawReg { GmchDrawReg(Vector3 &v) { v.x = 0; v.y = 0x2000; v.z = 0; }
  * GmchAnimationFileHandle spell the model/animation ctors and dtors, and
  * GmchDrawReg supplies the draw offset's .init stores so the plain Vector3
  * earns its registered destructor instead of constant initialization. */
-
-Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
-s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+extern "C" {
 /* local extern: named parameters keep the TU's compiler-generated aliases
  * stable when CalcLib's shared declarations are included above. */
-extern "C" int RandomIntInternal(int *seed);
-void func_02038414(void *clsn);
-extern "C" void Matrix4x3_FromRotationY(void *m, int angle);
-extern "C" void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
-extern "C" void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
-extern "C" void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 angY);
-extern "C" unsigned char DecIfAbove0_Byte(unsigned char *p);
+extern int RandomIntInternal(int *seed);
+extern void func_02038414(void *clsn);
+extern void Matrix4x3_FromRotationY(void *m, int angle);
+extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
+extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
+extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 angY);
+extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 
 /* Parameter names keep this TU's @NNN. */
-extern "C" {
 typedef void BgchInitAt_(void *self, void *actor, int a, int b, void *v, int c);
 }
 
@@ -196,8 +193,8 @@ void daGmch_c::ChooseNextState()
 {
     extern int data_0209e650;
 
-    Fix12i distC;
-    Fix12i dist;
+    fx32 distC;
+    fx32 dist;
     int curState;
 
     distC = DistToCPlayer();
@@ -530,7 +527,7 @@ int daGmch_c::EnterState6()
 
 int daGmch_c::UpdateState5()
 {
-    Fix12i distToSpawn = Vec3_Dist(&mPos, (Vector3 *)&mSpawnPosX);
+    fx32 distToSpawn = Vec3_Dist(&mPos, (Vector3 *)&mSpawnPosX);
     if (distToSpawn < mHorzSpeed) {
         mAngleY = Vec3_HorzAngle(&mPos, (Vector3 *)&mSpawnPosX);
         mPrevAngleY = mAngleY;
@@ -908,5 +905,5 @@ GmchDrawReg gmchDrawReg(data_ov081_02128ef8);
 Vector3 data_ov081_02128ef8;
 
 /* Registry priorities, flags and clipping ranges use the shared actor profile contract. */
-SpawnInfo<daGmch_c> g_profile_GAMAGUCHI = {
+extern "C" SpawnInfo<daGmch_c> g_profile_GAMAGUCHI = {
     daGmch_c_classInit, 0x105, 0x77, 0x10000007, 0x3f000, 0x50000, 0x1000000, 0xa28000};

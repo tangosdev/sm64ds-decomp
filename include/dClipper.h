@@ -12,7 +12,7 @@ struct Matrix4x3;
  * member makes mwccarm emit __cxa_vec_cleanup in dClipper's D1/D0; the cartridge's
  * trivial destructors prove these plane records have no element destructor. */
 struct ClipperPlane {
-    Fix12i x, y, z;
+    fx32 x, y, z;
 };
 
 struct dClipper {
@@ -51,14 +51,14 @@ struct dClipper {
        them from r1/r2/r3/[sp]. The old address-derived `...Ev` symbol was
        therefore impossible; this declaration lets CodeWarrior generate the
        truthful signature and the exact ROM body. */
-    void Func_020156DC(Fix12i aspectRatio, s16 fovAngle, Fix12i nearZ, Fix12i farZ);
+    void Func_020156DC(fx32 aspectRatio, s16 fovAngle, fx32 nearZ, fx32 farZ);
 
     /* Name inferred from the frustum-plane tests; no original name is known.
        hint optionally caches the rejecting side plane. */
-    int ClipSphere(Vector3 &v, Fix12i radius, u8 *hint);
+    int ClipSphere(Vector3 &v, fx32 radius, u8 *hint);
     /* Name inferred from use: transform the position, then test the frustum
        with a scalar fixed-point sphere radius. No original name is known. */
-    int TransformAndClip(Matrix4x3 &mat, Vector3 &srcVec, Fix12i radius, Vector3 &dstVec);
+    int TransformAndClip(Matrix4x3 &mat, Vector3 &srcVec, fx32 radius, Vector3 &dstVec);
 };
 
 #endif

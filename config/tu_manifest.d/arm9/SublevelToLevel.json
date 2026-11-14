@@ -28,7 +28,7 @@
   ],
   "functions": [
     {
-      "symbol": "_Z15SublevelToLeveli",
+      "symbol": "SublevelToLevel",
       "address": "0x02013558",
       "size": "0x10",
       "legacy_source": "src/SublevelToLevel.c",

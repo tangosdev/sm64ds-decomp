@@ -44,9 +44,9 @@ daSCoin_c *daSCoin_c_classInit() {
     return new daSCoin_c();
 }
 
-SpawnInfo<daSCoin_c> g_profile_SECRET_COIN = {daSCoin_c_classInit, 0x0149,     0x014a,
-                                              0x00000000,          0x00000000, 0x00320000,
-                                              0x01f40000,          0x00050000};
+extern "C" SpawnInfo<daSCoin_c> g_profile_SECRET_COIN = {
+    daSCoin_c_classInit, 0x0149,     0x014a,     0x00000000,
+    0x00000000,          0x00320000, 0x01f40000, 0x00050000};
 
 s32 daSCoin_c::InitResources()
 {

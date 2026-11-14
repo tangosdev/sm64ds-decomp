@@ -1,14 +1,5 @@
 #ifndef NITRO_CTRDG_COMMON_H
 #define NITRO_CTRDG_COMMON_H
-#ifndef __cplusplus
-#define CTRDGi_SendtoPxi _Z16CTRDGi_SendtoPxij
-#define CTRDGi_UnlockByProcessor _Z24CTRDGi_UnlockByProcessortPi
-#define CTRDGi_LockByProcessor _Z22CTRDGi_LockByProcessortPi
-#define CTRDGi_RestoreAccessCycle _Z25CTRDGi_RestoreAccessCyclePi
-#define CTRDGi_ChangeLatestAccessCycle _Z30CTRDGi_ChangeLatestAccessCyclePi
-#define CTRDG_IsExisting _Z16CTRDG_IsExistingv
-#define CTRDGi_InitCommon _Z17CTRDGi_InitCommonv
-#endif
 
 /*
  * The cartridge-slot common routines, under the NitroSDK's own names. The
@@ -27,9 +18,7 @@
 #include "nitro/hw/mmap_shared.h"
 
 #ifdef __cplusplus
-#ifdef _MSC_VER
 extern "C" {
-#endif
 #endif
 
 /* NitroSDK CTRDGHeader: the GBA cartridge header at HW_CTRDG_ROM (0x08000000). */
@@ -85,9 +74,7 @@ void CTRDGi_UnlockByProcessor(u16, int *);
 void CTRDGi_SendtoPxi(u32);
 
 #ifdef __cplusplus
-#ifdef _MSC_VER
 }
-#endif
 #endif
 
 #endif /* NITRO_CTRDG_COMMON_H */

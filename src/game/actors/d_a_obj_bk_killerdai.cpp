@@ -88,10 +88,11 @@ extern s8 gCurrentSublevel;
 extern u8 gCurrentStarId;
 
 /* arm9 C helpers with no shared header. */
-
-extern int IsStarCollectedInCurLevel(int starID);
+extern "C" {
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+}
+extern int IsStarCollectedInCurLevel(int starID);
 
 #pragma defer_codegen off
 
@@ -101,9 +102,9 @@ daObjBkKillerdai_c::~daObjBkKillerdai_c() {}
 void daObjBkKillerdai_c::Kill() {
     Vector3 pos;
     Vector3 dustPos;
-    Fix12i x = mPosX;
-    Fix12i y = mPosY + 0x96000;
-    Fix12i z = mPosZ;
+    fx32 x = mPosX;
+    fx32 y = mPosY + 0x96000;
+    fx32 z = mPosZ;
     pos.x = x;
     pos.y = y;
     pos.z = z;

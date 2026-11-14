@@ -11,17 +11,10 @@
 #include "Presenter.h"
 #include "MWCPlusLib.h"
 
-#ifdef __cplusplus
-extern "C"
-#endif
-    void
-    __cxa_vec_cleanup(void *base, unsigned int count, unsigned int stride, dtor_t dtor);
+extern "C" void __cxa_vec_cleanup(void *base, unsigned int count, unsigned int stride,
+                                  void (*dtor)(void *));
 void CupFx_ElemDtor(void);
-#ifdef __cplusplus
-extern "C"
-#endif
-    void
-    NullDestructor_0203d47c(void);
+extern "C" void NullDestructor_0203d47c(void);
 
 struct OamAttr;
 

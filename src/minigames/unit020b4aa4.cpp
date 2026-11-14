@@ -33,6 +33,7 @@
  * the reverse of source order, so the highest-address function is written
  * first here and the functions come out in ROM order.
  *
+ * The functions keep their ROM names under C linkage.
  *
  * Retired one-function sources (ROM address order):
  *   0x020b4aa4  Coin_FlyToCounter
@@ -87,46 +88,6 @@
 #include "Sound.h"
 #include "math/Approach.h"
 #include "private/ov006_ec4dc_obj.h"
-namespace s20b2444 {
-void Mg_DrawBigNumber(int, int, int, int, int, int, int);
-}
-using s20b2444::Mg_DrawBigNumber;
-namespace s20b1de8 {
-void Mg_DrawCreditsIcon(int, int, int, int);
-}
-using s20b1de8::Mg_DrawCreditsIcon;
-namespace s20b1b08 {
-void Mg_LoseCredits(int);
-}
-using s20b1b08::Mg_LoseCredits;
-namespace s20b04c0 {
-int Mg_GetTopScreenYOffset(void);
-}
-using s20b04c0::Mg_GetTopScreenYOffset;
-namespace s20af948 {
-void Mg_RenderSubSpriteMtx(void *a, int, int, void *m);
-}
-using s20af948::Mg_RenderSubSpriteMtx;
-namespace s20af68c {
-void Hud_RenderSprite(void *attr, int, int, int, int);
-}
-using s20af68c::Hud_RenderSprite;
-namespace s20ae1a8 {
-int Mg_GetScoringMode(void);
-}
-using s20ae1a8::Mg_GetScoringMode;
-namespace s20b1b40 {
-void Mg_GainCredits(int);
-}
-using s20b1b40::Mg_GainCredits;
-namespace s20adb1c {
-void Mg_SubmitScore(int);
-}
-using s20adb1c::Mg_SubmitScore;
-namespace s20ad674 {
-s32 GetGameLanguage(void);
-}
-using s20ad674::GetGameLanguage;
 
 /* One of the twenty records at sMgCoins. Positions are Fix12
    screen pixels (Coin_Draw draws at mPos >> 12). */
@@ -150,57 +111,21 @@ typedef char Sprite_size_must_be_0x24[sizeof(Sprite) == 0x24 ? 1 : -1];
 
 
 extern "C" {
+extern void Vec2_Sub(void *o, void *a, void *b);
+extern void func_0203d680(void *out, void *in, int scale);
+extern int GetGameLanguage(void);
+extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 
-extern "C" void Vec2_Sub(void *o, void *a, void *b);
-extern void func_0203d680(void* out, void* in, int scale);
-}
-
-extern void Coin_PlacePayout(Sprite *s, Vec2i *in);
-
-extern void Coin_Return(Sprite* s);
-
-extern void Coin_Spend(Sprite* s);
-
-extern void Coin_SendOff(Sprite* s);
-
-extern void Coin_Launch(Sprite *s, Vec2i *in);
-
-extern void Coin_Hide(Sprite* s);
-
-extern void Coin_Draw(Sprite* s);
-
-extern void Coin_Update(Sprite* s);
-
-extern void Coin_Reset(Sprite* s);
-
-extern void MgCoins_StepPayoutFinish(void);
-
-extern void MgCoins_StepPayoutNext(void);
-
-extern void MgCoins_StepPayoutLayout(void);
-
-extern void MgCoins_StepSpendHold(void);
-
-extern void MgCoins_StepSpend(void);
-
-extern void MgCoins_StepHoldThenFinish(void);
-
-extern void MgCoins_StepLoseOneMore(void);
-
-extern void MgCoins_StepLose(void);
-
-extern void MgCoins_StepRefund(void);
-
-extern void MgCoins_StepLaunchQuick(void);
-
-extern void MgCoins_StepLaunch(void);
-
-extern void MgCoins_AddBetCoin(void);
-
-extern void MgCoins_DrawDelta(int arg);
+extern void Mg_GainCredits(int c);
+extern void Mg_LoseCredits(int x);
+extern void Mg_DrawCreditsIcon(int a, int b, int c, int d);
+extern int Mg_GetTopScreenYOffset(void);
+extern int Mg_GetScoringMode(void);
+extern void Mg_SubmitScore(int score);
+extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *d);
+extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
 
 extern int sMgCoinRiseFrames;
-
 extern int sMgCoinsBetCap;   /* cap MgCoins_AddBetCoin raises the count to */
 extern int gMgCoinsShowDelta;   /* nonzero: sequences also show their count */
 /* Sprite states: member-pointer records (ov004 relocs.txt names each
@@ -216,9 +141,7 @@ extern SpriteFn pmf_Coin_MoveThenRiseSpent; /* Coin_MoveThenRiseSpent */
 extern SpriteFn pmf_Coin_MoveThenRefund; /* Coin_MoveThenRefund */
 extern SpriteFn pmf_Coin_Move_3; /* Coin_Move */
 extern int *sMgCoinsButtonSprites[];
-
 extern unsigned char *sMgCoinsDeltaSprites[];
-
 extern short gMgCoinsStatus; /* 1 when a sequence finishes; 2, 3, 4 while one runs */
 extern int sMgCoinsDelta;   /* the count MgCoins_DrawDelta shows */
 extern int sMgCoinsBetPlaced;   /* set once by MgCoins_PlaceBet */
@@ -239,8 +162,30 @@ extern int sMgCoinsDeltaShown;   /* nonzero: MgCoins_Draw shows the count */
 /* The address of sMgCoins[0].mVisible; the ROM indexes the
    array's visible bytes from it. */
 extern unsigned char sMgCoinsVisible[];
-
 extern int data_020a0db0;
+}
+extern void Coin_PlacePayout(Sprite *s, Vec2i *in);
+extern void Coin_Return(Sprite *s);
+extern void Coin_Spend(Sprite *s);
+extern void Coin_SendOff(Sprite *s);
+extern void Coin_Launch(Sprite *s, Vec2i *in);
+extern void Coin_Hide(Sprite *s);
+extern void Coin_Draw(Sprite *s);
+extern void Coin_Update(Sprite *s);
+extern void Coin_Reset(Sprite *s);
+extern void MgCoins_StepPayoutFinish(void);
+extern void MgCoins_StepPayoutNext(void);
+extern void MgCoins_StepPayoutLayout(void);
+extern void MgCoins_StepSpendHold(void);
+extern void MgCoins_StepSpend(void);
+extern void MgCoins_StepHoldThenFinish(void);
+extern void MgCoins_StepLoseOneMore(void);
+extern void MgCoins_StepLose(void);
+extern void MgCoins_StepRefund(void);
+extern void MgCoins_StepLaunchQuick(void);
+extern void MgCoins_StepLaunch(void);
+extern void MgCoins_AddBetCoin(void);
+extern void MgCoins_DrawDelta(int arg);
 
 /* The twenty sprites. mwcc builds them in this file's static initializer
    (retail 0x020b9ad0) with __cxa_vec_ctor and registers their cleanup

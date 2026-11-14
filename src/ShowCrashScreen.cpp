@@ -6,7 +6,7 @@
 #include "fBase_c.h"
 #include "nitro/hw/registers.h"
 
-extern u64 func_020427c4(void);
+extern "C" u64 func_020427c4(void);
 extern "C" {
 
 extern char *GetStageDebugName(void);

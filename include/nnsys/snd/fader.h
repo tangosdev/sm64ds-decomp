@@ -9,9 +9,7 @@
  */
 
 #ifdef __cplusplus
-#ifdef _MSC_VER
 extern "C" {
-#endif
 #endif
 
 typedef struct NNSSndFader {
@@ -22,9 +20,7 @@ typedef struct NNSSndFader {
 } NNSSndFader;
 
 #ifdef __cplusplus
-#ifdef _MSC_VER
 }
-#endif
 #endif
 
 #endif

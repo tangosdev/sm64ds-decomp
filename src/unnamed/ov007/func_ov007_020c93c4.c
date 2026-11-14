@@ -1,7 +1,6 @@
 #include "types.h"
 #include "Ov007PaletteBuf.h"
 
-#define func_ov007_020c3be0 _Z19func_ov007_020c3be0iii
 extern unsigned short func_ov007_020c3be0(int t, int a, int b);
 
 /* Blends all 32 colours: out = from at t = 0, to at t = 0x1000 (Q12). */

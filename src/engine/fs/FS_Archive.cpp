@@ -32,6 +32,8 @@
 #include "nitro/fs/file.h"
 #include "nitro/fs/archive.h"
 
+extern "C" {
+
 #define ALIGN_BYTE(n, a) (((u32)(n) + (a) - 1) & ~((a) - 1))
 
 extern FSArchive *arc_list;
@@ -39,10 +41,7 @@ extern FSDirPos current_dir_pos;
 
 int FSi_TranslateCommand(FSFile *p_file, int command);
 void FSi_ReleaseCommand(FSFile *p_file, int ret);
-extern "C" {
-
 void FSi_AppendToList(FSFile *elem, FSFile *list);
-}
 
 u32 FSi_GetPackedName(const char *name, int name_len);
 int FSi_ReadMemCallback(FSArchive *p_arc, void *dst, u32 pos, u32 size);
@@ -526,4 +525,5 @@ void FS_SetArchiveProc(FSArchive *p_arc, FS_ARCHIVE_PROC_FUNC proc, u32 flags) {
         flags = 0;
     p_arc->proc = proc;
     p_arc->proc_flag = flags;
+}
 }

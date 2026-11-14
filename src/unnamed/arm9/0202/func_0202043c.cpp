@@ -7,7 +7,7 @@
  */
 extern "C" int func_0202044c(char *a, int b);
 
-int func_0202043c(void *a) {
+extern "C" int func_0202043c(void *a) {
     return func_0202044c((char *)a, 0);
 }
 

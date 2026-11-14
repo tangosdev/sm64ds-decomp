@@ -40,10 +40,10 @@ struct TboxAnimationFileHandle : SharedFilePtr {
     ~TboxAnimationFileHandle();
 };
 
-void func_02012694(u32 code, const Vector3 *pos);
 extern "C" {
 s32 AngleDiff(s32 a, s32 b);
 }
+void func_02012694(u32 code, const Vector3 *pos);
 
 /* The overlay's three {init, behavior} pointer-to-member pairs, filled by the
  * static initializer this TU now carries at 0x0211b59c. */

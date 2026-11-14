@@ -58,7 +58,6 @@ extern "C" {
  * SDK_SYS_STACKSIZE = 0 and SDK_IRQ_STACKSIZE = 0x600). */
 extern void SDK_SYS_STACKSIZE(void);
 extern void SDK_IRQ_STACKSIZE(void);
-}
 
 extern OSSwitchThreadCallback OSi_SystemCallbackInSwitchThread;
 extern OSThread **OSi_CurrentThreadPtr;
@@ -360,4 +359,5 @@ void OSi_IdleThreadProc(void *unused) {
     for (;;) {
         OS_Halt();
     }
+}
 }

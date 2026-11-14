@@ -1,8 +1,8 @@
 /* The Trampoline / Trampoline2 Mario pools' module-level entry points.
  *
  * The scenes (d_s_mg_trampoline.cpp, d_s_mg_trampoline2.cpp) own the pools
- * and call these by the namespace names in symbols.txt; d_mg_trmpln2_mario.cpp
- * defines them. The Marios are dMgTrmpln3DMario_c (Trampoline, pool of 4) and
+ * and call these by their unmangled ROM names; d_mg_trmpln2_mario.cpp defines
+ * them. The Marios are dMgTrmpln3DMario_c (Trampoline, pool of 4) and
  * dMgTrmpln2Mario_c (Trampoline2, pool of 5); the pool base is walked by byte
  * offset, so the entry points take it as void* / unsigned char*. The pool's
  * init / reset / draw family (and Trmp2Mario_SetTuning) is declared in
@@ -14,8 +14,28 @@
 #ifndef DMGTRMPLNSHARED_H
 #define DMGTRMPLNSHARED_H
 
-/* These entry points are C++ namespace functions (_ZN11ns_...), declared
- * next to their callers (decl_common.h and the two scene TUs). An extern "C"
- * declaration here would hide those usings and emit the unmangled name. */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* Trampoline2 (dMgTrmpln2Mario_c). */
+int Trmp2Mario_Hide(void);
+void Trmp2Mario_EnterAll(void);
+void Trmp2Mario_MoveToStart(void);
+void Trmp2Mario_PlaceAtStart(void);
+void Trmp2Mario_UpdateAll(void);
+
+/* Trampoline (dMgTrmpln3DMario_c). */
+void Trmp3DMario_EnterWalkIn(char *);
+int Trmp3DMario_IsOffstage(int *);
+int Trmp3DMario_CountFinished(void);
+void Trmp3DMario_StartAll(void);
+void Trmp3DMario_UpdateAll(void);
+void Trmp3DMario_SetTuning(int);
+void Trmp3DMario_SetSpawnHeight(int);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

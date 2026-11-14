@@ -1,7 +1,7 @@
 //cpp
 /* The constructor/destructor order retains all five lifecycle variants used
  * by dBgW_KcMbgSclY. The direction-to-world and movement-filter helpers retain C linkage.
- * SetFile and dBgCh_SphCrr::SetObjAndSphere are scalar Fix12i methods.
+ * SetFile and dBgCh_SphCrr::SetObjAndSphere are scalar fx32 methods.
  * Flat matrix copies use Mtx43;
  * the shared Matrix4x3 copy changes the retail instruction sequence.
  */
@@ -21,18 +21,17 @@
 #include "nitro/fx/fx_cp.h"
 
 extern "C" {
-
 /* Shared math workers.
    local extern: no header in include/ declares them. */
 void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *m, s32 x, s32 y, s32 z);
 void VEC_Normalize(const Vector3 *src, Vector3 *dst);
-}
 
 /* The scratch line's lineEnd and dBgPi base (both inside data_020a0d0c,
    below), and the scratch scaled matrix.
    local extern: no header in include/ declares them. */
 extern Vector3 data_020a0d60;
 extern dBgPi data_020a0d1c;
+}
 
 /* The shared scratch line, in collider space. A namespace-scope dBgCh_Lin,
    so mwcc emits __sinit_d_bg_w_kc_mbg.cpp to construct it and register
@@ -54,7 +53,7 @@ dBgW_KcMbg::~dBgW_KcMbg() {}
  * Matrix words are copied through Mtx43; a Matrix4x3 assignment
  * scalarizes.
  */
-void dBgW_KcMbg::SetFile(KCL_File *file, const Matrix4x3 &mtx, Fix12i scale, s16 angY,
+void dBgW_KcMbg::SetFile(KCL_File *file, const Matrix4x3 &mtx, fx32 scale, s16 angY,
                          CLPS_Block &clps) {
     dBgW_KcMbg *self = this;
     struct Scratch {
@@ -306,7 +305,7 @@ int dBgW_KcMbg::DetectClsn(dBgCh_Lin &ray) {
 
     int hit = dBgW_Kc::DetectClsn(data_020a0d0c);
     if (hit != 0) {
-        Fix12i distance = data_020a0d0c.clsnDist;
+        fx32 distance = data_020a0d0c.clsnDist;
         LocalToWorldPosition(data_020a0d60, worldPos);
         ray.SetClsnPos(worldPos);
         ray.clsnDist = distance;

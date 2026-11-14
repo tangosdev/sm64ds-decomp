@@ -19,21 +19,21 @@
   ],
   "functions": [
     {
-      "symbol": "_Z13func_0206da64v",
+      "symbol": "func_0206da64",
       "address": "0x0206da64",
       "size": "0x00000030",
       "legacy_source": "src/unnamed/arm9/0206/func_0206da64.c",
       "ordinal": 0
     },
     {
-      "symbol": "_Z13func_0206da94v",
+      "symbol": "func_0206da94",
       "address": "0x0206da94",
       "size": "0x00000008",
       "legacy_source": "src/unnamed/arm9/0206/func_0206da94.c",
       "ordinal": 1
     },
     {
-      "symbol": "_Z13func_0206da9cv",
+      "symbol": "func_0206da9c",
       "address": "0x0206da9c",
       "size": "0x00000008",
       "legacy_source": "src/unnamed/arm9/0206/func_0206da9c.c",

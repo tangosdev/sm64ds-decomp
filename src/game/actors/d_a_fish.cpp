@@ -36,7 +36,7 @@
  * - Mtx43 / RawVector3_16 are POD views whose aggregate copies keep the
  *   ROM's ldm/stm / halfword-move shapes.
  * - func_0203b9b4, Vec3_Sub and Vec3_Asr have no shared header, so they
- *   keep a local block.
+ *   keep a local extern "C" block.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -102,7 +102,6 @@ extern int data_0209f32c;
 
 /* local extern: arm9 C helpers with no shared header yet. */
 extern "C" {
-
 void func_0203b9b4(s32 *value, s32 initial);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);

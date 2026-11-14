@@ -20,16 +20,6 @@
 #include "Sound.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "math/CalcLib.h"
-namespace s20aea78 {
-struct S;
-struct M;
-void Mg_DrawSpriteListEntry(S *, int, int, M *);
-}
-using s20aea78::Mg_DrawSpriteListEntry;
-namespace s20ad674 {
-s32 GetGameLanguage(void);
-}
-using s20ad674::GetGameLanguage;
 
 /* The blitter's 2x2 matrix. This panel always passes none. */
 struct M;
@@ -79,31 +69,29 @@ enum { kSndMode = 0x64, kSndBack = 0x65, kSndLight = 0x66, kSndReject = 0x67 };
 /* Sub-screen BG enable shadow. Value 2 is this panel. */
 enum { kSubBgBit = 2 };
 
+extern "C" {
+extern void Mg_DrawSpriteListEntry(void *sprite, int x, int y, struct M *matrix);
 /* The two arrow sprites: one 16x16 OAM entry each (tile 0x49 previous,
    0x47 next, palette 13) and a 0xffff terminator. Mg_DrawSpriteListEntry
    copies the entry and draws it. */
 extern u16 sPsOptSoundPrevSprite[];
-
 extern u16 sPsOptSoundNextSprite[];
-extern void func_ov001_020ab5b0(char *icon, int kind, short x, short y, short halfW, short halfH);
-extern int TouchArea_Update(void *icon, int touch);
-extern /* Toggles mOn, drops mReady, and reloads mPressTimer from mPressTime. */
-    void
-    func_ov001_020ab3f0(void *icon);
+extern int GetGameLanguage(void);
+/* Writes the icon center, half extents, touch kind, and clears the blink. */
+/* Toggles mOn, drops mReady, and reloads mPressTimer from mPressTime. */
 /* Sound::Play2D(2, id). The ROM calls this thunk, not Play2D. */
-extern "C" int GetSoundMode(void);
-extern "C" {
-extern void SetSoundMode(int mode);
-extern void TurnBacklightOn(void);
-extern void TurnBacklightOff(void);
-}
-
+int GetSoundMode(void);
+void SetSoundMode(int mode);
+void TurnBacklightOn(void);
+void TurnBacklightOff(void);
 /* Sub BG enable bits. dScMgBase_c saves them in mSavedSubBgBits. */
 extern unsigned char gSubScreenLayers;
-
 /* 1 while the backlight is on. TurnBacklightOn / Off write it. */
 extern unsigned char data_0208ee3c;
-
+}
+extern void func_ov001_020ab5b0(char *icon, int kind, short x, short y, short halfW, short halfH);
+int TouchArea_Update(void *icon, int touch);
+void func_ov001_020ab3f0(void *icon);
 void PsOpt_PlaceIcon(dMgPsOpt_c::TouchIcon_c *icon, int style, int variant, short x, short y);
 
 /* One icon's half extents. The destructor is the shared empty arm9 one
@@ -425,5 +413,5 @@ void dMgPsOpt_c::TouchIcon_c::Render() {
         return;
     }
 
-    Mg_DrawSpriteListEntry((s20aea78::S *)sprites, xy[0], xy[1], 0);
+    Mg_DrawSpriteListEntry(sprites, xy[0], xy[1], 0);
 }

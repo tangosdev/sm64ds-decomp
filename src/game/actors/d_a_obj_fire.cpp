@@ -50,7 +50,7 @@ daObjFire_c *daObjFire_c_classInit_OBJ_BLUE_FIRE() {
     return new daObjFire_c();
 }
 
-SpawnInfo<daObjFire_c> g_profile_OBJ_RED_FIRE = {
+extern "C" SpawnInfo<daObjFire_c> g_profile_OBJ_RED_FIRE = {
     daObjFire_c_classInit_OBJ_RED_FIRE,
     0x013c,
     0x013a,
@@ -61,7 +61,7 @@ SpawnInfo<daObjFire_c> g_profile_OBJ_RED_FIRE = {
     0x00000000,
 };
 
-SpawnInfo<daObjFire_c> g_profile_OBJ_BLUE_FIRE = {
+extern "C" SpawnInfo<daObjFire_c> g_profile_OBJ_BLUE_FIRE = {
     daObjFire_c_classInit_OBJ_BLUE_FIRE,
     0x013d,
     0x013b,

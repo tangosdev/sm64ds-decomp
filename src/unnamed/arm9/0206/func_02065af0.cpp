@@ -6,8 +6,6 @@
 extern "C" {
 
 extern WBTCommand *func_02065b88(void);
-}
-
 extern int data_020a94c0;
 extern int data_020a9570;
 
@@ -27,4 +25,5 @@ int func_02065af0(int *thiz)
     MI_CpuCopy32(thiz, &data_020a9570, 0x9c);
     OS_RestoreInterrupts(saved);
     return 1;
+}
 }

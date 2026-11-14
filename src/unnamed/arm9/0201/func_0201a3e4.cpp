@@ -1,7 +1,7 @@
 //cpp
 #include "Heap.h"
 
-extern int func_0203d974(void);
+extern "C" int func_0203d974(void);
 extern void *func_02011e94(int *size);
 extern mHeap::Heap_t *data_0209d520;
 /* Unless this console is the host (func_0203d974), make data_0209d520 a

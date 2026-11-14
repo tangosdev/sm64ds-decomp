@@ -34,21 +34,18 @@
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 
+extern "C" {
 /* local extern: no header in include/ declares these (dClipper.h only
  * mentions the clipper instance, daPly_c.h only the water height). */
 extern dClipper data_0209f43c;
 extern Matrix4x3 data_0209b3ec;
 extern Matrix4x3 data_0209b41c;
 extern s32 data_0209f32c;
-struct TrackingRecord;
-void func_0204dab4(void *system, TrackingRecord *records, int count, u32 mask, void *callback);
-extern "C" {
-
+void func_0204dab4(void *system, void *records, int count, u32 mask, void *callback);
 /* This initializer's 0xc-byte layout is evidenced, but its original class
  * name is not. Keep that single unresolved ABI boundary explicit. */
 void func_0204dc84(char *record);
 }
-
 void func_02049d60(Particle::Manager *manager, Particle::System *system);
 
 void dPa_c::level_c::callback_c::SpawnParticles(Particle::System&)
@@ -214,7 +211,7 @@ dPa_c::level_c::edStarKiraCallback_c::edStarKiraCallback_c()
 
 /* The projection func_0204dab4 runs for each tracked particle in place of
  * its default func_0204dcc0: the record's 2D point and its 20.12 scale. */
-void func_02022260(int *position, short *screenX, short *screenY, int *scale) {
+extern "C" void func_02022260(int *position, short *screenX, short *screenY, int *scale) {
     *screenX = position[0] >> 9;
     *screenY = position[1] >> 9;
     *scale = 0xfff;
@@ -231,7 +228,7 @@ void dPa_c::level_c::edStarKiraCallback_c::SpawnParticles(
 int dPa_c::level_c::edStarKiraCallback_c::OnUpdate(Particle::System& system,
                                                     bool active)
 {
-    func_0204dab4(&system, (TrackingRecord *)trackingRecords, 0x40, 0, (void *)func_02022260);
+    func_0204dab4(&system, trackingRecords, 0x40, 0, (void *)func_02022260);
     return simpleCallback_c::OnUpdate(system, active);
 }
 

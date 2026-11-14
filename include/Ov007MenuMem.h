@@ -8,27 +8,19 @@
  * ("global data", "pad", ...) that is not forwarded. The MenuMem_* names
  * are coined; ov007 records none. */
 
-#ifdef __cplusplus
-
+/* The hook setters have C++ linkage: only C++ files call them. */
 void MenuMem_SetAllocHook(int);
-
 void MenuMem_SetFreeHook(int);
-
 void MenuMem_SetMaxAllocSizeHook(int);
 
-/* C++ linkage: the objects emit the Itanium names. */
-void *MenuMem_AllocClear(const char *, int);
-int MenuMem_GetMaxAllocSize(void);
+#ifdef __cplusplus
 extern "C" {
-#else
-#define MenuMem_AllocClear _Z18MenuMem_AllocClearPKci
-#define MenuMem_GetMaxAllocSize _Z23MenuMem_GetMaxAllocSizev
-void *MenuMem_AllocClear(const char *, int);
-int MenuMem_GetMaxAllocSize(void);
 #endif
 
 void *func_ov007_020c3df4(const char *, int);
+void *MenuMem_AllocClear(const char *, int);
 void func_ov007_020c3d1c(void *);
+int MenuMem_GetMaxAllocSize(void);
 
 #ifdef __cplusplus
 }

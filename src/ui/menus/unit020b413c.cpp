@@ -118,14 +118,14 @@ extern "C" int func_ov007_020b6208(int id);
 extern "C" void func_ov007_020b63e4(Ov007ItemView *view);
 extern "C" void func_ov007_020b647c(int r0, int r1, short r2);
 extern "C" void func_ov007_020b64a8(int dir);
-int func_ov007_020b79e4(void);
+extern "C" int func_ov007_020b79e4(void);
 extern "C" void MessageWindow_Close(void);
-void func_ov007_020b7d94(int kind);
-void func_ov007_020b7eec(Ov007BootArgs *bootArgs);
-Ov007MenuState *PickerScene_GetDisplayState(void);
+extern "C" void func_ov007_020b7d94(int kind);
+extern "C" void func_ov007_020b7eec(Ov007BootArgs *bootArgs);
+extern "C" Ov007MenuState *PickerScene_GetDisplayState(void);
 extern int PickerScene_IsAwaitingTap(void);
-void func_ov007_020c1d78(int i);
-void func_ov007_020c1d8c(int i);
+extern "C" void func_ov007_020c1d78(int i);
+extern "C" void func_ov007_020c1d8c(int i);
 extern int func_ov007_020c1da0(int i);
 extern int func_ov007_020c3598(int value, int count, char *digits, int base);
 extern "C" void func_ov007_020c3d1c(void *p);
@@ -392,7 +392,7 @@ void ItemView_UpdateIdle(Ov007ItemView *view) {
     ItemView_TryChoose(view);
 }
 
-Ov007ItemView *ItemView_Create(int id) {
+extern "C" Ov007ItemView *ItemView_Create(int id) {
     Ov007ItemView *view;
     Ov007Sprite *sprite;
     s32 hitBoxIndex;
@@ -499,7 +499,7 @@ Ov007ItemView *ItemView_Create(int id) {
 
 /* Frees a view built by ItemView_Create: its slide tween, its item,
  * its sprite, then the view itself. */
-void ItemView_Destroy(Ov007ItemView *view) {
+extern "C" void ItemView_Destroy(Ov007ItemView *view) {
     func_ov007_020c9080(view->slideTween);
     func_ov007_020aea4c(view->item);
     func_ov007_020c44c4(view->sprite);
@@ -509,7 +509,7 @@ void ItemView_Destroy(Ov007ItemView *view) {
 /* Resets the view's sprite to unit scale, full alpha and white, sizes it
  * for `camera` (func_ov007_020c43bc), puts it at the item's home point
  * and places it in the world (func_ov007_020c4388). */
-void ItemView_ResetSprite(Ov007ItemView *view, Ov007Camera *camera) {
+extern "C" void ItemView_ResetSprite(Ov007ItemView *view, Ov007Camera *camera) {
     Ov007Sprite *o = view->sprite;
     o->scaleY = 0x1000;
     o->scaleX = o->scaleY;
@@ -793,7 +793,7 @@ void func_ov007_020b4464(Ov007ItemView *view, Ov007Camera *camera) {
 
 /* The choice word data_ov007_02103428, or 0 while func_ov007_020b79e4
  * returns nonzero. */
-int func_ov007_020b4438(void) {
+extern "C" int func_ov007_020b4438(void) {
     if (func_ov007_020b79e4())
         return 0;
     return data_ov007_02103428;
@@ -802,7 +802,7 @@ int func_ov007_020b4438(void) {
 /* Opens the 0x16 / 0x17 choice: sets the choice word to 1, requests state 3
  * on both items' views, then opens the message window for `kind` (9 or 0xc
  * at the callers) with func_ov007_020b7d94. */
-void func_ov007_020b43dc(int kind) {
+extern "C" void func_ov007_020b43dc(int kind) {
     data_ov007_02103428 = 1;
     WORK->itemViews[0x16]->item->state->requestedState = 3;
     WORK->itemViews[0x17]->item->state->requestedState = 3;
