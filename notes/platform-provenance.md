@@ -26,7 +26,7 @@ named field:
 
 | sub-object | span | closes on |
 |---|---|---|
-| `dActor_c`   | 0x000 + 0x0d0 = 0x0d0 | `pad_0d0` |
+| `dActor_c`   | 0x000 + 0x0d0 = 0x0d0 | `mEatingPlayer` |
 | `dExtSimpleModel_c`      | 0x0d4 + 0x050 = 0x124 | `mMeshCollider` |
 | `dBgW_KcMbg` | 0x124 + 0x1c8 = 0x2ec | padding, then the clsn matrix |
 

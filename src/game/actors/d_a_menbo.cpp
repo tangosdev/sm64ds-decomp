@@ -97,13 +97,6 @@ extern "C" u16 DecIfAbove0_Short(u16 *p);
 extern "C" int RandomIntInternal(int *seed);
 void func_02012694(unsigned int id, const Vector3 *pos);
 
-extern "C" int d_a_menboNewHold(unsigned int a0, unsigned int a1, int a2, int a3, int a4, int a5,
-                                int a6);
-
-/* Parameter names keep this TU's @NNN. */
-extern "C" {
-typedef void BgchInitAt_(dBgCh_Actr *self, int a, LocFix12 r, LocFix12 h, int p, int q);
-}
 int SurfaceInfo_TestFlag0x20(int *p);
 extern "C" int func_02035638(u8 *p);
 
@@ -178,9 +171,9 @@ void func_ov090_02130f94(daMenbo_c *c_) {
         data_020a0e68 = *src;
         MTX_Concat43((const Matrix4x3 *)c->mAnmModel.data.transforms + (6 + i * 3), &data_020a0e68,
                      &data_020a0e68);
-        v.x = *(int *)((char *)&data_020a0e68 + 0x24);
-        v.y = *(int *)((char *)&data_020a0e68 + 0x28);
-        v.z = *(int *)((char *)&data_020a0e68 + 0x2c);
+        v.x = data_020a0e68.m[9];
+        v.y = data_020a0e68.m[10];
+        v.z = data_020a0e68.m[11];
         Vec3_Lsl(&r, &v, sh);
         v.x = r.x;
         v.y = r.y;

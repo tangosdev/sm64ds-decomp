@@ -8,11 +8,8 @@
  * dCcAcPos_c x2, dExtShadowModel_c and dBgCh_Actr in reverse before
  * storing _ZTV10dBgActor_c (inlined) and chaining to dActor_c.
  *
- * 0x0d0..0x0d4 is dBgActor_c's own generic pad (include/dBgActor_c.h), not a
- * daObjBlockS_c field -- the .cpp reaches it by raw offset as `mEatingPlayer`,
- * the name the other actor headers (include/dEnemyBase_c.h, include/daCoin_c.h)
- * give the word at 0x0d0, the same idiom dBgActor_c.h documents for
- * daObjRc_Guruguru_c's tail-padding field.
+ * The word at 0x0d0 the crate's spit-out and in-mouth states use is
+ * dBgActor_c::mEatingPlayer (include/dBgActor_c.h), not a daObjBlockS_c field.
  *
  * Field names come from what the matched bodies do with each offset; the
  * per-offset citations for the older members are in notes/bgobject-provenance.md
@@ -49,15 +46,11 @@ struct daObjBlockS_c : dBgActor_c {
     s32 mFloorNormalX;          /* 0x4dc */
     s32 mFloorNormalY;          /* 0x4e0 */
     s32 mFloorNormalZ;          /* 0x4e4 */
-    s32 mHomePosX;              /* 0x4e8 */
-    s32 mHomePosY;              /* 0x4ec */
-    s32 mHomePosZ;              /* 0x4f0 */
+    Vector3 mHomePos;           /* 0x4e8 */
     /* Offset of the crate from the carrying player's hand, fix12: eased toward
        a per-case target row (data_ov098_0213bf60) and handed to
        dActor_c::UpdateCarry as its Vector3. Zeroed when nothing carries it. */
-    s32 mCarryOffsetX;          /* 0x4f4 */
-    s32 mCarryOffsetY;          /* 0x4f8 */
-    s32 mCarryOffsetZ;          /* 0x4fc */
+    Vector3 mCarryOffset;       /* 0x4f4 */
     s16 mHomeAngleX;            /* 0x500 */
     s16 mHomeAngleY;            /* 0x502 */
     s16 mHomeAngleZ;            /* 0x504 */
@@ -78,7 +71,7 @@ struct daObjBlockS_c : dBgActor_c {
        padding. Was a u8 marker. */
     daPly_c *mHoldingPlayer; /* 0x5e4 */
     /* The actor that last let go of the crate: copied from mHoldingPlayer when
-       it is thrown and from the 0x0d0 word when it is spat out. The thrown
+       it is thrown and from mEatingPlayer when it is spat out. The thrown
        state's hit test will not hurt it. */
     dActor_c *mPrevHolder;      /* 0x5e8 */
     /* Y of the ground under the crate: dBgCh_Gnd::DetectClsn is run at a point
@@ -129,6 +122,7 @@ struct daObjBlockS_c : dBgActor_c {
     void EnterCarried();
     void UpdateIdle();
     void EnterIdle();
+    void SetState(int state);
     void CallStateUpdate();
     int IsOnWaterFloor();
     int func_ov098_02138bfc();
@@ -145,13 +139,14 @@ struct daObjBlockS_c : dBgActor_c {
        at data_ov098_0213c878 (see src/game/actors/d_a_obj_block_s.cpp). The names
        describe what the handlers do; the ROM stores none. */
     enum State {
-        STATE_IDLE      = 0,    /* sitting where it was placed or landed */
-        STATE_CARRIED   = 1,    /* held by mHoldingPlayer */
-        STATE_THROWN    = 2,    /* released by a player, flying */
-        STATE_SPIT_OUT  = 3,    /* put in front of the player at 0x0d0 and launched */
-        STATE_BOUNCING  = 4,    /* tumbling, with mBounceCount bounces left */
-        STATE_IN_MOUTH  = 5,    /* entered when the 0x20000 / 0x40000 flags are set; may follow the player at 0x0d0 */
-        STATE_BROKEN    = 6     /* invisible; waits to respawn at its home */
+        STATE_IDLE = 0,     /* sitting where it was placed or landed */
+        STATE_CARRIED = 1,  /* held by mHoldingPlayer */
+        STATE_THROWN = 2,   /* released by a player, flying */
+        STATE_SPIT_OUT = 3, /* put in front of mEatingPlayer and launched */
+        STATE_BOUNCING = 4, /* tumbling, with mBounceCount bounces left */
+        STATE_IN_MOUTH =
+            5, /* entered when the 0x20000 / 0x40000 flags are set; may follow mEatingPlayer */
+        STATE_BROKEN = 6 /* invisible; waits to respawn at its home */
     };
 };
 
