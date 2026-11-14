@@ -17,11 +17,11 @@
 
 extern SharedFilePtr data_ov002_0210d9e0;
 
-extern "C" daESwitch_c *daESwitch_c_classInit() {
+daESwitch_c *daESwitch_c_classInit() {
     return new daESwitch_c;
 }
 
-extern "C" daECreate_c *daECreate_c_classInit() {
+daECreate_c *daECreate_c_classInit() {
     return new daECreate_c;
 }
 

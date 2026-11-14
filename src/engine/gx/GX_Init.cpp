@@ -53,13 +53,16 @@
 #define MASTER_BRIGHT_UP    0x4000
 #define MASTER_BRIGHT_DOWN  0x8000
 
+extern u16 sIsDispOn;
+// display on (TRUE until GX_DispOff)
+extern int GXi_DmaId;
+// GX DMA channel, -1 if none
+extern u16 sDispMode;
 extern "C" {
-
-extern u16 sIsDispOn; // display on (TRUE until GX_DispOff)
-extern int GXi_DmaId; // GX DMA channel, -1 if none
-extern u16 sDispMode; // display mode parked by GX_DispOff
+// display mode parked by GX_DispOff
 
 void GX_InitGXState(void);
+}
 
 // Power the display engines, reset the VRAM state, and clear both
 // engines' 2D registers. The ROM spills each zero of the CPU path to its own
@@ -159,4 +162,4 @@ void GXx_SetMasterBrightness_(volatile u16 *reg, int brightness) {
         *reg = (u16)(MASTER_BRIGHT_DOWN | -brightness);
 }
 
-} // extern "C"
+// extern "C"

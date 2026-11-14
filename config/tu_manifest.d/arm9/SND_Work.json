@@ -21,21 +21,21 @@
   ],
   "functions": [
     {
-      "symbol": "SNDi_InitSharedWork",
+      "symbol": "_Z19SNDi_InitSharedWorkP13SNDSharedWork",
       "address": "0x0205b554",
       "size": "0x00000080",
       "legacy_source": "src/unnamed/arm9/0205/func_0205b554.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "SNDi_GetFinishedCommandTag",
+      "symbol": "_Z26SNDi_GetFinishedCommandTagv",
       "address": "0x0205b5d4",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/arm9/0205/func_0205b5d4.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "SND_GetPlayerStatus",
+      "symbol": "_Z19SND_GetPlayerStatusv",
       "address": "0x0205b608",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/arm9/0205/func_0205b608.cpp",

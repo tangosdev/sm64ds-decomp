@@ -7,7 +7,6 @@ void SetFIQState(bool);
 void SetIRQState(bool);
 }
 
-extern "C" {
 extern int func_0206da18(void);
 extern int func_0206d9cc(void);
 /* One try at the cartridge lock, with IRQ and FIQ disabled first (the
@@ -46,5 +45,4 @@ int func_0206cee0(int *out) {
         *out = 0;
     }
     return locked;
-}
 }

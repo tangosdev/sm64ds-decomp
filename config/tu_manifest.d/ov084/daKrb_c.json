@@ -106,7 +106,7 @@
       "ordinal": 7
     },
     {
-      "symbol": "func_ov084_021296b0",
+      "symbol": "_Z19func_ov084_021296b0PvS_",
       "address": "0x021296b0",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov084_021296b0.c",
@@ -274,21 +274,21 @@
       "ordinal": 31
     },
     {
-      "symbol": "daKrb_c_classInit_KURIBO_L",
+      "symbol": "_Z26daKrb_c_classInit_KURIBO_Lv",
       "address": "0x0212bff8",
       "size": "0x0000005c",
       "legacy_source": "src/d_a_krb_kuribo_l.c",
       "ordinal": 32
     },
     {
-      "symbol": "daKrb_c_classInit_KURIBO_S",
+      "symbol": "_Z26daKrb_c_classInit_KURIBO_Sv",
       "address": "0x0212c054",
       "size": "0x0000005c",
       "legacy_source": "src/d_a_krb_kuribo_s.c",
       "ordinal": 33
     },
     {
-      "symbol": "daKrb_c_classInit_KURIBO",
+      "symbol": "_Z24daKrb_c_classInit_KURIBOv",
       "address": "0x0212c0b0",
       "size": "0x0000005c",
       "legacy_source": "src/d_a_krb_kuribo.c",
@@ -1080,14 +1080,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN15KrbModelFilePtrC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail model-handle construction destination and the SharedFilePtr model family identity"
     },
     {
       "symbol": "_ZN15KrbModelFilePtrD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the SharedFilePtr model family identity"
@@ -1301,7 +1301,7 @@
       "source": "0x021308ec",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daKrb_c_classInit_KURIBO",
+      "symbol": "_Z24daKrb_c_classInit_KURIBOv",
       "addend": 0,
       "target_module": "ov084",
       "target_address": "0x0212c0b0"
@@ -1311,7 +1311,7 @@
       "source": "0x02130908",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daKrb_c_classInit_KURIBO_S",
+      "symbol": "_Z26daKrb_c_classInit_KURIBO_Sv",
       "addend": 0,
       "target_module": "ov084",
       "target_address": "0x0212c054"
@@ -1321,7 +1321,7 @@
       "source": "0x02130924",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daKrb_c_classInit_KURIBO_L",
+      "symbol": "_Z26daKrb_c_classInit_KURIBO_Lv",
       "addend": 0,
       "target_module": "ov084",
       "target_address": "0x0212bff8"
@@ -1651,7 +1651,7 @@
       "source": "0x213036c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1671,7 +1671,7 @@
       "source": "0x2130388",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1841,7 +1841,7 @@
       "source": "0x021304dc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"

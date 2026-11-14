@@ -117,18 +117,27 @@ extern struct OamAttr data_ov002_0210c3b0;
 extern void *data_ov002_0210c3e0[2];
 
 extern "C" {
+
 /* Siblings below 0x0200bec4 (defined at the end of the file). */
 extern int func_020092c4(void *cam, Vector3 *out, const Vector3 *target);
 extern s32 Math_Function_0203b14c(s32 *p, s32 tgt, s32 rate, s32 lim, s32 step);
+}
+
 extern int StartWithFarCamera();
+extern "C" {
+
 /* Actor-table factory; the registry row names the bare symbol. */
 extern dCamera_c *dCamera_c_classInit();
+}
+
 extern struct ViewObj *GetViewObj(int idx);
 
-extern s16 Vec3_HorzAngle(const void *v0, const void *v1);
+extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-extern int Vec3_HorzLen(const void *v);
+extern int Vec3_HorzLen(const Vector3 *v);
+extern "C" {
+
 extern int VEC_Mag(void *v);
 extern void Vec3_Add(void *out, const void *a, const void *b);
 extern void Vec3_Sub(void *out, const void *a, const void *b);
@@ -139,7 +148,11 @@ extern void Vec3_MulScalarInPlace(void *v, int s);
 extern int *Vec3_LslInPlace(int *v, int sh);
 extern void Vec3_RotateYAndTranslate(void *out, const void *in, short angle, const void *src);
 extern void MTX_MultVec43(void *dst, Matrix4x3 *src, void *out);
+}
+
 extern s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
+extern "C" {
+
 /* local extern: including math/MtxStack.h renumbers this TU's function-local
    statics (sScriptOps, sPrevTurnInput), whose numbered names symbols.txt
    records, so its matrix routines stay declared here. */
@@ -1335,7 +1348,7 @@ int dCamera_c::func_0200bec4(int *target, int baseY, char *modeArg, int speed) {
         height = FX_MUL(height, 0x3000);
     }
     goal.y += ScaleHeightByFov(height);
-    horzDist = Vec3_HorzLen(&goal);
+    horzDist = Vec3_HorzLen((const Vector3 *)&goal);
     VecFx32 focus;
     Vec3_MulScalar((Vector3 *)&focus, &mLookTargetPos, mFocusBlend);
     VEC_Add(&goal, &focus, &goal);
@@ -1407,11 +1420,14 @@ int dCamera_c::func_0200bec4(int *target, int baseY, char *modeArg, int speed) {
 dActor_c *KuppaScript::FindScriptPlayer(u32 character);
 dActor_c *KuppaScript::FindDemoActor(u32 param1);
 
-extern "C" {
 /* local extern: math/CalcLib.h spells the Vec3 helpers with const Vector3 *,
    which this file's VecFx32 callers cannot pass; only these two are taken
    from it. */
-extern s32 ApproachAngle(s16 *cur, s32 target, s32 div, s32 band, s32 step);
+/* int target: a short parameter sign-extends and ApproachLookAtAndAngles /
+   func_02009e70 no longer reproduce. C linkage matches the definition. */
+extern "C" s32 ApproachAngle(s16 *cur, s32 target, s32 div, s32 band, s32 step);
+extern "C" {
+
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 /* local extern: math/MtxStack.h declares these; see the matrix helpers above. */
 extern void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
@@ -1422,7 +1438,11 @@ extern int NormalizeVec3IfNonZero(Vector3 *v);
 extern Fix12i VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 /* The 64-bit squared distance between two points. */
 extern long long func_0203cf94(int *a, int *b);
-extern void func_ov002_020effb8(void *out, s32 t, void *p0, void *p1, void *p2, void *p3);
+}
+
+extern void func_ov002_020effb8(Vector3 *out, s32 t, Vector3 *p0, Vector3 *p1, Vector3 *p2,
+                                Vector3 *p3);
+
 extern void FUN_02029ab0(void);
 extern int Sound_PlayIfNotActive(int handle, int bank, int id, short arg);
 extern void func_020070e8(dCamera_c *cam, int distTarget, int distStep, short vertTarget,
@@ -1453,6 +1473,7 @@ extern struct CamMode data_0208710c;
 extern struct CamMode data_0208724c;
 extern struct CamMode data_0208729c;
 extern struct CamMode data_020874cc;
+extern "C" {
 
 /* Siblings defined below. */
 int func_02009414(dCamera_c *cam);
@@ -1460,10 +1481,13 @@ int func_020094a8(dCamera_c *cam);
 int func_02008b08(dCamera_c *cam);
 short func_02008abc(dCamera_c *cam);
 short func_02008a70(dCamera_c *cam);
+}
+
 void Vec3fSetDistAndAngle(Vector3 *res, const Vector3 *trans, int mag, short ang, short angY);
 void Vec3fGetDistAndAngle(const Vector3 *v0, const Vector3 *v1, int *outDist, short *outVertAng,
                           short *outHorzAng);
 void ApproachVec3fAsymptotic(Vector3 *self, const Vector3 *src, int stepX, int stepY, int stepZ);
+extern "C" {
 
 /* State entries and helpers defined below. The declarations carry the C
    linkage their ROM symbols need. */
@@ -3158,7 +3182,7 @@ int MovePointAlongSpline(Vector3 *pos, s16 *segment, s32 *progress, CutsceneSpli
     CutsceneSplinePoint *elem;
     CutsceneSpline *path = spline;
     int i;
-    VecFx32 v[4];
+    Vector3 v[4];
     int lo, hi;
     int prog;
 
@@ -3285,7 +3309,6 @@ void dCamera_c::PrepareBgCh(dBgCh &bgCh) {
    member representation matters. */
 typedef int (CamPmfHost::*CamScriptOp)(unsigned char *, int, int);
 
-extern "C" {
 extern CamScriptOp data_02086c80, data_02086d80, data_02086c60, data_02086c90, data_02086bd8,
     data_02086d18, data_02086d98, data_02086c88, data_02086d00, data_02086bc0, data_02086e30,
     data_02086ce8, data_02086e38, data_02086e20, data_02086cd0, data_02086e08, data_02086df0,
@@ -3556,7 +3579,7 @@ int CutsceneDanceFlyAwayStart(dCamera_c *cam) {
     cam->mYawOffset = 0;
     p = cam->mFixedViewPos;
     if (p != 0) {
-        cam->mOrbitTargetYaw = Vec3_HorzAngle(p, &cam->pos);
+        cam->mOrbitTargetYaw = Vec3_HorzAngle((const Vector3 *)p, &cam->pos);
     }
     lvl = SublevelToLevel(gCurrentSublevel);
     if (lvl == 3 && data_0209f224 == 4) {
@@ -3922,7 +3945,6 @@ int CutsceneGrandStarFlyMarioOffscreen(dCamera_c *cam) {
     ApproachLinear(cam->savedPos.y, 0x4b0000, cam->mRampSpeed >> 1);
     ApproachLinear(cam->savedPos.z, 0x3e8000, cam->mRampSpeed * 10 / 15);
     return 1;
-}
 }
 
 /* Nineteen camera states, definition order is retail __sinit order. Each

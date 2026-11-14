@@ -8,5 +8,5 @@
 #include "private/watchdog_alarm.h"
 
 void func_0201aac8(OSAlarm *alarm) {
-    OS_CreateAlarm(alarm);
+    _Z14OS_CreateAlarmP8OSiAlarm(alarm);
 }

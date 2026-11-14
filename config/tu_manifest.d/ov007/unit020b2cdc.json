@@ -20,84 +20,84 @@
   ],
   "functions": [
     {
-      "symbol": "func_ov007_020b2cdc",
+      "symbol": "_Z19func_ov007_020b2cdcv",
       "address": "0x020b2cdc",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b2cdc.c",
       "ordinal": 0
     },
     {
-      "symbol": "func_ov007_020b2cf0",
+      "symbol": "_Z19func_ov007_020b2cf0v",
       "address": "0x020b2cf0",
       "size": "0x00000174",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b2cf0.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "func_ov007_020b2e64",
+      "symbol": "_Z19func_ov007_020b2e64P6TPData",
       "address": "0x020b2e64",
       "size": "0x000001ec",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b2e64.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov007_020b3050",
+      "symbol": "_Z19func_ov007_020b3050v",
       "address": "0x020b3050",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b3050.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov007_020b30b0",
+      "symbol": "_Z19func_ov007_020b30b0v",
       "address": "0x020b30b0",
       "size": "0x000000e0",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b30b0.c",
       "ordinal": 4
     },
     {
-      "symbol": "Cursor_UpdateParked",
+      "symbol": "_Z19Cursor_UpdateParkedv",
       "address": "0x020b3190",
       "size": "0x000001d0",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b3190.c",
       "ordinal": 5
     },
     {
-      "symbol": "Cursor_UpdateState",
+      "symbol": "_Z18Cursor_UpdateStatev",
       "address": "0x020b3360",
       "size": "0x000003a8",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b3360.c",
       "ordinal": 6
     },
     {
-      "symbol": "Cursor_NextState",
+      "symbol": "_Z16Cursor_NextStatev",
       "address": "0x020b3708",
       "size": "0x0000054c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b3708.c",
       "ordinal": 7
     },
     {
-      "symbol": "Cursor_UpdateMode",
+      "symbol": "_Z17Cursor_UpdateModev",
       "address": "0x020b3c54",
       "size": "0x000000dc",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b3c54.c",
       "ordinal": 8
     },
     {
-      "symbol": "Cursor_SetSpriteMode",
+      "symbol": "_Z20Cursor_SetSpriteModeP11Ov007Spritei",
       "address": "0x020b3d30",
       "size": "0x000000d4",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b3d30.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "Cursor_GetModeOffset",
+      "symbol": "_Z20Cursor_GetModeOffsetiPsS_",
       "address": "0x020b3e04",
       "size": "0x00000080",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b3e04.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "Cursor_TouchItem",
+      "symbol": "_Z16Cursor_TouchItemP6TPData",
       "address": "0x020b3e84",
       "size": "0x00000058",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b3e84.c",

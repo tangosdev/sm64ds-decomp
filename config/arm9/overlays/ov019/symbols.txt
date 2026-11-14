@@ -27,12 +27,12 @@ _ZN10daPgRcer_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x0211235c
 _ZN10daPgRcer_c6RenderEv kind:function(arm,size=0x34) addr:0x02112360
 _ZN10daPgRcer_c8BehaviorEv kind:function(arm,size=0x40) addr:0x02112394
 _ZN10daPgRcer_c13InitResourcesEv kind:function(arm,size=0x1e8) addr:0x021123d4
-daPgRcer_c_classInit kind:function(arm,size=0x60) addr:0x021125bc
+_Z20daPgRcer_c_classInitv kind:function(arm,size=0x60) addr:0x021125bc
 _ZN10daSldMng_cD1Ev kind:function(arm,size=0x24) addr:0x0211261c
 _ZN10daSldMng_cD0Ev kind:function(arm,size=0x38) addr:0x02112640
 _ZN10daSldMng_c8BehaviorEv kind:function(arm,size=0xa4) addr:0x02112678
 _ZN10daSldMng_c13InitResourcesEv kind:function(arm,size=0x30) addr:0x0211271c
-daSldMng_c_classInit kind:function(arm,size=0x30) addr:0x0211274c
+_Z20daSldMng_c_classInitv kind:function(arm,size=0x30) addr:0x0211274c
 data_ov019_0211277c kind:data(any) addr:0x0211277c
 data_ov019_02112788 kind:data(any) addr:0x02112788
 __sinit_d_a_pg_rcer.cpp kind:function(arm,size=0x370) addr:0x021127a4

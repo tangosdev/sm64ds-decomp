@@ -4,7 +4,7 @@
 /* Link start. This is the only writer of data_0209e64c. The actor RNG
    data_0209e650 is the next bss word, so the seed lives here. Actors only
    read it. */
-extern "C" {
+
 extern unsigned char data_0209e64c;
 extern unsigned char data_0208f274;
 extern char data_02075358[];
@@ -13,8 +13,12 @@ extern const char data_020752e8[28];
 extern const char data_02075304[28];
 extern const char data_02075320[28];
 extern const char data_0207533c[28];
+extern "C" {
+
 extern void OS_GetOwnerInfo(unsigned char *dst);
-extern void func_0203db64(char *a, char *b);
+}
+
+extern void func_0203db64(void *a, void *b);
 extern int func_0203daac(void);
 
 void func_0201fec8(void)
@@ -45,7 +49,6 @@ void func_0201fec8(void)
     func_0201a9fc(&data_0209d574);
     func_0201a96c(&data_0209d574, saved);
     data_0209e64c = 1;
-}
 }
 
 /* One s32 seeded to 1. The empty destructor is func_0201973c, already

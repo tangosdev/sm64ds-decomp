@@ -44,7 +44,7 @@
       "ordinal": 0
     },
     {
-      "symbol": "func_020396dc",
+      "symbol": "_Z13func_020396dcP7dBgW_KcP7KCL_Tri",
       "address": "0x020396dc",
       "size": "0x00000014",
       "legacy_source": "src/func_020396dc.c",

@@ -147,21 +147,28 @@ PMF data_ov078_021270fc[2] = {&daBombking_c::EnterWalkHome, &daBombking_c::TickW
 PMF data_ov078_0212705c[2] = {&daBombking_c::EnterDefeated, &daBombking_c::TickDefeated};
 
 extern "C" {
+
 /* Canonical single declaration per ROM data symbol -- the generated
      * preamble carried up to three contradictory spellings of each. */
 extern unsigned char gCurrentStarId;
+
 extern dCamera_c *gCamera;
+
 extern Matrix4x3 data_020a0e68;
+
 extern int data_02092138;
-extern void func_02012694(unsigned int a, void *p);
-extern void func_02011cfc(void);
 }
-extern "C" {
+
+extern Matrix4x3 IDENTITY_MATRIX4X3;
+extern void func_02012694(unsigned int a, const Vector3 *p);
+extern void func_02011cfc(void);
+
 // local extern: CalcLib.h does not declare Vec3_VertAngle yet.
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
+extern "C" {
+
 extern int atan2_hold_d_a_bombking_1(int a, int b);
 extern int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
-extern Matrix4x3 IDENTITY_MATRIX4X3;
 }
 
 /* `defer_codegen off` flips .text emission from reversed to source order,
@@ -1579,12 +1586,11 @@ s32 daBombking_c::OnAimedAtWithEgg() {
 
 /* -------------------------------------------------------------------------- */
 /* Registry factory for the BOMBKING profile. */
-extern "C" daBombking_c *daBombking_c_classInit(void)
-{
+daBombking_c *daBombking_c_classInit(void) {
     return new daBombking_c();
 }
 
-extern "C" SpawnInfo<daBombking_c> g_profile_BOMBKING = {
+SpawnInfo<daBombking_c> g_profile_BOMBKING = {
     daBombking_c_classInit,
     0x00bd, /* BOMBKING registry id 189 */
     0x002c,

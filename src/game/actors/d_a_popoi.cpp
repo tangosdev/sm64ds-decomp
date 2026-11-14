@@ -114,15 +114,16 @@ extern daPopoi_StateRecord data_ov077_02127cd8;
 /* Member bodies have C++ linkage and mwccarm does not inherit C linkage into
  * their block-scope externs, so every external FUNCTION declaration lives in
  * this file-scope region (extern data names are unmangled either way; they are
- * kept here too so each call site reads identically). */
-extern "C" {
+ * kept here too so each call site reads identically). The _ZN spellings are
+ * the Fix12-by-value signatures the real headers cannot express. */
+
 extern int data_0209f32c;               /* WATER_HEIGHT */
 extern signed char gCurrentSublevel;    /* LEVEL_ID */
 extern Matrix4x3 data_020a0e68;         /* scratch Matrix4x3 */
-extern Vector3 data_ov077_02127a5c;     /* sensor offset (0, 0, 44 units) */
-
-extern int func_ov002_020db674(void *c, int a1, int a2, int a3);
+extern Vector3 data_ov077_02127a5c;
 void func_02012694(unsigned int id, const Vector3 *pos);
+extern "C" {
+extern int func_ov002_020db674(void *c, int a1, int a2, int a3);
 }
 
 /* Actor ID daPopoi_ACTOR_PLAYER (0xbf) is the daPly_c. These int-returning
@@ -136,11 +137,9 @@ static inline int IsNoControl(daPly_c *player) {
 }
 
 /* resolved: VT0 = _ZTV9daPopoi_c */
-extern "C" int *daPopoi_c_classInit(void)
-{
+int *daPopoi_c_classInit(void) {
     return (int *)new daPopoi_c;
 }
-
 
 /* Loads the four files (data_ov077_02127c88 = file 0x40d, the model; 02127ca0 =
  * 0x40e, 02127c90 = 0x40f and 02127c98 = 0x410, the three animations, the way

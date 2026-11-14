@@ -1,5 +1,12 @@
 #ifndef SOUND_H
 #define SOUND_H
+#ifndef __cplusplus
+#define func_02012194 _Z13func_02012194iiiiiPK7Vector3s
+#define func_0201226c _Z13func_0201226ciiiPK7Vector3is
+#define func_0201251c _Z13func_0201251ciiPK7Vector3i
+#define func_0201267c _Z13func_0201267cjPK7Vector3
+#define func_02012790 _Z13func_02012790j
+#endif
 
 /* The sound namespace. The tree already spells `namespace Sound { ... }` for
  * its free functions -- PauseMusic, LoadGroupAndSetBank and a dozen others --
@@ -28,21 +35,19 @@ struct dActor_c;
 /* Two of the arm9 bank-bound wrappers defined in src/engine/sound/Sound.cpp,
    with their C names: func_0201267c is Sound::Play(3, id, *pos), and
    func_02012790 is Sound::Play2D(2, id). */
-extern "C" {
+
 void func_0201267c(unsigned int, const Vector3 *);
 unsigned int func_02012790(unsigned int);
-}
 
 /* Positioned sounds, defined in src/engine/sound/Sound.cpp. The position is
    the sound's camera-space Vector3 (dActor_c::mCamSpacePos). func_0201251c
    plays a one-shot; func_0201226c and func_02012194 keep a looping sound
    going, taking the registry id it was given last time (0 for none) and
    returning the id now playing. */
-extern "C" {
+
 void func_0201251c(int, int, const Vector3 *, int);
 int func_0201226c(int, int, int, const Vector3 *, int, short);
 int func_02012194(int, int, int, int, int, const Vector3 *, short);
-}
 
 namespace Sound {
 

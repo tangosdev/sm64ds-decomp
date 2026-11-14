@@ -80,7 +80,7 @@ char *double2hex(double x, char *buff_end, print_format format) {
 
     if (fabs(x) == 0.0) {
         p = buff_end - 6;
-        strcpy(p, data_0209a61c);
+        _Z6strcpyPcPKc(p, data_0209a61c);
         return p;
     }
 
@@ -88,30 +88,30 @@ char *double2hex(double x, char *buff_end, print_format format) {
         if (dec.sgn) {
             p = buff_end - 5;
             if (code == 'A')
-                strcpy(p, data_0209a5ec);
+                _Z6strcpyPcPKc(p, data_0209a5ec);
             else
-                strcpy(p, data_0209a5f4);
+                _Z6strcpyPcPKc(p, data_0209a5f4);
         } else {
             p = buff_end - 4;
             if (code == 'A')
-                strcpy(p, data_0209a5fc);
+                _Z6strcpyPcPKc(p, data_0209a5fc);
             else
-                strcpy(p, data_0209a600);
+                _Z6strcpyPcPKc(p, data_0209a600);
         }
         return p;
     } else if (dec.sig.text[0] == 'N') {
         if (dec.sgn) {
             p = buff_end - 5;
             if (code == 'A')
-                strcpy(p, data_0209a604);
+                _Z6strcpyPcPKc(p, data_0209a604);
             else
-                strcpy(p, data_0209a60c);
+                _Z6strcpyPcPKc(p, data_0209a60c);
         } else {
             p = buff_end - 4;
             if (code == 'A')
-                strcpy(p, data_0209a614);
+                _Z6strcpyPcPKc(p, data_0209a614);
             else
-                strcpy(p, data_0209a618);
+                _Z6strcpyPcPKc(p, data_0209a618);
         }
         return p;
     }

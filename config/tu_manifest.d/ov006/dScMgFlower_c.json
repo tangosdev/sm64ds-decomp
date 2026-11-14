@@ -88,7 +88,7 @@
       "ordinal": 8
     },
     {
-      "symbol": "dScMgFlower_c_classInit",
+      "symbol": "_Z23dScMgFlower_c_classInitv",
       "address": "0x0212b7f8",
       "size": "0x00000094",
       "legacy_source": "src/d_s_mg_flower.cpp",

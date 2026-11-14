@@ -22,56 +22,56 @@
   ],
   "functions": [
     {
-      "symbol": "GXx_SetMasterBrightness_",
+      "symbol": "_Z24GXx_SetMasterBrightness_PVti",
       "address": "0x02053a90",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/arm9/0205/func_02053a90.c",
       "ordinal": 0
     },
     {
-      "symbol": "GXS_SetGraphicsMode",
+      "symbol": "_Z19GXS_SetGraphicsModei",
       "address": "0x02053abc",
       "size": "0x0000001c",
       "legacy_source": "src/_ZN3GXS15SetGraphicsModeEi.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "GX_SetGraphicsMode",
+      "symbol": "_Z18GX_SetGraphicsModeiii",
       "address": "0x02053ad8",
       "size": "0x00000074",
       "legacy_source": "src/_ZN2GX15SetGraphicsModeEiii.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "GX_DispOn",
+      "symbol": "_Z9GX_DispOnv",
       "address": "0x02053b4c",
       "size": "0x0000004c",
       "legacy_source": "src/_ZN2GX6DispOnEv.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "GX_DispOff",
+      "symbol": "_Z10GX_DispOffv",
       "address": "0x02053b98",
       "size": "0x00000048",
       "legacy_source": "src/unnamed/arm9/0205/func_02053b98.c",
       "ordinal": 4
     },
     {
-      "symbol": "GX_VBlankIntr",
+      "symbol": "_Z13GX_VBlankIntri",
       "address": "0x02053be0",
       "size": "0x00000030",
       "legacy_source": "src/unnamed/arm9/0205/func_02053be0.c",
       "ordinal": 5
     },
     {
-      "symbol": "GX_HBlankIntr",
+      "symbol": "_Z13GX_HBlankIntri",
       "address": "0x02053c10",
       "size": "0x00000030",
       "legacy_source": "src/unnamed/arm9/0205/func_02053c10.c",
       "ordinal": 6
     },
     {
-      "symbol": "GX_Init",
+      "symbol": "_Z7GX_Initv",
       "address": "0x02053c40",
       "size": "0x0000015c",
       "legacy_source": "src/func_02053c40.c",

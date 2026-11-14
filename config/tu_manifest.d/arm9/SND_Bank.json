@@ -20,21 +20,21 @@
   ],
   "functions": [
     {
-      "symbol": "SND_DestroyWaveArc",
+      "symbol": "_Z18SND_DestroyWaveArcP10SNDWaveArc",
       "address": "0x0205b6b0",
       "size": "0x00000044",
       "legacy_source": "src/unnamed/arm9/0205/func_0205b6b0.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "SND_DestroyBank",
+      "symbol": "_Z15SND_DestroyBankP11SNDBankData",
       "address": "0x0205b6f4",
       "size": "0x00000098",
       "legacy_source": "src/unnamed/arm9/0205/func_0205b6f4.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "SND_AssignWaveArc",
+      "symbol": "_Z17SND_AssignWaveArcP11SNDBankDataiP10SNDWaveArc",
       "address": "0x0205b78c",
       "size": "0x000000cc",
       "legacy_source": "src/unnamed/arm9/0205/func_0205b78c.cpp",

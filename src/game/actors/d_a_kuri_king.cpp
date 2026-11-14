@@ -133,58 +133,58 @@ union KuriKingFreeState {
     KuriKingStateFn pmf;
 };
 
-extern "C" dCamera_c *gCamera;
+extern dCamera_c *gCamera;
 extern "C" int RandomIntInternal(int *seed);
 extern "C" u16 DecIfAbove0_Short(u16* p);
-extern "C" s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
-extern "C" void func_02012694(u32 a, void* b);
+s16 Vec3_VertAngle(const struct Vector3 *v1, const struct Vector3 *v0);
+void func_02012694(u32 a, const Vector3 *b);
 
 /* local extern: include/Sound.h does not declare the layer-3 pair yet. */
 namespace Sound {
 void StopLoadedMusic_Layer3();
 void LoadAndSetMusic_Layer3(unsigned int musicId);
 }
-extern "C" void func_02011cfc();
+void func_02011cfc();
 namespace Sound {
 void ChangeMusicVolume(u32 a, int f);
 }
-extern "C" unsigned short data_ov074_02122e04[];
+extern unsigned short data_ov074_02122e04[];
 extern "C" int ApproachAngle(short *, short, int, int, int);
-extern "C" void func_ov084_021296b0(void* a, void* b);
+void func_ov084_021296b0(void *a, void *b);
 extern "C" int __aeabi_idiv(int a, int b);
 extern "C" int AngleDiff(int a, int b);
 extern "C" int Math_Function_0203b14c(int* p, int a, int b, int d, int e);
-extern "C" unsigned short data_ov074_02122dfc[];
-extern "C" int data_ov074_0212291c[];
-extern "C" int data_ov074_0212290c[];
-extern "C" float data_ov074_02122e4c[];
+extern unsigned short data_ov074_02122dfc[];
+extern int data_ov074_0212291c[];
+extern int data_ov074_0212290c[];
+extern float data_ov074_02122e4c[];
 extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern "C" s32 Vec3_HorzLen(const Vector3 *v);
+s32 Vec3_HorzLen(const Vector3 *v);
 extern "C" s16 atan2_hold_d_a_kuri_king_1(s32 y, s32 x);
 extern "C" unsigned char DecIfAbove0_Byte(unsigned char *p);
-extern "C" s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
+s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
 extern "C" int *Vec3_LslInPlace(void *v, int n);
-extern "C" struct Matrix4x3 data_020a0e68;
-extern "C" struct Matrix4x3 IDENTITY_MATRIX4X3;
+extern struct Matrix4x3 data_020a0e68;
+extern struct Matrix4x3 IDENTITY_MATRIX4X3;
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, s32 fa, s32 fb, void *v0, void *v1);
 extern "C" void d_a_kuri_kingEarthquakeHold(void *thiz, void *v, int f);
 struct KuriKingBoneIdx {
     int v[3];
 };
-extern "C" KuriKingBoneIdx data_ov074_02122e24;
-extern "C" char data_ov074_02122f3c[];
-extern "C" char data_ov074_02122f38[];
-extern "C" void UnloadKeyModels(int i);
-extern "C" void LoadKeyModels(int idx);
-extern "C" void *data_ov074_02122e5c[];
+extern KuriKingBoneIdx data_ov074_02122e24;
+extern char data_ov074_02122f3c[];
+extern char data_ov074_02122f38[];
+void UnloadKeyModels(int i);
+void LoadKeyModels(int idx);
+extern void *data_ov074_02122e5c[];
 /* Boss-overlay resource blobs, linked into the co-resident 0x0211xxxx
    overlay; ov074's image has no copy, so these bind cross-module. */
 extern BMA_File data_ov010_021123f4;
 extern BTA_File data_ov010_021124ac;
-extern "C" void Vec3_Asr(Vector3* d, Vector3* s, int sh);
-extern "C" int func_02037e20(int *p);
-extern "C" unsigned int func_0201277c(unsigned int a);
+extern "C" void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
+extern int func_02037e20(int *p);
+extern unsigned int func_0201277c(unsigned int a);
 extern "C" u8 data_ov074_02122d80[];
 extern SharedFilePtr data_ov002_0210da30;
 extern SharedFilePtr data_ov084_02130cf8;
@@ -197,11 +197,11 @@ extern SharedFilePtr *const sKurikingMinionAnimationFiles[7];
 extern SharedFilePtr *const sKurikingAnimationFiles[12];
 
 /* Intra-TU forward decls: calls run both ways across the file. */
-extern "C" void func_ov074_02121270(Vector3* out, daKuriKing_c* self, int bone);
-extern "C" void func_ov074_0212087c(int* out, daKuriKing_c* self, int n_);
-extern "C" void func_ov074_021203e0(void);
-extern "C" void func_ov074_021201ec(void);
-extern "C" void func_ov074_0212007c(void);
+void func_ov074_02121270(Vector3 *out, daKuriKing_c *self, int bone);
+void func_ov074_0212087c(int *out, daKuriKing_c *self, int n_);
+void func_ov074_021203e0(void);
+void func_ov074_021201ec(void);
+void func_ov074_0212007c(void);
 
 /* data_ov074_021230f8 is copied as 8-byte records (__sinit_ov074). daKuriKing_c
  * has virtuals, so a daKuriKing_c::* is wider than that; the call stays on this
@@ -459,7 +459,7 @@ void daKuriKing_c::UpdateDefeat() {
         }
         if (this->mSpawnedCount != 0)
             return;
-        func_02012694(0x15c, &this->mCamSpacePosX);
+        func_02012694(0x15c, &this->mCamSpacePos);
         this->mSubState += 1;
         this->mSpawnedCount = 0;
         return;
@@ -487,7 +487,7 @@ void daKuriKing_c::UpdateDefeat() {
         vzero.y = vzero.y + 0x190000;
         Particle::System::NewSimple(kPtclGoombossVanishA, vzero.x, vzero.y, vzero.z);
         Particle::System::NewSimple(kPtclGoombossVanishB, vzero.x, vzero.y, vzero.z);
-        func_02012694(0x15f, &this->mCamSpacePosX);
+        func_02012694(0x15f, &this->mCamSpacePos);
         SetOtherCopiesShouldRender(1);
         LaunchVanishCopies();
         cam->mFlags &= ~8;
@@ -505,7 +505,7 @@ void daKuriKing_c::UpdateDefeat() {
         vzero.z = this->mPosZ;
         vzero.y = vzero.y + 0x12c000;
         dActor_c::Spawn(0x11a, 2, vzero, 0, this->mAreaId, -1);
-        func_02012694(0xbb, &this->mCamSpacePosX);
+        func_02012694(0xbb, &this->mCamSpacePos);
         this->fBase_c::MarkForDestruction();
         return;
     default:
@@ -540,7 +540,7 @@ void daKuriKing_c::UpdateScaleChange() {
             p = (unsigned char*)(((int)&this->mSubState));
             *p = *p + 1;
             PlayAnim(0);
-            func_02012694(0x15c, &this->mCamSpacePosX);
+            func_02012694(0x15c, &this->mCamSpacePos);
             return;
         }
         {
@@ -548,7 +548,7 @@ void daKuriKing_c::UpdateScaleChange() {
             *p = *p + 1;
         }
         PlayAnim(0);
-        func_02012694(0x15c, &this->mCamSpacePosX);
+        func_02012694(0x15c, &this->mCamSpacePos);
         return;
     case 1:
         {
@@ -702,9 +702,7 @@ void daKuriKing_c::func_ov074_0211ffcc() {
   ChangeState(2);
 }
 
-extern "C" void func_ov074_0212007c(void)
-{
-}
+void func_ov074_0212007c(void) {}
 
 void daKuriKing_c::UpdateWalk() {
     if (this->mSpawnedCount == 0) {
@@ -731,7 +729,7 @@ void daKuriKing_c::EnterWalk() {
     UpdateMaxWalkSpeed();
 }
 
-extern "C" void func_02011d20(void);
+void func_02011d20(void);
 void daKuriKing_c::UpdateIntroTalkEnd() {
     if (this->mTalkPlayer->GetTalkState() != -1)
         return;
@@ -742,9 +740,7 @@ void daKuriKing_c::UpdateIntroTalkEnd() {
     ChangeState(2);
 }
 
-extern "C" void func_ov074_021201ec(void)
-{
-}
+void func_ov074_021201ec(void) {}
 
 /* daKuriKing_c state-0 tick -- the intro cutscene.
  *
@@ -811,13 +807,11 @@ void daKuriKing_c::UpdateIntroTalk() {
     }
     msg = (unsigned short)((int)player->param1 + 0xd3);
     if (player->ShowMessage(*this, msg, &msgpos[1], 0, 2) == 0) return;
-    func_02012694(0x15a, &this->mCamSpacePosX);
+    func_02012694(0x15a, &this->mCamSpacePos);
     ChangeState(1);
 }
 
-extern "C" void func_ov074_021203e0(void)
-{
-}
+void func_ov074_021203e0(void) {}
 
 int daKuriKing_c::ChangeState(int i) {
     mState = i;
@@ -932,8 +926,7 @@ void daKuriKing_c::TurnIfPlayerBehind() {
     this->mDirection *= -1;
 }
 
-extern "C" void func_ov074_0212087c(int* out, daKuriKing_c* self, int n_)
-{
+void func_ov074_0212087c(int *out, daKuriKing_c *self, int n_) {
     int n;
 
     n = n_;
@@ -1165,7 +1158,7 @@ void daKuriKing_c::HandleCylinderHits() {
                         PlayAnim(7);
                         ChangeState(8);
                         SpawnHitParticles(pl, cur, 0);
-                        func_02012694(0x15a, &this->mCamSpacePosX);
+                        func_02012694(0x15a, &this->mCamSpacePos);
                         this->mWalkSpeed = dir * (this->mDirection * -0xc8);
                     }
                 } else {
@@ -1210,7 +1203,7 @@ void daKuriKing_c::HandleCylinderHits() {
     }
     if (hit == 0)
         return;
-    func_02012694(0x15b, &this->mCamSpacePosX);
+    func_02012694(0x15b, &this->mCamSpacePos);
     {
         int ang2 = Vec3_HorzAngle(&this->mPos, &player->mPos);
         dir2 = 1;
@@ -1229,7 +1222,7 @@ void daKuriKing_c::HandleCylinderHits() {
 /* World position of model bone `bone`: that bone's transform composed with
  * mBodyMatrix, translation row out, shifted back up from model
  * space (<< 3). */
-extern "C" void func_ov074_02121270(Vector3 *out, daKuriKing_c *self, int bone) {
+void func_ov074_02121270(Vector3 *out, daKuriKing_c *self, int bone) {
     Vector3 *v = out;
     Matrix4x3 *boneMat;
     v->x = 0;
@@ -1414,7 +1407,7 @@ void daKuriKing_c::UpdateAnimation() {
         mAnmModel.speed = CalcWalkAnimSpeed();
     } else if (IsAnimPlaying(0xb)) {
         if ((((unsigned int)mAnmModel.currFrame << 4) >> 0x10) == 8) {
-            func_02012694(0x15d, &mCamSpacePosX);
+            func_02012694(0x15d, &mCamSpacePos);
         }
     } else {
         mAnmModel.speed = 0x1000;
@@ -1536,7 +1529,7 @@ int daKuriKing_c::Behavior()
                 v.z = mCylClsnPos[2].z;
                 LandingDustAt(v, 1);
             }
-            func_02012694(0x15e, &mCamSpacePosX);
+            func_02012694(0x15e, &mCamSpacePos);
             {
                 Vector3 v;
                 v.x = mCylClsnPos[2].x;
@@ -1560,7 +1553,7 @@ int daKuriKing_c::Behavior()
                 v.z = mCylClsnPos[1].z;
                 LandingDustAt(v, 1);
             }
-            func_02012694(0x15e, &mCamSpacePosX);
+            func_02012694(0x15e, &mCamSpacePos);
             {
                 Vector3 v;
                 v.x = mCylClsnPos[1].x;
@@ -1746,9 +1739,9 @@ int daKuriKing_c::BehaviorVanish() {
         int b = ((this->mFlags & 8) != 0) ? 1 : 0;
         if (b == 0) {
             if (this->mSubState == 0) {
-                func_02012694(0x13a, &this->mCamSpacePosX);
+                func_02012694(0x13a, &this->mCamSpacePos);
             } else {
-                func_02012694(0x13b, &this->mCamSpacePosX);
+                func_02012694(0x13b, &this->mCamSpacePos);
             }
         }
         this->mSubState++;
@@ -1865,8 +1858,8 @@ KuriKingFreeState data_ov074_02122dbc = { (void (*)())func_ov074_021203e0 };
 
 /* Size-indexed material parameters, in ROM order. Retail words are
  * 0x00d00000/0x00500080 here and 0x003c0059/0x0001001e below. */
-extern "C" unsigned short data_ov074_02122dfc[4] = { 0x0000, 0x00d0, 0x0080, 0x0050 };
-extern "C" unsigned short data_ov074_02122e04[4] = { 0x0059, 0x003c, 0x001e, 0x0001 };
+unsigned short data_ov074_02122dfc[4] = {0x0000, 0x00d0, 0x0080, 0x0050};
+unsigned short data_ov074_02122e04[4] = {0x0059, 0x003c, 0x001e, 0x0001};
 
 KuriKingFreeState data_ov074_02122e0c = { (void (*)())func_ov074_021201ec };
 
@@ -1880,8 +1873,7 @@ KuriKingStateTable data_ov074_021230f8;
  * allocation size, vtable identity, and the KURIKING_VANISH registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: ExplosionGoomba_Spawn. */
-extern "C" daKuriKing_c *daKuriKing_c_classInit_KURIKING_VANISH(void)
-{
+daKuriKing_c *daKuriKing_c_classInit_KURIKING_VANISH(void) {
     return new daKuriKing_c;
 }
 
@@ -1889,15 +1881,15 @@ extern "C" daKuriKing_c *daKuriKing_c_classInit_KURIKING_VANISH(void)
  * allocation size, vtable identity, and the KURIKING registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: Goomboss_Spawn. */
-extern "C" daKuriKing_c *daKuriKing_c_classInit_KURIKING(void) {
+daKuriKing_c *daKuriKing_c_classInit_KURIKING(void) {
     return new daKuriKing_c;
 }
-extern "C" KrbAnimationFileHandle data_ov084_02130ce8;
-extern "C" KrbAnimationFileHandle data_ov084_02130ce0;
-extern "C" KrbAnimationFileHandle data_ov084_02130cd0;
-extern "C" KrbAnimationFileHandle data_ov084_02130cc0;
-extern "C" KrbAnimationFileHandle gKuriboRecoverAnimationFile;
-extern "C" KrbAnimationFileHandle data_ov084_02130cf0;
+extern KrbAnimationFileHandle data_ov084_02130ce8;
+extern KrbAnimationFileHandle data_ov084_02130ce0;
+extern KrbAnimationFileHandle data_ov084_02130cd0;
+extern KrbAnimationFileHandle data_ov084_02130cc0;
+extern KrbAnimationFileHandle gKuriboRecoverAnimationFile;
+extern KrbAnimationFileHandle data_ov084_02130cf0;
 
 SharedFilePtr *const sKurikingMinionAnimationFiles[7] = {
     &data_ov084_02130ce8,         &data_ov084_02130ce0, &data_ov084_02130cd0, &data_ov084_02130cc0,

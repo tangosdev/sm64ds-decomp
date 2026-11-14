@@ -131,7 +131,6 @@ enum {
    other actor headers name it mEatingPlayer. */
 #define BLOCKS_EATING_PLAYER(o) (*(daPly_c **)((char *)(o) + 0xd0))
 
-extern "C" {
 extern u32 gNextActorUpdateMask;
 struct BlockSFiles {
     SharedFilePtr *model;
@@ -139,38 +138,33 @@ struct BlockSFiles {
     CLPS_Block *clps;
 };
 extern BlockSFiles data_ov098_0213c4c8;
-extern int Vec3_HorzDist(const struct Vector3 *a, const struct Vector3 *b);
-extern u8 DecIfAbove0_Byte(u8 *p);
-extern void *d_a_obj_block_sNewHold(u32 a, u32 b, int c, int d, int e, const void *v, void *cb);
-extern u32 d_a_obj_block_sNewCleanParticleHold(u32 a, u32 b, int c, int d, int e,
-                                               const Vector3_16f *v);
-}
+int Vec3_HorzDist(const struct Vector3 *a, const struct Vector3 *b);
+extern "C" u8 DecIfAbove0_Byte(u8 *p);
+extern "C" void *d_a_obj_block_sNewHold(u32 a, u32 b, int c, int d, int e, const void *v, void *cb);
+extern "C" u32 d_a_obj_block_sNewCleanParticleHold(u32 a, u32 b, int c, int d, int e,
+                                                   const Vector3_16f *v);
 namespace Particle {
 void RunningSlidingDustAt(s32, s32, s32);
 }
-extern "C" {
-extern void d_a_obj_block_sRunningSlidingDustAtHold(s32 x, s32 y, s32 z);
-extern void hold_d_a_obj_block_s(char *thiz, int f, char *m, int fix, short s, int blk);
+extern "C" void d_a_obj_block_sRunningSlidingDustAtHold(s32 x, s32 y, s32 z);
+extern "C" void hold_d_a_obj_block_s(char *thiz, int f, char *m, int fix, short s, int blk);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(char *thiz, char *actor, int b, int d, void *v, int f);
 
+int SurfaceInfo_TestFlag0x20(int *p);
+int func_ov002_020ef228(dBgCh_Actr *c, dActor_c *other);
+int func_ov002_020f030c(int x);
+extern "C" int func_ov002_020e496c(daPly_c *c);
 
-extern int SurfaceInfo_TestFlag0x20(int *p);
-extern int func_ov002_020ef228(void *c, dActor_c *other);
-extern int func_ov002_020f030c(int x);
-extern int func_ov002_020e496c(daPly_c *c);
+extern "C" void d_a_obj_block_sPlayLongHold(u32 a, u32 b, u32 c, const Vector3 *pos, u32 e);
 
-
-extern void d_a_obj_block_sPlayLongHold(u32 a, u32 b, u32 c, const Vector3 *pos, u32 e);
-
-extern s16 atan2_hold_d_a_obj_block_s_1(s32 y, s32 x);
-extern s32 Vec3_HorzLen(const Vector3 *v0);
-extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
-extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int Math_Function_0203b14c(int *dst, int a, int b, int c, int d);
+extern "C" s16 atan2_hold_d_a_obj_block_s_1(s32 y, s32 x);
+s32 Vec3_HorzLen(const Vector3 *v0);
+extern "C" void Vec3_MulScalarInPlace(Vector3 *v, int s);
+extern "C" void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
+extern "C" int Math_Function_0203b14c(int *dst, int a, int b, int c, int d);
 
 void Crate_SetState(daObjBlockS_c *c, int i);
-}
 
 enum Bool { FALSE, TRUE };
 
@@ -605,8 +599,7 @@ void daObjBlockS_c::EnterIdle() {
 
 /* Enters state `i`: stores it in mState and calls that row's enter member of
  * the table at data_ov098_0213c878. */
-extern "C" void Crate_SetState(daObjBlockS_c *self, int i)
-{
+void Crate_SetState(daObjBlockS_c *self, int i) {
     BlockSStateHost *c = (BlockSStateHost *)self;
     c->idx = i;
     int j = c->idx;
@@ -1333,8 +1326,7 @@ void daObjBlockS_c::OnTurnIntoEgg(daPly_c &player) {
  * allocation size, vtable identity, and the BLOCK_S registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: Crate_Spawn. */
-extern "C" daObjBlockS_c *daObjBlockS_c_classInit()
-{
+daObjBlockS_c *daObjBlockS_c_classInit() {
     return new daObjBlockS_c();
 }
 
@@ -1344,20 +1336,20 @@ BlockSCollisionFilePtr gBrokenBlockSCollisionFile(ASSET_BROKEN_BLOCK_S_KCL);   /
 /* The fourteen state member-pointer records live in .data
  * (0x0213c458..0x0213c4c8); the static initializer copies them into the
  * .bss table below, an enter/update pair per state. */
-extern "C" BlockSStateFn data_ov098_0213c4a8;
-extern "C" BlockSStateFn data_ov098_0213c488;
-extern "C" BlockSStateFn data_ov098_0213c490;
-extern "C" BlockSStateFn data_ov098_0213c468;
-extern "C" BlockSStateFn data_ov098_0213c498;
-extern "C" BlockSStateFn data_ov098_0213c470;
-extern "C" BlockSStateFn data_ov098_0213c4b0;
-extern "C" BlockSStateFn data_ov098_0213c480;
-extern "C" BlockSStateFn data_ov098_0213c4a0;
-extern "C" BlockSStateFn data_ov098_0213c478;
-extern "C" BlockSStateFn data_ov098_0213c458;
-extern "C" BlockSStateFn data_ov098_0213c460;
-extern "C" BlockSStateFn data_ov098_0213c4c0;
-extern "C" BlockSStateFn data_ov098_0213c4b8;
+extern BlockSStateFn data_ov098_0213c4a8;
+extern BlockSStateFn data_ov098_0213c488;
+extern BlockSStateFn data_ov098_0213c490;
+extern BlockSStateFn data_ov098_0213c468;
+extern BlockSStateFn data_ov098_0213c498;
+extern BlockSStateFn data_ov098_0213c470;
+extern BlockSStateFn data_ov098_0213c4b0;
+extern BlockSStateFn data_ov098_0213c480;
+extern BlockSStateFn data_ov098_0213c4a0;
+extern BlockSStateFn data_ov098_0213c478;
+extern BlockSStateFn data_ov098_0213c458;
+extern BlockSStateFn data_ov098_0213c460;
+extern BlockSStateFn data_ov098_0213c4c0;
+extern BlockSStateFn data_ov098_0213c4b8;
 
 BlockSStateEntry data_ov098_0213c878[7] = {
     { data_ov098_0213c4a8, data_ov098_0213c488 },   /* STATE_IDLE */

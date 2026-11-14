@@ -37,37 +37,75 @@
 #include "nitro/gx/gx_bgcnt.h"
 #include "PlayerInput.h"
 #include "nitro/mi/memory.h"
+namespace s20afdd0 {
+void Mg_RenderSpriteBoth(void *a0, int, int, int, int);
+}
+using s20afdd0::Mg_RenderSpriteBoth;
+namespace s20afa20 {
+void RenderOamMainScreen(OamAttr *oam, int, int, int, int);
+}
+using s20afa20::RenderOamMainScreen;
+namespace s20af68c {
+void Hud_RenderSprite(void *attr, int, int, int, int);
+}
+using s20af68c::Hud_RenderSprite;
+namespace s20adbc0 {
+int Mg_GetSubmittedScore(void);
+}
+using s20adbc0::Mg_GetSubmittedScore;
 
-extern "C" {
-extern void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
+extern "C" {}
+
 extern OamAttr *sBomroomPenGateSprites[];
+
 extern int sBomroomPenGateX[];
+
 extern int sBomroomPenGateY[];
+
 extern OamAttr *sBomroomHatchPanelSprites[];
+
 extern OamAttr *sBomroomTopDoorSprites[];
+
 extern int sBomroomHatchPanelX[];
+
 extern int sBomroomHatchPanelY[];
+
 extern int func_020126e8(int a);
+
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
+
 extern unsigned char *sBomroomBombFrameTimes[];
+
 extern unsigned char sBomroomBombFrameCounts[];
-extern void Mg_RenderSpriteBoth(void* a0, int a1, int a2, int a3, int a4);
+extern "C" {}
+
 extern unsigned char *sBomroomBombSprites[];
+
 extern unsigned char *sBomroomBombLitSprites[];
+
 extern void *sBomroomBombsSprites[];
-extern void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
+extern "C" {}
+
 extern OamAttr *sBomroomRoundOverSprites;
+
 extern void *sBomroomMarkerPlainSprites[];
+
 extern void *sBomroomMarkerLitSprites[];
+
 extern int sBomroomMarkerY[];
-extern int Mg_GetSubmittedScore(void);
+extern "C" {}
+
 extern u16 sBomroomSpawnDelays[];
+extern "C" {
+
 extern void *LoadFile(int handle);
+
 extern void DecompressLZ16(void *src, void *dst);
+}
 
 extern u8 gMainScreenLayers;
+
 extern u8 gSubScreenLayers;
-}
 
 /* Runtime asset handles resolved through the overlay 0 file table; the names
    are the ROM's MG/ file names (tools/asset_catalog.py resolve). */
@@ -241,11 +279,9 @@ void dScMgBomroom_c::Marker_HideAll() {
     }
 }
 
-extern "C" {
 void Bomroom_DrawScore(void)
 {
     Mg_DrawTopRightCounter(Mg_GetSubmittedScore(), 4);
-}
 }
 
 void dScMgBomroom_c::TopDoor_Close() {
@@ -304,8 +340,8 @@ void dScMgBomroom_c::TopDoor_StateOpening(int index) {
 void dScMgBomroom_c::TopDoor_StateShut(int index) {
     mTopDoor[index].timer = 0;
 }
+extern PMF sBomroomTopDoorStateTable[];
 
-extern "C" PMF sBomroomTopDoorStateTable[];
 void dScMgBomroom_c::TopDoor_Update() {
     if (!mTopDoor[0].gate)
         return;
@@ -376,8 +412,8 @@ void dScMgBomroom_c::PenGate_StateOpening(int index) {
 void dScMgBomroom_c::PenGate_StateShut(int index) {
     mPenGates[index].timer = 0;
 }
+extern PMF sBomroomPenGateStateTable[];
 
-extern "C" PMF sBomroomPenGateStateTable[];
 void dScMgBomroom_c::PenGate_UpdateAll() {
     for (int slot = 0; slot < 2; slot++) {
         if (mPenGates[slot].gate) {
@@ -470,8 +506,8 @@ void dScMgBomroom_c::HatchPanel_StateAnimate(int index) {
 void dScMgBomroom_c::HatchPanel_StateIdle(int index) {
     mHatchPanels[index].timer = 0;
 }
+extern PMF sBomroomHatchPanelStateTable[];
 
-extern "C" PMF sBomroomHatchPanelStateTable[];
 void dScMgBomroom_c::HatchPanel_UpdateAll() {
     for (int slot = 0; slot < 2; slot++) {
         if (mHatchPanels[slot].gate) {
@@ -1066,11 +1102,11 @@ void dScMgBomroom_c::BombMarch_ToGate(int index) {
 
     PenGate_Open(mBombs[index].color);
 }
-
-/* Runs the bomb's current handler: its substate indexes the
+extern /* Runs the bomb's current handler: its substate indexes the
  * pointer-to-member table sBomroomBombMarchTable. */
 
-extern "C" PMF sBomroomBombMarchTable[];
+    PMF sBomroomBombMarchTable[];
+
 void dScMgBomroom_c::Bomb_StateMarch(int index) {
     unsigned char state = mBombs[index].substate;
     (this->*sBomroomBombMarchTable[state])(index);
@@ -1645,11 +1681,11 @@ void dScMgBomroom_c::Round_StateGameOver() {
     Mg_SetSharedState(MG_STATE_RESULTS);
     mPromptEnabled = 0;
 }
-
-/* Runs the mSubState sub-state through the pointer-to-member table
+extern /* Runs the mSubState sub-state through the pointer-to-member table
  * sBomroomRoundEndTable, then the three per-frame passes. */
 
-extern "C" PMFv sBomroomRoundEndTable[];
+    PMFv sBomroomRoundEndTable[];
+
 void dScMgBomroom_c::Round_StateEnd() {
     (this->*sBomroomRoundEndTable[mSubState])();
     HatchPanel_UpdateAll();
@@ -1725,11 +1761,11 @@ s32 dScMgBomroom_c::Render()
     DrawRoundOver();
     return 1;
 }
-
-/* Waits out mDispatchDelay, then runs the round state mSceneState from
+extern /* Waits out mDispatchDelay, then runs the round state mSceneState from
  * the pointer-to-member table sBomroomRoundStateTable and steps the sprite
  * records and the BG2 offset. */
-extern "C" PMFv sBomroomRoundStateTable[];
+    PMFv sBomroomRoundStateTable[];
+
 s32 dScMgBomroom_c::Behavior()
 {
     if (mDispatchDelay != 0) {
@@ -1844,8 +1880,7 @@ s32 dScMgBomroom_c::InitResources() {
  * allocation size, vtable identity, and the MG_BOMROOM registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: MgSortOrSplode_Spawn. */
-extern "C" void *dScMgBomroom_c_classInit()
-{
+void *dScMgBomroom_c_classInit() {
     return new dScMgBomroom_c;
 }
 
@@ -1887,12 +1922,12 @@ extern PMF pmf_dScMgBomroom_c_TopDoor_StateOpening;
 extern PMF pmf_dScMgBomroom_c_TopDoor_StateOpen;
 extern PMF pmf_dScMgBomroom_c_TopDoor_StateClosing;
 
-extern "C" PMFv sBomroomRoundStateTable[5] = {
+PMFv sBomroomRoundStateTable[5] = {
     pmf_dScMgBomroom_c_Round_StateSetup,    pmf_dScMgBomroom_c_Round_StateStart,
     pmf_dScMgBomroom_c_Round_StatePlay,     pmf_dScMgBomroom_c_Round_StateEnd,
     pmf_dScMgBomroom_c_Round_StateGameOver,
 };
-extern "C" PMFv sBomroomRoundEndTable[4] = {
+PMFv sBomroomRoundEndTable[4] = {
     pmf_dScMgBomroom_c_RoundEnd_StartMarch,
     pmf_dScMgBomroom_c_RoundEnd_WaitLinedUp,
     pmf_dScMgBomroom_c_RoundEnd_Tally,
@@ -1904,24 +1939,24 @@ PMF sBomroomBombStateTable[7] = {
     pmf_dScMgBomroom_c_Bomb_StateExploding, pmf_dScMgBomroom_c_Bomb_StateInPen,
     pmf_dScMgBomroom_c_Bomb_StateMarch,
 };
-extern "C" PMF sBomroomBombMarchTable[5] = {
+PMF sBomroomBombMarchTable[5] = {
     pmf_dScMgBomroom_c_BombMarch_ToGate,    pmf_dScMgBomroom_c_BombMarch_Exit,
     pmf_dScMgBomroom_c_BombMarch_Offscreen, pmf_dScMgBomroom_c_BombMarch_ToLine,
     pmf_dScMgBomroom_c_BombMarch_LinedUp,
 };
-extern "C" PMF sBomroomHatchPanelStateTable[4] = {
+PMF sBomroomHatchPanelStateTable[4] = {
     pmf_dScMgBomroom_c_HatchPanel_StateIdle,
     pmf_dScMgBomroom_c_HatchPanel_StateAnimate,
     pmf_dScMgBomroom_c_HatchPanel_StateHeld,
     pmf_dScMgBomroom_c_HatchPanel_StateRevert,
 };
-extern "C" PMF sBomroomPenGateStateTable[4] = {
+PMF sBomroomPenGateStateTable[4] = {
     pmf_dScMgBomroom_c_PenGate_StateShut,
     pmf_dScMgBomroom_c_PenGate_StateOpening,
     pmf_dScMgBomroom_c_PenGate_StateHold,
     pmf_dScMgBomroom_c_PenGate_StateClosing,
 };
-extern "C" PMF sBomroomTopDoorStateTable[4] = {
+PMF sBomroomTopDoorStateTable[4] = {
     pmf_dScMgBomroom_c_TopDoor_StateShut,
     pmf_dScMgBomroom_c_TopDoor_StateOpening,
     pmf_dScMgBomroom_c_TopDoor_StateOpen,

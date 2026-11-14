@@ -2,7 +2,7 @@
 #include "Ov007Picker.h"
 #include "Ov007Camera.h"
 
-extern "C" void func_ov007_020bfe4c(Ov007Camera *o, int x, int y, int z, void *out);
+void func_ov007_020bfe4c(Ov007Camera *o, int x, int y, int z, Vector3 *out);
 
 /* Vector3 declares a constructor and destructor under C++, which makes its
    assignment copy word by word. The ROM copies these with one ldm/stm, which
@@ -13,7 +13,7 @@ struct Vec3Words {
 
 /* Re-unprojects every committed stroke point through the camera, resets the
    live points to it, and puts pos back at its rest position. */
-extern "C" void func_ov007_020c5dec(Ov007Picker *c) {
+void func_ov007_020c5dec(Ov007Picker *c) {
     int i;
     for (i = 0; i < c->groupCount; i++) {
         int j;

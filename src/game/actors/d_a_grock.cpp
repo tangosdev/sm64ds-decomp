@@ -77,9 +77,8 @@ struct GrockModelFilePtr : SharedFilePtr {
 
 /* arm9 C helper with no shared header. func_02012694 has the same body as
  * Sound::PlayBank3 (0x02012664); the ROM calls this copy. */
-extern "C" {
-extern void func_02012694(unsigned int id, void *pos);
-}
+
+extern void func_02012694(unsigned int id, const Vector3 *pos);
 
 extern GrockModelFilePtr data_ov021_02114a50;
 
@@ -389,7 +388,7 @@ int daGrock_c::InitResources() {
  * allocation size, vtable identity, and the GORO_ROCK registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: RollingRock_Spawn. */
-extern "C" daGrock_c *daGrock_c_classInit() {
+daGrock_c *daGrock_c_classInit() {
     return new daGrock_c();
 }
 

@@ -20,77 +20,77 @@
   ],
   "functions": [
     {
-      "symbol": "NNS_FndResizeForMBlockFrmHeap",
+      "symbol": "_Z29NNS_FndResizeForMBlockFrmHeapP15NNSiFndHeapHeadPvj",
       "address": "0x0204e964",
       "size": "0x000000a4",
       "legacy_source": "src/_ZN18SolidHeapAllocator10ReallocateEPvj.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "NNS_FndAdjustFrmHeap",
+      "symbol": "_Z20NNS_FndAdjustFrmHeapP15NNSiFndHeapHead",
       "address": "0x0204ea08",
       "size": "0x00000034",
       "legacy_source": "src/_ZN18SolidHeapAllocator14TryResizeToFitEv.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "NNS_FndFreeByStateToFrmHeap",
+      "symbol": "_Z27NNS_FndFreeByStateToFrmHeapP15NNSiFndHeapHeadj",
       "address": "0x0204ea3c",
       "size": "0x0000005c",
       "legacy_source": "src/_ZN18SolidHeapAllocator9LoadStateEj.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "NNS_FndRecordStateForFrmHeap",
+      "symbol": "_Z28NNS_FndRecordStateForFrmHeapP15NNSiFndHeapHeadj",
       "address": "0x0204ea98",
       "size": "0x00000058",
       "legacy_source": "src/_ZN18SolidHeapAllocator9SaveStateEj.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "NNS_FndGetAllocatableSizeForFrmHeapEx",
+      "symbol": "_Z37NNS_FndGetAllocatableSizeForFrmHeapExP15NNSiFndHeapHeadi",
       "address": "0x0204eaf0",
       "size": "0x00000040",
       "legacy_source": "src/_ZN18SolidHeapAllocator10MemoryLeftEi.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "NNS_FndFreeToFrmHeap",
+      "symbol": "_Z20NNS_FndFreeToFrmHeapP15NNSiFndHeapHeadi",
       "address": "0x0204eb30",
       "size": "0x00000040",
       "legacy_source": "src/_ZN18SolidHeapAllocator5ResetEj.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "NNS_FndAllocFromFrmHeapEx",
+      "symbol": "_Z25NNS_FndAllocFromFrmHeapExP15NNSiFndHeapHeadji",
       "address": "0x0204eb70",
       "size": "0x00000048",
       "legacy_source": "src/_ZN18SolidHeapAllocator8AllocateEji.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "NNS_FndDestroyFrmHeap",
+      "symbol": "_Z21NNS_FndDestroyFrmHeapP15NNSiFndHeapHead",
       "address": "0x0204ebb8",
       "size": "0x0000000c",
       "legacy_source": "src/func_0204ebb8.c",
       "ordinal": 7
     },
     {
-      "symbol": "NNS_FndCreateFrmHeapEx",
+      "symbol": "_Z22NNS_FndCreateFrmHeapExPvjt",
       "address": "0x0204ebc4",
       "size": "0x0000004c",
       "legacy_source": "src/_ZN5mHeap6Heap_t24CreateSolidHeapAllocatorEPvjj.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "FreeTail",
+      "symbol": "_Z8FreeTailP15NNSiFndHeapHead",
       "address": "0x0204ec10",
       "size": "0x00000030",
       "legacy_source": "src/_ZN18SolidHeapAllocator8ResetEndEv.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "FreeHead",
+      "symbol": "_Z8FreeHeadP15NNSiFndHeapHead",
       "address": "0x0204ec40",
       "size": "0x00000018",
       "legacy_source": "src/_ZN18SolidHeapAllocator10ResetStartEv.cpp",
@@ -111,7 +111,7 @@
       "ordinal": 12
     },
     {
-      "symbol": "InitFrameHeap",
+      "symbol": "_Z13InitFrameHeapPvS_t",
       "address": "0x0204ed54",
       "size": "0x00000050",
       "legacy_source": "src/_ZN18SolidHeapAllocatorC1EPvj.cpp",

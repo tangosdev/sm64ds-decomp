@@ -136,11 +136,13 @@ enum {
     kTiltStep = 0x80
 };
 
-extern "C" {
 void func_02012694(unsigned int id, const Vector3 *pos);
+extern "C" {
+
 unsigned short DecIfAbove0_Short(unsigned short *p);
-/* local extern: d_bg_w.cpp defines these; no header declares them. */
 }
+
+/* local extern: d_bg_w.cpp defines these; no header declares them. */
 
 extern int data_02092138;
 extern u8 data_ov073_02123420[];
@@ -417,7 +419,7 @@ void daObjEwbIce_c::StoodOnCallback(dBgW *collider, daObjEwbIce_c *ice, dActor_c
  * `new daObjEwbIce_c` is the whole sequence the loose factory spelled by
  * hand: fBase_c::operator new(0x33c), dBgActor_c's base constructor, then
  * the vptr store. */
-extern "C" daObjEwbIce_c *daObjEwbIce_c_classInit_EWB_ICE_C(void) {
+daObjEwbIce_c *daObjEwbIce_c_classInit_EWB_ICE_C(void) {
     return new daObjEwbIce_c;
 }
 
@@ -425,7 +427,7 @@ extern "C" daObjEwbIce_c *daObjEwbIce_c_classInit_EWB_ICE_C(void) {
  * allocation size, vtable identity, and the EWB_ICE_B registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: CccBigIce_Spawn. */
-extern "C" daObjEwbIce_c *daObjEwbIce_c_classInit_EWB_ICE_B(void) {
+daObjEwbIce_c *daObjEwbIce_c_classInit_EWB_ICE_B(void) {
     return new daObjEwbIce_c;
 }
 
@@ -433,7 +435,7 @@ extern "C" daObjEwbIce_c *daObjEwbIce_c_classInit_EWB_ICE_B(void) {
  * allocation size, vtable identity, and the EWB_ICE_A registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: CccArena_Spawn. */
-extern "C" daObjEwbIce_c *daObjEwbIce_c_classInit_EWB_ICE_A(void) {
+daObjEwbIce_c *daObjEwbIce_c_classInit_EWB_ICE_A(void) {
     return new daObjEwbIce_c;
 }
 

@@ -63,10 +63,9 @@ extern s32 data_ov002_02100348[];
 
 /* local extern: arm9/ov002 C helpers with no shared header yet. Vec3_Asr is
    not among them any more -- math/CalcLib.h, included above, declares it. */
-extern "C" {
 int func_ov002_020ad660(void *cc, void *pp, void *r5p, int flags);
+
 void func_02012694(unsigned int, const Vector3 *);
-}
 
 /* D1: own vptr, then the members in reverse declaration order (dExtShadowModel_c,
  * dBgCh_Actr, dCcAc_c), then dEnemyBase_c's destructor. D0 is the same body
@@ -351,6 +350,6 @@ s32 daFPknBall_c::OnYoshiTryEat() {
 }
 
 /* FPAKUN_BALL registry factory. */
-extern "C" daFPknBall_c *daFPknBall_c_classInit() {
+daFPknBall_c *daFPknBall_c_classInit() {
     return new daFPknBall_c();
 }

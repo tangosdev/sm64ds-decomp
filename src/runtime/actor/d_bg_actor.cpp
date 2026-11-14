@@ -45,6 +45,7 @@
 /* ROM symbols with no header of their own, spelled to agree with their
  * definitions. */
 extern "C" {
+
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 
@@ -78,11 +79,13 @@ void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
  * label. The ray and ceiling hits are copied into a local dBgPi by its
  * implicit copy constructor, and its destructor runs on every exit. */
 
-extern "C" {
 /* dBgCh_Actr queries (src/engine/collision/d_bg_ch_actr.cpp), not yet
    declared in dBgCh_Actr.h. */
-int func_02035638(void *clsn); /* mSphereClsn.flags & 0x10: the ceiling bit */
-void *func_0203564c(void *clsn); /* mSphereClsn.GetUnderResult(): the ceiling hit */
+int func_02035638(unsigned char *clsn);
+/* mSphereClsn.flags & 0x10: the ceiling bit */
+void *func_0203564c(void *clsn);
+extern "C" {
+/* mSphereClsn.GetUnderResult(): the ceiling hit */
 /* d_a_ply_methods.cpp: sets 0x20 in daPly_c::mStateFlags. */
 void func_ov002_020d8838(void *player);
 }
@@ -93,7 +96,7 @@ static inline int IsActorID(const dActor_c *actor, int id) {
     return actor->actorID == id;
 }
 
-extern "C" int func_ov002_020ef2a4(dBgCh_Actr *clsn, dActor_c *other) {
+int func_ov002_020ef2a4(dBgCh_Actr *clsn, dActor_c *other) {
     if (clsn->IsOnGround()) {
         dBgPi *hit = clsn->GetFloorResult();
         if (hit->GetClsnID() != -1) {
@@ -107,7 +110,7 @@ extern "C" int func_ov002_020ef2a4(dBgCh_Actr *clsn, dActor_c *other) {
     return 0;
 }
 
-extern "C" int func_ov002_020ef228(dBgCh_Actr *clsn, dActor_c *other) {
+int func_ov002_020ef228(dBgCh_Actr *clsn, dActor_c *other) {
     if (clsn->IsOnWall()) {
         dBgPi *hit = clsn->GetWallResult();
         if (hit->GetClsnID() != -1) {
@@ -121,7 +124,7 @@ extern "C" int func_ov002_020ef228(dBgCh_Actr *clsn, dActor_c *other) {
     return 0;
 }
 
-extern "C" int func_ov002_020ef070(void *unused, char *moverArg) {
+int func_ov002_020ef070(void *unused, char *moverArg) {
     Vector3 start, end;
 
     dBgCh_Lin line;
@@ -161,7 +164,7 @@ extern "C" int func_ov002_020ef070(void *unused, char *moverArg) {
     return 0;
 }
 
-extern "C" int func_ov002_020eeeb8(void *unused, char *moverArg) {
+int func_ov002_020eeeb8(void *unused, char *moverArg) {
     Vector3 start, end;
 
     dBgCh_Lin line;
@@ -205,7 +208,7 @@ extern "C" int func_ov002_020eeeb8(void *unused, char *moverArg) {
     return 0;
 }
 
-extern "C" int func_ov002_020eee3c(char *clsnArg, char *otherArg) {
+int func_ov002_020eee3c(char *clsnArg, char *otherArg) {
     dBgCh_Actr *clsn = (dBgCh_Actr *)clsnArg;
     dActor_c *other = (dActor_c *)otherArg;
     if (clsn->IsOnWall()) {
@@ -221,7 +224,7 @@ extern "C" int func_ov002_020eee3c(char *clsnArg, char *otherArg) {
     return 0;
 }
 
-extern "C" int func_ov002_020eedc0(dBgCh_Actr *clsn, dActor_c *other) {
+int func_ov002_020eedc0(dBgCh_Actr *clsn, dActor_c *other) {
     if (clsn->IsOnWall()) {
         dBgPi *hit = clsn->GetWallResult();
         if (hit->GetClsnID() != -1) {
@@ -235,10 +238,10 @@ extern "C" int func_ov002_020eedc0(dBgCh_Actr *clsn, dActor_c *other) {
     return 0;
 }
 
-extern "C" int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player) {
+int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player) {
     dBgPi *hit;
     dActor_c *owner;
-    if (clsn->IsOnWall() || clsn->IsOnGround() || func_02035638(clsn)) {
+    if (clsn->IsOnWall() || clsn->IsOnGround() || func_02035638((unsigned char *)clsn)) {
         hit = clsn->GetSphereResult();
         if (hit->GetClsnID() != -1) {
             owner = dActor_c::FindWithID(hit->GetClsnID());
@@ -251,8 +254,8 @@ extern "C" int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player) {
     return 0;
 }
 
-extern "C" int func_ov002_020eeca8(dBgCh_Actr *clsn, dActor_c *other) {
-    if (func_02035638(clsn)) {
+int func_ov002_020eeca8(dBgCh_Actr *clsn, dActor_c *other) {
+    if (func_02035638((unsigned char *)clsn)) {
         dBgPi *hit = clsn->GetSphereResult();
         if (hit->GetClsnID() != -1) {
             dActor_c *owner = dActor_c::FindWithID(hit->GetClsnID());
@@ -273,13 +276,13 @@ extern "C" int func_ov002_020eeca8(dBgCh_Actr *clsn, dActor_c *other) {
  * Vector3 scoped to its own branch. The scalar Hurt ABI remains a measured
  * reconstruction boundary. */
 
-extern "C" int func_ov002_020eea84(dBgCh_Actr *clsn, dActor_c *player) {
+int func_ov002_020eea84(dBgCh_Actr *clsn, dActor_c *player) {
     dActor_c *owner;
 
     if (!IsActorID(player, 0xbf))
         return 0;
 
-    if (func_02035638(clsn)) {
+    if (func_02035638((unsigned char *)clsn)) {
         dBgPi hit(*(const dBgPi *)func_0203564c(clsn));
         if (hit.GetClsnID() != -1) {
             owner = dActor_c::FindWithID(hit.GetClsnID());

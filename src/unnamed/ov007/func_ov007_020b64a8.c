@@ -2,6 +2,7 @@
 #include "Ov007Work.h"
 #include "Ov007Settings.h"
 
+#define func_ov007_020b7eec _Z19func_ov007_020b7eecP13Ov007BootArgs
 extern void func_ov007_020b7eec(Ov007BootArgs *bootArgs);
 
 /* Steps the sound mode by `step`, wrapping over 0..2, and redraws the

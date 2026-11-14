@@ -21,42 +21,42 @@
   ],
   "functions": [
     {
-      "symbol": "OSi_ExceptionHandler",
+      "symbol": "_Z20OSi_ExceptionHandlerv",
       "address": "0x020593f4",
       "size": "0x00000074",
       "legacy_source": "src/unnamed/arm9/0205/func_020593f4.c",
       "ordinal": 0
     },
     {
-      "symbol": "OSi_GetAndDisplayContext",
+      "symbol": "_Z24OSi_GetAndDisplayContextv",
       "address": "0x02059468",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0205/func_02059468.c",
       "ordinal": 1
     },
     {
-      "symbol": "OSi_SetExContext",
+      "symbol": "_Z16OSi_SetExContextv",
       "address": "0x0205947c",
       "size": "0x00000090",
       "legacy_source": "src/unnamed/arm9/0205/func_0205947c.c",
       "ordinal": 2
     },
     {
-      "symbol": "OSi_DisplayExContext",
+      "symbol": "_Z20OSi_DisplayExContextv",
       "address": "0x0205950c",
       "size": "0x0000006c",
       "legacy_source": "src/unnamed/arm9/0205/func_0205950c.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "OS_SetUserExceptionHandler",
+      "symbol": "_Z26OS_SetUserExceptionHandlerPFvjPvES_",
       "address": "0x02059578",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/arm9/0205/func_02059578.c",
       "ordinal": 4
     },
     {
-      "symbol": "OS_InitException",
+      "symbol": "_Z16OS_InitExceptionv",
       "address": "0x02059594",
       "size": "0x00000090",
       "legacy_source": "src/unnamed/arm9/0205/func_02059594.c",

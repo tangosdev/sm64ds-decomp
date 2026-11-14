@@ -35,7 +35,7 @@
  * the reverse of source order, so the highest-address function is written
  * first here and the functions come out in ROM order.
  *
- * The functions keep C linkage. The Texture_ names are coined from the
+ * The Texture_ names are coined from the
  * bodies, after the in-tree Ov007Texture (include/Ov007Texture.h); the
  * other six keep their address names for now.
  */
@@ -46,8 +46,6 @@
 #include "nitro/gx/g3imm.h"
 #include "nitro/os/system.h"
 #include "Ov007MenuMem.h"
-
-extern "C" {
 
 extern u32 data_ov007_02104bdc; /* next free texture slot */
 extern u32 data_ov007_02104be0; /* end of the palette region */
@@ -289,5 +287,3 @@ void Texture_BindPalette(Ov007Texture *tex) {
         reg_G3_TEXPLTT_BASE = 0;
     }
 }
-
-} // extern "C"

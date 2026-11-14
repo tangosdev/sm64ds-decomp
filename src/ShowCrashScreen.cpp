@@ -6,16 +6,24 @@
 #include "fBase_c.h"
 #include "nitro/hw/registers.h"
 
+extern u64 func_020427c4(void);
 extern "C" {
 
-extern u64 func_020427c4(void);
 extern char *GetStageDebugName(void);
-extern int func_020441bc(int i);
-extern int GetActorDebugName(unsigned int i);
+}
 
-extern void nds_printt(void *dst, const char *fmt, s32 v);
+extern int func_020441bc(int i);
+extern "C" {
+
+extern int GetActorDebugName(unsigned int i);
+}
+
+extern void nds_printt(unsigned short *dst, const char *fmt, s32 v);
+extern "C" {
+
 extern void nds_print(void *dst, const void *str);
 extern void nds_printf(void *dst, const char *fmt, ...);
+}
 
 extern signed char gCurrentSublevel;
 extern u8 gCurrentEntranceId;
@@ -40,7 +48,9 @@ extern char data_0208e5b0[], data_0208e5c0[], data_0208e5d4[], data_0208e5e4[];
 extern char data_0208e5f0[], data_0208e5fc[], data_0208e608[], data_0208e610[];
 extern char data_0208e624[], data_0208e634[], data_0208e648[], data_020a0d90[];
 
-typedef struct { char c[52]; } Buf52;
+typedef struct {
+    char c[52];
+} Buf52;
 extern Buf52 data_0208e504;
 
 void ShowCrashScreen(void)
@@ -50,7 +60,7 @@ void ShowCrashScreen(void)
     int rr;
     int cc;
 
-    nds_printt(scr + 0x5e8, data_0208e538, func_020427c4());
+    nds_printt((unsigned short *)scr + 0x2f4, data_0208e538, (u32)func_020427c4());
     nds_print(scr, data_0208e548);
     nds_print(scr + 6, data_020a0d90);
     cc = gCurrentSublevel;
@@ -117,5 +127,4 @@ void ShowCrashScreen(void)
     }
 
     data_0209cdd0 = 1;
-}
 }

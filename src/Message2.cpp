@@ -30,7 +30,6 @@
 #include "SaveData.h"
 #include "Sound.h"
 
-extern "C" {
 extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
 /* The message box rectangle: see the comment at Message.cpp's definitions. */
@@ -39,7 +38,8 @@ extern u8 gMsgBoxLeft;
 extern u8 gMsgBoxWinLeft;
 extern u8 data_0209d65c;
 extern u8 data_0209d660;
-extern u8 data_0209d664; /* nonzero while a dialogue box is up */
+extern u8 data_0209d664;
+/* nonzero while a dialogue box is up */
 extern u8 data_0209d668;
 extern u8 data_0209d66c;
 extern u8 data_0209d670;
@@ -67,7 +67,8 @@ extern u8 data_0209d6b4;
 extern u8 data_0209d6b8;
 extern u8 data_0209d6bc;
 extern u8 data_0209d6c0;
-extern u8 gMsgBoxStyle; /* the box style: see Message.cpp */
+extern u8 gMsgBoxStyle;
+/* the box style: see Message.cpp */
 extern u8 gMsgBoxCenterY;
 extern u8 gMsgBoxTop;
 extern u8 gMsgBoxCenterX;
@@ -100,19 +101,22 @@ extern s16 data_0209f4a2[];
 extern s16 data_0209f4a4[];
 extern u16 data_020a0e5a[];
 extern s32 data_020a0db0;
-struct OamAttr;
-extern OamAttr data_ov002_0210c390;
-extern OamAttr data_ov002_0210c398;
-extern OamAttr data_ov002_0210c3a0;
-extern OamAttr data_ov002_0210c3a8;
+extern struct OamAttr data_ov002_0210c390;
+extern struct OamAttr data_ov002_0210c398;
+extern struct OamAttr data_ov002_0210c3a0;
+extern struct OamAttr data_ov002_0210c3a8;
+extern "C" {
+
 extern void (*MSG_GEN_TEXT_FUNCS[])(void);
+}
 
 extern int IsButtonInputValid(void);
 extern int func_0201fb4c(void);
 extern u8 NumStars(void);
 extern int func_020138dc(void);
-}
+
 extern "C" {
+
 void OamRender10_Message2(int a, void *b, int c, int d, int e, int f, int g, int h, int i, int j);
 }
 
@@ -183,8 +187,6 @@ void Message::AddChoice() {
     }
 }
 
-extern "C" {
-
 void func_0201aca4(void) {
 
     struct MsgTextChar {
@@ -231,7 +233,6 @@ void func_0201aca4(void) {
         break;
     }
 }
-}
 
 void Message::AddCharPair() {
     /* Text code 3. Calls AddChar twice with the font byte and the next byte.
@@ -249,8 +250,6 @@ void Message::AddCharPair() {
     AddChar(data_0208ee6c[idx]);
     AddChar((data_0208ee6c[idx] + 1) & 0xff);
 }
-
-extern "C" {
 
 void func_0201adfc(void) {
     int n;
@@ -470,7 +469,6 @@ void func_0201b388(int a0) {
     data_0209d6c0 = data_0209d6c0 + 1;
 }
 #pragma pop
-}
 
 void Message::AddChar(u8 c) {
     int i;
@@ -514,8 +512,6 @@ void Message::AddChar(u8 c) {
     }
 }
 
-extern "C" {
-
 void func_0201b6f8(int mode) {
     int i;
     u8 *p = data_0209d6f4;
@@ -543,7 +539,6 @@ void func_0201b6f8(int mode) {
             break;
         }
     }
-}
 }
 
 /* Lays out the next text line: glyphs until 0xfd (line end) or 0xff (message

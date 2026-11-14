@@ -96,20 +96,27 @@ struct CLPS_Block;
 extern "C" {
 /* ---- this TU ---- */
 void func_ov079_02123d4c(Vector3 *out, daBtn_c *self);
-void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other);
+}
 
-/* ---- arm9 / ov002 ---- */
-int AngleDiff(int, int);
+void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other);
 int IsStarCollectedInCurLevel(int a);
 void func_02011cfc(void);
 void func_02011d38(void);
-void func_02012694(unsigned int a, void *p);
+void func_02012694(unsigned int a, const Vector3 *p);
+extern "C" {
+
+/* ---- arm9 / ov002 ---- */
+int AngleDiff(int, int);
 int func_ov002_020dd8b8(void *c);
+}
 
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int a, int b, void *c, void *d);
+extern "C" {
+
 extern void hold_d_a_btn(void *mc, void *kcl, void *mtx, int fix, s16 s, void *clps);
 void d_a_btnEarthquakeHold(void *self, const void *v, int f);
+}
 
 /* ---- data ---- */
 extern unsigned int gNextActorUpdateMask;
@@ -132,7 +139,6 @@ extern void *data_ov079_02127600[];
 extern CLPS_Block data_ov079_02127ba0;   /* the plain Whomp's CLPS block */
 extern void *data_ov079_02127bf0[];
 extern int data_ov079_02127cfc[];
-}
 
 /* File-scope resource handles: each ctor/dtor pair is a ROM SharedFilePtr
    veneer (func_02017acc/func_02017ab4 for the two BMDs, SharedFilePtr::
@@ -196,7 +202,7 @@ BtnCollisionFilePtr     gBattanKingCollisionFile(ASSET_BATTAN_KING_KCL);   /* th
 /* The twelve state handler records live in .data (0x02127bc0..0x02127c28);
    the static initializer copies them into the table below, one member
    pointer per mState. */
-extern "C" {
+
 extern daBtn_c::StateFunc data_ov079_02127c00;   /* 0 func_ov079_02125b44 */
 extern daBtn_c::StateFunc data_ov079_02127bd0;   /* 1 func_ov079_021258fc */
 extern daBtn_c::StateFunc data_ov079_02127c10;   /* 2 func_ov079_021256d4 */
@@ -209,7 +215,6 @@ extern daBtn_c::StateFunc data_ov079_02127be8;   /* 8 func_ov079_021246dc */
 extern daBtn_c::StateFunc data_ov079_02127bf8;   /* 9 func_ov079_021246d8 */
 extern daBtn_c::StateFunc data_ov079_02127be0;   /* 10 func_ov079_02124638 */
 extern daBtn_c::StateFunc data_ov079_02127c08;   /* 11 func_ov079_02124530 */
-}
 
 daBtn_c::StateFunc data_ov079_02128280[12] = {
     data_ov079_02127c00, data_ov079_02127bd0, data_ov079_02127c10,
@@ -223,13 +228,11 @@ daBtn_c::StateFunc data_ov079_02128280[12] = {
    Vector3-by-value call, so this view lets the virtual forward to it. */
 namespace vecret { extern "C" Vector3 func_ov079_02123d4c(void *thiz); }
 
-extern "C" daBtn_c *daBtn_c_classInit_BATAN()
-{
+daBtn_c *daBtn_c_classInit_BATAN() {
     return new daBtn_c();
 }
 
-extern "C" daBtn_c *daBtn_c_classInit_BATANKING()
-{
+daBtn_c *daBtn_c_classInit_BATANKING() {
     return new daBtn_c();
 }
 
@@ -900,7 +903,7 @@ void daBtn_c::func_ov079_02125240(){
    `ldr ip,[pc,#8]; bx ip` absolute tail-call; bracketed closed immediately
    because it is positional. */
 #pragma long_calls on
-extern "C" void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other) {
+void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other) {
     static_cast<daBtn_c *>(owner)->func_ov079_02125058(other);
 }
 #pragma long_calls off
@@ -966,7 +969,7 @@ void daBtn_c::func_ov079_02124ed4()
         if (mPounded != 0) {
             mPounded = 0;
             mHitPoints--;
-            func_02012694(0x134, &mCamSpacePosX);
+            func_02012694(0x134, (const Vector3 *)(&mCamSpacePosX));
             {
                 s32 *p = &mPounder->mPosX;
                 Particle::System::NewSimple(kPtclWhompPounded, p[0], p[1], p[2]);
@@ -1506,7 +1509,7 @@ void daBtn_c::OnHitByMegaChar(daPly_c &player) {
     if (mIsKing != 0) return;
     if (mDeathState == 8) return;
     player.IncMegaKillCount();
-    func_02012694(0x1e, &mCamSpacePosX);
+    func_02012694(0x1e, (const Vector3 *)(&mCamSpacePosX));
     Vector3 pos;
     func_ov079_02123d4c(&pos, this);
     Vector3 dust;

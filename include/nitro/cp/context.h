@@ -14,9 +14,10 @@
 #include "types.h"
 
 #ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
 #endif
-
+#endif
 typedef struct CPContext {
     u64 div_numer; /* 0x00 -- 0x04000290 */
     u64 div_denom; /* 0x08 -- 0x04000298 */
@@ -25,11 +26,18 @@ typedef struct CPContext {
     u16 sqrt_mode; /* 0x1a -- 0x040002b0 (low bit) */
 } CPContext;
 
-void CP_SaveContext(CPContext *);
-void CPi_RestoreContext(const CPContext *);
-
 #ifdef __cplusplus
+extern "C"
+#endif
+void CP_SaveContext(CPContext *);
+#ifdef __cplusplus
+extern "C"
+#endif
+void CPi_RestoreContext(const CPContext *);
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #ifndef SM64DS_PLATFORM_PC

@@ -3,10 +3,17 @@
 #include "Ov007Settings.h"
 #include "nitro/os/system.h"
 
+#define func_ov007_020c1d78 _Z19func_ov007_020c1d78i
+#define func_ov007_020b7d94 _Z19func_ov007_020b7d94i
+#define func_ov007_020b43dc _Z19func_ov007_020b43dci
+#define func_ov007_020c1d8c _Z19func_ov007_020c1d8ci
+#define func_ov007_020b79c8 _Z19func_ov007_020b79c8v
 extern void func_ov007_020c1d78(int i);
 extern void func_ov007_020b0244(void);
 extern void func_ov007_020b7d94(int kind);
 extern void func_ov007_020b43dc(int kind);
+#define func_ov007_020b79e4 _Z19func_ov007_020b79e4v
+#define func_ov007_020b4438 _Z19func_ov007_020b4438v
 extern int func_ov007_020b79e4(void);
 extern int func_ov007_020b4438(void);
 extern void func_ov007_020c1d8c(int i);
@@ -87,7 +94,7 @@ void func_ov007_020af59c(void) {
                 menu->stateWork = 2;
                 return;
             case 2:
-                OS_Terminate();
+                _Z12OS_Terminatev();
                 return;
             }
             return;

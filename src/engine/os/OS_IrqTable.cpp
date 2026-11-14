@@ -17,8 +17,8 @@
 #include "nitro/os/interrupt.h"
 #include "nitro/os/interrupt_check.h"
 
-extern "C" {
-extern u16 OSi_IrqCallbackInfoIndex[OSi_IRQCALLBACK_NUM]; /* DMA 0-3, then timers 0-3 */
+extern u16 OSi_IrqCallbackInfoIndex[OSi_IRQCALLBACK_NUM];
+/* DMA 0-3, then timers 0-3 */
 
 // Installed for vectors that have no handler.
 void OS_IrqDummy(void) {}
@@ -73,5 +73,4 @@ void OSi_IrqTimer2(void) {
 
 void OSi_IrqTimer3(void) {
     OSi_IrqCallback(OSi_IRQCALLBACK_NO_TIMER3);
-}
 }

@@ -65,7 +65,7 @@ CLPS_Block data_ov030_02114ee4 = {
     {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
 };
 
-extern "C" daObjHmBskt_c *daObjHmBskt_c_classInit() {
+daObjHmBskt_c *daObjHmBskt_c_classInit() {
     return new daObjHmBskt_c();
 }
 

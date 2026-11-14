@@ -56,13 +56,19 @@ typedef char Ov007Sprite_size_must_be_0x88[sizeof(Ov007Sprite) == 0x88 ? 1 : -1]
 #endif
 
 #ifdef __cplusplus
+
+void func_ov007_020c44c4(Ov007Sprite *sprite);
 extern "C" {
 #endif
 
+#ifdef __cplusplus
+#ifdef _MSC_VER
+extern "C" {
+#endif
+#endif
 struct Ov007Camera;
 
 Ov007Sprite *func_ov007_020c44e4(int frameCount);
-void func_ov007_020c44c4(Ov007Sprite *sprite);
 void func_ov007_020c4388(Ov007Sprite *sprite, struct Ov007Camera *camera);
 void func_ov007_020c43bc(Ov007Sprite *sprite, struct Ov007Camera *camera);
 void func_ov007_020c42f8(Ov007Sprite *sprite);
@@ -71,6 +77,11 @@ void func_ov007_020c41dc(Ov007Sprite *base, Ov007Sprite *sprite, struct Ov007Cam
 void func_ov007_020c4128(Ov007Sprite *parent, Ov007Sprite *child, struct Ov007Camera *camera);
 void func_ov007_020c4684(Ov007Sprite *sprite, u16 color, int alpha, int polygonId, int flags,
                          s16 *vec);
+#ifdef __cplusplus
+#ifdef _MSC_VER
+}
+#endif
+#endif
 
 #ifdef __cplusplus
 }

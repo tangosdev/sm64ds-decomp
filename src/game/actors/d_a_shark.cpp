@@ -51,11 +51,10 @@ enum daShark_c_AssetId { ASSET_HOJIRO_BMD = 0x0325, ASSET_HOJIRO_SWIM_BCA = 0x03
 #include "math/MtxStack.h"
 
 /* local extern: no shared header declares these. */
-extern "C" {
-extern void func_02012694(unsigned int, void *);
-extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-}
+
+void func_02012694(unsigned int, const Vector3 *);
+extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
+s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 
 typedef daShark_c::StateFn SharkFn;
 
@@ -148,7 +147,7 @@ int daShark_c::StateSwim(daShark_c *self) {
     frame = (frame >> 12) << 16;
     frame = (unsigned int)frame >> 16;
     if (frame == 0)
-        func_02012694(9, &self->mCamSpacePosX);
+        func_02012694(9, (const Vector3 *)(&self->mCamSpacePosX));
     self->mAnmModel.speed = 0x1000;
     self->mAnmModel.Advance();
     self->CheckPlayerHit();
@@ -281,7 +280,7 @@ int daShark_c::InitResources() {
     return 1;
 }
 
-extern "C" daShark_c *daShark_c_classInit() {
+daShark_c *daShark_c_classInit() {
     return new daShark_c();
 }
 

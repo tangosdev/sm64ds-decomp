@@ -61,11 +61,10 @@ struct daOnms_c : dBgActor_c {
     virtual int Render();
 
     /* The movement states, indexed by mMoveDir through the member-pointer
-       table this file defines. The helpers func_ov092_021313b0 and
-       func_ov092_02131a88 stay C-linkage free functions because
-       include/decl_common.h declares them by those names. Every member
-       name below is coined; the cartridge keeps none. The address is the
-       method name for func_ov092_02131578. */
+       table this file defines. Every member name below is coined; the
+       cartridge keeps none. The address is the method name. */
+    void func_ov092_021313b0();
+    void func_ov092_02131a88();
     void StateLand();               /* 0 - coined */
     void func_ov092_02131578();     /* 1 - wait, address name */
     void StateRollPosZ();           /* 2 - coined */

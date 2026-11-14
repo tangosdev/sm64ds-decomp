@@ -151,20 +151,21 @@ struct GmchDrawReg { GmchDrawReg(Vector3 &v) { v.x = 0; v.y = 0x2000; v.z = 0; }
  * GmchAnimationFileHandle spell the model/animation ctors and dtors, and
  * GmchDrawReg supplies the draw offset's .init stores so the plain Vector3
  * earns its registered destructor instead of constant initialization. */
-extern "C" {
-extern Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
-extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+
+Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
+s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 /* local extern: named parameters keep the TU's compiler-generated aliases
  * stable when CalcLib's shared declarations are included above. */
-extern int RandomIntInternal(int *seed);
-extern void func_02038414(void *clsn);
-extern void   Matrix4x3_FromRotationY(void *m, int angle);
-extern void   Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
-extern void   Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
-extern void   Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 angY);
-extern unsigned char DecIfAbove0_Byte(unsigned char *p);
+extern "C" int RandomIntInternal(int *seed);
+void func_02038414(void *clsn);
+extern "C" void Matrix4x3_FromRotationY(void *m, int angle);
+extern "C" void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
+extern "C" void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
+extern "C" void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 angY);
+extern "C" unsigned char DecIfAbove0_Byte(unsigned char *p);
 
 /* Parameter names keep this TU's @NNN. */
+extern "C" {
 typedef void BgchInitAt_(void *self, void *actor, int a, int b, void *v, int c);
 }
 
@@ -876,8 +877,7 @@ void daGmch_c::OnTurnIntoEgg(daPly_c &player) {
  * allocation size, vtable identity and the GAMAGUCHI registry profile; later
  * EAD lineage supplies classInit. Exact original spelling is not preserved.
  * Historical alias: Moneybag_Spawn. */
-extern "C" daGmch_c *daGmch_c_classInit(void)
-{
+daGmch_c *daGmch_c_classInit(void) {
     return new daGmch_c();
 }
 
@@ -908,5 +908,5 @@ GmchDrawReg gmchDrawReg(data_ov081_02128ef8);
 Vector3 data_ov081_02128ef8;
 
 /* Registry priorities, flags and clipping ranges use the shared actor profile contract. */
-extern "C" SpawnInfo<daGmch_c> g_profile_GAMAGUCHI = {
+SpawnInfo<daGmch_c> g_profile_GAMAGUCHI = {
     daGmch_c_classInit, 0x105, 0x77, 0x10000007, 0x3f000, 0x50000, 0x1000000, 0xa28000};

@@ -8,8 +8,6 @@
 #include "nitro/os/system.h"
 #include "nitro/card/card_common.h"
 
-extern "C" {
-
 void CARDi_TaskThread(void *arg) {
     CARDiCommon *const p = &cardi_common;
     for (;;) {
@@ -23,5 +21,4 @@ void CARDi_TaskThread(void *arg) {
         OS_RestoreInterrupts(bak_psr);
         (*p->task_func)(p);
     }
-}
 }

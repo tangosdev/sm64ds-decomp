@@ -12,9 +12,14 @@ int FS_LoadOverlay(MIProcessor target, FSOverlayID id) {
     if (!func_02018c00(&info, target, id) || !func_02018b64(&info))
         return 0;
     ram = (unsigned int)info.header.ram_address;
-    if (!(ram >= (unsigned int)CapIconMgr_DispatchVs &&
-          (sum = ram + info.header.ram_size, sum + info.header.bss_size <= 0x214eaa0u)))
-        OS_Terminate();
+    /* goto kept: an || guard around OS_Terminate() colours ram/sum differently (4 forms tried) */
+    if (ram >= (unsigned int)CapIconMgr_DispatchVs) {
+        sum = ram + info.header.ram_size;
+        if (sum + info.header.bss_size <= 0x214eaa0u)
+            goto start;
+    }
+    _Z12OS_Terminatev();
+start:
     FS_StartOverlay(&info);
     return 1;
 }

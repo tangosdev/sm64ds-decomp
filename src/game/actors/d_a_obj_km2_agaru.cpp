@@ -48,7 +48,7 @@ enum {
     kRideHeight = 0x5dc000, /* 1500.0 */
 };
 
-extern "C" daObjKm2_Agaru_c *daObjKm2_Agaru_c_classInit() {
+daObjKm2_Agaru_c *daObjKm2_Agaru_c_classInit() {
     return new daObjKm2_Agaru_c();
 }
 

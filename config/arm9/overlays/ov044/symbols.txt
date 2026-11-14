@@ -4,7 +4,7 @@ _ZN19daObjKb1Billboard_c20UpdateModelTransformEv kind:function(arm,size=0x40) ad
 _ZN19daObjKb1Billboard_c16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02111254
 _ZN19daObjKb1Billboard_c6RenderEv kind:function(arm,size=0x28) addr:0x02111278
 _ZN19daObjKb1Billboard_c13InitResourcesEv kind:function(arm,size=0x3c) addr:0x021112a0
-daObjKb1Billboard_c_classInit kind:function(arm,size=0x38) addr:0x021112dc
+_Z29daObjKb1Billboard_c_classInitv kind:function(arm,size=0x38) addr:0x021112dc
 __sinit_d_a_obj_kb1_billboard.cpp kind:function(arm,size=0x40) addr:0x02111314
 .p__sinit_d_a_obj_kb1_billboard.cpp kind:data(word) addr:0x02111354
 data_ov044_02111360 kind:data(any) addr:0x02111360

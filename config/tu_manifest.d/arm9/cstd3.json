@@ -19,7 +19,7 @@
   ],
   "functions": [
     {
-      "symbol": "func_0206ccd8",
+      "symbol": "_Z13func_0206ccd8iz",
       "address": "0x0206ccd8",
       "size": "0x0000006c",
       "legacy_source": "src/unnamed/arm9/0206/func_0206ccd8.c",
@@ -33,14 +33,14 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_0206cd9c",
+      "symbol": "_Z13func_0206cd9cP12CardBusState",
       "address": "0x0206cd9c",
       "size": "0x00000084",
       "legacy_source": "src/unnamed/arm9/0206/func_0206cd9c.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_0206ce20",
+      "symbol": "_Z13func_0206ce20P12CardBusState",
       "address": "0x0206ce20",
       "size": "0x00000070",
       "legacy_source": "src/unnamed/arm9/0206/func_0206ce20.c",

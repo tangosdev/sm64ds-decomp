@@ -21,126 +21,126 @@
   ],
   "functions": [
     {
-      "symbol": "OSi_IdleThreadProc",
+      "symbol": "_Z18OSi_IdleThreadProcPv",
       "address": "0x02057e34",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0205/func_02057e34.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "OS_SetSwitchThreadCallback",
+      "symbol": "_Z26OS_SetSwitchThreadCallbackPFvP8OSThreadS0_E",
       "address": "0x02057e48",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/arm9/0205/func_02057e48.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "OS_GetThreadPriority",
+      "symbol": "_Z20OS_GetThreadPriorityPK8OSThread",
       "address": "0x02057e7c",
       "size": "0x00000008",
       "legacy_source": "src/unnamed/arm9/0205/func_02057e7c.c",
       "ordinal": 2
     },
     {
-      "symbol": "OS_SetThreadPriority",
+      "symbol": "_Z20OS_SetThreadPriorityP8OSThreadj",
       "address": "0x02057e84",
       "size": "0x000000b4",
       "legacy_source": "src/unnamed/arm9/0205/func_02057e84.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "OS_SetThreadStackWarningOffset",
+      "symbol": "_Z30OS_SetThreadStackWarningOffsetP8OSThreadj",
       "address": "0x02057f38",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/arm9/0205/func_02057f38.c",
       "ordinal": 4
     },
     {
-      "symbol": "OS_RescheduleThread",
+      "symbol": "_Z19OS_RescheduleThreadv",
       "address": "0x02057f54",
       "size": "0x000000c8",
       "legacy_source": "src/unnamed/arm9/0205/func_02057f54.c",
       "ordinal": 5
     },
     {
-      "symbol": "OS_SelectThread",
+      "symbol": "_Z15OS_SelectThreadv",
       "address": "0x0205801c",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/arm9/0205/func_0205801c.c",
       "ordinal": 6
     },
     {
-      "symbol": "OS_WakeupThreadDirect",
+      "symbol": "_Z21OS_WakeupThreadDirectP8OSThread",
       "address": "0x02058048",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/arm9/0205/func_02058048.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "OS_WakeupThread",
+      "symbol": "_Z15OS_WakeupThreadPt",
       "address": "0x0205807c",
       "size": "0x00000074",
       "legacy_source": "src/OS_WakeupThread.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "OS_SleepThread",
+      "symbol": "_Z14OS_SleepThreadPt",
       "address": "0x020580f0",
       "size": "0x00000068",
       "legacy_source": "src/OS_SleepThread.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "OS_IsThreadTerminated",
+      "symbol": "_Z21OS_IsThreadTerminatedPK8OSThread",
       "address": "0x02058158",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0205/func_02058158.c",
       "ordinal": 10
     },
     {
-      "symbol": "OS_JoinThread",
+      "symbol": "_Z13OS_JoinThreadP8OSThread",
       "address": "0x0205816c",
       "size": "0x0000003c",
       "legacy_source": "src/unnamed/arm9/0205/func_0205816c.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "OS_ExitThread",
+      "symbol": "_Z13OS_ExitThreadv",
       "address": "0x020581a8",
       "size": "0x00000058",
       "legacy_source": "src/unnamed/arm9/0205/func_020581a8.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "OS_CreateThread",
+      "symbol": "_Z15OS_CreateThreadP8OSThreadPFvPvES1_S1_jj",
       "address": "0x02058200",
       "size": "0x00000108",
       "legacy_source": "src/unnamed/arm9/0205/func_02058200.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "OS_InitThread",
+      "symbol": "_Z13OS_InitThreadv",
       "address": "0x02058308",
       "size": "0x00000180",
       "legacy_source": "src/unnamed/arm9/0205/func_02058308.c",
       "ordinal": 14
     },
     {
-      "symbol": "OSi_RemoveThreadFromList",
+      "symbol": "_Z24OSi_RemoveThreadFromListP8OSThread",
       "address": "0x02058488",
       "size": "0x00000048",
       "legacy_source": "src/unnamed/arm9/0205/func_02058488.c",
       "ordinal": 15
     },
     {
-      "symbol": "OSi_InsertThreadToList",
+      "symbol": "_Z22OSi_InsertThreadToListP8OSThread",
       "address": "0x020584d0",
       "size": "0x00000068",
       "legacy_source": "src/unnamed/arm9/0205/func_020584d0.c",
       "ordinal": 16
     },
     {
-      "symbol": "OSi_GetUnusedThreadId",
+      "symbol": "_Z21OSi_GetUnusedThreadIdv",
       "address": "0x02058538",
       "size": "0x00000030",
       "legacy_source": "src/unnamed/arm9/0205/func_02058538.c",

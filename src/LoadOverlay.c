@@ -2,7 +2,7 @@
 #include "nitro/fs/overlay.h"
 #include "private/fs_views.h"
 #include "nitro/os/system.h"
-int func_0203d7b8(void);
+int _Z13func_0203d7b8v(void);
 /* A loaded-overlay slot (see func_02017e60.c): the overlay id, 0xffffffff
    when the slot is free, and the RAM range the overlay occupies. */
 struct OverlaySlot {
@@ -22,7 +22,7 @@ void LoadOverlay(int id) {
     struct OverlaySlot *r;
     u32 end;
     func_02018c00(&info, MI_PROCESSOR_ARM9, id);
-    if (func_0203d7b8() != 0) {
+    if (_Z13func_0203d7b8v() != 0) {
         return;
     }
     pair = FS_GetOverlayFileID(&info);
@@ -36,7 +36,7 @@ void LoadOverlay(int id) {
                 slot = r;
             }
         } else if (((r->start + r->size) > start) && (end > r->start)) {
-            OS_Terminate();
+            _Z12OS_Terminatev();
         }
     }
 
@@ -46,5 +46,5 @@ void LoadOverlay(int id) {
         slot->size = total;
     }
     FS_LoadOverlay(MI_PROCESSOR_ARM9, id);
-    func_0203d7b8();
+    _Z13func_0203d7b8v();
 }

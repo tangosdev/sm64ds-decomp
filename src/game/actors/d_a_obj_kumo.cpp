@@ -57,7 +57,7 @@ extern int data_ov039_021118e0;
    operator new; the implicit ctor calls dActor_c's C2, stores this class's
    vptr, then dExtSimpleModel_c's C1 at 0xd4. The null check is the one `new` itself
    emits. */
-extern "C" daObjKumo_c *daObjKumo_c_classInit(void) {
+daObjKumo_c *daObjKumo_c_classInit(void) {
     return new daObjKumo_c();
 }
 

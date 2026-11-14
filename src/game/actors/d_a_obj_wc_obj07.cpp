@@ -41,7 +41,7 @@ struct WcObj07CollisionFilePtr : SharedFilePtr {
     ~WcObj07CollisionFilePtr();
 };
 
-extern "C" daObjWc_Obj07_c *daObjWc_Obj07_c_classInit() {
+daObjWc_Obj07_c *daObjWc_Obj07_c_classInit() {
     return new daObjWc_Obj07_c();
 }
 

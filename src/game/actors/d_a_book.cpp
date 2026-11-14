@@ -85,11 +85,11 @@ enum { kFlightSpeed = 0x32000 };
 extern "C" {
 short atan2_hold_d_a_book_1(int, int);
 void Vec3_Sub(Vector3 *d, const Vector3 *a, const Vector3 *b);
-void func_ov063_0211cae8(void *found, int mask);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(dBgCh_Actr *self, dActor_c *actor, int radius, int height,
                          Vector3_16 *first, Vector3_16 *second);
 }
+void func_ov063_0211cae8(daTrsTrap_c *c, int m);
 
 /* BOOK_SWITCH push order, indexed by the book's param1: the value the
  * partner's low three book bits must have when that book is pushed. {0, 1, 3}
@@ -838,23 +838,19 @@ s32 daBook_c::OnYoshiTryEat()
     unsigned int b = actorID==kKillerBookActorId; return b ? 2 : 0;
 }
 
-extern "C" daBook_c *daBook_c_classInit_BOOK_SWITCH()
-{
+daBook_c *daBook_c_classInit_BOOK_SWITCH() {
     return new daBook_c;
 }
 
-extern "C" daBookGen_c *daBookGen_c_classInit()
-{
+daBookGen_c *daBookGen_c_classInit() {
     return new daBookGen_c;
 }
 
-extern "C" daBook_c *daBook_c_classInit_KILLER_BOOK()
-{
+daBook_c *daBook_c_classInit_KILLER_BOOK() {
     return new daBook_c;
 }
 
-extern "C" daBook_c *daBook_c_classInit_SHOOT_BOOK()
-{
+daBook_c *daBook_c_classInit_SHOOT_BOOK() {
     return new daBook_c;
 }
 

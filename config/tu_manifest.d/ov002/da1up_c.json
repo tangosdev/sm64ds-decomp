@@ -291,14 +291,14 @@
       "ordinal": 35
     },
     {
-      "symbol": "da1up_c_classInit_SCALEUP_KINOKO",
+      "symbol": "_Z32da1up_c_classInit_SCALEUP_KINOKOv",
       "address": "0x020b0530",
       "size": "0x00000050",
       "legacy_source": "src/d_a_1up_scaleup_kinoko.c",
       "ordinal": 36
     },
     {
-      "symbol": "da1up_c_classInit_ONEUPKINOKO",
+      "symbol": "_Z29da1up_c_classInit_ONEUPKINOKOv",
       "address": "0x020b0580",
       "size": "0x00000050",
       "legacy_source": "src/d_a_1up_oneupkinoko.c",

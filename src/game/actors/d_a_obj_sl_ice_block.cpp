@@ -145,7 +145,7 @@ int daObjSlIceBlock_c::InitResources() {
  * RTTI, allocation size, vtable identity, and the SL_ICEBLOCK_SHOT registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: SlidingIce_Spawn. */
-extern "C" daObjSlIceBlock_c *daObjSlIceBlock_c_classInit_SL_ICEBLOCK_SHOT() {
+daObjSlIceBlock_c *daObjSlIceBlock_c_classInit_SL_ICEBLOCK_SHOT() {
     return new daObjSlIceBlock_c();
 }
 
@@ -153,7 +153,7 @@ extern "C" daObjSlIceBlock_c *daObjSlIceBlock_c_classInit_SL_ICEBLOCK_SHOT() {
  * RTTI, allocation size, vtable identity, and the SL_ICEBLOCK registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: SlidingIceSpawner_Spawn. */
-extern "C" daObjSlIceBlock_c *daObjSlIceBlock_c_classInit_SL_ICEBLOCK() {
+daObjSlIceBlock_c *daObjSlIceBlock_c_classInit_SL_ICEBLOCK() {
     return new daObjSlIceBlock_c();
 }
 

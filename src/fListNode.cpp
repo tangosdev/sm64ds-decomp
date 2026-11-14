@@ -21,11 +21,12 @@
 
 #pragma defer_codegen off
 
-extern "C" {
 extern void *data_020a4b68;
 extern int data_02099f24;
 extern const int data_02082178[6];
-extern void *func_02043fdc(void *list);
+namespace Absorb02043fdc {
+struct ProcessListDescriptor;
+void *func_02043fdc(ProcessListDescriptor *list);
 }
 
 /* If this node is the one currently executing, clear that pointer. */
@@ -97,15 +98,15 @@ ProcessList data_020a4ba8(data_02099f50);
 
 /* One frame: walk each process list, recording the phase number in
  * data_02099f24 while it runs. */
-extern "C" void func_02044120(void) {
+void func_02044120(void) {
     data_02099f24 = 4;
-    func_02043fdc(&data_020a4ba8);
+    Absorb02043fdc::func_02043fdc((Absorb02043fdc::ProcessListDescriptor *)&data_020a4ba8);
     data_02099f24 = 2;
-    func_02043fdc(&data_020a4b88);
+    Absorb02043fdc::func_02043fdc((Absorb02043fdc::ProcessListDescriptor *)&data_020a4b88);
     data_02099f24 = 3;
-    func_02043fdc(&data_020a4b78);
+    Absorb02043fdc::func_02043fdc((Absorb02043fdc::ProcessListDescriptor *)&data_020a4b78);
     data_02099f24 = 5;
-    func_02043fdc(&data_020a4b98);
+    Absorb02043fdc::func_02043fdc((Absorb02043fdc::ProcessListDescriptor *)&data_020a4b98);
     data_02099f24 = 1;
     data_020a4b6c.func_020441cc();
     data_02099f24 = 0;
@@ -113,15 +114,14 @@ extern "C" void func_02044120(void) {
 
 /* Table entry for frame-loop phase i (data_02099f24). The crash screen
  * prints it. */
-extern "C" int func_020441bc(int i) {
+int func_020441bc(int i) {
     return data_02082178[i];
 }
 
-namespace ProcessTree {
-/* local extern: ActorBase_SceneNode.cpp defines it; no header declares it.
-   Node is this file's view of the same fBase_c::SceneNode. */
-extern "C" fBase_c::SceneNode *func_0203b394(fBase_c::SceneNode *node);
+/* ActorBase_SceneNode.cpp defines it at file scope. */
+fBase_c::SceneNode *func_0203b394(fBase_c::SceneNode *node);
 
+namespace ProcessTree {
 /* Walk a tree list, calling the descriptor's callback on each owner.
  * Unlike func_02043fdc, it does not set data_020a4b68. */
 void *Thing::func_020441cc() {
@@ -160,10 +160,10 @@ struct LifecycleSequence {
     s16 f12;    // 0x12
 };
 
-extern "C" int func_02044284(LifecycleSequence *self, int flag);
+int func_02044284(LifecycleSequence *self, int flag);
 
 /* Step a pending sequence once. Returns 0 while it is still pending. */
-extern "C" int func_0204424c(char *c) {
+int func_0204424c(char *c) {
     LifecycleSequence *self = (LifecycleSequence *)c;
     if (self->state == 1)
         self->state = func_02044284(self, 0);
@@ -174,7 +174,7 @@ extern "C" int func_0204424c(char *c) {
 
 /* Run table entries from idx while each returns state 2. With flag == 0,
  * run at most one. */
-extern "C" int func_02044284(LifecycleSequence *self, int flag) {
+int func_02044284(LifecycleSequence *self, int flag) {
     void **arr = self->arr;
     s16 i;
 
@@ -198,7 +198,7 @@ extern "C" int func_02044284(LifecycleSequence *self, int flag) {
 
 /* Drain a started sequence: call slot 3 on each entry already run, newest
  * first. */
-extern "C" void func_02044334(LifecycleSequence *self) {
+void func_02044334(LifecycleSequence *self) {
     if (self->arr == 0)
         return;
     if (self->state == 0)

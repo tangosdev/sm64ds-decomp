@@ -48,14 +48,14 @@ extern Km2GuraModelFilePtr data_ov045_02113220;
 extern Km2GuraClsnFilePtr data_ov045_02113228;
 extern CLPS_Block data_ov045_021124f0;
 
-extern "C" ResourceDescriptor data_ov045_02112fdc = {&data_ov045_02113220, &data_ov045_02113228,
-                                                     &data_ov045_021124f0};
+ResourceDescriptor data_ov045_02112fdc = {&data_ov045_02113220, &data_ov045_02113228,
+                                          &data_ov045_021124f0};
 
-extern "C" daObjKm2_Gura_c *daObjKm2_Gura_c_classInit() {
+daObjKm2_Gura_c *daObjKm2_Gura_c_classInit() {
     return new daObjKm2_Gura_c();
 }
 
-extern "C" SpawnInfo<daObjKm2_Gura_c> g_profile_KM2_GURA = {
+SpawnInfo<daObjKm2_Gura_c> g_profile_KM2_GURA = {
     daObjKm2_Gura_c_classInit,
     0x008d, /* KM2_GURA registry id 141 */
     0x00d4,

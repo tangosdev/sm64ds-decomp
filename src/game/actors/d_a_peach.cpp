@@ -26,10 +26,9 @@ struct BMD_File;
 struct Vector3_16;
 
 /* local extern: no header declares these two. */
-extern "C" {
-int AngleDiff(int, int);
+
+extern "C" int AngleDiff(int, int);
 short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-}
 
 /* ov085 statics. data_ov085_0212f280 keeps include/decl_common.h's
  * spelling, so this file adds no new reading of it. */
@@ -370,7 +369,7 @@ int daPeach_c::InitResources() {
 }
 
 /* PEACH_PRINCESS factory. */
-extern "C" daPeach_c *daPeach_c_classInit(void) {
+daPeach_c *daPeach_c_classInit(void) {
     return new daPeach_c();
 }
 

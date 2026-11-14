@@ -218,11 +218,11 @@ extern TrmpGoal sTrmpGoalSlots;
 
 /* C callees owned by other units; no shared header declares them yet. */
 extern "C" void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
-extern "C" void Sound_PlayBank1Panned(int bank, int id, int panX);
-extern "C" void Puff_Spawn(int x, int y);
-extern "C" void Puff_DrawAll();
-extern "C" void Puff_UpdateAll();
-extern "C" void TrmpFx_Spawn(int y, int combo);
+void Sound_PlayBank1Panned(int bank, int id, int panX);
+void Puff_Spawn(int x, int y);
+void Puff_DrawAll();
+void Puff_UpdateAll();
+void TrmpFx_Spawn(int y, int combo);
 
 Vector3 *dMgTrmpln2Mario_c::GetVelocity() {
     return &mVel;
@@ -973,8 +973,8 @@ int dMgTrmpln2Mario_c::Load() {
     if (sMgMainCamera != 0)
         Camera_ProjectToScreen16(sMgMainCamera, &mPos, mScreenPos);
     mGravityStep = 0;
-    func_02016a14(&mAnmModel, 0x73ff);
-    func_02016a04(&mAnmModel, 0x3e52);
+    func_02016a14((char *)&mAnmModel, 0x73ff);
+    func_02016a04((char *)&mAnmModel, 0x3e52);
     EnterHidden();
     return ret;
 }
@@ -1018,6 +1018,56 @@ dMgTrmpln2Mario_c::~dMgTrmpln2Mario_c() {
    is this class's C1, not a daPly_c method. */
 dMgTrmpln2Mario_c::dMgTrmpln2Mario_c() {}
 
+namespace ns_020ca7b8 {
+int Trmp2Mario_Hide(void);
+}
+using ns_020ca7b8::Trmp2Mario_Hide;
+namespace ns_020ca840 {
+void Trmp2Mario_EnterAll(void);
+}
+using ns_020ca840::Trmp2Mario_EnterAll;
+namespace ns_020ca8e0 {
+void Trmp2Mario_MoveToStart(void);
+}
+using ns_020ca8e0::Trmp2Mario_MoveToStart;
+namespace ns_020caa08 {
+void Trmp2Mario_PlaceAtStart(void);
+}
+using ns_020caa08::Trmp2Mario_PlaceAtStart;
+namespace ns_020cac30 {
+void Trmp2Mario_UpdateAll(void);
+}
+using ns_020cac30::Trmp2Mario_UpdateAll;
+namespace ns_020cc9fc {
+void Trmp3DMario_EnterWalkIn(char *);
+}
+using ns_020cc9fc::Trmp3DMario_EnterWalkIn;
+namespace ns_020ccd04 {
+int Trmp3DMario_IsOffstage(int *);
+}
+using ns_020ccd04::Trmp3DMario_IsOffstage;
+namespace ns_020cd158 {
+int Trmp3DMario_CountFinished(void);
+}
+using ns_020cd158::Trmp3DMario_CountFinished;
+namespace ns_020cd1e0 {
+void Trmp3DMario_StartAll(void);
+}
+using ns_020cd1e0::Trmp3DMario_StartAll;
+namespace ns_020cd39c {
+void Trmp3DMario_UpdateAll(void);
+}
+using ns_020cd39c::Trmp3DMario_UpdateAll;
+namespace ns_020cd510 {
+void Trmp3DMario_SetTuning(int);
+}
+using ns_020cd510::Trmp3DMario_SetTuning;
+namespace ns_020cd62c {
+void Trmp3DMario_SetSpawnHeight(int);
+}
+using ns_020cd62c::Trmp3DMario_SetSpawnHeight;
+
+namespace ns_020ca7b8 {
 int Trmp2Mario_Hide(void) {
     int i;
     for (i = 0; i < sTrmp2MarioCount; i++) {
@@ -1029,7 +1079,9 @@ int Trmp2Mario_Hide(void) {
     }
     return 1;
 }
+}
 
+namespace ns_020ca840 {
 void Trmp2Mario_EnterAll(void) {
     int i, n, off;
     n = sTrmp2MarioCount;
@@ -1049,7 +1101,9 @@ void Trmp2Mario_EnterAll(void) {
         } while (i < n);
     }
 }
+}
 
+namespace ns_020ca8e0 {
 void Trmp2Mario_MoveToStart(void) {
     char *base;
     char *e;
@@ -1086,7 +1140,9 @@ void Trmp2Mario_MoveToStart(void) {
         break;
     }
 }
+}
 
+namespace ns_020caa08 {
 void Trmp2Mario_PlaceAtStart(void) {
     int n;
     int i;
@@ -1100,7 +1156,9 @@ void Trmp2Mario_PlaceAtStart(void) {
         ((dMgTrmpln2Mario_c *)(sTrmp2Marios + i * 0xdc))->UpdateMatrix();
     }
 }
+}
 
+namespace ns_020caadc {
 void Trmp2Mario_DrawAll(void) {
     int v[3];
     VecFx32 w;
@@ -1132,8 +1190,10 @@ void Trmp2Mario_DrawAll(void) {
     }
     Puff_DrawAll();
 }
+}
 
 /* Module-level update step; not a class method. */
+namespace ns_020cac30 {
 void Trmp2Mario_UpdateAll(void) {
     int i = 0;
     if (sTrmp2MarioCount > 0) {
@@ -1147,7 +1207,9 @@ void Trmp2Mario_UpdateAll(void) {
     }
     Puff_UpdateAll();
 }
+}
 
+namespace ns_020cac9c {
 void Trmp2Mario_ResetAll(u32) {
     int i;
     int off;
@@ -1167,7 +1229,9 @@ void Trmp2Mario_ResetAll(u32) {
     }
     Puff_ClearAll(0, 0);
 }
+}
 
+namespace ns_020cad3c {
 void Trmp2Mario_SetTuning(int a) {
     int v;
     if (a > 0x2800)
@@ -1179,6 +1243,7 @@ void Trmp2Mario_SetTuning(int a) {
     sTrmpSpeedScale = FX_MUL(v, 0x5800);
     sTrmp2RiseSpeedMax = FX_MUL(v, 0x6000);
     sTrmp2DriftScale = FX_MUL(v, 0x180);
+}
 }
 
 int Trmp2Mario_InitPool(void *base, int n) {
@@ -2085,6 +2150,7 @@ void dMgTrmpln3DMario_c::StateWalkIn() {
     JumpOff();
 }
 
+namespace ns_020cc9fc {
 void Trmp3DMario_EnterWalkIn(char *c) {
     MARIO3D(c)->mGravityStep = 0;
     MARIO3D(c)->mPos.y = sTrmpRowHeights[0];
@@ -2103,6 +2169,7 @@ void Trmp3DMario_EnterWalkIn(char *c) {
         sTrmpMariosInPlay += 1;
     }
     MARIO3D(c)->mState = pmf_Trmp3DMario_StateWalkIn;
+}
 }
 
 void dMgTrmpln3DMario_c::StateOnGround() {
@@ -2153,6 +2220,7 @@ void dMgTrmpln3DMario_c::EnterOnGround() {
     mState = pmf_Trmp3DMario_StateOnGround_2;
 }
 
+namespace ns_020ccd04 {
 int Trmp3DMario_IsOffstage(int *r0) {
     int *p = MARIO3D(r0)->mState;
     int *g = pmf_Trmp3DMario_StateOffstage_3;
@@ -2167,6 +2235,7 @@ int Trmp3DMario_IsOffstage(int *r0) {
     }
 out:
     return ret == 0;
+}
 }
 
 void dMgTrmpln3DMario_c::StateOffstage() {
@@ -2207,8 +2276,8 @@ int dMgTrmpln3DMario_c::Load() {
     if (sMgMainCamera != 0)
         Camera_ProjectToScreen16(sMgMainCamera, &mPos, mScreenPos);
     mGravityStep = 0;
-    func_02016a14(&mAnmModel, 0x6bff);
-    func_02016a04(&mAnmModel, 0x21d);
+    func_02016a14((char *)&mAnmModel, 0x6bff);
+    func_02016a04((char *)&mAnmModel, 0x21d);
     EnterOffstage();
     return ret;
 }
@@ -2246,6 +2315,7 @@ dMgTrmpln3DMario_c::~dMgTrmpln3DMario_c() {
 /* The base adapter and mAnmModel are constructed before the (empty) body. */
 dMgTrmpln3DMario_c::dMgTrmpln3DMario_c() {}
 
+namespace ns_020cd158 {
 int Trmp3DMario_CountFinished(void) {
     int i = 0;
     char *e;
@@ -2273,7 +2343,9 @@ int Trmp3DMario_CountFinished(void) {
     }
     return 1;
 }
+}
 
+namespace ns_020cd1e0 {
 void Trmp3DMario_StartAll(void) {
     int i;
     int off;
@@ -2290,7 +2362,9 @@ void Trmp3DMario_StartAll(void) {
         off += 0xd0;
     } while (i < sTrmp3DMarioCount);
 }
+}
 
+namespace ns_020cd270 {
 void Trmp3DMario_DrawAll(void) {
     int v[3];
     int w[3];
@@ -2316,7 +2390,9 @@ void Trmp3DMario_DrawAll(void) {
 
     Puff_DrawAll();
 }
+}
 
+namespace ns_020cd39c {
 void Trmp3DMario_UpdateAll(void) {
     int i;
     for (i = 0; i < sTrmp3DMarioCount; i++)
@@ -2327,7 +2403,9 @@ void Trmp3DMario_UpdateAll(void) {
         sTrmpAnyOnLedge = 0;
     Puff_UpdateAll();
 }
+}
 
+namespace ns_020cd424 {
 void Trmp3DMario_ResetAll(unsigned int n, int arg1) {
     int i;
     Trmp3DMario_SetTuning((n % 5 + n / 5) * 0x150 + 0x1000);
@@ -2342,7 +2420,9 @@ void Trmp3DMario_ResetAll(unsigned int n, int arg1) {
     }
     Puff_ClearAll(0, 0);
 }
+}
 
+namespace ns_020cd510 {
 void Trmp3DMario_SetTuning(int a) {
     int v;
     if (a > 0x2800)
@@ -2354,12 +2434,16 @@ void Trmp3DMario_SetTuning(int a) {
     sTrmp3DBounceScale = FX_MUL(v, 0x4800);
     sTrmp3DHardBounceScale = FX_MUL(v, 0x5400);
 }
+}
 
+namespace ns_020cd62c {
 void Trmp3DMario_SetSpawnHeight(int n) {
     sTrmpRowHeights[0] = sTrmpRowBaseHeights[0] + (n << 12);
     sTrmpRowHeights[1] = sTrmpRowBaseHeights[1] + (n << 12);
 }
+}
 
+namespace ns_020cd658 {
 int Trmp3DMario_InitPool(unsigned char *a0, int a1) {
     int i = 0;
     int off;
@@ -2379,6 +2463,7 @@ int Trmp3DMario_InitPool(unsigned char *a0, int a1) {
         } while (i < sTrmp3DMarioCount);
     }
     return 1;
+}
 }
 
 /* The Clear slot each bounce runs also restarts the combo

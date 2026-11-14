@@ -42,6 +42,7 @@ int data_ov018_02112f48[4] = {0x53504c43, 0x00020008, 0x00000fc5, 0x000000ff};
 int data_ov018_02112f58[4] = {0x01000fc5, 0x000000ff, 0xffffffff, 0xffffffff};
 
 extern "C" {
+
 int AngleDiff(int, int);
 int Math_Function_0203b14c(void *p, int a, int b, int c, int d);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
@@ -268,7 +269,7 @@ void daObjSm_Lift_c::StoodOnCallback(dBgW *collider, dActor_c *self, dActor_c *o
  * `new daObjSm_Lift_c` is the whole sequence the loose factory spelled by
  * hand: fBase_c::operator new(0x354), dBgActor_c's base constructor and the
  * vptr store (the class adds no member with a constructor). */
-extern "C" daObjSm_Lift_c *daObjSm_Lift_c_classInit(void) {
+daObjSm_Lift_c *daObjSm_Lift_c_classInit(void) {
     return new daObjSm_Lift_c;
 }
 

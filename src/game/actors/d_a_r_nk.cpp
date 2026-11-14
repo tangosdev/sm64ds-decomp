@@ -167,22 +167,23 @@ extern StateFunc data_ov062_0211e0a4[6];
    caller reconstruction under the pinned compiler. */
 extern "C" s16 atan2_hold_d_a_r_nk_1(int y, int x);
 
-extern "C" {
 /* Positional sound at the actor's camera-space position (Sound::Play(3, id, pos)). */
 /* This scalar entry follows its C definition, including u16 startFrame.
    dExtAnmModel_c.h instead declares u32; that shared contract is still unresolved. */
 /* Play2D(3, id): a sound with no position. */
-extern unsigned int func_0201277c(unsigned int id);
+unsigned int func_0201277c(unsigned int id);
 extern signed char gCurrentSublevel; /* LEVEL_ID */
 extern u8 gShowRaceTimer;            /* nonzero: dMeter_c draws the race timer */
-extern bool d_a_r_nkPlaySubHold(u32 a, u32 b, u32 c, int d, int e);
-extern void func_02012694(u32 a, void *b);
+extern "C" bool d_a_r_nkPlaySubHold(u32 a, u32 b, u32 c, int d, int e);
+void func_02012694(u32 a, const Vector3 *b);
 extern u8 data_0209d684;            /* MESSAGE_RESULT: which answer the player picked (1 or 2) */
 extern Timer gRaceTimer;            /* TIME_TIMER: the course timer */
 /* The existing C initializer erases pointer slots to integers. Keep the
    evidenced actor view here; repairing the shared initializer is separate. */
 /* Parameter names keep this TU's @NNN. */
+extern "C" {
 typedef void BgchInitAt_(void *self, void *actor, int r, int h, void *p, int q);
+}
 /* The files InitResources loads and CleanupResources releases; see ANIM_*. */
 extern RNkModelFileHandle gdaRNkNokonokoModelFile;      /* the model (BMD) */
 extern RNkAnimationFileHandle data_ov062_0211e014;  /* ANIM_RUN_START */
@@ -192,13 +193,10 @@ extern RNkAnimationFileHandle gdaRNkNokonokoWait1AnimationFile;  /* ANIM_IDLE */
 extern RNkAnimationFileHandle gdaRNkNokonokoWait2AnimationFile;  /* ANIM_TALK */
 extern RNkAnimationFileHandle data_ov062_0211e02c;  /* ANIM_JUMP */
 extern RNkAnimationFileHandle data_ov062_0211e004;  /* ANIM_LAND */
-}
 
-extern "C" {
 int *daRNk_c_classInit(void)
 {
     return (int *)new daRNk_c;
-}
 }
 
 /* Load the model and animations, set up the collision, read the actor's
@@ -484,7 +482,7 @@ void daRNk_c::func_ov062_0211a1f4()
         if (this->mPlayer->GetTalkState() != -1)
             return;
         Sound::PlaySub(0x1f, 0x7f, 0, 0x7f000, 0);
-        func_02012694(kSfx4D, &this->mCamSpacePosX);
+        func_02012694(kSfx4D, (const Vector3 *)(&this->mCamSpacePosX));
         Sound::LoadAndSetMusic_Layer2(kMusicRace);
         this->mIsRacing = 1;
         this->mStep++;

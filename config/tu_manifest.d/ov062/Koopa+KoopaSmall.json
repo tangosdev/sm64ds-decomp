@@ -295,14 +295,14 @@
       "ordinal": 36
     },
     {
-      "symbol": "daNknk_c_classInit_NOKONOKO_S",
+      "symbol": "_Z29daNknk_c_classInit_NOKONOKO_Sv",
       "address": "0x021196bc",
       "size": "0x00000050",
       "legacy_source": "src/d_a_nknk_nokonoko_s.c",
       "ordinal": 37
     },
     {
-      "symbol": "daNknk_c_classInit_NOKONOKO",
+      "symbol": "_Z27daNknk_c_classInit_NOKONOKOv",
       "address": "0x0211970c",
       "size": "0x00000050",
       "legacy_source": "src/d_a_nknk_nokonoko.c",
@@ -935,14 +935,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN16NknkModelFilePtrC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN16NknkModelFilePtrD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the wrapper destructor's exact ABS32 relocation"
@@ -1048,7 +1048,7 @@
       "source": "0x0211d2e8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1068,7 +1068,7 @@
       "source": "0x0211d304",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1278,7 +1278,7 @@
       "source": "0x0211d428",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -1516,57 +1516,57 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1285",
+      "from": "@1284",
       "to": "@1292",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 26, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1264 to @1271 after adding the mHomePos Vector3 view. The existing target @1292 is unchanged. Re-keyed from @1271 to @1270 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1342 to @1341 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1341 to @1345 when Render's scale save became a Vector3 local (#821). Re-keyed from @1345 to @1286 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1286 to @1287 when the goto cleanup shifted this compiler-local number (measured from the compiled object; same section, offset, size, type and binding). Re-keyed from @1287 to @1285 when a redundant pun was removed (same section, offset, size, type and binding)."
-    },
-    {
-      "from": "@1278",
-      "to": "@1285",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 34, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1257 to @1264 after adding the mHomePos Vector3 view. The existing target @1285 is unchanged. Re-keyed from @1264 to @1263 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1335 to @1334 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1334 to @1338 when Render's scale save became a Vector3 local (#821). Re-keyed from @1338 to @1279 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1279 to @1280 when the goto cleanup shifted this compiler-local number (measured from the compiled object; same section, offset, size, type and binding). Re-keyed from @1280 to @1278 when a redundant pun was removed (same section, offset, size, type and binding)."
-    },
-    {
-      "from": "@1280",
-      "to": "@1287",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 30, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1259 to @1266 after adding the mHomePos Vector3 view. The existing target @1287 is unchanged. Re-keyed from @1266 to @1265 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1337 to @1336 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1336 to @1340 when Render's scale save became a Vector3 local (#821). Re-keyed from @1340 to @1281 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1281 to @1282 when the goto cleanup shifted this compiler-local number (measured from the compiled object; same section, offset, size, type and binding). Re-keyed from @1282 to @1280 when a redundant pun was removed (same section, offset, size, type and binding)."
-    },
-    {
-      "from": "@1281",
-      "to": "@1288",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 33, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1260 to @1267 after adding the mHomePos Vector3 view. The existing target @1288 is unchanged. Re-keyed from @1267 to @1266 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1338 to @1337 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1337 to @1341 when Render's scale save became a Vector3 local (#821). Re-keyed from @1341 to @1282 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1282 to @1283 when the goto cleanup shifted this compiler-local number (measured from the compiled object; same section, offset, size, type and binding). Re-keyed from @1283 to @1281 when a redundant pun was removed (same section, offset, size, type and binding)."
-    },
-    {
-      "from": "@1279",
-      "to": "@1286",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 27, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1258 to @1265 after adding the mHomePos Vector3 view. The existing target @1286 is unchanged. Re-keyed from @1265 to @1264 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1336 to @1335 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1335 to @1339 when Render's scale save became a Vector3 local (#821). Re-keyed from @1339 to @1280 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1280 to @1281 when the goto cleanup shifted this compiler-local number (measured from the compiled object; same section, offset, size, type and binding). Re-keyed from @1281 to @1279 when a redundant pun was removed (same section, offset, size, type and binding)."
-    },
-    {
-      "from": "@1282",
-      "to": "@1289",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 35, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1261 to @1268 after adding the mHomePos Vector3 view. The existing target @1289 is unchanged. Re-keyed from @1268 to @1267 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1339 to @1338 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1338 to @1342 when Render's scale save became a Vector3 local (#821). Re-keyed from @1342 to @1283 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1283 to @1284 when the goto cleanup shifted this compiler-local number (measured from the compiled object; same section, offset, size, type and binding). Re-keyed from @1284 to @1282 when a redundant pun was removed (same section, offset, size, type and binding)."
-    },
-    {
-      "from": "@1283",
-      "to": "@1290",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 38, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1262 to @1269 after adding the mHomePos Vector3 view. The existing target @1290 is unchanged. Re-keyed from @1269 to @1268 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1340 to @1339 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1339 to @1343 when Render's scale save became a Vector3 local (#821). Re-keyed from @1343 to @1284 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1284 to @1285 when the goto cleanup shifted this compiler-local number (measured from the compiled object; same section, offset, size, type and binding). Re-keyed from @1285 to @1283 when a redundant pun was removed (same section, offset, size, type and binding)."
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 26, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1264 to @1271 after adding the mHomePos Vector3 view. The existing target @1292 is unchanged. Re-keyed from @1271 to @1270 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1342 to @1341 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1341 to @1345 when Render's scale save became a Vector3 local (#821). Re-keyed from @1345 to @1286 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1286 to @1287 when the goto cleanup shifted this compiler-local number (measured from the compiled object; same section, offset, size, type and binding)."
     },
     {
       "from": "@1277",
-      "to": "@1284",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 23, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1256 to @1263 after adding the mHomePos Vector3 view. The existing target @1284 is unchanged. Re-keyed from @1263 to @1262 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1334 to @1333 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1333 to @1337 when Render's scale save became a Vector3 local (#821). Re-keyed from @1337 to @1278 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1278 to @1279 when the goto cleanup shifted this compiler-local number (measured from the compiled object; same section, offset, size, type and binding). Re-keyed from @1279 to @1277 when a redundant pun was removed (same section, offset, size, type and binding)."
+      "to": "@1285",
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 34, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1257 to @1264 after adding the mHomePos Vector3 view. The existing target @1285 is unchanged. Re-keyed from @1264 to @1263 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1335 to @1334 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1334 to @1338 when Render's scale save became a Vector3 local (#821). Re-keyed from @1338 to @1279 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1279 to @1280 when the goto cleanup shifted this compiler-local number (measured from the compiled object; same section, offset, size, type and binding)."
     },
     {
-      "from": "@1275",
-      "to": "@1282",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 40, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1254 to @1261 after adding the mHomePos Vector3 view. The existing target @1282 is unchanged. Re-keyed from @1261 to @1260 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1332 to @1331 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1331 to @1335 when Render's scale save became a Vector3 local (#821). Re-keyed from @1335 to @1276 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1276 to @1277 when the goto cleanup shifted this compiler-local number (measured from the compiled object; same section, offset, size, type and binding). Re-keyed from @1277 to @1275 when a redundant pun was removed (same section, offset, size, type and binding)."
+      "from": "@1279",
+      "to": "@1287",
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 30, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1259 to @1266 after adding the mHomePos Vector3 view. The existing target @1287 is unchanged. Re-keyed from @1266 to @1265 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1337 to @1336 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1336 to @1340 when Render's scale save became a Vector3 local (#821). Re-keyed from @1340 to @1281 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1281 to @1282 when the goto cleanup shifted this compiler-local number (measured from the compiled object; same section, offset, size, type and binding)."
+    },
+    {
+      "from": "@1280",
+      "to": "@1288",
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 33, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1260 to @1267 after adding the mHomePos Vector3 view. The existing target @1288 is unchanged. Re-keyed from @1267 to @1266 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1338 to @1337 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1337 to @1341 when Render's scale save became a Vector3 local (#821). Re-keyed from @1341 to @1282 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1282 to @1283 when the goto cleanup shifted this compiler-local number (measured from the compiled object; same section, offset, size, type and binding)."
+    },
+    {
+      "from": "@1278",
+      "to": "@1286",
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 27, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1258 to @1265 after adding the mHomePos Vector3 view. The existing target @1286 is unchanged. Re-keyed from @1265 to @1264 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1336 to @1335 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1335 to @1339 when Render's scale save became a Vector3 local (#821). Re-keyed from @1339 to @1280 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1280 to @1281 when the goto cleanup shifted this compiler-local number (measured from the compiled object; same section, offset, size, type and binding)."
+    },
+    {
+      "from": "@1281",
+      "to": "@1289",
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 35, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1261 to @1268 after adding the mHomePos Vector3 view. The existing target @1289 is unchanged. Re-keyed from @1268 to @1267 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1339 to @1338 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1338 to @1342 when Render's scale save became a Vector3 local (#821). Re-keyed from @1342 to @1283 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1283 to @1284 when the goto cleanup shifted this compiler-local number (measured from the compiled object; same section, offset, size, type and binding)."
+    },
+    {
+      "from": "@1282",
+      "to": "@1290",
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 38, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1262 to @1269 after adding the mHomePos Vector3 view. The existing target @1290 is unchanged. Re-keyed from @1269 to @1268 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1340 to @1339 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1339 to @1343 when Render's scale save became a Vector3 local (#821). Re-keyed from @1343 to @1284 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1284 to @1285 when the goto cleanup shifted this compiler-local number (measured from the compiled object; same section, offset, size, type and binding)."
     },
     {
       "from": "@1276",
-      "to": "@1283",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 39, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1255 to @1262 after adding the mHomePos Vector3 view. The existing target @1283 is unchanged. Re-keyed from @1262 to @1261 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1333 to @1332 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1332 to @1336 when Render's scale save became a Vector3 local (#821). Re-keyed from @1336 to @1277 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1277 to @1278 when the goto cleanup shifted this compiler-local number (measured from the compiled object; same section, offset, size, type and binding). Re-keyed from @1278 to @1276 when a redundant pun was removed (same section, offset, size, type and binding)."
+      "to": "@1284",
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 23, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1256 to @1263 after adding the mHomePos Vector3 view. The existing target @1284 is unchanged. Re-keyed from @1263 to @1262 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1334 to @1333 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1333 to @1337 when Render's scale save became a Vector3 local (#821). Re-keyed from @1337 to @1278 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1278 to @1279 when the goto cleanup shifted this compiler-local number (measured from the compiled object; same section, offset, size, type and binding)."
     },
     {
-      "from": "@1284",
+      "from": "@1274",
+      "to": "@1282",
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 40, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1254 to @1261 after adding the mHomePos Vector3 view. The existing target @1282 is unchanged. Re-keyed from @1261 to @1260 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1332 to @1331 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1331 to @1335 when Render's scale save became a Vector3 local (#821). Re-keyed from @1335 to @1276 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1276 to @1277 when the goto cleanup shifted this compiler-local number (measured from the compiled object; same section, offset, size, type and binding)."
+    },
+    {
+      "from": "@1275",
+      "to": "@1283",
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 39, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1255 to @1262 after adding the mHomePos Vector3 view. The existing target @1283 is unchanged. Re-keyed from @1262 to @1261 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1333 to @1332 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1332 to @1336 when Render's scale save became a Vector3 local (#821). Re-keyed from @1336 to @1277 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1277 to @1278 when the goto cleanup shifted this compiler-local number (measured from the compiled object; same section, offset, size, type and binding)."
+    },
+    {
+      "from": "@1283",
       "to": "@1291",
       "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 22, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1263 to @1270 after adding the mHomePos Vector3 view. The existing target @1291 is unchanged. Re-keyed from @1270 to @1269 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1341 to @1340 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1340 to @1344 when Render's scale save became a Vector3 local (#821). Re-keyed from @1344 to @1285 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1285 to @1286 when the goto cleanup shifted this compiler-local number (measured from the compiled object; same section, offset, size, type and binding). Re-keyed from @1286 to @1284 when a redundant pun was removed (same section, offset, size, type and binding)."
     }

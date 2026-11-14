@@ -21,17 +21,18 @@
 #include "nitro/fx/fx_cp.h"
 
 extern "C" {
+
 /* Shared math workers.
    local extern: no header in include/ declares them. */
 void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *m, s32 x, s32 y, s32 z);
 void VEC_Normalize(const Vector3 *src, Vector3 *dst);
+}
 
 /* The scratch line's lineEnd and dBgPi base (both inside data_020a0d0c,
    below), and the scratch scaled matrix.
    local extern: no header in include/ declares them. */
 extern Vector3 data_020a0d60;
 extern dBgPi data_020a0d1c;
-}
 
 /* The shared scratch line, in collider space. A namespace-scope dBgCh_Lin,
    so mwcc emits __sinit_d_bg_w_kc_mbg.cpp to construct it and register

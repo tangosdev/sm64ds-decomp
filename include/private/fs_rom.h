@@ -1,5 +1,8 @@
 #ifndef PRIVATE_FS_ROM_H
 #define PRIVATE_FS_ROM_H
+#ifndef __cplusplus
+#define FSi_InitRom _Z11FSi_InitRomj
+#endif
 
 /* The FS library's ROM-archive statics and entry points, as NitroSDK's
  * private libraries/fs/include/rom.h declares them: fs_rom.c (FS_Rom.cpp)
@@ -11,7 +14,9 @@
 #include "private/fs_views.h"
 
 #ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 
 extern u32 fsi_default_dma_no;
@@ -23,7 +28,9 @@ extern FSArchive fsi_arc_rom;
 void FSi_InitRom(u32 default_dma_no);
 
 #ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif /* PRIVATE_FS_ROM_H */

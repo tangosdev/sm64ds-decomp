@@ -33,6 +33,7 @@
 
 /* local extern: no non-generated header declares these vector helpers. */
 extern "C" {
+
 void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *result);
 void VEC_Normalize(const Vector3 *src, Vector3 *dst);
 }

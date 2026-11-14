@@ -164,7 +164,7 @@ s32 daObj1UpLogo_c::InitResources() {
 }
 
 /* Historical alias OneUpLogo_Spawn. */
-extern "C" daObj1UpLogo_c *daObj1UpLogo_c_classInit() {
+daObj1UpLogo_c *daObj1UpLogo_c_classInit() {
     return new daObj1UpLogo_c();
 }
 

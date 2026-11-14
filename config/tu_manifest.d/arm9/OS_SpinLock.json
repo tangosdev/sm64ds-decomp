@@ -21,133 +21,133 @@
   ],
   "functions": [
     {
-      "symbol": "OS_UnLockCartridge",
+      "symbol": "_Z18OS_UnLockCartridget",
       "address": "0x02057014",
       "size": "0x0000000c",
       "legacy_source": "src/unnamed/arm9/0205/func_02057014.c",
       "ordinal": 0
     },
     {
-      "symbol": "OS_GetLockID",
+      "symbol": "_Z12OS_GetLockIDv",
       "address": "0x02057020",
       "size": "0x00000058",
       "legacy_source": "src/unnamed/arm9/0205/func_02057020.c",
       "ordinal": 1
     },
     {
-      "symbol": "OS_ReleaseLockID",
+      "symbol": "_Z16OS_ReleaseLockIDt",
       "address": "0x02057078",
       "size": "0x00000030",
       "legacy_source": "src/unnamed/arm9/0205/func_02057078.c",
       "ordinal": 2
     },
     {
-      "symbol": "OSi_WaitByLoop",
+      "symbol": "_Z14OSi_WaitByLoopv",
       "address": "0x020570a8",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0205/func_020570a8.c",
       "ordinal": 3
     },
     {
-      "symbol": "OS_ReadOwnerOfLockWord",
+      "symbol": "_Z22OS_ReadOwnerOfLockWordPV10OSLockWord",
       "address": "0x020570b8",
       "size": "0x00000008",
       "legacy_source": "src/unnamed/arm9/0205/func_020570b8.c",
       "ordinal": 4
     },
     {
-      "symbol": "OSi_FreeCardBus",
+      "symbol": "_Z15OSi_FreeCardBusv",
       "address": "0x020570c0",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0205/func_020570c0.c",
       "ordinal": 5
     },
     {
-      "symbol": "OSi_AllocateCardBus",
+      "symbol": "_Z19OSi_AllocateCardBusv",
       "address": "0x020570d8",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0205/func_020570d8.c",
       "ordinal": 6
     },
     {
-      "symbol": "OS_UnlockCard",
+      "symbol": "_Z13OS_UnlockCardt",
       "address": "0x020570f0",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/arm9/0205/func_020570f0.c",
       "ordinal": 7
     },
     {
-      "symbol": "OS_TryLockCard",
+      "symbol": "_Z14OS_TryLockCardt",
       "address": "0x0205710c",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/arm9/0205/func_0205710c.c",
       "ordinal": 8
     },
     {
-      "symbol": "OSi_FreeCartridgeBus",
+      "symbol": "_Z20OSi_FreeCartridgeBusv",
       "address": "0x02057128",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0205/func_02057128.c",
       "ordinal": 9
     },
     {
-      "symbol": "OSi_AllocateCartridgeBus",
+      "symbol": "_Z24OSi_AllocateCartridgeBusv",
       "address": "0x02057140",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0205/func_02057140.c",
       "ordinal": 10
     },
     {
-      "symbol": "OS_TryLockCartridge",
+      "symbol": "_Z19OS_TryLockCartridget",
       "address": "0x02057158",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0205/func_02057158.c",
       "ordinal": 11
     },
     {
-      "symbol": "OS_UnlockCartridge",
+      "symbol": "_Z18OS_UnlockCartridget",
       "address": "0x02057178",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0205/func_02057178.c",
       "ordinal": 12
     },
     {
-      "symbol": "OSi_DoTryLockByWord",
+      "symbol": "_Z19OSi_DoTryLockByWordtPV10OSLockWordPFvvEj",
       "address": "0x02057198",
       "size": "0x00000080",
       "legacy_source": "src/unnamed/arm9/0205/func_02057198.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "OS_UnlockByWord",
+      "symbol": "_Z15OS_UnlockByWordtPV10OSLockWordPFvvE",
       "address": "0x02057218",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0205/func_02057218.c",
       "ordinal": 14
     },
     {
-      "symbol": "OSi_DoUnlockByWord",
+      "symbol": "_Z18OSi_DoUnlockByWordtPV10OSLockWordPFvvEj",
       "address": "0x02057228",
       "size": "0x00000090",
       "legacy_source": "src/unnamed/arm9/0205/func_02057228.cpp",
       "ordinal": 15
     },
     {
-      "symbol": "OS_TryLockByWord",
+      "symbol": "_Z16OS_TryLockByWordtPV10OSLockWordPFvvE",
       "address": "0x020572b8",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0205/func_020572b8.c",
       "ordinal": 16
     },
     {
-      "symbol": "OSi_DoLockByWord",
+      "symbol": "_Z16OSi_DoLockByWordtPV10OSLockWordPFvvEj",
       "address": "0x020572c8",
       "size": "0x00000058",
       "legacy_source": "src/unnamed/arm9/0205/func_020572c8.c",
       "ordinal": 17
     },
     {
-      "symbol": "OS_InitLock",
+      "symbol": "_Z11OS_InitLockv",
       "address": "0x02057320",
       "size": "0x000000f0",
       "legacy_source": "src/unnamed/arm9/0205/func_02057320.cpp",

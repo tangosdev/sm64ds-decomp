@@ -52,147 +52,147 @@
       "ordinal": 0
     },
     {
-      "symbol": "GetGameLanguage",
+      "symbol": "_ZN8s20ad67415GetGameLanguageEv",
       "address": "0x020ad674",
       "size": "0x00000080",
       "legacy_source": "src/GetGameLanguage.c",
       "ordinal": 1
     },
     {
-      "symbol": "Mg_GetLastRecordRank",
+      "symbol": "_ZN8s20ad6f420Mg_GetLastRecordRankEP11dScMgBase_ci",
       "address": "0x020ad6f4",
       "size": "0x00000008",
       "legacy_source": "src/func_ov004_020ad6f4.c",
       "ordinal": 2
     },
     {
-      "symbol": "Mg_FindRecordRank",
+      "symbol": "_ZN8s20ad6fc17Mg_FindRecordRankEPvi",
       "address": "0x020ad6fc",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov004_020ad6fc.c",
       "ordinal": 3
     },
     {
-      "symbol": "Mg_SaveRecordPair",
+      "symbol": "_ZN8s20ad79c17Mg_SaveRecordPairEii",
       "address": "0x020ad79c",
       "size": "0x000000dc",
       "legacy_source": "src/func_ov004_020ad79c.c",
       "ordinal": 4
     },
     {
-      "symbol": "Mg_GetSavedRecord1",
+      "symbol": "_ZN8s20ad87818Mg_GetSavedRecord1Ev",
       "address": "0x020ad878",
       "size": "0x00000040",
       "legacy_source": "src/func_ov004_020ad878.c",
       "ordinal": 5
     },
     {
-      "symbol": "Mg_GetSavedRecord0",
+      "symbol": "_ZN8s20ad8b818Mg_GetSavedRecord0Ev",
       "address": "0x020ad8b8",
       "size": "0x00000054",
       "legacy_source": "src/func_ov004_020ad8b8.c",
       "ordinal": 6
     },
     {
-      "symbol": "Mg_CommitRecords",
+      "symbol": "_ZN8s20ad90c16Mg_CommitRecordsEv",
       "address": "0x020ad90c",
       "size": "0x00000034",
       "legacy_source": "src/func_ov004_020ad90c.c",
       "ordinal": 7
     },
     {
-      "symbol": "Mg_RankSessionBest",
+      "symbol": "_ZN8s20ad94018Mg_RankSessionBestEP11dScMgBase_c",
       "address": "0x020ad940",
       "size": "0x000000e0",
       "legacy_source": "src/func_ov004_020ad940.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "Mg_ClearNewRecordFlag",
+      "symbol": "_ZN8s20ada2021Mg_ClearNewRecordFlagEv",
       "address": "0x020ada20",
       "size": "0x00000020",
       "legacy_source": "src/func_ov004_020ada20.c",
       "ordinal": 9
     },
     {
-      "symbol": "Mg_SetSessionBest",
+      "symbol": "_ZN8s20ada4017Mg_SetSessionBestEi",
       "address": "0x020ada40",
       "size": "0x000000bc",
       "legacy_source": "src/func_ov004_020ada40.c",
       "ordinal": 10
     },
     {
-      "symbol": "Mg_GetSessionBest",
+      "symbol": "_ZN8s20adafc17Mg_GetSessionBestEv",
       "address": "0x020adafc",
       "size": "0x00000020",
       "legacy_source": "src/func_ov004_020adafc.c",
       "ordinal": 11
     },
     {
-      "symbol": "Mg_SubmitScore",
+      "symbol": "_ZN8s20adb1c14Mg_SubmitScoreEi",
       "address": "0x020adb1c",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov004_020adb1c.c",
       "ordinal": 12
     },
     {
-      "symbol": "Mg_GetSubmittedScore",
+      "symbol": "_ZN8s20adbc020Mg_GetSubmittedScoreEv",
       "address": "0x020adbc0",
       "size": "0x00000020",
       "legacy_source": "src/func_ov004_020adbc0.c",
       "ordinal": 13
     },
     {
-      "symbol": "Mg_IsNewRecord",
+      "symbol": "_ZN8s20adbe014Mg_IsNewRecordEv",
       "address": "0x020adbe0",
       "size": "0x00000020",
       "legacy_source": "src/func_ov004_020adbe0.c",
       "ordinal": 14
     },
     {
-      "symbol": "Mg_SetTopRecord",
+      "symbol": "_ZN8s20adc0015Mg_SetTopRecordEi",
       "address": "0x020adc00",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov004_020adc00.c",
       "ordinal": 15
     },
     {
-      "symbol": "Mg_GetTopRecord",
+      "symbol": "_ZN8s20adc1c15Mg_GetTopRecordEv",
       "address": "0x020adc1c",
       "size": "0x00000020",
       "legacy_source": "src/func_ov004_020adc1c.c",
       "ordinal": 16
     },
     {
-      "symbol": "Mg_GetSaveTable",
+      "symbol": "_ZN8s20adc3c15Mg_GetSaveTableEPv",
       "address": "0x020adc3c",
       "size": "0x00000010",
       "legacy_source": "src/func_ov004_020adc3c.c",
       "ordinal": 17
     },
     {
-      "symbol": "Mg_GetWorkBuffer",
+      "symbol": "_ZN8s20adc4c16Mg_GetWorkBufferEv",
       "address": "0x020adc4c",
       "size": "0x00000010",
       "legacy_source": "src/func_ov004_020adc4c.c",
       "ordinal": 18
     },
     {
-      "symbol": "Ov004_Deallocate",
+      "symbol": "_ZN8s20adc5c16Ov004_DeallocateEPv",
       "address": "0x020adc5c",
       "size": "0x0000000c",
       "legacy_source": "src/Ov004_Deallocate.c",
       "ordinal": 19
     },
     {
-      "symbol": "Ov004_LoadFile",
+      "symbol": "_ZN8s20adc6814Ov004_LoadFileEi",
       "address": "0x020adc68",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov004_020adc68.c",
       "ordinal": 20
     },
     {
-      "symbol": "Ov004_LoadFileByPath",
+      "symbol": "_ZN8s20adc7420Ov004_LoadFileByPathEPKc",
       "address": "0x020adc74",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov004_020adc74.c",
@@ -213,7 +213,7 @@
       "ordinal": 23
     },
     {
-      "symbol": "Mg_DrawFx",
+      "symbol": "_ZN8s20add889Mg_DrawFxEP4MgFx",
       "address": "0x020add88",
       "size": "0x00000044",
       "legacy_source": "src/func_ov004_020add88.cpp",
@@ -234,7 +234,7 @@
       "ordinal": 26
     },
     {
-      "symbol": "Mg_UpdateFx",
+      "symbol": "_ZN8s20adf2c11Mg_UpdateFxEP4MgFx",
       "address": "0x020adf2c",
       "size": "0x00000044",
       "legacy_source": "src/func_ov004_020adf2c.cpp",
@@ -318,49 +318,49 @@
       "ordinal": 38
     },
     {
-      "symbol": "Mg_GetScoringMode",
+      "symbol": "_ZN8s20ae1a817Mg_GetScoringModeEv",
       "address": "0x020ae1a8",
       "size": "0x00000024",
       "legacy_source": "src/func_ov004_020ae1a8.c",
       "ordinal": 39
     },
     {
-      "symbol": "Mg_GetMusicMode",
+      "symbol": "_ZN8s20ae1cc15Mg_GetMusicModeEv",
       "address": "0x020ae1cc",
       "size": "0x00000024",
       "legacy_source": "src/func_ov004_020ae1cc.c",
       "ordinal": 40
     },
     {
-      "symbol": "Mg_GetMusicTrack",
+      "symbol": "_ZN8s20ae1f016Mg_GetMusicTrackEv",
       "address": "0x020ae1f0",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov004_020ae1f0.c",
       "ordinal": 41
     },
     {
-      "symbol": "Mg_RestoreMusic",
+      "symbol": "_ZN8s20ae20c15Mg_RestoreMusicEv",
       "address": "0x020ae20c",
       "size": "0x00000068",
       "legacy_source": "src/func_ov004_020ae20c.c",
       "ordinal": 42
     },
     {
-      "symbol": "Mg_PlayJingle",
+      "symbol": "_ZN8s20ae27413Mg_PlayJingleEPv",
       "address": "0x020ae274",
       "size": "0x00000054",
       "legacy_source": "src/func_ov004_020ae274.c",
       "ordinal": 43
     },
     {
-      "symbol": "Mg_StartMusic",
+      "symbol": "_ZN8s20ae2c813Mg_StartMusicEv",
       "address": "0x020ae2c8",
       "size": "0x00000068",
       "legacy_source": "src/func_ov004_020ae2c8.cpp",
       "ordinal": 44
     },
     {
-      "symbol": "Mg_InitMusic",
+      "symbol": "_ZN8s20ae33012Mg_InitMusicEv",
       "address": "0x020ae330",
       "size": "0x00000084",
       "legacy_source": "src/func_ov004_020ae330.c",
@@ -381,21 +381,21 @@
       "ordinal": 47
     },
     {
-      "symbol": "Mg_DrawMenu",
+      "symbol": "_ZN8s20ae85811Mg_DrawMenuEP11dScMgBase_c",
       "address": "0x020ae858",
       "size": "0x000001d8",
       "legacy_source": "src/func_ov004_020ae858.cpp",
       "ordinal": 48
     },
     {
-      "symbol": "Mg_DrawSpriteList",
+      "symbol": "_ZN8s20aea3017Mg_DrawSpriteListEPvS0_S0_S0_",
       "address": "0x020aea30",
       "size": "0x00000048",
       "legacy_source": "src/func_ov004_020aea30.cpp",
       "ordinal": 49
     },
     {
-      "symbol": "Mg_DrawSpriteListEntry",
+      "symbol": "_ZN8s20aea7822Mg_DrawSpriteListEntryEPNS_1SEiiPNS_1ME",
       "address": "0x020aea78",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov004_020aea78.cpp",
@@ -437,7 +437,7 @@
       "ordinal": 55
     },
     {
-      "symbol": "Mg_InitBrush",
+      "symbol": "_ZN8s20af2f812Mg_InitBrushEPccii",
       "address": "0x020af2f8",
       "size": "0x000002e8",
       "legacy_source": "src/func_ov004_020af2f8.cpp",
@@ -451,105 +451,105 @@
       "ordinal": 57
     },
     {
-      "symbol": "Hud_RenderSprite",
+      "symbol": "_ZN8s20af68c16Hud_RenderSpriteEPviiii",
       "address": "0x020af68c",
       "size": "0x000000e4",
       "legacy_source": "src/Hud_RenderSprite.cpp",
       "ordinal": 58
     },
     {
-      "symbol": "Mg_RenderSubSpriteScaled",
+      "symbol": "_ZN8s20af77024Mg_RenderSubSpriteScaledEPviiiiit",
       "address": "0x020af770",
       "size": "0x000000f8",
       "legacy_source": "src/func_ov004_020af770.cpp",
       "ordinal": 59
     },
     {
-      "symbol": "Mg_RenderSubSpritePalMtx",
+      "symbol": "_ZN8s20af86824Mg_RenderSubSpritePalMtxEPviiiiS0_",
       "address": "0x020af868",
       "size": "0x000000e0",
       "legacy_source": "src/func_ov004_020af868.cpp",
       "ordinal": 60
     },
     {
-      "symbol": "Mg_RenderSubSpriteMtx",
+      "symbol": "_ZN8s20af94821Mg_RenderSubSpriteMtxEPviiS0_",
       "address": "0x020af948",
       "size": "0x000000d8",
       "legacy_source": "src/func_ov004_020af948.cpp",
       "ordinal": 61
     },
     {
-      "symbol": "RenderOamMainScreen",
+      "symbol": "_ZN8s20afa2019RenderOamMainScreenEP7OamAttriiii",
       "address": "0x020afa20",
       "size": "0x00000100",
       "legacy_source": "src/RenderOamMainScreen.cpp",
       "ordinal": 62
     },
     {
-      "symbol": "Mg_RenderMainSpriteScaled",
+      "symbol": "_ZN8s20afb2025Mg_RenderMainSpriteScaledEiiiiiit",
       "address": "0x020afb20",
       "size": "0x000000f8",
       "legacy_source": "src/func_ov004_020afb20.cpp",
       "ordinal": 63
     },
     {
-      "symbol": "Mg_RenderMainSpritePalMtx",
+      "symbol": "_ZN8s20afc1825Mg_RenderMainSpritePalMtxEPviiiiS0_",
       "address": "0x020afc18",
       "size": "0x000000e0",
       "legacy_source": "src/func_ov004_020afc18.cpp",
       "ordinal": 64
     },
     {
-      "symbol": "DrawOamSprite",
+      "symbol": "_ZN8s20afcf813DrawOamSpriteEP7OamAttriiP9Matrix2x2",
       "address": "0x020afcf8",
       "size": "0x000000d8",
       "legacy_source": "src/DrawOamSprite.cpp",
       "ordinal": 65
     },
     {
-      "symbol": "Mg_RenderSpriteBoth",
+      "symbol": "_ZN8s20afdd019Mg_RenderSpriteBothEPviiii",
       "address": "0x020afdd0",
       "size": "0x00000168",
       "legacy_source": "src/func_ov004_020afdd0.cpp",
       "ordinal": 66
     },
     {
-      "symbol": "Mg_RenderSpriteBothScaled",
+      "symbol": "_ZN8s20aff3825Mg_RenderSpriteBothScaledEPNS_7OamAttrEiiiiii",
       "address": "0x020aff38",
       "size": "0x000001cc",
       "legacy_source": "src/func_ov004_020aff38.cpp",
       "ordinal": 67
     },
     {
-      "symbol": "RenderOamBothScreens",
+      "symbol": "_ZN8s20b010420RenderOamBothScreensEPviiiiS0_",
       "address": "0x020b0104",
       "size": "0x00000138",
       "legacy_source": "src/RenderOamBothScreens.cpp",
       "ordinal": 68
     },
     {
-      "symbol": "Mg_RenderSpriteBothPalMtx",
+      "symbol": "_ZN8s20b023c25Mg_RenderSpriteBothPalMtxEPviiiS0_",
       "address": "0x020b023c",
       "size": "0x00000144",
       "legacy_source": "src/func_ov004_020b023c.cpp",
       "ordinal": 69
     },
     {
-      "symbol": "Mg_RenderSpriteBothMtx",
+      "symbol": "_ZN8s20b038022Mg_RenderSpriteBothMtxEPviiS0_",
       "address": "0x020b0380",
       "size": "0x00000140",
       "legacy_source": "src/func_ov004_020b0380.cpp",
       "ordinal": 70
     },
     {
-      "symbol": "Mg_GetTopScreenYOffset",
+      "symbol": "_ZN8s20b04c022Mg_GetTopScreenYOffsetEv",
       "address": "0x020b04c0",
       "size": "0x00000010",
       "legacy_source": "src/func_ov004_020b04c0.c",
       "ordinal": 71
     },
     {
-      "symbol": "Mg_SetTopScreenYOffset",
+      "symbol": "_ZN8s20b04d022Mg_SetTopScreenYOffsetEi",
       "address": "0x020b04d0",
       "size": "0x00000010",
       "legacy_source": "src/func_ov004_020b04d0.c",
@@ -619,49 +619,49 @@
       "ordinal": 81
     },
     {
-      "symbol": "Mg_ResumeSharedState",
+      "symbol": "_ZN8s20b0a3820Mg_ResumeSharedStateEv",
       "address": "0x020b0a38",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov004_020b0a38.c",
       "ordinal": 82
     },
     {
-      "symbol": "Mg_SetSharedState",
+      "symbol": "_ZN8s20b0a5417Mg_SetSharedStateEi",
       "address": "0x020b0a54",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov004_020b0a54.cpp",
       "ordinal": 83
     },
     {
-      "symbol": "FreeGfxSlotsById",
+      "symbol": "_ZN8s20b0aa016FreeGfxSlotsByIdEi",
       "address": "0x020b0aa0",
       "size": "0x0000007c",
       "legacy_source": "src/FreeGfxSlotsById.c",
       "ordinal": 84
     },
     {
-      "symbol": "Mg_CheckBannerButton",
+      "symbol": "_ZN8s20b0b1c20Mg_CheckBannerButtonEi",
       "address": "0x020b0b1c",
       "size": "0x00000190",
       "legacy_source": "src/func_ov004_020b0b1c.c",
       "ordinal": 85
     },
     {
-      "symbol": "Mg_ShowBanner",
+      "symbol": "_ZN8s20b0cac13Mg_ShowBannerEiiiiis",
       "address": "0x020b0cac",
       "size": "0x00000084",
       "legacy_source": "src/func_ov004_020b0cac.c",
       "ordinal": 86
     },
     {
-      "symbol": "Mg_ResetOverlays",
+      "symbol": "_ZN8s20b0d3016Mg_ResetOverlaysEv",
       "address": "0x020b0d30",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov004_020b0d30.c",
       "ordinal": 87
     },
     {
-      "symbol": "Mg_DrawBlinkSprite",
+      "symbol": "_ZN8s20b0d8c18Mg_DrawBlinkSpriteEPvii",
       "address": "0x020b0d8c",
       "size": "0x00000054",
       "legacy_source": "src/func_ov004_020b0d8c.c",
@@ -675,7 +675,7 @@
       "ordinal": 89
     },
     {
-      "symbol": "Mg_DrawTally",
+      "symbol": "_ZN8s20b0e8412Mg_DrawTallyEP11dScMgBase_ci",
       "address": "0x020b0e84",
       "size": "0x0000066c",
       "legacy_source": "src/func_ov004_020b0e84.cpp",
@@ -689,63 +689,63 @@
       "ordinal": 91
     },
     {
-      "symbol": "Mg_DrawRecordRow",
+      "symbol": "_ZN8s20b171016Mg_DrawRecordRowEP11dScMgBase_ciii",
       "address": "0x020b1710",
       "size": "0x000002e0",
       "legacy_source": "src/func_ov004_020b1710.c",
       "ordinal": 92
     },
     {
-      "symbol": "Mg_DrawTopLeftCounter",
+      "symbol": "_ZN8s20b19f021Mg_DrawTopLeftCounterEi",
       "address": "0x020b19f0",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov004_020b19f0.c",
       "ordinal": 93
     },
     {
-      "symbol": "Mg_DrawTopRightCounter",
+      "symbol": "_ZN8s20b1a5c22Mg_DrawTopRightCounterEii",
       "address": "0x020b1a5c",
       "size": "0x00000090",
       "legacy_source": "src/func_ov004_020b1a5c.c",
       "ordinal": 94
     },
     {
-      "symbol": "Mg_GetLevel",
+      "symbol": "_ZN8s20b1aec11Mg_GetLevelEv",
       "address": "0x020b1aec",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov004_020b1aec.c",
       "ordinal": 95
     },
     {
-      "symbol": "Mg_LoseCredits",
+      "symbol": "_ZN8s20b1b0814Mg_LoseCreditsEi",
       "address": "0x020b1b08",
       "size": "0x00000038",
       "legacy_source": "src/func_ov004_020b1b08.c",
       "ordinal": 96
     },
     {
-      "symbol": "Mg_GainCredits",
+      "symbol": "_ZN8s20b1b4014Mg_GainCreditsEi",
       "address": "0x020b1b40",
       "size": "0x00000038",
       "legacy_source": "src/func_ov004_020b1b40.c",
       "ordinal": 97
     },
     {
-      "symbol": "Mg_SubCredits",
+      "symbol": "_ZN8s20b1b7813Mg_SubCreditsEPvi",
       "address": "0x020b1b78",
       "size": "0x00000028",
       "legacy_source": "src/func_ov004_020b1b78.c",
       "ordinal": 98
     },
     {
-      "symbol": "Mg_AddCredits",
+      "symbol": "_ZN8s20b1ba013Mg_AddCreditsEPvi",
       "address": "0x020b1ba0",
       "size": "0x00000028",
       "legacy_source": "src/func_ov004_020b1ba0.c",
       "ordinal": 99
     },
     {
-      "symbol": "Mg_DrawCredits",
+      "symbol": "_ZN8s20b1bc814Mg_DrawCreditsEPciii",
       "address": "0x020b1bc8",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov004_020b1bc8.c",
@@ -759,63 +759,63 @@
       "ordinal": 101
     },
     {
-      "symbol": "Mg_RenderSpriteOn",
+      "symbol": "_ZN8s20b1cf017Mg_RenderSpriteOnEP7OamAttriiii",
       "address": "0x020b1cf0",
       "size": "0x00000070",
       "legacy_source": "src/func_ov004_020b1cf0.c",
       "ordinal": 102
     },
     {
-      "symbol": "Mg_RenderSpriteOnNoMtx",
+      "symbol": "_ZN8s20b1d6022Mg_RenderSpriteOnNoMtxEPviiii",
       "address": "0x020b1d60",
       "size": "0x00000088",
       "legacy_source": "src/func_ov004_020b1d60.c",
       "ordinal": 103
     },
     {
-      "symbol": "Mg_DrawCreditsIcon",
+      "symbol": "_ZN8s20b1de818Mg_DrawCreditsIconEiiii",
       "address": "0x020b1de8",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov004_020b1de8.c",
       "ordinal": 104
     },
     {
-      "symbol": "Mg_DrawScoreTally",
+      "symbol": "_ZN8s20b1e3417Mg_DrawScoreTallyEPviii",
       "address": "0x020b1e34",
       "size": "0x00000010",
       "legacy_source": "src/func_ov004_020b1e34.c",
       "ordinal": 105
     },
     {
-      "symbol": "Mg_DrawTopCenterCounter",
+      "symbol": "_ZN8s20b1e4423Mg_DrawTopCenterCounterEi",
       "address": "0x020b1e44",
       "size": "0x00000060",
       "legacy_source": "src/func_ov004_020b1e44.c",
       "ordinal": 106
     },
     {
-      "symbol": "Mg_DrawNumber",
+      "symbol": "_ZN8s20b1ea413Mg_DrawNumberEiiiiiii",
       "address": "0x020b1ea4",
       "size": "0x0000037c",
       "legacy_source": "src/func_ov004_020b1ea4.c",
       "ordinal": 107
     },
     {
-      "symbol": "Mg_DrawNumberRotated",
+      "symbol": "_ZN8s20b222020Mg_DrawNumberRotatedEiiiiiit",
       "address": "0x020b2220",
       "size": "0x00000224",
       "legacy_source": "src/func_ov004_020b2220.c",
       "ordinal": 108
     },
     {
-      "symbol": "Mg_DrawBigNumber",
+      "symbol": "_ZN8s20b244416Mg_DrawBigNumberEiiiiiii",
       "address": "0x020b2444",
       "size": "0x00000130",
       "legacy_source": "src/func_ov004_020b2444.c",
       "ordinal": 109
     },
     {
-      "symbol": "Mg_DrawStockCounter",
+      "symbol": "_ZN8s20b257419Mg_DrawStockCounterEii",
       "address": "0x020b2574",
       "size": "0x000000e8",
       "legacy_source": "src/func_ov004_020b2574.c",
@@ -843,14 +843,14 @@
       "ordinal": 113
     },
     {
-      "symbol": "Mg_ResetBgOffsets",
+      "symbol": "_ZN8s20b290c17Mg_ResetBgOffsetsEv",
       "address": "0x020b290c",
       "size": "0x00000074",
       "legacy_source": "src/func_ov004_020b290c.c",
       "ordinal": 114
     },
     {
-      "symbol": "Mg_DisableAllBanks",
+      "symbol": "_ZN8s20b298018Mg_DisableAllBanksEv",
       "address": "0x020b2980",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov004_020b2980.c",
@@ -1675,32 +1675,32 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@343",
+      "from": "@354",
       "to": "@315",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Re-keyed +6 (from @324) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed +6 (from @330) when d_s_mg_base.cpp gained #include \"MgBanner.h\" (decl agreement); all non-strtab sections identical, renamed by symtab index. Re-keyed from @336 to @344 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @344 to @347 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @344 to @337 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @340 to @343 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object)."
     },
     {
-      "from": "@345",
+      "from": "@356",
       "to": "@317",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Re-keyed +6 (from @326) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed +6 (from @332) when d_s_mg_base.cpp gained #include \"MgBanner.h\" (decl agreement); all non-strtab sections identical, renamed by symtab index. Re-keyed from @338 to @346 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @346 to @349 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @346 to @339 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @342 to @345 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object)."
     },
     {
-      "from": "@347",
+      "from": "@358",
       "to": "@319",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Re-keyed +6 (from @328) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed +6 (from @334) when d_s_mg_base.cpp gained #include \"MgBanner.h\" (decl agreement); all non-strtab sections identical, renamed by symtab index. Re-keyed from @340 to @348 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @348 to @351 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @348 to @341 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @344 to @347 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object)."
     },
     {
-      "from": "@349",
+      "from": "@360",
       "to": "@321",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Re-keyed +6 (from @330) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed +6 (from @336) when d_s_mg_base.cpp gained #include \"MgBanner.h\" (decl agreement); all non-strtab sections identical, renamed by symtab index. Re-keyed from @342 to @350 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @350 to @353 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @350 to @343 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @346 to @349 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object)."
     },
     {
-      "from": "@351",
+      "from": "@362",
       "to": "@323",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Re-keyed +6 (from @332) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed +6 (from @338) when d_s_mg_base.cpp gained #include \"MgBanner.h\" (decl agreement); all non-strtab sections identical, renamed by symtab index. Re-keyed from @344 to @352 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @352 to @355 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @352 to @345 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @348 to @351 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object)."
     },
     {
-      "from": "__arraydtor$342",
+      "from": "__arraydtor$353",
       "to": "__arraydtor$328",
       "owned_function": {
         "module": "ov004",

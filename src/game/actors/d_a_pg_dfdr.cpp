@@ -115,7 +115,7 @@ struct PatrolStep {
 };
 extern PatrolStep data_ov027_02113a1c[];
 
-extern "C" daPgDfdr_c *daPgDfdr_c_classInit() {
+daPgDfdr_c *daPgDfdr_c_classInit() {
     return new daPgDfdr_c();
 }
 

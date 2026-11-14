@@ -74,7 +74,7 @@ extern Mecha03ModelFilePtr data_ov065_0211d88c;
 extern Mecha03ClsnFilePtr data_ov065_0211d894;
 extern CLPS_Block data_ov035_02112198;
 
-extern "C" daObjCtMecha03_c *daObjCtMecha03_c_classInit() {
+daObjCtMecha03_c *daObjCtMecha03_c_classInit() {
     return new daObjCtMecha03_c();
 }
 

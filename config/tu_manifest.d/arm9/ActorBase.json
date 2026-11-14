@@ -38,14 +38,14 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_0204302c",
+      "symbol": "_Z13func_0204302ci",
       "address": "0x0204302c",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/arm9/0204/func_0204302c.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_02043060",
+      "symbol": "_Z13func_02043060i",
       "address": "0x02043060",
       "size": "0x00000038",
       "legacy_source": "src/unnamed/arm9/0204/func_02043060.c",
@@ -283,28 +283,28 @@
       "ordinal": 36
     },
     {
-      "symbol": "func_02043f4c",
+      "symbol": "_Z13func_02043f4cPP9fLiNdBa_cjS0_",
       "address": "0x02043f4c",
       "size": "0x0000004c",
       "legacy_source": "src/unnamed/arm9/0204/func_02043f4c.c",
       "ordinal": 37
     },
     {
-      "symbol": "func_02043f98",
+      "symbol": "_Z13func_02043f98PP9fLiNdBa_cj",
       "address": "0x02043f98",
       "size": "0x00000044",
       "legacy_source": "src/unnamed/arm9/0204/func_02043f98.c",
       "ordinal": 38
     },
     {
-      "symbol": "func_02043fdc",
+      "symbol": "_ZN14Absorb02043fdc13func_02043fdcEPNS_21ProcessListDescriptorE",
       "address": "0x02043fdc",
       "size": "0x00000080",
       "legacy_source": "src/unnamed/arm9/0204/func_02043fdc.cpp",
       "ordinal": 39
     },
     {
-      "symbol": "func_0204405c",
+      "symbol": "_Z13func_0204405cPvS_",
       "address": "0x0204405c",
       "size": "0x0000008c",
       "legacy_source": "src/func_0204405c.c",

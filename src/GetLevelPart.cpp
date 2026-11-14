@@ -7,7 +7,7 @@
  */
 extern const signed char data_02075264[52];
 
-extern "C" signed char GetLevelPart(int idx) {
+signed char GetLevelPart(int idx) {
     return data_02075264[idx];
 }
 

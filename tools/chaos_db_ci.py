@@ -452,7 +452,8 @@ def main():
             # fixed byte window.
             head = asm_policy.header_region(text)
             cls = asm_policy.classify(text) if src_path else None
-            # Policy D (Tango's ruling on audit/enrollment_report.md section 6): a file
+            # Policy D (Tango's ruling on the 2026-08 enrollment audit, section 6;
+            # retired, in git history): a file
             # that exists is not evidence if the byte gate cannot get a verdict out of
             # it. linkcheck reports 22 of the 251 matched-but-unverified functions as
             # NO-SYM -- 18 that no compiler in the sweep will build and 4 zero-size alias
@@ -613,7 +614,8 @@ def main():
     # matched/unenrolled function has a delinks entry waiting for a `complete`; a
     # matched/no_block one is almost always deliberate (thumb, alias, exclude list) and
     # promoting it is not on the table. Printed so the split lands in the CI log next to
-    # the number it explains. See audit/enrollment_report.md.
+    # the number it explains. The retired 2026-08 enrollment audit has the original
+    # breakdown (in git history).
     print("  enrollment: " + ", ".join(
         f"{k[0]}{'/matched' if k[1] else ''}={n}"
         for k, n in sorted(enrollment_n.items(), key=lambda kv: (kv[0][0], not kv[0][1]))))

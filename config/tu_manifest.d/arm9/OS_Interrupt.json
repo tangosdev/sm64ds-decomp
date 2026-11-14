@@ -20,63 +20,63 @@
   ],
   "functions": [
     {
-      "symbol": "OS_ResetRequestIrqMask",
+      "symbol": "_Z22OS_ResetRequestIrqMaskj",
       "address": "0x02056d64",
       "size": "0x00000034",
       "legacy_source": "src/_ZN3IRQ15ClearInterruptsEj.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "OS_DisableIrqMask",
+      "symbol": "_Z17OS_DisableIrqMaskj",
       "address": "0x02056d98",
       "size": "0x00000048",
       "legacy_source": "src/_ZN3IRQ11DisableIRQsEj.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "OS_EnableIrqMask",
+      "symbol": "_Z16OS_EnableIrqMaskj",
       "address": "0x02056de0",
       "size": "0x00000038",
       "legacy_source": "src/_ZN3IRQ10EnableIRQsEj.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "OS_SetIrqMask",
+      "symbol": "_Z13OS_SetIrqMaskj",
       "address": "0x02056e18",
       "size": "0x00000034",
       "legacy_source": "src/_ZN3IRQ7SetIRQsEj.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "OSi_EnterTimerCallback",
+      "symbol": "_Z22OSi_EnterTimerCallbackjPFvPvES_",
       "address": "0x02056e4c",
       "size": "0x0000004c",
       "legacy_source": "src/unnamed/arm9/0205/func_02056e4c.c",
       "ordinal": 4
     },
     {
-      "symbol": "OSi_EnterDmaCallback",
+      "symbol": "_Z20OSi_EnterDmaCallbackjPFvPvES_",
       "address": "0x02056e98",
       "size": "0x0000004c",
       "legacy_source": "src/unnamed/arm9/0205/func_02056e98.c",
       "ordinal": 5
     },
     {
-      "symbol": "OS_GetIrqFunction",
+      "symbol": "_Z17OS_GetIrqFunctionj",
       "address": "0x02056ee4",
       "size": "0x0000008c",
       "legacy_source": "src/_ZN3IRQ13GetIRQHandlerEj.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "OS_SetIrqFunction",
+      "symbol": "_Z17OS_SetIrqFunctionjPFvvE",
       "address": "0x02056f70",
       "size": "0x00000090",
       "legacy_source": "src/_ZN3IRQ13SetIRQHandlerEjPFvvE.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "OS_InitIrqTable",
+      "symbol": "_Z15OS_InitIrqTablev",
       "address": "0x02057000",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0205/func_02057000.c",

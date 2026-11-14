@@ -26,6 +26,8 @@ extern "C" {
 s32 GetLanguageIndex(void);
 u32 LoadCompressedFileAt(int fileID, void *target);
 void *LoadFile(int fileID);
+}
+
 void Deallocate(void *ptr);
 
 /* Player count. Callers store one byte; the next object is word-aligned,
@@ -39,11 +41,16 @@ struct OamAttr;
 extern struct OamAttr *data_0208a0f8[5];
 
 /* Per-language file IDs, indexed by GetLanguageIndex(). */
-extern u32 data_0208a10c[5]; /* sub BG2 characters */
-extern u32 data_0208a120[5]; /* sub OBJ characters */
-extern u32 data_0208a134[5]; /* sub BG3 characters at +0x6000 */
-extern u32 data_0208a148[5]; /* main BG2 characters */
-extern u32 data_0208a15c[5]; /* main OBJ characters */
+extern u32 data_0208a10c[5];
+/* sub BG2 characters */
+extern u32 data_0208a120[5];
+/* sub OBJ characters */
+extern u32 data_0208a134[5];
+/* sub BG3 characters at +0x6000 */
+extern u32 data_0208a148[5];
+/* main BG2 characters */
+extern u32 data_0208a15c[5];
+/* main OBJ characters */
 
 /* Loads the sub-engine BG graphics: per-language BG2 characters (and BG3
  * characters at +0x6000), file 0x8405 at BG3 characters +0x3000, files
@@ -81,5 +88,4 @@ void func_0200f13c(void) {
     void *q = LoadFile(0x8400);
     GXS_LoadOBJPltt(q, 0, 0x200);
     Deallocate(q);
-}
 }

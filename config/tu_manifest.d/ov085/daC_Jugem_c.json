@@ -258,7 +258,7 @@
       "ordinal": 31
     },
     {
-      "symbol": "daC_Jugem_c_classInit",
+      "symbol": "_Z21daC_Jugem_c_classInitv",
       "address": "0x0212ed54",
       "size": "0x00000058",
       "legacy_source": "src/d_a_c_jugem.c",
@@ -436,14 +436,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN14JugemModelFileC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor exact PC24 relocation"
     },
     {
       "symbol": "_ZN14JugemModelFileD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the model wrapper destructor exact ABS32 relocation"
@@ -486,27 +486,27 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1215",
+      "from": "@1217",
       "to": "@1063",
       "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison. | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1145 to @1137 when the local VecFx32 respelling of the function-scope vector twins shifted this local number (#4570). Re-keyed from @1137 to @1165 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical). Re-keyed from @1162 to @1254 when Re-keyed when Vector3 members and function-scope Vector3 locals replaced their VecFx32/CamPose stand-ins (#821).. Re-keyed from @1254 to @1265 when Re-keyed when fx_trig.h was included for StateBobMain's FX_SinIdx (#821)..; daPly_c::func_ov002_020d228c becoming a member dropped the named-parameter local extern in the caller, lowering it by 1 (measured) Re-keyed from @1264 to @1210 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1210 to @1208 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged. Re-keyed from @1208 to @1204 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged. Re-keyed from @1204 to @1203 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @1203 to @1215 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@1216",
+      "from": "@1218",
       "to": "@1064",
       "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison. | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1146 to @1138 when the local VecFx32 respelling of the function-scope vector twins shifted this local number (#4570). Re-keyed from @1138 to @1166 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical). Re-keyed from @1163 to @1255 when Re-keyed when Vector3 members and function-scope Vector3 locals replaced their VecFx32/CamPose stand-ins (#821).. Re-keyed from @1255 to @1266 when Re-keyed when fx_trig.h was included for StateBobMain's FX_SinIdx (#821)..; daPly_c::func_ov002_020d228c becoming a member dropped the named-parameter local extern in the caller, lowering it by 1 (measured) Re-keyed from @1265 to @1211 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1211 to @1209 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged. Re-keyed from @1209 to @1205 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged. Re-keyed from @1205 to @1204 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @1204 to @1216 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@1217",
+      "from": "@1219",
       "to": "@1065",
       "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison. | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1147 to @1139 when the local VecFx32 respelling of the function-scope vector twins shifted this local number (#4570). Re-keyed from @1139 to @1167 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical). Re-keyed from @1164 to @1256 when Re-keyed when Vector3 members and function-scope Vector3 locals replaced their VecFx32/CamPose stand-ins (#821).. Re-keyed from @1256 to @1267 when Re-keyed when fx_trig.h was included for StateBobMain's FX_SinIdx (#821)..; daPly_c::func_ov002_020d228c becoming a member dropped the named-parameter local extern in the caller, lowering it by 1 (measured) Re-keyed from @1266 to @1212 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1212 to @1210 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged. Re-keyed from @1210 to @1206 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged. Re-keyed from @1206 to @1205 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @1205 to @1217 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@1218",
+      "from": "@1220",
       "to": "@1066",
       "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison. | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1148 to @1140 when the local VecFx32 respelling of the function-scope vector twins shifted this local number (#4570). Re-keyed from @1140 to @1168 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical). Re-keyed from @1165 to @1257 when Re-keyed when Vector3 members and function-scope Vector3 locals replaced their VecFx32/CamPose stand-ins (#821).. Re-keyed from @1257 to @1268 when Re-keyed when fx_trig.h was included for StateBobMain's FX_SinIdx (#821)..; daPly_c::func_ov002_020d228c becoming a member dropped the named-parameter local extern in the caller, lowering it by 1 (measured) Re-keyed from @1267 to @1213 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1213 to @1211 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged. Re-keyed from @1211 to @1207 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged. Re-keyed from @1207 to @1206 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @1206 to @1218 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@1219",
+      "from": "@1221",
       "to": "@1067",
       "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison. | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1149 to @1141 when the local VecFx32 respelling of the function-scope vector twins shifted this local number (#4570). Re-keyed from @1141 to @1169 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical). Re-keyed from @1166 to @1258 when Re-keyed when Vector3 members and function-scope Vector3 locals replaced their VecFx32/CamPose stand-ins (#821).. Re-keyed from @1258 to @1269 when Re-keyed when fx_trig.h was included for StateBobMain's FX_SinIdx (#821)..; daPly_c::func_ov002_020d228c becoming a member dropped the named-parameter local extern in the caller, lowering it by 1 (measured) Re-keyed from @1268 to @1214 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1214 to @1212 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged. Re-keyed from @1212 to @1208 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged. Re-keyed from @1208 to @1207 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @1207 to @1219 when a redundant pun was removed (same section, offset, size, type and binding)."
     }
@@ -571,7 +571,7 @@
       "source": "0x0212fa50",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -661,7 +661,7 @@
       "source": "0x0212fcec",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"

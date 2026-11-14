@@ -1,7 +1,7 @@
 #include "types.h"
 #include "private/arm9_wbt.h"
 #include "nitro/mi/memory.h"
-extern int func_02065af0(void *thiz);
+extern int _Z13func_02065af0Pi(int *thiz);
 
 /* NitroSDK WBT_GetBlockInfo: WBT_GetBlock's REQ_GET_BLOCK built as
  * REQ_GET_BLOCKINFO. Entry index of the peers' block list is fetched
@@ -15,5 +15,5 @@ void WBT_GetBlockInfo(u16 target_bmp, int index, const void *recv_buf_table, WBT
     cmd.u.get.block_id = index;
     cmd.u.get.recv_data_size = sizeof(WBTBlockInfo);
     MI_CpuCopy32(recv_buf_table, cmd.u.get.recv_buf_table, sizeof(cmd.u.get.recv_buf_table));
-    func_02065af0(&cmd);
+    _Z13func_02065af0Pi((int *)&cmd);
 }

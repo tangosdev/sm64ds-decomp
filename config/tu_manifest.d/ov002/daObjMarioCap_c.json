@@ -246,7 +246,7 @@
       "ordinal": 29
     },
     {
-      "symbol": "daObjMarioCap_c_classInit",
+      "symbol": "_Z25daObjMarioCap_c_classInitv",
       "address": "0x020b8b98",
       "size": "0x00000058",
       "legacy_source": "src/d_a_obj_mario_cap.c",

@@ -28,7 +28,7 @@ enum d_a_obj_th_fall_block_AssetId { ASSET_TH_DOWN_B_BMD = 0x06b9, ASSET_TH_DOWN
 
 extern ResourceDescriptor data_ov063_0211eb10;
 
-extern "C" daObjTh_Fall_Block_c *daObjTh_Fall_Block_c_classInit() {
+daObjTh_Fall_Block_c *daObjTh_Fall_Block_c_classInit() {
     return new daObjTh_Fall_Block_c();
 }
 

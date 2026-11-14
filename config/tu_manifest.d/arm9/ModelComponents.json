@@ -47,28 +47,28 @@
       "ordinal": 3
     },
     {
-      "symbol": "func_02044dc4",
+      "symbol": "_Z13func_02044dc4P15ModelComponents",
       "address": "0x02044dc4",
       "size": "0x0000008c",
       "legacy_source": "src/unnamed/arm9/0204/func_02044dc4.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_02044e50",
+      "symbol": "_Z13func_02044e50P15ModelComponentsiiPi",
       "address": "0x02044e50",
       "size": "0x000000ac",
       "legacy_source": "src/unnamed/arm9/0204/func_02044e50.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_02044efc",
+      "symbol": "_Z13func_02044efcP8BMD_File",
       "address": "0x02044efc",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/arm9/0204/func_02044efc.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_02044f74",
+      "symbol": "_Z13func_02044f74PvP4Node",
       "address": "0x02044f74",
       "size": "0x000000d8",
       "legacy_source": "src/unnamed/arm9/0204/func_02044f74.c",
@@ -89,14 +89,14 @@
       "ordinal": 9
     },
     {
-      "symbol": "func_02045178",
+      "symbol": "_Z13func_02045178Piiiiiii",
       "address": "0x02045178",
       "size": "0x000001a4",
       "legacy_source": "src/func_02045178.c",
       "ordinal": 10
     },
     {
-      "symbol": "func_0204531c",
+      "symbol": "_Z13func_0204531cPci",
       "address": "0x0204531c",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/arm9/0204/func_0204531c.c",

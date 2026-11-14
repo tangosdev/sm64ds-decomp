@@ -1,5 +1,15 @@
 #ifndef NITRO_MI_DMA_H
 #define NITRO_MI_DMA_H
+#ifndef __cplusplus
+#define MI_StopDma _Z10MI_StopDmaj
+#define MI_WaitDma _Z10MI_WaitDmaj
+#define MI_DmaCopy32Async _Z17MI_DmaCopy32AsyncjPKvPvjPFvS1_ES1_
+#define MI_DmaFill32Async _Z17MI_DmaFill32AsyncjPvjjPFvS_ES_
+#define MI_DmaCopy16 _Z12MI_DmaCopy16jPKvPvj
+#define MI_DmaCopy32 _Z12MI_DmaCopy32jPKvPvj
+#define MI_DmaFill32 _Z12MI_DmaFill32jPvjj
+#define MI_SendGXCommandAsync _Z21MI_SendGXCommandAsyncjPKvjPFvPvES1_
+#endif
 
 /* NitroSDK's DMA API (nitro/mi/dma.h): mi_dma.c, defined in
  * src/engine/mi/MI_Dma.cpp, and the geometry-FIFO sends of mi_dma_gxcommand.c
@@ -9,9 +19,10 @@
  * and channel numbers are spelled unsigned int, the SDK's u32. */
 
 #ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
 #endif
-
+#endif
 typedef void (*MIDmaCallback)(void *);
 
 void MI_DmaFill32(unsigned int, void *, unsigned int, unsigned int);
@@ -27,16 +38,25 @@ void MI_StopDma(unsigned int);
 #define MI_DmaClear32Async(dmaNo, dest, size, callback, arg) \
     MI_DmaFill32Async((dmaNo), (dest), 0, (size), (callback), (arg))
 
-void MI_SendGXCommand(unsigned int, const void *, unsigned int);
+#ifdef __cplusplus
+extern "C"
+#endif
+    void
+    MI_SendGXCommand(unsigned int, const void *, unsigned int);
 void MI_SendGXCommandAsync(unsigned int, const void *, unsigned int, MIDmaCallback, void *);
 
-/* Arms one channel: source, destination, then the control word that starts
+#ifdef __cplusplus
+extern "C"
+#endif
+    /* Arms one channel: source, destination, then the control word that starts
  * it, with interrupts masked (pret/pokediamond MI_dma.h). The body is in
  * ITCM, src/MIi_DmaSetParams.cpp. */
-void MIi_DmaSetParams(unsigned int, unsigned int, unsigned int, unsigned int);
-
+    void
+    MIi_DmaSetParams(unsigned int, unsigned int, unsigned int, unsigned int);
 #ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif

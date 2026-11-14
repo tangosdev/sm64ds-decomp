@@ -56,10 +56,8 @@ namespace Sound {
 bool PlaySub(u32, u32, u32, int, bool);
 }
 
-extern "C" {
-
 /* ground probe / collision */
-int   SurfaceInfo_TestFlag0x20(void *);
+int SurfaceInfo_TestFlag0x20(int *);
 
 /* dActor_c / dEnemyBase_c, reached by their ROM names.
    dActor_c::ClosestPlayer and dActor_c::FindWithID are deliberately NOT here:
@@ -78,22 +76,20 @@ int   SurfaceInfo_TestFlag0x20(void *);
 
 
 /* maths and the still-unnamed helpers */
-void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
-int VEC_Mag(const Vector3 *);
-int   AngleDiff(int, int);
-void  Matrix4x3_FromTranslation(void *, int, int, int);
-void  Matrix4x3_FromRotationY(void *, int);
-void  Matrix4x3_ApplyInPlaceToRotationXYZExt(void *, int, int, int);
-void MTX_Concat43(void *, void *, void *);
-void MTX_Concat33(void *, void *, void *);
-void MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
+extern "C" void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
+extern "C" int VEC_Mag(const Vector3 *);
+extern "C" int AngleDiff(int, int);
+extern "C" void Matrix4x3_FromTranslation(void *, int, int, int);
+extern "C" void Matrix4x3_FromRotationY(void *, int);
+extern "C" void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *, int, int, int);
+extern "C" void MTX_Concat43(void *, void *, void *);
+extern "C" void MTX_Concat33(void *, void *, void *);
+extern "C" void MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
 u8 NumStars(void);
 int func_02013890(int, int);
 void func_02013944(void);
 void func_02012694(unsigned int id, const Vector3 *pos);
-void  func_0203c178(void *, int, int, int);
-
-}
+extern "C" void func_0203c178(void *, int, int, int);
 
 /* The state records at 0x0213003c..0x021300bc are 8-byte Itanium
    pointer-to-member-function constants, so SetState reaches one through a real
@@ -232,7 +228,7 @@ int daMip_c::TestWaterBelow()
     rg.SetObjAndPos(*(::Vector3 *)&v, this);
     if (rg.DetectClsn()) {
         mFloorY = rg.clsnY;
-        if (SurfaceInfo_TestFlag0x20(&rg.surface))
+        if (SurfaceInfo_TestFlag0x20((int *)&rg.surface))
             return 1;
     }
     return 0;
@@ -1497,8 +1493,7 @@ s32 daMip_c::OnYoshiTryEat() {
 }
 
 /* Registry factory for the MIP profile. `return new daMip_c()`. */
-extern "C" daMip_c *daMip_c_classInit(void)
-{
+daMip_c *daMip_c_classInit(void) {
     return new daMip_c();
 }
 

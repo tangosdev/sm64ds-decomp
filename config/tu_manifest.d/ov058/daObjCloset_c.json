@@ -55,7 +55,7 @@
       "ordinal": 4
     },
     {
-      "symbol": "daObjCloset_c_classInit",
+      "symbol": "_Z23daObjCloset_c_classInitv",
       "address": "0x02111688",
       "size": "0x0000005c",
       "legacy_source": "src/d_a_obj_closet.cpp",

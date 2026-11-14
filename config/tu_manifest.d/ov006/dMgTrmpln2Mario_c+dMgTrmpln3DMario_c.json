@@ -230,56 +230,56 @@
       "ordinal": 27
     },
     {
-      "symbol": "Trmp2Mario_Hide",
+      "symbol": "_ZN11ns_020ca7b815Trmp2Mario_HideEv",
       "address": "0x020ca7b8",
       "size": "0x00000088",
       "legacy_source": "src/func_ov006_020ca7b8.c",
       "ordinal": 28
     },
     {
-      "symbol": "Trmp2Mario_EnterAll",
+      "symbol": "_ZN11ns_020ca84019Trmp2Mario_EnterAllEv",
       "address": "0x020ca840",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov006_020ca840.c",
       "ordinal": 29
     },
     {
-      "symbol": "Trmp2Mario_MoveToStart",
+      "symbol": "_ZN11ns_020ca8e022Trmp2Mario_MoveToStartEv",
       "address": "0x020ca8e0",
       "size": "0x00000128",
       "legacy_source": "src/func_ov006_020ca8e0.cpp",
       "ordinal": 30
     },
     {
-      "symbol": "Trmp2Mario_PlaceAtStart",
+      "symbol": "_ZN11ns_020caa0823Trmp2Mario_PlaceAtStartEv",
       "address": "0x020caa08",
       "size": "0x000000d4",
       "legacy_source": "src/func_ov006_020caa08.c",
       "ordinal": 31
     },
     {
-      "symbol": "Trmp2Mario_DrawAll",
+      "symbol": "_ZN11ns_020caadc18Trmp2Mario_DrawAllEv",
       "address": "0x020caadc",
       "size": "0x00000154",
       "legacy_source": "src/func_ov006_020caadc.c",
       "ordinal": 32
     },
     {
-      "symbol": "Trmp2Mario_UpdateAll",
+      "symbol": "_ZN11ns_020cac3020Trmp2Mario_UpdateAllEv",
       "address": "0x020cac30",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov006_020cac30.cpp",
       "ordinal": 33
     },
     {
-      "symbol": "Trmp2Mario_ResetAll",
+      "symbol": "_ZN11ns_020cac9c19Trmp2Mario_ResetAllEj",
       "address": "0x020cac9c",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov006_020cac9c.c",
       "ordinal": 34
     },
     {
-      "symbol": "Trmp2Mario_SetTuning",
+      "symbol": "_ZN11ns_020cad3c20Trmp2Mario_SetTuningEi",
       "address": "0x020cad3c",
       "size": "0x00000160",
       "legacy_source": "src/func_ov006_020cad3c.c",
@@ -503,7 +503,7 @@
       "ordinal": 66
     },
     {
-      "symbol": "Trmp3DMario_EnterWalkIn",
+      "symbol": "_ZN11ns_020cc9fc23Trmp3DMario_EnterWalkInEPc",
       "address": "0x020cc9fc",
       "size": "0x000000e4",
       "legacy_source": "src/func_ov006_020cc9fc.cpp",
@@ -524,7 +524,7 @@
       "ordinal": 69
     },
     {
-      "symbol": "Trmp3DMario_IsOffstage",
+      "symbol": "_ZN11ns_020ccd0422Trmp3DMario_IsOffstageEPi",
       "address": "0x020ccd04",
       "size": "0x00000060",
       "legacy_source": "src/func_ov006_020ccd04.c",
@@ -566,56 +566,56 @@
       "ordinal": 75
     },
     {
-      "symbol": "Trmp3DMario_CountFinished",
+      "symbol": "_ZN11ns_020cd15825Trmp3DMario_CountFinishedEv",
       "address": "0x020cd158",
       "size": "0x00000088",
       "legacy_source": "src/func_ov006_020cd158.c",
       "ordinal": 76
     },
     {
-      "symbol": "Trmp3DMario_StartAll",
+      "symbol": "_ZN11ns_020cd1e020Trmp3DMario_StartAllEv",
       "address": "0x020cd1e0",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_020cd1e0.c",
       "ordinal": 77
     },
     {
-      "symbol": "Trmp3DMario_DrawAll",
+      "symbol": "_ZN11ns_020cd27019Trmp3DMario_DrawAllEv",
       "address": "0x020cd270",
       "size": "0x0000012c",
       "legacy_source": "src/func_ov006_020cd270.c",
       "ordinal": 78
     },
     {
-      "symbol": "Trmp3DMario_UpdateAll",
+      "symbol": "_ZN11ns_020cd39c21Trmp3DMario_UpdateAllEv",
       "address": "0x020cd39c",
       "size": "0x00000088",
       "legacy_source": "src/func_ov006_020cd39c.c",
       "ordinal": 79
     },
     {
-      "symbol": "Trmp3DMario_ResetAll",
+      "symbol": "_ZN11ns_020cd42420Trmp3DMario_ResetAllEji",
       "address": "0x020cd424",
       "size": "0x000000ec",
       "legacy_source": "src/func_ov006_020cd424.c",
       "ordinal": 80
     },
     {
-      "symbol": "Trmp3DMario_SetTuning",
+      "symbol": "_ZN11ns_020cd51021Trmp3DMario_SetTuningEi",
       "address": "0x020cd510",
       "size": "0x0000011c",
       "legacy_source": "src/func_ov006_020cd510.c",
       "ordinal": 81
     },
     {
-      "symbol": "Trmp3DMario_SetSpawnHeight",
+      "symbol": "_ZN11ns_020cd62c26Trmp3DMario_SetSpawnHeightEi",
       "address": "0x020cd62c",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov006_020cd62c.c",
       "ordinal": 82
     },
     {
-      "symbol": "Trmp3DMario_InitPool",
+      "symbol": "_ZN11ns_020cd65820Trmp3DMario_InitPoolEPhi",
       "address": "0x020cd658",
       "size": "0x00000080",
       "legacy_source": "src/func_ov006_020cd658.c",
@@ -2126,7 +2126,7 @@
       "source": "0x0212f6c4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017a24",
+      "symbol": "_Z13func_02017a24Pvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017a24"
@@ -2536,7 +2536,7 @@
       "source": "0x0212fb10",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017a0c",
+      "symbol": "_Z13func_02017a0ci",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017a0c"
@@ -3325,14 +3325,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN19Trmpln2ModelFilePtrC1Ej",
-      "canonical_symbol": "func_02017a24",
+      "canonical_symbol": "_Z13func_02017a24Pvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017a24",
       "evidence": "model handle construction in the retail initializer is func_02017a24"
     },
     {
       "symbol": "_ZN19Trmpln2ModelFilePtrD1Ev",
-      "canonical_symbol": "func_02017a0c",
+      "canonical_symbol": "_Z13func_02017a0ci",
       "canonical_module": "arm9",
       "canonical_address": "0x02017a0c",
       "evidence": "model handle destruction registered by the retail initializer is func_02017a0c"
@@ -3353,7 +3353,7 @@
     },
     {
       "symbol": "_ZN7Vector3D1Ev",
-      "canonical_symbol": "func_02017a9c",
+      "canonical_symbol": "_Z13func_02017a9ci",
       "canonical_module": "arm9",
       "canonical_address": "0x02017a9c",
       "evidence": "deadstrip externalises this TU's unreferenced vague ~Vector3, and the leftover import still occupies the name. Nothing references it. Parking that import on func_02017a9c, which this object does not already import, frees _ZN7Vector3D1Ev for the goal-slot registration."
@@ -3370,7 +3370,7 @@
     {
       "from": "@2012",
       "to": "@2141",
-      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2197 to @2196 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2196) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2197) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2192 to @2161 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2161 to @2159 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2161 to @2146 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2144 to @2183 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed from @2044 to @2023 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @2023 to @2012 when a redundant pun was removed (same section, offset, size, type and binding)."
+      "evidence": "Header inclusion renumbers this BSS registration node; base/head objects agree in order, section kind, flags and size. Re-keyed from @2197 to @2196 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2196) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2197) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2192 to @2161 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2161 to @2159 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2161 to @2146 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2144 to @2183 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed -4 when the merge gave func_02012718, func_02016a04 and func_02016a14 C++ linkage; paired by symtab index, every non-strtab section byte-identical."
     },
     {
       "from": "@2013",
@@ -3495,7 +3495,7 @@
     {
       "from": "@2037",
       "to": "@1142",
-      "evidence": "mwcc emits @2222; that name is already used in ov002, so it is renamed to the unused same-length @1142. Re-keyed from @2222 to @2221 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2221) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2222) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2217 to @2186 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2186 to @2184 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2186 to @2171 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2169 to @2208 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed from @2069 to @2048 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @2048 to @2037 when a redundant pun was removed (same section, offset, size, type and binding)."
+      "evidence": "mwcc emits @2222; that name is already used in ov002, so it is renamed to the unused same-length @1142. Re-keyed from @2222 to @2221 when the namespace-local anonymous POD vector typedef was retired for VecFx32 (#4570). Re-keyed +1 (from @2221) when Trmp2Mario_ResetAll gained its unread level parameter (the ROM caller loads mLevel into r0). Re-keyed -5 (from @2222) when the two local func_02016a14 externs were retired for decl_common.h (their unread third argument dropped) and Trmp2Mario_InitPool took its pool as char * (decl agreement); paired by symtab index, every non-strtab section byte-identical. Re-keyed from @2217 to @2186 when the PMF state copies in the Enter functions became struct copies instead of b ? a : a ternaries. Re-keyed from @2186 to @2184 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @2186 to @2171 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @2169 to @2208 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed -4 when the merge gave func_02012718, func_02016a04 and func_02016a14 C++ linkage; paired by symtab index, every non-strtab section byte-identical."
     }
   ],
   "symbol_binding_rewrites": [

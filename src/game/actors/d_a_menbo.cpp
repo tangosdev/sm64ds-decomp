@@ -75,33 +75,35 @@ struct MenboAnimationFilePtr : SharedFilePtr {
 /* By-value Fix12<int> in a mangled name; the calls pass a bare word. */
 typedef int LocFix12;
 
-extern "C" {
-
-void MTX_Concat43(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *out);
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
-void Matrix4x3_FromRotationY(void *m, int angle);
-void  Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-void  Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
-void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int rx, int ry, int rz);
-void  Vec3_Lsl(Vector3 *out, const Vector3 *in, int n);
-void  Vec3_Asr(void *dst, void *src, int n);
+extern "C" void MTX_Concat43(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *out);
+extern "C" void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
+extern "C" void Matrix4x3_FromRotationY(void *m, int angle);
+extern "C" void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
+extern "C" void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
+extern "C" void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int rx, int ry, int rz);
+extern "C" void Vec3_Lsl(Vector3 *out, const Vector3 *in, int n);
+extern "C" void Vec3_Asr(void *dst, void *src, int n);
 int   Vec3_Dist(const Vector3 *a, const Vector3 *b);
 int   Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 s16   Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
-int   AngleDiff(int a, int b);
-int ApproachAngle(s16 *cur, s16 target, int divisor, int band, int maxStep);
-u16   DecIfAbove0_Short(u16 *p);
-int   RandomIntInternal(int *seed);
+extern "C" int AngleDiff(int a, int b);
+extern "C" int ApproachAngle(s16 *cur, s16 target, int divisor, int band, int maxStep);
+extern "C" u16 DecIfAbove0_Short(u16 *p);
+extern "C" int RandomIntInternal(int *seed);
 void func_02012694(unsigned int id, const Vector3 *pos);
 
-int d_a_menboNewHold(unsigned int a0, unsigned int a1, int a2, int a3, int a4, int a5, int a6);
+extern "C" int d_a_menboNewHold(unsigned int a0, unsigned int a1, int a2, int a3, int a4, int a5,
+                                int a6);
 
 /* Parameter names keep this TU's @NNN. */
+extern "C" {
 typedef void BgchInitAt_(dBgCh_Actr *self, int a, LocFix12 r, LocFix12 h, int p, int q);
-int   SurfaceInfo_TestFlag0x20(const SurfaceInfo *p);
+}
+int SurfaceInfo_TestFlag0x20(int *p);
 int   func_02035638(u8 *p);
 
-void  func_ov002_020aea30(void *self, void *actor, void *collision);
+extern "C" struct Aea30C;
+void func_ov002_020aea30(Aea30C *self, dActor_c *actor, dBgCh_Actr *collision);
 
 extern Matrix4x3     data_020a0e68;
 extern int           data_02092138;
@@ -122,10 +124,8 @@ extern MenboStateFn  data_ov090_021344f4[2];
 extern MenboStateFn  data_ov090_02134504[2];
 extern MenboStateFn  data_ov090_02134514[2];
 
-int  func_ov090_021314a0(daMenbo_c *c);
-int  func_ov090_02131e00(MenboState *c, MenboStateFn *p);
-
-}
+extern "C" int func_ov090_021314a0(daMenbo_c *c);
+extern "C" int func_ov090_02131e00(MenboState *c, MenboStateFn *p);
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
  * off screen. Actor ID 0xbf is PLAYER. gGameMode is the current game
@@ -150,8 +150,7 @@ daMenbo_c::~daMenbo_c()
 /* One ripple under each of four leg bones. Skipped while the actor is off
  * screen. Bone matrices are transforms[6], [9], [12] and [15], multiplied
  * by the model matrix; the ripple sits on the water line. */
-extern "C" void func_ov090_02130f94(daMenbo_c *c_)
-{
+void func_ov090_02130f94(daMenbo_c *c_) {
     int zero;
     int sh;
     daMenbo_c *c;
@@ -207,23 +206,23 @@ void daMenbo_c::func_ov090_021310b4() {
 
     if (flags & 0x2400) {
         mDeathState = 2;
-        func_ov002_020aea30(this, p, 0);
+        func_ov002_020aea30((Aea30C *)this, p, 0);
         return;
     }
     if (flags & 0x40000) {
         mDeathState = 4;
-        func_ov002_020aea30(this, p, 0);
+        func_ov002_020aea30((Aea30C *)this, p, 0);
         return;
     }
     if (flags & 0x40) {
         mDeathState = 2;
-        func_ov002_020aea30(this, p, 0);
+        func_ov002_020aea30((Aea30C *)this, p, 0);
         return;
     }
     if (JumpedOnByPlayer(mdCcAcPos_c, *(daPly_c *)p)) {
         ((daPly_c *)p)->Bounce(0x28000);
         mDeathState = 1;
-        func_ov002_020aea30(this, p, 0);
+        func_ov002_020aea30((Aea30C *)this, p, 0);
         return;
     }
     if (flags & 0x20) {
@@ -232,7 +231,7 @@ void daMenbo_c::func_ov090_021310b4() {
         mVertSpeed = 0;
         mSpeedZ = 0;
         mDeathState = 1;
-        func_ov002_020aea30(this, p, 0);
+        func_ov002_020aea30((Aea30C *)this, p, 0);
         return;
     }
     if (flags & 0x10) {
@@ -246,7 +245,7 @@ void daMenbo_c::func_ov090_021310b4() {
     if (flags & 0x4380) {
         mDeathTumble = 3;
         mDeathState = 3;
-        func_ov002_020aea30(this, p, 0);
+        func_ov002_020aea30((Aea30C *)this, p, 0);
         return;
     }
     if (!IsPlayerActor(p))
@@ -715,7 +714,7 @@ int daMenbo_c::Behavior()
                 mVertSpeed = 0;
                 mSpeedZ = 0;
                 mDeathState = 1;
-                func_ov002_020aea30(c, ClosestPlayer(), 0);
+                func_ov002_020aea30((Aea30C *)c, ClosestPlayer(), 0);
                 return 1;
             }
         }
@@ -738,7 +737,7 @@ int daMenbo_c::Behavior()
         mVertSpeed = 0;
         mSpeedZ = 0;
         mDeathState = 1;
-        func_ov002_020aea30(c, ClosestPlayer(), 0);
+        func_ov002_020aea30((Aea30C *)c, ClosestPlayer(), 0);
         return 1;
     }
 
@@ -822,7 +821,7 @@ int daMenbo_c::InitResources()
         ground.SetObjAndPos(pos, this);
         mFloorY = data_02092138;
         if (ground.DetectClsn() != 0) {
-            if (SurfaceInfo_TestFlag0x20(&ground.surface) != 0) {
+            if (SurfaceInfo_TestFlag0x20((int *)&ground.surface) != 0) {
                 mOnWater = 1;
                 mSurfaceY = ground.clsnY;
             } else {
@@ -904,7 +903,6 @@ MenboStateFn data_ov090_021344e4[2] = {
  * `new daMenbo_c` is the whole sequence the loose factory spelled by hand:
  * fBase_c::operator new(0x3b0), dEnemyBase_c's base constructor, the vptr
  * store, then the dCcAcPos_c, dBgCh_Actr and dExtAnmModel_c member constructors. */
-extern "C" daMenbo_c *daMenbo_c_classInit(void)
-{
+daMenbo_c *daMenbo_c_classInit(void) {
     return new daMenbo_c;
 }

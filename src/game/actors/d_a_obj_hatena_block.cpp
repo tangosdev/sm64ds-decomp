@@ -183,7 +183,6 @@ enum {
    trigger (UpdateIdle) does not run for it. */
 enum { SAVE_FLAGS1_BIT31 = 0x80000000 };
 
-extern "C" {
 
 extern signed char gCurrentSublevel;
 extern int data_0209f32c;
@@ -204,18 +203,17 @@ extern SharedFilePtr gPFlowerOpenModelFile;
 extern SharedFilePtr gPFlowerCloseModelFile;
 extern CLPS_Block data_ov002_0210d954;
 
-extern int RandomIntInternal(int *seed);
-extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-extern u16 DecIfAbove0_Short(u16 *p);
-extern void Matrix4x3_FromRotationY(void *m, int angle);
-void d_a_obj_hatena_blockEarthquakeHold(void *self, void *pos, s32 radius);
-extern void hold_d_a_obj_hatena_block(void *thiz, void *kcl, void *mtx, int fix, short s,
-                                      void *clps);
+extern "C" int RandomIntInternal(int *seed);
+int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
+extern "C" u16 DecIfAbove0_Short(u16 *p);
+extern "C" void Matrix4x3_FromRotationY(void *m, int angle);
+extern "C" void d_a_obj_hatena_blockEarthquakeHold(void *self, void *pos, s32 radius);
+extern "C" void hold_d_a_obj_hatena_block(void *thiz, void *kcl, void *mtx, int fix, short s,
+                                          void *clps);
 
 /* Free: the block is its second argument (dst, src), so member form would
    swap the register operands. */
-void func_ov102_02149684(Vector3 *dst, daObjHatenaBlock_c *src);
-}
+void func_ov102_02149684(int *dst, daObjHatenaBlock_c *src);
 
 /* The block's file-scope SharedFilePtr objects, spelled through the same
    wrapper idiom the landed folds use: the handles' code is the veneer pair
@@ -289,33 +287,27 @@ PMF data_ov102_0214e870[1][4] = {
      &daObjHatenaBlock_c::SpawnPrizeFeather, &daObjHatenaBlock_c::SpawnPrizeFeather},
 };
 
-extern "C" daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_VS_ITEM_BLOCK()
-{
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_VS_ITEM_BLOCK() {
     return new daObjHatenaBlock_c();
 }
 
-extern "C" daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_HATENA_BLOCK()
-{
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_HATENA_BLOCK() {
     return new daObjHatenaBlock_c();
 }
 
-extern "C" daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_ITEM_BLOCK()
-{
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_ITEM_BLOCK() {
     return new daObjHatenaBlock_c();
 }
 
-extern "C" daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_M()
-{
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_M() {
     return new daObjHatenaBlock_c();
 }
 
-extern "C" daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_L()
-{
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_L() {
     return new daObjHatenaBlock_c();
 }
 
-extern "C" daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_W()
-{
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_W() {
     return new daObjHatenaBlock_c();
 }
 
@@ -758,7 +750,7 @@ void daObjHatenaBlock_c::UpdateBouncing() {
     int ch;
     u16 typ;
     dActor_c *held;
-    func_ov102_02149684(&pos, this);
+    func_ov102_02149684((int *)&pos, this);
     if (DecIfAbove0_Short(&mBounceTimer) != 0) {
 
         mScaleY = FX_MUL(FX_SinIdx((u16)mBounceAng >> 4) + 0x1000, 0x999) + 0x666;
@@ -926,14 +918,12 @@ int daObjHatenaBlock_c::OnHitFromUnderneath(dActor_c &other)
 
 /* dst = the block's position with Y raised by 0x32000 (50 units): the point
    the prizes spawn at. */
-extern "C" {
-void func_ov102_02149684(Vector3 *dst, daObjHatenaBlock_c *src) {
-    int z = src->mPosZ;
-    int liftedY = src->mPosY + 0x32000;
-    dst->x = src->mPosX;
-    dst->y = liftedY;
-    dst->z = z;
-}
+void func_ov102_02149684(int* dst, daObjHatenaBlock_c* src){
+  int z = src->mPosZ;
+  int liftedY = src->mPosY + 0x32000;
+  dst[0] = src->mPosX;
+  dst[1] = liftedY;
+  dst[2] = z;
 }
 
 /* Floor height under the block: a ground raycast (dBgCh_Gnd) from 0x28000 (40
@@ -963,7 +953,7 @@ void daObjHatenaBlock_c::SpawnPrizeMarioCap(int p1, int p2) {
     int rnd;
     dActor_c* o;
     dCamera_c* g;
-    func_ov102_02149684(&f.pos, this);
+    func_ov102_02149684((int *)&f.pos, this);
     o = dActor_c::Spawn(
         ACTOR_OBJ_MARIO_CAP, (unsigned int)(p2 | (p1 << 8)), f.pos, 0, mAreaId, -1);
     if (o == 0) return;
@@ -989,7 +979,7 @@ void daObjHatenaBlock_c::SpawnPrizeMarioCap(int p1, int p2) {
    1.5 units, base angle 0), then KillAndTrackInDeathTable. */
 void daObjHatenaBlock_c::SpawnPrizeCoins() {
     int s[3];
-    func_ov102_02149684((Vector3 *)s, this);
+    func_ov102_02149684(s, this);
     int count = (param1 >> 8) & 0xff;
     if (count == 0xff)
         count = 1;
@@ -1005,7 +995,7 @@ void daObjHatenaBlock_c::SpawnPrizeCoins() {
    0x40 (the 0x40 bit is not interpreted here), then MarkForDestruction. */
 void daObjHatenaBlock_c::SpawnPrizeStar() {
     char local[12];
-    func_ov102_02149684((Vector3 *)local, this);
+    func_ov102_02149684((int *)local, this);
     dActor_c::Spawn(ACTOR_STAR, mStarId | 0x40, *(Vector3 *)local, 0, mAreaId, -1);
     MarkForDestruction();
 }
@@ -1014,7 +1004,7 @@ void daObjHatenaBlock_c::SpawnPrizeStar() {
    KillAndTrackInDeathTable. */
 void daObjHatenaBlock_c::SpawnPrize1Up() {
     struct Vector3 pos;
-    func_ov102_02149684(&pos, this);
+    func_ov102_02149684((int *)&pos, this);
     dActor_c::Spawn(ACTOR_ONEUPKINOKO, 0, pos, 0, mAreaId, -1);
     KillAndTrackInDeathTable();
 }
@@ -1023,7 +1013,7 @@ void daObjHatenaBlock_c::SpawnPrize1Up() {
    Does not kill the block. */
 void daObjHatenaBlock_c::SpawnPrizeScaleUpKinoko() {
     Vector3 v;
-    func_ov102_02149684(&v, this);
+    func_ov102_02149684((int *)&v, this);
     signed char cc = mAreaId;
     dActor_c::Spawn(ACTOR_SCALEUP_KINOKO, 0, v, (const Vector3_16*)0, cc, -1);
 }
@@ -1032,7 +1022,7 @@ void daObjHatenaBlock_c::SpawnPrizeScaleUpKinoko() {
    sets the new shell's mDespawnTimer to 0xb4 (180). */
 void daObjHatenaBlock_c::SpawnPrizeShell() {
     Vector3 v;
-    func_ov102_02149684(&v, this);
+    func_ov102_02149684((int *)&v, this);
     void *a = dActor_c::Spawn(ACTOR_SHELL, 0, v, 0, mAreaId, -1);
     if (a)
         ((daShl_c *)a)->mDespawnTimer = 0xb4;
@@ -1045,7 +1035,7 @@ void daObjHatenaBlock_c::SpawnPrizeShell() {
 void daObjHatenaBlock_c::SpawnPrizeFeather() {
     struct Vector3 pos;
     struct Vector3_16 rot;
-    func_ov102_02149684(&pos, this);
+    func_ov102_02149684((int *)&pos, this);
     rot.x = *(u16 *)(data_020a0edc);
     rot.y = *(u16 *)(data_020a0edc + 2);
     rot.z = *(u16 *)(data_020a0edc + 4);
@@ -1060,7 +1050,7 @@ void daObjHatenaBlock_c::SpawnPrizeFeather() {
 /* POWER_UP_ITEM prize: spawns a POWER_UP_ITEM (param 0) at the prize point. */
 void daObjHatenaBlock_c::SpawnPrizePowerUpItem() {
     Vector3 v;
-    func_ov102_02149684(&v, this);
+    func_ov102_02149684((int *)&v, this);
     dActor_c::Spawn(ACTOR_POWER_UP_ITEM, 0u, v, 0, mAreaId, -1);
 }
 
@@ -1070,7 +1060,7 @@ void daObjHatenaBlock_c::SpawnPrizePowerUpItem() {
    fuse). Callers discard the result of that helper. */
 void daObjHatenaBlock_c::SpawnPrizeBobOmb() {
     Vector3 v;
-    func_ov102_02149684(&v, this);
+    func_ov102_02149684((int *)&v, this);
     daBmb_c *a = (daBmb_c *)dActor_c::Spawn(ACTOR_BOMBHEI, 4, v, 0, mAreaId, -1);
     if (a == 0)
         return;
@@ -1133,7 +1123,7 @@ int daObjHatenaBlock_c::IsHitBlocked() {
     return 0;
 }
 
-extern "C" SpawnInfo<daObjHatenaBlock_c> g_profile_VS_ITEM_BLOCK = {
+extern SpawnInfo<daObjHatenaBlock_c> g_profile_VS_ITEM_BLOCK = {
     daObjHatenaBlock_c_classInit_VS_ITEM_BLOCK,
     0x16,
     0x28,
@@ -1143,7 +1133,7 @@ extern "C" SpawnInfo<daObjHatenaBlock_c> g_profile_VS_ITEM_BLOCK = {
     0x1000000,
     0x1000000};
 
-extern "C" SpawnInfo<daObjHatenaBlock_c> g_profile_HATENA_BLOCK = {
+extern SpawnInfo<daObjHatenaBlock_c> g_profile_HATENA_BLOCK = {
     daObjHatenaBlock_c_classInit_HATENA_BLOCK,
     0x14,
     0x26,
@@ -1153,7 +1143,7 @@ extern "C" SpawnInfo<daObjHatenaBlock_c> g_profile_HATENA_BLOCK = {
     0x1000000,
     0x1000000};
 
-extern "C" SpawnInfo<daObjHatenaBlock_c> g_profile_ITEM_BLOCK = {
+extern SpawnInfo<daObjHatenaBlock_c> g_profile_ITEM_BLOCK = {
     daObjHatenaBlock_c_classInit_ITEM_BLOCK,
     0x15,
     0x27,
@@ -1163,7 +1153,7 @@ extern "C" SpawnInfo<daObjHatenaBlock_c> g_profile_ITEM_BLOCK = {
     0x1000000,
     0x1000000};
 
-extern "C" SpawnInfo<daObjHatenaBlock_c> g_profile_CAP_BLOCK_M = {
+extern SpawnInfo<daObjHatenaBlock_c> g_profile_CAP_BLOCK_M = {
     daObjHatenaBlock_c_classInit_CAP_BLOCK_M,
     0x17,
     0x29,
@@ -1173,7 +1163,7 @@ extern "C" SpawnInfo<daObjHatenaBlock_c> g_profile_CAP_BLOCK_M = {
     0x1000000,
     0x1000000};
 
-extern "C" SpawnInfo<daObjHatenaBlock_c> g_profile_CAP_BLOCK_L = {
+extern SpawnInfo<daObjHatenaBlock_c> g_profile_CAP_BLOCK_L = {
     daObjHatenaBlock_c_classInit_CAP_BLOCK_L,
     0x19,
     0x2b,
@@ -1183,7 +1173,7 @@ extern "C" SpawnInfo<daObjHatenaBlock_c> g_profile_CAP_BLOCK_L = {
     0x1000000,
     0x1000000};
 
-extern "C" SpawnInfo<daObjHatenaBlock_c> g_profile_CAP_BLOCK_W = {
+extern SpawnInfo<daObjHatenaBlock_c> g_profile_CAP_BLOCK_W = {
     daObjHatenaBlock_c_classInit_CAP_BLOCK_W,
     0x18,
     0x2a,

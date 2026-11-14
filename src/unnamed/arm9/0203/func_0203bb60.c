@@ -5,14 +5,14 @@
 #include "PlayerInput.h"
 #include "nitro/spi/tp.h"
 
-extern TPData *func_0203dabc(int idx);
+extern TPData *_Z13func_0203dabci(int idx);
 
 void func_0203bb60(void)
 {
     u8 *p = gTouchHeld;
     int i;
     for (i = 0; i < 4; i++) {
-        TPData *s = func_0203dabc(i);
+        TPData *s = _Z13func_0203dabci(i);
         p[1] = (u8)(s->touch ^ p[0]);
         p[0] = (u8)s->touch;
         p[2] = (u8)s->x;

@@ -2,8 +2,6 @@
 #include "dCamera_c.h"
 #include "math/CalcLib.h"
 
-extern "C" {
-
 extern struct CamMode data_020874cc;
 extern struct CamMode data_020874f4;
 
@@ -16,5 +14,4 @@ void func_02005000(dCamera_c *cam) {
             cam->mMode = &data_020874f4;
     }
     cam->func_02009e70();
-}
 }

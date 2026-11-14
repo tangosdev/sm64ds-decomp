@@ -2,8 +2,6 @@
 #include "Ov007StrokePath.h"
 #include "nitro/fx/fx_cp.h"
 
-extern "C" {
-
 /* Whether the path turns by less than v degrees at point idx - 1
  * (2 <= idx < pointCount): the change between the angles of segments idx - 1
  * and idx, squared, against v's binary angle squared. A negative v never
@@ -19,5 +17,4 @@ int func_ov007_020c2dfc(Ov007StrokePath *path, int idx, int v) {
         return d * d < q * q;
     }
     return 0;
-}
 }

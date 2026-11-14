@@ -60,210 +60,210 @@
       "ordinal": 2
     },
     {
-      "symbol": "RouletteResults_Draw",
+      "symbol": "_Z20RouletteResults_Drawv",
       "address": "0x021079cc",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov006_021079cc.c",
       "ordinal": 3
     },
     {
-      "symbol": "RouletteResults_Tick",
+      "symbol": "_Z20RouletteResults_Tickv",
       "address": "0x02107a6c",
       "size": "0x000000a8",
       "legacy_source": "src/func_ov006_02107a6c.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "RouletteStrip_ResetAll",
+      "symbol": "_Z22RouletteStrip_ResetAllv",
       "address": "0x02107b14",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov006_02107b14.c",
       "ordinal": 5
     },
     {
-      "symbol": "RouletteStrip_LinkAll",
+      "symbol": "_Z21RouletteStrip_LinkAllPc",
       "address": "0x02107b70",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_02107b70.c",
       "ordinal": 6
     },
     {
-      "symbol": "RouletteStrip_DrawRacers",
+      "symbol": "_Z24RouletteStrip_DrawRacersP13RouletteStrip",
       "address": "0x02107b94",
       "size": "0x000000bc",
       "legacy_source": "src/func_ov006_02107b94.c",
       "ordinal": 7
     },
     {
-      "symbol": "RouletteStrip_Draw",
+      "symbol": "_Z18RouletteStrip_DrawP13RouletteStripi",
       "address": "0x02107c50",
       "size": "0x000000d0",
       "legacy_source": "src/func_ov006_02107c50.c",
       "ordinal": 8
     },
     {
-      "symbol": "RouletteStrip_AddRacer",
+      "symbol": "_Z22RouletteStrip_AddRacerP13RouletteStripP13RouletteRacer",
       "address": "0x02107d20",
       "size": "0x00000038",
       "legacy_source": "src/func_ov006_02107d20.c",
       "ordinal": 9
     },
     {
-      "symbol": "RouletteStrip_Reset",
+      "symbol": "_Z19RouletteStrip_ResetP13RouletteStrip",
       "address": "0x02107d58",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_02107d58.c",
       "ordinal": 10
     },
     {
-      "symbol": "RouletteBoard_Draw",
+      "symbol": "_Z18RouletteBoard_DrawPc",
       "address": "0x02107d80",
       "size": "0x00000038",
       "legacy_source": "src/func_ov006_02107d80.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "RouletteBoard_Update",
+      "symbol": "_Z20RouletteBoard_UpdateP13RouletteBoard",
       "address": "0x02107db8",
       "size": "0x000000f0",
       "legacy_source": "src/func_ov006_02107db8.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "RouletteBoard_StateSlow",
+      "symbol": "_Z23RouletteBoard_StateSlowP13RouletteBoard",
       "address": "0x02107ea8",
       "size": "0x0000041c",
       "legacy_source": "src/func_ov006_02107ea8.c",
       "ordinal": 13
     },
     {
-      "symbol": "RouletteBoard_StartSlowdown",
+      "symbol": "_Z27RouletteBoard_StartSlowdownP13RouletteBoard",
       "address": "0x021082c4",
       "size": "0x00000038",
       "legacy_source": "src/func_ov006_021082c4.c",
       "ordinal": 14
     },
     {
-      "symbol": "RouletteBoard_StateSpin",
+      "symbol": "_Z23RouletteBoard_StateSpinP13RouletteBoard",
       "address": "0x021082fc",
       "size": "0x0000020c",
       "legacy_source": "src/func_ov006_021082fc.c",
       "ordinal": 15
     },
     {
-      "symbol": "RouletteBoard_SetStateSpin",
+      "symbol": "_Z26RouletteBoard_SetStateSpinP13RouletteBoard",
       "address": "0x02108508",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov006_02108508.c",
       "ordinal": 16
     },
     {
-      "symbol": "RouletteBoard_StartSpin",
+      "symbol": "_Z23RouletteBoard_StartSpinPc",
       "address": "0x02108524",
       "size": "0x00000068",
       "legacy_source": "src/func_ov006_02108524.c",
       "ordinal": 17
     },
     {
-      "symbol": "RouletteBoard_FreeModels",
+      "symbol": "_Z24RouletteBoard_FreeModelsP13RouletteBoard",
       "address": "0x0210858c",
       "size": "0x00000034",
       "legacy_source": "src/func_ov006_0210858c.c",
       "ordinal": 18
     },
     {
-      "symbol": "RouletteBoard_LoadModels",
+      "symbol": "_Z24RouletteBoard_LoadModelsPc",
       "address": "0x021085c0",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_021085c0.c",
       "ordinal": 19
     },
     {
-      "symbol": "Roulette_TileAt",
+      "symbol": "_Z15Roulette_TileAtii",
       "address": "0x02108650",
       "size": "0x00000540",
       "legacy_source": "src/func_ov006_02108650.c",
       "ordinal": 20
     },
     {
-      "symbol": "RouletteRacer_GetPayout",
+      "symbol": "_Z23RouletteRacer_GetPayoutP13RouletteRaceri",
       "address": "0x02108b90",
       "size": "0x00000130",
       "legacy_source": "src/func_ov006_02108b90.c",
       "ordinal": 21
     },
     {
-      "symbol": "RouletteRacer_Draw",
+      "symbol": "_Z18RouletteRacer_DrawPc",
       "address": "0x02108cc0",
       "size": "0x00000068",
       "legacy_source": "src/func_ov006_02108cc0.c",
       "ordinal": 22
     },
     {
-      "symbol": "RouletteRacer_CheckLandingB",
+      "symbol": "_Z27RouletteRacer_CheckLandingBP13RouletteRacer",
       "address": "0x02108d28",
       "size": "0x000000fc",
       "legacy_source": "src/func_ov006_02108d28.c",
       "ordinal": 23
     },
     {
-      "symbol": "RouletteRacer_CheckLandingA",
+      "symbol": "_Z27RouletteRacer_CheckLandingAP13RouletteRacer",
       "address": "0x02108e24",
       "size": "0x00000108",
       "legacy_source": "src/func_ov006_02108e24.c",
       "ordinal": 24
     },
     {
-      "symbol": "RouletteRacer_Update",
+      "symbol": "_Z20RouletteRacer_UpdateP13RouletteRacer",
       "address": "0x02108f2c",
       "size": "0x00000350",
       "legacy_source": "src/func_ov006_02108f2c.c",
       "ordinal": 25
     },
     {
-      "symbol": "RouletteRacer_Release",
+      "symbol": "_Z21RouletteRacer_ReleaseP13RouletteRacer",
       "address": "0x0210927c",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_0210927c.c",
       "ordinal": 26
     },
     {
-      "symbol": "RouletteRacer_PlaceAtStart",
+      "symbol": "_Z26RouletteRacer_PlaceAtStartPi",
       "address": "0x021092a0",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_021092a0.c",
       "ordinal": 27
     },
     {
-      "symbol": "RouletteRacer_Init",
+      "symbol": "_Z18RouletteRacer_InitP13RouletteRacer",
       "address": "0x021092e8",
       "size": "0x00000074",
       "legacy_source": "src/func_ov006_021092e8.c",
       "ordinal": 28
     },
     {
-      "symbol": "RouletteRacer_MoveToTile",
+      "symbol": "_Z24RouletteRacer_MoveToTileP13RouletteRaceri",
       "address": "0x0210935c",
       "size": "0x00000150",
       "legacy_source": "src/func_ov006_0210935c.c",
       "ordinal": 29
     },
     {
-      "symbol": "RouletteRacer_SetTarget",
+      "symbol": "_Z23RouletteRacer_SetTargetP13RouletteRacerPi",
       "address": "0x021094ac",
       "size": "0x00000084",
       "legacy_source": "src/func_ov006_021094ac.c",
       "ordinal": 30
     },
     {
-      "symbol": "RouletteRacer_SetVelocityToward",
+      "symbol": "_Z31RouletteRacer_SetVelocityTowardP13RouletteRacerPii",
       "address": "0x02109530",
       "size": "0x0000007c",
       "legacy_source": "src/func_ov006_02109530.c",
       "ordinal": 31
     },
     {
-      "symbol": "RouletteRacer_AimAt",
+      "symbol": "_Z19RouletteRacer_AimAtP13RouletteRacerPi",
       "address": "0x021095ac",
       "size": "0x00000020",
       "legacy_source": "src/func_ov006_021095ac.c",
@@ -298,7 +298,7 @@
       "ordinal": 36
     },
     {
-      "symbol": "Roulette_DrawResultsThunk",
+      "symbol": "_Z25Roulette_DrawResultsThunkPc",
       "address": "0x02109aa0",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov006_02109aa0.c",
@@ -1224,202 +1224,202 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@481",
+      "from": "@486",
       "to": "@285",
       "evidence": "mwcc emits @415, already defined in ov022. @285 is unused and no longer. Re-keyed from @415 to @419 (same symtab index 107, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @419 to @427 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @427 to @426 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @426 to @429 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @429 to @420 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @426 to @424 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @426 to @404 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @396 to @399 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @399 to @475 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @475 to @481 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@439",
+      "from": "@444",
       "to": "@249",
       "evidence": "mwcc emits @373, already defined in another module. @249 is unused and no longer. Re-keyed from @373 to @377 (same symtab index 79, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @377 to @385 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @385 to @384 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @384 to @387 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @387 to @378 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @384 to @382 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @384 to @362 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @354 to @357 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @357 to @433 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @433 to @439 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@442",
+      "from": "@447",
       "to": "@251",
       "evidence": "mwcc emits @376, already defined in another module. @251 is unused and no longer. Re-keyed from @376 to @380 (same symtab index 93, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @380 to @388 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @388 to @387 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @387 to @390 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @390 to @381 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @387 to @385 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @387 to @365 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @357 to @360 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @360 to @436 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @436 to @442 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@445",
+      "from": "@450",
       "to": "@257",
       "evidence": "mwcc emits @379, already defined in another module. @257 is unused and no longer. Re-keyed from @379 to @383 (same symtab index 83, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @383 to @391 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @391 to @390 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @390 to @393 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @393 to @384 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @390 to @388 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @390 to @368 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @360 to @363 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @363 to @439 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @439 to @445 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@448",
+      "from": "@453",
       "to": "@256",
       "evidence": "mwcc emits @382, already defined in another module. @256 is unused and no longer. Re-keyed from @382 to @386 (same symtab index 105, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @386 to @394 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @394 to @393 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @393 to @396 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @396 to @387 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @393 to @391 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @393 to @371 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @363 to @366 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @366 to @442 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @442 to @448 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@454",
+      "from": "@459",
       "to": "@258",
       "evidence": "mwcc emits @388, already defined in another module. @258 is unused and no longer. Re-keyed from @388 to @392 (same symtab index 91, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @392 to @400 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @400 to @399 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @399 to @402 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @402 to @393 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @399 to @397 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @399 to @377 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @369 to @372 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @372 to @448 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @448 to @454 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@457",
+      "from": "@462",
       "to": "@268",
       "evidence": "mwcc emits @391, already defined in another module. @268 is unused and no longer. Re-keyed from @391 to @395 (same symtab index 115, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @395 to @403 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @403 to @402 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @402 to @405 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @405 to @396 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @402 to @400 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @402 to @380 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @372 to @375 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @375 to @451 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @451 to @457 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@460",
+      "from": "@465",
       "to": "@269",
       "evidence": "mwcc emits @394, already defined in another module. @269 is unused and no longer. Re-keyed from @394 to @398 (same symtab index 114, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @398 to @406 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @406 to @405 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @405 to @408 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @408 to @399 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @405 to @403 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @405 to @383 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @375 to @378 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @378 to @454 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @454 to @460 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@463",
+      "from": "@468",
       "to": "@176",
       "evidence": "mwcc emits @397, already defined in another module. @176 is unused and no longer. Re-keyed from @397 to @401 (same symtab index 113, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @401 to @409 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @409 to @408 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @408 to @411 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @411 to @402 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @408 to @406 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @408 to @386 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @378 to @381 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @381 to @457 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @457 to @463 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@466",
+      "from": "@471",
       "to": "@270",
       "evidence": "mwcc emits @400, already defined in another module. @270 is unused and no longer. Re-keyed from @400 to @404 (same symtab index 112, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @404 to @412 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @412 to @411 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @411 to @414 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @414 to @405 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @411 to @409 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @411 to @389 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @381 to @384 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @384 to @460 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @460 to @466 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@469",
+      "from": "@474",
       "to": "@271",
       "evidence": "mwcc emits @403, already defined in another module. @271 is unused and no longer. Re-keyed from @403 to @407 (same symtab index 111, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @407 to @415 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @415 to @414 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @414 to @417 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @417 to @408 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @414 to @412 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @414 to @392 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @384 to @387 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @387 to @463 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @463 to @469 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@472",
+      "from": "@477",
       "to": "@274",
       "evidence": "mwcc emits @406, already defined in another module. @274 is unused and no longer. Re-keyed from @406 to @410 (same symtab index 110, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @410 to @418 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @418 to @417 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @417 to @420 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @420 to @411 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @417 to @415 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @417 to @395 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @387 to @390 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @390 to @466 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @466 to @472 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@475",
+      "from": "@480",
       "to": "@280",
       "evidence": "mwcc emits @409, already defined in another module. @280 is unused and no longer. Re-keyed from @409 to @413 (same symtab index 109, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @413 to @421 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @421 to @420 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @420 to @423 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @423 to @414 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @420 to @418 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @420 to @398 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @390 to @393 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @393 to @469 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @469 to @475 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@478",
+      "from": "@483",
       "to": "@281",
       "evidence": "mwcc emits @412, already defined in another module. @281 is unused and no longer. Re-keyed from @412 to @416 (same symtab index 108, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @416 to @424 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @424 to @423 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @423 to @426 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @426 to @417 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @423 to @421 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @423 to @401 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @393 to @396 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @396 to @472 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @472 to @478 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@484",
+      "from": "@489",
       "to": "@180",
       "evidence": "mwcc emits @418, already defined in another module. @180 is unused and no longer. Re-keyed from @418 to @422 (same symtab index 106, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @422 to @430 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @430 to @429 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @429 to @432 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @432 to @423 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @429 to @427 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @429 to @407 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @399 to @402 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @402 to @478 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @478 to @484 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@487",
+      "from": "@492",
       "to": "@279",
       "evidence": "mwcc emits @421, already defined in another module. @279 is unused and no longer. Re-keyed from @421 to @425 (same symtab index 84, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @425 to @433 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @433 to @432 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @432 to @435 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @435 to @426 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @432 to @430 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @432 to @410 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @402 to @405 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @405 to @481 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @481 to @487 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@490",
+      "from": "@495",
       "to": "@179",
       "evidence": "mwcc emits @424, already defined in another module. @179 is unused and no longer. Re-keyed from @424 to @428 (same symtab index 85, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @428 to @436 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @436 to @435 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @435 to @438 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @438 to @429 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @435 to @433 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @435 to @413 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @405 to @408 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @408 to @484 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @484 to @490 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@493",
+      "from": "@498",
       "to": "@272",
       "evidence": "mwcc emits @427, already defined in another module. @272 is unused and no longer. Re-keyed from @427 to @431 (same symtab index 103, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @431 to @439 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @439 to @438 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @438 to @441 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @441 to @432 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @438 to @436 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @438 to @416 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @408 to @411 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @411 to @487 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @487 to @493 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@508",
+      "from": "@513",
       "to": "@178",
       "evidence": "mwcc emits @442, already defined in another module. @178 is unused and no longer. Re-keyed from @442 to @446 (same symtab index 100, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @446 to @454 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @454 to @453 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @453 to @456 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @456 to @447 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @453 to @451 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @453 to @431 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @423 to @426 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @426 to @502 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @502 to @508 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@511",
+      "from": "@516",
       "to": "@177",
       "evidence": "mwcc emits @445, already defined in another module. @177 is unused and no longer. Re-keyed from @445 to @449 (same symtab index 102, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @449 to @457 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @457 to @456 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @456 to @459 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @459 to @450 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @456 to @454 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @456 to @434 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @426 to @429 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @429 to @505 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @505 to @511 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@520",
+      "from": "@525",
       "to": "@244",
       "evidence": "mwcc emits @454, already defined in another module. @244 is unused and no longer. Re-keyed from @454 to @458 (same symtab index 95, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @458 to @466 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @466 to @465 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @465 to @468 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @468 to @459 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @465 to @463 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @465 to @443 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @435 to @438 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @438 to @514 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @514 to @520 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@523",
+      "from": "@528",
       "to": "@255",
       "evidence": "mwcc emits @457, already defined in another module. @255 is unused and no longer. Re-keyed from @457 to @461 (same symtab index 94, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @461 to @469 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @469 to @468 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @468 to @471 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @471 to @462 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @468 to @466 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @468 to @446 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @438 to @441 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @441 to @517 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @517 to @523 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@526",
+      "from": "@531",
       "to": "@254",
       "evidence": "mwcc emits @460, already defined in another module. @254 is unused and no longer. Re-keyed from @460 to @464 (same symtab index 81, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @464 to @472 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @472 to @471 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @471 to @474 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @474 to @465 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @471 to @469 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @471 to @449 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @441 to @444 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @444 to @520 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @520 to @526 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@529",
+      "from": "@534",
       "to": "@252",
       "evidence": "mwcc emits @463, already defined in another module. @252 is unused and no longer. Re-keyed from @463 to @467 (same symtab index 92, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @467 to @475 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @475 to @474 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @474 to @477 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @477 to @468 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @474 to @472 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @474 to @452 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @444 to @447 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @447 to @523 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @523 to @529 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@532",
+      "from": "@537",
       "to": "@245",
       "evidence": "mwcc emits @466, already defined in another module. @245 is unused and no longer. Re-keyed from @466 to @470 (same symtab index 80, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @470 to @478 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @478 to @477 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @477 to @480 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @480 to @471 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @477 to @475 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @477 to @455 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @447 to @450 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @450 to @526 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @526 to @532 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@535",
+      "from": "@540",
       "to": "@250",
       "evidence": "mwcc emits @469, already defined in another module. @250 is unused and no longer. Re-keyed from @469 to @473 (same symtab index 90, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @473 to @481 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @481 to @480 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @480 to @483 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @483 to @474 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @480 to @478 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @480 to @458 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @450 to @453 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @453 to @529 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @529 to @535 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@538",
+      "from": "@543",
       "to": "@246",
       "evidence": "mwcc emits @472, already defined in another module. @246 is unused and no longer. Re-keyed from @472 to @476 (same symtab index 89, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @476 to @484 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @484 to @483 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @483 to @486 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @486 to @477 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @483 to @481 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @483 to @461 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @453 to @456 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @456 to @532 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @532 to @538 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@541",
+      "from": "@546",
       "to": "@247",
       "evidence": "mwcc emits @475, already defined in another module. @247 is unused and no longer. Re-keyed from @475 to @479 (same symtab index 88, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @479 to @487 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @487 to @486 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @486 to @489 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @489 to @480 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @486 to @484 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @486 to @464 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @456 to @459 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @459 to @535 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @535 to @541 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@547",
+      "from": "@552",
       "to": "@248",
       "evidence": "mwcc emits @481, already defined in another module. @248 is unused and no longer. Re-keyed from @481 to @485 (same symtab index 86, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @485 to @493 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @493 to @492 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @492 to @495 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @495 to @486 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @492 to @490 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @492 to @470 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @462 to @465 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @465 to @541 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @541 to @547 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@897",
+      "from": "@891",
       "to": "@181",
       "evidence": "mwcc emits @867, already defined in another module. @181 is unused and no longer. Re-keyed from @866 to @868 (same symtab index 82, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @868 to @873 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @873 to @872 (same relocation sites, every section identical) after InitResources spelled its display registers through the REG_ macros. Re-keyed from @872 to @856 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @856 to @859 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @859 to @850 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @856 to @854 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @856 to @834 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @826 to @829 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @829 to @828 when d_s_mg_roulette_methods dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @828 to @896 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @896 to @897 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "_ZGVsRouletteRacerGoal$894",
+      "from": "_ZGVsRouletteRacerGoal$888",
       "to": "sRouletteRacerGoalGuard",
       "evidence": "function-local guard emitted as _ZGVsRouletteRacerGoal$863; the configured name is shorter Re-keyed from _ZGVsRouletteRacerGoal$863 to _ZGVsRouletteRacerGoal$865 (same symtab index 77, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from _ZGVsRouletteRacerGoal$865 to _ZGVsRouletteRacerGoal$870 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from _ZGVsRouletteRacerGoal$870 to _ZGVsRouletteRacerGoal$869 (same relocation sites, every section identical) after InitResources spelled its display registers through the REG_ macros. Re-keyed from _ZGVsRouletteRacerGoal$869 to _ZGVsRouletteRacerGoal$853 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from _ZGVsRouletteRacerGoal$853 to _ZGVsRouletteRacerGoal$856 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from _ZGVsRouletteRacerGoal$856 to _ZGVsRouletteRacerGoal$847 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from _ZGVsRouletteRacerGoal$853 to _ZGVsRouletteRacerGoal$851 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from _ZGVsRouletteRacerGoal$853 to _ZGVsRouletteRacerGoal$831 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsRouletteRacerGoal$823 to _ZGVsRouletteRacerGoal$826 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from _ZGVsRouletteRacerGoal$826 to _ZGVsRouletteRacerGoal$825 when d_s_mg_roulette_methods dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from _ZGVsRouletteRacerGoal$825 to _ZGVsRouletteRacerGoal$893 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from _ZGVsRouletteRacerGoal$893 to _ZGVsRouletteRacerGoal$894 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "sRouletteRacerGoal$894",
+      "from": "sRouletteRacerGoal$888",
       "to": "sRouletteRacerGoal",
       "evidence": "function-local Vector2 emitted as sRouletteRacerGoal$863; the configured name is shorter Re-keyed from sRouletteRacerGoal$863 to sRouletteRacerGoal$865 (same symtab index 78, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from sRouletteRacerGoal$865 to sRouletteRacerGoal$870 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from sRouletteRacerGoal$870 to sRouletteRacerGoal$869 (same relocation sites, every section identical) after InitResources spelled its display registers through the REG_ macros. Re-keyed from sRouletteRacerGoal$869 to sRouletteRacerGoal$853 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from sRouletteRacerGoal$853 to sRouletteRacerGoal$856 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from sRouletteRacerGoal$856 to sRouletteRacerGoal$847 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from sRouletteRacerGoal$853 to sRouletteRacerGoal$851 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from sRouletteRacerGoal$853 to sRouletteRacerGoal$831 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sRouletteRacerGoal$823 to sRouletteRacerGoal$826 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from sRouletteRacerGoal$826 to sRouletteRacerGoal$825 when d_s_mg_roulette_methods dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from sRouletteRacerGoal$825 to sRouletteRacerGoal$893 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from sRouletteRacerGoal$893 to sRouletteRacerGoal$894 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@544",
+      "from": "@549",
       "to": "@478",
       "evidence": "mwcc emitted @478, its ROM name, until include/MgCamera.h typed the minigame camera; it now emits @482 at the same symtab index 87, with every non-strtab section identical. Re-keyed from @482 to @490 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @490 to @489 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @489 to @492 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @492 to @483 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @489 to @487 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @489 to @467 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @459 to @462 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @462 to @538 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @538 to @544 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@517",
+      "from": "@522",
       "to": "@451",
       "evidence": "mwcc emitted @451, its ROM name, until include/MgCamera.h typed the minigame camera; it now emits @455 at the same symtab index 96, with every non-strtab section identical. Re-keyed from @455 to @463 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @463 to @462 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @462 to @465 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @465 to @456 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @462 to @460 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @462 to @440 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @432 to @435 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @435 to @511 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @511 to @517 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@496",
+      "from": "@501",
       "to": "@430",
       "evidence": "mwcc emitted @430, its ROM name, until include/MgCamera.h typed the minigame camera; it now emits @434 at the same symtab index 97, with every non-strtab section identical. Re-keyed from @434 to @442 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @442 to @441 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @441 to @444 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @444 to @435 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @441 to @439 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @441 to @419 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @411 to @414 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @414 to @490 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @490 to @496 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@502",
+      "from": "@507",
       "to": "@436",
       "evidence": "mwcc emitted @436, its ROM name, until include/MgCamera.h typed the minigame camera; it now emits @440 at the same symtab index 98, with every non-strtab section identical. Re-keyed from @440 to @448 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @448 to @447 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @447 to @450 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @450 to @441 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @447 to @445 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @447 to @425 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @417 to @420 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @420 to @496 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @496 to @502 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@505",
+      "from": "@510",
       "to": "@439",
       "evidence": "mwcc emitted @439, its ROM name, until include/MgCamera.h typed the minigame camera; it now emits @443 at the same symtab index 99, with every non-strtab section identical. Re-keyed from @443 to @451 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @451 to @450 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @450 to @453 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @453 to @444 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @450 to @448 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @450 to @428 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @420 to @423 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @423 to @499 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @499 to @505 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@499",
+      "from": "@504",
       "to": "@433",
       "evidence": "mwcc emitted @433, its ROM name, until include/MgCamera.h typed the minigame camera; it now emits @437 at the same symtab index 101, with every non-strtab section identical. Re-keyed from @437 to @445 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @445 to @444 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @444 to @447 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @447 to @438 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @444 to @442 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @444 to @422 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @414 to @417 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @417 to @493 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @493 to @499 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@514",
+      "from": "@519",
       "to": "@448",
       "evidence": "mwcc emitted @448, its ROM name, until include/MgCamera.h typed the minigame camera; it now emits @452 at the same symtab index 104, with every non-strtab section identical. Re-keyed from @452 to @460 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @460 to @459 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @459 to @462 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @462 to @453 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @459 to @457 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @459 to @437 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @429 to @432 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @432 to @508 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @508 to @514 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@451",
+      "from": "@456",
       "to": "@385",
       "evidence": "mwcc emitted @385, its ROM name, until include/MgCamera.h typed the minigame camera; it now emits @389 at the same symtab index 116, with every non-strtab section identical. Re-keyed from @389 to @397 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @397 to @396 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @396 to @399 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @399 to @390 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @396 to @394 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @396 to @374 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @366 to @369 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @369 to @445 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @445 to @451 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     }

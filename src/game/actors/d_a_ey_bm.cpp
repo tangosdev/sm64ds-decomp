@@ -76,12 +76,12 @@ static inline int IsPlayerActor(dActor_c *actor) {
 
 /* `new` calls the inherited fBase_c::operator new; the implicit constructor
  * emits the measured dActor_c C2, vptr store, and three member C1s. */
-extern "C" daEyBm_c *daEyBm_c_classInit() {
+daEyBm_c *daEyBm_c_classInit() {
     return new daEyBm_c();
 }
 
 /* The actor-table descriptor, at ov071:0x02122dc4. */
-extern "C" SpawnInfo<daEyBm_c> g_profile_EYEKUN_BEAM = {
+SpawnInfo<daEyBm_c> g_profile_EYEKUN_BEAM = {
     daEyBm_c_classInit, 0x0108, 0x007a, 0x00000002, 0, 0x00019000, 0x01000000, 0x01000000};
 
 int daEyBm_c::InitResources() {

@@ -15,84 +15,84 @@
   ],
   "functions": [
     {
-      "symbol": "NNS_FndGetPrevListObject",
+      "symbol": "_Z24NNS_FndGetPrevListObjectP10NNSFndListPv",
       "address": "0x0204dcfc",
       "size": "0x14",
       "ordinal": 0,
       "legacy_source": "src/_ZN18NestedHeapIterator8PreviousEP13HeapAllocator.cpp"
     },
     {
-      "symbol": "NNS_FndGetNextListObject",
+      "symbol": "_Z24NNS_FndGetNextListObjectP10NNSFndListPv",
       "address": "0x0204dd10",
       "size": "0x18",
       "ordinal": 1,
       "legacy_source": "src/_ZN18NestedHeapIterator4NextEP13HeapAllocator.cpp"
     },
     {
-      "symbol": "NNS_FndRemoveListObject",
+      "symbol": "_Z23NNS_FndRemoveListObjectP10NNSFndListPv",
       "address": "0x0204dd28",
       "size": "0x70",
       "ordinal": 2,
       "legacy_source": "src/_ZN18NestedHeapIterator6RemoveEP13HeapAllocator.cpp"
     },
     {
-      "symbol": "NNS_FndInsertListObject",
+      "symbol": "_Z23NNS_FndInsertListObjectP10NNSFndListPvS1_",
       "address": "0x0204dd98",
       "size": "0x74",
       "ordinal": 3,
       "legacy_source": "src/_ZN18NestedHeapIterator5AddAtEP13HeapAllocatorS1_.cpp"
     },
     {
-      "symbol": "NNS_FndPrependListObject",
+      "symbol": "_Z24NNS_FndPrependListObjectP10NNSFndListPv",
       "address": "0x0204de0c",
       "size": "0x68",
       "ordinal": 4,
       "legacy_source": "src/_ZN18NestedHeapIterator8AddFirstEP13HeapAllocator.cpp"
     },
     {
-      "symbol": "NNS_FndAppendListObject",
+      "symbol": "_Z23NNS_FndAppendListObjectP10NNSFndListPv",
       "address": "0x0204de74",
       "size": "0x6c",
       "ordinal": 5,
       "legacy_source": "src/_ZN18NestedHeapIterator7AddLastEP13HeapAllocator.cpp"
     },
     {
-      "symbol": "SetFirstObject",
+      "symbol": "_Z14SetFirstObjectP10NNSFndListPv",
       "address": "0x0204dee0",
       "size": "0x40",
       "ordinal": 6,
       "legacy_source": "src/_ZN18NestedHeapIterator4InitEP13HeapAllocator.cpp"
     },
     {
-      "symbol": "NNS_FndInitList",
+      "symbol": "_Z15NNS_FndInitListP10NNSFndListt",
       "address": "0x0204df20",
       "size": "0x18",
       "ordinal": 7,
       "legacy_source": "src/_ZN18NestedHeapIteratorC1Ej.cpp"
     },
     {
-      "symbol": "NNSi_FndFinalizeHeap",
+      "symbol": "_Z20NNSi_FndFinalizeHeapP15NNSiFndHeapHead",
       "address": "0x0204df38",
       "size": "0x1c",
       "ordinal": 8,
       "legacy_source": "src/_ZN13HeapAllocator6RemoveEv.cpp"
     },
     {
-      "symbol": "NNSi_FndInitHeapHead",
+      "symbol": "_Z20NNSi_FndInitHeapHeadP15NNSiFndHeapHeadjPvS1_t",
       "address": "0x0204df54",
       "size": "0x94",
       "ordinal": 9,
       "legacy_source": "src/func_0204df54.cpp"
     },
     {
-      "symbol": "FindListContainHeap",
+      "symbol": "_Z19FindListContainHeapPKv",
       "address": "0x0204dfe8",
       "size": "0x2c",
       "ordinal": 10,
       "legacy_source": "src/_ZN18NestedHeapIterator10FindNestedEPv.cpp"
     },
     {
-      "symbol": "FindContainHeap",
+      "symbol": "_Z15FindContainHeapP10NNSFndListPKv",
       "address": "0x0204e014",
       "size": "0x70",
       "ordinal": 11,

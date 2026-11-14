@@ -42,28 +42,28 @@
       "legacy_source": "src/game/actors/daTrsTrap_c/d_a_trs_trap_teresapit.c",
       "ordinal": 2,
       "size": "0x00000040",
-      "symbol": "daTrsTrap_c_classInit_TERESAPIT"
+      "symbol": "_Z31daTrsTrap_c_classInit_TERESAPITv"
     },
     {
       "address": "0x0211d2e0",
       "legacy_source": "src/game/actors/daTrsTrap_c/d_a_trs_trap_merrygoround.c",
       "ordinal": 3,
       "size": "0x00000040",
-      "symbol": "daTrsTrap_c_classInit_MERRYGOROUND"
+      "symbol": "_Z34daTrsTrap_c_classInit_MERRYGOROUNDv"
     },
     {
       "address": "0x0211d320",
       "legacy_source": "src/game/actors/daTrsTrap_c/d_a_trs_trap_bookshelf.c",
       "ordinal": 4,
       "size": "0x00000040",
-      "symbol": "daTrsTrap_c_classInit_BOOKSHELF"
+      "symbol": "_Z31daTrsTrap_c_classInit_BOOKSHELFv"
     },
     {
       "address": "0x0211d360",
       "legacy_source": "src/game/actors/daTrsTrap_c/d_a_trs_trap_kaidan.c",
       "ordinal": 5,
       "size": "0x00000040",
-      "symbol": "daTrsTrap_c_classInit_KAIDAN"
+      "symbol": "_Z28daTrsTrap_c_classInit_KAIDANv"
     }
   ],
   "id": "ov063/daTrsTrap_c_classInit",

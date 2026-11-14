@@ -278,7 +278,7 @@
       "ordinal": 33
     },
     {
-      "symbol": "daBmb_c_classInit",
+      "symbol": "_Z17daBmb_c_classInitv",
       "address": "0x0214c6f8",
       "size": "0x00000050",
       "legacy_source": "src/d_a_bmb.c",
@@ -361,7 +361,7 @@
       "source": "0x0214e534",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daBmb_c_classInit",
+      "symbol": "_Z17daBmb_c_classInitv",
       "addend": 0,
       "target_module": "ov102",
       "target_address": "0x0214c6f8"

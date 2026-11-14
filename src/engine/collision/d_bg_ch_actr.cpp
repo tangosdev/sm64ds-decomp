@@ -27,15 +27,13 @@
 #include "dActor_c.h"
 #include "daPly_c.h"
 
-extern "C" {
-
 /* Checker-family helpers shared across the collision TUs, spelled as
    defined. */
-int  func_02037dc4(int p);   /* SurfaceInfo * -> Vector3 * (the hit normal) */
+int func_02037dc4(int p);
+/* SurfaceInfo * -> Vector3 * (the hit normal) */
 void dBgS_RideCallBack(int a, int b);
 void dBgS_MoveBgCrrPos(void *arg, int b, int c, int d);
 int  SurfaceInfo_TestFlag0x20(int *p);
-}
 
 /* Lifecycle first; the group emits at the run's tail. Both bodies are empty:
    the class header supplies the base step, the vtable store, the two typed
@@ -60,7 +58,7 @@ void dBgCh_Actr::Init(dActor_c *actor, Fix12i radius, Fix12i height, Vector3_16 
 /* Latch the sphere query's floor normal (the floor contact with the greatest
    Y, see dBgCh_SphCrr.h) into mGroundNormal on a grounded frame. Flag 0x100
    marks the latched normal valid; func_020371fc reads it. */
-extern "C" void func_02037318(dBgCh_Actr *clsn) {
+void func_02037318(dBgCh_Actr *clsn) {
     const int *src;
 
     clsn->mFlags &= ~0x100;
@@ -78,8 +76,7 @@ extern "C" void func_02037318(dBgCh_Actr *clsn) {
 /* The ground-snap step run once per landing: when the sphere query flagged a
    floor hit and the actor is close to a dBgCh_Gnd probed surface, snap the
    actor's position onto it and raise the on-ground state. */
-extern "C" void func_020371fc(char *self)
-{
+void func_020371fc(char *self) {
     dBgCh_Actr *clsn = (dBgCh_Actr *)self;
     if ((clsn->mSphereClsn.flags & 1) == 0) return;
     if ((clsn->mSphereClsn.flags & 8) == 0) return;
@@ -862,7 +859,7 @@ void dBgCh_Actr::Unk_0203589c()
 }
 
 /* Copy a vector into the actor's current and previous position fields. */
-extern "C" void func_02035860(dBgCh_Actr *self, const Vector3 *src) {
+void func_02035860(dBgCh_Actr *self, const Vector3 *src) {
     dActor_c *base = self->mActor;
     struct Vector3 *d1 = &base->mPos;
     d1->x = src->x;
@@ -909,7 +906,7 @@ void dBgCh_Actr::StopIgnoringType14Walls() {
     mSphereClsn.StopIgnoringType14Walls();
 }
 
-extern "C" void func_02035798(dBgCh_Actr *self, Fix12i maxNormalY) {
+void func_02035798(dBgCh_Actr *self, Fix12i maxNormalY) {
     self->mMaxNormalY = maxNormalY;
 }
 
@@ -1005,17 +1002,15 @@ dBgPi *dBgCh_Actr::GetWallResult() const {
     return const_cast<dBgCh_SphCrr &>(mSphereClsn).GetWallResult();
 }
 
-extern "C" void *func_0203564c(void *p) {
+void *func_0203564c(void *p) {
     return ((dBgCh_Actr *)p)->mSphereClsn.GetUnderResult();
 }
 
-extern "C" void func_02035644(int *p, int v)
-{
+void func_02035644(int *p, int v) {
     p[67] = v; /* mSphereClsn's wall-rejection half extent (its +0xec) */
 }
 
-extern "C" int func_02035638(unsigned char *p)
-{
+int func_02035638(unsigned char *p) {
     return p[144] & 16;   /* mSphereClsn.flags & 0x10 -- the ceiling bit */
 }
 

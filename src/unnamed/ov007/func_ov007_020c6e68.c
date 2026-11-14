@@ -20,6 +20,8 @@
 
 extern int func_ov007_020c249c(Ov007StrokePath *path);
 extern Ov007Link *func_ov007_020c80a4(void);
+#define func_ov007_020c8010 _Z19func_ov007_020c8010P9Ov007LinkP13Ov007FollowerS2_
+#define func_ov007_020bfe4c _Z19func_ov007_020bfe4cP11Ov007CameraiiiP7Vector3
 extern void func_ov007_020c8010(Ov007Link *link, Ov007Follower *from, Ov007Follower *to);
 extern void func_ov007_020bfe4c(Ov007Camera *cam, int a, int b, int c, Vector3 *out);
 
@@ -53,7 +55,7 @@ void func_ov007_020c6e68(Ov007Picker *self, int idx) {
     dx = px[0] - px[last];
     dz = pz[0] - pz[last];
     lensq = FX_MUL(dx, dx) + FX_MUL(dz, dz);
-    if (FX_Sqrt(lensq) <= proj)
+    if (_Z7FX_Sqrti(lensq) <= proj)
         flag |= 2;
 
     {

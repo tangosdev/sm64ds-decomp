@@ -6,8 +6,6 @@
 #include "nitro/hw/registers.h"
 #include "private/controller_input.h"
 
-extern "C" {
-
 extern int data_0209d50c;
 extern unsigned char data_0209d4e8;
 extern PadData data_020a0e58[];
@@ -19,20 +17,38 @@ extern unsigned char data_0209ee90[];
 extern int data_0209d514;
 extern unsigned char gSoundInitialized;
 extern unsigned char data_0209e64c;
+extern "C" {
 
 void func_02019ac4(void);
+}
+
 void func_02019390(void);
+extern "C" {
+
 void func_0203bb60(void);
 void func_0203bc7c(void);
+}
+
 void func_02023498(void);
 void func_02044120(void);
 void func_02019404(void);
+extern "C" {
+
 void func_020190b8(void);
+}
+
 void func_0201a4bc(void);
+extern "C" {
+
 void func_0201ffcc(void);
+}
+
 void func_020132d8(void);
 unsigned short func_0203da80(unsigned short);
+extern "C" {
+
 int func_02030e4c(void);
+}
 
 /* The main loop (main.cpp), never returning. data_0209d50c records the
    step it is in. Each frame: the lid check (func_02019ac4), the frame
@@ -81,5 +97,4 @@ void func_020197b8(void) {
         if (data_0209e64c != 0 || func_0203da80(0x9d) != 0)
             func_02030e4c();
     } while (1);
-}
 }

@@ -158,7 +158,6 @@ enum {
     SND_TUMBLE_BOUNCE_LATER = 0x13b   /* second and third bounce */
 };
 
-extern "C" {
 /* data_ov084_02130cf8 is the BMD this TU LoadFile / Release. The other
    six handles are never passed to a SharedFilePtr method; this TU reads
    filePtr as the loaded BCA. Selected by role (see SetAnim calls):
@@ -178,30 +177,32 @@ extern KrbAnimationFileHandle data_ov084_02130cf0;
 extern KrbModelFilePtr data_ov084_02130cf8;
 extern KrbModelFilePtr gKuriboLowModelModelFile;
 extern StateHandler data_ov084_02130d74[];
-int func_02037e20(int *p);
-extern void func_02012694(unsigned int id, const Vector3 *pos);
-extern int SurfaceInfo_TestFlag0x20(int *p);
+int func_02037e20(int* p);
+void func_02012694(unsigned int id, const Vector3 *pos);
+int SurfaceInfo_TestFlag0x20(int *p);
 extern u8 data_0209f208[];
 extern u8 *data_0209f344;
 /* Three-register reconstructed interface; death-state stores also use r3. */
-extern void func_ov002_020aea30(void *self, void *actor, void *collision);
+extern "C" struct Aea30C;
+void func_ov002_020aea30(Aea30C *self, dActor_c *actor, dBgCh_Actr *collision);
 extern BMA_File data_ov084_0213088c;
 extern int data_ov084_02130248[];
 extern u8 data_ov084_02130204[];
 extern int data_ov084_02130228[];
 extern int data_ov084_02130268[];
-extern void func_ov074_0212087c(Vector3 *out, void *player, u8 flag);
-extern int Math_Function_0203b14c(int *v, int target, int a, int b, int c);
+void func_ov074_0212087c(int *out, daKuriKing_c *player, int flag);
+extern "C" int Math_Function_0203b14c(int *v, int target, int a, int b, int c);
 extern s8 gCurrentSublevel;
 void LoadSilverStarAndNumber(void);
 /* Parameter names keep this TU's @NNN. */
+extern "C" {
 typedef void BgchInitAt_(void *self, void *a, Fix12i b, Fix12i cc, void *d, Fix12i e);
+}
 extern SharedFilePtr *const sKuriboAnimationFiles[7];
 extern int data_ov084_02130258[];
 extern int data_ov084_02130208[];
 extern int data_ov084_02130238[];
 extern int data_ov084_02130218[];
-}
 
 daKrb_c::~daKrb_c()
 {
@@ -445,14 +446,13 @@ void daKrb_c::func_ov084_021294d0() {
 
 /* Set the home position (mHomePos) from a three-word position. daKuriKing_c
  * calls this on each minion it spawns, after the Spawn. */
-extern "C" {
+
 void func_ov084_021296b0(void *a, void *b) {
     daKrb_c *goomba = (daKrb_c *)a;
     int *pos = (int *)b;
     goomba->mHomePos.x = pos[0];
     goomba->mHomePos.y = pos[1];
     goomba->mHomePos.z = pos[2];
-}
 }
 
 /* Pay out the reward the Goomba carries (mRewardType), then clear bits 4..7
@@ -621,7 +621,7 @@ int daKrb_c::func_ov084_02129a00() {
         if (goomba->SpawnParticlesIfHitOtherObj(goomba->mdCcAc_c) != 0) {
             void *actor = dActor_c::FindWithID(goomba->mdCcAc_c.otherOwner);
             goomba->mDeathState = daKrb_c::DEATH_HIT_20000;
-            func_ov002_020aea30(goomba, actor, &goomba->mWithMeshClsn);
+            func_ov002_020aea30((Aea30C *)goomba, (dActor_c *)actor, &goomba->mWithMeshClsn);
             goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce0.filePtr, 0x40000000, 0x1000,
                                       0);
             goomba->mdCcAc_c.flags |= 1;
@@ -970,7 +970,7 @@ void daKrb_c::func_ov084_02129ed4() {
         capReleaseOnExit.z = 0; /* 108.0 */
         goomba->ReleaseCap(capReleaseOnExit);
     }
-    func_ov002_020aea30(goomba, other, &goomba->mWithMeshClsn);
+    func_ov002_020aea30((Aea30C *)goomba, (dActor_c *)other, &goomba->mWithMeshClsn);
     if (turnAround != 0) {
         goomba->mAngleY = (goomba->mPrevAngleY + 0x8000); /* half a turn */
     }
@@ -1142,7 +1142,7 @@ void daKrb_c::ActTumble() {
     if (goomba->SpawnParticlesIfHitOtherObj(goomba->mdCcAc_c) != 0) {
         void *a = dActor_c::FindWithID(goomba->mdCcAc_c.otherOwner);
         goomba->mDeathState = daKrb_c::DEATH_HIT_20000;
-        func_ov002_020aea30(goomba, a, &goomba->mWithMeshClsn);
+        func_ov002_020aea30((Aea30C *)goomba, (dActor_c *)a, &goomba->mWithMeshClsn);
         goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce0.filePtr, 0x40000000, 0x1000, 0);
         goomba->mdCcAc_c.flags |= 1;
     }
@@ -1356,7 +1356,7 @@ void daKrb_c::func_ov084_0212af74() {
         goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce8.filePtr, 0, 0x1000, 0);
     }
 
-    func_ov074_0212087c(&targetPos, king, goomba->mMinionIndex);
+    func_ov074_0212087c((int *)&targetPos, king, goomba->mMinionIndex);
 
     if (ApproachAngle(&goomba->mPrevAngleY, goomba->mInitAngleY, 4, 0x1000, 0x400) == 0 &&
         goomba->mWithMeshClsn.IsOnGround() != 0)
@@ -1878,22 +1878,19 @@ int daKrb_c::OnYoshiTryEat()
     return 0;
 }
 
-extern "C" daKrb_c *daKrb_c_classInit_KURIBO_L()
-{
+daKrb_c *daKrb_c_classInit_KURIBO_L() {
     return new daKrb_c();
 }
 
-extern "C" daKrb_c *daKrb_c_classInit_KURIBO_S()
-{
+daKrb_c *daKrb_c_classInit_KURIBO_S() {
     return new daKrb_c();
 }
 
-extern "C" daKrb_c *daKrb_c_classInit_KURIBO()
-{
+daKrb_c *daKrb_c_classInit_KURIBO() {
     return new daKrb_c();
 }
 
-extern "C" SpawnInfo<daKrb_c> g_profile_KURIBO = {
+SpawnInfo<daKrb_c> g_profile_KURIBO = {
     daKrb_c_classInit_KURIBO,
     0x00c8, /* KURIBO registry id 200 */
     0x0018,
@@ -1904,7 +1901,7 @@ extern "C" SpawnInfo<daKrb_c> g_profile_KURIBO = {
     0x01000000,
 };
 
-extern "C" SpawnInfo<daKrb_c> g_profile_KURIBO_S = {
+SpawnInfo<daKrb_c> g_profile_KURIBO_S = {
     daKrb_c_classInit_KURIBO_S,
     0x00c9,
     0x0019,
@@ -1915,7 +1912,7 @@ extern "C" SpawnInfo<daKrb_c> g_profile_KURIBO_S = {
     0x00800000,
 };
 
-extern "C" SpawnInfo<daKrb_c> g_profile_KURIBO_L = {
+SpawnInfo<daKrb_c> g_profile_KURIBO_L = {
     daKrb_c_classInit_KURIBO_L,
     0x00ca,
     0x001a,
@@ -1951,9 +1948,7 @@ StateHandler data_ov084_02130d74[5] = {
     &daKrb_c::ActPause,         /* STATE_PAUSE */
 };
 
-extern "C" {
 SharedFilePtr *const sKuriboAnimationFiles[7] = {
     &data_ov084_02130ce8,         &data_ov084_02130ce0, &data_ov084_02130cd0, &data_ov084_02130cc0,
     &gKuriboRecoverAnimationFile, &data_ov084_02130cc8, &data_ov084_02130cf0,
 };
-}

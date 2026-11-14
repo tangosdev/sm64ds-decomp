@@ -283,7 +283,7 @@ int daBgSnmHed_c::InitResources() {
     return 1;
 }
 
-extern "C" daBgSnmHed_c *daBgSnmHed_c_classInit() {
+daBgSnmHed_c *daBgSnmHed_c_classInit() {
     return new daBgSnmHed_c();
 }
 

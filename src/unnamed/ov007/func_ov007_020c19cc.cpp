@@ -7,9 +7,8 @@
  * this one, and g3imm_cmd.h has no G3_VtxXY. */
 #define REG_VTX_XY (*(volatile u32 *)0x04000494)
 
-extern "C" {
-extern void MTX_RotZ33_(int *m, int s, int c);
-extern void G3_MultTransMtx33(int *a, int *v);
+extern "C" void MTX_RotZ33_(int *m, int s, int c);
+extern "C" void G3_MultTransMtx33(int *a, int *v);
 
 /* Draws a ribbon `half` units either side of the point path `pts` as one
  * quad strip: at each point it pushes a matrix, turns to the mean of the
@@ -129,5 +128,4 @@ void func_ov007_020c19cc(int count, Vector3 *pts, int half, int t) {
         } while (i < count);
     }
     G3_End();
-}
 }

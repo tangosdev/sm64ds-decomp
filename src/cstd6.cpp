@@ -20,14 +20,10 @@
 #include "nitro/os/mutex.h"
 #include "msl/critical_regions.h"
 
-extern "C" {
 extern unsigned int random_next;
 extern void exit(int status);
 typedef void (*sig_func)(int);
 extern sig_func signal_funcs[];
-}
-
-extern "C" {
 
 unsigned int strlen(const char *s)
 {
@@ -40,9 +36,6 @@ unsigned int strlen(const char *s)
   return n;
 }
 
-}
-
-extern "C" {
 char *strcpy(char *dst, const char *src) {
     u8 *s = (u8 *)src;
     u8 *d = (u8 *)dst;
@@ -84,9 +77,6 @@ char *strcpy(char *dst, const char *src) {
     } while (*d2 != 0);
     return dst;
 }
-}
-
-extern "C" {
 
 char *strncpy(char *dst, const char *src, unsigned int n)
 {
@@ -105,9 +95,6 @@ char *strncpy(char *dst, const char *src, unsigned int n)
   return dst;
 }
 
-}
-
-extern "C" {
 int strcmp(const char *a, const char *b) {
     unsigned int wb, wa, t;
     unsigned int cnt;
@@ -173,9 +160,7 @@ int strcmp(const char *a, const char *b) {
             return 0;
     }
 }
-}
 
-extern "C" {
 char *strchr(const char *s, int ch_in) {
     unsigned char ch = ch_in;
     unsigned char c = *s;
@@ -189,7 +174,6 @@ char *strchr(const char *s, int ch_in) {
     if (ch != 0) return 0;
     return (char *)(p - 1);
 }
-}
 
 /* MSL raise (signal.c), statement for statement with Spirit Tracks' copy:
    signals 1..7 (__signal_max), the handler table signal_funcs read and
@@ -197,7 +181,7 @@ char *strchr(const char *s, int ch_in) {
    signal_funcs_access critical region; SIG_IGN, or SIG_DFL for SIGABRT
    (1), returns 0, any other SIG_DFL calls exit(0). abort raises 1 and the
    floating-point dispatcher in cstd4 raises 2, SIGFPE. */
-extern "C" {
+
 int raise(int sig) {
     sig_func signal_func;
     if (sig < 1 || sig > 7)
@@ -225,12 +209,9 @@ int raise(int sig) {
     signal_func(sig);
     return 0;
 }
-}
 
-extern "C" {
 int rand(void) {
     unsigned int s = random_next * 0x41c64e6d + 0x3039;
     random_next = s;
     return (s >> 16) & 0x7fff;
-}
 }

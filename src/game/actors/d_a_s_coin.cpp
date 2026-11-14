@@ -40,15 +40,13 @@ static inline int HasActorID(dActor_c *actor, unsigned int id) {
     return actor->actorID == id;
 }
 
-extern "C" daSCoin_c *daSCoin_c_classInit()
-{
+daSCoin_c *daSCoin_c_classInit() {
     return new daSCoin_c();
 }
 
-extern "C" SpawnInfo<daSCoin_c> g_profile_SECRET_COIN = {
-    daSCoin_c_classInit, 0x0149, 0x014a, 0x00000000,
-    0x00000000, 0x00320000, 0x01f40000, 0x00050000
-};
+SpawnInfo<daSCoin_c> g_profile_SECRET_COIN = {daSCoin_c_classInit, 0x0149,     0x014a,
+                                              0x00000000,          0x00000000, 0x00320000,
+                                              0x01f40000,          0x00050000};
 
 s32 daSCoin_c::InitResources()
 {

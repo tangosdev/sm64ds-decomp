@@ -44,7 +44,7 @@ struct CvShutterCollisionFilePtr : SharedFilePtr {
     ~CvShutterCollisionFilePtr();
 };
 
-extern "C" daObjCvShutter_c *daObjCvShutter_c_classInit() {
+daObjCvShutter_c *daObjCvShutter_c_classInit() {
     return new daObjCvShutter_c();
 }
 

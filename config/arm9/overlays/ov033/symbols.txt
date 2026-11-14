@@ -5,14 +5,14 @@ _ZN13daObjTtFuta_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111
 _ZN13daObjTtFuta_c6RenderEv kind:function(arm,size=0x28) addr:0x021112c4
 _ZN13daObjTtFuta_c8BehaviorEv kind:function(arm,size=0x24) addr:0x021112ec
 _ZN13daObjTtFuta_c13InitResourcesEv kind:function(arm,size=0x94) addr:0x02111310
-daObjTtFuta_c_classInit kind:function(arm,size=0x30) addr:0x021113a4
+_Z23daObjTtFuta_c_classInitv kind:function(arm,size=0x30) addr:0x021113a4
 _ZN14daObjTtWater_cD1Ev kind:function(arm,size=0x4c) addr:0x021113d4
 _ZN14daObjTtWater_cD0Ev kind:function(arm,size=0x60) addr:0x02111420
 _ZN14daObjTtWater_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111480
 _ZN14daObjTtWater_c6RenderEv kind:function(arm,size=0x34) addr:0x021114c4
 _ZN14daObjTtWater_c8BehaviorEv kind:function(arm,size=0xc4) addr:0x021114f8
 _ZN14daObjTtWater_c13InitResourcesEv kind:function(arm,size=0xd4) addr:0x021115bc
-daObjTtWater_c_classInit kind:function(arm,size=0x38) addr:0x02111690
+_Z24daObjTtWater_c_classInitv kind:function(arm,size=0x38) addr:0x02111690
 data_ov033_021116c8 kind:data(any) addr:0x021116c8
 data_ov033_021116cc kind:data(any) addr:0x021116cc
 data_ov033_021116d0 kind:data(any) addr:0x021116d0

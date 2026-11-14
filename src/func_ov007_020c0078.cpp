@@ -4,8 +4,6 @@
 #include "Ov007Camera.h"
 #include "nitro/fx/fx_trig.h"
 
-extern "C" {
-
 /* func_ov007_020c0078 at 0x020c0078 (ov007)
  *
  * Ov007Camera perspective setup: sets the viewport from the camera's screen
@@ -24,5 +22,4 @@ void func_ov007_020c0078(Ov007Camera *cam) {
                       0x1000, 1, (Matrix4x3 *)cam->projMatrix);
 
     G3_StoreMtx(0);
-}
 }

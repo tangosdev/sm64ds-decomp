@@ -6,7 +6,7 @@ what kept `src/` a permanently flat directory of 11,203 files: giving any one fi
 meant finding and fixing every copy. Every one of those call sites now comes through here
 -- actor_names, chaos_db_ci, clone, cpp_index, cpp_rename, enroll, import_symbols,
 knowledge, ledger, name_evidence, nonmatching, progress, rebuild_ledger,
-reconcile_names, reverify_corpus, rombuild_versions, sigaudit, stamp_provenance,
+reverify_corpus, rombuild_versions, sigaudit, stamp_provenance,
 verify_mangled, worklist -- so the directory is a decision this module makes alone.
 
 The convention still holds for legacy one-function sources, and `enroll` is what makes

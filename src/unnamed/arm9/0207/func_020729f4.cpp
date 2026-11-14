@@ -4,16 +4,19 @@
 /* std::terminate takes no arguments. The default arm still passes the
  * opcode and the 0x80 test: that cast is a direct bl to _ZSt9terminatev,
  * and it keeps r1 live from the flag test. An ellipsis declaration links
- * to a different symbol. The file stays .c: delinks.txt names this path. */
+ * to a different symbol. */
 namespace std {
 void terminate();
 }
 extern "C" {
+
 extern void *func_02071910(ThrowContext *c, void *s);
 extern void func_02072dac(int x, ActionIterator *b);
 extern void func_02071864(ThrowContext *t, ActionIterator *it);
 extern u8 *ReadSignedVarInt(u8 *p, int *out);
 extern u8 *func_02071a50(u8 *p, int *out);
+}
+
 u8 func_020729f4(ActionWalk *c) {
     ThrowContext *frame = &c->mThrow;
     u8 *ip;
@@ -163,5 +166,4 @@ tail:
         } while (op == 1);
     }
     return op;
-}
 }

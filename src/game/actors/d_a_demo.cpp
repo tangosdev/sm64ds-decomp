@@ -237,6 +237,7 @@ struct DemoTexSeqFile : SharedFilePtr {
 };
 
 extern "C" {
+
 extern unsigned char gSubScreenLayers;
 extern int data_0209e650;
 extern OamAttr data_ov002_0210bddc;
@@ -253,22 +254,40 @@ extern struct OamAttr *data_ov002_0210b6a8[];
 extern u32 d_a_demoNewHold(u32 slot, u32 unk, Fix12i x, Fix12i y, Fix12i z, void *rot,
                            struct ParticleCallback *callback);
 extern int data_ov002_02100140[];
+}
+
 extern void func_ov002_020f2790(char *c, int p1, int p2, int p3, short p4);
 extern int func_ov002_020f2984(char *p);
+
 extern int GetOwnerLanguage(void);
+extern "C" {
+
 extern void OamRender10_d_a_demo(int a, struct OamAttr *attr, int x, int y, int e, int f, int g,
                                  int h, int i, int j);
 extern struct OamAttr* data_ov002_0210b988[];
-extern void func_0201ef50(unsigned char v);
+}
+
+extern void func_0201ef50(int v);
 extern void func_0201f108(void);
-extern struct OamAttr* data_ov002_0210bba0[];
+extern "C" {
+
+extern struct OamAttr *data_ov002_0210bba0[];
+}
+
 extern int func_ov002_020f5a94(void *c);
-extern int* data_ov002_0210b97c[];
+extern "C" {
+extern int *data_ov002_0210b97c[];
+}
+
 extern void func_ov002_020f2f18(char *c, int a, int b);
+extern "C" {
 extern void SetSubBg2Offset(int a, int b);
 extern StaffRollStep data_ov002_02110e24[];
 extern StaffRollStep data_ov002_02110e9c[];
+}
+
 extern void func_ov002_020f3828(int *c);
+extern "C" {
 extern int data_ov002_021002a0[];
 extern short atan2_hold_d_a_demo_1(int y, int x);
 extern StaffRollStep data_ov002_02110e34[];
@@ -289,8 +308,13 @@ extern StaffRollStep data_ov002_02110eec[];
 extern int data_ov002_02100190[];
 extern int data_ov002_02100170[];
 extern StaffRollStep data_ov002_02110e64[];
+}
+
 extern void func_ov002_020f39ec(char *c, int i);
+extern "C" {
 extern StaffRollStep data_ov002_02110e7c[];
+}
+
 extern void func_ov002_020f5a6c(char* p);
 extern void func_ov002_020f396c(char* p);
 extern void func_ov002_020f30d4(char* p);
@@ -300,15 +324,19 @@ extern void func_ov002_020f2958(char* c);
 extern void func_ov002_020f37fc(char*);
 extern void func_ov002_020f2f9c(void *, int);
 extern void func_ov002_020f3954(char *);
+extern "C" {
 /* local extern dropped: decl_common.h already declares LoadFont(u8) */
 extern StaffRollCue data_ov002_02110f9c[];
 extern void SetSubBg3Offset(int a, int b);
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
+}
+
 extern void Deallocate(void* p);
 extern void GXS_LoadBG1Scr(const void *src, int offset, int count);
 extern void GXS_LoadBG3Scr(const void *src, u32 offset, u32 count);
 extern void GXS_LoadBG2Scr(const void *src, u32 offset, u32 count);
+
 extern void func_ov002_020f5ad4(char* c);
 extern void func_ov002_020f5f60(char *c);
 extern int func_ov002_020f5fb8(void* c);
@@ -318,17 +346,24 @@ extern void func_ov002_020f3978(char *c);
 extern int func_ov002_020f27e8(char *c);
 extern int func_ov002_020f2990(char *c);
 extern void func_ov002_020f5fe4(char *c);
+
 /* local extern dropped: decl_common.h declares func_ov002_020f6514(unsigned char*, void*, unsigned char) */
-extern void func_02012694(unsigned int, void*);
+extern void func_02012694(unsigned int, const Vector3 *);
+extern "C" {
+
 /* local extern dropped: decl_common.h declares data_ov002_0210bc88 as 'int'; callers cast the address */
 extern int* Vec3_LslInPlace(int *v, int sh);
 extern u16 gKuppaScriptFrame;
 extern char *gCamera;
-extern Vector3 data_ov002_0210b958;
+extern int data_ov002_0210b958;
+}
+
 /* local extern dropped: decl_common.h declares data_0209b41c */
 extern s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
 extern void func_0201f138(void);
 extern void func_0201ef38(void);
+extern "C" {
+
 extern void Math_Function_0203b0fc(int* p, int target, int scale, int max);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
@@ -631,7 +666,6 @@ void StaffRoll::func_ov002_020f26e0() {
     }
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f2790(char* c, int p1, int p2, int p3, s16 p4)
 {
     ((StaffRoll *)c)->kira.unk308 = p3;
@@ -640,9 +674,7 @@ void func_ov002_020f2790(char* c, int p1, int p2, int p3, s16 p4)
         Particle::System::New(((StaffRoll *)c)->kiraParticle, kPtclEndingStarSparkle, p1 << 12,
                               p2 << 12, 0, 0, &((StaffRoll *)c)->kira);
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov002_020f27e8(char *c)
 {
     if (((StaffRoll *)c)->burstActive == 0)
@@ -682,9 +714,7 @@ int func_ov002_020f27e8(char *c)
         return ((StaffRoll *)c)->burstPeriods;
     return func_ov002_020f2984(c);
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f2958(char *c)
 {
     ((StaffRoll *)c)->burstActive = 1;
@@ -693,17 +723,13 @@ void func_ov002_020f2958(char *c)
     ((StaffRoll *)c)->burstTimer = 0;
     ((StaffRoll *)c)->burstPeriods = 0;
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov002_020f2984(char *p)
 {
     ((StaffRoll *)p)->burstActive = 0;
     return (int)p;
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov002_020f2990(char* c)
 {
     int x, y;
@@ -721,7 +747,6 @@ int func_ov002_020f2990(char* c)
 
     OAM::Render(0, data_ov002_0210b988[idx], x, y, -1, 1, 0x1000, 0x1000, 0, -1);
 }
-}
 
 void StaffRoll::func_ov002_020f2a48() {
     /* 0x1d8/0x1d9 and the position: see func_ov002_020f2990. */
@@ -731,13 +756,11 @@ void StaffRoll::func_ov002_020f2a48() {
     endY = 393216;
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f2a68(char *p)
 {
     /* 0x1d8/0x1d9: see func_ov002_020f2990. */
     ((StaffRoll *)p)->endActive = 0;
     ((StaffRoll *)p)->endVisible = 0;
-}
 }
 
 void StaffRoll::func_ov002_020f2a78(int i) {
@@ -843,14 +866,11 @@ void StaffRoll::StartCredit(int n) {
     gSubScreenLayers |= 1;
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f2ea0(char *p)
 {
     ((StaffRoll *)p)->credit[0].active = 0;
 }
-}
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f2eac(void *c) {
     int i;
     char *p = (char *)c;
@@ -863,9 +883,7 @@ void func_ov002_020f2eac(void *c) {
         p += 0x14;
     }
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f2f18(char* c, int a, int b)
 {
     int i = 0;
@@ -878,7 +896,6 @@ void func_ov002_020f2f18(char* c, int a, int b)
         c += 0x14;
     } while (i < 5);
 }
-}
 
 void StaffRoll::func_ov002_020f2f64() {
     int i;
@@ -889,7 +906,6 @@ void StaffRoll::func_ov002_020f2f64() {
     }
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f2f9c(void* self, int count)
 {
     char* sl = (char*)self;
@@ -920,9 +936,7 @@ void func_ov002_020f2f9c(void* self, int count)
         sl += 0x14;
     }
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f30d4(char *p)
 {
     int i;
@@ -931,7 +945,6 @@ void func_ov002_020f30d4(char *p)
         ((StaffRoll *)p)->dolls[0].visible = 0;
         p += 0x14;
     }
-}
 }
 
 void StaffRoll::func_ov002_020f30f8(int i) {
@@ -1098,7 +1111,6 @@ void StaffRoll::func_ov002_020f37a0() {
     (this->*data_ov002_02110e4c[this->window[0].kind])(0);
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f37fc(char *c)
 {
     func_ov002_020f3828((int*)c);
@@ -1106,9 +1118,7 @@ void func_ov002_020f37fc(char *c)
     ((StaffRoll *)c)->window[0].kind = 2;
     ((StaffRoll *)c)->window[0].step = 0;
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f3828(int *c)
 {
     ((StaffRoll *)c)->window[0].left = 0x80000;
@@ -1133,26 +1143,24 @@ void func_ov002_020f3828(int *c)
     SetSubBg2Offset(((StaffRoll *)c)->window[0].bgX >> 12, ((StaffRoll *)c)->window[0].bgY >> 12);
     gSubScreenLayers |= 6;
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f3954(char *p)
 {
     ((StaffRoll *)p)->window[0].active = 1;
     ((StaffRoll *)p)->window[0].kind = 1;
     ((StaffRoll *)p)->window[0].step = 0;
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f396c(char *p)
 {
     ((StaffRoll *)p)->window[0].active = 0;
 }
-}
 
 extern "C" {
+
 extern void *data_ov002_0210b998[];
+}
+
 void func_ov002_020f3978(char *c) {
     int i;
     for (i = 0; i < 4; i++) {
@@ -1164,9 +1172,7 @@ void func_ov002_020f3978(char *c) {
         c += 0x4c;
     }
 }
-}
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f39ec(char *self, int idx) {
     StaffRoll *s = (StaffRoll *)self;
     s->stars[idx].frameTimer++;
@@ -1189,7 +1195,6 @@ void func_ov002_020f39ec(char *self, int idx) {
         MI_CpuCopy16(s->starChars + src,
                      (u8 *)G2S_GetOBJCharPtr() + 0x2000 + idx * 0x100 + i * 0x400, 0x100);
     }
-}
 }
 
 void StaffRoll::func_ov002_020f3ae8(int idx) {
@@ -2195,7 +2200,6 @@ void StaffRoll::func_ov002_020f5990() {
     }
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f5a6c(char *p) {
     int i;
     for (i = 0; i < 4; i++) {
@@ -2205,9 +2209,7 @@ void func_ov002_020f5a6c(char *p) {
         p += 0x4c;
     }
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov002_020f5a94(void *unused){
     unsigned char count = 0;
     int i;
@@ -2217,9 +2219,7 @@ int func_ov002_020f5a94(void *unused){
     }
     return count;
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f5ad4(char* c)
 {
     /* StaffRoll::pad_1f0: two words cleared here and read nowhere. */
@@ -2239,7 +2239,6 @@ void func_ov002_020f5ad4(char* c)
     func_ov002_020f2ea0(c);
     func_ov002_020f2a68(c);
     func_ov002_020f2984(c);
-}
 }
 
 void StaffRoll::func_ov002_020f5b24() {
@@ -2431,7 +2430,6 @@ void StaffRoll::func_ov002_020f5f0c(int idx) {
     this->StartCredit(idx);
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f5f60(char *c)
 {
     void *p = ((StaffRoll *)c)->starChars;
@@ -2440,27 +2438,21 @@ void func_ov002_020f5f60(char *c)
     ::operator delete(p);
     ((StaffRoll *)c)->starChars = 0;
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov002_020f5f8c(void* c){
     ((StaffRoll *)c)->func_ov002_020f26e0();
     func_ov002_020f3978((char *)c);
     func_ov002_020f2eac(c);
     return func_ov002_020f2990((char *)c);
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov002_020f5fb8(void* c){
     ((StaffRoll *)c)->func_ov002_020f5990();
     ((StaffRoll *)c)->func_ov002_020f37a0();
     ((StaffRoll *)c)->func_ov002_020f2dd4();
     return func_ov002_020f27e8((char *)c);
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f5fe4(char* c)
 {
     void *f;
@@ -2566,8 +2558,6 @@ void func_ov002_020f5fe4(char* c)
 
     func_ov002_020f5ad4(c);
 }
-}
-
 
 int daDemo_c::func_ov002_020f63a0()
 {
@@ -2813,7 +2803,7 @@ int daDemo_c::func_ov002_020f6ae4(unsigned char *p)
 int daDemo_c::func_ov002_020f6b28(unsigned char *p)
 {
     unsigned int v = ReadUnalignedInt(p);
-    func_02012694(v, &mCamSpacePosX);
+    func_02012694(v, (const Vector3 *)&mCamSpacePosX);
     return 1;
 }
 
@@ -2867,12 +2857,11 @@ int daDemo_c::func_ov002_020f6c34(unsigned char *src)
     return 1;
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 inline unsigned int inline_fn(unsigned int arg0)
 {
   return arg0;
 }
-
 }
 
 int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
@@ -2907,7 +2896,7 @@ int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
   }
   else
   {
-      MTX_MultVec43(&data_ov002_0210b958, &data_0209b41c, (Vector3 *)&v);
+      MTX_MultVec43((Vector3 *)&data_ov002_0210b958, &data_0209b41c, (Vector3 *)&v);
       Vec3_LslInPlace(&v.x, 3);
       func_ov002_020f6f48((Vector3 *)&v, 8);
   }
@@ -3621,8 +3610,7 @@ int daDemo_c::InitResources()
  * `new daDemo_c` is the whole sequence the loose factory spelled by hand:
  * fBase_c::operator new(0x104), dActor_c's base constructor, then the vptr
  * store. */
-extern "C" daDemo_c *daDemo_c_classInit(void)
-{
+daDemo_c *daDemo_c_classInit(void) {
     return new daDemo_c;
 }
 
@@ -3640,9 +3628,11 @@ int data_ov002_0210b658[2] = {(int)0x81f020f0, (int)0xffff0100};
 int data_ov002_0210b6e8[2] = {(int)0x81f020f0, (int)0xffff0118};
 int data_ov002_0210b768[2] = {(int)0x41f800f8, (int)0xffff701e};
 int data_ov002_0210b868[2] = {(int)0x41f800f8, (int)0xffff705e};
+}
+
 struct OamAttr *data_ov002_0210b6a8[2] = {(struct OamAttr *)data_ov002_0210b768,
                                           (struct OamAttr *)data_ov002_0210b868};
-
+extern "C" {
 
 DemoModelFile data_ov002_02110b50(0x49b);
 DemoModelFile data_ov002_02110b98(0x3ef);

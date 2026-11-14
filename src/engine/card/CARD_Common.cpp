@@ -25,8 +25,6 @@
 #include "nitro/mi/memory.h"
 #include "nitro/pxi/fifo.h"
 
-extern "C" {
-
 /* local extern: no header declares this yet. */
 
 #define OS_LOCK_ID_ERROR (-3)
@@ -145,5 +143,4 @@ void CARD_LockBackup(u16 lockID) {
 
 void CARD_UnlockBackup(u16 lockID) {
     CARDi_UnlockResource(lockID, CARD_TARGET_BACKUP);
-}
 }

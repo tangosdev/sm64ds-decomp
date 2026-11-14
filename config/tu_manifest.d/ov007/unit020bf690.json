@@ -20,49 +20,49 @@
   ],
   "functions": [
     {
-      "symbol": "ScreenFade_Update",
+      "symbol": "_Z17ScreenFade_Updatev",
       "address": "0x020bf690",
       "size": "0x00000100",
       "legacy_source": "src/unnamed/ov007/func_ov007_020bf690.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "ScreenFade_Start",
+      "symbol": "_Z16ScreenFade_Startv",
       "address": "0x020bf790",
       "size": "0x0000033c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020bf790.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "RequestScreenFade",
+      "symbol": "_Z17RequestScreenFadeiiPFvvE",
       "address": "0x020bfacc",
       "size": "0x00000024",
       "legacy_source": "src/RequestScreenFade.c",
       "ordinal": 2
     },
     {
-      "symbol": "ScreenFade_Draw",
+      "symbol": "_Z15ScreenFade_DrawP11Ov007Camera",
       "address": "0x020bfaf0",
       "size": "0x000000ec",
       "legacy_source": "src/unnamed/ov007/func_ov007_020bfaf0.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov007_020bfbdc",
+      "symbol": "_Z19func_ov007_020bfbdcPv",
       "address": "0x020bfbdc",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/ov007/func_ov007_020bfbdc.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "ScreenFade_Destroy",
+      "symbol": "_Z18ScreenFade_Destroyv",
       "address": "0x020bfc54",
       "size": "0x00000098",
       "legacy_source": "src/unnamed/ov007/func_ov007_020bfc54.c",
       "ordinal": 5
     },
     {
-      "symbol": "ScreenFade_Create",
+      "symbol": "_Z17ScreenFade_Createv",
       "address": "0x020bfcec",
       "size": "0x00000084",
       "legacy_source": "src/unnamed/ov007/func_ov007_020bfcec.c",

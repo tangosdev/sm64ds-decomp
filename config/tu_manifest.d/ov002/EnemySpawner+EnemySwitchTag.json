@@ -89,14 +89,14 @@
       "ordinal": 9
     },
     {
-      "symbol": "daECreate_c_classInit",
+      "symbol": "_Z21daECreate_c_classInitv",
       "address": "0x020f1924",
       "size": "0x00000030",
       "legacy_source": "src/d_a_e_create.c",
       "ordinal": 10
     },
     {
-      "symbol": "daESwitch_c_classInit",
+      "symbol": "_Z21daESwitch_c_classInitv",
       "address": "0x020f1954",
       "size": "0x00000038",
       "legacy_source": "src/d_a_e_switch.c",

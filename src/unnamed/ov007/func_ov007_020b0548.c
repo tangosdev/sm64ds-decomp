@@ -1,6 +1,10 @@
 #include "Ov007MenuState.h"
 #include "Ov007Work.h"
 
+#define func_ov007_020b1cf0 _Z19func_ov007_020b1cf0v
+#define func_ov007_020b1b74 _Z19func_ov007_020b1b74v
+#define func_ov007_020b1718 _Z19func_ov007_020b1718v
+#define func_ov007_020b0a20 _Z19func_ov007_020b0a20v
 extern void func_ov007_020b1cf0(void);
 extern void func_ov007_020b1224(void);
 extern void func_ov007_020b1b74(void);

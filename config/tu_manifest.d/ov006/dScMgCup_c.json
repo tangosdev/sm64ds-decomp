@@ -54,49 +54,49 @@
       "ordinal": 1
     },
     {
-      "symbol": "CupFx_ElemDtor",
+      "symbol": "_Z14CupFx_ElemDtorv",
       "address": "0x020deac4",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020deac4.c",
       "ordinal": 2
     },
     {
-      "symbol": "CupFx_FindFree",
+      "symbol": "_Z14CupFx_FindFreeP5CupFxiii",
       "address": "0x020deac8",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_020deac8.c",
       "ordinal": 3
     },
     {
-      "symbol": "CupFx_MoveForCup",
+      "symbol": "_Z16CupFx_MoveForCupP5CupFxiii",
       "address": "0x020deaf0",
       "size": "0x00000058",
       "legacy_source": "src/func_ov006_020deaf0.c",
       "ordinal": 4
     },
     {
-      "symbol": "CupFx_Spawn",
+      "symbol": "_Z11CupFx_SpawnP5CupFxiiia",
       "address": "0x020deb48",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov006_020deb48.c",
       "ordinal": 5
     },
     {
-      "symbol": "CupFx_DrawForCup",
+      "symbol": "_Z16CupFx_DrawForCupP5CupFxi",
       "address": "0x020debb4",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_020debb4.c",
       "ordinal": 6
     },
     {
-      "symbol": "CupFx_UpdateAll",
+      "symbol": "_Z15CupFx_UpdateAllP5CupFx",
       "address": "0x020debfc",
       "size": "0x00000040",
       "legacy_source": "src/func_ov006_020debfc.c",
       "ordinal": 7
     },
     {
-      "symbol": "CupFx_ClearAll",
+      "symbol": "_Z14CupFx_ClearAllP5CupFx",
       "address": "0x020dec3c",
       "size": "0x00000020",
       "legacy_source": "src/func_ov006_020dec3c.c",
@@ -250,14 +250,14 @@
       "ordinal": 29
     },
     {
-      "symbol": "dScMgCup_c_classInit",
+      "symbol": "_Z20dScMgCup_c_classInitv",
       "address": "0x020e0574",
       "size": "0x000000c0",
       "legacy_source": "src/d_s_mg_cup.cpp",
       "ordinal": 30
     },
     {
-      "symbol": "Cup_Nothing",
+      "symbol": "_Z11Cup_Nothingv",
       "address": "0x020e0634",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020e0634.c",
@@ -1610,7 +1610,7 @@
       "source": "0x0213c020",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "dScMgCup_c_classInit",
+      "symbol": "_Z20dScMgCup_c_classInitv",
       "addend": 0,
       "target_module": "overlay(6)",
       "target_address": "0x020e0574"
@@ -1649,42 +1649,42 @@
   "production_mode": "intact-object",
   "defined_symbol_renames": [
     {
-      "from": "@1256",
+      "from": "@1243",
       "to": "pmf_dScMgCup_c_StateSetup",
       "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1180) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1202 to @1259 when the opt pragma was removed (#821). Re-keyed from @1259 to @1264 (same symtab index 58, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @1264 to @1268 when Re-keyed when the TU included NitroSDK's GXOamAttr for its OAM bitfield access (#821).. Re-keyed from @1268 to @1300 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @1300 to @1303 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @1303 to @1297 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @1300 to @1299 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1300 to @1278 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1274 to @1277 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object). Re-keyed from @1277 to @1268 when the TU took the effect and scene helpers as CupFx / dScMgCup_c members (measured from the compiled object). Re-keyed from @1268 to @1267 when the cup game took the NitroSDK BG control, priority and mosaic setters (#5157) (measured from the compiled object, same symtab index). Re-keyed from @1267 to @1265 when d_s_mg_cup dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @1265 to @1256 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@1258",
+      "from": "@1245",
       "to": "pmf_dScMgCup_c_StatePrepareShuffle",
       "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1182) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1204 to @1261 when the opt pragma was removed (#821). Re-keyed from @1261 to @1266 (same symtab index 59, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @1266 to @1270 when Re-keyed when the TU included NitroSDK's GXOamAttr for its OAM bitfield access (#821).. Re-keyed from @1270 to @1302 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @1302 to @1305 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @1305 to @1299 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @1302 to @1301 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1302 to @1280 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1276 to @1279 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object). Re-keyed from @1279 to @1270 when the TU took the effect and scene helpers as CupFx / dScMgCup_c members (measured from the compiled object). Re-keyed from @1270 to @1269 when the cup game took the NitroSDK BG control, priority and mosaic setters (#5157) (measured from the compiled object, same symtab index). Re-keyed from @1269 to @1267 when d_s_mg_cup dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @1267 to @1258 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@1260",
+      "from": "@1247",
       "to": "pmf_dScMgCup_c_StateShuffle",
       "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1184) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1206 to @1263 when the opt pragma was removed (#821). Re-keyed from @1263 to @1268 (same symtab index 60, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @1268 to @1272 when Re-keyed when the TU included NitroSDK's GXOamAttr for its OAM bitfield access (#821).. Re-keyed from @1272 to @1304 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @1304 to @1307 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @1307 to @1301 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @1304 to @1303 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1304 to @1282 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1278 to @1281 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object). Re-keyed from @1281 to @1272 when the TU took the effect and scene helpers as CupFx / dScMgCup_c members (measured from the compiled object). Re-keyed from @1272 to @1271 when the cup game took the NitroSDK BG control, priority and mosaic setters (#5157) (measured from the compiled object, same symtab index). Re-keyed from @1271 to @1269 when d_s_mg_cup dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @1269 to @1260 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@1262",
+      "from": "@1249",
       "to": "pmf_dScMgCup_c_StateWaitForInput",
       "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1186) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1208 to @1265 when the opt pragma was removed (#821). Re-keyed from @1265 to @1270 (same symtab index 61, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @1270 to @1274 when Re-keyed when the TU included NitroSDK's GXOamAttr for its OAM bitfield access (#821).. Re-keyed from @1274 to @1306 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @1306 to @1309 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @1309 to @1303 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @1306 to @1305 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1306 to @1284 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1280 to @1283 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object). Re-keyed from @1283 to @1274 when the TU took the effect and scene helpers as CupFx / dScMgCup_c members (measured from the compiled object). Re-keyed from @1274 to @1273 when the cup game took the NitroSDK BG control, priority and mosaic setters (#5157) (measured from the compiled object, same symtab index). Re-keyed from @1273 to @1271 when d_s_mg_cup dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @1271 to @1262 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@1264",
+      "from": "@1251",
       "to": "pmf_dScMgCup_c_StateSelect",
       "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1188) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1210 to @1267 when the opt pragma was removed (#821). Re-keyed from @1267 to @1272 (same symtab index 62, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @1272 to @1276 when Re-keyed when the TU included NitroSDK's GXOamAttr for its OAM bitfield access (#821).. Re-keyed from @1276 to @1308 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @1308 to @1311 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @1311 to @1305 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @1308 to @1307 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1308 to @1286 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1282 to @1285 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object). Re-keyed from @1285 to @1276 when the TU took the effect and scene helpers as CupFx / dScMgCup_c members (measured from the compiled object). Re-keyed from @1276 to @1275 when the cup game took the NitroSDK BG control, priority and mosaic setters (#5157) (measured from the compiled object, same symtab index). Re-keyed from @1275 to @1273 when d_s_mg_cup dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @1273 to @1264 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@1266",
+      "from": "@1253",
       "to": "pmf_dScMgCup_c_StateResult",
       "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1190) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1212 to @1269 when the opt pragma was removed (#821). Re-keyed from @1269 to @1274 (same symtab index 63, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @1274 to @1278 when Re-keyed when the TU included NitroSDK's GXOamAttr for its OAM bitfield access (#821).. Re-keyed from @1278 to @1310 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @1310 to @1313 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @1313 to @1307 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @1310 to @1309 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1310 to @1288 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1284 to @1287 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object). Re-keyed from @1287 to @1278 when the TU took the effect and scene helpers as CupFx / dScMgCup_c members (measured from the compiled object). Re-keyed from @1278 to @1277 when the cup game took the NitroSDK BG control, priority and mosaic setters (#5157) (measured from the compiled object, same symtab index). Re-keyed from @1277 to @1275 when d_s_mg_cup dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @1275 to @1266 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@1268",
+      "from": "@1255",
       "to": "pmf_dScMgCup_c_StateFinish",
       "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1192) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1214 to @1271 when the opt pragma was removed (#821). Re-keyed from @1271 to @1276 (same symtab index 64, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @1276 to @1280 when Re-keyed when the TU included NitroSDK's GXOamAttr for its OAM bitfield access (#821).. Re-keyed from @1280 to @1312 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @1312 to @1315 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @1315 to @1309 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @1312 to @1311 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1312 to @1290 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1286 to @1289 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object). Re-keyed from @1289 to @1280 when the TU took the effect and scene helpers as CupFx / dScMgCup_c members (measured from the compiled object). Re-keyed from @1280 to @1279 when the cup game took the NitroSDK BG control, priority and mosaic setters (#5157) (measured from the compiled object, same symtab index). Re-keyed from @1279 to @1277 when d_s_mg_cup dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @1277 to @1268 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     },
     {
-      "from": "@1270",
+      "from": "@1257",
       "to": "pmf_dScMgCup_c_StateIdle",
       "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1194) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1216 to @1273 when the opt pragma was removed (#821). Re-keyed from @1273 to @1278 (same symtab index 65, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @1278 to @1282 when Re-keyed when the TU included NitroSDK's GXOamAttr for its OAM bitfield access (#821).. Re-keyed from @1282 to @1314 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @1314 to @1317 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @1317 to @1311 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @1314 to @1313 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1314 to @1292 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1288 to @1291 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object). Re-keyed from @1291 to @1282 when the TU took the effect and scene helpers as CupFx / dScMgCup_c members (measured from the compiled object). Re-keyed from @1282 to @1281 when the cup game took the NitroSDK BG control, priority and mosaic setters (#5157) (measured from the compiled object, same symtab index). Re-keyed from @1281 to @1279 when d_s_mg_cup dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @1279 to @1270 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged."
     }

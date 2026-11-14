@@ -1,5 +1,6 @@
 #include "Ov007Picker.h"
 
+#define func_ov007_020c704c _Z19func_ov007_020c704cP13Ov007FollowerP7Vector3iii
 extern int func_ov007_020c704c(Ov007Follower *f, Vector3 *target, int pull, int reach,
                                int snapRadius);
 

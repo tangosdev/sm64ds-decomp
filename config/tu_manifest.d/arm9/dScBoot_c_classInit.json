@@ -35,7 +35,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "dScBoot_c_classInit",
+      "symbol": "_Z19dScBoot_c_classInitv",
       "address": "0x02023624",
       "size": "0x00000064",
       "legacy_source": "src/d_s_boot.c",

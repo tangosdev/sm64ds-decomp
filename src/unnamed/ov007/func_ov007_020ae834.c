@@ -21,6 +21,8 @@
  * one OR so the request-0 store is emitted once; the function is void.
  */
 
+#define func_ov007_020c92d0 _Z19func_ov007_020c92d0P14Ov007MenuState
+#define func_ov007_020aeaec _Z19func_ov007_020aeaecP9Ov007Itemiii
 extern void func_ov007_020c92d0(Ov007MenuState *state);
 extern int func_ov007_020aeaec(Ov007Item *item, int flag, int lo, int hi);
 extern void func_ov007_020ae810(Ov007Item *item);

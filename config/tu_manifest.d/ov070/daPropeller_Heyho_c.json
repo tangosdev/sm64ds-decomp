@@ -54,28 +54,28 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov070_0211f0a4",
+      "symbol": "_Z19func_ov070_0211f0a4P19daPropeller_Heyho_c",
       "address": "0x0211f0a4",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov070_0211f0a4.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov070_0211f100",
+      "symbol": "_Z19func_ov070_0211f100P19daPropeller_Heyho_c",
       "address": "0x0211f100",
       "size": "0x00000268",
       "legacy_source": "src/func_ov070_0211f100.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov070_0211f368",
+      "symbol": "_Z19func_ov070_0211f368P19daPropeller_Heyho_c",
       "address": "0x0211f368",
       "size": "0x000000e8",
       "legacy_source": "src/func_ov070_0211f368.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov070_0211f450",
+      "symbol": "_Z19func_ov070_0211f450P19daPropeller_Heyho_c",
       "address": "0x0211f450",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov070_0211f450.c",
@@ -89,7 +89,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "func_ov070_0211f5f0",
+      "symbol": "_Z19func_ov070_0211f5f0P19daPropeller_Heyho_c",
       "address": "0x0211f5f0",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov070_0211f5f0.cpp",
@@ -103,7 +103,7 @@
       "ordinal": 8
     },
     {
-      "symbol": "func_ov070_0211f694",
+      "symbol": "_Z19func_ov070_0211f694P19daPropeller_Heyho_c",
       "address": "0x0211f694",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov070_0211f694.cpp",
@@ -117,42 +117,42 @@
       "ordinal": 10
     },
     {
-      "symbol": "func_ov070_0211fa80",
+      "symbol": "_Z19func_ov070_0211fa80P19daPropeller_Heyho_c",
       "address": "0x0211fa80",
       "size": "0x00000064",
       "legacy_source": "src/func_ov070_0211fa80.c",
       "ordinal": 11
     },
     {
-      "symbol": "func_ov070_0211fae4",
+      "symbol": "_Z19func_ov070_0211fae4P19daPropeller_Heyho_c",
       "address": "0x0211fae4",
       "size": "0x0000027c",
       "legacy_source": "src/func_ov070_0211fae4.c",
       "ordinal": 12
     },
     {
-      "symbol": "func_ov070_0211fd60",
+      "symbol": "_Z19func_ov070_0211fd60P19daPropeller_Heyho_c",
       "address": "0x0211fd60",
       "size": "0x00000038",
       "legacy_source": "src/func_ov070_0211fd60.c",
       "ordinal": 13
     },
     {
-      "symbol": "func_ov070_0211fd98",
+      "symbol": "_Z19func_ov070_0211fd98P19daPropeller_Heyho_c",
       "address": "0x0211fd98",
       "size": "0x00000210",
       "legacy_source": "src/func_ov070_0211fd98.c",
       "ordinal": 14
     },
     {
-      "symbol": "func_ov070_0211ffa8",
+      "symbol": "_Z19func_ov070_0211ffa8P19daPropeller_Heyho_c",
       "address": "0x0211ffa8",
       "size": "0x00000078",
       "legacy_source": "src/func_ov070_0211ffa8.cpp",
       "ordinal": 15
     },
     {
-      "symbol": "FlyGuy_ChangeState",
+      "symbol": "_Z18FlyGuy_ChangeStateP19daPropeller_Heyho_cPNS_5StateE",
       "address": "0x02120020",
       "size": "0x00000050",
       "legacy_source": "src/FlyGuy_ChangeState.cpp",
@@ -222,7 +222,7 @@
       "ordinal": 25
     },
     {
-      "symbol": "daPropeller_Heyho_c_classInit",
+      "symbol": "_Z29daPropeller_Heyho_c_classInitv",
       "address": "0x02120520",
       "size": "0x00000050",
       "legacy_source": "src/FlyGuy_Spawn.c",
@@ -441,14 +441,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN14HeyhoModelFileC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor exact PC24 relocation"
     },
     {
       "symbol": "_ZN14HeyhoModelFileD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the model wrapper destructor exact ABS32 relocation"
@@ -597,7 +597,7 @@
       "source": "0x02123144",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPropeller_Heyho_c_classInit",
+      "symbol": "_Z29daPropeller_Heyho_c_classInitv",
       "addend": 0,
       "target_module": "ov070",
       "target_address": "0x02120520"
@@ -937,7 +937,7 @@
       "source": "0x02122b0c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1087,7 +1087,7 @@
       "source": "0x02122ce4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -2012,28 +2012,28 @@
           },
           {
             "ordinal": 2,
-            "symbol": "func_ov070_0211f0a4",
+            "symbol": "_Z19func_ov070_0211f0a4P19daPropeller_Heyho_c",
             "identical": true,
             "relocCount": 3,
             "differences": []
           },
           {
             "ordinal": 3,
-            "symbol": "func_ov070_0211f100",
+            "symbol": "_Z19func_ov070_0211f100P19daPropeller_Heyho_c",
             "identical": true,
             "relocCount": 18,
             "differences": []
           },
           {
             "ordinal": 4,
-            "symbol": "func_ov070_0211f368",
+            "symbol": "_Z19func_ov070_0211f368P19daPropeller_Heyho_c",
             "identical": true,
             "relocCount": 5,
             "differences": []
           },
           {
             "ordinal": 5,
-            "symbol": "func_ov070_0211f450",
+            "symbol": "_Z19func_ov070_0211f450P19daPropeller_Heyho_c",
             "identical": true,
             "relocCount": 0,
             "differences": []
@@ -2047,7 +2047,7 @@
           },
           {
             "ordinal": 7,
-            "symbol": "func_ov070_0211f5f0",
+            "symbol": "_Z19func_ov070_0211f5f0P19daPropeller_Heyho_c",
             "identical": true,
             "relocCount": 2,
             "differences": []
@@ -2061,7 +2061,7 @@
           },
           {
             "ordinal": 9,
-            "symbol": "func_ov070_0211f694",
+            "symbol": "_Z19func_ov070_0211f694P19daPropeller_Heyho_c",
             "identical": true,
             "relocCount": 2,
             "differences": []
@@ -2075,42 +2075,42 @@
           },
           {
             "ordinal": 11,
-            "symbol": "func_ov070_0211fa80",
+            "symbol": "_Z19func_ov070_0211fa80P19daPropeller_Heyho_c",
             "identical": true,
             "relocCount": 3,
             "differences": []
           },
           {
             "ordinal": 12,
-            "symbol": "func_ov070_0211fae4",
+            "symbol": "_Z19func_ov070_0211fae4P19daPropeller_Heyho_c",
             "identical": true,
             "relocCount": 23,
             "differences": []
           },
           {
             "ordinal": 13,
-            "symbol": "func_ov070_0211fd60",
+            "symbol": "_Z19func_ov070_0211fd60P19daPropeller_Heyho_c",
             "identical": true,
             "relocCount": 2,
             "differences": []
           },
           {
             "ordinal": 14,
-            "symbol": "func_ov070_0211fd98",
+            "symbol": "_Z19func_ov070_0211fd98P19daPropeller_Heyho_c",
             "identical": true,
             "relocCount": 21,
             "differences": []
           },
           {
             "ordinal": 15,
-            "symbol": "func_ov070_0211ffa8",
+            "symbol": "_Z19func_ov070_0211ffa8P19daPropeller_Heyho_c",
             "identical": true,
             "relocCount": 5,
             "differences": []
           },
           {
             "ordinal": 16,
-            "symbol": "FlyGuy_ChangeState",
+            "symbol": "_Z18FlyGuy_ChangeStateP19daPropeller_Heyho_cPNS_5StateE",
             "identical": true,
             "relocCount": 0,
             "differences": []
@@ -2180,7 +2180,7 @@
           },
           {
             "ordinal": 26,
-            "symbol": "daPropeller_Heyho_c_classInit",
+            "symbol": "_Z29daPropeller_Heyho_c_classInitv",
             "identical": true,
             "relocCount": 7,
             "differences": []
@@ -2259,22 +2259,22 @@
             "size": "0x0000005c"
           },
           {
-            "symbol": "func_ov070_0211f0a4",
+            "symbol": "_Z19func_ov070_0211f0a4P19daPropeller_Heyho_c",
             "section": ".text",
             "size": "0x0000005c"
           },
           {
-            "symbol": "func_ov070_0211f100",
+            "symbol": "_Z19func_ov070_0211f100P19daPropeller_Heyho_c",
             "section": ".text",
             "size": "0x00000268"
           },
           {
-            "symbol": "func_ov070_0211f368",
+            "symbol": "_Z19func_ov070_0211f368P19daPropeller_Heyho_c",
             "section": ".text",
             "size": "0x000000e8"
           },
           {
-            "symbol": "func_ov070_0211f450",
+            "symbol": "_Z19func_ov070_0211f450P19daPropeller_Heyho_c",
             "section": ".text",
             "size": "0x0000003c"
           },
@@ -2284,7 +2284,7 @@
             "size": "0x00000164"
           },
           {
-            "symbol": "func_ov070_0211f5f0",
+            "symbol": "_Z19func_ov070_0211f5f0P19daPropeller_Heyho_c",
             "section": ".text",
             "size": "0x0000003c"
           },
@@ -2294,7 +2294,7 @@
             "size": "0x00000068"
           },
           {
-            "symbol": "func_ov070_0211f694",
+            "symbol": "_Z19func_ov070_0211f694P19daPropeller_Heyho_c",
             "section": ".text",
             "size": "0x0000004c"
           },
@@ -2304,32 +2304,32 @@
             "size": "0x000003a0"
           },
           {
-            "symbol": "func_ov070_0211fa80",
+            "symbol": "_Z19func_ov070_0211fa80P19daPropeller_Heyho_c",
             "section": ".text",
             "size": "0x00000064"
           },
           {
-            "symbol": "func_ov070_0211fae4",
+            "symbol": "_Z19func_ov070_0211fae4P19daPropeller_Heyho_c",
             "section": ".text",
             "size": "0x0000027c"
           },
           {
-            "symbol": "func_ov070_0211fd60",
+            "symbol": "_Z19func_ov070_0211fd60P19daPropeller_Heyho_c",
             "section": ".text",
             "size": "0x00000038"
           },
           {
-            "symbol": "func_ov070_0211fd98",
+            "symbol": "_Z19func_ov070_0211fd98P19daPropeller_Heyho_c",
             "section": ".text",
             "size": "0x00000210"
           },
           {
-            "symbol": "func_ov070_0211ffa8",
+            "symbol": "_Z19func_ov070_0211ffa8P19daPropeller_Heyho_c",
             "section": ".text",
             "size": "0x00000078"
           },
           {
-            "symbol": "FlyGuy_ChangeState",
+            "symbol": "_Z18FlyGuy_ChangeStateP19daPropeller_Heyho_cPNS_5StateE",
             "section": ".text",
             "size": "0x00000050"
           },
@@ -2379,7 +2379,7 @@
             "size": "0x00000008"
           },
           {
-            "symbol": "daPropeller_Heyho_c_classInit",
+            "symbol": "_Z29daPropeller_Heyho_c_classInitv",
             "section": ".text",
             "size": "0x00000050"
           }
@@ -2796,28 +2796,28 @@
           },
           {
             "ordinal": 2,
-            "symbol": "func_ov070_0211f0a4",
+            "symbol": "_Z19func_ov070_0211f0a4P19daPropeller_Heyho_c",
             "identical": true,
             "relocCount": 3,
             "differences": []
           },
           {
             "ordinal": 3,
-            "symbol": "func_ov070_0211f100",
+            "symbol": "_Z19func_ov070_0211f100P19daPropeller_Heyho_c",
             "identical": true,
             "relocCount": 18,
             "differences": []
           },
           {
             "ordinal": 4,
-            "symbol": "func_ov070_0211f368",
+            "symbol": "_Z19func_ov070_0211f368P19daPropeller_Heyho_c",
             "identical": true,
             "relocCount": 5,
             "differences": []
           },
           {
             "ordinal": 5,
-            "symbol": "func_ov070_0211f450",
+            "symbol": "_Z19func_ov070_0211f450P19daPropeller_Heyho_c",
             "identical": true,
             "relocCount": 0,
             "differences": []
@@ -2831,7 +2831,7 @@
           },
           {
             "ordinal": 7,
-            "symbol": "func_ov070_0211f5f0",
+            "symbol": "_Z19func_ov070_0211f5f0P19daPropeller_Heyho_c",
             "identical": true,
             "relocCount": 2,
             "differences": []
@@ -2845,7 +2845,7 @@
           },
           {
             "ordinal": 9,
-            "symbol": "func_ov070_0211f694",
+            "symbol": "_Z19func_ov070_0211f694P19daPropeller_Heyho_c",
             "identical": true,
             "relocCount": 2,
             "differences": []
@@ -2859,42 +2859,42 @@
           },
           {
             "ordinal": 11,
-            "symbol": "func_ov070_0211fa80",
+            "symbol": "_Z19func_ov070_0211fa80P19daPropeller_Heyho_c",
             "identical": true,
             "relocCount": 3,
             "differences": []
           },
           {
             "ordinal": 12,
-            "symbol": "func_ov070_0211fae4",
+            "symbol": "_Z19func_ov070_0211fae4P19daPropeller_Heyho_c",
             "identical": true,
             "relocCount": 23,
             "differences": []
           },
           {
             "ordinal": 13,
-            "symbol": "func_ov070_0211fd60",
+            "symbol": "_Z19func_ov070_0211fd60P19daPropeller_Heyho_c",
             "identical": true,
             "relocCount": 2,
             "differences": []
           },
           {
             "ordinal": 14,
-            "symbol": "func_ov070_0211fd98",
+            "symbol": "_Z19func_ov070_0211fd98P19daPropeller_Heyho_c",
             "identical": true,
             "relocCount": 21,
             "differences": []
           },
           {
             "ordinal": 15,
-            "symbol": "func_ov070_0211ffa8",
+            "symbol": "_Z19func_ov070_0211ffa8P19daPropeller_Heyho_c",
             "identical": true,
             "relocCount": 5,
             "differences": []
           },
           {
             "ordinal": 16,
-            "symbol": "FlyGuy_ChangeState",
+            "symbol": "_Z18FlyGuy_ChangeStateP19daPropeller_Heyho_cPNS_5StateE",
             "identical": true,
             "relocCount": 0,
             "differences": []
@@ -2964,7 +2964,7 @@
           },
           {
             "ordinal": 26,
-            "symbol": "daPropeller_Heyho_c_classInit",
+            "symbol": "_Z29daPropeller_Heyho_c_classInitv",
             "identical": true,
             "relocCount": 7,
             "differences": []
@@ -3043,22 +3043,22 @@
             "size": "0x0000005c"
           },
           {
-            "symbol": "func_ov070_0211f0a4",
+            "symbol": "_Z19func_ov070_0211f0a4P19daPropeller_Heyho_c",
             "section": ".text",
             "size": "0x0000005c"
           },
           {
-            "symbol": "func_ov070_0211f100",
+            "symbol": "_Z19func_ov070_0211f100P19daPropeller_Heyho_c",
             "section": ".text",
             "size": "0x00000268"
           },
           {
-            "symbol": "func_ov070_0211f368",
+            "symbol": "_Z19func_ov070_0211f368P19daPropeller_Heyho_c",
             "section": ".text",
             "size": "0x000000e8"
           },
           {
-            "symbol": "func_ov070_0211f450",
+            "symbol": "_Z19func_ov070_0211f450P19daPropeller_Heyho_c",
             "section": ".text",
             "size": "0x0000003c"
           },
@@ -3068,7 +3068,7 @@
             "size": "0x00000164"
           },
           {
-            "symbol": "func_ov070_0211f5f0",
+            "symbol": "_Z19func_ov070_0211f5f0P19daPropeller_Heyho_c",
             "section": ".text",
             "size": "0x0000003c"
           },
@@ -3078,7 +3078,7 @@
             "size": "0x00000068"
           },
           {
-            "symbol": "func_ov070_0211f694",
+            "symbol": "_Z19func_ov070_0211f694P19daPropeller_Heyho_c",
             "section": ".text",
             "size": "0x0000004c"
           },
@@ -3088,32 +3088,32 @@
             "size": "0x000003a0"
           },
           {
-            "symbol": "func_ov070_0211fa80",
+            "symbol": "_Z19func_ov070_0211fa80P19daPropeller_Heyho_c",
             "section": ".text",
             "size": "0x00000064"
           },
           {
-            "symbol": "func_ov070_0211fae4",
+            "symbol": "_Z19func_ov070_0211fae4P19daPropeller_Heyho_c",
             "section": ".text",
             "size": "0x0000027c"
           },
           {
-            "symbol": "func_ov070_0211fd60",
+            "symbol": "_Z19func_ov070_0211fd60P19daPropeller_Heyho_c",
             "section": ".text",
             "size": "0x00000038"
           },
           {
-            "symbol": "func_ov070_0211fd98",
+            "symbol": "_Z19func_ov070_0211fd98P19daPropeller_Heyho_c",
             "section": ".text",
             "size": "0x00000210"
           },
           {
-            "symbol": "func_ov070_0211ffa8",
+            "symbol": "_Z19func_ov070_0211ffa8P19daPropeller_Heyho_c",
             "section": ".text",
             "size": "0x00000078"
           },
           {
-            "symbol": "FlyGuy_ChangeState",
+            "symbol": "_Z18FlyGuy_ChangeStateP19daPropeller_Heyho_cPNS_5StateE",
             "section": ".text",
             "size": "0x00000050"
           },
@@ -3163,7 +3163,7 @@
             "size": "0x00000008"
           },
           {
-            "symbol": "daPropeller_Heyho_c_classInit",
+            "symbol": "_Z29daPropeller_Heyho_c_classInitv",
             "section": ".text",
             "size": "0x00000050"
           }

@@ -3,6 +3,7 @@
 #include "Ov007Settings.h"
 
 extern void func_ov007_020b1390(int mode);
+#define func_ov007_020b7eec _Z19func_ov007_020b7eecP13Ov007BootArgs
 extern void func_ov007_020b7eec(Ov007BootArgs *bootArgs);
 
 /* func_ov007_020b11bc's second tick: func_ov007_020b1390 in mode 0, then

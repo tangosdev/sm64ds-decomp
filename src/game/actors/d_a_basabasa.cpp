@@ -56,13 +56,15 @@ struct BasabasaAnimationFileHandle : SharedFilePtr {
 
 /* arm9 C helpers with no shared header. Vec3_Asr's definition takes a
  * file-local struct, so no shared spelling agrees with it yet. */
-extern "C" {
-void func_ov002_020aea30(void *self, void *actor, void *collision);
+struct Aea30C;
+void func_ov002_020aea30(Aea30C *self, dActor_c *actor, dBgCh_Actr *collision);
+
 void func_02012694(unsigned int id, const Vector3 *pos);
+extern "C" {
+
 void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 }
-
 
 extern BasabasaAnimationFileHandle data_ov065_0211d690; /* flying animation */
 extern BasabasaModelFilePtr data_ov065_0211d698;        /* flying model */
@@ -96,7 +98,7 @@ void daBasabasa_c::CheckTouch() {
         mIsFlying = 1;
         mAnmModel1.SetAnim((BCA_File *)data_ov065_0211d690.filePtr, 0, 0x1000, 0);
         mDeathState = 2;
-        func_ov002_020aea30(this, p, 0);
+        func_ov002_020aea30((Aea30C *)this, p, 0);
         func_02012694(0x112, &mCamSpacePos);
         return;
     }
@@ -113,7 +115,7 @@ void daBasabasa_c::CheckTouch() {
         mDeathState = 4;
         mIsFlying = 1;
         mAnmModel1.SetAnim((BCA_File *)data_ov065_0211d690.filePtr, 0, 0x1000, 0);
-        func_ov002_020aea30(this, p, 0);
+        func_ov002_020aea30((Aea30C *)this, p, 0);
         func_02012694(0x112, &mCamSpacePos);
         return;
     }
@@ -121,7 +123,7 @@ void daBasabasa_c::CheckTouch() {
         mIsFlying = 1;
         mAnmModel1.SetAnim((BCA_File *)data_ov065_0211d690.filePtr, 0, 0x1000, 0);
         mDeathState = 3;
-        func_ov002_020aea30(this, p, 0);
+        func_ov002_020aea30((Aea30C *)this, p, 0);
         func_02012694(0x112, &mCamSpacePos);
         return;
     }
@@ -129,13 +131,13 @@ void daBasabasa_c::CheckTouch() {
         mIsFlying = 1;
         mAnmModel1.SetAnim((BCA_File *)data_ov065_0211d690.filePtr, 0, 0x1000, 0);
         mDeathState = 2;
-        func_ov002_020aea30(this, p, 0);
+        func_ov002_020aea30((Aea30C *)this, p, 0);
         func_02012694(0x112, &mCamSpacePos);
         return;
     }
     if (flags & 0x20) {
         mDeathState = 1;
-        func_ov002_020aea30(this, p, 0);
+        func_ov002_020aea30((Aea30C *)this, p, 0);
         func_02012694(0x112, &mCamSpacePos);
         return;
     }
@@ -160,7 +162,7 @@ void daBasabasa_c::CheckTouch() {
     if (JumpedOnByPlayer(mdCcAc_c, *p) != 0) {
         p->Bounce(0x28000);
         mDeathState = 1;
-        func_ov002_020aea30(this, p, 0);
+        func_ov002_020aea30((Aea30C *)this, p, 0);
         func_02012694(0x112, &mCamSpacePos);
         return;
     }
@@ -462,7 +464,7 @@ s32 daBasabasa_c::OnYoshiTryEat() {
     return 4;
 }
 
-extern "C" daBasabasa_c *daBasabasa_c_classInit() {
+daBasabasa_c *daBasabasa_c_classInit() {
     return new daBasabasa_c();
 }
 

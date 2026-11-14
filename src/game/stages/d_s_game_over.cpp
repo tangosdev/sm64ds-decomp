@@ -52,7 +52,12 @@ enum dScGameOver_c_AssetId {
 #include "OamAttr.h"
 #include "OAM.h"
 #include "SpawnInfo.h"
+/* decl_common's C++ line takes int. Hide it and declare the definition's
+   short. local extern: decl_common.h */
+#define func_0201cebc func_0201cebc_hidden
 #include "decl_common.h"
+#undef func_0201cebc
+void func_0201cebc(short); /* local extern: decl_common.h */
 #include "PlayerInput.h"
 #include "dFdBrightness_c.h"
 #include "Sound.h"
@@ -60,7 +65,6 @@ enum dScGameOver_c_AssetId {
 /* SetFaders stores the fade controller here; slot 5 waits for the entrance fade. */
 
 /* Native scene data: prompt selection and the animated GAME OVER sprites. */
-extern "C" {
 /* Screen-map offsets for the two prompt rows, and the glyph animation's
  * off-screen starts and final x positions. The initial-position symbol retains
  * its existing shared declaration in decl_common.h. */
@@ -92,10 +96,8 @@ OamAttr *sGameOverGlyphTemplates[9] = {
     &sGameOverGlyph3, &sGameOverGlyph4, &sGameOverGlyph5,
     &sGameOverGlyph6, &sGameOverGlyph7, sGameOverCompositeTemplate,
 };
-}
 
 /* External scene services not declared by the included headers. */
-extern "C" {
 extern dFdBrightness_c *gSceneFader;
 extern int data_0208ee44;
 /* Scalars, not tables: the two BG-enable bit registers, main and sub --
@@ -108,11 +110,11 @@ extern u8 data_0209f204;
  * at both consumers (see notes/experiments/gameover-2711-bg1scrptr-u16.md).
  * Init passes the result to DecompressLZ16's void* param either way. */
 
-void OamRender10_d_s_game_over(s32 sub, OamAttr *data, s32 x, s32 y, s32 palette, s32 priority,
-                               Fix12i scaleX, Fix12i scaleY, s32 rotation, s32 mode);
-void *LoadFile(int handle);
-void DecompressLZ16(void *src, void *dst);
-}
+extern "C" void OamRender10_d_s_game_over(s32 sub, OamAttr *data, s32 x, s32 y, s32 palette,
+                                          s32 priority, Fix12i scaleX, Fix12i scaleY, s32 rotation,
+                                          s32 mode);
+extern "C" void *LoadFile(int handle);
+extern "C" void DecompressLZ16(void *src, void *dst);
 
 /* The stylus went down this frame: held, with the held state just changed
  * (see PlayerInput.h). Int-returning, so the ROM materializes the 0/1 it
@@ -135,7 +137,7 @@ static inline int IsTouchStarted() {
  * new; the inlined ctor runs fBase_c's C2, stores dBase_c then dScene_c's
  * vptrs, ORs pauseFlags 1 and 4 (dScene_c::dScene_c), then stores this
  * class's vptr. The null check is the one `new` itself emits. */
-extern "C" dScGameOver_c *dScGameOver_c_classInit(void) {
+dScGameOver_c *dScGameOver_c_classInit(void) {
     return new dScGameOver_c();
 }
 
@@ -486,6 +488,4 @@ void dScGameOver_c::UpdateIntro() {
  * inherited operator delete. See include/dScGameOver_c.h. */
 
 /* Scene registry priorities use the base profile, without an actor tail. */
-extern "C" {
 BaseSpawnInfo<dScGameOver_c> g_profile_GAME_OVER = {dScGameOver_c_classInit, 8, 11};
-}

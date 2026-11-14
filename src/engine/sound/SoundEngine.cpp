@@ -301,10 +301,13 @@ struct Elem_204f278 {
 };
 
 extern "C" {
+
 /* C-linkage callback types used by foreign decls. */
 /* Foreign callees and data. */
 
 extern int __aeabi_idiv(int a, int b);
+}
+
 extern s16 data_02086384[];
 extern int data_020a4d44;
 extern unsigned int data_020a4d48;
@@ -320,7 +323,8 @@ extern struct E data_020a5578[];
 extern int data_020a55f8;
 extern int data_020a55fc;
 extern OSMessageQueue data_020a5600;
-extern void *data_020a5614[]; /* the message array of data_020a5600 */
+extern void *data_020a5614[];
+/* the message array of data_020a5600 */
 extern struct T data_020a5634;
 extern OSThread data_020a5684;
 extern struct Q data_020a5718[];
@@ -328,7 +332,11 @@ extern char *data_020a5bb8;
 extern NNSFndList data_020a5bbc;
 extern NNSFndList data_020a5bc8;
 extern struct Obj_205212c data_020a5bd4[];
+extern "C" {
+
 extern void SND_Init(void);
+}
+
 extern void SND_SetOutputSelector(s32 left, s32 right, s32 channel1, s32 channel3);
 extern void SND_InvalidateWaveData(const void *start, const void *end);
 extern void SND_InvalidateBankData(const void *start, const void *end);
@@ -363,7 +371,11 @@ extern void SND_WaitForCommandProc(u32 tag);
 extern int SND_FlushCommand(u32 flags);
 extern const struct SNDCommand *SND_RecvCommandReply(u32 flags);
 extern u32 SND_GetPlayerStatus(void);
+extern "C" {
+
 extern u16 SND_CalcChannelVolume(s32 x);
+}
+
 struct SNDWaveArc;
 extern void SND_DestroyWaveArc(struct SNDWaveArc *waveArc);
 extern void SND_DestroyBank(struct SNDBankData *bank);
@@ -499,23 +511,22 @@ extern void func_02052438(NNSSndFader *fader);
 extern int func_02052458(NNSSndFader *fader);
 extern void func_02052494(NNSSndFader *o, int a, int b);
 extern void func_020524c4(NNSSndFader *fader);
-}
 
-extern "C" void func_020524c4(NNSSndFader *fader) {
+void func_020524c4(NNSSndFader *fader) {
     fader->target = 0;
     fader->origin = fader->target;
     fader->frame = 0;
     fader->counter = fader->frame;
 }
 
-extern "C" void func_02052494(NNSSndFader *o, int a, int b) {
+void func_02052494(NNSSndFader *o, int a, int b) {
     o->origin = func_02052458(o);
     o->target = a;
     o->frame = b;
     o->counter = 0;
 }
 
-extern "C" int func_02052458(NNSSndFader *fader) {
+int func_02052458(NNSSndFader *fader) {
     int den = fader->frame;
     int num = fader->counter;
     if (num >= den)
@@ -527,17 +538,17 @@ extern "C" int func_02052458(NNSSndFader *fader) {
     }
 }
 
-extern "C" void func_02052438(NNSSndFader *fader) {
+void func_02052438(NNSSndFader *fader) {
     if (fader->counter < fader->frame) {
         fader->counter += 1;
     }
 }
 
-extern "C" int func_02052420(NNSSndFader *fader) {
+int func_02052420(NNSSndFader *fader) {
     return fader->counter >= fader->frame;
 }
 
-extern "C" struct Elem *func_020523e0(struct ElemTable *obj, int idx) {
+struct Elem *func_020523e0(struct ElemTable *obj, int idx) {
     struct Elem* e;
     if (idx < 0) return 0;
     if ((u32)idx >= (u32)obj->count) return 0;
@@ -547,8 +558,7 @@ extern "C" struct Elem *func_020523e0(struct ElemTable *obj, int idx) {
     return e;
 }
 
-extern "C" void func_020522c4(void)
-{
+void func_020522c4(void) {
     int i;
     int t1;
     Obj_205212c *stream = data_020a5bd4;
@@ -589,32 +599,32 @@ extern "C" void func_020522c4(void)
     }
 }
 
-extern "C" void func_0205227c(void){
-  int i;
-  for (i = 0; i < 4; i++){
-      if (((int)data_020a5bd4[i].uf0 << 30) >> 31) {
-          func_0204ff48(&data_020a5bd4[i]);
-      }
-  }
+void func_0205227c(void) {
+    int i;
+    for (i = 0; i < 4; i++) {
+        if (((int)data_020a5bd4[i].uf0 << 30) >> 31) {
+            func_0204ff48(&data_020a5bd4[i]);
+        }
+    }
 }
 
-extern "C" void func_02052234(void){
-  int i;
-  for (i = 0; i < 4; i++){
-      if (((int)data_020a5bd4[i].uf0 << 30) >> 31) {
-          func_0204fed0(&data_020a5bd4[i]);
-      }
-  }
+void func_02052234(void) {
+    int i;
+    for (i = 0; i < 4; i++) {
+        if (((int)data_020a5bd4[i].uf0 << 30) >> 31) {
+            func_0204fed0(&data_020a5bd4[i]);
+        }
+    }
 }
 
-extern "C" void func_02052208(Obj_205212c *stream) {
+void func_02052208(Obj_205212c *stream) {
     int v = stream->uf0;
     if ((v << 30) >> 31)
         func_0204ff9c(stream);
     func_0205212c(stream);
 }
 
-extern "C" void func_0205212c(Obj_205212c *self) {
+void func_0205212c(Obj_205212c *self) {
     if (self->u114 != 0) {
         *self->u114 = 0;
         self->u114 = 0;
@@ -642,7 +652,7 @@ extern "C" void func_0205212c(Obj_205212c *self) {
     *p &= ~2u;
 }
 
-extern "C" void func_020520dc(Obj_205212c *self) {
+void func_020520dc(Obj_205212c *self) {
     if (self->useCount == 0)
         return;
 
@@ -654,7 +664,7 @@ extern "C" void func_020520dc(Obj_205212c *self) {
     func_02050008(self);
 }
 
-extern "C" void func_020520a4(void *node) {
+void func_020520a4(void *node) {
     OSIntrMode state;
 
     state = OS_DisableInterrupts();
@@ -662,7 +672,7 @@ extern "C" void func_020520a4(void *node) {
     OS_RestoreInterrupts(state);
 }
 
-extern "C" int func_02052008(struct SndHeap *heap) {
+int func_02052008(struct SndHeap *heap) {
     int i;
     func_02050d2c();
     for (i = 0; i < 0x20; i++) {
@@ -685,7 +695,7 @@ extern "C" int func_02052008(struct SndHeap *heap) {
     return 1;
 }
 
-extern "C" int func_02051fb4(void *handle, unsigned int seqNo) {
+int func_02051fb4(void *handle, unsigned int seqNo) {
     Sound::InfoSequenceEntry *info = Sound::InfoSequenceEntry::GetWithID(seqNo);
     if (!info)
         return 0;
@@ -693,7 +703,7 @@ extern "C" int func_02051fb4(void *handle, unsigned int seqNo) {
                          info->playerPriority, info, seqNo);
 }
 
-extern "C" int func_02051f1c(void *handle, u32 seqArcNo, int index) {
+int func_02051f1c(void *handle, u32 seqArcNo, int index) {
     struct SndArchiveInfo *info;
     struct ElemTable *arc;
     struct Elem *seq;
@@ -710,8 +720,8 @@ extern "C" int func_02051f1c(void *handle, u32 seqArcNo, int index) {
                          seq->playerPriority, seq, arc, seqArcNo, index);
 }
 
-extern "C" int func_02051e60(NNSSndHandle *handle, int playerNo, int bankNo, int playerPrio,
-                             unsigned int seqArcNo, int index) {
+int func_02051e60(NNSSndHandle *handle, int playerNo, int bankNo, int playerPrio,
+                  unsigned int seqArcNo, int index) {
     struct SndArchiveInfo *info;
     struct Elem *seq;
     struct ElemTable *arc;
@@ -733,8 +743,8 @@ extern "C" int func_02051e60(NNSSndHandle *handle, int playerNo, int bankNo, int
     return func_02051a98(handle, playerNo, bankNo, playerPrio, seq, arc, seqArcNo, index);
 }
 
-extern "C" int func_02051bd0(NNSSndHandle *handle, int playerNo, unsigned int bankNo,
-                             int playerPrio, Sound::InfoSequenceEntry *info, int seqNo) {
+int func_02051bd0(NNSSndHandle *handle, int playerNo, unsigned int bankNo, int playerPrio,
+                  Sound::InfoSequenceEntry *info, int seqNo) {
     Sound::InfoInstrumentBankEntry *bank;
     struct SndArchiveInfo *waveArcInfo;
     NNSSndSeqPlayer *player;
@@ -816,9 +826,8 @@ extern "C" int func_02051bd0(NNSSndHandle *handle, int playerNo, unsigned int ba
     return 1;
 }
 
-extern "C" int func_02051a98(NNSSndHandle *handle, int playerNo, unsigned int bankNo,
-                             int playerPrio, struct Elem *seq, struct ElemTable *arc, int seqArcNo,
-                             int index) {
+int func_02051a98(NNSSndHandle *handle, int playerNo, unsigned int bankNo, int playerPrio,
+                  struct Elem *seq, struct ElemTable *arc, int seqArcNo, int index) {
     Sound::InfoInstrumentBankEntry *bank;
     NNSSndSeqPlayer *player;
     void *bankData;
@@ -861,21 +870,21 @@ extern "C" int func_02051a98(NNSSndHandle *handle, int playerNo, unsigned int ba
     return 1;
 }
 
-extern "C" void func_02051a88(void *mem, u32 size, u32 data1, u32 data2) {
+void func_02051a88(void *mem, u32 size, u32 data1, u32 data2) {
     SND_InvalidateSeqData(mem, (u8 *)mem + size);
 }
 
-extern "C" void func_02051a68(void *mem, u32 size, u32 data1, u32 data2) {
+void func_02051a68(void *mem, u32 size, u32 data1, u32 data2) {
     SND_InvalidateBankData(mem, (u8 *)mem + size);
     SND_DestroyBank((struct SNDBankData *)mem);
 }
 
-extern "C" void func_02051a48(void *mem, u32 size, u32 data1, u32 data2) {
+void func_02051a48(void *mem, u32 size, u32 data1, u32 data2) {
     SND_InvalidateWaveData(mem, (u8 *)mem + size);
     SND_DestroyWaveArc((struct SNDWaveArc *)mem);
 }
 
-extern "C" struct SndHeap *func_02051a28(int playerNo, NNSSndSeqPlayer *player) {
+struct SndHeap *func_02051a28(int playerNo, NNSSndSeqPlayer *player) {
     struct SndHeap *heap = func_0204f504(playerNo, player);
     if (heap) {
         func_02051244(heap);
@@ -883,7 +892,7 @@ extern "C" struct SndHeap *func_02051a28(int playerNo, NNSSndSeqPlayer *player) 
     return heap;
 }
 
-extern "C" int func_02051918(unsigned int id, struct SndHeap *heap) {
+int func_02051918(unsigned int id, struct SndHeap *heap) {
     struct List *l;
     unsigned int i;
     struct Entry *e;
@@ -922,21 +931,21 @@ extern "C" int func_02051918(unsigned int id, struct SndHeap *heap) {
     return 1;
 }
 
-extern "C" int func_020518dc(u32 id, struct SndHeap *heap) {
+int func_020518dc(u32 id, struct SndHeap *heap) {
     struct SndArchiveInfo *info = func_02050c14(id);
     if (info == 0)
         return 0;
     return func_02051574(info->fileId, heap) != 0;
 }
 
-extern "C" int func_020518a0(u32 id, struct SndHeap *heap) {
+int func_020518a0(u32 id, struct SndHeap *heap) {
     struct SndArchiveInfo *info = func_02050b4c(id);
     if (info == 0)
         return 0;
     return func_020514b4(info->fileId, heap) != 0;
 }
 
-extern "C" int func_0205179c(unsigned int id, int flags, struct SndHeap *heap) {
+int func_0205179c(unsigned int id, int flags, struct SndHeap *heap) {
     Sound::InfoSequenceEntry *seq;
     Sound::InfoInstrumentBankEntry *bank;
     void *bankData = 0;
@@ -979,7 +988,7 @@ extern "C" int func_0205179c(unsigned int id, int flags, struct SndHeap *heap) {
     return 1;
 }
 
-extern "C" int func_020516d4(unsigned int id, int flags, struct SndHeap *heap) {
+int func_020516d4(unsigned int id, int flags, struct SndHeap *heap) {
     Sound::InfoInstrumentBankEntry *entry;
     void *bankData;
     int i;
@@ -1015,8 +1024,8 @@ extern "C" int func_020516d4(unsigned int id, int flags, struct SndHeap *heap) {
     return 1;
 }
 
-extern "C" void *func_02051634(u32 fileId, SndHeapDisposeCallback callback, u32 data1, u32 data2,
-                               struct SndHeap *heap) {
+void *func_02051634(u32 fileId, SndHeapDisposeCallback callback, u32 data1, u32 data2,
+                    struct SndHeap *heap) {
     int size = func_02050a5c(fileId);
     void *buffer;
     if (size == 0)
@@ -1030,7 +1039,7 @@ extern "C" void *func_02051634(u32 fileId, SndHeapDisposeCallback callback, u32 
     return buffer;
 }
 
-extern "C" void *func_020515d4(u32 fileId, struct SndHeap *heap) {
+void *func_020515d4(u32 fileId, struct SndHeap *heap) {
     void *data = func_020509b0(fileId);
     if (data == 0) {
         data = func_02051634(fileId, func_02051420, func_02050d2c(), fileId, heap);
@@ -1041,7 +1050,7 @@ extern "C" void *func_020515d4(u32 fileId, struct SndHeap *heap) {
     return data;
 }
 
-extern "C" void *func_02051574(u32 fileId, struct SndHeap *heap) {
+void *func_02051574(u32 fileId, struct SndHeap *heap) {
     void *data = func_020509b0(fileId);
     if (data == 0) {
         data = func_02051634(fileId, func_02051420, func_02050d2c(), fileId, heap);
@@ -1052,7 +1061,7 @@ extern "C" void *func_02051574(u32 fileId, struct SndHeap *heap) {
     return data;
 }
 
-extern "C" void *func_02051514(u32 fileId, struct SndHeap *heap) {
+void *func_02051514(u32 fileId, struct SndHeap *heap) {
     void *data = func_020509b0(fileId);
     if (data == 0) {
         data = func_02051634(fileId, func_020513e4, func_02050d2c(), fileId, heap);
@@ -1063,7 +1072,7 @@ extern "C" void *func_02051514(u32 fileId, struct SndHeap *heap) {
     return data;
 }
 
-extern "C" void *func_020514b4(u32 fileId, struct SndHeap *heap) {
+void *func_020514b4(u32 fileId, struct SndHeap *heap) {
     void *data = func_020509b0(fileId);
     if (data == 0) {
         data = func_02051634(fileId, func_020513a8, func_02050d2c(), fileId, heap);
@@ -1074,7 +1083,7 @@ extern "C" void *func_020514b4(u32 fileId, struct SndHeap *heap) {
     return data;
 }
 
-extern "C" void func_02051454(void *mem, int arc, u32 fileId) {
+void func_02051454(void *mem, int arc, u32 fileId) {
     int prev;
     OSIntrMode irq;
     irq = OS_DisableInterrupts();
@@ -1086,24 +1095,24 @@ extern "C" void func_02051454(void *mem, int arc, u32 fileId) {
     OS_RestoreInterrupts(irq);
 }
 
-extern "C" void func_02051420(void *mem, u32 size, u32 arc, u32 fileId) {
+void func_02051420(void *mem, u32 size, u32 arc, u32 fileId) {
     func_02051454(mem, arc, fileId);
     SND_InvalidateSeqData(mem, (u8 *)mem + size);
 }
 
-extern "C" void func_020513e4(void *mem, u32 size, u32 arc, u32 fileId) {
+void func_020513e4(void *mem, u32 size, u32 arc, u32 fileId) {
     func_02051454(mem, arc, fileId);
     SND_InvalidateBankData(mem, (u8 *)mem + size);
     SND_DestroyBank((struct SNDBankData *)mem);
 }
 
-extern "C" void func_020513a8(void *mem, u32 size, u32 arc, u32 fileId) {
+void func_020513a8(void *mem, u32 size, u32 arc, u32 fileId) {
     func_02051454(mem, arc, fileId);
     SND_InvalidateWaveData(mem, (u8 *)mem + size);
     SND_DestroyWaveArc((struct SNDWaveArc *)mem);
 }
 
-extern "C" struct SndHeap *func_0205130c(u32 addr, u32 size) {
+struct SndHeap *func_0205130c(u32 addr, u32 size) {
     u32 end = addr + size;
     u32 aligned = (addr + 3) & ~3u;
     NNSFndHeapHandle frmHeap;
@@ -1122,12 +1131,12 @@ extern "C" struct SndHeap *func_0205130c(u32 addr, u32 size) {
     return 0;
 }
 
-extern "C" void func_020512f0(struct SndHeap *heap) {
+void func_020512f0(struct SndHeap *heap) {
     func_02051244(heap);
     NNS_FndDestroyFrmHeap(heap->frmHeap);
 }
 
-extern "C" void func_02051244(struct SndHeap *heap) {
+void func_02051244(struct SndHeap *heap) {
     NNSFndList *level;
     struct SndHeapBlock *block;
     level = (NNSFndList *)NNS_FndGetPrevListObject(&heap->levels, 0);
@@ -1149,8 +1158,8 @@ extern "C" void func_02051244(struct SndHeap *heap) {
     func_02050fd4(heap);
 }
 
-extern "C" void *func_020511d4(struct SndHeap *heap, u32 size, SndHeapDisposeCallback callback,
-                               u32 data1, u32 data2) {
+void *func_020511d4(struct SndHeap *heap, u32 size, SndHeapDisposeCallback callback, u32 data1,
+                    u32 data2) {
     struct SndHeapBlock *block;
     NNSFndList *level;
 
@@ -1169,7 +1178,7 @@ extern "C" void *func_020511d4(struct SndHeap *heap, u32 size, SndHeapDisposeCal
     return block->mem;
 }
 
-extern "C" s32 func_0205117c(struct SndHeap *heap) {
+s32 func_0205117c(struct SndHeap *heap) {
     u16 level = heap->levels.numObjects;
     NNSFndHeapHandle frmHeap = heap->frmHeap;
     if (!NNS_FndRecordStateForFrmHeap(frmHeap, level)) {
@@ -1182,7 +1191,7 @@ extern "C" s32 func_0205117c(struct SndHeap *heap) {
     return ~0;
 }
 
-extern "C" void func_020510a4(struct SndHeap *heap, int level) {
+void func_020510a4(struct SndHeap *heap, int level) {
     struct SndHeapBlock *block;
     NNSFndList *top;
 
@@ -1210,7 +1219,7 @@ extern "C" void func_020510a4(struct SndHeap *heap, int level) {
     func_02050fd4(heap);
 }
 
-extern "C" u32 func_02051074(struct SndHeap *heap) {
+u32 func_02051074(struct SndHeap *heap) {
     u32 size;
     size = NNS_FndGetAllocatableSizeForFrmHeapEx(heap->frmHeap, 0x20);
     if (size < 0x20)
@@ -1220,11 +1229,11 @@ extern "C" u32 func_02051074(struct SndHeap *heap) {
     return size;
 }
 
-extern "C" void func_02051064(NNSFndList *level) {
+void func_02051064(NNSFndList *level) {
     NNS_FndInitList(level, 0);
 }
 
-extern "C" s32 func_02051024(struct SndHeap *heap, NNSFndHeapHandle frmHeap) {
+s32 func_02051024(struct SndHeap *heap, NNSFndHeapHandle frmHeap) {
     NNS_FndInitList(&heap->levels, 0xc);
     heap->frmHeap = frmHeap;
     if (func_02050fd4(heap)) {
@@ -1233,7 +1242,7 @@ extern "C" s32 func_02051024(struct SndHeap *heap, NNSFndHeapHandle frmHeap) {
     return 0;
 }
 
-extern "C" s32 func_02050fd4(struct SndHeap *heap) {
+s32 func_02050fd4(struct SndHeap *heap) {
     NNSFndList *level = (NNSFndList *)NNS_FndAllocFromFrmHeapEx(heap->frmHeap, 0x14, 4);
     if (!level) {
         return 0;
@@ -1243,15 +1252,13 @@ extern "C" s32 func_02050fd4(struct SndHeap *heap) {
     return 1;
 }
 
-extern "C" void func_02050fb0(void)
-{
+void func_02050fb0(void) {
     u32 r = SND_GetCurrentCommandTag();
     SND_FlushCommand(1);
     SND_WaitForCommandProc(r);
 }
 
-extern "C" void func_02050f34(data_020a5bb8_t *arc, const char *path, struct SndHeap *heap,
-                              int loadSymbols) {
+void func_02050f34(data_020a5bb8_t *arc, const char *path, struct SndHeap *heap, int loadSymbols) {
     arc->info = 0;
     arc->fileTable = 0;
     arc->symbols = 0;
@@ -1264,7 +1271,7 @@ extern "C" void func_02050f34(data_020a5bb8_t *arc, const char *path, struct Snd
     data_020a5bb8 = (char *)arc;
 }
 
-extern "C" int func_02050d54(data_020a5bb8_t *arc, struct SndHeap *heap, int loadSymbols) {
+int func_02050d54(data_020a5bb8_t *arc, struct SndHeap *heap, int loadSymbols) {
     unsigned int sz;
     int r;
     arc->info = func_020511d4(heap, arc->infoSize, func_02050988, (u32)arc, 0);
@@ -1299,16 +1306,17 @@ extern "C" int func_02050d54(data_020a5bb8_t *arc, struct SndHeap *heap, int loa
     return 1;
 }
 
-extern "C" int func_02050d3c(int v) {
+int func_02050d3c(int v) {
     int old = ((int)data_020a5bb8);
-    data_020a5bb8 = (char *)v;
+    *(int *)(&data_020a5bb8) = (v);
     return old;
 }
 
-extern "C" int func_02050d2c(void) { return ((int)data_020a5bb8); }
+int func_02050d2c(void) {
+    return ((int)data_020a5bb8);
+}
 
-extern "C" void *func_02050cdc(int a, int idx)
-{
+void *func_02050cdc(int a, int idx) {
     struct SndArchiveInfo *info;
     struct ElemTable *o;
     struct Elem *e;
@@ -1341,7 +1349,7 @@ Sound::InfoSequenceEntry *Sound::InfoSequenceEntry::GetWithID(u32 id)
     return (v == 0) ? 0 : (InfoSequenceEntry *)(base + v);
 }
 
-extern "C" struct SndArchiveInfo *func_02050c14(unsigned int id) {
+struct SndArchiveInfo *func_02050c14(unsigned int id) {
     char* root = data_020a5bb8;
     char *sub = (char *)((data_020a5bb8_t *)root)->info;
     int off = ((struct SndInfoBlock *)sub)->seqArcTable;
@@ -1372,7 +1380,7 @@ Sound::InfoInstrumentBankEntry *Sound::InfoInstrumentBankEntry::GetWithID(u32 id
     return (v == 0) ? 0 : (InfoInstrumentBankEntry *)(base + v);
 }
 
-extern "C" struct SndArchiveInfo *func_02050b4c(unsigned int id) {
+struct SndArchiveInfo *func_02050b4c(unsigned int id) {
     char* root = data_020a5bb8;
     char *sub = (char *)((data_020a5bb8_t *)root)->info;
     int off = ((struct SndInfoBlock *)sub)->waveArcTable;
@@ -1387,7 +1395,7 @@ extern "C" struct SndArchiveInfo *func_02050b4c(unsigned int id) {
     return (v == 0) ? 0 : (struct SndArchiveInfo *)(base + v);
 }
 
-extern "C" struct SndPlayerInfo *func_02050ae8(unsigned int id) {
+struct SndPlayerInfo *func_02050ae8(unsigned int id) {
     char* root = data_020a5bb8;
     char *sub = (char *)((data_020a5bb8_t *)root)->info;
     int off = ((struct SndInfoBlock *)sub)->playerTable;
@@ -1402,7 +1410,7 @@ extern "C" struct SndPlayerInfo *func_02050ae8(unsigned int id) {
     return (v == 0) ? 0 : (struct SndPlayerInfo *)(base + v);
 }
 
-extern "C" struct List *func_02050a84(unsigned int id) {
+struct List *func_02050a84(unsigned int id) {
     char* root = data_020a5bb8;
     char *sub = (char *)((data_020a5bb8_t *)root)->info;
     int off = ((struct SndInfoBlock *)sub)->groupTable;
@@ -1417,13 +1425,13 @@ extern "C" struct List *func_02050a84(unsigned int id) {
     return (v == 0) ? 0 : (struct List *)(base + v);
 }
 
-extern "C" int func_02050a5c(unsigned int i) {
+int func_02050a5c(unsigned int i) {
     struct Hdr84 *h = ((data_020a5bb8_t *)data_020a5bb8)->fileTable;
     if (i >= (unsigned int)h->count) return 0;
     return h->entries[i].size;
 }
 
-extern "C" int func_020509d8(u32 fileId, void *buffer, u32 size, u32 offset) {
+int func_020509d8(u32 fileId, void *buffer, u32 size, u32 offset) {
     data_020a5bb8_t *arc = (data_020a5bb8_t *)data_020a5bb8;
     struct Hdr84 *fat = arc->fileTable;
     struct FatEntry *entry;
@@ -1443,36 +1451,35 @@ extern "C" int func_020509d8(u32 fileId, void *buffer, u32 size, u32 offset) {
     return FS_ReadFile(&arc->file, buffer, size);
 }
 
-extern "C" void *func_020509b0(u32 fileId) {
+void *func_020509b0(u32 fileId) {
     struct Hdr84 *h = ((data_020a5bb8_t *)data_020a5bb8)->fileTable;
     if (fileId >= (unsigned int)h->count)
         return 0;
     return h->entries[fileId].address;
 }
 
-extern "C" void func_02050994(u32 fileId, void *address) {
+void func_02050994(u32 fileId, void *address) {
     ((data_020a5bb8_t *)data_020a5bb8)->fileTable->entries[fileId].address = address;
 }
 
-extern "C" void func_02050988(void *mem, u32 size, u32 arc, u32 data2) {
+void func_02050988(void *mem, u32 size, u32 arc, u32 data2) {
     ((data_020a5bb8_t *)arc)->info = 0;
 }
 
-extern "C" void func_0205097c(void *mem, u32 size, u32 arc, u32 data2) {
+void func_0205097c(void *mem, u32 size, u32 arc, u32 data2) {
     ((data_020a5bb8_t *)arc)->fileTable = 0;
 }
 
-extern "C" void func_02050970(void *mem, u32 size, u32 arc, u32 data2) {
+void func_02050970(void *mem, u32 size, u32 arc, u32 data2) {
     ((data_020a5bb8_t *)arc)->symbols = 0;
 }
 
-extern "C" void func_02050950(void) {
+void func_02050950(void) {
     data_020a55fc = 0;
     data_020a5634.f0 = (0);
 }
 
-extern "C" void func_020508a0(void)
-{
+void func_020508a0(void) {
     T *g = &data_020a5634;
     NNSSndFader *sub;
     int v;
@@ -1495,8 +1502,7 @@ extern "C" void func_020508a0(void)
     g->f4c = v;
 }
 
-extern "C" int func_020507e0(void *a0, unsigned int a1, int a2, int a3, int a4, void *a5,
-                             void *a6) {
+int func_020507e0(void *a0, unsigned int a1, int a2, int a3, int a4, void *a5, void *a6) {
     volatile int z;
     func_02050798();
     if (data_020a5634.f0 != 0)
@@ -1508,7 +1514,7 @@ extern "C" int func_020507e0(void *a0, unsigned int a1, int a2, int a3, int a4, 
                          a4, (int)a5, (int)a6);
 }
 
-extern "C" void func_02050798(void){
+void func_02050798(void) {
     if (data_020a5634.f0 == 0)
         return;
     if (data_020a5634.f4 != 1)
@@ -1516,8 +1522,7 @@ extern "C" void func_02050798(void){
     func_020502b8();
 }
 
-extern "C" void func_020506fc(int arg)
-{
+void func_020506fc(int arg) {
     if (data_020a55fc != 0)
         return;
     data_020a55f8 = 0;
@@ -1527,9 +1532,8 @@ extern "C" void func_020506fc(int arg)
     OS_WakeupThreadDirect(&data_020a5684);
 }
 
-extern "C" int func_020503a4(int a, int b, int c, int d, int p5, int p6, int p7, int p8,
-                  int p9, int p10, int p11, int p12, int p13, int p14, int p15)
-{
+int func_020503a4(int a, int b, int c, int d, int p5, int p6, int p7, int p8, int p9, int p10,
+                  int p11, int p12, int p13, int p14, int p15) {
     int mode = 0;
     int align;
     int total;
@@ -1622,8 +1626,7 @@ extern "C" int func_020503a4(int a, int b, int c, int d, int p5, int p6, int p7,
     }
 }
 
-extern "C" void func_020502b8(void)
-{
+void func_020502b8(void) {
     struct T *d = &data_020a5634;
     int has = (d->f28 >= 0);
     int mask = has ? (1 << d->f28) : 0;
@@ -1645,8 +1648,7 @@ extern "C" void func_020502b8(void)
     d->f0 = 0;
 }
 
-extern "C" void func_02050258(void)
-{
+void func_02050258(void) {
     struct T *G = &data_020a5634;
     int sh;
     int mask;
@@ -1664,8 +1666,7 @@ extern "C" void func_02050258(void)
     SND_WaitForCommandProc(p);
 }
 
-extern "C" void func_020501b8(void)
-{
+void func_020501b8(void) {
     T *g = &data_020a5634;
     volatile int a;
     volatile int b;
@@ -1684,7 +1685,7 @@ extern "C" void func_020501b8(void)
     }
 }
 
-extern "C" void func_020500a4(void *arg) {
+void func_020500a4(void *arg) {
     struct T *strm = (struct T *)arg;
     int quot = strm->f14 / strm->f2c;
     int prod = quot * strm->f18;
@@ -1711,7 +1712,7 @@ extern "C" void func_020500a4(void *arg) {
         strm->f18 = 0;
 }
 
-extern "C" void func_02050038(void *arg) {
+void func_02050038(void *arg) {
     struct Q *r;
     void *out;
     for (;;) {
@@ -1723,7 +1724,7 @@ extern "C" void func_02050038(void *arg) {
     }
 }
 
-extern "C" void func_02050008(struct C *o) {
+void func_02050008(struct C *o) {
     if (o->f2c == 0) {
         return;
     }
@@ -1732,18 +1733,18 @@ extern "C" void func_02050008(struct C *o) {
     o->chanCount = 0;
 }
 
-extern "C" void func_0204ffcc(struct C *c) {
+void func_0204ffcc(struct C *c) {
     SND_StartTimer(c->f2c, 0, 1 << c->f28, 0);
     c->fc |= 2;
 }
 
-extern "C" void func_0204ff9c(struct C *o) {
+void func_0204ff9c(struct C *o) {
     if ((o->fc << 31) >> 31) {
         func_0204fde8(o);
     }
 }
 
-extern "C" void func_0204ff48(struct C *p) {
+void func_0204ff48(struct C *p) {
     if (!((p->fc << 30) >> 31))
         return;
     SND_StopTimer(p->f2c, 0, 1 << p->f28, 0);
@@ -1752,7 +1753,7 @@ extern "C" void func_0204ff48(struct C *p) {
     SND_WaitForCommandProc(x);
 }
 
-extern "C" void func_0204fed0(struct C *c) {
+void func_0204fed0(struct C *c) {
     if (((c->fc << 30) >> 31) == 0) return;
     while (c->f20 != 0) {
         OSIntrMode saved = OS_DisableInterrupts();
@@ -1762,7 +1763,7 @@ extern "C" void func_0204fed0(struct C *c) {
     SND_StartTimer(c->f2c, 0, 1 << c->f28, 0);
 }
 
-extern "C" void func_0204fe5c(struct C *c, int volume) {
+void func_0204fe5c(struct C *c, int volume) {
     unsigned char new_var;
     int i = 0;
     c->volume = volume;
@@ -1778,7 +1779,7 @@ extern "C" void func_0204fe5c(struct C *c, int volume) {
     }
 }
 
-extern "C" void func_0204fde8(struct C *obj) {
+void func_0204fde8(struct C *obj) {
     if ((int)(obj->fc << 0x1e) >> 0x1f) {
         u32 p;
         int *flags = &obj->fc;
@@ -1791,7 +1792,7 @@ extern "C" void func_0204fde8(struct C *obj) {
     func_0204fda4(obj);
 }
 
-extern "C" void func_0204fda4(struct C *c) {
+void func_0204fda4(struct C *c) {
     int* p;
     func_0204f0b8(c->f28);
     NNS_FndRemoveListObject(&data_020a552c, c);
@@ -1819,8 +1820,7 @@ void C::func_0204fce8(void *arg) {
     }
 }
 
-extern "C" void func_0204fc40(void)
-{
+void func_0204fc40(void) {
     int i;
     NNS_FndInitList(&data_020a4d60, 0x14);
     NNS_FndInitList(&data_020a4d54, 0x14);
@@ -1836,7 +1836,7 @@ extern "C" void func_0204fc40(void)
     }
 }
 
-extern "C" void func_0204fafc(void) {
+void func_0204fafc(void) {
     NNSSndSeqPlayer *node;
     NNSSndSeqPlayer *next;
     unsigned int mask;
@@ -1887,7 +1887,7 @@ void Sound::Player::SetPlayableSeqCount(int index, int count)
     data_020a4d6c[index].mPlayableSeqCount = (unsigned short)count;
 }
 
-extern "C" int func_0204fa3c(int playerNo, struct SndHeap *heap, u32 size) {
+int func_0204fa3c(int playerNo, struct SndHeap *heap, u32 size) {
     Elem_204f278 *block;
     struct SndHeap *seqHeap;
     block = (Elem_204f278 *)func_020511d4(heap, size + sizeof(Elem_204f278), func_0204f278, 0, 0);
@@ -1904,13 +1904,13 @@ extern "C" int func_0204fa3c(int playerNo, struct SndHeap *heap, u32 size) {
     return 1;
 }
 
-extern "C" int func_0204fa2c(NNSSndHandle *handle, int fade) {
+int func_0204fa2c(NNSSndHandle *handle, int fade) {
     /* func_0204f5a0 is void, so there is no return: the call is a tail call and r0 is the
        callee's. */
     func_0204f5a0(handle->player, fade);
 }
 
-extern "C" void func_0204f9c4(int idx, int arg1) {
+void func_0204f9c4(int idx, int arg1) {
     int i;
     NNSSndSeqPlayer *p = data_020a50ec;
     SoundPlayerRecord *player = &data_020a4d6c[idx];
@@ -1921,7 +1921,7 @@ extern "C" void func_0204f9c4(int idx, int arg1) {
     }
 }
 
-extern "C" void func_0204f958(int idx, int val) {
+void func_0204f958(int idx, int val) {
     NNSSndSeqPlayer *cur;
     NNSSndSeqPlayer *next;
     NNSFndList *list = &data_020a4d6c[idx].mLists[0];
@@ -1934,11 +1934,11 @@ extern "C" void func_0204f958(int idx, int val) {
     } while (cur != 0);
 }
 
-extern "C" void func_0204f94c(NNSSndHandle *handle) {
+void func_0204f94c(NNSSndHandle *handle) {
     handle->player = 0;
 }
 
-extern "C" void func_0204f934(NNSSndHandle *handle) {
+void func_0204f934(NNSSndHandle *handle) {
     NNSSndSeqPlayer *player = handle->player;
     if (player != 0) {
         player->handle = 0;
@@ -1950,7 +1950,7 @@ extern "C" void func_0204f934(NNSSndHandle *handle) {
    its extVolume. This and the setters after it run in reverse snd_player.c
    source order, the order the Sonic Rush Adventure decomp lists them in;
    the handle and player types are nnsys/snd/player.h's. */
-extern "C" void NNS_SndPlayerSetVolume(NNSSndHandle *handle, int volume) {
+void NNS_SndPlayerSetVolume(NNSSndHandle *handle, int volume) {
     NNSSndSeqPlayer *player = handle->player;
     if (player)
         player->extVolume = (u8)volume;
@@ -1958,7 +1958,7 @@ extern "C" void NNS_SndPlayerSetVolume(NNSSndHandle *handle, int volume) {
 
 /* NitroSystem's NNS_SndPlayerSetInitialVolume: if the handle holds a
    player, set its initVolume. */
-extern "C" void NNS_SndPlayerSetInitialVolume(NNSSndHandle *handle, int volume) {
+void NNS_SndPlayerSetInitialVolume(NNSSndHandle *handle, int volume) {
     NNSSndSeqPlayer *player = handle->player;
     if (player)
         player->initVolume = (u8)volume;
@@ -1967,7 +1967,7 @@ extern "C" void NNS_SndPlayerSetInitialVolume(NNSSndHandle *handle, int volume) 
 /* NitroSystem's NNS_SndPlayerMoveVolume: unless the player is fading out
    (status 2), fade its volume to targetVolume over `frames` frames
    (func_02052494, NNSi_SndFaderSet by shape, works in 8.8 fixed point). */
-extern "C" void NNS_SndPlayerMoveVolume(NNSSndHandle *handle, int targetVolume, int frames) {
+void NNS_SndPlayerMoveVolume(NNSSndHandle *handle, int targetVolume, int frames) {
     NNSSndSeqPlayer *player = handle->player;
     if (player == 0)
         return;
@@ -1978,7 +1978,7 @@ extern "C" void NNS_SndPlayerMoveVolume(NNSSndHandle *handle, int targetVolume, 
 
 /* NitroSystem's NNS_SndPlayerSetChannelPriority: SND_SetPlayerChannelPriority
    on the player number. */
-extern "C" void NNS_SndPlayerSetChannelPriority(NNSSndHandle *handle, int priority) {
+void NNS_SndPlayerSetChannelPriority(NNSSndHandle *handle, int priority) {
     NNSSndSeqPlayer *player = handle->player;
     if (player)
         SND_SetPlayerChannelPriority(player->playerNo, priority);
@@ -1987,7 +1987,7 @@ extern "C" void NNS_SndPlayerSetChannelPriority(NNSSndHandle *handle, int priori
 /* NitroSystem's NNS_SndPlayerSetTrackMute: if the handle holds a player,
    mute (flag 1) or unmute the tracks in trackBitMask through
    SND_SetTrackMute on its player number. */
-extern "C" void NNS_SndPlayerSetTrackMute(NNSSndHandle *handle, int trackBitMask, int flag) {
+void NNS_SndPlayerSetTrackMute(NNSSndHandle *handle, int trackBitMask, int flag) {
     NNSSndSeqPlayer *player = handle->player;
     if (player)
         SND_SetTrackMute(player->playerNo, trackBitMask, flag);
@@ -1997,7 +1997,7 @@ extern "C" void NNS_SndPlayerSetTrackMute(NNSSndHandle *handle, int trackBitMask
    set the tracks in trackBitMask to volume (0..127) through
    SND_SetTrackVolume, converted by SND_CalcDecibel, which
    is the SNDi_DecibelTable lookup data_02086384[volume]. */
-extern "C" void NNS_SndPlayerSetTrackVolume(NNSSndHandle *handle, int trackBitMask, int volume) {
+void NNS_SndPlayerSetTrackVolume(NNSSndHandle *handle, int trackBitMask, int volume) {
     NNSSndSeqPlayer *player = handle->player;
     if (player == 0)
         return;
@@ -2008,7 +2008,7 @@ extern "C" void NNS_SndPlayerSetTrackVolume(NNSSndHandle *handle, int trackBitMa
    (SNDTrack.ext_pitch at 0xc) on the player number. The track setters
    below take the same shape; each SND_ callee is one SNDi_SetTrackParam
    write at the SNDTrack offset named. */
-extern "C" void NNS_SndPlayerSetTrackPitch(NNSSndHandle *handle, int trackBitMask, int pitch) {
+void NNS_SndPlayerSetTrackPitch(NNSSndHandle *handle, int trackBitMask, int pitch) {
     NNSSndSeqPlayer *player = handle->player;
     if (player)
         SND_SetTrackPitch(player->playerNo, trackBitMask, pitch);
@@ -2016,7 +2016,7 @@ extern "C" void NNS_SndPlayerSetTrackPitch(NNSSndHandle *handle, int trackBitMas
 
 /* NitroSystem's NNS_SndPlayerSetTrackPan: SND_SetTrackPan (SNDTrack.ext_pan
    at 9). */
-extern "C" void NNS_SndPlayerSetTrackPan(NNSSndHandle *handle, int trackBitMask, int pan) {
+void NNS_SndPlayerSetTrackPan(NNSSndHandle *handle, int trackBitMask, int pan) {
     NNSSndSeqPlayer *player = handle->player;
     if (player)
         SND_SetTrackPan(player->playerNo, trackBitMask, pan);
@@ -2026,7 +2026,7 @@ extern "C" void NNS_SndPlayerSetTrackPan(NNSSndHandle *handle, int trackBitMask,
    (SNDTrack.mod.depth at 0x1a). The source puts
    NNS_SndPlayerSetTrackPanRange between this and the pan setter; it is
    absent here (the two are adjacent), presumably dead-stripped. */
-extern "C" void NNS_SndPlayerSetTrackModDepth(NNSSndHandle *handle, int trackBitMask, int depth) {
+void NNS_SndPlayerSetTrackModDepth(NNSSndHandle *handle, int trackBitMask, int depth) {
     NNSSndSeqPlayer *player = handle->player;
     if (player)
         SND_SetTrackModDepth(player->playerNo, trackBitMask, depth);
@@ -2034,7 +2034,7 @@ extern "C" void NNS_SndPlayerSetTrackModDepth(NNSSndHandle *handle, int trackBit
 
 /* NitroSystem's NNS_SndPlayerSetTrackModSpeed: SND_SetTrackModSpeed
    (SNDTrack.mod.speed at 0x19). */
-extern "C" void NNS_SndPlayerSetTrackModSpeed(NNSSndHandle *handle, int trackBitMask, int speed) {
+void NNS_SndPlayerSetTrackModSpeed(NNSSndHandle *handle, int trackBitMask, int speed) {
     NNSSndSeqPlayer *player = handle->player;
     if (player)
         SND_SetTrackModSpeed(player->playerNo, trackBitMask, speed);
@@ -2042,13 +2042,13 @@ extern "C" void NNS_SndPlayerSetTrackModSpeed(NNSSndHandle *handle, int trackBit
 
 /* NitroSystem's NNS_SndPlayerSetTempoRatio: SND_SetPlayerTempoRatio (an
    SNDi_SetPlayerParam write of SNDPlayer.tempo_ratio at 0x1a). */
-extern "C" void NNS_SndPlayerSetTempoRatio(NNSSndHandle *handle, int ratio) {
+void NNS_SndPlayerSetTempoRatio(NNSSndHandle *handle, int ratio) {
     NNSSndSeqPlayer *player = handle->player;
     if (player)
         SND_SetPlayerTempoRatio(player->playerNo, ratio);
 }
 
-extern "C" void func_0204f720(NNSSndHandle *handle, int seqNo) {
+void func_0204f720(NNSSndHandle *handle, int seqNo) {
     NNSSndSeqPlayer *p = handle->player;
     if (p != 0) {
         p->seqType = 1;
@@ -2057,7 +2057,7 @@ extern "C" void func_0204f720(NNSSndHandle *handle, int seqNo) {
     }
 }
 
-extern "C" void func_0204f6f8(NNSSndHandle *handle, int seqArcNo, int index) {
+void func_0204f6f8(NNSSndHandle *handle, int seqArcNo, int index) {
     if (handle->player == 0)
         return;
     handle->player->seqType = 2;
@@ -2065,7 +2065,7 @@ extern "C" void func_0204f6f8(NNSSndHandle *handle, int seqArcNo, int index) {
     handle->player->seqArcIndex = index;
 }
 
-extern "C" NNSSndSeqPlayer *func_0204f63c(NNSSndHandle *handle, int playerIdx, int prio) {
+NNSSndSeqPlayer *func_0204f63c(NNSSndHandle *handle, int playerIdx, int prio) {
     SoundPlayerRecord *record = &data_020a4d6c[playerIdx];
     NNSSndSeqPlayer *player;
     if (handle->player != 0)
@@ -2088,12 +2088,12 @@ extern "C" NNSSndSeqPlayer *func_0204f63c(NNSSndHandle *handle, int playerIdx, i
     return player;
 }
 
-extern "C" void func_0204f630(NNSSndSeqPlayer *player) {
+void func_0204f630(NNSSndSeqPlayer *player) {
     func_0204f2d4(player);
 }
 
-extern "C" int func_0204f600(NNSSndSeqPlayer *player, const void *seqData, u32 seqOffset,
-                             struct SNDBankData *bank) {
+int func_0204f600(NNSSndSeqPlayer *player, const void *seqData, u32 seqOffset,
+                  struct SNDBankData *bank) {
     SND_StartSeq(player->playerNo, seqData, seqOffset, bank);
     func_0204f4bc(player);
     player->commandTag = SND_GetCurrentCommandTag();
@@ -2101,7 +2101,7 @@ extern "C" int func_0204f600(NNSSndSeqPlayer *player, const void *seqData, u32 s
     return 1;
 }
 
-extern "C" void func_0204f5a0(NNSSndSeqPlayer *player, int fadeFrames) {
+void func_0204f5a0(NNSSndSeqPlayer *player, int fadeFrames) {
     if (player == 0)
         return;
     if (player->status == 0)
@@ -2115,7 +2115,7 @@ extern "C" void func_0204f5a0(NNSSndSeqPlayer *player, int fadeFrames) {
     player->status = 2;
 }
 
-extern "C" void func_0204f558(NNSSndSeqPlayer *player, int flag) {
+void func_0204f558(NNSSndSeqPlayer *player, int flag) {
     if (player == 0)
         return;
     if (flag == player->pauseFlag)
@@ -2124,7 +2124,7 @@ extern "C" void func_0204f558(NNSSndSeqPlayer *player, int flag) {
     player->pauseFlag = (unsigned char)flag;
 }
 
-extern "C" struct SndHeap *func_0204f504(int playerNo, NNSSndSeqPlayer *player) {
+struct SndHeap *func_0204f504(int playerNo, NNSSndSeqPlayer *player) {
     SoundPlayerRecord *record = &data_020a4d6c[playerNo];
     Elem_204f278 *block = (Elem_204f278 *)NNS_FndGetNextListObject(&record->mLists[1], 0);
     if (block == 0)
@@ -2135,7 +2135,7 @@ extern "C" struct SndHeap *func_0204f504(int playerNo, NNSSndSeqPlayer *player) 
     return block->heap;
 }
 
-extern "C" void func_0204f4bc(NNSSndSeqPlayer *player) {
+void func_0204f4bc(NNSSndSeqPlayer *player) {
     player->pauseFlag = 0;
     player->startFlag = 0;
     player->seqType = 0;
@@ -2146,7 +2146,7 @@ extern "C" void func_0204f4bc(NNSSndSeqPlayer *player) {
     func_02052494(&player->fader, 0x7f00, 1);
 }
 
-extern "C" void func_0204f460(NNSFndList *list, NNSSndSeqPlayer *player) {
+void func_0204f460(NNSFndList *list, NNSSndSeqPlayer *player) {
     NNSSndSeqPlayer *cur;
     cur = (NNSSndSeqPlayer *)NNS_FndGetNextListObject(list, 0);
     if (cur != 0) {
@@ -2162,7 +2162,7 @@ extern "C" void func_0204f460(NNSFndList *list, NNSSndSeqPlayer *player) {
     player->player = list;
 }
 
-extern "C" void func_0204f400(NNSSndSeqPlayer *self) {
+void func_0204f400(NNSSndSeqPlayer *self) {
     NNSSndSeqPlayer *cur;
     cur = (NNSSndSeqPlayer *)(NNS_FndGetNextListObject(&data_020a4d60, 0));
     if (cur != 0) {
@@ -2177,12 +2177,12 @@ extern "C" void func_0204f400(NNSSndSeqPlayer *self) {
     NNS_FndInsertListObject(&data_020a4d60, cur, self);
 }
 
-extern "C" void func_0204f3e0(NNSSndSeqPlayer *player) {
+void func_0204f3e0(NNSSndSeqPlayer *player) {
     SND_StopSeq(player->playerNo);
     func_0204f2d4(player);
 }
 
-extern "C" NNSSndSeqPlayer *func_0204f364(int prio) {
+NNSSndSeqPlayer *func_0204f364(int prio) {
     NNSSndSeqPlayer *player = (NNSSndSeqPlayer *)NNS_FndGetNextListObject(&data_020a4d54, 0);
     if (player == 0) {
         player = (NNSSndSeqPlayer *)NNS_FndGetNextListObject(&data_020a4d60, 0);
@@ -2197,7 +2197,7 @@ extern "C" NNSSndSeqPlayer *func_0204f364(int prio) {
     return player;
 }
 
-extern "C" void func_0204f2d4(NNSSndSeqPlayer *obj) {
+void func_0204f2d4(NNSSndSeqPlayer *obj) {
     NNSSndHandle *handle = obj->handle;
     if (handle != 0) {
         handle->player = 0;
@@ -2216,7 +2216,7 @@ extern "C" void func_0204f2d4(NNSSndSeqPlayer *obj) {
     obj->status = 0;
 }
 
-extern "C" void func_0204f278(void *mem, u32 size, u32 data1, u32 data2) {
+void func_0204f278(void *mem, u32 size, u32 data1, u32 data2) {
     Elem_204f278 *ph = (Elem_204f278 *)mem;
     struct SndHeap *heap = ph->heap;
     if (heap == 0)
@@ -2231,7 +2231,7 @@ extern "C" void func_0204f278(void *mem, u32 size, u32 data1, u32 data2) {
     NNS_FndRemoveListObject(&data_020a4d6c[idx].mLists[1], ph);
 }
 
-extern "C" void func_0204f214(NNSSndSeqPlayer *player, int prio) {
+void func_0204f214(NNSSndSeqPlayer *player, int prio) {
     NNSFndList *list = (NNSFndList *)player->player;
     if (list != 0) {
         NNS_FndRemoveListObject(list, player);
@@ -2245,13 +2245,13 @@ extern "C" void func_0204f214(NNSSndSeqPlayer *player, int prio) {
     func_0204f400(player);
 }
 
-extern "C" void func_0204f1e8(void) {
+void func_0204f1e8(void) {
     data_020a4d50 = 0;
     data_020a4d48 = 0;
     data_020a4d4c = 0;
 }
 
-extern "C" int func_0204f194(unsigned int a) {
+int func_0204f194(unsigned int a) {
     if (a == 0) return 1;
     if (a & data_020a4d50) return 0;
     SND_LockChannel(a, 0);
@@ -2259,27 +2259,25 @@ extern "C" int func_0204f194(unsigned int a) {
     return 1;
 }
 
-extern "C" void func_0204f15c(unsigned int mask) {
+void func_0204f15c(unsigned int mask) {
     if (mask == 0)
         return;
     SND_UnlockChannel(mask, 0);
     data_020a4d50 &= ~mask;
 }
 
-extern "C" int func_0204f138(unsigned int mask)
-{
+int func_0204f138(unsigned int mask) {
     if (mask & data_020a4d48)
         return 0;
     data_020a4d48 = data_020a4d48 | mask;
     return 1;
 }
 
-extern "C" void func_0204f11c(int mask) {
+void func_0204f11c(int mask) {
     data_020a4d48 &= ~mask;
 }
 
-extern "C" int func_0204f0d8(void)
-{
+int func_0204f0d8(void) {
     int i;
     int mask = 1;
     unsigned int v = data_020a4d4c;
@@ -2295,22 +2293,21 @@ extern "C" int func_0204f0d8(void)
     return -1;
 }
 
-extern "C" int func_0204f0b8(unsigned int bit)
-{
+int func_0204f0b8(unsigned int bit) {
     return data_020a4d4c &= ~(1 << bit);
 }
 
-extern "C" void func_0204f070(void){
-  if (data_020a4d44 != 0) return;
-  data_020a4d44 = 1;
-  SND_Init();
-  func_0204f1e8();
-  func_02050950();
-  func_0204fc40();
+void func_0204f070(void) {
+    if (data_020a4d44 != 0)
+        return;
+    data_020a4d44 = 1;
+    SND_Init();
+    func_0204f1e8();
+    func_02050950();
+    func_0204fc40();
 }
 
-extern "C" void func_0204f03c(void)
-{
+void func_0204f03c(void) {
     while (SND_RecvCommandReply(0) != 0)
         ;
     func_0204fafc();
@@ -2319,7 +2316,7 @@ extern "C" void func_0204f03c(void)
     SND_FlushCommand(0);
 }
 
-extern "C" void func_0204effc(void) {
+void func_0204effc(void) {
     u32 p;
     func_0205227c();
     func_02050258();
@@ -2329,12 +2326,12 @@ extern "C" void func_0204effc(void) {
     SND_WaitForCommandProc(p);
 }
 
-extern "C" void func_0204efe0(void) {
+void func_0204efe0(void) {
     func_020501b8();
     func_02052234();
 }
 
-extern "C" int func_0204ef9c(void* p) {
+int func_0204ef9c(void *p) {
     if (((struct NitroFileHeader *)p)->magic != 0x4352414e)
         return 0;
     if (((struct NitroFileHeader *)p)->byteOrder != 0xfffe)
@@ -2342,7 +2339,7 @@ extern "C" int func_0204ef9c(void* p) {
     return ((struct NitroFileHeader *)p)->version == 0x100;
 }
 
-extern "C" int func_0204ee40(struct S82 *self, char *name, char *p) {
+int func_0204ee40(struct S82 *self, char *name, char *p) {
     char *fatb;
     char *fntb;
     char *fimg;
@@ -2401,14 +2398,14 @@ extern "C" int func_0204ee40(struct S82 *self, char *name, char *p) {
     return 0;
 }
 
-extern "C" int func_0204ee10(struct S82 *self) {
+int func_0204ee10(struct S82 *self) {
     if (!FS_UnloadArchive(&self->arc))
         return 0;
     FS_ReleaseArchiveName(&self->arc);
     return 1;
 }
 
-extern "C" int func_0204ede8(struct S82 *o, unsigned int i) {
+int func_0204ede8(struct S82 *o, unsigned int i) {
     int r = 0;
     if (i < o->f54->fileCount) {
         r = (int)o->f58 + o->f54->files[i].start;
@@ -2416,7 +2413,7 @@ extern "C" int func_0204ede8(struct S82 *o, unsigned int i) {
     return r;
 }
 
-extern "C" int func_0204eda4(int r0, char* a, u32 idx) {
+int func_0204eda4(int r0, char *a, u32 idx) {
     int r = 0;
     if (idx < ((struct S82 *)a)->f54->fileCount) {
         FSFileID id;
@@ -2426,4 +2423,3 @@ extern "C" int func_0204eda4(int r0, char* a, u32 idx) {
     }
     return r;
 }
-
