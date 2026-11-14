@@ -84,6 +84,7 @@
 #include "dCc_c.h"
 #include "private/mtx43.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/CalcLib.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -158,8 +159,6 @@ struct Vector3_16;
 struct dCc_c;
 
 void func_02012694(unsigned int, const Vector3 *);
-extern "C" int Vec3_HorzLen(const Vector3 *v);
-extern "C" short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 void LoadSilverStarAndNumber();
 void UnloadSilverStarAndNumber();
 extern "C" {

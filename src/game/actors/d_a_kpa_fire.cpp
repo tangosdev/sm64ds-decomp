@@ -60,6 +60,7 @@
 #include "private/mtx43.h"
 #include "math/MtxStack.h"
 #include "LevelRng.h"
+#include "math/CalcLib.h"
 
 /* The shadow update copies its matrix through Mtx43: the plain word union
  * keeps the block copy in C++ with Vector3's user-declared constructor in
@@ -124,8 +125,6 @@ extern u32 d_a_kpa_fireNewHold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const
 void d_a_kpa_fireNewSimpleHold(u32 id, Fix12i x, Fix12i y, Fix12i z);
 extern void d_a_kpa_firePlayLongHold(u32 a, u32 b, u32 c, void *pos, u32 d);
 
-extern short Vec3_HorzAngle(const struct Vector3* a, const struct Vector3* b);
-extern Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern int RandomIntInternal(int* seed);
 
 /* ov060 tables indexed by mSubVariant (02119358, 0211934c) and the mouth-pose

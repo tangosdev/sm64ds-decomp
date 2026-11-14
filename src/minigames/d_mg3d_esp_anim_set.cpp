@@ -129,7 +129,6 @@ void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 }
 
-extern "C" void GXS_LoadBG2Scr(const void *, u32, u32);
 
 extern int sEsp3DMaterialAnim;
 

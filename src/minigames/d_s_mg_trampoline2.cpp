@@ -61,11 +61,6 @@ enum d_s_mg_trampoline2_AssetId {
 #include "nitro/mi/memory.h"
 #include "math/CalcLib.h"
 
-extern "C" int Trmp2Mario_Hide();
-extern "C" void Trmp2Mario_EnterAll();
-extern "C" void Trmp2Mario_MoveToStart();
-extern "C" void Trmp2Mario_PlaceAtStart();
-extern "C" void Trmp2Mario_UpdateAll();
 
 /* local: the ROM re-reads the slot byte at each use here, so keep the read volatile. */
 #define ACTIVE_SLOT (*(volatile unsigned char *)&gActivePlayerSlot)

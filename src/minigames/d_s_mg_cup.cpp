@@ -76,7 +76,7 @@ extern unsigned char sCupFxFrameSprites[];
 extern OamAttr *sCupFxSprites[];
 extern int OamRender8_d_s_mg_cup(int show, struct OamAttr *attr, int a, int b, int c, int d, int e,
                                  int f);
-extern int Mg_RenderSubSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
+extern int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5,
                                     unsigned short a6);
 extern RoundRow sCupRoundTable[];
 extern s16 sCupShuffleSpeeds[];
@@ -252,7 +252,7 @@ void dScMgCup_c::DrawOamList(OamAttr *list, int x, int y, int scale, int cupCont
 
     for (;;) {
         GXOamAttr *oam =
-            (GXOamAttr *)Mg_RenderSubSpriteScaled((int)entry, screenX, screenY, -1, -1, scale, 0);
+            (GXOamAttr *)Mg_RenderSubSpriteScaled(entry, screenX, screenY, -1, -1, scale, 0);
         if (oam != 0) {
             if (content == 2) {
                 if (entry->cParam == 3) {

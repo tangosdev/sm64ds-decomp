@@ -38,6 +38,7 @@ enum d_a_pg_mthr_AssetId {
 #include "Sound.h"
 #include "math/Approach.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/CalcLib.h"
 
 enum {
     ACTOR_PLAYER = 0xbf,
@@ -100,7 +101,6 @@ extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern int AngleDiff(int a, int b);
 /* 0x0201267c plays Sound::Play(3, id, pos). Sound::PlayBank3 is the
    previous function (0x02012664); this TU's bl is not that one. */
-extern int Vec3_Dist(const struct Vector3 *a, const struct Vector3 *b);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *mf, short angY);
 extern void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *mf, short angX);

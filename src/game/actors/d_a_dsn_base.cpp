@@ -48,6 +48,7 @@
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "LevelRng.h"
+#include "math/CalcLib.h"
 
 /* Actor IDs this TU compares. No header vocabulary exists (cleaned callers
  * pass raw hex), so they live here, cited to the ROM's own debug table. */
@@ -82,7 +83,6 @@ struct DsnCycle {
 extern "C" {
 extern u8 DecIfAbove0_Byte(u8 *);
 extern int RandomIntInternal(int *);
-extern int Vec3_Dist(const Vector3 *, const Vector3 *);
 }
 
 

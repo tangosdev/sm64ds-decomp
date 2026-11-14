@@ -35,6 +35,7 @@ enum daObjSwitch_c_AssetId {
 #include "daStar_c.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/CalcLib.h"
 
 namespace Event { int ClearBit(unsigned int bit); void SetBit(unsigned int bit); }
 
@@ -71,7 +72,6 @@ extern void hold_d_a_obj_switch(void *self, void *file, const Matrix4x3 *matrix,
                                 s16 angle, void *clps);
 int func_02012310(int handle, int sound, short arg);
 unsigned char DecIfAbove0_Byte(unsigned char *value);
-int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 }
 unsigned char IsAreaShowing(int area);
 void LoadSilverStarAndNumber();

@@ -1735,7 +1735,7 @@ typedef int Fix12i;
 extern int OamRender8_d_s_mg_base(int show, struct OamAttr *attr, int a, int b, int c, int d,
                                   Fix12i e, int f);
 
-extern "C" int Mg_RenderSubSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
+extern "C" int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5,
                                         unsigned short a6) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)

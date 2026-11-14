@@ -93,6 +93,7 @@ enum daObjBlockS_c_AssetId {
 #include "ParticleIds.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/CalcLib.h"
 
 /* Actor profile IDs this file compares against (symbols/actor_debug_names.tsv). */
 enum {
@@ -132,7 +133,6 @@ enum {
 
 extern u32 gNextActorUpdateMask;
 extern int data_ov098_0213c4c8[];
-extern "C" int Vec3_HorzDist(const struct Vector3 *a, const struct Vector3 *b);
 extern "C" u8 DecIfAbove0_Byte(u8 *p);
 extern "C" void *d_a_obj_block_sNewHold(u32 a, u32 b, int c, int d, int e, const void *v, void *cb);
 extern "C" u32 d_a_obj_block_sNewCleanParticleHold(u32 a, u32 b, int c, int d, int e,
@@ -153,7 +153,6 @@ extern "C" int func_ov002_020e496c(daPly_c *c);
 extern "C" void d_a_obj_block_sPlayLongHold(u32 a, u32 b, u32 c, const Vector3 *pos, u32 e);
 
 extern "C" s16 atan2_hold_d_a_obj_block_s_1(s32 y, s32 x);
-extern "C" s32 Vec3_HorzLen(const Vector3 *v0);
 extern "C" void Vec3_MulScalarInPlace(Vector3 *v, int s);
 extern "C" void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern "C" int Math_Function_0203b14c(int *dst, int a, int b, int c, int d);

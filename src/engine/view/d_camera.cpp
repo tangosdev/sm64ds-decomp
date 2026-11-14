@@ -129,10 +129,10 @@ extern dCamera_c *dCamera_c_classInit();
 
 extern struct ViewObj *GetViewObj(int idx);
 
-extern "C" s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
+extern "C" s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1); /* local extern: CalcLib.h clashes with this TU's C Vec3_HorzLen (int) and Vec3_MulScalarInPlace (void *) */
 extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
-extern "C" int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-extern "C" int Vec3_HorzLen(const Vector3 *v);
+extern "C" int Vec3_HorzDist(const Vector3 *a, const Vector3 *b); /* local extern: CalcLib.h clashes with this TU's C Vec3_HorzLen (int) and Vec3_MulScalarInPlace (void *) */
+extern "C" int Vec3_HorzLen(const Vector3 *v); /* local extern: CalcLib.h clashes with this TU's C Vec3_HorzLen (int) and Vec3_MulScalarInPlace (void *) */
 extern "C" {
 extern int VEC_Mag(void *v);
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
@@ -146,7 +146,7 @@ extern void Vec3_RotateYAndTranslate(void *out, const void *in, short angle, con
 extern void MTX_MultVec43(void *dst, Matrix4x3 *src, void *out);
 }
 
-extern "C" s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
+extern "C" s32 Vec3_Dist(const Vector3 *a, const Vector3 *b); /* local extern: CalcLib.h clashes with this TU's C Vec3_HorzLen (int) and Vec3_MulScalarInPlace (void *) */
 extern "C" {
 /* local extern: including math/MtxStack.h renumbers this TU's function-local
    statics (sScriptOps, sPrevTurnInput), whose numbered names symbols.txt

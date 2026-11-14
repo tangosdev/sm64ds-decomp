@@ -117,6 +117,7 @@ enum daKpa_c_AssetId {
 #include "LevelRng.h"
 #include "nitro/fx/fx_cp.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 
 /* Names for the numbers this file uses. A name describes what the value does
  * at its use sites here; it is not a recovered symbol. */
@@ -274,8 +275,6 @@ extern KpaTailState data_ov060_0211ae9c[];
 extern "C" {
 /* The dCamera_c; Bowser publishes himself into its mFramedActor. */
 extern dCamera_c *gCamera;
-extern int Vec3_HorzDist(const struct Vector3*, const struct Vector3*);
-extern short Vec3_HorzAngle(const struct Vector3*, const struct Vector3*);
 /* Eases a camera vector toward a target; 1 when it arrives (d_camera.cpp). */
 extern int func_020092c4(void*, void*, void*);
 extern KpaAnimationFileHandle data_ov060_0211acd0;
@@ -291,7 +290,6 @@ extern void *d_a_kpaNewHold(unsigned a, unsigned b, int x, int y, int z, void *v
 extern void d_a_kpaChangeMusicVolumeHold(unsigned int a, int b);
 extern KpaAnimationFileHandle data_ov060_0211ac88;
 extern KpaAnimationFileHandle data_ov060_0211ac60;
-extern int Vec3_HorzLen(const Vector3* v);
 extern int RandomIntInternal(int* seed);
 extern KpaAnimationFileHandle data_ov060_0211abe0;
 extern KpaAnimationFileHandle data_ov060_0211acd8;

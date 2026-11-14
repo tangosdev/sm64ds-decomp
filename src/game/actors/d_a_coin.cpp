@@ -45,6 +45,7 @@
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/CalcLib.h"
 
 /* Views of daObjBC_Switch_c.h and daObjFl_Coin_c.h, same member names and
    offsets: including either header renumbers this TU's @NNN labels. */
@@ -91,9 +92,6 @@ struct CoinFlagBits {
 /* ROM symbols. Mangled spellings live inside extern "C" so the C++ front end
  * does not mangle them a second time. */
 
-extern "C" int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-extern "C" Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-extern "C" int Vec3_HorzLen(const Vector3 *v);
 extern "C" int SublevelToLevel(int i);
 extern "C" {
 extern int VEC_Mag(const Vector3 *v);

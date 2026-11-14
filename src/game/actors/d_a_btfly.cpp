@@ -93,7 +93,7 @@ extern "C" {
 // local extern: CalcLib.h also conflicts with this TU's retained Vec3_Asr and Vec3_HorzLen prototypes.
 s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-int Vec3_HorzLen(const Vector3 *v);
+int Vec3_HorzLen(const Vector3 *v); /* local extern: CalcLib.h clashes with this TU's C Vec3_HorzLen (int) and Vec3_Asr (void *) */
 void Vec3_Asr(void *d, void *s, int sh);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 ang);

@@ -73,6 +73,7 @@
 
 #include "nitro/os/cache.h"
 #include "nitro/mi/dma.h"
+#include "nitro/gx/g3_util.h"
 
 /* The four-pointer block at BMD_File::skin (UpdateFileOffsets rebases all
    four). */
@@ -133,7 +134,6 @@ extern "C" {
 void MTX_Identity43_(Matrix4x3 *mat);
 }
 
-extern "C" int MTX_Inverse43(const Matrix4x3 *a, Matrix4x3 *b);
 extern "C" {
 void func_02048234(int *out, int sa, int sb, int sc, u16 ax, u16 ay, u16 az, int tx, int ty,
                    int tz);
@@ -168,7 +168,6 @@ void MTX_Concat33(void *a, void *b, void *dst);
 void MTX_Copy33To44_(void *a, void *b);
 }
 
-extern "C" void G3_LoadTexMtxEnv(int *n);
 
 /* Bone-tree walk at 0x020453c0. UpdateBones forwards here. Samples each
  * bone's pose with func_0204547c (which stays out) from the model's

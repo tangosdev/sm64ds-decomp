@@ -95,9 +95,6 @@ extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 
 extern short sTrmpGoalRow;
-extern "C" void Trmp3DMario_UpdateAll(void);
-extern "C" int Trmp3DMario_CountFinished(void);
-extern "C" void Trmp3DMario_StartAll(void);
 
 extern int sTrmpComboCount;
 
@@ -107,10 +104,6 @@ extern int sTrmpMariosInPlay;
 
 extern int sTrmpAnyOnLedge;
 void TrmpLine_UpdateAll(void);
-extern "C" int Trmp3DMario_IsOffstage(int *r0);
-extern "C" void Trmp3DMario_EnterWalkIn(char *c);
-extern "C" void Trmp3DMario_SetSpawnHeight(int n);
-extern "C" void Trmp3DMario_SetTuning(int a);
 void TrmpLine_CreateStartLineT1(void);
 
 extern s16 sTrmpIntroFromX;

@@ -85,9 +85,9 @@ extern "C" void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int rx, int ry, int rz);
 extern "C" void Vec3_Lsl(Vector3 *out, const Vector3 *in, int n);
 extern "C" void Vec3_Asr(void *dst, void *src, int n);
-extern "C" int   Vec3_Dist(const Vector3 *a, const Vector3 *b);
-extern "C" int   Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-extern "C" s16   Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
+extern "C" int   Vec3_Dist(const Vector3 *a, const Vector3 *b); /* local extern: CalcLib.h clashes with this TU's C Vec3_Asr (void *) and Vec3_Lsl (non-const source) */
+extern "C" int   Vec3_HorzDist(const Vector3 *a, const Vector3 *b); /* local extern: CalcLib.h clashes with this TU's C Vec3_Asr (void *) and Vec3_Lsl (non-const source) */
+extern "C" s16   Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1); /* local extern: CalcLib.h clashes with this TU's C Vec3_Asr (void *) and Vec3_Lsl (non-const source) */
 extern "C" int AngleDiff(int a, int b);
 extern "C" int ApproachAngle(s16 *cur, s16 target, int divisor, int band, int maxStep);
 extern "C" u16 DecIfAbove0_Short(u16 *p);

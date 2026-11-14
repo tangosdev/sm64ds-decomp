@@ -39,6 +39,7 @@ enum daObjFl_Amilift_c_AssetId { ASSET_FL_AMILIFT_BMD = 0x05ef, ASSET_FL_AMILIFT
 #include "math/Approach.h"
 #include "cstd.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/CalcLib.h"
 
 /* The resource handles as the ROM lays them out: {id, loaded file}. The
  * model handle constructs through func_02017acc and destroys through
@@ -66,7 +67,6 @@ struct KCL_File;
 struct CLPS_Block;
 
 extern "C" {
-int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern void Vec3_Sub(Vector3 *dst, const Vector3 *a, const Vector3 *b);
 /* local extern: d_bg_w.cpp defines these and no header declares them. */
 }

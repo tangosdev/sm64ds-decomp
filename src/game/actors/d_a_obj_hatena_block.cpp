@@ -139,6 +139,7 @@ enum daObjHatenaBlock_c_AssetId {
 #include "ParticleIds.h"
 #include "LevelRng.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/CalcLib.h"
 
 struct CLPS_Block;
 struct KCL_File;
@@ -205,7 +206,6 @@ extern SharedFilePtr gPFlowerCloseModelFile;
 extern CLPS_Block data_ov002_0210d954;
 
 extern int RandomIntInternal(int *seed);
-extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern u16 DecIfAbove0_Short(u16 *p);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 void d_a_obj_hatena_blockEarthquakeHold(void *self, void *pos, s32 radius);
