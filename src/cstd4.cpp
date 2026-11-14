@@ -658,8 +658,6 @@ int __StringWrite(void *osc, const char *Buffer, size_t NumChars) {
 
 #pragma push
 #pragma defer_codegen off
-#pragma push
-#pragma defer_codegen off
 /* __pformatter @ 0x0206e4a4 (arm9, size 0x83c)
  * MSL __pformatter: the printf formatting engine. Walks the format string,
  * hands each %-specifier to parse_format, pulls the matching
