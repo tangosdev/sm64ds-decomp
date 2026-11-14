@@ -210,34 +210,34 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
        `this + 0x4f38 + lane * 0x5c0 + row * 2`, so the lane index carries
        0x5c0 = 0x2e0 * sizeof(u16) and the row index the halfword. 0x10 lanes
        times 0x5c0 is 0x5c00, which closes exactly on mPosX. */
-    u16   mTileMap[0x10][0x2e0]; /* 0x4f38 */
-    s32   mPosX;            /* 0xab38 -- Fix12 world position of the ball */
-    s32   mPosY;            /* 0xab3c */
-    s32   mPrevPosX;        /* 0xab40 -- Behavior's copy of mPos at tick start */
-    s32   mPrevPosY;        /* 0xab44 */
-    s32   mDrawPosX;        /* 0xab48 -- where Render puts the ball sprite */
-    s32   mDrawPosY;        /* 0xab4c */
-    s32   mSoundPosX;       /* 0xab50 -- position of the last roll sound; a new
-                                one fires every 0x30000 of travel */
-    s32   mSoundPosY;       /* 0xab54 */
-    s32 mUphillDebt;        /* 0xab58 -- Behavior adds every tick's backwards
-                                (+Y) travel here and pays it off from later
-                                downhill travel; only while it is 0 does the
-                                downhill travel grow mBallSize (by 1/128) */
-    s32 mGoalCenterX;       /* 0xab5c -- BuildCourse clears it, then
-                                writes the generated corridor's centre lane in
-                                fx32 on the row before the goal */
-    s32   mVelX;            /* 0xab60 -- Fix12, capped at 0x8000 */
-    s32   mVelY;            /* 0xab64 */
-    s32   mScrollX;         /* 0xab68 -- subtracted from every world X to draw */
-    s32   mScrollY;         /* 0xab6c -- mPosY - 0x190000, clamped; drives all
-                                four BG offsets */
-    s32   mTouchX;          /* 0xab70 -- last stylus sample */
-    s32   mTouchY;          /* 0xab74 */
-    s16 mRollAngle;         /* 0xab78 -- += speed * 0x2710 / mBallSize */
-    s16 mAngleY;            /* 0xab7a -- UpdateCamera's Y rotation of
-                                the ball, after Z (mHeadingAngle) and X
-                                (mRollAngle); ResetScene zeroes it */
+    u16 mTileMap[0x10][0x2e0]; /* 0x4f38 */
+    s32 mPosX;                 /* 0xab38 -- fx32 world position of the ball */
+    s32 mPosY;                 /* 0xab3c */
+    s32 mPrevPosX;             /* 0xab40 -- Behavior's copy of mPos at tick start */
+    s32 mPrevPosY;             /* 0xab44 */
+    s32 mDrawPosX;             /* 0xab48 -- where Render puts the ball sprite */
+    s32 mDrawPosY;             /* 0xab4c */
+    s32 mSoundPosX;            /* 0xab50 -- position of the last roll sound; a new
+                                   one fires every 0x30000 of travel */
+    s32 mSoundPosY;            /* 0xab54 */
+    s32 mUphillDebt;           /* 0xab58 -- Behavior adds every tick's backwards
+                                   (+Y) travel here and pays it off from later
+                                   downhill travel; only while it is 0 does the
+                                   downhill travel grow mBallSize (by 1/128) */
+    s32 mGoalCenterX;          /* 0xab5c -- BuildCourse clears it, then
+                                   writes the generated corridor's centre lane in
+                                   fx32 on the row before the goal */
+    s32 mVelX;                 /* 0xab60 -- fx32, capped at 0x8000 */
+    s32 mVelY;                 /* 0xab64 */
+    s32 mScrollX;              /* 0xab68 -- subtracted from every world X to draw */
+    s32 mScrollY;              /* 0xab6c -- mPosY - 0x190000, clamped; drives all
+                                   four BG offsets */
+    s32 mTouchX;               /* 0xab70 -- last stylus sample */
+    s32 mTouchY;               /* 0xab74 */
+    s16 mRollAngle;            /* 0xab78 -- += speed * 0x2710 / mBallSize */
+    s16 mAngleY;               /* 0xab7a -- UpdateCamera's Y rotation of
+                                   the ball, after Z (mHeadingAngle) and X
+                                   (mRollAngle); ResetScene zeroes it */
     s16 mHeadingAngle;      /* 0xab7c -- atan2 of the velocity */
     s16 mPrevRollAngle;     /* 0xab7e -- Behavior copies 0xab78..0xab7c here */
     s16 mPrevAngleY;        /* 0xab80 -- Behavior's copy of mAngleY */

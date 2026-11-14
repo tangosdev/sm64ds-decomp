@@ -989,7 +989,6 @@ void func_ov070_0211f100(daPropeller_Heyho_c *c) {
 
 /* -------------------------------------------------------------------------- */
 
-
 /* (dActor_c: real header type in scope) */
 
 /* Defeat helper: a small puff of dust, then mExtraCoinCount + 1 coins spread
