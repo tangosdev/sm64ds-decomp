@@ -16,7 +16,7 @@
  *   order; the inline destructor group comes out retail D1 then D0, no D2.
  *   Mtx43, the flat type for the IDENTITY_MATRIX4X3 copy: the nested
  *   math/Matrix.h spelling (via dExtShadowModel_c.h) scalarizes it.
- *   Fix12i[3] locals instead of Vector3, which declares its own
+ *   fx32[3] locals instead of Vector3, which declares its own
  *   destructor.
  *   FX_MUL's 64-bit product (one smull) in func_ov070_02121d50 is the
  *   matching form.
@@ -200,7 +200,7 @@ void daKpFr_c::func_ov070_02121e14() {
 
 void daKpFr_c::func_ov070_02121d50(void* vclsn) {
     dBgCh_Actr* clsn = (dBgCh_Actr*)vclsn;
-    Fix12i normal[3];
+    fx32 normal[3];
     dBgCh_Actr_UpdateContinuous_Veneer(clsn);
     if (clsn->IsOnGround()) {
         clsn->GetFloorResult()->surface.CopyNormalTo(*(Vector3 *)normal);
@@ -246,15 +246,15 @@ void daKpFr_c::func_ov070_02121c8c()
 
 void daKpFr_c::func_ov070_02121be4()
 {
-    Fix12i pos[3];
+    fx32 pos[3];
 
     if (!mWithMeshClsn.IsOnGround()) return;
 
     dBgCh_Gnd ground;
     {
-        Fix12i z = mPosZ;
-        Fix12i y = mPosY + 0x1e000;
-        Fix12i x = mPosX;
+        fx32 z = mPosZ;
+        fx32 y = mPosY + 0x1e000;
+        fx32 x = mPosX;
         pos[0] = x;
         pos[1] = y;
         pos[2] = z;

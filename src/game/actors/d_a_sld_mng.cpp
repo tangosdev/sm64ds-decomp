@@ -28,7 +28,7 @@
  * __sinit_d_a_sld_mng.cpp emits the stores. The wrapper is local; the
  * manifest aliases its destructor to the ROM's _ZN7Vector3D1Ev. */
 struct SldMngVec3 : Vector3 {
-    SldMngVec3(Fix12i a, Fix12i b, Fix12i c) {
+    SldMngVec3(fx32 a, fx32 b, fx32 c) {
         x = a;
         y = b;
         z = c;

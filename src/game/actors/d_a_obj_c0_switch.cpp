@@ -28,7 +28,7 @@
  *
  * Notes:
  * - dBgW_KcMbg::SetFile and dBgActor_c::IsClsnInRange are header member
- *   calls; their Fix12 parameters are Fix12i, a plain s32. Fix12<int> by
+ *   calls; their Fix12 parameters are fx32, a plain s32. Fix12<int> by
  *   value would size-DIFF the callers (notes/mwccarm-codegen.md 6az).
  * - data_ov012_021124a8 / 021124a0 are this overlay's BMD/KCL handles,
  *   defined here. data_ov012_02111cd0 is the CLPS block this TU does
