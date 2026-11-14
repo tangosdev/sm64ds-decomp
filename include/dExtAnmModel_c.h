@@ -68,7 +68,7 @@
  * invented -- the cartridge carries no mangled names at all -- and the
  * class-typed parameter is what cost +0x18, because the body reads `speed` in
  * both branches. Retail reads the argument straight out of r3 (`mov r4, r3`),
- * so the honest parameter is the scalar Fix12i and the honest startFrame is the
+ * so the honest parameter is the scalar fx32 and the honest startFrame is the
  * u16 the body already loads with `ldrh`. Under that spelling the method
  * reproduces 0x02016748/0x5c exactly. See notes/mwccarm-codegen.md section 6az,
  * MEASURED 2026-10-22.
@@ -97,7 +97,7 @@ struct dExtAnmModel_c : dExtSimpleModel_c, dExtFrameCtrl_c {
 
     /* --- non-virtual --- */
     dExtAnmModel_c();
-    void SetAnim(BCA_File *animFile, int flags, Fix12i speed, u16 startFrame);
+    void SetAnim(BCA_File *animFile, int flags, fx32 speed, u16 startFrame);
     void Copy(const dExtAnmModel_c &src, char *newFile);
 };
 
