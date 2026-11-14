@@ -54,7 +54,7 @@ struct dCcAcPos_c : dCcAc_c {
     dCcAcPos_c();
 
     /* --- non-virtual --- */
-    void Init(dActor_c *actor, const Vector3 &offset, Fix12i radius, Fix12i height, u32 flags,
+    void Init(dActor_c *actor, const Vector3 &offset, fx32 radius, fx32 height, u32 flags,
               u32 vulnFlags);
     void SetPosRelativeToActor(const Vector3 &offset);
 };

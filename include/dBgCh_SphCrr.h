@@ -27,12 +27,12 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
        THE QUERY SPHERE. dBgW_KcMbg::DetectClsn(dBgCh_SphCrr&) hands 0x03c
        to WorldToLocalPosition, which transforms a Vector3 into the collider's local
        frame, and scales 0x048 by the collider's uniform scale before passing it
-       as the `Fix12i radius` argument of dBgCh_SphCrr::SetObjAndSphere -- so
+       as the `fx32 radius` argument of dBgCh_SphCrr::SetObjAndSphere -- so
        0x03c is twelve bytes of centre and 0x048 is the radius that follows it. */
     /* A Vector3 DISPLACEMENT. dBgCh_Actr's Update* methods read these three
        words (their Actr +0x6c) as a Vector3 and feed them to the movement
        helpers; named when Actr's flat blob was typed out. */
-    Vector3 disp;           /* 0x04c */
+    Vector3 disp; /* 0x04c */
     /* Per-axis range of the push-out vectors the contacts produce, not a
        spatial box: dBgW_Kc's sphere query tracks the lowest and highest push
        per axis and hands both to ExpandPushOutBounds, which widens this range to
@@ -44,18 +44,18 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
     /* Result flags, read and OR-ed a bit at a time by the same function:
        1 = any hit, 4 = floor, 8 = wall, 0x10 = from underneath. Each bit gates
        copying the matching dBgPi below it. */
-    u8  flags;              /* 0x070 */
-    u8  pad_071[0x3];
-    dBgPi mClsnResult1;     /* 0x074 */
-    dBgPi mClsnResult2;     /* 0x09c */
-    dBgPi mClsnResult3;     /* 0x0c4 */
+    u8 flags; /* 0x070 */
+    u8 pad_071[0x3];
+    dBgPi mClsnResult1; /* 0x074 */
+    dBgPi mClsnResult2; /* 0x09c */
+    dBgPi mClsnResult3; /* 0x0c4 */
     /* Wall-rejection half extent. When positive, dBgW_Kc's sphere query
        rejects a wall triangle whose three axis projections all lie within
        [-(extent + radius), extent - radius] (the retail comparison at
        0x01ffcfa8); zero, the constructor's value, disables the test.
        dBgW_KcMbg rescales it into the collider's frame with the radius. */
     s32 mWallRejectHalfExtent; /* 0x0ec */
-    u8  pad_0f0[0xc];
+    u8 pad_0f0[0xc];
     /* Normal of the floor contact with the greatest Y component. The retail
        KCL query copies SurfaceInfo's normal at 0x01ffbe6c, then compares its
        Y against mFloorNormal.y before saving all three words at
@@ -67,8 +67,8 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
        query tests it against every candidate face before classifying it.
        SetObjAndSphere sets 0x1000 (accept every face); dBgCh_Actr's Update*
        copy its own tail word (Actr +0x1b8) here each update. */
-    s32 mMaxNormalY;       /* 0x108 */
-    s32 mMotionAngPtr;     /* 0x10c - dBgCh_Actr::Init stores its fourth
+    s32 mMaxNormalY;   /* 0x108 */
+    s32 mMotionAngPtr; /* 0x10c - dBgCh_Actr::Init stores its fourth
                                argument, a Vector3_16 *, at Actr +0x12c = this
                                +0x10c, and the Update* bodies forward it and
                                Actr +0x130 to dBgS_MoveBgCrrPos, which hands them
@@ -88,8 +88,8 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
 
     /* methods */
     void SetFloorResult(const dBgPi &result);
-    void SetObjAndSphere(const Vector3 &pos, Fix12i radius, dActor_c *actor);
-    int  DetectClsn();
+    void SetObjAndSphere(const Vector3 &pos, fx32 radius, dActor_c *actor);
+    int DetectClsn();
 
     /* Result-slot accessors. mClsnResult1/2/3 are the floor / wall /
        underneath hit records: dBgCh_Actr::GetFloorResult and

@@ -70,15 +70,15 @@ struct dCc_c {
      *   0x2000000 handstand */
 
     /* 0x00 is the vptr, placed implicitly by the first virtual declaration. */
-    Fix12i radius;          /* 0x04 - Init arg 1 */
-    Fix12i height;          /* 0x08 - Init arg 2 */
-    Vector3 pushback;       /* 0x0c - cleared by Clear */
-    u32 flags;              /* 0x18 - Init arg 3; bit 0x1 makes Update bail */
-    u32 vulnFlags;          /* 0x1c - Init arg 4; see the bit table above */
-    u32 hitFlags;           /* 0x20 - cleared by Clear; see the bit table above */
-    u32 otherOwner;         /* 0x24 - cleared by Clear */
-    dCc_c *prev;     /* 0x28 - intrusive list, zeroed by C2 */
-    dCc_c *next;     /* 0x2c - intrusive list, zeroed by C2 */
+    fx32 radius;      /* 0x04 - Init arg 1 */
+    fx32 height;      /* 0x08 - Init arg 2 */
+    Vector3 pushback; /* 0x0c - cleared by Clear */
+    u32 flags;        /* 0x18 - Init arg 3; bit 0x1 makes Update bail */
+    u32 vulnFlags;    /* 0x1c - Init arg 4; see the bit table above */
+    u32 hitFlags;     /* 0x20 - cleared by Clear; see the bit table above */
+    u32 otherOwner;   /* 0x24 - cleared by Clear */
+    dCc_c *prev;      /* 0x28 - intrusive list, zeroed by C2 */
+    dCc_c *next;      /* 0x2c - intrusive list, zeroed by C2 */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
     virtual ~dCc_c();            /* slots 0 (D1), 1 (D0) */
@@ -91,7 +91,7 @@ struct dCc_c {
     dCc_c();
 
     /* --- non-virtual --- */
-    void Init(Fix12i radius, Fix12i height, u32 flags, u32 vulnFlags);
+    void Init(fx32 radius, fx32 height, u32 flags, u32 vulnFlags);
     void Clear();
     /* Removes this node from the global collision list. The role is proven
        by the prev/next rewiring; the original member spelling is not. */

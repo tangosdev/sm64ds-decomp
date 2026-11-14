@@ -42,8 +42,8 @@
 
 struct dM3dGSph {
     /* --- members --- */
-    Vector3 centre;         /* 0x04 */
-    Fix12i radius;          /* 0x10 */
+    Vector3 centre; /* 0x04 */
+    fx32 radius;    /* 0x10 */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
     /* Slots 0 (D1) and 1 (D0). First virtual declaration places the vptr
@@ -58,8 +58,8 @@ struct dM3dGSph {
        centre out for dBgW_KcMbgSclY::DetectClsn; the setters are what
        SetObjAndLine and SetObjAndSphere reach through Set(). */
     void GetCentre(Vector3 &out) const;
-    void SetRadius(Fix12i radius);
-    void Set(const Vector3 &centre, Fix12i radius);
+    void SetRadius(fx32 radius);
+    void Set(const Vector3 &centre, fx32 radius);
     void SetCentre(const Vector3 &centre);
 };
 

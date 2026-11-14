@@ -31,11 +31,11 @@ struct dBgCh_Gnd : dBgCh, dBgPi {
        mProbeHeight the constructor seeds 0x1f4000 -- 500.0 fixed-point, the
        default probe height above pos. Callers override it with round <<12
        distances (daMenbo 3000.0, daObjHatenaBlock/daStar 1000.0). */
-    Vector3 pos;            /* 0x038 */
-    Fix12i clsnY;           /* 0x044 */
-    u8  hasClsn;            /* 0x048 */
-    u8  pad_049[0x3];
-    Fix12i mProbeHeight;    /* 0x04c */
+    Vector3 pos; /* 0x038 */
+    fx32 clsnY;  /* 0x044 */
+    u8 hasClsn;  /* 0x048 */
+    u8 pad_049[0x3];
+    fx32 mProbeHeight; /* 0x04c */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
     /* Defined as real C++ in separate D1/D0 source files. Dedicated TUs with

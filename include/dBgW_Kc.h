@@ -53,22 +53,22 @@ struct KCL_File {
 
     /* Octree geometry. UpdateFileOffsets relocates only 0x00..0x0c, so nothing
        from here on is a pointer. Positions and this origin are stored at 1/64 of
-       a Fix12i unit (`lsl #6` on read) and face normals with 1.0 == 0x400
-       (`lsl #2`), so none of these is typed Fix12i. prismThickness is the KCL
+       an fx32 unit (`lsl #6` on read) and face normals with 1.0 == 0x400
+       (`lsl #2`), so none of these is typed fx32. prismThickness is the KCL
        header's: how far behind its face a prism still reaches, in the same
        raw x 0x400 units as a face dot. */
-    s32 prismThickness;    /* 0x10 */
-    Vector3 origin;        /* 0x14 - .y pinned by dBgW_Kc::GetOctreeOriginY;
+    s32 prismThickness; /* 0x10 */
+    Vector3 origin;     /* 0x14 - .y pinned by dBgW_Kc::GetOctreeOriginY;
                               read as one Vector3 by DetectClsn, which materialises
                               file+0x14 once and reads [r0], [r0,#4], [r0,#8] */
-    u32 xMask;             /* 0x20 */
-    u32 yMask;             /* 0x24 - pinned by dBgW_Kc::GetUnkOctreeY */
-    u32 zMask;             /* 0x28 */
+    u32 xMask;          /* 0x20 */
+    u32 yMask;          /* 0x24 - pinned by dBgW_Kc::GetUnkOctreeY */
+    u32 zMask;          /* 0x28 */
     /* index = (z>>coordShift)<<zShift | (y>>coordShift)<<yShift | (x>>coordShift),
        then coordShift is decremented once per level of descent. */
-    u32 coordShift;        /* 0x2c */
-    u32 yShift;            /* 0x30 */
-    u32 zShift;            /* 0x34 */
+    u32 coordShift; /* 0x2c */
+    u32 yShift;     /* 0x30 */
+    u32 zShift;     /* 0x34 */
 };
 
 struct dBgW_Kc : dBgW {
@@ -84,7 +84,7 @@ struct dBgW_Kc : dBgW {
        the ROM's object does not have. The type is named because an unnamed
        one takes a compiler @NNN number in every consumer. */
     struct PlainVec {
-        Fix12i x, y, z;
+        fx32 x, y, z;
     };
     PlainVec upAxis; /* 0x28 */
     /* The penetration-depth policy of DetectClsn(dBgCh_SphCrr&): how far behind a
@@ -98,8 +98,8 @@ struct dBgW_Kc : dBgW {
     bool shallowOnly; /* 0x34 */
     bool depthByDir;  /* 0x35 */
     u8 pad_36[2];
-    PlainVec depthDir;     /* 0x38 - init the unit X vector */
-    Fix12i depthDirMinDot; /* 0x44 - init -0x1000 */
+    PlainVec depthDir;   /* 0x38 - init the unit X vector */
+    fx32 depthDirMinDot; /* 0x44 - init -0x1000 */
     /* The edge-contact policy of the same query
        (notes/collision-query-classes.md):
          edgeToleranceShift  a SHIFT COUNT, not a value: an edge hit is rejected
@@ -130,14 +130,14 @@ struct dBgW_Kc : dBgW {
     /* Inferred from the sphere face/edge tests and their setup callers. */
     void SetEdgeToleranceShift(int);
     /* Inferred from the sphere face/edge tests and their setup callers. */
-    void SetDepthDirMinDot(Fix12i);
+    void SetDepthDirMinDot(fx32);
 
     /* --- non-virtual --- */
     void SetFile(KCL_File *file, CLPS_Block &clps);
     /* Both ITCM, both reading kclFile->origin.y out of the file's 1/64 scale.
        GetUnkOctreeY adds the octree's Y extent, giving its far edge. */
-    Fix12i GetOctreeOriginY() const;   /* 0x01ffb0ec */
-    Fix12i GetUnkOctreeY() const;      /* 0x01ffb0d0 */
+    fx32 GetOctreeOriginY() const; /* 0x01ffb0ec */
+    fx32 GetUnkOctreeY() const;    /* 0x01ffb0d0 */
     /* The ITCM accessors directly below GetUnkOctreeY, 0x01ffb07c..0x01ffb0c8:
        kclFile and the depth policy's switches and direction. Named for the
        fields they write; the callers are the derived colliders and the actors
@@ -155,7 +155,7 @@ struct dBgW_Kc : dBgW {
     /* Geometry division guard: abs(value) <= 8. */
     static bool IsNearZeroDivisor(int);
     /* Line-query wall filter: -0xccc < normalY < 0x600 (strict). */
-    static bool IsWallNormal(Fix12i);
+    static bool IsWallNormal(fx32);
     /* Face class from a normal's y: 0 floor (> 0x600), 1 wall (> -0xccc),
        2 underside. Inferred name, beside the other two KCL predicates. */
     static int ClassifyNormalY(int);

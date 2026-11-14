@@ -30,8 +30,8 @@
 #include "math/Fix12.h"
 
 struct dBgW_KcMbgSclY : dBgW_KcMbg {
-    Fix12i scaleY;             /* 0x1c8 */
-    Fix12i invScaleY;          /* 0x1cc - FX_Inv(scaleY) */
+    fx32 scaleY;    /* 0x1c8 */
+    fx32 invScaleY; /* 0x1cc - FX_Inv(scaleY) */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
     virtual ~dBgW_KcMbgSclY();                     /* slots 0/1 */
@@ -47,8 +47,8 @@ struct dBgW_KcMbgSclY : dBgW_KcMbg {
     dBgW_KcMbgSclY();
 
     /* --- non-virtual --- */
-    void SetFile(KCL_File *file, const Matrix4x3 &mat, Fix12i scale, s16 angY, CLPS_Block &clps);
-    void SetScaleY(Fix12i scaleY);
+    void SetFile(KCL_File *file, const Matrix4x3 &mat, fx32 scale, s16 angY, CLPS_Block &clps);
+    void SetScaleY(fx32 scaleY);
     s32 GetScaleY();
     /* World to collider space, then collider back to world. */
     void ToColliderSpace(Vector3 *, Vector3 *);
