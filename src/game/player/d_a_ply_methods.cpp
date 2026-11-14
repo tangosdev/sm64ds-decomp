@@ -16374,8 +16374,7 @@ void func_ov002_020dc09c(char *c) {
 /* The attack collision's offset, reach and height. pos is a const Vector3 *: it
    goes straight to dCcAcPos_c::Init, whose ROM symbol mangles that
    parameter as RK7Vector3, a const Vector3 &. Eleven callers in this file each used to spell it void *. */
-void daPly_c::func_ov002_020dc174(const Vector3 *pos, fx32 reach, fx32 height, u32 flags,
-                                  u32 a6) {
+void daPly_c::func_ov002_020dc174(const Vector3 *pos, fx32 reach, fx32 height, u32 flags, u32 a6) {
     int f = mIsMega ? 0x10 : 0;
     mAttackClsn.Init(this, *pos, reach, height, flags | 2 | f, a6);
 }

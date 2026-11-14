@@ -1093,7 +1093,7 @@ struct daPly_c : dActor_c {
     /* Non-virtual helpers that were free functions taking the player as `self`.
        Coined names; parameters stay unnamed because a named parameter in a
        class-scope declaration renumbers @NNN in every consumer TU. */
-    void SplineGetWeights(fx32 *);     /* func_ov002_020c3160 */
+    void SplineGetWeights(fx32 *);       /* func_ov002_020c3160 */
     void ClearClimbCollider();           /* func_ov002_020caf68 */
     void LeaveShellRide();               /* func_ov002_020cc1f4 */
     void StartAnim0xAB();                /* func_ov002_020cd2c4 */

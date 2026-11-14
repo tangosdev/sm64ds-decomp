@@ -419,8 +419,8 @@ int func_ov002_020ae5c8(dEnemyBase_c *c, int x) {
 extern "C" {
 extern void *d_enemy_baseNewHold(unsigned int a, unsigned int b, int c, int d, int e, const void *f,
                                  void *g);
-extern u32 d_enemy_baseNewCleanParticleHold(u32 uniqueID, u32 effectID, fx32 x, fx32 y,
-                                            fx32 z, const Vector3_16f *dir);
+extern u32 d_enemy_baseNewCleanParticleHold(u32 uniqueID, u32 effectID, fx32 x, fx32 y, fx32 z,
+                                            const Vector3_16f *dir);
 }
 
 int EnemyDeathC::func_ov002_020ae4cc(dBgCh_Actr &clsn) {

@@ -333,8 +333,7 @@ dActor_c *dActor_c::Spawn(u32 actorID, u32 spawnParam, const Vector3 &pos,
 
 /* The radius, clip distance and far distance are stored at 1/8 scale, the
    scale BeforeBehavior projects into. */
-void dActor_c::SetRanges(fx32 clipOffsetY, fx32 clipRadius, fx32 clipDistance,
-                         fx32 farDistance) {
+void dActor_c::SetRanges(fx32 clipOffsetY, fx32 clipRadius, fx32 clipDistance, fx32 farDistance) {
     mClipOffsetY = clipOffsetY;
     mClipRadius = clipRadius >> 3;
     mClipDistance = clipDistance >> 3;
