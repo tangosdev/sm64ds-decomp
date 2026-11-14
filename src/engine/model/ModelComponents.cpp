@@ -281,10 +281,8 @@ void func_02044f74(void *g, struct Node *n)
                   (u16)((unsigned)n->f1e << 4), (u16)((unsigned)n->f20 << 4), n->f24, n->f28,
                   n->f2c);
     {
-        int *base = *(int **)((char *)g + 0x34);
-        int t = base[3];
-        MTX_Concat43((Matrix4x3 *)m, (const Matrix4x3 *)((a + n->f8) * 0x30 + t),
-                     (Matrix4x3 *)((s16)a * 0x30 + t));
+        Matrix4x3 *t = ((struct Sub *)((BMD_File *)g)->skin)->blk;
+        MTX_Concat43((Matrix4x3 *)m, &t[a + n->f8], &t[(s16)a]);
     }
     if (n->fa != 0)
         func_02044f74(g, n + n->fa);

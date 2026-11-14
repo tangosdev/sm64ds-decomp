@@ -2334,8 +2334,7 @@ int func_0204ee40(struct S82 *self, char *name, char *p) {
     i = 0;
     if (n > 0) {
         do {
-            unsigned int m = *(unsigned int *)cur;
-            switch (m) {
+            switch (((NitroBlockHeader *)cur)->kind) {
             case 0x46415442:
                 fatb = cur;
                 break;
@@ -2346,7 +2345,7 @@ int func_0204ee40(struct S82 *self, char *name, char *p) {
                 fimg = cur;
                 break;
             }
-            cur += *(int *)(cur + 4);
+            cur += ((NitroBlockHeader *)cur)->size;
             i++;
         } while (i < n);
     }
@@ -2361,8 +2360,8 @@ int func_0204ee40(struct S82 *self, char *name, char *p) {
         return 0;
 
     if (FS_LoadArchive(&self->arc, (u32)fimg_off, (u32)(fatb + 0xc) - (u32)fimg_off,
-                       *(u32 *)(fatb + 4) - 0xc, (u32)(fntb + 8) - (u32)fimg_off,
-                       *(u32 *)(fntb + 4) - 8, 0, 0))
+                       ((NitroBlockHeader *)fatb)->size - 0xc, (u32)(fntb + 8) - (u32)fimg_off,
+                       ((NitroBlockHeader *)fntb)->size - 8, 0, 0))
         return 1;
 
     FS_ReleaseArchiveName(&self->arc);
