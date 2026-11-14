@@ -171,7 +171,7 @@ struct dScMgSlot1_c : dScMgBase_c {
     SlotBlink mMatchBlink; /* 0x4684 -- placed from sSlotMatchBlinkX/Y[mMatchedSymbol] */
     SlotBlink mWildBlink;  /* 0x4690 -- placed from sSlotWildBlinkX/Y[mWildCount - 1] */
     SlotLamp mPayoutLamp;  /* 0x469c -- started when a spin pays out */
-    u32 mReelScroll[3];    /* 0x46a4 -- Fix12 distance to the next symbol */
+    u32 mReelScroll[3];    /* 0x46a4 -- fx32 distance to the next symbol */
     s32 mSpinSoundHandle;  /* 0x46b0 -- returned by Sound_PlayIfNotActive */
     s32 mState;            /* 0x46b4 -- Behavior's state-machine index */
     s32 mPayoutMultiplier; /* 0x46b8 -- matched-symbol and wild awards per bet */

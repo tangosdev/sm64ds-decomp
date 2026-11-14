@@ -23,8 +23,6 @@
  * - mSpawnPosX stays punned: daJgm_c stores it as three scalars.
  * - dBgCh_Actr_UpdateDiscreteNoLava_veneer stays: the named
  *   UpdateDiscreteNoLava method is WRONG-DEST (ROM 0x02038420).
- * - daPly_c::Bounce / Hurt stay mangled: each takes Fix12<int> by value
- *   (6az).
  * - dActor_c::IsTooFarAwayFromPlayer and FX_Div have no header decl,
  *   so they are declared locally.
  * - Sound::PlayLong is the Sound.h call. d_a_jgmPlayLongHold keeps the five

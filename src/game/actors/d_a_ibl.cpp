@@ -17,8 +17,6 @@
  *   coined from their bodies and gIblKindHandlers' kind order, not
  *   recovered. Behavior reads gIblKindHandlers by hand, through two-word
  *   records, rather than calling a pointer-to-member.
- * - daPly_c::Hurt stays mangled: it takes Fix12<int> by value. The local
- *   Hurt declaration agrees with the current scalar definition.
  * - The spawner copies daPly_c position through a byte view of the whole object
  *   into a real Vector3. The inherited position fields remain separate scalars.
  * - Spawn still borrows this actor's flat position and angle fields through

@@ -33,8 +33,6 @@ enum d_s_mg_trampoline2_AssetId {
  *
  * leftovers:
  * - 0x7acc has no matched read.
- * - NewCleanParticle takes Fix12 by value, which costs the caller bytes
- *   (notes/mwccarm-codegen.md 6az).
  * - The 0x78-element pool helpers stay free functions over char *; they
  *   read the record through Trmp2Spinner.h's view. Their
  *   pointer locals (Init's p1..p3, Update's p), StatePlay's level pointer

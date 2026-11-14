@@ -28,10 +28,6 @@
  * king's face texture 02128178, the collision meshes data_ov079_02127bf0[2].
  *
  * Known limits:
- * - dActor_c::SpawnCoins/Earthquake, DropShadowScaleXYZ,
- *   dBgW_KcMbg::SetFile and
- *   dBgCh_Actr::Init take Fix12<int> by value, so they stay mangled
- *   (notes/mwccarm-codegen.md 6az).
  * - func_ov079_02123804 reacts to a hit but nothing in the cartridge's
  *   relocations calls it.
  * - func_ov079_02123d4c is really a Vector3-by-value member of daBtn_c, but

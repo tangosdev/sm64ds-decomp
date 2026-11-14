@@ -56,12 +56,6 @@
  * - State dispatch stays a pointer-to-member on a non-virtual stand-in:
  *   daKuriKing_c has virtuals, so its own member pointers are wider than the
  *   8-byte records the sinit copies in.
- * - The remaining mangled calls that carry Fix12<int> (Particle::System::
- *   NewSimple, daPly_c::Hurt, the Init family,
- *   Earthquake, DropShadowRadHeight, cstd::atan2, Sound::ChangeMusicVolume)
- *   pass it as a raw int. The header form with Fix12<int> locals builds a
- *   stack temporary and changes size (021223bc goes 0x278 -> 0x288 through
- *   DropShadowRadHeight).
  */
 
 /* common.h BEFORE daKuriKing_c.h: with the structured Matrix4x3,
@@ -838,7 +832,7 @@ int daKuriKing_c::AdvanceMaterialChanger() {
 /* daKuriKing_c shrink/grow interpolation tick.
  *
  * Called from UpdateDefeat and UpdateScaleChange. data_ov074_02122e4c holds
- * the boss's four sizes as floats (3.0, 2.333, 1.666 and 1.0 in Fix12 units);
+ * the boss's four sizes as floats (3.0, 2.333, 1.666 and 1.0 in fx32 units);
  * mTargetScale is the next size plus the gap back to the current one,
  * divided by the steps left in mScaleSteps. Math_Function_0203b14c eases
  * mCurrentScale toward that target; unless the last step has just finished,

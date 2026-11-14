@@ -20,8 +20,6 @@
  * - IsStarCollected and Message::DisplayText stay local externs. The header
  *   spellings take s8 / u16 and those parameters emit a narrow the ROM does
  *   not have. DisplayText must see this untruncated.
- * - Sound::ChangeMusicVolume stays mangled. The second parameter is
- *   Fix12<int> by value.
  * - BG pointer getters are the SDK's G2_ / G2S_ functions
  *   (nitro/gx/gx_bgcnt.h). They return void *, so each call site casts
  *   to the type it computes with.

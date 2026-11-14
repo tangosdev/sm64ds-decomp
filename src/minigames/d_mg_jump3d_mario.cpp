@@ -26,8 +26,6 @@
  * this TU. They were one-function shards, one per function.
  *
  * leftovers:
- * - dExtAnmModel_c::SetAnim takes Fix12<int> by value; its real spelling makes
- *   the compiler home the argument and the size changes. It stays mangled.
  * - The helper functions and data_ov006_ tables have no header or name yet.
  * - The five gTouch-lane and gActivePlayerSlot externs keep the file-local record
  *   spellings (u8 [][4] lanes) because the ROM scales the slot in the
@@ -69,7 +67,6 @@ struct Mtx { int a, b, c, d; };
  * above the first function. */
 extern "C" {
 
-/* Fix12<int> by value in the real signatures; see the banner. */
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void func_02012718(int a, int b);
 void func_02016a14(void *self, int a);

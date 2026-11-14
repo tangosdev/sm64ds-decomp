@@ -7,10 +7,6 @@
  * with the five per-profile registry factories, each `new daObjBlockL_c()`.
  *
  * Notes:
- * - Particle::System::NewSimple, dActor_c::SpawnCoins,
- *   dBgActor_c::IsClsnInRangeOnScreen and dBgW_KcMbg::SetFile are member
- *   calls through their headers, which spell the Fix12 parameters as
- *   fx32, a plain s32 (notes/mwccarm-codegen.md 6az).
  * - the BigBrickBlockAssets resource table stays file-local: no shared
  *   header owns that 0xc row.
  * - linkedActor + 0x3b0 is an unnamed byte on the mega character
@@ -216,13 +212,7 @@ void daObjBlockL_c::OnGroundPounded(dActor_c &other) {
  *
  * The last Vector3 is memberwise on purpose: Vector3 declares a destructor
  * (types.h), so a whole-object assignment compiles to an ldm/stm pair, four
- * instructions where the ROM has six.
- *
- * Particle::System::NewSimple and dActor_c::SpawnCoins take their Fix12
- * arguments as fx32 (a plain s32): passing Fix12<int> BY VALUE changes how
- * the caller passes them. include/dActor_c.h says the same thing at the
- * bottom of the class, src/runtime/actor/d_bg_actor.cpp argues it in full, and
- * notes/mwccarm-codegen.md 6az is the rule. */
+ * instructions where the ROM has six. */
 void daObjBlockL_c::Kill() {
     Vector3 starPos;
     Vector3 pos;
@@ -323,8 +313,7 @@ int daObjBlockL_c::Render() {
     return 1;
 }
 
-/* Clip bounds use the out-of-line dBgW property setters.
-   IsClsnInRangeOnScreen takes its Fix12 arguments as fx32. */
+/* Clip bounds use the out-of-line dBgW property setters. */
 int daObjBlockL_c::Behavior() {
     if (IsActorID(this, 0x13)) {
         if (mPrevEventBit != Event::GetBit(mEventID))
@@ -376,7 +365,6 @@ int daObjBlockL_c::Behavior() {
  *
  * Each actorID test after the switch re-reads actorID through IsActorID; the
  * switch's own copy is not reused, and folding them changes the compare shape.
- * dBgW_KcMbg::SetFile's scale is fx32, not Fix12<int> by value (wall 6az).
  */
 int daObjBlockL_c::InitResources() {
     u16 id = actorID;

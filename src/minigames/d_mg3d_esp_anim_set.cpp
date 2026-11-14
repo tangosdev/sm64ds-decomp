@@ -377,9 +377,6 @@ void dMg3DEspModel_c::Wait()
     Sound::PlayBank2_2D(0x18f);
 }
 
-/* Keep the scalar-speed boundary used by the existing SetAnim definition.
-   The measured native Fix12-by-value call grows this function by eight
-   bytes. */
 void dMg3DEspModel_c::StartWait()
 {
     mAnmModel.SetAnim((BCA_File *)gEspCardWaitAnimFile.filePtr, 0, 0x800, 0);

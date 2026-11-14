@@ -33,8 +33,6 @@
  * not reorder.
  *
  * leftovers:
- * - daPly_c::Hurt and Particle::System::NewSimple stay mangled. Each takes
- *   Fix12<int> by value (wall 6az).
  * - The hit check and the placement helper are members but keep their
  *   func_ov098_* address names.
  * - The fragment angle table (data_ov098_0213bf90) is an unnamed ov098 row

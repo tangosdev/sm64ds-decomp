@@ -14,8 +14,7 @@
 // leftovers:
 // - The FL_COIN puzzle manager (actor 0x4f) has no header, so its live-coin
 //   count at +0xd6 stays a raw offset.
-// - ReflectAngle and DropShadowRadHeight stay mangled (Fix12<int> by value).
-//   GetClsnPos keeps the free (res, self) spelling: the real member returns
+// - GetClsnPos keeps the free (res, self) spelling: the real member returns
 //   Vector3 by value. GetWallResult and GetFloorResult have no header member.
 //   dBgCh_Lin and dBgPi C1/D1 run on raw char buffers.
 // - func_ov002_020b18f0 stays a free extern "C": GiveCoins passes a daPly_c,
@@ -554,7 +553,7 @@ void daCoin_c::StateSlideAwayFromMario() {
 /* Tumbling handler for the coins that bounce and slide: bounces off an FL_COIN
  * (0x4f) puzzle manager found through mPuzzleManagerID once the coin has fallen
  * to its height, and otherwise off the floor. Each bounce bumps the bounce
- * count and scales the vertical speed by a fix12 factor that shrinks with it
+ * count and scales the vertical speed by an fx32 factor that shrinks with it
  * (2/3, 1/3, then 0x555/0x1000) and halves the horizontal speed. On a sloped
  * floor it accelerates along the surface normal by data_ov002_020ff078 for the
  * floor's class, caps the speed at 0x1c000 and steers toward the slope. The

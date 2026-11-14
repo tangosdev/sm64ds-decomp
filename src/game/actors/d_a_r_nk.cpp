@@ -8,8 +8,6 @@
 // leftovers:
 // - The helpers keep their addresses as method names. The State enum in
 //   daRNk_c.h says which handler is which.
-// - SetAnim, PlaySub and DropShadowRadHeight stay mangled. Their symbols
-//   carry 5Fix12IiE, and the scalar signatures are what these calls need.
 // - daPly_c::Unk_020c4f40(0x5a), the 0x1f PlaySub pairs, sounds 0x4d and
 //   0xec, and DropShadowRadHeight's last argument 0xf are named only by
 //   when this TU uses them.

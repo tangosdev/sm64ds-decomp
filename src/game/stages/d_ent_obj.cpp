@@ -19,10 +19,7 @@
  * the classInit factory, then UnknownVsPlayer's constructor.
  *
  * leftovers:
- *  - The Fix12-by-value dExtShadowModel_c::InitModel call keeps its measured
- *    scalar-extern spelling: spelled as
- *    the real member types, mwccarm homes the register arguments and the
- *    callers grow. G3i_PerspectiveW_ takes the SDK's fx32 scalars.
+ *  - G3i_PerspectiveW_ takes the SDK's fx32 scalars.
  *  - The Matrix4x3 copies go through the flat Mtx43; assigning Matrix4x3
  *    itself grows .text by 0x6c bytes.
  *  - Behavior's mFellOffThisFrame probe keeps the second `walk` induction variable
@@ -80,9 +77,6 @@ struct EntObjTextureSequenceFileHandle : SharedFilePtr {
     ~EntObjTextureSequenceFileHandle();
 };
 
-/* Fix12<int> is passed by value at these call boundaries. Spelled as the
- * class type, mwccarm homes the register arguments and the callers grow, so
- * the measured scalar views stay. */
 extern "C" {
 int d_ent_objNewHold(unsigned handle, unsigned id, int x, int y, int z, const Vector3_16 *dir,
                      void *callback);

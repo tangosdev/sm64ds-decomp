@@ -350,9 +350,7 @@ void dScMgJump2_c::State_Idle() {}
 
 /* Slot 6. mParticleID is a particle system's unique ID, handed to
  * NewCleanParticle and back each frame. The object FromUniqueID returns is
- * a Particle::System. Both Particle::System
- * calls keep their mangled spellings: declaring the real Fix12<int>
- * parameters changes how the call passes them. */
+ * a Particle::System. */
 s32 dScMgJump2_c::Behavior() {
     mParticleID =
         Particle::System::NewCleanParticle(mParticleID, 0xf0, 0x400000, 0x800000, -0x480000, 0);

@@ -118,7 +118,6 @@ extern "C" {
 extern Entry data_ov060_0211afb4[];
 extern PMF data_ov060_0211af74[];
 
-/* Fix12<int>-by-value and other mangled-name calls (see the banner). */
 extern u32 d_a_kpa_fireNewCleanParticleHold(u32 a, u32 b, fx32 c, fx32 d, fx32 e,
                                             const struct Vector3_16f *f);
 extern u32 d_a_kpa_fireNewHold(u32 a, u32 b, fx32 c, fx32 d, fx32 e, const void *f, void *g);
@@ -158,7 +157,7 @@ int daKpaFire_c::InitResources()
         this, 0x32000, 0x32000, 0,
         0); /* radius and height 50 units; the two Vector3_16 * args are null */
 
-    /* Fix12: gravity -4.0 units per frame per frame, fall speed floor -30.0
+    /* fx32: gravity -4.0 units per frame per frame, fall speed floor -30.0
        units per frame. The variant's init (below) may overwrite both. */
     this->mVertAccel = -0x4000;
     this->mTerminalVelocity = -0x1e000;
@@ -246,7 +245,7 @@ int daKpaFire_c::CleanupResources()
  * builds a translation matrix in the shared scratch matrix data_020a0e68 at
  * the fire's x, its mGroundY and its z (each >> 3), copies it into the
  * Matrix4x3 at 0x32c of the actor, and draws the dExtShadowModel_c at 0x304 with
- * radius mShadowRadiusMul * mFireScale, the second Fix12 argument (dActor_c.h
+ * radius mShadowRadiusMul * mFireScale, the second fx32 argument (dActor_c.h
  * calls it `depth`) 30 units (0x1e000), and the `opacity` argument 0xf (what
  * that value means is not decoded; every caller passes 0xf).
  * The Matrix4x3 at 0x32c remains the header's `mShadowMat` storage; copying it
@@ -761,7 +760,7 @@ void daKpaFire_c::func_ov060_02116740() {
 }
 
 /* Particle helper. Keeps two particles alive at the fire's position, y raised
- * by yOffset (Fix12): `kind` in mParticleHandle and `kind + 1` in
+ * by yOffset (fx32): `kind` in mParticleHandle and `kind + 1` in
  * mParticleHandle2 (each handle is passed back in, so a live particle is
  * presumably refreshed rather than duplicated). Kinds 0xa2 and 0xa4 start the
  * first one through the NewCleanParticle form of Particle::System::New; the rest use

@@ -138,15 +138,7 @@ struct dEnemyBase_c : dActor_c {
     /* Already a real method -- its own file builds _ZN12dEnemyBase_c9SpawnCoinEv from a
        local `struct dEnemyBase_c : dActor_c` shadow. Declared here so callers need not
        spell the mangled name. */
-    /* Its parameters are SCALARS, and the mangled name says so. The old name
-       spelled the first and last `Fix12<int>`, which the image refutes: mwcc
-       homes a class-typed by-value parameter to the stack the moment a body
-       reads it, and this function's ROM bytes read both straight from r1 and
-       r3. Nothing anchors the class spelling either -- the whole image contains
-       zero `_Z...` strings and zero occurrences of `5Fix12IiE`, so every
-       mangled name in this tree is reconstructed and this one was a guess that
-       the bytes disagree with. `fx32` keeps the fixed-point intent and
-       mangles as plain `i`. See notes/mwccarm-codegen.md 6az. */
+    /* down_ and up_ are scalar fx32: the ROM body reads both straight from r1 and r3. */
     int IsGoingOffCliff(dBgCh_Actr &clsn_, fx32 down_, s16 maxSlope_, bool detectWater_,
                         bool allowObjFloor_, fx32 up_);
     void SpawnCoin();
@@ -180,7 +172,7 @@ struct dEnemyBase_c : dActor_c {
            ov004 (0x020ad97c, 0x020ada10, 0x020adb70, 0x020adbac) leave r3 alone,
            which is what a one-scalar-argument call looks like. All 15 outside it
            materialise a fourth argument in r3 -- the old note listed three. Most
-           pass a Fix12 constant (0x46000, 0x41000, 0x96000, 0x32000, 0);
+           pass an fx32 constant (0x46000, 0x41000, 0x96000, 0x32000, 0);
            ov064 0x02116904 and ov102 0x0214cc8c load one from an object; ov081
            0x02123988
            passes the RETURN of the virtual at vtable offset 0x74, which is slot
@@ -192,12 +184,9 @@ struct dEnemyBase_c : dActor_c {
            source of the following `strh`, so the argument setup is invisible.
 
            It is a fixed-point value, by the sibling:
-           `dBgActor_c::UpdateKillByMegaChar(s16, s16, s16, Fix12<int>)` is the
+           `dBgActor_c::UpdateKillByMegaChar(s16, s16, s16, fx32)` is the
            background-actor form of the same operation and ends in the same
-           parameter. It is the scalar fx32 here: the body never reads r3, so
-           the bytes cannot tell a by-value Fix12<int> from a scalar, and the
-           scalar lets the definition be a real method (notes/mwccarm-codegen.md
-           6az). */
+           parameter. */
     void KillByInvincibleChar(const Vector3_16 &spin_, daPly_c &player_, fx32 unused_);
 };
 

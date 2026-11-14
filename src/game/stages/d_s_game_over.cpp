@@ -17,10 +17,8 @@
  * deslop leftovers:
  * - UpdateIntro (0x020b060c) and UpdateButtonPalettes (0x020b0730) are
  *   non-virtual methods under coined names.
- * - OAM::Render's Fix12 overload stays mangled: OAM.h excludes the by-value
- *   Fix12<int> overloads (codegen wall, pinned in
- *   notes/experiments/gameover-2711-oam-render-fix12.md). G2S_GetBG1ScrPtr
- *   comes from nitro/gx/gx_bgcnt.h as `void *` and UpdateButtonPalettes casts it to u16* for its pointer
+ * - G2S_GetBG1ScrPtr comes from nitro/gx/gx_bgcnt.h as `void *` and
+ *   UpdateButtonPalettes casts it to u16* for its pointer
  *   arithmetic (typing ergonomics, not a codegen wall -- see
  *   notes/experiments/gameover-2711-bg1scrptr-u16.md).
  * - gSceneFader, the dFdBrightness_c dScene_c::SetFaders installed, gates

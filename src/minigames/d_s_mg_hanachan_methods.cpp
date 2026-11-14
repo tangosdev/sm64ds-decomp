@@ -37,14 +37,10 @@
  * - Wiggler::DrawTarget repeats Wiggler::DrawField's segment
  *   walk with its own point type, Vec2_ea914, whose trivial destructor
  *   is part of the match.
- * - Wiggler::StepSegmentsA, StepSegmentsB, StepSegmentsC and MoveBounce:
- *   cstd::atan2(Fix12<int>, Fix12<int>) does not link.
- *   cstd::atan2(int, int) mangles Eii, not E5Fix12IiES1_.
  * - Wiggler::GetFlag reads the four 2-bit colours in color (+0x74) through
  *   the B72 bitfield view.
  * - Wiggler::DrawField: OAM::Render(int, OamAttr*, int, int, int,
- *   int, int, int) does not typecheck (the sprite table is void*). The
- *   ROM symbol's scale parameter is Fix12<int>, which this tree cannot spell.
+ *   int, int, int) does not typecheck (the sprite table is void*).
  *   One sprite offset is still read back through a volatile stack word.
  * - Wiggler::StartPathA reads base.y through a volatile; a plain read DIFFs.
  */
@@ -232,8 +228,8 @@ dScMgHanachan_c::~dScMgHanachan_c() {}
    StarPopup_Draw and StarPopup_Clear use it. Its byte fields differ from the
    sixteen popups' S_ea81c layout. */
 struct HanaStarPopup {
-    int x;      /* 0x00 Fix12; clamped to 0x10000..0xf4000 at start */
-    int y;      /* 0x04 Fix12; kept at or above 0x8000 */
+    int x;      /* 0x00 fx32; clamped to 0x10000..0xf4000 at start */
+    int y;      /* 0x04 fx32; kept at or above 0x8000 */
     int vy;     /* 0x08 added to y in phase 0, -0x800 at start, minus 0x100 a frame */
     u8 timer;   /* 0x0c 0x18 at start, 0x40 for the hold; counts to 8 in phase 2 */
     u8 active;  /* 0x0d Update skips the popup while clear */

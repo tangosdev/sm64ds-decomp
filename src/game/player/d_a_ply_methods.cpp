@@ -12,19 +12,6 @@
  *   as a raw pointer. The following mStateArg store is an int-cast of the
  *   address; the member spelling of that store is short.
  * - One ChangeState passes (int)data_ov002_021101b4.
- * - Particle::System::New, Particle::System::NewSimple, cstd::atan2,
- *   Sound::PlaySub and Sound::ChangeMusicVolume stay mangled. The symbol
- *   carries 5Fix12IiE. Sound.h does not declare the last two.
- *   All 16 body-local declarations of Particle::System::New use ONE spelling:
- *       u32 (u32 handle, u32 kind, fx32 x, fx32 y, fx32 z,
- *            const void *dir, void *callback)
- *   The mangled name gives the real types of the last two -- const Vector3_16f *
- *   and dPa_c::level_c::callback_c * -- but the call sites pass several different
- *   three-by-s16 shapes, so they stay void pointers until those are unified.
- *   fx32 is a scalar typedef, so it costs nothing here; the by-value
- *   Fix12<int> the symbol names is still the wall (notes/mwccarm-codegen.md
- *   6az). Keep them identical: 16 spellings of one symbol is how a wrong
- *   return type or argument order hides.
  * - __register_global_object (arm9 0x020731dc) is the C++ runtime's
  *   destructor registration. Five function-local Vector3 offsets are real statics;
  *   mwcc emits their guards, stores and ~Vector3() registration.
@@ -2940,10 +2927,6 @@ int daPly_c::func_ov002_020c0fb4() {
     return this->func_ov002_020c0cbc();
 }
 
-/* Signature deliberately copied from the local declaration above: the
-   ROM name carries by-value class parameters (e.g. Fix12<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 void daPly_c::func_ov002_020c1234() {
     unsigned int a1, a2;
     int fx;
@@ -3579,10 +3562,6 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
         return ret;
 }
 
-/* Signature deliberately copied from the local declaration above: the
-   ROM name carries by-value class parameters (e.g. Fix12<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 void daPly_c::func_ov002_020c29d4() {
     char *base = (char *)this;
     if (param1 != 1)
@@ -8036,10 +8015,9 @@ int daPly_c::St_Climb_Cleanup() {
  * keeps the data_0209f49c load live in r1 through both call sites, which is
  * the ROM's coloring.
  *
- * SetAnim retains its scalar Fix12 ABI declaration. The climbed object's
- * position comes from mClimbClsn->GetPos() (dCc_c's slot 2). daPly_c fields
- * and state changes use the shared class interface where their types are
- * established.
+ * The climbed object's position comes from mClimbClsn->GetPos() (dCc_c's
+ * slot 2). daPly_c fields and state changes use the shared class interface
+ * where their types are established.
  */
 
 int daPly_c::St_Climb_Main() {
@@ -10272,10 +10250,6 @@ int daPly_c::func_ov002_020d0178(int arg1, int flag) {
     return 1;
 }
 
-/* Signature deliberately copied from the local declaration above: the
-   ROM name carries by-value class parameters (e.g. Fix12<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 int daPly_c::func_ov002_020d0580() {
 
     int b354, b358;
@@ -10307,10 +10281,6 @@ cont:
     return 1;
 }
 
-/* Signature deliberately copied from the local declaration above: the
-   ROM name carries by-value class parameters (e.g. Fix12<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 int daPly_c::func_ov002_020d06c0() {
 
     int thresh, b354, b358;
@@ -12395,10 +12365,6 @@ void daPly_c::func_ov002_020d4748() {
 
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
-/* Signature deliberately copied from the local declaration above: the
-   ROM name carries by-value class parameters (e.g. Fix12<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 
 void daPly_c::PlayLandingEffects() {
     int id;
@@ -12548,9 +12514,6 @@ void daPly_c::BlowAway(short v) {
 /* current level id */
 /* sin/cos pair table, indexed by angle >> 4 */
 /* the walk state */
-/* Particle::System::New takes Fix12<int> by value -- the
-   mwccarm 6az wall, runbook section 7 -- so it stays extern "C" with scalars
-   in those slots. */
 int daPly_c::St_BurnLava_Main() {
     if (gMeterShownHealth == 0 && mStateArg == 0) {
         KillPlayer();
@@ -12814,8 +12777,6 @@ int daPly_c::Burn() {
  * The particle point is a Vector3 declared up front and filled after the
  * sound call; constructing it at the declaration is 23 words off.
  */
-/* Particle::System::New takes Fix12<int> by value -- the mwccarm 6az wall,
-   runbook section 7 -- so it stays extern "C" with scalars in those slots. */
 /* the walk state */
 /* the swim state */
 int daPly_c::St_Electrocute_Main() {
@@ -17611,10 +17572,6 @@ void daPly_c::InitBalloonMario() {
     Sound::PlayBank0(0xd7, mCamSpacePos);
 }
 
-/* Signature deliberately copied from the local declaration above: the
-   ROM name carries by-value class parameters (e.g. Fix12<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 int daPly_c::St_WindCarry_Main() {
     char* c = (char*)this;
 
@@ -17856,10 +17813,6 @@ int func_ov002_020df300(char* p) {
 }
 }
 
-/* Signature deliberately copied from the local declaration above: the
-   ROM name carries by-value class parameters (e.g. Fix12<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 
 int daPly_c::TryEnterCannonState() {
     struct dCamera_c {};
@@ -18170,10 +18123,6 @@ void func_ov002_020df8f0(char* c)
 }
 }
 
-/* Signature deliberately copied from the local declaration above: the
-   ROM name carries by-value class parameters (e.g. Fix12<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 #define c ((char *)this)
 
 int daPly_c::St_Fly_Main() {
@@ -18471,10 +18420,6 @@ tail:
     return 1;
 }
 
-/* Signature deliberately copied from the local declaration above: the
-   ROM name carries by-value class parameters (e.g. Fix12<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 #pragma push                // without it, the later pop does not compile
 #pragma opt_common_subs off // without it, St_Land_Init shrinks 0x1d8 to 0x1d4
 

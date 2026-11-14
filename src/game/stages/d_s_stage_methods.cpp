@@ -23,9 +23,7 @@
  */
 
 // leftovers:
-// - OAM::Render, OAM::RenderSub, Sound::PlaySub and cstd::atan2
-//   stay mangled (Fix12 by value). Fog::Init is the scalar fx32 method.
-//   RenderNumber keeps a local extern spelled over the member's mask-emitting
+// - RenderNumber keeps a local extern spelled over the member's mask-emitting
 //   parameter conversions. InitResources calls LoadGraphics2D with the comparison
 //   itself as the bool, which is what the ROM passes.
 // - LoadTextureTransformers spells `new` as an explicit operator new call

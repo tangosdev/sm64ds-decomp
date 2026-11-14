@@ -93,11 +93,10 @@ struct Player {
 
      PARAMETERS come from the mangled symbol. Note what that is and is not: the
      image holds zero _Z... strings, so these names are this TREE's convention
-     rather than ROM evidence (see the Fix12 note in types.h). What they are is
+     rather than ROM evidence (see the fx32 note in types.h). What they are is
      the one spelling every existing caller already agrees on, which is what a
      shared declaration needs. Where the convention and the bytes disagree the
-     bytes win -- so `5Fix12IiE` is declared fx32, the plain s32 the callers
-     actually pass, not the template the name implies.
+     bytes win.
 
      RETURN TYPES come from each DEFINITION in src/, never from a caller. A
      return type is not part of an Itanium mangled name, so the symbol is

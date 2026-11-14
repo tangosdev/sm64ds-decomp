@@ -25,15 +25,6 @@
  *   func_ov077_021251d0 call a destructor the cartridge does not.
  *
  * deslop leftovers:
- * - func_ov077_02124eb0 and func_ov077_021253a4: dActor_c::SpawnCoins is
- *   +12 (0x1f8->0x204, 0xdc->0xe8). Scalar extern kept.
- * - func_ov077_02125304: dActor_c::DropShadowRadHeight is +16 (0xa0->0xb0).
- * - func_ov077_02125480 and func_ov077_02125b1c: dExtAnmModel_c::SetAnim is +12
- *   (0xd0->0xdc, 0x98->0xa4). Scalar extern passes the u16 start frame.
- * - InitResources: SetAnim + dCcAc_c::Init + dBgCh_Actr::Init together are
- *   +36 (0x13c->0x160). dBgCh_Actr::Init's header mangles
- *   _ZN10dBgCh_Actr4InitEP8dActor_ciiP10Vector3_16S3_, not the ROM Fix12
- *   symbol.
  * - func_ov077_021256b4 and func_ov077_02125830: carrier->mPosX/Y/Z is -4
  *   (0x17c->0x178, 0xac->0xa8). The ROM keeps add #0x5c then [0]/[4]/[8].
  */

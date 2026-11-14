@@ -8,9 +8,9 @@
  */
 /* leftovers: the rows of data_ov014_0211476c reach the twelve state members
  * through 8-byte PMF descriptors that stay ROM-supplied data; the table copies
- * them by value. g_profile_WANWAN is not this file's data. daPly_c::Hurt stays mangled:
- * it takes Fix12<int> by value. The factory constructs the real class, including its two
- * Vector3[7] arrays. The four resource handles keep address names;
+ * them by value. g_profile_WANWAN is not this file's data. The factory
+ * constructs the real class, including its two Vector3[7] arrays. The four
+ * resource handles keep address names;
  * their definitions drive this file's static initializer.
  */
 
@@ -260,7 +260,6 @@ void daWanwan_c::UpdateModelTransform() {
     t = mPosY - mSpawnPosY;
     if (t <= 0x1000)
         t = 0x1000;
-    /* DropShadowRadHeight takes Fix12<int> by value. */
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x15e000 - FX_MUL(t, 0x180), t + 0x28000,
                         0xf);
     tmp = IDENTITY_MATRIX4X3;

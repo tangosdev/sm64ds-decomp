@@ -19,10 +19,6 @@
  * - Behavior: `(frame - 1) << 12` is one lsl #12 and the function shrinks
  *   0x1d4 to 0x1d0. The ROM is lsl #16; lsr #4, which is
  *   `(((unsigned)frame - 1) << 16) >> 4`.
- * - Behavior: dBgActor_c::IsClsnInRange as Fix12<int> by value grows it
- *   0x1d4 to 0x1f0 (stack temps). `Fix12<int>{0}` does not compile here
- *   ("( expected"). The scalar (void *, int, int) call with (0, 0) is the
- *   ROM's mov r1, #0; mov r2, r1. dBgActor_c.h does not declare it.
  * - OnHitByMegaChar: `Vector3 poofPosCopy = poofPos` is ldm/stm and shrinks
  *   the function 0x9c to 0x94. The three field stores are the ROM copies.
  * - OnHitByMegaChar: Sound::Play(3, 0x1e, &mCamSpacePosX) grows it 0x9c to

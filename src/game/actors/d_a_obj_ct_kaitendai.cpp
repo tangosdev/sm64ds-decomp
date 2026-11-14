@@ -17,12 +17,6 @@
  * to front); do not reorder.
  *
  * Notes:
- * - dBgW_KcMbg::SetFile, dActor_c::DropShadowRadHeight and
- *   dBgActor_c::IsClsnInRange are header member calls; their headers
- *   take the Fix12 parameters as the scalar fx32, a plain s32. Passing a
- *   Fix12<int> by value size-DIFFs this TU: InitResources 0x14c against
- *   0x140, and UpdateShadow 0x80 against 0x70 (notes/mwccarm-codegen.md
- *   6az).
  * - dBgW::SetBeforeClsnCallback is the store of dBgW::beforeClsnCallback (+0x18).
  *   This InitResources calls it with &dBgW::UpdatePosAndAngs.
  * - The sign flip and the yaw add go through a pointer. Writing

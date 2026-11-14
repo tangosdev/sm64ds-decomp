@@ -27,14 +27,10 @@
  * - State7 mFlutterPhase: named += is 0x234 vs 0x258. The phase load is
  *   ldrsh plus a zero-extend shift (ldrh of the field is shorter), and the
  *   adds take the int-cast address, not add #0x300.
- * - State7 daPly_c::Hurt: method form is 0x264 vs 0x258 (+0xc). Fix12<int>
- *   by value. daPly_c.h does not declare Hurt.
  * - State7 UpdateContinuous(): WRONG-DEST. ROM calls
  *   dBgCh_Actr_UpdateContinuous_Veneer (0x020383fc).
  * - State7 func_02035638 is mClsnFlags & 0x10. No method; IsOnGround is
  *   mFlags & 0x10.
- * - Behavior DropShadowRadHeight: method form is 0x24c vs 0x22c (+0x20,
- *   both calls). Fix12<int> by value.
  * - Behavior scratch matrix: Matrix4x3 assignment is 0x264 vs 0x22c.
  *   The flat Mtx43 copy is the ROM ldm/stm; the real type's translation is a
  *   Vector3 and runs ~Vector3.
@@ -108,8 +104,6 @@ extern SharedFilePtr data_ov100_02148668;
 extern BtflyModelFilePtr gButterflyModelFile;
 extern ButterflyState data_ov100_02148628[];
 
-/* Fix12<int> by value. The header method form homes those arguments on the
- * stack; these scalar entries are the ROM calls. */
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *w, void *actor, int radius, int height, void *a, void *b);
 }

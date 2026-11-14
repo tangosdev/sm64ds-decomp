@@ -43,7 +43,7 @@ struct CupFx {
 typedef char CupFx_size_must_be_0x18[sizeof(CupFx) == 0x18 ? 1 : -1];
 #endif
 
-/* Fix12 screen position. StateSelect subtracts x>>12, y>>12 from the touch. */
+/* fx32 screen position. StateSelect subtracts x>>12, y>>12 from the touch. */
 struct CupPos {
     s32 x;
     s32 y;
@@ -87,7 +87,7 @@ struct dScMgCup_c : dScMgSingle3DBase_c {
     s32 mMidX;          /* 0x5400 -- average of the two cups' rest x */
     s32 mMidY;          /* 0x5404 -- average of the two rest y */
     s32 mHalfX;         /* 0x5408 -- mMidX minus the first cup's rest x */
-    s32 mCupScale[3];   /* 0x540c -- Fix12 size; converted to reciprocal for OAM rendering */
+    s32 mCupScale[3];   /* 0x540c -- fx32 size; converted to reciprocal for OAM rendering */
     s32 mState;         /* 0x5418 */
     s32 mTimer;         /* 0x541c */
     s32 mCupAtSlot[3];  /* 0x5420 -- which cup sits in each slot */

@@ -45,7 +45,6 @@
  *    copies go through the flat Mtx43: assigning Matrix4x3 grows .text by
  *    0x54 bytes. Vec4 is an unused stack object with a destructor.
  *  - Handler descriptions come from reading the code, not from play-testing.
- *  - Sound::ChangeMusicVolume keeps its mangled decl (Fix12<int> by value, S13 wall); the Layer3 pair keeps file-local mangled decls because Sound.h declares only Layer1/Layer2 (this file excludes decl_common.h).
  */
 
 /* Turns off deferred codegen, which flips .text emission from reverse-source
@@ -272,7 +271,7 @@ extern unsigned char data_ov066_0211abe0;
 /* Threshold for the special pattern: the decision state picks pattern 8 / 9
  * once mPickCount exceeds this + 3. Starts at 1. */
 extern int data_ov066_0211abe4;
-/* Offset of a hand's hit volume from its position, Fix12 x/y/z. One global
+/* Offset of a hand's hit volume from its position, fx32 x/y/z. One global
  * shared by both hands, rewritten by SetRestHitVolume and
  * SetPoundHitVolume, so it holds whatever the last of those calls left. */
 extern int data_ov066_0211ad18[];

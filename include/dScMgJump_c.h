@@ -100,11 +100,11 @@ struct dScMgJump_c : dScMgD3DBase_c {
        mwccarm scalarises the copy member-by-member and the assigners come
        back 2 words short of the ROM's schedule. */
     struct StatePmf { s32 w[2]; };
-    StatePmf mState;      /* 0x5004 -- current state pair */
-    s32   mAccum;          /* 0x500c -- gains mAccumStep >> 12 a tick */
-    s32   mAccumStep;      /* 0x5010 -- Fix12 */
-    s16   mStateTimer;     /* 0x5014 -- countdown to the state change */
-    u8    pad_5016[0x6];   /* 0x5016 */
+    StatePmf mState;              /* 0x5004 -- current state pair */
+    s32 mAccum;                   /* 0x500c -- gains mAccumStep >> 12 a tick */
+    s32 mAccumStep;               /* 0x5010 -- fx32 */
+    s16 mStateTimer;              /* 0x5014 -- countdown to the state change */
+    u8 pad_5016[0x6];             /* 0x5016 */
     dExtSimpleModel_c mModel;     /* 0x501c -- 0x50, destroyed last, see banner */
     dMgJump3DMario_c mPlayers[3]; /* 0x506c -- RTTI-proven element type */
     Heyho mHeyhos[6];             /* 0x5294 -- 6 * 0xf0 */

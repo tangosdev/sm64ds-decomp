@@ -60,7 +60,7 @@ typedef struct {
     short v[12];
 } ShortTbl12;
 
-/* Two Fix12 words copied as a unit out of pmf_RouletteBoard_StateSlow and
+/* Two fx32 words copied as a unit out of pmf_RouletteBoard_StateSlow and
    pmf_RouletteBoard_StateSpin. Both keep the array member: a whole-struct copy of
    `{int a, b;}` is split into load, store, load, store, where the ROM does
    both loads first. */

@@ -31,11 +31,9 @@
  * A static member mangles identically, so the symbol is unchanged. This is the
  * same correction already applied to the sibling dExtAnmTexSRT_c, whose
  * header names this veneer and dExtAnmMaterial_c's as called the same way.
- * SetFile is a real member under its scalar mangling: speed is an fx32
- * (Fix12<int> by value cannot be passed through a member call without a
- * diff, wall 6az) and startFrame a u16, the width the definition and
- * daDemo_c's member calls reproduce. Callers that still spell it as a free
- * function carry a local extern.
+ * SetFile is a real member under its scalar mangling: speed is an fx32 and
+ * startFrame a u16, the width the definition and daDemo_c's member calls
+ * reproduce.
  */
 
 #ifdef __cplusplus

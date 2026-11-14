@@ -1446,7 +1446,7 @@ void daKrb_c::ActWalk() {
     goomba->mAngleY = goomba->mPrevAngleY;
 }
 
-/* Returns a Fix12 value by size: 65.0 for KURIBO, 150.0 for KURIBO_L and
+/* Returns an fx32 value by size: 65.0 for KURIBO, 150.0 for KURIBO_L and
  * 20.0 for KURIBO_S. */
 int daKrb_c::OnAimedAtWithEgg()
 {
@@ -1759,7 +1759,7 @@ int daKrb_c::Behavior() {
  * cylinder gets radius 60 * scale and height data_ov084_02130208[type]; a
  * KURIBO_L has bit 0x8000 cleared from its vulnFlags (the Yoshi-tongue bit in
  * dCc_c.h's best-effort table); dBgCh_Actr::Init gets 60 * scale for its two
- * Fix12 size arguments. mSavedParam keeps the original param1 for the end of
+ * fx32 size arguments. mSavedParam keeps the original param1 for the end of
  * STATE_TUMBLE. */
 int daKrb_c::InitResources() {
     dActor_c *actor = this;

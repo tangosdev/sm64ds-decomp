@@ -12,8 +12,7 @@
  * OAM buffers through file globals.
  *
  * Render's int overloads are declared below with no parameter names: a named
- * parameter renumbers @NNN in every includer. A by-value Fix12<int> still must
- * not be declared here -- mwccarm homes r0-r3 to the stack for it.
+ * parameter renumbers @NNN in every includer.
  *
  * OamAttr now lives in include/OamAttr.h -- eleven files that each carried their own
  * copy of the 4 x u16 layout share it, and the `OamAttri` misspelling is retired. See
@@ -59,9 +58,9 @@ struct OAM {
        coefficient, which is also why the search strides by 4. */
     static int LoadAffineParams(OamAttr* attr, int* count, Matrix2x2* mtx);
     static void Render(bool draw, OamAttr* obj, int x, int y, int palette, int priority, Matrix2x2* mtx);
-    /* 10-arg form. Scales are ints (0x1000), not Fix12. Unnamed: a named parameter renumbers @NNN in every includer. */
+    /* 10-arg form. Scales are ints (0x1000 = 1.0). Unnamed: a named parameter renumbers @NNN in every includer. */
     static void Render(bool, OamAttr *, int, int, int, int, int, int, int, int);
-    /* 8-arg form. Scale and rotation are ints, not Fix12. Unnamed: a named parameter renumbers @NNN in every includer. */
+    /* 8-arg form. Scale and rotation are plain ints. Unnamed: a named parameter renumbers @NNN in every includer. */
     static OamAttr *Render(bool, OamAttr *, int, int, int, int, int, int);
     static void RenderSub(OamAttr* data, s32 x, s32 y);
     static void RenderSub(OamAttr* data, s32 x, s32 y, s32 palette, s32 priority);

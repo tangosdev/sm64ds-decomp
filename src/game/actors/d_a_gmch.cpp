@@ -8,7 +8,6 @@
  * - common.h stays before daGmch_c.h. InitResources assigns
  *   IDENTITY_MATRIX4X3 into mMatrix; the .r/.t Matrix4x3 spelling is
  *   0x1f0 against the ROM's 0x1d4. decl_common.h is not included.
- * - daPly_c::Bounce and daPly_c::Hurt stay mangled (Fix12<int> by value).
  * - GetFloorResult / GetWallResult return the raw word; a dBgPi* return
  *   disagrees with the definitions, so the callers still cast.
  *   TouchesWater and FX_Div are the const method and the divide.
