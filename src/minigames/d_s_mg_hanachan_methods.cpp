@@ -1486,7 +1486,7 @@ void dScMgHanachan_c::Wiggler::StartPathB(int idx) {
     int A, B;
     int p;
     int valY;
-    int pos[2];
+    Vector2 pos;
     int i;
     int off;
 
@@ -1500,23 +1500,23 @@ void dScMgHanachan_c::Wiggler::StartPathB(int idx) {
     p = (n1 - 2) << 3;
     valY = FX_MUL(((0x28 - p) << 12), A) + FX_MUL(((p + 0x98) << 12), B);
 
-    *(int *)((char *)pos + 4) = 0;
-    *(int *)((char *)pos + 0) = 0;
-    *(int *)((char *)pos + 4) = valY;
+    pos.y = 0;
+    pos.x = 0;
+    pos.y = valY;
 
     if (RandomIntInternal(&data_0209e650.value) & 0x8000000) {
         aim = -0x4000;
-        pos[0] = 0x80000;
-        pos[0] += ((unsigned int)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19) << 7;
+        pos.x = 0x80000;
+        pos.x += ((unsigned int)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19) << 7;
     } else {
         aim = 0x4000;
-        pos[0] = 0x80000;
-        pos[0] -= ((unsigned int)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19) << 7;
+        pos.x = 0x80000;
+        pos.x -= ((unsigned int)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19) << 7;
     }
 
     for (i = 0, off = 0; i < 5; i++) {
-        seg[i].x = pos[0];
-        seg[i].y = pos[1];
+        seg[i].x = pos.x;
+        seg[i].y = pos.y;
         if (aim < 0)
             seg[i].x += off;
         else
