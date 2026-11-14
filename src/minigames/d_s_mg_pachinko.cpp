@@ -29,11 +29,9 @@
 
 // leftovers:
 // - The func_ and data_ helpers are unnamed in symbols.txt.
-// - Ball_AimAtTarget, Ball_CheckHitByBobOmb and
-//   BobOmb_StateAim keep the field-base addressing above; natural
-//   indexing misses in each (AimAtTarget's note gives the sizes; 21 words of
-//   register colouring in CheckHitByBobOmb and 88 in StateAim, which also
-//   keeps `opt_propagation off`, measured 2026-11-07).
+// - Ball_AimAtTarget and BobOmb_StateAim keep the field-base addressing
+//   above; natural indexing misses in each (AimAtTarget's note gives the
+//   sizes; StateAim's note gives its two measurements, 2026-11-13).
 // - The BG2 character fills (ClearAimLine, _CheckTargetsLeft,
 //   _DrawAimLine, InitResources) go through a volatile zero; in
 //   ClearAimLine a by-reference fill wrapper is 7 words off
@@ -64,15 +62,13 @@ struct OamAttr;
    drawer. */
 #include "Matrix2x2.h"
 
-/* The three functions that keep the ROM's field-base addressing
- * (Ball_AimAtTarget, Ball_CheckHitByBobOmb,
- * BobOmb_StateAim) reach a record field as the scene plus the
- * field's whole-scene offset, then add the pre-scaled index i * 0x38;
- * mBall[i].f folds the field into the index instead and does not match
- * there. SHOT/BALL view one record already stepped by i * 0x38. */
+/* The two functions that keep the ROM's field-base addressing
+ * (Ball_AimAtTarget, BobOmb_StateAim) reach a record field as the scene
+ * plus the field's whole-scene offset, then add the pre-scaled index
+ * i * 0x38; each one's note gives what mBall[i].f / mShot[i].f measured.
+ * BALL views one record already stepped by i * 0x38. */
 #define SHOT_BASE ((int)&((dScMgPachinko_c *)0)->mShot)
 #define BALL_BASE ((int)&((dScMgPachinko_c *)0)->mBall)
-#define SHOT(p) ((dScMgPachinko_shot *)((p) + SHOT_BASE))
 #define BALL(p) ((dScMgPachinko_ball *)((p) + BALL_BASE))
 #define SHOT_OFF(member) (SHOT_BASE + (int)&((dScMgPachinko_shot *)0)->member)
 #define BALL_OFF(member) (BALL_BASE + (int)&((dScMgPachinko_ball *)0)->member)
@@ -1610,116 +1606,56 @@ void dScMgPachinko_c::Ball_UpdateAll() {
     }
 }
 
-/* Finds the first live entry within 0x18 of
- * the caller's entry and launch it.
+/* Ball `i` against every live Bob-omb: the first shot that has left the
+ * launcher (state 2 or later) and lies within 0x18 pixels pops the ball. The
+ * ball takes the shot's heading as its spin rotation, starts spinning away
+ * (state 5) at 0x2000 along it, plays the pop sound and spawns the burst for
+ * the shot's combo (capped at 5), and the shot's combo goes up by one.
  *
- * Walks the 0x30 records of stride 0x38 that begin at self+0x4000. A record is
- * a candidate when its flag byte at +0x4f0c is non-zero and its state byte at
- * +0x4f0d is at least 2. For each candidate the planar distance from record
- * `i`'s position (self + i*0x38 + 0x4660 for x, +0x4664 for z) is taken in
- * whole units (>> 12) and compared against 0x18 through cstd::sqrt of the
- * 64-bit sum of squares. The first record inside that radius wins: the scan
- * writes its heading into self+0x4684+i*0x38, derives a cosine/sine pair at
- * 0x2000 scale plus a zero velocity pair into the record at
- * self+i*0x38+0x4000+0x668..0x674, plays the sound whose id comes from
- * sPachinkoPopSfx indexed by the hit record's counter (clamped at 5),
- * spawns the effect through Fx_Spawn, bumps that counter, and
- * returns. With no hit the loop runs out and the function returns having
- * written nothing.
- *
- * Two spellings are load-bearing for the register colouring in the guard
- * block, and only TOGETHER -- each one alone scores worse than either does
- * apart (16 and 11 against 7):
- *
- *   1. The four record fields in the guard block are reached off `walk` with
- *      the +0x4000 already folded into the constant (0x4f0c, 0x4f0d, 0x4ed8,
- *      0x4edc). Introducing a `char *w = walk + 0x4000` local and using
- *      w+0xf0c... is the same address arithmetic but creates a named web that
- *      takes r2 away from the loaded x.
- *   2. The z difference is computed BEFORE the x difference. mwccarm schedules
- *      the z term first either way, but the source order decides which of the
- *      two competing values reaches the allocator first, and with it whether
- *      the record base lands in r2 and the loaded x in r3 (the cartridge) or
- *      the other way round.
+ * Two spellings are load-bearing, measured 2026-11-13:
+ * - dx is taken before dy, and every operand of the sum of squares carries its
+ *   own (s64) cast: (s64)dx * dx moves the loop counter and record base into
+ *   other registers (16 words), and dy first emits the y field's offset to the
+ *   literal pool ahead of x (5 words).
+ * - the cosine and sine of the offset pair go through named fx16 locals;
+ *   inline, the spin radius and the table read swap registers (16 words).
  */
 
 void dScMgPachinko_c::Ball_CheckHitByBobOmb(int i) {
-    int n = i * 0x38;
-    char *o = (char *)this;
     int j;
-    char *walk;
-    int *xp = (int *)((o + n) + BALL_OFF(x));
-    int *zp = (int *)((o + n) + BALL_OFF(y));
-    for (j = 0, walk = o; j < 0x30; j += 1, walk += 0x38) {
-        if (SHOT(walk)->active == 0)
+
+    for (j = 0; j < 0x30; j++) {
+        int dx;
+        int dy;
+        s64 distsq;
+
+        if (mShot[j].active == 0)
             continue;
-        if (SHOT(walk)->state < 2)
+        if (mShot[j].state < 2)
             continue;
-        {
-            int dy = (*zp - SHOT(walk)->y) >> 12;
-            int dx = (*xp - SHOT(walk)->x) >> 12;
-            s64 distsq = (s64)dx * dx + (s64)dy * dy;
-            if (cstd::sqrt((unsigned long long)distsq) > 0x18)
-                continue;
-        }
-        {
-            int m = j * 0x38;
-            int five = 5;
-            char *ov = (char *)o;
-            unsigned char *comboBase = (unsigned char *)(o + SHOT_OFF(combo));
-            char *bn = ov + n;
-            char *bm = ov + m;
-            u16 ang;
+        dx = (mBall[i].x - mShot[j].x) >> 12;
+        dy = (mBall[i].y - mShot[j].y) >> 12;
+        distsq = (s64)dx * (s64)dx + (s64)dy * (s64)dy;
+        if (cstd::sqrt(distsq) <= 0x18) {
             fx16 cosv;
             fx16 sinv;
-            int vel;
-            int cnt;
             int cc;
-            char *rotationBase;
-            char *spinRadiusBase;
-            char *xBase;
-            unsigned char *cntp;
 
-            BALL(bn)->state = (u8)five;
-            {
-                char *r = bm + 0x4f00; /* split base: + 8 is the angle */
-                ang = *(u16 *)(r + 8);
-                r = o + BALL_OFF(rotation);
-                rotationBase = r;
-            }
-            *(u16 *)(rotationBase + n) = ang;
-            ang = *(u16 *)(rotationBase + n);
-
-            cosv = FX_CosIdx(ang >> 4);
-            {
-                unsigned char *lr = comboBase;
-                spinRadiusBase = o + BALL_OFF(spinRadius);
-                BALL(bn)->velX = FX_MUL(cosv, 0x2000);
-                ang = *(u16 *)(rotationBase + n);
-                sinv = FX_SinIdx(ang >> 4);
-                BALL(bn)->velY = FX_MUL(sinv, 0x2000);
-                *(int *)(spinRadiusBase + n) = 0;
-                ang = *(u16 *)(rotationBase + n);
-                vel = *(int *)(spinRadiusBase + n);
-                cosv = FX_CosIdx(ang >> 4);
-                BALL(bn)->offX = FX_MUL(cosv, vel);
-                ang = *(u16 *)(rotationBase + n);
-                vel = *(int *)(spinRadiusBase + n);
-                sinv = FX_SinIdx(ang >> 4);
-                BALL(bn)->offY = FX_MUL(sinv, vel);
-                cnt = *(u8 *)(lr + m);
-                cc = cnt;
-                if (cc >= 5)
-                    cc = five;
-                xBase = o + BALL_OFF(x);
-                func_02012718(sPachinkoPopSfx[cc], *(int *)(xBase + n));
-                {
-                    char *q = (char *)o + n;
-                    Fx_Spawn(*(int *)(xBase + n), BALL(q)->y, 2, (int)sPachinkoPopScores[cc], 0);
-                }
-                cntp = comboBase + m;
-                *cntp = (u8)(*cntp + 1);
-            }
+            mBall[i].state = 5;
+            mBall[i].rotation = mShot[j].angle;
+            mBall[i].velX = FX_MUL(FX_CosIdx(mBall[i].rotation >> 4), 0x2000);
+            mBall[i].velY = FX_MUL(FX_SinIdx(mBall[i].rotation >> 4), 0x2000);
+            mBall[i].spinRadius = 0;
+            cosv = FX_CosIdx(mBall[i].rotation >> 4);
+            mBall[i].offX = FX_MUL(cosv, mBall[i].spinRadius);
+            sinv = FX_SinIdx(mBall[i].rotation >> 4);
+            mBall[i].offY = FX_MUL(sinv, mBall[i].spinRadius);
+            cc = mShot[j].combo;
+            if (cc >= 5)
+                cc = 5;
+            func_02012718(sPachinkoPopSfx[cc], mBall[i].x);
+            Fx_Spawn(mBall[i].x, mBall[i].y, 2, sPachinkoPopScores[cc], 0);
+            mShot[j].combo++;
             return;
         }
     }
@@ -1852,14 +1788,14 @@ void dScMgPachinko_c::BobOmb_StateWaitGrab(int i) {
 
 #pragma push
 #pragma opt_propagation off
-/* One ball's stylus frame. While the stylus is down the ball follows the touch
- * point through its grab offset, clamped into the 8..0xf8 x 8..0xb8 box, the
- * offset is re-derived, and the drag-speed sound is re-armed at 0x17b or 0x17c
- * depending on whether the distance from the launcher grew by more than ten.
- * On release the launch fires: the pull-back vector becomes an angle at 0x4f08
- * and a speed at 0x4ef8 (the square root scaled by 1.953, clamped to 0xa000),
- * that speed drives the sine table into the velocity pair at 0x4ee0/0x4ee4, and
- * the ball is re-seated at 0x80000, 0x28000 if the pull was too short.
+/* One Bob-omb's stylus frame (mShot[i]). While the stylus is down the shot
+ * follows the touch point through its grab offset, clamped into the 8..0xf8 x
+ * 8..0xb8 box, the offset is re-derived, and the drag-speed sound is re-armed
+ * at 0x17b or 0x17c depending on whether the distance from the launcher grew
+ * by more than ten. On release the launch fires: the pull-back vector becomes
+ * the shot's angle and speed (the square root scaled by 1.953, clamped to
+ * 0xa000), that speed drives the sine table into velX/velY, and the shot is
+ * re-seated at 0x80000, 0x28000 if the pull was too short.
  *
  * Four spellings only move registers, and each was measured:
  * - dy is taken before dx in both distance blocks;
@@ -1870,7 +1806,12 @@ void dScMgPachinko_c::BobOmb_StateWaitGrab(int i) {
  * - the first velocity word's table index is a block-scope local, not inline
  *   and not at function scope.
  * `opt_propagation off` was measured against deleting it outright.
- * opt_propagation stays: a typed mShot[i] rewrite without it is the right size but schedules the touch loads and clamps differently (88 words).
+ * The field-base form stays (measured 2026-11-13): typed mShot[i] under
+ * opt_propagation off recomputes i * 0x38 after each call and branch (0x3e8
+ * bytes of 0x3bc); typed without the pragma is the right size but schedules
+ * the touch loads, the x/y reloads and the clamps differently (74 words,
+ * unmoved by declaration order, idx type, vx/vy order, `py`, inline touch
+ * reads, `+=` or else-if clamps).
  * The two velocity reads stay hand-indexed into FX_SinCosTable_: through
  * FX_CosIdx / FX_SinIdx the products take swapped registers (17-22 DIFF in
  * eleven spellings: inline, index local, fx16 local, speed read first).
@@ -1953,7 +1894,7 @@ void dScMgPachinko_c::BobOmb_StateAim(int i) {
             mNextBallDelay = (u16)(*(s32 *)(c + SHOT_OFF(speed) + off) >> 10);
             if (mNextBallDelay == 0)
                 mNextBallDelay = 1;
-            *(u8 *)(c + 0x5c31) = 0;
+            mUnused5c31 = 0;
             {
                 int ai = (*(u16 *)(c + SHOT_OFF(angle) + off) >> 4) * 2 + 1;
                 *(s32 *)(c + SHOT_OFF(velX) + off) =
@@ -2140,7 +2081,7 @@ void dScMgPachinko_c::ResetRound() {
     mUnused5c22 = 0;
     mUnused5c1e = 0;
     mUnused5c30 = 0;
-    unk_5c31 = 0;
+    mUnused5c31 = 0;
     mPlayStarted = 0;
     mWaveTimer = 0;
     mFlyerOut = 0;
