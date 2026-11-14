@@ -214,8 +214,7 @@ int daObjSm_Lift_c::Behavior() {
 }
 
 s32 daObjSm_Lift_c::InitResources() {
-    char *c = (char *)this;
-    mPathId = *(int *)(c + 8) & 0xff;
+    mPathId = param1 & 0xff;
     if (mPathId == 0xff)
         return 0;
     BMD_File *f = dExtSimpleModel_c::LoadFile(gSmLiftModelFile);
@@ -230,18 +229,12 @@ s32 daObjSm_Lift_c::InitResources() {
     mBasePosX = mPosX;
     mBasePosY = mPosY;
     mBasePosZ = mPosZ;
-    {
-        short *ang = (short *)&mAngleY;
-        *ang = *ang - 0x4000;
-    }
+    mAngleY -= 0x4000;
     PathPtr p;
     p.FromID(mPathId);
     mNodeCount = p.NumNodes();
     mNodeStep = 1;
-    {
-        int *ip = (int *)&mNodeIndex;
-        *ip = *ip + mNodeStep;
-    }
+    mNodeIndex += mNodeStep;
     mTouchingPlayer = 0;
     return 1;
 }

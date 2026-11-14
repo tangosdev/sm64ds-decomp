@@ -27,6 +27,7 @@
 #include "SaveData.h"
 #include "Sound.h"
 #include "daFPknBall_c.h"
+#include "daKpa_c.h"
 #include "dBgCh_Actr.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
@@ -87,7 +88,7 @@ void daFPknBall_c::TryDropCoin() {
 /* Death drop of a variant-0 ball. Rolls 0..9. On 4..9, gives up if any
  * FPAKUN_BALL already exists. Otherwise, if the closest player's param1 is 3
  * and the actor 279 has not yet handed one out, spawns a cap (actor 269) for a
- * random unlocked character 0..2 and marks actor 279's byte at +0x42b. If none
+ * random unlocked character 0..2 and sets Bowser's mCapActorAlive. If none
  * of that happens, a roll below 4 spawns a coin as TryDropCoin does. */
 void daFPknBall_c::TryDropItem() {
     u8 roll = (((u32)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10);
@@ -97,10 +98,10 @@ void daFPknBall_c::TryDropItem() {
     }
     {
         daPly_c *player = ClosestPlayer();
-        char *koopa;
+        daKpa_c *koopa;
         if (player != 0 && player->param1 == 3 &&
-            (koopa = (char *)dActor_c::FindWithActorID(ACTOR_KOOPA, 0)) != 0 &&
-            *(u8 *)(koopa + 0x42b) == 0) {
+            (koopa = (daKpa_c *)dActor_c::FindWithActorID(ACTOR_KOOPA, 0)) != 0 &&
+            koopa->mCapActorAlive == 0) {
             int c;
             int idx;
             int unlocked = 0;
@@ -114,7 +115,7 @@ void daFPknBall_c::TryDropItem() {
             } while ((unlocked & (1 << idx)) == 0);
             if (dActor_c::Spawn(ACTOR_OBJ_MARIO_CAP, (idx << 8) | 0xb, mPos, &mAngle, mAreaId,
                                 -1) != 0) {
-                *(u8 *)(koopa + 0x42b) = 1;
+                koopa->mCapActorAlive = 1;
                 return;
             }
         }

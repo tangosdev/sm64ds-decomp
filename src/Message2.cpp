@@ -25,6 +25,7 @@
 #include "types.h"
 #include "nitro/hw/registers.h"
 #include "Message.h"
+#include "MessageBank.h"
 #include "PlayerInput.h"
 #include "SaveData.h"
 #include "Sound.h"
@@ -753,7 +754,7 @@ void Message::Update() {
             data_0209d65c = 0;
         } else {
             func_0201b6f8(0);
-            data_0209d65c = (u8)((*(u16 *)(data_0209d6f0 + 4) - data_0209d6b0) >> 1);
+            data_0209d65c = (u8)((((MessageEntry *)data_0209d6f0)->width - data_0209d6b0) >> 1);
         }
         LayoutLine();
         return;

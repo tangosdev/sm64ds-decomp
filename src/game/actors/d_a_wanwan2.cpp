@@ -500,9 +500,6 @@ void daWanwan2_c::func_ov100_02143b68() {
     Mtx43 tmp;
     int i;
     dExtSimpleModel_c *mdst;
-    char *rd;
-    char *st;
-    dExtShadowModel_c *sm;
     Matrix4x3_FromRotationXYZExt(&c->mAnmModel.mat4x3, c->mAngleX, c->mAngleY, c->mAngleZ);
     c->mAnmModel.mat4x3.t.x = c->mPosX >> 3;
     c->mAnmModel.mat4x3.t.y = c->mPosY >> 3;
@@ -511,22 +508,13 @@ void daWanwan2_c::func_ov100_02143b68() {
     tmp = *(Mtx43 *)&IDENTITY_MATRIX4X3;
     i = 0;
     mdst = c->mModels;
-    /* rd and st both start at the chomp itself and are stepped by one link
-       (rd: 0xc, st: 0x50, a dExtSimpleModel_c), so the offsets below are from the chomp:
-       rd + 0x6d8 is mLinkPos[i] and st + 0x3b0 is mModels[i].mat4x3.t. */
-    rd = (char *)c;
-    st = (char *)c;
-    sm = c->mShadowModels;
     for (; i < daWanwan2_NUM_LINKS; i++) {
         *(Mtx43 *)&mdst->mat4x3 = tmp;
-        *(int *)(st + 0x3b0) = *(int *)(rd + 0x6d8) >> 3;
-        *(int *)(st + 0x3b4) = *(int *)(rd + 0x6dc) >> 3;
-        *(int *)(st + 0x3b8) = *(int *)(rd + 0x6e0) >> 3;
-        c->DropShadowRadHeight(*sm, mdst->mat4x3, 0x78000, 0x1f4000, 0xf);
+        c->mModels[i].mat4x3.t.x = c->mLinkPos[i].x >> 3;
+        c->mModels[i].mat4x3.t.y = c->mLinkPos[i].y >> 3;
+        c->mModels[i].mat4x3.t.z = c->mLinkPos[i].z >> 3;
+        c->DropShadowRadHeight(c->mShadowModels[i], mdst->mat4x3, 0x78000, 0x1f4000, 0xf);
         mdst++;
-        rd += 0xc;
-        st += 0x50;
-        sm++;
     }
 }
 
@@ -757,13 +745,11 @@ int daWanwan2_c::InitResources()
     /* Every link starts at the position it was placed at. */
     {
         int i = 0;
-        char *position = (char *)this;
         do {
-            *(s32 *)(position + 0x6d8) = mPosX;     /* mLinkPos[i] */
+            mLinkPos[i].x = mPosX;
+            mLinkPos[i].y = mPosY;
+            mLinkPos[i].z = mPosZ;
             i++;
-            *(s32 *)(position + 0x6dc) = mPosY;
-            *(s32 *)(position + 0x6e0) = mPosZ;
-            position += sizeof(Vector3);
         } while (i < daWanwan2_NUM_LINKS);
     }
 

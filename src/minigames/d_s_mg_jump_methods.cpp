@@ -447,7 +447,8 @@ s32 dScMgJump_c::Render()
         obj = &mModel.data;
         p = obj->materials;
         func_02045e44(obj, 1, 0);
-        /* +0x18 of the first material is inside BMD_Material's unnamed pad_0c. */
+        /* +0x18 is texTransT of the runtime material record (MaterialState, still
+           local to src/engine/model/ModelComponents.cpp), not a BMD_Material field. */
         *(int *)((char *)p + 0x18) = mAccum;
 
         {

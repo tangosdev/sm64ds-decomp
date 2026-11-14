@@ -89,6 +89,7 @@
 #include "Sound.h"
 #include "daStar_c.h"
 #include "daBtn_c.h"
+#include "daDsn_c.h"
 #include "math/Approach.h"
 #include "private/mtx43.h"
 #include "LevelRng.h"
@@ -255,7 +256,7 @@ void daYegg_c::HandleWallHit(int arg) {
     {
         int t = (int)(type == ACTOR_DOSUN);
         if (t != 0) {
-            *(u8*)((char*)actor + 0x3a2) = 1;
+            ((daDsn_c *)actor)->mTriggered = 1;
             return;
         }
     }

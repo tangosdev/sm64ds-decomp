@@ -1041,23 +1041,24 @@ void func_020326ac(void) {
  * third, so only three of the four are fixed strides:
  *
  *     +0x00  header      -> data_0209fd04
- *     +0x20  section A   -> data_0209fcf8, and its word at +4 is the distance
- *                           from A to section B
- *     A + *(A+4)         -> data_0209fcfc
+ *     +0x20  info section -> data_0209fcf8; its sectionSize is the distance
+ *                            to the data section
+ *     info + sectionSize -> data_0209fcfc
  *     +0x30              -> data_0209fd08
  *
- * The intermediate `r2`/`r3` locals are kept because the load of `*(r2 + 4)` has
- * to happen after r2 is formed and before r3 is stored; collapsing them into one
- * expression reorders the loads.
+ * The intermediate infoSection/dataSection locals are kept because the
+ * sectionSize load has to happen after infoSection is formed and before
+ * dataSection is stored; collapsing them into one expression reorders the
+ * loads. Same shape as Message::SetTextGlobals.
  */
 void Message::SetTextGlobalsVS() {
-    int ip = data_0209fd14;
-    int r2 = ip + 0x20;
-    data_0209fd04 = ip;
-    data_0209fcf8 = (int *)r2;
-    int r3 = r2 + *(int *)(r2 + 4);
-    data_0209fcfc = r3;
-    data_0209fd08 = ip + 0x30;
+    int bankBase = data_0209fd14;
+    int infoSection = bankBase + 0x20;
+    data_0209fd04 = bankBase;
+    data_0209fcf8 = (int *)infoSection;
+    int dataSection = infoSection + ((MessageInfoSection *)infoSection)->sectionSize;
+    data_0209fcfc = dataSection;
+    data_0209fd08 = bankBase + 0x30;
 }
 
 void func_02032f54(void) {

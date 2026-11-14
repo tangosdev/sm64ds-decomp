@@ -82,6 +82,7 @@ enum daObjBlockS_c_AssetId {
 #include "dActor_c.h"
 #include "daPly_c.h"
 #include "SharedFilePtr.h"
+#include "ResourceDescriptor.h"
 #include "dBgW.h"
 #include "dBgCh_Actr.h"
 #include "dBgCh_Gnd.h"
@@ -132,7 +133,7 @@ enum {
 #define BLOCKS_EATING_PLAYER(o) (*(daPly_c **)((char *)(o) + 0xd0))
 
 extern u32 gNextActorUpdateMask;
-extern int data_ov098_0213c4c8[];
+extern ResourceDescriptor data_ov098_0213c4c8;
 extern "C" u8 DecIfAbove0_Byte(u8 *p);
 extern "C" void *d_a_obj_block_sNewHold(u32 a, u32 b, int c, int d, int e, const void *v, void *cb);
 extern "C" u32 d_a_obj_block_sNewCleanParticleHold(u32 a, u32 b, int c, int d, int e,
@@ -1121,18 +1122,18 @@ void daObjBlockS_c::UpdateModelMatrix() {
 }
 
 /* Disables the collider, then releases the model and collision files
- * (data_ov098_0213c4c8[0] / [1]) when the actor is BLOCK_S. Always returns 1. */
+ * (data_ov098_0213c4c8.model / .collision) when the actor is BLOCK_S. Always returns 1. */
 int daObjBlockS_c::CleanupResources()
 {
-    int *f;
+    ResourceDescriptor *f;
     if (((dBgW *)((char *)&mMeshCollider))->IsEnabled())
         ((dBgW *)((char *)&mMeshCollider))->Disable();
     f = 0;
     if (actorID == ACTOR_BLOCK_S)
-        f = data_ov098_0213c4c8;
+        f = &data_ov098_0213c4c8;
     if (f) {
-        ((SharedFilePtr *)((void *)f[0]))->Release();
-        ((SharedFilePtr *)((void *)f[1]))->Release();
+        f->model->Release();
+        f->collision->Release();
     }
     return 1;
 }
@@ -1242,9 +1243,9 @@ int daObjBlockS_c::Behavior()
  * to its home condition. Returns 1. */
 int daObjBlockS_c::InitResources()
 {
-    char *f = 0;
+    ResourceDescriptor *f = 0;
     if (actorID == ACTOR_BLOCK_S)
-        f = (char *)data_ov098_0213c4c8;
+        f = &data_ov098_0213c4c8;
     if (f == 0)
         return 0;
     mHomePosX = mPosX;
@@ -1253,10 +1254,10 @@ int daObjBlockS_c::InitResources()
     mHomeAngleX = mAngleX;
     mHomeAngleY = mAngleY;
     mHomeAngleZ = mAngleZ;
-    mModel.SetFile(dExtSimpleModel_c::LoadFile(**(SharedFilePtr **)(f)), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(*f->model), 1, -1);
     mShadowModel.InitCuboid();
-    mMeshCollider.SetFile((KCL_File *)((int)dBgW_Kc::LoadFile(**(SharedFilePtr **)(f + 4))),
-                          mClsnMat, 0x199, mAngleY, *(CLPS_Block *)(*(int *)(f + 8)));
+    mMeshCollider.SetFile((KCL_File *)((int)dBgW_Kc::LoadFile(*f->collision)), mClsnMat, 0x199,
+                          mAngleY, *f->clps);
     mWithMeshClsn.Init((dActor_c *)((char *)this), 0x28000, 0x28000, 0, 0);
     mWithMeshClsn.StartDetectingWater();
     mVertAccel = -0x2000;

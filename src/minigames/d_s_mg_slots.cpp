@@ -1076,10 +1076,9 @@ int dScMgSlot1_c::SlotReels_CheckStopped() {
 }
 
 void Slot1_InitHud(void *self) {
-    char *raw = (char *)self;
-    ((dScMgSlot1_c *)raw)->mPrevMatchedSymbol = -1;
-    *(u8 *)(raw + 0x4707) = 1;
     dScMgSlot1_c *scene = (dScMgSlot1_c *)self;
+    scene->mPrevMatchedSymbol = -1;
+    scene->unk_4707 = 1;
     scene->mSpeedTableOffset = 0;
     scene->mCredits = Mg_GetSavedRecord0();
     scene->mCreditsShown = scene->mCredits;

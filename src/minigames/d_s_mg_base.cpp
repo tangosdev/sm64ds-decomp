@@ -35,6 +35,7 @@
 #include "dFdBrightness_c.h"
 #include "decl_common.h"
 #include "MgBanner.h"
+#include "OamAttr.h"
 #include "Sound.h"
 #include "types.h"
 #include "nitro/fx/fx_trig.h"
@@ -1126,7 +1127,7 @@ extern "C" void Mg_DrawMenu(dScMgBase_c *scene) {
     for (i = 0; i < 3; i++) {
         if (i == scene->mMenuCursor) {
             int idx = (int)(((u32)scene->mMenuCursorPhase << 0xf) >> 0x10) >> 4;
-            char *cursor = (char *)extra[i];
+            OamAttr *cursor = (OamAttr *)extra[i];
             s16 *pos;
             u16 v;
             int *pbuf = buf;
@@ -1146,8 +1147,8 @@ extern "C" void Mg_DrawMenu(dScMgBase_c *scene) {
             do {
                 Mg_DrawSpriteListEntry(cursor, (void *)(int)pos[0], (void *)(int)pos[1],
                                        (void *)buf);
-                v = *(u16 *)(cursor + 6);
-                cursor += 8;
+                v = cursor->attr3;
+                cursor++;
             } while (v != 0xffff);
 
             Mg_DrawSpriteList(data_ov006_021346bc, tbl[i][0], tbl[i][1], 0);
@@ -1166,15 +1167,15 @@ extern "C" {
 /* Draws an OAM sprite list: calls Mg_DrawSpriteListEntry on each 8-byte
    entry from `self`, up to and including the one whose attr3 is 0xffff. */
 extern "C" void Mg_DrawSpriteList(void *self, void *actor, void *c2, void *c3) {
-    void *r8 = self;
+    OamAttr *r8 = (OamAttr *)self;
     void *r7 = actor;
     void *r6 = c2;
     void *r5 = c3;
     u16 sentinel = 0xffff;
     do {
         Mg_DrawSpriteListEntry(r8, r7, r6, r5);
-        u16 v = *(u16*)((char*)r8 + 6);
-        r8 = (char*)r8 + 8;
+        u16 v = r8->attr3;
+        r8++;
         if (v == sentinel) break;
     } while (1);
 }
@@ -2219,11 +2220,8 @@ bool dScMgBase_c::BeforeInitResources()
     mMusicTrack = gMgMenuRow.musicTrack;
     if (sMgWorkBuffer == 0)
         sMgWorkBuffer = ::operator new[](0x4000);
-    /* +0xb0 is the header's pad_0b0. Scanning ov004 and ov006 turns up no
-       other word access at +0xb0 in a scene method or through gMgScene, so
-       no role is established and the store stays raw. */
     if (gMgScene != 0)
-        *(int*)((char*)gMgScene + 0xb0) = 0;
+        gMgScene->unk_0b0 = 0;
     mHudScore = 0;
     mBestHudScore = 0;
     mNewRecord = 0;

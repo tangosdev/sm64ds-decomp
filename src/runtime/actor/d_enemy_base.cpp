@@ -424,22 +424,22 @@ extern u32 d_enemy_baseNewCleanParticleHold(u32 uniqueID, u32 effectID, Fix12i x
 }
 
 int EnemyDeathC::func_ov002_020ae4cc(dBgCh_Actr &clsn) {
-    int v[3];
+    Vector3 v;
     int n = mScaleY;
     if (n == 0) {
         int z = mPosZ;
         int y = mPosY + 0x50000;
         int x = mPosX;
-        v[0] = x;
-        v[1] = y;
-        v[2] = z;
+        v.x = x;
+        v.y = y;
+        v.z = z;
     } else {
         int z = mPosZ;
         int y = mPosY + n * 0x50;
         int x = mPosX;
-        v[0] = x;
-        v[1] = y;
-        v[2] = z;
+        v.x = x;
+        v.y = y;
+        v.z = z;
     }
     if (clsn.IsOnGround()) {
         SpawnCoin();
@@ -447,12 +447,9 @@ int EnemyDeathC::func_ov002_020ae4cc(dBgCh_Actr &clsn) {
         mDeathState = 0;
         return 1;
     }
-    mDeathParticleID0 =
-        Particle::System::New(mDeathParticleID0, kPtclDeathA, *(int *)((char *)v + 0),
-                              *(int *)((char *)v + 4), *(int *)((char *)v + 8), 0, 0);
+    mDeathParticleID0 = Particle::System::New(mDeathParticleID0, kPtclDeathA, v.x, v.y, v.z, 0, 0);
     mDeathParticleID1 =
-        Particle::System::NewCleanParticle(mDeathParticleID1, kPtclDeathB, *(int *)((char *)v + 0),
-                                           *(int *)((char *)v + 4), *(int *)((char *)v + 8), 0);
+        Particle::System::NewCleanParticle(mDeathParticleID1, kPtclDeathB, v.x, v.y, v.z, 0);
     return 0;
 }
 

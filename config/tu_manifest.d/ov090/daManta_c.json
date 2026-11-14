@@ -780,24 +780,24 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@853",
+      "from": "@852",
       "to": "@766",
-      "evidence": "Measured local resource-field reconstruction changes compiler input @790 to @789; section, offset, size, binding, bytes and typed relocation destinations preserved. Canonical destination unchanged. Re-keyed from @907 to @853 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "Measured local resource-field reconstruction changes compiler input @790 to @789; section, offset, size, binding, bytes and typed relocation destinations preserved. Canonical destination unchanged. Re-keyed from @907 to @853 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @853 to @852 by object pairing (section, value, size) when this source replaced raw offset arithmetic with member access (measured from the compiled object)."
     },
     {
-      "from": "@854",
+      "from": "@853",
       "to": "@767",
-      "evidence": "Measured local resource-field reconstruction changes compiler input @791 to @790; section, offset, size, binding, bytes and typed relocation destinations preserved. Canonical destination unchanged. Re-keyed from @908 to @854 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "Measured local resource-field reconstruction changes compiler input @791 to @790; section, offset, size, binding, bytes and typed relocation destinations preserved. Canonical destination unchanged. Re-keyed from @908 to @854 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @854 to @853 by object pairing (section, value, size) when this source replaced raw offset arithmetic with member access (measured from the compiled object)."
     },
     {
-      "from": "@856",
+      "from": "@855",
       "to": "@769",
-      "evidence": "Measured local resource-field reconstruction changes compiler input @793 to @792; section, offset, size, binding, bytes and typed relocation destinations preserved. Canonical destination unchanged. Re-keyed from @910 to @856 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "Measured local resource-field reconstruction changes compiler input @793 to @792; section, offset, size, binding, bytes and typed relocation destinations preserved. Canonical destination unchanged. Re-keyed from @910 to @856 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @856 to @855 by object pairing (section, value, size) when this source replaced raw offset arithmetic with member access (measured from the compiled object)."
     },
     {
-      "from": "@858",
+      "from": "@857",
       "to": "@771",
-      "evidence": "Measured local resource-field reconstruction changes compiler input @795 to @794; section, offset, size, binding, bytes and typed relocation destinations preserved. Canonical destination unchanged. Re-keyed from @912 to @858 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "Measured local resource-field reconstruction changes compiler input @795 to @794; section, offset, size, binding, bytes and typed relocation destinations preserved. Canonical destination unchanged. Re-keyed from @912 to @858 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @858 to @857 by object pairing (section, value, size) when this source replaced raw offset arithmetic with member access (measured from the compiled object)."
     }
   ]
 }

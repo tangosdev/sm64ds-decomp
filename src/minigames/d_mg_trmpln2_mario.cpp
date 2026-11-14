@@ -2260,7 +2260,7 @@ int Trmp3DMario_CountFinished(void) {
         do {
             int *p = MARIO3D(e)->mState;
             if (p[0] == first) {
-                if (p[1] == *(volatile int *)(b + 1))
+                if (p[1] == b[1])
                     goto next;
                 if (*(volatile int *)MARIO3D(e)->mState == 0)
                     goto next;

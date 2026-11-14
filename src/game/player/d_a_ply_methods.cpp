@@ -111,6 +111,10 @@ MTX_C_DECL void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *, short);
 MTX_C_DECL void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *, short);
 #undef MTX_C_DECL
 
+/* local extern: nitro/fx/fx_vec.h cannot be included next to math/CalcLib.h,
+ * which still declares the other VEC_* functions with Vector3 (issue #5207). */
+extern "C" fx32 VEC_Distance(const VecFx32 *, const VecFx32 *);
+
 extern "C" {
 void Vec3_RotateYAndTranslate(Vector3 *, const Vector3 *, short, const Vector3 *);
 int *Vec3_LslInPlace(int *, int);
@@ -424,7 +428,6 @@ extern int *func_ov002_020e6bb0(void *model);
 }
 
 extern "C" short GetAngleToCamera(int i);
-extern "C" int VEC_Distance(int *, int *);
 extern struct ObjTeleport *GetTeleportDestObj(int i);
 extern "C" {
 extern u8 gShowTouchScreenArrows;
@@ -6675,7 +6678,7 @@ int daPly_c::func_ov002_020c8a4c() {
     this->SetAnim(0x48, 0, spd, 0);
     this->mPrevAngleY = Vec3_HorzAngle(&mPos, (Vector3 *)&mStateTargetX);
     this->mAngleY = this->mPrevAngleY;
-    if (VEC_Distance((int *)&mPos, (int *)&mStateTargetX) < 0xa000) {
+    if (VEC_Distance((const VecFx32 *)&mPos, (const VecFx32 *)&mStateTargetX) < 0xa000) {
         if (mStateArg == 0) {
             mStateArg = 1;
             /* First entry constructs it: guard, three stores, ~Vector3() registration. */
@@ -9030,6 +9033,7 @@ void daPly_c::func_ov002_020cd71c() {
 int daPly_c::St_Swim_Main() {
     extern int *func_02037dc4(int);
     extern ControllerInput data_0209f498[];
+    /* Raw on purpose: data_0209ee90 (untyped arm9 .bss, 8 TUs) has no recovered layout. */
     extern char data_0209ee90[];
     int t4;
     Vector3 pos;
@@ -13271,6 +13275,7 @@ void daPly_c::func_ov002_020d6368() {
 /* recovered: named members + shared header, real C++ method */
 
 int daPly_c::St_Swallow_Main() {
+    /* Raw on purpose: data_0209ee90 (untyped arm9 .bss, 8 TUs) has no recovered layout. */
     extern int data_0209ee90[];
     dActor_c *p360;
 
@@ -13604,7 +13609,7 @@ int daPly_c::TongueWallProbe() {
     }
 
     ::Vector3 clsnPos = rl.GetClsnPos();
-    player->mTongueHitDist = VEC_Distance((int *)&p1, (int *)&clsnPos);
+    player->mTongueHitDist = VEC_Distance((const VecFx32 *)&p1, (const VecFx32 *)&clsnPos);
     Vector3 normal;
     rl.surface.CopyNormalTo(normal);
     ang = cstd::atan2(normal.x, normal.z);
@@ -13625,6 +13630,7 @@ int daPly_c::func_ov002_020d7030(void *b) {
     if (flag)
         return 0;
     ((dActor_c *)b)->mFlags |= 0x20000;
+    /* Raw on purpose: +0xd0 is each eatable subclass's own first field (mEatingPlayer). */
     *(void **)((char *)b + 0xd0) = this;
     mObjInMouth = (dActor_c *)b;
     func_ov002_020d71ec(1);
@@ -14723,6 +14729,7 @@ void daPly_c::func_ov002_020d91b8(int a) {
 
 int daPly_c::func_ov002_020d91e0(int damage, int doPre) {
     extern u8 gGameMode;
+    /* Raw on purpose: data_0209ee90 (untyped arm9 .bss, 8 TUs) has no recovered layout. */
     extern char data_0209ee90[];
     if (doPre != 0)
         DropHeldObj();
@@ -15362,6 +15369,7 @@ int daPly_c::St_GrabBowserTail_Main() {
     extern void func_02012694(unsigned int id, const Vector3 *v);
     extern u16 data_0209f49e[];
     extern s16 data_0209f4a0[];
+    /* Raw on purpose: data_0209ee90 (untyped arm9 .bss, 8 TUs) has no recovered layout. */
     extern char data_0209ee90[];
     switch (mStateStep) {
     case 0:
@@ -16703,6 +16711,7 @@ void daPly_c::func_ov002_020dcafc() {
 
 int daPly_c::St_StomachSlide_Main() {
     extern u16 data_0209f49e[];
+    /* Raw on purpose: data_0209ee90 (untyped arm9 .bss, 8 TUs) has no recovered layout. */
     extern u8 data_0209ee90;
     dActor_c *light0 = mHeldObj;
     if (light0 != 0) {
@@ -19782,15 +19791,13 @@ int daPly_c::ChangeState(daPly_c::State &state) {
     {
         daPly_c::State *cur;
         int ok;
-        /* The null-checks below stay as raw offset arithmetic on purpose.
-           Spelling either as `*(void**)&cur->mCleanup == 0` costs 4 words:
-           taking the ADDRESS of a pointer-to-member makes mwcc materialise
-           the whole 8-byte pmf first. Reading one to CALL it is free -- the
-           calls below use the named members. Measured both ways. */
+        /* Test the pointer-to-member itself, not `*(void**)&cur->mCleanup`:
+           taking the ADDRESS of one makes mwcc materialise the whole 8-byte
+           pmf first and costs 4 words. */
         cur = mState;
         if (cur == 0)
             ok = 1;
-        else if (*(int *)((char *)cur + 0x10) == 0)
+        else if (cur->mCleanup == 0)
             ok = 1;
         else
             ok = (this->*(cur->mCleanup))();
@@ -19869,7 +19876,8 @@ int daPly_c::ChangeState(daPly_c::State &state) {
 
     {
         daPly_c::State *s = mState;
-        if (*(int*)s == 0) return 1;
+        if (s->mInit == 0)
+            return 1;
         return (this->*(s->mInit))();
     }
 }
@@ -20767,7 +20775,7 @@ after_player_slot:
 
     {
         daPly_c::State *st = mState;
-        if (*(void **)&st->mMain != 0)
+        if (st->mMain != 0)
             (this->*(st->mMain))();
     }
 

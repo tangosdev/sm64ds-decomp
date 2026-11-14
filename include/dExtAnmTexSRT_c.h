@@ -25,7 +25,7 @@
  * same way. Declared static below: a static member mangles identically,
  * and the earlier "(this, &model, &file)" reading of this comment cost
  * the PC port a wrong-register hunt.
- * SetFile is a real member under its scalar mangling: speed is a Fix12i
+ * SetFile is a real member under its scalar mangling: speed is an fx32
  * and startFrame a u16. Measured against the ROM body, a u32 startFrame
  * adds a truncation (0x5c, not 0x54) and Fix12<int> by value spills it
  * through the stack (0x6c); the sibling dExtAnmTexPat_c::SetFile is the
@@ -47,7 +47,7 @@ struct dExtAnmTexSRT_c : dExtFrameCtrl_c {
     /* --- non-virtual --- */
     static void Prepare(BMD_File &model, BTA_File &animFile);
     void Update(ModelComponents &model);
-    void SetFile(BTA_File &animFile, int flags, Fix12i speed, u16 startFrame);
+    void SetFile(BTA_File &animFile, int flags, fx32 speed, u16 startFrame);
 };
 
 #ifndef SM64DS_PLATFORM_PC

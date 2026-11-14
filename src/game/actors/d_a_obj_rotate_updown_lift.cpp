@@ -391,23 +391,15 @@ int daObjRotateUpdownLift_c::Behavior()
         mPosX = snapped.x;
         mPosY = snapped.y;
         mPosZ = snapped.z;
-        /* &mPitchBase is offsetof 0x3a2, which is not an ARM immediate, so this
-           is a pool add. The step is the halfword at this+0x300+0xa4. One
-           base for both grows the function. */
-        {
-            s16 *pitch = &mPitchBase;
-            s16 *stepAt = (s16 *)((char *)this + 0x300);
-            arrived = 1;
-            *pitch = (*pitch + *(s16 *)((char *)stepAt + 0xa4));
-        }
+        arrived = 1;
+        mPitchBase += mPitchStep;
     } else {
         Vec3_MulScalar(&stepVec, &remain, FX_Div(stepLen, dist));
         VEC_Subtract(&mPosX, &stepVec, &mPosX);
     }
 
     if (arrived != 0) {
-        u8 *waypoint = &mWaypointIndex;
-        *waypoint = (*waypoint + 1);
+        mWaypointIndex++;
         if (mWaypointIndex >= 0xa)
             mWaypointIndex = 0;
         if (mWaypointIndex > 3 && mWaypointIndex < 8)

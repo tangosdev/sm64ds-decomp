@@ -783,10 +783,10 @@ void daKuriKing_c::UpdateIntroTalk() {
     player->mAngleZ = ang.v[2];
 
     {
-        int pv = (int)&player->mPosX;
-        msgpos[0].x = *(int*)pv;
-        msgpos[0].y = *(int*)(pv + 4);
-        msgpos[0].z = *(int*)(pv + 8);
+        const Vector3 *pv = &player->mPos;
+        msgpos[0].x = pv->x;
+        msgpos[0].y = pv->y;
+        msgpos[0].z = pv->z;
     }
     msgpos[1].x = this->mPosX;
     msgpos[1].y = this->mPosY;

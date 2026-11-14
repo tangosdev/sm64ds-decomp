@@ -423,7 +423,7 @@ void func_020167a4(dExtAnmModel_c *self) {
     self->data.UpdateBones(self->file, (u32)(frame << 4) >> 0x10);
 }
 
-void dExtAnmModel_c::SetAnim(BCA_File *animFile, int flags, Fix12i speed, u16 startFrame) {
+void dExtAnmModel_c::SetAnim(BCA_File *animFile, int flags, fx32 speed, u16 startFrame) {
     if (animFile == file) {
         SetFlags(flags);
         this->speed = speed;
@@ -519,7 +519,7 @@ void dExtBlendAnmModel_c::Advance() {
     }
 }
 
-void dExtBlendAnmModel_c::SetAnim(BCA_File &animFile, int numBlendFrames, int flags, Fix12i speed,
+void dExtBlendAnmModel_c::SetAnim(BCA_File &animFile, int numBlendFrames, int flags, fx32 speed,
                                   u16 startFrame) {
     if (&animFile == file) {
         SetFlags(flags);
@@ -555,7 +555,7 @@ dExtAnm2Model_c::~dExtAnm2Model_c() {}
 
 /* The second animation's SetAnim, fast path and all: the same body as
    dExtAnmModel_c::SetAnim, run on otherFile and otherAnim. */
-void dExtAnm2Model_c::Func_020162C4(BCA_File *animFile, int flags, Fix12i speed, u16 startFrame) {
+void dExtAnm2Model_c::Func_020162C4(BCA_File *animFile, int flags, fx32 speed, u16 startFrame) {
     if (animFile == otherFile) {
         otherAnim.SetFlags(flags);
         otherAnim.speed = speed;
@@ -712,7 +712,7 @@ int dExtShadowModel_c::InitCylinder() {
  * the 5Fix12IiE in the old symbol was OUR spelling of a 20.12 scalar, and
  * nothing about the bytes asked for it. Scalars, a real method, same bytes.
  */
-void dExtShadowModel_c::InitModel(Matrix4x3 *m, Fix12i sx, Fix12i sy, Fix12i sz, u8 opacity) {
+void dExtShadowModel_c::InitModel(Matrix4x3 *m, fx32 sx, fx32 sy, fx32 sz, u8 opacity) {
     mat = m;
     scale.x = sx;
     scale.y = sy;
@@ -799,7 +799,7 @@ void dExtFrameCtrl_c::Advance() {
     }
 }
 
-void dExtFrameCtrl_c::SetAnimation(u16 numFrames, int flags, Fix12i speed, u16 startFrame) {
+void dExtFrameCtrl_c::SetAnimation(u16 numFrames, int flags, fx32 speed, u16 startFrame) {
     numFramesAndFlags = flags | (numFrames << 12);
     currFrame = startFrame << 12;
     this->speed = speed;
@@ -881,7 +881,7 @@ dExtAnmTexPat_c::~dExtAnmTexPat_c() {}
 
 /* The header's first word is the frame count handed to SetAnimation, as in
    the sibling BTA. */
-void dExtAnmTexPat_c::SetFile(BTP_File &animFile, int flags, Fix12i speed, u16 startFrame) {
+void dExtAnmTexPat_c::SetFile(BTP_File &animFile, int flags, fx32 speed, u16 startFrame) {
     if (&animFile == file) {
         SetFlags(flags);
         this->speed = speed;
@@ -911,7 +911,7 @@ dExtAnmTexSRT_c::dExtAnmTexSRT_c() {
 
 dExtAnmTexSRT_c::~dExtAnmTexSRT_c() {}
 
-void dExtAnmTexSRT_c::SetFile(BTA_File &animFile, int flags, Fix12i speed, u16 startFrame) {
+void dExtAnmTexSRT_c::SetFile(BTA_File &animFile, int flags, fx32 speed, u16 startFrame) {
     if (&animFile == file) {
         SetFlags(flags);
         this->speed = speed;
@@ -941,7 +941,7 @@ dExtAnmMaterial_c::dExtAnmMaterial_c() {
 
 dExtAnmMaterial_c::~dExtAnmMaterial_c() {}
 
-void dExtAnmMaterial_c::SetFile(BMA_File &animFile, int flags, Fix12i speed, u16 startFrame) {
+void dExtAnmMaterial_c::SetFile(BMA_File &animFile, int flags, fx32 speed, u16 startFrame) {
     if (&animFile == file) {
         SetFlags(flags);
         this->speed = speed;
