@@ -1114,12 +1114,10 @@ int daMip_c::Render()
     mScaleY = mScaleZ;
 
     {
-        /* modelFile, then materials.
-           +0x20 of each 0x30-byte material is still pad in BMD_Material;
-           walking it as BMD_Material:: does not match this loop. */
-        int **base = (int **)&mAnmModel.data;
-        BMD_File *modelData = (BMD_File *)base[0];
-        BMD_Material *mat = (BMD_Material *)base[1];
+        /* modelFile, then materials. texImageParam is the colour word. */
+        ModelComponents *components = &mAnmModel.data;
+        BMD_File *modelData = components->modelFile;
+        BMD_Material *mat = (BMD_Material *)components->materials;
         for (unsigned int i = 0; i < modelData->numMaterials; i++) {
             mat->texImageParam = mMaterialColor;
             mat++;

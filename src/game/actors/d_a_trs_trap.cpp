@@ -486,7 +486,7 @@ int daTrsTrap_c::InitResources()
     mStandingActor = 0;
     mInitLatch = 0;
     mOccupiedFlag = 0;
-    pad_154 = 0;
+    mUnk154 = 0;
     mTriggered = 0;
     mSoundHandle = 0;
     mSoundTimer = 0;

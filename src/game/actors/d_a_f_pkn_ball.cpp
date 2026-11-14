@@ -28,6 +28,7 @@
 #include "SaveData.h"
 #include "Sound.h"
 #include "daFPknBall_c.h"
+#include "daKpa_c.h"
 #include "dBgCh_Actr.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
@@ -89,7 +90,7 @@ void daFPknBall_c::TryDropCoin() {
 /* Death drop of a variant-0 ball. Rolls 0..9. On 4..9, gives up if any
  * FPAKUN_BALL already exists. Otherwise, if the closest player's param1 is 3
  * and the actor 279 has not yet handed one out, spawns a cap (actor 269) for a
- * random unlocked character 0..2 and marks actor 279's byte at +0x42b. If none
+ * random unlocked character 0..2 and sets Bowser's mCapActorAlive. If none
  * of that happens, a roll below 4 spawns a coin as TryDropCoin does. */
 void daFPknBall_c::TryDropItem() {
     u8 roll = (((u32)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10);

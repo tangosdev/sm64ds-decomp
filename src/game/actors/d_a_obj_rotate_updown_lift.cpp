@@ -387,21 +387,15 @@ int daObjRotateUpdownLift_c::Behavior()
         mPosX = snapped.x;
         mPosY = snapped.y;
         mPosZ = snapped.z;
-        /* &mPitchBase is offsetof 0x3a2, which is not an ARM immediate, so this
-           is a pool add. */
-        {
-            s16 *pitch = &mPitchBase;
-            arrived = 1;
-            *pitch = (*pitch + mPitchStep);
-        }
+        arrived = 1;
+        mPitchBase += mPitchStep;
     } else {
         Vec3_MulScalar(&stepVec, &remain, FX_Div(stepLen, dist));
         VEC_Subtract(&mPosX, &stepVec, &mPosX);
     }
 
     if (arrived != 0) {
-        u8 *waypoint = &mWaypointIndex;
-        *waypoint = (*waypoint + 1);
+        mWaypointIndex++;
         if (mWaypointIndex >= 0xa)
             mWaypointIndex = 0;
         if (mWaypointIndex > 3 && mWaypointIndex < 8)

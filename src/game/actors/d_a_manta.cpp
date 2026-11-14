@@ -165,15 +165,15 @@ int daManta_c::ExecuteSwim() {
                 mRingRead += 1;
                 if (mRingRead >= MANTA_RING_SLOTS)
                     mRingRead = 0;
-                /* Named mRingIDs[mRingRead] == uniqueID is cmp r1, r0 either
-                 * operand order. The cartridge is cmp r0, r1. 0x3ac is mRingIDs;
-                 * spelling the slot as &mRingIDs[i] differs by four words. */
-                int slotAddr = mRingRead;
+                /* mRingIDs[mRingRead] == mHitRing->uniqueID in one expression
+                 * is cmp r1, r0 either operand order; the cartridge is cmp r0, r1,
+                 * which needs the slot and the ring id each reusing a local. */
+                int slot = mRingRead;
                 int ringId = (int)mHitRing;
-                slotAddr = (int)((char *)this + (slotAddr << 2));
+                s32 *ids = mRingIDs;
                 ringId = ((dActor_c *)ringId)->uniqueID;
-                slotAddr = *(int *)(slotAddr + 0x3ac);
-                if (slotAddr == ringId) {
+                slot = ids[slot];
+                if (slot == ringId) {
                     mRingCount += 1;
                     func_02012790(MANTA_COLLECT_JINGLE);
                     num2 = mHitRing->mPos;

@@ -29,7 +29,7 @@
  * two, current frame at +0x8 as 20.12, playback speed at +0xc.
  *
  * SetAnimation is a real method. Its symbol is
- * _ZN15dExtFrameCtrl_c12SetAnimationEtiit: speed is the scalar Fix12i,
+ * _ZN15dExtFrameCtrl_c12SetAnimationEtiit: speed is the scalar fx32,
  * which mangles as i, not the by-value Fix12<int> the old name invented.
  * The body reads it straight from a register (notes/mwccarm-codegen.md
  * 6az, MEASURED 2026-10-22; the caller does not pay either, 2026-10-23).
@@ -45,8 +45,8 @@ struct SharedFilePtr;
 struct dExtFrameCtrl_c {
     /* 0x00 is the vptr, placed implicitly by the first virtual declaration. */
     u32 numFramesAndFlags;   /* 0x04 - count in bits 0..29, loop flags in 30..31 */
-    Fix12i currFrame;        /* 0x08 - 20.12 */
-    Fix12i speed;            /* 0x0c - 0x1000 is 1.0 */
+    fx32 currFrame;          /* 0x08 - 20.12 */
+    fx32 speed;              /* 0x0c - 0x1000 is 1.0 */
 
     /* --- vtable, in ROM order: the destructor pair and nothing else. --- */
     virtual ~dExtFrameCtrl_c();                /* slots 0 (D1), 1 (D0) */
@@ -59,7 +59,7 @@ struct dExtFrameCtrl_c {
     dExtFrameCtrl_c();
 
     /* --- non-virtual --- */
-    void SetAnimation(u16 numFrames, int flags, Fix12i speed, u16 startFrame);
+    void SetAnimation(u16 numFrames, int flags, fx32 speed, u16 startFrame);
     void Copy(const dExtFrameCtrl_c &anim);
     void Advance();
     int Finished();

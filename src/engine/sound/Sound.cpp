@@ -25,6 +25,7 @@
 #include "math/Approach.h"
 #include "nnsys/snd/player.h"
 #include "private/sound_positional.h"
+#include "daPly_c.h"
 
 /* SoundEngine's sound heap, opaque here. */
 struct SndHeap;
@@ -183,7 +184,7 @@ extern int data_0209baa0;
 extern char data_0208e498[];
 extern unsigned char gLocalPlayerId;
 extern signed char gCurrentSublevel;
-extern void *gPlayers[];
+extern daPly_c *gPlayers[];
 extern signed char gCurrentAreaId;
 extern const unsigned char data_02075250[8];
 extern unsigned char data_02075258[];
@@ -254,14 +255,14 @@ void LoadAndSetMusic_Layer1(int j)
 }
 
 int func_02013078(void) {
-    daPly_c *obj = (daPly_c *)gPlayers[gLocalPlayerId];
+    daPly_c *player = gPlayers[gLocalPlayerId];
     int state;
     int flag;
     int result;
 
-    if (obj == 0)
+    if (player == 0)
         return -1;
-    flag = (obj->mIsUnderwater != 0);
+    flag = (player->mIsUnderwater != 0);
     state = gCurrentSublevel;
     result = -1;
     if (state == 8) {
@@ -284,9 +285,9 @@ int func_02013078(void) {
             data_0209b48c = Sound_PlayIfNotActive(data_0209b48c, 3, 0x18d, 0);
         result = (gCurrentAreaId == 0) ? 4 : 3;
     } else if (state == 0xd) {
-        result = (obj->mPosY < (int)0xffe3e000) ? 5 : 6;
+        result = (player->mPos.y < (int)0xffe3e000) ? 5 : 6;
     } else if (state == 0x15) {
-        result = (obj->mPosY < 0) ? 5 : 6;
+        result = (player->mPos.y < 0) ? 5 : 6;
     }
     if (result >= 0 && result != sMusicTrackMode) {
         sMusicTrackMode = result;

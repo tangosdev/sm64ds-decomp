@@ -33,8 +33,8 @@
  * - Render keeps its gotos, and mStateTimer keeps its (u16) casts.
  * - func_ov002_020e8244 stays a free function; its first parameter is the
  *   output vector, not the star.
- * - Still unnamed: the dActor_c word at +0xc8, the bone word at +0xc and
- *   the table entry at data_02082714 + 0x56.
+ * - Still unnamed: the dActor_c word at +0xc8 and the halfword at
+ *   data_02082714 + 0x56, which lands mid-word in an untyped arm9 table.
  * - Fix12-by-value callees stay as mangled extern "C" names, and `this`
  *   goes to some externs as (char *)this to keep their declared signatures.
  * - The Kind names are numbers (KIND_n): only what the code evidences is
@@ -2383,14 +2383,14 @@ void daStar_c::SpawnCollectEffects() {
  * plays from frame 2 on, and a one-shot effect 0x30 when frame 0x75 is
  * reached. */
 void daStar_c::SpawnPoseEffects() {
-    ModelBone *obj;
+    ModelBone *root;
     struct Vector3 v1;
     struct Vector3 v2;
 
-    obj = mAnmModel1.data.bones;
+    root = mAnmModel1.data.bones;
 
     if (!mAnmModel1.Finished() && (u32)(((u32)mAnmModel1.currFrame << 4) >> 0x10) >= 2 &&
-        obj->scaleX != 0) {
+        root->scaleX != 0) {
         func_ov002_020e8244(&v1, this);
         mParticle[0] =
             (u32)Particle::System::New(mParticle[0], kPtclStarPose, v1.x, v1.y, v1.z, 0, 0);

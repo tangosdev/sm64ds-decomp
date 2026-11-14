@@ -2808,7 +2808,8 @@ int daTrs_c::Behavior()
     int t;
     void *p;
     char *q;
-    s16 *r2;
+    Vector3_16 *prev;
+    s32 *p19c;
     u16 *fp;
     u8 *bp;
     s32 y;
@@ -2876,7 +2877,7 @@ int daTrs_c::Behavior()
            (02116190) passes, an undefeated Boo goes back to its home. */
         if ((IsAreaShowing(mAreaIdx) == 0) || (func_ov063_02116190() != 0)) {
             if (mBooFlags.defeated == 0) {
-                r2 = &mPrevAngleX;
+                prev = &mPrevAngle;
                 mPosX = mHomePos.x;
                 fp = &this->mBooFlagsWord;
                 mPosY = mHomePos.y;
@@ -2884,9 +2885,9 @@ int daTrs_c::Behavior()
                 mPrevAngleX = mHomeAngleX;
                 mPrevAngleY = mHomeAngleY;
                 mPrevAngleZ = mHomeAngleZ;
-                mAngleX = r2[0];
-                mAngleY = r2[1];
-                mAngleZ = r2[2];
+                mAngleX = prev->x;
+                mAngleY = prev->y;
+                mAngleZ = prev->z;
                 *fp = (*fp) | TRS_FLAG_CAN_APPEAR;
                 mState = 0;
                 mHorzSpeed = 0;

@@ -19,7 +19,6 @@
  *   The ROM calls func_0201267c.
  * - Assigning mMeshCollider.beforeClsnCallback is -4 bytes in
  *   InitResources (0x1c8 -> 0x1c4). The ROM calls dBgW::SetBeforeClsnCallback.
- * - The straight-walk file compare in StateWalk stays a ternary.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -288,15 +287,12 @@ int daPgDfdr_c::StateWalk() {
     }
     UpdatePos(&mdCcAc_c);
     {
-        int frameRaw = mAnmModel.currFrame;
-        int walkAnim = (int)data_ov027_02113c74.filePtr;
-        int curAnim = walkAnim ? (int)mAnmModel.file : (int)mAnmModel.file;
-        unsigned int frame = (unsigned int)(frameRaw << 4) >> 0x10;
-        if (curAnim == walkAnim) {
+        unsigned short frame = (unsigned short)(mAnmModel.currFrame >> 12);
+        if (mAnmModel.file == (BCA_File *)data_ov027_02113c74.filePtr) {
             if (frame == 0xa || frame == 0x16) {
                 func_0201267c(0xf3, &mCamSpacePos);
             }
-        } else if (curAnim == (int)data_ov027_02113c8c.filePtr) {
+        } else if (mAnmModel.file == (BCA_File *)data_ov027_02113c8c.filePtr) {
             if (frame == 9 || frame == 0x16) {
                 func_0201267c(0xf3, &mCamSpacePos);
             }

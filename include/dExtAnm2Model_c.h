@@ -18,7 +18,7 @@
  *
  * Func_020162C4 keeps its placeholder name, but its body is SetAnim for
  * the second animation, fast path and all. It is a real member: speed is
- * the scalar Fix12i, so the symbol is _ZN15dExtAnm2Model_c13Func_020162C4EP8BCA_Fileiit,
+ * the scalar fx32, so the symbol is _ZN15dExtAnm2Model_c13Func_020162C4EP8BCA_Fileiit,
  * as dExtAnmModel_c::SetAnim's is.
  */
 
@@ -53,7 +53,7 @@ struct dExtAnm2Model_c : dExtAnmModel_c {
 
     /* --- non-virtual --- */
     void Copy(const dExtAnm2Model_c &src, char *newFile, BCA_File *newOtherFile);
-    void Func_020162C4(BCA_File *animFile, int flags, Fix12i speed, u16 startFrame);
+    void Func_020162C4(BCA_File *animFile, int flags, fx32 speed, u16 startFrame);
 };
 
 #ifndef SM64DS_PLATFORM_PC

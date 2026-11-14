@@ -43,9 +43,9 @@ s32 daWarpkun_c::InitResources() {
        assignment (r5/r6) and DIFFs. height reads the local because the
        SetRanges call below may clobber this->param1. */
     u32 spawnParam = param1;
-    Fix12i radius = ((param1 & 0xf) + 1) << 0x12;
+    fx32 radius = ((param1 & 0xf) + 1) << 0x12;
     SetRanges(0, radius, radius + 0x7d0000, 0);
-    Fix12i height = (((spawnParam >> 4) & 0xf) + 1) << 0x12;
+    fx32 height = (((spawnParam >> 4) & 0xf) + 1) << 0x12;
     mdCcAc_c.Init(this, radius, height, 2, 0x400000);
     return 1;
 }

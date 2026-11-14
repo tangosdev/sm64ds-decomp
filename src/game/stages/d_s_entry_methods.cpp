@@ -177,6 +177,7 @@ extern u8 data_0209b2ec[];
 extern u8 data_0209b2ed[];
 extern u8 data_0209fc50;
 extern u8 data_0209fc58;
+/* Raw on purpose: data_0209ee90 (untyped arm9 .bss, 8 TUs) has no recovered layout. */
 extern char data_0209ee90[];
 extern u8 data_0208ee3c;
 extern PadData data_020a0e58[];

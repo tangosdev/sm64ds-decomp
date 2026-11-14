@@ -83,6 +83,7 @@ enum daObjBlockS_c_AssetId {
 #include "dActor_c.h"
 #include "daPly_c.h"
 #include "SharedFilePtr.h"
+#include "ResourceDescriptor.h"
 #include "dBgW.h"
 #include "dBgCh_Actr.h"
 #include "dBgCh_Gnd.h"
@@ -132,12 +133,7 @@ enum {
 #define BLOCKS_EATING_PLAYER(o) (*(daPly_c **)((char *)(o) + 0xd0))
 
 extern u32 gNextActorUpdateMask;
-struct BlockSFiles {
-    SharedFilePtr *model;
-    SharedFilePtr *collision;
-    CLPS_Block *clps;
-};
-extern BlockSFiles data_ov098_0213c4c8;
+extern ResourceDescriptor data_ov098_0213c4c8;
 int Vec3_HorzDist(const struct Vector3 *a, const struct Vector3 *b);
 extern "C" u8 DecIfAbove0_Byte(u8 *p);
 extern "C" void *d_a_obj_block_sNewHold(u32 a, u32 b, int c, int d, int e, const void *v, void *cb);
@@ -1132,10 +1128,10 @@ void daObjBlockS_c::UpdateModelMatrix() {
 }
 
 /* Disables the collider, then releases the model and collision files
- * (data_ov098_0213c4c8[0] / [1]) when the actor is BLOCK_S. Always returns 1. */
+ * (data_ov098_0213c4c8.model / .collision) when the actor is BLOCK_S. Always returns 1. */
 int daObjBlockS_c::CleanupResources()
 {
-    BlockSFiles *f;
+    ResourceDescriptor *f;
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
     f = 0;
@@ -1252,7 +1248,7 @@ int daObjBlockS_c::Behavior()
  * to its home condition. Returns 1. */
 int daObjBlockS_c::InitResources()
 {
-    BlockSFiles *f = 0;
+    ResourceDescriptor *f = 0;
     if (actorID == ACTOR_BLOCK_S)
         f = &data_ov098_0213c4c8;
     if (f == 0)

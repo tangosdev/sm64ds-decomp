@@ -1,10 +1,11 @@
 #include "types.h"
 #include "nitro/cp/divider.h"
 #include "nitro/cp/sqrt.h"
+#include "nitro/fx/fx_vec.h"
 
 /* v / |v|: 1 / |v|^2 in the divider while the square-root unit takes |v|,
    then each component times their product (NitroSDK fx_vec.c). */
-void VEC_Normalize(const Vector3 *v, Vector3 *out) {
+void VEC_Normalize(const VecFx32 *v, VecFx32 *out) {
     s64 sq;
     int len;
     s64 recip;

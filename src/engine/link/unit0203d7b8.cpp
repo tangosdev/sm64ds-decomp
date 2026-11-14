@@ -1389,10 +1389,7 @@ static inline void FlushFileShareArea(char *base, unsigned int size) {
     DC_FlushRange(base, size);
 }
 
-/* mFreeList is base+0x2700, the same address as `end`. A member store CSEs
- * with `end` and the function grows 4 bytes. (base+0x2000)+0x700 is the add
- * the ROM uses; the node's mFreeList and mReadyList updates below use it too.
- * The other callees are C. */
+/* The other callees are C. */
 void func_02040c34(int isParent, int port, void (*stateCallback)(int),
                    void *(*allocFunc)(void *arg, unsigned int size, void *ptr), void *allocArg) {
     FileShareWork *G = &data_020a1fc0;
@@ -1469,17 +1466,17 @@ void func_02040c34(int isParent, int port, void (*stateCallback)(int),
                 WFSi_LoadTables();
             }
             {
-                char *base = (char *)G->mArea;
+                FileShareParentArea *area = (FileShareParentArea *)G->mArea;
                 FileShareNode *nd;
-                nd = *(FileShareNode **)((base + 0x2000) + 0x700);
-                *(FileShareNode **)((base + 0x2000) + 0x700) = nd->mNext;
+                nd = area->mFreeList;
+                area->mFreeList = nd->mNext;
                 MI_CpuClear8(nd, FILE_SHARE_NODE_SIZE);
                 /* mTableSize is read through data_020a1fc0, not G, here and in the
                    child branch: the G-> spelling comes out 8 bytes short */
                 WBT_RegisterBlock(&nd->mRegion, 0x20000, data_02082158, G->mTable,
                                   data_020a1fc0.mTableSize, 0);
-                nd->mNext = *(FileShareNode **)((base + 0x2000) + 0x704);
-                *(FileShareNode **)((base + 0x2000) + 0x704) = nd;
+                nd->mNext = area->mReadyList;
+                area->mReadyList = nd;
                 nd->mRefCount = 1;
                 WFSi_CreateTaskThread();
             }

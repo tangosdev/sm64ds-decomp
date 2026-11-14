@@ -21,9 +21,9 @@
  *   `adj ? fn : fn`; FallingPetal::Draw stores its scale z, y, x; and
  *   Dealer::StateReveal keeps its `goto other` (the structured rewrite moves
  *   92 words).
- * - Presenter::Draw's material table stays an int* view reached through a
- *   char* components pointer: naming the ModelComponents or the BMD_Material
- *   pad_0c fields moves 30 words. Dealer::Draw fills its lamp array through a
+ * - Presenter::Draw's material table stays an int* view: the scrolled words
+ *   are fields of the runtime material record (MaterialState, still local to
+ *   src/engine/model/ModelComponents.cpp), not of BMD_Material. Dealer::Draw fills its lamp array through a
  *   walking pointer with an if/else body (indexing or a value-select moves
  *   three words). MascotWalker::Update compares its state words through int*
  *   (a StateSlot view changes the relocation).

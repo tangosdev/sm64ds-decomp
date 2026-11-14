@@ -230,18 +230,12 @@ s32 daObjSm_Lift_c::InitResources() {
     mBasePosX = mPosX;
     mBasePosY = mPosY;
     mBasePosZ = mPosZ;
-    {
-        short *ang = &mAngleY;
-        *ang = *ang - 0x4000;
-    }
+    mAngleY -= 0x4000;
     PathPtr p;
     p.FromID(mPathId);
     mNodeCount = p.NumNodes();
     mNodeStep = 1;
-    {
-        int *ip = &mNodeIndex;
-        *ip = *ip + mNodeStep;
-    }
+    mNodeIndex += mNodeStep;
     mTouchingPlayer = 0;
     return 1;
 }

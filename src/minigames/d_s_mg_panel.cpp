@@ -23,8 +23,8 @@
  * the member spelling is byte-identical (#821). The named locals those drafts
  * carried shifted the per-TU @NNN uniquifier, which the manifest re-keys.
  *
- * Leftover raw site: ResetRound zeroes 0x4ec2 and 0x466c, pads that nothing
- * else reads or writes, so there is no evidence to name them.
+ * ResetRound zeroes 0x4ec2 and 0x466c and nothing else reads or writes
+ * them, so they keep the neutral names unk_4ec2 and unk_466c.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -1270,7 +1270,7 @@ void dScMgPanel_c::ResetRound() {
     mState = 0;
     mBusy = 0;
     mResultTimer = 0;
-    pad_4ec2 = 0;
+    unk_4ec2 = 0;
     mFlipCount = 0;
     mMovesUsed = 0;
     mCredits = 0;
@@ -1285,7 +1285,7 @@ void dScMgPanel_c::ResetRound() {
     mSlide = 0;
     mSlideY = 0;
     mSlideVel = 0;
-    pad_466c = 0;
+    unk_466c = 0;
     mHold = 0;
     mSlideStep = 0;
     mSlideFlag = 0;

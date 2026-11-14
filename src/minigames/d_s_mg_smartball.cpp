@@ -321,7 +321,7 @@ extern "C" {}
 
 extern OamAttr *data_ov006_02138ae0[];
 
-extern char **sSmartballTextSpritesByLanguage[];
+extern OamAttr **sSmartballTextSpritesByLanguage[];
 
 extern int sSmartballCellScores[];
 
@@ -471,11 +471,6 @@ static inline void CallObjectConstruct(cMgSmartball_object_c *c, dScMgSmartball_
    cartridge needs these offsets as values rather than as member accesses: see
    SlotAddress below. */
 #define OFFSET_OF(type, member) ((size_t)&((type *)0)->member)
-
-/* The shared draw routine takes one pointer out of each language's text-sprite table. */
-static inline void *TextSpriteGfx(char **sprite) {
-    return sprite[21];
-}
 
 /* Address of one entry of one of the manager's per-slot arrays. The cartridge
    forms the address as an integer -- object + index*stride, then the member
@@ -5017,8 +5012,7 @@ s32 dScMgSmartball_c::Render() {
             Mg_RenderSpriteBoth(data_ov006_02138ae0[0], 0x30, xpos, -1, -1);
             Mg_DrawNumber(0x80, xpos, 0x64, 0, 0, 1, 0);
             i = GetGameLanguage();
-            Mg_RenderSpriteBoth(TextSpriteGfx(sSmartballTextSpritesByLanguage[i]), 0x90, xpos, -1,
-                                -1);
+            Mg_RenderSpriteBoth(sSmartballTextSpritesByLanguage[i][21], 0x90, xpos, -1, -1);
             Mg_DrawNumber(0xa0, xpos, mCellTally, 0, 0, 1, 0);
             Mg_DrawNumber(0xe0, xpos, mCellTally * 0x64, 0, 0, 1, 0);
             xpos += 0x18;
@@ -5033,8 +5027,7 @@ s32 dScMgSmartball_c::Render() {
                 val = sSmartballCellScores[row];
                 Mg_DrawNumber(0x80, xpos, val, 0, 0, 1, 0);
                 i = GetGameLanguage();
-                Mg_RenderSpriteBoth(TextSpriteGfx(sSmartballTextSpritesByLanguage[i]), 0x90, xpos,
-                                    -1, -1);
+                Mg_RenderSpriteBoth(sSmartballTextSpritesByLanguage[i][21], 0x90, xpos, -1, -1);
                 /* Leftover: stepped base, element 0. */
                 pcnt = ((dScMgSmartball_c *)(g + row * 4))->mLineTally;
                 Mg_DrawNumber(0xa0, xpos, *pcnt, 0, 0, 0, 0);
@@ -5050,8 +5043,7 @@ s32 dScMgSmartball_c::Render() {
             Mg_RenderSpriteBoth(sSmartballKinokoSprites[0], 0x30, xpos, -1, -1);
             Mg_DrawNumber(0x80, xpos, 0x12c, 0, 0, 1, 0);
             i = GetGameLanguage();
-            Mg_RenderSpriteBoth(TextSpriteGfx(sSmartballTextSpritesByLanguage[i]), 0x90, xpos, -1,
-                                -1);
+            Mg_RenderSpriteBoth(sSmartballTextSpritesByLanguage[i][21], 0x90, xpos, -1, -1);
             Mg_DrawNumber(0xa0, xpos, mKinokoTally, 0, 0, 0, 0);
             Mg_DrawNumber(0xe0, xpos, mKinokoTally * 0x12c, 0, 0, 1, 0);
             xpos += 0x18;
@@ -5063,8 +5055,7 @@ s32 dScMgSmartball_c::Render() {
             Mg_RenderSpriteBoth(data_ov006_02137a78[0], 0x30, xpos, -1, -1);
             Mg_DrawNumber(0x80, xpos, 0xbb8, 0, 0, 1, 0);
             i = GetGameLanguage();
-            Mg_RenderSpriteBoth(TextSpriteGfx(sSmartballTextSpritesByLanguage[i]), 0x90, xpos, -1,
-                                -1);
+            Mg_RenderSpriteBoth(sSmartballTextSpritesByLanguage[i][21], 0x90, xpos, -1, -1);
             Mg_DrawNumber(0xa0, xpos, mDokanTally, 0, 0, 0, 0);
             Mg_DrawNumber(0xe0, xpos, mDokanTally * 0xbb8, 0, 0, 1, 0);
             xpos += 0x18;
@@ -5076,8 +5067,7 @@ s32 dScMgSmartball_c::Render() {
             Mg_RenderSpriteBoth(data_ov006_02137a6c[0], 0x30, xpos, -1, -1);
             Mg_DrawNumber(0x80, xpos, 0x7d0, 0, 0, 1, 0);
             i = GetGameLanguage();
-            Mg_RenderSpriteBoth(TextSpriteGfx(sSmartballTextSpritesByLanguage[i]), 0x90, xpos, -1,
-                                -1);
+            Mg_RenderSpriteBoth(sSmartballTextSpritesByLanguage[i][21], 0x90, xpos, -1, -1);
             Mg_DrawNumber(0xa0, xpos, mAnaTally, 0, 0, 0, 0);
             Mg_DrawNumber(0xe0, xpos, mAnaTally * 0x7d0, 0, 0, 1, 0);
             xpos += 0x18;
@@ -5113,8 +5103,7 @@ s32 dScMgSmartball_c::Render() {
                 }
                 Mg_DrawNumber(0x80, xpos, mult, 0, 0, 1, 0);
                 i = GetGameLanguage();
-                Mg_RenderSpriteBoth(TextSpriteGfx(sSmartballTextSpritesByLanguage[i]), 0x90, xpos,
-                                    -1, -1);
+                Mg_RenderSpriteBoth(sSmartballTextSpritesByLanguage[i][21], 0x90, xpos, -1, -1);
                 Mg_DrawNumber(0xa0, xpos, *slot[1], 0, 0, 0, 0);
                 Mg_DrawNumber(0xe0, xpos, mult * *slot[1], 0, 0, 1, 0);
                 xpos += 0x18;
@@ -5128,8 +5117,7 @@ s32 dScMgSmartball_c::Render() {
             Mg_RenderSpriteBoth(data_ov006_02138ae0[5], 0x30, xpos, -1, -1);
             Mg_DrawNumber(0x80, xpos, 0x2710, 0, 0, 1, 0);
             i = GetGameLanguage();
-            Mg_RenderSpriteBoth(TextSpriteGfx(sSmartballTextSpritesByLanguage[i]), 0x90, xpos, -1,
-                                -1);
+            Mg_RenderSpriteBoth(sSmartballTextSpritesByLanguage[i][21], 0x90, xpos, -1, -1);
             Mg_DrawNumber(0xa0, xpos, mBingoTally, 0, 0, 0, 0);
             Mg_DrawNumber(0xe0, xpos, mBingoTally * 0x2710, 0, 0, 1, 0);
             xpos += 0x18;
@@ -5141,8 +5129,7 @@ s32 dScMgSmartball_c::Render() {
             Mg_RenderSpriteBoth(sSmartballBallSprites[0], 0x30, xpos, -1, -1);
             Mg_DrawNumber(0x80, xpos, 0x7d0, 0, 0, 1, 0);
             i = GetGameLanguage();
-            Mg_RenderSpriteBoth(TextSpriteGfx(sSmartballTextSpritesByLanguage[i]), 0x90, xpos, -1,
-                                -1);
+            Mg_RenderSpriteBoth(sSmartballTextSpritesByLanguage[i][21], 0x90, xpos, -1, -1);
             Mg_DrawNumber(0xa0, xpos, mOutTally, 0, 0, 0, 0);
             Mg_DrawNumber(0xe0, xpos, mOutTally * 0x7d0, 0, 0, 1, 0);
             xpos += 0x18;
@@ -5206,7 +5193,7 @@ s32 dScMgSmartball_c::Render() {
                         } while (u != 0);
                     }
                     i = GetGameLanguage();
-                    Mg_RenderSpriteBoth(TextSpriteGfx(sSmartballTextSpritesByLanguage[i]),
+                    Mg_RenderSpriteBoth(sSmartballTextSpritesByLanguage[i][21],
                                         (*px >> 12) + nd * 8 - 8, *py >> 12, -1, -1);
                     nd = 0;
                     u = (unsigned int)*pcnt;

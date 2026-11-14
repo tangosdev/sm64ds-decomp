@@ -51,6 +51,7 @@
 #include "nitro/hw/registers.h"
 #include "nitro/mi/memory.h"
 #include "nitro/gx/g2.h"
+#include "nitro/gx/gxcommon.h"
 #include "math/CalcLib.h"
 
 /* SetFaders stores the fade controller here; slot 5 waits for the entrance fade. */
@@ -71,7 +72,7 @@ struct OamTmp {
  * Behavior's `% 0x36` is an unsigned reduction; the array spelling was only
  * ever read at [0]. */
 extern u32 gTitleCursor;
-extern char data_0209e674[];
+extern GXOamAttr data_0209e674[];
 extern dFdBrightness_c *gSceneFader;
 extern PadData data_020a0e58[];
 extern u8 gGameMode;
@@ -312,13 +313,9 @@ s32 dScTitle_c::Render() {
     {
         int idx = data_0209e664;
         unsigned int v = ((gTitleCursor - gTitleListTop + 2) << 3) & 0xff;
-        struct TitleCursorOam {
-            unsigned int attr;
-            short pad;
-        };
-        TitleCursorOam *oam = (TitleCursorOam *)(data_0209e674 + (idx << 3));
-        oam->attr = v | 0x80000;
-        oam->pad = 0;
+        GXOamAttr *p = &data_0209e674[idx];
+        p->attr01 = v | 0x80000;
+        p->attr2 = 0;
     }
     return 1;
 }

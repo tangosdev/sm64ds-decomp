@@ -232,6 +232,13 @@ struct CamPmfHost {
     unsigned int flags;             /* camera +0x154 == mFlags */
 };
 
+/* A camera state: two CamPmf (enter at +0, execute at +8), plain-copied
+   from the .data member-function constants (data_0209b008 and on, below). */
+struct dCamera_c::State {
+    CamPmf enter;
+    CamPmf exec;
+};
+
 enum Bool { FALSE, TRUE };
 
 /* Allocation factory. new dCamera_c is the fBase constructor, the dBase and
@@ -1063,10 +1070,9 @@ int dCamera_c::UpdateState() {
     } else if (flags & 0x8000) {
         RestoreCameraStateAfterTalk();
     } else {
-        CamState *st = (CamState *)mState;
-        if (st->exec != 0) {
-            result = (host->*(st->exec))();
-        }
+        State *state = mState;
+        if (state->exec != 0)
+            result = (host->*state->exec)();
     }
     return result;
 }
@@ -3947,14 +3953,9 @@ int CutsceneGrandStarFlyMarioOffscreen(dCamera_c *cam) {
     return 1;
 }
 
-/* Nineteen camera states, definition order is retail __sinit order. Each
-   record is two CamPmf (enter at +0, execute at +8), plain-copied from the
-   .data member-function constants. mwcc emits __sinit_d_camera.cpp from
-   these, which was the handwritten __sinit_02073a24. */
-struct dCamera_c::State {
-    CamPmf enter;
-    CamPmf exec;
-};
+/* Nineteen camera states, definition order is retail __sinit order.
+   mwcc emits __sinit_d_camera.cpp from these, which was the handwritten
+   __sinit_02073a24. */
 
 extern CamPmf data_02086d28, data_02086c28, data_02086da8, data_02086c30, data_02086c48,
     data_02086c40, data_02086c98, data_02086c58, data_02086c68, data_02086bf8, data_02086d58,

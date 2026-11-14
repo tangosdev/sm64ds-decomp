@@ -1036,6 +1036,8 @@ void daObjHatenaBlock_c::SpawnPrizeFeather() {
     struct Vector3 pos;
     struct Vector3_16 rot;
     func_ov102_02149684((int *)&pos, this);
+    /* Raw: as Vector3_16 the three loads become ldrsh where the ROM has ldrh
+       (copy and field-wise both, measured 2026-11-14). */
     rot.x = *(u16 *)(data_020a0edc);
     rot.y = *(u16 *)(data_020a0edc + 2);
     rot.z = *(u16 *)(data_020a0edc + 4);

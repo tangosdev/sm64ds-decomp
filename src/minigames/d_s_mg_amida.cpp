@@ -1715,9 +1715,7 @@ void dScMgAmida_c::SetupRound() {
     }
 
     Amida_SaveBgChars(this);
-    /* pad_5370: this store is the only access in the class, so there is no
-       evidence for a name yet. */
-    pad_5370 = 1;
+    unk_5370 = 1;
     G2_BlendNone();
     G2S_SetBlendAlpha(4, 8, 6, 0x10);
     Mg_ShowBanner(0xd, 0x80, 0x60, 1, -1, 0xd);

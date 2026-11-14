@@ -347,23 +347,23 @@ union DblWords {
     int w[2];
 };
 
-void __num2dec_internal(Decimal *out, double x) {
+void __num2dec_internal(Decimal *d, double x) {
     int e;
     union DblWords t1;
     union DblWords t2;
     double mm;
-    unsigned char dec[0x26];
-    unsigned char big[0x26];
+    Decimal dec;
+    Decimal big;
     double v = x;
     unsigned char neg = (((int *)&x)[1] & 0x80000000) != 0;
     int cls;
     int cls2;
 
     if (v == 0.0) {
-        out->sign = neg;
-        out->exp = 0;
-        out->sig.length = 1;
-        out->sig.text[0] = 0;
+        d->sign = neg;
+        d->exp = 0;
+        d->sig.length = 1;
+        d->sig.text[0] = 0;
         return;
     }
 
@@ -389,9 +389,9 @@ void __num2dec_internal(Decimal *out, double x) {
         break;
     }
     if (cls <= 2) {
-        out->sign = neg;
-        out->exp = 0;
-        out->sig.length = 1;
+        d->sign = neg;
+        d->exp = 0;
+        d->sig.length = 1;
 
         t2.d = x;
         switch (t2.w[1] & 0x7ff00000) {
@@ -411,7 +411,7 @@ void __num2dec_internal(Decimal *out, double x) {
             cls2 = 4;
             break;
         }
-        out->sig.text[0] = (cls2 == 1) ? 0x4e : 0x49;
+        d->sig.text[0] = (cls2 == 1) ? 0x4e : 0x49;
     } else {
         double m;
         int nbits, k;
@@ -427,10 +427,10 @@ void __num2dec_internal(Decimal *out, double x) {
         else
             nbits = func_02071708(mp[1] | 0x100000) + 0x20;
         k = 0x35 - nbits;
-        __two_exp((Decimal *)big, e - k);
-        __ull2dec((Decimal *)dec, ldexp(m, k));
-        __timesdec(out, (Decimal *)dec, (Decimal *)big);
-        out->sign = neg;
+        __two_exp(&big, e - k);
+        __ull2dec(&dec, ldexp(m, k));
+        __timesdec(d, &dec, &big);
+        d->sign = neg;
     }
 }
 

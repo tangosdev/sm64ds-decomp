@@ -26,6 +26,7 @@
 #include "MessageBank.h"
 #include "nitro/hw/registers.h"
 #include "Message.h"
+#include "MessageBank.h"
 #include "PlayerInput.h"
 #include "SaveData.h"
 #include "Sound.h"

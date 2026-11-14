@@ -19,10 +19,15 @@
  * types.h's s32 / s64 directly.
  */
 
+/* include/types.h declares the same four under the same guard (it spells
+ * Fix12i as fx32), so a file may include both in either order. */
+#ifndef NITRO_FX_SCALAR_TYPES
+#define NITRO_FX_SCALAR_TYPES
 typedef signed int fx32;
 typedef signed long long fx64;
 typedef signed long long fx64c;
 typedef signed short fx16;
+#endif
 
 /* NitroSDK's VecFx32 and VecFx16: plain three-component fixed-point vectors.
  * The game's Vector3 / Vector3s hold the same words but declare a constructor

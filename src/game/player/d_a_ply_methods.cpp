@@ -19855,15 +19855,13 @@ int daPly_c::ChangeState(daPly_c::State &state) {
     {
         daPly_c::State *cur;
         int ok;
-        /* The null-checks below stay as raw offset arithmetic on purpose.
-           Spelling either as `*(void**)&cur->mCleanup == 0` costs 4 words:
-           taking the ADDRESS of a pointer-to-member makes mwcc materialise
-           the whole 8-byte pmf first. Reading one to CALL it is free -- the
-           calls below use the named members. Measured both ways. */
+        /* Test the pointer-to-member itself, not `*(void**)&cur->mCleanup`:
+           taking the ADDRESS of one makes mwcc materialise the whole 8-byte
+           pmf first and costs 4 words. */
         cur = mState;
         if (cur == 0)
             ok = 1;
-        else if (*(int *)((char *)cur + 0x10) == 0)
+        else if (cur->mCleanup == 0)
             ok = 1;
         else
             ok = (this->*(cur->mCleanup))();
@@ -19942,7 +19940,8 @@ int daPly_c::ChangeState(daPly_c::State &state) {
 
     {
         daPly_c::State *s = mState;
-        if (*(int*)s == 0) return 1;
+        if (s->mInit == 0)
+            return 1;
         return (this->*(s->mInit))();
     }
 }
