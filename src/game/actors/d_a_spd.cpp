@@ -66,14 +66,10 @@ typedef struct { PMF enter, run; } ScuttlebugStateRow;
 
 extern "C" int AngleDiff(int a, int b);
 extern "C" unsigned short DecIfAbove0_Short(void *p);
-extern "C" int
-Vec3_Dist(const Vector3 *a,
-          const Vector3
-              *b); /* local extern: CalcLib.h clashes with this TU's C DecIfAbove0_Short (void *) */
-extern "C" short Vec3_HorzAngle(
-    const Vector3 *a,
-    const Vector3
-        *b); /* local extern: CalcLib.h clashes with this TU's C DecIfAbove0_Short (void *) */
+/* local extern: CalcLib.h clashes with this TU's C DecIfAbove0_Short (void *) */
+extern "C" int Vec3_Dist(const Vector3 *a, const Vector3 *b);
+/* local extern: CalcLib.h clashes with this TU's C DecIfAbove0_Short (void *) */
+extern "C" short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 
 extern "C" void Matrix4x3_FromRotationY(void *m, int angle);
 extern "C" void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);

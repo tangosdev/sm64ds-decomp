@@ -145,12 +145,10 @@ extern DaJgmStateHandler data_ov077_021277f8;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
-extern int Vec3_HorzDist(
-    const Vector3 *a,
-    const Vector3 *b); /* local extern: CalcLib.h clashes with this TU's C Vec3_Asr (void *) */
-extern short Vec3_HorzAngle(
-    const Vector3 *a,
-    const Vector3 *b); /* local extern: CalcLib.h clashes with this TU's C Vec3_Asr (void *) */
+/* local extern: CalcLib.h clashes with this TU's C Vec3_Asr (void *) */
+extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
+/* local extern: CalcLib.h clashes with this TU's C Vec3_Asr (void *) */
+extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 
 extern int *Vec3_LslInPlace(void *v, int sh);
 extern void Vec3_Asr(void *d, void *s, int sh);
