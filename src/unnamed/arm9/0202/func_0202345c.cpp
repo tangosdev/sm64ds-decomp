@@ -6,17 +6,20 @@
    func_0203bc7c turns into data_020a0e44) asks the running scene to fade out
    and restart. dScene_c::BeforeBehavior runs the fade out with
    gSoftResetFader and then destroys the scene. */
-extern "C" {
 
 extern unsigned char data_0209b2fc;
 extern unsigned char gMgSaveDirty;
 extern void func_0202fd2c(void);
 extern void Wipe_Reset(void);
 extern void func_02011c8c(void);
+extern "C" {
+
 extern int GetSoundMode(void);
 extern void SetSoundMode(int mode);
 extern void func_0203bc50(void);
 extern void func_0203bb14(void);
+}
+
 extern void ResetInput(void);
 extern unsigned char data_020a0e44;
 
@@ -82,5 +85,4 @@ void func_0202345c(void) {
     if (!fader)
         return;
     fader->AdvanceFade();
-}
 }

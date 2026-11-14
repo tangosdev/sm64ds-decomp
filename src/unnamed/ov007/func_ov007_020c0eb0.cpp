@@ -9,7 +9,7 @@ static inline int HasOamFlip(int mode, int axis) {
     return singleAxis | bothAxes;
 }
 // Retain the configured address-named export while its callers are reconstructed.
-extern "C" {
+
 extern unsigned short data_ov007_020d7d7c[][4];
 extern unsigned short data_ov007_020d7d94[][4];
 
@@ -64,5 +64,4 @@ void func_ov007_020c0eb0(GXOamAttr *dst, const Ov007CellEntry *src, int xoff, in
     } else {
         dst->attr01 &= ~0x1000;
     }
-}
 }

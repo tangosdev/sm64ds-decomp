@@ -72,11 +72,15 @@ struct Event {
 #define ICON_Y_VISIBLE(y) ((u16)((y) + 0x10) < 0xe0)
 
 extern "C" {
+
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern signed char gCurrentSublevel;
 extern u8 gCurrentStarId;
+}
+
 int SublevelToLevel(int i);
 int IsStarCollected(int level, int star);
+extern "C" {
 
 extern u8 data_0209f20c;
 extern u8 gGamePaused;
@@ -114,10 +118,15 @@ extern dActor_c *STAR_MARKERS[12];
 extern int data_0209f3e8[];
 extern void *data_0209f3a4[];
 extern void SetSubBg2Offset(s32 a, s32 b);
+}
+
 extern s32 GetMinimapID(dActor_c *actor, s32 arg);
 extern s32  GetMinimapScale(s32 idx);
-extern void UpdateMinimap(s32 *a, u32 b, u32 c, u32 d, u32 e);
+struct MinimapDesc;
+extern void UpdateMinimap(MinimapDesc *a, u32 b, u32 c, u32 d, u32 e);
 Vector3 *Vec3_DivScalarInPlace(Vector3 *v, int s);
+extern "C" {
+
 void Vec3_MulScalarInPlace(Vector3 *v, int s);
 void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *in, short ang, const Vector3 *t);
 }
@@ -895,20 +904,27 @@ Lc00:
     data_ov002_02111148 = id;
     this->mTargetInvScale = GetMinimapScale(id);
     }
-Lc30:
-    UpdateMinimap(&this->mBgMatrixA, this->mMapCenterX, this->mMapCenterY, this->mMapCenterX - 0x80, this->mMapCenterY - 0x60);
-    return 1;
+    Lc30:
+        UpdateMinimap((MinimapDesc *)&this->mBgMatrixA, this->mMapCenterX, this->mMapCenterY,
+                      this->mMapCenterX - 0x80, this->mMapCenterY - 0x60);
+        return 1;
 }
 
 /* What InitResources loads the map graphics with. */
-extern "C" {
+
 int func_0202a980(void);
+extern "C" {
+
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
+}
+
 void Deallocate(void* ptr);
 int func_0202a96c(void);
 
 int func_0202a958(void);
+extern "C" {
+
 extern u8 gNumMinimapTileObjs;
 extern u16 *gMinimapTileObjs;
 extern s32 gRunningKuppaScript;
@@ -1073,7 +1089,6 @@ void dMap_c::GetPosOnMinimap(Vector3 *pos, Vector3 *center, Fix12i scale, short 
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: Minimap_Spawn. It was once labelled
  * the dMap_c constructor, but it takes no `this`: it is the registry factory. */
-extern "C" dMap_c *dMap_c_classInit()
-{
+dMap_c *dMap_c_classInit() {
     return new dMap_c();
 }

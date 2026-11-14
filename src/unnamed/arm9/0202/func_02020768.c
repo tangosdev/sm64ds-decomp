@@ -1,5 +1,5 @@
 extern int func_0202044c(char *thiz, int idx);
-extern int func_0202043c(void *thiz);
+extern int _Z13func_0202043cPv(void *thiz);
 #include "OamAnimation.h"
 
 extern int data_0208ee44;
@@ -26,7 +26,7 @@ void func_02020768(char *thiz)
         return;
 
     if (anim->loops == 0) {
-        func_0202043c(thiz);
+        _Z13func_0202043cPv(thiz);
         return;
     }
 
@@ -36,5 +36,5 @@ void func_02020768(char *thiz)
     }
 
     anim->loops -= 1;
-    func_0202043c(thiz);
+    _Z13func_0202043cPv(thiz);
 }

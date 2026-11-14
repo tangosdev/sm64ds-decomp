@@ -12,13 +12,11 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
 
-extern "C" {
-
-extern void func_ov007_020c92d0(Ov007MenuState *state);
-extern void func_ov007_020c0638(Ov007BgLayer *layer, int x, int y, u16 tile);
-extern void func_ov007_020c02d8(void *a, int b, u16 c);
-extern void RequestScreenFade(int kind, int flags, void (*onEnd)(void));
-extern void func_ov007_020c1d8c(int a);
+void func_ov007_020c92d0(Ov007MenuState *state);
+extern "C" void func_ov007_020c0638(Ov007BgLayer *layer, int x, int y, u16 tile);
+void func_ov007_020c02d8(void *a, int b, u16 c);
+void RequestScreenFade(int kind, int flags, void (*onEnd)(void));
+void func_ov007_020c1d8c(int a);
 extern void func_ov007_020ada70(void);
 
 /* Per-frame update of one BG layer slot (func_ov007_020aed98 runs all eight). */
@@ -126,5 +124,4 @@ void func_ov007_020ad660(Ov007LayerSlot *slot) {
     default:
         return;
     }
-}
 }

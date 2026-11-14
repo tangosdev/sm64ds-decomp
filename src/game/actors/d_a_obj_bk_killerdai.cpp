@@ -83,11 +83,10 @@ extern s8 gCurrentSublevel;
 extern u8 gCurrentStarId;
 
 /* arm9 C helpers with no shared header. */
-extern "C" {
+
 extern int IsStarCollectedInCurLevel(int starID);
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-}
 
 #pragma defer_codegen off
 
@@ -190,6 +189,6 @@ s32 daObjBkKillerdai_c::InitResources() {
     return 1;
 }
 
-extern "C" daObjBkKillerdai_c *daObjBkKillerdai_c_classInit() {
+daObjBkKillerdai_c *daObjBkKillerdai_c_classInit() {
     return new daObjBkKillerdai_c();
 }

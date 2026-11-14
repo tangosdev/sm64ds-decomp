@@ -75,7 +75,7 @@
       "ordinal": 7
     },
     {
-      "symbol": "daMugenBGM_c_classInit",
+      "symbol": "_Z22daMugenBGM_c_classInitv",
       "address": "0x020f1f40",
       "size": "0x00000030",
       "legacy_source": "src/d_a_mugen_bgm.c",

@@ -52,14 +52,14 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_02044120",
+      "symbol": "_Z13func_02044120v",
       "address": "0x02044120",
       "size": "0x0000009c",
       "legacy_source": "src/unnamed/arm9/0204/func_02044120.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_020441bc",
+      "symbol": "_Z13func_020441bci",
       "address": "0x020441bc",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0204/func_020441bc.c",
@@ -73,21 +73,21 @@
       "ordinal": 4
     },
     {
-      "symbol": "func_0204424c",
+      "symbol": "_Z13func_0204424cPc",
       "address": "0x0204424c",
       "size": "0x00000038",
       "legacy_source": "src/func_0204424c.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_02044284",
+      "symbol": "_Z13func_02044284P17LifecycleSequencei",
       "address": "0x02044284",
       "size": "0x000000b0",
       "legacy_source": "src/func_02044284.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "func_02044334",
+      "symbol": "_Z13func_02044334P17LifecycleSequence",
       "address": "0x02044334",
       "size": "0x00000094",
       "legacy_source": "src/func_02044334.cpp",

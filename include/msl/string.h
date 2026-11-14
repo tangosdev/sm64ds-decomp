@@ -1,5 +1,16 @@
 #ifndef MSL_STRING_H
 #define MSL_STRING_H
+#ifndef __cplusplus
+#define memcmp _Z6memcmpPKvS0_j
+#define memchr _Z6memchrPKvij
+#define memset _Z6memsetPvij
+#define memcpy _Z6memcpyPvPKvj
+#define strchr _Z6strchrPKci
+#define strcmp _Z6strcmpPKcS0_
+#define strncpy _Z7strncpyPcPKcj
+#define strcpy _Z6strcpyPcPKc
+#define strlen _Z6strlenPKc
+#endif
 
 /* The Metrowerks MSL C string routines the game calls (MSL's string.h),
  * defined in src/cstd6.cpp. The ROM keeps them in MSL_Common string.c's
@@ -15,7 +26,9 @@
  * compiler @NNN number in every includer. */
 
 #ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 
 void *memcpy(void *, const void *, unsigned int);
@@ -30,7 +43,9 @@ int strcmp(const char *, const char *);
 char *strchr(const char *, int);
 
 #ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif /* MSL_STRING_H */

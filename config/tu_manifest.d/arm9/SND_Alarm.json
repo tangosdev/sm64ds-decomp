@@ -20,28 +20,28 @@
   ],
   "functions": [
     {
-      "symbol": "SNDi_CallAlarmHandler",
+      "symbol": "_Z21SNDi_CallAlarmHandleri",
       "address": "0x0205b470",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0205/func_0205b470.c",
       "ordinal": 0
     },
     {
-      "symbol": "SNDi_SetAlarmHandler",
+      "symbol": "_Z20SNDi_SetAlarmHandlerjPFvPvES_",
       "address": "0x0205b4d0",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/arm9/0205/func_0205b4d0.c",
       "ordinal": 1
     },
     {
-      "symbol": "SNDi_IncAlarmId",
+      "symbol": "_Z15SNDi_IncAlarmIdj",
       "address": "0x0205b504",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0205/func_0205b504.c",
       "ordinal": 2
     },
     {
-      "symbol": "SND_AlarmInit",
+      "symbol": "_Z13SND_AlarmInitv",
       "address": "0x0205b524",
       "size": "0x00000030",
       "legacy_source": "src/unnamed/arm9/0205/func_0205b524.c",

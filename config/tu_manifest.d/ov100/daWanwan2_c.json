@@ -50,56 +50,56 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov100_02143370",
+      "symbol": "_ZN11daWanwan2_c19func_ov100_02143370Ev",
       "address": "0x02143370",
       "size": "0x000000dc",
       "legacy_source": "src/func_ov100_02143370.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov100_0214344c",
+      "symbol": "_Z19func_ov100_0214344cP11daWanwan2_c",
       "address": "0x0214344c",
       "size": "0x0000019c",
       "legacy_source": "src/func_ov100_0214344c.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov100_021435e8",
+      "symbol": "_Z19func_ov100_021435e8P11daWanwan2_c",
       "address": "0x021435e8",
       "size": "0x000001ec",
       "legacy_source": "src/func_ov100_021435e8.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov100_021437d4",
+      "symbol": "_Z19func_ov100_021437d4P11daWanwan2_c",
       "address": "0x021437d4",
       "size": "0x000002d0",
       "legacy_source": "src/func_ov100_021437d4.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov100_02143aa4",
+      "symbol": "_Z19func_ov100_02143aa4P11daWanwan2_c",
       "address": "0x02143aa4",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov100_02143aa4.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov100_02143ae0",
+      "symbol": "_Z19func_ov100_02143ae0P11daWanwan2_c",
       "address": "0x02143ae0",
       "size": "0x00000038",
       "legacy_source": "src/func_ov100_02143ae0.c",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov100_02143b18",
+      "symbol": "_Z19func_ov100_02143b18P12ChompPmfSelfP10ChompState",
       "address": "0x02143b18",
       "size": "0x00000050",
       "legacy_source": "src/func_ov100_02143b18.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov100_02143b68",
+      "symbol": "_ZN11daWanwan2_c19func_ov100_02143b68Ev",
       "address": "0x02143b68",
       "size": "0x00000148",
       "legacy_source": "src/func_ov100_02143b68.cpp",
@@ -148,7 +148,7 @@
       "ordinal": 15
     },
     {
-      "symbol": "daWanwan2_c_classInit",
+      "symbol": "_Z21daWanwan2_c_classInitv",
       "address": "0x021442dc",
       "size": "0x00000118",
       "legacy_source": "src/d_a_wanwan2.cpp",
@@ -608,14 +608,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN19Wanwan2ModelFilePtrC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor exact PC24 relocation"
     },
     {
       "symbol": "_ZN19Wanwan2ModelFilePtrD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the model wrapper destructor exact ABS32 relocation"
@@ -711,7 +711,7 @@
       "source": "0x021475b4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -731,7 +731,7 @@
       "source": "0x021475d0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -801,7 +801,7 @@
       "source": "0x0214765c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"

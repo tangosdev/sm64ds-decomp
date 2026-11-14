@@ -22,161 +22,161 @@
   ],
   "functions": [
     {
-      "symbol": "MBi_CheckWmErrcode",
+      "symbol": "_Z18MBi_CheckWmErrcodeii",
       "address": "0x0206879c",
       "size": "0x0000005c",
       "legacy_source": "src/MBi_CheckWmErrcode.c",
       "ordinal": 0
     },
     {
-      "symbol": "MBi_IsStarted",
+      "symbol": "_Z13MBi_IsStartedv",
       "address": "0x020687f8",
       "size": "0x00000024",
       "legacy_source": "src/MBi_IsStarted.c",
       "ordinal": 1
     },
     {
-      "symbol": "func_0206881c",
+      "symbol": "_Z13func_0206881cv",
       "address": "0x0206881c",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0206/func_0206881c.c",
       "ordinal": 2
     },
     {
-      "symbol": "MBi_SetMaxScanTime",
+      "symbol": "_Z18MBi_SetMaxScanTimet",
       "address": "0x02068834",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0206/func_02068834.c",
       "ordinal": 3
     },
     {
-      "symbol": "MBi_GetAttribute",
+      "symbol": "_Z16MBi_GetAttributev",
       "address": "0x02068844",
       "size": "0x00000070",
       "legacy_source": "src/unnamed/arm9/0206/func_02068844.c",
       "ordinal": 4
     },
     {
-      "symbol": "MBi_GetTgid",
+      "symbol": "_Z11MBi_GetTgidv",
       "address": "0x020688b4",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0206/func_020688b4.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_020688cc",
+      "symbol": "_Z13func_020688ccv",
       "address": "0x020688cc",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0206/func_020688cc.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_020688e4",
+      "symbol": "_Z13func_020688e4v",
       "address": "0x020688e4",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0206/func_020688e4.c",
       "ordinal": 7
     },
     {
-      "symbol": "MBi_SendMP",
+      "symbol": "_Z10MBi_SendMPPKvii",
       "address": "0x020688fc",
       "size": "0x0000012c",
       "legacy_source": "src/unnamed/arm9/0206/func_020688fc.c",
       "ordinal": 8
     },
     {
-      "symbol": "MBi_SetMPData",
+      "symbol": "_Z13MBi_SetMPDataPFvPvEPKtttt",
       "address": "0x02068a28",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/arm9/0206/func_02068a28.c",
       "ordinal": 9
     },
     {
-      "symbol": "MB_End",
+      "symbol": "_Z6MB_Endv",
       "address": "0x02068a54",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0206/func_02068a54.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "MBi_CommEnd",
+      "symbol": "_Z11MBi_CommEndv",
       "address": "0x02068a74",
       "size": "0x00000074",
       "legacy_source": "src/unnamed/arm9/0206/func_02068a74.c",
       "ordinal": 11
     },
     {
-      "symbol": "MB_StartParent",
+      "symbol": "_Z14MB_StartParenti",
       "address": "0x02068ae8",
       "size": "0x00000220",
       "legacy_source": "src/unnamed/arm9/0206/func_02068ae8.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "MBi_StartCommon",
+      "symbol": "_Z15MBi_StartCommonv",
       "address": "0x02068d08",
       "size": "0x000000c0",
       "legacy_source": "src/unnamed/arm9/0206/func_02068d08.c",
       "ordinal": 13
     },
     {
-      "symbol": "MB_SetParentCommParam",
+      "symbol": "_Z21MB_SetParentCommParamiii",
       "address": "0x02068dc8",
       "size": "0x0000007c",
       "legacy_source": "src/unnamed/arm9/0206/func_02068dc8.c",
       "ordinal": 14
     },
     {
-      "symbol": "MBi_IsCommSizeValid",
+      "symbol": "_Z19MBi_IsCommSizeValidiii",
       "address": "0x02068e44",
       "size": "0x00000008",
       "legacy_source": "src/unnamed/arm9/0206/func_02068e44.c",
       "ordinal": 15
     },
     {
-      "symbol": "MB_Init",
+      "symbol": "_Z7MB_InitPvPK10MBUserInfoiiti",
       "address": "0x02068e4c",
       "size": "0x000001ec",
       "legacy_source": "src/unnamed/arm9/0206/func_02068e4c.cpp",
       "ordinal": 16
     },
     {
-      "symbol": "MBi_GetBeaconPeriodDispersion",
+      "symbol": "_Z29MBi_GetBeaconPeriodDispersionv",
       "address": "0x02069038",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/arm9/0206/func_02068e4c.cpp",
       "ordinal": 17
     },
     {
-      "symbol": "MBi_ChildCallback",
+      "symbol": "_Z17MBi_ChildCallbackPv",
       "address": "0x020690b0",
       "size": "0x00000868",
       "legacy_source": "src/unnamed/arm9/0206/func_020690b0.c",
       "ordinal": 18
     },
     {
-      "symbol": "MBi_ChildPortCallback",
+      "symbol": "_Z21MBi_ChildPortCallbackPv",
       "address": "0x02069918",
       "size": "0x0000007c",
       "legacy_source": "src/unnamed/arm9/0206/func_02069918.c",
       "ordinal": 19
     },
     {
-      "symbol": "MBi_ParentCallback",
+      "symbol": "_Z18MBi_ParentCallbackPv",
       "address": "0x02069994",
       "size": "0x0000089c",
       "legacy_source": "src/unnamed/arm9/0206/func_02069994.c",
       "ordinal": 20
     },
     {
-      "symbol": "MBi_IsSendEnabled",
+      "symbol": "_Z17MBi_IsSendEnabledv",
       "address": "0x0206a230",
       "size": "0x0000006c",
       "legacy_source": "src/unnamed/arm9/0206/func_0206a230.c",
       "ordinal": 21
     },
     {
-      "symbol": "changeScanChannel",
+      "symbol": "_Z17changeScanChannelP11WMScanParam",
       "address": "0x0206a29c",
       "size": "0x0000007c",
       "legacy_source": "src/unnamed/arm9/0206/func_0206a29c.c",

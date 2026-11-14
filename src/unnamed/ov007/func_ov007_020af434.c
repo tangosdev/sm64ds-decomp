@@ -1,7 +1,11 @@
 #include "Ov007Work.h"
 #include "Ov007Display.h"
+#define RequestScreenFade _Z17RequestScreenFadeiiPFvvE
 
 extern void func_ov007_020b283c(void);
+#define func_ov007_020b76a0 _Z19func_ov007_020b76a0v
+#define func_ov007_020bcba8 _Z19func_ov007_020bcba8i
+#define func_ov007_020c1d78 _Z19func_ov007_020c1d78i
 extern void func_ov007_020b76a0(void);
 extern void func_ov007_020bcba8(int i);
 extern void func_ov007_020bca40(int i);

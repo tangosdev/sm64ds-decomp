@@ -107,6 +107,10 @@ typedef struct Ov007Picker {
      * to it on x and y */
     Vector3 boundsMin;
     Vector3 boundsMax;
+#ifdef __cplusplus
+    int func_ov007_020c5014(int x);
+    void func_ov007_020c510c();
+#endif
 } Ov007Picker;
 
 #ifndef SM64DS_PLATFORM_PC
@@ -116,6 +120,11 @@ typedef char Ov007Picker_camera_must_be_at_0xa8[(int)&((Ov007Picker *)0)->camera
 
 #ifdef __cplusplus
 extern "C" {
+#endif
+#ifdef __cplusplus
+#ifdef _MSC_VER
+extern "C" {
+#endif
 #endif
 
 struct Ov007Camera;
@@ -142,6 +151,11 @@ void func_ov007_020c6784(Ov007Picker *picker, int count, const int *pointCounts,
 Ov007Picker *func_ov007_020c690c(int maxGroups, int maxPoints, int pathCapacity,
                                  struct Ov007Camera *camera, void *params, void *springConstants);
 
+#ifdef __cplusplus
+#ifdef _MSC_VER
+}
+#endif
+#endif
 #ifdef __cplusplus
 }
 #endif

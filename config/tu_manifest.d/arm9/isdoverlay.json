@@ -22,42 +22,42 @@
   ],
   "functions": [
     {
-      "symbol": "_ISDbgLib_UnregistOverlayInfo",
+      "symbol": "_Z29_ISDbgLib_UnregistOverlayInfo11OVERLAYPROCjj",
       "address": "0x0206cf98",
       "size": "0x00000394",
       "legacy_source": "src/unnamed/arm9/0206/func_0206cf98.c",
       "ordinal": 0
     },
     {
-      "symbol": "_ISDbgLib_RegistOverlayInfo",
+      "symbol": "_Z27_ISDbgLib_RegistOverlayInfo11OVERLAYPROCjjj",
       "address": "0x0206d32c",
       "size": "0x0000053c",
       "legacy_source": "src/unnamed/arm9/0206/func_0206d32c.c",
       "ordinal": 1
     },
     {
-      "symbol": "func_0206d868",
+      "symbol": "_Z13func_0206d868PK13SavedIntState",
       "address": "0x0206d868",
       "size": "0x00000028",
       "legacy_source": "src/unnamed/arm9/0206/func_0206d868.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "func_0206d890",
+      "symbol": "_Z13func_0206d890P13SavedIntState",
       "address": "0x0206d890",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/arm9/0206/func_0206d890.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "func_0206d8c4",
+      "symbol": "_Z13func_0206d8c4P12OverlayTablej",
       "address": "0x0206d8c4",
       "size": "0x0000007c",
       "legacy_source": "src/unnamed/arm9/0206/func_0206d8c4.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "func_0206d940",
+      "symbol": "_Z13func_0206d940P12OverlayTablej",
       "address": "0x0206d940",
       "size": "0x0000008c",
       "legacy_source": "src/unnamed/arm9/0206/func_0206d940.cpp",

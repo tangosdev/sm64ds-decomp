@@ -103,49 +103,49 @@
       "ordinal": 10
     },
     {
-      "symbol": "TrmpFx_Unlink",
+      "symbol": "_Z13TrmpFx_UnlinkP14TrmpScorePopup",
       "address": "0x02120b7c",
       "size": "0x0000004c",
       "legacy_source": "src/actors/d_sc_mg_trampoline.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "TrmpFx_Link",
+      "symbol": "_Z11TrmpFx_LinkP14TrmpScorePopup",
       "address": "0x02120bc8",
       "size": "0x00000040",
       "legacy_source": "src/actors/d_sc_mg_trampoline.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "TrmpFx_DrawAll",
+      "symbol": "_Z14TrmpFx_DrawAllv",
       "address": "0x02120c08",
       "size": "0x00000038",
       "legacy_source": "src/actors/d_sc_mg_trampoline.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "TrmpFx_UpdateAll",
+      "symbol": "_Z16TrmpFx_UpdateAllv",
       "address": "0x02120c40",
       "size": "0x00000060",
       "legacy_source": "src/actors/d_sc_mg_trampoline.cpp",
       "ordinal": 14
     },
     {
-      "symbol": "TrmpFx_ClearAll",
+      "symbol": "_Z15TrmpFx_ClearAllv",
       "address": "0x02120ca0",
       "size": "0x0000006c",
       "legacy_source": "src/actors/d_sc_mg_trampoline.cpp",
       "ordinal": 15
     },
     {
-      "symbol": "TrmpFx_Spawn",
+      "symbol": "_Z12TrmpFx_Spawnii",
       "address": "0x02120d0c",
       "size": "0x00000080",
       "legacy_source": "src/actors/d_sc_mg_trampoline.cpp",
       "ordinal": 16
     },
     {
-      "symbol": "TrmpFx_InitPool",
+      "symbol": "_Z15TrmpFx_InitPoolPvi",
       "address": "0x02120d8c",
       "size": "0x0000001c",
       "legacy_source": "src/actors/d_sc_mg_trampoline.cpp",
@@ -320,7 +320,7 @@
       "ordinal": 41
     },
     {
-      "symbol": "dScMgTrampoline_c_classInit",
+      "symbol": "_Z27dScMgTrampoline_c_classInitv",
       "address": "0x02122490",
       "size": "0x00000118",
       "legacy_source": "src/MgTrampolineTime_Spawn.cpp",
@@ -446,7 +446,7 @@
       "source": "0x0213fab8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "dScMgTrampoline_c_classInit",
+      "symbol": "_Z27dScMgTrampoline_c_classInitv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02122490"
@@ -1325,27 +1325,27 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@542",
+      "from": "@544",
       "to": "pmf_dScMgTrampoline_c_StateIntro",
       "evidence": "Compiler PMF literal: BeginIntro assigns mState = &dScMgTrampoline_c::StateIntro, and mwcc emits that pointer-to-member constant as an 8-byte {code address, 0} .data temporary. Paired with the canonical descriptor by the single relocation that loads it and by its relocation target. Re-keyed from @561 to @580 when the NitroSDK GX/G3X renames merged with the PMF-literal state assignments (measured from the compiled object). Re-keyed from @580 to @578 when the NitroSDK FX renames merged with the PMF-literal state descriptors (measured from the compiled object). Re-keyed from @578 to @546 when the class-scope operator delete forwarders gave way to the global operator delete, merged over the NitroSDK renames (measured from the compiled object). Re-keyed from @546 to @549 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @549 to @548 when d_s_mg_trampoline dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @548 to @542 when d_s_mg_trampoline dropped its local copies of the nitro/mi/memory.h CPU fill and copy for the header (measured from the compiled object)."
     },
     {
-      "from": "@563",
+      "from": "@565",
       "to": "pmf_dScMgTrampoline_c_StatePlay",
       "evidence": "Compiler PMF literal: BeginPlay assigns mState = &dScMgTrampoline_c::StatePlay, and mwcc emits that pointer-to-member constant as an 8-byte {code address, 0} .data temporary. Paired with the canonical descriptor by the single relocation that loads it and by its relocation target. Re-keyed from @582 to @601 when the NitroSDK GX/G3X renames merged with the PMF-literal state assignments (measured from the compiled object). Re-keyed from @601 to @599 when the NitroSDK FX renames merged with the PMF-literal state descriptors (measured from the compiled object). Re-keyed from @599 to @567 when the class-scope operator delete forwarders gave way to the global operator delete, merged over the NitroSDK renames (measured from the compiled object). Re-keyed from @567 to @570 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @570 to @569 when d_s_mg_trampoline dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @569 to @563 when d_s_mg_trampoline dropped its local copies of the nitro/mi/memory.h CPU fill and copy for the header (measured from the compiled object)."
     },
     {
-      "from": "@636",
+      "from": "@638",
       "to": "pmf_dScMgTrampoline_c_StateResults",
       "evidence": "Compiler PMF literal: BeginResults assigns mState = &dScMgTrampoline_c::StateResults, and mwcc emits that pointer-to-member constant as an 8-byte {code address, 0} .data temporary. Paired with the canonical descriptor by the single relocation that loads it and by its relocation target. Re-keyed from @655 to @674 when the NitroSDK GX/G3X renames merged with the PMF-literal state assignments (measured from the compiled object). Re-keyed from @674 to @672 when the NitroSDK FX renames merged with the PMF-literal state descriptors (measured from the compiled object). Re-keyed from @672 to @640 when the class-scope operator delete forwarders gave way to the global operator delete, merged over the NitroSDK renames (measured from the compiled object). Re-keyed from @640 to @643 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @643 to @642 when d_s_mg_trampoline dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @642 to @636 when d_s_mg_trampoline dropped its local copies of the nitro/mi/memory.h CPU fill and copy for the header (measured from the compiled object)."
     },
     {
-      "from": "@646",
+      "from": "@648",
       "to": "pmf_dScMgTrampoline_c_StateWaitExit",
       "evidence": "Compiler PMF literal: StateResults assigns mState = &dScMgTrampoline_c::StateWaitExit, and mwcc emits that pointer-to-member constant as an 8-byte {code address, 0} .data temporary. Paired with the canonical descriptor by the single relocation that loads it and by its relocation target. Re-keyed from @665 to @684 when the NitroSDK GX/G3X renames merged with the PMF-literal state assignments (measured from the compiled object). Re-keyed from @684 to @682 when the NitroSDK FX renames merged with the PMF-literal state descriptors (measured from the compiled object). Re-keyed from @682 to @650 when the class-scope operator delete forwarders gave way to the global operator delete, merged over the NitroSDK renames (measured from the compiled object). Re-keyed from @650 to @653 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @653 to @652 when d_s_mg_trampoline dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @652 to @646 when d_s_mg_trampoline dropped its local copies of the nitro/mi/memory.h CPU fill and copy for the header (measured from the compiled object)."
     },
     {
-      "from": "@663",
+      "from": "@665",
       "to": "pmf_dScMgTrampoline_c_StateDone",
       "evidence": "Compiler PMF literal: StateWaitExit assigns mState = &dScMgTrampoline_c::StateDone, and mwcc emits that pointer-to-member constant as an 8-byte {code address, 0} .data temporary. Paired with the canonical descriptor by the single relocation that loads it and by its relocation target. Re-keyed from @682 to @701 when the NitroSDK GX/G3X renames merged with the PMF-literal state assignments (measured from the compiled object). Re-keyed from @701 to @699 when the NitroSDK FX renames merged with the PMF-literal state descriptors (measured from the compiled object). Re-keyed from @699 to @667 when the class-scope operator delete forwarders gave way to the global operator delete, merged over the NitroSDK renames (measured from the compiled object). Re-keyed from @667 to @670 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @670 to @669 when d_s_mg_trampoline dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @669 to @663 when d_s_mg_trampoline dropped its local copies of the nitro/mi/memory.h CPU fill and copy for the header (measured from the compiled object)."
     }

@@ -33,10 +33,10 @@
 
 extern int data_02092768[4];
 
-/* local extern: MTX_Inverse43 has no shared header. */
-extern "C" {
+/* local extern: arm9 matrix, quaternion and dBgW helpers with no shared
+ * header that agrees with these spellings. */
+
 int MTX_Inverse43(const Matrix4x3 *s, Matrix4x3 *d);
-}
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
  * off screen. This int-returning predicate is what makes the ROM
@@ -152,7 +152,7 @@ void daObjGuragura_c::TiltToward(unsigned char *arg) {
     axis.x = 0;
     axis.z = 0;
     axis.y = 0x1000;
-    Quaternion_FromVector3(mTiltTarget, &axis, &v);
+    Quaternion_FromVector3((Quat *)mTiltTarget, &axis, &v);
     Quaternion_Normalize(mTiltTarget);
     mSettleDelay = 0xa;
 }

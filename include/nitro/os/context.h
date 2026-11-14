@@ -36,9 +36,10 @@
 #define OS_CONTEXT_CP_CONTEXT 72
 
 #ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
 #endif
-
+#endif
 typedef struct OSContext {
     u32 cpsr;             /* 0x00 */
     u32 r[13];            /* 0x04 */
@@ -49,12 +50,23 @@ typedef struct OSContext {
     CPContext cp_context; /* 0x48 */
 } OSContext;
 
-void OS_InitContext(OSContext *, u32, u32);
-int OS_SaveContext(OSContext *); /* the SDK's BOOL */
-void OS_LoadContext(OSContext *);
-
 #ifdef __cplusplus
+extern "C"
+#endif
+void OS_InitContext(OSContext *, u32, u32);
+#ifdef __cplusplus
+extern "C"
+#endif
+int OS_SaveContext(OSContext *);
+#ifdef __cplusplus
+extern "C"
+#endif
+/* the SDK's BOOL */
+void OS_LoadContext(OSContext *);
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif /* NITRO_OS_CONTEXT_H */

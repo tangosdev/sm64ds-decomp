@@ -78,28 +78,28 @@
       "ordinal": 5
     },
     {
-      "symbol": "D3D_PanForX",
+      "symbol": "_Z11D3D_PanForXi",
       "address": "0x020e6da4",
       "size": "0x00000010",
       "legacy_source": "src/func_ov006_020e6da4.c",
       "ordinal": 6
     },
     {
-      "symbol": "D3D_PlaySePannedLoop",
+      "symbol": "_Z20D3D_PlaySePannedLoopiii",
       "address": "0x020e6db4",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov006_020e6db4.c",
       "ordinal": 7
     },
     {
-      "symbol": "Sound_PlayBank1Panned",
+      "symbol": "_Z21Sound_PlayBank1Pannediii",
       "address": "0x020e6df0",
       "size": "0x0000004c",
       "legacy_source": "src/Sound_PlayBank1Panned.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "D3D_PlaySeAtX",
+      "symbol": "_Z13D3D_PlaySeAtXii",
       "address": "0x020e6e3c",
       "size": "0x00000010",
       "legacy_source": "src/func_ov006_020e6e3c.c",
@@ -169,7 +169,7 @@
       "ordinal": 18
     },
     {
-      "symbol": "D3D_ReleaseSubBg1",
+      "symbol": "_Z17D3D_ReleaseSubBg1Pv",
       "address": "0x020e7110",
       "size": "0x00000014",
       "legacy_source": "src/func_ov006_020e7110.c",
@@ -190,35 +190,35 @@
       "ordinal": 21
     },
     {
-      "symbol": "D3D_InitDualScreen",
+      "symbol": "_Z18D3D_InitDualScreenv",
       "address": "0x020e73c4",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_020e73c4.cpp",
       "ordinal": 22
     },
     {
-      "symbol": "D3D_ClearCaptureTable",
+      "symbol": "_Z21D3D_ClearCaptureTablev",
       "address": "0x020e740c",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov006_020e740c.c",
       "ordinal": 23
     },
     {
-      "symbol": "D3D_DrawSpriteTable",
+      "symbol": "_Z19D3D_DrawSpriteTablev",
       "address": "0x020e7428",
       "size": "0x000000e0",
       "legacy_source": "src/func_ov006_020e7428.c",
       "ordinal": 24
     },
     {
-      "symbol": "D3D_CaptureToSub",
+      "symbol": "_Z16D3D_CaptureToSubv",
       "address": "0x020e7508",
       "size": "0x00000094",
       "legacy_source": "src/func_ov006_020e7508.cpp",
       "ordinal": 25
     },
     {
-      "symbol": "D3D_CaptureToMain",
+      "symbol": "_Z17D3D_CaptureToMainv",
       "address": "0x020e759c",
       "size": "0x000000c4",
       "legacy_source": "src/func_ov006_020e759c.c",

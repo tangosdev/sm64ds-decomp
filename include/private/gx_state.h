@@ -28,11 +28,15 @@ typedef struct GXVRamCnt {
 typedef char GXVRamCnt_size_must_be_0x1a[sizeof(GXVRamCnt) == 0x1a ? 1 : -1];
 
 #ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 extern GXVRamCnt data_020a6088; /* gGXState */
 #ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif

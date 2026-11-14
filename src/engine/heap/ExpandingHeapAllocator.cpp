@@ -33,8 +33,6 @@
 
 /* local extern: no header declares this yet. */
 
-extern "C" {
-
 #define MBLOCK_FREE_SIGNATURE 0x4652 /* 'FR' */
 #define MBLOCK_USED_SIGNATURE 0x5544 /* 'UD' */
 #define MIN_ALIGNMENT 4
@@ -596,4 +594,4 @@ u32 NNS_FndGetSizeForMBlockExpHeap(const void *memBlock) {
     return GetMBlockHeadCPtr(memBlock)->blockSize;
 }
 
-} /* extern "C" */
+/* extern "C" */

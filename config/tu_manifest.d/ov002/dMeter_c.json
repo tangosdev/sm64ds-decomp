@@ -153,7 +153,7 @@
       "ordinal": 18
     },
     {
-      "symbol": "dMeter_c_classInit",
+      "symbol": "_Z18dMeter_c_classInitv",
       "address": "0x020fe154",
       "size": "0x0000003c",
       "legacy_source": "src/d_meter.cpp",

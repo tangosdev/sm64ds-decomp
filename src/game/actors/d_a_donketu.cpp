@@ -57,7 +57,7 @@ struct DonketuAnimationFileHandle : SharedFilePtr {
 };
 
 /* DONKETU factory. Written first so it emits last. */
-extern "C" daDonketu_c *daDonketu_c_classInit() {
+daDonketu_c *daDonketu_c_classInit() {
     return new daDonketu_c();
 }
 

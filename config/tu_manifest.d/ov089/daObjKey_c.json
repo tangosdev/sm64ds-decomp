@@ -59,14 +59,14 @@
       "ordinal": 2
     },
     {
-      "symbol": "UnloadKeyModels",
+      "symbol": "_Z15UnloadKeyModelsi",
       "address": "0x021310cc",
       "size": "0x00000048",
       "legacy_source": "src/UnloadKeyModels.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "LoadKeyModels",
+      "symbol": "_Z13LoadKeyModelsi",
       "address": "0x02131114",
       "size": "0x00000048",
       "legacy_source": "src/LoadKeyModels.cpp",
@@ -164,14 +164,14 @@
       "ordinal": 17
     },
     {
-      "symbol": "daObjKey_c_classInit_LAST_STAR",
+      "symbol": "_Z30daObjKey_c_classInit_LAST_STARv",
       "address": "0x021327d0",
       "size": "0x00000058",
       "legacy_source": "src/d_a_obj_key_last_star.c",
       "ordinal": 18
     },
     {
-      "symbol": "daObjKey_c_classInit_OBJ_KEY",
+      "symbol": "_Z28daObjKey_c_classInit_OBJ_KEYv",
       "address": "0x02132828",
       "size": "0x00000058",
       "legacy_source": "src/d_a_obj_key_obj_key.c",
@@ -828,14 +828,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN15ObjKeyModelFileC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN15ObjKeyModelFileD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the model wrapper destructor's exact ABS32 relocation"
@@ -971,7 +971,7 @@
       "source": "0x021328e4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -991,7 +991,7 @@
       "source": "0x02132900",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1011,7 +1011,7 @@
       "source": "0x0213291c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1031,7 +1031,7 @@
       "source": "0x02132938",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1141,7 +1141,7 @@
       "source": "0x02132a74",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -1489,42 +1489,42 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1240",
+      "from": "@1243",
       "to": "@2708",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @1248 to @1194 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1194 to @1242 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @1242 to @1240 when a redundant cast was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@1241",
+      "from": "@1244",
       "to": "@1175",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @1249 to @1195 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1195 to @1243 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @1243 to @1241 when a redundant cast was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@1242",
+      "from": "@1245",
       "to": "@2709",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @1250 to @1196 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1196 to @1244 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @1244 to @1242 when a redundant cast was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@1243",
+      "from": "@1246",
       "to": "@1177",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @1251 to @1197 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1197 to @1245 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @1245 to @1243 when a redundant cast was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@1244",
+      "from": "@1247",
       "to": "@1178",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @1252 to @1198 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1198 to @1246 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @1246 to @1244 when a redundant cast was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@1245",
+      "from": "@1248",
       "to": "@1179",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @1253 to @1199 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1199 to @1247 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @1247 to @1245 when a redundant cast was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@1246",
+      "from": "@1249",
       "to": "@1180",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @1254 to @1200 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1200 to @1248 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @1248 to @1246 when a redundant cast was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@1247",
+      "from": "@1250",
       "to": "@1181",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @1255 to @1201 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1201 to @1249 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @1249 to @1247 when a redundant cast was removed (same section, offset, size, type and binding)."
     },

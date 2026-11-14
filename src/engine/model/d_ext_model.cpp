@@ -61,21 +61,28 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
 struct Model;
 struct MatAnimData;
 
-extern "C" {
-extern Matrix4x3 data_0209b3ec; /* local extern: the camera-space matrix the Render paths use */
+extern Matrix4x3 data_0209b3ec;
+/* local extern: the camera-space matrix the Render paths use */
 /* local extern: no header declares it; sizes the transforms buffer from the file */
-int func_02046564(BMD_File *file);
-/* local extern: no header declares it; initializes ModelComponents over the file */
-void func_020462d0(ModelComponents *data, BMD_File *file, void *buffer);
+int func_02046564(void *file);
+/* local extern: Model4.cpp's Dst/Desc/ElemA. Pointer casts at the calls. */
+struct Dst;
+struct Desc;
+struct ElemA;
+void func_020462d0(Dst *data, Desc *file, ElemA *buffer);
 /* defined below; dExtCommonModel_c and dExtShadowModel_c take their pooled
    components from it */
 ModelComponents *GetCommonModelComponents(BMD_File *file);
+extern "C" {
+
 /* local extern: LoadFile.c defines int(int); the file comes back as a
    pointer here (banked return row). */
 void *LoadFile(int ov0ID);
 /* local extern: func_020469e0.c defines int(int *). The caller's shard
    matched this spelling (banked rows). */
 int func_020469e0(void *ptr);
+}
+
 /* local extern: no header declares it; dExtModel_c's destructor frees the file.
    decl_common.h's copy is the same spelling; that catch-all does not count. */
 void Deallocate(void *ptr);
@@ -93,15 +100,12 @@ extern int data_0209cef0;
    but flips the declaration plurality onto this shorter path. */
 extern int data_0208e738;
 u32 TrimModelFile(void *ptr);
-/* local extern: defined in src/engine/model/Model4.cpp, which types the frame
-   `short`; no header declares it. Stores (file, frame) into bone slot i of the
-   components' animation array. The frame stays `int` here: the ROM passes
-   func_020162a4's `lsr #16` result with no sign extension, which a `short`
-   parameter would add (the banked param:#4 int disagreement). */
-void func_02045e2c(int obj, int i, BCA_File *a, int b);
-/* local extern: no header declares it; blends verts toward the old pose in
-   Virtual10/UpdateVerts while blendWeight is still below 1.0 */
-void func_0204531c(ModelComponents *data, s32 weight);
+/* int frame: a short parameter sign-extends func_020162a4 and that function
+   no longer reproduces. C linkage matches Model4.cpp. */
+extern "C" void func_02045e2c(int obj, int i, BCA_File *a, int b);
+/* local extern: blends verts toward the old pose in Virtual10/UpdateVerts
+   while blendWeight is still below 1.0. Definition takes char *. */
+void func_0204531c(char *data, int weight);
 /* local extern: no header declares it; sizes the mBlendBuffer blend buffer off the
    file. Spelled (int *) the way func_020462bc.c defines it */
 u32 func_020462bc(int *file);
@@ -117,6 +121,8 @@ extern u8 data_0209ceec;
  * strings, so the objects are overlay 1's .data. */
 extern BMD_File data_ov001_020ad524;
 extern BMD_File data_ov001_020ad560;
+extern "C" {
+
 /* local extern: no header declares it; the shadow scale matrix */
 void func_0203c178(Matrix4x3 *m, Fix12i sx, Fix12i sy, Fix12i sz);
 /* local extern: the texture-animation helpers. Each Prepare's ROM body is a
@@ -160,7 +166,7 @@ dExtModel_c::~dExtModel_c() {
 
 /* Trims a set-up model file's allocation down to the size its header
    reports (func_020469e0). Coined name. */
-extern "C" u32 TrimModelFile(void *ptr) {
+u32 TrimModelFile(void *ptr) {
     if (!ptr)
         return 0;
     void *heap = data_020a0ea0;
@@ -216,7 +222,7 @@ void *dExtSimpleModel_c::AddToCommonModelDataArr(BMD_File &file) {
 
 /* Get-or-create the pooled ModelComponents entry for the pointer-holding
    siblings (dExtCommonModel_c/dExtShadowModel_c). Coined name. */
-extern "C" ModelComponents *GetCommonModelComponents(BMD_File *file) {
+ModelComponents *GetCommonModelComponents(BMD_File *file) {
     CommonModelData *e;
     void *b;
 
@@ -232,12 +238,12 @@ extern "C" ModelComponents *GetCommonModelComponents(BMD_File *file) {
             e->components = 0;
             return 0;
         }
-        func_020462d0(e->components, file, b);
+        func_020462d0((Dst *)e->components, (Desc *)file, (ElemA *)b);
     }
     return e->components;
 }
 
-extern "C" void CleanCommonModelDataArr(void) {
+void CleanCommonModelDataArr(void) {
     CommonModelData *e = (CommonModelData *)data_0209cefc;
     int i = 0;
 
@@ -284,7 +290,7 @@ int dExtSimpleModel_c::DoSetFile(char *file_, int a, int b) {
     buffer = transformsBuf;
     if (buffer == 0)
         return 0;
-    func_020462d0(&data, file, buffer);
+    func_020462d0((Dst *)&data, (Desc *)file, (ElemA *)buffer);
     data.UpdateVertsUsingBones();
     if (a != 0)
         SetMaterialFlags(0x8000);
@@ -331,7 +337,7 @@ void dExtSimpleModel_c::SetPolygonID(int id) {
     data.SetPolygonID(id);
 }
 
-extern "C" void func_02016aac(char *self, int id, int index) {
+void func_02016aac(char *self, int id, int index) {
     ((dExtSimpleModel_c *)self)->data.SetMaterialPolygonID(id, index);
 }
 
@@ -357,19 +363,19 @@ void dExtSimpleModel_c::ShowMaterial(int boneID, int listIdx) {
     mats[ids[listIdx]].flags &= 0x7fffffff;
 }
 
-extern "C" void func_02016a14(char *self, int color) {
+void func_02016a14(char *self, int color) {
     ((dExtSimpleModel_c *)self)->data.SetDiffuse(color);
 }
 
-extern "C" void func_02016a04(char *self, int color) {
+void func_02016a04(char *self, int color) {
     ((dExtSimpleModel_c *)self)->data.SetAmbient(color);
 }
 
-extern "C" void func_020169f4(char *self, int color) {
+void func_020169f4(char *self, int color) {
     ((dExtSimpleModel_c *)self)->data.SetEmission(color);
 }
 
-extern "C" void func_020169d8(char *self, int index, unsigned int value) {
+void func_020169d8(char *self, int index, unsigned int value) {
     ((dExtSimpleModel_c *)self)->data.SetMaterialEmission(value, index);
 }
 
@@ -414,7 +420,7 @@ void dExtAnmModel_c::Virtual18(u32 mat, const Vector3 *scale) {
 
 /* Refresh bones without touching verts -- UpdateVerts' first half kept
    file-local; daMoray_c calls it on a dExtBlendAnmModel_c*. */
-extern "C" void func_020167a4(dExtAnmModel_c *self) {
+void func_020167a4(dExtAnmModel_c *self) {
     s32 frame = self->currFrame;
     self->data.UpdateBones(self->file, (u32)(frame << 4) >> 0x10);
 }
@@ -482,7 +488,7 @@ void dExtBlendAnmModel_c::UpdateVerts() {
     s32 frame = currFrame;
     data.UpdateBones(file, (u32)(frame << 4) >> 0x10);
     if (blendWeight < 0x1000) {
-        func_0204531c(&data, blendWeight);
+        func_0204531c((char *)&data, blendWeight);
     } else {
         data.UpdateVertsUsingBones();
     }
@@ -492,7 +498,7 @@ void dExtBlendAnmModel_c::Virtual10(Matrix4x3 &mat) {
     s32 frame = currFrame;
     data.UpdateBones(file, (u32)(frame << 4) >> 0x10);
     if (blendWeight < 0x1000) {
-        func_0204531c(&data, blendWeight);
+        func_0204531c((char *)&data, blendWeight);
     } else {
         dExtSimpleModel_c::Virtual10(mat);
     }
@@ -564,14 +570,14 @@ void dExtAnm2Model_c::Func_020162C4(BCA_File *animFile, int flags, Fix12i speed,
 /* Pose bone `bone` from the second animation at its current frame. daPly_c
    calls it on a body model with bone 8; the int `self` keeps daPly_c's
    declaration and this definition in agreement. */
-extern "C" void func_020162a4(int self, int bone) {
+void func_020162a4(int self, int bone) {
     dExtAnm2Model_c *model = (dExtAnm2Model_c *)self;
     s32 frame = model->otherAnim.currFrame;
     func_02045e2c((int)&model->data, bone, model->otherFile, (u32)(frame << 4) >> 16);
 }
 
 /* Release bone `bone` back to the primary animation (no file, frame 0). */
-extern "C" void func_0201628c(int self, int bone) {
+void func_0201628c(int self, int bone) {
     dExtAnm2Model_c *model = (dExtAnm2Model_c *)self;
     func_02045e2c((int)&model->data, bone, 0, 0);
 }

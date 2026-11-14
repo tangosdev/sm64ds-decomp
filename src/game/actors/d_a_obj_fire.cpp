@@ -42,15 +42,15 @@ static inline int IsPlayerActor(dActor_c *actor) {
     return actor->actorID == 0xbf;
 }
 
-extern "C" daObjFire_c *daObjFire_c_classInit_OBJ_RED_FIRE() {
+daObjFire_c *daObjFire_c_classInit_OBJ_RED_FIRE() {
     return new daObjFire_c();
 }
 
-extern "C" daObjFire_c *daObjFire_c_classInit_OBJ_BLUE_FIRE() {
+daObjFire_c *daObjFire_c_classInit_OBJ_BLUE_FIRE() {
     return new daObjFire_c();
 }
 
-extern "C" SpawnInfo<daObjFire_c> g_profile_OBJ_RED_FIRE = {
+SpawnInfo<daObjFire_c> g_profile_OBJ_RED_FIRE = {
     daObjFire_c_classInit_OBJ_RED_FIRE,
     0x013c,
     0x013a,
@@ -61,7 +61,7 @@ extern "C" SpawnInfo<daObjFire_c> g_profile_OBJ_RED_FIRE = {
     0x00000000,
 };
 
-extern "C" SpawnInfo<daObjFire_c> g_profile_OBJ_BLUE_FIRE = {
+SpawnInfo<daObjFire_c> g_profile_OBJ_BLUE_FIRE = {
     daObjFire_c_classInit_OBJ_BLUE_FIRE,
     0x013d,
     0x013b,

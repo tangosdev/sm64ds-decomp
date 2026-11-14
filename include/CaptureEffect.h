@@ -1,5 +1,9 @@
 #ifndef CAPTUREEFFECT_H
 #define CAPTUREEFFECT_H
+#ifndef __cplusplus
+#define func_020497a0 _Z13func_020497a0PsS_jP13CaptureEffect
+#define func_020499bc _Z13func_020499bcPsS_jP13CaptureEffect
+#endif
 
 /* The sound-capture effect at data_020a4c64. func_02049cd8 starts the
  * capture with func_02049ba8 as its callback and &data_020a4c64 as the
@@ -39,17 +43,25 @@ typedef char CaptureEffect_size_must_be_0xcc[sizeof(CaptureEffect) == 0xcc ? 1 :
 #endif
 
 #ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 extern CaptureEffect data_020a4c64;
 /* data_020a4c64.work: the ROM addresses it by its own symbol. */
 extern CaptureEffectWork data_020a4c70;
 
-void func_02049ba8(void *, void *, unsigned int, int, CaptureEffect *);
+#ifdef __cplusplus
+extern "C"
+#endif
+    void
+    func_02049ba8(void *, void *, unsigned int, int, CaptureEffect *);
 void func_020499bc(short *, short *, unsigned int, CaptureEffect *);
 void func_020497a0(short *, short *, unsigned int, CaptureEffect *);
 #ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif

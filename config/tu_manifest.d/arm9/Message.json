@@ -34,7 +34,7 @@
       "ordinal": 0
     },
     {
-      "symbol": "func_0201cd08",
+      "symbol": "_Z13func_0201cd08i",
       "address": "0x0201cd08",
       "size": "0x00000108",
       "legacy_source": "src/unnamed/arm9/0201/func_0201cd08.cpp",
@@ -48,7 +48,7 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_0201cebc",
+      "symbol": "_Z13func_0201cebcs",
       "address": "0x0201cebc",
       "size": "0x000000c4",
       "legacy_source": "src/unnamed/arm9/0201/func_0201cebc.c",
@@ -62,7 +62,7 @@
       "ordinal": 4
     },
     {
-      "symbol": "func_0201cfb8",
+      "symbol": "_Z13func_0201cfb8i",
       "address": "0x0201cfb8",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0201/func_0201cfb8.c",
@@ -76,7 +76,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "LoadControllerModeText",
+      "symbol": "_Z22LoadControllerModeTexti",
       "address": "0x0201d0f8",
       "size": "0x0000020c",
       "legacy_source": "src/LoadControllerModeText.c",
@@ -90,28 +90,28 @@
       "ordinal": 8
     },
     {
-      "symbol": "func_0201d418",
+      "symbol": "_Z13func_0201d418ii",
       "address": "0x0201d418",
       "size": "0x00000178",
       "legacy_source": "src/unnamed/arm9/0201/func_0201d418.c",
       "ordinal": 9
     },
     {
-      "symbol": "Message_DrawLineBG2",
+      "symbol": "_Z19Message_DrawLineBG2v",
       "address": "0x0201d590",
       "size": "0x00000110",
       "legacy_source": "src/unnamed/arm9/0201/func_0201d590.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "Message_DrawCenteredLine",
+      "symbol": "_Z24Message_DrawCenteredLineii",
       "address": "0x0201d6a0",
       "size": "0x000001b0",
       "legacy_source": "src/Message_DrawCenteredLine.c",
       "ordinal": 11
     },
     {
-      "symbol": "func_0201d850",
+      "symbol": "_Z13func_0201d850j",
       "address": "0x0201d850",
       "size": "0x000007f4",
       "legacy_source": "src/unnamed/arm9/0201/func_0201d850.c",
@@ -132,7 +132,7 @@
       "ordinal": 14
     },
     {
-      "symbol": "func_0201e220",
+      "symbol": "_Z13func_0201e220i",
       "address": "0x0201e220",
       "size": "0x000000f4",
       "legacy_source": "src/unnamed/arm9/0201/func_0201e220.cpp",
@@ -174,7 +174,7 @@
       "ordinal": 20
     },
     {
-      "symbol": "func_0201eaac",
+      "symbol": "_Z13func_0201eaacv",
       "address": "0x0201eaac",
       "size": "0x000000e8",
       "legacy_source": "src/unnamed/arm9/0201/func_0201eaac.c",
@@ -188,56 +188,56 @@
       "ordinal": 22
     },
     {
-      "symbol": "func_0201ef38",
+      "symbol": "_Z13func_0201ef38v",
       "address": "0x0201ef38",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0201/func_0201ef38.c",
       "ordinal": 23
     },
     {
-      "symbol": "func_0201ef50",
+      "symbol": "_Z13func_0201ef50i",
       "address": "0x0201ef50",
       "size": "0x000001b8",
       "legacy_source": "src/unnamed/arm9/0201/func_0201ef50.c",
       "ordinal": 24
     },
     {
-      "symbol": "func_0201f108",
+      "symbol": "_Z13func_0201f108v",
       "address": "0x0201f108",
       "size": "0x00000030",
       "legacy_source": "src/unnamed/arm9/0201/func_0201f108.c",
       "ordinal": 25
     },
     {
-      "symbol": "func_0201f138",
+      "symbol": "_Z13func_0201f138v",
       "address": "0x0201f138",
       "size": "0x000001f4",
       "legacy_source": "src/unnamed/arm9/0201/func_0201f138.cpp",
       "ordinal": 26
     },
     {
-      "symbol": "func_0201f32c",
+      "symbol": "_Z13func_0201f32ci",
       "address": "0x0201f32c",
       "size": "0x00000820",
       "legacy_source": "src/unnamed/arm9/0201/func_0201f32c.c",
       "ordinal": 27
     },
     {
-      "symbol": "func_0201fb4c",
+      "symbol": "_Z13func_0201fb4cv",
       "address": "0x0201fb4c",
       "size": "0x000000c4",
       "legacy_source": "src/unnamed/arm9/0201/func_0201fb4c.c",
       "ordinal": 28
     },
     {
-      "symbol": "ObjectMessageIDToActualMessageID",
+      "symbol": "_Z32ObjectMessageIDToActualMessageIDs",
       "address": "0x0201fc10",
       "size": "0x00000078",
       "legacy_source": "src/ObjectMessageIDToActualMessageID.c",
       "ordinal": 29
     },
     {
-      "symbol": "func_0201fc88",
+      "symbol": "_Z13func_0201fc88s",
       "address": "0x0201fc88",
       "size": "0x00000024",
       "legacy_source": "src/unnamed/arm9/0201/func_0201fc88.c",

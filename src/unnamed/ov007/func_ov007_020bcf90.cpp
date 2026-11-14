@@ -5,19 +5,17 @@
 #include "Ov007Settings.h"
 #include "Ov007Camera.h"
 
-extern "C" {
-
-extern void func_ov007_020c93b4(struct Ov007PaletteBuf *buf);
+extern "C" void func_ov007_020c93b4(struct Ov007PaletteBuf *buf);
 extern void func_ov007_020b2160(int a);
 extern void func_ov007_020b8fd4(struct Ov007Camera *camera);
-extern void func_ov007_020b413c(void *view, int number);
-extern void func_ov007_020b2728(void);
+extern void func_ov007_020b413c(struct Ov007ItemView *view, int number);
+extern "C" void func_ov007_020b2728(void);
 extern int func_ov007_020b7a34(void);
 extern void func_ov007_020b7a00(void);
-extern void func_ov007_020b4464(void *view, struct Ov007Camera *camera);
+extern void func_ov007_020b4464(struct Ov007ItemView *view, struct Ov007Camera *camera);
 extern void func_ov007_020b2cf0(void);
-extern void func_ov007_020c2390(struct Ov007Light *light);
-extern void func_ov007_020c232c(struct Ov007Light *light);
+extern "C" void func_ov007_020c2390(struct Ov007Light *light);
+extern "C" void func_ov007_020c232c(struct Ov007Light *light);
 extern void func_ov007_020b91b4(void);
 extern void func_ov007_020bee14(void);
 extern void func_ov007_020b7658(Matrix4x3 *viewMatrix, int update);
@@ -110,5 +108,4 @@ void func_ov007_020bcf90(void) {
         func_ov007_020b2370();
     }
     ScreenFade_Draw(WORK->cameras[0]);
-}
 }

@@ -21,7 +21,7 @@
   ],
   "functions": [
     {
-      "symbol": "func_02037dc4",
+      "symbol": "_Z13func_02037dc4i",
       "address": "0x02037dc4",
       "size": "0x00000008",
       "legacy_source": "src/unnamed/arm9/0203/func_02037dc4.c",
@@ -49,7 +49,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "func_02037e20",
+      "symbol": "_Z13func_02037e20Pi",
       "address": "0x02037e20",
       "size": "0x0000000c",
       "legacy_source": "src/func_02037e20.c",
@@ -91,7 +91,7 @@
       "ordinal": 9
     },
     {
-      "symbol": "SurfaceInfo_TestFlag0x20",
+      "symbol": "_Z24SurfaceInfo_TestFlag0x20Pi",
       "address": "0x02037e78",
       "size": "0x0000000c",
       "legacy_source": "src/SurfaceInfo_TestFlag0x20.c",
@@ -119,7 +119,7 @@
       "ordinal": 13
     },
     {
-      "symbol": "func_02037eb0",
+      "symbol": "_Z13func_02037eb0P11SurfaceInfo4CLPSP7Vector3",
       "address": "0x02037eb0",
       "size": "0x00000034",
       "legacy_source": "src/engine/collision/dBgPc.cpp",
@@ -273,7 +273,7 @@
       "ordinal": 35
     },
     {
-      "symbol": "func_020381cc",
+      "symbol": "_Z13func_020381ccPviPS_",
       "address": "0x020381cc",
       "size": "0x00000050",
       "legacy_source": "src/engine/collision/dBgPi.cpp",
@@ -301,63 +301,63 @@
       "ordinal": 39
     },
     {
-      "symbol": "dBgS_RideCallBack",
+      "symbol": "_Z17dBgS_RideCallBackii",
       "address": "0x02038234",
       "size": "0x00000064",
       "legacy_source": "src/engine/collision/CLPS_BlockRef.cpp",
       "ordinal": 40
     },
     {
-      "symbol": "dBgS_ChkPolySafe",
+      "symbol": "_Z16dBgS_ChkPolySafePv",
       "address": "0x02038298",
       "size": "0x0000008c",
       "legacy_source": "src/unnamed/arm9/0203/func_02038298.c",
       "ordinal": 41
     },
     {
-      "symbol": "dBgS_MoveBgCrrPos",
+      "symbol": "_Z17dBgS_MoveBgCrrPosPviii",
       "address": "0x02038324",
       "size": "0x000000c0",
       "legacy_source": "src/unnamed/arm9/0203/func_02038324.cpp",
       "ordinal": 42
     },
     {
-      "symbol": "func_020383e4",
+      "symbol": "_Z13func_020383e4P10dBgCh_Actr",
       "address": "0x020383e4",
       "size": "0x0000000c",
       "legacy_source": "src/unnamed/arm9/0203/func_020383e4.c",
       "ordinal": 43
     },
     {
-      "symbol": "func_020383f0",
+      "symbol": "_Z13func_020383f0P10dBgCh_Actr",
       "address": "0x020383f0",
       "size": "0x0000000c",
       "legacy_source": "src/unnamed/arm9/0203/func_020383f0.c",
       "ordinal": 44
     },
     {
-      "symbol": "dBgCh_Actr_UpdateContinuous_Veneer",
+      "symbol": "_Z34dBgCh_Actr_UpdateContinuous_VeneerP10dBgCh_Actr",
       "address": "0x020383fc",
       "size": "0x0000000c",
       "legacy_source": "src/dBgCh_Actr_UpdateContinuous_Veneer.c",
       "ordinal": 45
     },
     {
-      "symbol": "func_02038408",
+      "symbol": "_Z13func_02038408P10dBgCh_Actr",
       "address": "0x02038408",
       "size": "0x0000000c",
       "legacy_source": "src/unnamed/arm9/0203/func_02038408.c",
       "ordinal": 46
     },
     {
-      "symbol": "func_02038414",
+      "symbol": "_Z13func_02038414Pv",
       "address": "0x02038414",
       "size": "0x0000000c",
       "legacy_source": "src/unnamed/arm9/0203/func_02038414.c",
       "ordinal": 47
     },
     {
-      "symbol": "dBgCh_Actr_UpdateDiscreteNoLava_veneer",
+      "symbol": "_Z38dBgCh_Actr_UpdateDiscreteNoLava_veneerP10dBgCh_Actr",
       "address": "0x02038420",
       "size": "0x0000000c",
       "legacy_source": "src/dBgCh_Actr_UpdateDiscreteNoLava_veneer.c",

@@ -20,42 +20,42 @@
   ],
   "functions": [
     {
-      "symbol": "GX_EndLoadTexPltt",
+      "symbol": "_Z17GX_EndLoadTexPlttv",
       "address": "0x020568cc",
       "size": "0x00000058",
       "legacy_source": "src/_ZN2GX14EndLoadTexPlttEv.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "GX_LoadTexPltt",
+      "symbol": "_Z14GX_LoadTexPlttPKvjj",
       "address": "0x02056924",
       "size": "0x00000074",
       "legacy_source": "src/_ZN2GX11LoadTexPlttEPKvjj.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "GX_BeginLoadTexPltt",
+      "symbol": "_Z19GX_BeginLoadTexPlttv",
       "address": "0x02056998",
       "size": "0x00000048",
       "legacy_source": "src/_ZN2GX16BeginLoadTexPlttEv.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "GX_EndLoadTex",
+      "symbol": "_Z13GX_EndLoadTexv",
       "address": "0x020569e0",
       "size": "0x00000070",
       "legacy_source": "src/_ZN2GX10EndLoadTexEv.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "GX_LoadTex",
+      "symbol": "_Z10GX_LoadTexPKvjj",
       "address": "0x02056a50",
       "size": "0x0000014c",
       "legacy_source": "src/_ZN2GX7LoadTexEPKvjj.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "GX_BeginLoadTex",
+      "symbol": "_Z15GX_BeginLoadTexv",
       "address": "0x02056b9c",
       "size": "0x00000080",
       "legacy_source": "src/_ZN2GX12BeginLoadTexEv.cpp",

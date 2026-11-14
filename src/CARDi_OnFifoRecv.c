@@ -12,6 +12,6 @@ void CARDi_OnFifoRecv(PXIFifoTag tag, u32 data, BOOL err) {
     if ((tag == PXI_FIFO_TAG_FS) && err) {
         CARDiCommon *const p = &cardi_common;
         p->flag &= ~CARD_STAT_REQ;
-        OS_WakeupThreadDirect(p->cur_th);
+        _Z21OS_WakeupThreadDirectP8OSThread(p->cur_th);
     }
 }

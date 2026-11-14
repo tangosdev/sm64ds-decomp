@@ -95,27 +95,26 @@ extern daPly_c *gPlayers[];
 extern dCamera_c *gCamera;
 
 /* local extern: arm9/ov002 C helpers with no shared header yet. */
-extern "C" {
+
 /* Sound::Play2D(3, id). The ROM calls this wrapper, not Play2D. */
 unsigned int func_0201277c(unsigned int soundID);
 
 /* Depth from mModelOffsetY, mPosY, mSinkDepth and mGroundY; radius from that,
  * mIsBalloon, mIsMega and mScaleY. The definition takes char *. */
 /* Returns mBodyModels[GetBodyModelID(mBodyModelId, 1)] as int. */
-int func_ov002_020e496c(daPly_c *player);
+extern "C" int func_ov002_020e496c(daPly_c *player);
 
-void func_0203c178(Matrix4x3 *m, int sx, int sy, int sz);
-void MTX_Concat33(const int *a, const int *b, int *dst);
+extern "C" void func_0203c178(Matrix4x3 *m, int sx, int sy, int sz);
+extern "C" void MTX_Concat33(const int *a, const int *b, int *dst);
 /* local extern: math/CalcLib.h's spelling is the one below, but including
    that header renumbers this TU's @NNN .data locals. */
-void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
-}
+extern "C" void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
 
 /* Reconstructed source-style name: SM64DS proves daLuigi_c through RTTI,
  * allocation size, vtable identity, and the LUIGI registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: MirrorLuigi_Spawn. */
-extern "C" daLuigi_c *daLuigi_c_classInit() {
+daLuigi_c *daLuigi_c_classInit() {
     return new daLuigi_c();
 }
 
@@ -264,7 +263,7 @@ int daLuigi_c::ExecuteMirror(daPly_c *player) {
 
 /* One candidate caller, ov063 0x02118004, relocates to ov027 or ov055, so
  * the owner is unknown. */
-extern "C" void func_ov055_02111264(void) {
+void func_ov055_02111264(void) {
     data_ov055_02111b68 = kReqFade;
     func_0201277c(kAppearSound);
 }

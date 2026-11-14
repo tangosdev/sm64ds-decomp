@@ -66,7 +66,7 @@ extern ClockHurikoModelFilePtr data_ov013_02112280;
  * allocation size, vtable identity, and the CLOCK_HURIKO registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: daObjClockHuriko_c_Spawn. */
-extern "C" daObjClockHuriko_c *daObjClockHuriko_c_classInit() {
+daObjClockHuriko_c *daObjClockHuriko_c_classInit() {
     return new daObjClockHuriko_c();
 }
 

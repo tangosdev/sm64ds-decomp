@@ -281,14 +281,14 @@
       "ordinal": 33
     },
     {
-      "symbol": "daSanbo_c_classInit_SANBO_BODY",
+      "symbol": "_Z30daSanbo_c_classInit_SANBO_BODYv",
       "address": "0x02136d10",
       "size": "0x00000050",
       "legacy_source": "src/d_a_sanbo_sanbo_body.c",
       "ordinal": 34
     },
     {
-      "symbol": "daSanbo_c_classInit_SANBO",
+      "symbol": "_Z25daSanbo_c_classInit_SANBOv",
       "address": "0x02136d60",
       "size": "0x00000050",
       "legacy_source": "src/d_a_sanbo_sanbo.c",
@@ -866,14 +866,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN17SanboModelFilePtrC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN17SanboModelFilePtrD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor-registration destination and the model wrapper destructor's exact ABS32 relocation"
@@ -921,7 +921,7 @@
       "source": "0x2137718",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -941,7 +941,7 @@
       "source": "0x2137734",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -971,7 +971,7 @@
       "source": "0x213784c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -1291,7 +1291,7 @@
       "source": "0x02137998",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daSanbo_c_classInit_SANBO",
+      "symbol": "_Z25daSanbo_c_classInit_SANBOv",
       "addend": 0,
       "target_module": "ov096",
       "target_address": "0x02136d60"
@@ -1301,7 +1301,7 @@
       "source": "0x021379b4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daSanbo_c_classInit_SANBO_BODY",
+      "symbol": "_Z30daSanbo_c_classInit_SANBO_BODYv",
       "addend": 0,
       "target_module": "ov096",
       "target_address": "0x02136d10"

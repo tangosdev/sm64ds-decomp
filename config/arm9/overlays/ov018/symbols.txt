@@ -8,7 +8,7 @@ _ZN14daObjSm_Lift_c8BehaviorEv kind:function(arm,size=0x34c) addr:0x02111368
 _ZN14daObjSm_Lift_c13InitResourcesEv kind:function(arm,size=0x134) addr:0x021116b4
 _ZN14daObjSm_Lift_c19HandlePlayerContactEP8dActor_c kind:function(arm,size=0x1c) addr:0x021117e8
 _ZN14daObjSm_Lift_c15StoodOnCallbackEP4dBgWP8dActor_cS3_ kind:function(arm,size=0x14) addr:0x02111804
-daObjSm_Lift_c_classInit kind:function(arm,size=0x30) addr:0x02111818
+_Z24daObjSm_Lift_c_classInitv kind:function(arm,size=0x30) addr:0x02111818
 _ZN10daPgMthr_cD1Ev kind:function(arm,size=0x50) addr:0x02111848
 _ZN10daPgMthr_cD0Ev kind:function(arm,size=0x64) addr:0x02111898
 _ZN10daPgMthr_c14FindNewToucherEv kind:function(arm,size=0x6c) addr:0x021118fc
@@ -31,11 +31,11 @@ _ZN10daPgMthr_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02112450
 _ZN10daPgMthr_c6RenderEv kind:function(arm,size=0x2c) addr:0x02112454
 _ZN10daPgMthr_c8BehaviorEv kind:function(arm,size=0x50) addr:0x02112480
 _ZN10daPgMthr_c13InitResourcesEv kind:function(arm,size=0x1ac) addr:0x021124d0
-daPgMthr_c_classInit kind:function(arm,size=0x58) addr:0x0211267c
+_Z20daPgMthr_c_classInitv kind:function(arm,size=0x58) addr:0x0211267c
 _ZN8daSCre_cD1Ev kind:function(arm,size=0x24) addr:0x021126d4
 _ZN8daSCre_cD0Ev kind:function(arm,size=0x38) addr:0x021126f8
 _ZN8daSCre_c8BehaviorEv kind:function(arm,size=0x5c) addr:0x02112730
-daSCre_c_classInit kind:function(arm,size=0x30) addr:0x0211278c
+_Z18daSCre_c_classInitv kind:function(arm,size=0x30) addr:0x0211278c
 _ZN15daObjIceBoard_cD1Ev kind:function(arm,size=0x44) addr:0x021127bc
 _ZN15daObjIceBoard_cD0Ev kind:function(arm,size=0x58) addr:0x02112800
 _ZN15daObjIceBoard_c15OnHitByMegaCharER7daPly_c kind:function(arm,size=0x28) addr:0x02112858
@@ -45,7 +45,7 @@ _ZN15daObjIceBoard_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021
 _ZN15daObjIceBoard_c6RenderEv kind:function(arm,size=0x28) addr:0x02112968
 _ZN15daObjIceBoard_c8BehaviorEv kind:function(arm,size=0x30) addr:0x02112990
 _ZN15daObjIceBoard_c13InitResourcesEv kind:function(arm,size=0x84) addr:0x021129c0
-daObjIceBoard_c_classInit kind:function(arm,size=0x30) addr:0x02112a44
+_Z25daObjIceBoard_c_classInitv kind:function(arm,size=0x30) addr:0x02112a44
 data_ov018_02112a74 kind:data(any) addr:0x02112a74
 data_ov018_02112a78 kind:data(any) addr:0x02112a78
 data_ov018_02112a7c kind:data(any) addr:0x02112a7c

@@ -188,7 +188,7 @@ void FS_StartOverlay(FSOverlayInfo *p_ovi) {
         }
         if (!ret) {
             MI_CpuClear8(p_ovi->header.ram_address, rare_size);
-            OS_Terminate();
+            _Z12OS_Terminatev();
             return;
         }
     }
@@ -267,9 +267,9 @@ void FS_EndOverlay(FSOverlayInfo *p_ovi) {
         } while (head);
     }
 
-    _ISDbgLib_UnregistOverlayInfo((p_ovi->target == MI_PROCESSOR_ARM9) ? OVERLAYPROC_ARM9
-                                                                       : OVERLAYPROC_ARM7,
-                                  (u32)FS_GetOverlayAddress(p_ovi), FS_GetOverlayImageSize(p_ovi));
+    _Z29_ISDbgLib_UnregistOverlayInfo11OVERLAYPROCjj(
+        (p_ovi->target == MI_PROCESSOR_ARM9) ? OVERLAYPROC_ARM9 : OVERLAYPROC_ARM7,
+        (u32)FS_GetOverlayAddress(p_ovi), FS_GetOverlayImageSize(p_ovi));
 }
 
 BOOL FS_UnloadOverlayImage(FSOverlayInfo *p_ovi) {
@@ -298,7 +298,7 @@ void FS_AttachOverlayTable(MIProcessor target, const void *ptr, u32 len) {
     if ((ptr != NULL) && (target == MI_PROCESSOR_ARM9)) {
         int bak_ovt_mode = DGT_SetOverlayTableMode(TRUE);
         if (!FSi_CompareDigest((const u8 *)SDK_OVERLAYTABLE_DIGEST, (void *)ptr, (int)len)) {
-            OS_Terminate();
+            _Z12OS_Terminatev();
         }
         DGT_SetOverlayTableMode(bak_ovt_mode);
     }

@@ -4,16 +4,17 @@
 #include "nitro/os/thread.h"
 #include "nitro/os/alarm.h"
 
-extern "C" {
-
 extern void OS_InitTick(void);
 extern void OS_SetUserExceptionHandler(OSExceptionHandler handler, void *arg);
 extern void func_0201a054(void);
 extern void func_020197b8(void);
+extern "C" {
 
 /* The game's exception handler: it takes the context and ignores arg, which
  * NitroMain passes as the launcher thread (the thread NitroMain runs on). */
 extern void func_0201a03c(u32 context, void *arg);
+}
+
 extern mHeap::Heap_t *data_020a0e9c;
 
 void NitroMain(void) {
@@ -24,5 +25,4 @@ void NitroMain(void) {
     func_0201a054();
     data_020a0e9c->SetNodeID(3);
     func_020197b8();
-}
 }

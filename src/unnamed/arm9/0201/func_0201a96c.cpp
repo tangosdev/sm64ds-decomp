@@ -4,8 +4,6 @@
 #include "nitro/os/system.h"
 #include "nitro/os/alarm.h"
 
-extern "C" {
-
 /* Set the suspended flag and return the old one. Clearing it re-arms the
    alarm for the full limit with func_0201a8b4 as the handler; setting it
    cancels the alarm through func_0201aaa4. */
@@ -22,7 +20,6 @@ u8 func_0201a96c(WatchdogAlarm *self, int suspended) {
 
     OS_RestoreInterrupts(saved);
     return oldVal;
-}
 }
 
 /* File-scope watchdog. mwcc emits __sinit_func_0201a96c.cpp: the

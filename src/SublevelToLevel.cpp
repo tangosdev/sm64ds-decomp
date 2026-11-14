@@ -7,7 +7,7 @@
  */
 extern signed char SUBLEVEL_LEVEL_TABLE[];
 
-extern "C" int SublevelToLevel(int i) {
+int SublevelToLevel(int i) {
     return SUBLEVEL_LEVEL_TABLE[i];
 }
 

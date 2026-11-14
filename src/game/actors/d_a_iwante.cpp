@@ -211,7 +211,6 @@ struct EyerokCollisionFilePtr : SharedFilePtr {
     ~EyerokCollisionFilePtr();
 };
 
-extern "C" {
 /* ---- ov066 .bss: 8-byte SharedFilePtr slots (0x0211ae14..0x0211aebc) ----
  * Each one's filePtr is the loaded file, which the states pass to SetAnim /
  * SetFile. Roles, from InitResources and the order __sinit_d_a_iwante.cpp
@@ -341,29 +340,25 @@ extern dCamera_c *gCamera;
 extern Matrix4x3 data_020a0e68;
 
 /* ---- arm9 helpers (unmangled ROM names) ---- */
-extern int AngleDiff(int a, int b);
-extern int ApproachAngle(s16 *angle, s16 target, int a, int b, int max);
-extern unsigned short DecIfAbove0_Short(unsigned short *p);
-extern int RandomIntInternal(int *seed);
-extern int Vec3_ApproachHorz(void *out, void *a, int maxStep);
-extern int Vec3_Dist(const void *a, const void *b);
-extern void Vec3_Asr(void *d, void *s, int sh);
-extern int Vec3_HorzDist(const void *a, const void *b);
+extern "C" int AngleDiff(int a, int b);
+extern "C" int ApproachAngle(s16 *angle, s16 target, int a, int b, int max);
+extern "C" unsigned short DecIfAbove0_Short(unsigned short *p);
+extern "C" int RandomIntInternal(int *seed);
+int Vec3_ApproachHorz(Vector3 *out, Vector3 *a, int maxStep);
+int Vec3_Dist(const Vector3 *a, const Vector3 *b);
+extern "C" void Vec3_Asr(void *d, void *s, int sh);
+int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 // local extern: CalcLib.h conflicts with this TU's opaque Vec3_Dist, Vec3_Asr, and Vec3_HorzDist prototypes.
-extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-extern int func_020092c4(void *cam, void *out, void *target);
-extern void func_02011cfc(void);
-extern void func_02011d2c(void);
-extern void func_02012694(unsigned int a, void *p);
+s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+extern "C" int func_020092c4(void *cam, void *out, void *target);
+void func_02011cfc(void);
+void func_02011d2c(void);
+void func_02012694(unsigned int a, const Vector3 *p);
 
 /* Unreferenced. */
-extern void hold_d_a_iwante(void *self, void *kcl, void *mtx, int fix, short s, void *clps);
-}
-extern "C" {
-extern u32 d_a_iwanteNewHold(u32 a, u32 b, int x, int y, int z, const void *v, void *cb);
-}
+extern "C" void hold_d_a_iwante(void *self, void *kcl, void *mtx, int fix, short s, void *clps);
 
-
+extern "C" u32 d_a_iwanteNewHold(u32 a, u32 b, int x, int y, int z, const void *v, void *cb);
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
  * off screen. These int-returning predicates are what make the ROM
@@ -472,7 +467,7 @@ int daIwante_c::CheckAttacked() {
                     mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211aebc.filePtr, 0x40000000,
                                              0x1000, 0);
                 }
-                func_02012694(SE_HAND_HIT, &mCamSpacePosX);
+                func_02012694(SE_HAND_HIT, (const Vector3 *)(&mCamSpacePosX));
                 return 1;
             }
 
@@ -484,7 +479,7 @@ int daIwante_c::CheckAttacked() {
                 data_ov066_0211ae08 = (u8)(x + 1);
                 data_ov066_0211abe4 = -3;
             }
-            func_02012694(SE_HAND_DEFEATED, &mCamSpacePosX);
+            func_02012694(SE_HAND_DEFEATED, (const Vector3 *)(&mCamSpacePosX));
             SetState(&data_ov066_0211b07c);
             return 2;
         }
@@ -724,7 +719,7 @@ void daIwante_c::PoundGround(int strength) {
         mPosX += 0x80000;
     mPosZ += 0x80000;
     HugeLandingDust(true);
-    func_02012694(SE_LANDING, &mCamSpacePosX);
+    func_02012694(SE_LANDING, (const Vector3 *)(&mCamSpacePosX));
     mPos = saved;
 }
 
@@ -792,7 +787,7 @@ int daIwante_c::HandDefeatExecute() {
             v.z = mPosZ;
             TriplePoofDustAt(*(Vector3 *)&v);
         }
-        func_02012694(SE_DEFEAT_POOF, &mCamSpacePosX);
+        func_02012694(SE_DEFEAT_POOF, (const Vector3 *)(&mCamSpacePosX));
         MarkForDestruction();
     }
     return 1;
@@ -869,11 +864,11 @@ int daIwante_c::HandPattern9Execute() {
             }
 
             if ((unsigned short)(mBlendAnmModel.currFrame >> 0xc) == 0)
-                func_02012694(SE_ANIM_FRAME_0, &mCamSpacePosX);
+                func_02012694(SE_ANIM_FRAME_0, (const Vector3 *)(&mCamSpacePosX));
 
             if ((unsigned short)(mBlendAnmModel.currFrame >> 0xc) == 0) {
                 BeginVulnerable();
-                func_02012694(SE_START_MOVING, &mCamSpacePosX);
+                func_02012694(SE_START_MOVING, (const Vector3 *)(&mCamSpacePosX));
             }
 
             ang = Vec3_HorzAngle(&mPos, (const Vector3 *)&mTargetPosX);
@@ -887,8 +882,9 @@ int daIwante_c::HandPattern9Execute() {
                     mSubState = 2;
                 break;
             }
-            Vec3_ApproachHorz(&mPosX, &mTargetPosX, 0x37000);
-            if (ClampToArena() == 1 || Vec3_HorzDist(&mPosX, &mTargetPosX) <= 0x37000) {
+            Vec3_ApproachHorz((Vector3 *)&mPosX, (Vector3 *)&mTargetPosX, 0x37000);
+            if (ClampToArena() == 1 ||
+                Vec3_HorzDist((const Vector3 *)&mPosX, (const Vector3 *)&mTargetPosX) <= 0x37000) {
                 EndVulnerable();
                 mSubState = 3;
             }
@@ -924,8 +920,8 @@ int daIwante_c::HandPattern9Execute() {
     case 4:
         SetRestHitVolume();
         ApproachAngle(&mAngleY, 0, 2, 0x400, 0x200);
-        Vec3_ApproachHorz(&mPosX, &mRestPosX, 0x37000);
-        if (Vec3_HorzDist(&mPosX, &mRestPosX) <= 0x37000) {
+        Vec3_ApproachHorz((Vector3 *)&mPosX, (Vector3 *)&mRestPosX, 0x37000);
+        if (Vec3_HorzDist((const Vector3 *)&mPosX, (const Vector3 *)&mRestPosX) <= 0x37000) {
             mPosX = mRestPosX;
             mPosY = mRestPosY;
             mPosZ = mRestPosZ;
@@ -1007,14 +1003,14 @@ int daIwante_c::HandPattern8Execute() {
                 mTargetPosX -= 0xf2000;
             }
         }
-        func_02012694(SE_START_MOVING, &mCamSpacePosX);
+        func_02012694(SE_START_MOVING, (const Vector3 *)(&mCamSpacePosX));
         mTargetPosY = mRestPosY + 0x1c2000;
         mSubState = 1;
         break;
     }
     case 1:
         ApproachLinear(mPos, *(Vector3 *)&mTargetPosX, 0x28000);
-        if (Vec3_Dist(&mPosX, &mTargetPosX) > 0x28000)
+        if (Vec3_Dist((const Vector3 *)&mPosX, (const Vector3 *)&mTargetPosX) > 0x28000)
             break;
         mPosX = mTargetPosX;
         mPosY = mTargetPosY;
@@ -1037,7 +1033,7 @@ int daIwante_c::HandPattern8Execute() {
         if (mTimer1 != 0)
             break;
         ApproachLinear(mPos, *(Vector3 *)&mTargetPosX, 0x32000);
-        if (Vec3_Dist(&mPosX, &mTargetPosX) > 0x32000)
+        if (Vec3_Dist((const Vector3 *)&mPosX, (const Vector3 *)&mTargetPosX) > 0x32000)
             break;
         mPosX = mTargetPosX;
         mPosY = mTargetPosY;
@@ -1080,8 +1076,8 @@ int daIwante_c::HandPattern8Execute() {
         }
         if (data_ov066_0211ae00 != 0)
             break;
-        Vec3_ApproachHorz(&mPosX, &mRestPosX, 0x28000);
-        if (Vec3_HorzDist(&mPosX, &mRestPosX) > 0x28000)
+        Vec3_ApproachHorz((Vector3 *)&mPosX, (Vector3 *)&mRestPosX, 0x28000);
+        if (Vec3_HorzDist((const Vector3 *)&mPosX, (const Vector3 *)&mRestPosX) > 0x28000)
             break;
         data_ov066_0211ae0c = 0;
         mPosX = mRestPosX;
@@ -1163,7 +1159,7 @@ int daIwante_c::HandPattern7Execute() {
                 else if (mTargetPosZ > -0x73a000)
                     mTargetPosZ = -0x73a000;
             }
-            func_02012694(SE_START_MOVING, &mCamSpacePosX);
+            func_02012694(SE_START_MOVING, (const Vector3 *)(&mCamSpacePosX));
             mTargetPosY = mRestPosY + 0x1c2000;
             mSubState = 1;
         } else if (mTimer1 == 0) {
@@ -1173,7 +1169,7 @@ int daIwante_c::HandPattern7Execute() {
         break;
     case 1:
         ApproachLinear(mPos, *(Vector3 *)&mTargetPosX, 0x28000);
-        if (Vec3_Dist(&mPosX, &mTargetPosX) <= 0x28000) {
+        if (Vec3_Dist((const Vector3 *)&mPosX, (const Vector3 *)&mTargetPosX) <= 0x28000) {
             mTimer1 = 0xa;
             mFlags = 0x2000000;
             mPosX = mTargetPosX;
@@ -1186,7 +1182,7 @@ int daIwante_c::HandPattern7Execute() {
     case 2:
         if (mTimer1 == 0)
             ApproachLinear(mPos, *(Vector3 *)&mTargetPosX, 0x32000);
-        if (Vec3_Dist(&mPosX, &mTargetPosX) <= 0x32000) {
+        if (Vec3_Dist((const Vector3 *)&mPosX, (const Vector3 *)&mTargetPosX) <= 0x32000) {
             PoundGround(0x7d0000);
             mPosX = mTargetPosX;
             mPosY = mTargetPosY;
@@ -1201,7 +1197,7 @@ int daIwante_c::HandPattern7Execute() {
                     v.y = pp->y;
                     v.z = pp->z;
                     mTimer1 = 0x24;
-                    if (Vec3_HorzDist(&mPosX, &v) < 0x400000) {
+                    if (Vec3_HorzDist((const Vector3 *)&mPosX, (const Vector3 *)&v) < 0x400000) {
                         if (v.x < mPosX)
                             mPrevAngleY = -0x4000;
                         else
@@ -1231,7 +1227,7 @@ int daIwante_c::HandPattern7Execute() {
     case 4:
         BeginVulnerable();
         if ((unsigned short)(mBlendAnmModel.currFrame >> 0xc) == 0)
-            func_02012694(SE_ANIM_FRAME_0, &mCamSpacePosX);
+            func_02012694(SE_ANIM_FRAME_0, (const Vector3 *)(&mCamSpacePosX));
         if (mStateWork1 == 1) {
             int r = CheckAttacked();
             UpdateTexturePattern();
@@ -1273,8 +1269,8 @@ int daIwante_c::HandPattern7Execute() {
         break;
     case 7:
         if (mTimer1 == 0) {
-            Vec3_ApproachHorz(&mPosX, &mRestPosX, 0x28000);
-            if (Vec3_HorzDist(&mPosX, &mRestPosX) <= 0x28000) {
+            Vec3_ApproachHorz((Vector3 *)&mPosX, (Vector3 *)&mRestPosX, 0x28000);
+            if (Vec3_HorzDist((const Vector3 *)&mPosX, (const Vector3 *)&mRestPosX) <= 0x28000) {
                 data_ov066_0211ae0c ^= mPartIdx;
                 mPosX = mRestPosX;
                 mPosY = mRestPosY;
@@ -1358,7 +1354,7 @@ int daIwante_c::HandPattern6Execute() {
                         mTargetPosX -= 0x1c2000;
                 }
             }
-            func_02012694(SE_START_MOVING, &mCamSpacePosX);
+            func_02012694(SE_START_MOVING, (const Vector3 *)(&mCamSpacePosX));
             mSubState = 1;
         } else if (mTimer1 == 0) {
             SetLoweredPose();
@@ -1366,8 +1362,8 @@ int daIwante_c::HandPattern6Execute() {
         }
         break;
     case 1:
-        Vec3_ApproachHorz(&mPosX, &mTargetPosX, 0x28000);
-        if (Vec3_HorzDist(&mPosX, &mTargetPosX) <= 0x28000) {
+        Vec3_ApproachHorz((Vector3 *)&mPosX, (Vector3 *)&mTargetPosX, 0x28000);
+        if (Vec3_HorzDist((const Vector3 *)&mPosX, (const Vector3 *)&mTargetPosX) <= 0x28000) {
             mSubState = 6;
             if (GetPlayerDepthBand() == 0) {
                 daPly_c *p = ClosestPlayer();
@@ -1377,7 +1373,7 @@ int daIwante_c::HandPattern6Execute() {
                     v.y = pp->y;
                     v.z = pp->z;
                     mTimer1 = 0x24;
-                    if (Vec3_HorzDist(&mPosX, &v) < 0x400000) {
+                    if (Vec3_HorzDist((const Vector3 *)&mPosX, (const Vector3 *)&v) < 0x400000) {
                         if (v.x < mPosX)
                             mPrevAngleY = -0x4000;
                         else
@@ -1407,7 +1403,7 @@ int daIwante_c::HandPattern6Execute() {
     case 3:
         BeginVulnerable();
         if ((unsigned short)(mBlendAnmModel.currFrame >> 0xc) == 0)
-            func_02012694(SE_ANIM_FRAME_0, &mCamSpacePosX);
+            func_02012694(SE_ANIM_FRAME_0, (const Vector3 *)(&mCamSpacePosX));
         if (mStateWork1 == 1) {
             int r = CheckAttacked();
             UpdateTexturePattern();
@@ -1448,8 +1444,8 @@ int daIwante_c::HandPattern6Execute() {
         }
         break;
     case 6:
-        Vec3_ApproachHorz(&mPosX, &mRestPosX, 0x28000);
-        if (Vec3_HorzDist(&mPosX, &mRestPosX) <= 0x28000) {
+        Vec3_ApproachHorz((Vector3 *)&mPosX, (Vector3 *)&mRestPosX, 0x28000);
+        if (Vec3_HorzDist((const Vector3 *)&mPosX, (const Vector3 *)&mRestPosX) <= 0x28000) {
             data_ov066_0211ae0c ^= mPartIdx;
             mPosX = mRestPosX;
             mPosY = mRestPosY;
@@ -1538,7 +1534,7 @@ int daIwante_c::HandPattern5Execute() {
         }
 
         if ((unsigned short)(mBlendAnmModel.currFrame >> 0xc) == 0) {
-            func_02012694(SE_ANIM_FRAME_0, &mCamSpacePosX);
+            func_02012694(SE_ANIM_FRAME_0, (const Vector3 *)(&mCamSpacePosX));
         }
 
         BeginVulnerable();
@@ -1709,12 +1705,12 @@ int daIwante_c::HandRiseExecute() {
                 mVertAccel = -0x800;
             }
             mStateWork0 = 1;
-            func_02012694(SE_START_MOVING, &mCamSpacePosX);
+            func_02012694(SE_START_MOVING, (const Vector3 *)(&mCamSpacePosX));
         }
         return 1;
     }
 
-    Vec3_ApproachHorz(&mPosX, &mRestPosX, 0x14000);
+    Vec3_ApproachHorz((Vector3 *)&mPosX, (Vector3 *)&mRestPosX, 0x14000);
     if (mVertAccel != 0) {
         int v = mRestPosY;
         if (v >= mPosY) {
@@ -1725,7 +1721,8 @@ int daIwante_c::HandRiseExecute() {
         }
     }
 
-    if (mVertAccel == 0 && Vec3_HorzDist(&mPosX, &mRestPosX) <= 0x14000 &&
+    if (mVertAccel == 0 &&
+        Vec3_HorzDist((const Vector3 *)&mPosX, (const Vector3 *)&mRestPosX) <= 0x14000 &&
         mBlendAnmModel.Finished()) {
         mMeshCollider2.Enable(this);
         data_ov066_0211ae0c |= mPartIdx;
@@ -2109,7 +2106,7 @@ int daIwante_c::BodyTalkExecute() {
             Message::PrepareTalk();
             if (mTalkPlayer->ShowMessage(*this, msgid, &out, 0, 0) == 1) {
                 mStateWork1 = 1;
-                func_02012694(SE_TALK_STARTED, &mCamSpacePosX);
+                func_02012694(SE_TALK_STARTED, (const Vector3 *)(&mCamSpacePosX));
             }
         }
     } else {
@@ -2612,7 +2609,7 @@ void daIwante_c::StoodOnCallback(dBgW *collider, dActor_c *owner, dActor_c *othe
  * allocation size, vtable identity, and the IWANTE registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: Eyerok_Spawn. */
-extern "C" daIwante_c *daIwante_c_classInit(void) {
+daIwante_c *daIwante_c_classInit(void) {
     return new daIwante_c();
 }
 

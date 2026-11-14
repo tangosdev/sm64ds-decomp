@@ -21,21 +21,21 @@
   ],
   "functions": [
     {
-      "symbol": "func_0201a4bc",
+      "symbol": "_Z13func_0201a4bcv",
       "address": "0x0201a4bc",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0201/func_0201a4bc.c",
       "ordinal": 0
     },
     {
-      "symbol": "func_0201a4d0",
+      "symbol": "_Z13func_0201a4d0v",
       "address": "0x0201a4d0",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0201/func_0201a4bc.c",
       "ordinal": 1
     },
     {
-      "symbol": "func_0201a4e4",
+      "symbol": "_Z13func_0201a4e4v",
       "address": "0x0201a4e4",
       "size": "0x00000050",
       "legacy_source": "src/unnamed/arm9/0201/func_0201a4e4.c",

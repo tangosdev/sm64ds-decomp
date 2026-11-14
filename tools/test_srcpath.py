@@ -412,6 +412,54 @@ class SrcPath(unittest.TestCase):
         self.assertEqual(SP.path_for("func_0203b438"), SP.SRC / "func_0203b438.c")
 
 
+def _demangled_free_name(symbol):
+    """Unqualified identifier of a free-function Itanium name, or None.
+
+    ``_Z19func_ov007_020cb7c0P10Vector3_16iiPiss`` is ``func_ov007_020cb7c0``.
+    Nested names (``_ZN``) and typeinfo stay with ``_itanium_qualified_stem``.
+    A one-symbol source named for that identifier still round-trips when C++
+    linkage puts the signature on the symbol.
+    """
+    if not symbol.startswith("_Z") or symbol.startswith(("_ZN", "_ZNK", "_ZT")):
+        return None
+    i = 2
+    if i >= len(symbol) or not symbol[i].isdigit():
+        return None
+    j = i
+    while j < len(symbol) and symbol[j].isdigit():
+        j += 1
+    length = int(symbol[i:j])
+    name = symbol[j:j + length]
+    if len(name) != length:
+        return None
+    return name
+
+
+def _itanium_parts(symbol):
+    """Nested-name components of an Itanium ``_ZN`` symbol, or None."""
+    if not symbol.startswith("_ZN"):
+        return None
+    i = 3
+    parts = []
+    while i < len(symbol):
+        if symbol[i] == "E":
+            break
+        if not symbol[i].isdigit():
+            return None
+        j = i + 1
+        while j < len(symbol) and symbol[j].isdigit():
+            j += 1
+        length = int(symbol[i:j])
+        name = symbol[j:j + length]
+        if len(name) != length:
+            return None
+        parts.append(name)
+        i = j + length
+    else:
+        return None
+    return parts or None
+
+
 def _itanium_qualified_stem(symbol):
     """``Outer_Inner_Method`` from an Itanium nested name, or None.
 
@@ -518,9 +566,13 @@ class EnrolmentMatchesTheTree(unittest.TestCase):
                     self.assertEqual(SP.path_for(symbol).resolve(), source.resolve())
                 if len(symbols) == 1:
                     stem = SP.symbol_for(source)
-                    if stem == symbols[0] or stem == _itanium_qualified_stem(symbols[0]):
+                    plain = _demangled_free_name(symbols[0]) or symbols[0]
+                    parts = _itanium_parts(symbols[0]) or []
+                    if (stem == symbols[0] or stem == plain
+                            or stem == _itanium_qualified_stem(symbols[0])
+                            or (parts and stem == parts[-1])):
                         continue
-                    want = _reconstructed_stem(symbols[0])
+                    want = _reconstructed_stem(plain)
                     self.assertIsNotNone(
                         want,
                         "a one-symbol source no longer follows the filename fallback, "

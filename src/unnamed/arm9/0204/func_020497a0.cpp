@@ -3,8 +3,6 @@
 #include "nitro/os/cache.h"
 #include "CaptureEffect.h"
 
-extern "C" {
-
 /* Capture effect 2, a feedback cross-echo: each output sample is the input
    plus the delay-line entry from 24 samples earlier, saturated to s16. What
    goes back into the delay line is a quarter of the other channel's mixed
@@ -82,5 +80,4 @@ void func_020497a0(s16 *p0, s16 *p1, u32 len, CaptureEffect *st) {
 
     DC_FlushRange(p0, len);
     DC_FlushRange(p1, len);
-}
 }

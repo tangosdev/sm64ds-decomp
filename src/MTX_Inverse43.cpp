@@ -4,8 +4,6 @@
 #include "nitro/fx/fx_cp.h"
 #include "nitro/mi/memory.h"
 
-extern "C" {
-
 int MTX_Inverse43(const Matrix4x3 *src, Matrix4x3 *dst) {
     Matrix4x3 buf;
     Matrix4x3 *out;
@@ -67,5 +65,4 @@ int MTX_Inverse43(const Matrix4x3 *src, Matrix4x3 *dst) {
     }
 
     return 0;
-}
 }

@@ -26,7 +26,9 @@ enum critical_regions {
 };
 
 #ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 
 extern int __cs_id[num_critical_regions];
@@ -34,7 +36,9 @@ extern int __cs_ref[num_critical_regions];
 extern OSMutex __cs[num_critical_regions];
 
 #ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif /* MSL_CRITICAL_REGIONS_H */

@@ -128,18 +128,28 @@ enum {
 };
 
 extern "C" {
+
 extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
 extern char *func_ov002_020e496c(daPly_c *p);
 extern void Vec3_Lsl(Vector3 *d, const Vector3 *s, int sh);
 extern short data_ov002_020ff0d0[];
 extern Vector3 data_ov002_020ff0d4[];
-extern void func_02012694(unsigned int a, void *b);
+}
+
+extern void func_02012694(unsigned int a, const Vector3 *b);
+extern int Vec3_ApproachHorz(Vector3 *out, Vector3 *target, int maxStep);
 
 extern s16 Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
+extern "C" {
+
 extern u8 data_0209d660;
 extern u8 data_0209d6bc;
 extern u8 gShowTouchScreenArrows;
+}
+
 extern s32 Vec3_HorzDist(const struct Vector3 *a, const struct Vector3 *b);
+extern "C" {
+
 extern int func_ov002_020bec84(void *player, unsigned int i);
 extern unsigned int gNextActorUpdateMask;
 extern u8 DecIfAbove0_Byte(u8 *p);
@@ -148,9 +158,13 @@ extern u32 d_a_obj_tatefudaNewCleanParticleHold(u32 a, u32 b, int c, int d, int 
                                                 const Vector3_16f *v);
 extern void hold_d_a_obj_tatefuda(void *self, KCL_File *f, const Matrix4x3 &m, s32 fix, s16 sh,
                                   CLPS_Block &b);
+}
+
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, dActor_c *a, s32 radius, s32 height, Vector3_16 *v,
                          Vector3_16 *v2);
+extern "C" {
+
 extern CLPS_Block data_ov002_0210d714;
 }
 
@@ -167,8 +181,7 @@ extern CLPS_Block data_ov002_0210d714;
  * hand: fBase_c::operator new(0x5a4), dBgActor_c's base constructor, the
  * vptr store, then the dCcAc_c, dExtShadowModel_c and dBgCh_Actr member
  * constructors in declaration order. */
-extern "C" daObjTatefuda_c *daObjTatefuda_c_classInit(void)
-{
+daObjTatefuda_c *daObjTatefuda_c_classInit(void) {
     return new daObjTatefuda_c;
 }
 
@@ -903,7 +916,7 @@ void daObjTatefuda_c::Kill()
  * dActor_c's own field pair (include/dActor_c.h, 0x08e/0x094). */
 void daObjTatefuda_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
-    func_02012694(0x1d, &mCamSpacePosX);
+    func_02012694(0x1d, (const Vector3 *)&mCamSpacePosX);
     KillByMegaChar(player);
     mAngleY = mPrevAngleY;
 }

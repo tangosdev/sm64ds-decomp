@@ -34,7 +34,7 @@
   ],
   "functions": [
     {
-      "symbol": "Vec2_Len",
+      "symbol": "_Z8Vec2_LenPK7Vector2",
       "address": "0x0203d614",
       "size": "0x1c",
       "legacy_source": "src/Vec2_Len.cpp",

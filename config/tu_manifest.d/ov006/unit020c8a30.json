@@ -37,49 +37,49 @@
   ],
   "functions": [
     {
-      "symbol": "Puff_DrawAll",
+      "symbol": "_Z12Puff_DrawAllv",
       "address": "0x020c8a30",
       "size": "0x00000034",
       "legacy_source": "src/func_ov006_020c8a30.c",
       "ordinal": 0
     },
     {
-      "symbol": "Puff_UpdateAll",
+      "symbol": "_Z14Puff_UpdateAllv",
       "address": "0x020c8a64",
       "size": "0x00000038",
       "legacy_source": "src/func_ov006_020c8a64.c",
       "ordinal": 1
     },
     {
-      "symbol": "Puff_ClearAll",
+      "symbol": "_Z13Puff_ClearAllii",
       "address": "0x020c8a9c",
       "size": "0x00000058",
       "legacy_source": "src/func_ov006_020c8a9c.c",
       "ordinal": 2
     },
     {
-      "symbol": "Puff_Draw",
+      "symbol": "_Z9Puff_DrawP4Puff",
       "address": "0x020c8af4",
       "size": "0x000000b4",
       "legacy_source": "src/func_ov006_020c8af4.c",
       "ordinal": 3
     },
     {
-      "symbol": "Puff_Update",
+      "symbol": "_Z11Puff_UpdateP4Puff",
       "address": "0x020c8ba8",
       "size": "0x000000c4",
       "legacy_source": "src/func_ov006_020c8ba8.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "Puff_Clear",
+      "symbol": "_Z10Puff_ClearP4Puff",
       "address": "0x020c8c6c",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov006_020c8c6c.c",
       "ordinal": 5
     },
     {
-      "symbol": "Puff_Spawn",
+      "symbol": "_Z10Puff_Spawnii",
       "address": "0x020c8c78",
       "size": "0x00000130",
       "legacy_source": "src/func_ov006_020c8c78.c",
@@ -292,12 +292,12 @@
   "undefined_symbol_aliases": [],
   "defined_symbol_renames": [
     {
-      "from": "@15",
+      "from": "@11",
       "to": "data_ov006_021404cc",
       "evidence": "compiler temp: mwcc numbers this destructor-registration node @7, and ov064 already defines @7; it is renamed to the configured name at 0x021404cc. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change. Re-keyed from @7 to @15 when Puff_Draw's sine-table read became FX_SinIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier by 8; measured from the compiled object)."
     },
     {
-      "from": "__arraydtor$14",
+      "from": "__arraydtor$10",
       "to": "__arraydtor$6",
       "owned_function": {
         "module": "ov006",

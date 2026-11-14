@@ -19,7 +19,7 @@ static inline void CARDi_SendPxi(u32 data) {
  * block's address) until the result is not CARD_RESULT_TIMEOUT or the
  * retries run out, sleeping until CARDi_OnFifoRecv clears CARD_STAT_REQ.
  * This SDK does not invalidate the block after the reply. */
-extern "C" int CARDi_Request(CARDiCommon *p, int req_type, int retry_count) {
+int CARDi_Request(CARDiCommon *p, int req_type, int retry_count) {
     if ((p->flag & CARD_STAT_INIT_CMD) == 0) {
         p->flag |= CARD_STAT_INIT_CMD;
         while (!PXI_IsCallbackReady(PXI_FIFO_TAG_FS, PXI_PROC_ARM7)) {

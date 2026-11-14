@@ -112,6 +112,8 @@ struct daWanwan2_c : dEnemyBase_c {
     int InitResources();
     void OnPendingDestroy();
     int Render();
+    int func_ov100_02143370();
+    void func_ov100_02143b68();
 };
 
 #ifndef SM64DS_PLATFORM_PC

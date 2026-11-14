@@ -1,6 +1,6 @@
 #include "types.h"
-extern int func_0203d950(int i);
-extern void func_02030790(void);
+extern int _Z13func_0203d950i(int i);
+extern void _Z13func_02030790v(void);
 
 extern unsigned char data_0209fc5d[];
 extern unsigned char data_0209fc58;
@@ -14,9 +14,9 @@ void func_02030c38(void)
     int i;
     unsigned char *p = data_0209fc5d;
     for (i = 1; i < 4; i++) {
-        if (*p != 0 && func_0203d950(i) == 0) {
+        if (*p != 0 && _Z13func_0203d950i(i) == 0) {
             data_0209fc58 |= 1 << i;
-            func_02030790();
+            _Z13func_02030790v();
         }
         p++;
     }

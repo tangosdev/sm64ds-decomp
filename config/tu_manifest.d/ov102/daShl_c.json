@@ -200,7 +200,7 @@
       "ordinal": 22
     },
     {
-      "symbol": "daShl_c_classInit",
+      "symbol": "_Z17daShl_c_classInitv",
       "address": "0x0214d6b4",
       "size": "0x00000058",
       "legacy_source": "src/d_a_shl.c",

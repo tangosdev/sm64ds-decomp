@@ -147,21 +147,28 @@ PMF data_ov078_021270fc[2] = {&daBombking_c::EnterWalkHome, &daBombking_c::TickW
 PMF data_ov078_0212705c[2] = {&daBombking_c::EnterDefeated, &daBombking_c::TickDefeated};
 
 extern "C" {
+
 /* Canonical single declaration per ROM data symbol -- the generated
      * preamble carried up to three contradictory spellings of each. */
 extern unsigned char gCurrentStarId;
+
 extern dCamera_c *gCamera;
+
 extern Matrix4x3 data_020a0e68;
+
 extern int data_02092138;
-extern void func_02012694(unsigned int a, void *p);
-extern void func_02011cfc(void);
 }
-extern "C" {
+
+extern Matrix4x3 IDENTITY_MATRIX4X3;
+extern void func_02012694(unsigned int a, const Vector3 *p);
+extern void func_02011cfc(void);
+
 // local extern: CalcLib.h does not declare Vec3_VertAngle yet.
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
+extern "C" {
+
 extern int atan2_hold_d_a_bombking_1(int a, int b);
 extern int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
-extern Matrix4x3 IDENTITY_MATRIX4X3;
 }
 
 /* `defer_codegen off` flips .text emission from reversed to source order,
@@ -223,7 +230,7 @@ int daBombking_c::TickDefeated() {
     v.x = t.x;
     v.y = t.y;
     v.z = t.z;
-    func_02012694(0x130, &this->mCamSpacePosX);
+    func_02012694(0x130, (const Vector3 *)&this->mCamSpacePosX);
 
     this->UntrackAndSpawnStar(*(s8 *)&this->mStarTracked, this->mStarID, v, 4);
     Particle::System::NewSimple(kPtclKingBobOmbDefeat, v.x, v.y, v.z);
@@ -271,7 +278,7 @@ int daBombking_c::TickWalkHome() {
         }
     }
     if (this->mSoundCooldown == 0) {
-        func_02012694(0x12d, &this->mCamSpacePosX);
+        func_02012694(0x12d, (const Vector3 *)&this->mCamSpacePosX);
         this->mSoundCooldown = 5;
     }
     ApproachAngle(&this->mPrevAngleY, ang, 5, 0x1000, 0x100);
@@ -313,7 +320,7 @@ int daBombking_c::TickThrowPlayer() {
             func_ov002_020db54c((char*)v, 0x28000, 0x50000, this->mAngleY);
             this->mTalkingPlayer = this->mHeldActor;
             this->mHeldActor = 0;
-            func_02012694(0x131, &this->mCamSpacePosX);
+            func_02012694(0x131, (const Vector3 *)&this->mCamSpacePosX);
         }
     }
     if ((&this->mBlendAnmModel)->Finished()) {
@@ -365,13 +372,13 @@ int daBombking_c::TickCarryPlayer() {
 
     if (Vec3_Dist(&this->mPos, &v) > 0x1e000) {
         if (this->mSoundCooldown == 0) {
-            func_02012694(0x12d, &this->mCamSpacePosX);
+            func_02012694(0x12d, (const Vector3 *)&this->mCamSpacePosX);
             this->mSoundCooldown = 0xf;
         }
     } else {
         if (this->mSoundCooldown == 0) {
             this->mSoundCooldown = 0x14;
-            func_02012694(0x12f, &this->mCamSpacePosX);
+            func_02012694(0x12f, (const Vector3 *)&this->mCamSpacePosX);
         }
     }
 
@@ -465,7 +472,7 @@ int daBombking_c::TickKnockback() {
                     }
                     Sound::ChangeMusicVolume(0x14, 0x15666);
                     if (pl->ShowMessage(*this, msg, &mPos, 0, 0) != 0) {
-                        func_02012694(0x12a, &mCamSpacePosX);
+                        func_02012694(0x12a, (const Vector3 *)&mCamSpacePosX);
                         KingBobOmb_SetState(&data_ov078_0212705c);
                     }
                 }
@@ -474,7 +481,7 @@ int daBombking_c::TickKnockback() {
         }
 
         if (mActionStep == 0) {
-            func_02012694(0x128, &mCamSpacePosX);
+            func_02012694(0x128, (const Vector3 *)&mCamSpacePosX);
             ShakeScreen(0x7d0000);
             HugeLandingDust(1);
             mActionStep = 1;
@@ -575,7 +582,7 @@ int daBombking_c::TickHomeTalk() {
     cam = gCamera;
     if ((&this->mBlendAnmModel)->WillHitFrame(0x46)) {
         ShakeScreen(0x7d0000);
-        func_02012694(0x12c, &this->mCamSpacePosX);
+        func_02012694(0x12c, (const Vector3 *)&this->mCamSpacePosX);
         a.x = 0;
         a.y = 0;
         a.z = 0;
@@ -709,7 +716,7 @@ int daBombking_c::TickReturnHome() {
                                          0x40000000, 0x1000, 0);
             this->mVertAccel = -0x2000;
             this->mFlags = 0x10000002;
-            func_02012694(0x12c, &this->mCamSpacePosX);
+            func_02012694(0x12c, (const Vector3 *)&this->mCamSpacePosX);
             ShakeScreen(0xfa0000);
             func_0200fa8c(1);
             this->mActionStep = 2;
@@ -730,7 +737,7 @@ int daBombking_c::TickReturnHome() {
             if (m == 0) {
                 if (pl2->ShowMessage(*this, 0x94, &E, 0, 0) != 0) {
                     gCamera->SetFlag_3();
-                    func_02012694(0x12a, &this->mCamSpacePosX);
+                    func_02012694(0x12a, (const Vector3 *)&this->mCamSpacePosX);
                     KingBobOmb_SetState(&data_ov078_021270dc);
                 }
             }
@@ -745,7 +752,7 @@ int daBombking_c::TickReturnHome() {
 int daBombking_c::EnterReturnHome() {
     this->mBlendAnmModel.SetAnim(*(BCA_File *)gBombkingJumpAnimationFile.filePtr, 0, 0x40000000,
                                  0x1000, 0);
-    func_02012694(0x129, &this->mCamSpacePosX);
+    func_02012694(0x129, (const Vector3 *)&this->mCamSpacePosX);
     this->mWithMeshClsn.ClearGroundFlag();
     this->mPrevAngleX = 0;
     this->mHorzSpeed = 0;
@@ -770,7 +777,7 @@ int daBombking_c::TickBounceOffHill() {
         if (this->mActionStep == 0) {
             ShakeScreen(0x7d0000);
             func_0200fa8c(1);
-            func_02012694(0x128, &this->mCamSpacePosX);
+            func_02012694(0x128, (const Vector3 *)&this->mCamSpacePosX);
             this->mStateTimer = 5;
             this->mVertSpeed = 0x14000;
             this->mHorzSpeed = 0xa000;
@@ -801,13 +808,13 @@ int daBombking_c::TickThrown() {
     if (this->mWithMeshClsn.IsOnGround() == 0) goto done;
     this->mHorzSpeed = 0;
     if ((this->mArenaPos.y - 0x28000) > this->mPosY) {
-        func_02012694(0x128, &this->mCamSpacePosX);
+        func_02012694(0x128, (const Vector3 *)&this->mCamSpacePosX);
         KingBobOmb_SetState(&data_ov078_021270ac);
         goto done;
     }
     if (this->mActionStep == 0) {
-        func_02012694(0x128, &this->mCamSpacePosX);
-        func_02012694(0x12b, &this->mCamSpacePosX);
+        func_02012694(0x128, (const Vector3 *)&this->mCamSpacePosX);
+        func_02012694(0x12b, (const Vector3 *)&this->mCamSpacePosX);
         ShakeScreen(0x7d0000);
         func_0200fa8c(1);
         this->mActionStep = 1;
@@ -833,7 +840,7 @@ int daBombking_c::TickThrown() {
 
     if (other->ShowMessage(*this, msg, &this->mPos, 0, 0) == 0)
         goto done;
-    func_02012694(0x12a, &this->mCamSpacePosX);
+    func_02012694(0x12a, (const Vector3 *)&this->mCamSpacePosX);
     KingBobOmb_SetState(&data_ov078_0212705c);
 done:
     return 1;
@@ -1048,7 +1055,7 @@ int daBombking_c::TickChase() {
     int slot;
 
     if (this->mSoundCooldown == 0) {
-        func_02012694(0x12d, &this->mCamSpacePosX);
+        func_02012694(0x12d, (const Vector3 *)&this->mCamSpacePosX);
         this->mSoundCooldown = 0xf;
     }
     if (CheckKnockbackHit() == 1) {
@@ -1155,7 +1162,7 @@ int daBombking_c::TickActivate() {
     this->mAngleY = this->mPrevAngleY;
     if ((&this->mBlendAnmModel)->WillHitFrame(0x46)) {
         ShakeScreen(0x7d0000);
-        func_02012694(0x12c, &this->mCamSpacePosX);
+        func_02012694(0x12c, (const Vector3 *)&this->mCamSpacePosX);
         s.x = 0;
         s.y = 0;
         s.z = 0;
@@ -1266,7 +1273,7 @@ int daBombking_c::TickInactive() {
                     Message::PrepareTalk();
                     b = (gCurrentStarId != 1) ? 0x93 : (short)(player->param1 + 0x96);
                     if (player->ShowMessage(*this, b, &v, 0, 0)) {
-                        func_02012694(0x12a, &this->mCamSpacePosX);
+                        func_02012694(0x12a, (const Vector3 *)&this->mCamSpacePosX);
                         this->mIntroTalked = 1;
                         KingBobOmb_SetState(&data_ov078_0212700c);
                     }
@@ -1582,12 +1589,11 @@ s32 daBombking_c::OnAimedAtWithEgg() {
 
 /* -------------------------------------------------------------------------- */
 /* Registry factory for the BOMBKING profile. */
-extern "C" daBombking_c *daBombking_c_classInit(void)
-{
+daBombking_c *daBombking_c_classInit(void) {
     return new daBombking_c();
 }
 
-extern "C" SpawnInfo<daBombking_c> g_profile_BOMBKING = {
+SpawnInfo<daBombking_c> g_profile_BOMBKING = {
     daBombking_c_classInit,
     0x00bd, /* BOMBKING registry id 189 */
     0x002c,

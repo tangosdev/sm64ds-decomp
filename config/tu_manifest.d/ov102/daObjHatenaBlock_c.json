@@ -143,7 +143,7 @@
       "ordinal": 13
     },
     {
-      "symbol": "func_ov102_02149684",
+      "symbol": "_Z19func_ov102_02149684PiP18daObjHatenaBlock_c",
       "address": "0x02149684",
       "size": "0x00000020",
       "legacy_source": "src/func_ov102_02149684.c",
@@ -290,42 +290,42 @@
       "ordinal": 34
     },
     {
-      "symbol": "daObjHatenaBlock_c_classInit_CAP_BLOCK_W",
+      "symbol": "_Z40daObjHatenaBlock_c_classInit_CAP_BLOCK_Wv",
       "address": "0x0214a7ec",
       "size": "0x00000040",
       "legacy_source": "src/d_a_obj_hatena_block_cap_block_w.c",
       "ordinal": 35
     },
     {
-      "symbol": "daObjHatenaBlock_c_classInit_CAP_BLOCK_L",
+      "symbol": "_Z40daObjHatenaBlock_c_classInit_CAP_BLOCK_Lv",
       "address": "0x0214a82c",
       "size": "0x00000040",
       "legacy_source": "src/d_a_obj_hatena_block_cap_block_l.c",
       "ordinal": 36
     },
     {
-      "symbol": "daObjHatenaBlock_c_classInit_CAP_BLOCK_M",
+      "symbol": "_Z40daObjHatenaBlock_c_classInit_CAP_BLOCK_Mv",
       "address": "0x0214a86c",
       "size": "0x00000040",
       "legacy_source": "src/d_a_obj_hatena_block_cap_block_m.c",
       "ordinal": 37
     },
     {
-      "symbol": "daObjHatenaBlock_c_classInit_ITEM_BLOCK",
+      "symbol": "_Z39daObjHatenaBlock_c_classInit_ITEM_BLOCKv",
       "address": "0x0214a8ac",
       "size": "0x00000040",
       "legacy_source": "src/d_a_obj_hatena_block_item_block.c",
       "ordinal": 38
     },
     {
-      "symbol": "daObjHatenaBlock_c_classInit_HATENA_BLOCK",
+      "symbol": "_Z41daObjHatenaBlock_c_classInit_HATENA_BLOCKv",
       "address": "0x0214a8ec",
       "size": "0x00000040",
       "legacy_source": "src/d_a_obj_hatena_block_hatena_block.c",
       "ordinal": 39
     },
     {
-      "symbol": "daObjHatenaBlock_c_classInit_VS_ITEM_BLOCK",
+      "symbol": "_Z42daObjHatenaBlock_c_classInit_VS_ITEM_BLOCKv",
       "address": "0x0214a92c",
       "size": "0x00000040",
       "legacy_source": "src/d_a_obj_hatena_block_vs_item_block.c",
@@ -1420,7 +1420,7 @@
       "source": "0x0214d918",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1440,7 +1440,7 @@
       "source": "0x0214d934",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1460,7 +1460,7 @@
       "source": "0x0214d950",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1480,7 +1480,7 @@
       "source": "0x0214d96c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1500,7 +1500,7 @@
       "source": "0x0214d988",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1520,7 +1520,7 @@
       "source": "0x0214d9a4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1560,7 +1560,7 @@
       "source": "0x0214d9dc",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017b4c",
+      "symbol": "_Z13func_02017b4cPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1590,7 +1590,7 @@
       "source": "0x0214dd58",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -1750,7 +1750,7 @@
       "source": "0x0214ddb4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_Clsn",
+      "symbol": "_Z27SharedFilePtr_Destruct_Clsni",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017b34"
@@ -2680,7 +2680,7 @@
       "source": "0x214e404",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daObjHatenaBlock_c_classInit_ITEM_BLOCK",
+      "symbol": "_Z39daObjHatenaBlock_c_classInit_ITEM_BLOCKv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x214a8ac"
@@ -2690,7 +2690,7 @@
       "source": "0x214e420",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daObjHatenaBlock_c_classInit_CAP_BLOCK_M",
+      "symbol": "_Z40daObjHatenaBlock_c_classInit_CAP_BLOCK_Mv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x214a86c"
@@ -2700,7 +2700,7 @@
       "source": "0x214e43c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daObjHatenaBlock_c_classInit_CAP_BLOCK_L",
+      "symbol": "_Z40daObjHatenaBlock_c_classInit_CAP_BLOCK_Lv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x214a82c"
@@ -2710,7 +2710,7 @@
       "source": "0x214e458",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daObjHatenaBlock_c_classInit_CAP_BLOCK_W",
+      "symbol": "_Z40daObjHatenaBlock_c_classInit_CAP_BLOCK_Wv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x214a7ec"
@@ -2720,7 +2720,7 @@
       "source": "0x214e3cc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daObjHatenaBlock_c_classInit_VS_ITEM_BLOCK",
+      "symbol": "_Z42daObjHatenaBlock_c_classInit_VS_ITEM_BLOCKv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x214a92c"
@@ -2730,7 +2730,7 @@
       "source": "0x214e3e8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daObjHatenaBlock_c_classInit_HATENA_BLOCK",
+      "symbol": "_Z41daObjHatenaBlock_c_classInit_HATENA_BLOCKv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x214a8ec"
@@ -3069,14 +3069,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN23HatenaBlockModelFilePtrC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN23HatenaBlockModelFilePtrD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor-registration destination and the model wrapper destructor's exact ABS32 relocation; all six model registrations share the one pooled descriptor word"
@@ -3097,14 +3097,14 @@
     },
     {
       "symbol": "_ZN25HatenaBlockClsnFileHandleC1Ej",
-      "canonical_symbol": "func_02017b4c",
+      "canonical_symbol": "_Z13func_02017b4cPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b4c",
       "evidence": "retail initializer call destination and the collision wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN25HatenaBlockClsnFileHandleD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_Clsn",
+      "canonical_symbol": "_Z27SharedFilePtr_Destruct_Clsni",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b34",
       "evidence": "retail destructor-registration destination and the collision wrapper destructor's exact ABS32 relocation"

@@ -43,7 +43,7 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_0202fd2c",
+      "symbol": "_Z13func_0202fd2cv",
       "address": "0x0202fd2c",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0202/func_0202fd2c.c",

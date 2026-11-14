@@ -68,18 +68,16 @@
 #include "nitro/hw/registers.h"
 #include "math/Approach.h"
 
-extern "C" {
-
-void DecompressLZ16(void *, void *);
+extern "C" void DecompressLZ16(void *, void *);
 void Deallocate(void *);
 
 extern unsigned char data_0209b2e4;
 
-extern void OamRender10_d_s_entry(int a, void *oam, int b, int c, int d, int e, int f, int g, int h,
-                                  int i);
-extern int func_0203d974(void);
+extern "C" void OamRender10_d_s_entry(int a, void *oam, int b, int c, int d, int e, int f, int g,
+                                      int h, int i);
+int func_0203d974(void);
 
-int GetLanguageIndex(void);
+extern "C" int GetLanguageIndex(void);
 void func_ov001_020ab5b0(char *r0, int r1, short r2, short r3, short s4, short s5);
 
 extern OamAttr *data_ov075_0211cb64[];
@@ -90,7 +88,6 @@ extern short data_ov075_0211d72e[];
 extern short data_ov075_0211d742[];
 extern short data_ov075_0211d756[];
 extern short data_ov075_0211d94a[];
-}
 
 #define SH(base, i) (*(short*)((char*)(base) + (i)*4))
 
@@ -100,10 +97,10 @@ struct EntryPair {
     EntryPair(int pw, int ph) : w((short)pw), h((short)ph) {}
     ~EntryPair();
 };
-extern "C" EntryPair data_ov075_0211d948[];
-extern "C" EntryPair data_ov075_0211d72c[];
-extern "C" EntryPair data_ov075_0211d740[];
-extern "C" EntryPair data_ov075_0211d754[];
+extern EntryPair data_ov075_0211d948[];
+extern EntryPair data_ov075_0211d72c[];
+extern EntryPair data_ov075_0211d740[];
+extern EntryPair data_ov075_0211d754[];
 
 /* Written first so D1 and D0 are emitted first, as in the cartridge. The
  * body is empty: tearing down the four OamAnimations and the nine icon_c
@@ -332,10 +329,7 @@ void dScEntry_c::RenderIcons() {
  * a rotated register assignment.
  */
 
-extern "C" {
-
-int func_02030958(int val);
-}
+extern "C" int func_02030958(int val);
 extern u8 data_0209fc50;
 
 static inline void SetPalette(u16 *entry, u16 pal) {
@@ -392,7 +386,7 @@ void dScEntry_c::SetSlotBorderPalette(int slot, int dim) {
  *     colours the same; here the digit is divided out at the point of use and the
  *     operand order decides which of r0/r1 holds the shifted attribute word.
  */
-extern "C" {
+
 extern u8 data_ov075_0211c6e8[];
 extern OamAttr data_ov075_0211c7c0[];
 extern char data_ov075_0211c8b0[];
@@ -400,7 +394,6 @@ extern OamAttr data_ov075_0211c870[];
 extern s8 gNumStageStars[];
 extern s16 gNumCoins[];
 extern char data_0209ee90[];
-}
 
 static inline int EntryPlayerIndex(int arg0) {
     return func_02030958(arg0);
@@ -507,7 +500,7 @@ void dScEntry_c::RenderPlayerScores() {
 /* Sprite-template lists reached through the Entry animation tables.
  * Both entries are drawn; attr3 == 0xffff ends the list after its last sprite.
  * Original list identifiers and artwork roles remain unproven. */
-extern "C" {
+
 OamAttr data_ov075_0211c914[2] = {
     {0x8018, 0x0008, 0xe282, 0x0000},
     {0x0018, 0x41f8, 0xe280, 0xffff},
@@ -520,7 +513,6 @@ OamAttr data_ov075_0211c934[2] = {
     {0x0010, 0x11cb, 0xe11d, 0x0000},
     {0x0009, 0x11d5, 0xe11e, 0xffff},
 };
-}
 
 /* Templates consumed by the four choice icons, selected-character icon and
  * player-result rows. The final entry is drawn before attr3 terminates each
@@ -528,7 +520,6 @@ OamAttr data_ov075_0211c934[2] = {
  * The eight-pointer list has four base choices plus four alternate choices;
  * the five-pointer list includes the initial selection at index 4. */
 
-extern "C" {
 OamAttr data_ov075_0211c6f0[1] = {
     {0x00e0, 0xc1e0, 0x8090, 0xffff},
 };
@@ -616,7 +607,6 @@ OamAttr *data_ov075_0211c954[5] = {data_ov075_0211cac4, data_ov075_0211cae4, dat
 OamAttr *data_ov075_0211cb64[8] = {data_ov075_0211c890, data_ov075_0211d144, data_ov075_0211c778,
                                    data_ov075_0211d18c, data_ov075_0211c708, data_ov075_0211d1d4,
                                    data_ov075_0211c6f0, data_ov075_0211d21c};
-}
 
 #pragma defer_codegen on
 /* Width/height pairs and the step sets __sinit installs. One Pair type, so
@@ -671,18 +661,18 @@ extern dScEntry_c::Step data_ov075_0211c8d0;
 extern dScEntry_c::Step data_ov075_0211c8d8;
 
 dScEntry_c::graphCallback_c sEntryGraphCallback;
-extern "C" EntryPair data_ov075_0211d948[14] __attribute__((aligned(4))) = {
+EntryPair data_ov075_0211d948[14] __attribute__((aligned(4))) = {
     EntryPair(0x80, 0x10), EntryPair(0x3c, 0x10), EntryPair(0x1c, 0x10), EntryPair(8, 0x10),
     EntryPair(8, 0x10),    EntryPair(0x20, 0x10), EntryPair(0x30, 0x10), EntryPair(0x20, 0x20),
     EntryPair(0x28, 0x10), EntryPair(0x58, 0x10), EntryPair(0x78, 0x10), EntryPair(0x20, 0x10),
     EntryPair(0xa, 0x10),  EntryPair(0, 0)};
-extern "C" EntryPair data_ov075_0211d72c[5] __attribute__((aligned(4))) = {
+EntryPair data_ov075_0211d72c[5] __attribute__((aligned(4))) = {
     EntryPair(0x20, 0x10), EntryPair(0x18, 0x10), EntryPair(0x1c, 0x10), EntryPair(0x1c, 0x10),
     EntryPair(0x20, 0x10)};
-extern "C" EntryPair data_ov075_0211d740[5] __attribute__((aligned(4))) = {
+EntryPair data_ov075_0211d740[5] __attribute__((aligned(4))) = {
     EntryPair(0x30, 0x10), EntryPair(0x30, 0x10), EntryPair(0x30, 0x10), EntryPair(0x30, 0x10),
     EntryPair(0x18, 0x10)};
-extern "C" EntryPair data_ov075_0211d754[5] __attribute__((aligned(4))) = {
+EntryPair data_ov075_0211d754[5] __attribute__((aligned(4))) = {
     EntryPair(0x20, 0x10), EntryPair(0x20, 0x10), EntryPair(0x28, 0x10), EntryPair(0x20, 0x10),
     EntryPair(0x30, 0x10)};
 

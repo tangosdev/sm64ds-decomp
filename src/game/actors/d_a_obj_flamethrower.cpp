@@ -84,7 +84,7 @@ extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 /* The implicit constructor builds twelve collision cylinders and twelve
  * flame positions in member order. Vector3's empty default constructor
  * is the original array callback at arm9 0x0203d384. */
-extern "C" daObjFlamethrower_c *daObjFlamethrower_c_classInit() {
+daObjFlamethrower_c *daObjFlamethrower_c_classInit() {
     return new daObjFlamethrower_c;
 }
 

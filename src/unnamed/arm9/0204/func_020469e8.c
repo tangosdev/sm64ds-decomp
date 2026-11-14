@@ -24,7 +24,7 @@ struct MaterialState {
 };
 
 /* Spelled as Model4.cpp defines it. */
-extern void func_02045e44(void *self, unsigned int value, int index);
+extern void _Z13func_02045e44Pvji(void *self, unsigned int value, int index);
 
 void func_020469e8(struct ModelComponents *model, BTA_File *file, int frame) {
     int i;
@@ -32,9 +32,9 @@ void func_020469e8(struct ModelComponents *model, BTA_File *file, int frame) {
         BTAMaterialRecord *rec = &file->materialRecords[i];
         struct MaterialState *mat;
         if (rec->materialId == 0xffff)
-            OS_Terminate();
+            _Z12OS_Terminatev();
         mat = &((struct MaterialState *)model->materials)[rec->materialId];
-        func_02045e44(model, 1, rec->materialId);
+        _Z13func_02045e44Pvji(model, 1, rec->materialId);
         if (rec->scaleS.numKeys == 1)
             mat->texScaleS = file->keyScales[rec->scaleS.firstKey];
         else

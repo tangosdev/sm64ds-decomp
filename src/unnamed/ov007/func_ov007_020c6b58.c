@@ -1,5 +1,7 @@
 #include "Ov007Picker.h"
 
+#define func_ov007_020c31e0 _Z19func_ov007_020c31e0PiS_iiiiS_
+#define func_ov007_020c8010 _Z19func_ov007_020c8010P9Ov007LinkP13Ov007FollowerS2_
 extern int func_ov007_020c31e0(int *xs, int *ys, int n, int x, int y, int maxDist, int *dist);
 extern void func_ov007_020c8010(Ov007Link *link, Ov007Follower *from, Ov007Follower *to);
 

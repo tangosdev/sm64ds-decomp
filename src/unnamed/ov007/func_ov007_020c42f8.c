@@ -3,6 +3,7 @@
 #include "nitro/gx/g3imm_cmd.h"
 
 extern void MTX_Identity33_(Matrix3x3 *m);
+#define func_ov007_020c3abc _Z19func_ov007_020c3abcP9Matrix3x3iii
 extern void func_ov007_020c3abc(Matrix3x3 *out, int ax, int ay, int az);
 extern void G3_MultTransMtx33(int *a, int *v);
 

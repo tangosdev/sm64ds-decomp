@@ -13,7 +13,7 @@
 #include "nitro/os/thread.h"
 #include "nitro/os/system.h"
 
-extern int func_0203d7d4(int);
+extern int _Z13func_0203d7d4i(int);
 extern void *data_0209d3c0;
 extern int data_0208ecd8[7];
 extern int data_0208ecc4;
@@ -22,10 +22,10 @@ extern int data_0208eb8c[];
 extern char data_0208eb9c;
 
 void func_02018e68(void *c) {
-    if (func_0203d7d4(0) == 0)
+    if (_Z13func_0203d7d4i(0) == 0)
         return;
     data_0209d3c0 = c;
-    OS_SleepThread(0);
+    _Z14OS_SleepThreadPt(0);
 }
 
 /* recovered: the ROM reaches FS_ConvertPathToFileID with r0 and r1 still holding this
@@ -36,7 +36,7 @@ int myFS_ConvertPathToFileID(FSFileID *p_file_id, const char *path) {
     int r = FS_ConvertPathToFileID(p_file_id, path);
     if (!r) {
         func_02018e68(data_0208ecd8);
-        OS_Terminate();
+        _Z12OS_Terminatev();
     }
     return r;
 }
@@ -46,7 +46,7 @@ int myFS_OpenFileDirect(FSFile *p_file, FSArchive *p_arc, u32 image_top, u32 ima
     int r = FS_OpenFileDirect(p_file, p_arc, image_top, image_bottom, file_index);
     if (r == 0) {
         func_02018e68(&data_0208ecc4);
-        OS_Terminate();
+        _Z12OS_Terminatev();
     }
     return r;
 }
@@ -55,7 +55,7 @@ int myFS_OpenFileFast(FSFile *p_file, FSFileID id) {
     int r = FS_OpenFileFast(p_file, id);
     if (r == 0) {
         func_02018e68(&data_0208ec74);
-        OS_Terminate();
+        _Z12OS_Terminatev();
     }
     return r;
 }
@@ -67,7 +67,7 @@ int myFS_OpenFile(FSFile *p_file, const char *path) {
     int r = FS_OpenFile(p_file, path);
     if (!r) {
         func_02018e68(data_0208eb8c);
-        OS_Terminate();
+        _Z12OS_Terminatev();
     }
     return r;
 }
@@ -78,7 +78,7 @@ int myFS_ReadFile(FSFile *p_file, void *dst, int len) {
     if (r != len) {
         func_02018e68(&data_0208eb9c);
         FS_GetPathName(p_file, buf, 0x100);
-        OS_Terminate();
+        _Z12OS_Terminatev();
     }
     return r;
 }

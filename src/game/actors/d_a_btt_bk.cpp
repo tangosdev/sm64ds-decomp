@@ -35,12 +35,10 @@ enum daBttBk_c_AssetId { ASSET_BATTA_BLOCK_BMD = 0x02ac };
 typedef void (daBttBk_c::*PMF)();
 
 /* arm9 C helpers. local extern: no shared header declares these. */
-extern "C" {
-int *Vec3_LslInPlace(Vector3 *v, int sh);
+
+extern "C" int *Vec3_LslInPlace(Vector3 *v, int sh);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int a, int b, void *v, int c);
-}
-
 
 /* dExtSimpleModel_c-file handle. The derived constructor and destructor are the retail
  * SharedFilePtr pair; this TU does not define them. */
@@ -384,7 +382,7 @@ void daBttBk_c::OnTurnIntoEgg(daPly_c &player) {
     MarkForDestruction();
 }
 
-extern "C" daBttBk_c *daBttBk_c_classInit() {
+daBttBk_c *daBttBk_c_classInit() {
     return new daBttBk_c();
 }
 

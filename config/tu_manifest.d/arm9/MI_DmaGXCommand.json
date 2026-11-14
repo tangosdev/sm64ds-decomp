@@ -20,21 +20,21 @@
   ],
   "functions": [
     {
-      "symbol": "MIi_DMACallback",
+      "symbol": "_Z15MIi_DMACallbackPv",
       "address": "0x0205a21c",
       "size": "0x00000074",
       "legacy_source": "src/unnamed/arm9/0205/func_0205a21c.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "MIi_FIFOCallback",
+      "symbol": "_Z16MIi_FIFOCallbackv",
       "address": "0x0205a290",
       "size": "0x000000c8",
       "legacy_source": "src/func_0205a290.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "MI_SendGXCommandAsync",
+      "symbol": "_Z21MI_SendGXCommandAsyncjPKvjPFvPvES1_",
       "address": "0x0205a358",
       "size": "0x000000f0",
       "legacy_source": "src/unnamed/arm9/0205/func_0205a358.cpp",

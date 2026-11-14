@@ -26,6 +26,7 @@ extern "C" {
 extern int (*fsi_default_command[])(FSFile *p_file);
 
 void FSi_CutFromList(FSFile *elem);
+}
 
 void FSi_ReleaseCommand(FSFile *p_file, int ret) {
     FSi_CutFromList(p_file);
@@ -104,5 +105,4 @@ int FSi_TranslateCommand(FSFile *p_file, int command) {
     }
 
     return ret;
-}
 }

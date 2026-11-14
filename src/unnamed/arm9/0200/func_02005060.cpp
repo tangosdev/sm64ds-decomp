@@ -2,8 +2,6 @@
 #include "dCamera_c.h"
 #include "dActor_c.h"
 
-extern "C" {
-
 extern struct CamMode data_020874cc;
 
 /* Camera state init: enter mode data_020874cc with mBaseAngleOffset set to
@@ -13,5 +11,4 @@ int func_02005060(dCamera_c *cam) {
     cam->mMode = &data_020874cc;
     cam->mBaseAngleOffset = (short)(cam->mTargetPlayer->mAngleY + 0x8000) - cam->mAngleY;
     return 1;
-}
 }

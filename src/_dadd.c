@@ -25,8 +25,8 @@
 // hand-written runtime block, not compiled C.
 
 extern unsigned int *func_0207322c(void);
-extern double func_0206dd7c(double a, int op);
-extern double func_0206dcd4(double a, double b, int op);
+extern double _Z13func_0206dd7cdi(double a, int op);
+extern double _Z13func_0206dcd4ddi(double a, double b, int op);
 extern void _dsub_core(void);
 
 asm double _dadd(double a, double b)
@@ -385,7 +385,7 @@ _L510:
     add sp, sp, #0x10
     sub r1, r1, #0x60000000
     ldr r2, =0x10000091
-    bl func_0206dd7c
+    bl _Z13func_0206dd7cdi
     ldmia sp!, {r4, lr}
     bx lr
 _L528:
@@ -398,21 +398,21 @@ _L528:
     orr r1, r1, r2, lsl #20
     orr r1, r1, lr
     ldr r2, =0x10000091
-    bl func_0206dd7c
+    bl _Z13func_0206dd7cdi
     ldmia sp!, {r4, lr}
     bx lr
 _L558:
     ldmia sp!, {r0, r1, r2, r3}
     ldr ip, =0x04000091
     stmdb sp!, {ip}
-    bl func_0206dcd4
+    bl _Z13func_0206dcd4ddi
     add sp, sp, #4
     ldmia sp!, {r4, lr}
     bx lr
 _L574:
     add sp, sp, #0x10
     ldr r2, =0x40000091
-    bl func_0206dd7c
+    bl _Z13func_0206dd7cdi
     ldmia sp!, {r4, lr}
     bx lr
 }

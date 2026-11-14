@@ -35,7 +35,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "LoadCard2SubBg3",
+      "symbol": "_Z15LoadCard2SubBg3Pv",
       "address": "0x0210a534",
       "size": "0x000000cc",
       "legacy_source": "src/func_ov006_0210a534.cpp",

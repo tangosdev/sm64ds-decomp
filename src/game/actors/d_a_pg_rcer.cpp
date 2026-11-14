@@ -29,21 +29,18 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/CalcLib.h"
 
-extern "C" {
-
 extern SharedFilePtr *data_ov019_02112788[7];      /* the seven BCA handles */
 extern SharedFilePtr *data_ov019_0211277c[3];      /* the three BTP handles */
 extern unsigned char data_0209d684;                /* talk-script choice */
 
-extern unsigned char NumStars(void);
-extern void func_02038414(void *clsn);
-extern void Matrix4x3_FromRotationY(Matrix4x3 *m, int angle);
+unsigned char NumStars(void);
+void func_02038414(void *clsn);
+extern "C" void Matrix4x3_FromRotationY(Matrix4x3 *m, int angle);
 
-extern void d_a_pg_rcerPlaySubHold(unsigned int a, unsigned int b, unsigned int c, int d, int e);
-extern void *d_a_pg_rcerNewHold(u32 handle, u32 effect, int x, int y, int z, void *dir, void *cb);
-
-}
-
+extern "C" void d_a_pg_rcerPlaySubHold(unsigned int a, unsigned int b, unsigned int c, int d,
+                                       int e);
+extern "C" void *d_a_pg_rcerNewHold(u32 handle, u32 effect, int x, int y, int z, void *dir,
+                                    void *cb);
 
 /* Resource handles owned by this TU. The static initializer constructs the
    model, seven animations and three texture sequences and registers each
@@ -104,8 +101,7 @@ daPgRcerState data_ov019_0211356c[6] = {
 Vector3 data_ov019_021134e8(-0x18c28a1, -0x164c644, -0x18f1a11);
 Vector3 data_ov019_0211353c(-0x1290000, 0x600000, 0);
 
-extern "C" daPgRcer_c *daPgRcer_c_classInit()
-{
+daPgRcer_c *daPgRcer_c_classInit() {
     return new daPgRcer_c();
 }
 

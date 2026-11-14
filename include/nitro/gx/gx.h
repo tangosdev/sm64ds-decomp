@@ -1,5 +1,15 @@
 #ifndef NITRO_GX_GX_H
 #define NITRO_GX_GX_H
+#ifndef __cplusplus
+#define GXx_SetMasterBrightness_ _Z24GXx_SetMasterBrightness_PVti
+#define GXS_SetGraphicsMode _Z19GXS_SetGraphicsModei
+#define GX_SetGraphicsMode _Z18GX_SetGraphicsModeiii
+#define GX_DispOn _Z9GX_DispOnv
+#define GX_DispOff _Z10GX_DispOffv
+#define GX_VBlankIntr _Z13GX_VBlankIntri
+#define GX_HBlankIntr _Z13GX_HBlankIntri
+#define GX_Init _Z7GX_Initv
+#endif
 
 /* NitroSDK's display control (gx.h), defined in src/engine/gx/GX_Init.cpp
  * (pret pokediamond arm9/lib/NitroSDK/src/GX.c). The int parameters stand
@@ -41,7 +51,9 @@
 #define GX_BG0_AS_3D 1
 
 #ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 
 void GX_Init(void);
@@ -54,7 +66,9 @@ void GXS_SetGraphicsMode(int);
 void GXx_SetMasterBrightness_(volatile unsigned short *, int);
 
 #ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 /* The SDK's public wrappers over GXx_SetMasterBrightness_, one per engine.

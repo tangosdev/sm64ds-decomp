@@ -1,5 +1,8 @@
 #ifndef PRIVATE_WATCHDOG_ALARM_H
 #define PRIVATE_WATCHDOG_ALARM_H
+#ifndef __cplusplus
+#define func_0201a96c _Z13func_0201a96cP13WatchdogAlarmi
+#endif
 
 /*
  * The game's watchdog: one file-scope object, data_0209d574, built around a
@@ -39,26 +42,68 @@ typedef struct WatchdogAlarm {
 } WatchdogAlarm;
 
 #ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
 #endif
-
+#endif
 extern WatchdogAlarm data_0209d574;
 
-void func_0201a8b4(void *);
+#ifdef __cplusplus
+extern "C"
+#endif
+    void
+    func_0201a8b4(void *);
 u8 func_0201a96c(WatchdogAlarm *, int);
-u8 func_0201a9ec(WatchdogAlarm *);
-void func_0201a9fc(WatchdogAlarm *);
-WatchdogAlarm *func_0201aa18(WatchdogAlarm *);
-WatchdogAlarm *func_0201aaec(WatchdogAlarm *);
-
-void func_0201aa50(OSAlarm *, long long, OSAlarmHandler, void *);
-void func_0201aaa4(OSAlarm *);
-OSAlarm *func_0201aab0(OSAlarm *);
-void func_0201aac8(OSAlarm *);
-OSAlarm *func_0201aad4(OSAlarm *);
+#ifdef __cplusplus
+extern "C"
+#endif
+    u8
+    func_0201a9ec(WatchdogAlarm *);
+#ifdef __cplusplus
+extern "C"
+#endif
+    void
+    func_0201a9fc(WatchdogAlarm *);
+#ifdef __cplusplus
+extern "C"
+#endif
+    WatchdogAlarm *
+    func_0201aa18(WatchdogAlarm *);
+#ifdef __cplusplus
+extern "C"
+#endif
+    WatchdogAlarm *
+    func_0201aaec(WatchdogAlarm *);
 
 #ifdef __cplusplus
+extern "C"
+#endif
+    void
+    func_0201aa50(OSAlarm *, long long, OSAlarmHandler, void *);
+#ifdef __cplusplus
+extern "C"
+#endif
+    void
+    func_0201aaa4(OSAlarm *);
+#ifdef __cplusplus
+extern "C"
+#endif
+    OSAlarm *
+    func_0201aab0(OSAlarm *);
+#ifdef __cplusplus
+extern "C"
+#endif
+    void
+    func_0201aac8(OSAlarm *);
+#ifdef __cplusplus
+extern "C"
+#endif
+    OSAlarm *
+    func_0201aad4(OSAlarm *);
+#ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif

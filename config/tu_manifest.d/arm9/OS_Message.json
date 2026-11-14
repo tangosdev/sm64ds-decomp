@@ -20,21 +20,21 @@
   ],
   "functions": [
     {
-      "symbol": "OS_ReceiveMessage",
+      "symbol": "_Z17OS_ReceiveMessageP14OSMessageQueuePPvi",
       "address": "0x020587e4",
       "size": "0x000000b0",
       "legacy_source": "src/unnamed/arm9/0205/func_020587e4.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "OS_SendMessage",
+      "symbol": "_Z14OS_SendMessageP14OSMessageQueuePvi",
       "address": "0x02058894",
       "size": "0x000000ac",
       "legacy_source": "src/unnamed/arm9/0205/func_02058894.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "OS_InitMessageQueue",
+      "symbol": "_Z19OS_InitMessageQueueP14OSMessageQueuePPvi",
       "address": "0x02058940",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0205/func_02058940.c",

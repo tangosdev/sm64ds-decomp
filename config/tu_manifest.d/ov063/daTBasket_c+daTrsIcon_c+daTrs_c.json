@@ -337,7 +337,7 @@
       "ordinal": 42
     },
     {
-      "symbol": "func_ov063_02118f24",
+      "symbol": "_Z19func_ov063_02118f24P11daTrsIcon_cRK7Vector3",
       "address": "0x02118f24",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/ov063/func_ov063_02118f24.c",
@@ -491,7 +491,7 @@
       "ordinal": 64
     },
     {
-      "symbol": "func_ov063_0211a0a8",
+      "symbol": "_Z19func_ov063_0211a0a8iiiii",
       "address": "0x0211a0a8",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/ov063/func_ov063_0211a0a8.c",
@@ -687,28 +687,28 @@
       "ordinal": 92
     },
     {
-      "symbol": "daTrsIcon_c_classInit",
+      "symbol": "_Z21daTrsIcon_c_classInitv",
       "address": "0x0211c4a0",
       "size": "0x00000030",
       "legacy_source": "src/game/actors/daTrsIcon_c/d_a_trs_icon.c",
       "ordinal": 93
     },
     {
-      "symbol": "daTBasket_c_classInit",
+      "symbol": "_Z21daTBasket_c_classInitv",
       "address": "0x0211c4d0",
       "size": "0x00000050",
       "legacy_source": "src/game/actors/daTBasket_c/d_a_t_basket.cpp",
       "ordinal": 94
     },
     {
-      "symbol": "daTrs_c_classInit_BOSS_TERESA",
+      "symbol": "_Z29daTrs_c_classInit_BOSS_TERESAv",
       "address": "0x0211c520",
       "size": "0x00000070",
       "legacy_source": "src/game/actors/daTrs_c/d_a_trs_factories.cpp",
       "ordinal": 95
     },
     {
-      "symbol": "daTrs_c_classInit_TERESA",
+      "symbol": "_Z24daTrs_c_classInit_TERESAv",
       "address": "0x0211c590",
       "size": "0x00000070",
       "legacy_source": "src/game/actors/daTrs_c/d_a_trs_factories.cpp",
@@ -1373,7 +1373,7 @@
       "source": "0x0211e2ac",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1393,7 +1393,7 @@
       "source": "0x0211e2c8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1413,7 +1413,7 @@
       "source": "0x0211e2e4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1523,7 +1523,7 @@
       "source": "0x0211e37c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -1672,14 +1672,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN21TrsModelFileResHandleC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model file-handle wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN21TrsModelFileResHandleD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the model file-handle wrapper destructor's exact ABS32 relocation"

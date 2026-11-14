@@ -20,8 +20,6 @@
 #include "nitro/fs/archive.h"
 #include "nitro/os/thread.h"
 
-extern "C" {
-
 #define FS_INVALID_ID 0x10000
 
 /* FSDirPos as its three words. The SDK's file is C, where an FSDirPos
@@ -76,17 +74,15 @@ typedef struct FSiSyncReadParam {
 } FSiSyncReadParam;
 
 int FSi_TranslateCommand(FSFile *p_file, int command);
-extern const char data_0209a044[]; /* ":/" */
+extern const char data_0209a044[];
+/* ":/" */
 
 void FSi_ReadTable(FSiSyncReadParam *p, void *dst, u32 len);
 void FSi_SeekDirDirect(FSFile *p_dir, u32 id);
 int FSi_StrNICmp(const u8 *str1, const u8 *str2, int len);
-}
 
 #include "nitro/os/system.h"
 #include "nitro/mi/memory.h"
-
-extern "C" {
 
 /* The archive is still busy with a synchronous table read. The if/return body
  * is measured: `return (flag & FS_ARCHIVE_FLAG_IS_SYNC) != 0;' lets the loop
@@ -532,5 +528,4 @@ int FSi_OpenFileDirectCommand(FSFile *p_file) {
 
 int FSi_CloseFileCommand(FSFile *p_file) {
     return FS_RESULT_SUCCESS;
-}
 }

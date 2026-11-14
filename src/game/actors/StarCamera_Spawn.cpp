@@ -21,7 +21,7 @@ inline void *operator new(size_t, void *p) {
     return p;
 }
 
-extern "C" void *StarCamera_Spawn(void) {
+void *StarCamera_Spawn(void) {
     void *p = fBase_c::operator new(0xd4);
     return ::new (p) dActor_c();
 }

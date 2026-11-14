@@ -20,49 +20,49 @@
   ],
   "functions": [
     {
-      "symbol": "CTRDGi_SendtoPxi",
+      "symbol": "_Z16CTRDGi_SendtoPxij",
       "address": "0x0206a318",
       "size": "0x00000064",
       "legacy_source": "src/unnamed/arm9/0206/func_0206a318.c",
       "ordinal": 0
     },
     {
-      "symbol": "CTRDGi_UnlockByProcessor",
+      "symbol": "_Z24CTRDGi_UnlockByProcessortPi",
       "address": "0x0206a37c",
       "size": "0x00000028",
       "legacy_source": "src/unnamed/arm9/0206/func_0206a37c.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "CTRDGi_LockByProcessor",
+      "symbol": "_Z22CTRDGi_LockByProcessortPi",
       "address": "0x0206a3a4",
       "size": "0x00000080",
       "legacy_source": "src/unnamed/arm9/0206/func_0206a3a4.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "CTRDGi_RestoreAccessCycle",
+      "symbol": "_Z25CTRDGi_RestoreAccessCyclePi",
       "address": "0x0206a424",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/arm9/0206/func_0206a424.c",
       "ordinal": 3
     },
     {
-      "symbol": "CTRDGi_ChangeLatestAccessCycle",
+      "symbol": "_Z30CTRDGi_ChangeLatestAccessCyclePi",
       "address": "0x0206a458",
       "size": "0x00000048",
       "legacy_source": "src/unnamed/arm9/0206/func_0206a458.c",
       "ordinal": 4
     },
     {
-      "symbol": "CTRDG_IsExisting",
+      "symbol": "_Z16CTRDG_IsExistingv",
       "address": "0x0206a4a0",
       "size": "0x00000120",
       "legacy_source": "src/unnamed/arm9/0206/func_0206a4a0.c",
       "ordinal": 5
     },
     {
-      "symbol": "CTRDGi_InitCommon",
+      "symbol": "_Z17CTRDGi_InitCommonv",
       "address": "0x0206a5c0",
       "size": "0x00000040",
       "legacy_source": "src/unnamed/arm9/0206/func_0206a5c0.c",

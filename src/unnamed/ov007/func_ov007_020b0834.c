@@ -7,6 +7,11 @@
 #include "Ov007Pad.h"
 
 extern void func_ov007_020c0638(struct Ov007BgLayer *layer, int x, int y, u16 tile);
+#define func_ov007_020b7d94 _Z19func_ov007_020b7d94i
+#define func_ov007_020c1d8c _Z19func_ov007_020c1d8ci
+#define func_ov007_020b79c8 _Z19func_ov007_020b79c8v
+#define func_ov007_020bdeb0 _Z19func_ov007_020bdeb0i
+#define func_ov007_020b79e4 _Z19func_ov007_020b79e4v
 extern void func_ov007_020b7d94(int kind);
 extern void func_ov007_020b2614(int anim, int startFrame, int fadeFrames);
 extern void func_ov007_020c1d8c(int i);

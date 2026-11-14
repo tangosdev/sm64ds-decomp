@@ -44,10 +44,10 @@
 #include "nitro/wm/wm_api.h"
 
 /* local extern: MI_Memory.c's asm fills and copies; no header declares them. */
-extern u16 func_020688e4(void);
-extern u16 func_020688cc(void);
-extern u16 MBi_GetTgid(void);
-extern u8 MBi_GetAttribute(void);
+extern u16 _Z13func_020688e4v(void);
+extern u16 _Z13func_020688ccv(void);
+extern u16 _Z11MBi_GetTgidv(void);
+extern u8 _Z16MBi_GetAttributev(void);
 
 typedef struct MbBeaconSendStatus {
     MBGameInfo *gameInfoListTop; /* 0x00 */
@@ -393,8 +393,8 @@ void MBi_SendFixedBeacon(void) {
     else
         data_020a9d2c.state = 4;
 
-    WM_SetGameInfo(0, (u16 *)&data_020a9d40, 0x70, func_020688e4(), func_020688cc(), MBi_GetTgid(),
-                   (u8)(MBi_GetAttribute() | WM_ATTR_FLAG_MB));
+    WM_SetGameInfo(0, (u16 *)&data_020a9d40, 0x70, _Z13func_020688e4v(), _Z13func_020688ccv(),
+                   _Z11MBi_GetTgidv(), (u8)(_Z16MBi_GetAttributev() | WM_ATTR_FLAG_MB));
 }
 
 /* NitroSDK MBi_InitSendVolatBeacon, beacon send state 4: start the volatile
@@ -477,9 +477,9 @@ void MBi_SendVolatBeacon(void) {
         data_020a9d2c.state = 1;
     }
 
-    a = func_020688e4();
-    b = func_020688cc();
-    c = MBi_GetTgid();
+    a = _Z13func_020688e4v();
+    b = _Z13func_020688ccv();
+    c = _Z11MBi_GetTgidv();
     WM_SetGameInfo(0, (u16 *)&data_020a9d40, 0x70, a, b, c,
-                   (u8)(MBi_GetAttribute() | WM_ATTR_FLAG_MB));
+                   (u8)(_Z16MBi_GetAttributev() | WM_ATTR_FLAG_MB));
 }

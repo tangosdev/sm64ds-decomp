@@ -2357,6 +2357,11 @@
         "param:#1 short *"
       ]
     },
+    "_Z13func_02013c84hP12FileSaveDataiS0_": {
+      "src/game/stages/d_s_dsmt.cpp": [
+        "param:#1 int"
+      ]
+    },
     "_Z14ApproachLinearRiii": {
       "src/_ZN7daPly_c11St_Owl_MainEv.cpp": [
         "param:#1 int *",

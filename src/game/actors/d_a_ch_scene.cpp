@@ -25,13 +25,11 @@
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 
-extern "C" {
 /* local extern: these three have no shared header yet. LoadLevel takes the
    definition's wide spelling; the caller narrows the packed bytes itself. */
 void LoadLevel(int levelID, u32 entranceID, int starID, u32 arg3, s8 returnState);
 void StartExitFaderWipe(int);
 int IsStarCollectedInLevel(signed char levelID, int starID);
-}
 
 extern u8 data_0209f2c0;
 extern unsigned char gLocalPlayerId;
@@ -50,7 +48,7 @@ extern dFdColor_c gSceneColorFader;
  * preserved. Historical alias: daChScene_c_Spawn.
  *
  * Every instruction the cartridge has here falls out of the one `new`. */
-extern "C" daChScene_c *daChScene_c_classInit() {
+daChScene_c *daChScene_c_classInit() {
     return new daChScene_c();
 }
 

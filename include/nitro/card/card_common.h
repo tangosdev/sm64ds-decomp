@@ -1,5 +1,17 @@
 #ifndef NITRO_CARD_COMMON_H
 #define NITRO_CARD_COMMON_H
+#ifndef __cplusplus
+#define CARDi_EndTask _Z13CARDi_EndTaskP11CARDiCommon
+#define CARDi_Request _Z13CARDi_RequestP11CARDiCommonii
+#define CARDi_TaskThread _Z16CARDi_TaskThreadPv
+#define CARD_UnlockBackup _Z17CARD_UnlockBackupt
+#define CARD_LockBackup _Z15CARD_LockBackupt
+#define CARD_UnlockRom _Z14CARD_UnlockRomt
+#define CARD_LockRom _Z12CARD_LockRomt
+#define CARDi_WaitAsync _Z15CARDi_WaitAsyncv
+#define CARDi_InitCommon _Z16CARDi_InitCommonv
+#define CARDi_SetTask _Z13CARDi_SetTaskPFvP11CARDiCommonE
+#endif
 
 /*
  * The card access common routines, under the NitroSDK's own names. The
@@ -21,9 +33,10 @@
 #include "nitro/pxi/fifo.h"
 
 #ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
 #endif
-
+#endif
 /* NitroSDK MIDmaCallback: run with its argument when a transfer ends. */
 typedef void (*MIDmaCallback)(void *);
 
@@ -100,22 +113,31 @@ void CARD_UnlockRom(u16);
 void CARD_LockBackup(u16);
 void CARD_UnlockBackup(u16);
 
-/* The backup type the game selected: word 0 of its backup spec (ntrtwl/NitroSDK
+#ifdef __cplusplus
+extern "C"
+#endif
+    /* The backup type the game selected: word 0 of its backup spec (ntrtwl/NitroSDK
  * nitro/card/common.h). The SDK returns a CARDBackupType; the
  * definition, src/CARD_GetCurrentBackupType.c, spells it int. */
-int CARD_GetCurrentBackupType(void);
+    int
+    CARD_GetCurrentBackupType(void);
 
-/* card_request.c */
-void CARDi_OnFifoRecv(PXIFifoTag, u32, int);
+#ifdef __cplusplus
+extern "C"
+#endif
+    /* card_request.c */
+    void
+    CARDi_OnFifoRecv(PXIFifoTag, u32, int);
 void CARDi_TaskThread(void *);
 int CARDi_Request(CARDiCommon *, s32, s32);
 
 /* pret's CARDi_EndTask(p, TRUE), out of line in this SDK: clear the busy
  * and task bits, wake the waiters, then run the callback. */
 void CARDi_EndTask(CARDiCommon *);
-
 #ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif /* NITRO_CARD_COMMON_H */

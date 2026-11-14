@@ -1,5 +1,25 @@
 #ifndef PRIVATE_SOUND_POSITIONAL_H
 #define PRIVATE_SOUND_POSITIONAL_H
+#ifndef __cplusplus
+#define func_02048528 _Z13func_02048528P12NNSSndHandlePK7Vector3
+#define func_020485f0 _Z13func_020485f0P12NNSSndHandlePK7Vector3
+#define func_02048720 _Z13func_02048720PK7Vector3ii
+#define func_02048908 _Z13func_02048908P9SoundSlotPK7Vector3
+#define func_02048a18 _Z13func_02048a18ii
+#define func_02048a1c _Z13func_02048a1cPK7Vector3ii
+#define func_02048af4 _Z13func_02048af4P12NNSSndHandlePK7Vector3i
+#define func_02048c30 _Z13func_02048c30P12NNSSndHandlePK7Vector3i
+#define func_02048d80 _Z13func_02048d80P12NNSSndHandlePK7Vector3
+#define func_02048e54 _Z13func_02048e54v
+#define func_02048e74 _Z13func_02048e74v
+#define func_02048e94 _Z13func_02048e94v
+#define func_02048ed4 _Z13func_02048ed4v
+#define func_02048ef4 _Z13func_02048ef4v
+#define func_02048f04 _Z13func_02048f04v
+#define func_02048f14 _Z13func_02048f14v
+#define func_02048f24 _Z13func_02048f24v
+#define func_02048f34 _Z13func_02048f34Pv
+#endif
 
 /* The positional sound helpers of src/engine/sound/Sound2.cpp
  * (0x02048528..0x020490b0) and the voice slots they hand out. They work
@@ -21,7 +41,9 @@ typedef struct SoundSlot {
 } SoundSlot;
 
 #ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 
 /* Store the owner, clear the voice slots and select range mode 0. */
@@ -57,7 +79,9 @@ int func_02048a18(int, int);
 SoundSlot *func_02048720(const Vector3 *, int, int);
 
 #ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif

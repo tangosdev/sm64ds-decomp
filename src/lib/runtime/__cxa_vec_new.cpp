@@ -32,8 +32,7 @@
 
 #include "MWCPlusLib.h"
 
-
-extern "C" void func_02073534(void *base, void *current, unsigned int size, dtor_t dtor);
+void func_02073534(void *base, void *current, unsigned int size, dtor_t dtor);
 
 extern "C" void *__cxa_vec_new(unsigned int n, unsigned int elem_size, unsigned int cookie_size,
                                ctor_t ctor, dtor_t dtor) {

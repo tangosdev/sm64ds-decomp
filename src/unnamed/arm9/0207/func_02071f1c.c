@@ -1,6 +1,7 @@
 #include "private/throw_context.h"
 
-extern void func_02072168(ThrowContext *c, ActionIterator *s, char *end);
+extern void _Z13func_02072168P12ThrowContextP14ActionIteratorPc(ThrowContext *c, ActionIterator *s,
+                                                                char *end);
 extern void func_02071790(ThrowContext *context, ActionIterator *iterator, int pad);
 
 /* ThrowContext, ActionIterator and CatchInfo are shared
@@ -17,7 +18,7 @@ void func_02071f1c(ThrowContext *context, ActionIterator *it, ExSpecification *s
     CatchInfo *catchInfo;
     int off;
 
-    func_02072168(context, it, (char *)action);
+    _Z13func_02072168P12ThrowContextP14ActionIteratorPc(context, it, (char *)action);
 
     off = spec->mCatchInfoRef;
     catchInfo = (CatchInfo *)(context->mFP + off);

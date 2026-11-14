@@ -12,13 +12,23 @@ extern "C" {
 
 extern void func_02072dac(int handle, ActionIterator *ctx);
 extern void func_02071864(ThrowContext *t, ActionIterator *it);
+}
+
 extern struct CatchInfo *func_02072014(ThrowContext *c, struct ActionCursor *cursor);
 extern unsigned char *func_02071d3c(ThrowContext *self, struct ActionCursor *src, int *flag);
+extern "C" {
+
 extern unsigned char *func_02071a50(unsigned char *p, int *out);
 extern unsigned char *ReadSignedVarInt(unsigned char *p, int *out);
+}
+
 extern void func_02072168(ThrowContext *c, ActionIterator *s, char *end);
+extern "C" {
+
 extern void func_02071ccc(ThrowContext *s, int off, int add);
 extern void func_02071790(ThrowContext *context, ActionIterator *iterator, int pad);
+}
+
 /* EH runtime: the throw driver that __rethrow branches to. It finds the
    action table for the throw's return address (func_02072dac) and calls the
    terminate path (std::terminate) if there is none, reads the frame
@@ -49,5 +59,4 @@ void func_02071be8(ThrowContext *s) {
     func_02072168(s, &ctx.iterator, (char *)q);
     func_02071ccc(s, blk[2], local0);
     func_02071790(s, &ctx.iterator, ctx.iterator.mFuncStart + blk[1]);
-}
 }

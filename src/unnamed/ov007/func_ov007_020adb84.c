@@ -2,6 +2,8 @@
 #include "Ov007BgLayer.h"
 #include "Ov007LayerSlot.h"
 
+#define func_ov007_020c02d8 _Z19func_ov007_020c02d8Pvit
+#define func_ov007_020c1d78 _Z19func_ov007_020c1d78i
 extern void func_ov007_020c02d8(void *screen, int rows, unsigned short tile);
 extern void func_ov007_020c1d78(int i);
 

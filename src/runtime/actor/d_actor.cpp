@@ -60,60 +60,22 @@ namespace cstd {
 s16 atan2(s32, s32);
 }
 
-/* External C symbols no header owns. Declarations only: the definitions below
-   are plain C++ (a member definition or a plain function that inherits this
-   declaration's C linkage). */
-extern "C" {
 /* The spawn arguments func_02010e78 stages for the constructor. */
+
 extern s16 *data_0209b460;
 extern s16 *data_0209b45c;
 extern s16 data_0208e378;
+extern "C" {
+
 /* local extern: no header declares it. */
 int func_0203b244(void *list, void *node);
+}
+
 /* local extern: no header declares it. The actor registry, indexed by actorID. */
 extern void *data_020a4bb8;
 /* local extern: no header declares it. Game mode; 2 pushes the clip distance. */
 extern unsigned char gGameMode;
 
-u8 IsAreaShowing(int areaId);
-/* local extern: named parameters hold this TU's @NNN count. */
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
-extern int data_0209fc68;       /* nonzero forces the actor to think anyway */
-extern Matrix4x3 data_0209b3ec; /* world -> camera */
-extern dClipper data_0209f43c;  /* the dClipper instance */
-extern u8 data_0209f274;        /* doubles the clip distance when set */
-extern u8 gGamePaused;
-extern u8 data_0209f20c;
-extern u8 gVsExitScreenActive;
-/* This frame's actor update mask, copied from gNextActorUpdateMask; see
-   ACTOR_UPDATE_MASK_STAGE_ENDING in dActor_c.h. */
-extern u32 gActorUpdateMask;
-
-/* local extern: defined in ActorBase.cpp, which has no header. */
-extern fLiNdBa_c *func_02043f98(fLiNdBa_c **head, unsigned int key);
-extern fBase_c *gCurrentScene;
-void func_02010e78(const Vector3 *pos, const Vector3_16 *rot, s8 areaID, s16 deathTableID);
-extern unsigned char gNumPlayers;         /* number of players */
-extern daPly_c *gPlayers[];               /* the player table */
-void GiveCoins(s32 playerNo, s32 amount); /* 0x0202a7b8 */
-extern dCamera_c *gCamera;                /* the camera */
-extern u8 gCurrentStarId[];               /* the star index this mission was entered for */
-extern s8 gCurrentSublevel[];             /* the current sublevel id */
-extern dActor_c *STAR_MARKERS[12];        /* 0x0209f40c */
-void SetStarMarker(s32 slot, dActor_c *actor, s32 markerType);
-int IsStarCollectedInCurLevel(s32 starIdx);
-extern unsigned char data_0209f2c0[];     /* WDW's water level, 0..2 */
-extern SharedFilePtr data_ov002_0210da00; /* the blue coin's two model files */
-extern SharedFilePtr data_ov002_0210d9c8;
-extern int func_0200f7f0(dActor_c *actor, u16 *counter);
-unsigned int DeathTable_GetBit(int id);
-void DeathTable_SetBit(int id);
-/* local extern: daPly_c has no accessor for the current body model. */
-void *func_ov002_020e496c(daPly_c *p); /* the player's current mBodyModels entry */
-/* func_02037dc4 is still an address label: it returns the hit surface's
-   normal. */
-Vector3 *func_02037dc4(SurfaceInfo *surface);
-}
 
 /* The global actor list: every dActor_c links its mActorListNode into it. The
    inline constructor empties it (mwcc emits __sinit_d_actor.cpp for that);
@@ -216,6 +178,27 @@ void dActor_c::AfterCleanupResources(u32 vfSuccess)
     fBase_c::AfterCleanupResources(vfSuccess);
 }
 
+u8 IsAreaShowing(int areaId);
+extern "C" {
+
+void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
+}
+
+extern int data_0209fc68;
+/* nonzero forces the actor to think anyway */
+extern Matrix4x3 data_0209b3ec;
+/* world -> camera */
+extern dClipper data_0209f43c;
+/* the dClipper instance */
+extern u8 data_0209f274;
+/* doubles the clip distance when set */
+extern u8 gGamePaused;
+extern u8 data_0209f20c;
+extern u8 gVsExitScreenActive;
+/* This frame's actor update mask, copied from gNextActorUpdateMask; see
+   ACTOR_UPDATE_MASK_STAGE_ENDING in dActor_c.h. */
+extern u32 gActorUpdateMask;
+
 /* Culls the actor for this frame: flags 0x38 plus a far-away camera position
    when its area is hidden or the dClipper rejects it, then the pause and
    update-mask gates, then snapshots mPos into mPrevPos. */
@@ -297,6 +280,9 @@ void dActor_c::AfterRender(u32 vfSuccess)
     fBase_c::AfterRender(vfSuccess);
 }
 
+/* local extern: defined in ActorBase.cpp, which has no header. */
+extern fLiNdBa_c *func_02043f98(fLiNdBa_c **head, unsigned int key);
+
 dActor_c *dActor_c::FindWithID(u32 id)
 {
     fLiNdBa_c *node = func_02043f98(&data_0209b468.first, id);
@@ -336,6 +322,9 @@ void func_02010e78(const Vector3 *pos, const Vector3_16 *rot, s8 areaID, s16 dea
     data_0208e378 = deathTableID;
     data_0209b458 = 0;
 }
+
+extern fBase_c *gCurrentScene;
+void func_02010e78(const Vector3 *pos, const Vector3_16 *rot, s8 areaID, s16 deathTableID);
 
 dActor_c *dActor_c::Spawn(u32 actorID, u32 spawnParam, const Vector3 &pos,
                     const Vector3_16 *rot, s8 areaID, s16 deathTableID)
@@ -442,6 +431,15 @@ void dActor_c::DropShadowScaleXYZ(dExtShadowModel_c &shadow, Matrix4x3 &matrix, 
         return;
     shadow.InitModel(&matrix, scaleX, scaleY, scaleZ, opacity);
 }
+
+extern int data_0208e380;
+/* distance to the cached closest player */
+extern int data_0208e37c;
+/* distance to the cached farthest player */
+extern unsigned char gNumPlayers;
+/* number of players */
+extern daPly_c *gPlayers[];
+/* the player table */
 
 daPly_c *dActor_c::ClosestPlayer() {
     if (!data_0209b458) {
@@ -607,6 +605,12 @@ void dActor_c::SpawnCoins(const Vector3 &pos, s32 count, Fix12i spread, s16 angl
         }
     }
 }
+
+extern const u16 data_02075230[4];
+/* yellow, red, blue */
+extern const u32 data_02075238[3];
+void GiveCoins(s32 playerNo, s32 amount);
+/* 0x0202a7b8 */
 
 void dActor_c::GivePlayerCoins(daPly_c &player, u8 count, u32 coinKind) {
     /* Null-tested on purpose: the mangled name says R6Player and the ROM's
@@ -780,6 +784,13 @@ dActor_c *dActor_c::SpawnFireball(const Vector3 &pos, const Vector3_16 *rot, Fix
     return ball;
 }
 
+extern "C" {
+
+/* local extern: daPly_c has no accessor for the current body model. */
+void *func_ov002_020e496c(daPly_c *p);
+}
+/* the player's current mBodyModels entry */
+
 Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
     Vector3 t;
     t.x = 0;
@@ -810,6 +821,9 @@ Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
     mPosZ = lsl.z;
     return &data_020a0e68;
 }
+
+extern dCamera_c *gCamera;
+/* the camera */
 
 void dActor_c::Earthquake(const Vector3 &pos, Fix12i magnitude) {
     gCamera->func_0200d8c8(&pos, magnitude);
@@ -892,6 +906,15 @@ dActor_c *dActor_c::SpawnNumber(const Vector3 &pos, u32 value, bool packLowNibbl
     return number->SetOwner(owner);
 }
 
+extern u8 gCurrentStarId[];
+/* the star index this mission was entered for */
+extern s8 gCurrentSublevel[];
+/* the current sublevel id */
+extern dActor_c *STAR_MARKERS[12];
+/* 0x0209f40c */
+void SetStarMarker(s32 slot, dActor_c *actor, s32 markerType);
+int IsStarCollectedInCurLevel(s32 starIdx);
+
 s32 dActor_c::TrackStar(u32 starIdx, u32 markerType)
 {
     s32 type = markerType;
@@ -935,6 +958,11 @@ dActor_c *dActor_c::UntrackAndSpawnStar(s8 &trackStarID, u32 starID,
                  mAreaId, -1);
 }
 
+extern unsigned char data_0209f2c0[];
+/* WDW's water level, 0..2 */
+extern int data_02075244[];
+/* the water height for each level */
+
 /* In area 0 of sublevel 0x15 (WDW), the current water height; anywhere else,
    the actor's own height. */
 s32 dActor_c::GetWaterHeightWDW()
@@ -948,6 +976,10 @@ s32 dActor_c::GetWaterHeightWDW()
     }
     return height;
 }
+
+extern SharedFilePtr data_ov002_0210da00;
+/* the blue coin's two model files */
+extern SharedFilePtr data_ov002_0210d9c8;
 
 void dActor_c::LoadBlueCoinModel() {
     dExtSimpleModel_c::LoadFile(data_ov002_0210da00);
@@ -1097,15 +1129,21 @@ void *dActor_c::func_0200fa04(Vector3 *pos, int doRaycast) {
     return Particle::System::NewSimple(kPtclBossLandingDust, pos->x, pos->y, pos->z);
 }
 
+unsigned int DeathTable_GetBit(int id);
+
 int dActor_c::GetBitInDeathTable()
 {
     return DeathTable_GetBit(mDeathTableID);
 }
 
+void DeathTable_SetBit(int id);
+
 void dActor_c::TrackInDeathTable()
 {
     DeathTable_SetBit(mDeathTableID);
 }
+
+void DeathTable_ClearBit(int id);
 
 void dActor_c::UntrackInDeathTable()
 {
@@ -1200,6 +1238,10 @@ int dActor_c::IsTooFarAwayFromPlayer(Fix12i threshold) {
     return 0;
 }
 
+/* func_02037dc4 returns the hit surface's normal. The definition takes the
+   surface address as an int. */
+int func_02037dc4(int surface);
+
 bool dActor_c::DetectRaycastClsn(Vector3 &start, Vector3 &end, bool storeHitPos)
 {
     dBgCh_Lin ray;
@@ -1207,7 +1249,7 @@ bool dActor_c::DetectRaycastClsn(Vector3 &start, Vector3 &end, bool storeHitPos)
     if (ray.DetectClsn()) {
         if (storeHitPos) {
             Vector3 *hitPos = &ray.lineEnd;
-            Vector3 *normal = func_02037dc4(&ray.surface);
+            Vector3 *normal = (Vector3 *)func_02037dc4((int)&ray.surface);
             int x = hitPos->x + normal->x;
             int z = hitPos->z + normal->z;
             int y = hitPos->y + normal->y;

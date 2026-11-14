@@ -215,7 +215,7 @@
       "ordinal": 27
     },
     {
-      "symbol": "func_02023178",
+      "symbol": "_Z13func_02023178i",
       "address": "0x02023178",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/arm9/0202/func_02023178.c",

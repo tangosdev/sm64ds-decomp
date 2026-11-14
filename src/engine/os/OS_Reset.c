@@ -47,7 +47,7 @@ void OSi_CommonCallback(PXIFifoTag tag, u32 data, BOOL err) {
         OSi_IsResetOccurred = 1;
         return;
     }
-    OS_Terminate();
+    _Z12OS_Terminatev();
 }
 
 /* Sends one OS command to the ARM7, retrying until the FIFO takes it.

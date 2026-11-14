@@ -2568,7 +2568,7 @@ src/cstd3.cpp:
     complete
     .text start:0x0206ccd8 end:0x0206ce90
 
-src/unnamed/arm9/0206/func_0206ce90.c:
+src/unnamed/arm9/0206/func_0206ce90.cpp:
     complete
     .text start:0x0206ce90 end:0x0206cec0
 
@@ -2576,7 +2576,7 @@ src/unnamed/arm9/0206/func_0206cec0.c:
     complete
     .text start:0x0206cec0 end:0x0206cee0
 
-src/unnamed/arm9/0206/func_0206cee0.c:
+src/unnamed/arm9/0206/func_0206cee0.cpp:
     complete
     .text start:0x0206cee0 end:0x0206cf7c
 
@@ -2749,7 +2749,7 @@ src/unnamed/arm9/0207/func_02072168.cpp:
     complete
     .text start:0x02072168 end:0x020729f4
 
-src/unnamed/arm9/0207/func_020729f4.c:
+src/unnamed/arm9/0207/func_020729f4.cpp:
     complete
     .text start:0x020729f4 end:0x02072d90
 

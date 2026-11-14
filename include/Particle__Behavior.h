@@ -68,14 +68,19 @@ typedef struct SPLBehavior {
     const void *object;
 } SPLBehavior;
 
+#ifdef __cplusplus
 extern "C" {
+#endif
+
 void SPLBehavior_ApplyGravity(const void *obj, Particle::Element *ptcl, Vector3 *acc);
 void SPLBehavior_ApplyRandom(const void *obj, Particle::Element *ptcl, Vector3 *acc);
 void SPLBehavior_ApplyMagnet(const void *obj, Particle::Element *ptcl, Vector3 *acc);
 void SPLBehavior_ApplySpin(const void *obj, Particle::Element *ptcl, Vector3 *acc);
 void SPLBehavior_ApplyCollisionPlane(const void *obj, Particle::Element *ptcl, Vector3 *acc);
 void SPLBehavior_ApplyConvergence(const void *obj, Particle::Element *ptcl, Vector3 *acc);
+#ifdef __cplusplus
 }
+#endif
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */

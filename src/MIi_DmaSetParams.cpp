@@ -16,8 +16,6 @@
 #include "nitro/mi/dma.h"
 #include "nitro/os/system.h"
 
-extern "C" {
-
 /* Source, destination and control for one DMA channel. */
 typedef struct DMAChannelRegs {
     vu32 src;
@@ -34,5 +32,4 @@ void MIi_DmaSetParams(u32 channel, u32 src, u32 dest, u32 ctrl) {
     reg->ctrl = ctrl;
 
     OS_RestoreInterrupts(state);
-}
 }

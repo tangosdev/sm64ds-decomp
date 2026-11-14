@@ -53,6 +53,7 @@ struct SwitchClsnFileHandle : SharedFilePtr {
 };
 
 extern "C" {
+
 extern u32 gNextActorUpdateMask;
 extern signed char gCurrentSublevel;
 extern SharedFilePtr data_ov002_0211092c;
@@ -69,13 +70,19 @@ int d_a_obj_switchChangeMusicVolumeHold(unsigned int id, int volume);
 // committed experiment.
 extern void hold_d_a_obj_switch(void *self, void *file, const Matrix4x3 *matrix, int scale,
                                 s16 angle, void *clps);
+}
+
 int func_02012310(int handle, int sound, short arg);
 unsigned char IsAreaShowing(int area);
+extern "C" {
+
 unsigned char DecIfAbove0_Byte(unsigned char *value);
+}
+
 void LoadSilverStarAndNumber();
 void UnloadSilverStarAndNumber();
+
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-}
 
 /* Reconstructed source-style name: SM64DS proves daObjSwitch_c through RTTI,
  * allocation size, vtable identity, and the HANSWITCH registry profile;
@@ -85,8 +92,7 @@ int Vec3_Dist(const Vector3 *a, const Vector3 *b);
  * `new daObjSwitch_c` is the whole sequence the loose factory spelled by
  * hand: fBase_c::operator new(0x354), dBgActor_c's base constructor, then
  * the vptr store. */
-extern "C" daObjSwitch_c *daObjSwitch_c_classInit_HANSWITCH(void)
-{
+daObjSwitch_c *daObjSwitch_c_classInit_HANSWITCH(void) {
     return new daObjSwitch_c;
 }
 
@@ -94,8 +100,7 @@ extern "C" daObjSwitch_c *daObjSwitch_c_classInit_HANSWITCH(void)
  * allocation size, vtable identity, and the STAR_SWITCH registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: StarSwitch_Spawn. */
-extern "C" daObjSwitch_c *daObjSwitch_c_classInit_STAR_SWITCH(void)
-{
+daObjSwitch_c *daObjSwitch_c_classInit_STAR_SWITCH(void) {
     return new daObjSwitch_c;
 }
 

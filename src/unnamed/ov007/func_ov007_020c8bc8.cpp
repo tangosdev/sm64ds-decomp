@@ -5,7 +5,7 @@ typedef long long s64;
 
 /* Eases EVA and EVB by the Q12 progress t and writes BLDALPHA on the chosen
  * screens; effect 3 makes EVB the complement of EVA. */
-extern "C" void func_ov007_020c8bc8(Ov007Transition *tr, int t) {
+void func_ov007_020c8bc8(Ov007Transition *tr, int t) {
     unsigned char c1 = tr->fx.alpha.evaTo;
     unsigned char c0 = tr->fx.alpha.evaFrom;
     int v2 = c1;

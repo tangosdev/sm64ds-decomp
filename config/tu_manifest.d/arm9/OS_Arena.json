@@ -20,63 +20,63 @@
   ],
   "functions": [
     {
-      "symbol": "OS_AllocFromArenaLo",
+      "symbol": "_Z19OS_AllocFromArenaLoijj",
       "address": "0x02058cd0",
       "size": "0x00000088",
       "legacy_source": "src/unnamed/arm9/0205/func_02058cd0.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "OS_SetArenaLo",
+      "symbol": "_Z13OS_SetArenaLoij",
       "address": "0x02058d58",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0205/func_02058cd0.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "OS_SetArenaHi",
+      "symbol": "_Z13OS_SetArenaHiij",
       "address": "0x02058d6c",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0205/func_02058cd0.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "OS_GetInitArenaLo",
+      "symbol": "_Z17OS_GetInitArenaLoi",
       "address": "0x02058d80",
       "size": "0x00000074",
       "legacy_source": "src/OS_GetInitArenaLo.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "OS_GetInitArenaHi",
+      "symbol": "_Z17OS_GetInitArenaHii",
       "address": "0x02058df4",
       "size": "0x000000ac",
       "legacy_source": "src/unnamed/arm9/0205/func_02058df4.c",
       "ordinal": 4
     },
     {
-      "symbol": "OS_GetArenaLo",
+      "symbol": "_Z13OS_GetArenaLoi",
       "address": "0x02058ea0",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0205/func_02058ea0.c",
       "ordinal": 5
     },
     {
-      "symbol": "OS_GetArenaHi",
+      "symbol": "_Z13OS_GetArenaHii",
       "address": "0x02058eb4",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0205/func_02058eb4.c",
       "ordinal": 6
     },
     {
-      "symbol": "OS_InitArenaEx",
+      "symbol": "_Z14OS_InitArenaExv",
       "address": "0x02058ec8",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0205/func_02058ec8.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "OS_InitArena",
+      "symbol": "_Z12OS_InitArenav",
       "address": "0x02058f28",
       "size": "0x00000118",
       "legacy_source": "src/unnamed/arm9/0205/func_02058f28.c",

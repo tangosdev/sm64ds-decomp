@@ -1,5 +1,6 @@
 #include "Ov007Display.h"
 #include "Ov007MenuMem.h"
+#define MenuMem_AllocClear _Z18MenuMem_AllocClearPKci
 
 /* Sizes the character and palette tables (func_ov007_020b6d40 asks for 4
  * and 6), zeroed. */

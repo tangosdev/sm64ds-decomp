@@ -20,91 +20,91 @@
   ],
   "functions": [
     {
-      "symbol": "func_ov007_020b413c",
+      "symbol": "_Z19func_ov007_020b413cP13Ov007ItemViewi",
       "address": "0x020b413c",
       "size": "0x0000019c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b413c.c",
       "ordinal": 0
     },
     {
-      "symbol": "NumberSprite_Create",
+      "symbol": "_Z19NumberSprite_Createi",
       "address": "0x020b42d8",
       "size": "0x00000104",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b42d8.c",
       "ordinal": 1
     },
     {
-      "symbol": "func_ov007_020b43dc",
+      "symbol": "_Z19func_ov007_020b43dci",
       "address": "0x020b43dc",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b43dc.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov007_020b4438",
+      "symbol": "_Z19func_ov007_020b4438v",
       "address": "0x020b4438",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b4438.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov007_020b4464",
+      "symbol": "_Z19func_ov007_020b4464P13Ov007ItemViewP11Ov007Camera",
       "address": "0x020b4464",
       "size": "0x00000088",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b4464.c",
       "ordinal": 4
     },
     {
-      "symbol": "ItemView_Update",
+      "symbol": "_Z15ItemView_UpdateP13Ov007ItemView",
       "address": "0x020b44ec",
       "size": "0x000000c4",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b44ec.c",
       "ordinal": 5
     },
     {
-      "symbol": "ItemView_TryChoose",
+      "symbol": "_Z18ItemView_TryChooseP13Ov007ItemView",
       "address": "0x020b45b0",
       "size": "0x00000100",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b45b0.c",
       "ordinal": 6
     },
     {
-      "symbol": "ItemView_HandleTouch",
+      "symbol": "_ZN13Ov007ItemView20ItemView_HandleTouchEPv",
       "address": "0x020b46b0",
       "size": "0x000004ac",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b46b0.c",
       "ordinal": 7
     },
     {
-      "symbol": "ItemView_ResetSprite",
+      "symbol": "_Z20ItemView_ResetSpriteP13Ov007ItemViewP11Ov007Camera",
       "address": "0x020b4b5c",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b4b5c.c",
       "ordinal": 8
     },
     {
-      "symbol": "ItemView_Destroy",
+      "symbol": "_Z16ItemView_DestroyP13Ov007ItemView",
       "address": "0x020b4bd4",
       "size": "0x00000030",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b4bd4.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "ItemView_Create",
+      "symbol": "_Z15ItemView_Createi",
       "address": "0x020b4c04",
       "size": "0x00000464",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b4c04.c",
       "ordinal": 10
     },
     {
-      "symbol": "ItemView_UpdateIdle",
+      "symbol": "_Z19ItemView_UpdateIdleP13Ov007ItemView",
       "address": "0x020b5068",
       "size": "0x00000080",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b5068.c",
       "ordinal": 11
     },
     {
-      "symbol": "ItemView_UpdateChosen",
+      "symbol": "_Z21ItemView_UpdateChosenP13Ov007ItemView",
       "address": "0x020b50e8",
       "size": "0x000007fc",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b50e8.cpp",

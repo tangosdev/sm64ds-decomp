@@ -82,10 +82,9 @@ extern HasiraCollisionFile RockPillar_ClsnFile;
 extern CLPS_Block data_ov016_02113cac;
 
 /* local extern: no shared header declares these. */
-extern "C" {
+
 /* The camera the shake request goes to (arm9). */
 extern dCamera_c *gCamera;
-}
 
 /* -------------------------------------------------------------------------- */
 /* Reconstructed source-style name: SM64DS proves daObjKi_Hasira_c through
@@ -93,7 +92,7 @@ extern dCamera_c *gCamera;
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical aliases: RockPillar_Spawn, and RockPillar for
  * the class itself. */
-extern "C" daObjKi_Hasira_c *daObjKi_Hasira_c_classInit() {
+daObjKi_Hasira_c *daObjKi_Hasira_c_classInit() {
     return new daObjKi_Hasira_c();
 }
 

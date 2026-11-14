@@ -1,5 +1,20 @@
 #ifndef NITRO_OS_THREAD_H
 #define NITRO_OS_THREAD_H
+#ifndef __cplusplus
+#define OS_GetThreadPriority _Z20OS_GetThreadPriorityPK8OSThread
+#define OS_SetThreadPriority _Z20OS_SetThreadPriorityP8OSThreadj
+#define OS_SetThreadStackWarningOffset _Z30OS_SetThreadStackWarningOffsetP8OSThreadj
+#define OS_RescheduleThread _Z19OS_RescheduleThreadv
+#define OS_SelectThread _Z15OS_SelectThreadv
+#define OS_WakeupThreadDirect _Z21OS_WakeupThreadDirectP8OSThread
+#define OS_WakeupThread _Z15OS_WakeupThreadPt
+#define OS_SleepThread _Z14OS_SleepThreadPt
+#define OS_IsThreadTerminated _Z21OS_IsThreadTerminatedPK8OSThread
+#define OS_JoinThread _Z13OS_JoinThreadP8OSThread
+#define OS_ExitThread _Z13OS_ExitThreadv
+#define OS_CreateThread _Z15OS_CreateThreadP8OSThreadPFvPvES1_S1_jj
+#define OS_InitThread _Z13OS_InitThreadv
+#endif
 
 /*
  * The thread types of the Nitro SDK's os_thread.c, this SDK's layouts. The
@@ -16,7 +31,9 @@
 #include "nitro/os/context.h"
 
 #ifdef __cplusplus
+#ifdef _MSC_VER
 extern "C" {
+#endif
 #endif
 
 #define OS_THREAD_MAX_NUM 16
@@ -111,7 +128,9 @@ int OS_SetThreadPriority(OSThread *, u32);
 u32 OS_GetThreadPriority(const OSThread *);
 
 #ifdef __cplusplus
+#ifdef _MSC_VER
 }
+#endif
 #endif
 
 #endif /* NITRO_OS_THREAD_H */
