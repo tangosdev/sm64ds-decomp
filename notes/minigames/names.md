@@ -27,7 +27,7 @@ which declares no virtual, so a slot number means nothing between them.
 - **Where they came from.** The actor names are themselves imports from an ASM-hack
   symbol file. An untooled "vtable-identity" pass (#877) wrote them onto the scene
   classes as `recovered from vtable slot identity` comments.
-- **How they spread.** `tools/reconcile_names.py` (#944) turned those comments into
+- **How they spread.** The reconcile_names pass (#944, since retired) turned those comments into
   `// recovered name:` lines. The slot campaign of 2026-08-31 (#2088-#2112) then made
   them symbols. Slots 31 and 32 got `Kill` and `AfterClsn` the same way, from
   `dBgActor_c` and `dPathLiftActor_c`.

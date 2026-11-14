@@ -2,7 +2,7 @@
 
 The handlers take `this` as a bare `char *c` and poke it by raw offset, so nothing
 in the file says which actor it is. That is what makes
-`tools/residue_reaudit.py --overlay` over-report: two classes in one overlay both
+the residue re-audit's `--overlay` mode (since retired) over-report: two classes in one overlay both
 have a `+0x438`, and only one of them means what the handler means by it.
 
 Scores every class in the handler's overlay by how well the offsets it pokes match
