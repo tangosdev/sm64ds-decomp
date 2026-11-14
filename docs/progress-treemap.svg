@@ -8701,59 +8701,59 @@ matched: yes</title></rect><rect x="116.54" y="684.56" width="2.99" height="9.86
 module: arm9
 addr: 0x02052ec8
 size: 44 bytes
-matched: yes</title></rect><rect x="119.53" y="684.56" width="5.99" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z9FX_ModS32ii
+matched: yes</title></rect><rect x="119.53" y="684.56" width="5.99" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FX_ModS32
 module: arm9
 addr: 0x02052ef4
 size: 88 bytes
-matched: yes</title></rect><rect x="125.52" y="684.56" width="5.99" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z9FX_DivS32ii
+matched: yes</title></rect><rect x="125.52" y="684.56" width="5.99" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FX_DivS32
 module: arm9
 addr: 0x02052f4c
 size: 88 bytes
-matched: yes</title></rect><rect x="131.51" y="684.56" width="3.81" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z11FX_DivAsyncii
+matched: yes</title></rect><rect x="131.51" y="684.56" width="3.81" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FX_DivAsync
 module: arm9
 addr: 0x02052fa4
 size: 56 bytes
-matched: yes</title></rect><rect x="135.31" y="684.56" width="2.99" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z16FX_GetSqrtResultv
+matched: yes</title></rect><rect x="135.31" y="684.56" width="2.99" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FX_GetSqrtResult
 module: arm9
 addr: 0x02052fdc
 size: 44 bytes
-matched: yes</title></rect><rect x="138.31" y="684.56" width="9.25" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z12FX_SqrtAsynci
+matched: yes</title></rect><rect x="138.31" y="684.56" width="9.25" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FX_SqrtAsync
 module: arm9
 addr: 0x02053008
 size: 136 bytes
-matched: yes</title></rect><rect x="147.56" y="684.56" width="4.08" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z11FX_InvAsynci
+matched: yes</title></rect><rect x="147.56" y="684.56" width="4.08" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FX_InvAsync
 module: arm9
 addr: 0x02053090
 size: 60 bytes
-matched: yes</title></rect><rect x="151.64" y="684.56" width="4.08" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z15FX_GetDivResultv
+matched: yes</title></rect><rect x="151.64" y="684.56" width="4.08" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FX_GetDivResult
 module: arm9
 addr: 0x020530cc
 size: 60 bytes
-matched: yes</title></rect><rect x="155.72" y="684.56" width="2.72" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z20FX_GetDivResultFx64cv
+matched: yes</title></rect><rect x="155.72" y="684.56" width="2.72" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FX_GetDivResultFx64c
 module: arm9
 addr: 0x02053108
 size: 40 bytes
-matched: yes</title></rect><rect x="158.44" y="684.56" width="7.89" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z10FX_InvSqrti
+matched: yes</title></rect><rect x="158.44" y="684.56" width="7.89" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FX_InvSqrt
 module: arm9
 addr: 0x02053130
 size: 116 bytes
-matched: yes</title></rect><rect x="166.33" y="684.56" width="6.26" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z7FX_Sqrti
+matched: yes</title></rect><rect x="166.33" y="684.56" width="6.26" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FX_Sqrt
 module: arm9
 addr: 0x020531a4
 size: 92 bytes
-matched: yes</title></rect><rect x="172.59" y="684.56" width="1.90" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z6FX_Invi
+matched: yes</title></rect><rect x="172.59" y="684.56" width="1.90" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FX_Inv
 module: arm9
 addr: 0x02053200
 size: 28 bytes
-matched: yes</title></rect><rect x="174.49" y="684.56" width="4.08" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z11FX_DivFx64cii
+matched: yes</title></rect><rect x="174.49" y="684.56" width="4.08" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FX_DivFx64c
 module: arm9
 addr: 0x0205321c
 size: 60 bytes
-matched: yes</title></rect><rect x="178.58" y="684.56" width="1.90" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z6FX_Divii
+matched: yes</title></rect><rect x="178.58" y="684.56" width="1.90" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FX_Div
 module: arm9
 addr: 0x02053258
 size: 28 bytes
-matched: yes</title></rect><rect x="180.48" y="684.56" width="11.70" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z12VEC_DistancePiS_
+matched: yes</title></rect><rect x="180.48" y="684.56" width="11.70" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>VEC_Distance
 module: arm9
 addr: 0x02053274
 size: 172 bytes
