@@ -4,7 +4,8 @@ matched symbol and that no compiler in the sweep will build.
 WHY THIS IS A FILE AND NOT AN `if`
 -----------------------------------
 `matched` used to mean "a src/ file exists, unbannered, not a dcd transcription".
-audit/enrollment_report.md put every one of the 251 matched-but-unverified functions
+The 2026-08 enrollment audit (retired; in git history) put
+every one of the 251 matched-but-unverified functions
 through tools/linkcheck.py and found 22 that the byte gate reports NO-SYM: 18 that no
 compiler in reverify_corpus.ALL_VERSIONS will build, and 4 zero-size alias records whose
 sized twin at the same address is separately counted unmatched. Policy D drops exactly

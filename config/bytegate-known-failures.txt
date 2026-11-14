@@ -1,6 +1,7 @@
 # Source files that are named after a matched symbol but that no compiler in
 # reverify_corpus.ALL_VERSIONS will build. tools/chaos_db_ci.py does not count these
-# as matched (policy D, see audit/enrollment_report.md section 6).
+# as matched (policy D: Tango's ruling on the 2026-08 enrollment audit, section 6;
+# the report itself is retired; it is in git history).
 #
 # Modelled on config/layout-known-issues.txt and config/rombuild-exclude.txt: the debt
 # already in the tree is written down instead of silently allowed. This list should
@@ -56,7 +57,8 @@
 #
 # linkcheck reported all 18 as NO-SYM and WRONG for none -- "counted without evidence",
 # NOT "proven wrong", and repairing 15 of them into byte matches is what that predicted.
-# See audit/enrollment_report.md 4a.
+# The retired enrollment audit, section 4a, has the per-file detail
+# (in git history).
 
 # --- retired extern "C" signature clash with include/decl_common.h ----------------
 # The file declares a symbol `extern "C"` with one signature and decl_common.h declares
