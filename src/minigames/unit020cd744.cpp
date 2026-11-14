@@ -207,7 +207,7 @@ void TrmpItem::MotionSpinHover() {
     struct Vector3 normalCopy;
     struct Vector3 tangent;
     struct Vector3 tangentCopy;
-    func_0203cc28(&mForward.x, 0x100);
+    func_0203cc28((int *)&mForward, 0x100);
     func_0203ce80(&normalCopy, &mForward);
     func_0203cf00(&tangent, &mForward, &sUnitZ);
     mSide.x = tangent.x;
@@ -231,7 +231,7 @@ void TrmpItem::MotionSpinDrift() {
 
     struct Vector3 normalCopy, tangent, tangentCopy;
 
-    func_0203cc28(&mForward.x, 0x100);
+    func_0203cc28((int *)&mForward, 0x100);
     func_0203ce80(&normalCopy, &mForward);
     func_0203cf00(&tangent, &mForward, &sUnitZ);
     mSide.x = tangent.x;
@@ -254,7 +254,7 @@ void TrmpItem::MotionSpinSway() {
     struct Vector3 normalCopy;
     struct Vector3 tangent;
     struct Vector3 tangentCopy;
-    func_0203cc28(&mForward.x, 0x100);
+    func_0203cc28((int *)&mForward, 0x100);
     func_0203ce80(&normalCopy, &mForward);
     func_0203cf00(&tangent, &mForward, &sUnitZ);
     mSide.x = tangent.x;
@@ -314,7 +314,7 @@ void TrmpItem::MotionSpin() {
 
     struct Vector3 normalCopy, tangent, tangentCopy;
 
-    func_0203cc28(&mForward.x, 0x100);
+    func_0203cc28((int *)&mForward, 0x100);
     func_0203ce80(&normalCopy, &mForward);
     func_0203cf00(&tangent, &mForward, &sUnitZ);
     mSide.x = tangent.x;
@@ -616,9 +616,9 @@ int TrmpItem::HitTest2D(TrampolineObjectCallbacks *jumper, int) {
     }
 
     // The projections must straddle the line without lying on it together.
-    Vec2_Sub(&testDirection.x, &lineEnd.x, &lineStart.x);
-    Vec2_Sub(&firstOffset.x, &currentProjection.x, &lineStart.x);
-    Vec2_Sub(&secondOffset.x, &previousProjection.x, &lineStart.x);
+    Vec2_Sub((int *)&testDirection, (int *)&lineEnd, (int *)&lineStart);
+    Vec2_Sub((int *)&firstOffset, (int *)&currentProjection, (int *)&lineStart);
+    Vec2_Sub((int *)&secondOffset, (int *)&previousProjection, (int *)&lineStart);
     currentSide = func_0203d524(&testDirection, &firstOffset);
     previousSide = func_0203d524(&testDirection, &secondOffset);
     if (currentSide < -1)
@@ -632,11 +632,11 @@ int TrmpItem::HitTest2D(TrampolineObjectCallbacks *jumper, int) {
     if (currentSide * previousSide <= 0 && (currentSide != 0 || previousSide != 0)) {
 
         // Require an intersection strictly between the two line endpoints.
-        Vec2_Sub(&movementDirection.x, &currentProjection.x, &previousProjection.x);
+        Vec2_Sub((int *)&movementDirection, (int *)&currentProjection, (int *)&previousProjection);
         testDirection = movementDirection;
-        Vec2_Sub(&toEnd.x, &lineEnd.x, &currentProjection.x);
+        Vec2_Sub((int *)&toEnd, (int *)&lineEnd, (int *)&currentProjection);
         firstOffset = toEnd;
-        Vec2_Sub(&toStart.x, &lineStart.x, &currentProjection.x);
+        Vec2_Sub((int *)&toStart, (int *)&lineStart, (int *)&currentProjection);
         secondOffset = toStart;
         endSide = func_0203d524(&testDirection, &firstOffset);
         startSide = func_0203d524(&testDirection, &secondOffset);
@@ -718,17 +718,17 @@ void TrmpItem::Init(int *position, int *normal, int itemType, short motionType) 
     mForward.y = normal[1];
     mForward.z = normal[2];
     {
-        int *normalComponents = &mForward.x;
+        int *normalComponents = (int *)&mForward;
         mSide.x = normalComponents[0];
         mSide.y = normalComponents[1];
         mSide.z = normalComponents[2];
     }
-    func_0203cc28(&mSide.x, -0x4000);
+    func_0203cc28((int *)&mSide, -0x4000);
     mPrevPos.x = mPos.x;
     mPrevPos.y = mPos.y;
     mPrevPos.z = mPos.z;
     {
-        int *cachedPosition = &mPrevPos.x;
+        int *cachedPosition = (int *)&mPrevPos;
         mSpawnPos.x = cachedPosition[0];
         mSpawnPos.y = cachedPosition[1];
         mSpawnPos.z = cachedPosition[2];
@@ -1237,9 +1237,9 @@ int TrmpLine::PushJumper() {
         lineEnd.x = mHalfWidth;
         lineEnd.y = 0;
 
-        Vec2_Sub(&edgeDirection.x, &lineStart.x, &lineEnd.x);
-        Vec2_Sub(&firstOffset.x, &lineStart.x, &previousProjection.x);
-        Vec2_Sub(&secondOffset.x, &lineStart.x, &currentProjection.x);
+        Vec2_Sub((int *)&edgeDirection, (int *)&lineStart, (int *)&lineEnd);
+        Vec2_Sub((int *)&firstOffset, (int *)&lineStart, (int *)&previousProjection);
+        Vec2_Sub((int *)&secondOffset, (int *)&lineStart, (int *)&currentProjection);
 
         crossedLine = 0;
         previousSide = func_0203d524(&edgeDirection, &firstOffset);
@@ -1250,11 +1250,11 @@ int TrmpLine::PushJumper() {
         if (previousSide * currentSide <= 0 && previousSide > currentSide) {
             struct V2 edge, e1, e2;
             int startSide, endSide;
-            Vec2_Sub(&edge.x, &previousProjection.x, &currentProjection.x);
+            Vec2_Sub((int *)&edge, (int *)&previousProjection, (int *)&currentProjection);
             edgeDirection = edge;
-            Vec2_Sub(&e1.x, &previousProjection.x, &lineStart.x);
+            Vec2_Sub((int *)&e1, (int *)&previousProjection, (int *)&lineStart);
             firstOffset = e1;
-            Vec2_Sub(&e2.x, &previousProjection.x, &lineEnd.x);
+            Vec2_Sub((int *)&e2, (int *)&previousProjection, (int *)&lineEnd);
             secondOffset = e2;
 
             startSide = func_0203d524(&edgeDirection, &firstOffset);

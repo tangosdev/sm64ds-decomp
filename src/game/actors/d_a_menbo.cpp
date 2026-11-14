@@ -846,8 +846,8 @@ int daMenbo_c::InitResources()
         {
             r = RandomIntInternal(&data_0209e650.value);
             short ang = (short)((((unsigned int)r >> 8) & 0xf) << 12);
-            mTargetAngleY = (u16)ang;
-            mPrevAngleY = mTargetAngleYSigned;
+            *(short *)&mTargetAngleY = ang;
+            mPrevAngleY = *(short *)&mTargetAngleY;
             mAngleY = mPrevAngleY;
         }
         func_ov090_02131e00((MenboState *)this, data_ov090_021344e4);

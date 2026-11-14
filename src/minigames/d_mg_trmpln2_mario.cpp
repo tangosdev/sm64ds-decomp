@@ -1114,7 +1114,7 @@ void Trmp2Mario_DrawAll(void) {
     w.x = 0;
     w.y = 0;
     w.z = -0xff8;
-    func_0203cd80(&w.x, -0x2000);
+    func_0203cd80((int *)&w, -0x2000);
     G3_LightVector(GX_LIGHTID_1, w.x, w.y, w.z);
     G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
     G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));

@@ -302,12 +302,8 @@ struct daTrs_c : dCapEnemy_c {
     u8  mAttackRepeats;        /* 0x5d2 */
     u8  unk_5d3;               /* 0x5d3 -- zeroed, no reader recovered */
     /* Typed (not a u8 placeholder) so member access compiles to the ROM's
-       add+ldrh instead of a literal-pool address load. mBooFlagsWord is the
-       same halfword, for the sites that read or mask the whole value. */
-    union {
-        BooFlags16 mBooFlags; /* 0x5d4 */
-        u16 mBooFlagsWord;
-    };
+       add+ldrh instead of a literal-pool address load. */
+    BooFlags16 mBooFlags;      /* 0x5d4 */
     u8  pad_5d6[0x2];
     /* Recycled effect handles (0x95/0x96/0x97/0x98), like daBmb_c's. */
     u32 mParticle0;            /* 0x5d8 */

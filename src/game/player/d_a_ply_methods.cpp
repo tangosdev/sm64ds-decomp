@@ -3983,7 +3983,7 @@ void daPly_c::JumboStarCutsceneFlying() {
         *p = *p + 1;
         /* fallthrough */
     case 1:
-        if (AnimSplinePoll(&s.d.x) != 0) {
+        if (AnimSplinePoll((int *)&s.d) != 0) {
             p = &this->mStateWork;
             *p = *p + 1;
             return;
@@ -6612,8 +6612,9 @@ int daPly_c::func_ov002_020c8714() {
         /* mPosY (+0x60), re-read by index: this->mPosY lets the compiler reuse the
            load above and drops the ROM's second load (one word short, measured). */
         v[1] = ((int *)this)[0x18] + 0x3c000;
-        mParticle1 = Particle::System::New(*(volatile int *)&this->mParticle1, 0x27, v[0], v[1],
-                                           this->mPosZ, 0, 0);
+        mParticle1 =
+            Particle::System::New(*(volatile int *)&this->mParticle1, 0x27, v[0], v[1], this->mPosZ,
+                                  0, 0); // without volatile, two instructions swap
     } else if (this->FinishedAnim() != 0) {
         if (mNoCtrlKind == 0x10) {
             mStateStep = 0x19;
@@ -9025,11 +9026,8 @@ void daPly_c::func_ov002_020cd71c() {
 int daPly_c::St_Swim_Main() {
     extern int *func_02037dc4(int);
     extern ControllerInput data_0209f498[];
-    struct Ee90View {
-        char pad[0x244];
-        int word244;
-    };
-    extern Ee90View data_0209ee90;
+    /* Raw on purpose: data_0209ee90 (untyped arm9 .bss, 8 TUs) has no recovered layout. */
+    extern char data_0209ee90[];
     int t4;
     Vector3 pos;
     int* fr;
@@ -9084,7 +9082,7 @@ int daPly_c::St_Swim_Main() {
             vec[1] = 0;
             at = at + 0x8000;
             yaw = (short)at;
-            vec[2] = data_0209ee90.word244 << 0xc;
+            vec[2] = (*(int*)((char*)data_0209ee90 + 0x244)) << 0xc;
             Vec3_RotateYAndTranslate((Vector3 *)out, (const Vector3 *)&mPosX, yaw,
                                      (const Vector3 *)vec);
             mPosX = out[0];
@@ -9417,7 +9415,8 @@ int daPly_c::func_ov002_020ce5f8() {
     Vec3_LslInPlace((int *)&pos, 3);
 
     if (pos.y < data_0209f32c - 0x1e000) {
-        Particle::System::NewBubble(pos.x, *(volatile int *)&pos.y, pos.z);
+        Particle::System::NewBubble(pos.x, *(volatile int *)&pos.y,
+                                    pos.z); // without volatile, the function shrinks 0x1a0 to 0x19c
         if (mStateWaitTimer == 0) {
             Sound::PlayBank3(0xb, mCamSpacePos);
             mStateWaitTimer = 0xa;
@@ -13262,11 +13261,8 @@ void daPly_c::func_ov002_020d6368() {
 /* recovered: named members + shared header, real C++ method */
 
 int daPly_c::St_Swallow_Main() {
-    struct Ee90View {
-        char pad[0x238];
-        int word238;
-    };
-    extern Ee90View data_0209ee90;
+    /* Raw on purpose: data_0209ee90 (untyped arm9 .bss, 8 TUs) has no recovered layout. */
+    extern int data_0209ee90[];
     dActor_c *p360;
 
     if (mModels.mBodyModels[this->GetBodyModelID(param1 & 0xff, 0)]->WillHitFrame(3)) {
@@ -13288,7 +13284,7 @@ int daPly_c::St_Swallow_Main() {
                     (unsigned short)(mStateFlags & 0x1000) == 0) {
                     unsigned char flag = 0;
                     int b_c2 = (mObjInMouth->actorID == 0xc2);
-                    if (b_c2 || data_0209ee90.word238 != 0) {
+                    if (b_c2 || *(int *)((char *)data_0209ee90 + 0x238) != 0) {
                         flag |= 1;
                     }
                     mEggParams |= (flag + 1);
@@ -13616,7 +13612,8 @@ int daPly_c::func_ov002_020d7030(void *b) {
     if (flag)
         return 0;
     ((dActor_c *)b)->mFlags |= 0x20000;
-    ((daPly_c *)b)->mEatingPlayer = this;
+    /* Raw on purpose: +0xd0 is each eatable subclass's own first field (mEatingPlayer). */
+    *(void **)((char *)b + 0xd0) = this;
     mObjInMouth = (dActor_c *)b;
     func_ov002_020d71ec(1);
     return 1;
@@ -14711,11 +14708,8 @@ void daPly_c::func_ov002_020d91b8(int a) {
 
 int daPly_c::func_ov002_020d91e0(int damage, int doPre) {
     extern u8 gGameMode;
-    struct Ee90View {
-        char pad[0x248];
-        int word248;
-    };
-    extern Ee90View data_0209ee90;
+    /* Raw on purpose: data_0209ee90 (untyped arm9 .bss, 8 TUs) has no recovered layout. */
+    extern char data_0209ee90[];
     if (doPre != 0)
         DropHeldObj();
 
@@ -14729,7 +14723,7 @@ int daPly_c::func_ov002_020d91e0(int damage, int doPre) {
         if (b != 0) return 0;
     }
 
-    if (data_0209ee90.word248 == 0) {
+    if (*(int*)(data_0209ee90 + 0x248) == 0) {
         Heal(-damage);
     }
     if (GetHealth() != 0)
@@ -15354,11 +15348,8 @@ int daPly_c::St_GrabBowserTail_Main() {
     extern void func_02012694(unsigned int id, const Vector3 *v);
     extern u16 data_0209f49e[];
     extern s16 data_0209f4a0[];
-    struct Ee90View {
-        char pad[0x24c];
-        int word24c;
-    };
-    extern Ee90View data_0209ee90;
+    /* Raw on purpose: data_0209ee90 (untyped arm9 .bss, 8 TUs) has no recovered layout. */
+    extern char data_0209ee90[];
     switch (mStateStep) {
     case 0:
         if (this->FinishedAnim()) {
@@ -15379,7 +15370,7 @@ int daPly_c::St_GrabBowserTail_Main() {
             func_ov002_020daa74();
             return 1;
         }
-        if (data_0209ee90.word24c != 0)
+        if (*(int*)(data_0209ee90 + 0x24c) != 0)
             mStateWork = 0;
         if (data_0209f498[gActivePlayerSlot].mag == 0) {
             u8 v = mStateWork;
@@ -16692,11 +16683,8 @@ void daPly_c::func_ov002_020dcafc() {
 
 int daPly_c::St_StomachSlide_Main() {
     extern u16 data_0209f49e[];
-    struct Ee90View {
-        char pad[0x244];
-        int word244;
-    };
-    extern Ee90View data_0209ee90;
+    /* Raw on purpose: data_0209ee90 (untyped arm9 .bss, 8 TUs) has no recovered layout. */
+    extern u8 data_0209ee90;
     dActor_c *light0 = mHeldObj;
     if (light0 != 0) {
         u32 *p = &light0->mFlags;
@@ -16764,7 +16752,7 @@ int daPly_c::St_StomachSlide_Main() {
             if (this->IsState(data_ov002_0211031c)) {
                 mStatePhase = 1;
                 mStateStep = 0;
-                if (data_0209ee90.word244 != 0) {
+                if (*(int*)((char*)&data_0209ee90 + 0x244) != 0) {
                     if ((mStateArg | mSlideType) != 0) {
                         mVertSpeed = 0x15000;
                     }
@@ -20329,8 +20317,8 @@ int daPly_c::func_ov002_020e3f90() {
     }
     mShadowMatrix = data_020a0e68;
     t = (&data_020a0e68)->m[9];
-    t1 = ((volatile Matrix4x3 *)&data_020a0e68)->m[10];
-    t2 = ((volatile Matrix4x3 *)&data_020a0e68)->m[11];
+    t1 = ((volatile Matrix4x3 *)&data_020a0e68)->m[10]; // without volatile, 7 words differ
+    t2 = ((volatile Matrix4x3 *)&data_020a0e68)->m[11]; // without volatile, 10 words differ
     s.v[1] = t1;
     s.v[2] = t2;
     s.v[0] = t;

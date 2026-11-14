@@ -731,7 +731,7 @@ void daPkn_c::UpdatePose()
     mHeadClsnOffset.x = data_020a0e68.m[9];
     mHeadClsnOffset.y = data_020a0e68.m[10];
     mHeadClsnOffset.z = data_020a0e68.m[11];
-    Vec3_LslInPlace(&mHeadClsnOffset.x, 3);
+    Vec3_LslInPlace((int *)&mHeadClsnOffset, 3);
     VEC_Subtract(&mHeadClsnOffset, &mPos, &mHeadClsnOffset);
 
     /* Still a hand-indexed FX_SinIdx: through the inline the table base loads

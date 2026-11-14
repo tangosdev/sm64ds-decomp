@@ -585,10 +585,10 @@ void Banner_StartWaveBurst(MgBanner *e) {
     static Vector2 sBannerWaveFxGravity(0, 0xc0);
 
     for (i = 0; i < 0x20; i++) {
-        func_0203d704(&spawnPos.x, &center.x, &ringOffset.x);
-        func_0203d388(&burstVel.x, 0x800);
-        func_0203d388(&ringOffset.x, 0x800);
-        func_0203d704(&spawnVel.x, &liftVel.x, &burstVel.x);
+        func_0203d704((int *)&spawnPos, (int *)&center, (int *)&ringOffset);
+        func_0203d388((int *)&burstVel, 0x800);
+        func_0203d388((int *)&ringOffset, 0x800);
+        func_0203d704((int *)&spawnVel, (int *)&liftVel, (int *)&burstVel);
 
         Mg_SpawnFx(0, BANNER_RAND(60) + 90, &spawnPos, &spawnVel, &sBannerWaveFxGravity);
     }
@@ -946,10 +946,10 @@ void Banner_SetupZoomBurst(MgBanner *e) {
     static Vector2 sBannerZoomFxGravity(0, 0xc0);
 
     for (i = 0; i < 0x20; i++) {
-        func_0203d704(&spawnPos.x, &center.x, &ringOffset.x);
-        func_0203d388(&burstVel.x, 0x800);
-        func_0203d388(&ringOffset.x, 0x800);
-        func_0203d704(&spawnVel.x, &liftVel.x, &burstVel.x);
+        func_0203d704((int *)&spawnPos, (int *)&center, (int *)&ringOffset);
+        func_0203d388((int *)&burstVel, 0x800);
+        func_0203d388((int *)&ringOffset, 0x800);
+        func_0203d704((int *)&spawnVel, (int *)&liftVel, (int *)&burstVel);
 
         Mg_SpawnFx(0, BANNER_RAND(60) + 90, &spawnPos, &spawnVel, &sBannerZoomFxGravity);
     }

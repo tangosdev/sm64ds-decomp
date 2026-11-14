@@ -2883,7 +2883,7 @@ int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
   else
   {
       MTX_MultVec43((Vector3 *)&data_ov002_0210b958, &data_0209b41c, (Vector3 *)&v);
-      Vec3_LslInPlace(&v.x, 3);
+      Vec3_LslInPlace((int *)&v, 3);
       func_ov002_020f6f48((Vector3 *)&v, 8);
   }
   this->mPrevAngleX = this->mAngleX;

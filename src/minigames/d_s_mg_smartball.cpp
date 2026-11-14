@@ -121,7 +121,7 @@ typedef struct State2 {
 } State2;
 
 extern "C" {
-extern void func_0203d388(int *p, int angle);
+extern void func_0203d388(V2 *p, int angle);
 extern long long func_0203d5bc(int *p);
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 extern struct OamAttr *sSmartballWingSprites[];
@@ -149,9 +149,9 @@ extern void Vec2_Sub(int *o, int *a, int *b);
 extern OamAttr *sSmartballDokanSprites[];
 extern OamAttr *sSmartballAnaSprites[];
 extern int func_0203d570(V2 *a, V2 *b);
-extern int func_0203d434(fx32 *p);
-extern void func_0203d630(int *p, int scale);
-extern void func_0203d480(fx32 *out, fx32 *in);
+extern int func_0203d434(V2 *p);
+extern void func_0203d630(V2 *p, int scale);
+extern void func_0203d480(V2 *out, V2 *in);
 extern int func_0203d524(V2 *a, V2 *b);
 extern int func_0203d4d0(void *p, int *a, int *b);
 extern OamAttr *sSmartballSparkSpritesAlt[];
@@ -376,14 +376,14 @@ void cMgSmartball_wing_c::RebuildVerts() {
     mVertices[7].x = 0x4000;
     mVertices[7].y = -0x18000;
 
-    func_0203d388(&mVertices[0].x, (s16)-mAngle);
-    func_0203d388(&mVertices[1].x, (s16)-mAngle);
-    func_0203d388(&mVertices[2].x, (s16)-mAngle);
-    func_0203d388(&mVertices[3].x, (s16)-mAngle);
-    func_0203d388(&mVertices[4].x, mAngle);
-    func_0203d388(&mVertices[5].x, mAngle);
-    func_0203d388(&mVertices[6].x, mAngle);
-    func_0203d388(&mVertices[7].x, mAngle);
+    func_0203d388((V2 *)&mVertices[0], (s16)-mAngle);
+    func_0203d388((V2 *)&mVertices[1], (s16)-mAngle);
+    func_0203d388((V2 *)&mVertices[2], (s16)-mAngle);
+    func_0203d388((V2 *)&mVertices[3], (s16)-mAngle);
+    func_0203d388((V2 *)&mVertices[4], mAngle);
+    func_0203d388((V2 *)&mVertices[5], mAngle);
+    func_0203d388((V2 *)&mVertices[6], mAngle);
+    func_0203d388((V2 *)&mVertices[7], mAngle);
 
     mVertices[0].x += mCurrent0 - 0x10000;
     mVertices[0].y += mCurrent1 + 0x28000;
@@ -1774,14 +1774,14 @@ void cMgSmartball_propeller_c::RebuildVerts() {
     mVertices[7].x = 0;
     mVertices[7].y = -0x20000;
 
-    func_0203d388(&mVertices[0].x, mAngle);
-    func_0203d388(&mVertices[1].x, mAngle);
-    func_0203d388(&mVertices[2].x, mAngle);
-    func_0203d388(&mVertices[3].x, mAngle);
-    func_0203d388(&mVertices[4].x, mAngle);
-    func_0203d388(&mVertices[5].x, mAngle);
-    func_0203d388(&mVertices[6].x, mAngle);
-    func_0203d388(&mVertices[7].x, mAngle);
+    func_0203d388((V2 *)&mVertices[0], mAngle);
+    func_0203d388((V2 *)&mVertices[1], mAngle);
+    func_0203d388((V2 *)&mVertices[2], mAngle);
+    func_0203d388((V2 *)&mVertices[3], mAngle);
+    func_0203d388((V2 *)&mVertices[4], mAngle);
+    func_0203d388((V2 *)&mVertices[5], mAngle);
+    func_0203d388((V2 *)&mVertices[6], mAngle);
+    func_0203d388((V2 *)&mVertices[7], mAngle);
 
     mVertices[0].x += mCurrent0;
     mVertices[0].y += mCurrent1;
@@ -2755,7 +2755,7 @@ outer_loop:
         work.x = state.zero;
         work.z = state.zero;
         work.z += mRadius;
-        func_0203d388(&work.x, angle);
+        func_0203d388((V2 *)&work, angle);
         dot = func_0203d570((V2 *)&work, (V2 *)&mVel0);
         if (dot >= 0) {
             work.x += mCurrent0;
@@ -2911,7 +2911,7 @@ outer_loop:
                                     do {
                                         work.z = mRadius;
                                         work.x = 0;
-                                        func_0203d388(&work.x, angle);
+                                        func_0203d388((V2 *)&work, angle);
                                         work.x += mCurrent0;
                                         work.z += mCurrent1;
                                         Vec2_Sub(&radialDelta.x, &work.x, &otherPos.x);
@@ -2944,15 +2944,15 @@ outer_loop:
         if (hit[i] == 1) {
             unit.x = state.zero4c;
             unit.z = state.baseZ;
-            func_0203d388(&unit.x, angle);
+            func_0203d388((V2 *)&unit, angle);
             normal.x += unit.x;
             normal.z += unit.z;
         }
         angle = (s16)(angle + 0x800);
         i++;
     } while (i < 0x20);
-    func_0203d434(&normal.x);
-    func_0203d630(&normal.x, state.baseZ);
+    func_0203d434((V2 *)&normal);
+    func_0203d630((V2 *)&normal, state.baseZ);
     {
         mCurrent0 -= normal.x;
         mCurrent1 -= normal.z;
@@ -2973,7 +2973,7 @@ outer_loop:
             if (hitB[i] == 1) {
                 radial.x = 0;
                 radial.z = 0x1000;
-                func_0203d388(&radial.x, (s16)(angle / 0x20));
+                func_0203d388((V2 *)&radial, (s16)(angle / 0x20));
                 response.x -= radial.x;
                 response.z -= radial.z;
             }
@@ -2986,7 +2986,7 @@ outer_loop:
             if (hitA[i] == 1 && hitC[i] == 0) {
                 radial.x = 0;
                 radial.z = 0x1000;
-                func_0203d388(&radial.x, (s16)(angle / 0x20));
+                func_0203d388((V2 *)&radial, (s16)(angle / 0x20));
                 response.x -= radial.x;
                 response.z -= radial.z;
             }
@@ -2996,7 +2996,7 @@ outer_loop:
     }
 
     if (response.x != 0 || response.z != 0) {
-        func_0203d480(&normalized.x, &response.x);
+        func_0203d480((V2 *)&normalized, (V2 *)&response);
         dot = FX_MUL(mVel0, response.x) + FX_MUL(mVel1, response.z);
         if (state.flags[5] == 1) {
             responseScale = FX_MUL(dot, 0x1800);
@@ -3009,7 +3009,7 @@ outer_loop:
                  << 12);
             responseScale += FIX_MUL_SU(responseScale, randomScale >> 6);
             randomAngle = (u32)RandomIntInternal(&data_0209d4b8.value);
-            func_0203d388(&response.x,
+            func_0203d388((V2 *)&response,
                           (s16)(((((randomAngle >> 16) & 0x7fff) << 12) >> 15) - 0x800));
         } else if (state.flags[3] == 1) {
             u32 randomScale;
@@ -3022,7 +3022,7 @@ outer_loop:
                  << 12);
             responseScale += FIX_MUL_US(randomScale >> 5, -0x2000);
             randomAngle = (u32)RandomIntInternal(&data_0209d4b8.value);
-            func_0203d388(&response.x,
+            func_0203d388((V2 *)&response,
                           (s16)(((((randomAngle >> 16) & 0x7fff) << 12) >> 15) - 0x800));
         } else if (state.flags[2] == 1) {
             u32 randomScale;
@@ -3138,7 +3138,7 @@ outer_loop:
                     return;
                 }
                 correction = hazardDelta;
-                func_0203d434(&correction.x);
+                func_0203d434((V2 *)&correction);
                 correction.x = FX_MUL(correction.x, dot);
                 correction.x /= 64;
                 correction.z = FX_MUL(correction.z, dot);
@@ -3353,8 +3353,8 @@ after2:
         spd = Vec2_Len((const Vector2 *)(V2xz *)&mVel0);
         if (spd >= 0x8000)
             spd = 0x8000;
-        if (func_0203d434(&mVel0) != 0)
-            func_0203d630(&mVel0, spd);
+        if (func_0203d434((V2 *)&mVel0) != 0)
+            func_0203d630((V2 *)&mVel0, spd);
     }
     mCurrent0 += mVel0;
     mCurrent1 += mVel1;
@@ -3365,7 +3365,7 @@ after2:
         if (mExitGateOpen == 0) {
             vc.x = 0x20000;
             vc.z = -0x8000;
-            func_0203d480(&v5c.x, &vc.x);
+            func_0203d480((V2 *)&v5c, (V2 *)&vc);
             {
                 int dz = mCurrent1 + 0x80000;
                 int dx = mCurrent0 - 0xd8000;
@@ -3385,9 +3385,9 @@ after2:
         return;
     if (mag < 0x800)
         return;
-    if (func_0203d434(&mVel0) == 0)
+    if (func_0203d434((V2 *)&mVel0) == 0)
         return;
-    func_0203d630(&mVel0, dist);
+    func_0203d630((V2 *)&mVel0, dist);
 }
 
 /* Slot 2: resets the ball and every hit-test array. */
@@ -3560,7 +3560,7 @@ void dScMgSmartball_c::EmitSparks(int *pair, int a3) {
         r = RandomIntInternal(&data_0209d4b8.value);
         mSparks[i].mPos[0] = 0;
         mSparks[i].mPos[1] = (((r >> 16) & 0x7fff) * 0x10000) >> 15;
-        func_0203d388(mSparks[i].mPos, (s16)(u16)(SPARK_RAND * 2));
+        func_0203d388((V2 *)mSparks[i].mPos, (s16)(u16)(SPARK_RAND * 2));
         mSparks[i].mPos[1] *= 2;
         mSparks[i].mPos[0] += mSparks[i].mOrigin[0];
         mSparks[i].mPos[1] += mSparks[i].mOrigin[1];
@@ -3582,7 +3582,7 @@ void dScMgSmartball_c::EmitSparks(int *pair, int a3) {
         r = RandomIntInternal(&data_0209d4b8.value);
         mSparks[i].mPos[0] = 0;
         mSparks[i].mPos[1] = (((r >> 16) & 0x7fff) * 0xc000) >> 15;
-        func_0203d388(mSparks[i].mPos, (s16)(u16)(SPARK_RAND * 2));
+        func_0203d388((V2 *)mSparks[i].mPos, (s16)(u16)(SPARK_RAND * 2));
         mSparks[i].mPos[1] *= 2;
         mSparks[i].mPos[0] += mSparks[i].mOrigin[0];
         mSparks[i].mPos[1] += mSparks[i].mOrigin[1];
@@ -3628,8 +3628,8 @@ void dScMgSmartball_c::UpdateSparks() {
             mSparks[i].mPos[1] += mSparks[i].mVel[1];
             len = Vec2_Len((const Vector2 *)mSparks[i].mVel);
             len = len * 7 / 8;
-            if (func_0203d434(mSparks[i].mVel))
-                func_0203d630(mSparks[i].mVel, len);
+            if (func_0203d434((V2 *)mSparks[i].mVel))
+                func_0203d630((V2 *)mSparks[i].mVel, len);
             mSparks[i].mFrame++;
             if (mSparks[i].mFrame >= 0x10) {
                 mSparks[i].mFrame = 0;
@@ -3640,7 +3640,7 @@ void dScMgSmartball_c::UpdateSparks() {
                     r = RandomIntInternal(&data_0209d4b8.value);
                     mSparks[i].mPos[0] = 0;
                     mSparks[i].mPos[1] = (((r >> 16) & 0x7fff) * 0x10000) >> 15;
-                    func_0203d388(mSparks[i].mPos, (s16)(u16)(SPARK_RAND * 2));
+                    func_0203d388((V2 *)mSparks[i].mPos, (s16)(u16)(SPARK_RAND * 2));
                     mSparks[i].mPos[1] *= 2;
                     mSparks[i].mPos[0] += mSparks[i].mOrigin[0];
                     mSparks[i].mPos[1] += mSparks[i].mOrigin[1];
@@ -3763,8 +3763,8 @@ void dScMgSmartball_c::UpdateDust() {
             entry->mDustPos[0][1] += entry->mDustVel[0][1];
             {
                 int m = Vec2_Len((const Vector2 *)obj) * 6 / 8;
-                if (func_0203d434((int *)obj)) {
-                    func_0203d630((int *)obj, m);
+                if (func_0203d434((V2 *)obj)) {
+                    func_0203d630((V2 *)obj, m);
                 }
             }
             {
@@ -4015,15 +4015,15 @@ void dScMgSmartball_c::ResolveBallPair(int firstIndex, int secondIndex, u8 *firs
     }
     // Rotate into the ball-to-ball line, swap the shared component, rotate back.
     inverseAngle = -collisionAngle;
-    func_0203d388(&firstVelocity.x, (s16)inverseAngle);
-    func_0203d388(&secondVelocity.x, (s16)inverseAngle);
+    func_0203d388(&firstVelocity, (s16)inverseAngle);
+    func_0203d388(&secondVelocity, (s16)inverseAngle);
     {
         int normalVelocity = firstVelocity.x;
         firstVelocity.x = secondVelocity.x;
         secondVelocity.x = normalVelocity;
     }
-    func_0203d388(&firstVelocity.x, collisionAngle);
-    func_0203d388(&secondVelocity.x, collisionAngle);
+    func_0203d388(&firstVelocity, collisionAngle);
+    func_0203d388(&secondVelocity, collisionAngle);
     firstResult = firstVelocity;
     ((cMgSmartball_ball_c *)firstObject)->SetVel(&firstResult.x);
     secondResult = secondVelocity;

@@ -70,7 +70,7 @@ struct dScMgJump2_c : dScMgD3DBase_c {
     u16 pad_5a76;                 /* 0x5a76 */
 
     /* The PMF state machine. pmf_dScMgJump2_c_State_Idle..9c are the eight-byte
-       records the state functions copy into pad_5004 whole; their first
+       records the state functions copy into mState whole; their first
        words relocate to State_Idle, ..ef5ac, ..ef480, ..ef794 and
        ..ef4ec respectively (config/arm9/overlays/ov006/relocs.txt). The
        three remaining members are the transitions that install them. */

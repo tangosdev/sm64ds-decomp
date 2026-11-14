@@ -30,7 +30,9 @@
  *   (0x8c -> 0xb0). The scalar extern passes the three positions in r1-r3.
  * - func_ov091_02131160: a Matrix4x3 * local for mShadowMat is +4
  *   (0x1e0 -> 0x1e4); the translation row is stored through `this`.
- * - Behavior: &mPitchBase is a pool add of 0x3a2.
+ * - Behavior: one this+0x3a2 halfword for the arrived pitch is
+ *   -0xc (0x488 -> 0x47c); &mPitchBase is a pool add of 0x3a2 and the
+ *   step stays this+0x300+0xa4.
  * - InitResources: paths[variant].node[index] swaps the mla registers (3 words, same
  *   size); the char* stride multiply stays.
  */

@@ -197,7 +197,7 @@ int daSpd_c::InitResources() {
     mScaleZ = 0x1000;
     mParent = 0;
     mTimer = 0x3c;
-    mShadowMat = IDENTITY_MATRIX4X3;
+    *(Matrix4x3 *)mShadowMtx = IDENTITY_MATRIX4X3;
     func_ov071_0211f524();
     return 1;
 }
@@ -576,7 +576,7 @@ void daSpd_c::func_ov071_0211f524() {
     mShadowMtx[11] = mPosZ >> 3;
 
     int dh = (mState == 8) ? 0x190000 : 0xc8000;
-    DropShadowRadHeight(mShadowModel, mShadowMat, 0xa0000, dh, 0xf);
+    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMtx, 0xa0000, dh, 0xf);
 }
 
 void daSpd_c::func_ov071_0211f498() {

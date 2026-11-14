@@ -43,15 +43,7 @@ enum daObjMcWater_c_AssetId { ASSET_MC_WATER_BMD = 0x0693, ASSET_MC_WATER_KCL = 
 /* The handles reach their files through these wrappers' constructor and
    destructor veneers; the manifest maps each to the retail destination.
    Descriptive local types, not recovered spellings. */
-struct McWaterModelFile {
-    union {
-        SharedFilePtr base;
-        struct {
-            u16 fileID;
-            u8 numRefs;
-            BMD_File *filePtr;
-        };
-    };
+struct McWaterModelFile : SharedFilePtr {
     McWaterModelFile(u32 fileID);
     ~McWaterModelFile();
 };
@@ -109,10 +101,10 @@ int daObjMcWater_c::InitResources() {
         }
     }
     {
-        BMD_File *bmd = dExtSimpleModel_c::LoadFile(gMcWaterModelFile.base);
+        BMD_File *bmd = dExtSimpleModel_c::LoadFile(gMcWaterModelFile);
         mModel.SetFile(bmd, 1, 0x14);
     }
-    dExtAnmTexSRT_c::Prepare(*gMcWaterModelFile.filePtr, data_ov009_02112bc4);
+    dExtAnmTexSRT_c::Prepare(*(BMD_File *)gMcWaterModelFile.filePtr, data_ov009_02112bc4);
     mTexTransformer.SetFile(data_ov009_02112bc4, 0, 0x1000, 0);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
@@ -149,7 +141,7 @@ int daObjMcWater_c::Render() {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 int daObjMcWater_c::CleanupResources() {
-    gMcWaterModelFile.base.Release();
+    gMcWaterModelFile.Release();
     gMcWaterCollisionFile.Release();
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();

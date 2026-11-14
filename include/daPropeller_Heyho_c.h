@@ -52,7 +52,8 @@ struct daPropeller_Heyho_c : dEnemyBase_c {
     dExtAnmModel_c mAnmModel;                         /* 0x300 */
     dExtShadowModel_c                  mShadowModel;          /* 0x364 */
     /* Shadow matrix written by func_ov070_02120070 and passed to
-       DropShadowRadHeight. */
+       DropShadowRadHeight. Mtx43 rather than Matrix4x3: Vector3's
+       destructor would change D1/D0. */
     Mtx43 mShadowMatrix;                                /* 0x38c */
     State                       *mCurrentState;         /* 0x3bc */
     /* InitResources copies mPosX/Y/Z here. Wander/chase compare Vec3_Dist

@@ -29,7 +29,9 @@
  *
  * Leftover. The first three items were tried in their clean form and moved
  * the bytes; the rest are names or types the evidence does not give:
- * - StateCollectTalk keeps the LA label.
+ * - StateCollectTalk keeps the LA label, and stores mStarFlags through a
+ *   local u16 pointer; a plain mBits.answer store loses the address
+ *   rematerialization.
  * - Render keeps its gotos, and mStateTimer keeps its (u16) casts.
  * - func_ov002_020e8244 stays a free function; its first parameter is the
  *   output vector, not the star.
@@ -2645,8 +2647,8 @@ void daStar_c::StepCameraCutscene() {
     switch (mCamSeq) {
     case 0:
     {
-        s32 *s1 = &cam->lookAt.x;
-        s32 *s2 = &cam->pos.x;
+        int *s1 = (int *)&cam->lookAt;
+        int *s2 = (int *)&cam->pos;
         mCamLookAtX = s1[0];
         mCamLookAtY = s1[1];
         mCamLookAtZ = s1[2];
@@ -2667,8 +2669,8 @@ void daStar_c::StepCameraCutscene() {
         break;
     case 0x64:
     {
-        s32 *s1 = &cam->lookAt.x;
-        s32 *s2 = &cam->pos.x;
+        int *s1 = (int *)&cam->lookAt;
+        int *s2 = (int *)&cam->pos;
         mCamLookAtX = s1[0];
         mCamLookAtY = s1[1];
         mCamLookAtZ = s1[2];
