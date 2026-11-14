@@ -107,12 +107,12 @@ struct daMip_cSelf { char pad[0x364]; daMip_cStateFn *pp; };
  * pairs and read the glowing-rabbit count. mwcc emits __sinit_d_a_mip.cpp
  * from those definitions. The wrapper names are local; the handle
  * constructors and destructors are the ROM resource-family functions,
- * aliased in the manifest. Both MipVec3 overloads store the three
- * components. The (int, int, long) overload is the one the three wider
- * initializers call. Both share the one declared-not-defined destructor
- * (never ~Vector3: a Vector3 here would instantiate its vague-linkage D1
- * into this TU, which deliberately avoids it); the destructor alias
- * points at the ROM's canonical copy. */
+ * aliased in the manifest. MipVec3's plain overload builds the first vector
+ * with ordinary stores; the (int, int, long) overload builds the other
+ * three through a volatile lvalue, exactly as retail. Both share the one
+ * declared-not-defined destructor (never ~Vector3: a Vector3 here would
+ * instantiate its vague-linkage D1 into this TU, which deliberately avoids
+ * it); the destructor alias points at the ROM's canonical copy. */
 struct DaMipModelFile : SharedFilePtr {
     DaMipModelFile(u32 fileID);
     ~DaMipModelFile();
