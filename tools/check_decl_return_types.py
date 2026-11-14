@@ -250,7 +250,7 @@ def scalar_aliases(root):
     Harvested rather than hard-coded so the table cannot drift away from the
     header the tree actually compiles against: `u32` is only `unsigned int`
     because types.h says so, and a future edit there moves this with it.
-    Resolved transitively, so `Fix12i -> s32 -> signed int -> int`.
+    Resolved transitively, so `fx32 -> signed int -> int`.
 
     An alias whose base does not land on a BASE_CANON spelling is DROPPED, not
     guessed: `typedef volatile unsigned int vu32;` keeps its volatile, and

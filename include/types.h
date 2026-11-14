@@ -41,7 +41,18 @@ typedef signed int intptr_t;
 /* NitroSDK's fixed-point scalars (nitro/fx/fx.h): fx32 is 20.12 in an s32,
    fx16 is 4.12 in an s16. Declared here under the same guard as fx.h so every
    file sees the SDK's spelling without pulling in fx.h's vectors and macros,
-   and a file may include both headers in either order. */
+   and a file may include both headers in either order.
+
+   fx32 is the only spelling of a 20.12 scalar in this tree. The ROM is
+   stripped: it carries RTTI class names and no function symbols, so no type
+   spelling of a 20.12 value comes from the cartridge. What the toolchain
+   verifiably had is the SDK's fx32 (the NitroSDK functions linked into this
+   ROM take it), so that is the period spelling, with FX32_SHIFT and FX_MUL
+   from nitro/fx/fx.h. An earlier community name, Fix12i, was retired for it;
+   both named `signed int`, so the respelling changed no byte and no mangled
+   name. Fix12<T> (include/math/Fix12.h) is a different thing, a class
+   template whose by-value parameters change calling convention
+   (notes/mwccarm-codegen.md 6az): converting to it is matching work. */
 #ifndef NITRO_FX_SCALAR_TYPES
 #define NITRO_FX_SCALAR_TYPES
 typedef signed int fx32;
@@ -50,26 +61,8 @@ typedef signed long long fx64c;
 typedef signed short fx16;
 #endif
 
-/* Fix12i: the tree's older spelling of a 20.12 scalar, now an alias of fx32.
-
-   The name is coined, not recovered. The ROM is stripped: it carries RTTI
-   class names and no function symbols, so no type spelling of a 20.12 value
-   comes from the cartridge. What the toolchain verifiably had is the SDK's
-   fx32 (the NitroSDK functions linked into this ROM take it), so that is the
-   period spelling; new and touched code should write fx32 (and FX32_SHIFT /
-   FX_MUL from nitro/fx/fx.h) rather than Fix12i. Both name `signed int`, so
-   moving a declaration between them changes no byte and no mangled name.
-
-   NOT named `Fix12`: include/math/Fix12.h reserves that for the class
-   template Fix12<T>, whose by-value parameters change calling convention
-   (notes/mwccarm-codegen.md 6az) and are matching work, not a rename.
-
-   A local `typedef int Fix12i;` in an individual src/ file still compiles:
-   it names the same type. */
-typedef fx32 Fix12i;
-
 typedef struct Vector3 {
-    Fix12i x, y, z;
+    fx32 x, y, z;
 #ifdef __cplusplus
     /* DECLARED, AND EMPTY, BECAUSE THE ROM DESTROYS ARRAYS OF IT. A POD array
        needs no cleanup, so daKing_Donketu_c's
@@ -90,7 +83,7 @@ typedef struct Vector3 {
        lowering from block moves to memberwise in a few TUs -- those sites use
        a local POD twin instead. */
     Vector3() {}
-    Vector3(Fix12i x_, Fix12i y_, Fix12i z_) : x(x_), y(y_), z(z_) {}
+    Vector3(fx32 x_, fx32 y_, fx32 z_) : x(x_), y(y_), z(z_) {}
 #endif
 } Vector3;
 

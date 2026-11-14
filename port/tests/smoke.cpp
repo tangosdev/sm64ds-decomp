@@ -13,7 +13,7 @@
 static_assert(sizeof(u8) == 1 && sizeof(u16) == 2 && sizeof(u32) == 4, "int widths");
 static_assert(sizeof(s64) == 8, "s64");
 static_assert(sizeof(void *) == 4, "32-bit host (see port/platform.h)");
-static_assert(sizeof(Fix12i) == 4, "Fix12i is a 32-bit 20.12 scalar");
+static_assert(sizeof(fx32) == 4, "fx32 is a 32-bit 20.12 scalar");
 static_assert(offsetof(Timer, mTime) == 0, "Timer +0x0");
 static_assert(sizeof(((Timer *)0)->mTime) == 8, "Timer tick count is s64");
 static_assert(offsetof(Timer, mIsRunning) == 8, "Timer +0x8");
@@ -27,7 +27,7 @@ static_assert(offsetof(dFader_c, speed) == 8, "dFader_c +0x8");
 // Vector3 comes from the shared headers (common.h via the dFader_c includes);
 // redefining it here was a redefinition error, which is itself a small ABI
 // win: the test uses the same type the game does.
-extern "C" Fix12i VEC_DotProduct(const Vector3 *a, const Vector3 *b);
+extern "C" fx32 VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 extern "C" void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *out);
 extern "C" void sm64ds_hal_advance_ticks(s64 n);
 int ApproachLinear(int &ref, int target, int step);

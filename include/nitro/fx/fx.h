@@ -19,8 +19,8 @@
  * types.h's s32 / s64 directly.
  */
 
-/* include/types.h declares the same four under the same guard (it spells
- * Fix12i as fx32), so a file may include both in either order. */
+/* include/types.h declares the same four under the same guard, so a file may
+ * include both in either order. */
 #ifndef NITRO_FX_SCALAR_TYPES
 #define NITRO_FX_SCALAR_TYPES
 typedef signed int fx32;

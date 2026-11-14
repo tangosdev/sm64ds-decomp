@@ -38,7 +38,7 @@ struct Fix12 {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char Fix12i_size_must_be_4[sizeof(Fix12<int>) == 4 ? 1 : -1];
+typedef char Fix12_int_size_must_be_4[sizeof(Fix12<int>) == 4 ? 1 : -1];
 #endif
 
 #endif /* __cplusplus */
