@@ -19955,7 +19955,8 @@ int daPly_c::ChangeState(daPly_c::State &state) {
 
     {
         daPly_c::State *s = mState;
-        if (s->mInit == 0) return 1;
+        if (s->mInit == 0)
+            return 1;
         return (this->*(s->mInit))();
     }
 }
