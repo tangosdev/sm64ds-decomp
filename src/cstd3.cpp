@@ -67,7 +67,7 @@ void func_0206cd9c(struct CardBusState *s)
         unsigned short v2;
 
         mirror = &((struct DebuggerBlock *)HW_ISD_RESERVED)->busMirror;
-        busReg = (volatile unsigned short *)0x9fe2ffe;
+        busReg = (unsigned short *)0x9fe2ffe;
         v2 = s->busMirror;
         *mirror = v2;
         v2 = s->busMirror;
