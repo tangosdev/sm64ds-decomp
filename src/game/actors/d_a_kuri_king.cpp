@@ -1346,7 +1346,7 @@ int daKuriKing_c::WalkAlongRing() {
 
 void daKuriKing_c::UpdateShadows() {
     Matrix4x3 mtx;
-    int i, height, rad, footX, posY, radius; /* footX is never used: it keeps the @NNN count */
+    int i, height, rad, posY, radius;
     char *self, *src, *m;
     dExtShadowModel_c *shadow;
 
@@ -1374,10 +1374,7 @@ void daKuriKing_c::UpdateShadows() {
         ((daKuriKing_c *)self)->mShadowMatrices[0][9] =
             ((daKuriKing_c *)src)->mCylClsnPos[0].x >> 3;
         posY = this->mPosY;
-        /* Both arms are the same; the select is never needed for codegen,
-           but its compiler temporaries keep the @2113.. pins (dropping it
-           renumbers by 4). */
-        ((daKuriKing_c *)self)->mShadowMatrices[0][10] = (radius ? posY : posY) >> 3;
+        ((daKuriKing_c *)self)->mShadowMatrices[0][10] = posY >> 3;
         height += 0x28000;
         ((daKuriKing_c *)self)->mShadowMatrices[0][11] =
             ((daKuriKing_c *)src)->mCylClsnPos[0].z >> 3;

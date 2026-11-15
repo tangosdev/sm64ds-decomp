@@ -775,14 +775,10 @@ void daKpa_c::BounceEffects(char *counter) {
 
 /*
 True once the model's animation has reached its last frame or will reach it on
-the coming advance (dExtFrameCtrl_c::Finished, or WillHitFrame(frame count - 1)).
-Reads mAnmModel through a copy of this: the plain this->mAnmModel form builds
-the same code but draws one @NNN fewer, renumbering every pinned @NNN in this
-TU (measured). */
+the coming advance (dExtFrameCtrl_c::Finished, or WillHitFrame(frame count - 1)). */
 bool daKpa_c::Bowser_IsAnimAtLastFrame(){
-    daKpa_c *obj = this;
-    return obj->mAnmModel.Finished() ||
-           obj->mAnmModel.WillHitFrame((unsigned short)(obj->mAnmModel.GetFrameCount() - 1));
+    return mAnmModel.Finished() ||
+           mAnmModel.WillHitFrame((unsigned short)(mAnmModel.GetFrameCount() - 1));
 }
 
 /*

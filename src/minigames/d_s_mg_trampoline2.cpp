@@ -36,10 +36,7 @@ enum d_s_mg_trampoline2_AssetId {
  * - NewCleanParticle takes Fix12 by value, which costs the caller bytes
  *   (notes/mwccarm-codegen.md 6az).
  * - The 0x78-element pool helpers stay free functions over char *; they
- *   read the record through Trmp2Spinner.h's view. Their
- *   pointer locals (Init's p1..p3, Update's p), StatePlay's level pointer
- *   and its unread raw hold the pinned @1110: folding any of them into a
- *   direct member expression renumbers it (measured).
+ *   read the record through Trmp2Spinner.h's view.
  * - TrmpItem's +0x1a8 array (five Vector2s, mUnusedVec) has no known role.
  */
 
@@ -164,6 +161,9 @@ BaseSpawnInfo<dScMgTrampoline2_c> g_profile_MG_TRAMPOLINE2 = {
     0x181,
 };
 Tbl sTrmp2SpinnerSpeeds = {0x600, 0xc00, 0xe00};
+
+/* A random fx32 in [0, 1.0): the top 12 bits of the 31-bit draw. */
+#define TRMP2_RAND_FX ((((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13))
 int sTrmp2ScoreGates[] = {1000, 5000, 10000, 20000};
 int sTrmp2PuffXByLanguage[] = {(int)sTrmpPuffEnglish, (int)sTrmpPuffSpanish, (int)sTrmpPuffFrench,
                                (int)sTrmpPuffGerman, (int)sTrmpPuffItalian};
@@ -391,7 +391,6 @@ void dScMgTrampoline2_c::BeginPlay() {
 }
 
 void dScMgTrampoline2_c::StatePlay() {
-    char *raw = (char *)this; /* unread; deleting it renumbers the pinned @1110 */
     int old;
 
     old = sTrmpItemsHit;
@@ -415,10 +414,7 @@ void dScMgTrampoline2_c::StatePlay() {
     if (sTrmp2Score >= mScoreGate && sTrmp2MarioCount < 5) {
         unsigned int v;
         Trmp2Mario_MoveToStart();
-        {
-            u32 *p = &mLevel;
-            *p = *p + 1;
-        }
+        mLevel++;
         if (mLevel > 0x270e)
             mLevel = 0x270e;
         v = mLevel;
@@ -1073,7 +1069,7 @@ void func_020169f4(char *self, int kind);
 void Trmp2Spinner_Init(void *r0, int value) {
     Trmp2Spinner *spinner = (Trmp2Spinner *)r0;
     struct Tbl t = sTrmp2SpinnerSpeeds;
-    unsigned int rnd = ((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13;
+    unsigned int rnd = TRMP2_RAND_FX;
     int idx;
     if ((int)rnd < t.a) {
         idx = 0;
@@ -1101,26 +1097,16 @@ void Trmp2Spinner_Init(void *r0, int value) {
     spinner->mVel.x = drop;
     spinner->mVel.y = drop;
     spinner->mVel.z = 0;
-    unsigned int rnd2 = RandomIntInternal(&data_0209e650.value);
-    int *p1 = &spinner->mPos.x;
-    int v1 = *p1 + ((((rnd2 & 0x7fffffff) >> 0x13) - 0x800) * 0x40);
-    *p1 = v1;
-    int rnd3 = RandomIntInternal(&data_0209e650.value);
-    int *p2 = &spinner->mVel.x;
-    int adj3 = (((unsigned int)rnd3 & 0x7fffffff) >> 0x13);
-    *p2 -= adj3 >> 1;
-    int rnd4 = RandomIntInternal(&data_0209e650.value);
-    int *p3 = &spinner->mVel.y;
-    int adj4 = (((unsigned int)rnd4 & 0x7fffffff) >> 0x13);
-    *p3 -= adj4 >> 1;
+    spinner->mPos.x += (TRMP2_RAND_FX - 0x800) * 0x40;
+    spinner->mVel.x -= (int)TRMP2_RAND_FX >> 1;
+    spinner->mVel.y -= (int)TRMP2_RAND_FX >> 1;
     func_02016a14((char *)spinner, 0);
     func_02016a04((char *)spinner, 0);
 }
 
 void Trmp2Spinner_Update(char *raw) {
     ApproachLinear2(SPINNER(raw)->mLifeTimer, 0, 1);
-    short *p = &SPINNER(raw)->mAngleZ;
-    *p = *p + 0x400;
+    SPINNER(raw)->mAngleZ += 0x400;
     VEC_Add(&SPINNER(raw)->mPos, &SPINNER(raw)->mVel, &SPINNER(raw)->mPos);
 }
 

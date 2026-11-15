@@ -210,12 +210,6 @@ extern StarModelFilePtr data_ov002_0211093c;
 extern StarAnimationFileHandle data_ov002_02110924;
 extern StarAnimationFileHandle data_ov002_02110964;
 extern SharedFilePtr data_ov002_0210d9a8;
-/* Numbering pin: func_ov002_020d718c is now a daPly_c member (see daPly_c.h);
-   no call in this TU uses the free spelling anymore. The declaration stays,
-   spelled exactly as it was, because each named parameter advances mwccarm's
-   @NNN counter: removing or un-naming it renumbers this TU's .data temps
-   (measured on daYegg_c, same mechanism). */
-extern void func_ov002_020d718c(void *p);
 extern int data_ov002_0210aa0c[3];
 extern StateHandler data_ov002_021109d8[];
 extern u8 gCurrentStarId;
