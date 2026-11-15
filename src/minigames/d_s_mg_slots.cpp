@@ -150,7 +150,6 @@ extern int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, in
 extern int Sound_PlayIfNotActive(int, int, int, short);
 extern void func_ov001_020ab3f0(void *c);
 int TouchArea_Update(void *c, int x);
-extern void func_ov001_020ab5b0(char *r0, int r1, short r2, short r3, short s4, short s5);
 
 /* ~dScMgSlot1_c() (D1, complete-object destructor). The empty body is the
    original ownership model: the compiler destroys the typed mBetIcon member,
@@ -1000,7 +999,7 @@ void dScMgSlot1_c::betIcon_c::Behavior() {
 }
 
 void dScMgSlot1_c::betIcon_c::Place() {
-    func_ov001_020ab5b0((char *)this, 1, 0x90, 0xb0, 0x10, 8);
+    dThIcon_c::Place(1, 0x90, 0xb0, 0x10, 8);
     mPressTime = 6;
 }
 

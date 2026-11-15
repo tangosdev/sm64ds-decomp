@@ -12619,7 +12619,7 @@
     },
     "ov001:0x020ab5b0": {
       "author": "tangosdev",
-      "name": "_Z19func_ov001_020ab5b0Pcissss"
+      "name": "_ZN9dThIcon_c5PlaceEissss"
     },
     "ov002:0x020ad660": {
       "author": "ruspecial",
