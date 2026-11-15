@@ -152,9 +152,6 @@ struct GmchDrawReg { GmchDrawReg(Vector3 &v) { v.x = 0; v.y = 0x2000; v.z = 0; }
  * GmchDrawReg supplies the draw offset's .init stores so the plain Vector3
  * earns its registered destructor instead of constant initialization. */
 extern "C" {
-/* local extern: named parameters keep the TU's compiler-generated aliases
- * stable when CalcLib's shared declarations are included above. */
-extern int RandomIntInternal(int *seed);
 extern void func_02038414(void *clsn);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);

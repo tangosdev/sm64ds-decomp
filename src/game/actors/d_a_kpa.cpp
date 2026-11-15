@@ -291,10 +291,7 @@ extern KpaAnimationFileHandle data_ov060_0211ac20;
 extern KpaAnimationFileHandle data_ov060_0211ac68;
 extern KpaAnimationFileHandle data_ov060_0211ac70;
 extern s16 data_ov060_0211a4e0[];
-/* local extern: the Vector3 spelling math/CalcLib.h declares. */
-extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern int *Vec3_LslInPlace(void *v, int sh);
-extern Matrix4x3 data_020a0e68;
 /* Sound.cpp 0xc-byte cleanup veneer. */
 extern void func_02011cfc(void);
 /* One declaration per resource handle, typed from how InitResources and

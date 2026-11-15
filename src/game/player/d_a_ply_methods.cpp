@@ -96,6 +96,7 @@
 #include "cstd.h"
 #include "math/Approach.h"
 #include "nitro/fx/fx_cp.h"
+#include "nitro/fx/fx_trig.h"
 
 /* mwccarm rejects a block-scope extern "C" (declarator expected). These six
  * stay at file scope so the calls emit the plain ROM names. The macro is
@@ -328,8 +329,6 @@ extern int atan2_hold_Player_15(fx32, fx32);
 extern int atan2_hold_Player_5(fx32 y, fx32 x);
 extern fx32 atan2_hold_Player_6(fx32 a, fx32 b);
 extern int atan2_hold_Player_7(fx32 a, int b);
-/* local extern: including nitro/fx/fx_trig.h renumbers this TU; spelled as the header does. */
-extern const fx16 FX_SinCosTable_[];
 extern signed char gCurrentSublevel;
 extern unsigned char data_0209f4ae[];
 extern unsigned int data_ov002_020ff220[];
@@ -473,8 +472,6 @@ extern void PlayerPlayLongHold_cec2c(unsigned int a, unsigned int b, unsigned in
                                      const Vector3 *v, unsigned int d);
 extern struct P2 data_ov002_0210a084;
 extern struct P2 data_ov002_0210a34c;
-/* local extern: including CalcLib.h renumbers this TU's @NNN aliases. */
-extern int RandomIntInternal(int *seed);
 extern u32 PlayerNewHold7(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
                           void *callback);
 extern u32 PlayerNewHold8(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
@@ -509,8 +506,6 @@ extern void MulMat4x3Mat4x3(void *a, void *b, void *c);
 extern void Matrix4x3_ApplyInPlaceToTranslation(struct Matrix4x3 *mF, fx32 x, fx32 y, fx32 z);
 /* local extern: MtxStack's named parameters take an @NNN in every includer. */
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
-/* local extern: including CalcLib.h renumbers this TU's @NNN aliases. */
-extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern u8 gReturnSublevel;
 }
 
